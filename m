@@ -1,33 +1,45 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50A216AA3
-	for <regressions@lists.linux.dev>; Mon, 30 Jan 2023 17:32:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1675099977;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nojJO24UhteNPmsCx+HsdO8ZWDLBCbRPISorctyRNtk=;
-	b=OCAXaQBZ+qmpeQFNHzc8DL7ciIcgBR44+yxh89+ZwuhZy0DfncxvIAli2yeG1o+8BN7x1a
-	RnNVFZ659k/7iJ7YyMDdb3YFnbWtWrMnIklk+8kuwrW94ZKuiLGROFbc2qmmk6QudPM+FG
-	tJ/TvOc39PHf009AsDg9NmbmK5PXkDc=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-168-UA9-8G9EM2m8_sWfxfQFOA-1; Mon, 30 Jan 2023 12:32:53 -0500
-X-MC-Unique: UA9-8G9EM2m8_sWfxfQFOA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 585721C0754E;
-	Mon, 30 Jan 2023 17:32:52 +0000 (UTC)
-Received: from [10.18.17.153] (dhcp-17-153.bos.redhat.com [10.18.17.153])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id C542C2166B26;
-	Mon, 30 Jan 2023 17:32:51 +0000 (UTC)
-Message-ID: <e782060f-0c2f-b287-1eaf-3058eac6dcb4@redhat.com>
-Date: Mon, 30 Jan 2023 12:32:51 -0500
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DCFE79D5
+	for <regressions@lists.linux.dev>; Mon, 30 Jan 2023 20:19:35 +0000 (UTC)
+Received: by mail-wm1-f49.google.com with SMTP id m16-20020a05600c3b1000b003dc4050c94aso6269789wms.4
+        for <regressions@lists.linux.dev>; Mon, 30 Jan 2023 12:19:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=tpokIJDSZzqHSJDGhqSzmkBsCKFTZDnMLuN4zymXWTA=;
+        b=p0UiG900WXM2A1Fw8OzsI7ZJbtaO5S/zOqJ68ReWdWUGEETyfIgZhSr8TogTAmOUtq
+         FGOfY4ejyAUFdAXWBgIgnYX09kyG47Iz/0DmwrUdtGMl255wduEBtfpXNIrlkd4AF2wH
+         /k3vqPQMwPAMHtK5EtZ/8OQyIkZ0awmbXkYq8cAh7u0fBQeGiJGjcM5Ip5tQ/Z1UTOjQ
+         gQ6VBau0vwbxmXQyBKzT2XjrCPXBrsuwpHM2r5cLId6VeyDlv1mvRSoCIDNo00NKToco
+         farotpQCLy8Myx3/gRvHW6leR0rEeTJxi2IgyK3A8g8A8Srf16agT7LStEEaY+AtrwHN
+         ru5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=tpokIJDSZzqHSJDGhqSzmkBsCKFTZDnMLuN4zymXWTA=;
+        b=YaqFo62qbhwpBX94mTFkc0gIYoDqXHORqIKlNlEXYkv/q9/z/A4NHGi++0wl/r9Wen
+         i2tdb7pCyJcrZUgKOgMuNRN1N8xsYJzxj13+FlFQBDu7CYBsIgdittXRNQuPBRe9vTUb
+         lPKd9fbZNOunUQOYLNm254rNlyDhrM5B4kbVYUnEeC0bCdpqlcmQd7D420dwyxrjPbvy
+         IdxXBScVHI7H58b/6q1YWUu7INSG+J61mXYhKmLxeKA0eRlmNhFlHiOMFslWZL7lo/pO
+         EBlM72Qm2fNhbM6pJpspNRAqqdH6MJJE3kK7fV5RzBfDvYBxguhHhSJx/au4qH5kvRY/
+         ayLQ==
+X-Gm-Message-State: AO0yUKWewKgsiGFbrKxNTMKAYX7hkMiauAqg799CUZRF+SDc1aFZpzJF
+	02nz5RN1ej65Rozm7e7Bz7k=
+X-Google-Smtp-Source: AK7set8tk0+2xec7Ji1+1KYZ/rXzoxz5g1DJTJYwKacFFYysSvaTKfa7csgh4CGcQ6aRjmeSF23oIg==
+X-Received: by 2002:a7b:c44a:0:b0:3dc:46f6:e5fd with SMTP id l10-20020a7bc44a000000b003dc46f6e5fdmr9804066wmi.7.1675109973685;
+        Mon, 30 Jan 2023 12:19:33 -0800 (PST)
+Received: from [192.168.1.10] (97e09f27.skybroadband.com. [151.224.159.39])
+        by smtp.googlemail.com with ESMTPSA id d33-20020a05600c4c2100b003dc41a9836esm9851172wmp.43.2023.01.30.12.19.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 30 Jan 2023 12:19:32 -0800 (PST)
+Message-ID: <1cdb84ac-f7a8-66ba-98fc-3db302b49a5a@googlemail.com>
+Date: Mon, 30 Jan 2023 20:19:29 +0000
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -35,93 +47,200 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-Subject: Re: [PATCH v2] sched: Store restrict_cpus_allowed_ptr() call state
-Content-Language: en-US
-To: Will Deacon <will@kernel.org>
-Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
- Juri Lelli <juri.lelli@redhat.com>,
- Vincent Guittot <vincent.guittot@linaro.org>,
- Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
- Mel Gorman <mgorman@suse.de>, Daniel Bristot de Oliveira
- <bristot@redhat.com>, Valentin Schneider <vschneid@redhat.com>,
- Phil Auld <pauld@redhat.com>, Linus Torvalds
- <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org,
- regressions@lists.linux.dev, regressions@leemhuis.info
-References: <20230121021749.55313-1-longman@redhat.com>
- <20230124194805.GA27257@willie-the-truck>
- <fdf76fb2-1da4-2d72-7eb3-21137a7d6845@redhat.com>
- <20230126161110.GB29438@willie-the-truck>
-From: Waiman Long <longman@redhat.com>
-In-Reply-To: <20230126161110.GB29438@willie-the-truck>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+ Thunderbird/102.7.0
+Subject: Re: linux-6.2-rc4+ hangs on poweroff/reboot: Bisected
+To: Ben Skeggs <skeggsb@gmail.com>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
+ bskeggs@redhat.com, Karol Herbst <kherbst@redhat.com>,
+ Lyude Paul <lyude@redhat.com>, ML nouveau <nouveau@lists.freedesktop.org>,
+ LKML <linux-kernel@vger.kernel.org>,
+ ML dri-devel <dri-devel@lists.freedesktop.org>
+References: <b64705e3-2e63-a466-f829-f9568b06766a@googlemail.com>
+ <fcec3c78-b5d9-eb48-0fc0-d1f27de87f23@leemhuis.info>
+ <b21fa1f6-a71d-5657-8596-ee0be73185ea@leemhuis.info>
+ <3ab28896-70e9-6f90-5b97-e5397b06e715@googlemail.com>
+ <a163dd7b-c5d1-a07b-a816-7a2dfd3edfd4@leemhuis.info>
+ <ab1b0f73-6b4e-8602-2999-b7bec25d92db@googlemail.com>
+ <CACAvsv4sOtPjCVnEcKd2RCUqYWxSn5XKyksbS-Bds2qCqyusVw@mail.gmail.com>
+Content-Language: en-GB
+From: Chris Clayton <chris2553@googlemail.com>
+In-Reply-To: <CACAvsv4sOtPjCVnEcKd2RCUqYWxSn5XKyksbS-Bds2qCqyusVw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.6
 
-On 1/26/23 11:11, Will Deacon wrote:
-> On Tue, Jan 24, 2023 at 03:24:36PM -0500, Waiman Long wrote:
->> On 1/24/23 14:48, Will Deacon wrote:
->>> On Fri, Jan 20, 2023 at 09:17:49PM -0500, Waiman Long wrote:
->>>> The user_cpus_ptr field was originally added by commit b90ca8badbd1
->>>> ("sched: Introduce task_struct::user_cpus_ptr to track requested
->>>> affinity"). It was used only by arm64 arch due to possible asymmetric
->>>> CPU setup.
+Thanks, Ben.
+
+On 30/01/2023 01:09, Ben Skeggs wrote:
+> On Sat, 28 Jan 2023 at 21:29, Chris Clayton <chris2553@googlemail.com> wrote:
+>>
+>>
+>>
+>> On 28/01/2023 05:42, Linux kernel regression tracking (Thorsten Leemhuis) wrote:
+>>> On 27.01.23 20:46, Chris Clayton wrote:
+>>>> [Resend because the mail client on my phone decided to turn HTML on behind my back, so my reply got bounced.]
 >>>>
->>>> Since commit 8f9ea86fdf99 ("sched: Always preserve the user requested
->>>> cpumask"), task_struct::user_cpus_ptr is repurposed to store user
->>>> requested cpu affinity specified in the sched_setaffinity().
+>>>> Thanks Thorsten.
 >>>>
->>>> This results in a performance regression in an arm64 system when booted
->>>> with "allow_mismatched_32bit_el0" on the command-line. The arch code will
->>>> (amongst other things) calls force_compatible_cpus_allowed_ptr() and
->>>> relax_compatible_cpus_allowed_ptr() when exec()'ing a 32-bit or a 64-bit
->>>> task respectively. Now a call to relax_compatible_cpus_allowed_ptr()
->>>> will always result in a __sched_setaffinity() call whether there is a
->>>> previous force_compatible_cpus_allowed_ptr() call or not.
->>> I'd argue it's more than just a performance regression -- the affinity
->>> masks are set incorrectly, which is a user visible thing
->>> (i.e. sched_getaffinity() gives unexpected values).
->> Can your elaborate a bit more on what you mean by getting unexpected
->> sched_getaffinity() results? You mean the result is wrong after a
->> relax_compatible_cpus_allowed_ptr(). Right?
-> Yes, as in the original report. If, on a 4-CPU system, I do the following
-> with v6.1 and "allow_mismatched_32bit_el0" on the kernel cmdline:
->
-> # for c in `seq 1 3`; do echo 0 > /sys/devices/system/cpu/cpu$c/online; done
-> # yes > /dev/null &
-> [1] 334
-> # taskset -p 334
-> pid 334's current affinity mask: 1
-> # for c in `seq 1 3`; do echo 1 > /sys/devices/system/cpu/cpu$c/online; done
-> # taskset -p 334
-> pid 334's current affinity mask: f
->
-> but with v6.2-rc5 that last taskset invocation gives:
->
-> pid 334's current affinity mask: 1
->
-> so, yes, the performance definitely regresses, but that's because the
-> affinity mask is wrong!
+>>>> I did try to revert but it didnt revert cleanly and I don't have the knowledge to fix it up.
+>>>>
+>>>> The patch was part of a merge that included a number of related patches. Tomorrow, I'll try to revert the lot and report
+>>>> back.
+>>>
+>>> You are free to do so, but there is no need for that from my side. I
+>>> only wanted to know if a simple revert would do the trick; if it
+>>> doesn't, it in my experience often is best to leave things to the
+>>> developers of the code in question,
+>>
+>> Sound advice, Thorsten. Way to many conflicts for me to resolve.
+> Hey,
+> 
+> This is a complete shot-in-the-dark, as I don't see this behaviour on
+> *any* of my boards.  Could you try the attached patch please?
 
-Are you using cgroup v1 or v2? Are your process in the root 
-cgroup/cpuset or a child cgroup/cpuset under root?
+Unfortunately, the patch made no difference.
 
-If you are using cgroup v1 in a child cpuset, cpuset.cpus works more 
-like cpuset.cpus_effective. IOW, with an offline and then online hotplug 
-event, the cpu will be permanently lost from the cpuset. So the above is 
-an expected result. If you using cgroup v2, the cpuset should be able to 
-recover the lost cpu after the online event. If your process is in the 
-root cpuset, the cpu will not be lost too. Alternatively, if you mount 
-the v1 cpuset with the "cpuset_v2_mode" flag, it will behave more like 
-v2 and recover the lost cpu.
+I've been looking at how the graphics on my laptop is set up, and have a bit of a worry about whether the firmware might
+be playing a part in this problem. In order to offload video decoding to the NVidia TU117 GPU, it seems the scrubber
+firmware must be available, but as far as I know,that has not been released by NVidia. To get it to work, I followed
+what ubuntu have done and the scrubber in /lib/firmware/nvidia/tu117/nvdec/ is a symlink to
+../../tu116/nvdev/scrubber.bin. That, of course, means that some of the firmware loaded is for a different card is being
+loaded. I note that processing related to firmware is being changed in the patch. Might my set up be at the root of my
+problem?
 
-I ran a similar cpu offline/online test with cgroup v1 and v2 and 
-confirm that v1 has the above behavior and v2 is fine.
+I'll have a fiddle an see what I can work out.
 
-I believe what you have observed above may not be related to my sched 
-patch as I can't see how it will affect cpu hotplug at all.
+Chris
 
-Cheers,
-Longman
-
+> 
+> Thanks,
+> Ben.
+> 
+>>
+>> as they know it best and thus have a
+>>> better idea which hidden side effect a more complex revert might have.
+>>>
+>>> Ciao, Thorsten
+>>>
+>>>> On 27/01/2023 11:20, Linux kernel regression tracking (Thorsten Leemhuis) wrote:
+>>>>> Hi, this is your Linux kernel regression tracker. Top-posting for once,
+>>>>> to make this easily accessible to everyone.
+>>>>>
+>>>>> @nouveau-maintainers, did anyone take a look at this? The report is
+>>>>> already 8 days old and I don't see a single reply. Sure, we'll likely
+>>>>> get a -rc8, but still it would be good to not fix this on the finish line.
+>>>>>
+>>>>> Chris, btw, did you try if you can revert the commit on top of latest
+>>>>> mainline? And if so, does it fix the problem?
+>>>>>
+>>>>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+>>>>> --
+>>>>> Everything you wanna know about Linux kernel regression tracking:
+>>>>> https://linux-regtracking.leemhuis.info/about/#tldr
+>>>>> If I did something stupid, please tell me, as explained on that page.
+>>>>>
+>>>>> #regzbot poke
+>>>>>
+>>>>> On 19.01.23 15:33, Linux kernel regression tracking (Thorsten Leemhuis)
+>>>>> wrote:
+>>>>>> [adding various lists and the two other nouveau maintainers to the list
+>>>>>> of recipients]
+>>>>>
+>>>>>> On 18.01.23 21:59, Chris Clayton wrote:
+>>>>>>> Hi.
+>>>>>>>
+>>>>>>> I build and installed the lastest development kernel earlier this week. I've found that when I try the laptop down (or
+>>>>>>> reboot it), it hangs right at the end of closing the current session. The last line I see on  the screen when rebooting is:
+>>>>>>>
+>>>>>>>   sd 4:0:0:0: [sda] Synchronising SCSI cache
+>>>>>>>
+>>>>>>> when closing down I see one additional line:
+>>>>>>>
+>>>>>>>   sd 4:0:0:0 [sda]Stopping disk
+>>>>>>>
+>>>>>>> In both cases the machine then hangs and I have to hold down the power button fot a few seconds to switch it off.
+>>>>>>>
+>>>>>>> Linux 6.1 is OK but 6.2-rc1 hangs, so I bisected between this two and landed on:
+>>>>>>>
+>>>>>>>   # first bad commit: [0e44c21708761977dcbea9b846b51a6fb684907a] drm/nouveau/flcn: new code to load+boot simple HS FWs
+>>>>>>> (VPR scrubber)
+>>>>>>>
+>>>>>>> I built and installed a kernel with f15cde64b66161bfa74fb58f4e5697d8265b802e (the parent of the bad commit) checked out
+>>>>>>> and that shuts down and reboots fine. It the did the same with the bad commit checked out and that does indeed hang, so
+>>>>>>> I'm confident the bisect outcome is OK.
+>>>>>>>
+>>>>>>> Kernels 6.1.6 and 5.15.88 are also OK.
+>>>>>>>
+>>>>>>> My system had dual GPUs - one intel and one NVidia. Related extracts from 'lscpi -v' is:
+>>>>>>>
+>>>>>>> 00:02.0 VGA compatible controller: Intel Corporation CometLake-H GT2 [UHD Graphics] (rev 05) (prog-if 00 [VGA controller])
+>>>>>>>         Subsystem: CLEVO/KAPOK Computer CometLake-H GT2 [UHD Graphics]
+>>>>>>>
+>>>>>>>         Flags: bus master, fast devsel, latency 0, IRQ 142
+>>>>>>>
+>>>>>>>         Memory at c2000000 (64-bit, non-prefetchable) [size=16M]
+>>>>>>>
+>>>>>>>         Memory at a0000000 (64-bit, prefetchable) [size=256M]
+>>>>>>>
+>>>>>>>         I/O ports at 5000 [size=64]
+>>>>>>>
+>>>>>>>         Expansion ROM at 000c0000 [virtual] [disabled] [size=128K]
+>>>>>>>
+>>>>>>>         Capabilities: [40] Vendor Specific Information: Len=0c <?>
+>>>>>>>
+>>>>>>>         Capabilities: [70] Express Root Complex Integrated Endpoint, MSI 00
+>>>>>>>
+>>>>>>>         Capabilities: [ac] MSI: Enable+ Count=1/1 Maskable- 64bit-
+>>>>>>>
+>>>>>>>         Capabilities: [d0] Power Management version 2
+>>>>>>>
+>>>>>>>         Kernel driver in use: i915
+>>>>>>>
+>>>>>>>         Kernel modules: i915
+>>>>>>>
+>>>>>>>
+>>>>>>> 01:00.0 VGA compatible controller: NVIDIA Corporation TU117M [GeForce GTX 1650 Ti Mobile] (rev a1) (prog-if 00 [VGA
+>>>>>>> controller])
+>>>>>>>         Subsystem: CLEVO/KAPOK Computer TU117M [GeForce GTX 1650 Ti Mobile]
+>>>>>>>         Flags: bus master, fast devsel, latency 0, IRQ 141
+>>>>>>>         Memory at c4000000 (32-bit, non-prefetchable) [size=16M]
+>>>>>>>         Memory at b0000000 (64-bit, prefetchable) [size=256M]
+>>>>>>>         Memory at c0000000 (64-bit, prefetchable) [size=32M]
+>>>>>>>         I/O ports at 4000 [size=128]
+>>>>>>>         Expansion ROM at c3000000 [disabled] [size=512K]
+>>>>>>>         Capabilities: [60] Power Management version 3
+>>>>>>>         Capabilities: [68] MSI: Enable+ Count=1/1 Maskable- 64bit+
+>>>>>>>         Capabilities: [78] Express Legacy Endpoint, MSI 00
+>>>>>>>         Kernel driver in use: nouveau
+>>>>>>>         Kernel modules: nouveau
+>>>>>>>
+>>>>>>> DRI_PRIME=1 is exported in one of my init scripts (yes, I am still using sysvinit).
+>>>>>>>
+>>>>>>> I've attached the bisect.log, but please let me know if I can provide any other diagnostics. Please cc me as I'm not
+>>>>>>> subscribed.
+>>>>>>
+>>>>>> Thanks for the report. To be sure the issue doesn't fall through the
+>>>>>> cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
+>>>>>> tracking bot:
+>>>>>>
+>>>>>> #regzbot ^introduced e44c2170876197
+>>>>>> #regzbot title drm: nouveau: hangs on poweroff/reboot
+>>>>>> #regzbot ignore-activity
+>>>>>>
+>>>>>> This isn't a regression? This issue or a fix for it are already
+>>>>>> discussed somewhere else? It was fixed already? You want to clarify when
+>>>>>> the regression started to happen? Or point out I got the title or
+>>>>>> something else totally wrong? Then just reply and tell me -- ideally
+>>>>>> while also telling regzbot about it, as explained by the page listed in
+>>>>>> the footer of this mail.
+>>>>>>
+>>>>>> Developers: When fixing the issue, remember to add 'Link:' tags pointing
+>>>>>> to the report (the parent of this mail). See page linked in footer for
+>>>>>> details.
+>>>>>>
+>>>>>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+>>>>>> --
+>>>>>> Everything you wanna know about Linux kernel regression tracking:
+>>>>>> https://linux-regtracking.leemhuis.info/about/#tldr
+>>>>>> That page also explains what to do if mails like this annoy you.
+>>>>
+>>>>
