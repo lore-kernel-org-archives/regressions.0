@@ -1,120 +1,85 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C37C1366
-	for <regressions@lists.linux.dev>; Mon, 30 Jan 2023 06:33:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1675060436;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GeA8p7IElQZmWDuS7ETU1wAXtU+jk4NtO9TFABoYpQo=;
-	b=SJiVvaoaZ1ghCoq6nsL0eVAmUNjCGQ7za5tnj4pAaAcoaimyrbWzufJRgAyNgLqe7llBsC
-	A37m7MsRT+aRhZ7C6Dtqc3WyAj2M/mptkDH1jfEtF9yFrAcs9J4ofHI/uicTAPDZAhwIoH
-	057fxdl4KGQ0Sgw7Op7oxwZGKt/9PDY=
-Received: from mail-yw1-f200.google.com (mail-yw1-f200.google.com
- [209.85.128.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-343-XJa5QZ11PIuzsNAa3g9V2w-1; Mon, 30 Jan 2023 01:33:55 -0500
-X-MC-Unique: XJa5QZ11PIuzsNAa3g9V2w-1
-Received: by mail-yw1-f200.google.com with SMTP id 00721157ae682-517f8be4b00so6867267b3.3
-        for <regressions@lists.linux.dev>; Sun, 29 Jan 2023 22:33:55 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=GeA8p7IElQZmWDuS7ETU1wAXtU+jk4NtO9TFABoYpQo=;
-        b=2xOMwjKliDa7Y92TuAPua0bQFYLr74E8tzB9eVvZaJxgqdaaYMgaAv6Pio2XmvBSRI
-         dHORlwSjdgjpaBCeiyYgzlhBq+4i6f7TtfB+MYDrlxO45MG2eRWiAqA2Oa8rNXuI29qt
-         OyCs3/OUGNUhKaLeTK2bd0szg7dkj4ZA05aFIpsukAvCYV1v7pEjnOVxR1YoeoRk9BLe
-         Ne9K2teY5QwB4FaQJocK/R6hoPiLe3c4UqvloqiNySHNESKA7kt43yRB+QSaEoDdzc/y
-         7LIP4deqMy0HQoWiJPiFzqOO5ZrokfUUZaQShp0M6rXfuoOwbvGg8FFYU4QpxiEQl1QK
-         xwQw==
-X-Gm-Message-State: AO0yUKUvjocoLvi/EQA0f0FpNFTBCO50+e/Ql4+B7R9B8xBA/KunjDr0
-	kBgp02WYaHoOfckqtVOqldIPMgm7wyePBj2dexugfZ7hblmlkHmRR8u3T88INWZcQRvOIr1QXeN
-	eUxMGXAASNe/SuyIeipnqOfgcKZIBaRBU6xmbXYA=
-X-Received: by 2002:a0d:eb82:0:b0:507:4ba0:f1bc with SMTP id u124-20020a0deb82000000b005074ba0f1bcmr2518438ywe.293.1675060434680;
-        Sun, 29 Jan 2023 22:33:54 -0800 (PST)
-X-Google-Smtp-Source: AK7set9UpeZ9osWXs+yNLWMCxE6HsbfBShnUYYIAZH3CjZZ3A9MgSScBcIPRH1lp9Xgk6BmkOvRcGwOgiixAGdhbeGM=
-X-Received: by 2002:a0d:eb82:0:b0:507:4ba0:f1bc with SMTP id
- u124-20020a0deb82000000b005074ba0f1bcmr2518433ywe.293.1675060434485; Sun, 29
- Jan 2023 22:33:54 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96D0C17F0
+	for <regressions@lists.linux.dev>; Mon, 30 Jan 2023 09:22:19 +0000 (UTC)
+Received: from [2a02:8108:963f:de38:4bc7:2566:28bd:b73c]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1pMQMj-0007zj-6n; Mon, 30 Jan 2023 10:22:17 +0100
+Message-ID: <2f4dc626-5287-6ec7-a31d-335e5dbb9119@leemhuis.info>
+Date: Mon, 30 Jan 2023 10:22:16 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAJD_bPJ1VYTSQvogui4S9xWn9jQzQq8JRXOzXmus+qoRyrybOA@mail.gmail.com>
- <Y9Vg26wjGfkCicYv@kroah.com> <CAJD_bPLkkgbk+GO66Ec9RmiW6MfYrG32WP75oLzXsz2+rpREWg@mail.gmail.com>
-In-Reply-To: <CAJD_bPLkkgbk+GO66Ec9RmiW6MfYrG32WP75oLzXsz2+rpREWg@mail.gmail.com>
-From: Jason Montleon <jmontleo@redhat.com>
-Date: Mon, 30 Jan 2023 01:33:43 -0500
-Message-ID: <CAJD_bPK=m0mX8_Qq=6iwD8sL8AkR99PEzBbE3RcSaJmxuJmW6g@mail.gmail.com>
-Subject: Re: Google Pixelbook EVE, no sound in kernel 6.1.x
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: casaxa@gmail.com, cezary.rojewski@intel.com, lma@semihalf.com, 
-	Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>, regressions@lists.linux.dev, 
-	stable@vger.kernel.org
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+From: "Linux kernel regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+Cc: Linux kernel regressions list <regressions@lists.linux.dev>,
+ LKML <linux-kernel@vger.kernel.org>,
+ "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+ jessegodfroy@gmail.com
+To: Jiri Kosina <jikos@kernel.org>,
+ "Benjamin Tissoires <benjamin.tissoires"@redhat.com
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: [regression] Bug 216977 - asus t100 touchpad registered but not
+ working
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1675070539;b0e883af;
+X-HE-SMSGID: 1pMQMj-0007zj-6n
 
-I ran a bisect back further while patching in
-f2bd1c5ae2cb0cf9525c9bffc0038c12dd7e1338.
+Hi, this is your Linux kernel regression tracker.
 
-When doing this, 3fd63658caed9494cca1d4789a66d3d2def2a0ab appears to
-be the commit in 6.1+ that it's interacting badly with. I couldn't
-revert this cleanly without reverting a handful of other commits, but
-doing so also results in working audio with 6.1.8 while leaving in
-f2bd1c5ae2cb.
-(e9441675edc1, 1cda83e42bf6, 37882100cd06, 0e213813df02, fb5987844808
-were the others removed)
+I noticed a regression report in bugzilla.kernel.org. As many (most?)
+kernel developer don't keep an eye on it, I decided to forward it by
+mail. Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=216977 :
 
-Hopefully that helps narrow it down for someone more familiar,
-otherwise I'll keep digging.
-
-
-On Sat, Jan 28, 2023 at 7:23 PM Jason Montleon <jmontleo@redhat.com> wrote:
->
-> I have confirmed 6.2-rc5 is also broken and removing the same commit
-> causes it to work again.
->
-> Thank you,
-> Jason Montleon
->
-> On Sat, Jan 28, 2023 at 12:52 PM Greg KH <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Sat, Jan 28, 2023 at 12:09:54PM -0500, Jason Montleon wrote:
-> > > I did a bisect which implicated
-> > > f2bd1c5ae2cb0cf9525c9bffc0038c12dd7e1338 as the first bad commit.
-> > >
-> > > Reverting this commit on 6.1.8 gives me working sound again.
-> > >
-> > > I'm not clear why this is breaking 6.1.x since it appears to be in
-> > > 6.0.18 (7494e2e6c55e), which was the last working package in Fedora
-> > > for the 6.0 line. Maybe something else didn't make it into 6.1?
-> > >
-> > >
-> >
-> > So this is also broken in Linus's tree (6.2-rc5?)
-> >
-> > thanks,
-> >
-> > greg k-h
-> >
->
->
-> --
-> Jason Montleon        | email: jmontleo@redhat.com
-> Red Hat, Inc.         | gpg key: 0x069E3022
-> Cell: 508-496-0663    | irc: jmontleo / jmontleon
+>  jessegodfroy@gmail.com 2023-01-29 15:44:34 UTC
+> 
+> After upgrading the kernel from 6.0 series to the 6.1 the touchpad on my asus t100 no longer works. 
+> 
+> The device is registered in dmesg. I believe hid_asus is responsible for the keyboard and touchpad.  The keyboard continues to function, but the touchpad does not. 
+> 
+> Jan 29 09:29:53 t100ta-white kernel: asus 0003:0B05:17E0.0001: input,hidraw0: USB HID v1.11 Keyboard [ASUSTek COMPUTER INC. ASUS Base Station(T100)] on usb-0000:00:14.0-3/input0
+> Jan 29 09:29:53 t100ta-white kernel: asus 0003:0B05:17E0.0002: Fixing up Asus T100 keyb report descriptor
+> Jan 29 09:29:53 t100ta-white kernel: asus 0003:0B05:17E0.0002: input,hiddev96,hidraw1: USB HID v1.11 Device [ASUSTek COMPUTER INC. ASUS Base Station(T100)] on usb-0000:00:14.0-3/input1
+> Jan 29 09:29:53 t100ta-white kernel: asus 0003:0B05:17E0.0003: input,hiddev97,hidraw2: USB HID v1.11 Mouse [ASUSTek COMPUTER INC. ASUS Base Station(T100)] on usb-0000:00:14.0-3/input2
+> 
+> I do not see any changes to hid_asus that should be responsible for the change in performance.
+See the ticket for more details.
 
 
+[TLDR for the rest of this mail: I'm adding this report to the list of
+tracked Linux kernel regressions; the text you find below is based on a
+few templates paragraphs you might have encountered already in similar
+form.]
 
+BTW, let me use this mail to also add the report to the list of tracked
+regressions to ensure it's doesn't fall through the cracks:
+
+#regzbot introduced: v6.0..v6.1
+https://bugzilla.kernel.org/show_bug.cgi?id=216977
+#regzbot title: input: hid: asus t100 touchpad registered but not working
+#regzbot ignore-activity
+
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply and tell me -- ideally
+while also telling regzbot about it, as explained by the page listed in
+the footer of this mail.
+
+Developers: When fixing the issue, remember to add 'Link:' tags pointing
+to the report (e.g. the buzgzilla ticket and maybe this mail as well, if
+this thread sees some discussion). See page linked in footer for details.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
-Jason Montleon        | email: jmontleo@redhat.com
-Red Hat, Inc.         | gpg key: 0x069E3022
-Cell: 508-496-0663    | irc: jmontleo / jmontleon
-
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
