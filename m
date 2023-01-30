@@ -1,66 +1,111 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f50.google.com (mail-oa1-f50.google.com [209.85.160.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA1D833FC
-	for <regressions@lists.linux.dev>; Mon, 30 Jan 2023 15:21:27 +0000 (UTC)
-Received: from [2a02:8108:963f:de38:4bc7:2566:28bd:b73c]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pMVyH-00031O-36; Mon, 30 Jan 2023 16:21:25 +0100
-Message-ID: <794e2dd8-5412-e74d-66de-7e19b2c3ab39@leemhuis.info>
-Date: Mon, 30 Jan 2023 16:21:24 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04DFA3C13
+	for <regressions@lists.linux.dev>; Mon, 30 Jan 2023 16:05:35 +0000 (UTC)
+Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-15085b8a2f7so15595663fac.2
+        for <regressions@lists.linux.dev>; Mon, 30 Jan 2023 08:05:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=51bRkvWujNd4jPcMG9BJhLnAdVGH8Ah/pwvY7OLYBxg=;
+        b=L98bAAgAmuX9bFEDS6fk6Q+27l6gFYkFOLbjKNDsS8RTOTjiBEdK702pVpPk8K8v2x
+         FZ40wxfCgagdDgLZgDQSMy99FG0HrFXxnw5fTYnrvOwXT+BwXCieEpFIg3/SsmQJP+EC
+         kDBQkrBuzGcoU7ndvROuyFWLZFE/ctHdUqpLQ8WEW7ATErXDt8JgWyaIg4+oPKIiIIG2
+         E/5aPbIUxghZjhtNR71JXB5xvYRjiu0AUliaWGmF3G0g05pRTLYrCoXS9OGzaRGBOFGs
+         DpgHoQDXj4lObIjncle+96AxxcpMoBLOLxT1OwqPpaSjYjWU66vw4Foj9apT1oscVN7h
+         RTcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=51bRkvWujNd4jPcMG9BJhLnAdVGH8Ah/pwvY7OLYBxg=;
+        b=ziuWadnA8DmxkyZUuwXFe5OuAcl2fd0nabXLl3xk1gw+RSI7WcwMgi3IoCznLNrNRr
+         4x7An8uIPV4hmDujX/ZdIwEMlvOwLMixpxYdJgHdUS4a1kODm84JX/jXY/1vexQNfb4F
+         wlzl/IO8K4gH1oj+T8S6q7ULBCSji7ZfO3Gqyb0+M7mk0JgpAHvev0Q/Ye5VJwxYuGAu
+         MWQGLIhi5hubcYYdSzQVubJHn9UEgIuVhXDfOeUcFWxHZdFVnyQPjUkCO6pGJuZ9ZVk8
+         03QmHlW8mULr5Q8ZZ0mgcC/R3dkF6Qow2mUPK7PZEBj0BdvHtsn/RzdqxQ2GtMWUGTn2
+         k1SQ==
+X-Gm-Message-State: AO0yUKXhc7qzyCeLbYwp/nZvjuqymFIOfXOZfr42Vqr4irhzn3eAkoTT
+	dSC08JlLxxwFdb0/TYtvxrLFM8yIFSnwTCD/YPQ=
+X-Google-Smtp-Source: AK7set8EqeKjODeZxYSFoNuOQNRomzjZI0eXWH0l8P+aWs8vNWEn7kSRbZqFFz4w7fzpO/miv8K0++Fx3wa5+PLBAtg=
+X-Received: by 2002:a05:6870:4588:b0:163:3c39:d0c7 with SMTP id
+ y8-20020a056870458800b001633c39d0c7mr1249465oao.54.1675094735057; Mon, 30 Jan
+ 2023 08:05:35 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-Subject: Re: [PASEMI] Nemo board doesn't reboot anymore after the commit "HID:
- usbhid: Add ALWAYS_POLL quirk for some mice" #forregzbot
-Content-Language: en-US, de-DE
-From: "Linux kernel regression tracking (#update)" <regressions@leemhuis.info>
-To: linux-input@vger.kernel.org, linuxppc-dev
- <linuxppc-dev@lists.ozlabs.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <747e3240-bb3f-3a0c-e998-02f3b4826704@xenosoft.de>
- <d0119f9f-421c-069a-91f6-ff7a0187038d@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <d0119f9f-421c-069a-91f6-ff7a0187038d@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1675092088;baa7d5cb;
-X-HE-SMSGID: 1pMVyH-00031O-36
+References: <CACAvsv4_XJLSwnA-s0BXLVbBCESDfnK7kx5-WUPd2+vdJuMojg@mail.gmail.com>
+ <20230127103959.5nqk57sb7qchtaw6@wslaptop> <CACAvsv5sA8pmhYEVhJk9PEAWyKRZYvcsSHa-04CsJxgu7+YEiw@mail.gmail.com>
+In-Reply-To: <CACAvsv5sA8pmhYEVhJk9PEAWyKRZYvcsSHa-04CsJxgu7+YEiw@mail.gmail.com>
+From: Nicolas Chauvet <kwizart@gmail.com>
+Date: Mon, 30 Jan 2023 17:05:23 +0100
+Message-ID: <CABr+WT=a3YqyS0VWCoRDE-QGGJrP8AL3CpMPsZXR3Ps-tmjrWQ@mail.gmail.com>
+Subject: Re: [REGRESSION] GM20B probe fails after commit 2541626cfb79
+To: Ben Skeggs <skeggsb@gmail.com>
+Cc: Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt>, airlied@redhat.com, 
+	nouveau@lists.freedesktop.org, regressions@lists.linux.dev, 
+	dri-devel@lists.freedesktop.org, kherbst@redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-[TLDR: This mail in primarily relevant for Linux kernel regression
-tracking. See link in footer if these mails annoy you.]
+Le dim. 29 janv. 2023 =C3=A0 23:36, Ben Skeggs <skeggsb@gmail.com> a =C3=A9=
+crit :
+>
+> On Fri, 27 Jan 2023 at 20:42, Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt> wr=
+ote:
+> >
+> > On Fri, Jan 27, 2023 at 04:00:59PM +1000, Ben Skeggs wrote:
+> > > On Fri, 20 Jan 2023 at 21:37, Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt=
+> wrote:
+> > > >
+> > > > On Wed, Jan 18, 2023 at 11:28:49AM +1000, Ben Skeggs wrote:
+> > > > > On Mon, 16 Jan 2023 at 22:27, Diogo Ivo <diogo.ivo@tecnico.ulisbo=
+a.pt> wrote:
+> > > > > > On Mon, Jan 16, 2023 at 07:45:05AM +1000, David Airlie wrote:
+> > > > > > > As a quick check can you try changing
+> > > > > > >
+> > > > > > > drivers/gpu/drm/nouveau/nvkm/core/firmware.c:nvkm_firmware_me=
+m_target
+> > > > > > > from NVKM_MEM_TARGET_HOST to NVKM_MEM_TARGET_NCOH ?
+> > > >
+> > > > > In addition to Dave's change, can you try changing the
+> > > > > nvkm_falcon_load_dmem() call in gm20b_pmu_init() to:
+> > > > >
+> > > > > nvkm_falcon_pio_wr(falcon, (u8 *)&args, 0, 0, DMEM, addr_args,
+> > > > > sizeof(args), 0, false);
+> > > >
+> > > > Chiming in just to say that with this change I see the same as Nico=
+las
+> > > > except that the init message size is 255 instead of 0:
+> > > >
+> > > > [    2.196934] nouveau 57000000.gpu: pmu: unexpected init message s=
+ize 255 vs 42
+> > > I've attached an entirely untested patch (to go on top of the other
+> > > hacks/fixes so far), that will hopefully get us a little further.
+> >
+> > Hello,
+> >
+> > Thank you for the patch! I can confirm that it fixes the problem
+> > on the Pixel C, and everything works as before the regression.
+> > With this, for the combination of patches
+> >
+> > Tested-by: Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt>
+> >
+> > which I can resend after testing the final patch version.
+> Thank you (both!) for testing!
+>
+> I've attached a "final" version of a patch that I'll send (assuming it
+> still works ;)) after re-testing.  There's only a minor change to
+> avoid breaking the non-Tegra path, so I expect it should be fine.
 
-On 22.12.22 12:24, Thorsten Leemhuis wrote:
+Fine with me.
+Tested-By: Nicolas Chauvet <kwizart@gmail.com>
 
-> On 22.12.22 11:42, Christian Zigotzky wrote:
->>
->> The Nemo board [1] doesn't reboot anymore since the final kernel 6.1.
->> The reboot works with the RC8 of kernel 6.1.
->> Actually, a reboot works but the CFE firmware is not loaded. Maybe there
->> is still something in the memory after the reboot.
->>
->> I bisected today. [2]
-> 
-> Thanks for the report. To be sure below issue doesn't fall through the
-> cracks unnoticed, I'm adding it to regzbot, my Linux kernel regression
-> tracking bot:
-> 
-> #regzbot ^introduced f6d910a89a23
-> #regzbot title hid: PASEMI Nemo board doesn't reboot anymore
-> #regzbot ignore-activity
-
-#regzbot fix: cbf44580ce6b310272a73
-#regzbot ignore-activity
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
-
-
+Thanks.
