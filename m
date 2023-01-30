@@ -1,111 +1,127 @@
-Received: from mail-oa1-f50.google.com (mail-oa1-f50.google.com [209.85.160.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04DFA3C13
-	for <regressions@lists.linux.dev>; Mon, 30 Jan 2023 16:05:35 +0000 (UTC)
-Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-15085b8a2f7so15595663fac.2
-        for <regressions@lists.linux.dev>; Mon, 30 Jan 2023 08:05:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=51bRkvWujNd4jPcMG9BJhLnAdVGH8Ah/pwvY7OLYBxg=;
-        b=L98bAAgAmuX9bFEDS6fk6Q+27l6gFYkFOLbjKNDsS8RTOTjiBEdK702pVpPk8K8v2x
-         FZ40wxfCgagdDgLZgDQSMy99FG0HrFXxnw5fTYnrvOwXT+BwXCieEpFIg3/SsmQJP+EC
-         kDBQkrBuzGcoU7ndvROuyFWLZFE/ctHdUqpLQ8WEW7ATErXDt8JgWyaIg4+oPKIiIIG2
-         E/5aPbIUxghZjhtNR71JXB5xvYRjiu0AUliaWGmF3G0g05pRTLYrCoXS9OGzaRGBOFGs
-         DpgHoQDXj4lObIjncle+96AxxcpMoBLOLxT1OwqPpaSjYjWU66vw4Foj9apT1oscVN7h
-         RTcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=51bRkvWujNd4jPcMG9BJhLnAdVGH8Ah/pwvY7OLYBxg=;
-        b=ziuWadnA8DmxkyZUuwXFe5OuAcl2fd0nabXLl3xk1gw+RSI7WcwMgi3IoCznLNrNRr
-         4x7An8uIPV4hmDujX/ZdIwEMlvOwLMixpxYdJgHdUS4a1kODm84JX/jXY/1vexQNfb4F
-         wlzl/IO8K4gH1oj+T8S6q7ULBCSji7ZfO3Gqyb0+M7mk0JgpAHvev0Q/Ye5VJwxYuGAu
-         MWQGLIhi5hubcYYdSzQVubJHn9UEgIuVhXDfOeUcFWxHZdFVnyQPjUkCO6pGJuZ9ZVk8
-         03QmHlW8mULr5Q8ZZ0mgcC/R3dkF6Qow2mUPK7PZEBj0BdvHtsn/RzdqxQ2GtMWUGTn2
-         k1SQ==
-X-Gm-Message-State: AO0yUKXhc7qzyCeLbYwp/nZvjuqymFIOfXOZfr42Vqr4irhzn3eAkoTT
-	dSC08JlLxxwFdb0/TYtvxrLFM8yIFSnwTCD/YPQ=
-X-Google-Smtp-Source: AK7set8EqeKjODeZxYSFoNuOQNRomzjZI0eXWH0l8P+aWs8vNWEn7kSRbZqFFz4w7fzpO/miv8K0++Fx3wa5+PLBAtg=
-X-Received: by 2002:a05:6870:4588:b0:163:3c39:d0c7 with SMTP id
- y8-20020a056870458800b001633c39d0c7mr1249465oao.54.1675094735057; Mon, 30 Jan
- 2023 08:05:35 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50A216AA3
+	for <regressions@lists.linux.dev>; Mon, 30 Jan 2023 17:32:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1675099977;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nojJO24UhteNPmsCx+HsdO8ZWDLBCbRPISorctyRNtk=;
+	b=OCAXaQBZ+qmpeQFNHzc8DL7ciIcgBR44+yxh89+ZwuhZy0DfncxvIAli2yeG1o+8BN7x1a
+	RnNVFZ659k/7iJ7YyMDdb3YFnbWtWrMnIklk+8kuwrW94ZKuiLGROFbc2qmmk6QudPM+FG
+	tJ/TvOc39PHf009AsDg9NmbmK5PXkDc=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-168-UA9-8G9EM2m8_sWfxfQFOA-1; Mon, 30 Jan 2023 12:32:53 -0500
+X-MC-Unique: UA9-8G9EM2m8_sWfxfQFOA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 585721C0754E;
+	Mon, 30 Jan 2023 17:32:52 +0000 (UTC)
+Received: from [10.18.17.153] (dhcp-17-153.bos.redhat.com [10.18.17.153])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id C542C2166B26;
+	Mon, 30 Jan 2023 17:32:51 +0000 (UTC)
+Message-ID: <e782060f-0c2f-b287-1eaf-3058eac6dcb4@redhat.com>
+Date: Mon, 30 Jan 2023 12:32:51 -0500
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CACAvsv4_XJLSwnA-s0BXLVbBCESDfnK7kx5-WUPd2+vdJuMojg@mail.gmail.com>
- <20230127103959.5nqk57sb7qchtaw6@wslaptop> <CACAvsv5sA8pmhYEVhJk9PEAWyKRZYvcsSHa-04CsJxgu7+YEiw@mail.gmail.com>
-In-Reply-To: <CACAvsv5sA8pmhYEVhJk9PEAWyKRZYvcsSHa-04CsJxgu7+YEiw@mail.gmail.com>
-From: Nicolas Chauvet <kwizart@gmail.com>
-Date: Mon, 30 Jan 2023 17:05:23 +0100
-Message-ID: <CABr+WT=a3YqyS0VWCoRDE-QGGJrP8AL3CpMPsZXR3Ps-tmjrWQ@mail.gmail.com>
-Subject: Re: [REGRESSION] GM20B probe fails after commit 2541626cfb79
-To: Ben Skeggs <skeggsb@gmail.com>
-Cc: Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt>, airlied@redhat.com, 
-	nouveau@lists.freedesktop.org, regressions@lists.linux.dev, 
-	dri-devel@lists.freedesktop.org, kherbst@redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Subject: Re: [PATCH v2] sched: Store restrict_cpus_allowed_ptr() call state
+Content-Language: en-US
+To: Will Deacon <will@kernel.org>
+Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+ Juri Lelli <juri.lelli@redhat.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>,
+ Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
+ Mel Gorman <mgorman@suse.de>, Daniel Bristot de Oliveira
+ <bristot@redhat.com>, Valentin Schneider <vschneid@redhat.com>,
+ Phil Auld <pauld@redhat.com>, Linus Torvalds
+ <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org,
+ regressions@lists.linux.dev, regressions@leemhuis.info
+References: <20230121021749.55313-1-longman@redhat.com>
+ <20230124194805.GA27257@willie-the-truck>
+ <fdf76fb2-1da4-2d72-7eb3-21137a7d6845@redhat.com>
+ <20230126161110.GB29438@willie-the-truck>
+From: Waiman Long <longman@redhat.com>
+In-Reply-To: <20230126161110.GB29438@willie-the-truck>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.6
 
-Le dim. 29 janv. 2023 =C3=A0 23:36, Ben Skeggs <skeggsb@gmail.com> a =C3=A9=
-crit :
+On 1/26/23 11:11, Will Deacon wrote:
+> On Tue, Jan 24, 2023 at 03:24:36PM -0500, Waiman Long wrote:
+>> On 1/24/23 14:48, Will Deacon wrote:
+>>> On Fri, Jan 20, 2023 at 09:17:49PM -0500, Waiman Long wrote:
+>>>> The user_cpus_ptr field was originally added by commit b90ca8badbd1
+>>>> ("sched: Introduce task_struct::user_cpus_ptr to track requested
+>>>> affinity"). It was used only by arm64 arch due to possible asymmetric
+>>>> CPU setup.
+>>>>
+>>>> Since commit 8f9ea86fdf99 ("sched: Always preserve the user requested
+>>>> cpumask"), task_struct::user_cpus_ptr is repurposed to store user
+>>>> requested cpu affinity specified in the sched_setaffinity().
+>>>>
+>>>> This results in a performance regression in an arm64 system when booted
+>>>> with "allow_mismatched_32bit_el0" on the command-line. The arch code will
+>>>> (amongst other things) calls force_compatible_cpus_allowed_ptr() and
+>>>> relax_compatible_cpus_allowed_ptr() when exec()'ing a 32-bit or a 64-bit
+>>>> task respectively. Now a call to relax_compatible_cpus_allowed_ptr()
+>>>> will always result in a __sched_setaffinity() call whether there is a
+>>>> previous force_compatible_cpus_allowed_ptr() call or not.
+>>> I'd argue it's more than just a performance regression -- the affinity
+>>> masks are set incorrectly, which is a user visible thing
+>>> (i.e. sched_getaffinity() gives unexpected values).
+>> Can your elaborate a bit more on what you mean by getting unexpected
+>> sched_getaffinity() results? You mean the result is wrong after a
+>> relax_compatible_cpus_allowed_ptr(). Right?
+> Yes, as in the original report. If, on a 4-CPU system, I do the following
+> with v6.1 and "allow_mismatched_32bit_el0" on the kernel cmdline:
 >
-> On Fri, 27 Jan 2023 at 20:42, Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt> wr=
-ote:
-> >
-> > On Fri, Jan 27, 2023 at 04:00:59PM +1000, Ben Skeggs wrote:
-> > > On Fri, 20 Jan 2023 at 21:37, Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt=
-> wrote:
-> > > >
-> > > > On Wed, Jan 18, 2023 at 11:28:49AM +1000, Ben Skeggs wrote:
-> > > > > On Mon, 16 Jan 2023 at 22:27, Diogo Ivo <diogo.ivo@tecnico.ulisbo=
-a.pt> wrote:
-> > > > > > On Mon, Jan 16, 2023 at 07:45:05AM +1000, David Airlie wrote:
-> > > > > > > As a quick check can you try changing
-> > > > > > >
-> > > > > > > drivers/gpu/drm/nouveau/nvkm/core/firmware.c:nvkm_firmware_me=
-m_target
-> > > > > > > from NVKM_MEM_TARGET_HOST to NVKM_MEM_TARGET_NCOH ?
-> > > >
-> > > > > In addition to Dave's change, can you try changing the
-> > > > > nvkm_falcon_load_dmem() call in gm20b_pmu_init() to:
-> > > > >
-> > > > > nvkm_falcon_pio_wr(falcon, (u8 *)&args, 0, 0, DMEM, addr_args,
-> > > > > sizeof(args), 0, false);
-> > > >
-> > > > Chiming in just to say that with this change I see the same as Nico=
-las
-> > > > except that the init message size is 255 instead of 0:
-> > > >
-> > > > [    2.196934] nouveau 57000000.gpu: pmu: unexpected init message s=
-ize 255 vs 42
-> > > I've attached an entirely untested patch (to go on top of the other
-> > > hacks/fixes so far), that will hopefully get us a little further.
-> >
-> > Hello,
-> >
-> > Thank you for the patch! I can confirm that it fixes the problem
-> > on the Pixel C, and everything works as before the regression.
-> > With this, for the combination of patches
-> >
-> > Tested-by: Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt>
-> >
-> > which I can resend after testing the final patch version.
-> Thank you (both!) for testing!
+> # for c in `seq 1 3`; do echo 0 > /sys/devices/system/cpu/cpu$c/online; done
+> # yes > /dev/null &
+> [1] 334
+> # taskset -p 334
+> pid 334's current affinity mask: 1
+> # for c in `seq 1 3`; do echo 1 > /sys/devices/system/cpu/cpu$c/online; done
+> # taskset -p 334
+> pid 334's current affinity mask: f
 >
-> I've attached a "final" version of a patch that I'll send (assuming it
-> still works ;)) after re-testing.  There's only a minor change to
-> avoid breaking the non-Tegra path, so I expect it should be fine.
+> but with v6.2-rc5 that last taskset invocation gives:
+>
+> pid 334's current affinity mask: 1
+>
+> so, yes, the performance definitely regresses, but that's because the
+> affinity mask is wrong!
 
-Fine with me.
-Tested-By: Nicolas Chauvet <kwizart@gmail.com>
+Are you using cgroup v1 or v2? Are your process in the root 
+cgroup/cpuset or a child cgroup/cpuset under root?
 
-Thanks.
+If you are using cgroup v1 in a child cpuset, cpuset.cpus works more 
+like cpuset.cpus_effective. IOW, with an offline and then online hotplug 
+event, the cpu will be permanently lost from the cpuset. So the above is 
+an expected result. If you using cgroup v2, the cpuset should be able to 
+recover the lost cpu after the online event. If your process is in the 
+root cpuset, the cpu will not be lost too. Alternatively, if you mount 
+the v1 cpuset with the "cpuset_v2_mode" flag, it will behave more like 
+v2 and recover the lost cpu.
+
+I ran a similar cpu offline/online test with cgroup v1 and v2 and 
+confirm that v1 has the above behavior and v2 is fine.
+
+I believe what you have observed above may not be related to my sched 
+patch as I can't see how it will affect cpu hotplug at all.
+
+Cheers,
+Longman
+
