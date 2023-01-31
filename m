@@ -1,124 +1,75 @@
-Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
+Received: from mail-vs1-f45.google.com (mail-vs1-f45.google.com [209.85.217.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C9438803
-	for <regressions@lists.linux.dev>; Mon, 30 Jan 2023 23:28:08 +0000 (UTC)
-Received: by mail-qv1-f41.google.com with SMTP id k2so10003573qvd.12
-        for <regressions@lists.linux.dev>; Mon, 30 Jan 2023 15:28:08 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60405622
+	for <regressions@lists.linux.dev>; Tue, 31 Jan 2023 01:46:31 +0000 (UTC)
+Received: by mail-vs1-f45.google.com with SMTP id i185so14593258vsc.6
+        for <regressions@lists.linux.dev>; Mon, 30 Jan 2023 17:46:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
+        d=draconx-ca.20210112.gappssmtp.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:references:in-reply-to
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=bmBE85HsciAbIIMS0yOe3l7FgaHGQXtcytfZQJSmxO0=;
-        b=S0uq6kVOcVxXjbSrSgERLfItROwiDvkdWRHnN2GdDsQRuqeyQ7177xQJhPsIKqho56
-         Fo1Vk4z/X8u/F+LOUPIlH1foeDJQ2GXsLkaBmL3O1iNPMD4oMIEcD4zl+NQq+gMUMYPa
-         fHkd+/iDTKHlmDIC+7EkIojMdYdwlRGRfnBykTZzurvxQ27gj+7zPrxNUoK4OWgzJHdG
-         i1IlkmiPLbqabThOF1jCgwfm4ba+p3F19MOMdmC32ITYqM00NXC231RnxO1VSA4h8c8j
-         m4ToedpT1zsTm1gDtVZzhgSJ2xKLrGZ7baEd1OlZCAJm2EuAX9wCUpWP0yCZtfFBbtEb
-         GW7A==
+        bh=r0G78tCFuMbUc11f4Np3FVLjYUjXRj+1bSf/D+z772Y=;
+        b=mBtK5jkiEPcmqnnUf3pWbeh8X1hzLi8VxrmvPgnBVeR64+mnnmMndwS6dpqTQOgQTV
+         GYrR7P3jZQo0pYnE8xyMUtVNrxhSv+1+3CdCnGJjS5kJOjSRSy0v6Su3cI6SYyqauSlB
+         vPb8rMkw1MYjQiYj4oaoqHB3JVw4YvTnr2t97GRBiG2II0iD6Qq1DylRNSQrOR5rrmse
+         cqXxYh6CCSb4Jd0lCVVJKNNpJGOcQa8yJTUZbSj0XSMK4LNVSLGenAQR4ZBr54k4VZIo
+         RCH+zjvb6Bcc9CwtuiKAgBA08gZS+RMrsWymnMqBCPaa1E8w70bbakPcfMlclVt+O1T+
+         8ZwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
+        h=cc:to:subject:message-id:date:from:references:in-reply-to
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=bmBE85HsciAbIIMS0yOe3l7FgaHGQXtcytfZQJSmxO0=;
-        b=6MMeYgP+rHYFILbpfd0Su9+JMAD5XN38ielhuyNY9DLwPa4iK0dMBt1eG+whNZn4Ds
-         YdglvovSMHWTTJ6/meuyT5v2papwaNswC7noZGwQug6b6Vmq8lzBD9aDcrgZAO6vq/b7
-         yalDdU3vjSsN2oobSF7OFDIDjClcCwpPo6pg9bCxM7+BNwpyvaSv5E8z9UUMhO0Tx6q6
-         pTibdJCSADdqg6iR6mWx2/MOyHG5mx2eO0m1bIeMBbajaDWDEOAnLJaFFxmj7bA50MFY
-         5U2V3XUWZAF4FojoaVxExC2hUGQz0VIOxVIoVqrarqIn9eLLOREnueT8L7Wr0d6M0JJy
-         uZ4g==
-X-Gm-Message-State: AO0yUKUwdVGiCGzdgfwPRlL+hjPNDzKrg7QZ35gCW1NQuNfxAEzK9tMf
-	izdL3zgPbasnz4S1HuYWXUyPrzjp8PQezRJx2so=
-X-Google-Smtp-Source: AK7set9or4XA7meh3Hg8ca4eIDcBBKeqU6thMY4tegDekaLTVqEMt8XXBu9cHQZoNCthUBN3zU2lm+DakWHrVo4U13s=
-X-Received: by 2002:a05:6214:11b0:b0:53b:f96b:4e20 with SMTP id
- u16-20020a05621411b000b0053bf96b4e20mr409435qvv.27.1675121287028; Mon, 30 Jan
- 2023 15:28:07 -0800 (PST)
+        bh=r0G78tCFuMbUc11f4Np3FVLjYUjXRj+1bSf/D+z772Y=;
+        b=7SxMtT0ZoClXmJ1b+6gRrU0pN9eji7a57iFDznCyyo3C/ERtwAlkrpbgHE+mg+h29M
+         8aj9UwFvwEEQNHak+IDckMKXl/tZXqFPUpiYa/7vUBWzh9AuJlZ7wy5KQZp2Qi4DcUXB
+         aWF/guy8NPyA6Sxj0tdm1BTeLgwe+sP/SWbOo7w2jQjLnAMUWkGINymMxfYjpi5FlTom
+         cID1YCEErDQkz3JjDdiKvJAt63oQYNiDQEg8lG78/62e4M+AsezlbqdjGnD0zGrt87cK
+         2utEqVCbzqK4hdlRtpxkTzqwzb25b6ShmcVJ2ZF+2We2NLHbO4ZQwGvrPNwJDpqWL+78
+         0vsg==
+X-Gm-Message-State: AO0yUKXbt1QUZQV0SmjuWZW9I+pazmnrNJ4vlKbBa9S5XpGNoMGWmvnq
+	CfE5jC8J61vG+IqBk1zTHc0zYtg2DERHO4zIfrPI3w==
+X-Google-Smtp-Source: AK7set8T18QDx4rAbFvPvwBDlz5oPdhQHy9nhjNv0cUUAZfeKar7Fpa3GKrYmMJRQRPGA3x+F0b5SBaQ6GGUsLHTgr0=
+X-Received: by 2002:a67:ecd8:0:b0:3eb:e432:5601 with SMTP id
+ i24-20020a67ecd8000000b003ebe4325601mr2837366vsp.16.1675129590180; Mon, 30
+ Jan 2023 17:46:30 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <b64705e3-2e63-a466-f829-f9568b06766a@googlemail.com>
- <fcec3c78-b5d9-eb48-0fc0-d1f27de87f23@leemhuis.info> <b21fa1f6-a71d-5657-8596-ee0be73185ea@leemhuis.info>
- <3ab28896-70e9-6f90-5b97-e5397b06e715@googlemail.com> <a163dd7b-c5d1-a07b-a816-7a2dfd3edfd4@leemhuis.info>
- <ab1b0f73-6b4e-8602-2999-b7bec25d92db@googlemail.com> <CACAvsv4sOtPjCVnEcKd2RCUqYWxSn5XKyksbS-Bds2qCqyusVw@mail.gmail.com>
- <1cdb84ac-f7a8-66ba-98fc-3db302b49a5a@googlemail.com> <dab6eb81-db3f-8fa1-84ad-9b40e209514b@googlemail.com>
-In-Reply-To: <dab6eb81-db3f-8fa1-84ad-9b40e209514b@googlemail.com>
-From: Ben Skeggs <skeggsb@gmail.com>
-Date: Tue, 31 Jan 2023 09:27:54 +1000
-Message-ID: <CACAvsv5iYdF3P8AbyrbYo3zGmYRYhxDWn7WbAR5V9qHpbgBXRA@mail.gmail.com>
-Subject: Re: linux-6.2-rc4+ hangs on poweroff/reboot: Bisected
-To: Chris Clayton <chris2553@googlemail.com>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>, bskeggs@redhat.com, 
-	Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>, 
-	ML nouveau <nouveau@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>, 
-	ML dri-devel <dri-devel@lists.freedesktop.org>
+Received: by 2002:a05:6130:1015:b0:559:9619:d862 with HTTP; Mon, 30 Jan 2023
+ 17:46:29 -0800 (PST)
+X-Originating-IP: [24.53.241.20]
+In-Reply-To: <Y9bvwz4FIOQ+D8c4@x1n>
+References: <CADyTPExpEqaJiMGoV+Z6xVgL50ZoMJg49B10LcZ=8eg19u34BA@mail.gmail.com>
+ <Y9bvwz4FIOQ+D8c4@x1n>
+From: Nick Bowler <nbowler@draconx.ca>
+Date: Mon, 30 Jan 2023 20:46:29 -0500
+Message-ID: <CADyTPEzsvdRC15+Z5T3oryofwRYqHmHzwqRmJKJoHB3d7Tdayw@mail.gmail.com>
+Subject: Re: PROBLEM: sparc64 random crashes starting w/ Linux 6.1 (regression)
+To: Peter Xu <peterx@redhat.com>
+Cc: linux-kernel@vger.kernel.org, sparclinux@vger.kernel.org, 
+	regressions@lists.linux.dev, Andrew Morton <akpm@linux-foundation.org>
 Content-Type: text/plain; charset="UTF-8"
 
-On Tue, 31 Jan 2023 at 09:09, Chris Clayton <chris2553@googlemail.com> wrote:
->
-> Hi again.
->
-> On 30/01/2023 20:19, Chris Clayton wrote:
-> > Thanks, Ben.
->
-> <snip>
->
-> >> Hey,
-> >>
-> >> This is a complete shot-in-the-dark, as I don't see this behaviour on
-> >> *any* of my boards.  Could you try the attached patch please?
-> >
-> > Unfortunately, the patch made no difference.
-> >
-> > I've been looking at how the graphics on my laptop is set up, and have a bit of a worry about whether the firmware might
-> > be playing a part in this problem. In order to offload video decoding to the NVidia TU117 GPU, it seems the scrubber
-> > firmware must be available, but as far as I know,that has not been released by NVidia. To get it to work, I followed
-> > what ubuntu have done and the scrubber in /lib/firmware/nvidia/tu117/nvdec/ is a symlink to
-> > ../../tu116/nvdev/scrubber.bin. That, of course, means that some of the firmware loaded is for a different card is being
-> > loaded. I note that processing related to firmware is being changed in the patch. Might my set up be at the root of my
-> > problem?
-> >
-> > I'll have a fiddle an see what I can work out.
-> >
-> > Chris
-> >
-> >>
-> >> Thanks,
-> >> Ben.
-> >>
-> >>>
->
-> Well, my fiddling has got my system rebooting and shutting down successfully again. I found that if I delete the symlink
-> to the scrubber firmware, reboot and shutdown work again. There are however, a number of other files in the tu117
-> firmware directory tree that that are symlinks to actual files in its tu116 counterpart. So I deleted all of those too.
-> Unfortunately, the absence of one or more of those symlinks causes Xorg to fail to start. I've reinstated all the links
-> except scrubber and I now have a system that works as it did until I tried to run a kernel that includes the bad commit
-> I identified in my bisection. That includes offloading video decoding to the NVidia card, so what ever I read that said
-> the scrubber firmware was needed seems to have been wrong. I get a new message that (nouveau 0000:01:00.0: fb: VPR
-> locked, but no scrubber binary!), but, hey, we can't have everything.
->
-> If you still want to get to the bottom of this, let me know what you need me to provide and I'll do my best. I suspect
-> you might want to because there will a n awful lot of Ubuntu-based systems out there with that scrubber.bin symlink in
-> place. On the other hand,m it could but quite a while before ubuntu are deploying 6.2 or later kernels.
-The symlinks are correct - whole groups of GPUs share the same FW, and
-we use symlinks in linux-firmware to represent this.
+On 2023-01-29, Peter Xu <peterx@redhat.com> wrote:
+> On Sat, Jan 28, 2023 at 09:17:31PM -0500, Nick Bowler wrote:
+>> Starting with Linux 6.1.y, my sparc64 (Sun Ultra 60) system is very
+>> unstable, with userspace processes randomly crashing with all kinds of
+>> different weird errors.  The same problem occurs on 6.2-rc5.  Linux
+>> 6.0.y is OK.
+[...]
+> Could you try below patch to see whether it fixes your problem?  It should
+> cover the last piece of possible issue with dirty bit on sparc after that
+> patchset.  It's based on latest master branch (commit ab072681eabe1ce0).
 
-I don't really have any ideas how/why this patch causes issues with
-shutdown - it's a path that only gets executed during initialisation.
-Can you try and capture the kernel log during shutdown ("dmesg -w"
-over ssh? netconsole?), and see if there's any relevant messages
-providing a hint at what's going on?  Alternatively, you could try
-unloading the module (you will have to stop X/wayland/gdm/etc/etc
-first) and seeing if that hangs too.
+Haven't seen any failures yet, so it seems this patch on top of 6.2-rc6
+makes things much better.
 
-Ben.
+I'll keep running this for a while to see if any other problems come up.
 
->
-> Thanks,
->
-> Chris
->
-> <snip>
+Thanks,
+  Nick
