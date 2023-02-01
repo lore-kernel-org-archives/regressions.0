@@ -1,63 +1,143 @@
-Received: from trent.utfs.org (trent.utfs.org [94.185.90.103])
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E98A7F
-	for <regressions@lists.linux.dev>; Wed,  1 Feb 2023 09:37:46 +0000 (UTC)
-Received: from localhost (localhost [IPv6:::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by trent.utfs.org (Postfix) with ESMTPS id 71AF15F8F9;
-	Wed,  1 Feb 2023 10:37:41 +0100 (CET)
-Date: Wed, 1 Feb 2023 10:37:41 +0100 (CET)
-From: Christian Kujau <lists@nerdbynature.de>
-To: Juergen Gross <jgross@suse.com>
-cc: Michael Kelley <mikelley@microsoft.com>, Borislav Petkov <bp@alien8.de>, 
-    linux-kernel@vger.kernel.org, Greg KH <gregkh@linuxfoundation.org>, 
-    Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: External USB disks not recognized with v6.1.8 when using Xen
-In-Reply-To: <0f441adb-f565-7a37-d9e5-3b14f6f7aea6@suse.com>
-Message-ID: <58cf4464-57e0-afe7-68d1-8f42d8088545@nerdbynature.de>
-References: <4fe9541e-4d4c-2b2a-f8c8-2d34a7284930@nerdbynature.de> <f22551ea-0694-2838-4a3f-f60d8d93fa64@leemhuis.info> <8f132803-f496-f33a-d2ab-b47fd5af0b88@nerdbynature.de> <0f441adb-f565-7a37-d9e5-3b14f6f7aea6@suse.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7952DBD08
+	for <regressions@lists.linux.dev>; Wed,  1 Feb 2023 11:05:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1675249547; x=1706785547;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=wUI9fwdxyITvbXcc3bSr/O1oZNGcCUvap6bRqf8k2dQ=;
+  b=aNMBhHCAYtY8ynITrxnhbURqIexBpETNPD9jQ7rsaELghqE0yV84Hhfc
+   LWNKWk8mnBfTFJ+O1/U+EeeGsPAQkaw5DMnCy4RcYTnS5aTQ97V6iAPx1
+   5Hn1vaLporo3fHtfLv90rQDVDMGgnP20MyJTkILR9S82trK91ei8BAJay
+   7X7P/ng8TDNHVIoMR9RAPatXYtNwy9ZxUjnreuqVJwiuzC8KZZXxB0kTW
+   5NWkRDKUAWpM4w8Ozx1EBZ7FhMyO80qESj830cA2ZTO10RNoridvE1Fz+
+   Grf85Aj37w4SroSnfuUGeOATdQDeOUTItAXxwFnnqfrNUcEnLASDwGIVO
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10607"; a="390501511"
+X-IronPort-AV: E=Sophos;i="5.97,263,1669104000"; 
+   d="scan'208";a="390501511"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2023 03:05:46 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10607"; a="773395829"
+X-IronPort-AV: E=Sophos;i="5.97,263,1669104000"; 
+   d="scan'208";a="773395829"
+Received: from aslawinx-mobl.ger.corp.intel.com (HELO [10.99.16.144]) ([10.99.16.144])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2023 03:05:44 -0800
+Message-ID: <6262bd72-cc2b-9d2a-e8f0-55c2b2bb7861@linux.intel.com>
+Date: Wed, 1 Feb 2023 12:05:41 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.1
+Subject: Re: Google Pixelbook EVE, no sound in kernel 6.1.x
+Content-Language: en-US
+To: Jason Montleon <jmontleo@redhat.com>,
+ Cezary Rojewski <cezary.rojewski@intel.com>
+Cc: Sasa Ostrouska <casaxa@gmail.com>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ Greg KH <gregkh@linuxfoundation.org>, lma@semihalf.com,
+ Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+ stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
+References: <CAJD_bPJ1VYTSQvogui4S9xWn9jQzQq8JRXOzXmus+qoRyrybOA@mail.gmail.com>
+ <Y9Vg26wjGfkCicYv@kroah.com>
+ <CAJD_bPLkkgbk+GO66Ec9RmiW6MfYrG32WP75oLzXsz2+rpREWg@mail.gmail.com>
+ <CAJD_bPK=m0mX8_Qq=6iwD8sL8AkR99PEzBbE3RcSaJmxuJmW6g@mail.gmail.com>
+ <02834fa9-4fb0-08fb-4b5f-e9646c1501d6@leemhuis.info>
+ <288d7ff4-75aa-7ad1-c49c-579373cab3ed@intel.com>
+ <CALFERdw=GwNYafR3q=5=k=H_jrzTZMyDBQLouFGV0JGu8i9sCg@mail.gmail.com>
+ <04a9f939-8a98-9a46-e165-8e9fb8801a83@intel.com>
+ <CAJD_bP+Te5a=OfjN9YrjGOG2PzudQ87=5FEKj6YLFxfKyFe5bw@mail.gmail.com>
+From: =?UTF-8?Q?Amadeusz_S=c5=82awi=c5=84ski?=
+ <amadeuszx.slawinski@linux.intel.com>
+In-Reply-To: <CAJD_bP+Te5a=OfjN9YrjGOG2PzudQ87=5FEKj6YLFxfKyFe5bw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, 1 Feb 2023, Juergen Gross wrote:
-> I have problems understanding the behavior.
+On 1/31/2023 4:16 PM, Jason Montleon wrote:
+> On Tue, Jan 31, 2023 at 7:37 AM Cezary Rojewski
+> <cezary.rojewski@intel.com> wrote:
+>>
+>> On 2023-01-30 1:22 PM, Sasa Ostrouska wrote:
+>>
+>>> Dear Czarek, many thanks for the answer and taking care of it. If
+>>> needed something from my side please jest let me know
+>>> and I will try to do it.
+>>
+>>
+>> Hello Sasa,
+>>
+>> Could you provide us with the topology and firmware binary present on
+>> your machine?
+>>
+>> Audio topology is located at /lib/firmware and named:
+>>
+>> 9d71-GOOGLE-EVEMAX-0-tplg.bin
+>> -or-
+>> dfw_sst.bin
+>>
+>> Firmware on the other hand is found in /lib/firmware/intel/.
+>> 'dsp_fw_kbl.bin' will lie there, it shall be a symlink pointing to an
+>> actual AudioDSP firmware binary.
+>>
+> Maybe this is the problem.
 > 
-> Assuming the cited error messages
+> I think most of us are pulling the topology and firmware from the
+> chromeos recovery images for lack of any other known source, and it
+> looks a little different than this. Those can be downloaded like so:
+> https://gist.github.com/jmontleon/8899cb83138f2653f520fbbcc5b830a0
 > 
->   ioremap error for 0xf2520000-0xf2530000, requested 0x2, got 0x0
-
-Yes, that and the XHCI_HCD error are only present in dmesg when it's 
-running as the Xen Dom0:
-
-+ioremap error for 0xf2520000-0xf2530000, requested 0x2, got 0x0
-+xhci_hcd 0000:00:14.0: init 0000:00:14.0 fail, -14
-+xhci_hcd: probe of 0000:00:14.0 failed with error -14
-
-I don't know if it's related, but the issue is really, really gone when 
-that commit is reverted. And "no external disks when running in Dom0 mode" 
-(i.e. started by the Xen HV) is kind of a big issue, I'm afraid.
-
-But I'm at a loss on the technicalities of that commit, sorry.
-
-Christian.
-
-> are related to the issue, this would mean that the ioremap() caller
-> requested _PAGE_CACHE_MODE_UC_MINUS (type 0x2) and got _PAGE_CACHE_MODE_WB
-> (type 0x0).
+> After placing the topology file you'll see these errors and audio will
+> not work until they're also copied in place.
+> snd_soc_skl 0000:00:1f.3: Direct firmware load for
+> dsp_lib_dsm_core_spt_release.bin failed with error -2
+> snd_soc_skl 0000:00:1f.3: Direct firmware load for
+> intel/dsp_fw_C75061F3-F2B2-4DCC-8F9F-82ABB4131E66.bin failed with
+> error -2
 > 
-> The patch you have reverted is modifying behavior only if the _input_ type
-> is _PAGE_CACHE_MODE_WB.
+> Once those were in place, up to 6.0.18 audio worked.
 > 
-> Anyone having an idea what could be wrong here?
--- 
-BOFH excuse #339:
+> Is there a better source for the topology file?
+> 
+>> The reasoning for these asks is fact that problem stopped reproducing on
+>> our end once we started playing with kernel versions (moved away from
+>> status quo with Fedora). Neither on Lukasz EVE nor on my SKL RVP.
+>> However, we might be using newer configuration files when compared to
+>> equivalent of yours.
+>>
+>> Recent v6.2-rc5 broonie/sound/for-next - no repro
+>> Our internal tree based on Mark's for-next - no repro
+>> 6.1.7 stable [1] - no repro
+>>
+>> Of course we will continue with our attempts. Will notify about the
+>> progress.
+>>
+>>
+>> [1]:
+>> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=v6.1.7&id=21e996306a6afaae88295858de0ffb8955173a15
+>>
+>>
+>> Kind regards,
+>> Czarek
+>>
+> 
+> 
 
-manager in the cable duct
+Hi Jason,
+
+as I understand you've tried to do bisect, can you instead try building 
+kernels checking out following tags:
+v6.1      v6.1.1    v6.1.2    v6.1.3    v6.1.4    v6.1.5    v6.1.6 
+v6.1.7    v6.1.8
+and report when it stops working, so it narrows scope of what we look 
+at? I assume that kernel builds are done using upstream stable kernel 
+(from https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/).
+
+Thanks,
+Amadeusz
