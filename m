@@ -1,176 +1,120 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47AD72F5B
-	for <regressions@lists.linux.dev>; Wed,  1 Feb 2023 13:51:10 +0000 (UTC)
-Received: by mail-wm1-f53.google.com with SMTP id q8so12712201wmo.5
-        for <regressions@lists.linux.dev>; Wed, 01 Feb 2023 05:51:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:from:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=skHdOUp8a0O2VeWC0Ud27F7Yg35quVymPzucu8ggf5c=;
-        b=lgqYQTYgmGKYJ3VcE3XqFsCLGAX/Zmt8c/6e0c1SgNnvDHSZVeZ9P5i9M8YYsxcmZa
-         91GSQZ+BPi0OpXsAW4x91Hkb+RPCW6//wvl/leUU6T3LLrI3jQP+7TtdzMZbDgKqaUH2
-         lUhB3ReSwYPlArKYc6G+egKktrYvh1uV3pYDrHS4lNxuY0ROM01e7WonAp3pJ7qjE/J9
-         Vi2LnZoJwXpbucDjvskR/yvh0sBGMRcHoCJocEKRpX/+dgSfxu8KecIoDr3GpeEZN4gP
-         VVaC6CVXNGlIGQ56Ot8zRbz3f00XBAVFZa+qWXcCsEfMXglAivF4zMYgdd0/rAcB0KAh
-         bx4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:from:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=skHdOUp8a0O2VeWC0Ud27F7Yg35quVymPzucu8ggf5c=;
-        b=vl2WYhIBpjj+XE3Q62eCzJDq6IvujnFBDBaV+FS9yWFwtBVYZ/jeURtzWBW2lQPhYn
-         EgMg/uLmvEpcPhrvpylzLyP9F1uvTSlXpFajKRjzSmitvlPLkxZ3biKcPuR7gxzTYhxC
-         fQyud6yC1pgRxL3L594Uw3RVcs3TZFtAIgvWIqYpUMTxPR7ucR/7b+uhStIxMV3bkmmK
-         0Y0yJ+IDs9ptySspErdwkInQrwQPKEUwm01LbiEdWoFuJUlPTwfTOR+Gw3CackZftFHg
-         7tOqtwtqzFxgj/iGKZFQoz483hlY06hfJFh560SbZwXunF0QVLt3iq6I/vqhUv+013Lk
-         WZOg==
-X-Gm-Message-State: AO0yUKX7TyIO1TaHmWfFazzXY65UfMYFMFzye6nTKIU7wLgWv8MItTpt
-	hGEO86sdIi9T6dhoHqSN7tm8+zgGJZpIdw==
-X-Google-Smtp-Source: AK7set/asA5ao0giThJfFqWEnETU4WRPPmZ/hdU64C5avUmycquMj1kcyW3sm8UkFcf/wTzMYWmJPw==
-X-Received: by 2002:a05:600c:1e24:b0:3da:f665:5b66 with SMTP id ay36-20020a05600c1e2400b003daf6655b66mr2454442wmb.6.1675259468375;
-        Wed, 01 Feb 2023 05:51:08 -0800 (PST)
-Received: from [192.168.1.10] (97e09f27.skybroadband.com. [151.224.159.39])
-        by smtp.googlemail.com with ESMTPSA id i13-20020a1c540d000000b003db03725e86sm1903981wmb.8.2023.02.01.05.51.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 01 Feb 2023 05:51:07 -0800 (PST)
-Message-ID: <1632a9ef-2954-c8f0-cdc9-03157c9d8547@googlemail.com>
-Date: Wed, 1 Feb 2023 13:51:03 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 031F63207
+	for <regressions@lists.linux.dev>; Wed,  1 Feb 2023 14:02:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D015C433D2;
+	Wed,  1 Feb 2023 14:02:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1675260138;
+	bh=uDz882o8QGjil4P0o9GmH382T/0MD+lojG9404za37U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UYPGNJjCvqyJleauxmq4REQ7+lHP5ZiSHxLgN2sSJsFOOYn22/JZPFPt+M2uQ+LiL
+	 7KT0gbRQZA7kifilH8EazAtYk1yNceiWD6nNmZPHXuiRUb77x4iYiK09jb8AX7WL4u
+	 yhC4mO9GIKMk2rEdAxTznLl5J/e76ks7Lgz/WU60=
+Date: Wed, 1 Feb 2023 15:02:15 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Thorsten Leemhuis <linux@leemhuis.info>
+Cc: Jonathan Corbet <corbet@lwn.net>, Randy Dunlap <rdunlap@infradead.org>,
+	Lukas Bulwahn <lukas.bulwahn@gmail.com>, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, regressions@lists.linux.dev
+Subject: Re: [PATCH v1] docs: describe how to quickly build Linux
+Message-ID: <Y9pw59V/CBTxmaoR@kroah.com>
+References: <fabdb45fa44db2531f0dbe5e88545c49dfb87040.1675252073.git.linux@leemhuis.info>
+ <Y9peNbWUR9JmTJbo@kroah.com>
+ <Y9pep+GBBaTiN/sN@kroah.com>
+ <3d568611-8119-37c7-7d84-61cb97532446@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-From: Chris Clayton <chris2553@googlemail.com>
-Subject: Re: linux-6.2-rc4+ hangs on poweroff/reboot: Bisected
-To: Ben Skeggs <skeggsb@gmail.com>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
- bskeggs@redhat.com, Karol Herbst <kherbst@redhat.com>,
- Lyude Paul <lyude@redhat.com>, ML nouveau <nouveau@lists.freedesktop.org>,
- LKML <linux-kernel@vger.kernel.org>,
- ML dri-devel <dri-devel@lists.freedesktop.org>
-References: <b64705e3-2e63-a466-f829-f9568b06766a@googlemail.com>
- <fcec3c78-b5d9-eb48-0fc0-d1f27de87f23@leemhuis.info>
- <b21fa1f6-a71d-5657-8596-ee0be73185ea@leemhuis.info>
- <3ab28896-70e9-6f90-5b97-e5397b06e715@googlemail.com>
- <a163dd7b-c5d1-a07b-a816-7a2dfd3edfd4@leemhuis.info>
- <ab1b0f73-6b4e-8602-2999-b7bec25d92db@googlemail.com>
- <CACAvsv4sOtPjCVnEcKd2RCUqYWxSn5XKyksbS-Bds2qCqyusVw@mail.gmail.com>
- <1cdb84ac-f7a8-66ba-98fc-3db302b49a5a@googlemail.com>
- <dab6eb81-db3f-8fa1-84ad-9b40e209514b@googlemail.com>
- <CACAvsv5iYdF3P8AbyrbYo3zGmYRYhxDWn7WbAR5V9qHpbgBXRA@mail.gmail.com>
-Content-Language: en-GB
-In-Reply-To: <CACAvsv5iYdF3P8AbyrbYo3zGmYRYhxDWn7WbAR5V9qHpbgBXRA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3d568611-8119-37c7-7d84-61cb97532446@leemhuis.info>
 
-
-
-On 30/01/2023 23:27, Ben Skeggs wrote:
-> On Tue, 31 Jan 2023 at 09:09, Chris Clayton <chris2553@googlemail.com> wrote:
->>
->> Hi again.
->>
->> On 30/01/2023 20:19, Chris Clayton wrote:
->>> Thanks, Ben.
->>
->> <snip>
->>
->>>> Hey,
->>>>
->>>> This is a complete shot-in-the-dark, as I don't see this behaviour on
->>>> *any* of my boards.  Could you try the attached patch please?
->>>
->>> Unfortunately, the patch made no difference.
->>>
->>> I've been looking at how the graphics on my laptop is set up, and have a bit of a worry about whether the firmware might
->>> be playing a part in this problem. In order to offload video decoding to the NVidia TU117 GPU, it seems the scrubber
->>> firmware must be available, but as far as I know,that has not been released by NVidia. To get it to work, I followed
->>> what ubuntu have done and the scrubber in /lib/firmware/nvidia/tu117/nvdec/ is a symlink to
->>> ../../tu116/nvdev/scrubber.bin. That, of course, means that some of the firmware loaded is for a different card is being
->>> loaded. I note that processing related to firmware is being changed in the patch. Might my set up be at the root of my
->>> problem?
->>>
->>> I'll have a fiddle an see what I can work out.
->>>
->>> Chris
->>>
->>>>
->>>> Thanks,
->>>> Ben.
->>>>
->>>>>
->>
->> Well, my fiddling has got my system rebooting and shutting down successfully again. I found that if I delete the symlink
->> to the scrubber firmware, reboot and shutdown work again. There are however, a number of other files in the tu117
->> firmware directory tree that that are symlinks to actual files in its tu116 counterpart. So I deleted all of those too.
->> Unfortunately, the absence of one or more of those symlinks causes Xorg to fail to start. I've reinstated all the links
->> except scrubber and I now have a system that works as it did until I tried to run a kernel that includes the bad commit
->> I identified in my bisection. That includes offloading video decoding to the NVidia card, so what ever I read that said
->> the scrubber firmware was needed seems to have been wrong. I get a new message that (nouveau 0000:01:00.0: fb: VPR
->> locked, but no scrubber binary!), but, hey, we can't have everything.
->>
->> If you still want to get to the bottom of this, let me know what you need me to provide and I'll do my best. I suspect
->> you might want to because there will a n awful lot of Ubuntu-based systems out there with that scrubber.bin symlink in
->> place. On the other hand,m it could but quite a while before ubuntu are deploying 6.2 or later kernels.
-> The symlinks are correct - whole groups of GPUs share the same FW, and
-> we use symlinks in linux-firmware to represent this.
+On Wed, Feb 01, 2023 at 02:22:07PM +0100, Thorsten Leemhuis wrote:
+> On 01.02.23 13:44, Greg KH wrote:
+> > On Wed, Feb 01, 2023 at 01:42:29PM +0100, Greg KH wrote:
+> >> On Wed, Feb 01, 2023 at 12:52:30PM +0100, Thorsten Leemhuis wrote:
+> >>> Add a text explaining how to quickly build a kernel, as that's something
+> >>> users will often have to do when they want to report an issue or test
+> >>> proposed fixes. This is a huge and frightening task for quite a few
+> >>> users these days, as many rely on pre-compiled kernels and have never
+> >>> built their own. They find help on quite a few websites explaining the
+> >>> process in various ways, but those howtos often omit important details
+> >>> or make things too hard for the 'quickly build just for testing' case
+> >>> that 'localmodconfig' is really useful for. Hence give users something
+> >>> at hand to guide them, as that makes it easier for them to help with
+> >>> testing, debugging, and fixing the kernel.
+> >>
+> >> First off, this is great, thanks for doing this.
 > 
-> I don't really have any ideas how/why this patch causes issues with
-> shutdown - it's a path that only gets executed during initialisation.
-> Can you try and capture the kernel log during shutdown ("dmesg -w"
-> over ssh? netconsole?), and see if there's any relevant messages
-> providing a hint at what's going on?  Alternatively, you could try
-> unloading the module (you will have to stop X/wayland/gdm/etc/etc
-> first) and seeing if that hangs too.
+> Thx, feels good to hear.
 > 
-> Ben.
-
-Sorry for the delay - I've been learning about netconsole and netcat. However, I had no success with ssh and netconsole
-produced a log with nothing unusual in it.
-
-Simply stopping Xorg and removing the nouveau module succeeds.
-
-So, I rebuilt rc6+ after a pull from linus' tree this morning and set the nouveau debug level to 7. I then booted to a
-console before doing a reboot (with Ctl+Alt+Del). As expected the machine locked up just before it would ordinarily
-restart. The last few lines on the console might be helpful:
-
-...
-nouveau 0000:01:00:0  fifo: preinit running...
-nouveau 0000:01:00:0  fifo: preinit completed in 4us
-nouveau 0000:01:00:0  gr: preinit running...
-nouveau 0000:01:00:0  gr: preinit completed in 0us
-nouveau 0000:01:00:0  nvdec0: preinit running...
-nouveau 0000:01:00:0  nvdec0: preinit completed in 0us
-nouveau 0000:01:00:0  nvdec0: preinit running...
-nouveau 0000:01:00:0  nvdec0: preinit completed in 0us
-nouveau 0000:01:00:0  sec2: preinit running...
-nouveau 0000:01:00:0  sec2: preinit completed in 0us
-nouveau 0000:01:00:0  fb:.VPR locked, running scrubber binary
-
-These messages appear after the "sd 4:0:0:0 [sda] Stopping disk" I reported in my initial email.
-
-After the "running scrubber" line appears the machine is locked and I have to hold down the power button to recover. I
-get the same outcome from running "halt -dip", "poweroff -di" and "shutdown -h -P now". I guess it's no surprise that
-all three result in the same outcome because invocations halt, poweroff and reboot (without the -f argument)from a
-runlevel other than 0 resukt in shutdown being run. switching to runlevel 0 with "telenit 0" results in the same
-messages from nouveau followed by the lockup.
-
-Let me know if you need any additional diagnostics.
-
-Chris
-
+> Bisection is next on my todo list once this matured...
 > 
->>
->> Thanks,
->>
->> Chris
->>
->> <snip>
+> >> One minor comment, to prevent people from "overloading" the
+> >> git.kernel.org systems:
+> >>
+> >>> +.. _sources_sbs:
+> >>> +
+> >>> + * Retrieve the sources of the Linux version you intend to build; then change
+> >>> +   into the directory holding them, as all further commands in this guide are
+> >>> +   meant to be executed from there.
+> >>> +
+> >>> +   If you plan to only build one particular kernel version, download its source
+> >>> +   archive from https://kernel.org; afterwards extract its content to '~/linux/'
+> >>> +   and change into the directory created during extraction.
+> >>> +
+> >>> +   In most other situations your best choice is to fetch the sources using git::
+> >>> +
+> >>> +          git clone https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git \
+> >>> +            ~/linux/sources
+> >>> +          cd ~/linux/sources/
+> >>
+> >> Ideally you should never do a "full clone from scratch" like this, as it
+> >> takes up loads of server resources.  The "best" way to do this is to
+> >> download the kernel git bundle, and then pull and resolve the remaining
+> >> bits.  It's explained, with a script to do the work for you, here:
+> >>
+> >> 	https://kernel.org/best-way-to-do-linux-clones-for-your-ci.html
+> > 
+> > Oops, here's the full steps involved:
+> > 	https://www.kernel.org/cloning-linux-from-a-bundle.html
+> > the first link above has a script that does it all for you, but you
+> > probably just want to copy the steps at this last link instead.
+> 
+> Great idea, thx for bringing this up -- now that you mention it, I
+> remember those pages and the script again... :-/
+> 
+> Sadly my "after cloning Linus tree, add the stable tree as remote and
+> fetch everything" approach would will still create a lot of load.
+
+Not really, nothing like doing a "full" clone of the original repo.
+It's a much smaller working set that needs to be handled that way on the
+server side.
+
+I do this (as do many others) for CI systems, and the primary workload
+is on the client resolving the bundle, that can take a bit of time, but
+that's all client side, not server.
+
+> I
+> could use the script with the stable git repo, as that includes
+> mainline; but I noticed it sometimes is not fully up2date. At least I
+> once noticed it was quite a few hours (or maybe even a day?) behind. Is
+> that normal? I assume you should know.
+
+I think it's generated daily, so yes, it will be a bit out of date, but
+that's fine.
+
+> Anyway: maybe "a little bit behind" isn't something that's much of a
+> problem for this document.
+
+Adding the remote and doing a pull is good and recommended, so it's fine
+if it's a day or so out of date.
+
+thanks,
+
+greg k-h
