@@ -1,60 +1,83 @@
-Received: from mslow1.mail.gandi.net (mslow1.mail.gandi.net [217.70.178.240])
+Received: from bedivere.hansenpartnership.com (bedivere.hansenpartnership.com [96.44.175.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B5FF4408
-	for <regressions@lists.linux.dev>; Thu,  2 Feb 2023 12:33:31 +0000 (UTC)
-Received: from relay1-d.mail.gandi.net (unknown [217.70.183.193])
-	by mslow1.mail.gandi.net (Postfix) with ESMTP id 1E57DC8E47
-	for <regressions@lists.linux.dev>; Thu,  2 Feb 2023 12:21:40 +0000 (UTC)
-Received: (Authenticated sender: hadess@hadess.net)
-	by mail.gandi.net (Postfix) with ESMTPSA id 740CF24000A;
-	Thu,  2 Feb 2023 12:21:30 +0000 (UTC)
-Message-ID: <0aa7e4aab15179d4c6093d32db699ffcc8a2a8ec.camel@hadess.net>
-Subject: Re: Linux 6.1 and 6.2-rc make mousewheel on Logitech G903
- (046d:c091) report too many non-hires events
-From: Bastien Nocera <hadess@hadess.net>
-To: Tobias Klausmann <klausman@schwarzvogel.de>, "Linux kernel regression
-	tracking (Thorsten Leemhuis)"
-	 <regressions@leemhuis.info>
-Cc: Salvatore Bonaccorso <carnil@debian.org>, linux-input@vger.kernel.org, 
-	regressions@lists.linux.dev
-Date: Thu, 02 Feb 2023 13:21:29 +0100
-In-Reply-To: <Y9VPBpcyEK61cNC1@skade.schwarzvogel.de>
-References: <Y9GmnIjUgIGuYtk2@skade.schwarzvogel.de>
-	 <Y9VBz/GVZPqG3KwM@eldamar.lan>
-	 <01fb3b37-8ba2-70f9-df62-4cf8df6bcc97@leemhuis.info>
-	 <Y9VPBpcyEK61cNC1@skade.schwarzvogel.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F32A963B7
+	for <regressions@lists.linux.dev>; Thu,  2 Feb 2023 12:57:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+	d=hansenpartnership.com; s=20151216; t=1675342664;
+	bh=b0+JBu7+hicXZS/ZVb10lf4TBhXVyuFoDEk7dU9kzZU=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
+	b=F3z58H/Vxe98tjskmvHl2JnlqqmFVq6LnScVUrplDkbVaHFkOjr5DqPQNIRp7+CIo
+	 aSp20BVPLsyhliD2kwMIXy1RbP+Zf9SqT2iMR7o40pYwwquTcC5QCZJd1hQbIuPqxc
+	 KjepfFAftyq2FuMYt0ZChd0F3+SWNvcQ9GMUSjVo=
+Received: from localhost (localhost [127.0.0.1])
+	by bedivere.hansenpartnership.com (Postfix) with ESMTP id A51961280C9A;
+	Thu,  2 Feb 2023 07:57:44 -0500 (EST)
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+	by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id YBosZ22p1qzS; Thu,  2 Feb 2023 07:57:44 -0500 (EST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+	d=hansenpartnership.com; s=20151216; t=1675342664;
+	bh=b0+JBu7+hicXZS/ZVb10lf4TBhXVyuFoDEk7dU9kzZU=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
+	b=F3z58H/Vxe98tjskmvHl2JnlqqmFVq6LnScVUrplDkbVaHFkOjr5DqPQNIRp7+CIo
+	 aSp20BVPLsyhliD2kwMIXy1RbP+Zf9SqT2iMR7o40pYwwquTcC5QCZJd1hQbIuPqxc
+	 KjepfFAftyq2FuMYt0ZChd0F3+SWNvcQ9GMUSjVo=
+Received: from lingrow.int.hansenpartnership.com (unknown [IPv6:2601:5c4:4302:c21::c14])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 8E09C1280A87;
+	Thu,  2 Feb 2023 07:57:43 -0500 (EST)
+Message-ID: <8a7775912f31394944b43db12adc78efd84b1fad.camel@HansenPartnership.com>
+Subject: Re: [regression] Bug 216989 - since 6.1 systems with AMD Ryzen
+ stutter when fTPM is enabled
+From: James Bottomley <James.Bottomley@HansenPartnership.com>
+To: Linux regressions mailing list <regressions@lists.linux.dev>, Peter
+ Huewe <peterhuewe@gmx.de>, Jarkko Sakkinen <jarkko@kernel.org>, Jason
+ Gunthorpe <jgg@ziepe.ca>
+Cc: linux-integrity@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+ reach622@mailcuk.com, 1138267643@qq.com, "Jason A. Donenfeld"
+ <Jason@zx2c4.com>
+Date: Thu, 02 Feb 2023 07:57:37 -0500
+In-Reply-To: <3a196414-68d8-29c9-24cc-2b8cb4c9d358@leemhuis.info>
+References: <3a196414-68d8-29c9-24cc-2b8cb4c9d358@leemhuis.info>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.3 (3.46.3-1.fc37) 
+User-Agent: Evolution 3.42.4 
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 
-Hey Tobias,
+On Thu, 2023-02-02 at 11:28 +0100, Linux kernel regression tracking
+(Thorsten Leemhuis) wrote:
+[...]
+> So it's a firmware problem, but apparently one that Linux only
+> triggers since 6.1.
+> 
+> Jason, could the hwrng changes have anything to do with this?
+> 
+> A bisection really would be helpful, but I guess that is not easy as
+> the problem apparently only shows up after some time...
 
-On Sat, 2023-01-28 at 17:36 +0100, Tobias Klausmann wrote:
-> Hi!=20
->=20
-> On Sat, 28 Jan 2023, Linux kernel regression tracking (Thorsten
-> Leemhuis) wrote:
-> > On 28.01.23 16:39, Salvatore Bonaccorso wrote:
-> > > Let's loop in as well the regresssions list.
-> >=20
-> > Thx for that.
-> >=20
-> > TWIMC, I assume it's the same issue as this one:
-> > https://bugzilla.kernel.org/show_bug.cgi?id=3D216885
->=20
-> That is correct.
+the problem description says the fTPM causes system stutter when it
+writes to NVRAM.  Since an fTPM is a proprietary implementation, we
+don't know what it does.  The ms TPM implementation definitely doesn't
+trigger NV writes on rng requests, but it is plausible this fTPM does
+... particularly if they have a time based input to the DRNG.  Even if
+this speculation is true, there's not much we can do about it, since
+it's a firmware bug and AMD should have delivered the BIOS update that
+fixes it.
 
-I've posted debug patches on the bugzilla:
-https://bugzilla.kernel.org/show_bug.cgi?id=3D216885#c29
+The way to test this would be to set the config option
 
-I'll post a patch to either fix the bug, or disable the functionality
-on those devices as soon as I have enough information.
+CONFIG_HW_RANDOM_TPM=n
 
-Cheers
+and see if the stutter goes away.  I suppose if someone could quantify
+the bad bioses, we could warn, but that's about it.
+
+James
+
