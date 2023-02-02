@@ -1,208 +1,246 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from trent.utfs.org (trent.utfs.org [94.185.90.103])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09A0B1C15
-	for <regressions@lists.linux.dev>; Thu,  2 Feb 2023 11:15:41 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pNXZ3-00021x-GU; Thu, 02 Feb 2023 12:15:37 +0100
-Message-ID: <1f217c94-b90f-359a-2142-0d3ae5d84fc6@leemhuis.info>
-Date: Thu, 2 Feb 2023 12:15:36 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D00962582
+	for <regressions@lists.linux.dev>; Thu,  2 Feb 2023 11:38:46 +0000 (UTC)
+Received: from localhost (localhost [IPv6:::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by trent.utfs.org (Postfix) with ESMTPS id 23B4C5F796;
+	Thu,  2 Feb 2023 12:38:37 +0100 (CET)
+Date: Thu, 2 Feb 2023 12:38:37 +0100 (CET)
+From: Christian Kujau <lists@nerdbynature.de>
+To: Juergen Gross <jgross@suse.com>
+cc: Michael Kelley <mikelley@microsoft.com>, Borislav Petkov <bp@alien8.de>, 
+    linux-kernel@vger.kernel.org, Greg KH <gregkh@linuxfoundation.org>, 
+    Linux regressions mailing list <regressions@lists.linux.dev>, 
+    Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: External USB disks not recognized with v6.1.8 when using Xen
+In-Reply-To: <0f441adb-f565-7a37-d9e5-3b14f6f7aea6@suse.com>
+Message-ID: <f02c49da-0377-97b9-9438-9e0ddbfbcc6d@nerdbynature.de>
+References: <4fe9541e-4d4c-2b2a-f8c8-2d34a7284930@nerdbynature.de> <f22551ea-0694-2838-4a3f-f60d8d93fa64@leemhuis.info> <8f132803-f496-f33a-d2ab-b47fd5af0b88@nerdbynature.de> <0f441adb-f565-7a37-d9e5-3b14f6f7aea6@suse.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-Subject: Re: [PATCH v1] docs: describe how to quickly build Linux
-Content-Language: en-US, de-DE
-From: "Linux kernel regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-To: Greg KH <gregkh@linuxfoundation.org>,
- Konstantin Ryabitsev <konstantin@linuxfoundation.org>
-Cc: Randy Dunlap <rdunlap@infradead.org>,
- Lukas Bulwahn <lukas.bulwahn@gmail.com>, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
- Jonathan Corbet <corbet@lwn.net>
-References: <fabdb45fa44db2531f0dbe5e88545c49dfb87040.1675252073.git.linux@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <fabdb45fa44db2531f0dbe5e88545c49dfb87040.1675252073.git.linux@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1675336542;93058089;
-X-HE-SMSGID: 1pNXZ3-00021x-GU
+Content-Type: text/plain; charset=us-ascii
 
-[adding Konstantin and Greg to the list of recipients]
+On Wed, 1 Feb 2023, Juergen Gross wrote:
+> On 31.01.23 23:50, Christian Kujau wrote:
+> > [Leaving the full quote below for reference and adding more appropriate
+> > people.]
+> > 
+> > After a far too long round of git-bisect I narrowed it down to:
+> > 
+> >    c1c59538337ab6d45700cb4a1c9725e67f59bc6e is the first bad commit
+> > 
+> >      x86/pat: Fix pat_x_mtrr_type() for MTRR disabled case
+> >      commit 90b926e68f500844dff16b5bcea178dc55cf580a upstream.
+> > 
+> > And indeed, reverting this single commit from v6.1.8 (stable) makes the
+> > disks appear again.
+> 
+> I have problems understanding the behavior.
+> 
+> Assuming the cited error messages
+> 
+>   ioremap error for 0xf2520000-0xf2530000, requested 0x2, got 0x0
+> 
+> are related to the issue, this would mean that the ioremap() caller
+> requested _PAGE_CACHE_MODE_UC_MINUS (type 0x2) and got _PAGE_CACHE_MODE_WB
+> (type 0x0).
+> 
+> The patch you have reverted is modifying behavior only if the _input_ type
+> is _PAGE_CACHE_MODE_WB.
 
-On 01.02.23 12:52, Thorsten Leemhuis wrote:
-> Add a text explaining how to quickly build a kernel, as that's something
-> users will often have to do when they want to report an issue or test
-> proposed fixes. This is a huge and frightening task for quite a few
-> users these days, as many rely on pre-compiled kernels and have never
-> built their own. They find help on quite a few websites explaining the
-> process in various ways, but those howtos often omit important details
-> or make things too hard for the 'quickly build just for testing' case
-> that 'localmodconfig' is really useful for. Hence give users something
-> at hand to guide them, as that makes it easier for them to help with
-> testing, debugging, and fixing the kernel.
+This also happens on mainline, not only in stable. Reverting this patch 
+from 6.2-rc6 makes the disks appear again.
 
-Side note: after feedback on social media I'll likely switch to a title
-like "how to quickly configure & build a trimmed-down Linux kernel", as
-some people from the current title assumed this would be about things
-like ccache. I'll also likely will switch to using a localversion file
-in the buildroot instead of modifying the EXTRAVERSION in the top-level
-makefile (but I haven't actually tried it yet).
+Christian.
 
-> [...]
->
-> The text currently describes two approaches to retrieve Linux' sources
-> using git: the regular clone with linux-stable as a remote and a shallow
-> clone with just one branch from linux-stable. The shallow clone approach
-> is a little bit more tricky to describe and handle, but downloads way
-> less data – and thus is a lot quicker, unless you have a really really
-> quick link to the internet (which in some parts of the world is hard to
-> come by). That's why I wonder if the text should switch to making the
-> shallow clone with selected stable branches the default. What do you
-> think, dear reader?
+> Anyone having an idea what could be wrong here?
+> 
+> 
+> Juergen
+> 
+> > 
+> > TL;DR: with v6.1.8 in Xen Dom0 mode (i.e. the Xen host itself) the
+> > external disk enclosure attached via USB is not being recognized. When
+> > booted *without* Xen, the disks show up just fine.
+> > 
+> > Details with dmesg and lsusb outputs:
+> >    https://nerdbynature.de/bits/usb_v6.1.8/
+> > 
+> > Thanks Thorsten for the localmodconfig hint, I've tried that before, but
+> > the thing just did not want to boot, so I manually cut down on options,
+> > but it's still ~12 minutes per compile, ccache helped a bit in the end.
+> > 
+> > Thanks for reading,
+> > Christian.
+> > 
+> > On Mon, 30 Jan 2023, Linux kernel regression tracking (#adding) wrote:
+> > 
+> > > [TLDR: I'm adding this report to the list of tracked Linux kernel
+> > > regressions; the text you find below is based on a few templates
+> > > paragraphs you might have encountered already in similar form.
+> > > See link in footer if these mails annoy you.]
+> > > 
+> > > On 30.01.23 04:46, Christian Kujau wrote:
+> > > > [CC stable as I only tested the stable tree for now]
+> > > > 
+> > > > I'm running a current Alpine Linux with linux-edge-6.1.8-r0 installed on
+> > > > a
+> > > > Lenovo Thinkpad L540 where an external disk enclosure with two disks is
+> > > > attached via USB. The Alpine Linux kernel appears to track Linux stable
+> > > > and is more or less vanilla. Also, the machine boots into Xen 4.17.0 and
+> > > > then starts a few headless VMs, nothing too exotic here.
+> > > > 
+> > > > But when updating from Linux 6.1.1 to 6.1.8, the disks from the external
+> > > > enclosure did not show up. Unplug, replug, no dice, and this is 100%
+> > > > reproducable. dmesg has new these lines now:
+> > > > 
+> > > > +ioremap error for 0xf2520000-0xf2530000, requested 0x2, got 0x0
+> > > > +ioremap error for 0xf2520000-0xf2530000, requested 0x2, got 0x0
+> > > > +xhci_hcd 0000:00:14.0: init 0000:00:14.0 fail, -14
+> > > > +ioremap error for 0xfed1f000-0xfed20000, requested 0x2, got 0x0
+> > > > +iTCO_wdt iTCO_wdt.1.auto: ioremap failed for resource [mem
+> > > > 0xfed1f410-0xfed1f414]
+> > > > 
+> > > > I'm not sure if the ioremap error is related here (booted with
+> > > > early_ioremap_debug but then dmesg was filled with WARNINGS for both
+> > > > versions, so I disabled it again), but that xhci_hcd error looks
+> > > > suspicious.
+> > > > 
+> > > > Curiously 6.1.8 works just fine when NOT booted via Xen. I booted into
+> > > > Xen + vanilla 6.1.8 now and was able to reproduce this issue. Xen +
+> > > > vanilla 6.1.1 works fine.
+> > > 
+> > > Thanks for the report. To be sure the issue doesn't fall through the
+> > > cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
+> > > tracking bot:
+> > > 
+> > > #regzbot ^introduced v6.1.1..v6.1.8
+> > > #regzbot title xen/usb(?): External USB disks not recognized anymore
+> > > under Xen
+> > > #regzbot ignore-activity
+> > > 
+> > > This isn't a regression? This issue or a fix for it are already
+> > > discussed somewhere else? It was fixed already? You want to clarify when
+> > > the regression started to happen? Or point out I got the title or
+> > > something else totally wrong? Then just reply and tell me -- ideally
+> > > while also telling regzbot about it, as explained by the page listed in
+> > > the footer of this mail.
+> > > 
+> > > Developers: When fixing the issue, remember to add 'Link:' tags pointing
+> > > to the report (the parent of this mail). See page linked in footer for
+> > > details.
+> > > 
+> > > >  From v6.1.1 to v6.1.8 there's only one commit in drivers/xen, but 54
+> > > > commits in drivers/usb. Compiling takes time because the distribution
+> > > > kernel has almost everything enabled and I still need to cut down
+> > > > enabled
+> > > > options to be able to attempt a git biset in a reasonable time,
+> > > 
+> > > FWIW, I'm working on a text for the kernel docs that will use
+> > > "localmodconfig" to trim down the configs automatically. Maybe it's
+> > > helpful for you, here is a draft:
+> > > 
+> > > https://www.leemhuis.info/files/misc/How%20to%20quickly%20build%20a%20Linux%20kernel%20%E2%80%94%20The%20Linux%20Kernel%20documentation.html
+> > > 
+> > > > but I
+> > > > still wanted to report this, maybe someone has an idea about this.
+> > > > 
+> > > > Full dmesg and lshw outputs: https://nerdbynature.de/bits/usb_v6.1.8/
+> > > > 
+> > > > Thanks,
+> > > > Christian.
+> > > > 
+> > > > PS: I found this workaround on the interwebs[0] to force the USB ports
+> > > > of that machine to USB 2.0 and then the missing disks magically appear:
+> > > > 
+> > > > $ lspci -nn | grep -i usb
+> > > > 00:14.0 USB controller [0c03]: Intel Corporation 8 Series/C220 Series
+> > > > Chipset Family USB xHCI [8086:8c31] (rev 05)  <=== !!!
+> > > > 00:1a.0 USB controller [0c03]: Intel Corporation 8 Series/C220 Series
+> > > > Chipset Family USB EHCI #2 [8086:8c2d] (rev 05)
+> > > > 00:1d.0 USB controller [0c03]: Intel Corporation 8 Series/C220 Series
+> > > > Chipset Family USB EHCI #1 [8086:8c26] (rev 05)
+> > > > 
+> > > > $ setpci -H1 -d 8086:8c31 d8.l=0
+> > > > $ setpci -H1 -d 8086:8c31 d0.l=0
+> > > > 
+> > > > $ dmesg
+> > > > usb 1-1.3: new full-speed USB device number 3 using ehci-pci
+> > > > usb 2-1.3: new high-speed USB device number 3 using ehci-pci
+> > > > usb 1-1.3: New USB device found, idVendor=138a, idProduct=0011,
+> > > > bcdDevice=0.78
+> > > > usb 1-1.3: New USB device strings: Mfr=0, Product=0, SerialNumber=1
+> > > > usb 1-1.3: SerialNumber: aa32bf84ed47
+> > > > usb 1-1.5: new full-speed USB device number 4 using ehci-pci
+> > > > usb 2-1.3: New USB device found, idVendor=1e91, idProduct=a3a8,
+> > > > bcdDevice=2.07
+> > > > usb 2-1.3: New USB device strings: Mfr=1, Product=2, SerialNumber=5
+> > > > usb 2-1.3: Product: Elite Pro Dual
+> > > > usb 2-1.3: Manufacturer: OWC
+> > > > usb 2-1.3: SerialNumber: RANDOM__1E359879645F
+> > > > usb 2-1.3: UAS is ignored for this device, using usb-storage instead
+> > > > usb-storage 2-1.3:1.0: USB Mass Storage device detected
+> > > > usb-storage 2-1.3:1.0: Quirks match for vid 1e91 pid a3a8: 800000
+> > > > scsi host5: usb-storage 2-1.3:1.0
+> > > > usb 1-1.5: New USB device found, idVendor=8087, idProduct=07dc,
+> > > > bcdDevice=0.01
+> > > > usb 1-1.5: New USB device strings: Mfr=0, Product=0, SerialNumber=0
+> > > > Bluetooth: hci0: Legacy ROM 2.5 revision 8.0 build 1 week 45 2013
+> > > > Bluetooth: hci0: Intel Bluetooth firmware file:
+> > > > intel/ibt-hw-37.7.10-fw-1.80.1.2d.d.bseq
+> > > > usb 1-1.6: new high-speed USB device number 5 using ehci-pci
+> > > > usb 1-1.6: New USB device found, idVendor=04f2, idProduct=b398,
+> > > > bcdDevice=39.98
+> > > > usb 1-1.6: New USB device strings: Mfr=1, Product=2, SerialNumber=0
+> > > > usb 1-1.6: Product: Integrated Camera
+> > > > usb 1-1.6: Manufacturer: Vimicro corp.
+> > > > Bluetooth: hci0: Intel BT fw patch 0x2a completed & activated
+> > > > scsi 5:0:0:0: Direct-Access     ElitePro Dual U3FW-1      0207 PQ: 0
+> > > > ANSI: 6
+> > > > scsi 5:0:0:1: Direct-Access     ElitePro Dual U3FW-2      0207 PQ: 0
+> > > > ANSI: 6
+> > > > sd 5:0:0:0: [sdc] Very big device. Trying to use READ CAPACITY(16).
+> > > > sd 5:0:0:0: [sdc] 7814037168 512-byte logical blocks: (4.00 TB/3.64 TiB)
+> > > > sd 5:0:0:1: [sdd] Very big device. Trying to use READ CAPACITY(16).
+> > > > sd 5:0:0:1: [sdd] 7814037168 512-byte logical blocks: (4.00 TB/3.64 TiB)
+> > > > sd 5:0:0:1: [sdd] Write Protect is off
+> > > > sd 5:0:0:1: [sdd] Mode Sense: 47 00 10 08
+> > > > sd 5:0:0:0: [sdc] Write Protect is off
+> > > > sd 5:0:0:0: [sdc] Mode Sense: 47 00 10 08
+> > > > sd 5:0:0:0: [sdc] No Caching mode page found
+> > > > sd 5:0:0:0: [sdc] Assuming drive cache: write through
+> > > > sd 5:0:0:1: [sdd] No Caching mode page found
+> > > > sd 5:0:0:1: [sdd] Assuming drive cache: write through
+> > > > sd 5:0:0:0: [sdc] Attached SCSI disk
+> > > > sd 5:0:0:1: [sdd] Attached SCSI disk
+> > > > 
+> > > > $ lsblk /dev/sd[cd]
+> > > > NAME MAJ:MIN RM  SIZE RO TYPE MOUNTPOINTS
+> > > > sdc    8:32   0  3.6T  0 disk
+> > > > sdd    8:48   0  3.6T  0 disk
+> > > > 
+> > > > 
+> > > > [0] https://superuser.com/a/875863/218574
+> > > 
+> > > Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> > > --
+> > > Everything you wanna know about Linux kernel regression tracking:
+> > > https://linux-regtracking.leemhuis.info/about/#tldr
+> > > That page also explains what to do if mails like this annoy you.
+> > > 
+> > 
+> 
+> 
 
-So, I looked into what Greg suggested (e.g.
-https://kernel.org/best-way-to-do-linux-clones-for-your-ci.html and
-https://www.kernel.org/cloning-linux-from-a-bundle.html
-). Assuming users have a up2date git (afaics 2.38+) I could use commands
-like this in my text:
+-- 
+BOFH excuse #286:
 
-curl -L
-https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/clone.bundle
--o ~/linux/linux-stable.git.bundle
-git clone --bundle-uri=linux-stable.git.bundle
-https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
-~/linux/sources
-rm ~/linux/linix-stable.git.bundle
-
-This took roundabout 16 minutes with my 100 Mbit cable internet
-connection (~9 min for the download, 7 for the clone [the machine used
-is somewhat old]) and downloads & stores ~4,5 GByte data (without checkout).
-
-[side note: using
-"--bundle-uri=https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/clone.bundle"
-does not work (due to the redirect? whatever) -- but that might be
-unwise anyway in case the download is interrupted]
-
-
-Then I tried creating a shallow clone like this:
-
-git clone
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
---depth 1 -b v6.1
-git remote set-branches --add origin master
-git fetch --all --shallow-exclude=v6.1
-git remote add -t linux-6.1.y linux-stable
-https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
-git fetch --all --shallow-exclude=v6.1
-
-This took only roundabout 2 minutes and downloads & stores ~512 MByte
-data (without checkout).
-
-
-Not totally sure, but the shallow clone somehow feels more appropriate
-for the use case (reminder, there is a "quickly" in the document title),
-even if such a clone is less flexible (e.g. users have to manually add
-stable branches they are interested it; and they need to be careful when
-using git fetch).
-
-That's why I now strongly consider using the shallow clone method by
-default in v2 of this text. Or does that also create a lot of load on
-the servers? Or are there other strong reason why using a shallow clone
-might be a bad idea for this use case?
-
-Ciao, Thorsten
-
-> [...]
-> +.. _sources_sbs:
-> +
-> + * Retrieve the sources of the Linux version you intend to build; then change
-> +   into the directory holding them, as all further commands in this guide are
-> +   meant to be executed from there.
-> +
-> +   If you plan to only build one particular kernel version, download its source
-> +   archive from https://kernel.org; afterwards extract its content to '~/linux/'
-> +   and change into the directory created during extraction.
-> +
-> +   In most other situations your best choice is to fetch the sources using git::
-> +
-> +          git clone https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git \
-> +            ~/linux/sources
-> +          cd ~/linux/sources/
-> +
-> +   Now you can check out any mainline release with a command like
-> +   ``git checkout --detach v6.1``; pre-release like v6.2-rc2 work, too.
-> +   Specifying 'origin/master' will hand you the latest mainline code, which is
-> +   automatically checked out by the above 'git clone […]' command.
-> +
-> +   In case you want to build a stable or longterm kernel, run this, too::
-> +
-> +          git remote add linux-stable \
-> +            https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
-> +          git fetch --all
-> +
-> +   Afterwards you can use a command like ``git checkout --detach v6.1.5`` to
-> +   access any such release.
-> +
-> +   This flexibility comes at a cost, as cloning the sources like this will
-> +   download quite a bit of data: roundabout 2,5 Gigabyte for mainline and 1,8
-> +   for stable/longterm releases as of early 2022. See the reference section for
-> +   a somewhat more complicated approach which is also using git, but downloads
-> +   only slightly more data than downloading a compressed tarball would.
-> +
-> +   [:ref:`details<sources>`]
-> +
-> [...]
-> +
-> +.. _sources:
-> +
-> +Download the sources
-> +--------------------
-> +
-> +  *Retrieve the sources of the Linux version you intend to build.*
-> +  [:ref:`...<sources_sbs>`]
-> +
-> +Fetching the complete stable git repository as explained in the step-by-step
-> +guide above is easy and offers the most flexibility, but also downloads quite a
-> +bit of data (more than 4 Gigabyte as of late 2022). If you want something
-> +lighter, you instead might want to create a 'shallow clone' that omits some of
-> +the history and only contains stable series you are interested in::
-> +
-> +       git clone --no-checkout \
-> +         https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git \
-> +         --depth 1 -b v6.0 ~/linux/sources/
-> +       cd ~/linux/sources/
-> +       git remote set-branches --add origin master
-> +       git remote add -t linux-6.1.y linux-stable \
-> +         https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
-> +       git fetch --all --shallow-exclude=v6.0
-> +
-> +The initial command creates a clone with the sources of just Linux v6.0; this
-> +downloads just a little more data than retrieving a xz-compressed tarball of
-> +that version would (~230 vs 204 Megabyte); afterwards the master branch is added
-> +to the list of tracked branches, which allows you to retrieve anything state of
-> +mainline since Linux 6.0 was released. The linux-stable repository is then added
-> +as a remote which just tracks the linux-6.1.y branch. In early 2022 as of Linux
-> +v6.2-rc4 the last two steps downloaded ~95 and ~2 Megabyte.
-> +
-> +With this tree you can check out the latest mainline code using ``git checkout
-> +--detach origin/master``. All versions and individual changes released between
-> +6.0 and the latest 6.1.y version are at hand, too -- this tree thus also allows
-> +you to bisect a problem introduced in that range.
-> +
-> +Later run above 'git fetch [...]' command again, when you want to retrieve the
-> +latest mainline codebase or access 6.1.y versions released in between. If you
-> +want to switch to a release from a newer stable series (say Linux v6.2.y), you
-> +first need to add its remote branch with a command like ``git remote
-> +set-branches --add linux-stable linux-6.2.y``; once you run 'git fetch [...]'
-> +again you'll be able to check out versions from that series.
-> +
-> +[:ref:`back to step-by-step guide <sources_sbs>`]
-> +
-
+Telecommunications is downgrading.
