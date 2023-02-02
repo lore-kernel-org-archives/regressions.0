@@ -1,66 +1,170 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE9613201
-	for <regressions@lists.linux.dev>; Wed,  1 Feb 2023 23:27:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 551DBC433D2;
-	Wed,  1 Feb 2023 23:27:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1675294072;
-	bh=RWoOaeA8WKVSkilf0ogrMhF6p1JmcfEnPTqAXbIcaZg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=GBlOa1a+Lj6d2/HdIwDlpPDCsirYOsenVhX+0vaRZTfyJdCmUP/qgw+07jfFwYOYj
-	 6aIeQVKAs14KsRP6gwJRkkP9tLwqUS0BY+xAfUsmLlSjB6OH+TwiuqsBW2OT67I4Uz
-	 Ol6E1aUUdWWHiYFQGaIkgYfqSBtFpFqm9rWvOb63uMlm6M8DcJoQmF8mhgdcgfymP/
-	 2XgQlgTAdSVfXGYAb04uMAhGpmja1Ir4qVnJ+/uhd0HcvwkqSRCdHPeyYAhm5qLSgM
-	 ipd4jxcXTknoQk8TKyB9puZRm4jgjiSW9tfxnKtcUlxIfrZvyg+ubeGVo/4K9bT1k5
-	 fVL57OEh/E1pw==
-Date: Wed, 1 Feb 2023 17:27:50 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: regressions@lists.linux.dev
-Cc: linux-pci@vger.kernel.org
-Subject: Re: [REGRESSION] [Bug 216859] New: PCI bridge to bus boot hang at
- enumeration
-Message-ID: <20230201232750.GA1908996@bhelgaas>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A8B91875
+	for <regressions@lists.linux.dev>; Thu,  2 Feb 2023 10:28:22 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1pNWpH-0008CR-12; Thu, 02 Feb 2023 11:28:19 +0100
+Message-ID: <3a196414-68d8-29c9-24cc-2b8cb4c9d358@leemhuis.info>
+Date: Thu, 2 Feb 2023 11:28:16 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230126121124.GA1258686@bhelgaas>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Content-Language: en-US, de-DE
+From: "Linux kernel regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+To: Peter Huewe <peterhuewe@gmx.de>, Jarkko Sakkinen <jarkko@kernel.org>,
+ Jason Gunthorpe <jgg@ziepe.ca>
+Cc: linux-integrity@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ reach622@mailcuk.com, 1138267643@qq.com, "Jason A. Donenfeld"
+ <Jason@zx2c4.com>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: [regression] Bug 216989 - since 6.1 systems with AMD Ryzen stutter
+ when fTPM is enabled
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1675333702;f313c5b4;
+X-HE-SMSGID: 1pNWpH-0008CR-12
 
-On Thu, Jan 26, 2023 at 06:11:24AM -0600, Bjorn Helgaas wrote:
-> [+cc folks from 145eed48de27 and framebuffer folks, regression list]
-> 
-> On Thu, Jan 12, 2023 at 02:08:19PM -0600, Bjorn Helgaas wrote:
-> > On Wed, Dec 28, 2022 at 06:02:48AM -0600, Bjorn Helgaas wrote:
-> > > On Wed, Dec 28, 2022 at 08:37:52AM +0000, bugzilla-daemon@kernel.org wrote:
-> > > > https://bugzilla.kernel.org/show_bug.cgi?id=216859
-> > > 
-> > > >            Summary: PCI bridge to bus boot hang at enumeration
-> > > >     Kernel Version: 6.1-rc1
-> > > > ...
-> > > 
-> > > > With Kernel 6.1-rc1 the enumeration process stopped working for me,
-> > > > see attachments.
-> > > > 
-> > > > The enumeration works fine with Kernel 6.0 and below.
-> > > > 
-> > > > Same problem still exists with v6.1. and v6.2.-rc1
-> 
-> This is a regression between v6.0 and v6.1-rc1.  Console output during
-> boot freezes after nvidiafb deactivates the VGA console.
-> 
-> It was a lot of work for Zeno, but we finally isolated this console
-> hang to 145eed48de27 ("fbdev: Remove conflicting devices on PCI bus").
-> 
-> The system actually does continue to boot and is accessible via ssh, 
-> but the console appears hung, at least for output.  More details in
-> the bugzilla starting at
-> https://bugzilla.kernel.org/show_bug.cgi?id=216859#c47 .
+Hi, this is your Linux kernel regression tracker.
 
-#regzbot introduced: 145eed48de27
-#regzbot dup: https://lore.kernel.org/all/D41A3A42-2412-4722-9090-01565058E525@gmail.com/
+I noticed a regression report in bugzilla.kernel.org. As many (most?)
+kernel developer don't keep an eye on it, I decided to forward it by
+mail. Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=216989 :
+
+>  reach622@mailcuk.com 2023-02-02 02:49:48 UTC
+> 
+> Linux kernel >=6.1 exhibits a stuttering issue that occurs once every few hours. See https://www.reddit.com/r/archlinux/comments/zvgev0/audio_stuttering_issues_with_kernel_611/ https://www.reddit.com/r/linux_gaming/comments/zzqaf7/having_intermittent_stutters_with_a_ryzen_cpu/ https://bbs.archlinux.org/viewtopic.php?id=282333 for detailed information.
+> 
+> The stutter lasts for 1-2 seconds and causes the framerate of the display to decrease dramatically and causes bursts in audio output.
+> 
+> Additional info:
+> 
+> * linux 6.1.0 or later
+> 
+> Steps to reproduce:
+> 
+> * Use Linux kernel >=6.1
+> 
+> * Use AMD Ryzen CPU with fTPM enabled
+> 
+> * Wait for a few hours
+> 
+> [reply] [−] Comment 1 Bell 2023-02-02 03:33:24 UTC
+> 
+> Hey, Let me add some extra information to help.
+> 1. this issue can happen in 6.2-rc6 without loading third-party kernel modules. (NVIDIA or Virtualbox and so)
+> 2. some guy on the Desktop/Laptop who can disable ftpm and did eliminate the problem.
+> 3. this problem can happen in newer AMD processors from the 4000 series to the 6000 series.
+> 4. this problem isn't caused by the dedicated graphics card I guess, here are some combinations that stuttering can happen:
+> AMD(built-in GPU) + NVIDIA  Laptop
+> AMD(No built-in GPU) + AMD(dedicated) Desktop
+> AMD(built-in GPU) + AMD(dedicated) Laptop/Desktop
+> AMD + AMD(Built-in GPU only) Laptop
+> all suffer from this.
+> 
+> Hope this can help :)
+
+See the ticket for more details.
+
+I briefly looked into the links and found this:
+https://www.amd.com/en/support/kb/faq/pa-410
+
+> 
+> Intermittent System Stutter Experienced with fTPM Enabled on Windows® 10
+> and 11
+> Article Number
+> PA-410
+> 
+> This documentation provides information on improving intermittent
+> performance stutter(s) on select PCs running Windows® 10 and 11 with
+> Firmware Trusted Platform Module (“fTPM”) enabled.
+> 
+> 
+> 
+> Issue Description
+> 
+> AMD has determined that select AMD Ryzen™ system configurations may
+> intermittently perform extended fTPM-related memory transactions in SPI
+> flash memory (“SPIROM”) located on the motherboard, which can lead to
+> temporary pauses in system interactivity or responsiveness until the
+> transaction is concluded.
+> 
+> 
+> 
+> Update and Workaround
+> 
+>     Update: Affected PCs will require a motherboard system BIOS (sBIOS)
+> update containing enhanced modules for fTPM interaction with SPIROM. AMD
+> expects that flashable customer sBIOS files to be available starting in
+> early May, 2022. Exact BIOS availability timing for a specific
+> motherboard depends on the testing and integration schedule of your
+> manufacturer. Flashable updates for motherboards will be based on AMD
+> AGESA 1207 (or newer).
+> 
+>     Workaround: As an immediate solution, affected customers dependent
+> on fTPM functionality for Trusted Platform Module support may instead
+> use a hardware TPM (“dTPM”) device for trusted computing. Platform dTPM
+> modules utilize onboard non-volatile memory (NVRAM) that supersedes the
+> TPM/SPIROM interaction described in this article.
+> 
+>         COMPATIBILITY: Please check with your system or motherboard
+> manufacturer to ensure that your platform supports add-in dTPM modules
+> before attempting or implementing this workaround.
+> 
+>         WARNING: If switching an active system from fTPM to dTPM, it is
+> critical that you disable TPM-backed encryption systems (e.g. BitLocker
+> Drive Encryption) and/or back up vital system data prior to switching
+> TPM devices. You must have full administrative access to the system, or
+> explicit support from your IT administrator if the system is managed.
+> For more information on transferring ownership to a new TPM device,
+> please visit this Microsoft webpage.
+> 
+
+So it's a firmware problem, but apparently one that Linux only triggers
+since 6.1.
+
+Jason, could the hwrng changes have anything to do with this?
+
+A bisection really would be helpful, but I guess that is not easy as the
+problem apparently only shows up after some time...
+
+
+Anyway:
+
+[TLDR for the rest of this mail: I'm adding this report to the list of
+tracked Linux kernel regressions; the text you find below is based on a
+few templates paragraphs you might have encountered already in similar
+form.]
+
+BTW, let me use this mail to also add the report to the list of tracked
+regressions to ensure it's doesn't fall through the cracks:
+
+#regzbot introduced: v6.0..v6.1
+https://bugzilla.kernel.org/show_bug.cgi?id=216989
+#regzbot title: tpm: systems with AMD Ryzen stutter when fTPM is enabled
+#regzbot ignore-activity
+
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply and tell me -- ideally
+while also telling regzbot about it, as explained by the page listed in
+the footer of this mail.
+
+Developers: When fixing the issue, remember to add 'Link:' tags pointing
+to the report (e.g. the buzgzilla ticket and maybe this mail as well, if
+this thread sees some discussion). See page linked in footer for details.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
