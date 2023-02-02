@@ -1,51 +1,13 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 534621C15
-	for <regressions@lists.linux.dev>; Thu,  2 Feb 2023 10:48:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1675334936;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Hni8RyJwUI9pK/JShhsW1noPvQwnTV2b6Z/zTe+GZpg=;
-	b=PJsoea49RAvpA8GFxh9zyB/8BFQIFCrZd9e/M8OFZYpELwATWT5CooaUfrIMgEwkRblwCD
-	w22nsQSZ2NwNLTqShDBt5HCbWXS3bB11VD1QLCarnMdeNbZMvN25d6mDG/57sxb3gVG2Yb
-	DnJigt8DDg6fKct70i8tVUW42SVQ7sw=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-67-1Wi8O781Pc6Qfj2PspHijw-1; Thu, 02 Feb 2023 05:48:54 -0500
-X-MC-Unique: 1Wi8O781Pc6Qfj2PspHijw-1
-Received: by mail-ej1-f71.google.com with SMTP id ud13-20020a170907c60d00b0088d773d11d6so1265686ejc.17
-        for <regressions@lists.linux.dev>; Thu, 02 Feb 2023 02:48:54 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Hni8RyJwUI9pK/JShhsW1noPvQwnTV2b6Z/zTe+GZpg=;
-        b=pODvYx2y9IElgO/szsnFeH2KKp/zg+51VDEpfyuxhtMS8GFYMQ3b1UgdeVDmTzyuLm
-         EggxZ1jnPIaTZKSR4yYIDjspTw209NUjQ6MdE4CUaAY52EkqCIdy0Q/JMe9rRyAnBOGO
-         HKXgILfTdRHjsL7FWSNEAR8H019fWwgUXoIWbIxEs7BQ0gHY2pY+7evatNfDcIti/Kbc
-         MB1QQeII/vFehEQyyDBkWZcx0ntK/h9Dw1Gr9Poluow5A9W0O7KT7k0iokMDRJfzq8AC
-         FkFicQeER60xBawzn9ZcFFE9jgO1AsW7u1yNkKwvGKB7+OzzxabIPToOQJTt0O64vwhp
-         vLVA==
-X-Gm-Message-State: AO0yUKXUi8Qgm6qdvVO054qcz4+Ar4beQSJdCgFr0+aCu5v6IzEiZVnV
-	5P1kSh5hiyOuyR0Jp1xAaxF4xDZzbVzISt/CuiXBLUp7pYV1yT1iaWdjupt9bs/iCxB0A5Bf7eM
-	wKa1WGqxZaQXOZ2m/Cuz0FQc=
-X-Received: by 2002:a17:906:5a09:b0:886:221b:44de with SMTP id mx9-20020a1709065a0900b00886221b44demr4562697ejc.0.1675334932730;
-        Thu, 02 Feb 2023 02:48:52 -0800 (PST)
-X-Google-Smtp-Source: AK7set8Uun7xwBmnOJU08ijOFAC0wKlV758JS5JraCtFo2SJIo57KFFlmIyDWw0DCc3fPXZ07mRMqg==
-X-Received: by 2002:a17:906:5a09:b0:886:221b:44de with SMTP id mx9-20020a1709065a0900b00886221b44demr4562685ejc.0.1675334932532;
-        Thu, 02 Feb 2023 02:48:52 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id x25-20020a170906711900b00878b89075adsm10666286ejj.51.2023.02.02.02.48.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 Feb 2023 02:48:51 -0800 (PST)
-Message-ID: <5486235f-e205-ea00-0320-cb64e9d55d7d@redhat.com>
-Date: Thu, 2 Feb 2023 11:48:51 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09A0B1C15
+	for <regressions@lists.linux.dev>; Thu,  2 Feb 2023 11:15:41 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1pNXZ3-00021x-GU; Thu, 02 Feb 2023 12:15:37 +0100
+Message-ID: <1f217c94-b90f-359a-2142-0d3ae5d84fc6@leemhuis.info>
+Date: Thu, 2 Feb 2023 12:15:36 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -54,118 +16,193 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.6.0
-Subject: Re: 6.0-rc1 new XHCI cacheline tracking EEXIST WARN/oops
-To: Mathias Nyman <mathias.nyman@linux.intel.com>,
- Mathias Nyman <mathias.nyman@intel.com>,
- linux-usb <linux-usb@vger.kernel.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <587e5aa0-63d2-3b0b-4cc5-8c0240a9e8df@redhat.com>
- <0e13b14f-be11-3f00-28b6-fa334667ee35@linux.intel.com>
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <0e13b14f-be11-3f00-28b6-fa334667ee35@linux.intel.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US, nl
+Subject: Re: [PATCH v1] docs: describe how to quickly build Linux
+Content-Language: en-US, de-DE
+From: "Linux kernel regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+To: Greg KH <gregkh@linuxfoundation.org>,
+ Konstantin Ryabitsev <konstantin@linuxfoundation.org>
+Cc: Randy Dunlap <rdunlap@infradead.org>,
+ Lukas Bulwahn <lukas.bulwahn@gmail.com>, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
+ Jonathan Corbet <corbet@lwn.net>
+References: <fabdb45fa44db2531f0dbe5e88545c49dfb87040.1675252073.git.linux@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <fabdb45fa44db2531f0dbe5e88545c49dfb87040.1675252073.git.linux@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1675336542;93058089;
+X-HE-SMSGID: 1pNXZ3-00021x-GU
 
-Hi,
+[adding Konstantin and Greg to the list of recipients]
 
-On 8/23/22 10:04, Mathias Nyman wrote:
-> On 19.8.2022 15.04, Hans de Goede wrote:
->> Hi All,
->>
->> While dogfooding 6.0-rc1 on my main workstation I noticed the following
->> new WARN/oops:
->>
->> Aug 19 12:22:39 shalem kernel: ------------[ cut here ]------------
->> Aug 19 12:22:39 shalem kernel: DMA-API: xhci_hcd 0000:30:00.3: cacheline tracking EEXIST, overlapping mappings aren't supported
->> Aug 19 12:22:39 shalem kernel: WARNING: CPU: 14 PID: 8321 at kernel/dma/debug.c:570 add_dma_entry+0x1ed/0x270
->> Aug 19 12:22:39 shalem kernel: Modules linked in: rfcomm snd_seq_dummy snd_hrtimer qrtr bnep vboxnetadp(OE) vboxnetflt(OE) vboxdrv(OE) binfmt_misc vfat fat intel_rapl_msr intel_rapl_common iwlmvm snd_hda_codec_realtek snd_hda_codec_generic edac_mce_amd mac80211 ledtrig_audio snd_hda_codec_hdmi kvm_amd snd_hda_intel snd_intel_dspcfg snd_intel_sdw_acpi libarc4 kvm snd_hda_codec irqbypass iwlwifi snd_hda_core snd_usb_audio btusb rapl btrtl snd_usbmidi_lib iwlmei btbcm snd_hwdep btintel snd_rawmidi snd_seq mc btmtk snd_seq_device cfg80211 wmi_bmof bluetooth snd_pcm joydev snd_timer rfkill mei r8169 snd soundcore i2c_piix4 k10temp gpio_amdpt gpio_generic zram dm_crypt amdgpu drm_ttm_helper ttm iommu_v2 crct10dif_pclmul gpu_sched crc32_pclmul crc32c_intel drm_buddy hid_lg_g15 drm_display_helper nvme ghash_clmulni_intel nvme_core ccp cec sp5100_tco wmi video hid_logitech_hidpp uas usb_storage hid_logitech_dj ip6_tables ip_tables fuse i2c_dev
->> Aug 19 12:22:39 shalem kernel: Unloaded tainted modules: acpi_cpufreq():1 acpi_cpufreq():1 acpi_cpufreq():1 acpi_cpufreq():1 acpi_cpufreq():1 pcc_cpufreq():1 pcc_cpufreq():1 acpi_cpufreq():1 acpi_cpufreq():1 acpi_cpufreq():1 amd64_edac():1 acpi_cpufreq():1 amd64_edac():1 acpi_cpufreq():1 amd64_edac():1 acpi_cpufreq():1 amd64_edac():1 acpi_cpufreq():1 amd64_edac():1 amd64_edac():1 acpi_cpufreq():1 fjes():1 amd64_edac():1 acpi_cpufreq():1 fjes():1 amd64_edac():1 acpi_cpufreq():1 fjes():1 pcc_cpufreq():1 amd64_edac():1 acpi_cpufreq():1 fjes():1 amd64_edac():1 acpi_cpufreq():1 pcc_cpufreq():1 fjes():1 acpi_cpufreq():1 amd64_edac():1 pcc_cpufreq():1 acpi_cpufreq():1 fjes():1 amd64_edac():1 pcc_cpufreq():1 acpi_cpufreq():1 fjes():1 amd64_edac():1 pcc_cpufreq():1 fjes():1 amd64_edac():1 acpi_cpufreq():1 pcc_cpufreq():1 fjes():1 amd64_edac():1 acpi_cpufreq():1 pcc_cpufreq():1 amd64_edac():1 fjes():1 pcc_cpufreq():1 acpi_cpufreq():1 acpi_cpufreq():1 pcc_cpufreq():1 fjes():1
->> acpi_cpufreq():1 pcc_cpufreq():1
->> Aug 19 12:22:39 shalem kernel:  fjes():1 acpi_cpufreq():1 pcc_cpufreq():1 acpi_cpufreq():1 fjes():1 pcc_cpufreq():1 acpi_cpufreq():1 acpi_cpufreq():1 fjes():1 pcc_cpufreq():1 acpi_cpufreq():1 fjes():1 acpi_cpufreq():1 pcc_cpufreq():1 fjes():1 acpi_cpufreq():1
->> Aug 19 12:22:39 shalem kernel: CPU: 14 PID: 8321 Comm: kworker/u64:57 Tainted: G           OE     -------  ---  6.0.0-0.rc1.20220817git3cc40a443a04.14.fc38.x86_64 #1
->> Aug 19 12:22:39 shalem kernel: Hardware name: Micro-Star International Co., Ltd. MS-7C95/B550M PRO-VDH WIFI (MS-7C95), BIOS 2.90 12/23/2021
->> Aug 19 12:22:39 shalem kernel: Workqueue: events_unbound async_run_entry_fn
->> Aug 19 12:22:39 shalem kernel: RIP: 0010:add_dma_entry+0x1ed/0x270
->> Aug 19 12:22:39 shalem kernel: Code: ff 0f 84 97 00 00 00 48 8b 5f 50 48 85 db 75 03 48 8b 1f e8 15 96 85 00 48 89 c6 48 89 da 48 c7 c7 30 c9 86 85 e8 73 99 ce 00 <0f> 0b 48 85 ed 0f 85 a9 50 cf 00 8b 05 f2 09 23 02 85 c0 0f 85 ca
->> Aug 19 12:22:39 shalem kernel: RSP: 0018:ffffa78dc2c0ba20 EFLAGS: 00010282
->> Aug 19 12:22:39 shalem kernel: RAX: 0000000000000060 RBX: ffff8ac186a636c0 RCX: 0000000000000000
->> Aug 19 12:22:39 shalem kernel: RDX: 0000000000000001 RSI: ffffffff858d07a4 RDI: 00000000ffffffff
->> Aug 19 12:22:39 shalem kernel: RBP: ffff8ac184f17a80 R08: 0000000000000001 R09: 0000000000000001
->> Aug 19 12:22:39 shalem kernel: R10: 0000000000000001 R11: 0000000000000000 R12: 0000000000000000
->> Aug 19 12:22:39 shalem kernel: R13: 0000000000000001 R14: 0000000000000206 R15: 00000000042f65bd
->> Aug 19 12:22:39 shalem kernel: FS:  0000000000000000(0000) GS:ffff8ac409a00000(0000) knlGS:0000000000000000
->> Aug 19 12:22:39 shalem kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->> Aug 19 12:22:39 shalem kernel: CR2: 0000000000000000 CR3: 000000014c028000 CR4: 0000000000750ee0
->> Aug 19 12:22:39 shalem kernel: PKRU: 55555554
->> Aug 19 12:22:39 shalem kernel: Call Trace:
->> Aug 19 12:22:39 shalem kernel:  <TASK>
->> Aug 19 12:22:39 shalem kernel:  dma_map_page_attrs+0x82/0x2d0
->> Aug 19 12:22:39 shalem kernel:  ? _raw_spin_unlock_irqrestore+0x30/0x60
->> Aug 19 12:22:39 shalem kernel:  usb_hcd_map_urb_for_dma+0x423/0x500
->> Aug 19 12:22:39 shalem kernel:  usb_hcd_submit_urb+0x9b/0xb80
->> Aug 19 12:22:39 shalem kernel:  ? lockdep_init_map_type+0x62/0x260
->> Aug 19 12:22:39 shalem kernel:  usb_start_wait_urb+0x55/0x140
->> Aug 19 12:22:39 shalem kernel:  usb_control_msg+0xc9/0x120
->> Aug 19 12:22:39 shalem kernel:  hub_ext_port_status+0x89/0x110
->> Aug 19 12:22:39 shalem kernel:  hub_activate+0x11c/0x8b0
->> Aug 19 12:22:39 shalem kernel:  ? usb_dev_thaw+0x10/0x10
->> Aug 19 12:22:39 shalem kernel:  hub_resume+0x23/0xe0
->> Aug 19 12:22:39 shalem kernel:  ? usb_dev_thaw+0x10/0x10
->> Aug 19 12:22:39 shalem kernel:  usb_resume_interface.constprop.0.isra.0+0x89/0xd0
->> Aug 19 12:22:39 shalem kernel:  usb_resume_both+0x109/0x180
->> Aug 19 12:22:39 shalem kernel:  ? usb_dev_thaw+0x10/0x10
->> Aug 19 12:22:39 shalem kernel:  usb_resume+0x15/0x60
->> Aug 19 12:22:39 shalem kernel:  dpm_run_callback+0x53/0xc0
->> Aug 19 12:22:39 shalem kernel:  device_resume+0xa8/0x200
->> Aug 19 12:22:39 shalem kernel:  async_resume+0x19/0x30
->> Aug 19 12:22:39 shalem kernel:  async_run_entry_fn+0x30/0x130
->> Aug 19 12:22:39 shalem kernel:  process_one_work+0x2a0/0x600
->> Aug 19 12:22:39 shalem kernel:  worker_thread+0x4f/0x3a0
->> Aug 19 12:22:39 shalem kernel:  ? process_one_work+0x600/0x600
->> Aug 19 12:22:39 shalem kernel:  kthread+0xf5/0x120
->> Aug 19 12:22:39 shalem kernel:  ? kthread_complete_and_exit+0x20/0x20
->> Aug 19 12:22:39 shalem kernel:  ret_from_fork+0x22/0x30
->> Aug 19 12:22:39 shalem kernel:  </TASK>
->> Aug 19 12:22:39 shalem kernel: irq event stamp: 2115
->> Aug 19 12:22:39 shalem kernel: hardirqs last  enabled at (2123): [<ffffffff8418fb52>] vprintk_emit+0x342/0x350
->> Aug 19 12:22:39 shalem kernel: hardirqs last disabled at (2130): [<ffffffff8418fb01>] vprintk_emit+0x2f1/0x350
->> Aug 19 12:22:39 shalem kernel: softirqs last  enabled at (0): [<ffffffff840f5079>] copy_process+0xa49/0x1e50
->> Aug 19 12:22:39 shalem kernel: softirqs last disabled at (0): [<0000000000000000>] 0x0
->> Aug 19 12:22:39 shalem kernel: ---[ end trace 0000000000000000 ]---
->> Aug 19 12:22:39 shalem kernel: DMA-API: Mapped at:
->> Aug 19 12:22:39 shalem kernel:  debug_dma_map_page+0x66/0x100
->> Aug 19 12:22:39 shalem kernel:  dma_map_page_attrs+0x82/0x2d0
->> Aug 19 12:22:39 shalem kernel:  usb_hcd_map_urb_for_dma+0x423/0x500
->> Aug 19 12:22:39 shalem kernel:  usb_hcd_submit_urb+0x9b/0xb80
->> Aug 19 12:22:39 shalem kernel:  usb_start_wait_urb+0x55/0x140
->>
-> 
-> I'm guessing that the data buffer where hub driver stores port status data
-> was already dma mapped when hub driver submitted a new get port status URB.
-> usb core tries to map the buffer again at urb subit, triggering this.
-> 
-> Hub driver allocates one data buffer once, and uses it to store both
-> hub status data and port status data. (union &hub->status->port and &hub->status->hub)
-> 
-> So probably the previous URB (get port status, or get hub status) never successfully
-> completed, or for some reason didn't unmap dma at completion.
-> 
-> Looks like this issue is hit in resume, so maybe somethin went wrong in completing the
-> hub URB in suspend?
-> 
-> Was this easy to reproduce? any external hubs connected?
-> 
-> One thing to check would be if usbmon shows an uncompleted hub URB when
-> a new URB is submitted, triggering this.
+On 01.02.23 12:52, Thorsten Leemhuis wrote:
+> Add a text explaining how to quickly build a kernel, as that's something
+> users will often have to do when they want to report an issue or test
+> proposed fixes. This is a huge and frightening task for quite a few
+> users these days, as many rely on pre-compiled kernels and have never
+> built their own. They find help on quite a few websites explaining the
+> process in various ways, but those howtos often omit important details
+> or make things too hard for the 'quickly build just for testing' case
+> that 'localmodconfig' is really useful for. Hence give users something
+> at hand to guide them, as that makes it easier for them to help with
+> testing, debugging, and fixing the kernel.
 
-Sorry for being (very) slow in following up on this. I have not seen this
-for quite a while now, so this seems to be resolved with 6.1 and later.
+Side note: after feedback on social media I'll likely switch to a title
+like "how to quickly configure & build a trimmed-down Linux kernel", as
+some people from the current title assumed this would be about things
+like ccache. I'll also likely will switch to using a localversion file
+in the buildroot instead of modifying the EXTRAVERSION in the top-level
+makefile (but I haven't actually tried it yet).
 
-Regards,
+> [...]
+>
+> The text currently describes two approaches to retrieve Linux' sources
+> using git: the regular clone with linux-stable as a remote and a shallow
+> clone with just one branch from linux-stable. The shallow clone approach
+> is a little bit more tricky to describe and handle, but downloads way
+> less data – and thus is a lot quicker, unless you have a really really
+> quick link to the internet (which in some parts of the world is hard to
+> come by). That's why I wonder if the text should switch to making the
+> shallow clone with selected stable branches the default. What do you
+> think, dear reader?
 
-Hans
+So, I looked into what Greg suggested (e.g.
+https://kernel.org/best-way-to-do-linux-clones-for-your-ci.html and
+https://www.kernel.org/cloning-linux-from-a-bundle.html
+). Assuming users have a up2date git (afaics 2.38+) I could use commands
+like this in my text:
 
+curl -L
+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/clone.bundle
+-o ~/linux/linux-stable.git.bundle
+git clone --bundle-uri=linux-stable.git.bundle
+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
+~/linux/sources
+rm ~/linux/linix-stable.git.bundle
+
+This took roundabout 16 minutes with my 100 Mbit cable internet
+connection (~9 min for the download, 7 for the clone [the machine used
+is somewhat old]) and downloads & stores ~4,5 GByte data (without checkout).
+
+[side note: using
+"--bundle-uri=https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/clone.bundle"
+does not work (due to the redirect? whatever) -- but that might be
+unwise anyway in case the download is interrupted]
+
+
+Then I tried creating a shallow clone like this:
+
+git clone
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+--depth 1 -b v6.1
+git remote set-branches --add origin master
+git fetch --all --shallow-exclude=v6.1
+git remote add -t linux-6.1.y linux-stable
+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
+git fetch --all --shallow-exclude=v6.1
+
+This took only roundabout 2 minutes and downloads & stores ~512 MByte
+data (without checkout).
+
+
+Not totally sure, but the shallow clone somehow feels more appropriate
+for the use case (reminder, there is a "quickly" in the document title),
+even if such a clone is less flexible (e.g. users have to manually add
+stable branches they are interested it; and they need to be careful when
+using git fetch).
+
+That's why I now strongly consider using the shallow clone method by
+default in v2 of this text. Or does that also create a lot of load on
+the servers? Or are there other strong reason why using a shallow clone
+might be a bad idea for this use case?
+
+Ciao, Thorsten
+
+> [...]
+> +.. _sources_sbs:
+> +
+> + * Retrieve the sources of the Linux version you intend to build; then change
+> +   into the directory holding them, as all further commands in this guide are
+> +   meant to be executed from there.
+> +
+> +   If you plan to only build one particular kernel version, download its source
+> +   archive from https://kernel.org; afterwards extract its content to '~/linux/'
+> +   and change into the directory created during extraction.
+> +
+> +   In most other situations your best choice is to fetch the sources using git::
+> +
+> +          git clone https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git \
+> +            ~/linux/sources
+> +          cd ~/linux/sources/
+> +
+> +   Now you can check out any mainline release with a command like
+> +   ``git checkout --detach v6.1``; pre-release like v6.2-rc2 work, too.
+> +   Specifying 'origin/master' will hand you the latest mainline code, which is
+> +   automatically checked out by the above 'git clone […]' command.
+> +
+> +   In case you want to build a stable or longterm kernel, run this, too::
+> +
+> +          git remote add linux-stable \
+> +            https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
+> +          git fetch --all
+> +
+> +   Afterwards you can use a command like ``git checkout --detach v6.1.5`` to
+> +   access any such release.
+> +
+> +   This flexibility comes at a cost, as cloning the sources like this will
+> +   download quite a bit of data: roundabout 2,5 Gigabyte for mainline and 1,8
+> +   for stable/longterm releases as of early 2022. See the reference section for
+> +   a somewhat more complicated approach which is also using git, but downloads
+> +   only slightly more data than downloading a compressed tarball would.
+> +
+> +   [:ref:`details<sources>`]
+> +
+> [...]
+> +
+> +.. _sources:
+> +
+> +Download the sources
+> +--------------------
+> +
+> +  *Retrieve the sources of the Linux version you intend to build.*
+> +  [:ref:`...<sources_sbs>`]
+> +
+> +Fetching the complete stable git repository as explained in the step-by-step
+> +guide above is easy and offers the most flexibility, but also downloads quite a
+> +bit of data (more than 4 Gigabyte as of late 2022). If you want something
+> +lighter, you instead might want to create a 'shallow clone' that omits some of
+> +the history and only contains stable series you are interested in::
+> +
+> +       git clone --no-checkout \
+> +         https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git \
+> +         --depth 1 -b v6.0 ~/linux/sources/
+> +       cd ~/linux/sources/
+> +       git remote set-branches --add origin master
+> +       git remote add -t linux-6.1.y linux-stable \
+> +         https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
+> +       git fetch --all --shallow-exclude=v6.0
+> +
+> +The initial command creates a clone with the sources of just Linux v6.0; this
+> +downloads just a little more data than retrieving a xz-compressed tarball of
+> +that version would (~230 vs 204 Megabyte); afterwards the master branch is added
+> +to the list of tracked branches, which allows you to retrieve anything state of
+> +mainline since Linux 6.0 was released. The linux-stable repository is then added
+> +as a remote which just tracks the linux-6.1.y branch. In early 2022 as of Linux
+> +v6.2-rc4 the last two steps downloaded ~95 and ~2 Megabyte.
+> +
+> +With this tree you can check out the latest mainline code using ``git checkout
+> +--detach origin/master``. All versions and individual changes released between
+> +6.0 and the latest 6.1.y version are at hand, too -- this tree thus also allows
+> +you to bisect a problem introduced in that range.
+> +
+> +Later run above 'git fetch [...]' command again, when you want to retrieve the
+> +latest mainline codebase or access 6.1.y versions released in between. If you
+> +want to switch to a release from a newer stable series (say Linux v6.2.y), you
+> +first need to add its remote branch with a command like ``git remote
+> +set-branches --add linux-stable linux-6.2.y``; once you run 'git fetch [...]'
+> +again you'll be able to check out versions from that series.
+> +
+> +[:ref:`back to step-by-step guide <sources_sbs>`]
+> +
 
