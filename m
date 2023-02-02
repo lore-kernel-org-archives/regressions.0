@@ -1,141 +1,158 @@
-Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D0967E7
-	for <regressions@lists.linux.dev>; Thu,  2 Feb 2023 16:39:33 +0000 (UTC)
-Received: by mail-il1-f170.google.com with SMTP id l15so975937ilj.5
-        for <regressions@lists.linux.dev>; Thu, 02 Feb 2023 08:39:33 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 267908F60
+	for <regressions@lists.linux.dev>; Thu,  2 Feb 2023 20:24:50 +0000 (UTC)
+Received: by mail-ej1-f48.google.com with SMTP id me3so9407170ejb.7
+        for <regressions@lists.linux.dev>; Thu, 02 Feb 2023 12:24:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ot6L1ecH9+J5351ioCfiXK7b7j3GD/N/gMOwzzurxQE=;
-        b=f5j8udaog8zjMPPKGZqIHB3k8DCngfxB2Q7j44u97r9dsxlNmuQgyoyhWWbV0/E1Rv
-         9ojM5cksrxhZG8UZOl5OA3CNE72ukkH1UWjHKi2UgvZQ+LT+v8CfOSW1bAaVoLgKsPuT
-         00hTXg5TYYSofIAl+McIcTSQwTd2KlEQJBZFw=
+        d=linux-foundation.org; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=M6HsC50aGCO7W8N50fVJSxtjDprl/+8JFYrOxszA6JA=;
+        b=eVvqh/ZO+ZwZXJD78ngiSxjCCBWjvgqEglnRH+lPiOGmIRY47s7BBazSPfGb67DR28
+         iQKUGRqpf0A56PDc1Ay8X9MNsLXEPCRIOE2BB6gnoYYrVQpBVH7WDPGsU4sBAU2Jtd83
+         C5HNHPmOUYszp/BNQX+NTLE3aZ+WMpwktt/zo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ot6L1ecH9+J5351ioCfiXK7b7j3GD/N/gMOwzzurxQE=;
-        b=bVd2dxO1sEWsZAiQjsqC+BCfXbhAjmdfLQx7AcmuOhbmuScDayxrooaOGQF2UHFKHd
-         ck2SeAFeX2uXT8jjape0sIHmweYeymVuVTCstcZy5R0r5v9OXbB+Umocp+sQVcRrwofP
-         IhUN6ySCMByZ4UgtBEvfdzyAn8xKtBeM2oOx+yL48rWW5/VQOJUcbcDrbTcAX8vjgZYJ
-         L0pS15/BWE3qo9mhuKaduiEiL3rfV/MNtDkj1diJxXv8WSE/Ac+PmG7UhwQYH1xl7DU2
-         yOWdqBVau2DifmCFEHRrYoC/bFeM5d3YELzreq15TCEU+JWfiXt93d06a5rU5hdrQU2N
-         4+eg==
-X-Gm-Message-State: AO0yUKX7EkB2PNWEDL+ewBUrTkIk/dwJwfMPNqATPjRjbK7uw+qHbueT
-	xU5fASse8KKtgbkZotg316fdvQ==
-X-Google-Smtp-Source: AK7set8v/Z9VpK+S9jRdYg90eH7l5Y11Tt4SFysEb2res8ONv4zlV1+aY1AtG9vZwR+KIdBTec10Fw==
-X-Received: by 2002:a05:6e02:1d03:b0:310:c411:125d with SMTP id i3-20020a056e021d0300b00310c411125dmr5335512ila.12.1675355972412;
-        Thu, 02 Feb 2023 08:39:32 -0800 (PST)
-Received: from localhost (30.23.70.34.bc.googleusercontent.com. [34.70.23.30])
-        by smtp.gmail.com with UTF8SMTPSA id m14-20020a056e020dee00b0030d6f952221sm25745ilj.75.2023.02.02.08.39.31
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=M6HsC50aGCO7W8N50fVJSxtjDprl/+8JFYrOxszA6JA=;
+        b=BLvSogcPlXPCLzs1ay0w6aGRxh9Xi+PJdBpOUD5csU+9IKBcCy92cftjfj8PiwSsOV
+         jLZ6TM80VqkoB3xvbx0B0gNOoSv4S6svsiJGXk19RVDEbo1v0K8QF7XS7pes+NVFKvvy
+         izdYLxt/Ko8KusM/JVCTLO8DVHziXjg+cyV+ArA9Hhge17zRoFyWdYE8i/X16fKvKycy
+         rimtT95GQEccF8CNpZkVYbOPhC8ATN5hE/zvHkzjlUnqlBV1csQ8Mq0zW4ZPnBOBvFGD
+         YYLuvO3UZj6AiV74KIVu+nGESgKFNckomjBk/nCWVRRamAsXoM6QkvozfqOKkBvxggVS
+         3Bcw==
+X-Gm-Message-State: AO0yUKUea6Iplc7m7LrzLxdfifyeNAVAIkqf83/C3KvN50jDYIg3GVvx
+	wJFJ7qfQ/0gLzyNrCQtHBxRp9xIWR2YRGZnYzomvNw==
+X-Google-Smtp-Source: AK7set/5Q/vB0OoRRyjlMPUW7UkUc4V5xiQD1MN6q1dhcxPFUdSRGmcWHmceZPT/x+iegbb0lnihNg==
+X-Received: by 2002:a17:907:9914:b0:878:8237:7abb with SMTP id ka20-20020a170907991400b0087882377abbmr8890802ejc.35.1675369488970;
+        Thu, 02 Feb 2023 12:24:48 -0800 (PST)
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com. [209.85.218.43])
+        by smtp.gmail.com with ESMTPSA id e13-20020a170906248d00b0087a9f699effsm254309ejb.173.2023.02.02.12.24.48
+        for <regressions@lists.linux.dev>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 Feb 2023 08:39:31 -0800 (PST)
-Date: Thu, 2 Feb 2023 16:39:31 +0000
-From: Matthias Kaehlcke <mka@chromium.org>
-To: Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-	Vikash Garodia <quic_vgarodia@quicinc.com>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, Fritz Koenig <frkoenig@chromium.org>,
-	Nathan Hebert <nhebert@chromium.org>, regressions@lists.linux.dev
-Subject: Re: [REGRESSION][PATCH 2/3] venus: firmware: Correct non-pix start
- and end addresses
-Message-ID: <Y9vnQxQlRgVMvowZ@google.com>
-References: <20221005083730.963322-1-stanimir.varbanov@linaro.org>
- <20221005083730.963322-3-stanimir.varbanov@linaro.org>
- <Y9LSMap+jRxbtpC8@google.com>
+        Thu, 02 Feb 2023 12:24:48 -0800 (PST)
+Received: by mail-ej1-f43.google.com with SMTP id lu11so9474047ejb.3
+        for <regressions@lists.linux.dev>; Thu, 02 Feb 2023 12:24:48 -0800 (PST)
+X-Received: by 2002:a17:906:f109:b0:882:e1b7:a90b with SMTP id
+ gv9-20020a170906f10900b00882e1b7a90bmr2149759ejb.187.1675369487833; Thu, 02
+ Feb 2023 12:24:47 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <Y9LSMap+jRxbtpC8@google.com>
+References: <4fe9541e-4d4c-2b2a-f8c8-2d34a7284930@nerdbynature.de>
+ <f22551ea-0694-2838-4a3f-f60d8d93fa64@leemhuis.info> <8f132803-f496-f33a-d2ab-b47fd5af0b88@nerdbynature.de>
+ <0f441adb-f565-7a37-d9e5-3b14f6f7aea6@suse.com> <f02c49da-0377-97b9-9438-9e0ddbfbcc6d@nerdbynature.de>
+In-Reply-To: <f02c49da-0377-97b9-9438-9e0ddbfbcc6d@nerdbynature.de>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Thu, 2 Feb 2023 12:24:30 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wg1yXaX+Ut4uctf7x1WrZ4WW9hjSCr1VACwZtkZT9frFw@mail.gmail.com>
+Message-ID: <CAHk-=wg1yXaX+Ut4uctf7x1WrZ4WW9hjSCr1VACwZtkZT9frFw@mail.gmail.com>
+Subject: Re: External USB disks not recognized with v6.1.8 when using Xen
+To: Christian Kujau <lists@nerdbynature.de>
+Cc: Juergen Gross <jgross@suse.com>, Michael Kelley <mikelley@microsoft.com>, 
+	Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org, 
+	Greg KH <gregkh@linuxfoundation.org>, 
+	Linux regressions mailing list <regressions@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Jan 26, 2023 at 07:19:13PM +0000, Matthias Kaehlcke wrote:
-> Hi Stanimir,
-> 
-> On Wed, Oct 05, 2022 at 11:37:29AM +0300, Stanimir Varbanov wrote:
-> > The default values for those registers are zero.
-> > 
-> > Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-> > ---
-> >  drivers/media/platform/qcom/venus/firmware.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/media/platform/qcom/venus/firmware.c b/drivers/media/platform/qcom/venus/firmware.c
-> > index 3851cedc3329..71e43611d1cf 100644
-> > --- a/drivers/media/platform/qcom/venus/firmware.c
-> > +++ b/drivers/media/platform/qcom/venus/firmware.c
-> > @@ -38,8 +38,8 @@ static void venus_reset_cpu(struct venus_core *core)
-> >  	writel(fw_size, wrapper_base + WRAPPER_FW_END_ADDR);
-> >  	writel(0, wrapper_base + WRAPPER_CPA_START_ADDR);
-> >  	writel(fw_size, wrapper_base + WRAPPER_CPA_END_ADDR);
-> > -	writel(fw_size, wrapper_base + WRAPPER_NONPIX_START_ADDR);
-> > -	writel(fw_size, wrapper_base + WRAPPER_NONPIX_END_ADDR);
-> > +	writel(0, wrapper_base + WRAPPER_NONPIX_START_ADDR);
-> > +	writel(0, wrapper_base + WRAPPER_NONPIX_END_ADDR);
-> >  
-> >  	if (IS_V6(core)) {
-> >  		/* Bring XTSS out of reset */
-> 
-> I found that this commit prevents the AOSS from entering sleep mode during
-> system suspend at least on sc7180 and sc7280. AOSS not entering sleep mode
-> leads to a (apparently significant) increase in S3 power consumption, on
-> trogdor and herobrine it prevents the system from staying suspended, because
-> the embedded controller detect the condition and wakes the sytem up again.
-> 
-> Testing is slightly involved, since unfortunately this is not the only issue
-> in v6.2-rcN that impacts AOSS sleep.
-> 
-> To reach AOSS sleep you also have to revert this commit:
-> 
-> 3a39049f88e4 soc: qcom: rpmhpd: Use highest corner until sync_state
-> 
-> And apply something like the diff below (or enable the bwmon driver).
-> 
-> On a trogdor device you will see something like this when AOSS doesn't
-> enter sleep mode during system suspend:
-> 
->   [   32.882869] EC detected sleep transition timeout. Total sleep transitions: 0
->   [   32.882886] WARNING: CPU: 7 PID: 5682 at drivers/platform/chrome/cros_ec.c:146 cros_ec_sleep_event+0x100/0x10c
->   [   32.900393] Modules linked in: uinput veth uvcvideo videobuf2_vmalloc venus_enc venus_dec videobuf2_dma_contig videobuf2_memops onboard_usb_hub cros_ec_typec typec hci_uart btqca xt_MASQUERADE venus_core v4l2_mem2mem videobuf2_v4l2 videobuf2_common qcom_q6v5_mss qcom_pil_v
->   [   32.940015] CPU: 7 PID: 5682 Comm: cat Tainted: G        W          6.1.0-rc2+ #295 d14276115b3f6b03fc99220174e5d7724847cbd6
->   [   32.951525] Hardware name: Google Villager (rev1+) with LTE (DT)
->   [   32.957695] pstate: 60400009 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
->   [   32.964848] pc : cros_ec_sleep_event+0x100/0x10c
->   [   32.969596] lr : cros_ec_sleep_event+0x100/0x10c
-> 
-> I'm also happy to help with testing if you have a candidate fix.
+On Thu, Feb 2, 2023 at 3:38 AM Christian Kujau <lists@nerdbynature.de> wrote:
+>
+> On Wed, 1 Feb 2023, Juergen Gross wrote:
+> > On 31.01.23 23:50, Christian Kujau wrote:
+> > > [Leaving the full quote below for reference and adding more appropriate
+> > > people.]
+> > >
+> > > After a far too long round of git-bisect I narrowed it down to:
+> > >
+> > >    c1c59538337ab6d45700cb4a1c9725e67f59bc6e is the first bad commit
+> > >
+> > >      x86/pat: Fix pat_x_mtrr_type() for MTRR disabled case
+> > >      commit 90b926e68f500844dff16b5bcea178dc55cf580a upstream.
+> > >
+> > > And indeed, reverting this single commit from v6.1.8 (stable) makes the
+> > > disks appear again.
+>
+> This also happens on mainline, not only in stable. Reverting this patch
+> from 6.2-rc6 makes the disks appear again.
 
-This change introduced an important regression at least for sc7180 and sc7280,
-and probably other QC SoCs, I wonder if it should be reverted unless there is
-an obvious better fix.
+I think the patch is simply wrong and should be reverted.
 
-> diff --git a/arch/arm64/boot/dts/qcom/sc7280.dtsi b/arch/arm64/boot/dts/qcom/sc7280.dtsi
-> index 0adf13399e64..c1f6952764c5 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7280.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sc7280.dtsi
-> @@ -3488,7 +3488,7 @@ IPCC_MPROC_SIGNAL_GLINK_QMP
->                 };
-> 
->                 pmu@9091000 {
-> 		-                       compatible = "qcom,sc7280-llcc-bwmon";
-> 		+                       // compatible = "qcom,sc7280-llcc-bwmon";
-> 		                        reg = <0 0x9091000 0 0x1000>;
-> 
->                         interrupts = <GIC_SPI 81 IRQ_TYPE_LEVEL_HIGH>;
-> 			@@ -3528,7 +3528,7 @@ opp-7 {
-> 			                };
-> 
->                 pmu@90b6400 {
-> 		-                       compatible = "qcom,sc7280-cpu-bwmon", "qcom,msm8998-bwmon";
-> 		+                       // compatible = "qcom,sc7280-cpu-bwmon", "qcom,msm8998-bwmon";
-> 		                        reg = <0 0x090b6400 0 0x600>;
-> 
->                         interrupts = <GIC_SPI 581 IRQ_TYPE_LEVEL_HIGH>;
+The way hardware works, MTRR_TYPE_INVALID implies UC-, not WB.
+
+So that commit 90b926e68f50 ("x86/pat: Fix pat_x_mtrr_type() for MTRR
+disabled case") is simply wrong to say "disabled means the same as
+WB",.
+
+That said, I think mtrr_type_lookup() is wrong too. It has two bugs
+
+ (a) it basically returns the wrong mtrr type for the "not enabled" conditions
+
+ (b) it doesn't set the "uniform" bit for said conditions, which then
+causes problems for callers - the hugepage case in particular only
+checks for that MTRR_TYPE_INVALID case because of this.
+
+ (c) it sets is_uniform wrongly for the fixed mtrr case, but I guess
+the only thing that cares is largepage, so it works
+
+and I think the !CONFIG_MTRR case has the same issue.
+
+I'm not convinced it *ever* makes sense for mtrr_type_lookup() to
+return MTRR_TYPE_INVALID (it makes sense for the helper functions to
+do so to let the code know to look at other mtrrs, but not the final
+lookup).
+
+And at a minimum, the !MTRR_STATE_MTRR_ENABLED case seems very wrong -
+if mtrr is disabled, it should return 'def_type', no?>
+
+So I think that commit should be reverted as broken, and then people
+should *maybe* look at something like this (intentionally whitespace
+damaged, and people should *really* think about what the
+MTRR_TYPE_INVALID case should be - returning UC- is probably what is
+closest to "this is what the hardware does", but maybe doesn't make
+sense for the largepage case, which might as well just always use
+largepages in that case?)
+
+   --- a/arch/x86/include/asm/mtrr.h
+   +++ b/arch/x86/include/asm/mtrr.h
+   @@ -53,7 +53,8 @@ static inline u8 mtrr_type_lookup(..
+        /*
+         * Return no-MTRRs:
+         */
+   -    return MTRR_TYPE_INVALID;
+   +    *uniform = 1;
+   +    return MTRR_TYPE_INVALID; /* ??? */
+    }
+    #define mtrr_save_fixed_ranges(arg) do {} while (0)
+    #define mtrr_save_state() do {} while (0)
+   --- a/arch/x86/kernel/cpu/mtrr/generic.c
+   +++ b/arch/x86/kernel/cpu/mtrr/generic.c
+   @@ -261,11 +261,13 @@ u8 mtrr_type_lookup(..
+        /* Make end inclusive instead of exclusive */
+        end--;
+
+   +    type = MTRR_TYPE_INVALID; /* ??? */
+        if (!mtrr_state_set)
+   -            return MTRR_TYPE_INVALID;
+   +            goto out;
+
+   +    type = mtrr_state.def_type;
+        if (!(mtrr_state.enabled & MTRR_STATE_MTRR_ENABLED))
+   -            return MTRR_TYPE_INVALID;
+   +            goto out;
+
+        /*
+         * Look up the fixed ranges first, which take priority over
+
+But note how I think the !MTRR_STATE_MTRR_ENABLED case really should
+return the default mtrr type, and that looks fairly unambiguous to me.
+
+Hmm?
+
+            Linus
