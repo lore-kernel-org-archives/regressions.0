@@ -1,58 +1,105 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF5C61863
-	for <regressions@lists.linux.dev>; Fri,  3 Feb 2023 09:13:43 +0000 (UTC)
-Received: from [46.183.103.8] (helo=[172.18.99.178]); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pNs8W-0006Vz-Sx; Fri, 03 Feb 2023 10:13:36 +0100
-Message-ID: <2445e228-37d0-ef64-7abf-bfa14e10f9cc@leemhuis.info>
-Date: Fri, 3 Feb 2023 10:13:34 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA25F1863
+	for <regressions@lists.linux.dev>; Fri,  3 Feb 2023 09:17:51 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12BAEC433D2;
+	Fri,  3 Feb 2023 09:17:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1675415871;
+	bh=qXg9nkVrLq+tSzHiuxr6prwSi15LJI7uYBFEuN7cU7s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=X0FXIXNsxgEE573lxDtYRDIMCVflI5UVNtHtiFFOuPmzwXT5y3dQooGfEAxkd14Br
+	 CeqCNb7gb3dX8UFzmB4FgRwIka+/89E4tohQSr8b93ZVLPTnoGkbJSSqJ8JqMdIQuA
+	 yvj8wSUcxbncnjPH+OAKSaJAn+PhhczjK79zLd9s=
+Date: Fri, 3 Feb 2023 10:17:48 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Jens Axboe <axboe@kernel.dk>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
+	"stable@vger.kernel.org" <stable@vger.kernel.org>,
+	io-uring@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+	"Sergey V." <truesmb@gmail.com>
+Subject: Re: [regression] =?iso-8859-1?Q?Bug=A02169?=
+ =?iso-8859-1?Q?32_-_io=5Furing_with_libvir?= =?iso-8859-1?Q?t?= cause kernel
+ NULL pointer dereference since 6.1.5
+Message-ID: <Y9zRPHyAmxhJoork@kroah.com>
+References: <74347fe1-ac68-2661-500d-b87fab6994f7@leemhuis.info>
+ <c5632908-1b0f-af1f-4754-bf1d0027a6dc@kernel.dk>
+ <a862915b-66f3-9ad8-77d4-4b9ce7044037@kernel.dk>
+ <Y8VkB6Q2xqeut5N8@kroah.com>
+ <e921f92d-52ac-1dc7-7720-c270910c2a2d@kernel.dk>
+ <0857ddf2-89a9-231b-89da-57cacc7342d5@kernel.dk>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-Subject: Re: [REGRESSION] GM20B probe fails after commit 2541626cfb79
-Content-Language: en-US, de-DE
-From: "Linux kernel regression tracking (#update)" <regressions@leemhuis.info>
-To: bskeggs@redhat.com, Karol Herbst <kherbst@redhat.com>,
- Lyude Paul <lyude@redhat.com>
-Cc: regressions@lists.linux.dev, dri-devel@lists.freedesktop.org,
- nouveau@lists.freedesktop.org, airlied@redhat.com,
- Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt>
-References: <20221228144914.z7t7a4fdwvbblnak@wslaptop>
- <c32ea02c-d706-ea2f-aa13-660b8db958ef@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <c32ea02c-d706-ea2f-aa13-660b8db958ef@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1675415623;f6b5122d;
-X-HE-SMSGID: 1pNs8W-0006Vz-Sx
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <0857ddf2-89a9-231b-89da-57cacc7342d5@kernel.dk>
 
-[TLDR: This mail in primarily relevant for Linux kernel regression
-tracking. See link in footer if these mails annoy you.]
+On Mon, Jan 16, 2023 at 08:50:20AM -0700, Jens Axboe wrote:
+> On 1/16/23 8:44 AM, Jens Axboe wrote:
+> > On 1/16/23 7:49 AM, Greg Kroah-Hartman wrote:
+> >> On Mon, Jan 16, 2023 at 07:13:40AM -0700, Jens Axboe wrote:
+> >>> On 1/16/23 6:42 AM, Jens Axboe wrote:
+> >>>> On 1/16/23 6:17?AM, Linux kernel regression tracking (Thorsten Leemhuis) wrote:
+> >>>>> Hi, this is your Linux kernel regression tracker.
+> >>>>>
+> >>>>> I noticed a regression report in bugzilla.kernel.org. As many (most?)
+> >>>>> kernel developer don't keep an eye on it, I decided to forward it by
+> >>>>> mail. Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=216932 :
+> >>>>
+> >>>> Looks like:
+> >>>>
+> >>>> commit 6d47e0f6a535701134d950db65eb8fe1edf0b575
+> >>>> Author: Jens Axboe <axboe@kernel.dk>
+> >>>> Date:   Wed Jan 4 08:52:06 2023 -0700
+> >>>>
+> >>>>     block: don't allow splitting of a REQ_NOWAIT bio
+> >>>>
+> >>>> got picked up by stable, but not the required prep patch:
+> >>>>
+> >>>>
+> >>>> commit 613b14884b8595e20b9fac4126bf627313827fbe
+> >>>> Author: Jens Axboe <axboe@kernel.dk>
+> >>>> Date:   Wed Jan 4 08:51:19 2023 -0700
+> >>>>
+> >>>>     block: handle bio_split_to_limits() NULL return
+> >>>>
+> >>>> Greg/team, can you pick the latter too? It'll pick cleanly for
+> >>>> 6.1-stable, not sure how far back the other patch has gone yet.
+> >>>
+> >>> Looked back, and 5.15 has it too, but the cherry-pick won't work
+> >>> on that kernel.
+> >>>
+> >>> Here's one for 5.15-stable that I verified crashes before this one,
+> >>> and works with it. Haven't done an allmodconfig yet...
+> >>
+> >> All now queued up, thanks!
+> > 
+> > Thanks Greg! This one was my fault, as it was a set of 2 patches and
+> > I only marked 2/2 for stable. But how is that best handled? 1/2 could've
+> > been marked stable as well, but I don't think that would have prevented
+> > 2/2 applying fine and 1/2 failing and hence not getting queued up until
+> > I would've done a backport.
+> > 
+> > What's the recommended way to describe the dependency that you only
+> > want 2/2 applied when 1/2 is in as well?
+> 
+> What I'm asking is if we have something like Depends-on or similar
+> that would explain this dependency. Then patch 2/2 could have:
+> 
+> Depends-on: 613b14884b85 ("block: handle bio_split_to_limits() NULL return")
+> 
+> and then it'd be clear that either both get added, or none of them.
 
-On 05.01.23 13:28, Thorsten Leemhuis wrote:
-> On 28.12.22 15:49, Diogo Ivo wrote:
->> Hello,
->>
->> Commit 2541626cfb79 breaks GM20B probe with
->> the following kernel log:
-> Just wondering: is anyone looking on this? The report was posted more
-> than a week ago and didn't even get a single reply yet afaics. This of
-> course can happen at this time of the year, but I nevertheless thought a
-> quick status inquiry might be a good idea at this point.
+As per the documentation, you can put this on the cc: stable line in the
+changelog text like:
+  cc: stable <stable@vger.kernel.org> # 613b14884b85
 
-#regzbot fix: drm/nouveau/acr/gm20b: regression fixes
-#regzbot ignore-activity
+thanks,
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
-
+greg k-h
