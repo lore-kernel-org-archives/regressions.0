@@ -1,76 +1,142 @@
-Received: from trent.utfs.org (trent.utfs.org [94.185.90.103])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FA5BAD3A
-	for <regressions@lists.linux.dev>; Fri,  3 Feb 2023 17:30:00 +0000 (UTC)
-Received: from localhost (localhost [IPv6:::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by trent.utfs.org (Postfix) with ESMTPS id E0C735F820;
-	Fri,  3 Feb 2023 18:29:57 +0100 (CET)
-Date: Fri, 3 Feb 2023 18:29:57 +0100 (CET)
-From: Christian Kujau <lists@nerdbynature.de>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-cc: Juergen Gross <jgross@suse.com>, Michael Kelley <mikelley@microsoft.com>, 
-    Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org, 
-    Greg KH <gregkh@linuxfoundation.org>, 
-    Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: External USB disks not recognized with v6.1.8 when using Xen
-In-Reply-To: <4973310d-005b-5228-78c8-74cf353f05a9@nerdbynature.de>
-Message-ID: <fbaaf7cb-7ca3-e755-708d-3a08b4eeff76@nerdbynature.de>
-References: <4fe9541e-4d4c-2b2a-f8c8-2d34a7284930@nerdbynature.de> <f22551ea-0694-2838-4a3f-f60d8d93fa64@leemhuis.info> <8f132803-f496-f33a-d2ab-b47fd5af0b88@nerdbynature.de> <0f441adb-f565-7a37-d9e5-3b14f6f7aea6@suse.com> <f02c49da-0377-97b9-9438-9e0ddbfbcc6d@nerdbynature.de>
- <CAHk-=wg1yXaX+Ut4uctf7x1WrZ4WW9hjSCr1VACwZtkZT9frFw@mail.gmail.com> <4973310d-005b-5228-78c8-74cf353f05a9@nerdbynature.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A42C1FB7
+	for <regressions@lists.linux.dev>; Sat,  4 Feb 2023 11:07:42 +0000 (UTC)
+Received: from [2001:67c:1810:f055:bde0:6d5b:d664:e19a]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1pOGOD-0007HW-7T; Sat, 04 Feb 2023 12:07:25 +0100
+Message-ID: <c5259e81-631e-7877-d3b0-5a5a56d35b42@leemhuis.info>
+Date: Sat, 4 Feb 2023 12:07:24 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Subject: Re: git regression failures with v6.2-rc NFS client
+Content-Language: en-US, de-DE
+To: Trond Myklebust <trondmy@hammerspace.com>, Hugh Dickins <hughd@google.com>
+Cc: Charles Edward Lever <chuck.lever@oracle.com>,
+ Benjamin Coddington <bcodding@redhat.com>,
+ Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+ Anna Schumaker <anna@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>,
+ Amir Goldstein <amir73il@gmail.com>,
+ "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+ "linux-mm@kvack.org" <linux-mm@kvack.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <9A4A5673-691D-47EC-BC44-C43BE7E50A48@oracle.com>
+ <D0404F55-2692-4DB6-8DD6-CAC004331AC1@redhat.com>
+ <5FF4061F-108C-4555-A32D-DDBFA80EE4E7@redhat.com>
+ <F1833EA0-263F-46DF-8001-747A871E5757@redhat.com>
+ <B90C62F2-1D3A-40E0-8E33-8C349C6FFD3D@oracle.com>
+ <44CB1E86-60E0-4CF0-9FD4-BB7E446542B7@redhat.com>
+ <1AAC6854-2591-4B21-952A-BC58180B4091@oracle.com>
+ <41813D21-95C8-44E3-BB97-1E9C03CE7FE5@redhat.com>
+ <79261B77-35D0-4E36-AA29-C7BF9FB734CC@oracle.com>
+ <104B6879-5223-485F-B099-767F741EB15B@redhat.com>
+ <966AEC32-A7C9-4B97-A4F7-098AF6EF0067@oracle.com>
+ <545B5AB7-93A6-496E-924E-AE882BF57B72@hammerspace.com>
+ <FA8392E6-DAFC-4462-BDAE-893955F9E1A4@oracle.com>
+ <4dd32d-9ea3-4330-454a-36f1189d599@google.com>
+ <0D7A0393-EE80-4785-9A83-44CF8269758B@hammerspace.com>
+ <ab632691-7e4c-ccbf-99a0-397f1f7d30ec@google.com>
+ <8B4F6A20-D7A4-4A22-914C-59F5EA79D252@hammerspace.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <8B4F6A20-D7A4-4A22-914C-59F5EA79D252@hammerspace.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1675508863;e884232d;
+X-HE-SMSGID: 1pOGOD-0007HW-7T
 
-On Fri, 3 Feb 2023, Christian Kujau wrote:
-> Not fully understanding what your proposal really does, I got curious and 
-> applied it to v6.2-rc6 with 90b926e68f50 (upstream) reverted. And it 
-> boots, and the disks are there, and the "ioremap error" is gone, but now 
-> I've got strange memory allocation errors, for like really small 
-> operations (I wanted to capture dmesg):
-> 
->   $ dmesg -t | xz -9ec | base64 
->   xz: (stdin): Out of memory
+On 04.02.23 01:59, Trond Myklebust wrote:
+>> On Feb 3, 2023, at 19:15, Hugh Dickins <hughd@google.com> wrote:
+>> On Sat, 4 Feb 2023, Trond Myklebust wrote:
+>>>> On Feb 3, 2023, at 18:53, Hugh Dickins <hughd@google.com> wrote:
+>>>> On Fri, 3 Feb 2023, Chuck Lever III wrote:
+>>>>>> On Feb 3, 2023, at 5:26 PM, Trond Myklebust <trondmy@hammerspace.com> wrote:
+>>>>>> The bottom line is that you’ve always been playing the lottery when mounting tmpfs over NFS.
+>>>>>
+>>>>> I'm not debating the truth of that. I just don't think we should
+>>>>> be making that situation needlessly worse.
+>>>>>
+>>>>> And I would be much more comfortable with this if it appeared in
+>>>>> a man page or on our wiki, or ... I'm sorry, but "some email in
+>>>>> 2001" is not documentation a user should be expected to find.
+>>>>
+>>>> I very much agree with you, Chuck.  Making something imperfect
+>>>> significantly worse is called "a regression".
+>>>>
+>>>> And I would expect the (laudable) optimization which introduced
+>>>> that regression to be reverted from 6.2 for now, unless (I imagine
+>>>> not, but have no clue) it can be easily conditionalized somehow on
+>>>> not-tmpfs or not-simple_dir_operations.  But that's not my call.
+>>>>
+>>>> What is the likelihood that simple_dir_operations will be enhanced,
+>>>> or a satisfactory complicated_dir_operations added?  I can assure
+>>>> you, never by me!  If Al or Amir or some dcache-savvy FS folk have
+>>>> time on their hands and an urge to add what's wanted, great: but
+>>>> that surely will not come in 6.2, if ever.
+>>>>
+>>>> More likely that effort would have to come from the NFS(D) end,
+>>>> who will see the benefit.  And if there's some little tweak to be
+>>>> made to simple_dir_operations, which will give you the hint you need
+>>>> to handle it better, I expect fsdevel would welcome a patch or two.
+>>>
+>>> No! If it was impossible to hit this problem before the patch, then I might agree with you. However what it does is exposes a problem that has always existed, but was a lot less likely to happen timing wise when we were allowing glibc to suck in all 50000 or so directory entries in one gulp.
+>>>
+>>> IOW: this patch doesn’t cause the problem, it just makes it easier to hit when you are using a high performance setup like Chuck's. It was always easy to hit when you were using slower networking and/or smaller rsize values against a remote server with multiple clients creating + deleting files in the same NFS exported tmpfs directory.
+>>
+>> I can only repeat,
+>> making something imperfect significantly worse is called "a regression".
+>
+> It is exposing a problem which was always there. [...]
 
-OK, whatever that is, it's unrelated to Linus's "patch" here, this happens 
-with v6.2-rc6 (under Xen, and the revert of 90b926e68f50 (upstream) too. 
-Dmesg has this too:
+But as you said: people are more likely to run into this problem now.
+This in the end makes the kernel worse and thus afaics is a regression,
+as Hugh mentioned.
 
- __vm_enough_memory: pid: 3450, comm: xz, no enough memory for the allocation
+There sadly is no quote from Linus in
+https://docs.kernel.org/process/handling-regressions.html
+that exactly matches and helps in this scenario, but a few that come
+close; one of them:
 
-Never seen this before, and Xen DomU (pvh) domains can be started just 
-fine. Not sure what this message is all about, the system appears to run 
-just fine.
+```
+Because the only thing that matters IS THE USER.
 
-Christian.
+How hard is that to understand?
 
-> 
-> With v6.2-rc6 (vanilla, and also booted under Xen) there's no problem 
-> allocating much more memory than that, so something is still not right. 
-> Patch applied for reference, but as you said: nobody should apply this :-)
-> 
-> More details:
-> 
-> - https://nerdbynature.de/bits/usb_v6.1.8/dmesg.6.1.8.xen
-> - https://nerdbynature.de/bits/usb_v6.1.8/dmesg_xen-6.1.8_MTRR_TYPE_INVALID.txt
-> - https://nerdbynature.de/bits/usb_v6.1.8/meminfo_xen-6.1.8.txt
-> - https://nerdbynature.de/bits/usb_v6.1.8/meminfo_xen-6.1.8_MTRR_TYPE_INVALID.txt
-> 
-> Thanks,
-> Christian.
-> -- 
-> BOFH excuse #448:
-> 
-> vi needs to be upgraded to vii
+Anybody who uses "but it was buggy" as an argument is entirely missing
+the point. As far as the USER was concerned, it wasn't buggy - it
+worked for him/her.
+```
 
--- 
-BOFH excuse #83:
+Anyway, I guess we get close to the point where I simply explicitly
+mention the issue in my weekly regression report, then Linus can speak
+up himself if he wants. No hard feeling here, I think that's just my duty.
 
-Support staff hung over, send aspirin and come back LATER.
+BTW, I CCed the regression list, as it should be in the loop for
+regressions per
+https://docs.kernel.org/admin-guide/reporting-regressions.html]
+
+BTW, Benjamin, you earlier in this thread mentioned:
+
+```
+Thorsten's bot is just scraping your regression report email, I doubt
+they've carefully read this thread.
+```
+
+Well, kinda. It's just not the bot that adds the regression to the
+tracking, that's me doing it. But yes, I only skim threads and sometimes
+simply when adding lack knowledge or details to decide if something
+really is a regression or not. But often that sooner or later becomes
+clear -- and then I'll remove an issue from the tracking, if it turns
+out it isn't a regression.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
