@@ -1,143 +1,83 @@
-Received: from mail.skyhub.de (mail.skyhub.de [5.9.137.197])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ADA32F43
-	for <regressions@lists.linux.dev>; Sun,  5 Feb 2023 13:20:31 +0000 (UTC)
-Received: from zn.tnic (p5de8e9fe.dip0.t-ipconnect.de [93.232.233.254])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id F337A1EC06F0;
-	Sun,  5 Feb 2023 14:20:18 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-	t=1675603219;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 632327B
+	for <regressions@lists.linux.dev>; Sun,  5 Feb 2023 16:11:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1675613476;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-	bh=ay3kfPvYsRLBE8nBle1Vb9IVSFgTMMllKyY+0VBTznY=;
-	b=FplXfxBmqD9vnAcT5mxDJE1BW45a2dekq0GUJifMicCn+Z/MAqRt1jLLGDK0RdSZSW+HMv
-	JI09mZFo6h1KspTC9wXFm9k7QSoOLGXxgdisb3VOyYCKfGnJBHxAxK89A7xQjNg8iMiIgv
-	CSFGCw0CckhXZ846ztcLPKC9+JKo1uM=
-Date: Sun, 5 Feb 2023 14:20:14 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Christian Kujau <lists@nerdbynature.de>,
-	Juergen Gross <jgross@suse.com>,
-	Michael Kelley <mikelley@microsoft.com>,
-	linux-kernel@vger.kernel.org, Greg KH <gregkh@linuxfoundation.org>,
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: External USB disks not recognized with v6.1.8 when using Xen
-Message-ID: <Y9+tDmLAlqg37TS+@zn.tnic>
-References: <4fe9541e-4d4c-2b2a-f8c8-2d34a7284930@nerdbynature.de>
- <f22551ea-0694-2838-4a3f-f60d8d93fa64@leemhuis.info>
- <8f132803-f496-f33a-d2ab-b47fd5af0b88@nerdbynature.de>
- <0f441adb-f565-7a37-d9e5-3b14f6f7aea6@suse.com>
- <f02c49da-0377-97b9-9438-9e0ddbfbcc6d@nerdbynature.de>
- <CAHk-=wg1yXaX+Ut4uctf7x1WrZ4WW9hjSCr1VACwZtkZT9frFw@mail.gmail.com>
+	 in-reply-to:in-reply-to:references:references;
+	bh=ObU9haac15/5ndYLncPOcflnXZb09Zw6shZT8Mhn0eI=;
+	b=TS1YizAVgw6uubodIVkYXiii0WLy8w08pe+x37jVg5sa168Tl8Io+aAZMqT44bVCCWmihq
+	iJ3fjx7SuxvD8D0XKoCXK81QgDjvIRPZ4GOee+B0MuJGuxguNMs7ryReJVpmjTb9/m9qTi
+	tPRrgLJv7WH98Kp8toH4hKptdCUPoO8=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-50-c6LIMRUfP_CjoR0g_E4NXw-1; Sun, 05 Feb 2023 11:11:10 -0500
+X-MC-Unique: c6LIMRUfP_CjoR0g_E4NXw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 01B9E3C025B8;
+	Sun,  5 Feb 2023 16:11:10 +0000 (UTC)
+Received: from [172.16.176.1] (unknown [10.22.50.5])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id E46D0140EBF4;
+	Sun,  5 Feb 2023 16:11:07 +0000 (UTC)
+From: Benjamin Coddington <bcodding@redhat.com>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Trond Myklebust <trondmy@hammerspace.com>,
+ Thorsten Leemhuis <regressions@leemhuis.info>,
+ Hugh Dickins <hughd@google.com>,
+ Charles Edward Lever <chuck.lever@oracle.com>,
+ Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+ Anna Schumaker <anna@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>,
+ Amir Goldstein <amir73il@gmail.com>, linux-fsdevel@vger.kernel.org,
+ linux-mm@kvack.org,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+Subject: Re: git regression failures with v6.2-rc NFS client
+Date: Sun, 05 Feb 2023 11:11:06 -0500
+Message-ID: <3AD5F198-42A1-49F3-85CA-D245775F87DF@redhat.com>
+In-Reply-To: <8f122cb0304632b391759788fe1f72ea1bab1ba0.camel@kernel.org>
+References: <9A4A5673-691D-47EC-BC44-C43BE7E50A48@oracle.com>
+ <D0404F55-2692-4DB6-8DD6-CAC004331AC1@redhat.com>
+ <5FF4061F-108C-4555-A32D-DDBFA80EE4E7@redhat.com>
+ <F1833EA0-263F-46DF-8001-747A871E5757@redhat.com>
+ <B90C62F2-1D3A-40E0-8E33-8C349C6FFD3D@oracle.com>
+ <44CB1E86-60E0-4CF0-9FD4-BB7E446542B7@redhat.com>
+ <1AAC6854-2591-4B21-952A-BC58180B4091@oracle.com>
+ <41813D21-95C8-44E3-BB97-1E9C03CE7FE5@redhat.com>
+ <79261B77-35D0-4E36-AA29-C7BF9FB734CC@oracle.com>
+ <104B6879-5223-485F-B099-767F741EB15B@redhat.com>
+ <966AEC32-A7C9-4B97-A4F7-098AF6EF0067@oracle.com>
+ <545B5AB7-93A6-496E-924E-AE882BF57B72@hammerspace.com>
+ <FA8392E6-DAFC-4462-BDAE-893955F9E1A4@oracle.com>
+ <4dd32d-9ea3-4330-454a-36f1189d599@google.com>
+ <0D7A0393-EE80-4785-9A83-44CF8269758B@hammerspace.com>
+ <ab632691-7e4c-ccbf-99a0-397f1f7d30ec@google.com>
+ <8B4F6A20-D7A4-4A22-914C-59F5EA79D252@hammerspace.com>
+ <c5259e81-631e-7877-d3b0-5a5a56d35b42@leemhuis.info>
+ <15679CC0-6B56-4F6D-9857-21DCF1EFFF79@redhat.com>
+ <031C52C0-144A-4051-9B4C-0E1E3164951E@hammerspace.com>
+ <05BEEF62-46DF-4FAC-99D4-4589C294F93A@redhat.com>
+ <8f122cb0304632b391759788fe1f72ea1bab1ba0.camel@kernel.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wg1yXaX+Ut4uctf7x1WrZ4WW9hjSCr1VACwZtkZT9frFw@mail.gmail.com>
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.7
 
-On Thu, Feb 02, 2023 at 12:24:30PM -0800, Linus Torvalds wrote:
-> So I think that commit should be reverted as broken, and then people
-> should *maybe* look at something like this (intentionally whitespace
-> damaged, and people should *really* think about what the
-> MTRR_TYPE_INVALID case should be - returning UC- is probably what is
-> closest to "this is what the hardware does",
+On 5 Feb 2023, at 6:24, Jeff Layton wrote:
+> I may be missing something, but would it be possible to move to a more
+> stable scheme for readdir cookies for tmpfs?
 
-Yes, it is actually even documented that by default, all memory is UC-
-if MTRRs are disabled.
+Yes, totally possible but it was pointed out earlier that's not going to
+land in 6.2, so this thread's been focused on trying to reason if
+85aa8ddc3818 counts as a regression.
 
-> but maybe doesn't make sense for the largepage case, which might as
-> well just always use largepages in that case?)
+Ben
 
-See below. I think it should be this way but I might be missing an
-angle...
-
----
-diff --git a/arch/x86/include/asm/mtrr.h b/arch/x86/include/asm/mtrr.h
-index f0eeaf6e5f5f..4061f1e8d34c 100644
---- a/arch/x86/include/asm/mtrr.h
-+++ b/arch/x86/include/asm/mtrr.h
-@@ -53,7 +53,8 @@ static inline u8 mtrr_type_lookup(u64 addr, u64 end, u8 *uniform)
- 	/*
- 	 * Return no-MTRRs:
- 	 */
--	return MTRR_TYPE_INVALID;
-+	*uniform = 1;
-+	return MTRR_TYPE_UNCACHABLE;
- }
- #define mtrr_save_fixed_ranges(arg) do {} while (0)
- #define mtrr_save_state() do {} while (0)
-diff --git a/arch/x86/kernel/cpu/mtrr/generic.c b/arch/x86/kernel/cpu/mtrr/generic.c
-index ee09d359e08f..2a1ed63d2b24 100644
---- a/arch/x86/kernel/cpu/mtrr/generic.c
-+++ b/arch/x86/kernel/cpu/mtrr/generic.c
-@@ -255,17 +255,25 @@ static u8 mtrr_type_lookup_variable(u64 start, u64 end, u64 *partial_end,
- u8 mtrr_type_lookup(u64 start, u64 end, u8 *uniform)
- {
- 	u8 type, prev_type, is_uniform = 1, dummy;
--	int repeat;
- 	u64 partial_end;
-+	int repeat;
- 
- 	/* Make end inclusive instead of exclusive */
- 	end--;
- 
-+	/*
-+	 * UC- by default because " [i]f the MTRRs are disabled in implementations
-+	 * that support the MTRR mechanism, the default memory type is set to
-+	 * uncacheable (UC)".
-+	 */
-+	 type = MTRR_TYPE_UNCACHABLE;
-+
- 	if (!mtrr_state_set)
--		return MTRR_TYPE_INVALID;
-+		goto out;
- 
-+	type = mtrr_state.def_type;
- 	if (!(mtrr_state.enabled & MTRR_STATE_MTRR_ENABLED))
--		return MTRR_TYPE_INVALID;
-+		goto out;
- 
- 	/*
- 	 * Look up the fixed ranges first, which take priority over
-diff --git a/arch/x86/mm/pgtable.c b/arch/x86/mm/pgtable.c
-index e4f499eb0f29..ed914bc95345 100644
---- a/arch/x86/mm/pgtable.c
-+++ b/arch/x86/mm/pgtable.c
-@@ -721,8 +721,9 @@ int pud_set_huge(pud_t *pud, phys_addr_t addr, pgprot_t prot)
- 	u8 mtrr, uniform;
- 
- 	mtrr = mtrr_type_lookup(addr, addr + PUD_SIZE, &uniform);
--	if ((mtrr != MTRR_TYPE_INVALID) && (!uniform) &&
--	    (mtrr != MTRR_TYPE_WRBACK))
-+	if (mtrr != MTRR_TYPE_UNCACHABLE &&
-+	    mtrr != MTRR_TYPE_WRBACK &&
-+	    !uniform)
- 		return 0;
- 
- 	/* Bail out if we are we on a populated non-leaf entry: */
-@@ -748,8 +749,9 @@ int pmd_set_huge(pmd_t *pmd, phys_addr_t addr, pgprot_t prot)
- 	u8 mtrr, uniform;
- 
- 	mtrr = mtrr_type_lookup(addr, addr + PMD_SIZE, &uniform);
--	if ((mtrr != MTRR_TYPE_INVALID) && (!uniform) &&
--	    (mtrr != MTRR_TYPE_WRBACK)) {
-+	if (mtrr != MTRR_TYPE_UNCACHABLE &&
-+	    mtrr != MTRR_TYPE_WRBACK &&
-+	    !uniform) {
- 		pr_warn_once("%s: Cannot satisfy [mem %#010llx-%#010llx] with a huge-page mapping due to MTRR override.\n",
- 			     __func__, addr, addr + PMD_SIZE);
- 		return 0;
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
