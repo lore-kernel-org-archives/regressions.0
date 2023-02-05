@@ -1,289 +1,133 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E31215C8
-	for <regressions@lists.linux.dev>; Sun,  5 Feb 2023 18:38:41 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:5054:ff:feb3:8f48] (helo=regzbot.fritz.box); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	id 1pOjuR-0003Fk-7C; Sun, 05 Feb 2023 19:38:39 +0100
-From: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>
-To: LKML <linux-kernel@vger.kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Linux regressions report  for mainline [2023-02-05]
-Date: Sun,  5 Feb 2023 18:38:38 +0000
-Message-Id: <167562163001.1743361.7332568307990617200@leemhuis.info>
-X-Mailer: git-send-email 2.39.1
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF5B52F21
+	for <regressions@lists.linux.dev>; Sun,  5 Feb 2023 20:22:02 +0000 (UTC)
+Received: by mail-ed1-f45.google.com with SMTP id r3so108451edq.13
+        for <regressions@lists.linux.dev>; Sun, 05 Feb 2023 12:22:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=c7AMfEAIeR/+FfczDgCKveqbE3jvjS9AcYcv8gEH+jg=;
+        b=AubkqDgfdmEzLss5anQ2QUuOJ23EmV0DleDD4TD4vdfeaSa4JriPsT5cPwkvHRzSAv
+         v4dQ6yasKZndh/dM+ittZFX+QZ8d1faFJdhZGC/UZICZo1l1XEG5VJx3Y5Ck2DUfWEgZ
+         DbpZxLVWAJSHD8LTivj+KOvEBNMGpvJ1NxwBc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=c7AMfEAIeR/+FfczDgCKveqbE3jvjS9AcYcv8gEH+jg=;
+        b=g5naYHNHGRad1JCb4Q6+Jw+4ITvi1HNXgi2BQF+ZIIyfTFSmmqsKbhyZmaKeN9YP0h
+         kNlX63vjwqobd5qKVr7O0sAt4lQn4K1MSkoiu2HngHqehZrb/mW0bYfnGZkf/qagn3wJ
+         BEk4+ZlaRc9A8QQYySDv4ETf5Cy4mvtfyY29cAGrirLAfR6Y88DrulvOLakaI1wrvt78
+         8Ir2HEOGRwdFsPirfhB2JOR1bQS8ARGod98NlQt02tM0Dreli1j1i5ofiWHuV8xL7mCI
+         HKc1SKYO710CBhr8PC8Kji9wKZUpzqM/sRIVhneLsBvl7ZkU4AioxLhat4bXEPmQYi8D
+         47vg==
+X-Gm-Message-State: AO0yUKVoTRZd8pnuhQPKb1E1QPOtt7/V0lFZfItGfpFs/DmflJW7ho4B
+	S8FU/gMcF7D6IVGVxpaXiXOJq8+JdJtRmE2fnUc=
+X-Google-Smtp-Source: AK7set/9GMxOaedUXWf//XVDC4lj7tOOY40OWbY2MwF69M1gHxmf1eRTVGdnVm2KLEQElmXkvVKkPA==
+X-Received: by 2002:a50:8751:0:b0:4aa:a9ee:f126 with SMTP id 17-20020a508751000000b004aaa9eef126mr4240998edv.3.1675628520551;
+        Sun, 05 Feb 2023 12:22:00 -0800 (PST)
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com. [209.85.218.48])
+        by smtp.gmail.com with ESMTPSA id i26-20020a05640200da00b004a7e9ec2087sm4237515edu.76.2023.02.05.12.21.59
+        for <regressions@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 05 Feb 2023 12:22:00 -0800 (PST)
+Received: by mail-ej1-f48.google.com with SMTP id dr8so28804854ejc.12
+        for <regressions@lists.linux.dev>; Sun, 05 Feb 2023 12:21:59 -0800 (PST)
+X-Received: by 2002:a17:906:892:b0:87a:7098:ca09 with SMTP id
+ n18-20020a170906089200b0087a7098ca09mr4393708eje.78.1675628519644; Sun, 05
+ Feb 2023 12:21:59 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1675622321;5bb48a7d;
-X-HE-SMSGID: 1pOjuR-0003Fk-7C
-
-Hi Linus. Below you'll find regzbot's report about regression from this
-cycle me or someone else told the bot about. 
-
-Let me highlight three issues you might want to know about:
-
- * There is a long and ongoing discussion about problems with the NFS
-client where there is some disagreement if this qualifies as
-regression, as it's a old problem that is more likely to happen now. Not
-sure where this heads, a proper fix seems unlikely to emerge quickly. At
-least it *currently* looks like this doesn't affect a lot of users.
-https://lore.kernel.org/linux-nfs/9A4A5673-691D-47EC-BC44-C43BE7E50A48@oracle.com/
-
- * The "Black screen when amdgpu started during 6.2-rc1 boot with AMD
-IOMMU enabled" issue was stalled, but there is some movement now;
-hopefully some agreement will be found there, too. It *currently* looks
-like this doesn't affect a lot of users.
-https://lore.kernel.org/lkml/20230114073420.759989-1-baolu.lu@linux.intel.com/
-
- * Waiman and Will are still discussing the "sched: incorrectly set
-affinity masks and performance regression on arm64" issue, but I'm
-optimistic that the involved parties soon will agree on how to fix this.
-https://lore.kernel.org/lkml/20230131221719.3176-1-will@kernel.org/
-
-And one more for the general audience than for Linus, in case anyone has
-similar issues: one user reported that Chrome was crashing with the
-recent -rc releases, but until now it's the only such report I've seen;
-and it's not bisected yet.
-https://lore.kernel.org/lkml/CAPaMSD3MM2BTW0REi4onUCPCLzz1B=-x0j9Uuvf2NHUOSefQ-w@mail.gmail.com/
-
-Ciao, Thorsten
-
----
-
-Hi, this is regzbot, the Linux kernel regression tracking bot.
-
-Currently I'm aware of 12 regressions in linux-mainline. Find the
-current status below and the latest on the web:
-
-https://linux-regtracking.leemhuis.info/regzbot/mainline/
-
-Bye bye, hope to see you soon for the next report.
-   Regzbot (on behalf of Thorsten Leemhuis)
-
-
-======================================================
-current cycle (v6.1.. aka v6.2-rc), culprit identified
-======================================================
-
-
-[ *NEW* ] xen/usb(?): External USB disks not recognized anymore under Xen
--------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/4fe9541e-4d4c-2b2a-f8c8-2d34a7284930@nerdbynature.de/
-https://lore.kernel.org/lkml/4fe9541e-4d4c-2b2a-f8c8-2d34a7284930@nerdbynature.de/
-
-By Christian Kujau; 6 days ago; 11 activities, latest 0 days ago.
-Introduced in 90b926e68f50 (v6.2-rc4)
-
-Recent activities from: Christian Kujau (7), Borislav Petkov (1), Linus
-  Torvalds (1), Juergen Gross (1), Greg KH (1)
-
-One patch associated with this regression:
-* Re: External USB disks not recognized with v6.1.8 when using Xen
-  https://lore.kernel.org/lkml/Y9%2BtDmLAlqg37TS%2B@zn.tnic/
-  0 days ago, by Borislav Petkov
-
-
-[ *NEW* ] nfs: failures during the git regression suite on all NFS versions
----------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/9A4A5673-691D-47EC-BC44-C43BE7E50A48@oracle.com/
-https://lore.kernel.org/linux-nfs/9A4A5673-691D-47EC-BC44-C43BE7E50A48@oracle.com/
-
-By Chuck Lever III; 4 days ago; 25 activities, latest 0 days ago.
-Introduced in 85aa8ddc3818 (v6.2-rc1)
-
-Recent activities from: Benjamin Coddington (9), Chuck Lever III (7),
-  Trond Myklebust (5), Hugh Dickins (2), Jeff Layton (1), Thorsten
-  Leemhuis (1)
-
-
-Black screen when amdgpu started during 6.2-rc1 boot with AMD IOMMU enabled
----------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/216865/
-https://bugzilla.kernel.org/show_bug.cgi?id=216865
-https://lore.kernel.org/lkml/15d0f9ff-2a56-b3e9-5b45-e6b23300ae3b@leemhuis.info/
-
-By Matt Fagnani and Matt Fagnani; 37 days ago; 55 activities, latest 1 days ago.
-Introduced in 201007ef707a (v6.2-rc1)
-
-Recent activities from: Jason Gunthorpe (6), Bjorn Helgaas (6), Baolu
-  Lu (6), Jonathan Cameron (1), Vasant Hegde (1)
-
-One patch associated with this regression:
-* Re: [PATCH v3 1/1] PCI: Add translated request only flag for pci_enable_pasid()
-  https://lore.kernel.org/lkml/b75a5a94-a962-f88e-149e-7d23982a7ad2@linux.intel.com/
-  3 days ago, by Baolu Lu
-
-Noteworthy links:
-* [PATCH] PCI: revert "Enable PASID only when ACS RR & UF enabled on upstream path"
-  https://lore.kernel.org/linux-pci/20230111085745.401710-1-christian.koenig@amd.com/
-  25 days ago, by Christian König; thread monitored.
-* [PATCH 1/1] PCI: Add translated request only opt-in for pci_enable_pasid()
-  https://bugzilla.kernel.org/show_bug.cgi?id=20230112084629.737653-1-baolu.lu@linux.intel.com
-  24 days ago, by Lu Baolu; thread monitored.
-* [PATCH v2 1/1] PCI: Add translated request only flag for pci_enable_pasid()
-  https://bugzilla.kernel.org/show_bug.cgi?id=20230113014409.752405-1-baolu.lu@linux.intel.com
-  23 days ago, by Lu Baolu; thread monitored.
-* [PATCH v3 1/1] PCI: Add translated request only flag for pci_enable_pasid()
-  https://bugzilla.kernel.org/show_bug.cgi?id=20230114073420.759989-1-baolu.lu@linux.intel.com
-  22 days ago, by Lu Baolu; thread monitored.
-
-
-sched: incorrectly set affinity masks and performance regression on arm64
--------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/20230117160825.GA17756@willie-the-truck/
-https://lore.kernel.org/lkml/20230117160825.GA17756@willie-the-truck/
-
-By Will Deacon; 19 days ago; 48 activities, latest 2 days ago.
-Introduced in 8f9ea86fdf99 (v6.2-rc1)
-
-Recent activities from: Waiman Long (15), Peter Zijlstra (6), Will
-  Deacon (4), Tejun Heo (2), Hillf Danton (1)
-
-One patch associated with this regression:
-* Re: [PATCH v10 2/5] sched: Use user_cpus_ptr for saving user provided cpumask in sched_setaffinity()
-  https://lore.kernel.org/lkml/Y9QZxVPLYpH%2FsrMw@hirez.programming.kicks-ass.net/
-  8 days ago, by Peter Zijlstra
-
-Noteworthy links:
-* [PATCH v2] sched: Store restrict_cpus_allowed_ptr() call state
-  https://lore.kernel.org/lkml/20230121021749.55313-1-longman@redhat.com/
-  15 days ago, by Waiman Long; thread monitored.
-* [PATCH v3] sched: Store restrict_cpus_allowed_ptr() call state
-  https://lore.kernel.org/lkml/20230127015527.466367-1-longman@redhat.com/
-  9 days ago, by Waiman Long; thread monitored.
-* [PATCH 1/2] cpuset: Fix cpuset_cpus_allowed() to not filter offline CPUs
-  https://lore.kernel.org/lkml/20230131221719.3176-2-will@kernel.org/
-  4 days ago, by Will Deacon; thread monitored.
-
-
-drm: nouveau: hangs on poweroff/reboot
---------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/b64705e3-2e63-a466-f829-f9568b06766a@googlemail.com/
-https://lore.kernel.org/lkml/b64705e3-2e63-a466-f829-f9568b06766a@googlemail.com/
-
-By Chris Clayton; 17 days ago; 16 activities, latest 2 days ago.
-Introduced in 0e44c2170876 (v6.2-rc1)
-
-Recent activities from: Chris Clayton (4), Ben Skeggs (2)
-
-
-[ *NEW* ] meida: venus: firmware: AOSS doesn't seel anymore on at least sc7180 and sc7280
------------------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/Y9LSMap+jRxbtpC8@google.com/
-https://lore.kernel.org/lkml/Y9LSMap%2BjRxbtpC8@google.com/
-
-By Matthias Kaehlcke; 9 days ago; 2 activities, latest 3 days ago.
-Introduced in a837e5161cff (v6.2-rc1)
-
-Recent activities from: Matthias Kaehlcke (1)
-
-
-[ *NEW* ] usb: gadget: USB network interface is recognized, but 'ip link' sees it as 'NO-CARRIER'
--------------------------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/f2a4f9847617a0929d62025748384092e5f35cce.camel@crapouillou.net/
-https://lore.kernel.org/lkml/f2a4f9847617a0929d62025748384092e5f35cce.camel@crapouillou.net/
-
-By Paul Cercueil; 4 days ago; 1 activities, latest 4 days ago.
-Introduced in 321b59870f85 (v6.2-rc1)
-
-Recent activities from: Paul Cercueil (1)
-
-
-spi: spidev: recursive locking error
-------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/Y8U9vrwzHVAyBZHK@francesco-nb.int.toradex.com/
-https://lore.kernel.org/lkml/Y8U9vrwzHVAyBZHK@francesco-nb.int.toradex.com/
-
-By Francesco Dolcini; 20 days ago; 12 activities, latest 6 days ago.
-Introduced in a720416d9463 (v6.2-rc4)
-
-Fix incoming:
-* spi: spidev: fix a recursive locking error
-  https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=master&id=eede42c9459b58b71edc99303dad65216a655810
-
-
-nfs: NULL pointer dereference since NFS_V4_2_READ_PLUS is enabled by default
-----------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/f591b13c-4600-e2a4-8efa-aac6ad828dd1@linaro.org/
-https://lore.kernel.org/lkml/f591b13c-4600-e2a4-8efa-aac6ad828dd1@linaro.org/
-
-By Krzysztof Kozlowski; 29 days ago; 14 activities, latest 13 days ago.
-Introduced in 7fd461c47 (v6.2-rc1)
-
-
-==================================================
-current cycle (v6.1.. aka v6.2-rc), unkown culprit
-==================================================
-
-
-net: r8169: NETDEV WATCHDOG: enp6s0 (r8169): transmit queue 0 timed out
------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/216884/
-https://bugzilla.kernel.org/show_bug.cgi?id=216884
-https://lore.kernel.org/regressions/f5b100c0-cdeb-59d1-5c82-e1df59ee3773@leemhuis.info/
-
-By HougeLangley and HougeLangley; 32 days ago; 21 activities, latest 2 days ago.
-Introduced in v6.1..v6.2-rc2
-
-Fix incoming:
-* PCI: loongson: Improve the MRRS quirk for LS7A
-  https://lore.kernel.org/regressions/2a9140bb-8c4f-dda8-cf43-92db792a29db@leemhuis.info/
-
-
-[ *NEW* ] chrome crashes
-------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/CAPaMSD3MM2BTW0REi4onUCPCLzz1B=-x0j9Uuvf2NHUOSefQ-w@mail.gmail.com/
-https://lore.kernel.org/lkml/CAPaMSD3MM2BTW0REi4onUCPCLzz1B=-x0j9Uuvf2NHUOSefQ-w@mail.gmail.com/
-
-By Chris McGimpsey-Jones; 8 days ago; 1 activities, latest 8 days ago.
-Introduced in v6.1..v6.2-rc5
-
-
-ptdma: kernel panic during host shutdown
-----------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/216856/
-https://bugzilla.kernel.org/show_bug.cgi?id=216856
-https://lore.kernel.org/lkml/0e77436c-9f0a-15b6-697a-7b879e4abc4a@leemhuis.info/
-
-By Eric Pilmore and Eric Pilmore; 39 days ago; 3 activities, latest 9 days ago.
-Introduced in v6.1..v6.2-rc1
-
-
-=============
-End of report
-=============
-
-All regressions marked '[ *NEW* ]' were added since the previous report,
-which can be found here:
-https://lore.kernel.org/r/167501403214.1314424.14370223374691112185@leemhuis.info
-
-Thanks for your attention, have a nice day!
-
-  Regzbot, your hard working Linux kernel regression tracking robot
-
-
-P.S.: Wanna know more about regzbot or how to use it to track regressions
-for your subsystem? Then check out the getting started guide or the
-reference documentation:
-
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
-
-The short version: if you see a regression report you want to see
-tracked, just send a reply to the report where you Cc
-regressions@lists.linux.dev with a line like this:
-
-#regzbot introduced: v5.13..v5.14-rc1
-
-If you want to fix a tracked regression, just do what is expected
-anyway: add a 'Link:' tag with the url to the report, e.g.:
-
-Link: https://lore.kernel.org/all/30th.anniversary.repost@klaava.Helsinki.FI/
+References: <4fe9541e-4d4c-2b2a-f8c8-2d34a7284930@nerdbynature.de>
+ <f22551ea-0694-2838-4a3f-f60d8d93fa64@leemhuis.info> <8f132803-f496-f33a-d2ab-b47fd5af0b88@nerdbynature.de>
+ <0f441adb-f565-7a37-d9e5-3b14f6f7aea6@suse.com> <f02c49da-0377-97b9-9438-9e0ddbfbcc6d@nerdbynature.de>
+ <CAHk-=wg1yXaX+Ut4uctf7x1WrZ4WW9hjSCr1VACwZtkZT9frFw@mail.gmail.com> <Y9+tDmLAlqg37TS+@zn.tnic>
+In-Reply-To: <Y9+tDmLAlqg37TS+@zn.tnic>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Sun, 5 Feb 2023 12:21:42 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wgC_MEFnnzUGN4q9pmhxV+eFV1Oo=W2j1J69YhJF5EDtw@mail.gmail.com>
+Message-ID: <CAHk-=wgC_MEFnnzUGN4q9pmhxV+eFV1Oo=W2j1J69YhJF5EDtw@mail.gmail.com>
+Subject: Re: External USB disks not recognized with v6.1.8 when using Xen
+To: Borislav Petkov <bp@alien8.de>
+Cc: Christian Kujau <lists@nerdbynature.de>, Juergen Gross <jgross@suse.com>, 
+	Michael Kelley <mikelley@microsoft.com>, linux-kernel@vger.kernel.org, 
+	Greg KH <gregkh@linuxfoundation.org>, 
+	Linux regressions mailing list <regressions@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+
+On Sun, Feb 5, 2023 at 5:20 AM Borislav Petkov <bp@alien8.de> wrote:
+>
+> @@ -53,7 +53,8 @@ static inline u8 mtrr_type_lookup(u64 addr,
+>         /*
+>          * Return no-MTRRs:
+>          */
+> -       return MTRR_TYPE_INVALID;
+> +       *uniform = 1;
+> +       return MTRR_TYPE_UNCACHABLE;
+
+So this is the one I'd almost leave alone.
+
+Because this is not a "there are no MTRR's" situation, this is a "I
+haven't enabled CONFIG_MTRR, so I don't _know_ if there are any MTRR's
+or not.
+
+And returning MTRR_TYPE_UNCACHABLE will then disable things like
+largepages etc, so this change would effectively mean that if
+CONFIG_MTRR is off, it would turn off hugepage support too.
+
+But maybe that was the only thing that cared, and we have:
+
+> @@ -721,8 +721,9 @@ int pud_set_huge(pud_t *pud, phys_addr_t addr, pgprot_t prot)
+>         u8 mtrr, uniform;
+>
+>         mtrr = mtrr_type_lookup(addr, addr + PUD_SIZE, &uniform);
+> -       if ((mtrr != MTRR_TYPE_INVALID) && (!uniform) &&
+> -           (mtrr != MTRR_TYPE_WRBACK))
+> +       if (mtrr != MTRR_TYPE_UNCACHABLE &&
+> +           mtrr != MTRR_TYPE_WRBACK &&
+> +           !uniform)
+>                 return 0;
+
+Here you make up for it, but I don't actually understand why these
+checks exist at all.
+
+I *think* that what the check should do is just check for uniformity.
+
+Why would the largepage code otherwise care?
+
+Other MTRR types are explicitly fine, and I think things like the X
+server might even want to do write-combining with large pages etc.
+
+So I think the hugepage code should only do
+
+     if (!uniform)
+          return 0;
+
+or there should be some explanation for why those types are special?
+
+>> @@ -748,8 +749,9 @@ int pmd_set_huge(pmd_t *pmd, phys_addr_t addr, pgprot_t prot)
+>         u8 mtrr, uniform;
+>
+>         mtrr = mtrr_type_lookup(addr, addr + PMD_SIZE, &uniform);
+> -       if ((mtrr != MTRR_TYPE_INVALID) && (!uniform) &&
+> -           (mtrr != MTRR_TYPE_WRBACK)) {
+> +       if (mtrr != MTRR_TYPE_UNCACHABLE &&
+> +           mtrr != MTRR_TYPE_WRBACK &&
+> +           !uniform) {
+
+Same here.
+
+Again, I *think* that the reason it used to do that "check two types"
+thing is simply because "uniform" wasn't set correctly.
+
+But I don't know.
+
+                Linus
