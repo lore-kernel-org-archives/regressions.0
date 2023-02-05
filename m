@@ -1,194 +1,289 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1C8633C1
-	for <regressions@lists.linux.dev>; Sun,  5 Feb 2023 17:38:31 +0000 (UTC)
-Received: from [46.183.103.17] (helo=[172.18.99.178]); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pOiy6-0001nS-HZ; Sun, 05 Feb 2023 18:38:22 +0100
-Message-ID: <1c04756b-574b-210d-9580-a4de2aa16a20@leemhuis.info>
-Date: Sun, 5 Feb 2023 18:38:16 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E31215C8
+	for <regressions@lists.linux.dev>; Sun,  5 Feb 2023 18:38:41 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:5054:ff:feb3:8f48] (helo=regzbot.fritz.box); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	id 1pOjuR-0003Fk-7C; Sun, 05 Feb 2023 19:38:39 +0100
+From: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>
+To: LKML <linux-kernel@vger.kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Linux regressions report  for mainline [2023-02-05]
+Date: Sun,  5 Feb 2023 18:38:38 +0000
+Message-Id: <167562163001.1743361.7332568307990617200@leemhuis.info>
+X-Mailer: git-send-email 2.39.1
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-Subject: Re: [regression] Bug 216989 - since 6.1 systems with AMD Ryzen
- stutter when fTPM is enabled
-From: "Linux kernel regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-To: Dominik Brodowski <linux@dominikbrodowski.net>,
- Herbert Xu <herbert@gondor.apana.org.au>
-Cc: linux-integrity@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- reach622@mailcuk.com, 1138267643@qq.com, "Jason A. Donenfeld"
- <Jason@zx2c4.com>, Jarkko Sakkinen <jarkko@kernel.org>,
- Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-References: <3a196414-68d8-29c9-24cc-2b8cb4c9d358@leemhuis.info>
-Content-Language: en-US, de-DE
-In-Reply-To: <3a196414-68d8-29c9-24cc-2b8cb4c9d358@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1675618711;dc87e3ec;
-X-HE-SMSGID: 1pOiy6-0001nS-HZ
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1675622321;5bb48a7d;
+X-HE-SMSGID: 1pOjuR-0003Fk-7C
 
-[ccing Dominik (who authored the culprit) and Herbert (who merged it)]
+Hi Linus. Below you'll find regzbot's report about regression from this
+cycle me or someone else told the bot about. 
 
-On 02.02.23 11:28, Linux kernel regression tracking (Thorsten Leemhuis)
-wrote:
-> 
-> I noticed a regression report in bugzilla.kernel.org. As many (most?)
-> kernel developer don't keep an eye on it, I decided to forward it by
-> mail. Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=216989 :
+Let me highlight three issues you might want to know about:
 
-Turns out according to a bisection from one of the reporters that
-b006c439d58d ("hwrng: core - start hwrng kthread also for untrusted
-sources") (merged for 6.1) apparently makes this hardware issue occur
-quicker/more frequently a lot quicker on any board that didn't get the
-firmware update yet. So it could be argued that from the point of the
-kernel it *might* be considered a regression.
+ * There is a long and ongoing discussion about problems with the NFS
+client where there is some disagreement if this qualifies as
+regression, as it's a old problem that is more likely to happen now. Not
+sure where this heads, a proper fix seems unlikely to emerge quickly. At
+least it *currently* looks like this doesn't affect a lot of users.
+https://lore.kernel.org/linux-nfs/9A4A5673-691D-47EC-BC44-C43BE7E50A48@oracle.com/
 
-For details see the ticket.
+ * The "Black screen when amdgpu started during 6.2-rc1 boot with AMD
+IOMMU enabled" issue was stalled, but there is some movement now;
+hopefully some agreement will be found there, too. It *currently* looks
+like this doesn't affect a lot of users.
+https://lore.kernel.org/lkml/20230114073420.759989-1-baolu.lu@linux.intel.com/
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+ * Waiman and Will are still discussing the "sched: incorrectly set
+affinity masks and performance regression on arm64" issue, but I'm
+optimistic that the involved parties soon will agree on how to fix this.
+https://lore.kernel.org/lkml/20230131221719.3176-1-will@kernel.org/
 
-#regzbot introduced: b006c439d58d
+And one more for the general audience than for Linus, in case anyone has
+similar issues: one user reported that Chrome was crashing with the
+recent -rc releases, but until now it's the only such report I've seen;
+and it's not bisected yet.
+https://lore.kernel.org/lkml/CAPaMSD3MM2BTW0REi4onUCPCLzz1B=-x0j9Uuvf2NHUOSefQ-w@mail.gmail.com/
 
->>  reach622@mailcuk.com 2023-02-02 02:49:48 UTC
->>
->> Linux kernel >=6.1 exhibits a stuttering issue that occurs once every few hours. See https://www.reddit.com/r/archlinux/comments/zvgev0/audio_stuttering_issues_with_kernel_611/ https://www.reddit.com/r/linux_gaming/comments/zzqaf7/having_intermittent_stutters_with_a_ryzen_cpu/ https://bbs.archlinux.org/viewtopic.php?id=282333 for detailed information.
->>
->> The stutter lasts for 1-2 seconds and causes the framerate of the display to decrease dramatically and causes bursts in audio output.
->>
->> Additional info:
->>
->> * linux 6.1.0 or later
->>
->> Steps to reproduce:
->>
->> * Use Linux kernel >=6.1
->>
->> * Use AMD Ryzen CPU with fTPM enabled
->>
->> * Wait for a few hours
->>
->> [reply] [−] Comment 1 Bell 2023-02-02 03:33:24 UTC
->>
->> Hey, Let me add some extra information to help.
->> 1. this issue can happen in 6.2-rc6 without loading third-party kernel modules. (NVIDIA or Virtualbox and so)
->> 2. some guy on the Desktop/Laptop who can disable ftpm and did eliminate the problem.
->> 3. this problem can happen in newer AMD processors from the 4000 series to the 6000 series.
->> 4. this problem isn't caused by the dedicated graphics card I guess, here are some combinations that stuttering can happen:
->> AMD(built-in GPU) + NVIDIA  Laptop
->> AMD(No built-in GPU) + AMD(dedicated) Desktop
->> AMD(built-in GPU) + AMD(dedicated) Laptop/Desktop
->> AMD + AMD(Built-in GPU only) Laptop
->> all suffer from this.
->>
->> Hope this can help :)
-> 
-> See the ticket for more details.
-> 
-> I briefly looked into the links and found this:
-> https://www.amd.com/en/support/kb/faq/pa-410
-> 
->>
->> Intermittent System Stutter Experienced with fTPM Enabled on Windows® 10
->> and 11
->> Article Number
->> PA-410
->>
->> This documentation provides information on improving intermittent
->> performance stutter(s) on select PCs running Windows® 10 and 11 with
->> Firmware Trusted Platform Module (“fTPM”) enabled.
->>
->>
->>
->> Issue Description
->>
->> AMD has determined that select AMD Ryzen™ system configurations may
->> intermittently perform extended fTPM-related memory transactions in SPI
->> flash memory (“SPIROM”) located on the motherboard, which can lead to
->> temporary pauses in system interactivity or responsiveness until the
->> transaction is concluded.
->>
->>
->>
->> Update and Workaround
->>
->>     Update: Affected PCs will require a motherboard system BIOS (sBIOS)
->> update containing enhanced modules for fTPM interaction with SPIROM. AMD
->> expects that flashable customer sBIOS files to be available starting in
->> early May, 2022. Exact BIOS availability timing for a specific
->> motherboard depends on the testing and integration schedule of your
->> manufacturer. Flashable updates for motherboards will be based on AMD
->> AGESA 1207 (or newer).
->>
->>     Workaround: As an immediate solution, affected customers dependent
->> on fTPM functionality for Trusted Platform Module support may instead
->> use a hardware TPM (“dTPM”) device for trusted computing. Platform dTPM
->> modules utilize onboard non-volatile memory (NVRAM) that supersedes the
->> TPM/SPIROM interaction described in this article.
->>
->>         COMPATIBILITY: Please check with your system or motherboard
->> manufacturer to ensure that your platform supports add-in dTPM modules
->> before attempting or implementing this workaround.
->>
->>         WARNING: If switching an active system from fTPM to dTPM, it is
->> critical that you disable TPM-backed encryption systems (e.g. BitLocker
->> Drive Encryption) and/or back up vital system data prior to switching
->> TPM devices. You must have full administrative access to the system, or
->> explicit support from your IT administrator if the system is managed.
->> For more information on transferring ownership to a new TPM device,
->> please visit this Microsoft webpage.
->>
-> 
-> So it's a firmware problem, but apparently one that Linux only triggers
-> since 6.1.
-> 
-> Jason, could the hwrng changes have anything to do with this?
-> 
-> A bisection really would be helpful, but I guess that is not easy as the
-> problem apparently only shows up after some time...
-> 
-> 
-> Anyway:
-> 
-> [TLDR for the rest of this mail: I'm adding this report to the list of
-> tracked Linux kernel regressions; the text you find below is based on a
-> few templates paragraphs you might have encountered already in similar
-> form.]
-> 
-> BTW, let me use this mail to also add the report to the list of tracked
-> regressions to ensure it's doesn't fall through the cracks:
-> 
-> #regzbot introduced: v6.0..v6.1
-> https://bugzilla.kernel.org/show_bug.cgi?id=216989
-> #regzbot title: tpm: systems with AMD Ryzen stutter when fTPM is enabled
-> #regzbot ignore-activity
-> 
-> This isn't a regression? This issue or a fix for it are already
-> discussed somewhere else? It was fixed already? You want to clarify when
-> the regression started to happen? Or point out I got the title or
-> something else totally wrong? Then just reply and tell me -- ideally
-> while also telling regzbot about it, as explained by the page listed in
-> the footer of this mail.
-> 
-> Developers: When fixing the issue, remember to add 'Link:' tags pointing
-> to the report (e.g. the buzgzilla ticket and maybe this mail as well, if
-> this thread sees some discussion). See page linked in footer for details.
-> 
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-> --
-> Everything you wanna know about Linux kernel regression tracking:
-> https://linux-regtracking.leemhuis.info/about/#tldr
-> If I did something stupid, please tell me, as explained on that page.
+Ciao, Thorsten
+
+---
+
+Hi, this is regzbot, the Linux kernel regression tracking bot.
+
+Currently I'm aware of 12 regressions in linux-mainline. Find the
+current status below and the latest on the web:
+
+https://linux-regtracking.leemhuis.info/regzbot/mainline/
+
+Bye bye, hope to see you soon for the next report.
+   Regzbot (on behalf of Thorsten Leemhuis)
+
+
+======================================================
+current cycle (v6.1.. aka v6.2-rc), culprit identified
+======================================================
+
+
+[ *NEW* ] xen/usb(?): External USB disks not recognized anymore under Xen
+-------------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/4fe9541e-4d4c-2b2a-f8c8-2d34a7284930@nerdbynature.de/
+https://lore.kernel.org/lkml/4fe9541e-4d4c-2b2a-f8c8-2d34a7284930@nerdbynature.de/
+
+By Christian Kujau; 6 days ago; 11 activities, latest 0 days ago.
+Introduced in 90b926e68f50 (v6.2-rc4)
+
+Recent activities from: Christian Kujau (7), Borislav Petkov (1), Linus
+  Torvalds (1), Juergen Gross (1), Greg KH (1)
+
+One patch associated with this regression:
+* Re: External USB disks not recognized with v6.1.8 when using Xen
+  https://lore.kernel.org/lkml/Y9%2BtDmLAlqg37TS%2B@zn.tnic/
+  0 days ago, by Borislav Petkov
+
+
+[ *NEW* ] nfs: failures during the git regression suite on all NFS versions
+---------------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/9A4A5673-691D-47EC-BC44-C43BE7E50A48@oracle.com/
+https://lore.kernel.org/linux-nfs/9A4A5673-691D-47EC-BC44-C43BE7E50A48@oracle.com/
+
+By Chuck Lever III; 4 days ago; 25 activities, latest 0 days ago.
+Introduced in 85aa8ddc3818 (v6.2-rc1)
+
+Recent activities from: Benjamin Coddington (9), Chuck Lever III (7),
+  Trond Myklebust (5), Hugh Dickins (2), Jeff Layton (1), Thorsten
+  Leemhuis (1)
+
+
+Black screen when amdgpu started during 6.2-rc1 boot with AMD IOMMU enabled
+---------------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/216865/
+https://bugzilla.kernel.org/show_bug.cgi?id=216865
+https://lore.kernel.org/lkml/15d0f9ff-2a56-b3e9-5b45-e6b23300ae3b@leemhuis.info/
+
+By Matt Fagnani and Matt Fagnani; 37 days ago; 55 activities, latest 1 days ago.
+Introduced in 201007ef707a (v6.2-rc1)
+
+Recent activities from: Jason Gunthorpe (6), Bjorn Helgaas (6), Baolu
+  Lu (6), Jonathan Cameron (1), Vasant Hegde (1)
+
+One patch associated with this regression:
+* Re: [PATCH v3 1/1] PCI: Add translated request only flag for pci_enable_pasid()
+  https://lore.kernel.org/lkml/b75a5a94-a962-f88e-149e-7d23982a7ad2@linux.intel.com/
+  3 days ago, by Baolu Lu
+
+Noteworthy links:
+* [PATCH] PCI: revert "Enable PASID only when ACS RR & UF enabled on upstream path"
+  https://lore.kernel.org/linux-pci/20230111085745.401710-1-christian.koenig@amd.com/
+  25 days ago, by Christian König; thread monitored.
+* [PATCH 1/1] PCI: Add translated request only opt-in for pci_enable_pasid()
+  https://bugzilla.kernel.org/show_bug.cgi?id=20230112084629.737653-1-baolu.lu@linux.intel.com
+  24 days ago, by Lu Baolu; thread monitored.
+* [PATCH v2 1/1] PCI: Add translated request only flag for pci_enable_pasid()
+  https://bugzilla.kernel.org/show_bug.cgi?id=20230113014409.752405-1-baolu.lu@linux.intel.com
+  23 days ago, by Lu Baolu; thread monitored.
+* [PATCH v3 1/1] PCI: Add translated request only flag for pci_enable_pasid()
+  https://bugzilla.kernel.org/show_bug.cgi?id=20230114073420.759989-1-baolu.lu@linux.intel.com
+  22 days ago, by Lu Baolu; thread monitored.
+
+
+sched: incorrectly set affinity masks and performance regression on arm64
+-------------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/20230117160825.GA17756@willie-the-truck/
+https://lore.kernel.org/lkml/20230117160825.GA17756@willie-the-truck/
+
+By Will Deacon; 19 days ago; 48 activities, latest 2 days ago.
+Introduced in 8f9ea86fdf99 (v6.2-rc1)
+
+Recent activities from: Waiman Long (15), Peter Zijlstra (6), Will
+  Deacon (4), Tejun Heo (2), Hillf Danton (1)
+
+One patch associated with this regression:
+* Re: [PATCH v10 2/5] sched: Use user_cpus_ptr for saving user provided cpumask in sched_setaffinity()
+  https://lore.kernel.org/lkml/Y9QZxVPLYpH%2FsrMw@hirez.programming.kicks-ass.net/
+  8 days ago, by Peter Zijlstra
+
+Noteworthy links:
+* [PATCH v2] sched: Store restrict_cpus_allowed_ptr() call state
+  https://lore.kernel.org/lkml/20230121021749.55313-1-longman@redhat.com/
+  15 days ago, by Waiman Long; thread monitored.
+* [PATCH v3] sched: Store restrict_cpus_allowed_ptr() call state
+  https://lore.kernel.org/lkml/20230127015527.466367-1-longman@redhat.com/
+  9 days ago, by Waiman Long; thread monitored.
+* [PATCH 1/2] cpuset: Fix cpuset_cpus_allowed() to not filter offline CPUs
+  https://lore.kernel.org/lkml/20230131221719.3176-2-will@kernel.org/
+  4 days ago, by Will Deacon; thread monitored.
+
+
+drm: nouveau: hangs on poweroff/reboot
+--------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/b64705e3-2e63-a466-f829-f9568b06766a@googlemail.com/
+https://lore.kernel.org/lkml/b64705e3-2e63-a466-f829-f9568b06766a@googlemail.com/
+
+By Chris Clayton; 17 days ago; 16 activities, latest 2 days ago.
+Introduced in 0e44c2170876 (v6.2-rc1)
+
+Recent activities from: Chris Clayton (4), Ben Skeggs (2)
+
+
+[ *NEW* ] meida: venus: firmware: AOSS doesn't seel anymore on at least sc7180 and sc7280
+-----------------------------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/Y9LSMap+jRxbtpC8@google.com/
+https://lore.kernel.org/lkml/Y9LSMap%2BjRxbtpC8@google.com/
+
+By Matthias Kaehlcke; 9 days ago; 2 activities, latest 3 days ago.
+Introduced in a837e5161cff (v6.2-rc1)
+
+Recent activities from: Matthias Kaehlcke (1)
+
+
+[ *NEW* ] usb: gadget: USB network interface is recognized, but 'ip link' sees it as 'NO-CARRIER'
+-------------------------------------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/f2a4f9847617a0929d62025748384092e5f35cce.camel@crapouillou.net/
+https://lore.kernel.org/lkml/f2a4f9847617a0929d62025748384092e5f35cce.camel@crapouillou.net/
+
+By Paul Cercueil; 4 days ago; 1 activities, latest 4 days ago.
+Introduced in 321b59870f85 (v6.2-rc1)
+
+Recent activities from: Paul Cercueil (1)
+
+
+spi: spidev: recursive locking error
+------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/Y8U9vrwzHVAyBZHK@francesco-nb.int.toradex.com/
+https://lore.kernel.org/lkml/Y8U9vrwzHVAyBZHK@francesco-nb.int.toradex.com/
+
+By Francesco Dolcini; 20 days ago; 12 activities, latest 6 days ago.
+Introduced in a720416d9463 (v6.2-rc4)
+
+Fix incoming:
+* spi: spidev: fix a recursive locking error
+  https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=master&id=eede42c9459b58b71edc99303dad65216a655810
+
+
+nfs: NULL pointer dereference since NFS_V4_2_READ_PLUS is enabled by default
+----------------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/f591b13c-4600-e2a4-8efa-aac6ad828dd1@linaro.org/
+https://lore.kernel.org/lkml/f591b13c-4600-e2a4-8efa-aac6ad828dd1@linaro.org/
+
+By Krzysztof Kozlowski; 29 days ago; 14 activities, latest 13 days ago.
+Introduced in 7fd461c47 (v6.2-rc1)
+
+
+==================================================
+current cycle (v6.1.. aka v6.2-rc), unkown culprit
+==================================================
+
+
+net: r8169: NETDEV WATCHDOG: enp6s0 (r8169): transmit queue 0 timed out
+-----------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/216884/
+https://bugzilla.kernel.org/show_bug.cgi?id=216884
+https://lore.kernel.org/regressions/f5b100c0-cdeb-59d1-5c82-e1df59ee3773@leemhuis.info/
+
+By HougeLangley and HougeLangley; 32 days ago; 21 activities, latest 2 days ago.
+Introduced in v6.1..v6.2-rc2
+
+Fix incoming:
+* PCI: loongson: Improve the MRRS quirk for LS7A
+  https://lore.kernel.org/regressions/2a9140bb-8c4f-dda8-cf43-92db792a29db@leemhuis.info/
+
+
+[ *NEW* ] chrome crashes
+------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/CAPaMSD3MM2BTW0REi4onUCPCLzz1B=-x0j9Uuvf2NHUOSefQ-w@mail.gmail.com/
+https://lore.kernel.org/lkml/CAPaMSD3MM2BTW0REi4onUCPCLzz1B=-x0j9Uuvf2NHUOSefQ-w@mail.gmail.com/
+
+By Chris McGimpsey-Jones; 8 days ago; 1 activities, latest 8 days ago.
+Introduced in v6.1..v6.2-rc5
+
+
+ptdma: kernel panic during host shutdown
+----------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/216856/
+https://bugzilla.kernel.org/show_bug.cgi?id=216856
+https://lore.kernel.org/lkml/0e77436c-9f0a-15b6-697a-7b879e4abc4a@leemhuis.info/
+
+By Eric Pilmore and Eric Pilmore; 39 days ago; 3 activities, latest 9 days ago.
+Introduced in v6.1..v6.2-rc1
+
+
+=============
+End of report
+=============
+
+All regressions marked '[ *NEW* ]' were added since the previous report,
+which can be found here:
+https://lore.kernel.org/r/167501403214.1314424.14370223374691112185@leemhuis.info
+
+Thanks for your attention, have a nice day!
+
+  Regzbot, your hard working Linux kernel regression tracking robot
+
+
+P.S.: Wanna know more about regzbot or how to use it to track regressions
+for your subsystem? Then check out the getting started guide or the
+reference documentation:
+
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
+
+The short version: if you see a regression report you want to see
+tracked, just send a reply to the report where you Cc
+regressions@lists.linux.dev with a line like this:
+
+#regzbot introduced: v5.13..v5.14-rc1
+
+If you want to fix a tracked regression, just do what is expected
+anyway: add a 'Link:' tag with the url to the report, e.g.:
+
+Link: https://lore.kernel.org/all/30th.anniversary.repost@klaava.Helsinki.FI/
