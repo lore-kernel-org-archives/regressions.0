@@ -1,106 +1,200 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EAAD7F
-	for <regressions@lists.linux.dev>; Wed,  8 Feb 2023 02:52:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D1CDC433EF;
-	Wed,  8 Feb 2023 02:52:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1675824727;
-	bh=b/rkymYs8+pjheRuYyegq/Om1XooZkZ/LI4pZoJDRVo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IaDVTGhkKI4ZBPjAlHb+gUIHgeBKmxo0U2I2yRvZB4o8li5UpeKZxMQDVwKZyMxlt
-	 Ufp8DeaHUML/fopNaEwYMhBvqvRnMs3L3D5fUhAjaVfoViLCeDqrlOaiLDBMNMJQb+
-	 javTqb2h8S4BgtHWDphOip3EWRCzvkgEUXm2BWkoAomtOavGdD/L4gG+2CP/VfNfxh
-	 nLTbwBf36NZNOdDir7tmEfJ/9ltqeOqls0Y/7H6XIy00wqMlnGIE2n43S1pD0KjNgF
-	 qQq4s0rDMVNCxNP0SiNHT3sNcoEGn2d2fJ77WQ5HtJs4bxiOuRXq/7o6kh44eswyfK
-	 zjmJn3zepZU6A==
-Date: Wed, 8 Feb 2023 04:52:02 +0200
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc: James Bottomley <James.Bottomley@hansenpartnership.com>,
-	Linux regressions mailing list <regressions@lists.linux.dev>,
-	Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
-	linux-integrity@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>, reach622@mailcuk.com,
-	1138267643@qq.com
-Subject: Re: [regression] Bug 216989 - since 6.1 systems with AMD Ryzen
- stutter when fTPM is enabled
-Message-ID: <Y+MOUsLIniYS/mw8@kernel.org>
-References: <3a196414-68d8-29c9-24cc-2b8cb4c9d358@leemhuis.info>
- <8a7775912f31394944b43db12adc78efd84b1fad.camel@HansenPartnership.com>
- <Y+MFNvr2deX7+Mxa@kernel.org>
- <Y+MFUZ7WD0rX2rU9@kernel.org>
- <CAHmME9pwT52maXyQMNutv6svgDxAaz3L4MDeq_KVDutOAe8uPw@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7784625
+	for <regressions@lists.linux.dev>; Wed,  8 Feb 2023 08:48:29 +0000 (UTC)
+Received: by mail-wm1-f41.google.com with SMTP id f47-20020a05600c492f00b003dc584a7b7eso868888wmp.3
+        for <regressions@lists.linux.dev>; Wed, 08 Feb 2023 00:48:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=1YhWIUQuspKwnf1RJNS+WEoyM4k3FQkpbf1DuyHpQ0I=;
+        b=KtrZ9XZBRhHf8wolcZBZLXibdV/1X9MpAw7nthzYQRE94gZNP72e88J6pDpSXGHQCn
+         R5prpEJqnEjEPdXBX30EA+1rqVcSLx0O2GnkD4f/Y0mEEmIV6HzVwxJA3U7zkRVVRD7l
+         2gIj5b0XIf4FlFXGh4mSQkRD8qFD8y3CjHFA17XEMyeF4+uzpptNxPNklqgGeCz4Yf1s
+         GbpjisTZjI4hJw3ZIJo+3milbbBDvsEeBfnK5kj6rLiLt81gPP87z59W/mm4rPzSPcfT
+         D/NvpkkyiBMmWPUqlImpWReOAU5kdlki+xqJtgQLyiYukyuUmgjdQnamcwzI3naRf6II
+         urVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1YhWIUQuspKwnf1RJNS+WEoyM4k3FQkpbf1DuyHpQ0I=;
+        b=ezXNWqM4rET6BjuRVYEkIkFnBRgcpU3Sqb83Wxw+ZBNsu1dhCFGIbfSgIHSvBSYOUk
+         GDRyH4/tdVMGMyVe2UKfcNqOlUw6FRLiKK+lGzfabsHkzTPsJEZ4SOP+W6LY9UCMYlt4
+         Qg6ULVj8qqcWLDK1cKnyn2RddCNegzWwuj+Z0ZFVcJEgtFska4ZIRIQlGbcVx3gl3C7W
+         nPA4ucGe/1zvC6dIMQ4LxYa3ZR8O4eKQX7NBk8avaSyb64+oBudAw+jrdfWNOys1/TRo
+         77BB0t0zfSqra8XP1+/Uz/pz9Tbg9N9iYtTct9Cw68MOqeTZbZtPrv2xiQPce0frbZLT
+         C9+A==
+X-Gm-Message-State: AO0yUKUJqS0ZAx7GoeOaVD7g6SIsSdBXExTJxDPAVV85+RzjhmLDki1E
+	uPL4cqtLxaNvwxZt/p7Jb7A=
+X-Google-Smtp-Source: AK7set9ycYc14r7fwKij4cP+qvNHtAux32nBwIIJmI+Y8TrAiMRobTDyCQIxDTpuDQUYli1I8GsUbA==
+X-Received: by 2002:a05:600c:998:b0:3e0:95:ea3e with SMTP id w24-20020a05600c099800b003e00095ea3emr5863272wmp.22.1675846107796;
+        Wed, 08 Feb 2023 00:48:27 -0800 (PST)
+Received: from [192.168.1.10] (97e09f27.skybroadband.com. [151.224.159.39])
+        by smtp.googlemail.com with ESMTPSA id iv12-20020a05600c548c00b003db12112fcfsm1356808wmb.4.2023.02.08.00.48.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 08 Feb 2023 00:48:27 -0800 (PST)
+Message-ID: <5cf46df8-0fa2-e9f5-aa8e-7f7f703d96dd@googlemail.com>
+Date: Wed, 8 Feb 2023 08:48:25 +0000
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHmME9pwT52maXyQMNutv6svgDxAaz3L4MDeq_KVDutOAe8uPw@mail.gmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Subject: Re: linux-6.2-rc4+ hangs on poweroff/reboot: Bisected
+From: Chris Clayton <chris2553@googlemail.com>
+To: Ben Skeggs <skeggsb@gmail.com>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
+ bskeggs@redhat.com, Karol Herbst <kherbst@redhat.com>,
+ Lyude Paul <lyude@redhat.com>, ML nouveau <nouveau@lists.freedesktop.org>,
+ LKML <linux-kernel@vger.kernel.org>,
+ ML dri-devel <dri-devel@lists.freedesktop.org>
+References: <b64705e3-2e63-a466-f829-f9568b06766a@googlemail.com>
+ <fcec3c78-b5d9-eb48-0fc0-d1f27de87f23@leemhuis.info>
+ <b21fa1f6-a71d-5657-8596-ee0be73185ea@leemhuis.info>
+ <3ab28896-70e9-6f90-5b97-e5397b06e715@googlemail.com>
+ <a163dd7b-c5d1-a07b-a816-7a2dfd3edfd4@leemhuis.info>
+ <ab1b0f73-6b4e-8602-2999-b7bec25d92db@googlemail.com>
+ <CACAvsv4sOtPjCVnEcKd2RCUqYWxSn5XKyksbS-Bds2qCqyusVw@mail.gmail.com>
+ <1cdb84ac-f7a8-66ba-98fc-3db302b49a5a@googlemail.com>
+ <dab6eb81-db3f-8fa1-84ad-9b40e209514b@googlemail.com>
+ <CACAvsv5iYdF3P8AbyrbYo3zGmYRYhxDWn7WbAR5V9qHpbgBXRA@mail.gmail.com>
+ <1632a9ef-2954-c8f0-cdc9-03157c9d8547@googlemail.com>
+ <5abbee70-cc84-1528-c3d8-9befd9edd611@googlemail.com>
+Content-Language: en-GB
+In-Reply-To: <5abbee70-cc84-1528-c3d8-9befd9edd611@googlemail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Feb 07, 2023 at 11:31:37PM -0300, Jason A. Donenfeld wrote:
-> On Tue, Feb 7, 2023 at 11:13 PM Jarkko Sakkinen <jarkko@kernel.org> wrote:
-> >
-> > On Wed, Feb 08, 2023 at 04:13:16AM +0200, Jarkko Sakkinen wrote:
-> > > On Thu, Feb 02, 2023 at 07:57:37AM -0500, James Bottomley wrote:
-> > > > On Thu, 2023-02-02 at 11:28 +0100, Linux kernel regression tracking
-> > > > (Thorsten Leemhuis) wrote:
-> > > > [...]
-> > > > > So it's a firmware problem, but apparently one that Linux only
-> > > > > triggers since 6.1.
-> > > > >
-> > > > > Jason, could the hwrng changes have anything to do with this?
-> > > > >
-> > > > > A bisection really would be helpful, but I guess that is not easy as
-> > > > > the problem apparently only shows up after some time...
-> > > >
-> > > > the problem description says the fTPM causes system stutter when it
-> > > > writes to NVRAM.  Since an fTPM is a proprietary implementation, we
-> > > > don't know what it does.  The ms TPM implementation definitely doesn't
-> > > > trigger NV writes on rng requests, but it is plausible this fTPM does
-> > > > ... particularly if they have a time based input to the DRNG.  Even if
-> > > > this speculation is true, there's not much we can do about it, since
-> > > > it's a firmware bug and AMD should have delivered the BIOS update that
-> > > > fixes it.
-> > > >
-> > > > The way to test this would be to set the config option
-> > > >
-> > > > CONFIG_HW_RANDOM_TPM=n
-> > > >
-> > > > and see if the stutter goes away.  I suppose if someone could quantify
-> > > > the bad bioses, we could warn, but that's about it.
-> > > >
-> > > > James
-> > > >
-> > >
-> > > And e.g. I do not have a Ryzen CPU so pretty hard to answer such question.
-> >
-> > ... about hwrng
-> 
-> Well, the options here are basically:
-> 
-> a) Do nothing, and just expect people to update their BIOSes, since an
-> update is available.
-> b) Do nothing, and expect people with broken BIOSes to `echo blacklist
-> tpm >> /etc/modprobesomethingsomething`.
-> c) Figure out how to identify the buggy BIOS and disable the TPM's rng
-> with a quirk in this case.
-> d) Figure out how to dynamically detect TPM rng latency, and warn about it.
-> e) Figure out how to dynamically detect TPM rng latency, and disable it.
-> 
-> I think given that a firmware update *is* available, (a) is fine. And
-> the generic workaround remains (b). But if you want to be really nice,
-> (c) would be fine too. Somebody with the affected hardware would
-> probably have to send in some DMI logs or whatever else. (d) and (e)
-> sound possible in theory but I dunno really... seems finicky.
-> 
-> Jason
+Hi.
 
-For now (a), but if someone with capable hardware can make up something
-I'm happy to go that through, if it makes sense.
+I'm assuming  that we are not going to see a fix for this regression before 6.2 is released. Consequently, I've
+implemented a (very simple) workaround. All that happens is that in the (sysv) init script that starts and stops SDDM,
+the nouveau module is removed once SDDM is stopped. With that in place, my system no longer freezes on reboot or poweroff.
 
-BR, Jarkko
+Let me know if I can provide any additional diagnostics although, with the problem seemingly occurring so late in the
+shutdown process, I may need help on how to go about capturing.
+
+Chris
+
+On 02/02/2023 20:45, Chris Clayton wrote:
+> 
+> 
+> On 01/02/2023 13:51, Chris Clayton wrote:
+>>
+>>
+>> On 30/01/2023 23:27, Ben Skeggs wrote:
+>>> On Tue, 31 Jan 2023 at 09:09, Chris Clayton <chris2553@googlemail.com> wrote:
+>>>>
+>>>> Hi again.
+>>>>
+>>>> On 30/01/2023 20:19, Chris Clayton wrote:
+>>>>> Thanks, Ben.
+>>>>
+>>>> <snip>
+>>>>
+>>>>>> Hey,
+>>>>>>
+>>>>>> This is a complete shot-in-the-dark, as I don't see this behaviour on
+>>>>>> *any* of my boards.  Could you try the attached patch please?
+>>>>>
+>>>>> Unfortunately, the patch made no difference.
+>>>>>
+>>>>> I've been looking at how the graphics on my laptop is set up, and have a bit of a worry about whether the firmware might
+>>>>> be playing a part in this problem. In order to offload video decoding to the NVidia TU117 GPU, it seems the scrubber
+>>>>> firmware must be available, but as far as I know,that has not been released by NVidia. To get it to work, I followed
+>>>>> what ubuntu have done and the scrubber in /lib/firmware/nvidia/tu117/nvdec/ is a symlink to
+>>>>> ../../tu116/nvdev/scrubber.bin. That, of course, means that some of the firmware loaded is for a different card is being
+>>>>> loaded. I note that processing related to firmware is being changed in the patch. Might my set up be at the root of my
+>>>>> problem?
+>>>>>
+>>>>> I'll have a fiddle an see what I can work out.
+>>>>>
+>>>>> Chris
+>>>>>
+>>>>>>
+>>>>>> Thanks,
+>>>>>> Ben.
+>>>>>>
+>>>>>>>
+>>>>
+>>>> Well, my fiddling has got my system rebooting and shutting down successfully again. I found that if I delete the symlink
+>>>> to the scrubber firmware, reboot and shutdown work again. There are however, a number of other files in the tu117
+>>>> firmware directory tree that that are symlinks to actual files in its tu116 counterpart. So I deleted all of those too.
+>>>> Unfortunately, the absence of one or more of those symlinks causes Xorg to fail to start. I've reinstated all the links
+>>>> except scrubber and I now have a system that works as it did until I tried to run a kernel that includes the bad commit
+>>>> I identified in my bisection. That includes offloading video decoding to the NVidia card, so what ever I read that said
+>>>> the scrubber firmware was needed seems to have been wrong. I get a new message that (nouveau 0000:01:00.0: fb: VPR
+>>>> locked, but no scrubber binary!), but, hey, we can't have everything.
+>>>>
+>>>> If you still want to get to the bottom of this, let me know what you need me to provide and I'll do my best. I suspect
+>>>> you might want to because there will a n awful lot of Ubuntu-based systems out there with that scrubber.bin symlink in
+>>>> place. On the other hand,m it could but quite a while before ubuntu are deploying 6.2 or later kernels.
+>>> The symlinks are correct - whole groups of GPUs share the same FW, and
+>>> we use symlinks in linux-firmware to represent this.
+>>>
+>>> I don't really have any ideas how/why this patch causes issues with
+>>> shutdown - it's a path that only gets executed during initialisation.
+>>> Can you try and capture the kernel log during shutdown ("dmesg -w"
+>>> over ssh? netconsole?), and see if there's any relevant messages
+>>> providing a hint at what's going on?  Alternatively, you could try
+>>> unloading the module (you will have to stop X/wayland/gdm/etc/etc
+>>> first) and seeing if that hangs too.
+>>>
+>>> Ben.
+>>
+>> Sorry for the delay - I've been learning about netconsole and netcat. However, I had no success with ssh and netconsole
+>> produced a log with nothing unusual in it.
+>>
+>> Simply stopping Xorg and removing the nouveau module succeeds.
+>>
+>> So, I rebuilt rc6+ after a pull from linus' tree this morning and set the nouveau debug level to 7. I then booted to a
+>> console before doing a reboot (with Ctl+Alt+Del). As expected the machine locked up just before it would ordinarily
+>> restart. The last few lines on the console might be helpful:
+>>
+>> ...
+>> nouveau 0000:01:00:0  fifo: preinit running...
+>> nouveau 0000:01:00:0  fifo: preinit completed in 4us
+>> nouveau 0000:01:00:0  gr: preinit running...
+>> nouveau 0000:01:00:0  gr: preinit completed in 0us
+>> nouveau 0000:01:00:0  nvdec0: preinit running...
+>> nouveau 0000:01:00:0  nvdec0: preinit completed in 0us
+>> nouveau 0000:01:00:0  nvdec0: preinit running...
+>> nouveau 0000:01:00:0  nvdec0: preinit completed in 0us
+>> nouveau 0000:01:00:0  sec2: preinit running...
+>> nouveau 0000:01:00:0  sec2: preinit completed in 0us
+>> nouveau 0000:01:00:0  fb:.VPR locked, running scrubber binary
+>>
+>> These messages appear after the "sd 4:0:0:0 [sda] Stopping disk" I reported in my initial email.
+>>
+>> After the "running scrubber" line appears the machine is locked and I have to hold down the power button to recover. I
+>> get the same outcome from running "halt -dip", "poweroff -di" and "shutdown -h -P now". I guess it's no surprise that
+>> all three result in the same outcome because invocations halt, poweroff and reboot (without the -f argument)from a
+>> runlevel other than 0 resukt in shutdown being run. switching to runlevel 0 with "telenit 0" results in the same
+>> messages from nouveau followed by the lockup.
+>>
+>> Let me know if you need any additional diagnostics.
+>>
+>> Chris
+>>
+> 
+> I've done some more investigation and found that I hadn't done sufficient amemdment the scripts run at shutdown to
+> prevent the network being shutdown. I've now got netconsole captures for 6.2.0-rc6+
+> (9f266ccaa2f5228bfe67ad58a94ca4e0109b954a) and, for comparison, 6.1.9. These two logs are attached.
+> 
+> Chris
+> 
+>>>
+>>>>
+>>>> Thanks,
+>>>>
+>>>> Chris
+>>>>
+>>>> <snip>
