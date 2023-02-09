@@ -1,200 +1,180 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+Received: from mail-oa1-f41.google.com (mail-oa1-f41.google.com [209.85.160.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7784625
-	for <regressions@lists.linux.dev>; Wed,  8 Feb 2023 08:48:29 +0000 (UTC)
-Received: by mail-wm1-f41.google.com with SMTP id f47-20020a05600c492f00b003dc584a7b7eso868888wmp.3
-        for <regressions@lists.linux.dev>; Wed, 08 Feb 2023 00:48:29 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA21833ED
+	for <regressions@lists.linux.dev>; Thu,  9 Feb 2023 14:11:53 +0000 (UTC)
+Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-16a7f5b6882so2625856fac.10
+        for <regressions@lists.linux.dev>; Thu, 09 Feb 2023 06:11:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=1YhWIUQuspKwnf1RJNS+WEoyM4k3FQkpbf1DuyHpQ0I=;
-        b=KtrZ9XZBRhHf8wolcZBZLXibdV/1X9MpAw7nthzYQRE94gZNP72e88J6pDpSXGHQCn
-         R5prpEJqnEjEPdXBX30EA+1rqVcSLx0O2GnkD4f/Y0mEEmIV6HzVwxJA3U7zkRVVRD7l
-         2gIj5b0XIf4FlFXGh4mSQkRD8qFD8y3CjHFA17XEMyeF4+uzpptNxPNklqgGeCz4Yf1s
-         GbpjisTZjI4hJw3ZIJo+3milbbBDvsEeBfnK5kj6rLiLt81gPP87z59W/mm4rPzSPcfT
-         D/NvpkkyiBMmWPUqlImpWReOAU5kdlki+xqJtgQLyiYukyuUmgjdQnamcwzI3naRf6II
-         urVQ==
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=JFB1o+M1WT64r376ibZ+mxHZwj2asHMqFz3iFJrx2AQ=;
+        b=eg0TGvfOTUHTMNXRJ+GlrjdGoYvkiD+UHI5DDibs5zeRyO+2d3UHX3GiD3n1uCmoUq
+         VZTw7DL7KuBJvGQiVygUY7uqpyo7+l8henIXwZNfR52yqIc+2Y7ayDrQyG3vPmNdXi7g
+         OlYPOck8l4mzUpdUtBQcrdp+fuN8iri9m2VGO+nr/XiUrJunsDTjsfDhBkk1fSlyVGqw
+         ljWvka2t+N07Y+H6PF1hgEZz0UeYUmxiebUZH0BmaDEiq/Yy0HDidGLi7mpFpU9sDxiu
+         ZP9R8NjoMXdM8GcKNW6Ble1DkyMBBoqu3RqAEFOFUabssIEpDOf/R+vVqYVN8r9ekeHw
+         4s/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1YhWIUQuspKwnf1RJNS+WEoyM4k3FQkpbf1DuyHpQ0I=;
-        b=ezXNWqM4rET6BjuRVYEkIkFnBRgcpU3Sqb83Wxw+ZBNsu1dhCFGIbfSgIHSvBSYOUk
-         GDRyH4/tdVMGMyVe2UKfcNqOlUw6FRLiKK+lGzfabsHkzTPsJEZ4SOP+W6LY9UCMYlt4
-         Qg6ULVj8qqcWLDK1cKnyn2RddCNegzWwuj+Z0ZFVcJEgtFska4ZIRIQlGbcVx3gl3C7W
-         nPA4ucGe/1zvC6dIMQ4LxYa3ZR8O4eKQX7NBk8avaSyb64+oBudAw+jrdfWNOys1/TRo
-         77BB0t0zfSqra8XP1+/Uz/pz9Tbg9N9iYtTct9Cw68MOqeTZbZtPrv2xiQPce0frbZLT
-         C9+A==
-X-Gm-Message-State: AO0yUKUJqS0ZAx7GoeOaVD7g6SIsSdBXExTJxDPAVV85+RzjhmLDki1E
-	uPL4cqtLxaNvwxZt/p7Jb7A=
-X-Google-Smtp-Source: AK7set9ycYc14r7fwKij4cP+qvNHtAux32nBwIIJmI+Y8TrAiMRobTDyCQIxDTpuDQUYli1I8GsUbA==
-X-Received: by 2002:a05:600c:998:b0:3e0:95:ea3e with SMTP id w24-20020a05600c099800b003e00095ea3emr5863272wmp.22.1675846107796;
-        Wed, 08 Feb 2023 00:48:27 -0800 (PST)
-Received: from [192.168.1.10] (97e09f27.skybroadband.com. [151.224.159.39])
-        by smtp.googlemail.com with ESMTPSA id iv12-20020a05600c548c00b003db12112fcfsm1356808wmb.4.2023.02.08.00.48.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Feb 2023 00:48:27 -0800 (PST)
-Message-ID: <5cf46df8-0fa2-e9f5-aa8e-7f7f703d96dd@googlemail.com>
-Date: Wed, 8 Feb 2023 08:48:25 +0000
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=JFB1o+M1WT64r376ibZ+mxHZwj2asHMqFz3iFJrx2AQ=;
+        b=HyQoPZ9Wzdfm/nabscIjUNBshw8isX8boLnY3xgQsHVagi0Ztbc2nD3K9reesOKrtq
+         ok6RTGmKOltyq5J1YOEV2FKFGfiIC93ivbsl2XI2FtKq5KKzkUaouuXY0hINwtPAaL24
+         +o+KxgmJfsY20DJiLCRn4Qg4z+pUmUtn9Mdioe1WNk+S0mN9JvcqK1BWWcajUbmLqWSk
+         NDyiPdaiLEEGsDMzHmQLOUTr99dw9/HvU3rACN8Y3APHt3631H/Qe99/BMcFzu3nMw8B
+         opKI+WP7wxAFhUyydLx/3QOirPSGQbtCtNPdwW2/cU/MqaLlwayEFWWtQEFKl+7qTawa
+         r3tg==
+X-Gm-Message-State: AO0yUKW6hMEE2Fh6ppavvowhEBjz52J1MmxEKfHWhXrbcHGBAiZ+Mcoa
+	jTa4XguBeF1vhmMnWsfyFpna1Hi1gUB0VwP4/FOreWFpJ4QlDw==
+X-Google-Smtp-Source: AK7set+5BvkASgCVopLhZdPXdr8pMRKwKxKAotvY+K6QKb/dMzp3I4Xyky+P69sIgrxHEwvgn12ND22+oW28RAw35kY=
+X-Received: by 2002:a05:6870:392c:b0:163:67a4:8f9f with SMTP id
+ b44-20020a056870392c00b0016367a48f9fmr1336048oap.270.1675951912604; Thu, 09
+ Feb 2023 06:11:52 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: linux-6.2-rc4+ hangs on poweroff/reboot: Bisected
-From: Chris Clayton <chris2553@googlemail.com>
-To: Ben Skeggs <skeggsb@gmail.com>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
- bskeggs@redhat.com, Karol Herbst <kherbst@redhat.com>,
- Lyude Paul <lyude@redhat.com>, ML nouveau <nouveau@lists.freedesktop.org>,
- LKML <linux-kernel@vger.kernel.org>,
- ML dri-devel <dri-devel@lists.freedesktop.org>
-References: <b64705e3-2e63-a466-f829-f9568b06766a@googlemail.com>
- <fcec3c78-b5d9-eb48-0fc0-d1f27de87f23@leemhuis.info>
- <b21fa1f6-a71d-5657-8596-ee0be73185ea@leemhuis.info>
- <3ab28896-70e9-6f90-5b97-e5397b06e715@googlemail.com>
- <a163dd7b-c5d1-a07b-a816-7a2dfd3edfd4@leemhuis.info>
- <ab1b0f73-6b4e-8602-2999-b7bec25d92db@googlemail.com>
- <CACAvsv4sOtPjCVnEcKd2RCUqYWxSn5XKyksbS-Bds2qCqyusVw@mail.gmail.com>
- <1cdb84ac-f7a8-66ba-98fc-3db302b49a5a@googlemail.com>
- <dab6eb81-db3f-8fa1-84ad-9b40e209514b@googlemail.com>
- <CACAvsv5iYdF3P8AbyrbYo3zGmYRYhxDWn7WbAR5V9qHpbgBXRA@mail.gmail.com>
- <1632a9ef-2954-c8f0-cdc9-03157c9d8547@googlemail.com>
- <5abbee70-cc84-1528-c3d8-9befd9edd611@googlemail.com>
-Content-Language: en-GB
-In-Reply-To: <5abbee70-cc84-1528-c3d8-9befd9edd611@googlemail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <CALFERdzKUodLsm6=Ub3g2+PxpNpPtPq3bGBLbff=eZr9_S=YVA@mail.gmail.com>
+ <962dfb15-b259-b764-3085-8d6a942f5abb@leemhuis.info> <CALFERdwmt_1yVmeQheTRqv6n0YJUs5cuRpUqT1O4UMydY6ubEA@mail.gmail.com>
+In-Reply-To: <CALFERdwmt_1yVmeQheTRqv6n0YJUs5cuRpUqT1O4UMydY6ubEA@mail.gmail.com>
+From: Sasa Ostrouska <casaxa@gmail.com>
+Date: Thu, 9 Feb 2023 15:11:41 +0100
+Message-ID: <CALFERdwvq5day_sbDfiUsMSZCQu9HG8-SBpOZDNPeMdZGog6XA@mail.gmail.com>
+Subject: Re: Google Pixelbook EVE, no sound in kernel 6.1.x
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: stable@vger.kernel.org, 
+	Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>, Lukasz Majczak <lma@semihalf.com>, 
+	Cezary Rojewski <cezary.rojewski@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi.
+Hi, I dont know how much this is relevant but I am getting this kind
+of traces in dmesg on both, Salckware and Fedora installs.
 
-I'm assuming  that we are not going to see a fix for this regression before 6.2 is released. Consequently, I've
-implemented a (very simple) workaround. All that happens is that in the (sysv) init script that starts and stops SDDM,
-the nouveau module is removed once SDDM is stopped. With that in place, my system no longer freezes on reboot or poweroff.
+[   16.286097] ------------[ cut here ]------------
+[   16.286100] memcpy: detected field-spanning write (size 100) of
+single field "cpr_mconfig->gtw_cfg.config_data" at
+sound/soc/intel/skylake/skl-messages.c:554 (size 4)
+[   16.286128] WARNING: CPU: 1 PID: 1232 at
+sound/soc/intel/skylake/skl-messages.c:554 skl_init_module+0x757/0x770
+[snd_soc_skl]
+[   16.286156] Modules linked in: nf_nat_ftp nf_conntrack_ftp
+nft_objref nf_conntrack_netbios_ns nf_conntrack_broadcast nft_fib_inet
+nft_fib_ipv4 nft_fib_ipv6 nft_fib nft_reject_inet nf_reject_ipv4
+nf_reject_ipv6 nft_reject nft_ct nft_chain_nat nf_nat nf_conntrack
+nf_defrag_ipv6 nf_defrag_ipv4 ip_set nf_tables nfnetlink
+snd_soc_skl_ssp_clk snd_sof_pci_intel_skl snd_sof_intel_hda_common
+soundwire_intel soundwire_generic_allocation soundwire_cadence
+snd_sof_intel_hda snd_sof_pci snd_sof_xtensa_dsp snd_sof snd_sof_utils
+qrtr soundwire_bus snd_soc_avs snd_soc_kbl_rt5663_rt5514_max98927
+snd_soc_hda_codec cros_ec_light_prox cros_ec_sensors
+cros_ec_sensors_core bnep industrialio_triggered_buffer kfifo_buf
+snd_soc_hdac_hdmi snd_soc_dmic industrialio i2c_hid_acpi i2c_hid
+snd_soc_skl cros_ec_chardev snd_soc_hdac_hda cros_ec_sensorhub
+snd_hda_ext_core cros_usbpd_charger cros_ec_sysfs cros_usbpd_logger
+snd_soc_sst_ipc binfmt_misc iTCO_wdt snd_soc_sst_dsp
+snd_soc_acpi_intel_match intel_pmc_bxt
+[   16.286215]  iTCO_vendor_support intel_tcc_cooling
+x86_pkg_temp_thermal snd_soc_acpi intel_powerclamp coretemp kvm_intel
+snd_hda_intel snd_intel_dspcfg snd_intel_sdw_acpi cros_ec_dev
+snd_hda_codec kvm intel_rapl_msr iwlmvm uvcvideo videobuf2_vmalloc
+irqbypass mac80211 rapl videobuf2_memops snd_hda_core videobuf2_v4l2
+intel_cstate intel_uncore libarc4 pcspkr i2c_i801 sunrpc snd_hwdep
+videobuf2_common videodev i2c_smbus btusb btrtl spi_pxa2xx_platform
+dw_dmac btbcm iwlwifi btintel mc snd_soc_rt5663 btmtk snd_soc_rt5514
+snd_soc_max98927 snd_soc_rt5514_spi snd_soc_rl6231 bluetooth
+snd_soc_core cfg80211 mei_me joydev snd_compress mei ac97_bus
+snd_pcm_dmaengine intel_pch_thermal rfkill idma64 snd_seq
+snd_seq_device snd_pcm snd_timer processor_thermal_device_pci_legacy
+processor_thermal_device snd cros_ec_i2c processor_thermal_rfim
+processor_thermal_mbox soundcore processor_thermal_rapl cros_ec_lpcs
+cros_ec tpm_tis_i2c_cr50 cros_usbpd_notify int3403_thermal
+intel_rapl_common
+[   16.286285]  int340x_thermal_zone intel_xhci_usb_role_switch
+int3400_thermal chromeos_pstore cros_kbd_led_backlight
+acpi_thermal_rel chromeos_acpi intel_soc_dts_iosf zram
+hid_logitech_hidpp hid_logitech_dj i915 drm_buddy video
+crct10dif_pclmul crc32_pclmul crc32c_intel wmi polyval_clmulni nvme
+polyval_generic drm_display_helper nvme_core sdhci_pci cqhci cec sdhci
+ghash_clmulni_intel hid_multitouch mmc_core sha512_ssse3 nvme_common
+serio_raw ttm pinctrl_sunrisepoint r8152 mii ip6_tables ip_tables fuse
+[last unloaded: i2c_hid]
+[   16.286324] CPU: 1 PID: 1232 Comm: pulseaudio Not tainted
+6.1.9-201.pixelbook.fc37.x86_64 #1
+[   16.286328] Hardware name: Google Eve/Eve, BIOS
+Google_Eve.9584.230.0 09/06/2021
+[   16.286330] RIP: 0010:skl_init_module+0x757/0x770 [snd_soc_skl]
+[   16.286355] Code: bd fe ff ff b9 04 00 00 00 4c 89 fe 4c 89 04 24
+48 c7 c2 00 e7 42 c1 48 c7 c7 58 e7 42 c1 c6 05 0e 36 02 00 01 e8 3f
+1b 95 fb <0f> 0b 4c 8b 04 24 e9 8c fe ff ff e9 96 ab 00 00 66 0f 1f 84
+00 00
+[   16.286358] RSP: 0000:ffffb3c2816c7ae0 EFLAGS: 00010296
+[   16.286362] RAX: 000000000000009a RBX: ffff8d7ce355e028 RCX: 0000000000000000
+[   16.286364] RDX: 0000000000000001 RSI: ffffffffbd74c48b RDI: 00000000ffffffff
+[   16.286366] RBP: ffff8d7cc3854028 R08: 0000000000000000 R09: ffffb3c2816c7980
+[   16.286368] R10: 0000000000000003 R11: ffffffffbe1465a8 R12: 00000000000000b8
+[   16.286370] R13: 00000000000000b8 R14: ffff8d7d0d73c840 R15: 0000000000000064
+[   16.286372] FS:  00007fcb6eca02c0(0000) GS:ffff8d802ec80000(0000)
+knlGS:0000000000000000
+[   16.286375] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   16.286377] CR2: 00002dc17c298000 CR3: 000000016ccfa004 CR4: 00000000003706e0
+[   16.286379] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[   16.286381] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[   16.286382] Call Trace:
+[   16.286386]  <TASK>
+[   16.286391]  skl_tplg_mixer_event+0x72f/0xd20 [snd_soc_skl]
+[   16.286412]  ? __schedule+0x367/0x1360
+[   16.286420]  dapm_seq_check_event+0x108/0x1c0 [snd_soc_core]
+[   16.286464]  dapm_seq_run_coalesced+0x84/0x1c0 [snd_soc_core]
+[   16.286501]  dapm_seq_run+0x16e/0x3e0 [snd_soc_core]
+[   16.286542]  dapm_power_widgets+0x5db/0xa40 [snd_soc_core]
+[   16.286581]  snd_soc_dapm_stream_event+0xf5/0x170 [snd_soc_core]
+[   16.286619]  __soc_pcm_prepare+0x53/0xf0 [snd_soc_core]
+[   16.286659]  dpcm_fe_dai_prepare+0xac/0x150 [snd_soc_core]
+[   16.286699]  snd_pcm_do_prepare+0x26/0x40 [snd_pcm]
+[   16.286718]  snd_pcm_action_single+0x33/0x80 [snd_pcm]
+[   16.286733]  snd_pcm_action_nonatomic+0x95/0xa0 [snd_pcm]
+[   16.286749]  snd_pcm_ioctl+0x23/0x40 [snd_pcm]
+[   16.286764]  __x64_sys_ioctl+0x8d/0xd0
+[   16.286770]  do_syscall_64+0x58/0x80
+[   16.286774]  ? syscall_exit_to_user_mode+0x17/0x40
+[   16.286777]  ? do_syscall_64+0x67/0x80
+[   16.286780]  ? snd_pcm_ioctl+0x23/0x40 [snd_pcm]
+[   16.286795]  ? __x64_sys_ioctl+0x8d/0xd0
+[   16.286799]  ? syscall_exit_to_user_mode+0x17/0x40
+[   16.286801]  ? do_syscall_64+0x67/0x80
+[   16.286805]  entry_SYSCALL_64_after_hwframe+0x63/0xcd
+[   16.286809] RIP: 0033:0x7fcb6f593d6f
+[   16.286841] Code: 00 48 89 44 24 18 31 c0 48 8d 44 24 60 c7 04 24
+10 00 00 00 48 89 44 24 08 48 8d 44 24 20 48 89 44 24 10 b8 10 00 00
+00 0f 05 <89> c2 3d 00 f0 ff ff 77 18 48 8b 44 24 18 64 48 2b 04 25 28
+00 00
+[   16.286843] RSP: 002b:00007ffe5ea27370 EFLAGS: 00000246 ORIG_RAX:
+0000000000000010
+[   16.286847] RAX: ffffffffffffffda RBX: 0000563cd8d93160 RCX: 00007fcb6f593d6f
+[   16.286849] RDX: 0000000000000000 RSI: 0000000000004140 RDI: 0000000000000015
+[   16.286851] RBP: 0000000000000000 R08: 00000000000012bd R09: 00007ffe5ea27324
+[   16.286853] R10: 0000000000000004 R11: 0000000000000246 R12: 00007ffe5ea27aa4
+[   16.286855] R13: 00007ffe5ea27680 R14: 00007ffe5ea27a90 R15: 00007fcb6ec07290
+[   16.286861]  </TASK>
+[   16.286863] ---[ end trace 0000000000000000 ]---
 
-Let me know if I can provide any additional diagnostics although, with the problem seemingly occurring so late in the
-shutdown process, I may need help on how to go about capturing.
+Seems sound related. Also I suffer from not be able to reboot or
+powerdown on Slackware with 6.1.8,6.1.9 and 6.1.10 kernels.
 
-Chris
+Rgds
+Sasa
 
-On 02/02/2023 20:45, Chris Clayton wrote:
-> 
-> 
-> On 01/02/2023 13:51, Chris Clayton wrote:
->>
->>
->> On 30/01/2023 23:27, Ben Skeggs wrote:
->>> On Tue, 31 Jan 2023 at 09:09, Chris Clayton <chris2553@googlemail.com> wrote:
->>>>
->>>> Hi again.
->>>>
->>>> On 30/01/2023 20:19, Chris Clayton wrote:
->>>>> Thanks, Ben.
->>>>
->>>> <snip>
->>>>
->>>>>> Hey,
->>>>>>
->>>>>> This is a complete shot-in-the-dark, as I don't see this behaviour on
->>>>>> *any* of my boards.  Could you try the attached patch please?
->>>>>
->>>>> Unfortunately, the patch made no difference.
->>>>>
->>>>> I've been looking at how the graphics on my laptop is set up, and have a bit of a worry about whether the firmware might
->>>>> be playing a part in this problem. In order to offload video decoding to the NVidia TU117 GPU, it seems the scrubber
->>>>> firmware must be available, but as far as I know,that has not been released by NVidia. To get it to work, I followed
->>>>> what ubuntu have done and the scrubber in /lib/firmware/nvidia/tu117/nvdec/ is a symlink to
->>>>> ../../tu116/nvdev/scrubber.bin. That, of course, means that some of the firmware loaded is for a different card is being
->>>>> loaded. I note that processing related to firmware is being changed in the patch. Might my set up be at the root of my
->>>>> problem?
->>>>>
->>>>> I'll have a fiddle an see what I can work out.
->>>>>
->>>>> Chris
->>>>>
->>>>>>
->>>>>> Thanks,
->>>>>> Ben.
->>>>>>
->>>>>>>
->>>>
->>>> Well, my fiddling has got my system rebooting and shutting down successfully again. I found that if I delete the symlink
->>>> to the scrubber firmware, reboot and shutdown work again. There are however, a number of other files in the tu117
->>>> firmware directory tree that that are symlinks to actual files in its tu116 counterpart. So I deleted all of those too.
->>>> Unfortunately, the absence of one or more of those symlinks causes Xorg to fail to start. I've reinstated all the links
->>>> except scrubber and I now have a system that works as it did until I tried to run a kernel that includes the bad commit
->>>> I identified in my bisection. That includes offloading video decoding to the NVidia card, so what ever I read that said
->>>> the scrubber firmware was needed seems to have been wrong. I get a new message that (nouveau 0000:01:00.0: fb: VPR
->>>> locked, but no scrubber binary!), but, hey, we can't have everything.
->>>>
->>>> If you still want to get to the bottom of this, let me know what you need me to provide and I'll do my best. I suspect
->>>> you might want to because there will a n awful lot of Ubuntu-based systems out there with that scrubber.bin symlink in
->>>> place. On the other hand,m it could but quite a while before ubuntu are deploying 6.2 or later kernels.
->>> The symlinks are correct - whole groups of GPUs share the same FW, and
->>> we use symlinks in linux-firmware to represent this.
->>>
->>> I don't really have any ideas how/why this patch causes issues with
->>> shutdown - it's a path that only gets executed during initialisation.
->>> Can you try and capture the kernel log during shutdown ("dmesg -w"
->>> over ssh? netconsole?), and see if there's any relevant messages
->>> providing a hint at what's going on?  Alternatively, you could try
->>> unloading the module (you will have to stop X/wayland/gdm/etc/etc
->>> first) and seeing if that hangs too.
->>>
->>> Ben.
->>
->> Sorry for the delay - I've been learning about netconsole and netcat. However, I had no success with ssh and netconsole
->> produced a log with nothing unusual in it.
->>
->> Simply stopping Xorg and removing the nouveau module succeeds.
->>
->> So, I rebuilt rc6+ after a pull from linus' tree this morning and set the nouveau debug level to 7. I then booted to a
->> console before doing a reboot (with Ctl+Alt+Del). As expected the machine locked up just before it would ordinarily
->> restart. The last few lines on the console might be helpful:
->>
->> ...
->> nouveau 0000:01:00:0  fifo: preinit running...
->> nouveau 0000:01:00:0  fifo: preinit completed in 4us
->> nouveau 0000:01:00:0  gr: preinit running...
->> nouveau 0000:01:00:0  gr: preinit completed in 0us
->> nouveau 0000:01:00:0  nvdec0: preinit running...
->> nouveau 0000:01:00:0  nvdec0: preinit completed in 0us
->> nouveau 0000:01:00:0  nvdec0: preinit running...
->> nouveau 0000:01:00:0  nvdec0: preinit completed in 0us
->> nouveau 0000:01:00:0  sec2: preinit running...
->> nouveau 0000:01:00:0  sec2: preinit completed in 0us
->> nouveau 0000:01:00:0  fb:.VPR locked, running scrubber binary
->>
->> These messages appear after the "sd 4:0:0:0 [sda] Stopping disk" I reported in my initial email.
->>
->> After the "running scrubber" line appears the machine is locked and I have to hold down the power button to recover. I
->> get the same outcome from running "halt -dip", "poweroff -di" and "shutdown -h -P now". I guess it's no surprise that
->> all three result in the same outcome because invocations halt, poweroff and reboot (without the -f argument)from a
->> runlevel other than 0 resukt in shutdown being run. switching to runlevel 0 with "telenit 0" results in the same
->> messages from nouveau followed by the lockup.
->>
->> Let me know if you need any additional diagnostics.
->>
->> Chris
->>
-> 
-> I've done some more investigation and found that I hadn't done sufficient amemdment the scripts run at shutdown to
-> prevent the network being shutdown. I've now got netconsole captures for 6.2.0-rc6+
-> (9f266ccaa2f5228bfe67ad58a94ca4e0109b954a) and, for comparison, 6.1.9. These two logs are attached.
-> 
-> Chris
-> 
->>>
->>>>
->>>> Thanks,
->>>>
->>>> Chris
->>>>
->>>> <snip>
+On Fri, Jan 27, 2023 at 11:06 AM Sasa Ostrouska <casaxa@gmail.com> wrote:
+>
+> Hi Lucasz, I don't know if this could be relevant, but when I
+> installed slackware64-current on the other pixelbook I have the sound
+> works with
+> kernel 6.1.8 but not all the time and seems there are some crashes of
+> the sound. Also it is very amplified.
+> I attach the dmesg here.
