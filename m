@@ -1,242 +1,441 @@
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62F88A920
-	for <regressions@lists.linux.dev>; Thu,  9 Feb 2023 18:22:38 +0000 (UTC)
-Received: by mail-qt1-f176.google.com with SMTP id c2so2995672qtw.5
-        for <regressions@lists.linux.dev>; Thu, 09 Feb 2023 10:22:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=L/1gTmVnySca8jPan+vw+HB1wn9UVQIEd+iLChgEFuM=;
-        b=HSpP2//Xd6RTJQFb4fyXH7eYu+tbzxXV4ccX5E75RJiLGZEVvFw4b6g6w/fhlS7D+T
-         JJS2DBYg/x8vbWzMcUDyj1rzXvrG8ha/9eCPq7GsYt/7r8vr9iD9DAf0z3EFORUzI4k/
-         UrkfeOLF5Ypxf3bx7/iJ+qpdqcODQ0wxXTedHSfH3Gnjg4yDeLEvLMIfXPj9mhIbEJmV
-         p2Zm55OTki21fn2eodcvgURT5ZjXqQBC5sjWmfWJKxTewQtC2XDuKW+v3X5UVOy7YH59
-         jLM3u5Fn4pyrZiswtzx5/s9Q63TPLVpDcF0FYEU6Meb4bizZHHmgJxLaMRu6Nx7n64N8
-         w/Qw==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EB17A931
+	for <regressions@lists.linux.dev>; Thu,  9 Feb 2023 19:22:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1675970540;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=odjslzgfJQeZsYkFt34EcHS3ke09IOK/EQikeuKIQN0=;
+	b=RZsRDIYABdqpF5BjcZiQm0EH4ObsR8gTS2FbTT6vpZmDJgdDUsZC1ZuniW+abnnYBtpSHC
+	J8Hg2LdAfMVnfCCfD+Ltd2me41XDOw55YAVhfLqDcbpTaih5rgibtIeuNgmI3eay696/18
+	ow9bQyAI3nqvR4HnwA/9qW44GWc+mWc=
+Received: from mail-yb1-f198.google.com (mail-yb1-f198.google.com
+ [209.85.219.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-63-jqN3s1hZOFe9rJPcNQ-wzA-1; Thu, 09 Feb 2023 14:22:19 -0500
+X-MC-Unique: jqN3s1hZOFe9rJPcNQ-wzA-1
+Received: by mail-yb1-f198.google.com with SMTP id a4-20020a5b0004000000b006fdc6aaec4fso2793035ybp.20
+        for <regressions@lists.linux.dev>; Thu, 09 Feb 2023 11:22:18 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=L/1gTmVnySca8jPan+vw+HB1wn9UVQIEd+iLChgEFuM=;
-        b=FB9yFRR/euUoGu6dVqldCcJjFlpW5m7TSNPCL3eJ2EzxjHPgJY9vbbtTK6A7nfIIKr
-         8LydXhQsnJ3Yw3xGoEXLrk235PJesuivZ0Bdi9pT/ySm81uF19EWeDWLegCJTR/iat5S
-         XeMV+3R+JqQdsVpnhfxvr1Y71AAdSoLZajoVogBqdtLvGjoIa9y+iMC3INVUHRnmTQw0
-         pBb9sCBKFenIAnrwS8hn4g64yy5FNo3AA92DMIWmyfcmQfmz5iWeKkptw78sJZxmfXLx
-         P8Kiw9MF72bXkcCbNxzKJsVI91x4MBN0vRrcysgdwlOfoZkJI90fnHp6DLpkzoETBkkq
-         Ytnw==
-X-Gm-Message-State: AO0yUKUWXtXQldA0lKxtGZt40i/207goywvRc0N6dZxqlgzuqQlSPA/N
-	cM6ESEA9U1uz8IpWPujtsrVdMmopBTtrAEB2j7ev+WfW
-X-Google-Smtp-Source: AK7set/J4dF2RFxj4FVay1hvmCp/e6kKQ5Md7umeDye5D5FVkwQg0r1w8z5RxTfk99ESqGjGKzn7pzXar80TSis0cLM=
-X-Received: by 2002:a05:622a:4cd:b0:3b9:b260:1e95 with SMTP id
- q13-20020a05622a04cd00b003b9b2601e95mr1918775qtx.378.1675966957090; Thu, 09
- Feb 2023 10:22:37 -0800 (PST)
+        bh=odjslzgfJQeZsYkFt34EcHS3ke09IOK/EQikeuKIQN0=;
+        b=hIu0+TBecKeMrNoK+4GA+LRBAm20qjE9WS66vRqsKxWzeLFGTQ7CNU1ai9mgsTv4u+
+         rP+gDYY+xBhbxgsWggz6ViSwiZ2PamwSj6OTTTNKZQKmucIRJI859tQ1QEBX8QxGgPIG
+         ZU9eNP923nTin14cQtSIcub2in31npiYfy+40WwvT3n/hi24+oPyoyzt3vsIFuGwTjNl
+         uv0cwGZOm3JtNZZcpYMPAUCBd2TAVhu0SPaNWAKsdEqrhMZF/62Ip0f56LbK33j91UOr
+         28qSUz49MUCa4E2j7b8A5skGDEgT49x/GedA49W771MQoFDX/sqQGAnWSIgqfvyWmCI9
+         6sjg==
+X-Gm-Message-State: AO0yUKUPKq9DK1GpJaE0dkX4b9/6h3TkoVNFfC/xKeFerewgpnS9pgne
+	APdjylNEC8cwg2NtZ6fB3uL1SAdpoqPYGO7LX5diZOa72tS+NBZCQAt6m8Fvc8fvMaL0mrso8O7
+	OOzyUeOZcBSMSmJKUf72HA5J2UJ0+6IeSoPfkAzc=
+X-Received: by 2002:a81:9e04:0:b0:509:bd6:4d4b with SMTP id m4-20020a819e04000000b005090bd64d4bmr1221883ywj.282.1675970536922;
+        Thu, 09 Feb 2023 11:22:16 -0800 (PST)
+X-Google-Smtp-Source: AK7set+1AIEPwZDLEkmtLCQ19uJLBZ0qJj44vOuvdsNAf61QTRcJrF1GxtYwVYeGvWhGHfxGlAO/LRfsvANEZkcrglY=
+X-Received: by 2002:a81:9e04:0:b0:509:bd6:4d4b with SMTP id
+ m4-20020a819e04000000b005090bd64d4bmr1221875ywj.282.1675970536521; Thu, 09
+ Feb 2023 11:22:16 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <f591b13c-4600-e2a4-8efa-aac6ad828dd1@linaro.org>
- <82526863-d07a-0a5d-2990-1555b1387f26@linaro.org> <2C5E9725-F152-4D2E-882E-CF92A35481BF@hammerspace.com>
- <7ba38377-7992-7f0f-d905-cceb42510f39@linaro.org> <51430925-8046-7066-84ed-2ff0db835347@linaro.org>
- <CAFX2Jf=5X3zyZEWQmD6Rg9jQAD7ccDbae5LQCwrAyPCVVoFumg@mail.gmail.com> <2add1769-1458-b185-bc78-6d573f61b6fc@linaro.org>
-In-Reply-To: <2add1769-1458-b185-bc78-6d573f61b6fc@linaro.org>
-From: Anna Schumaker <schumaker.anna@gmail.com>
-Date: Thu, 9 Feb 2023 13:22:21 -0500
-Message-ID: <CAFX2JfnKy7juGQaDTzqosN9SF-zd+XrhSL9uh_Xg0GpJGDux-A@mail.gmail.com>
-Subject: Re: Regression: NULL pointer dereference after NFS_V4_2_READ_PLUS
- (commit 7fd461c47)
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Trond Myklebust <trondmy@hammerspace.com>, Anna Schumaker <Anna.Schumaker@netapp.com>, 
-	linux-nfs <linux-nfs@vger.kernel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <CAJD_bPJ1VYTSQvogui4S9xWn9jQzQq8JRXOzXmus+qoRyrybOA@mail.gmail.com>
+ <Y9Vg26wjGfkCicYv@kroah.com> <CAJD_bPLkkgbk+GO66Ec9RmiW6MfYrG32WP75oLzXsz2+rpREWg@mail.gmail.com>
+ <CAJD_bPK=m0mX8_Qq=6iwD8sL8AkR99PEzBbE3RcSaJmxuJmW6g@mail.gmail.com>
+ <02834fa9-4fb0-08fb-4b5f-e9646c1501d6@leemhuis.info> <288d7ff4-75aa-7ad1-c49c-579373cab3ed@intel.com>
+ <CALFERdw=GwNYafR3q=5=k=H_jrzTZMyDBQLouFGV0JGu8i9sCg@mail.gmail.com>
+ <04a9f939-8a98-9a46-e165-8e9fb8801a83@intel.com> <CAJD_bP+Te5a=OfjN9YrjGOG2PzudQ87=5FEKj6YLFxfKyFe5bw@mail.gmail.com>
+ <6262bd72-cc2b-9d2a-e8f0-55c2b2bb7861@linux.intel.com> <CAJD_bPKxbsDi10FGX2mrMeuxcphDOvO8Q87j+AvnnQpe5cvmSA@mail.gmail.com>
+ <CAJD_bP+RUemsss_YiAZ5v08ak8aTzXCB0gk7q623zyF455bh7g@mail.gmail.com>
+ <a423c627-d303-3b50-5f11-78c06ed3b985@linux.intel.com> <CAJD_bPKO+zCeRojkOr2uY+nXvhsjO3Um86Lh53ZCuCUm3Ci3PA@mail.gmail.com>
+ <CAJD_bPJfT5DA8EdN+timzXa3-itnPD5epq552S=NQ6Spr7iTUw@mail.gmail.com> <CAJD_bPLHPfLO=192Ohrxvg5OGtAfAgTim0O+fdmxo753VS83iQ@mail.gmail.com>
+In-Reply-To: <CAJD_bPLHPfLO=192Ohrxvg5OGtAfAgTim0O+fdmxo753VS83iQ@mail.gmail.com>
+From: Jason Montleon <jmontleo@redhat.com>
+Date: Thu, 9 Feb 2023 14:22:05 -0500
+Message-ID: <CAJD_bPJLd_hUhkU_XTOJFQ+dczBcLpFc=jf8PDuKzQgzWitkeQ@mail.gmail.com>
+Subject: Re: Google Pixelbook EVE, no sound in kernel 6.1.x
+To: =?UTF-8?B?QW1hZGV1c3ogU8WCYXdpxYRza2k=?= <amadeuszx.slawinski@linux.intel.com>
+Cc: Cezary Rojewski <cezary.rojewski@intel.com>, Sasa Ostrouska <casaxa@gmail.com>, 
+	Linux regressions mailing list <regressions@lists.linux.dev>, Greg KH <gregkh@linuxfoundation.org>, 
+	lma@semihalf.com, Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>, 
+	stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Krzysztof,
+I have a hung task call trace from a debug kernel in case it's helpful:
+https://gist.github.com/jmontleon/a6dff2ad949cc50bb8f162d7b306b320
 
-On Mon, Jan 23, 2023 at 2:58 AM Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
+On Thu, Feb 9, 2023 at 11:13 AM Jason Montleon <jmontleo@redhat.com> wrote:
 >
-> On 22/01/2023 23:25, Anna Schumaker wrote:
-> > Hi Krzysztof,
+> I've done some more digging. The only line that needs to be reverted
+> from f2bd1c5ae2cb0cf9525c9bffc0038c12dd7e1338, moving from
+> snd_hda_codec_device_init back to snd_hda_codec_device_new is:
+> codec->core.exec_verb =3D codec_exec_verb;
+> (https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/so=
+und/pci/hda/hda_codec.c?h=3Dv6.1.11#n931)
+>
+> I added a bunch of debug statements and all the code in
+> codec_exec_verb runs at boot with this in snd_hda_codec_device_init,
+> whereas it does not when in snd_hda_codec_device_new.
+>
+> From what I can tell we end up in snd_hda_power_up_pm and then get
+> hung up at snd_hdac_power_up.
+>
+> There are a bunch of pin port messages that show up from
+> hdac_hdmi_query_port_connlist when things are working, that never
+> appear when broken:
+> [   14.618805] HDMI HDA Codec ehdaudio0D2: No connections found for pin:p=
+ort 5:0
+> [   14.619242] HDMI HDA Codec ehdaudio0D2: No connections found for pin:p=
+ort 5:1
+> [   14.619703] HDMI HDA Codec ehdaudio0D2: No connections found for pin:p=
+ort 5:2
+> ...
+>
+> I do see hdac_hdmi_runtime_suspend run a moment before things go bad,
+> but I have no idea if it is related.
+>
+> Without patching anything and CONFIG_PM unset everything works.
+>
+> I don't know if that helps anyone see where the problem is. If not
+> I'll keep plugging away.
+>
+> Incidentally, commit 3fd63658caed9494cca1d4789a66d3d2def2a0ab, pointed
+> to by my second bisect, starts making using of skl_codec_device_init
+> where I believe snd_hda_codec_device_init is called and starts the
+> problem. I believe this is why reverting either of the two works
+> around the problem.
+>
+>
+>
+> On Mon, Feb 6, 2023 at 2:57 PM Jason Montleon <jmontleo@redhat.com> wrote=
+:
 > >
-> > On Mon, Jan 9, 2023 at 3:46 AM Krzysztof Kozlowski
-> > <krzysztof.kozlowski@linaro.org> wrote:
-> >>
-> >> On 09/01/2023 09:14, Krzysztof Kozlowski wrote:
-> >>> On 08/01/2023 18:09, Trond Myklebust wrote:
-> >>>> Hi Krzysztof,
-> >>>>
-> >>>>> On Jan 8, 2023, at 08:25, Krzysztof Kozlowski <krzysztof.kozlowski@=
-linaro.org> wrote:
-> >>>>>
-> >>>>> [You don't often get email from krzysztof.kozlowski@linaro.org. Lea=
-rn why this is important at https://aka.ms/LearnAboutSenderIdentification]
-> >>>>>
-> >>>>> On 07/01/2023 16:44, Krzysztof Kozlowski wrote:
-> >>>>>> Hi,
-> >>>>>>
-> >>>>>> Bisect identified commit 7fd461c47c6c ("NFSv4.2: Change the defaul=
+> > On Mon, Feb 6, 2023 at 8:51 AM Jason Montleon <jmontleo@redhat.com> wro=
+te:
+> > >
+> > > On Mon, Feb 6, 2023 at 4:04 AM Amadeusz S=C5=82awi=C5=84ski
+> > > <amadeuszx.slawinski@linux.intel.com> wrote:
+> > > >
+> > > > On 2/4/2023 4:16 PM, Jason Montleon wrote:
+> > > > > I have built kernels for 6.0.19 (I don't think anyone confirmed
+> > > > > whether or not it worked), plus every 6.1 tag from 6.1-rc1 up to
+> > > > > 6.1.7. 6.0.19 worked. No 6.1 kernels worked. For rc1 to rc5 I bui=
+lt
+> > > > > with and without the legacy dai renaming patch added in rc6 that =
+I
+> > > > > believe would be necessary, but it made no difference either way.
+> > > >
+> > > > Hi,
+> > > >
+> > > > thank you for trying to narrow it down, if I understand correctly -=
+rc1
+> > > > doesn't work, which means that problem was introduced somewhere bet=
+ween
+> > > > 6.0 and 6.1-rc1 (just for the sake of being sure, can you test 6.0
+> > > > instead of 6.0.19?) There is one commit which I'm bit suspicious ab=
+out:
+> > > > ef6f5494faf6a37c74990689a3bb3cee76d2544c it changes how HDMI are
+> > > > assigned and as a machine board present on EVE makes use of HDMI, i=
+t may
+> > > > potentially cause some problems. Can you try reverting it?
+> > > > (If reverting on top of v6.1.8 you need to revert both
+> > > > f9aafff5448b1d8d457052271cd9a11b24e4d0bd and
+> > > > ef6f5494faf6a37c74990689a3bb3cee76d2544c which has minor conflict,
+> > > > easily resolved with just adding both lines.
+> > > >
+> > >
+> > > Yes, happy to give that a shot and will report back.
+> > >
+> >
+> > Removing f9aafff5448b1d8d457052271cd9a11b24e4d0bd and
+> > ef6f5494faf6a37c74990689a3bb3cee76d2544c did not make things work.
+> >
+> > You may be onto something with pulseaudio and/or HDMI, however.
+> > When setting up Slackware I saw an interesting aplay hang.
+> > Normally aplay -l will list like this with working audio:
+> > $ aplay -l
+> > **** List of PLAYBACK Hardware Devices ****
+> > card 0: kblr55145663max [kbl-r5514-5663-max], device 0: Audio (*) []
+> >   Subdevices: 1/1
+> >   Subdevice #0: subdevice #0
+> > card 0: kblr55145663max [kbl-r5514-5663-max], device 2: Headset Audio (=
+*) []
+> >   Subdevices: 1/1
+> >   Subdevice #0: subdevice #0
+> > card 0: kblr55145663max [kbl-r5514-5663-max], device 6: Hdmi1 (*) []
+> >   Subdevices: 1/1
+> >   Subdevice #0: subdevice #0
+> > card 0: kblr55145663max [kbl-r5514-5663-max], device 7: Hdmi2 (*) []
+> >   Subdevices: 1/1
+> >   Subdevice #0: subdevice #0
+> >
+> > Both on Slackware and Fedora with broken audio it hangs like so
+> > (haven't tried on Arch):
+> > $ aplay -l
+> > **** List of PLAYBACK Hardware Devices ****
+> > card 0: kblr55145663max [kbl-r5514-5663-max], device 0: Audio (*) []
+> >   Subdevices: 1/1
+> >   Subdevice #0: subdevice #0
+> > card 0: kblr55145663max [kbl-r5514-5663-max], device 2: Headset Audio (=
+*) []
+> >   Subdevices: 1/1
+> >   Subdevice #0: subdevice #0
+> > card 0: kblr55145663max [kbl-r5514-5663-max], device 6: Hdmi1 (*) []
+> >   Subdevices: 1/1
+> >   Subdevice #0: subdevice #0
+> >
+> > If I remove or disable pulseaudio it lists without hanging, but it's
+> > difficult for me to tell whether it's working since aplay, etc. seem
+> > to want pulseaudio to play anything. Shutdown hangs persist
+> > regardless.
+> >
+> > Also, Slackware with 6.1.9 behaves as badly for me as everything else.
+> > If Sasa has working audio I do not know how he has managed to
+> > configure it. On each distro, as soon as I add topology and firmware
+> > files everything goes bad, regardless of whether I add ucm
+> > configuration or not, etc.
+> >
+> > > > I also still wonder, why problem reproduces only on some
+> > > > distributions... any chance you can try and boot with
+> > > > pipewire/pulseaudio disabled and see if it still happens, iirc thos=
+e
+> > > > tools try to check all FEs and this may be breaking something durin=
+g
+> > > > enumeration.
+> > >
+> > > I can definitely try disabling pulseaudio and switching to pipewire
+> > > and seeing if anything changes as well.
+> > >
+> > > FWIW, I installed Arch on a thumb drive this weekend and was able to
+> > > reproduce the issue and work around it by reverting the commit from m=
+y
+> > > first bisect. So, for me it behaves just like Fedora. The instruction=
+s
+> > > for Arch for building a custom kernel are great except they generaliz=
+e
+> > > the bootloader instructions, so you need to know what to do at the en=
+d
+> > > to add the grub boot entries, if using grub for example, and I suspec=
 t
-> >>>>>> KConfig value for READ_PLUS") as one leading to NULL pointer excep=
-tion
-> >>>>>> when mounting NFS root on NFSv4 client:
-> >>>>>>
-> >>>>>> [   25.739003] systemd[1]: Set hostname to <odroidhc1>.
-> >>>>>> [   25.771714] systemd[1]: Failed to bump fs.file-max, ignoring: I=
-nvalid
-> >>>>>> argument
-> >>>>>> [   26.199478] 8<--- cut here ---
-> >>>>>> [   26.201366] Unable to handle kernel NULL pointer dereference at
-> >>>>>> virtual address 00000004
-> >>>>>> ...
-> >>>>>> [   26.555522]  mmiocpy from xdr_inline_decode+0xec/0x16c
-> >>>>>> [   26.560628]  xdr_inline_decode from nfs4_xdr_dec_read_plus+0x17=
-8/0x358
-> >>>>>> [   26.567130]  nfs4_xdr_dec_read_plus from call_decode+0x204/0x30=
-4
-> >>>>>>
-> >>>>>> Full OOPS attached. Full log available here:
-> >>>>>> https://krzk.eu/#/builders/21/builds/3901/steps/15/logs/serial0
-> >>>>>>
-> >>>>>> Disabling NFS_V4_2_READ_PLUS fixes the issue, so obviously the com=
-mit is
-> >>>>>> not the cause, but rather making it default caused the regression.
-> >>>>>>
-> >>>>>> I did not make the bisect yet which commit introduced it, if every
-> >>>>>> config includes NFS_V4_2_READ_PLUS.
-> >>>>>
-> >>>>> When every kernel is built with NFS_V4_2_READ_PLUS, bisect pointed =
-to:
-> >>>>> d3b00a802c84 ("NFS: Replace the READ_PLUS decoding code")
-> >>>>>
-> >>>>> commit d3b00a802c845a6021148ce2e669b5a0b5729959
-> >>>>> Author: Anna Schumaker <Anna.Schumaker@Netapp.com>
-> >>>>> Date:   Thu Jul 21 14:21:34 2022 -0400
-> >>>>>
-> >>>>>    NFS: Replace the READ_PLUS decoding code
-> >>>>>
-> >>>>>    We now take a 2-step process that allows us to place data and ho=
-le
-> >>>>>    segments directly at their final position in the xdr_stream with=
-out
-> >>>>>    needing to do a bunch of redundant copies to expand holes. Due t=
-o the
-> >>>>>    variable lengths of each segment, the xdr metadata might cross p=
-age
-> >>>>>    boundaries which I account for by setting a small scratch buffer=
- so
-> >>>>>    xdr_inline_decode() won't fail.
-> >>>>>
-> >>>>>    Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
-> >>>>>    Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-> >>>>>
-> >>>>> With a trace:
-> >>>>> [   25.898462] systemd[1]: Set hostname to <odroidhc1>.
-> >>>>> [   25.933746] systemd[1]: Failed to bump fs.file-max, ignoring: In=
-valid
-> >>>>> argument
-> >>>>> [   25.986237] random: crng init done
-> >>>>> [   26.264564] 8<--- cut here ---
-> >>>>> [   26.266823] Unable to handle kernel NULL pointer dereference at
-> >>>>> virtual address 00000fe8
-> >>>>> ...
-> >>>>> [   26.597263]  nfs4_xdr_dec_read_plus from call_decode+0x204/0x304
-> >>>>> [   26.603222]  call_decode from __rpc_execute+0xd0/0x890
-> >>>>> [   26.608328]  __rpc_execute from rpc_async_schedule+0x1c/0x34
-> >>>>> [   26.613960]  rpc_async_schedule from process_one_work+0x294/0x79=
-0
-> >>>>> [   26.620030]  process_one_work from worker_thread+0x54/0x518
-> >>>>> [   26.625570]  worker_thread from kthread+0xf4/0x128
-> >>>>> [   26.630336]  kthread from ret_from_fork+0x14/0x2c
-> >>>>>
-> >>>>
-> >>>> Is this test being run against a 6.2-rc2 server, or is it an older s=
-erver platform? We know there were bugs in older server implementations, so=
- the question is whether this might be a problem with handling a bad/corrup=
-t RPC reply from the server, or whether it is happening against code that i=
-s supposed to have been fixed?
-> >>>
-> >>> I would say that buggy server should not cause NULL pointer dereferen=
-ces
-> >>> on the client. Otherwise this is a perfect recipe for a rogue server =
-in
-> >>> the network to start crashing clients and running exploits... Imagine=
- a
-> >>> compromised machine (through some other means) in a local company
-> >>> network running now a server with NFS share "HR salary data" or "HR
-> >>> planned layoffs", where unsuspected people in that network access it
-> >>> leading to exploit of NFS code on their side...
-> >>>
-> >>> Server is Raspberry Pi 3 kernel: 5.10.92-2-rpi-legacy-ARCH
-> >>>
-> >>> Which points that it is not latest stable, so anyway I need to update=
-.
-> >>
-> >> I updated the kernel to 5.15.84-3-rpi-ARCH which is pretty close to
-> >> latest stable and I can reproduce the issue. Therefore:
-> >> 1. It is visible on two stable (one new, one old) kernels on the serve=
-r,
-> >> 2. Buggy or rogue server should not cause NULL pointer on remote devic=
-es...
+> > > that may be where the confusion came from, though I don't know. I'm
+> > > trying to get one of the two to reproduce my results to confirm and a=
+t
+> > > least get them a workaround.
+> > >
+> > > I have slackware on another thumb drive already, but I have yet to
+> > > even get it updated to 6.1.8.
+> > >
+> > > If any of them behave differently I was hoping to tease out whether
+> > > it's firmware, kernel config, or something else, but so far the first
+> > > has been more of the same.
+> > >
+> > > > Thanks,
+> > > > Amadeusz
+> > > >
+> > > > >
+> > > > > On Wed, Feb 1, 2023 at 9:33 AM Jason Montleon <jmontleo@redhat.co=
+m> wrote:
+> > > > >>
+> > > > >> On Wed, Feb 1, 2023 at 6:05 AM Amadeusz S=C5=82awi=C5=84ski
+> > > > >> <amadeuszx.slawinski@linux.intel.com> wrote:
+> > > > >>>
+> > > > >>> On 1/31/2023 4:16 PM, Jason Montleon wrote:
+> > > > >>>> On Tue, Jan 31, 2023 at 7:37 AM Cezary Rojewski
+> > > > >>>> <cezary.rojewski@intel.com> wrote:
+> > > > >>>>>
+> > > > >>>>> On 2023-01-30 1:22 PM, Sasa Ostrouska wrote:
+> > > > >>>>>
+> > > > >>>>>> Dear Czarek, many thanks for the answer and taking care of i=
+t. If
+> > > > >>>>>> needed something from my side please jest let me know
+> > > > >>>>>> and I will try to do it.
+> > > > >>>>>
+> > > > >>>>>
+> > > > >>>>> Hello Sasa,
+> > > > >>>>>
+> > > > >>>>> Could you provide us with the topology and firmware binary pr=
+esent on
+> > > > >>>>> your machine?
+> > > > >>>>>
+> > > > >>>>> Audio topology is located at /lib/firmware and named:
+> > > > >>>>>
+> > > > >>>>> 9d71-GOOGLE-EVEMAX-0-tplg.bin
+> > > > >>>>> -or-
+> > > > >>>>> dfw_sst.bin
+> > > > >>>>>
+> > > > >>>>> Firmware on the other hand is found in /lib/firmware/intel/.
+> > > > >>>>> 'dsp_fw_kbl.bin' will lie there, it shall be a symlink pointi=
+ng to an
+> > > > >>>>> actual AudioDSP firmware binary.
+> > > > >>>>>
+> > > > >>>> Maybe this is the problem.
+> > > > >>>>
+> > > > >>>> I think most of us are pulling the topology and firmware from =
+the
+> > > > >>>> chromeos recovery images for lack of any other known source, a=
+nd it
+> > > > >>>> looks a little different than this. Those can be downloaded li=
+ke so:
+> > > > >>>> https://gist.github.com/jmontleon/8899cb83138f2653f520fbbcc5b8=
+30a0
+> > > > >>>>
+> > > > >>>> After placing the topology file you'll see these errors and au=
+dio will
+> > > > >>>> not work until they're also copied in place.
+> > > > >>>> snd_soc_skl 0000:00:1f.3: Direct firmware load for
+> > > > >>>> dsp_lib_dsm_core_spt_release.bin failed with error -2
+> > > > >>>> snd_soc_skl 0000:00:1f.3: Direct firmware load for
+> > > > >>>> intel/dsp_fw_C75061F3-F2B2-4DCC-8F9F-82ABB4131E66.bin failed w=
+ith
+> > > > >>>> error -2
+> > > > >>>>
+> > > > >>>> Once those were in place, up to 6.0.18 audio worked.
+> > > > >>>>
+> > > > >>>> Is there a better source for the topology file?
+> > > > >>>>
+> > > > >>>>> The reasoning for these asks is fact that problem stopped rep=
+roducing on
+> > > > >>>>> our end once we started playing with kernel versions (moved a=
+way from
+> > > > >>>>> status quo with Fedora). Neither on Lukasz EVE nor on my SKL =
+RVP.
+> > > > >>>>> However, we might be using newer configuration files when com=
+pared to
+> > > > >>>>> equivalent of yours.
+> > > > >>>>>
+> > > > >>>>> Recent v6.2-rc5 broonie/sound/for-next - no repro
+> > > > >>>>> Our internal tree based on Mark's for-next - no repro
+> > > > >>>>> 6.1.7 stable [1] - no repro
+> > > > >>>>>
+> > > > >>>>> Of course we will continue with our attempts. Will notify abo=
+ut the
+> > > > >>>>> progress.
+> > > > >>>>>
+> > > > >>>>>
+> > > > >>>>> [1]:
+> > > > >>>>> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.=
+git/commit/?h=3Dv6.1.7&id=3D21e996306a6afaae88295858de0ffb8955173a15
+> > > > >>>>>
+> > > > >>>>>
+> > > > >>>>> Kind regards,
+> > > > >>>>> Czarek
+> > > > >>>>>
+> > > > >>>>
+> > > > >>>>
+> > > > >>>
+> > > > >>> Hi Jason,
+> > > > >>>
+> > > > >>> as I understand you've tried to do bisect, can you instead try =
+building
+> > > > >>> kernels checking out following tags:
+> > > > >>> v6.1      v6.1.1    v6.1.2    v6.1.3    v6.1.4    v6.1.5    v6.=
+1.6
+> > > > >>> v6.1.7    v6.1.8
+> > > > >>> and report when it stops working, so it narrows scope of what w=
+e look
+> > > > >>> at? I assume that kernel builds are done using upstream stable =
+kernel
+> > > > >>> (from https://git.kernel.org/pub/scm/linux/kernel/git/stable/li=
+nux.git/).
+> > > > >>>
+> > > > >>> Thanks,
+> > > > >>> Amadeusz
+> > > > >>>
+> > > > >> Hi Amadeusz,
+> > > > >> Yes, I did the bisects using
+> > > > >> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git=
+/
+> > > > >>
+> > > > >> The only thing I did to these was add
+> > > > >> 392cc13c5ec72ccd6bbfb1bc2339502cc59dd285, otherwise audio breaks=
+ with
+> > > > >> the dai not registered error message in dmesg from the rt5514 bu=
+g from
+> > > > >> 6.0 and up. It wasn't added to 6.1 until rc6, I believe. If ther=
+e's a
+> > > > >> better way to work around the multiple bugs I can try again, oth=
+erwise
+> > > > >> I will start working on builds from tags and see if I learn anyt=
+hing.
+> > > > >>
+> > > > >> FWIW, I've seen two people complain that Arch isn't working eith=
+er
+> > > > >> since it moved to 6.1. For the one who was trying, patching out =
+the
+> > > > >> commit I came to with the first bisect did not regain them sound=
+ like
+> > > > >> it did for me. And yet Sasa reports Slackware is mostly working =
+for
+> > > > >> him with 6.1.8 on Slackware. I don't know what to make of it, bu=
+t
+> > > > >> thought I'd share in case it helps point someone else to somethi=
+ng.
+> > > > >> https://github.com/jmontleon/pixelbook-fedora/issues/51#issuecom=
+ment-1410222840
+> > > > >> https://github.com/jmontleon/pixelbook-fedora/issues/51#issuecom=
+ment-1410673371
+> > > > >> https://github.com/jmontleon/pixelbook-fedora/issues/53#issuecom=
+ment-1408699252
+> > > > >>
+> > > > >> Probably less relevant since they aren't from upstream and I kno=
+w they
+> > > > >> don't mean as much, but I have tried 6.1.5-6.1.8 Fedora packages=
+ for
+> > > > >> certain, and went back trying several others from koji back into=
+ rc
+> > > > >> builds, although using prebuilt kernels, anything before 6.1-rc6=
+ won't
+> > > > >> work, as mentioned above. Nothing worked. But as I said I'll bui=
+ld
+> > > > >> from tags and see if I can learn anything.
+> > > > >>
+> > > > >> Thank you,
+> > > > >> Jason Montleon
+> > > > >>
+> > > > >> --
+> > > > >> Jason Montleon        | email: jmontleo@redhat.com
+> > > > >> Red Hat, Inc.         | gpg key: 0x069E3022
+> > > > >> Cell: 508-496-0663    | irc: jmontleo / jmontleon
+> > > > >
+> > > > >
+> > > > >
+> > > >
+> > >
+> > >
+> > > --
+> > > Jason Montleon        | email: jmontleo@redhat.com
+> > > Red Hat, Inc.         | gpg key: 0x069E3022
+> > > Cell: 508-496-0663    | irc: jmontleo / jmontleon
 > >
-> > I'm still working on this issue, but I haven't been able to reproduce
-> > it with my setup at all yet. I was hoping I could ask you a couple of
-> > questions?
 > >
-> > - Are both client and server run on a Raspberry Pi 3?
->
-> No, server is Rpi3, client is Odroid HC1.
->
-> > - Is there a specific workload that triggers the bug, or is it just
-> > during boot when using nfsroot?
->
-> No specific workload - mounting system with nfsroot. You have there full
-> logs as it is reproducible every time.
->
-> > - Would it be possible to get a Wireshark network trace of the crash
-> > (you'll have to run this on the server due to nfsroot).
->
-> I'll check.
-
-Any luck getting the wireshark trace? I don't have access to the
-Odroid HC1 board, so all my attempts at reproducing the problem have
-been with qemu & libvirt, which doesn't seem to be hitting this issue.
-
-I was also wondering if it would be possible to turn on KASAN in your
-kernel, which should give us a little more info?
-
-Thanks,
-Anna
-
->
-> > - Can you share your export options from /etc/exports and the mount
-> > options that the client uses?
->
-> exports are the same since like 5 years or more:
->
-> /srv/nfs/odroidhc1      192.168.1.0/24(rw,async,no_root_squash,no_subtree=
-_check)
-> /srv/nfs/odroidhc1-home
-> 192.168.1.0/24(rw,async,no_root_squash,no_subtree_check)
->
->
 > >
-> > Thanks,
-> > Anna
-> >
-> >>
-> >> Best regards,
-> >> Krzysztof
-> >>
+> > --
+> > Jason Montleon        | email: jmontleo@redhat.com
+> > Red Hat, Inc.         | gpg key: 0x069E3022
+> > Cell: 508-496-0663    | irc: jmontleo / jmontleon
 >
-> Best regards,
-> Krzysztof
 >
+>
+> --
+> Jason Montleon        | email: jmontleo@redhat.com
+> Red Hat, Inc.         | gpg key: 0x069E3022
+> Cell: 508-496-0663    | irc: jmontleo / jmontleon
+
+
+
+--=20
+Jason Montleon        | email: jmontleo@redhat.com
+Red Hat, Inc.         | gpg key: 0x069E3022
+Cell: 508-496-0663    | irc: jmontleo / jmontleon
+
