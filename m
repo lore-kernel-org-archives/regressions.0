@@ -1,296 +1,414 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2045.outbound.protection.outlook.com [40.107.93.45])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32F9479F8
-	for <regressions@lists.linux.dev>; Thu,  9 Feb 2023 15:41:46 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=F/kREO+w++CGIryAXXRWD0YGF5Ze9rlVjwgO30+zgfro/LxnM0ToH6AqQFipOO0lGF/g/4mgUOU0y5U7aPtaTA/cTOUvMnJS/GftcENu4sExs3kJBQuEYbBOLZIfb2QfsbM4l00EUBhxGU08zssw12TQRiNIznONNSwXE74/tQR1/i0YiPa+CQcLN4+4K2WgKZE2XZP4wJPXCFVjtPR/JaqWdyBtMT2PBPKSQylixmeukm7QaHROVv26IoEFgIvTCCOl/Ce9WjO2OrMXZVhhgliAzFJT7VY3PEEI0TVxoIXpwmf9Ih1qjfZhXIBf6wMBpv8ilCpepbGEYhjnvt1RYA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=DyhskwD3TT/SGBdL8wqEqY8p68+eZXYetRcjdYDc0lQ=;
- b=MzezQoY7aScNqh0MbRpqJNsemeyQ2E/bU0xQA/iNVzZonpF3xpQSvK5QNtEAmSRnHh0x+C1Tg0B8GMK7RiRbq/a8jg11VS/4vIImPqzIrTDR2n4MlKB8vNKJ1o/9GrteMIS1HMUSBRzfCJ0JR6f9nr0Jr2kt6I+QiQIPPkK7n4tcumoHqZOI6FLSohGUa1ryZBYSRwH3Zkn5bMEldG+V6RtfqvC8wlDt7UIX8KhD4SfzTJOTAUZjQcyE4Bu79aD3Px/0DjKDa27fkz1lyUnOtHt41o9iGcNkANTGSAhR/VqePse4rCRZW7I+A371FCMoGVrMtSzsSfpGZCqQ+b2gTA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DyhskwD3TT/SGBdL8wqEqY8p68+eZXYetRcjdYDc0lQ=;
- b=0iSZzuj3LpocYBVgiXXiJOtbFLP4zvnhfcG27+v9Pg/aEd46fpCsLBhD8sMz/2c6WC4VPl+YakRbLHaUQIBXVT4M6BJRoZU5+QmsTjPePpEcN6FGCpE5Cc3b0+ZAQ+GXO4EVyWNAHvgV1SDSVDciH7QaJjqgSNaUfmfHUA9Cyt8=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by DM6PR12MB4547.namprd12.prod.outlook.com (2603:10b6:5:2a9::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6086.17; Thu, 9 Feb
- 2023 15:41:43 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::a59e:bafb:f202:313c]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::a59e:bafb:f202:313c%6]) with mapi id 15.20.6086.017; Thu, 9 Feb 2023
- 15:41:43 +0000
-Message-ID: <543c2e9b-6d82-7ee0-9a1f-e3176aba16e2@amd.com>
-Date: Thu, 9 Feb 2023 09:41:48 -0600
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.1
-Subject: Re: [PATCH RFC] tpm: disable hwrng for known-defective AMD RNGs
-To: "Jason A. Donenfeld" <Jason@zx2c4.com>, regressions@lists.linux.dev,
- linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Jarkko Sakkinen <jarkko@kernel.org>,
- Thorsten Leemhuis <regressions@leemhuis.info>,
- James Bottomley <James.Bottomley@hansenpartnership.com>
-References: <20230209153120.261904-1-Jason@zx2c4.com>
-Content-Language: en-US
-From: "Limonciello, Mario" <mario.limonciello@amd.com>
-In-Reply-To: <20230209153120.261904-1-Jason@zx2c4.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: CH0P220CA0021.NAMP220.PROD.OUTLOOK.COM
- (2603:10b6:610:ef::11) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D37F679F8
+	for <regressions@lists.linux.dev>; Thu,  9 Feb 2023 16:14:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1675959240;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9hzEZR0I96rsYzS7+a9mW2+aObA0+abmhYUEnUTowuc=;
+	b=a+9HV57babR4QAhfBAsQWwOcOIRnu2Egd5qZZ151FXaZRb8ez1p/hQOyWTtdQFQvrvDEI1
+	tiaU0Bv0p+zbmLddvQy8H6XmK+WGosuDJosppj9iUnvRx/GouXjU4GchquB5CgM+Mz+dUP
+	oO8aon6ui3HdL8rZBVYKoy2owJeWmA8=
+Received: from mail-yb1-f199.google.com (mail-yb1-f199.google.com
+ [209.85.219.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-498-9bwoHf-UN6yamfSVqd9Kjg-1; Thu, 09 Feb 2023 11:13:57 -0500
+X-MC-Unique: 9bwoHf-UN6yamfSVqd9Kjg-1
+Received: by mail-yb1-f199.google.com with SMTP id a9-20020a25af09000000b0083fa6f15c2fso2297439ybh.16
+        for <regressions@lists.linux.dev>; Thu, 09 Feb 2023 08:13:57 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9hzEZR0I96rsYzS7+a9mW2+aObA0+abmhYUEnUTowuc=;
+        b=B2E9LkEWsLT7OxXrcuK6wXlNWIENjnD/SV34YDlcBDBgzqj1uSDxb7zIH8Ph3mMg/t
+         iI2wHMr9sVRKhx0eiqDzMnUWrRMExXyWb2aJLQ/vkyPzDGAxXUPgJ0GSkZCCUafAwpHP
+         tVa2xplKuFV3cHgMsXPyZ9yn8cfrhqYTLLkXj+/3DvK5Ujt0byoTiaZ7NmMCemFZR9FF
+         xET4n+UYBSsY1dOYaMp7s+hCB9v3cLoOhIDpqFuA6rwwwokTgF/QnNZ/eLULPNwb+b/O
+         eycQF0XHcJe38v2UDi8mYqM2GA1s9GFWtf/9Llw7Y+2IjZ1qmbkaMyjTZVlD0Qh6vnOZ
+         469A==
+X-Gm-Message-State: AO0yUKXcEEPhMvIsPP+fif/lh6rb+Aba1tZkeDQeu3EZlZE2Zkehu5EI
+	O42ttmXh5EntIs/EOCjGNuSMBsEiKRFuBnAFaiQSEAPkKQib6vRzl76uwiX0utOESNWrxrshifY
+	T9sfzF0wheV9fD3cFKJ4k3AvLpIbQak0dQW5OtuI=
+X-Received: by 2002:a0d:cc83:0:b0:52e:a8dc:115 with SMTP id o125-20020a0dcc83000000b0052ea8dc0115mr290483ywd.287.1675959236400;
+        Thu, 09 Feb 2023 08:13:56 -0800 (PST)
+X-Google-Smtp-Source: AK7set/FET5Ehu8lTPsO/iNF73Rs/wnB0luOK9AtnqNqzgUgVWOuV/Y+l+tydTrVw6iRPmk295F2c2ZGJ9JHvrwGyu0=
+X-Received: by 2002:a0d:cc83:0:b0:52e:a8dc:115 with SMTP id
+ o125-20020a0dcc83000000b0052ea8dc0115mr290474ywd.287.1675959236067; Thu, 09
+ Feb 2023 08:13:56 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|DM6PR12MB4547:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7b932383-9734-4c27-7459-08db0ab4252f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	alDokiIyReKxhfJYHkGBOy1oGBqEWAK8uQy2Wx2PjoqOHomw6uU9Jm2Jr3eDtIHCN5Add9rhblUjvqxDDr1rc7J1ndCQ2HN6KUxJNGT9jUd4/kwaeaZxECPPL8d6SzJ7ZvalRCc/SZHK5WPLwiRC4fOTOG2AgJVMkBJ7MdUxh/VQ+Gvb4LtmRQhR52szPOpbXZKLqtg06A8lv88xM/vR+t/udYvVp7MunvwjOixYRuCkS+NYJ02vLj6OJD9ZYAkKGi2Faq76OvsVy3GdAQZNo9ajcUBqT47H1kR3FHbaK5z4/0kjMdRZf7WFB3PXu1cfoCpZfy7VXn6/zC2QqWn/SLohc917vO0OxCDnhq2sW4gumsqhjfxRLbXGxNnu6g39nEbKUGiYc/kspNC4GKueJcz6xoVqTL0jFKKeT2u9wOHStpkZJRrbpMmHGaZn5n+waxUCGvO3KABmosFHFKiTxtgC4DC3dHVkyhm3odaIyGf9rFbhsG2BASXkmNmFn4tQZ7WO3bbuIehmVIGOhGrJ2nEL7iq+uVVto3O4RZ8SvTcFMf9x9JGOTktzS9uSrLNW/8eH1CtM2knf7baOZEaPVbQwZRXpTrsknyJNzn5S2wivl/0gNY8n5YSh0E0qG993uxNaeWE060CgBxdWON4LklWmpG9v/ZyqT3zznSUHdVXzOhLeahf+PWLY5/ukZnp87cRkcBPYpBC0gep6w2VIu33+n+o5aNPr79R3WKTKP4A=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(396003)(136003)(346002)(39860400002)(366004)(376002)(451199018)(66476007)(4326008)(66946007)(8676002)(316002)(38100700002)(66556008)(83380400001)(31696002)(54906003)(86362001)(5660300002)(6486002)(31686004)(478600001)(6506007)(53546011)(26005)(2906002)(6512007)(186003)(36756003)(41300700001)(8936002)(2616005)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?Yk14cHd3d2t5dXBrSjFraWRWY1p4anpieWhMS3R5VHNDY3daMi9uSFBJd1Vj?=
- =?utf-8?B?T0w1a2l3WFpDVmFvbSt0dDh3Z3FCdGJQRERQeFpLL2trQkIrdlRXTTM3MUoy?=
- =?utf-8?B?dkxuR3NBNllEc2RndlFuRmtOOWRzNU1TL2ZVdmZ6RUNXQjEyak5iM1J5YklF?=
- =?utf-8?B?WHFBL0ZmMHppeG9DQkx5R1JXTXlFaitiaU1mUkJHaXhaSFdsbEhpYVB3ZDlR?=
- =?utf-8?B?SnlMWWdYVnc3U3ZWY1dYaEdyaU9YeGV4SXp3ZkF5NTNjS1RiTTZURUdObVp2?=
- =?utf-8?B?Mkp4SzRQbENrVVZkYWxmRlBFdDAwYzU1S21scFIrNXZSU3RNdlVnaWNGT25o?=
- =?utf-8?B?MldscnI4ZGxoWWVSTG5pTVd4VjVjWDVTeVdqbEZZRTlIV29pWnFscTVaSmxj?=
- =?utf-8?B?MGUvdkpKMDlzeTlIcGZydVJTVnBHM3BPSFVDdnJHWUNNZzFua29YR0MvOUlz?=
- =?utf-8?B?bzl6T3RvVVh0TUVIcWxsVXYxZWl5Y3ZtREVmblIyQmV4OU51Uk9EMlF0Mm81?=
- =?utf-8?B?aDdZNUpJZ0xuelBpMTk4MGswREFudUVKMzJSZHpxMFhiTlZoSWd5dTFVTjdP?=
- =?utf-8?B?Q1dSWHREY1BEQ1dPQkY1T1Y1RnhaT2dzTDM4L25wTzNpNDk2eUZ5UEFzMmY2?=
- =?utf-8?B?c3pQa21XSFZDU0xMQ1pSRjJQY2VSR25yZFlmbDVWekJhOGFnNGM1UGRZMGg0?=
- =?utf-8?B?MjZyQ0NHbUdQR2xCNFBVUnU4cDlXdWI0S1Z5UENRVXlxYzUveFFSMU1EZTdv?=
- =?utf-8?B?TC9vaEVabVlEeklxK2U5d1F4SlJzNldlVnMrSm9vM1QvcktoM1ZxczhUd2pL?=
- =?utf-8?B?SDIvNmRBTldzQkJldDd6L2pMMjFvRCtoRGorWWNMMFIyaFltSGxVVGxJemdu?=
- =?utf-8?B?K3EzY0pvdk05bW5uZnRxcXQyQXdMTmpRQ250aGd5MVQwL21TQy8yRDlFSGdU?=
- =?utf-8?B?Mm5sYWxFZnFvNTg5c3BRVS9BeGdwZHJvNWcwK1g3NDBmSEdJQkhDN2h1ZHIz?=
- =?utf-8?B?TWd5NSs1eDkzN2xPWWgrdWFHYUxOSkVKZVF3cnV6c1JxUVlZT1FFT29CN00z?=
- =?utf-8?B?Qk5RRmEvRFFuTi8rL3FmQzg5Mm1sbmpBR3pXbFZLSUt5VHIzWmRPa0VmbjZh?=
- =?utf-8?B?YlJ2T3FyQVNtWEM4R3BFa29yNVZZSzRaL1BpQmthVUhRQmR2TlRqbXBLTGlu?=
- =?utf-8?B?NExJSjVZOGNISmlXK1pWNlMxMFAvRWZqSnFFYkNjR2RXc0tSNVNwREd3eVBi?=
- =?utf-8?B?bFNaMUJGWVFjek9wRzk5TEFFWlIvamtIYXRzZjhST0RGTjZxRmh0enUrbEVP?=
- =?utf-8?B?WUczM0FVNCs3b29DM1hBbWVkbWIzOUplUWk1NVhvZCtld2grL3h4N1NQMXpw?=
- =?utf-8?B?eCt2TkdnQzREY2JLTFZJRzg4MFdUUHZzRTVIa09ETW9UZDIzNkZQWVhqNTN6?=
- =?utf-8?B?QzY0UmVNV09MbHlpeFlqbk4wUVlpeTZkTHJaWURkeU54eDNYYnVzWnh5OVN4?=
- =?utf-8?B?ZHMxZjkybmQ0OXl2cC9LNlBEK1NBTmZ1LzFDdWE1TTFWSVBSd2ZvTDEwWTBj?=
- =?utf-8?B?V3UzaW5qNWM1VlBvRTlGMG9kS3JrbEpvaWYyaDZmK1EvWVdsN0NITnh2eE9S?=
- =?utf-8?B?c0pzSFIvMG1BT0hhYlNzTlFkNytraU5zNDNQMTBPRm56ZExxT3hHak8yR1pr?=
- =?utf-8?B?NWhmcjY5cDJCYUNlUnpSVkNoaFU4M2xnV2wvaTgxbWIwY244Y1dqQnZzSTRq?=
- =?utf-8?B?STl4bnJKd2RsQ0pqOHJaOVJmckFlM0lPV1VwVGxlNWUwZ2t3TXlBM0U0Q2tL?=
- =?utf-8?B?T1FHdlMxY0J2K0RpWDFJa3hTVHBEeFF0YkxxNGNSWHFVKzNxOTNPRTZWTWxN?=
- =?utf-8?B?THp1dURMS1kyVkx6aEFHM1dWb3FOaWp0Si9aNVZZeFROVXNEN1h1ZE1MQnhL?=
- =?utf-8?B?WkcrUVVMdUdsL0t4c3BOTnNVOTlnZDU0Qlh4SmVUaGNtMXIwQ0pXZGNlTHZR?=
- =?utf-8?B?VG11S1NFcGRyVDREWFZlZitpY0xtY1hFWG90TmxEMEkrdWpMUEp1V2VpUVRC?=
- =?utf-8?B?TjArWjJTQ3JXWVlZeDFDaUsvTlRsQ2U1WVYvaXljK2ZqZnVRY0ZLMVRMR1k5?=
- =?utf-8?Q?89RQKiQ+lcwl48o+bPu9athx6?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7b932383-9734-4c27-7459-08db0ab4252f
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Feb 2023 15:41:43.8564
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: +zYzPOqADFeRfXFDdzSSNvVUAxw7g5RFAdlbTBCZG2QfQDl8AOvloGM5BQRx3BYn7MeKSX1PR0OhsH/RIocCgQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4547
+References: <CAJD_bPJ1VYTSQvogui4S9xWn9jQzQq8JRXOzXmus+qoRyrybOA@mail.gmail.com>
+ <Y9Vg26wjGfkCicYv@kroah.com> <CAJD_bPLkkgbk+GO66Ec9RmiW6MfYrG32WP75oLzXsz2+rpREWg@mail.gmail.com>
+ <CAJD_bPK=m0mX8_Qq=6iwD8sL8AkR99PEzBbE3RcSaJmxuJmW6g@mail.gmail.com>
+ <02834fa9-4fb0-08fb-4b5f-e9646c1501d6@leemhuis.info> <288d7ff4-75aa-7ad1-c49c-579373cab3ed@intel.com>
+ <CALFERdw=GwNYafR3q=5=k=H_jrzTZMyDBQLouFGV0JGu8i9sCg@mail.gmail.com>
+ <04a9f939-8a98-9a46-e165-8e9fb8801a83@intel.com> <CAJD_bP+Te5a=OfjN9YrjGOG2PzudQ87=5FEKj6YLFxfKyFe5bw@mail.gmail.com>
+ <6262bd72-cc2b-9d2a-e8f0-55c2b2bb7861@linux.intel.com> <CAJD_bPKxbsDi10FGX2mrMeuxcphDOvO8Q87j+AvnnQpe5cvmSA@mail.gmail.com>
+ <CAJD_bP+RUemsss_YiAZ5v08ak8aTzXCB0gk7q623zyF455bh7g@mail.gmail.com>
+ <a423c627-d303-3b50-5f11-78c06ed3b985@linux.intel.com> <CAJD_bPKO+zCeRojkOr2uY+nXvhsjO3Um86Lh53ZCuCUm3Ci3PA@mail.gmail.com>
+ <CAJD_bPJfT5DA8EdN+timzXa3-itnPD5epq552S=NQ6Spr7iTUw@mail.gmail.com>
+In-Reply-To: <CAJD_bPJfT5DA8EdN+timzXa3-itnPD5epq552S=NQ6Spr7iTUw@mail.gmail.com>
+From: Jason Montleon <jmontleo@redhat.com>
+Date: Thu, 9 Feb 2023 11:13:44 -0500
+Message-ID: <CAJD_bPLHPfLO=192Ohrxvg5OGtAfAgTim0O+fdmxo753VS83iQ@mail.gmail.com>
+Subject: Re: Google Pixelbook EVE, no sound in kernel 6.1.x
+To: =?UTF-8?B?QW1hZGV1c3ogU8WCYXdpxYRza2k=?= <amadeuszx.slawinski@linux.intel.com>
+Cc: Cezary Rojewski <cezary.rojewski@intel.com>, Sasa Ostrouska <casaxa@gmail.com>, 
+	Linux regressions mailing list <regressions@lists.linux.dev>, Greg KH <gregkh@linuxfoundation.org>, 
+	lma@semihalf.com, Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>, 
+	stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2/9/2023 09:31, Jason A. Donenfeld wrote:
-> Do not register a hwrng for certain AMD TPMs that are running an old
-> known-buggy revision. Do this by probing the TPM2_PT_MANUFACTURER,
-> TPM2_PT_FIRMWARE_VERSION_1, and TPM2_PT_FIRMWARE_VERSION_2 properties,
-> and failing when an "AMD"-manufactured TPM2 chip is below a threshold.
-> 
-> BROKEN BROKEN BROKEN - I just made the version numbers up and haven't
-> tested this because I don't actually have hardware for it. I'm posting
-> this so that Mario can take over its development and submit a v2 himself
-> once he has confirmed the versioning info from inside AMD.
+I've done some more digging. The only line that needs to be reverted
+from f2bd1c5ae2cb0cf9525c9bffc0038c12dd7e1338, moving from
+snd_hda_codec_device_init back to snd_hda_codec_device_new is:
+codec->core.exec_verb =3D codec_exec_verb;
+(https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/soun=
+d/pci/hda/hda_codec.c?h=3Dv6.1.11#n931)
 
-Thanks, happy to do that.  As I'll take over some comments are inline 
-mostly for my future self when this is resubmitted.
+I added a bunch of debug statements and all the code in
+codec_exec_verb runs at boot with this in snd_hda_codec_device_init,
+whereas it does not when in snd_hda_codec_device_new.
 
-Perhaps one of the people who can reproduce this right now can confirm 
-this works?  The version number string should at least trigger one of 
-the reported systems to avoid doing this.
+From what I can tell we end up in snd_hda_power_up_pm and then get
+hung up at snd_hdac_power_up.
 
-> 
-> Suggested-by: Mario Limonciello <mario.limonciello@amd.com>
-> Cc: Jarkko Sakkinen <jarkko@kernel.org>
-> Cc: Thorsten Leemhuis <regressions@leemhuis.info>
-> Cc: James Bottomley <James.Bottomley@hansenpartnership.com>
-> Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+There are a bunch of pin port messages that show up from
+hdac_hdmi_query_port_connlist when things are working, that never
+appear when broken:
+[   14.618805] HDMI HDA Codec ehdaudio0D2: No connections found for pin:por=
+t 5:0
+[   14.619242] HDMI HDA Codec ehdaudio0D2: No connections found for pin:por=
+t 5:1
+[   14.619703] HDMI HDA Codec ehdaudio0D2: No connections found for pin:por=
+t 5:2
+...
 
-At least as a note for myself this needs:
-1. 'Link' tag to the public advisory for this fTPM issue
-2. A 'Fixes' tag to the commit that enabled fTPM as a hwrng source by 
-default and exposed the issue.
-3. A 'Link' tag to the bugzilla.
+I do see hdac_hdmi_runtime_suspend run a moment before things go bad,
+but I have no idea if it is related.
 
-> ---
->   drivers/char/tpm/tpm-chip.c | 34 ++++++++++++++++-
->   drivers/char/tpm/tpm.h      | 73 +++++++++++++++++++++++++++++++++++++
->   2 files changed, 106 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/char/tpm/tpm-chip.c b/drivers/char/tpm/tpm-chip.c
-> index 741d8f3e8fb3..e0f8134d31a3 100644
-> --- a/drivers/char/tpm/tpm-chip.c
-> +++ b/drivers/char/tpm/tpm-chip.c
-> @@ -512,6 +512,37 @@ static int tpm_add_legacy_sysfs(struct tpm_chip *chip)
->   	return 0;
->   }
->   
-> +static bool tpm_is_rng_defective(struct tpm_chip *chip)
-> +{
-> +	int ret;
-> +	u32 val1, val2;
-> +	u64 version;
-> +
-> +	/* No known-broken TPM1 chips. */
-> +	if (!(chip->flags & TPM_CHIP_FLAG_TPM2))
-> +		return false;
-> +
-> +	/* Only known-broken are AMD. */
-> +	ret = tpm2_get_tpm_pt(chip, TPM2_PT_MANUFACTURER, &val1, NULL);
-> +	if (ret < 0 || val1 != 0x414D4400U /* AMD */)
-> +		return false;
-> +
-> +	/* Grab and concat the version values. */
-> +	ret = tpm2_get_tpm_pt(chip, TPM2_PT_FIRMWARE_VERSION_1, &val1, NULL);
-> +	if (ret < 0)
-> +		return false;
-> +	ret = tpm2_get_tpm_pt(chip, TPM2_PT_FIRMWARE_VERSION_2, &val2, NULL);
-> +	if (ret < 0)
-> +		return false;
-> +	version = ((u64)val1 << 32) | val2;
-> +
-> +	/* Versions below 3.4e.2.9 are broken. */
-> +	if (version < 0x0003004E0002009ULL)
-> +		return true;
+Without patching anything and CONFIG_PM unset everything works.
 
-We probably want to also do a 'dev_info_once' or 'dev_warn_once' here to 
-let people know that they're not getting a fTPM RNG so it's not a surprise.
+I don't know if that helps anyone see where the problem is. If not
+I'll keep plugging away.
 
-> +
-> +	return false;
-> +}
-> +
->   static int tpm_hwrng_read(struct hwrng *rng, void *data, size_t max, bool wait)
->   {
->   	struct tpm_chip *chip = container_of(rng, struct tpm_chip, hwrng);
-> @@ -521,7 +552,8 @@ static int tpm_hwrng_read(struct hwrng *rng, void *data, size_t max, bool wait)
->   
->   static int tpm_add_hwrng(struct tpm_chip *chip)
->   {
-> -	if (!IS_ENABLED(CONFIG_HW_RANDOM_TPM) || tpm_is_firmware_upgrade(chip))
-> +	if (!IS_ENABLED(CONFIG_HW_RANDOM_TPM) || tpm_is_firmware_upgrade(chip) ||
-> +	    tpm_is_rng_defective(chip))
->   		return 0;
->   
->   	snprintf(chip->hwrng_name, sizeof(chip->hwrng_name),
-> diff --git a/drivers/char/tpm/tpm.h b/drivers/char/tpm/tpm.h
-> index 24ee4e1cc452..830014a26609 100644
-> --- a/drivers/char/tpm/tpm.h
-> +++ b/drivers/char/tpm/tpm.h
-> @@ -150,6 +150,79 @@ enum tpm_sub_capabilities {
->   	TPM_CAP_PROP_TIS_DURATION = 0x120,
->   };
->   
-> +enum tpm2_pt_props {
-> +	TPM2_PT_NONE = 0x00000000,
-> +	TPM2_PT_GROUP = 0x00000100,
-> +	TPM2_PT_FIXED = TPM2_PT_GROUP * 1,
-> +	TPM2_PT_FAMILY_INDICATOR = TPM2_PT_FIXED + 0,
-> +	TPM2_PT_LEVEL = TPM2_PT_FIXED + 1,
-> +	TPM2_PT_REVISION = TPM2_PT_FIXED + 2,
-> +	TPM2_PT_DAY_OF_YEAR = TPM2_PT_FIXED + 3,
-> +	TPM2_PT_YEAR = TPM2_PT_FIXED + 4,
-> +	TPM2_PT_MANUFACTURER = TPM2_PT_FIXED + 5,
-> +	TPM2_PT_VENDOR_STRING_1 = TPM2_PT_FIXED + 6,
-> +	TPM2_PT_VENDOR_STRING_2 = TPM2_PT_FIXED + 7,
-> +	TPM2_PT_VENDOR_STRING_3 = TPM2_PT_FIXED + 8,
-> +	TPM2_PT_VENDOR_STRING_4 = TPM2_PT_FIXED + 9,
-> +	TPM2_PT_VENDOR_TPM_TYPE = TPM2_PT_FIXED + 10,
-> +	TPM2_PT_FIRMWARE_VERSION_1 = TPM2_PT_FIXED + 11,
-> +	TPM2_PT_FIRMWARE_VERSION_2 = TPM2_PT_FIXED + 12,
-> +	TPM2_PT_INPUT_BUFFER = TPM2_PT_FIXED + 13,
-> +	TPM2_PT_HR_TRANSIENT_MIN = TPM2_PT_FIXED + 14,
-> +	TPM2_PT_HR_PERSISTENT_MIN = TPM2_PT_FIXED + 15,
-> +	TPM2_PT_HR_LOADED_MIN = TPM2_PT_FIXED + 16,
-> +	TPM2_PT_ACTIVE_SESSIONS_MAX = TPM2_PT_FIXED + 17,
-> +	TPM2_PT_PCR_COUNT = TPM2_PT_FIXED + 18,
-> +	TPM2_PT_PCR_SELECT_MIN = TPM2_PT_FIXED + 19,
-> +	TPM2_PT_CONTEXT_GAP_MAX = TPM2_PT_FIXED + 20,
-> +	TPM2_PT_NV_COUNTERS_MAX = TPM2_PT_FIXED + 22,
-> +	TPM2_PT_NV_INDEX_MAX = TPM2_PT_FIXED + 23,
-> +	TPM2_PT_MEMORY = TPM2_PT_FIXED + 24,
-> +	TPM2_PT_CLOCK_UPDATE = TPM2_PT_FIXED + 25,
-> +	TPM2_PT_CONTEXT_HASH = TPM2_PT_FIXED + 26,
-> +	TPM2_PT_CONTEXT_SYM = TPM2_PT_FIXED + 27,
-> +	TPM2_PT_CONTEXT_SYM_SIZE = TPM2_PT_FIXED + 28,
-> +	TPM2_PT_ORDERLY_COUNT = TPM2_PT_FIXED + 29,
-> +	TPM2_PT_MAX_COMMAND_SIZE = TPM2_PT_FIXED + 30,
-> +	TPM2_PT_MAX_RESPONSE_SIZE = TPM2_PT_FIXED + 31,
-> +	TPM2_PT_MAX_DIGEST = TPM2_PT_FIXED + 32,
-> +	TPM2_PT_MAX_OBJECT_CONTEXT = TPM2_PT_FIXED + 33,
-> +	TPM2_PT_MAX_SESSION_CONTEXT = TPM2_PT_FIXED + 34,
-> +	TPM2_PT_PS_FAMILY_INDICATOR = TPM2_PT_FIXED + 35,
-> +	TPM2_PT_PS_LEVEL = TPM2_PT_FIXED + 36,
-> +	TPM2_PT_PS_REVISION = TPM2_PT_FIXED + 37,
-> +	TPM2_PT_PS_DAY_OF_YEAR = TPM2_PT_FIXED + 38,
-> +	TPM2_PT_PS_YEAR = TPM2_PT_FIXED + 39,
-> +	TPM2_PT_SPLIT_MAX = TPM2_PT_FIXED + 40,
-> +	TPM2_PT_TOTAL_COMMANDS = TPM2_PT_FIXED + 41,
-> +	TPM2_PT_LIBRARY_COMMANDS = TPM2_PT_FIXED + 42,
-> +	TPM2_PT_VENDOR_COMMANDS = TPM2_PT_FIXED + 43,
-> +	TPM2_PT_NV_BUFFER_MAX = TPM2_PT_FIXED + 44,
-> +	TPM2_PT_MODES = TPM2_PT_FIXED + 45,
-> +	TPM2_PT_MAX_CAP_BUFFER = TPM2_PT_FIXED + 46,
-> +	TPM2_PT_VAR = TPM2_PT_GROUP * 2,
-> +	TPM2_PT_PERMANENT = TPM2_PT_VAR + 0,
-> +	TPM2_PT_STARTUP_CLEAR = TPM2_PT_VAR + 1,
-> +	TPM2_PT_HR_NV_INDEX = TPM2_PT_VAR + 2,
-> +	TPM2_PT_HR_LOADED = TPM2_PT_VAR + 3,
-> +	TPM2_PT_HR_LOADED_AVAIL = TPM2_PT_VAR + 4,
-> +	TPM2_PT_HR_ACTIVE = TPM2_PT_VAR + 5,
-> +	TPM2_PT_HR_ACTIVE_AVAIL = TPM2_PT_VAR + 6,
-> +	TPM2_PT_HR_TRANSIENT_AVAIL = TPM2_PT_VAR + 7,
-> +	TPM2_PT_HR_PERSISTENT = TPM2_PT_VAR + 8,
-> +	TPM2_PT_HR_PERSISTENT_AVAIL = TPM2_PT_VAR + 9,
-> +	TPM2_PT_NV_COUNTERS = TPM2_PT_VAR + 10,
-> +	TPM2_PT_NV_COUNTERS_AVAIL = TPM2_PT_VAR + 11,
-> +	TPM2_PT_ALGORITHM_SET = TPM2_PT_VAR + 12,
-> +	TPM2_PT_LOADED_CURVES = TPM2_PT_VAR + 13,
-> +	TPM2_PT_LOCKOUT_COUNTER = TPM2_PT_VAR + 14,
-> +	TPM2_PT_MAX_AUTH_FAIL = TPM2_PT_VAR + 15,
-> +	TPM2_PT_LOCKOUT_INTERVAL = TPM2_PT_VAR + 16,
-> +	TPM2_PT_LOCKOUT_RECOVERY = TPM2_PT_VAR + 17,
-> +	TPM2_PT_NV_WRITE_RECOVERY = TPM2_PT_VAR + 18,
-> +	TPM2_PT_AUDIT_COUNTER_0 = TPM2_PT_VAR + 19,
-> +	TPM2_PT_AUDIT_COUNTER_1 = TPM2_PT_VAR + 20,
-> +};
->   
+Incidentally, commit 3fd63658caed9494cca1d4789a66d3d2def2a0ab, pointed
+to by my second bisect, starts making using of skl_codec_device_init
+where I believe snd_hda_codec_device_init is called and starts the
+problem. I believe this is why reverting either of the two works
+around the problem.
 
-I guess these properties should be split out to a separate patch in a 
-series.
 
->   /* 128 bytes is an arbitrary cap. This could be as large as TPM_BUFSIZE - 18
->    * bytes, but 128 is still a relatively large number of random bytes and
+
+On Mon, Feb 6, 2023 at 2:57 PM Jason Montleon <jmontleo@redhat.com> wrote:
+>
+> On Mon, Feb 6, 2023 at 8:51 AM Jason Montleon <jmontleo@redhat.com> wrote=
+:
+> >
+> > On Mon, Feb 6, 2023 at 4:04 AM Amadeusz S=C5=82awi=C5=84ski
+> > <amadeuszx.slawinski@linux.intel.com> wrote:
+> > >
+> > > On 2/4/2023 4:16 PM, Jason Montleon wrote:
+> > > > I have built kernels for 6.0.19 (I don't think anyone confirmed
+> > > > whether or not it worked), plus every 6.1 tag from 6.1-rc1 up to
+> > > > 6.1.7. 6.0.19 worked. No 6.1 kernels worked. For rc1 to rc5 I built
+> > > > with and without the legacy dai renaming patch added in rc6 that I
+> > > > believe would be necessary, but it made no difference either way.
+> > >
+> > > Hi,
+> > >
+> > > thank you for trying to narrow it down, if I understand correctly -rc=
+1
+> > > doesn't work, which means that problem was introduced somewhere betwe=
+en
+> > > 6.0 and 6.1-rc1 (just for the sake of being sure, can you test 6.0
+> > > instead of 6.0.19?) There is one commit which I'm bit suspicious abou=
+t:
+> > > ef6f5494faf6a37c74990689a3bb3cee76d2544c it changes how HDMI are
+> > > assigned and as a machine board present on EVE makes use of HDMI, it =
+may
+> > > potentially cause some problems. Can you try reverting it?
+> > > (If reverting on top of v6.1.8 you need to revert both
+> > > f9aafff5448b1d8d457052271cd9a11b24e4d0bd and
+> > > ef6f5494faf6a37c74990689a3bb3cee76d2544c which has minor conflict,
+> > > easily resolved with just adding both lines.
+> > >
+> >
+> > Yes, happy to give that a shot and will report back.
+> >
+>
+> Removing f9aafff5448b1d8d457052271cd9a11b24e4d0bd and
+> ef6f5494faf6a37c74990689a3bb3cee76d2544c did not make things work.
+>
+> You may be onto something with pulseaudio and/or HDMI, however.
+> When setting up Slackware I saw an interesting aplay hang.
+> Normally aplay -l will list like this with working audio:
+> $ aplay -l
+> **** List of PLAYBACK Hardware Devices ****
+> card 0: kblr55145663max [kbl-r5514-5663-max], device 0: Audio (*) []
+>   Subdevices: 1/1
+>   Subdevice #0: subdevice #0
+> card 0: kblr55145663max [kbl-r5514-5663-max], device 2: Headset Audio (*)=
+ []
+>   Subdevices: 1/1
+>   Subdevice #0: subdevice #0
+> card 0: kblr55145663max [kbl-r5514-5663-max], device 6: Hdmi1 (*) []
+>   Subdevices: 1/1
+>   Subdevice #0: subdevice #0
+> card 0: kblr55145663max [kbl-r5514-5663-max], device 7: Hdmi2 (*) []
+>   Subdevices: 1/1
+>   Subdevice #0: subdevice #0
+>
+> Both on Slackware and Fedora with broken audio it hangs like so
+> (haven't tried on Arch):
+> $ aplay -l
+> **** List of PLAYBACK Hardware Devices ****
+> card 0: kblr55145663max [kbl-r5514-5663-max], device 0: Audio (*) []
+>   Subdevices: 1/1
+>   Subdevice #0: subdevice #0
+> card 0: kblr55145663max [kbl-r5514-5663-max], device 2: Headset Audio (*)=
+ []
+>   Subdevices: 1/1
+>   Subdevice #0: subdevice #0
+> card 0: kblr55145663max [kbl-r5514-5663-max], device 6: Hdmi1 (*) []
+>   Subdevices: 1/1
+>   Subdevice #0: subdevice #0
+>
+> If I remove or disable pulseaudio it lists without hanging, but it's
+> difficult for me to tell whether it's working since aplay, etc. seem
+> to want pulseaudio to play anything. Shutdown hangs persist
+> regardless.
+>
+> Also, Slackware with 6.1.9 behaves as badly for me as everything else.
+> If Sasa has working audio I do not know how he has managed to
+> configure it. On each distro, as soon as I add topology and firmware
+> files everything goes bad, regardless of whether I add ucm
+> configuration or not, etc.
+>
+> > > I also still wonder, why problem reproduces only on some
+> > > distributions... any chance you can try and boot with
+> > > pipewire/pulseaudio disabled and see if it still happens, iirc those
+> > > tools try to check all FEs and this may be breaking something during
+> > > enumeration.
+> >
+> > I can definitely try disabling pulseaudio and switching to pipewire
+> > and seeing if anything changes as well.
+> >
+> > FWIW, I installed Arch on a thumb drive this weekend and was able to
+> > reproduce the issue and work around it by reverting the commit from my
+> > first bisect. So, for me it behaves just like Fedora. The instructions
+> > for Arch for building a custom kernel are great except they generalize
+> > the bootloader instructions, so you need to know what to do at the end
+> > to add the grub boot entries, if using grub for example, and I suspect
+> > that may be where the confusion came from, though I don't know. I'm
+> > trying to get one of the two to reproduce my results to confirm and at
+> > least get them a workaround.
+> >
+> > I have slackware on another thumb drive already, but I have yet to
+> > even get it updated to 6.1.8.
+> >
+> > If any of them behave differently I was hoping to tease out whether
+> > it's firmware, kernel config, or something else, but so far the first
+> > has been more of the same.
+> >
+> > > Thanks,
+> > > Amadeusz
+> > >
+> > > >
+> > > > On Wed, Feb 1, 2023 at 9:33 AM Jason Montleon <jmontleo@redhat.com>=
+ wrote:
+> > > >>
+> > > >> On Wed, Feb 1, 2023 at 6:05 AM Amadeusz S=C5=82awi=C5=84ski
+> > > >> <amadeuszx.slawinski@linux.intel.com> wrote:
+> > > >>>
+> > > >>> On 1/31/2023 4:16 PM, Jason Montleon wrote:
+> > > >>>> On Tue, Jan 31, 2023 at 7:37 AM Cezary Rojewski
+> > > >>>> <cezary.rojewski@intel.com> wrote:
+> > > >>>>>
+> > > >>>>> On 2023-01-30 1:22 PM, Sasa Ostrouska wrote:
+> > > >>>>>
+> > > >>>>>> Dear Czarek, many thanks for the answer and taking care of it.=
+ If
+> > > >>>>>> needed something from my side please jest let me know
+> > > >>>>>> and I will try to do it.
+> > > >>>>>
+> > > >>>>>
+> > > >>>>> Hello Sasa,
+> > > >>>>>
+> > > >>>>> Could you provide us with the topology and firmware binary pres=
+ent on
+> > > >>>>> your machine?
+> > > >>>>>
+> > > >>>>> Audio topology is located at /lib/firmware and named:
+> > > >>>>>
+> > > >>>>> 9d71-GOOGLE-EVEMAX-0-tplg.bin
+> > > >>>>> -or-
+> > > >>>>> dfw_sst.bin
+> > > >>>>>
+> > > >>>>> Firmware on the other hand is found in /lib/firmware/intel/.
+> > > >>>>> 'dsp_fw_kbl.bin' will lie there, it shall be a symlink pointing=
+ to an
+> > > >>>>> actual AudioDSP firmware binary.
+> > > >>>>>
+> > > >>>> Maybe this is the problem.
+> > > >>>>
+> > > >>>> I think most of us are pulling the topology and firmware from th=
+e
+> > > >>>> chromeos recovery images for lack of any other known source, and=
+ it
+> > > >>>> looks a little different than this. Those can be downloaded like=
+ so:
+> > > >>>> https://gist.github.com/jmontleon/8899cb83138f2653f520fbbcc5b830=
+a0
+> > > >>>>
+> > > >>>> After placing the topology file you'll see these errors and audi=
+o will
+> > > >>>> not work until they're also copied in place.
+> > > >>>> snd_soc_skl 0000:00:1f.3: Direct firmware load for
+> > > >>>> dsp_lib_dsm_core_spt_release.bin failed with error -2
+> > > >>>> snd_soc_skl 0000:00:1f.3: Direct firmware load for
+> > > >>>> intel/dsp_fw_C75061F3-F2B2-4DCC-8F9F-82ABB4131E66.bin failed wit=
+h
+> > > >>>> error -2
+> > > >>>>
+> > > >>>> Once those were in place, up to 6.0.18 audio worked.
+> > > >>>>
+> > > >>>> Is there a better source for the topology file?
+> > > >>>>
+> > > >>>>> The reasoning for these asks is fact that problem stopped repro=
+ducing on
+> > > >>>>> our end once we started playing with kernel versions (moved awa=
+y from
+> > > >>>>> status quo with Fedora). Neither on Lukasz EVE nor on my SKL RV=
+P.
+> > > >>>>> However, we might be using newer configuration files when compa=
+red to
+> > > >>>>> equivalent of yours.
+> > > >>>>>
+> > > >>>>> Recent v6.2-rc5 broonie/sound/for-next - no repro
+> > > >>>>> Our internal tree based on Mark's for-next - no repro
+> > > >>>>> 6.1.7 stable [1] - no repro
+> > > >>>>>
+> > > >>>>> Of course we will continue with our attempts. Will notify about=
+ the
+> > > >>>>> progress.
+> > > >>>>>
+> > > >>>>>
+> > > >>>>> [1]:
+> > > >>>>> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.gi=
+t/commit/?h=3Dv6.1.7&id=3D21e996306a6afaae88295858de0ffb8955173a15
+> > > >>>>>
+> > > >>>>>
+> > > >>>>> Kind regards,
+> > > >>>>> Czarek
+> > > >>>>>
+> > > >>>>
+> > > >>>>
+> > > >>>
+> > > >>> Hi Jason,
+> > > >>>
+> > > >>> as I understand you've tried to do bisect, can you instead try bu=
+ilding
+> > > >>> kernels checking out following tags:
+> > > >>> v6.1      v6.1.1    v6.1.2    v6.1.3    v6.1.4    v6.1.5    v6.1.=
+6
+> > > >>> v6.1.7    v6.1.8
+> > > >>> and report when it stops working, so it narrows scope of what we =
+look
+> > > >>> at? I assume that kernel builds are done using upstream stable ke=
+rnel
+> > > >>> (from https://git.kernel.org/pub/scm/linux/kernel/git/stable/linu=
+x.git/).
+> > > >>>
+> > > >>> Thanks,
+> > > >>> Amadeusz
+> > > >>>
+> > > >> Hi Amadeusz,
+> > > >> Yes, I did the bisects using
+> > > >> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/
+> > > >>
+> > > >> The only thing I did to these was add
+> > > >> 392cc13c5ec72ccd6bbfb1bc2339502cc59dd285, otherwise audio breaks w=
+ith
+> > > >> the dai not registered error message in dmesg from the rt5514 bug =
+from
+> > > >> 6.0 and up. It wasn't added to 6.1 until rc6, I believe. If there'=
+s a
+> > > >> better way to work around the multiple bugs I can try again, other=
+wise
+> > > >> I will start working on builds from tags and see if I learn anythi=
+ng.
+> > > >>
+> > > >> FWIW, I've seen two people complain that Arch isn't working either
+> > > >> since it moved to 6.1. For the one who was trying, patching out th=
+e
+> > > >> commit I came to with the first bisect did not regain them sound l=
+ike
+> > > >> it did for me. And yet Sasa reports Slackware is mostly working fo=
+r
+> > > >> him with 6.1.8 on Slackware. I don't know what to make of it, but
+> > > >> thought I'd share in case it helps point someone else to something=
+.
+> > > >> https://github.com/jmontleon/pixelbook-fedora/issues/51#issuecomme=
+nt-1410222840
+> > > >> https://github.com/jmontleon/pixelbook-fedora/issues/51#issuecomme=
+nt-1410673371
+> > > >> https://github.com/jmontleon/pixelbook-fedora/issues/53#issuecomme=
+nt-1408699252
+> > > >>
+> > > >> Probably less relevant since they aren't from upstream and I know =
+they
+> > > >> don't mean as much, but I have tried 6.1.5-6.1.8 Fedora packages f=
+or
+> > > >> certain, and went back trying several others from koji back into r=
+c
+> > > >> builds, although using prebuilt kernels, anything before 6.1-rc6 w=
+on't
+> > > >> work, as mentioned above. Nothing worked. But as I said I'll build
+> > > >> from tags and see if I can learn anything.
+> > > >>
+> > > >> Thank you,
+> > > >> Jason Montleon
+> > > >>
+> > > >> --
+> > > >> Jason Montleon        | email: jmontleo@redhat.com
+> > > >> Red Hat, Inc.         | gpg key: 0x069E3022
+> > > >> Cell: 508-496-0663    | irc: jmontleo / jmontleon
+> > > >
+> > > >
+> > > >
+> > >
+> >
+> >
+> > --
+> > Jason Montleon        | email: jmontleo@redhat.com
+> > Red Hat, Inc.         | gpg key: 0x069E3022
+> > Cell: 508-496-0663    | irc: jmontleo / jmontleon
+>
+>
+>
+> --
+> Jason Montleon        | email: jmontleo@redhat.com
+> Red Hat, Inc.         | gpg key: 0x069E3022
+> Cell: 508-496-0663    | irc: jmontleo / jmontleon
+
+
+
+--
+Jason Montleon        | email: jmontleo@redhat.com
+Red Hat, Inc.         | gpg key: 0x069E3022
+Cell: 508-496-0663    | irc: jmontleo / jmontleon
 
