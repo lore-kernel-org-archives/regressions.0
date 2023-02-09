@@ -1,180 +1,200 @@
-Received: from mail-oa1-f41.google.com (mail-oa1-f41.google.com [209.85.160.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA21833ED
-	for <regressions@lists.linux.dev>; Thu,  9 Feb 2023 14:11:53 +0000 (UTC)
-Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-16a7f5b6882so2625856fac.10
-        for <regressions@lists.linux.dev>; Thu, 09 Feb 2023 06:11:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=JFB1o+M1WT64r376ibZ+mxHZwj2asHMqFz3iFJrx2AQ=;
-        b=eg0TGvfOTUHTMNXRJ+GlrjdGoYvkiD+UHI5DDibs5zeRyO+2d3UHX3GiD3n1uCmoUq
-         VZTw7DL7KuBJvGQiVygUY7uqpyo7+l8henIXwZNfR52yqIc+2Y7ayDrQyG3vPmNdXi7g
-         OlYPOck8l4mzUpdUtBQcrdp+fuN8iri9m2VGO+nr/XiUrJunsDTjsfDhBkk1fSlyVGqw
-         ljWvka2t+N07Y+H6PF1hgEZz0UeYUmxiebUZH0BmaDEiq/Yy0HDidGLi7mpFpU9sDxiu
-         ZP9R8NjoMXdM8GcKNW6Ble1DkyMBBoqu3RqAEFOFUabssIEpDOf/R+vVqYVN8r9ekeHw
-         4s/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=JFB1o+M1WT64r376ibZ+mxHZwj2asHMqFz3iFJrx2AQ=;
-        b=HyQoPZ9Wzdfm/nabscIjUNBshw8isX8boLnY3xgQsHVagi0Ztbc2nD3K9reesOKrtq
-         ok6RTGmKOltyq5J1YOEV2FKFGfiIC93ivbsl2XI2FtKq5KKzkUaouuXY0hINwtPAaL24
-         +o+KxgmJfsY20DJiLCRn4Qg4z+pUmUtn9Mdioe1WNk+S0mN9JvcqK1BWWcajUbmLqWSk
-         NDyiPdaiLEEGsDMzHmQLOUTr99dw9/HvU3rACN8Y3APHt3631H/Qe99/BMcFzu3nMw8B
-         opKI+WP7wxAFhUyydLx/3QOirPSGQbtCtNPdwW2/cU/MqaLlwayEFWWtQEFKl+7qTawa
-         r3tg==
-X-Gm-Message-State: AO0yUKW6hMEE2Fh6ppavvowhEBjz52J1MmxEKfHWhXrbcHGBAiZ+Mcoa
-	jTa4XguBeF1vhmMnWsfyFpna1Hi1gUB0VwP4/FOreWFpJ4QlDw==
-X-Google-Smtp-Source: AK7set+5BvkASgCVopLhZdPXdr8pMRKwKxKAotvY+K6QKb/dMzp3I4Xyky+P69sIgrxHEwvgn12ND22+oW28RAw35kY=
-X-Received: by 2002:a05:6870:392c:b0:163:67a4:8f9f with SMTP id
- b44-20020a056870392c00b0016367a48f9fmr1336048oap.270.1675951912604; Thu, 09
- Feb 2023 06:11:52 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80FB679F8
+	for <regressions@lists.linux.dev>; Thu,  9 Feb 2023 15:31:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 324E4C433EF;
+	Thu,  9 Feb 2023 15:31:46 +0000 (UTC)
+Authentication-Results: smtp.kernel.org;
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="inW/2snd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
+	t=1675956701;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=TgBq3MqvxYZXue4Xz/yBrfYt3XfuzRFTCNB40SKCI8E=;
+	b=inW/2sndNOy0O90MQLt2a7rWYimKGnG7saScn4Vxf4Y7/y2y4CmdswXyMVsqDG0GBn1/8v
+	yOoQ+pEL2QYBHJRpnycM4JSI6yzYNnb+AqaCMxiDL2t5M0KFB49cvEP0OYmSe6dTGWQHjU
+	pP5o+3Q6OtmqBaxsJ9AfwaGCM8TAKXk=
+Received: 
+	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 7033f5f3 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+	Thu, 9 Feb 2023 15:31:40 +0000 (UTC)
+From: "Jason A. Donenfeld" <Jason@zx2c4.com>
+To: regressions@lists.linux.dev,
+	linux-integrity@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Jarkko Sakkinen <jarkko@kernel.org>,
+	Thorsten Leemhuis <regressions@leemhuis.info>,
+	James Bottomley <James.Bottomley@hansenpartnership.com>
+Subject: [PATCH RFC] tpm: disable hwrng for known-defective AMD RNGs
+Date: Thu,  9 Feb 2023 12:31:20 -0300
+Message-Id: <20230209153120.261904-1-Jason@zx2c4.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CALFERdzKUodLsm6=Ub3g2+PxpNpPtPq3bGBLbff=eZr9_S=YVA@mail.gmail.com>
- <962dfb15-b259-b764-3085-8d6a942f5abb@leemhuis.info> <CALFERdwmt_1yVmeQheTRqv6n0YJUs5cuRpUqT1O4UMydY6ubEA@mail.gmail.com>
-In-Reply-To: <CALFERdwmt_1yVmeQheTRqv6n0YJUs5cuRpUqT1O4UMydY6ubEA@mail.gmail.com>
-From: Sasa Ostrouska <casaxa@gmail.com>
-Date: Thu, 9 Feb 2023 15:11:41 +0100
-Message-ID: <CALFERdwvq5day_sbDfiUsMSZCQu9HG8-SBpOZDNPeMdZGog6XA@mail.gmail.com>
-Subject: Re: Google Pixelbook EVE, no sound in kernel 6.1.x
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: stable@vger.kernel.org, 
-	Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>, Lukasz Majczak <lma@semihalf.com>, 
-	Cezary Rojewski <cezary.rojewski@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hi, I dont know how much this is relevant but I am getting this kind
-of traces in dmesg on both, Salckware and Fedora installs.
+Do not register a hwrng for certain AMD TPMs that are running an old
+known-buggy revision. Do this by probing the TPM2_PT_MANUFACTURER,
+TPM2_PT_FIRMWARE_VERSION_1, and TPM2_PT_FIRMWARE_VERSION_2 properties,
+and failing when an "AMD"-manufactured TPM2 chip is below a threshold.
 
-[   16.286097] ------------[ cut here ]------------
-[   16.286100] memcpy: detected field-spanning write (size 100) of
-single field "cpr_mconfig->gtw_cfg.config_data" at
-sound/soc/intel/skylake/skl-messages.c:554 (size 4)
-[   16.286128] WARNING: CPU: 1 PID: 1232 at
-sound/soc/intel/skylake/skl-messages.c:554 skl_init_module+0x757/0x770
-[snd_soc_skl]
-[   16.286156] Modules linked in: nf_nat_ftp nf_conntrack_ftp
-nft_objref nf_conntrack_netbios_ns nf_conntrack_broadcast nft_fib_inet
-nft_fib_ipv4 nft_fib_ipv6 nft_fib nft_reject_inet nf_reject_ipv4
-nf_reject_ipv6 nft_reject nft_ct nft_chain_nat nf_nat nf_conntrack
-nf_defrag_ipv6 nf_defrag_ipv4 ip_set nf_tables nfnetlink
-snd_soc_skl_ssp_clk snd_sof_pci_intel_skl snd_sof_intel_hda_common
-soundwire_intel soundwire_generic_allocation soundwire_cadence
-snd_sof_intel_hda snd_sof_pci snd_sof_xtensa_dsp snd_sof snd_sof_utils
-qrtr soundwire_bus snd_soc_avs snd_soc_kbl_rt5663_rt5514_max98927
-snd_soc_hda_codec cros_ec_light_prox cros_ec_sensors
-cros_ec_sensors_core bnep industrialio_triggered_buffer kfifo_buf
-snd_soc_hdac_hdmi snd_soc_dmic industrialio i2c_hid_acpi i2c_hid
-snd_soc_skl cros_ec_chardev snd_soc_hdac_hda cros_ec_sensorhub
-snd_hda_ext_core cros_usbpd_charger cros_ec_sysfs cros_usbpd_logger
-snd_soc_sst_ipc binfmt_misc iTCO_wdt snd_soc_sst_dsp
-snd_soc_acpi_intel_match intel_pmc_bxt
-[   16.286215]  iTCO_vendor_support intel_tcc_cooling
-x86_pkg_temp_thermal snd_soc_acpi intel_powerclamp coretemp kvm_intel
-snd_hda_intel snd_intel_dspcfg snd_intel_sdw_acpi cros_ec_dev
-snd_hda_codec kvm intel_rapl_msr iwlmvm uvcvideo videobuf2_vmalloc
-irqbypass mac80211 rapl videobuf2_memops snd_hda_core videobuf2_v4l2
-intel_cstate intel_uncore libarc4 pcspkr i2c_i801 sunrpc snd_hwdep
-videobuf2_common videodev i2c_smbus btusb btrtl spi_pxa2xx_platform
-dw_dmac btbcm iwlwifi btintel mc snd_soc_rt5663 btmtk snd_soc_rt5514
-snd_soc_max98927 snd_soc_rt5514_spi snd_soc_rl6231 bluetooth
-snd_soc_core cfg80211 mei_me joydev snd_compress mei ac97_bus
-snd_pcm_dmaengine intel_pch_thermal rfkill idma64 snd_seq
-snd_seq_device snd_pcm snd_timer processor_thermal_device_pci_legacy
-processor_thermal_device snd cros_ec_i2c processor_thermal_rfim
-processor_thermal_mbox soundcore processor_thermal_rapl cros_ec_lpcs
-cros_ec tpm_tis_i2c_cr50 cros_usbpd_notify int3403_thermal
-intel_rapl_common
-[   16.286285]  int340x_thermal_zone intel_xhci_usb_role_switch
-int3400_thermal chromeos_pstore cros_kbd_led_backlight
-acpi_thermal_rel chromeos_acpi intel_soc_dts_iosf zram
-hid_logitech_hidpp hid_logitech_dj i915 drm_buddy video
-crct10dif_pclmul crc32_pclmul crc32c_intel wmi polyval_clmulni nvme
-polyval_generic drm_display_helper nvme_core sdhci_pci cqhci cec sdhci
-ghash_clmulni_intel hid_multitouch mmc_core sha512_ssse3 nvme_common
-serio_raw ttm pinctrl_sunrisepoint r8152 mii ip6_tables ip_tables fuse
-[last unloaded: i2c_hid]
-[   16.286324] CPU: 1 PID: 1232 Comm: pulseaudio Not tainted
-6.1.9-201.pixelbook.fc37.x86_64 #1
-[   16.286328] Hardware name: Google Eve/Eve, BIOS
-Google_Eve.9584.230.0 09/06/2021
-[   16.286330] RIP: 0010:skl_init_module+0x757/0x770 [snd_soc_skl]
-[   16.286355] Code: bd fe ff ff b9 04 00 00 00 4c 89 fe 4c 89 04 24
-48 c7 c2 00 e7 42 c1 48 c7 c7 58 e7 42 c1 c6 05 0e 36 02 00 01 e8 3f
-1b 95 fb <0f> 0b 4c 8b 04 24 e9 8c fe ff ff e9 96 ab 00 00 66 0f 1f 84
-00 00
-[   16.286358] RSP: 0000:ffffb3c2816c7ae0 EFLAGS: 00010296
-[   16.286362] RAX: 000000000000009a RBX: ffff8d7ce355e028 RCX: 0000000000000000
-[   16.286364] RDX: 0000000000000001 RSI: ffffffffbd74c48b RDI: 00000000ffffffff
-[   16.286366] RBP: ffff8d7cc3854028 R08: 0000000000000000 R09: ffffb3c2816c7980
-[   16.286368] R10: 0000000000000003 R11: ffffffffbe1465a8 R12: 00000000000000b8
-[   16.286370] R13: 00000000000000b8 R14: ffff8d7d0d73c840 R15: 0000000000000064
-[   16.286372] FS:  00007fcb6eca02c0(0000) GS:ffff8d802ec80000(0000)
-knlGS:0000000000000000
-[   16.286375] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   16.286377] CR2: 00002dc17c298000 CR3: 000000016ccfa004 CR4: 00000000003706e0
-[   16.286379] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[   16.286381] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[   16.286382] Call Trace:
-[   16.286386]  <TASK>
-[   16.286391]  skl_tplg_mixer_event+0x72f/0xd20 [snd_soc_skl]
-[   16.286412]  ? __schedule+0x367/0x1360
-[   16.286420]  dapm_seq_check_event+0x108/0x1c0 [snd_soc_core]
-[   16.286464]  dapm_seq_run_coalesced+0x84/0x1c0 [snd_soc_core]
-[   16.286501]  dapm_seq_run+0x16e/0x3e0 [snd_soc_core]
-[   16.286542]  dapm_power_widgets+0x5db/0xa40 [snd_soc_core]
-[   16.286581]  snd_soc_dapm_stream_event+0xf5/0x170 [snd_soc_core]
-[   16.286619]  __soc_pcm_prepare+0x53/0xf0 [snd_soc_core]
-[   16.286659]  dpcm_fe_dai_prepare+0xac/0x150 [snd_soc_core]
-[   16.286699]  snd_pcm_do_prepare+0x26/0x40 [snd_pcm]
-[   16.286718]  snd_pcm_action_single+0x33/0x80 [snd_pcm]
-[   16.286733]  snd_pcm_action_nonatomic+0x95/0xa0 [snd_pcm]
-[   16.286749]  snd_pcm_ioctl+0x23/0x40 [snd_pcm]
-[   16.286764]  __x64_sys_ioctl+0x8d/0xd0
-[   16.286770]  do_syscall_64+0x58/0x80
-[   16.286774]  ? syscall_exit_to_user_mode+0x17/0x40
-[   16.286777]  ? do_syscall_64+0x67/0x80
-[   16.286780]  ? snd_pcm_ioctl+0x23/0x40 [snd_pcm]
-[   16.286795]  ? __x64_sys_ioctl+0x8d/0xd0
-[   16.286799]  ? syscall_exit_to_user_mode+0x17/0x40
-[   16.286801]  ? do_syscall_64+0x67/0x80
-[   16.286805]  entry_SYSCALL_64_after_hwframe+0x63/0xcd
-[   16.286809] RIP: 0033:0x7fcb6f593d6f
-[   16.286841] Code: 00 48 89 44 24 18 31 c0 48 8d 44 24 60 c7 04 24
-10 00 00 00 48 89 44 24 08 48 8d 44 24 20 48 89 44 24 10 b8 10 00 00
-00 0f 05 <89> c2 3d 00 f0 ff ff 77 18 48 8b 44 24 18 64 48 2b 04 25 28
-00 00
-[   16.286843] RSP: 002b:00007ffe5ea27370 EFLAGS: 00000246 ORIG_RAX:
-0000000000000010
-[   16.286847] RAX: ffffffffffffffda RBX: 0000563cd8d93160 RCX: 00007fcb6f593d6f
-[   16.286849] RDX: 0000000000000000 RSI: 0000000000004140 RDI: 0000000000000015
-[   16.286851] RBP: 0000000000000000 R08: 00000000000012bd R09: 00007ffe5ea27324
-[   16.286853] R10: 0000000000000004 R11: 0000000000000246 R12: 00007ffe5ea27aa4
-[   16.286855] R13: 00007ffe5ea27680 R14: 00007ffe5ea27a90 R15: 00007fcb6ec07290
-[   16.286861]  </TASK>
-[   16.286863] ---[ end trace 0000000000000000 ]---
+BROKEN BROKEN BROKEN - I just made the version numbers up and haven't
+tested this because I don't actually have hardware for it. I'm posting
+this so that Mario can take over its development and submit a v2 himself
+once he has confirmed the versioning info from inside AMD.
 
-Seems sound related. Also I suffer from not be able to reboot or
-powerdown on Slackware with 6.1.8,6.1.9 and 6.1.10 kernels.
+Suggested-by: Mario Limonciello <mario.limonciello@amd.com>
+Cc: Jarkko Sakkinen <jarkko@kernel.org>
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: James Bottomley <James.Bottomley@hansenpartnership.com>
+Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+---
+ drivers/char/tpm/tpm-chip.c | 34 ++++++++++++++++-
+ drivers/char/tpm/tpm.h      | 73 +++++++++++++++++++++++++++++++++++++
+ 2 files changed, 106 insertions(+), 1 deletion(-)
 
-Rgds
-Sasa
+diff --git a/drivers/char/tpm/tpm-chip.c b/drivers/char/tpm/tpm-chip.c
+index 741d8f3e8fb3..e0f8134d31a3 100644
+--- a/drivers/char/tpm/tpm-chip.c
++++ b/drivers/char/tpm/tpm-chip.c
+@@ -512,6 +512,37 @@ static int tpm_add_legacy_sysfs(struct tpm_chip *chip)
+ 	return 0;
+ }
+ 
++static bool tpm_is_rng_defective(struct tpm_chip *chip)
++{
++	int ret;
++	u32 val1, val2;
++	u64 version;
++
++	/* No known-broken TPM1 chips. */
++	if (!(chip->flags & TPM_CHIP_FLAG_TPM2))
++		return false;
++
++	/* Only known-broken are AMD. */
++	ret = tpm2_get_tpm_pt(chip, TPM2_PT_MANUFACTURER, &val1, NULL);
++	if (ret < 0 || val1 != 0x414D4400U /* AMD */)
++		return false;
++
++	/* Grab and concat the version values. */
++	ret = tpm2_get_tpm_pt(chip, TPM2_PT_FIRMWARE_VERSION_1, &val1, NULL);
++	if (ret < 0)
++		return false;
++	ret = tpm2_get_tpm_pt(chip, TPM2_PT_FIRMWARE_VERSION_2, &val2, NULL);
++	if (ret < 0)
++		return false;
++	version = ((u64)val1 << 32) | val2;
++
++	/* Versions below 3.4e.2.9 are broken. */
++	if (version < 0x0003004E0002009ULL)
++		return true;
++
++	return false;
++}
++
+ static int tpm_hwrng_read(struct hwrng *rng, void *data, size_t max, bool wait)
+ {
+ 	struct tpm_chip *chip = container_of(rng, struct tpm_chip, hwrng);
+@@ -521,7 +552,8 @@ static int tpm_hwrng_read(struct hwrng *rng, void *data, size_t max, bool wait)
+ 
+ static int tpm_add_hwrng(struct tpm_chip *chip)
+ {
+-	if (!IS_ENABLED(CONFIG_HW_RANDOM_TPM) || tpm_is_firmware_upgrade(chip))
++	if (!IS_ENABLED(CONFIG_HW_RANDOM_TPM) || tpm_is_firmware_upgrade(chip) ||
++	    tpm_is_rng_defective(chip))
+ 		return 0;
+ 
+ 	snprintf(chip->hwrng_name, sizeof(chip->hwrng_name),
+diff --git a/drivers/char/tpm/tpm.h b/drivers/char/tpm/tpm.h
+index 24ee4e1cc452..830014a26609 100644
+--- a/drivers/char/tpm/tpm.h
++++ b/drivers/char/tpm/tpm.h
+@@ -150,6 +150,79 @@ enum tpm_sub_capabilities {
+ 	TPM_CAP_PROP_TIS_DURATION = 0x120,
+ };
+ 
++enum tpm2_pt_props {
++	TPM2_PT_NONE = 0x00000000,
++	TPM2_PT_GROUP = 0x00000100,
++	TPM2_PT_FIXED = TPM2_PT_GROUP * 1,
++	TPM2_PT_FAMILY_INDICATOR = TPM2_PT_FIXED + 0,
++	TPM2_PT_LEVEL = TPM2_PT_FIXED + 1,
++	TPM2_PT_REVISION = TPM2_PT_FIXED + 2,
++	TPM2_PT_DAY_OF_YEAR = TPM2_PT_FIXED + 3,
++	TPM2_PT_YEAR = TPM2_PT_FIXED + 4,
++	TPM2_PT_MANUFACTURER = TPM2_PT_FIXED + 5,
++	TPM2_PT_VENDOR_STRING_1 = TPM2_PT_FIXED + 6,
++	TPM2_PT_VENDOR_STRING_2 = TPM2_PT_FIXED + 7,
++	TPM2_PT_VENDOR_STRING_3 = TPM2_PT_FIXED + 8,
++	TPM2_PT_VENDOR_STRING_4 = TPM2_PT_FIXED + 9,
++	TPM2_PT_VENDOR_TPM_TYPE = TPM2_PT_FIXED + 10,
++	TPM2_PT_FIRMWARE_VERSION_1 = TPM2_PT_FIXED + 11,
++	TPM2_PT_FIRMWARE_VERSION_2 = TPM2_PT_FIXED + 12,
++	TPM2_PT_INPUT_BUFFER = TPM2_PT_FIXED + 13,
++	TPM2_PT_HR_TRANSIENT_MIN = TPM2_PT_FIXED + 14,
++	TPM2_PT_HR_PERSISTENT_MIN = TPM2_PT_FIXED + 15,
++	TPM2_PT_HR_LOADED_MIN = TPM2_PT_FIXED + 16,
++	TPM2_PT_ACTIVE_SESSIONS_MAX = TPM2_PT_FIXED + 17,
++	TPM2_PT_PCR_COUNT = TPM2_PT_FIXED + 18,
++	TPM2_PT_PCR_SELECT_MIN = TPM2_PT_FIXED + 19,
++	TPM2_PT_CONTEXT_GAP_MAX = TPM2_PT_FIXED + 20,
++	TPM2_PT_NV_COUNTERS_MAX = TPM2_PT_FIXED + 22,
++	TPM2_PT_NV_INDEX_MAX = TPM2_PT_FIXED + 23,
++	TPM2_PT_MEMORY = TPM2_PT_FIXED + 24,
++	TPM2_PT_CLOCK_UPDATE = TPM2_PT_FIXED + 25,
++	TPM2_PT_CONTEXT_HASH = TPM2_PT_FIXED + 26,
++	TPM2_PT_CONTEXT_SYM = TPM2_PT_FIXED + 27,
++	TPM2_PT_CONTEXT_SYM_SIZE = TPM2_PT_FIXED + 28,
++	TPM2_PT_ORDERLY_COUNT = TPM2_PT_FIXED + 29,
++	TPM2_PT_MAX_COMMAND_SIZE = TPM2_PT_FIXED + 30,
++	TPM2_PT_MAX_RESPONSE_SIZE = TPM2_PT_FIXED + 31,
++	TPM2_PT_MAX_DIGEST = TPM2_PT_FIXED + 32,
++	TPM2_PT_MAX_OBJECT_CONTEXT = TPM2_PT_FIXED + 33,
++	TPM2_PT_MAX_SESSION_CONTEXT = TPM2_PT_FIXED + 34,
++	TPM2_PT_PS_FAMILY_INDICATOR = TPM2_PT_FIXED + 35,
++	TPM2_PT_PS_LEVEL = TPM2_PT_FIXED + 36,
++	TPM2_PT_PS_REVISION = TPM2_PT_FIXED + 37,
++	TPM2_PT_PS_DAY_OF_YEAR = TPM2_PT_FIXED + 38,
++	TPM2_PT_PS_YEAR = TPM2_PT_FIXED + 39,
++	TPM2_PT_SPLIT_MAX = TPM2_PT_FIXED + 40,
++	TPM2_PT_TOTAL_COMMANDS = TPM2_PT_FIXED + 41,
++	TPM2_PT_LIBRARY_COMMANDS = TPM2_PT_FIXED + 42,
++	TPM2_PT_VENDOR_COMMANDS = TPM2_PT_FIXED + 43,
++	TPM2_PT_NV_BUFFER_MAX = TPM2_PT_FIXED + 44,
++	TPM2_PT_MODES = TPM2_PT_FIXED + 45,
++	TPM2_PT_MAX_CAP_BUFFER = TPM2_PT_FIXED + 46,
++	TPM2_PT_VAR = TPM2_PT_GROUP * 2,
++	TPM2_PT_PERMANENT = TPM2_PT_VAR + 0,
++	TPM2_PT_STARTUP_CLEAR = TPM2_PT_VAR + 1,
++	TPM2_PT_HR_NV_INDEX = TPM2_PT_VAR + 2,
++	TPM2_PT_HR_LOADED = TPM2_PT_VAR + 3,
++	TPM2_PT_HR_LOADED_AVAIL = TPM2_PT_VAR + 4,
++	TPM2_PT_HR_ACTIVE = TPM2_PT_VAR + 5,
++	TPM2_PT_HR_ACTIVE_AVAIL = TPM2_PT_VAR + 6,
++	TPM2_PT_HR_TRANSIENT_AVAIL = TPM2_PT_VAR + 7,
++	TPM2_PT_HR_PERSISTENT = TPM2_PT_VAR + 8,
++	TPM2_PT_HR_PERSISTENT_AVAIL = TPM2_PT_VAR + 9,
++	TPM2_PT_NV_COUNTERS = TPM2_PT_VAR + 10,
++	TPM2_PT_NV_COUNTERS_AVAIL = TPM2_PT_VAR + 11,
++	TPM2_PT_ALGORITHM_SET = TPM2_PT_VAR + 12,
++	TPM2_PT_LOADED_CURVES = TPM2_PT_VAR + 13,
++	TPM2_PT_LOCKOUT_COUNTER = TPM2_PT_VAR + 14,
++	TPM2_PT_MAX_AUTH_FAIL = TPM2_PT_VAR + 15,
++	TPM2_PT_LOCKOUT_INTERVAL = TPM2_PT_VAR + 16,
++	TPM2_PT_LOCKOUT_RECOVERY = TPM2_PT_VAR + 17,
++	TPM2_PT_NV_WRITE_RECOVERY = TPM2_PT_VAR + 18,
++	TPM2_PT_AUDIT_COUNTER_0 = TPM2_PT_VAR + 19,
++	TPM2_PT_AUDIT_COUNTER_1 = TPM2_PT_VAR + 20,
++};
+ 
+ /* 128 bytes is an arbitrary cap. This could be as large as TPM_BUFSIZE - 18
+  * bytes, but 128 is still a relatively large number of random bytes and
+-- 
+2.39.1
 
-On Fri, Jan 27, 2023 at 11:06 AM Sasa Ostrouska <casaxa@gmail.com> wrote:
->
-> Hi Lucasz, I don't know if this could be relevant, but when I
-> installed slackware64-current on the other pixelbook I have the sound
-> works with
-> kernel 6.1.8 but not all the time and seems there are some crashes of
-> the sound. Also it is very amplified.
-> I attach the dmesg here.
