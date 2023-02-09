@@ -1,237 +1,242 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C29DE64A
-	for <regressions@lists.linux.dev>; Thu,  9 Feb 2023 17:27:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21A90C433D2
-	for <regressions@lists.linux.dev>; Thu,  9 Feb 2023 17:27:11 +0000 (UTC)
-Authentication-Results: smtp.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="ND8YGvIF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
-	t=1675963627;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=A05rqra2JzOwWHXPK1fgbDy2s18snUltZCCp/mNa3do=;
-	b=ND8YGvIFU670lfq1GjFjVygyVFCsmM9pEEWH+bITYh9IUdFJB0cASiFzBCL3S7mtU2XGt3
-	vuyw16PPNtCtoAcunAvuJ8LI1PIAAJ/kIDkHEaYU2hCsP/PbqDls9PIgZgEMoTrTNIdWYN
-	J0As9PIpHpD/MeeLc5FuB0INWSOMqrI=
-Received: 
-	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id f6fca880 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO)
-	for <regressions@lists.linux.dev>;
-	Thu, 9 Feb 2023 17:27:07 +0000 (UTC)
-Received: by mail-yb1-f173.google.com with SMTP id t1so3243460ybd.4
-        for <regressions@lists.linux.dev>; Thu, 09 Feb 2023 09:27:07 -0800 (PST)
-X-Gm-Message-State: AO0yUKWA+tjiO98jW6VBliByMxf9dIQhEt1eXVKv5+UtOglrKhQKqpQN
-	IdjhEtmCNY9Mxyp2xpFpwFTPB9Gsx58BV1hlQnA=
-X-Google-Smtp-Source: AK7set8fojPXvRFNN7tEs8bI/1kxDlzSKYWZ/s2YuWziA2+UuCrN1ST3NnhlZ2Vohu6/3+7HefI1GivoSVeOXkyFJ4U=
-X-Received: by 2002:a5b:6c5:0:b0:88f:946:bd98 with SMTP id r5-20020a5b06c5000000b0088f0946bd98mr1458600ybq.24.1675963626234;
- Thu, 09 Feb 2023 09:27:06 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62F88A920
+	for <regressions@lists.linux.dev>; Thu,  9 Feb 2023 18:22:38 +0000 (UTC)
+Received: by mail-qt1-f176.google.com with SMTP id c2so2995672qtw.5
+        for <regressions@lists.linux.dev>; Thu, 09 Feb 2023 10:22:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=L/1gTmVnySca8jPan+vw+HB1wn9UVQIEd+iLChgEFuM=;
+        b=HSpP2//Xd6RTJQFb4fyXH7eYu+tbzxXV4ccX5E75RJiLGZEVvFw4b6g6w/fhlS7D+T
+         JJS2DBYg/x8vbWzMcUDyj1rzXvrG8ha/9eCPq7GsYt/7r8vr9iD9DAf0z3EFORUzI4k/
+         UrkfeOLF5Ypxf3bx7/iJ+qpdqcODQ0wxXTedHSfH3Gnjg4yDeLEvLMIfXPj9mhIbEJmV
+         p2Zm55OTki21fn2eodcvgURT5ZjXqQBC5sjWmfWJKxTewQtC2XDuKW+v3X5UVOy7YH59
+         jLM3u5Fn4pyrZiswtzx5/s9Q63TPLVpDcF0FYEU6Meb4bizZHHmgJxLaMRu6Nx7n64N8
+         w/Qw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=L/1gTmVnySca8jPan+vw+HB1wn9UVQIEd+iLChgEFuM=;
+        b=FB9yFRR/euUoGu6dVqldCcJjFlpW5m7TSNPCL3eJ2EzxjHPgJY9vbbtTK6A7nfIIKr
+         8LydXhQsnJ3Yw3xGoEXLrk235PJesuivZ0Bdi9pT/ySm81uF19EWeDWLegCJTR/iat5S
+         XeMV+3R+JqQdsVpnhfxvr1Y71AAdSoLZajoVogBqdtLvGjoIa9y+iMC3INVUHRnmTQw0
+         pBb9sCBKFenIAnrwS8hn4g64yy5FNo3AA92DMIWmyfcmQfmz5iWeKkptw78sJZxmfXLx
+         P8Kiw9MF72bXkcCbNxzKJsVI91x4MBN0vRrcysgdwlOfoZkJI90fnHp6DLpkzoETBkkq
+         Ytnw==
+X-Gm-Message-State: AO0yUKUWXtXQldA0lKxtGZt40i/207goywvRc0N6dZxqlgzuqQlSPA/N
+	cM6ESEA9U1uz8IpWPujtsrVdMmopBTtrAEB2j7ev+WfW
+X-Google-Smtp-Source: AK7set/J4dF2RFxj4FVay1hvmCp/e6kKQ5Md7umeDye5D5FVkwQg0r1w8z5RxTfk99ESqGjGKzn7pzXar80TSis0cLM=
+X-Received: by 2002:a05:622a:4cd:b0:3b9:b260:1e95 with SMTP id
+ q13-20020a05622a04cd00b003b9b2601e95mr1918775qtx.378.1675966957090; Thu, 09
+ Feb 2023 10:22:37 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230209153120.261904-1-Jason@zx2c4.com> <543c2e9b-6d82-7ee0-9a1f-e3176aba16e2@amd.com>
-In-Reply-To: <543c2e9b-6d82-7ee0-9a1f-e3176aba16e2@amd.com>
-From: "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date: Thu, 9 Feb 2023 14:26:55 -0300
-X-Gmail-Original-Message-ID: <CAHmME9rNMPwA0D8gqsm-OzR9GgHm31TKGvOWeMAauF-Y083q4g@mail.gmail.com>
-Message-ID: <CAHmME9rNMPwA0D8gqsm-OzR9GgHm31TKGvOWeMAauF-Y083q4g@mail.gmail.com>
-Subject: Re: [PATCH RFC] tpm: disable hwrng for known-defective AMD RNGs
-To: "Limonciello, Mario" <mario.limonciello@amd.com>
-Cc: regressions@lists.linux.dev, linux-integrity@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Jarkko Sakkinen <jarkko@kernel.org>, 
-	Thorsten Leemhuis <regressions@leemhuis.info>, 
-	James Bottomley <James.Bottomley@hansenpartnership.com>
+References: <f591b13c-4600-e2a4-8efa-aac6ad828dd1@linaro.org>
+ <82526863-d07a-0a5d-2990-1555b1387f26@linaro.org> <2C5E9725-F152-4D2E-882E-CF92A35481BF@hammerspace.com>
+ <7ba38377-7992-7f0f-d905-cceb42510f39@linaro.org> <51430925-8046-7066-84ed-2ff0db835347@linaro.org>
+ <CAFX2Jf=5X3zyZEWQmD6Rg9jQAD7ccDbae5LQCwrAyPCVVoFumg@mail.gmail.com> <2add1769-1458-b185-bc78-6d573f61b6fc@linaro.org>
+In-Reply-To: <2add1769-1458-b185-bc78-6d573f61b6fc@linaro.org>
+From: Anna Schumaker <schumaker.anna@gmail.com>
+Date: Thu, 9 Feb 2023 13:22:21 -0500
+Message-ID: <CAFX2JfnKy7juGQaDTzqosN9SF-zd+XrhSL9uh_Xg0GpJGDux-A@mail.gmail.com>
+Subject: Re: Regression: NULL pointer dereference after NFS_V4_2_READ_PLUS
+ (commit 7fd461c47)
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Trond Myklebust <trondmy@hammerspace.com>, Anna Schumaker <Anna.Schumaker@netapp.com>, 
+	linux-nfs <linux-nfs@vger.kernel.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 9, 2023 at 12:41 PM Limonciello, Mario
-<mario.limonciello@amd.com> wrote:
->
-> On 2/9/2023 09:31, Jason A. Donenfeld wrote:
-> > Do not register a hwrng for certain AMD TPMs that are running an old
-> > known-buggy revision. Do this by probing the TPM2_PT_MANUFACTURER,
-> > TPM2_PT_FIRMWARE_VERSION_1, and TPM2_PT_FIRMWARE_VERSION_2 properties,
-> > and failing when an "AMD"-manufactured TPM2 chip is below a threshold.
-> >
-> > BROKEN BROKEN BROKEN - I just made the version numbers up and haven't
-> > tested this because I don't actually have hardware for it. I'm posting
-> > this so that Mario can take over its development and submit a v2 himself
-> > once he has confirmed the versioning info from inside AMD.
->
-> Thanks, happy to do that.  As I'll take over some comments are inline
-> mostly for my future self when this is resubmitted.
->
-> Perhaps one of the people who can reproduce this right now can confirm
-> this works?  The version number string should at least trigger one of
-> the reported systems to avoid doing this.
->
-> >
-> > Suggested-by: Mario Limonciello <mario.limonciello@amd.com>
-> > Cc: Jarkko Sakkinen <jarkko@kernel.org>
-> > Cc: Thorsten Leemhuis <regressions@leemhuis.info>
-> > Cc: James Bottomley <James.Bottomley@hansenpartnership.com>
-> > Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
->
-> At least as a note for myself this needs:
-> 1. 'Link' tag to the public advisory for this fTPM issue
-> 2. A 'Fixes' tag to the commit that enabled fTPM as a hwrng source by
-> default and exposed the issue.
-> 3. A 'Link' tag to the bugzilla.
->
-> > ---
-> >   drivers/char/tpm/tpm-chip.c | 34 ++++++++++++++++-
-> >   drivers/char/tpm/tpm.h      | 73 +++++++++++++++++++++++++++++++++++++
-> >   2 files changed, 106 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/char/tpm/tpm-chip.c b/drivers/char/tpm/tpm-chip.c
-> > index 741d8f3e8fb3..e0f8134d31a3 100644
-> > --- a/drivers/char/tpm/tpm-chip.c
-> > +++ b/drivers/char/tpm/tpm-chip.c
-> > @@ -512,6 +512,37 @@ static int tpm_add_legacy_sysfs(struct tpm_chip *chip)
-> >       return 0;
-> >   }
-> >
-> > +static bool tpm_is_rng_defective(struct tpm_chip *chip)
-> > +{
-> > +     int ret;
-> > +     u32 val1, val2;
-> > +     u64 version;
-> > +
-> > +     /* No known-broken TPM1 chips. */
-> > +     if (!(chip->flags & TPM_CHIP_FLAG_TPM2))
-> > +             return false;
-> > +
-> > +     /* Only known-broken are AMD. */
-> > +     ret = tpm2_get_tpm_pt(chip, TPM2_PT_MANUFACTURER, &val1, NULL);
-> > +     if (ret < 0 || val1 != 0x414D4400U /* AMD */)
-> > +             return false;
-> > +
-> > +     /* Grab and concat the version values. */
-> > +     ret = tpm2_get_tpm_pt(chip, TPM2_PT_FIRMWARE_VERSION_1, &val1, NULL);
-> > +     if (ret < 0)
-> > +             return false;
-> > +     ret = tpm2_get_tpm_pt(chip, TPM2_PT_FIRMWARE_VERSION_2, &val2, NULL);
-> > +     if (ret < 0)
-> > +             return false;
-> > +     version = ((u64)val1 << 32) | val2;
-> > +
-> > +     /* Versions below 3.4e.2.9 are broken. */
-> > +     if (version < 0x0003004E0002009ULL)
-> > +             return true;
->
-> We probably want to also do a 'dev_info_once' or 'dev_warn_once' here to
-> let people know that they're not getting a fTPM RNG so it's not a surprise.
+Hi Krzysztof,
 
-AFAICT, this runs once per TPM device. So maybe a simple dev_warn()
-without the _once part will be good, so you actually see in dmesg each
-buggy device.
+On Mon, Jan 23, 2023 at 2:58 AM Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
+>
+> On 22/01/2023 23:25, Anna Schumaker wrote:
+> > Hi Krzysztof,
+> >
+> > On Mon, Jan 9, 2023 at 3:46 AM Krzysztof Kozlowski
+> > <krzysztof.kozlowski@linaro.org> wrote:
+> >>
+> >> On 09/01/2023 09:14, Krzysztof Kozlowski wrote:
+> >>> On 08/01/2023 18:09, Trond Myklebust wrote:
+> >>>> Hi Krzysztof,
+> >>>>
+> >>>>> On Jan 8, 2023, at 08:25, Krzysztof Kozlowski <krzysztof.kozlowski@=
+linaro.org> wrote:
+> >>>>>
+> >>>>> [You don't often get email from krzysztof.kozlowski@linaro.org. Lea=
+rn why this is important at https://aka.ms/LearnAboutSenderIdentification]
+> >>>>>
+> >>>>> On 07/01/2023 16:44, Krzysztof Kozlowski wrote:
+> >>>>>> Hi,
+> >>>>>>
+> >>>>>> Bisect identified commit 7fd461c47c6c ("NFSv4.2: Change the defaul=
+t
+> >>>>>> KConfig value for READ_PLUS") as one leading to NULL pointer excep=
+tion
+> >>>>>> when mounting NFS root on NFSv4 client:
+> >>>>>>
+> >>>>>> [   25.739003] systemd[1]: Set hostname to <odroidhc1>.
+> >>>>>> [   25.771714] systemd[1]: Failed to bump fs.file-max, ignoring: I=
+nvalid
+> >>>>>> argument
+> >>>>>> [   26.199478] 8<--- cut here ---
+> >>>>>> [   26.201366] Unable to handle kernel NULL pointer dereference at
+> >>>>>> virtual address 00000004
+> >>>>>> ...
+> >>>>>> [   26.555522]  mmiocpy from xdr_inline_decode+0xec/0x16c
+> >>>>>> [   26.560628]  xdr_inline_decode from nfs4_xdr_dec_read_plus+0x17=
+8/0x358
+> >>>>>> [   26.567130]  nfs4_xdr_dec_read_plus from call_decode+0x204/0x30=
+4
+> >>>>>>
+> >>>>>> Full OOPS attached. Full log available here:
+> >>>>>> https://krzk.eu/#/builders/21/builds/3901/steps/15/logs/serial0
+> >>>>>>
+> >>>>>> Disabling NFS_V4_2_READ_PLUS fixes the issue, so obviously the com=
+mit is
+> >>>>>> not the cause, but rather making it default caused the regression.
+> >>>>>>
+> >>>>>> I did not make the bisect yet which commit introduced it, if every
+> >>>>>> config includes NFS_V4_2_READ_PLUS.
+> >>>>>
+> >>>>> When every kernel is built with NFS_V4_2_READ_PLUS, bisect pointed =
+to:
+> >>>>> d3b00a802c84 ("NFS: Replace the READ_PLUS decoding code")
+> >>>>>
+> >>>>> commit d3b00a802c845a6021148ce2e669b5a0b5729959
+> >>>>> Author: Anna Schumaker <Anna.Schumaker@Netapp.com>
+> >>>>> Date:   Thu Jul 21 14:21:34 2022 -0400
+> >>>>>
+> >>>>>    NFS: Replace the READ_PLUS decoding code
+> >>>>>
+> >>>>>    We now take a 2-step process that allows us to place data and ho=
+le
+> >>>>>    segments directly at their final position in the xdr_stream with=
+out
+> >>>>>    needing to do a bunch of redundant copies to expand holes. Due t=
+o the
+> >>>>>    variable lengths of each segment, the xdr metadata might cross p=
+age
+> >>>>>    boundaries which I account for by setting a small scratch buffer=
+ so
+> >>>>>    xdr_inline_decode() won't fail.
+> >>>>>
+> >>>>>    Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+> >>>>>    Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+> >>>>>
+> >>>>> With a trace:
+> >>>>> [   25.898462] systemd[1]: Set hostname to <odroidhc1>.
+> >>>>> [   25.933746] systemd[1]: Failed to bump fs.file-max, ignoring: In=
+valid
+> >>>>> argument
+> >>>>> [   25.986237] random: crng init done
+> >>>>> [   26.264564] 8<--- cut here ---
+> >>>>> [   26.266823] Unable to handle kernel NULL pointer dereference at
+> >>>>> virtual address 00000fe8
+> >>>>> ...
+> >>>>> [   26.597263]  nfs4_xdr_dec_read_plus from call_decode+0x204/0x304
+> >>>>> [   26.603222]  call_decode from __rpc_execute+0xd0/0x890
+> >>>>> [   26.608328]  __rpc_execute from rpc_async_schedule+0x1c/0x34
+> >>>>> [   26.613960]  rpc_async_schedule from process_one_work+0x294/0x79=
+0
+> >>>>> [   26.620030]  process_one_work from worker_thread+0x54/0x518
+> >>>>> [   26.625570]  worker_thread from kthread+0xf4/0x128
+> >>>>> [   26.630336]  kthread from ret_from_fork+0x14/0x2c
+> >>>>>
+> >>>>
+> >>>> Is this test being run against a 6.2-rc2 server, or is it an older s=
+erver platform? We know there were bugs in older server implementations, so=
+ the question is whether this might be a problem with handling a bad/corrup=
+t RPC reply from the server, or whether it is happening against code that i=
+s supposed to have been fixed?
+> >>>
+> >>> I would say that buggy server should not cause NULL pointer dereferen=
+ces
+> >>> on the client. Otherwise this is a perfect recipe for a rogue server =
+in
+> >>> the network to start crashing clients and running exploits... Imagine=
+ a
+> >>> compromised machine (through some other means) in a local company
+> >>> network running now a server with NFS share "HR salary data" or "HR
+> >>> planned layoffs", where unsuspected people in that network access it
+> >>> leading to exploit of NFS code on their side...
+> >>>
+> >>> Server is Raspberry Pi 3 kernel: 5.10.92-2-rpi-legacy-ARCH
+> >>>
+> >>> Which points that it is not latest stable, so anyway I need to update=
+.
+> >>
+> >> I updated the kernel to 5.15.84-3-rpi-ARCH which is pretty close to
+> >> latest stable and I can reproduce the issue. Therefore:
+> >> 1. It is visible on two stable (one new, one old) kernels on the serve=
+r,
+> >> 2. Buggy or rogue server should not cause NULL pointer on remote devic=
+es...
+> >
+> > I'm still working on this issue, but I haven't been able to reproduce
+> > it with my setup at all yet. I was hoping I could ask you a couple of
+> > questions?
+> >
+> > - Are both client and server run on a Raspberry Pi 3?
+>
+> No, server is Rpi3, client is Odroid HC1.
+>
+> > - Is there a specific workload that triggers the bug, or is it just
+> > during boot when using nfsroot?
+>
+> No specific workload - mounting system with nfsroot. You have there full
+> logs as it is reproducible every time.
+>
+> > - Would it be possible to get a Wireshark network trace of the crash
+> > (you'll have to run this on the server due to nfsroot).
+>
+> I'll check.
+
+Any luck getting the wireshark trace? I don't have access to the
+Odroid HC1 board, so all my attempts at reproducing the problem have
+been with qemu & libvirt, which doesn't seem to be hitting this issue.
+
+I was also wondering if it would be possible to turn on KASAN in your
+kernel, which should give us a little more info?
+
+Thanks,
+Anna
 
 >
-> > +
-> > +     return false;
-> > +}
-> > +
-> >   static int tpm_hwrng_read(struct hwrng *rng, void *data, size_t max, bool wait)
-> >   {
-> >       struct tpm_chip *chip = container_of(rng, struct tpm_chip, hwrng);
-> > @@ -521,7 +552,8 @@ static int tpm_hwrng_read(struct hwrng *rng, void *data, size_t max, bool wait)
-> >
-> >   static int tpm_add_hwrng(struct tpm_chip *chip)
-> >   {
-> > -     if (!IS_ENABLED(CONFIG_HW_RANDOM_TPM) || tpm_is_firmware_upgrade(chip))
-> > +     if (!IS_ENABLED(CONFIG_HW_RANDOM_TPM) || tpm_is_firmware_upgrade(chip) ||
-> > +         tpm_is_rng_defective(chip))
-> >               return 0;
-> >
-> >       snprintf(chip->hwrng_name, sizeof(chip->hwrng_name),
-> > diff --git a/drivers/char/tpm/tpm.h b/drivers/char/tpm/tpm.h
-> > index 24ee4e1cc452..830014a26609 100644
-> > --- a/drivers/char/tpm/tpm.h
-> > +++ b/drivers/char/tpm/tpm.h
-> > @@ -150,6 +150,79 @@ enum tpm_sub_capabilities {
-> >       TPM_CAP_PROP_TIS_DURATION = 0x120,
-> >   };
-> >
-> > +enum tpm2_pt_props {
-> > +     TPM2_PT_NONE = 0x00000000,
-> > +     TPM2_PT_GROUP = 0x00000100,
-> > +     TPM2_PT_FIXED = TPM2_PT_GROUP * 1,
-> > +     TPM2_PT_FAMILY_INDICATOR = TPM2_PT_FIXED + 0,
-> > +     TPM2_PT_LEVEL = TPM2_PT_FIXED + 1,
-> > +     TPM2_PT_REVISION = TPM2_PT_FIXED + 2,
-> > +     TPM2_PT_DAY_OF_YEAR = TPM2_PT_FIXED + 3,
-> > +     TPM2_PT_YEAR = TPM2_PT_FIXED + 4,
-> > +     TPM2_PT_MANUFACTURER = TPM2_PT_FIXED + 5,
-> > +     TPM2_PT_VENDOR_STRING_1 = TPM2_PT_FIXED + 6,
-> > +     TPM2_PT_VENDOR_STRING_2 = TPM2_PT_FIXED + 7,
-> > +     TPM2_PT_VENDOR_STRING_3 = TPM2_PT_FIXED + 8,
-> > +     TPM2_PT_VENDOR_STRING_4 = TPM2_PT_FIXED + 9,
-> > +     TPM2_PT_VENDOR_TPM_TYPE = TPM2_PT_FIXED + 10,
-> > +     TPM2_PT_FIRMWARE_VERSION_1 = TPM2_PT_FIXED + 11,
-> > +     TPM2_PT_FIRMWARE_VERSION_2 = TPM2_PT_FIXED + 12,
-> > +     TPM2_PT_INPUT_BUFFER = TPM2_PT_FIXED + 13,
-> > +     TPM2_PT_HR_TRANSIENT_MIN = TPM2_PT_FIXED + 14,
-> > +     TPM2_PT_HR_PERSISTENT_MIN = TPM2_PT_FIXED + 15,
-> > +     TPM2_PT_HR_LOADED_MIN = TPM2_PT_FIXED + 16,
-> > +     TPM2_PT_ACTIVE_SESSIONS_MAX = TPM2_PT_FIXED + 17,
-> > +     TPM2_PT_PCR_COUNT = TPM2_PT_FIXED + 18,
-> > +     TPM2_PT_PCR_SELECT_MIN = TPM2_PT_FIXED + 19,
-> > +     TPM2_PT_CONTEXT_GAP_MAX = TPM2_PT_FIXED + 20,
-> > +     TPM2_PT_NV_COUNTERS_MAX = TPM2_PT_FIXED + 22,
-> > +     TPM2_PT_NV_INDEX_MAX = TPM2_PT_FIXED + 23,
-> > +     TPM2_PT_MEMORY = TPM2_PT_FIXED + 24,
-> > +     TPM2_PT_CLOCK_UPDATE = TPM2_PT_FIXED + 25,
-> > +     TPM2_PT_CONTEXT_HASH = TPM2_PT_FIXED + 26,
-> > +     TPM2_PT_CONTEXT_SYM = TPM2_PT_FIXED + 27,
-> > +     TPM2_PT_CONTEXT_SYM_SIZE = TPM2_PT_FIXED + 28,
-> > +     TPM2_PT_ORDERLY_COUNT = TPM2_PT_FIXED + 29,
-> > +     TPM2_PT_MAX_COMMAND_SIZE = TPM2_PT_FIXED + 30,
-> > +     TPM2_PT_MAX_RESPONSE_SIZE = TPM2_PT_FIXED + 31,
-> > +     TPM2_PT_MAX_DIGEST = TPM2_PT_FIXED + 32,
-> > +     TPM2_PT_MAX_OBJECT_CONTEXT = TPM2_PT_FIXED + 33,
-> > +     TPM2_PT_MAX_SESSION_CONTEXT = TPM2_PT_FIXED + 34,
-> > +     TPM2_PT_PS_FAMILY_INDICATOR = TPM2_PT_FIXED + 35,
-> > +     TPM2_PT_PS_LEVEL = TPM2_PT_FIXED + 36,
-> > +     TPM2_PT_PS_REVISION = TPM2_PT_FIXED + 37,
-> > +     TPM2_PT_PS_DAY_OF_YEAR = TPM2_PT_FIXED + 38,
-> > +     TPM2_PT_PS_YEAR = TPM2_PT_FIXED + 39,
-> > +     TPM2_PT_SPLIT_MAX = TPM2_PT_FIXED + 40,
-> > +     TPM2_PT_TOTAL_COMMANDS = TPM2_PT_FIXED + 41,
-> > +     TPM2_PT_LIBRARY_COMMANDS = TPM2_PT_FIXED + 42,
-> > +     TPM2_PT_VENDOR_COMMANDS = TPM2_PT_FIXED + 43,
-> > +     TPM2_PT_NV_BUFFER_MAX = TPM2_PT_FIXED + 44,
-> > +     TPM2_PT_MODES = TPM2_PT_FIXED + 45,
-> > +     TPM2_PT_MAX_CAP_BUFFER = TPM2_PT_FIXED + 46,
-> > +     TPM2_PT_VAR = TPM2_PT_GROUP * 2,
-> > +     TPM2_PT_PERMANENT = TPM2_PT_VAR + 0,
-> > +     TPM2_PT_STARTUP_CLEAR = TPM2_PT_VAR + 1,
-> > +     TPM2_PT_HR_NV_INDEX = TPM2_PT_VAR + 2,
-> > +     TPM2_PT_HR_LOADED = TPM2_PT_VAR + 3,
-> > +     TPM2_PT_HR_LOADED_AVAIL = TPM2_PT_VAR + 4,
-> > +     TPM2_PT_HR_ACTIVE = TPM2_PT_VAR + 5,
-> > +     TPM2_PT_HR_ACTIVE_AVAIL = TPM2_PT_VAR + 6,
-> > +     TPM2_PT_HR_TRANSIENT_AVAIL = TPM2_PT_VAR + 7,
-> > +     TPM2_PT_HR_PERSISTENT = TPM2_PT_VAR + 8,
-> > +     TPM2_PT_HR_PERSISTENT_AVAIL = TPM2_PT_VAR + 9,
-> > +     TPM2_PT_NV_COUNTERS = TPM2_PT_VAR + 10,
-> > +     TPM2_PT_NV_COUNTERS_AVAIL = TPM2_PT_VAR + 11,
-> > +     TPM2_PT_ALGORITHM_SET = TPM2_PT_VAR + 12,
-> > +     TPM2_PT_LOADED_CURVES = TPM2_PT_VAR + 13,
-> > +     TPM2_PT_LOCKOUT_COUNTER = TPM2_PT_VAR + 14,
-> > +     TPM2_PT_MAX_AUTH_FAIL = TPM2_PT_VAR + 15,
-> > +     TPM2_PT_LOCKOUT_INTERVAL = TPM2_PT_VAR + 16,
-> > +     TPM2_PT_LOCKOUT_RECOVERY = TPM2_PT_VAR + 17,
-> > +     TPM2_PT_NV_WRITE_RECOVERY = TPM2_PT_VAR + 18,
-> > +     TPM2_PT_AUDIT_COUNTER_0 = TPM2_PT_VAR + 19,
-> > +     TPM2_PT_AUDIT_COUNTER_1 = TPM2_PT_VAR + 20,
-> > +};
-> >
+> > - Can you share your export options from /etc/exports and the mount
+> > options that the client uses?
 >
-> I guess these properties should be split out to a separate patch in a
-> series.
-
-That will make backporting this more annoying. Up to Jarkko,
-obviously, but personally I wouldn't bother.
+> exports are the same since like 5 years or more:
+>
+> /srv/nfs/odroidhc1      192.168.1.0/24(rw,async,no_root_squash,no_subtree=
+_check)
+> /srv/nfs/odroidhc1-home
+> 192.168.1.0/24(rw,async,no_root_squash,no_subtree_check)
+>
+>
+> >
+> > Thanks,
+> > Anna
+> >
+> >>
+> >> Best regards,
+> >> Krzysztof
+> >>
+>
+> Best regards,
+> Krzysztof
+>
