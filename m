@@ -1,128 +1,230 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E22622F31
-	for <regressions@lists.linux.dev>; Fri, 10 Feb 2023 12:24:57 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pQSSV-00082x-0K; Fri, 10 Feb 2023 13:24:55 +0100
-Message-ID: <10a47408-3019-403d-97b1-c9f36e52e130@leemhuis.info>
-Date: Fri, 10 Feb 2023 13:24:54 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 541AD2F45
+	for <regressions@lists.linux.dev>; Fri, 10 Feb 2023 13:10:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1676034603; x=1707570603;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=f+OvfwKfprcc/acaFkv5Qci5DZw8PJqhwKPv1PQ4ins=;
+  b=UNqjI9vqAMYpDXSTS+N8TDNXD2jHSbnp3ZjqT/VeHBE5CgbSfiEjaPxv
+   xzlXOoHH7wEGeakfjgdkH8WNsgzD6Y4xniZKHYvJNxsXZCCkAzfAVZQfP
+   ygukmtlTHGM2o3OvJPNHSpZVZU4qoqQHGOIia9R8QMOUFbOrcKRj42baC
+   OXb5itNx19U1tsSWz305tEJZwiVvUdiSTTkoq3oRm6w+n+cQyOnqJszLO
+   fJvROW+R0Jj5D35XoE1gf8fPGH5dxVfGNisvkmEztmP/Lkd5VZWPPAX1w
+   xDrvJUgfYtiYMKn6wSqZCG+e8pmBreCw+gCtBIP3rarGnODwUdSWO80N5
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10616"; a="328104155"
+X-IronPort-AV: E=Sophos;i="5.97,287,1669104000"; 
+   d="scan'208";a="328104155"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2023 05:10:02 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10616"; a="810816374"
+X-IronPort-AV: E=Sophos;i="5.97,287,1669104000"; 
+   d="scan'208";a="810816374"
+Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
+  by fmsmga001.fm.intel.com with ESMTP; 10 Feb 2023 05:10:01 -0800
+Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.16; Fri, 10 Feb 2023 05:10:01 -0800
+Received: from orsmsx612.amr.corp.intel.com (10.22.229.25) by
+ ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.16; Fri, 10 Feb 2023 05:10:00 -0800
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ orsmsx612.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.16 via Frontend Transport; Fri, 10 Feb 2023 05:10:00 -0800
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.168)
+ by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.16; Fri, 10 Feb 2023 05:10:00 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nCaf5y15rYzqITxeBmkg7zhQ5Eit2MfsKQbKTt9GFW4/g0fl7Zt1Bl6WQe9HXQvZxlSZ1jQZeyTdvb+24LptFByLdsWiVy3dp2gjHOE3T7FYk0vhrAVzeJT+DFm59WxwCgs+ziOaHGcGHU30JAs1bums0tdNnue1DV5hdc83SnSrJCCtwALRo7sUaF65Kg1ARQP11SUaM7SFAe5LK7+pK7C3XXrW2DBuxqJJfVbcaqWqtix1v6zCo+jZRNftWTbE5pHr2uPyzm/Cn6/iPo60acrzkygvPEzN/mJ9jpe47N+Y1vAmICZF2Fy4FYvLI4y791CJZiFQU2mwLdHZihu7MQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=eVVF/v+fxv8N6JjPY6e2TV1JxWMZchURj08xSnHY50g=;
+ b=OSSLE1kCt27hQluCubJfNXXOBHp7IFB/imhlfbB8AqIXTbZ1XDs5w09AJ8QkgXz95cJKzoujq+csLdP+BuQgbgmCtECohq73BFo69WlmEdz2w88hOuWAHMv2CYUi62xcDhouM89hxmkp11Meh//p7povg+wuT6wS5VeyZ52rCndq0FyCSFWZ6WqiTUmPg+hGBfRG3fXOk0A1xzFQI4uctRYCkYIa2JNP6KVP4t+3m3ugdLOaOeAlgVA+iVR0G7BS2loSOD4rWE/Jh6ubbzz7EDj0vwGFCmVAY6b4QcgZE4EQv4upbXeEBYhf5/GrpUET1qlXyY0ybS156vFfxuwXPw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DS0PR11MB6375.namprd11.prod.outlook.com (2603:10b6:8:c9::21) by
+ PH0PR11MB7544.namprd11.prod.outlook.com (2603:10b6:510:28d::6) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6086.19; Fri, 10 Feb 2023 13:09:58 +0000
+Received: from DS0PR11MB6375.namprd11.prod.outlook.com
+ ([fe80::8117:219e:33d2:4dd8]) by DS0PR11MB6375.namprd11.prod.outlook.com
+ ([fe80::8117:219e:33d2:4dd8%9]) with mapi id 15.20.6086.017; Fri, 10 Feb 2023
+ 13:09:58 +0000
+Message-ID: <478bb609-8615-31b4-e6f3-8eaaf95b84d6@intel.com>
+Date: Fri, 10 Feb 2023 14:09:51 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Subject: Re: Google Pixelbook EVE, no sound in kernel 6.1.x
+Content-Language: en-US
+To: Jason Montleon <jmontleo@redhat.com>
+CC: Sasa Ostrouska <casaxa@gmail.com>, Linux regressions mailing list
+	<regressions@lists.linux.dev>, Greg KH <gregkh@linuxfoundation.org>,
+	<lma@semihalf.com>, Pierre-Louis Bossart
+	<pierre-louis.bossart@linux.intel.com>, <stable@vger.kernel.org>, "Takashi
+ Iwai" <tiwai@suse.de>, =?UTF-8?Q?Amadeusz_S=c5=82awi=c5=84ski?=
+	<amadeuszx.slawinski@linux.intel.com>
+References: <CAJD_bPJ1VYTSQvogui4S9xWn9jQzQq8JRXOzXmus+qoRyrybOA@mail.gmail.com>
+ <Y9Vg26wjGfkCicYv@kroah.com>
+ <CAJD_bPLkkgbk+GO66Ec9RmiW6MfYrG32WP75oLzXsz2+rpREWg@mail.gmail.com>
+ <CAJD_bPK=m0mX8_Qq=6iwD8sL8AkR99PEzBbE3RcSaJmxuJmW6g@mail.gmail.com>
+ <02834fa9-4fb0-08fb-4b5f-e9646c1501d6@leemhuis.info>
+ <288d7ff4-75aa-7ad1-c49c-579373cab3ed@intel.com>
+ <CALFERdw=GwNYafR3q=5=k=H_jrzTZMyDBQLouFGV0JGu8i9sCg@mail.gmail.com>
+ <04a9f939-8a98-9a46-e165-8e9fb8801a83@intel.com>
+ <CAJD_bP+Te5a=OfjN9YrjGOG2PzudQ87=5FEKj6YLFxfKyFe5bw@mail.gmail.com>
+ <6262bd72-cc2b-9d2a-e8f0-55c2b2bb7861@linux.intel.com>
+ <CAJD_bPKxbsDi10FGX2mrMeuxcphDOvO8Q87j+AvnnQpe5cvmSA@mail.gmail.com>
+ <CAJD_bP+RUemsss_YiAZ5v08ak8aTzXCB0gk7q623zyF455bh7g@mail.gmail.com>
+ <a423c627-d303-3b50-5f11-78c06ed3b985@linux.intel.com>
+ <CAJD_bPKO+zCeRojkOr2uY+nXvhsjO3Um86Lh53ZCuCUm3Ci3PA@mail.gmail.com>
+ <CAJD_bPJfT5DA8EdN+timzXa3-itnPD5epq552S=NQ6Spr7iTUw@mail.gmail.com>
+ <CAJD_bPLHPfLO=192Ohrxvg5OGtAfAgTim0O+fdmxo753VS83iQ@mail.gmail.com>
+From: Cezary Rojewski <cezary.rojewski@intel.com>
+In-Reply-To: <CAJD_bPLHPfLO=192Ohrxvg5OGtAfAgTim0O+fdmxo753VS83iQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: FR2P281CA0053.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:93::6) To DS0PR11MB6375.namprd11.prod.outlook.com
+ (2603:10b6:8:c9::21)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: Resume after suspend broken, reboots instead on kernel 6.1
- onwards x86_64 RTW88
-Content-Language: en-US, de-DE
-To: gary.chang@realtek.com, Yan-Hsuan Chuang <tony0620emma@gmail.com>
-Cc: regressions@lists.linux.dev, linux-wireless@vger.kernel.org,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- Kalle Valo <kvalo@kernel.org>, Paul Gover <pmw.gover@yahoo.co.uk>,
- stable@vger.kernel.org
-References: <3739412.kQq0lBPeGt.ref@ryzen> <3739412.kQq0lBPeGt@ryzen>
-From: "Linux kernel regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <3739412.kQq0lBPeGt@ryzen>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1676031898;9f4a0887;
-X-HE-SMSGID: 1pQSSV-00082x-0K
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR11MB6375:EE_|PH0PR11MB7544:EE_
+X-MS-Office365-Filtering-Correlation-Id: 46b25277-0836-4512-6f1c-08db0b681c38
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: ZBTKdUKmkzbfoVPlzRN/dWKSaDDoRWEWZV9bszVOG7WAdnAOp1Xr74XtHAEXJ8zMSo4WVAZPB4g3qKj2lk6e3nFkRIMURCxIwrusTsso9L4IU0/BhI+FC1EG5irOrAF/Ghly0CrKHBe9wL0rPxrsSh9ScsnMUTk+xyHNX5ld3fOF/phleikjeZv9FperPt/JCQojSTtAJDZkrGEO+77JbETbvXVb14hyuRrLB6ikJ6n29RxUqxUe369waM1GRYX8RoHSbSnDeKhTb1UcTBHjnFTrqNhASRcyOwD/VnRteqD8YPXUHupjFOyJIYdnG/1x8LR/fW9Y2Wm1hTkhdTTo8MSgYoOTH23vuZ7dVmC752f+jdkO0Oc+8logVz7pk1k2OifZeDY3MOjsNRmZT5j3L2MXLTIbNXvSjcmsv3H212XWOAk7bvZwgGJfjAVJn7RBzgVfKDR8TPLT6QSsYria50qPtCmJy0iLtPFYGLDlXH0uEcAMjtckK2EpfcdohDQvz+/No44hzp3fRcnuiJMwRZoyRz6HbMf67uILz0WId/sddDVbUxirCJs4RkyxRqlU4GqIE/4Wy2Yh1E/8bDaa26224QyxyIifx3VeeBx6qVIerFdpviK8a8VCwWvC930yTJKTEBS3BCmc9NPDr6tHJXysUiJ32KE/8M+FR0AEQP3iaQLvbNjvtJgeYPKTgcxy1UQEbz/jGfnE6PhMnPHQ/D2wRba2JZSUXdI3CO9k4jptNiL/TCFSVA5CWxYqh0YT
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR11MB6375.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(136003)(346002)(376002)(39860400002)(396003)(366004)(451199018)(5660300002)(8936002)(53546011)(6512007)(26005)(186003)(31696002)(86362001)(82960400001)(36756003)(54906003)(478600001)(6486002)(38100700002)(2616005)(6666004)(41300700001)(44832011)(316002)(6506007)(8676002)(83380400001)(6916009)(2906002)(4326008)(31686004)(66946007)(66556008)(66476007)(45980500001)(43740500002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?QjZMcXlCc2JWL1hBaXMrRUhaOFcvalF3TFN3ZHdpUVU1R0Rxa3d2ZWdsdkRI?=
+ =?utf-8?B?dFFJMnk2elpLc3lUek1PVnBFUlpUbW9pUU9CUHpKVnVsNGNuU2RjY0Zxb0Ri?=
+ =?utf-8?B?QWR5UHVKK2JMN01WSHcvSGthQ05kdEtqTHA2M2tzaDdsSXhiTjJIMy9BVXcy?=
+ =?utf-8?B?czM4N1FiWW9ER20vbloxT21kbnc0eGdad044ZDhKeGNUZGxEUEt3S09IWmFp?=
+ =?utf-8?B?dmNaa1JvK2lVaGJGdUdxd0N3SGZQRTIybnJ5WEtQdnhSUnFNb1ovbkF0YXJ4?=
+ =?utf-8?B?TExPV2s0K1piYkplc1FvNDlnRGo5UkUwNnJRdmVFRnJqelhZVFBPMGVSekk0?=
+ =?utf-8?B?TkhqRkFtZDZoUkxmNlpXL2NkOWxiODE2dFZROThIWm1NQ21Zc0J3Z28yZTI1?=
+ =?utf-8?B?TTlod1ZpTGFRMmlMM3RQMHN4T1hYUGtUVkVlaHpHM3Q1bC8vZUgzaGVwYlF4?=
+ =?utf-8?B?dkZ0VXNXa05FNlJvbmgyN3Z2M0dGeU1zSUhXR0g3cUo0SUw4MDN4bFlvVWcr?=
+ =?utf-8?B?eGVhUFV4RFVmWDltTFpDeGJwMnRGemVLNjAvT1ZLYXZwUmd0SmYwSmd0YzU2?=
+ =?utf-8?B?NjRCQ0lrdHhMVFBGN3RIOGRRcmYvUWJFUlNiZlFXRGxkQzRnZUVtWDVRZFlR?=
+ =?utf-8?B?VkU4UkxSUzZrT0V2OXBnRFhxa2poeTN3c1hwUlNZOC8yYzhmY0RLMitCaFB4?=
+ =?utf-8?B?QVR1Z2N0ckVpeS9CZGR5NFBIQmxvNEN5SXgvUEF1cFd0dzI5OUFod3dyaWRU?=
+ =?utf-8?B?bEMyQlRJaUg2eHV5QWxjOHQ3U296Z0FCRngzSHpWQkNIQk9NWlhRS09RNDBt?=
+ =?utf-8?B?VkEwODFMVjlINVVyTTVLM2NMNTJxdjE4eFNFV1lMVmZibWdwSmtDbVkwMlBz?=
+ =?utf-8?B?a0paRFRlSmxKLzVGQXRwVHFyV05YZWlDQ0huRk9JaVhwSFAzSUhFTi90SjZl?=
+ =?utf-8?B?ZEhYL2l2VUxWOWRPeHFiK3JnbGhxejZucEFYOHRqd04zMG1xRlVVaW8yOGY3?=
+ =?utf-8?B?bzdKUkV0OFl3RVh3OGdGbmxZdUl5d2J2UUJ1eUhsam9XV0R6blh3dlZPb3VS?=
+ =?utf-8?B?ZFNLbkFSMUR1d3I1b2VCL2ZiMTBWMlZoYjB3NThIaVh5NEk5ZGtUZDBwTHd3?=
+ =?utf-8?B?ak40UlE1QWlPa1RxazEycGRjRkx3RUREaHRqclBUWGxFZkZJNlZRZHhUQmpl?=
+ =?utf-8?B?Y3pEMFV3WFN0VGQwSDdVYnNmcEhvZDl1VURRZHFPdXByVk9MeS81SnFpRDRl?=
+ =?utf-8?B?WlpFQ1doTXNBSnZFbFhodXVmeDc4UmRrWHFBZ3RIOFloYitsNnNVanU0NktB?=
+ =?utf-8?B?RERmVXI5SXd3L0s2S2kyd2M3UDFZS1pIMG4vTzdQWHUrQWpKNkx2K3Jpa3hw?=
+ =?utf-8?B?MG02bXlZOVJOb1d4Znp5Y0ZmR3ppQXRBS0Yxb1dsMFE3QjBuNXRXVTgvZURv?=
+ =?utf-8?B?ZGlyem1USVdiazRWYWJrNTJzMTZlaEJ0eHpHc0VvdDNIZGVGaGVSaElCdFRS?=
+ =?utf-8?B?OFE1RHpHMm5KOCtsc0k4RG5zSTIwYTc2ODdxaXdzRkJxZDVHRHpiUnF4OGQ4?=
+ =?utf-8?B?OTRlMkdmQ3plak9sZjBxU3A3Q295WVBudlJsdW5EUTVjUXlMVnMzVC9iQnZG?=
+ =?utf-8?B?MUFHVEJKR01yMEZvTDBSME05ZUhIRWd5Mks5WGk2bmtnU0dXQ2NSejZ6K1Z4?=
+ =?utf-8?B?ZEVxMjVPdDkwNldFS2pMY0tFQThtdGduNlJsM2RFOU1KaWJRWEk5a2JoenNT?=
+ =?utf-8?B?bmJKWnNkV09kWnFTQVl2RVd2ZElsdGlBNitiWWpVUUJLWTlnTWtvRDdoSVVE?=
+ =?utf-8?B?N3Bkb1h4SXhnQjVpbmp0NnNkN0NNRG1PMncveGl1WlNFWkhCNEhwcVBxdjZ5?=
+ =?utf-8?B?ZDBhR0lRVkozVlI0NHlnb2JIUWNJMEI3R2RIckxpV3kya2Q3UFl1eDFiZ2Y3?=
+ =?utf-8?B?aUs2MDR2QWxNbThseS9NWTliVUF3c01XeWxUc2Z3TE9LbmswZ25WRGRUR2FI?=
+ =?utf-8?B?aTFudGsvWWdlS1J6eHJOQzdyd3dUU1hQZU8xUDFCT09wU3FYSU5kQi9QMUxP?=
+ =?utf-8?B?WGpmbmtWbFhyd3dTbXd1V2huaXhmQitucHNMQ1NueTZDa215VzNvT0tPWTdE?=
+ =?utf-8?B?TnovYkZFWG9NOURYQ0F2WEd3RHZUcHhVeGhYcWp4VjJSYUI1WVllY29jd25K?=
+ =?utf-8?B?S0E9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 46b25277-0836-4512-6f1c-08db0b681c38
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR11MB6375.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Feb 2023 13:09:58.3677
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: doPMAZyzPd9IdFXpIE87WIU1ru2hNXBOzif2XeBAsd1qxB24I4liPbyKeji9DrCRhMtTt5CiIBbyZYVgdsCBKFqvnvItmD9XR3dGzY/s7WI=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB7544
+X-OriginatorOrg: intel.com
 
-[adding Chih-Kang Chang (author), Kalle (committer) and LKML to the list
-of recipients]
+On 2023-02-09 5:13 PM, Jason Montleon wrote:
+> I've done some more digging. The only line that needs to be reverted
+> from f2bd1c5ae2cb0cf9525c9bffc0038c12dd7e1338, moving from
+> snd_hda_codec_device_init back to snd_hda_codec_device_new is:
+> codec->core.exec_verb = codec_exec_verb;
+> (https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/sound/pci/hda/hda_codec.c?h=v6.1.11#n931)
+> 
+> I added a bunch of debug statements and all the code in
+> codec_exec_verb runs at boot with this in snd_hda_codec_device_init,
+> whereas it does not when in snd_hda_codec_device_new.
+> 
+>  From what I can tell we end up in snd_hda_power_up_pm and then get
+> hung up at snd_hdac_power_up.
+> 
+> There are a bunch of pin port messages that show up from
+> hdac_hdmi_query_port_connlist when things are working, that never
+> appear when broken:
+> [   14.618805] HDMI HDA Codec ehdaudio0D2: No connections found for pin:port 5:0
+> [   14.619242] HDMI HDA Codec ehdaudio0D2: No connections found for pin:port 5:1
+> [   14.619703] HDMI HDA Codec ehdaudio0D2: No connections found for pin:port 5:2
+> ...
+> 
+> I do see hdac_hdmi_runtime_suspend run a moment before things go bad,
+> but I have no idea if it is related.
+> 
+> Without patching anything and CONFIG_PM unset everything works.
+> 
+> I don't know if that helps anyone see where the problem is. If not
+> I'll keep plugging away.
+> 
+> Incidentally, commit 3fd63658caed9494cca1d4789a66d3d2def2a0ab, pointed
+> to by my second bisect, starts making using of skl_codec_device_init
+> where I believe snd_hda_codec_device_init is called and starts the
+> problem. I believe this is why reverting either of the two works
+> around the problem.
 
-[anyone who replies to this: feel free to remove stable@vger.kernel.org
-from the recipients, this is a mainline regression]
 
-[TLDR: I'm adding this report to the list of tracked Linux kernel
-regressions; the text you find below is based on a few templates
-paragraphs you might have encountered already in similar form.
-See link in footer if these mails annoy you.]
+This is some exceptional debugging, Jason.
 
-On 09.02.23 20:59, Paul Gover wrote:
-> Suspend/Resume was working OK on kernel 6.0.13, broken since 6.1.1
-> (I've not tried kernels between those, except in the bisect below.)
-> All subsequent 6,1 kernels exhibit the same behaviour.
-> 
-> Suspend works OK, but on Resume, there's a flicker, and then it reboots.
-> Sometimes the screen gets restored to its contents at the time of suspend. but 
-> less than a second later, it starts rebooting.
-> To reproduce, simply boot, suspend, and resume.
-> 
-> Git bisect blames RTW88
-> commit 6bf3a083407b5d404d70efc3a5ac75b472e5efa9
+I believe this finding reveals a long standing problem that was covered 
+by a very specific codec-fields initialization order:
 
-TWIMC, that's "wifi: rtw88: add flag check before enter or leave IPS"
+During initial part of codec-device initialization, VERBs execution 
+follows different flow than one happening once the device is fully 
+initialized. This comes down to the if-statement preset in 
+snd_hdac_exec_verb() and the fact codec_exec_verb() differs from 
+snd_hdac_bus_exec_verb() in PM-handling - the latter is devoid of it.
 
-> I'll attach bisect log, dmesg and configs to the bug I've opened 
-> 	https://bugzilla.kernel.org/show_bug.cgi?id=217016
-> 
-> dmesg from the following boot show a hardware error.
-> It's not there when the system resumes or reboots with 6.0.13,
-> and if I don't suspend & resume, there are no reported errors.
-> 
-> The problem occurs under both Wayland and X11, and from the command line via 
-> echo mem>/sys/power.state
-> 
-> 
-> Vanilla kernels, untainted, compiled with GCC; my system is Gentoo FWIW, but I 
-> do my own kernels direct from a git clone of stable.
-> 
-> Couldn't find anything similar with Google or the mailing lists.
-> 
-> **Hardware:**
-> 
-> HP Laptop 15-bw0xx
-> AMD A9-9420 RADEON R5, 5 COMPUTE CORES
-> Stoney [Radeon R2/R3/R4/R5 Graphics]
-> 4 GB memory
-> RTL8723DE PCIe adapter
-> 
-> **Kernel**
-> 
-> Kernel command line:
-> psmouse.synaptics_intertouch=1 pcie_aspm=force rdrand=force rootfstype=f2fs 
-> root=LABEL=gentoo
-> 
-> CONFIG_RTW88=m
-> CONFIG_RTW88_CORE=m
-> CONFIG_RTW88_PCI=m
-> CONFIG_RTW88_8723D=m
-> # CONFIG_RTW88_8822BE is not set
-> # CONFIG_RTW88_8822CE is not set
-> CONFIG_RTW88_8723DE=m
-> # CONFIG_RTW88_8821CE is not set
-> # CONFIG_RTW88_DEBUG is not set
-> # CONFIG_RTW88_DEBUGFS is not set
-> # CONFIG_RTW89 is not set
+That is until ->exec_verb gets initialized and codec_exec_verb() becomes 
+the sole handler of VERB execution process. As PM is not yet configured 
+at the time - snd_hda_codec_device_init() happens early, whereas PM 
+configuration is done later with snd_hda_set_power_save() during 
+skl_hda_audio_probe() in sound/soc/intel/boards/skl_hda_dsp_generic.c - 
+it should not be touched yet.
 
-Thanks for the report. To be sure the issue doesn't fall through the
-cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
-tracking bot:
+I'm up for reverting this single line to where it was before the 
+offending patch. We still want to avoid the page fault the very patch is 
+addressing.
 
-#regzbot ^introduced 6bf3a083407b
-#regzbot title wifi: rtw88: resume broken (reboot)
-#regzbot ignore-activity
+Does the proposed change address both problems? i.e. no sound and hang 
+during shutdown?
 
-This isn't a regression? This issue or a fix for it are already
-discussed somewhere else? It was fixed already? You want to clarify when
-the regression started to happen? Or point out I got the title or
-something else totally wrong? Then just reply and tell me -- ideally
-while also telling regzbot about it, as explained by the page listed in
-the footer of this mail.
 
-Developers: When fixing the issue, remember to add 'Link:' tags pointing
-to the report (the parent of this mail). See page linked in footer for
-details.
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+Kind regards,
+Czarek
