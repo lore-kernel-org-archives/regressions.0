@@ -1,45 +1,13 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F2AD10FD
-	for <regressions@lists.linux.dev>; Sat, 11 Feb 2023 11:23:26 +0000 (UTC)
-Received: by mail-wr1-f43.google.com with SMTP id ba1so7625035wrb.5
-        for <regressions@lists.linux.dev>; Sat, 11 Feb 2023 03:23:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=509YsbfSRxRhwVrB3ujZKFgTxveap/RV0wTuof5gtnI=;
-        b=Z6Jq0HCoHdSZL9Iq0BYg/yqg6NX+G5xZfOjaEvYDcUYwHEi3uQfP61Q7r8fQAUS2qN
-         t2w7qFvvEbvoxJ8/oiSsTGg1W0i32DEGY5VPVXmFtXXVphXnjeoq+SZUQGx1SzGV4Siq
-         tmQAfU5/2QF53UYgxL+ZoznZEioCVl2XR/NuMom5UvwkwbE6hicwC7VyF3F81lXSb95v
-         X75vg47/ie8ypISp5KZlDE2NGdZs4GRF66o1K6NpY7utfVnXQnpuPjciqIC3X3BN24b/
-         9RzE4NBLA+cVG9uV41fI7ts/i9/X9ryuc/W9oiy+Iro4k3yqiV1bR6S3olDx0APGIXLO
-         SE8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=509YsbfSRxRhwVrB3ujZKFgTxveap/RV0wTuof5gtnI=;
-        b=UaMvigKzaKFaEUrD0WLk+4bYz2kHSF4B+JQcPnTRkhYhwynetT7OpcFm+umXYdzpnz
-         gP3kar+eH+9DQ1hFJ5l/oHmEyHkc3E+n5e7apn90pnbPMCBj4FKvNsRKaQ0P5IhsBj01
-         XreDeCUNoMHbye6VI40AqWmlHnxyA62QyhGkykVnVrT6Rn57oDGuenEjzpjiRg6sDeA/
-         Xf66aPENA1SGokPvn8Zj9kszYtXQdyfcOErOxcf/r/MdZVo7+kz9HA7kAUcdpBhy2ToG
-         JcMUUvVZP3PiZn1iNfnFfnnPC+a+Thns4XB8dzviB8N1+YOcWljpS5H27VSw3iyAAKyZ
-         ZkJw==
-X-Gm-Message-State: AO0yUKUU1SqZOn2RCJ90yOTn0+pKXlWNUbEjCqEcrV+q2ltfolWubfE9
-	0j4WgRWCnrnGAriXgQhy3Q23nA==
-X-Google-Smtp-Source: AK7set+3iv4xqXpUwg18UQU2HQzqg0hNuwqwP5UEoSDdBp11uM1gD0Sk8/trPnIAdkepnV8RVJNuTA==
-X-Received: by 2002:adf:f9cc:0:b0:2c3:e308:7673 with SMTP id w12-20020adff9cc000000b002c3e3087673mr18756507wrr.35.1676114604402;
-        Sat, 11 Feb 2023 03:23:24 -0800 (PST)
-Received: from [192.168.1.109] ([178.197.216.144])
-        by smtp.gmail.com with ESMTPSA id n18-20020a5d4012000000b002b57bae7174sm6013940wrp.5.2023.02.11.03.23.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 11 Feb 2023 03:23:23 -0800 (PST)
-Message-ID: <4fe39d77-eb7c-a578-aefa-45b76e2247c2@linaro.org>
-Date: Sat, 11 Feb 2023 12:23:22 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA5C01C39
+	for <regressions@lists.linux.dev>; Sat, 11 Feb 2023 12:42:33 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1pQpCz-00029B-Jj; Sat, 11 Feb 2023 13:42:25 +0100
+Message-ID: <b74b2c93-bd0b-84c2-868b-d5376a16b020@leemhuis.info>
+Date: Sat, 11 Feb 2023 13:42:25 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -48,110 +16,83 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.7.1
-Subject: Re: Regression: NULL pointer dereference after NFS_V4_2_READ_PLUS
- (commit 7fd461c47)
-Content-Language: en-US
-To: Anna Schumaker <schumaker.anna@gmail.com>
-Cc: Trond Myklebust <trondmy@hammerspace.com>,
- Anna Schumaker <Anna.Schumaker@netapp.com>,
- linux-nfs <linux-nfs@vger.kernel.org>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <f591b13c-4600-e2a4-8efa-aac6ad828dd1@linaro.org>
- <82526863-d07a-0a5d-2990-1555b1387f26@linaro.org>
- <2C5E9725-F152-4D2E-882E-CF92A35481BF@hammerspace.com>
- <7ba38377-7992-7f0f-d905-cceb42510f39@linaro.org>
- <51430925-8046-7066-84ed-2ff0db835347@linaro.org>
- <CAFX2Jf=5X3zyZEWQmD6Rg9jQAD7ccDbae5LQCwrAyPCVVoFumg@mail.gmail.com>
- <2add1769-1458-b185-bc78-6d573f61b6fc@linaro.org>
- <CAFX2JfnKy7juGQaDTzqosN9SF-zd+XrhSL9uh_Xg0GpJGDux-A@mail.gmail.com>
- <32530c36-91d0-d351-0689-aed6a0975a4b@linaro.org>
- <2f285607-cbf9-6abc-f436-edb6e9a3938b@linaro.org>
- <CAFX2Jfmz7QqZBEdzbPUhPs0yctnXVaVF68tX1c57YX=6ki=0TA@mail.gmail.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <CAFX2Jfmz7QqZBEdzbPUhPs0yctnXVaVF68tX1c57YX=6ki=0TA@mail.gmail.com>
+Content-Language: en-US, de-DE
+To: Greg KH <gregkh@linuxfoundation.org>, Sasha Levin <sashal@kernel.org>
+References: <git-mailbomb-linux-master-690eb7dec72ae52d1d710d14a451844b4d0f4f19@kernel.org>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Cc: Bastien Nocera <hadess@hadess.net>,
+ "stable@vger.kernel.org" <stable@vger.kernel.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ LKML <linux-kernel@vger.kernel.org>,
+ Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Heads-up: one change merged for -rc8 that might be good to have in
+ the next 6.1.y release
+In-Reply-To: <git-mailbomb-linux-master-690eb7dec72ae52d1d710d14a451844b4d0f4f19@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1676119353;0bea5760;
+X-HE-SMSGID: 1pQpCz-00029B-Jj
 
-On 10/02/2023 21:55, Anna Schumaker wrote:
-> Hi Krzysztof,
+Hi Greg. Would be great if you could pick up 690eb7dec72a ("HID:
+logitech: Disable hi-res scrolling on USB") for the next 6.1.y release,
+as it's fixing a regression I saw multiple people report.
+
+The commit (see below) that was recently merged to mainline and has a
+proper stable "Cc: <stable@...>" tag, so I guess you scripts will at
+some point pick it up automatically. But I noticed you updated the
+stable queue and hour ago and this patch afaics is not in it yet
+(despite some other patches being in it that were merged later), so I
+thought: just to be sure send a quick heads up.
+
+Ciao, Thorsten
+
+On 09.02.23 19:10, Linux Kernel Mailing List wrote:
+> Commit:     690eb7dec72ae52d1d710d14a451844b4d0f4f19
+> Parent:     ea427a222d8bdf2bc1a8a6da3ebe247f7dced70c
+> Refname:    refs/heads/master
+> Web:        https://git.kernel.org/torvalds/c/690eb7dec72ae52d1d710d14a451844b4d0f4f19
+> Author:     Bastien Nocera <hadess@hadess.net>
+> AuthorDate: Fri Feb 3 11:18:00 2023 +0100
+> Committer:  Benjamin Tissoires <benjamin.tissoires@redhat.com>
+> CommitDate: Mon Feb 6 10:58:15 2023 +0100
 > 
-> On Fri, Feb 10, 2023 at 3:53 AM Krzysztof Kozlowski
-> <krzysztof.kozlowski@linaro.org> wrote:
->>
->> On 10/02/2023 09:41, Krzysztof Kozlowski wrote:
->>>
->>>
->>>>
->>>> I was also wondering if it would be possible to turn on KASAN in your
->>>> kernel, which should give us a little more info?
->>>
->>> I'll try with KASAN.
->>
->> Not much from the KASAN, except that kernel
->> continues to boot and runs:
->>
->> [   44.722846] vdd_vmem: disabling
->> [   44.793465] systemd[1]: Hostname set to <odroidhc1>.
->> [   45.357929] systemd[1]: bpf-lsm: BPF LSM hook not enabled in the kernel, BPF LSM not supported
->> [   45.980476] ==================================================================
->> [   45.986372] BUG: KASAN: null-ptr-deref in xdr_inline_decode+0x140/0x200
->> [   45.992929] Read of size 4092 at addr 00000004 by task kworker/u16:3/71
->> [   45.999513]
->> [   46.000940] CPU: 6 PID: 71 Comm: kworker/u16:3 Not tainted 6.2.0-rc7-00018-g0983f6bf2bfc #222
->> [   46.009504] Hardware name: Samsung Exynos (Flattened Device Tree)
->> [   46.015542] Workqueue: rpciod rpc_async_schedule
->> [   46.020123]  unwind_backtrace from show_stack+0x10/0x14
->> [   46.025323]  show_stack from dump_stack_lvl+0x58/0x70
->> [   46.030301]  dump_stack_lvl from kasan_report+0xa8/0xe0
->> [   46.035501]  kasan_report from kasan_check_range+0x94/0x1a0
->> [   46.041048]  kasan_check_range from memcpy+0x28/0x68
->> [   46.045985]  memcpy from xdr_inline_decode+0x140/0x200
->> [   46.051098]  xdr_inline_decode from nfs4_xdr_dec_read_plus+0x298/0x5b8
->> [   46.057602]  nfs4_xdr_dec_read_plus from call_decode+0x39c/0x530
->> [   46.063581]  call_decode from __rpc_execute+0x1f4/0xc5c
->> [   46.068776]  __rpc_execute from rpc_async_schedule+0x2c/0x4c
->> [   46.074411]  rpc_async_schedule from process_one_work+0x51c/0xc44
->> [   46.080478]  process_one_work from worker_thread+0x9c/0x7c0
->> [   46.086022]  worker_thread from kthread+0x16c/0x1b8
->> [   46.090872]  kthread from ret_from_fork+0x14/0x2c
->> [   46.095550] Exception stack(0xf0ba3fb0 to 0xf0ba3ff8)
->> [   46.100580] 3fa0:                                     00000000 00000000 00000000 00000000
->> [   46.108740] 3fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
->> [   46.116885] 3fe0: 00000000 00000000 00000000 00000000 00000013 00000000
->> [   46.123461] ==================================================================
->> [   46.130774] Disabling lock debugging due to kernel taint
->> [   50.848579] systemd[1]: Queued start job for default target Graphical Interface.
->> [   50.877068] systemd[1]: Created slice Slice /system/getty.
->>
->>
->> Decoded stacktrace is (this is master branch):
->>
->> [   46.020123] unwind_backtrace from show_stack (arch/arm/kernel/traps.c:258)
->> [   46.025323] show_stack from dump_stack_lvl (lib/dump_stack.c:107 (discriminator 4))
->> [   46.030301] dump_stack_lvl from kasan_report (mm/kasan/report.c:184 mm/kasan/report.c:519)
->> [   46.035501] kasan_report from kasan_check_range (mm/kasan/generic.c:173 mm/kasan/generic.c:189)
->> [   46.041048] kasan_check_range from memcpy (mm/kasan/shadow.c:65)
->> [   46.045985] memcpy from xdr_inline_decode (net/sunrpc/xdr.c:1419 net/sunrpc/xdr.c:1454)
+>     HID: logitech: Disable hi-res scrolling on USB
+>     
+>     On some Logitech mice, such as the G903, and possibly the G403, the HID
+>     events are generated on a different interface to the HID++ one.
+>     
+>     If we enable hi-res through the HID++ interface, the HID interface
+>     wouldn't know anything about it, and handle the events as if they were
+>     regular scroll events, making the mouse unusable.
+>     
+>     Disable hi-res scrolling on those devices until we implement scroll
+>     events through HID++.
+>     
+>     Signed-off-by: Bastien Nocera <hadess@hadess.net>
+>     Tested-by: Tobias Klausmann <klausman@schwarzvogel.de>
+>     Link: https://bugzilla.kernel.org/show_bug.cgi?id=216885
+>     Fixes: 908d325e1665 ("HID: logitech-hidpp: Detect hi-res scrolling support")
+>     Cc: stable@vger.kernel.org
+>     Link: https://lore.kernel.org/r/20230203101800.139380-1-hadess@hadess.net
+>     Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+> ---
+>  drivers/hid/hid-logitech-hidpp.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> Actually, this part is really useful. net/sunrpc/xdr.c:1419 points to
-> the memcpy in xdr_copy_to_scratch(), which has me wondering if I'm
-> incorrectly setting up the xdr scratch buffer that READ_PLUS uses for
-> decoding. Can you try this patch and let me know if it helps?
+> diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-hidpp.c
+> index abf2c95e4d0b0..9c1ee8e91e0ca 100644
+> --- a/drivers/hid/hid-logitech-hidpp.c
+> +++ b/drivers/hid/hid-logitech-hidpp.c
+> @@ -3978,7 +3978,8 @@ static void hidpp_connect_event(struct hidpp_device *hidpp)
+>  	}
+>  
+>  	hidpp_initialize_battery(hidpp);
+> -	hidpp_initialize_hires_scroll(hidpp);
+> +	if (!hid_is_usb(hidpp->hid_dev))
+> +		hidpp_initialize_hires_scroll(hidpp);
+>  
+>  	/* forward current battery state */
+>  	if (hidpp->capabilities & HIDPP_CAPABILITY_HIDPP10_BATTERY) {
 > 
-> From ac2d6c501dbcdb306480edaee625b5496f1fb4f5 Mon Sep 17 00:00:00 2001
-> From: Anna Schumaker <Anna.Schumaker@Netapp.com>
-> Date: Fri, 10 Feb 2023 15:50:22 -0500
-> Subject: [PATCH] NFSv4.2: Rework scratch handling for READ_PLUS
-> 
-
-Patch is corrupted - maybe mail program reformatted it when sending:
-
-Applying: NFSv4.2: Rework scratch handling for READ_PLUS
-error: corrupt patch at line 12
-Patch failed at 0001 NFSv4.2: Rework scratch handling for READ_PLUS
-
-
-Best regards,
-Krzysztof
-
