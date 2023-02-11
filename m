@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BCE32F41
-	for <regressions@lists.linux.dev>; Sat, 11 Feb 2023 14:04:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81E067E7
+	for <regressions@lists.linux.dev>; Sat, 11 Feb 2023 14:30:44 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pQqUe-0007sk-UO; Sat, 11 Feb 2023 15:04:44 +0100
-Message-ID: <6fa20ee8-7471-017d-55c1-e4dbe127b81a@leemhuis.info>
-Date: Sat, 11 Feb 2023 15:04:44 +0100
+	id 1pQqtl-0004G1-U5; Sat, 11 Feb 2023 15:30:41 +0100
+Message-ID: <cd61b6d1-52e3-11a9-714e-324b51425cec@leemhuis.info>
+Date: Sat, 11 Feb 2023 15:30:41 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,83 +16,60 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.7.1
-Subject: Re: [PATCH] Fix page corruption caused by racy check in __free_pages
+Subject: =?UTF-8?Q?Re=3a_=5bregression=5d_Bug=c2=a0216856_-_=5bptdma=5d_NULL?=
+ =?UTF-8?Q?_pointer_dereference_in_pt=5fcmd=5fcallback_during_server_shutdow?=
+ =?UTF-8?Q?n?=
 Content-Language: en-US, de-DE
-To: David Chen <david.chen@nutanix.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- "Matthew Wilcox (Oracle)" <willy@infradead.org>,
- "linux-mm@kvack.org" <linux-mm@kvack.org>,
- "stable@vger.kernel.org" <stable@vger.kernel.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <BYAPR02MB448855960A9656EEA81141FC94D99@BYAPR02MB4488.namprd02.prod.outlook.com>
-From: "Linux regression tracking #adding (Thorsten Leemhuis)"
+From: "Linux regression tracking #update (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
+To: Sanjay R Mehta <sanju.mehta@amd.com>, Vinod Koul <vkoul@kernel.org>
+Cc: Eric Pilmore <epilmore@gigaio.com>, dmaengine@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <0e77436c-9f0a-15b6-697a-7b879e4abc4a@leemhuis.info>
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <BYAPR02MB448855960A9656EEA81141FC94D99@BYAPR02MB4488.namprd02.prod.outlook.com>
+In-Reply-To: <0e77436c-9f0a-15b6-697a-7b879e4abc4a@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1676124291;e2064400;
-X-HE-SMSGID: 1pQqUe-0007sk-UO
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1676125844;18ff4fb0;
+X-HE-SMSGID: 1pQqtl-0004G1-U5
 
-[TLDR: I'm adding this report to the list of tracked Linux kernel
-regressions; the text you find below is based on a few templates
-paragraphs you might have encountered already in similar form.
-See link in footer if these mails annoy you.]
+[TLDR: This mail in primarily relevant for Linux regression tracking. A
+change or fix related to the regression discussed in this thread was
+posted or applied, but it did not use a Link: tag to point to the
+report, as Linus and the documentation call for. Things happen, no
+worries -- but now the regression tracking bot needs to be told manually
+about the fix. See link in footer if these mails annoy you.]
 
-On 09.02.23 18:48, David Chen wrote:
-> When we upgraded our kernel, we started seeing some page corruption like
-> the following consistently:
-> 
->  BUG: Bad page state in process ganesha.nfsd  pfn:1304ca
->  page:0000000022261c55 refcount:0 mapcount:-128 mapping:0000000000000000 index:0x0 pfn:0x1304ca
->  flags: 0x17ffffc0000000()
->  raw: 0017ffffc0000000 ffff8a513ffd4c98 ffffeee24b35ec08 0000000000000000
->  raw: 0000000000000000 0000000000000001 00000000ffffff7f 0000000000000000
->  page dumped because: nonzero mapcount
->  CPU: 0 PID: 15567 Comm: ganesha.nfsd Kdump: loaded Tainted: P    B      O      5.10.158-1.nutanix.20221209.el7.x86_64 #1
->  Hardware name: VMware, Inc. VMware Virtual Platform/440BX Desktop Reference Platform, BIOS 6.00 04/05/2016
->  Call Trace:
->   dump_stack+0x74/0x96
->   bad_page.cold+0x63/0x94
->   check_new_page_bad+0x6d/0x80
->   rmqueue+0x46e/0x970
->   get_page_from_freelist+0xcb/0x3f0
->   ? _cond_resched+0x19/0x40
->   __alloc_pages_nodemask+0x164/0x300
->   alloc_pages_current+0x87/0xf0
->   skb_page_frag_refill+0x84/0x110
->   ...
->
-> Sometimes, it would also show up as corruption in the free list pointer and
-> cause crashes.
-> 
-> After bisecting the issue, we found the issue started from e320d3012d25:
-> 
-> 	if (put_page_testzero(page))
-> 		free_the_page(page, order);
-> 	else if (!PageHead(page))
-> 		while (order-- > 0)
-> 			free_the_page(page + (1 << order), order);
-> 
-> So the problem is the check PageHead is racy because at this point we
-> already dropped our reference to the page. So even if we came in with
-> compound page, the page can already be freed and PageHead can return
-> false and we will end up freeing all the tail pages causing double free.
-> 
-> Fixes: e320d3012d25 ("mm/page_alloc.c: fix freeing non-compound pages")
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Matthew Wilcox (Oracle) <willy@infradead.org>
-> Cc: linux-mm@kvack.org
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Chunwei Chen <david.chen@nutanix.com>
+On 30.12.22 09:27, Thorsten Leemhuis wrote:
 
-Thanks for the report and the patch. To be sure the issue doesn't fall
-through the cracks unnoticed, I'm adding it to regzbot, the Linux kernel
-regression tracking bot:
+> I noticed a bug report in bugzilla.kernel.org that looks a lot like a
+> regression to my untrained eyes (it's not entirely clear). As many
+> (most?) kernel developer don't keep an eye on it, I decided to forward
+> it by mail. Quoting from
+> https://bugzilla.kernel.org/show_bug.cgi?id=216856 :
+> 
+>>  Eric Pilmore 2022-12-27 22:23:50 UTC
+>>
+>> Observed kernel panic during host shutdown on a AMD (Milan CPU) based
+>> server. The issue ended up being a NULL pointer dereference in
+>> pt_cmd_callback() when
+>> called from pt_issue_pending(). If you follow the flow in
+>> pt_issue_pending() you will note that if pt_next_dma_desc() returns
+>> NULL, then engine_is_idle will remain as TRUE, including if
+>> pt_next_dma_desc() is still returning NULL in the 2nd call just prior to
+>> doing the call to pt_cmd_callback().
+> [...]
+> #regzbot introduced: v6.1..v6.2-rc1
+> https://bugzilla.kernel.org/show_bug.cgi?id=216856
+> #regzbot title: ptdma: kernel panic during host shutdown
+> #regzbot ignore-activity
 
-#regzbot ^introduced e320d3012d25
-#regzbot title mm: page corruption caused by racy check in __free_pages
+#regzbot introduced: 6fa7e0e836e2
+#regzbot monitor:
+https://lore.kernel.org/all/20230210075142.58253-1-epilmore@gigaio.com/
+#regzbot fix: dmaengine: ptdma: check for null desc before calling
+pt_cmd_callback
 #regzbot ignore-activity
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
