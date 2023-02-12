@@ -1,58 +1,234 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 480A010E7
-	for <regressions@lists.linux.dev>; Sun, 12 Feb 2023 04:18:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=C1+aOkGVEB4KQ1YTLeYD4sqqteaA3LlF8O5Ivt5MSa8=; b=fgmHgD72h0yJu+JFs2V7YqI5ne
-	jt83z98YvTg4kQ3PNwDJLNGiXoyttkH8C/yHP20WN4sAtrDncAxr2qzI7MUQtgxmmOq5IPrMQO+s0
-	vUPIFdFX/vA0BqhQ2m9viHJlfvaWn0sEmhVzYBg1UJy63dDNnPwWIY07eHr6MN3NeiKaLEiKltLge
-	rDsCIyQ8cG/GQ5DMXk63YfG7+fyx2fAvLDFSf9CZvErPLYqPDPNUUntXcwa8nskDfoDlw7wg61J2H
-	Eu3s2OKKDzfuK/F0l9dKiRZtpJ2GQS6lWTsgaoKrSR1q6ehtK4qWRLFFWUS1meS58GxcykPa32Ntv
-	Z0jV7vsg==;
-Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pR3od-004bok-7o; Sun, 12 Feb 2023 04:18:15 +0000
-Date: Sun, 12 Feb 2023 04:18:15 +0000
-From: Matthew Wilcox <willy@infradead.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	David Chen <david.chen@nutanix.com>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: Linux regressions report for mainline [2023-02-11]
-Message-ID: <Y+hohwykIsBD2082@casper.infradead.org>
-References: <167613641114.2124708.9785978428796571420@leemhuis.info>
- <CAHk-=wiEJa-R50PTYPyAQDs02OAyK+Oqr67x5nxns=OKXCEf6A@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57FDC1FC5
+	for <regressions@lists.linux.dev>; Sun, 12 Feb 2023 14:06:06 +0000 (UTC)
+Received: by mail-qk1-f175.google.com with SMTP id x2so3863725qkg.7
+        for <regressions@lists.linux.dev>; Sun, 12 Feb 2023 06:06:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=WLsmoPCaetnyKB5wRMApvAff4Jx1/sqybqlgrpDwf8Y=;
+        b=ZK5LzAhsUJ1tjNk3z7lHAsEo+Z5samSodYbkay5tuZKgC6m9ygJVBJXgWznsEUstlR
+         Sa/yWpeBMt1e33k8Q1gHOXHkge1qm0kXiGKDIn99cFP6/8FeR0KH/zE1uyEmvNKvpTG9
+         qKtvPo6dPepgQ9adkoTmQ7m3V/Dph5IoByOOjdptnf0228qwB5z1Gbqcs1JWv9gHFrGY
+         oHVOIYPcHiiYVt/AKrOs6lofbpx+Uo3YD40rz2Sna+mDEdxjRKtbxT8vtMMUCXsamnFU
+         1+3uirWnfFlpNzwh+NSOlV4Kh4R2+6sbkpc6ucsU26PbDWukxSIyeQCF8A+FXLJrsniJ
+         i9Sw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=WLsmoPCaetnyKB5wRMApvAff4Jx1/sqybqlgrpDwf8Y=;
+        b=vLSUm4PbkjcszsQfPVCI/9Gf69YCsnPfNqhX183ynUzEJRYqTo/KdB2I+EtJiSrZ5o
+         tAY+B1ZOGIDKNxU4sZs2XYptPiOJK2yZeeNvNBLez9vokBexXcKEd1E1hb4V8m9wZtt3
+         eUxUio7o/Hn08Iqufyd/RvMQqriFB1kkr+q280UBsx50/yRXgLUHhGuDNdMwVqghzKPn
+         56iBtx8vRMitWirA59x4y+eNHMD06ITr+Fn1fd92a0AOP2+SwBlt3pPlrXQbfP5RGmGt
+         TTI3lMLDIlFVyZvhOafTN5vxlkJML19zXeoklq8i3G33pT5pLGMk1qnITiXCL7KIyf9S
+         lc9Q==
+X-Gm-Message-State: AO0yUKWvkzk/J6axmFCeifKj76E6+D7JvQQxfjtgQ6IuSyQnAj0Tquz+
+	EEYQZ7sy4EeS/qQtxSXZ/SXfxc6OYFFoOFWFKKI=
+X-Google-Smtp-Source: AK7set+3ZP1jCqlBEC0WpqasMK9RYzHfWAOiyO9nm22lCTXqTpK15C7r/IpCKnFaz34OYd3W0Hj1KhRTI9uqzWEDVRQ=
+X-Received: by 2002:a37:680b:0:b0:739:1900:6eb3 with SMTP id
+ d11-20020a37680b000000b0073919006eb3mr260793qkc.477.1676210765073; Sun, 12
+ Feb 2023 06:06:05 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wiEJa-R50PTYPyAQDs02OAyK+Oqr67x5nxns=OKXCEf6A@mail.gmail.com>
+References: <f591b13c-4600-e2a4-8efa-aac6ad828dd1@linaro.org>
+ <82526863-d07a-0a5d-2990-1555b1387f26@linaro.org> <2C5E9725-F152-4D2E-882E-CF92A35481BF@hammerspace.com>
+ <7ba38377-7992-7f0f-d905-cceb42510f39@linaro.org> <51430925-8046-7066-84ed-2ff0db835347@linaro.org>
+ <CAFX2Jf=5X3zyZEWQmD6Rg9jQAD7ccDbae5LQCwrAyPCVVoFumg@mail.gmail.com>
+ <2add1769-1458-b185-bc78-6d573f61b6fc@linaro.org> <CAFX2JfnKy7juGQaDTzqosN9SF-zd+XrhSL9uh_Xg0GpJGDux-A@mail.gmail.com>
+ <32530c36-91d0-d351-0689-aed6a0975a4b@linaro.org> <2f285607-cbf9-6abc-f436-edb6e9a3938b@linaro.org>
+ <CAFX2Jfmz7QqZBEdzbPUhPs0yctnXVaVF68tX1c57YX=6ki=0TA@mail.gmail.com> <4fe39d77-eb7c-a578-aefa-45b76e2247c2@linaro.org>
+In-Reply-To: <4fe39d77-eb7c-a578-aefa-45b76e2247c2@linaro.org>
+From: Anna Schumaker <schumaker.anna@gmail.com>
+Date: Sun, 12 Feb 2023 09:05:48 -0500
+Message-ID: <CAFX2JfmdRMsHPTySiw4vm7BwJfRZj3s0V3_v7NJ+XwMxBBSo9A@mail.gmail.com>
+Subject: Re: Regression: NULL pointer dereference after NFS_V4_2_READ_PLUS
+ (commit 7fd461c47)
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Trond Myklebust <trondmy@hammerspace.com>, Anna Schumaker <Anna.Schumaker@netapp.com>, 
+	linux-nfs <linux-nfs@vger.kernel.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Content-Type: multipart/mixed; boundary="00000000000038d58905f4813b7a"
 
-On Sat, Feb 11, 2023 at 01:39:08PM -0800, Linus Torvalds wrote:
-> Maybe we should just bite the bullet and say "page cache pages are
-> rcu-freed after removing them from the mapping", so that we don't need
-> the whole folio_try_get_rcu() at all.
+--00000000000038d58905f4813b7a
+Content-Type: text/plain; charset="UTF-8"
 
-For GUP, you'd also have to do it for any page which has ever been mapped
-to userspace, including from drivers.  I think that gets a bit tricky.
+On Sat, Feb 11, 2023 at 6:23 AM Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
+>
+> On 10/02/2023 21:55, Anna Schumaker wrote:
+> > Hi Krzysztof,
+> >
+> > On Fri, Feb 10, 2023 at 3:53 AM Krzysztof Kozlowski
+> > <krzysztof.kozlowski@linaro.org> wrote:
+> >>
+> >> On 10/02/2023 09:41, Krzysztof Kozlowski wrote:
+> >>>
+> >>>
+> >>>>
+> >>>> I was also wondering if it would be possible to turn on KASAN in your
+> >>>> kernel, which should give us a little more info?
+> >>>
+> >>> I'll try with KASAN.
+> >>
+> >> Not much from the KASAN, except that kernel
+> >> continues to boot and runs:
+> >>
+> >> [   44.722846] vdd_vmem: disabling
+> >> [   44.793465] systemd[1]: Hostname set to <odroidhc1>.
+> >> [   45.357929] systemd[1]: bpf-lsm: BPF LSM hook not enabled in the kernel, BPF LSM not supported
+> >> [   45.980476] ==================================================================
+> >> [   45.986372] BUG: KASAN: null-ptr-deref in xdr_inline_decode+0x140/0x200
+> >> [   45.992929] Read of size 4092 at addr 00000004 by task kworker/u16:3/71
+> >> [   45.999513]
+> >> [   46.000940] CPU: 6 PID: 71 Comm: kworker/u16:3 Not tainted 6.2.0-rc7-00018-g0983f6bf2bfc #222
+> >> [   46.009504] Hardware name: Samsung Exynos (Flattened Device Tree)
+> >> [   46.015542] Workqueue: rpciod rpc_async_schedule
+> >> [   46.020123]  unwind_backtrace from show_stack+0x10/0x14
+> >> [   46.025323]  show_stack from dump_stack_lvl+0x58/0x70
+> >> [   46.030301]  dump_stack_lvl from kasan_report+0xa8/0xe0
+> >> [   46.035501]  kasan_report from kasan_check_range+0x94/0x1a0
+> >> [   46.041048]  kasan_check_range from memcpy+0x28/0x68
+> >> [   46.045985]  memcpy from xdr_inline_decode+0x140/0x200
+> >> [   46.051098]  xdr_inline_decode from nfs4_xdr_dec_read_plus+0x298/0x5b8
+> >> [   46.057602]  nfs4_xdr_dec_read_plus from call_decode+0x39c/0x530
+> >> [   46.063581]  call_decode from __rpc_execute+0x1f4/0xc5c
+> >> [   46.068776]  __rpc_execute from rpc_async_schedule+0x2c/0x4c
+> >> [   46.074411]  rpc_async_schedule from process_one_work+0x51c/0xc44
+> >> [   46.080478]  process_one_work from worker_thread+0x9c/0x7c0
+> >> [   46.086022]  worker_thread from kthread+0x16c/0x1b8
+> >> [   46.090872]  kthread from ret_from_fork+0x14/0x2c
+> >> [   46.095550] Exception stack(0xf0ba3fb0 to 0xf0ba3ff8)
+> >> [   46.100580] 3fa0:                                     00000000 00000000 00000000 00000000
+> >> [   46.108740] 3fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+> >> [   46.116885] 3fe0: 00000000 00000000 00000000 00000000 00000013 00000000
+> >> [   46.123461] ==================================================================
+> >> [   46.130774] Disabling lock debugging due to kernel taint
+> >> [   50.848579] systemd[1]: Queued start job for default target Graphical Interface.
+> >> [   50.877068] systemd[1]: Created slice Slice /system/getty.
+> >>
+> >>
+> >> Decoded stacktrace is (this is master branch):
+> >>
+> >> [   46.020123] unwind_backtrace from show_stack (arch/arm/kernel/traps.c:258)
+> >> [   46.025323] show_stack from dump_stack_lvl (lib/dump_stack.c:107 (discriminator 4))
+> >> [   46.030301] dump_stack_lvl from kasan_report (mm/kasan/report.c:184 mm/kasan/report.c:519)
+> >> [   46.035501] kasan_report from kasan_check_range (mm/kasan/generic.c:173 mm/kasan/generic.c:189)
+> >> [   46.041048] kasan_check_range from memcpy (mm/kasan/shadow.c:65)
+> >> [   46.045985] memcpy from xdr_inline_decode (net/sunrpc/xdr.c:1419 net/sunrpc/xdr.c:1454)
+> >
+> > Actually, this part is really useful. net/sunrpc/xdr.c:1419 points to
+> > the memcpy in xdr_copy_to_scratch(), which has me wondering if I'm
+> > incorrectly setting up the xdr scratch buffer that READ_PLUS uses for
+> > decoding. Can you try this patch and let me know if it helps?
+> >
+> > From ac2d6c501dbcdb306480edaee625b5496f1fb4f5 Mon Sep 17 00:00:00 2001
+> > From: Anna Schumaker <Anna.Schumaker@Netapp.com>
+> > Date: Fri, 10 Feb 2023 15:50:22 -0500
+> > Subject: [PATCH] NFSv4.2: Rework scratch handling for READ_PLUS
+> >
+>
+> Patch is corrupted - maybe mail program reformatted it when sending:
+>
+> Applying: NFSv4.2: Rework scratch handling for READ_PLUS
+> error: corrupt patch at line 12
+> Patch failed at 0001 NFSv4.2: Rework scratch handling for READ_PLUS
 
-But there's a good motivation for RCU-freeing page cache pages.
-Ben Lahaise once worked on a system which did very small reads which
-invariably hit in the page cache.  On the order of dozens to hundreds
-of bytes.  For that workload, cache contention on the page refcount was
-the limiting factor on performance.  He had an optimisation where he'd
-look up the page, memcpy() to a small buffer on the stack, look up the
-page again, and if it was the same, copy_to_user().  I was thinking that
-we could do that less painfully by RCU-freeing pages.
+That's weird. I wasn't expecting gmail to reformat the patch but I
+guess it did. I've added it as an attachment so that shouldn't happen
+again.
 
-That's at the back of my mind; I'm kind of busy with other things
-right now.
+Sorry about that!
+Anna
+
+>
+>
+> Best regards,
+> Krzysztof
+>
+
+--00000000000038d58905f4813b7a
+Content-Type: text/x-patch; charset="US-ASCII"; 
+	name="0001-NFSv4.2-Rework-scratch-handling-for-READ_PLUS.patch"
+Content-Disposition: attachment; 
+	filename="0001-NFSv4.2-Rework-scratch-handling-for-READ_PLUS.patch"
+Content-Transfer-Encoding: base64
+Content-ID: <f_le1glenh0>
+X-Attachment-Id: f_le1glenh0
+
+RnJvbSBhYzJkNmM1MDFkYmNkYjMwNjQ4MGVkYWVlNjI1YjU0OTZmMWZiNGY1IE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiBBbm5hIFNjaHVtYWtlciA8QW5uYS5TY2h1bWFrZXJATmV0YXBw
+LmNvbT4KRGF0ZTogRnJpLCAxMCBGZWIgMjAyMyAxNTo1MDoyMiAtMDUwMApTdWJqZWN0OiBbUEFU
+Q0hdIE5GU3Y0LjI6IFJld29yayBzY3JhdGNoIGhhbmRsaW5nIGZvciBSRUFEX1BMVVMKCkluc3Rl
+YWQgb2YgdXNpbmcgYSB0aW55IHNjcmF0Y2ggYnVmZmVyLCB3ZSBzaG91bGQgdXNlIGEgZnVsbCBz
+Y3JhdGNoCnBhZ2UgdG8gbWF0Y2ggaG93IG90aGVyIE5GU3Y0IG9wZXJhdGlvbnMgaGFuZGxlIHNj
+cmF0Y2ggZGF0YS4KClNpZ25lZC1vZmYtYnk6IEFubmEgU2NodW1ha2VyIDxBbm5hLlNjaHVtYWtl
+ckBOZXRhcHAuY29tPgotLS0KIGZzL25mcy9uZnM0Mnhkci5jICAgICAgIHwgIDQgKystLQogZnMv
+bmZzL25mczRwcm9jLmMgICAgICAgfCAxNCArKysrKysrKysrLS0tLQogaW5jbHVkZS9saW51eC9u
+ZnNfeGRyLmggfCAgMSArCiAzIGZpbGVzIGNoYW5nZWQsIDEzIGluc2VydGlvbnMoKyksIDYgZGVs
+ZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvZnMvbmZzL25mczQyeGRyLmMgYi9mcy9uZnMvbmZzNDJ4
+ZHIuYwppbmRleCBkODBlZTg4Y2E5OTYuLjcwMjU2N2Q1YjFkYiAxMDA2NDQKLS0tIGEvZnMvbmZz
+L25mczQyeGRyLmMKKysrIGIvZnMvbmZzL25mczQyeGRyLmMKQEAgLTExMjIsNyArMTEyMiw2IEBA
+IHN0YXRpYyBpbnQgZGVjb2RlX3JlYWRfcGx1cyhzdHJ1Y3QgeGRyX3N0cmVhbSAqeGRyLCBzdHJ1
+Y3QgbmZzX3BnaW9fcmVzICpyZXMpCiAJdWludDMyX3Qgc2VnbWVudHM7CiAJc3RydWN0IHJlYWRf
+cGx1c19zZWdtZW50ICpzZWdzOwogCWludCBzdGF0dXMsIGk7Ci0JY2hhciBzY3JhdGNoX2J1Zlsx
+Nl07CiAJX19iZTMyICpwOwogCiAJc3RhdHVzID0gZGVjb2RlX29wX2hkcih4ZHIsIE9QX1JFQURf
+UExVUyk7CkBAIC0xMTQzLDcgKzExNDIsNiBAQCBzdGF0aWMgaW50IGRlY29kZV9yZWFkX3BsdXMo
+c3RydWN0IHhkcl9zdHJlYW0gKnhkciwgc3RydWN0IG5mc19wZ2lvX3JlcyAqcmVzKQogCWlmICgh
+c2VncykKIAkJcmV0dXJuIC1FTk9NRU07CiAKLQl4ZHJfc2V0X3NjcmF0Y2hfYnVmZmVyKHhkciwg
+JnNjcmF0Y2hfYnVmLCBzaXplb2Yoc2NyYXRjaF9idWYpKTsKIAlzdGF0dXMgPSAtRUlPOwogCWZv
+ciAoaSA9IDA7IGkgPCBzZWdtZW50czsgaSsrKSB7CiAJCXN0YXR1cyA9IGRlY29kZV9yZWFkX3Bs
+dXNfc2VnbWVudCh4ZHIsICZzZWdzW2ldKTsKQEAgLTEzNDgsNiArMTM0Niw4IEBAIHN0YXRpYyBp
+bnQgbmZzNF94ZHJfZGVjX3JlYWRfcGx1cyhzdHJ1Y3QgcnBjX3Jxc3QgKnJxc3RwLAogCXN0cnVj
+dCBjb21wb3VuZF9oZHIgaGRyOwogCWludCBzdGF0dXM7CiAKKwl4ZHJfc2V0X3NjcmF0Y2hfcGFn
+ZSh4ZHIsIHJlcy0+c2NyYXRjaCk7CisKIAlzdGF0dXMgPSBkZWNvZGVfY29tcG91bmRfaGRyKHhk
+ciwgJmhkcik7CiAJaWYgKHN0YXR1cykKIAkJZ290byBvdXQ7CmRpZmYgLS1naXQgYS9mcy9uZnMv
+bmZzNHByb2MuYyBiL2ZzL25mcy9uZnM0cHJvYy5jCmluZGV4IDQwZDc0OWYyOWVkMy4uNWM1ODlk
+MGJkOWU5IDEwMDY0NAotLS0gYS9mcy9uZnMvbmZzNHByb2MuYworKysgYi9mcy9uZnMvbmZzNHBy
+b2MuYwpAQCAtNTQ0MCw2ICs1NDQwLDggQEAgc3RhdGljIGJvb2wgbmZzNF9yZWFkX3BsdXNfbm90
+X3N1cHBvcnRlZChzdHJ1Y3QgcnBjX3Rhc2sgKnRhc2ssCiAKIHN0YXRpYyBpbnQgbmZzNF9yZWFk
+X2RvbmUoc3RydWN0IHJwY190YXNrICp0YXNrLCBzdHJ1Y3QgbmZzX3BnaW9faGVhZGVyICpoZHIp
+CiB7CisJaWYgKGhkci0+cmVzLnNjcmF0Y2gpCisJCV9fZnJlZV9wYWdlKGhkci0+cmVzLnNjcmF0
+Y2gpOwogCWlmICghbmZzNF9zZXF1ZW5jZV9kb25lKHRhc2ssICZoZHItPnJlcy5zZXFfcmVzKSkK
+IAkJcmV0dXJuIC1FQUdBSU47CiAJaWYgKG5mczRfcmVhZF9zdGF0ZWlkX2NoYW5nZWQodGFzaywg
+Jmhkci0+YXJncykpCkBAIC01NDUzLDEyICs1NDU1LDE2IEBAIHN0YXRpYyBpbnQgbmZzNF9yZWFk
+X2RvbmUoc3RydWN0IHJwY190YXNrICp0YXNrLCBzdHJ1Y3QgbmZzX3BnaW9faGVhZGVyICpoZHIp
+CiB9CiAKICNpZiBkZWZpbmVkIENPTkZJR19ORlNfVjRfMiAmJiBkZWZpbmVkIENPTkZJR19ORlNf
+VjRfMl9SRUFEX1BMVVMKLXN0YXRpYyB2b2lkIG5mczQyX3JlYWRfcGx1c19zdXBwb3J0KHN0cnVj
+dCBuZnNfcGdpb19oZWFkZXIgKmhkciwKK3N0YXRpYyBib29sIG5mczQyX3JlYWRfcGx1c19zdXBw
+b3J0KHN0cnVjdCBuZnNfcGdpb19oZWFkZXIgKmhkciwKIAkJCQkgICAgc3RydWN0IHJwY19tZXNz
+YWdlICptc2cpCiB7CiAJLyogTm90ZTogV2UgZG9uJ3QgdXNlIFJFQURfUExVUyB3aXRoIHBORlMg
+eWV0ICovCi0JaWYgKG5mc19zZXJ2ZXJfY2FwYWJsZShoZHItPmlub2RlLCBORlNfQ0FQX1JFQURf
+UExVUykgJiYgIWhkci0+ZHNfY2xwKQorCWlmIChuZnNfc2VydmVyX2NhcGFibGUoaGRyLT5pbm9k
+ZSwgTkZTX0NBUF9SRUFEX1BMVVMpICYmICFoZHItPmRzX2NscCkgewogCQltc2ctPnJwY19wcm9j
+ID0gJm5mczRfcHJvY2VkdXJlc1tORlNQUk9DNF9DTE5UX1JFQURfUExVU107CisJCWhkci0+cmVz
+LnNjcmF0Y2ggPSBhbGxvY19wYWdlKEdGUF9LRVJORUwpOworCQlyZXR1cm4gaGRyLT5yZXMuc2Ny
+YXRjaCAhPSBOVUxMOworCX0KKwlyZXR1cm4gZmFsc2U7CiB9CiAjZWxzZQogc3RhdGljIHZvaWQg
+bmZzNDJfcmVhZF9wbHVzX3N1cHBvcnQoc3RydWN0IG5mc19wZ2lvX2hlYWRlciAqaGRyLApAQCAt
+NTQ3Myw4ICs1NDc5LDggQEAgc3RhdGljIHZvaWQgbmZzNF9wcm9jX3JlYWRfc2V0dXAoc3RydWN0
+IG5mc19wZ2lvX2hlYWRlciAqaGRyLAogCWhkci0+dGltZXN0YW1wICAgPSBqaWZmaWVzOwogCWlm
+ICghaGRyLT5wZ2lvX2RvbmVfY2IpCiAJCWhkci0+cGdpb19kb25lX2NiID0gbmZzNF9yZWFkX2Rv
+bmVfY2I7Ci0JbXNnLT5ycGNfcHJvYyA9ICZuZnM0X3Byb2NlZHVyZXNbTkZTUFJPQzRfQ0xOVF9S
+RUFEXTsKLQluZnM0Ml9yZWFkX3BsdXNfc3VwcG9ydChoZHIsIG1zZyk7CisJaWYgKCFuZnM0Ml9y
+ZWFkX3BsdXNfc3VwcG9ydChoZHIsIG1zZykpCisJCW1zZy0+cnBjX3Byb2MgPSAmbmZzNF9wcm9j
+ZWR1cmVzW05GU1BST0M0X0NMTlRfUkVBRF07CiAJbmZzNF9pbml0X3NlcXVlbmNlKCZoZHItPmFy
+Z3Muc2VxX2FyZ3MsICZoZHItPnJlcy5zZXFfcmVzLCAwLCAwKTsKIH0KIApkaWZmIC0tZ2l0IGEv
+aW5jbHVkZS9saW51eC9uZnNfeGRyLmggYi9pbmNsdWRlL2xpbnV4L25mc194ZHIuaAppbmRleCBl
+ODZjZjY2NDJkMjEuLjZkODIxYWFmMGIxYSAxMDA2NDQKLS0tIGEvaW5jbHVkZS9saW51eC9uZnNf
+eGRyLmgKKysrIGIvaW5jbHVkZS9saW51eC9uZnNfeGRyLmgKQEAgLTY3MCw2ICs2NzAsNyBAQCBz
+dHJ1Y3QgbmZzX3BnaW9fcmVzIHsKIAkJc3RydWN0IHsKIAkJCXVuc2lnbmVkIGludAkJcmVwbGVu
+OwkJLyogdXNlZCBieSByZWFkICovCiAJCQlpbnQJCQllb2Y7CQkvKiB1c2VkIGJ5IHJlYWQgKi8K
+KwkJCXN0cnVjdCBwYWdlCQkqc2NyYXRjaDsJLyogdXNlZCBieSByZWFkICovCiAJCX07CiAJCXN0
+cnVjdCB7CiAJCQlzdHJ1Y3QgbmZzX3dyaXRldmVyZiAqCXZlcmY7CQkvKiB1c2VkIGJ5IHdyaXRl
+ICovCi0tIAoyLjM5LjEKCg==
+--00000000000038d58905f4813b7a--
