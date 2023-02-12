@@ -1,95 +1,69 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC18D2F3F
-	for <regressions@lists.linux.dev>; Sat, 11 Feb 2023 22:32:13 +0000 (UTC)
-Received: by mail-ed1-f44.google.com with SMTP id u21so8556930edv.3
-        for <regressions@lists.linux.dev>; Sat, 11 Feb 2023 14:32:13 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EAAB7E0
+	for <regressions@lists.linux.dev>; Sun, 12 Feb 2023 00:41:01 +0000 (UTC)
+Received: by mail-ej1-f50.google.com with SMTP id sa10so24129968ejc.9
+        for <regressions@lists.linux.dev>; Sat, 11 Feb 2023 16:41:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linux-foundation.org; s=google;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=dh9Mfj+GJ1EDtE88jqp5PZHXrchX7Kr3iI5S46RntLo=;
-        b=ef3BEBDJzUmhAk4lbobcyVovew4ssFMQo3+OgYMkMwyjLreYQTqxte5LkLxtJPntii
-         MDCGE6/rNX52nAy3smz5Ylt3YEECyBL7ovNUVv0eRFQ1dADmJkRTNqx0WlrYU0QOeWuN
-         9/rYMJ5nC2TE4ZXIrWKHcpApr7fLFpkCR5OUU=
+        bh=d+Yc5GEsj58XNQLYGh7tO2KtoPIPeJSL4iGRvP+Kg7M=;
+        b=QaAd/PnW9D1eu/UXRg5FHeqrBR+5di7X7KJ1JV5+vX5qTyjKY+FsiH3amYLsdVcO1Q
+         4TD+eJDwRvZQbNd87zWLmyN9VcWv/1Zc/4bgRmPIdePpYnNSyKKvWpCtizveCrrd36Xk
+         n+zeKuQbOD+axb/3nj0x9bWzWxwJuJYwIZQxo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=dh9Mfj+GJ1EDtE88jqp5PZHXrchX7Kr3iI5S46RntLo=;
-        b=EvHWu1hc8Ss6qHLcnCfVIisgu29SFo3UQ5AKMh4i1HMHBULM2yV/Vku7GiGqylVhKc
-         AlWmSmbbSkkpHygC1dmo5WaAIlnfdlvDqXepUe+sKQNDH139cLH91xQYoLzN1LFNTHss
-         W8M1T+XTNAFGzyL/Rg5t4FQMdNM/DUD2fGB/9Ovedw3HdLR9UiddTObYXixpZ04Rtrtt
-         xeFRahF4bpc3mHul9Vzi6MIGAZg+bqHjhoARgEQCuFKlHMwiXc6jh+7c5KkWJi7+iqBr
-         KuJuMpDilmMoToevYdkmCznNcYLgL6uIizQs3Eeho2qdn1+Sze3oh9qgc9/GNyiZuQAV
-         bpNw==
-X-Gm-Message-State: AO0yUKWEOxtGK3JfMhAHbVdkJ2XaAMZHaFmggoGecFSB6x/5sWPR11gs
-	l+T5jPvdLmJd9fRr6uPGZCHoP/ZWkgzzakA/msVYVQ==
-X-Google-Smtp-Source: AK7set9lwjzhbYJ6wYO7AgDqGlmlLZDjttEufp+hzLCsLy/xmpFrThqJOIvboHXmEFdzyTf8CwkVeQ==
-X-Received: by 2002:a50:a692:0:b0:4ab:24e4:ded7 with SMTP id e18-20020a50a692000000b004ab24e4ded7mr10268752edc.14.1676154731729;
-        Sat, 11 Feb 2023 14:32:11 -0800 (PST)
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com. [209.85.218.51])
-        by smtp.gmail.com with ESMTPSA id v1-20020a50a441000000b004aab66d34c7sm4375589edb.7.2023.02.11.14.32.10
+        bh=d+Yc5GEsj58XNQLYGh7tO2KtoPIPeJSL4iGRvP+Kg7M=;
+        b=D/EZxRvgXYscNV8JEjJ6fgeLgjIXgGGuKSns0x/B+Ph4Vz7tkly9gf9a2Rteiyrvh/
+         dOupjLs/P0rSZJesuPaoImA+viOx5nkxaPaL0NlzM0iqfwJKOiWWPWqR/6pEj1+YvzF/
+         V/cFHqnxx1F36NcPnKQGRVqDes8wYzARIErfaytIsIdfQZw1D79HezK0GzzwhW21lIkl
+         1qqeqpSbpKB1h3ET0yiZUuAbwq+i2d0c7vABUOD6A9/IZQBLJTw39uRIZvSL2j92bura
+         GBQtOeuZ43bUsQzoo8zTXhGqcErjo7PPro5bYRo7ufdlzc/i4vC5R3I5GNX2G+7Pk2CD
+         /0sw==
+X-Gm-Message-State: AO0yUKUUV1fQ3Rx3jK7qbV+Pmd5SrbFIY6B3pPPb7wzvM/hfHOnrbM0C
+	PJ4BmAi8TKH5Q/W6LUuPRpYpCmMo+bwYGM6S4eo2jQ==
+X-Google-Smtp-Source: AK7set+OqcuYVAdtJ5vlhcVmT8lRmfazc6tIsugcF6AElQgScqziUiZGGfeAXHwEVFa7TVMu/hhDFw==
+X-Received: by 2002:a17:907:20da:b0:8ab:a378:5f96 with SMTP id qq26-20020a17090720da00b008aba3785f96mr13320098ejb.3.1676162459460;
+        Sat, 11 Feb 2023 16:40:59 -0800 (PST)
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com. [209.85.218.49])
+        by smtp.gmail.com with ESMTPSA id br2-20020a170906d14200b008818d9e0bfesm4552847ejb.117.2023.02.11.16.40.58
         for <regressions@lists.linux.dev>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 11 Feb 2023 14:32:11 -0800 (PST)
-Received: by mail-ej1-f51.google.com with SMTP id gr7so23828243ejb.5
-        for <regressions@lists.linux.dev>; Sat, 11 Feb 2023 14:32:10 -0800 (PST)
-X-Received: by 2002:a17:906:fad2:b0:88d:d304:3424 with SMTP id
- lu18-20020a170906fad200b0088dd3043424mr2691969ejb.0.1676154730590; Sat, 11
- Feb 2023 14:32:10 -0800 (PST)
+        Sat, 11 Feb 2023 16:40:58 -0800 (PST)
+Received: by mail-ej1-f49.google.com with SMTP id sb24so217356ejb.8
+        for <regressions@lists.linux.dev>; Sat, 11 Feb 2023 16:40:58 -0800 (PST)
+X-Received: by 2002:a17:906:16c2:b0:8af:4100:28e5 with SMTP id
+ t2-20020a17090616c200b008af410028e5mr2539793ejd.0.1676162458573; Sat, 11 Feb
+ 2023 16:40:58 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <167613641114.2124708.9785978428796571420@leemhuis.info> <CAHk-=wiEJa-R50PTYPyAQDs02OAyK+Oqr67x5nxns=OKXCEf6A@mail.gmail.com>
-In-Reply-To: <CAHk-=wiEJa-R50PTYPyAQDs02OAyK+Oqr67x5nxns=OKXCEf6A@mail.gmail.com>
+References: <167613641114.2124708.9785978428796571420@leemhuis.info>
+In-Reply-To: <167613641114.2124708.9785978428796571420@leemhuis.info>
 From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Sat, 11 Feb 2023 14:31:53 -0800
-X-Gmail-Original-Message-ID: <CAHk-=whncfNmZmWe4yh-M=DXYT6L6Eq1r=UYKdt57=4jUmKbTA@mail.gmail.com>
-Message-ID: <CAHk-=whncfNmZmWe4yh-M=DXYT6L6Eq1r=UYKdt57=4jUmKbTA@mail.gmail.com>
+Date: Sat, 11 Feb 2023 16:40:41 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wi4-LenywoHYw9W5QZeG8RaV+9htGhR02QAe_LDSA5pgA@mail.gmail.com>
+Message-ID: <CAHk-=wi4-LenywoHYw9W5QZeG8RaV+9htGhR02QAe_LDSA5pgA@mail.gmail.com>
 Subject: Re: Linux regressions report for mainline [2023-02-11]
-To: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>, 
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Vlastimil Babka <vbabka@suse.cz>, 
-	David Chen <david.chen@nutanix.com>
+To: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>
 Cc: LKML <linux-kernel@vger.kernel.org>, 
 	Linux regressions mailing list <regressions@lists.linux.dev>
 Content-Type: text/plain; charset="UTF-8"
 
-On Sat, Feb 11, 2023 at 1:39 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
+On Sat, Feb 11, 2023 at 9:28 AM Regzbot (on behalf of Thorsten
+Leemhuis) <regressions@leemhuis.info> wrote:
 >
-> Or even just reverting the original commit e320d3012d25
-> ("mm/page_alloc.c: fix freeing non-compound pages") and say that the
-> (very rare) memory leak is much less dangerous than that hacky fix
-> (that was buggy).
->
-> Because it's a bit dodgy how commit e320d3012d25 ends up hooking into
-> __free_pages(),
+> * the fix for a SPI issue I already mentioned two weeks ago is still
+> sitting in next;
 
-Actually, that's not the only dodgy thing about it.
-
-It assumes that any multi-order page allocator user doesn't use the
-page counts and only ever has a single "alloc" and a "free".
-
-And apparently that assumption is correct, or we'd have seen a lot of problems.
-
-But it *also* assumes that the speculative page alloc/free was for one
-single page, and while that used to be true, the whole higher-order
-folio code means that it's not necessarily true any more.
-
-Or rather, I guess it *is* true in practice, but if you ever want to
-enable 16kB folios on some filesystem, that commit e320d3012d25 is
-just plain unfixably buggy.
-
-Are we there yet? Clearly not, considering bugs like this. But it all
-does make me go "Hmm, maybe we'd be better off with the outright
-revert and accept the unlikely memory leak for now".
-
-Willy?
+It's now in my tree.
 
                Linus
