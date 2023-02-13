@@ -1,198 +1,106 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-fw-80007.amazon.com (smtp-fw-80007.amazon.com [99.78.197.218])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AC838F6C
-	for <regressions@lists.linux.dev>; Mon, 13 Feb 2023 16:24:06 +0000 (UTC)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id BC5811F8B9;
-	Mon, 13 Feb 2023 16:23:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1676305438; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=u3KZsWS9yq587wT8ZzVLFMR8Ts3cCsLRIsEUUms7WOI=;
-	b=LTMij1N3N8Lb+4bkpAC9VeC1wsKsxXm9gkPHTABZ9ajCXFmfYVnsCUo+OYgSbSW0H5SwYX
-	FYvjcwJ6ujggFk1lta3UbvMgbJAjgtmgkf0byiecwAGP6IMe2uprQfbXx+BxaCE8tEwENT
-	eqXZxiRkboXk3js3oAfwrPGsu1Qzdp0=
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 5985E138E6;
-	Mon, 13 Feb 2023 16:23:58 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-	by imap2.suse-dmz.suse.de with ESMTPSA
-	id lQVlFB5k6mP2QAAAMHmgww
-	(envelope-from <jgross@suse.com>); Mon, 13 Feb 2023 16:23:58 +0000
-Message-ID: <f18e315f-bfe2-426d-0ecf-d82fb22a05f4@suse.com>
-Date: Mon, 13 Feb 2023 17:23:57 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E249399
+	for <regressions@lists.linux.dev>; Mon, 13 Feb 2023 16:45:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1676306716; x=1707842716;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=ZDQJ3j66lvSghE+5Zg2rbIchPj9PWcZWgtulopzngrk=;
+  b=kdBquCPHSoGkZOZ2DHiDK+ob59X+3m2ANDGJ5KLf547NQragOaKeZs5n
+   x/DHS7aJKRu9GlS4/8KG58GiaUesAtCFHfqzgUsDCA1ImtAv+n/vdt5Ey
+   axCnXRQ8Y9GsL7tNJXBW4xnTbmO+XSTbDtQ0lUuG0kQXZ1MhXaHPiu0oU
+   U=;
+X-IronPort-AV: E=Sophos;i="5.97,294,1669075200"; 
+   d="scan'208";a="181364611"
+Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO email-inbound-relay-pdx-2c-m6i4x-e7094f15.us-west-2.amazon.com) ([10.25.36.214])
+  by smtp-border-fw-80007.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2023 16:45:09 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan3.pdx.amazon.com [10.236.137.198])
+	by email-inbound-relay-pdx-2c-m6i4x-e7094f15.us-west-2.amazon.com (Postfix) with ESMTPS id 38B58417A3;
+	Mon, 13 Feb 2023 16:45:05 +0000 (UTC)
+Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
+ EX13MTAUWB001.ant.amazon.com (10.43.161.207) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.45; Mon, 13 Feb 2023 16:45:05 +0000
+Received: from 88665a182662.ant.amazon.com (10.43.162.56) by
+ EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1118.24;
+ Mon, 13 Feb 2023 16:45:03 +0000
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
+To: <w@1wt.eu>
+CC: <gregkh@linuxfoundation.org>, <netdev@vger.kernel.org>,
+	<regressions@lists.linux.dev>, <stable@vger.kernel.org>,
+	<winter@winter.cafe>, <kuniyu@amazon.com>
+Subject: Re: [REGRESSION] 5.15.88 and onwards no longer return EADDRINUSE from bind
+Date: Mon, 13 Feb 2023 08:44:55 -0800
+Message-ID: <20230213164455.36911-1-kuniyu@amazon.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <Y+nsQlVzmTP0meTX@1wt.eu>
+References: <Y+nsQlVzmTP0meTX@1wt.eu>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: [PATCH v2 5/8] x86/mtrr: revert commit 90b926e68f50
-Content-Language: en-US
-To: Christian Kujau <lists@nerdbynature.de>, mikelley@microsoft.com
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
- linux-kernel@vger.kernel.org, x86@kernel.org, torvalds@linux-foundation.org,
- Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski
- <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>
-References: <20230209072220.6836-1-jgross@suse.com>
- <20230209072220.6836-6-jgross@suse.com>
- <9046a3cb-928a-5476-1e72-63bd197c039e@leemhuis.info>
- <129d8c1d-ffa6-dac2-f516-dab4fc8c6218@suse.com>
- <6e4198c2-d79c-8ebd-82f7-3826dd807f1b@nerdbynature.de>
-From: Juergen Gross <jgross@suse.com>
-In-Reply-To: <6e4198c2-d79c-8ebd-82f7-3826dd807f1b@nerdbynature.de>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------ZpXCMa5vtEEn05cd52m0ectS"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.43.162.56]
+X-ClientProxiedBy: EX13D34UWA002.ant.amazon.com (10.43.160.245) To
+ EX19D004ANA001.ant.amazon.com (10.37.240.138)
+Precedence: Bulk
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------ZpXCMa5vtEEn05cd52m0ectS
-Content-Type: multipart/mixed; boundary="------------d1gUdTw0OLkvmENL1ViLh1yA";
- protected-headers="v1"
-From: Juergen Gross <jgross@suse.com>
-To: Christian Kujau <lists@nerdbynature.de>, mikelley@microsoft.com
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
- linux-kernel@vger.kernel.org, x86@kernel.org, torvalds@linux-foundation.org,
- Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski
- <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>
-Message-ID: <f18e315f-bfe2-426d-0ecf-d82fb22a05f4@suse.com>
-Subject: Re: [PATCH v2 5/8] x86/mtrr: revert commit 90b926e68f50
-References: <20230209072220.6836-1-jgross@suse.com>
- <20230209072220.6836-6-jgross@suse.com>
- <9046a3cb-928a-5476-1e72-63bd197c039e@leemhuis.info>
- <129d8c1d-ffa6-dac2-f516-dab4fc8c6218@suse.com>
- <6e4198c2-d79c-8ebd-82f7-3826dd807f1b@nerdbynature.de>
-In-Reply-To: <6e4198c2-d79c-8ebd-82f7-3826dd807f1b@nerdbynature.de>
+From:   Willy Tarreau <w@1wt.eu>
+Date:   Mon, 13 Feb 2023 08:52:34 +0100
+> Hi Greg,
+> 
+> On Mon, Feb 13, 2023 at 08:25:34AM +0100, Greg KH wrote:
+> > On Mon, Feb 13, 2023 at 05:27:03AM +0100, Willy Tarreau wrote:
+> > > Hi,
+> > > 
+> > > [CCed netdev]
+> > > 
+> > > On Sun, Feb 12, 2023 at 10:38:40PM -0500, Winter wrote:
+> > > > Hi all,
+> > > > 
+> > > > I'm facing the same issue as
+> > > > https://lore.kernel.org/stable/CAFsF8vL4CGFzWMb38_XviiEgxoKX0GYup=JiUFXUOmagdk9CRg@mail.gmail.com/,
+> > > > but on 5.15. I've bisected it across releases to 5.15.88, and can reproduce
+> > > > on 5.15.93.
+> > > > 
+> > > > However, I cannot seem to find the identified problematic commit in the 5.15
+> > > > branch, so I'm unsure if this is a different issue or not.
+> > > > 
+> > > > There's a few ways to reproduce this issue, but the one I've been using is
+> > > > running libuv's (https://github.com/libuv/libuv) tests, specifically tests
+> > > > 271 and 277.
+> > > 
+> > > >From the linked patch:
+> > > 
+> > >   https://lore.kernel.org/stable/20221228144337.512799851@linuxfoundation.org/
+> > 
+> > But that commit only ended up in 6.0.y, not 5.15, so how is this an
+> > issue in 5.15.y?
+> 
+> Hmmm I plead -ENOCOFFEE on my side, I hadn't notice the "can't find the
+> problematic commit", you're right indeed.
+> 
+> However if the issue happened in 5.15.88, the only part touching the
+> network listening area is this one which may introduce an EINVAL on
+> one listening path, but that seems unrelated to me given that it's
+> only for ULP that libuv doesn't seem to be using:
+> 
+>   dadd0dcaa67d ("net/ulp: prevent ULP without clone op from entering the LISTEN status")
 
---------------d1gUdTw0OLkvmENL1ViLh1yA
-Content-Type: multipart/mixed; boundary="------------mPY7KgYP8W0xmk0oWL40WHYi"
+This commit accidentally backports a part of 7a7160edf1bf ("net: Return
+errno in sk->sk_prot->get_port().") and removed err = -EADDRINUSE in
+inet_csk_listen_start().  Then, listen() will return 0 even if ->get_port()
+actually fails and returns 1.
 
---------------mPY7KgYP8W0xmk0oWL40WHYi
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+I can send a small revert or a whole backport, but which is preferable ?
+The original patch is not for stable, but it will make future backports
+easy.
 
-T24gMTMuMDIuMjMgMTI6NDYsIENocmlzdGlhbiBLdWphdSB3cm90ZToNCj4gT24gTW9uLCAx
-MyBGZWIgMjAyMywgSnVlcmdlbiBHcm9zcyB3cm90ZToNCj4+IE9uIDEwLjAyLjIzIDE5OjU5
-LCBMaW51eCByZWdyZXNzaW9uIHRyYWNraW5nIChUaG9yc3RlbiBMZWVtaHVpcykgd3JvdGU6
-DQo+Pj4gSGksIHRoaXMgaXMgeW91ciBMaW51eCBrZXJuZWwgcmVncmVzc2lvbiB0cmFja2Vy
-Lg0KPj4+DQo+Pj4gT24gMDkuMDIuMjMgMDg6MjIsIEp1ZXJnZW4gR3Jvc3Mgd3JvdGU6DQo+
-Pj4+IENvbW1pdCA5MGI5MjZlNjhmNTAgKCJ4ODYvcGF0OiBGaXggcGF0X3hfbXRycl90eXBl
-KCkgZm9yIE1UUlIgZGlzYWJsZWQNCj4+Pj4gY2FzZSIpIGhhcyBpbnRyb2R1Y2VkIGEgcmVn
-cmVzc2lvbiB3aXRoIFhlbi4NCj4+Pj4NCj4+Pj4gUmV2ZXJ0IHRoZSBwYXRjaC4NCj4+Pg0K
-Pj4+IFRoYXQgcmVncmVzc2lvbiB5b3UgcmVmZXIgdG8gaXMgYWZhaWNzIG9uZSBJJ20gdHJh
-Y2tpbmdbMV0gdGhhdCB3YXMNCj4+PiBpbnRyb2R1Y2VkIHRoaXMgY3ljbGUuIFRoYXQgbWFr
-ZXMgbWUgd29uZGVyOiBjb3VsZCB0aGlzIHBhdGNoIGJlIGFwcGxpZWQNCj4+PiBkaXJlY3Rs
-eSB0byBmaXggdGhlIGlzc3VlIHF1aWNrbHk/IE9yIGFyZSBwYXRjaGVzIDEgdG8gNCBuZWVk
-ZWQgYXMgd2VsbA0KPj4+IChvciB0aGUgd2hvbGUgc2VyaWVzPykgdG8gYXZvaWQgb3RoZXIg
-cHJvYmxlbXM/DQo+Pg0KPj4gUGF0Y2hlcyAxLTQgYXJlIG5lZWRlZCwgdG9vLCBhcyBvdGhl
-cndpc2UgdGhlIGlzc3VlIGNsYWltZWQgdG8gYmUgZml4ZWQNCj4+IHdpdGggcGF0Y2ggNSB3
-b3VsZCBzaG93IHVwIGFnYWluLg0KPiANCj4gVGhlIChsYXN0PykgLXJjOCB2ZXJzaW9uIHdh
-cyByZWxlYXNlZCB5ZXN0ZXJkYXkuIFdvdWxkIGl0IGJlIHBvc3NpYmxlIHRvDQo+IGluY2x1
-ZGUgYXQgbGVhc3QgKG9ubHkpIHRoZSByZXZlcnQgaW4gbWFpbmxpbmUgc28gdGhhdCA2LjIg
-d2lsbCBiZQ0KPiByZWxlYXNlZCB3aXRoIGEgd29ya2luZyBzdG9yYWdlIGNvbmZpZ3VyYXRp
-b24gdW5kZXIgWGVuPw0KDQpIbW0sIHRoaXMgd291bGQgbWFrZSBIeXBlci1WIFNFVi1TTlAg
-Z3Vlc3RzIHNsb3cgYWdhaW4uDQoNCkknbSBub3QgY29tcGxldGVseSBhZ2FpbnN0IGl0LCBi
-dXQgT1RPSCBJJ20gYSBsaXR0bGUgYml0IGJpYXNlZCBhcyB0aGUNCm1haW50YWluZXIgb2Yg
-dGhlIFhlbiBjb2RlLiA6LSkNCg0KTWljaGFlbCwgd291bGQgeW91IHNlZSBtYWpvciBwcm9i
-bGVtcyB3aXRoIGRvaW5nIHRoZSByZXZlcnQgYmVmb3JlIGhhdmluZw0KdGhlIGZpbmFsIHBh
-dGNoZXMgZm9yIGZpeGluZyB5b3VyIGlzc3VlLCB0b28/DQoNCj4gT3RoZXJ3aXNlIG9uZSB3
-b3VsZCBoYXZlIHRvIGNhcnJ5IGFyb3VuZCB0aGF0IHNpbmdsZSByZXZlcnQgbWFudWFsbHkg
-dW50aWwNCj4gdGhpcyBwYXRjaCBzZXJpZXMgaGFzIGxhbmRlZCBpbiBtYWlubGluZSwgb3Ig
-Y29udmluY2UgYWxsIHRoZQ0KPiBkaXN0cmlidXRpb25zIHRvIGRvIHNvIDotXA0KPiANCj4g
-QW55d2F5LCB0aGFua3MgZm9yIGZpeGluZyB0aGlzIHByb2JsZW0sIEkgZGlkIG5vdCBleHBl
-Y3QgdGhpcyB0byBiZSBzdWNoIGENCj4gY29tcGxpY2F0ZWQgaXNzdWUgd2hlbiBJIHJlcG9y
-dGVkIHRoYXQgdGhpbmcgOi0pDQoNClllcywgSSBoYXZlIG9wZW5lZCBhIGNhbiBvZiB3b3Jt
-cyB3aXRoIG15IE1UUlIvUEFUIGRpc2VudGFuZ2xpbmcuDQoNCg0KSnVlcmdlbg0K
---------------mPY7KgYP8W0xmk0oWL40WHYi
-Content-Type: application/pgp-keys; name="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Disposition: attachment; filename="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Description: OpenPGP public key
-Content-Transfer-Encoding: quoted-printable
-
------BEGIN PGP PUBLIC KEY BLOCK-----
-
-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
-jR/i1DG86lem3iBDXzXsZDn8R38=3D
-=3D2wuH
------END PGP PUBLIC KEY BLOCK-----
-
---------------mPY7KgYP8W0xmk0oWL40WHYi--
-
---------------d1gUdTw0OLkvmENL1ViLh1yA--
-
---------------ZpXCMa5vtEEn05cd52m0ectS
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature"
-
------BEGIN PGP SIGNATURE-----
-
-wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmPqZB0FAwAAAAAACgkQsN6d1ii/Ey/N
-AQf+IJ4HaUBDT91Q5o0DXnpsa/A1qUj9iQGBaPhgpGU1EqgQuJ6WrQXwLptI5qh9V/HGO9dKEWOA
-YtsMA6YVk5Qv8Rkumg4tCb7PYw74DqAu2LdEdi9PazkxvnZTLMCmKnkekK56c5gu/BGaDpXWJ+ks
-XrPVkd9vopn18gwsXmUTxcaD3QMTzM92KBN48JjAG03/J5uW2+wzg2Yi4iKU8IhpG9dNBJvURmSJ
-bXks1NpnjmAuqaevG8vbGoACZagoNW8WzxZt3vzf82+B6pplinWi/M+8vwQLyo0gJ+wihZXUCVqO
-npS1bnedB0eqpf6Nn2cKxfb0bZAGuOIrLHd+06K9YQ==
-=BA4R
------END PGP SIGNATURE-----
-
---------------ZpXCMa5vtEEn05cd52m0ectS--
+Thanks,
+Kuniyuki
