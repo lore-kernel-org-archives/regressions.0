@@ -1,155 +1,53 @@
-Received: from 1wt.eu (wtarreau.pck.nerim.net [62.212.114.60])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 574E51C06
-	for <regressions@lists.linux.dev>; Mon, 13 Feb 2023 04:27:04 +0000 (UTC)
-Received: (from willy@localhost)
-	by mail.home.local (8.17.1/8.17.1/Submit) id 31D4R361006971;
-	Mon, 13 Feb 2023 05:27:03 +0100
-Date: Mon, 13 Feb 2023 05:27:03 +0100
-From: Willy Tarreau <w@1wt.eu>
-To: Winter <winter@winter.cafe>
-Cc: stable@vger.kernel.org, regressions@lists.linux.dev,
-        netdev@vger.kernel.org
-Subject: Re: [REGRESSION] 5.15.88 and onwards no longer return EADDRINUSE
- from bind
-Message-ID: <Y+m8F7Q95al39ctV@1wt.eu>
-References: <EF8A45D0-768A-4CD5-9A8A-0FA6E610ABF7@winter.cafe>
+Received: from out-147.mta0.migadu.com (out-147.mta0.migadu.com [91.218.175.147])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2E111C26
+	for <regressions@lists.linux.dev>; Mon, 13 Feb 2023 06:01:25 +0000 (UTC)
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=winter.cafe; s=key1;
+	t=1676259532;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=x3m3BVlWph+iMrNcunQU9Xs3tEv4F3QPz6iEhnDahgY=;
+	b=RLGBqvebXA0ktiCKczitFb8exn8opE+iUIHFqjDJR7miJYrLJUcgvmvhcWLuyVg70pOji+
+	JaWoezT7f3Rg2PbCpTWEBbw/MhhfzjOGnaw0fs8OjEM4zu4ex47orZNvn+QYMtXimEZxum
+	KNIlkARa0f5iVeOxBl0TBcO8EI9mfnhoGzPYDph8W9MzCxvsQp8wULp4DZBbYzb+uEHJ7x
+	Wbqh0tQGRuzgFf7V3n1yu0nNoDMejqmqP9NmXV+s9dqjmM3IBERdY7fzpcbdGmHdEG1FSC
+	IcB3k/DtmxbonbVTG54XP8JTveY1UHFs0Y4XEk8tbHN+Sdm5/eR3z4WesiZsdA==
+From: Winter <winter@winter.cafe>
+Content-Type: text/plain;
+	charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <EF8A45D0-768A-4CD5-9A8A-0FA6E610ABF7@winter.cafe>
+Subject: [REGRESSION] 5.15.88 and onwards no longer return EADDRINUSE from
+ bind
+Message-Id: <EF8A45D0-768A-4CD5-9A8A-0FA6E610ABF7@winter.cafe>
+Date: Sun, 12 Feb 2023 22:38:40 -0500
+Cc: regressions@lists.linux.dev
+To: stable@vger.kernel.org
+X-Migadu-Flow: FLOW_OUT
 
-Hi,
+Hi all,
 
-[CCed netdev]
+I'm facing the same issue as =
+https://lore.kernel.org/stable/CAFsF8vL4CGFzWMb38_XviiEgxoKX0GYup=3DJiUFXU=
+Omagdk9CRg@mail.gmail.com/, but on 5.15. I've bisected it across =
+releases to 5.15.88, and can reproduce on 5.15.93.
 
-On Sun, Feb 12, 2023 at 10:38:40PM -0500, Winter wrote:
-> Hi all,
-> 
-> I'm facing the same issue as
-> https://lore.kernel.org/stable/CAFsF8vL4CGFzWMb38_XviiEgxoKX0GYup=JiUFXUOmagdk9CRg@mail.gmail.com/,
-> but on 5.15. I've bisected it across releases to 5.15.88, and can reproduce
-> on 5.15.93.
-> 
-> However, I cannot seem to find the identified problematic commit in the 5.15
-> branch, so I'm unsure if this is a different issue or not.
-> 
-> There's a few ways to reproduce this issue, but the one I've been using is
-> running libuv's (https://github.com/libuv/libuv) tests, specifically tests
-> 271 and 277.
+However, I cannot seem to find the identified problematic commit in the =
+5.15 branch, so I'm unsure if this is a different issue or not.
 
-From the linked patch:
+There's a few ways to reproduce this issue, but the one I've been using =
+is running libuv's (https://github.com/libuv/libuv) tests, specifically =
+tests 271 and 277.
 
-  https://lore.kernel.org/stable/20221228144337.512799851@linuxfoundation.org/
+#regzbot introduced v5.15.88..
 
-I can see that:
-
-  We assume the correct errno is -EADDRINUSE when sk->sk_prot->get_port()
-  fails, so some ->get_port() functions return just 1 on failure and the
-  callers return -EADDRINUSE instead.
-
-  However, mptcp_get_port() can return -EINVAL.  Let's not ignore the error.
-
-  Note the only exception is inet_autobind(), all of whose callers return
-  -EAGAIN instead.
-
-But the patch doesn't do what is documented, it preserves all return
-values and will happily return 1 if ->get_port() returns 1:
-
-> --- a/net/ipv4/af_inet.c
-> +++ b/net/ipv4/af_inet.c
-> @@ -522,9 +522,9 @@ int __inet_bind(struct sock *sk, struct sockaddr *uaddr, int addr_len,
->  	/* Make sure we are allowed to bind here. */
->  	if (snum || !(inet->bind_address_no_port ||
->  		      (flags & BIND_FORCE_ADDRESS_NO_PORT))) {
-> -		if (sk->sk_prot->get_port(sk, snum)) {
-> +		err = sk->sk_prot->get_port(sk, snum);
-> +		if (err) {
->  			inet->inet_saddr = inet->inet_rcv_saddr = 0;
-> -			err = -EADDRINUSE;
->  			goto out_release_sock;
->  		}
->  		if (!(flags & BIND_FROM_BPF)) {
-> diff --git a/net/ipv4/inet_connection_sock.c b/net/ipv4/inet_connection_sock.c
-> index eb31c7158b39..971969cc7e17 100644
-> --- a/net/ipv4/inet_connection_sock.c
-> +++ b/net/ipv4/inet_connection_sock.c
-> @@ -1041,7 +1041,7 @@ int inet_csk_listen_start(struct sock *sk)
->  {
->  	struct inet_connection_sock *icsk = inet_csk(sk);
->  	struct inet_sock *inet = inet_sk(sk);
-> -	int err = -EADDRINUSE;
-> +	int err;
->  
->  	reqsk_queue_alloc(&icsk->icsk_accept_queue);
->  
-> @@ -1057,7 +1057,8 @@ int inet_csk_listen_start(struct sock *sk)
->  	 * after validation is complete.
->  	 */
->  	inet_sk_state_store(sk, TCP_LISTEN);
-> -	if (!sk->sk_prot->get_port(sk, inet->inet_num)) {
-> +	err = sk->sk_prot->get_port(sk, inet->inet_num);
-> +	if (!err) {
->  		inet->inet_sport = htons(inet->inet_num);
-
-IMHO in the "if (err)" block in all these places what is missing
-is:
-
-    if (err > 0)
-        err = -EADDRINUSE;
-
-so that all non-negative errors are properly mapped to -EADDRINUSE,
-like in the appended patch (if someone wants to give it a try, I've
-not even build-tested it). Note that I don't like it much and do not
-like the original patch either, I think a revert and a cleaner fix
-could be better :-/
-
-Willy
---
-
-diff --git a/net/ipv4/af_inet.c b/net/ipv4/af_inet.c
-index cf11f10927e1..ce9960d9448d 100644
---- a/net/ipv4/af_inet.c
-+++ b/net/ipv4/af_inet.c
-@@ -526,6 +526,9 @@ int __inet_bind(struct sock *sk, struct sockaddr *uaddr, int addr_len,
- 		err = sk->sk_prot->get_port(sk, snum);
- 		if (err) {
- 			inet->inet_saddr = inet->inet_rcv_saddr = 0;
-+			/* some ->get_port() return 1 on failure */
-+			if (err > 0)
-+				err = -EADDRINUSE;
- 			goto out_release_sock;
- 		}
- 		if (!(flags & BIND_FROM_BPF)) {
-diff --git a/net/ipv4/inet_connection_sock.c b/net/ipv4/inet_connection_sock.c
-index f2c43f67187d..7585c440fb8c 100644
---- a/net/ipv4/inet_connection_sock.c
-+++ b/net/ipv4/inet_connection_sock.c
-@@ -1241,6 +1241,9 @@ int inet_csk_listen_start(struct sock *sk)
- 		if (likely(!err))
- 			return 0;
- 	}
-+	/* some ->get_port() return 1 on failure */
-+	if (err > 0)
-+		err = -EADDRINUSE;
- 
- 	inet_sk_set_state(sk, TCP_CLOSE);
- 	return err;
-diff --git a/net/ipv6/af_inet6.c b/net/ipv6/af_inet6.c
-index 847934763868..941c8ee4a144 100644
---- a/net/ipv6/af_inet6.c
-+++ b/net/ipv6/af_inet6.c
-@@ -415,6 +415,9 @@ static int __inet6_bind(struct sock *sk, struct sockaddr *uaddr, int addr_len,
- 		if (err) {
- 			sk->sk_ipv6only = saved_ipv6only;
- 			inet_reset_saddr(sk);
-+			/* some ->get_port() return 1 on failure */
-+			if (err > 0)
-+				err = -EADDRINUSE;
- 			goto out;
- 		}
- 		if (!(flags & BIND_FROM_BPF)) {
+Thanks,
+Winter=
