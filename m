@@ -1,27 +1,28 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14825A945
-	for <regressions@lists.linux.dev>; Mon, 13 Feb 2023 17:48:50 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D99AC433D2;
-	Mon, 13 Feb 2023 17:48:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1676310530;
-	bh=KolfguvNkJgNxPeBch9TKh/NIl+yTt6QO4x4ItWFvek=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=14fDbUwYvFwmxrqzJ4T82nI1FyZKOM/oW1Kf+JhMGLjhj9RHEO5wUvlGbyaOy8v+A
-	 wfS3JzrrqzGiZiBeAeRRP/u4LfnYEyA5Hj7IheOSckWSh/3o1VQ9r0gPZtPIZALmDy
-	 RehMCKwN7+g1OEt4IOMXEZw6316VKrTzObl414jw=
-Date: Mon, 13 Feb 2023 18:48:48 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Kuniyuki Iwashima <kuniyu@amazon.com>
-Cc: w@1wt.eu, netdev@vger.kernel.org, regressions@lists.linux.dev,
-	stable@vger.kernel.org, winter@winter.cafe
-Subject: Re: [REGRESSION] 5.15.88 and onwards no longer return EADDRINUSE
- from bind
-Message-ID: <Y+p4AJHkP8JUf4KB@kroah.com>
-References: <Y+nsQlVzmTP0meTX@1wt.eu>
- <20230213164455.36911-1-kuniyu@amazon.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7C103239;
+	Mon, 13 Feb 2023 20:43:28 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5AE5DC4339E;
+	Mon, 13 Feb 2023 20:43:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1676321008;
+	bh=LhGXEydzhzIGCFr9vFVD0Poi6fXU0TxaqAAdiMVgxh8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=W3ziS3tTpTUKiAQCvfgSg0WExH/Itc3Dw0NcrOj8GDG9YApZA4JXdU+p83ftOwh0X
+	 9O7oSo3NazjU9/MLClmODRPQYoMImpxZACCVajea/NP2kI/BgrepVpwU4dt8IOLFev
+	 jSznjH+9mbPKrymxTASoPN123JWaCDFRVvMSECYzDebw7Xd3kPMfhh+TOYd/wnrKd0
+	 jtzFjItU3TFfXPVRSvcCuNFZlH6GKteP1MTgUn+ZqHZOHe1jcU6wqu/zAAHHjM7Hmg
+	 V3VgBjSmZFNB94Z1WghkNem1hW8AwEoubvYCYlUOU/DAFeF6sEnBE4pV+AJR6kcTHY
+	 wmq/PNxRTxV3A==
+Date: Mon, 13 Feb 2023 14:43:26 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+	iommu@lists.linux.dev
+Subject: Re: [PATCH 1/2] iommu/vt-d: Fix PCI device reference count leak in
+ has_external pci() #forregzbot
+Message-ID: <20230213204326.GA2928938@bhelgaas>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -30,63 +31,20 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230213164455.36911-1-kuniyu@amazon.com>
+In-Reply-To: <20230201232421.GA1908454@bhelgaas>
 
-On Mon, Feb 13, 2023 at 08:44:55AM -0800, Kuniyuki Iwashima wrote:
-> From:   Willy Tarreau <w@1wt.eu>
-> Date:   Mon, 13 Feb 2023 08:52:34 +0100
-> > Hi Greg,
-> > 
-> > On Mon, Feb 13, 2023 at 08:25:34AM +0100, Greg KH wrote:
-> > > On Mon, Feb 13, 2023 at 05:27:03AM +0100, Willy Tarreau wrote:
-> > > > Hi,
-> > > > 
-> > > > [CCed netdev]
-> > > > 
-> > > > On Sun, Feb 12, 2023 at 10:38:40PM -0500, Winter wrote:
-> > > > > Hi all,
-> > > > > 
-> > > > > I'm facing the same issue as
-> > > > > https://lore.kernel.org/stable/CAFsF8vL4CGFzWMb38_XviiEgxoKX0GYup=JiUFXUOmagdk9CRg@mail.gmail.com/,
-> > > > > but on 5.15. I've bisected it across releases to 5.15.88, and can reproduce
-> > > > > on 5.15.93.
-> > > > > 
-> > > > > However, I cannot seem to find the identified problematic commit in the 5.15
-> > > > > branch, so I'm unsure if this is a different issue or not.
-> > > > > 
-> > > > > There's a few ways to reproduce this issue, but the one I've been using is
-> > > > > running libuv's (https://github.com/libuv/libuv) tests, specifically tests
-> > > > > 271 and 277.
-> > > > 
-> > > > >From the linked patch:
-> > > > 
-> > > >   https://lore.kernel.org/stable/20221228144337.512799851@linuxfoundation.org/
-> > > 
-> > > But that commit only ended up in 6.0.y, not 5.15, so how is this an
-> > > issue in 5.15.y?
-> > 
-> > Hmmm I plead -ENOCOFFEE on my side, I hadn't notice the "can't find the
-> > problematic commit", you're right indeed.
-> > 
-> > However if the issue happened in 5.15.88, the only part touching the
-> > network listening area is this one which may introduce an EINVAL on
-> > one listening path, but that seems unrelated to me given that it's
-> > only for ULP that libuv doesn't seem to be using:
-> > 
-> >   dadd0dcaa67d ("net/ulp: prevent ULP without clone op from entering the LISTEN status")
+On Wed, Feb 01, 2023 at 05:24:21PM -0600, Bjorn Helgaas wrote:
+> On Mon, Dec 26, 2022 at 02:29:39PM +0100, Thorsten Leemhuis wrote:
+> > [Note: this mail contains only information for Linux kernel regression
+> > tracking. Mails like these contain '#forregzbot' in the subject to make
+> > then easy to spot and filter out. The author also tried to remove most
+> > or all individuals from the list of recipients to spare them the hassle.]
 > 
-> This commit accidentally backports a part of 7a7160edf1bf ("net: Return
-> errno in sk->sk_prot->get_port().") and removed err = -EADDRINUSE in
-> inet_csk_listen_start().  Then, listen() will return 0 even if ->get_port()
-> actually fails and returns 1.
+> > #regzbot ^introduced v6.0..v6.1-rc1
+> > #regzbot title pci(?)/iommu(?): hang with kernel 6.1
+> > #regzbot ignore-activity
 > 
-> I can send a small revert or a whole backport, but which is preferable ?
-> The original patch is not for stable, but it will make future backports
-> easy.
+> #regzbot dup-of: https://bugzilla.kernel.org/show_bug.cgi?id=216859
+> #regzbot introduced: 145eed48de27
 
-A whole revert is probably best, if it's not needed.  But if it is, a
-fix up would be fine to get as well.
-
-thanks,
-
-greg k-h
+#regzbot fix: 04119ab1a49f ("nvidiafb: detect the hardware support before removing console.")
