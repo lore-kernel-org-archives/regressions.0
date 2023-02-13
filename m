@@ -1,219 +1,137 @@
-Received: from sonic314-19.consmr.mail.ir2.yahoo.com (sonic314-19.consmr.mail.ir2.yahoo.com [77.238.177.145])
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12EC36FB7
-	for <regressions@lists.linux.dev>; Mon, 13 Feb 2023 12:24:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.co.uk; s=s2048; t=1676291040; bh=Lidb/t/85uYD0R0nEPRspux5N4k/e6TtAm3PGpyV4zg=; h=From:To:Cc:Subject:Date:In-Reply-To:References:From:Subject:Reply-To; b=rkO4Ix4qfxuf2TKeSEnH2kUoVz46TkU0m3o4u4VmoeW2YG4szhD8cL7K6BmWbIyIWeWe8tNGI+bZTrbRBnNVU8/CtiuMYO8Z7Z0RqjW3laRNwU6cWUxSehbPcvYoJrh1GM12TEVPal9pjzcR+bF3chydTeLBSqQfAWNGwbUn3nGslvrkKdCZG8f5Lua57826LQgq2BOn9457e3dGI3+BC1SzabU6ctzEK+ol0B5PlDsCbqaGoCd0MGvS4Fo+0azp4/9oXWisnLOzaTL//LXk7xqDDJSK8tA4noAlNggePgKBl+Xw7OO/9gS/Q5RIRBSdjPzYzmP5XhEoKopEGt3aQg==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1676291040; bh=gIO6tb3DdZpb8uEa0TeWTUjSYWv4XnIY3gV8wSGVr71=; h=X-Sonic-MF:From:To:Subject:Date:From:Subject; b=LnFkDUpf7Q4F9NM+6azQfM/F4ulRaKtvzDvAeuyn54BiPwbxo6XdeDsYyqV/TGJZ/qYNuPQ+T26DIuG+rEyi2NykXSOxDJUvoM4QMTFYiVZaeLLeQ0XyaGx6T76z0wayRVHj49crvVNPHAV94LfBRqB5Th83+cyl4ZCB56Iqu1h/lv+695B7P9+M2pec+EoksblZomqU2rZTemSiqWpj7gLePfAbsmSWY4axKoyXP6m4c6dK+TkU5jPx0yQHhd8fCkFOln2kXMyCo/CuyMJtrv4q8VTqFZmZy0QKdy1HLmtedItcpxD37Gzd5/Fv/UWBL1X63p2icbJ+UnO+WDxSvQ==
-X-YMail-OSG: YXsxRkoVM1n66eok1DaECSw7XTkvxbcGsoPn.Wtsm37ZkduZyeiwnmkrfVLBoMJ
- lYUB7MqO1oTXzzSrNqMgp.cOMmIBxD8cc_vM1vr0sHK0qxTEs1WnbuI0rLWbm7ThFO7ysFBQTYrs
- DIpaSYZSLZK01IkCpv5B8.K_8ltCseBlfMylWx8OCiE4LcdjqjdngHB.eGC6idnCXOPZZ5wWtff_
- Vo0b3Z.jANc6LDH._bF3ejPzZVm7KF6nFovFijOgqLz9eQLVMOHr7mXRC2oDxIaFDrrDmRme7ERm
- qWpSkoW0tZVEwSvPdTtd0MjrZ2t4Xf96pNih3_K5FSak..Jp1HrN8N7FR9iayVzA8.TwoFd9m2fM
- B2GD_OSrqC1b0gxx_NeNzDrZXUvu04OAZpgbijlsqFNzH8iW1F5Wq554gZ2osklGmq4fVrdTw29K
- j_Pe050.VQw_48hkdnqcVETkpfG5Vo_yAm0GBQMCE_vQxpkXUr4iGD1oC3dmZnCTIJl8i4JlgFC.
- uIK3DZZ7ZhIwU40PGf5PkXSC0M7DNDLIjfNGplGJlon071ZUN_V7xYds5A6pzDLDo0qwXNso6UKp
- ej0xOHd_9M3N9KijO.r2yLrtZ8eDSsc92_xm0MGV4eZaEWbMcpzVVSDAmnr8LkKCkkxPbuAaOMYM
- uDdmvlf0qLzWJn_qjb1WmzBz7IsH4CIGSxlWrnAIYM.Z4sdpBhvZ0XEghkWZz2UrEbgJNebLXRqX
- J13laDG.8_LSI9G_Iz1SSTqmm2lhyJe3fftCWNV6I5pWaHSz0Ff2zFj5y8y4wWI9Sx0neSTXG0.p
- XTvCLdgyI79hLkUwMnH_BQb578_4DsBmIP8xuuTqJNo3td_bHxq7eAAwgoz0ZXWz7rIGC.z39yin
- 21.lSnaMgzNv2wlyHjEMJTYyoi4m85KGOedvjGAydLZ3GXlvMjAB9qNkTAsm_yeClsUXsMwz1NaZ
- fevqfq8PqNC5fHG2Ths1.rc8k4hcBhWsfDSHCNt1F6jwH3lXDL418L8r7kLc_00lnY2LiNpWAJGO
- PjcXyJWVA3Tk_9DZZYgmQSJ6oAVLseKsyoW66OTOOcWWc8xQJe2Xj37pykEILmXra8.tArqJIl7Q
- tM65pK6c0Fqyclr2N438V9tgvnJzzOLsvCfGw9VUzWqWHBhZiRr6ooT86xLp1WfFLI9wgWi72dRP
- Ygn5jyOQdtNcDa93NKFTaq0k.8wBNLcCd.PcTzv8bJh8rLYwmzMmHho4uaNzLzB63fsU9L5j5VYu
- LutLMPR_PnOre5FR.Tpxlsxs0N4NoQeQUCqOczqFFz0Aklxg52ppc91aX34.NiN7tS1akmeqE..e
- orfRwQI0Wumpwtd9yc2vkfVI9ryVdc4F6KPVPKLTaDB6MtcPO.Gn4bhG5jYDx9ki7kzSXv2DtBAW
- Qa1ZaHpnJARFnngHdv46X9RvvNXJ3ug183K.nE9dj1T0GZC.SVgVJCX6NNKB0b_PgCkb6S3xXyl8
- CyP.QKdZttGAPIBBMMjcs0YKGT67VAue7QCQHOT.imUDXPC6sXj0wu7HKTfs34keold9XOig2xaT
- k401WijIFxqkf5SWNuZ2lNyXmK3jqIke6nZ2AIfW1QINcxomKJjOntCvI1.lQVBb6ubQiItZqz_z
- EJeaxscyTvSW70sw21oYts44trbZAeC2p_L5fdSGdApar1Fw94qE1raHCJ7KdIzNzxVUrxIlabwm
- _DiDQGFUT5LNvO1keYLRe5RMy94AJQO7kPha2BbYmicJqksKEXmC0L11Oe9W_LOb4NtT9BihrALP
- ALl48t3KxHofR2pnkYZPAf.bkIaokUhPQuf.23ds0bWLA7UrH5mhIO8dfDUCwD5ubFoRToFZ11AK
- jL59ZDiE5tJyhl_GG46RCfio82o3_KLdxhMU12bLYi.qjriB9iUmcfRsTyZ8E0XdU71B627E5upx
- aRi8Z5_aM9yOOUAn0dzajZNS6_q3XwlQZ8dhjpZ5bzybv2gExv0og6h7Xam3fE9kDXqnzrUnWJCH
- eLDf356uvpFEBlt3AlLVwcxaCRTJh8WXP5TBU83TeGziP2MtkFpZXjM0UzYdAxqHB3EsZYBQU6rP
- JvDu9b372LEaANEJCv5WK0X1c2vRsneIN303tKedsp9dGAo4Hgbsl7rnpUR8uJPhYshnc.nVcPzP
- vS98.YQOnQ4ZfVHloYPWJZSpFCjviKZ6it.UCSNNTsIur9H9nIo4JANw1PxrK_ahV2muza7yxhY4
- zx1hvwORAmSTQs6n4F0PVok1rHIDQGNStU6rz3JjLdUa..pIxXbW1Z_kwBjrzIvjMZGzbG4wwwLG
- ETnhfr3bIoVPkmGz4vfIxtFcSCgwi4XxlpVOdKg--
-X-Sonic-MF: <pmw.gover@yahoo.co.uk>
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic314.consmr.mail.ir2.yahoo.com with HTTP; Mon, 13 Feb 2023 12:24:00 +0000
-Received: by hermes--production-ir2-65c64dfd66-q2fgd (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID c15dffe479a6d6171d8d5cb27b1f0f0a;
-          Mon, 13 Feb 2023 12:23:57 +0000 (UTC)
-From: Paul Gover <pmw.gover@yahoo.co.uk>
-To: Linux regressions mailing list <regressions@lists.linux.dev>, Gary Chang <gary.chang@realtek.com>, Yan-Hsuan Chuang <tony0620emma@gmail.com>, Ping-Ke Shih <pkshih@realtek.com>
-Cc: "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, Kalle Valo <kvalo@kernel.org>
-Subject: Re: Resume after suspend broken, reboots instead on kernel 6.1 onwards x86_64 RTW88
-Date: Mon, 13 Feb 2023 12:23:56 +0000
-Message-ID: <5648174.DvuYhMxLoT@ryzen>
-In-Reply-To: <0024ebe795eb48969380d442b24fc4be@realtek.com>
-References: <3739412.kQq0lBPeGt.ref@ryzen> <10a47408-3019-403d-97b1-c9f36e52e130@leemhuis.info> <0024ebe795eb48969380d442b24fc4be@realtek.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB43733D1
+	for <regressions@lists.linux.dev>; Mon, 13 Feb 2023 14:12:54 +0000 (UTC)
+Received: by mail-wr1-f45.google.com with SMTP id k3so4747209wrv.5
+        for <regressions@lists.linux.dev>; Mon, 13 Feb 2023 06:12:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:cc:from:to:references
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=EsqkxOvpnaFZCqHajOpHltyVhIkx+s6eYXNOmyQ4+o4=;
+        b=OUzZcLleBxOMqrP9XviKuUrD0xYSPYpPLESmUkD1O6ZcmLJxTCv8nULdz7i0tyZs60
+         /ERJgBT0bqLe9+7CQv5+/Bniht4E6MKnF95RcrMKk0rm3JLHFamh/Dw7Xq3XQcXwk3L0
+         cepU8kuWhq/7HKV127ztH7nXOnwNqY2dSnKewNDpMhj0UB+gIr64VdEQGaRdYH6aZ3/i
+         A9plwBGs20Yy1rjA9v5CIevipFF8L4XI7cG2IZGLTvXaoXOZczrOPIDxKkL4zEpwrZZ7
+         HnhClGGjw8mKRBY8tBK9+/hYx99wmLerEASStnvHqBfD2EvTq2cDRCzv+a1oEi+vQADl
+         0Uuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:cc:from:to:references
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=EsqkxOvpnaFZCqHajOpHltyVhIkx+s6eYXNOmyQ4+o4=;
+        b=Wepu+qoUA8mZz8vGvPHQAl3Uv2rxOa9iiSDqbIZ3driDfpvFW40l5sRAaponsEnGm5
+         n9N15z7MNv38oEMNf//keB3A9AYIzYTwPKVHDWFPWddmE3yauRLGzisO9Pk7YeCydApn
+         rlt41+QGrHsy9PGxZPmpTj9wv468bOwZm0OmV2ucl8xCojt62L0EURNUOlZWkk3x5MXZ
+         gHQHRwNIMlZFmOtU78dsGgtZnHQwj7c/2LNWFJ+czF2jAEkXjCxa1L/E2XWw8C+JnK5J
+         PM3qS4+pX6Y3SLjNr3WwMrfsG4m1MElgcEvjEa/1PYyOtUfDwDVpY6WqAz1P/r6niF6A
+         8wUw==
+X-Gm-Message-State: AO0yUKUMPHM9IZLe6YoInVlClTQUW83ua77Mbs/SvzdwtBJIlUSFmIVn
+	AwZbsuBzm/tsXU9tkBF4i5s=
+X-Google-Smtp-Source: AK7set/wugfPYZOYQTzQrvfbcgzO0WnIG8etqnnThADl0ZnsrGA9jjVo3EGtn3NH4mRbfJ3Nruf9Wg==
+X-Received: by 2002:adf:e54a:0:b0:2c5:5984:6f07 with SMTP id z10-20020adfe54a000000b002c559846f07mr2319355wrm.26.1676297573096;
+        Mon, 13 Feb 2023 06:12:53 -0800 (PST)
+Received: from [192.168.1.10] (97e09f27.skybroadband.com. [151.224.159.39])
+        by smtp.googlemail.com with ESMTPSA id w11-20020adff9cb000000b002c54e9f6bc2sm6176883wrr.77.2023.02.13.06.12.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 13 Feb 2023 06:12:52 -0800 (PST)
+Message-ID: <e0b80506-b3cf-315b-4327-1b988d86031e@googlemail.com>
+Date: Mon, 13 Feb 2023 14:12:51 +0000
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
-X-Mailer: WebService/1.1.21183 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.2
+Subject: Fwd: linux-6.2-rc4+ hangs on poweroff/reboot: Bisected
+Content-Language: en-GB
+References: <ab3b4b8a-93a7-5129-5996-f0b364b04dda@googlemail.com>
+To: ">> ML dri-devel" <dri-devel@lists.freedesktop.org>,
+ LKML <linux-kernel@vger.kernel.org>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ Karol Herbst <kherbst@redhat.com>, Ben Skeggs <skeggsb@gmail.com>,
+ bskeggs@redhat.com, Lyude Paul <lyude@redhat.com>,
+ ML nouveau <nouveau@lists.freedesktop.org>
+From: Chris Clayton <chris2553@googlemail.com>
+Cc: Dave Airlie <airlied@gmail.com>
+In-Reply-To: <ab3b4b8a-93a7-5129-5996-f0b364b04dda@googlemail.com>
+X-Forwarded-Message-Id: <ab3b4b8a-93a7-5129-5996-f0b364b04dda@googlemail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Ping-Ke,
+Proof, if any where needed, that I should consume more coffee before dealing with email...
 
-Thanks for responding. My answers embedded below.
+Adding cc recipients that were dropped in my message this morning.
 
-On Monday, 13 February 2023 03:42:14 GMT you wrote:
-> > -----Original Message-----
-> > From: Linux kernel regression tracking (Thorsten Leemhuis)
-> > <regressions@leemhuis.info>
- Sent: Friday, February 10, 2023 8:25 PM
-> > To: Gary Chang <gary.chang@realtek.com>; Yan-Hsuan Chuang
-> > <tony0620emma@gmail.com>
- Cc: regressions@lists.linux.dev;
-> > linux-wireless@vger.kernel.org; Linux kernel regressions list
-> > <regressions@lists.linux.dev>; Kalle Valo <kvalo@kernel.org>; Paul Gover
-> > <pmw.gover@yahoo.co.uk>; stable@vger.kernel.org
-> > Subject: Re: Resume after suspend broken, reboots instead on kernel 6.1
-> > onwards x86_64 RTW88
- 
-> > [adding Chih-Kang Chang (author), Kalle (committer) and LKML to the list
-> > of recipients]
-> > 
-> > [anyone who replies to this: feel free to remove stable@vger.kernel.org
-> > from the recipients, this is a mainline regression]
-> > 
-> > [TLDR: I'm adding this report to the list of tracked Linux kernel
-> > regressions; the text you find below is based on a few templates
-> > paragraphs you might have encountered already in similar form.
-> > See link in footer if these mails annoy you.]
-> > 
-> > On 09.02.23 20:59, Paul Gover wrote:
-> > 
-> > > Suspend/Resume was working OK on kernel 6.0.13, broken since 6.1.1
-> > > (I've not tried kernels between those, except in the bisect below.)
-> > > All subsequent 6,1 kernels exhibit the same behaviour.
-> > >
-> > >
-> > >
-> > > Suspend works OK, but on Resume, there's a flicker, and then it
-> > > reboots.
-> > > Sometimes the screen gets restored to its contents at the time of
-> > > suspend. but
- less than a second later, it starts rebooting.
-> > > To reproduce, simply boot, suspend, and resume.
-> > >
-> > >
-> > >
-> > > Git bisect blames RTW88
-> > > commit 6bf3a083407b5d404d70efc3a5ac75b472e5efa9
-> > 
-> > 
-> > TWIMC, that's "wifi: rtw88: add flag check before enter or leave IPS"
-> > 
-> > 
-> > > I'll attach bisect log, dmesg and configs to the bug I've opened
-> > > 
-> > > 	https://bugzilla.kernel.org/show_bug.cgi?id=217016
-> > >
-> > >
-> > >
-> > > dmesg from the following boot show a hardware error.
-> > > It's not there when the system resumes or reboots with 6.0.13,
-> > > and if I don't suspend & resume, there are no reported errors.
-> > >
-> > >
-> > >
-> > > The problem occurs under both Wayland and X11, and from the command line
-> > > via
- echo mem>/sys/power.state
-> > >
-> > >
-> > >
-> > >
-> > > Vanilla kernels, untainted, compiled with GCC; my system is Gentoo FWIW,
-> > > but I
- do my own kernels direct from a git clone of stable.
-> > >
-> > >
-> > >
-> > > Couldn't find anything similar with Google or the mailing lists.
-> > >
-> > >
-> > >
-> > > **Hardware:**
-> > >
-> > >
-> > >
-> > > HP Laptop 15-bw0xx
-> > > AMD A9-9420 RADEON R5, 5 COMPUTE CORES
-> > > Stoney [Radeon R2/R3/R4/R5 Graphics]
-> > > 4 GB memory
-> > > RTL8723DE PCIe adapter
-> > >
-> > >
-> > >
-> > > **Kernel**
-> > >
-> > >
-> > >
-> > > Kernel command line:
-> > > psmouse.synaptics_intertouch=1 pcie_aspm=force rdrand=force
-> > > rootfstype=f2fs
- root=LABEL=gentoo
-> > >
-> > >
-> > >
-> > > CONFIG_RTW88=m
-> > > CONFIG_RTW88_CORE=m
-> > > CONFIG_RTW88_PCI=m
-> > > CONFIG_RTW88_8723D=m
-> > > # CONFIG_RTW88_8822BE is not set
-> > > # CONFIG_RTW88_8822CE is not set
-> > > CONFIG_RTW88_8723DE=m
-> > > # CONFIG_RTW88_8821CE is not set
-> > > # CONFIG_RTW88_DEBUG is not set
-> > > # CONFIG_RTW88_DEBUGFS is not set
-> > > # CONFIG_RTW89 is not set
-> > 
-> > 
-> > Thanks for the report. To be sure the issue doesn't fall through the
-> > cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
-> > tracking bot:
-> > 
-> > #regzbot ^introduced 6bf3a083407b
-> > #regzbot title wifi: rtw88: resume broken (reboot)
-> > #regzbot ignore-activity
-> > 
-> > This isn't a regression? This issue or a fix for it are already
-> > discussed somewhere else? It was fixed already? You want to clarify when
-> > the regression started to happen? Or point out I got the title or
-> > something else totally wrong? Then just reply and tell me -- ideally
-> > while also telling regzbot about it, as explained by the page listed in
-> > the footer of this mail.
-> > 
-> > Developers: When fixing the issue, remember to add 'Link:' tags pointing
-> > to the report (the parent of this mail). See page linked in footer for
-> > details.
-> > 
-> > Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-> 
-> 
-> Since rtw88 can support 8723DE, 8821CE, 8822BE and 8822CE, do you have chip
-> other
-> than 8723DE to give a try? Or, install 8723DE to another platform? 
-Sorry, I'm afraid I only have the one laptop with that device built-in; my 
-other PC is a big desktop with a different chipset.
 
-> I have added myself to kernel Bugzilla, so we can discuss further there.
-> We will try to reproduce this problem, and will update to Bugzilla if any
-> finding.
+-------- Forwarded Message --------
+Subject: Re: linux-6.2-rc4+ hangs on poweroff/reboot: Bisected
+Date: Mon, 13 Feb 2023 09:21:10 +0000
+From: Chris Clayton <chris2553@googlemail.com>
+To: Dave Airlie <airlied@gmail.com>
 
-Thanks.  I'll respond there.
- 
-> Ping-Ke
+[ Apologies for the incomplete message I sent a few minutes ago. I should have had more coffee before I started dealing
+with email. ]
+
+On 13/02/2023 02:57, Dave Airlie wrote:
+> On Sun, 12 Feb 2023 at 00:43, Chris Clayton <chris2553@googlemail.com> wrote:
+>>
+>>
+>>
+>> On 10/02/2023 19:33, Linux regression tracking (Thorsten Leemhuis) wrote:
+>>> On 10.02.23 20:01, Karol Herbst wrote:
+>>>> On Fri, Feb 10, 2023 at 7:35 PM Linux regression tracking (Thorsten
+>>>> Leemhuis) <regressions@leemhuis.info> wrote:
+>>>>>
+>>>>> On 08.02.23 09:48, Chris Clayton wrote:
+>>>>>>
+>>>>>> I'm assuming  that we are not going to see a fix for this regression before 6.2 is released.
+>>>>>
+>>>>> Yeah, looks like it. That's unfortunate, but happens. But there is still
+>>>>> time to fix it and there is one thing I wonder:
+>>>>>
+>>>>> Did any of the nouveau developers look at the netconsole captures Chris
+>>>>> posted more than a week ago to check if they somehow help to track down
+>>>>> the root of this problem?
+>>>>
+>>>> I did now and I can't spot anything. I think at this point it would
+>>>> make sense to dump the active tasks/threads via sqsrq keys to see if
+>>>> any is in a weird state preventing the machine from shutting down.
+>>>
+>>> Many thx for looking into it!
+>>
+>> Yes, thanks Karol.
+>>
+>> Attached is the output from dmesg when this block of code:
+>>
+>>         /bin/mount /dev/sda7 /mnt/sda7
+>>         /bin/mountpoint /proc || /bin/mount /proc
+>>         /bin/dmesg -w > /mnt/sda7/sysrq.dmesg.log &
+>>         /bin/echo t > /proc/sysrq-trigger
+>>         /bin/sleep 1
+>>         /bin/sync
+>>         /bin/sleep 1
+>>         kill $(pidof dmesg)
+>>         /bin/umount /mnt/sda7
+>>
+>> is executed immediately before /sbin/reboot is called as the final step of rebooting my system.
+>>
+>> I hope this is what you were looking for, but if not, please let me know what you need
 > 
 
+Thanks, Dave.
+
+> Another shot in the dark, but does nouveau.runpm=0 help at all?
+> 
+Yes, it does. With runpm=0, both reboot and poweroff work on my laptop. Of course, it also means that the discrete
+(NVidia) GPU is now powered on permanently.
+
+Chris
 
 
-
+> Dave.
