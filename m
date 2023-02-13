@@ -1,69 +1,155 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-fw-2101.amazon.com (smtp-fw-2101.amazon.com [72.21.196.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EC553239
-	for <regressions@lists.linux.dev>; Mon, 13 Feb 2023 20:47:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5F1AC433EF;
-	Mon, 13 Feb 2023 20:47:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1676321244;
-	bh=CxKp7DdRpIHLjyKvK/8EagwtvA0dnNmDwSHqDGmAmwA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=ijPd2PKP+TMC7+P+NjEuiTm/Xko37dYQGHOYIwUvdyrPqNZhHk0AFGgO6F2k0TM7o
-	 ioS89gBKo368/y1po2aQidhAEu3/QR+vtaf+A+JE1lhaLfHyMzLx3k1c9A3xJoj+vM
-	 blAl7XLQnM9AlGq5+IaTu5fXxrkRy8yPz+8PutJXFoWDUmadezKiVPz9qGJkcc2SkN
-	 D6b2Jo10o/Xwo4Kv7VfztFUo/CGrugTgqtPpA4vftg7DPDgCt9d40wi6G+AnnZ4kzN
-	 kobvP2nuT2FrNqfDlj3+ReUFIZoAc37dOeXfDBIguvw7AHPHALEBVzn2vpQVom3ZY5
-	 e5ABk69JqVjag==
-Date: Mon, 13 Feb 2023 14:47:22 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: regressions@lists.linux.dev
-Cc: linux-pci@vger.kernel.org
-Subject: Re: [REGRESSION] [Bug 216859] New: PCI bridge to bus boot hang at
- enumeration
-Message-ID: <20230213204722.GA2929794@bhelgaas>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFA99AD52
+	for <regressions@lists.linux.dev>; Mon, 13 Feb 2023 20:59:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1676321967; x=1707857967;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=7GGo37vfeM/q0M9f7i5/owHCwmTU2ilbzg1WlYDczYA=;
+  b=iqea3qgcdgn8ON78iSb9BK3OsLs50rpQE+8FDJ+DmSY1IyPp6KWlW+EE
+   1tYF7PeQ5r7YZNcK/uNC6Jlx2QXJAT+icu9O6QZXI5FsKbiM7/AoG+P0y
+   RH3IoJBgnKtXPpMwRpvqbmJT/bpsTnJjwOTtuYBvkK5WMZz3Q1yrPMsMB
+   E=;
+X-IronPort-AV: E=Sophos;i="5.97,294,1669075200"; 
+   d="scan'208";a="292449900"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-pdx-2c-m6i4x-94edd59b.us-west-2.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-2101.iad2.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2023 20:59:01 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan3.pdx.amazon.com [10.236.137.198])
+	by email-inbound-relay-pdx-2c-m6i4x-94edd59b.us-west-2.amazon.com (Postfix) with ESMTPS id DDBB3414BA;
+	Mon, 13 Feb 2023 20:59:00 +0000 (UTC)
+Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
+ EX13MTAUWB001.ant.amazon.com (10.43.161.249) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.45; Mon, 13 Feb 2023 20:59:00 +0000
+Received: from 88665a182662.ant.amazon.com (10.43.162.56) by
+ EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1118.24;
+ Mon, 13 Feb 2023 20:58:57 +0000
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
+To: <gregkh@linuxfoundation.org>
+CC: <kuniyu@amazon.com>, <netdev@vger.kernel.org>,
+	<regressions@lists.linux.dev>, <stable@vger.kernel.org>, <w@1wt.eu>,
+	<winter@winter.cafe>
+Subject: Re: [REGRESSION] 5.15.88 and onwards no longer return EADDRINUSE from bind
+Date: Mon, 13 Feb 2023 12:58:35 -0800
+Message-ID: <20230213205835.56151-1-kuniyu@amazon.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <Y+p4AJHkP8JUf4KB@kroah.com>
+References: <Y+p4AJHkP8JUf4KB@kroah.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230201232750.GA1908996@bhelgaas>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.43.162.56]
+X-ClientProxiedBy: EX13D44UWB004.ant.amazon.com (10.43.161.205) To
+ EX19D004ANA001.ant.amazon.com (10.37.240.138)
+Precedence: Bulk
 
-On Wed, Feb 01, 2023 at 05:27:50PM -0600, Bjorn Helgaas wrote:
-> On Thu, Jan 26, 2023 at 06:11:24AM -0600, Bjorn Helgaas wrote:
-> > [+cc folks from 145eed48de27 and framebuffer folks, regression list]
-> > 
-> > On Thu, Jan 12, 2023 at 02:08:19PM -0600, Bjorn Helgaas wrote:
-> > > On Wed, Dec 28, 2022 at 06:02:48AM -0600, Bjorn Helgaas wrote:
-> > > > On Wed, Dec 28, 2022 at 08:37:52AM +0000, bugzilla-daemon@kernel.org wrote:
-> > > > > https://bugzilla.kernel.org/show_bug.cgi?id=216859
-> > > > 
-> > > > >            Summary: PCI bridge to bus boot hang at enumeration
-> > > > >     Kernel Version: 6.1-rc1
-> > > > > ...
-> > > > 
-> > > > > With Kernel 6.1-rc1 the enumeration process stopped working for me,
-> > > > > see attachments.
+From:   Greg KH <gregkh@linuxfoundation.org>
+Date:   Mon, 13 Feb 2023 18:48:48 +0100
+> On Mon, Feb 13, 2023 at 08:44:55AM -0800, Kuniyuki Iwashima wrote:
+> > From:   Willy Tarreau <w@1wt.eu>
+> > Date:   Mon, 13 Feb 2023 08:52:34 +0100
+> > > Hi Greg,
+> > > 
+> > > On Mon, Feb 13, 2023 at 08:25:34AM +0100, Greg KH wrote:
+> > > > On Mon, Feb 13, 2023 at 05:27:03AM +0100, Willy Tarreau wrote:
+> > > > > Hi,
 > > > > > 
-> > > > > The enumeration works fine with Kernel 6.0 and below.
+> > > > > [CCed netdev]
 > > > > > 
-> > > > > Same problem still exists with v6.1. and v6.2.-rc1
+> > > > > On Sun, Feb 12, 2023 at 10:38:40PM -0500, Winter wrote:
+> > > > > > Hi all,
+> > > > > > 
+> > > > > > I'm facing the same issue as
+> > > > > > https://lore.kernel.org/stable/CAFsF8vL4CGFzWMb38_XviiEgxoKX0GYup=JiUFXUOmagdk9CRg@mail.gmail.com/,
+> > > > > > but on 5.15. I've bisected it across releases to 5.15.88, and can reproduce
+> > > > > > on 5.15.93.
+> > > > > > 
+> > > > > > However, I cannot seem to find the identified problematic commit in the 5.15
+> > > > > > branch, so I'm unsure if this is a different issue or not.
+> > > > > > 
+> > > > > > There's a few ways to reproduce this issue, but the one I've been using is
+> > > > > > running libuv's (https://github.com/libuv/libuv) tests, specifically tests
+> > > > > > 271 and 277.
+> > > > > 
+> > > > > >From the linked patch:
+> > > > > 
+> > > > >   https://lore.kernel.org/stable/20221228144337.512799851@linuxfoundation.org/
+> > > > 
+> > > > But that commit only ended up in 6.0.y, not 5.15, so how is this an
+> > > > issue in 5.15.y?
+> > > 
+> > > Hmmm I plead -ENOCOFFEE on my side, I hadn't notice the "can't find the
+> > > problematic commit", you're right indeed.
+> > > 
+> > > However if the issue happened in 5.15.88, the only part touching the
+> > > network listening area is this one which may introduce an EINVAL on
+> > > one listening path, but that seems unrelated to me given that it's
+> > > only for ULP that libuv doesn't seem to be using:
+> > > 
+> > >   dadd0dcaa67d ("net/ulp: prevent ULP without clone op from entering the LISTEN status")
 > > 
-> > This is a regression between v6.0 and v6.1-rc1.  Console output during
-> > boot freezes after nvidiafb deactivates the VGA console.
+> > This commit accidentally backports a part of 7a7160edf1bf ("net: Return
+> > errno in sk->sk_prot->get_port().") and removed err = -EADDRINUSE in
+> > inet_csk_listen_start().  Then, listen() will return 0 even if ->get_port()
+> > actually fails and returns 1.
 > > 
-> > It was a lot of work for Zeno, but we finally isolated this console
-> > hang to 145eed48de27 ("fbdev: Remove conflicting devices on PCI bus").
-> > 
-> > The system actually does continue to boot and is accessible via ssh, 
-> > but the console appears hung, at least for output.  More details in
-> > the bugzilla starting at
-> > https://bugzilla.kernel.org/show_bug.cgi?id=216859#c47 .
+> > I can send a small revert or a whole backport, but which is preferable ?
+> > The original patch is not for stable, but it will make future backports
+> > easy.
 > 
-> #regzbot introduced: 145eed48de27
-> #regzbot dup: https://lore.kernel.org/all/D41A3A42-2412-4722-9090-01565058E525@gmail.com/
+> A whole revert is probably best, if it's not needed.  But if it is, a
+> fix up would be fine to get as well.
 
-#regzbot fix: 04119ab1a49f ("nvidiafb: detect the hardware support before removing console.")
+dadd0dcaa67d is needed to fix potential double-free, so could you queue
+this fixup for 5.15. ?
+
+---8<---
+From ad319ace8b5c1dd5105b7263b7ccfd0ba0926551 Mon Sep 17 00:00:00 2001
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
+Date: Mon, 13 Feb 2023 20:45:48 +0000
+Subject: [PATCH] tcp: Fix listen() regression in 5.15.88.
+
+When we backport dadd0dcaa67d ("net/ulp: prevent ULP without clone op from
+entering the LISTEN status"), we have accidentally backported a part of
+7a7160edf1bf ("net: Return errno in sk->sk_prot->get_port().") and removed
+err = -EADDRINUSE in inet_csk_listen_start().
+
+Thus, listen() no longer returns -EADDRINUSE even if ->get_port() failed
+as reported in [0].
+
+We set -EADDRINUSE to err just before ->get_port() to fix the regression.
+
+[0]: https://lore.kernel.org/stable/EF8A45D0-768A-4CD5-9A8A-0FA6E610ABF7@winter.cafe/
+
+Reported-by: Winter <winter@winter.cafe>
+Signed-off-by: Kuniyuki Iwashima <kuniyu@amazon.com>
+---
+ net/ipv4/inet_connection_sock.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/net/ipv4/inet_connection_sock.c b/net/ipv4/inet_connection_sock.c
+index a86140ff093c..29ec42c1f5d0 100644
+--- a/net/ipv4/inet_connection_sock.c
++++ b/net/ipv4/inet_connection_sock.c
+@@ -1070,6 +1070,7 @@ int inet_csk_listen_start(struct sock *sk, int backlog)
+ 	 * It is OK, because this socket enters to hash table only
+ 	 * after validation is complete.
+ 	 */
++	err = -EADDRINUSE;
+ 	inet_sk_state_store(sk, TCP_LISTEN);
+ 	if (!sk->sk_prot->get_port(sk, inet->inet_num)) {
+ 		inet->inet_sport = htons(inet->inet_num);
+-- 
+2.38.1
+---8<---
+
+Thanks,
+Kuniyuki
