@@ -1,206 +1,1173 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2064.outbound.protection.outlook.com [40.107.94.64])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F20A7C5C2
-	for <regressions@lists.linux.dev>; Tue, 14 Feb 2023 17:32:03 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hOQp5MgIAQMWLUerTBPmzFM4NAOQbme7o5L7VJ+L6M9ykzpLUuvw6cR4L86HweCUEc/ndqzbVHBGpDTTMRwS7ylrI2A3hn1jUfSWfNK9l3a4WXQIpn5N5W3hRU6fyXE4OL9gZpOyIt6e8btFBoG2cfAKxQ9TdGxw07KGByzoL2K/fyhRZxs3Mgn1dnSICCy8gGhEeqBJKo/+JEh1ebleLQ1IFBItB85ozEfuzQtcofciK2Kt3XUa/nbkqsf8TLSLmRm58YuOnhueeAXF+QbiW5qg1O28TljYWDhPCr2tU6Q6Qi1fA9Ql5obw2Wa6dUtRhUVikcZep72TyIefa9sPww==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=edSQnsgU4yDr5DzK/pRnFN1UYv9WnOwj93TIUM5tXjc=;
- b=NPRCeLfw7KuumqDeyrqBd2fZVXgLsY4pVYpHakajnpme0P9OxpeneVeubGie7XVrjMyRX95Go7M3jbaqW8PvmfK4HKir179RooEsyNS8pMBBGdZubg8+u3F7sjnITF+1MZYnBS6EQMDPpv8ZYOPkzPnAsM30jwWaRLjlKGVpwSWLGWu2AC0z8LsoZ73XRRtolk3OP6CluuT/LD/vKy78r9Lf6dceVYE5+GMes5Oq4cnvnYwaY4VEcygJ9JAqLm/UltY4x5yikppQBOkDSfTGojBQ2hWQtqSAl63OgnaWJKvW1NoHnIHP4yCgKgyEuUba5Vac3b69UHM9kJ0pFAobpA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=edSQnsgU4yDr5DzK/pRnFN1UYv9WnOwj93TIUM5tXjc=;
- b=Em2TcBAjdHNhD1GJPEfUCb5yQymJAYpgfCIRyl0yA4fpKMGaMr/2cVdYOSGCwgvkc9utKwu0AwP7jhEEzVC0UbBqf/g30reu2DAUiEaeMggdVNjFoLINMJZNYS4orHbrgml/f/21mHKZKdK9u6zvdbSFHdV0T2ekRUgVZfpMV8QQ4JVSo3K2VoJiWKKmTAk2SXTWxiOBkvjpK7Y2aK0rN318Tuqnxs4S1VWlIjmZpL+9bzze1kbV6Xs1++PBnrple3FAoRMl5MakV6DdhnXXBOeXj/d9xT6yCtTbN8wnrlrqtrjtOErmsza54ud3HmDedE9nxaTrO69OrN0q2gCS2w==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DM6PR12MB2763.namprd12.prod.outlook.com (2603:10b6:5:48::16) by
- DM4PR12MB5262.namprd12.prod.outlook.com (2603:10b6:5:399::19) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6086.26; Tue, 14 Feb 2023 17:32:02 +0000
-Received: from DM6PR12MB2763.namprd12.prod.outlook.com
- ([fe80::6e75:2e:a53d:a7a]) by DM6PR12MB2763.namprd12.prod.outlook.com
- ([fe80::6e75:2e:a53d:a7a%6]) with mapi id 15.20.6086.021; Tue, 14 Feb 2023
- 17:32:02 +0000
-Date: Tue, 14 Feb 2023 11:31:59 -0600
-From: Daniel Dadap <ddadap@nvidia.com>
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Mark Gross <markgross@kernel.org>, Andy Shevchenko <andy@kernel.org>,
-	Luke McCarthy <mail@lukehmcc.com>, regressions@lists.linux.dev,
-	platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH] platform/x86: nvidia-wmi-ec-backlight: Add force module
- parameter
-Message-ID: <Y+vFj3sRMDuPmvqc@ddadap-lakeline.nvidia.com>
-References: <20230214163435.7065-1-hdegoede@redhat.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230214163435.7065-1-hdegoede@redhat.com>
-X-ClientProxiedBy: SA9PR13CA0003.namprd13.prod.outlook.com
- (2603:10b6:806:21::8) To DM6PR12MB2763.namprd12.prod.outlook.com
- (2603:10b6:5:48::16)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB4C6C5E4
+	for <regressions@lists.linux.dev>; Tue, 14 Feb 2023 18:58:15 +0000 (UTC)
+Received: from ip4d148da6.dynamic.kabel-deutschland.de ([77.20.141.166] helo=truhe.fritz.box); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	id 1pS0VG-0006UN-E5; Tue, 14 Feb 2023 19:58:10 +0100
+From: Thorsten Leemhuis <linux@leemhuis.info>
+To: Jonathan Corbet <corbet@lwn.net>
+Cc: Randy Dunlap <rdunlap@infradead.org>,
+	Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev,
+	Greg KH <gregkh@linuxfoundation.org>,
+	Jani Nikula <jani.nikula@linux.intel.com>
+Subject: [PATCH v2] docs: describe how to quickly build a trimmed kernel
+Date: Tue, 14 Feb 2023 19:58:09 +0100
+Message-Id: <8cfcf069d48c1b8d7b83aafe0132f8dad0f1d0ea.1676400947.git.linux@leemhuis.info>
+X-Mailer: git-send-email 2.39.1
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR12MB2763:EE_|DM4PR12MB5262:EE_
-X-MS-Office365-Filtering-Correlation-Id: 43abd8ef-a80f-4173-5dac-08db0eb16229
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	XqD4yJVtPOG6WD8uFkf9boASkjGqfMLbL6qVxcSO3x/garcNA4yCJHB7qhT/kDQgrQ06qsH/8vzklrWV/dBb0HMGxQQiOjs8cKWXhhASbJjfUnJdWztGLT4GROtUM+fbHHSJgC8kywBvXGzTS+uCbr39ZUXEOsczXrUwvhcD6RVcwIk5Gpr28QYfclTiUM1dzmO8jkvl0cvXS22tN5w9ltauWgXueK22T9Prrr4GZhegyDZP4NK4092fa4FybJNmTX/j96GL0pmcwQb0MNWCvGJcMGdOu8Xerm6XLj7pEyDrgbquQAL5SpfXy9i7d9Hz0GSiXUtKtUuFuQhpqx3ONhqVLSZJNytB5+KaaaV8rzj0m90raL2FpAg3rd6A1aER7/ixuB0wUxKvpy9y/w/dLugVih2LfTb31lTdvc8J5RnS31AlzQuKdE9lUr3dROsB7xKU+LIyoJUK5fw5G37vZGY3+9cPjiiNqufwEEw5M3JNS3r656Noz27q3H3prATEm3SzU2P/XsrcID9i40ft7rZszH+pLtjb+De2lTxxc7nPtsvvpGMvdtm+IRe/MVuRsqcuT5nFj7XNfpp/YdZn03r/HJPzlU1QO/NerA8xxlimtmbTv+IaT8R2Z78U6LdOK4K5+1W/mvl67OnF4XHP2nPdhUuwgVUBEpshuKcMxFqrqJSe531ix8SXhv0TeyB8ucg1ulVbJsbRVJIDWjua+xczGWlEcgrlDDlWUA9kjOucLyxR7+PDwp7+dGMMAdTL
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB2763.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(366004)(136003)(396003)(376002)(346002)(39860400002)(451199018)(478600001)(6666004)(2906002)(6506007)(966005)(6512007)(26005)(186003)(38100700002)(6486002)(5660300002)(8936002)(86362001)(54906003)(316002)(66476007)(66556008)(6916009)(83380400001)(41300700001)(8676002)(66946007)(4326008)(21314003)(67856001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?+kEziI1SiQsugWv9t6rUQCYw8ChMfoG4JNemD0o0qCJqOWi3OCE/EA2+fP1/?=
- =?us-ascii?Q?NjhR7a2+vrBGJvk8n4QM5AUbgY994h+MHFySy6qFcAhp7oO9ObUC6skDtcLz?=
- =?us-ascii?Q?4pFnaeF7o3ZImJYU/Ye1yZxyw/09kKj2DIC9+WYK6uKzBkFz83HJdHE6ZkD8?=
- =?us-ascii?Q?tMFGfldmIwpu78T9oHO+HXW14ygpScpxdXDBLp3BuZVoPTGTw4A+DFE4I7lX?=
- =?us-ascii?Q?PYl53eyILkEgNCUbBldJz5FxmV7Jax7U4wT7vTZ7WhTjP+xSMnlOfxl9ZIPh?=
- =?us-ascii?Q?or2WPITF3VR0oEuGjX4SMreSr73UEb82nl276NMrDl0WEXkp4VK1fkzBK/ec?=
- =?us-ascii?Q?w4w7acUYJOJdFozCNu/kbdgLWYw7P4q3dBhx/7gwRGl0X9tJYW856CwhnMpU?=
- =?us-ascii?Q?0wVSo/KHdrET+pTmPA6Ek5YuFAUR94yUS2NtiKFz6bWQ4pfH02jPIUhw6jZH?=
- =?us-ascii?Q?TBFeSN/uApN8dG0zfGNX6dQW98PaRRNbBDMKbMMaDLsZSdt6Plxd1GZbFDI+?=
- =?us-ascii?Q?x1FY7GW5diZr19H762XxvzMnp63svx9vx8/3VilTBIAlphxH+OPCt1iGkUUP?=
- =?us-ascii?Q?nURhdx4oUkzo53l2nM5Ph7RQwf5ykNbDogQH6uOR32vG3XxNiKyQRbmTc1lY?=
- =?us-ascii?Q?JNa5sefiLi/4yd+NMaD4X3XlaNhl/15odDfC6AcSt82BzQ947HBFKJ8ra2Xm?=
- =?us-ascii?Q?3KnBP37I8Dv5qCe/qcuTktYO/T0GVeGMu02lp5roYpoTN+K11o4jg3lERlMl?=
- =?us-ascii?Q?tfbCIAR+7ym6m5RJjiU7LlyLKln4/k9PcJbUxDdgXHoGKgxf1ymGLfXq3o/J?=
- =?us-ascii?Q?aAoArN0sVnZsMaVcit+0FSJZkBcu8WTffDLmX51lMSuuAeFP+P7itmiz6AyL?=
- =?us-ascii?Q?E0RUpnyyvJQpLcOAvWmRGIhsoZweWssdYJ9OhmcNyW5H/wNmVDrWoM5XD7U/?=
- =?us-ascii?Q?GidyRvIdgouERHyTl/tzb/cVUW9chafXtV13huEnxbne10V185mBw6crGlkp?=
- =?us-ascii?Q?gZUVGOnVN2drTqCZ0f/O72aIoAvW6BRVUQHiEchvfmBwcIU6/cmoyxzZ8A5H?=
- =?us-ascii?Q?YYqapbWhoQtxjx0fpHtypg5wd/G9tW/cCHS20YZkcaPlfUDMUWlurxGDO/gx?=
- =?us-ascii?Q?Ry61q6y6UE5Bx/dPX/IS7zz5YvrGA8vxxKPGAfAkQRQoqm17Dm8sWosddzJY?=
- =?us-ascii?Q?i7UaMlxXRyJUX/qcm9VDt9540YzdPFVi7kL8VV1RnJNc3S0H1ibjPuDIF5hA?=
- =?us-ascii?Q?g6DjYMvr2LMVdOzl5h5sWwMhCtfHYDNhl8UpkI16hjX0Gkq7a9f13CFyHfd0?=
- =?us-ascii?Q?4o7VPFsTAdAGtB57D+hbCosP9iaMj1P0oLueDW34cIRIU1QOA5gITGPTTy2T?=
- =?us-ascii?Q?aAx9PA01kc4LZcougUCadbmiCQkZzSLU/SVAbnmaU/FV0XDNl1/yIXzKEnNn?=
- =?us-ascii?Q?QjJO4dl6ev8vTWtUbc+UnXlr6nS8xY7zZnJHogut/vtLoin3diHdCqQblYA0?=
- =?us-ascii?Q?R9QHsaqMS3WP5Oq8Y2SebTZJgEKOaZ+mj8YROEHw4oM9xPC+aMX/RKcGY1aI?=
- =?us-ascii?Q?wHQ3i7bfN7AF/bRsfXCgnDRRBbJNFQ3475Tr5tLn?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 43abd8ef-a80f-4173-5dac-08db0eb16229
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB2763.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Feb 2023 17:32:02.3810
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: UqZlFEgEXjPTzZrlUCMLZKpxgAno3smILAupk9dvSj8duVXNKrfgZYHW7XbDf0/YtIsuEy4yoLUfM0ALfkPp+w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5262
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1676401095;e67f913f;
+X-HE-SMSGID: 1pS0VG-0006UN-E5
 
-Thanks, Hans:
+Add a text explaining how to quickly build a kernel, as that's something
+users will often have to do when they want to report an issue or test
+proposed fixes. This is a huge and frightening task for quite a few
+users these days, as many rely on pre-compiled kernels and have never
+built their own. They find help on quite a few websites explaining the
+process in various ways, but those howtos often omit important details
+or make things too hard for the 'quickly build just for testing' case
+that 'localmodconfig' is really useful for. Hence give users something
+at hand to guide them, as that makes it easier for them to help with
+testing, debugging, and fixing the kernel.
 
-On Tue, Feb 14, 2023 at 05:34:35PM +0100, Hans de Goede wrote:
-> On models with the Nvidia WMI EC backlight interface, when the laptop is
-> configured in dynamic mux mode in the BIOS the backlight should always be
-> controlled by the Nvidia WMI EC backlight interface.
-> 
-> But it turns out that on some laptop models, E.g. Some Lenovo Legion models
-> /sys/class/backlight/nvidia_wmi_ec_backlight only works when the LCD panel
-> is muxed to the Nvidia GPU and when muxed to the AMD iGPU amdgpu_bl0
-> controls the backlight.
+To keep the complexity at bay, the document explicitly focuses on how to
+compile the kernel on commodity distributions running on commodity
+hardware. People that deal with less common distributions or hardware
+will often know their way around already anyway.
 
-I'm not certain that this description is accurate. From my understanding so
-far, the problem is that the working backlight device changes at runtime,
-regardless of the mux state. Recall that we don't actually have support for
-dynamic mux switching, yet, so if the system is booted in dynamic mode, it
-will remain muxed to the AMD iGPU the whole time.
+The text describes a few oddities of Arch and Debian that were found by
+the author and a few volunteers that tested the described procedure.
+There are likely more such quirks that need to be covered as well as a
+few things the author will have missed -- but one has to start
+somewhere.
 
-In theory the EC should in charge of backlight control at all times when
-operating in dynamic mux switch mode, regardless of which GPU the mux is
-switched to. However, on some of the Lenovo Legion models it appears that
-occasionally the backlight control falls to the native interface, instead.
-The user who initially reported this class of issue observed that only the
-EC backlight interface would work upon a fresh boot, and only the native
-AMD iGPU interface would work after a suspend/resume cycle, and it would
-continue to work after further suspend/resume cycles. The second reporter
-observed that the EC backlight interface was usually active when connected
-to external power, and the iGPU native interface was usually active when
-running off of internal battery power, however, occasionally this wouldn't
-hold true, with no discernible pattern.
+The document heavily uses anchors and links to them, which makes things
+slightly harder to read in the source form. But the intended target
+audience is way more likely to read rendered versions of this text on
+pages like docs.kernel.org anyway -- and there those anchors and links
+allow easy jumps to the reference section and back, which makes the
+document a lot easier to work with for the intended target audience.
 
-This third report sounds a little bit different: it is stated that different
-interfaces work to "change the brightness of the screen depending on if I
-was using the AMD GPU or NVIDIA GPU to display the current application." It
-is unclear to me what it means to use a GPU to display an application: my
-interpretation of this is that the system is configured to use PRIME Render
-Offload, and the desktop is being primarily driven by the iGPU, while select
-applications are explicitly render offloaded to be driven by the dGPU, but
-displayed on the iGPU, since the display always remains muxed to the iGPU.
+Aspects relevant for bisection were left out on purpose, as that is a
+related, but in the end different use case. The rough plan is to have a
+second document with a similar style to cover bisection. The idea is to
+reuse a few bits from this document and link quite often to entries in
+the reference section with the help of the anchors in this text.
 
-Since we don't fully understand what is going wrong, yet, it may be safer
-to leave the mux out of the description of the problem that this patch
-restores the ability to work around for, and say something more vague like
-"On some Lenovo Legion models, the backlight might be driven by either one
-of nvidia_wmi_ec_backlight or amdgpu_bl0 at different times."
+Signed-off-by: Thorsten Leemhuis <linux@leemhuis.info>
 
-> This appears to be a firmware bug on these laptops, but prior to 6.1.4
-> users would have both nvidia_wmi_ec_backlight and amdgpu_bl0 and could
-> work around this in userspace.
->
-> Add a force module parameter which can be used with acpi_backlight=native
-> to restore the old behavior as a workound (for now):
-> 
-> "acpi_backlight=native nvidia-wmi-ec-backlight.force=1"
-> 
-> Fixes: 8d0ca287fd8c ("platform/x86: nvidia-wmi-ec-backlight: Use acpi_video_get_backlight_type()")
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=217026
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
->  drivers/platform/x86/nvidia-wmi-ec-backlight.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/x86/nvidia-wmi-ec-backlight.c b/drivers/platform/x86/nvidia-wmi-ec-backlight.c
-> index baccdf658538..1b572c90c76e 100644
-> --- a/drivers/platform/x86/nvidia-wmi-ec-backlight.c
-> +++ b/drivers/platform/x86/nvidia-wmi-ec-backlight.c
-> @@ -12,6 +12,10 @@
->  #include <linux/wmi.h>
->  #include <acpi/video.h>
->  
-> +static bool force;
-> +module_param(force, bool, 0444);
-> +MODULE_PARM_DESC(force, "Force loading (disable acpi_backlight=xxx checks");
+---
+Lo! Here is v2 of the text with some big changes after input from the
+community. Ciao, Thorsten
 
-This is a bit of a nit, but it took me several times reading the description
-to understand that disabling the acpi_backlight check refers specifically to
-disabling the acpi_video_get_backlight_type() check within the EC backlight
-driver. My initial read was that it is intended to disable the various checks
-in drivers/acpi/video_detect.c, which it does not. Something along the lines
-of "(ignore acpi_video_get_backlight_type check)" makes the intent a little
-bit clearer, I think.
+v2:
+- default to a shallow clone
+- rename to "How to quickly build a trimmed Linux kernel"
+- use a localversion file instead of patching Makefile
+- various small improvements
 
-Apart from the commit message and documentation nits, I think that this patch
-makes sense:
+v1:
+https://lore.kernel.org/regressions/fabdb44fa44db2531f0dbe5e88545c49dfb87040.1675252073.git.linux@leemhuis.info/
+- inital version
 
-ACKed-by: Daniel Dadap <ddadap@nvidia.com>
+P.S.: a rendered version of this text is temporarily available at:
+https://www.leemhuis.info/files/misc/How%20to%20quickly%20build%20a%20trimmed%20Linux%20kernel%20%e2%80%94%20The%20Linux%20Kernel%20documentation.html
+---
+ Documentation/admin-guide/index.rst           |    1 +
+ .../quickly-build-trimmed-linux.rst           | 1047 +++++++++++++++++
+ MAINTAINERS                                   |    1 +
+ 3 files changed, 1049 insertions(+)
+ create mode 100644 Documentation/admin-guide/quickly-build-trimmed-linux.rst
 
-> +
->  /**
->   * wmi_brightness_notify() - helper function for calling WMI-wrapped ACPI method
->   * @w:    Pointer to the struct wmi_device identified by %WMI_BRIGHTNESS_GUID
-> @@ -91,7 +95,7 @@ static int nvidia_wmi_ec_backlight_probe(struct wmi_device *wdev, const void *ct
->  	int ret;
->  
->  	/* drivers/acpi/video_detect.c also checks that SOURCE == EC */
-> -	if (acpi_video_get_backlight_type() != acpi_backlight_nvidia_wmi_ec)
-> +	if (!force && acpi_video_get_backlight_type() != acpi_backlight_nvidia_wmi_ec)
->  		return -ENODEV;
->  
->  	/*
-> -- 
-> 2.39.1
-> 
+diff --git a/Documentation/admin-guide/index.rst b/Documentation/admin-guide/index.rst
+index f475554382e2..f796d65ba1f8 100644
+--- a/Documentation/admin-guide/index.rst
++++ b/Documentation/admin-guide/index.rst
+@@ -37,6 +37,7 @@ problems and bugs in particular.
+    reporting-issues
+    reporting-regressions
+    security-bugs
++   quickly-build-trimmed-linux
+    bug-hunting
+    bug-bisect
+    tainted-kernels
+diff --git a/Documentation/admin-guide/quickly-build-trimmed-linux.rst b/Documentation/admin-guide/quickly-build-trimmed-linux.rst
+new file mode 100644
+index 000000000000..6d7b482790af
+--- /dev/null
++++ b/Documentation/admin-guide/quickly-build-trimmed-linux.rst
+@@ -0,0 +1,1047 @@
++.. SPDX-License-Identifier: (GPL-2.0+ OR CC-BY-4.0)
++.. [see the bottom of this file for redistribution information]
++
++===========================================
++How to quickly build a trimmed Linux kernel
++===========================================
++
++This guide explains how to swiftly build Linux kernels that are ideal for
++testing purposes, but perfectly fine for day-to-day use, too.
++
++The essence of the process (aka 'TL;DR')
++========================================
++
++*[If you are new to compiling Linux, ignore this TLDR and head over to the next
++section below: it contains a step-by-step guide, which is more detailed, but
++still brief and easy to follow; that guide and its accompanying reference
++section also mention alternatives, pitfalls, and additional aspects, all of
++which might be relevant for you.]*
++
++If your platform uses techniques like Secure Boot, prepare the system to permit
++starting self-compiled Linux kernels; install compilers and everything else
++needed for building Linux; make sure to have 15 Gigabyte free space in your home
++directory. Now run the following commands to download fresh Linux mainline
++sources, which you then use to configure, build and install your own kernel::
++
++    mkdir ~/linux ~/linux/sources ~/linux/build
++    git clone --depth 1 -b master \
++      https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git ~/linux/sources/
++    cd ~/linux/sources/
++    # Hint: if you want to apply patches, do it at this point; see below for details.
++    # Hint: it's recommended to tag your build at this point; see below for details.
++    yes "" | make O=~/linux/build/ localmodconfig
++    # Hint: at this point you might want to adjust the build configuration;
++    #   you'll have to, if you are running Debian. See below for details.
++    make -j $(nproc --all) O=~/linux/build/
++    # Note: on many commodity distributions the next command suffices, but on Arch
++    #   Linux, its derivatives, and some others it does not. See below for details.
++    command -v installkernel && sudo make O=~/linux/build/ modules_install install
++    reboot
++
++If you later want to build a newer mainline snapshot, use commands like these::
++
++    cd ~/linux/sources/
++    git fetch --depth 1
++    # Note: the next command will discard any changes you did to the code:
++    git checkout --force --detach origin/master
++    # Reminder: if you want to (re)apply patches, do it at this point.
++    # Reminder: you might want to add or modify a build tag at this point.
++    make O=~/linux/build/ olddefconfig
++    make -j $(nproc --all) O=~/linux/build/
++    # Reminder: the next command on some distributions does not suffice.
++    command -v installkernel && sudo make O=~/linux/build/ modules_install install
++    reboot
++
++Step-by-step guide
++==================
++
++Compiling your own Linux kernel is easy in principle. There are various ways to
++do it. Which of them actually work and is the best depends on the circumstances.
++
++This guide describes a way perfectly suited for those who want to quickly
++install Linux from sources without being bothered by complicated details; the
++goal is to cover everything typically needed on mainstream Linux distributions
++running on commodity PC or server hardware.
++
++The described approach is great for testing purposes, for example to try a
++proposed fix or check if the latest codebase still contains a problem.
++Nonetheless, kernels built this way are also totally fine for day-to-day use
++while at the same time being easy to keep up to date.
++
++The following steps describe the important aspects of the process; a
++comprehensive reference section later explains each of them in more detail. It
++sometimes also describes alternative approaches, pitfalls, as well as errors
++that might occur at a particular point -- and how to then get things rolling
++again.
++
++.. _backup_sbs:
++
++ * Create a fresh backup and put system repair and restore tools at hand, just
++   to be prepared for the unlikely case that something might go sideways.
++
++   [:ref:`details<backup>`]
++
++.. _secureboot_sbs:
++
++ * On platforms with 'Secure Boot' or similar techniques, prepare everything to
++   ensure the system will permit your self-compiled kernel to boot later. The
++   quickest and easiest way to achieve this on commodity x86 systems is to turn
++   such techniques off in the BIOS setup utility; alternatively remove their
++   restrictions through a process initiated by ``mokutil --disable-validation``.
++
++   [:ref:`details<secureboot>`]
++
++.. _buildrequires_sbs:
++
++ * Install all software required to build a Linux kernel. Often you will need:
++   'bc', 'binutils' ('ld' et al.), 'bison', 'flex', 'gcc', 'git', 'openssl',
++   'pahole', 'perl', and the development headers for 'libelf' and 'openssl'. The
++   reference section shows how to quickly install those on various popular Linux
++   distributions.
++
++   [:ref:`details<buildrequires>`]
++
++.. _diskspace_sbs:
++
++ * Ensure to have enough free space for building and installing Linux. For the
++   latter 150 Megabyte in /lib/ and 100 in /boot/ are a safe bet. For storing
++   sources and build artifacts 15 Gigabyte in your home directory should
++   typically suffice. If you have less available, be sure to check the reference
++   section for the steps about downloading the Linux sources and adjusting your
++   kernels build configuration: they mention tricks that reduce the amount of
++   required space in /home/ to around 3,5 Gigabyte.
++
++   [:ref:`details<diskspace>`]
++
++.. _directories_sbs:
++
++ * Create directories for sources and build artifacts::
++
++     mkdir ~/linux ~/linux/sources ~/linux/build
++
++   [:ref:`details<directories>`]
++
++.. _sources_sbs:
++
++ * Retrieve the sources of the Linux version you intend to build; then change
++   into the directory holding them, as all further commands in this guide are
++   meant to be executed from there.
++
++   *[Note: the following paragraphs describe how to retrieve the sources by
++   partially cloning the Linux stable git repository. This is called a shallow
++   clone. The reference section explains two alternatives:* :ref:`packaged
++   archives<sources_archive>` *and* :ref:`a full git clone<sources_full>` *;
++   prefer the latter, if downloading a lot of data does not bother you, as that
++   will avoid some* :ref:`peculiar characteristics of shallow clones the
++   reference section explains<sources_shallow>` *.]*
++
++   Execute the following command to retrieve a fresh mainline codebase::
++
++     git clone --no-checkput --depth 1 -b master \
++       https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git \
++       ~/linux/sources/
++     cd ~/linux/sources/
++
++   If you want to access recent mainline releases and pre-releases, deepen you
++   clone's history to the oldest version you are interested in::
++
++     git fetch --shallow-exclude=v6.0
++
++   In case you want to access a stable/longterm release (say v6.1.5), simply add
++   the branch holding that series; afterwards fetch the history up to the
++   mainline version that started the series (v6.1) or is older::
++
++     git remote set-branches --add origin linux-6.1.y
++     git fetch --shallow-exclude=v6.0
++
++   Now checkout the code you are interested in. If you just performed the
++   initial clone, you will be able to check out a fresh mainline codebase, which
++   is ideal for checking whether developers already addressed an issue::
++
++      git checkout --detach origin/master
++
++   If you deepened your clone, you instead of ``origin/master`` can specify the
++   version you deepened to; any later releases like ``v6.1`` or pre-release like
++   ``v6.2-rc1`` will work, too. Stable or longterm versions like ``v6.1.5`` work
++   just the same, if you added the appropriate stable/longterm branches as
++   described.
++
++   [:ref:`details<sources>`]
++
++.. _patching_sbs:
++
++ * In case you want to apply a kernel patch, do so now. Often a command like
++   this will do the trick::
++
++     patch -p1 < ../proposed-fix.patch
++
++   If the ``-p1`` is actually needed, depends on how the patch was created; in
++   case it does not apply thus try without it.
++
++   If you cloned the sources with git and anything goes sideways, run ``git
++   reset --hard`` to undo any changes to the sources.
++
++   [:ref:`details<patching>`]
++
++.. _tagging_sbs:
++
++ * If you patched your kernel or have one of the same version installed already,
++   better tag the one you are about to build uniquely::
++
++     echo "-proposed_fix" > ~/linux/build/localversion
++
++   As a result running ``uname -r`` under your kernel later will print something
++   like '6.1-rc4-proposed_fix'.
++
++   [:ref:`details<tagging>`]
++
++ .. _configuration_sbs:
++
++ * Create the build configuration for your kernel based on an existing
++   configuration.
++
++   If you already prepared such a '.config' file yourself, copy it to
++   ~/linux/build/ and run ``make O=~/linux/build/ olddefconfig``.
++
++   Use the same command, if your distribution or somebody else already tailored
++   your running kernel to your or your hardware's needs: the make target
++   'olddefconfig' will then try to use that kernel's .config as base.
++
++   Using this make target is fine for everybody else, too -- but you often can
++   save a lot of time by using this command instead::
++
++     yes "" | make O=~/linux/build/ localmodconfig
++
++   This will also try to pick your distribution's kernel as base, but then
++   disable modules for any features apparently superfluous for your setup. This
++   will later reduce the compile time enormously, especially if you are running
++   an universal kernel from a mainstream Linux distribution.
++
++   There is a catch: the make target 'localmodconfig' will disable kernel
++   features you have not actually utilized through some action or program since
++   you booted the system. You can reduce or even eliminate that risk by using
++   tricks outlined in the reference section; for quick testing purposes that
++   risk is often negligible, but it is an aspect you want to keep in mind in
++   case your kernel behaves oddly.
++
++   [:ref:`details<configuration>`]
++
++.. _configmods_sbs:
++
++ * Check if you might want to or have to adjust some kernel configuration
++   options:
++
++  * Evaluate how you want to handle debug symbols. Enable them, if you later
++    might need to decode a stack trace found for example in a 'panic', 'Oops',
++    'warning', or 'BUG'; on the other hand disable them, if you are short on
++    storage space or prefer a smaller kernel binary. See the reference section
++    for details on how to do either. If neither applies, it will likely be fine
++    to simply not bother with this. [:ref:`details<configmods_debugsymbols>`]
++
++  * Are you running Debian? Then to avoid known problems you need to perform
++    additional adjustments explained in the reference section.
++    [:ref:`details<configmods_distros>`].
++
++.. _build_sbs:
++
++ * Build the image and the modules of your kernel::
++
++     make -j $(nproc --all) O=~/linux/build/
++
++   [:ref:`details<build>`]
++
++.. _install_sbs:
++
++ * Now install your kernel::
++
++     command -v installkernel && sudo make O=~/linux/build/ modules_install install
++
++   Often all left for you to do afterwards is a ``reboot``, as many commodity
++   Linux distributions will create an initramfs (also known as initrd) and an
++   entry for your kernel in your boot-loader's configuration when you execute
++   above command; but on some distributions you have to take care of these two
++   steps manually for reasons the reference section explains.
++
++   On a few distributions like Arch Linux and its derivatives the above command
++   does nothing at all; in that case you have to manually install your kernel,
++   as outlined in the reference section.
++
++   [:ref:`details<install>`]
++
++.. _another_sbs:
++
++ * To later build another kernel you need similar steps, but sometimes slightly
++   different commands.
++
++   First, switch back into the sources tree::
++
++      cd ~/linux/sources
++
++   In case you want to build a version from a stable/longterm series you have
++   not used yet (say 6.2.y), tell git to track it::
++
++      git remote set-branches --add origin linux-6.2.y
++
++   Now fetch the latest upstream changes; you again need to specify the earliest
++   version you care about, as git otherwise might retrieve the entire commit
++   history::
++
++     git fetch origin --shallow-exclude=v6.1
++
++   If you modified the sources (for example by applying a patch), you now need
++   to discard those modifications; that's because git otherwise will not be able
++   to switch to the sources of another version due to potential conflicting
++   changes::
++
++     git reset --hard
++
++   Now checkout the version you are interested in::
++
++     git checkout --detach origin/master
++
++   At this point you might want to patch the sources again or set/modify a build
++   tag, as explained earlier; afterwards adjust the build configuration to the
++   new codebase and build your next kernel::
++
++     # reminder: if you want to apply patches, do it at this point
++     # reminder: you might want to update your build tag at this point
++     make O=~/linux/build/ olddefconfig
++     make -j $(nproc --all) O=~/linux/build/
++
++   Install this kernel as outlined already::
++
++     command -v installkernel && sudo make O=~/linux/build/ modules_install install
++
++   [:ref:`details<another>`]
++
++.. _uninstall_sbs:
++
++ * Your kernel is easy to remove later, as its parts are only stored in two
++   places and clearly identifiable by the kernel's release name. Just ensure to
++   not delete the kernel you are running, as that might render your system
++   unbootable.
++
++   Start by deleting the directory holding your kernel's modules, which is named
++   after its release name -- '6.0.1-foobar' in the following example::
++
++     sudo rm -rf /lib/modules/6.0.1-foobar
++
++   Now try the following command, which on some distributions will delete all
++   other kernel files installed and remove the kernel's entry from the boot
++   loader configuration::
++
++     command -v kernel-install && sudo kernel-install -v remove 6.0.1-foobar
++
++   If that command does not output anything or fails, see the reference section;
++   do the same if any files named '*6.0.1-foobar*' remain in /boot/.
++
++   [:ref:`details<uninstall>`]
++
++.. _submit_improvements:
++
++Did you run into trouble following any of the above steps that is not cleared up
++by the reference section below? Or do you have ideas how to improve the text?
++Then please take a moment of your time and let the maintainer of this document
++know by email (Thorsten Leemhuis <linux@leemhuis.info>), ideally while CCing the
++Linux docs mailing list (linux-doc@vger.kernel.org). Such feedback is vital to
++improve this document further, which is in everybody's interest, as it will
++enable more people to master the task described here.
++
++Reference section for the step-by-step guide
++============================================
++
++This section holds additional information for each of the steps in the above
++guide.
++
++.. _backup:
++
++Prepare for emergencies
++-----------------------
++
++   *Create a fresh backup and put system repair and restore tools at hand*
++   [:ref:`... <backup_sbs>`]
++
++Remember, you are dealing with computers, which sometimes do unexpected things
++-- especially if you fiddle with crucial parts like the kernel of an operating
++system. That's what you are about to do in this process. Hence, better prepare
++for something going sideways, even if that should not happen.
++
++[:ref:`back to step-by-step guide <backup_sbs>`]
++
++.. _secureboot:
++
++Dealing with techniques like Secure Boot
++----------------------------------------
++
++   *On platforms with 'Secure Boot' or similar techniques, prepare everything to
++   ensure the system will permit your self-compiled kernel to boot later.*
++   [:ref:`... <secureboot_sbs>`]
++
++Many modern systems allow only certain operating systems to start; they thus by
++default will reject booting self-compiled kernels.
++
++You ideally deal with this by making your platform trust your self-built kernels
++with the help of a certificate and signing. How to do that is not described
++here, as it requires various steps that would take the text too far away from
++its purpose; but you will find many pages on the web that explain this in
++detail.
++
++Temporarily disabling solutions like Secure Boot is another way to make your own
++Linux boot. On commodity x86 systems it is possible to do this in the BIOS Setup
++utility; the steps to do so are not described here, as they greatly vary between
++machines.
++
++On mainstream x86 Linux distributions there is a third and universal option:
++disable all Secure Boot restrictions for your Linux environment. You can
++initiate this process by running ``mokutil --disable-validation``; this will
++tell you to create a one-time password, which is safe to write down. Now
++restart; right after your BIOS performed all self-tests the bootloader Shim will
++show a blue box with a message 'Press any key to perform MOK management'. Hit
++some key before the countdown exposes. This will open a menu and choose 'Change
++Secure Boot state' there. Shim's 'MokManager' will now ask you to enter three
++randomly chosen characters from the one-time password specified earlier. Once
++you provided them, confirm that you really want to disable the validation.
++Afterwards, permit MokManager to reboot the machine.
++
++[:ref:`back to step-by-step guide <secureboot_sbs>`]
++
++.. _buildrequires:
++
++Install build requirements
++--------------------------
++
++   *Install all software required to build a Linux kernel.*
++   [:ref:`...<buildrequires_sbs>`]
++
++The kernel is pretty stand-alone, but besides tools like the compiler you will
++sometimes need a few libraries to build one. How to install everything needed
++depends on your Linux distribution and the configuration of the kernel you are
++about to build.
++
++Here are a few examples what you typically need on some mainstream
++distributions:
++
++ * Debian, Ubuntu, and derivatives::
++
++     sudo apt install bc binutils bison dwarves flex gcc git make openssl \
++       pahole perl-base libssl-dev libelf-dev
++
++ * Fedora and derivatives::
++
++     sudo dnf install binutils /usr/include/{libelf.h,openssl/pkcs7.h} \
++       /usr/bin/{bc,bison,flex,gcc,git,openssl,make,perl,pahole}
++
++ * openSUSE and derivatives::
++
++     sudo zypper install bc binutils bison dwarves flex gcc git make perl-base \
++       openssl openssl-devel libelf-dev
++
++In case you wonder why these lists include openssl and its development headers:
++they are needed for the Secure Boot support, which many distributions enable in
++their kernel configuration for x86 machines.
++
++Sometimes you will need tools for compression formats like bzip2, gzip, lz4,
++lzma, lzo, xz, or zstd as well.
++
++You might need additional libraries and their development headers in case you
++perform tasks not covered in this guide. For example, zlib will be needed when
++building kernel tools from the tools/ directory; make targets like 'menuconfig'
++or 'xconfig' will require development headers for ncurses or Qt.
++
++[:ref:`back to step-by-step guide <buildrequires_sbs>`]
++
++.. _diskspace:
++
++Space requirements
++------------------
++
++   *Ensure to have enough free space for building and installing Linux.*
++   [:ref:`... <diskspace_sbs>`]
++
++The numbers mentioned are rough estimates with a big extra charge to be on the
++safe side, so often you will need less.
++
++If you have space constraints, remember to read the reference section for the
++steps :ref:`Downloading the Linux sources<sources>` and :ref:`Debug symbols in
++the section about configuration adjustments' <configmods>`: both mention tricks
++that reduce the consumed disk space by quite a lot.
++
++[:ref:`back to step-by-step guide <diskspace_sbs>`]
++
++
++.. _directories:
++
++Create dedicated directories
++----------------------------
++
++  *Create directories for sources and build artifacts:*
++  [:ref:`...<directories_sbs>`]
++
++You could build your kernel directly in the source tree, but it is good practice
++to keep it clean by storing the build artifacts separately. That's why this
++guide recommends creating a directory for the latter, which you hence must
++specify in later commands. Most of the time this is done by passing
++``O=~/linux/build/`` to make.
++
++[:ref:`back to step-by-step guide <directories_sbs>`]
++
++.. _sources:
++
++Download the sources
++--------------------
++
++  *Retrieve the sources of the Linux version you intend to build.*
++  [:ref:`...<sources_sbs>`]
++
++The step-by-step guide outlines how to retrieve Linux' sources using a shallow
++git clone. There is :ref:`more to tell about this method<sources_shallow>` and
++two alternate ways worth describing: :ref:`packaged archives<sources_archive>`
++and :ref:`a full git clone<sources_full>`. And the aspects ':ref:`wouldn't it
++be wiser to use a proper pre-release than the latest mainline code
++<sources_snapshot>`' and ':ref:`how to get an even fresher mainline codebase
++<sources_fresher>`' need elaboration, too.
++
++[:ref:`back to step-by-step guide <sources_sbs>`]
++
++.. _sources_shallow:
++
++Noteworthy characteristics of shallow clones
++~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
++
++The step-by-step guide uses a shallow clone, as it is the best solution for most
++of this document's target audience. There are a few aspects of this approach
++worth mentioning:
++
++ * This document in most places uses ``git fetch`` with ``--shallow-exclude=``
++   to specify the tag of the earliest version you care about. You alternatively
++   cat use the parameter ``--shallow-since=`` to specify an absolute (say
++   ``'2023-07-15'``) or relative (``'12 months'``) date to define the depth of
++   the history you want to download. As a second alternative, you can also
++   specify a certain depth explicitly with a parameter like ``--depth=1``,
++   unless you add branches for stable/longterm kernels.
++
++ * When running ``git fetch``, remember to always specify the oldest version,
++   the time you care about, or an explicit depth as shown in the step-by-step
++   guide. Otherwise you will risk downloading nearly the entire git history,
++   which will consume quite a bit of time and bandwidth while also stressing the
++   servers.
++
++   Note, you do not have to use the same version or date all the time. But when
++   you change it over time, git will deepen or flatten the history to the
++   specified point. That allows you to retrieve versions you initially thought
++   you did not need -- or it will discard the sources of older versions, for
++   example in case you want to free up some disk space. The latter will happen
++   automatically when using ``--shallow-since=`` or
++   ``--depth=``.
++
++ * Be warned, when deepening your clone you might encounter an error like
++   'fatal: error in object: unshallow cafecaca0c0dacafecaca0c0dacafecaca0c0da'.
++   In that case run ``git repack -d`` and try again``
++
++ * In case you want to revert changes from a certain version (say Linux 6.3) or
++   perform a bisection (v6.2..v6.3), better tell ``git fetch`` to retrieve
++   objects up to three versions earlier (e.g. 6.0): ``git describe`` will then
++   be able to describe most commits just like it would in a full git clone.
++
++[:ref:`back to step-by-step guide <sources_sbs>`] [:ref:`back to section intro <sources>`]
++
++.. _sources_archive:
++
++Downloading the sources using a packages archive
++~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
++
++People new to compiling Linux often assume downloading an archive via the
++front-page of https://kernel.org is the best approach to retrieve Linux'
++sources. It actually can be, if you are certain to build just one particular
++kernel version without changing any code. Thing is: you might be sure this will
++be the case, but in practice it often will turn out to be a wrong assumption.
++
++That's because when reporting or debugging an issue developers will often ask to
++give another version a try. They also might suggest temporarily undoing a commit
++with ``git revert`` or might provide various patches to try. Sometimes reporters
++will also be asked to use ``git bisect`` to find the change causing a problem.
++These things rely on git or are a lot easier and quicker to handle with it.
++
++A shallow clone also does not add any significant overhead. For example, when
++you use ``git clone --depth=1`` to create a shallow clone of the latest mainline
++codebase git will only retrieve a little more data than downloading a compressed
++packaged archive would.
++
++A shallow clone therefore is often the better choice. If you nevertheless want
++to use a packaged source archive, download one via kernel.org; afterwards
++extract its content to ``~/linux/`` and change to the directory created during
++extraction. The rest of the step-by-step guide will work just fine, apart from
++things that rely on git -- but this mainly concerns the section on successive
++builds of other versions.
++
++[:ref:`back to step-by-step guide <sources_sbs>`] [:ref:`back to section intro <sources>`]
++
++.. _sources_full:
++
++Downloading the sources using a full git clone
++~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
++
++If downloading and storing a lot of data (~4,4 Gigabyte as of early 2023) is
++nothing that bothers you, instead of a shallow clone perform a full git clone
++instead. You then will avoid the specialties mentioned above and will have all
++versions and individual commits at hand at any time::
++
++    curl -L https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/clone.bundle -o ~/linux/linux-stable.git.bundle
++    git clone clone.bundle ~/linux/sources/
++    rm ~/linux/linux-stable.git.bundle
++    cd ~/linux/sources/
++    git remote set-url origin
++    https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
++    git fetch --all
++    git checkout --detach origin/master
++
++[:ref:`back to step-by-step guide <sources_sbs>`] [:ref:`back to section intro <sources>`]
++
++.. _sources_snapshot:
++
++Proper pre-releases (RCs) vs. latest mainline
++~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
++
++When cloning the sources using git and checking out origin/master, you often
++will retrieve a codebase that is somewhere between the latest and the next
++release or pre-release. This almost always is the code you want when giving
++mainline a shot: pre-releases like v6.1-rc5 are in no way special, as they do
++not get any significant extra testing before being published.
++
++There is one exception: you might want to stick to the latest mainline release
++(say v6.1) before its successor's first pre-release (v6.2-rc1) is out. That is
++because compiler errors and other problems are more likely to occur during this
++time, as mainline then is in its 'merge window': a usually two week long phase,
++in which the bulk of the changes for the next release is merged.
++
++[:ref:`back to step-by-step guide <sources_sbs>`] [:ref:`back to section intro <sources>`]
++
++.. _sources_fresher:
++
++Avoiding the mainline lag
++~~~~~~~~~~~~~~~~~~~~~~~~~
++
++The explanations for both the shallow clone and the full clone both retrieve the
++code from the Linux stable git repository. That makes things simpler for this
++document's audience, as it allows easy access to both mainline and
++stable/longterm releases. This approach has just one downside:
++
++Changes merged into the mainline repository are only synced to the master branch
++of the Linux stable repository  every few hours. This lag most of the time is
++not something to worry about; but in case you really need the latest code, just
++add the mainline repo as additional remote and checkout the code from there::
++
++    git remote add mainline https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
++    git fetch
++    git checkout --detach mainline/master
++
++When doing this with a shallow clone, remember to call ``git fetch`` with one
++of the parameters described earlier to limit the depth.
++
++[:ref:`back to step-by-step guide <sources_sbs>`] [:ref:`back to section intro <sources>`]
++
++.. _patching:
++
++Patch the sources (optional)
++----------------------------
++
++  *In case you want to apply a kernel patch, do so now.*
++  [:ref:`...<patching_sbs>`]
++
++This is the point where you might want to patch your kernel -- for example when
++a developer proposed a fix and asked you to check if it helps. The step-by-step
++guide already explains everything crucial here.
++
++[:ref:`back to step-by-step guide <patching_sbs>`]
++
++.. _tagging:
++
++Tagging this kernel build (optional, often wise)
++------------------------------------------------
++
++  *If you patched your kernel or already have that kernel version installed,
++  better tag your kernel by extending its release name:*
++  [:ref:`...<tagging_sbs>`]
++
++Tagging your kernel will help avoid confusion later, especially when you patched
++your kernel. Adding an individual tag will also ensure the kernel's image and
++its modules are installed in parallel to any existing kernels.
++
++There are various ways to add such a tag. The step-by-step guide realizes one by
++creating a 'localversion' file in your build directory from which the kernel
++build scripts will automatically pick up the tag. You can later change that file
++to use a different tag in subsequent builds or simply remove that file to dump
++the tag.
++
++[:ref:`back to step-by-step guide <tagging_sbs>`]
++
++.. _configuration:
++
++Define the build configuration for your kernel
++----------------------------------------------
++
++  *Create the build configuration for your kernel based on an existing
++  configuration.* [:ref:`... <configuration_sbs>`]
++
++There are various aspects for this steps that require a more careful
++explanation:
++
++Pitfalls when using another configuration file as base
++~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
++
++Make targets like localmodconfig and olddefconfig share a few common snares you
++want to be aware of:
++
++ * These targets will reuse a kernel build configuration in your build directory
++   (e.g. '~/linux/build/.config'), if one exists. In case you want to start from
++   scratch you thus need to delete it.
++
++ * The make targets try to find the configuration for your running kernel
++   automatically, but might choose poorly. A line like '# using defaults found
++   in /boot/config-6.0.7-250.fc36.x86_64' or 'using config:
++   '/boot/config-6.0.7-250.fc36.x86_64' tells you which file they picked. If
++   that is not the intended one, simply store it as '~/linux/build/.config'
++   before using these make targets.
++
++ * Unexpected things might happen if you try to use a config file prepared for
++   one kernel (say v6.0) on an older generation (say v5.15). In that case you
++   might want to use a configuration as base which your distribution utilized
++   when they used that or an slightly older kernel version.
++
++Influencing the configuration
++~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
++
++The make target olddefconfig and the ``yes "" |`` used when utilizing
++localmodconfig will set any undefined build options to their default value. This
++among others will disable many kernel features that were introduced after your
++base kernel was released.
++
++If you want to set these configurations options manually, use ``oldconfig``
++instead of ``olddefconfig`` or omit the ``yes "" |`` when utilizing
++localmodconfig. Then for each undefined configuration option you will be asked
++how to proceed. In case you are unsure what to answer, simply hit 'enter' to
++apply the default value.
++
++Big pitfall when using localmodconfig
++~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
++
++As explained briefly in the step-by-step guide already: with localmodconfig it
++can easily happen that your self-built kernel will lack modules for tasks you
++did not perform before utilizing this make target. That's because those tasks
++require kernel modules that are normally autoloaded when you perform that task
++for the first time; if you didn't perform that task at least once before using
++localmodonfig, the latter will thus assume these modules are superfluous and
++disable them.
++
++You can try to avoid this by performing typical tasks that often will autoload
++additional kernel modules: start a VM, establish VPN connections, loop-mount a
++CD/DVD ISO, mount network shares (CIFS, NFS, ...), and connect all external
++devices (2FA keys, headsets, webcams, ...) as well as storage devices with file
++systems you otherwise do not utilize (btrfs, ext4, FAT, NTFS, XFS, ...). But it
++is hard to think of everything that might be needed -- even kernel developers
++often forget one thing or another at this point.
++
++Do not let that risk bother you, especially when compiling a kernel only for
++testing purposes: everything typically crucial will be there. And if you forget
++something important you can turn on a missing feature later and quickly run the
++commands to compile and install a better kernel.
++
++But if you plan to build and use self-built kernels regularly, you might want to
++reduce the risk by recording which modules your system loads over the course of
++a few weeks. You can automate this with `modprobed-db
++<https://github.com/graysky2/modprobed-db>`_. Afterwards use ``LSMOD=<path>`` to
++point localmodconfig to the list of modules modprobed-db noticed being used::
++
++    yes "" | make O=~/linux/build/ LSMOD="${HOME}"/.config/modprobed.db localmodconfig
++
++Remote building with localmodconfig
++~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
++
++If you want to use localmodconfig to build a kernel for another machine, run
++``lsmod > lsmod_foo-machine`` on it and transfer that file to your build host.
++Now point the build scripts to the file like this: ``yes "" | make
++O=~/linux/build/ LSMOD=~/lsmod_foo-machine localmodconfig``. Note, in this case
++you likely want to copy a base kernel configuration from the other machine over
++as well and place it as .config in your build directory.
++
++[:ref:`back to step-by-step guide <configuration_sbs>`]
++
++.. _configmods:
++
++Adjust build configuration
++--------------------------
++
++   *Check if you might want to or have to adjust some kernel configuration
++   options:*
++
++Depending on your needs you at this point might want or have to adjust some
++kernel configuration options.
++
++.. _configmods_debugsymbols:
++
++Debug symbols
++~~~~~~~~~~~~~
++
++   *Evaluate how you want to handle debug symbols.*
++   [:ref:`...<configmods_sbs>`]
++
++Most users do not need to care about this, it's often fine to leave everything
++as it is; but you should take a closer look at this, if you might need to decode
++a stack trace or want to reduce space consumption.
++
++Having debug symbols available can be important when your kernel throws a
++'panic', 'Oops', 'warning', or 'BUG' later when running, as then you will be
++able to find the exact place where the problem occurred in the code. But
++collecting and embedding the needed debug information takes time and consumes
++quite a bit of space: in late 2022 the build artifacts for a typical x86 kernel
++configured with localmodconfig consumed around 5 Gigabyte of space with debug
++symbols, but less than 1 when they were disabled. The resulting kernel image and
++the modules are bigger as well, which increases load times.
++
++Hence, if you want a small kernel and are unlikely to decode a stack trace
++later, you might want to disable debug symbols to avoid above downsides::
++
++    ./scripts/config --file ~/linux/build/.config -d DEBUG_INFO \
++      -d DEBUG_INFO_DWARF_TOOLCHAIN_DEFAULT -d DEBUG_INFO_DWARF4 \
++      -d DEBUG_INFO_DWARF5 -e CONFIG_DEBUG_INFO_NONE
++    make O=~/linux/build/ olddefconfig
++
++You on the other hand definitely want to enable them, if there is a decent
++chance that you need to decode a stack trace later (as explained by 'Decode
++failure messages' in Documentation/admin-guide/tainted-kernels.rst in more
++detail)::
++
++    ./scripts/config --file ~/linux/build/.config -d DEBUG_INFO_NONE -e DEBUG_KERNEL
++      -e DEBUG_INFO -e DEBUG_INFO_DWARF_TOOLCHAIN_DEFAULT -e KALLSYMS -e KALLSYMS_ALL
++    make O=~/linux/build/ olddefconfig
++
++Note, many mainstream distributions enable debug symbols in their kernel
++configurations -- make targets like localmodconfig and olddefconfig thus will
++often pick that setting up.
++
++[:ref:`back to step-by-step guide <configmods_sbs>`]
++
++.. _configmods_distros:
++
++Distro specific adjustments
++~~~~~~~~~~~~~~~~~~~~~~~~~~~
++
++   *Are you running* [:ref:`... <configmods_sbs>`]
++
++The following sections help you to avoid build problems that are known to occur
++when following this guide on a few commodity distributions.
++
++**Debian:**
++
++ * Remove a stale reference to a certificate file that would cause your build to
++   fail::
++
++    ./scripts/config --file ~/linux/build/.config --set-str SYSTEM_TRUSTED_KEYS ''
++
++   Alternatively, download the needed certificate and make that configuration
++   option point to it, as `the Debian handbook explains in more detail
++   <https://debian-handbook.info/browse/stable/sect.kernel-compilation.html>`_ .
++
++[:ref:`back to step-by-step guide <configmods_sbs>`]
++
++.. _build:
++
++Build your kernel
++-----------------
++
++  *Build the image and the modules of your kernel* [:ref:`... <build_sbs>`]
++
++A lot can go wrong at this stage that will abort the build process. Sometimes
++this is caused by problems on your side, which you will often be able to fix
++quickly; sometimes though the problem lies in the code and can only be fixed by
++a developer.
++
++A close examination of the failure messages coupled with some research on the
++internet will often tell you which of the two it is. Before doing this, restart
++the build process like this::
++
++    make O=~/linux/build/ V=1
++
++The ``V=1`` activates verbose output, which might be needed to see the actual
++error. To make it easier to spot, this command also omits the ``-j $(nproc
++--all)`` used earlier to utilize every CPU core in the system for the job. But
++this parallelism results in some clutter when failures occur, which makes the
++actual error message harder to spot.
++
++Once the failure happens again, try to find the most crucial line describing the
++problem. Then search the internet for the most important and non-generic section
++of that line (say 4 to 8 words); avoid or remove anything that looks remotely
++system-specific, like your username or local path names like ``~/linux/build/``.
++First try your regular internet search engine with that string, afterwards
++search Linux kernel mailing lists via `lore.kernel.org/all/
++<https://lore.kernel.org/all/>`_.
++
++This most of the time will find something that will explain what is wrong; quite
++often one of the hits will provide a solution for your problem, too. If you
++do not find anything that matches your problem, try again from a different angle
++by modifying your search terms or using another line from the printed error
++messages.
++
++In the end, most trouble you are to run into has likely been encountered and
++reported by others already. That includes issues where the cause is not your
++system, but lies the code. If you run into one of those, you might thus find a
++solution (e.g. a patch) or workaround for your problem, too.
++
++[:ref:`back to step-by-step guide <build_sbs>`]
++
++.. _install:
++
++Install your kernel
++-------------------
++
++  *Now install your kernel* [:ref:`... <install_sbs>`]
++
++What you need to do after executing the command in the step-by-step guide
++depends on the existence and the implementation of an ``installkernel``
++executable. Many commodity Linux distributions ship such a kernel installer in
++``/sbin/`` that does everything needed, hence there is nothing left for you
++except rebooting. But some distributions contain an installkernel that does
++only part of the job -- and a few lack it completely and leave all the work to
++you.
++
++If ``installkernel`` is found, the kernel's build system will delegate the
++actual installation of your kernel's image and related files to this executable.
++On almost all Linux distributions it will store the image as '/boot/vmlinuz-
++<your kernel's release name>' and put a 'System.map-<your kernel's release
++name>' alongside it. Your kernel will thus be installed in parallel to any
++existing ones, unless you already have one with exactly the same release name.
++
++Installkernel on many distributions will afterwards generate an 'initramfs'
++(often also called 'initrd'), which commodity distributions rely on for booting;
++hence be sure to keep the order of the two make targets used in the step-by-step
++guide, as things will go sideways if you install your kernel's image before its
++modules. Often installkernel will then add your kernel to the boot loader
++configuration, too. You have to take care of one or both of these tasks
++yourself, if your distributions installkernel doesn't handle them.
++
++A few distributions like Arch Linux and its derivatives totally lack an
++installkernel executable. On those just install the modules using the kernel's
++build system and then install the image and the System.map file manually::
++
++     sudo make O=~/linux/build/ modules_install
++     sudo install -m 0600 ~/linux/build/$(make O=~/linux/build/ -s image_name) \
++       /boot/vmlinuz-$(make O=~/linux/build/ -s kernelrelease)
++     sudo install -m 0600 ~/linux/build/System.map \
++       /boot/System.map-$(make O=~/linux/build/ -s kernelrelease)
++
++If your distribution boots with the help of an initramfs, now generate one for
++your kernel using the tools your distribution provides for this process.
++Afterwards add your kernel to your boot-loader configuration and reboot.
++
++[:ref:`back to step-by-step guide <install_sbs>`]
++
++.. _another:
++
++Another round later
++-------------------
++
++  *To later build another kernel you need similar, but sometimes slightly
++  different commands* [:ref:`... <another_sbs>`]
++
++The process to build later kernels is similar, but at some points slightly
++different. You for example do not want to use 'localmodconfig' for succeeding
++kernel builds, as you already created a trimmed down configuration you want to
++use from now on. Hence instead just use ``oldconfig`` or ``olddefconfig`` to
++adjust your build configurations to the needs of the kernel version you are
++about to build.
++
++If you created a shallow-clone with git, remember what the :ref:`section that
++explained the setup described in more detail <sources>`: you need to use a
++slightly different ``git fetch`` command and when switching to another series
++need to add an additional remote branch.
++
++[:ref:`back to step-by-step guide <another_sbs>`]
++
++.. _uninstall:
++
++Uninstall the kernel later
++--------------------------
++
++  *All parts of your installed kernel are identifiable by its release name and
++  thus easy to remove later.* [:ref:`... <uninstall_sbs>`]
++
++Do not worry installing your kernel manually and thus bypassing your
++distribution's packaging system will totally mess up your machine: all parts of
++your kernel are easy to remove later, as files are stored in two places only and
++normally identifiable by the kernel's release name.
++
++One of the two places is a directory in /lib/modules/, which holds the modules
++for each installed kernel. This directory is named after the kernel's release
++name; hence, to remove all modules for one of your kernels, simply remove its
++modules directory in /lib/modules/.
++
++The other place is /boot/, where typically one to five files will be placed
++during installation of a kernel. All of them usually contain the release name in
++their file name, but how many files and their name depends somewhat on your
++distribution's installkernel executable (:ref:`see above <install>`) and its
++initramfs generator. On some distributions the ``kernel-install`` command
++mentioned in the step-by-step guide will remove all of these files for you --
++and the entry for your kernel in the boot-loader configuration at the same time,
++too. On others you have to take care of these steps yourself. The following
++command should interactively remove the two main files of a kernel with the
++release name '6.0.1-foobar'::
++
++    rm -i /boot/{System.map,vmlinuz}-6.0.1-foobar
++
++Now remove the belonging initramfs, which often will be called something like
++``/boot/initramfs-6.0.1-foobar.img`` or ``/boot/initrd.img-6.0.1-foobar``.
++Afterwards check for other files in /boot/ that have '6.0.1-foobar' in their
++name and delete them as well. Now remove the kernel from your boot-loader's
++configuration.
++
++Note, be very careful with wildcards like '*' when deleting files or directories
++for kernels manually: you might accidentally remove files of a 6.0.11 kernel
++when all you want is to remove 6.0 or 6.0.1.
++
++[:ref:`back to step-by-step guide <uninstall_sbs>`]
++
++.. _faq:
++
++FAQ
++===
++
++Why does this 'how-to' not work on my system?
++---------------------------------------------
++
++As initially stated, this guide is 'designed to cover everything typically
++needed [to build a kernel] on mainstream Linux distributions running on
++commodity PC or server hardware'. The outlined approach despite this should work
++on many other setups as well. But trying to cover every possible use-case in one
++guide would defeat its purpose, as without such a focus you would need dozens or
++hundreds of constructs along the lines of 'in case you are having <insert
++machine or distro>, you at this point have to do <this and that>
++<instead|additionally>'. Each of which would make the text longer, more
++complicated, and harder to follow.
++
++That being said: this of course is a balancing act. Hence, if you think an
++additional use-case is worth describing, suggest it to the maintainers of this
++document, as :ref:`described above <submit_improvements>`.
++
++
++..
++   end-of-content
++..
++   This document is maintained by Thorsten Leemhuis <linux@leemhuis.info>. If
++   you spot a typo or small mistake, feel free to let him know directly and
++   he'll fix it. You are free to do the same in a mostly informal way if you
++   want to contribute changes to the text -- but for copyright reasons please CC
++   linux-doc@vger.kernel.org and 'sign-off' your contribution as
++   Documentation/process/submitting-patches.rst explains in the section 'Sign
++   your work - the Developer's Certificate of Origin'.
++..
++   This text is available under GPL-2.0+ or CC-BY-4.0, as stated at the top
++   of the file. If you want to distribute this text under CC-BY-4.0 only,
++   please use 'The Linux kernel development community' for author attribution
++   and link this as source:
++   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/plain/Documentation/admin-guide/quickly-build-trimmed-linux.rst
++..
++   Note: Only the content of this RST file as found in the Linux kernel sources
++   is available under CC-BY-4.0, as versions of this text that were processed
++   (for example by the kernel's build system) might contain content taken from
++   files which use a more restrictive license.
++
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 7f86d02cb427..bfbed79c0ea1 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -6329,6 +6329,7 @@ DOCUMENTATION REPORTING ISSUES
+ M:	Thorsten Leemhuis <linux@leemhuis.info>
+ L:	linux-doc@vger.kernel.org
+ S:	Maintained
++F:	Documentation/admin-guide/quickly-build-trimmed-linux.rst
+ F:	Documentation/admin-guide/reporting-issues.rst
+ 
+ DOCUMENTATION SCRIPTS
+
+base-commit: e076f253283c3e55a128fa9665c0e6cd8146948d
+-- 
+2.39.1
+
