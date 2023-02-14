@@ -1,52 +1,13 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D61C52569
-	for <regressions@lists.linux.dev>; Tue, 14 Feb 2023 15:00:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1676386803;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/Y0i1G7CGmJ3aU/RrjzieSXfqNBmOoSoOUJ9sUny07Y=;
-	b=akN2hNUFRAe3BAFuc+n9UEozlziGVRwbgrJIe/3Kx0wfiYRdMizMLaYkK7zmnjRXbjr+4q
-	9E4CaPbhmEzXOGve2PONuZcZTbzoCYQdDa1BNmh7rY80AziUzuxxTq0hM09wM1fIMrAx1b
-	BKWNlIKp33v1WgXfz7Ei6XH8HI8hQjk=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-222--Lzfr7cwNlOTc8M-oYX-4A-1; Tue, 14 Feb 2023 10:00:02 -0500
-X-MC-Unique: -Lzfr7cwNlOTc8M-oYX-4A-1
-Received: by mail-ej1-f69.google.com with SMTP id l18-20020a1709067d5200b008af415fdd80so9545568ejp.21
-        for <regressions@lists.linux.dev>; Tue, 14 Feb 2023 07:00:01 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/Y0i1G7CGmJ3aU/RrjzieSXfqNBmOoSoOUJ9sUny07Y=;
-        b=AxlEekJUbxCn5H2jJyTjvF93EzXnnlByWtQf7Cu3wOn5jg4nKlyDTMS/ha/6YQv2vS
-         pVrVyFQHrLPBC4kJZ+HksD+L2HyOuT09m2Qht3QqjADYUHATQIBD6RK9eJohuKghU6JL
-         PjaEZxL0k8IQVJc+rzeSEMOsVRf28srw5WI7MiANXJKXLKy/YD+Z90+4snCwXm2NSzq3
-         6CzwoJlerQwHG3R0BqkjKYLKgrPh7us/bXIGLRRWMLPpstxEZEK/hSYDVEtOgaJjpsbq
-         jZFnypDP0ONqvAvnofUEtBogQS88nqD6RyqF8HWwnI5TW9kl1X6DgFpJ9dssO9juK4MU
-         WWpA==
-X-Gm-Message-State: AO0yUKWwchUo3/ouvng0w442o50xZ2Huk2ceq6jxEvwFvAtFqIOIBggj
-	9qn2Bl6ppRfhbz7cx6SyYsQdYgj0e8CfIifI4ET+6KV1jt/6UyyUDAjTmaKWHkDVMt3A1MmtBPs
-	Y8pZulVF8QHF0H7j47rw2qPBDkuLPiCDy4rCtEb+kFK9Ttp+uBk5yesq/pgXPKv0LvyFNz28oV0
-	/kD9pJ
-X-Received: by 2002:a50:aac2:0:b0:4ac:bf55:7d69 with SMTP id r2-20020a50aac2000000b004acbf557d69mr2608263edc.42.1676386800604;
-        Tue, 14 Feb 2023 07:00:00 -0800 (PST)
-X-Google-Smtp-Source: AK7set+cwMTzgQSeX9+VMvJQqzXqjKyplrTQ3LHy4WXUktpA6qt/fyjC2BwIKZEEbgoTe3bf1P8iGQ==
-X-Received: by 2002:a50:aac2:0:b0:4ac:bf55:7d69 with SMTP id r2-20020a50aac2000000b004acbf557d69mr2608237edc.42.1676386800308;
-        Tue, 14 Feb 2023 07:00:00 -0800 (PST)
-Received: from [192.168.43.127] ([109.37.137.201])
-        by smtp.gmail.com with ESMTPSA id r10-20020a50c00a000000b004acd14ab4dfsm2041132edb.41.2023.02.14.06.59.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Feb 2023 06:59:59 -0800 (PST)
-Message-ID: <a3a2ca3b-9f9d-58d2-d0f0-0035291d81c5@redhat.com>
-Date: Tue, 14 Feb 2023 15:59:58 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0817DC0A9
+	for <regressions@lists.linux.dev>; Tue, 14 Feb 2023 15:19:00 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1pRx58-00005h-Me; Tue, 14 Feb 2023 16:18:58 +0100
+Message-ID: <deecc5a8-35b7-6e0f-c1f5-35e36118f774@leemhuis.info>
+Date: Tue, 14 Feb 2023 16:18:58 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -54,132 +15,135 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
+ Thunderbird/102.7.2
 Subject: Re: [Regression] Bug 217026 - Backlight control broken on kernels
  6.1.4+
-To: Linux regressions mailing list <regressions@lists.linux.dev>,
+Content-Language: en-US, de-DE
+To: Hans de Goede <hdegoede@redhat.com>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
  Daniel Dadap <ddadap@nvidia.com>
 Cc: "platform-driver-x86@vger.kernel.org"
  <platform-driver-x86@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
  albimarini4283@gmail.com
 References: <197e2991-9d0a-4cb3-e2d3-f0f58fb28a2e@leemhuis.info>
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <197e2991-9d0a-4cb3-e2d3-f0f58fb28a2e@leemhuis.info>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
+ <a3a2ca3b-9f9d-58d2-d0f0-0035291d81c5@redhat.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <a3a2ca3b-9f9d-58d2-d0f0-0035291d81c5@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1676387941;5dcdfe5e;
+X-HE-SMSGID: 1pRx58-00005h-Me
 
-Hi Thorsten,
-
-On 2/14/23 11:44, Linux regression tracking (Thorsten Leemhuis) wrote:
-> Hi, this is your Linux kernel regression tracker.
+On 14.02.23 15:59, Hans de Goede wrote:
 > 
-> I noticed a regression report in bugzilla.kernel.org. As many (most?)
-> kernel developer don't keep an eye on it, I decided to forward it by
-> mail. Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=217026 :
+> On 2/14/23 11:44, Linux regression tracking (Thorsten Leemhuis) wrote:
+>> Hi, this is your Linux kernel regression tracker.
+>>
+>> I noticed a regression report in bugzilla.kernel.org. As many (most?)
+>> kernel developer don't keep an eye on it, I decided to forward it by
+>> mail. Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=217026 :
+>>
+>>>  albimarini4283@gmail.com 2023-02-12 20:57:03 UTC
+>>>
+>>> Brightness control does not work with AMD Ryzen 5800H when using hybrid
+>>> graphics on kernel updates 6.1.4+. I am using a Lenovo Legion Slim 7
+>>> (2021, 15ACH6) currently running Arch Linux with the mainline kernel
+>>> 6.1.11, however, I have been testing my experience with this issue on
+>>> every point revision from 6.1.3 to 6.1.11.
+>>>
+>>>       CPU: AMD Ryzen 5 5800H with Radeon Graphics
+>>>       GPU: NVIDIA RTX 3060 Mobile / Max-Q (Proprietary NVIDIA driver,
+>>> tested with 525.78.01-1 (version prior to 6.1.4 being released) and
+>>> 525.89.02-1 (latest driver at time of writing))
+>>>       System Memory: 40 GB
+>>>       Display: Laptop (Laptop Screen)
+>>>
+>>> The only parameters applied at boot on my system are: nvidia-drm.modeset=1
+>>>
+>>> How to reproduce the issue:
+>>> Enable hybrid graphics/Optimus in BIOS setup.
+>>>
+>>> Prior to kernel version 6.1.4, /sys/class/backlight contained two entries:
+>>> amdgpu_bl0 and nvidia_wmi_ec_backlight
+>>>
+>>> With these two entries in /sys/class/backlight , I was able to write to
+>>> their respective brightness files directly or use a program like light
+>>> to change the values. Those values would change the brightness of the
+>>> screen depending on if I was using the AMD GPU or NVIDIA GPU to display
+>>> the current application. I could set these values to roughly the same
+>>> thing to achieve an overall complete brightness experience regardless of
+>>> whether or not I was currently running an application on my integrated
+>>> (AMD) GPU or dedicated (NVIDIA) GPU.
+>>>
+>>> Then, upon updating to kernel versions 6.1.4+, there is no longer an
+>>> amdgpu_bl0 entry in /sys/class/backlight , just a
+>>> nvidia_wmi_ec_backlight entry, making it impossible for me to change the
+>>> brightness on my display when using the iGPU. Interestingly, on kernels
+>>> 6.1.4+, running "journalctl -b -0 | grep backlight" returns an output
+>>> "amdgpu: [drm] Skipping amdgpu DM backlight registration", which was not
+>>> present in prior kernel versions.
+>>>
+>>> However, if I instead prepend the option "acpi_backlight=native" to my
+>>> kernel command line options at boot, "amdgpu_bl0" is once again present
+>>> in /sys/class/backlight but "nvidia_wmi_ec_backlight" has now
+>>> disappeared and is nowhere to be seen making it so I can change the
+>>> brightness when using the iGPU, but the brightness is stuck at max when
+>>> using the dedicated GPU. Running the above journalctl command at this
+>>> point returns no errors relating to my AMD GPU and does not mention
+>>> anything about the NVIDIA GPU. Trying different acpi_backlight options
+>>> on 6.1.4+ does not fix the issue and instead removes functionality.
+>>> acpi_backlight=vendor makes an entry called "ideapad" pop up in
+>>> /sys/class/backlight with nothing else. Changing the brightness values
+>>> in ideapad does nothing.
+>>> acpi_backlight=video makes only two entries appear in
+>>> /sys/class/backlight, acpi_video0 and acpi_video1. Changing the
+>>> brightness values in either of these directories does nothing.
+>>> acpi_backlight=none causes nothing to appear under /sys/class/backlight.
+>>>
+>>> If hybrid graphics is disabled, the display is connected to the NVIDIA
+>>> GPU and /sys/class/backlight/nvidia_0 is present, the NVIDIA driver can
+>>> change the display brightness without a problem.p
+>>>
+>>> Below is my lscpi -nn and dmidecode outputs on kernel 6.1.3 and 6.1.11.
+>>> [...]
+>>
+>> See the ticket for more details.
+>>
+>> [TLDR for the rest of this mail: I'm adding this report to the list of
+>> tracked Linux kernel regressions; the text you find below is based on a
+>> few templates paragraphs you might have encountered already in similar
+>> form.]
+>>
+>> BTW, let me use this mail to also add the report to the list of tracked
+>> regressions to ensure it's doesn't fall through the cracks:
+>>
+>> #regzbot introduced: v6.1.3..v6.1.4
+>> https://bugzilla.kernel.org/show_bug.cgi?id=217026
+>> #regzbot title: backlight: brightness control stopped working on a Ryzen
+>> system with hybrid graphics
+>> #regzbot ignore-activity
 > 
->>  albimarini4283@gmail.com 2023-02-12 20:57:03 UTC
->>
->> Brightness control does not work with AMD Ryzen 5800H when using hybrid
->> graphics on kernel updates 6.1.4+. I am using a Lenovo Legion Slim 7
->> (2021, 15ACH6) currently running Arch Linux with the mainline kernel
->> 6.1.11, however, I have been testing my experience with this issue on
->> every point revision from 6.1.3 to 6.1.11.
->>
->>       CPU: AMD Ryzen 5 5800H with Radeon Graphics
->>       GPU: NVIDIA RTX 3060 Mobile / Max-Q (Proprietary NVIDIA driver,
->> tested with 525.78.01-1 (version prior to 6.1.4 being released) and
->> 525.89.02-1 (latest driver at time of writing))
->>       System Memory: 40 GB
->>       Display: Laptop (Laptop Screen)
->>
->> The only parameters applied at boot on my system are: nvidia-drm.modeset=1
->>
->> How to reproduce the issue:
->> Enable hybrid graphics/Optimus in BIOS setup.
->>
->> Prior to kernel version 6.1.4, /sys/class/backlight contained two entries:
->> amdgpu_bl0 and nvidia_wmi_ec_backlight
->>
->> With these two entries in /sys/class/backlight , I was able to write to
->> their respective brightness files directly or use a program like light
->> to change the values. Those values would change the brightness of the
->> screen depending on if I was using the AMD GPU or NVIDIA GPU to display
->> the current application. I could set these values to roughly the same
->> thing to achieve an overall complete brightness experience regardless of
->> whether or not I was currently running an application on my integrated
->> (AMD) GPU or dedicated (NVIDIA) GPU.
->>
->> Then, upon updating to kernel versions 6.1.4+, there is no longer an
->> amdgpu_bl0 entry in /sys/class/backlight , just a
->> nvidia_wmi_ec_backlight entry, making it impossible for me to change the
->> brightness on my display when using the iGPU. Interestingly, on kernels
->> 6.1.4+, running "journalctl -b -0 | grep backlight" returns an output
->> "amdgpu: [drm] Skipping amdgpu DM backlight registration", which was not
->> present in prior kernel versions.
->>
->> However, if I instead prepend the option "acpi_backlight=native" to my
->> kernel command line options at boot, "amdgpu_bl0" is once again present
->> in /sys/class/backlight but "nvidia_wmi_ec_backlight" has now
->> disappeared and is nowhere to be seen making it so I can change the
->> brightness when using the iGPU, but the brightness is stuck at max when
->> using the dedicated GPU. Running the above journalctl command at this
->> point returns no errors relating to my AMD GPU and does not mention
->> anything about the NVIDIA GPU. Trying different acpi_backlight options
->> on 6.1.4+ does not fix the issue and instead removes functionality.
->> acpi_backlight=vendor makes an entry called "ideapad" pop up in
->> /sys/class/backlight with nothing else. Changing the brightness values
->> in ideapad does nothing.
->> acpi_backlight=video makes only two entries appear in
->> /sys/class/backlight, acpi_video0 and acpi_video1. Changing the
->> brightness values in either of these directories does nothing.
->> acpi_backlight=none causes nothing to appear under /sys/class/backlight.
->>
->> If hybrid graphics is disabled, the display is connected to the NVIDIA
->> GPU and /sys/class/backlight/nvidia_0 is present, the NVIDIA driver can
->> change the display brightness without a problem.p
->>
->> Below is my lscpi -nn and dmidecode outputs on kernel 6.1.3 and 6.1.11.
->> [...]
-> 
-> See the ticket for more details.
-> 
-> [TLDR for the rest of this mail: I'm adding this report to the list of
-> tracked Linux kernel regressions; the text you find below is based on a
-> few templates paragraphs you might have encountered already in similar
-> form.]
-> 
-> BTW, let me use this mail to also add the report to the list of tracked
-> regressions to ensure it's doesn't fall through the cracks:
-> 
-> #regzbot introduced: v6.1.3..v6.1.4
-> https://bugzilla.kernel.org/show_bug.cgi?id=217026
-> #regzbot title: backlight: brightness control stopped working on a Ryzen
-> system with hybrid graphics
-> #regzbot ignore-activity
+> Thank you for forwarding this.
 
-Thank you for forwarding this. I have just added the following comment
-to the bug:
+yw
 
-"""
-Yes this has already been reported on the malinglist.
+> I have just added the following comment to the bug:
+> [...]
+> Lets continue this inside bugzilla.
 
-There unfortunately is a firmware bug on the Lenovo Legion models.
+Thx. FWIW, at least from my side there is no need to post replies to
+bugzilla and the list; some developers prefer one, some the other -- and
+regzbot will notice replies to both places.
 
-On models with the Nvidia WMI EC backlight interface, when the laptop is configured in dynamic mux mode in the BIOS (1) the backlight should always be controlled by the Nvidia WMI EC backlight interface. So in theory the kernel is behaving as it should according to the documentation here.
+It's IMHO unfortunate that we have to deal with two places, but well,
+that's how it is.
 
-But as you found out, some Legion models are not behaving as the Nvidia WMI spec says they should behave. This is also why you needed the hack/script to write brightness values to both backlight devices at the same time with older kernels.
+Ciao, Thorsten
 
-Daniel Dadap from Nvidia is looking into this, but I'm afraid that we don't have a solution yet.
+P.S.: while at it, let me tell regzbot that this one will take some time
+to get resolved:
 
-1) So that you can switch at runtime which GPU is connected to the builtin LCD panel
-"""
-
-Lets continue this inside bugzilla.
-
-Regards,
-
-Hans
-
+#regzbot backburner: known bios issue, that why there where tricky
+aspects beforehand as well; someone from Nvidia is looking into this
