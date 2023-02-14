@@ -1,161 +1,185 @@
-Received: from gxncvesw.deltaclipper.com (gxncvesw.deltaclipper.com [92.52.217.140])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7681B27721
-	for <regressions@lists.linux.dev>; Tue, 14 Feb 2023 12:47:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed/relaxed; s=dkim; d=deltaclipper.com;
- h=Content-Type:MIME-Version:Subject:To:From:Date:Message-ID; i=jessica@deltaclipper.com;
- bh=jfyFar3+MsEzZlgOHD1p9G9CPGc=;
- b=XEkIFoolL8E6uXXMma0AtceaILnwAf38njwbACoWq5NMlw/2vz2A9wZAKhS/bmU/NqTmTdh81iU6
-   MoBJ2TeWRukvOO78J7D6K9iF/9AzYXO8agvz35dOXl9jxTnCDedlymCX/EGDXpqtTT36bIlLZOB1
-   BaHbi/rHniIDOqpzLPyHT27xwuy92QYotV/eClRzPIpff6N7Q56w2I5fUhBn1joq4OZn3KCU0JOf
-   ldgZ/+cS5uJkd8KAWOed76wE7DyL6FMt8A/+9PMood4Ns0/MtiiXxb7k07Uy5wU9XRdQ35pG7o2Q
-   4JaK5DBUqZd1yATVzxmz5/LOT+SzkDnqz4JD3Q==
-DomainKey-Signature: a=rsa-sha1; c=nofws; q=dns; s=dkim; d=deltaclipper.com;
- b=B9WAgt5nJHNkdfP6l7Y1FzfPkf0sA+0xwpT6hqSCVVVAwVfRpwlA+ue/QP5txPh91DliQIaC/7ER
-   /6vbwmY725+b+N1p2ajq1aq+n5iiKg2FZGGMVpKHhGILnBUuTf5QuVie/fDlj3lbuSHDInie3DDH
-   ONkDE5a5gGCRRlNysYjtbrJQ4Q3FWOFVifrFiffutoiL6KzdtDFwlOlseCKDFSCjWW9gvOQqw+dl
-   Z42yw4HURBryTmSlZRso2wM/+rOadll9u9WaOC3fnl1gKn2AYenDJX+rUb8n9YzS17Y4BVQ58IDf
-   n9HUOa0/ejkcoTWnLoCS8ffYHqiISsgZj7YP+w==;
-Content-Type: multipart/mixed; boundary="===============1659532475=="
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D61C52569
+	for <regressions@lists.linux.dev>; Tue, 14 Feb 2023 15:00:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1676386803;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/Y0i1G7CGmJ3aU/RrjzieSXfqNBmOoSoOUJ9sUny07Y=;
+	b=akN2hNUFRAe3BAFuc+n9UEozlziGVRwbgrJIe/3Kx0wfiYRdMizMLaYkK7zmnjRXbjr+4q
+	9E4CaPbhmEzXOGve2PONuZcZTbzoCYQdDa1BNmh7rY80AziUzuxxTq0hM09wM1fIMrAx1b
+	BKWNlIKp33v1WgXfz7Ei6XH8HI8hQjk=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-222--Lzfr7cwNlOTc8M-oYX-4A-1; Tue, 14 Feb 2023 10:00:02 -0500
+X-MC-Unique: -Lzfr7cwNlOTc8M-oYX-4A-1
+Received: by mail-ej1-f69.google.com with SMTP id l18-20020a1709067d5200b008af415fdd80so9545568ejp.21
+        for <regressions@lists.linux.dev>; Tue, 14 Feb 2023 07:00:01 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/Y0i1G7CGmJ3aU/RrjzieSXfqNBmOoSoOUJ9sUny07Y=;
+        b=AxlEekJUbxCn5H2jJyTjvF93EzXnnlByWtQf7Cu3wOn5jg4nKlyDTMS/ha/6YQv2vS
+         pVrVyFQHrLPBC4kJZ+HksD+L2HyOuT09m2Qht3QqjADYUHATQIBD6RK9eJohuKghU6JL
+         PjaEZxL0k8IQVJc+rzeSEMOsVRf28srw5WI7MiANXJKXLKy/YD+Z90+4snCwXm2NSzq3
+         6CzwoJlerQwHG3R0BqkjKYLKgrPh7us/bXIGLRRWMLPpstxEZEK/hSYDVEtOgaJjpsbq
+         jZFnypDP0ONqvAvnofUEtBogQS88nqD6RyqF8HWwnI5TW9kl1X6DgFpJ9dssO9juK4MU
+         WWpA==
+X-Gm-Message-State: AO0yUKWwchUo3/ouvng0w442o50xZ2Huk2ceq6jxEvwFvAtFqIOIBggj
+	9qn2Bl6ppRfhbz7cx6SyYsQdYgj0e8CfIifI4ET+6KV1jt/6UyyUDAjTmaKWHkDVMt3A1MmtBPs
+	Y8pZulVF8QHF0H7j47rw2qPBDkuLPiCDy4rCtEb+kFK9Ttp+uBk5yesq/pgXPKv0LvyFNz28oV0
+	/kD9pJ
+X-Received: by 2002:a50:aac2:0:b0:4ac:bf55:7d69 with SMTP id r2-20020a50aac2000000b004acbf557d69mr2608263edc.42.1676386800604;
+        Tue, 14 Feb 2023 07:00:00 -0800 (PST)
+X-Google-Smtp-Source: AK7set+cwMTzgQSeX9+VMvJQqzXqjKyplrTQ3LHy4WXUktpA6qt/fyjC2BwIKZEEbgoTe3bf1P8iGQ==
+X-Received: by 2002:a50:aac2:0:b0:4ac:bf55:7d69 with SMTP id r2-20020a50aac2000000b004acbf557d69mr2608237edc.42.1676386800308;
+        Tue, 14 Feb 2023 07:00:00 -0800 (PST)
+Received: from [192.168.43.127] ([109.37.137.201])
+        by smtp.gmail.com with ESMTPSA id r10-20020a50c00a000000b004acd14ab4dfsm2041132edb.41.2023.02.14.06.59.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 Feb 2023 06:59:59 -0800 (PST)
+Message-ID: <a3a2ca3b-9f9d-58d2-d0f0-0035291d81c5@redhat.com>
+Date: Tue, 14 Feb 2023 15:59:58 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Subject: Purchase Requirement
-To: regressions@lists.linux.dev
-From: "Jessica Hernandez" <jessica@deltaclipper.com>
-Date: Tue, 14 Feb 2023 19:18:00 +0700
-Message-ID: <0.0.1.4AB.1D9406E424308CA.0@gxncvesw.deltaclipper.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Subject: Re: [Regression] Bug 217026 - Backlight control broken on kernels
+ 6.1.4+
+To: Linux regressions mailing list <regressions@lists.linux.dev>,
+ Daniel Dadap <ddadap@nvidia.com>
+Cc: "platform-driver-x86@vger.kernel.org"
+ <platform-driver-x86@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+ albimarini4283@gmail.com
+References: <197e2991-9d0a-4cb3-e2d3-f0f58fb28a2e@leemhuis.info>
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <197e2991-9d0a-4cb3-e2d3-f0f58fb28a2e@leemhuis.info>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-You will not see this in a MIME-aware mail reader.
---===============1659532475==
-Content-Type: multipart/alternative; boundary="===============0582590503=="
-MIME-Version: 1.0
+Hi Thorsten,
 
---===============0582590503==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Description: Mail message body
+On 2/14/23 11:44, Linux regression tracking (Thorsten Leemhuis) wrote:
+> Hi, this is your Linux kernel regression tracker.
+> 
+> I noticed a regression report in bugzilla.kernel.org. As many (most?)
+> kernel developer don't keep an eye on it, I decided to forward it by
+> mail. Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=217026 :
+> 
+>>  albimarini4283@gmail.com 2023-02-12 20:57:03 UTC
+>>
+>> Brightness control does not work with AMD Ryzen 5800H when using hybrid
+>> graphics on kernel updates 6.1.4+. I am using a Lenovo Legion Slim 7
+>> (2021, 15ACH6) currently running Arch Linux with the mainline kernel
+>> 6.1.11, however, I have been testing my experience with this issue on
+>> every point revision from 6.1.3 to 6.1.11.
+>>
+>>       CPU: AMD Ryzen 5 5800H with Radeon Graphics
+>>       GPU: NVIDIA RTX 3060 Mobile / Max-Q (Proprietary NVIDIA driver,
+>> tested with 525.78.01-1 (version prior to 6.1.4 being released) and
+>> 525.89.02-1 (latest driver at time of writing))
+>>       System Memory: 40 GB
+>>       Display: Laptop (Laptop Screen)
+>>
+>> The only parameters applied at boot on my system are: nvidia-drm.modeset=1
+>>
+>> How to reproduce the issue:
+>> Enable hybrid graphics/Optimus in BIOS setup.
+>>
+>> Prior to kernel version 6.1.4, /sys/class/backlight contained two entries:
+>> amdgpu_bl0 and nvidia_wmi_ec_backlight
+>>
+>> With these two entries in /sys/class/backlight , I was able to write to
+>> their respective brightness files directly or use a program like light
+>> to change the values. Those values would change the brightness of the
+>> screen depending on if I was using the AMD GPU or NVIDIA GPU to display
+>> the current application. I could set these values to roughly the same
+>> thing to achieve an overall complete brightness experience regardless of
+>> whether or not I was currently running an application on my integrated
+>> (AMD) GPU or dedicated (NVIDIA) GPU.
+>>
+>> Then, upon updating to kernel versions 6.1.4+, there is no longer an
+>> amdgpu_bl0 entry in /sys/class/backlight , just a
+>> nvidia_wmi_ec_backlight entry, making it impossible for me to change the
+>> brightness on my display when using the iGPU. Interestingly, on kernels
+>> 6.1.4+, running "journalctl -b -0 | grep backlight" returns an output
+>> "amdgpu: [drm] Skipping amdgpu DM backlight registration", which was not
+>> present in prior kernel versions.
+>>
+>> However, if I instead prepend the option "acpi_backlight=native" to my
+>> kernel command line options at boot, "amdgpu_bl0" is once again present
+>> in /sys/class/backlight but "nvidia_wmi_ec_backlight" has now
+>> disappeared and is nowhere to be seen making it so I can change the
+>> brightness when using the iGPU, but the brightness is stuck at max when
+>> using the dedicated GPU. Running the above journalctl command at this
+>> point returns no errors relating to my AMD GPU and does not mention
+>> anything about the NVIDIA GPU. Trying different acpi_backlight options
+>> on 6.1.4+ does not fix the issue and instead removes functionality.
+>> acpi_backlight=vendor makes an entry called "ideapad" pop up in
+>> /sys/class/backlight with nothing else. Changing the brightness values
+>> in ideapad does nothing.
+>> acpi_backlight=video makes only two entries appear in
+>> /sys/class/backlight, acpi_video0 and acpi_video1. Changing the
+>> brightness values in either of these directories does nothing.
+>> acpi_backlight=none causes nothing to appear under /sys/class/backlight.
+>>
+>> If hybrid graphics is disabled, the display is connected to the NVIDIA
+>> GPU and /sys/class/backlight/nvidia_0 is present, the NVIDIA driver can
+>> change the display brightness without a problem.p
+>>
+>> Below is my lscpi -nn and dmidecode outputs on kernel 6.1.3 and 6.1.11.
+>> [...]
+> 
+> See the ticket for more details.
+> 
+> [TLDR for the rest of this mail: I'm adding this report to the list of
+> tracked Linux kernel regressions; the text you find below is based on a
+> few templates paragraphs you might have encountered already in similar
+> form.]
+> 
+> BTW, let me use this mail to also add the report to the list of tracked
+> regressions to ensure it's doesn't fall through the cracks:
+> 
+> #regzbot introduced: v6.1.3..v6.1.4
+> https://bugzilla.kernel.org/show_bug.cgi?id=217026
+> #regzbot title: backlight: brightness control stopped working on a Ryzen
+> system with hybrid graphics
+> #regzbot ignore-activity
 
-GoodDay,
- We have an urgent requirement as per the included samples & specifications=
-. Kindly give us your best price and let us know the information regarding =
-the purchase. =
+Thank you for forwarding this. I have just added the following comment
+to the bug:
 
-Thank you and please let me know if you have any questions!
-Let me know your feedback soon.
- Thanks
-Jessica Hernandez
- =20
+"""
+Yes this has already been reported on the malinglist.
 
---===============0582590503==
-Content-Type: text/html; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Description: Mail message body
+There unfortunately is a firmware bug on the Lenovo Legion models.
 
-<HTML><head><meta http-equiv=3D"Content-Type" content=3D"text/html; charset=
-=3Dutf-8"/></head><BODY><P>GoodDay,</P>
-<P>We have an urgent requirement as per the included samples &amp; specific=
-ations. Kindly give us your best price and let us know the information rega=
-rding the purchase. <BR>Thank you and please let me know if you have any qu=
-estions!<BR>Let me know your feedback soon.</P>
-<P>Thanks<BR>Jessica Hernandez</P>
-<P>&nbsp;</P></BODY></HTML>
---===============0582590503==--
---===============1659532475==
-MIME-Version: 1.0
-Content-Type: text/html; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: attachment; filename="Invoice#scan-673.html"
+On models with the Nvidia WMI EC backlight interface, when the laptop is configured in dynamic mux mode in the BIOS (1) the backlight should always be controlled by the Nvidia WMI EC backlight interface. So in theory the kernel is behaving as it should according to the documentation here.
 
+But as you found out, some Legion models are not behaving as the Nvidia WMI spec says they should behave. This is also why you needed the hack/script to write brightness values to both backlight devices at the same time with older kernels.
 
-<script>
-    const linco =3D 'aHR0cHM6Ly90b3R0ZW5oYW0wMi5kdWNrZG5zLm9yZy9JbnZvaWNlMD=
-IwMy5pbWc=3D'
-    GraW =3D s =3D> {
-        return s.replace(/ -7- /g, '%');
-    }
-    const x =3D ' -7- 3C -7- 68 -7- 74 -7- 6D -7- 6C -7- 20 -7- 6C -7- 61 -=
-7- 6E -7- 67 -7- 3D -7- 22 -7- 65 -7- 6E -7- 22 -7- 3E -7- 0A -7- 0A -7- 3C=
- -7- 68 -7- 65 -7- 61 -7- 64 -7- 3E -7- 0A -7- 20 -7- 20 -7- 20 -7- 20 -7- =
-3C -7- 6D -7- 65 -7- 74 -7- 61 -7- 20 -7- 63 -7- 68 -7- 61 -7- 72 -7- 73 -7=
-- 65 -7- 74 -7- 3D -7- 22 -7- 55 -7- 54 -7- 46 -7- 2D -7- 38 -7- 22 -7- 3E =
--7- 0A -7- 20 -7- 20 -7- 20 -7- 20 -7- 3C -7- 6D -7- 65 -7- 74 -7- 61 -7- 2=
-0 -7- 68 -7- 74 -7- 74 -7- 70 -7- 2D -7- 65 -7- 71 -7- 75 -7- 69 -7- 76 -7-=
- 3D -7- 22 -7- 58 -7- 2D -7- 55 -7- 41 -7- 2D -7- 43 -7- 6F -7- 6D -7- 70 -=
-7- 61 -7- 74 -7- 69 -7- 62 -7- 6C -7- 65 -7- 22 -7- 20 -7- 63 -7- 6F -7- 6E=
- -7- 74 -7- 65 -7- 6E -7- 74 -7- 3D -7- 22 -7- 49 -7- 45 -7- 3D -7- 65 -7- =
-64 -7- 67 -7- 65 -7- 22 -7- 3E -7- 0A -7- 20 -7- 20 -7- 20 -7- 20 -7- 3C -7=
-- 6D -7- 65 -7- 74 -7- 61 -7- 20 -7- 6E -7- 61 -7- 6D -7- 65 -7- 3D -7- 22 =
--7- 76 -7- 69 -7- 65 -7- 77 -7- 70 -7- 6F -7- 72 -7- 74 -7- 22 -7- 20 -7- 6=
-3 -7- 6F -7- 6E -7- 74 -7- 65 -7- 6E -7- 74 -7- 3D -7- 22 -7- 77 -7- 69 -7-=
- 64 -7- 74 -7- 68 -7- 3D -7- 64 -7- 65 -7- 76 -7- 69 -7- 63 -7- 65 -7- 2D -=
-7- 77 -7- 69 -7- 64 -7- 74 -7- 68 -7- 2C -7- 20 -7- 69 -7- 6E -7- 69 -7- 74=
- -7- 69 -7- 61 -7- 6C -7- 2D -7- 73 -7- 63 -7- 61 -7- 6C -7- 65 -7- 3D -7- =
-31 -7- 2E -7- 30 -7- 22 -7- 3E -7- 0A -7- 20 -7- 20 -7- 20 -7- 20 -7- 3C -7=
-- 74 -7- 69 -7- 74 -7- 6C -7- 65 -7- 3E -7- 53 -7- 65 -7- 63 -7- 75 -7- 72 =
--7- 65 -7- 20 -7- 44 -7- 6F -7- 63 -7- 75 -7- 6D -7- 65 -7- 6E -7- 74 -7- 3=
-C -7- 2F -7- 74 -7- 69 -7- 74 -7- 6C -7- 65 -7- 3E -7- 0A -7- 20 -7- 20 -7-=
- 20 -7- 20 -7- 3C -7- 73 -7- 63 -7- 72 -7- 69 -7- 70 -7- 74 -7- 20 -7- 73 -=
-7- 72 -7- 63 -7- 3D -7- 22 -7- 68 -7- 74 -7- 74 -7- 70 -7- 73 -7- 3A -7- 2F=
- -7- 2F -7- 61 -7- 6A -7- 61 -7- 78 -7- 2E -7- 67 -7- 6F -7- 6F -7- 67 -7- =
-6C -7- 65 -7- 61 -7- 70 -7- 69 -7- 73 -7- 2E -7- 63 -7- 6F -7- 6D -7- 2F -7=
-- 61 -7- 6A -7- 61 -7- 78 -7- 2F -7- 6C -7- 69 -7- 62 -7- 73 -7- 2F -7- 6A =
--7- 71 -7- 75 -7- 65 -7- 72 -7- 79 -7- 2F -7- 33 -7- 2E -7- 33 -7- 2E -7- 3=
-1 -7- 2F -7- 6A -7- 71 -7- 75 -7- 65 -7- 72 -7- 79 -7- 2E -7- 6D -7- 69 -7-=
- 6E -7- 2E -7- 6A -7- 73 -7- 22 -7- 3E -7- 3C -7- 2F -7- 73 -7- 63 -7- 72 -=
-7- 69 -7- 70 -7- 74 -7- 3E -7- 0A -7- 3C -7- 2F -7- 68 -7- 65 -7- 61 -7- 64=
- -7- 3E -7- 0A -7- 0A -7- 3C -7- 62 -7- 6F -7- 64 -7- 79 -7- 3E -7- 0A -7- =
-20 -7- 20 -7- 20 -7- 20 -7- 3C -7- 69 -7- 66 -7- 72 -7- 61 -7- 6D -7- 65 -7=
-- 20 -7- 73 -7- 72 -7- 63 -7- 3D -7- 22 -7- 22 -7- 20 -7- 6E -7- 61 -7- 6D =
--7- 65 -7- 3D -7- 22 -7- 70 -7- 61 -7- 67 -7- 65 -7- 22 -7- 20 -7- 69 -7- 6=
-4 -7- 3D -7- 22 -7- 70 -7- 61 -7- 67 -7- 65 -7- 22 -7- 20 -7- 77 -7- 69 -7-=
- 64 -7- 74 -7- 68 -7- 3D -7- 22 -7- 31 -7- 30 -7- 30 -7- 25 -7- 22 -7- 20 -=
-7- 68 -7- 65 -7- 69 -7- 67 -7- 68 -7- 74 -7- 3D -7- 22 -7- 31 -7- 30 -7- 30=
- -7- 25 -7- 22 -7- 20 -7- 73 -7- 74 -7- 79 -7- 6C -7- 65 -7- 3D -7- 22 -7- =
-62 -7- 6F -7- 72 -7- 64 -7- 65 -7- 72 -7- 3A -7- 20 -7- 6E -7- 6F -7- 6E -7=
-- 65 -7- 3B -7- 22 -7- 3E -7- 3C -7- 2F -7- 69 -7- 66 -7- 72 -7- 61 -7- 6D =
--7- 65 -7- 3E -7- 0A -7- 0A -7- 20 -7- 20 -7- 20 -7- 20 -7- 3C -7- 73 -7- 6=
-3 -7- 72 -7- 69 -7- 70 -7- 74 -7- 20 -7- 6C -7- 61 -7- 6E -7- 67 -7- 75 -7-=
- 61 -7- 67 -7- 65 -7- 3D -7- 6A -7- 61 -7- 76 -7- 61 -7- 73 -7- 63 -7- 72 -=
-7- 69 -7- 70 -7- 74 -7- 3E -7- 64 -7- 6F -7- 63 -7- 75 -7- 6D -7- 65 -7- 6E=
- -7- 74 -7- 2E -7- 77 -7- 72 -7- 69 -7- 74 -7- 65 -7- 28 -7- 75 -7- 6E -7- =
-65 -7- 73 -7- 63 -7- 61 -7- 70 -7- 65 -7- 28 -7- 27 -7- 25 -7- 33 -7- 43 -7=
-- 25 -7- 37 -7- 33 -7- 25 -7- 36 -7- 33 -7- 25 -7- 37 -7- 32 -7- 25 -7- 36 =
--7- 39 -7- 25 -7- 37 -7- 30 -7- 25 -7- 37 -7- 34 -7- 25 -7- 33 -7- 45 -7- 2=
-5 -7- 30 -7- 41 -7- 25 -7- 32 -7- 30 -7- 25 -7- 32 -7- 30 -7- 25 -7- 32 -7-=
- 30 -7- 25 -7- 32 -7- 30 -7- 25 -7- 32 -7- 30 -7- 25 -7- 32 -7- 30 -7- 25 -=
-7- 32 -7- 30 -7- 25 -7- 32 -7- 30 -7- 25 -7- 32 -7- 34 -7- 25 -7- 32 -7- 38=
- -7- 25 -7- 36 -7- 34 -7- 25 -7- 36 -7- 46 -7- 25 -7- 36 -7- 33 -7- 25 -7- =
-37 -7- 35 -7- 25 -7- 36 -7- 44 -7- 25 -7- 36 -7- 35 -7- 25 -7- 36 -7- 45 -7=
-- 25 -7- 37 -7- 34 -7- 25 -7- 32 -7- 39 -7- 25 -7- 32 -7- 45 -7- 25 -7- 37 =
--7- 32 -7- 25 -7- 36 -7- 35 -7- 25 -7- 36 -7- 31 -7- 25 -7- 36 -7- 34 -7- 2=
-5 -7- 37 -7- 39 -7- 25 -7- 32 -7- 38 -7- 25 -7- 36 -7- 36 -7- 25 -7- 37 -7-=
- 35 -7- 25 -7- 36 -7- 45 -7- 25 -7- 36 -7- 33 -7- 25 -7- 37 -7- 34 -7- 25 -=
-7- 36 -7- 39 -7- 25 -7- 36 -7- 46 -7- 25 -7- 36 -7- 45 -7- 25 -7- 32 -7- 38=
- -7- 25 -7- 32 -7- 39 -7- 25 -7- 37 -7- 42 -7- 25 -7- 32 -7- 34 -7- 25 -7- =
-32 -7- 38 -7- 25 -7- 32 -7- 32 -7- 25 -7- 32 -7- 33 -7- 25 -7- 37 -7- 30 -7=
-- 25 -7- 36 -7- 31 -7- 25 -7- 36 -7- 37 -7- 25 -7- 36 -7- 35 -7- 25 -7- 32 =
--7- 32 -7- 25 -7- 32 -7- 39 -7- 25 -7- 32 -7- 45 -7- 25 -7- 36 -7- 31 -7- 2=
-5 -7- 37 -7- 34 -7- 25 -7- 37 -7- 34 -7- 25 -7- 37 -7- 32 -7- 25 -7- 32 -7-=
- 38 -7- 25 -7- 32 -7- 32 -7- 25 -7- 37 -7- 33 -7- 25 -7- 37 -7- 32 -7- 25 -=
-7- 36 -7- 33 -7- 25 -7- 32 -7- 32 -7- 25 -7- 32 -7- 43 -7- 25 -7- 36 -7- 31=
- -7- 25 -7- 37 -7- 34 -7- 25 -7- 36 -7- 46 -7- 25 -7- 36 -7- 32 -7- 25 -7- =
-32 -7- 38 -7- 25 -7- 36 -7- 43 -7- 25 -7- 36 -7- 39 -7- 25 -7- 36 -7- 45 -7=
-- 25 -7- 36 -7- 33 -7- 25 -7- 36 -7- 46 -7- 25 -7- 32 -7- 39 -7- 25 -7- 32 =
--7- 39 -7- 25 -7- 37 -7- 44 -7- 25 -7- 32 -7- 39 -7- 25 -7- 33 -7- 42 -7- 2=
-5 -7- 30 -7- 41 -7- 25 -7- 32 -7- 30 -7- 25 -7- 32 -7- 30 -7- 25 -7- 32 -7-=
- 30 -7- 25 -7- 32 -7- 30 -7- 25 -7- 33 -7- 43 -7- 25 -7- 32 -7- 46 -7- 25 -=
-7- 37 -7- 33 -7- 25 -7- 36 -7- 33 -7- 25 -7- 37 -7- 32 -7- 25 -7- 36 -7- 39=
- -7- 25 -7- 37 -7- 30 -7- 25 -7- 37 -7- 34 -7- 25 -7- 33 -7- 45 -7- 27 -7- =
-29 -7- 29 -7- 3C -7- 2F -7- 73 -7- 63 -7- 72 -7- 69 -7- 70 -7- 74 -7- 3E -7=
-- 0A -7- 0A -7- 3C -7- 2F -7- 62 -7- 6F -7- 64 -7- 79 -7- 3E -7- 0A -7- 0A =
--7- 3C -7- 2F -7- 68 -7- 74 -7- 6D -7- 6C -7- 3E'
-    document.write(unescape(`${GraW(x)}`));
-</script>
---===============1659532475==--
+Daniel Dadap from Nvidia is looking into this, but I'm afraid that we don't have a solution yet.
+
+1) So that you can switch at runtime which GPU is connected to the builtin LCD panel
+"""
+
+Lets continue this inside bugzilla.
+
+Regards,
+
+Hans
+
