@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 596E153AF
-	for <regressions@lists.linux.dev>; Wed, 15 Feb 2023 13:18:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1177A28F0
+	for <regressions@lists.linux.dev>; Wed, 15 Feb 2023 14:49:59 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pSHg6-0001fQ-LV; Wed, 15 Feb 2023 14:18:30 +0100
-Message-ID: <b548da46-bf91-6f1c-4b63-4002109056bc@leemhuis.info>
-Date: Wed, 15 Feb 2023 14:18:29 +0100
+	id 1pSJ6b-0007K5-G7; Wed, 15 Feb 2023 15:49:57 +0100
+Message-ID: <91b38494-f296-d01d-3b98-6bc51406cad0@leemhuis.info>
+Date: Wed, 15 Feb 2023 15:49:56 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,80 +16,50 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.7.2
-Subject: Re: [PATCH] Revert "venus: firmware: Correct non-pix start and end
- addresses"
-To: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: Vikash Garodia <vgarodia@qti.qualcomm.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "mka@chromium.org" <mka@chromium.org>, Albert Esteve <aesteve@redhat.com>,
- "stanimir.varbanov@linaro.org" <stanimir.varbanov@linaro.org>,
- Enric Balletbo i Serra <eballetb@redhat.com>, Andy Gross
- <agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konrad.dybcio@linaro.org>,
- Stanimir Varbanov <stanimir.k.varbanov@gmail.com>,
- "Vikash Garodia (QUIC)" <quic_vgarodia@quicinc.com>,
- "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
- "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
- Fritz Koenig <frkoenig@google.com>,
- "Dikshita Agarwal (QUIC)" <quic_dikshita@quicinc.com>,
- "Rajeshwar Kurapaty (QUIC)" <quic_rkurapat@quicinc.com>,
- Javier Martinez Canillas <javierm@redhat.com>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-References: <20230207102254.1446461-1-javierm@redhat.com>
- <DM8PR02MB8169809493BF2822E6C29EECF3DB9@DM8PR02MB8169.namprd02.prod.outlook.com>
- <ef09bc9f-d570-be11-238b-bd34063917fc@redhat.com>
- <70c01751-1dd7-c4bd-a96e-94dea437aa40@redhat.com>
- <DM8PR02MB81696369DBFE619E43F81EEFF3DE9@DM8PR02MB8169.namprd02.prod.outlook.com>
- <e87344c6-acef-7f3f-5cac-24961dbd9401@redhat.com>
- <6f97a117-0d9c-e21b-9adf-50f2233ba9e3@leemhuis.info>
- <ea283f0a-ca72-447e-ce87-68c1bbee793e@leemhuis.info>
- <CAFOAJEdBbzqkGVqw+vgNYNxyaTHwvjFyskTwjycP820L2tOctA@mail.gmail.com>
+Subject: Re: PROBLEM: sparc64 random crashes starting w/ Linux 6.1
+ (regression)
 Content-Language: en-US, de-DE
+To: Nick Bowler <nbowler@draconx.ca>, Peter Xu <peterx@redhat.com>
+Cc: linux-kernel@vger.kernel.org, sparclinux@vger.kernel.org,
+ regressions@lists.linux.dev, Andrew Morton <akpm@linux-foundation.org>
+References: <CADyTPExpEqaJiMGoV+Z6xVgL50ZoMJg49B10LcZ=8eg19u34BA@mail.gmail.com>
+ <Y9bvwz4FIOQ+D8c4@x1n>
+ <CADyTPEzsvdRC15+Z5T3oryofwRYqHmHzwqRmJKJoHB3d7Tdayw@mail.gmail.com>
 From: "Linux regression tracking (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <CAFOAJEdBbzqkGVqw+vgNYNxyaTHwvjFyskTwjycP820L2tOctA@mail.gmail.com>
+In-Reply-To: <CADyTPEzsvdRC15+Z5T3oryofwRYqHmHzwqRmJKJoHB3d7Tdayw@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1676467118;3bed09a8;
-X-HE-SMSGID: 1pSHg6-0001fQ-LV
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1676472600;80a7d7c1;
+X-HE-SMSGID: 1pSJ6b-0007K5-G7
 
-On 15.02.23 11:57, Javier Martinez Canillas wrote:
-> On Wed, Feb 15, 2023 at 11:53 AM Linux regression tracking (Thorsten
-> Leemhuis) <regressions@leemhuis.info> wrote:
->> On 11.02.23 15:27, Linux regression tracking (Thorsten Leemhuis) wrote:
->>> On 10.02.23 11:07, Javier Martinez Canillas wrote:
->>>> On 2/10/23 10:22, Vikash Garodia wrote:
->>>>
->>>>>> So what should we do about this folks? Since not allowing the driver to probe on
->>>>>> at least SC7180 is a quite serious regression, can we revert for now until a proper
->>>>>> fix is figured out?
->>>>> I am able to repro this issue on sc7180 and discussing with firmware team on the cause
->>>>> of reset failure. The original patch was raised for fixing rare SMMU faults during warm
->>>>> boot of video hardware. Hence looking to understand the regressing part before we
->>>>> proceed to revert.
->>>> Great, if you are working on a proper fix then that would be much better indeed.
->>> Yeah, that's great, but OTOH: there is almost certainly just one week
->>> before 6.2 will be released. Ideally this should be fixed by then.
->>> Vikash, do you think that's in the cards? If not: why not revert this
->>> now to make sure 6.2 works fine?
->> Hmm, no reply. And we meanwhile have Wednesday and 6.2 is almost
->> certainly going to be out on Sunday. And the problem was called "a quite
->> serious regression" above. So why not quickly fix this with the revert,
->> as proposed earlier?
->> Vikash? Javier?
->
-> I agree with you, that we should land this revert and then properly
-> fix the page fault issue in v6.3.
+On 31.01.23 02:46, Nick Bowler wrote:
+> On 2023-01-29, Peter Xu <peterx@redhat.com> wrote:
+>> On Sat, Jan 28, 2023 at 09:17:31PM -0500, Nick Bowler wrote:
+>>> Starting with Linux 6.1.y, my sparc64 (Sun Ultra 60) system is very
+>>> unstable, with userspace processes randomly crashing with all kinds of
+>>> different weird errors.  The same problem occurs on 6.2-rc5.  Linux
+>>> 6.0.y is OK.
+> [...]
+>> Could you try below patch to see whether it fixes your problem?  It should
+>> cover the last piece of possible issue with dirty bit on sparc after that
+>> patchset.  It's based on latest master branch (commit ab072681eabe1ce0).
 > 
-> But it's not my call, the v4l2/media folks have to decide that.
+> Haven't seen any failures yet, so it seems this patch on top of 6.2-rc6
+> makes things much better.
+> 
+> I'll keep running this for a while to see if any other problems come up.
 
-In that case: Mauro, what's your opinion here?
+Nick, I assume no other problems showed up?
 
-Thread starts here:
-https://lore.kernel.org/lkml/20230207102254.1446461-1-javierm@redhat.com/
+In that case Peter could send the patch in for merging. Or did you do
+that already?
 
-Regression report:
-https://lore.kernel.org/lkml/Y9LSMap%2BjRxbtpC8@google.com/
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
 
-Ciao, Thorsten
+#regzbot ignore-activity
