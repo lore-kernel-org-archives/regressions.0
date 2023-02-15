@@ -1,84 +1,100 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B3B56109
-	for <regressions@lists.linux.dev>; Wed, 15 Feb 2023 14:52:57 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pSJ9L-00082i-9y; Wed, 15 Feb 2023 15:52:47 +0100
-Message-ID: <05f6936f-f8e0-d0e5-7f8f-d0278dc03753@leemhuis.info>
-Date: Wed, 15 Feb 2023 15:52:46 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46D026109
+	for <regressions@lists.linux.dev>; Wed, 15 Feb 2023 15:21:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1676474466;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=rfv7Rycn+rNU8ZwT5IAQ8tPoQPJy80nVLPsdVlq6m/k=;
+	b=DyVh59UELM43/PHiETsDzP99SIVS3Y8cZ6L5YP1VtkKQW6JBI/jGvoCUIeQuShwCc6Jd3s
+	l/kTg7I17Yn6RtbOoiVTDE9VLFZcEih1wmIQdB9TiwnoqHF+m0oUM/mLcvYFHUDHbdRdy8
+	F1A7yeeZyl4mym+7++yvXbgVaNhOtKc=
+Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
+ [209.85.219.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-58-BRGbreGxPT6qclxWqOfMlQ-1; Wed, 15 Feb 2023 10:21:05 -0500
+X-MC-Unique: BRGbreGxPT6qclxWqOfMlQ-1
+Received: by mail-qv1-f71.google.com with SMTP id c10-20020a05621401ea00b004c72d0e92bcso10699878qvu.12
+        for <regressions@lists.linux.dev>; Wed, 15 Feb 2023 07:21:05 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rfv7Rycn+rNU8ZwT5IAQ8tPoQPJy80nVLPsdVlq6m/k=;
+        b=15cPVvu/5QoZfZXaYQkMYb4PiFm9UZJsHq5cbvX7GJcLuUydN7KSV9v76v0Zj55Z/g
+         nNQxzq5dw7uSfXjm3w51uzYb7g5bIYYSgbAES6tE36B5K4IRTwRxfGLCnGFmWB7Emvpn
+         LOC+6IFx+6kYX49sTYfmA59G7vNdL1T1oskWVSLZJveU0AoGqPWJxkP0BliEsSKVnIxw
+         ZhNVoAHSR5VSGpEnQ9VWlw9MqnEBwJhG7vQx0gz5Hx1GlOxYOwfTnr7zj9MVvg5X/mFJ
+         qllljsQp7LhoLXt/bWxpJzP8Y/W9/FaSuAzhFZt5E4Zh10t2bU7+MVeqcnQXi7RhLXls
+         SZUg==
+X-Gm-Message-State: AO0yUKXvjszd8/NEKt4a0jqotzvq73dAD4YhGcvxztbhaEIbYn4ycSH+
+	RSb+nyZ5/tjoap9ZQJlqRBuoLevisVoIAGhOb02MKiNBh1JwVRBnukd1wg/pju85RkUG/va/6nh
+	X8HKZBO/dLC0O791mmnFsfumdVU3+vcb2ggwf8idYEiiFfCSt6hFxucvbsDyEczrhRY/rGlAJ9I
+	3GOw==
+X-Received: by 2002:ac8:5f4e:0:b0:3b8:695b:aad1 with SMTP id y14-20020ac85f4e000000b003b8695baad1mr4805437qta.1.1676474464359;
+        Wed, 15 Feb 2023 07:21:04 -0800 (PST)
+X-Google-Smtp-Source: AK7set/bUBwJRT9nplisX7cCmXea98zUuaNhVa0ZTJCA74agqwEPC+rEotKS3qcPHLZRGk14AYlnHQ==
+X-Received: by 2002:ac8:5f4e:0:b0:3b8:695b:aad1 with SMTP id y14-20020ac85f4e000000b003b8695baad1mr4805379qta.1.1676474463947;
+        Wed, 15 Feb 2023 07:21:03 -0800 (PST)
+Received: from x1n (bras-base-aurron9127w-grc-56-70-30-145-63.dsl.bell.ca. [70.30.145.63])
+        by smtp.gmail.com with ESMTPSA id d22-20020ac86696000000b003b9a4a497a1sm13111453qtp.86.2023.02.15.07.21.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Feb 2023 07:21:03 -0800 (PST)
+Date: Wed, 15 Feb 2023 10:21:02 -0500
+From: Peter Xu <peterx@redhat.com>
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Nick Bowler <nbowler@draconx.ca>, linux-kernel@vger.kernel.org,
+	sparclinux@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: PROBLEM: sparc64 random crashes starting w/ Linux 6.1
+ (regression)
+Message-ID: <Y+z4XlhDzokAMTI1@x1n>
+References: <CADyTPExpEqaJiMGoV+Z6xVgL50ZoMJg49B10LcZ=8eg19u34BA@mail.gmail.com>
+ <Y9bvwz4FIOQ+D8c4@x1n>
+ <CADyTPEzsvdRC15+Z5T3oryofwRYqHmHzwqRmJKJoHB3d7Tdayw@mail.gmail.com>
+ <91b38494-f296-d01d-3b98-6bc51406cad0@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.2
-Subject: Re: [PATCH] pinctrl: aspeed: Force to disable the function's signal
-Content-Language: en-US, de-DE
-From: "Linux regression tracking #update (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-To: Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
- Billy Tsai <billy_tsai@aspeedtech.com>, linux-aspeed@lists.ozlabs.org,
- openbmc@lists.ozlabs.org, linux-gpio@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- Linux kernel regressions list <regressions@lists.linux.dev>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-References: <20220818101839.28860-1-billy_tsai@aspeedtech.com>
- <CACRpkdYpp_1JJQmuX27pECxN0cjzciCuETLPTrSYKqpX0FPABQ@mail.gmail.com>
- <e501d2fb-aaa0-470d-a8d5-5f8e97898df7@beta.fastmail.com>
- <CACPK8XfQ=uarsOgJ7LaXqLyGG2vSF-47RkAEV=T2gruapx-yfg@mail.gmail.com>
- <3af98200-7240-9e93-bd6a-d0e2f71ab1c4@leemhuis.info>
-In-Reply-To: <3af98200-7240-9e93-bd6a-d0e2f71ab1c4@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1676472777;466956c9;
-X-HE-SMSGID: 1pSJ9L-00082i-9y
+In-Reply-To: <91b38494-f296-d01d-3b98-6bc51406cad0@leemhuis.info>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-[TLDR: This mail in primarily relevant for Linux regression tracking. A
-change or fix related to the regression discussed in this thread was
-posted or applied, but it did not use a Link: tag to point to the
-report, as Linus and the documentation call for. Things happen, no
-worries -- but now the regression tracking bot needs to be told manually
-about the fix. See link in footer if these mails annoy you.]
-
-On 21.01.23 13:32, Linux kernel regression tracking (#adding) wrote:
-> On 19.01.23 02:54, Joel Stanley wrote:
->> On Fri, 26 Aug 2022 at 22:48, Andrew Jeffery <andrew@aj.id.au> wrote:
->>> On Sat, 27 Aug 2022, at 07:26, Linus Walleij wrote:
->>>> On Thu, Aug 18, 2022 at 12:18 PM Billy Tsai <billy_tsai@aspeedtech.com> wrote:
->>>>
->>>>> When the driver want to disable the signal of the function, it doesn't
->>>>> need to query the state of the mux function's signal on a pin. The
->>>>> condition below will miss the disable of the signal:
->>
->>>> I can't see the verdict for this patch? Will there be a new
->>>> version, or are we in the middle of a discussion?
->>>> I'd really like Andrew's ACK on the result before merging.
->>>
->>> Apologies, it's been a bit of A Week :)
->>>
->>> Given the approach has been discussed with the IP designer and solves a bug I'm okay for it to be merged. If we run into issues it is easy enough to back it out.
->>
->> As foreseen by Andrew, this caused a regression. On the Romulus
->> machine the device tree contains a gpio hog for GPIO S7. With the
->> patch applied:
+On Wed, Feb 15, 2023 at 03:49:56PM +0100, Linux regression tracking (Thorsten Leemhuis) wrote:
+> On 31.01.23 02:46, Nick Bowler wrote:
+> > On 2023-01-29, Peter Xu <peterx@redhat.com> wrote:
+> >> On Sat, Jan 28, 2023 at 09:17:31PM -0500, Nick Bowler wrote:
+> >>> Starting with Linux 6.1.y, my sparc64 (Sun Ultra 60) system is very
+> >>> unstable, with userspace processes randomly crashing with all kinds of
+> >>> different weird errors.  The same problem occurs on 6.2-rc5.  Linux
+> >>> 6.0.y is OK.
+> > [...]
+> >> Could you try below patch to see whether it fixes your problem?  It should
+> >> cover the last piece of possible issue with dirty bit on sparc after that
+> >> patchset.  It's based on latest master branch (commit ab072681eabe1ce0).
+> > 
+> > Haven't seen any failures yet, so it seems this patch on top of 6.2-rc6
+> > makes things much better.
+> > 
+> > I'll keep running this for a while to see if any other problems come up.
 > 
-> #regzbot ^introduced cf517fef601b
-> #regzbot title pinctrl: aspeed-g5-pinctrl 1e6e2080.pinctrl: Failed to
-> acquire regmap for IP block 1
-> #regzbot ignore-activity
+> Nick, I assume no other problems showed up?
+> 
+> In that case Peter could send the patch in for merging. Or did you do
+> that already?
 
-#regzbot fix: 606d4ef4922662
+Thanks for raising this again.  Nop, I'm just waiting for a final ack from
+Nick to make sure that nothing went wrong after the longer run.
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+-- 
+Peter Xu
 
-#regzbot ignore-activity
