@@ -1,100 +1,111 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46D026109
-	for <regressions@lists.linux.dev>; Wed, 15 Feb 2023 15:21:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1676474466;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rfv7Rycn+rNU8ZwT5IAQ8tPoQPJy80nVLPsdVlq6m/k=;
-	b=DyVh59UELM43/PHiETsDzP99SIVS3Y8cZ6L5YP1VtkKQW6JBI/jGvoCUIeQuShwCc6Jd3s
-	l/kTg7I17Yn6RtbOoiVTDE9VLFZcEih1wmIQdB9TiwnoqHF+m0oUM/mLcvYFHUDHbdRdy8
-	F1A7yeeZyl4mym+7++yvXbgVaNhOtKc=
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
- [209.85.219.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-58-BRGbreGxPT6qclxWqOfMlQ-1; Wed, 15 Feb 2023 10:21:05 -0500
-X-MC-Unique: BRGbreGxPT6qclxWqOfMlQ-1
-Received: by mail-qv1-f71.google.com with SMTP id c10-20020a05621401ea00b004c72d0e92bcso10699878qvu.12
-        for <regressions@lists.linux.dev>; Wed, 15 Feb 2023 07:21:05 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rfv7Rycn+rNU8ZwT5IAQ8tPoQPJy80nVLPsdVlq6m/k=;
-        b=15cPVvu/5QoZfZXaYQkMYb4PiFm9UZJsHq5cbvX7GJcLuUydN7KSV9v76v0Zj55Z/g
-         nNQxzq5dw7uSfXjm3w51uzYb7g5bIYYSgbAES6tE36B5K4IRTwRxfGLCnGFmWB7Emvpn
-         LOC+6IFx+6kYX49sTYfmA59G7vNdL1T1oskWVSLZJveU0AoGqPWJxkP0BliEsSKVnIxw
-         ZhNVoAHSR5VSGpEnQ9VWlw9MqnEBwJhG7vQx0gz5Hx1GlOxYOwfTnr7zj9MVvg5X/mFJ
-         qllljsQp7LhoLXt/bWxpJzP8Y/W9/FaSuAzhFZt5E4Zh10t2bU7+MVeqcnQXi7RhLXls
-         SZUg==
-X-Gm-Message-State: AO0yUKXvjszd8/NEKt4a0jqotzvq73dAD4YhGcvxztbhaEIbYn4ycSH+
-	RSb+nyZ5/tjoap9ZQJlqRBuoLevisVoIAGhOb02MKiNBh1JwVRBnukd1wg/pju85RkUG/va/6nh
-	X8HKZBO/dLC0O791mmnFsfumdVU3+vcb2ggwf8idYEiiFfCSt6hFxucvbsDyEczrhRY/rGlAJ9I
-	3GOw==
-X-Received: by 2002:ac8:5f4e:0:b0:3b8:695b:aad1 with SMTP id y14-20020ac85f4e000000b003b8695baad1mr4805437qta.1.1676474464359;
-        Wed, 15 Feb 2023 07:21:04 -0800 (PST)
-X-Google-Smtp-Source: AK7set/bUBwJRT9nplisX7cCmXea98zUuaNhVa0ZTJCA74agqwEPC+rEotKS3qcPHLZRGk14AYlnHQ==
-X-Received: by 2002:ac8:5f4e:0:b0:3b8:695b:aad1 with SMTP id y14-20020ac85f4e000000b003b8695baad1mr4805379qta.1.1676474463947;
-        Wed, 15 Feb 2023 07:21:03 -0800 (PST)
-Received: from x1n (bras-base-aurron9127w-grc-56-70-30-145-63.dsl.bell.ca. [70.30.145.63])
-        by smtp.gmail.com with ESMTPSA id d22-20020ac86696000000b003b9a4a497a1sm13111453qtp.86.2023.02.15.07.21.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Feb 2023 07:21:03 -0800 (PST)
-Date: Wed, 15 Feb 2023 10:21:02 -0500
-From: Peter Xu <peterx@redhat.com>
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Nick Bowler <nbowler@draconx.ca>, linux-kernel@vger.kernel.org,
-	sparclinux@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: PROBLEM: sparc64 random crashes starting w/ Linux 6.1
- (regression)
-Message-ID: <Y+z4XlhDzokAMTI1@x1n>
-References: <CADyTPExpEqaJiMGoV+Z6xVgL50ZoMJg49B10LcZ=8eg19u34BA@mail.gmail.com>
- <Y9bvwz4FIOQ+D8c4@x1n>
- <CADyTPEzsvdRC15+Z5T3oryofwRYqHmHzwqRmJKJoHB3d7Tdayw@mail.gmail.com>
- <91b38494-f296-d01d-3b98-6bc51406cad0@leemhuis.info>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FBC26109;
+	Wed, 15 Feb 2023 15:39:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96E44C4339B;
+	Wed, 15 Feb 2023 15:39:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1676475554;
+	bh=KAqVQM9UCH1nsN4dVqO6EI2zHup8vWAXhFqadtkfxJM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=RaKm6Vd89p1r/UPhvnoxGM8/yaSzsjglgOBhaKDjkb66pV8QyxW8L6p+iTAWHw5fr
+	 ow8VrkUQ47yCIqPBTU12Y1e5i6FQqvtasc3nI4nTwipHy5QQbmYPKq03feQ7lj4lxB
+	 4QvQP7lmtYdMV0LqxnrmYKW366R92hVLF2jIVfEPtf9kxNDIL2kuPkGfGAeNKJhSNf
+	 4mXkTP0lpilWn114gDuj2C6vCcgr+i1x6jYnf/mpp5g7Cpy2lNTa75PV15gDik493s
+	 EuhBBIu98FjsuRQjkJIexThiNjQJYAiaNHezaExE++u+q49OIi+57CU1rQ5jj4Q5ii
+	 nBJHKKqXH+3UA==
+Date: Wed, 15 Feb 2023 09:39:13 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Baolu Lu <baolu.lu@linux.intel.com>
+Cc: Felix Kuehling <felix.kuehling@amd.com>,
+	"Deucher, Alexander" <Alexander.Deucher@amd.com>,
+	"Hegde, Vasant" <Vasant.Hegde@amd.com>,
+	Matt Fagnani <matt.fagnani@bell.net>,
+	Thorsten Leemhuis <regressions@leemhuis.info>,
+	Joerg Roedel <jroedel@suse.de>, Jason Gunthorpe <jgg@nvidia.com>,
+	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+	LKML <linux-kernel@vger.kernel.org>,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+	Linux PCI <linux-pci@vger.kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	"Pan, Xinhui" <Xinhui.Pan@amd.com>, amd-gfx@lists.freedesktop.org
+Subject: Re: [regression, =?iso-8859-1?Q?bisected?=
+ =?iso-8859-1?Q?=2C_pci=2Fiommu=5D_Bug=A0216865_-_Black_screen_when_amdgp?=
+ =?iso-8859-1?Q?u?= started during 6.2-rc1 boot with AMD IOMMU enabled
+Message-ID: <20230215153913.GA3189407@bhelgaas>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <91b38494-f296-d01d-3b98-6bc51406cad0@leemhuis.info>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <7bbc0f65-e1c6-f388-29a8-390b8c9c92c8@linux.intel.com>
 
-On Wed, Feb 15, 2023 at 03:49:56PM +0100, Linux regression tracking (Thorsten Leemhuis) wrote:
-> On 31.01.23 02:46, Nick Bowler wrote:
-> > On 2023-01-29, Peter Xu <peterx@redhat.com> wrote:
-> >> On Sat, Jan 28, 2023 at 09:17:31PM -0500, Nick Bowler wrote:
-> >>> Starting with Linux 6.1.y, my sparc64 (Sun Ultra 60) system is very
-> >>> unstable, with userspace processes randomly crashing with all kinds of
-> >>> different weird errors.  The same problem occurs on 6.2-rc5.  Linux
-> >>> 6.0.y is OK.
-> > [...]
-> >> Could you try below patch to see whether it fixes your problem?  It should
-> >> cover the last piece of possible issue with dirty bit on sparc after that
-> >> patchset.  It's based on latest master branch (commit ab072681eabe1ce0).
-> > 
-> > Haven't seen any failures yet, so it seems this patch on top of 6.2-rc6
-> > makes things much better.
-> > 
-> > I'll keep running this for a while to see if any other problems come up.
+[+cc Christian, Xinhui, amd-gfx]
+
+On Fri, Jan 06, 2023 at 01:48:11PM +0800, Baolu Lu wrote:
+> On 1/5/23 11:27 PM, Felix Kuehling wrote:
+> > Am 2023-01-05 um 09:46 schrieb Deucher, Alexander:
+> > > > -----Original Message-----
+> > > > From: Hegde, Vasant <Vasant.Hegde@amd.com>
+> > > > On 1/5/2023 4:07 PM, Baolu Lu wrote:
+> > > > > On 2023/1/5 18:27, Vasant Hegde wrote:
+> > > > > > On 1/5/2023 6:39 AM, Matt Fagnani wrote:
+> > > > > > > I built 6.2-rc2 with the patch applied. The same black
+> > > > > > > screen problem happened with 6.2-rc2 with the patch. I
+> > > > > > > tried to use early kdump with 6.2-rc2 with the patch
+> > > > > > > twice by panicking the kernel with sysrq+alt+c after the
+> > > > > > > black screen happened. The system rebooted after about
+> > > > > > > 10-20 seconds both times, but no kdump and dmesg files
+> > > > > > > were saved in /var/crash. I'm attaching the lspci -vvv
+> > > > > > > output as requested. ...
+
+> > > > > > Looking into lspci output, it doesn't list ACS feature
+> > > > > > for Graphics card. So with your fix it didn't enable PASID
+> > > > > > and hence it failed to boot. ...
+
+> > > > > So do you mind telling why does the PASID need to be enabled
+> > > > > for the graphic device? Or in another word, what does the
+> > > > > graphic driver use the PASID for? ...
+
+> > > The GPU driver uses the pasid for shared virtual memory between
+> > > the CPU and GPU.  I.e., so that the user apps can use the same
+> > > virtual address space on the GPU and the CPU.  It also uses
+> > > pasid to take advantage of recoverable device page faults using
+> > > PRS. ...
+
+> > Agreed. This applies to GPU computing on some older AMD APUs that
+> > take advantage of memory coherence and IOMMUv2 address translation
+> > to create a shared virtual address space between the CPU and GPU.
+> > In this case it seems to be a Carrizo APU. It is also true for
+> > Raven APUs. ...
+
+> Thanks for the explanation.
 > 
-> Nick, I assume no other problems showed up?
+> This is actually the problem that commit 201007ef707a was trying to
+> fix.  The PCIe fabric routes Memory Requests based on the TLP
+> address, ignoring any PASID (PCIe r6.0, sec 2.2.10.4), so a TLP with
+> PASID that should go upstream to the IOMMU may instead be routed as
+> a P2P Request if its address falls in a bridge window.
 > 
-> In that case Peter could send the patch in for merging. Or did you do
-> that already?
+> In SVA case, the IOMMU shares the address space of a user
+> application.  The user application side has no knowledge about the
+> PCI bridge window.  It is entirely possible that the device is
+> programed with a P2P address and results in a disaster.
 
-Thanks for raising this again.  Nop, I'm just waiting for a final ack from
-Nick to make sure that nothing went wrong after the longer run.
+Is this stalled?  We explored the idea of changing the PCI core so
+that for devices that use ATS/PRI, we could enable PASID without
+checking for ACS [1], but IIUC we ultimately concluded that it was
+based on a misunderstanding of how ATS Translation Requests are routed
+and that an AMD driver change would be required [2].
 
--- 
-Peter Xu
+So it seems like we still have this regression, and we're running out
+of time before v6.2.
 
+[1] https://lore.kernel.org/all/20230114073420.759989-1-baolu.lu@linux.intel.com/
+[2] https://lore.kernel.org/all/Y91X9MeCOsa67CC6@nvidia.com/
