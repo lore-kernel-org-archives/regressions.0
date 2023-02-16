@@ -1,129 +1,68 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B21933E6
-	for <regressions@lists.linux.dev>; Thu, 16 Feb 2023 21:56:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99512C433A0;
-	Thu, 16 Feb 2023 21:56:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1676584616;
-	bh=qDmxSxoBKk1Qa30a7Y9foBsbHqpaX8s9ZMRxS3UQFSU=;
-	h=Date:To:From:Subject:From;
-	b=TlYC/CcLu22jSKXvcN5Me9ZjJkLML/qiRbmEWgJViP+KT2sst7hFuBxYOaTazidWA
-	 LU1nan5TJbFCgCcQwekuzFMBJJmXN+1QWT7+wPB87mueiSsWU07IPU8+yQ0w8rVKBV
-	 VBguiAOBO1p/VgmF39zWikSTfnYVq/ROgZvwFto4=
-Date: Thu, 16 Feb 2023 13:56:55 -0800
-To: mm-commits@vger.kernel.org,stable@vger.kernel.org,regressions@lists.linux.dev,nbowler@draconx.ca,david@redhat.com,peterx@redhat.com,akpm@linux-foundation.org
-From: Andrew Morton <akpm@linux-foundation.org>
-Subject: + mm-migrate-fix-wrongly-apply-write-bit-after-mkdirty-on-sparc64.patch added to mm-hotfixes-unstable branch
-Message-Id: <20230216215656.99512C433A0@smtp.kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D583CD308
+	for <regressions@lists.linux.dev>; Thu, 16 Feb 2023 22:39:42 +0000 (UTC)
+Received: by mail-pg1-f177.google.com with SMTP id x31so2188849pgl.6
+        for <regressions@lists.linux.dev>; Thu, 16 Feb 2023 14:39:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toxicpanda-com.20210112.gappssmtp.com; s=20210112; t=1676587182;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=pi9noMYVGr57MR9lsBdKAfrR3AzH/XjRZ8qVHHkboUA=;
+        b=ilRc6bGW2j1NFXeJp6gWho2MZHvncBJzu3o1KNvsLnf408IY0rj98GTY1h6WayouH6
+         zAgn2nxBPGOD2xowZi/VXN3bUbI20JqRaTzKfy3y5c4iKIQWhO8IeGyTJE8L6oUnFIFW
+         9oAczAmKp1mk2OUmoC5dC+TF5MgmgKvbZNUFgn0o86KlPUcr2CunouQy8UkELwGt8eIb
+         S6rYMtbeDDSBbKR45nmx6nU/1u7nUeBwDQlpzNVciIAcYpLadY4lENO8qdNUXE3rH6Vu
+         206IgDTGJpznNkkoHas4BePgbrCGqmjfFWSt05RgNQMB02JOPpvg8YmuD/BWABva/Brz
+         tp6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1676587182;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=pi9noMYVGr57MR9lsBdKAfrR3AzH/XjRZ8qVHHkboUA=;
+        b=4CeSF5O9m0K3wVwog20aovFNwvIC0vkWQz8PUTJiYtP9wjgX3n2V8445VVXkKUm60z
+         2qqpAn5QdHLdt21RSuGwDeuGH5vzACIfikTiiNOTLGX8KvOgaChvrNQOHV6zFBGQEImZ
+         1ivxqhMveZpvlW6YnYCWRz49Of0AnXz1AB32VNSWAdm/wFZxzukJwVTRPXhnCJlAqYzS
+         4D9QqI7UgKfK1dn9P0vtyUHTOJ+/CHsUa2VUIWKKG0aJyTCpefFui9NPGdUn7YIXuSHe
+         mv9o+aGcr3T9lphGSkmtjhBKyZekwGVFtReT+h2tHCFXMeMRxINxLTd0qBsmv+lRIYTY
+         TMZw==
+X-Gm-Message-State: AO0yUKVW7CPmg9mQ3+z6EpBHnWcCWF2kkK/rRBUdgOPpprMObSY1rphJ
+	rGcE0fW+TqeDszS2LGyWXXHi/WUyXeBn9Mrw7hpSACuRfncnPOLK
+X-Google-Smtp-Source: AK7set9kKa9eBzDeIKikiiDIWuCL4AJkcboiiV1ZwSCTRe6TdvP3fkDrAkB5UJ/Dp6ALZBtj1NnGPoiFrl7lYrtlORM=
+X-Received: by 2002:a62:cd0a:0:b0:5a9:c837:5ad5 with SMTP id
+ o10-20020a62cd0a000000b005a9c8375ad5mr207866pfg.14.1676587181637; Thu, 16 Feb
+ 2023 14:39:41 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+References: <0ca02b1f-ab00-9fa6-aecc-c2c46d624e49@leemhuis.info> <e0998928-0f4e-f2a9-2e77-3e4bab459688@leemhuis.info>
+In-Reply-To: <e0998928-0f4e-f2a9-2e77-3e4bab459688@leemhuis.info>
+From: Josef Bacik <josef@toxicpanda.com>
+Date: Thu, 16 Feb 2023 17:39:30 -0500
+Message-ID: <CAEzrpqc6tweHqKKPZYyVuOXH1Wd+hmrTPfcrpa-5-btU_Z24Fg@mail.gmail.com>
+Subject: Re: [Regression] Bug 216961 - Severe IO scheduling starvation issues
+ with btrfs
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: David Sterba <dsterba@suse.com>, Chris Mason <clm@fb.com>, 
+	linux-btrfs <linux-btrfs@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	Wyatt Childers <kernel.dbwta@haxing.ninja>, pmacedo@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 
+On Thu, Feb 16, 2023 at 12:43 PM Thorsten Leemhuis
+<regressions@leemhuis.info> wrote:
+>
+> Hi btrfs maintainers and developers.
+>
+> I might be missing something, but it looks like the report was ignored.
+> Is there a reason for that?
+>
 
-The patch titled
-     Subject: mm/migrate: fix wrongly apply write bit after mkdirty on sparc64
-has been added to the -mm mm-hotfixes-unstable branch.  Its filename is
-     mm-migrate-fix-wrongly-apply-write-bit-after-mkdirty-on-sparc64.patch
+Mostly just being blind.  I've responded to the BZ, I'll investigate
+through the BZ.  Thanks,
 
-This patch will shortly appear at
-     https://git.kernel.org/pub/scm/linux/kernel/git/akpm/25-new.git/tree/patches/mm-migrate-fix-wrongly-apply-write-bit-after-mkdirty-on-sparc64.patch
-
-This patch will later appear in the mm-hotfixes-unstable branch at
-    git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm
-
-Before you just go and hit "reply", please:
-   a) Consider who else should be cc'ed
-   b) Prefer to cc a suitable mailing list as well
-   c) Ideally: find the original patch on the mailing list and do a
-      reply-to-all to that, adding suitable additional cc's
-
-*** Remember to use Documentation/process/submit-checklist.rst when testing your code ***
-
-The -mm tree is included into linux-next via the mm-everything
-branch at git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm
-and is updated there every 2-3 working days
-
-------------------------------------------------------
-From: Peter Xu <peterx@redhat.com>
-Subject: mm/migrate: fix wrongly apply write bit after mkdirty on sparc64
-Date: Thu, 16 Feb 2023 10:30:59 -0500
-
-Nick Bowler reported another sparc64 breakage after the young/dirty
-persistent work for page migration (per "Link:" below).  That's after a
-similar report [2].
-
-It turns out page migration was overlooked, and it wasn't failing before
-because page migration was not enabled in the initial report test
-environment.
-
-David proposed another way [2] to fix this from sparc64 side, but that
-patch didn't land somehow.  Neither did I check whether there's any other
-arch that has similar issues.
-
-Let's fix it for now as simple as moving the write bit handling to be
-after dirty, like what we did before.
-
-Note: this is based on mm-unstable, because the breakage was since 6.1 and
-we're at a very late stage of 6.2 (-rc8), so I assume for this specific
-case we should target this at 6.3.
-
-[1] https://lore.kernel.org/all/20221021160603.GA23307@u164.east.ru/
-[2] https://lore.kernel.org/all/20221212130213.136267-1-david@redhat.com/
-
-Link: https://lkml.kernel.org/r/20230216153059.256739-1-peterx@redhat.com
-Fixes: 2e3468778dbe ("mm: remember young/dirty bit for page migrations")
-Link: https://lore.kernel.org/all/CADyTPExpEqaJiMGoV+Z6xVgL50ZoMJg49B10LcZ=8eg19u34BA@mail.gmail.com/
-Signed-off-by: Peter Xu <peterx@redhat.com>
-Reported-by: Nick Bowler <nbowler@draconx.ca>
-Acked-by: David Hildenbrand <david@redhat.com>
-Tested-by: Nick Bowler <nbowler@draconx.ca>
-Cc: <regressions@lists.linux.dev>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
----
-
-
---- a/mm/huge_memory.c~mm-migrate-fix-wrongly-apply-write-bit-after-mkdirty-on-sparc64
-+++ a/mm/huge_memory.c
-@@ -3272,8 +3272,6 @@ void remove_migration_pmd(struct page_vm
- 	pmde = mk_huge_pmd(new, READ_ONCE(vma->vm_page_prot));
- 	if (pmd_swp_soft_dirty(*pvmw->pmd))
- 		pmde = pmd_mksoft_dirty(pmde);
--	if (is_writable_migration_entry(entry))
--		pmde = maybe_pmd_mkwrite(pmde, vma);
- 	if (pmd_swp_uffd_wp(*pvmw->pmd))
- 		pmde = pmd_wrprotect(pmd_mkuffd_wp(pmde));
- 	if (!is_migration_entry_young(entry))
-@@ -3281,6 +3279,10 @@ void remove_migration_pmd(struct page_vm
- 	/* NOTE: this may contain setting soft-dirty on some archs */
- 	if (PageDirty(new) && is_migration_entry_dirty(entry))
- 		pmde = pmd_mkdirty(pmde);
-+	if (is_writable_migration_entry(entry))
-+		pmde = maybe_pmd_mkwrite(pmde, vma);
-+	else
-+		pmde = pmd_wrprotect(pmde);
- 
- 	if (PageAnon(new)) {
- 		rmap_t rmap_flags = RMAP_COMPOUND;
---- a/mm/migrate.c~mm-migrate-fix-wrongly-apply-write-bit-after-mkdirty-on-sparc64
-+++ a/mm/migrate.c
-@@ -224,6 +224,8 @@ static bool remove_migration_pte(struct
- 			pte = maybe_mkwrite(pte, vma);
- 		else if (pte_swp_uffd_wp(*pvmw.pte))
- 			pte = pte_mkuffd_wp(pte);
-+		else
-+			pte = pte_wrprotect(pte);
- 
- 		if (folio_test_anon(folio) && !is_readable_migration_entry(entry))
- 			rmap_flags |= RMAP_EXCLUSIVE;
-_
-
-Patches currently in -mm which might be from peterx@redhat.com are
-
-mm-migrate-fix-wrongly-apply-write-bit-after-mkdirty-on-sparc64.patch
-mm-uffd-fix-comment-in-handling-pte-markers.patch
-
+Josef
