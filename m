@@ -1,153 +1,278 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com [209.85.222.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 238623C3B
-	for <regressions@lists.linux.dev>; Thu, 16 Feb 2023 11:47:42 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pScjg-0000CY-Ra; Thu, 16 Feb 2023 12:47:36 +0100
-Message-ID: <286293b4-5ae6-1348-9d69-7049ef5adf35@leemhuis.info>
-Date: Thu, 16 Feb 2023 12:47:36 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59C134435
+	for <regressions@lists.linux.dev>; Thu, 16 Feb 2023 12:13:46 +0000 (UTC)
+Received: by mail-ua1-f48.google.com with SMTP id b18so379345uan.11
+        for <regressions@lists.linux.dev>; Thu, 16 Feb 2023 04:13:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=W8yheI6Ev2vCWCjtqaZ1PTSNedyk7XdbtOBVzcTh5Mo=;
+        b=SoDnVhC41LL6wFNmGyX5Vu7DkwpvaanFGtINn0JZXqoRQMW4HOgonWEOvlUcJwjKso
+         CP/VxCATdBJvV1ySHRZxBe3wevGT8KOs53sfSzwn2w+eHOQzXJblRABK7tRebPhVGfKE
+         IhoNTxdA8CWsA5CVLyNajdyU/W73WuPsoYKGz8gHbSiw0cASjn7/w+lDxOS41sgMCNx6
+         gydTLj7np2/yzZKacvQcKWb7vEEqRA1HFGvLpl0xhMIWPH5Cl+wHXDQjGWMyFh4wOkuA
+         132v+ArUd6PVgQjRbsps6mg8tBZwIFswk1yIVSYyi1NTOrPTEi5XuXxLcwbODKHcyzft
+         bFaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=W8yheI6Ev2vCWCjtqaZ1PTSNedyk7XdbtOBVzcTh5Mo=;
+        b=BB+MKr9RvEGwD4Gk+2ceymuCD5o6UDCdDkrHDx0CmC+VR96WJ33fwGwLHbOQt+Qy/u
+         I7cqGGSQ208qC6k6bBQGIfJO8rkQRk2unvNOl28+eFb9cp18O9L6xaY19lWxluvUatj6
+         sHVum1vOTn7zGS2BrWoMxfWtZZ5I+z2CyfvkGjlqOee1DKhQoHKU5skc+Cs1/hoZorTH
+         7FgJLdqRuxAhe/Zqfhol67Xu7ly8JYmQ97I6xtim4clK00sG+4sh5yPJlNt/33CoBz1o
+         /gSlzpb53H8IDhlopKn2mCvjofyCKYq/JXZA9liPogfCUc2HMFwtQpY/60AgBzJEErE8
+         SAUw==
+X-Gm-Message-State: AO0yUKVmeYIZHmgXFxd0ATpoYhq3cXDRY6EwdjWoLRNx8v4iYKlL4vWu
+	WgbBQiHOajXCKE5FYUCCM3kqmer35FlhrQl1VRsc9w==
+X-Google-Smtp-Source: AK7set/yBX5AxVIAAM5oq2ruaCPCEwFwFCPpQF8EWudXEtAoomjo+m++zJHMYcLh3C0Zy6qIWr4QKVAfagX4LFDHyxc=
+X-Received: by 2002:ab0:7552:0:b0:68a:751e:a4a with SMTP id
+ k18-20020ab07552000000b0068a751e0a4amr625307uaq.9.1676549624973; Thu, 16 Feb
+ 2023 04:13:44 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.2
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: [RFC PATCH V2 1/1] rasdaemon: Fix poll() on per_cpu
- trace_pipe_raw blocks indefinitely
-Content-Language: en-US, de-DE
-To: rostedt@goodmis.org
-Cc: mhiramat@kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, tanxiaofei@huawei.com,
- jonathan.cameron@huawei.com, linuxarm@huawei.com,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- shiju.jose@huawei.com, mchehab@kernel.org, linux-edac@vger.kernel.org
-References: <20230204193345.842-1-shiju.jose@huawei.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-In-Reply-To: <20230204193345.842-1-shiju.jose@huawei.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1676548062;c5d99771;
-X-HE-SMSGID: 1pScjg-0000CY-Ra
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Thu, 16 Feb 2023 17:43:33 +0530
+Message-ID: <CA+G9fYvZqytp3gMnC4-no9EB=Jnzqmu44i8JQo6apiZat-xxPg@mail.gmail.com>
+Subject: next: x86_64: kunit test crashed and kernel panic
+To: kasan-dev <kasan-dev@googlegroups.com>, open list <linux-kernel@vger.kernel.org>, 
+	kunit-dev@googlegroups.com, lkft-triage@lists.linaro.org, 
+	regressions@lists.linux.dev
+Cc: Marco Elver <elver@google.com>, Anders Roxell <anders.roxell@linaro.org>, 
+	Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi, this is your Linux kernel regression tracker.
+Following kernel panic noticed while running KUNIT testing on qemu-x86_64
+with KASAN enabled kernel.
 
-On 04.02.23 20:33, shiju.jose@huawei.com wrote:
-> From: Shiju Jose <shiju.jose@huawei.com>
-> 
-> The error events are not received in the rasdaemon since kernel 6.1-rc6.
-> This issue is firstly detected and reported, when testing the CXL error
-> events in the rasdaemon.
+CONFIG_KASAN=y
+CONFIG_KUNIT=y
+CONFIG_KUNIT_ALL_TESTS=y
 
-Thanks for working on this. This submission looks stalled, unless I
-missed something. This is unfortunate, as this afaics is fixing a
-regression (caused by a commit from Steven). Hence it would be good to
-get this fixed rather sooner than later. Or is the RFC in the subject
-the reason why there was no progress? Is it maybe time to remove it?
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-> Debugging showed, poll() on trace_pipe_raw in the ras-events.c do not
-> return and this issue is seen after the commit
-> 42fb0a1e84ff525ebe560e2baf9451ab69127e2b ("tracing/ring-buffer: Have
-> polling block on watermark").
-> 
-> This also verified using a test application for poll()
-> and select() on trace_pipe_raw.
-> 
-> There is also a bug reported on this issue,
-> https://lore.kernel.org/all/31eb3b12-3350-90a4-a0d9-d1494db7cf74@oracle.com/
+Boot log:
+---------
+<5>[    0.000000] Linux version 6.2.0-rc8-next-20230216
+(tuxmake@tuxmake) (x86_64-linux-gnu-gcc (Debian 12.2.0-14) 12.2.0, GNU
+ld (GNU Binutils for Debian) 2.40) #1 SMP PREEMPT_DYNAMIC @1676522550
+<6>[    0.000000] Command line: console=ttyS0,115200 rootwait
+root=/dev/sda debug verbose console_msg_format=syslog earlycon
+<6>[    0.000000] x86/fpu: x87 FPU will use FXSAVE
+<6>[    0.000000] signal: max sigframe size: 1440
+...
+<6>[    0.001000] kasan: KernelAddressSanitizer initialized
+...
+<6>[   16.570308] KTAP version 1
+<6>[   16.570801] 1..62
+<6>[   16.574277]     KTAP version 1
+...
+<6>[   38.688296]     ok 16 kmalloc_uaf_16
+<3>[   38.692992]     # kmalloc_oob_in_memset: EXPECTATION FAILED at
+mm/kasan/kasan_test.c:558
+<3>[   38.692992]     KASAN failure expected in \"memset(ptr, 0, size
++ KASAN_GRANULE_SIZE)\", but none occurred
+<6>[   38.695659]     not ok 17 kmalloc_oob_in_memset
+<3>[   38.702362]     # kmalloc_oob_memset_2: EXPECTATION FAILED at
+mm/kasan/kasan_test.c:505
+<3>[   38.702362]     KASAN failure expected in \"memset(ptr + size -
+1, 0, 2)\", but none occurred
+<6>[   38.704750]     not ok 18 kmalloc_oob_memset_2
+<3>[   38.710076]     # kmalloc_oob_memset_4: EXPECTATION FAILED at
+mm/kasan/kasan_test.c:518
+<3>[   38.710076]     KASAN failure expected in \"memset(ptr + size -
+3, 0, 4)\", but none occurred
+<6>[   38.712349]     not ok 19 kmalloc_oob_memset_4
+<3>[   38.718545]     # kmalloc_oob_memset_8: EXPECTATION FAILED at
+mm/kasan/kasan_test.c:531
+<3>[   38.718545]     KASAN failure expected in \"memset(ptr + size -
+7, 0, 8)\", but none occurred
+<6>[   38.721274]     not ok 20 kmalloc_oob_memset_8
+<3>[   38.726201]     # kmalloc_oob_memset_16: EXPECTATION FAILED at
+mm/kasan/kasan_test.c:544
+<3>[   38.726201]     KASAN failure expected in \"memset(ptr + size -
+15, 0, 16)\", but none occurred
+<6>[   38.728269]     not ok 21 kmalloc_oob_memset_16
+<4>[   38.735350] general protection fault, probably for non-canonical
+address 0xa0de1c2100000008: 0000 [#1] PREEMPT SMP KASAN PTI
+<4>[   38.737084] CPU: 0 PID: 131 Comm: kunit_try_catch Tainted: G
+B            N 6.2.0-rc8-next-20230216 #1
+<4>[   38.738232] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009),
+BIOS 1.14.0-2 04/01/2014
+<4>[   38.739202] RIP: 0010:__stack_depot_save+0x16b/0x4a0
+<4>[   38.740158] Code: 29 c8 89 c3 48 8b 05 bc ef 4a 03 89 de 23 35
+ac ef 4a 03 4c 8d 04 f0 4d 8b 20 4d 85 e4 75 0b eb 77 4d 8b 24 24 4d
+85 e4 74 6e <41> 39 5c 24 08 75 f0 41 3b 54 24 0c 75 e9 31 c0 49 8b 7c
+c4 18 49
+<4>[   38.742135] RSP: 0000:ffff88815b409a00 EFLAGS: 00000286
+<4>[   38.743055] RAX: ffff88815a600000 RBX: 00000000a0de1c21 RCX:
+000000000000000e
+<4>[   38.744084] RDX: 000000000000000e RSI: 00000000000e1c21 RDI:
+00000000282127a7
+<4>[   38.745061] RBP: ffff88815b409a58 R08: ffff88815ad0e108 R09:
+0000000005d4305e
+<4>[   38.746039] R10: ffffed1020693eb9 R11: ffff88815b409ff8 R12:
+a0de1c2100000000
+<4>[   38.747012] R13: 0000000000000001 R14: 0000000000000800 R15:
+ffff88815b409a68
+<4>[   38.748039] FS:  0000000000000000(0000)
+GS:ffff88815b400000(0000) knlGS:0000000000000000
+<4>[   38.749066] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+<4>[   38.749848] CR2: a0de1c2100000008 CR3: 000000012c2ae000 CR4:
+00000000000006f0
+<4>[   38.750769] DR0: ffffffff97419b80 DR1: ffffffff97419b81 DR2:
+ffffffff97419b82
+<4>[   38.751712] DR3: ffffffff97419b83 DR6: 00000000ffff0ff0 DR7:
+0000000000000600
+<4>[   38.752692] Call Trace:
+<4>[   38.753288]  <IRQ>
+<4>[   38.753795]  kasan_save_stack+0x4c/0x60
+<4>[   38.754479]  ? kasan_save_stack+0x3c/0x60
+<4>[   38.755112]  ? kasan_set_track+0x29/0x40
+<4>[   38.756690]  ? kasan_save_free_info+0x32/0x50
+<4>[   38.757186]  ? ____kasan_slab_free+0x175/0x1d0
+<4>[   38.757830]  ? __kasan_slab_free+0x16/0x20
+<4>[   38.758525]  ? __kmem_cache_free+0x18c/0x300
+<4>[   38.759187]  ? kfree+0x7c/0x120
+<4>[   38.759756]  ? free_kthread_struct+0x78/0xa0
+<4>[   38.760516]  ? free_task+0x96/0xa0
+<4>[   38.761127]  ? __put_task_struct+0x1a2/0x1f0
+<4>[   38.761843]  ? delayed_put_task_struct+0xec/0x110
+<4>[   38.762595]  ? rcu_core+0x4e3/0x1010
+<4>[   38.763180]  ? rcu_core_si+0x12/0x20
+<4>[   38.763842]  ? __do_softirq+0x18f/0x502
+<4>[   38.764464]  ? __irq_exit_rcu+0xa1/0xe0
+<4>[   38.764982]  ? irq_exit_rcu+0x12/0x20
+<4>[   38.765760]  ? sysvec_apic_timer_interrupt+0x7d/0xa0
+<4>[   38.766544]  ? asm_sysvec_apic_timer_interrupt+0x1f/0x30
+<4>[   38.767391]  ? memmove+0x3c/0x1c0
+<4>[   38.767994]  ? kunit_try_run_case+0x8e/0x130
+<4>[   38.768718]  ? kunit_generic_run_threadfn_adapter+0x33/0x50
+<4>[   38.769477]  ? kthread+0x17f/0x1b0
+<4>[   38.769871]  ? ret_from_fork+0x2c/0x50
+<4>[   38.770841]  ? kfree+0x7c/0x120
+<4>[   38.771470]  kasan_set_track+0x29/0x40
+<4>[   38.772101]  kasan_save_free_info+0x32/0x50
+<4>[   38.772855]  ____kasan_slab_free+0x175/0x1d0
+<4>[   38.773536]  ? free_kthread_struct+0x78/0xa0
+<4>[   38.774175]  __kasan_slab_free+0x16/0x20
+<4>[   38.774865]  __kmem_cache_free+0x18c/0x300
+<4>[   38.775553]  kfree+0x7c/0x120
+<4>[   38.776137]  free_kthread_struct+0x78/0xa0
+<4>[   38.776840]  free_task+0x96/0xa0
+<4>[   38.777220]  __put_task_struct+0x1a2/0x1f0
+<4>[   38.778103]  delayed_put_task_struct+0xec/0x110
+<4>[   38.778786]  rcu_core+0x4e3/0x1010
+<4>[   38.779450]  ? __pfx_rcu_core+0x10/0x10
+<4>[   38.780147]  ? __pfx_read_tsc+0x10/0x10
+<4>[   38.780750]  ? __do_softirq+0x11f/0x502
+<4>[   38.781480]  rcu_core_si+0x12/0x20
+<4>[   38.782073]  __do_softirq+0x18f/0x502
+<4>[   38.782755]  ? __pfx___do_softirq+0x10/0x10
+<4>[   38.783442]  ? trace_preempt_on+0x20/0xa0
+<4>[   38.784070]  ? __irq_exit_rcu+0x17/0xe0
+<4>[   38.784767]  __irq_exit_rcu+0xa1/0xe0
+<4>[   38.785377]  irq_exit_rcu+0x12/0x20
+<4>[   38.786028]  sysvec_apic_timer_interrupt+0x7d/0xa0
+<4>[   38.786781]  </IRQ>
+<4>[   38.787107]  <TASK>
+<4>[   38.787639]  asm_sysvec_apic_timer_interrupt+0x1f/0x30
+<4>[   38.788698] RIP: 0010:memmove+0x3c/0x1c0
+<4>[   38.789436] Code: 49 39 f8 0f 8f b5 00 00 00 48 83 fa 20 0f 82
+01 01 00 00 0f 1f 44 00 00 48 81 fa a8 02 00 00 72 05 40 38 fe 74 48
+48 83 ea 20 <48> 83 ea 20 4c 8b 1e 4c 8b 56 08 4c 8b 4e 10 4c 8b 46 18
+48 8d 76
+<4>[   38.791297] RSP: 0000:ffff888103507e08 EFLAGS: 00000286
+<4>[   38.792130] RAX: ffff8881033e9000 RBX: ffff8881033e9000 RCX:
+0000000000000000
+<4>[   38.792969] RDX: fffffffffff8727e RSI: ffff888103461d64 RDI:
+ffff888103461d60
+<4>[   38.793818] RBP: ffff888103507eb8 R08: 0000000100000000 R09:
+0000000000000000
+<4>[   38.794643] R10: 0000000000000000 R11: 0000000000000000 R12:
+1ffff110206a0fc2
+<4>[   38.795458] R13: ffff888100327b60 R14: ffff888103507e90 R15:
+fffffffffffffffe
+<4>[   38.796558]  ? kmalloc_memmove_negative_size+0xeb/0x1f0
+<4>[   38.797376]  ? __pfx_kmalloc_memmove_negative_size+0x10/0x10
+<4>[   38.798257]  ? __kasan_check_write+0x18/0x20
+<4>[   38.798923]  ? _raw_spin_lock_irqsave+0xa2/0x110
+<4>[   38.799617]  ? _raw_spin_unlock_irqrestore+0x2c/0x60
+<4>[   38.800491]  ? trace_preempt_on+0x20/0xa0
+<4>[   38.801150]  ? __kthread_parkme+0x4f/0xd0
+<4>[   38.801778]  kunit_try_run_case+0x8e/0x130
+<4>[   38.802505]  ? __pfx_kunit_try_run_case+0x10/0x10
+<4>[   38.803197]  ? __pfx_kunit_generic_run_threadfn_adapter+0x10/0x10
+<4>[   38.803997]  kunit_generic_run_threadfn_adapter+0x33/0x50
+<4>[   38.804749]  kthread+0x17f/0x1b0
+<4>[   38.805377]  ? __pfx_kthread+0x10/0x10
+<4>[   38.806025]  ret_from_fork+0x2c/0x50
+<4>[   38.806716]  </TASK>
+<4>[   38.807261] Modules linked in:
+<4>[   38.809163] ---[ end trace 0000000000000000 ]---
+<4>[   38.809731] RIP: 0010:__stack_depot_save+0x16b/0x4a0
+<4>[   38.810988] Code: 29 c8 89 c3 48 8b 05 bc ef 4a 03 89 de 23 35
+ac ef 4a 03 4c 8d 04 f0 4d 8b 20 4d 85 e4 75 0b eb 77 4d 8b 24 24 4d
+85 e4 74 6e <41> 39 5c 24 08 75 f0 41 3b 54 24 0c 75 e9 31 c0 49 8b 7c
+c4 18 49
+<4>[   38.812911] RSP: 0000:ffff88815b409a00 EFLAGS: 00000286
+<4>[   38.813435] RAX: ffff88815a600000 RBX: 00000000a0de1c21 RCX:
+000000000000000e
+<4>[   38.815407] RDX: 000000000000000e RSI: 00000000000e1c21 RDI:
+00000000282127a7
+<4>[   38.816630] RBP: ffff88815b409a58 R08: ffff88815ad0e108 R09:
+0000000005d4305e
+<4>[   38.817540] R10: ffffed1020693eb9 R11: ffff88815b409ff8 R12:
+a0de1c2100000000
+<4>[   38.818685] R13: 0000000000000001 R14: 0000000000000800 R15:
+ffff88815b409a68
+<4>[   38.819949] FS:  0000000000000000(0000)
+GS:ffff88815b400000(0000) knlGS:0000000000000000
+<4>[   38.821375] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+<4>[   38.822431] CR2: a0de1c2100000008 CR3: 000000012c2ae000 CR4:
+00000000000006f0
+<4>[   38.823562] DR0: ffffffff97419b80 DR1: ffffffff97419b81 DR2:
+ffffffff97419b82
+<4>[   38.824702] DR3: ffffffff97419b83 DR6: 00000000ffff0ff0 DR7:
+0000000000000600
+<0>[   38.826157] Kernel panic - not syncing: Fatal exception in interrupt
+<0>[   38.828641] Kernel Offset: 0x12400000 from 0xffffffff81000000
+(relocation range: 0xffffffff80000000-0xffffffffbfffffff)
+<0>[   38.830146] ---[ end Kernel panic - not syncing: Fatal exception
+in interrupt ]---
 
 
+links:
+----
+https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20230216/testrun/14817835/suite/log-parser-test/test/check-kernel-panic/log
+https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20230216/testrun/14817835/suite/log-parser-test/tests/
+https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20230216/testrun/14817835/suite/log-parser-test/test/check-kernel-panic/details/
 
 
-> This issue occurs for the per_cpu case, which calls the
-> ring_buffer_poll_wait(), in kernel/trace/ring_buffer.c, with the
-> buffer_percent > 0 and then wait until the percentage of pages are
-> available.The default value set for the buffer_percent is 50 in the
-> kernel/trace/trace.c. However poll() does not return even met the percentage
-> of pages condition.
-> 
-> As a fix, rasdaemon set buffer_percent as 0 through the
-> /sys/kernel/debug/tracing/instances/rasdaemon/buffer_percent, then the
-> task will wake up as soon as data is added to any of the specific cpu
-> buffer and poll() on per_cpu/cpuX/trace_pipe_raw does not block
-> indefinitely.
-> 
-> Dependency on the kernel RFC patch
-> tracing: Fix poll() and select() do not work on per_cpu trace_pipe and trace_pipe_raw
+steps to reproduce:
+---
+tuxrun  \
+ --runtime podman  \
+ --device qemu-x86_64  \
+ --kernel https://storage.tuxsuite.com/public/linaro/lkft/builds/2Lo0yXyxgpsuMQhyLdw5jKk9nSj/bzImage
+ \
+ --modules https://storage.tuxsuite.com/public/linaro/lkft/builds/2Lo0yXyxgpsuMQhyLdw5jKk9nSj/modules.tar.xz
+ \
+ --rootfs https://storage.tuxsuite.com/public/linaro/lkft/oebuilds/2LUxobLpTjiRrzSKqqYOwhong7e/images/intel-corei7-64/lkft-tux-image-intel-corei7-64-20230209111930.rootfs.ext4.gz
+ \
+ --parameters SKIPFILE=skipfile-lkft.yaml  \
+ --image docker.io/lavasoftware/lava-dispatcher:2023.01.0020.gc1598238f  \
+ --tests kunit  \
+ --timeouts boot=15 kunit=30
 
-BTW, this patch afaics should have these tags:
-
-Fixes: 42fb0a1e84ff ("tracing/ring-buffer: Have polling block on watermark")
-Reported-by: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
-Link:
-https://lore.kernel.org/r/31eb3b12-3350-90a4-a0d9-d1494db7cf74@oracle.com/
-
-An likely a
-
-Cc: <stable@vger.kernel.org> # 6.1.x
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
-
-#regzbot poke
-#regzbot ^backmonitor:
-https://lore.kernel.org/r/31eb3b12-3350-90a4-a0d9-d1494db7cf74@oracle.com/
-
-> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
-> 
-> Changes:
-> RFC V1 -> RFC V2
-> 1. Rename the patch header subject.
-> 2. Changes for the backward compatability to the old kernels.
-> ---
->  ras-events.c | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
-> 
-> diff --git a/ras-events.c b/ras-events.c
-> index 3691311..e505a0e 100644
-> --- a/ras-events.c
-> +++ b/ras-events.c
-> @@ -383,6 +383,8 @@ static int read_ras_event_all_cpus(struct pthread_data *pdata,
->  	int warnonce[n_cpus];
->  	char pipe_raw[PATH_MAX];
->  	int legacy_kernel = 0;
-> +	int fd;
-> +	char buf[10];
->  #if 0
->  	int need_sleep = 0;
->  #endif
-> @@ -402,6 +404,26 @@ static int read_ras_event_all_cpus(struct pthread_data *pdata,
->  		return -ENOMEM;
->  	}
->  
-> +	/* Fix for poll() on the per_cpu trace_pipe and trace_pipe_raw blocks
-> +	 * indefinitely with the default buffer_percent in the kernel trace system,
-> +	 * which is introduced by the following change in the kernel.
-> +	 * https://lore.kernel.org/all/20221020231427.41be3f26@gandalf.local.home/T/#u.
-> +	 * Set buffer_percent to 0 so that poll() will return immediately
-> +	 * when the trace data is available in the ras per_cpu trace pipe_raw
-> +	 */
-> +	fd = open_trace(pdata[0].ras, "buffer_percent", O_WRONLY);
-> +	if (fd >= 0) {
-> +		/* For the backward compatabilty to the old kernel, do not return
-> +		 * if fail to set the buffer_percent.
-> +		 */
-> +		snprintf(buf, sizeof(buf), "0");
-> +		size = write(fd, buf, strlen(buf));
-> +		if (size <= 0)
-> +			log(TERM, LOG_WARNING, "can't write to buffer_percent\n");
-> +		close(fd);
-> +	} else
-> +		log(TERM, LOG_WARNING, "Can't open buffer_percent\n");
-> +
->  	for (i = 0; i < (n_cpus + 1); i++)
->  		fds[i].fd = -1;
->  
+Linaro LKFT
+https://lkft.linaro.org
