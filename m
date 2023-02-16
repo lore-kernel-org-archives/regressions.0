@@ -1,52 +1,149 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3775553A2
-	for <regressions@lists.linux.dev>; Thu, 16 Feb 2023 12:50:10 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pSdiB-0007QC-RW; Thu, 16 Feb 2023 13:50:07 +0100
-Message-ID: <9ec958e1-ae6e-d50a-2f15-008267c0a578@leemhuis.info>
-Date: Thu, 16 Feb 2023 13:50:07 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8F295663
+	for <regressions@lists.linux.dev>; Thu, 16 Feb 2023 13:40:16 +0000 (UTC)
+Received: from lhrpeml500006.china.huawei.com (unknown [172.18.147.226])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PHbYH0JbBz67Zjl;
+	Thu, 16 Feb 2023 21:35:31 +0800 (CST)
+Received: from lhrpeml500006.china.huawei.com (7.191.161.198) by
+ lhrpeml500006.china.huawei.com (7.191.161.198) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.17; Thu, 16 Feb 2023 13:40:08 +0000
+Received: from lhrpeml500006.china.huawei.com ([7.191.161.198]) by
+ lhrpeml500006.china.huawei.com ([7.191.161.198]) with mapi id 15.01.2507.017;
+ Thu, 16 Feb 2023 13:40:08 +0000
+From: Shiju Jose <shiju.jose@huawei.com>
+To: Linux regressions mailing list <regressions@lists.linux.dev>,
+	"rostedt@goodmis.org" <rostedt@goodmis.org>
+CC: "mhiramat@kernel.org" <mhiramat@kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
+	tanxiaofei <tanxiaofei@huawei.com>, Jonathan Cameron
+	<jonathan.cameron@huawei.com>, Linuxarm <linuxarm@huawei.com>,
+	"mchehab@kernel.org" <mchehab@kernel.org>, "linux-edac@vger.kernel.org"
+	<linux-edac@vger.kernel.org>
+Subject: RE: [RFC PATCH V2 1/1] rasdaemon: Fix poll() on per_cpu
+ trace_pipe_raw blocks indefinitely
+Thread-Topic: [RFC PATCH V2 1/1] rasdaemon: Fix poll() on per_cpu
+ trace_pipe_raw blocks indefinitely
+Thread-Index: AQHZOM+ccQhNZ2anGEyRrj5aM7KqRq7Rh00AgAAcTMA=
+Date: Thu, 16 Feb 2023 13:40:08 +0000
+Message-ID: <1e759e44f5e64b4e99096afd9e89b6dc@huawei.com>
+References: <20230204193345.842-1-shiju.jose@huawei.com>
+ <286293b4-5ae6-1348-9d69-7049ef5adf35@leemhuis.info>
+In-Reply-To: <286293b4-5ae6-1348-9d69-7049ef5adf35@leemhuis.info>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-originating-ip: [10.195.245.146]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.2
-Subject: Re: matroxfb: cannot determine memory size
-Content-Language: en-US, de-DE
-To: regressions@lists.linux.dev
-References: <5da53ec5-3a9c-ec87-da20-69f140aaaa6b@molgen.mpg.de>
- <6ef71be5-def9-4578-3f73-c43c35d7e4a9@gmx.de>
- <dc0b1487-04f9-5a2f-e0f8-d157a74b6bcb@molgen.mpg.de>
-From: "Linux regression tracking #update (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <dc0b1487-04f9-5a2f-e0f8-d157a74b6bcb@molgen.mpg.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1676551810;61f8ffb9;
-X-HE-SMSGID: 1pSdiB-0007QC-RW
+X-CFilter-Loop: Reflected
 
-[TLDR: This mail in primarily relevant for Linux kernel regression
-tracking. See link in footer if these mails annoy you.]
-
-On 16.12.22 12:58, Paul Menzel wrote:
-> [Cc: +regressions@, +stable@]
-> 
-> #regzbot ^introduced: 62d89a7d49afe46e6b9bbe9e23b004ad848dbde4
-
-#regzbot fix: f685dd7a8025f
-
-(/me missed that in during the festive season and didn't notice until now)
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
-
-#regzbot ignore-activity
+SGVsbG8sDQoNCj4tLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPkZyb206IExpbnV4IHJlZ3Jl
+c3Npb24gdHJhY2tpbmcgKFRob3JzdGVuIExlZW1odWlzKQ0KPjxyZWdyZXNzaW9uc0BsZWVtaHVp
+cy5pbmZvPg0KPlNlbnQ6IDE2IEZlYnJ1YXJ5IDIwMjMgMTE6NDgNCj5Ubzogcm9zdGVkdEBnb29k
+bWlzLm9yZw0KPkNjOiBtaGlyYW1hdEBrZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJu
+ZWwub3JnOyBsaW51eC10cmFjZS0NCj5rZXJuZWxAdmdlci5rZXJuZWwub3JnOyB0YW54aWFvZmVp
+IDx0YW54aWFvZmVpQGh1YXdlaS5jb20+OyBKb25hdGhhbg0KPkNhbWVyb24gPGpvbmF0aGFuLmNh
+bWVyb25AaHVhd2VpLmNvbT47IExpbnV4YXJtDQo+PGxpbnV4YXJtQGh1YXdlaS5jb20+OyBMaW51
+eCBrZXJuZWwgcmVncmVzc2lvbnMgbGlzdA0KPjxyZWdyZXNzaW9uc0BsaXN0cy5saW51eC5kZXY+
+OyBTaGlqdSBKb3NlIDxzaGlqdS5qb3NlQGh1YXdlaS5jb20+Ow0KPm1jaGVoYWJAa2VybmVsLm9y
+ZzsgbGludXgtZWRhY0B2Z2VyLmtlcm5lbC5vcmcNCj5TdWJqZWN0OiBSZTogW1JGQyBQQVRDSCBW
+MiAxLzFdIHJhc2RhZW1vbjogRml4IHBvbGwoKSBvbiBwZXJfY3B1DQo+dHJhY2VfcGlwZV9yYXcg
+YmxvY2tzIGluZGVmaW5pdGVseQ0KPg0KPkhpLCB0aGlzIGlzIHlvdXIgTGludXgga2VybmVsIHJl
+Z3Jlc3Npb24gdHJhY2tlci4NCg0KS2VybmVsIGZpeCBwYXRjaCBmb3IgdGhpcyBpc3N1ZSBpcyBh
+bHJlYWR5IGluIHRoZSBtYWlubGluZS4gUGxlYXNlIHNlZSB0aGUgY29tbWl0DQozZTQ2ZDkxMGQ4
+YWNmOTRlNTM2MDEyNjU5M2I2OGJmNGZlZTRjNGExDQooInRyYWNpbmc6IEZpeCBwb2xsKCkgYW5k
+IHNlbGVjdCgpIGRvIG5vdCB3b3JrIG9uIHBlcl9jcHUgdHJhY2VfcGlwZSBhbmQgdHJhY2VfcGlw
+ZV9yYXciKQ0KDQo+DQo+T24gMDQuMDIuMjMgMjA6MzMsIHNoaWp1Lmpvc2VAaHVhd2VpLmNvbSB3
+cm90ZToNCj4+IEZyb206IFNoaWp1IEpvc2UgPHNoaWp1Lmpvc2VAaHVhd2VpLmNvbT4NCj4+DQo+
+PiBUaGUgZXJyb3IgZXZlbnRzIGFyZSBub3QgcmVjZWl2ZWQgaW4gdGhlIHJhc2RhZW1vbiBzaW5j
+ZSBrZXJuZWwgNi4xLXJjNi4NCj4+IFRoaXMgaXNzdWUgaXMgZmlyc3RseSBkZXRlY3RlZCBhbmQg
+cmVwb3J0ZWQsIHdoZW4gdGVzdGluZyB0aGUgQ1hMDQo+PiBlcnJvciBldmVudHMgaW4gdGhlIHJh
+c2RhZW1vbi4NCj4NCj5UaGFua3MgZm9yIHdvcmtpbmcgb24gdGhpcy4gVGhpcyBzdWJtaXNzaW9u
+IGxvb2tzIHN0YWxsZWQsIHVubGVzcyBJIG1pc3NlZA0KPnNvbWV0aGluZy4gVGhpcyBpcyB1bmZv
+cnR1bmF0ZSwgYXMgdGhpcyBhZmFpY3MgaXMgZml4aW5nIGEgcmVncmVzc2lvbiAoY2F1c2VkIGJ5
+IGENCj5jb21taXQgZnJvbSBTdGV2ZW4pLiBIZW5jZSBpdCB3b3VsZCBiZSBnb29kIHRvIGdldCB0
+aGlzIGZpeGVkIHJhdGhlciBzb29uZXINCj50aGFuIGxhdGVyLiBPciBpcyB0aGUgUkZDIGluIHRo
+ZSBzdWJqZWN0IHRoZSByZWFzb24gd2h5IHRoZXJlIHdhcyBubyBwcm9ncmVzcz8gSXMNCj5pdCBt
+YXliZSB0aW1lIHRvIHJlbW92ZSBpdD8NCg0KSSBtYWRlIHRoZSBwdWxsIHJlcXVlc3QgZm9yIHRo
+aXMgcmFzZGFlbW9uICBwYXRjaCBoZXJlLA0KIGh0dHBzOi8vZ2l0aHViLmNvbS9tY2hlaGFiL3Jh
+c2RhZW1vbi9wdWxsLzg2DQoNCj4NCj4+IERlYnVnZ2luZyBzaG93ZWQsIHBvbGwoKSBvbiB0cmFj
+ZV9waXBlX3JhdyBpbiB0aGUgcmFzLWV2ZW50cy5jIGRvIG5vdA0KPj4gcmV0dXJuIGFuZCB0aGlz
+IGlzc3VlIGlzIHNlZW4gYWZ0ZXIgdGhlIGNvbW1pdA0KPj4gNDJmYjBhMWU4NGZmNTI1ZWJlNTYw
+ZTJiYWY5NDUxYWI2OTEyN2UyYiAoInRyYWNpbmcvcmluZy1idWZmZXI6IEhhdmUNCj4+IHBvbGxp
+bmcgYmxvY2sgb24gd2F0ZXJtYXJrIikuDQo+Pg0KPj4gVGhpcyBhbHNvIHZlcmlmaWVkIHVzaW5n
+IGEgdGVzdCBhcHBsaWNhdGlvbiBmb3IgcG9sbCgpIGFuZCBzZWxlY3QoKSBvbg0KPj4gdHJhY2Vf
+cGlwZV9yYXcuDQo+Pg0KPj4gVGhlcmUgaXMgYWxzbyBhIGJ1ZyByZXBvcnRlZCBvbiB0aGlzIGlz
+c3VlLA0KPj4gaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvYWxsLzMxZWIzYjEyLTMzNTAtOTBhNC1h
+MGQ5LWQxNDk0ZGI3Y2Y3NEBvcmFjbA0KPj4gZS5jb20vDQo+DQo+DQo+DQo+DQo+PiBUaGlzIGlz
+c3VlIG9jY3VycyBmb3IgdGhlIHBlcl9jcHUgY2FzZSwgd2hpY2ggY2FsbHMgdGhlDQo+PiByaW5n
+X2J1ZmZlcl9wb2xsX3dhaXQoKSwgaW4ga2VybmVsL3RyYWNlL3JpbmdfYnVmZmVyLmMsIHdpdGgg
+dGhlDQo+PiBidWZmZXJfcGVyY2VudCA+IDAgYW5kIHRoZW4gd2FpdCB1bnRpbCB0aGUgcGVyY2Vu
+dGFnZSBvZiBwYWdlcyBhcmUNCj4+IGF2YWlsYWJsZS5UaGUgZGVmYXVsdCB2YWx1ZSBzZXQgZm9y
+IHRoZSBidWZmZXJfcGVyY2VudCBpcyA1MCBpbiB0aGUNCj4+IGtlcm5lbC90cmFjZS90cmFjZS5j
+LiBIb3dldmVyIHBvbGwoKSBkb2VzIG5vdCByZXR1cm4gZXZlbiBtZXQgdGhlDQo+PiBwZXJjZW50
+YWdlIG9mIHBhZ2VzIGNvbmRpdGlvbi4NCj4+DQo+PiBBcyBhIGZpeCwgcmFzZGFlbW9uIHNldCBi
+dWZmZXJfcGVyY2VudCBhcyAwIHRocm91Z2ggdGhlDQo+PiAvc3lzL2tlcm5lbC9kZWJ1Zy90cmFj
+aW5nL2luc3RhbmNlcy9yYXNkYWVtb24vYnVmZmVyX3BlcmNlbnQsIHRoZW4gdGhlDQo+PiB0YXNr
+IHdpbGwgd2FrZSB1cCBhcyBzb29uIGFzIGRhdGEgaXMgYWRkZWQgdG8gYW55IG9mIHRoZSBzcGVj
+aWZpYyBjcHUNCj4+IGJ1ZmZlciBhbmQgcG9sbCgpIG9uIHBlcl9jcHUvY3B1WC90cmFjZV9waXBl
+X3JhdyBkb2VzIG5vdCBibG9jaw0KPj4gaW5kZWZpbml0ZWx5Lg0KPj4NCj4+IERlcGVuZGVuY3kg
+b24gdGhlIGtlcm5lbCBSRkMgcGF0Y2gNCj4+IHRyYWNpbmc6IEZpeCBwb2xsKCkgYW5kIHNlbGVj
+dCgpIGRvIG5vdCB3b3JrIG9uIHBlcl9jcHUgdHJhY2VfcGlwZSBhbmQNCj4+IHRyYWNlX3BpcGVf
+cmF3DQo+DQo+QlRXLCB0aGlzIHBhdGNoIGFmYWljcyBzaG91bGQgaGF2ZSB0aGVzZSB0YWdzOg0K
+Pg0KPkZpeGVzOiA0MmZiMGExZTg0ZmYgKCJ0cmFjaW5nL3JpbmctYnVmZmVyOiBIYXZlIHBvbGxp
+bmcgYmxvY2sgb24gd2F0ZXJtYXJrIikNCj5SZXBvcnRlZC1ieTogSGFyc2hpdCBNb2dhbGFwYWxs
+aSA8aGFyc2hpdC5tLm1vZ2FsYXBhbGxpQG9yYWNsZS5jb20+DQo+TGluazoNCj5odHRwczovL2xv
+cmUua2VybmVsLm9yZy9yLzMxZWIzYjEyLTMzNTAtOTBhNC1hMGQ5LQ0KPmQxNDk0ZGI3Y2Y3NEBv
+cmFjbGUuY29tLw0KWWVzLiBJIGhhZCBnaXZlbiB0aGUgbGluayBpbiB0aGUgcGF0Y2ggaGVhZGVy
+Lg0KDQo+DQo+QW4gbGlrZWx5IGENCj4NCj5DYzogPHN0YWJsZUB2Z2VyLmtlcm5lbC5vcmc+ICMg
+Ni4xLngNCj4NCj5DaWFvLCBUaG9yc3RlbiAod2VhcmluZyBoaXMgJ3RoZSBMaW51eCBrZXJuZWwn
+cyByZWdyZXNzaW9uIHRyYWNrZXInIGhhdCkNCj4tLQ0KPkV2ZXJ5dGhpbmcgeW91IHdhbm5hIGtu
+b3cgYWJvdXQgTGludXgga2VybmVsIHJlZ3Jlc3Npb24gdHJhY2tpbmc6DQo+aHR0cHM6Ly9saW51
+eC1yZWd0cmFja2luZy5sZWVtaHVpcy5pbmZvL2Fib3V0LyN0bGRyDQo+SWYgSSBkaWQgc29tZXRo
+aW5nIHN0dXBpZCwgcGxlYXNlIHRlbGwgbWUsIGFzIGV4cGxhaW5lZCBvbiB0aGF0IHBhZ2UuDQo+
+DQo+I3JlZ3pib3QgcG9rZQ0KPiNyZWd6Ym90IF5iYWNrbW9uaXRvcjoNCj5odHRwczovL2xvcmUu
+a2VybmVsLm9yZy9yLzMxZWIzYjEyLTMzNTAtOTBhNC1hMGQ5LQ0KPmQxNDk0ZGI3Y2Y3NEBvcmFj
+bGUuY29tLw0KPg0KPj4gU2lnbmVkLW9mZi1ieTogU2hpanUgSm9zZSA8c2hpanUuam9zZUBodWF3
+ZWkuY29tPg0KPj4NCj4+IENoYW5nZXM6DQo+PiBSRkMgVjEgLT4gUkZDIFYyDQo+PiAxLiBSZW5h
+bWUgdGhlIHBhdGNoIGhlYWRlciBzdWJqZWN0Lg0KPj4gMi4gQ2hhbmdlcyBmb3IgdGhlIGJhY2t3
+YXJkIGNvbXBhdGFiaWxpdHkgdG8gdGhlIG9sZCBrZXJuZWxzLg0KPj4gLS0tDQo+PiAgcmFzLWV2
+ZW50cy5jIHwgMjIgKysrKysrKysrKysrKysrKysrKysrKw0KPj4gIDEgZmlsZSBjaGFuZ2VkLCAy
+MiBpbnNlcnRpb25zKCspDQo+Pg0KPj4gZGlmZiAtLWdpdCBhL3Jhcy1ldmVudHMuYyBiL3Jhcy1l
+dmVudHMuYyBpbmRleCAzNjkxMzExLi5lNTA1YTBlIDEwMDY0NA0KPj4gLS0tIGEvcmFzLWV2ZW50
+cy5jDQo+PiArKysgYi9yYXMtZXZlbnRzLmMNCj4+IEBAIC0zODMsNiArMzgzLDggQEAgc3RhdGlj
+IGludCByZWFkX3Jhc19ldmVudF9hbGxfY3B1cyhzdHJ1Y3QgcHRocmVhZF9kYXRhDQo+KnBkYXRh
+LA0KPj4gIAlpbnQgd2Fybm9uY2Vbbl9jcHVzXTsNCj4+ICAJY2hhciBwaXBlX3Jhd1tQQVRIX01B
+WF07DQo+PiAgCWludCBsZWdhY3lfa2VybmVsID0gMDsNCj4+ICsJaW50IGZkOw0KPj4gKwljaGFy
+IGJ1ZlsxMF07DQo+PiAgI2lmIDANCj4+ICAJaW50IG5lZWRfc2xlZXAgPSAwOw0KPj4gICNlbmRp
+Zg0KPj4gQEAgLTQwMiw2ICs0MDQsMjYgQEAgc3RhdGljIGludCByZWFkX3Jhc19ldmVudF9hbGxf
+Y3B1cyhzdHJ1Y3QNCj5wdGhyZWFkX2RhdGEgKnBkYXRhLA0KPj4gIAkJcmV0dXJuIC1FTk9NRU07
+DQo+PiAgCX0NCj4+DQo+PiArCS8qIEZpeCBmb3IgcG9sbCgpIG9uIHRoZSBwZXJfY3B1IHRyYWNl
+X3BpcGUgYW5kIHRyYWNlX3BpcGVfcmF3IGJsb2Nrcw0KPj4gKwkgKiBpbmRlZmluaXRlbHkgd2l0
+aCB0aGUgZGVmYXVsdCBidWZmZXJfcGVyY2VudCBpbiB0aGUga2VybmVsIHRyYWNlDQo+c3lzdGVt
+LA0KPj4gKwkgKiB3aGljaCBpcyBpbnRyb2R1Y2VkIGJ5IHRoZSBmb2xsb3dpbmcgY2hhbmdlIGlu
+IHRoZSBrZXJuZWwuDQo+PiArCSAqDQo+aHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvYWxsLzIwMjIx
+MDIwMjMxNDI3LjQxYmUzZjI2QGdhbmRhbGYubG9jYWwuaG9tZS9ULyN1DQo+Lg0KPj4gKwkgKiBT
+ZXQgYnVmZmVyX3BlcmNlbnQgdG8gMCBzbyB0aGF0IHBvbGwoKSB3aWxsIHJldHVybiBpbW1lZGlh
+dGVseQ0KPj4gKwkgKiB3aGVuIHRoZSB0cmFjZSBkYXRhIGlzIGF2YWlsYWJsZSBpbiB0aGUgcmFz
+IHBlcl9jcHUgdHJhY2UgcGlwZV9yYXcNCj4+ICsJICovDQo+PiArCWZkID0gb3Blbl90cmFjZShw
+ZGF0YVswXS5yYXMsICJidWZmZXJfcGVyY2VudCIsIE9fV1JPTkxZKTsNCj4+ICsJaWYgKGZkID49
+IDApIHsNCj4+ICsJCS8qIEZvciB0aGUgYmFja3dhcmQgY29tcGF0YWJpbHR5IHRvIHRoZSBvbGQg
+a2VybmVsLCBkbyBub3QNCj5yZXR1cm4NCj4+ICsJCSAqIGlmIGZhaWwgdG8gc2V0IHRoZSBidWZm
+ZXJfcGVyY2VudC4NCj4+ICsJCSAqLw0KPj4gKwkJc25wcmludGYoYnVmLCBzaXplb2YoYnVmKSwg
+IjAiKTsNCj4+ICsJCXNpemUgPSB3cml0ZShmZCwgYnVmLCBzdHJsZW4oYnVmKSk7DQo+PiArCQlp
+ZiAoc2l6ZSA8PSAwKQ0KPj4gKwkJCWxvZyhURVJNLCBMT0dfV0FSTklORywgImNhbid0IHdyaXRl
+IHRvDQo+YnVmZmVyX3BlcmNlbnRcbiIpOw0KPj4gKwkJY2xvc2UoZmQpOw0KPj4gKwl9IGVsc2UN
+Cj4+ICsJCWxvZyhURVJNLCBMT0dfV0FSTklORywgIkNhbid0IG9wZW4gYnVmZmVyX3BlcmNlbnRc
+biIpOw0KPj4gKw0KPj4gIAlmb3IgKGkgPSAwOyBpIDwgKG5fY3B1cyArIDEpOyBpKyspDQo+PiAg
+CQlmZHNbaV0uZmQgPSAtMTsNCj4+DQoNClRoYW5rcywNClNoaWp1DQo=
