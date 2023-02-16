@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77F117B
-	for <regressions@lists.linux.dev>; Thu, 16 Feb 2023 10:09:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C26BD312
+	for <regressions@lists.linux.dev>; Thu, 16 Feb 2023 10:33:44 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pSbCX-0003iE-2L; Thu, 16 Feb 2023 11:09:17 +0100
-Message-ID: <e9923ff8-4027-9188-fd04-77d0bbbc6573@leemhuis.info>
-Date: Thu, 16 Feb 2023 11:09:16 +0100
+	id 1pSba8-0001qa-HS; Thu, 16 Feb 2023 11:33:40 +0100
+Message-ID: <eca2d453-5b0b-b012-dcf8-be6e197536db@leemhuis.info>
+Date: Thu, 16 Feb 2023 11:33:40 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,79 +16,53 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.7.2
-Subject: Re: 6.2-rc7 fails building on Talos II: memory.c:(.text+0x2e14):
- undefined reference to `hash__tlb_flush'
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Re: [Intel-wired-lan] [PATCH net v2] ice: avoid bonding causing
+ auxiliary plug/unplug under RTNL lock
 Content-Language: en-US, de-DE
-To: "Erhard F." <erhard_f@mailbox.org>, linuxppc-dev@lists.ozlabs.org
-Cc: linux-kernel@vger.kernel.org,
+To: Dave Ertman <david.m.ertman@intel.com>, intel-wired-lan@lists.osuosl.org
+Cc: Jaroslav Pulchart <jaroslav.pulchart@gooddata.com>,
  Linux kernel regressions list <regressions@lists.linux.dev>
-References: <20230216005535.6bff7aa6@yea>
+References: <20230215191757.1826508-1-david.m.ertman@intel.com>
 From: "Linux regression tracking (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <20230216005535.6bff7aa6@yea>
+In-Reply-To: <20230215191757.1826508-1-david.m.ertman@intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1676542159;6ff4c7b3;
-X-HE-SMSGID: 1pSbCX-0003iE-2L
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1676543625;9ba394cf;
+X-HE-SMSGID: 1pSba8-0001qa-HS
 
-[TLDR: I'm adding this report to the list of tracked Linux kernel
-regressions; the text you find below is based on a few templates
-paragraphs you might have encountered already in similar form.
-See link in footer if these mails annoy you.]
+On 15.02.23 20:17, Dave Ertman wrote:
+> RDMA is not supported in ice on a PF that has been added to a bonded
+> interface. To enforce this, when an interface enters a bond, we unplug
+> the auxiliary device that supports RDMA functionality.  This unplug
+> currently happens in the context of handling the netdev bonding event.
+> This event is sent to the ice driver under RTNL context.  This is causing
+> a deadlock where the RDMA driver is waiting for the RTNL lock to complete
+> the removal.
+> 
+> Defer the unplugging/re-plugging of the auxiliary device to the service
+> task so that it is not performed under the RTNL lock context.
 
-[CCing the regression list, as it should be in the loop for regressions:
-https://docs.kernel.org/admin-guide/reporting-regressions.html]
+Thanks for taking care of this.
 
-On 16.02.23 00:55, Erhard F. wrote:
-> Just noticed a build failure on 6.2-rc7 for my Talos 2 (.config attached):
-> 
->  # make
->   CALL    scripts/checksyscalls.sh
->   UPD     include/generated/utsversion.h
->   CC      init/version-timestamp.o
->   LD      .tmp_vmlinux.kallsyms1
-> ld: ld: DWARF error: could not find abbrev number 6
-> mm/memory.o: in function `unmap_page_range':
-> memory.c:(.text+0x2e14): undefined reference to `hash__tlb_flush'
-> ld: memory.c:(.text+0x2f8c): undefined reference to `hash__tlb_flush'
-> ld: ld: DWARF error: could not find abbrev number 3117
-> mm/mmu_gather.o: in function `tlb_remove_table':
-> mmu_gather.c:(.text+0x584): undefined reference to `hash__tlb_flush'
-> ld: mmu_gather.c:(.text+0x6c4): undefined reference to `hash__tlb_flush'
-> ld: mm/mmu_gather.o: in function `tlb_flush_mmu':
-> mmu_gather.c:(.text+0x80c): undefined reference to `hash__tlb_flush'
-> ld: mm/mmu_gather.o:mmu_gather.c:(.text+0xbe0): more undefined references to `hash__tlb_flush' follow
-> make[1]: *** [scripts/Makefile.vmlinux:35: vmlinux] Fehler 1
-> make: *** [Makefile:1264: vmlinux] Error 2
-> 
-> As 6.2-rc6 was good on this machine I did a quick bisect which revealed this commit:
-> 
->  # git bisect bad
-> 1665c027afb225882a5a0b014c45e84290b826c2 is the first bad commit
+> Reported-by: Jaroslav Pulchart <jaroslav.pulchart@gooddata.com>
+> Link: https://lore.kernel.org/linux-rdma/68b14b11-d0c7-65c9-4eeb-0487c95e395d@leemhuis.info/
+
+FWIW, that should be
+
+Link:
+https://lore.kernel.org/netdev/CAK8fFZ6A_Gphw_3-QMGKEFQk=sfCw1Qmq0TVZK3rtAi7vb621A@mail.gmail.com/
+
+instead, as that's Jaroslav's report
+
+> Fixes: 5cb1ebdbc434 ("ice: Fix race condition during interface enslave")
+> Fixes: 425c9bd06b7a ("RDMA/irdma: Report the correct link speed")
+> Signed-off-by: Dave Ertman <david.m.ertman@intel.com>
 > [...]
-
-Thanks for the report. To be sure the issue doesn't fall through the
-cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
-tracking bot:
-
-#regzbot ^introduced 1665c027afb225
-#regzbot title powerpc: 6.2-rc7 fails building on Talos II
-#regzbot ignore-activity
-
-This isn't a regression? This issue or a fix for it are already
-discussed somewhere else? It was fixed already? You want to clarify when
-the regression started to happen? Or point out I got the title or
-something else totally wrong? Then just reply and tell me -- ideally
-while also telling regzbot about it, as explained by the page listed in
-the footer of this mail.
-
-Developers: When fixing the issue, remember to add 'Link:' tags pointing
-to the report (the parent of this mail). See page linked in footer for
-details.
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
 Everything you wanna know about Linux kernel regression tracking:
 https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+If I did something stupid, please tell me, as explained on that page.
