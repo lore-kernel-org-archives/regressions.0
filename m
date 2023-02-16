@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBD7633DC
-	for <regressions@lists.linux.dev>; Thu, 16 Feb 2023 11:10:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 238623C3B
+	for <regressions@lists.linux.dev>; Thu, 16 Feb 2023 11:47:42 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pSc9k-0002AL-T1; Thu, 16 Feb 2023 12:10:28 +0100
-Message-ID: <e503afb9-df36-5b98-6b1b-e1ad3a9d13a7@leemhuis.info>
-Date: Thu, 16 Feb 2023 12:10:28 +0100
+	id 1pScjg-0000CY-Ra; Thu, 16 Feb 2023 12:47:36 +0100
+Message-ID: <286293b4-5ae6-1348-9d69-7049ef5adf35@leemhuis.info>
+Date: Thu, 16 Feb 2023 12:47:36 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -17,34 +17,79 @@ MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.7.2
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: Latest RC causing web browser crash
+Subject: Re: [RFC PATCH V2 1/1] rasdaemon: Fix poll() on per_cpu
+ trace_pipe_raw blocks indefinitely
 Content-Language: en-US, de-DE
+To: rostedt@goodmis.org
+Cc: mhiramat@kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, tanxiaofei@huawei.com,
+ jonathan.cameron@huawei.com, linuxarm@huawei.com,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ shiju.jose@huawei.com, mchehab@kernel.org, linux-edac@vger.kernel.org
+References: <20230204193345.842-1-shiju.jose@huawei.com>
 From: "Linux regression tracking (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
-To: Chris McGimpsey-Jones <chrisjones.unixmen@gmail.com>
-Cc: linux-kernel@vger.kernel.org,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <CAPaMSD3MM2BTW0REi4onUCPCLzz1B=-x0j9Uuvf2NHUOSefQ-w@mail.gmail.com>
- <ee9518a8-64ce-142d-ecfd-f560978352b0@leemhuis.info>
-In-Reply-To: <ee9518a8-64ce-142d-ecfd-f560978352b0@leemhuis.info>
+In-Reply-To: <20230204193345.842-1-shiju.jose@huawei.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1676545831;f33706c8;
-X-HE-SMSGID: 1pSc9k-0002AL-T1
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1676548062;c5d99771;
+X-HE-SMSGID: 1pScjg-0000CY-Ra
 
-On 30.01.23 11:11, Linux kernel regression tracking (Thorsten Leemhuis)
-wrote:
-> On 28.01.23 02:14, Chris McGimpsey-Jones wrote:
->> Is anyone else with the latest RC having issues with Google Chrome
->> browser, causing it to crash after a couple of minutes?
-> FWIW, this is unlikely to get any traction: nearly nobody reads the LKML
-> anymore, hence it's unlikely that someone that can help will see it.
+Hi, this is your Linux kernel regression tracker.
 
-FWIW, I pointed to this problem in my weekly reports, but there was no
-reaction. That sound like this is something rare which might only happen
-on your machine.
+On 04.02.23 20:33, shiju.jose@huawei.com wrote:
+> From: Shiju Jose <shiju.jose@huawei.com>
+> 
+> The error events are not received in the rasdaemon since kernel 6.1-rc6.
+> This issue is firstly detected and reported, when testing the CXL error
+> events in the rasdaemon.
 
-Is the problem actually still occuring?
+Thanks for working on this. This submission looks stalled, unless I
+missed something. This is unfortunate, as this afaics is fixing a
+regression (caused by a commit from Steven). Hence it would be good to
+get this fixed rather sooner than later. Or is the RFC in the subject
+the reason why there was no progress? Is it maybe time to remove it?
+
+> Debugging showed, poll() on trace_pipe_raw in the ras-events.c do not
+> return and this issue is seen after the commit
+> 42fb0a1e84ff525ebe560e2baf9451ab69127e2b ("tracing/ring-buffer: Have
+> polling block on watermark").
+> 
+> This also verified using a test application for poll()
+> and select() on trace_pipe_raw.
+> 
+> There is also a bug reported on this issue,
+> https://lore.kernel.org/all/31eb3b12-3350-90a4-a0d9-d1494db7cf74@oracle.com/
+
+
+
+
+> This issue occurs for the per_cpu case, which calls the
+> ring_buffer_poll_wait(), in kernel/trace/ring_buffer.c, with the
+> buffer_percent > 0 and then wait until the percentage of pages are
+> available.The default value set for the buffer_percent is 50 in the
+> kernel/trace/trace.c. However poll() does not return even met the percentage
+> of pages condition.
+> 
+> As a fix, rasdaemon set buffer_percent as 0 through the
+> /sys/kernel/debug/tracing/instances/rasdaemon/buffer_percent, then the
+> task will wake up as soon as data is added to any of the specific cpu
+> buffer and poll() on per_cpu/cpuX/trace_pipe_raw does not block
+> indefinitely.
+> 
+> Dependency on the kernel RFC patch
+> tracing: Fix poll() and select() do not work on per_cpu trace_pipe and trace_pipe_raw
+
+BTW, this patch afaics should have these tags:
+
+Fixes: 42fb0a1e84ff ("tracing/ring-buffer: Have polling block on watermark")
+Reported-by: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
+Link:
+https://lore.kernel.org/r/31eb3b12-3350-90a4-a0d9-d1494db7cf74@oracle.com/
+
+An likely a
+
+Cc: <stable@vger.kernel.org> # 6.1.x
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
@@ -52,19 +97,57 @@ Everything you wanna know about Linux kernel regression tracking:
 https://linux-regtracking.leemhuis.info/about/#tldr
 If I did something stupid, please tell me, as explained on that page.
 
->> I reverted (temporarily) back to Linux 6.1.0 and it's fine.
->> Tested a couple of times, the issue can be reproduced.
+#regzbot poke
+#regzbot ^backmonitor:
+https://lore.kernel.org/r/31eb3b12-3350-90a4-a0d9-d1494db7cf74@oracle.com/
+
+> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
 > 
-> Are there any crash dumps that might indicate what might cause the problem?
+> Changes:
+> RFC V1 -> RFC V2
+> 1. Rename the patch header subject.
+> 2. Changes for the backward compatability to the old kernels.
+> ---
+>  ras-events.c | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
 > 
->> I don't know of the relationship between the kernel and web browser
->> and it seems odd the kernel would cause this problem, but there's no
->> disputing it is the cause as I can reproduce the issue.
-> 
-> Well, things like this don't happen frequently, but they do happen.
-> Without more data it's just very hard to get to the root of this issue,
-> as it could be caused by all sorts of things (mm and drm are two most
-> likely suspects, but it could be something totally different).
-> 
-> Could you try to bisect the issue? There are various pages on the net
-> that explain how to do that.
+> diff --git a/ras-events.c b/ras-events.c
+> index 3691311..e505a0e 100644
+> --- a/ras-events.c
+> +++ b/ras-events.c
+> @@ -383,6 +383,8 @@ static int read_ras_event_all_cpus(struct pthread_data *pdata,
+>  	int warnonce[n_cpus];
+>  	char pipe_raw[PATH_MAX];
+>  	int legacy_kernel = 0;
+> +	int fd;
+> +	char buf[10];
+>  #if 0
+>  	int need_sleep = 0;
+>  #endif
+> @@ -402,6 +404,26 @@ static int read_ras_event_all_cpus(struct pthread_data *pdata,
+>  		return -ENOMEM;
+>  	}
+>  
+> +	/* Fix for poll() on the per_cpu trace_pipe and trace_pipe_raw blocks
+> +	 * indefinitely with the default buffer_percent in the kernel trace system,
+> +	 * which is introduced by the following change in the kernel.
+> +	 * https://lore.kernel.org/all/20221020231427.41be3f26@gandalf.local.home/T/#u.
+> +	 * Set buffer_percent to 0 so that poll() will return immediately
+> +	 * when the trace data is available in the ras per_cpu trace pipe_raw
+> +	 */
+> +	fd = open_trace(pdata[0].ras, "buffer_percent", O_WRONLY);
+> +	if (fd >= 0) {
+> +		/* For the backward compatabilty to the old kernel, do not return
+> +		 * if fail to set the buffer_percent.
+> +		 */
+> +		snprintf(buf, sizeof(buf), "0");
+> +		size = write(fd, buf, strlen(buf));
+> +		if (size <= 0)
+> +			log(TERM, LOG_WARNING, "can't write to buffer_percent\n");
+> +		close(fd);
+> +	} else
+> +		log(TERM, LOG_WARNING, "Can't open buffer_percent\n");
+> +
+>  	for (i = 0; i < (n_cpus + 1); i++)
+>  		fds[i].fd = -1;
+>  
