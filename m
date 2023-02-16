@@ -1,69 +1,58 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD7C6747A
-	for <regressions@lists.linux.dev>; Thu, 16 Feb 2023 15:10:24 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pSftt-0006pU-46; Thu, 16 Feb 2023 16:10:21 +0100
-Message-ID: <cbdc682f-87a6-3885-5853-328562569bdd@leemhuis.info>
-Date: Thu, 16 Feb 2023 16:10:20 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC712747A
+	for <regressions@lists.linux.dev>; Thu, 16 Feb 2023 15:19:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0519BC433D2;
+	Thu, 16 Feb 2023 15:19:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1676560760;
+	bh=aUBobFomaZu++V/z3TN862RlF8Gpj5REZIykBITcL58=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NqBVA10AXCjsux3YIwa2fodrNJHeOuFYmSuNljY3SNd0nn7UPAMH7WXZmWN8rPgyh
+	 JKMBhblQLDcgQczf8qSepkGW7aAmEdyUDfCwLLAgYAbnaVF6eklPJgf/cZNK+StFJ+
+	 lcJZ8owTQC8FANEBXHMRE2A8Zv0hIX9+ACdTnoCzQNQ+N4KQ9DjYHOg1ZPOynkkDKV
+	 A0OBs0D3vaPCiU2iZCarZtMrdCKZ4/sdbGousJ+tbZfxfySpDh9Xo5v+o1Q3fq7cIL
+	 y1oMZBxYj7qSfDjSTAg9ICD7wWN9DzyUqg9Nnq1/6NaXysAVbjWYfDQCA0Ot8u8Cv8
+	 IW1C31J5vXr1g==
+Date: Thu, 16 Feb 2023 08:19:17 -0700
+From: Keith Busch <kbusch@kernel.org>
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Jens Axboe <axboe@fb.com>, Christoph Hellwig <hch@lst.de>,
+	Sagi Grimberg <sagi@grimberg.me>,
+	"linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+	LKML <linux-kernel@vger.kernel.org>, michallinuxstuff@gmail.com
+Subject: Re: [regression] Bug 217037 - cmb attributes missing from the nvme
+ class under sysfs
+Message-ID: <Y+5JdR02tlzD/TFS@kbusch-mbp>
+References: <52f9afe2-f621-77d8-9d10-449d539e901d@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.2
-Subject: =?UTF-8?Q?Re=3a_=5bRegression=5d_Bug=c2=a0216913_-_i2c_not_working_?=
- =?UTF-8?Q?after_hibernation_=28i2c=5fdesignware=29?=
-Content-Language: en-US, de-DE
-From: "Linux regression tracking #update (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-To: Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Cc: Georg <g.wenzel@gmail.com>, Richard Fitzgerald
- <rf@opensource.cirrus.com>,
- "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
- LKML <linux-kernel@vger.kernel.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-References: <8c3fd22a-9a11-216c-891f-969475745d20@leemhuis.info>
-In-Reply-To: <8c3fd22a-9a11-216c-891f-969475745d20@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1676560224;238b178d;
-X-HE-SMSGID: 1pSftt-0006pU-46
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <52f9afe2-f621-77d8-9d10-449d539e901d@leemhuis.info>
 
-[TLDR: This mail in primarily relevant for Linux kernel regression
-tracking. See link in footer if these mails annoy you.]
-
-On 12.01.23 13:51, Linux kernel regression tracking (Thorsten Leemhuis)
-wrote:
+On Thu, Feb 16, 2023 at 10:28:55AM +0100, Linux regression tracking (Thorsten Leemhuis) wrote:
 > Hi, this is your Linux kernel regression tracker.
 > 
-> I noticed a regression report in bugzilla.kernel.org that sounds a lot
-> like it's a regression (it's not totally clear). As many (most?) kernel
-> developer don't keep an eye on it, I decided to forward it by mail.
-> Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=216913 :
->
-> [...]
+> I noticed a regression report in bugzilla.kernel.org. As many (most?)
+> kernel developer don't keep an eye on it, I decided to forward it by
+> mail. Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=217037 :
 > 
-> #regzbot introduced: v6.0..v6.1
-> https://bugzilla.kernel.org/show_bug.cgi?id=216913
-> #regzbot title: i2c: i2c_designware: i2c not working after hibernation
-> #regzbot ignore-activity
+> >  michallinuxstuff@gmail.com 2023-02-14 14:16:26 UTC
+> > 
+> > For the CMB-capable nvme ctrls, kernel was exposing couple of related attributes under the sysfs. E.g.
+> > 
+> > 
+> > # grep . /sys/class/nvme/nvme0/cmb*
+> > /sys/class/nvme/nvme0/cmb:cmbloc : x00000062
+> > /sys/class/nvme/nvme0/cmb:cmbsz  : x0008021d
+> > /sys/class/nvme/nvme0/cmbloc:98
+> > /sys/class/nvme/nvme0/cmbsz:524829
 
-According to https://bugzilla.kernel.org/show_bug.cgi?id=216913#c7 :
-
-#regzbot fixed: 75507a319876a
-#regzbot ignore-activity
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
-
-
+The breakage is that the attributes are decided before we've setup the cmb
+regions. I'll send a fix shortly.
