@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 088936AA0
-	for <regressions@lists.linux.dev>; Fri, 17 Feb 2023 12:40:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B9196AA0
+	for <regressions@lists.linux.dev>; Fri, 17 Feb 2023 12:45:32 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pT01p-00064O-Fl; Fri, 17 Feb 2023 13:39:53 +0100
-Message-ID: <f30eae62-c827-f743-acbe-867770714522@leemhuis.info>
-Date: Fri, 17 Feb 2023 13:39:52 +0100
+	id 1pT07G-0007SF-KU; Fri, 17 Feb 2023 13:45:30 +0100
+Message-ID: <4c6089a3-fb56-39c5-3f5a-79c20ffa34df@leemhuis.info>
+Date: Fri, 17 Feb 2023 13:45:30 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,104 +16,55 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.7.2
-Subject: Re: Regression in Kernel 6.0: System partially freezes with "nvme
- controller is down"
+Subject: Re: regression: nfs mount (even idle) eventually hangs server
+ #forregzbot
 Content-Language: en-US, de-DE
-To: Bjorn Helgaas <helgaas@kernel.org>, =?UTF-8?Q?Julian_Gro=c3=9f?=
- <julian.g@posteo.de>
-Cc: Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
- Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
- linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- Linux regressions mailing list <regressions@lists.linux.dev>
-References: <20230112164204.GA1768006@bhelgaas>
-From: "Linux regression tracking (Thorsten Leemhuis)"
+From: "Linux regression tracking #update (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
+To: LKML <linux-kernel@vger.kernel.org>
+Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <65ed34338c69cb034295f2c9cbe0af684d65d30f.camel@gmx.de>
+ <0bee316d-8b9c-055b-4fdc-0abd151799d7@leemhuis.info>
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <20230112164204.GA1768006@bhelgaas>
+In-Reply-To: <0bee316d-8b9c-055b-4fdc-0abd151799d7@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1676637603;1c00a318;
-X-HE-SMSGID: 1pT01p-00064O-Fl
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1676637932;f901104d;
+X-HE-SMSGID: 1pT07G-0007SF-KU
 
-Hi, this is your Linux kernel regression tracker. Top-posting for once,
-to make this easily accessible to everyone.
+[TLDR: This mail in primarily relevant for Linux kernel regression
+tracking. See link in footer if these mails annoy you.]
 
-I might be missing something, but it looks like this discussion stalled.
-I wonder why.
+On 22.12.22 12:19, Thorsten Leemhuis wrote:
+> [Note: this mail contains only information for Linux kernel regression
+> tracking. Mails like these contain '#forregzbot' in the subject to make
+> then easy to spot and filter out. The author also tried to remove most
+> or all individuals from the list of recipients to spare them the hassle.]
+> 
+> On 21.12.22 09:59, Mike Galbraith wrote:
+>> scenario: /home/mikeg of desktop box mounted by lappy, lappy sitting
+>> idle with user mikeg not even logged in.  Reclaim inducing activity on
+>> desktop box eventually leads to spew below.  I've hung the box three
+>> times in two days, twice with light client side activity, and below
+>> with none, ie with the mount point allegedly merely existing. Sans nfs
+>> mount, box seems perfectly fine. 6.1 didn't reproduce either, so it
+>> would appear to be a merge window bug.
+> 
+> Thanks for the report. To be sure below issue doesn't fall through the
+> cracks unnoticed, I'm adding it to regzbot, my Linux kernel regression
+> tracking bot:
+> 
+> #regzbot ^introduced v5.19..v6.0
+> #regzbot title nfs: mount (even idle) eventually hangs server
+> #regzbot ignore-activity
 
-Julian, did you ever share the data Bjorn asked for? Or tried a a
-bisection, as suggested by Keith? Or did you stop caring for some
-reason? Does everything maybe work fine these days?
+#regzbot fix: f385f7d244134246f984975ed34cd75f77de4
+#regzbot ignore-activity
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
 Everything you wanna know about Linux kernel regression tracking:
 https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+That page also explains what to do if mails like this annoy you.
 
-#regzbot poke
 
-On 12.01.23 17:42, Bjorn Helgaas wrote:
-> On Thu, Jan 12, 2023 at 03:48:46PM +0100, Linux kernel regression tracking (Thorsten Leemhuis) wrote:
->> ...
->> On 11.01.23 23:11, Julian Groß wrote:
->>> Dear Maintainer,
->>>
->>> when running Linux Kernel version 6.0.12, 6.0.10, 6.0-rc7, or 6.1.4, my
->>> system seemingly randomly freezes due to the file system being set to
->>> read-only due to an issue with my NVMe controller.
->>> The issue does *not* appear on Linux Kernel version 5.19.11 or lower.
->>>
->>> Through network logging I am able to catch the issue:
->>> ```
->>> Jan  8 14:50:16 x299-desktop kernel: [ 1461.259288] nvme nvme0:
->>> controller is down; will reset: CSTS=0xffffffff, PCI_STATUS=0x10
->>> Jan  8 14:50:16 x299-desktop kernel: [ 1461.259293] nvme nvme0: Does
->>> your device have a faulty power saving mode enabled?
->>> Jan  8 14:50:16 x299-desktop kernel: [ 1461.259293] nvme nvme0: Try
->>> "nvme_core.default_ps_max_latency_us=0 pcie_aspm=off" and report a bug
->>> Jan  8 14:50:16 x299-desktop kernel: [ 1461.331360] nvme 0000:01:00.0:
->>> enabling device (0000 -> 0002)
->>> ...
->>>
->>> I have tried the suggestion in the log without luck.
->>>
->>> Attached is a log that includes two system freezes, as well as a list of
->>> PCI(e) devices created by Debian reportbug.
->>> The first freeze happens at "Jan  8 04:26:28" and the second freeze
->>> happens at "Jan  8 14:50:16".
->>>
->>> Currently, I am using git bisect to narrow down the window of possible
->>> commits, but since the issue appears seemingly random, it will take many
->>> months to identify the offending commit this way.
->>>
->>> The original Debian bug report is here:
->>> https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1028309
-> 
-> For some reason the log [1] has very little of the kernel dmesg log.
-> It does seem like the freeze is partial (I see messages for hundreds
-> or thousands of seconds after the nvme reset), but requires a reboot
-> to recover.
-> 
-> The lspci information [2] shows the 00:1b.0 Root Port leading to the
-> 01:00.0 NVMe device.
-> 
-> Is it possible to collect lspci output after the nvme freeze?  If so,
-> please save the output of:
-> 
->   sudo lspci -vv -s00:1b.0
->   sudo lspci -vv -s01:00.0
-> 
-> Make sure to run lspci as root so we can see the error logging
-> registers for these devices.
-> 
-> If you can collect more of the dmesg log after the freeze, e.g., via
-> the "dmesg" command, that might be helpful, too.
-> 
-> Bjorn
-> 
-> [1] https://bugs.debian.org/cgi-bin/bugreport.cgi?att=1;bug=1028309;filename=x299-desktop_crash.log.xz;msg=5
-> [2] https://bugs.debian.org/cgi-bin/bugreport.cgi?att=0;bug=1028309;msg=5
-> 
-> 
