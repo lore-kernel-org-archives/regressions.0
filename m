@@ -1,78 +1,101 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com [209.85.222.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74C4963E;
-	Fri, 17 Feb 2023 06:11:36 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pSty1-0005Vo-7a; Fri, 17 Feb 2023 07:11:33 +0100
-Message-ID: <b25da864-7227-e669-30fa-d953da252842@leemhuis.info>
-Date: Fri, 17 Feb 2023 07:11:32 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2EEE7F
+	for <regressions@lists.linux.dev>; Fri, 17 Feb 2023 07:30:02 +0000 (UTC)
+Received: by mail-ua1-f52.google.com with SMTP id i2so701607ual.7
+        for <regressions@lists.linux.dev>; Thu, 16 Feb 2023 23:30:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=AaFc9U9vYkJWTuUxQlSrpWrlwRWSsnO1tJS6q4VH5W4=;
+        b=TSXVN4RAjB8gKl5Z1yahyFnITPfu5lqbpL7BVaeg0fH617+OmS9alOEehBuvGkN/KD
+         IRsOfbMhyRi4UVwoF2DBRsMaQssAly9wUXGzaLew905wq4Nd7SvicYVzJJ3juh/669oT
+         k5BPJGG8BYSZnWkMQ4IhGx5Whjdj+3+v5mllPZvRawq7o21Im/plHhYIxwXWqTszxTgY
+         APeRqTn3K5HMGDsAdOvaMU7waaHMHxgjVH/1sbz9/OoY5ZIieqE9jpTRfVsjgY38S0J/
+         tpH+b5bwHoKDogZeD0+tMXWVEOUbEHwtJ3Ox52tqDKaeC+QtwXg5g6ZeTQR5iBOAzXpn
+         +8lQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=AaFc9U9vYkJWTuUxQlSrpWrlwRWSsnO1tJS6q4VH5W4=;
+        b=p3pLi2e95DD79VPZ7ACiPLreLAdAKw1NLenqfeojq3I03P/raYQdraYXAyaklxhCph
+         kv99JNV4BJIsfcL4xu0MbeR+8s3y5sMV0n+pBhQdw1FJxj2ZbkETiGXi2Z/cK5dPz/W2
+         gduiPsPHVEOid/pgQ6Bup0E0JJYoaZs1meVWKk8LspF6R7kT6s/NYfuYUrc6WpB94eNB
+         ZI9T1S1kLC0cXEzN2Gzx59Km5XneEKGKB+9sEi2LUBioOVmoaPpd+s79VUKFtk3q5N2u
+         5/0hVf6PvSCbOx9G30PvbCClqAJzWpPkucnijrv5OA5vwN2vinaOIE6kdHGQ9HXoQrxq
+         KNAg==
+X-Gm-Message-State: AO0yUKVSBQjWOXcKOIUXKbGKeiT5hiuHJ8mRgdFMVPpSEqkwiCusfCta
+	7tMpDOQcm6ujVk8UbpBsryu63AJqVO7m1imRXw7kXQ==
+X-Google-Smtp-Source: AK7set9DF9KeFw9LzyQH5Z6doKGd/0FaFayUaEkUBWy5Rjgx+3emgp23EIrxCij/WAG2qoon3dmfE1FIOTJQFjuGcfM=
+X-Received: by 2002:a9f:305e:0:b0:68b:a181:563c with SMTP id
+ i30-20020a9f305e000000b0068ba181563cmr497812uab.0.1676619001255; Thu, 16 Feb
+ 2023 23:30:01 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.2
-Subject: Re: [PATCH v3 3/3] iommu/amd: Improve page fault error reporting
-Content-Language: en-US, de-DE
-To: Vasant Hegde <vasant.hegde@amd.com>, iommu@lists.linux.dev,
- joro@8bytes.org, baolu.lu@linux.intel.com
-Cc: suravee.suthikulpanit@amd.com, robin.murphy@arm.com, will@kernel.org,
- Matt Fagnani <matt.fagnani@bell.net>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <20230215052642.6016-1-vasant.hegde@amd.com>
- <20230215052642.6016-3-vasant.hegde@amd.com>
- <7c8a2356-4964-20a7-2f8b-4836c1f6a9ff@leemhuis.info>
- <d3d6aff3-b10e-4d02-65f6-b714ad57bd78@amd.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <d3d6aff3-b10e-4d02-65f6-b714ad57bd78@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1676614296;838a7391;
-X-HE-SMSGID: 1pSty1-0005Vo-7a
+References: <CA+G9fYvZqytp3gMnC4-no9EB=Jnzqmu44i8JQo6apiZat-xxPg@mail.gmail.com>
+ <CAG_fn=V3a-kLkjE252V4ncHWDR0YhMby7nd1P6RNQA4aPf+fRw@mail.gmail.com>
+ <CAG_fn=VuD+8GL_3-aSa9Y=zLqmroK11bqk48GBuPgTCpZMe-jw@mail.gmail.com> <CANpmjNOciiDNkWDrkQ+BEgAj=rSYGQAuHVS1DTDfvPHSbAndoA@mail.gmail.com>
+In-Reply-To: <CANpmjNOciiDNkWDrkQ+BEgAj=rSYGQAuHVS1DTDfvPHSbAndoA@mail.gmail.com>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Fri, 17 Feb 2023 12:59:50 +0530
+Message-ID: <CA+G9fYvLmhfw7dk_rhXBHd7YESGtAndmhdcW2=VGANfk0ho9Uw@mail.gmail.com>
+Subject: Re: next: x86_64: kunit test crashed and kernel panic
+To: Marco Elver <elver@google.com>
+Cc: Alexander Potapenko <glider@google.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Jakub Jelinek <jakub@redhat.com>, Peter Collingbourne <pcc@google.com>, 
+	kasan-dev <kasan-dev@googlegroups.com>, open list <linux-kernel@vger.kernel.org>, 
+	kunit-dev@googlegroups.com, lkft-triage@lists.linaro.org, 
+	regressions@lists.linux.dev, Anders Roxell <anders.roxell@linaro.org>, 
+	Arnd Bergmann <arnd@arndb.de>, Andrey Konovalov <andreyknvl@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On 17.02.23 06:56, Vasant Hegde wrote:
-> On 2/16/2023 3:11 PM, Thorsten Leemhuis wrote:
->> On 15.02.23 06:26, Vasant Hegde wrote:
->>> If IOMMU domain for device group is not setup properly then we may hit
->>> IOMMU page fault. Current page fault handler assumes that domain is
->>> always setup and it will hit NULL pointer derefence (see below sample log).
->>>
->>> Lets check whether domain is setup or not and log appropriate message.
->>>
->>> [...]
->>
->> Many thx for taking care of this. Is this something that is still
->> suitable for merging before 6.2 is released? If not it would be good to
->> directly add a "CC: <stable.." tag to ensure it's backported to 6.2
->> later, as maybe there are more people affected by this.
-> 
-> I think patch 1/3 is candidate for 6.2. I have request Joerg to look into it.
+Hi Marco,
 
-Great, many thx for clarifying. Sorry for creating confusion, I
-sometimes get details wrong, as I juggle with so many different
-regression at the same time...
+On Fri, 17 Feb 2023 at 05:22, Marco Elver <elver@google.com> wrote:
+>
+> On Thu, 16 Feb 2023 at 19:59, Alexander Potapenko <glider@google.com> wrote:
+> >
+> > >
+> > > > <4>[   38.796558]  ? kmalloc_memmove_negative_size+0xeb/0x1f0
+> > > > <4>[   38.797376]  ? __pfx_kmalloc_memmove_negative_size+0x10/0x10
+> > >
+> > > Most certainly kmalloc_memmove_negative_size() is related.
+> > > Looks like we fail to intercept the call to memmove() in this test,
+> > > passing -2 to the actual __memmove().
+> >
+> > This was introduced by 69d4c0d321869 ("entry, kasan, x86: Disallow
+> > overriding mem*() functions")
+>
+> Ah, thanks!
+>
+> > There's Marco's "kasan: Emit different calls for instrumentable
+> > memintrinsics", but it doesn't fix the problem for me (looking
+> > closer...), and GCC support is still not there, right?
+>
+> Only Clang 15 supports it at this point. Some future GCC will support it.
+>
+> > Failing to intercept memcpy/memset/memmove should normally result in
+> > false negatives, but kmalloc_memmove_negative_size() makes a strong
+> > assumption that KASAN will catch and prevent memmove(dst, src, -2).
+>
+> Ouch - ok, so we need to skip these tests if we know memintrinsics
+> aren't instrumented.
+>
+> I've sent a series here:
+> https://lore.kernel.org/all/20230216234522.3757369-1-elver@google.com/
 
->>> Reported-by: Matt Fagnani <matt.fagnani@bell.net>
->>
->> There is one small thing to improve, please add the following tags here
->> to make things easier for future code archaeologists:
->>
->> Link: https://bugzilla.kernel.org/show_bug.cgi?id=216865
->> Link:
->> https://lore.kernel.org/lkml/15d0f9ff-2a56-b3e9-5b45-e6b23300ae3b@leemhuis.info/
->>
-> 
-> I am sorry. I should have added above two links. I will keep a note so that I
-> don't miss things next time.
-> 
-> Joerg did added these link before applying. Thanks Joerg.
+Thanks for sending this patch series.
 
-+1
+I request you to share your Linux tree / branch / sha.
+I will rebuild it with clang-16 and run kunit tests and get back to
+you soon with results.
 
-Ciao, Thorsten
+- Naresh
