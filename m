@@ -1,92 +1,58 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC6F9361
-	for <regressions@lists.linux.dev>; Fri, 17 Feb 2023 00:38:33 +0000 (UTC)
-Received: from localhost (unknown [IPv6:2601:281:8300:73::5f6])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id 8AF5E2ED;
-	Fri, 17 Feb 2023 00:30:25 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 8AF5E2ED
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1676593825; bh=IPkIzJ6RsuEEgaqZNxiZrcDInYONFkZL3WGC1ruybMo=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=XxDB/h8e8Q9yvGXZfm+omUkKZ/GAVnBQanaG4U5wFw9k6IRfG4VLkXRsHzE9qtjph
-	 GwSJt+VnsQufLa0po+1sRf3emwh5kE166mUr92djEmhlXF0Xa24EXdc5C7ey6fVzWZ
-	 X1TA1wm04uApeLyJp5kBmA/Xf1GLIdmwW1QqzeF6rd87DJpPK0uxOAWePwIbSwNBdA
-	 0lXCcC0oL4U8TqqMNxSzBU1sJDZk+bdXp6SkPSPzxaYWKSVbFTUEH0XueCyGt6imZG
-	 6NucNPqQ6DYb9goOIdFR4H1WXMIg9aUvldn+5dgR20/CAZ0EWvXT7Wm40Y1qP36M4U
-	 OzcCiR04cJaMQ==
-From: Jonathan Corbet <corbet@lwn.net>
-To: Thorsten Leemhuis <linux@leemhuis.info>
-Cc: Randy Dunlap <rdunlap@infradead.org>, Lukas Bulwahn
- <lukas.bulwahn@gmail.com>, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, regressions@lists.linux.dev, Greg KH
- <gregkh@linuxfoundation.org>, Jani Nikula <jani.nikula@linux.intel.com>
-Subject: Re: [PATCH v2] docs: describe how to quickly build a trimmed kernel
-In-Reply-To: <8cfcf069d48c1b8d7b83aafe0132f8dad0f1d0ea.1676400947.git.linux@leemhuis.info>
-References: <8cfcf069d48c1b8d7b83aafe0132f8dad0f1d0ea.1676400947.git.linux@leemhuis.info>
-Date: Thu, 16 Feb 2023 17:30:24 -0700
-Message-ID: <873575gmlb.fsf@meer.lwn.net>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FC9E631
+	for <regressions@lists.linux.dev>; Fri, 17 Feb 2023 05:18:02 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1pSt8A-0006Uf-Ur; Fri, 17 Feb 2023 06:17:59 +0100
+Message-ID: <06a5ada1-d1b8-3139-3a60-f43958f90f79@leemhuis.info>
+Date: Fri, 17 Feb 2023 06:17:58 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.2
+Subject: Re: [Regression] Bug 216961 - Severe IO scheduling starvation issues
+ with btrfs
+Content-Language: en-US, de-DE
+To: Josef Bacik <josef@toxicpanda.com>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: David Sterba <dsterba@suse.com>, Chris Mason <clm@fb.com>,
+ linux-btrfs <linux-btrfs@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>,
+ Wyatt Childers <kernel.dbwta@haxing.ninja>, pmacedo@gmail.com
+References: <0ca02b1f-ab00-9fa6-aecc-c2c46d624e49@leemhuis.info>
+ <e0998928-0f4e-f2a9-2e77-3e4bab459688@leemhuis.info>
+ <CAEzrpqc6tweHqKKPZYyVuOXH1Wd+hmrTPfcrpa-5-btU_Z24Fg@mail.gmail.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <CAEzrpqc6tweHqKKPZYyVuOXH1Wd+hmrTPfcrpa-5-btU_Z24Fg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1676611082;e9c80e51;
+X-HE-SMSGID: 1pSt8A-0006Uf-Ur
 
-Thorsten Leemhuis <linux@leemhuis.info> writes:
+On 16.02.23 23:39, Josef Bacik wrote:
+> On Thu, Feb 16, 2023 at 12:43 PM Thorsten Leemhuis
+> <regressions@leemhuis.info> wrote:
+>>
+>> Hi btrfs maintainers and developers.
+>>
+>> I might be missing something, but it looks like the report was ignored.
+>> Is there a reason for that?
+> 
+> Mostly just being blind.
 
-> Add a text explaining how to quickly build a kernel, as that's something
-> users will often have to do when they want to report an issue or test
-> proposed fixes. This is a huge and frightening task for quite a few
-> users these days, as many rely on pre-compiled kernels and have never
-> built their own. They find help on quite a few websites explaining the
-> process in various ways, but those howtos often omit important details
-> or make things too hard for the 'quickly build just for testing' case
-> that 'localmodconfig' is really useful for. Hence give users something
-> at hand to guide them, as that makes it easier for them to help with
-> testing, debugging, and fixing the kernel.
->
-> To keep the complexity at bay, the document explicitly focuses on how to
-> compile the kernel on commodity distributions running on commodity
-> hardware. People that deal with less common distributions or hardware
-> will often know their way around already anyway.
+Happens.
 
-So this seems generally good though - as is my usual style - if it were
-mine I'd be trying to find a way to make it significantly shorter.
+>  I've responded to the BZ, I'll investigate
+> through the BZ.
 
-I could certainly bikeshed a lot of things - I'm not convinced about the
-whole shallow-clone business, for example - but I'll try to restrain
-myself.
+Great, many thx!
 
-> The document heavily uses anchors and links to them, which makes things
-> slightly harder to read in the source form. But the intended target
-> audience is way more likely to read rendered versions of this text on
-> pages like docs.kernel.org anyway -- and there those anchors and links
-> allow easy jumps to the reference section and back, which makes the
-> document a lot easier to work with for the intended target audience.
-
-I do wonder if all that back-and-forth actually makes things easier, and
-it definitely impedes use of the RST file.  I recognize that you're
-trying to do something a bit different here, though, and don't want to
-get in the way of the experiment.  Given the purpose, though, I do have
-a couple of little thoughts:
-
-- Somewhere at the top of the RST file should be a prominent link to the
-  rendered version, presumably on kernel.org.  It could perhaps be in an
-  RST comment that doesn't show up in the rendered version, saying
-  "perhaps you really want to read this ----> over there".
-
-- Eventually we should probably make the link to this document more
-  prominent on the front page - once we've figured out what we're doing
-  there :)
-
-Anyway, those quibbles aside, I think we should probably just apply this
-after the merge window.
-
-Thanks,
-
-jon
+Ciao, THorsten
