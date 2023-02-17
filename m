@@ -1,93 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D128B6ABD
-	for <regressions@lists.linux.dev>; Fri, 17 Feb 2023 14:26:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27EFFC433EF;
-	Fri, 17 Feb 2023 14:26:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1676643982;
-	bh=vETSbfaGkUw1h7Lh16tXPMaRRqS2eBm7YgpEdwClYBM=;
-	h=Subject:To:Cc:From:Date:In-Reply-To:From;
-	b=kT4FPKnnUE+bqcCTNrYzsVDjHLbiWgslBeUizext/kUiw2ZpF1IRyqtEJPlWRPUTg
-	 9J6d0b6go8+21olxCH8nELmy9mvqjXaW9Pt8g4GDIiTVUNciMbRQwTcco6WQ5heomS
-	 hNLHdZ6v5QFPmR4k1tRr2ZokSOnZPBLXXScpZJ+4=
-Subject: Patch "tcp: Fix listen() regression in 5.15.88." has been added to the 5.15-stable tree
-To: EF8A45D0-768A-4CD5-9A8A-0FA6E610ABF7@winter.cafe,gregkh@linuxfoundation.org,kuniyu@amazon.com,regressions@lists.linux.dev,w@1wt.eu,winter@winter.cafe
-Cc: <stable-commits@vger.kernel.org>
-From: <gregkh@linuxfoundation.org>
-Date: Fri, 17 Feb 2023 15:25:18 +0100
-In-Reply-To: <20230213205835.56151-1-kuniyu@amazon.com>
-Message-ID: <1676643918250202@kroah.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9D6F3C32
+	for <regressions@lists.linux.dev>; Fri, 17 Feb 2023 14:42:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1676644934;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=+to4UHiUaaWlmqhp9/u5LSsHFJ9FxRfzJ2CJA+u2D2g=;
+	b=hkh/o14UhNFu4nwKbCyXb3VHz8sFUl8qU+cRQFXhp4Lns/QYreq0Q5X63xj9B9eTkRNdu7
+	++xcrEHwgzllBu5chZ0uI0fuVodMiylIKHjg0ierMhQ8pkSgQQwup8dznuq81lMPKGliVI
+	pauGzyabCvaVHxCOZ1A+pqpCKQKI0G0=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-474-t72OOqcFOTG-bJR1AhkMIQ-1; Fri, 17 Feb 2023 09:42:10 -0500
+X-MC-Unique: t72OOqcFOTG-bJR1AhkMIQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 3D8E2185A794;
+	Fri, 17 Feb 2023 14:42:10 +0000 (UTC)
+Received: from shalem.redhat.com (unknown [10.39.193.199])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 32D232026D4B;
+	Fri, 17 Feb 2023 14:42:09 +0000 (UTC)
+From: Hans de Goede <hdegoede@redhat.com>
+To: Mark Gross <markgross@kernel.org>,
+	Andy Shevchenko <andy@kernel.org>,
+	Daniel Dadap <ddadap@nvidia.com>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	Luke McCarthy <mail@lukehmcc.com>,
+	platform-driver-x86@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: [PATCH v2] platform/x86: nvidia-wmi-ec-backlight: Add force module parameter
+Date: Fri, 17 Feb 2023 15:42:08 +0100
+Message-Id: <20230217144208.5721-1-hdegoede@redhat.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ANSI_X3.4-1968
 Content-Transfer-Encoding: 8bit
-X-stable: commit
-X-Patchwork-Hint: ignore 
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.4
 
+On some Lenovo Legion models, the backlight might be driven by either
+one of nvidia_wmi_ec_backlight or amdgpu_bl0 at different times.
 
-This is a note to let you know that I've just added the patch titled
+When the Nvidia WMI EC backlight interface reports the backlight is
+controlled by the EC, the current backlight handling only registers
+nvidia_wmi_ec_backlight (and registers no other backlight interfaces).
 
-    tcp: Fix listen() regression in 5.15.88.
+This hides (never registers) the amdgpu_bl0 interface, where as prior
+to 6.1.4 users would have both nvidia_wmi_ec_backlight and amdgpu_bl0
+and could work around things in userspace.
 
-to the 5.15-stable tree which can be found at:
-    http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
+Add a force module parameter which can be used with acpi_backlight=native
+to restore the old behavior as a workound (for now) by passing:
 
-The filename of the patch is:
-     tcp-fix-listen-regression-in-5.15.88.patch
-and it can be found in the queue-5.15 subdirectory.
+"acpi_backlight=native nvidia-wmi-ec-backlight.force=1"
 
-If you, or anyone else, feels it should not be added to the stable tree,
-please let <stable@vger.kernel.org> know about it.
-
-
-From kuniyu@amazon.com  Fri Feb 17 15:21:48 2023
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
-Date: Mon, 13 Feb 2023 20:45:48 +0000
-Subject: tcp: Fix listen() regression in 5.15.88.
-To: <gregkh@linuxfoundation.org>
-Cc: <kuniyu@amazon.com>, <netdev@vger.kernel.org>, <regressions@lists.linux.dev>, <stable@vger.kernel.org>, <w@1wt.eu>, <winter@winter.cafe>
-Message-ID: <20230213205835.56151-1-kuniyu@amazon.com>
-
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
-
-When we backport dadd0dcaa67d ("net/ulp: prevent ULP without clone op from
-entering the LISTEN status"), we have accidentally backported a part of
-7a7160edf1bf ("net: Return errno in sk->sk_prot->get_port().") and removed
-err = -EADDRINUSE in inet_csk_listen_start().
-
-Thus, listen() no longer returns -EADDRINUSE even if ->get_port() failed
-as reported in [0].
-
-We set -EADDRINUSE to err just before ->get_port() to fix the regression.
-
-[0]: https://lore.kernel.org/stable/EF8A45D0-768A-4CD5-9A8A-0FA6E610ABF7@winter.cafe/
-
-Reported-by: Winter <winter@winter.cafe>
-Signed-off-by: Kuniyuki Iwashima <kuniyu@amazon.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 8d0ca287fd8c ("platform/x86: nvidia-wmi-ec-backlight: Use acpi_video_get_backlight_type()")
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=217026
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
- net/ipv4/inet_connection_sock.c |    1 +
- 1 file changed, 1 insertion(+)
+Changes in v2:
+- Reword commit message
+---
+ drivers/platform/x86/nvidia-wmi-ec-backlight.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/net/ipv4/inet_connection_sock.c
-+++ b/net/ipv4/inet_connection_sock.c
-@@ -1070,6 +1070,7 @@ int inet_csk_listen_start(struct sock *s
- 	 * It is OK, because this socket enters to hash table only
- 	 * after validation is complete.
- 	 */
-+	err = -EADDRINUSE;
- 	inet_sk_state_store(sk, TCP_LISTEN);
- 	if (!sk->sk_prot->get_port(sk, inet->inet_num)) {
- 		inet->inet_sport = htons(inet->inet_num);
+diff --git a/drivers/platform/x86/nvidia-wmi-ec-backlight.c b/drivers/platform/x86/nvidia-wmi-ec-backlight.c
+index baccdf658538..1b572c90c76e 100644
+--- a/drivers/platform/x86/nvidia-wmi-ec-backlight.c
++++ b/drivers/platform/x86/nvidia-wmi-ec-backlight.c
+@@ -12,6 +12,10 @@
+ #include <linux/wmi.h>
+ #include <acpi/video.h>
+ 
++static bool force;
++module_param(force, bool, 0444);
++MODULE_PARM_DESC(force, "Force loading (disable acpi_backlight=xxx checks");
++
+ /**
+  * wmi_brightness_notify() - helper function for calling WMI-wrapped ACPI method
+  * @w:    Pointer to the struct wmi_device identified by %WMI_BRIGHTNESS_GUID
+@@ -91,7 +95,7 @@ static int nvidia_wmi_ec_backlight_probe(struct wmi_device *wdev, const void *ct
+ 	int ret;
+ 
+ 	/* drivers/acpi/video_detect.c also checks that SOURCE == EC */
+-	if (acpi_video_get_backlight_type() != acpi_backlight_nvidia_wmi_ec)
++	if (!force && acpi_video_get_backlight_type() != acpi_backlight_nvidia_wmi_ec)
+ 		return -ENODEV;
+ 
+ 	/*
+-- 
+2.39.1
 
-
-Patches currently in stable-queue which might be from kuniyu@amazon.com are
-
-queue-5.15/net-rose-fix-to-not-accept-on-connected-socket.patch
-queue-5.15/tcp-fix-listen-regression-in-5.15.88.patch
