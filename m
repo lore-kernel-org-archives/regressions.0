@@ -1,88 +1,92 @@
-Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com [209.85.217.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E1A2BD3F
-	for <regressions@lists.linux.dev>; Thu, 16 Feb 2023 23:52:41 +0000 (UTC)
-Received: by mail-vs1-f53.google.com with SMTP id h10so3760135vsu.11
-        for <regressions@lists.linux.dev>; Thu, 16 Feb 2023 15:52:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112; t=1676591561;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=r8AHC9C5MjMuHRim+xbd7khMCwzT9fB8DRzXrlAFNl0=;
-        b=BWv/RC5RYRHUHlunLNk5iuHtg1N0p0f1GBnHSwDXKG4iLKqS75rNV6TSMQEgMh1COy
-         K7ZFRQVDxkm7tcvHZIPunE8E5KuAhqsc2SuZq1FhAnI/9lTkvWU0KOM/XfThWs97mg5P
-         0VEUd24R40T+1512zdYPTyvnuJ6PB2FwNVlNkgd/ydD9esxYX113ylMzvFzhsa03fB5O
-         JbZmdcPYTCYcTytV00jqyf72ulouC2RZ5wpCsfN20xx1jWmtRF0Vq6kGKQS4S3yhD2bR
-         wilXlXXBJ6uus7nvaTSZ+Kp1/FvFACMOZ4dM8ve90//R82+/uGgtYvX3RP3x6pakdUuA
-         0P8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1676591561;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=r8AHC9C5MjMuHRim+xbd7khMCwzT9fB8DRzXrlAFNl0=;
-        b=FslqQY59kuCpp5NZmFvDNy5/uzq2J9kyTCkdmKBVAG4+YkJ2u0Wl8sQprtiy5OTlzv
-         hKa7QCHO1rKu2P+YWabz9sh0tT29cSXiiXO3MlsosKL7Pk6phwPiybXp8qUlO0Zt328I
-         FP8rFbIZOYnFfeIvMydMJ3YxXTVPJurZ3dsEPI3PtI2HgDg4M12FcOAxvpsQtgzQFSRq
-         Hcp4xicEUWcZVi4KgIVc8em0VoGMztbDPTQ6gw0IjJFML6hhNhLFntf4P+CTQDhbcIl+
-         huKfeaA22ImtRfC9djNddG300fcbMPVxv+vkh6XjWXs+bxXWm0a76fwYg7QRL58UDQbT
-         H7AQ==
-X-Gm-Message-State: AO0yUKXDMkQ+ez4wDpGsnodWdN6DVdrWtbPwAmJnrg1u/5gm4oP8z6dx
-	T0wL8bo5tK9ODC54d1QTL6wsl5jhzsBRO8A4rUTlfg==
-X-Google-Smtp-Source: AK7set9s0+V4GZG35TLTtCHNiSMJR5wePZ4+XXizwIrrnw3bn7L+WzNkZ1SID/jr9/iulYpYmS8AAH+NkbFgYjPqBOU=
-X-Received: by 2002:a67:70c6:0:b0:412:2e92:21a6 with SMTP id
- l189-20020a6770c6000000b004122e9221a6mr1433170vsc.13.1676591560792; Thu, 16
- Feb 2023 15:52:40 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC6F9361
+	for <regressions@lists.linux.dev>; Fri, 17 Feb 2023 00:38:33 +0000 (UTC)
+Received: from localhost (unknown [IPv6:2601:281:8300:73::5f6])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id 8AF5E2ED;
+	Fri, 17 Feb 2023 00:30:25 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 8AF5E2ED
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1676593825; bh=IPkIzJ6RsuEEgaqZNxiZrcDInYONFkZL3WGC1ruybMo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=XxDB/h8e8Q9yvGXZfm+omUkKZ/GAVnBQanaG4U5wFw9k6IRfG4VLkXRsHzE9qtjph
+	 GwSJt+VnsQufLa0po+1sRf3emwh5kE166mUr92djEmhlXF0Xa24EXdc5C7ey6fVzWZ
+	 X1TA1wm04uApeLyJp5kBmA/Xf1GLIdmwW1QqzeF6rd87DJpPK0uxOAWePwIbSwNBdA
+	 0lXCcC0oL4U8TqqMNxSzBU1sJDZk+bdXp6SkPSPzxaYWKSVbFTUEH0XueCyGt6imZG
+	 6NucNPqQ6DYb9goOIdFR4H1WXMIg9aUvldn+5dgR20/CAZ0EWvXT7Wm40Y1qP36M4U
+	 OzcCiR04cJaMQ==
+From: Jonathan Corbet <corbet@lwn.net>
+To: Thorsten Leemhuis <linux@leemhuis.info>
+Cc: Randy Dunlap <rdunlap@infradead.org>, Lukas Bulwahn
+ <lukas.bulwahn@gmail.com>, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, regressions@lists.linux.dev, Greg KH
+ <gregkh@linuxfoundation.org>, Jani Nikula <jani.nikula@linux.intel.com>
+Subject: Re: [PATCH v2] docs: describe how to quickly build a trimmed kernel
+In-Reply-To: <8cfcf069d48c1b8d7b83aafe0132f8dad0f1d0ea.1676400947.git.linux@leemhuis.info>
+References: <8cfcf069d48c1b8d7b83aafe0132f8dad0f1d0ea.1676400947.git.linux@leemhuis.info>
+Date: Thu, 16 Feb 2023 17:30:24 -0700
+Message-ID: <873575gmlb.fsf@meer.lwn.net>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CA+G9fYvZqytp3gMnC4-no9EB=Jnzqmu44i8JQo6apiZat-xxPg@mail.gmail.com>
- <CAG_fn=V3a-kLkjE252V4ncHWDR0YhMby7nd1P6RNQA4aPf+fRw@mail.gmail.com> <CAG_fn=VuD+8GL_3-aSa9Y=zLqmroK11bqk48GBuPgTCpZMe-jw@mail.gmail.com>
-In-Reply-To: <CAG_fn=VuD+8GL_3-aSa9Y=zLqmroK11bqk48GBuPgTCpZMe-jw@mail.gmail.com>
-From: Marco Elver <elver@google.com>
-Date: Fri, 17 Feb 2023 00:52:03 +0100
-Message-ID: <CANpmjNOciiDNkWDrkQ+BEgAj=rSYGQAuHVS1DTDfvPHSbAndoA@mail.gmail.com>
-Subject: Re: next: x86_64: kunit test crashed and kernel panic
-To: Alexander Potapenko <glider@google.com>
-Cc: Naresh Kamboju <naresh.kamboju@linaro.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Jakub Jelinek <jakub@redhat.com>, Peter Collingbourne <pcc@google.com>, 
-	kasan-dev <kasan-dev@googlegroups.com>, open list <linux-kernel@vger.kernel.org>, 
-	kunit-dev@googlegroups.com, lkft-triage@lists.linaro.org, 
-	regressions@lists.linux.dev, Anders Roxell <anders.roxell@linaro.org>, 
-	Arnd Bergmann <arnd@arndb.de>, Andrey Konovalov <andreyknvl@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 
-On Thu, 16 Feb 2023 at 19:59, Alexander Potapenko <glider@google.com> wrote:
+Thorsten Leemhuis <linux@leemhuis.info> writes:
+
+> Add a text explaining how to quickly build a kernel, as that's something
+> users will often have to do when they want to report an issue or test
+> proposed fixes. This is a huge and frightening task for quite a few
+> users these days, as many rely on pre-compiled kernels and have never
+> built their own. They find help on quite a few websites explaining the
+> process in various ways, but those howtos often omit important details
+> or make things too hard for the 'quickly build just for testing' case
+> that 'localmodconfig' is really useful for. Hence give users something
+> at hand to guide them, as that makes it easier for them to help with
+> testing, debugging, and fixing the kernel.
 >
-> >
-> > > <4>[   38.796558]  ? kmalloc_memmove_negative_size+0xeb/0x1f0
-> > > <4>[   38.797376]  ? __pfx_kmalloc_memmove_negative_size+0x10/0x10
-> >
-> > Most certainly kmalloc_memmove_negative_size() is related.
-> > Looks like we fail to intercept the call to memmove() in this test,
-> > passing -2 to the actual __memmove().
->
-> This was introduced by 69d4c0d321869 ("entry, kasan, x86: Disallow
-> overriding mem*() functions")
+> To keep the complexity at bay, the document explicitly focuses on how to
+> compile the kernel on commodity distributions running on commodity
+> hardware. People that deal with less common distributions or hardware
+> will often know their way around already anyway.
 
-Ah, thanks!
+So this seems generally good though - as is my usual style - if it were
+mine I'd be trying to find a way to make it significantly shorter.
 
-> There's Marco's "kasan: Emit different calls for instrumentable
-> memintrinsics", but it doesn't fix the problem for me (looking
-> closer...), and GCC support is still not there, right?
+I could certainly bikeshed a lot of things - I'm not convinced about the
+whole shallow-clone business, for example - but I'll try to restrain
+myself.
 
-Only Clang 15 supports it at this point. Some future GCC will support it.
+> The document heavily uses anchors and links to them, which makes things
+> slightly harder to read in the source form. But the intended target
+> audience is way more likely to read rendered versions of this text on
+> pages like docs.kernel.org anyway -- and there those anchors and links
+> allow easy jumps to the reference section and back, which makes the
+> document a lot easier to work with for the intended target audience.
 
-> Failing to intercept memcpy/memset/memmove should normally result in
-> false negatives, but kmalloc_memmove_negative_size() makes a strong
-> assumption that KASAN will catch and prevent memmove(dst, src, -2).
+I do wonder if all that back-and-forth actually makes things easier, and
+it definitely impedes use of the RST file.  I recognize that you're
+trying to do something a bit different here, though, and don't want to
+get in the way of the experiment.  Given the purpose, though, I do have
+a couple of little thoughts:
 
-Ouch - ok, so we need to skip these tests if we know memintrinsics
-aren't instrumented.
+- Somewhere at the top of the RST file should be a prominent link to the
+  rendered version, presumably on kernel.org.  It could perhaps be in an
+  RST comment that doesn't show up in the rendered version, saying
+  "perhaps you really want to read this ----> over there".
 
-I've sent a series here:
-https://lore.kernel.org/all/20230216234522.3757369-1-elver@google.com/
+- Eventually we should probably make the link to this document more
+  prominent on the front page - once we've figured out what we're doing
+  there :)
+
+Anyway, those quibbles aside, I think we should probably just apply this
+after the merge window.
+
+Thanks,
+
+jon
