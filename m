@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95544746A
-	for <regressions@lists.linux.dev>; Fri, 17 Feb 2023 14:58:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7859746A
+	for <regressions@lists.linux.dev>; Fri, 17 Feb 2023 15:01:48 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pT2CI-00051Z-C1; Fri, 17 Feb 2023 15:58:50 +0100
-Message-ID: <d410440b-e1a6-ef02-8de9-7f168791cf4c@leemhuis.info>
-Date: Fri, 17 Feb 2023 15:58:50 +0100
+	id 1pT2F8-0005uQ-Lu; Fri, 17 Feb 2023 16:01:46 +0100
+Message-ID: <189043d8-1ea7-4264-7f86-3e28b99cc7da@leemhuis.info>
+Date: Fri, 17 Feb 2023 16:01:46 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,37 +16,50 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.7.2
-Subject: =?UTF-8?Q?Re=3a_Bug=c2=a0216844_-_Mediatek_MT7921_Driver_Crashing_U?=
- =?UTF-8?Q?pon_Modprobe?=
+Subject: Re: Regression in Kernel 6.0: System partially freezes with "nvme
+ controller is down"
 Content-Language: en-US, de-DE
 From: "Linux regression tracking #update (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
 To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <ad271bce-3441-ee96-d049-349ba6046003@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <ad271bce-3441-ee96-d049-349ba6046003@leemhuis.info>
+Cc: linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+References: <d5d8d106-acce-e20c-827d-1b37de2b2188@posteo.de>
+ <0d3206be-fae8-4bbd-4b6c-a5d1f038356d@posteo.de>
+ <9d46a35f-5830-9761-ca2c-eaa640e9cc86@leemhuis.info>
+In-Reply-To: <9d46a35f-5830-9761-ca2c-eaa640e9cc86@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1676645932;3732865b;
-X-HE-SMSGID: 1pT2CI-00051Z-C1
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1676646108;6db19960;
+X-HE-SMSGID: 1pT2F8-0005uQ-Lu
 
-
-
-On 26.12.22 13:48, Thorsten Leemhuis wrote:
-> Hi, this is your Linux kernel regression tracker speaking.
+On 12.01.23 15:48, Linux kernel regression tracking (Thorsten Leemhuis)
+wrote:
+> On 11.01.23 23:11, Julian Groß wrote:
+>>
+>> when running Linux Kernel version 6.0.12, 6.0.10, 6.0-rc7, or 6.1.4, my
+>> system seemingly randomly freezes due to the file system being set to
+>> read-only due to an issue with my NVMe controller.
+>> The issue does *not* appear on Linux Kernel version 5.19.11 or lower.
+>>
+>> Through network logging I am able to catch the issue:
 > 
-> I noticed a regression reported in bugzilla.kernel.org that seems to be
-> handled there already, nevertheless I'd like to add to the tracking to
-> ensure it's doesn't fall through the cracks in the end:
+> [...]
 > 
-> #regzbot ^introduced v6.0..v6.1
-> https://bugzilla.kernel.org/show_bug.cgi?id=216844
-> #regzbot title net: wifi: Mediatek MT7921 Driver Crashing Upon Modprobe
+> #regzbot ^introduced v5.19..v6.0-rc7
+> #regzbot title nvme: system partially freezes with "nvme controller is down"
 > #regzbot ignore-activity
 
-#regzbot introduced b320d6c456ff
-#regzbot fix: e66b7920aa5ac5b1a199
+Stop tracking this for now:
+
+#regzbot inconclusive: stalled and might be a hw issue
 #regzbot ignore-activity
+
+For details see:
+
+https://lore.kernel.org/all/81b5b28e-33fb-48ca-9e84-7574d5596bfb@posteo.de/
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
