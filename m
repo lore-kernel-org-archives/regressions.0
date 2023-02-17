@@ -1,73 +1,113 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2E84388
-	for <regressions@lists.linux.dev>; Fri, 17 Feb 2023 22:35:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18E54C433D2;
-	Fri, 17 Feb 2023 22:35:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1676673346;
-	bh=AJkZmUCTEOmCCALQIpc7uUcbL0+2XWrf05ehY0N88Wg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mUDU7xopOIEZs436JwIl+cCjUZA63Bqc/3skD+sDIV81RbNuihUv2rCacAjG7+UDA
-	 anKS0vxHmLuCZFSyP71rOvqWQdcZDRb8QXRLjWnGcZ0NUNZunrKxhM0ulPVdIojsDB
-	 NzdqHZ2CykePkK0icHoZxqnLQVDah7R5ZriBmGKd+U5p2wBMxOsYdZb+v87GUygq7D
-	 pcoA1XnCs9PRJVsAt3eqnnvVZIQfday5V/XK4mTPoHaEZyWU7nV4/qtK9uaB2EZjHU
-	 khWWiTcye8kLe1QZ115skjBuBFqkA/zTcAIVeywHRKHRw8pdIBm6+osm4ynbCxGd3Z
-	 /wrpK3hxTBmYg==
-Date: Sat, 18 Feb 2023 00:35:42 +0200
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: James Bottomley <James.Bottomley@hansenpartnership.com>,
-	Jason@zx2c4.com, linux-integrity@vger.kernel.org,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Linux kernel regressions list <regressions@lists.linux.dev>
-Subject: Re: [PATCH 1/1] tpm: disable hwrng for fTPM on some AMD designs
-Message-ID: <Y/ABPhpMQrQgQ72l@kernel.org>
-References: <20230214201955.7461-1-mario.limonciello@amd.com>
- <20230214201955.7461-2-mario.limonciello@amd.com>
- <50b5498c-38fb-e2e8-63f0-3d5bbc047737@leemhuis.info>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E286388
+	for <regressions@lists.linux.dev>; Fri, 17 Feb 2023 23:07:46 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EDB2C433D2;
+	Fri, 17 Feb 2023 23:07:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1676675266;
+	bh=fExcyML4LkR07+JWBsVgHvUX9J5y7OPoncWOiwO5AAo=;
+	h=Date:To:From:Subject:From;
+	b=gJ0pmv6sP5iY4gt3Ceho7c2EtAmAaleTMVei922mbgEP6m1oh2OabR7jqPyaIrt+k
+	 YIFUNLy5vlpI4Ad8da1Wwi24QBhvZlZ7H0I9vlcMpTjTTAT+wlsZlfKiPBSV8sz8gf
+	 zsFhhRgY8Z8HuqqPJSckghgm9ybth0I1CINatbYU=
+Date: Fri, 17 Feb 2023 15:07:45 -0800
+To: mm-commits@vger.kernel.org,stable@vger.kernel.org,regressions@lists.linux.dev,nbowler@draconx.ca,david@redhat.com,peterx@redhat.com,akpm@linux-foundation.org
+From: Andrew Morton <akpm@linux-foundation.org>
+Subject: [merged mm-hotfixes-stable] mm-migrate-fix-wrongly-apply-write-bit-after-mkdirty-on-sparc64.patch removed from -mm tree
+Message-Id: <20230217230746.1EDB2C433D2@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <50b5498c-38fb-e2e8-63f0-3d5bbc047737@leemhuis.info>
 
-On Fri, Feb 17, 2023 at 04:18:39PM +0100, Thorsten Leemhuis wrote:
-> On 14.02.23 21:19, Mario Limonciello wrote:
-> > AMD has issued an advisory indicating that having fTPM enabled in
-> > BIOS can cause "stuttering" in the OS.  This issue has been fixed
-> > in newer versions of the fTPM firmware, but it's up to system
-> > designers to decide whether to distribute it.
-> > 
-> > This issue has existed for a while, but is more prevalent starting
-> > with kernel 6.1 because commit b006c439d58db ("hwrng: core - start
-> > hwrng kthread also for untrusted sources") started to use the fTPM
-> > for hwrng by default. However, all uses of /dev/hwrng result in
-> > unacceptable stuttering.
-> > 
-> > So, simply disable registration of the defective hwrng when detecting
-> > these faulty fTPM versions.
-> 
-> Hmm, no reply since Mario posted this.
-> 
-> Jarkko, James, what's your stance on this? Does the patch look fine from
-> your point of view? And does the situation justify merging this on the
-> last minute for 6.2? Or should we merge it early for 6.3 and then
-> backport to stable?
-> 
-> Ciao, Thorsten
 
-As I stated in earlier response: do we want to forbid tpm_crb in this case
-or do we want to pass-through with a faulty firmware?
+The quilt patch titled
+     Subject: mm/migrate: fix wrongly apply write bit after mkdirty on sparc64
+has been removed from the -mm tree.  Its filename was
+     mm-migrate-fix-wrongly-apply-write-bit-after-mkdirty-on-sparc64.patch
 
-Not weighting either choice here I just don't see any motivating points
-in the commit message to pick either, that's all.
+This patch was dropped because it was merged into the mm-hotfixes-stable branch
+of git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm
 
-BR, Jarkko
+------------------------------------------------------
+From: Peter Xu <peterx@redhat.com>
+Subject: mm/migrate: fix wrongly apply write bit after mkdirty on sparc64
+Date: Thu, 16 Feb 2023 10:30:59 -0500
+
+Nick Bowler reported another sparc64 breakage after the young/dirty
+persistent work for page migration (per "Link:" below).  That's after a
+similar report [2].
+
+It turns out page migration was overlooked, and it wasn't failing before
+because page migration was not enabled in the initial report test
+environment.
+
+David proposed another way [2] to fix this from sparc64 side, but that
+patch didn't land somehow.  Neither did I check whether there's any other
+arch that has similar issues.
+
+Let's fix it for now as simple as moving the write bit handling to be
+after dirty, like what we did before.
+
+Note: this is based on mm-unstable, because the breakage was since 6.1 and
+we're at a very late stage of 6.2 (-rc8), so I assume for this specific
+case we should target this at 6.3.
+
+[1] https://lore.kernel.org/all/20221021160603.GA23307@u164.east.ru/
+[2] https://lore.kernel.org/all/20221212130213.136267-1-david@redhat.com/
+
+Link: https://lkml.kernel.org/r/20230216153059.256739-1-peterx@redhat.com
+Fixes: 2e3468778dbe ("mm: remember young/dirty bit for page migrations")
+Link: https://lore.kernel.org/all/CADyTPExpEqaJiMGoV+Z6xVgL50ZoMJg49B10LcZ=8eg19u34BA@mail.gmail.com/
+Signed-off-by: Peter Xu <peterx@redhat.com>
+Reported-by: Nick Bowler <nbowler@draconx.ca>
+Acked-by: David Hildenbrand <david@redhat.com>
+Tested-by: Nick Bowler <nbowler@draconx.ca>
+Cc: <regressions@lists.linux.dev>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+---
+
+
+--- a/mm/huge_memory.c~mm-migrate-fix-wrongly-apply-write-bit-after-mkdirty-on-sparc64
++++ a/mm/huge_memory.c
+@@ -3272,8 +3272,6 @@ void remove_migration_pmd(struct page_vm
+ 	pmde = mk_huge_pmd(new, READ_ONCE(vma->vm_page_prot));
+ 	if (pmd_swp_soft_dirty(*pvmw->pmd))
+ 		pmde = pmd_mksoft_dirty(pmde);
+-	if (is_writable_migration_entry(entry))
+-		pmde = maybe_pmd_mkwrite(pmde, vma);
+ 	if (pmd_swp_uffd_wp(*pvmw->pmd))
+ 		pmde = pmd_wrprotect(pmd_mkuffd_wp(pmde));
+ 	if (!is_migration_entry_young(entry))
+@@ -3281,6 +3279,10 @@ void remove_migration_pmd(struct page_vm
+ 	/* NOTE: this may contain setting soft-dirty on some archs */
+ 	if (PageDirty(new) && is_migration_entry_dirty(entry))
+ 		pmde = pmd_mkdirty(pmde);
++	if (is_writable_migration_entry(entry))
++		pmde = maybe_pmd_mkwrite(pmde, vma);
++	else
++		pmde = pmd_wrprotect(pmde);
+ 
+ 	if (PageAnon(new)) {
+ 		rmap_t rmap_flags = RMAP_COMPOUND;
+--- a/mm/migrate.c~mm-migrate-fix-wrongly-apply-write-bit-after-mkdirty-on-sparc64
++++ a/mm/migrate.c
+@@ -224,6 +224,8 @@ static bool remove_migration_pte(struct
+ 			pte = maybe_mkwrite(pte, vma);
+ 		else if (pte_swp_uffd_wp(*pvmw.pte))
+ 			pte = pte_mkuffd_wp(pte);
++		else
++			pte = pte_wrprotect(pte);
+ 
+ 		if (folio_test_anon(folio) && !is_readable_migration_entry(entry))
+ 			rmap_flags |= RMAP_EXCLUSIVE;
+_
+
+Patches currently in -mm which might be from peterx@redhat.com are
+
+mm-uffd-fix-comment-in-handling-pte-markers.patch
+
