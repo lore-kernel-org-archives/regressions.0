@@ -1,100 +1,57 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9D6F3C32
-	for <regressions@lists.linux.dev>; Fri, 17 Feb 2023 14:42:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1676644934;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=+to4UHiUaaWlmqhp9/u5LSsHFJ9FxRfzJ2CJA+u2D2g=;
-	b=hkh/o14UhNFu4nwKbCyXb3VHz8sFUl8qU+cRQFXhp4Lns/QYreq0Q5X63xj9B9eTkRNdu7
-	++xcrEHwgzllBu5chZ0uI0fuVodMiylIKHjg0ierMhQ8pkSgQQwup8dznuq81lMPKGliVI
-	pauGzyabCvaVHxCOZ1A+pqpCKQKI0G0=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-474-t72OOqcFOTG-bJR1AhkMIQ-1; Fri, 17 Feb 2023 09:42:10 -0500
-X-MC-Unique: t72OOqcFOTG-bJR1AhkMIQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 3D8E2185A794;
-	Fri, 17 Feb 2023 14:42:10 +0000 (UTC)
-Received: from shalem.redhat.com (unknown [10.39.193.199])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 32D232026D4B;
-	Fri, 17 Feb 2023 14:42:09 +0000 (UTC)
-From: Hans de Goede <hdegoede@redhat.com>
-To: Mark Gross <markgross@kernel.org>,
-	Andy Shevchenko <andy@kernel.org>,
-	Daniel Dadap <ddadap@nvidia.com>
-Cc: Hans de Goede <hdegoede@redhat.com>,
-	Luke McCarthy <mail@lukehmcc.com>,
-	platform-driver-x86@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: [PATCH v2] platform/x86: nvidia-wmi-ec-backlight: Add force module parameter
-Date: Fri, 17 Feb 2023 15:42:08 +0100
-Message-Id: <20230217144208.5721-1-hdegoede@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95544746A
+	for <regressions@lists.linux.dev>; Fri, 17 Feb 2023 14:58:52 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1pT2CI-00051Z-C1; Fri, 17 Feb 2023 15:58:50 +0100
+Message-ID: <d410440b-e1a6-ef02-8de9-7f168791cf4c@leemhuis.info>
+Date: Fri, 17 Feb 2023 15:58:50 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.4
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.2
+Subject: =?UTF-8?Q?Re=3a_Bug=c2=a0216844_-_Mediatek_MT7921_Driver_Crashing_U?=
+ =?UTF-8?Q?pon_Modprobe?=
+Content-Language: en-US, de-DE
+From: "Linux regression tracking #update (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <ad271bce-3441-ee96-d049-349ba6046003@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <ad271bce-3441-ee96-d049-349ba6046003@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1676645932;3732865b;
+X-HE-SMSGID: 1pT2CI-00051Z-C1
 
-On some Lenovo Legion models, the backlight might be driven by either
-one of nvidia_wmi_ec_backlight or amdgpu_bl0 at different times.
 
-When the Nvidia WMI EC backlight interface reports the backlight is
-controlled by the EC, the current backlight handling only registers
-nvidia_wmi_ec_backlight (and registers no other backlight interfaces).
 
-This hides (never registers) the amdgpu_bl0 interface, where as prior
-to 6.1.4 users would have both nvidia_wmi_ec_backlight and amdgpu_bl0
-and could work around things in userspace.
+On 26.12.22 13:48, Thorsten Leemhuis wrote:
+> Hi, this is your Linux kernel regression tracker speaking.
+> 
+> I noticed a regression reported in bugzilla.kernel.org that seems to be
+> handled there already, nevertheless I'd like to add to the tracking to
+> ensure it's doesn't fall through the cracks in the end:
+> 
+> #regzbot ^introduced v6.0..v6.1
+> https://bugzilla.kernel.org/show_bug.cgi?id=216844
+> #regzbot title net: wifi: Mediatek MT7921 Driver Crashing Upon Modprobe
+> #regzbot ignore-activity
 
-Add a force module parameter which can be used with acpi_backlight=native
-to restore the old behavior as a workound (for now) by passing:
+#regzbot introduced b320d6c456ff
+#regzbot fix: e66b7920aa5ac5b1a199
+#regzbot ignore-activity
 
-"acpi_backlight=native nvidia-wmi-ec-backlight.force=1"
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+That page also explains what to do if mails like this annoy you.
 
-Fixes: 8d0ca287fd8c ("platform/x86: nvidia-wmi-ec-backlight: Use acpi_video_get_backlight_type()")
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=217026
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
-Changes in v2:
-- Reword commit message
----
- drivers/platform/x86/nvidia-wmi-ec-backlight.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/platform/x86/nvidia-wmi-ec-backlight.c b/drivers/platform/x86/nvidia-wmi-ec-backlight.c
-index baccdf658538..1b572c90c76e 100644
---- a/drivers/platform/x86/nvidia-wmi-ec-backlight.c
-+++ b/drivers/platform/x86/nvidia-wmi-ec-backlight.c
-@@ -12,6 +12,10 @@
- #include <linux/wmi.h>
- #include <acpi/video.h>
- 
-+static bool force;
-+module_param(force, bool, 0444);
-+MODULE_PARM_DESC(force, "Force loading (disable acpi_backlight=xxx checks");
-+
- /**
-  * wmi_brightness_notify() - helper function for calling WMI-wrapped ACPI method
-  * @w:    Pointer to the struct wmi_device identified by %WMI_BRIGHTNESS_GUID
-@@ -91,7 +95,7 @@ static int nvidia_wmi_ec_backlight_probe(struct wmi_device *wdev, const void *ct
- 	int ret;
- 
- 	/* drivers/acpi/video_detect.c also checks that SOURCE == EC */
--	if (acpi_video_get_backlight_type() != acpi_backlight_nvidia_wmi_ec)
-+	if (!force && acpi_video_get_backlight_type() != acpi_backlight_nvidia_wmi_ec)
- 		return -ENODEV;
- 
- 	/*
--- 
-2.39.1
 
