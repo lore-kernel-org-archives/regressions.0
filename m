@@ -1,239 +1,162 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2080.outbound.protection.outlook.com [40.107.92.80])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5D65746A
-	for <regressions@lists.linux.dev>; Fri, 17 Feb 2023 15:18:45 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pT2VU-0002ZX-CL; Fri, 17 Feb 2023 16:18:40 +0100
-Message-ID: <50b5498c-38fb-e2e8-63f0-3d5bbc047737@leemhuis.info>
-Date: Fri, 17 Feb 2023 16:18:39 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8663746A
+	for <regressions@lists.linux.dev>; Fri, 17 Feb 2023 15:37:25 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mbiVe5k2YgfqJUEYCpg8Vr3dzuScJQJypvXI33UebMTaeq4pZfRUmNMu7fu7pDIpoce7zrNoy+XADASvyqZx3zs5yGG4EJYhSl4FCTm5eGFZcoPwVUf4b5stJFSLoiK8ynbbbfNn/BZgkgdCaV1xWA8NnXvnwvd83DrGROkc7HO2yrEVWkb5VPJW5Nx+z2JIYsuwhZW6hGiRjSvFvM24U5L97W7die7SwFeRSRNhkHh19UqGAuaEHR1NIHmm1JZtVWPrEIlIW1l5ZwnN0QVLlLEx3XBna8fNPPTOhWS4Hg/aC83Dj93/F6oQScocbvq6QbSbddcuEPf5rVOblRHN3w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=SoZox6uELnY3L9tKnKXtsUKm5srM2pSydR7BEg35A14=;
+ b=QUEsPMNon4GJ3ny6Wf5aSZiI1qiDgJ7ODxlMwOGP/Dpk8NiXjpRZJUuc8edkoT5IqEQPL4VJ4TnrqLHyrMQAhw/IWhqTWFhbDIBjIygaXQrumtzmgfVmiTafPvyPKAq+I4RDMeJtx9M1Eo0bpKSXmIThLTYSAZODjUIMZ1O1r/i35Oqvu7FeiEUWdtbxFar1XTLC+lXTWLhLNL+ybtvTGk+h2WFpb1EVfAxbmz2OL/NiNfuj5uDhybzD3hZkqZObu73DSjwKuOCovQWLM1D3DQDFKBMzUMupSMhFPH9qLA1tZkESz1aZqsQSbJU8dZ3b1T8cRQTqdXSea6yU/Up4fA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SoZox6uELnY3L9tKnKXtsUKm5srM2pSydR7BEg35A14=;
+ b=upE/4ngoEYLsb032P1eFQb6GfIa198hXbnN7+gdHnkjxo4xKR4HZL2kMeAVO+ArrFzUuT2bqHFxxk9CcsNlwY2EZ404msLop33nFt2j9G2vXqgsE+jWO3943KWjWfnpXApwtyNWgqjPBXtFxmGpBsNsc1aW4YvGaPfeTAijy+aWYvKtTRPpYYC81RAS1RVgIVGAa5hBRAftYlmKLi/v5XpRQ3T1Q1kmByNVHUZ9CpwaNIB+BgQTO9LEXZeYm1Un2da2JS3Aerc3VtDVkxOWQTnmsKzi4uIbHbM8UMQO+smAtQesa43NE0ApOdb5LrFGO+z0QxNGrUy3eKLr2AlLeFQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DM6PR12MB2763.namprd12.prod.outlook.com (2603:10b6:5:48::16) by
+ PH8PR12MB7277.namprd12.prod.outlook.com (2603:10b6:510:223::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6086.26; Fri, 17 Feb
+ 2023 15:37:21 +0000
+Received: from DM6PR12MB2763.namprd12.prod.outlook.com
+ ([fe80::6e75:2e:a53d:a7a]) by DM6PR12MB2763.namprd12.prod.outlook.com
+ ([fe80::6e75:2e:a53d:a7a%6]) with mapi id 15.20.6086.026; Fri, 17 Feb 2023
+ 15:37:21 +0000
+Date: Fri, 17 Feb 2023 09:37:19 -0600
+From: Daniel Dadap <ddadap@nvidia.com>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Mark Gross <markgross@kernel.org>, Andy Shevchenko <andy@kernel.org>,
+	Luke McCarthy <mail@lukehmcc.com>,
+	platform-driver-x86@vger.kernel.org, regressions@lists.linux.dev
+Subject: Re: [PATCH v2] platform/x86: nvidia-wmi-ec-backlight: Add force
+ module parameter
+Message-ID: <Y++fL1Wzy+6CYBYj@ddadap-lakeline.nvidia.com>
+References: <20230217144208.5721-1-hdegoede@redhat.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230217144208.5721-1-hdegoede@redhat.com>
+X-ClientProxiedBy: DS7PR05CA0095.namprd05.prod.outlook.com
+ (2603:10b6:8:56::29) To DM6PR12MB2763.namprd12.prod.outlook.com
+ (2603:10b6:5:48::16)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.2
-Subject: Re: [PATCH 1/1] tpm: disable hwrng for fTPM on some AMD designs
-Content-Language: en-US, de-DE
-To: Jarkko Sakkinen <jarkko@kernel.org>
-Cc: James Bottomley <James.Bottomley@hansenpartnership.com>, Jason@zx2c4.com,
- linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org, Mario Limonciello <mario.limonciello@amd.com>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <20230214201955.7461-1-mario.limonciello@amd.com>
- <20230214201955.7461-2-mario.limonciello@amd.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <20230214201955.7461-2-mario.limonciello@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1676647125;71f84fc5;
-X-HE-SMSGID: 1pT2VU-0002ZX-CL
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR12MB2763:EE_|PH8PR12MB7277:EE_
+X-MS-Office365-Filtering-Correlation-Id: cd1f4b11-c4c0-4773-a415-08db10fcdc3e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	Omni9r08TIiYmFaI70wnOZVswV3pEXccldyfEWTswZMZkDA/ZTkUgRgJDu2S93XWm5ScugQ/whKq1QcuEWM/yVC/H9wkvwpqoAccKGsuUuVHdwWYAsulltho8N+eGiOnWUHB8Twftp83mqoA3o3163FR3ODFm1EwMoy1llt7AiABVw977xeseMvJZn3GkIoOGK78iNwUlOAChl6yL1iRleL9MbTOclMz0rRWlCYgiryIbvReHTjTlLYH/jLgXQlqHX7/3igzdqkxGRLi6V6YK4mU8VudutyhUpKwZJNs0Abg4+q81gShOS+vRW8VEW41yPt8VhRO/BRo6NjnPuM5Vb53ppiLMo8Bpre6Ea20IklBx8kP64QNSnm/jvqsUdl1Atmn5fprNDJU5TjdpmdS2ZVVTG/i7noCO+8ZAObW96MCNQ4ps3LZAH4OC+TlK5wL+hWsqt1K+V5dTKpEA+4yJ27qPo0qv55JPCem9uUT4rbYaQkBY2150qRuBFjl9rZSqg7V2vWeC6h0Q3i0PsdGbn4RK3g5T9dfxUDwQw0j1OhCIFHSkeW/Rjinw03Mu8N+Voqnq3cILEfiiV3QtaoEnufmPtjs9hLZFed+i2xGJ+bNyiAYC879eqgA3aI7DjuDS6TrD+qFdSPwsFU4bDILjPlPw8SkP+1rlU6C3PwtnmBXio+YKmdjz9kyEiO88IAGALIurlvKzbKNtr9GMTekeEfRsk10n3UFVwEKWnMu5uk=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB2763.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(366004)(396003)(39860400002)(376002)(136003)(346002)(451199018)(966005)(6486002)(83380400001)(86362001)(38100700002)(6512007)(26005)(186003)(6506007)(4326008)(6916009)(8676002)(66946007)(66476007)(66556008)(41300700001)(8936002)(478600001)(2906002)(5660300002)(316002)(54906003)(21314003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?V/BCYYAuZyrc97VqYBfoEGC8RIt8rlQOkZDgf1XyaTUhkk3DhUC+ngbrC6IA?=
+ =?us-ascii?Q?hKE9VDf51NeKtWhYZxiNTCmeWv9ydDncEWhj8PERutUAWXGZ78BSwv+GnKOY?=
+ =?us-ascii?Q?Q4aAK/RXIN//eUETWRKFXjsK6WSeaeKge2/bLMbssM/7kOkqtoXsj/8eCjE8?=
+ =?us-ascii?Q?neY6ZaV8lghrDKU6roAxRy4MI0JffkCofIY6hpRjz9yKNMRTKolS+Sn0XeCJ?=
+ =?us-ascii?Q?0SsEmh6h9XWNjIQbwp2MSsGwVtgRdbCp62E5Q/r6Sl/1JwydqqM5PAnRXpGF?=
+ =?us-ascii?Q?6yIEDLC9de/0TPgCFuuQTL+7VqCROUH8qjFsCkljZD5XyqYl32WGbj84Vmrp?=
+ =?us-ascii?Q?9txeDb8aRs6IiZS6qyilaSv3IzYdqwdFW132ou+H3EUFsgSC0qeyL3Ih9IHE?=
+ =?us-ascii?Q?BGSO3rrrbxJMbJJx23wNUxMoTgfX8norcXeRYObdvPQnGb5+Z7YzkYwSYes0?=
+ =?us-ascii?Q?SK61n3Stxu4CXOzArI9T0CkX/1JJf91+DFg3vYPfRGwpDF/Hn9Jekx5hENCG?=
+ =?us-ascii?Q?ZmbHCNgAnydOpU6UNQD1IKct046vl1/NxL7naMkU6g9ZSjI+Ixwgtd1WJNkU?=
+ =?us-ascii?Q?bSHyQWHqQOxCfHxAsSiuWQcNZJNI9lNNdeIaorYGH0AJPZ5iTZhOfvAEgClE?=
+ =?us-ascii?Q?MkDo4OyV+UvpqYXiyhSZG3sBc/OhC09fwMhLlOVU3QbLCrVL0d/7wRSgXwUQ?=
+ =?us-ascii?Q?2UAPjqadtNHUg5PHp+OIPiiTO48x8AsyoNWup4DZzG4Zad0Zpz6hU2bgg7AI?=
+ =?us-ascii?Q?WYNbcgpeSkGicBt0SW5ehED+vSMoslQAfmCMuJLI2K58W3jcmJ/eez8+N/Mr?=
+ =?us-ascii?Q?O7/oOf9gtKyluTEvj0XgWT5rGOtHz0w/RJMsAifM1kTApebGiwgsoSAOhPjB?=
+ =?us-ascii?Q?fBapNPFmsv66VM4W2+/IMLEIJwYuVl0EE+Y1yHAV9dykVImaMrrTJ3XfUmr1?=
+ =?us-ascii?Q?H0IkpPGMqJ+GF+BsKi9FG000Kr6gbwIuKpzozjOWKkZK7u9n3DYwu0kANnGx?=
+ =?us-ascii?Q?4FFAf74z/jGZFjb3Ob0xK4CbkSWxiCGZGbPhGuZeQ4jK0fC83+F/h2pJEUEf?=
+ =?us-ascii?Q?H2YUcsJb8Ii2loXqDs/utZiIKKuej2RRFEnyr1F9mIkvfDcGakhmsvrq4H4A?=
+ =?us-ascii?Q?05bpQwXj2XXHguUHIvnA7kAVYtv8rkFyHb9Uh9K7tfv0gQzxta3RKhVTVy/5?=
+ =?us-ascii?Q?ABT/r8U3QLcTnW+uOPDvHr0Aoxoux6mejR3ll8dZovENqdr6akbF4W0ZYzi3?=
+ =?us-ascii?Q?/RHmVSmEAhAObYTPSBDjIM850YsizsysOqXQf3FxxbHpJolJ3q3TpsIq2xLO?=
+ =?us-ascii?Q?JJ76qqJEjTtAEGdOpBHYKaMEsyUysxro9bdqSY0ljhPrGQWIR5IACPIQ3gch?=
+ =?us-ascii?Q?JW3kATeLtC7npUc/ZTaBJJSwntNwT5r2iR5GFYzlde8aSM9wBYjcJwQoXmOv?=
+ =?us-ascii?Q?pbP4+P3EQierrYcfkqkqYur+SAu8+EU39cTrW8wxyoQJggeXA5smG0oRnfO4?=
+ =?us-ascii?Q?7tzR/3tgG/5UuNNnQOM427dEoQXeyu/oxaCWI0sHWzQw4KnieeUInaHkwbJh?=
+ =?us-ascii?Q?LsdjPlWA5KDQZOIHehKz8nwrxr7iUrsb87yqRbdw?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cd1f4b11-c4c0-4773-a415-08db10fcdc3e
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB2763.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Feb 2023 15:37:21.7515
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: VL7zlVZMT67JIWniGIfXaU0AR8ul/kmeXq5XFbeL4qOkEA2Cj1m94Oz/2dtPaCdQ2/iBE/oC3znL+CyDkYQDbQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB7277
 
-On 14.02.23 21:19, Mario Limonciello wrote:
-> AMD has issued an advisory indicating that having fTPM enabled in
-> BIOS can cause "stuttering" in the OS.  This issue has been fixed
-> in newer versions of the fTPM firmware, but it's up to system
-> designers to decide whether to distribute it.
+Thanks, Hans. The new commit message sounds more appropriate.
+
+Reviewed-by: Daniel Dadap <ddadap@nvidia.com>
+
+On Fri, Feb 17, 2023 at 03:42:08PM +0100, Hans de Goede wrote:
+> On some Lenovo Legion models, the backlight might be driven by either
+> one of nvidia_wmi_ec_backlight or amdgpu_bl0 at different times.
 > 
-> This issue has existed for a while, but is more prevalent starting
-> with kernel 6.1 because commit b006c439d58db ("hwrng: core - start
-> hwrng kthread also for untrusted sources") started to use the fTPM
-> for hwrng by default. However, all uses of /dev/hwrng result in
-> unacceptable stuttering.
+> When the Nvidia WMI EC backlight interface reports the backlight is
+> controlled by the EC, the current backlight handling only registers
+> nvidia_wmi_ec_backlight (and registers no other backlight interfaces).
 > 
-> So, simply disable registration of the defective hwrng when detecting
-> these faulty fTPM versions.
-
-Hmm, no reply since Mario posted this.
-
-Jarkko, James, what's your stance on this? Does the patch look fine from
-your point of view? And does the situation justify merging this on the
-last minute for 6.2? Or should we merge it early for 6.3 and then
-backport to stable?
-
-Ciao, Thorsten
-
-> Link: https://www.amd.com/en/support/kb/faq/pa-410
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=216989
-> Link: https://lore.kernel.org/all/20230209153120.261904-1-Jason@zx2c4.com/
-> Fixes: b006c439d58d ("hwrng: core - start hwrng kthread also for untrusted sources")
-> Cc: stable@vger.kernel.org
-> Cc: Jarkko Sakkinen <jarkko@kernel.org>
-> Cc: Thorsten Leemhuis <regressions@leemhuis.info>
-> Cc: James Bottomley <James.Bottomley@hansenpartnership.com>
-> Co-developed-by: Jason A. Donenfeld <Jason@zx2c4.com>
-> Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> This hides (never registers) the amdgpu_bl0 interface, where as prior
+> to 6.1.4 users would have both nvidia_wmi_ec_backlight and amdgpu_bl0
+> and could work around things in userspace.
+> 
+> Add a force module parameter which can be used with acpi_backlight=native
+> to restore the old behavior as a workound (for now) by passing:
+> 
+> "acpi_backlight=native nvidia-wmi-ec-backlight.force=1"
+> 
+> Fixes: 8d0ca287fd8c ("platform/x86: nvidia-wmi-ec-backlight: Use acpi_video_get_backlight_type()")
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=217026
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 > ---
->  drivers/char/tpm/tpm-chip.c | 62 ++++++++++++++++++++++++++++++-
->  drivers/char/tpm/tpm.h      | 73 +++++++++++++++++++++++++++++++++++++
->  2 files changed, 134 insertions(+), 1 deletion(-)
+> Changes in v2:
+> - Reword commit message
+> ---
+>  drivers/platform/x86/nvidia-wmi-ec-backlight.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/char/tpm/tpm-chip.c b/drivers/char/tpm/tpm-chip.c
-> index 741d8f3e8fb3a..348dd5705fbb6 100644
-> --- a/drivers/char/tpm/tpm-chip.c
-> +++ b/drivers/char/tpm/tpm-chip.c
-> @@ -512,6 +512,65 @@ static int tpm_add_legacy_sysfs(struct tpm_chip *chip)
->  	return 0;
->  }
+> diff --git a/drivers/platform/x86/nvidia-wmi-ec-backlight.c b/drivers/platform/x86/nvidia-wmi-ec-backlight.c
+> index baccdf658538..1b572c90c76e 100644
+> --- a/drivers/platform/x86/nvidia-wmi-ec-backlight.c
+> +++ b/drivers/platform/x86/nvidia-wmi-ec-backlight.c
+> @@ -12,6 +12,10 @@
+>  #include <linux/wmi.h>
+>  #include <acpi/video.h>
 >  
-> +static bool tpm_is_rng_defective(struct tpm_chip *chip)
-> +{
-> +	int ret;
-> +	u64 version;
-> +	u32 val1, val2;
+> +static bool force;
+> +module_param(force, bool, 0444);
+> +MODULE_PARM_DESC(force, "Force loading (disable acpi_backlight=xxx checks");
 > +
-> +	/* No known-broken TPM1 chips. */
-> +	if (!(chip->flags & TPM_CHIP_FLAG_TPM2))
-> +		return false;
-> +
-> +	ret = tpm_request_locality(chip);
-> +	if (ret)
-> +		return false;
-> +
-> +	/* Some AMD fTPM versions may cause stutter */
-> +	ret = tpm2_get_tpm_pt(chip, TPM2_PT_MANUFACTURER, &val1, NULL);
-> +	if (ret)
-> +		goto release;
-> +	if (val1 != 0x414D4400U /* AMD */) {
-> +		ret = -ENODEV;
-> +		goto release;
-> +	}
-> +	ret = tpm2_get_tpm_pt(chip, TPM2_PT_FIRMWARE_VERSION_1, &val1, NULL);
-> +	if (ret)
-> +		goto release;
-> +	ret = tpm2_get_tpm_pt(chip, TPM2_PT_FIRMWARE_VERSION_2, &val2, NULL);
-> +	if (ret)
-> +		goto release;
-> +
-> +release:
-> +	tpm_relinquish_locality(chip);
-> +
-> +	if (ret)
-> +		return false;
-> +
-> +	version = ((u64)val1 << 32) | val2;
-> +	/*
-> +	 * Fixes for stutter as described in
-> +	 * https://www.amd.com/en/support/kb/faq/pa-410
-> +	 * are available in two series of fTPM firmware:
-> +	 *   6.x.y.z series: 6.0.18.6 +
-> +	 *   3.x.y.z series: 3.57.x.5 +
-> +	 */
-> +	if ((version >> 48) == 6) {
-> +		if (version >= 0x0006000000180006ULL)
-> +			return false;
-> +	} else if ((version >> 48) == 3) {
-> +		if (version >= 0x0003005700000005ULL)
-> +			return false;
-> +	} else {
-> +		return false;
-> +	}
-> +	dev_warn(&chip->dev,
-> +		 "AMD fTPM version 0x%llx causes system stutter; hwrng disabled\n",
-> +		 version);
-> +
-> +	return true;
-> +}
-> +
->  static int tpm_hwrng_read(struct hwrng *rng, void *data, size_t max, bool wait)
->  {
->  	struct tpm_chip *chip = container_of(rng, struct tpm_chip, hwrng);
-> @@ -521,7 +580,8 @@ static int tpm_hwrng_read(struct hwrng *rng, void *data, size_t max, bool wait)
+>  /**
+>   * wmi_brightness_notify() - helper function for calling WMI-wrapped ACPI method
+>   * @w:    Pointer to the struct wmi_device identified by %WMI_BRIGHTNESS_GUID
+> @@ -91,7 +95,7 @@ static int nvidia_wmi_ec_backlight_probe(struct wmi_device *wdev, const void *ct
+>  	int ret;
 >  
->  static int tpm_add_hwrng(struct tpm_chip *chip)
->  {
-> -	if (!IS_ENABLED(CONFIG_HW_RANDOM_TPM) || tpm_is_firmware_upgrade(chip))
-> +	if (!IS_ENABLED(CONFIG_HW_RANDOM_TPM) || tpm_is_firmware_upgrade(chip) ||
-> +	    tpm_is_rng_defective(chip))
->  		return 0;
+>  	/* drivers/acpi/video_detect.c also checks that SOURCE == EC */
+> -	if (acpi_video_get_backlight_type() != acpi_backlight_nvidia_wmi_ec)
+> +	if (!force && acpi_video_get_backlight_type() != acpi_backlight_nvidia_wmi_ec)
+>  		return -ENODEV;
 >  
->  	snprintf(chip->hwrng_name, sizeof(chip->hwrng_name),
-> diff --git a/drivers/char/tpm/tpm.h b/drivers/char/tpm/tpm.h
-> index 24ee4e1cc452a..830014a266090 100644
-> --- a/drivers/char/tpm/tpm.h
-> +++ b/drivers/char/tpm/tpm.h
-> @@ -150,6 +150,79 @@ enum tpm_sub_capabilities {
->  	TPM_CAP_PROP_TIS_DURATION = 0x120,
->  };
->  
-> +enum tpm2_pt_props {
-> +	TPM2_PT_NONE = 0x00000000,
-> +	TPM2_PT_GROUP = 0x00000100,
-> +	TPM2_PT_FIXED = TPM2_PT_GROUP * 1,
-> +	TPM2_PT_FAMILY_INDICATOR = TPM2_PT_FIXED + 0,
-> +	TPM2_PT_LEVEL = TPM2_PT_FIXED + 1,
-> +	TPM2_PT_REVISION = TPM2_PT_FIXED + 2,
-> +	TPM2_PT_DAY_OF_YEAR = TPM2_PT_FIXED + 3,
-> +	TPM2_PT_YEAR = TPM2_PT_FIXED + 4,
-> +	TPM2_PT_MANUFACTURER = TPM2_PT_FIXED + 5,
-> +	TPM2_PT_VENDOR_STRING_1 = TPM2_PT_FIXED + 6,
-> +	TPM2_PT_VENDOR_STRING_2 = TPM2_PT_FIXED + 7,
-> +	TPM2_PT_VENDOR_STRING_3 = TPM2_PT_FIXED + 8,
-> +	TPM2_PT_VENDOR_STRING_4 = TPM2_PT_FIXED + 9,
-> +	TPM2_PT_VENDOR_TPM_TYPE = TPM2_PT_FIXED + 10,
-> +	TPM2_PT_FIRMWARE_VERSION_1 = TPM2_PT_FIXED + 11,
-> +	TPM2_PT_FIRMWARE_VERSION_2 = TPM2_PT_FIXED + 12,
-> +	TPM2_PT_INPUT_BUFFER = TPM2_PT_FIXED + 13,
-> +	TPM2_PT_HR_TRANSIENT_MIN = TPM2_PT_FIXED + 14,
-> +	TPM2_PT_HR_PERSISTENT_MIN = TPM2_PT_FIXED + 15,
-> +	TPM2_PT_HR_LOADED_MIN = TPM2_PT_FIXED + 16,
-> +	TPM2_PT_ACTIVE_SESSIONS_MAX = TPM2_PT_FIXED + 17,
-> +	TPM2_PT_PCR_COUNT = TPM2_PT_FIXED + 18,
-> +	TPM2_PT_PCR_SELECT_MIN = TPM2_PT_FIXED + 19,
-> +	TPM2_PT_CONTEXT_GAP_MAX = TPM2_PT_FIXED + 20,
-> +	TPM2_PT_NV_COUNTERS_MAX = TPM2_PT_FIXED + 22,
-> +	TPM2_PT_NV_INDEX_MAX = TPM2_PT_FIXED + 23,
-> +	TPM2_PT_MEMORY = TPM2_PT_FIXED + 24,
-> +	TPM2_PT_CLOCK_UPDATE = TPM2_PT_FIXED + 25,
-> +	TPM2_PT_CONTEXT_HASH = TPM2_PT_FIXED + 26,
-> +	TPM2_PT_CONTEXT_SYM = TPM2_PT_FIXED + 27,
-> +	TPM2_PT_CONTEXT_SYM_SIZE = TPM2_PT_FIXED + 28,
-> +	TPM2_PT_ORDERLY_COUNT = TPM2_PT_FIXED + 29,
-> +	TPM2_PT_MAX_COMMAND_SIZE = TPM2_PT_FIXED + 30,
-> +	TPM2_PT_MAX_RESPONSE_SIZE = TPM2_PT_FIXED + 31,
-> +	TPM2_PT_MAX_DIGEST = TPM2_PT_FIXED + 32,
-> +	TPM2_PT_MAX_OBJECT_CONTEXT = TPM2_PT_FIXED + 33,
-> +	TPM2_PT_MAX_SESSION_CONTEXT = TPM2_PT_FIXED + 34,
-> +	TPM2_PT_PS_FAMILY_INDICATOR = TPM2_PT_FIXED + 35,
-> +	TPM2_PT_PS_LEVEL = TPM2_PT_FIXED + 36,
-> +	TPM2_PT_PS_REVISION = TPM2_PT_FIXED + 37,
-> +	TPM2_PT_PS_DAY_OF_YEAR = TPM2_PT_FIXED + 38,
-> +	TPM2_PT_PS_YEAR = TPM2_PT_FIXED + 39,
-> +	TPM2_PT_SPLIT_MAX = TPM2_PT_FIXED + 40,
-> +	TPM2_PT_TOTAL_COMMANDS = TPM2_PT_FIXED + 41,
-> +	TPM2_PT_LIBRARY_COMMANDS = TPM2_PT_FIXED + 42,
-> +	TPM2_PT_VENDOR_COMMANDS = TPM2_PT_FIXED + 43,
-> +	TPM2_PT_NV_BUFFER_MAX = TPM2_PT_FIXED + 44,
-> +	TPM2_PT_MODES = TPM2_PT_FIXED + 45,
-> +	TPM2_PT_MAX_CAP_BUFFER = TPM2_PT_FIXED + 46,
-> +	TPM2_PT_VAR = TPM2_PT_GROUP * 2,
-> +	TPM2_PT_PERMANENT = TPM2_PT_VAR + 0,
-> +	TPM2_PT_STARTUP_CLEAR = TPM2_PT_VAR + 1,
-> +	TPM2_PT_HR_NV_INDEX = TPM2_PT_VAR + 2,
-> +	TPM2_PT_HR_LOADED = TPM2_PT_VAR + 3,
-> +	TPM2_PT_HR_LOADED_AVAIL = TPM2_PT_VAR + 4,
-> +	TPM2_PT_HR_ACTIVE = TPM2_PT_VAR + 5,
-> +	TPM2_PT_HR_ACTIVE_AVAIL = TPM2_PT_VAR + 6,
-> +	TPM2_PT_HR_TRANSIENT_AVAIL = TPM2_PT_VAR + 7,
-> +	TPM2_PT_HR_PERSISTENT = TPM2_PT_VAR + 8,
-> +	TPM2_PT_HR_PERSISTENT_AVAIL = TPM2_PT_VAR + 9,
-> +	TPM2_PT_NV_COUNTERS = TPM2_PT_VAR + 10,
-> +	TPM2_PT_NV_COUNTERS_AVAIL = TPM2_PT_VAR + 11,
-> +	TPM2_PT_ALGORITHM_SET = TPM2_PT_VAR + 12,
-> +	TPM2_PT_LOADED_CURVES = TPM2_PT_VAR + 13,
-> +	TPM2_PT_LOCKOUT_COUNTER = TPM2_PT_VAR + 14,
-> +	TPM2_PT_MAX_AUTH_FAIL = TPM2_PT_VAR + 15,
-> +	TPM2_PT_LOCKOUT_INTERVAL = TPM2_PT_VAR + 16,
-> +	TPM2_PT_LOCKOUT_RECOVERY = TPM2_PT_VAR + 17,
-> +	TPM2_PT_NV_WRITE_RECOVERY = TPM2_PT_VAR + 18,
-> +	TPM2_PT_AUDIT_COUNTER_0 = TPM2_PT_VAR + 19,
-> +	TPM2_PT_AUDIT_COUNTER_1 = TPM2_PT_VAR + 20,
-> +};
->  
->  /* 128 bytes is an arbitrary cap. This could be as large as TPM_BUFSIZE - 18
->   * bytes, but 128 is still a relatively large number of random bytes and
+>  	/*
+> -- 
+> 2.39.1
+> 
