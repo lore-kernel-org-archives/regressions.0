@@ -1,77 +1,132 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACF4C641
-	for <regressions@lists.linux.dev>; Sat, 18 Feb 2023 04:44:58 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pTF5j-0000sJ-En; Sat, 18 Feb 2023 05:44:55 +0100
-Message-ID: <3ff87754-70f2-079c-d522-2330d0ffb5fd@leemhuis.info>
-Date: Sat, 18 Feb 2023 05:44:55 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7D8A7F3
+	for <regressions@lists.linux.dev>; Sat, 18 Feb 2023 08:07:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47C1AC433D2;
+	Sat, 18 Feb 2023 08:07:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1676707662;
+	bh=y+vu0pH/C6aqC1FwmkJmV7uf3+TVF0rPVwHu5u66ieY=;
+	h=Subject:To:Cc:From:Date:From;
+	b=svp9oZXbGel2gifpPz+taj1n+zTXNqUNDnTr+65paV4jV4+SsviksW1YlOP7k+By0
+	 vjMh6W/Qsj4XBLe26lBxfrZv2LdFG0GnDfptE7Rp3CCiTuR0Ou0wt7UZJFufu+D5X2
+	 qBuV84Z+ZmEGX3J+lZT4U5QvaPoLZh35LcBGpMxY=
+Subject: Patch "mm/migrate: fix wrongly apply write bit after mkdirty on sparc64" has been added to the 6.1-stable tree
+To: 20221021160603.GA23307@u164.east.ru,20221212130213.136267-1-david@redhat.com,akpm@linux-foundation.org,david@redhat.com,gregkh@linuxfoundation.org,nbowler@draconx.ca,peterx@redhat.com,regressions@lists.linux.dev
+Cc: <stable-commits@vger.kernel.org>
+From: <gregkh@linuxfoundation.org>
+Date: Sat, 18 Feb 2023 09:06:35 +0100
+Message-ID: <1676707595235175@kroah.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.2
-Subject: Re: 6.2-rc7 fails building on Talos II: memory.c:(.text+0x2e14):
- undefined reference to `hash__tlb_flush'
-Content-Language: en-US, de-DE
-From: "Linux regression tracking #update (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-To: "Erhard F." <erhard_f@mailbox.org>, linuxppc-dev@lists.ozlabs.org
-Cc: linux-kernel@vger.kernel.org,
- Linux kernel regressions list <regressions@lists.linux.dev>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-References: <20230216005535.6bff7aa6@yea>
- <e9923ff8-4027-9188-fd04-77d0bbbc6573@leemhuis.info>
-In-Reply-To: <e9923ff8-4027-9188-fd04-77d0bbbc6573@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1676695498;84afa4cb;
-X-HE-SMSGID: 1pTF5j-0000sJ-En
-
-[TLDR: This mail in primarily relevant for Linux regression tracking. A
-change or fix related to the regression discussed in this thread was
-posted or applied, but it did not use a Link: tag to point to the
-report, as Linus and the documentation call for. Things happen, no
-worries -- but now the regression tracking bot needs to be told manually
-about the fix. See link in footer if these mails annoy you.]
-
-On 16.02.23 11:09, Linux regression tracking (Thorsten Leemhuis) wrote:
-> 
-> On 16.02.23 00:55, Erhard F. wrote:
->> Just noticed a build failure on 6.2-rc7 for my Talos 2 (.config attached):
->>
->>  # make
->>   CALL    scripts/checksyscalls.sh
->>   UPD     include/generated/utsversion.h
->>   CC      init/version-timestamp.o
->>   LD      .tmp_vmlinux.kallsyms1
->> ld: ld: DWARF error: could not find abbrev number 6
->> mm/memory.o: in function `unmap_page_range':
->> memory.c:(.text+0x2e14): undefined reference to `hash__tlb_flush'
->> ld: memory.c:(.text+0x2f8c): undefined reference to `hash__tlb_flush'
->> ld: ld: DWARF error: could not find abbrev number 3117
->> mm/mmu_gather.o: in function `tlb_remove_table':
->> mmu_gather.c:(.text+0x584): undefined reference to `hash__tlb_flush'
->> ld: mmu_gather.c:(.text+0x6c4): undefined reference to `hash__tlb_flush'
->> ld: mm/mmu_gather.o: in function `tlb_flush_mmu':
->> mmu_gather.c:(.text+0x80c): undefined reference to `hash__tlb_flush'
->> ld: mm/mmu_gather.o:mmu_gather.c:(.text+0xbe0): more undefined references to `hash__tlb_flush' follow
->> make[1]: *** [scripts/Makefile.vmlinux:35: vmlinux] Fehler 1
->> make: *** [Makefile:1264: vmlinux] Error 2
-
-#regzbot fix: 4302abc628fc0dc08e5855f21bbfa
-#regzbot ignore-activity
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+Content-Type: text/plain; charset=ANSI_X3.4-1968
+Content-Transfer-Encoding: 8bit
+X-stable: commit
+X-Patchwork-Hint: ignore 
 
 
+This is a note to let you know that I've just added the patch titled
+
+    mm/migrate: fix wrongly apply write bit after mkdirty on sparc64
+
+to the 6.1-stable tree which can be found at:
+    http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
+
+The filename of the patch is:
+     mm-migrate-fix-wrongly-apply-write-bit-after-mkdirty-on-sparc64.patch
+and it can be found in the queue-6.1 subdirectory.
+
+If you, or anyone else, feels it should not be added to the stable tree,
+please let <stable@vger.kernel.org> know about it.
+
+
+From 96a9c287e25d690fd9623b5133703b8e310fbed1 Mon Sep 17 00:00:00 2001
+From: Peter Xu <peterx@redhat.com>
+Date: Thu, 16 Feb 2023 10:30:59 -0500
+Subject: mm/migrate: fix wrongly apply write bit after mkdirty on sparc64
+
+From: Peter Xu <peterx@redhat.com>
+
+commit 96a9c287e25d690fd9623b5133703b8e310fbed1 upstream.
+
+Nick Bowler reported another sparc64 breakage after the young/dirty
+persistent work for page migration (per "Link:" below).  That's after a
+similar report [2].
+
+It turns out page migration was overlooked, and it wasn't failing before
+because page migration was not enabled in the initial report test
+environment.
+
+David proposed another way [2] to fix this from sparc64 side, but that
+patch didn't land somehow.  Neither did I check whether there's any other
+arch that has similar issues.
+
+Let's fix it for now as simple as moving the write bit handling to be
+after dirty, like what we did before.
+
+Note: this is based on mm-unstable, because the breakage was since 6.1 and
+we're at a very late stage of 6.2 (-rc8), so I assume for this specific
+case we should target this at 6.3.
+
+[1] https://lore.kernel.org/all/20221021160603.GA23307@u164.east.ru/
+[2] https://lore.kernel.org/all/20221212130213.136267-1-david@redhat.com/
+
+Link: https://lkml.kernel.org/r/20230216153059.256739-1-peterx@redhat.com
+Fixes: 2e3468778dbe ("mm: remember young/dirty bit for page migrations")
+Link: https://lore.kernel.org/all/CADyTPExpEqaJiMGoV+Z6xVgL50ZoMJg49B10LcZ=8eg19u34BA@mail.gmail.com/
+Signed-off-by: Peter Xu <peterx@redhat.com>
+Reported-by: Nick Bowler <nbowler@draconx.ca>
+Acked-by: David Hildenbrand <david@redhat.com>
+Tested-by: Nick Bowler <nbowler@draconx.ca>
+Cc: <regressions@lists.linux.dev>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ mm/huge_memory.c |    6 ++++--
+ mm/migrate.c     |    2 ++
+ 2 files changed, 6 insertions(+), 2 deletions(-)
+
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -3253,8 +3253,6 @@ void remove_migration_pmd(struct page_vm
+ 	pmde = mk_huge_pmd(new, READ_ONCE(vma->vm_page_prot));
+ 	if (pmd_swp_soft_dirty(*pvmw->pmd))
+ 		pmde = pmd_mksoft_dirty(pmde);
+-	if (is_writable_migration_entry(entry))
+-		pmde = maybe_pmd_mkwrite(pmde, vma);
+ 	if (pmd_swp_uffd_wp(*pvmw->pmd))
+ 		pmde = pmd_wrprotect(pmd_mkuffd_wp(pmde));
+ 	if (!is_migration_entry_young(entry))
+@@ -3262,6 +3260,10 @@ void remove_migration_pmd(struct page_vm
+ 	/* NOTE: this may contain setting soft-dirty on some archs */
+ 	if (PageDirty(new) && is_migration_entry_dirty(entry))
+ 		pmde = pmd_mkdirty(pmde);
++	if (is_writable_migration_entry(entry))
++		pmde = maybe_pmd_mkwrite(pmde, vma);
++	else
++		pmde = pmd_wrprotect(pmde);
+ 
+ 	if (PageAnon(new)) {
+ 		rmap_t rmap_flags = RMAP_COMPOUND;
+--- a/mm/migrate.c
++++ b/mm/migrate.c
+@@ -215,6 +215,8 @@ static bool remove_migration_pte(struct
+ 			pte = maybe_mkwrite(pte, vma);
+ 		else if (pte_swp_uffd_wp(*pvmw.pte))
+ 			pte = pte_mkuffd_wp(pte);
++		else
++			pte = pte_wrprotect(pte);
+ 
+ 		if (folio_test_anon(folio) && !is_readable_migration_entry(entry))
+ 			rmap_flags |= RMAP_EXCLUSIVE;
+
+
+Patches currently in stable-queue which might be from peterx@redhat.com are
+
+queue-6.1/mm-migrate-fix-wrongly-apply-write-bit-after-mkdirty-on-sparc64.patch
