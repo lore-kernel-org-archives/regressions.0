@@ -1,45 +1,45 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28605323C
-	for <regressions@lists.linux.dev>; Sat, 18 Feb 2023 15:09:45 +0000 (UTC)
-Received: by mail-ed1-f54.google.com with SMTP id eq13so3399974edb.11
-        for <regressions@lists.linux.dev>; Sat, 18 Feb 2023 07:09:44 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64BC4323C
+	for <regressions@lists.linux.dev>; Sat, 18 Feb 2023 15:19:58 +0000 (UTC)
+Received: by mail-ed1-f48.google.com with SMTP id eq13so3460357edb.11
+        for <regressions@lists.linux.dev>; Sat, 18 Feb 2023 07:19:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
+        d=googlemail.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=ZgJb9gVH88PGc08H2WjK2lb5uIuxbgsWahfg6NJGgvc=;
-        b=NOf7dxPFDZRhzPkx6GyGPyfikWbRviwRTkr22smpaRGvLecdj4iSZZSIA63iROUmKu
-         KDMFx0ABUHjiCNq9PAEaf3ynIwc18NRBzzmfgJuqUAFwRLtQddIwzEW94TQlmjR8bTel
-         Ko6twuH3hrKskeFGYt9zwMIOOTegVc6hhRj94Rewr9BJBOyjfDABZxsAtSjdQ+CLl+cB
-         s00y5eiDQtESQmO8O2A2Yn+K/dIU4XHO23Br/v0RpLCrvlt0TzEiFzx3RYFj28erzzEX
-         XfCukIayTfFche3Ff72u29qMT6d3unJ/UEp5laHioHdnw4GTiKXeaZ0CzmDUke3hF4vV
-         rEPQ==
+        bh=Es+Lqx15nhH72hDuco7gnSjiFCCGxIOyI29cELR1jX0=;
+        b=GU2xEXt3bkwHO76OElw0E/hoqS38izDZLWpqKZCMreNCIav87v6LWdWmoMojofxhYA
+         SoCnIMYXHFS7mdokBbt+Vyt6hDGvmY9VCHUTbgjEmfQCYLdUyXDh3paJIt2jGdE7+DZi
+         GiS++kp83n/QBwHyOc+0kGxApPVkALbDMjUJuyYlkkJV/s0AowMbR5H94xj8ECotip6a
+         Xj6KmOa+hVEFyvExjJ2YmXncOx+2o3weTVWLCM/fKwTtQDfPYgLu90BKkerLymM75hAd
+         hDmLWCj5GvXUur13xcQnLmJU9o6EUPoYjz3FRiL7d23Y2HLoiKxm+9IxgPHJYEqKNwOu
+         d3cg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZgJb9gVH88PGc08H2WjK2lb5uIuxbgsWahfg6NJGgvc=;
-        b=1t9lzdS3wIR/3f7p+gGDnyQ1Wt8WnvrlYvdm9kSPT5hphDzD/assrAMyTKI0SKVRaO
-         BO+grCtCmDz1tPx2nqbeKVSX8aZKNA8haILib+d5z+/DzGr49LLNlC9VZPw7P84F7luv
-         wV6aZml6A2Dw4mOvpcoKxvwriS5UffG2Lc1+8f/s0WQ/ioo5SkvJ23noEJS+BeFJys88
-         6oZyK2o+36jErOksEVt90PlIAE1W9UYjvNAV+ojyIZF1JUmCrBdb3rxZAf8kNA48Eb+t
-         tcUVEanwoX+nTdUI4GoqlNLzQQsdklgdg4rDTl/j7aRSoHiYrBlsqMowvMnGK+DWqP3E
-         /yiw==
-X-Gm-Message-State: AO0yUKUaDOOg4VkVfg3jGrCqTKgralbvBSSwsTNSY+SkYImkoD47KtcW
-	iCnAeV3AKP0XAgzAuBKmxB8SKw==
-X-Google-Smtp-Source: AK7set8B7ASOT9ahO5mmjKrhEN8TOQur8B2zQbAphdp95C/MToAcBLZ2OShTFKDaR7If0BvEHlCIaw==
-X-Received: by 2002:a05:6402:556:b0:4ac:b32e:b65 with SMTP id i22-20020a056402055600b004acb32e0b65mr5588099edx.3.1676732983283;
-        Sat, 18 Feb 2023 07:09:43 -0800 (PST)
-Received: from [192.168.1.109] ([178.197.216.144])
-        by smtp.gmail.com with ESMTPSA id j17-20020a508a91000000b004a21c9facd5sm3685608edj.67.2023.02.18.07.09.42
+        bh=Es+Lqx15nhH72hDuco7gnSjiFCCGxIOyI29cELR1jX0=;
+        b=oUfg5XpwugCjrbspZltdXabQoU7As1KCIW2DF2P2qXOzY8d263yovXOjKBoRtHNbMt
+         MCH1mK0wXBjMWllnYrpRlN2sMU1hLDslQIuE/3Y/GjUnnOfDaQ8xkA08bpAkE6po7jb7
+         cIEfb5vr5dSqLVG8PlkBeQHo5YX+Dx1eUIY+7oKBoXKExUS9m8WxGZeHWAccAGUjNq66
+         AhKaHChOGxXMLy6ePuJ09EHHfCvJnhz6G6eNqdL9XQMT2Md9ZrPcRwbO25W9TFoD38sW
+         LSi5pmiLwMwKXoKwOs8ds1rYYB3aIMC1z2UII+8FGzgNIVyQivpZP0Q3110/xMf3VyFK
+         v2bg==
+X-Gm-Message-State: AO0yUKVgshy9bB5DNff2wGBsIS2QBZ8EVZvmiAYJSgvsdVvI83xEbZjX
+	NnoKKt8zkWmTbhoRib2zAMc=
+X-Google-Smtp-Source: AK7set+INP8dEuhA7Ie/h+TUrwSv4cZGC/e/19fQCwFgu5XImo5u/0P6x43B+NNN+GUOAve5XBo5fg==
+X-Received: by 2002:a17:907:8c11:b0:8b1:7968:7fb8 with SMTP id ta17-20020a1709078c1100b008b179687fb8mr8590794ejc.62.1676733596410;
+        Sat, 18 Feb 2023 07:19:56 -0800 (PST)
+Received: from [192.168.1.10] (97e09f27.skybroadband.com. [151.224.159.39])
+        by smtp.googlemail.com with ESMTPSA id pk2-20020a170906d7a200b008806a3c22c5sm3501464ejb.25.2023.02.18.07.19.55
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 18 Feb 2023 07:09:42 -0800 (PST)
-Message-ID: <78806040-5725-103f-fe55-8c6d9ced6e63@linaro.org>
-Date: Sat, 18 Feb 2023 16:09:41 +0100
+        Sat, 18 Feb 2023 07:19:55 -0800 (PST)
+Message-ID: <dbfc1f77-29f3-7690-c231-55f906a4e7e5@googlemail.com>
+Date: Sat, 18 Feb 2023 15:19:53 +0000
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -47,55 +47,174 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: Regression: NULL pointer dereference after NFS_V4_2_READ_PLUS
- (commit 7fd461c47)
-Content-Language: en-US
-To: Thorsten Leemhuis <regressions@leemhuis.info>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- Anna Schumaker <Anna.Schumaker@Netapp.com>,
- Trond Myklebust <trond.myklebust@hammerspace.com>
-Cc: linux-nfs@vger.kernel.org,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <f591b13c-4600-e2a4-8efa-aac6ad828dd1@linaro.org>
- <65ae10cd-a086-47c6-c881-d1385d7fcf42@leemhuis.info>
- <5150343c-e13d-ed15-e59a-bc14f0db89da@leemhuis.info>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <5150343c-e13d-ed15-e59a-bc14f0db89da@leemhuis.info>
+ Thunderbird/102.8.0
+Subject: Re: linux-6.2-rc4+ hangs on poweroff/reboot: Bisected
+To: Karol Herbst <kherbst@redhat.com>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
+ Dave Airlie <airlied@gmail.com>, Ben Skeggs <skeggsb@gmail.com>,
+ bskeggs@redhat.com, Lyude Paul <lyude@redhat.com>,
+ ML nouveau <nouveau@lists.freedesktop.org>,
+ LKML <linux-kernel@vger.kernel.org>,
+ ML dri-devel <dri-devel@lists.freedesktop.org>
+References: <b64705e3-2e63-a466-f829-f9568b06766a@googlemail.com>
+ <dab6eb81-db3f-8fa1-84ad-9b40e209514b@googlemail.com>
+ <CACAvsv5iYdF3P8AbyrbYo3zGmYRYhxDWn7WbAR5V9qHpbgBXRA@mail.gmail.com>
+ <1632a9ef-2954-c8f0-cdc9-03157c9d8547@googlemail.com>
+ <5abbee70-cc84-1528-c3d8-9befd9edd611@googlemail.com>
+ <5cf46df8-0fa2-e9f5-aa8e-7f7f703d96dd@googlemail.com>
+ <f72fe15b-db1d-56dd-aaf6-3cba68a8bf0a@leemhuis.info>
+ <CACO55tvR4ydDOXt=9nbR3n2aFLKrj8zeuGRR_xpezVQBBLrjqg@mail.gmail.com>
+ <a6188878-f84c-0fcc-9509-b9d7ab797f4c@leemhuis.info>
+ <d031f0a5-8d5e-af51-6db6-11844de3eeba@googlemail.com>
+ <CAPM=9tz+wksJTvMi_4Ef7XWezfH0ReN2se189s8Q=obJjHC+Fw@mail.gmail.com>
+ <4e786e22-f17a-da76-5129-8fef0c7c825a@googlemail.com>
+ <b829633e-ccc4-7a54-1cad-f29254de1251@leemhuis.info>
+ <CACO55tsvM07_6mGU3dCgeji0a6B4JJKSDOOBuCHv2Mw3rYbCHg@mail.gmail.com>
+ <181bea6a-e501-f5bd-b002-de7a244a921a@googlemail.com>
+ <CACO55tsGXfy9-a-nexvcn7pnDGoEWXMqhiQEBwCDkGyOeT1sXQ@mail.gmail.com>
+Content-Language: en-GB
+From: Chris Clayton <chris2553@googlemail.com>
+In-Reply-To: <CACO55tsGXfy9-a-nexvcn7pnDGoEWXMqhiQEBwCDkGyOeT1sXQ@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 18/02/2023 05:42, Linux regression tracking #update (Thorsten
-Leemhuis) wrote:
-> [TLDR: This mail in primarily relevant for Linux regression tracking. A
-> change or fix related to the regression discussed in this thread was
-> posted or applied, but it did not use a Link: tag to point to the
-> report, as Linus and the documentation call for. Things happen, no
-> worries -- but now the regression tracking bot needs to be told manually
-> about the fix. See link in footer if these mails annoy you.]
-> 
-> On 08.01.23 09:52, Linux kernel regression tracking (#adding) wrote:
->> On 07.01.23 16:44, Krzysztof Kozlowski wrote:
->>>
->>> Bisect identified commit 7fd461c47c6c ("NFSv4.2: Change the default
->>> KConfig value for READ_PLUS") as one leading to NULL pointer exception
->>> when mounting NFS root on NFSv4 client:
->> [...]
->> Thanks for the report. To be sure the issue doesn't fall through the
->> cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
->> tracking bot:
+
+
+On 18/02/2023 12:25, Karol Herbst wrote:
+> On Sat, Feb 18, 2023 at 1:22 PM Chris Clayton <chris2553@googlemail.com> wrote:
 >>
->> #regzbot ^introduced 7fd461c47
->> #regzbot title nfs: NULL pointer dereference since NFS_V4_2_READ_PLUS is
->> enabled by default
->> #regzbot ignore-activity
+>>
+>>
+>> On 15/02/2023 11:09, Karol Herbst wrote:
+>>> On Wed, Feb 15, 2023 at 11:36 AM Linux regression tracking #update
+>>> (Thorsten Leemhuis) <regressions@leemhuis.info> wrote:
+>>>>
+>>>> On 13.02.23 10:14, Chris Clayton wrote:
+>>>>> On 13/02/2023 02:57, Dave Airlie wrote:
+>>>>>> On Sun, 12 Feb 2023 at 00:43, Chris Clayton <chris2553@googlemail.com> wrote:
+>>>>>>>
+>>>>>>>
+>>>>>>>
+>>>>>>> On 10/02/2023 19:33, Linux regression tracking (Thorsten Leemhuis) wrote:
+>>>>>>>> On 10.02.23 20:01, Karol Herbst wrote:
+>>>>>>>>> On Fri, Feb 10, 2023 at 7:35 PM Linux regression tracking (Thorsten
+>>>>>>>>> Leemhuis) <regressions@leemhuis.info> wrote:
+>>>>>>>>>>
+>>>>>>>>>> On 08.02.23 09:48, Chris Clayton wrote:
+>>>>>>>>>>>
+>>>>>>>>>>> I'm assuming  that we are not going to see a fix for this regression before 6.2 is released.
+>>>>>>>>>>
+>>>>>>>>>> Yeah, looks like it. That's unfortunate, but happens. But there is still
+>>>>>>>>>> time to fix it and there is one thing I wonder:
+>>>>>>>>>>
+>>>>>>>>>> Did any of the nouveau developers look at the netconsole captures Chris
+>>>>>>>>>> posted more than a week ago to check if they somehow help to track down
+>>>>>>>>>> the root of this problem?
+>>>>>>>>>
+>>>>>>>>> I did now and I can't spot anything. I think at this point it would
+>>>>>>>>> make sense to dump the active tasks/threads via sqsrq keys to see if
+>>>>>>>>> any is in a weird state preventing the machine from shutting down.
+>>>>>>>>
+>>>>>>>> Many thx for looking into it!
+>>>>>>>
+>>>>>>> Yes, thanks Karol.
+>>>>>>>
+>>>>>>> Attached is the output from dmesg when this block of code:
+>>>>>>>
+>>>>>>>         /bin/mount /dev/sda7 /mnt/sda7
+>>>>>>>         /bin/mountpoint /proc || /bin/mount /proc
+>>>>>>>         /bin/dmesg -w > /mnt/sda7/sysrq.dmesg.log &
+>>>>>>>         /bin/echo t > /proc/sysrq-trigger
+>>>>>>>         /bin/sleep 1
+>>>>>>>         /bin/sync
+>>>>>>>         /bin/sleep 1
+>>>>>>>         kill $(pidof dmesg)
+>>>>>>>         /bin/umount /mnt/sda7
+>>>>>>>
+>>>>>>> is executed immediately before /sbin/reboot is called as the final step of rebooting my system.
+>>>>>>>
+>>>>>>> I hope this is what you were looking for, but if not, please let me know what you need
+>>>>>
+>>>>> Thanks Dave. [...]
+>>>> FWIW, in case anyone strands here in the archives: the msg was
+>>>> truncated. The full post can be found in a new thread:
+>>>>
+>>>> https://lore.kernel.org/lkml/e0b80506-b3cf-315b-4327-1b988d86031e@googlemail.com/
+>>>>
+>>>> Sadly it seems the info "With runpm=0, both reboot and poweroff work on
+>>>> my laptop." didn't bring us much further to a solution. :-/ I don't
+>>>> really like it, but for regression tracking I'm now putting this on the
+>>>> back-burner, as a fix is not in sight.
+>>>>
+>>>> #regzbot monitor:
+>>>> https://lore.kernel.org/lkml/e0b80506-b3cf-315b-4327-1b988d86031e@googlemail.com/
+>>>> #regzbot backburner: hard to debug and apparently rare
+>>>> #regzbot ignore-activity
+>>>>
+>>>
+>>> yeah.. this bug looks a little annoying. Sadly the only Turing based
+>>> laptop I got doesn't work on Nouveau because of firmware related
+>>> issues and we probably need to get updated ones from Nvidia here :(
+>>>
+>>> But it's a bit weird that the kernel doesn't shutdown, because I don't
+>>> see anything in the logs which would prevent that from happening.
+>>> Unless it's waiting on one of the tasks to complete, but none of them
+>>> looked in any way nouveau related.
+>>>
+>>> If somebody else has any fancy kernel debugging tips here to figure
+>>> out why it hangs, that would be very helpful...
+>>>
+>>
+>> I think I've figured this out. It's to do with how my system is configured. I do have an initrd, but the only thing on
+>> it is the cpu microcode which, it is recommended, should be loaded early. The absence of the NVidia firmare from an
+>> initrd doesn't matter because the drivers for the hardware that need to load firmware are all built as modules, So, by
+>> the time the devices are configured via udev, the root partition is mounted and the drivers can get at the firmware.
+>>
+>> I've found, by turning on nouveau debug and taking a video of the screen as the system shuts down, that nouveau seems to
+>> be trying to run the scrubber very very late in the shutdown process. The problem is that by this time, I think the root
+>> partition, and thus the scrubber binary, have become inaccessible.
+>>
+>> I seem to have two choices - either make the firmware accessible on an initrd or unload the module in a shutdown script
+>> before the scrubber binary becomes inaccessible. The latter of these is the workaround I have implemented whilst the
+>> problem I reported has been under investigation. For simplicity, I think I'll promote my workaround to being the
+>> permanent solution.
+>>
+>> So, apologies (and thanks) to everyone whose time I have taken up with this non-bug.
+>>
 > 
-> #regzbot fix: 896e090eefedeb8a715ea19938a2791c32679
+> Well.. nouveau shouldn't prevent the system from shutting down if the
+> firmware file isn't available. Or at least it should print a
+> warning/error. Mind messing with the code a little to see if skipping
+> it kind of works? I probably can also come up with a patch by next
+> week.
+> 
+Well, I'd love to but a quick glance at the code caused me to bump into this obscenity:
 
-I see it was posted and merged as "Revert "NFSv4.2: Change the default
-KConfig value for READ_PLUS"". It's nice to give credits to people who
-report bugs with "Reported-by" tag.
+int
+gm200_flcn_reset_wait_mem_scrubbing(struct nvkm_falcon *falcon)
+{
+        nvkm_falcon_mask(falcon, 0x040, 0x00000000, 0x00000000);
 
-Best regards,
-Krzysztof
+        if (nvkm_msec(falcon->owner->device, 10,
+                if (!(nvkm_falcon_rd32(falcon, 0x10c) & 0x00000006))
+                        break;
+        ) < 0)
+                return -ETIMEDOUT;
 
+        return 0;
+}
+
+nvkm_msec is #defined to nvkm_usec which in turn is #defined to nvkm_nsec where the loop that the break is related to
+appears.> Chris
+>>
+>>>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+>>>> --
+>>>> Everything you wanna know about Linux kernel regression tracking:
+>>>> https://linux-regtracking.leemhuis.info/about/#tldr
+>>>> That page also explains what to do if mails like this annoy you.
+>>>>
+>>>> #regzbot ignore-activity
+>>>>
+>>>
+>>
+> 
