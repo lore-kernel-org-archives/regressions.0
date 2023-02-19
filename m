@@ -1,83 +1,102 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 522EA80E
-	for <regressions@lists.linux.dev>; Sun, 19 Feb 2023 18:31:11 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pToSp-0005Bq-5n; Sun, 19 Feb 2023 19:31:07 +0100
-Message-ID: <d85e3138-f07b-f59b-761b-a99314ba3058@leemhuis.info>
-Date: Sun, 19 Feb 2023 19:31:06 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B1F965B
+	for <regressions@lists.linux.dev>; Sun, 19 Feb 2023 22:54:49 +0000 (UTC)
+Received: by mail-pl1-f172.google.com with SMTP id ko13so74063plb.13
+        for <regressions@lists.linux.dev>; Sun, 19 Feb 2023 14:54:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Dq60iPwMT9YyeuZYyBaeVXOCLyMD+LIZs+7sJUezDZU=;
+        b=NZYxQ1+X02jZEYiaJJ0FEnR/k09pMGRnpL3WRKgxjY6VkopET8Pl1CsQTko02lD8yj
+         HQSoD1Pkg26h3qdJvpRbyfl965FaQfcULt8lYHCNmVx2v+U29mXO7UcsE3q2+gF/rhP5
+         wFYNuAmlMe/mCOOHD4HACmSCUNBZx6h6beDZu5LqD3GazOseUVpeN7zkVuIIQzChoItZ
+         WnBDtK2BDNhVpkwIRJBEi4j2hw5zcoiaanvs+2rl/7Q6ecpPU9vHA3uLxnrxj52uKpfZ
+         4n9IdSLdprAsyBO/gLc6822eWwciBp60bsJVPfjHpjz3oU0xAZIKk+EDJYxihW8EeO93
+         Ls7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Dq60iPwMT9YyeuZYyBaeVXOCLyMD+LIZs+7sJUezDZU=;
+        b=lrw4QyXyanxtlU0AbTUquoBGdjpojEzPFW3fnBkxSQtvsYlG+4oGxH6/WWG1iyN36o
+         B4UW14wcG5QBNrIR7P4sffl/ZshKOsvP200/pjJLG2tmOfNvQt5PCkOnDyNdPw69QCiu
+         a1kMOFRQflrmifAqxyaxcjllceCZCWLu2TEIhyqhqRQuw6NjSJ8Ao08PdynwWu12i66t
+         XsmoQPizVaxao0tYazMPUYQo7WiyoFI7lUm09VUhYDUOxvlGUh9a8lH/I0vd87nohAdL
+         UksD3Ed1pD0bdS3C6JUx2jkUByJvay8olBHQFxPA/VQjqrmLtpCUYVQBRhfmPLlsSldA
+         H+tA==
+X-Gm-Message-State: AO0yUKU+mMy1Dah4+W0Bczmb6w50bdmLHKnR1zo8qAyJvc6owSrVC3Kb
+	OT6259SMB3oyxTX4hsgDlLPLI0LvQw8uvo5Xzms=
+X-Google-Smtp-Source: AK7set+kG+DUmbdPiJsfJTmx5/zd26OJWhuaT2epIMVOS6lpWkQvJxPNa1l7k/ybyAmYhUoo3ImINDAItkhm0F2qDbA=
+X-Received: by 2002:a17:90b:2643:b0:232:d23a:8314 with SMTP id
+ pa3-20020a17090b264300b00232d23a8314mr809903pjb.96.1676847288595; Sun, 19 Feb
+ 2023 14:54:48 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.2
-Subject: Re: Linux regressions report for mainline [ extra issue due to
- pending 6.2 release]
-Content-Language: en-US, de-DE
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Linux kernel regressions list <regressions@lists.linux.dev>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-References: <02498ae8-798d-2fa8-51ab-4f9360672c7e@leemhuis.info>
-In-Reply-To: <02498ae8-798d-2fa8-51ab-4f9360672c7e@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1676831471;d03b7d74;
-X-HE-SMSGID: 1pToSp-0005Bq-5n
+References: <52f9afe2-f621-77d8-9d10-449d539e901d@leemhuis.info>
+ <Y+5JdR02tlzD/TFS@kbusch-mbp> <151a00d9-0ea2-eadb-72b4-fa8a2dd41bfc@kernel.dk>
+In-Reply-To: <151a00d9-0ea2-eadb-72b4-fa8a2dd41bfc@kernel.dk>
+From: Michal Berger <michallinuxstuff@gmail.com>
+Date: Sun, 19 Feb 2023 23:54:37 +0100
+Message-ID: <CACosJgyjgh+cz6nTrKWVQ9P8Z9_wJGWGQBOjae2MoJrZQ3RmTQ@mail.gmail.com>
+Subject: Re: [regression] Bug 217037 - cmb attributes missing from the nvme
+ class under sysfs
+To: Jens Axboe <axboe@kernel.dk>
+Cc: Keith Busch <kbusch@kernel.org>, 
+	Linux regressions mailing list <regressions@lists.linux.dev>, Jens Axboe <axboe@fb.com>, 
+	Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>, 
+	"linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 18.02.23 11:54, Linux regression tracking (Thorsten Leemhuis) wrote:
-> Hi Linux! A quick special report, mainly due to one issue:
+Have there been any patches submitted for testing? I don't see any as
+part of this thread nor at the bugzilla where the issue was initially
+reported. :)
 
-Quick update:
+Regards,
+Michal
 
-> * There is a regression in the qcom-venus driver that leads to problems
-> on various systems. A revert was proposed, but the driver's maintainer
-> wanted to fix it instead. That didn't happen yet afaics. On Wednesday I
-> asked Mauro to look into the situation and maybe pick up the revert, but
-> he didn't reply.
-> 
-> Report:
-> https://lore.kernel.org/lkml/Y9LSMap%2BjRxbtpC8@google.com/
-> 
-> Proposed revert:
-> https://lore.kernel.org/lkml/20230207102254.1446461-1-javierm@redhat.com/
 
-No news afaics.
-
-> While at it let me quickly mention a few other issues I'm aware of:
-> 
-> * Finally a fix for a much discussed IOMMU issue on certain AMD
-> platforms showed up; the author asked for it to be merged for 6.2, but
-> that might have come to late for Jörg to notice. See here:
-> https://lore.kernel.org/linux-iommu/0f6e2838-9d7f-dc2c-6e5b-0d02e239f032@amd.com/
-> 
-> But according to tests from the reporter that leads to a new warning
-> from amdgpu:
-> https://lore.kernel.org/linux-iommu/e17d1ee9-7383-6717-6f10-9465b273b1ed@amd.com/T/#m98390232691e3e55db7f1187073016436fd2176a
-
-Joerg yesterday: "Queued to core branch for 6.2.":
-https://lore.kernel.org/all/Y%2FDilsJ9ItuWXhGU@8bytes.org/
-
-> * Pretty sure Jens will decide himself if he still wants to send this
-> nvme last-minute fix for a nvme regression that surfaced this week:
-> https://lore.kernel.org/lkml/151a00d9-0ea2-eadb-72b4-fa8a2dd41bfc@kernel.dk/
-> https://bugzilla.kernel.org/show_bug.cgi?id=217037
-> 
-> * Pretty sure you'll get this fix with the weekly pull from the TIP folks:
-> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=master&id=f9f57da2c2d119dbf109e3f6e1ceab7659294046
-
-You got those two.
-
-> * Nothing new from Chuck's regression that broke the git regression
-> suite on all NFS versions (when tmpfs is involved), so I guess that will
-> never be fixed:
-> https://lore.kernel.org/linux-nfs/9A4A5673-691D-47EC-BC44-C43BE7E50A48@oracle.com/
-
-Nothing new to report.
-
-HTH, Ciao, Thorsten
+pt., 17 lut 2023 o 22:23 Jens Axboe <axboe@kernel.dk> napisa=C5=82(a):
+>
+> On Thu, Feb 16, 2023 at 8:19 AM Keith Busch <kbusch@kernel.org> wrote:
+> >
+> > On Thu, Feb 16, 2023 at 10:28:55AM +0100, Linux regression tracking (Th=
+orsten Leemhuis) wrote:
+> > > Hi, this is your Linux kernel regression tracker.
+> > >
+> > > I noticed a regression report in bugzilla.kernel.org. As many (most?)
+> > > kernel developer don't keep an eye on it, I decided to forward it by
+> > > mail. Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=3D2170=
+37 :
+> > >
+> > > >  michallinuxstuff@gmail.com 2023-02-14 14:16:26 UTC
+> > > >
+> > > > For the CMB-capable nvme ctrls, kernel was exposing couple of relat=
+ed attributes under the sysfs. E.g.
+> > > >
+> > > >
+> > > > # grep . /sys/class/nvme/nvme0/cmb*
+> > > > /sys/class/nvme/nvme0/cmb:cmbloc : x00000062
+> > > > /sys/class/nvme/nvme0/cmb:cmbsz  : x0008021d
+> > > > /sys/class/nvme/nvme0/cmbloc:98
+> > > > /sys/class/nvme/nvme0/cmbsz:524829
+> >
+> > The breakage is that the attributes are decided before we've setup the =
+cmb
+> > regions. I'll send a fix shortly.
+>
+> Michael, have you tested this? It's queued up for inclusion, but I don't
+> see any evidence that this was tested.
+>
+> --
+> Jens Axboe
+>
