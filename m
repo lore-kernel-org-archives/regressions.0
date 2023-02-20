@@ -1,13 +1,45 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0FC3ED0
-	for <regressions@lists.linux.dev>; Mon, 20 Feb 2023 07:40:29 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pU0mQ-0003aA-Rp; Mon, 20 Feb 2023 08:40:10 +0100
-Message-ID: <8489afbb-2391-c22f-41fc-21726f09e444@leemhuis.info>
-Date: Mon, 20 Feb 2023 08:40:09 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26B8929AB
+	for <regressions@lists.linux.dev>; Mon, 20 Feb 2023 10:51:41 +0000 (UTC)
+Received: by mail-ed1-f54.google.com with SMTP id g1so2681269edz.7
+        for <regressions@lists.linux.dev>; Mon, 20 Feb 2023 02:51:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=1zcGRTl/9l2GpF8LYO2/lWbNZQDU6Xe0XQhuGFj5NQk=;
+        b=B6uKlERavDvKoVnUAsopmtnUrrjgtlfadYYrEW+1d6mx6Dp7WDWk2LSrMYkiBImSJg
+         2MX6IMhFhciuSVo2IVdK8RLwB099a6FrmRRNKXdb3xxENLlHDWHjotUUUjAmEQMwuDBe
+         aWatdxsvw3ci4l9yYNl7gE2GQyoa2bsMEDG8FHeP41AvnHs8C2Sgi+aqRlOGr1pd27J+
+         yWI91Q1FxLXu1h9QAHxbsHEzDLzpqA8mH9ElWsKR9LNn1dG3voNVw2FGedLk/3Q3Qu+D
+         4rvRA2DokgYwEo4qjf2yMgW+juWr0Isi0hDCc5TUrVYjbei39zGSC9v0Q+uO43XgTm7E
+         Ax0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1zcGRTl/9l2GpF8LYO2/lWbNZQDU6Xe0XQhuGFj5NQk=;
+        b=jf0F3S9rThfiMRfzfSdXFNbivD5k50o7DA2pzxvYkkT3iZjZEhQ/PLEi3a7GGXaSkW
+         94ED3eyJpvkndAwpiOy/AbQoj+iwCAHBWxDzdztLswAR/h4LotRD0CaL0ROLfQn6lxlj
+         2NFepR5srgZvaQaMFJ/LW1Hnxhy08fIHQrsDbdPhqNzzYlQHge+u4kVw35a5RAHw3R1k
+         CtyPRXCHyPLhcVC1iS+8SdpzXynWMOjReGM6j14u13Oc7Iib95W5LkaC6XdJqCqxbqqc
+         0deYLMPvtZiyFYhw8zYAO7QjF4gZJstYKr/qrSAeK9fddtjr/tS4mVZqQrfmT7gMBhBl
+         UIuw==
+X-Gm-Message-State: AO0yUKXEbz9+hcNvvedPo1VQ+H6ZrYfqoVQ2cRJuThwmxAPqg5ZvToxF
+	LaA7+VO69JyaPGWLacCSgZ8=
+X-Google-Smtp-Source: AK7set8TW5veSVICkPbHeLQ5wN2iSlqP+gqOJcmhQuifsFLIWce6R5b8cWaoCiDrC0NMmPiqdjWQjg==
+X-Received: by 2002:a05:6402:3890:b0:4a3:43c1:843e with SMTP id fd16-20020a056402389000b004a343c1843emr1507395edb.18.1676890299222;
+        Mon, 20 Feb 2023 02:51:39 -0800 (PST)
+Received: from [192.168.1.10] (97e09f27.skybroadband.com. [151.224.159.39])
+        by smtp.googlemail.com with ESMTPSA id m9-20020a50c189000000b004ad7af3955dsm832108edf.15.2023.02.20.02.51.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 20 Feb 2023 02:51:38 -0800 (PST)
+Message-ID: <c12aa9b8-65a1-0cdf-8948-15309f16b955@googlemail.com>
+Date: Mon, 20 Feb 2023 10:51:36 +0000
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -15,207 +47,206 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.2
-Subject: Re: scsi: Recent kernels drop into emergency shell
-Content-Language: en-US, de-DE
-To: Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
- "James E.J. Bottomley" <jejb@linux.ibm.com>,
- "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
- bvanassche@acm.org, hare@suse.de, hch@lst.de, ming.lei@redhat.com,
- sumanesh.samanta@broadcom.com, michael.christie@oracle.com,
- john.garry@huawei.com, johannes.thumshirn@wdc.com, axboe@kernel.dk,
- osandov@fb.com, kashyap.desai@broadcom.com, gregkh@linuxfoundation.org,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <20230220061559.GJ159593@linux.vnet.ibm.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <20230220061559.GJ159593@linux.vnet.ibm.com>
+ Thunderbird/102.8.0
+Subject: Re: linux-6.2-rc4+ hangs on poweroff/reboot: Bisected
+To: Ben Skeggs <skeggsb@gmail.com>
+Cc: Karol Herbst <kherbst@redhat.com>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ Dave Airlie <airlied@gmail.com>, bskeggs@redhat.com,
+ Lyude Paul <lyude@redhat.com>, ML nouveau <nouveau@lists.freedesktop.org>,
+ LKML <linux-kernel@vger.kernel.org>,
+ ML dri-devel <dri-devel@lists.freedesktop.org>
+References: <b64705e3-2e63-a466-f829-f9568b06766a@googlemail.com>
+ <5abbee70-cc84-1528-c3d8-9befd9edd611@googlemail.com>
+ <5cf46df8-0fa2-e9f5-aa8e-7f7f703d96dd@googlemail.com>
+ <f72fe15b-db1d-56dd-aaf6-3cba68a8bf0a@leemhuis.info>
+ <CACO55tvR4ydDOXt=9nbR3n2aFLKrj8zeuGRR_xpezVQBBLrjqg@mail.gmail.com>
+ <a6188878-f84c-0fcc-9509-b9d7ab797f4c@leemhuis.info>
+ <d031f0a5-8d5e-af51-6db6-11844de3eeba@googlemail.com>
+ <CAPM=9tz+wksJTvMi_4Ef7XWezfH0ReN2se189s8Q=obJjHC+Fw@mail.gmail.com>
+ <4e786e22-f17a-da76-5129-8fef0c7c825a@googlemail.com>
+ <b829633e-ccc4-7a54-1cad-f29254de1251@leemhuis.info>
+ <CACO55tsvM07_6mGU3dCgeji0a6B4JJKSDOOBuCHv2Mw3rYbCHg@mail.gmail.com>
+ <181bea6a-e501-f5bd-b002-de7a244a921a@googlemail.com>
+ <CACO55tsGXfy9-a-nexvcn7pnDGoEWXMqhiQEBwCDkGyOeT1sXQ@mail.gmail.com>
+ <dbfc1f77-29f3-7690-c231-55f906a4e7e5@googlemail.com>
+ <7f6ec5b3-b5c7-f564-003e-132f112b7cf4@googlemail.com>
+ <CACAvsv7Uf5=K44y8YLsiy0aMnc1zvGEQdeDe7RQF=AV+fxxzuQ@mail.gmail.com>
+Content-Language: en-GB
+From: Chris Clayton <chris2553@googlemail.com>
+In-Reply-To: <CACAvsv7Uf5=K44y8YLsiy0aMnc1zvGEQdeDe7RQF=AV+fxxzuQ@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1676878829;acdd48c2;
-X-HE-SMSGID: 1pU0mQ-0003aA-Rp
+Content-Transfer-Encoding: 7bit
 
-[CCing the regression list, as it should be in the loop for regressions:
-https://docs.kernel.org/admin-guide/reporting-regressions.html]
 
-On 20.02.23 07:15, Srikar Dronamraju wrote:
-> On a freshly installed system, booting latest upstream kernels causes the
-> system to drop into emergency shell. The reason for dropping into emergency
-> shell is system is unable to mount /home partition.
 
-What kind of storage hardware do you have? Is this maybe related to this
-fix, that afaics never was merged?
-https://lore.kernel.org/all/20220928181350.9948-1-leeman.duncan@gmail.com/
+On 20/02/2023 05:35, Ben Skeggs wrote:
+> On Sun, 19 Feb 2023 at 04:55, Chris Clayton <chris2553@googlemail.com> wrote:
+>>
+>>
+>>
+>> On 18/02/2023 15:19, Chris Clayton wrote:
+>>>
+>>>
+>>> On 18/02/2023 12:25, Karol Herbst wrote:
+>>>> On Sat, Feb 18, 2023 at 1:22 PM Chris Clayton <chris2553@googlemail.com> wrote:
+>>>>>
+>>>>>
+>>>>>
+>>>>> On 15/02/2023 11:09, Karol Herbst wrote:
+>>>>>> On Wed, Feb 15, 2023 at 11:36 AM Linux regression tracking #update
+>>>>>> (Thorsten Leemhuis) <regressions@leemhuis.info> wrote:
+>>>>>>>
+>>>>>>> On 13.02.23 10:14, Chris Clayton wrote:
+>>>>>>>> On 13/02/2023 02:57, Dave Airlie wrote:
+>>>>>>>>> On Sun, 12 Feb 2023 at 00:43, Chris Clayton <chris2553@googlemail.com> wrote:
+>>>>>>>>>>
+>>>>>>>>>>
+>>>>>>>>>>
+>>>>>>>>>> On 10/02/2023 19:33, Linux regression tracking (Thorsten Leemhuis) wrote:
+>>>>>>>>>>> On 10.02.23 20:01, Karol Herbst wrote:
+>>>>>>>>>>>> On Fri, Feb 10, 2023 at 7:35 PM Linux regression tracking (Thorsten
+>>>>>>>>>>>> Leemhuis) <regressions@leemhuis.info> wrote:
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> On 08.02.23 09:48, Chris Clayton wrote:
+>>>>>>>>>>>>>>
+>>>>>>>>>>>>>> I'm assuming  that we are not going to see a fix for this regression before 6.2 is released.
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> Yeah, looks like it. That's unfortunate, but happens. But there is still
+>>>>>>>>>>>>> time to fix it and there is one thing I wonder:
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> Did any of the nouveau developers look at the netconsole captures Chris
+>>>>>>>>>>>>> posted more than a week ago to check if they somehow help to track down
+>>>>>>>>>>>>> the root of this problem?
+>>>>>>>>>>>>
+>>>>>>>>>>>> I did now and I can't spot anything. I think at this point it would
+>>>>>>>>>>>> make sense to dump the active tasks/threads via sqsrq keys to see if
+>>>>>>>>>>>> any is in a weird state preventing the machine from shutting down.
+>>>>>>>>>>>
+>>>>>>>>>>> Many thx for looking into it!
+>>>>>>>>>>
+>>>>>>>>>> Yes, thanks Karol.
+>>>>>>>>>>
+>>>>>>>>>> Attached is the output from dmesg when this block of code:
+>>>>>>>>>>
+>>>>>>>>>>         /bin/mount /dev/sda7 /mnt/sda7
+>>>>>>>>>>         /bin/mountpoint /proc || /bin/mount /proc
+>>>>>>>>>>         /bin/dmesg -w > /mnt/sda7/sysrq.dmesg.log &
+>>>>>>>>>>         /bin/echo t > /proc/sysrq-trigger
+>>>>>>>>>>         /bin/sleep 1
+>>>>>>>>>>         /bin/sync
+>>>>>>>>>>         /bin/sleep 1
+>>>>>>>>>>         kill $(pidof dmesg)
+>>>>>>>>>>         /bin/umount /mnt/sda7
+>>>>>>>>>>
+>>>>>>>>>> is executed immediately before /sbin/reboot is called as the final step of rebooting my system.
+>>>>>>>>>>
+>>>>>>>>>> I hope this is what you were looking for, but if not, please let me know what you need
+>>>>>>>>
+>>>>>>>> Thanks Dave. [...]
+>>>>>>> FWIW, in case anyone strands here in the archives: the msg was
+>>>>>>> truncated. The full post can be found in a new thread:
+>>>>>>>
+>>>>>>> https://lore.kernel.org/lkml/e0b80506-b3cf-315b-4327-1b988d86031e@googlemail.com/
+>>>>>>>
+>>>>>>> Sadly it seems the info "With runpm=0, both reboot and poweroff work on
+>>>>>>> my laptop." didn't bring us much further to a solution. :-/ I don't
+>>>>>>> really like it, but for regression tracking I'm now putting this on the
+>>>>>>> back-burner, as a fix is not in sight.
+>>>>>>>
+>>>>>>> #regzbot monitor:
+>>>>>>> https://lore.kernel.org/lkml/e0b80506-b3cf-315b-4327-1b988d86031e@googlemail.com/
+>>>>>>> #regzbot backburner: hard to debug and apparently rare
+>>>>>>> #regzbot ignore-activity
+>>>>>>>
+>>>>>>
+>>>>>> yeah.. this bug looks a little annoying. Sadly the only Turing based
+>>>>>> laptop I got doesn't work on Nouveau because of firmware related
+>>>>>> issues and we probably need to get updated ones from Nvidia here :(
+>>>>>>
+>>>>>> But it's a bit weird that the kernel doesn't shutdown, because I don't
+>>>>>> see anything in the logs which would prevent that from happening.
+>>>>>> Unless it's waiting on one of the tasks to complete, but none of them
+>>>>>> looked in any way nouveau related.
+>>>>>>
+>>>>>> If somebody else has any fancy kernel debugging tips here to figure
+>>>>>> out why it hangs, that would be very helpful...
+>>>>>>
+>>>>>
+>>>>> I think I've figured this out. It's to do with how my system is configured. I do have an initrd, but the only thing on
+>>>>> it is the cpu microcode which, it is recommended, should be loaded early. The absence of the NVidia firmare from an
+>>>>> initrd doesn't matter because the drivers for the hardware that need to load firmware are all built as modules, So, by
+>>>>> the time the devices are configured via udev, the root partition is mounted and the drivers can get at the firmware.
+>>>>>
+>>>>> I've found, by turning on nouveau debug and taking a video of the screen as the system shuts down, that nouveau seems to
+>>>>> be trying to run the scrubber very very late in the shutdown process. The problem is that by this time, I think the root
+>>>>> partition, and thus the scrubber binary, have become inaccessible.
+>>>>>
+>>>>> I seem to have two choices - either make the firmware accessible on an initrd or unload the module in a shutdown script
+>>>>> before the scrubber binary becomes inaccessible. The latter of these is the workaround I have implemented whilst the
+>>>>> problem I reported has been under investigation. For simplicity, I think I'll promote my workaround to being the
+>>>>> permanent solution.
+>>>>>
+>>>>> So, apologies (and thanks) to everyone whose time I have taken up with this non-bug.
+>>>>>
+>>>>
+>>>> Well.. nouveau shouldn't prevent the system from shutting down if the
+>>>> firmware file isn't available. Or at least it should print a
+>>>> warning/error. Mind messing with the code a little to see if skipping
+>>>> it kind of works? I probably can also come up with a patch by next
+>>>> week.
+>>>>
+>>> Well, I'd love to but a quick glance at the code caused me to bump into this obscenity:
+>>>
+>>> int
+>>> gm200_flcn_reset_wait_mem_scrubbing(struct nvkm_falcon *falcon)
+>>> {
+>>>         nvkm_falcon_mask(falcon, 0x040, 0x00000000, 0x00000000);
+>>>
+>>>         if (nvkm_msec(falcon->owner->device, 10,
+>>>                 if (!(nvkm_falcon_rd32(falcon, 0x10c) & 0x00000006))
+>>>                         break;
+>>>         ) < 0)
+>>>                 return -ETIMEDOUT;
+>>>
+>>>         return 0;
+>>> }
+>>>
+>>> nvkm_msec is #defined to nvkm_usec which in turn is #defined to nvkm_nsec where the loop that the break is related to
+>>> appears
+>>
+>> I think someone who knows the code needs to look at this. What I can confirm is that after a freeze, I waited for 90
+>> seconds for a timeout to occur, but it didn't.
+> Hey,
+> 
+> Are you able to try the attached patch for me please?
+> 
+> Thanks,
+> Ben.
+> 
 
-Anyway for the rest of this mail:
+Thanks Ben.
 
-[TLDR: I'm adding this report to the list of tracked Linux kernel
-regressions; the text you find below is based on a few templates
-paragraphs you might have encountered already in similar form.
-See link in footer if these mails annoy you.]
+Yes, this patch fixes the lockup on reboot and poweroff that I've been seeing on my laptop. As you would expect,
+offloaded rendering is still working and the discrete GPU is being powered on and off as required.
 
-> The system was able to boot properly on v5.18 kernel, but failed to boot
-> v5.19 and 6.2-rc8 kernels.
-> 
-> On the recent or failing kernels, I see the below msg when kernel drops into
-> emergency shell.
-> 
-> lvm[1370]: /dev/sda3 excluded: device is not in devices file.
-> lvm[1370]: WARNING: no autoactivation for /dev/sda3: system.devices naa.60050768108001b3a800000000000097 current missing device id.
-> systemd[1]: dev-mapper-rhel_ltcden3\x2d\x2dlp9\x2dhome.device: Job dev-mapper-rhel_ltcden3\x2d\x2dlp9\x2dhome.device/start timed out.
-> systemd[1]: Timed out waiting for device /dev/mapper/rhel_ltcden3--lp9-home.
-> systemd[1]: Dependency failed for /home.
-> systemd[1]: Dependency failed for Local File Systems.
-> systemd[1]: Dependency failed for Mark the need to relabel after reboot.
-> systemd[1]: selinux-autorelabel-mark.service: Job selinux-autorelabel-mark.service/start failed with result 'dependency'.
-> systemd[1]: local-fs.target: Job local-fs.target/start failed with result 'dependency'.
-> systemd[1]: local-fs.target: Triggering OnFailure= dependencies.
-> systemd[1]: home.mount: Job home.mount/start failed with result 'dependency'.
-> systemd[1]: dev-mapper-rhel_ltcden3\x2d\x2dlp9\x2dhome.device: Job dev-mapper-rhel_ltcden3\x2d\x2dlp9\x2dhome.device/start failed with result 'timeout'.
-> 
-> lsblk o/p when system has fallen into ememrgency shell (aka bad kernel)
-> NAME                       MAJ:MIN RM  SIZE RO TYPE MOUNTPOINTS
-> sda                          8:0    0  100G  0 disk
-> â”œâ”€sda1                       8:1    0    4M  0 part
-> â”œâ”€sda2                       8:2    0    1G  0 part /boot
-> â””â”€sda3                       8:3    0   99G  0 part
->   â”œâ”€rhel_ltcden3--lp9-root 253:0    0 63.8G  0 lvm  /
->   â””â”€rhel_ltcden3--lp9-swap 253:1    0    4G  0 lvm  [SWAP]
-> sr0                         11:0    1 1024M  0 rom
-> 
-> lsblk o/p when system boots normally on v5.18 or earlier kernels
-> NAME                       MAJ:MIN RM  SIZE RO TYPE MOUNTPOINTS
-> sda                          8:0    0  100G  0 disk
-> â”œâ”€sda1                       8:1    0    4M  0 part
-> â”œâ”€sda2                       8:2    0    1G  0 part /boot
-> â””â”€sda3                       8:3    0   99G  0 part
->   â”œâ”€rhel_ltcden3--lp9-root 253:0    0 63.8G  0 lvm  /
->   â”œâ”€rhel_ltcden3--lp9-swap 253:1    0    4G  0 lvm  [SWAP]
->   â””â”€rhel_ltcden3--lp9-home 253:2    0 31.2G  0 lvm  /home
-> sr0                         11:0    1 1024M  0 rom
-> 
-> 
-> lvdisplay o/p when system has fallen into emergency shell (aka bad kernel)
->   Devices file sys_wwid naa.60050768108001b3a800000000000097 PVID iws5FZqBFBVE12w874dFuppLWkQUyEcb last seen on /dev/sda3 not found.
-> 
-> lvdisplay o/p when system boots normally on v5.18 or earlier kernels
->   --- Logical volume ---
->   LV Path                /dev/rhel_ltcden3-lp9/swap
->   LV Name                swap
->   VG Name                rhel_ltcden3-lp9
->   LV UUID                pzxuKG-ofVC-7jBY-HXn9-RDPN-G3hP-K5gdcI
->   LV Write Access        read/write
->   LV Creation host, time ltcden3-lp9, 2023-01-24 09:44:21 +0530
->   LV Status              available
->   # open                 2
->   LV Size                <4.01 GiB
->   Current LE             1026
->   Segments               1
->   Allocation             inherit
->   Read ahead sectors     auto
->   - currently set to     256
->   Block device           253:1
-> 
->   --- Logical volume ---
->   LV Path                /dev/rhel_ltcden3-lp9/home
->   LV Name                home
->   VG Name                rhel_ltcden3-lp9
->   LV UUID                XDcVN6-kP6V-0LtL-nLM4-rvLv-gMQm-uaDRwi
->   LV Write Access        read/write
->   LV Creation host, time ltcden3-lp9, 2023-01-24 09:44:26 +0530
->   LV Status              available
->   # open                 1
->   LV Size                31.16 GiB
->   Current LE             7977
->   Segments               1
->   Allocation             inherit
->   Read ahead sectors     auto
->   - currently set to     256
->   Block device           253:2
-> 
->   --- Logical volume ---
->   LV Path                /dev/rhel_ltcden3-lp9/root
->   LV Name                root
->   VG Name                rhel_ltcden3-lp9
->   LV UUID                sJlMVf-eE2v-UKJp-Esqg-uxis-wA1Y-gOXFnO
->   LV Write Access        read/write
->   LV Creation host, time ltcden3-lp9, 2023-01-24 09:44:36 +0530
->   LV Status              available
->   # open                 1
->   LV Size                63.82 GiB
->   Current LE             16339
->   Segments               1
->   Allocation             inherit
->   Read ahead sectors     auto
->   - currently set to     256
->   Block device           253:0
-> 
-> git bisect start '--'
-> # bad: [3d7cb6b04c3f3115719235cc6866b10326de34cd] Linux 5.19
-> git bisect bad 3d7cb6b04c3f3115719235cc6866b10326de34cd
-> # good: [4b0986a3613c92f4ec1bdc7f60ec66fea135991f] Linux 5.18
-> git bisect good 4b0986a3613c92f4ec1bdc7f60ec66fea135991f
-> # bad: [c011dd537ffe47462051930413fed07dbdc80313] Merge tag 'arm-soc-5.19' of git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc
-> git bisect bad c011dd537ffe47462051930413fed07dbdc80313
-> # good: [7e062cda7d90543ac8c7700fc7c5527d0c0f22ad] Merge tag 'net-next-5.19' of git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next
-> git bisect good 7e062cda7d90543ac8c7700fc7c5527d0c0f22ad
-> # good: [f8122500a039abeabfff41b0ad8b6a2c94c1107d] Merge branch 'etnaviv/next' of https://git.pengutronix.de/git/lst/linux into drm-next
-> git bisect good f8122500a039abeabfff41b0ad8b6a2c94c1107d
-> # good: [2518f226c60d8e04d18ba4295500a5b0b8ac7659] Merge tag 'drm-next-2022-05-25' of git://anongit.freedesktop.org/drm/drm
-> git bisect good 2518f226c60d8e04d18ba4295500a5b0b8ac7659
-> # good: [f7a344468105ef8c54086dfdc800e6f5a8417d3e] ASoC: max98090: Move check for invalid values before casting in max98090_put_enab_tlv()
-> git bisect good f7a344468105ef8c54086dfdc800e6f5a8417d3e
-> # bad: [fbe86daca0ba878b04fa241b85e26e54d17d4229] Merge tag 'scsi-misc' of git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi
-> git bisect bad fbe86daca0ba878b04fa241b85e26e54d17d4229
-> # bad: [f304d35e59958ea4be399f78e5be08d4a0c4db75] scsi: mpi3mr: Update driver version to 8.0.0.69.0
-> git bisect bad f304d35e59958ea4be399f78e5be08d4a0c4db75
-> # good: [21c2e3418d07955c7b87fc3f75688cb1c2b04a32] scsi: ufs: Remove the TRUE and FALSE definitions
-> git bisect good 21c2e3418d07955c7b87fc3f75688cb1c2b04a32
-> # good: [671a52f2aeafe2f42bddb53dcfe3933b1f641843] scsi: fnic: Remove unneeded flush_workqueue()
-> git bisect good 671a52f2aeafe2f42bddb53dcfe3933b1f641843
-> # bad: [d657700ccac71da19a4d1a591fafcd598ce0dd6e] scsi: core: Do not truncate INQUIRY data on modern devices
-> git bisect bad d657700ccac71da19a4d1a591fafcd598ce0dd6e
-> # good: [c5acd61dbb32b6bda0f3a354108f2b8dcb788985] scsi: megaraid: Fix error check return value of register_chrdev()
-> git bisect good c5acd61dbb32b6bda0f3a354108f2b8dcb788985
-> # good: [dc1178767cba9d67f5100fb370670fd613319362] scsi: mpt3sas: Use cached ATA Information VPD page
-> git bisect good dc1178767cba9d67f5100fb370670fd613319362
-> # bad: [e17d63403076affccd72d195f93bbf3f39514005] scsi: core: Pick suitable allocation length in scsi_report_opcode()
-> git bisect bad e17d63403076affccd72d195f93bbf3f39514005
-> # bad: [c92a6b5d63359dd6d2ce6ea88ecd8e31dd769f6b] scsi: core: Query VPD size before getting full page
-> git bisect bad c92a6b5d63359dd6d2ce6ea88ecd8e31dd769f6b
-> # first bad commit: [c92a6b5d63359dd6d2ce6ea88ecd8e31dd769f6b] scsi: core: Query VPD size before getting full page
-> 
-> Commit c92a6b5d6335 ("scsi: core: Query VPD size before getting full page")
-> went in between v5.18 and v5.19.
-> 
-> Verifications:
-> I have verified that reverting the said bad commit on top of v6.2-rc8, v5.19
-> and on top of c92a6b5d63359dd6d2ce6ea88ecd8e31dd769f6b causes the system to
-> boot normally.
+Thanks.
 
-Thanks for the report. To be sure the issue doesn't fall through the
-cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
-tracking bot:
+Reported-by: Chris Clayton <chris2553@googlemail.com>
+Tested-by: Chris Clayton <chris2553@googlemail.com>
 
-#regzbot ^introduced c92a6b5d63359dd
-#regzbot title scsi: storage not properly detected
-#regzbot ignore-activity
-
-This isn't a regression? This issue or a fix for it are already
-discussed somewhere else? It was fixed already? You want to clarify when
-the regression started to happen? Or point out I got the title or
-something else totally wrong? Then just reply and tell me -- ideally
-while also telling regzbot about it, as explained by the page listed in
-the footer of this mail.
-
-Developers: When fixing the issue, remember to add 'Link:' tags pointing
-to the report (the parent of this mail). See page linked in footer for
-details.
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+>>
+>>
+>> .> Chris
+>>>>>
+>>>>>>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+>>>>>>> --
+>>>>>>> Everything you wanna know about Linux kernel regression tracking:
+>>>>>>> https://linux-regtracking.leemhuis.info/about/#tldr
+>>>>>>> That page also explains what to do if mails like this annoy you.
+>>>>>>>
+>>>>>>> #regzbot ignore-activity
+>>>>>>>
+>>>>>>
+>>>>>
+>>>>
