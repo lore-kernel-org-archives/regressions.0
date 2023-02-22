@@ -1,62 +1,86 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FF332F3F
-	for <regressions@lists.linux.dev>; Wed, 22 Feb 2023 15:45:33 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pUrJ7-0002gC-62; Wed, 22 Feb 2023 16:45:25 +0100
-Message-ID: <e4f69695-e444-4283-06a5-7a50d01038e0@leemhuis.info>
-Date: Wed, 22 Feb 2023 16:45:24 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB08F10E7
+	for <regressions@lists.linux.dev>; Wed, 22 Feb 2023 16:44:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=qj4/wUvuYBB7N+Y9LA8l89zGBmqdIRGfgsWaxKkBaug=; b=Tw0pmpuoFb72/djYGTKZbstk3i
+	Qisu9akf8lVz3gLrekCpDqTM2KpgZGbYODULReAAzhWxQthPz+R735wLkT/xORhvzA5zvuSjCWYqS
+	mSlcYO2x52WidirP8uNaABLmlBaaWzw5MDESI04s0QDrYrBt70s7Zqz6lAS+8eGwA8jnVU5RvctE/
+	Me689/9XFOz3pxzILD7F5H/KgjL2/THQfatNga6JgNrw2D8AjORvTWrVSPY0bCz8i2ZFGkc+t9Q8Y
+	QsLjtUHtipl11m06ybj5g6aSYutza1zXTsKnOU9F/Su4pCecNdglxIVrbHC42K0BBWriP9ajp28Q9
+	6bySXm3A==;
+Received: from authenticated user
+	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.94.2)
+	(envelope-from <carnil@debian.org>)
+	id 1pUsEW-008lbK-Nw; Wed, 22 Feb 2023 16:44:45 +0000
+Received: by eldamar.lan (Postfix, from userid 1000)
+	id E8EC6BE2DE0; Wed, 22 Feb 2023 17:44:43 +0100 (CET)
+Date: Wed, 22 Feb 2023 17:44:43 +0100
+From: Salvatore Bonaccorso <carnil@debian.org>
+To: "Martin K. Petersen" <martin.petersen@oracle.com>,
+	Martin Wilck <mwilck@suse.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	Sreekanth Reddy <sreekanth.reddy@broadcom.com>
+Cc: linux-scsi@vger.kernel.org, regressions@lists.linux.dev
+Subject: Re: [PATCH 1/1] mpt3sas: Remove usage of dma_get_required_mask api
+Message-ID: <Y/ZGe8c1XyqSuCSk@eldamar.lan>
+References: <20221028091655.17741-1-sreekanth.reddy@broadcom.com>
+ <20221028091655.17741-2-sreekanth.reddy@broadcom.com>
+ <Y15lk+CPsjJ801iY@infradead.org>
+ <181536c494aa39ca78b190396a97072448739411.camel@suse.com>
+ <yq1tu192iur.fsf@ca-mkp.ca.oracle.com>
+ <Y8+m0w4Og2CLFImY@lorien.valinor.li>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: Latest RC causing web browser crash
-From: "Linux regression tracking #update (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-To: Chris McGimpsey-Jones <chrisjones.unixmen@gmail.com>
-Cc: linux-kernel@vger.kernel.org,
- Linux kernel regressions list <regressions@lists.linux.dev>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-References: <CAPaMSD3MM2BTW0REi4onUCPCLzz1B=-x0j9Uuvf2NHUOSefQ-w@mail.gmail.com>
- <ee9518a8-64ce-142d-ecfd-f560978352b0@leemhuis.info>
- <e503afb9-df36-5b98-6b1b-e1ad3a9d13a7@leemhuis.info>
-Content-Language: en-US, de-DE
-In-Reply-To: <e503afb9-df36-5b98-6b1b-e1ad3a9d13a7@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1677080733;49b8c79f;
-X-HE-SMSGID: 1pUrJ7-0002gC-62
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Y8+m0w4Og2CLFImY@lorien.valinor.li>
+X-Debian-User: carnil
 
-On 16.02.23 12:10, Linux regression tracking (Thorsten Leemhuis) wrote:
-> On 30.01.23 11:11, Linux kernel regression tracking (Thorsten Leemhuis)
-> wrote:
->> On 28.01.23 02:14, Chris McGimpsey-Jones wrote:
->>> Is anyone else with the latest RC having issues with Google Chrome
->>> browser, causing it to crash after a couple of minutes?
->> FWIW, this is unlikely to get any traction: nearly nobody reads the LKML
->> anymore, hence it's unlikely that someone that can help will see it.
+Hi,
+
+On Tue, Jan 24, 2023 at 10:37:23AM +0100, Salvatore Bonaccorso wrote:
+> Hi,
 > 
-> FWIW, I pointed to this problem in my weekly reports, but there was no
-> reaction. That sound like this is something rare which might only happen
-> on your machine.
+> On Mon, Jan 02, 2023 at 08:06:41AM -0500, Martin K. Petersen wrote:
+> > 
+> > Martin,
+> > 
+> > > is anything blocking mainline inclusion of this patch?
+> > 
+> > I applied these to 6.2/scsi-fixes last week. The patches have been
+> > sitting in a topic branch for a bit due to the three-way conflict
+> > between fixes, queue, and upstream.
 > 
-> Is the problem actually still occuring?
+> It landed in 6.2-rc4 recently in fact. Thank you!
+> 
+> Would it be posssible to backport the fix as well back to the stable
+> series affected? 
+> 
+> In Debian we have the reports as per https://bugs.debian.org/1022126
+> where the issue was introduced back in 5.10.y. Context in
+> https://lore.kernel.org/linux-scsi/CAK=zhgr=MYn=-mrz3gKUFoXG_+EQ796bHEWSdK88o1Aqamby7g@mail.gmail.com/
+> .
 
-Hmm, not reply. In that case I'm going to remove it from the tracking:
+Friendly ping on this, can this change be backported as well to the
+relevant stable series? It would apply already cleanly to 6.1.y, but
+due to 9df650963bf6 ("scsi: mpt3sas: Don't change DMA mask while
+reallocating pools") it might need some additional review for the
+older stable series (in particular of interest due to the above for
+5.10.y).
 
-#regzbot inconclusive: reporter MIA and likely individual (local?) issue
-anyway
-#regzbot ignore-activity
+Thanks already! If the change for older series needs some additional
+testing we might ask the affected users from the Debian bug 1022126 to
+test on 5.10.y as well.
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+Regards,
+Salvatore
