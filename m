@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CF2F1FB5
-	for <regressions@lists.linux.dev>; Wed, 22 Feb 2023 07:46:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3E231FB5
+	for <regressions@lists.linux.dev>; Wed, 22 Feb 2023 07:58:04 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pUjpv-0006im-51; Wed, 22 Feb 2023 08:46:47 +0100
-Message-ID: <aa452e7d-9670-46f5-171f-71d60b841eb0@leemhuis.info>
-Date: Wed, 22 Feb 2023 08:46:46 +0100
+	id 1pUk0j-0000zp-CF; Wed, 22 Feb 2023 08:57:57 +0100
+Message-ID: <e6aaddb9-afec-e77d-be33-570f9f10a9c2@leemhuis.info>
+Date: Wed, 22 Feb 2023 08:57:56 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -17,59 +17,46 @@ MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.7.2
 Content-Language: en-US, de-DE
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: netdev <netdev@vger.kernel.org>,
+From: Thorsten Leemhuis <linux@leemhuis.info>
+To: Heiner Kallweit <hkallweit1@gmail.com>, nic_swsd@realtek.com
+Cc: "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, netdev <netdev@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>,
  Linux kernel regressions list <regressions@lists.linux.dev>,
- LKML <linux-kernel@vger.kernel.org>, Boris Pismenny <borisp@nvidia.com>,
- John Fastabend <john.fastabend@gmail.com>, Gaurav Jain <gaurav.jain@nxp.com>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: [regression] Bug 217064 - Kernel TLS with CAAM is Broken
- (net/tls/tls_sw.c)
+ Ivan Ivanich <iivanich@gmail.com>
+Subject: [regression] Bug 217069 - Wake on Lan is broken on r8169 since 6.2
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1677052009;10b25ef0;
-X-HE-SMSGID: 1pUjpv-0006im-51
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1677052685;bdca105e;
+X-HE-SMSGID: 1pUk0j-0000zp-CF
 
 Hi, this is your Linux kernel regression tracker.
 
 I noticed a regression report in bugzilla.kernel.org. As many (most?)
 kernel developer don't keep an eye on it, I decided to forward it by
-mail. Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=217064 :
+mail. Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=217069 :
 
->  Gaurav Jain 2023-02-21 07:07:22 UTC
+> Ivan Ivanich 2023-02-22 00:51:52 UTC
 > 
-> I am running Kernel TLS with CAAM on iMX8M board.
-> KTLS + CAAM is broken in 6.1 kernel when async and zero copy is true.
+> After upgrade to 6.2 having issues with wake on lan on 2 systems: -
+> first is an old lenovo laptop from 2012(Ivy Bridge) with realtek
+> network adapter - second is a PC(Haswell refresh) with PCIE realtek
+> network adapter
 > 
-> **Commit id causing the issue: **
+> Both uses r8169 driver for network.
 > 
-> commit cbbdee9918a2662914f411aa999f2f80bf044a30
-> Author: Jakub Kicinski kuba@kernel.org
-> Date:   Thu Jul 14 22:22:34 2022 -0700
+> On laptop it's not possible to wake on lan after poweroff On PC it's
+> not possible to wake on lan up after hibernate but works after
+> poweroff
 > 
->     tls: rx: async: don't put async zc on the list
-> 
->     The "zero-copy" path in SW TLS will engage either for no skbs or
->     for all but last. If the recvmsg parameters are right and the
->     socket can do ZC we'll ZC until the iterator can't fit a full
->     record at which point we'll decrypt one more record and copy
->     over the necessary bits to fill up the request.
-> 
->     The only reason we hold onto the ZC skbs which went thru the async
->     path until the end of recvmsg() is to count bytes. We need an accurate
->     count of zc'ed bytes so that we can calculate how much of the non-zc'd
->     data to copy. To allow freeing input skbs on the ZC path count only
->     how much of the list we'll need to consume.
-> 
->     Signed-off-by: Jakub Kicinski kuba@kernel.org
->     Signed-off-by: David S. Miller davem@davemloft.net
-
-
+> In both cases downgrade to 6.1.x kernel fixes the issue.
 
 See the ticket for more details.
 
+@Ivan: maybe someone that sees this mail might have an idea what's
+wrong. But if not, you likely need to run a bisection to find what's
+causing this.
 
 [TLDR for the rest of this mail: I'm adding this report to the list of
 tracked Linux kernel regressions; the text you find below is based on a
@@ -79,9 +66,9 @@ form.]
 BTW, let me use this mail to also add the report to the list of tracked
 regressions to ensure it's doesn't fall through the cracks:
 
-#regzbot introduced: cbbdee9918a2
-https://bugzilla.kernel.org/show_bug.cgi?id=217064
-#regzbot title: net/ktls: Kernel TLS with CAAM is Broken
+#regzbot introduced: v6.1..v6.2
+https://bugzilla.kernel.org/show_bug.cgi?id=217069
+#regzbot title: net/r8169: Wake/power on Lan is broken on two machines
 #regzbot ignore-activity
 
 This isn't a regression? This issue or a fix for it are already
