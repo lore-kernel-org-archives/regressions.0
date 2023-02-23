@@ -1,125 +1,113 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A534A1FB5
-	for <regressions@lists.linux.dev>; Thu, 23 Feb 2023 08:05:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1677139504;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1+ueFbDYI2fCK6KAGkfWDv0qOw1/uXZTIg/vtWRlPiU=;
-	b=adB+W9iy6u6cBXv593m+9LlnTmT1xtIdBo7KvGPFbhVpCBbEI/aULbM3KSljLIijQi3iqT
-	cHizFw9MrpR1gjj5uHs/Sr7VT8YmU+KohhCvYlBEs33kb2poyRKmLw+Cw5xNl3j7Wgp4jY
-	rhpLvBmZXQfoA/cNA2/LXm/tHYqSvLk=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-594-hOAT_IWjOr-Q1o305JZO2A-1; Thu, 23 Feb 2023 03:05:03 -0500
-X-MC-Unique: hOAT_IWjOr-Q1o305JZO2A-1
-Received: by mail-wm1-f70.google.com with SMTP id e17-20020a05600c219100b003e21fa60ec1so4430017wme.2
-        for <regressions@lists.linux.dev>; Thu, 23 Feb 2023 00:05:02 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1+ueFbDYI2fCK6KAGkfWDv0qOw1/uXZTIg/vtWRlPiU=;
-        b=bcn8/b4/cBVHhipQn9i77/V0yYkCeEDzuqN/pZqlA1TXCBuHr95RN6Y/cwrPSWZz1o
-         RPNAVMcLvBivYxmr2Dk7ip56GZ+jxfO9aoFRf3DzMUmA2fwT1ydwD/t7VomhCN/LRpB2
-         GWhEnvowLXf6r1/5oKU/lbO5HtvCU1HB3NSQ93yIvZS3svLo+G8W128rhf+b80hcXYju
-         sTJFtKUapNMM/Zyjm758F0s6ut4qT+6jmJOnK3pjXCCPKKb2nVjJGW45z98NWoo2f/NS
-         0T7za8EAWZBVvBVDxlX4FjaHvHK42greYR27lYhN4LXUa5YmqraU5YsukZMqZTAY0Ecc
-         pp6w==
-X-Gm-Message-State: AO0yUKV/1Iu7xjIcD853qlfrAXs4wGug9CSQYG+G+HOm98AYTihQcDIe
-	5supsw6yQtLnXPB6fohAWyO6HNu1cTBffBjpntw4uzlBUn8VZLZIzX6viZTihyDwxxPYqnunD7N
-	ehPMIKurtWlfovjnWeOFjIkE=
-X-Received: by 2002:a05:600c:3093:b0:3dc:555c:dd30 with SMTP id g19-20020a05600c309300b003dc555cdd30mr1930920wmn.27.1677139502052;
-        Thu, 23 Feb 2023 00:05:02 -0800 (PST)
-X-Google-Smtp-Source: AK7set8C2KkhdFOu+LnX9wVb8yRJ6czYkak4zwJwTlRC59nu1vtOB2+Qi4rT251F92cwGEsPeVo5bw==
-X-Received: by 2002:a05:600c:3093:b0:3dc:555c:dd30 with SMTP id g19-20020a05600c309300b003dc555cdd30mr1930899wmn.27.1677139501762;
-        Thu, 23 Feb 2023 00:05:01 -0800 (PST)
-Received: from localhost (205.pool92-176-231.dynamic.orange.es. [92.176.231.205])
-        by smtp.gmail.com with ESMTPSA id o11-20020a05600c510b00b003e1f2e43a1csm10728694wms.48.2023.02.23.00.05.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Feb 2023 00:05:01 -0800 (PST)
-From: Javier Martinez Canillas <javierm@redhat.com>
-To: Vikash Garodia <vgarodia@qti.qualcomm.com>, Linux regressions mailing
- list <regressions@lists.linux.dev>, Stanimir
- Varbanov <stanimir.k.varbanov@gmail.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "mka@chromium.org" <mka@chromium.org>, Albert Esteve <aesteve@redhat.com>,
- "stanimir.varbanov@linaro.org" <stanimir.varbanov@linaro.org>, Enric
- Balletbo
- i Serra <eballetb@redhat.com>, Andy Gross <agross@kernel.org>, Bjorn
- Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>,
- "Vikash Garodia (QUIC)" <quic_vgarodia@quicinc.com>,
- "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
- "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, Fritz Koenig
- <frkoenig@google.com>, "Dikshita Agarwal (QUIC)"
- <quic_dikshita@quicinc.com>, "Rajeshwar Kurapaty (QUIC)"
- <quic_rkurapat@quicinc.com>, Mauro Carvalho Chehab <mchehab@kernel.org>
-Subject: RE: [PATCH] Revert "venus: firmware: Correct non-pix start and end
- addresses"
-In-Reply-To: <DM8PR02MB8169E16569616870A583B376F3AB9@DM8PR02MB8169.namprd02.prod.outlook.com>
-References: <20230207102254.1446461-1-javierm@redhat.com>
- <DM8PR02MB8169809493BF2822E6C29EECF3DB9@DM8PR02MB8169.namprd02.prod.outlook.com>
- <ef09bc9f-d570-be11-238b-bd34063917fc@redhat.com>
- <70c01751-1dd7-c4bd-a96e-94dea437aa40@redhat.com>
- <DM8PR02MB81696369DBFE619E43F81EEFF3DE9@DM8PR02MB8169.namprd02.prod.outlook.com>
- <e87344c6-acef-7f3f-5cac-24961dbd9401@redhat.com>
- <6f97a117-0d9c-e21b-9adf-50f2233ba9e3@leemhuis.info>
- <ea283f0a-ca72-447e-ce87-68c1bbee793e@leemhuis.info>
- <CAFOAJEdBbzqkGVqw+vgNYNxyaTHwvjFyskTwjycP820L2tOctA@mail.gmail.com>
- <b548da46-bf91-6f1c-4b63-4002109056bc@leemhuis.info>
- <9a0bfef8-0b5d-f4d0-a8a5-4bbcacc5c0fb@leemhuis.info>
- <DM8PR02MB8169E16569616870A583B376F3AB9@DM8PR02MB8169.namprd02.prod.outlook.com>
-Date: Thu, 23 Feb 2023 09:05:00 +0100
-Message-ID: <87356wn6xf.fsf@minerva.mail-host-address-is-not-set>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEC6A28ED
+	for <regressions@lists.linux.dev>; Thu, 23 Feb 2023 16:01:27 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1pVE23-0007wG-N0; Thu, 23 Feb 2023 17:01:19 +0100
+Message-ID: <c7a7e21a-0eac-8e84-aa8e-59ba4116e6af@leemhuis.info>
+Date: Thu, 23 Feb 2023 17:01:19 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+Content-Language: en-US, de-DE
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+To: Kalle Valo <kvalo@kernel.org>
+Cc: ath11k <ath11k@lists.infradead.org>,
+ "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+ netdev <netdev@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>, mani@kernel.org
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: [regression] Bug 217070 - ath11k: QCA6390: Regression on 6.2-rc1
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1677168087;ecc132a2;
+X-HE-SMSGID: 1pVE23-0007wG-N0
 
-Vikash Garodia <vgarodia@qti.qualcomm.com> writes:
+Hi, this is your Linux kernel regression tracker.
 
-Hello Vikash,
+I noticed a regression report in bugzilla.kernel.org. As many (most?)
+kernel developer don't keep an eye on it, I decided to forward it by
+mail. Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=217070 :
 
-> Hi All,
->
+>  mani@kernel.org 2023-02-22 08:43:15 UTC
+> 
+> Hi,
+> 
+> With the firmware from linux-firmware and vendor SDK, ath11k used to
+> work on kernel v5.19-rc6 but it is now failing on kernel v6.2-rc1.
+> 
+> dmesg of the failure with firmware from linux-firmware:
+> 
+> [   33.224148] ath11k_pci 0000:01:00.0: Adding to iommu group 1
+> [   33.238000] ath11k_pci 0000:01:00.0: BAR 0: assigned [mem 0x40300000-0x403fffff 64bit]
+> [   33.238260] ath11k_pci 0000:01:00.0: enabling device (0140 -> 0142)
+> [   33.275898] ath11k_pci 0000:01:00.0: MSI vectors: 32
+> [   33.276053] ath11k_pci 0000:01:00.0: qca6390 hw2.0
+> [   35.901819] ath11k_pci 0000:01:00.0: chip_id 0x0 chip_family 0xb board_id 0xff soc_id 0xffffffff
+> [   35.902011] ath11k_pci 0000:01:00.0: fw_version 0x10121492 fw_build_timestamp 2021-11-04 11:23 fw_build_id 
+> [   38.134029] ath11k_pci 0000:01:00.0: failed to receive control response completion, polling..
+> [   39.173898] ath11k_pci 0000:01:00.0: ctl_resp never came in (-110)
+> [   39.174022] ath11k_pci 0000:01:00.0: failed to connect to HTC: -110
+> [   39.280618] ath11k_pci 0000:01:00.0: failed to start core: -110
+> 
+> dmesg of the failure with firmware from vendor SDK:
+> 
+> [   33.294291] ath11k_pci 0000:01:00.0: Adding to iommu group 1
+> [   33.295671] ath11k_pci 0000:01:00.0: BAR 0: assigned [mem 0x40300000-0x403fffff 64bit]
+> [   33.299223] ath11k_pci 0000:01:00.0: enabling device (0140 -> 0142)
+> [   33.338562] ath11k_pci 0000:01:00.0: MSI vectors: 32
+> [   33.338711] ath11k_pci 0000:01:00.0: qca6390 hw2.0
+> [   38.506850] ath11k_pci 0000:01:00.0: ignore reset dev flags 0x8000
+> [   38.507181] ath11k_pci 0000:01:00.0: failed to power up mhi: -110
+> [   38.520546] ath11k_pci 0000:01:00.0: failed to start mhi: -110
+> [   38.520665] ath11k_pci 0000:01:00.0: failed to power up :-110
+> [   38.554297] ath11k_pci 0000:01:00.0: failed to create soc core: -110
+> [   38.554424] ath11k_pci 0000:01:00.0: failed to init core: -110
+> [   38.888539] ath11k_pci: probe of 0000:01:00.0 failed with error -110
+> 
+> [tag] [reply] [−]
+> Private
+> Comment 1 mani@kernel.org 2023-02-22 08:45:27 UTC
+> 
+> Host platform is Thundercomm T55 board based on Qualcomm SDX55 SoC (ARM32).
 
-[...]
+See the ticket for more details.
 
->>
->>No reply from Mauro and Linus chose to not apply the revert I pointed him to.
->>That at this point leads to the question:
->>
->>Vikash, did you or somebody else make any progress to fix this properly?
->
-> We tried with different settings for the registers and arrive at a conclusion that
-> the original configuration was proper. There is no need to explicitly configure
-> the secure non-pixel region when there is no support for the usecase. So, in summary,
-> we are good to have the revert.
->
 
-Perfect. Thanks a lot for looking at this.
+[TLDR for the rest of this mail: I'm adding this report to the list of
+tracked Linux kernel regressions; the text you find below is based on a
+few templates paragraphs you might have encountered already in similar
+form.]
 
-> Stan, could you please help with the revert and a pull request having this revert
-> alongwith other pending changes ?
->
+BTW, let me use this mail to also add the report to the list of tracked
+regressions to ensure it's doesn't fall through the cracks:
 
-Other fix posted is "media: venus: dec: Fix capture formats enumeration order":
+#regzbot introduced: v5.19-rc6..v6.2-rc1
+https://bugzilla.kernel.org/show_bug.cgi?id=217070
+#regzbot title: net: wireless: ath11k: QCA6390
+#regzbot ignore-activity
 
-https://patchwork.kernel.org/project/linux-media/patch/20230210081835.2054482-1-javierm@redhat.com/
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply and tell me -- ideally
+while also telling regzbot about it, as explained by the page listed in
+the footer of this mail.
 
--- 
-Best regards,
+Developers: When fixing the issue, remember to add 'Link:' tags pointing
+to the report (e.g. the buzgzilla ticket and maybe this mail as well, if
+this thread sees some discussion). See page linked in footer for details.
 
-Javier Martinez Canillas
-Core Platforms
-Red Hat
-
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
