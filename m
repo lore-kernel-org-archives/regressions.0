@@ -1,60 +1,62 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B929E539D
-	for <regressions@lists.linux.dev>; Fri, 24 Feb 2023 14:25:21 +0000 (UTC)
-Date: Fri, 24 Feb 2023 14:25:17 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1677248719;
-	bh=dZi9kxGc5dBklS0ESvRLJ0gpRNKig54XVYburYPqEUs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=olYubdHzBRIBGcY3V0rvmMWBXr+USWB/OqpOgBysdpPbF9AoBq+PEQPn5cpcdp1QC
-	 jQLCCHl6oGpJZFOuewjspYbTfuWglVqF2fRCCSunDFwDrUr0v4koxhiogPR+Ee+mmI
-	 TZ/wCVibmr/1otEyN7x5evEGtXOIyubtbmz0uOAU=
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-To: regressions@lists.linux.dev
-Cc: regressions@leemhuis.info
-Subject: Re: Bug with /dev/vcs* devices
-Message-ID: <6685c2ab-fffe-4eb7-b8df-1019f68a5d5d@t-8ch.de>
-References: <Y/KS6vdql2pIsCiI@hotmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE4096FBB
+	for <regressions@lists.linux.dev>; Fri, 24 Feb 2023 16:08:58 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1pVact-0004Mr-GB; Fri, 24 Feb 2023 17:08:51 +0100
+Message-ID: <9e210dcb-cd65-2213-ceab-9ba7b4ea0e81@leemhuis.info>
+Date: Fri, 24 Feb 2023 17:08:51 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y/KS6vdql2pIsCiI@hotmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+Subject: Re: [Regression] mqueue performance degradation after "The new cgroup
+ slab memory controller" patchset.
+Content-Language: en-US, de-DE
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <PH0PR11MB562641BC03630B4B7A227FD7E9189@PH0PR11MB5626.namprd11.prod.outlook.com>
+ <PH0PR11MB56260B78ED0C1255D7B5EE21E9189@PH0PR11MB5626.namprd11.prod.outlook.com>
+From: "Linux regression tracking #update (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <PH0PR11MB56260B78ED0C1255D7B5EE21E9189@PH0PR11MB5626.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1677254939;a9468122;
+X-HE-SMSGID: 1pVact-0004Mr-GB
 
-On Sun, Feb 19, 2023 at 04:21:46PM -0500, Storm Dragon wrote:
-> Howdy,
-> 
-> This is my first time ever submitting a kernel bug, so I apologize if this is the wrong place. As per the instructions I found, I first filed a bug in Arch Linux:
-> 
-> https://bugs.archlinux.org/task/77575
-> 
-> I will add the contents of the response here:
-> 
-> For the record, here are the 2 associated mailing list threads [1][2].
-> The reason why it affects both LTS and current linux is because it appears a security patch was applied to both trees to fix a UAF (use after free) bug.
-> If that patch is problematic, you should report it upstream to the kernel folks. Maybe even email the patch author directly. It's this patch [3]. Please let us
-> know what you find out.
-> [1] https://lists.archlinux.org/archives/list/arch-general%40lists.archlinux.org/thread/EOSHIVGUZLNAD7BPHSUGOXFYSAFWDYH7/
-> [2] https://lists.archlinux.org/archives/list/arch-general%40lists.archlinux.org/thread/S6R6UDUMX2LWL4HJ74MFNYOES45UBFLF/
-> [3] https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/drivers/tty/vt/vc_screen.c?h=v5.15.94&id=fc9e27f3ba083534b8bbf72ab0f5c810ffdc7d18
-> 
-> ----------End Response ----------
-> 
-> Methods for reproducing the bug are included in the link to the bug above. But I will include one of them here as well. As root:
-> 
-> [root@mjollnir ~]# cat /dev/vcsa1
->    cat: /dev/vcsa1: No such device or address
-> 
-> The contents is displayed very briefly before the No such device or address error.
-> 
-> Thank you,
-> Storm
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+That page also explains what to do if mails like this annoy you.
 
-#regzbot title: vc_screen: unexpected ENXIO on read
-#regzbot introduced: 226fae124b2dac217ea5436060d623ff3385bc34 ^
+#regzbot ignore-activity
+
+On 05.12.22 16:05, Luther, Sven wrote:
+> #regzbot ^introduced 10befea91b61c4e2c2d1df06a2e978d182fcf792
+> 
+> We are making heavy use of mqueues, and noticed a degradation of performance between 4.18 & 5.10 linux kernels.
+> 
+> After a gross per-version tracing, we did kernel bisection between 5.8 and 5.9
+> and traced the issue to a 10 patches (of which 9 where skipped as they didn't boot) between:
+
+#regzbot inconclusive: not fixed, but cause by a trade-off and a likely
+corner-case anyway; more optimizations planned to improve things
+#regzbot ignore-activity
+
+For details, see:
+
+https://lore.kernel.org/all/Y+%2FGxJcNykVQxcG+@P9FQF9L96D.corp.robot.car/
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+That page also explains what to do if mails like this annoy you.
