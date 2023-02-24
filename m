@@ -1,351 +1,299 @@
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+Received: from mail-ot1-f42.google.com (mail-ot1-f42.google.com [209.85.210.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8170AD4C
-	for <regressions@lists.linux.dev>; Fri, 24 Feb 2023 18:08:06 +0000 (UTC)
-Received: by mail-lf1-f45.google.com with SMTP id i9so202838lfc.6
-        for <regressions@lists.linux.dev>; Fri, 24 Feb 2023 10:08:06 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56F72524F
+	for <regressions@lists.linux.dev>; Fri, 24 Feb 2023 20:43:48 +0000 (UTC)
+Received: by mail-ot1-f42.google.com with SMTP id cc12-20020a05683061cc00b00693daa9016fso350525otb.2
+        for <regressions@lists.linux.dev>; Fri, 24 Feb 2023 12:43:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:from:references:cc:to:content-language:subject
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rFLfBvmPiXc0YLOf1/g3lP1vVzSEJ99GGf6Ms203FQY=;
-        b=bPTFwByNzFSanrJI7f1XP0QPEeGqcS67tASka3uwuQvqMovPnroHvNWczTtKe5CkhZ
-         2k8d9nRKXsg2jvuN0a2AFv4H7M/LsDLBN/WWIiejpHUVzMk4nTjSZN7kh+FXrHF4Vybs
-         mfgIw38naNMIGsj6fOSvMsAySJpY3TdqsdLN9Z68jMOzOIoD8v77HkQ4oy6eIDbqQ+wh
-         Zigfuce3WJZzUPkwrFAv2RcyEK5pFSd3t9Qqu6TDTgiP1PHTQ34+YKpXgkLAP6IMRwNH
-         A7ejBu5ehSFW9Sdo2ih64acSeraGWuN47HBpvbRX6e+djiiiybjm8APd59rlCwSV/ekI
-         8Chg==
+        d=gmail.com; s=20210112; t=1677271427;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=BeqCCFmamN/YjGQ8EDdEmCZT36JJtvtkBpaxq359rIc=;
+        b=VKo1uuSbaSluO3MucjgjemnpqGTaov114+fov4EKdOFbZgs8iwwFm6vR9JkXP4QV4e
+         OVDf1Zdl387RqHpolDdnTaqa4BkvYoUayPsLPV/q3ItZasX+FA1bjk4T6YkfvSDkLUW9
+         XveyUQ49jv12TQEIAfmjr44vLTmchXg8h3q3aBwOIkI2HeAYzdoRei6T3DnwVNWEgcwO
+         jKjnCi9qscpO5B+I2JDg+TVOSYn05EXk5QLiOpBWRr3tq9m3Rq8jkLfKPdPrzALLM1Ke
+         ZRoTGI8NnEny7rdGXJuMUK9OZ9816yuRpjvipA4RHuxhpLkSXplyAdRMAI2oYfzempFP
+         Rr+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:from:references:cc:to:content-language:subject
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=rFLfBvmPiXc0YLOf1/g3lP1vVzSEJ99GGf6Ms203FQY=;
-        b=q4Gwi8aFZ2/2jRo01AjBkDFFs99HHTjyawsQulriUdv1o+/1CVWkudZAnYU9SCyC0W
-         HoA5fjisK4PrbZ0zsxZBiyqfUL7Hwf/5HjpmLWa4jyLqHS/MsRpNkmnapnu8Ubjqsq69
-         N8iPvLJunRYr694wpvdEdw1TAvA97TVOpW2cmlB8o/lN4h8NOtzOs/9graXK90VQ+3zR
-         QCD/5j/IHAcH1YT52fr19V3EZneGdiwLxWyClzxAkXsVvFyVReGaf+CoBzMSuo9fsPYO
-         MqAdBQMQgYb/rFZWhjIA+l9xelCMm0AMrDtRvqBy028zuj2FsC8LFwTeHb7BQKOkbTOZ
-         tjug==
-X-Gm-Message-State: AO0yUKXMdaLQ5AgBZPX1WC/4u6F6ZTeYeBJv9UNoSy46nki7ZmxkjwkC
-	k+n8QqJ3Cb/Zsdnt04YsWq/9n53DJeQ7BA==
-X-Google-Smtp-Source: AK7set9Bd1K2OCxfqlXZpavkCxBvWFEQ3j9b7q2PEJBKLHN2mtP8++531ST9P3+FU6vi5PbMYRBOaA==
-X-Received: by 2002:ac2:5974:0:b0:4db:25f2:c116 with SMTP id h20-20020ac25974000000b004db25f2c116mr5547887lfp.18.1677262084243;
-        Fri, 24 Feb 2023 10:08:04 -0800 (PST)
-Received: from ?IPV6:2001:470:27:8a1::2? (tunnel811020-pt.tunnel.tserv24.sto1.ipv6.he.net. [2001:470:27:8a1::2])
-        by smtp.gmail.com with ESMTPSA id x4-20020ac25dc4000000b004d85dab237csm721226lfq.39.2023.02.24.10.08.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 24 Feb 2023 10:08:03 -0800 (PST)
-Content-Type: multipart/mixed; boundary="------------v0I38eSMINc6BvUKbyDmyawn"
-Message-ID: <edd93326-513b-71d4-82eb-aabdfa9e3c90@gmail.com>
-Date: Fri, 24 Feb 2023 21:08:02 +0300
+        d=1e100.net; s=20210112; t=1677271427;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BeqCCFmamN/YjGQ8EDdEmCZT36JJtvtkBpaxq359rIc=;
+        b=iuW8F4BRMmD2tPAX2grGO/OblAL1dFBNYbh94KhFpvywNS00hLkH0pG2gYHw2zVJS5
+         MISSNgERvm7m0eszM7WF72MkxszVKhdbqISvjNGLZSqMMuvGBXuJw2WTPpw3rnhwxUuY
+         R5hXzbnGjXphjNZpEx70ZLUT76nXrXW3Fa8pC8CUC3NxtFWFVgI3Yg5zV9qcuDnWoLsp
+         9TPsAROEbsXy4QxappKziZTAYNZaWve24PPxRTeclvn3rMWGTFY0qROJr2Ids/xjHETq
+         AYzxJhgQspyqv/Chmfgu533mFopD60BpZpuPXdbWO3dZ+y9Iw/nm583WeqA/6m6un2Q5
+         2XKw==
+X-Gm-Message-State: AO0yUKUM+dlX7ZsBirdHZNjxg/pYCwV4LTDyoKBljno9HswKHd2TZtIw
+	uIXgkZLnUz2BXvBARvNHUk2TwmtbSvSwKMJ8NLWNtZI3Vqk=
+X-Google-Smtp-Source: AK7set/62qBylDEldjOIpXiklV3jggx+vGy7Hoh/09rtagX9iG/qVuZhXJlgRXiXX54czevDHVHx3KZ9HoinqjvMQ70=
+X-Received: by 2002:a05:6830:26e3:b0:688:cfcc:ddad with SMTP id
+ m35-20020a05683026e300b00688cfccddadmr1993642otu.1.1677271427099; Fri, 24 Feb
+ 2023 12:43:47 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [Bug 216646] having TRANSPARENT_HUGEPAGE enabled hangs some
- applications (supervisor read access in kernel mode)
-Content-Language: en-US
-To: Linux regressions mailing list <regressions@lists.linux.dev>,
- Matthew Wilcox <willy@infradead.org>
-Cc: bugzilla-daemon@kernel.org, linux-mm@kvack.org,
- Andrew Morton <akpm@linux-foundation.org>, decedion@gmail.com
-References: <bug-216646-27@https.bugzilla.kernel.org/>
- <bug-216646-27-o4jKola2S5@https.bugzilla.kernel.org/>
- <20221121125400.334190a6d2791b0c9afbfea0@linux-foundation.org>
- <220fd094-7cf1-9d17-8380-98d5663dc5da@leemhuis.info>
- <Y4ouwhqSyDV7I+D9@casper.infradead.org>
- <Y4p0tbbbQ5JkyZs5@casper.infradead.org>
- <20221203014420.76281b930dbc64f51eda0f8b@gmail.com>
- <Y45Tp1Br2Em8e3Fr@casper.infradead.org>
- <20221206050845.6ba9351cef3295be4b923ea8@gmail.com>
- <69b81148-8e62-d697-e92b-c3b042214a09@leemhuis.info>
- <e9528025-afcc-bde0-dba4-24d2074ad52d@leemhuis.info>
-From: Mikhail Pletenv <mmp.dux@gmail.com>
-In-Reply-To: <e9528025-afcc-bde0-dba4-24d2074ad52d@leemhuis.info>
+References: <CALFERdzKUodLsm6=Ub3g2+PxpNpPtPq3bGBLbff=eZr9_S=YVA@mail.gmail.com>
+ <962dfb15-b259-b764-3085-8d6a942f5abb@leemhuis.info> <CALFERdwmt_1yVmeQheTRqv6n0YJUs5cuRpUqT1O4UMydY6ubEA@mail.gmail.com>
+ <CALFERdwvq5day_sbDfiUsMSZCQu9HG8-SBpOZDNPeMdZGog6XA@mail.gmail.com> <CALFERdy2+shxBo=sSXYfJBLZtzMq9rHY8X=Krh52T4-LW=-CKw@mail.gmail.com>
+In-Reply-To: <CALFERdy2+shxBo=sSXYfJBLZtzMq9rHY8X=Krh52T4-LW=-CKw@mail.gmail.com>
+From: Sasa Ostrouska <casaxa@gmail.com>
+Date: Fri, 24 Feb 2023 21:43:35 +0100
+Message-ID: <CALFERdz3Q_Usr63-TLBk+MW7q9=0RqeNb7kaXT4fkS=Ch4mSgQ@mail.gmail.com>
+Subject: Re: Google Pixelbook EVE, no sound in kernel 6.1.x
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: stable@vger.kernel.org, 
+	Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>, Lukasz Majczak <lma@semihalf.com>, 
+	Cezary Rojewski <cezary.rojewski@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 
-This is a multi-part message in MIME format.
---------------v0I38eSMINc6BvUKbyDmyawn
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-
-I did some more testing on v6.1.12 and reproduced the issue. But i have 
-new bit of information: since the last time i've seen this issue i've 
-migrated most of my storage from XFS to BTRFS and i couldn't reproduce 
-the issue again today until i switched the source volume in the test 
-back to XFS. So it seems bug is either in the way that XFS talks to 
-mm/folios or is just triggered by it.
-
-anyway, i attached a report from v6.1.2 (seems to be happening in the 
-same place)
-
-
-On 2/24/23 13:21, Linux regression tracking (Thorsten Leemhuis) wrote:
-> On 16.12.22 06:23, Thorsten Leemhuis wrote:
->> Hi, this is your Linux kernel regression tracker. Top-posting for once,
->> to make this easily accessible to everyone.
-> /me again
+On Fri, Feb 24, 2023 at 2:10 AM Sasa Ostrouska <casaxa@gmail.com> wrote:
 >
->> Was some progress made to get this regression resolved? From here it
->> looks kinda stalled, that's why I'm asking -- but maybe I just missed
->> something.
-> Did anything happen to get this regression resolved? Doesn't look like
-> it, but maybe I missed some progress.
+> Hi again. I have today upgraded my slackware install pixelbook from
+> kernel 6.1.12 to 6.1.13 and this solved the issue of powering down the
+> notebook. Now it has no problem
+> to poweroff, I do not need anymore to keep the power button to switch
+> off. But the thing now is that I have no longer a working sound.
+> I see that for some reason the firmware seems is no longer loaded:
 >
-> Willy, Mikhail confirmed off-list to me that the problem still exists.
-> He also tried you patch and reported back. Is there something else you need?
+> root@goopix:~# dmesg | grep snd
+> [    5.599427] snd_hda_intel 0000:00:1f.3: DSP detected with PCI
+> class/subclass/prog-if info 0x040100
+> [    5.907375] snd_soc_skl 0000:00:1f.3: DSP detected with PCI
+> class/subclass/prog-if info 0x040100
+> [    5.990054] snd_soc_skl 0000:00:1f.3: bound 0000:00:02.0 (ops
+> i915_audio_component_bind_ops [i915])
+> [    7.382484] snd_soc_skl 0000:00:1f.3: ASoC: no sink widget found
+> for AEC Capture
+> [    7.382952] snd_soc_skl 0000:00:1f.3: ASoC: Failed to add route
+> echo_ref_out cpr 7 -> direct -> AEC Capture
+> [    7.384409] snd_soc_skl 0000:00:1f.3: Direct firmware load for
+> intel/dsp_fw_kbl.bin failed with error -2
+> [    7.386037] snd_soc_skl 0000:00:1f.3: Request firmware failed -2
+> [    7.388099] snd_soc_skl 0000:00:1f.3: Load base fw failed : -5
+> [    7.390630] snd_soc_skl 0000:00:1f.3: Failed to boot first fw: -5
+> [    7.393598] snd_soc_skl 0000:00:1f.3: ASoC: error at
+> snd_soc_component_probe on 0000:00:1f.3: -5
+> root@goopix:~#
 >
-> Side note: I lost this out of sight during the festive season and should
-> have asked this earlier, but better late than never. :-D
+> root@goopix:~# dmesg | grep kbl
+> [    5.946463] i915 0000:00:02.0: [drm] Finished loading DMC firmware
+> i915/kbl_dmc_ver1_04.bin (v1.4)
+> [    6.293440] kbl_r5514_5663_max kbl_r5514_5663_max: Failed to get
+> ssp1_mclk, defer probe
+> [    7.383448] kbl_r5514_5663_max kbl_r5514_5663_max: ASoC: Parent
+> card not yet available, widget card binding deferred
+> [    7.384409] snd_soc_skl 0000:00:1f.3: Direct firmware load for
+> intel/dsp_fw_kbl.bin failed with error -2
+> [    7.397157] kbl_r5514_5663_max kbl_r5514_5663_max: ASoC: failed to
+> instantiate card -5
+> [    7.399749] kbl_r5514_5663_max: probe of kbl_r5514_5663_max failed
+> with error -5
+> root@goopix:~#
 >
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-> --
-> Everything you wanna know about Linux kernel regression tracking:
-> https://linux-regtracking.leemhuis.info/about/#tldr
-> If I did something stupid, please tell me, as explained on that page.
+> But I have the firmware in place:
 >
-> #regzbot poke
+> root@goopix:~# ls -l /lib/firmware/9d71-GOOGLE-EVEMAX-0-tplg.bin
+> -rw-r--r-- 1 root root 37864 Jan 26 07:48
+> /lib/firmware/9d71-GOOGLE-EVEMAX-0-tplg.bin
+> root@goopix:~# ls -l /lib/firmware/dsp*
+> -rw-r--r-- 1 root root 16556 Jan 26 07:49
+> /lib/firmware/dsp_lib_dsm_core_spt_release.bin
 >
->> On 06.12.22 03:08, Mikhail Pletnev wrote:
->>> On Mon, 5 Dec 2022 20:25:11 +0000
->>> Matthew Wilcox <willy@infradead.org> wrote:
->>>> Thanks!  I think this may be the problem ...
->>>>
->>> Hi Matthew, thanks for swift response, i've applied your last patch and ran my stress test a couple of times. It's still constistently crashing (albeit it seems in a different place):
->>>
->>> [ 1975.257126] ***BAD SIBLING*** index 912583 offset 4
->>> [ 1975.257128] node ffff9fc817e01ff0 offset 51 parent ffff9fc5c7a31ff0 shift 0 count 64 values 48 array ffff9fc521173e80 list ffff9fc817e02008 ffff9fc817e02008 marks 0 0 0
->>> [ 1975.257133] BUG: kernel NULL pointer dereference, address: 0000000000000036
->>> [ 1975.257135] #PF: supervisor read access in kernel mode
->>> [ 1975.257137] #PF: error_code(0x0000) - not-present page
->>> [ 1975.257138] PGD 0 P4D 0
->>> [ 1975.257139] Oops: 0000 [#1] PREEMPT SMP NOPTI
->>> [ 1975.257141] CPU: 5 PID: 8303 Comm: deluge-gtk Not tainted 5.17.0-rc4_ap_test-00163-g793917d997df-dirty #6
->>> [ 1975.257144] Hardware name: Micro-Star International Co., Ltd. MS-7C35/MEG X570 UNIFY (MS-7C35), BIOS A.C3 03/15/2022
->>> [ 1975.257146] RIP: 0010:__filemap_get_folio (/home/reinhardt/dev-apps/kernel/linux/./arch/x86/include/asm/atomic.h:29 /home/reinhardt/dev-apps/kernel/linux/./include/linux/atomic/atomic-arch-fallback.h:1158 /home/reinhardt/dev-apps/kernel/linux/./include/linux/atomic/atomic-arch-fallback.h:1183 /home/reinhardt/dev-apps/kernel/linux/./include/linux/atomic/atomic-instrumented.h:608 /home/reinhardt/dev-apps/kernel/linux/./include/linux/page_ref.h:238 /home/reinhardt/dev-apps/kernel/linux/./include/linux/page_ref.h:247 /home/reinhardt/dev-apps/kernel/linux/./include/linux/page_ref.h:280 /home/reinhardt/dev-apps/kernel/linux/./include/linux/page_ref.h:313 /home/reinhardt/dev-apps/kernel/linux/mm/filemap.c:1899 /home/reinhardt/dev-apps/kernel/linux/mm/filemap.c:1951)
->>> [ 1975.257152] Code: 10 e8 56 fd 67 00 48 89 c3 48 3d 02 04 00 00 74 e2 48 3d 06 04 00 00 74 da 48 85 c0 0f 84 3e 02 00 00 a8 01 0f 85 40 02 00 00 <8b> 40 34 85 c0 74 c2 8d 50 01 f0 0f b1 53 34 75 f2 48 8b 54 24 28
->>> All code
->>> ========
->>>     0:	10 e8                	adc    %ch,%al
->>>     2:	56                   	push   %rsi
->>>     3:	fd                   	std
->>>     4:	67 00 48 89          	add    %cl,-0x77(%eax)
->>>     8:	c3                   	ret
->>>     9:	48 3d 02 04 00 00    	cmp    $0x402,%rax
->>>     f:	74 e2                	je     0xfffffffffffffff3
->>>    11:	48 3d 06 04 00 00    	cmp    $0x406,%rax
->>>    17:	74 da                	je     0xfffffffffffffff3
->>>    19:	48 85 c0             	test   %rax,%rax
->>>    1c:	0f 84 3e 02 00 00    	je     0x260
->>>    22:	a8 01                	test   $0x1,%al
->>>    24:	0f 85 40 02 00 00    	jne    0x26a
->>>    2a:*	8b 40 34             	mov    0x34(%rax),%eax		<-- trapping instruction
->>>    2d:	85 c0                	test   %eax,%eax
->>>    2f:	74 c2                	je     0xfffffffffffffff3
->>>    31:	8d 50 01             	lea    0x1(%rax),%edx
->>>    34:	f0 0f b1 53 34       	lock cmpxchg %edx,0x34(%rbx)
->>>    39:	75 f2                	jne    0x2d
->>>    3b:	48 8b 54 24 28       	mov    0x28(%rsp),%rdx
->>>
->>> Code starting with the faulting instruction
->>> ===========================================
->>>     0:	8b 40 34             	mov    0x34(%rax),%eax
->>>     3:	85 c0                	test   %eax,%eax
->>>     5:	74 c2                	je     0xffffffffffffffc9
->>>     7:	8d 50 01             	lea    0x1(%rax),%edx
->>>     a:	f0 0f b1 53 34       	lock cmpxchg %edx,0x34(%rbx)
->>>     f:	75 f2                	jne    0x3
->>>    11:	48 8b 54 24 28       	mov    0x28(%rsp),%rdx
->>> [ 1975.257154] RSP: 0000:ffffc2d744c37cb0 EFLAGS: 00010246
->>> [ 1975.257155] RAX: 0000000000000002 RBX: 0000000000000002 RCX: 0000000000000000
->>> [ 1975.257156] RDX: 0000000000000000 RSI: ffffffffbb117459 RDI: 00000000ffffffff
->>> [ 1975.257157] RBP: 0000000000000000 R08: 00000000ffffdfff R09: 00000000ffffdfff
->>> [ 1975.257158] R10: ffffffffbb472dc0 R11: ffffffffbb472dc0 R12: 0000000000000000
->>> [ 1975.257159] R13: ffff9fc521173e78 R14: 00000000000decc7 R15: fff000003fffffff
->>> [ 1975.257160] FS:  00007fb2137fe6c0(0000) GS:ffff9fcb7eb40000(0000) knlGS:0000000000000000
->>> [ 1975.257161] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->>> [ 1975.257162] CR2: 0000000000000036 CR3: 0000000164114000 CR4: 0000000000750ee0
->>> [ 1975.257163] PKRU: 55555554
->>> [ 1975.257163] Call Trace:
->>> [ 1975.257164]  <TASK>
->>> [ 1975.257166] ? page_add_file_rmap (/home/reinhardt/dev-apps/kernel/linux/./include/linux/page-flags.h:195 /home/reinhardt/dev-apps/kernel/linux/mm/internal.h:440 /home/reinhardt/dev-apps/kernel/linux/mm/rmap.c:1270)
->>> [ 1975.257169] filemap_fault (/home/reinhardt/dev-apps/kernel/linux/./include/linux/pagemap.h:531 /home/reinhardt/dev-apps/kernel/linux/mm/filemap.c:3107)
->>> [ 1975.257172] __do_fault (/home/reinhardt/dev-apps/kernel/linux/mm/memory.c:3852)
->>> [ 1975.257174] __handle_mm_fault (/home/reinhardt/dev-apps/kernel/linux/mm/memory.c:4169 /home/reinhardt/dev-apps/kernel/linux/mm/memory.c:4297 /home/reinhardt/dev-apps/kernel/linux/mm/memory.c:4555 /home/reinhardt/dev-apps/kernel/linux/mm/memory.c:4690)
->>> [ 1975.257176] handle_mm_fault (/home/reinhardt/dev-apps/kernel/linux/mm/memory.c:4788)
->>> [ 1975.257178] do_user_addr_fault (/home/reinhardt/dev-apps/kernel/linux/./include/linux/sched/signal.h:404 /home/reinhardt/dev-apps/kernel/linux/arch/x86/mm/fault.c:1399)
->>> [ 1975.257181] exc_page_fault (/home/reinhardt/dev-apps/kernel/linux/./arch/x86/include/asm/irqflags.h:40 /home/reinhardt/dev-apps/kernel/linux/./arch/x86/include/asm/irqflags.h:75 /home/reinhardt/dev-apps/kernel/linux/arch/x86/mm/fault.c:1492 /home/reinhardt/dev-apps/kernel/linux/arch/x86/mm/fault.c:1540)
->>> [ 1975.257184] ? asm_exc_page_fault (/home/reinhardt/dev-apps/kernel/linux/./arch/x86/include/asm/idtentry.h:568)
->>> [ 1975.257186] asm_exc_page_fault (/home/reinhardt/dev-apps/kernel/linux/./arch/x86/include/asm/idtentry.h:568)
->>> [ 1975.257188] RIP: 0033:0x7fb265b88409
->>> [ 1975.257189] Code: 66 66 2e 0f 1f 84 00 00 00 00 00 66 66 2e 0f 1f 84 00 00 00 00 00 66 66 2e 0f 1f 84 00 00 00 00 00 48 89 f8 48 83 fa 20 72 27 <c5> fe 6f 06 48 83 fa 40 0f 87 a9 00 00 00 c5 fe 6f 4c 16 e0 c5 fe
->>> All code
->>> ========
->>>     0:	66 66 2e 0f 1f 84 00 	data16 cs nopw 0x0(%rax,%rax,1)
->>>     7:	00 00 00 00
->>>     b:	66 66 2e 0f 1f 84 00 	data16 cs nopw 0x0(%rax,%rax,1)
->>>    12:	00 00 00 00
->>>    16:	66 66 2e 0f 1f 84 00 	data16 cs nopw 0x0(%rax,%rax,1)
->>>    1d:	00 00 00 00
->>>    21:	48 89 f8             	mov    %rdi,%rax
->>>    24:	48 83 fa 20          	cmp    $0x20,%rdx
->>>    28:	72 27                	jb     0x51
->>>    2a:*	c5 fe 6f 06          	vmovdqu (%rsi),%ymm0		<-- trapping instruction
->>>    2e:	48 83 fa 40          	cmp    $0x40,%rdx
->>>    32:	0f 87 a9 00 00 00    	ja     0xe1
->>>    38:	c5 fe 6f 4c 16 e0    	vmovdqu -0x20(%rsi,%rdx,1),%ymm1
->>>    3e:	c5                   	.byte 0xc5
->>>    3f:	fe                   	.byte 0xfe
->>>
->>> Code starting with the faulting instruction
->>> ===========================================
->>>     0:	c5 fe 6f 06          	vmovdqu (%rsi),%ymm0
->>>     4:	48 83 fa 40          	cmp    $0x40,%rdx
->>>     8:	0f 87 a9 00 00 00    	ja     0xb7
->>>     e:	c5 fe 6f 4c 16 e0    	vmovdqu -0x20(%rsi,%rdx,1),%ymm1
->>>    14:	c5                   	.byte 0xc5
->>>    15:	fe                   	.byte 0xfe
->>> [ 1975.257190] RSP: 002b:00007fb2137fd908 EFLAGS: 00010202
->>> [ 1975.257191] RAX: 00007fb204012a80 RBX: 0000000000000000 RCX: 00007fb2137fda90
->>> [ 1975.257192] RDX: 0000000000004000 RSI: 00007f9fddbb51c3 RDI: 00007fb204012a80
->>> [ 1975.257193] RBP: 00007fb2137fd928 R08: 00000000638ea1ab R09: 0000000000000000
->>> [ 1975.257193] R10: 0000000000000008 R11: 0000000000000246 R12: 00007fb204000bb0
->>> [ 1975.257194] R13: 00007fb21809a5a0 R14: 00000000decc71c3 R15: 0000000000004000
->>> [ 1975.257196]  </TASK>
->>> [ 1975.257196] Modules linked in: overlay xt_addrtype amdgpu drm_ttm_helper ttm gpu_sched drm_kms_helper iwlmvm backlight syscopyarea mac80211 sysfillrect sysimgblt libarc4 fb_sys_fops iwlwifi cfg80211 i2c_piix4 k10temp fuse configfs efivarfs
->>> [ 1975.257207] CR2: 0000000000000036
->>> [ 1975.257208] ---[ end trace 0000000000000000 ]---
->>> [ 1975.257209] RIP: 0010:__filemap_get_folio (/home/reinhardt/dev-apps/kernel/linux/./arch/x86/include/asm/atomic.h:29 /home/reinhardt/dev-apps/kernel/linux/./include/linux/atomic/atomic-arch-fallback.h:1158 /home/reinhardt/dev-apps/kernel/linux/./include/linux/atomic/atomic-arch-fallback.h:1183 /home/reinhardt/dev-apps/kernel/linux/./include/linux/atomic/atomic-instrumented.h:608 /home/reinhardt/dev-apps/kernel/linux/./include/linux/page_ref.h:238 /home/reinhardt/dev-apps/kernel/linux/./include/linux/page_ref.h:247 /home/reinhardt/dev-apps/kernel/linux/./include/linux/page_ref.h:280 /home/reinhardt/dev-apps/kernel/linux/./include/linux/page_ref.h:313 /home/reinhardt/dev-apps/kernel/linux/mm/filemap.c:1899 /home/reinhardt/dev-apps/kernel/linux/mm/filemap.c:1951)
->>> [ 1975.257211] Code: 10 e8 56 fd 67 00 48 89 c3 48 3d 02 04 00 00 74 e2 48 3d 06 04 00 00 74 da 48 85 c0 0f 84 3e 02 00 00 a8 01 0f 85 40 02 00 00 <8b> 40 34 85 c0 74 c2 8d 50 01 f0 0f b1 53 34 75 f2 48 8b 54 24 28
->>> All code
->>> ========
->>>     0:	10 e8                	adc    %ch,%al
->>>     2:	56                   	push   %rsi
->>>     3:	fd                   	std
->>>     4:	67 00 48 89          	add    %cl,-0x77(%eax)
->>>     8:	c3                   	ret
->>>     9:	48 3d 02 04 00 00    	cmp    $0x402,%rax
->>>     f:	74 e2                	je     0xfffffffffffffff3
->>>    11:	48 3d 06 04 00 00    	cmp    $0x406,%rax
->>>    17:	74 da                	je     0xfffffffffffffff3
->>>    19:	48 85 c0             	test   %rax,%rax
->>>    1c:	0f 84 3e 02 00 00    	je     0x260
->>>    22:	a8 01                	test   $0x1,%al
->>>    24:	0f 85 40 02 00 00    	jne    0x26a
->>>    2a:*	8b 40 34             	mov    0x34(%rax),%eax		<-- trapping instruction
->>>    2d:	85 c0                	test   %eax,%eax
->>>    2f:	74 c2                	je     0xfffffffffffffff3
->>>    31:	8d 50 01             	lea    0x1(%rax),%edx
->>>    34:	f0 0f b1 53 34       	lock cmpxchg %edx,0x34(%rbx)
->>>    39:	75 f2                	jne    0x2d
->>>    3b:	48 8b 54 24 28       	mov    0x28(%rsp),%rdx
->>>
->>> Code starting with the faulting instruction
->>> ===========================================
->>>     0:	8b 40 34             	mov    0x34(%rax),%eax
->>>     3:	85 c0                	test   %eax,%eax
->>>     5:	74 c2                	je     0xffffffffffffffc9
->>>     7:	8d 50 01             	lea    0x1(%rax),%edx
->>>     a:	f0 0f b1 53 34       	lock cmpxchg %edx,0x34(%rbx)
->>>     f:	75 f2                	jne    0x3
->>>    11:	48 8b 54 24 28       	mov    0x28(%rsp),%rdx
->>> [ 1975.257212] RSP: 0000:ffffc2d744c37cb0 EFLAGS: 00010246
->>> [ 1975.257213] RAX: 0000000000000002 RBX: 0000000000000002 RCX: 0000000000000000
->>> [ 1975.257214] RDX: 0000000000000000 RSI: ffffffffbb117459 RDI: 00000000ffffffff
->>> [ 1975.257215] RBP: 0000000000000000 R08: 00000000ffffdfff R09: 00000000ffffdfff
->>> [ 1975.257215] R10: ffffffffbb472dc0 R11: ffffffffbb472dc0 R12: 0000000000000000
->>> [ 1975.257216] R13: ffff9fc521173e78 R14: 00000000000decc7 R15: fff000003fffffff
->>> [ 1975.257217] FS:  00007fb2137fe6c0(0000) GS:ffff9fcb7eb40000(0000) knlGS:0000000000000000
->>> [ 1975.257218] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->>> [ 1975.257219] CR2: 0000000000000036 CR3: 0000000164114000 CR4: 0000000000750ee0
->>> [ 1975.257220] PKRU: 55555554
->>>
->>> (full dmesg and my local changeset in attachments for your reference)
->>>
->> #regzbot poke
->>
---------------v0I38eSMINc6BvUKbyDmyawn
-Content-Type: text/plain; charset=UTF-8; name="bug-latest"
-Content-Disposition: attachment; filename="bug-latest"
-Content-Transfer-Encoding: base64
+> root@goopix:~# ls -l /lib/firmware/intel/dsp_fw_*
+> -rw-r--r-- 1 root root  73728 Jan 26 07:50
+> /lib/firmware/intel/dsp_fw_C75061F3-F2B2-4DCC-8F9F-82ABB4131E66.bin
+> lrwxrwxrwx 1 root root     28 Feb 23 21:22
+> /lib/firmware/intel/dsp_fw_bxtn.bin -> intel/avs/apl/dsp_basefw.bin
+> -rw-r--r-- 1 root root 505608 Feb 22 22:10
+> /lib/firmware/intel/dsp_fw_bxtn_v2219.bin
+> -rw-r--r-- 1 root root 505608 Feb 22 22:10
+> /lib/firmware/intel/dsp_fw_bxtn_v3366.bin
+> lrwxrwxrwx 1 root root     28 Feb 23 21:22
+> /lib/firmware/intel/dsp_fw_cnl.bin -> intel/avs/cnl/dsp_basefw.bin
+> -rw-r--r-- 1 root root 583852 Feb 22 22:10
+> /lib/firmware/intel/dsp_fw_cnl_v1191.bin
+> -rw-r--r-- 1 root root 583852 Feb 22 22:10
+> /lib/firmware/intel/dsp_fw_cnl_v1858.bin
+> lrwxrwxrwx 1 root root     28 Feb 23 21:22
+> /lib/firmware/intel/dsp_fw_glk.bin -> intel/avs/apl/dsp_basefw.bin
+> -rw-r--r-- 1 root root 505608 Feb 22 22:10
+> /lib/firmware/intel/dsp_fw_glk_v1814.bin
+> -rw-r--r-- 1 root root 505608 Feb 22 22:10
+> /lib/firmware/intel/dsp_fw_glk_v2768.bin
+> -rw-r--r-- 1 root root 505608 Feb 22 22:10
+> /lib/firmware/intel/dsp_fw_glk_v2880.bin
+> -rw-r--r-- 1 root root 505608 Feb 22 22:10
+> /lib/firmware/intel/dsp_fw_glk_v3366.bin
+> lrwxrwxrwx 1 root root     28 Feb 23 21:22
+> /lib/firmware/intel/dsp_fw_kbl.bin -> intel/avs/skl/dsp_basefw.bin
+> -rw-r--r-- 1 root root 238920 Feb 22 22:10
+> /lib/firmware/intel/dsp_fw_kbl_v1037.bin
+> -rw-r--r-- 1 root root 238920 Feb 22 22:10
+> /lib/firmware/intel/dsp_fw_kbl_v2042.bin
+> -rw-r--r-- 1 root root 243016 Feb 22 22:10
+> /lib/firmware/intel/dsp_fw_kbl_v2630.bin
+> -rw-r--r-- 1 root root 243016 Feb 22 22:10
+> /lib/firmware/intel/dsp_fw_kbl_v3266.bin
+> -rw-r--r-- 1 root root 247112 Feb 22 22:10
+> /lib/firmware/intel/dsp_fw_kbl_v3402.bin
+> -rw-r--r-- 1 root root 243016 Feb 22 22:10
+> /lib/firmware/intel/dsp_fw_kbl_v3420.bin
+> -rw-r--r-- 1 root root 238920 Feb 22 22:10
+> /lib/firmware/intel/dsp_fw_kbl_v701.bin
+> lrwxrwxrwx 1 root root     28 Feb 23 21:22
+> /lib/firmware/intel/dsp_fw_release.bin -> intel/avs/skl/dsp_basefw.bin
+> -rw-r--r-- 1 root root 247112 Feb 22 22:10
+> /lib/firmware/intel/dsp_fw_release_v3402.bin
+> -rw-r--r-- 1 root root 221184 Feb 22 22:10
+> /lib/firmware/intel/dsp_fw_release_v969.bin
+> root@goopix:~#
+>
+> At least to me all seems in place.
+> Anybody can help me understand how to see why the firmware is not
+> loading or what could be the problem now ?
+>
+> Rgds
+> Sasa
 
-WyAgODYyLjkxNDE3NV0gQlVHOiBrZXJuZWwgTlVMTCBwb2ludGVyIGRlcmVmZXJlbmNlLCBh
-ZGRyZXNzOiAwMDAwMDAwMDAwMDAwMGI2ClsgIDg2Mi45MTQxODFdICNQRjogc3VwZXJ2aXNv
-ciByZWFkIGFjY2VzcyBpbiBrZXJuZWwgbW9kZQpbICA4NjIuOTE0MTgyXSAjUEY6IGVycm9y
-X2NvZGUoMHgwMDAwKSAtIG5vdC1wcmVzZW50IHBhZ2UKWyAgODYyLjkxNDE4NF0gUEdEIDAg
-UDREIDAKWyAgODYyLjkxNDE4Nl0gT29wczogMDAwMCBbIzFdIFBSRUVNUFQgU01QIE5PUFRJ
-ClsgIDg2Mi45MTQxODhdIENQVTogNiBQSUQ6IDgyNzIgQ29tbTogZGVsdWdlLWd0ayBOb3Qg
-dGFpbnRlZCA2LjEuMTItZ2VudG9vX2FwICMzClsgIDg2Mi45MTQxOTBdIEhhcmR3YXJlIG5h
-bWU6IE1pY3JvLVN0YXIgSW50ZXJuYXRpb25hbCBDby4sIEx0ZC4gTVMtN0MzNS9NRUcgWDU3
-MCBVTklGWSAoTVMtN0MzNSksIEJJT1MgQS5DMyAwMy8xNS8yMDIyClsgIDg2Mi45MTQxOTFd
-IFJJUDogMDAxMDpfX2ZpbGVtYXBfZ2V0X2ZvbGlvKzB4YTcvMHgzNzAKWyAgODYyLjkxNDE5
-NV0gQ29kZTogMTAgZTggNmQgNDEgMmIgMDEgNDggODkgYzMgNDggM2QgMDIgMDQgMDAgMDAg
-NzQgZTIgNDggM2QgMDYgMDQgMDAgMDAgNzQgZGEgNDggODUgYzAgMGYgODQgNTYgMDIgMDAg
-MDAgYTggMDEgMGYgODUgNTggMDIgMDAgMDAgPDhiPiA0MCAzNCA4NSBjMCA3NCBjMiA4ZCA1
-MCAwMSBmMCAwZiBiMSA1MyAzNCA3NSBmMiA0OCA4YiA1NCAyNCAyOApbICA4NjIuOTE0MTk3
-XSBSU1A6IDAwMDA6ZmZmZmJkNmQ4NzdiZmM4OCBFRkxBR1M6IDAwMDEwMjQ2ClsgIDg2Mi45
-MTQxOThdIFJBWDogMDAwMDAwMDAwMDAwMDA4MiBSQlg6IDAwMDAwMDAwMDAwMDAwODIgUkNY
-OiAwMDAwMDAwMDAwMDAwMDAyClsgIDg2Mi45MTQxOTldIFJEWDogMDAwMDAwMDAwMDAwMDAy
-OCBSU0k6IGZmZmY5NTEyZGFiYzAyNDggUkRJOiBmZmZmYmQ2ZDg3N2JmYzk4ClsgIDg2Mi45
-MTQyMDBdIFJCUDogMDAwMDAwMDAwMDAwMDAwMCBSMDg6IDAwMDAwMDAwMDA1MzI1MmYgUjA5
-OiAwMDAwMDAwMDAwMDAwMDAwClsgIDg2Mi45MTQyMDFdIFIxMDogZmZmZmZmZmZmZmZmZmZj
-MCBSMTE6IGZmZmY5NTBmZjU2ZTYzMGMgUjEyOiAwMDAwMDAwMDAwMDAwMDAwClsgIDg2Mi45
-MTQyMDJdIFIxMzogZmZmZjk1MTBhMDk2NDZiMCBSMTQ6IDAwMDAwMDAwMDA1MzI1MmEgUjE1
-OiBmZmYwMDAwMDNmZmZmZmZmClsgIDg2Mi45MTQyMDRdIEZTOiAgMDAwMDdmNWQ2MzdmZTZj
-MCgwMDAwKSBHUzpmZmZmOTUxNmJlYjgwMDAwKDAwMDApIGtubEdTOjAwMDAwMDAwMDAwMDAw
-MDAKWyAgODYyLjkxNDIwNV0gQ1M6ICAwMDEwIERTOiAwMDAwIEVTOiAwMDAwIENSMDogMDAw
-MDAwMDA4MDA1MDAzMwpbICA4NjIuOTE0MjA2XSBDUjI6IDAwMDAwMDAwMDAwMDAwYjYgQ1Iz
-OiAwMDAwMDAwMTU0YmY0MDAwIENSNDogMDAwMDAwMDAwMDc1MGVlMApbICA4NjIuOTE0MjA3
-XSBQS1JVOiA1NTU1NTU1NApbICA4NjIuOTE0MjA4XSBDYWxsIFRyYWNlOgpbICA4NjIuOTE0
-MjEwXSAgPFRBU0s+ClsgIDg2Mi45MTQyMTJdICA/IF9yYXdfc3Bpbl91bmxvY2srMHgxMC8w
-eDMwClsgIDg2Mi45MTQyMTVdICBmaWxlbWFwX2ZhdWx0KzB4NjAvMHg5MDAKWyAgODYyLjkx
-NDIxN10gIF9fZG9fZmF1bHQrMHgzMC8weGIwClsgIDg2Mi45MTQyMjBdICBfX2hhbmRsZV9t
-bV9mYXVsdCsweGNhMy8weDE2YzAKWyAgODYyLjkxNDIyMl0gIGhhbmRsZV9tbV9mYXVsdCsw
-eGU5LzB4MmUwClsgIDg2Mi45MTQyMjRdICBkb191c2VyX2FkZHJfZmF1bHQrMHgxYjcvMHg2
-NTAKWyAgODYyLjkxNDIyNl0gIGV4Y19wYWdlX2ZhdWx0KzB4NjAvMHgxMzAKWyAgODYyLjkx
-NDIyOV0gIGFzbV9leGNfcGFnZV9mYXVsdCsweDIyLzB4MzAKWyAgODYyLjkxNDIzMV0gUklQ
-OiAwMDMzOjB4N2Y1ZGNkMzc2NDA5ClsgIDg2Mi45MTQyMzJdIENvZGU6IDY2IDY2IDJlIDBm
-IDFmIDg0IDAwIDAwIDAwIDAwIDAwIDY2IDY2IDJlIDBmIDFmIDg0IDAwIDAwIDAwIDAwIDAw
-IDY2IDY2IDJlIDBmIDFmIDg0IDAwIDAwIDAwIDAwIDAwIDQ4IDg5IGY4IDQ4IDgzIGZhIDIw
-IDcyIDI3IDxjNT4gZmUgNmYgMDYgNDggODMgZmEgNDAgMGYgODcgYTkgMDAgMDAgMDAgYzUg
-ZmUgNmYgNGMgMTYgZTAgYzUgZmUKWyAgODYyLjkxNDIzM10gUlNQOiAwMDJiOjAwMDA3ZjVk
-NjM3ZmQ5MDggRUZMQUdTOiAwMDAxMDIwMgpbICA4NjIuOTE0MjM0XSBSQVg6IDAwMDA3ZjVk
-OTQwMjk2NjAgUkJYOiAwMDAwMDAwMDAwMDAwMDAwIFJDWDogMDAwMDdmNWQ2MzdmZGE5MApb
-ICA4NjIuOTE0MjM1XSBSRFg6IDAwMDAwMDAwMDAwMDQwMDAgUlNJOiAwMDAwN2YxYmFjNTJh
-NjZhIFJESTogMDAwMDdmNWQ5NDAyOTY2MApbICA4NjIuOTE0MjM2XSBSQlA6IDAwMDA3ZjVk
-NjM3ZmQ5MjggUjA4OiAwMDAwMDAwMDYzZjhmYTAxIFIwOTogMDAwMDAwMDAwMDAwMDAwMApb
-ICA4NjIuOTE0MjM3XSBSMTA6IDAwMDAwMDAwMDAwMDAwMDggUjExOiAwMDAwMDAwMDAwMDAw
-MjQ2IFIxMjogMDAwMDdmNWQ5NDAwNGMyMApbICA4NjIuOTE0MjM3XSBSMTM6IDAwMDA3ZjVk
-OWMwMGEwZDAgUjE0OiAwMDAwMDAwNTMyNTJhNjZhIFIxNTogMDAwMDAwMDAwMDAwNDAwMApb
-ICA4NjIuOTE0MjM5XSAgPC9UQVNLPgpbICA4NjIuOTE0MjQwXSBNb2R1bGVzIGxpbmtlZCBp
-bjogb3ZlcmxheSB4dF9hZGRydHlwZSBpd2xtdm0gbWFjODAyMTEgbGliYXJjNCBpMmNfcGlp
-eDQgaXdsd2lmaSB0cG1fY3JiIGNmZzgwMjExIHRwbV90aXMgdHBtX3Rpc19jb3JlIHRwbSBr
-MTB0ZW1wIGZ1c2UgY29uZmlnZnMgZWZpdmFyZnMKWyAgODYyLjkxNDI0N10gQ1IyOiAwMDAw
-MDAwMDAwMDAwMGI2ClsgIDg2Mi45MTQyNDhdIC0tLVsgZW5kIHRyYWNlIDAwMDAwMDAwMDAw
-MDAwMDAgXS0tLQpbICA4NjIuOTE0MjQ5XSBSSVA6IDAwMTA6X19maWxlbWFwX2dldF9mb2xp
-bysweGE3LzB4MzcwClsgIDg2Mi45MTQyNTFdIENvZGU6IDEwIGU4IDZkIDQxIDJiIDAxIDQ4
-IDg5IGMzIDQ4IDNkIDAyIDA0IDAwIDAwIDc0IGUyIDQ4IDNkIDA2IDA0IDAwIDAwIDc0IGRh
-IDQ4IDg1IGMwIDBmIDg0IDU2IDAyIDAwIDAwIGE4IDAxIDBmIDg1IDU4IDAyIDAwIDAwIDw4
-Yj4gNDAgMzQgODUgYzAgNzQgYzIgOGQgNTAgMDEgZjAgMGYgYjEgNTMgMzQgNzUgZjIgNDgg
-OGIgNTQgMjQgMjgKWyAgODYyLjkxNDI1Ml0gUlNQOiAwMDAwOmZmZmZiZDZkODc3YmZjODgg
-RUZMQUdTOiAwMDAxMDI0NgpbICA4NjIuOTE0MjUzXSBSQVg6IDAwMDAwMDAwMDAwMDAwODIg
-UkJYOiAwMDAwMDAwMDAwMDAwMDgyIFJDWDogMDAwMDAwMDAwMDAwMDAwMgpbICA4NjIuOTE0
-MjU1XSBSRFg6IDAwMDAwMDAwMDAwMDAwMjggUlNJOiBmZmZmOTUxMmRhYmMwMjQ4IFJESTog
-ZmZmZmJkNmQ4NzdiZmM5OApbICA4NjIuOTE0MjU2XSBSQlA6IDAwMDAwMDAwMDAwMDAwMDAg
-UjA4OiAwMDAwMDAwMDAwNTMyNTJmIFIwOTogMDAwMDAwMDAwMDAwMDAwMApbICA4NjIuOTE0
-MjU3XSBSMTA6IGZmZmZmZmZmZmZmZmZmYzAgUjExOiBmZmZmOTUwZmY1NmU2MzBjIFIxMjog
-MDAwMDAwMDAwMDAwMDAwMApbICA4NjIuOTE0MjU4XSBSMTM6IGZmZmY5NTEwYTA5NjQ2YjAg
-UjE0OiAwMDAwMDAwMDAwNTMyNTJhIFIxNTogZmZmMDAwMDAzZmZmZmZmZgpbICA4NjIuOTE0
-MjYwXSBGUzogIDAwMDA3ZjVkNjM3ZmU2YzAoMDAwMCkgR1M6ZmZmZjk1MTZiZWI4MDAwMCgw
-MDAwKSBrbmxHUzowMDAwMDAwMDAwMDAwMDAwClsgIDg2Mi45MTQyNjJdIENTOiAgMDAxMCBE
-UzogMDAwMCBFUzogMDAwMCBDUjA6IDAwMDAwMDAwODAwNTAwMzMKWyAgODYyLjkxNDI2Ml0g
-Q1IyOiAwMDAwMDAwMDAwMDAwMGI2IENSMzogMDAwMDAwMDE1NGJmNDAwMCBDUjQ6IDAwMDAw
-MDAwMDA3NTBlZTAKWyAgODYyLjkxNDI2M10gUEtSVTogNTU1NTU1NTQK
+Sorry, please ignore this my last email as sound is working also on my
+slackware install with 6.1.13 , the problem was that my symlinks got
+broken in some way in /lib/firmware.
 
---------------v0I38eSMINc6BvUKbyDmyawn--
+Rgds
+Sasa
+>
+> On Thu, Feb 9, 2023 at 3:11 PM Sasa Ostrouska <casaxa@gmail.com> wrote:
+> >
+> > Hi, I dont know how much this is relevant but I am getting this kind
+> > of traces in dmesg on both, Salckware and Fedora installs.
+> >
+> > [   16.286097] ------------[ cut here ]------------
+> > [   16.286100] memcpy: detected field-spanning write (size 100) of
+> > single field "cpr_mconfig->gtw_cfg.config_data" at
+> > sound/soc/intel/skylake/skl-messages.c:554 (size 4)
+> > [   16.286128] WARNING: CPU: 1 PID: 1232 at
+> > sound/soc/intel/skylake/skl-messages.c:554 skl_init_module+0x757/0x770
+> > [snd_soc_skl]
+> > [   16.286156] Modules linked in: nf_nat_ftp nf_conntrack_ftp
+> > nft_objref nf_conntrack_netbios_ns nf_conntrack_broadcast nft_fib_inet
+> > nft_fib_ipv4 nft_fib_ipv6 nft_fib nft_reject_inet nf_reject_ipv4
+> > nf_reject_ipv6 nft_reject nft_ct nft_chain_nat nf_nat nf_conntrack
+> > nf_defrag_ipv6 nf_defrag_ipv4 ip_set nf_tables nfnetlink
+> > snd_soc_skl_ssp_clk snd_sof_pci_intel_skl snd_sof_intel_hda_common
+> > soundwire_intel soundwire_generic_allocation soundwire_cadence
+> > snd_sof_intel_hda snd_sof_pci snd_sof_xtensa_dsp snd_sof snd_sof_utils
+> > qrtr soundwire_bus snd_soc_avs snd_soc_kbl_rt5663_rt5514_max98927
+> > snd_soc_hda_codec cros_ec_light_prox cros_ec_sensors
+> > cros_ec_sensors_core bnep industrialio_triggered_buffer kfifo_buf
+> > snd_soc_hdac_hdmi snd_soc_dmic industrialio i2c_hid_acpi i2c_hid
+> > snd_soc_skl cros_ec_chardev snd_soc_hdac_hda cros_ec_sensorhub
+> > snd_hda_ext_core cros_usbpd_charger cros_ec_sysfs cros_usbpd_logger
+> > snd_soc_sst_ipc binfmt_misc iTCO_wdt snd_soc_sst_dsp
+> > snd_soc_acpi_intel_match intel_pmc_bxt
+> > [   16.286215]  iTCO_vendor_support intel_tcc_cooling
+> > x86_pkg_temp_thermal snd_soc_acpi intel_powerclamp coretemp kvm_intel
+> > snd_hda_intel snd_intel_dspcfg snd_intel_sdw_acpi cros_ec_dev
+> > snd_hda_codec kvm intel_rapl_msr iwlmvm uvcvideo videobuf2_vmalloc
+> > irqbypass mac80211 rapl videobuf2_memops snd_hda_core videobuf2_v4l2
+> > intel_cstate intel_uncore libarc4 pcspkr i2c_i801 sunrpc snd_hwdep
+> > videobuf2_common videodev i2c_smbus btusb btrtl spi_pxa2xx_platform
+> > dw_dmac btbcm iwlwifi btintel mc snd_soc_rt5663 btmtk snd_soc_rt5514
+> > snd_soc_max98927 snd_soc_rt5514_spi snd_soc_rl6231 bluetooth
+> > snd_soc_core cfg80211 mei_me joydev snd_compress mei ac97_bus
+> > snd_pcm_dmaengine intel_pch_thermal rfkill idma64 snd_seq
+> > snd_seq_device snd_pcm snd_timer processor_thermal_device_pci_legacy
+> > processor_thermal_device snd cros_ec_i2c processor_thermal_rfim
+> > processor_thermal_mbox soundcore processor_thermal_rapl cros_ec_lpcs
+> > cros_ec tpm_tis_i2c_cr50 cros_usbpd_notify int3403_thermal
+> > intel_rapl_common
+> > [   16.286285]  int340x_thermal_zone intel_xhci_usb_role_switch
+> > int3400_thermal chromeos_pstore cros_kbd_led_backlight
+> > acpi_thermal_rel chromeos_acpi intel_soc_dts_iosf zram
+> > hid_logitech_hidpp hid_logitech_dj i915 drm_buddy video
+> > crct10dif_pclmul crc32_pclmul crc32c_intel wmi polyval_clmulni nvme
+> > polyval_generic drm_display_helper nvme_core sdhci_pci cqhci cec sdhci
+> > ghash_clmulni_intel hid_multitouch mmc_core sha512_ssse3 nvme_common
+> > serio_raw ttm pinctrl_sunrisepoint r8152 mii ip6_tables ip_tables fuse
+> > [last unloaded: i2c_hid]
+> > [   16.286324] CPU: 1 PID: 1232 Comm: pulseaudio Not tainted
+> > 6.1.9-201.pixelbook.fc37.x86_64 #1
+> > [   16.286328] Hardware name: Google Eve/Eve, BIOS
+> > Google_Eve.9584.230.0 09/06/2021
+> > [   16.286330] RIP: 0010:skl_init_module+0x757/0x770 [snd_soc_skl]
+> > [   16.286355] Code: bd fe ff ff b9 04 00 00 00 4c 89 fe 4c 89 04 24
+> > 48 c7 c2 00 e7 42 c1 48 c7 c7 58 e7 42 c1 c6 05 0e 36 02 00 01 e8 3f
+> > 1b 95 fb <0f> 0b 4c 8b 04 24 e9 8c fe ff ff e9 96 ab 00 00 66 0f 1f 84
+> > 00 00
+> > [   16.286358] RSP: 0000:ffffb3c2816c7ae0 EFLAGS: 00010296
+> > [   16.286362] RAX: 000000000000009a RBX: ffff8d7ce355e028 RCX: 0000000000000000
+> > [   16.286364] RDX: 0000000000000001 RSI: ffffffffbd74c48b RDI: 00000000ffffffff
+> > [   16.286366] RBP: ffff8d7cc3854028 R08: 0000000000000000 R09: ffffb3c2816c7980
+> > [   16.286368] R10: 0000000000000003 R11: ffffffffbe1465a8 R12: 00000000000000b8
+> > [   16.286370] R13: 00000000000000b8 R14: ffff8d7d0d73c840 R15: 0000000000000064
+> > [   16.286372] FS:  00007fcb6eca02c0(0000) GS:ffff8d802ec80000(0000)
+> > knlGS:0000000000000000
+> > [   16.286375] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > [   16.286377] CR2: 00002dc17c298000 CR3: 000000016ccfa004 CR4: 00000000003706e0
+> > [   16.286379] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> > [   16.286381] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> > [   16.286382] Call Trace:
+> > [   16.286386]  <TASK>
+> > [   16.286391]  skl_tplg_mixer_event+0x72f/0xd20 [snd_soc_skl]
+> > [   16.286412]  ? __schedule+0x367/0x1360
+> > [   16.286420]  dapm_seq_check_event+0x108/0x1c0 [snd_soc_core]
+> > [   16.286464]  dapm_seq_run_coalesced+0x84/0x1c0 [snd_soc_core]
+> > [   16.286501]  dapm_seq_run+0x16e/0x3e0 [snd_soc_core]
+> > [   16.286542]  dapm_power_widgets+0x5db/0xa40 [snd_soc_core]
+> > [   16.286581]  snd_soc_dapm_stream_event+0xf5/0x170 [snd_soc_core]
+> > [   16.286619]  __soc_pcm_prepare+0x53/0xf0 [snd_soc_core]
+> > [   16.286659]  dpcm_fe_dai_prepare+0xac/0x150 [snd_soc_core]
+> > [   16.286699]  snd_pcm_do_prepare+0x26/0x40 [snd_pcm]
+> > [   16.286718]  snd_pcm_action_single+0x33/0x80 [snd_pcm]
+> > [   16.286733]  snd_pcm_action_nonatomic+0x95/0xa0 [snd_pcm]
+> > [   16.286749]  snd_pcm_ioctl+0x23/0x40 [snd_pcm]
+> > [   16.286764]  __x64_sys_ioctl+0x8d/0xd0
+> > [   16.286770]  do_syscall_64+0x58/0x80
+> > [   16.286774]  ? syscall_exit_to_user_mode+0x17/0x40
+> > [   16.286777]  ? do_syscall_64+0x67/0x80
+> > [   16.286780]  ? snd_pcm_ioctl+0x23/0x40 [snd_pcm]
+> > [   16.286795]  ? __x64_sys_ioctl+0x8d/0xd0
+> > [   16.286799]  ? syscall_exit_to_user_mode+0x17/0x40
+> > [   16.286801]  ? do_syscall_64+0x67/0x80
+> > [   16.286805]  entry_SYSCALL_64_after_hwframe+0x63/0xcd
+> > [   16.286809] RIP: 0033:0x7fcb6f593d6f
+> > [   16.286841] Code: 00 48 89 44 24 18 31 c0 48 8d 44 24 60 c7 04 24
+> > 10 00 00 00 48 89 44 24 08 48 8d 44 24 20 48 89 44 24 10 b8 10 00 00
+> > 00 0f 05 <89> c2 3d 00 f0 ff ff 77 18 48 8b 44 24 18 64 48 2b 04 25 28
+> > 00 00
+> > [   16.286843] RSP: 002b:00007ffe5ea27370 EFLAGS: 00000246 ORIG_RAX:
+> > 0000000000000010
+> > [   16.286847] RAX: ffffffffffffffda RBX: 0000563cd8d93160 RCX: 00007fcb6f593d6f
+> > [   16.286849] RDX: 0000000000000000 RSI: 0000000000004140 RDI: 0000000000000015
+> > [   16.286851] RBP: 0000000000000000 R08: 00000000000012bd R09: 00007ffe5ea27324
+> > [   16.286853] R10: 0000000000000004 R11: 0000000000000246 R12: 00007ffe5ea27aa4
+> > [   16.286855] R13: 00007ffe5ea27680 R14: 00007ffe5ea27a90 R15: 00007fcb6ec07290
+> > [   16.286861]  </TASK>
+> > [   16.286863] ---[ end trace 0000000000000000 ]---
+> >
+> > Seems sound related. Also I suffer from not be able to reboot or
+> > powerdown on Slackware with 6.1.8,6.1.9 and 6.1.10 kernels.
+> >
+> > Rgds
+> > Sasa
+> >
+> > On Fri, Jan 27, 2023 at 11:06 AM Sasa Ostrouska <casaxa@gmail.com> wrote:
+> > >
+> > > Hi Lucasz, I don't know if this could be relevant, but when I
+> > > installed slackware64-current on the other pixelbook I have the sound
+> > > works with
+> > > kernel 6.1.8 but not all the time and seems there are some crashes of
+> > > the sound. Also it is very amplified.
+> > > I attach the dmesg here.
