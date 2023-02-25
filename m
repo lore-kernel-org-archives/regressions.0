@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89C4019B
-	for <regressions@lists.linux.dev>; Sat, 25 Feb 2023 13:34:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21B3D3212
+	for <regressions@lists.linux.dev>; Sat, 25 Feb 2023 14:22:58 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pVugl-00040o-JH; Sat, 25 Feb 2023 14:34:11 +0100
-Message-ID: <643054d9-5f96-b6d3-8ea4-a5feb9f094d7@leemhuis.info>
-Date: Sat, 25 Feb 2023 14:34:10 +0100
+	id 1pVvRv-0003jp-Ek; Sat, 25 Feb 2023 15:22:55 +0100
+Message-ID: <9f682c4d-e7b7-5e23-84f5-cea4fdac2085@leemhuis.info>
+Date: Sat, 25 Feb 2023 15:22:55 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,57 +16,118 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.8.0
-From: Thorsten Leemhuis <linux@leemhuis.info>
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Jonathan Corbet <corbet@lwn.net>, Randy Dunlap <rdunlap@infradead.org>,
- Lukas Bulwahn <lukas.bulwahn@gmail.com>, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-References: <fabdb45fa44db2531f0dbe5e88545c49dfb87040.1675252073.git.linux@leemhuis.info>
- <Y/nSJvm6h4Sq5PR2@duo.ucw.cz>
- <1c222195-8fec-5067-c382-78dfd2505974@leemhuis.info>
 Content-Language: en-US, de-DE
-Subject: Re: [PATCH v1] docs: describe how to quickly build Linux
-In-Reply-To: <1c222195-8fec-5067-c382-78dfd2505974@leemhuis.info>
+To: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>, davidgow@google.com,
+ rmoar@google.com, brendanhiggins@google.com, skhan@linuxfoundation.org,
+ Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <CABXGCsO4=qKBF=2FRPVwW8FA4iLFh0Dt9n1BLMec3k10GUorpg@mail.gmail.com>
+From: Thorsten Leemhuis <linux@leemhuis.info>
+Subject: Re: [6.3][regression] after commit
+ 7170b7ed6acbde523c5d362c8978c60df4c30f30 my system stuck in initramfs forever
+In-Reply-To: <CABXGCsO4=qKBF=2FRPVwW8FA4iLFh0Dt9n1BLMec3k10GUorpg@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1677332057;4130db7c;
-X-HE-SMSGID: 1pVugl-00040o-JH
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1677334978;8f0ad21c;
+X-HE-SMSGID: 1pVvRv-0003jp-Ek
 
-On 25.02.23 10:29, Thorsten Leemhuis wrote:
-> On 25.02.23 10:17, Pavel Machek wrote:
->
->>> +       mkdir ~/linux/ ~/linux/sources ~/linux/build
->>> +       git clone https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git \
->>> +         ~/linux/sources
->>> +       cd ~/linux/sources/
->>> +       # hint: if you don't want to build any stable or longterm kernels, skip the
->>> +       #   next two commands
->>> +       git remote add linux-stable \
->>> +         https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
->>> +       git fetch --all
->>> +       # hint: if you want to apply patches, do it at this point (see below for details)
->>> +       # hint: at this point it's recommended to tag your build (see below for details)
->>> +       yes "" | make O=~/linux/build/ localmodconfig
->>> +       # hint: at this point you might want or have to adjust the build configuration
->>> +       #  (see below for details)
->>> +       # note: if you are running a Debian kernel, you'll have to adjust the configuration
->>> +       #  at this point (see below)
->>> +       make -j $(nproc --all) O=~/linux/build/
->>
->> Is the complexity of using O= worth it for one-off kernel builds?
+[CCing the regression list, as it should be in the loop for regressions:
+https://docs.kernel.org/admin-guide/reporting-regressions.html]
+
+On 25.02.23 14:51, Mikhail Gavrilov wrote:
+> new kernel release cycle returning with new bugs
+> Today my system got stuck in initramfs environment after updating to
+> commit d2980d8d826554fa6981d621e569a453787472f8.
 > 
-> That is a good question. I seemed like the right thing to do when I
-> started writing this guide (maybe just because I've been doing it that
-> way for ages), but now that you ask I'm unsure myself.
-> 
-> /me wonders how others feel about it
+> I still do not understand how to configure the network inside the
+> initramfs environment to grab the logs.
+> Since an attempt to rebuild the initramfs with all modules (dracut
+> --no-hostonly --force) leads to the stuck initramfs environment and
+> impossible entering into initramfs console.
 
-/me should have pondered with the idea for more time before writing aboe
-mail, because:
+Do you see any error messages? I have problems since Friday morning as
+well (stuck in Fedora's initramfs) and see a lot of BPF warnings like
+"BPF: invalid name" and "failed to validate module". Was able to do a
+screenshot:
 
-Having thought about this some more, I decided to drop it, the
-complexity really is not worth it.
+https://www.leemhuis.info/files/misc/Screenshot_ktst-f36-x86-64_2023-02-24_07:53:14.png
 
-Many thx for the suggestion!
+Funny detail: my Thursday morning built for my Fedora vanilla repos[1]
+(which happened after the main net and thus bpf merge) worked; my Friday
+morning built (which among others contained the kunit updates) was the
+first to fail, so maybe we have the same problem. I did a quick
+localmodconfig earlier today, which worked (but localmodconfig disabled
+KUNIT, which might explain why it worked).
 
 Ciao, Thorsten
+
+[1] https://fedoraproject.org/wiki/Kernel_Vanilla_Repositories
+
+> But I can bisect the problem and bisection blames this commit:
+> 
+> ❯ git bisect good
+> 7170b7ed6acbde523c5d362c8978c60df4c30f30 is the first bad commit
+> commit 7170b7ed6acbde523c5d362c8978c60df4c30f30
+> Author: David Gow <davidgow@google.com>
+> Date:   Sat Jan 28 15:10:07 2023 +0800
+> 
+>     kunit: Add "hooks" to call into KUnit when it's built as a module
+> 
+>     KUnit has several macros and functions intended for use from non-test
+>     code. These hooks, currently the kunit_get_current_test() and
+>     kunit_fail_current_test() macros, didn't work when CONFIG_KUNIT=m.
+> 
+>     In order to support this case, the required functions and static data
+>     need to be available unconditionally, even when KUnit itself is not
+>     built-in. The new 'hooks.c' file is therefore always included, and has
+>     both the static key required for kunit_get_current_test(), and a table
+>     of function pointers in struct kunit_hooks_table. This is filled in with
+>     the real implementations by kunit_install_hooks(), which is kept in
+>     hooks-impl.h and called when the kunit module is loaded.
+> 
+>     This can  be extended for future features which require similar
+>     "hook" behaviour, such as static stubs, by simply adding new entries to
+>     the struct, and the appropriate code to set them.
+> 
+>     Fixed white-space errors during commit:
+>     Shuah Khan <skhan@linuxfoundation.org>
+> 
+>     Resolved merge conflicts with:
+>     db105c37a4d6 ("kunit: Export kunit_running()")
+>     This patch supersedes the above.
+>     Shuah Khan <skhan@linuxfoundation.org>
+> 
+>     Signed-off-by: David Gow <davidgow@google.com>
+>     Reviewed-by: Rae Moar <rmoar@google.com>
+>     Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
+>     Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+> 
+>  Documentation/dev-tools/kunit/usage.rst | 15 ++++++---------
+>  include/kunit/test-bug.h                | 28 ++++++++++------------------
+>  lib/Makefile                            |  8 ++++++++
+>  lib/kunit/Makefile                      |  3 +++
+>  lib/kunit/hooks-impl.h                  | 27 +++++++++++++++++++++++++++
+>  lib/kunit/hooks.c                       | 21 +++++++++++++++++++++
+>  lib/kunit/test.c                        | 15 +++++++--------
+>  7 files changed, 82 insertions(+), 35 deletions(-)
+>  create mode 100644 lib/kunit/hooks-impl.h
+>  create mode 100644 lib/kunit/hooks.c
+> 
+> Unfortunately I couldn't revert this commit staying on
+> d2980d8d826554fa6981d621e569a453787472f8 because of conflicts:
+> ❯ git revert 7170b7ed6acbde523c5d362c8978c60df4c30f30 -n
+> Auto-merging include/kunit/test-bug.h
+> CONFLICT (content): Merge conflict in include/kunit/test-bug.h
+> Auto-merging lib/Makefile
+> Auto-merging lib/kunit/Makefile
+> CONFLICT (modify/delete): lib/kunit/hooks-impl.h deleted in parent of
+> 7170b7ed6acb (kunit: Add "hooks" to call into KUnit when it's built as
+> a module) and modified in HEAD.  Version HEAD of
+> lib/kunit/hooks-impl.h left in tree.
+> Auto-merging lib/kunit/test.c
+> CONFLICT (content): Merge conflict in lib/kunit/test.c
+> error: could not revert 7170b7ed6acb... kunit: Add "hooks" to call
+> into KUnit when it's built as a module
+> hint: after resolving the conflicts, mark the corrected paths
+> hint: with 'git add <paths>' or 'git rm <paths>'
+> 
