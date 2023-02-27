@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08F996D18
-	for <regressions@lists.linux.dev>; Mon, 27 Feb 2023 14:20:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8612746B
+	for <regressions@lists.linux.dev>; Mon, 27 Feb 2023 15:08:35 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pWeMP-0000G7-Jo; Mon, 27 Feb 2023 15:20:13 +0100
-Message-ID: <9e297f30-dc8c-ecac-f7a6-348ddbd4b928@leemhuis.info>
-Date: Mon, 27 Feb 2023 15:20:13 +0100
+	id 1pWf6z-00066K-4O; Mon, 27 Feb 2023 16:08:21 +0100
+Message-ID: <8c287b1d-476c-7b00-27f6-76c3a1a5fd46@leemhuis.info>
+Date: Mon, 27 Feb 2023 16:08:20 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -17,93 +17,94 @@ MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.8.0
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: [PATCH] vc_screen: don't clobber return value in vcs_read
+Subject: Re: [PATCH RFC] arm64/vmalloc: use module region only for
+ module_alloc() if CONFIG_RANDOMIZE_BASE is set
 Content-Language: en-US, de-DE
-To: George Kennedy <george.kennedy@oracle.com>
-Cc: =?UTF-8?Q?Thomas_Wei=c3=9fschuh?= <linux@weissschuh.net>,
- Jiri Slaby <jirislaby@kernel.org>, linux-kernel@vger.kernel.org,
- Randy Dunlap <rdunlap@infradead.org>,
- Storm Dragon <stormdragon2976@gmail.com>,
- Linus Torvalds <torvalds@linux-foundation.org>, sfr@canb.auug.org.au,
- akpm@linux-foundation.org, linux-serial@vger.kernel.org,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+To: Ard Biesheuvel <ardb@kernel.org>, Liu Shixin <liushixin2@huawei.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ Catalin Marinas <catalin.marinas@arm.com>,
+ Uladzislau Rezki <urezki@gmail.com>, Christoph Hellwig <hch@infradead.org>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, Will Deacon <will@kernel.org>,
  Linux kernel regressions list <regressions@lists.linux.dev>
-References: <Y/KtG9vK0oz0nQrN@hotmail.com>
- <20230220064612.1783-1-linux@weissschuh.net>
- <dcaaf7d5-b2d5-dbb9-f3fe-2232ee525cc8@kernel.org>
- <2094ecec-f63c-4e8a-ba97-da77c5266da1@t-8ch.de>
- <2941c2b9-5fa5-e25c-dcd0-ab9c9c0f143e@oracle.com>
- <Y/TMH8Hf6zBrC3yc@kroah.com>
+References: <20221227092634.445212-1-liushixin2@huawei.com>
+ <b93ec55c-f6f0-274a-e7d6-edb419b4be8a@huawei.com>
+ <20230129134147.f19ca0641f1133f3e3bc185b@linux-foundation.org>
+ <20230131150644.GA2605@willie-the-truck>
+ <20230131150750.GB2605@willie-the-truck>
+ <CAMj1kXGaxehOcrQqFZNA+C3dTk_H8sBr_1wsN3_KN82nXVaG_g@mail.gmail.com>
+ <20230207112940.GA12147@willie-the-truck>
 From: "Linux regression tracking (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
-In-Reply-To: <Y/TMH8Hf6zBrC3yc@kroah.com>
+In-Reply-To: <20230207112940.GA12147@willie-the-truck>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1677507621;fad7a058;
-X-HE-SMSGID: 1pWeMP-0000G7-Jo
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1677510515;cf17d863;
+X-HE-SMSGID: 1pWf6z-00066K-4O
 
-Hi, this is your Linux kernel regression tracker. Top-posting for once,
-to make this easily accessible to everyone.
+[CCing the regression list, as it should be in the loop for regressions:
+https://docs.kernel.org/admin-guide/reporting-regressions.html]
 
-George, is there anything we can do to help you moving forward to
-finally get this regression fixed? It seems (or am I missing something?)
-everyone is waiting for you (see below) to act on the feedback Jiri
-provided here:
+On 07.02.23 12:29, Will Deacon wrote:
+> On Tue, Jan 31, 2023 at 05:03:32PM +0100, Ard Biesheuvel wrote:
+>> On Tue, 31 Jan 2023 at 16:07, Will Deacon <will@kernel.org> wrote:
+>>> On Tue, Jan 31, 2023 at 03:06:44PM +0000, Will Deacon wrote:
+>>>> On Sun, Jan 29, 2023 at 01:41:47PM -0800, Andrew Morton wrote:
+>>>>> On Sun, 29 Jan 2023 10:44:31 +0800 Liu Shixin <liushixin2@huawei.com> wrote:
+>>>>>> On 2022/12/27 17:26, Liu Shixin wrote:
+>>>>>>> After I add a 10GB pmem device, I got the following error message when
+>>>>>>> insert module:
+>>>>>>>
+>>>>>>>  insmod: vmalloc error: size 16384, vm_struct allocation failed,
+>>>>>>>  mode:0xcc0(GFP_KERNEL), nodemask=(null),cpuset=/,mems_allowed=0
+>>>>>>>
+>>>>>>> If CONFIG_RANDOMIZE_BASE is set, the module region can be located in the
+>>>>>>> vmalloc region entirely. Although module_alloc() can fall back to a 2GB
+>>>>>>> window if ARM64_MODULE_PLTS is set, the module region is still easily
+>>>>>>> exhausted because the module region is located at bottom of vmalloc region
+>>>>>>> and the vmalloc region is allocated from bottom to top.
+>>>>>>>
+>>>>>>> Skip module region if not calling from module_alloc().
+>>>>>
+>>>>> I'll assume this is for the arm tree.
+>>>>>
+>>>>> Acked-by: Andrew Morton <akpm@linux-foundation.org>
+>>>>
+>>>> This looks like the same issue previously reported at:
+>>>>
+>>>> https://lore.kernel.org/all/e6a804de-a5f7-c551-ffba-e09d04e438fc@hisilicon.com/
+>>>>
+>>>> where Ard had a few suggestions but, afaict, they didn't help.
+>>>>
+>>
+>> Thanks for the cc.
+>>
+>> So this is a bit clunky, and I wonder whether we wouldn't be better
+>> off just splitting the vmalloc region into two separate regions: one
+>> for the kernel and modules, and one for everything else. That way, we
+>> lose one bit of entropy in the randomized placement, but the default
+>> 48-bit VA space is vast anway, and even on 39-bit VA configs (such as
+>> Android), I seriously doubt that we come anywhere close to exhausting
+>> the vmalloc space today.
+> 
+> That sounds like a good idea to me.
+> 
+> Liu Shixin -- do you think you could have a go at implementing Ard's
+> suggestion instead?
 
-https://lore.kernel.org/lkml/8dffe187-240d-746e-ed84-885ffd2785f6@kernel.org/
+Liu Shixin, did you ever look into realizing this idea?
 
-Side note: would be good to add a "Link:" tag pointing to the start of
-this thread as well, but that's just a detail.
+Or was some progress already made and I just missed it?
+
+I'm asking, as the idea discussed afaics is not only supposed to fix the
+regression you tried to address, but also one that is now three months
+old and stalled since Mid-December -- which is really unfortunate, as
+that's not how regressions should be handled. :-/ But well, it afaik was
+caused by a patch from Ard, so it's obviously not your job to address
+it. But it seems you were working on it.
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
 Everything you wanna know about Linux kernel regression tracking:
 https://linux-regtracking.leemhuis.info/about/#tldr
 If I did something stupid, please tell me, as explained on that page.
-
-On 21.02.23 14:50, Greg Kroah-Hartman wrote:
-> On Tue, Feb 21, 2023 at 08:30:11AM -0500, George Kennedy wrote:
->> On 2/20/2023 11:34 AM, Thomas Weißschuh wrote:
->>> +Cc people who were involved in the original thread.
->>>
->>> On Mon, Feb 20, 2023 at 12:48:59PM +0100, Jiri Slaby wrote:
->>>> On 20. 02. 23, 7:46, linux@weissschuh.net wrote:
->>>>> From: Thomas Weißschuh <linux@weissschuh.net>
->>>>>
->>>>> Commit 226fae124b2d
->>>>> ("vc_screen: move load of struct vc_data pointer in vcs_read() to avoid UAF")
->>>>> moved the call to vcs_vc() into the loop.
->>>>> While doing this it also moved the unconditional assignment of
->>>>> "ret = -ENXIO".
->>>>> This unconditional assignment was valid outside the loop but within it
->>>>> it clobbers the actual value of ret.
->>>>>
->>>>> To avoid this only assign "ret = -ENXIO" when actually needed.
->>>> Not sure -- I cannot find it -- but hasn't George fixed this yet?
->>> Indeed there was a proposed fix at
->>> https://lore.kernel.org/lkml/1675704844-17228-1-git-send-email-george.kennedy@oracle.com/
->>>
->>> Linus had some suggestions so it was not applied as is.
->>>
->>> I'm not sure what the current state is.
->>> George, do you have something in the pipeline?
->>
->> Yes, that is in the pipeline:
->> https://lore.kernel.org/lkml/1675774098-17722-1-git-send-email-george.kennedy@oracle.com/
->>
->> Linus suggested the fix, which was tested and submitted.
->>
->> Jiri commented on the patch, which I believe was directed at Linus as he
->> suggested the fix.
-> 
-> And I was waiting for a new version from you based on those comments :(
-> 
-> Can you fix that up and send?
-> 
-> thanks,
-> 
-> greg k-h
-
-#regzbot monitor:
-https://lore.kernel.org/lkml/1675774098-17722-1-git-send-email-george.kennedy@oracle.com/
-#regzbot poke
