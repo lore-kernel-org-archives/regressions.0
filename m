@@ -1,82 +1,89 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3268779EF
-	for <regressions@lists.linux.dev>; Mon, 27 Feb 2023 20:07:08 +0000 (UTC)
-Received: by mail-ed1-f45.google.com with SMTP id cy6so30724137edb.5
-        for <regressions@lists.linux.dev>; Mon, 27 Feb 2023 12:07:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3oqSuHyd58upkN+REe6cNpWdbGmeGTPNZYBxYA3mJCI=;
-        b=QNq5ZFOBMWMe087lgTL0w/9PiBLy3Nqgwhna58XI6PQXysMgseTVTYmKejL+jeRj6j
-         LelmxO5Bq2l/Ve5cGo4Y55I8VkmuHqpaJv/KH+UyDNN2QSR+eFT7p9LBG6z6Az7Y9+Sx
-         PZvVkULrHJM3qoerf5FLEgJVvwSUyWSeZz22g=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3oqSuHyd58upkN+REe6cNpWdbGmeGTPNZYBxYA3mJCI=;
-        b=Xp2ND6W/z0k434S2ON4PhJV1l4sVAJzT3pQ/YbVxnGMdep6ACq9Cg9jhmpyKrH3GWu
-         ASeqtxOzAAkMIunGjVvEYUbObCm+Gl1zlRuSdsy2vRg3wwKqMXucaGWMTrWxDnFpW5XC
-         FBUVYZBkBAH7cBYBblkBJEOTzG16HAg0e8xK/qefDWziIf/jM08nPR27/6aXPYI2siQw
-         MHQ1BGVAfO4IFnJtsBdhJi++nCPtVAoUZhzGddKnXGABxbOfHOZGqoZYASCgQzJio3Eo
-         qdwmh5W1fTy678mQ7FbMbPtMRXRTdhPbyfsmBngqmF8LpGa7AA7EvWaJL1TVFItJyfU1
-         fvdA==
-X-Gm-Message-State: AO0yUKVDunAJ4XaxOf7Q8Ff2RF5WFmaQ0wbAEgnrIzp21c09vvLBkdf/
-	ydldKRxY4ITbcExZwOkeSlFrl1CAokXseNmpAXk=
-X-Google-Smtp-Source: AK7set99eqPhcdLbKh4OyTFxPP9O8G/WWB5QMaVMSr+BMVZVE8siBskF0BmgwHe4CRhnDdJV6IsLxg==
-X-Received: by 2002:a17:906:4910:b0:8b1:7de0:c854 with SMTP id b16-20020a170906491000b008b17de0c854mr33738094ejq.41.1677528426013;
-        Mon, 27 Feb 2023 12:07:06 -0800 (PST)
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com. [209.85.208.53])
-        by smtp.gmail.com with ESMTPSA id e12-20020a1709061e8c00b008d1693c212csm3532747ejj.8.2023.02.27.12.07.04
-        for <regressions@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Feb 2023 12:07:05 -0800 (PST)
-Received: by mail-ed1-f53.google.com with SMTP id o12so30623053edb.9
-        for <regressions@lists.linux.dev>; Mon, 27 Feb 2023 12:07:04 -0800 (PST)
-X-Received: by 2002:a17:906:8508:b0:8d0:2c55:1aa with SMTP id
- i8-20020a170906850800b008d02c5501aamr13023299ejx.0.1677528424547; Mon, 27 Feb
- 2023 12:07:04 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53D6F846F
+	for <regressions@lists.linux.dev>; Mon, 27 Feb 2023 20:22:10 +0000 (UTC)
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 31RIioNo027473;
+	Mon, 27 Feb 2023 20:21:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2022-7-12;
+ bh=VWpkQXpnWOnVO4rf4vkzWMatqHdeMgv7xqpeqXkJar0=;
+ b=HPHbOUO6sZOhs5AWCG1MyJCSl3orA276vprxTxarKHTwKiXL/qoiJeM1rM+F42FHig9O
+ 9CUDW5aAKbhDwvw5F+WuAg2M2fNOPV6A3B8ju1HvcWfM4kkWtCkUXSzXSlPJFw/9o+2s
+ EIU3E5/egLj3z3AGm3edPPayCIYB/SqIeM+AqylTZJGGPWt90pxNK/rXiNXQjuytSt1L
+ xRDhfstSzLqn+PMgy1R3vaYK0G5/FJVDzB55JJFnWcHjLwKHmWEGfvs3t3fKnZSfGPb8
+ hPZIlpm+7qfpyvstpvgAE9+z0RHEIcEUl+fwIEqEt1cF2iRnfe4vxWND7L9tvK4OnQgV gA== 
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3nyb9acja1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 27 Feb 2023 20:21:59 +0000
+Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 31RJBxdt032919;
+	Mon, 27 Feb 2023 20:21:58 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3ny8s5t3nm-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 27 Feb 2023 20:21:58 +0000
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 31RKLvmQ021428;
+	Mon, 27 Feb 2023 20:21:57 GMT
+Received: from dhcp-10-152-13-169.usdhcp.oraclecorp.com.com (dhcp-10-152-13-169.usdhcp.oraclecorp.com [10.152.13.169])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 3ny8s5t3md-1;
+	Mon, 27 Feb 2023 20:21:57 +0000
+From: George Kennedy <george.kennedy@oracle.com>
+To: jirislaby@kernel.org, gregkh@linuxfoundation.org,
+        torvalds@linux-foundation.org
+Cc: george.kennedy@oracle.com, sfr@canb.auug.org.au, akpm@linux-foundation.org,
+        linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux@weissschuh.net, regressions@lists.linux.dev
+Subject: [PATCH v2] vc_screen: modify vcs_size() handling in vcs_read()
+Date: Mon, 27 Feb 2023 15:21:41 -0500
+Message-Id: <1677529301-19530-1-git-send-email-george.kennedy@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.170.22
+ definitions=2023-02-27_17,2023-02-27_01,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxlogscore=999
+ phishscore=0 bulkscore=0 spamscore=0 suspectscore=0 adultscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2212070000 definitions=main-2302270161
+X-Proofpoint-GUID: 563-FF90gCLmJuL1VO2vsbRln0f648sN
+X-Proofpoint-ORIG-GUID: 563-FF90gCLmJuL1VO2vsbRln0f648sN
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-References: <1677527001-17459-1-git-send-email-george.kennedy@oracle.com>
-In-Reply-To: <1677527001-17459-1-git-send-email-george.kennedy@oracle.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Mon, 27 Feb 2023 12:06:47 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wjaz=muuHR-bS9KfELeMf56z1BS2ecB9isAKxf0EwqCYQ@mail.gmail.com>
-Message-ID: <CAHk-=wjaz=muuHR-bS9KfELeMf56z1BS2ecB9isAKxf0EwqCYQ@mail.gmail.com>
-Subject: Re: [PATCH] vc_screen: modify vcs_size() handling in vcs_read()
-To: George Kennedy <george.kennedy@oracle.com>
-Cc: jirislaby@kernel.org, gregkh@linuxfoundation.org, sfr@canb.auug.org.au, 
-	akpm@linux-foundation.org, linux-kernel@vger.kernel.org, 
-	linux-serial@vger.kernel.org, linux@weissschuh.net, 
-	regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Feb 27, 2023 at 11:43=E2=80=AFAM George Kennedy
-<george.kennedy@oracle.com> wrote:
->
-> Restore the vcs_size() handling in vcs_read() to what
-> it had been in previous version.
->
-> Suggested-by: Jiri Slaby <jirislaby@kernel.org>
-> Signed-off-by: George Kennedy <george.kennedy@oracle.com>
+Restore the vcs_size() handling in vcs_read() to what
+it had been in previous version.
 
-Please also add a
+Fixes: 226fae124b2d ("vc_screen: move load of struct vc_data pointer in vcs_read() to avoid UAF")
+Suggested-by: Jiri Slaby <jirislaby@kernel.org>
+Signed-off-by: George Kennedy <george.kennedy@oracle.com>
+---
+v2: added Fixes
 
-   Fixes: 226fae124b2d ("vc_screen: move load of struct vc_data
-pointer in vcs_read() to avoid UAF")
+ drivers/tty/vt/vc_screen.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-or whatever it was that broke this, so that we have that context to
-what the "previous version" actually was.
+diff --git a/drivers/tty/vt/vc_screen.c b/drivers/tty/vt/vc_screen.c
+index f566eb1839dc..c0a2273bb998 100644
+--- a/drivers/tty/vt/vc_screen.c
++++ b/drivers/tty/vt/vc_screen.c
+@@ -414,10 +414,8 @@ vcs_read(struct file *file, char __user *buf, size_t count, loff_t *ppos)
+ 		 */
+ 		size = vcs_size(vc, attr, uni_mode);
+ 		if (size < 0) {
+-			if (read)
+-				break;
+ 			ret = size;
+-			goto unlock_out;
++			break;
+ 		}
+ 		if (pos >= size)
+ 			break;
+-- 
+2.31.1
 
-               Linus
