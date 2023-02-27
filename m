@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 812906D18
-	for <regressions@lists.linux.dev>; Mon, 27 Feb 2023 14:07:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08F996D18
+	for <regressions@lists.linux.dev>; Mon, 27 Feb 2023 14:20:20 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pWeAM-0005FW-1S; Mon, 27 Feb 2023 15:07:46 +0100
-Message-ID: <9aa5e89f-6579-15e5-cc51-d226b5d4bea3@leemhuis.info>
-Date: Mon, 27 Feb 2023 15:07:45 +0100
+	id 1pWeMP-0000G7-Jo; Mon, 27 Feb 2023 15:20:13 +0100
+Message-ID: <9e297f30-dc8c-ecac-f7a6-348ddbd4b928@leemhuis.info>
+Date: Mon, 27 Feb 2023 15:20:13 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,82 +16,94 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.8.0
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Re: [PATCH] vc_screen: don't clobber return value in vcs_read
 Content-Language: en-US, de-DE
-To: Salvatore Bonaccorso <carnil@debian.org>,
- "Martin K. Petersen" <martin.petersen@oracle.com>,
- Martin Wilck <mwilck@suse.com>, Christoph Hellwig <hch@infradead.org>,
- Sreekanth Reddy <sreekanth.reddy@broadcom.com>
-Cc: linux-scsi@vger.kernel.org, regressions@lists.linux.dev
-References: <20221028091655.17741-1-sreekanth.reddy@broadcom.com>
- <20221028091655.17741-2-sreekanth.reddy@broadcom.com>
- <Y15lk+CPsjJ801iY@infradead.org>
- <181536c494aa39ca78b190396a97072448739411.camel@suse.com>
- <yq1tu192iur.fsf@ca-mkp.ca.oracle.com> <Y8+m0w4Og2CLFImY@lorien.valinor.li>
- <Y/ZGe8c1XyqSuCSk@eldamar.lan>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Subject: Re: [PATCH 1/1] mpt3sas: Remove usage of dma_get_required_mask api
-In-Reply-To: <Y/ZGe8c1XyqSuCSk@eldamar.lan>
+To: George Kennedy <george.kennedy@oracle.com>
+Cc: =?UTF-8?Q?Thomas_Wei=c3=9fschuh?= <linux@weissschuh.net>,
+ Jiri Slaby <jirislaby@kernel.org>, linux-kernel@vger.kernel.org,
+ Randy Dunlap <rdunlap@infradead.org>,
+ Storm Dragon <stormdragon2976@gmail.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>, sfr@canb.auug.org.au,
+ akpm@linux-foundation.org, linux-serial@vger.kernel.org,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <Y/KtG9vK0oz0nQrN@hotmail.com>
+ <20230220064612.1783-1-linux@weissschuh.net>
+ <dcaaf7d5-b2d5-dbb9-f3fe-2232ee525cc8@kernel.org>
+ <2094ecec-f63c-4e8a-ba97-da77c5266da1@t-8ch.de>
+ <2941c2b9-5fa5-e25c-dcd0-ab9c9c0f143e@oracle.com>
+ <Y/TMH8Hf6zBrC3yc@kroah.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+In-Reply-To: <Y/TMH8Hf6zBrC3yc@kroah.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1677506872;dd9efe58;
-X-HE-SMSGID: 1pWeAM-0005FW-1S
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1677507621;fad7a058;
+X-HE-SMSGID: 1pWeMP-0000G7-Jo
 
-Hi, this is your Linux kernel regression tracker.
+Hi, this is your Linux kernel regression tracker. Top-posting for once,
+to make this easily accessible to everyone.
 
-On 22.02.23 17:44, Salvatore Bonaccorso wrote:
-> On Tue, Jan 24, 2023 at 10:37:23AM +0100, Salvatore Bonaccorso wrote:
->> On Mon, Jan 02, 2023 at 08:06:41AM -0500, Martin K. Petersen wrote:
->>>> is anything blocking mainline inclusion of this patch?
->>>
->>> I appCiao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that
-page.lied these to 6.2/scsi-fixes last week. The patches have been
->>> sitting in a topic branch for a bit due to the three-way conflict
->>> between fixes, queue, and upstream.
->>
->> It landed in 6.2-rc4 recently in fact. Thank you!
->>
->> Would it be posssible to backport the fix as well back to the stable
->> series affected? 
->>
->> In Debian we have the reports as per https://bugs.debian.org/1022126
->> where the issue was introduced back in 5.10.y. Context in
->> https://lore.kernel.org/linux-scsi/CAK=zhgr=MYn=-mrz3gKUFoXG_+EQ796bHEWSdK88o1Aqamby7g@mail.gmail.com/
->> .
-> 
-> Friendly ping on this, can this change be backported as well to the
-> relevant stable series? It would apply already cleanly to 6.1.y, but
-> due to 9df650963bf6 ("scsi: mpt3sas: Don't change DMA mask while
-> reallocating pools") it might need some additional review for the
-> older stable series (in particular of interest due to the above for
-> 5.10.y).
+George, is there anything we can do to help you moving forward to
+finally get this regression fixed? It seems (or am I missing something?)
+everyone is waiting for you (see below) to act on the feedback Jiri
+provided here:
 
-This afaics is a reasonable request for 6.1, as this seems to be
-(Salvatore, please correct me if I'm wrong) a regression caused by
-0e0747de0ea3 ("scsi: mpt3sas: Fix return value check of
-dma_get_required_mask()"), which was merged for 6.0-rc7. Hence allow me
-to ask:
+https://lore.kernel.org/lkml/8dffe187-240d-746e-ed84-885ffd2785f6@kernel.org/
 
-Sreekanth and Martin, is there a reason why this request (and the
-earlier one a month ago) was apparently met with silence? Or was
-progress made in between and I just missed it?
-
-Salvatore, for 5.10 things are a bit more complicated, as someone would
-need to do the work. Sometimes that work is done by the driver
-developers and maintainers as well, but strictly speaking it's the duty
-of those that backported the change to 5.10.y. Didn't check who did that
-this case (the stable team?); but well, maybe let's sort this out for
-6.1.y first.
-
-> Thanks already! If the change for older series needs some additional
-> testing we might ask the affected users from the Debian bug 1022126 to
-> test on 5.10.y as well.
+Side note: would be good to add a "Link:" tag pointing to the start of
+this thread as well, but that's just a detail.
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
 Everything you wanna know about Linux kernel regression tracking:
 https://linux-regtracking.leemhuis.info/about/#tldr
 If I did something stupid, please tell me, as explained on that page.
+
+On 21.02.23 14:50, Greg Kroah-Hartman wrote:
+> On Tue, Feb 21, 2023 at 08:30:11AM -0500, George Kennedy wrote:
+>> On 2/20/2023 11:34 AM, Thomas Weißschuh wrote:
+>>> +Cc people who were involved in the original thread.
+>>>
+>>> On Mon, Feb 20, 2023 at 12:48:59PM +0100, Jiri Slaby wrote:
+>>>> On 20. 02. 23, 7:46, linux@weissschuh.net wrote:
+>>>>> From: Thomas Weißschuh <linux@weissschuh.net>
+>>>>>
+>>>>> Commit 226fae124b2d
+>>>>> ("vc_screen: move load of struct vc_data pointer in vcs_read() to avoid UAF")
+>>>>> moved the call to vcs_vc() into the loop.
+>>>>> While doing this it also moved the unconditional assignment of
+>>>>> "ret = -ENXIO".
+>>>>> This unconditional assignment was valid outside the loop but within it
+>>>>> it clobbers the actual value of ret.
+>>>>>
+>>>>> To avoid this only assign "ret = -ENXIO" when actually needed.
+>>>> Not sure -- I cannot find it -- but hasn't George fixed this yet?
+>>> Indeed there was a proposed fix at
+>>> https://lore.kernel.org/lkml/1675704844-17228-1-git-send-email-george.kennedy@oracle.com/
+>>>
+>>> Linus had some suggestions so it was not applied as is.
+>>>
+>>> I'm not sure what the current state is.
+>>> George, do you have something in the pipeline?
+>>
+>> Yes, that is in the pipeline:
+>> https://lore.kernel.org/lkml/1675774098-17722-1-git-send-email-george.kennedy@oracle.com/
+>>
+>> Linus suggested the fix, which was tested and submitted.
+>>
+>> Jiri commented on the patch, which I believe was directed at Linus as he
+>> suggested the fix.
+> 
+> And I was waiting for a new version from you based on those comments :(
+> 
+> Can you fix that up and send?
+> 
+> thanks,
+> 
+> greg k-h
+
+#regzbot monitor:
+https://lore.kernel.org/lkml/1675774098-17722-1-git-send-email-george.kennedy@oracle.com/
+#regzbot poke
