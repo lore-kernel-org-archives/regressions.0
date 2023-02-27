@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98AD77EF
-	for <regressions@lists.linux.dev>; Mon, 27 Feb 2023 08:21:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 856F21FBD
+	for <regressions@lists.linux.dev>; Mon, 27 Feb 2023 10:57:20 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pWYlU-0006tU-CQ; Mon, 27 Feb 2023 09:21:44 +0100
-Message-ID: <73f8ce97-ad66-11bb-f3a9-bc1aa324aeb8@leemhuis.info>
-Date: Mon, 27 Feb 2023 09:21:43 +0100
+	id 1pWbBz-0007Bw-Rm; Mon, 27 Feb 2023 11:57:15 +0100
+Message-ID: <2a381d6c-25d9-0027-4951-c0012d09b498@leemhuis.info>
+Date: Mon, 27 Feb 2023 11:57:15 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,111 +16,147 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.8.0
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Subject: Re: [PATCH 1/1] tpm: disable hwrng for fTPM on some AMD designs
+To: Jarkko Sakkinen <jarkko@kernel.org>,
+ James Bottomley <James.Bottomley@hansenpartnership.com>
+Cc: "Jason@zx2c4.com" <Jason@zx2c4.com>,
+ "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "stable@vger.kernel.org" <stable@vger.kernel.org>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ "Limonciello, Mario" <Mario.Limonciello@amd.com>
+References: <20230214201955.7461-1-mario.limonciello@amd.com>
+ <20230214201955.7461-2-mario.limonciello@amd.com>
+ <50b5498c-38fb-e2e8-63f0-3d5bbc047737@leemhuis.info>
+ <Y/ABPhpMQrQgQ72l@kernel.org> <03c045b5-73f8-0522-9966-472404068949@amd.com>
+ <Y/VLYxAqmlF8nbw3@kernel.org>
+ <MN0PR12MB610146866686D09CBFEC7AA2E2A59@MN0PR12MB6101.namprd12.prod.outlook.com>
 Content-Language: en-US, de-DE
-To: David Gow <davidgow@google.com>
-Cc: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>, rmoar@google.com,
- brendanhiggins@google.com, skhan@linuxfoundation.org,
- Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <CABXGCsO4=qKBF=2FRPVwW8FA4iLFh0Dt9n1BLMec3k10GUorpg@mail.gmail.com>
- <9f682c4d-e7b7-5e23-84f5-cea4fdac2085@leemhuis.info>
- <CABXGCsNruNKfx3d1dpneRUvn3dCqv_bM93TdJsCLeRYiP3qYaA@mail.gmail.com>
- <6bfa6d67-27ce-04b3-a1f9-3768b8a0169f@leemhuis.info>
- <CABVgOSnCLbqHHA-gT6FwtJYKYAHt_9uwR_S2r6ZE8hm6eZaLBA@mail.gmail.com>
- <f6616a9e-d250-b808-8c2c-e321e215f622@leemhuis.info>
- <CABVgOS=7JMGisPq_QUQpKV1mz8z8D2Esg0TwdMKx23yJhPbQGw@mail.gmail.com>
-From: Thorsten Leemhuis <linux@leemhuis.info>
-Subject: Re: [6.3][regression] after commit
- 7170b7ed6acbde523c5d362c8978c60df4c30f30 my system stuck in initramfs forever
-In-Reply-To: <CABVgOS=7JMGisPq_QUQpKV1mz8z8D2Esg0TwdMKx23yJhPbQGw@mail.gmail.com>
+In-Reply-To: <MN0PR12MB610146866686D09CBFEC7AA2E2A59@MN0PR12MB6101.namprd12.prod.outlook.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1677486113;0f856abd;
-X-HE-SMSGID: 1pWYlU-0006tU-CQ
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1677495440;b8c9319d;
+X-HE-SMSGID: 1pWbBz-0007Bw-Rm
 
-On 26.02.23 08:31, David Gow wrote:
-> On Sun, 26 Feb 2023 at 14:02, Thorsten Leemhuis <linux@leemhuis.info> wrote:
->> On 26.02.23 02:11, David Gow wrote:
->>> On Sat, 25 Feb 2023 at 23:53, Thorsten Leemhuis <linux@leemhuis.info> wrote:
->>>> On 25.02.23 15:55, Mikhail Gavrilov wrote:
->>>>> On Sat, Feb 25, 2023 at 7:22 PM Thorsten Leemhuis <linux@leemhuis.info> wrote:
->>>>>>
->>>>>> [CCing the regression list, as it should be in the loop for regressions:
->>>>>> https://docs.kernel.org/admin-guide/reporting-regressions.html]
->>>>>>
->>>>>> On 25.02.23 14:51, Mikhail Gavrilov wrote:
->>>>>>> new kernel release cycle returning with new bugs
->>>>>>> Today my system got stuck in initramfs environment after updating to
->>>>>>> commit d2980d8d826554fa6981d621e569a453787472f8.
->>>>>>>
->>>>>>> I still do not understand how to configure the network inside the
->>>>>>> initramfs environment to grab the logs.
->>>>>>> Since an attempt to rebuild the initramfs with all modules (dracut
->>>>>>> --no-hostonly --force) leads to the stuck initramfs environment and
->>>>>>> impossible entering into initramfs console.
->>>>>>
->>>>>> Do you see any error messages? I have problems since Friday morning as
->>>>>> well (stuck in Fedora's initramfs) and see a lot of BPF warnings like
->>>>>> "BPF: invalid name" and "failed to validate module". Was able to do a
->>>>>> screenshot:
->>>>>>
->>>>>> https://www.leemhuis.info/files/misc/Screenshot_ktst-f36-x86-64_2023-02-24_07:53:14.png
+Hi, this is your Linux kernel regression tracker. Top-posting for once,
+to make this easily accessible to everyone.
+
+Jarkko (or James), what is needed to get this regression resolved? More
+people showed up that are apparently affected by this. Sure, 6.2 is out,
+but it's a regression in 6.1 it thus would be good to fix rather sooner
+than later. Ideally this week, if you ask me.
+
+FWIW, latest version of this patch is here, but it didn't get any
+replies since it was posted last Tuesday (and the mail quoted below is
+just one day younger):
+
+https://lore.kernel.org/all/20230220180729.23862-1-mario.limonciello@amd.com/
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
+
+#regzbot poke
+
+On 22.02.23 00:10, Limonciello, Mario wrote:
+> [Public]
+> 
+>> -----Original Message-----
+>> From: Jarkko Sakkinen <jarkko@kernel.org>
+>> Sent: Tuesday, February 21, 2023 16:53
+>> To: Limonciello, Mario <Mario.Limonciello@amd.com>
+>> Cc: Thorsten Leemhuis <regressions@leemhuis.info>; James Bottomley
+>> <James.Bottomley@hansenpartnership.com>; Jason@zx2c4.com; linux-
+>> integrity@vger.kernel.org; linux-kernel@vger.kernel.org;
+>> stable@vger.kernel.org; Linus Torvalds <torvalds@linux-foundation.org>;
+>> Linux kernel regressions list <regressions@lists.linux.dev>
+>> Subject: Re: [PATCH 1/1] tpm: disable hwrng for fTPM on some AMD designs
+>>
+>> On Fri, Feb 17, 2023 at 08:25:56PM -0600, Limonciello, Mario wrote:
+>>> On 2/17/2023 16:05, Jarkko Sakkinen wrote:
+>>>
+>>>> Perhaps tpm_amd_* ?
+>>>
+>>> When Jason first proposed this patch I feel the intent was it could cover
+>>> multiple deficiencies.
+>>> But as this is the only one for now, sure re-naming it is fine.
+>>>
+>>>>
+>>>> Also, just a question: is there any legit use for fTPM's, which are not
+>>>> updated? I.e. why would want tpm_crb to initialize with a dysfunctional
+>>>> firmware?>
+>>>> I.e. the existential question is: is it better to workaround the issue and
+>>>> let pass through, or make the user aware that the firmware would really
+>>>> need an update.
+>>>>
+>>>
+>>> On 2/17/2023 16:35, Jarkko Sakkinen wrote:
 >>>>>
->>>>> I also seen such messages
->>>>> https://freeimage.host/i/img-1475.HMPL26l
+>>>>> Hmm, no reply since Mario posted this.
+>>>>>
+>>>>> Jarkko, James, what's your stance on this? Does the patch look fine
+>> from
+>>>>> your point of view? And does the situation justify merging this on the
+>>>>> last minute for 6.2? Or should we merge it early for 6.3 and then
+>>>>> backport to stable?
+>>>>>
+>>>>> Ciao, Thorsten
 >>>>
->>>> Pretty sure that's the same problem, at least the symptoms match. If
->>>> anyone needs a config to reproduce this, here's one of mine that shows
->>>> the problem:
+>>>> As I stated in earlier response: do we want to forbid tpm_crb in this case
+>>>> or do we want to pass-through with a faulty firmware?
 >>>>
->>>> https://www.leemhuis.info/files/misc/config
+>>>> Not weighting either choice here I just don't see any motivating points
+>>>> in the commit message to pick either, that's all.
 >>>>
->>>>> P.S.: I also use Fedora Rawhide.
->>>>
->>>> Happens for me on all Fedora 36, 37, and 38 (my rawhide build failed for
->>>> other reasons, so I couldn't test).
+>>>> BR, Jarkko
 >>>
->>> Thanks for the report, and sorry this seems to have broken.
+>>> Even if you're not using RNG functionality you can still do plenty of other
+>>> things with the TPM.  The RNG functionality is what tripped up this issue
+>>> though.  All of these issues were only raised because the kernel started
+>>> using it by default for RNG and userspace wants random numbers all the
+>> time.
 >>>
->>> I've not been able to reproduce this locally yet, but I'm looking into it.
+>>> If the firmware was easily updatable from all the OEMs I would lean on
+>>> trying to encourage people to update.  But alas this has been available for
+>>> over a year and a sizable number of OEMs haven't distributed a fix.
 >>>
->>> In the meantime, a few questions if you have time:
->>> - Does this happen with CONFIG_KUNIT=y as well as CONFIG_KUNIT=m?
->>> - Does this patch fix it?
->>> https://lore.kernel.org/linux-kselftest/20230225014529.2259752-1-davidgow@google.com/T/#u
+>>> The major issue I see with forbidding tpm_crb is that users may have been
+>>> using the fTPM for something and taking it away in an update could lead to
+>> a
+>>> no-boot scenario if they're (for example) tying a policy to PCR values and
+>>> can no longer access those.
+>>>
+>>> If the consensus were to go that direction instead I would want to see a
+>>> module parameter that lets users turn on the fTPM even knowing this
+>> problem
+>>> exists so they could recover.  That all seems pretty expensive to me for
+>>> this problem.
 >>
->> Sorry, limited time and about to leave the house for the day. I only
->> could try the latter and did only do a very quick test, but it seems
->> that patch fixes the issue for me.
+>> I agree with the last argument.
+> 
+> FYI, I did send out a v2 and folded in this argument to the commit message
+> and adjusted for your feedback.  You might not have found it in your inbox
+> yet.
+> 
+>>
+>> I re-read the commit message and
+>> https://www.amd.com/en/support/kb/faq/pa-410.
+>>
+>> Why this scopes down to only rng? Should TPM2_CC_GET_RANDOM also
+>> blocked
+>> from /dev/tpm0?
 >>
 > 
-> Thanks! Glad to hear that patch seems to fix it: we'll try to get it
-> upstream as soon as possible, then.
-
-Great. I did some more tests (still not much) earlier today, feel free
-
-Tested-by: Thorsten Leemhuis <linux@leemhuis.info>
-
-but I don't care if that doesn't make it.
-
-> I wouldn't worry about testing with CONFIG_KUNIT=y as well at this
-> point: I doubt it'll shed any more light on the situation.
+> The only reason that this commit was created is because the kernel utilized
+> the fTPM for hwrng which triggered the problem.  If that never happened
+> this probably wouldn't have been exposed either.
 > 
-> I've still been unable to reproduce the issue here, even with a fresh
-> install of Fedora Rawhide, and a very recent torvalds/master:
-
-Strange. Wondering if that has something to do with the way Mikhail and
-I build the kernel. I'm build using something that very closely
-resembles the SRPM used by Fedora.
-
-> [...]
-> Given everything else seems fine here, and the makefile issues fixed
-> by the above patch both seems to fix this, and is the only real issue
-> I could imagine having unpredictable behaviour, I'm reasonably happy
-> to consider this "fixed" by that patch. But if this patch _doesn't_
-> fix it, or you continue to see some other strange behaviour, we can
-> look into fixing it further.
-
-+1
-
-Ciao, Thorsten
+> Yes; I would agree that if someone was to do other fTPM operations over
+> an extended period of time it's plausible they can cause the problem too. 
+> 
+> But picking and choosing functionality to block seems quite arbitrary to me.
+> 
