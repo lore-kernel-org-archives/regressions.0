@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7CBE2CA2
-	for <regressions@lists.linux.dev>; Tue, 28 Feb 2023 11:11:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E7C72CA2
+	for <regressions@lists.linux.dev>; Tue, 28 Feb 2023 11:32:48 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pWxt6-0005iO-7n; Tue, 28 Feb 2023 12:11:16 +0100
-Message-ID: <ae9753d2-6bc5-b99e-6462-ed83f8cad474@leemhuis.info>
-Date: Tue, 28 Feb 2023 12:11:15 +0100
+	id 1pWyDt-0001z7-Fu; Tue, 28 Feb 2023 12:32:45 +0100
+Message-ID: <abb495f7-f973-4614-846b-d3922dc0fe25@leemhuis.info>
+Date: Tue, 28 Feb 2023 12:32:43 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,43 +16,113 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.8.0
-Subject: Re: [REGRESSION] 5.15.88 and onwards no longer return EADDRINUSE from
- bind
+Subject: Re: [regression] Bug 216946 - Toshiba satellite click mini l9w-b:
+ touchscreen: no touch events with kernel 6.1.4
 Content-Language: en-US, de-DE
-To: Winter <winter@winter.cafe>, stable@vger.kernel.org
-Cc: regressions@lists.linux.dev
-References: <EF8A45D0-768A-4CD5-9A8A-0FA6E610ABF7@winter.cafe>
-From: "Linux regression tracking #update (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Jiri Kosina <jikos@kernel.org>,
+ Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ =?UTF-8?Q?G=c3=a9_Koerkamp?= <ge.koerkamp@gmail.com>
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <EF8A45D0-768A-4CD5-9A8A-0FA6E610ABF7@winter.cafe>
+References: <32a14a8a-9795-4c8c-7e00-da9012f548f8@leemhuis.info>
+In-Reply-To: <32a14a8a-9795-4c8c-7e00-da9012f548f8@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1677582678;6b55824e;
-X-HE-SMSGID: 1pWxt6-0005iO-7n
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1677583968;4766698f;
+X-HE-SMSGID: 1pWyDt-0001z7-Fu
 
-[TLDR: This mail in primarily relevant for Linux kernel regression
-tracking. See link in footer if these mails annoy you.]
+On 19.01.23 16:06, Linux kernel regression tracking (Thorsten Leemhuis)
+wrote:
+> Hi, this is your Linux kernel regression tracker.
+> 
+> I noticed a regression report in bugzilla.kernel.org. As many (most?)
+> kernel developer don't keep an eye on it, I decided to forward it by
+> mail. Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=216946 :
 
-On 13.02.23 04:38, Winter wrote:
-> Hi all,
-> 
-> I'm facing the same issue as https://lore.kernel.org/stable/CAFsF8vL4CGFzWMb38_XviiEgxoKX0GYup=JiUFXUOmagdk9CRg@mail.gmail.com/, but on 5.15. I've bisected it across releases to 5.15.88, and can reproduce on 5.15.93.
-> 
-> However, I cannot seem to find the identified problematic commit in the 5.15 branch, so I'm unsure if this is a different issue or not.
-> 
-> There's a few ways to reproduce this issue, but the one I've been using is running libuv's (https://github.com/libuv/libuv) tests, specifically tests 271 and 277.
-> 
-> #regzbot introduced v5.15.88..
+The reporter recently confirmed in the ticket that the issue still
+happens with 6.2.
 
-#regzbot fix: fdaf88531cfd17b
-#regzbot ignore-activity
+There wasn't any reply from any of the input developers here or in
+bugzilla afaics. :-/ Hmmm. Could someone from that camp maybe please
+take a minute and at least briefly look into this as answer something
+like "that might be due to a problem in subsystem 'foo'", "maybe ask bar
+for an option", or "we have no idea what might cause this, this needs to
+be bisected"? That would help a lot.
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
 Everything you wanna know about Linux kernel regression tracking:
 https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+If I did something stupid, please tell me, as explained on that page.
 
-
-
+#regzbot poke
+>>  Gé Koerkamp 2023-01-17 20:21:51 UTC
+>>
+>> Created attachment 303619 [details]
+>> Kernel configuration for v6.1.4/ journalctl (dmesg)/ ACPIdump/lsmod
+>>
+>> Overview: 
+>> The touchscreen does not react on touch events.
+>> Touchscreen display and touchpad are working.
+>>
+>> Step to reproduce:
+>> Open any UI page
+>> Try to use touch on relevant UI controls (buttons etc.)
+>>
+>> Result:
+>> No reaction on screen touches
+>>
+>> Expected result:
+>> Reaction on touched control, same as when using the touch pad or connected mouse (which do work).
+>>
+>> Build information:
+>> The error happens with kernel version 6.1.4
+>> After rebuilding with different kernel versions, it appears that it first fails with kernel 5.16
+>>
+>> Additional builds:
+>> The click mini l9w-b still works with kernel 5.10.y LTS and 5.15.y LTS.
+>>
+>> Important remark:
+>> Touchscreen still works fine with kernel 6.1.4 using  
+>> - an HP x2 detachable 10-p0xx or
+>> - a Lenovo yoga 520-14ikb
+>>
+>> So it could be a hardware dependent issue
+> 
+> See the ticket for more details.
+> 
+> 
+> [TLDR for the rest of this mail: I'm adding this report to the list of
+> tracked Linux kernel regressions; the text you find below is based on a
+> few templates paragraphs you might have encountered already in similar
+> form.]
+> 
+> BTW, let me use this mail to also add the report to the list of tracked
+> regressions to ensure it's doesn't fall through the cracks:
+> 
+> #regzbot introduced: v5.15..v5.16
+> https://bugzilla.kernel.org/show_bug.cgi?id=216946
+> #regzbot title: hid: touchscreen broken with Toshiba satellite click
+> mini l9w-b
+> #regzbot ignore-activity
+> 
+> This isn't a regression? This issue or a fix for it are already
+> discussed somewhere else? It was fixed already? You want to clarify when
+> the regression started to happen? Or point out I got the title or
+> something else totally wrong? Then just reply and tell me -- ideally
+> while also telling regzbot about it, as explained by the page listed in
+> the footer of this mail.
+> 
+> Developers: When fixing the issue, remember to add 'Link:' tags pointing
+> to the report (e.g. the buzgzilla ticket and maybe this mail as well, if
+> this thread sees some discussion). See page linked in footer for details.
+> 
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> --
+> Everything you wanna know about Linux kernel regression tracking:
+> https://linux-regtracking.leemhuis.info/about/#tldr
+> If I did something stupid, please tell me, as explained on that page.
