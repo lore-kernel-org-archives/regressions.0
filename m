@@ -1,135 +1,109 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66EA363C5
-	for <regressions@lists.linux.dev>; Tue, 28 Feb 2023 16:03:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1677600227;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZWMAworI50CQabTilrteqDasDy+XoVkceugkq8E6Pr8=;
-	b=OEvO2hjLOql8LTVrmgTfZaBhPf9c8HWQXGL6C7UmsYBg9nossJniRvcoJyQcjeo2eUGCX4
-	vEycITcZCsTfTvUwLWyhRFDiUcGfP8CeOlBSqKxOYEARGUOsyU/xZQ5ouIiM/3emrWfDPe
-	ecOwZw422p5mvdlMImBUtMH86ew6wyg=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-590-Po99KAYTNN684wAaLu07eA-1; Tue, 28 Feb 2023 11:03:46 -0500
-X-MC-Unique: Po99KAYTNN684wAaLu07eA-1
-Received: by mail-wr1-f71.google.com with SMTP id g6-20020adfa486000000b002c55ef1ec94so1684342wrb.0
-        for <regressions@lists.linux.dev>; Tue, 28 Feb 2023 08:03:45 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3C713224
+	for <regressions@lists.linux.dev>; Tue, 28 Feb 2023 18:43:06 +0000 (UTC)
+Received: by mail-il1-f169.google.com with SMTP id y14so4841822ilv.4
+        for <regressions@lists.linux.dev>; Tue, 28 Feb 2023 10:43:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Qjpz6w1wU5Ahvn+ZiAXXT7LUF2diV3nFILzNkAj96SY=;
+        b=nkgj59ZCKiK1D88RTqrIIcfHr0fWsaoTuy5xVm3ADPBIAetdxbSxDJESBM2+Fz4qc7
+         ko0ehsCR3mNWQ3/MT+ClSqo1xlZ4pS38Kr1PpU1O7oEqclR5/T+gHG2u4mL93r73orcV
+         P0kTTxbCjpVYiU/nI+Evm0Y+O9z9nymjAr3biZVUQZAu99DTTC6qa5B9flHhLHmHu+91
+         1NR5NSqFLv9d0xURv1FZfMxhJ68hU23v3Can1pPmfYT8eO1k22xS6jJvOqU+AjGzr5+v
+         3wfd8g2dqB68aHELwUnWNN6LGld+JnTUP45MWD8dUEu2/J7ps4OZW2JwOWa1iGFJEaRj
+         Spyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1677600224;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZWMAworI50CQabTilrteqDasDy+XoVkceugkq8E6Pr8=;
-        b=nqkrSjfFij3HbWo0wXHQoyunregaAO5yu9d1/u6Pb3VXcwOYi9780zCCWc/AG93Gws
-         naOSp7Df8xk4WCHlclKG37AwTrrJLI26VknjmR5f7qfjZNoplDxw+ed2GqOX6wBWcyOj
-         qFXhVbgMlk95BUVHaQRsWc8RPID3NNDehw/Ez77MHHTRTjkaNhqr1KoTaxs6ZsrViByw
-         qMBBwRvQDkop6jdmBUz2mCRpCiLv4It+aTkYLLPKFa5nR75DqyXLmAH88kLSLWhwDbK5
-         o41tzEGfLWu4FrxDN4ZlaCRMUX0LW8efJiJ9gNP0kwQ1asclCywU/7V6UEuYPT3583pL
-         AUvw==
-X-Gm-Message-State: AO0yUKUwt4trnijQGH2IbXohb3wteg6xvCIORq82G72droZXVF4VogXq
-	UIcXo0oglSwqkwQfxuSRp2yO8ph53aybAgCnn978BGf/rDwWj3Z/t2OlB3bz7N/UCWCO/M0ss4C
-	udzvb/bCJDQqDgpiwz1BpV6g=
-X-Received: by 2002:a05:6000:1c5:b0:2ca:fd48:7c1e with SMTP id t5-20020a05600001c500b002cafd487c1emr2573794wrx.48.1677600224600;
-        Tue, 28 Feb 2023 08:03:44 -0800 (PST)
-X-Google-Smtp-Source: AK7set9v0g4E7whTc7rYOu89mROUSRxzGr6QXBdhfOQaLBzNnR8lC5RcL1m+NJS3PUR1LZvjFt2e1g==
-X-Received: by 2002:a05:6000:1c5:b0:2ca:fd48:7c1e with SMTP id t5-20020a05600001c500b002cafd487c1emr2573757wrx.48.1677600224266;
-        Tue, 28 Feb 2023 08:03:44 -0800 (PST)
-Received: from localhost (205.pool92-176-231.dynamic.orange.es. [92.176.231.205])
-        by smtp.gmail.com with ESMTPSA id 13-20020a05600c020d00b003dc1d668866sm16485490wmi.10.2023.02.28.08.03.43
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Qjpz6w1wU5Ahvn+ZiAXXT7LUF2diV3nFILzNkAj96SY=;
+        b=4EX6tE/8X+zBTIW4Sa53vDqHXqTLIrQZcISDjmsqvAGudJa3kc7nf/pLqX50y2n2nx
+         Iaetp32Pv90vBwj5Rbg8+1+Xpha1vNyf4vstGmEr29DyCzbKGZvIQYOXmeRhvEYUTDn6
+         zp2cqNOtKwrogkouqbK2Gq9PEw1K3UMDViwVCGm+e0hZI5lboLxrwBF7FoSSxLNr3dzQ
+         Ukuv149RD8JyCtpttlyzlRAcPjhrYD6QoPaaP9GkM2g7/2IRL7EtBI5yAUfh/uKMKsyp
+         lOK+ycpbE3HN2o2OMMQvBT/gXVoMXzSv0x4bXwY/cWiaUtH4oNEHJ2VmPVD7G377tk5y
+         Y3Bg==
+X-Gm-Message-State: AO0yUKUYA/OEnQSPMwgt2jqjui/YL8Ku3xrhwrCfja0VMOhSwy+sXqqA
+	NUTA57vuHRfh25DNRNKK3o8=
+X-Google-Smtp-Source: AK7set+3SB0xC45QlRlJGTf+BbZNkGs7ZRfuNGqxezNLWWwtxXvPDuKgP46T2mHtv/3U+N83n2USvw==
+X-Received: by 2002:a05:6e02:1a24:b0:314:fa6:323c with SMTP id g4-20020a056e021a2400b003140fa6323cmr4151260ile.12.1677609785974;
+        Tue, 28 Feb 2023 10:43:05 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id c14-20020a92cf4e000000b00316e39f1285sm2842875ilr.82.2023.02.28.10.43.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Feb 2023 08:03:43 -0800 (PST)
-From: Javier Martinez Canillas <javierm@redhat.com>
-To: Vikash Garodia <vgarodia@qti.qualcomm.com>, Linux regressions mailing
- list <regressions@lists.linux.dev>, Stanimir
- Varbanov <stanimir.k.varbanov@gmail.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "mka@chromium.org" <mka@chromium.org>, Albert Esteve <aesteve@redhat.com>,
- "stanimir.varbanov@linaro.org" <stanimir.varbanov@linaro.org>, Enric
- Balletbo
- i Serra <eballetb@redhat.com>, Andy Gross <agross@kernel.org>, Bjorn
- Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>,
- "Vikash Garodia (QUIC)" <quic_vgarodia@quicinc.com>,
- "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
- "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, Fritz Koenig
- <frkoenig@google.com>, "Dikshita Agarwal (QUIC)"
- <quic_dikshita@quicinc.com>, "Rajeshwar Kurapaty (QUIC)"
- <quic_rkurapat@quicinc.com>, Mauro Carvalho Chehab <mchehab@kernel.org>
-Subject: RE: [PATCH] Revert "venus: firmware: Correct non-pix start and end
- addresses"
-In-Reply-To: <87356wn6xf.fsf@minerva.mail-host-address-is-not-set>
-References: <20230207102254.1446461-1-javierm@redhat.com>
- <DM8PR02MB8169809493BF2822E6C29EECF3DB9@DM8PR02MB8169.namprd02.prod.outlook.com>
- <ef09bc9f-d570-be11-238b-bd34063917fc@redhat.com>
- <70c01751-1dd7-c4bd-a96e-94dea437aa40@redhat.com>
- <DM8PR02MB81696369DBFE619E43F81EEFF3DE9@DM8PR02MB8169.namprd02.prod.outlook.com>
- <e87344c6-acef-7f3f-5cac-24961dbd9401@redhat.com>
- <6f97a117-0d9c-e21b-9adf-50f2233ba9e3@leemhuis.info>
- <ea283f0a-ca72-447e-ce87-68c1bbee793e@leemhuis.info>
- <CAFOAJEdBbzqkGVqw+vgNYNxyaTHwvjFyskTwjycP820L2tOctA@mail.gmail.com>
- <b548da46-bf91-6f1c-4b63-4002109056bc@leemhuis.info>
- <9a0bfef8-0b5d-f4d0-a8a5-4bbcacc5c0fb@leemhuis.info>
- <DM8PR02MB8169E16569616870A583B376F3AB9@DM8PR02MB8169.namprd02.prod.outlook.com>
- <87356wn6xf.fsf@minerva.mail-host-address-is-not-set>
-Date: Tue, 28 Feb 2023 17:03:43 +0100
-Message-ID: <87edq9hj4w.fsf@minerva.mail-host-address-is-not-set>
+        Tue, 28 Feb 2023 10:43:05 -0800 (PST)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Tue, 28 Feb 2023 10:43:03 -0800
+From: Guenter Roeck <linux@roeck-us.net>
+To: Oleksij Rempel <o.rempel@pengutronix.de>
+Cc: Woojung Huh <woojung.huh@microchip.com>, UNGLinuxDriver@microchip.com,
+	Andrew Lunn <andrew@lunn.ch>,
+	Vivien Didelot <vivien.didelot@gmail.com>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	Vladimir Oltean <olteanv@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Wei Fang <wei.fang@nxp.com>, Heiner Kallweit <hkallweit1@gmail.com>,
+	kernel@pengutronix.de, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org, Arun.Ramadoss@microchip.com,
+	intel-wired-lan@lists.osuosl.org, regressions@lists.linux.dev
+Subject: Re: [PATCH net-next v8 6/9] net: phy: c22: migrate to
+ genphy_c45_write_eee_adv()
+Message-ID: <20230228184303.GA4098978@roeck-us.net>
+References: <20230211074113.2782508-1-o.rempel@pengutronix.de>
+ <20230211074113.2782508-7-o.rempel@pengutronix.de>
+ <20230224035553.GA1089605@roeck-us.net>
+ <20230224041604.GA1353778@roeck-us.net>
+ <20230224172004.GA1224760@roeck-us.net>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230224172004.GA1224760@roeck-us.net>
 
-Javier Martinez Canillas <javierm@redhat.com> writes:
+Letting regzbot know about the fix:
 
-> Vikash Garodia <vgarodia@qti.qualcomm.com> writes:
->
-> Hello Vikash,
->
->> Hi All,
->>
->
-> [...]
->
->>>
->>>No reply from Mauro and Linus chose to not apply the revert I pointed him to.
->>>That at this point leads to the question:
->>>
->>>Vikash, did you or somebody else make any progress to fix this properly?
->>
->> We tried with different settings for the registers and arrive at a conclusion that
->> the original configuration was proper. There is no need to explicitly configure
->> the secure non-pixel region when there is no support for the usecase. So, in summary,
->> we are good to have the revert.
->>
->
-> Perfect. Thanks a lot for looking at this.
->
->> Stan, could you please help with the revert and a pull request having this revert
->> alongwith other pending changes ?
->>
->
-> Other fix posted is "media: venus: dec: Fix capture formats enumeration order":
->
-> https://patchwork.kernel.org/project/linux-media/patch/20230210081835.2054482-1-javierm@redhat.com/
->
+#regzbot fixed-by: 972074ea8840
 
-Vikash,
-
-Could you or someone else from QC please Review/Ack these two patches,
-since it seems that Stanimir moved on and maybe is not working in this
-driver anymore?
-
--- 
-Best regards,
-
-Javier Martinez Canillas
-Core Platforms
-Red Hat
-
+On Fri, Feb 24, 2023 at 09:20:04AM -0800, Guenter Roeck wrote:
+> Copying regzbot.
+>   
+> #regzbot ^introduced 9b01c885be36
+> #regzbot title Network interface initialization failures on xtensa, arm:cubieboard
+> #regzbot ignore-activity
+> 
+> On Thu, Feb 23, 2023 at 08:16:06PM -0800, Guenter Roeck wrote:
+> > On Thu, Feb 23, 2023 at 07:55:55PM -0800, Guenter Roeck wrote:
+> > > On Sat, Feb 11, 2023 at 08:41:10AM +0100, Oleksij Rempel wrote:
+> > > > Migrate from genphy_config_eee_advert() to genphy_c45_write_eee_adv().
+> > > > 
+> > > > It should work as before except write operation to the EEE adv registers
+> > > > will be done only if some EEE abilities was detected.
+> > > > 
+> > > > If some driver will have a regression, related driver should provide own
+> > > > .get_features callback. See micrel.c:ksz9477_get_features() as example.
+> > > > 
+> > > > Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> > > > Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+> > > 
+> > > This patch causes network interface failures with all my xtensa qemu
+> > > emulations. Reverting it fixes the problem. Bisect log is attached
+> > > for reference.
+> > > 
+> > 
+> > Also affected are arm:cubieboard emulations, with same symptom.
+> > arm:bletchley-bmc emulations crash. In both cases, reverting this patch
+> > fixes the problem.
+> > 
+> > Guenter
