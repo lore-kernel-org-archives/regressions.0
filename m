@@ -1,136 +1,110 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4D16636
-	for <regressions@lists.linux.dev>; Tue, 28 Feb 2023 01:48:08 +0000 (UTC)
-Received: from dggpemm100009.china.huawei.com (unknown [172.30.72.56])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4PQgFB1Xt9zKqGN;
-	Tue, 28 Feb 2023 09:46:06 +0800 (CST)
-Received: from [10.174.179.24] (10.174.179.24) by
- dggpemm100009.china.huawei.com (7.185.36.113) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.21; Tue, 28 Feb 2023 09:48:03 +0800
-Subject: Re: [PATCH RFC] arm64/vmalloc: use module region only for
- module_alloc() if CONFIG_RANDOMIZE_BASE is set
-To: Ard Biesheuvel <ardb@kernel.org>, Linux regressions mailing list
-	<regressions@lists.linux.dev>
-References: <20221227092634.445212-1-liushixin2@huawei.com>
- <b93ec55c-f6f0-274a-e7d6-edb419b4be8a@huawei.com>
- <20230129134147.f19ca0641f1133f3e3bc185b@linux-foundation.org>
- <20230131150644.GA2605@willie-the-truck>
- <20230131150750.GB2605@willie-the-truck>
- <CAMj1kXGaxehOcrQqFZNA+C3dTk_H8sBr_1wsN3_KN82nXVaG_g@mail.gmail.com>
- <20230207112940.GA12147@willie-the-truck>
- <8c287b1d-476c-7b00-27f6-76c3a1a5fd46@leemhuis.info>
- <CAMj1kXGWEaQXoKj=DzG9XpVGi4t5zfE-RSG0BodVL-b47nsj-A@mail.gmail.com>
-CC: Andrew Morton <akpm@linux-foundation.org>, Catalin Marinas
-	<catalin.marinas@arm.com>, Uladzislau Rezki <urezki@gmail.com>, Christoph
- Hellwig <hch@infradead.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>, Will Deacon
-	<will@kernel.org>
-From: Liu Shixin <liushixin2@huawei.com>
-Message-ID: <856fa1a1-cecd-a7b7-a6b0-3e3c8fedda47@huawei.com>
-Date: Tue, 28 Feb 2023 09:48:03 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07DB6636
+	for <regressions@lists.linux.dev>; Tue, 28 Feb 2023 01:58:31 +0000 (UTC)
+Received: by mail-ed1-f47.google.com with SMTP id cq23so33936348edb.1
+        for <regressions@lists.linux.dev>; Mon, 27 Feb 2023 17:58:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1677549510;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=A5kj/tOIuYssE3nfGvgZJGSzN2o3Am/0V2s7h/8HaHc=;
+        b=BsUAShZ8pW0HHowCbX3WiXBRR36o5wnDHxqee+ebCqVym9PUvnjfKqLkgU29H/SxIU
+         x6NtZCJbyVRSGj+wjr7IYfiaqsLyOpc09vexbdcerpUP2Sq7HmMQKqjUPbtnfQKucKtE
+         XHpLkj48IMYRmlhg1OumlalykVOLMtcndTTb8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1677549510;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=A5kj/tOIuYssE3nfGvgZJGSzN2o3Am/0V2s7h/8HaHc=;
+        b=Bll1PokgWOiMkij0hbKlWkjClMIrxnaCz/2ACmHOxxoFEetGc5PUvUW4uHwVudwdPj
+         T0ePPSA7PDeM7QJiQPMtBevcxWccDfKvvII6Dp7dD8eaXO8Hr6gJ4pmMxvaOY+2lsdLD
+         IDbaybKYhk24I2jgplNExpQcc8cOPtjSK75iidIU5VM88OeuIxfebNfvnSOFMYSOv6sU
+         D8TNDfoR63jYFPbKPeIXWsfDew1RztXFea3Aw9Y8Mh7f2AD69kaJ8Yl7Eim/X3b6h8/Q
+         1S0+E+LZHLXQpDMA9pSMWc/IaQkd8Oi/0IZTTksfESzIscAsZgkDkumPOwklosya5Y3Y
+         yFyQ==
+X-Gm-Message-State: AO0yUKWavYTt7YlKTbmYRdR0+5KjpAoquGNiOB0vfUXXS5VnQrT5F9px
+	Aj6c6jIWdP5kFtADwn9CLV0S7UB+sosuNhsVoC8=
+X-Google-Smtp-Source: AK7set8hWDG27w4gnUCTddKztC/JjnlasO+QA7XmnL3ANLkP4PRoZ4mBXZcZGj9fThCemLCUnNFSFg==
+X-Received: by 2002:a17:906:7c8:b0:8b1:a3c7:a9c9 with SMTP id m8-20020a17090607c800b008b1a3c7a9c9mr764135ejc.70.1677549509842;
+        Mon, 27 Feb 2023 17:58:29 -0800 (PST)
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com. [209.85.208.47])
+        by smtp.gmail.com with ESMTPSA id q20-20020a1709060e5400b008e772c97db6sm3834303eji.128.2023.02.27.17.58.29
+        for <regressions@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Feb 2023 17:58:29 -0800 (PST)
+Received: by mail-ed1-f47.google.com with SMTP id cy6so33843380edb.5
+        for <regressions@lists.linux.dev>; Mon, 27 Feb 2023 17:58:29 -0800 (PST)
+X-Received: by 2002:a17:906:2ec8:b0:877:747e:f076 with SMTP id
+ s8-20020a1709062ec800b00877747ef076mr368063eji.0.1677549508810; Mon, 27 Feb
+ 2023 17:58:28 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CAMj1kXGWEaQXoKj=DzG9XpVGi4t5zfE-RSG0BodVL-b47nsj-A@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.179.24]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- dggpemm100009.china.huawei.com (7.185.36.113)
-X-CFilter-Loop: Reflected
+References: <1677529301-19530-1-git-send-email-george.kennedy@oracle.com> <face2b1b-0f2e-4a79-a71b-79681fc56273@t-8ch.de>
+In-Reply-To: <face2b1b-0f2e-4a79-a71b-79681fc56273@t-8ch.de>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Mon, 27 Feb 2023 17:58:12 -0800
+X-Gmail-Original-Message-ID: <CAHk-=whxC0ob3f--B-igBp34ujA5PZQMcTnDQ8Zh8HA7+ZbeWg@mail.gmail.com>
+Message-ID: <CAHk-=whxC0ob3f--B-igBp34ujA5PZQMcTnDQ8Zh8HA7+ZbeWg@mail.gmail.com>
+Subject: Re: [PATCH v2] vc_screen: modify vcs_size() handling in vcs_read()
+To: linux@weissschuh.net
+Cc: George Kennedy <george.kennedy@oracle.com>, jirislaby@kernel.org, 
+	gregkh@linuxfoundation.org, sfr@canb.auug.org.au, akpm@linux-foundation.org, 
+	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, 
+	regressions@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, Feb 27, 2023 at 5:46=E2=80=AFPM <linux@weissschuh.net> wrote:
+>
+> This still seems to be broken for me.
 
+Looks that way.
 
-On 2023/2/28 0:14, Ard Biesheuvel wrote:
-> On Mon, 27 Feb 2023 at 16:08, Linux regression tracking (Thorsten
-> Leemhuis) <regressions@leemhuis.info> wrote:
->> [CCing the regression list, as it should be in the loop for regressions:
->> https://docs.kernel.org/admin-guide/reporting-regressions.html]
->>
->> On 07.02.23 12:29, Will Deacon wrote:
->>> On Tue, Jan 31, 2023 at 05:03:32PM +0100, Ard Biesheuvel wrote:
->>>> On Tue, 31 Jan 2023 at 16:07, Will Deacon <will@kernel.org> wrote:
->>>>> On Tue, Jan 31, 2023 at 03:06:44PM +0000, Will Deacon wrote:
->>>>>> On Sun, Jan 29, 2023 at 01:41:47PM -0800, Andrew Morton wrote:
->>>>>>> On Sun, 29 Jan 2023 10:44:31 +0800 Liu Shixin <liushixin2@huawei.com> wrote:
->>>>>>>> On 2022/12/27 17:26, Liu Shixin wrote:
->>>>>>>>> After I add a 10GB pmem device, I got the following error message when
->>>>>>>>> insert module:
->>>>>>>>>
->>>>>>>>>  insmod: vmalloc error: size 16384, vm_struct allocation failed,
->>>>>>>>>  mode:0xcc0(GFP_KERNEL), nodemask=(null),cpuset=/,mems_allowed=0
->>>>>>>>>
->>>>>>>>> If CONFIG_RANDOMIZE_BASE is set, the module region can be located in the
->>>>>>>>> vmalloc region entirely. Although module_alloc() can fall back to a 2GB
->>>>>>>>> window if ARM64_MODULE_PLTS is set, the module region is still easily
->>>>>>>>> exhausted because the module region is located at bottom of vmalloc region
->>>>>>>>> and the vmalloc region is allocated from bottom to top.
->>>>>>>>>
->>>>>>>>> Skip module region if not calling from module_alloc().
->>>>>>> I'll assume this is for the arm tree.
->>>>>>>
->>>>>>> Acked-by: Andrew Morton <akpm@linux-foundation.org>
->>>>>> This looks like the same issue previously reported at:
->>>>>>
->>>>>> https://lore.kernel.org/all/e6a804de-a5f7-c551-ffba-e09d04e438fc@hisilicon.com/
->>>>>>
->>>>>> where Ard had a few suggestions but, afaict, they didn't help.
->>>>>>
->>>> Thanks for the cc.
->>>>
->>>> So this is a bit clunky, and I wonder whether we wouldn't be better
->>>> off just splitting the vmalloc region into two separate regions: one
->>>> for the kernel and modules, and one for everything else. That way, we
->>>> lose one bit of entropy in the randomized placement, but the default
->>>> 48-bit VA space is vast anway, and even on 39-bit VA configs (such as
->>>> Android), I seriously doubt that we come anywhere close to exhausting
->>>> the vmalloc space today.
->>> That sounds like a good idea to me.
->>>
->>> Liu Shixin -- do you think you could have a go at implementing Ard's
->>> suggestion instead?
->> Liu Shixin, did you ever look into realizing this idea?
->>
->> Or was some progress already made and I just missed it?
->>
-> This patch
+> I still need the patch from
 >
-> https://lore.kernel.org/all/20230223204101.1500373-1-ardb@kernel.org/
->
-> should fix the issue.
->
->> I'm asking, as the idea discussed afaics is not only supposed to fix the
->> regression you tried to address, but also one that is now three months
->> old and stalled since Mid-December -- which is really unfortunate, as
->> that's not how regressions should be handled. :-/
-> Is it documented anywhere how regressions should be handled? The
-> mailing list is flooded with hard to reproduce reports from users as
-> well as automatic fuzzers and build bots, so I don't think it is
-> entirely unreasonable to move unresponsive reporters to the back of
-> the queue.
->
->> But well, it afaik was
->> caused by a patch from Ard, so it's obviously not your job to address
->> it. But it seems you were working on it.
->>
-> We are all working together here, so please refrain from telling
-> people what they should or should not be working on. (I am aware that
-> you probably did not mean it that way, but things tend to get lost in
-> translation very easily on the mailing list)
->
-> Liu, could you please check whether the linked patch addresses your issue?
-Thanks, I will try this patch.
->
-> Thanks,
-> Ard.
-> .
->
+> https://lore.kernel.org/lkml/20230220064612.1783-1-linux@weissschuh.net/
 
+.. and that has the same problem with "what if the error happens
+during an iteration that wasn't the first, and we already succeeded
+partially".
+
+The "goto unlock_out" is bogus, since it jumps over all the "update
+pos and check if we read something".
+
+It was the correct thing to do *above* the loop, but not inside the loop.
+
+IOW, I think the proper patch is to also turn the "goto unlock_out"
+into a "break". Mind testing something like this (whitespace-damaged,
+but you get the idea):
+
+    --- a/drivers/tty/vt/vc_screen.c
+    +++ b/drivers/tty/vt/vc_screen.c
+    @@ -403,10 +403,11 @@ vcs_read(struct file *file, char __user
+*buf, size_t count, loff_t *ppos)
+                unsigned int this_round, skip =3D 0;
+                int size;
+
+    -           ret =3D -ENXIO;
+                vc =3D vcs_vc(inode, &viewed);
+    -           if (!vc)
+    -                   goto unlock_out;
+    +           if (!vc) {
+    +                   ret =3D -ENXIO;
+    +                   break;
+    +           }
+
+                /* Check whether we are above size each round,
+                 * as copy_to_user at the end of this loop
+
+which hopefully really fixes this (at least I don't see any other
+"goto unlock_out" cases).
+
+              Linus
