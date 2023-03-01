@@ -1,126 +1,288 @@
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2170D2F32
-	for <regressions@lists.linux.dev>; Wed,  1 Mar 2023 13:00:56 +0000 (UTC)
-Received: by mail-lj1-f181.google.com with SMTP id a4so10557519ljr.9
-        for <regressions@lists.linux.dev>; Wed, 01 Mar 2023 05:00:55 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30F912F32
+	for <regressions@lists.linux.dev>; Wed,  1 Mar 2023 13:28:20 +0000 (UTC)
+Received: by mail-ed1-f46.google.com with SMTP id o15so51230459edr.13
+        for <regressions@lists.linux.dev>; Wed, 01 Mar 2023 05:28:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1677675654;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=qubv27DiDwlC9u0MucshTHdbQ727qIsd5IiVQIsU3iA=;
-        b=QcT2MW6k9iEQOu9UaRMh0MZIYKfDcj7Xykn63IUOpR6qyXCtdyJkMO8bBtngWZqliX
-         ytnu8nRVUeaD8UVBCQCoPEeeWubq5FspN+N1S0YWwK8oSHEo72XDVUN4nHPuBgnzu6Cr
-         B4qTwlvN7wlZtb6UWVNt9fkTNPCCdSdD1RLHxkngQ8p7n43m1suPiC8kOdV24+RGlWQ7
-         snPudnLtgIG0QS1FmENGXSNY8xNsyYpjVi7Lgd4whVgbJDMqwr1Bqfdoo+mu+HRPlEEm
-         U1+RVAq8/1FQSg1kySLi8mo9AJGADIUBZpEYkfH/l7YSjKUdShr2Wtyh0ZHrm9naUOU6
-         IOMg==
+        d=gooddata.com; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=lmqqQlgYZYOHqJWu/VnESxyYWak0lPlw9Q2NBrFdhdo=;
+        b=DVQ9VMrdCQ7kuR5yVnPGPP0n8n5sx2X8eraab1SMf9KgJ1qJSf6msxMoCxm8eKH4Jw
+         woCpDR0zyTpE7Nu10xQIy/svK77phk1Y7SlW+Dz3jyFnNm04Y91uqUR6VPjkLQzEJqIC
+         sQPuTC/44D6f5JAU/3LK+RpiHljkcJWK9XBi4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1677675654;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qubv27DiDwlC9u0MucshTHdbQ727qIsd5IiVQIsU3iA=;
-        b=WTum0q5YMGx9YuRL2yAe/+tB5BrmHc/Ru8rLTRex1EAEnC4TeqQxT4EsAOs341qnbo
-         Ry5m90t8eGYTkO/pnmSg5vSsX6DkxKHZxRbro9j+iFroQFQl7m3F05cBgXVBN9XrXDKj
-         pP7PxO3YKzUcrP3FrgB/af9uZrFCAryoXaoyNyPFFWSm+8zSyJxvTmtWf9ZVeBaSmKiG
-         6rXbWIxfalA2fexAfC0t8eaUqnpuPvQDLT7R2WZdT4Yhy9WGPOWaJHe5mIIcNMQu19Mk
-         frJJTqF4RJI9Yvm76fq24aUBAhmZcwqgwa66nKRQ2KyhgqD0owCS6QsBZ9mv8M3ugjVy
-         Avog==
-X-Gm-Message-State: AO0yUKVwt4dLvkaH4c3ZFcQ8TTxg+EMUMUNtyARufK+xeYiNKiVx8c8Q
-	KUegep5dt6G+8MEewl8X7kDgXGKTyJ8=
-X-Google-Smtp-Source: AK7set9wpDa15h9smNLGWGmgZTpzZGnMy28pdVnR+UobMgf3TSpw9Noot7aD1FrEZPTC66B2Vq/10A==
-X-Received: by 2002:a2e:b90c:0:b0:293:2d4d:7e00 with SMTP id b12-20020a2eb90c000000b002932d4d7e00mr1862707ljb.12.1677675653657;
-        Wed, 01 Mar 2023 05:00:53 -0800 (PST)
-Received: from ?IPV6:2001:470:27:8a1::2? (tunnel811020-pt.tunnel.tserv24.sto1.ipv6.he.net. [2001:470:27:8a1::2])
-        by smtp.gmail.com with ESMTPSA id v21-20020a197415000000b004db250355a2sm1727653lfe.103.2023.03.01.05.00.52
-        for <regressions@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 01 Mar 2023 05:00:52 -0800 (PST)
-Message-ID: <4634aff6-1d1e-f3e4-d33a-f9677e305ebe@gmail.com>
-Date: Wed, 1 Mar 2023 16:00:52 +0300
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=lmqqQlgYZYOHqJWu/VnESxyYWak0lPlw9Q2NBrFdhdo=;
+        b=ZGVMuHozzxUlVdEIGEO48CtFbrpxSd5jD3TE1GN8C/FqC3mU5pmHSolHySf9JNf752
+         f+WsqGl2S6SX6GwgX/EY2Y6U39yiyX/W9gaotkpfMZ9SEs6qL8J54NdwgeA3m5zsc4kk
+         NY9KoEojssD+hqAR7LjYNdu84ckpU3UGwZRnjxLWNgjH3fiZMeZFRZYX7T+jA1HAD8+B
+         v71YCHxb7EYnF/df4BEfB8O/eR0oSHhCbMfjsXkKp0THUsN7OrcigDeD04XraVbNcrJR
+         llV6ecO9XowkMxrm++xRkWsi4lW75vvZINfUKJC1onVtXjVXvY47B3zoxs2SdL0z+6PP
+         TmLA==
+X-Gm-Message-State: AO0yUKWSKUnaYEIYRkqWWKycWJTs7REUBGddmEG3rXnfCUo9WQV3DRnR
+	R0AyoO+jl/hZv5KtGbs8n1DnJj7bhfOEoOHUKQzB3w==
+X-Google-Smtp-Source: AK7set/Lhi4kDhOjni1GIs/lVYMerkY1xu1uJSSgpY7mTTqN0GGKIdjPVK7wZOd4XmeZEeOlAmP9EeFcfhCP5h7Vb1c=
+X-Received: by 2002:a17:906:3586:b0:8ab:b606:9728 with SMTP id
+ o6-20020a170906358600b008abb6069728mr3299480ejb.5.1677677298193; Wed, 01 Mar
+ 2023 05:28:18 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [Bug 216646] having TRANSPARENT_HUGEPAGE enabled hangs some
- applications (supervisor read access in kernel mode)
-Content-Language: en-US
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-References: <bug-216646-27@https.bugzilla.kernel.org/>
- <bug-216646-27-o4jKola2S5@https.bugzilla.kernel.org/>
- <20221121125400.334190a6d2791b0c9afbfea0@linux-foundation.org>
- <220fd094-7cf1-9d17-8380-98d5663dc5da@leemhuis.info>
- <Y4ouwhqSyDV7I+D9@casper.infradead.org>
- <Y4p0tbbbQ5JkyZs5@casper.infradead.org>
- <20221203014420.76281b930dbc64f51eda0f8b@gmail.com>
- <Y45Tp1Br2Em8e3Fr@casper.infradead.org>
- <20221206050845.6ba9351cef3295be4b923ea8@gmail.com>
- <69b81148-8e62-d697-e92b-c3b042214a09@leemhuis.info>
- <c7e325e6-48a5-902c-054a-dbb32d3d938a@leemhuis.info>
- <edd796af-c53e-0908-599f-2fce92160e92@gmail.com>
- <adb98c6c-dd64-7cb1-4be9-b663a100c460@leemhuis.info>
-From: Mikhail Pletenv <mmp.dux@gmail.com>
-In-Reply-To: <adb98c6c-dd64-7cb1-4be9-b663a100c460@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <CAK8fFZ6A_Gphw_3-QMGKEFQk=sfCw1Qmq0TVZK3rtAi7vb621A@mail.gmail.com>
+ <68b14b11-d0c7-65c9-4eeb-0487c95e395d@leemhuis.info> <675161ac-35c5-ee5d-e96b-8e70d9d11d98@leemhuis.info>
+ <CAK8fFZ6jbCYK7FFoYGJpq5oH195t+dBF0sbOr_V6k4Q8pPb_ow@mail.gmail.com> <f7ab5942-eee2-88e4-ffac-007de0ed06ba@intel.com>
+In-Reply-To: <f7ab5942-eee2-88e4-ffac-007de0ed06ba@intel.com>
+From: Jaroslav Pulchart <jaroslav.pulchart@gooddata.com>
+Date: Wed, 1 Mar 2023 14:27:51 +0100
+Message-ID: <CAK8fFZ4-kDdB_RkQG5xx2WuELe-TprD-Vfd_XJAB_4h54eR=sw@mail.gmail.com>
+Subject: Re: Network do not works with linux >= 6.1.2. Issue bisected to
+ "425c9bd06b7a70796d880828d15c11321bdfb76d" (RDMA/irdma: Report the correct
+ link speed)
+To: Tony Nguyen <anthony.l.nguyen@intel.com>
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>, 
+	Linux regressions mailing list <regressions@lists.linux.dev>, kamalheib1@gmail.com, shiraz.saleem@intel.com, 
+	leon@kernel.org, sashal@kernel.org, linux-rdma@vger.kernel.org, 
+	netdev@vger.kernel.org, Igor Raits <igor.raits@gooddata.com>
+Content-Type: text/plain; charset="UTF-8"
 
-That's all right, i was gearing up to re-test this anyway =)
-
-On 2/27/23 14:40, Linux regression tracking (Thorsten Leemhuis) wrote:
-> On 22.02.23 17:45, Mikhail Pletenv wrote:
->> To my knowledge it wasn't, Matthew didn't reply to my last testing
->> results and i'm kinda hesitant to poke him. I've been using a workaround
->> for the time being. I will run tests again later this week (maybe issue
->> was fixed and i didn't notice because of workaround) and i can report
->> the results to you if you wish.
-> Thx for your reply. Ugh, I noticed I misread your mail. But seems I was
-> lucky and the problem is still there according to your latest public
-> message on this. Thx for the update!
 >
->> Also i'm thinking about reporting this on gentoo kernel bugzilla, since
->> 6.1.12 is now considered stable there.
->>
->> Best wishes, Mikhail
->>
->> On 2/16/23 15:43, Linux regression tracking (Thorsten Leemhuis) wrote:
->>> [off-list]
->>>
->>> Quick question, was that issue (originally filed in
->>> https://bugzilla.kernel.org/show_bug.cgi?id=216646 ) ever fixed? It
->>> doesn't look like it, but I wonder if I'm missing something
->>>
->>> Ciao, Thorsten
->>>
->>> On 16.12.22 06:23, Thorsten Leemhuis wrote:
->>>> Hi, this is your Linux kernel regression tracker. Top-posting for once,
->>>> to make this easily accessible to everyone.
->>>>
->>>> Was some progress made to get this regression resolved? From here it
->>>> looks kinda stalled, that's why I'm asking -- but maybe I just missed
->>>> something.
->>>>
->>>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
->>>>
->>>> P.S.: As the Linux kernel's regression tracker I deal with a lot of
->>>> reports and sometimes miss something important when writing mails like
->>>> this. If that's the case here, don't hesitate to tell me in a public
->>>> reply, it's in everyone's interest to set the public record straight.
->>>>
->>>> On 06.12.22 03:08, Mikhail Pletnev wrote:
->>>>> On Mon, 5 Dec 2022 20:25:11 +0000
->>>>> Matthew Wilcox <willy@infradead.org> wrote:
->>>>>> Thanks!  I think this may be the problem ...
->>>>>>
->>>>> Hi Matthew, thanks for swift response, i've applied your last patch
->>>>> and ran my stress test a couple of times. It's still constistently
->>>>> crashing (albeit it seems in a different place):
->>>>>
->>>>> .....
->>>> #regzbot poke
+> On 2/28/2023 4:33 AM, Jaroslav Pulchart wrote:
+> >>
+> >> Hi, this is your Linux kernel regression tracker. Top-posting for once,
+> >> to make this easily accessible to everyone.
+> >>
+> >> On 06.01.23 12:11, Linux kernel regression tracking (#adding) wrote:
+> >>> On 06.01.23 08:55, Jaroslav Pulchart wrote:
+> >>>> Hello,
+> >>>>
+> >>>> I would like to report a >= 6.1.2 some network regression (looks like
+> >>>> NIC us not UP) on our Dell R7525 servers with E810 NICs. The issue was
+> >>>> observed after I updated 6.1.0 to 6.1.2 or newer (tested up to newest
+> >>>> 6.1.4-rc1). The system is not accesible and all services are in D
+> >>>> state after each reboot.
+> >>
+> >> Can anyone please provide a status on this? It seems to take quite a
+> >> while to get this regression fixed, which is unfortunate. Or was
+> >> progress made somewhere and I just missed it?
+> >>
+> >> I noticed Tony tried to address this in mainline, but the last thing I'm
+> >> aware of is "Please ignore/drop this. Just saw that this change doesn't
+> >> solve the issue." here:
+> >>
+> >
+> > FYI: We are building 6.1.y with the provided patch to fix the
+> > regression in our environment.
+>
+> Thanks for the input Jaroslav; just to be clear, are you using the v1
+> [1] or v2 [2] of the patch?
+
+We are using v1 [1] of the patch.
+
+
+>
+> We're doing more testing on v2, but I was going to reach out to you
+> afterwards to see if you would mind testing the v2 as we haven't heard
+> from the other reporter who said v2 didn't work for him.
+>
+> Thanks,
+> Tony
+>
+> [1]
+> https://lore.kernel.org/netdev/20230131213703.1347761-2-anthony.l.nguyen@intel.com/
+> [2]
+> https://lore.kernel.org/netdev/20230217004201.2895321-1-anthony.l.nguyen@intel.com/
+>
+> >> https://lore.kernel.org/all/b944d1d4-7f90-dcef-231c-91bb031a4275@intel.com/#t
+> >>
+> >> Should the backport to 6.1.y (425c9bd06b7a ) maybe be dropped to at
+> >> least resolve the issue there until this is fixed in mainline? Or would
+> >> that cause a regression as well?
+> >>
+> >> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> >> --
+> >> Everything you wanna know about Linux kernel regression tracking:
+> >> https://linux-regtracking.leemhuis.info/about/#tldr
+> >> If I did something stupid, please tell me, as explained on that page.
+> >>
+> >> #regzbot poke
+> >>
+> >>>> [  257.625207]       Tainted: G            E      6.1.4-0.gdc.el9.x86_64 #1
+> >>>> [  257.631911] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs"
+> >>>> disables this message.
+> >>>> [  257.639740] task:kworker/u192:1  state:D stack:0     pid:11
+> >>>> ppid:2      flags:0x00004000
+> >>>> [  257.648095] Workqueue: netns cleanup_net
+> >>>> [  257.652029] Call Trace:
+> >>>> [  257.654481]  <TASK>
+> >>>> [  257.656589]  __schedule+0x1eb/0x630
+> >>>> [  257.660087]  schedule+0x5a/0xd0
+> >>>> [  257.663233]  schedule_preempt_disabled+0x11/0x20
+> >>>> [  257.667851]  __mutex_lock.constprop.0+0x372/0x6c0
+> >>>> [  257.672561]  rdma_dev_change_netns+0x25/0x120 [ib_core]
+> >>>> [  257.677821]  rdma_dev_exit_net+0x139/0x1e0 [ib_core]
+> >>>> [  257.682804]  ops_exit_list+0x30/0x70
+> >>>> [  257.686382]  cleanup_net+0x213/0x3b0
+> >>>> [  257.689964]  process_one_work+0x1e2/0x3b0
+> >>>> [  257.693984]  ? rescuer_thread+0x390/0x390
+> >>>> [  257.697995]  worker_thread+0x50/0x3a0
+> >>>> [  257.701661]  ? rescuer_thread+0x390/0x390
+> >>>> [  257.705674]  kthread+0xd6/0x100
+> >>>> [  257.708819]  ? kthread_complete_and_exit+0x20/0x20
+> >>>> [  257.713613]  ret_from_fork+0x1f/0x30
+> >>>> [  257.717192]  </TASK>
+> >>>> [  257.719496] INFO: task kworker/87:0:470 blocked for more than 122 seconds.
+> >>>> [  257.726423]       Tainted: G            E      6.1.4-0.gdc.el9.x86_64 #1
+> >>>> [  257.733123] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs"
+> >>>> disables this message.
+> >>>> [  257.740949] task:kworker/87:0    state:D stack:0     pid:470
+> >>>> ppid:2      flags:0x00004000
+> >>>> [  257.749307] Workqueue: events linkwatch_event
+> >>>> [  257.753672] Call Trace:
+> >>>> [  257.756124]  <TASK>
+> >>>> [  257.758228]  __schedule+0x1eb/0x630
+> >>>> [  257.761723]  schedule+0x5a/0xd0
+> >>>> [  257.764867]  schedule_preempt_disabled+0x11/0x20
+> >>>> [  257.769487]  __mutex_lock.constprop.0+0x372/0x6c0
+> >>>> [  257.774196]  ? pick_next_task+0x57/0x9b0
+> >>>> [  257.778127]  ? finish_task_switch.isra.0+0x8f/0x2a0
+> >>>> [  257.783007]  linkwatch_event+0xa/0x30
+> >>>> [  257.786674]  process_one_work+0x1e2/0x3b0
+> >>>> [  257.790687]  worker_thread+0x50/0x3a0
+> >>>> [  257.794352]  ? rescuer_thread+0x390/0x390
+> >>>> [  257.798365]  kthread+0xd6/0x100
+> >>>> [  257.801513]  ? kthread_complete_and_exit+0x20/0x20
+> >>>> [  257.806303]  ret_from_fork+0x1f/0x30
+> >>>> [  257.809885]  </TASK>
+> >>>> [  257.812109] INFO: task kworker/39:1:614 blocked for more than 123 seconds.
+> >>>> [  257.818984]       Tainted: G            E      6.1.4-0.gdc.el9.x86_64 #1
+> >>>> [  257.825686] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs"
+> >>>> disables this message.
+> >>>> [  257.833519] task:kworker/39:1    state:D stack:0     pid:614
+> >>>> ppid:2      flags:0x00004000
+> >>>> [  257.841869] Workqueue: infiniband ib_cache_event_task [ib_core]
+> >>>> [  257.847802] Call Trace:
+> >>>> [  257.850252]  <TASK>
+> >>>> [  257.852360]  __schedule+0x1eb/0x630
+> >>>> [  257.855851]  schedule+0x5a/0xd0
+> >>>> [  257.858998]  schedule_preempt_disabled+0x11/0x20
+> >>>> [  257.863617]  __mutex_lock.constprop.0+0x372/0x6c0
+> >>>> [  257.868325]  ib_get_eth_speed+0x65/0x190 [ib_core]
+> >>>> [  257.873127]  ? ib_cache_update.part.0+0x4b/0x2b0 [ib_core]
+> >>>> [  257.878619]  ? __kmem_cache_alloc_node+0x18c/0x2b0
+> >>>> [  257.883417]  irdma_query_port+0xb3/0x110 [irdma]
+> >>>> [  257.888051]  ib_query_port+0xaa/0x100 [ib_core]
+> >>>> [  257.892601]  ib_cache_update.part.0+0x65/0x2b0 [ib_core]
+> >>>> [  257.897924]  ? pick_next_task+0x57/0x9b0
+> >>>> [  257.901855]  ? dequeue_task_fair+0xb6/0x3c0
+> >>>> [  257.906043]  ? finish_task_switch.isra.0+0x8f/0x2a0
+> >>>> [  257.910920]  ib_cache_event_task+0x58/0x80 [ib_core]
+> >>>> [  257.915906]  process_one_work+0x1e2/0x3b0
+> >>>> [  257.919918]  ? rescuer_thread+0x390/0x390
+> >>>> [  257.923931]  worker_thread+0x50/0x3a0
+> >>>> [  257.927595]  ? rescuer_thread+0x390/0x390
+> >>>> [  257.931609]  kthread+0xd6/0x100
+> >>>> [  257.934755]  ? kthread_complete_and_exit+0x20/0x20
+> >>>> [  257.939549]  ret_from_fork+0x1f/0x30
+> >>>> [  257.943128]  </TASK>
+> >>>> [  257.945438] INFO: task NetworkManager:3387 blocked for more than 123 seconds.
+> >>>> [  257.952577]       Tainted: G            E      6.1.4-0.gdc.el9.x86_64 #1
+> >>>> [  257.959274] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs"
+> >>>> disables this message.
+> >>>> [  257.967099] task:NetworkManager  state:D stack:0     pid:3387
+> >>>> ppid:1      flags:0x00004002
+> >>>> [  257.975446] Call Trace:
+> >>>> [  257.977901]  <TASK>
+> >>>> [  257.980004]  __schedule+0x1eb/0x630
+> >>>> [  257.983498]  schedule+0x5a/0xd0
+> >>>> [  257.986641]  schedule_timeout+0x11d/0x160
+> >>>> [  257.990654]  __wait_for_common+0x90/0x1e0
+> >>>> [  257.994666]  ? usleep_range_state+0x90/0x90
+> >>>> [  257.998854]  __flush_workqueue+0x13a/0x3f0
+> >>>> [  258.002955]  ? __kernfs_remove.part.0+0x11e/0x1e0
+> >>>> [  258.007661]  ib_cache_cleanup_one+0x1c/0xe0 [ib_core]
+> >>>> [  258.012721]  __ib_unregister_device+0x62/0xa0 [ib_core]
+> >>>> [  258.017959]  ib_unregister_device+0x22/0x30 [ib_core]
+> >>>> [  258.023024]  irdma_remove+0x1a/0x60 [irdma]
+> >>>> [  258.027223]  auxiliary_bus_remove+0x18/0x30
+> >>>> [  258.031414]  device_release_driver_internal+0x1aa/0x230
+> >>>> [  258.036643]  bus_remove_device+0xd8/0x150
+> >>>> [  258.040654]  device_del+0x18b/0x3f0
+> >>>> [  258.044149]  ice_unplug_aux_dev+0x42/0x60 [ice]
+> >>>> [  258.048707]  ice_lag_changeupper_event+0x287/0x2a0 [ice]
+> >>>> [  258.054038]  ice_lag_event_handler+0x51/0x130 [ice]
+> >>>> [  258.058930]  raw_notifier_call_chain+0x41/0x60
+> >>>> [  258.063381]  __netdev_upper_dev_link+0x1a0/0x370
+> >>>> [  258.068008]  netdev_master_upper_dev_link+0x3d/0x60
+> >>>> [  258.072886]  bond_enslave+0xd16/0x16f0 [bonding]
+> >>>> [  258.077517]  ? nla_put+0x28/0x40
+> >>>> [  258.080756]  do_setlink+0x26c/0xc10
+> >>>> [  258.084249]  ? avc_alloc_node+0x27/0x180
+> >>>> [  258.088173]  ? __nla_validate_parse+0x141/0x190
+> >>>> [  258.092708]  __rtnl_newlink+0x53a/0x620
+> >>>> [  258.096549]  rtnl_newlink+0x44/0x70
+> >>>> [  258.100040]  rtnetlink_rcv_msg+0x159/0x3d0
+> >>>> [  258.104140]  ? rtnl_calcit.isra.0+0x140/0x140
+> >>>> [  258.108496]  netlink_rcv_skb+0x4e/0x100
+> >>>> [  258.112338]  netlink_unicast+0x23b/0x360
+> >>>> [  258.116264]  netlink_sendmsg+0x24e/0x4b0
+> >>>> [  258.120191]  sock_sendmsg+0x5f/0x70
+> >>>> [  258.123684]  ____sys_sendmsg+0x241/0x2c0
+> >>>> [  258.127609]  ? copy_msghdr_from_user+0x6d/0xa0
+> >>>> [  258.132054]  ___sys_sendmsg+0x88/0xd0
+> >>>> [  258.135722]  ? ___sys_recvmsg+0x88/0xd0
+> >>>> [  258.139559]  ? wake_up_q+0x4a/0x90
+> >>>> [  258.142967]  ? rseq_get_rseq_cs.isra.0+0x16/0x220
+> >>>> [  258.147673]  ? __fget_light+0xa4/0x130
+> >>>> [  258.151434]  __sys_sendmsg+0x59/0xa0
+> >>>> [  258.155012]  do_syscall_64+0x38/0x90
+> >>>> [  258.158591]  entry_SYSCALL_64_after_hwframe+0x63/0xcd
+> >>>> [  258.163645] RIP: 0033:0x7ff23714fa7d
+> >>>> [  258.167226] RSP: 002b:00007ffdddfc8c70 EFLAGS: 00000293 ORIG_RAX:
+> >>>> 000000000000002e
+> >>>> [  258.174798] RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007ff23714fa7d
+> >>>> [  258.181933] RDX: 0000000000000000 RSI: 00007ffdddfc8cb0 RDI: 000000000000000d
+> >>>> [  258.189063] RBP: 00005572f5d77040 R08: 0000000000000000 R09: 0000000000000000
+> >>>> [  258.196197] R10: 0000000000000000 R11: 0000000000000293 R12: 00007ffdddfc8e1c
+> >>>> [  258.203332] R13: 00007ffdddfc8e20 R14: 0000000000000000 R15: 00007ffdddfc8e28
+> >>>> [  258.210464]  </TASK>
+> >>>> ...
+> >>>>
+> >>>> I bisected the issue to a commit
+> >>>> "425c9bd06b7a70796d880828d15c11321bdfb76d" (RDMA/irdma: Report the
+> >>>> correct link speed). Reverting this commit in my kernel build "fix"
+> >>>> the issue and the server has a working network again.
+> >>>
+> >>> Thanks for the report. To be sure the issue doesn't fall through the
+> >>> cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
+> >>> tracking bot:
+> >>>
+> >>> #regzbot ^introduced 425c9bd06b7a7079
+> >>> #regzbot title RDMA/irdma: network stopped working
+> >>> #regzbot ignore-activity
+> >>>
+> >>> This isn't a regression? This issue or a fix for it are already
+> >>> discussed somewhere else? It was fixed already? You want to clarify when
+> >>> the regression started to happen? Or point out I got the title or
+> >>> something else totally wrong? Then just reply and tell me -- ideally
+> >>> while also telling regzbot about it, as explained by the page listed in
+> >>> the footer of this mail.
+> >>>
+> >>> Reminder for developers: When fixing the issue, add 'Link:' tags
+> >>> pointing to the report (see page linked in footer for details).
+> >>>
+> >>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> >>> --
+> >>> Everything you wanna know about Linux kernel regression tracking:
+> >>> https://linux-regtracking.leemhuis.info/about/#tldr
+> >>> That page also explains what to do if mails like this annoy you.
+> >>>
+> >>>
