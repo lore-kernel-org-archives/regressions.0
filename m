@@ -1,228 +1,248 @@
-Received: from mx08-001d1705.pphosted.com (mx08-001d1705.pphosted.com [185.183.30.70])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C4C9110B
-	for <regressions@lists.linux.dev>; Thu,  2 Mar 2023 16:09:25 +0000 (UTC)
-Received: from pps.filterd (m0209321.ppops.net [127.0.0.1])
-	by mx08-001d1705.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 322EolOF021526;
-	Thu, 2 Mar 2023 15:32:49 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sony.com; h=message-id : date :
- from : subject : to : cc : content-type : content-transfer-encoding :
- mime-version; s=S1; bh=SQ7q+5m7QC8vuh8KdrZLoYaoRcEZiM+cHPImqK7sU4g=;
- b=YJDf30Ca5q+2wGLtRbU1rHQMaP1tX+BOoF648sQNyGsoo+tM6RtHtq4Af4SqRPyI2BPa
- hx8WEVua3p32PnvUIrvzpQGnrqGEGjckYaNiGh+PrAR5R76E2Uv6P39Xnpajj+uMu9iP
- 3Th9iShxWuV8x/griLBfCK3LeskQjtg729AqmLlJHeGjsHaCgXsCvOpxHP575I6ABiRZ
- lQlMxXz//+xU9pid/Ccxg61iqjg5A4J58hbLZdfx3DDTavcmv5jZWOKEOogx8cD4dxcR
- wKxRFzZEB1DufoSRxKXfhU6pwR7xtTnF8/yKrTo386uNe4FEWDkbVcp8jRwMVTWu5Efx LQ== 
-Received: from eur03-dba-obe.outbound.protection.outlook.com (mail-dbaeur03lp2176.outbound.protection.outlook.com [104.47.51.176])
-	by mx08-001d1705.pphosted.com (PPS) with ESMTPS id 3nyb564yhw-1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29D8410FA
+	for <regressions@lists.linux.dev>; Thu,  2 Mar 2023 18:44:05 +0000 (UTC)
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 322HMsGc005310;
+	Thu, 2 Mar 2023 18:43:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=corp-2022-7-12;
+ bh=CKQ6kqONyXh2DUuoyQJd6bgfpIaUCsHUiJudzsG4plc=;
+ b=MknNTOZwTkcnpMotdCFwP0T+tj5behElhpGsIEWMkoDfMiIgayPI1bKbbqRc1NIyRnDR
+ 8Hlg8JsK01L2frp1hlFVq+s/1Y6CHAaiCrXLQLKJBtfkWciEfLd5j7bkruXNO3hrsEDW
+ an7yUAr4PDvGT1LB5ID1grG07UosBWQkVxIVezv+bdCe3Iqw/kjmyFEq5xPTe9QVInvS
+ yU4iKOf6i+BsHphWxWi3efTw5eFQM8o6k87Vm4lorzCfsYLtFVGayDQ/NLf0oAEnpZIZ
+ efHKT38S0zV5p87xN9AMoTvku/N86ykO0fa4l1bu1xjMSzuu+owrquRkUeQ0oLtCLKwD qA== 
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3nyba7mk6t-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 02 Mar 2023 15:32:49 +0000
+	Thu, 02 Mar 2023 18:43:49 +0000
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 322IYiv9032862;
+	Thu, 2 Mar 2023 18:43:47 GMT
+Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2171.outbound.protection.outlook.com [104.47.55.171])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3ny8saesgt-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 02 Mar 2023 18:43:46 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JwxKVCdK3iKGt2QE7vHCyfMIUmVPNlMfF8eUG5zgaPOnC8aJKciRvNGKBgSxIBJBMWCmslH4JyXmZBgg5iV+5lYXqxODKqQiqzXR6K6gFH9jVYn+crgTBPDA3qAZPgpQGcDNBuFHUk28P2hJusttVDa2+mqUH/Myx3monrQoeiYcsdJcTqCwb3nV9oqAwLUOCprVdSa0AhiKS4NrWlIEK1nIop5krIT592CpI9XzxMVN36afg4GPMDCyVi5l/RXtX9+/6fKi9tdJg3vlUfJTo+s8SOO9i/K31yDmw2HJPsNEXeQQ2yoaHgprPWcT9QDp6d2/gca7npEjh1WArMHWRw==
+ b=DdoVmwGNl/qjtPuDfmYKcyVp/7aqSegY5XaH2G/WOASzygWakPQ7NmEG7hkAMU8NugTFdwpDeEVYstGuNFNnJR1H4HUtEuz8ukv+lFCmy8TTMOKmQUU838gup4W8sOFAtxzripk+zBBVrmuHOTohVgLs1sZEs8bBuqevHHN5auTiAZ/KYVG4LXWld49IULJNUl0GjN8Z9afwN9hyNBkyPLvlKQlYR/EMKdbXcHQA+oUBl78ucFMcr9iwpUNOZCyZ/iT5Wn6PdGPmQyNOQVOgmXvWNqmbKB/0VDJbkqC3L73S7O8Nhwh2X7iZg97TCVNmypWwdU5BR7jAF8cnN4HEiQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=SQ7q+5m7QC8vuh8KdrZLoYaoRcEZiM+cHPImqK7sU4g=;
- b=E9rp45x2hUeZlHvMniXnkiAmVyqCQ0bQQt6+30LwBJS37kYPVOZfDZ2YQb5e7Gmi4QUqa9xwo/dYS28jt51kh9GE1Q1EjzksSEmXDfQMoxE5X/HDFzp1vCq1sj4Rrg20x2A9qO+ol4M/06f5vLh7u/BZAlyP/DdSMLGzzniKMoMf5T40yPCFsmUWmi2kCqcNpz9LzAOLU47CjR8h/kLDTjL7HjgvGPUMZlkGr0TA3XWseaHvt9dYyIS5m+hbB5E5SCRYVDTedzRgJaqBGhVhCYcAzeiwrk345uNINoyWxY4p/0pOIU4lF+3KD8nRGRcJKEe4RDhmj0bbclS0afN5Fw==
+ bh=CKQ6kqONyXh2DUuoyQJd6bgfpIaUCsHUiJudzsG4plc=;
+ b=lZcku/MhGswImKw3yOFdzQeMko5Qj+l2pZi+Y/LYJyTcBAJuLzkJHjBb1OszNYKSYy9C5XxyTKO1uJaOW8ka66bzcsPra86god7UhwG7T88vyziL7Cowd0WfLYhuAKv6lavcfVDJ1oZarXjtF5W+xQvJ+Lw/Lh2VRh0m3jaurZrMbLMiqEYV/dWi15luJ2STtTspOJPVFFTjYr4GtO5djzgtjw2xZ1tsBLdLW7JNM8cOClk4qmurVt2ZEYxWuwvNlco1QVzsVkVqk4n6MwFZNoGNK6TrjeVrxgPNoxoLkmvvhewSn+Iy2XmqeEoCet6IU7e5CzfCeVz2+dzQyuNCbQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=sony.com; dmarc=pass action=none header.from=sony.com;
- dkim=pass header.d=sony.com; arc=none
-Received: from AM9P193MB1332.EURP193.PROD.OUTLOOK.COM (2603:10a6:20b:30d::9)
- by PR3P193MB0991.EURP193.PROD.OUTLOOK.COM (2603:10a6:102:ad::8) with
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CKQ6kqONyXh2DUuoyQJd6bgfpIaUCsHUiJudzsG4plc=;
+ b=iEJ61vXhy0AghxZHR1Ourt92Q70WUarsTxfETibwqB4c6mEfEheKpO/bs6XjMfLRE19PI2/cZoc+0y9JRmmzwvT5y8rY+i7uQMG2ITKvW6Y9/9Wq0IeVEhZKbRRZhhgaqygD2pc5qgsw4f9TwsQwBM3RUSlGuKU7I7++n0rOhvI=
+Received: from SN6PR10MB3022.namprd10.prod.outlook.com (2603:10b6:805:d8::25)
+ by MW4PR10MB6559.namprd10.prod.outlook.com (2603:10b6:303:228::17) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6134.25; Thu, 2 Mar
- 2023 15:32:46 +0000
-Received: from AM9P193MB1332.EURP193.PROD.OUTLOOK.COM
- ([fe80::b1ea:2de8:5297:f6ab]) by AM9P193MB1332.EURP193.PROD.OUTLOOK.COM
- ([fe80::b1ea:2de8:5297:f6ab%6]) with mapi id 15.20.6156.019; Thu, 2 Mar 2023
- 15:32:46 +0000
-Message-ID: <cb8dc31a-fef2-1d09-f133-e9f7b9f9e77a@sony.com>
-Date: Thu, 2 Mar 2023 16:32:44 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Content-Language: en-US
-From: Snild Dolkow <snild@sony.com>
-Subject: [Regression] mmap with MAP_32BIT randomly fails since 6.1
-To: "Liam R. Howlett" <Liam.Howlett@Oracle.com>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>
-Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6156.19; Thu, 2 Mar
+ 2023 18:43:44 +0000
+Received: from SN6PR10MB3022.namprd10.prod.outlook.com
+ ([fe80::93c9:c99e:5ab:4319]) by SN6PR10MB3022.namprd10.prod.outlook.com
+ ([fe80::93c9:c99e:5ab:4319%7]) with mapi id 15.20.6156.017; Thu, 2 Mar 2023
+ 18:43:44 +0000
+Date: Thu, 2 Mar 2023 13:43:41 -0500
+From: "Liam R. Howlett" <Liam.Howlett@Oracle.com>
+To: Snild Dolkow <snild@sony.com>
+Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
         LKML <linux-kernel@vger.kernel.org>, Linux-MM <linux-mm@kvack.org>,
         "maple-tree@lists.infradead.org" <maple-tree@lists.infradead.org>,
         Andrew Morton <akpm@linux-foundation.org>
-X-ClientProxiedBy: LO2P265CA0021.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:62::33) To AM9P193MB1332.EURP193.PROD.OUTLOOK.COM
- (2603:10a6:20b:30d::9)
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM9P193MB1332:EE_|PR3P193MB0991:EE_
-X-MS-Office365-Filtering-Correlation-Id: 78ec6c08-f4df-4fe9-c5e5-08db1b335f74
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	nOU9X+hsPyNMfpnLaHkpSBsyjWyKTJoPyqVTXMHxydBbP9yNx540ufgTtXbIFhuILKxjRaYY1asqBGxHk3VXONbSJRXyZmMJSsxZjAb6rAK4QrFi7/CgyJo8gLvABJVoDkqGrj+SHU9i5JqvkDwLWoG0Hb2yZc00ld4E97zjL+RvBHGapNiscaL0CBF4s0Xwwkq/qefgfHDGLVlepdb+ssQ34Pwsg9zuIzeTgnFtcilCn5z8iR6t36efDPCkiEqBMO6Zdyb7g6emdaq3oHxMxS9c74qOiL6XxgMY/Sfp6f4jMFZQOwo4OhT6vohYqUPsHpPdG+dSvbBJz1RasvYohmRb4TkHBeVhyYjnXSF6gv9/h6zpWhFxntC/68lvP8g5ByFa21LUrWBToJa11qRb9h1B4NRDbcfu84nQSFfFSDN8xAiW4FxID3LK82cy/F9jqk1f7J0XLQYPWhfVaeoXN0BydbosMT6A3v2BkEt4I7NlT9rMgRKpy16x8wpfgynCDLSQGMgYXkg353KmlOQXRvoR3UQ+B5wiGBpvlJ1RV+P0MYojgA0+sgj+q4l4mMdLLQ+ApYGr6x4CeryavzJkUIgfd4GnV10GiyRN/AuH4Cfg7n+zPCITZ45fc30Jwc8eTg9n+1CylMsmoLd6PgCMoXHN7l3FkZQv3QVaAWCk+Z0Bvz3dgx9mnieEhWAyFA2KZ456bIx9MZZKqtfC7bkbIw==
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM9P193MB1332.EURP193.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230025)(4636009)(366004)(396003)(346002)(376002)(136003)(39860400002)(451199018)(31686004)(82960400001)(2616005)(8936002)(54906003)(41300700001)(6512007)(6506007)(966005)(110136005)(83380400001)(478600001)(5660300002)(38100700002)(86362001)(6486002)(8676002)(66946007)(31696002)(66476007)(36756003)(316002)(2906002)(4326008)(186003)(66556008)(45980500001)(43740500002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?utf-8?B?bEJaUmM2S3E0WEE5Sm05Ni9YTm82M2xJWHlKcE9Md25XZmphS3Z3M0d0REJ0?=
- =?utf-8?B?SXZGcVlzRzlzYm43QjIyV09GUVhkZ0gxMTllTFFqTVpFdHZXV09WU09nWHAx?=
- =?utf-8?B?djVNSktEMFQ2c0M5QXpIMzFaZk5YbnA4M295L1IrV1FZZEVzZDNVSlIvMmdn?=
- =?utf-8?B?WUhPTWkvUzJRaXN4L01oTFlKTytyQXVKK2RtbWtrRWltQ0RuUlh4M3dtWXly?=
- =?utf-8?B?bWdLclF0QXBJR2ZTSmJ0RVI5OFpWVWpHOXgzVlpaSkZydlY3ZGxaNmNDbmor?=
- =?utf-8?B?bzFaaHJtTHRONzdCRHJpK05rR1hGUTlMMzBrMXlnMDBrTVhGUXRBT3RKblFI?=
- =?utf-8?B?MjhISmVQUFluck9Kd3RmQ1FUTlZtRVQwV2EzNElwT2htUTJrc1BkTm5jczNL?=
- =?utf-8?B?QW9hVy9KY2k0L2tvWmFuUGhRREhKWmQ2VzEzOEh2M1BqaElIYy92NVBoVEdz?=
- =?utf-8?B?b2pZa2dSMlMwVVRwa2E1c25VNG5aSEZyZnphMmVhRXc3dTFXTDJXMi91dkVB?=
- =?utf-8?B?UFJmcldmWjVwQzhLN0s3MEhzei9pQnRpb0NuR214QkxhcmRHSGYwM0xiRFl3?=
- =?utf-8?B?QkdZVjFaejY5QmdIeUVkN0VZMVhSQnRxNjAxK3k4M1lsYURnUGg2YXY1UFpB?=
- =?utf-8?B?RHFvWCt4aU83US9oM2g3NXJLQ2VyMjh5QVk0MDBJN1NkY2NKM2pzR0ROeVpy?=
- =?utf-8?B?RXVMYkV4NVZTVTRad2lSUnc1V0N2K0p4SG1LeEJtU0pBaDBWZTJ5aVhhbGlP?=
- =?utf-8?B?a0ZCL3VRS3hSaXp2T3hZWk4yZU9SZlVYM0RiSW9vTlRNdUs2YUFCY2prdTZt?=
- =?utf-8?B?UTRLcFNpU0RyVkp3S3VOR1c5d08xWmMyTVg4M2s3NEx4RGRiSUtLenZqV25M?=
- =?utf-8?B?WDRCeTA4NTZVdXp1ZWlZeDIxaFJJdlJVODRURHNRenFLbHVQZEUyTy9LdGpn?=
- =?utf-8?B?Ny9ISFZCeVRKelpaT1hNZ3F0Nk5qTWRCNG40ZU5LODlkMnpYZjVhUHkzMjU4?=
- =?utf-8?B?RjVsK0YzTW9RUkVieERzRFd2U1R0Qkk1Vk9XczA1RHMvZkVzSVpOVXpGWnRS?=
- =?utf-8?B?WTNYK2p4Nng5OXdzOWFSbHNmakFXK2FLMjhSU2ZwYnJEK00yWUdaT3BrWU9P?=
- =?utf-8?B?WFFhM1BuUFVRMy9haTdxWVhNc2xhcHR6Nk1iRlVBMnpLKytNNFlwbWdXNGVq?=
- =?utf-8?B?SVZjY00zcXFycTArTDcxbHFYYTRDT200bGtGN0VSWW5KS29ZaHdDNnF1T1hw?=
- =?utf-8?B?RkpIaFcrNjFyMEpEUjhzUkVuSHIvWURBMUhCWUJBOWdZbHd6WE5lb3V0empn?=
- =?utf-8?B?YUxIRjZLUnNnaHJKc0FhS1k2YUF5c3VkbWVKM0p4RXhhZkVqWTZLVU9IekpR?=
- =?utf-8?B?SjIreUdPN0RZbEM4eFAxUC9pUzdlM2tNKzF5Ti8zNlpzSlV1MFZRUDVHRTVk?=
- =?utf-8?B?SEVlZ2w0VU1YRUsxcDdOc0NMeWxqRWVnaDF3cHBDMnJ6bVdaSEUxU1RvMWxH?=
- =?utf-8?B?RWxuUnRHelNPSGNGQzd6bHozU0hlRUpOclpZWDJMeS9vU1hhcC9HcCtQVmNK?=
- =?utf-8?B?UGFMZEw3amxqdDcrL0lXQmhwWWtHK0RuRWVqN2ZnTjh3NzlQc2xQZjBUZG9Y?=
- =?utf-8?B?MzQrMVozNEtSaUxBdnhUTlFRSXRvZS9KMUN4OUJpakJYeEZBZGFnd0t4M3U0?=
- =?utf-8?B?YUVIcERWQmo0RU9lV2lwTzF1OWhuUklseGdUYlNzaTRYREZxSS9ScXY5c00y?=
- =?utf-8?B?L1VQVUZzQmZFM0pEd0ZDRWJjVnZ1V2JNZlJsWXNpNGtzdUh5UkxYQnBkeXho?=
- =?utf-8?B?dHA5a1VpZHgyTGZxY3Nud1pSeG51VGJkVFFFSVBEZVFIYkVoUWxJSWsxMGl4?=
- =?utf-8?B?L3RuK2RibFA0VkRKMmNqRTZnTmZJdWVjOHBTSmo2RGVGT01icWxLSjlGOVlI?=
- =?utf-8?B?YVZuK01YLzdyT2RsYUZaU0xrOGlqRmFZY3B5UGM3Ukl1WGpwYnFoV3JJeE1G?=
- =?utf-8?B?d1JwWVdPL0UxdUZDMHRYS2RFblBIRmFkMEZlR3VJL1hTVmp4UCtKTWkzUGxt?=
- =?utf-8?B?RU9scXhVRGI1OUFKRURuV3dyWHVKZHJyN3FxZlhEY3I0TGoxWGw2Si9na2t0?=
- =?utf-8?B?SlBVM2VSYWhRL0x1Q2pQU2kwcjc4KzVEUzAzajFteUpkODN4SzA1VzVMMENu?=
- =?utf-8?Q?91KXhMLDxPEI6an/YxrpXtQ=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	=?utf-8?B?S3N6ZUYxQ1EvMU5tLzhKT25oNjN6T0k5RzVGNmFsaDVySmppTERtSGdwQ2Z6?=
- =?utf-8?B?aitoNXVKVXpRN0NTZm04UHMrTEJ0MHBqdFVSSTI4aitXVWpKMEpZZ3pXcVFE?=
- =?utf-8?B?RkdPNEd0b0FWUFRycFY4NWl2MFBBUTJGaFdpUlZRNUt4ZnB4TEo1Y3dLdUVi?=
- =?utf-8?B?QkVrNjBRMExmQ2dzZnFxYyt6c3Zxc2V1YjNCM3hYQUd1UHdFYUp1VHlQeThr?=
- =?utf-8?B?SXdhbk91WFhPUHFQcSthdG1KRUI1Mjl2c2VKOXgvUmVGNmhWeUw2cEE5WGRH?=
- =?utf-8?B?dDg0UllLcG5nUG11MzZTaWE3TVFJLy9hbHYveGxEMFNiNS9talJ6RldnS25O?=
- =?utf-8?B?Y2RkMUNzQXNPSXU1NythVUxlejhYTVlqRmtrV21tQmRRU2RaczBkL0hJSVcz?=
- =?utf-8?B?bWpYYUlMN0M2aEltcWVYNzhmVEZBQ2VqWXFRd2crNFpDN2NEOVlZY2FpYUtQ?=
- =?utf-8?B?ekFBbmdKSDJ6cUg4TlNMN2I4aUVwQWtxZzZiZmR3SlJyQW1ZencwQkpvU3dS?=
- =?utf-8?B?VU8wSlpRbVlzdkhKS1hsUjJNWWtoMzhXdm96UEhsMUp3bitTT2lPd3hna2c5?=
- =?utf-8?B?QmV3MGYyRi9vUUhoUVpuQkUvdkVrcGtWVDFVdEV5dS9xakFKMjJzcXcrNXR3?=
- =?utf-8?B?ZlNaQlRjRXlqck5xUWJpdkMxc0lLV1BwdkdTOXUzSTJtMndLUjlKc0lJdmMv?=
- =?utf-8?B?WmMzcEpzclZYOTY0a1N6ZCtaa0ZyMTBNd1gwa20vL01oMTZqVVlKeE5qTWtE?=
- =?utf-8?B?WFFwLzlRbXI4aHREcVVEUG1xbStMNUdpVS9kcitLdHBVTFNHUUg0bElpMXo0?=
- =?utf-8?B?MUs3MDNPSzFYYS84N2ZpSVdrU29lTm9FNnNsc0pTT01aVTVwQTdMMUhDb1M2?=
- =?utf-8?B?ODZtVXIwTThteUVSTzlLcTVLUlh0cW5IQXhOOHFFZnh6cUp6TXFlZWZBa0xV?=
- =?utf-8?B?SFEvYVVKOFAxb25DODdHRS93ZWpUbU1LSExPL0oyUHNqa3BYV2RySCtEa3hR?=
- =?utf-8?B?WFpyTkkybSs4S0tEME5tY1N1ZldTS2NLVFowWVE5cXRjOXJZSnYwRWJaRjc1?=
- =?utf-8?B?VGRQcXBxNDBTMzB2cncvNm1pZEl1WTIwT2hJZkZKOVRGTlpia05IY1VvQmda?=
- =?utf-8?B?Z0MzdFY0ajd4L0hMcWFhMnJqT3RscENYc20rMm5MVWtQa0JKNTZhRGNWL0Fz?=
- =?utf-8?B?UzBRY3dRdU9SR24rc3QxOWZwRmFBbE1rc09kc2VMT1p5dlFHeksxbWhjVS9m?=
- =?utf-8?B?Mld4QXh4Mlg4VmhocVZhdU9sanNJdXFFek5ET1Z2R2hMdlcyRzdmZyt3cjJM?=
- =?utf-8?B?STAvS2JaOGw5b1VwajFNMXNRT1hVZzduR2tsbVJVd2c3akplanBtOXJzVDZa?=
- =?utf-8?B?Yzl3SWcwWGR0Y2c9PQ==?=
-X-OriginatorOrg: sony.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 78ec6c08-f4df-4fe9-c5e5-08db1b335f74
-X-MS-Exchange-CrossTenant-AuthSource: AM9P193MB1332.EURP193.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Mar 2023 15:32:46.2764
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 66c65d8a-9158-4521-a2d8-664963db48e4
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: GUQYxAohBMrD9pjYdgRI2nSiUKkzT3iXjlT7/YZTQq+0XdRhqM120UmfnELLhv5V
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PR3P193MB0991
-X-Proofpoint-ORIG-GUID: McAcrlOlKTMKULgzsjI5R-siHDGl_lzk
-X-Proofpoint-GUID: McAcrlOlKTMKULgzsjI5R-siHDGl_lzk
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+Subject: Re: [Regression] mmap with MAP_32BIT randomly fails since 6.1
+Message-ID: <20230302184341.bju3vjqhkfm4giqm@revolver>
+Mail-Followup-To: "Liam R. Howlett" <Liam.Howlett@Oracle.com>,
+	Snild Dolkow <snild@sony.com>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+	LKML <linux-kernel@vger.kernel.org>, Linux-MM <linux-mm@kvack.org>,
+	"maple-tree@lists.infradead.org" <maple-tree@lists.infradead.org>,
+	Andrew Morton <akpm@linux-foundation.org>
+References: <cb8dc31a-fef2-1d09-f133-e9f7b9f9e77a@sony.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cb8dc31a-fef2-1d09-f133-e9f7b9f9e77a@sony.com>
+User-Agent: NeoMutt/20220429
+X-ClientProxiedBy: YT3PR01CA0113.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:85::16) To SN6PR10MB3022.namprd10.prod.outlook.com
+ (2603:10b6:805:d8::25)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Sony-Outbound-GUID: McAcrlOlKTMKULgzsjI5R-siHDGl_lzk
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN6PR10MB3022:EE_|MW4PR10MB6559:EE_
+X-MS-Office365-Filtering-Correlation-Id: b16701db-21da-4f16-241f-08db1b4e0cd6
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	FHkiITcFrB5vTlZ9SNHw6+kwGgUlTqVHXaGHNrS+BVLFzMp3nFASxh+kw8WYH9h/6X3P0pE9wHX76fHX8E7HZ46fpR7FNfkHVqzDP0uYAr070uFYyTx9ooNc7VDJWl84rX3HEXoeKSvQJ5lNX2j0AbuBUooGvrdvLtbJpUm6/+zV3LadYIqLit8UNbJ+px1feAmStvcTzQmmLIOrDJoK0rTvDwmrBOVqbv6YMD+aNHOkPX89TmMZWVmGlxttui9DSMIr68pWVkVnMe5ENI7tHA+aG1kHBb6UPSNCrGiLJOUfBvlur4OMw4gVR5Z837ESPpUGjEhjPJKh30M1mU2UIyydKbIbV/bSPjZw2oaKHThgIl74iEEbxbPt3l3rcKmxiO6SWyosVRobyc8PJ6M1Q9IsC8ZnXFf3URW+AYerigZiwEpIHSVRopmCbV/nGVyfwxfxYkmNJ+dd7bkrIsTchtHOshpGzfsIRogyJ670HYlPjOeurZVpizgFyLWBLyFGQk3IWiW4haQDF1ZvoF2R7ZUH8sih2clQEtw/48TbIZVMWRUWjwyQbhGKJTd4n53VLJwfKUwuc/AXcBsx7IhXnn0yx0jikpWZWODluuj1gv179iThxVRS82yrrRYnB18d
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR10MB3022.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(7916004)(346002)(39860400002)(376002)(396003)(366004)(136003)(451199018)(478600001)(6486002)(966005)(38100700002)(26005)(316002)(186003)(54906003)(6512007)(9686003)(2906002)(6666004)(83380400001)(5660300002)(8936002)(6506007)(66476007)(4326008)(8676002)(6916009)(66946007)(66556008)(1076003)(41300700001)(86362001)(33716001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?us-ascii?Q?fwMooWnqzq95GzVtXPFjC7mALPxjjppcLZJGfPNFh/5Zx4cbWK4FJN3VGLyt?=
+ =?us-ascii?Q?igOVm/HnE0RIbAKWNRUZbYBpOmctowh/Ehf3Vw+O51hfIxQSOnzrf13Anzr0?=
+ =?us-ascii?Q?sdrhswSddT6U8B4nO55Ss0P0RGErZBtthqmRkvEvwOcEZxild9/VHQPNz6J3?=
+ =?us-ascii?Q?zIiVYd5f3hJMOIXaIo5kYUCadCdHBcNe4OjNdnvU3JWZI1XKH5E/34tDraMw?=
+ =?us-ascii?Q?MibNAnR6mcDCx+jOWgBWlKI5iwaK9y0UYlZaGp5iFWnAai1NdcV+VNbkRmnc?=
+ =?us-ascii?Q?770aO3CLtwgNblbkc4UVlbP3Yo43XSgGnQardkLFUx+1+f3Gse/iaRszhlYm?=
+ =?us-ascii?Q?Ql0onRHwjy7LmaHwyDSdJH+BW6WMMlxFHv+ARZEBRwl7uVxLDkBicwgIy+hF?=
+ =?us-ascii?Q?w6hW4dK+hG1VXTG8osEMd0Yx9/AnrNgKLjMr3CPXofWVscNa8U7kN4+NTFwi?=
+ =?us-ascii?Q?uYK5hyyHz4EK6uJ7T00paRKQNkicdLe02gFj+5ELIhUB9yWH90SE44kjiD8P?=
+ =?us-ascii?Q?1E1oc1d4KetPuy+U4EU89zowllqoB+AOCiwTfkoL1MEAT5hdNRE7bw+F9SFl?=
+ =?us-ascii?Q?UKvldb4eu/qIX4QX49GzEmBhRwkIBgoLeXXcKMqXcNj4WY4tbsavtVpm1XEl?=
+ =?us-ascii?Q?24TwAtQMx9amIX68iv8plhud2yvvxEC+tQpNXC6hcKskohpNPbuxlc9prQfA?=
+ =?us-ascii?Q?ehgn7j4uNOI15vcd2R0L2WqXNyoFgafgOUIn+THGZMTiuHHahz1QJgBTaw5+?=
+ =?us-ascii?Q?JXQBcLFEztrVQrn4iUAmABnoAXpCQFAuBSf9af4i8sPpZd8tTAyahPNv422v?=
+ =?us-ascii?Q?ZJMOFvrz+fKwhrK/EC7vGbjNxyFUN967viUwCULGg97UaPqsQ5XrpteK7WFB?=
+ =?us-ascii?Q?F0FoTx5GABqY8k32Xo3jkdfrdHVg8kgqQJN1L33Hr0aBTTVSVDKjWAYu7C4a?=
+ =?us-ascii?Q?xdYQ+dcVNaUF0ulvEmnr6EOFZ0XOtck6DinD+ssLug2yk12DMuKiQLVpkII5?=
+ =?us-ascii?Q?os7ZggAyDq2sQQ5mhTr2v9reTY4VRUa/lZktIUt/LbUJln+hUiQNEkwAlLeT?=
+ =?us-ascii?Q?/6ie3/9HjiA+1i9e5ozys1FNBaGZWUvcEtSRiluX8esN3P7qoD2Z/3W9F9g9?=
+ =?us-ascii?Q?C61qt3UkyzlN3NFBqNp6/v8Mz4HXMksJ346XgjeBsrBA+bAlvMvqla2QDIhW?=
+ =?us-ascii?Q?ioN/uvgB/3dqIuy35cvRxb1GOhhH83zbMlJWhkFlEkxTaLAdkQCJesgSMCGR?=
+ =?us-ascii?Q?B9Fp4Lj+XalPX5+4ejjlzf6RazRwLZurOmbnT7xuEh2tci97v85APWb1b+da?=
+ =?us-ascii?Q?60D23lYaYF5y3BDybRJ9l6BVTmeNXhlDBPR2hYZCe39AWU7NVDpKt12Rcp32?=
+ =?us-ascii?Q?eZsWY0Vb9iSYi820eqMdXpod1suxjjacISS35VVzSM0d62DtdRQJmVHni9X+?=
+ =?us-ascii?Q?ITBXmJ9ID3HSx/jFaQDgsyTai+E8njZvmb26J3LJWnYE4JnYAgkju5Gszl9B?=
+ =?us-ascii?Q?CfFN/hdeH6pxd6x56oHQBvTwSwB/btzy3IM8MAZqVQxkwOJTYg9yqx/woSXQ?=
+ =?us-ascii?Q?+HCUUv3SsUlZItzDCGAUrbY4kCSG+vha6jKo7hk82/U3Ij8171q1I9uO7GiL?=
+ =?us-ascii?Q?fQ=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
+	=?us-ascii?Q?y9/yjwRe8DlHt1b5XF03QDqV/qxNy1uvnSLD9peoJHlaWqd7HraefST4sG3n?=
+ =?us-ascii?Q?SyMYsfIq9Nrjp1gtxvZS+QpFkhUHlci1clOsPJVUui8Mwd9AmQYIbN69CVe+?=
+ =?us-ascii?Q?soa0UTvGYYklqa5stQSuX52xm/YxaFX7OJmTptzQG9melN/lFsje4atEEdmE?=
+ =?us-ascii?Q?oHhvCDdPm0vEddaJPpmc9Oy6Eqihqs+wMCO1NHmDRq/iDY5Nnn0WpQusQd8d?=
+ =?us-ascii?Q?Ew3RyvTX6sYjR6mC51XWfx8gzboGw6Yo1MJPV4M3r4uwJXPqZ0AVt2QG6ngt?=
+ =?us-ascii?Q?CV7ziCRzTbfthdZNInjmpIbB/eRNvb2pwyFTFiBn0m01i5w8FIsnHJiBuKCf?=
+ =?us-ascii?Q?BVUwODSQ5e8KCB+RTFqDu3Xq1BpkDdbuK4x49kp48BpfScMl73SRabHCIxRA?=
+ =?us-ascii?Q?4d6g35y4mOgufv1w665ufD1ftPKPAcIbJ8/ES6qztyCy6qBcE/punfJCgLdP?=
+ =?us-ascii?Q?1YAq+sYowFTRYOnXasvAnn4jzzEVqjRqQZHeGvPt+cVTvtUPUgY3uC4+yeqW?=
+ =?us-ascii?Q?JkN+3bAdG4nfYSuhGL7AuE/+p0y269r9kgJgD3bFVbcSvHUygMkXpOq0tOUP?=
+ =?us-ascii?Q?eVPD1AxqGgdlsA0r7Aw4wXuiAWBjc3lgwNsY4e4fvvXfB+hkcvE0kMQVjeh9?=
+ =?us-ascii?Q?mqoV03bxALwmK0uG1efHa5vQwTxfUeqUl++DwCRhAnWDFPu5bp1tDmrhN2ru?=
+ =?us-ascii?Q?QseAAshajFyCMbdh2MAW7/2xkfl/8UeLtdLVR2U8thzhLh9sHUqJz1kPmlf2?=
+ =?us-ascii?Q?A9OBsHEmlNhdThtL2Dlb7JiPNFdttcBDj0pE7MxOAMW21UeEvls8gt3bbyHJ?=
+ =?us-ascii?Q?HRTonNS4fh2rmqwsSLvLzuAwhX8LpWYWKm92zGeLIJUT0AS5sKGdojvWffdx?=
+ =?us-ascii?Q?/OSbsfmsghRn8s2hso5ANP3U9I9UTv4J3uxTd+sB090zD0IJPpp74vAgaI4O?=
+ =?us-ascii?Q?OlZ8fnrjn92YyiBK2f/EpVtNX81QhY9FmSzbdSpztk8KZCVs3FPWF2YkjTzO?=
+ =?us-ascii?Q?WeQt?=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b16701db-21da-4f16-241f-08db1b4e0cd6
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR10MB3022.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Mar 2023 18:43:44.1847
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: aZDrtc8TpVkboJBk+OZsWIJi66MjPx6K6U7qlz/HfG4wEh3GSs4N9JPe29sZ8oMgOLKwiKZzo57S7qla7EMPJA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR10MB6559
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.219,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
- definitions=2023-03-02_09,2023-03-02_02,2023-02-09_01
+ definitions=2023-03-02_12,2023-03-02_02,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 malwarescore=0 spamscore=0
+ mlxscore=0 phishscore=0 suspectscore=0 mlxlogscore=871 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2212070000
+ definitions=main-2303020161
+X-Proofpoint-ORIG-GUID: 5PWHsDUd2cUJ85czQduRNTrcfz_BN8md
+X-Proofpoint-GUID: 5PWHsDUd2cUJ85czQduRNTrcfz_BN8md
 
-After upgrading a machine from 5.17.4 to 6.1.12 a couple of weeks ago, I 
-started getting (inconsistent) failures when building Android:
+* Snild Dolkow <snild@sony.com> [230302 10:33]:
+> After upgrading a machine from 5.17.4 to 6.1.12 a couple of weeks ago, I
+> started getting (inconsistent) failures when building Android:
 
-> dex2oatd F 02-28 11:49:44 40098 40098 mem_map_arena_pool.cc:65] Check failed: map.IsValid() Failed anonymous mmap((nil), 131072, 0x3, 0x22, -1, 0): Cannot allocate memory. See process maps in the log.
+Thanks for reporting this.
 
-While it claims to be using 0x22 (MAP_PRIVATE | MAP_ANONYMOUS) for the 
-flags, it really uses 0x40 (MAP_32BIT) as well, as shown by strace:
+> 
+> > dex2oatd F 02-28 11:49:44 40098 40098 mem_map_arena_pool.cc:65] Check failed: map.IsValid() Failed anonymous mmap((nil), 131072, 0x3, 0x22, -1, 0): Cannot allocate memory. See process maps in the log.
+> 
+> While it claims to be using 0x22 (MAP_PRIVATE | MAP_ANONYMOUS) for the
+> flags, it really uses 0x40 (MAP_32BIT) as well, as shown by strace:
+> 
+> > mmap(NULL, 131072, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS|MAP_32BIT, -1, 0) = 0x40720000
+> > mmap(NULL, 131072, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS|MAP_32BIT, -1, 0) = 0x4124e000
+> > mmap(NULL, 131072, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS|MAP_32BIT, -1, 0) = -1 ENOMEM (Cannot allocate memory)
+> > dex2oatd F 03-01 10:32:33 74063 74063 mem_map_arena_pool.cc:65] Check failed: map.IsValid() Failed anonymous mmap((nil), 131072, 0x3, 0x22, -1, 0): Cannot allocate memory. See process maps in the log.
+> 
+> Here's a simple reproducer, which (if my math is correct) tries to mmap a
+> total of ~600MiB in increasing chunk sizes:
+> 
+> #include <sys/mman.h>
+> #include <stdio.h>
+> #include <errno.h>
+> 
+> int main() {
+>     size_t total_leaks = 0;
+>     for (int shift=12; shift<=16; shift++) {
+>         size_t size = ((size_t)1)<<shift;
+>         for (int i=0; i<5000; ++i) {
+>             void* m = mmap(NULL, size, PROT_READ | PROT_WRITE,
+>                     MAP_PRIVATE | MAP_ANONYMOUS | MAP_32BIT, -1, 0);
+>             if (m == MAP_FAILED || m == NULL) {
+>                 printf(
+>                     "Failed. m=%p size=%zd (1<<%d) i=%d "
+>                     " errno=%d total_leaks=%zd (%zd MiB)\n",
+>                     m, size, shift, i, errno,
+>                     total_leaks, total_leaks / 1024 / 1024);
+>                 return 1;
+>             }
+>             total_leaks += size;
+>         }
+>     }
+>     printf("Success.\n");
+>     return 0;
+> }
 
-> mmap(NULL, 131072, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS|MAP_32BIT, -1, 0) = 0x40720000
-> mmap(NULL, 131072, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS|MAP_32BIT, -1, 0) = 0x4124e000
-> mmap(NULL, 131072, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS|MAP_32BIT, -1, 0) = -1 ENOMEM (Cannot allocate memory)
-> dex2oatd F 03-01 10:32:33 74063 74063 mem_map_arena_pool.cc:65] Check failed: map.IsValid() Failed anonymous mmap((nil), 131072, 0x3, 0x22, -1, 0): Cannot allocate memory. See process maps in the log.
+Very useful, thanks!
 
-Here's a simple reproducer, which (if my math is correct) tries to mmap 
-a total of ~600MiB in increasing chunk sizes:
+> 
+> Older kernels fail very consistently at almost exactly 1GiB total_leaks, if
+> you change the test program to go that far. On 6.1.12, it fails much
+> earlier, after an arbitrary amount of successful mmaps:
+> 
+> > $ ./mmap-test Failed. m=0xffffffffffffffff size=4096 (1<<12) i=1500
+> > errno=12 total_leaks=6144000 (5 MiB)
+> > $ ./mmap-test Failed. m=0xffffffffffffffff size=4096 (1<<12) i=620
+> > errno=12 total_leaks=2539520 (2 MiB)
+> > $ ./mmap-test Failed. m=0xffffffffffffffff size=4096 (1<<12) i=2408
+> > errno=12 total_leaks=9863168 (9 MiB)
+> > $ ./mmap-test Failed. m=0xffffffffffffffff size=4096 (1<<12) i=774
+> > errno=12 total_leaks=3170304 (3 MiB)
+> > $ ./mmap-test Failed. m=0xffffffffffffffff size=4096 (1<<12) i=1648
+> > errno=12 total_leaks=6750208 (6 MiB)
+> > $ ./mmap-test
+> 
+> 
+> I have checked a more recent master commit (ee3f96b1, from March 1st), and
+> the problem is still there. Bisecting shows that e15e06a8 is the last good
+> commit, and that 524e00b3 is the first one failing in this way. The 10 or so
+> commits in between run into a page fault BUG down in vma_merge() instead.
 
-#include <sys/mman.h>
-#include <stdio.h>
-#include <errno.h>
+It does look like it's the maple tree.  I am working on this issue now.
 
-int main() {
-     size_t total_leaks = 0;
-     for (int shift=12; shift<=16; shift++) {
-         size_t size = ((size_t)1)<<shift;
-         for (int i=0; i<5000; ++i) {
-             void* m = mmap(NULL, size, PROT_READ | PROT_WRITE,
-                     MAP_PRIVATE | MAP_ANONYMOUS | MAP_32BIT, -1, 0);
-             if (m == MAP_FAILED || m == NULL) {
-                 printf(
-                     "Failed. m=%p size=%zd (1<<%d) i=%d "
-                     " errno=%d total_leaks=%zd (%zd MiB)\n",
-                     m, size, shift, i, errno,
-                     total_leaks, total_leaks / 1024 / 1024);
-                 return 1;
-             }
-             total_leaks += size;
-         }
-     }
-     printf("Success.\n");
-     return 0;
-}
+> 
+> This range of commits is about the same as mentioned in https://lore.kernel.org/lkml/0b9f5425-08d4-8013-aa4c-e620c3b10bb2@leemhuis.info/,
+> so I assume that my problem, too, was introduced with the Maple Tree
+> changes. Sending this to the same people and lists.
 
-Older kernels fail very consistently at almost exactly 1GiB total_leaks, 
-if you change the test program to go that far. On 6.1.12, it fails much 
-earlier, after an arbitrary amount of successful mmaps:
+These are the right people to email.
 
-> $ ./mmap-test 
-> Failed. m=0xffffffffffffffff size=4096 (1<<12) i=1500  errno=12 total_leaks=6144000 (5 MiB)
-> $ ./mmap-test 
-> Failed. m=0xffffffffffffffff size=4096 (1<<12) i=620  errno=12 total_leaks=2539520 (2 MiB)
-> $ ./mmap-test 
-> Failed. m=0xffffffffffffffff size=4096 (1<<12) i=2408  errno=12 total_leaks=9863168 (9 MiB)
-> $ ./mmap-test 
-> Failed. m=0xffffffffffffffff size=4096 (1<<12) i=774  errno=12 total_leaks=3170304 (3 MiB)
-> $ ./mmap-test 
-> Failed. m=0xffffffffffffffff size=4096 (1<<12) i=1648  errno=12 total_leaks=6750208 (6 MiB)
-> $ ./mmap-test 
+Hopefully I'll have an update for you soon.
 
-
-I have checked a more recent master commit (ee3f96b1, from March 1st), 
-and the problem is still there. Bisecting shows that e15e06a8 is the 
-last good commit, and that 524e00b3 is the first one failing in this 
-way. The 10 or so commits in between run into a page fault BUG down in 
-vma_merge() instead.
-
-This range of commits is about the same as mentioned in 
-https://lore.kernel.org/lkml/0b9f5425-08d4-8013-aa4c-e620c3b10bb2@leemhuis.info/, 
-so I assume that my problem, too, was introduced with the Maple Tree 
-changes. Sending this to the same people and lists.
-
-//Snild
+Regards,
+Liam
