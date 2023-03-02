@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BB881866
-	for <regressions@lists.linux.dev>; Thu,  2 Mar 2023 08:04:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A86CF1C10
+	for <regressions@lists.linux.dev>; Thu,  2 Mar 2023 08:27:31 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pXdvZ-0006YB-Bt; Thu, 02 Mar 2023 09:04:37 +0100
-Message-ID: <fcba79c6-7d1b-0e17-7c75-42e25fedae69@leemhuis.info>
-Date: Thu, 2 Mar 2023 09:04:35 +0100
+	id 1pXeHg-0003NJ-JS; Thu, 02 Mar 2023 09:27:28 +0100
+Message-ID: <cb03d97f-ae48-4090-e14b-354373a2ebe3@leemhuis.info>
+Date: Thu, 2 Mar 2023 09:27:28 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,145 +16,66 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.8.0
-Subject: Re: [6.2 regression][bisected]discard storm on idle since
- v6.1-rc8-59-g63a7cb130718 discard=async
+Subject: Re: [GIT FIXES FOR v6.3] Venus fixes
 Content-Language: en-US, de-DE
-To: Sergei Trofimovich <slyich@gmail.com>, linux-btrfs@vger.kernel.org
-Cc: David Sterba <dsterba@suse.com>, Boris Burkov <boris@bur.io>,
- Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <Y/+n1wS/4XAH7X1p@nz>
-From: "Linux regression tracking #adding (Thorsten Leemhuis)"
+To: Stanimir Varbanov <stanimir.k.varbanov@gmail.com>,
+ linux-media@vger.kernel.org
+References: <20230302060413.67239-1-stanimir.k.varbanov@gmail.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
+Cc: Javier Martinez Canillas <javierm@redhat.com>,
+ Vikash Garodia <vgarodia@qti.qualcomm.com>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <Y/+n1wS/4XAH7X1p@nz>
+In-Reply-To: <20230302060413.67239-1-stanimir.k.varbanov@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1677744288;7a024d95;
-X-HE-SMSGID: 1pXdvZ-0006YB-Bt
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1677745651;ab1fe155;
+X-HE-SMSGID: 1pXeHg-0003NJ-JS
 
-[CCing the regression list, as it should be in the loop for regressions:
-https://docs.kernel.org/admin-guide/reporting-regressions.html]
-
-[TLDR: I'm adding this report to the list of tracked Linux kernel
-regressions; the text you find below is based on a few templates
-paragraphs you might have encountered already in similar form.
-See link in footer if these mails annoy you.]
-
-On 01.03.23 20:30, Sergei Trofimovich wrote:
-> Hi btrfs maintainers!
+On 02.03.23 07:04, Stanimir Varbanov wrote:
 > 
-> Tl;DR:
+> This pull request includes a fix for regression in venus hardware reset.
+> The reverted commit has been merged in v6.2. 
 > 
->   After 63a7cb13071842 "btrfs: auto enable discard=async when possible" I
->   see constant DISCARD storm towards my NVME device be it idle or not.
+> Please pull.
 > 
->   No storm: v6.1 and older
->   Has storm: v6.2 and newer
+> regards,
+> Stan
+> 
+> The following changes since commit 3e62aba8284de0994a669d07983299242e68fe72:
+> 
+>   media: imx-mipi-csis: Check csis_fmt validity before use (2023-02-26 11:21:33 +0100)
+> 
+> are available in the Git repository at:
+> 
+>   git://linuxtv.org/svarbanov/media_tree.git tags/tag-venus-fixes-for-v6.3
+> 
+> for you to fetch changes up to 1440cfcf24db8c50d929d3c35ab6f87f868fa628:
+> 
+>   Revert "venus: firmware: Correct non-pix start and end addresses" (2023-03-02 07:52:10 +0200)
+> 
+> ----------------------------------------------------------------
+> Venus fixes for v6.3
+> 
+> ----------------------------------------------------------------
+> Javier Martinez Canillas (1):
+>       Revert "venus: firmware: Correct non-pix start and end addresses"
 
-Thanks for the report. To be sure the issue doesn't fall through the
-cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
-tracking bot:
+Good to see that this finally is heading towards mainline, thx.
 
-#regzbot ^introduced 63a7cb13071842
-#regzbot title btrfs: DISCARD storm towards NVME device be it idle or not
-#regzbot ignore-activity
+What about the other venus regression[1] Javier provided this patch for:
 
-This isn't a regression? This issue or a fix for it are already
-discussed somewhere else? It was fixed already? You want to clarify when
-the regression started to happen? Or point out I got the title or
-something else totally wrong? Then just reply and tell me -- ideally
-while also telling regzbot about it, as explained by the page listed in
-the footer of this mail.
+https://patchwork.kernel.org/project/linux-media/patch/20230210081835.2054482-1-javierm@redhat.com/
 
-Developers: When fixing the issue, remember to add 'Link:' tags pointing
-to the report (the parent of this mail). See page linked in footer for
-details.
+[1] as pointed out earlier in
+https://lore.kernel.org/all/87edq9hj4w.fsf@minerva.mail-host-address-is-not-set/
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
 Everything you wanna know about Linux kernel regression tracking:
 https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+If I did something stupid, please tell me, as explained on that page.
 
-> More words:
-> 
-> After upgrade from 6.1 to 6.2 I noticed that Disk led on my desktop
-> started flashing incessantly regardless of present or absent workload.
-> 
-> I think I confirmed the storm with `perf`: led flashes align with output
-> of:
-> 
->     # perf ftrace -a -T 'nvme_setup*' | cat
-> 
->     kworker/6:1H-298     [006]   2569.645201: nvme_setup_cmd <-nvme_queue_rq
->     kworker/6:1H-298     [006]   2569.645205: nvme_setup_discard <-nvme_setup_cmd
->     kworker/6:1H-298     [006]   2569.749198: nvme_setup_cmd <-nvme_queue_rq
->     kworker/6:1H-298     [006]   2569.749202: nvme_setup_discard <-nvme_setup_cmd
->     kworker/6:1H-298     [006]   2569.853204: nvme_setup_cmd <-nvme_queue_rq
->     kworker/6:1H-298     [006]   2569.853209: nvme_setup_discard <-nvme_setup_cmd
->     kworker/6:1H-298     [006]   2569.958198: nvme_setup_cmd <-nvme_queue_rq
->     kworker/6:1H-298     [006]   2569.958202: nvme_setup_discard <-nvme_setup_cmd
-> 
-> `iotop` shows no read/write IO at all (expected).
-> 
-> I was able to bisect it down to this commit:
-> 
->   $ git bisect good
->   63a7cb13071842966c1ce931edacbc23573aada5 is the first bad commit
->   commit 63a7cb13071842966c1ce931edacbc23573aada5
->   Author: David Sterba <dsterba@suse.com>
->   Date:   Tue Jul 26 20:54:10 2022 +0200
-> 
->     btrfs: auto enable discard=async when possible
-> 
->     There's a request to automatically enable async discard for capable
->     devices. We can do that, the async mode is designed to wait for larger
->     freed extents and is not intrusive, with limits to iops, kbps or latency.
-> 
->     The status and tunables will be exported in /sys/fs/btrfs/FSID/discard .
-> 
->     The automatic selection is done if there's at least one discard capable
->     device in the filesystem (not capable devices are skipped). Mounting
->     with any other discard option will honor that option, notably mounting
->     with nodiscard will keep it disabled.
-> 
->     Link: https://lore.kernel.org/linux-btrfs/CAEg-Je_b1YtdsCR0zS5XZ_SbvJgN70ezwvRwLiCZgDGLbeMB=w@mail.gmail.com/
->     Reviewed-by: Boris Burkov <boris@bur.io>
->     Signed-off-by: David Sterba <dsterba@suse.com>
-> 
->    fs/btrfs/ctree.h   |  1 +
->    fs/btrfs/disk-io.c | 14 ++++++++++++++
->    fs/btrfs/super.c   |  2 ++
->    fs/btrfs/volumes.c |  3 +++
->    fs/btrfs/volumes.h |  2 ++
->    5 files changed, 22 insertions(+)
-> 
-> Is this storm a known issue? I did not dig too much into the patch. But
-> glancing at it this bit looks slightly off:
-> 
->     +       if (bdev_max_discard_sectors(bdev))
->     +               fs_devices->discardable = true;
-> 
-> Is it expected that there is no `= false` assignment?
-> 
-> This is the list of `btrfs` filesystems I have:
-> 
->   $ cat /proc/mounts | fgrep btrfs
->   /dev/nvme0n1p3 / btrfs rw,noatime,compress=zstd:3,ssd,space_cache,subvolid=848,subvol=/nixos 0 0
->   /dev/sda3 /mnt/archive btrfs rw,noatime,compress=zstd:3,space_cache,subvolid=5,subvol=/ 0 0
->   # skipped bind mounts
-> 
-> The device is:
-> 
->   $ lspci | fgrep -i Solid
->   01:00.0 Non-Volatile memory controller: ADATA Technology Co., Ltd. XPG SX8200 Pro PCIe Gen3x4 M.2 2280 Solid State Drive (rev 03)
-> 
-> Can you help me debug the source of discards storm?
-> 
-> Is it an expected discard storm?
-> 
-> Is it problematic for SSD life span?
-> 
-> Thank you!
-> 
+#regzbot ^backmonitor:
+https://lore.kernel.org/all/20230207102254.1446461-1-javierm@redhat.com/
