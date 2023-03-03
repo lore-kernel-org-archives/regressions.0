@@ -1,160 +1,276 @@
-Received: from wout3-smtp.messagingengine.com (wout3-smtp.messagingengine.com [64.147.123.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D85F1FDD
-	for <regressions@lists.linux.dev>; Fri,  3 Mar 2023 10:37:44 +0000 (UTC)
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
-	by mailout.west.internal (Postfix) with ESMTP id CCAFE320094C;
-	Fri,  3 Mar 2023 05:37:42 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute2.internal (MEProxy); Fri, 03 Mar 2023 05:37:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	invisiblethingslab.com; h=cc:cc:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:sender:subject:subject:to:to; s=fm1; t=
-	1677839862; x=1677926262; bh=/oK2gKw0WQP9P6/4o7LSk3aPOgvTeYe0l2p
-	E4+Q6qcU=; b=hTNskU3uMF2rEM7dtUJ8aPxqkn1EuEEaf0PQbSAGCygA+8CRcSW
-	rLMfh8M67aDs+oAnBFCK+/S8LulYlh3Yyn8DVQaIOHlSK2edFr+a13QH410VCnA0
-	YrwPBqU/7eRGfo0dPJ4Yqi+dNo5Kna6/2eHMHLHX4D2gZG5UghsSMTmX0EMJRzEt
-	Mz247DmMJeAhkgpFCjHTqFr9UznYDGtXrC2QnEJO5FPvZkFoFVO8MPJavL2lHM7d
-	FEOr6WNdqgMGl2BPNr/xzDMjXasUbNQRazllXw7TpKRa0+lUQp9y/isG5iYGZ19O
-	r/Ge+VEBmFQ3vkCzc/lDRuJJx7J+Fkl8Hng==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:sender:subject
-	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-	:x-sasl-enc; s=fm1; t=1677839862; x=1677926262; bh=/oK2gKw0WQP9P
-	6/4o7LSk3aPOgvTeYe0l2pE4+Q6qcU=; b=WF5aLGj34/fkS4nhCoUR4X5rp5rEz
-	2FWeh0jTmaKufgSz/tCLJmS6nyaZAZ41t2hk6Odn2kONDAACblD5FTiWNB0axcnh
-	oaS+CBfF4sXvDH2Wp/byR5PnGkuF4Hvx7ULM+1helij/mLH0EJPNnW4dQE3scTIB
-	3yKViKkCQ+PcZnuwHoJfCIerkbApWL/gIAZiV+ulAYrw5llWT3MkG7O5Zrk3bfPo
-	M7zVr5Dx3bcU1rTnvryKllGkEvgq2e360OhzcH45j8NcDmrtkJblyBUO/5hPX5Es
-	O+uoo3Fm06akU3XsGc0qouZmVV7yyq5MR3yY3o779jcwYblqs0+hMfLsw==
-X-ME-Sender: <xms:9s0BZDxz1dPFBkQXjJrjYl-dpvYvsRdhTehHK2zLsP-3g28mfjJ1gw>
-    <xme:9s0BZLQUsIIsgmJ7Dp9joirC4WlKthMJ_Vrrnx_cKrKsWFHZKtRP4UBsmzzLJ-17c
-    _mAuo9BgsExThw>
-X-ME-Received: <xmr:9s0BZNXg4vzg4_03VFy-ym8JuwpliYnEeGqiXTaYGa7FoSoKRKPjIOky8YyHmw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrudelledguddvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepkfffggfuvfevfhfhjggtsehgtderredttdejnecuhfhrohhmpefuihhmohhn
-    ucfirghishgvrhcuoehsihhmohhnsehinhhvihhsihgslhgvthhhihhnghhslhgrsgdrtg
-    homheqnecuggftrfgrthhtvghrnhepueehgfegtedttedvvdektdelkefhueffgedtiefh
-    keeffefhvdehuedvjeejheehnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdprghrtg
-    hhlhhinhhugidrohhrghenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgr
-    ihhlfhhrohhmpehsihhmohhnsehinhhvihhsihgslhgvthhhihhnghhslhgrsgdrtghomh
-X-ME-Proxy: <xmx:9s0BZNiE2MHLtEDQYwWBUm888MpkL1DvNij8B9UE6RsdB6qvYKmHzg>
-    <xmx:9s0BZFBk7hNO_I3ph-_WJGaYOh34VR1zNRzuh_h0rG0QLgz4iq8Pzg>
-    <xmx:9s0BZGIyRwUYidKoYDj2XZWPrD72C8P6qNMUeN7plmZTlaGtPf-F6g>
-    <xmx:9s0BZA-ItFwawRSyobA-8mHMgv6jxNNd2y0ZobQzkTVX2LxsX7ZDuw>
-Feedback-ID: idc5945a3:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 3 Mar 2023 05:37:35 -0500 (EST)
-Message-ID: <7135b5c6-daed-a726-c02c-b0ed821e2121@invisiblethingslab.com>
-Date: Fri, 3 Mar 2023 11:38:16 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21BF88F42
+	for <regressions@lists.linux.dev>; Fri,  3 Mar 2023 18:54:33 +0000 (UTC)
+Received: by mail-pl1-f169.google.com with SMTP id n6so3728170plf.5
+        for <regressions@lists.linux.dev>; Fri, 03 Mar 2023 10:54:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1677869672;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZN9HFXEA9zbJwH0Fq5wKiQwubJ7uIu4eSgEnheP9zqU=;
+        b=e4yo/I/BfwPB6yRvxw0xvmaRoz9s7apX7mwbs5SIn6g966pEn5wFOGKT8sQ4jENWJu
+         rWbrNFVaPtf8IQC9BdoqrbrVcfR9G0VsVI7Nqcp//7tqCCRgfvRcWCLRNUt7KylBxH1d
+         AjoG9X1OwNWmBXZaFlFiZDPum7vfKrRB2zQ6uxa9vTIiD8fktfk7XfKwgoKcrxDGG8pj
+         Tu6GFsAY8tvRoP/kCfRV7lYTsZm6EbohJgTNs76pGbqBPz9QWNBvzbphV8NuiC4vcKCL
+         Hsrv5Ll7eHiGIW2a+xVxCE3Q5LUWnA9zPdwn9CaPo7OBIBN9nLkGTbXRxu0bYSLlvSrP
+         mOZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1677869672;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZN9HFXEA9zbJwH0Fq5wKiQwubJ7uIu4eSgEnheP9zqU=;
+        b=VJ68hpUr8HQyaKOnlOkBU5sSMnFQhUEB0UV7ZUnclvViVaU0bI9p9+Paj7yEwEI4sC
+         EyV0l8x2/G8yAPOV4idYFr/nb7Miz3Xpe6wC6ssVkSgTXu5n50jxVaxHyO5yzIhzpsuy
+         5XpcRDcYg7IeOQ5hdt5yMOQ6Yopu1QdsvlFnSkiT73yXGUlzQ9IjV0y5NPDEu3JUPG9g
+         qD5lBWxQiTV8sNrvF6V5LxM2fo0Du/7nK1TSV0iYl6RBOn6BcCuO5M44/qOWg1hIrZhh
+         4hx8hibuQR4HuadTspKad/b8VCK9b+3iQzXo/QDeeS6rMP3MeoMNM5eq/7GT7X9itnC/
+         g9Iw==
+X-Gm-Message-State: AO0yUKXEQD0m82bK2g6LHq6baxd3skVgwZqd82ezP96UBoejeG0Zl4QO
+	edIPKre2fOmenMocIRSnbPX0kQMqWiFLhQ==
+X-Google-Smtp-Source: AK7set9Y8CTpwSm1HI+IqBC9E1Nad8r6qM/YT6DW4gKxOL1Mii3jhSZIzxecsEiTfpCLSu86LLTcWw==
+X-Received: by 2002:a05:6a20:4a08:b0:cc:f7ad:eb6f with SMTP id fr8-20020a056a204a0800b000ccf7adeb6fmr2672373pzb.53.1677869672299;
+        Fri, 03 Mar 2023 10:54:32 -0800 (PST)
+Received: from smtpclient.apple ([2601:1c0:4d7f:138e::3])
+        by smtp.gmail.com with ESMTPSA id h70-20020a638349000000b00478ca052819sm1941066pge.47.2023.03.03.10.54.31
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 03 Mar 2023 10:54:32 -0800 (PST)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Subject: Re: [regression] Bug 217114 - Tiger Lake SATA Controller not
- operating correctly [bisected]
-Content-Language: en-US
-To: Damien Le Moal <damien.lemoal@opensource.wdc.com>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: "stable@vger.kernel.org" <stable@vger.kernel.org>, emmi@emmixis.net,
- schwagsucks@gmail.com,
- "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)"
- <linux-ide@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-References: <ad02467d-d623-5933-67e0-09925c185568@leemhuis.info>
- <af6a355b-3ac2-a610-379a-167e87145368@opensource.wdc.com>
-From: Simon Gaiser <simon@invisiblethingslab.com>
-In-Reply-To: <af6a355b-3ac2-a610-379a-167e87145368@opensource.wdc.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------eY0wtsDnTwQw10yONnf8MW0F"
-
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------eY0wtsDnTwQw10yONnf8MW0F
-Content-Type: multipart/mixed; boundary="------------B7xKDox4LcyyrC95EzxDJhv8";
- protected-headers="v1"
-From: Simon Gaiser <simon@invisiblethingslab.com>
-To: Damien Le Moal <damien.lemoal@opensource.wdc.com>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: "stable@vger.kernel.org" <stable@vger.kernel.org>, emmi@emmixis.net,
- schwagsucks@gmail.com,
- "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)"
- <linux-ide@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Message-ID: <7135b5c6-daed-a726-c02c-b0ed821e2121@invisiblethingslab.com>
-Subject: Re: [regression] Bug 217114 - Tiger Lake SATA Controller not
- operating correctly [bisected]
-References: <ad02467d-d623-5933-67e0-09925c185568@leemhuis.info>
- <af6a355b-3ac2-a610-379a-167e87145368@opensource.wdc.com>
-In-Reply-To: <af6a355b-3ac2-a610-379a-167e87145368@opensource.wdc.com>
-
---------------B7xKDox4LcyyrC95EzxDJhv8
-Content-Type: text/plain; charset=UTF-8
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3731.400.51.1.1\))
+Subject: Re: [PATCH] scsi: core: Add BLIST_NO_ASK_VPD_SIZE for some VDASD
+From: Lee Duncan <leeman.duncan@gmail.com>
+In-Reply-To: <88927435-ae58-c24b-e7b7-b675985de433@leemhuis.info>
+Date: Fri, 3 Mar 2023 10:54:21 -0800
+Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>,
+ "Martin K. Petersen" <martin.petersen@oracle.com>,
+ linux-scsi@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ Lee Duncan <lduncan@suse.com>,
+ Martin Wilck <mwilck@suse.com>,
+ Hannes Reinecke <hare@suse.de>,
+ Srikar Dronamraju <srikar@linux.vnet.ibm.com>
 Content-Transfer-Encoding: quoted-printable
+Message-Id: <86D685F2-D411-460B-A09B-6BE942372F0A@gmail.com>
+References: <20220928181350.9948-1-leeman.duncan@gmail.com>
+ <88927435-ae58-c24b-e7b7-b675985de433@leemhuis.info>
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+X-Mailer: Apple Mail (2.3731.400.51.1.1)
 
-Damien Le Moal:
-> On 3/3/23 16:10, Linux regression tracking (Thorsten Leemhuis) wrote:
->> Hi, this is your Linux kernel regression tracker.
->>
->> I noticed a regression report in bugzilla.kernel.org that apparently
->> affects 6.2 and later as well as 6.1.13 and later, as it was already
->> backported there.
->>
->> As many (most?) kernel developer don't keep an eye on bugzilla, I
->> decided to forward the report by mail. Quoting from
->> https://bugzilla.kernel.org/show_bug.cgi?id=3D217114 :
->>
->>>  emmi@emmixis.net 2023-03-02 11:25:00 UTC
->>>
->>> As per kernel problem found in https://bbs.archlinux.org/viewtopic.ph=
-p?id=3D283906 ,
->>>
->>> Commit 104ff59af73aba524e57ae0fef70121643ff270e
->>
->> [FWIW: That's "ata: ahci: Add Tiger Lake UP{3,4} AHCI controller" from=
-
->> Simon Gaiser]
+On Mar 3, 2023, at 1:02 AM, Linux regression tracking (Thorsten =
+Leemhuis) <regressions@leemhuis.info> wrote:
 >=20
-> I sent a revert with cc: stable.
+> Hi, this is your Linux kernel regression tracker.
 >=20
-> Simon,
+> On 28.09.22 20:13, Lee Duncan wrote:
+>> From: Lee Duncan <lduncan@suse.com>
+>>=20
+>> Some storage, such as AIX VDASD (virtual storage) and IBM 2076
+>> (front end) do not like the recent commit:
+>>=20
+>> commit c92a6b5d6335 ("scsi: core: Query VPD size before getting full =
+page")
+>>=20
+>> That commit changed getting SCSI VPD pages so that we now read
+>> just enough of the page to get the actual page size, then read
+>> the whole page in a second read. The problem is that the above
+>> mentioned hardware returns zero for the page size, because of
+>> a firmware error. In such cases, until the firmware is fixed,
+>> this new black flag says to revert to the original method of
+>> reading the VPD pages, i.e. try to read as a whole buffer's
+>> worth on the first try.
 >=20
-> Let's work on finding a better solution for enabling LPM for that
-> adapter without causing regressions. I will need your help for testing
-> as I do not have this hardware.
+> As this is a fix for a regression (one that Srikar Dronamraju recently
+> ran into as well and bisected again :-/ ), please allow me to ask:
+>=20
+> James, Martin, what is needed to get this or some other solution for =
+the
+> regression finally mainlined?
+>=20
+> FWIW, the thread afaics accumulated three Reviewed-by an one Tested-by
+> in the meantime.
+>=20
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' =
+hat)
+> --
+> Everything you wanna know about Linux kernel regression tracking:
+> https://linux-regtracking.leemhuis.info/about/#tldr
+> If I did something stupid, please tell me, as explained on that page.
+>=20
+> #regzbot poke
 
-Sure, let me know what I can do to help.
+Martin:
 
-Simon
+I know you had reservations about this approach, but the fact that =
+another
+case has shown up where this patch helps means this isn=E2=80=99t just a =
+one-off
+problem.
 
---------------B7xKDox4LcyyrC95EzxDJhv8--
+I know the alternative was to have the code that reads mode pages just
+automatically handle all cases where the size was returned to zero, but
+I really prefer specifically listing =E2=80=9Coffending=E2=80=9D =
+hardware, rather than
+automatically covering for it.
 
---------------eY0wtsDnTwQw10yONnf8MW0F
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature"
+Please let me know if you still have reservations. If not, I could =
+rebase
+and resubmit this, if you like.
 
------BEGIN PGP SIGNATURE-----
+Thanks.
 
-iQIzBAEBCgAdFiEE3E8ezGzG3N1CTQ//kO9xfO/xly8FAmQBzhoACgkQkO9xfO/x
-ly9odw/+McAW/GtDWNrqJlk1I1G1Zbsxv5yhwxT17Ma4A9+VItJj16T3ot6GhxFX
-S4EaEGBl1pipfJyrUoUNdcJk+Kg0XTriTVH0fJl1I66ekFPPmrOa1bigJ1bHKBMk
-EJPx94Av2CNhKTAV1HZ4nSJaO8vZ2+wJ704yDxSEP8eqsAsr/48eGvV04KL6cL6P
-XhUPDstOsmB3SaG0HnXA7aSNPeTJ4SaV8Pz4Em68n92r5/+eVEZu5gzq/xQBTkdB
-3J0gizkm2TR2lNdEvNOMNaHaUaOyOQuXtyDOuxlF3jmOoKgiDMGpdlu7W1gWwTT6
-iBNZnP4g10eooTb/hHtsdvVSsP81pi1RdMJ60n3W6TantQ0BkaM35WPIRxFBhKj1
-+6ov8fQ6LOm0cJOaHJvsOhVa24CYJXbMS0I9avi/3c9D7AWIUfiSoDXxrvql4BIq
-xziQ6EKu2s6haFKZzd/7WRCECnr6+vsqvrCZmMZClyoN3f8GOUn1XkrtO0emwrA/
-+DuivP0l9/40ECTIQkv4j2zYIYKaqws9vsrxGiRCdTOSB7ylMjwXC9YAX4F1OdkJ
-MeR0HzL76MXAIb6R+Nv7qoicKgLdkVORNlz8gMhW2Ga1S/Pe0AClHosuOKRZIlyF
-icYwRVen9SY97Ko7fSZiVTJHLmVpCEnMe9vFEYRFxPVOOHLIbag=
-=G8eI
------END PGP SIGNATURE-----
+>=20
+>> Fixes: c92a6b5d6335 ("scsi: core: Query VPD size before getting full =
+page")
+>> Reported-by: Martin Wilck <mwilck@suse.com>
+>> Suggested-by: Hannes Reinecke <hare@suse.de>
+>> Signed-off-by: Lee Duncan <lduncan@suse.com>
+>> ---
+>> drivers/scsi/scsi.c         | 14 +++++++++++---
+>> drivers/scsi/scsi_devinfo.c |  3 ++-
+>> drivers/scsi/scsi_scan.c    |  3 +++
+>> include/scsi/scsi_device.h  |  2 ++
+>> include/scsi/scsi_devinfo.h |  6 +++---
+>> 5 files changed, 21 insertions(+), 7 deletions(-)
+>>=20
+>> diff --git a/drivers/scsi/scsi.c b/drivers/scsi/scsi.c
+>> index c59eac7a32f2..f2db4b846190 100644
+>> --- a/drivers/scsi/scsi.c
+>> +++ b/drivers/scsi/scsi.c
+>> @@ -321,11 +321,19 @@ static int scsi_vpd_inquiry(struct scsi_device =
+*sdev, unsigned char *buffer,
+>> return get_unaligned_be16(&buffer[2]) + 4;
+>> }
+>>=20
+>> -static int scsi_get_vpd_size(struct scsi_device *sdev, u8 page)
+>> +static int scsi_get_vpd_size(struct scsi_device *sdev, u8 page, int =
+buf_len)
+>> {
+>> unsigned char vpd_header[SCSI_VPD_HEADER_SIZE] __aligned(4);
+>> int result;
+>>=20
+>> + /*
+>> + * if this hardware is blacklisted then don't bother asking
+>> + * the page size, since it will repy with zero -- just assume it
+>> + * is the buffer size
+>> + */
+>> + if (sdev->no_ask_vpd_sz_first)
+>> + return buf_len;
+>> +
+>> /*
+>> * Fetch the VPD page header to find out how big the page
+>> * is. This is done to prevent problems on legacy devices
+>> @@ -367,7 +375,7 @@ int scsi_get_vpd_page(struct scsi_device *sdev, =
+u8 page, unsigned char *buf,
+>> if (!scsi_device_supports_vpd(sdev))
+>> return -EINVAL;
+>>=20
+>> - vpd_len =3D scsi_get_vpd_size(sdev, page);
+>> + vpd_len =3D scsi_get_vpd_size(sdev, page, buf_len);
+>> if (vpd_len <=3D 0)
+>> return -EINVAL;
+>>=20
+>> @@ -402,7 +410,7 @@ static struct scsi_vpd *scsi_get_vpd_buf(struct =
+scsi_device *sdev, u8 page)
+>> struct scsi_vpd *vpd_buf;
+>> int vpd_len, result;
+>>=20
+>> - vpd_len =3D scsi_get_vpd_size(sdev, page);
+>> + vpd_len =3D scsi_get_vpd_size(sdev, page, SCSI_VPD_PG_LEN);
+>> if (vpd_len <=3D 0)
+>> return NULL;
+>>=20
+>> diff --git a/drivers/scsi/scsi_devinfo.c =
+b/drivers/scsi/scsi_devinfo.c
+>> index c7080454aea9..d2b2e841e570 100644
+>> --- a/drivers/scsi/scsi_devinfo.c
+>> +++ b/drivers/scsi/scsi_devinfo.c
+>> @@ -134,7 +134,7 @@ static struct {
+>> {"3PARdata", "VV", NULL, BLIST_REPORTLUN2},
+>> {"ADAPTEC", "AACRAID", NULL, BLIST_FORCELUN},
+>> {"ADAPTEC", "Adaptec 5400S", NULL, BLIST_FORCELUN},
+>> - {"AIX", "VDASD", NULL, BLIST_TRY_VPD_PAGES},
+>> + {"AIX", "VDASD", NULL, BLIST_TRY_VPD_PAGES | =
+BLIST_NO_ASK_VPD_SIZE},
+>> {"AFT PRO", "-IX CF", "0.0>", BLIST_FORCELUN},
+>> {"BELKIN", "USB 2 HS-CF", "1.95",  BLIST_FORCELUN | =
+BLIST_INQUIRY_36},
+>> {"BROWNIE", "1200U3P", NULL, BLIST_NOREPORTLUN},
+>> @@ -188,6 +188,7 @@ static struct {
+>> {"HPE", "OPEN-", "*", BLIST_REPORTLUN2 | BLIST_TRY_VPD_PAGES},
+>> {"IBM", "AuSaV1S2", NULL, BLIST_FORCELUN},
+>> {"IBM", "ProFibre 4000R", "*", BLIST_SPARSELUN | BLIST_LARGELUN},
+>> + {"IBM", "2076", NULL, BLIST_NO_ASK_VPD_SIZE},
+>> {"IBM", "2105", NULL, BLIST_RETRY_HWERROR},
+>> {"iomega", "jaz 1GB", "J.86", BLIST_NOTQ | BLIST_NOLUN},
+>> {"IOMEGA", "ZIP", NULL, BLIST_NOTQ | BLIST_NOLUN},
+>> diff --git a/drivers/scsi/scsi_scan.c b/drivers/scsi/scsi_scan.c
+>> index 5d27f5196de6..b67743e32089 100644
+>> --- a/drivers/scsi/scsi_scan.c
+>> +++ b/drivers/scsi/scsi_scan.c
+>> @@ -1056,6 +1056,9 @@ static int scsi_add_lun(struct scsi_device =
+*sdev, unsigned char *inq_result,
+>> else if (*bflags & BLIST_SKIP_VPD_PAGES)
+>> sdev->skip_vpd_pages =3D 1;
+>>=20
+>> + if (*bflags & BLIST_NO_ASK_VPD_SIZE)
+>> + sdev->no_ask_vpd_sz_first =3D 1;
+>> +
+>> transport_configure_device(&sdev->sdev_gendev);
+>>=20
+>> if (sdev->host->hostt->slave_configure) {
+>> diff --git a/include/scsi/scsi_device.h b/include/scsi/scsi_device.h
+>> index 2493bd65351a..5d15784ccefc 100644
+>> --- a/include/scsi/scsi_device.h
+>> +++ b/include/scsi/scsi_device.h
+>> @@ -145,6 +145,7 @@ struct scsi_device {
+>> const char * model; /* ... after scan; point to static string */
+>> const char * rev; /* ... "nullnullnullnull" before scan */
+>>=20
+>> +#define SCSI_VPD_PG_LEN 255 /* default SCSI VPD page size (max) */
+>> struct scsi_vpd __rcu *vpd_pg0;
+>> struct scsi_vpd __rcu *vpd_pg83;
+>> struct scsi_vpd __rcu *vpd_pg80;
+>> @@ -214,6 +215,7 @@ struct scsi_device {
+>> * creation time */
+>> unsigned ignore_media_change:1; /* Ignore MEDIA CHANGE on resume */
+>> unsigned silence_suspend:1; /* Do not print runtime PM related =
+messages */
+>> + unsigned no_ask_vpd_sz_first:1; /* Do not ask for VPD size first */
+>>=20
+>> unsigned int queue_stopped; /* request queue is quiesced */
+>> bool offline_already; /* Device offline message logged */
+>> diff --git a/include/scsi/scsi_devinfo.h =
+b/include/scsi/scsi_devinfo.h
+>> index 5d14adae21c7..ec12dbaff0e8 100644
+>> --- a/include/scsi/scsi_devinfo.h
+>> +++ b/include/scsi/scsi_devinfo.h
+>> @@ -32,7 +32,8 @@
+>> #define BLIST_IGN_MEDIA_CHANGE ((__force blist_flags_t)(1ULL << 11))
+>> /* do not do automatic start on add */
+>> #define BLIST_NOSTARTONADD ((__force blist_flags_t)(1ULL << 12))
+>> -#define __BLIST_UNUSED_13 ((__force blist_flags_t)(1ULL << 13))
+>> +/* do not ask for VPD page size first on some broken targets */
+>> +#define BLIST_NO_ASK_VPD_SIZE ((__force blist_flags_t)(1ULL << 13))
+>> #define __BLIST_UNUSED_14 ((__force blist_flags_t)(1ULL << 14))
+>> #define __BLIST_UNUSED_15 ((__force blist_flags_t)(1ULL << 15))
+>> #define __BLIST_UNUSED_16 ((__force blist_flags_t)(1ULL << 16))
+>> @@ -74,8 +75,7 @@
+>> #define __BLIST_HIGH_UNUSED (~(__BLIST_LAST_USED | \
+>>       (__force blist_flags_t) \
+>>       ((__force __u64)__BLIST_LAST_USED - 1ULL)))
+>> -#define __BLIST_UNUSED_MASK (__BLIST_UNUSED_13 | \
+>> -     __BLIST_UNUSED_14 | \
+>> +#define __BLIST_UNUSED_MASK (__BLIST_UNUSED_14 | \
+>>     __BLIST_UNUSED_15 | \
+>>     __BLIST_UNUSED_16 | \
+>>     __BLIST_UNUSED_24 | \
 
---------------eY0wtsDnTwQw10yONnf8MW0F--
