@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9C1C1FA1
-	for <regressions@lists.linux.dev>; Fri,  3 Mar 2023 08:17:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56F921363
+	for <regressions@lists.linux.dev>; Fri,  3 Mar 2023 08:31:47 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pY0bG-0004AA-Q4; Fri, 03 Mar 2023 09:17:10 +0100
-Message-ID: <19284aff-436a-5130-5126-8ccdd1af476d@leemhuis.info>
-Date: Fri, 3 Mar 2023 09:17:10 +0100
+	id 1pY0pL-0005rW-So; Fri, 03 Mar 2023 09:31:43 +0100
+Message-ID: <3bcbba4f-6f40-51d0-10ed-692e32f630e4@leemhuis.info>
+Date: Fri, 3 Mar 2023 09:31:39 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,63 +16,49 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.8.0
+Subject: Re: [Regression] mmap with MAP_32BIT randomly fails since 6.1
 Content-Language: en-US, de-DE
-From: "Linux regression tracking (Thorsten Leemhuis)"
+To: Snild Dolkow <snild@sony.com>, "Liam R. Howlett"
+ <Liam.Howlett@Oracle.com>, "Matthew Wilcox (Oracle)" <willy@infradead.org>
+Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ LKML <linux-kernel@vger.kernel.org>, Linux-MM <linux-mm@kvack.org>,
+ "maple-tree@lists.infradead.org" <maple-tree@lists.infradead.org>,
+ Andrew Morton <akpm@linux-foundation.org>
+References: <cb8dc31a-fef2-1d09-f133-e9f7b9f9e77a@sony.com>
+From: "Linux regression tracking #adding (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-To: Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
-Cc: Alsa-devel <alsa-devel@alsa-project.org>,
- LKML <linux-kernel@vger.kernel.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-Subject: [regression] Bug 217084 - Roland VS-100 non working (snd_usb_audio)
- since kernel 5.11
+In-Reply-To: <cb8dc31a-fef2-1d09-f133-e9f7b9f9e77a@sony.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1677831439;1ebd2d19;
-X-HE-SMSGID: 1pY0bG-0004AA-Q4
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1677832307;4b4f83b2;
+X-HE-SMSGID: 1pY0pL-0005rW-So
 
-Hi, this is your Linux kernel regression tracker.
+[TLDR: I'm adding this report to the list of tracked Linux kernel
+regressions; the text you find below is based on a few templates
+paragraphs you might have encountered already in similar form.
+See link in footer if these mails annoy you.]
 
-I noticed a regression report in bugzilla.kernel.org. As many (most?)
-kernel developer don't keep an eye on it, I decided to forward it by
-mail. Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=217084 :
+On 02.03.23 16:32, Snild Dolkow wrote:
+> After upgrading a machine from 5.17.4 to 6.1.12 a couple of weeks ago, I
+> started getting (inconsistent) failures when building Android:
+> [...]
+> I have checked a more recent master commit (ee3f96b1, from March 1st),
+> and the problem is still there. Bisecting shows that e15e06a8 is the
+> last good commit, and that 524e00b3 is the first one failing in this
+> way. The 10 or so commits in between run into a page fault BUG down in
+> vma_merge() instead.
+> 
+> This range of commits is about the same as mentioned in
+> https://lore.kernel.org/lkml/0b9f5425-08d4-8013-aa4c-e620c3b10bb2@leemhuis.info/, so I assume that my problem, too, was introduced with the Maple Tree changes. Sending this to the same people and lists.
+> 
 
->  Alberto Zin 2023-02-24 18:11:31 UTC
-> 
-> The issue I encountered is on a Roland VS-100:
-> 
-> https://www.roland.com/global/products/v-studio_100/
-> 
-> it seems that snd_usb_audio module has broken the compatibility with the VS-100 at around kernel 5.11 time. After that kernel the interface is recognized only as a midi interface, on recent kernels there is only dummy audio device and no sound at all. 
-> 
-> I have two alsa-info reports, on the same desktop pc:
-> 
-> working (my current setup, linux kernel 5.6.0-1055-oem):
-> http://alsa-project.org/db/?f=a3378ecb0a258b4745827c693f4c0045fdb83847
-> 
-> non working (live, avlinux, 6.0.x):
-> http://alsa-project.org/db/?f=99bcdd5a60281110a93317d09a11b9f4831f9701 
-> 
-> in the non working case the interface is recognised by "lsusb", it is seen by "aconnect -l" but not by "aplay -l".
-> 
-> I'm willing to help testing as much as I can.
-> Alberto
+Thanks for the report. To be sure the issue doesn't fall through the
+cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
+tracking bot:
 
-See the ticket for more details. There you noticed that Alberto retried
-with a vanilla kernel later and the problem happens there, too.
-
-
-[TLDR for the rest of this mail: I'm adding this report to the list of
-tracked Linux kernel regressions; the text you find below is based on a
-few templates paragraphs you might have encountered already in similar
-form.]
-
-BTW, let me use this mail to also add the report to the list of tracked
-regressions to ensure it's doesn't fall through the cracks:
-
-#regzbot introduced: v5.4.59..v5.4.233
-https://bugzilla.kernel.org/show_bug.cgi?id=217084
-#regzbot title: alsa: Roland VS-100 stopped working
+#regzbot ^introduced e15e06a8..524e00b3
+#regzbot title mm: mmap with MAP_32BIT randomly fails since 6.1
 #regzbot ignore-activity
 
 This isn't a regression? This issue or a fix for it are already
@@ -83,11 +69,11 @@ while also telling regzbot about it, as explained by the page listed in
 the footer of this mail.
 
 Developers: When fixing the issue, remember to add 'Link:' tags pointing
-to the report (e.g. the buzgzilla ticket and maybe this mail as well, if
-this thread sees some discussion). See page linked in footer for details.
+to the report (the parent of this mail). See page linked in footer for
+details.
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
 Everything you wanna know about Linux kernel regression tracking:
 https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+That page also explains what to do if mails like this annoy you.
