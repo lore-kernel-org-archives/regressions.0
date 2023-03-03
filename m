@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 382F71FB3
-	for <regressions@lists.linux.dev>; Fri,  3 Mar 2023 09:39:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 819F81FB3
+	for <regressions@lists.linux.dev>; Fri,  3 Mar 2023 09:42:48 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pY1t0-0006Uw-VZ; Fri, 03 Mar 2023 10:39:35 +0100
-Message-ID: <754b030c-ba14-167c-e2d0-2f4f5bf55e99@leemhuis.info>
-Date: Fri, 3 Mar 2023 10:39:32 +0100
+	id 1pY1w3-0007DD-9B; Fri, 03 Mar 2023 10:42:43 +0100
+Message-ID: <632d4ca3-01ed-4d51-41b0-40c1aa82ffe9@leemhuis.info>
+Date: Fri, 3 Mar 2023 10:42:42 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,90 +16,69 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.8.0
-Subject: Re: [PATCH 1/1] mpt3sas: Remove usage of dma_get_required_mask api
+Subject: Re: regression: insmod module failed in VM with nvdimm on #forregzbot
 Content-Language: en-US, de-DE
-From: "Linux regression tracking (Thorsten Leemhuis)"
+From: "Linux regression tracking #update (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
-To: Salvatore Bonaccorso <carnil@debian.org>,
- "Martin K. Petersen" <martin.petersen@oracle.com>,
- Martin Wilck <mwilck@suse.com>, Christoph Hellwig <hch@infradead.org>,
- Sreekanth Reddy <sreekanth.reddy@broadcom.com>
-Cc: linux-scsi@vger.kernel.org, regressions@lists.linux.dev
-References: <20221028091655.17741-1-sreekanth.reddy@broadcom.com>
- <20221028091655.17741-2-sreekanth.reddy@broadcom.com>
- <Y15lk+CPsjJ801iY@infradead.org>
- <181536c494aa39ca78b190396a97072448739411.camel@suse.com>
- <yq1tu192iur.fsf@ca-mkp.ca.oracle.com> <Y8+m0w4Og2CLFImY@lorien.valinor.li>
- <Y/ZGe8c1XyqSuCSk@eldamar.lan>
- <9aa5e89f-6579-15e5-cc51-d226b5d4bea3@leemhuis.info>
+To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Cc: linux-arm-kernel@lists.infradead.org,
+ chenxiang via <qemu-devel@nongnu.org>,
+ "linuxarm@huawei.com" <linuxarm@huawei.com>
+References: <e6a804de-a5f7-c551-ffba-e09d04e438fc@hisilicon.com>
+ <b4b81dfd-d30c-e8f4-3ea3-1af9140a82bb@leemhuis.info>
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <9aa5e89f-6579-15e5-cc51-d226b5d4bea3@leemhuis.info>
+In-Reply-To: <b4b81dfd-d30c-e8f4-3ea3-1af9140a82bb@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1677836380;cca7c617;
-X-HE-SMSGID: 1pY1t0-0006Uw-VZ
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1677836568;39d3567f;
+X-HE-SMSGID: 1pY1w3-0007DD-9B
 
-On 27.02.23 15:07, Thorsten Leemhuis wrote:
-> On 22.02.23 17:44, Salvatore Bonaccorso wrote:
->> On Tue, Jan 24, 2023 at 10:37:23AM +0100, Salvatore Bonaccorso wrote:
->>> On Mon, Jan 02, 2023 at 08:06:41AM -0500, Martin K. Petersen wrote:
->>>>> is anything blocking mainline inclusion of this patch?
->>>> I app
+[TLDR: This mail in primarily relevant for Linux regression tracking. A
+change or fix related to the regression discussed in this thread was
+posted or applied, but it did not use a Link: tag to point to the
+report, as Linus and the documentation call for. Things happen, no
+worries -- but now the regression tracking bot needs to be told manually
+about the fix. See link in footer if these mails annoy you.]
 
-[removing a footer from the quoting here, that accidentally was added
-here in my previous mail; sorry!]
-
->>>> lied these to 6.2/scsi-fixes last week. The patches have been
->>>> sitting in a topic branch for a bit due to the three-way conflict
->>>> between fixes, queue, and upstream.
->>>
->>> It landed in 6.2-rc4 recently in fact. Thank you!
->>>
->>> Would it be posssible to backport the fix as well back to the stable
->>> series affected? 
->>>
->>> In Debian we have the reports as per https://bugs.debian.org/1022126
->>> where the issue was introduced back in 5.10.y. Context in
->>> https://lore.kernel.org/linux-scsi/CAK=zhgr=MYn=-mrz3gKUFoXG_+EQ796bHEWSdK88o1Aqamby7g@mail.gmail.com/
+On 30.11.22 11:10, Thorsten Leemhuis wrote:
+>
+> On 30.11.22 03:52, chenxiang (M) wrote:
 >>
->> Friendly ping on this, can this change be backported as well to the
->> relevant stable series? It would apply already cleanly to 6.1.y, but
->> due to 9df650963bf6 ("scsi: mpt3sas: Don't change DMA mask while
->> reallocating pools") it might need some additional review for the
->> older stable series (in particular of interest due to the above for
->> 5.10.y).
+>> We boot the VM using following commands (with nvdimm on)  (qemu version
+>> 6.1.50, kernel 6.0-r4):
+>>
+>> qemu-system-aarch64 -machine
+>> virt,kernel_irqchip=on,gic-version=3,nvdimm=on  -kernel
+>> /home/kernel/Image -initrd /home/mini-rootfs/rootfs.cpio.gz -bios
+>> /root/QEMU_EFI.FD -cpu host -enable-kvm -net none -nographic -m
+>> 2G,maxmem=64G,slots=3 -smp 4 -append 'rdinit=init console=ttyAMA0
+>> ealycon=pl0ll,0x90000000 pcie_ports=native pciehp.pciehp_debug=1'
+>> -object memory-backend-ram,id=ram1,size=10G -device
+>> nvdimm,id=dimm1,memdev=ram1  -device ioh3420,id=root_port1,chassis=1
+>> -device vfio-pci,host=7d:01.0,id=net0,bus=root_port1
+>> [...]
+>> We git bisect the code, and find the patch c5a89f75d2a ("arm64: kaslr:
+>> defer initialization to initcall where permitted").
 > 
-> This afaics is a reasonable request for 6.1, as this seems to be
-> (Salvatore, please correct me if I'm wrong) a regression caused by
-> 0e0747de0ea3 ("scsi: mpt3sas: Fix return value check of
-> dma_get_required_mask()"), which was merged for 6.0-rc7. Hence allow me
-> to ask:
+> Thanks for the report. To be sure below issue doesn't fall through the
+> cracks unnoticed, I'm adding it to regzbot, my Linux kernel regression
+> tracking bot:
 > 
-> Sreekanth and Martin, is there a reason why this request (and the
-> earlier one a month ago) was apparently met with silence? Or was
-> progress made in between and I just missed it?
+> #regzbot ^introduced fc5a89f75d2a
+> #regzbot title arm64: kaslr: vmalloc error when boothing a VM with nvdimm
+> #regzbot ignore-activity
 
-Salvatore, seems my inquiry didn't help. I'd suggest you ask the stable
-maintainers yourself to pick this up for 6.1.y. See "Option 2" in
+#regzbot fix: arm64: kaslr: don't pretend KASLR is enabled if offset <
+MIN_KIMG_ALIGN
+#regzbot ignore-activity
 
+Backstory:
 
-https://docs.kernel.org/process/stable-kernel-rules.html
-
-> Salvatore, for 5.10 things are a bit more complicated, as someone would
-> need to do the work. Sometimes that work is done by the driver
-> developers and maintainers as well, but strictly speaking it's the duty
-> of those that backported the change to 5.10.y. Didn't check who did that
-> this case (the stable team?); but well, maybe let's sort this out for
-> 6.1.y first.
-
-Option 3 mentioned on above page might work for you here.
-
->> Thanks already! If the change for older series needs some additional
->> testing we might ask the affected users from the Debian bug 1022126 to
->> test on 5.10.y as well.
+https://lore.kernel.org/lkml/CAMj1kXGWEaQXoKj=DzG9XpVGi4t5zfE-RSG0BodVL-b47nsj-A@mail.gmail.com/
+https://lore.kernel.org/all/20230223204101.1500373-1-ardb@kernel.org/
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
 Everything you wanna know about Linux kernel regression tracking:
 https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+That page also explains what to do if mails like this annoy you.
