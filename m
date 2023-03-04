@@ -1,143 +1,70 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 651961FD1
-	for <regressions@lists.linux.dev>; Sat,  4 Mar 2023 09:16:29 +0000 (UTC)
-Received: by mail-wm1-f41.google.com with SMTP id o11-20020a05600c4fcb00b003eb33ea29a8so2506768wmq.1
-        for <regressions@lists.linux.dev>; Sat, 04 Mar 2023 01:16:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1677921387;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=u7rxpvEXxMl98nbZc+87/nzrWnz91WbmS8yFASWPUHs=;
-        b=TN8ZJywX3LymTOxeVmLugSsFYOPpiIELhM3L/ArlWRrBI10bV+TFLVR8C0U79d4CgJ
-         oi+MkZEAK/JOa8gmSkRS5798vHuMQK05ls7wvE6ZkBnMUwdZdjaN7Ln7Jv5THwYI8qz7
-         FDXCPqvnNfTEwaPP7m+bEw9BxZFXEob5Ans9nfjv7QHhfKmu1DJErUKqWD+gjl72QLoK
-         W1Jt3L8I9AUmcAVLFS5zNjzbiQbjw76eUdFmH4u2kBOG7cvOcHxjOE8FtA+zdBwjNoz1
-         DS0AroXUucGqK3h621Ce1wJWAfB8kHny8MGc8lPvtVIQhXxILNfhong43cB+4cDZCOqS
-         MNEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1677921387;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=u7rxpvEXxMl98nbZc+87/nzrWnz91WbmS8yFASWPUHs=;
-        b=QqnuGdQoKxnCs/fwm/gnYDI1A5X+rieRDxHAbydG5Dw6GqSF3UlEcUMvYdeLXeAL1E
-         vif/yFc+tinGXyhvir1jeXeYqxTYRZk7C/8PukFaqtio57tGbTE61Z9aBYzpDn05+j7y
-         1kBzGH5Zg3xvDxbnmBbaClIS1teMgwjqFQTwDf3a7FGqc/PZ4c2PyHN9U+h+OICjqOFB
-         8qnsXn7P4QLhGiqwwt4LnMYDYeUuMn1JEktT2LYne6SyzTSlNXMWjlzJK6E9q2jA1LvP
-         jx3REAVVllPkJUhPrVDfB51d1UiQA3z0OsD8Yt0sNTuymabkHABxY8eb/zAE7Z1urm7x
-         ElsQ==
-X-Gm-Message-State: AO0yUKVUnJKNwzFw/KshMI7pZYE1p17H/gg+YeKEKoUx/VLk7Ob+BHFs
-	ot6Ht/99QCkQuI9FOJFIVTM=
-X-Google-Smtp-Source: AK7set8fI3WvLbOHT2f8qsxFThGOZJTIpCKa9SKWW+mxh86Iub6eGN/rF2Urg59uB2BlMDbFuy4Dcg==
-X-Received: by 2002:a05:600c:3153:b0:3ea:f73e:9d8c with SMTP id h19-20020a05600c315300b003eaf73e9d8cmr4107437wmo.16.1677921387469;
-        Sat, 04 Mar 2023 01:16:27 -0800 (PST)
-Received: from eldamar.lan (c-82-192-242-114.customer.ggaweb.ch. [82.192.242.114])
-        by smtp.gmail.com with ESMTPSA id c21-20020a7bc015000000b003e214803343sm8254413wmb.46.2023.03.04.01.16.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 04 Mar 2023 01:16:26 -0800 (PST)
-Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
-Received: by eldamar.lan (Postfix, from userid 1000)
-	id 1335BBE2DE0; Sat,  4 Mar 2023 10:16:26 +0100 (CET)
-Date: Sat, 4 Mar 2023 10:16:26 +0100
-From: Salvatore Bonaccorso <carnil@debian.org>
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: "Martin K. Petersen" <martin.petersen@oracle.com>,
-	Martin Wilck <mwilck@suse.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
-	linux-scsi@vger.kernel.org
-Subject: Re: [PATCH 1/1] mpt3sas: Remove usage of dma_get_required_mask api
-Message-ID: <ZAMMarCPzUSpvrQ1@eldamar.lan>
-References: <20221028091655.17741-1-sreekanth.reddy@broadcom.com>
- <20221028091655.17741-2-sreekanth.reddy@broadcom.com>
- <Y15lk+CPsjJ801iY@infradead.org>
- <181536c494aa39ca78b190396a97072448739411.camel@suse.com>
- <yq1tu192iur.fsf@ca-mkp.ca.oracle.com>
- <Y8+m0w4Og2CLFImY@lorien.valinor.li>
- <Y/ZGe8c1XyqSuCSk@eldamar.lan>
- <9aa5e89f-6579-15e5-cc51-d226b5d4bea3@leemhuis.info>
- <754b030c-ba14-167c-e2d0-2f4f5bf55e99@leemhuis.info>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58D5823D1
+	for <regressions@lists.linux.dev>; Sat,  4 Mar 2023 13:58:41 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1pYSP7-0001uK-Bl; Sat, 04 Mar 2023 14:58:29 +0100
+Message-ID: <229e264a-9af6-7662-c04c-9c1492a18c51@leemhuis.info>
+Date: Sat, 4 Mar 2023 14:58:28 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <754b030c-ba14-167c-e2d0-2f4f5bf55e99@leemhuis.info>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+Subject: Re: [regression] Bug 217114 - Tiger Lake SATA Controller not
+ operating correctly [bisected]
+Content-Language: en-US, de-DE
+To: Damien Le Moal <damien.lemoal@opensource.wdc.com>,
+ Greg KH <gregkh@linuxfoundation.org>, Sasha Levin <sashal@kernel.org>
+Cc: "stable@vger.kernel.org" <stable@vger.kernel.org>, emmi@emmixis.net,
+ schwagsucks@gmail.com,
+ "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)"
+ <linux-ide@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+ Simon Gaiser <simon@invisiblethingslab.com>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+References: <ad02467d-d623-5933-67e0-09925c185568@leemhuis.info>
+ <af6a355b-3ac2-a610-379a-167e87145368@opensource.wdc.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <af6a355b-3ac2-a610-379a-167e87145368@opensource.wdc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1677938321;4a405597;
+X-HE-SMSGID: 1pYSP7-0001uK-Bl
 
-Thorsten, thanks for you time!
+On 03.03.23 10:48, Damien Le Moal wrote:
+> On 3/3/23 16:10, Linux regression tracking (Thorsten Leemhuis) wrote:
+>>
+>> I noticed a regression report in bugzilla.kernel.org that apparently
+>> affects 6.2 and later as well as 6.1.13 and later, as it was already
+>> backported there.
+>>
+>> As many (most?) kernel developer don't keep an eye on bugzilla, I
+>> decided to forward the report by mail. Quoting from
+>> https://bugzilla.kernel.org/show_bug.cgi?id=217114 :
+>>
+>>>  emmi@emmixis.net 2023-03-02 11:25:00 UTC
+>>>
+>>> As per kernel problem found in https://bbs.archlinux.org/viewtopic.php?id=283906 ,
+>>>
+>>> Commit 104ff59af73aba524e57ae0fef70121643ff270e
+>>
+>> [FWIW: That's "ata: ahci: Add Tiger Lake UP{3,4} AHCI controller" from
+>> Simon Gaiser]
+> 
+> I sent a revert with cc: stable.
 
-On Fri, Mar 03, 2023 at 10:39:32AM +0100, Linux regression tracking (Thorsten Leemhuis) wrote:
-> On 27.02.23 15:07, Thorsten Leemhuis wrote:
-> > On 22.02.23 17:44, Salvatore Bonaccorso wrote:
-> >> On Tue, Jan 24, 2023 at 10:37:23AM +0100, Salvatore Bonaccorso wrote:
-> >>> On Mon, Jan 02, 2023 at 08:06:41AM -0500, Martin K. Petersen wrote:
-> >>>>> is anything blocking mainline inclusion of this patch?
-> >>>> I app
-> 
-> [removing a footer from the quoting here, that accidentally was added
-> here in my previous mail; sorry!]
-> 
-> >>>> lied these to 6.2/scsi-fixes last week. The patches have been
-> >>>> sitting in a topic branch for a bit due to the three-way conflict
-> >>>> between fixes, queue, and upstream.
-> >>>
-> >>> It landed in 6.2-rc4 recently in fact. Thank you!
-> >>>
-> >>> Would it be posssible to backport the fix as well back to the stable
-> >>> series affected? 
-> >>>
-> >>> In Debian we have the reports as per https://bugs.debian.org/1022126
-> >>> where the issue was introduced back in 5.10.y. Context in
-> >>> https://lore.kernel.org/linux-scsi/CAK=zhgr=MYn=-mrz3gKUFoXG_+EQ796bHEWSdK88o1Aqamby7g@mail.gmail.com/
-> >>
-> >> Friendly ping on this, can this change be backported as well to the
-> >> relevant stable series? It would apply already cleanly to 6.1.y, but
-> >> due to 9df650963bf6 ("scsi: mpt3sas: Don't change DMA mask while
-> >> reallocating pools") it might need some additional review for the
-> >> older stable series (in particular of interest due to the above for
-> >> 5.10.y).
-> > 
-> > This afaics is a reasonable request for 6.1, as this seems to be
-> > (Salvatore, please correct me if I'm wrong) a regression caused by
-> > 0e0747de0ea3 ("scsi: mpt3sas: Fix return value check of
-> > dma_get_required_mask()"), which was merged for 6.0-rc7. Hence allow me
-> > to ask:
-> > 
-> > Sreekanth and Martin, is there a reason why this request (and the
-> > earlier one a month ago) was apparently met with silence? Or was
-> > progress made in between and I just missed it?
-> 
-> Salvatore, seems my inquiry didn't help. I'd suggest you ask the stable
-> maintainers yourself to pick this up for 6.1.y. See "Option 2" in
-> 
-> 
-> https://docs.kernel.org/process/stable-kernel-rules.html
+Many thx for this and your quick actions.
 
-Yes as a start this will help to get it in 6.1 where it should apply
-cleanly, thank you. I will do that next.
+@Greg, @Sasha: that revert landed as 6210038aeaf4 ("ata: ahci: Revert
+"ata: ahci: Add Tiger Lake UP{3,4} AHCI controller""); you might want to
+ensure you have it in the first batch of 6.1 backports in case you need
+to split the backports from the merge window over multiple 6.1.y releases.
 
-> 
-> > Salvatore, for 5.10 things are a bit more complicated, as someone would
-> > need to do the work. Sometimes that work is done by the driver
-> > developers and maintainers as well, but strictly speaking it's the duty
-> > of those that backported the change to 5.10.y. Didn't check who did that
-> > this case (the stable team?); but well, maybe let's sort this out for
-> > 6.1.y first.
-> 
-> Option 3 mentioned on above page might work for you here.
-
-That might be an option yes. And the fix really neeeds to go back to
-5.10.y at least as people are experiencing regressions from it (see
-the Debian bugs). Help and confirmation from the affected people would
-be welcome, but did not happened so far.
-
-Thorsten, thanks for your work on the regression trackings!
-
-Regards,
-Salvatore
+Ciao, Thorsten
