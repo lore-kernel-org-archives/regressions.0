@@ -1,285 +1,143 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7D798F6E
-	for <regressions@lists.linux.dev>; Fri,  3 Mar 2023 22:41:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85819C4339B
-	for <regressions@lists.linux.dev>; Fri,  3 Mar 2023 22:41:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1677883288;
-	bh=ddB2tfpY7d7Vws0DiDOusuH4nDz5o7Zpo6VvcYiudRY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=fhE5++Hl98r6HkADbrYuWSPp5+4gpuBHTT+PqjJYMuttC47YDEQjTDALParik5igO
-	 D+6vh99t1iSkSei/phGJbCZ7gLmAJQqmd1l0ltE7L8L5/HEc2T4FSz2l4uITIYDd1A
-	 +QJ2OW34rHYwHgr4htJoTvNHCGhfZd1fUjBRcLwK993bzqOXhgB5N39P51EbNi4eri
-	 sH8zQAVI0YTwWg0tK0s+wYmMye9Yfk92SPNcYxr0ctqkARcNHeVBbizSBJTnrTxMLT
-	 c9HvIj1cc6fkIZohmGoD4d3KcB7XFSBWWKaiDg1AiiV90i+SgEgwccULsP+BOp3FBU
-	 yiJAnFth0O0yg==
-Received: by mail-lf1-f46.google.com with SMTP id k14so5493668lfj.7
-        for <regressions@lists.linux.dev>; Fri, 03 Mar 2023 14:41:28 -0800 (PST)
-X-Gm-Message-State: AO0yUKUoGTzx7jAPkdR3LhBvqlTbjEq8OULYwkjRbYlYvCBYV+eXkLmN
-	XLlcSHhzijnPZ2DSE3ZGIifDmNocoMsmyw80Rgc=
-X-Google-Smtp-Source: AK7set9+8r88VEQ7/2q9Miz+CPEi/sAQJ8m2vNWn4VJYw+hYUvC0spLA41QyTJysmbtrvM3l5sm/trqaDYHW1mT3BZo=
-X-Received: by 2002:ac2:532c:0:b0:4dd:a058:f08f with SMTP id
- f12-20020ac2532c000000b004dda058f08fmr1114274lfh.3.1677883285860; Fri, 03 Mar
- 2023 14:41:25 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 651961FD1
+	for <regressions@lists.linux.dev>; Sat,  4 Mar 2023 09:16:29 +0000 (UTC)
+Received: by mail-wm1-f41.google.com with SMTP id o11-20020a05600c4fcb00b003eb33ea29a8so2506768wmq.1
+        for <regressions@lists.linux.dev>; Sat, 04 Mar 2023 01:16:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1677921387;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=u7rxpvEXxMl98nbZc+87/nzrWnz91WbmS8yFASWPUHs=;
+        b=TN8ZJywX3LymTOxeVmLugSsFYOPpiIELhM3L/ArlWRrBI10bV+TFLVR8C0U79d4CgJ
+         oi+MkZEAK/JOa8gmSkRS5798vHuMQK05ls7wvE6ZkBnMUwdZdjaN7Ln7Jv5THwYI8qz7
+         FDXCPqvnNfTEwaPP7m+bEw9BxZFXEob5Ans9nfjv7QHhfKmu1DJErUKqWD+gjl72QLoK
+         W1Jt3L8I9AUmcAVLFS5zNjzbiQbjw76eUdFmH4u2kBOG7cvOcHxjOE8FtA+zdBwjNoz1
+         DS0AroXUucGqK3h621Ce1wJWAfB8kHny8MGc8lPvtVIQhXxILNfhong43cB+4cDZCOqS
+         MNEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1677921387;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=u7rxpvEXxMl98nbZc+87/nzrWnz91WbmS8yFASWPUHs=;
+        b=QqnuGdQoKxnCs/fwm/gnYDI1A5X+rieRDxHAbydG5Dw6GqSF3UlEcUMvYdeLXeAL1E
+         vif/yFc+tinGXyhvir1jeXeYqxTYRZk7C/8PukFaqtio57tGbTE61Z9aBYzpDn05+j7y
+         1kBzGH5Zg3xvDxbnmBbaClIS1teMgwjqFQTwDf3a7FGqc/PZ4c2PyHN9U+h+OICjqOFB
+         8qnsXn7P4QLhGiqwwt4LnMYDYeUuMn1JEktT2LYne6SyzTSlNXMWjlzJK6E9q2jA1LvP
+         jx3REAVVllPkJUhPrVDfB51d1UiQA3z0OsD8Yt0sNTuymabkHABxY8eb/zAE7Z1urm7x
+         ElsQ==
+X-Gm-Message-State: AO0yUKVUnJKNwzFw/KshMI7pZYE1p17H/gg+YeKEKoUx/VLk7Ob+BHFs
+	ot6Ht/99QCkQuI9FOJFIVTM=
+X-Google-Smtp-Source: AK7set8fI3WvLbOHT2f8qsxFThGOZJTIpCKa9SKWW+mxh86Iub6eGN/rF2Urg59uB2BlMDbFuy4Dcg==
+X-Received: by 2002:a05:600c:3153:b0:3ea:f73e:9d8c with SMTP id h19-20020a05600c315300b003eaf73e9d8cmr4107437wmo.16.1677921387469;
+        Sat, 04 Mar 2023 01:16:27 -0800 (PST)
+Received: from eldamar.lan (c-82-192-242-114.customer.ggaweb.ch. [82.192.242.114])
+        by smtp.gmail.com with ESMTPSA id c21-20020a7bc015000000b003e214803343sm8254413wmb.46.2023.03.04.01.16.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 04 Mar 2023 01:16:26 -0800 (PST)
+Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
+Received: by eldamar.lan (Postfix, from userid 1000)
+	id 1335BBE2DE0; Sat,  4 Mar 2023 10:16:26 +0100 (CET)
+Date: Sat, 4 Mar 2023 10:16:26 +0100
+From: Salvatore Bonaccorso <carnil@debian.org>
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: "Martin K. Petersen" <martin.petersen@oracle.com>,
+	Martin Wilck <mwilck@suse.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
+	linux-scsi@vger.kernel.org
+Subject: Re: [PATCH 1/1] mpt3sas: Remove usage of dma_get_required_mask api
+Message-ID: <ZAMMarCPzUSpvrQ1@eldamar.lan>
+References: <20221028091655.17741-1-sreekanth.reddy@broadcom.com>
+ <20221028091655.17741-2-sreekanth.reddy@broadcom.com>
+ <Y15lk+CPsjJ801iY@infradead.org>
+ <181536c494aa39ca78b190396a97072448739411.camel@suse.com>
+ <yq1tu192iur.fsf@ca-mkp.ca.oracle.com>
+ <Y8+m0w4Og2CLFImY@lorien.valinor.li>
+ <Y/ZGe8c1XyqSuCSk@eldamar.lan>
+ <9aa5e89f-6579-15e5-cc51-d226b5d4bea3@leemhuis.info>
+ <754b030c-ba14-167c-e2d0-2f4f5bf55e99@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <a13cd3b5-cc41-bf2f-c8ac-e031ad0d5dd7@leemhuis.info>
-In-Reply-To: <a13cd3b5-cc41-bf2f-c8ac-e031ad0d5dd7@leemhuis.info>
-From: Song Liu <song@kernel.org>
-Date: Fri, 3 Mar 2023 14:41:13 -0800
-X-Gmail-Original-Message-ID: <CAPhsuW7ZWthh0PZt71hQh1_51C0yMSpOqWYJKc_+VzzTmW_r5A@mail.gmail.com>
-Message-ID: <CAPhsuW7ZWthh0PZt71hQh1_51C0yMSpOqWYJKc_+VzzTmW_r5A@mail.gmail.com>
-Subject: Re: [regression] Bug 217074 - upgrading to kernel 6.1.12 from 5.15.x
- can no longer assemble software raid0
-To: Linux regressions mailing list <regressions@lists.linux.dev>, Jes.Sorensen@gmail.com
-Cc: linux-raid <linux-raid@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	Nikolay Kichukov <hijacker@oldum.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <754b030c-ba14-167c-e2d0-2f4f5bf55e99@leemhuis.info>
 
-+ Jes.
+Thorsten, thanks for you time!
 
-It appeared to me that we can assemble the array if we have any of the
-following:
-1. Enable CONFIG_BLOCK_LEGACY_AUTOLOAD;
-2. Have a valid /etc/mdadm.conf;
-3. Update mdadm to handle this case. (I tried some ugly hacks, which worked but
-    weren't clean).
+On Fri, Mar 03, 2023 at 10:39:32AM +0100, Linux regression tracking (Thorsten Leemhuis) wrote:
+> On 27.02.23 15:07, Thorsten Leemhuis wrote:
+> > On 22.02.23 17:44, Salvatore Bonaccorso wrote:
+> >> On Tue, Jan 24, 2023 at 10:37:23AM +0100, Salvatore Bonaccorso wrote:
+> >>> On Mon, Jan 02, 2023 at 08:06:41AM -0500, Martin K. Petersen wrote:
+> >>>>> is anything blocking mainline inclusion of this patch?
+> >>>> I app
+> 
+> [removing a footer from the quoting here, that accidentally was added
+> here in my previous mail; sorry!]
+> 
+> >>>> lied these to 6.2/scsi-fixes last week. The patches have been
+> >>>> sitting in a topic branch for a bit due to the three-way conflict
+> >>>> between fixes, queue, and upstream.
+> >>>
+> >>> It landed in 6.2-rc4 recently in fact. Thank you!
+> >>>
+> >>> Would it be posssible to backport the fix as well back to the stable
+> >>> series affected? 
+> >>>
+> >>> In Debian we have the reports as per https://bugs.debian.org/1022126
+> >>> where the issue was introduced back in 5.10.y. Context in
+> >>> https://lore.kernel.org/linux-scsi/CAK=zhgr=MYn=-mrz3gKUFoXG_+EQ796bHEWSdK88o1Aqamby7g@mail.gmail.com/
+> >>
+> >> Friendly ping on this, can this change be backported as well to the
+> >> relevant stable series? It would apply already cleanly to 6.1.y, but
+> >> due to 9df650963bf6 ("scsi: mpt3sas: Don't change DMA mask while
+> >> reallocating pools") it might need some additional review for the
+> >> older stable series (in particular of interest due to the above for
+> >> 5.10.y).
+> > 
+> > This afaics is a reasonable request for 6.1, as this seems to be
+> > (Salvatore, please correct me if I'm wrong) a regression caused by
+> > 0e0747de0ea3 ("scsi: mpt3sas: Fix return value check of
+> > dma_get_required_mask()"), which was merged for 6.0-rc7. Hence allow me
+> > to ask:
+> > 
+> > Sreekanth and Martin, is there a reason why this request (and the
+> > earlier one a month ago) was apparently met with silence? Or was
+> > progress made in between and I just missed it?
+> 
+> Salvatore, seems my inquiry didn't help. I'd suggest you ask the stable
+> maintainers yourself to pick this up for 6.1.y. See "Option 2" in
+> 
+> 
+> https://docs.kernel.org/process/stable-kernel-rules.html
 
-Since we eventually would like to get rid of CONFIG_BLOCK_LEGACY_AUTOLOAD, I
-think we need mdadm to handle this properly. But the logistics might
-be complicated, as
-mdadm are shipped separately.
+Yes as a start this will help to get it in 6.1 where it should apply
+cleanly, thank you. I will do that next.
 
-Jes, what do you think about this? AFAICT, we need to update the logic in
-mdopen.c:create_mddev().
+> 
+> > Salvatore, for 5.10 things are a bit more complicated, as someone would
+> > need to do the work. Sometimes that work is done by the driver
+> > developers and maintainers as well, but strictly speaking it's the duty
+> > of those that backported the change to 5.10.y. Didn't check who did that
+> > this case (the stable team?); but well, maybe let's sort this out for
+> > 6.1.y first.
+> 
+> Option 3 mentioned on above page might work for you here.
 
-Thanks,
-Song
+That might be an option yes. And the fix really neeeds to go back to
+5.10.y at least as people are experiencing regressions from it (see
+the Debian bugs). Help and confirmation from the affected people would
+be welcome, but did not happened so far.
 
+Thorsten, thanks for your work on the regression trackings!
 
-On Thu, Feb 23, 2023 at 8:06 AM Linux regression tracking (Thorsten
-Leemhuis) <regressions@leemhuis.info> wrote:
->
-> Hi, this is your Linux kernel regression tracker.
->
-> I noticed a regression report in bugzilla.kernel.org. As many (most?)
-> kernel developer don't keep an eye on it, I decided to forward it by
-> mail. Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=217074 :
->
-> > Hello,
-> > Installing a new kernel 6.1.12 does not allow assembly of raid0 device.
-> >
-> > Going back to previous working kernels: 5.15.65, 5.15.75 assembles the raid0 without any problems.
-> >
-> > Kernel command line parameters:
-> > ... ro kvm_amd.nested=0 kvm_amd.avic=1 kvm_amd.npt=1 raid0.default_layout=2
-> >
-> > mdadm assembly attempt fails with:
-> > 'mdadm: unexpected failure opening /dev/md<NR>'
-> >
-> > Tried with mdadm-4.1 and mdadm-4.2, but as it works with either versions of mdadm, I rule out the mdadm software.
-> >
-> > strace -f output, last few lines:
-> >
-> > mkdir("/run/mdadm", 0755)               = -1 EEXIST (File exists)
-> > openat(AT_FDCWD, "/run/mdadm/map.lock", O_RDWR|O_CREAT|O_TRUNC, 0600) = 3
-> > fcntl(3, F_GETFL)                       = 0x8002 (flags O_RDWR|O_LARGEFILE)
-> > flock(3, LOCK_EX)                       = 0
-> > newfstatat(3, "", {st_mode=S_IFREG|0600, st_size=0, ...}, AT_EMPTY_PATH) = 0
-> > openat(AT_FDCWD, "/run/mdadm/map", O_RDONLY) = 4
-> > fcntl(4, F_GETFL)                       = 0x8000 (flags O_RDONLY|O_LARGEFILE)
-> > newfstatat(4, "", {st_mode=S_IFREG|0600, st_size=0, ...}, AT_EMPTY_PATH) = 0
-> > read(4, "", 4096)                       = 0
-> > close(4)                                = 0
-> > openat(AT_FDCWD, "/run/mdadm/map", O_RDONLY) = 4
-> > fcntl(4, F_GETFL)                       = 0x8000 (flags O_RDONLY|O_LARGEFILE)
-> > newfstatat(4, "", {st_mode=S_IFREG|0600, st_size=0, ...}, AT_EMPTY_PATH) = 0
-> > read(4, "", 4096)                       = 0
-> > close(4)                                = 0
-> > newfstatat(AT_FDCWD, "/dev/.udev", 0x7ffcd8243c90, 0) = -1 ENOENT (No such file or directory)
-> > newfstatat(AT_FDCWD, "/run/udev", {st_mode=S_IFDIR|0755, st_size=160, ...}, 0) = 0
-> > openat(AT_FDCWD, "/proc/mdstat", O_RDONLY) = 4
-> > fcntl(4, F_SETFD, FD_CLOEXEC)           = 0
-> > newfstatat(4, "", {st_mode=S_IFREG|0444, st_size=0, ...}, AT_EMPTY_PATH) = 0
-> > read(4, "Personalities : [raid1] [raid0] "..., 1024) = 56
-> > read(4, "", 1024)                       = 0
-> > close(4)                                = 0
-> > openat(AT_FDCWD, "/sys/block/md127/dev", O_RDONLY) = -1 ENOENT (No such file or directory)
-> > getpid()                                = 18351
-> > mknodat(AT_FDCWD, "/dev/.tmp.md.18351:9:127", S_IFBLK|0600, makedev(0x9, 0x7f)) = 0
-> > openat(AT_FDCWD, "/dev/.tmp.md.18351:9:127", O_RDWR|O_EXCL|O_DIRECT) = -1 ENXIO (No such device or address)
-> > unlink("/dev/.tmp.md.18351:9:127")      = 0
-> > getpid()                                = 18351
-> > mknodat(AT_FDCWD, "/tmp/.tmp.md.18351:9:127", S_IFBLK|0600, makedev(0x9, 0x7f)) = 0
-> > openat(AT_FDCWD, "/tmp/.tmp.md.18351:9:127", O_RDWR|O_EXCL|O_DIRECT) = -1 ENXIO (No such device or address)
-> > unlink("/tmp/.tmp.md.18351:9:127")      = 0
-> > write(2, "mdadm: unexpected failure openin"..., 45mdadm: unexpected failure opening /dev/md127
-> > ) = 45
-> > unlink("/run/mdadm/map.lock")           = 0
-> > close(3)                                = 0
-> > exit_group(1)                           = ?
-> > +++ exited with 1 +++
-> >
-> >
-> > Tried with kernel compiled with either CONFIG_DEVTMPFS_SAFE=y or CONFIG_DEVTMPFS_SAFE=n, fails the same way.
-> >
-> > The raid consists of 4 devices, here is mdstat contents:
-> >
-> > Personalities : [raid0]
-> > md127 : active raid0 sda[0] sdc[2] sdd[3] sdb[1]
-> >       2929769472 blocks super 1.2 512k chunks
-> >
-> > unused devices: <none>
-> >
-> >
-> > Examining the 4 block devices:
-> >
-> > gnusystem /var/log # mdadm --misc -E /dev/sda
-> > /dev/sda:
-> >           Magic : a92b4efc
-> >         Version : 1.2
-> >     Feature Map : 0x0
-> >      Array UUID : bb710ce6:edd5d68d:a0a0a405:edd99547
-> >            Name : gnusystem:md0-store  (local to host gnusystem)
-> >   Creation Time : Wed Sep 29 22:28:09 2021
-> >      Raid Level : raid0
-> >    Raid Devices : 4
-> >
-> >  Avail Dev Size : 976508976 sectors (465.64 GiB 499.97 GB)
-> >     Data Offset : 264192 sectors
-> >    Super Offset : 8 sectors
-> >    Unused Space : before=264112 sectors, after=0 sectors
-> >           State : clean
-> >     Device UUID : 7f226c1c:23632b9d:e3d6c656:74522906
-> >
-> >     Update Time : Wed Sep 29 22:28:09 2021
-> >   Bad Block Log : 512 entries available at offset 8 sectors
-> >        Checksum : 51e99fb5 - correct
-> >          Events : 0
-> >
-> >      Chunk Size : 512K
-> >
-> >    Device Role : Active device 0
-> >    Array State : AAAA ('A' == active, '.' == missing, 'R' == replacing)
-> > gnusystem /var/log # mdadm --misc -E /dev/sdb
-> > /dev/sdb:
-> >           Magic : a92b4efc
-> >         Version : 1.2
-> >     Feature Map : 0x0
-> >      Array UUID : bb710ce6:edd5d68d:a0a0a405:edd99547
-> >            Name : gnusystem:md0-store  (local to host gnusystem)
-> >   Creation Time : Wed Sep 29 22:28:09 2021
-> >      Raid Level : raid0
-> >    Raid Devices : 4
-> >
-> >  Avail Dev Size : 1953260976 sectors (931.39 GiB 1000.07 GB)
-> >     Data Offset : 264192 sectors
-> >    Super Offset : 8 sectors
-> >    Unused Space : before=264112 sectors, after=0 sectors
-> >           State : clean
-> >     Device UUID : ed8795fe:c7e6719a:165db37e:32ec0894
-> >
-> >     Update Time : Wed Sep 29 22:28:09 2021
-> >   Bad Block Log : 512 entries available at offset 8 sectors
-> >        Checksum : 215db63b - correct
-> >          Events : 0
-> >
-> >      Chunk Size : 512K
-> >
-> >    Device Role : Active device 1
-> >    Array State : AAAA ('A' == active, '.' == missing, 'R' == replacing)
-> > gnusystem /var/log # mdadm --misc -E /dev/sdc
-> > /dev/sdc:
-> >           Magic : a92b4efc
-> >         Version : 1.2
-> >     Feature Map : 0x0
-> >      Array UUID : bb710ce6:edd5d68d:a0a0a405:edd99547
-> >            Name : gnusystem:md0-store  (local to host gnusystem)
-> >   Creation Time : Wed Sep 29 22:28:09 2021
-> >      Raid Level : raid0
-> >    Raid Devices : 4
-> >
-> >  Avail Dev Size : 976508976 sectors (465.64 GiB 499.97 GB)
-> >     Data Offset : 264192 sectors
-> >    Super Offset : 8 sectors
-> >    Unused Space : before=264112 sectors, after=0 sectors
-> >           State : clean
-> >     Device UUID : 3713dfff:d2e29aaf:3275039d:08b317bb
-> >
-> >     Update Time : Wed Sep 29 22:28:09 2021
-> >   Bad Block Log : 512 entries available at offset 8 sectors
-> >        Checksum : 42f70f03 - correct
-> >          Events : 0
-> >
-> >      Chunk Size : 512K
-> >
-> >    Device Role : Active device 2
-> >    Array State : AAAA ('A' == active, '.' == missing, 'R' == replacing)
-> > gnusystem /var/log # mdadm --misc -E /dev/sdd
-> > /dev/sdd:
-> >           Magic : a92b4efc
-> >         Version : 1.2
-> >     Feature Map : 0x0
-> >      Array UUID : bb710ce6:edd5d68d:a0a0a405:edd99547
-> >            Name : gnusystem:md0-store  (local to host gnusystem)
-> >   Creation Time : Wed Sep 29 22:28:09 2021
-> >      Raid Level : raid0
-> >    Raid Devices : 4
-> >
-> >  Avail Dev Size : 1953260976 sectors (931.39 GiB 1000.07 GB)
-> >     Data Offset : 264192 sectors
-> >    Super Offset : 8 sectors
-> >    Unused Space : before=264112 sectors, after=0 sectors
-> >           State : clean
-> >     Device UUID : 7da858ae:c0d6ca51:0ecaaaf0:280367cc
-> >
-> >     Update Time : Wed Sep 29 22:28:09 2021
-> >   Bad Block Log : 512 entries available at offset 8 sectors
-> >        Checksum : 32cf4ab4 - correct
-> >          Events : 0
-> >
-> >      Chunk Size : 512K
-> >
-> >    Device Role : Active device 3
-> >    Array State : AAAA ('A' == active, '.' == missing, 'R' == replacing)
-> >
-> > If any more information is needed, let me know.
->
-> See the ticket for details.
->
->
-> [TLDR for the rest of this mail: I'm adding this report to the list of
-> tracked Linux kernel regressions; the text you find below is based on a
-> few templates paragraphs you might have encountered already in similar
-> form.]
->
-> BTW, let me use this mail to also add the report to the list of tracked
-> regressions to ensure it's doesn't fall through the cracks:
->
-> #regzbot introduced: v5.15..v6.1.12
-> https://bugzilla.kernel.org/show_bug.cgi?id=217074
-> #regzbot title: block: md: raid0 no longer assembled
-> #regzbot ignore-activity
->
-> This isn't a regression? This issue or a fix for it are already
-> discussed somewhere else? It was fixed already? You want to clarify when
-> the regression started to happen? Or point out I got the title or
-> something else totally wrong? Then just reply and tell me -- ideally
-> while also telling regzbot about it, as explained by the page listed in
-> the footer of this mail.
->
-> Developers: When fixing the issue, remember to add 'Link:' tags pointing
-> to the report (e.g. the buzgzilla ticket and maybe this mail as well, if
-> this thread sees some discussion). See page linked in footer for details.
->
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-> --
-> Everything you wanna know about Linux kernel regression tracking:
-> https://linux-regtracking.leemhuis.info/about/#tldr
-> If I did something stupid, please tell me, as explained on that page.
+Regards,
+Salvatore
