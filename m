@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2F0F7E
-	for <regressions@lists.linux.dev>; Sat,  4 Mar 2023 16:17:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC5EE7E
+	for <regressions@lists.linux.dev>; Sat,  4 Mar 2023 16:24:09 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pYUZZ-0002Hn-Am; Sat, 04 Mar 2023 17:17:25 +0100
-Message-ID: <1562be6d-7c91-b453-dc24-5d4eabcf33ba@leemhuis.info>
-Date: Sat, 4 Mar 2023 17:17:24 +0100
+	id 1pYUg3-0003yt-Kq; Sat, 04 Mar 2023 17:24:07 +0100
+Message-ID: <b8efebc6-4399-d0b8-b2a0-66843314616b@leemhuis.info>
+Date: Sat, 4 Mar 2023 17:24:07 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,80 +16,93 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.8.0
-Subject: Re: Too many BDL entries regression
 Content-Language: en-US, de-DE
-To: Laurent Lyaudet <laurent.lyaudet@gmail.com>, stable@vger.kernel.org
-Cc: regressions@lists.linux.dev
-References: <CAB1LBmv1kY+kuUBWvXRoe+mbQBjtJOFvZB8Smmbcuy2MdvgJnA@mail.gmail.com>
- <CAB1LBmsBGFDLoKZHUZCLHDvHb68eOfc-W+W9hQXbXkqRB7Uykw@mail.gmail.com>
 From: "Linux regression tracking (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
+To: Stanislaw Gruszka <stf_xl@wp.pl>,
+ Helmut Schaa <helmut.schaa@googlemail.com>
+Cc: "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ Thomas Mann <rauchwolke@gmx.net>
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <CAB1LBmsBGFDLoKZHUZCLHDvHb68eOfc-W+W9hQXbXkqRB7Uykw@mail.gmail.com>
+Subject: [Regression] rt2800usb - Wifi performance issues and connection drops
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1677946650;c33afffa;
-X-HE-SMSGID: 1pYUZZ-0002Hn-Am
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1677947049;f036538b;
+X-HE-SMSGID: 1pYUg3-0003yt-Kq
 
-On 04.03.23 16:53, Laurent Lyaudet wrote:
+Hi, this is your Linux kernel regression tracker.
+
+I noticed a regression report in bugzilla.kernel.org. As many (most?)
+kernel developer don't keep an eye on it, I decided to forward it by
+mail. Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=217119 :
+
+>  Thomas Mann 2023-03-03 15:12:03 UTC
 > 
-> I filled a bug report to Ubuntu also :
-> https://bugs.launchpad.net/ubuntu/+source/linux/+bug/2009271
-
-That's the right thing to do, as it's definitely something the Ubuntu
-folks caused if its recent.
-
-To quote https://docs.kernel.org/admin-guide/reporting-issues.html
-
-"Are you facing an issue with a Linux kernel a hardware or software
-vendor provided? Then in almost all cases you are better off to stop
-reading this document and reporting the issue to your vendor instead […]"
-
-In an ideal world it would not be like that, but we don't live in one.
-
-The reference section of above document explains this aspect in more
-detail, albeit it doesn't really explain one aspect that is quite
-relevant in this case here: the kernel.org community doesn't maintain
-5.19.y anymore, it was deemed "end of life" months ago. But if you can
-reproduce the issue with the latest mainline release, feel free to raise
-as outlined in above document.
-
-HTH, Ciao, Thorsten
-
-> Le sam. 4 mars 2023 à 16:41, Laurent Lyaudet
-> <laurent.lyaudet@gmail.com> a écrit :
->>
->> Hello,
->>
->> Thanks for your hard work :)
->> Ubuntu 22.10 shipped kernel 5.19.0-35 thursday.
->> And some people started having syslogs :
->> "Too many BDL entries"
->> https://askubuntu.com/questions/1457367/snd-hda-intel-0000001f-3-too-many-bdl-entries-messages-in-system-log
->>
->> I looked here how to report it :
->> https://docs.kernel.org/admin-guide/reporting-issues.html
->> and searched for "Too many BDL entries" but found nothing
->>
->> I looked at versions here :
->> https://kernel.org/
->> but I don't know if version 5.19 should be reported at
->> stable@vger.kernel.org
->> since it is in between
->> 5.15.98
->> and 6.1.15
->> or maybe Ubuntu does some renumbering ?
->>
->> Excuse me if my report does not contain all needed data,
->> or should be addressed elsewhere.
->> Sorry if I cannot do all the checks with latest kernel ;
->> my current laptop is my only PC for work,
->> and I would prefer to avoid breaking it, even for a day or two.
->>
->> Nevertheless, I would be happy to provide log extracts or other
->> information that may help.
->>
->> Have a nice week-end, best regards,
->>     Laurent Lyaudet
+> After the update of linux to 6.2.x, i get connection drops and bandwidth problems.
 > 
+> 6.2.1 was completely unusable and 6.2.2 still has bandwidth problems but works a bit better
 > 
+> The device in use is:
+> 
+> 13d3:3273 IMC Networks 802.11 n/g/b Wireless LAN USB Mini-Card
+> 
+> Downgrading the kernel to 6.1.[14,15] fixes the problem and the wifi gets stable again and the available bandwidth increases.
+> 
+> demsg shows no errors
+> 
+> [tag] [reply] [−]
+> Private
+> Comment 1 The Linux kernel's regression tracker (Thorsten Leemhuis) 2023-03-04 05:45:33 UTC
+> 
+> Please attach dmesg [without it most people won't even know which driver is in use for your card]
+> 
+> [tag] [reply] [−]
+> Private
+> Comment 2 Thomas Mann 2023-03-04 12:36:45 UTC
+> 
+> drive in use is rt2800usb
+> 
+> [tag] [reply] [−]
+> Private
+> Comment 3 Thomas Mann 2023-03-04 12:38:01 UTC
+> 
+> Created attachment 303840 [details]
+> dmesg output
+> 
+
+
+See the ticket for more details.
+
+
+[TLDR for the rest of this mail: I'm adding this report to the list of
+tracked Linux kernel regressions; the text you find below is based on a
+few templates paragraphs you might have encountered already in similar
+form.]
+
+BTW, let me use this mail to also add the report to the list of tracked
+regressions to ensure it's doesn't fall through the cracks:
+
+#regzbot introduced: v6.1..v6.2
+https://bugzilla.kernel.org/show_bug.cgi?id=217119
+#regzbot title: net: wireless: rt2800usb: wifi performance issues and
+connection drops
+#regzbot ignore-activity
+
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply and tell me -- ideally
+while also telling regzbot about it, as explained by the page listed in
+the footer of this mail.
+
+Developers: When fixing the issue, remember to add 'Link:' tags pointing
+to the report (e.g. the buzgzilla ticket and maybe this mail as well, if
+this thread sees some discussion). See page linked in footer for details.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
