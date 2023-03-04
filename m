@@ -1,102 +1,95 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEFFB7E
-	for <regressions@lists.linux.dev>; Sat,  4 Mar 2023 15:54:05 +0000 (UTC)
-Received: by mail-wm1-f54.google.com with SMTP id o11-20020a05600c4fcb00b003eb33ea29a8so2849195wmq.1
-        for <regressions@lists.linux.dev>; Sat, 04 Mar 2023 07:54:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1677945244;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jsepL0tvWvLyn3/LsFMVSsF0JgTexm6WZnv5HSKWLi8=;
-        b=bq3hRRdhVN4W4S3cGVUc48hBUnT+7mQMay/c5pNi1PHnFBgN7UIqFOs/zycE437s0x
-         xEjvJEz+PGysoUNpLmGy4opiDWbcEaCH6393n0T3hCHWX0F1GHAr4EFPD8bQeKeqFdIb
-         YZFuRCAJbM9dTvho8GgafJvY5vAhnw15FGWO23Ifjji3QKBmbH/gVW1WKBfuPpWMwMkv
-         ulWT/vrLkHewlB69uF39AVNb3/vmbQBCqScZ4B5G6UVBNB1pZgq1+u6zkWNJ6UcBMZT8
-         5yPp9dxZvFGrIY60nY4tP/3JHCZe/Bf/2sUOi81RDsq2Zz3TYKCY8/rYxC/yBm5pRNgJ
-         p3xw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1677945244;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jsepL0tvWvLyn3/LsFMVSsF0JgTexm6WZnv5HSKWLi8=;
-        b=MnPAMG1YYLiNkBrRbn1lOvV179NPhpfZ3bDC7o9jeBQ/k3PcY+RDUu8pbKZ/9vxnyQ
-         0sZo2WIgD8xKhvUFjPLJjFOH54Z4D3BMxXToN7bQNmu9gHe3ZJfj/DZuONwvaEVUDnkC
-         2TnoWnAcsRTm0R1S7UJsdCZHbrbUIysOHXjHlrP6+S1PcoEPmloKrxxxbBTWmF6XJCaz
-         amnmm1LTEfF57N0kgJgO9p5yfdIoepXE17dP4O22BklnQwqDGLgGckOUulDBbiViEaHu
-         A6y606iO1VUyrNOAw63/TdibBsG8VxSvREtFRLOe2gu5xPGKnXtQVuriWq8X3B3PmktS
-         66xw==
-X-Gm-Message-State: AO0yUKUUSz5pN/8glPCM1Vo9r6ewHyXv+ybFv0tq1FYThFYQvyb7Cu9z
-	976iDB6By+ixVf6uyoWZTcVGebVANca4NI0DaEZl9B5JsV0=
-X-Google-Smtp-Source: AK7set8ps9y5m4K1FLPZRrU0txATHmkv/mGn81Up3y4JGYSyi54mASm1sWXN4KfwTD9pMM6P4j+vKsAeIKG0aMp42bI=
-X-Received: by 2002:a05:600c:181d:b0:3e1:bfc:d1c3 with SMTP id
- n29-20020a05600c181d00b003e10bfcd1c3mr1028824wmp.5.1677945243872; Sat, 04 Mar
- 2023 07:54:03 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2F0F7E
+	for <regressions@lists.linux.dev>; Sat,  4 Mar 2023 16:17:29 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1pYUZZ-0002Hn-Am; Sat, 04 Mar 2023 17:17:25 +0100
+Message-ID: <1562be6d-7c91-b453-dc24-5d4eabcf33ba@leemhuis.info>
+Date: Sat, 4 Mar 2023 17:17:24 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAB1LBmv1kY+kuUBWvXRoe+mbQBjtJOFvZB8Smmbcuy2MdvgJnA@mail.gmail.com>
-In-Reply-To: <CAB1LBmv1kY+kuUBWvXRoe+mbQBjtJOFvZB8Smmbcuy2MdvgJnA@mail.gmail.com>
-From: Laurent Lyaudet <laurent.lyaudet@gmail.com>
-Date: Sat, 4 Mar 2023 16:53:53 +0100
-Message-ID: <CAB1LBmsBGFDLoKZHUZCLHDvHb68eOfc-W+W9hQXbXkqRB7Uykw@mail.gmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
 Subject: Re: Too many BDL entries regression
-To: stable@vger.kernel.org
+Content-Language: en-US, de-DE
+To: Laurent Lyaudet <laurent.lyaudet@gmail.com>, stable@vger.kernel.org
 Cc: regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+References: <CAB1LBmv1kY+kuUBWvXRoe+mbQBjtJOFvZB8Smmbcuy2MdvgJnA@mail.gmail.com>
+ <CAB1LBmsBGFDLoKZHUZCLHDvHb68eOfc-W+W9hQXbXkqRB7Uykw@mail.gmail.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <CAB1LBmsBGFDLoKZHUZCLHDvHb68eOfc-W+W9hQXbXkqRB7Uykw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1677946650;c33afffa;
+X-HE-SMSGID: 1pYUZZ-0002Hn-Am
 
-Hello,
+On 04.03.23 16:53, Laurent Lyaudet wrote:
+> 
+> I filled a bug report to Ubuntu also :
+> https://bugs.launchpad.net/ubuntu/+source/linux/+bug/2009271
 
-I filled a bug report to Ubuntu also :
-https://bugs.launchpad.net/ubuntu/+source/linux/+bug/2009271
-It should contain all the data about my hardware :)
+That's the right thing to do, as it's definitely something the Ubuntu
+folks caused if its recent.
 
-Best regards,
-    Laurent Lyaudet
+To quote https://docs.kernel.org/admin-guide/reporting-issues.html
 
+"Are you facing an issue with a Linux kernel a hardware or software
+vendor provided? Then in almost all cases you are better off to stop
+reading this document and reporting the issue to your vendor instead […]"
 
+In an ideal world it would not be like that, but we don't live in one.
 
+The reference section of above document explains this aspect in more
+detail, albeit it doesn't really explain one aspect that is quite
+relevant in this case here: the kernel.org community doesn't maintain
+5.19.y anymore, it was deemed "end of life" months ago. But if you can
+reproduce the issue with the latest mainline release, feel free to raise
+as outlined in above document.
 
-Le sam. 4 mars 2023 =C3=A0 16:41, Laurent Lyaudet
-<laurent.lyaudet@gmail.com> a =C3=A9crit :
->
-> Hello,
->
-> Thanks for your hard work :)
-> Ubuntu 22.10 shipped kernel 5.19.0-35 thursday.
-> And some people started having syslogs :
-> "Too many BDL entries"
-> https://askubuntu.com/questions/1457367/snd-hda-intel-0000001f-3-too-many=
--bdl-entries-messages-in-system-log
->
-> I looked here how to report it :
-> https://docs.kernel.org/admin-guide/reporting-issues.html
-> and searched for "Too many BDL entries" but found nothing
->
-> I looked at versions here :
-> https://kernel.org/
-> but I don't know if version 5.19 should be reported at
-> stable@vger.kernel.org
-> since it is in between
-> 5.15.98
-> and 6.1.15
-> or maybe Ubuntu does some renumbering ?
->
-> Excuse me if my report does not contain all needed data,
-> or should be addressed elsewhere.
-> Sorry if I cannot do all the checks with latest kernel ;
-> my current laptop is my only PC for work,
-> and I would prefer to avoid breaking it, even for a day or two.
->
-> Nevertheless, I would be happy to provide log extracts or other
-> information that may help.
->
-> Have a nice week-end, best regards,
->     Laurent Lyaudet
+HTH, Ciao, Thorsten
+
+> Le sam. 4 mars 2023 à 16:41, Laurent Lyaudet
+> <laurent.lyaudet@gmail.com> a écrit :
+>>
+>> Hello,
+>>
+>> Thanks for your hard work :)
+>> Ubuntu 22.10 shipped kernel 5.19.0-35 thursday.
+>> And some people started having syslogs :
+>> "Too many BDL entries"
+>> https://askubuntu.com/questions/1457367/snd-hda-intel-0000001f-3-too-many-bdl-entries-messages-in-system-log
+>>
+>> I looked here how to report it :
+>> https://docs.kernel.org/admin-guide/reporting-issues.html
+>> and searched for "Too many BDL entries" but found nothing
+>>
+>> I looked at versions here :
+>> https://kernel.org/
+>> but I don't know if version 5.19 should be reported at
+>> stable@vger.kernel.org
+>> since it is in between
+>> 5.15.98
+>> and 6.1.15
+>> or maybe Ubuntu does some renumbering ?
+>>
+>> Excuse me if my report does not contain all needed data,
+>> or should be addressed elsewhere.
+>> Sorry if I cannot do all the checks with latest kernel ;
+>> my current laptop is my only PC for work,
+>> and I would prefer to avoid breaking it, even for a day or two.
+>>
+>> Nevertheless, I would be happy to provide log extracts or other
+>> information that may help.
+>>
+>> Have a nice week-end, best regards,
+>>     Laurent Lyaudet
+> 
+> 
