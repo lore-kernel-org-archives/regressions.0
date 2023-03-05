@@ -1,47 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EF657E
-	for <regressions@lists.linux.dev>; Sat,  4 Mar 2023 16:29:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA241C433EF;
-	Sat,  4 Mar 2023 16:29:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1677947394;
-	bh=umcemy53qtUEgWpL2tTKrKeIQakV5HeE4WLED07PO+g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mS+8Z8zjABOax/2EbhHpD4lwOdmcWbCa6y/lSdraiS//az2rzVbsPzlwsSv7BGeAe
-	 noOE0NBCPi6W0ZOzerfUqyyXio269QYLxScv06Gdg29EtMcJWI5VsCa1x882ZcxyR1
-	 Llswzjs98WoMdC/MvpgCwrmIKMaJVy3iteS4AaQE=
-Date: Sat, 4 Mar 2023 17:29:51 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Laurent Lyaudet <laurent.lyaudet@gmail.com>
-Cc: stable@vger.kernel.org, regressions@lists.linux.dev
-Subject: Re: Too many BDL entries regression
-Message-ID: <ZANx/xXokp2ju4Uw@kroah.com>
-References: <CAB1LBmv1kY+kuUBWvXRoe+mbQBjtJOFvZB8Smmbcuy2MdvgJnA@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7629219D
+	for <regressions@lists.linux.dev>; Sun,  5 Mar 2023 09:18:05 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1pYkVF-0000ff-L8; Sun, 05 Mar 2023 10:18:01 +0100
+Message-ID: <72579321-2cc9-2de1-d28c-0c56562f3a28@leemhuis.info>
+Date: Sun, 5 Mar 2023 10:18:01 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAB1LBmv1kY+kuUBWvXRoe+mbQBjtJOFvZB8Smmbcuy2MdvgJnA@mail.gmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+Content-Language: en-US, de-DE
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+To: Mathias Nyman <mathias.nyman@intel.com>
+Cc: "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ LKML <linux-kernel@vger.kernel.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: [regression] Bug 217122 - "Transfer event TRB DMA ptr not part of
+ current TD" messages since 6.1
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1678007885;8df18f09;
+X-HE-SMSGID: 1pYkVF-0000ff-L8
 
-On Sat, Mar 04, 2023 at 04:41:23PM +0100, Laurent Lyaudet wrote:
-> Hello,
+Hi, this is your Linux kernel regression tracker.
+
+I noticed a regression report in bugzilla.kernel.org. As many (most?)
+kernel developer don't keep an eye on it, I decided to forward it by
+mail. Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=217122 :
+
+>  Jürgen Herrmann 2023-03-03 19:53:55 UTC
 > 
-> Thanks for your hard work :)
-> Ubuntu 22.10 shipped kernel 5.19.0-35 thursday.
+> Created attachment 303837 [details]
+> collection of txt files with various hardware/software states
+> 
+> Occasionally this error happens:
+> 
+> [94467.984745] xhci_hcd 0000:05:00.4: ERROR Transfer event TRB DMA ptr not part of current TD ep_index 3 comp_code 1
+> [94467.984751] xhci_hcd 0000:05:00.4: Looking for event-dma 000000010f10c730 trb-start 000000010f10c740 trb-end 000000010f10c740 seg-start 000000010f10
+> c000 seg-end 000000010f10cff0
+> 
+> the playback software (camilladsp then reports an error:
+> 
+> 2023-03-03 05:41:37.010408 WARN [src/alsadevice.rs:260] Capture device failed while waiting for available frames, error: ALSA function 'snd_pcm_wait' f
+> ailed with error 'EPIPE: Broken pipe'
+> 2023-03-03 05:41:37.013214 ERROR [src/bin.rs:364] Capture error: ALSA function 'snd_pcm_wait' failed with error 'EPIPE: Broken pipe'
+> 
+> This did not occur in any 6.0 version and was introduced in 6.1, still present in 6.2
+See the ticket for more details.
 
-There's not much we can do about this old and obsolete kernel version,
-sorry.  Please work with your distro to resolve it.
 
-If you use a kernel.org release, we will be glad to help you out, as you
-point out, that is much newer as can be seen on the front page of
-www.kernel.org
+[TLDR for the rest of this mail: I'm adding this report to the list of
+tracked Linux kernel regressions; the text you find below is based on a
+few templates paragraphs you might have encountered already in similar
+form.]
 
-thanks!
+BTW, let me use this mail to also add the report to the list of tracked
+regressions to ensure it's doesn't fall through the cracks:
 
-greg k-h
+#regzbot introduced: v6.0..v6.1
+https://bugzilla.kernel.org/show_bug.cgi?id=217122
+#regzbot title: usb: xhci: suddenly errors msg like "Transfer event TRB
+DMA ptr not part of current TD"
+#regzbot ignore-activity
+
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply and tell me -- ideally
+while also telling regzbot about it, as explained by the page listed in
+the footer of this mail.
+
+Developers: When fixing the issue, remember to add 'Link:' tags pointing
+to the report (e.g. the buzgzilla ticket and maybe this mail as well, if
+this thread sees some discussion). See page linked in footer for details.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
