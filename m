@@ -1,132 +1,136 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BECC7E
-	for <regressions@lists.linux.dev>; Sun,  5 Mar 2023 14:33:15 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:5054:ff:feb3:8f48] (helo=regzbot.fritz.box); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	id 1pYpQA-0006bo-Ra; Sun, 05 Mar 2023 15:33:06 +0100
-From: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>
-To: LKML <linux-kernel@vger.kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Linux regressions report  for mainline [2023-03-05]
-Date: Sun,  5 Mar 2023 14:33:06 +0000
-Message-Id: <167802672375.3551148.2619236429318783591@leemhuis.info>
-X-Mailer: git-send-email 2.39.2
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACEB62F26
+	for <regressions@lists.linux.dev>; Sun,  5 Mar 2023 17:26:02 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1pYs7S-0001Uk-Mt; Sun, 05 Mar 2023 18:25:58 +0100
+Message-ID: <5a7cd098-1d83-6297-e802-ce998c8ec116@leemhuis.info>
+Date: Sun, 5 Mar 2023 18:25:58 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+Subject: Re: [Regression] rt2800usb - Wifi performance issues and connection
+ drops
+Content-Language: en-US, de-DE
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ Thomas Mann <rauchwolke@gmx.net>, Stanislaw Gruszka <stf_xl@wp.pl>,
+ Helmut Schaa <helmut.schaa@googlemail.com>,
+ Johannes Berg <johannes.berg@intel.com>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+References: <b8efebc6-4399-d0b8-b2a0-66843314616b@leemhuis.info>
+To: Alexander Wetzel <alexander@wetzel-home.de>
+In-Reply-To: <b8efebc6-4399-d0b8-b2a0-66843314616b@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1678026795;0f3e8c99;
-X-HE-SMSGID: 1pYpQA-0006bo-Ra
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1678037162;dfdfbc9f;
+X-HE-SMSGID: 1pYs7S-0001Uk-Mt
 
-Hi Linus. There is nothing much to report wrt to regressions,
-nevertheless let me give a quick status update.
+On 04.03.23 17:24, Linux regression tracking (Thorsten Leemhuis) wrote:
+> Hi, this is your Linux kernel regression tracker.
+> 
+> I noticed a regression report in bugzilla.kernel.org. As many (most?)
+> kernel developer don't keep an eye on it, I decided to forward it by
+> mail. Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=217119 :
+> 
+>>  Thomas Mann 2023-03-03 15:12:03 UTC
+>>
+>> After the update of linux to 6.2.x, i get connection drops and bandwidth problems.
+>>
+>> 6.2.1 was completely unusable and 6.2.2 still has bandwidth problems but works a bit better
+>>
+>> The device in use is:
+>>
+>> 13d3:3273 IMC Networks 802.11 n/g/b Wireless LAN USB Mini-Card
+>>
+>> Downgrading the kernel to 6.1.[14,15] fixes the problem and the wifi gets stable again and the available bandwidth increases.
 
-As of now I only track two afaik unfixed build problems that were
-introduced this cycle. Both were reported by Guenter (he even added them
-to regzbot's tracking himself, yeah!). See below for details.
+Quick update from bugzilla:
 
-Apart from those there are two more issues I don't track (yet) and only
-have a loose eye on, as I had assumed the maintainers would send fixes
-for them in before -rc1. But that afaics didn't happen, so let me
-quickly mention the fixes here:
+```
+--- Comment #4 from Thomas Mann (rauchwolke@gmx.net) ---
+i bisected and found the commit that introduced the regression:
 
-* media: Fix building pdfdocs
-https://lore.kernel.org/linux-media/20230208082916.68377-1-tomi.valkeinen@ideasonboard.com/
-[looks like this is needed in mainline, but it's not entirely clear]
+# first bad commit: [4444bc2116aecdcde87dce80373540adc8bd478b] wifi:
+mac80211: Proper mark iTXQs for resumption
+```
 
-* clk: Mark a fwnode as initialized when using CLK_OF_DECLARE* macros
-https://lore.kernel.org/lkml/20230301012506.1401883-1-saravanak@google.com/
+That's a commit from Alexander, applied by Johannes.
 
-I also had hoped a fix for a TPM regression from the 6.1 cycle would
-reach your before -rc1, as it would prevent stuttering on some Ryzen
-systems that more than just a user or two currently has to deal with
-(due to a hw issue that happens more often due to a change in 6.1).
-That's why some of the involved developers would have liked to see the
-fix merged for 6.2 already. Well, that didn't happen. Luckily that patch
-since a few days is at least in Linux-next now (currently as 8699d5244e):
-https://lore.kernel.org/all/20230228024439.27156-1-mario.limonciello@amd.com/
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
 
-Ciao, Thorsten
+>> demsg shows no errors
+>>
+>> [tag] [reply] [−]
+>> Private
+>> Comment 1 The Linux kernel's regression tracker (Thorsten Leemhuis) 2023-03-04 05:45:33 UTC
+>>
+>> Please attach dmesg [without it most people won't even know which driver is in use for your card]
+>>
+>> [tag] [reply] [−]
+>> Private
+>> Comment 2 Thomas Mann 2023-03-04 12:36:45 UTC
+>>
+>> drive in use is rt2800usb
+>>
+>> [tag] [reply] [−]
+>> Private
+>> Comment 3 Thomas Mann 2023-03-04 12:38:01 UTC
+>>
+>> Created attachment 303840 [details]
+>> dmesg output
+>>
+> 
+> 
+> See the ticket for more details.
+> 
+> 
+> [TLDR for the rest of this mail: I'm adding this report to the list of
+> tracked Linux kernel regressions; the text you find below is based on a
+> few templates paragraphs you might have encountered already in similar
+> form.]
+> 
+> BTW, let me use this mail to also add the report to the list of tracked
+> regressions to ensure it's doesn't fall through the cracks:
+> 
+> #regzbot introduced: v6.1..v6.2
+> https://bugzilla.kernel.org/show_bug.cgi?id=217119
 
----
+P.S.:
 
-Hi, this is regzbot, the Linux kernel regression tracking bot.
+#regzbot introduced: 4444bc2116aecdcde8
+#regzbot ignore-activity
 
-Currently I'm aware of 2 regressions in linux-mainline. Find the
-current status below and the latest on the web:
-
-https://linux-regtracking.leemhuis.info/regzbot/mainline/
-
-Bye bye, hope to see you soon for the next report.
-   Regzbot (on behalf of Thorsten Leemhuis)
-
-
-========================================================
-current cycle (v6.2.. aka v6.2-post), culprit identified
-========================================================
-
-
-[ *NEW* ] Build error in drivers/media/i2c/imx290.c if PM support is disabled
------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/20230227175245.GA3728693@roeck-us.net/
-https://lore.kernel.org/linux-media/20230227175245.GA3728693@roeck-us.net/
-
-By Guenter Roeck; 5 days ago; 1 activities, latest 5 days ago.
-Introduced in 02852c01f654
-
-Recent activities from: Guenter Roeck (1)
-
-
-[ *NEW* ] Build failures for sparc64:allmodconfig and parisc:allmodconfig with gcc 11.x+
-----------------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/20230222025918.GA1651385@roeck-us.net/
-https://lore.kernel.org/linux-btrfs/20230222025918.GA1651385@roeck-us.net/
-
-By Guenter Roeck; 11 days ago; 4 activities, latest 8 days ago.
-Introduced in 1ec49744ba83
-
-Recent activities from: Guenter Roeck (3), David Sterba (1)
-
-One patch associated with this regression:
-* Re: [PATCH 8/8] btrfs: turn on -Wmaybe-uninitialized
-  https://lore.kernel.org/linux-btrfs/6c308ddc-60f8-1b4d-28da-898286ddb48d@roeck-us.net/
-  10 days ago, by Guenter Roeck
-
-
-=============
-End of report
-=============
-
-All regressions marked '[ *NEW* ]' were added since the previous report,
-which can be found here:
-https://lore.kernel.org/r/167613641114.2124708.9785978428796571420@leemhuis.info
-
-Thanks for your attention, have a nice day!
-
-  Regzbot, your hard working Linux kernel regression tracking robot
-
-
-P.S.: Wanna know more about regzbot or how to use it to track regressions
-for your subsystem? Then check out the getting started guide or the
-reference documentation:
-
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
-
-The short version: if you see a regression report you want to see
-tracked, just send a reply to the report where you Cc
-regressions@lists.linux.dev with a line like this:
-
-#regzbot introduced: v5.13..v5.14-rc1
-
-If you want to fix a tracked regression, just do what is expected
-anyway: add a 'Link:' tag with the url to the report, e.g.:
-
-Link: https://lore.kernel.org/all/30th.anniversary.repost@klaava.Helsinki.FI/
+> #regzbot title: net: wireless: rt2800usb: wifi performance issues and
+> connection drops
+> #regzbot ignore-activity
+> 
+> This isn't a regression? This issue or a fix for it are already
+> discussed somewhere else? It was fixed already? You want to clarify when
+> the regression started to happen? Or point out I got the title or
+> something else totally wrong? Then just reply and tell me -- ideally
+> while also telling regzbot about it, as explained by the page listed in
+> the footer of this mail.
+> 
+> Developers: When fixing the issue, remember to add 'Link:' tags pointing
+> to the report (e.g. the buzgzilla ticket and maybe this mail as well, if
+> this thread sees some discussion). See page linked in footer for details.
+> 
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> --
+> Everything you wanna know about Linux kernel regression tracking:
+> https://linux-regtracking.leemhuis.info/about/#tldr
+> If I did something stupid, please tell me, as explained on that page.
