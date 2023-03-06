@@ -1,129 +1,85 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 933E8D309
-	for <regressions@lists.linux.dev>; Mon,  6 Mar 2023 04:19:58 +0000 (UTC)
-Received: by mail-pl1-f172.google.com with SMTP id y11so8919847plg.1
-        for <regressions@lists.linux.dev>; Sun, 05 Mar 2023 20:19:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1678076398;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=xeEjG9qQfN4HurN7R54SerXBeT3Wfu1COvtor1oGcTU=;
-        b=bJdobVfbZ/JtEbgfUe3fgjUR0an6hBlkhNfdz+/BmompPoJ8pXdG68bHxH1W3a321z
-         4gCAjiUgYHWhsE25xcWMRXayRkIdQh1xOmOJnHEGVRTxN8TJRy9/lLTkzFpgn1BlZl0s
-         hOhhRP8sB0sNLfplTHiS8cTIpnf+qcWoGjXsAGQAWwCywQ8GnQJhiT4KCUs8WCW/NbYq
-         nKE4DSS6IWWlOefzMbuiMzqOKE8uRjFh2TEWGnHiYnqqTPAhuovOfUDjwqiMMDUfgYBV
-         lLQmo0MQ/Ug7Wwrz1Z97fuCaynIA02+z54g20fNIaipS2XAB76FTn17eLYs/PMZ07gde
-         zA7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678076398;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xeEjG9qQfN4HurN7R54SerXBeT3Wfu1COvtor1oGcTU=;
-        b=6sP6YatBvY3FEJ0NvU4QdKrVwKcdSlN9PgsCtMgkI1TharTkHif/75iaBK+WV07QDu
-         Uwt/WHmzbu2JmBAAhvvdJqwZ0kziQ9sCzRGnU0hanmIaDrbXS5gWTD3rRxkbV22w2VLb
-         k9lg0cddT6bk5yhz5pf5h4uzoaQVlrO+s76qSnd5+Ys8bG94AM7Sy+Kqv8thupMn7MN7
-         u+avy5uQmiAmdTi5jXThEhhw7zCx9YPqRyuup1dSQiZJU6qaN1n4ZXDHbdv7iidm3p9A
-         KW+XVtLBQagARba5t977qXqfOCo5nPrC4pr8b3xEO0XTmbfJTuKUFvZa5FF6nWBJaAdi
-         u2pg==
-X-Gm-Message-State: AO0yUKV4bjz+D5cJhdNHwLccSGSvXy0QGENMpf9aVnCVMD5AtDKkRQVz
-	yWqp5I5wfMF5qefH6o0uRqU=
-X-Google-Smtp-Source: AK7set9JlEwPBlqALSpRV6c8jrwcUt2XEbmfkdnOj+j7NNUMSjUZ+WbkdDXSfOA930RbhN+kZ6GYrA==
-X-Received: by 2002:a17:903:187:b0:19c:dc38:3eb5 with SMTP id z7-20020a170903018700b0019cdc383eb5mr13005836plg.14.1678076397861;
-        Sun, 05 Mar 2023 20:19:57 -0800 (PST)
-Received: from debian.me (subs03-180-214-233-84.three.co.id. [180.214.233.84])
-        by smtp.gmail.com with ESMTPSA id p3-20020a170902bd0300b0019a96a6543esm5465926pls.184.2023.03.05.20.19.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 Mar 2023 20:19:57 -0800 (PST)
-Received: by debian.me (Postfix, from userid 1000)
-	id B3E621062B3; Mon,  6 Mar 2023 11:19:54 +0700 (WIB)
-Date: Mon, 6 Mar 2023 11:19:54 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Thorsten Leemhuis <linux@leemhuis.info>,
-	Jonathan Corbet <corbet@lwn.net>
-Cc: Randy Dunlap <rdunlap@infradead.org>,
-	Lukas Bulwahn <lukas.bulwahn@gmail.com>, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-Subject: Re: [PATCH v3] docs: describe how to quickly build a trimmed kernel
-Message-ID: <ZAVp6jdeWzYcisUO@debian.me>
-References: <1a788a8e7ba8a2063df08668f565efa832016032.1678021408.git.linux@leemhuis.info>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67CF320F0
+	for <regressions@lists.linux.dev>; Mon,  6 Mar 2023 05:40:27 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1pZ3a7-0005ht-2J; Mon, 06 Mar 2023 06:40:19 +0100
+Message-ID: <3d6a30ee-f093-f5b6-a193-cd86320f9452@leemhuis.info>
+Date: Mon, 6 Mar 2023 06:40:18 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="qYTifO9MShStiXxN"
-Content-Disposition: inline
-In-Reply-To: <1a788a8e7ba8a2063df08668f565efa832016032.1678021408.git.linux@leemhuis.info>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+Content-Language: en-US, de-DE
+To: Bagas Sanjaya <bagasdotme@gmail.com>, Jonathan Corbet <corbet@lwn.net>
+Cc: Randy Dunlap <rdunlap@infradead.org>,
+ Lukas Bulwahn <lukas.bulwahn@gmail.com>, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, regressions@lists.linux.dev
+References: <1a788a8e7ba8a2063df08668f565efa832016032.1678021408.git.linux@leemhuis.info>
+ <ZAVp6jdeWzYcisUO@debian.me>
+From: Thorsten Leemhuis <linux@leemhuis.info>
+Subject: Re: [PATCH v3] docs: describe how to quickly build a trimmed kernel
+In-Reply-To: <ZAVp6jdeWzYcisUO@debian.me>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1678081227;c31f7d6f;
+X-HE-SMSGID: 1pZ3a7-0005ht-2J
 
+On 06.03.23 05:19, Bagas Sanjaya wrote:
+> On Sun, Mar 05, 2023 at 02:04:44PM +0100, Thorsten Leemhuis wrote:
+>> + * Create the build configuration for your kernel based on an existing
+>> +   configuration.
+>> +
+>> +   If you already prepared such a '.config' file yourself, copy it to
+>> +   ~/linux/ and run ``make olddefconfig``.
+>> +
+>> +   Use the same command, if your distribution or somebody else already tailored
+>> +   your running kernel to your or your hardware's needs: the make target
+>> +   'olddefconfig' will then try to use that kernel's .config as base.
+>> +
+>> +   Using this make target is fine for everybody else, too -- but you often can
+>> +   save a lot of time by using this command instead::
+>> +
+>> +     yes "" | make localmodconfig
+>> +
+>> +   This will try to pick your distribution's kernel as base, but then disable
+>> +   modules for any features apparently superfluous for your setup. This will
+>> +   reduce the compile time enormously, especially if you are running an
+>> +   universal kernel from a commodity Linux distribution.
+>> +
+>> +   There is a catch: the make target 'localmodconfig' will disable kernel
+>> +   features you have not directly or indirectly through some program utilized
+>> +   since you booted the system. You can reduce or nearly eliminate that risk by
+>> +   using tricks outlined in the reference section; for quick testing purposes
+>> +   that risk is often negligible, but it is an aspect you want to keep in mind
+>> +   in case your kernel behaves oddly.
+> 
+> If your distro config have ``CONFIG_IKCONFIG=y``, you can copy from
+> procfs::
+> 
+>     zcat /proc/config.gz > .config
 
---qYTifO9MShStiXxN
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Localmodconfig afaics does that automatically and I'm pretty sure
+olddefconfig does that, too (but I didn't check either). So no need to
+explain this in the text afaics.
 
-On Sun, Mar 05, 2023 at 02:04:44PM +0100, Thorsten Leemhuis wrote:
-> + * Create the build configuration for your kernel based on an existing
-> +   configuration.
-> +
-> +   If you already prepared such a '.config' file yourself, copy it to
-> +   ~/linux/ and run ``make olddefconfig``.
-> +
-> +   Use the same command, if your distribution or somebody else already t=
-ailored
-> +   your running kernel to your or your hardware's needs: the make target
-> +   'olddefconfig' will then try to use that kernel's .config as base.
-> +
-> +   Using this make target is fine for everybody else, too -- but you oft=
-en can
-> +   save a lot of time by using this command instead::
-> +
-> +     yes "" | make localmodconfig
-> +
-> +   This will try to pick your distribution's kernel as base, but then di=
-sable
-> +   modules for any features apparently superfluous for your setup. This =
-will
-> +   reduce the compile time enormously, especially if you are running an
-> +   universal kernel from a commodity Linux distribution.
-> +
-> +   There is a catch: the make target 'localmodconfig' will disable kernel
-> +   features you have not directly or indirectly through some program uti=
-lized
-> +   since you booted the system. You can reduce or nearly eliminate that =
-risk by
-> +   using tricks outlined in the reference section; for quick testing pur=
-poses
-> +   that risk is often negligible, but it is an aspect you want to keep i=
-n mind
-> +   in case your kernel behaves oddly.
+> If it isn't the case, you may want to enable the aforementioned config
+> option.
 
-If your distro config have ``CONFIG_IKCONFIG=3Dy``, you can copy from
-procfs::
+That or put them in /boot/config-$(uname -r). But well, that is
+something the provider of the running kernel needs to do, so it won't
+help the reader if we mention it here.
 
-    zcat /proc/config.gz > .config
+Or do you think the guide should explain this to ensure people can
+pickup their config from there again in case they deleted their build
+artifacts? Hmmm. I currently tend to think that's not worth making the
+text longer for, as at that point it might be better to restart from
+scratch with a distro config anyway.
 
-If it isn't the case, you may want to enable the aforementioned config
-option.
-
-Thanks.=20
-
---=20
-An old man doll... just what I always wanted! - Clara
-
---qYTifO9MShStiXxN
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZAVp6gAKCRD2uYlJVVFO
-o5N/AP9JIudqWFfpP3JkGugq4+NddtOMNbJA6AwZ9DiejYitqAD/emGfPGzV8r9o
-956SQlBEkmphV6I72CgsXWG+jD/EOgo=
-=KKNk
------END PGP SIGNATURE-----
-
---qYTifO9MShStiXxN--
+Ciao, Thorsten
