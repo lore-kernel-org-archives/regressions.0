@@ -1,13 +1,45 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3A8520F0
-	for <regressions@lists.linux.dev>; Mon,  6 Mar 2023 06:03:52 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pZ3wr-0000bP-JK; Mon, 06 Mar 2023 07:03:49 +0100
-Message-ID: <80c249ca-fe51-7a7b-da1d-ab14873170aa@leemhuis.info>
-Date: Mon, 6 Mar 2023 07:03:49 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D714F7E
+	for <regressions@lists.linux.dev>; Mon,  6 Mar 2023 08:57:33 +0000 (UTC)
+Received: by mail-pj1-f46.google.com with SMTP id y15-20020a17090aa40f00b00237ad8ee3a0so8202825pjp.2
+        for <regressions@lists.linux.dev>; Mon, 06 Mar 2023 00:57:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1678093053;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=vt+MS0eYcnMeqDB+aM3O4tClbihsYFf1JjAFSjKpS1E=;
+        b=Ut2pKvDf5wwayQF+UAC+FXF6xHDhXluuw7A6U2rkEwwqhkYN5kTsDWdIlcpFk0krUc
+         lY8S6KlxITtUWDTDzUkrs7VSrxHu09I324zsD0cQk2qhJ6l4/sOHIWMHsGDmQ1HPXTdk
+         OJcPY+GMEj99V3q+BtoXsRpgeXaGDcsNqsK+lhAFFqwgEgCj2Z7+4ag1w2DBSoSs60s8
+         70iyjdwN3vTnJKC1ONpM5pMOeX3W+WXB4aVscw/4hCFnzeAS+aIz61fLh9bxrjTHmXtE
+         pF78aY6e8KxYw4kXIWuF9qsUaTQ3cE8qo+HFqbMZog+hA3bXZhAW27U1EFR/81jKd3tJ
+         gJeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678093053;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vt+MS0eYcnMeqDB+aM3O4tClbihsYFf1JjAFSjKpS1E=;
+        b=aaUAU6ITG31ilSVOnQCjP/49Y/y5nS8zbb/6sLrOdrHA1D6iMRZI/VPNVduS56glfR
+         fFReFtitT1PTXr1Pe1c/9bYv3UcAmki7Z7tg/v9FdJnNy/5KieAeHIXAyTSsslY0psgJ
+         IVgc1d0W0cKTR8+m4h3ynEKZDVX423woZ1FgH6lAroiNPWRlfglfHQsgs3Z8g5KM/VRt
+         H35DuUvO9P0VIcq0VB0AdV5J8K6Rg1w5ToW11ljWUkL/LjOKXZaJAIaUam6sOGC2EgJk
+         ap0BtRtEz2f5cEoma0av+7SoVGW5un3qYVKUP/7IV89VVpwxb4bvh6DFujwmRRRj2zGu
+         4NzA==
+X-Gm-Message-State: AO0yUKUa2XZQGVZKbiEMu1wEtttIAjQrzg2pXZh5RnTojj2kc6/4wnyN
+	otSlDTvTo8M13xHrO3DMknw=
+X-Google-Smtp-Source: AK7set+dFQRcLEIvi0ZHJ5bHx/UaxNJvMl1pMDFFHBR/U+WXM9FUajLpcyefdLAvvbY7wiCn+BqlMg==
+X-Received: by 2002:a17:902:d489:b0:19e:5cc3:828f with SMTP id c9-20020a170902d48900b0019e5cc3828fmr13019163plg.27.1678093053259;
+        Mon, 06 Mar 2023 00:57:33 -0800 (PST)
+Received: from [192.168.43.80] (subs03-180-214-233-82.three.co.id. [180.214.233.82])
+        by smtp.gmail.com with ESMTPSA id e1-20020a631e01000000b004fb681ea0e1sm5764949pge.84.2023.03.06.00.57.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 06 Mar 2023 00:57:33 -0800 (PST)
+Message-ID: <f53f84b5-9da7-0726-2e1f-f7e81e8ecd24@gmail.com>
+Date: Mon, 6 Mar 2023 15:57:28 +0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,98 +48,50 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.8.0
-Content-Language: en-US, de-DE
-To: Bagas Sanjaya <bagasdotme@gmail.com>, Jonathan Corbet <corbet@lwn.net>
+Subject: Re: [PATCH v3] docs: describe how to quickly build a trimmed kernel
+To: Thorsten Leemhuis <linux@leemhuis.info>, Jonathan Corbet <corbet@lwn.net>
 Cc: Randy Dunlap <rdunlap@infradead.org>,
  Lukas Bulwahn <lukas.bulwahn@gmail.com>, linux-doc@vger.kernel.org,
  linux-kernel@vger.kernel.org, regressions@lists.linux.dev
 References: <1a788a8e7ba8a2063df08668f565efa832016032.1678021408.git.linux@leemhuis.info>
- <ZAVopho26SPotT6v@debian.me>
-From: Thorsten Leemhuis <linux@leemhuis.info>
-Subject: Re: [PATCH v3] docs: describe how to quickly build a trimmed kernel
-In-Reply-To: <ZAVopho26SPotT6v@debian.me>
+ <ZAVp6jdeWzYcisUO@debian.me>
+ <3d6a30ee-f093-f5b6-a193-cd86320f9452@leemhuis.info>
+Content-Language: en-US
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+In-Reply-To: <3d6a30ee-f093-f5b6-a193-cd86320f9452@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1678082633;66e1f14e;
-X-HE-SMSGID: 1pZ3wr-0000bP-JK
 
-Thx for the feedback
-
-On 06.03.23 05:14, Bagas Sanjaya wrote:
-> On Sun, Mar 05, 2023 at 02:04:44PM +0100, Thorsten Leemhuis wrote:
->> +.. _patching_sbs:
->> +
->> + * In case you want to apply a kernel patch, do so now. Often a command like
->> +   this will do the trick::
->> +
->> +     patch -p1 < ../proposed-fix.patch
->> +
->> +   If the ``-p1`` is actually needed, depends on how the patch was created; in
->> +   case it does not apply thus try without it.
->> +
->> +   If you cloned the sources with git and anything goes sideways, run ``git
->> +   reset --hard`` to undo any changes to the sources.
+On 3/6/23 12:40, Thorsten Leemhuis wrote:
+>> If your distro config have ``CONFIG_IKCONFIG=y``, you can copy from
+>> procfs::
+>>
+>>     zcat /proc/config.gz > .config
+> <snipped>
 > 
-> Alternatively, if you have ``b4`` installed, you can prepare the patch
-> with ``b4 am -l <message-id of the patch>``. The -l option adds a Link:
-> to lore.kernel.org for the patch. Apply the resulting patch with
-> ``git am``.
+>> If it isn't the case, you may want to enable the aforementioned config
+>> option.
 > 
-> It is often wise to branch-off from mainline before applying patches, to
-> keep the remote-tracking mainline pristine. Create a branch with ``git
-> checkout -b <branch name>``.
-
-Well, for developers of course all that is helpful, but at the same time
-it's just overhead and complicated stuff for people that just want to
-quickly compile a kernel (maybe for the first time) and might or might
-not apply a patch for testing -- hence I'd say that this text is the
-wrong place to explain such things.
-
-I wonders if I needs to describe the target audience more explicitly in
-the text, but OTOH it kinda feels like it's clear enough already. But
-well, maybe adding something like "this document is not intended for
-kernel developers" somewhere might be worth it.
-
->> +Changes merged into the mainline repository are only synced to the master branch
->> +of the Linux stable repository  every few hours. This lag most of the time is
->> +not something to worry about; but in case you really need the latest code, just
->> +add the mainline repo as additional remote and checkout the code from there::
->> +
->> +    git remote add mainline \
->> +      https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
->> +    git fetch mainline
->> +    git checkout --detach mainline/master
+> That or put them in /boot/config-$(uname -r). But well, that is
+> something the provider of the running kernel needs to do, so it won't
+> help the reader if we mention it here.
 > 
-> You will most likely change the tracking remote for your master branch
-> to mainline by ``git branch --set-upstream-to=mainline/master``.
-
-Why? The document doesn't even use that branch, git is just used to
-retrieve the sources.
-
->> +The step-by-step guide uses the default make targets (e.g. 'bzImage' and
->> +'modules' on x86) to build the image and the modules of your kernel, which later
->> +steps of the guide then install. You instead can also directly build everything
->> +and directly package it up by using one of the following targets:
->> +
->> + * ``make -j $(nproc --all) bindeb-pkg`` to generate a deb package
->> +
->> + * ``make -j $(nproc --all) binrpm-pkg`` to generate a rpm package
->> +
->> + * ``make -j $(nproc --all) tarbz2-pkg`` to generate a bz2 compressed tarball
+> Or do you think the guide should explain this to ensure people can
+> pickup their config from there again in case they deleted their build
+> artifacts? Hmmm. I currently tend to think that's not worth making the
+> text longer for, as at that point it might be better to restart from
+> scratch with a distro config anyway.
 > 
-> I used to try compiling kernel in rpm-based systems (at that time
-> CentOS). make binrpm-pkg generates kernel headers, image, and sanitized
-> kernel headers for libc packages. These three packages have to be
-> installed together.> However, the generated libc headers package most
-> likely overwrite distro-installed one, thus rebuilding the world is
-> necessary.
 
-Is it? This is totally not my area of expertise, but I thought updating
-those is not a problem, as long as you don't expect stuff compiled
-against those headers to work on older kernels all the time. At least
-Fedora updates its kernel-headers package (which contains the C header
-files that specify the interface between the Linux kernel and userspace
-libraries) occasionally to newer mainline versions within a release and
-doesn't rebuild the world when they do so.
+I think it depends whether someone would pick from /proc/config.gz or
+/boot/config. My kernel configuration have CONFIG_IKCONFIG=y but I
+often copy the config from the latter instead, since I booted with
+arbitrary kernel version when compiling two or three versions, and I
+want to ensure that the config used is from correct version (i.e.
+I use /boot/config-5.15.x-string to build 5.15.x+1 kernel).
 
-Ciao, Thorsten
+Thanks.
+
+-- 
+An old man doll... just what I always wanted! - Clara
+
