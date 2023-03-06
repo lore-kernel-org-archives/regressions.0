@@ -1,151 +1,189 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E01C19B
-	for <regressions@lists.linux.dev>; Mon,  6 Mar 2023 10:44:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1678099442;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=iDesKEH7zvriBWTq7JexRfulhrKSrhU4sKAOril+/8I=;
-	b=Hp3lwklPjdjeRDkJ1G1DqSstbx05kPyqsRghkH8MKNBdaIM8/nv/Ibg/fi3NxmSTr+rVxN
-	fIOynbzTkVRB4+YyFO0JqmP0SgYyMeEg6TIXaf2iX/+8zRGnpiq18lIjmPovAQ5t16E7Vu
-	p1RIOYHGIzb5bhpS7AkpvkFbfru1coY=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-356-K9Pb7ziKNUeN-xE4Da7uqA-1; Mon, 06 Mar 2023 05:44:01 -0500
-X-MC-Unique: K9Pb7ziKNUeN-xE4Da7uqA-1
-Received: by mail-wr1-f69.google.com with SMTP id l5-20020a5d6745000000b002c91cb49949so1361326wrw.14
-        for <regressions@lists.linux.dev>; Mon, 06 Mar 2023 02:44:01 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA4955665
+	for <regressions@lists.linux.dev>; Mon,  6 Mar 2023 17:09:51 +0000 (UTC)
+Received: by mail-qv1-f44.google.com with SMTP id nf5so7095190qvb.5
+        for <regressions@lists.linux.dev>; Mon, 06 Mar 2023 09:09:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1678122590;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=A+BGgoHDzc7+NmR0hn4rA1NNLqZTh2qEE69Q1RGzpP8=;
+        b=hvReIGjzJBupBHJOehU1TDMWO1dOnGTbZNPIde2a2Jq6vgsGhwuzfwOTFgma2u5t/k
+         xicXjF3V9Ja3+447N9Ok9RxKSBagblklCgQx51Jlw2sAkdSkYWZ+q4QVg2LZWjodgpqx
+         mUiDhLSp7D24RCg/gdVYgmT0tPZlTZbWNNRvJzWjqYIthGI/gmwVBVGf8bd2e3zjXtyI
+         /L3ZzEc/yrl9mUwi0Xx2EDboZUceIMihinbagAy3VFNSwZFyIuMJKaRyQGuN1CGWFwRQ
+         F9mKaypW+bwfZpxv3c1lptFjVG9Vq8nTlmRS66a08SpOjVzHsdr15NXqoDTLNI+b8ljE
+         lF9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678099440;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=iDesKEH7zvriBWTq7JexRfulhrKSrhU4sKAOril+/8I=;
-        b=dd0ApwkGvFrJzTogVJWIqrtHJx45MT650PoX587CldpwwniAR23iLu47rUQ5MGrv7+
-         LVFzsf11O8jOOTlLuTRDYz6TKg521HsmGAjzSmCIzKY0aEvJ4rvt+yDHNZnCXxZWFvQx
-         IvZ/mselUcq0tVnklqrVu4fi4hy/XIKbfHAoed/equDlz3Yh4BDhqwynSE1EUpl84KT3
-         A1I/aCZatlib3+GTF2wBGrOgXPanM6nGb/YD0YrlTfhbZGHJoOuPH5au2ZeFRrAPhFHk
-         KWyRc/Qt3O2HAmRyy9L8hEH0gyNO1XpYE1AiTqXZqyONKF5VOnoN4itRJdmOn1FuQckq
-         WLfQ==
-X-Gm-Message-State: AO0yUKVUtlQIRN7eP3/jfxeOZOsYakShfdo+iqawD6U5dvD3KUpqf531
-	tfzzbC817cuaGNXVaghdSMJVMtqPrDfVcpFAxbLUHx5glpNU1O1k+2l/cNVzAmi+SIlQ++D76iW
-	E8PQwrE7USBuCA/DGKZHwDVA=
-X-Received: by 2002:adf:fecf:0:b0:2c8:cdde:c284 with SMTP id q15-20020adffecf000000b002c8cddec284mr5750803wrs.38.1678099440416;
-        Mon, 06 Mar 2023 02:44:00 -0800 (PST)
-X-Google-Smtp-Source: AK7set+xDDKOkEQ/ouFaHCLdFnxR30h51kxFvJ2YPQfpuZKNHPpdAuO161DYiS2nOmGOYC1GadhwCw==
-X-Received: by 2002:adf:fecf:0:b0:2c8:cdde:c284 with SMTP id q15-20020adffecf000000b002c8cddec284mr5750790wrs.38.1678099440053;
-        Mon, 06 Mar 2023 02:44:00 -0800 (PST)
-Received: from localhost (205.pool92-176-231.dynamic.orange.es. [92.176.231.205])
-        by smtp.gmail.com with ESMTPSA id n18-20020adfe352000000b002c567881dbcsm9468784wrj.48.2023.03.06.02.43.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Mar 2023 02:43:59 -0800 (PST)
-From: Javier Martinez Canillas <javierm@redhat.com>
-To: Dikshita Agarwal <quic_dikshita@quicinc.com>, Vikash Garodia
- <vgarodia@qti.qualcomm.com>, Linux regressions mailing list
- <regressions@lists.linux.dev>, Stanimir Varbanov
- <stanimir.k.varbanov@gmail.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "mka@chromium.org" <mka@chromium.org>, Albert Esteve <aesteve@redhat.com>,
- "stanimir.varbanov@linaro.org" <stanimir.varbanov@linaro.org>, Enric
- Balletbo i Serra <eballetb@redhat.com>, Andy Gross <agross@kernel.org>,
- Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio
- <konrad.dybcio@linaro.org>, "Vikash Garodia (QUIC)"
- <quic_vgarodia@quicinc.com>, "linux-arm-msm@vger.kernel.org"
- <linux-arm-msm@vger.kernel.org>, "linux-media@vger.kernel.org"
- <linux-media@vger.kernel.org>, Fritz Koenig <frkoenig@google.com>,
- "Rajeshwar
- Kurapaty (QUIC)" <quic_rkurapat@quicinc.com>, Mauro Carvalho Chehab
- <mchehab@kernel.org>
-Subject: Re: [PATCH] Revert "venus: firmware: Correct non-pix start and end
- addresses"
-In-Reply-To: <0c84724d-08d4-ddcb-5f71-4eb8261240c6@quicinc.com>
-References: <20230207102254.1446461-1-javierm@redhat.com>
- <DM8PR02MB8169809493BF2822E6C29EECF3DB9@DM8PR02MB8169.namprd02.prod.outlook.com>
- <ef09bc9f-d570-be11-238b-bd34063917fc@redhat.com>
- <70c01751-1dd7-c4bd-a96e-94dea437aa40@redhat.com>
- <DM8PR02MB81696369DBFE619E43F81EEFF3DE9@DM8PR02MB8169.namprd02.prod.outlook.com>
- <e87344c6-acef-7f3f-5cac-24961dbd9401@redhat.com>
- <6f97a117-0d9c-e21b-9adf-50f2233ba9e3@leemhuis.info>
- <ea283f0a-ca72-447e-ce87-68c1bbee793e@leemhuis.info>
- <CAFOAJEdBbzqkGVqw+vgNYNxyaTHwvjFyskTwjycP820L2tOctA@mail.gmail.com>
- <b548da46-bf91-6f1c-4b63-4002109056bc@leemhuis.info>
- <9a0bfef8-0b5d-f4d0-a8a5-4bbcacc5c0fb@leemhuis.info>
- <DM8PR02MB8169E16569616870A583B376F3AB9@DM8PR02MB8169.namprd02.prod.outlook.com>
- <87356wn6xf.fsf@minerva.mail-host-address-is-not-set>
- <87edq9hj4w.fsf@minerva.mail-host-address-is-not-set>
- <d18fac76-6b77-a446-5fe0-7236556e9187@quicinc.com>
- <0c84724d-08d4-ddcb-5f71-4eb8261240c6@quicinc.com>
-Date: Mon, 06 Mar 2023 11:43:58 +0100
-Message-ID: <87edq2dus1.fsf@minerva.mail-host-address-is-not-set>
+        d=1e100.net; s=20210112; t=1678122590;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=A+BGgoHDzc7+NmR0hn4rA1NNLqZTh2qEE69Q1RGzpP8=;
+        b=UHkKxaXdmvJJdTH/OqgCJFocbHPsor3dRSfNZJJiJUsXRYFIFUk815iyw2o3Vif6+5
+         8aFAvAsbIoFWONMlNpLKbsuEBJde0PUcVmskFrDhTV6jzHIHND/ey8T9UGwI4sgcYcmk
+         2XQ80YcY0wH3PyiRQ4EmksdrEjiCvn48Cmfft7biZSeq9kmWsfiNy1c1/9DAVw6uMvUw
+         M1Ejc1X7s3rRhB3rc0hX5K0s6OHrvMf8HxiPtexUIKSOOS3ACTuAOHEleUVRqeTZCa7p
+         n/cOL3aQFJ9AFNm6qMBjCf3pKG3B5tK67oNEwGDCGtx1kKvNV1P38VGeULObiv1ZcIRN
+         TWIw==
+X-Gm-Message-State: AO0yUKXSFz9yAMwLt94OKOzK37Ua2qJ2gTkg/rbJBzGkmFPrL0sJHKe2
+	JU8020cAtzrnq/g52DLTKfuFCjQ5iiHiLfs5U1o=
+X-Google-Smtp-Source: AK7set/dNXrM/q4DD+eq7JiFfAV/j8ceoLnDGBHikXrbmdNTN3Xbus+CPPP87DWUcfC1mb7fZBut6SeRE/I+aqLXQ4E=
+X-Received: by 2002:a05:6214:913:b0:56e:ff38:46a2 with SMTP id
+ dj19-20020a056214091300b0056eff3846a2mr3125460qvb.10.1678122590367; Mon, 06
+ Mar 2023 09:09:50 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain
+References: <f591b13c-4600-e2a4-8efa-aac6ad828dd1@linaro.org>
+ <82526863-d07a-0a5d-2990-1555b1387f26@linaro.org> <2C5E9725-F152-4D2E-882E-CF92A35481BF@hammerspace.com>
+ <7ba38377-7992-7f0f-d905-cceb42510f39@linaro.org> <51430925-8046-7066-84ed-2ff0db835347@linaro.org>
+ <CAFX2Jf=5X3zyZEWQmD6Rg9jQAD7ccDbae5LQCwrAyPCVVoFumg@mail.gmail.com>
+ <2add1769-1458-b185-bc78-6d573f61b6fc@linaro.org> <CAFX2JfnKy7juGQaDTzqosN9SF-zd+XrhSL9uh_Xg0GpJGDux-A@mail.gmail.com>
+ <32530c36-91d0-d351-0689-aed6a0975a4b@linaro.org> <2f285607-cbf9-6abc-f436-edb6e9a3938b@linaro.org>
+ <CAFX2Jfmz7QqZBEdzbPUhPs0yctnXVaVF68tX1c57YX=6ki=0TA@mail.gmail.com>
+ <4fe39d77-eb7c-a578-aefa-45b76e2247c2@linaro.org> <CAFX2JfmdRMsHPTySiw4vm7BwJfRZj3s0V3_v7NJ+XwMxBBSo9A@mail.gmail.com>
+ <a3683dd3-3f30-bb4c-539d-d1519de6e5bf@linaro.org>
+In-Reply-To: <a3683dd3-3f30-bb4c-539d-d1519de6e5bf@linaro.org>
+From: Anna Schumaker <schumaker.anna@gmail.com>
+Date: Mon, 6 Mar 2023 12:09:34 -0500
+Message-ID: <CAFX2JfnS9GVc4NaxKhr9E4y10NNv6SPgcv1yoeHTfEw5NvZgMg@mail.gmail.com>
+Subject: Re: Regression: NULL pointer dereference after NFS_V4_2_READ_PLUS
+ (commit 7fd461c47)
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Trond Myklebust <trondmy@hammerspace.com>, Anna Schumaker <Anna.Schumaker@netapp.com>, 
+	linux-nfs <linux-nfs@vger.kernel.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Content-Type: multipart/mixed; boundary="000000000000e3cadb05f63e5cc4"
 
-Dikshita Agarwal <quic_dikshita@quicinc.com> writes:
+--000000000000e3cadb05f63e5cc4
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello Dikshita,
+Hi Krzysztof,
 
-> On 3/1/2023 3:15 PM, Dikshita Agarwal wrote:
->>
->>
->> On 2/28/2023 9:33 PM, Javier Martinez Canillas wrote:
->>> Javier Martinez Canillas<javierm@redhat.com>  writes:
->>>
->>>> Vikash Garodia<vgarodia@qti.qualcomm.com>  writes:
->>>>
->>>> Hello Vikash,
->>>>
->>>>> Hi All,
->>>>>
->>>> [...]
->>>>
->>>>>> No reply from Mauro and Linus chose to not apply the revert I pointed him to.
->>>>>> That at this point leads to the question:
->>>>>>
->>>>>> Vikash, did you or somebody else make any progress to fix this properly?
->>>>> We tried with different settings for the registers and arrive at a conclusion that
->>>>> the original configuration was proper. There is no need to explicitly configure
->>>>> the secure non-pixel region when there is no support for the usecase. So, in summary,
->>>>> we are good to have the revert.
->>>>>
->>>> Perfect. Thanks a lot for looking at this.
->>>>
->>>>> Stan, could you please help with the revert and a pull request having this revert
->>>>> alongwith other pending changes ?
->>>>>
->>>> Other fix posted is "media: venus: dec: Fix capture formats enumeration order":
->>>>
->>>> https://patchwork.kernel.org/project/linux-media/patch/20230210081835.2054482-1-javierm@redhat.com/
+On Tue, Feb 14, 2023 at 6:02=E2=80=AFAM Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
 >
-> Hi Javier,
+> On 12/02/2023 15:05, Anna Schumaker wrote:
+> >>> From ac2d6c501dbcdb306480edaee625b5496f1fb4f5 Mon Sep 17 00:00:00 200=
+1
+> >>> From: Anna Schumaker <Anna.Schumaker@Netapp.com>
+> >>> Date: Fri, 10 Feb 2023 15:50:22 -0500
+> >>> Subject: [PATCH] NFSv4.2: Rework scratch handling for READ_PLUS
+> >>>
+> >>
+> >> Patch is corrupted - maybe mail program reformatted it when sending:
+> >>
+> >> Applying: NFSv4.2: Rework scratch handling for READ_PLUS
+> >> error: corrupt patch at line 12
+> >> Patch failed at 0001 NFSv4.2: Rework scratch handling for READ_PLUS
+> >
+> > That's weird. I wasn't expecting gmail to reformat the patch but I
+> > guess it did. I've added it as an attachment so that shouldn't happen
+> > again.
 >
-> Thanks for this patch "media: venus: dec: Fix capture formats 
-> enumeration order".
+> Still null ptr (built on 420b2d4 with your patch):
+
+We're through the merge window and at rc1 now, so I can spend more
+time scratching my head over your bug again. We've come up with a
+patch (attached) that adds a bunch of printks to show us what the
+kernel thinks is going on. Do you mind trying it out and letting us
+know what gets printed out? You'll need to make sure
+CONFIG_NFS_V4_2_READ_PLUS is enabled when compiling the kernel.
+
+Thanks,
+Anna
+
 >
-> Somehow I can't find it in my mailbox to be able to reply there.
+> [  144.690844] mmiocpy from xdr_inline_decode (net/sunrpc/xdr.c:1419 net/=
+sunrpc/xdr.c:1454)
+> [  144.695950] xdr_inline_decode from nfs4_xdr_dec_read_plus (fs/nfs/nfs4=
+2xdr.c:1063 fs/nfs/nfs42xdr.c:1147 fs/nfs/nfs42xdr.c:1360 fs/nfs/nfs42xdr.c=
+:1341)
+> [  144.702452] nfs4_xdr_dec_read_plus from call_decode (net/sunrpc/clnt.c=
+:2595)
+> [  144.708429] call_decode from __rpc_execute (include/asm-generic/bitops=
+/generic-non-atomic.h:128 net/sunrpc/sched.c:954)
+> [  144.713538] __rpc_execute from rpc_async_schedule (include/linux/sched=
+/mm.h:336 net/sunrpc/sched.c:1035)
+> [  144.719170] rpc_async_schedule from process_one_work (include/linux/ju=
+mp_label.h:260 include/linux/jump_label.h:270 include/trace/events/workqueu=
+e.h:108 kernel/workqueue.c:2294)
+> [  144.725238] process_one_work from worker_thread (include/linux/list.h:=
+292 kernel/workqueue.c:2437)
+> [  144.730782] worker_thread from kthread (kernel/kthread.c:378)
+> [  144.735547] kthread from ret_from_fork (arch/arm/kernel/entry-common.S=
+:149)
 >
-> Could you please explain what is the regression you see here?
+>
+>
+> Best regards,
+> Krzysztof
 >
 
-You can find the thread and explanation of the issue here:
+--000000000000e3cadb05f63e5cc4
+Content-Type: text/x-patch; charset="US-ASCII"; name="aglo-read_plus.patch"
+Content-Disposition: attachment; filename="aglo-read_plus.patch"
+Content-Transfer-Encoding: base64
+Content-ID: <f_lex2ufs20>
+X-Attachment-Id: f_lex2ufs20
 
-https://lore.kernel.org/lkml/Y+KPW18o%2FDa+N8UI@google.com/T/
-
-But Stanimir already picked it and sent a PR for v6.3 including it.
-
--- 
-Best regards,
-
-Javier Martinez Canillas
-Core Platforms
-Red Hat
-
+ZGlmZiAtLWdpdCBhL2ZzL25mcy9uZnM0Mnhkci5jIGIvZnMvbmZzL25mczQyeGRyLmMKaW5kZXgg
+ZDgwZWU4OGNhOTk2Li5kZWU1ZWNmMDc4NWEgMTAwNjQ0Ci0tLSBhL2ZzL25mcy9uZnM0Mnhkci5j
+CisrKyBiL2ZzL25mcy9uZnM0Mnhkci5jCkBAIC0zNDYsNiArMzQ2LDcgQEAgc3RhdGljIHZvaWQg
+ZW5jb2RlX3JlYWRfcGx1cyhzdHJ1Y3QgeGRyX3N0cmVhbSAqeGRyLAogCQkJICAgICBjb25zdCBz
+dHJ1Y3QgbmZzX3BnaW9fYXJncyAqYXJncywKIAkJCSAgICAgc3RydWN0IGNvbXBvdW5kX2hkciAq
+aGRyKQogeworCXByaW50aygiQUdMTzogJXMgc2V0dGluZyB1cCBkZWNvZGUgYnVmZmVyIHNpemU9
+JWRcbiIsIF9fZnVuY19fLCBkZWNvZGVfcmVhZF9wbHVzX21heHN6KTsKIAllbmNvZGVfb3BfaGRy
+KHhkciwgT1BfUkVBRF9QTFVTLCBkZWNvZGVfcmVhZF9wbHVzX21heHN6LCBoZHIpOwogCWVuY29k
+ZV9uZnM0X3N0YXRlaWQoeGRyLCAmYXJncy0+c3RhdGVpZCk7CiAJZW5jb2RlX3VpbnQ2NCh4ZHIs
+IGFyZ3MtPm9mZnNldCk7CkBAIC0xMDU5LDYgKzEwNjAsNyBAQCBzdGF0aWMgaW50IGRlY29kZV9y
+ZWFkX3BsdXNfc2VnbWVudChzdHJ1Y3QgeGRyX3N0cmVhbSAqeGRyLAogewogCV9fYmUzMiAqcDsK
+IAorCXByaW50aygiQUdMTzogJXMgc3RhcnQgc2VnPSVwXG4iLCBfX2Z1bmNfXywgc2VnKTsKIAlw
+ID0geGRyX2lubGluZV9kZWNvZGUoeGRyLCA0KTsKIAlpZiAoIXApCiAJCXJldHVybiAtRUlPOwpA
+QCAtMTA4Miw2ICsxMDg0LDcgQEAgc3RhdGljIGludCBkZWNvZGVfcmVhZF9wbHVzX3NlZ21lbnQo
+c3RydWN0IHhkcl9zdHJlYW0gKnhkciwKIAkJeGRyX2RlY29kZV9oeXBlcihwLCAmc2VnLT5ob2xl
+Lmxlbmd0aCk7CiAJfSBlbHNlCiAJCXJldHVybiAtRUlOVkFMOworCXByaW50aygiQUdMTzogJXMg
+ZW5kIHNlZz0lcCB4ZHItPm53b3Jkcz0lZFxuIiwgX19mdW5jX18sIHNlZywgeGRyLT5ud29yZHMp
+OwogCXJldHVybiAwOwogfQogCkBAIC0xMTI1LDYgKzExMjgsNyBAQCBzdGF0aWMgaW50IGRlY29k
+ZV9yZWFkX3BsdXMoc3RydWN0IHhkcl9zdHJlYW0gKnhkciwgc3RydWN0IG5mc19wZ2lvX3JlcyAq
+cmVzKQogCWNoYXIgc2NyYXRjaF9idWZbMTZdOwogCV9fYmUzMiAqcDsKIAorCXByaW50aygiQUdM
+TzogJXMgU1RBUlRcbiIsIF9fZnVuY19fKTsKIAlzdGF0dXMgPSBkZWNvZGVfb3BfaGRyKHhkciwg
+T1BfUkVBRF9QTFVTKTsKIAlpZiAoc3RhdHVzKQogCQlyZXR1cm4gc3RhdHVzOwpAQCAtMTE1OCw2
+ICsxMTYyLDcgQEAgc3RhdGljIGludCBkZWNvZGVfcmVhZF9wbHVzKHN0cnVjdCB4ZHJfc3RyZWFt
+ICp4ZHIsIHN0cnVjdCBuZnNfcGdpb19yZXMgKnJlcykKIAogb3V0OgogCWtmcmVlKHNlZ3MpOwor
+CXByaW50aygiQUdMTzogJXMgRU5EXG4iLCBfX2Z1bmNfXyk7CiAJcmV0dXJuIHN0YXR1czsKIH0K
+IApkaWZmIC0tZ2l0IGEvbmV0L3N1bnJwYy9jbG50LmMgYi9uZXQvc3VucnBjL2NsbnQuYwppbmRl
+eCAwYjBiOWYxZWVkNDYuLjM0NDllYTgzNmQzMCAxMDA2NDQKLS0tIGEvbmV0L3N1bnJwYy9jbG50
+LmMKKysrIGIvbmV0L3N1bnJwYy9jbG50LmMKQEAgLTEzMzcsNiArMTMzNyw3IEBAIHZvaWQgcnBj
+X3ByZXBhcmVfcmVwbHlfcGFnZXMoc3RydWN0IHJwY19ycXN0ICpyZXEsIHN0cnVjdCBwYWdlICoq
+cGFnZXMsCiB7CiAJaGRyc2l6ZSArPSBSUENfUkVQSERSU0laRSArIHJlcS0+cnFfY3JlZC0+Y3Jf
+YXV0aC0+YXVfcmFsaWduOwogCisJcHJpbnRrKCJBR0xPOiAlcyBoZHJzaXplICVkICg8PDIgJWQp
+IEhEUlNJWkUgJWQgYXVsaWdoICVkXG4iLCBfX2Z1bmNfXywgaGRyc2l6ZSwgaGRyc2l6ZSA8PCAy
+LCBSUENfUkVQSERSU0laRSwgcmVxLT5ycV9jcmVkLT5jcl9hdXRoLT5hdV9yYWxpZ24pOwogCXhk
+cl9pbmxpbmVfcGFnZXMoJnJlcS0+cnFfcmN2X2J1ZiwgaGRyc2l6ZSA8PCAyLCBwYWdlcywgYmFz
+ZSwgbGVuKTsKIAl0cmFjZV9ycGNfeGRyX3JlcGx5X3BhZ2VzKHJlcS0+cnFfdGFzaywgJnJlcS0+
+cnFfcmN2X2J1Zik7CiB9CmRpZmYgLS1naXQgYS9uZXQvc3VucnBjL3hkci5jIGIvbmV0L3N1bnJw
+Yy94ZHIuYwppbmRleCBmNzc2N2JmMjI0MDYuLmUxYmI5ZmNiYWFkNiAxMDA2NDQKLS0tIGEvbmV0
+L3N1bnJwYy94ZHIuYworKysgYi9uZXQvc3VucnBjL3hkci5jCkBAIC0xMzk3LDYgKzEzOTcsNyBA
+QCBzdGF0aWMgX19iZTMyICogX194ZHJfaW5saW5lX2RlY29kZShzdHJ1Y3QgeGRyX3N0cmVhbSAq
+eGRyLCBzaXplX3QgbmJ5dGVzKQogCV9fYmUzMiAqcCA9IHhkci0+cDsKIAlfX2JlMzIgKnEgPSBw
+ICsgbndvcmRzOwogCisJcHJpbnRrKCJBR0xPOiAlcyBud29yZHM9JWQgeGRyLT5ud29yZHM9JWQg
+cT0lcCB4ZHItPmVuZD0lcCBwPSVwICglZCAlZClcbiIsIF9fZnVuY19fLCBud29yZHMsIHhkci0+
+bndvcmRzLCBxLCB4ZHItPmVuZCwgcCwgcSA+IHhkci0+ZW5kLCBxIDwgcCk7CiAJaWYgKHVubGlr
+ZWx5KG53b3JkcyA+IHhkci0+bndvcmRzIHx8IHEgPiB4ZHItPmVuZCB8fCBxIDwgcCkpCiAJCXJl
+dHVybiBOVUxMOwogCXhkci0+cCA9IHE7CkBAIC0xNDEwLDYgKzE0MTEsNyBAQCBzdGF0aWMgX19i
+ZTMyICp4ZHJfY29weV90b19zY3JhdGNoKHN0cnVjdCB4ZHJfc3RyZWFtICp4ZHIsIHNpemVfdCBu
+Ynl0ZXMpCiAJY2hhciAqY3BkZXN0ID0geGRyLT5zY3JhdGNoLmlvdl9iYXNlOwogCXNpemVfdCBj
+cGxlbiA9IChjaGFyICopeGRyLT5lbmQgLSAoY2hhciAqKXhkci0+cDsKIAorCXByaW50aygiQUdM
+TzogJXMgaGVyZVxuIiwgX19mdW5jX18pOwogCWlmIChuYnl0ZXMgPiB4ZHItPnNjcmF0Y2guaW92
+X2xlbikKIAkJZ290byBvdXRfb3ZlcmZsb3c7CiAJcCA9IF9feGRyX2lubGluZV9kZWNvZGUoeGRy
+LCBjcGxlbik7Cg==
+--000000000000e3cadb05f63e5cc4--
