@@ -1,84 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from l2mail1.panix.com (l2mail1.panix.com [166.84.1.75])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60C84566C
-	for <regressions@lists.linux.dev>; Mon,  6 Mar 2023 17:48:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13931C4339C
-	for <regressions@lists.linux.dev>; Mon,  6 Mar 2023 17:48:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1678124929;
-	bh=p+285oYfxGT6oBTqHONjb6ZZM55PJciuUnjkNQRO/l8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=mLukCiu6l58LxMHAFOYSqQ4tDWy7q06yDh7VqDDp6QPQEu+lL8E2cmYL2RViflJMl
-	 HBscU23mm//Dr/O3xDo/uCvbaCP1w2RRDHfiQaKnvYBPn24+sQeWtLkGA6kYYrQZC8
-	 420Av6Crf12BbjSeH5z/C99Q20K6JTHpOgAwaeYLG1EeASUMNePxPHzOcs3dLfZ6xe
-	 Cjf5beR8XB3IgiqtB4IX6LpDWjnhnUVWQRGtZspfftRWxUbgOeo81ecwU7LKEZNTiD
-	 29ZYgnmooHENwAexUIstb8rtfNEjvSTZ3lp7ai8Rt+fZ0oFF6Wa0Rh5JQxgVGPC36Y
-	 ZY4benJ/1LLBQ==
-Received: by mail-lf1-f50.google.com with SMTP id j11so13801159lfg.13
-        for <regressions@lists.linux.dev>; Mon, 06 Mar 2023 09:48:48 -0800 (PST)
-X-Gm-Message-State: AO0yUKWoMovZWcYfVN1pHstPbx2v2UrYhYof9z4qSkrFMGUUFA52hRuT
-	YqewbhdQOQlsM0E+bQnBCpz6bxW7s+/Im+trfXk=
-X-Google-Smtp-Source: AK7set96s98VtUg4tvq8jDeVcoN4cW8Y4Vt0icc1TFcZ9YMAnc7rz9TIMDGuN7rDsHZUSneArEil7nQkSsY+3mQdkcE=
-X-Received: by 2002:ac2:5ece:0:b0:4dd:a74d:aca3 with SMTP id
- d14-20020ac25ece000000b004dda74daca3mr3592321lfq.3.1678124927094; Mon, 06 Mar
- 2023 09:48:47 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 608057473
+	for <regressions@lists.linux.dev>; Mon,  6 Mar 2023 22:00:53 +0000 (UTC)
+Received: from mailbackend.panix.com (mailbackend.panix.com [166.84.1.89])
+	by l2mail1.panix.com (Postfix) with ESMTPS id 4PVsZd10SXzDQh
+	for <regressions@lists.linux.dev>; Mon,  6 Mar 2023 16:45:45 -0500 (EST)
+Received: from mail.panix.com (localhost [127.0.0.1])
+	by mailbackend.panix.com (Postfix) with ESMTPA id 4PVsZT6P5Sz3rbX;
+	Mon,  6 Mar 2023 16:45:37 -0500 (EST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=panix.com; s=panix;
+	t=1678139138; bh=OokC9caJijB2R6x/uvmHEfwIj7maH40ayrBrHRxaoEw=;
+	h=Date:Subject:From:To:Cc;
+	b=OLLp0H9Q3NQeipWSvj3ygBjfsF7RfpV7LPyR/l2dl8rNj0Ar2rEVeVI9rWY0WhQ0K
+	 /W2Vve1A2xhzmaq928KRldmJDWfPdnAqotgW/blCQBAf4pV2tOKjqQGR6JMr3Smj9L
+	 2BgL6k+ZozPOuZvXATkkUM6nb7vuP4z+BODtlTQE=
+X-Panix-Received: from 166.84.1.2
+        (SquirrelMail authenticated user pa@panix.com)
+        by mail.panix.com with HTTP;
+        Mon, 6 Mar 2023 16:45:37 -0500
+Message-ID: <9f6cba7a8a57e5a687c934e8e406e28c.squirrel@mail.panix.com>
+Date: Mon, 6 Mar 2023 16:45:37 -0500
+Subject: [Regression] acpi: laptop panics early in boot
+From: "Pierre Asselin" <pa@panix.com>
+To: linux-acpi@vger.kernel.org
+Cc: regressions@lists.linux.dev,
+ =?iso-8859-1?Q?=22Uwe_Kleine-K=F6nig=22?= <u.kleine-koenig@pengutronix.de>,
+ "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+User-Agent: SquirrelMail/1.4.23-p1
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <a13cd3b5-cc41-bf2f-c8ac-e031ad0d5dd7@leemhuis.info>
- <CAPhsuW7ZWthh0PZt71hQh1_51C0yMSpOqWYJKc_+VzzTmW_r5A@mail.gmail.com> <167805126796.8008.3635368722810568057@noble.neil.brown.name>
-In-Reply-To: <167805126796.8008.3635368722810568057@noble.neil.brown.name>
-From: Song Liu <song@kernel.org>
-Date: Mon, 6 Mar 2023 09:48:34 -0800
-X-Gmail-Original-Message-ID: <CAPhsuW64R2ze1AYZhEmQcGf0cKBjjX=4EZZowD+=Cr=VPg1QYg@mail.gmail.com>
-Message-ID: <CAPhsuW64R2ze1AYZhEmQcGf0cKBjjX=4EZZowD+=Cr=VPg1QYg@mail.gmail.com>
-Subject: Re: [regression] Bug 217074 - upgrading to kernel 6.1.12 from 5.15.x
- can no longer assemble software raid0
-To: NeilBrown <neilb@suse.de>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>, Jes.Sorensen@gmail.com, 
-	linux-raid <linux-raid@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	Nikolay Kichukov <hijacker@oldum.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+X-Priority: 3 (Normal)
+Importance: Normal
 
-On Sun, Mar 5, 2023 at 1:21=E2=80=AFPM NeilBrown <neilb@suse.de> wrote:
->
-> On Sat, 04 Mar 2023, Song Liu wrote:
-> > + Jes.
-> >
-> > It appeared to me that we can assemble the array if we have any of the
-> > following:
-> > 1. Enable CONFIG_BLOCK_LEGACY_AUTOLOAD;
-> > 2. Have a valid /etc/mdadm.conf;
-> > 3. Update mdadm to handle this case. (I tried some ugly hacks, which wo=
-rked but
-> >     weren't clean).
-> >
-> > Since we eventually would like to get rid of CONFIG_BLOCK_LEGACY_AUTOLO=
-AD, I
-> > think we need mdadm to handle this properly. But the logistics might
-> > be complicated, as
-> > mdadm are shipped separately.
-> >
-> > Jes, what do you think about this? AFAICT, we need to update the logic =
-in
-> > mdopen.c:create_mddev().
->
-> mdadm already handles this, but only if
->    CREATE names=3Dyes
-> is present in /etc/mdadm.conf
->
-> Maybe we should flip the default for the next mdadm release, and patch
-> the kernel (with a stable backport) to select BLOCK_LEGACY_AUTOLOAD if
-> BLK_DEV_MD=3Dm
-> Then revert that - say - 6 months after the new mdadm is released.
+[First bug report, apologies if I break etiquette, pointers appreciated.]
 
-I like this idea. I guess we also need to select BLOCK_LEGACY_AUTOLOAD
-if BLK_DEV_MD=3Dy?
+Laptop crashes when booting on AC power.
 
-Thanks,
-Song
+The laptop is on Gentoo; upgrading from 5.15.88 to 6.1.12, the kernel
+panics before reaching early userspace.  I find no other report like
+this on the Gentoo, arch, mint, or Ubuntu forums, on kernel.org, or out
+of duckduckgo.  This is a regression (because, you know, the kernel used
+to boot) but so far it's only me, and only on my 16-year old laptop.
+Also, I have a workaround.
+
+Image of the panic screen at
+https://www.panix.com/~pa/linux-6.1.12-crash/boot-failure.jpg .
+
+Seeing acpi_ac_notify() near the top of the traceback, I tried booting on
+battery power.  Works fine.  The panic occurs only when booting on AC power,
+whether or not a battery is present.  Sometimes, rarely, it boots fine
+even on AC, but that is the exception not the rule.
+
+Based on comments in drivers/acpi/ac.c I tried a trivial patch,
+
+	--- drivers/acpi/ac.c.orig	2022-12-11 17:15:18.000000000 -0500
+	+++ drivers/acpi/ac.c	2023-02-19 17:38:06.958733031 -0500
+	@@ -47,7 +47,7 @@ static int acpi_ac_resume(struct device
+	 #endif
+	 static SIMPLE_DEV_PM_OPS(acpi_ac_pm, NULL, acpi_ac_resume);
+
+	-static int ac_sleep_before_get_state_ms;
+	+static int ac_sleep_before_get_state_ms = 1000;
+	 static int ac_only;
+
+	 static struct acpi_driver acpi_ac_driver = {
+
+and it works.  This is probably not the right fix but it will be my
+workaround for the time being.
+
+Problem is still present in 6.3-rc1 .  Bisecting, the first bad commit
+is d6fb6ee1820c .
+
+The starting config (from 5.15.88) is at
+https://www.panix.com/~pa/linux-6.1.12-crash/config-base .
+The test is make olddefconfig, make bzImage, then kexec the bzImage with an
+initramfs to see if it reaches the rescueshell prompt.  Has to succeed
+three times to be declared good.
+
+In case I forgot something, here is my post on the Gentoo forums:
+https://forums.gentoo.org/viewtopic-t-1161834-highlight-.html
+
+#regzbot introduced d6fb6ee1820c
+
+Also in bugzilla:
+https://bugzilla.kernel.org/show_bug.cgi?id=217152
+
