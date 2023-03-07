@@ -1,144 +1,198 @@
-Received: from zg8tmtyylji0my4xnjqumte4.icoremail.net (zg8tmtyylji0my4xnjqumte4.icoremail.net [162.243.164.118])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E38313D65
-	for <regressions@lists.linux.dev>; Tue,  7 Mar 2023 12:37:51 +0000 (UTC)
-Received: by ajax-webmail-mail-app3 (Coremail) ; Tue, 7 Mar 2023 20:37:46
- +0800 (GMT+08:00)
-X-Originating-IP: [183.128.133.225]
-Date: Tue, 7 Mar 2023 20:37:46 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-From: "Lin Ma" <linma@zju.edu.cn>
-To: intel-wired-lan@lists.osuosl.org
-Cc: "Paul Menzel" <pmenzel@molgen.mpg.de>, 
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06711613D
+	for <regressions@lists.linux.dev>; Tue,  7 Mar 2023 12:55:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1678193711;
+	h=from:from:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:in-reply-to:in-reply-to:  references:references;
+	bh=pSWbWjgkA/+Pz9FI+1aAb7RBrpCnSLKZlatfA57yuG0=;
+	b=Cnxpfek6gKqclSqfn/+hU4ZAKjOqLzzrzZKcEO8vnRUJOO8VDLy6/uCopRblZkZIOIARSL
+	kF9uX9zwnBo7qn3rkQH8FkFLleZWCYhg0rR95gcm65FzxOnVYmgDvTattD9SLMiobLU1js
+	7MwH+Ukxt1BUuDF7Y+agvzcH8gXZxf4=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-333-ST5h8vKrN_eRpFfrybklcg-1; Tue, 07 Mar 2023 07:55:05 -0500
+X-MC-Unique: ST5h8vKrN_eRpFfrybklcg-1
+Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 7E2F580352D;
+	Tue,  7 Mar 2023 12:55:05 +0000 (UTC)
+Received: from calimero.vinschen.de (unknown [10.39.192.200])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id E40CD492B00;
+	Tue,  7 Mar 2023 12:55:04 +0000 (UTC)
+Received: by calimero.vinschen.de (Postfix, from userid 500)
+	id AF095A80B97; Tue,  7 Mar 2023 13:55:03 +0100 (CET)
+Date: Tue, 7 Mar 2023 13:55:03 +0100
+From: Corinna Vinschen <vinschen@redhat.com>
+To: Lin Ma <linma@zju.edu.cn>
+Cc: intel-wired-lan@lists.osuosl.org, Paul Menzel <pmenzel@molgen.mpg.de>,
 	regressions <regressions@lists.linux.dev>
 Subject: Re: [Intel-wired-lan] [REGRESSION] Deadlock since commit
  6faee3d4ee8b ("igb: Add lock to avoid data race")
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.13 build 20210104(ab8c30b6)
- Copyright (c) 2002-2023 www.mailtech.cn zju.edu.cn
-In-Reply-To: <ZAcqAgLo5/EMca8e@calimero.vinschen.de>
+Message-ID: <ZAc0JxPp4wX7Bvcz@calimero.vinschen.de>
+Reply-To: intel-wired-lan@lists.osuosl.org
+Mail-Followup-To: Lin Ma <linma@zju.edu.cn>,
+	intel-wired-lan@lists.osuosl.org,
+	Paul Menzel <pmenzel@molgen.mpg.de>,
+	regressions <regressions@lists.linux.dev>
 References: <ZAcJvkEPqWeJHO2r@calimero.vinschen.de>
  <3ef31c0b-ce40-20d0-7740-5dc0cca278ca@molgen.mpg.de>
  <882d6a36-d3ac-c231-ba02-bc2235984cfd@molgen.mpg.de>
  <43532635.82161.186bba49ec2.Coremail.linma@zju.edu.cn>
  <ZAcqAgLo5/EMca8e@calimero.vinschen.de>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+ <4826c9a2.825ce.186bc13e703.Coremail.linma@zju.edu.cn>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Message-ID: <4826c9a2.825ce.186bc13e703.Coremail.linma@zju.edu.cn>
-X-Coremail-Locale: en_US
-X-CM-TRANSID:cC_KCgD3_6saMAdkCdPrDQ--.24099W
-X-CM-SenderInfo: qtrwiiyqvtljo62m3hxhgxhubq/1tbiAwMHElNG3KG1xgAAsO
-X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJ3iIAIbVAYjsxI4VWxJw
-	CS07vEb4IE77IF4wCS07vE1I0E4x80FVAKz4kxMIAIbVAFxVCaYxvI4VCIwcAKzIAtYxBI
-	daVFxhVjvjDU=
+In-Reply-To: <4826c9a2.825ce.186bc13e703.Coremail.linma@zju.edu.cn>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.10
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-SGkgQ29yaW5uYSwKClRoYW5rcyBmb3IgdGhlIGNyYXNoIGxvZy4gU2VlbXMgdGhlIHJlYXNvbiBJ
-IGRpZG4ndCBzdWNjZXNzZnVsbHkgcmVwcm9kdWNlIHRoZSBidWcgaXMgdGhhdCBJIGRpZG4ndCBh
-Y3R1YWxseSBlbmFibGUgdGhlIHNyaW92LiAKQWNjb3JkaW5nIHRvIHRoZSBsb2csIHRoZSBkZWFk
-bG9jayBzZWVtcyBvYnZpb3VzLiBJJ20gc29vb28gbm9vYiB0byBtYWtlIHN1Y2ggYSBtaXN0YWtl
-LgoKPiBbICAxNDEuNDIzMzI0XSAgdW5yZWdpc3Rlcl9uZXRkZXYrMHhlLzB4MjAgIC8vIDw9PT09
-PSBhZ2FpbiBncmFudCBydG5sX2xvY2sKPiBbICAxNDEuNDIzNTc4XSAgaWdidmZfcmVtb3ZlKzB4
-NDUvMHhlMCBbaWdidmZdCj4gWyAgMTQxLjQyMzc5MV0gIHBjaV9kZXZpY2VfcmVtb3ZlKzB4MzYv
-MHhiMAo+IFsgIDE0MS40MjM5OTBdICBkZXZpY2VfcmVsZWFzZV9kcml2ZXJfaW50ZXJuYWwrMHhj
-MS8weDE2MAo+IFsgIDE0MS40MjQyNzBdICBwY2lfc3RvcF9idXNfZGV2aWNlKzB4NmQvMHg5MAo+
-IFsgIDE0MS40MjQ1MDddICBwY2lfc3RvcF9hbmRfcmVtb3ZlX2J1c19kZXZpY2UrMHhlLzB4MjAK
-PiBbICAxNDEuNDI0Nzg5XSAgcGNpX2lvdl9yZW1vdmVfdmlydGZuKzB4YmEvMHgxMjAKPiBbICAx
-NDEuNDI1NDUyXSAgc3Jpb3ZfZGlzYWJsZSsweDJmLzB4ZjAKPiBbICAxNDEuNDI1Njc5XSAgaWdi
-X2Rpc2FibGVfc3Jpb3YrMHg0ZS8weDEwMCBbaWdiXQo+IFsgIDE0MS40MjYzNTNdICBpZ2JfcmVt
-b3ZlKzB4YTAvMHgxMzAgW2lnYl0gLy8gPD09PT09IGZpcnN0IGdyYW50IHJ0bmxfbG9jawoKSSB3
-aWxsIHByZXBhcmUgdGhlIGNvbW1pdCB0byByZXZlcnQgdGhpcyBidWdneSBjb21taXQgYW5kIEkg
-d2lsbCBhZGQgdGhlIFJlcG9ydC1ieSB0YWcgZm9yIHlvdS4KClJlZ2FyZHMKTGluCgoKPiBGcm9t
-OiAiQ29yaW5uYSBWaW5zY2hlbiIgPHZpbnNjaGVuQHJlZGhhdC5jb20+Cj4gU2VudCBUaW1lOiAy
-MDIzLTAzLTA3IDIwOjExOjQ2IChUdWVzZGF5KQo+IFRvOiAiTGluIE1hIiA8bGlubWFAemp1LmVk
-dS5jbj4KPiBDYzogIlBhdWwgTWVuemVsIiA8cG1lbnplbEBtb2xnZW4ubXBnLmRlPiwgaW50ZWwt
-d2lyZWQtbGFuIDxpbnRlbC13aXJlZC1sYW5AbGlzdHMub3N1b3NsLm9yZz4sIHJlZ3Jlc3Npb25z
-IDxyZWdyZXNzaW9uc0BsaXN0cy5saW51eC5kZXY+Cj4gU3ViamVjdDogUmU6IFtJbnRlbC13aXJl
-ZC1sYW5dIFtSRUdSRVNTSU9OXSBEZWFkbG9jayBzaW5jZSBjb21taXQgNmZhZWUzZDRlZThiICgi
-aWdiOiBBZGQgbG9jayB0byBhdm9pZCBkYXRhIHJhY2UiKQo+IAo+IEhpIExpbiwKPiAKPiBPbiBN
-YXIgIDcgMTg6MzYsIExpbiBNYSB3cm90ZToKPiA+IEhlbGxvIHRoZXJlCj4gPiAKPiA+IFllYWgg
-SSBhbSBsb29raW5nIGF0IGl0LiBDb3VsZCB5b3UgcGxlYXNlIG9mZmVyIHRoZSBjcmFzaCBsb2cg
-b3IKPiA+IGxvY2tpbmcgZGVidWcgbWVzc2FnZSBpZiBhY2Nlc3NpYmxlPyBUaGFua3MgaW4gYWR2
-YW5jZS4KPiAKPiBUaGUgY29tbWFuZHMgdXNlZCB0byByZXJvZHVjZSBhbmQgdGhlIHJlc3VsdGlu
-ZyBsb2cgbWVzc2FnZToKPiAKPiAgICMgZWNobyAxMCA+IC9wcm9jL3N5cy9rZXJuZWwvaHVuZ190
-YXNrX3RpbWVvdXRfc2Vjcwo+ICAgIyBlY2hvIDIgPiAvc3lzL2NsYXNzL25ldC9lbnM1ZjIvZGV2
-aWNlL3NyaW92X251bXZmcwo+ICAgIyBtb2Rwcm9iZSAtciBpZ2IKPiAgIFtoYW5nXQo+IAo+IGNv
-bnNvbGUgbG9nOgo+IAo+IFsgIDExNi45MTQ2NTZdIHBjaSAwMDAwOjg0OjEwLjI6IFs4MDg2OjE1
-MjBdIHR5cGUgMDAgY2xhc3MgMHgwMjAwMDAKPiBbICAxMTYuOTE1NzIyXSBwY2kgMDAwMDo4NDox
-MC42OiBbODA4NjoxNTIwXSB0eXBlIDAwIGNsYXNzIDB4MDIwMDAwCj4gWyAgMTE2LjkxNzAxM10g
-aWdiIDAwMDA6ODQ6MDAuMjogMiBWRnMgYWxsb2NhdGVkCj4gWyAgMTE2Ljk3ODM1MF0gaWdidmY6
-IEludGVsKFIpIEdpZ2FiaXQgVmlydHVhbCBGdW5jdGlvbiBOZXR3b3JrIERyaXZlcgo+IFsgIDEx
-Ni45NzkwNzJdIGlnYnZmOiBDb3B5cmlnaHQgKGMpIDIwMDkgLSAyMDEyIEludGVsIENvcnBvcmF0
-aW9uLgo+IFsgIDExNi45ODAyNTNdIGlnYnZmIDAwMDA6ODQ6MTAuMjogZW5hYmxpbmcgZGV2aWNl
-ICgwMDAwIC0+IDAwMDIpCj4gWyAgMTE2Ljk4MjM1Nl0gaWdidmYgMDAwMDo4NDoxMC4yOiBQRiBz
-dGlsbCBpbiByZXNldCBzdGF0ZS4gSXMgdGhlIFBGIGludGVyZmFjZSB1cD8KPiBbICAxMTYuOTgz
-MTk2XSBpZ2J2ZiAwMDAwOjg0OjEwLjI6IEFzc2lnbmluZyByYW5kb20gTUFDIGFkZHJlc3MuCj4g
-WyAgMTE2Ljk4NTA1OF0gaWdidmYgMDAwMDo4NDoxMC4yOiBQRiBzdGlsbCByZXNldHRpbmcKPiBb
-ICAxMTcuMDExMDU0XSBpZ2J2ZiAwMDAwOjg0OjEwLjI6IEludGVsKFIpIEkzNTAgVmlydHVhbCBG
-dW5jdGlvbgo+IFsgIDExNy4wMTE3ODVdIGlnYnZmIDAwMDA6ODQ6MTAuMjogQWRkcmVzczogYzI6
-ZTU6YzI6YTI6NzU6MDAKPiBbICAxMTcuMDEyMTg5XSBpZ2J2ZiAwMDAwOjg0OjEwLjY6IGVuYWJs
-aW5nIGRldmljZSAoMDAwMCAtPiAwMDAyKQo+IFsgIDExNy4wMjM5MTFdIGlnYnZmIDAwMDA6ODQ6
-MTAuNjogUEYgc3RpbGwgaW4gcmVzZXQgc3RhdGUuIElzIHRoZSBQRiBpbnRlcmZhY2UgdXA/Cj4g
-WyAgMTE3LjAyNDcyNF0gaWdidmYgMDAwMDo4NDoxMC42OiBBc3NpZ25pbmcgcmFuZG9tIE1BQyBh
-ZGRyZXNzLgo+IFsgIDExNy4wMzYyMTVdIGlnYnZmIDAwMDA6ODQ6MTAuNjogUEYgc3RpbGwgcmVz
-ZXR0aW5nCj4gWyAgMTE3LjAzNzU5Nl0gaWdidmYgMDAwMDo4NDoxMC42OiBJbnRlbChSKSBJMzUw
-IFZpcnR1YWwgRnVuY3Rpb24KPiBbICAxMTcuMDM4MzI3XSBpZ2J2ZiAwMDAwOjg0OjEwLjY6IEFk
-ZHJlc3M6IGVhOjc0OjA3OmY0OjI4OjdjCj4gWyAgMTE3LjA0Nzk3MF0gaWdidmYgMDAwMDo4NDox
-MC42IGVuczVmMnYxOiByZW5hbWVkIGZyb20gZXRoMQo+IFsgIDExNy4wNjI4NDddIGlnYnZmIDAw
-MDA6ODQ6MTAuMiBlbnM1ZjJ2MDogcmVuYW1lZCBmcm9tIGV0aDAKPiBbICAxMTcuMDgwNzI1XSBp
-Z2IgMDAwMDo4NDowMC4yOiBWRiAxIGF0dGVtcHRlZCB0byBzZXQgaW52YWxpZCBNQUMgZmlsdGVy
-Cj4gWyAgMTE3LjEwNjEwNl0gaWdiIDAwMDA6ODQ6MDAuMjogVkYgMSBhdHRlbXB0ZWQgdG8gc2V0
-IGludmFsaWQgTUFDIGZpbHRlcgo+IFsgIDExNy4xMDcxODldIGlnYiAwMDAwOjg0OjAwLjI6IFZG
-IDEgYXR0ZW1wdGVkIHRvIHNldCBpbnZhbGlkIE1BQyBmaWx0ZXIKPiBbICAxMjcuMzYxMzE2XSBp
-Z2IgMDAwMDo4NDowMC4zOiByZW1vdmVkIFBIQyBvbiBlbnM1ZjMKPiBbICAxMjcuMzYxOTc1XSBp
-Z2IgMDAwMDo4NDowMC4zOiBEQ0EgZGlzYWJsZWQKPiBbICAxMjcuNDgzMDg1XSBpZ2IgMDAwMDo4
-NDowMC4yOiByZW1vdmVkIFBIQyBvbiBlbnM1ZjIKPiBbICAxMjcuNDgzNzg2XSBpZ2IgMDAwMDo4
-NDowMC4yOiBEQ0EgZGlzYWJsZWQKPiBbICAxNDEuNDE4NDEwXSBJTkZPOiB0YXNrIG1vZHByb2Jl
-OjIwNzggYmxvY2tlZCBmb3IgbW9yZSB0aGFuIDEwIHNlY29uZHMuCj4gWyAgMTQxLjQxODg1Nl0g
-ICAgICAgTm90IHRhaW50ZWQgNi4yLjAtcmM4KyAjMTIKPiBbICAxNDEuNDE5MTg0XSAiZWNobyAw
-ID4gL3Byb2Mvc3lzL2tlcm5lbC9odW5nX3Rhc2tfdGltZW91dF9zZWNzIiBkaXNhYmxlcyB0aGlz
-IG1lc3NhZ2UuCj4gWyAgMTQxLjQxOTYxNl0gdGFzazptb2Rwcm9iZSAgICAgICAgc3RhdGU6RCBz
-dGFjazowICAgICBwaWQ6MjA3OCAgcHBpZDoyMDM3ICAgZmxhZ3M6MHgwMDAwNDAwMAo+IFsgIDE0
-MS40MjAwMzldIENhbGwgVHJhY2U6Cj4gWyAgMTQxLjQyMDE2OV0gIDxUQVNLPgo+IFsgIDE0MS40
-MjA2NzJdICBfX3NjaGVkdWxlKzB4MmRkLzB4ODQwCj4gWyAgMTQxLjQyMTQyN10gIHNjaGVkdWxl
-KzB4NTAvMHhjMAo+IFsgIDE0MS40MjIwNDFdICBzY2hlZHVsZV9wcmVlbXB0X2Rpc2FibGVkKzB4
-MTEvMHgyMAo+IFsgIDE0MS40MjI2NzhdICBfX211dGV4X2xvY2suaXNyYS4xMysweDQzMS8weDZi
-MAo+IFsgIDE0MS40MjMzMjRdICB1bnJlZ2lzdGVyX25ldGRldisweGUvMHgyMAo+IFsgIDE0MS40
-MjM1NzhdICBpZ2J2Zl9yZW1vdmUrMHg0NS8weGUwIFtpZ2J2Zl0KPiBbICAxNDEuNDIzNzkxXSAg
-cGNpX2RldmljZV9yZW1vdmUrMHgzNi8weGIwCj4gWyAgMTQxLjQyMzk5MF0gIGRldmljZV9yZWxl
-YXNlX2RyaXZlcl9pbnRlcm5hbCsweGMxLzB4MTYwCj4gWyAgMTQxLjQyNDI3MF0gIHBjaV9zdG9w
-X2J1c19kZXZpY2UrMHg2ZC8weDkwCj4gWyAgMTQxLjQyNDUwN10gIHBjaV9zdG9wX2FuZF9yZW1v
-dmVfYnVzX2RldmljZSsweGUvMHgyMAo+IFsgIDE0MS40MjQ3ODldICBwY2lfaW92X3JlbW92ZV92
-aXJ0Zm4rMHhiYS8weDEyMAo+IFsgIDE0MS40MjU0NTJdICBzcmlvdl9kaXNhYmxlKzB4MmYvMHhm
-MAo+IFsgIDE0MS40MjU2NzldICBpZ2JfZGlzYWJsZV9zcmlvdisweDRlLzB4MTAwIFtpZ2JdCj4g
-WyAgMTQxLjQyNjM1M10gIGlnYl9yZW1vdmUrMHhhMC8weDEzMCBbaWdiXQo+IFsgIDE0MS40MjY1
-OTldICBwY2lfZGV2aWNlX3JlbW92ZSsweDM2LzB4YjAKPiBbICAxNDEuNDI2Nzk2XSAgZGV2aWNl
-X3JlbGVhc2VfZHJpdmVyX2ludGVybmFsKzB4YzEvMHgxNjAKPiBbICAxNDEuNDI3MDYwXSAgZHJp
-dmVyX2RldGFjaCsweDQ0LzB4OTAKPiBbICAxNDEuNDI3MjUzXSAgYnVzX3JlbW92ZV9kcml2ZXIr
-MHg1NS8weGUwCj4gWyAgMTQxLjQyNzQ3N10gIHBjaV91bnJlZ2lzdGVyX2RyaXZlcisweDJhLzB4
-YTAKPiBbICAxNDEuNDI4Mjk2XSAgX194NjRfc3lzX2RlbGV0ZV9tb2R1bGUrMHgxNDEvMHgyYjAK
-PiBbICAxNDEuNDI5MTI2XSAgPyBtbnRwdXRfbm9fZXhwaXJlKzB4NGEvMHgyNDAKPiBbICAxNDEu
-NDI5MzYzXSAgPyBzeXNjYWxsX3RyYWNlX2VudGVyLmlzcmEuMTkrMHgxMjYvMHgxYTAKPiBbICAx
-NDEuNDI5NjUzXSAgZG9fc3lzY2FsbF82NCsweDViLzB4ODAKPiBbICAxNDEuNDI5ODQ3XSAgPyBl
-eGl0X3RvX3VzZXJfbW9kZV9wcmVwYXJlKzB4MTRkLzB4MWMwCj4gWyAgMTQxLjQzMDEwOV0gID8g
-c3lzY2FsbF9leGl0X3RvX3VzZXJfbW9kZSsweDEyLzB4MzAKPiBbICAxNDEuNDMwODQ5XSAgPyBk
-b19zeXNjYWxsXzY0KzB4NjcvMHg4MAo+IFsgIDE0MS40MzEwODNdICA/IHN5c2NhbGxfZXhpdF90
-b191c2VyX21vZGVfcHJlcGFyZSsweDE4My8weDFiMAo+IFsgIDE0MS40MzE3NzBdICA/IHN5c2Nh
-bGxfZXhpdF90b191c2VyX21vZGUrMHgxMi8weDMwCj4gWyAgMTQxLjQzMjQ4Ml0gID8gZG9fc3lz
-Y2FsbF82NCsweDY3LzB4ODAKPiBbICAxNDEuNDMyNzE0XSAgPyBleGNfcGFnZV9mYXVsdCsweDY0
-LzB4MTQwCj4gWyAgMTQxLjQzMjkxMV0gIGVudHJ5X1NZU0NBTExfNjRfYWZ0ZXJfaHdmcmFtZSsw
-eDcyLzB4ZGMKPiBbICAxNDEuNDMzMTc1XSBSSVA6IDAwMzM6MHg3ZmYwNGNjM2EwNWIKPiBbICAx
-NDEuNDMzMzc1XSBSU1A6IDAwMmI6MDAwMDdmZmQ4OTFiY2IzOCBFRkxBR1M6IDAwMDAwMjA2IE9S
-SUdfUkFYOiAwMDAwMDAwMDAwMDAwMGIwCj4gWyAgMTQxLjQzNDMzN10gUkFYOiBmZmZmZmZmZmZm
-ZmZmZmRhIFJCWDogMDAwMDU1ZmRlMjU2ZGQwMCBSQ1g6IDAwMDA3ZmYwNGNjM2EwNWIKPiBbICAx
-NDEuNDM1MTcxXSBSRFg6IDAwMDAwMDAwMDAwMDAwMDAgUlNJOiAwMDAwMDAwMDAwMDAwODAwIFJE
-STogMDAwMDU1ZmRlMjU2ZGQ2OAo+IFsgIDE0MS40MzU5NzNdIFJCUDogMDAwMDU1ZmRlMjU2ZGQ2
-OCBSMDg6IDAwMDA3ZmZkODkxYmJhZTEgUjA5OiAwMDAwMDAwMDAwMDAwMDAwCj4gWyAgMTQxLjQz
-Njg1Ml0gUjEwOiAwMDAwN2ZmMDRjZDcxNDgwIFIxMTogMDAwMDAwMDAwMDAwMDIwNiBSMTI6IDAw
-MDAwMDAwMDAwMDAwMDAKPiBbICAxNDEuNDM3NjM2XSBSMTM6IDAwMDAwMDAwMDAwMDAwMDAgUjE0
-OiAwMDAwNTVmZGUyNTZkZDY4IFIxNTogMDAwMDAwMDAwMDAwMDAwMAo+IFsgIDE0MS40Mzg0NDJd
-ICA8L1RBU0s+Cj4gCj4gCj4gQ29yaW5uYQo=
+Hi Lin,
+
+On Mar  7 20:37, Lin Ma wrote:
+> Hi Corinna,
+> 
+> Thanks for the crash log. Seems the reason I didn't successfully reproduce the bug is that I didn't actually enable the sriov. 
+> According to the log, the deadlock seems obvious. I'm soooo noob to make such a mistake.
+> 
+> > [  141.423324]  unregister_netdev+0xe/0x20  // <===== again grant rtnl_lock
+> > [  141.423578]  igbvf_remove+0x45/0xe0 [igbvf]
+> > [  141.423791]  pci_device_remove+0x36/0xb0
+> > [  141.423990]  device_release_driver_internal+0xc1/0x160
+> > [  141.424270]  pci_stop_bus_device+0x6d/0x90
+> > [  141.424507]  pci_stop_and_remove_bus_device+0xe/0x20
+> > [  141.424789]  pci_iov_remove_virtfn+0xba/0x120
+> > [  141.425452]  sriov_disable+0x2f/0xf0
+> > [  141.425679]  igb_disable_sriov+0x4e/0x100 [igb]
+> > [  141.426353]  igb_remove+0xa0/0x130 [igb] // <===== first grant rtnl_lock
+> 
+> I will prepare the commit to revert this buggy commit and I will add
+> the Report-by tag for you.
+
+Great, thanks a lot!
+
+
+Corinna
+
+
+
+
+
+> Regards
+> Lin
+> 
+> 
+> > From: "Corinna Vinschen" <vinschen@redhat.com>
+> > Sent Time: 2023-03-07 20:11:46 (Tuesday)
+> > To: "Lin Ma" <linma@zju.edu.cn>
+> > Cc: "Paul Menzel" <pmenzel@molgen.mpg.de>, intel-wired-lan <intel-wired-lan@lists.osuosl.org>, regressions <regressions@lists.linux.dev>
+> > Subject: Re: [Intel-wired-lan] [REGRESSION] Deadlock since commit 6faee3d4ee8b ("igb: Add lock to avoid data race")
+> > 
+> > Hi Lin,
+> > 
+> > On Mar  7 18:36, Lin Ma wrote:
+> > > Hello there
+> > > 
+> > > Yeah I am looking at it. Could you please offer the crash log or
+> > > locking debug message if accessible? Thanks in advance.
+> > 
+> > The commands used to reroduce and the resulting log message:
+> > 
+> >   # echo 10 > /proc/sys/kernel/hung_task_timeout_secs
+> >   # echo 2 > /sys/class/net/ens5f2/device/sriov_numvfs
+> >   # modprobe -r igb
+> >   [hang]
+> > 
+> > console log:
+> > 
+> > [  116.914656] pci 0000:84:10.2: [8086:1520] type 00 class 0x020000
+> > [  116.915722] pci 0000:84:10.6: [8086:1520] type 00 class 0x020000
+> > [  116.917013] igb 0000:84:00.2: 2 VFs allocated
+> > [  116.978350] igbvf: Intel(R) Gigabit Virtual Function Network Driver
+> > [  116.979072] igbvf: Copyright (c) 2009 - 2012 Intel Corporation.
+> > [  116.980253] igbvf 0000:84:10.2: enabling device (0000 -> 0002)
+> > [  116.982356] igbvf 0000:84:10.2: PF still in reset state. Is the PF interface up?
+> > [  116.983196] igbvf 0000:84:10.2: Assigning random MAC address.
+> > [  116.985058] igbvf 0000:84:10.2: PF still resetting
+> > [  117.011054] igbvf 0000:84:10.2: Intel(R) I350 Virtual Function
+> > [  117.011785] igbvf 0000:84:10.2: Address: c2:e5:c2:a2:75:00
+> > [  117.012189] igbvf 0000:84:10.6: enabling device (0000 -> 0002)
+> > [  117.023911] igbvf 0000:84:10.6: PF still in reset state. Is the PF interface up?
+> > [  117.024724] igbvf 0000:84:10.6: Assigning random MAC address.
+> > [  117.036215] igbvf 0000:84:10.6: PF still resetting
+> > [  117.037596] igbvf 0000:84:10.6: Intel(R) I350 Virtual Function
+> > [  117.038327] igbvf 0000:84:10.6: Address: ea:74:07:f4:28:7c
+> > [  117.047970] igbvf 0000:84:10.6 ens5f2v1: renamed from eth1
+> > [  117.062847] igbvf 0000:84:10.2 ens5f2v0: renamed from eth0
+> > [  117.080725] igb 0000:84:00.2: VF 1 attempted to set invalid MAC filter
+> > [  117.106106] igb 0000:84:00.2: VF 1 attempted to set invalid MAC filter
+> > [  117.107189] igb 0000:84:00.2: VF 1 attempted to set invalid MAC filter
+> > [  127.361316] igb 0000:84:00.3: removed PHC on ens5f3
+> > [  127.361975] igb 0000:84:00.3: DCA disabled
+> > [  127.483085] igb 0000:84:00.2: removed PHC on ens5f2
+> > [  127.483786] igb 0000:84:00.2: DCA disabled
+> > [  141.418410] INFO: task modprobe:2078 blocked for more than 10 seconds.
+> > [  141.418856]       Not tainted 6.2.0-rc8+ #12
+> > [  141.419184] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+> > [  141.419616] task:modprobe        state:D stack:0     pid:2078  ppid:2037   flags:0x00004000
+> > [  141.420039] Call Trace:
+> > [  141.420169]  <TASK>
+> > [  141.420672]  __schedule+0x2dd/0x840
+> > [  141.421427]  schedule+0x50/0xc0
+> > [  141.422041]  schedule_preempt_disabled+0x11/0x20
+> > [  141.422678]  __mutex_lock.isra.13+0x431/0x6b0
+> > [  141.423324]  unregister_netdev+0xe/0x20
+> > [  141.423578]  igbvf_remove+0x45/0xe0 [igbvf]
+> > [  141.423791]  pci_device_remove+0x36/0xb0
+> > [  141.423990]  device_release_driver_internal+0xc1/0x160
+> > [  141.424270]  pci_stop_bus_device+0x6d/0x90
+> > [  141.424507]  pci_stop_and_remove_bus_device+0xe/0x20
+> > [  141.424789]  pci_iov_remove_virtfn+0xba/0x120
+> > [  141.425452]  sriov_disable+0x2f/0xf0
+> > [  141.425679]  igb_disable_sriov+0x4e/0x100 [igb]
+> > [  141.426353]  igb_remove+0xa0/0x130 [igb]
+> > [  141.426599]  pci_device_remove+0x36/0xb0
+> > [  141.426796]  device_release_driver_internal+0xc1/0x160
+> > [  141.427060]  driver_detach+0x44/0x90
+> > [  141.427253]  bus_remove_driver+0x55/0xe0
+> > [  141.427477]  pci_unregister_driver+0x2a/0xa0
+> > [  141.428296]  __x64_sys_delete_module+0x141/0x2b0
+> > [  141.429126]  ? mntput_no_expire+0x4a/0x240
+> > [  141.429363]  ? syscall_trace_enter.isra.19+0x126/0x1a0
+> > [  141.429653]  do_syscall_64+0x5b/0x80
+> > [  141.429847]  ? exit_to_user_mode_prepare+0x14d/0x1c0
+> > [  141.430109]  ? syscall_exit_to_user_mode+0x12/0x30
+> > [  141.430849]  ? do_syscall_64+0x67/0x80
+> > [  141.431083]  ? syscall_exit_to_user_mode_prepare+0x183/0x1b0
+> > [  141.431770]  ? syscall_exit_to_user_mode+0x12/0x30
+> > [  141.432482]  ? do_syscall_64+0x67/0x80
+> > [  141.432714]  ? exc_page_fault+0x64/0x140
+> > [  141.432911]  entry_SYSCALL_64_after_hwframe+0x72/0xdc
+> > [  141.433175] RIP: 0033:0x7ff04cc3a05b
+> > [  141.433375] RSP: 002b:00007ffd891bcb38 EFLAGS: 00000206 ORIG_RAX: 00000000000000b0
+> > [  141.434337] RAX: ffffffffffffffda RBX: 000055fde256dd00 RCX: 00007ff04cc3a05b
+> > [  141.435171] RDX: 0000000000000000 RSI: 0000000000000800 RDI: 000055fde256dd68
+> > [  141.435973] RBP: 000055fde256dd68 R08: 00007ffd891bbae1 R09: 0000000000000000
+> > [  141.436852] R10: 00007ff04cd71480 R11: 0000000000000206 R12: 0000000000000000
+> > [  141.437636] R13: 0000000000000000 R14: 000055fde256dd68 R15: 0000000000000000
+> > [  141.438442]  </TASK>
+> > 
+> > 
+> > Corinna
+> _______________________________________________
+> Intel-wired-lan mailing list
+> Intel-wired-lan@osuosl.org
+> https://lists.osuosl.org/mailman/listinfo/intel-wired-lan
+
