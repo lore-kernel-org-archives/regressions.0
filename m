@@ -1,45 +1,13 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BBFA36E
-	for <regressions@lists.linux.dev>; Tue,  7 Mar 2023 02:58:03 +0000 (UTC)
-Received: by mail-pl1-f178.google.com with SMTP id ky4so12707725plb.3
-        for <regressions@lists.linux.dev>; Mon, 06 Mar 2023 18:58:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1678157882;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ZG9H8kJCK6WYwRPdpe8Xhn57MezozsZ/GiZoddNadUo=;
-        b=eMu1WXHDVsaEZqx58s0fbo89SuPSweqXF8VArjA18ypdz+WK9HYC+qeF01v/VxFutq
-         40G7EQfVkrArxG0lYsdVq1+aeyZVCPtLQOleYt6NTfyyn2dWauL94rXf81rTGrPhw00P
-         5MWx3n8KYTGt7mH7qy3TeYpY3GEIJ9x81ycdsa/xxyedyakrtZLne71q8FwxN5iuEvne
-         cM/epRuPbomeYnz/6yhSOX2ghgT656w13Uu0P/chhlWqj8BOuZYdQzMQzodXi1P9IGw+
-         qukbRip9ScaZQWpQMluK6pMZai20XhyAg9QWHaXSTPBOLG0lmVP/XNFWWDwfRN1dCxaV
-         FgMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678157882;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZG9H8kJCK6WYwRPdpe8Xhn57MezozsZ/GiZoddNadUo=;
-        b=8DpxcS1kCjKzdDH9mmrWOXWbqhy7ReDotBy96sUUWr+QvwLCjRgQDUhgCFGAMO3lNT
-         B3IwNjIL/A/39doNdlJPWuXkPH7cDnCNTSU/jlJqPzfJkBKBqwCQ2QbnXAEBBCaByhtj
-         zw5QDnuAjk7Mu1UjEZ9YNVr+Bt08U3bprlRxxUwGyDZW/8pR1unFo3YPAOD/iqtpDSPj
-         iVp6iTY0wComBOAMmFzfFfGYnBKo/oUHbArO2puOrbd5aX0R4Hy1Z9cXJpKvtGujwszl
-         vf83wsxho7VdqdohUsTM07BSgWFWqoZLApUBeVTUauoDRuvLtYukLl30U5eJZysGujR3
-         ZOVg==
-X-Gm-Message-State: AO0yUKVBf1x8p+4ihKi0wmSjGZmHAgW6ExRwZHpfYSL7eUI9WMSLFzXS
-	m4SX/c5C0rTbQl9Ytc6jBls=
-X-Google-Smtp-Source: AK7set8sebQi6ka4Uw0tIudv7vur/G+YowtMa7d1No3GHx7jRxgAdVzieGfTZ3qknMwreU/Tot+KJg==
-X-Received: by 2002:a05:6a20:a025:b0:cd:9db3:a7c1 with SMTP id p37-20020a056a20a02500b000cd9db3a7c1mr11838174pzj.44.1678157882389;
-        Mon, 06 Mar 2023 18:58:02 -0800 (PST)
-Received: from [192.168.43.80] (subs02-180-214-232-68.three.co.id. [180.214.232.68])
-        by smtp.gmail.com with ESMTPSA id x6-20020aa793a6000000b005a8dd86018dsm6971769pff.64.2023.03.06.18.58.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 06 Mar 2023 18:58:02 -0800 (PST)
-Message-ID: <2d1362fd-c109-1d8f-5954-3d60475ed907@gmail.com>
-Date: Tue, 7 Mar 2023 09:57:57 +0700
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05FD6290F
+	for <regressions@lists.linux.dev>; Tue,  7 Mar 2023 08:49:44 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1pZT0r-0001iT-2m; Tue, 07 Mar 2023 09:49:37 +0100
+Message-ID: <fcd30d9e-f391-fe1d-4c09-4691e50e41a8@leemhuis.info>
+Date: Tue, 7 Mar 2023 09:49:36 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -48,46 +16,138 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.8.0
-Subject: Re: [PATCH v3] docs: describe how to quickly build a trimmed kernel
-To: Thorsten Leemhuis <linux@leemhuis.info>, Jonathan Corbet <corbet@lwn.net>
-Cc: Randy Dunlap <rdunlap@infradead.org>,
- Lukas Bulwahn <lukas.bulwahn@gmail.com>, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-References: <1a788a8e7ba8a2063df08668f565efa832016032.1678021408.git.linux@leemhuis.info>
- <ZAVp6jdeWzYcisUO@debian.me>
- <3d6a30ee-f093-f5b6-a193-cd86320f9452@leemhuis.info>
- <f53f84b5-9da7-0726-2e1f-f7e81e8ecd24@gmail.com>
- <b12d433e-62ea-3ac4-dd97-be0288f1335f@leemhuis.info>
-Content-Language: en-US
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-In-Reply-To: <b12d433e-62ea-3ac4-dd97-be0288f1335f@leemhuis.info>
+Content-Language: en-US, de-DE
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc: "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+ Linux PCI <linux-pci@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ Szymon Janc <szymon.janc@gmail.com>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: [regression] Bug 217106 - Null pointer dereference on dock unplug
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1678178985;b9c06407;
+X-HE-SMSGID: 1pZT0r-0001iT-2m
 
-On 3/6/23 16:07, Thorsten Leemhuis wrote:
->> I think it depends whether someone would pick from /proc/config.gz or
->> /boot/config. My kernel configuration have CONFIG_IKCONFIG=y but I
->> often copy the config from the latter instead, since I booted with
->> arbitrary kernel version when compiling two or three versions, and I
->> want to ensure that the config used is from correct version (i.e.
->> I use /boot/config-5.15.x-string to build 5.15.x+1 kernel).
+Hi, Thorsten here, the Linux kernel's regression tracker.
+
+I noticed a regression report in bugzilla.kernel.org. As many (most?)
+kernel developer don't keep an eye on it, I decided to forward it by mail.
+
+To quoting from https://bugzilla.kernel.org/show_bug.cgi?id=217106 :
+
+>  Szymon Janc 2023-03-01 08:16:51 UTC
 > 
-> Well, I'd say for most users the file that was automatically picked up
-> by olddefconfig/localmodconfig will be the right one. And for cases like
-> yours there is already this in the text:
+> On Lenovo Thinkpad X1 when unplugging from Lenovo ThinkPad Thunderbolt 4 dock I get NULL pointer dereference in kernel and system freezes. This is 100% reproducible.
 > 
-> ```
-> The make targets try to find the configuration for your running kernel
-> automatically, but might choose poorly. A line like ‘# using defaults
-> found in /boot/config-6.0.7-250.fc36.x86_64’ or ‘using config:
-> ‘/boot/config-6.0.7-250.fc36.x86_64’ tells you which file they picked.
-> If that is not the intended one, simply store it as ‘~/linux/.config’
-> before using these make targets.
-> ```
+> I'm using Fedora 37 and I don't recall this happen while on 6.0 kernel.
 > 
+> Attaching photo with kernel log.
 
-Ah, I don't see that feature! Thanks anyway.
+See the ticket for more details.
 
--- 
-An old man doll... just what I always wanted! - Clara
+I was a bit unsure whom to forward this to. Heikki, in the end I chose
+you. If I chose poorly, please let me known who might be a better choice.
 
+I as usual checked the net for existing reports. And it seems there are
+a few:
+
+ * also since 6.1:
+https://bbs.archlinux.org/viewtopic.php?id=283562
+https://discussion.fedoraproject.org/t/system-freezes-after-pull-usb-mass-storage/70844
+
+ * since 5.19:
+https://bugs.archlinux.org/task/75666 (since 5.19)
+https://groups.google.com/g/linux.debian.kernel/c/tZSzgRoxZu0?pli=1
+
+ * unknown kernel (I suspect 5.19 from ubuntu):
+https://gitlab.gnome.org/GNOME/gnome-shell/-/issues/6001
+
+Many of them (maybe all?) seem to happen on Thinkpads. For
+searchability, here is a trace from
+https://bbs.archlinux.org/viewtopic.php?id=283562 that looks somewhat
+similar to the one from above bugzilla ticket:
+
+> Feb 14 23:30:35 <hostname> kernel: usb 3-5: USB disconnect, device number 14 
+> Feb 14 23:30:36 <hostname> kernel: BUG: kernel NULL pointer dereference, address: 0000000000000030
+> Feb 14 23:30:36 <hostname> kernel: #PF: supervisor write access in kernel mode
+> Feb 14 23:30:36 <hostname> kernel: #PF: error_code(0x0002) - not-present page
+> Feb 14 23:30:36 <hostname> kernel: PGD 0 P4D 0  
+> Feb 14 23:30:36 <hostname> kernel: Oops: 0002 [#1] PREEMPT SMP NOPTI
+> Feb 14 23:30:36 <hostname> kernel: CPU: 0 PID: 7 Comm: kworker/0:0 Not tainted 6.1.11-arch1-1 #1 a4e1ab564378dba05cc0d5c9f99dce3dc67f88f0
+> Feb 14 23:30:36 <hostname> kernel: Hardware name: LENOVO 21BWS37K00/21BWS37K00, BIOS N3MET11W (1.10 ) 12/07/2022
+> Feb 14 23:30:36 <hostname> kernel: Workqueue: kacpi_notify acpi_os_execute_deferred
+> Feb 14 23:30:36 <hostname> kernel: RIP: 0010:queue_work_on+0x19/0x50
+> Feb 14 23:30:36 <hostname> kernel: Code: ff e9 c5 fe ff ff 66 66 2e 0f 1f 84 00 00 00 00 00 f3 0f 1e fa 0f 1f 44 00 00 53 9c 58 0f 1f 40 00 48 89 c3 fa 0f 1f 44 00 00 <f0> 48 0f ba 2a 00 73 15 31 c9 80 e7 02 74 06 fb 0f 1f >
+> Feb 14 23:30:36 <hostname> kernel: RSP: 0000:ffffbd07400ffe38 EFLAGS: 00010006
+> Feb 14 23:30:36 <hostname> kernel: RAX: 0000000000000206 RBX: 0000000000000206 RCX: 0000000000000000
+> Feb 14 23:30:36 <hostname> kernel: RDX: 0000000000000030 RSI: ffff9f5a80051000 RDI: 0000000000000140
+> Feb 14 23:30:36 <hostname> kernel: RBP: 0000000000000002 R08: 0000000000000000 R09: 0000000080380026
+> Feb 14 23:30:36 <hostname> kernel: R10: 0000000000000000 R11: 0000000000000000 R12: ffff9f61bf43ba00
+> Feb 14 23:30:36 <hostname> kernel: R13: 0000000000000000 R14: ffff9f5a80212b40 R15: ffff9f5a86468c98
+> Feb 14 23:30:36 <hostname> kernel: FS:  0000000000000000(0000) GS:ffff9f61bf400000(0000) knlGS:0000000000000000
+> Feb 14 23:30:36 <hostname> kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> Feb 14 23:30:36 <hostname> kernel: CR2: 0000000000000030 CR3: 00000004d8210001 CR4: 0000000000f70ef0
+> Feb 14 23:30:36 <hostname> kernel: PKRU: 55555554
+> Feb 14 23:30:36 <hostname> kernel: Call Trace:
+> Feb 14 23:30:36 <hostname> kernel:  <TASK>
+> Feb 14 23:30:36 <hostname> kernel:  ucsi_acpi_notify+0xac/0xc0 [ucsi_acpi 9c6a23f21d3ec74e5573e3e6b769395c9b0898ad]
+> Feb 14 23:30:36 <hostname> kernel:  acpi_ev_notify_dispatch+0x4b/0x63
+> Feb 14 23:30:36 <hostname> kernel:  acpi_os_execute_deferred+0x17/0x30
+> Feb 14 23:30:36 <hostname> kernel:  process_one_work+0x1c4/0x380
+> Feb 14 23:30:36 <hostname> kernel:  worker_thread+0x51/0x390
+> Feb 14 23:30:36 <hostname> kernel:  ? rescuer_thread+0x3b0/0x3b0
+> Feb 14 23:30:36 <hostname> kernel:  kthread+0xdb/0x110
+> Feb 14 23:30:36 <hostname> kernel:  ? kthread_complete_and_exit+0x20/0x20
+> Feb 14 23:30:36 <hostname> kernel:  ret_from_fork+0x1f/0x30
+> Feb 14 23:30:36 <hostname> kernel:  </TASK>
+> Feb 14 23:30:36 <hostname> kernel: Modules linked in: tls authenc echainiv esp4 ccm rfcomm snd_seq_dummy snd_hrtimer snd_seq cmac algif_hash algif_skcipher af_alg r8153_ecm cdc_ether usbnet r8152 mii snd_usb_audio snd_usbmi>
+> Feb 14 23:30:36 <hostname> kernel:  snd_soc_core snd_compress ac97_bus iwlmvm intel_tcc_cooling snd_pcm_dmaengine x86_pkg_temp_thermal i915 intel_powerclamp snd_hda_intel snd_intel_dspcfg snd_intel_sdw_acpi hid_multitouch c>
+> Feb 14 23:30:36 <hostname> kernel:  i2c_hid int3400_thermal intel_hid acpi_tad acpi_pad wmi acpi_thermal_rel sparse_keymap mac_hid crypto_user fuse ip_tables x_tables btrfs blake2b_generic libcrc32c crc32c_generic xor raid6>
+> Feb 14 23:30:36 <hostname> kernel: CR2: 0000000000000030
+> Feb 14 23:30:36 <hostname> kernel: ---[ end trace 0000000000000000 ]---
+> Feb 14 23:30:36 <hostname> kernel: RIP: 0010:queue_work_on+0x19/0x50
+> Feb 14 23:30:36 <hostname> kernel: Code: ff e9 c5 fe ff ff 66 66 2e 0f 1f 84 00 00 00 00 00 f3 0f 1e fa 0f 1f 44 00 00 53 9c 58 0f 1f 40 00 48 89 c3 fa 0f 1f 44 00 00 <f0> 48 0f ba 2a 00 73 15 31 c9 80 e7 02 74 06 fb 0f 1f >
+> Feb 14 23:30:36 <hostname> kernel: RSP: 0000:ffffbd07400ffe38 EFLAGS: 00010006
+> Feb 14 23:30:36 <hostname> kernel: RAX: 0000000000000206 RBX: 0000000000000206 RCX: 0000000000000000
+> Feb 14 23:30:36 <hostname> kernel: RDX: 0000000000000030 RSI: ffff9f5a80051000 RDI: 0000000000000140
+> Feb 14 23:30:36 <hostname> kernel: RBP: 0000000000000002 R08: 0000000000000000 R09: 0000000080380026
+> Feb 14 23:30:36 <hostname> kernel: R10: 0000000000000000 R11: 0000000000000000 R12: ffff9f61bf43ba00
+> Feb 14 23:30:36 <hostname> kernel: R13: 0000000000000000 R14: ffff9f5a80212b40 R15: ffff9f5a86468c98
+> Feb 14 23:30:36 <hostname> kernel: FS:  0000000000000000(0000) GS:ffff9f61bf400000(0000) knlGS:0000000000000000
+> Feb 14 23:30:36 <hostname> kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> Feb 14 23:30:36 <hostname> kernel: CR2: 0000000000000030 CR3: 00000004d8210001 CR4: 0000000000f70ef0
+> Feb 14 23:30:36 <hostname> kernel: PKRU: 55555554
+
+
+[TLDR for the rest of this mail: I'm adding this report to the list of
+tracked Linux kernel regressions; the text you find below is based on a
+few templates paragraphs you might have encountered already in similar
+form.]
+
+BTW, let me use this mail to also add the report to the list of tracked
+regressions to ensure it's doesn't fall through the cracks:
+
+#regzbot introduced: v6.0..v6.1
+https://bugzilla.kernel.org/show_bug.cgi?id=217106
+#regzbot title: usb: null pointer dereference on dock unplug
+#regzbot ignore-activity
+
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply and tell me -- ideally
+while also telling regzbot about it, as explained by the page listed in
+the footer of this mail.
+
+Developers: When fixing the issue, remember to add 'Link:' tags pointing
+to the report (e.g. the buzgzilla ticket and maybe this mail as well, if
+this thread sees some discussion). See page linked in footer for details.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
