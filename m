@@ -1,22 +1,15 @@
-Received: from sender11-op-o11.zoho.eu (sender11-op-o11.zoho.eu [31.186.226.225])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E970BA4F
-	for <regressions@lists.linux.dev>; Tue,  7 Mar 2023 19:44:42 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; t=1678218270; cv=none; 
-	d=zohomail.eu; s=zohoarc; 
-	b=Sc5kAYJttgjUHM0dK8Um7PYql3nnW7dQPt/cWsYRAb00uQtlVLexTpVlQADl5t38iYRHk6A1xMXtDid+vMdSUty58HKk8SBpdToyK7CZH+v1WjTSr1kguAu8DK/HaGMoQiixV3/M/YuddS8DcHlN/ZA8hQvzJOJS+hRCq7+ZoZA=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
-	t=1678218270; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-	bh=X5hIcBpmyHG0dpsjtHm3qTE9RjRkrr2sZkwKhqoD0cY=; 
-	b=NKOTpqEyv1mm66ICziZWlXvxDtHgE5X5vFj1DLFRDUL/n2GLGgNqb5yzW0jLrd/b0dZb39lT5M9GQCSIINZw2Qf4d3085DL9gEiTDJXA6VrZJOJc2Omjo+LzHyTsfxFOek3WN+PlbK1hrtNCWcMtfgSqVAcN2ASqgtVHjTWWUeI=
-ARC-Authentication-Results: i=1; mx.zohomail.eu;
-	spf=pass  smtp.mailfrom=jes@trained-monkey.org;
-	dmarc=pass header.from=<jes@trained-monkey.org>
-Received: from [192.168.99.50] (pool-98-113-67-206.nycmny.fios.verizon.net [98.113.67.206]) by mx.zoho.eu
-	with SMTPS id 167821826760826.94495560300186; Tue, 7 Mar 2023 20:44:27 +0100 (CET)
-Message-ID: <8f5ce378-9a83-454b-5b92-df530308c679@trained-monkey.org>
-Date: Tue, 7 Mar 2023 14:44:24 -0500
+Received: from ns2.wdyn.eu (ns2.wdyn.eu [5.252.227.236])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A7B110790
+	for <regressions@lists.linux.dev>; Tue,  7 Mar 2023 20:54:40 +0000 (UTC)
+Message-ID: <debc7fe9-204d-63a7-aa61-91b20a46f385@wetzel-home.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=wetzel-home.de;
+	s=wetzel-home; t=1678222473;
+	bh=gVULR4YUbSKl0259vw/9Yr2iJf2/4S6O/2d2pKa3l4Q=;
+	h=Date:From:Subject:To:Cc:References:In-Reply-To;
+	b=ozwFpPHmovVcG0ko+0n17rnI4Y79AXv07fyPPwHZLZtJwOtbX9+ZdehneBd3SU0xA
+	 /HcpwC76txJt2U4ASZUJjd639Nd0/Y3lOTb1gUW57Hhk7WXQ53MR8eP6w3iAFokEfy
+	 fZXtzWjBvQ+ddWDUKf2Jgmdzi3EW1z6qq6ti36Dg=
+Date: Tue, 7 Mar 2023 21:54:31 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -25,86 +18,157 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.8.0
-Subject: Re: [regression] Bug 217074 - upgrading to kernel 6.1.12 from 5.15.x
- can no longer assemble software raid0
+From: Alexander Wetzel <alexander@wetzel-home.de>
+Subject: Re: [Regression] rt2800usb - Wifi performance issues and connection
+ drops
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>, Thomas Mann <rauchwolke@gmx.net>,
+ Stanislaw Gruszka <stf_xl@wp.pl>, Helmut Schaa
+ <helmut.schaa@googlemail.com>, Johannes Berg <johannes.berg@intel.com>
+References: <b8efebc6-4399-d0b8-b2a0-66843314616b@leemhuis.info>
+ <5a7cd098-1d83-6297-e802-ce998c8ec116@leemhuis.info>
+ <6025e17e-4c29-6d36-6b9c-2fec543b21c4@wetzel-home.de>
 Content-Language: en-US
-To: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>,
- NeilBrown <neilb@suse.de>
-Cc: Song Liu <song@kernel.org>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- Jes.Sorensen@gmail.com, linux-raid <linux-raid@vger.kernel.org>,
- LKML <linux-kernel@vger.kernel.org>, Nikolay Kichukov <hijacker@oldum.net>
-References: <a13cd3b5-cc41-bf2f-c8ac-e031ad0d5dd7@leemhuis.info>
- <CAPhsuW7ZWthh0PZt71hQh1_51C0yMSpOqWYJKc_+VzzTmW_r5A@mail.gmail.com>
- <167805126796.8008.3635368722810568057@noble.neil.brown.name>
- <20230307095258.00001cb3@linux.intel.com>
-From: Jes Sorensen <jes@trained-monkey.org>
-In-Reply-To: <20230307095258.00001cb3@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <6025e17e-4c29-6d36-6b9c-2fec543b21c4@wetzel-home.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ZohoMailClient: External
 
-On 3/7/23 03:52, Mariusz Tkaczyk wrote:
-> On Mon, 06 Mar 2023 08:21:07 +1100
-> "NeilBrown" <neilb@suse.de> wrote:
-> 
->> On Sat, 04 Mar 2023, Song Liu wrote:
->>> + Jes.
->>>
->>> It appeared to me that we can assemble the array if we have any of the
->>> following:
->>> 1. Enable CONFIG_BLOCK_LEGACY_AUTOLOAD;
->>> 2. Have a valid /etc/mdadm.conf;
->>> 3. Update mdadm to handle this case. (I tried some ugly hacks, which worked
->>> but weren't clean).
->>>
->>> Since we eventually would like to get rid of CONFIG_BLOCK_LEGACY_AUTOLOAD, I
->>> think we need mdadm to handle this properly. But the logistics might
->>> be complicated, as
->>> mdadm are shipped separately.
->>>
->>> Jes, what do you think about this? AFAICT, we need to update the logic in
->>> mdopen.c:create_mddev().  
 >>
->> mdadm already handles this, but only if 
->>    CREATE names=yes
->> is present in /etc/mdadm.conf
 > 
-> Hi,
+> I just uploaded a test patch to bugzilla.
+> Please have a look if that fixes the issue.
 > 
-> "CREATE names=yes" enforces creation of /dev/md_name arrays instead of
-> /dev/mdXXX. It is a large change for users, too aggressive IMO. It will destroy
-> many setups.
-
-This is my concern too. I find a lot of people setup their box with md
-and then keep it running, but they don't necessarily update it as
-frequently as their laptop etc. This could cause some unpleasant
-surprises down the road.
-
-> To resolve it, we need is to use create_named_array() but respect old naming
-> convention. We already have find_free_devnm(), and we are able to keep
-> consistency because we can create 'mdXXX':
+> If not I would be interested in the output of your iTXQ status.
+> Enable CONFIG_MAC80211_DEBUGFS and run this command when the connection 
+> is bad and send/share/upload to bugzilla the resulting debug.out:
 > 
-> /sys/module/md_mod/parameters # echo md125 > new_array
-> 
-> /sys/module/md_mod/parameters # ll /sys/block/md125
-> lrwxrwxrwx 1 root root 0 Mar  7 10:54 /sys/block/md125 ->
-> ../devices/virtual/block/md125
-> 
-> That will require adjustments in mdadm, but I think that we can keep
-> names the same way. I created the test for verification of base creation flows,
-> we can use it to avoid regression:
-> https://git.kernel.org/pub/scm/utils/mdadm/mdadm.git/tree/tests/00createnames
-> 
-> Thoughts?
+> k=1; while [ $k -lt 10 ]; do \
+> cat /sys/kernel/debug/ieee80211/phy?/netdev:*/stations/*/aqm; \
+> k=$(($k+1)); done >> debug.out
 
-I like this.
+Thomas and I continued with some debugging in
+https://bugzilla.kernel.org/show_bug.cgi?id=217119
 
-> BTW. I wanted to get rid of this legacy "create_on_open" from mdadm anyway but
-> never had time to. If you agree, I can proceed with fixing it.
+But the results so far are unexpected and we decided to continue the 
+debugging with the round here. Hoping someone sees something I miss.
 
-Oh yes
+A very summary where we are:
+I can't reproduce the bug with a very similar card and kernel config so 
+far. Thomas card stops the iTXQs for intervalls >30s. Mine operates 
+normally.
 
-Cheers,
-Jes
+A more useful but longer summary:
 
+Thomas updated to a 6.2 kernel and reported "connection drops and 
+bandwidth problems" with his rt2800usb wlan card. (6.1 is ok.) Asked for 
+some more details he reported:
+"...slow bandwidth stuff works better, but the main problem/test case is 
+to start a 8-16 mbit video stream, which sometimes runs for a few 
+seconds and then stops or it doesn't start at all"
+
+He bisected the issue and identified my commit 4444bc2116ae ("wifi: 
+mac80211: Proper mark iTXQs for resumption") as culprit.
+
+Checking the internal iTXQ status when the issue is ongoing shows, that 
+TID zero is flagged as dirty and thus is not transmitting queued 
+packets. Interesting line from 
+/sys/kernel/debug/ieee80211/phy?/netdev:*/stations/*/aqm:
+tid ac backlog-bytes backlog-packets new-flows drops marks overlimit 
+collisions tx-bytes tx-packets flags
+0 2 619736 404 1681 0 0 0 1 4513965 3019 0xe(RUN AMPDU NO-AMSDU DIRTY)
+
+--> The "normal" iTXQ handling IEEE80211_AC_BE has queued packets and is 
+flagged as DIRTY. There even is a potential race setting the DIRTY flag, 
+but the fix for that is not helping.
+
+Thus Thomas applied two debug patches, to better understand why the 
+DIRTY flag is not cleared.
+
+And looking at the output from those we see that the driver stops Tx by 
+calling ieee80211_stop_queue(). When ieee80211_wake_queue() mac80211 
+correctly resumes TX but is getting stopped by the driver after a single 
+packet again. (The start of the relevant log is missing, so that may be 
+initially more).
+I assume TX is still ok at that stage. But after some singe Tx 
+operations the driver stops the queues again. Here the relevant part of 
+the log:
+[  179.584997] XXXX __ieee80211_wake_txqs: waking TID 0
+[  179.585022] XXXX drv_tx: TX
+[  179.585027] XXXX ieee80211_stop_queue: called
+[  179.585028] XXXX ieee80211_tx_dequeue: mark TID 0 dirty. Reason: 1
+[  179.585030] XXXX __ieee80211_wake_txqs: TID 3 NOT dirty
+[  179.585031] XXXX __ieee80211_wake_txqs: TID 8 NOT dirty
+[  179.585033] XXXX __ieee80211_wake_txqs: TID 11 NOT dirty
+[  179.585034] XXXX __ieee80211_wake_txqs: EXIT
+[  179.585035] XXXX __ieee80211_wake_txqs: ENTRY
+[  179.585036] XXXX __ieee80211_wake_txqs: TID 1 NOT dirty
+[  179.585037] XXXX __ieee80211_wake_txqs: TID 2 NOT dirty
+[  179.585038] XXXX __ieee80211_wake_txqs: TID 9 NOT dirty
+[  179.585040] XXXX __ieee80211_wake_txqs: TID 10 NOT dirty
+[  179.585041] XXXX __ieee80211_wake_txqs: EXIT
+[  179.585047] XXXX drv_tx: TX
+[  179.585056] XXXX ieee80211_tx_dequeue: mark TID 0 dirty. Reason: 1
+[  179.585271] XXXX ieee80211_tx_dequeue: mark TID 0 dirty. Reason: 1
+[  179.585868] XXXX ieee80211_tx_dequeue: mark TID 0 dirty. Reason: 1
+[  179.586120] XXXX ieee80211_tx_dequeue: mark TID 0 dirty. Reason: 1
+[  179.586544] XXXX ieee80211_tx_dequeue: mark TID 0 dirty. Reason: 1
+[  179.586792] XXXX ieee80211_tx_dequeue: mark TID 0 dirty. Reason: 1
+[  179.587317] XXXX ieee80211_tx_dequeue: mark TID 0 dirty. Reason: 1
+[  179.587591] XXXX ieee80211_tx_dequeue: mark TID 0 dirty. Reason: 1
+[  179.588569] XXXX ieee80211_tx_dequeue: mark TID 0 dirty. Reason: 1
+....
+[  214.307617] XXXX ieee80211_wake_queue: called
+
+
+--> So the driver blocked TX for more than 30s. Which is a good 
+explanation of what Thomas observes.
+
+But there is nothing mac80211 can do differently here. Whatever is the 
+real reason for the issue, it's nothing obvious I see.
+
+Luckily I found a card using the same driver and nearly the same card:
+Thomas systems:Linux version 6.2.2-gentoo (root@foo) (gcc (Gentoo 
+Hardened 12.2.1_p20230121-r1 p10) 12.2.1 20230121, GNU ld (Gentoo 2.39 
+p5) 2.39.0) #2 SMP Fri Mar  3 16:59:02 CET 2023ieee80211 phy0: 
+rt2x00_set_rt: Info - RT chipset 3070, rev 0201 detected
+ieee80211 phy0: rt2x00_set_rf: Info - RF chipset 0005 detected
+ieee80211 phy0: Selected rate control algorithm 'minstrel_ht'
+
+My system, using the kernel config from Thomas with only minor 
+modifications (different filesystems and initramfs settings and enabled 
+mac80211 debug and developer options):
+Linux version 6.2.2-gentoo (root@Perry.mordor) (gcc (Gentoo 
+12.2.1_p20230121-r1 p10) 12.2.1 20230121, GNU ld (Gentoo 2.40 p2) 
+2.40.0) #2 SMP Tue Mar  7 18:18:47 CET 2023ieee80211 phy0: 
+rt2x00_set_rt: Info - RT chipset 3070, rev 0200 detected
+ieee80211 phy0: rt2x00_set_rf: Info - RF chipset 0005 detected
+ieee80211 phy0: Selected rate control algorithm 'minstrel_ht'
+ieee80211 phy0: rt2x00lib_request_firmware: Info - Loading firmware file 
+'rt2870.bin'
+ieee80211 phy0: rt2x00lib_request_firmware: Info - Firmware detected - 
+version: 0.36
+
+But there is one big difference on my system: I can't reproduce the bug 
+so far. It's working as it should... (I did not apply the debug patches 
+myself so far)
+
+I'm now planning to look a bit more into the rt2800usb driver and 
+provide another debug patch for interesting looking code pieces in it.
+
+@Thomas:
+I've also uploaded you my binary kernel I'm running at the moment here:
+https://www.awhome.eu/s/5FjqMS73rtCtSBM
+
+That kernel should also be able to boot and operate your system. Can you 
+try that and tell me, if that makes any difference?
+
+I'm also planning to provide some more debug patches, to figuring out 
+which part of commit 4444bc2116ae ("wifi: mac80211: Proper mark iTXQs 
+for resumption") fixes the issue for you. Assuming my understanding 
+above is correct the patch should not really fix/break anything for 
+you...With the findings above I would have expected your git bisec to 
+identify commit a790cc3a4fad ("wifi: mac80211: add wake_tx_queue 
+callback to drivers") as the first broken commit...
+
+Alexander
