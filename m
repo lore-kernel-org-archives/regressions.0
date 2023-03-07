@@ -1,106 +1,112 @@
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [85.220.165.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A87E12C9C
-	for <regressions@lists.linux.dev>; Tue,  7 Mar 2023 08:53:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1678179192; x=1709715192;
-  h=date:from:to:cc:subject:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=CkWIV2Sme/nIgVi1LRlIJJvdhICN9cwd5WczP5l0JHI=;
-  b=Bc0n+OxOEJJpHKKhhleuafGW30xS6+2tsPDQ/U2LqWsqxTzT6/9bPNv3
-   AAv2xMZZpbbHM0NDktl7J4SqSHBN5P3iX7N6HD/wR8aMWKkfIDJWiovgA
-   HG5uLbEn7/6gZNi5HXkuaSNfUBn3SLWIhvZ22575mIRhzOuwGKYrwQK0/
-   dH0Z6PxpZJRgs1OmY3bgpwikK38nRJBRv8992ri2StCGQUm7Edfexyg4v
-   lqEZ+IvOzbtw5WVmjmwwV7IRoVhg/Dk1o9qXM/eygV/7t5RMb/K/1C2R4
-   HDimuqznNyAbCcHqqZgzfDGTRvqaxjZDqZ29zPY6HRY/A3q8dZ9m1GTMu
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10641"; a="398379593"
-X-IronPort-AV: E=Sophos;i="5.98,240,1673942400"; 
-   d="scan'208";a="398379593"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2023 00:53:12 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10641"; a="850617900"
-X-IronPort-AV: E=Sophos;i="5.98,240,1673942400"; 
-   d="scan'208";a="850617900"
-Received: from mtkaczyk-mobl.ger.corp.intel.com (HELO localhost) ([10.252.46.26])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2023 00:53:03 -0800
-Date: Tue, 7 Mar 2023 09:52:58 +0100
-From: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
-To: "NeilBrown" <neilb@suse.de>
-Cc: "Song Liu" <song@kernel.org>, "Linux regressions mailing list"
- <regressions@lists.linux.dev>, Jes.Sorensen@gmail.com, "linux-raid"
- <linux-raid@vger.kernel.org>, "LKML" <linux-kernel@vger.kernel.org>,
- "Nikolay Kichukov" <hijacker@oldum.net>
-Subject: Re: [regression] Bug 217074 - upgrading to kernel 6.1.12 from
- 5.15.x can no longer assemble software raid0
-Message-ID: <20230307095258.00001cb3@linux.intel.com>
-In-Reply-To: <167805126796.8008.3635368722810568057@noble.neil.brown.name>
-References: <a13cd3b5-cc41-bf2f-c8ac-e031ad0d5dd7@leemhuis.info>
-	<CAPhsuW7ZWthh0PZt71hQh1_51C0yMSpOqWYJKc_+VzzTmW_r5A@mail.gmail.com>
-	<167805126796.8008.3635368722810568057@noble.neil.brown.name>
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 219A82CA5
+	for <regressions@lists.linux.dev>; Tue,  7 Mar 2023 09:33:22 +0000 (UTC)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1pZTh2-0007l7-0d; Tue, 07 Mar 2023 10:33:12 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1pZTgz-002RxZ-P9; Tue, 07 Mar 2023 10:33:09 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1pZTgy-002wzY-QJ; Tue, 07 Mar 2023 10:33:08 +0100
+Date: Tue, 7 Mar 2023 10:33:08 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Pierre Asselin <pa@panix.com>
+Cc: linux-acpi@vger.kernel.org, regressions@lists.linux.dev,
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: Re: [Regression] acpi: laptop panics early in boot
+Message-ID: <20230307093308.m5enhuegm3r4qwvo@pengutronix.de>
+References: <9f6cba7a8a57e5a687c934e8e406e28c.squirrel@mail.panix.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="5xwoizhnk7z6op77"
+Content-Disposition: inline
+In-Reply-To: <9f6cba7a8a57e5a687c934e8e406e28c.squirrel@mail.panix.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: regressions@lists.linux.dev
 
-On Mon, 06 Mar 2023 08:21:07 +1100
-"NeilBrown" <neilb@suse.de> wrote:
 
-> On Sat, 04 Mar 2023, Song Liu wrote:
-> > + Jes.
-> > 
-> > It appeared to me that we can assemble the array if we have any of the
-> > following:
-> > 1. Enable CONFIG_BLOCK_LEGACY_AUTOLOAD;
-> > 2. Have a valid /etc/mdadm.conf;
-> > 3. Update mdadm to handle this case. (I tried some ugly hacks, which worked
-> > but weren't clean).
-> > 
-> > Since we eventually would like to get rid of CONFIG_BLOCK_LEGACY_AUTOLOAD, I
-> > think we need mdadm to handle this properly. But the logistics might
-> > be complicated, as
-> > mdadm are shipped separately.
-> > 
-> > Jes, what do you think about this? AFAICT, we need to update the logic in
-> > mdopen.c:create_mddev().  
-> 
-> mdadm already handles this, but only if 
->    CREATE names=yes
-> is present in /etc/mdadm.conf
+--5xwoizhnk7z6op77
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+Hello,
 
-"CREATE names=yes" enforces creation of /dev/md_name arrays instead of
-/dev/mdXXX. It is a large change for users, too aggressive IMO. It will destroy
-many setups.
+> Problem is still present in 6.3-rc1 .  Bisecting, the first bad commit
+> is d6fb6ee1820c .
 
-To resolve it, we need is to use create_named_array() but respect old naming
-convention. We already have find_free_devnm(), and we are able to keep
-consistency because we can create 'mdXXX':
+There is a small timeframe where the (now deleted) struct
+acpi_device::driver is different from acpi_device::dev->driver. That's
+because the latter is assigned to in drivers/base/dd.c's really_probe()
+before the acpi probe function is called, while the former is assigned
+only later.
 
-/sys/module/md_mod/parameters # echo md125 > new_array
+So acpi_drv->ops.add(acpi_dev) is called with the driver set while that
+was not true before d6fb6ee1820c.
 
-/sys/module/md_mod/parameters # ll /sys/block/md125
-lrwxrwxrwx 1 root root 0 Mar  7 10:54 /sys/block/md125 ->
-../devices/virtual/block/md125
+To test if this is the culprit, can you please try a 5.19 kernel plus
+the following patch?:
 
-That will require adjustments in mdadm, but I think that we can keep
-names the same way. I created the test for verification of base creation flows,
-we can use it to avoid regression:
-https://git.kernel.org/pub/scm/utils/mdadm/mdadm.git/tree/tests/00createnames
+diff --git a/drivers/acpi/bus.c b/drivers/acpi/bus.c
+index e2db1bdd9dd2..657a2520a3e1 100644
+--- a/drivers/acpi/bus.c
++++ b/drivers/acpi/bus.c
+@@ -1022,6 +1022,8 @@ static int acpi_device_probe(struct device *dev)
+ 	struct acpi_driver *acpi_drv =3D to_acpi_driver(dev->driver);
+ 	int ret;
+=20
++	acpi_dev->driver =3D acpi_drv;
++
+ 	if (acpi_dev->handler && !acpi_is_pnp_device(acpi_dev))
+ 		return -EINVAL;
+=20
+@@ -1032,8 +1034,6 @@ static int acpi_device_probe(struct device *dev)
+ 	if (ret)
+ 		return ret;
+=20
+-	acpi_dev->driver =3D acpi_drv;
+-
+ 	pr_debug("Driver [%s] successfully bound to device [%s]\n",
+ 		 acpi_drv->name, acpi_dev->pnp.bus_id);
+=20
 
-Thoughts?
+If the above patch breaks 5.19 that's the trail we have to follow. That
+this is timing-related is strange though.
 
-BTW. I wanted to get rid of this legacy "create_on_open" from mdadm anyway but
-never had time to. If you agree, I can proceed with fixing it.
+Best regards
+Uwe
 
-Thanks,
-Mariusz
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--5xwoizhnk7z6op77
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmQHBNEACgkQwfwUeK3K
+7AmcAwf/cgXNS274mBJJlX1uA2cv9j3AFPcMGzLPZ6dKO06ergAcVpboCOiEZ/xG
+OSu/i+awxSCld8dlaiIgmRqjWKL1UGGZz0rcY6h1UucqyS5o5TLaO9bpks3DFUi5
+RZ0wjCB9SEdxoJu7p+LlpC3EJr/17k57U86szOpzXi3V9W1K424w3eS30AEkzw6U
+W81vmf2Asaya3Qv3DVgcG9yqIIOf8fmJiNQJ9n1p6BkyH/TivkQ7QynXjgiTXoFX
+wNJgeA2FT+/K5ZHUGiE3kPCmIhyLA3QkeASg89co+UyCVh//0OsYK7C6Uq0hHeze
+PZ7K79UigClZ9YdZWZvKhnoVYtatvA==
+=H4CK
+-----END PGP SIGNATURE-----
+
+--5xwoizhnk7z6op77--
