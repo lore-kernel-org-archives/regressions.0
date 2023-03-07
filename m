@@ -1,75 +1,152 @@
-Received: from zg8tmtyylji0my4xnjqumte4.icoremail.net (zg8tmtyylji0my4xnjqumte4.icoremail.net [162.243.164.118])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F12B63C00
-	for <regressions@lists.linux.dev>; Tue,  7 Mar 2023 11:48:36 +0000 (UTC)
-Received: by ajax-webmail-mail-app4 (Coremail) ; Tue, 7 Mar 2023 19:48:30
- +0800 (GMT+08:00)
-X-Originating-IP: [183.128.133.225]
-Date: Tue, 7 Mar 2023 19:48:30 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-From: "Lin Ma" <linma@zju.edu.cn>
-To: "Paul Menzel" <pmenzel@molgen.mpg.de>
-Cc: "Corinna Vinschen" <vinschen@redhat.com>, 
-	intel-wired-lan@lists.osuosl.org, regressions@lists.linux.dev
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B630C3D72
+	for <regressions@lists.linux.dev>; Tue,  7 Mar 2023 12:11:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1678191109;
+	h=from:from:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:in-reply-to:in-reply-to:  references:references;
+	bh=SLqVJBp1eLgW5h0bSEtFxgqaBWz+fhMg0KuAiUSegZI=;
+	b=heKk0KS3z6fh2JgIr4sGQYzX02O03ggKVFzOq+UUVXbuNpomxar7cVQXedfjz0Blm+OfI6
+	4MYFG2++3fIq5GoSWG6dn57WfipoknemLIMunI3sDECNMZiMv0gyDBfrUKFXtNGmbbsk0V
+	gLs1dJmv9BiTb2GT1fX/y1Lh1f80og8=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-363-iFxcURc1NaikOb9Tk_85_Q-1; Tue, 07 Mar 2023 07:11:48 -0500
+X-MC-Unique: iFxcURc1NaikOb9Tk_85_Q-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 01824802D2F;
+	Tue,  7 Mar 2023 12:11:48 +0000 (UTC)
+Received: from calimero.vinschen.de (unknown [10.39.192.200])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 577F718EC6;
+	Tue,  7 Mar 2023 12:11:47 +0000 (UTC)
+Received: by calimero.vinschen.de (Postfix, from userid 500)
+	id 204E8A80721; Tue,  7 Mar 2023 13:11:46 +0100 (CET)
+Date: Tue, 7 Mar 2023 13:11:46 +0100
+From: Corinna Vinschen <vinschen@redhat.com>
+To: Lin Ma <linma@zju.edu.cn>
+Cc: Paul Menzel <pmenzel@molgen.mpg.de>,
+	intel-wired-lan <intel-wired-lan@lists.osuosl.org>,
+	regressions <regressions@lists.linux.dev>
 Subject: Re: [Intel-wired-lan] [REGRESSION] Deadlock since commit
  6faee3d4ee8b ("igb: Add lock to avoid data race")
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.13 build 20210104(ab8c30b6)
- Copyright (c) 2002-2023 www.mailtech.cn zju.edu.cn
-In-Reply-To: <882d6a36-d3ac-c231-ba02-bc2235984cfd@molgen.mpg.de>
+Message-ID: <ZAcqAgLo5/EMca8e@calimero.vinschen.de>
+Reply-To: intel-wired-lan@lists.osuosl.org
+Mail-Followup-To: Lin Ma <linma@zju.edu.cn>,
+	Paul Menzel <pmenzel@molgen.mpg.de>,
+	intel-wired-lan <intel-wired-lan@lists.osuosl.org>,
+	regressions <regressions@lists.linux.dev>
 References: <ZAcJvkEPqWeJHO2r@calimero.vinschen.de>
  <3ef31c0b-ce40-20d0-7740-5dc0cca278ca@molgen.mpg.de>
  <882d6a36-d3ac-c231-ba02-bc2235984cfd@molgen.mpg.de>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+ <43532635.82161.186bba49ec2.Coremail.linma@zju.edu.cn>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Message-ID: <301b585a.80249.186bbe6cc50.Coremail.linma@zju.edu.cn>
-X-Coremail-Locale: en_US
-X-CM-TRANSID:cS_KCgCXnP2PJAdket6xCw--.22652W
-X-CM-SenderInfo: qtrwiiyqvtljo62m3hxhgxhubq/1tbiAwMHElNG3KG0hAAAsN
-X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJ3iIAIbVAYjsxI4VWxJw
-	CS07vEb4IE77IF4wCS07vE1I0E4x80FVAKz4kxMIAIbVAFxVCaYxvI4VCIwcAKzIAtYxBI
-	daVFxhVjvjDU=
+In-Reply-To: <43532635.82161.186bba49ec2.Coremail.linma@zju.edu.cn>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.5
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-SGVsbG8gUGF1bCBhbmQgQ29yaW5uYSwKClNpbmNlIEkgZGlkbid0IGhhdmUgdGhlIGV4YWN0IGVu
-czVmMiBkcml2ZXIgYXMgeW91IGd1eXMsIEkganVzdCB0ZXN0IHRoZSBtb2R1bGUgbG9hZGluZyBh
-bmQgdW5sb2FkaW5nIGluIG15IFFFTVUgZW52aXJvbm1lbnQuCkkgdHVybmVkIG9uIHRoZSBDT05G
-SUdfUFJPVkVfTE9DS0lORyBvcHRpb24gYnV0IGZhaWxlZCB0byByZXByb2R1Y2UgdGhlIGRlYWRs
-b2NrLgoKcm9vdEBzeXprYWxsZXI6LyMgaW5zbW9kIGlnYi5rbwpbICAxMTYuMTkyNzMwXSBpZ2I6
-IEludGVsKFIpIEdpZ2FiaXQgRXRoZXJuZXQgTmV0d29yayBEcml2ZXIKWyAgMTE2LjE5MzEyOF0g
-aWdiOiBDb3B5cmlnaHQgKGMpIDIwMDctMjAxNCBJbnRlbCBDb3Jwb3JhdGlvbi4Kcm9vdEBzeXpr
-YWxsZXI6LyMgbHNtb2QKTW9kdWxlICAgICAgICAgICAgICAgICAgU2l6ZSAgVXNlZCBieQppZ2Ig
-ICAgICAgICAgICAgICAgICAgMjI1MjgwICAwCnJvb3RAc3l6a2FsbGVyOi8jIHJtbW9kIGlnYgpy
-bW1vZDogRVJST1I6IC4uL2xpYmttb2QvbGlia21vZC5jOjUxNCBsb29rdXBfYnVpbHRpbl9maWxl
-KCkgY291bGQgbm90IG9wZW4gYnVpbHRpbiBmaWxlICcvbGliL21vZHVsZXMvNi4xLjAvbW9kdWxl
-cy5idWlsdGluLmJpbicKcm9vdEBzeXprYWxsZXI6LyMgbHNtb2QKbHNtb2QKTW9kdWxlICAgICAg
-ICAgICAgICAgICAgU2l6ZSAgVXNlZCBieQoKSSBndWVzcyB0aGUgY29tbWFuZCAiZWNobyAyID4g
-L3N5cy9jbGFzcy9uZXQvZW5zNWYyL2RldmljZS9zcmlvdl9udW12ZnMiIG11c3QgZG8gc29tZXRo
-aW5nIGludGVyZXN0aW5nIGJ1dCBJCmRpZG4ndCBmaW5kIHRoZSByZWxldmFudCBjb2RlIHRoZXJl
-LiBDb3VsZCB5b3UgZ3V5cyB0YWtlIGEgbG9vaz8KClJlZ2FyZHMKTGluCgoKCj4gRnJvbTogIlBh
-dWwgTWVuemVsIiA8cG1lbnplbEBtb2xnZW4ubXBnLmRlPgo+IFNlbnQgVGltZTogMjAyMy0wMy0w
-NyAxODoxOToxOCAoVHVlc2RheSkKPiBUbzogIkxpbiBNYSIgPGxpbm1hQHpqdS5lZHUuY24+LCAi
-Q29yaW5uYSBWaW5zY2hlbiIgPHZpbnNjaGVuQHJlZGhhdC5jb20+Cj4gQ2M6IGludGVsLXdpcmVk
-LWxhbkBsaXN0cy5vc3Vvc2wub3JnLCByZWdyZXNzaW9uc0BsaXN0cy5saW51eC5kZXYKPiBTdWJq
-ZWN0OiBSZTogW0ludGVsLXdpcmVkLWxhbl0gW1JFR1JFU1NJT05dIERlYWRsb2NrIHNpbmNlIGNv
-bW1pdCA2ZmFlZTNkNGVlOGIgKCJpZ2I6IEFkZCBsb2NrIHRvIGF2b2lkIGRhdGEgcmFjZSIpCj4g
-Cj4gW0FkZCBDb3Jpbm5hIGJhY2sgdG8gQ2M6LCB3aG8gd2FzIHJlbW92ZWQgYnkgTW96aWxsYSBU
-aHVuZGVyYmlyZCBiZWNhdXNlIAo+IFJlcGx5LVRvIGhlYWRlciB3YXMgc2V0IGZvciBzb21lIHJl
-YXNvbiBpbiB0aGUgb3JpZ2luYWwgcmVwb3J0Ll0KPiAKPiBBbSAwNy4wMy4yMyB1bSAxMToxMiBz
-Y2hyaWViIFBhdWwgTWVuemVsOgo+ID4gW0FkZGluZyByZWdyZXNzaW9uc0BsaXN0cy5saW51eC5k
-ZXZdCj4gPiAKPiA+ICNyZWd6Ym90IF5pbnRyb2R1Y2VkOiA2ZmFlZTNkNGVlOGIKPiA+IAo+ID4g
-QW0gMDcuMDMuMjMgdW0gMTA6NTQgc2NocmllYiBDb3Jpbm5hIFZpbnNjaGVuOgo+ID4+IEhpLAo+
-ID4+Cj4gPj4KPiA+PiBBZnRlciBwYXRjaCA2ZmFlZTNkNGVlOGIgKCJpZ2I6IEFkZCBsb2NrIHRv
-IGF2b2lkIGRhdGEgcmFjZSIpLCB3ZSBzZWUKPiA+PiBhIGRlYWRsb2NrIHNjZW5hcmlvIHdoZW4g
-dHJ5aW5nIHRvIHVubG9hZCB0aGUgaWdiIG1vZHVsZS4KPiA+Pgo+ID4+IFRoZSByZXByb2R1Y2Vy
-IGlzIHByZXR0eSBzaW1wbGU6Cj4gPj4KPiA+PiDCoMKgICMgZWNobyAyID4gL3N5cy9jbGFzcy9u
-ZXQvZW5zNWYyL2RldmljZS9zcmlvdl9udW12ZnMKPiA+PiDCoMKgICMgbW9kcHJvYmUgLXIgaWdi
-Cj4gPj4KPiA+PiBUaGUgaGFuZyBpcyBxdWl0ZSB0aG9yb3VnaCwgSSBhc3N1bWUgaXQncyBzdWZm
-ZXJpbmcgYSBkZWFkbG9jayBiZXR3ZWVuCj4gPj4gdGhlIHJ0bmxfbG9jayBhbmQgdGhlIHNwaW5s
-b2NrIGludHJvZHVjZWQgYnkgNmZhZWUzZDRlZThiLgo+ID4+Cj4gPj4gQW55IGNoYW5jZSB5b3Ug
-Y291bGQgaGF2ZSBhIGxvb2s/Cj4gPj4KPiA+Pgo+ID4+IFRoYW5rcywKPiA+PiBDb3Jpbm5hCg==
+Hi Lin,
+
+On Mar  7 18:36, Lin Ma wrote:
+> Hello there
+> 
+> Yeah I am looking at it. Could you please offer the crash log or
+> locking debug message if accessible? Thanks in advance.
+
+The commands used to reroduce and the resulting log message:
+
+  # echo 10 > /proc/sys/kernel/hung_task_timeout_secs
+  # echo 2 > /sys/class/net/ens5f2/device/sriov_numvfs
+  # modprobe -r igb
+  [hang]
+
+console log:
+
+[  116.914656] pci 0000:84:10.2: [8086:1520] type 00 class 0x020000
+[  116.915722] pci 0000:84:10.6: [8086:1520] type 00 class 0x020000
+[  116.917013] igb 0000:84:00.2: 2 VFs allocated
+[  116.978350] igbvf: Intel(R) Gigabit Virtual Function Network Driver
+[  116.979072] igbvf: Copyright (c) 2009 - 2012 Intel Corporation.
+[  116.980253] igbvf 0000:84:10.2: enabling device (0000 -> 0002)
+[  116.982356] igbvf 0000:84:10.2: PF still in reset state. Is the PF interface up?
+[  116.983196] igbvf 0000:84:10.2: Assigning random MAC address.
+[  116.985058] igbvf 0000:84:10.2: PF still resetting
+[  117.011054] igbvf 0000:84:10.2: Intel(R) I350 Virtual Function
+[  117.011785] igbvf 0000:84:10.2: Address: c2:e5:c2:a2:75:00
+[  117.012189] igbvf 0000:84:10.6: enabling device (0000 -> 0002)
+[  117.023911] igbvf 0000:84:10.6: PF still in reset state. Is the PF interface up?
+[  117.024724] igbvf 0000:84:10.6: Assigning random MAC address.
+[  117.036215] igbvf 0000:84:10.6: PF still resetting
+[  117.037596] igbvf 0000:84:10.6: Intel(R) I350 Virtual Function
+[  117.038327] igbvf 0000:84:10.6: Address: ea:74:07:f4:28:7c
+[  117.047970] igbvf 0000:84:10.6 ens5f2v1: renamed from eth1
+[  117.062847] igbvf 0000:84:10.2 ens5f2v0: renamed from eth0
+[  117.080725] igb 0000:84:00.2: VF 1 attempted to set invalid MAC filter
+[  117.106106] igb 0000:84:00.2: VF 1 attempted to set invalid MAC filter
+[  117.107189] igb 0000:84:00.2: VF 1 attempted to set invalid MAC filter
+[  127.361316] igb 0000:84:00.3: removed PHC on ens5f3
+[  127.361975] igb 0000:84:00.3: DCA disabled
+[  127.483085] igb 0000:84:00.2: removed PHC on ens5f2
+[  127.483786] igb 0000:84:00.2: DCA disabled
+[  141.418410] INFO: task modprobe:2078 blocked for more than 10 seconds.
+[  141.418856]       Not tainted 6.2.0-rc8+ #12
+[  141.419184] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+[  141.419616] task:modprobe        state:D stack:0     pid:2078  ppid:2037   flags:0x00004000
+[  141.420039] Call Trace:
+[  141.420169]  <TASK>
+[  141.420672]  __schedule+0x2dd/0x840
+[  141.421427]  schedule+0x50/0xc0
+[  141.422041]  schedule_preempt_disabled+0x11/0x20
+[  141.422678]  __mutex_lock.isra.13+0x431/0x6b0
+[  141.423324]  unregister_netdev+0xe/0x20
+[  141.423578]  igbvf_remove+0x45/0xe0 [igbvf]
+[  141.423791]  pci_device_remove+0x36/0xb0
+[  141.423990]  device_release_driver_internal+0xc1/0x160
+[  141.424270]  pci_stop_bus_device+0x6d/0x90
+[  141.424507]  pci_stop_and_remove_bus_device+0xe/0x20
+[  141.424789]  pci_iov_remove_virtfn+0xba/0x120
+[  141.425452]  sriov_disable+0x2f/0xf0
+[  141.425679]  igb_disable_sriov+0x4e/0x100 [igb]
+[  141.426353]  igb_remove+0xa0/0x130 [igb]
+[  141.426599]  pci_device_remove+0x36/0xb0
+[  141.426796]  device_release_driver_internal+0xc1/0x160
+[  141.427060]  driver_detach+0x44/0x90
+[  141.427253]  bus_remove_driver+0x55/0xe0
+[  141.427477]  pci_unregister_driver+0x2a/0xa0
+[  141.428296]  __x64_sys_delete_module+0x141/0x2b0
+[  141.429126]  ? mntput_no_expire+0x4a/0x240
+[  141.429363]  ? syscall_trace_enter.isra.19+0x126/0x1a0
+[  141.429653]  do_syscall_64+0x5b/0x80
+[  141.429847]  ? exit_to_user_mode_prepare+0x14d/0x1c0
+[  141.430109]  ? syscall_exit_to_user_mode+0x12/0x30
+[  141.430849]  ? do_syscall_64+0x67/0x80
+[  141.431083]  ? syscall_exit_to_user_mode_prepare+0x183/0x1b0
+[  141.431770]  ? syscall_exit_to_user_mode+0x12/0x30
+[  141.432482]  ? do_syscall_64+0x67/0x80
+[  141.432714]  ? exc_page_fault+0x64/0x140
+[  141.432911]  entry_SYSCALL_64_after_hwframe+0x72/0xdc
+[  141.433175] RIP: 0033:0x7ff04cc3a05b
+[  141.433375] RSP: 002b:00007ffd891bcb38 EFLAGS: 00000206 ORIG_RAX: 00000000000000b0
+[  141.434337] RAX: ffffffffffffffda RBX: 000055fde256dd00 RCX: 00007ff04cc3a05b
+[  141.435171] RDX: 0000000000000000 RSI: 0000000000000800 RDI: 000055fde256dd68
+[  141.435973] RBP: 000055fde256dd68 R08: 00007ffd891bbae1 R09: 0000000000000000
+[  141.436852] R10: 00007ff04cd71480 R11: 0000000000000206 R12: 0000000000000000
+[  141.437636] R13: 0000000000000000 R14: 000055fde256dd68 R15: 0000000000000000
+[  141.438442]  </TASK>
+
+
+Corinna
 
