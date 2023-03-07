@@ -1,50 +1,77 @@
-Received: from mailbackend.panix.com (mailbackend.panix.com [166.84.1.89])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 531EB6FC5
-	for <regressions@lists.linux.dev>; Tue,  7 Mar 2023 14:25:11 +0000 (UTC)
-Received: from mail.panix.com (localhost [127.0.0.1])
-	by mailbackend.panix.com (Postfix) with ESMTPA id 4PWHln2L79z3lMq;
-	Tue,  7 Mar 2023 09:25:09 -0500 (EST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=panix.com; s=panix;
-	t=1678199109; bh=iKqTJyMs5p6z903qrfFiEeNAVFvQQXAKyI9pBRJ4e6s=;
-	h=In-Reply-To:References:Date:Subject:From:To:Cc;
-	b=JxbBMj699F6EU7HWKALZnxSV7OJjEWB+o+/YIgKIV2aJOysy1XhcUMwxKWbTvwuHH
-	 6HUX8st8idLfbejXC+dF3zmNuxVwY9oJo8icEeBugAkKA3I2+yiO/aLgdTbGFEf7gH
-	 F/KBC3GGnxhiQB47OGLEH/R1X35KgCbchRpGTg7w=
-X-Panix-Received: from 166.84.1.3
-        (SquirrelMail authenticated user pa@panix.com)
-        by mail.panix.com with HTTP;
-        Tue, 7 Mar 2023 09:25:09 -0500
-Message-ID: <220898e2276e4cae2572eb8f006f3a7b.squirrel@mail.panix.com>
-In-Reply-To: <20230307093308.m5enhuegm3r4qwvo@pengutronix.de>
-References: <9f6cba7a8a57e5a687c934e8e406e28c.squirrel@mail.panix.com>
-    <20230307093308.m5enhuegm3r4qwvo@pengutronix.de>
-Date: Tue, 7 Mar 2023 09:25:09 -0500
-Subject: Re: [Regression] acpi: laptop panics early in boot
-From: "Pierre Asselin" <pa@panix.com>
-To: "Uwe Kleine-Koenig" <u.kleine-koenig@pengutronix.de>
-Cc: "Pierre Asselin" <pa@panix.com>,
- linux-acpi@vger.kernel.org,
- regressions@lists.linux.dev,
- "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-User-Agent: SquirrelMail/1.4.23-p1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 939C7AD49
+	for <regressions@lists.linux.dev>; Tue,  7 Mar 2023 15:04:25 +0000 (UTC)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id C401C1FD75;
+	Tue,  7 Mar 2023 15:04:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1678201460; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zZd+0fZmtY/0IVP3m7HVKUpSYAIzofHoxsni843yHMU=;
+	b=IE7VzNEwWn5uGnnx5xLGOch/EXHH3bnpHILFloN6cNOuPDkEYYeExfbel63qGXjI1SwTH1
+	NPs4v5SDFMoBhnYxJ4WS3DYFUaZWz051VnYcbKDeIlKtbYsXpztoVRyqyMZ6Apsc/aPs3f
+	5LeL7G8IwBd+43kVVgLwq1k4/4pVm/k=
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 735501341F;
+	Tue,  7 Mar 2023 15:04:20 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+	by imap2.suse-dmz.suse.de with ESMTPSA
+	id GiZPGnRSB2TDFAAAMHmgww
+	(envelope-from <mwilck@suse.com>); Tue, 07 Mar 2023 15:04:20 +0000
+Message-ID: <db12cf6e72c82441370efdf38a9133aab5be602c.camel@suse.com>
+Subject: Re: [PATCH 1/1] mpt3sas: Remove usage of dma_get_required_mask api
+From: Martin Wilck <mwilck@suse.com>
+To: "Martin K. Petersen" <martin.petersen@oracle.com>, Thorsten Leemhuis
+	 <regressions@leemhuis.info>
+Cc: Salvatore Bonaccorso <carnil@debian.org>, Christoph Hellwig
+	 <hch@infradead.org>, Sreekanth Reddy <sreekanth.reddy@broadcom.com>, 
+	linux-scsi@vger.kernel.org, regressions@lists.linux.dev
+Date: Tue, 07 Mar 2023 16:04:19 +0100
+In-Reply-To: <yq1sfehmjnb.fsf@ca-mkp.ca.oracle.com>
+References: <20221028091655.17741-1-sreekanth.reddy@broadcom.com>
+	 <20221028091655.17741-2-sreekanth.reddy@broadcom.com>
+	 <Y15lk+CPsjJ801iY@infradead.org>
+	 <181536c494aa39ca78b190396a97072448739411.camel@suse.com>
+	 <yq1tu192iur.fsf@ca-mkp.ca.oracle.com> <Y8+m0w4Og2CLFImY@lorien.valinor.li>
+	 <Y/ZGe8c1XyqSuCSk@eldamar.lan>
+	 <9aa5e89f-6579-15e5-cc51-d226b5d4bea3@leemhuis.info>
+	 <yq1sfehmjnb.fsf@ca-mkp.ca.oracle.com>
+Content-Type: text/plain; charset="ISO-8859-15"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4 
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain;charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-X-Priority: 3 (Normal)
-Importance: Normal
 
+On Mon, 2023-03-06 at 20:39 -0500, Martin K. Petersen wrote:
+>=20
+> There are three recent commit in this area. e0e0747de0ea was
+> accidentally reverted by Linus during a merge and reinstated as
+> 1a2dcbdde82e. So unless I'm missing something, the appropriate thing
+> would be to backport these three commits:
+>=20
+> 9df650963bf6 ("scsi: mpt3sas: Don't change DMA mask while
+> reallocating pools")
+> 1a2dcbdde82e ("scsi: mpt3sas: re-do lost mpt3sas DMA mask fix")
+> 06e472acf964 ("scsi: mpt3sas: Remove usage of dma_get_required_mask()
+> API")
+>=20
 
-5.19: good.
-5.19+Uwe's patch: bad.
+I used the same sequence of backports for the SUSE kernel.
 
-Slightly different traceback,
-https://www.panix.com/~pa/linux-6.1.12-crash/boot-failure-5.19-patched.jpg
-
+Regards
+Martin
 
