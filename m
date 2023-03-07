@@ -1,141 +1,182 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 315E7386
-	for <regressions@lists.linux.dev>; Tue,  7 Mar 2023 22:34:01 +0000 (UTC)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 434BF21A19;
-	Tue,  7 Mar 2023 22:33:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1678228438; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MX+2KpqT8wrCqyg7j0dP+wq52LnT6AyIVkSxEYwnFa8=;
-	b=SSBWxDam7wOMnt7TF0pQLTpDz6cVUcjH4zfaXE84D6yczhNPEpnCNC2Uw3+ivHmi6wGK92
-	3xIFlD7ccw6c+bztZE+fbhx79TxDDLGCQW4LdhH1hjNIUR5syrqiZ9J45Q2IS6u8kxMUDz
-	mOeVX8CZxtJ+1IFKqxGOkoPWugbJHhw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1678228438;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MX+2KpqT8wrCqyg7j0dP+wq52LnT6AyIVkSxEYwnFa8=;
-	b=qnPLRNUlptwMcZkRvHJNVydHAdcCorh/vpKqdZx7AhnBbWklvsD0c6RYBynY7oBv+9TzC6
-	lzcRhv6HHWRQ8JDg==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id D0A7113440;
-	Tue,  7 Mar 2023 22:33:55 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-	by imap2.suse-dmz.suse.de with ESMTPSA
-	id b3I6IdO7B2T3AwAAMHmgww
-	(envelope-from <neilb@suse.de>); Tue, 07 Mar 2023 22:33:55 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E220386
+	for <regressions@lists.linux.dev>; Tue,  7 Mar 2023 23:41:02 +0000 (UTC)
+Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 327JwnLC018505;
+	Tue, 7 Mar 2023 23:40:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : message-id : references : date : in-reply-to : content-type :
+ mime-version; s=corp-2022-7-12;
+ bh=Y5NtI8+MP8YaTJhzubCmCktYEZZssFEEARrQdFvWMOs=;
+ b=cRO3L+RF0Ch5FqO7uSco5bilQrmVkz7kIu9mvzoPGb88ucGTr9ho04k3V7Wamqb/Th8V
+ ACp2Rls/tSu0mapKKlTwj0iJFMxAkFyQNbhYLauFA8h/H42ye3wTfEF+8QUtc1tiIt5B
+ DaMQZ+L784aZEaIjaLCSREBC1KJ4UR4M0MOyeFLxawoJP1rgPE24d1EW8zSWTzKzOjAv
+ HBs8CVoUhq+b+b+sRgbJ8OxjitC9cJ/T6XRzqnDXxIa1SILZw+o/Lvnebd88MoFU63+X
+ X6dtRPOZ129EfSpHa4EQiwNqpsHJ9PAgROHrLio3I508F6/jM34JAprIzaHgy4ufxOSo eg== 
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3p415hxyma-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 07 Mar 2023 23:40:53 +0000
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 327Mj4DB016365;
+	Tue, 7 Mar 2023 23:40:53 GMT
+Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2046.outbound.protection.outlook.com [104.47.66.46])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3p4tus12p7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 07 Mar 2023 23:40:53 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=WgG2LRvCEj0syycvlNbY3A0zv9H6GmHQAzS3lK4BfM+aYVI5KBQ2NVhfZz0lwA//wn4KUcnVLD6RXU+aWfXurvrjVprM+BLaSOLnq+cAeHhsPMdv0Iq/05SWJCr6lsvZ6iKuDhfZb7oK3GECeTOG9JZCA6Yrh26pJzdhLxpRf9QKjvXA84i6sNv4UjNz0rSbEPJPKSjclobbcF+EXRGdKwpu4UoN3nZmH2RiY7x/B61iPou9bbfiDcP93zCEmkW/ZIBiKjZ6WcTVN6xz5OC/hq3Abyy9JdExVAAm1F+4jqceVD2QOwoUCTHDbsM+3qWdXAMOwXfxRHk5CvQosbjnhA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Y5NtI8+MP8YaTJhzubCmCktYEZZssFEEARrQdFvWMOs=;
+ b=hPhMCr5QKeJ2+l6ngilqn9LsmeIdIv+IaDRF+rY40dO7GZXLvJ+k+Bag9F0LluBoFq5tatQd9xcJHpTnmib9GG4SkiuCJVFh9bESCP2ttZqvndBAqpHiMKghrobQC5dSvhkLjlNb/JuUrYC5IogcPkqWQ1ZTM9K/jQFWwJXn8nzlLZZZe7mpNb+ZPhzDXJvR59cCEp1fr/XYBA0aAV7och59rPQA3pkbAX1CLvBIziZqZDPsfzYKWzFsiu07qt7QqDujd7HmBbulM1wWh8Ge6Km1BkoPhtBKFN36J6QyKIaBWKYcCK9t61Od0Bz1yj/PirSiGJblw6cYSHOZ+7+oOw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Y5NtI8+MP8YaTJhzubCmCktYEZZssFEEARrQdFvWMOs=;
+ b=ld/EV9yyG81BysxCZ1XceWRLfhN8YPLnUEulvRAc8Bk+MP4LDABFmJu8EZL9VJ1/krepTasxbfJPM6W25DX/hAkuUGBIB/NbQWg6zHIOauamFnUzwfvy8bkJ0DyU/n5/KWi7mSZ18K1GKCNmK2dIK3UtLChpaljlzwyY/NFP2FM=
+Received: from PH0PR10MB4759.namprd10.prod.outlook.com (2603:10b6:510:3d::12)
+ by CYYPR10MB7566.namprd10.prod.outlook.com (2603:10b6:930:c0::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6156.29; Tue, 7 Mar
+ 2023 23:40:50 +0000
+Received: from PH0PR10MB4759.namprd10.prod.outlook.com
+ ([fe80::8ef9:5939:13aa:d6a2]) by PH0PR10MB4759.namprd10.prod.outlook.com
+ ([fe80::8ef9:5939:13aa:d6a2%8]) with mapi id 15.20.6156.029; Tue, 7 Mar 2023
+ 23:40:50 +0000
+To: Lee Duncan <lduncan@suse.com>
+Cc: "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Lee Duncan
+ <leeman.duncan@gmail.com>,
+        Linux regressions mailing list
+ <regressions@lists.linux.dev>,
+        "James E.J. Bottomley"
+ <jejb@linux.ibm.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Martin Wilck <mwilck@suse.com>, Hannes
+ Reinecke <hare@suse.de>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+Subject: Re: [PATCH] scsi: core: Add BLIST_NO_ASK_VPD_SIZE for some VDASD
+From: "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <yq1edq0jg2h.fsf@ca-mkp.ca.oracle.com>
+References: <20220928181350.9948-1-leeman.duncan@gmail.com>
+	<88927435-ae58-c24b-e7b7-b675985de433@leemhuis.info>
+	<86D685F2-D411-460B-A09B-6BE942372F0A@gmail.com>
+	<yq1zg8pl1nq.fsf@ca-mkp.ca.oracle.com>
+	<f8c5619f-1e1a-f759-6ab6-ea84bba3d635@suse.com>
+Date: Tue, 07 Mar 2023 18:40:48 -0500
+In-Reply-To: <f8c5619f-1e1a-f759-6ab6-ea84bba3d635@suse.com> (Lee Duncan's
+	message of "Tue, 7 Mar 2023 08:33:26 -0800")
+Content-Type: text/plain
+X-ClientProxiedBy: DM6PR08CA0040.namprd08.prod.outlook.com
+ (2603:10b6:5:1e0::14) To PH0PR10MB4759.namprd10.prod.outlook.com
+ (2603:10b6:510:3d::12)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-To: "Mariusz Tkaczyk" <mariusz.tkaczyk@linux.intel.com>
-Cc: "Song Liu" <song@kernel.org>,
- "Linux regressions mailing list" <regressions@lists.linux.dev>,
- Jes.Sorensen@gmail.com, "linux-raid" <linux-raid@vger.kernel.org>,
- "LKML" <linux-kernel@vger.kernel.org>,
- "Nikolay Kichukov" <hijacker@oldum.net>
-Subject: Re: [regression] Bug 217074 - upgrading to kernel 6.1.12 from 5.15.x
- can no longer assemble software raid0
-In-reply-to: <20230307095258.00001cb3@linux.intel.com>
-References: <a13cd3b5-cc41-bf2f-c8ac-e031ad0d5dd7@leemhuis.info>,
- <CAPhsuW7ZWthh0PZt71hQh1_51C0yMSpOqWYJKc_+VzzTmW_r5A@mail.gmail.com>,
- <167805126796.8008.3635368722810568057@noble.neil.brown.name>,
- <20230307095258.00001cb3@linux.intel.com>
-Date: Wed, 08 Mar 2023 09:33:52 +1100
-Message-id: <167822843274.8008.1142380266687607670@noble.neil.brown.name>
-
-On Tue, 07 Mar 2023, Mariusz Tkaczyk wrote:
-> On Mon, 06 Mar 2023 08:21:07 +1100
-> "NeilBrown" <neilb@suse.de> wrote:
->=20
-> > On Sat, 04 Mar 2023, Song Liu wrote:
-> > > + Jes.
-> > >=20
-> > > It appeared to me that we can assemble the array if we have any of the
-> > > following:
-> > > 1. Enable CONFIG_BLOCK_LEGACY_AUTOLOAD;
-> > > 2. Have a valid /etc/mdadm.conf;
-> > > 3. Update mdadm to handle this case. (I tried some ugly hacks, which wo=
-rked
-> > > but weren't clean).
-> > >=20
-> > > Since we eventually would like to get rid of CONFIG_BLOCK_LEGACY_AUTOLO=
-AD, I
-> > > think we need mdadm to handle this properly. But the logistics might
-> > > be complicated, as
-> > > mdadm are shipped separately.
-> > >=20
-> > > Jes, what do you think about this? AFAICT, we need to update the logic =
-in
-> > > mdopen.c:create_mddev(). =20
-> >=20
-> > mdadm already handles this, but only if=20
-> >    CREATE names=3Dyes
-> > is present in /etc/mdadm.conf
->=20
-> Hi,
->=20
-> "CREATE names=3Dyes" enforces creation of /dev/md_name arrays instead of
-> /dev/mdXXX. It is a large change for users, too aggressive IMO. It will des=
-troy
-> many setups.
->=20
-> To resolve it, we need is to use create_named_array() but respect old naming
-> convention. We already have find_free_devnm(), and we are able to keep
-> consistency because we can create 'mdXXX':
->=20
-> /sys/module/md_mod/parameters # echo md125 > new_array
->=20
-> /sys/module/md_mod/parameters # ll /sys/block/md125
-> lrwxrwxrwx 1 root root 0 Mar  7 10:54 /sys/block/md125 ->
-> ../devices/virtual/block/md125
->=20
-> That will require adjustments in mdadm, but I think that we can keep
-> names the same way. I created the test for verification of base creation fl=
-ows,
-> we can use it to avoid regression:
-> https://git.kernel.org/pub/scm/utils/mdadm/mdadm.git/tree/tests/00createnam=
-es
->=20
-> Thoughts?
-
-Yes, that is probably sensible.
-
-It would be nice to have a way to expose the "names=3Dyes" functionality
-more obviously.  I think people would generally prefer it (/proc/mdstat
-becomes more meaningful) but I agree that forcing it on people is the
-the best approach.
-
-Maybe a super-block flag that enables it for that array, and we start
-setting that flag when creating new arrays?
-
-NeilBrown
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH0PR10MB4759:EE_|CYYPR10MB7566:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0c13fb1f-5775-40ce-7587-08db1f656253
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	5rvt0dKOJs8Imo79zQb4ecTqCZE+9UKZchv27bPUhq4GzivljKVvkPU5znivjIwyNOejFTCEL4EPmDhHGqa4s9sonrcmk/3t6sHf0wa6p18J7HjxUUl3rvtjtAsO8L3+pVvL55rbDk1jAC3oAuCugzkyOFwmq+yVE+hM7DUsQaA9lILHvvXSwZo+oDtpmim4Rb2nPUU38XgVhQrvp4epvwWsdPhnPsIyS5MR9Jmtlt3BX8wxBpIUP063qdUGiFpeFYLbZVgyJ+8yfbu+G/lN7rsGT2bZmiREmeq1vXeDjmTfPM7XRH9h11NK7rYRGBpTwG299mfbM60LIclDiwdoMs0azi2UjnIe00MirNk6B3fSaRoa0ynIUE4mzjuE3qTRc4yivOZ3g+UIMcnq+XBgQ23F8ohgfr3sevM0f4DziecLlqOFkDdxVIpJncr7fNCw4jBQEYmLXk/ENzdwusoNyDsIVb2aU3KOsepBAFrCrMsELhyNwGvp1P6dNhVeAbiwAoR8Tpq4+VoFVshApOMl59NmdP0j197T7AO8GZGK7a4+Nac3DSgvmn/sLiyeDaKfR+NF8DxG60F/cO6/pdIoUSHmFgpx/YTdNk0QNI2Z2rwp/kK666nPPmjpNFQo9GZu/X5wTMKRtrgvnXwRXIL2Mg==
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR10MB4759.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(366004)(39860400002)(346002)(376002)(136003)(396003)(451199018)(41300700001)(5660300002)(36916002)(8936002)(54906003)(478600001)(4326008)(66556008)(66476007)(8676002)(66946007)(6916009)(316002)(6506007)(86362001)(26005)(6512007)(186003)(2906002)(6486002)(4744005)(38100700002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?us-ascii?Q?P0H+k0iLlzNQ+WaFUz+V9FiuSCTIFeYcdp/C4gCDf+8LSGNBn2jecZ4GEDKo?=
+ =?us-ascii?Q?7i47sXWTuDa1cBriGlHx2btB6jwWHbF2IzWwYZUBN526HTxGHahm8MaXN7TQ?=
+ =?us-ascii?Q?z83FWTEHH/lluAI63acV1ge4IRG/hOrKYFhr72bMeZ8uk5IUq6yq87I0Gkql?=
+ =?us-ascii?Q?Fyl83yxUaEpt+FzVGWPtV9ornsIjSi/v+1iKTGc/VCp+bQfgvJLKU/qTAIJW?=
+ =?us-ascii?Q?HY6ONCOpfEterZ6v7/PJF6Vvuj6AehHxMMyc70uYXbC3VMTTP9LKK61u9Bhk?=
+ =?us-ascii?Q?2d1eU4BiV4m+VrYo9cwgs4r3pUYKNj5hiqRgmkNwQ3NT3+Pha/lhZsE1eK33?=
+ =?us-ascii?Q?LWFF+HbN0N016vkSOjtdGOWLfCsLIwPsO5+PxAZPRwjDnftIeYv+2lioSRCi?=
+ =?us-ascii?Q?w8AQpPlYCNNngLAt7ZRULtWnJZBkJuRuQ1YfbQXRJ3ItxcpG8HpBsxPn5ALS?=
+ =?us-ascii?Q?1x6brnBi9U4KytRwgVcd7bgkouYisy90sayttq49BxQqWuQAzHRIETLZosSI?=
+ =?us-ascii?Q?fzOnOTXVEYGyDVNSu6ABWXr8RIUB3oM4yS4LpbmxA4AfEHE+KWqYEzH4T/d3?=
+ =?us-ascii?Q?4liToqBDSMqP//eB91S67EVoK8BpkQt/Jk1g871mkXuZ52n7A6/LCnQXAfeI?=
+ =?us-ascii?Q?R+Dy1BkJiItZuouDrG8qvaxJZ2XSrKrimqaUa9PhaLo0m/S5ho0ekzqxPjnv?=
+ =?us-ascii?Q?oK+Frdd8adKE5IxvSRoQkFe0uDy21v/FYvV1JAtBl0QQog674RXy3cCfNV6v?=
+ =?us-ascii?Q?DjyxtgUy6FF4cREpRDotSgXtlUV67C40KKOnvNvojrxozJSzHdPMpBuKxQOZ?=
+ =?us-ascii?Q?L/6uaVJ23DYzru3jXibLVgq+cruj+JzpUGwIc7jNVvmgsP4hb+4b40F06bM7?=
+ =?us-ascii?Q?egSqE8eTSQthD+Nrg1DP2WkH+XlpV8sCsuwAEvSXbEpqLi8sSp6C9mtUq2aP?=
+ =?us-ascii?Q?IN+lIKe6ctayljs5eAgZQ8AXjYy5SnPtdnUmQ6UEFGLQsg7d/52ZLyTEpuMU?=
+ =?us-ascii?Q?T9Tfa/Qc6z6EjJfctGoPkVRu3Ag3iW/vbfA1nFggQzQgaP4YW+RtwklnmRj6?=
+ =?us-ascii?Q?ROBoY8A62X4PviFMl2PVFeFwvsNG8jxU6qFZIf/Q5ADEyj/93EXaZvW2BteL?=
+ =?us-ascii?Q?NVSRczRKrg0e3ZmHD0B2xBFKFM2tgr0GUHy9HzNoM178D5EV1nlwWZA2HjCr?=
+ =?us-ascii?Q?0qU+DWvfwWLMVYRUKBsM8T52NXZhqsgw0WA51iS0YvUs9Gi98bNVUbfTGXTW?=
+ =?us-ascii?Q?VjxQty/polwQdXpmKm0WS3OA+PiEOdH79PtCEA30hm+4ws5MisKW7XLj7rZD?=
+ =?us-ascii?Q?x8H0+ZNUy7CTWt4onc8+h0tBZ3sxIKRnxjfP8TsA3JNCIhj67c2YB443XcXm?=
+ =?us-ascii?Q?SYW9OgB2oy1xENBOyckCWf9uuD2ChCYiom2dFWxYu9lFjS5+BdXQ0kIPdeWX?=
+ =?us-ascii?Q?H1xghXnR6BklLDdct321yRJn9X1urcAHgCDGCsNWf5t38XMqH9Y8rkXrg8B7?=
+ =?us-ascii?Q?YIgIxjQrom8N6lTMReIbeO3BZEfYJyfuKK6lUUm3LoOOXv4D5ucONczD9dri?=
+ =?us-ascii?Q?XeD7s0lkIhXcFGKSl19ejWQEfaEvgtptid+H3qoI1LmMJTNpIshLD14uIeEs?=
+ =?us-ascii?Q?/Q=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
+	=?us-ascii?Q?Li1exKrXQsIvElTmyn4QrPvpvxLBJ3jZS4eEcYjRh03RZCb4e9bcF0b9MRtx?=
+ =?us-ascii?Q?jxQC5Wt1+KuXqbAuxFopSZurAJRirD2yN99N3TsQK/iE9K6oBb7sA5f36bZF?=
+ =?us-ascii?Q?glTrUcCrhHDLtK18ESQO7iuYVKfm8vLtPo9UGqXrOG/tPqfCthrN3BqmTOvl?=
+ =?us-ascii?Q?voiEjQ7U5AtTdXuO3cD0YMEkDomEsHqotv91DPdYq/WTHQ8JR+jBsyV8IHxA?=
+ =?us-ascii?Q?DuZOFzl11A4fTwL7fMyK/JGbpG8FSUz+efNHyNlLUaqtPzSUDjl3fwchTJ8D?=
+ =?us-ascii?Q?Ytf9O03BNV5OGI4HiLWwU/i6NXUJAR56oRJBX5kNLf5LChPet218rT/s4+/x?=
+ =?us-ascii?Q?cu4W40c1qiXU2Aoo4Yi6CgBi+FlujID2eDV+BkxwQcak9lrOIVkOFqQ3Yc+q?=
+ =?us-ascii?Q?enAKj0QIyq+8cRVV+yJRdDfFHK/ksNiAnfvb8cdJv4C4xqYT+6Qvd7WA8wJj?=
+ =?us-ascii?Q?Yz9uiECDntesXD5oUN5M1fCBCiG/tZP6rPEw2+yEgoL+Pnp6pYHkKfjif4mw?=
+ =?us-ascii?Q?k6q7eqir+Ro6aQLKqYRLXF7LLzf/ZzA2lU2zE+QQ3ydjVMQKxu3JwJQ5kodo?=
+ =?us-ascii?Q?FKuq8qZiaVBf0cDLzPPA4EepbkyRrvr80J5uJzomqFYZKJkz6Ia9JKcdK+QG?=
+ =?us-ascii?Q?C8g4fZ80HPvRMC0Org1iDg3v8gDbRbtz0Mkm/01UdjeHNvBG15ZYtGKHtiVG?=
+ =?us-ascii?Q?Cv3i4KUGxWYHWuhQfkfNZFswc4oc+jef36g16cRI1JvYU3blbxff+QXcQj/C?=
+ =?us-ascii?Q?2u1gnUnKNrFq2Mo9NHgMiLUNwkWmJfMf5tiSmtOAg6NBI23T+A8P6n6Y9YGU?=
+ =?us-ascii?Q?LNVV915bJxVo6Hkr/waR9+kg5Uh5JQfoj23pSZJfszKlsqmmyZo+b0/KfYwF?=
+ =?us-ascii?Q?rqBCaEx+98/VMr6ouC4tYv31wbmhNgztThdFXC1YqnGB8zYvpNCPEYvdmWcy?=
+ =?us-ascii?Q?xCBXedslzKqNPsYRLwoMRg=3D=3D?=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0c13fb1f-5775-40ce-7587-08db1f656253
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR10MB4759.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Mar 2023 23:40:50.6570
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: zpr1y0uJyEVoXCuC2j7mqsC6XlFSdlJv5cL6yXQ/InPAAz7PF7RkekRkeNNminShm0g/UsLtPer9pttok7TYYZR0ULuZ+AsL4daYFPSmz1M=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYYPR10MB7566
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.219,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-03-07_16,2023-03-07_01,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=875 bulkscore=0
+ malwarescore=0 spamscore=0 mlxscore=0 suspectscore=0 adultscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2212070000 definitions=main-2303070208
+X-Proofpoint-GUID: z45Hshh_dqBTKdx4Qr_T1trx_QmjoROn
+X-Proofpoint-ORIG-GUID: z45Hshh_dqBTKdx4Qr_T1trx_QmjoROn
 
 
->=20
-> BTW. I wanted to get rid of this legacy "create_on_open" from mdadm anyway =
-but
-> never had time to. If you agree, I can proceed with fixing it.
->=20
-> Thanks,
-> Mariusz
->=20
+Lee,
 
+> My worry is that this won't always work. Looking at the code, the
+> buffer sizes used for VPD pages include 8, 32, 64, and 252 bytes. I'm
+> not sure how reading 255 bytes into an 8-byte buffer would work.
+
+In the scsi_get_vpd_buf() case we will allocate a 255 byte buffer since
+that's what scsi_get_vpd_size() returns for a VDASD.
+
+And in the scsi_get_vpd_page() case, where a buffer already exists, we
+clamp the INQUIRY size to the minimum of scsi_get_vpd_size() and the
+buffer length provided by the caller.
+
+-- 
+Martin K. Petersen	Oracle Linux Engineering
