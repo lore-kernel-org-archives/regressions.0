@@ -1,109 +1,128 @@
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [85.220.165.71])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA4CBAD49
-	for <regressions@lists.linux.dev>; Tue,  7 Mar 2023 16:10:19 +0000 (UTC)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1pZZtG-0002t0-6n; Tue, 07 Mar 2023 17:10:14 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1pZZtD-002WkP-F0; Tue, 07 Mar 2023 17:10:11 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1pZZtC-0032sF-Q2; Tue, 07 Mar 2023 17:10:10 +0100
-Date: Tue, 7 Mar 2023 17:10:05 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Pierre Asselin <pa@panix.com>
-Cc: linux-acpi@vger.kernel.org, regressions@lists.linux.dev,
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: Re: [Regression] acpi: laptop panics early in boot
-Message-ID: <20230307161005.6m6fpi3oxa3jn2wg@pengutronix.de>
-References: <9f6cba7a8a57e5a687c934e8e406e28c.squirrel@mail.panix.com>
- <20230307093308.m5enhuegm3r4qwvo@pengutronix.de>
- <220898e2276e4cae2572eb8f006f3a7b.squirrel@mail.panix.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A0FD28E3
+	for <regressions@lists.linux.dev>; Tue,  7 Mar 2023 16:33:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1678206804;
+	h=from:from:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:in-reply-to:in-reply-to:  references:references;
+	bh=NwQ3wDlpFiZI+BrzfSgoKWGDASiKEaVASGy92MgjLxs=;
+	b=SE29kUNwAFCqkpIymcQ8VYUyIaUbnr4NGx6OpfVKfekwXw3s7TdVZ6EA9BbMuF9hSskIGY
+	3iOG5mS7gZicBl+cbisgFm+KQCwCtwEgMf+iD/wo5gRUB6bVKHs50wboAnekIkg/iVswwc
+	8DXa4SctJPqQKBLJPUDrNl3RyjJUnjI=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-149-DyI-u7sfNMyppRNjIEtT9Q-1; Tue, 07 Mar 2023 11:33:17 -0500
+X-MC-Unique: DyI-u7sfNMyppRNjIEtT9Q-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 1ECB790F923;
+	Tue,  7 Mar 2023 16:27:21 +0000 (UTC)
+Received: from calimero.vinschen.de (unknown [10.39.192.200])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 2061FC15BAE;
+	Tue,  7 Mar 2023 16:27:20 +0000 (UTC)
+Received: by calimero.vinschen.de (Postfix, from userid 500)
+	id BEFC2A80C30; Tue,  7 Mar 2023 17:27:18 +0100 (CET)
+Date: Tue, 7 Mar 2023 17:27:18 +0100
+From: Corinna Vinschen <vinschen@redhat.com>
+To: Lin Ma <linma@zju.edu.cn>
+Cc: jesse.brandeburg@intel.com, anthony.l.nguyen@intel.com,
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, richardcochran@gmail.com,
+	ast@kernel.org, daniel@iogearbox.net, hawk@kernel.org,
+	john.fastabend@gmail.com, intel-wired-lan@lists.osuosl.org,
+	pmenzel@molgen.mpg.de, regressions@lists.linux.dev,
+	stable@vger.kernel.org
+Subject: Re: [PATCH v2] igb: revert rtnl_lock() that causes deadlock
+Message-ID: <ZAdl5jr3rBoTb7qZ@calimero.vinschen.de>
+Reply-To: intel-wired-lan@lists.osuosl.org
+Mail-Followup-To: Lin Ma <linma@zju.edu.cn>, jesse.brandeburg@intel.com,
+	anthony.l.nguyen@intel.com, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	richardcochran@gmail.com, ast@kernel.org, daniel@iogearbox.net,
+	hawk@kernel.org, john.fastabend@gmail.com,
+	intel-wired-lan@lists.osuosl.org, pmenzel@molgen.mpg.de,
+	regressions@lists.linux.dev, stable@vger.kernel.org
+References: <ZAc/3oVos9DBx3iR@calimero.vinschen.de>
+ <20230307152917.32182-1-linma@zju.edu.cn>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="x2fesy5b7onob64s"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <220898e2276e4cae2572eb8f006f3a7b.squirrel@mail.panix.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: regressions@lists.linux.dev
+In-Reply-To: <20230307152917.32182-1-linma@zju.edu.cn>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.8
+
+On Mar  7 23:29, Lin Ma wrote:
+> The commit 6faee3d4ee8b ("igb: Add lock to avoid data race") adds
+> rtnl_lock to eliminate a false data race shown below
+> 
+>  (FREE from device detaching)      |   (USE from netdev core)
+> igb_remove                         |  igb_ndo_get_vf_config
+>  igb_disable_sriov                 |  vf >= adapter->vfs_allocated_count?
+>   kfree(adapter->vf_data)          |
+>   adapter->vfs_allocated_count = 0 |
+>                                    |    memcpy(... adapter->vf_data[vf]
+> 
+> The above race will never happen and the extra rtnl_lock causes deadlock
+> below
+> 
+> [  141.420169]  <TASK>
+> [  141.420672]  __schedule+0x2dd/0x840
+> [  141.421427]  schedule+0x50/0xc0
+> [  141.422041]  schedule_preempt_disabled+0x11/0x20
+> [  141.422678]  __mutex_lock.isra.13+0x431/0x6b0
+> [  141.423324]  unregister_netdev+0xe/0x20
+> [  141.423578]  igbvf_remove+0x45/0xe0 [igbvf]
+> [  141.423791]  pci_device_remove+0x36/0xb0
+> [  141.423990]  device_release_driver_internal+0xc1/0x160
+> [  141.424270]  pci_stop_bus_device+0x6d/0x90
+> [  141.424507]  pci_stop_and_remove_bus_device+0xe/0x20
+> [  141.424789]  pci_iov_remove_virtfn+0xba/0x120
+> [  141.425452]  sriov_disable+0x2f/0xf0
+> [  141.425679]  igb_disable_sriov+0x4e/0x100 [igb]
+> [  141.426353]  igb_remove+0xa0/0x130 [igb]
+> [  141.426599]  pci_device_remove+0x36/0xb0
+> [  141.426796]  device_release_driver_internal+0xc1/0x160
+> [  141.427060]  driver_detach+0x44/0x90
+> [  141.427253]  bus_remove_driver+0x55/0xe0
+> [  141.427477]  pci_unregister_driver+0x2a/0xa0
+> [  141.428296]  __x64_sys_delete_module+0x141/0x2b0
+> [  141.429126]  ? mntput_no_expire+0x4a/0x240
+> [  141.429363]  ? syscall_trace_enter.isra.19+0x126/0x1a0
+> [  141.429653]  do_syscall_64+0x5b/0x80
+> [  141.429847]  ? exit_to_user_mode_prepare+0x14d/0x1c0
+> [  141.430109]  ? syscall_exit_to_user_mode+0x12/0x30
+> [  141.430849]  ? do_syscall_64+0x67/0x80
+> [  141.431083]  ? syscall_exit_to_user_mode_prepare+0x183/0x1b0
+> [  141.431770]  ? syscall_exit_to_user_mode+0x12/0x30
+> [  141.432482]  ? do_syscall_64+0x67/0x80
+> [  141.432714]  ? exc_page_fault+0x64/0x140
+> [  141.432911]  entry_SYSCALL_64_after_hwframe+0x72/0xdc
+> 
+> Since the igb_disable_sriov() will call pci_disable_sriov() before
+> releasing any resources, the netdev core will synchronize the cleanup to
+> avoid any races. This patch removes the useless rtnl_(un)lock to guarantee
+> correctness.
+> 
+> CC: stable@vger.kernel.org
+> Fixes: 6faee3d4ee8b ("igb: Add lock to avoid data race")
+> Reported-by: Corinna Vinschen <vinschen@redhat.com>
+> Link: https://lore.kernel.org/intel-wired-lan/ZAcJvkEPqWeJHO2r@calimero.vinschen.de/
+> Signed-off-by: Lin Ma <linma@zju.edu.cn>
+
+Tested-by: Corinna Vinschen <vinschen@redhat.com>
 
 
---x2fesy5b7onob64s
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks,
+Corinna
 
-On Tue, Mar 07, 2023 at 09:25:09AM -0500, Pierre Asselin wrote:
->=20
-> 5.19: good.
-> 5.19+Uwe's patch: bad.
->=20
-> Slightly different traceback,
-> https://www.panix.com/~pa/linux-6.1.12-crash/boot-failure-5.19-patched.jpg
-
-Maybe the following patch helps (on top of v6.3-rc1):
-
-diff --git a/drivers/acpi/bus.c b/drivers/acpi/bus.c
-index 9531dd0fef50..a5a8f82981ce 100644
---- a/drivers/acpi/bus.c
-+++ b/drivers/acpi/bus.c
-@@ -518,7 +518,7 @@ static void acpi_bus_notify(acpi_handle handle, u32 typ=
-e, void *data)
- 	if (!adev)
- 		goto err;
-=20
--	if (adev->dev.driver) {
-+	if (device_is_bound(&adev->dev)) {
- 		struct acpi_driver *driver =3D to_acpi_driver(adev->dev.driver);
-=20
- 		if (driver && driver->ops.notify &&
-
-This might be broken because usually you have to hold the device lock
-and this isn't given here I think.
-
-On the other hand, I don't know if you could just grab the lock here.
-You'd probably have to hold it while calling driver->ops.notify which
-might or might not be safe. I think there was a race already before
-commit d6fb6ee1820c ("ACPI: bus: Drop driver member of struct
-acpi_device"), it just wasn't hit that reliably. (Consider the state
-before d6fb6ee1820c and the device being unbound just between
-acpi_bus_notify()'s driver =3D adev->driver; and the call to
-driver->ops.notify. So conceptually it was necessary already before
-d6fb6ee1820c to hold the device lock?)
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---x2fesy5b7onob64s
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmQHYdIACgkQwfwUeK3K
-7AkT+Af9H5p6PIP3kSwQFlIpp63IUwRsyoSyHLAcyQDsR09ImT8wWUyfYDTxJefD
-TNG8Jp9Vu0PA4VVFINuFxdkbutHSOPQDTH8woe4D1QP0gLTbi5c1C6uGS23AvwV1
-aD05wU72r7nTICWCtduK0ovFAtnHKvARfVRryjqnSBQEcBV0qUd5Q5oFrl2/vVhz
-CLANpLUXnP+wCj0gvvDo4IIDuU83FldRcY26NABVzpXyFtn8yfgJxo61fxOgopPC
-HWuzvYCk5Uf711NcCOivoVuBqZfb7amQcwAhzJ26KdDFHGIKfwAI/ala9azrefgH
-CpAgTkr/VQdD16v01zVPoHdzOoERkw==
-=xlcn
------END PGP SIGNATURE-----
-
---x2fesy5b7onob64s--
