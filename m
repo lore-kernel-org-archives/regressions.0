@@ -1,27 +1,36 @@
-Received: from ns2.wdyn.eu (ns2.wdyn.eu [5.252.227.236])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D4F0333DE
-	for <regressions@lists.linux.dev>; Wed,  8 Mar 2023 11:41:30 +0000 (UTC)
-Message-ID: <cfa5cc30-bf5a-bffd-4c2f-eec8a6522dd5@wetzel-home.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=wetzel-home.de;
-	s=wetzel-home; t=1678275688;
-	bh=fBPyXjC2sm40FIorgDXaQx2GZRyrNRK6b9kMkcrZTjk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=eB5cKKkYq+81R/hQcdGmlRcnIjcgFAYDkjclS/5zsam76068g3KHQWbPXipkiGdae
-	 cOdXGWcU48zsNFH1NK17P0qhUCnGnuWgJr2O5c7p3M0mDG5QNjX8S0tOMXseh2z7D/
-	 FCeV+8oJgJehSy51KlENKcgjsGJ3b+dMZF9xF2mU=
-Date: Wed, 8 Mar 2023 12:41:26 +0100
+Received: from nbd.name (nbd.name [46.4.11.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBE2D613E
+	for <regressions@lists.linux.dev>; Wed,  8 Mar 2023 11:57:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=nbd.name;
+	s=20160729; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=t2+FdKzNbAwgnn+pWklJWP5J6JzG87Ysvje16z2B4ZY=; b=iuZwyZ/zezXnNnPt8ZpZYGyEUd
+	8GZiAIXbUqhJENVTdQrPmPQUPfgImLRTE9qd5cnWnwPgIIqPIbZ6xy2Wi711g7nyng8ySDj4aWuwQ
+	rlb+zNNbc28wgR4jX6JofCDIawBOi1gtf3geU8BcNNfiDhuS86Yi4r1ndRrn4Rn5bzuA=;
+Received: from p54ae9730.dip0.t-ipconnect.de ([84.174.151.48] helo=nf.local)
+	by ds12 with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.94.2)
+	(envelope-from <nbd@nbd.name>)
+	id 1pZsQB-00FrPN-EZ; Wed, 08 Mar 2023 12:57:27 +0100
+Message-ID: <42185fa2-4191-fcf5-9c0f-fd7098bb856b@nbd.name>
+Date: Wed, 8 Mar 2023 12:57:26 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.8.0
 Subject: Re: [Regression] rt2800usb - Wifi performance issues and connection
  drops
 Content-Language: en-US
-To: Felix Fietkau <nbd@nbd.name>,
+To: Alexander Wetzel <alexander@wetzel-home.de>,
  Linux regressions mailing list <regressions@lists.linux.dev>
 Cc: "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
  LKML <linux-kernel@vger.kernel.org>, Thomas Mann <rauchwolke@gmx.net>,
@@ -32,38 +41,43 @@ References: <b8efebc6-4399-d0b8-b2a0-66843314616b@leemhuis.info>
  <6025e17e-4c29-6d36-6b9c-2fec543b21c4@wetzel-home.de>
  <debc7fe9-204d-63a7-aa61-91b20a46f385@wetzel-home.de>
  <4a02173f-3a60-0a7e-8962-3778e6c55bf3@nbd.name>
-From: Alexander Wetzel <alexander@wetzel-home.de>
-In-Reply-To: <4a02173f-3a60-0a7e-8962-3778e6c55bf3@nbd.name>
+ <cfa5cc30-bf5a-bffd-4c2f-eec8a6522dd5@wetzel-home.de>
+From: Felix Fietkau <nbd@nbd.name>
+In-Reply-To: <cfa5cc30-bf5a-bffd-4c2f-eec8a6522dd5@wetzel-home.de>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 08.03.23 08:52, Felix Fietkau wrote:
-
->> I'm also planning to provide some more debug patches, to figuring out
->> which part of commit 4444bc2116ae ("wifi: mac80211: Proper mark iTXQs
->> for resumption") fixes the issue for you. Assuming my understanding
->> above is correct the patch should not really fix/break anything for
->> you...With the findings above I would have expected your git bisec to
->> identify commit a790cc3a4fad ("wifi: mac80211: add wake_tx_queue
->> callback to drivers") as the first broken commit...
-> I can't point to any specific series of events where it would go wrong, 
-> but I suspect that the problem might be the fact that you're doing tx 
-> scheduling from within ieee80211_handle_wake_tx_queue. I don't see how 
-> it's properly protected from potentially being called on different CPUs 
-> concurrently.
+On 08.03.23 12:41, Alexander Wetzel wrote:
+> On 08.03.23 08:52, Felix Fietkau wrote:
 > 
-> Back when I was debugging some iTXQ issues in mt76, I also had problems 
-> when tx scheduling could happen from multiple places. My solution was to 
-> have a single worker thread that handles tx, which is scheduled from the 
-> wake_tx_queue op.
-> Maybe you could do something similar in mac80211 for non-iTXQ drivers.
+>>> I'm also planning to provide some more debug patches, to figuring out
+>>> which part of commit 4444bc2116ae ("wifi: mac80211: Proper mark iTXQs
+>>> for resumption") fixes the issue for you. Assuming my understanding
+>>> above is correct the patch should not really fix/break anything for
+>>> you...With the findings above I would have expected your git bisec to
+>>> identify commit a790cc3a4fad ("wifi: mac80211: add wake_tx_queue
+>>> callback to drivers") as the first broken commit...
+>> I can't point to any specific series of events where it would go wrong, 
+>> but I suspect that the problem might be the fact that you're doing tx 
+>> scheduling from within ieee80211_handle_wake_tx_queue. I don't see how 
+>> it's properly protected from potentially being called on different CPUs 
+>> concurrently.
+>> 
+>> Back when I was debugging some iTXQ issues in mt76, I also had problems 
+>> when tx scheduling could happen from multiple places. My solution was to 
+>> have a single worker thread that handles tx, which is scheduled from the 
+>> wake_tx_queue op.
+>> Maybe you could do something similar in mac80211 for non-iTXQ drivers.
+>> 
 > 
+> I think it's already doing all of that:
+> ieee80211_handle_wake_tx_queue() is the mac80211 implementation for the
+> wake_tx_queue op. The drivers without native iTXQ support simply link it
+> to this handler.
+I know. The problem I see is that I can't find anything that guarantees 
+that .wake_tx_queue_op is not being called concurrently from multiple 
+different places. ieee80211_handle_wake_tx_queue is doing the scheduling 
+directly, instead of deferring it to a single workqueue/tasklet/thread, 
+and multiple concurrent calls to it could potentially cause issues.
 
-I think it's already doing all of that:
-ieee80211_handle_wake_tx_queue() is the mac80211 implementation for the 
-wake_tx_queue op. The drivers without native iTXQ support simply link it 
-to this handler.
-
-Alexander
-
-
+- Felix
