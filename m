@@ -1,182 +1,203 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E220386
-	for <regressions@lists.linux.dev>; Tue,  7 Mar 2023 23:41:02 +0000 (UTC)
-Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 327JwnLC018505;
-	Tue, 7 Mar 2023 23:40:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : message-id : references : date : in-reply-to : content-type :
- mime-version; s=corp-2022-7-12;
- bh=Y5NtI8+MP8YaTJhzubCmCktYEZZssFEEARrQdFvWMOs=;
- b=cRO3L+RF0Ch5FqO7uSco5bilQrmVkz7kIu9mvzoPGb88ucGTr9ho04k3V7Wamqb/Th8V
- ACp2Rls/tSu0mapKKlTwj0iJFMxAkFyQNbhYLauFA8h/H42ye3wTfEF+8QUtc1tiIt5B
- DaMQZ+L784aZEaIjaLCSREBC1KJ4UR4M0MOyeFLxawoJP1rgPE24d1EW8zSWTzKzOjAv
- HBs8CVoUhq+b+b+sRgbJ8OxjitC9cJ/T6XRzqnDXxIa1SILZw+o/Lvnebd88MoFU63+X
- X6dtRPOZ129EfSpHa4EQiwNqpsHJ9PAgROHrLio3I508F6/jM34JAprIzaHgy4ufxOSo eg== 
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3p415hxyma-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 07 Mar 2023 23:40:53 +0000
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 327Mj4DB016365;
-	Tue, 7 Mar 2023 23:40:53 GMT
-Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2046.outbound.protection.outlook.com [104.47.66.46])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3p4tus12p7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 07 Mar 2023 23:40:53 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WgG2LRvCEj0syycvlNbY3A0zv9H6GmHQAzS3lK4BfM+aYVI5KBQ2NVhfZz0lwA//wn4KUcnVLD6RXU+aWfXurvrjVprM+BLaSOLnq+cAeHhsPMdv0Iq/05SWJCr6lsvZ6iKuDhfZb7oK3GECeTOG9JZCA6Yrh26pJzdhLxpRf9QKjvXA84i6sNv4UjNz0rSbEPJPKSjclobbcF+EXRGdKwpu4UoN3nZmH2RiY7x/B61iPou9bbfiDcP93zCEmkW/ZIBiKjZ6WcTVN6xz5OC/hq3Abyy9JdExVAAm1F+4jqceVD2QOwoUCTHDbsM+3qWdXAMOwXfxRHk5CvQosbjnhA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Y5NtI8+MP8YaTJhzubCmCktYEZZssFEEARrQdFvWMOs=;
- b=hPhMCr5QKeJ2+l6ngilqn9LsmeIdIv+IaDRF+rY40dO7GZXLvJ+k+Bag9F0LluBoFq5tatQd9xcJHpTnmib9GG4SkiuCJVFh9bESCP2ttZqvndBAqpHiMKghrobQC5dSvhkLjlNb/JuUrYC5IogcPkqWQ1ZTM9K/jQFWwJXn8nzlLZZZe7mpNb+ZPhzDXJvR59cCEp1fr/XYBA0aAV7och59rPQA3pkbAX1CLvBIziZqZDPsfzYKWzFsiu07qt7QqDujd7HmBbulM1wWh8Ge6Km1BkoPhtBKFN36J6QyKIaBWKYcCK9t61Od0Bz1yj/PirSiGJblw6cYSHOZ+7+oOw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Y5NtI8+MP8YaTJhzubCmCktYEZZssFEEARrQdFvWMOs=;
- b=ld/EV9yyG81BysxCZ1XceWRLfhN8YPLnUEulvRAc8Bk+MP4LDABFmJu8EZL9VJ1/krepTasxbfJPM6W25DX/hAkuUGBIB/NbQWg6zHIOauamFnUzwfvy8bkJ0DyU/n5/KWi7mSZ18K1GKCNmK2dIK3UtLChpaljlzwyY/NFP2FM=
-Received: from PH0PR10MB4759.namprd10.prod.outlook.com (2603:10b6:510:3d::12)
- by CYYPR10MB7566.namprd10.prod.outlook.com (2603:10b6:930:c0::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6156.29; Tue, 7 Mar
- 2023 23:40:50 +0000
-Received: from PH0PR10MB4759.namprd10.prod.outlook.com
- ([fe80::8ef9:5939:13aa:d6a2]) by PH0PR10MB4759.namprd10.prod.outlook.com
- ([fe80::8ef9:5939:13aa:d6a2%8]) with mapi id 15.20.6156.029; Tue, 7 Mar 2023
- 23:40:50 +0000
-To: Lee Duncan <lduncan@suse.com>
-Cc: "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Lee Duncan
- <leeman.duncan@gmail.com>,
-        Linux regressions mailing list
- <regressions@lists.linux.dev>,
-        "James E.J. Bottomley"
- <jejb@linux.ibm.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Martin Wilck <mwilck@suse.com>, Hannes
- Reinecke <hare@suse.de>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-Subject: Re: [PATCH] scsi: core: Add BLIST_NO_ASK_VPD_SIZE for some VDASD
-From: "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <yq1edq0jg2h.fsf@ca-mkp.ca.oracle.com>
-References: <20220928181350.9948-1-leeman.duncan@gmail.com>
-	<88927435-ae58-c24b-e7b7-b675985de433@leemhuis.info>
-	<86D685F2-D411-460B-A09B-6BE942372F0A@gmail.com>
-	<yq1zg8pl1nq.fsf@ca-mkp.ca.oracle.com>
-	<f8c5619f-1e1a-f759-6ab6-ea84bba3d635@suse.com>
-Date: Tue, 07 Mar 2023 18:40:48 -0500
-In-Reply-To: <f8c5619f-1e1a-f759-6ab6-ea84bba3d635@suse.com> (Lee Duncan's
-	message of "Tue, 7 Mar 2023 08:33:26 -0800")
-Content-Type: text/plain
-X-ClientProxiedBy: DM6PR08CA0040.namprd08.prod.outlook.com
- (2603:10b6:5:1e0::14) To PH0PR10MB4759.namprd10.prod.outlook.com
- (2603:10b6:510:3d::12)
+Received: from ns2.wdyn.eu (ns2.wdyn.eu [5.252.227.236])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E2E47B
+	for <regressions@lists.linux.dev>; Wed,  8 Mar 2023 07:13:36 +0000 (UTC)
+Message-ID: <4171c994-6b02-95d1-30c7-8f6f72af7893@wetzel-home.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=wetzel-home.de;
+	s=wetzel-home; t=1678259614;
+	bh=29Jr78eaN2Bj1R4CabSc7hP3uCfcbMgRF4ahe/p26AY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=ZXNL6QbZUTp6NWcPfDfaFd88ULUE0WmmLinKd61qEAhiCrKVn/1zUUz6MoHdO1nuW
+	 o3bOHn9bp6kLwdH354K0jCXB6qwzD2Cio07BsLiQyrVYcJoBo+rcUNoB+6G4sfiQVJ
+	 /nq0jQr+neu/NCoccouMcOb3RpJM9F2mq7MeC0LE=
+Date: Wed, 8 Mar 2023 08:13:32 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH0PR10MB4759:EE_|CYYPR10MB7566:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0c13fb1f-5775-40ce-7587-08db1f656253
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	5rvt0dKOJs8Imo79zQb4ecTqCZE+9UKZchv27bPUhq4GzivljKVvkPU5znivjIwyNOejFTCEL4EPmDhHGqa4s9sonrcmk/3t6sHf0wa6p18J7HjxUUl3rvtjtAsO8L3+pVvL55rbDk1jAC3oAuCugzkyOFwmq+yVE+hM7DUsQaA9lILHvvXSwZo+oDtpmim4Rb2nPUU38XgVhQrvp4epvwWsdPhnPsIyS5MR9Jmtlt3BX8wxBpIUP063qdUGiFpeFYLbZVgyJ+8yfbu+G/lN7rsGT2bZmiREmeq1vXeDjmTfPM7XRH9h11NK7rYRGBpTwG299mfbM60LIclDiwdoMs0azi2UjnIe00MirNk6B3fSaRoa0ynIUE4mzjuE3qTRc4yivOZ3g+UIMcnq+XBgQ23F8ohgfr3sevM0f4DziecLlqOFkDdxVIpJncr7fNCw4jBQEYmLXk/ENzdwusoNyDsIVb2aU3KOsepBAFrCrMsELhyNwGvp1P6dNhVeAbiwAoR8Tpq4+VoFVshApOMl59NmdP0j197T7AO8GZGK7a4+Nac3DSgvmn/sLiyeDaKfR+NF8DxG60F/cO6/pdIoUSHmFgpx/YTdNk0QNI2Z2rwp/kK666nPPmjpNFQo9GZu/X5wTMKRtrgvnXwRXIL2Mg==
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR10MB4759.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(366004)(39860400002)(346002)(376002)(136003)(396003)(451199018)(41300700001)(5660300002)(36916002)(8936002)(54906003)(478600001)(4326008)(66556008)(66476007)(8676002)(66946007)(6916009)(316002)(6506007)(86362001)(26005)(6512007)(186003)(2906002)(6486002)(4744005)(38100700002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?P0H+k0iLlzNQ+WaFUz+V9FiuSCTIFeYcdp/C4gCDf+8LSGNBn2jecZ4GEDKo?=
- =?us-ascii?Q?7i47sXWTuDa1cBriGlHx2btB6jwWHbF2IzWwYZUBN526HTxGHahm8MaXN7TQ?=
- =?us-ascii?Q?z83FWTEHH/lluAI63acV1ge4IRG/hOrKYFhr72bMeZ8uk5IUq6yq87I0Gkql?=
- =?us-ascii?Q?Fyl83yxUaEpt+FzVGWPtV9ornsIjSi/v+1iKTGc/VCp+bQfgvJLKU/qTAIJW?=
- =?us-ascii?Q?HY6ONCOpfEterZ6v7/PJF6Vvuj6AehHxMMyc70uYXbC3VMTTP9LKK61u9Bhk?=
- =?us-ascii?Q?2d1eU4BiV4m+VrYo9cwgs4r3pUYKNj5hiqRgmkNwQ3NT3+Pha/lhZsE1eK33?=
- =?us-ascii?Q?LWFF+HbN0N016vkSOjtdGOWLfCsLIwPsO5+PxAZPRwjDnftIeYv+2lioSRCi?=
- =?us-ascii?Q?w8AQpPlYCNNngLAt7ZRULtWnJZBkJuRuQ1YfbQXRJ3ItxcpG8HpBsxPn5ALS?=
- =?us-ascii?Q?1x6brnBi9U4KytRwgVcd7bgkouYisy90sayttq49BxQqWuQAzHRIETLZosSI?=
- =?us-ascii?Q?fzOnOTXVEYGyDVNSu6ABWXr8RIUB3oM4yS4LpbmxA4AfEHE+KWqYEzH4T/d3?=
- =?us-ascii?Q?4liToqBDSMqP//eB91S67EVoK8BpkQt/Jk1g871mkXuZ52n7A6/LCnQXAfeI?=
- =?us-ascii?Q?R+Dy1BkJiItZuouDrG8qvaxJZ2XSrKrimqaUa9PhaLo0m/S5ho0ekzqxPjnv?=
- =?us-ascii?Q?oK+Frdd8adKE5IxvSRoQkFe0uDy21v/FYvV1JAtBl0QQog674RXy3cCfNV6v?=
- =?us-ascii?Q?DjyxtgUy6FF4cREpRDotSgXtlUV67C40KKOnvNvojrxozJSzHdPMpBuKxQOZ?=
- =?us-ascii?Q?L/6uaVJ23DYzru3jXibLVgq+cruj+JzpUGwIc7jNVvmgsP4hb+4b40F06bM7?=
- =?us-ascii?Q?egSqE8eTSQthD+Nrg1DP2WkH+XlpV8sCsuwAEvSXbEpqLi8sSp6C9mtUq2aP?=
- =?us-ascii?Q?IN+lIKe6ctayljs5eAgZQ8AXjYy5SnPtdnUmQ6UEFGLQsg7d/52ZLyTEpuMU?=
- =?us-ascii?Q?T9Tfa/Qc6z6EjJfctGoPkVRu3Ag3iW/vbfA1nFggQzQgaP4YW+RtwklnmRj6?=
- =?us-ascii?Q?ROBoY8A62X4PviFMl2PVFeFwvsNG8jxU6qFZIf/Q5ADEyj/93EXaZvW2BteL?=
- =?us-ascii?Q?NVSRczRKrg0e3ZmHD0B2xBFKFM2tgr0GUHy9HzNoM178D5EV1nlwWZA2HjCr?=
- =?us-ascii?Q?0qU+DWvfwWLMVYRUKBsM8T52NXZhqsgw0WA51iS0YvUs9Gi98bNVUbfTGXTW?=
- =?us-ascii?Q?VjxQty/polwQdXpmKm0WS3OA+PiEOdH79PtCEA30hm+4ws5MisKW7XLj7rZD?=
- =?us-ascii?Q?x8H0+ZNUy7CTWt4onc8+h0tBZ3sxIKRnxjfP8TsA3JNCIhj67c2YB443XcXm?=
- =?us-ascii?Q?SYW9OgB2oy1xENBOyckCWf9uuD2ChCYiom2dFWxYu9lFjS5+BdXQ0kIPdeWX?=
- =?us-ascii?Q?H1xghXnR6BklLDdct321yRJn9X1urcAHgCDGCsNWf5t38XMqH9Y8rkXrg8B7?=
- =?us-ascii?Q?YIgIxjQrom8N6lTMReIbeO3BZEfYJyfuKK6lUUm3LoOOXv4D5ucONczD9dri?=
- =?us-ascii?Q?XeD7s0lkIhXcFGKSl19ejWQEfaEvgtptid+H3qoI1LmMJTNpIshLD14uIeEs?=
- =?us-ascii?Q?/Q=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	=?us-ascii?Q?Li1exKrXQsIvElTmyn4QrPvpvxLBJ3jZS4eEcYjRh03RZCb4e9bcF0b9MRtx?=
- =?us-ascii?Q?jxQC5Wt1+KuXqbAuxFopSZurAJRirD2yN99N3TsQK/iE9K6oBb7sA5f36bZF?=
- =?us-ascii?Q?glTrUcCrhHDLtK18ESQO7iuYVKfm8vLtPo9UGqXrOG/tPqfCthrN3BqmTOvl?=
- =?us-ascii?Q?voiEjQ7U5AtTdXuO3cD0YMEkDomEsHqotv91DPdYq/WTHQ8JR+jBsyV8IHxA?=
- =?us-ascii?Q?DuZOFzl11A4fTwL7fMyK/JGbpG8FSUz+efNHyNlLUaqtPzSUDjl3fwchTJ8D?=
- =?us-ascii?Q?Ytf9O03BNV5OGI4HiLWwU/i6NXUJAR56oRJBX5kNLf5LChPet218rT/s4+/x?=
- =?us-ascii?Q?cu4W40c1qiXU2Aoo4Yi6CgBi+FlujID2eDV+BkxwQcak9lrOIVkOFqQ3Yc+q?=
- =?us-ascii?Q?enAKj0QIyq+8cRVV+yJRdDfFHK/ksNiAnfvb8cdJv4C4xqYT+6Qvd7WA8wJj?=
- =?us-ascii?Q?Yz9uiECDntesXD5oUN5M1fCBCiG/tZP6rPEw2+yEgoL+Pnp6pYHkKfjif4mw?=
- =?us-ascii?Q?k6q7eqir+Ro6aQLKqYRLXF7LLzf/ZzA2lU2zE+QQ3ydjVMQKxu3JwJQ5kodo?=
- =?us-ascii?Q?FKuq8qZiaVBf0cDLzPPA4EepbkyRrvr80J5uJzomqFYZKJkz6Ia9JKcdK+QG?=
- =?us-ascii?Q?C8g4fZ80HPvRMC0Org1iDg3v8gDbRbtz0Mkm/01UdjeHNvBG15ZYtGKHtiVG?=
- =?us-ascii?Q?Cv3i4KUGxWYHWuhQfkfNZFswc4oc+jef36g16cRI1JvYU3blbxff+QXcQj/C?=
- =?us-ascii?Q?2u1gnUnKNrFq2Mo9NHgMiLUNwkWmJfMf5tiSmtOAg6NBI23T+A8P6n6Y9YGU?=
- =?us-ascii?Q?LNVV915bJxVo6Hkr/waR9+kg5Uh5JQfoj23pSZJfszKlsqmmyZo+b0/KfYwF?=
- =?us-ascii?Q?rqBCaEx+98/VMr6ouC4tYv31wbmhNgztThdFXC1YqnGB8zYvpNCPEYvdmWcy?=
- =?us-ascii?Q?xCBXedslzKqNPsYRLwoMRg=3D=3D?=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0c13fb1f-5775-40ce-7587-08db1f656253
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR10MB4759.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Mar 2023 23:40:50.6570
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: zpr1y0uJyEVoXCuC2j7mqsC6XlFSdlJv5cL6yXQ/InPAAz7PF7RkekRkeNNminShm0g/UsLtPer9pttok7TYYZR0ULuZ+AsL4daYFPSmz1M=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYYPR10MB7566
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
- definitions=2023-03-07_16,2023-03-07_01,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=875 bulkscore=0
- malwarescore=0 spamscore=0 mlxscore=0 suspectscore=0 adultscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2212070000 definitions=main-2303070208
-X-Proofpoint-GUID: z45Hshh_dqBTKdx4Qr_T1trx_QmjoROn
-X-Proofpoint-ORIG-GUID: z45Hshh_dqBTKdx4Qr_T1trx_QmjoROn
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+Subject: Re: [Regression] rt2800usb - Wifi performance issues and connection
+ drops
+Content-Language: en-US
+To: Thomas Mann <rauchwolke@gmx.net>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
+ "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>, Stanislaw Gruszka <stf_xl@wp.pl>,
+ Helmut Schaa <helmut.schaa@googlemail.com>,
+ Johannes Berg <johannes.berg@intel.com>
+References: <b8efebc6-4399-d0b8-b2a0-66843314616b@leemhuis.info>
+ <5a7cd098-1d83-6297-e802-ce998c8ec116@leemhuis.info>
+ <6025e17e-4c29-6d36-6b9c-2fec543b21c4@wetzel-home.de>
+ <debc7fe9-204d-63a7-aa61-91b20a46f385@wetzel-home.de>
+ <20230307233123.14a411ee@polar.lan>
+From: Alexander Wetzel <alexander@wetzel-home.de>
+In-Reply-To: <20230307233123.14a411ee@polar.lan>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+
+On 07.03.23 23:31, Thomas Mann wrote:
+> Hi Alexander,
+
+Since I suspect we'll exchange quite some mails here:
+Top posting is being frowned on the mailing lists on copy.
+Details here: https://www.infradead.org/~dwmw2/email.html
+
+I've moved your post to the correct position and replied there.
+
+> 
+>>>>
+>>>
+>>> I just uploaded a test patch to bugzilla.
+>>> Please have a look if that fixes the issue.
+>>>
+>>> If not I would be interested in the output of your iTXQ status.
+>>> Enable CONFIG_MAC80211_DEBUGFS and run this command when the
+>>> connection is bad and send/share/upload to bugzilla the resulting
+>>> debug.out:
+>>>
+>>> k=1; while [ $k -lt 10 ]; do \
+>>> cat /sys/kernel/debug/ieee80211/phy?/netdev:*/stations/*/aqm; \
+>>> k=$(($k+1)); done >> debug.out
+>>
+>> Thomas and I continued with some debugging in
+>> https://bugzilla.kernel.org/show_bug.cgi?id=217119
+>>
+>> But the results so far are unexpected and we decided to continue the
+>> debugging with the round here. Hoping someone sees something I miss.
+>>
+>> A very summary where we are:
+>> I can't reproduce the bug with a very similar card and kernel config
+>> so far. Thomas card stops the iTXQs for intervalls >30s. Mine
+>> operates normally.
+>>
+>> A more useful but longer summary:
+>>
+>> Thomas updated to a 6.2 kernel and reported "connection drops and
+>> bandwidth problems" with his rt2800usb wlan card. (6.1 is ok.) Asked
+>> for some more details he reported:
+>> "...slow bandwidth stuff works better, but the main problem/test case
+>> is to start a 8-16 mbit video stream, which sometimes runs for a few
+>> seconds and then stops or it doesn't start at all"
+>>
+>> He bisected the issue and identified my commit 4444bc2116ae ("wifi:
+>> mac80211: Proper mark iTXQs for resumption") as culprit.
+>>
+>> Checking the internal iTXQ status when the issue is ongoing shows,
+>> that TID zero is flagged as dirty and thus is not transmitting queued
+>> packets. Interesting line from
+>> /sys/kernel/debug/ieee80211/phy?/netdev:*/stations/*/aqm:
+>> tid ac backlog-bytes backlog-packets new-flows drops marks overlimit
+>> collisions tx-bytes tx-packets flags
+>> 0 2 619736 404 1681 0 0 0 1 4513965 3019 0xe(RUN AMPDU NO-AMSDU DIRTY)
+>>
+>> --> The "normal" iTXQ handling IEEE80211_AC_BE has queued packets and
+>> is flagged as DIRTY. There even is a potential race setting the DIRTY
+>> flag, but the fix for that is not helping.
+>>
+>> Thus Thomas applied two debug patches, to better understand why the
+>> DIRTY flag is not cleared.
+>>
+>> And looking at the output from those we see that the driver stops Tx
+>> by calling ieee80211_stop_queue(). When ieee80211_wake_queue()
+>> mac80211 correctly resumes TX but is getting stopped by the driver
+>> after a single packet again. (The start of the relevant log is
+>> missing, so that may be initially more).
+>> I assume TX is still ok at that stage. But after some singe Tx
+>> operations the driver stops the queues again. Here the relevant part
+>> of the log:
+>> [  179.584997] XXXX __ieee80211_wake_txqs: waking TID 0
+>> [  179.585022] XXXX drv_tx: TX
+>> [  179.585027] XXXX ieee80211_stop_queue: called
+>> [  179.585028] XXXX ieee80211_tx_dequeue: mark TID 0 dirty. Reason: 1
+>> [  179.585030] XXXX __ieee80211_wake_txqs: TID 3 NOT dirty
+>> [  179.585031] XXXX __ieee80211_wake_txqs: TID 8 NOT dirty
+>> [  179.585033] XXXX __ieee80211_wake_txqs: TID 11 NOT dirty
+>> [  179.585034] XXXX __ieee80211_wake_txqs: EXIT
+>> [  179.585035] XXXX __ieee80211_wake_txqs: ENTRY
+>> [  179.585036] XXXX __ieee80211_wake_txqs: TID 1 NOT dirty
+>> [  179.585037] XXXX __ieee80211_wake_txqs: TID 2 NOT dirty
+>> [  179.585038] XXXX __ieee80211_wake_txqs: TID 9 NOT dirty
+>> [  179.585040] XXXX __ieee80211_wake_txqs: TID 10 NOT dirty
+>> [  179.585041] XXXX __ieee80211_wake_txqs: EXIT
+>> [  179.585047] XXXX drv_tx: TX
+>> [  179.585056] XXXX ieee80211_tx_dequeue: mark TID 0 dirty. Reason: 1
+>> [  179.585271] XXXX ieee80211_tx_dequeue: mark TID 0 dirty. Reason: 1
+>> [  179.585868] XXXX ieee80211_tx_dequeue: mark TID 0 dirty. Reason: 1
+>> [  179.586120] XXXX ieee80211_tx_dequeue: mark TID 0 dirty. Reason: 1
+>> [  179.586544] XXXX ieee80211_tx_dequeue: mark TID 0 dirty. Reason: 1
+>> [  179.586792] XXXX ieee80211_tx_dequeue: mark TID 0 dirty. Reason: 1
+>> [  179.587317] XXXX ieee80211_tx_dequeue: mark TID 0 dirty. Reason: 1
+>> [  179.587591] XXXX ieee80211_tx_dequeue: mark TID 0 dirty. Reason: 1
+>> [  179.588569] XXXX ieee80211_tx_dequeue: mark TID 0 dirty. Reason: 1
+>> ....
+>> [  214.307617] XXXX ieee80211_wake_queue: called
+>>
+>>
+>> --> So the driver blocked TX for more than 30s. Which is a good
+>> explanation of what Thomas observes.
+>>
+>> But there is nothing mac80211 can do differently here. Whatever is
+>> the real reason for the issue, it's nothing obvious I see.
+>>
+>> Luckily I found a card using the same driver and nearly the same card:
+>> Thomas systems:Linux version 6.2.2-gentoo (root@foo) (gcc (Gentoo
+>> Hardened 12.2.1_p20230121-r1 p10) 12.2.1 20230121, GNU ld (Gentoo
+>> 2.39 p5) 2.39.0) #2 SMP Fri Mar  3 16:59:02 CET 2023ieee80211 phy0:
+>> rt2x00_set_rt: Info - RT chipset 3070, rev 0201 detected
+>> ieee80211 phy0: rt2x00_set_rf: Info - RF chipset 0005 detected
+>> ieee80211 phy0: Selected rate control algorithm 'minstrel_ht'
+>>
+>> My system, using the kernel config from Thomas with only minor
+>> modifications (different filesystems and initramfs settings and
+>> enabled mac80211 debug and developer options):
+>> Linux version 6.2.2-gentoo (root@Perry.mordor) (gcc (Gentoo
+>> 12.2.1_p20230121-r1 p10) 12.2.1 20230121, GNU ld (Gentoo 2.40 p2)
+>> 2.40.0) #2 SMP Tue Mar  7 18:18:47 CET 2023ieee80211 phy0:
+>> rt2x00_set_rt: Info - RT chipset 3070, rev 0200 detected
+>> ieee80211 phy0: rt2x00_set_rf: Info - RF chipset 0005 detected
+>> ieee80211 phy0: Selected rate control algorithm 'minstrel_ht'
+>> ieee80211 phy0: rt2x00lib_request_firmware: Info - Loading firmware
+>> file 'rt2870.bin'
+>> ieee80211 phy0: rt2x00lib_request_firmware: Info - Firmware detected
+>> - version: 0.36
+>>
+>> But there is one big difference on my system: I can't reproduce the
+>> bug so far. It's working as it should... (I did not apply the debug
+>> patches myself so far)
+>>
+>> I'm now planning to look a bit more into the rt2800usb driver and
+>> provide another debug patch for interesting looking code pieces in it.
+>>
+>> @Thomas:
+>> I've also uploaded you my binary kernel I'm running at the moment
+>> here: https://www.awhome.eu/s/5FjqMS73rtCtSBM
+>>
+>> That kernel should also be able to boot and operate your system. Can
+>> you try that and tell me, if that makes any difference?
+
+ >
+ > i can't boot the binary kernel here, as the initramfs is included in
+ > my kernel, if you send me a patch, i can apply it and test it.
+
+That was an unpatched kernel. Idea was to verify that it's not a 
+compiler issue. (You seem to be using a hardened Gentoo profile.)
+
+Can you share your initrd, so I can include it? (Mail it to me directly, 
+upload it to bug in buguilla or send a link to some cloud storage.)
 
 
-Lee,
 
-> My worry is that this won't always work. Looking at the code, the
-> buffer sizes used for VPD pages include 8, 32, 64, and 252 bytes. I'm
-> not sure how reading 255 bytes into an 8-byte buffer would work.
+>>
+>> I'm also planning to provide some more debug patches, to figuring out
+>> which part of commit 4444bc2116ae ("wifi: mac80211: Proper mark iTXQs
+>> for resumption") fixes the issue for you. Assuming my understanding
+>> above is correct the patch should not really fix/break anything for
+>> you...With the findings above I would have expected your git bisec to
+>> identify commit a790cc3a4fad ("wifi: mac80211: add wake_tx_queue
+>> callback to drivers") as the first broken commit...
+>>
+>> Alexander
+> 
 
-In the scsi_get_vpd_buf() case we will allocate a 255 byte buffer since
-that's what scsi_get_vpd_size() returns for a VDASD.
-
-And in the scsi_get_vpd_page() case, where a buffer already exists, we
-clamp the INQUIRY size to the minimum of scsi_get_vpd_size() and the
-buffer length provided by the caller.
-
--- 
-Martin K. Petersen	Oracle Linux Engineering
