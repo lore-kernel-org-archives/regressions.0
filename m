@@ -1,96 +1,143 @@
-Received: from ns2.wdyn.eu (ns2.wdyn.eu [5.252.227.236])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04E9979F5
-	for <regressions@lists.linux.dev>; Wed,  8 Mar 2023 16:50:10 +0000 (UTC)
-Message-ID: <ba784fc6-ad8f-e5da-ae4e-0db7ad09f7dc@wetzel-home.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=wetzel-home.de;
-	s=wetzel-home; t=1678294207;
-	bh=YA+K444dWcbAd7DKNCT3bFNd5XtIlQMneb647LsxuxQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=ucKTGhcs9mmY8kxUWFtqZ3NokjCppc1K9Bsmw2rjAB3mJSJkh+LJ6cNmuHAfnrI4I
-	 iFDZCUxCRJmCtIKshFK/E5rbLskmK9ZIR5ZtNFCugtkpivpopDb3vTlOGftF8C6Yy6
-	 j7J4AVaWDsRfjAW1WHJTIEI06LVhG/7gVimOph9s=
-Date: Wed, 8 Mar 2023 17:50:05 +0100
+Received: from EUR04-VI1-obe.outbound.protection.outlook.com (mail-vi1eur04on2059.outbound.protection.outlook.com [40.107.8.59])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6733D8BED
+	for <regressions@lists.linux.dev>; Wed,  8 Mar 2023 18:42:01 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=EKyFbTAzg08YCmICyCFFf/eZDZIXsL0j84ifQY91bCrCSY9O+jJh24IF6tc7SsEVV/djGJCc29q192Q2z626b2AGZUliNONs1Bft91rsHUzliq0/h0MtHDsqjJDEv2ISFqi4U28/rcsaokXVtB0NWzoZ5pxIpDf8XbXkSAJp6Vzb0ldGCtcnrJnbLkuAo0fPzILRzXVJLY1pc7cta5InsIU0bS8UpCqSLjyuqimXxvSX00xY6JjIZ2tXXuyD/Btp+NI2uRB80HkqOFYnBs7nBE7XokSUHGaRUtR5VdaVQmuIGeuXGzEn4SddnFG01FlkgGxCnPw/ka3uur+7R8lUdA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=5qRdw4lNUBJIkUpoCpF1wcFR5snKb8Q8hFnzSRAWP1k=;
+ b=eMXfzRgoCdVrxMraP+lJbx8LrIYiFmZPoVRHEXUSunL7wGWdlfIrFUpxcvIhhW1kYsDXDOdugBdJaj3Eg9IBw3hkD6EChHniKCKNI0bW3fFZIK4vbdfstWVTCd8jyyIbRyl1hUN0oTww5QUvE0/JPF43E10TzcTLvUzYOBokR86RHWqzPrqucMgH9c7M1mKMI5zwadP4l1kxEsf/SR9BmgJfzmrDIoDVW+Or+8cMQddhaWhOwyAvs1L8or7ZOwEmP7yyMDL5nHJehst3Gm8kP4CNKN5wfs8b4QQQtQw9aPEQW5/4/b+S/JhZY8c1PmgRGaH5Pg/BIM2ruNryuci4Tg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
+ dkim=pass header.d=suse.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5qRdw4lNUBJIkUpoCpF1wcFR5snKb8Q8hFnzSRAWP1k=;
+ b=IlIoAcblH0JydEoriMdZe493JQQ1eGBFGNGjivvdiSyJa8ByWgYxm/rlxuERVO/vDCmTnuopFM4EYs8YUArGJ9apCEUTVb7n5DIFI12dzeEKn3rsx/ZEzMH/5aNm+1V5VzYJE7ulJWRWaKdPy32BezbqOzVkJ+u64l/+vmPb4cGo6gqLR5h46OU1vpFxTtMnzoZ41zCkNVfTNuJImTLl/Nb0/hBMsFmU7q7B6p50oqAm8H0dawGCiO9SBoDdaNachPPSVK9bHDuIZ+UZoJz4a+c/dLgHDrdHqKfwpa+KG4g5Rb1wp3Ec5tbIkQ23ddrVUO6AjWqxEn8ZEokoueZ5Sw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=suse.com;
+Received: from AM5PR04MB3089.eurprd04.prod.outlook.com (2603:10a6:206:b::28)
+ by PAXPR04MB8271.eurprd04.prod.outlook.com (2603:10a6:102:1ca::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6156.29; Wed, 8 Mar
+ 2023 18:41:58 +0000
+Received: from AM5PR04MB3089.eurprd04.prod.outlook.com
+ ([fe80::32a5:c2e6:91d9:1a68]) by AM5PR04MB3089.eurprd04.prod.outlook.com
+ ([fe80::32a5:c2e6:91d9:1a68%4]) with mapi id 15.20.6178.016; Wed, 8 Mar 2023
+ 18:41:58 +0000
+Message-ID: <a4ecf9eb-509a-84a6-8a9f-a3f5ea54ecac@suse.com>
+Date: Wed, 8 Mar 2023 10:41:51 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Subject: Re: [PATCH] scsi: core: Add BLIST_NO_ASK_VPD_SIZE for some VDASD
+Content-Language: en-US
+To: "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: Lee Duncan <leeman.duncan@gmail.com>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ "James E.J. Bottomley" <jejb@linux.ibm.com>, linux-scsi@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Martin Wilck <mwilck@suse.com>,
+ Hannes Reinecke <hare@suse.de>, Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+References: <20220928181350.9948-1-leeman.duncan@gmail.com>
+ <88927435-ae58-c24b-e7b7-b675985de433@leemhuis.info>
+ <86D685F2-D411-460B-A09B-6BE942372F0A@gmail.com>
+ <yq1zg8pl1nq.fsf@ca-mkp.ca.oracle.com>
+ <f8c5619f-1e1a-f759-6ab6-ea84bba3d635@suse.com>
+ <yq1edq0jg2h.fsf@ca-mkp.ca.oracle.com>
+From: Lee Duncan <lduncan@suse.com>
+In-Reply-To: <yq1edq0jg2h.fsf@ca-mkp.ca.oracle.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: FR3P281CA0103.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:a1::19) To AM5PR04MB3089.eurprd04.prod.outlook.com
+ (2603:10a6:206:b::28)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [Regression] rt2800usb - Wifi performance issues and connection
- drops
-Content-Language: en-US
-To: Linux regressions mailing list <regressions@lists.linux.dev>,
- Felix Fietkau <nbd@nbd.name>
-Cc: "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
- LKML <linux-kernel@vger.kernel.org>, Thomas Mann <rauchwolke@gmx.net>,
- Stanislaw Gruszka <stf_xl@wp.pl>, Helmut Schaa
- <helmut.schaa@googlemail.com>, Johannes Berg <johannes.berg@intel.com>
-References: <b8efebc6-4399-d0b8-b2a0-66843314616b@leemhuis.info>
- <5a7cd098-1d83-6297-e802-ce998c8ec116@leemhuis.info>
- <6025e17e-4c29-6d36-6b9c-2fec543b21c4@wetzel-home.de>
- <debc7fe9-204d-63a7-aa61-91b20a46f385@wetzel-home.de>
- <4a02173f-3a60-0a7e-8962-3778e6c55bf3@nbd.name>
- <cfa5cc30-bf5a-bffd-4c2f-eec8a6522dd5@wetzel-home.de>
- <42185fa2-4191-fcf5-9c0f-fd7098bb856b@nbd.name>
- <2246a9d5-789d-08c9-f6a7-fb9db2edfe9f@leemhuis.info>
-From: Alexander Wetzel <alexander@wetzel-home.de>
-In-Reply-To: <2246a9d5-789d-08c9-f6a7-fb9db2edfe9f@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM5PR04MB3089:EE_|PAXPR04MB8271:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0abad45e-b0ca-492e-3c8f-08db2004cc24
+X-LD-Processed: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba,ExtFwd
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	LjFatBBxlOcVEg0zi4AB53BzgcabXKbfp8XJulPtfHOpx5sT1eNury2l3fzA4yW43dssq+yqVDnJWblpoIyExgVKUcx9tRn9uvz2OCHXR5v+zQJTPebqjkFo4ADssG8PWJjDU9BOva8vTyaL//frnUxCRv8Un0ISdcQMkUCLAcdiCv183UIl64vG7hC35PL3VqhHfi+NU4dOMFog8Yv51nniU06zRT6LVyC/zsjDk/QIT/k+D5UE1D6u6r3V1djGGKdx0dCQOVSnFlfa/bXcuMRfdEucK6ZCbzmO5sKSOVA3PwgLe0j39YWUlpw9ZKydnj1LwW+k4CDKfVMgLOEfexgrMHh+MJt0TIFALx0aHNn2LM+A/Xq+iTR8jC3v87RgQhPUOAl7U5lfxFweRwHbk14HzPFRFjdzKuBuhbOLtoGHbVBqfW0DIU5+L52RdP3ug58EYOEWbbTLStZzw2dTgTQRw6RiT6fLkWtX6+4h7HzkAIVtWi+70HKxDmaPZwpMeKs67Yt/0My680IaVRpdq1Px1elhDEtWgA44bRB+yxEpCEHKYBAWP3GRWeHgWpodSn4Xi5D6Nv0h1TnTOo0ohFTBHBHdbQPYM0OueurVjbUtZbY8foX3fMgeCAehxrm7CMH/3Ft93FH3+rleO+pfNtjl+YcLRTLEisgDW1SBwoztNqV7KYD+yl7PTliE5MPi56MjqzxOUr3r/aWSJuIxqrFI2MtBWY38iGMJbvYcGyE=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM5PR04MB3089.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(346002)(376002)(366004)(39860400002)(136003)(396003)(451199018)(4744005)(31686004)(5660300002)(8936002)(2906002)(41300700001)(66946007)(66476007)(66556008)(8676002)(4326008)(6916009)(316002)(53546011)(6666004)(6512007)(54906003)(478600001)(6486002)(6506007)(31696002)(38100700002)(186003)(86362001)(26005)(2616005)(36756003)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?QTVLWHMyQy9UNCtqNTladmV3NXB1UlhBSXMzb3J1b0Z1bUs3enpMNU94MURC?=
+ =?utf-8?B?cEtmYU9pLzYzbmlWajFBeFlLbElCanJIcmMwMlZMRllGbndXU2ZEellkWHlV?=
+ =?utf-8?B?L25tdVZJUzF2bVo3bmtOYUtCSjBBYlJpaDhnbTFKYTYzVFkzVVlkREErdzVH?=
+ =?utf-8?B?MkFQRkhONVZmakZxQkNzbEp1NXVEZm1hb29NeUtHcWtNTnIrK2xaU1hvMUda?=
+ =?utf-8?B?K2JpcXphVWs0SlZXcGJvcXdHYzJXU20rUHZEM2oyWTV6dVBJczl2TndWSHJ6?=
+ =?utf-8?B?a3U0RmhlNzhJQUZwMDRGYkRySmNUa1E2WFBjK09lK01GTU9tcXZoNG4wTkZD?=
+ =?utf-8?B?NnREcm5nbVJ1TGhuMkVBOWxlRmNSNkEwN3lHSHduOFVCWGNlcW9HeW9FUlgr?=
+ =?utf-8?B?YmNSTEtGdGFpc3pQNk9wUklDOEx5cy9KNUtnRUJFK0xwT0tRZTFTc3dVdmtL?=
+ =?utf-8?B?OXE0cmxtMjYyNUEzVXB5ZGRWaFRrV3h1aE1ucTZpRjBmVkRLLzF1TmNjSGFP?=
+ =?utf-8?B?YlFnaXZnamQ2Sk9IMU9XLzVjbHlxMGdubjBuK1hmZktxVjhINTdSa1pselZl?=
+ =?utf-8?B?d0dseFpPK0pqZUdma1RWY0VWckp0ekpTNnZCSWhRSlpaa0xqbm9MbWNrR25x?=
+ =?utf-8?B?angxbTFNdzJhZm00UXAweXl3MmJIblgvaDNxak90bHdoQmpJbm1EbE9WODdo?=
+ =?utf-8?B?MzdVUFVzdCs3NUpSb0gyQnhlVGR5S1hJL0tLQ0k3N3ZVb1FZSjd6REcrRlQ2?=
+ =?utf-8?B?NTM3RStoKzhTL2ZKb28rQWMrSFFKNW9BUlRxaVVESkp1VEtxMFhLdjRtNnU4?=
+ =?utf-8?B?S3c5K3o0UTNpOTlReGlXb2VVbTJwQ0JZMnlFdytBdkYvSG91UVk5aWJnTEdz?=
+ =?utf-8?B?Vk1tWFZrV0ZCbHZzNlNLdThWbmQ1SGY1OUxlWXNabGJXdzNHd0l0Z1VkUmk2?=
+ =?utf-8?B?TERoOTRhbzBUbElicnZDUCtWWGNPdmRJdTM2b2pxdmUybEF3b2NsK2FFcEdw?=
+ =?utf-8?B?WXZiTlVRVmtBb241bFFEalJ1cVhhREJ3OE5uNkozaGt3bG9PUWx4YytuVU5s?=
+ =?utf-8?B?SXBhU3crSG9VdHdWcE5WTTNlVnUyZXJOSnRrVUlwZi9pRDVCQzNIdUtQdXJP?=
+ =?utf-8?B?eUZiQWhaZWVwRmVLcnBkYmljdkJZS0tVV1dwNnJpUTBmUXlsSFVlMW9mcndZ?=
+ =?utf-8?B?d3lNVnZpRjg3a0Z2cmlNaklBa291aW93WkcvSU5JTTBJMVBsamNzTEpUcisr?=
+ =?utf-8?B?VHdGQWJYbzFoaXJZY0E3YWxxMlJsTm04WllGRFhveU5OZk9RMzhFMnc2TUJF?=
+ =?utf-8?B?ZGozTkphazdhUzl2cjcvelU2QWxBWXpqd2JvdTZzcUphRDNxWEM0MkloSWEz?=
+ =?utf-8?B?MmQzUHE5U0dGTGlrUDVGVUsveVBkQSsyZm8zNU9EQms3QnRLK1hrTHREVnpq?=
+ =?utf-8?B?L2ZjSTZNK1lwc2tPQ0FRWGdYSzEyTzRJeXA1YzZ4bkFyb0ZEcTgrZmhqVEJa?=
+ =?utf-8?B?Z1UxWEtMRmcvTEdpdHJ3OU9DVnZPL01hYk1kSk0vN2pmV0s1c1dmb3h1Rmtr?=
+ =?utf-8?B?dXNNYXo3bFJNQ0xxTk1KdENHWTRoZHVjS2g5YVVlOG9URWtpZkkxUFhXYmxL?=
+ =?utf-8?B?ci93OTJTTjIweVJRbDBIMytIcDJFeG16L3AyY0dQZEwwSjJZT1VFdXo2WDVF?=
+ =?utf-8?B?dGNxUzVNd01HY1FZVW1GY0N5OEdjdi9TWC80VWdDTndpUHBvWjV2bUJIS3Ir?=
+ =?utf-8?B?a2R4RFd1ZjFtcmNFdThoK3pYbUJTSnhiYVlydlNYZDMwMmM4WW1WQ2J4UUdo?=
+ =?utf-8?B?eHpURzVmUXNvUTQveHRlREh5elBnTXZ4ZVBEOUlNajRPODJSNnFEUk92UkhY?=
+ =?utf-8?B?MXhlL1AxY0xOSzdrOHRJbGwra1M4U3gyRDk1eEFsOVZlSjNzUGMweGlDWGdO?=
+ =?utf-8?B?OUVEY2tQaEtuVWtkcnJRWGg1NXNudi9BWG5lOU9RWTNnWThGTWZpWnV1LzVu?=
+ =?utf-8?B?dmlINmtwWS9JRCtKbi9MMERxK0Jrc3FMYnNVT2trTEhkZHJaNFE5ZWRJSHRP?=
+ =?utf-8?B?d09rbzNqTWtZQzRSY01ydXhIMnN4eFZKdVpoWUVndXRWemxpaCtzbFF3Qndz?=
+ =?utf-8?Q?LiEpW51kfD/PQ274H4sZs1zec?=
+X-OriginatorOrg: suse.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0abad45e-b0ca-492e-3c8f-08db2004cc24
+X-MS-Exchange-CrossTenant-AuthSource: AM5PR04MB3089.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Mar 2023 18:41:58.3223
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: jTGdTIKEwkR46FtSiUkhP9GPrKEIDKDDoo3p7VsVgGqxNuQxqE45hb9XCksGNZkuHuwLJ9LiZKHBWaCr0ndYvw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB8271
 
-On 08.03.23 13:21, Linux regression tracking (Thorsten Leemhuis) wrote:
-> On 08.03.23 12:57, Felix Fietkau wrote:
->> On 08.03.23 12:41, Alexander Wetzel wrote:
->>> On 08.03.23 08:52, Felix Fietkau wrote:
->>>>> I'm also planning to provide some more debug patches, to figuring out
->>>>> which part of commit 4444bc2116ae ("wifi: mac80211: Proper mark iTXQs
->>>>> for resumption") fixes the issue for you. Assuming my understanding
->>>>> above is correct the patch should not really fix/break anything for
->>>>> you...With the findings above I would have expected your git bisec to
->>>>> identify commit a790cc3a4fad ("wifi: mac80211: add wake_tx_queue
->>>>> callback to drivers") as the first broken commit...
->>>> I can't point to any specific series of events where it would go
->>>> wrong, but I suspect that the problem might be the fact that you're
->>>> doing tx scheduling from within ieee80211_handle_wake_tx_queue. I
->>>> don't see how it's properly protected from potentially being called
->>>> on different CPUs concurrently.
->>>> Back when I was debugging some iTXQ issues in mt76, I also had
->>>> problems when tx scheduling could happen from multiple places. My
->>>> solution was to have a single worker thread that handles tx, which is
->>>> scheduled from the wake_tx_queue op.
->>>> Maybe you could do something similar in mac80211 for non-iTXQ drivers.
->>> I think it's already doing all of that:
->>> ieee80211_handle_wake_tx_queue() is the mac80211 implementation for the
->>> wake_tx_queue op. The drivers without native iTXQ support simply link it
->>> to this handler.
->> I know. The problem I see is that I can't find anything that guarantees
->> that .wake_tx_queue_op is not being called concurrently from multiple
->> different places. ieee80211_handle_wake_tx_queue is doing the scheduling
->> directly, instead of deferring it to a single workqueue/tasklet/thread,
->> and multiple concurrent calls to it could potentially cause issues.
+On 3/7/23 15:40, Martin K. Petersen wrote:
 > 
-> Alexander, Felix, many thx for looking into this.
+> Lee,
 > 
-> This more and more sounds like something that might take a while to get
-> fixed, which makes it harder to get this fixed within those time-frames
-> Documentation/process/handling-regressions.rst outlines. So please allow
-> me to ask:
+>> My worry is that this won't always work. Looking at the code, the
+>> buffer sizes used for VPD pages include 8, 32, 64, and 252 bytes. I'm
+>> not sure how reading 255 bytes into an 8-byte buffer would work.
 > 
-> Is reverting the culprit (and reapplying it later once the real cause is
-> found and fixed) an option, or would that cause other regressions?
+> In the scsi_get_vpd_buf() case we will allocate a 255 byte buffer since
+> that's what scsi_get_vpd_size() returns for a VDASD.
+> 
+> And in the scsi_get_vpd_page() case, where a buffer already exists, we
+> clamp the INQUIRY size to the minimum of scsi_get_vpd_size() and the
+> buffer length provided by the caller.
+> 
 
-This patch turned out to fix a (much worse) pre-release regression. See e.g.
-https://lore.kernel.org/linux-wireless/7cff27f8-d363-bbfb-241e-8d6fc0009c40@leemhuis.info/T/#t
+Please add my Reviewed-by tag then.
 
-To fix both regressions will force us to revert more commits other 
-patches depends on...
-
-> 
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-> --
-> Everything you wanna know about Linux kernel regression tracking:
-> https://linux-regtracking.leemhuis.info/about/#tldr
-> If I did something stupid, please tell me, as explained on that page.
+-- 
+Lee
 
