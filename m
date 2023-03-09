@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14421807
-	for <regressions@lists.linux.dev>; Thu,  9 Mar 2023 07:59:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B92B933ED
+	for <regressions@lists.linux.dev>; Thu,  9 Mar 2023 09:24:41 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1paBBN-0006ZG-B1; Thu, 09 Mar 2023 08:59:25 +0100
-Message-ID: <18c406b6-ca57-b8e4-e60c-f4f0186ed392@leemhuis.info>
-Date: Thu, 9 Mar 2023 08:59:24 +0100
+	id 1paCVr-0002m5-Jz; Thu, 09 Mar 2023 10:24:39 +0100
+Message-ID: <b8346394-955f-598d-d1ad-666b0ce68ec5@leemhuis.info>
+Date: Thu, 9 Mar 2023 10:24:39 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,88 +16,35 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.8.0
-Subject: Re: [Regression] rt2800usb - Wifi performance issues and connection
- drops
 Content-Language: en-US, de-DE
-To: Alexander Wetzel <alexander@wetzel-home.de>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- Felix Fietkau <nbd@nbd.name>
-Cc: "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
- LKML <linux-kernel@vger.kernel.org>, Thomas Mann <rauchwolke@gmx.net>,
- Stanislaw Gruszka <stf_xl@wp.pl>, Helmut Schaa
- <helmut.schaa@googlemail.com>, Johannes Berg <johannes.berg@intel.com>
-References: <b8efebc6-4399-d0b8-b2a0-66843314616b@leemhuis.info>
- <5a7cd098-1d83-6297-e802-ce998c8ec116@leemhuis.info>
- <6025e17e-4c29-6d36-6b9c-2fec543b21c4@wetzel-home.de>
- <debc7fe9-204d-63a7-aa61-91b20a46f385@wetzel-home.de>
- <4a02173f-3a60-0a7e-8962-3778e6c55bf3@nbd.name>
- <cfa5cc30-bf5a-bffd-4c2f-eec8a6522dd5@wetzel-home.de>
- <42185fa2-4191-fcf5-9c0f-fd7098bb856b@nbd.name>
- <2246a9d5-789d-08c9-f6a7-fb9db2edfe9f@leemhuis.info>
- <ba784fc6-ad8f-e5da-ae4e-0db7ad09f7dc@wetzel-home.de>
-From: "Linux regression tracking (Thorsten Leemhuis)"
+From: "Linux regression tracking #adding (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <ba784fc6-ad8f-e5da-ae4e-0db7ad09f7dc@wetzel-home.de>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+Subject: [regression] [Bug 217158] stutter with kernel 6.2
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1678348769;504204b0;
-X-HE-SMSGID: 1paBBN-0006ZG-B1
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1678353881;aa9ab858;
+X-HE-SMSGID: 1paCVr-0002m5-Jz
 
-On 08.03.23 17:50, Alexander Wetzel wrote:
-> On 08.03.23 13:21, Linux regression tracking (Thorsten Leemhuis) wrote:
->> On 08.03.23 12:57, Felix Fietkau wrote:
->>> On 08.03.23 12:41, Alexander Wetzel wrote:
->>>> On 08.03.23 08:52, Felix Fietkau wrote:
->>>>>> I'm also planning to provide some more debug patches, to figuring out
->>>>>> which part of commit 4444bc2116ae ("wifi: mac80211: Proper mark iTXQs
->>>>>> for resumption") fixes the issue for you. Assuming my understanding
->>>>>> above is correct the patch should not really fix/break anything for
->>>>>> you...With the findings above I would have expected your git bisec to
->>>>>> identify commit a790cc3a4fad ("wifi: mac80211: add wake_tx_queue
->>>>>> callback to drivers") as the first broken commit...
->>>>> I can't point to any specific series of events where it would go
->>>>> wrong, but I suspect that the problem might be the fact that you're
->>>>> doing tx scheduling from within ieee80211_handle_wake_tx_queue. I
->>>>> don't see how it's properly protected from potentially being called
->>>>> on different CPUs concurrently.
->>>>> Back when I was debugging some iTXQ issues in mt76, I also had
->>>>> problems when tx scheduling could happen from multiple places. My
->>>>> solution was to have a single worker thread that handles tx, which is
->>>>> scheduled from the wake_tx_queue op.
->>>>> Maybe you could do something similar in mac80211 for non-iTXQ drivers.
->>>> I think it's already doing all of that:
->>>> ieee80211_handle_wake_tx_queue() is the mac80211 implementation for the
->>>> wake_tx_queue op. The drivers without native iTXQ support simply
->>>> link it
->>>> to this handler.
->>> I know. The problem I see is that I can't find anything that guarantees
->>> that .wake_tx_queue_op is not being called concurrently from multiple
->>> different places. ieee80211_handle_wake_tx_queue is doing the scheduling
->>> directly, instead of deferring it to a single workqueue/tasklet/thread,
->>> and multiple concurrent calls to it could potentially cause issues.
->>
->> Alexander, Felix, many thx for looking into this.
->>
->> This more and more sounds like something that might take a while to get
->> fixed, which makes it harder to get this fixed within those time-frames
->> Documentation/process/handling-regressions.rst outlines. So please allow
->> me to ask:
->>
->> Is reverting the culprit (and reapplying it later once the real cause is
->> found and fixed) an option, or would that cause other regressions?
-> 
-> This patch turned out to fix a (much worse) pre-release regression. See
-> e.g.
-> https://lore.kernel.org/linux-wireless/7cff27f8-d363-bbfb-241e-8d6fc0009c40@leemhuis.info/T/#t
+[TLDR: Just adding a regression reported to bko to the tracking]
 
-Uggh, thx for the update, that's unfortunate, but that's how it is
-sometimes. I just asked because the culprit didn't have a Reported-by or
-together with a Link: to the backstory, so it looked like it might be
-fine to revert. But then it's not a option.
+Hi, Thorsten here, the Linux kernel's regression tracker. I noticed a
+regression reported in bugzilla.kernel.org that seems to be handled
+there already (at least partially, because as of now we have not the
+slightest idea what subsystem might cause this), nevertheless I'd like
+to add to the tracking to ensure it's doesn't fall through the cracks in
+the end:
+
+#regzbot introduced: v6.1..v6.2
+https://bugzilla.kernel.org/show_bug.cgi?id=217158
+#regzbot title: system started to stutter
+#regzbot ignore-activity
+
+See the ticket for details, there were a few replies already.
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
 Everything you wanna know about Linux kernel regression tracking:
 https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+That page also explains what to do if mails like this annoy you.
