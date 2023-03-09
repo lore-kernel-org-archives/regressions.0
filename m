@@ -1,95 +1,103 @@
-Received: from mta-253-222-181.smtp-out.sparkpostmail.com (mta-253-222-181.smtp-out.sparkpostmail.com [147.253.222.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DB838BF3
-	for <regressions@lists.linux.dev>; Wed,  8 Mar 2023 20:10:23 +0000 (UTC)
-X-MSFBL: biXhCyw3Qv7PL6vEJEXpX9LJ7qjlcYXIu0+1vq7oClU=|eyJjdXN0b21lcl9pZCI
-	6IjE4MTk1IiwidGVuYW50X2lkIjoic3BjZXUiLCJyIjoicmVncmVzc2lvbnNAbGl
-	zdHMubGludXguZGV2IiwibWVzc2FnZV9pZCI6IjYzZmZmM2U2MDg2NDhmYTY5YTU
-	yIiwic3ViYWNjb3VudF9pZCI6IjAifQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jetro.fi;
-	s=scph0722; t=1678305011; i=@jetro.fi;
-	bh=7fUjpORLA3TtUHjqVMrMy4HdWjQjD0+guTj3+2Rt4VY=;
-	h=Date:From:To:Cc:Subject:Message-ID:Content-Type:List-Unsubscribe:
-	 From:To:Cc:Subject;
-	b=jU/5EfJTx25F57y+rdncKLVHZkz5U6KWpraIsHBfZTvV/Gh521FQySptCC9YsMdxO
-	 J/ve/2YpAnfg9ImjTEYEwbjhMX/v3Z8GxddFYnNJ3mRwm1lLWmpzqPZaXsTcp9ueuN
-	 CIrUJspAQsg0vyQkFwSGfIkKkEqsDpeAFmaZXQzM=
-Authentication-Results:  gc.mta3vsmtp.cc.prd.sparkpost smtp.user=<hidden>; auth=pass (LOGIN)
-Received: from [95.216.160.149] ([95.216.160.149:50846] helo=tu.jetro.fi)
-	by gc.mta3vsmtp.cc.prd.sparkpost (envelope-from <jje-lxkl@jetro.fi>)
-	(ecelerity 4.4.0.18004 r(msys-ecelerity:tags/4.4.0.50)) with ESMTPSA (cipher=AES-256-GCM) 
-	id 88/25-28274-3F6E8046; Wed, 08 Mar 2023 19:50:11 +0000
-Received: from [2001:470:28:7b9::190] (port=33724 helo=mopti)
-	by tu.jetro.fi with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <jje-lxkl@jetro.fi>)
-	id 1pZzne-00BCor-1f;
-	Wed, 08 Mar 2023 21:50:10 +0200
-Date: Wed, 8 Mar 2023 21:50:09 +0200
-From: Jetro Jormalainen <jje-lxkl@jetro.fi>
-To: Meng Tang <tangmeng@uniontech.com>
-Cc: regressions@lists.linux.dev, linux-kernel@vger.kernel.org, Takashi Iwai
- <tiwai@suse.de>, stable@vger.kernel.org
-Subject: [REGRESSION] External mic not working on Lenovo Ideapad U310, ALSA:
- hda/conexant: Add quirk for LENOVO 20149 Notebook model
-Message-ID: <20230308215009.4d3e58a6@mopti>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.36; x86_64-pc-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14421807
+	for <regressions@lists.linux.dev>; Thu,  9 Mar 2023 07:59:28 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1paBBN-0006ZG-B1; Thu, 09 Mar 2023 08:59:25 +0100
+Message-ID: <18c406b6-ca57-b8e4-e60c-f4f0186ed392@leemhuis.info>
+Date: Thu, 9 Mar 2023 08:59:24 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+Subject: Re: [Regression] rt2800usb - Wifi performance issues and connection
+ drops
+Content-Language: en-US, de-DE
+To: Alexander Wetzel <alexander@wetzel-home.de>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ Felix Fietkau <nbd@nbd.name>
+Cc: "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>, Thomas Mann <rauchwolke@gmx.net>,
+ Stanislaw Gruszka <stf_xl@wp.pl>, Helmut Schaa
+ <helmut.schaa@googlemail.com>, Johannes Berg <johannes.berg@intel.com>
+References: <b8efebc6-4399-d0b8-b2a0-66843314616b@leemhuis.info>
+ <5a7cd098-1d83-6297-e802-ce998c8ec116@leemhuis.info>
+ <6025e17e-4c29-6d36-6b9c-2fec543b21c4@wetzel-home.de>
+ <debc7fe9-204d-63a7-aa61-91b20a46f385@wetzel-home.de>
+ <4a02173f-3a60-0a7e-8962-3778e6c55bf3@nbd.name>
+ <cfa5cc30-bf5a-bffd-4c2f-eec8a6522dd5@wetzel-home.de>
+ <42185fa2-4191-fcf5-9c0f-fd7098bb856b@nbd.name>
+ <2246a9d5-789d-08c9-f6a7-fb9db2edfe9f@leemhuis.info>
+ <ba784fc6-ad8f-e5da-ae4e-0db7ad09f7dc@wetzel-home.de>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <ba784fc6-ad8f-e5da-ae4e-0db7ad09f7dc@wetzel-home.de>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-List-Unsubscribe: <mailto:unsubscribe@eu.sparkpostmail.com?subject=unsubscribe:yOWhMwcquKaPPvewl-NKChrLft05QYZPAlG9ZIEBzRo~|eyAicmNwdF90byI6ICJyZWdyZXNzaW9uc0BsaXN0cy5saW51eC5kZXYiLCAidGVuYW50X2lkIjogInNwY2V1IiwgImN1c3RvbWVyX2lkIjogIjE4MTk1IiwgIm1lc3NhZ2VfaWQiOiAiNjNmZmYzZTYwODY0OGZhNjlhNTIiLCAic3ViYWNjb3VudF9pZCI6ICIwIiB9>
-List-Id: <spceu.18195.0.sparkpostmail.com>
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1678348769;504204b0;
+X-HE-SMSGID: 1paBBN-0006ZG-B1
 
-External mic on Lenovo Ideapad U310 has not been working with and
-after 5.19.2 release. Same problem still exists on 6.3.0-rc1. Reverting
-this commit makes external mic to work on 6.3.0-rc1. These were tested
-on vanilla kernels.
+On 08.03.23 17:50, Alexander Wetzel wrote:
+> On 08.03.23 13:21, Linux regression tracking (Thorsten Leemhuis) wrote:
+>> On 08.03.23 12:57, Felix Fietkau wrote:
+>>> On 08.03.23 12:41, Alexander Wetzel wrote:
+>>>> On 08.03.23 08:52, Felix Fietkau wrote:
+>>>>>> I'm also planning to provide some more debug patches, to figuring out
+>>>>>> which part of commit 4444bc2116ae ("wifi: mac80211: Proper mark iTXQs
+>>>>>> for resumption") fixes the issue for you. Assuming my understanding
+>>>>>> above is correct the patch should not really fix/break anything for
+>>>>>> you...With the findings above I would have expected your git bisec to
+>>>>>> identify commit a790cc3a4fad ("wifi: mac80211: add wake_tx_queue
+>>>>>> callback to drivers") as the first broken commit...
+>>>>> I can't point to any specific series of events where it would go
+>>>>> wrong, but I suspect that the problem might be the fact that you're
+>>>>> doing tx scheduling from within ieee80211_handle_wake_tx_queue. I
+>>>>> don't see how it's properly protected from potentially being called
+>>>>> on different CPUs concurrently.
+>>>>> Back when I was debugging some iTXQ issues in mt76, I also had
+>>>>> problems when tx scheduling could happen from multiple places. My
+>>>>> solution was to have a single worker thread that handles tx, which is
+>>>>> scheduled from the wake_tx_queue op.
+>>>>> Maybe you could do something similar in mac80211 for non-iTXQ drivers.
+>>>> I think it's already doing all of that:
+>>>> ieee80211_handle_wake_tx_queue() is the mac80211 implementation for the
+>>>> wake_tx_queue op. The drivers without native iTXQ support simply
+>>>> link it
+>>>> to this handler.
+>>> I know. The problem I see is that I can't find anything that guarantees
+>>> that .wake_tx_queue_op is not being called concurrently from multiple
+>>> different places. ieee80211_handle_wake_tx_queue is doing the scheduling
+>>> directly, instead of deferring it to a single workqueue/tasklet/thread,
+>>> and multiple concurrent calls to it could potentially cause issues.
+>>
+>> Alexander, Felix, many thx for looking into this.
+>>
+>> This more and more sounds like something that might take a while to get
+>> fixed, which makes it harder to get this fixed within those time-frames
+>> Documentation/process/handling-regressions.rst outlines. So please allow
+>> me to ask:
+>>
+>> Is reverting the culprit (and reapplying it later once the real cause is
+>> found and fixed) an option, or would that cause other regressions?
+> 
+> This patch turned out to fix a (much worse) pre-release regression. See
+> e.g.
+> https://lore.kernel.org/linux-wireless/7cff27f8-d363-bbfb-241e-8d6fc0009c40@leemhuis.info/T/#t
 
-Bisecting shows that this commit breaks external mic:
-f83bb2592482fe94c6eea07a8121763c80f36ce5
-ALSA: hda/conexant: Add quirk for LENOVO 20149 Notebook model
+Uggh, thx for the update, that's unfortunate, but that's how it is
+sometimes. I just asked because the culprit didn't have a Reported-by or
+together with a Link: to the backstory, so it looked like it might be
+fine to revert. But then it's not a option.
 
-After this commit Pulseaudio only shows "Microphone" port as before
-there was "Internal microphone" and "Microphone". However when
-recording this "Microphone" port that seems to record internal
-microphone. External mic cannot be recorded at all after this commit.
-
-External mic not working (dmesg):
-
-[    7.565222] snd_hda_codec_conexant hdaudioC1D0: CX20590: BIOS auto-probing.
-[    7.566141] snd_hda_codec_conexant hdaudioC1D0: autoconfig for CX20590: line_outs=1 (0x1f/0x0/0x0/0x0/0x0) type:speaker
-[    7.566152] snd_hda_codec_conexant hdaudioC1D0:    speaker_outs=0 (0x0/0x0/0x0/0x0/0x0)
-[    7.566158] snd_hda_codec_conexant hdaudioC1D0:    hp_outs=1 (0x19/0x0/0x0/0x0/0x0)
-[    7.566162] snd_hda_codec_conexant hdaudioC1D0:    mono: mono_out=0x0
-[    7.566166] snd_hda_codec_conexant hdaudioC1D0:    inputs:
-[    7.566169] snd_hda_codec_conexant hdaudioC1D0:      Mic=0x23
-[    7.566172] snd_hda_codec_conexant hdaudioC1D0:    dig-in=0x1a
-
-External mic working (dmesg):
-
-[    8.381160] snd_hda_codec_conexant hdaudioC1D0: CX20590: BIOS auto-probing.
-[    8.381691] snd_hda_codec_conexant hdaudioC1D0: autoconfig for CX20590: line_outs=1 (0x1f/0x0/0x0/0x0/0x0) type:speaker
-[    8.381700] snd_hda_codec_conexant hdaudioC1D0:    speaker_outs=0 (0x0/0x0/0x0/0x0/0x0)
-[    8.381705] snd_hda_codec_conexant hdaudioC1D0:    hp_outs=1 (0x19/0x0/0x0/0x0/0x0)
-[    8.381710] snd_hda_codec_conexant hdaudioC1D0:    mono: mono_out=0x0
-[    8.381714] snd_hda_codec_conexant hdaudioC1D0:    inputs:
-[    8.381717] snd_hda_codec_conexant hdaudioC1D0:      Internal Mic=0x23
-[    8.381721] snd_hda_codec_conexant hdaudioC1D0:      Mic=0x1a
-
-
-cat /proc/version:
-Linux version 6.3.0-rc1-1 (linux@archlinux) (gcc (GCC) 12.2.1 20230201, GNU ld (GNU Binutils) 2.40) #10 SMP PREEMPT_DYNAMIC Wed, 08 Mar 2023 17:45:22 +0000
-
-hostnamectl | grep "Operating System":
-Operating System: Arch Linux
-
-uname -mi:
-x86_64 unknown
-
-#regzbot introduced: f83bb2592482
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
