@@ -1,78 +1,208 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA64ED50B
-	for <regressions@lists.linux.dev>; Thu,  9 Mar 2023 15:25:01 +0000 (UTC)
-Received: by mail-wm1-f44.google.com with SMTP id p23-20020a05600c1d9700b003ead4835046so3703968wms.0
-        for <regressions@lists.linux.dev>; Thu, 09 Mar 2023 07:25:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1678375500;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=29V03fvB3UU3ILRRCDLx0p+xrMkONX6jLzeWPsnHEJg=;
-        b=gPCM1bppWBuMvjUvdsgYtIzU9jOlB9WotoqRUq4Pf/XFwofW0tosBWMFp/es7SjEEh
-         Wa8PdOKBaGw8bdJzCKL/TUW0yRP0ZH6EBil9dgW0uggcSKFPZ4Z1RHVFf2bKFpjELdvU
-         XgKD2ORkbrnXo8A55LWP9d6LNvL5KFc61nE+tb9yo2J7rlOM5PBaObuEVdOWRgcxNXH4
-         dsM92K1mDFWYWu8MQrPTKM+gOTvPm5A1wyoWLkFsa/Ny3FXzaQSG3nsdLlWk89cjt+No
-         pr542rZWF/ZRba3QixGKBnvzAlKqs/dpABubEVltjnM2eN7g45PX43OYwFe/aYqu51dS
-         um1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678375500;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=29V03fvB3UU3ILRRCDLx0p+xrMkONX6jLzeWPsnHEJg=;
-        b=R4O5lNRfrb0XjtcGqKScKzThRHxGoZQ7Mm5F5HoWQ76vFRgarouZeHd/dMR7ZeFYif
-         QKg/77z+qW8EHcgvml+WSlmZT6JcGDh4d8vsqIiC+Wfy6segSaBvEd6KB7VBDvpV41mY
-         GfAP1AJUrZgz7Yv/zwnf3SQ9e1xjkazKn3BftjaQsxk3IL78Qzk+hnUbnVBSbqdB8Uzn
-         YnWAWZL7wM9o/4SmMEzf20rmxdzLKFM2p2/KokHcnB9bvnU6JZT+znZartxIWsgnCILY
-         Z1hB7AsTRv652hDoaC7cjvXYqSL8/e/uhZWdabFkfMjzqSi1G7J5uJuzrKFzrKtHIjyx
-         fZkA==
-X-Gm-Message-State: AO0yUKXkWGOYf3jC9ieVrLXV5yt3hlxfp8HBCH5whsWiGVSFixkwhKfU
-	dbd9TxPjD6HPKfyE+VjDNroRPY8iF/qQRWNY318=
-X-Google-Smtp-Source: AK7set8bM2z4l7nqYTMmJ2SziZ2vFggDgMcbbRq2+BRlQoOdQrVIH7txE5VtjFw43fUecwY372LFFHhZGDnPbE49eNA=
-X-Received: by 2002:a7b:c2a2:0:b0:3eb:5a1e:d524 with SMTP id
- c2-20020a7bc2a2000000b003eb5a1ed524mr5068235wmk.3.1678375499996; Thu, 09 Mar
- 2023 07:24:59 -0800 (PST)
+Received: from ns2.wdyn.eu (ns2.wdyn.eu [5.252.227.236])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33F23A29
+	for <regressions@lists.linux.dev>; Thu,  9 Mar 2023 17:00:15 +0000 (UTC)
+Message-ID: <7300e0c0-d28e-6b3d-86c9-038cbbe47c65@wetzel-home.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=wetzel-home.de;
+	s=wetzel-home; t=1678381207;
+	bh=ni9AfbwoWlwpFUP2KPNh4PVLwDKy3vKb7jlVYEfhVY4=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To;
+	b=UEVgrsCo4WttG/IM02o9nZRsElylqlJZ479m50unNXF8kec6k5jqt2A5LhS0QhPPr
+	 QXYcQP8qNQNHB5k/XMVEzcYiVMKauOJy9F+gC73sS07rPjU+VUEQ6Hq+OSJOLdPQE/
+	 uT1qyoRp1yXhuoadqzCuQUKZ9fOrV0UiCfyuSpu0=
+Date: Thu, 9 Mar 2023 18:00:04 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CACH9xG8-tEtWstUVmD9eZFEEAqx-E8Gs14wDL+=uNtBK=-KJvQ@mail.gmail.com>
- <ZAmv57xeNqs7v9hY@kroah.com> <CACH9xG9=BFszD9OXspttTFdki0e68b5Hw7o11AUQ7pptSMy9wQ@mail.gmail.com>
- <ZAmzT/D8YxJ3844j@kroah.com>
-In-Reply-To: <ZAmzT/D8YxJ3844j@kroah.com>
-From: Sylvain Menu <sylvain.menu@gmail.com>
-Date: Thu, 9 Mar 2023 16:24:48 +0100
-Message-ID: <CACH9xG_v_2Y9d3Q16YB57Q5xVwSXe5FqLFSnjox6GotOT3DPmw@mail.gmail.com>
-Subject: Re: nfs mount disappears due to inode revalidate failure
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, regressions@lists.linux.dev, 
-	chuck.lever@oracle.com, jlayton@kernel.org, linux-nfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+Subject: Re: [Regression] rt2800usb - Wifi performance issues and connection
+ drops
+From: Alexander Wetzel <alexander@wetzel-home.de>
+To: Thomas Mann <rauchwolke@gmx.net>, sgruszka@redhat.com
+Cc: "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>,
+ Helmut Schaa <helmut.schaa@googlemail.com>,
+ Johannes Berg <johannes.berg@intel.com>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ Stanislaw Gruszka <stf_xl@wp.pl>
+References: <b8efebc6-4399-d0b8-b2a0-66843314616b@leemhuis.info>
+ <5a7cd098-1d83-6297-e802-ce998c8ec116@leemhuis.info>
+ <6025e17e-4c29-6d36-6b9c-2fec543b21c4@wetzel-home.de>
+ <debc7fe9-204d-63a7-aa61-91b20a46f385@wetzel-home.de>
+Content-Language: en-US
+In-Reply-To: <debc7fe9-204d-63a7-aa61-91b20a46f385@wetzel-home.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-No I don't have that, I found the bug in production by no chance.
-I tried to dive into the code but it quickly becomes complex for me,
-at least it's easy to reproduce with a little script (while(1) timeout
-my_c.code)
+On 07.03.23 21:54, Alexander Wetzel wrote:
+>>>
+>>
+>> I just uploaded a test patch to bugzilla.
+>> Please have a look if that fixes the issue.
+>>
+>> If not I would be interested in the output of your iTXQ status.
+>> Enable CONFIG_MAC80211_DEBUGFS and run this command when the 
+>> connection is bad and send/share/upload to bugzilla the resulting 
+>> debug.out:
+>>
+>> k=1; while [ $k -lt 10 ]; do \
+>> cat /sys/kernel/debug/ieee80211/phy?/netdev:*/stations/*/aqm; \
+>> k=$(($k+1)); done >> debug.out
+> 
+> Thomas and I continued with some debugging in
+> https://bugzilla.kernel.org/show_bug.cgi?id=217119
+> 
+> But the results so far are unexpected and we decided to continue the 
+> debugging with the round here. Hoping someone sees something I miss.
+> 
+> A very summary where we are:
+> I can't reproduce the bug with a very similar card and kernel config so 
+> far. Thomas card stops the iTXQs for intervalls >30s. Mine operates 
+> normally.
+> 
+> A more useful but longer summary:
+> 
+> Thomas updated to a 6.2 kernel and reported "connection drops and 
+> bandwidth problems" with his rt2800usb wlan card. (6.1 is ok.) Asked for 
+> some more details he reported:
+> "...slow bandwidth stuff works better, but the main problem/test case is 
+> to start a 8-16 mbit video stream, which sometimes runs for a few 
+> seconds and then stops or it doesn't start at all"
+> 
+> He bisected the issue and identified my commit 4444bc2116ae ("wifi: 
+> mac80211: Proper mark iTXQs for resumption") as culprit.
+> 
+> Checking the internal iTXQ status when the issue is ongoing shows, that 
+> TID zero is flagged as dirty and thus is not transmitting queued 
+> packets. Interesting line from 
+> /sys/kernel/debug/ieee80211/phy?/netdev:*/stations/*/aqm:
+> tid ac backlog-bytes backlog-packets new-flows drops marks overlimit 
+> collisions tx-bytes tx-packets flags
+> 0 2 619736 404 1681 0 0 0 1 4513965 3019 0xe(RUN AMPDU NO-AMSDU DIRTY)
+> 
+> --> The "normal" iTXQ handling IEEE80211_AC_BE has queued packets and is 
+> flagged as DIRTY. There even is a potential race setting the DIRTY flag, 
+> but the fix for that is not helping.
+> 
+> Thus Thomas applied two debug patches, to better understand why the 
+> DIRTY flag is not cleared.
+> 
+> And looking at the output from those we see that the driver stops Tx by 
+> calling ieee80211_stop_queue(). When ieee80211_wake_queue() mac80211 
+> correctly resumes TX but is getting stopped by the driver after a single 
+> packet again. (The start of the relevant log is missing, so that may be 
+> initially more).
+> I assume TX is still ok at that stage. But after some singe Tx 
+> operations the driver stops the queues again. Here the relevant part of 
+> the log:
+> [  179.584997] XXXX __ieee80211_wake_txqs: waking TID 0
+> [  179.585022] XXXX drv_tx: TX
+> [  179.585027] XXXX ieee80211_stop_queue: called
+> [  179.585028] XXXX ieee80211_tx_dequeue: mark TID 0 dirty. Reason: 1
+> [  179.585030] XXXX __ieee80211_wake_txqs: TID 3 NOT dirty
+> [  179.585031] XXXX __ieee80211_wake_txqs: TID 8 NOT dirty
+> [  179.585033] XXXX __ieee80211_wake_txqs: TID 11 NOT dirty
+> [  179.585034] XXXX __ieee80211_wake_txqs: EXIT
+> [  179.585035] XXXX __ieee80211_wake_txqs: ENTRY
+> [  179.585036] XXXX __ieee80211_wake_txqs: TID 1 NOT dirty
+> [  179.585037] XXXX __ieee80211_wake_txqs: TID 2 NOT dirty
+> [  179.585038] XXXX __ieee80211_wake_txqs: TID 9 NOT dirty
+> [  179.585040] XXXX __ieee80211_wake_txqs: TID 10 NOT dirty
+> [  179.585041] XXXX __ieee80211_wake_txqs: EXIT
+> [  179.585047] XXXX drv_tx: TX
+> [  179.585056] XXXX ieee80211_tx_dequeue: mark TID 0 dirty. Reason: 1
+> [  179.585271] XXXX ieee80211_tx_dequeue: mark TID 0 dirty. Reason: 1
+> [  179.585868] XXXX ieee80211_tx_dequeue: mark TID 0 dirty. Reason: 1
+> [  179.586120] XXXX ieee80211_tx_dequeue: mark TID 0 dirty. Reason: 1
+> [  179.586544] XXXX ieee80211_tx_dequeue: mark TID 0 dirty. Reason: 1
+> [  179.586792] XXXX ieee80211_tx_dequeue: mark TID 0 dirty. Reason: 1
+> [  179.587317] XXXX ieee80211_tx_dequeue: mark TID 0 dirty. Reason: 1
+> [  179.587591] XXXX ieee80211_tx_dequeue: mark TID 0 dirty. Reason: 1
+> [  179.588569] XXXX ieee80211_tx_dequeue: mark TID 0 dirty. Reason: 1
+> ....
+> [  214.307617] XXXX ieee80211_wake_queue: called
+> 
+> 
+> --> So the driver blocked TX for more than 30s. Which is a good 
+> explanation of what Thomas observes.
+> 
+> But there is nothing mac80211 can do differently here. Whatever is the 
+> real reason for the issue, it's nothing obvious I see.
 
-thanks
-sylvain menu
+Best shot I have so far is a driver bug/issue now exposed by the changed 
+traffic pattern from mac80211. And while digging into the rt2800usb 
+driver I found a watchdog introduced here:
+https://lore.kernel.org/20190615100100.29800-1-sgruszka@redhat.com
 
-Le jeu. 9 mars 2023 =C3=A0 11:22, Greg KH <gregkh@linuxfoundation.org> a =
-=C3=A9crit :
->
-> On Thu, Mar 09, 2023 at 11:17:30AM +0100, Sylvain Menu wrote:
-> > I think it's a regression according to the old resolved bugs/tickets
-> > but no idea since when it's broken again
->
-> Any chance you can do 'git bisect' to find where it broke and what
-> commit broke it?
->
-> thanks,
->
-> greg k-h
+ From mac80211 debugging it looks like it may just be that: A random 
+hang of the driver/card.
+
+For sure rt2800usb tells mac80211 to stop TXing and needs ages (>30s in 
+known sample) to unblock the queue. And this watchdog is disabled by 
+default.
+
+Now I'm clearly wondering, if the changed traffic pattern due to the 
+mac80211 patch is just triggering the random hangs...
+
+I've also uploaded more test patches to bugzilla.
+
+@Thomas
+Can you also try with this watchdog enabled? It must be enabled for 
+rt2800lib. Since you have compiled in the driver the following boot 
+parameter should enable it:
+  rt2800lib.watchdog=1
+
+@Stanislaw
+Can you maybe also have a look at the issue and how that looks compared 
+to the known random hangs you introduced the watchdog for?
+
+> 
+> Luckily I found a card using the same driver and nearly the same card:
+> Thomas systems:Linux version 6.2.2-gentoo (root@foo) (gcc (Gentoo 
+> Hardened 12.2.1_p20230121-r1 p10) 12.2.1 20230121, GNU ld (Gentoo 2.39 
+> p5) 2.39.0) #2 SMP Fri Mar  3 16:59:02 CET 2023ieee80211 phy0: 
+> rt2x00_set_rt: Info - RT chipset 3070, rev 0201 detected
+> ieee80211 phy0: rt2x00_set_rf: Info - RF chipset 0005 detected
+> ieee80211 phy0: Selected rate control algorithm 'minstrel_ht'
+> 
+> My system, using the kernel config from Thomas with only minor 
+> modifications (different filesystems and initramfs settings and enabled 
+> mac80211 debug and developer options):
+> Linux version 6.2.2-gentoo (root@Perry.mordor) (gcc (Gentoo 
+> 12.2.1_p20230121-r1 p10) 12.2.1 20230121, GNU ld (Gentoo 2.40 p2) 
+> 2.40.0) #2 SMP Tue Mar  7 18:18:47 CET 2023ieee80211 phy0: 
+> rt2x00_set_rt: Info - RT chipset 3070, rev 0200 detected
+> ieee80211 phy0: rt2x00_set_rf: Info - RF chipset 0005 detected
+> ieee80211 phy0: Selected rate control algorithm 'minstrel_ht'
+> ieee80211 phy0: rt2x00lib_request_firmware: Info - Loading firmware file 
+> 'rt2870.bin'
+> ieee80211 phy0: rt2x00lib_request_firmware: Info - Firmware detected - 
+> version: 0.36
+> 
+> But there is one big difference on my system: I can't reproduce the bug 
+> so far. It's working as it should... (I did not apply the debug patches 
+> myself so far)
+> 
+> I'm now planning to look a bit more into the rt2800usb driver and 
+> provide another debug patch for interesting looking code pieces in it.
+> 
+> @Thomas:
+> I've also uploaded you my binary kernel I'm running at the moment here:
+> https://www.awhome.eu/s/5FjqMS73rtCtSBM
+> 
+> That kernel should also be able to boot and operate your system. Can you 
+> try that and tell me, if that makes any difference?
+> 
+> I'm also planning to provide some more debug patches, to figuring out 
+> which part of commit 4444bc2116ae ("wifi: mac80211: Proper mark iTXQs 
+> for resumption") fixes the issue for you. Assuming my understanding 
+> above is correct the patch should not really fix/break anything for 
+> you...With the findings above I would have expected your git bisec to 
+> identify commit a790cc3a4fad ("wifi: mac80211: add wake_tx_queue 
+> callback to drivers") as the first broken commit...
+> 
+> Alexander
+
