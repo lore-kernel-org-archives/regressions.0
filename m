@@ -1,66 +1,78 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CF5A9464
-	for <regressions@lists.linux.dev>; Thu,  9 Mar 2023 14:42:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A99BCC433D2;
-	Thu,  9 Mar 2023 14:42:02 +0000 (UTC)
-Date: Thu, 9 Mar 2023 15:42:00 +0100
-From: Greg KH <greg@kroah.com>
-To: Thorsten Leemhuis <linux@leemhuis.info>
-Cc: Jonathan Corbet <corbet@lwn.net>, Randy Dunlap <rdunlap@infradead.org>,
-	Lukas Bulwahn <lukas.bulwahn@gmail.com>, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-Subject: Re: [PATCH v3] docs: describe how to quickly build a trimmed kernel
-Message-ID: <ZAnwONGXWo5V6Wac@kroah.com>
-References: <1a788a8e7ba8a2063df08668f565efa832016032.1678021408.git.linux@leemhuis.info>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA64ED50B
+	for <regressions@lists.linux.dev>; Thu,  9 Mar 2023 15:25:01 +0000 (UTC)
+Received: by mail-wm1-f44.google.com with SMTP id p23-20020a05600c1d9700b003ead4835046so3703968wms.0
+        for <regressions@lists.linux.dev>; Thu, 09 Mar 2023 07:25:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1678375500;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=29V03fvB3UU3ILRRCDLx0p+xrMkONX6jLzeWPsnHEJg=;
+        b=gPCM1bppWBuMvjUvdsgYtIzU9jOlB9WotoqRUq4Pf/XFwofW0tosBWMFp/es7SjEEh
+         Wa8PdOKBaGw8bdJzCKL/TUW0yRP0ZH6EBil9dgW0uggcSKFPZ4Z1RHVFf2bKFpjELdvU
+         XgKD2ORkbrnXo8A55LWP9d6LNvL5KFc61nE+tb9yo2J7rlOM5PBaObuEVdOWRgcxNXH4
+         dsM92K1mDFWYWu8MQrPTKM+gOTvPm5A1wyoWLkFsa/Ny3FXzaQSG3nsdLlWk89cjt+No
+         pr542rZWF/ZRba3QixGKBnvzAlKqs/dpABubEVltjnM2eN7g45PX43OYwFe/aYqu51dS
+         um1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678375500;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=29V03fvB3UU3ILRRCDLx0p+xrMkONX6jLzeWPsnHEJg=;
+        b=R4O5lNRfrb0XjtcGqKScKzThRHxGoZQ7Mm5F5HoWQ76vFRgarouZeHd/dMR7ZeFYif
+         QKg/77z+qW8EHcgvml+WSlmZT6JcGDh4d8vsqIiC+Wfy6segSaBvEd6KB7VBDvpV41mY
+         GfAP1AJUrZgz7Yv/zwnf3SQ9e1xjkazKn3BftjaQsxk3IL78Qzk+hnUbnVBSbqdB8Uzn
+         YnWAWZL7wM9o/4SmMEzf20rmxdzLKFM2p2/KokHcnB9bvnU6JZT+znZartxIWsgnCILY
+         Z1hB7AsTRv652hDoaC7cjvXYqSL8/e/uhZWdabFkfMjzqSi1G7J5uJuzrKFzrKtHIjyx
+         fZkA==
+X-Gm-Message-State: AO0yUKXkWGOYf3jC9ieVrLXV5yt3hlxfp8HBCH5whsWiGVSFixkwhKfU
+	dbd9TxPjD6HPKfyE+VjDNroRPY8iF/qQRWNY318=
+X-Google-Smtp-Source: AK7set8bM2z4l7nqYTMmJ2SziZ2vFggDgMcbbRq2+BRlQoOdQrVIH7txE5VtjFw43fUecwY372LFFHhZGDnPbE49eNA=
+X-Received: by 2002:a7b:c2a2:0:b0:3eb:5a1e:d524 with SMTP id
+ c2-20020a7bc2a2000000b003eb5a1ed524mr5068235wmk.3.1678375499996; Thu, 09 Mar
+ 2023 07:24:59 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1a788a8e7ba8a2063df08668f565efa832016032.1678021408.git.linux@leemhuis.info>
+References: <CACH9xG8-tEtWstUVmD9eZFEEAqx-E8Gs14wDL+=uNtBK=-KJvQ@mail.gmail.com>
+ <ZAmv57xeNqs7v9hY@kroah.com> <CACH9xG9=BFszD9OXspttTFdki0e68b5Hw7o11AUQ7pptSMy9wQ@mail.gmail.com>
+ <ZAmzT/D8YxJ3844j@kroah.com>
+In-Reply-To: <ZAmzT/D8YxJ3844j@kroah.com>
+From: Sylvain Menu <sylvain.menu@gmail.com>
+Date: Thu, 9 Mar 2023 16:24:48 +0100
+Message-ID: <CACH9xG_v_2Y9d3Q16YB57Q5xVwSXe5FqLFSnjox6GotOT3DPmw@mail.gmail.com>
+Subject: Re: nfs mount disappears due to inode revalidate failure
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, regressions@lists.linux.dev, 
+	chuck.lever@oracle.com, jlayton@kernel.org, linux-nfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, Mar 05, 2023 at 02:04:44PM +0100, Thorsten Leemhuis wrote:
-> Add a text explaining how to quickly build a kernel, as that's something
-> users will often have to do when they want to report an issue or test
-> proposed fixes. This is a huge and frightening task for quite a few
-> users these days, as many rely on pre-compiled kernels and have never
-> built their own. They find help on quite a few websites explaining the
-> process in various ways, but those howtos often omit important details
-> or make things too hard for the 'quickly build just for testing' case
-> that 'localmodconfig' is really useful for. Hence give users something
-> at hand to guide them, as that makes it easier for them to help with
-> testing, debugging, and fixing the kernel.
-> 
-> To keep the complexity at bay, the document explicitly focuses on how to
-> compile the kernel on commodity distributions running on commodity
-> hardware. People that deal with less common distributions or hardware
-> will often know their way around already anyway.
-> 
-> The text describes a few oddities of Arch and Debian that were found by
-> the author and a few volunteers that tested the described procedure.
-> There are likely more such quirks that need to be covered as well as a
-> few things the author will have missed -- but one has to start
-> somewhere.
-> 
-> The document heavily uses anchors and links to them, which makes things
-> slightly harder to read in the source form. But the intended target
-> audience is way more likely to read rendered versions of this text on
-> pages like docs.kernel.org anyway -- and there those anchors and links
-> allow easy jumps to the reference section and back, which makes the
-> document a lot easier to work with for the intended target audience.
-> 
-> Aspects relevant for bisection were left out on purpose, as that is a
-> related, but in the end different use case. The rough plan is to have a
-> second document with a similar style to cover bisection. The idea is to
-> reuse a few bits from this document and link quite often to entries in
-> the reference section with the help of the anchors in this text.
-> 
-> Signed-off-by: Thorsten Leemhuis <linux@leemhuis.info>
-> 
+No I don't have that, I found the bug in production by no chance.
+I tried to dive into the code but it quickly becomes complex for me,
+at least it's easy to reproduce with a little script (while(1) timeout
+my_c.code)
 
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+thanks
+sylvain menu
+
+Le jeu. 9 mars 2023 =C3=A0 11:22, Greg KH <gregkh@linuxfoundation.org> a =
+=C3=A9crit :
+>
+> On Thu, Mar 09, 2023 at 11:17:30AM +0100, Sylvain Menu wrote:
+> > I think it's a regression according to the old resolved bugs/tickets
+> > but no idea since when it's broken again
+>
+> Any chance you can do 'git bisect' to find where it broke and what
+> commit broke it?
+>
+> thanks,
+>
+> greg k-h
