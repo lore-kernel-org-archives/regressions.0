@@ -1,184 +1,273 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11CA97B
-	for <regressions@lists.linux.dev>; Fri, 10 Mar 2023 03:17:21 +0000 (UTC)
-Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 329LwtYM021575;
-	Fri, 10 Mar 2023 03:17:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : message-id : references : date : in-reply-to : content-type :
- mime-version; s=corp-2022-7-12;
- bh=NTS2zXOM11VY7y4ktvyXhfGblo8wAyR/aWfJ8Y7NYrM=;
- b=clBTo7yx3bSS8kCT1ydbDtXgSRk54n6rTL7WL1jhHkU/b58bnkTxKSH03MhwMAKJyndl
- 3lp/Ok74dldH77/iSlIW30yG1unEafIgqBUqX9/8xgjhjTj1Cf6hsx9zv2oMsKHkT5sn
- nIt3kbwgIfH/nFXBBsoLxvgDTDUikkIkNS/O1ZqU3uzer4DRtRRNhOl9bmdhhuv8351Q
- ThxGd5zwb7HK0QvSVwV/nf0v5roNb8vxaBguyNYTWSsuobrnUJwHbl8AjHsc2wzJJBvu
- SNz45ZdNHBamkdURl9U9zMnPHBT8cHJyr3dbGP8dyq2WPsA+JpttROz/PdxaiU/kwrra yQ== 
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3p418146c6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 10 Mar 2023 03:17:18 +0000
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 32A30nQc021719;
-	Fri, 10 Mar 2023 03:17:18 GMT
-Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2044.outbound.protection.outlook.com [104.47.66.44])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3p6frb6dpu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 10 Mar 2023 03:17:18 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PtgxISZZDEVS+QKLrh6L5voW2d3MXPkMwSxvJVuzxxt80A0DPjoatnPYu8Do5cq+aolB8sy5RWOtr8UPgap3G2ZIbr1k37hxgXgyO8GfGPicHcDB9ltYQUMl7DXRHvfkAdGG3r9bcKkH+8+KrWOujYn4NfegT+2LiW2miut2CILxSqslyS9xgrxMFfOXK/sRwCUdCynO0I0lFPjHfr9khPxD3uI7Tv+wyEKSbFMWjpFaap5P/3rqvY4oeRPmK6varlR08xVz767MLFSsVfnInrCtgJcn5xJTSXqSTpmdIFiF908GF61mL8iGXZILPdJFVb0f6hoYJKeXxV7jmiYZ5Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=NTS2zXOM11VY7y4ktvyXhfGblo8wAyR/aWfJ8Y7NYrM=;
- b=NShDkqLb6+qZulmtCZwhFJiTHz+3Ouuuoi5Y2b28m3tsyZKXXHSdWOpfQrXrcIL+mHhy7GCmNeJ1l74np+5iWid3n4FDK2nskLjTdnw0PB0ZOcTwfZoRSjewaFG2gYKKGSf5FZf5pMoGYcGMqXK8knMxhYxf61Cg9ET/nL+DnpIeOdO3muB35K5kbp9QUFNgjytcMw8yslbZ5sA3y5A99K1b2HkWOjibRqOBe0+Md7wv4hI2pgkGjWttrBCv7O3POUEwUdMmahub3Hotm2g4n4/z3CA9hJVf7soY/A7avNb2BKK/jOb1Q499P+w3dTwgjf+WWbx8r5DaR+xOQrYiVQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1188023AF
+	for <regressions@lists.linux.dev>; Fri, 10 Mar 2023 09:26:53 +0000 (UTC)
+Received: by mail-wm1-f53.google.com with SMTP id p23-20020a05600c1d9700b003ead4835046so4651424wms.0
+        for <regressions@lists.linux.dev>; Fri, 10 Mar 2023 01:26:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NTS2zXOM11VY7y4ktvyXhfGblo8wAyR/aWfJ8Y7NYrM=;
- b=Ve/jZMoMVhAR1SM9qXlPFPEJOyHlRaKd2Dva69dmPZqjRIvqPlF/5+phlAO0VKmD4pA63ZQdT7J9rwiNqV2TvtUf/N1REgzd9nnhBbnhJGlksL7LrXCdPfQpn1cqnY6C7yw/RW4OzhUSL5NGythaJTASj160RAycQAkCXCLyfks=
-Received: from PH0PR10MB4759.namprd10.prod.outlook.com (2603:10b6:510:3d::12)
- by SJ1PR10MB5978.namprd10.prod.outlook.com (2603:10b6:a03:45f::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6178.19; Fri, 10 Mar
- 2023 03:17:15 +0000
-Received: from PH0PR10MB4759.namprd10.prod.outlook.com
- ([fe80::8ef9:5939:13aa:d6a2]) by PH0PR10MB4759.namprd10.prod.outlook.com
- ([fe80::8ef9:5939:13aa:d6a2%8]) with mapi id 15.20.6178.019; Fri, 10 Mar 2023
- 03:17:15 +0000
-To: Lee Duncan <lduncan@suse.com>
-Cc: "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Lee Duncan
- <leeman.duncan@gmail.com>,
-        Linux regressions mailing list
- <regressions@lists.linux.dev>,
-        "James E.J. Bottomley"
- <jejb@linux.ibm.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Martin Wilck <mwilck@suse.com>, Hannes
- Reinecke <hare@suse.de>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-Subject: Re: [PATCH] scsi: core: Add BLIST_NO_ASK_VPD_SIZE for some VDASD
-From: "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <yq1o7p170tc.fsf@ca-mkp.ca.oracle.com>
-References: <20220928181350.9948-1-leeman.duncan@gmail.com>
-	<88927435-ae58-c24b-e7b7-b675985de433@leemhuis.info>
-	<86D685F2-D411-460B-A09B-6BE942372F0A@gmail.com>
-	<yq1zg8pl1nq.fsf@ca-mkp.ca.oracle.com>
-	<f8c5619f-1e1a-f759-6ab6-ea84bba3d635@suse.com>
-	<yq1edq0jg2h.fsf@ca-mkp.ca.oracle.com>
-	<a4ecf9eb-509a-84a6-8a9f-a3f5ea54ecac@suse.com>
-Date: Thu, 09 Mar 2023 22:17:06 -0500
-In-Reply-To: <a4ecf9eb-509a-84a6-8a9f-a3f5ea54ecac@suse.com> (Lee Duncan's
-	message of "Wed, 8 Mar 2023 10:41:51 -0800")
-Content-Type: text/plain
-X-ClientProxiedBy: SI1PR02CA0009.apcprd02.prod.outlook.com
- (2603:1096:4:1f7::10) To PH0PR10MB4759.namprd10.prod.outlook.com
- (2603:10b6:510:3d::12)
+        d=googlemail.com; s=20210112; t=1678440412;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=mNL+f3pZ6bNpmj3kt1NLjVcEmx4ylNGYtgxCZ9dlKFA=;
+        b=Sd4qVuxJDQFuMLlCPFaJoDKvhwHA9HlXnyhXjoU1pFEIyMWlwEmdwZnUEPK1vuhMzZ
+         9lq0+0yA0+2WUFeTD8v4G+it6tTbmo5+k79Tcrlot5KeDZmkz1+X7zhcadhZ91VnPJyX
+         CAtVpFMn5cjjOgRHzupMZWIyk5aNH7IJK3r7p7LauKKPOKZyQTGHFMB7SVdd4CRTh/9c
+         Ltb4XwQA1r2f05/BOgLxSrkwciuvbI5VVpF5twbmZJhMFA71HM+pvyG7Ugo5LXMybPah
+         /sAUZASNaCLN/ep2eHUDmQVlDH6bS+JqKDxoIGuuvU39/oyZGPXmp+2fkCFyIifKvvt4
+         7eWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678440412;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=mNL+f3pZ6bNpmj3kt1NLjVcEmx4ylNGYtgxCZ9dlKFA=;
+        b=qa1skGJ7QiKCjdrTs9jYKm2XQmpGuAARS3BX/HVoWLxO5nd9dMntzYBy763Sf0iB8Z
+         GArDGB9TUVgCNaRmSZOaE7CSZgoZvIAiNTrmF9pNgl8cZ+JcZejeR9YN3TynyTVq23y/
+         ycyDpUBx3dNH6NsiLHoCku/cwCIgCHJ8f43yCBB93jiYrmeSDYvupoaTe66epzuMplvv
+         4RRgeBTA1DxnS9ez8dPmZT1n8nPFIlax6LTyLooBmILGCsvXRi7yzKP7nxGzdLIWBnYF
+         7sbdaODaiXW0TApVZaLGBid/ai7j5dKEvZfslaH+tLwmemSIXlUOUHLdxKZ/W1K4Vgs2
+         SJGg==
+X-Gm-Message-State: AO0yUKVGK/5GLrnOs6GrH7BPy3mMgBVHEKS2wvOKu+0cTB4byLVswt+2
+	PXimx6LanGJF4VPHSfNXQnY=
+X-Google-Smtp-Source: AK7set9Xzk9BMbnoqlJVd1xoOzH2NobQcn8OcgRL3OMdLvLTW0Gl7RfPo93cGx+Qh3BdyL3vbUzymg==
+X-Received: by 2002:a05:600c:35c9:b0:3ea:d601:976f with SMTP id r9-20020a05600c35c900b003ead601976fmr1979380wmq.23.1678440412107;
+        Fri, 10 Mar 2023 01:26:52 -0800 (PST)
+Received: from [192.168.1.10] (95f1a118.skybroadband.com. [149.241.161.24])
+        by smtp.googlemail.com with ESMTPSA id g9-20020a7bc4c9000000b003e20970175dsm2353826wmk.32.2023.03.10.01.26.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 10 Mar 2023 01:26:51 -0800 (PST)
+Message-ID: <853b7e32-f566-2a92-0f59-3490ad5d88df@googlemail.com>
+Date: Fri, 10 Mar 2023 09:26:49 +0000
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH0PR10MB4759:EE_|SJ1PR10MB5978:EE_
-X-MS-Office365-Filtering-Correlation-Id: a5b6a188-20ae-41e2-b27e-08db2115f2a4
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	NH/QrwP5GlU4nPnuvjebXYyL+qZ4v+qMKJQJUw0ktVwXQ9ryslLJmf1fsAclPESDBnXDVBDgM8g111FfxVNM5yxd4/R4VyN1LF1/V5Bw1O8JhB5pQ4foeN4MeEmlJPZHd6gYNKs15QlKFmCH39gJ4PtVaop1Dg55bMck/Ctq5TsZY5YdWgpFk0solv5KCt6HL1KEzHN/WXe/r+Jd7uBfaIQlO2rP8Z45R3Uqqam3bZxkaP70u90kuQdprtYsYnWU8/3CoHI4Sub75QLvAXXS9DSL3YH9GTIuFUTV90NUWAJr1WoE2g10nxC7D+QZH4Gr3o3zb9HsOFzJTouUSMviuLYdT/qfDYyHDeQPNS5bmWWYZzZfzmvlQ/c4eLmN7dstcMXpmgPtVj07K7v/iOS6W+B5DvoeYHuTFeRFD+PpKVoyH4Hr+f3r6SJnSVaItfUtVag3boU0Rvl8bsLEWU6c1iZCyN8TlAscHqc5gFTl3WZv+iKTNudkDuXhzQg5xYUIISopn64JBd70QrXuVXe2CYP4FEuidbvQSc0jrG8DL0QT0FYQ4JTkWXCniMKezKe9+ZyQ+ERKhJhdsvK1fZ03rj1qFxe63j6Gds2Czrs9mjWtI4Z+UG4nnhOwJk6OZTJi6FuWIC+ylyhi+CvquK737Q==
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR10MB4759.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(346002)(366004)(136003)(39860400002)(396003)(376002)(451199018)(38100700002)(54906003)(478600001)(316002)(6486002)(26005)(6666004)(36916002)(6506007)(6512007)(186003)(8936002)(5660300002)(4744005)(66476007)(66556008)(2906002)(41300700001)(86362001)(66946007)(8676002)(6916009)(4326008);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?O796x2VhAJbmhUiT/zo3zjBwj+7Tsz+eYCZDt9K4zlwzSDJFRBlcB6fSfbZ+?=
- =?us-ascii?Q?8ESZQR0znSzHrQdqOML/boO3fwJM3K7Ki6BwEk8XhI31jiLROW+qTD8g/9Ms?=
- =?us-ascii?Q?Qkah9y1Vp/qSfaO8RcTQsEMBpe8WldMDNgPl20+TwAIKUB+nxTyNZ9KmS3J0?=
- =?us-ascii?Q?6+cwxeF62K4v/EKGToz0C0lsAcz8jixJLcUWcziUHsDiChJMHiw4t60bWCXk?=
- =?us-ascii?Q?aaOAwg9Z2jBoSDNqV5gK6UPblJlqyBCFdgZ5kbfeNsZNSO7eP8sbztTOT1rw?=
- =?us-ascii?Q?5gNWZht8tg0QSxXiVKYXVH7MUMb0M75SqDb12wXk4MLSvse+A7PyRhtvBJMn?=
- =?us-ascii?Q?SgGK7luZCPi2VlSJaW7BQGcZCORKjLwaVV0lnwUFSD5tDdk1ZfO1OYbsJTr1?=
- =?us-ascii?Q?Whfk6dmByONIFKkiKJWtuKrwwFyztDl8W8VMnBbpO48TQvIXSHhauXjHvZux?=
- =?us-ascii?Q?WUEroVWaRwj3oKbmFbVsHRw8ZUzN2I1r3bkzAxSn06fW+ZZwgM45MhkcR2Fj?=
- =?us-ascii?Q?8SKLjm1CDZkGUJH+Fb3xQNSi06oWNXRkr1gex1Vb7aVjRsju3Lks4q0IqU/z?=
- =?us-ascii?Q?mtLrLUq9oOsNXJ4dEnpKyLAUjct8XxbqUN/1QjR2ED+FFvNy8TXdmsXC5GUq?=
- =?us-ascii?Q?mJj8xkiJ59OMklu4tv4JLiDFtyAiG2azM0G3cGEcK8uzV2VE9okGDvKuUwc0?=
- =?us-ascii?Q?9Gsv3R6+8CQAH6zGpjTf76jIkQ6gvxj9QjKW8DwsiQmyCpNAw6pLbPTwq5Bf?=
- =?us-ascii?Q?jDPG9BK0fwC2jNDeIOxW8AoNNyJ0F2ZMWFlw0MkhMDuVqxXL8jHvYOyrF8FX?=
- =?us-ascii?Q?CnOFEQAoIee5Fq6fH1KxK2DgYwXskKZfQFK300ImRoB9Bq8xQInXuMtm16ai?=
- =?us-ascii?Q?LICAm64IUZ7O2+pmsf26/Fkwz+LrzGBDI96ApVk6xwmOEN5sTeWoR96+SVy/?=
- =?us-ascii?Q?MS8CwdNJsawEDIs239N6DptUQU9MIS5UhFXcAwMjNZHckAXSq+tBgg3BN1RE?=
- =?us-ascii?Q?NW0re45wE9EcvO39RU2swZgF2IE2iBRkpmBnjawLP/KIZE5uivxZ1cbXCCBG?=
- =?us-ascii?Q?NxlJMfWdVOhtL2XGawoaZTh82GcrWOjMG+nLT/24tLlvXIsCaWv60yeGBvts?=
- =?us-ascii?Q?SdpJcmoXPeTfB2xcv1beXGaWLVZLeVTFXY1ognSA8lBcLEjoJvVtr5PzYWxx?=
- =?us-ascii?Q?gtC9qfxrkLDviKLhQUS6kclusXOd5vAfdOCgW3IxQgenO3qGVz3VlROsE+zf?=
- =?us-ascii?Q?LOpAdgz7AS7k/AA4t18v7WNtRs4UA3HhqzBKSd4koN+91n1qc52GfKmvul3c?=
- =?us-ascii?Q?taMtzBtZwG4s6hqfj850XT+NcCzFF6vfCIaoTNQGTdE8yJUXdQ4Z9i2fanlG?=
- =?us-ascii?Q?CMQvqSaNwH92Xtc1IMz3fvobVqQhiRCI1uQgk017kPYMy28Eaz04gAGTadyQ?=
- =?us-ascii?Q?l6uBhhAWpgs/Bb43UgCYRYvMsSylzCOeSk32w5eJFoe18yILmLmyfPABwvnS?=
- =?us-ascii?Q?gZdIR6r8tw1RLOY2Zz3AOzooqE/WAfUzLYYnV2RPA3HXUvD8lEQvH6HDNIsq?=
- =?us-ascii?Q?X6/FVMSeaHvkEvXfVMGM++56wx8hQnE8S9ar23KfBmHB+ObOT1eXzgefLIgV?=
- =?us-ascii?Q?+Q=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	=?us-ascii?Q?SG2H9zt94eShoSLTprwOjrXElKneMK4zh84lHdZoMVU6iSfC91ITclJ6rMSw?=
- =?us-ascii?Q?RFEtkMbpqnKi05mHHq9/hijFoheD3AJ8ugnyFveWuYlMUjyosq3EARqnH8Mi?=
- =?us-ascii?Q?K5bBaUBYYyeImnotAZa1sGvUFSBDc/9W9m6gUscZynfzci3b+cU04dg6U/XG?=
- =?us-ascii?Q?wKKh5UvWMD9NzGtSdJcQs84tCYA3CaKJ3SMF9pasqj3NUSHV5Z4SBVA0mvBG?=
- =?us-ascii?Q?9ore6AMQBVvPV9yCCtmsnSGbgcMONcizH/NfOoNRYzCuzFkeezN5RX9Bf7fP?=
- =?us-ascii?Q?W3SuThIWoxFtZ85GXMt3SdoLV2vCFlQeYregppeHu581Hc8EVG35p3tAOBy8?=
- =?us-ascii?Q?wCtc+OGbn9pq4a/SqpOgHZ3TTSjV3CDClnTir2aEJOEdGzcoWjQHKv7FHbij?=
- =?us-ascii?Q?Jqi6NqnOG/9JF3TqCcp9/zNI5kELbC4cm4aGDb4Ay4/ICcK9OvnL4imkmZDf?=
- =?us-ascii?Q?+b/spgtkb0SmFHVLzYFUsO3FKtE5QConLP8sAlORouQ41lbzl3Tv0GTOtsCI?=
- =?us-ascii?Q?RvkLevQdGWU2UqYvyXrjCR47uByOH2pJt3voipfMFRPmVvY6SX84BlDrHAkU?=
- =?us-ascii?Q?Ojn5TyTiCWC6Dwkk60G134OHwhAXlJnXFegcFE4COrkYQUQ6T+OcczDXMuct?=
- =?us-ascii?Q?S3yDegw8fOeCdxzXDZuSnFNiKv6n2reIkiax4IBtl+99z722CeXoMUudOjKr?=
- =?us-ascii?Q?CGDF8qeKrq6YiSNZI6pP2sbGaocqRbgE5eZwMHcccdKQ+zQorQ3eUi4pPJJW?=
- =?us-ascii?Q?g2cw3ki8V5cHZDw+ESMda96Kxhma2MWWgvSL6Lpv6lStmw37TODlfY4gx5iM?=
- =?us-ascii?Q?5Ckx275lq5rS8IdbUyifrapn3+9Jxul1PSjvMr7GSqUxVYruPwcTcC6kjdTY?=
- =?us-ascii?Q?WabcGWumSFKTfNmQLzVDg20PwCveEVzAvuGrJnzzaA3s+7OyENCFfxGClu3B?=
- =?us-ascii?Q?0XFCt+6gk9qH+D6Jpfj9Mw=3D=3D?=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a5b6a188-20ae-41e2-b27e-08db2115f2a4
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR10MB4759.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Mar 2023 03:17:15.8059
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: tOHifdTruKdl7DUYClSXVc4fmXpUv3NU1btBW8HwuNyn9wB5lgp88OgvjiJmMztrS4CHuKCUUApWTc8u0OrGeXuquf7C0KMs1yZC6pF4tUk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ1PR10MB5978
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
- definitions=2023-03-09_14,2023-03-09_01,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 adultscore=0 bulkscore=0
- suspectscore=0 mlxlogscore=891 phishscore=0 spamscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2212070000
- definitions=main-2303100023
-X-Proofpoint-ORIG-GUID: 5DlUnYmB5DWQAPm4mV9Bfa55G_do6U86
-X-Proofpoint-GUID: 5DlUnYmB5DWQAPm4mV9Bfa55G_do6U86
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+Subject: Re: linux-6.2-rc4+ hangs on poweroff/reboot: Bisected
+To: Ben Skeggs <skeggsb@gmail.com>, Karol Herbst <kherbst@redhat.com>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
+ Dave Airlie <airlied@gmail.com>, bskeggs@redhat.com,
+ Lyude Paul <lyude@redhat.com>, ML nouveau <nouveau@lists.freedesktop.org>,
+ LKML <linux-kernel@vger.kernel.org>,
+ ML dri-devel <dri-devel@lists.freedesktop.org>
+References: <b64705e3-2e63-a466-f829-f9568b06766a@googlemail.com>
+ <CACO55tvR4ydDOXt=9nbR3n2aFLKrj8zeuGRR_xpezVQBBLrjqg@mail.gmail.com>
+ <a6188878-f84c-0fcc-9509-b9d7ab797f4c@leemhuis.info>
+ <d031f0a5-8d5e-af51-6db6-11844de3eeba@googlemail.com>
+ <CAPM=9tz+wksJTvMi_4Ef7XWezfH0ReN2se189s8Q=obJjHC+Fw@mail.gmail.com>
+ <4e786e22-f17a-da76-5129-8fef0c7c825a@googlemail.com>
+ <b829633e-ccc4-7a54-1cad-f29254de1251@leemhuis.info>
+ <CACO55tsvM07_6mGU3dCgeji0a6B4JJKSDOOBuCHv2Mw3rYbCHg@mail.gmail.com>
+ <181bea6a-e501-f5bd-b002-de7a244a921a@googlemail.com>
+ <CACO55tsGXfy9-a-nexvcn7pnDGoEWXMqhiQEBwCDkGyOeT1sXQ@mail.gmail.com>
+ <dbfc1f77-29f3-7690-c231-55f906a4e7e5@googlemail.com>
+ <7f6ec5b3-b5c7-f564-003e-132f112b7cf4@googlemail.com>
+ <CACAvsv7Uf5=K44y8YLsiy0aMnc1zvGEQdeDe7RQF=AV+fxxzuQ@mail.gmail.com>
+ <c12aa9b8-65a1-0cdf-8948-15309f16b955@googlemail.com>
+ <CACO55tvGQdHPnZEMAGPZN3K1nUCV-ruX_QNwSqQAg_z81ab0MA@mail.gmail.com>
+ <CACAvsv53xc8dr0e5HEFcV+218WoCbGVor0HDgBw-C51fPkR9kQ@mail.gmail.com>
+Content-Language: en-GB
+From: Chris Clayton <chris2553@googlemail.com>
+In-Reply-To: <CACAvsv53xc8dr0e5HEFcV+218WoCbGVor0HDgBw-C51fPkR9kQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+Hi.
 
-Lee,
+Is it likely that this fix will be sumbmitted to mainline during the ongoing 6.3 development cycle?
 
->> In the scsi_get_vpd_buf() case we will allocate a 255 byte buffer
->> since that's what scsi_get_vpd_size() returns for a VDASD.  And in
->> the scsi_get_vpd_page() case, where a buffer already exists, we clamp
->> the INQUIRY size to the minimum of scsi_get_vpd_size() and the buffer
->> length provided by the caller.
->> 
->
-> Please add my Reviewed-by tag then.
+Chris
 
-Applied to 6.3/scsi-fixes, thanks!
-
--- 
-Martin K. Petersen	Oracle Linux Engineering
+On 20/02/2023 22:16, Ben Skeggs wrote:
+> On Mon, 20 Feb 2023 at 21:27, Karol Herbst <kherbst@redhat.com> wrote:
+>>
+>> On Mon, Feb 20, 2023 at 11:51 AM Chris Clayton <chris2553@googlemail.com> wrote:
+>>>
+>>>
+>>>
+>>> On 20/02/2023 05:35, Ben Skeggs wrote:
+>>>> On Sun, 19 Feb 2023 at 04:55, Chris Clayton <chris2553@googlemail.com> wrote:
+>>>>>
+>>>>>
+>>>>>
+>>>>> On 18/02/2023 15:19, Chris Clayton wrote:
+>>>>>>
+>>>>>>
+>>>>>> On 18/02/2023 12:25, Karol Herbst wrote:
+>>>>>>> On Sat, Feb 18, 2023 at 1:22 PM Chris Clayton <chris2553@googlemail.com> wrote:
+>>>>>>>>
+>>>>>>>>
+>>>>>>>>
+>>>>>>>> On 15/02/2023 11:09, Karol Herbst wrote:
+>>>>>>>>> On Wed, Feb 15, 2023 at 11:36 AM Linux regression tracking #update
+>>>>>>>>> (Thorsten Leemhuis) <regressions@leemhuis.info> wrote:
+>>>>>>>>>>
+>>>>>>>>>> On 13.02.23 10:14, Chris Clayton wrote:
+>>>>>>>>>>> On 13/02/2023 02:57, Dave Airlie wrote:
+>>>>>>>>>>>> On Sun, 12 Feb 2023 at 00:43, Chris Clayton <chris2553@googlemail.com> wrote:
+>>>>>>>>>>>>>
+>>>>>>>>>>>>>
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> On 10/02/2023 19:33, Linux regression tracking (Thorsten Leemhuis) wrote:
+>>>>>>>>>>>>>> On 10.02.23 20:01, Karol Herbst wrote:
+>>>>>>>>>>>>>>> On Fri, Feb 10, 2023 at 7:35 PM Linux regression tracking (Thorsten
+>>>>>>>>>>>>>>> Leemhuis) <regressions@leemhuis.info> wrote:
+>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>> On 08.02.23 09:48, Chris Clayton wrote:
+>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>> I'm assuming  that we are not going to see a fix for this regression before 6.2 is released.
+>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>> Yeah, looks like it. That's unfortunate, but happens. But there is still
+>>>>>>>>>>>>>>>> time to fix it and there is one thing I wonder:
+>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>> Did any of the nouveau developers look at the netconsole captures Chris
+>>>>>>>>>>>>>>>> posted more than a week ago to check if they somehow help to track down
+>>>>>>>>>>>>>>>> the root of this problem?
+>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>> I did now and I can't spot anything. I think at this point it would
+>>>>>>>>>>>>>>> make sense to dump the active tasks/threads via sqsrq keys to see if
+>>>>>>>>>>>>>>> any is in a weird state preventing the machine from shutting down.
+>>>>>>>>>>>>>>
+>>>>>>>>>>>>>> Many thx for looking into it!
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> Yes, thanks Karol.
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> Attached is the output from dmesg when this block of code:
+>>>>>>>>>>>>>
+>>>>>>>>>>>>>         /bin/mount /dev/sda7 /mnt/sda7
+>>>>>>>>>>>>>         /bin/mountpoint /proc || /bin/mount /proc
+>>>>>>>>>>>>>         /bin/dmesg -w > /mnt/sda7/sysrq.dmesg.log &
+>>>>>>>>>>>>>         /bin/echo t > /proc/sysrq-trigger
+>>>>>>>>>>>>>         /bin/sleep 1
+>>>>>>>>>>>>>         /bin/sync
+>>>>>>>>>>>>>         /bin/sleep 1
+>>>>>>>>>>>>>         kill $(pidof dmesg)
+>>>>>>>>>>>>>         /bin/umount /mnt/sda7
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> is executed immediately before /sbin/reboot is called as the final step of rebooting my system.
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> I hope this is what you were looking for, but if not, please let me know what you need
+>>>>>>>>>>>
+>>>>>>>>>>> Thanks Dave. [...]
+>>>>>>>>>> FWIW, in case anyone strands here in the archives: the msg was
+>>>>>>>>>> truncated. The full post can be found in a new thread:
+>>>>>>>>>>
+>>>>>>>>>> https://lore.kernel.org/lkml/e0b80506-b3cf-315b-4327-1b988d86031e@googlemail.com/
+>>>>>>>>>>
+>>>>>>>>>> Sadly it seems the info "With runpm=0, both reboot and poweroff work on
+>>>>>>>>>> my laptop." didn't bring us much further to a solution. :-/ I don't
+>>>>>>>>>> really like it, but for regression tracking I'm now putting this on the
+>>>>>>>>>> back-burner, as a fix is not in sight.
+>>>>>>>>>>
+>>>>>>>>>> #regzbot monitor:
+>>>>>>>>>> https://lore.kernel.org/lkml/e0b80506-b3cf-315b-4327-1b988d86031e@googlemail.com/
+>>>>>>>>>> #regzbot backburner: hard to debug and apparently rare
+>>>>>>>>>> #regzbot ignore-activity
+>>>>>>>>>>
+>>>>>>>>>
+>>>>>>>>> yeah.. this bug looks a little annoying. Sadly the only Turing based
+>>>>>>>>> laptop I got doesn't work on Nouveau because of firmware related
+>>>>>>>>> issues and we probably need to get updated ones from Nvidia here :(
+>>>>>>>>>
+>>>>>>>>> But it's a bit weird that the kernel doesn't shutdown, because I don't
+>>>>>>>>> see anything in the logs which would prevent that from happening.
+>>>>>>>>> Unless it's waiting on one of the tasks to complete, but none of them
+>>>>>>>>> looked in any way nouveau related.
+>>>>>>>>>
+>>>>>>>>> If somebody else has any fancy kernel debugging tips here to figure
+>>>>>>>>> out why it hangs, that would be very helpful...
+>>>>>>>>>
+>>>>>>>>
+>>>>>>>> I think I've figured this out. It's to do with how my system is configured. I do have an initrd, but the only thing on
+>>>>>>>> it is the cpu microcode which, it is recommended, should be loaded early. The absence of the NVidia firmare from an
+>>>>>>>> initrd doesn't matter because the drivers for the hardware that need to load firmware are all built as modules, So, by
+>>>>>>>> the time the devices are configured via udev, the root partition is mounted and the drivers can get at the firmware.
+>>>>>>>>
+>>>>>>>> I've found, by turning on nouveau debug and taking a video of the screen as the system shuts down, that nouveau seems to
+>>>>>>>> be trying to run the scrubber very very late in the shutdown process. The problem is that by this time, I think the root
+>>>>>>>> partition, and thus the scrubber binary, have become inaccessible.
+>>>>>>>>
+>>>>>>>> I seem to have two choices - either make the firmware accessible on an initrd or unload the module in a shutdown script
+>>>>>>>> before the scrubber binary becomes inaccessible. The latter of these is the workaround I have implemented whilst the
+>>>>>>>> problem I reported has been under investigation. For simplicity, I think I'll promote my workaround to being the
+>>>>>>>> permanent solution.
+>>>>>>>>
+>>>>>>>> So, apologies (and thanks) to everyone whose time I have taken up with this non-bug.
+>>>>>>>>
+>>>>>>>
+>>>>>>> Well.. nouveau shouldn't prevent the system from shutting down if the
+>>>>>>> firmware file isn't available. Or at least it should print a
+>>>>>>> warning/error. Mind messing with the code a little to see if skipping
+>>>>>>> it kind of works? I probably can also come up with a patch by next
+>>>>>>> week.
+>>>>>>>
+>>>>>> Well, I'd love to but a quick glance at the code caused me to bump into this obscenity:
+>>>>>>
+>>>>>> int
+>>>>>> gm200_flcn_reset_wait_mem_scrubbing(struct nvkm_falcon *falcon)
+>>>>>> {
+>>>>>>         nvkm_falcon_mask(falcon, 0x040, 0x00000000, 0x00000000);
+>>>>>>
+>>>>>>         if (nvkm_msec(falcon->owner->device, 10,
+>>>>>>                 if (!(nvkm_falcon_rd32(falcon, 0x10c) & 0x00000006))
+>>>>>>                         break;
+>>>>>>         ) < 0)
+>>>>>>                 return -ETIMEDOUT;
+>>>>>>
+>>>>>>         return 0;
+>>>>>> }
+>>>>>>
+>>>>>> nvkm_msec is #defined to nvkm_usec which in turn is #defined to nvkm_nsec where the loop that the break is related to
+>>>>>> appears
+>>>>>
+>>>>> I think someone who knows the code needs to look at this. What I can confirm is that after a freeze, I waited for 90
+>>>>> seconds for a timeout to occur, but it didn't.
+>>>> Hey,
+>>>>
+>>>> Are you able to try the attached patch for me please?
+>>>>
+>>>> Thanks,
+>>>> Ben.
+>>>>
+>>>
+>>> Thanks Ben.
+>>>
+>>> Yes, this patch fixes the lockup on reboot and poweroff that I've been seeing on my laptop. As you would expect,
+>>> offloaded rendering is still working and the discrete GPU is being powered on and off as required.
+>>>
+>>> Thanks.
+>>>
+>>> Reported-by: Chris Clayton <chris2553@googlemail.com>
+>>> Tested-by: Chris Clayton <chris2553@googlemail.com>
+>>>
+>>
+>> Ben, did you manage to get push rights to drm-misc by now or should I
+>> just pick the patch and push it through -fixes?
+> Feel free to pick it up!
+> 
+> Thank you,
+> Ben.
+> 
+>>
+>>>>>
+>>>>>
+>>>>> .> Chris
+>>>>>>>>
+>>>>>>>>>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+>>>>>>>>>> --
+>>>>>>>>>> Everything you wanna know about Linux kernel regression tracking:
+>>>>>>>>>> https://linux-regtracking.leemhuis.info/about/#tldr
+>>>>>>>>>> That page also explains what to do if mails like this annoy you.
+>>>>>>>>>>
+>>>>>>>>>> #regzbot ignore-activity
+>>>>>>>>>>
+>>>>>>>>>
+>>>>>>>>
+>>>>>>>
+>>>
+>>
