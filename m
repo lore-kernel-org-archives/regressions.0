@@ -1,70 +1,84 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.marcansoft.com (marcansoft.com [212.63.210.85])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C143A23;
-	Sat, 11 Mar 2023 12:30:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70D02C433D2;
-	Sat, 11 Mar 2023 12:30:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1678537809;
-	bh=2UnpI/uHgbFeseZ6WJQHzE4N7+CfviWl8IBFeSiIEiI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uS6DLm5UPUhxRtPariV7SNAOO1a8pr1NgTwDTl8oE/XZrKVfIv4bRT8BSItVZhwPT
-	 PO4X5imccCh4TQZ52oXXSHDDz+AToomtjCJZfyG/fxUbUmbANKot4EGMf7A9Ez3Kxm
-	 3ODQ267kuCmBOIiHrUSHhXIcIrpjsnh6ZMJlkbmU=
-Date: Sat, 11 Mar 2023 13:30:05 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Hector Martin <marcan@marcan.st>,
-	Alexander Wetzel <alexander@wetzel-home.de>,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39ABE7B;
+	Sat, 11 Mar 2023 14:19:44 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: sendonly@marcansoft.com)
+	by mail.marcansoft.com (Postfix) with ESMTPSA id 8F0B742625;
+	Sat, 11 Mar 2023 14:19:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=marcan.st; s=default;
+	t=1678544382; bh=K9gl8fahgYUMVFftdPQMDoNmStusBGDJI/NXoxPhu6o=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=tDGxqR5NqPgL2zB++YbolTcp9fLpui6CI9QgypZYnAKvKSPFLGWtT5J8uq7Fp0cr3
+	 2K8k2vlMH9b80XRTWwJ3MHYk7rafN7T9fLGJYUrG7NcnUaUi7Kccjiwwa5wxqrpN3g
+	 EzwZ58hpqwF3JxIt7H6OSIdw5IT1GGTP6P/mcHcPS5sNwWwOJtL882tKe36RolVUnB
+	 JIBwRQMVVi0NlPeKnDi86DAfxI8YgPoazmmcQGTReFc4IMRAOaLAjewdNRk87w/W3y
+	 PvSTaM7mRJNKhskVL7D94KA+yKBAgTqcgmETBylstCjSfDl3JQLfxcTUZbRx1UpO+7
+	 uOsNT2wDRfcGg==
+From: Hector Martin <marcan@marcan.st>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Johannes Berg <johannes.berg@intel.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Alexander Wetzel <alexander@wetzel-home.de>
+Cc: Ilya <me@0upti.me>,
+	Janne Grunau <j@jannau.net>,
+	Hans de Goede <hdegoede@redhat.com>,
 	linux-wireless@vger.kernel.org,
-	Johannes Berg <johannes.berg@intel.com>, johannes@sipsolutions.net,
-	stable@vger.kernel.org, Asahi Linux <asahi@lists.linux.dev>,
-	Ilya <me@0upti.me>, Janne Grunau <j@jannau.net>,
-	LKML <linux-kernel@vger.kernel.org>, regressions@lists.linux.dev
-Subject: Re: [REGRESSION] Patch broke WPA auth: Re: [PATCH v2] wifi:
- cfg80211: Fix use after free for wext
-Message-ID: <ZAx0TWRBlGfv7pNl@kroah.com>
-References: <20230124141856.356646-1-alexander@wetzel-home.de>
- <d6851c2b-7966-6cb4-a51c-7268c60e0a86@marcan.st>
- <02ba45eb-1970-791a-d922-7b325ea51146@redhat.com>
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org,
+	regressions@lists.linux.dev,
+	asahi@lists.linux.dev,
+	Hector Martin <marcan@marcan.st>
+Subject: [PATCH] wifi: cfg80211: Partial revert "wifi: cfg80211: Fix use after free for wext"
+Date: Sat, 11 Mar 2023 23:19:14 +0900
+Message-Id: <20230311141914.24444-1-marcan@marcan.st>
+X-Mailer: git-send-email 2.35.1
+In-Reply-To: <d6851c2b-7966-6cb4-a51c-7268c60e0a86@marcan.st>
+References: <d6851c2b-7966-6cb4-a51c-7268c60e0a86@marcan.st>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <02ba45eb-1970-791a-d922-7b325ea51146@redhat.com>
+Content-Transfer-Encoding: 8bit
 
-On Sat, Mar 11, 2023 at 12:03:44PM +0100, Hans de Goede wrote:
-> Hi Hector,
-> 
-> On 3/11/23 10:55, Hector Martin wrote:
-> > Hi,
-> > 
-> > This broke WPA auth entirely on brcmfmac (in offload mode) and probably
-> > others, including on stable 6.2.3 and 6.3-rc1 (tested with iwd). Please
-> > revert or fix. Notes below.
-> > 
-> > Reported-by: Ilya <me@0upti.me>
-> > Reported-by: Janne Grunau <j@jannau.net>
-> > 
-> > #regzbot introduced: 015b8cc5e7c4d7
-> > #regzbot monitor:
-> > https://lore.kernel.org/linux-wireless/20230124141856.356646-1-alexander@wetzel-home.de/
-> 
-> I can confirm this bug, I was seeing broken wifi on brcmfmac with 6.3-rc1
-> and I was about to start a git bisect for this this morning when I saw
-> this email.
-> 
-> Reverting 015b8cc5e7c4d7 fixes the broken wifi. Hector, thank you, you
-> just saved me from a bisect on somewhat slow hardware :)
+This reverts part of commit 015b8cc5e7c4 ("wifi: cfg80211: Fix use after
+free for wext")
 
-Great, can someone submit the revert patch to the networking tree so we
-can get this resolved quickly?
+This commit broke WPA offload by unconditionally clearing the crypto
+modes for non-WEP connections. Drop that part of the patch.
 
-thanks,
+Fixes: 015b8cc5e7c4 ("wifi: cfg80211: Fix use after free for wext")
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/linux-wireless/ZAx0TWRBlGfv7pNl@kroah.com/T/#m11e6e0915ab8fa19ce8bc9695ab288c0fe018edf
+Signed-off-by: Hector Martin <marcan@marcan.st>
+---
+ net/wireless/sme.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-greg k-h
+diff --git a/net/wireless/sme.c b/net/wireless/sme.c
+index 28ce13840a88..7bdeb8eea92d 100644
+--- a/net/wireless/sme.c
++++ b/net/wireless/sme.c
+@@ -1500,8 +1500,6 @@ int cfg80211_connect(struct cfg80211_registered_device *rdev,
+ 		connect->key = NULL;
+ 		connect->key_len = 0;
+ 		connect->key_idx = 0;
+-		connect->crypto.cipher_group = 0;
+-		connect->crypto.n_ciphers_pairwise = 0;
+ 	}
+
+ 	wdev->connect_keys = connkeys;
+--
+2.35.1
+
