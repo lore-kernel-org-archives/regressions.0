@@ -1,244 +1,117 @@
-Received: from smtp-fw-6002.amazon.com (smtp-fw-6002.amazon.com [52.95.49.90])
+Received: from mail.marcansoft.com (marcansoft.com [212.63.210.85])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAB097E6
-	for <regressions@lists.linux.dev>; Fri, 10 Mar 2023 22:38:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1678487892; x=1710023892;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=4Ah8kgw+7F5+l+p1/S9MDspeHNTTxxxtpxdebEtglq0=;
-  b=BP57SktkS25gmmdAcjktPyKix7xHJiY9I9wNl9I+To8eH1Sg2soQiXBV
-   Jz3FnBn6/vHX0Al7Fu8FLuR3888y9yNAO1L9xgqGjUUu0X1Vd8fwUzG9r
-   MAzpsHwzrp9Ifg6ftRxUpxchNRNr2mNFF77D9nD33yFnnVTV97yxhWCv+
-   s=;
-X-IronPort-AV: E=Sophos;i="5.98,251,1673913600"; 
-   d="scan'208";a="305948878"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-iad-1e-m6i4x-a65ebc6e.us-east-1.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-6002.iad6.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2023 22:38:08 +0000
-Received: from EX19MTAUWC001.ant.amazon.com (iad12-ws-svc-p26-lb9-vlan3.iad.amazon.com [10.40.163.38])
-	by email-inbound-relay-iad-1e-m6i4x-a65ebc6e.us-east-1.amazon.com (Postfix) with ESMTPS id 6528763E62;
-	Fri, 10 Mar 2023 22:38:06 +0000 (UTC)
-Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
- EX19MTAUWC001.ant.amazon.com (10.250.64.174) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.25; Fri, 10 Mar 2023 22:38:04 +0000
-Received: from 88665a182662.ant.amazon.com.com (10.106.100.20) by
- EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.24; Fri, 10 Mar 2023 22:38:01 +0000
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
-To: <kuniyu@amazon.com>
-CC: <kuba@kernel.org>, <martin.lau@kernel.org>, <netdev@vger.kernel.org>,
-	<pholzing@redhat.com>, <regressions@lists.linux.dev>,
-	<stable@vger.kernel.org>
-Subject: Re: [REGRESSION] v6.1+ bind() does not fail with EADDRINUSE if dual stack is bound
-Date: Fri, 10 Mar 2023 14:37:52 -0800
-Message-ID: <20230310223752.31024-1-kuniyu@amazon.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20230310212547.25491-1-kuniyu@amazon.com>
-References: <20230310212547.25491-1-kuniyu@amazon.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08D7C7B;
+	Sat, 11 Mar 2023 09:56:13 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: marcan@marcan.st)
+	by mail.marcansoft.com (Postfix) with ESMTPSA id 4F13C4248B;
+	Sat, 11 Mar 2023 09:56:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=marcan.st; s=default;
+	t=1678528565; bh=WQv2RM/H+Nf4R69KWM6AeKDOyfaE/rl12gYu1zrMuhA=;
+	h=Date:To:Cc:References:From:Subject:In-Reply-To;
+	b=SqOErT1KAlhIuLV+rx0mU8z3+CrRCo+bXoJByLk2tPaYXbO4YzMF6dbNfLIlBuzhJ
+	 jwd/PRoU8bInf86qPwfzw0yCJnHjsU67+zaowvR4duC1m0q8CQx+sGipA5QvaXH9cr
+	 DpaL4Y9jLgNvw5btVCKH/B47vOwvNk81pmzz0NK1i45pGtbavijv5lV2mcJlsNknQA
+	 cKw2T9MsA9X8qYLOS8sseGXcjHj9yK24iwJEPfcRkVlg0S7+YVnSgJpuaZjDTj0+mt
+	 RsKpzUwTiY23AcYKiu4+4nIOcxa/J7h3X/vRdqFz20KBJ7IRJcPzAoZCqdIAoaBsuv
+	 iHOBBjvLFPCWw==
+Message-ID: <d6851c2b-7966-6cb4-a51c-7268c60e0a86@marcan.st>
+Date: Sat, 11 Mar 2023 18:55:59 +0900
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.106.100.20]
-X-ClientProxiedBy: EX19D044UWB002.ant.amazon.com (10.13.139.188) To
- EX19D004ANA001.ant.amazon.com (10.37.240.138)
-Precedence: Bulk
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.1
+Content-Language: en-US
+To: Alexander Wetzel <alexander@wetzel-home.de>,
+ linux-wireless@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: johannes@sipsolutions.net, stable@vger.kernel.org,
+ Asahi Linux <asahi@lists.linux.dev>, Ilya <me@0upti.me>,
+ Janne Grunau <j@jannau.net>, LKML <linux-kernel@vger.kernel.org>,
+ regressions@lists.linux.dev
+References: <20230124141856.356646-1-alexander@wetzel-home.de>
+From: Hector Martin <marcan@marcan.st>
+Subject: [REGRESSION] Patch broke WPA auth: Re: [PATCH v2] wifi: cfg80211: Fix
+ use after free for wext
+In-Reply-To: <20230124141856.356646-1-alexander@wetzel-home.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From:   Kuniyuki Iwashima <kuniyu@amazon.com>
-Date:   Fri, 10 Mar 2023 13:25:47 -0800
-> From:   Paul Holzinger <pholzing@redhat.com>
-> Date:   Fri, 10 Mar 2023 17:01:31 +0100
-> > Hi all,
-> > 
-> > there seems to be a regression which allows you to bind the same port 
-> > twice when the first bind call bound to all ip addresses (i. e. dual stack).
-> > 
-> > A second bind call for the same port will succeed if you try to bind to 
-> > a specific ipv4 (e. g. 127.0.0.1), binding to 0.0.0.0 or an ipv6 address 
-> > fails correctly with EADDRINUSE.
-> > 
-> > I included a small c program below to show the issue. Normally the 
-> > second bind call should fail, this was the case before v6.1.
-> > 
-> > 
-> > I bisected the regression to commit 5456262d2baa ("net: Fix incorrect 
-> > address comparison when searching for a bind2 bucket").
-> > 
-> > I also checked that the issue is still present in v6.3-rc1.
+Hi,
+
+This broke WPA auth entirely on brcmfmac (in offload mode) and probably
+others, including on stable 6.2.3 and 6.3-rc1 (tested with iwd). Please
+revert or fix. Notes below.
+
+Reported-by: Ilya <me@0upti.me>
+Reported-by: Janne Grunau <j@jannau.net>
+
+#regzbot introduced: 015b8cc5e7c4d7
+#regzbot monitor:
+https://lore.kernel.org/linux-wireless/20230124141856.356646-1-alexander@wetzel-home.de/
+
+On 24/01/2023 23.18, Alexander Wetzel wrote:
+> Key information in wext.connect is not reset on (re)connect and can hold
+> data from a previous connection.
 > 
-> Thanks for the detailed report.
+> Reset key data to avoid that drivers or mac80211 incorrectly detect a
+> WEP connection request and access the freed or already reused memory.
 > 
-> It seems we should take care of the special case in
-> inet_bind2_bucket_match_addr_any().
-
-I confimed this change fixes the regression.
-I'll check other paths that 5456262d2baa touched.
-
----8<---
-diff --git a/net/ipv4/inet_hashtables.c b/net/ipv4/inet_hashtables.c
-index e41fdc38ce19..62c5f7501571 100644
---- a/net/ipv4/inet_hashtables.c
-+++ b/net/ipv4/inet_hashtables.c
-@@ -828,8 +828,15 @@ bool inet_bind2_bucket_match_addr_any(const struct inet_bind2_bucket *tb, const
- #if IS_ENABLED(CONFIG_IPV6)
- 	struct in6_addr addr_any = {};
- 
--	if (sk->sk_family != tb->family)
--		return false;
-+	if (sk->sk_family != tb->family) {
-+		if (sk->sk_family == AF_INET6)
-+			return net_eq(ib2_net(tb), net) && tb->port == port &&
-+				tb->l3mdev == l3mdev && tb->rcv_saddr == 0;
-+		else
-+			return net_eq(ib2_net(tb), net) && tb->port == port &&
-+				tb->l3mdev == l3mdev &&
-+				ipv6_addr_equal(&tb->v6_rcv_saddr, &in6addr_any);
-+	}
- 
- 	if (sk->sk_family == AF_INET6)
- 		return net_eq(ib2_net(tb), net) && tb->port == port &&
----8<---
-
-
-Tested:
-
----8<---
->>> from socket import *
->>> 
->>> s = socket(AF_INET6, SOCK_STREAM, 0)
->>> s2 = socket(AF_INET, SOCK_STREAM, 0)
->>> 
->>> s.bind(('::', 0))
->>> s
-<socket.socket fd=3, family=AddressFamily.AF_INET6, type=SocketKind.SOCK_STREAM, proto=0, laddr=('::', 53147, 0, 0)>
->>> 
->>> s2.bind(('0.0.0.0', s.getsockname()[1]))
-Traceback (most recent call last):
-  File "<stdin>", line 1, in <module>
-OSError: [Errno 98] Address already in use
->>> s2.bind(('127.0.0.1', s.getsockname()[1]))
-Traceback (most recent call last):
-  File "<stdin>", line 1, in <module>
-OSError: [Errno 98] Address already in use
->>> 
->>> 
->>> s3 = socket(AF_INET, SOCK_STREAM, 0)
->>> s4 = socket(AF_INET6, SOCK_STREAM, 0)
->>> 
->>> s3.bind(('0.0.0.0', 0))
->>> s3
-<socket.socket fd=5, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('0.0.0.0', 58359)>
->>> 
->>> s4.bind(('::0', s3.getsockname()[1]))
-Traceback (most recent call last):
-  File "<stdin>", line 1, in <module>
-OSError: [Errno 98] Address already in use
->>> s4.bind(('::1', s3.getsockname()[1]))
-Traceback (most recent call last):
-  File "<stdin>", line 1, in <module>
-OSError: [Errno 98] Address already in use
----8<---
-
-Thanks,
-Kuniyuki
-
-
+> Additionally optimize cfg80211_sme_connect() and avoid an useless
+> schedule of conn_work.
 > 
-> I'll fix it.
+> Fixes: fffd0934b939 ("cfg80211: rework key operation")
+> Cc: stable@vger.kernel.org
+> Link: https://lore.kernel.org/r/c80f04d2-8159-a02a-9287-26e5ec838826@wetzel-home.de
+> Signed-off-by: Alexander Wetzel <alexander@wetzel-home.de>
 > 
-> Thanks,
-> Kuniyuki
+> ---
+> V2 changes:
+> - updated comment
+> - reset more key data
 > 
-> > 
-> > 
-> > Original report: https://github.com/containers/podman/issues/17719
-> > 
-> > #regzbot introduced: 5456262d2baa
-> > 
-> > 
-> > ```
-> > 
-> > #include <sys/socket.h>
-> > #include <sys/un.h>
-> > #include <stdlib.h>
-> > #include <stdio.h>
-> > #include <netinet/in.h>
-> > #include <unistd.h>
-> > 
-> > int main(int argc, char *argv[])
-> > {
-> >      int ret, sock1, sock2;
-> >      struct sockaddr_in6 addr;
-> >      struct sockaddr_in addr2;
-> > 
-> >      sock1 = socket(AF_INET6, SOCK_STREAM, 0);
-> >      if (sock1 == -1)
-> >      {
-> >          perror("socket1");
-> >          exit(1);
-> >      }
-> >      sock2 = socket(AF_INET, SOCK_STREAM, 0);
-> >      if (sock2 == -1)
-> >      {
-> >          perror("socket2");
-> >          exit(1);
-> >      }
-> > 
-> >      memset(&addr, 0, sizeof(addr));
-> >      addr.sin6_family = AF_INET6;
-> >      addr.sin6_addr = in6addr_any;
-> >      addr.sin6_port = htons(8080);
-> > 
-> >      memset(&addr2, 0, sizeof(addr2));
-> >      addr2.sin_family = AF_INET;
-> >      addr2.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
-> >      addr2.sin_port = htons(8080);
-> > 
-> >      ret = bind(sock1, (struct sockaddr *)&addr, sizeof(addr));
-> >      if (ret == -1)
-> >      {
-> >          perror("bind1");
-> >          exit(1);
-> >      }
-> >      printf("bind1 ret: %d\n", ret);
-> > 
-> >      if ((listen(sock1, 5)) != 0)
-> >      {
-> >          perror("listen1");
-> >          exit(1);
-> >      }
-> > 
-> >      ret = bind(sock2, (struct sockaddr *)&addr2, sizeof(addr2));
-> >      if (ret == -1)
-> >      {
-> >          perror("bind2");
-> >          exit(1);
-> >      }
-> >      printf("bind2 ret: %d\n", ret);
-> > 
-> >      if ((listen(sock2, 5)) != 0)
-> >      {
-> >          perror("listen2");
-> >          exit(1);
-> >      }
-> > 
-> >      // uncomment pause() to see with ss -tlpn the bound ports
-> >      // pause();
-> > 
-> >      return 0;
-> > }
-> > 
-> > ```
-> > 
-> > 
-> > Best regards,
-> > 
-> > Paul
+> ---
+>  net/wireless/sme.c | 31 ++++++++++++++++++++++++++-----
+>  1 file changed, 26 insertions(+), 5 deletions(-)
+> 
+> diff --git a/net/wireless/sme.c b/net/wireless/sme.c
+> index 123248b2c0be..0cc841c0c59b 100644
+> --- a/net/wireless/sme.c
+> +++ b/net/wireless/sme.c
+[snip]
+> @@ -1464,6 +1476,15 @@ int cfg80211_connect(struct cfg80211_registered_device *rdev,
+
+This if branch only fires if the connection is WEP.
+
+>  	} else {
+>  		if (WARN_ON(connkeys))
+>  			return -EINVAL;
+> +
+> +		/* connect can point to wdev->wext.connect which
+> +		 * can hold key data from a previous connection
+> +		 */
+> +		connect->key = NULL;
+> +		connect->key_len = 0;
+> +		connect->key_idx = 0;
+
+And these are indeed only used by WEP.
+
+> +		connect->crypto.cipher_group = 0;
+> +		connect->crypto.n_ciphers_pairwise = 0;
+
+But here you're killing the info that is used for *other* auth modes too
+if !WEP, breaking WPA and everything else.
+
+>  	}
+>  
+>  	wdev->connect_keys = connkeys;
+
+- Hector
