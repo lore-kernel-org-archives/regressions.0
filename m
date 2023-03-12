@@ -1,108 +1,115 @@
-Received: from nbd.name (nbd.name [46.4.11.11])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46C8210EB
-	for <regressions@lists.linux.dev>; Sun, 12 Mar 2023 08:58:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=nbd.name;
-	s=20160729; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:Subject:From
-	:References:Cc:To:MIME-Version:Date:Message-ID:Sender:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=T1s9MEoNJxbmqXeBcJiadA+hN4toXj4XR7QKtfAnZFI=; b=fxFTupKXuWutLJ4pxsTAGSRpgg
-	KMmnwJQvEEmzmN2WHYUHqbeeiDzW+XMPeFgStAGVDstLf+bXOJKTDW2SWcSkXXodK6iQvLJ2Ez4Pq
-	QfXn/WAg5Ttf234EJlmiIlYTlbY1yjxCTIhTie9IxHt2AnPnMCm0RNgIzJO+5J5koa8U=;
-Received: from p54ae9730.dip0.t-ipconnect.de ([84.174.151.48] helo=nf.local)
-	by ds12 with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.94.2)
-	(envelope-from <nbd@nbd.name>)
-	id 1pbHX6-000pSo-Do; Sun, 12 Mar 2023 09:58:24 +0100
-Message-ID: <a917ba35-bba4-9741-b7d4-c6ec4dfec4a0@nbd.name>
-Date: Sun, 12 Mar 2023 09:58:23 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C847710EA
+	for <regressions@lists.linux.dev>; Sun, 12 Mar 2023 10:36:09 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1pbJ3W-0002pE-Bm; Sun, 12 Mar 2023 11:35:58 +0100
+Message-ID: <6a916781-7b84-924f-bdc6-0f284610bead@leemhuis.info>
+Date: Sun, 12 Mar 2023 11:35:57 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.8.0
-To: Alexander Wetzel <alexander@wetzel-home.de>,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+Subject: Re: [PATCH v3] tpm: disable hwrng for fTPM on some AMD designs
+Content-Language: en-US, de-DE
+To: Jarkko Sakkinen <jarkko@kernel.org>,
  Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
- LKML <linux-kernel@vger.kernel.org>, Thomas Mann <rauchwolke@gmx.net>,
- Stanislaw Gruszka <stf_xl@wp.pl>, Helmut Schaa
- <helmut.schaa@googlemail.com>, Johannes Berg <johannes.berg@intel.com>
-References: <b8efebc6-4399-d0b8-b2a0-66843314616b@leemhuis.info>
- <5a7cd098-1d83-6297-e802-ce998c8ec116@leemhuis.info>
- <6025e17e-4c29-6d36-6b9c-2fec543b21c4@wetzel-home.de>
- <debc7fe9-204d-63a7-aa61-91b20a46f385@wetzel-home.de>
- <4a02173f-3a60-0a7e-8962-3778e6c55bf3@nbd.name>
- <cfa5cc30-bf5a-bffd-4c2f-eec8a6522dd5@wetzel-home.de>
- <42185fa2-4191-fcf5-9c0f-fd7098bb856b@nbd.name>
- <b4427052-9e94-bce7-b745-2473be5686fa@wetzel-home.de>
- <f00171a1-7f6f-d708-9587-4f176457fdfd@wetzel-home.de>
-Content-Language: en-US
-From: Felix Fietkau <nbd@nbd.name>
-Subject: Re: [Regression] rt2800usb - Wifi performance issues and connection
- drops
-In-Reply-To: <f00171a1-7f6f-d708-9587-4f176457fdfd@wetzel-home.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+ Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
+ Dominik Brodowski <linux@dominikbrodowski.net>,
+ Herbert Xu <herbert@gondor.apana.org.au>, stable@vger.kernel.org,
+ James Bottomley <James.Bottomley@hansenpartnership.com>,
+ reach622@mailcuk.com, Bell <1138267643@qq.com>,
+ "Jason A . Donenfeld" <Jason@zx2c4.com>, linux-integrity@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Mario Limonciello <mario.limonciello@amd.com>
+References: <20230228024439.27156-1-mario.limonciello@amd.com>
+ <Y/1wuXbaPcG9olkt@kernel.org>
+ <5e535bf9-c662-c133-7837-308d67dfac94@leemhuis.info>
+ <85df6dda-c1c9-f08e-9e64-2007d44f6683@leemhuis.info>
+ <ZA0sScO47IMKPhtG@kernel.org>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <ZA0sScO47IMKPhtG@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1678617369;be37a2cc;
+X-HE-SMSGID: 1pbJ3W-0002pE-Bm
 
-On 11.03.23 22:26, Alexander Wetzel wrote:
-> Serialization helps. A (crude and in multiple ways incorrect) patch
-> preventing two drv_wake_tx_queue() running for the same ac fixed the
-> issue for Thomas:
-> https://bugzilla.kernel.org/show_bug.cgi?id=217119#c20
+On 12.03.23 02:35, Jarkko Sakkinen wrote:
+> On Fri, Mar 10, 2023 at 06:43:47PM +0100, Thorsten Leemhuis wrote:
+>> [adding Linux to the list of recipients]
+>>
+>> On 08.03.23 10:42, Linux regression tracking (Thorsten Leemhuis) wrote:
+>>> Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
+>>> for once, to make this easily accessible to everyone.
+>>>
+>>> Jarkko, thx for reviewing and picking below fix up. Are you planning to
+>>> send this to Linus anytime soon, now that the patch was a few days in
+>>> next? It would be good to get this 6.1 regression finally fixed, it
+>>> already took way longer then the time frame
+>>> Documentation/process/handling-regressions.rst outlines for a case like
+>>> this. But well, that's how it is sometimes...
+>>
+>> Linus, would you consider picking this fix up directly from here or from
+>> linux-next (8699d5244e37)? It's been in the latter for 9 days now
+>> afaics. And the issue seems to bug more than just one or two users, so
+>> it IMHO would be good to get this finally resolved.
+>>
+>> Jarkko didn't reply to my inquiry, guess something else keeps him busy.
 > 
-> So it looks like we'll now have soon a fix for the issue.
-> 
-> The driver wakes the queue for IEEE80211_AC_BE often for only a single
-> skb and then stops it again.
-> The short run time is insufficient for wake_txqs_tasklet to proper wake
-> all queues itself and from time to time a new TX operation squeezes in
-> after IEEE80211_AC_BE has been unblocked but prior of drv_wake_tx_queue
-> being called from the wake_txqs_tasklet. When this happens
-> drv_wake_tx_queue is called two times: Once from the tasklet, once from
-> the userspace.
-> 
-> ieee80211_handle_wake_tx_queue is using ieee80211_txq_schedule_start,
-> which has this documented requirement:
-> "The driver must not call multiple TXQ scheduling rounds concurrently."
-> Now I don't think that is causing the reported regression. Nevertheless
-> we should prevent concurrent calls of ieee80211_handle_wake_tx_queue for
-> that reason alone.
-> 
-> The real reason of the hangs is probably in the rt2800usb driver or
-> hardware. I don't see anything in the driver code, so probably the HW
-> itself has a problem with the two near-concurrent TX operations.
-> 
-> The real culprit of the regression should be commit a790cc3a4fad ("wifi:
-> mac80211: add wake_tx_queue callback to drivers"), which switched
-> rt2800usb over to iTXQs. But without the fix from commit 4444bc2116ae
-> ("wifi: mac80211: Proper mark iTXQs for resumption") mac80211 omitted to
-> schedule the required run of the wake_txqs_tasklet. Thus thus instead of
-> two concurrent drv_wake_tx_queue we only got one and the driver
-> continued to work.
-> 
-> I asked Thomas on bugzilla to test the "best" solution I came up with.
-> 
-> There seems to be multiple ways. But I can't find a simple, low risk and
-> complete fix. So I compromised...
-> 
-> When Thomas can confirm the fix we can soon discuss the fix on
-> linux-wireless.
+> That's a bit arrogant. You emailed only 4 days ago.
 
-I would recommend the following approach for properly fixing this issue:
+My deepest apologies if that "guess something else keeps him busy"
+triggered your response, what I wanted to say is "I don't consider the
+lack of a response a problem, that's how it is for all of us sometimes".
+Sorry, that might not have been the best way to express that.
 
-On init if the .wake_tx_queue op is set to 
-ieee80211_handle_wake_tx_queue, create a single kthread that iterates 
-over all hw queues and schedules each one of them like 
-ieee80211_handle_wake_tx_queue does now.
-Change ieee80211_handle_wake_tx_queue to simply schedule the kthread 
-without doing anything else.
-This is how mt76 handles tx scheduling in the driver, and it works quite 
-well.
+If my prodding itself was the cause: well, I think that's what I should
+do in this case. That stance developed quickly when I started doing
+regression tracking, as I noticed one thing:
 
-- Felix
+Image a regression caused by a commit merged for 5.11-rc1 is reported a
+day or two after 5.11-rc7 is released. Imagine further a fix is posted
+for review two or three days after 5.11-rc8 is out. From what I noticed
+quite a few of those fixes (not all of course) make it to mainline in
+time for the release of 5.11. But the picture looked totally different
+when the fix was posted for review shortly *after* 5.11 was out, as I
+noticed quite a few of those were only mainlined 9 or 10 weeks later for
+5.13-rc1 (and only then can be backported to 5.11.y and 5.12.y).
+
+[above was just a hypothetical example with the worst timing to
+illustrate the core problem, the timelines are different in case of the
+fTPM issue]
+
+From my understanding of things that's not how it should be (unless
+there are strong reasons in the individual case). That's why I'm working
+against that. Still working on optimizing when/how I ask, as I'm not yet
+happy with how I do that.
+
+Don't worry, I use my best judgment in that process; if the fix is
+complex and the next merge window is near, I might let it slip – OTOH if
+it's something that apparently bugs quite a few people, I prod
+developers and maintainers more quickly & often, like I did in this case.
+
+In the end situations like the one outlined above lead me to writing the
+section "Prioritize work on fixing regressions" in
+Documentation/process/handling-regressions.rst (
+https://docs.kernel.org/process/handling-regressions.html ). Greg acked
+it; Linus never commented on it, not sure if he looked at it when he
+merged that. But I have no idea how developers actually have seen it
+and/or take it seriously. But from what I saw it already helped somewhat.
+
+> I'm open to do PR for rc3 with the fix, if it cannot wait to v6.4 pr.
+
+From later in this thread I see that you plan to do that now, thus:
+
+many thx!
+
+Ciao, Thorsten
