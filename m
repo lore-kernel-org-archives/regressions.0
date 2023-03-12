@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59DAD2F37;
-	Sun, 12 Mar 2023 14:42:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F1642F37
+	for <regressions@lists.linux.dev>; Sun, 12 Mar 2023 14:57:05 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pbMuL-0002dq-E1; Sun, 12 Mar 2023 15:42:45 +0100
-Message-ID: <c44b3f40-4b8f-8614-65f5-e78ded89c641@leemhuis.info>
-Date: Sun, 12 Mar 2023 15:42:44 +0100
+	id 1pbN89-0004zi-B2; Sun, 12 Mar 2023 15:57:01 +0100
+Message-ID: <10432722-1aa6-17ca-6375-a53a472207a8@leemhuis.info>
+Date: Sun, 12 Mar 2023 15:57:00 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,131 +16,152 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.8.0
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: [PATCH v3 1/3] iommu: Attach device group to old domain in error
- path
+Subject: Re: [PATCH 8/8] btrfs: turn on -Wmaybe-uninitialized
 Content-Language: en-US, de-DE
-To: Vasant Hegde <vasant.hegde@amd.com>, iommu@lists.linux.dev,
- joro@8bytes.org, baolu.lu@linux.intel.com
-Cc: suravee.suthikulpanit@amd.com, robin.murphy@arm.com, will@kernel.org,
- Felix Kuehling <Felix.Kuehling@amd.com>,
- Alex Deucher <alexander.deucher@amd.com>,
- =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
- Jason Gunthorpe <jgg@nvidia.com>, Bjorn Helgaas <bhelgaas@google.com>,
- Matt Fagnani <matt.fagnani@bell.net>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <20230215052642.6016-1-vasant.hegde@amd.com>
- <0f6e2838-9d7f-dc2c-6e5b-0d02e239f032@amd.com>
+To: Guenter Roeck <linux@roeck-us.net>,
+ Linux regressions mailing list <regressions@lists.linux.dev>, dsterba@suse.cz
+Cc: Josef Bacik <josef@toxicpanda.com>, linux-btrfs@vger.kernel.org,
+ kernel-team@fb.com
+References: <cover.1671221596.git.josef@toxicpanda.com>
+ <1d9deaa274c13665eca60dee0ccbc4b56b506d06.1671221596.git.josef@toxicpanda.com>
+ <20230222025918.GA1651385@roeck-us.net>
+ <20230222163855.GU10580@twin.jikos.cz>
+ <6c308ddc-60f8-1b4d-28da-898286ddb48d@roeck-us.net>
+ <feb05eef-cc80-2fbe-f28a-b778de73b776@leemhuis.info>
+ <caed9824-c05d-19a9-d321-edefab17c4f0@roeck-us.net>
 From: "Linux regression tracking (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
-In-Reply-To: <0f6e2838-9d7f-dc2c-6e5b-0d02e239f032@amd.com>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <caed9824-c05d-19a9-d321-edefab17c4f0@roeck-us.net>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1678632169;a99a0ee6;
-X-HE-SMSGID: 1pbMuL-0002dq-E1
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1678633025;64b116c0;
+X-HE-SMSGID: 1pbN89-0004zi-B2
 
-On 17.02.23 06:53, Vasant Hegde wrote:
-> 
-> [+ CCed few folks from other thread (Bug 216865 - Black screen when amdgpu ...).]
-> 
-> This patch helps to solve the 'black screen' issue we hit in upstream [1].
-> 
-> With this patch we are handling error path gracefully. System is booting without
-> enabling PASID for AMD gpu. Matt has tested this patch and confirmed its working [2]
-> 
-> [1] https://bugzilla.kernel.org/show_bug.cgi?id=216865
-> [2]
-> https://lore.kernel.org/linux-iommu/e17d1ee9-7383-6717-6f10-9465b273b1ed@amd.com/T/#m98390232691e3e55db7f1187073016436fd2176a
-> 
-> Can you consider this patch for 6.2?
-> 
-> I did miss Report-by, tested by tags. Can you append below tags or do you want
-> me to respin patches?
-> 
-> --------
-> 
-> Reported-by: Matt Fagnani <matt.fagnani@bell.net>
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=216865
-> Link:
-> https://lore.kernel.org/lkml/15d0f9ff-2a56-b3e9-5b45-e6b23300ae3b@leemhuis.info/
-> Tested-by: Matt Fagnani <matt.fagnani@bell.net>
 
-Thx again for handling this. Matt now seems to run into a different
-problem reported here:
 
-https://bugzilla.kernel.org/show_bug.cgi?id=217170
-https://gitlab.freedesktop.org/drm/amd/-/issues/2454
+On 12.03.23 15:37, Guenter Roeck wrote:
+> On 3/12/23 06:06, Linux regression tracking (Thorsten Leemhuis) wrote:
+>> On 22.02.23 18:18, Guenter Roeck wrote:
+>>> On 2/22/23 08:38, David Sterba wrote:
+>>>> On Tue, Feb 21, 2023 at 06:59:18PM -0800, Guenter Roeck wrote:
+>>>>> On Fri, Dec 16, 2022 at 03:15:58PM -0500, Josef Bacik wrote:
+>>>>>> We had a recent bug that would have been caught by a newer compiler
+>>>>>> with
+>>>>>> -Wmaybe-uninitialized and would have saved us a month of failing
+>>>>>> tests
+>>>>>> that I didn't have time to investigate.
+>>>>>>
+>>>>>
+>>>>> Thanks to this patch, sparc64:allmodconfig and parisc:allmodconfig now
+>>>>> fail to commpile with the following error when trying to build images
+>>>>> with gcc 11.3.
+>>>>>
+>>>>> Building sparc64:allmodconfig ... failed
+>>>>> --------------
+>>>>> Error log:
+>>>>> <stdin>:1517:2: warning: #warning syscall clone3 not implemented
+>>>>> [-Wcpp]
+>>>>> fs/btrfs/inode.c: In function 'btrfs_lookup_dentry':
+>>>>> fs/btrfs/inode.c:5730:21: error: 'location.type' may be used
+>>>>> uninitialized [-Werror=maybe-uninitialized]
+>>>>>    5730 |         if (location.type == BTRFS_INODE_ITEM_KEY) {
+>>>>>         |             ~~~~~~~~^~~~~
+>>>>> fs/btrfs/inode.c:5719:26: note: 'location' declared here
+>>>>>    5719 |         struct btrfs_key location;
+>>>>
+>>>> Thanks for the report, Linus warned me that there might be some
+>>>> fallouts
+>>>> and that the warning flag might need reverted. But before I do that I'd
+>>>> like to try to understand why the warnings happen in a code where is no
+>>>> reason for it.
+>>>>
+>>>> I did a quick test on gcc 11.3 (on x86_64, not on sparc64 unlike you
+>>>> report), and there is no warning
+>>>>
+>>>> gcc (SUSE Linux) 11.3.1 20220721 [revision
+>>>> a55184ada8e2887ca94c0ab07027617885beafc9]
+>>>> Copyright (C) 2021 Free Software Foundation, Inc.
+>>>> This is free software; see the source for copying conditions.  There
+>>>> is NO
+>>>> warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR
+>>>> PURPOSE.
+>>>>
+>>>>     DESCEND objtool
+>>>>     CALL    scripts/checksyscalls.sh
+>>>>     CC [M]  fs/btrfs/inode.o
+>>>>
+>>>> I.e. it's the same version, different arch and likely not the same
+>>>> config. In the function itself thre's a local variable passed by
+>>>> address
+>>>> to a static function in the same file.
+>>>>
+>>>>      struct btrfs_key location;
+>>>>      ...
+>>>>      ret = btrfs_inode_by_name(BTRFS_I(dir), dentry, &location,
+>>>> &di_type);
+>>>>
+>>>> and there it's
+>>>>
+>>>>      btrfs_dir_item_key_to_cpu(path->nodes[0], di, location);
+>>>>
+>>>> which is a series of helpers to read some data and store that to the
+>>>> strucutre. At some point there's a call to read_extent_buffer() that's
+>>>> in a different file.
+>>>>
+>>>> A local variable passed by address to external function is quite common
+>>>> so I'd expect more warnings and I don't see what's different in this
+>>>> case.
+>>>
+>>> Me not either. I also don't see the problem with other architectures,
+>>> only
+>>> with sparc and parisc. It doesn't have to be gcc 11.3, though; it also
+>>> happens
+>>> with gcc 11.1, 11.2, 12.1, and 12.2 (tested on sparc).
+>>>
+>>> Too bad that gcc doesn't tell why exactly it believes that the object
+>>> may be uninitialized. Anyway, the following change would fix the
+>>> problem.
+>>>
+>>> diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
+>>> index 6c18dc9a1831..4bab8ab39948 100644
+>>> --- a/fs/btrfs/inode.c
+>>> +++ b/fs/btrfs/inode.c
+>>> @@ -5421,7 +5421,7 @@ static int btrfs_inode_by_name(struct btrfs_inode
+>>> *dir, struct dentry *dentry,
+>>>                  return -ENOMEM;
+>>>
+>>>          ret = fscrypt_setup_filename(&dir->vfs_inode, &dentry->d_name,
+>>> 1, &fname);
+>>> -       if (ret)
+>>> +       if (ret < 0)
+>>>                  goto out;
+>>>
+>>> Presumably gcc assumes that fscrypt_setup_filename() could return
+>>> a positive value.
+>>
+>> This discussion seems to have stalled, but from a kernelci report it
+>> looks like above warning still happens:
+>> https://lore.kernel.org/all/640bceb7.a70a0220.af8cd.146b@mx.google.com/
+>>
+>> @btrfs developers, do you still have it on your radar?
+>>
+>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+>> -- 
+>> Everything you wanna know about Linux kernel regression tracking:
+>> https://linux-regtracking.leemhuis.info/about/#tldr
+>> If I did something stupid, please tell me, as explained on that page.
+>>
+>> #regzbot poke
+> 
+> There was a patch:
+> 
+> #regzbot monitor:
+> https://patchwork.kernel.org/project/linux-btrfs/patch/dc091588d770923c3afe779e1eb512724662db71.1678290988.git.sweettea-kernel@dorminy.me/
+> #regzbot fix: btrfs: fix compilation error on sparc/parisc
+> #regzbot ignore-activity
 
-In short: amdgpu failed to resume when IOMMU is in use; when
-"amd_iommu=off" is used, suspend works fine.
-
-Is this something that might be related to these fixes?
+Ahh, great, thx.
 
 Ciao, Thorsten
 
-> On 2/15/2023 10:56 AM, Vasant Hegde wrote:
->> iommu_attach_group() attaches all devices in a group to domain and then
->> sets group domain (group->domain). Current code (__iommu_attach_group())
->> does not handle error path. This creates problem as devices to domain
->> attachment is in inconsistent state.
->>
->> Flow:
->>   - During boot iommu attach devices to default domain
->>   - Later some device driver (like amd/iommu_v2 or vfio) tries to attach
->>     device to new domain.
->>   - In iommu_attach_group() path we detach device from current domain.
->>     Then it tries to attach devices to new domain.
->>   - If it fails to attach device to new domain then device to domain link
->>     is broken.
->>   - iommu_attach_group() returns error.
->>   - At this stage iommu_attach_group() caller thinks, attaching device to
->>     new domain failed and devices are still attached to old domain.
->>   - But in reality device to old domain link is broken. It will result
->>     in all sort of failures (like IO page fault) later.
->>
->> To recover from this situation, we need to attach all devices back to the
->> old domain. Also log warning if it fails attach device back to old domain.
->>
->> Suggested-by: Lu Baolu <baolu.lu@linux.intel.com>
->> Signed-off-by: Vasant Hegde <vasant.hegde@amd.com>
->> ---
->> Robin, Joerg,
->>   As explained in previous version [1], I still kept the changes in
->>   iommu core layer. I hope this is fine with you.
->>
->> [1] https://lore.kernel.org/linux-iommu/f2151603-de54-7717-60f9-748e9205139e@amd.com/
->>
->> -Vasant
->>
->>  drivers/iommu/iommu.c | 16 +++++++++++++++-
->>  1 file changed, 15 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
->> index de91dd88705b..e3336a11b6b9 100644
->> --- a/drivers/iommu/iommu.c
->> +++ b/drivers/iommu/iommu.c
->> @@ -2124,8 +2124,22 @@ static int __iommu_attach_group(struct iommu_domain *domain,
->>  
->>  	ret = __iommu_group_for_each_dev(group, domain,
->>  					 iommu_group_do_attach_device);
->> -	if (ret == 0)
->> +	if (ret == 0) {
->>  		group->domain = domain;
->> +	} else {
->> +		/*
->> +		 * To recover from the case when certain device within the
->> +		 * group fails to attach to the new domain, we need force
->> +		 * attaching all devices back to the old domain. The old
->> +		 * domain is compatible for all devices in the group,
->> +		 * hence the iommu driver should always return success.
->> +		 */
->> +		struct iommu_domain *old_domain = group->domain;
->> +
->> +		group->domain = NULL;
->> +		WARN(__iommu_group_set_domain(group, old_domain),
->> +		     "iommu driver failed to attach a compatible domain");
->> +	}
->>  
->>  	return ret;
->>  }
-> 
