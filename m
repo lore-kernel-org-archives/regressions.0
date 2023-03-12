@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C847710EA
-	for <regressions@lists.linux.dev>; Sun, 12 Mar 2023 10:36:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB6851FA3
+	for <regressions@lists.linux.dev>; Sun, 12 Mar 2023 10:40:41 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pbJ3W-0002pE-Bm; Sun, 12 Mar 2023 11:35:58 +0100
-Message-ID: <6a916781-7b84-924f-bdc6-0f284610bead@leemhuis.info>
-Date: Sun, 12 Mar 2023 11:35:57 +0100
+	id 1pbJ81-0003if-4E; Sun, 12 Mar 2023 11:40:37 +0100
+Message-ID: <a685eb86-ca78-6dd2-5c61-b6a217fe784a@leemhuis.info>
+Date: Sun, 12 Mar 2023 11:40:36 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -32,84 +32,50 @@ References: <20230228024439.27156-1-mario.limonciello@amd.com>
  <Y/1wuXbaPcG9olkt@kernel.org>
  <5e535bf9-c662-c133-7837-308d67dfac94@leemhuis.info>
  <85df6dda-c1c9-f08e-9e64-2007d44f6683@leemhuis.info>
- <ZA0sScO47IMKPhtG@kernel.org>
+ <ZA0sScO47IMKPhtG@kernel.org> <ZA0t/8Tz1Lbz25BZ@kernel.org>
 From: "Linux regression tracking (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <ZA0sScO47IMKPhtG@kernel.org>
+In-Reply-To: <ZA0t/8Tz1Lbz25BZ@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1678617369;be37a2cc;
-X-HE-SMSGID: 1pbJ3W-0002pE-Bm
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1678617641;6abe7919;
+X-HE-SMSGID: 1pbJ81-0003if-4E
 
-On 12.03.23 02:35, Jarkko Sakkinen wrote:
-> On Fri, Mar 10, 2023 at 06:43:47PM +0100, Thorsten Leemhuis wrote:
->> [adding Linux to the list of recipients]
->>
->> On 08.03.23 10:42, Linux regression tracking (Thorsten Leemhuis) wrote:
->>> Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
->>> for once, to make this easily accessible to everyone.
+On 12.03.23 02:42, Jarkko Sakkinen wrote:
+> On Sun, Mar 12, 2023 at 03:35:08AM +0200, Jarkko Sakkinen wrote:
+>> On Fri, Mar 10, 2023 at 06:43:47PM +0100, Thorsten Leemhuis wrote:
+>>> [adding Linux to the list of recipients]
 >>>
->>> Jarkko, thx for reviewing and picking below fix up. Are you planning to
->>> send this to Linus anytime soon, now that the patch was a few days in
->>> next? It would be good to get this 6.1 regression finally fixed, it
->>> already took way longer then the time frame
->>> Documentation/process/handling-regressions.rst outlines for a case like
->>> this. But well, that's how it is sometimes...
+>>> On 08.03.23 10:42, Linux regression tracking (Thorsten Leemhuis) wrote:
+>>>> Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
+>>>> for once, to make this easily accessible to everyone.
+>>>>
+>>>> Jarkko, thx for reviewing and picking below fix up. Are you planning to
+>>>> send this to Linus anytime soon, now that the patch was a few days in
+>>>> next? It would be good to get this 6.1 regression finally fixed, it
+>>>> already took way longer then the time frame
+>>>> Documentation/process/handling-regressions.rst outlines for a case like
+>>>> this. But well, that's how it is sometimes...
+>>>
+>>> Linus, would you consider picking this fix up directly from here or from
+>>> linux-next (8699d5244e37)? It's been in the latter for 9 days now
+>>> afaics. And the issue seems to bug more than just one or two users, so
+>>> it IMHO would be good to get this finally resolved.
+>>>
+>>> Jarkko didn't reply to my inquiry, guess something else keeps him busy.
 >>
->> Linus, would you consider picking this fix up directly from here or from
->> linux-next (8699d5244e37)? It's been in the latter for 9 days now
->> afaics. And the issue seems to bug more than just one or two users, so
->> it IMHO would be good to get this finally resolved.
+>> That's a bit arrogant. You emailed only 4 days ago.
 >>
->> Jarkko didn't reply to my inquiry, guess something else keeps him busy.
+>> I'm open to do PR for rc3 with the fix, if it cannot wait to v6.4 pr.
 > 
-> That's a bit arrogant. You emailed only 4 days ago.
+> If this is about slow response with kernel bugzilla: [...]
 
-My deepest apologies if that "guess something else keeps him busy"
-triggered your response, what I wanted to say is "I don't consider the
-lack of a response a problem, that's how it is for all of us sometimes".
-Sorry, that might not have been the best way to express that.
+Not at all, I don't care if developers use bugzilla or ignore it, as
+long as the regression itself it dealt with.
 
-If my prodding itself was the cause: well, I think that's what I should
-do in this case. That stance developed quickly when I started doing
-regression tracking, as I noticed one thing:
-
-Image a regression caused by a commit merged for 5.11-rc1 is reported a
-day or two after 5.11-rc7 is released. Imagine further a fix is posted
-for review two or three days after 5.11-rc8 is out. From what I noticed
-quite a few of those fixes (not all of course) make it to mainline in
-time for the release of 5.11. But the picture looked totally different
-when the fix was posted for review shortly *after* 5.11 was out, as I
-noticed quite a few of those were only mainlined 9 or 10 weeks later for
-5.13-rc1 (and only then can be backported to 5.11.y and 5.12.y).
-
-[above was just a hypothetical example with the worst timing to
-illustrate the core problem, the timelines are different in case of the
-fTPM issue]
-
-From my understanding of things that's not how it should be (unless
-there are strong reasons in the individual case). That's why I'm working
-against that. Still working on optimizing when/how I ask, as I'm not yet
-happy with how I do that.
-
-Don't worry, I use my best judgment in that process; if the fix is
-complex and the next merge window is near, I might let it slip – OTOH if
-it's something that apparently bugs quite a few people, I prod
-developers and maintainers more quickly & often, like I did in this case.
-
-In the end situations like the one outlined above lead me to writing the
-section "Prioritize work on fixing regressions" in
-Documentation/process/handling-regressions.rst (
-https://docs.kernel.org/process/handling-regressions.html ). Greg acked
-it; Linus never commented on it, not sure if he looked at it when he
-merged that. But I have no idea how developers actually have seen it
-and/or take it seriously. But from what I saw it already helped somewhat.
-
-> I'm open to do PR for rc3 with the fix, if it cannot wait to v6.4 pr.
-
-From later in this thread I see that you plan to do that now, thus:
-
-many thx!
+Fun fact: I actually wanted to get rid of bugzilla for developers/
+subsystems that didn't opt-in, but then another plan came up. See
+https://lwn.net/Articles/910740/
 
 Ciao, Thorsten
