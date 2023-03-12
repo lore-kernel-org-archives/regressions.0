@@ -1,167 +1,137 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F1642F37
-	for <regressions@lists.linux.dev>; Sun, 12 Mar 2023 14:57:05 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pbN89-0004zi-B2; Sun, 12 Mar 2023 15:57:01 +0100
-Message-ID: <10432722-1aa6-17ca-6375-a53a472207a8@leemhuis.info>
-Date: Sun, 12 Mar 2023 15:57:00 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1747538A
+	for <regressions@lists.linux.dev>; Sun, 12 Mar 2023 18:14:46 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:5054:ff:feb3:8f48] (helo=regzbot.fritz.box); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	id 1pbQDU-0000Yt-Et; Sun, 12 Mar 2023 19:14:44 +0100
+From: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>
+To: LKML <linux-kernel@vger.kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Linux regressions report  for mainline [2023-03-12]
+Date: Sun, 12 Mar 2023 18:14:40 +0000
+Message-Id: <167864480635.3972286.12282059674664387990@leemhuis.info>
+X-Mailer: git-send-email 2.39.2
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [PATCH 8/8] btrfs: turn on -Wmaybe-uninitialized
-Content-Language: en-US, de-DE
-To: Guenter Roeck <linux@roeck-us.net>,
- Linux regressions mailing list <regressions@lists.linux.dev>, dsterba@suse.cz
-Cc: Josef Bacik <josef@toxicpanda.com>, linux-btrfs@vger.kernel.org,
- kernel-team@fb.com
-References: <cover.1671221596.git.josef@toxicpanda.com>
- <1d9deaa274c13665eca60dee0ccbc4b56b506d06.1671221596.git.josef@toxicpanda.com>
- <20230222025918.GA1651385@roeck-us.net>
- <20230222163855.GU10580@twin.jikos.cz>
- <6c308ddc-60f8-1b4d-28da-898286ddb48d@roeck-us.net>
- <feb05eef-cc80-2fbe-f28a-b778de73b776@leemhuis.info>
- <caed9824-c05d-19a9-d321-edefab17c4f0@roeck-us.net>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <caed9824-c05d-19a9-d321-edefab17c4f0@roeck-us.net>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1678633025;64b116c0;
-X-HE-SMSGID: 1pbN89-0004zi-B2
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1678644886;421f6b4e;
+X-HE-SMSGID: 1pbQDU-0000Yt-Et
 
+Hi Linus. The list of tracked regressions is still quite short.
 
+Seems quite a few people have run into an issue Hector reported on
+Saturday: WPA auth is entirely broken on brcmfmac in mainline and some
+stable trees, as the culprit was already backported. He submitted a
+partial revert here:
+https://lore.kernel.org/all/20230311141914.24444-1-marcan@marcan.st/
 
-On 12.03.23 15:37, Guenter Roeck wrote:
-> On 3/12/23 06:06, Linux regression tracking (Thorsten Leemhuis) wrote:
->> On 22.02.23 18:18, Guenter Roeck wrote:
->>> On 2/22/23 08:38, David Sterba wrote:
->>>> On Tue, Feb 21, 2023 at 06:59:18PM -0800, Guenter Roeck wrote:
->>>>> On Fri, Dec 16, 2022 at 03:15:58PM -0500, Josef Bacik wrote:
->>>>>> We had a recent bug that would have been caught by a newer compiler
->>>>>> with
->>>>>> -Wmaybe-uninitialized and would have saved us a month of failing
->>>>>> tests
->>>>>> that I didn't have time to investigate.
->>>>>>
->>>>>
->>>>> Thanks to this patch, sparc64:allmodconfig and parisc:allmodconfig now
->>>>> fail to commpile with the following error when trying to build images
->>>>> with gcc 11.3.
->>>>>
->>>>> Building sparc64:allmodconfig ... failed
->>>>> --------------
->>>>> Error log:
->>>>> <stdin>:1517:2: warning: #warning syscall clone3 not implemented
->>>>> [-Wcpp]
->>>>> fs/btrfs/inode.c: In function 'btrfs_lookup_dentry':
->>>>> fs/btrfs/inode.c:5730:21: error: 'location.type' may be used
->>>>> uninitialized [-Werror=maybe-uninitialized]
->>>>>    5730 |         if (location.type == BTRFS_INODE_ITEM_KEY) {
->>>>>         |             ~~~~~~~~^~~~~
->>>>> fs/btrfs/inode.c:5719:26: note: 'location' declared here
->>>>>    5719 |         struct btrfs_key location;
->>>>
->>>> Thanks for the report, Linus warned me that there might be some
->>>> fallouts
->>>> and that the warning flag might need reverted. But before I do that I'd
->>>> like to try to understand why the warnings happen in a code where is no
->>>> reason for it.
->>>>
->>>> I did a quick test on gcc 11.3 (on x86_64, not on sparc64 unlike you
->>>> report), and there is no warning
->>>>
->>>> gcc (SUSE Linux) 11.3.1 20220721 [revision
->>>> a55184ada8e2887ca94c0ab07027617885beafc9]
->>>> Copyright (C) 2021 Free Software Foundation, Inc.
->>>> This is free software; see the source for copying conditions.  There
->>>> is NO
->>>> warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR
->>>> PURPOSE.
->>>>
->>>>     DESCEND objtool
->>>>     CALL    scripts/checksyscalls.sh
->>>>     CC [M]  fs/btrfs/inode.o
->>>>
->>>> I.e. it's the same version, different arch and likely not the same
->>>> config. In the function itself thre's a local variable passed by
->>>> address
->>>> to a static function in the same file.
->>>>
->>>>      struct btrfs_key location;
->>>>      ...
->>>>      ret = btrfs_inode_by_name(BTRFS_I(dir), dentry, &location,
->>>> &di_type);
->>>>
->>>> and there it's
->>>>
->>>>      btrfs_dir_item_key_to_cpu(path->nodes[0], di, location);
->>>>
->>>> which is a series of helpers to read some data and store that to the
->>>> strucutre. At some point there's a call to read_extent_buffer() that's
->>>> in a different file.
->>>>
->>>> A local variable passed by address to external function is quite common
->>>> so I'd expect more warnings and I don't see what's different in this
->>>> case.
->>>
->>> Me not either. I also don't see the problem with other architectures,
->>> only
->>> with sparc and parisc. It doesn't have to be gcc 11.3, though; it also
->>> happens
->>> with gcc 11.1, 11.2, 12.1, and 12.2 (tested on sparc).
->>>
->>> Too bad that gcc doesn't tell why exactly it believes that the object
->>> may be uninitialized. Anyway, the following change would fix the
->>> problem.
->>>
->>> diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
->>> index 6c18dc9a1831..4bab8ab39948 100644
->>> --- a/fs/btrfs/inode.c
->>> +++ b/fs/btrfs/inode.c
->>> @@ -5421,7 +5421,7 @@ static int btrfs_inode_by_name(struct btrfs_inode
->>> *dir, struct dentry *dentry,
->>>                  return -ENOMEM;
->>>
->>>          ret = fscrypt_setup_filename(&dir->vfs_inode, &dentry->d_name,
->>> 1, &fname);
->>> -       if (ret)
->>> +       if (ret < 0)
->>>                  goto out;
->>>
->>> Presumably gcc assumes that fscrypt_setup_filename() could return
->>> a positive value.
->>
->> This discussion seems to have stalled, but from a kernelci report it
->> looks like above warning still happens:
->> https://lore.kernel.org/all/640bceb7.a70a0220.af8cd.146b@mx.google.com/
->>
->> @btrfs developers, do you still have it on your radar?
->>
->> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
->> -- 
->> Everything you wanna know about Linux kernel regression tracking:
->> https://linux-regtracking.leemhuis.info/about/#tldr
->> If I did something stupid, please tell me, as explained on that page.
->>
->> #regzbot poke
-> 
-> There was a patch:
-> 
-> #regzbot monitor:
-> https://patchwork.kernel.org/project/linux-btrfs/patch/dc091588d770923c3afe779e1eb512724662db71.1678290988.git.sweettea-kernel@dorminy.me/
-> #regzbot fix: btrfs: fix compilation error on sparc/parisc
-> #regzbot ignore-activity
+Fixes for two build problems Guenter reported are floating around, but
+haven't reached you yet.
 
-Ahh, great, thx.
+The fix for the TPM regression (which made a HW/firmware issue happen
+more freqently) from the 6.1 cycle (
+https://lore.kernel.org/all/20230228024439.27156-1-mario.limonciello@amd.com/
+) is still not mainlined, but after a recent discussion (I CCed you
+recently) it should hopefully reach you soon now.
 
 Ciao, Thorsten
 
+---
+
+Hi, this is regzbot, the Linux kernel regression tracking bot.
+
+Currently I'm aware of 3 regressions in linux-mainline. Find the
+current status below and the latest on the web:
+
+https://linux-regtracking.leemhuis.info/regzbot/mainline/
+
+Bye bye, hope to see you soon for the next report.
+   Regzbot (on behalf of Thorsten Leemhuis)
+
+
+======================================================
+current cycle (v6.2.. aka v6.3-rc), culprit identified
+======================================================
+
+
+Build failures for sparc64:allmodconfig and parisc:allmodconfig with gcc 11.x+
+------------------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/20230222025918.GA1651385@roeck-us.net/
+https://lore.kernel.org/linux-btrfs/20230222025918.GA1651385@roeck-us.net/
+
+By Guenter Roeck; 18 days ago; 5 activities, latest 0 days ago.
+Introduced in 1ec49744ba83 (v6.3-rc1)
+
+Fix incoming:
+* btrfs: fix compilation error on sparc/parisc
+  https://lore.kernel.org/linux-btrfs/caed9824-c05d-19a9-d321-edefab17c4f0@roeck-us.net/
+
+
+Build error in drivers/media/i2c/imx290.c if PM support is disabled
+-------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/20230227175245.GA3728693@roeck-us.net/
+https://lore.kernel.org/linux-media/20230227175245.GA3728693@roeck-us.net/
+
+By Guenter Roeck; 13 days ago; 4 activities, latest 0 days ago.
+Introduced in 02852c01f654 (v6.3-rc1)
+
+Fix incoming:
+* media: i2c: imx290: fix conditional function defintions
+  https://lore.kernel.org/linux-media/79488ad7-5709-235b-14b4-1518e989c7a3@leemhuis.info/
+
+
+[ *NEW* ] Patch broke WPA auth: Re: [PATCH v2] wifi: cfg80211: Fix use after free for wext
+------------------------------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/d6851c2b-7966-6cb4-a51c-7268c60e0a86@marcan.st/
+https://lore.kernel.org/lkml/d6851c2b-7966-6cb4-a51c-7268c60e0a86@marcan.st/
+
+By Hector Martin; 1 days ago; 13 activities, latest 1 days ago.
+Introduced in 015b8cc5e7c4 (v6.3-rc1)
+
+Recent activities from: Hector Martin (3), Alexander Wetzel (3), Eric
+  Curtin (1), Janne Grunau (1), Joan Bruguera (1), Greg Kroah-
+  Hartman (1), Hans de Goede (1)
+
+One patch associated with this regression:
+* [PATCH] wifi: cfg80211: Partial revert "wifi: cfg80211: Fix use after free for wext"
+  https://lore.kernel.org/lkml/20230311141914.24444-1-marcan@marcan.st/
+  1 days ago, by Hector Martin
+
+=============
+End of report
+=============
+
+All regressions marked '[ *NEW* ]' were added since the previous report,
+which can be found here:
+https://lore.kernel.org/r/167802672375.3551148.2619236429318783591@leemhuis.info
+
+Thanks for your attention, have a nice day!
+
+  Regzbot, your hard working Linux kernel regression tracking robot
+
+
+P.S.: Wanna know more about regzbot or how to use it to track regressions
+for your subsystem? Then check out the getting started guide or the
+reference documentation:
+
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
+
+The short version: if you see a regression report you want to see
+tracked, just send a reply to the report where you Cc
+regressions@lists.linux.dev with a line like this:
+
+#regzbot introduced: v5.13..v5.14-rc1
+
+If you want to fix a tracked regression, just do what is expected
+anyway: add a 'Link:' tag with the url to the report, e.g.:
+
+Link: https://lore.kernel.org/all/30th.anniversary.repost@klaava.Helsinki.FI/
