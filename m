@@ -1,103 +1,71 @@
-Received: from mx.fenrir.org.uk (host-92-27-96-141.static.as13285.net [92.27.96.141])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A29C10E6
-	for <regressions@lists.linux.dev>; Sun, 12 Mar 2023 00:03:30 +0000 (UTC)
-Received: from [10.0.0.3] (helo=deangelis.fenrir.org.uk)
-	(TLS1.3:TLS_AES_256_GCM_SHA384:256)
-	by mx.fenrir.org.uk with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-	id 1pb9BF-0003zR-0b;
-	Sun, 12 Mar 2023 00:03:17 +0000
-Date: Sun, 12 Mar 2023 00:03:16 +0000
-From: Brian Morrison <bdm@fenrir.org.uk>
-To: Mathias Nyman <mathias.nyman@linux.intel.com>
-Cc: linux-usb@vger.kernel.org, Linux kernel regressions list
- <regressions@lists.linux.dev>
-Subject: Re: USB regression in kernel 6.2.2
-Message-ID: <20230312000316.2955d55a@deangelis.fenrir.org.uk>
-In-Reply-To: <20230309200415.118777d2@deangelis.fenrir.org.uk>
-References: <20230307132120.5897c5af@deangelis.fenrir.org.uk>
-	<db2e0984-6eb5-5987-44e1-a7143141469b@linux.intel.com>
-	<20230309200415.118777d2@deangelis.fenrir.org.uk>
-Organization: The Fool and Bladder Face-Jumping Team
-X-Mailer: Claws Mail 4.1.1git47 (GTK 3.24.37; x86_64-redhat-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ABF81103
+	for <regressions@lists.linux.dev>; Sun, 12 Mar 2023 01:35:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C17A1C433D2;
+	Sun, 12 Mar 2023 01:35:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1678584908;
+	bh=WKzZH6nR2LDVUj+kiMAJEwlCmwOLq2myYN0WUPAMo5I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fIx5ZcOU/4pSt6I0UtRZPrgLZJEgMZ0HGwFPGyL8Olcks6gxLcS8aK1SioT+uYS00
+	 1Un1X6m9pAdAXyoq5LxuraDtgWM/lh4BGI3A2i9Dpri1V/ejw+ZkiTnh5LVDgvv7ma
+	 aDxN0bY+222omcQyC2ACkuUUwFZbecYd8YyIoX4uCOB6g2dsAyhdg+TPfgPjoEWCRM
+	 wvuCQrEk9h97mm98thUh29c6Sq5+K0AtzjN8m5BuF2uJCv9U1agdU/TpQ9FTi2M/I0
+	 K7mzfOhQEvpHhpHZaTAA9sbhCpkm3V/HaTED7d1y0509zMwo9fmg5GfA/XB9vm+ejU
+	 ApOA1jIrs7FPw==
+Date: Sun, 12 Mar 2023 03:35:05 +0200
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+	Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Dominik Brodowski <linux@dominikbrodowski.net>,
+	Herbert Xu <herbert@gondor.apana.org.au>, stable@vger.kernel.org,
+	James Bottomley <James.Bottomley@hansenpartnership.com>,
+	reach622@mailcuk.com, Bell <1138267643@qq.com>,
+	"Jason A . Donenfeld" <Jason@zx2c4.com>,
+	linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Mario Limonciello <mario.limonciello@amd.com>
+Subject: Re: [PATCH v3] tpm: disable hwrng for fTPM on some AMD designs
+Message-ID: <ZA0sScO47IMKPhtG@kernel.org>
+References: <20230228024439.27156-1-mario.limonciello@amd.com>
+ <Y/1wuXbaPcG9olkt@kernel.org>
+ <5e535bf9-c662-c133-7837-308d67dfac94@leemhuis.info>
+ <85df6dda-c1c9-f08e-9e64-2007d44f6683@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Clacks-Overhead: GNU Terry Pratchett
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <85df6dda-c1c9-f08e-9e64-2007d44f6683@leemhuis.info>
 
-On Thu, 9 Mar 2023 20:04:15 +0000
-Brian Morrison <bdm@fenrir.org.uk> wrote:
-
-> On Wed, 8 Mar 2023 17:16:01 +0200
-> Mathias Nyman <mathias.nyman@linux.intel.com> wrote:
->  
-> > 
-> > Looks like that those devices initially enumerated fine, but
-> > suddenly disconnect about 19 seconds after boot.
-> > 
-> > [   19.155556] usb 2-1.1: USB disconnect, device number 4
-> > [   19.155685] cp210x ttyUSB0: cp210x converter now disconnected
-> > from ttyUSB0 [   19.159290] usb 2-1.4: USB disconnect, device
-> > number 6 [   19.242344] usb 2-1.4: 3:0: failed to get current value
-> > for ch 0 (-22) [   20.100761] usb 2-4.1: USB disconnect, device
-> > number 8 [   20.100894] cp210x ttyUSB1: cp210x converter now
-> > disconnected from ttyUSB1 [   20.100999] cp210x 2-4.1:1.0: device
-> > disconnected [   20.107188] usb 2-4.2: USB disconnect, device
-> > number 9 [   20.107253] cp210x ttyUSB2: cp210x converter now
-> > disconnected from ttyUSB2 [   20.107284] cp210x 2-4.2:1.0: device
-> > disconnected [   20.111938] usb 2-4.4: USB disconnect, device
-> > number 10 [   20.181363] usb 2-4.4: 3:0: failed to get current
-> > value for ch 0 (-22)
-> > 
-> > Interestingly those are all the devices behind external hubs.
-> > 
-> > Bisecting this to find the offending commit would be best, but a
-> > dmesg with xhci and usb core dynamic debug enabled could also show
-> > why those devices disconnect.
-> > 
-> > Adding "usbcore.dyndbg=+p xhci_hcd.dyndbg=+p" to your kernel cmdline
-> > should do this.  
+On Fri, Mar 10, 2023 at 06:43:47PM +0100, Thorsten Leemhuis wrote:
+> [adding Linux to the list of recipients]
 > 
-> In addition to the debug output I have been looking at the diff
-> between kernel-6.1 and kernel-6.2 in the /drivers/usb tree, in
-> particular under /drivers/usb/core/hub.h and /drivers/usb/core/hub.c
-> where the vendor for this device with VID 0451 is newly listed
-> although its PID is not:
+> On 08.03.23 10:42, Linux regression tracking (Thorsten Leemhuis) wrote:
+> > Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
+> > for once, to make this easily accessible to everyone.
+> > 
+> > Jarkko, thx for reviewing and picking below fix up. Are you planning to
+> > send this to Linus anytime soon, now that the patch was a few days in
+> > next? It would be good to get this 6.1 regression finally fixed, it
+> > already took way longer then the time frame
+> > Documentation/process/handling-regressions.rst outlines for a case like
+> > this. But well, that's how it is sometimes...
 > 
-> Bus 003 Device 002: ID 0451:2046 Texas Instruments, Inc. TUSB2046 Hub
+> Linus, would you consider picking this fix up directly from here or from
+> linux-next (8699d5244e37)? It's been in the latter for 9 days now
+> afaics. And the issue seems to bug more than just one or two users, so
+> it IMHO would be good to get this finally resolved.
 > 
-> this device is missing from lsusb output in kernel 6.2.2 but is
-> present with kernel 6.1.*
+> Jarkko didn't reply to my inquiry, guess something else keeps him busy.
 
-I was wrong about this, it's the devices on the far side of the TI and
-SMSC hub devices that are missing, not the hubs themselves.
+That's a bit arrogant. You emailed only 4 days ago.
 
-> 
-> In my inexpert way I think it is all tied in to changes from a few
-> months ago (November 2022) that went into the 6.2rc kernels where the
-> early_stop capability was added to USB enumeration but I am certainly
-> not smart enough to identify exactly why the particular combination of
-> hardware I have is caught up in it. I can see from the extended dmesg
-> output that certain USB interfaces are unregistered for no obvious
-> reason and that once this happens they are invisible to the OS. The
-> altered USB core code would seem to be a prime suspect as the cause of
-> this regression.
-> 
+I'm open to do PR for rc3 with the fix, if it cannot wait to v6.4 pr.
 
-Further testing with kernels 6.1.18 and 6.2.5 is added to the bug entry
-here:
-
-https://bugzilla.redhat.com/show_bug.cgi?id=2175534#c12
-
-I don't know how to bisect this with the available Fedora kernels.
-
--- 
-
-Brian Morrison
-
+BR, Jarkko
