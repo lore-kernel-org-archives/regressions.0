@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB6851FA3
-	for <regressions@lists.linux.dev>; Sun, 12 Mar 2023 10:40:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39DCB1FC5
+	for <regressions@lists.linux.dev>; Sun, 12 Mar 2023 13:10:23 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pbJ81-0003if-4E; Sun, 12 Mar 2023 11:40:37 +0100
-Message-ID: <a685eb86-ca78-6dd2-5c61-b6a217fe784a@leemhuis.info>
-Date: Sun, 12 Mar 2023 11:40:36 +0100
+	id 1pbLSr-0002eF-Bo; Sun, 12 Mar 2023 14:10:17 +0100
+Message-ID: <73bec5a8-98f7-5dca-3b34-cb6fe0b61249@leemhuis.info>
+Date: Sun, 12 Mar 2023 14:10:16 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,66 +16,65 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.8.0
-Subject: Re: [PATCH v3] tpm: disable hwrng for fTPM on some AMD designs
+Subject: Re: [PATCH v3 14/17] media: i2c: imx290: Initialize runtime PM before
+ subdev
 Content-Language: en-US, de-DE
-To: Jarkko Sakkinen <jarkko@kernel.org>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
- Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
- Dominik Brodowski <linux@dominikbrodowski.net>,
- Herbert Xu <herbert@gondor.apana.org.au>, stable@vger.kernel.org,
- James Bottomley <James.Bottomley@hansenpartnership.com>,
- reach622@mailcuk.com, Bell <1138267643@qq.com>,
- "Jason A . Donenfeld" <Jason@zx2c4.com>, linux-integrity@vger.kernel.org,
- linux-kernel@vger.kernel.org, Mario Limonciello <mario.limonciello@amd.com>
-References: <20230228024439.27156-1-mario.limonciello@amd.com>
- <Y/1wuXbaPcG9olkt@kernel.org>
- <5e535bf9-c662-c133-7837-308d67dfac94@leemhuis.info>
- <85df6dda-c1c9-f08e-9e64-2007d44f6683@leemhuis.info>
- <ZA0sScO47IMKPhtG@kernel.org> <ZA0t/8Tz1Lbz25BZ@kernel.org>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: linux-media@vger.kernel.org, Sakari Ailus <sakari.ailus@iki.fi>,
+ Manivannan Sadhasivam <mani@kernel.org>,
+ Alexander Stein <alexander.stein@ew.tq-group.com>,
+ Dave Stevenson <dave.stevenson@raspberrypi.com>,
+ regressions@lists.linux.dev, Guenter Roeck <linux@roeck-us.net>
+References: <20230116144454.1012-1-laurent.pinchart@ideasonboard.com>
+ <20230116144454.1012-15-laurent.pinchart@ideasonboard.com>
+ <20230227175245.GA3728693@roeck-us.net>
 From: "Linux regression tracking (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <ZA0t/8Tz1Lbz25BZ@kernel.org>
+In-Reply-To: <20230227175245.GA3728693@roeck-us.net>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1678617641;6abe7919;
-X-HE-SMSGID: 1pbJ81-0003if-4E
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1678626623;24a23807;
+X-HE-SMSGID: 1pbLSr-0002eF-Bo
 
-On 12.03.23 02:42, Jarkko Sakkinen wrote:
-> On Sun, Mar 12, 2023 at 03:35:08AM +0200, Jarkko Sakkinen wrote:
->> On Fri, Mar 10, 2023 at 06:43:47PM +0100, Thorsten Leemhuis wrote:
->>> [adding Linux to the list of recipients]
->>>
->>> On 08.03.23 10:42, Linux regression tracking (Thorsten Leemhuis) wrote:
->>>> Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
->>>> for once, to make this easily accessible to everyone.
->>>>
->>>> Jarkko, thx for reviewing and picking below fix up. Are you planning to
->>>> send this to Linus anytime soon, now that the patch was a few days in
->>>> next? It would be good to get this 6.1 regression finally fixed, it
->>>> already took way longer then the time frame
->>>> Documentation/process/handling-regressions.rst outlines for a case like
->>>> this. But well, that's how it is sometimes...
->>>
->>> Linus, would you consider picking this fix up directly from here or from
->>> linux-next (8699d5244e37)? It's been in the latter for 9 days now
->>> afaics. And the issue seems to bug more than just one or two users, so
->>> it IMHO would be good to get this finally resolved.
->>>
->>> Jarkko didn't reply to my inquiry, guess something else keeps him busy.
+On 27.02.23 18:52, Guenter Roeck wrote:
+> On Mon, Jan 16, 2023 at 04:44:51PM +0200, Laurent Pinchart wrote:
+>> Initializing the subdev before runtime PM means that no subdev
+>> initialization can interact with the runtime PM framework. This can be
+>> problematic when modifying controls, as the .s_ctrl() handler commonly
+>> calls pm_runtime_get_if_in_use(). These code paths are not trivial,
+>> making the driver fragile and possibly causing subtle bugs.
 >>
->> That's a bit arrogant. You emailed only 4 days ago.
+>> To make the subdev initialization more robust, initialize runtime PM
+>> first.
 >>
->> I'm open to do PR for rc3 with the fix, if it cannot wait to v6.4 pr.
+>> Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+>> Acked-by: Alexander Stein <alexander.stein@ew.tq-group.com>
+>> ---
 > 
-> If this is about slow response with kernel bugzilla: [...]
+> This patch results in
+> 
+> Error log:
+> <stdin>:1517:2: warning: #warning syscall clone3 not implemented [-Wcpp]
+> drivers/media/i2c/imx290.c:1090:12: error: 'imx290_runtime_suspend' defined but not used [-Werror=unused-function]
+>  1090 | static int imx290_runtime_suspend(struct device *dev)
+>       |            ^~~~~~~~~~~~~~~~~~~~~~
+> drivers/media/i2c/imx290.c:1082:12: error: 'imx290_runtime_resume' defined but not used [-Werror=unused-function]
+>  1082 | static int imx290_runtime_resume(struct device *dev)
+> 
+> if PM runtime support is disabled( alpha:allmodconfig, csky:allmodconfig,
+> and others).
 
-Not at all, I don't care if developers use bugzilla or ignore it, as
-long as the regression itself it dealt with.
+Looks like Guenter never got a reply, but from a recent kernelci report
+it looks like above warning still happens:
+https://lore.kernel.org/all/640bceb7.a70a0220.af8cd.146b@mx.google.com/
 
-Fun fact: I actually wanted to get rid of bugzilla for developers/
-subsystems that didn't opt-in, but then another plan came up. See
-https://lwn.net/Articles/910740/
+Laurent, do you still have it on your radar?
 
-Ciao, Thorsten
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
+
+#regzbot poke
