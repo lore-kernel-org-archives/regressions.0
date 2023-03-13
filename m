@@ -1,13 +1,45 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02CD6322B
-	for <regressions@lists.linux.dev>; Mon, 13 Mar 2023 17:32:25 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pbm22-0004ev-Qp; Mon, 13 Mar 2023 18:32:22 +0100
-Message-ID: <f96431ee-abc0-ff76-3963-c45d3b092840@leemhuis.info>
-Date: Mon, 13 Mar 2023 18:32:22 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F37643C1D
+	for <regressions@lists.linux.dev>; Mon, 13 Mar 2023 17:48:56 +0000 (UTC)
+Received: by mail-ed1-f49.google.com with SMTP id o12so51995541edb.9
+        for <regressions@lists.linux.dev>; Mon, 13 Mar 2023 10:48:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1678729735;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=LaK08avXalr1PtoSNHT6ZMxzGm2NKQlXYq160RM6SJg=;
+        b=dwExWLVQdmufRrRGXvEQQ1J2pk2D/Jdo2kqu0Ua5mZVPG4yiifCsywyW+2AMQkUukA
+         b92ORrZwWODHjo2I5wwOYpxAR8AKHud5h/H6Vqrk8gMWQB1ltNR3axJpDwbqRUZDp4IQ
+         is3++1C03Np1nMPrK4piGvjmNjsloBC3pux5NSXcc8ELrmfvWOMXXPH71gtEXIbrUAEF
+         qnItvDp2niVxcjONCEXYzYH9d2GUJEdfarO4PMknYxY9d6Gh9Ej5TpjoDMOPvpfGR4Kq
+         AdGfSbUtN2JtOh35w4ePqu2Dwhz52a3ABv/TxVTxAV43OjBchWT7oPumTKJwG3aEuH+q
+         talw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678729735;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=LaK08avXalr1PtoSNHT6ZMxzGm2NKQlXYq160RM6SJg=;
+        b=B5m88UqJyJngQOLzKHlYgS6qcg4rTchkdeYK/l/9hOU/s8txqex2HBWsV071q0zkbH
+         MyM1QZKAFZq8SIq1TC+68NLPRfqaxCuT6dwLi3t2y/rDWghnX4DxL5ZOvW+Fmc2qEz3L
+         tcoY3Y/SMOXKlSNf3jvuma1198GD/BdDJK0gnAzR66HVOv6InbUdBIGWb8M+KKjJX5Q0
+         kUTEjktGnEqtXxtia5jOMjFD202Eh0jclMxW0zSgUGHBMsHhqbVWj9YY5Wa3cuepN/og
+         pq0wFWG3zq/qtBMCn4L6EshurZukPHOkW3NgFp1D/JBQ3cryOLT6iVRxJbPP0fYOI3V+
+         I6Yw==
+X-Gm-Message-State: AO0yUKVHtsS+PVmr/Erguka+nB4dc+cQm1CAV/Tj2RHFdShej79JPRJ2
+	1hIdb3+GH7fnQFWmmr78YxnkantEyj1pRQ==
+X-Google-Smtp-Source: AK7set9d2laRnRbapcAd8siE2bZ+imaK9IVIK2D7fOzf13taHY4ft+Z6RvcxkeP2ISZnydG1+yAIxQ==
+X-Received: by 2002:a17:906:db0c:b0:909:3c55:a1b3 with SMTP id xj12-20020a170906db0c00b009093c55a1b3mr47469140ejb.38.1678729734897;
+        Mon, 13 Mar 2023 10:48:54 -0700 (PDT)
+Received: from [192.168.1.45] (hst-221-55.medicom.bg. [84.238.221.55])
+        by smtp.gmail.com with ESMTPSA id lg8-20020a170906f88800b008ca8b62cda6sm64827ejb.177.2023.03.13.10.48.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 13 Mar 2023 10:48:54 -0700 (PDT)
+Message-ID: <ace4420f-d4fb-df18-60f0-3b698c196250@gmail.com>
+Date: Mon, 13 Mar 2023 19:48:53 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -15,72 +47,86 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [REGRESSION] kbl-r5514-5663-max hdmi no longer working
-Content-Language: en-US, de-DE
-To: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-References: <CAJD_bPKQdtaExvVEKxhQ47G-ZXDA=k+gzhMJRHLBe=mysPnuKA@mail.gmail.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Cc: Jason Montleon <jmontleo@redhat.com>, stable@vger.kernel.org,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- Mark Brown <broonie@kernel.org>, Alsa-devel <alsa-devel@alsa-project.org>,
- Takashi Iwai <tiwai@suse.com>, Bard Liao <yung-chuan.liao@linux.intel.com>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <CAJD_bPKQdtaExvVEKxhQ47G-ZXDA=k+gzhMJRHLBe=mysPnuKA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1678728746;c446ae62;
-X-HE-SMSGID: 1pbm22-0004ev-Qp
+ Thunderbird/102.7.1
+Subject: Re: [GIT FIXES FOR v6.3] Venus fixes
+Content-Language: en-US, bg-BG
+To: Linux regressions mailing list <regressions@lists.linux.dev>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: Javier Martinez Canillas <javierm@redhat.com>,
+ Vikash Garodia <vgarodia@qti.qualcomm.com>, linux-media@vger.kernel.org
+References: <20230302060413.67239-1-stanimir.k.varbanov@gmail.com>
+ <cb03d97f-ae48-4090-e14b-354373a2ebe3@leemhuis.info>
+ <7ef0357c-1bd8-7598-4c4e-9d795b5f0abd@leemhuis.info>
+From: Stanimir Varbanov <stanimir.k.varbanov@gmail.com>
+In-Reply-To: <7ef0357c-1bd8-7598-4c4e-9d795b5f0abd@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-[adding a push of people and lists to the recipients that dealt with the
-culprit; leaving the stable list in CC for now, even if this is a
-mainline issue (apart from the backport of the culprit to 5.10.y Takashi
-asked for a while ago)]
+Hi,
 
-On 13.03.23 17:34, Jason Montleon wrote:
-> It looks like HDMI audio stopped working in 5.17-rc1. I ran a bisect
-> which points to 636110411ca726f19ef8e87b0be51bb9a4cdef06.
-
-FWIW, that's "ASoC: Intel/SOF: use set_stream() instead of
-set_tdm_slots() for HDAudio" from Pierre-Louis Bossart.
-
-> I built
-> 5.17.14 with it reverted and it restored HDMI output, but it doesn't
-> revert cleanly from 5.18 onward.
+On 13.03.23 г. 16:28 ч., Thorsten Leemhuis wrote:
+> On 02.03.23 09:27, Linux regression tracking (Thorsten Leemhuis) wrote:
+>> On 02.03.23 07:04, Stanimir Varbanov wrote:
+>>>
+>>> This pull request includes a fix for regression in venus hardware reset.
+>>> The reverted commit has been merged in v6.2.
+>>>
+>>> Please pull.
 > 
->>From what I can tell it looks like -ENOTSUPP is returned from
-> snd_soc_dai_set_stream for hdmi1 and hdmi2 now. I'm not sure if that's
-> expected, but I made the following change and I have working HDMI
-> audio now. https://gist.github.com/jmontleon/4780154c309f956d97ca9a304a00da3f
+> Mauro: any reason why this is still not pulled? It fixes a regression
+> that made it into 6.2 and the revert was now posted 34 days ago, hence
+> it would be good if this could finally go to Linus, so that it can be
+> backported to stable.
 
-Thanks for the report and the patch. I CCed the relevant people for this.
+I guess the best I can do is to include the revert in the next pull 
+request for v6.4.
 
-[TLDR For the rest of the mail: : I'm adding this report to the list of
-tracked Linux kernel regressions; the text you find below is based on a
-few templates paragraphs you might have encountered already in similar
-form. See link in footer if these mails annoy you.]
+> 
+> BTW, Stan: What...
+> 
+>>> The following changes since commit 3e62aba8284de0994a669d07983299242e68fe72:
+>>>
+>>>    media: imx-mipi-csis: Check csis_fmt validity before use (2023-02-26 11:21:33 +0100)
+>>>
+>>> are available in the Git repository at:
+>>>
+>>>    git://linuxtv.org/svarbanov/media_tree.git tags/tag-venus-fixes-for-v6.3
+>>>
+>>> for you to fetch changes up to 1440cfcf24db8c50d929d3c35ab6f87f868fa628:
+>>>
+>>>    Revert "venus: firmware: Correct non-pix start and end addresses" (2023-03-02 07:52:10 +0200)
+>>>
+>>> ----------------------------------------------------------------
+>>> Venus fixes for v6.3
+>>>
+>>> ----------------------------------------------------------------
+>>> Javier Martinez Canillas (1):
+>>>        Revert "venus: firmware: Correct non-pix start and end addresses"
+>>
+>> Good to see that this finally is heading towards mainline, thx.
+>>
+>> What about the other venus regression[1] Javier provided this patch for:
+>>
+>> https://patchwork.kernel.org/project/linux-media/patch/20230210081835.2054482-1-javierm@redhat.com/
+> 
+> ...about this revert from Feb, 10th? There was some discussion recently,
+> but it would to get this finally resolved, too.
 
-To be sure the issue doesn't fall through the cracks unnoticed, I'm
-adding it to regzbot, the Linux kernel regression tracking bot:
+I still have doubts about test coverage on db410c and RB3, because the 
+firmware there behaves very differently and we can introduce another 
+regression. If that happens we have to fix the fix in this patch. I'm 
+working on the testing on those two devices.
 
-#regzbot ^introduced 636110411ca726f19ef8e87b0be51bb9a4cdef06
-#regzbot title alsa/asoc: kbl-r5514-5663-max hdmi stopped working
-#regzbot ignore-activity
+> 
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> --
+> Everything you wanna know about Linux kernel regression tracking:
+> https://linux-regtracking.leemhuis.info/about/#tldr
+> If I did something stupid, please tell me, as explained on that page.
+> 
+> #regzbot poke
+> #regzbot ignore-activity
 
-This isn't a regression? This issue or a fix for it are already
-discussed somewhere else? It was fixed already? You want to clarify when
-the regression started to happen? Or point out I got the title or
-something else totally wrong? Then just reply and tell me -- ideally
-while also telling regzbot about it, as explained by the page listed in
-the footer of this mail.
-
-Developers: When fixing the issue, remember to add 'Link:' tags pointing
-to the report (the parent of this mail). See page linked in footer for
-details.
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+-- 
+regards,
+Stan
