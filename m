@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9EE72569
-	for <regressions@lists.linux.dev>; Mon, 13 Mar 2023 14:28:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A95628F2
+	for <regressions@lists.linux.dev>; Mon, 13 Mar 2023 14:46:01 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pbjAK-0001IM-5U; Mon, 13 Mar 2023 15:28:44 +0100
-Message-ID: <7ef0357c-1bd8-7598-4c4e-9d795b5f0abd@leemhuis.info>
-Date: Mon, 13 Mar 2023 15:28:43 +0100
+	id 1pbjR1-0004Xj-G0; Mon, 13 Mar 2023 15:45:59 +0100
+Message-ID: <2a21917d-2459-e8ce-d211-f8b23d0f59ec@leemhuis.info>
+Date: Mon, 13 Mar 2023 15:45:59 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,72 +16,46 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.8.0
-Subject: Re: [GIT FIXES FOR v6.3] Venus fixes
+Subject: Re: [regression] Bug 217042 - mdb_copy produces a corrupted database
+ on btrfs
 Content-Language: en-US, de-DE
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: Javier Martinez Canillas <javierm@redhat.com>,
- Vikash Garodia <vgarodia@qti.qualcomm.com>,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- linux-media@vger.kernel.org,
- Stanimir Varbanov <stanimir.k.varbanov@gmail.com>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-References: <20230302060413.67239-1-stanimir.k.varbanov@gmail.com>
- <cb03d97f-ae48-4090-e14b-354373a2ebe3@leemhuis.info>
-In-Reply-To: <cb03d97f-ae48-4090-e14b-354373a2ebe3@leemhuis.info>
+From: "Linux regression tracking #update (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+Cc: LKML <linux-kernel@vger.kernel.org>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+References: <efc853aa-0592-e43d-3ad1-c42d33f0ab6b@leemhuis.info>
+In-Reply-To: <efc853aa-0592-e43d-3ad1-c42d33f0ab6b@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1678717726;6b288e46;
-X-HE-SMSGID: 1pbjAK-0001IM-5U
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1678718761;d8af2ac6;
+X-HE-SMSGID: 1pbjR1-0004Xj-G0
 
-On 02.03.23 09:27, Linux regression tracking (Thorsten Leemhuis) wrote:
-> On 02.03.23 07:04, Stanimir Varbanov wrote:
->>
->> This pull request includes a fix for regression in venus hardware reset.
->> The reverted commit has been merged in v6.2. 
->>
->> Please pull.
+[TLDR: This mail in primarily relevant for Linux kernel regression
+tracking. See link in footer if these mails annoy you.]
 
-Mauro: any reason why this is still not pulled? It fixes a regression
-that made it into 6.2 and the revert was now posted 34 days ago, hence
-it would be good if this could finally go to Linus, so that it can be
-backported to stable.
-
-BTW, Stan: What...
-
->> The following changes since commit 3e62aba8284de0994a669d07983299242e68fe72:
->>
->>   media: imx-mipi-csis: Check csis_fmt validity before use (2023-02-26 11:21:33 +0100)
->>
->> are available in the Git repository at:
->>
->>   git://linuxtv.org/svarbanov/media_tree.git tags/tag-venus-fixes-for-v6.3
->>
->> for you to fetch changes up to 1440cfcf24db8c50d929d3c35ab6f87f868fa628:
->>
->>   Revert "venus: firmware: Correct non-pix start and end addresses" (2023-03-02 07:52:10 +0200)
->>
->> ----------------------------------------------------------------
->> Venus fixes for v6.3
->>
->> ----------------------------------------------------------------
->> Javier Martinez Canillas (1):
->>       Revert "venus: firmware: Correct non-pix start and end addresses"
+On 16.02.23 10:48, Linux regression tracking #adding (Thorsten Leemhuis)
+wrote:
+> [TLDR: Just adding a regression reported to bko to the tracking]
 > 
-> Good to see that this finally is heading towards mainline, thx.
+> I noticed a regression reported in bugzilla.kernel.org that seems to be
+> handled there already, nevertheless I'd like to add to the tracking to
+> ensure it's doesn't fall through the cracks in the end:
 > 
-> What about the other venus regression[1] Javier provided this patch for:
->
-> https://patchwork.kernel.org/project/linux-media/patch/20230210081835.2054482-1-javierm@redhat.com/
+> #regzbot introduced: 51bd9563b6783
+> https://bugzilla.kernel.org/show_bug.cgi?id=217042
+> #regzbot title: btrfs: mdb_copy produces a corrupted database
+> #regzbot ignore-activity
+> 
+> See the ticket for details, there were a few replies already.
 
-...about this revert from Feb, 10th? There was some discussion recently,
-but it would to get this finally resolved, too.
+#regzbot fix: btrfs: fix dio continue after short write due to buffer
+page fault
+#regzbot ignore-activity
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
 Everything you wanna know about Linux kernel regression tracking:
 https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
-
-#regzbot poke
-#regzbot ignore-activity
+That page also explains what to do if mails like this annoy you.
