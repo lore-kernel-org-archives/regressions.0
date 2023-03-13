@@ -1,132 +1,139 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F37643C1D
-	for <regressions@lists.linux.dev>; Mon, 13 Mar 2023 17:48:56 +0000 (UTC)
-Received: by mail-ed1-f49.google.com with SMTP id o12so51995541edb.9
-        for <regressions@lists.linux.dev>; Mon, 13 Mar 2023 10:48:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1678729735;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=LaK08avXalr1PtoSNHT6ZMxzGm2NKQlXYq160RM6SJg=;
-        b=dwExWLVQdmufRrRGXvEQQ1J2pk2D/Jdo2kqu0Ua5mZVPG4yiifCsywyW+2AMQkUukA
-         b92ORrZwWODHjo2I5wwOYpxAR8AKHud5h/H6Vqrk8gMWQB1ltNR3axJpDwbqRUZDp4IQ
-         is3++1C03Np1nMPrK4piGvjmNjsloBC3pux5NSXcc8ELrmfvWOMXXPH71gtEXIbrUAEF
-         qnItvDp2niVxcjONCEXYzYH9d2GUJEdfarO4PMknYxY9d6Gh9Ej5TpjoDMOPvpfGR4Kq
-         AdGfSbUtN2JtOh35w4ePqu2Dwhz52a3ABv/TxVTxAV43OjBchWT7oPumTKJwG3aEuH+q
-         talw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678729735;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=LaK08avXalr1PtoSNHT6ZMxzGm2NKQlXYq160RM6SJg=;
-        b=B5m88UqJyJngQOLzKHlYgS6qcg4rTchkdeYK/l/9hOU/s8txqex2HBWsV071q0zkbH
-         MyM1QZKAFZq8SIq1TC+68NLPRfqaxCuT6dwLi3t2y/rDWghnX4DxL5ZOvW+Fmc2qEz3L
-         tcoY3Y/SMOXKlSNf3jvuma1198GD/BdDJK0gnAzR66HVOv6InbUdBIGWb8M+KKjJX5Q0
-         kUTEjktGnEqtXxtia5jOMjFD202Eh0jclMxW0zSgUGHBMsHhqbVWj9YY5Wa3cuepN/og
-         pq0wFWG3zq/qtBMCn4L6EshurZukPHOkW3NgFp1D/JBQ3cryOLT6iVRxJbPP0fYOI3V+
-         I6Yw==
-X-Gm-Message-State: AO0yUKVHtsS+PVmr/Erguka+nB4dc+cQm1CAV/Tj2RHFdShej79JPRJ2
-	1hIdb3+GH7fnQFWmmr78YxnkantEyj1pRQ==
-X-Google-Smtp-Source: AK7set9d2laRnRbapcAd8siE2bZ+imaK9IVIK2D7fOzf13taHY4ft+Z6RvcxkeP2ISZnydG1+yAIxQ==
-X-Received: by 2002:a17:906:db0c:b0:909:3c55:a1b3 with SMTP id xj12-20020a170906db0c00b009093c55a1b3mr47469140ejb.38.1678729734897;
-        Mon, 13 Mar 2023 10:48:54 -0700 (PDT)
-Received: from [192.168.1.45] (hst-221-55.medicom.bg. [84.238.221.55])
-        by smtp.gmail.com with ESMTPSA id lg8-20020a170906f88800b008ca8b62cda6sm64827ejb.177.2023.03.13.10.48.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Mar 2023 10:48:54 -0700 (PDT)
-Message-ID: <ace4420f-d4fb-df18-60f0-3b698c196250@gmail.com>
-Date: Mon, 13 Mar 2023 19:48:53 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9F832F32
+	for <regressions@lists.linux.dev>; Mon, 13 Mar 2023 20:35:34 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84B11C433EF
+	for <regressions@lists.linux.dev>; Mon, 13 Mar 2023 20:35:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1678739734;
+	bh=u7u+NHhCXMgf5hsXTGJG85AoJ3MaLd/lr/vsQ9l3jxQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=KeSZuAw2+a0jpZKTX3Nv2MHuotqWgQeqMxPO0aiFt7O42tDhJ7d89Q6iO5coRl+nc
+	 GPRahWs5h7mR9AZkrG5SyeqtuozYVXytgMkIo8P6khnxR3Q/Twi6pLTstiUt+RqPWy
+	 H6UYikQPHa8BJaXYxecyM5bLVaQJOfLOy4waMxZfrN1XF8+N84Gpe623K7mAeO2geL
+	 qSEixu8gKdHBk4MvhCr6By6FtGuAU7fdkHJ8POfTQu/KGZdtg+z7OX/0Z0UW5sLr6N
+	 6/v79jy7S0WhfYR1sBjZm1EjPkj6hYkLpyaOKtegJ8t3UmjZuUlaWsqRmSwtyeIZYF
+	 mz5OEDpNiQUCg==
+Received: by mail-lj1-f174.google.com with SMTP id a32so13932724ljq.1
+        for <regressions@lists.linux.dev>; Mon, 13 Mar 2023 13:35:34 -0700 (PDT)
+X-Gm-Message-State: AO0yUKXP44tAaUq+pgF/GScGkgxlXhn8EmiCv7F7hJlZcs+IGpWc7/qC
+	/Xduq7gNSVCj1fIV2TDTBdbxjEGc6g+c9w1yv74=
+X-Google-Smtp-Source: AK7set//DFzr7HN1kkaxrWEfPY3wK6bwu6fBSdC6GQNzmN5iHlcln8ZyZm1IPfou1H+Puy+htM1NrinKzbpdWOAFo5U=
+X-Received: by 2002:a2e:aaa3:0:b0:295:a64f:9d50 with SMTP id
+ bj35-20020a2eaaa3000000b00295a64f9d50mr11100414ljb.5.1678739732443; Mon, 13
+ Mar 2023 13:35:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: [GIT FIXES FOR v6.3] Venus fixes
-Content-Language: en-US, bg-BG
-To: Linux regressions mailing list <regressions@lists.linux.dev>,
- Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: Javier Martinez Canillas <javierm@redhat.com>,
- Vikash Garodia <vgarodia@qti.qualcomm.com>, linux-media@vger.kernel.org
-References: <20230302060413.67239-1-stanimir.k.varbanov@gmail.com>
- <cb03d97f-ae48-4090-e14b-354373a2ebe3@leemhuis.info>
- <7ef0357c-1bd8-7598-4c4e-9d795b5f0abd@leemhuis.info>
-From: Stanimir Varbanov <stanimir.k.varbanov@gmail.com>
-In-Reply-To: <7ef0357c-1bd8-7598-4c4e-9d795b5f0abd@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <a13cd3b5-cc41-bf2f-c8ac-e031ad0d5dd7@leemhuis.info>
+ <CAPhsuW7ZWthh0PZt71hQh1_51C0yMSpOqWYJKc_+VzzTmW_r5A@mail.gmail.com>
+ <167805126796.8008.3635368722810568057@noble.neil.brown.name>
+ <CAPhsuW64R2ze1AYZhEmQcGf0cKBjjX=4EZZowD+=Cr=VPg1QYg@mail.gmail.com> <167814210165.8008.4497120634222267375@noble.neil.brown.name>
+In-Reply-To: <167814210165.8008.4497120634222267375@noble.neil.brown.name>
+From: Song Liu <song@kernel.org>
+Date: Mon, 13 Mar 2023 13:35:20 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW4oAsp=8dBcf_mmpp-bG_+wTHAZzvtRSn3x1QU0N3irXA@mail.gmail.com>
+Message-ID: <CAPhsuW4oAsp=8dBcf_mmpp-bG_+wTHAZzvtRSn3x1QU0N3irXA@mail.gmail.com>
+Subject: Re: [regression] Bug 217074 - upgrading to kernel 6.1.12 from 5.15.x
+ can no longer assemble software raid0
+To: NeilBrown <neilb@suse.de>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>, Jes.Sorensen@gmail.com, 
+	linux-raid <linux-raid@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	Nikolay Kichukov <hijacker@oldum.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Mon, Mar 6, 2023 at 2:35=E2=80=AFPM NeilBrown <neilb@suse.de> wrote:
+>
+> On Tue, 07 Mar 2023, Song Liu wrote:
+> > On Sun, Mar 5, 2023 at 1:21=E2=80=AFPM NeilBrown <neilb@suse.de> wrote:
+> > >
+> > > On Sat, 04 Mar 2023, Song Liu wrote:
+> > > > + Jes.
+> > > >
+> > > > It appeared to me that we can assemble the array if we have any of =
+the
+> > > > following:
+> > > > 1. Enable CONFIG_BLOCK_LEGACY_AUTOLOAD;
+> > > > 2. Have a valid /etc/mdadm.conf;
+> > > > 3. Update mdadm to handle this case. (I tried some ugly hacks, whic=
+h worked but
+> > > >     weren't clean).
+> > > >
+> > > > Since we eventually would like to get rid of CONFIG_BLOCK_LEGACY_AU=
+TOLOAD, I
+> > > > think we need mdadm to handle this properly. But the logistics migh=
+t
+> > > > be complicated, as
+> > > > mdadm are shipped separately.
+> > > >
+> > > > Jes, what do you think about this? AFAICT, we need to update the lo=
+gic in
+> > > > mdopen.c:create_mddev().
+> > >
+> > > mdadm already handles this, but only if
+> > >    CREATE names=3Dyes
+> > > is present in /etc/mdadm.conf
+> > >
+> > > Maybe we should flip the default for the next mdadm release, and patc=
+h
+> > > the kernel (with a stable backport) to select BLOCK_LEGACY_AUTOLOAD i=
+f
+> > > BLK_DEV_MD=3Dm
+> > > Then revert that - say - 6 months after the new mdadm is released.
+> >
+> > I like this idea. I guess we also need to select BLOCK_LEGACY_AUTOLOAD
+> > if BLK_DEV_MD=3Dy?
+>
+> Yes of course - sorry.
+>
+> Something like the following.
+>
+> Thanks,
+> NeilBrown
 
-On 13.03.23 г. 16:28 ч., Thorsten Leemhuis wrote:
-> On 02.03.23 09:27, Linux regression tracking (Thorsten Leemhuis) wrote:
->> On 02.03.23 07:04, Stanimir Varbanov wrote:
->>>
->>> This pull request includes a fix for regression in venus hardware reset.
->>> The reverted commit has been merged in v6.2.
->>>
->>> Please pull.
-> 
-> Mauro: any reason why this is still not pulled? It fixes a regression
-> that made it into 6.2 and the revert was now posted 34 days ago, hence
-> it would be good if this could finally go to Linus, so that it can be
-> backported to stable.
+Thanks Neil!
 
-I guess the best I can do is to include the revert in the next pull 
-request for v6.4.
+I applied this to md-fixes.
 
-> 
-> BTW, Stan: What...
-> 
->>> The following changes since commit 3e62aba8284de0994a669d07983299242e68fe72:
->>>
->>>    media: imx-mipi-csis: Check csis_fmt validity before use (2023-02-26 11:21:33 +0100)
->>>
->>> are available in the Git repository at:
->>>
->>>    git://linuxtv.org/svarbanov/media_tree.git tags/tag-venus-fixes-for-v6.3
->>>
->>> for you to fetch changes up to 1440cfcf24db8c50d929d3c35ab6f87f868fa628:
->>>
->>>    Revert "venus: firmware: Correct non-pix start and end addresses" (2023-03-02 07:52:10 +0200)
->>>
->>> ----------------------------------------------------------------
->>> Venus fixes for v6.3
->>>
->>> ----------------------------------------------------------------
->>> Javier Martinez Canillas (1):
->>>        Revert "venus: firmware: Correct non-pix start and end addresses"
->>
->> Good to see that this finally is heading towards mainline, thx.
->>
->> What about the other venus regression[1] Javier provided this patch for:
->>
->> https://patchwork.kernel.org/project/linux-media/patch/20230210081835.2054482-1-javierm@redhat.com/
-> 
-> ...about this revert from Feb, 10th? There was some discussion recently,
-> but it would to get this finally resolved, too.
+Song
 
-I still have doubts about test coverage on db410c and RB3, because the 
-firmware there behaves very differently and we can introduce another 
-regression. If that happens we have to fix the fix in this patch. I'm 
-working on the testing on those two devices.
-
-> 
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-> --
-> Everything you wanna know about Linux kernel regression tracking:
-> https://linux-regtracking.leemhuis.info/about/#tldr
-> If I did something stupid, please tell me, as explained on that page.
-> 
-> #regzbot poke
-> #regzbot ignore-activity
-
--- 
-regards,
-Stan
+>
+>
+> From: NeilBrown <neilb@suse.de>
+> Subject: md: select BLOCK_LEGACY_AUTOLOAD
+>
+> When BLOCK_LEGACY_AUTOLOAD is not enable, mdadm is not able to
+> activate new arrays unless "CREATE names=3Dyes" appears in
+> mdadm.conf
+>
+> As this is a regression we need to always enable BLOCK_LEGACY_AUTOLOAD
+> for when MD is selected - at least until mdadm is updated and the
+> updates widely available.
+>
+> Fixes: fbdee71bb5d8 ("block: deprecate autoloading based on dev_t")
+> Signed-off-by: NeilBrown <neilb@suse.de>
+>
+> diff --git a/drivers/md/Kconfig b/drivers/md/Kconfig
+> index 998a5cfdbc4e..662d219c39bf 100644
+> --- a/drivers/md/Kconfig
+> +++ b/drivers/md/Kconfig
+> @@ -16,6 +16,10 @@ if MD
+>
+>  config BLK_DEV_MD
+>         tristate "RAID support"
+>         select BLOCK_HOLDER_DEPRECATED if SYSFS
+> +       # BLOCK_LEGACY_AUTOLOAD requirement should be removed
+> +       # after relevant mdadm enhancements - to make "names=3Dyes"
+> +       # the default - are widely available.
+> +       select BLOCK_LEGACY_AUTOLOAD
+>         help
+>           This driver lets you combine several hard disk partitions into =
+one
+>           logical block device. This can be used to simply append one
+>
+>
