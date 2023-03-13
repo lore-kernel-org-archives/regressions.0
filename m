@@ -1,68 +1,86 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAF1328FC
-	for <regressions@lists.linux.dev>; Mon, 13 Mar 2023 16:34:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1678725275;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type;
-	bh=fqsCCadEeLBQPiW77d6JKg08JqzcL/IQAFHTmyw+CH8=;
-	b=KUV8zEZ6VcW8vQw4QRh0EpunUURdG8ICOnc9buLD82t5LkgQw3glqs6xa7rU2CjQK4F0Kh
-	Z7FWNeNyiNM27DJyh4oi962IotK9AYJwgBMGUUugD9I0Lm6TbG7mM9LxOJfW1hGH/eW1Z2
-	vvqK+qUYvxKpGqMJNjyb53W2x+6w6zY=
-Received: from mail-yb1-f199.google.com (mail-yb1-f199.google.com
- [209.85.219.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-104--ahQzJOPP5CfQZMkBeDm8g-1; Mon, 13 Mar 2023 12:34:34 -0400
-X-MC-Unique: -ahQzJOPP5CfQZMkBeDm8g-1
-Received: by mail-yb1-f199.google.com with SMTP id b20-20020a253414000000b00b305140e33cso9903295yba.0
-        for <regressions@lists.linux.dev>; Mon, 13 Mar 2023 09:34:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678725274;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=fqsCCadEeLBQPiW77d6JKg08JqzcL/IQAFHTmyw+CH8=;
-        b=duZqmGT2sb51QqyEBrDZNKAcS5q51ssCBZdZePVh07wPEgku8WCHN8YCLvERD9lcBs
-         MPZ0YFF+iatryThXk0aULTfCkT3YSaNm68qBBU3NxOOaL1Rdse/BSypawCvrMH4HVlfv
-         gDbKgDqeWrgDlY4pylof0vDsapOxKYUSM6s3d39sFMMNdHdp+5gnGImiXkVaDfp/d+t6
-         veqBluNuv/yYM8m5sDQSq2OYKrKTmEvFFI4+j9SkxbByvbv/TtMO+S0rQebbPSvBUU3Z
-         DD32MSSOOGZS/pMcVJAsw7yRL1V+7F4TQyainNJAgXw2DGDeiEgnuHi3KMkZD6+ma+EO
-         xyZw==
-X-Gm-Message-State: AO0yUKXU9T9SybL2K56h7B3xzEE2sO/xYkYb/7plCtKmQdRoMtx5ywgp
-	QA7iWiaOrLj58n0jz5hhCzXiAsY5ZpEXVnPUI+c6l3TszXy9zh0s5AhUjV0PfkZuvhzEwtlMhcO
-	WYY8+TVNqF2BtvKqap6v95jeQ6ykSt7DcMEn2DOv3zstiUDJGIA==
-X-Received: by 2002:a25:8903:0:b0:b34:54fe:bb2d with SMTP id e3-20020a258903000000b00b3454febb2dmr5505160ybl.8.1678725274065;
-        Mon, 13 Mar 2023 09:34:34 -0700 (PDT)
-X-Google-Smtp-Source: AK7set9rwEaavTcoTgWbXI0LbFtdbxcqqMu1e6BjZJgz9nC/+SuTmhtRuI2V1USQTycu54eNyZs4apjIbMUh3JeZ3Tc=
-X-Received: by 2002:a25:8903:0:b0:b34:54fe:bb2d with SMTP id
- e3-20020a258903000000b00b3454febb2dmr5505152ybl.8.1678725273806; Mon, 13 Mar
- 2023 09:34:33 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02CD6322B
+	for <regressions@lists.linux.dev>; Mon, 13 Mar 2023 17:32:25 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1pbm22-0004ev-Qp; Mon, 13 Mar 2023 18:32:22 +0100
+Message-ID: <f96431ee-abc0-ff76-3963-c45d3b092840@leemhuis.info>
+Date: Mon, 13 Mar 2023 18:32:22 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: Jason Montleon <jmontleo@redhat.com>
-Date: Mon, 13 Mar 2023 12:34:23 -0400
-Message-ID: <CAJD_bPKQdtaExvVEKxhQ47G-ZXDA=k+gzhMJRHLBe=mysPnuKA@mail.gmail.com>
-Subject: [REGRESSION] kbl-r5514-5663-max hdmi no longer working
-To: Linux regressions mailing list <regressions@lists.linux.dev>, stable@vger.kernel.org
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+Subject: Re: [REGRESSION] kbl-r5514-5663-max hdmi no longer working
+Content-Language: en-US, de-DE
+To: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+References: <CAJD_bPKQdtaExvVEKxhQ47G-ZXDA=k+gzhMJRHLBe=mysPnuKA@mail.gmail.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Cc: Jason Montleon <jmontleo@redhat.com>, stable@vger.kernel.org,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ Mark Brown <broonie@kernel.org>, Alsa-devel <alsa-devel@alsa-project.org>,
+ Takashi Iwai <tiwai@suse.com>, Bard Liao <yung-chuan.liao@linux.intel.com>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <CAJD_bPKQdtaExvVEKxhQ47G-ZXDA=k+gzhMJRHLBe=mysPnuKA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1678728746;c446ae62;
+X-HE-SMSGID: 1pbm22-0004ev-Qp
 
-It looks like HDMI audio stopped working in 5.17-rc1. I ran a bisect
-which points to 636110411ca726f19ef8e87b0be51bb9a4cdef06. I built
-5.17.14 with it reverted and it restored HDMI output, but it doesn't
-revert cleanly from 5.18 onward.
+[adding a push of people and lists to the recipients that dealt with the
+culprit; leaving the stable list in CC for now, even if this is a
+mainline issue (apart from the backport of the culprit to 5.10.y Takashi
+asked for a while ago)]
 
-From what I can tell it looks like -ENOTSUPP is returned from
-snd_soc_dai_set_stream for hdmi1 and hdmi2 now. I'm not sure if that's
-expected, but I made the following change and I have working HDMI
-audio now. https://gist.github.com/jmontleon/4780154c309f956d97ca9a304a00da3f
+On 13.03.23 17:34, Jason Montleon wrote:
+> It looks like HDMI audio stopped working in 5.17-rc1. I ran a bisect
+> which points to 636110411ca726f19ef8e87b0be51bb9a4cdef06.
 
-Thank you,
-Jason Montleon
+FWIW, that's "ASoC: Intel/SOF: use set_stream() instead of
+set_tdm_slots() for HDAudio" from Pierre-Louis Bossart.
 
+> I built
+> 5.17.14 with it reverted and it restored HDMI output, but it doesn't
+> revert cleanly from 5.18 onward.
+> 
+>>From what I can tell it looks like -ENOTSUPP is returned from
+> snd_soc_dai_set_stream for hdmi1 and hdmi2 now. I'm not sure if that's
+> expected, but I made the following change and I have working HDMI
+> audio now. https://gist.github.com/jmontleon/4780154c309f956d97ca9a304a00da3f
+
+Thanks for the report and the patch. I CCed the relevant people for this.
+
+[TLDR For the rest of the mail: : I'm adding this report to the list of
+tracked Linux kernel regressions; the text you find below is based on a
+few templates paragraphs you might have encountered already in similar
+form. See link in footer if these mails annoy you.]
+
+To be sure the issue doesn't fall through the cracks unnoticed, I'm
+adding it to regzbot, the Linux kernel regression tracking bot:
+
+#regzbot ^introduced 636110411ca726f19ef8e87b0be51bb9a4cdef06
+#regzbot title alsa/asoc: kbl-r5514-5663-max hdmi stopped working
+#regzbot ignore-activity
+
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply and tell me -- ideally
+while also telling regzbot about it, as explained by the page listed in
+the footer of this mail.
+
+Developers: When fixing the issue, remember to add 'Link:' tags pointing
+to the report (the parent of this mail). See page linked in footer for
+details.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+That page also explains what to do if mails like this annoy you.
