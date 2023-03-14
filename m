@@ -1,156 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx.fenrir.org.uk (host-92-27-96-141.static.as13285.net [92.27.96.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB5D63D8C
-	for <regressions@lists.linux.dev>; Tue, 14 Mar 2023 13:53:18 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22474C433A0;
-	Tue, 14 Mar 2023 13:53:17 +0000 (UTC)
-Authentication-Results: smtp.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="j/i/NV0F"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
-	t=1678801994;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nw46G3Ohfy348TYWWmrAfQluMh+Deckygk43WugP2iE=;
-	b=j/i/NV0FQYEyZ+nfHBfvMeMdz1QBoXOGsklgitGXWHv/yjtsCk/G6u7ZIc3uKtMfzGZqif
-	WIWmWk5YshdVvVIYd5fazucy8gI1b2o33vUlP12EvBZK+TAqh16BN7AAReFA02yOir4Zhm
-	DodsZwvXsm4iLQwpvLFeDDOcoYC5cVg=
-Received: 
-	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 6a9dbc1c (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-	Tue, 14 Mar 2023 13:53:14 +0000 (UTC)
-Date: Tue, 14 Mar 2023 14:53:11 +0100
-From: "Jason A. Donenfeld" <Jason@zx2c4.com>
-To: Jarkko Sakkinen <jarkko@kernel.org>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
-	James Bottomley <James.Bottomley@hansenpartnership.com>,
-	Vlastimil Babka <vbabka@suse.cz>, Peter Huewe <peterhuewe@gmx.de>,
-	Jason Gunthorpe <jgg@ziepe.ca>, Jan Dabros <jsd@semihalf.com>,
-	regressions@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>,
-	linux-integrity@vger.kernel.org,
-	Dominik Brodowski <linux@dominikbrodowski.net>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Johannes Altmanninger <aclopte@gmail.com>
-Subject: Re: [REGRESSION] suspend to ram fails in 6.2-rc1 due to tpm errors
-Message-ID: <ZBB8R9H3CyQnNfCt@zx2c4.com>
-References: <7cbe96cf-e0b5-ba63-d1b4-f63d2e826efa@suse.cz>
- <c39cc02da9f60412a0f7f7772ef3d89e4a081d38.camel@HansenPartnership.com>
- <Y60RoP77HnwaukEA@zx2c4.com>
- <7ebab1ff-48f1-2737-f0d3-25c72666d041@leemhuis.info>
- <Y7w74EBYP3+FHlkw@zx2c4.com>
- <4268d0ac-278a-28e4-66d1-e0347f011f46@leemhuis.info>
- <ZBBmVhwsTf/URoqs@kernel.org>
- <CAHmME9rxeE32g7nKqeVLwRodDNM8QyZUNd54cyE6mZW7FcqD-g@mail.gmail.com>
- <ZBBxMl5rVjY9FGS9@kernel.org>
- <ZBBxxftnXHVOjm92@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57B163D8C
+	for <regressions@lists.linux.dev>; Tue, 14 Mar 2023 14:00:30 +0000 (UTC)
+Received: from [10.0.0.3] (helo=deangelis.fenrir.org.uk)
+	(TLS1.3:TLS_AES_256_GCM_SHA384:256)
+	by mx.fenrir.org.uk with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+	id 1pc5CD-000lnn-0r;
+	Tue, 14 Mar 2023 14:00:09 +0000
+Date: Tue, 14 Mar 2023 14:00:08 +0000
+From: Brian Morrison <bdm@fenrir.org.uk>
+To: Mathias Nyman <mathias.nyman@linux.intel.com>
+Cc: linux-usb@vger.kernel.org, Linux kernel regressions list
+ <regressions@lists.linux.dev>
+Subject: Re: USB regression in kernel 6.2.2
+Message-ID: <20230314140008.79a90c38@deangelis.fenrir.org.uk>
+In-Reply-To: <d5ff9480-57bd-2c39-8b10-988ad0d14a7e@linux.intel.com>
+References: <20230307132120.5897c5af@deangelis.fenrir.org.uk>
+	<db2e0984-6eb5-5987-44e1-a7143141469b@linux.intel.com>
+	<20230309200415.118777d2@deangelis.fenrir.org.uk>
+	<20230312000316.2955d55a@deangelis.fenrir.org.uk>
+	<d5ff9480-57bd-2c39-8b10-988ad0d14a7e@linux.intel.com>
+Organization: The Fool and Bladder Face-Jumping Team
+X-Mailer: Claws Mail 4.1.1git48 (GTK 3.24.37; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ZBBxxftnXHVOjm92@kernel.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Clacks-Overhead: GNU Terry Pratchett
 
-On Tue, Mar 14, 2023 at 03:08:21PM +0200, Jarkko Sakkinen wrote:
-> On Tue, Mar 14, 2023 at 03:06:47PM +0200, Jarkko Sakkinen wrote:
-> > On Tue, Mar 14, 2023 at 01:47:38PM +0100, Jason A. Donenfeld wrote:
-> > > On 3/14/23, Jarkko Sakkinen <jarkko@kernel.org> wrote:
-> > > > On Tue, Mar 14, 2023 at 10:35:33AM +0100, Thorsten Leemhuis wrote:
-> > > >> On 09.01.23 17:08, Jason A. Donenfeld wrote:
-> > > >> > On Thu, Jan 05, 2023 at 02:59:15PM +0100, Thorsten Leemhuis wrote:
-> > > >> >> On 29.12.22 05:03, Jason A. Donenfeld wrote:
-> > > >> >>> On Wed, Dec 28, 2022 at 06:07:25PM -0500, James Bottomley wrote:
-> > > >> >>>> On Wed, 2022-12-28 at 21:22 +0100, Vlastimil Babka wrote:
-> > > >> >>>>> Ugh, while the problem [1] was fixed in 6.1, it's now happening
-> > > >> >>>>> again
-> > > >> >>>>> on the T460 with 6.2-rc1. Except I didn't see any oops message or
-> > > >> >>>>> "tpm_try_transmit" error this time. The first indication of a
-> > > >> >>>>> problem
-> > > >> >>>>> is this during a resume from suspend to ram:
-> > > >> >>>>> tpm tpm0: A TPM error (28) occurred continue selftest
-> > > >> >>>>> and then periodically
-> > > >> >>>>> tpm tpm0: A TPM error (28) occurred attempting get random
-> > > >> >>>>
-> > > >> >>>> That's a TPM 1.2 error which means the TPM failed the selftest.  The
-> > > >> >>>> original problem was reported against TPM 2.0  because of a missing
-> > > >> >>>> try_get_ops().
-> > > >> >>>
-> > > >> >>> No, I'm pretty sure the original bug, which was fixed by "char: tpm:
-> > > >> >>> Protect tpm_pm_suspend with locks" regards 1.2 as well, especially
-> > > >> >>> considering it's the same hardware from Vlastimil causing this. I
-> > > >> >>> also
-> > > >> >>> recall seeing this in 1.2 when I ran this with the TPM emulator. So
-> > > >> >>> that's not correct.
-> > > >> > [...]
-> > > >> > So, this is now in rc3:
-> > > >> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=1382999aa0548a171a272ca817f6c38e797c458c
-> > > >> >
-> > > >> > That should help avoid the worst of the issue -- laptop not sleeping.
-> > > >> > But the race or whatever it is still does exist. So you might want to
-> > > >> > keep this in your tracker to periodically nudge the TPM folks about it.
-> > > >>
-> > > >> I did, and with -rc2 out now is a good time to remind everybody about
-> > > >> it. Jarkko even looked into it, but no real fix emerged afaics. Or did
-> > > >> it?
-> > > >
-> > > > Jason's workaround was picked. I asked some questions in the thread but
-> > > > have not received any responses.
-> > > 
-> > > As I've written several times now, that patch doesn't fix the issue.
-> > > It makes it less common but it still exists and needs to be addressed.
-> > > Please re-read my various messages describing this. I have nothing new
-> > > at all to add; you just need to review my prior comments. There's a
-> > > bug that probably needs to be fixed here by somebody who understands
-> > > the tpm1 code.
-> > 
-> > I'll try qemu path to see if I can reproduce it with/without the already
-> > merged workaround.
+On Mon, 13 Mar 2023 12:06:59 +0200
+Mathias Nyman <mathias.nyman@linux.intel.com> wrote:
 > 
-> BTW, what sort of environment you had for your qemu run? I'm creating a
-> simple initramfs with buildroot for this.
+> 
+> In your v6.2 logs the usb bus numbers are interleaved, in the v6.1
+> they are not. xhci driver registers two usb buses per host, one
+> High-Speed and one SuperSpeed.
+> 
+> in v6.2:
+> 
+> [    1.094679] xhci_hcd 0000:00:14.0: new USB bus registered,
+> assigned bus number 1 [    1.094695] xhci_hcd 0000:04:00.0: new USB
+> bus registered, assigned bus number 2 [    1.096690] xhci_hcd
+> 0000:00:14.0: new USB bus registered, assigned bus number 3 [
+> 1.100549] xhci_hcd 0000:04:00.0: new USB bus registered, assigned bus
+> number 4
+> 
+> in 6.1:
+> 
+> [    1.071987] xhci_hcd 0000:00:14.0: new USB bus registered,
+> assigned bus number 1 [    1.073300] xhci_hcd 0000:00:14.0: new USB
+> bus registered, assigned bus number 2 [    1.076445] xhci_hcd
+> 0000:04:00.0: new USB bus registered, assigned bus number 3 [
+> 1.082133] xhci_hcd 0000:04:00.0: new USB bus registered, assigned bus
+> number 4
+> 
+> 0000:00:14.0 is your Intel xHC
+> 0000:04:00.0 is your Renesas xHC
+> 
+> This change could be due to 6.2 commit:
+> 
+> 4c2604a9a689 usb: xhci-pci: Set PROBE_PREFER_ASYNCHRONOUS
+> 
+> Not sure why it would cause this regression, but worth testing it.
 
-Nothing special at all in the userspace.
+I have now reverted the above commit, it's only the one line in
+xhci-pci.c and it took a couple of hours to rebuild my kernel rpms which
+wasn't too bad.
 
-I think details of my test bed might be in some other thread from when
-that original patch went in or when the original bug report came, but
-from memory, I believe what I did to reliably reproduce various issues
-was comment out the sleep in random.c so that it keeps asking the TPM
-for more bytes from the kthread, like this:
+With this change all of my USB devices are present again and the 3
+/dev/ttyUSB* nodes are all present and usable.
 
-diff --git a/drivers/char/random.c b/drivers/char/random.c
-index ce3ccd172cc8..708110c780aa 100644
---- a/drivers/char/random.c
-+++ b/drivers/char/random.c
-@@ -934,20 +934,20 @@ EXPORT_SYMBOL(add_device_randomness);
- void add_hwgenerator_randomness(const void *buf, size_t len, size_t entropy, bool sleep_after)
- {
- 	mix_pool_bytes(buf, len);
- 	credit_init_bits(entropy);
+I found this in the linux-usb list archives:
 
- 	/*
- 	 * Throttle writing to once every reseed interval, unless we're not yet
- 	 * initialized or no entropy is credited.
- 	 */
--	if (sleep_after && !kthread_should_stop() && (crng_ready() || !entropy))
--		schedule_timeout_interruptible(crng_reseed_interval());
-+//	if (sleep_after && !kthread_should_stop() && (crng_ready() || !entropy))
-+//		schedule_timeout_interruptible(crng_reseed_interval());
- }
- EXPORT_SYMBOL_GPL(add_hwgenerator_randomness);
+https://www.spinics.net/lists/kernel/msg4569289.html
 
- /*
-  * Handle random seed passed by bootloader, and credit it depending
-  * on the command line option 'random.trust_bootloader'.
-  */
- void __init add_bootloader_randomness(const void *buf, size_t len)
- {
+and the first part of this patch series here:
 
-Then I hooked the tpm emulator up to qemu and put it in tpm1 mode. I had
-userspace `echo mem > /sys/power/state` every couple of seconds (or
-continuously maybe?), and then I used the qemu monitor interface to wake
-the system from sleep. And kaboom.
+https://www.spinics.net/lists/kernel/msg4569288.html
 
-Jason
+Should both of these patches be reverted? I assume so but I don't think
+I have anything that uses an ehci device to test it.
+
+I know nothing about how this all works other than finding this:
+
+"Note that the end goal is to switch the kernel to use asynchronous
+probing by default, so annotating drivers with
+PROBE_PREFER_ASYNCHRONOUS is a temporary measure that allows us to
+speed up boot process while we are validating the rest of the drivers."
+
+which is at:
+
+https://www.kernel.org/doc/html/v4.14/driver-api/infrastructure.html
+
+so by the looks of it either this driver needs to initialise
+synchronously or there is a further problem which causes the bus
+ordering to be wrong but it also seems to be a work in progress so I
+don't know how this will eventually play out.
+
+
+> 
+> Can you try to revert that commit?
+> Or alternatively unbind and rebind the hosts from the xhci driver:
+> 
+> echo 0000:00:14.0 > /sys/bus/pci/drivers/xhci_hcd/unbind
+> echo 0000:04:00.0 > /sys/bus/pci/drivers/xhci_hcd/unbind
+> 
+> (all your usb devices should now be disconnected)
+> 
+> echo 0000:00:14.0 > /sys/bus/pci/drivers/xhci_hcd/bind
+> <wait a couple seconds>
+> echo 0000:04:00.0 > /sys/bus/pci/drivers/xhci_hcd/bind
+
+This suggestion only worked on one of the two USB ports, I mention it
+only for completeness, the revert above is a 100% fix.
+
+-- 
+
+Brian Morrison
+
