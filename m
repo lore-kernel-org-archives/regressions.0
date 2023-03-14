@@ -1,144 +1,237 @@
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9599728E8
-	for <regressions@lists.linux.dev>; Tue, 14 Mar 2023 10:55:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1678791328; x=1710327328;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=YUEVg8h8pPL4GCcT6a13zB6bRDoBci2PCRWOD3X1ZFI=;
-  b=lrbHhmLYHeQgvkBO3jwode316IE3RdbLQ7m5ko3e8XHy2Ziul+/lSO4h
-   HuV1VHCtpsFTuit3z4Y0amrufzGzJH5dU9cbdbzxd8zpbvSh8B344k8//
-   k+uU1PkSEnDtk+LdxUbgIUuYFoGi88TaEaWIv/lqb7OmQyFQ6rZobmrAZ
-   xivuWOxvpHfpPjyNJXWWeDgvzbn4p91A7w4Vj4aFVOMF8AquikWRaeDl1
-   7jLss2YhlH396F7+CYG9t7/+isXQbWs2soxazGphaOF0hdTV/vM/LYqFk
-   bxR63UeInRgsufNRbkdPQ04mX39i/i4oGhQjBrN6JW+QF/8TBNZ+FH0BU
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10648"; a="338934363"
-X-IronPort-AV: E=Sophos;i="5.98,259,1673942400"; 
-   d="scan'208";a="338934363"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2023 03:55:28 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10648"; a="672290879"
-X-IronPort-AV: E=Sophos;i="5.98,259,1673942400"; 
-   d="scan'208";a="672290879"
-Received: from npeltier-mobl1.ger.corp.intel.com ([10.252.33.129])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2023 03:55:26 -0700
-Date: Tue, 14 Mar 2023 12:55:22 +0200 (EET)
-From: =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Hans de Goede <hdegoede@redhat.com>
-cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-    Jiri Slaby <jirislaby@kernel.org>, 
-    "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, 
-    "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: Re: [Regression] "serial: 8250: use THRE & __stop_tx also with DMA"
- breaks DMA rx
-In-Reply-To: <7f18e19d-4072-0609-afd0-244b06103b9c@redhat.com>
-Message-ID: <dd9ebf9-e2e9-2b6-eec5-6ab152f92032@linux.intel.com>
-References: <7f18e19d-4072-0609-afd0-244b06103b9c@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B41E8320A
+	for <regressions@lists.linux.dev>; Tue, 14 Mar 2023 11:11:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1678792295;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=AkFOrLxvDsgE7J+80NELRMzqXPUi1ZsWUtFzSrHjiYE=;
+	b=I11bQNmjkfSf8s4FbVB/wsmzHEa0jjCqudsaKo90QnT+zAyX6D6EVG9UIswlYTlv6Uz+9h
+	L/0NqDePRVkhv8/GpG1Vjqogv8NHxH8xzzoIJd0A9LJn+bB4Eq85Y8BRtTz6zkOYWy7awX
+	zVMhCh0E6Tkv7vi256F0WiZkzvQZm6Q=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-61-o1OZ6YocMgSqn8iGoQW7IA-1; Tue, 14 Mar 2023 07:11:34 -0400
+X-MC-Unique: o1OZ6YocMgSqn8iGoQW7IA-1
+Received: by mail-ed1-f69.google.com with SMTP id i22-20020a05640242d600b004f5962985f4so21207685edc.12
+        for <regressions@lists.linux.dev>; Tue, 14 Mar 2023 04:11:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678792292;
+        h=in-reply-to:from:content-language:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=9zMiJPhJ5GwK07ItmFmu2mkZYymSezTcZoCWgkwJ42Y=;
+        b=xbAHKNF28JLrS0+V5Sr4o86+C0ZfSO4m+oHUTr2XYIp84gfhx0Lb804jUHUDV1cP0e
+         06QQMoFE51K8MBhhR2p3OzQ87GNJNKcdMrbBI59QvujQfy9JY/jzwCYXsh3DJjeO0QU6
+         uOY/u5xuhpgQCWWBzPQA6/yd2ZF7ROMwDFAANLPiKi/+dPqnra1nrH7QVFO31mczF+2p
+         FGH5zH4EwYG/LE4jogtTPXMJPHCXaNLZs087Xq13wtqLVpJnqN0qIm+NEMhcz+60+irL
+         M7HF9cgSnlMK0mdMTPtI9v02zarbKf4jixpAZVE738gU5agMVJobSIujD1Z8oGiXaSmw
+         j5Rw==
+X-Gm-Message-State: AO0yUKX77XpxWPvZPrKTesmsM4xAwene6IMqXuiCJnFfxyjgd1sTzsMy
+	bufxPLM0xXqWPQ+FnV4yx/po2LZS44EeXYUo75HESgZZinccFomWK9l9ioEeXPoRogAnp5g0UnP
+	pQ0L/xwH4jQPa+iP5gttIBxQ=
+X-Received: by 2002:a17:906:3394:b0:8b1:3f5b:af5f with SMTP id v20-20020a170906339400b008b13f5baf5fmr2042445eja.73.1678792292002;
+        Tue, 14 Mar 2023 04:11:32 -0700 (PDT)
+X-Google-Smtp-Source: AK7set90NOl7oyklfjaGvIkcDBXXIXsqsgB7ouNRHq6EXWrhaINIvD56YLxzYbDH6sWYRNj9n+1QNw==
+X-Received: by 2002:a17:906:3394:b0:8b1:3f5b:af5f with SMTP id v20-20020a170906339400b008b13f5baf5fmr2042430eja.73.1678792291719;
+        Tue, 14 Mar 2023 04:11:31 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id hb25-20020a170906b89900b009294524ac21sm1014650ejb.60.2023.03.14.04.11.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 Mar 2023 04:11:31 -0700 (PDT)
+Message-ID: <316ab583-d217-a332-d161-8225b0cee227@redhat.com>
+Date: Tue, 14 Mar 2023 12:11:30 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Subject: Re: [Regression] "serial: 8250: use THRE & __stop_tx also with DMA"
+ breaks DMA rx
+To: =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Jiri Slaby <jirislaby@kernel.org>,
+ "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <7f18e19d-4072-0609-afd0-244b06103b9c@redhat.com>
+ <dd9ebf9-e2e9-2b6-eec5-6ab152f92032@linux.intel.com>
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <dd9ebf9-e2e9-2b6-eec5-6ab152f92032@linux.intel.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: multipart/mixed; boundary="------------xjyF2JNLJa1Gfxw1gxHHbyeU"
+Content-Language: en-US, nl
 
-On Tue, 14 Mar 2023, Hans de Goede wrote:
-
-> Hi Ilpo,
+This is a multi-part message in MIME format.
+--------------xjyF2JNLJa1Gfxw1gxHHbyeU
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
 Hi,
 
-Thanks for the report.
+On 3/14/23 11:55, Ilpo Järvinen wrote:
+> On Tue, 14 Mar 2023, Hans de Goede wrote:
+> 
+>> Hi Ilpo,
+> 
+> Hi,
+> 
+> Thanks for the report.
+> 
+>> I have spend the last couple of days debugging a problem with Bluetooth
+>> adapters (HCIs) connected over an UART connection on Intel Bay Trail
+>> and Cherry Trail devices.
+>>
+>> After much debugging I found out that sometimes the first byte of
+>> a received packet (data[0]) would be overwritten with a 0 byte.
+>>
+>> E.g. this packet received during init of a BCM4324B3 (1) Bluetooth HCI:
+>>
+>> 04 0e 0a 01 79 fc 00 54 fe ff ff 00 00
+>>
+>> would sometimes turn into:
+>>
+>> 00 0e 0a 01 79 fc 00 54 fe ff ff 00 00
+>>
+>> Further investigation revealed that this goes away if I stop
+>> the dw_dmac module from loading, leading to:
+>> "dw-apb-uart 80860F0A:00: failed to request DMA"
+>> and the UART working without DMA support.
+>>
+>> Testing various kernels showed that this problem was introduced
+>> in v5.19, v5.18 - v5.18.19 are fine. An a git bisect points to:
+>>
+>> e8ffbb71f783 ("serial: 8250: use THRE & __stop_tx also with DMA")
+>>
+>> And reverting that on top of v6.3-rc2 indeed solves the problem.
+> 
+> You did something else too than just that because you cannot cleanly 
+> revert just e8ffbb71f783. Please indicate what happened to:
+>   f8d6e9d3ca5c ("serial: 8250: Fix __stop_tx() & DMA Tx restart races")
+> 
+> I guess you reverted that too and forgot to mention about it but I just 
+> want to be sure we're on the same page?
 
-> I have spend the last couple of days debugging a problem with Bluetooth
-> adapters (HCIs) connected over an UART connection on Intel Bay Trail
-> and Cherry Trail devices.
-> 
-> After much debugging I found out that sometimes the first byte of
-> a received packet (data[0]) would be overwritten with a 0 byte.
-> 
-> E.g. this packet received during init of a BCM4324B3 (1) Bluetooth HCI:
-> 
-> 04 0e 0a 01 79 fc 00 54 fe ff ff 00 00
-> 
-> would sometimes turn into:
-> 
-> 00 0e 0a 01 79 fc 00 54 fe ff ff 00 00
->
-> Further investigation revealed that this goes away if I stop
-> the dw_dmac module from loading, leading to:
-> "dw-apb-uart 80860F0A:00: failed to request DMA"
-> and the UART working without DMA support.
-> 
-> Testing various kernels showed that this problem was introduced
-> in v5.19, v5.18 - v5.18.19 are fine. An a git bisect points to:
-> 
-> e8ffbb71f783 ("serial: 8250: use THRE & __stop_tx also with DMA")
-> 
-> And reverting that on top of v6.3-rc2 indeed solves the problem.
+I manually fixed up the revert, effectively
+dropping the drivers/tty/serial/8250/8250_port.c part of f8d6e9d3ca5c
+I did not revert f8d6e9d3ca5c in its entirety.
 
-You did something else too than just that because you cannot cleanly 
-revert just e8ffbb71f783. Please indicate what happened to:
-  f8d6e9d3ca5c ("serial: 8250: Fix __stop_tx() & DMA Tx restart races")
+I've attached my manual fixed up revert as a patch here.
 
-I guess you reverted that too and forgot to mention about it but I just 
-want to be sure we're on the same page?
+>> So it seems that that commit somehow interferes with DMA based
+>> data receiving, causing the first byte of a received data transfer
+>> to get replaced by 0.
+> 
+> Okay, and you're sure the problem/corruption occurs on the receiving side? 
 
-> So it seems that that commit somehow interferes with DMA based
-> data receiving, causing the first byte of a received data transfer
-> to get replaced by 0.
+What I am sure is that the first byte of a packet has been replaced by 0
+by the time drivers/tty/tty_buffer.c: receive_buf() gets called.
 
-Okay, and you're sure the problem/corruption occurs on the receiving side? 
+I did not dive into the serial-port code side of this problem since
+I'm unfamiliar with that.
 
-Maybe the the extra interrupt that the tx side change will trigger somehow 
-causes the confusion on the rx side. So that would be an extra call into 
-handle_rx_dma() that could either do an extra flush or start DMA Rx that 
-would not occur w/o that tx side change.
+> Maybe the the extra interrupt that the tx side change will trigger somehow 
+> causes the confusion on the rx side. So that would be an extra call into 
+> handle_rx_dma() that could either do an extra flush or start DMA Rx that 
+> would not occur w/o that tx side change.
 
-> The issue has been seen on and the revert has been tested on
-> the following HW:
-> 
-> Asus T100TA
-> SoC: Bay Trail UART: 80860F0A WIFI: brcmfmac43241b4-sdio BT: BCM4324B3
-> 
-> Lenovo Yoga Tablet 2 1051L
-> SoC: Bay Trail UART: 80860F0A WIFI: brcmfmac43241b4-sdio BT: BCM4324B3
-> 
-> Lenovo Yoga Book X91F
-> Soc: Cherry Trail UART: 8086228A WIFI: brcmfmac4356-pcie BT: BCM4356A2
-> 
-> I have more hw which I believe is affected but these are the models
-> where I have done detailed testing.
-> 
-> I would be happy to test any patches, or run a kernel with some extra
-> debugging added, just let me know what you need to help fixing this.
+That sounds like a likely candidate for causing this yes, as said
+I'm unfamiliar with the serial-port code, but I did already suspect
+that the change was causing some extra interrupt which somehow
+interfered with the rx side.
 
-How easy this is to trigger in general? (Mainly trying to gauge how 
-easy it will be to find the read and/or the irq that related to the 
-corrupted payload).
+>> The issue has been seen on and the revert has been tested on
+>> the following HW:
+>>
+>> Asus T100TA
+>> SoC: Bay Trail UART: 80860F0A WIFI: brcmfmac43241b4-sdio BT: BCM4324B3
+>>
+>> Lenovo Yoga Tablet 2 1051L
+>> SoC: Bay Trail UART: 80860F0A WIFI: brcmfmac43241b4-sdio BT: BCM4324B3
+>>
+>> Lenovo Yoga Book X91F
+>> Soc: Cherry Trail UART: 8086228A WIFI: brcmfmac4356-pcie BT: BCM4356A2
+>>
+>> I have more hw which I believe is affected but these are the models
+>> where I have done detailed testing.
+>>
+>> I would be happy to test any patches, or run a kernel with some extra
+>> debugging added, just let me know what you need to help fixing this.
+> 
+> How easy this is to trigger in general? (Mainly trying to gauge how 
+> easy it will be to find the read and/or the irq that related to the 
+> corrupted payload).
 
-> Regards,
-> 
-> Hans
-> 
-> 
-> p.s.
-> 
-> I believe that these changes were made to improve the timing of
-> disabling the transmitter on tx completion when the UART is used
-> for a RS485 bus. So one option to workaround this might be to only
-> enable the new behavior when RS485 mode is used ?
+For the git bisect I did 10 consecutive "rmmod hci_uart; modprobe hci_uart"
+calls, re-initializing and re-uploading the BT firmware 10 times and
+then looked for "Frame reassembly failed" errors (+ more error caused
+by this error) from the drivers/bluetooth/hci_bcm.c code.
 
-That change also removed what IMO was a too early serial8250_rpm_put_tx()
-which is not just RS485 related but yes, the main reason was to have the
-half-duplex RS485 behave correctly.
+This would usually trigger at least twice with the 10 rmmod + modprobe
+calls and typically more often then twice.
+
+With the revert (and with 5.18.y) I never see a single error even
+with more rmmod + modprobe calls. Note it is not just the driver's
+probe() which fails, sometimes there are also later errors, this
+is just a somewhat convenient way to reproduce.
+
+So this is somewhat easy to trigger, not trivial to trigger,
+but it also does not take waiting many hours before hitting it
+once.
+
+Regards,
+
+Hans
 
 
--- 
- i.
+--------------xjyF2JNLJa1Gfxw1gxHHbyeU
+Content-Type: text/x-patch; charset=UTF-8;
+ name="0001-Revert-serial-8250-use-THRE-__stop_tx-also-with-DMA.patch"
+Content-Disposition: attachment;
+ filename*0="0001-Revert-serial-8250-use-THRE-__stop_tx-also-with-DMA.pat";
+ filename*1="ch"
+Content-Transfer-Encoding: base64
+
+RnJvbSA1MzQzYmE0YTZmYWI4ZDkxMDIxNDAzMzE1ZDM2YTE3NWEwOTdjNWQ4IE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiBIYW5zIGRlIEdvZWRlIDxoZGVnb2VkZUByZWRoYXQuY29tPgpE
+YXRlOiBNb24sIDEzIE1hciAyMDIzIDIyOjMyOjE5ICswMTAwClN1YmplY3Q6IFtQQVRDSF0gUmV2
+ZXJ0ICJzZXJpYWw6IDgyNTA6IHVzZSBUSFJFICYgX19zdG9wX3R4IGFsc28gd2l0aCBETUEiCgpU
+aGlzIHJldmVydHMgY29tbWl0IGU4ZmZiYjcxZjc4M2Y1NzdiMjRjMjViZDRkZDFjNzExOWQzNDQ5
+MjQuCi0tLQogZHJpdmVycy90dHkvc2VyaWFsLzgyNTAvODI1MF9kbWEuYyAgfCAzICsrLQogZHJp
+dmVycy90dHkvc2VyaWFsLzgyNTAvODI1MF9wb3J0LmMgfCA5ICsrKy0tLS0tLQogMiBmaWxlcyBj
+aGFuZ2VkLCA1IGluc2VydGlvbnMoKyksIDcgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvZHJp
+dmVycy90dHkvc2VyaWFsLzgyNTAvODI1MF9kbWEuYyBiL2RyaXZlcnMvdHR5L3NlcmlhbC84MjUw
+LzgyNTBfZG1hLmMKaW5kZXggN2ZhNjY1MDE3OTJkLi44MGM3MGE1Y2ZhNGMgMTAwNjQ0Ci0tLSBh
+L2RyaXZlcnMvdHR5L3NlcmlhbC84MjUwLzgyNTBfZG1hLmMKKysrIGIvZHJpdmVycy90dHkvc2Vy
+aWFsLzgyNTAvODI1MF9kbWEuYwpAQCAtMzIsNyArMzIsNyBAQCBzdGF0aWMgdm9pZCBfX2RtYV90
+eF9jb21wbGV0ZSh2b2lkICpwYXJhbSkKIAkJdWFydF93cml0ZV93YWtldXAoJnAtPnBvcnQpOwog
+CiAJcmV0ID0gc2VyaWFsODI1MF90eF9kbWEocCk7Ci0JaWYgKHJldCB8fCAhZG1hLT50eF9ydW5u
+aW5nKQorCWlmIChyZXQpCiAJCXNlcmlhbDgyNTBfc2V0X1RIUkkocCk7CiAKIAlzcGluX3VubG9j
+a19pcnFyZXN0b3JlKCZwLT5wb3J0LmxvY2ssIGZsYWdzKTsKQEAgLTEwNCw2ICsxMDQsNyBAQCBp
+bnQgc2VyaWFsODI1MF90eF9kbWEoc3RydWN0IHVhcnRfODI1MF9wb3J0ICpwKQogCiAJaWYgKHVh
+cnRfdHhfc3RvcHBlZCgmcC0+cG9ydCkgfHwgdWFydF9jaXJjX2VtcHR5KHhtaXQpKSB7CiAJCS8q
+IFdlIGhhdmUgYmVlbiBjYWxsZWQgZnJvbSBfX2RtYV90eF9jb21wbGV0ZSgpICovCisJCXNlcmlh
+bDgyNTBfcnBtX3B1dF90eChwKTsKIAkJcmV0dXJuIDA7CiAJfQogCmRpZmYgLS1naXQgYS9kcml2
+ZXJzL3R0eS9zZXJpYWwvODI1MC84MjUwX3BvcnQuYyBiL2RyaXZlcnMvdHR5L3NlcmlhbC84MjUw
+LzgyNTBfcG9ydC5jCmluZGV4IGZhNDNkZjA1MzQyYi4uNGUzNjA1YTQ5NGU4IDEwMDY0NAotLS0g
+YS9kcml2ZXJzL3R0eS9zZXJpYWwvODI1MC84MjUwX3BvcnQuYworKysgYi9kcml2ZXJzL3R0eS9z
+ZXJpYWwvODI1MC84MjUwX3BvcnQuYwpAQCAtMTk1MCwxMiArMTk1MCw5IEBAIGludCBzZXJpYWw4
+MjUwX2hhbmRsZV9pcnEoc3RydWN0IHVhcnRfcG9ydCAqcG9ydCwgdW5zaWduZWQgaW50IGlpcikK
+IAkJCXN0YXR1cyA9IHNlcmlhbDgyNTBfcnhfY2hhcnModXAsIHN0YXR1cyk7CiAJfQogCXNlcmlh
+bDgyNTBfbW9kZW1fc3RhdHVzKHVwKTsKLQlpZiAoKHN0YXR1cyAmIFVBUlRfTFNSX1RIUkUpICYm
+ICh1cC0+aWVyICYgVUFSVF9JRVJfVEhSSSkpIHsKLQkJaWYgKCF1cC0+ZG1hIHx8IHVwLT5kbWEt
+PnR4X2VycikKLQkJCXNlcmlhbDgyNTBfdHhfY2hhcnModXApOwotCQllbHNlIGlmICghdXAtPmRt
+YS0+dHhfcnVubmluZykKLQkJCV9fc3RvcF90eCh1cCk7Ci0JfQorCWlmICgoIXVwLT5kbWEgfHwg
+dXAtPmRtYS0+dHhfZXJyKSAmJiAoc3RhdHVzICYgVUFSVF9MU1JfVEhSRSkgJiYKKwkJKHVwLT5p
+ZXIgJiBVQVJUX0lFUl9USFJJKSkKKwkJc2VyaWFsODI1MF90eF9jaGFycyh1cCk7CiAKIAl1YXJ0
+X3VubG9ja19hbmRfY2hlY2tfc3lzcnFfaXJxcmVzdG9yZShwb3J0LCBmbGFncyk7CiAKLS0gCjIu
+MzkuMQoK
+--------------xjyF2JNLJa1Gfxw1gxHHbyeU--
 
