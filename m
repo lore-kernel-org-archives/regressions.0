@@ -1,252 +1,86 @@
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C459D3C10
-	for <regressions@lists.linux.dev>; Tue, 14 Mar 2023 11:48:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1678794515; x=1710330515;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=R4HHNoxG0BC5DFVbqZLYfqihSJBvEE4eybiKHWTy9gw=;
-  b=POUHw3TsxZvjtdDkLC6ybfnkrqkY9a+qDsIKR7DpZDUGuo0+xrijCXvB
-   +YAc2AJBX40Yw594+YGqXxxTEuIwsH+HWF0PhPxwf2xD3P7VbnufcsWJe
-   etyo6+frevEfmw5N9QySH/UvYZW2ynCDWdDDgxzVDuZX9neN9DQ/PB++3
-   otkCwCTzVugPBMbXjoRLNlUUR/d4TO0QCPGcR/v4UwgSrkniLGhn22nYh
-   Pv//XZJfWdtJCaR/OCGBtXyKfE0LWhCQBfZOGf1/qEO6r0/yOwXFAuliS
-   msFsRkIWtiZeGmt+1sG6jUhewKu/CKHh0O/6t71Q8wMGF9nn1vhTIo7tt
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10648"; a="317047403"
-X-IronPort-AV: E=Sophos;i="5.98,259,1673942400"; 
-   d="scan'208";a="317047403"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2023 04:48:35 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10648"; a="822341581"
-X-IronPort-AV: E=Sophos;i="5.98,259,1673942400"; 
-   d="scan'208";a="822341581"
-Received: from npeltier-mobl1.ger.corp.intel.com ([10.252.33.129])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2023 04:48:33 -0700
-Date: Tue, 14 Mar 2023 13:48:31 +0200 (EET)
-From: =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Hans de Goede <hdegoede@redhat.com>
-cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-    Jiri Slaby <jirislaby@kernel.org>, 
-    "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, 
-    "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: Re: [Regression] "serial: 8250: use THRE & __stop_tx also with DMA"
- breaks DMA rx
-In-Reply-To: <316ab583-d217-a332-d161-8225b0cee227@redhat.com>
-Message-ID: <1d7c80cf-cf79-ef1-58ba-e3b99294bb6@linux.intel.com>
-References: <7f18e19d-4072-0609-afd0-244b06103b9c@redhat.com> <dd9ebf9-e2e9-2b6-eec5-6ab152f92032@linux.intel.com> <316ab583-d217-a332-d161-8225b0cee227@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BA003C10
+	for <regressions@lists.linux.dev>; Tue, 14 Mar 2023 12:19:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 022E6C4339B;
+	Tue, 14 Mar 2023 12:19:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1678796378;
+	bh=FLpm2E7UClJUtW1FBykKxqNsf/z3ka1CkpWMW1ncwd8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=A4AuwI9ebk46aq0uqpqsqMou8lvYa7CesfmxKehCe5SiqTYnXbQ3GeNR7Asg2fr4I
+	 g92iIhIfVwdvYWPaeR9npJxx4UB3ubhwXwk/UwSZwoC1uqIKlVNI6zi6XMdLPbEOXt
+	 LyqS2PIaAFZpC+k8DgHfbQmM2yVaAnf/EGLRhxky6dwyhWKxqX8hsQGUiAG2IEeyaU
+	 VHiAOYP2D1HDkkewhNaWxWReV8f91VjOvQLvcR6ZIvxU/qeGaC1FUWk+ketzJGoz2K
+	 D5Jh+SrG/bFoflOTIBJyDT/5o4Nj/ou6xPbF+8AVeLv+kKhyuvoKrgjWH7kZGuxTLf
+	 /a+p5AhpWObVg==
+Date: Tue, 14 Mar 2023 14:19:34 +0200
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>,
+	James Bottomley <James.Bottomley@hansenpartnership.com>,
+	Vlastimil Babka <vbabka@suse.cz>, Peter Huewe <peterhuewe@gmx.de>,
+	Jason Gunthorpe <jgg@ziepe.ca>, Jan Dabros <jsd@semihalf.com>,
+	regressions@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>,
+	linux-integrity@vger.kernel.org,
+	Dominik Brodowski <linux@dominikbrodowski.net>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Johannes Altmanninger <aclopte@gmail.com>
+Subject: Re: [REGRESSION] suspend to ram fails in 6.2-rc1 due to tpm errors
+Message-ID: <ZBBmVhwsTf/URoqs@kernel.org>
+References: <7cbe96cf-e0b5-ba63-d1b4-f63d2e826efa@suse.cz>
+ <c39cc02da9f60412a0f7f7772ef3d89e4a081d38.camel@HansenPartnership.com>
+ <Y60RoP77HnwaukEA@zx2c4.com>
+ <7ebab1ff-48f1-2737-f0d3-25c72666d041@leemhuis.info>
+ <Y7w74EBYP3+FHlkw@zx2c4.com>
+ <4268d0ac-278a-28e4-66d1-e0347f011f46@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-1460968984-1678794514=:2593"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4268d0ac-278a-28e4-66d1-e0347f011f46@leemhuis.info>
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---8323329-1460968984-1678794514=:2593
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-
-On Tue, 14 Mar 2023, Hans de Goede wrote:
-> On 3/14/23 11:55, Ilpo Järvinen wrote:
-> > On Tue, 14 Mar 2023, Hans de Goede wrote:
+On Tue, Mar 14, 2023 at 10:35:33AM +0100, Thorsten Leemhuis wrote:
+> On 09.01.23 17:08, Jason A. Donenfeld wrote:
+> > On Thu, Jan 05, 2023 at 02:59:15PM +0100, Thorsten Leemhuis wrote:
+> >> On 29.12.22 05:03, Jason A. Donenfeld wrote:
+> >>> On Wed, Dec 28, 2022 at 06:07:25PM -0500, James Bottomley wrote:
+> >>>> On Wed, 2022-12-28 at 21:22 +0100, Vlastimil Babka wrote:
+> >>>>> Ugh, while the problem [1] was fixed in 6.1, it's now happening again
+> >>>>> on the T460 with 6.2-rc1. Except I didn't see any oops message or
+> >>>>> "tpm_try_transmit" error this time. The first indication of a problem
+> >>>>> is this during a resume from suspend to ram:
+> >>>>> tpm tpm0: A TPM error (28) occurred continue selftest
+> >>>>> and then periodically 
+> >>>>> tpm tpm0: A TPM error (28) occurred attempting get random
+> >>>>
+> >>>> That's a TPM 1.2 error which means the TPM failed the selftest.  The
+> >>>> original problem was reported against TPM 2.0  because of a missing
+> >>>> try_get_ops().
+> >>>
+> >>> No, I'm pretty sure the original bug, which was fixed by "char: tpm:
+> >>> Protect tpm_pm_suspend with locks" regards 1.2 as well, especially
+> >>> considering it's the same hardware from Vlastimil causing this. I also
+> >>> recall seeing this in 1.2 when I ran this with the TPM emulator. So
+> >>> that's not correct.
+> > [...]
+> > So, this is now in rc3:
+> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=1382999aa0548a171a272ca817f6c38e797c458c
 > > 
-> >> I have spend the last couple of days debugging a problem with Bluetooth
-> >> adapters (HCIs) connected over an UART connection on Intel Bay Trail
-> >> and Cherry Trail devices.
-> >>
-> >> After much debugging I found out that sometimes the first byte of
-> >> a received packet (data[0]) would be overwritten with a 0 byte.
-> >>
-> >> E.g. this packet received during init of a BCM4324B3 (1) Bluetooth HCI:
-> >>
-> >> 04 0e 0a 01 79 fc 00 54 fe ff ff 00 00
-> >>
-> >> would sometimes turn into:
-> >>
-> >> 00 0e 0a 01 79 fc 00 54 fe ff ff 00 00
-> >>
-> >> Further investigation revealed that this goes away if I stop
-> >> the dw_dmac module from loading, leading to:
-> >> "dw-apb-uart 80860F0A:00: failed to request DMA"
-> >> and the UART working without DMA support.
-> >>
-> >> Testing various kernels showed that this problem was introduced
-> >> in v5.19, v5.18 - v5.18.19 are fine. An a git bisect points to:
-> >>
-> >> e8ffbb71f783 ("serial: 8250: use THRE & __stop_tx also with DMA")
-> >>
-> >> And reverting that on top of v6.3-rc2 indeed solves the problem.
-> > 
-> > You did something else too than just that because you cannot cleanly 
-> > revert just e8ffbb71f783. Please indicate what happened to:
-> >   f8d6e9d3ca5c ("serial: 8250: Fix __stop_tx() & DMA Tx restart races")
-> > 
-> > I guess you reverted that too and forgot to mention about it but I just 
-> > want to be sure we're on the same page?
+> > That should help avoid the worst of the issue -- laptop not sleeping.
+> > But the race or whatever it is still does exist. So you might want to
+> > keep this in your tracker to periodically nudge the TPM folks about it.
 > 
-> I manually fixed up the revert, effectively
-> dropping the drivers/tty/serial/8250/8250_port.c part of f8d6e9d3ca5c
-> I did not revert f8d6e9d3ca5c in its entirety.
-> 
-> I've attached my manual fixed up revert as a patch here.
-> 
-> >> So it seems that that commit somehow interferes with DMA based
-> >> data receiving, causing the first byte of a received data transfer
-> >> to get replaced by 0.
-> > 
-> > Okay, and you're sure the problem/corruption occurs on the receiving side? 
-> 
-> What I am sure is that the first byte of a packet has been replaced by 0
-> by the time drivers/tty/tty_buffer.c: receive_buf() gets called.
-> 
-> I did not dive into the serial-port code side of this problem since
-> I'm unfamiliar with that.
-> 
-> > Maybe the the extra interrupt that the tx side change will trigger somehow 
-> > causes the confusion on the rx side. So that would be an extra call into 
-> > handle_rx_dma() that could either do an extra flush or start DMA Rx that 
-> > would not occur w/o that tx side change.
-> 
-> That sounds like a likely candidate for causing this yes, as said
-> I'm unfamiliar with the serial-port code, but I did already suspect
-> that the change was causing some extra interrupt which somehow
-> interfered with the rx side.
-> 
-> >> The issue has been seen on and the revert has been tested on
-> >> the following HW:
-> >>
-> >> Asus T100TA
-> >> SoC: Bay Trail UART: 80860F0A WIFI: brcmfmac43241b4-sdio BT: BCM4324B3
-> >>
-> >> Lenovo Yoga Tablet 2 1051L
-> >> SoC: Bay Trail UART: 80860F0A WIFI: brcmfmac43241b4-sdio BT: BCM4324B3
-> >>
-> >> Lenovo Yoga Book X91F
-> >> Soc: Cherry Trail UART: 8086228A WIFI: brcmfmac4356-pcie BT: BCM4356A2
-> >>
-> >> I have more hw which I believe is affected but these are the models
-> >> where I have done detailed testing.
-> >>
-> >> I would be happy to test any patches, or run a kernel with some extra
-> >> debugging added, just let me know what you need to help fixing this.
-> > 
-> > How easy this is to trigger in general? (Mainly trying to gauge how 
-> > easy it will be to find the read and/or the irq that related to the 
-> > corrupted payload).
-> 
-> For the git bisect I did 10 consecutive "rmmod hci_uart; modprobe hci_uart"
-> calls, re-initializing and re-uploading the BT firmware 10 times and
-> then looked for "Frame reassembly failed" errors (+ more error caused
-> by this error) from the drivers/bluetooth/hci_bcm.c code.
-> 
-> This would usually trigger at least twice with the 10 rmmod + modprobe
-> calls and typically more often then twice.
-> 
-> With the revert (and with 5.18.y) I never see a single error even
-> with more rmmod + modprobe calls. Note it is not just the driver's
-> probe() which fails, sometimes there are also later errors, this
-> is just a somewhat convenient way to reproduce.
-> 
-> So this is somewhat easy to trigger, not trivial to trigger,
-> but it also does not take waiting many hours before hitting it
-> once.
+> I did, and with -rc2 out now is a good time to remind everybody about
+> it. Jarkko even looked into it, but no real fix emerged afaics. Or did it?
 
-Okay, maybe the patch below will manage to filter the interesting part of 
-it (not tested beyond compiling). It should capture a few irq events after 
-the THRI is set when DMA Tx completes.
+Jason's workaround was picked. I asked some questions in the thread but
+have not received any responses.
 
-What I'd expect is to have iir value variation between the working and not 
-working case. Especially, if it's UART_IIR_THRI that shows up that might 
-be usable as a condition to return from handle_rx_dma() without touching
-DMA Rx.
-
-From: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH] DEBUG: DMA Rx problem
-
-A DEBUG PATCH, not intended for upstream inclusing.
-
----
- drivers/tty/serial/8250/8250_dma.c  |  4 +++-
- drivers/tty/serial/8250/8250_port.c | 13 +++++++++++++
- include/linux/serial_8250.h         |  1 +
- 3 files changed, 17 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/tty/serial/8250/8250_dma.c b/drivers/tty/serial/8250/8250_dma.c
-index 7fa66501792d..20d54abdded2 100644
---- a/drivers/tty/serial/8250/8250_dma.c
-+++ b/drivers/tty/serial/8250/8250_dma.c
-@@ -32,8 +32,10 @@ static void __dma_tx_complete(void *param)
- 		uart_write_wakeup(&p->port);
- 
- 	ret = serial8250_tx_dma(p);
--	if (ret || !dma->tx_running)
-+	if (ret || !dma->tx_running) {
-+		p->irq_debug = -5;
- 		serial8250_set_THRI(p);
-+	}
- 
- 	spin_unlock_irqrestore(&p->port.lock, flags);
- }
-diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
-index fa43df05342b..193c08b1888a 100644
---- a/drivers/tty/serial/8250/8250_port.c
-+++ b/drivers/tty/serial/8250/8250_port.c
-@@ -1923,6 +1923,9 @@ int serial8250_handle_irq(struct uart_port *port, unsigned int iir)
- 	struct uart_8250_port *up = up_to_u8250p(port);
- 	bool skip_rx = false;
- 	unsigned long flags;
-+	long irq_debug;
-+	unsigned int tx_running = 0, rx_running = 0, tx_err = 0;
-+	unsigned int ier;
- 	u16 status;
- 
- 	if (iir & UART_IIR_NO_INT)
-@@ -1931,6 +1934,12 @@ int serial8250_handle_irq(struct uart_port *port, unsigned int iir)
- 	spin_lock_irqsave(&port->lock, flags);
- 
- 	status = serial_lsr_in(up);
-+	if (up->dma) {
-+		rx_running = up->dma->rx_running;
-+		tx_running = up->dma->tx_running;
-+		tx_err = up->dma->tx_err;
-+	}
-+	ier = up->ier;
- 
- 	/*
- 	 * If port is stopped and there are no error conditions in the
-@@ -1957,7 +1966,11 @@ int serial8250_handle_irq(struct uart_port *port, unsigned int iir)
- 			__stop_tx(up);
- 	}
- 
-+	irq_debug = up->irq_debug++;
- 	uart_unlock_and_check_sysrq_irqrestore(port, flags);
-+	if (irq_debug < 0)
-+		pr_err("8250irq: iir=%02x lsr+saved=%02x ier=%02x dma_t/rx/err=%u/%u/%u skiprx=%d cnt=%ld\n",
-+		       iir, status, ier, tx_running, rx_running, tx_err, skip_rx, irq_debug);
- 
- 	return 1;
- }
-diff --git a/include/linux/serial_8250.h b/include/linux/serial_8250.h
-index 741ed4807a9c..8d9d7de6728d 100644
---- a/include/linux/serial_8250.h
-+++ b/include/linux/serial_8250.h
-@@ -107,6 +107,7 @@ struct uart_8250_port {
- 	unsigned char		mcr;
- 	unsigned char		cur_iotype;	/* Running I/O type */
- 	unsigned int		rpm_tx_active;
-+	long			irq_debug;
- 	unsigned char		canary;		/* non-zero during system sleep
- 						 *   if no_console_suspend
- 						 */
-
--- 
-tg: (571079f5ba93..) debug/dma-rx-problem (depends on: tty-next)
---8323329-1460968984-1678794514=:2593--
+BR, Jarkko
