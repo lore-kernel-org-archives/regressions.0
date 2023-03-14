@@ -1,156 +1,334 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F32168F63
-	for <regressions@lists.linux.dev>; Tue, 14 Mar 2023 14:24:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C39E8C433EF;
-	Tue, 14 Mar 2023 14:23:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1678803840;
-	bh=aQ57cJoWuOqPcdScGMzodxGhUAhK9wHEsdJIH8flygQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=M+cKkEPNFcexOgXohZaB+iNjkQHzIZL5XPZWPJjXRLPN/ewFERyszb3skfJGCpkP2
-	 a1UMjJwggYl3JB9yXlVIJZ9sC0jL3u0JnA8TawI1wX/mTcdk7nJhm6Ul+r3w/Q/oev
-	 FSsWYaEJ9LvekhF+u06AvlJGoDm1evzTuLnq47hx3Unc/Ex2aK96XXwcMHV2m1wNWD
-	 LAehdJpawro1d2PwDQ8YkY5IYagp3TJbImbtNtAdrhK6+cllEp6x7iskmUF6u2XbKE
-	 84aqJ0D5hx187U8xi4QdoXQNAmr+NTZY+ZWhoPPkRSV9uSvdymVnQobcQxut8tJl/5
-	 rwMy9E+LU7aCw==
-Date: Tue, 14 Mar 2023 16:23:54 +0200
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
-	James Bottomley <James.Bottomley@hansenpartnership.com>,
-	Vlastimil Babka <vbabka@suse.cz>, Peter Huewe <peterhuewe@gmx.de>,
-	Jason Gunthorpe <jgg@ziepe.ca>, Jan Dabros <jsd@semihalf.com>,
-	regressions@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>,
-	linux-integrity@vger.kernel.org,
-	Dominik Brodowski <linux@dominikbrodowski.net>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Johannes Altmanninger <aclopte@gmail.com>
-Subject: Re: [REGRESSION] suspend to ram fails in 6.2-rc1 due to tpm errors
-Message-ID: <ZBCDeleGG/fFlkt+@kernel.org>
-References: <c39cc02da9f60412a0f7f7772ef3d89e4a081d38.camel@HansenPartnership.com>
- <Y60RoP77HnwaukEA@zx2c4.com>
- <7ebab1ff-48f1-2737-f0d3-25c72666d041@leemhuis.info>
- <Y7w74EBYP3+FHlkw@zx2c4.com>
- <4268d0ac-278a-28e4-66d1-e0347f011f46@leemhuis.info>
- <ZBBmVhwsTf/URoqs@kernel.org>
- <CAHmME9rxeE32g7nKqeVLwRodDNM8QyZUNd54cyE6mZW7FcqD-g@mail.gmail.com>
- <ZBBxMl5rVjY9FGS9@kernel.org>
- <ZBBxxftnXHVOjm92@kernel.org>
- <ZBB8R9H3CyQnNfCt@zx2c4.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6A728F69
+	for <regressions@lists.linux.dev>; Tue, 14 Mar 2023 16:04:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1678809855;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GzhvSJRegQ05cQTbLX/ulW/gRiFVC1V7BJQvKFcfYec=;
+	b=fo1AsxxvFXGj1VmwNufrz2NKv873Mz8JkiZ+EJpqYd3t8vO9m2zCDPNdXXil+GrE9nQFCR
+	hv7qucnXPYwbfJDROV1gtQ5EncCjagqkRcTSmG6BtU1Txu7ON2+N9ZugfHLDCpctupoYMB
+	ksSMDshyWqroulU0vDLFW4JfktqRCGY=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-587-Uwj35YYSO5GO3gbC25eTdw-1; Tue, 14 Mar 2023 12:04:14 -0400
+X-MC-Unique: Uwj35YYSO5GO3gbC25eTdw-1
+Received: by mail-ed1-f69.google.com with SMTP id w6-20020a05640234c600b004fc0e5b4433so10003445edc.18
+        for <regressions@lists.linux.dev>; Tue, 14 Mar 2023 09:04:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678809845;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=GzhvSJRegQ05cQTbLX/ulW/gRiFVC1V7BJQvKFcfYec=;
+        b=Vuq7a5KWNchWqG24x8osuYcCj06mhohz4YFDVYTe2HA15DhPbd4CgQiNVz66StKXdA
+         N7tFlbwqjh5lM3b1keKPb5pHwcEOY7wN+w0VswbUKxdJpJP0pQVQ5oQuthpd5cjATwt4
+         fpJvuJmE+v9gm3FKnp4BS+J6oW/0Y4EnzlqozRa378Q3kHylNE8OP4xZYqEMijsdBOzn
+         esYSonYTFG0nyMy1qT0NRkPsogMKbatmGfIOHhdkjDsT1Le3K5UgoK5tbhCpVJrokPLC
+         NHdU1zUF7i6yOOeB9sCH9JTi8X2MSH2sllgHF3T311UGihzIgDLxC3jEtJUbCmZxwrjg
+         7LMQ==
+X-Gm-Message-State: AO0yUKWv7r2Yj9ag8h+pCVczryPsryPqUCyS98owKC5yXKeF10rQEx6b
+	UMi2KSCaDCEwQybgiRCYLdFJ3j7m8lR6/sQEY5QRlwlpImzgndWt7z1sVUXPZggcI7fbiechCj5
+	Zo7cHjymYUEIglvMlxHpGK5Nj9+uiLZE=
+X-Received: by 2002:aa7:c1c4:0:b0:4af:62af:460a with SMTP id d4-20020aa7c1c4000000b004af62af460amr40759558edp.8.1678809845305;
+        Tue, 14 Mar 2023 09:04:05 -0700 (PDT)
+X-Google-Smtp-Source: AK7set+rsZRW7ngfyVs1NjQdwwpLtAriJ4EtFBBn3WM8n97D7YdRpbBS/yzimkmwIVfaOhbl7Kqu/Q==
+X-Received: by 2002:aa7:c1c4:0:b0:4af:62af:460a with SMTP id d4-20020aa7c1c4000000b004af62af460amr40759527edp.8.1678809844953;
+        Tue, 14 Mar 2023 09:04:04 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:2a07:3a01:67e5:daf9:cec0:df6? (2001-1c00-2a07-3a01-67e5-daf9-cec0-0df6.cable.dynamic.v6.ziggo.nl. [2001:1c00:2a07:3a01:67e5:daf9:cec0:df6])
+        by smtp.gmail.com with ESMTPSA id u19-20020a50c053000000b004fc537aec3csm1255162edd.74.2023.03.14.09.04.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 Mar 2023 09:04:04 -0700 (PDT)
+Message-ID: <9e1e207f-a74f-cedb-6811-993d6b0a26cf@redhat.com>
+Date: Tue, 14 Mar 2023 17:04:03 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZBB8R9H3CyQnNfCt@zx2c4.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Subject: Re: [Regression] "serial: 8250: use THRE & __stop_tx also with DMA"
+ breaks DMA rx
+To: =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Jiri Slaby <jirislaby@kernel.org>,
+ "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <7f18e19d-4072-0609-afd0-244b06103b9c@redhat.com>
+ <dd9ebf9-e2e9-2b6-eec5-6ab152f92032@linux.intel.com>
+ <316ab583-d217-a332-d161-8225b0cee227@redhat.com>
+ <1d7c80cf-cf79-ef1-58ba-e3b99294bb6@linux.intel.com>
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <1d7c80cf-cf79-ef1-58ba-e3b99294bb6@linux.intel.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, Mar 14, 2023 at 02:53:11PM +0100, Jason A. Donenfeld wrote:
-> On Tue, Mar 14, 2023 at 03:08:21PM +0200, Jarkko Sakkinen wrote:
-> > On Tue, Mar 14, 2023 at 03:06:47PM +0200, Jarkko Sakkinen wrote:
-> > > On Tue, Mar 14, 2023 at 01:47:38PM +0100, Jason A. Donenfeld wrote:
-> > > > On 3/14/23, Jarkko Sakkinen <jarkko@kernel.org> wrote:
-> > > > > On Tue, Mar 14, 2023 at 10:35:33AM +0100, Thorsten Leemhuis wrote:
-> > > > >> On 09.01.23 17:08, Jason A. Donenfeld wrote:
-> > > > >> > On Thu, Jan 05, 2023 at 02:59:15PM +0100, Thorsten Leemhuis wrote:
-> > > > >> >> On 29.12.22 05:03, Jason A. Donenfeld wrote:
-> > > > >> >>> On Wed, Dec 28, 2022 at 06:07:25PM -0500, James Bottomley wrote:
-> > > > >> >>>> On Wed, 2022-12-28 at 21:22 +0100, Vlastimil Babka wrote:
-> > > > >> >>>>> Ugh, while the problem [1] was fixed in 6.1, it's now happening
-> > > > >> >>>>> again
-> > > > >> >>>>> on the T460 with 6.2-rc1. Except I didn't see any oops message or
-> > > > >> >>>>> "tpm_try_transmit" error this time. The first indication of a
-> > > > >> >>>>> problem
-> > > > >> >>>>> is this during a resume from suspend to ram:
-> > > > >> >>>>> tpm tpm0: A TPM error (28) occurred continue selftest
-> > > > >> >>>>> and then periodically
-> > > > >> >>>>> tpm tpm0: A TPM error (28) occurred attempting get random
-> > > > >> >>>>
-> > > > >> >>>> That's a TPM 1.2 error which means the TPM failed the selftest.  The
-> > > > >> >>>> original problem was reported against TPM 2.0  because of a missing
-> > > > >> >>>> try_get_ops().
-> > > > >> >>>
-> > > > >> >>> No, I'm pretty sure the original bug, which was fixed by "char: tpm:
-> > > > >> >>> Protect tpm_pm_suspend with locks" regards 1.2 as well, especially
-> > > > >> >>> considering it's the same hardware from Vlastimil causing this. I
-> > > > >> >>> also
-> > > > >> >>> recall seeing this in 1.2 when I ran this with the TPM emulator. So
-> > > > >> >>> that's not correct.
-> > > > >> > [...]
-> > > > >> > So, this is now in rc3:
-> > > > >> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=1382999aa0548a171a272ca817f6c38e797c458c
-> > > > >> >
-> > > > >> > That should help avoid the worst of the issue -- laptop not sleeping.
-> > > > >> > But the race or whatever it is still does exist. So you might want to
-> > > > >> > keep this in your tracker to periodically nudge the TPM folks about it.
-> > > > >>
-> > > > >> I did, and with -rc2 out now is a good time to remind everybody about
-> > > > >> it. Jarkko even looked into it, but no real fix emerged afaics. Or did
-> > > > >> it?
-> > > > >
-> > > > > Jason's workaround was picked. I asked some questions in the thread but
-> > > > > have not received any responses.
-> > > > 
-> > > > As I've written several times now, that patch doesn't fix the issue.
-> > > > It makes it less common but it still exists and needs to be addressed.
-> > > > Please re-read my various messages describing this. I have nothing new
-> > > > at all to add; you just need to review my prior comments. There's a
-> > > > bug that probably needs to be fixed here by somebody who understands
-> > > > the tpm1 code.
-> > > 
-> > > I'll try qemu path to see if I can reproduce it with/without the already
-> > > merged workaround.
-> > 
-> > BTW, what sort of environment you had for your qemu run? I'm creating a
-> > simple initramfs with buildroot for this.
+Hi,
+
+On 3/14/23 12:48, Ilpo Järvinen wrote:
+> On Tue, 14 Mar 2023, Hans de Goede wrote:
+>> On 3/14/23 11:55, Ilpo Järvinen wrote:
+>>> On Tue, 14 Mar 2023, Hans de Goede wrote:
+>>>
+>>>> I have spend the last couple of days debugging a problem with Bluetooth
+>>>> adapters (HCIs) connected over an UART connection on Intel Bay Trail
+>>>> and Cherry Trail devices.
+>>>>
+>>>> After much debugging I found out that sometimes the first byte of
+>>>> a received packet (data[0]) would be overwritten with a 0 byte.
+>>>>
+>>>> E.g. this packet received during init of a BCM4324B3 (1) Bluetooth HCI:
+>>>>
+>>>> 04 0e 0a 01 79 fc 00 54 fe ff ff 00 00
+>>>>
+>>>> would sometimes turn into:
+>>>>
+>>>> 00 0e 0a 01 79 fc 00 54 fe ff ff 00 00
+>>>>
+>>>> Further investigation revealed that this goes away if I stop
+>>>> the dw_dmac module from loading, leading to:
+>>>> "dw-apb-uart 80860F0A:00: failed to request DMA"
+>>>> and the UART working without DMA support.
+>>>>
+>>>> Testing various kernels showed that this problem was introduced
+>>>> in v5.19, v5.18 - v5.18.19 are fine. An a git bisect points to:
+>>>>
+>>>> e8ffbb71f783 ("serial: 8250: use THRE & __stop_tx also with DMA")
+>>>>
+>>>> And reverting that on top of v6.3-rc2 indeed solves the problem.
+>>>
+>>> You did something else too than just that because you cannot cleanly 
+>>> revert just e8ffbb71f783. Please indicate what happened to:
+>>>   f8d6e9d3ca5c ("serial: 8250: Fix __stop_tx() & DMA Tx restart races")
+>>>
+>>> I guess you reverted that too and forgot to mention about it but I just 
+>>> want to be sure we're on the same page?
+>>
+>> I manually fixed up the revert, effectively
+>> dropping the drivers/tty/serial/8250/8250_port.c part of f8d6e9d3ca5c
+>> I did not revert f8d6e9d3ca5c in its entirety.
+>>
+>> I've attached my manual fixed up revert as a patch here.
+>>
+>>>> So it seems that that commit somehow interferes with DMA based
+>>>> data receiving, causing the first byte of a received data transfer
+>>>> to get replaced by 0.
+>>>
+>>> Okay, and you're sure the problem/corruption occurs on the receiving side? 
+>>
+>> What I am sure is that the first byte of a packet has been replaced by 0
+>> by the time drivers/tty/tty_buffer.c: receive_buf() gets called.
+>>
+>> I did not dive into the serial-port code side of this problem since
+>> I'm unfamiliar with that.
+>>
+>>> Maybe the the extra interrupt that the tx side change will trigger somehow 
+>>> causes the confusion on the rx side. So that would be an extra call into 
+>>> handle_rx_dma() that could either do an extra flush or start DMA Rx that 
+>>> would not occur w/o that tx side change.
+>>
+>> That sounds like a likely candidate for causing this yes, as said
+>> I'm unfamiliar with the serial-port code, but I did already suspect
+>> that the change was causing some extra interrupt which somehow
+>> interfered with the rx side.
+>>
+>>>> The issue has been seen on and the revert has been tested on
+>>>> the following HW:
+>>>>
+>>>> Asus T100TA
+>>>> SoC: Bay Trail UART: 80860F0A WIFI: brcmfmac43241b4-sdio BT: BCM4324B3
+>>>>
+>>>> Lenovo Yoga Tablet 2 1051L
+>>>> SoC: Bay Trail UART: 80860F0A WIFI: brcmfmac43241b4-sdio BT: BCM4324B3
+>>>>
+>>>> Lenovo Yoga Book X91F
+>>>> Soc: Cherry Trail UART: 8086228A WIFI: brcmfmac4356-pcie BT: BCM4356A2
+>>>>
+>>>> I have more hw which I believe is affected but these are the models
+>>>> where I have done detailed testing.
+>>>>
+>>>> I would be happy to test any patches, or run a kernel with some extra
+>>>> debugging added, just let me know what you need to help fixing this.
+>>>
+>>> How easy this is to trigger in general? (Mainly trying to gauge how 
+>>> easy it will be to find the read and/or the irq that related to the 
+>>> corrupted payload).
+>>
+>> For the git bisect I did 10 consecutive "rmmod hci_uart; modprobe hci_uart"
+>> calls, re-initializing and re-uploading the BT firmware 10 times and
+>> then looked for "Frame reassembly failed" errors (+ more error caused
+>> by this error) from the drivers/bluetooth/hci_bcm.c code.
+>>
+>> This would usually trigger at least twice with the 10 rmmod + modprobe
+>> calls and typically more often then twice.
+>>
+>> With the revert (and with 5.18.y) I never see a single error even
+>> with more rmmod + modprobe calls. Note it is not just the driver's
+>> probe() which fails, sometimes there are also later errors, this
+>> is just a somewhat convenient way to reproduce.
+>>
+>> So this is somewhat easy to trigger, not trivial to trigger,
+>> but it also does not take waiting many hours before hitting it
+>> once.
 > 
-> Nothing special at all in the userspace.
+> Okay, maybe the patch below will manage to filter the interesting part of 
+> it (not tested beyond compiling). It should capture a few irq events after 
+> the THRI is set when DMA Tx completes.
 > 
-> I think details of my test bed might be in some other thread from when
-> that original patch went in or when the original bug report came, but
-> from memory, I believe what I did to reliably reproduce various issues
-> was comment out the sleep in random.c so that it keeps asking the TPM
-> for more bytes from the kthread, like this:
+> What I'd expect is to have iir value variation between the working and not 
+> working case. Especially, if it's UART_IIR_THRI that shows up that might 
+> be usable as a condition to return from handle_rx_dma() without touching
+> DMA Rx.
+
+Here are 2 dmesg snippets both are with a 6.3-rc2 kernel *without*
+the revert and with your dmesg patch.
+
+This is (part of) the HCI init without issues:
+
+[  733.682492] hci_uart_bcm serial0-0: supply vbat not found, using dummy regulator
+[  733.682628] hci_uart_bcm serial0-0: supply vddio not found, using dummy regulator
+[  733.927142] 8250irq: iir=c2 lsr+saved=20 ier=0f dma_t/rx/err=0/0/0 skiprx=0 cnt=-5
+[  733.928311] 8250irq: iir=cc lsr+saved=60 ier=0d dma_t/rx/err=0/0/0 skiprx=0 cnt=-4
+[  733.932892] 8250irq: iir=c2 lsr+saved=60 ier=0f dma_t/rx/err=0/0/0 skiprx=0 cnt=-5
+[  733.933818] 8250irq: iir=cc lsr+saved=60 ier=0d dma_t/rx/err=0/0/0 skiprx=0 cnt=-4
+[  733.970404] 8250irq: iir=c2 lsr+saved=60 ier=0f dma_t/rx/err=0/0/0 skiprx=0 cnt=-5
+[  733.975558] 8250irq: iir=cc lsr+saved=60 ier=0d dma_t/rx/err=0/0/0 skiprx=0 cnt=-4
+[  734.080290] 8250irq: iir=cc lsr+saved=60 ier=0f dma_t/rx/err=0/0/0 skiprx=0 cnt=-5
+[  734.081300] 8250irq: iir=cc lsr+saved=60 ier=0f dma_t/rx/err=0/0/0 skiprx=0 cnt=-5
+[  734.081492] Bluetooth: hci0: BCM: chip id 101
+
+Here is another *successful* log with slightly different timing.
+
+[  737.660532] hci_uart_bcm serial0-0: supply vbat not found, using dummy regulator
+[  737.660681] hci_uart_bcm serial0-0: supply vddio not found, using dummy regulator
+[  737.905238] 8250irq: iir=c2 lsr+saved=20 ier=0f dma_t/rx/err=0/0/0 skiprx=0 cnt=-5
+[  737.906429] 8250irq: iir=cc lsr+saved=60 ier=0d dma_t/rx/err=0/0/0 skiprx=0 cnt=-4
+[  737.907782] 8250irq: iir=c2 lsr+saved=20 ier=0f dma_t/rx/err=0/0/0 skiprx=0 cnt=-5
+[  737.908978] 8250irq: iir=cc lsr+saved=60 ier=0d dma_t/rx/err=0/0/0 skiprx=0 cnt=-4
+[  737.935929] 8250irq: iir=c2 lsr+saved=60 ier=0f dma_t/rx/err=0/0/0 skiprx=0 cnt=-5
+[  737.940976] 8250irq: iir=cc lsr+saved=60 ier=0d dma_t/rx/err=0/0/0 skiprx=0 cnt=-4
+[  738.048476] 8250irq: iir=cc lsr+saved=60 ier=0f dma_t/rx/err=0/0/0 skiprx=0 cnt=-5
+[  738.049530] 8250irq: iir=c2 lsr+saved=60 ier=0f dma_t/rx/err=0/0/0 skiprx=0 cnt=-5
+[  738.049678] 8250irq: iir=cc lsr+saved=60 ier=0d dma_t/rx/err=0/0/0 skiprx=0 cnt=-4
+[  738.050142] Bluetooth: hci0: BCM: chip id 101
+
+And here is the same part of the init sequence with an error:
+
+[  771.247538] hci_uart_bcm serial0-0: supply vbat not found, using dummy regulator
+[  771.247656] hci_uart_bcm serial0-0: supply vddio not found, using dummy regulator
+[  771.493259] 8250irq: iir=c2 lsr+saved=20 ier=0f dma_t/rx/err=0/0/0 skiprx=0 cnt=-5
+[  771.494378] 8250irq: iir=cc lsr+saved=60 ier=0d dma_t/rx/err=0/0/0 skiprx=0 cnt=-4
+[  771.495637] 8250irq: iir=c2 lsr+saved=20 ier=0f dma_t/rx/err=0/0/0 skiprx=0 cnt=-5
+[  771.496833] 8250irq: iir=cc lsr+saved=60 ier=0d dma_t/rx/err=0/0/0 skiprx=0 cnt=-4
+[  771.523597] 8250irq: iir=c2 lsr+saved=60 ier=0f dma_t/rx/err=0/0/0 skiprx=0 cnt=-5
+[  771.528708] 8250irq: iir=cc lsr+saved=60 ier=0d dma_t/rx/err=0/0/0 skiprx=0 cnt=-4
+[  771.632340] 8250irq: iir=c2 lsr+saved=61 ier=0f dma_t/rx/err=0/0/0 skiprx=0 cnt=-5
+[  771.632462] 8250irq: iir=cc lsr+saved=60 ier=0d dma_t/rx/err=0/1/0 skiprx=0 cnt=-4
+[  771.632568] Bluetooth: hci0: Frame reassembly failed (-84)
+
+Here is a full dmesg from several rmmod + modprobes, for the errors look for
+"Frame reassembly failed".
+
+Note this is from a different boot, I had to add log_buf_len=50M to be able
+to grab a full dmesg:
+
+https://fedorapeople.org/~jwrdegoede/dmesg-8250-dma-issue
+
+Regards,
+
+Hans
+
+
+
+
 > 
-> diff --git a/drivers/char/random.c b/drivers/char/random.c
-> index ce3ccd172cc8..708110c780aa 100644
-> --- a/drivers/char/random.c
-> +++ b/drivers/char/random.c
-> @@ -934,20 +934,20 @@ EXPORT_SYMBOL(add_device_randomness);
->  void add_hwgenerator_randomness(const void *buf, size_t len, size_t entropy, bool sleep_after)
->  {
->  	mix_pool_bytes(buf, len);
->  	credit_init_bits(entropy);
+> From: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+> Subject: [PATCH] DEBUG: DMA Rx problem
 > 
->  	/*
->  	 * Throttle writing to once every reseed interval, unless we're not yet
->  	 * initialized or no entropy is credited.
->  	 */
-> -	if (sleep_after && !kthread_should_stop() && (crng_ready() || !entropy))
-> -		schedule_timeout_interruptible(crng_reseed_interval());
-> +//	if (sleep_after && !kthread_should_stop() && (crng_ready() || !entropy))
-> +//		schedule_timeout_interruptible(crng_reseed_interval());
+> A DEBUG PATCH, not intended for upstream inclusing.
+> 
+> ---
+>  drivers/tty/serial/8250/8250_dma.c  |  4 +++-
+>  drivers/tty/serial/8250/8250_port.c | 13 +++++++++++++
+>  include/linux/serial_8250.h         |  1 +
+>  3 files changed, 17 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/tty/serial/8250/8250_dma.c b/drivers/tty/serial/8250/8250_dma.c
+> index 7fa66501792d..20d54abdded2 100644
+> --- a/drivers/tty/serial/8250/8250_dma.c
+> +++ b/drivers/tty/serial/8250/8250_dma.c
+> @@ -32,8 +32,10 @@ static void __dma_tx_complete(void *param)
+>  		uart_write_wakeup(&p->port);
+>  
+>  	ret = serial8250_tx_dma(p);
+> -	if (ret || !dma->tx_running)
+> +	if (ret || !dma->tx_running) {
+> +		p->irq_debug = -5;
+>  		serial8250_set_THRI(p);
+> +	}
+>  
+>  	spin_unlock_irqrestore(&p->port.lock, flags);
 >  }
->  EXPORT_SYMBOL_GPL(add_hwgenerator_randomness);
+> diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
+> index fa43df05342b..193c08b1888a 100644
+> --- a/drivers/tty/serial/8250/8250_port.c
+> +++ b/drivers/tty/serial/8250/8250_port.c
+> @@ -1923,6 +1923,9 @@ int serial8250_handle_irq(struct uart_port *port, unsigned int iir)
+>  	struct uart_8250_port *up = up_to_u8250p(port);
+>  	bool skip_rx = false;
+>  	unsigned long flags;
+> +	long irq_debug;
+> +	unsigned int tx_running = 0, rx_running = 0, tx_err = 0;
+> +	unsigned int ier;
+>  	u16 status;
+>  
+>  	if (iir & UART_IIR_NO_INT)
+> @@ -1931,6 +1934,12 @@ int serial8250_handle_irq(struct uart_port *port, unsigned int iir)
+>  	spin_lock_irqsave(&port->lock, flags);
+>  
+>  	status = serial_lsr_in(up);
+> +	if (up->dma) {
+> +		rx_running = up->dma->rx_running;
+> +		tx_running = up->dma->tx_running;
+> +		tx_err = up->dma->tx_err;
+> +	}
+> +	ier = up->ier;
+>  
+>  	/*
+>  	 * If port is stopped and there are no error conditions in the
+> @@ -1957,7 +1966,11 @@ int serial8250_handle_irq(struct uart_port *port, unsigned int iir)
+>  			__stop_tx(up);
+>  	}
+>  
+> +	irq_debug = up->irq_debug++;
+>  	uart_unlock_and_check_sysrq_irqrestore(port, flags);
+> +	if (irq_debug < 0)
+> +		pr_err("8250irq: iir=%02x lsr+saved=%02x ier=%02x dma_t/rx/err=%u/%u/%u skiprx=%d cnt=%ld\n",
+> +		       iir, status, ier, tx_running, rx_running, tx_err, skip_rx, irq_debug);
+>  
+>  	return 1;
+>  }
+> diff --git a/include/linux/serial_8250.h b/include/linux/serial_8250.h
+> index 741ed4807a9c..8d9d7de6728d 100644
+> --- a/include/linux/serial_8250.h
+> +++ b/include/linux/serial_8250.h
+> @@ -107,6 +107,7 @@ struct uart_8250_port {
+>  	unsigned char		mcr;
+>  	unsigned char		cur_iotype;	/* Running I/O type */
+>  	unsigned int		rpm_tx_active;
+> +	long			irq_debug;
+>  	unsigned char		canary;		/* non-zero during system sleep
+>  						 *   if no_console_suspend
+>  						 */
 > 
->  /*
->   * Handle random seed passed by bootloader, and credit it depending
->   * on the command line option 'random.trust_bootloader'.
->   */
->  void __init add_bootloader_randomness(const void *buf, size_t len)
->  {
-> 
-> Then I hooked the tpm emulator up to qemu and put it in tpm1 mode. I had
-> userspace `echo mem > /sys/power/state` every couple of seconds (or
-> continuously maybe?), and then I used the qemu monitor interface to wake
-> the system from sleep. And kaboom.
 
-Thanks for the tips! I'll try various patch combinations and see what
-happens.
-
-BR, Jarkko
