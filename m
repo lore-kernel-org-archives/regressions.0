@@ -1,55 +1,54 @@
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA3E77E
-	for <regressions@lists.linux.dev>; Wed, 15 Mar 2023 04:17:37 +0000 (UTC)
-Received: by mail-pj1-f51.google.com with SMTP id u3-20020a17090a450300b00239db6d7d47so586169pjg.4
-        for <regressions@lists.linux.dev>; Tue, 14 Mar 2023 21:17:37 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 944777E
+	for <regressions@lists.linux.dev>; Wed, 15 Mar 2023 04:19:17 +0000 (UTC)
+Received: by mail-pj1-f41.google.com with SMTP id j3-20020a17090adc8300b0023d09aea4a6so556595pjv.5
+        for <regressions@lists.linux.dev>; Tue, 14 Mar 2023 21:19:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1678853857;
+        d=gmail.com; s=20210112; t=1678853957;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=RSY7ZnRAjnFNpdEXKG3EtcXLc39AjD4AR33fsspA2yA=;
-        b=bCiza7sav1BaTufFra7tPZ6Ig2ZI0Y13oB8l86Bx3oeJyArlgGVC3NY8TcQeuJdCMN
-         50V7FDkWmj8k8Ga8RnwZ4aCgNwg+4ue2EsDIDb5mJ5589Xou3Vq94pKYJWGAqekLCc2x
-         /tRlZ6+Sp4s0lHR6Od5WkOgR3Z3eCXPuifMAyLRxyue28PDDcMtlCvyqOYSoQWG1fq4w
-         r4v1529wXxQhgfCQ5Z2vPz9nbkLQ3e+/lcFbmLMoMD4JzdF5yfYY4uJOWzA5CzWWo2HS
-         HX+7WzkGgK2fyv9JxNN9QdkCzsWQmndAQx+kPnALarcyO8uVh3CwTCzQxqrrioYT0WUj
-         YKQg==
+        bh=cNnbqGfLu+o/M/CLOMGQSt4vsNyS8ctukFJ1QgLUxMY=;
+        b=fNfb9RTDkf2k+i47u5Mb/JB7RG6jUw1ftN8pLPTN20kpQ7JejxL5324BKHRRNaNoxy
+         QGdKhYPqFYsvAMv3aNwZluAUNH6fID9/ylNwEbFEUv2xuZQ5/Mdxx/VtnzkD/6/V8yIg
+         HBWYzOKU2K++7jZKA6FW50xTo6hQAQbE47s2liOTtj6a0fjzBsI+RP5FVz51WsZthF3c
+         y+CLz/QrSrkz2BANi8fYbL+D6Hmi1XhyMWxM6GDn3ESZFUbTKk2dMrOgD+vCaMmdxrAK
+         k9nlxLza9GNZDhK3r/vdoXaZxNbobGv5ZXQTh7h9/RsYclgVmnuQTlT4hvk+bQDxmdjg
+         hY9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678853857;
+        d=1e100.net; s=20210112; t=1678853957;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=RSY7ZnRAjnFNpdEXKG3EtcXLc39AjD4AR33fsspA2yA=;
-        b=pENEvnHFVnAo3eR55YUxUOAOUotaDzxxccjeDKjG4TOJCAUv2PlEwNPWC8//exKYO7
-         zjChzC0LkWAJpeKU04voFTZBSjFbIW76UDKyITl36eoBGBUtp1YM4EGDZ2Y6CfuGn1CZ
-         3sF+uk97jNd3JAA7HD4dvfD6jiBmxPf8VPwOwfrzDLMahZS2MSIHZo+tSwXEW3bXQlg0
-         yC4lKquDgyEcOyUq4wG3rtHwD2w5lLTUeT40S7yIELSqgDAVqjO5PsJ2LwC5NEjKAQJi
-         6PX7LsJazqTLk+Ljkoy43eyazTrAXyFEHTxPZSrD1Osdw2NaWBpb9PLFB/0225nVJdp2
-         cLuw==
-X-Gm-Message-State: AO0yUKXRiZZY8tdKyzDXrz7fTXYFbsPuNYw2lqbHhz97pgA7fqhATLSb
-	PSu84AGy6NqqBXs+2XeRzuA=
-X-Google-Smtp-Source: AK7set/puAAI6Gqe6/gQITar+hr2kLsp/NA2NiJ78deWvGvXm+c8gBviEscu8yzbAjfeLlldM5wL2w==
-X-Received: by 2002:a05:6a20:4286:b0:d4:8879:6f33 with SMTP id o6-20020a056a20428600b000d488796f33mr10211511pzj.15.1678853857189;
-        Tue, 14 Mar 2023 21:17:37 -0700 (PDT)
+        bh=cNnbqGfLu+o/M/CLOMGQSt4vsNyS8ctukFJ1QgLUxMY=;
+        b=6kbGB8lv20CtZsdP4PLU+spb7vgt3FJu70fifGK1TpJvzlbX4jSo+Xq7FMuMdfenUo
+         cyIa+ke+52ee8qDvEpLkJB4CMMntbSRfWnjsxM2asJ5BTqAhGvntqecDSytZdRU6m5u7
+         4QC35XV7upICXT+5dWz2KAiHq/qeRGRYGX3GpLoiG2T2SBa2yADmxnNGyX/M7HpvvBBr
+         /KFj8hEUCXCBcZh+Ygqfd5qHrcgWTONdNLCecTQLmPS2CvAWHsFpmnJvk5mG3kZKeCQe
+         JgzZeUTVmRuRt7IJI/5sCUIcuP+3TGTcd6pNtMyiHCFWHvSEaa6EzaIJ/C5DJ2RNCGYx
+         6G+Q==
+X-Gm-Message-State: AO0yUKU7VW4P07WbpUxkN6bNxYF3frUCBxLo3fNS+EAzlq+bKAR1AT7S
+	RmeLxVeWzYLkDMAKiG9/SvU=
+X-Google-Smtp-Source: AK7set/UsX9pMyP/MKPF7KUtYJ+zB8rFptz/fFP9Mw2ZjMZv6k5TTtI1Ru3Zz6qJ82ZIZpwFeU17/Q==
+X-Received: by 2002:a05:6a20:54a1:b0:d5:10ca:5264 with SMTP id i33-20020a056a2054a100b000d510ca5264mr7862186pzk.59.1678853956874;
+        Tue, 14 Mar 2023 21:19:16 -0700 (PDT)
 Received: from debian.me (subs02-180-214-232-17.three.co.id. [180.214.232.17])
-        by smtp.gmail.com with ESMTPSA id d10-20020a63fd0a000000b004fba32949c3sm2292591pgh.16.2023.03.14.21.17.35
+        by smtp.gmail.com with ESMTPSA id g12-20020aa7874c000000b006227c3d5e29sm2486932pfo.16.2023.03.14.21.19.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Mar 2023 21:17:36 -0700 (PDT)
+        Tue, 14 Mar 2023 21:19:16 -0700 (PDT)
 Received: by debian.me (Postfix, from userid 1000)
-	id 2D453106195; Wed, 15 Mar 2023 11:17:33 +0700 (WIB)
-Date: Wed, 15 Mar 2023 11:17:33 +0700
+	id DD51010619F; Wed, 15 Mar 2023 11:19:12 +0700 (WIB)
+Date: Wed, 15 Mar 2023 11:19:12 +0700
 From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Jonathan Corbet <corbet@lwn.net>,
-	Thorsten Leemhuis <linux@leemhuis.info>
+To: Thorsten Leemhuis <linux@leemhuis.info>,
+	Jonathan Corbet <corbet@lwn.net>
 Cc: Randy Dunlap <rdunlap@infradead.org>,
 	Lukas Bulwahn <lukas.bulwahn@gmail.com>, linux-doc@vger.kernel.org,
 	linux-kernel@vger.kernel.org, regressions@lists.linux.dev
 Subject: Re: [PATCH v3] docs: describe how to quickly build a trimmed kernel
-Message-ID: <ZBFG3UqcS7IhGP6t@debian.me>
+Message-ID: <ZBFHQICkPe0tMent@debian.me>
 References: <1a788a8e7ba8a2063df08668f565efa832016032.1678021408.git.linux@leemhuis.info>
- <87a60frxk0.fsf@meer.lwn.net>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -57,54 +56,69 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="8zDsjomzav6C/tyN"
+	protocol="application/pgp-signature"; boundary="6JXQS39TaU+pYy8I"
 Content-Disposition: inline
-In-Reply-To: <87a60frxk0.fsf@meer.lwn.net>
+In-Reply-To: <1a788a8e7ba8a2063df08668f565efa832016032.1678021408.git.linux@leemhuis.info>
 
 
---8zDsjomzav6C/tyN
+--6JXQS39TaU+pYy8I
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 14, 2023 at 12:35:11PM -0600, Jonathan Corbet wrote:
-> This caused me to wonder if we shouldn't create a new book called
-> "tutorials" for this kind of stuff, with an explicit proviso that a more
-> web-oriented approach is OK in that section?  Tutorial documentation
-> *is* quite different from reference material, but we've really made no
-> effort to treat the two differently so far.
+On Sun, Mar 05, 2023 at 02:04:44PM +0100, Thorsten Leemhuis wrote:
+> Add a text explaining how to quickly build a kernel, as that's something
+> users will often have to do when they want to report an issue or test
+> proposed fixes. This is a huge and frightening task for quite a few
+> users these days, as many rely on pre-compiled kernels and have never
+> built their own. They find help on quite a few websites explaining the
+> process in various ways, but those howtos often omit important details
+> or make things too hard for the 'quickly build just for testing' case
+> that 'localmodconfig' is really useful for. Hence give users something
+> at hand to guide them, as that makes it easier for them to help with
+> testing, debugging, and fixing the kernel.
+>=20
+> To keep the complexity at bay, the document explicitly focuses on how to
+> compile the kernel on commodity distributions running on commodity
+> hardware. People that deal with less common distributions or hardware
+> will often know their way around already anyway.
+>=20
+> The text describes a few oddities of Arch and Debian that were found by
+> the author and a few volunteers that tested the described procedure.
+> There are likely more such quirks that need to be covered as well as a
+> few things the author will have missed -- but one has to start
+> somewhere.
+>=20
+> The document heavily uses anchors and links to them, which makes things
+> slightly harder to read in the source form. But the intended target
+> audience is way more likely to read rendered versions of this text on
+> pages like docs.kernel.org anyway -- and there those anchors and links
+> allow easy jumps to the reference section and back, which makes the
+> document a lot easier to work with for the intended target audience.
+>=20
+> Aspects relevant for bisection were left out on purpose, as that is a
+> related, but in the end different use case. The rough plan is to have a
+> second document with a similar style to cover bisection. The idea is to
+> reuse a few bits from this document and link quite often to entries in
+> the reference section with the help of the anchors in this text.
 >=20
 
-I think so, but I guess "web-oriented" means doing a lot of searching
-the Internet to accomplish kernel-related tasks, right?
+After considering all reviews,
 
-For the initial tutorial contents, I'd like to see:
-
-  * this one (for end users and tester)
-  * kernel building with development environment setup and
-    patch submission (for developers)
-  * kernel bisection (as in v1)
-  * reporting bugs (tldr: make sure to include info as detail as you can
-    get and Cc: related mailing lists [scripts/get_maintainer.pl
-    helps]).
-
-Other tutorial-style docs across Documentation/ can be candidate of
-moving to Documentation/tutorials/.
-
-Thanks.
+Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
 
 --=20
 An old man doll... just what I always wanted! - Clara
 
---8zDsjomzav6C/tyN
+--6JXQS39TaU+pYy8I
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZBFG1wAKCRD2uYlJVVFO
-oxycAQDxmtnjJWLDKQcG+mAZm5hcoXqW4pbWc8L8JQcJIfVUOwEAl11xXNiO8swY
-I+guj/o/klc20PKSltN5JZ4eQbnkQwo=
-=dkCF
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZBFHQAAKCRD2uYlJVVFO
+o9ajAP46+jE2amws3QYz7rVm9TaQ5muRI2YaMJ4c/GT4KLzRVAEA6m/maSAGqCZy
+Gvl5z2OIXStHbiGJ2xAK3TnXKGilfQQ=
+=5nof
 -----END PGP SIGNATURE-----
 
---8zDsjomzav6C/tyN--
+--6JXQS39TaU+pYy8I--
