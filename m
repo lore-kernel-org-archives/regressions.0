@@ -1,94 +1,110 @@
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 904D5D2F6
-	for <regressions@lists.linux.dev>; Tue, 14 Mar 2023 23:21:18 +0000 (UTC)
-Received: by mail-pj1-f53.google.com with SMTP id y2so16958891pjg.3
-        for <regressions@lists.linux.dev>; Tue, 14 Mar 2023 16:21:18 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA3E77E
+	for <regressions@lists.linux.dev>; Wed, 15 Mar 2023 04:17:37 +0000 (UTC)
+Received: by mail-pj1-f51.google.com with SMTP id u3-20020a17090a450300b00239db6d7d47so586169pjg.4
+        for <regressions@lists.linux.dev>; Tue, 14 Mar 2023 21:17:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1678853857;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=RSY7ZnRAjnFNpdEXKG3EtcXLc39AjD4AR33fsspA2yA=;
+        b=bCiza7sav1BaTufFra7tPZ6Ig2ZI0Y13oB8l86Bx3oeJyArlgGVC3NY8TcQeuJdCMN
+         50V7FDkWmj8k8Ga8RnwZ4aCgNwg+4ue2EsDIDb5mJ5589Xou3Vq94pKYJWGAqekLCc2x
+         /tRlZ6+Sp4s0lHR6Od5WkOgR3Z3eCXPuifMAyLRxyue28PDDcMtlCvyqOYSoQWG1fq4w
+         r4v1529wXxQhgfCQ5Z2vPz9nbkLQ3e+/lcFbmLMoMD4JzdF5yfYY4uJOWzA5CzWWo2HS
+         HX+7WzkGgK2fyv9JxNN9QdkCzsWQmndAQx+kPnALarcyO8uVh3CwTCzQxqrrioYT0WUj
+         YKQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678836078;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CTQ7I6gEq/wz6ZhaT13oVoyn1XK6+uvwTMIlBtJLUPo=;
-        b=IwxScq1sL/kYAT7T5nrZjevRXGSOA8P1n3dSST/yJiABa+J5HvjIkbeCTxhmIkmL36
-         Ez0J0aoopMuRzx1NhUR0heX30Da3pyFho7TG/PFsjaSq0NfrXVpodLI8pHNSVGNBfNXK
-         9raiHSYuDBKAo3ANoLqsCBY5uTnP7WeGn7VcHjOtGxu1CFH13kBZcAc3CcqiQQUyifzh
-         XcvLfPSfiqvgOcNsD1LX6NS4KqMBwRCl/Z/lJzvjuj5AaMI2OeQpwvTLN1BhMg+Tp171
-         mhPU27f9y9RurA6bVEPgsJKRzBk/vk2c02iCJXbZ3wU5MuoPXZkkGYnTWJgcjI0otyTE
-         AbVA==
-X-Gm-Message-State: AO0yUKXKRrqCbVz6wzcP9yJq6ugNQT2+18r7DBYoWTA3zYluVhVvMnWp
-	RoCgtrAw42NFyExbHa41y0A=
-X-Google-Smtp-Source: AK7set/NyLqv5k2p0JDFsAd2z1ShpVSrNW3r+zoLi8Lj2uvXgRFdLpqo2Yl7oH6prG4ifjoXU1JLgg==
-X-Received: by 2002:a05:6a20:63a1:b0:c7:4bf5:fa0a with SMTP id m33-20020a056a2063a100b000c74bf5fa0amr32385885pzg.48.1678836077941;
-        Tue, 14 Mar 2023 16:21:17 -0700 (PDT)
-Received: from [192.168.51.14] ([98.51.102.78])
-        by smtp.gmail.com with ESMTPSA id k17-20020aa78211000000b005cdbd9c8825sm2116947pfi.195.2023.03.14.16.21.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Mar 2023 16:21:17 -0700 (PDT)
-Message-ID: <c98a3741-273b-8a69-016d-5f3e79f8a71e@acm.org>
-Date: Tue, 14 Mar 2023 16:21:15 -0700
+        d=1e100.net; s=20210112; t=1678853857;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RSY7ZnRAjnFNpdEXKG3EtcXLc39AjD4AR33fsspA2yA=;
+        b=pENEvnHFVnAo3eR55YUxUOAOUotaDzxxccjeDKjG4TOJCAUv2PlEwNPWC8//exKYO7
+         zjChzC0LkWAJpeKU04voFTZBSjFbIW76UDKyITl36eoBGBUtp1YM4EGDZ2Y6CfuGn1CZ
+         3sF+uk97jNd3JAA7HD4dvfD6jiBmxPf8VPwOwfrzDLMahZS2MSIHZo+tSwXEW3bXQlg0
+         yC4lKquDgyEcOyUq4wG3rtHwD2w5lLTUeT40S7yIELSqgDAVqjO5PsJ2LwC5NEjKAQJi
+         6PX7LsJazqTLk+Ljkoy43eyazTrAXyFEHTxPZSrD1Osdw2NaWBpb9PLFB/0225nVJdp2
+         cLuw==
+X-Gm-Message-State: AO0yUKXRiZZY8tdKyzDXrz7fTXYFbsPuNYw2lqbHhz97pgA7fqhATLSb
+	PSu84AGy6NqqBXs+2XeRzuA=
+X-Google-Smtp-Source: AK7set/puAAI6Gqe6/gQITar+hr2kLsp/NA2NiJ78deWvGvXm+c8gBviEscu8yzbAjfeLlldM5wL2w==
+X-Received: by 2002:a05:6a20:4286:b0:d4:8879:6f33 with SMTP id o6-20020a056a20428600b000d488796f33mr10211511pzj.15.1678853857189;
+        Tue, 14 Mar 2023 21:17:37 -0700 (PDT)
+Received: from debian.me (subs02-180-214-232-17.three.co.id. [180.214.232.17])
+        by smtp.gmail.com with ESMTPSA id d10-20020a63fd0a000000b004fba32949c3sm2292591pgh.16.2023.03.14.21.17.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Mar 2023 21:17:36 -0700 (PDT)
+Received: by debian.me (Postfix, from userid 1000)
+	id 2D453106195; Wed, 15 Mar 2023 11:17:33 +0700 (WIB)
+Date: Wed, 15 Mar 2023 11:17:33 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Jonathan Corbet <corbet@lwn.net>,
+	Thorsten Leemhuis <linux@leemhuis.info>
+Cc: Randy Dunlap <rdunlap@infradead.org>,
+	Lukas Bulwahn <lukas.bulwahn@gmail.com>, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, regressions@lists.linux.dev
+Subject: Re: [PATCH v3] docs: describe how to quickly build a trimmed kernel
+Message-ID: <ZBFG3UqcS7IhGP6t@debian.me>
+References: <1a788a8e7ba8a2063df08668f565efa832016032.1678021408.git.linux@leemhuis.info>
+ <87a60frxk0.fsf@meer.lwn.net>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: [REGRESSION] CPUIDLE_FLAG_RCU_IDLE, blk_mq_freeze_queue_wait()
- and slow-stuck reboots
-Content-Language: en-US
-To: Alexey Klimov <alexey.klimov@linaro.org>, peterz@infradead.org
-Cc: draszik@google.com, peter.griffin@linaro.org, willmcvicker@google.com,
- mingo@kernel.org, ulf.hansson@linaro.org, tony@atomide.com,
- linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, axboe@kernel.dk,
- alim.akhtar@samsung.com, regressions@lists.linux.dev, avri.altman@wdc.com,
- klimova@google.com
-References: <20230314230004.961993-1-alexey.klimov@linaro.org>
-From: Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <20230314230004.961993-1-alexey.klimov@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="8zDsjomzav6C/tyN"
+Content-Disposition: inline
+In-Reply-To: <87a60frxk0.fsf@meer.lwn.net>
 
-On 3/14/23 16:00, Alexey Klimov wrote:
-> The delay is found to be in device's ->shutdown() methods called from kernel_restart():
-> void kernel_restart_prepare(char *cmd)
-> {
-> 	blocking_notifier_call_chain(&reboot_notifier_list, SYS_RESTART, cmd);
-> 	system_state = SYSTEM_RESTART;
-> 	usermodehelper_disable();
-> 	device_shutdown();	<---- here
-> }
-> 
-> The driver in question is ufshcd and its ufshcd_wl_shutdown() shutdown method. It often blocks on scsi_device_quiesce() and upon manual checking it seems that it sleeps on blk_mq_freeze_queue_wait()/wait_event() in blk_freeze_queue():
-> 
-> scsi_device_quiesce(struct scsi_device *sdev)
-> {
-> 	...
-> 	blk_mq_freeze_queue(q);
-> 	...
-> }
-> 	||
-> 	V
-> void blk_freeze_queue(struct request_queue *q)
-> {
-> 	/*
-> 	 * In the !blk_mq case we are only calling this to kill the
-> 	 * q_usage_counter, otherwise this increases the freeze depth
-> 	 * and waits for it to return to zero.  For this reason there is
-> 	 * no blk_unfreeze_queue(), and blk_freeze_queue() is not
-> 	 * exported to drivers as the only user for unfreeze is blk_mq.
-> 	 */
-> 	blk_freeze_queue_start(q);
-> 	blk_mq_freeze_queue_wait(q);	<--- sleeps on wait_event() here
-> }
 
-Please let me know if you want me to resubmit patch "scsi: ufs: Remove 
-the LUN quiescing code from ufshcd_wl_shutdown()" 
-(https://lore.kernel.org/linux-scsi/20220331223424.1054715-14-bvanassche@acm.org/).
+--8zDsjomzav6C/tyN
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks,
+On Tue, Mar 14, 2023 at 12:35:11PM -0600, Jonathan Corbet wrote:
+> This caused me to wonder if we shouldn't create a new book called
+> "tutorials" for this kind of stuff, with an explicit proviso that a more
+> web-oriented approach is OK in that section?  Tutorial documentation
+> *is* quite different from reference material, but we've really made no
+> effort to treat the two differently so far.
+>=20
 
-Bart.
+I think so, but I guess "web-oriented" means doing a lot of searching
+the Internet to accomplish kernel-related tasks, right?
 
+For the initial tutorial contents, I'd like to see:
+
+  * this one (for end users and tester)
+  * kernel building with development environment setup and
+    patch submission (for developers)
+  * kernel bisection (as in v1)
+  * reporting bugs (tldr: make sure to include info as detail as you can
+    get and Cc: related mailing lists [scripts/get_maintainer.pl
+    helps]).
+
+Other tutorial-style docs across Documentation/ can be candidate of
+moving to Documentation/tutorials/.
+
+Thanks.
+
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--8zDsjomzav6C/tyN
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZBFG1wAKCRD2uYlJVVFO
+oxycAQDxmtnjJWLDKQcG+mAZm5hcoXqW4pbWc8L8JQcJIfVUOwEAl11xXNiO8swY
+I+guj/o/klc20PKSltN5JZ4eQbnkQwo=
+=dkCF
+-----END PGP SIGNATURE-----
+
+--8zDsjomzav6C/tyN--
