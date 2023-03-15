@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1948C2F25
-	for <regressions@lists.linux.dev>; Wed, 15 Mar 2023 09:50:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F13E33F6
+	for <regressions@lists.linux.dev>; Wed, 15 Mar 2023 10:57:07 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pcNmQ-0003Yj-Vu; Wed, 15 Mar 2023 10:50:47 +0100
-Message-ID: <b7de0060-8555-65f7-c687-1326a5762929@leemhuis.info>
-Date: Wed, 15 Mar 2023 10:50:46 +0100
+	id 1pcOoa-0000aX-95; Wed, 15 Mar 2023 11:57:04 +0100
+Message-ID: <0968796e-c6a7-0340-09ec-222f2f9b325a@leemhuis.info>
+Date: Wed, 15 Mar 2023 11:57:03 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,69 +16,60 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.8.0
-Subject: Re: [regression] Bug 217182 - Dell Latitude E7450 Trackpoint not
- working as expected
+Subject: Re: [Regression] Bug 216371 - acpi wake up with black screen with msg
+ "amd_gpio AMDI0030:00: failed to get iomux index" #forregzbot
 Content-Language: en-US, de-DE
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>
-Cc: Steffen <wiesenbergsteffen+lxkernel@gmail.com>,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- Dmitry Torokhov <dmitry.torokhov@gmail.com>,
- "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
- LKML <linux-kernel@vger.kernel.org>, lanelone@gmail.com
+From: "Linux regression tracking #update (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Cc: "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>
+References: <849a07ba-a53c-3f10-e2ec-25421c1e40ee@leemhuis.info>
+ <b6aeaf85-c88f-c526-30c8-e040b99c66ea@leemhuis.info>
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-References: <6625ee0a-31a7-9fef-d299-457c0f98f5a0@leemhuis.info>
-In-Reply-To: <6625ee0a-31a7-9fef-d299-457c0f98f5a0@leemhuis.info>
+In-Reply-To: <b6aeaf85-c88f-c526-30c8-e040b99c66ea@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1678873849;7e5d052f;
-X-HE-SMSGID: 1pcNmQ-0003Yj-Vu
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1678877827;9c2f99de;
+X-HE-SMSGID: 1pcOoa-0000aX-95
 
-On 13.03.23 11:20, Linux regression tracking (Thorsten Leemhuis) wrote:
+[TLDR: This mail in primarily relevant for Linux kernel regression
+tracking. See link in footer if these mails annoy you.]
+
+On 18.09.22 18:24, Thorsten Leemhuis wrote:
+> On 25.08.22 11:42, Thorsten Leemhuis wrote:
 > 
-> Hi, Thorsten here, the Linux kernel's regression tracker.
-> 
-> I noticed a regression report in bugzilla.kernel.org. As many (most?)
-> kernel developer don't keep an eye on it, I decided to forward it by
-> mail. Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=217182 :
-> 
->>  Steffen 2023-03-12 11:17:02 UTC
+>> To quote from https://bugzilla.kernel.org/show_bug.cgi?id=216371 :
 >>
->> Hi,
->> I'm new to this bug tracking system and just a user, not a developer.
->>
->> I use a Dell Latitude E7450 running with the Debian unstable based
->> distribution Siduction.
->> After upgrading to Linux kernel 6.2.x the Trackpoint does not work
->> anymore as expected. It uses an Alps PS/2 DualPoint Stick.
->> Even slight touches in any direction send the cursor to the top right
->> corner of the screen where it stays regardless of actual pointer
->> movement. This also appears in console mode. One can retrieve the
->> pointer again with the touchpad, but I'm more precise with the
->> Trackpoint and prefer using that.
->> The Trackpoint works well in kernel 6.1.14
->> Can somebody help?
+>>>  neoe 2022-08-17 01:50:41 UTC
+>>>
+>>> just upgrade from 5.18 to 6.0.0-rc1
+>>>
+>>> `acpitool -s` 
+>>> to set to sleep, it seems a little slow.
+>>>
+>>> then wake up, black screen,
+>>>
+>>> everything works fine before.
+>>>
+>>> AMD 3900X
+>>>
+>>> [reply] [−] Comment 1 neoe 2022-08-22 02:39:12 UTC
+>>>
+>>> dmesg
+>>>
+>>> amd_gpio AMDI0030:00: failed to get iomux index
+>> See the ticket for details.
 > 
-> See the ticket for more details.
+> #regzbot backburner: likely bad bisect and reporter apparently ignoring
+> the issue for now
 
-FWIW, another user reported seeing the same problem on a different machine:
-
-```
- Radek 2023-03-14 08:00:31 UTC
-
-I am experiencing the same issue with kernel >6.2.x on Toshiba Z30
-with Alps PS/2 DualPoint trackpoint / touchpad. The cursor jumps top
-right even with the lowest sensitivity settings. It works just fine
-with 6.1 or lower.
-```
-
-Pali, or anybody else: anyone any idea what's might be wrong there?
-There afaics is only one recent commit to the alps driver (292a089d78d3
-("treewide: Convert del_timer*() to timer_shutdown*()")); it it maybe
-worth trying to revert it?
+#regzbot inconclusive: likely bad bisect and reporter MIA
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
 Everything you wanna know about Linux kernel regression tracking:
 https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+That page also explains what to do if mails like this annoy you.
+
+#regzbot ignore-activity
