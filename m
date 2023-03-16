@@ -1,64 +1,86 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC1EA323E
-	for <regressions@lists.linux.dev>; Thu, 16 Mar 2023 13:21:55 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pcnYD-00050T-QS; Thu, 16 Mar 2023 14:21:49 +0100
-Message-ID: <6bba2a93-d503-3c6e-680b-c350ea8d3f88@leemhuis.info>
-Date: Thu, 16 Mar 2023 14:21:48 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D080F6FD0
+	for <regressions@lists.linux.dev>; Thu, 16 Mar 2023 18:27:57 +0000 (UTC)
+Received: from localhost (unknown [IPv6:2601:281:8300:73::5f6])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id D14FA823;
+	Thu, 16 Mar 2023 18:27:56 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net D14FA823
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1678991277; bh=OwZBhz9VMbfwLaD6vDW+gcJbWhV8x+C3/Q50X51+JhM=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=QFstPU4oaTDsTc2nbT7WD/XIDOTQ92knb79vNLSDyNlTuLSVTuHbnrG33v4DZG6/z
+	 ScKv9Fw6tZhUWrmKPBuKeNC4Wpwpk0A5ELxE8awvHZjIzaiKu424sgXKxjQxVAv8HA
+	 wuazJA60F7mewuumNZaL1xo0aBfcRbqanhnSCYU95qNms0+0XCx5BFul00AazkRzSy
+	 LfTfAzHdZ3p3BFXcWxBJhKtd37+ajbeRa3UzS+OZ2lTaMWc4FG60rYHnTgdQc+xGr6
+	 An7PAhN7AOZ0di42WKOrdrk20ZDtt9KB3z5jNPPKOmKpbKDg50D6KwDbs1bh63do1Q
+	 G0lZ0aIk1TO+w==
+From: Jonathan Corbet <corbet@lwn.net>
+To: Thorsten Leemhuis <linux@leemhuis.info>
+Cc: Randy Dunlap <rdunlap@infradead.org>, Lukas Bulwahn
+ <lukas.bulwahn@gmail.com>, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, regressions@lists.linux.dev
+Subject: Re: [PATCH v3] docs: describe how to quickly build a trimmed kernel
+In-Reply-To: <d233a796-1cb8-a9b3-5a50-043dd2f98b3e@leemhuis.info>
+References: <1a788a8e7ba8a2063df08668f565efa832016032.1678021408.git.linux@leemhuis.info>
+ <87a60frxk0.fsf@meer.lwn.net>
+ <d233a796-1cb8-a9b3-5a50-043dd2f98b3e@leemhuis.info>
+Date: Thu, 16 Mar 2023 12:27:56 -0600
+Message-ID: <87edpomtzn.fsf@meer.lwn.net>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Content-Language: en-US, de-DE
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-To: "Rafael J. Wysocki" <rafael@kernel.org>,
- Bjorn Helgaas <helgaas@kernel.org>
-Cc: "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, netdev <netdev@vger.kernel.org>,
- LKML <linux-kernel@vger.kernel.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- Linux PCI <linux-pci@vger.kernel.org>,
- ACPI Devel Maling List <linux-acpi@vger.kernel.org>
-References: <e6aaddb9-afec-e77d-be33-570f9f10a9c2@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: [regression] Bug 217069 - Wake on Lan is broken on r8169 since
- 6.2
-In-Reply-To: <e6aaddb9-afec-e77d-be33-570f9f10a9c2@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1678972915;152f6551;
-X-HE-SMSGID: 1pcnYD-00050T-QS
+Content-Type: text/plain
 
-[Quick inquiry with different recipients]
+Thorsten Leemhuis <linux@leemhuis.info> writes:
 
-> I noticed a regression report in bugzilla.kernel.org. As many (most?)
-> kernel developer don't keep an eye on it, I decided to forward it by
-> mail. Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=217069 :
+> Documentation/doc-guide/contributing.rst says that "books" are meant to
+> "group documentation for specific readers"; creating a new book for
+> tutorials would work against that, as readers (users and administrators
+> in this case) then would have to consult two books.
 
-To Rafael and the ACPI & PM folks as well as to Bjorn and the PCI folks:
+The idea behind that guideline is that readers should be able to know
+where to look and to not have to dig through a lot of material that was
+not intended for them.  Not that, for any given reader, there should be
+exactly one book that has everything they might want.
 
-Three users reported that WOL/Wake on Lan broke for them with 6.2; two
-of them have Realtek chips, one an Intel NIC. For details see the bug
-linked above.
+One could also argue, of course, that readers seeking tutorials are a
+different group than those seeking reference material.
 
-Did something in ACPI/PM/PCI land change for 6.2 that might cause
-something like this? Or is such a problem even known already?
+> And isn't for example Documentation/process/submitting-patches.rst also
+> more of a tutorial than reference material (which we also have in the
+> form of Documentation/process/development-process.rst)?
 
-Just fishing for ideas here. If nobody has any, one of the reports will
-have to bisect this.
+It's a pretty clear example of what happens when you try to combine both
+types of documentation - you get something that isn't ideal for either
+type of reader.  It tries to take people through the process, but it is
+also the only reference document we have on how patches should be
+submitted. 
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+> Does that mean
+> it should be moved? Into the same book or a separate book, as it has a
+> different target audience? I fear that might quickly get confusing for
+> readers without any real benefits
 
+No, I wouldn't move it.  We could, someday, consider splitting it into
+two more focused documents, one of which could (say) go under tutorials/.
+
+> Or did I understand the idea of a new book wrong and you meant something
+> else? Like creating Documentation/admin-guide/tutorials/ and putting the
+> text there? That might work and would help future authors to get the
+> right mental model when writing new texts. But I'm not sure that's worth it.
+
+I wasn't thinking of doing it that way, but we could certainly consider
+it.  It doesn't seem like we would have vast numbers of these, though,
+and they would mostly cover relatively elementary topics, so a single,
+top-level directory might be better if we decide to take this path.
+
+Thanks,
+
+jon
