@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E261F28E3
-	for <regressions@lists.linux.dev>; Thu, 16 Mar 2023 09:45:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80B9628E3
+	for <regressions@lists.linux.dev>; Thu, 16 Mar 2023 09:52:46 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pckAT-0007w6-CW; Thu, 16 Mar 2023 10:45:05 +0100
-Message-ID: <59064730-e731-d137-ae92-e19622a122d0@leemhuis.info>
-Date: Thu, 16 Mar 2023 10:45:04 +0100
+	id 1pckHs-0001BV-0C; Thu, 16 Mar 2023 10:52:44 +0100
+Message-ID: <ef14180e-994d-e498-06df-96fd5851f373@leemhuis.info>
+Date: Thu, 16 Mar 2023 10:52:43 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,80 +16,96 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.8.0
-Subject: Re: kernel 6.2 stuck at boot (efi_call_rts) on arm64
-Content-Language: en-US, de-DE
-To: Andrea Righi <andrea.righi@canonical.com>,
- "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc: Ard Biesheuvel <ardb@kernel.org>,
- Paolo Pisati <paolo.pisati@canonical.com>, linux-efi@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <ZBLLSmLbt2P4ZN6O@righiandr-XPS-13-7390>
-From: "Linux regression tracking #adding (Thorsten Leemhuis)"
+From: "Linux regression tracking (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
+Subject: Re: [GIT FIXES FOR v6.3] Venus fixes
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <ZBLLSmLbt2P4ZN6O@righiandr-XPS-13-7390>
+To: Stanimir Varbanov <stanimir.k.varbanov@gmail.com>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: Javier Martinez Canillas <javierm@redhat.com>,
+ Vikash Garodia <vgarodia@qti.qualcomm.com>, linux-media@vger.kernel.org
+References: <20230302060413.67239-1-stanimir.k.varbanov@gmail.com>
+ <cb03d97f-ae48-4090-e14b-354373a2ebe3@leemhuis.info>
+ <7ef0357c-1bd8-7598-4c4e-9d795b5f0abd@leemhuis.info>
+ <ace4420f-d4fb-df18-60f0-3b698c196250@gmail.com>
+Content-Language: en-US, de-DE
+In-Reply-To: <ace4420f-d4fb-df18-60f0-3b698c196250@gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1678959908;9b169fc4;
-X-HE-SMSGID: 1pckAT-0007w6-CW
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1678960366;06c29ba4;
+X-HE-SMSGID: 1pckHs-0001BV-0C
 
-[CCing the regression list, as it should be in the loop for regressions:
-https://docs.kernel.org/admin-guide/reporting-regressions.html]
-
-[TLDR: I'm adding this report to the list of tracked Linux kernel
-regressions; the text you find below is based on a few templates
-paragraphs you might have encountered already in similar form.
-See link in footer if these mails annoy you.]
-
-On 16.03.23 08:54, Andrea Righi wrote:
-> Hello,
+On 13.03.23 18:48, Stanimir Varbanov wrote:
+> On 13.03.23 г. 16:28 ч., Thorsten Leemhuis wrote:
+>> On 02.03.23 09:27, Linux regression tracking (Thorsten Leemhuis) wrote:
+>>> On 02.03.23 07:04, Stanimir Varbanov wrote:
+>>>>
+>>>> This pull request includes a fix for regression in venus hardware
+>>>> reset.
+>>>> The reverted commit has been merged in v6.2.
+>>>> Please pull.
+>> Mauro: any reason why this is still not pulled? It fixes a regression
+>> that made it into 6.2 and the revert was now posted 34 days ago, hence
+>> it would be good if this could finally go to Linus, so that it can be
+>> backported to stable.
 > 
-> the latest v6.2.6 kernel fails to boot on some arm64 systems, the kernel
-> gets stuck and never completes the boot. On the console I see this:
-> 
-> [   72.043484] rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
-> [   72.049571] rcu:     22-...0: (30 GPs behind) idle=b10c/1/0x4000000000000000 softirq=164/164 fqs=6443
-> [   72.058520]     (detected by 28, t=15005 jiffies, g=449, q=174 ncpus=32)
-> [   72.064949] Task dump for CPU 22:
-> [   72.068251] task:kworker/u64:5   state:R  running task     stack:0     pid:447   ppid:2      flags:0x0000000a
-> [   72.078156] Workqueue: efi_rts_wq efi_call_rts
-> [   72.082595] Call trace:
-> [   72.085029]  __switch_to+0xbc/0x100
-> [   72.088508]  0xffff80000fe83d4c
-> 
-> After that, as a consequence, I start to get a lot of hung task timeout traces.
-> 
-> I tried to bisect the problem and I found that the offending commit is
-> this one:
-> 
->  e7b813b32a42 ("efi: random: refresh non-volatile random seed when RNG is initialized")
-> 
-> I've reverted this commit for now and everything works just fine, but I
-> was wondering if the problem could be caused by a lack of entropy on
-> these arm64 boxes or something else.
+> I guess the best I can do is to include the revert in the next pull
+> request for v6.4.
 
-Thanks for the report. To be sure the issue doesn't fall through the
-cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
-tracking bot:
+Three more days went by without anything. Happen. I guess if Mauro
+doesn't show up until Sunday I'll ask Linus to pull this directly (if he
+actually does it is a different matter).
 
-#regzbot ^introduced e7b813b32a42
-#regzbot title efi: stuck at boot (efi_call_rts) on arm64
-#regzbot ignore-activity
+>> BTW, Stan: What...
+>>
+>>>> The following changes since commit
+>>>> 3e62aba8284de0994a669d07983299242e68fe72:
+>>>>
+>>>>    media: imx-mipi-csis: Check csis_fmt validity before use
+>>>> (2023-02-26 11:21:33 +0100)
+>>>>
+>>>> are available in the Git repository at:
+>>>>
+>>>>    git://linuxtv.org/svarbanov/media_tree.git
+>>>> tags/tag-venus-fixes-for-v6.3
+>>>>
+>>>> for you to fetch changes up to
+>>>> 1440cfcf24db8c50d929d3c35ab6f87f868fa628:
+>>>>
+>>>>    Revert "venus: firmware: Correct non-pix start and end addresses"
+>>>> (2023-03-02 07:52:10 +0200)
+>>>>
+>>>> ----------------------------------------------------------------
+>>>> Venus fixes for v6.3
+>>>>
+>>>> ----------------------------------------------------------------
+>>>> Javier Martinez Canillas (1):
+>>>>        Revert "venus: firmware: Correct non-pix start and end
+>>>> addresses"
+>>>
+>>> Good to see that this finally is heading towards mainline, thx.
+>>>
+>>> What about the other venus regression[1] Javier provided this patch for:
+>>>
+>>> https://patchwork.kernel.org/project/linux-media/patch/20230210081835.2054482-1-javierm@redhat.com/
+>>
+>> ...about this revert from Feb, 10th? There was some discussion recently,
+>> but it would to get this finally resolved, too.
+> 
+> I still have doubts about test coverage on db410c and RB3, because the
+> firmware there behaves very differently and we can introduce another
+> regression. If that happens we have to fix the fix in this patch.
 
-This isn't a regression? This issue or a fix for it are already
-discussed somewhere else? It was fixed already? You want to clarify when
-the regression started to happen? Or point out I got the title or
-something else totally wrong? Then just reply and tell me -- ideally
-while also telling regzbot about it, as explained by the page listed in
-the footer of this mail.
+BTW & FWIW, in these situations it sometimes is worth risking such an
+outcome afaics. But whatever:
 
-Developers: When fixing the issue, remember to add 'Link:' tags pointing
-to the report (the parent of this mail). See page linked in footer for
-details.
+> I'm working on the testing on those two devices.
+
+thx!
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
 Everything you wanna know about Linux kernel regression tracking:
 https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+If I did something stupid, please tell me, as explained on that page.
