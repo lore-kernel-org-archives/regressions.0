@@ -1,54 +1,87 @@
-Received: from smtpbguseast3.qq.com (smtpbguseast3.qq.com [54.243.244.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB99C37C
-	for <regressions@lists.linux.dev>; Thu, 16 Mar 2023 02:17:54 +0000 (UTC)
-X-QQ-mid: bizesmtp69t1678932083t9enazw6
-Received: from [10.4.16.24] ( [58.240.82.166])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Thu, 16 Mar 2023 10:01:22 +0800 (CST)
-X-QQ-SSF: 01400000000000I0Z000000A0000000
-X-QQ-FEAT: HPkwb3INVpCkD+eN/AbJL1aye0ngp8ExXZNAlsIxfdcXhygZjrvR7Vi7OvtGI
-	WSIbE5OF+UDpoXSfmatWabhKHemR+EtxsGJnlWoodLK/J0zsVD0vI4SyCEY47qKHTNZYgIw
-	N+K59owGBp3Kh7YLarR5XTV2nRPDrpysFSj2TYE6pVvKyvsPatUw5e2I56CD+9qZRZ0tM+i
-	vWVyKw+1Dltcm0L5je8TyBhs/OhyqR6QCl7S7QCTGbGLu0zeNCd5vqrzo2fg7K+PeIctVDj
-	TVXJrye+CorIGApY7aSqCi7/CL13fmWoXQbj39ratlDeagNK9KTPIYI7ux4+zygoVD+Ge2I
-	EoNKjho8378i1xNGuzc48yLAi/nXQipRV4mgaT7idoLyooG7SKWIMaa3Hspyw==
-X-QQ-GoodBg: 1
-Message-ID: <927A9CC7D19E5BD6+6758c124-1a86-a981-d3cf-fa0da9ab589e@uniontech.com>
-Date: Thu, 16 Mar 2023 10:01:22 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD80A1382
+	for <regressions@lists.linux.dev>; Thu, 16 Mar 2023 05:54:35 +0000 (UTC)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id D424221A24;
+	Thu, 16 Mar 2023 05:54:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1678946073; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uz4sXjSZKUFf8KOnFqZxSThXuyL8SVP5pYRjYUawNhA=;
+	b=2GnesgqVADsCq9ENzXxktVUO198d+bjVQlWA/uuPMNJUPMUVufuzkGk9mb9JxVvr8ojcQG
+	QDlLTwa6xba2E2tX+gu4tmmlq0FAsFEpKW5QQR49SA/2A9enuicskG1ARYZTLf9rWGGefT
+	XDZw/HVob0Rqvs2o9WQhRfBCeDtiiDA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1678946073;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uz4sXjSZKUFf8KOnFqZxSThXuyL8SVP5pYRjYUawNhA=;
+	b=Sc2KxT03t7ld+BhIh97wzboWQSJeE+Xrz9QxH+zIpyDaxl7ThtoQoLwv/tD9oMtcrQQna8
+	CKkWePI6gceQ4oBw==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id B1DFD13513;
+	Thu, 16 Mar 2023 05:54:33 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+	by imap2.suse-dmz.suse.de with ESMTPSA
+	id IFnKKhmvEmSXXAAAMHmgww
+	(envelope-from <tiwai@suse.de>); Thu, 16 Mar 2023 05:54:33 +0000
+Date: Thu, 16 Mar 2023 06:54:33 +0100
+Message-ID: <87a60djl5y.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: tangmeng <tangmeng@uniontech.com>
+Cc: Takashi Iwai <tiwai@suse.de>,
+	Jetro Jormalainen <jje-lxkl@jetro.fi>,
+	regressions@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [REGRESSION] External mic not working on Lenovo Ideapad U310, ALSA: hda/conexant: Add quirk for LENOVO 20149 Notebook model
+In-Reply-To: <927A9CC7D19E5BD6+6758c124-1a86-a981-d3cf-fa0da9ab589e@uniontech.com>
+References: <20230308215009.4d3e58a6@mopti>
+	<87o7ou9jfi.wl-tiwai@suse.de>
+	<927A9CC7D19E5BD6+6758c124-1a86-a981-d3cf-fa0da9ab589e@uniontech.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [REGRESSION] External mic not working on Lenovo Ideapad U310,
- ALSA: hda/conexant: Add quirk for LENOVO 20149 Notebook model
-To: Takashi Iwai <tiwai@suse.de>, Jetro Jormalainen <jje-lxkl@jetro.fi>
-Cc: regressions@lists.linux.dev, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org
-References: <20230308215009.4d3e58a6@mopti> <87o7ou9jfi.wl-tiwai@suse.de>
-From: tangmeng <tangmeng@uniontech.com>
-In-Reply-To: <87o7ou9jfi.wl-tiwai@suse.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:uniontech.com:qybglogicsvr:qybglogicsvr7
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
 
-
-On 2023/3/15 22:29, Takashi Iwai wrote:
-
-> 
-> Sounds like multiple models using the same PCI SSID.
-> Could you share the alsa-info.sh output?
-> Meng, also could you give alsa-info.sh output of Lenovo 20149, too?
+On Thu, 16 Mar 2023 03:01:22 +0100,
+tangmeng wrote:
 > 
 > 
-Sorry, because the environment used before belongs to the customer's 
-environment, the environment has been returned to the customer after the 
-verification is completed.
-Output information is no longer available.
+> On 2023/3/15 22:29, Takashi Iwai wrote:
+> 
+> > 
+> > Sounds like multiple models using the same PCI SSID.
+> > Could you share the alsa-info.sh output?
+> > Meng, also could you give alsa-info.sh output of Lenovo 20149, too?
+> > 
+> > 
+> Sorry, because the environment used before belongs to the customer's
+> environment, the environment has been returned to the customer after
+> the verification is completed.
+> Output information is no longer available.
 
+Too bad.  So, if any, further fixes will be a guess work.
+Do you know the codec vendor ID at least?
+
+At the next time you submit such a change, please keep the
+alsa-info.sh output for a future reference.
+
+
+thanks,
+
+Takashi
