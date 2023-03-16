@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80B9628E3
-	for <regressions@lists.linux.dev>; Thu, 16 Mar 2023 09:52:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC1EA323E
+	for <regressions@lists.linux.dev>; Thu, 16 Mar 2023 13:21:55 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pckHs-0001BV-0C; Thu, 16 Mar 2023 10:52:44 +0100
-Message-ID: <ef14180e-994d-e498-06df-96fd5851f373@leemhuis.info>
-Date: Thu, 16 Mar 2023 10:52:43 +0100
+	id 1pcnYD-00050T-QS; Thu, 16 Mar 2023 14:21:49 +0100
+Message-ID: <6bba2a93-d503-3c6e-680b-c350ea8d3f88@leemhuis.info>
+Date: Thu, 16 Mar 2023 14:21:48 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,96 +16,49 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.8.0
+Content-Language: en-US, de-DE
 From: "Linux regression tracking (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
-Subject: Re: [GIT FIXES FOR v6.3] Venus fixes
+To: "Rafael J. Wysocki" <rafael@kernel.org>,
+ Bjorn Helgaas <helgaas@kernel.org>
+Cc: "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, netdev <netdev@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ Linux PCI <linux-pci@vger.kernel.org>,
+ ACPI Devel Maling List <linux-acpi@vger.kernel.org>
+References: <e6aaddb9-afec-e77d-be33-570f9f10a9c2@leemhuis.info>
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-To: Stanimir Varbanov <stanimir.k.varbanov@gmail.com>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: Javier Martinez Canillas <javierm@redhat.com>,
- Vikash Garodia <vgarodia@qti.qualcomm.com>, linux-media@vger.kernel.org
-References: <20230302060413.67239-1-stanimir.k.varbanov@gmail.com>
- <cb03d97f-ae48-4090-e14b-354373a2ebe3@leemhuis.info>
- <7ef0357c-1bd8-7598-4c4e-9d795b5f0abd@leemhuis.info>
- <ace4420f-d4fb-df18-60f0-3b698c196250@gmail.com>
-Content-Language: en-US, de-DE
-In-Reply-To: <ace4420f-d4fb-df18-60f0-3b698c196250@gmail.com>
+Subject: Re: [regression] Bug 217069 - Wake on Lan is broken on r8169 since
+ 6.2
+In-Reply-To: <e6aaddb9-afec-e77d-be33-570f9f10a9c2@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1678960366;06c29ba4;
-X-HE-SMSGID: 1pckHs-0001BV-0C
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1678972915;152f6551;
+X-HE-SMSGID: 1pcnYD-00050T-QS
 
-On 13.03.23 18:48, Stanimir Varbanov wrote:
-> On 13.03.23 г. 16:28 ч., Thorsten Leemhuis wrote:
->> On 02.03.23 09:27, Linux regression tracking (Thorsten Leemhuis) wrote:
->>> On 02.03.23 07:04, Stanimir Varbanov wrote:
->>>>
->>>> This pull request includes a fix for regression in venus hardware
->>>> reset.
->>>> The reverted commit has been merged in v6.2.
->>>> Please pull.
->> Mauro: any reason why this is still not pulled? It fixes a regression
->> that made it into 6.2 and the revert was now posted 34 days ago, hence
->> it would be good if this could finally go to Linus, so that it can be
->> backported to stable.
-> 
-> I guess the best I can do is to include the revert in the next pull
-> request for v6.4.
+[Quick inquiry with different recipients]
 
-Three more days went by without anything. Happen. I guess if Mauro
-doesn't show up until Sunday I'll ask Linus to pull this directly (if he
-actually does it is a different matter).
+> I noticed a regression report in bugzilla.kernel.org. As many (most?)
+> kernel developer don't keep an eye on it, I decided to forward it by
+> mail. Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=217069 :
 
->> BTW, Stan: What...
->>
->>>> The following changes since commit
->>>> 3e62aba8284de0994a669d07983299242e68fe72:
->>>>
->>>>    media: imx-mipi-csis: Check csis_fmt validity before use
->>>> (2023-02-26 11:21:33 +0100)
->>>>
->>>> are available in the Git repository at:
->>>>
->>>>    git://linuxtv.org/svarbanov/media_tree.git
->>>> tags/tag-venus-fixes-for-v6.3
->>>>
->>>> for you to fetch changes up to
->>>> 1440cfcf24db8c50d929d3c35ab6f87f868fa628:
->>>>
->>>>    Revert "venus: firmware: Correct non-pix start and end addresses"
->>>> (2023-03-02 07:52:10 +0200)
->>>>
->>>> ----------------------------------------------------------------
->>>> Venus fixes for v6.3
->>>>
->>>> ----------------------------------------------------------------
->>>> Javier Martinez Canillas (1):
->>>>        Revert "venus: firmware: Correct non-pix start and end
->>>> addresses"
->>>
->>> Good to see that this finally is heading towards mainline, thx.
->>>
->>> What about the other venus regression[1] Javier provided this patch for:
->>>
->>> https://patchwork.kernel.org/project/linux-media/patch/20230210081835.2054482-1-javierm@redhat.com/
->>
->> ...about this revert from Feb, 10th? There was some discussion recently,
->> but it would to get this finally resolved, too.
-> 
-> I still have doubts about test coverage on db410c and RB3, because the
-> firmware there behaves very differently and we can introduce another
-> regression. If that happens we have to fix the fix in this patch.
+To Rafael and the ACPI & PM folks as well as to Bjorn and the PCI folks:
 
-BTW & FWIW, in these situations it sometimes is worth risking such an
-outcome afaics. But whatever:
+Three users reported that WOL/Wake on Lan broke for them with 6.2; two
+of them have Realtek chips, one an Intel NIC. For details see the bug
+linked above.
 
-> I'm working on the testing on those two devices.
+Did something in ACPI/PM/PCI land change for 6.2 that might cause
+something like this? Or is such a problem even known already?
 
-thx!
+Just fishing for ideas here. If nobody has any, one of the reports will
+have to bisect this.
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
 Everything you wanna know about Linux kernel regression tracking:
 https://linux-regtracking.leemhuis.info/about/#tldr
 If I did something stupid, please tell me, as explained on that page.
+
