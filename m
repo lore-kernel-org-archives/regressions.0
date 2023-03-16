@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61A072574
-	for <regressions@lists.linux.dev>; Thu, 16 Mar 2023 09:40:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E261F28E3
+	for <regressions@lists.linux.dev>; Thu, 16 Mar 2023 09:45:07 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pck6C-0006hK-2D; Thu, 16 Mar 2023 10:40:40 +0100
-Message-ID: <b5186e47-d448-9706-d0b6-45c49d03f4a2@leemhuis.info>
-Date: Thu, 16 Mar 2023 10:40:39 +0100
+	id 1pckAT-0007w6-CW; Thu, 16 Mar 2023 10:45:05 +0100
+Message-ID: <59064730-e731-d137-ae92-e19622a122d0@leemhuis.info>
+Date: Thu, 16 Mar 2023 10:45:04 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,50 +16,80 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.8.0
-Subject: Re: [REGRESSION] External mic not working on Lenovo Ideapad U310,
- ALSA: hda/conexant: Add quirk for LENOVO 20149 Notebook model
+Subject: Re: kernel 6.2 stuck at boot (efi_call_rts) on arm64
 Content-Language: en-US, de-DE
-To: tangmeng <tangmeng@uniontech.com>, Takashi Iwai <tiwai@suse.de>,
- Jetro Jormalainen <jje-lxkl@jetro.fi>
-Cc: regressions@lists.linux.dev, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org
-References: <20230308215009.4d3e58a6@mopti> <87o7ou9jfi.wl-tiwai@suse.de>
- <927A9CC7D19E5BD6+6758c124-1a86-a981-d3cf-fa0da9ab589e@uniontech.com>
-From: "Linux regression tracking #update (Thorsten Leemhuis)"
+To: Andrea Righi <andrea.righi@canonical.com>,
+ "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc: Ard Biesheuvel <ardb@kernel.org>,
+ Paolo Pisati <paolo.pisati@canonical.com>, linux-efi@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <ZBLLSmLbt2P4ZN6O@righiandr-XPS-13-7390>
+From: "Linux regression tracking #adding (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <927A9CC7D19E5BD6+6758c124-1a86-a981-d3cf-fa0da9ab589e@uniontech.com>
+In-Reply-To: <ZBLLSmLbt2P4ZN6O@righiandr-XPS-13-7390>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1678959642;d356dde0;
-X-HE-SMSGID: 1pck6C-0006hK-2D
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1678959908;9b169fc4;
+X-HE-SMSGID: 1pckAT-0007w6-CW
 
-[TLDR: This mail in primarily relevant for Linux kernel regression
-tracking. See link in footer if these mails annoy you.]
+[CCing the regression list, as it should be in the loop for regressions:
+https://docs.kernel.org/admin-guide/reporting-regressions.html]
 
-On 16.03.23 03:01, tangmeng wrote:
+[TLDR: I'm adding this report to the list of tracked Linux kernel
+regressions; the text you find below is based on a few templates
+paragraphs you might have encountered already in similar form.
+See link in footer if these mails annoy you.]
+
+On 16.03.23 08:54, Andrea Righi wrote:
+> Hello,
 > 
-> On 2023/3/15 22:29, Takashi Iwai wrote:
+> the latest v6.2.6 kernel fails to boot on some arm64 systems, the kernel
+> gets stuck and never completes the boot. On the console I see this:
 > 
->>
->> Sounds like multiple models using the same PCI SSID.
->> Could you share the alsa-info.sh output?
->> Meng, also could you give alsa-info.sh output of Lenovo 20149, too?
->>
->>
-> Sorry, because the environment used before belongs to the customer's
-> environment, the environment has been returned to the customer after the
-> verification is completed.
-> Output information is no longer available.
+> [   72.043484] rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
+> [   72.049571] rcu:     22-...0: (30 GPs behind) idle=b10c/1/0x4000000000000000 softirq=164/164 fqs=6443
+> [   72.058520]     (detected by 28, t=15005 jiffies, g=449, q=174 ncpus=32)
+> [   72.064949] Task dump for CPU 22:
+> [   72.068251] task:kworker/u64:5   state:R  running task     stack:0     pid:447   ppid:2      flags:0x0000000a
+> [   72.078156] Workqueue: efi_rts_wq efi_call_rts
+> [   72.082595] Call trace:
+> [   72.085029]  __switch_to+0xbc/0x100
+> [   72.088508]  0xffff80000fe83d4c
+> 
+> After that, as a consequence, I start to get a lot of hung task timeout traces.
+> 
+> I tried to bisect the problem and I found that the offending commit is
+> this one:
+> 
+>  e7b813b32a42 ("efi: random: refresh non-volatile random seed when RNG is initialized")
+> 
+> I've reverted this commit for now and everything works just fine, but I
+> was wondering if the problem could be caused by a lack of entropy on
+> these arm64 boxes or something else.
 
-#regzbot inconclusive: unsolved, but reporter has no access to device
-anymore
+Thanks for the report. To be sure the issue doesn't fall through the
+cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
+tracking bot:
+
+#regzbot ^introduced e7b813b32a42
+#regzbot title efi: stuck at boot (efi_call_rts) on arm64
 #regzbot ignore-activity
+
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply and tell me -- ideally
+while also telling regzbot about it, as explained by the page listed in
+the footer of this mail.
+
+Developers: When fixing the issue, remember to add 'Link:' tags pointing
+to the report (the parent of this mail). See page linked in footer for
+details.
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
 Everything you wanna know about Linux kernel regression tracking:
 https://linux-regtracking.leemhuis.info/about/#tldr
 That page also explains what to do if mails like this annoy you.
-
-
