@@ -1,121 +1,119 @@
-Received: from mx.fenrir.org.uk (host-92-27-96-141.static.as13285.net [92.27.96.141])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6DE136A
-	for <regressions@lists.linux.dev>; Fri, 17 Mar 2023 18:37:34 +0000 (UTC)
-Received: from [10.0.0.3] (helo=deangelis.fenrir.org.uk)
-	(TLS1.3:TLS_AES_256_GCM_SHA384:256)
-	by mx.fenrir.org.uk with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-	id 1pdEx0-0001L6-18;
-	Fri, 17 Mar 2023 18:37:14 +0000
-Date: Fri, 17 Mar 2023 18:37:13 +0000
-From: Brian Morrison <bdm@fenrir.org.uk>
-To: Alan Stern <stern@rowland.harvard.edu>
-Cc: Mathias Nyman <mathias.nyman@linux.intel.com>,
- linux-usb@vger.kernel.org, Linux kernel regressions list
- <regressions@lists.linux.dev>, Chen Xingdi <chenxingdi@huawei.com>, Takashi
- Iwai <tiwai@suse.de>, Moritz Fischer <mdf@kernel.org>, Christian Lamparter
- <chunkeey@googlemail.com>, Vinod Koul <vkoul@kernel.org>
-Subject: Re: USB regression in kernel 6.2.2
-Message-ID: <20230317183713.7bef83c2@deangelis.fenrir.org.uk>
-In-Reply-To: <3d0a0429-a634-4c18-82e8-72028d8226d0@rowland.harvard.edu>
-References: <20230307132120.5897c5af@deangelis.fenrir.org.uk>
-	<db2e0984-6eb5-5987-44e1-a7143141469b@linux.intel.com>
-	<20230309200415.118777d2@deangelis.fenrir.org.uk>
-	<20230312000316.2955d55a@deangelis.fenrir.org.uk>
-	<d5ff9480-57bd-2c39-8b10-988ad0d14a7e@linux.intel.com>
-	<20230314140008.79a90c38@deangelis.fenrir.org.uk>
-	<c9b12beb-cb12-8839-db74-b18480885053@linux.intel.com>
-	<3d0a0429-a634-4c18-82e8-72028d8226d0@rowland.harvard.edu>
-Organization: The Fool and Bladder Face-Jumping Team
-X-Mailer: Claws Mail 4.1.1git48 (GTK 3.24.37; x86_64-redhat-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4BB31858
+	for <regressions@lists.linux.dev>; Sat, 18 Mar 2023 12:08:20 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1pdVM4-00054s-Tt; Sat, 18 Mar 2023 13:08:13 +0100
+Message-ID: <e20db4c4-b2a8-bc88-232f-d1213733d20c@leemhuis.info>
+Date: Sat, 18 Mar 2023 13:08:12 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+Content-Language: en-US, de-DE
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+To: "Jason A. Donenfeld" <Jason@zx2c4.com>,
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Linux kernel regressions list <regressions@lists.linux.dev>,
+ LKML <linux-kernel@vger.kernel.org>,
+ "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+ barry@messagefor.me.uk
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: [regression] focaltech touchpad driver misbehaves due to "kbuild:
+ treat char as always unsigned"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Clacks-Overhead: GNU Terry Pratchett
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1679141300;67d7d77c;
+X-HE-SMSGID: 1pdVM4-00054s-Tt
 
-On Wed, 15 Mar 2023 10:53:23 -0400
-Alan Stern <stern@rowland.harvard.edu> wrote:
+Hi, Thorsten here, the Linux kernel's regression tracker.
 
-> On Wed, Mar 15, 2023 at 01:19:16PM +0200, Mathias Nyman wrote:
-> > On 14.3.2023 16.00, Brian Morrison wrote:  
-> > > On Mon, 13 Mar 2023 12:06:59 +0200
-> > > Mathias Nyman <mathias.nyman@linux.intel.com> wrote:  
->  [...]  
-> > > 
-> > > I have now reverted the above commit, it's only the one line in
-> > > xhci-pci.c and it took a couple of hours to rebuild my kernel
-> > > rpms which wasn't too bad.
-> > > 
-> > > With this change all of my USB devices are present again and the 3
-> > > /dev/ttyUSB* nodes are all present and usable.
-> > >   
-> > 
-> > Thanks for testing.
-> > So setting PROBE_PREFER_ASYNCHRONOUS does trigger this issue for
-> > Renesas xHCI.
-> > 
-> > Was it so that with the devices connected to the Intel host
-> > everything worked on 6.2 kernel?
-> > 
-> > Just to make sure that this is a vendor specific host issue and not
-> > generic xhci driver issue.
+I noticed a regression report in bugzilla.kernel.org. Jason, apparently
+it's caused by a change of yours (3bc753c06dd0 ("kbuild: treat char as
+always unsigned")), which apparently caused a problem in
+drivers/input/mouse/focaltech.c to surface. Someone provided a patch
+already to fix it here: https://bugs.archlinux.org/task/77733?getfile=22498
 
-I will see if I can test this, but it may be difficult. The add-on
-Renesas card allows my USB cables (with quite large ferrites to keep RF
-out of the PC) to fit in, the Intel host ports are in a different
-orientation and so physically too close together for the ferrite-laden
-cables to fit in.
+Back to the bug. As many (most?) kernel developer don't keep an eye on
+bugzilla, I decided to forward it by mail. Quoting from
+https://bugzilla.kernel.org/show_bug.cgi?id=217211 :
 
-If I can manage to test it I will report, but don't hold your breath.
-
-> > 
-> > If we can't quickly figure out the real reason for this then we
-> > just have to revert that patch.
-
-It's certainly working for me, but as I don't know much about how the
-xhci driver initialises and finds the two bus host controllers I don't
-know about any consequences beyond the boot delay issue that prompted
-the async change in the first place.
-
-> >   
-> > > I found this in the linux-usb list archives:
-> > > 
-> > > https://www.spinics.net/lists/kernel/msg4569289.html
-> > > 
-> > > and the first part of this patch series here:
-> > > 
-> > > https://www.spinics.net/lists/kernel/msg4569288.html
-> > > 
-> > > Should both of these patches be reverted? I assume so but I don't
-> > > think I have anything that uses an ehci device to test it.
-> > >   
-> > 
-> > Probably just the xhci one. I haven't heard of any ehci issues.
-> > 
-> > Alan (cc) would know better if there are any new odd ehci issues
-> > that can be traced back to the async probe change.  
+> Barry 2023-03-17 13:51:10 UTC
 > 
-> I haven't heard of any problems with EHCI.
-
-I think that EHCI and UHCI are older standards, I don't know if the
-hardware those drivers work with is still common. I also have a VIA PCI
-USB card on another machine that also uses the xhci driver and it's much
-older than the machine with the Renesas card. I don't think I have the
-hardware that would allow me to test those drivers.
-
+> Created attachment 303972 [details] Kernel bisect result
 > 
-> Alan Stern
+> O/S: Archlinux.
 > 
+> On any kernel release from 6.2 onwards I have found that the touchpad
+> doesn't respond to multi finger touches properly. The pad works fine for
+> single finger movement and single finger tap to click. If I click and
+> hold the pad button and then use another finger to move such as for text
+> selection, drag and drop, moving or resizing a window etc. Or if I try
+> to use 2 finger scrolling then the mouse pointer jumps to the top or
+> right or into the top right of the screen. All of this functionality
+> worked as expected up to kernel 6.1.19.
+> 
+> I have bisected the kernel and got the attached result.
+> 
+> 
+> I have checked out kernel 6.2.6 and removed the `-funsigned-char` from
+> the Makefile. Kernel 6.2.6 built with the modified Makefile restores the
+> correct functionality. I believe the touchpad uses the psmouse driver so
+> maybe the new build option has broken this driver.>
+> I have bisected the kernel and got the attached result.
+> 
+> 
+> I have checked out kernel 6.2.6 and removed the `-funsigned-char`
+> from the Makefile. Kernel 6.2.6 built with the modified Makefile
+> restores the correct functionality. I believe the touchpad uses the
+> psmouse driver so maybe the new build option has broken this driver.
+> 
+> [...]
+> 
+> barry@messagefor.me.uk 2023-03-18 11:49:27 UTC
+> 
+> Hi. If you check this link which is my report of the same bug on the
+> arch bug tracker there is a patch attached which fixes the issue.
+> 
+> https://bugs.archlinux.org/task/77733#comment216336
 
-Please ask if there is any extra patch you would like me to try.
+See the ticket for more details.
 
--- 
 
-Brian Morrison
+[TLDR for the rest of this mail: I'm adding this report to the list of
+tracked Linux kernel regressions; the text you find below is based on a
+few templates paragraphs you might have encountered already in similar
+form.]
 
+BTW, let me use this mail to also add the report to the list of tracked
+regressions to ensure it's doesn't fall through the cracks:
+
+#regzbot introduced: 3bc753c06dd0
+https://bugzilla.kernel.org/show_bug.cgi?id=217211
+#regzbot title: kbuild/input: focaltech touchpad driver misbehaves due
+to a checke how to treat char
+#regzbot ignore-activity
+
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply and tell me -- ideally
+while also telling regzbot about it, as explained by the page listed in
+the footer of this mail.
+
+Developers: When fixing the issue, remember to add 'Link:' tags pointing
+to the report (e.g. the buzgzilla ticket and maybe this mail as well, if
+this thread sees some discussion). See page linked in footer for details.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
