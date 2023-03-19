@@ -1,65 +1,95 @@
-Received: from sender11-op-o11.zoho.eu (sender11-op-o11.zoho.eu [31.186.226.225])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8514D7E1
-	for <regressions@lists.linux.dev>; Sun, 19 Mar 2023 16:36:23 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; t=1679243770; cv=none; 
-	d=zohomail.eu; s=zohoarc; 
-	b=TWvfcLdvxEd52WkBg3U/j4DiJl8lCvHmTYCTaXaxvuLIFEsK1Q2CGu2adphLmTN3yuniACFaUGp8ZvE2yd3uxm4l6yOIAUT9NJx+hY+qaF+AQFU5jWn1JKS46A/g3m3+P60M6480Hgu2dYvox0ULTfc/gHigU3EQsbGQjJWOJy4=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
-	t=1679243770; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-	bh=1+gnTKfJVBMgMmDYlGD4RzHzJLRW5Xx60pBV+z1t9SQ=; 
-	b=fNlvK8g85iV6YtYscore9bLeYEttHcK0wE66ybbzFU/tBEwXEM1AYvdIZKds8+oQaMZoOmWK0JngX5VzeXZgmU/Xn3AQ/J1dU6YVQIczZICHJ5dJ1NV1Eowsy79wCQK1Dx4Mn5f0x3q/SxH02tWJJSoUrdlCv2+Fpi41bVNMp8U=
-ARC-Authentication-Results: i=1; mx.zohomail.eu;
-	spf=pass  smtp.mailfrom=jes@trained-monkey.org;
-	dmarc=pass header.from=<jes@trained-monkey.org>
-Received: from [192.168.99.50] (pool-98-113-67-206.nycmny.fios.verizon.net [98.113.67.206]) by mx.zoho.eu
-	with SMTPS id 16792437681711020.1266679224117; Sun, 19 Mar 2023 17:36:08 +0100 (CET)
-Message-ID: <318ff554-0694-64e1-72bd-d941a775a16f@trained-monkey.org>
-Date: Sun, 19 Mar 2023 12:36:06 -0400
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72CB41846
+	for <regressions@lists.linux.dev>; Sun, 19 Mar 2023 16:52:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09386C433D2;
+	Sun, 19 Mar 2023 16:52:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1679244720;
+	bh=jyYS3GJ/aW+lYyizBjOxRkQkb6yrUyO89tl2RA9/JlY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HeeVkxFDGXC7Wn9Q5k+tqRo6+JO85Y4mlVURyf8GOp51/iIyVsFWa59Tuc2kaq0PG
+	 eCWG5VCnBIJbxTZmoyxPs9/lOAXhRF59S64xYCl4smaAVtb60sSJTOIsL65V0SZLgK
+	 7CG2pyLFFCVRLwQyC6L12Ie60H284jBFgtWmmLNvDPl4IF79GXCLPmoj+ByLkrAMyk
+	 1j2eMb3zkIU2HLw9iqckEVgvpEnkXf+ewrf465nrX9k/HDo4nv/SOuS+CiYFidwY0l
+	 L43kmXbyD3ItWNbE0bedW+EQ6VtbPPfgvFSqUeIAMId/aQSEEcFLYkjgrM836nanJ/
+	 fgvfLUZIIxr8g==
+Received: by pali.im (Postfix)
+	id 4F3F9622; Sun, 19 Mar 2023 17:51:57 +0100 (CET)
+Date: Sun, 19 Mar 2023 17:51:57 +0100
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Steffen <wiesenbergsteffen+lxkernel@gmail.com>,
+	Linux kernel regressions list <regressions@lists.linux.dev>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	"open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>, lanelone@gmail.com
+Subject: Re: [regression] Bug 217182 - Dell Latitude E7450 Trackpoint not
+ working as expected
+Message-ID: <20230319165157.xyaxo3wlziqrjurx@pali>
+References: <6625ee0a-31a7-9fef-d299-457c0f98f5a0@leemhuis.info>
+ <b7de0060-8555-65f7-c687-1326a5762929@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [PATCH - mdadm] mdopen: always try create_named_array()
-Content-Language: en-US
-To: NeilBrown <neilb@suse.de>
-Cc: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>,
- Song Liu <song@kernel.org>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- linux-raid <linux-raid@vger.kernel.org>, LKML
- <linux-kernel@vger.kernel.org>, Nikolay Kichukov <hijacker@oldum.net>
-References: <167875238571.8008.9808655454439667586@noble.neil.brown.name>
-From: Jes Sorensen <jes@trained-monkey.org>
-In-Reply-To: <167875238571.8008.9808655454439667586@noble.neil.brown.name>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b7de0060-8555-65f7-c687-1326a5762929@leemhuis.info>
+User-Agent: NeoMutt/20180716
 
-On 3/13/23 20:06, NeilBrown wrote:
+On Wednesday 15 March 2023 10:50:46 Thorsten Leemhuis wrote:
+> On 13.03.23 11:20, Linux regression tracking (Thorsten Leemhuis) wrote:
+> > 
+> > Hi, Thorsten here, the Linux kernel's regression tracker.
+> > 
+> > I noticed a regression report in bugzilla.kernel.org. As many (most?)
+> > kernel developer don't keep an eye on it, I decided to forward it by
+> > mail. Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=217182 :
+> > 
+> >>  Steffen 2023-03-12 11:17:02 UTC
+> >>
+> >> Hi,
+> >> I'm new to this bug tracking system and just a user, not a developer.
+> >>
+> >> I use a Dell Latitude E7450 running with the Debian unstable based
+> >> distribution Siduction.
+> >> After upgrading to Linux kernel 6.2.x the Trackpoint does not work
+> >> anymore as expected. It uses an Alps PS/2 DualPoint Stick.
+> >> Even slight touches in any direction send the cursor to the top right
+> >> corner of the screen where it stays regardless of actual pointer
+> >> movement. This also appears in console mode. One can retrieve the
+> >> pointer again with the touchpad, but I'm more precise with the
+> >> Trackpoint and prefer using that.
+> >> The Trackpoint works well in kernel 6.1.14
+> >> Can somebody help?
+> > 
+> > See the ticket for more details.
 > 
-> mdopen() will use create_named_array() to ask the kernel to create the
-> given md array, but only if it is given a number or name.
-> If it is NOT given a name and is required to choose one itself using
-> find_free_devnm() it does NOT use create_named_array().
+> FWIW, another user reported seeing the same problem on a different machine:
 > 
-> On kernels with CONFIG_BLOCK_LEGACY_AUTOLOAD not set, this can result in
-> failure to assemble an array.  This can particularly seen when the
-> "name" of the array begins with a host name different to the name of the
-> host running the command.
+> ```
+>  Radek 2023-03-14 08:00:31 UTC
 > 
-> So add the missing call to create_named_array().
+> I am experiencing the same issue with kernel >6.2.x on Toshiba Z30
+> with Alps PS/2 DualPoint trackpoint / touchpad. The cursor jumps top
+> right even with the lowest sensitivity settings. It works just fine
+> with 6.1 or lower.
+> ```
 > 
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=217074
-> Signed-off-by: NeilBrown <neilb@suse.de>
+> Pali, or anybody else: anyone any idea what's might be wrong there?
+> There afaics is only one recent commit to the alps driver (292a089d78d3
+> ("treewide: Convert del_timer*() to timer_shutdown*()")); it it maybe
+> worth trying to revert it?
+> 
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> --
+> Everything you wanna know about Linux kernel regression tracking:
+> https://linux-regtracking.leemhuis.info/about/#tldr
+> If I did something stupid, please tell me, as explained on that page.
 
-Applied!
-
-Thanks,
-Jes
-
-
+Could you try following patch?
+https://lore.kernel.org/linux-input/20230318144206.14309-1-msizanoen@qtmlabs.xyz/
