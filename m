@@ -1,13 +1,22 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from sender11-op-o11.zoho.eu (sender11-op-o11.zoho.eu [31.186.226.225])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 289E3E4C6
-	for <regressions@lists.linux.dev>; Sun, 19 Mar 2023 14:07:06 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pdtgX-0002ug-6Z; Sun, 19 Mar 2023 15:06:57 +0100
-Message-ID: <73b7867a-8a1f-d521-d290-77bc7fcb2226@leemhuis.info>
-Date: Sun, 19 Mar 2023 15:06:55 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8514D7E1
+	for <regressions@lists.linux.dev>; Sun, 19 Mar 2023 16:36:23 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; t=1679243770; cv=none; 
+	d=zohomail.eu; s=zohoarc; 
+	b=TWvfcLdvxEd52WkBg3U/j4DiJl8lCvHmTYCTaXaxvuLIFEsK1Q2CGu2adphLmTN3yuniACFaUGp8ZvE2yd3uxm4l6yOIAUT9NJx+hY+qaF+AQFU5jWn1JKS46A/g3m3+P60M6480Hgu2dYvox0ULTfc/gHigU3EQsbGQjJWOJy4=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
+	t=1679243770; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+	bh=1+gnTKfJVBMgMmDYlGD4RzHzJLRW5Xx60pBV+z1t9SQ=; 
+	b=fNlvK8g85iV6YtYscore9bLeYEttHcK0wE66ybbzFU/tBEwXEM1AYvdIZKds8+oQaMZoOmWK0JngX5VzeXZgmU/Xn3AQ/J1dU6YVQIczZICHJ5dJ1NV1Eowsy79wCQK1Dx4Mn5f0x3q/SxH02tWJJSoUrdlCv2+Fpi41bVNMp8U=
+ARC-Authentication-Results: i=1; mx.zohomail.eu;
+	spf=pass  smtp.mailfrom=jes@trained-monkey.org;
+	dmarc=pass header.from=<jes@trained-monkey.org>
+Received: from [192.168.99.50] (pool-98-113-67-206.nycmny.fios.verizon.net [98.113.67.206]) by mx.zoho.eu
+	with SMTPS id 16792437681711020.1266679224117; Sun, 19 Mar 2023 17:36:08 +0100 (CET)
+Message-ID: <318ff554-0694-64e1-72bd-d941a775a16f@trained-monkey.org>
+Date: Sun, 19 Mar 2023 12:36:06 -0400
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,53 +25,41 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.8.0
-Subject: Re: Linux 6.3-rc2
-Content-Language: en-US, de-DE
-To: Guenter Roeck <linux@roeck-us.net>,
- Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <CAHk-=wii6BZtVKYfvQCQqbE3+t1_yAb-ea80-3PcJ4KxgpfHkA@mail.gmail.com>
- <d915df60-d06b-47d4-8b47-8aa1bbc2aac7@roeck-us.net>
-From: "Linux regression tracking #adding (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <d915df60-d06b-47d4-8b47-8aa1bbc2aac7@roeck-us.net>
+Subject: Re: [PATCH - mdadm] mdopen: always try create_named_array()
+Content-Language: en-US
+To: NeilBrown <neilb@suse.de>
+Cc: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>,
+ Song Liu <song@kernel.org>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ linux-raid <linux-raid@vger.kernel.org>, LKML
+ <linux-kernel@vger.kernel.org>, Nikolay Kichukov <hijacker@oldum.net>
+References: <167875238571.8008.9808655454439667586@noble.neil.brown.name>
+From: Jes Sorensen <jes@trained-monkey.org>
+In-Reply-To: <167875238571.8008.9808655454439667586@noble.neil.brown.name>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1679234827;b85a1078;
-X-HE-SMSGID: 1pdtgX-0002ug-6Z
+X-ZohoMailClient: External
 
-[TLDR: I'm adding this report to the list of tracked Linux kernel
-regressions; the text you find below is based on a few templates
-paragraphs you might have encountered already in similar form.
-See link in footer if these mails annoy you.]
-
-On 13.03.23 16:53, Guenter Roeck wrote:
-> On Sun, Mar 12, 2023 at 04:45:57PM -0700, Linus Torvalds wrote:
->
-> Runtime:
+On 3/13/23 20:06, NeilBrown wrote:
 > 
-> Warning backtraces in calls from ct_nmi_enter(),
-> seen randomly.
->
+> mdopen() will use create_named_array() to ask the kernel to create the
+> given md array, but only if it is given a number or name.
+> If it is NOT given a name and is required to choose one itself using
+> find_free_devnm() it does NOT use create_named_array().
+> 
+> On kernels with CONFIG_BLOCK_LEGACY_AUTOLOAD not set, this can result in
+> failure to assemble an array.  This can particularly seen when the
+> "name" of the array begins with a host name different to the name of the
+> host running the command.
+> 
+> So add the missing call to create_named_array().
+> 
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=217074
+> Signed-off-by: NeilBrown <neilb@suse.de>
 
-I had expected this would be quickly resolved, but as the fix is not yet
-heading towards mainline, lets better ensure this regression is tracked:
+Applied!
 
-#regzbot ^introduced 62b95a7b44d1
-#regzbot title arm: vfp: random Warning backtraces in calls from
-ct_nmi_enter()
-#regzbot fix: ARM: vfp: Fix broken softirq handling with instrumentation
-enabled
-#regzbot ignore-activity
+Thanks,
+Jes
 
-FWIW, latest patchset to fix it afaics is here:
 
-https://lore.kernel.org/all/20230316082007.652669-1-ardb@kernel.org/
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
