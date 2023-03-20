@@ -1,69 +1,67 @@
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ADDB1846
-	for <regressions@lists.linux.dev>; Mon, 20 Mar 2023 09:51:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1679305888; x=1710841888;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=F5B5AEnVmr1t6vsXHndScG3OO7bIHfDCKGwu/Lz5eR0=;
-  b=VoG2/PdNs6T8RzR6qvn8G/hVFMUmNw3uS6I3TgpbL0ZHruvcDjdkoZ1G
-   aU0p5UBDSyTYzJ86uqfzJ8AVgJWB4iWoyNe/Ez4BrgBlfFmF1yZij73Hd
-   wo/OLPgGDjx5sjZBfyi2tBTB5VT85C9sPLs3qvZpYtejotjzEWoD+y3Kb
-   HQGk7XHPe8tZ2szFfuo1wtZ1OuRlhKREnBzGNJydU38b7CrKODDarmoLF
-   sb5YDgYfElz7m9dJGNCCSq9CgFTTFwKABiYWGbfRoBBiCu/Bqn3Xp0h/H
-   tlf9oeDoFvuVcRfD0v+KPXn4HaKnadlCP0dmMvOfFI37nKPSutoG5hdeK
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10654"; a="319019962"
-X-IronPort-AV: E=Sophos;i="5.98,274,1673942400"; 
-   d="scan'208";a="319019962"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2023 02:51:27 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10654"; a="855231116"
-X-IronPort-AV: E=Sophos;i="5.98,274,1673942400"; 
-   d="scan'208";a="855231116"
-Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2023 02:51:25 -0700
-Received: from kekkonen.localdomain (localhost [IPv6:::1])
-	by kekkonen.fi.intel.com (Postfix) with SMTP id 77F64122400;
-	Mon, 20 Mar 2023 11:51:22 +0200 (EET)
-Date: Mon, 20 Mar 2023 11:51:22 +0200
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Manivannan Sadhasivam <mani@kernel.org>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Alexander Stein <alexander.stein@ew.tq-group.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Dave Stevenson <dave.stevenson@raspberrypi.com>,
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Arnd Bergmann <arnd@kernel.org>
-Subject: Re: [PATCH] media: i2c: imx290: fix conditional function defintions
-Message-ID: <ZBgsmvZDJmhGGrmU@kekkonen.localdomain>
-References: <20230207161316.293923-1-arnd@kernel.org>
- <Y+J+7lsf083k4x80@pendragon.ideasonboard.com>
- <c5383d0e-d33c-d59f-3ee6-4635c1c4d334@leemhuis.info>
- <ZBgoHvg3kxsVoSzg@kekkonen.localdomain>
- <84540c66-166e-067a-e1d9-961234640d2e@leemhuis.info>
- <810afc81-57e3-17ea-c624-34a157602d1f@leemhuis.info>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ACFC1846
+	for <regressions@lists.linux.dev>; Mon, 20 Mar 2023 10:50:38 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1peD64-0000As-53; Mon, 20 Mar 2023 11:50:36 +0100
+Message-ID: <0c8579b2-85ef-6add-05c3-cfe73c60694f@leemhuis.info>
+Date: Mon, 20 Mar 2023 11:50:35 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <810afc81-57e3-17ea-c624-34a157602d1f@leemhuis.info>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+Subject: Re: [PATCH v3 14/17] media: i2c: imx290: Initialize runtime PM before
+ subdev
+Content-Language: en-US, de-DE
+From: "Linux regression tracking #adding (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+References: <20230116144454.1012-1-laurent.pinchart@ideasonboard.com>
+ <20230116144454.1012-15-laurent.pinchart@ideasonboard.com>
+ <20230227175245.GA3728693@roeck-us.net>
+ <46d00d1a-9435-62d5-598d-49f0ea916f86@leemhuis.info>
+In-Reply-To: <46d00d1a-9435-62d5-598d-49f0ea916f86@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1679309438;085f9d43;
+X-HE-SMSGID: 1peD64-0000As-53
 
-On Mon, Mar 20, 2023 at 10:46:45AM +0100, Thorsten Leemhuis wrote:
-> Argh, ohh no, it's there. Sorry for the noise. Second time something
-> like this happens today. Seems today is not my best day. :-/
 
-No worries!
 
--- 
-Sakari Ailus
+On 28.02.23 10:56, Linux regression tracking #update (Thorsten Leemhuis)
+wrote:
+> [TLDR: This mail in primarily relevant for Linux kernel regression
+> tracking. See link in footer if these mails annoy you.]
+> 
+> On 27.02.23 18:52, Guenter Roeck wrote:
+>> ---
+>> #regzbot ^introduced 02852c01f6540
+>>
+> 
+> [this mail is just fixing up an accidental use of "^"; this is kinda my
+> fault, the regzbot syntax is to confusing; I need to introduce something
+> like "regzbot forward" to make things more obvious, I just didn't get
+> around to it yet :-/ ]
+> 
+> #regzbot ^introduced 02852c01f6540
+> #regzbot title Build error in drivers/media/i2c/imx290.c if PM support
+> is disabled
+> #regzbot ignore-activity
+
+#regzbot fix: media: i2c: imx290: fix conditional function definitions
+#regzbot ignore-activity
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+That page also explains what to do if mails like this annoy you.
+
