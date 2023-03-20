@@ -1,114 +1,75 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 673671846
-	for <regressions@lists.linux.dev>; Mon, 20 Mar 2023 09:36:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=tqALbZ5OD+GvIZ79Hn4bb3l4PzR7mUDvgsif1iZUWmw=; b=DSDp52qf3yBjZLxsGm62G6Pf4T
-	uqDeOgVWr3ykHJqXSRHqsRagNKKOXdDo0fOWb51S+e0GPR/qTpf4dsPXudoRisSNmrSdg4uiWSbC9
-	gvrLpP0Asc5xZEK4m9ByF43fnfomcJ8p0ecQJPwjtLsiA3DtRtwIfK12cdTTzXix64Mpz0f/Yfu/j
-	0D2IqKRdEo6HIPoQVMw4aA02e6u5/We7l4jba/mIzYuxufnFM7YI2UYDj7kgAllDG61bqBi4F96SY
-	dptQekvT5zyxbEvx1aQ6VKhQovL4H4EkRgGf7obXJLiEEVXyNEhDKX/JZu9FAMVuitipeESl0lDZ+
-	0YmRkElQ==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1peBw8-000sob-9k; Mon, 20 Mar 2023 09:36:16 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
-	(Client did not present a certificate)
-	by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id B8727300288;
-	Mon, 20 Mar 2023 10:36:14 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 9E98420EEFFC2; Mon, 20 Mar 2023 10:36:14 +0100 (CET)
-Date: Mon, 20 Mar 2023 10:36:14 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Alexey Klimov <alexey.klimov@linaro.org>
-Cc: draszik@google.com, peter.griffin@linaro.org, willmcvicker@google.com,
-	mingo@kernel.org, ulf.hansson@linaro.org, tony@atomide.com,
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-	axboe@kernel.dk, alim.akhtar@samsung.com,
-	regressions@lists.linux.dev, avri.altman@wdc.com,
-	bvanassche@acm.org, klimova@google.com
-Subject: Re: [REGRESSION] CPUIDLE_FLAG_RCU_IDLE, blk_mq_freeze_queue_wait()
- and slow-stuck reboots
-Message-ID: <20230320093614.GB2196776@hirez.programming.kicks-ass.net>
-References: <20230314230004.961993-1-alexey.klimov@linaro.org>
- <20230315111606.GB2006103@hirez.programming.kicks-ass.net>
- <CANgGJDpd4Gm5HhQW__oMAv1yUqSPZ7FSGoQLYTmug=TUk4cn4g@mail.gmail.com>
- <20230320090558.GF2194297@hirez.programming.kicks-ass.net>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5709BE4C8
+	for <regressions@lists.linux.dev>; Mon, 20 Mar 2023 09:42:21 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1peC1x-0001Q1-WE; Mon, 20 Mar 2023 10:42:18 +0100
+Message-ID: <84540c66-166e-067a-e1d9-961234640d2e@leemhuis.info>
+Date: Mon, 20 Mar 2023 10:42:17 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230320090558.GF2194297@hirez.programming.kicks-ass.net>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+Subject: Re: [PATCH] media: i2c: imx290: fix conditional function defintions
+Content-Language: en-US, de-DE
+To: Sakari Ailus <sakari.ailus@linux.intel.com>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Manivannan Sadhasivam <mani@kernel.org>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Alexander Stein <alexander.stein@ew.tq-group.com>,
+ Arnd Bergmann <arnd@arndb.de>,
+ Dave Stevenson <dave.stevenson@raspberrypi.com>,
+ linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Arnd Bergmann <arnd@kernel.org>
+References: <20230207161316.293923-1-arnd@kernel.org>
+ <Y+J+7lsf083k4x80@pendragon.ideasonboard.com>
+ <c5383d0e-d33c-d59f-3ee6-4635c1c4d334@leemhuis.info>
+ <ZBgoHvg3kxsVoSzg@kekkonen.localdomain>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <ZBgoHvg3kxsVoSzg@kekkonen.localdomain>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1679305341;242e1ad1;
+X-HE-SMSGID: 1peC1x-0001Q1-WE
 
-On Mon, Mar 20, 2023 at 10:05:58AM +0100, Peter Zijlstra wrote:
-> On Fri, Mar 17, 2023 at 02:11:25AM +0000, Alexey Klimov wrote:
-> > On Wed, 15 Mar 2023 at 11:16, Peter Zijlstra <peterz@infradead.org> wrote:
-> > >
-> > >
-> > > (could you wrap your email please)
-> > 
-> > Ouch. Sorry.
-> > 
-> > > On Tue, Mar 14, 2023 at 11:00:04PM +0000, Alexey Klimov wrote:
-> > > > #regzbot introduced: 0c5ffc3d7b15 #regzbot title:
-> > > > CPUIDLE_FLAG_RCU_IDLE, blk_mq_freeze_queue_wait() and slow-stuck
-> > > > reboots
-> > > >
-> > > > The upstream changes are being merged into android-mainline repo and
-> > > > at some point we started to observe kernel panics on reboot or long
-> > > > reboot times.
-> > >
-> > > On what hardware? I find it somewhat hard to follow this DT code :/
-> > 
-> > Pixel 6.
+On 20.03.23 10:32, Sakari Ailus wrote:
+> On Mon, Mar 20, 2023 at 10:18:23AM +0100, Linux regression tracking (Thorsten Leemhuis) wrote:
+>> On 07.02.23 17:40, Laurent Pinchart wrote:
+>>> On Tue, Feb 07, 2023 at 05:13:12PM +0100, Arnd Bergmann wrote:
+>>>> From: Arnd Bergmann <arnd@arndb.de>
+>>>>
+>>>> The runtime suspend/resume functions are only referenced from the
+>>>> dev_pm_ops, but they use the old SET_RUNTIME_PM_OPS() helper
+>>>> that requires a __maybe_unused annotation to avoid a warning:
+>>>>
+>>>> drivers/media/i2c/imx290.c:1082:12: error: unused function 'imx290_runtime_resume' [-Werror,-Wunused-function]
+>>>> static int imx290_runtime_resume(struct device *dev)
+>>>>            ^
+>>>> drivers/media/i2c/imx290.c:1090:12: error: unused function 'imx290_runtime_suspend' [-Werror,-Wunused-function]
+>>>> static int imx290_runtime_suspend(struct device *dev)
+>>>>            ^
+>>>>
+>>
+>> I might be missing something (if so, please tell me), but to me it looks
+>>  this fix for a build issue in 6.3-rc (which shows up in Guenters weekly
+>> reports to Linus) didn't make any progress in the past few weeks. Is
+>> there a reason why? Who actually needs to pick it up and send it towards
+>> mainline? Manivannan Sadhasivam? Sakari Ailus?
 > 
-> What actual cpuidle driver is that thing using? Is there any out-of-tree
-> code involved? Mark tells me anything arm64 should be using PSCI, so let
-> me to stare hard at that again.
+> Mauro has recently pulled my PR including this and I understand it's in
+> Mauro's tree now.
 
-So specifically, your problem sounds like rcu_synchronize() is taking
-very much longer than it used to. Specifically combined with the patch
-that makes it 'go-away' this seems to indicate you lost a
-ct_cpuidle_enter() call, which is what ends up telling RCU the cpu is
-idle and no longer partakes in the whole grace period machinery. Not
-telling RCU this results in RCU waiting for an idle cpu to report back
-on it's RCU progress, but it being idle means it's not going to be doing
-that and things sorta wait around until RCU gets fed up and starts
-spraying IPIs to try and get things moving.
+Ahh, great, many thx.
 
+I checked Linux-next before writing my mail, but didn't sport it there. :-/
 
-Now...  if a driver sets CPUIDLE_FLAG_RCU_IDLE it promises to call
-ct_cpuidle_{enter,exit}() itself. Hence for any driver that does *NOT*
-set that flag, cpuidle_enter_state() calls these functions.
-
-Now, fo PSCI, the DT handler is psci_enter_idle_state(), which uses
-CPU_PM_CPU_IDLE_ENTER_PARAM_RCU(), which per the other email, means that
-it's low_level_idle_enter := psci_cpu_suspend_enter(), *will* call
-ct_cpuidle_{enter,exit}().
-
-Then if we look at psci_cpu_suspend_enter(), it has two cases depending
-on psci_power_state_loses_context(). If it doesn't lose context it does
-ct_cpuidle_enter() right there and proceeds to call
-psci_ops.cpu_suspend() -- whatever that does.
-
-If it does lose state, then it depends on CONFIG_ARM64, on arm64 we do
-not call ct_cpuidle_{enter,exit}() but proceed into cpu_suspend().
-
-We can find that function in arch/arm64/kernel/suspend.c, and if you
-look at it, you'll note it does in fact call ct_cpuidle_{enter,exit}()
-as per promises made.
-
-So AFAICT every path into idle will pass through ct_cpuidle_enter().
-
-
-
+Ciao, Thorsten
