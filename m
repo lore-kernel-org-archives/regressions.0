@@ -1,116 +1,76 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B60641399
-	for <regressions@lists.linux.dev>; Mon, 20 Mar 2023 09:18:30 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1peBep-0004EZ-O8; Mon, 20 Mar 2023 10:18:23 +0100
-Message-ID: <c5383d0e-d33c-d59f-3ee6-4635c1c4d334@leemhuis.info>
-Date: Mon, 20 Mar 2023 10:18:23 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C64581846
+	for <regressions@lists.linux.dev>; Mon, 20 Mar 2023 09:22:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=HzXvmC2F0T5mOMMv6x8KeywsvUERmK/G2sfhdowiBaE=; b=VEdPFF1L3XL5QWODFVRVVr1Nd+
+	pz3zoP9eTAI42unK5OIQjyHYwYY49MjaoWY02CRgVDwdLhpAt4qMGWjBvOqYBebIByZ8MblPF82DW
+	lfVOQ+ltP8NtT6R866hDoq89ADKv8uAEDUStOBDX/0d0wsgcyv2mklroyJfgPJthsGXVEgh9pLwwf
+	rrc1nwT9MHG557hpGjmvVMT0YqXiwchuS77kT4GjLA+B33aVyjWBOM96Vi0x8uzAmQ8NQ+MdkPXo8
+	1kCK7WeJJ7pKcvxgf0dtBx7UoORivD67g6w4e3asVGktsdqLymjSfOUUNUxQTMD0xVkymfQErtw+F
+	genFaJUg==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+	id 1peBiw-003sZz-0s;
+	Mon, 20 Mar 2023 09:22:38 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(Client did not present a certificate)
+	by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 414B1300288;
+	Mon, 20 Mar 2023 10:22:36 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 275B920DD879E; Mon, 20 Mar 2023 10:22:36 +0100 (CET)
+Date: Mon, 20 Mar 2023 10:22:36 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Alexey Klimov <alexey.klimov@linaro.org>
+Cc: draszik@google.com, peter.griffin@linaro.org, willmcvicker@google.com,
+	mingo@kernel.org, ulf.hansson@linaro.org, tony@atomide.com,
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+	axboe@kernel.dk, alim.akhtar@samsung.com,
+	regressions@lists.linux.dev, avri.altman@wdc.com,
+	bvanassche@acm.org, klimova@google.com
+Subject: Re: [REGRESSION] CPUIDLE_FLAG_RCU_IDLE, blk_mq_freeze_queue_wait()
+ and slow-stuck reboots
+Message-ID: <20230320092236.GA2196776@hirez.programming.kicks-ass.net>
+References: <20230314230004.961993-1-alexey.klimov@linaro.org>
+ <20230315111606.GB2006103@hirez.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: [PATCH] media: i2c: imx290: fix conditional function defintions
-Content-Language: en-US, de-DE
-To: Sakari Ailus <sakari.ailus@linux.intel.com>,
- Manivannan Sadhasivam <mani@kernel.org>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
- Alexander Stein <alexander.stein@ew.tq-group.com>,
- Arnd Bergmann <arnd@arndb.de>,
- Dave Stevenson <dave.stevenson@raspberrypi.com>,
- linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Arnd Bergmann <arnd@kernel.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <20230207161316.293923-1-arnd@kernel.org>
- <Y+J+7lsf083k4x80@pendragon.ideasonboard.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-In-Reply-To: <Y+J+7lsf083k4x80@pendragon.ideasonboard.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1679303910;6423c433;
-X-HE-SMSGID: 1peBep-0004EZ-O8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230315111606.GB2006103@hirez.programming.kicks-ass.net>
 
-On 07.02.23 17:40, Laurent Pinchart wrote:
-> On Tue, Feb 07, 2023 at 05:13:12PM +0100, Arnd Bergmann wrote:
->> From: Arnd Bergmann <arnd@arndb.de>
->>
->> The runtime suspend/resume functions are only referenced from the
->> dev_pm_ops, but they use the old SET_RUNTIME_PM_OPS() helper
->> that requires a __maybe_unused annotation to avoid a warning:
->>
->> drivers/media/i2c/imx290.c:1082:12: error: unused function 'imx290_runtime_resume' [-Werror,-Wunused-function]
->> static int imx290_runtime_resume(struct device *dev)
->>            ^
->> drivers/media/i2c/imx290.c:1090:12: error: unused function 'imx290_runtime_suspend' [-Werror,-Wunused-function]
->> static int imx290_runtime_suspend(struct device *dev)
->>            ^
->>
+On Wed, Mar 15, 2023 at 12:16:06PM +0100, Peter Zijlstra wrote:
 
-I might be missing something (if so, please tell me), but to me it looks
- this fix for a build issue in 6.3-rc (which shows up in Guenters weekly
-reports to Linus) didn't make any progress in the past few weeks. Is
-there a reason why? Who actually needs to pick it up and send it towards
-mainline? Manivannan Sadhasivam? Sakari Ailus?
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
-
-#regzbot poke
-
->> Convert this to the new RUNTIME_PM_OPS() helper that so this
->> is not required. To improve this further, also use the pm_ptr()
->> helper that lets the dev_pm_ops get dropped entirely when
->> CONFIG_PM is disabled.
->>
->> A related mistake happened in the of_match_ptr() macro here, which
->> like SET_RUNTIME_PM_OPS() requires the match table to be marked
->> as __maybe_unused, though I could not reproduce building this without
->> CONFIG_OF. Remove the of_match_ptr() here as there is no point in
->> dropping the match table in configurations without CONFIG_OF.
->>
->> Fixes: 02852c01f654 ("media: i2c: imx290: Initialize runtime PM before subdev")
->> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> So ARM has a weird 'rule' in that idle state 0 (wfi) should not have
+> RCU_IDLE set, while others should have.
 > 
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Of the dt_init_idle_driver() users:
 > 
->> ---
->>  drivers/media/i2c/imx290.c | 6 +++---
->>  1 file changed, 3 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/media/i2c/imx290.c b/drivers/media/i2c/imx290.c
->> index 49d6c8bdec41..48ae2e0adf9e 100644
->> --- a/drivers/media/i2c/imx290.c
->> +++ b/drivers/media/i2c/imx290.c
->> @@ -1098,7 +1098,7 @@ static int imx290_runtime_suspend(struct device *dev)
->>  }
->>  
->>  static const struct dev_pm_ops imx290_pm_ops = {
->> -	SET_RUNTIME_PM_OPS(imx290_runtime_suspend, imx290_runtime_resume, NULL)
->> +	RUNTIME_PM_OPS(imx290_runtime_suspend, imx290_runtime_resume, NULL)
->>  };
->>  
->>  /* ----------------------------------------------------------------------------
->> @@ -1362,8 +1362,8 @@ static struct i2c_driver imx290_i2c_driver = {
->>  	.remove = imx290_remove,
->>  	.driver = {
->>  		.name  = "imx290",
->> -		.pm = &imx290_pm_ops,
->> -		.of_match_table = of_match_ptr(imx290_of_match),
->> +		.pm = pm_ptr(&imx290_pm_ops),
->> +		.of_match_table = imx290_of_match,
->>  	},
->>  };
->>  
+>  - cpuidle-arm: arm_enter_idle_state()
+>  - cpuidle-big_little: bl_enter_powerdown() does ct_cpuidle_{enter,exit}()
+>  - cpuidle-psci: psci_enter_idle_state() uses CPU_PM_CPU_IDLE_ENTER_PARAM_RCU()
+>  - cpuidle-qcom-spm: spm_enter_idle_state() uses CPU_PM_CPU_IDLE_ENTER_PARAM()
+>  - cpuidle-riscv-sbi: sbi_cpuidle_enter_state() uses CPU_PM_CPU_IDLE_ENTER_*_PARAM()
 > 
+> All of them start on index 1 and hence should have RCU_IDLE set, but at
+> least the arm, qcom-spm and riscv-sbi don't actually appear to abide by
+> the rules.
+> 
+> Fixing that gives me the below; does that help?
+
+FWIW..  I got the meaning of CPU_PM_CPU_IDLE_*'s _RCU thing inverted
+last week; they're actually ok as is.
+
+Specifically _RCU wants the @low_level_idle_enter to do
+ct_cpuidle_{enter,exit}(). And since the ones I audited didn't in fact
+do that, they should not be using the _RCU version.
