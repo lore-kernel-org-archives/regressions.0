@@ -1,44 +1,51 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C64581846
-	for <regressions@lists.linux.dev>; Mon, 20 Mar 2023 09:22:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=HzXvmC2F0T5mOMMv6x8KeywsvUERmK/G2sfhdowiBaE=; b=VEdPFF1L3XL5QWODFVRVVr1Nd+
-	pz3zoP9eTAI42unK5OIQjyHYwYY49MjaoWY02CRgVDwdLhpAt4qMGWjBvOqYBebIByZ8MblPF82DW
-	lfVOQ+ltP8NtT6R866hDoq89ADKv8uAEDUStOBDX/0d0wsgcyv2mklroyJfgPJthsGXVEgh9pLwwf
-	rrc1nwT9MHG557hpGjmvVMT0YqXiwchuS77kT4GjLA+B33aVyjWBOM96Vi0x8uzAmQ8NQ+MdkPXo8
-	1kCK7WeJJ7pKcvxgf0dtBx7UoORivD67g6w4e3asVGktsdqLymjSfOUUNUxQTMD0xVkymfQErtw+F
-	genFaJUg==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-	id 1peBiw-003sZz-0s;
-	Mon, 20 Mar 2023 09:22:38 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
-	(Client did not present a certificate)
-	by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 414B1300288;
-	Mon, 20 Mar 2023 10:22:36 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 275B920DD879E; Mon, 20 Mar 2023 10:22:36 +0100 (CET)
-Date: Mon, 20 Mar 2023 10:22:36 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Alexey Klimov <alexey.klimov@linaro.org>
-Cc: draszik@google.com, peter.griffin@linaro.org, willmcvicker@google.com,
-	mingo@kernel.org, ulf.hansson@linaro.org, tony@atomide.com,
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-	axboe@kernel.dk, alim.akhtar@samsung.com,
-	regressions@lists.linux.dev, avri.altman@wdc.com,
-	bvanassche@acm.org, klimova@google.com
-Subject: Re: [REGRESSION] CPUIDLE_FLAG_RCU_IDLE, blk_mq_freeze_queue_wait()
- and slow-stuck reboots
-Message-ID: <20230320092236.GA2196776@hirez.programming.kicks-ass.net>
-References: <20230314230004.961993-1-alexey.klimov@linaro.org>
- <20230315111606.GB2006103@hirez.programming.kicks-ass.net>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A141139A
+	for <regressions@lists.linux.dev>; Mon, 20 Mar 2023 09:32:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1679304740; x=1710840740;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=bO+5pP+LnkUbJcOR9Lz3DMOji7iPTXgGrtDs+N4xVKo=;
+  b=DE3i+InrIqhvn+CHMoONqF2/rxe1C/ToK1kXHp9huvEHaV4SlzJv81yH
+   JI8YhX/7ZttaNharXjwJAHsVipoyflXHLFQfLyUo3BInJ8UOD71UGDvE5
+   BquUcJpkbZMm8r9gRDJQDCnzHIvparr4Fs7l/z0SxzvKOEKqv9itoOqCZ
+   QHlWp8Yv5u3pu+/5IG56Ildi0xSECe0xISV9VPpXDWw5cm/NnEcdGTAMM
+   QmE1D3is5+fbpARHK9aGEUrKOm3c4EUdngVG+JthuSxU7OGzwDfy0WcX/
+   DXpkJLUsdxgcpQCkGGgVsaomOrdfwI7VWPmKuNUAvKpd8h34faocZCIHu
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10654"; a="340160437"
+X-IronPort-AV: E=Sophos;i="5.98,274,1673942400"; 
+   d="scan'208";a="340160437"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2023 02:32:20 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10654"; a="713516842"
+X-IronPort-AV: E=Sophos;i="5.98,274,1673942400"; 
+   d="scan'208";a="713516842"
+Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2023 02:32:16 -0700
+Received: from kekkonen.localdomain (localhost [IPv6:::1])
+	by kekkonen.fi.intel.com (Postfix) with SMTP id 14343122400;
+	Mon, 20 Mar 2023 11:32:14 +0200 (EET)
+Date: Mon, 20 Mar 2023 11:32:14 +0200
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Manivannan Sadhasivam <mani@kernel.org>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Alexander Stein <alexander.stein@ew.tq-group.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Dave Stevenson <dave.stevenson@raspberrypi.com>,
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Arnd Bergmann <arnd@kernel.org>
+Subject: Re: [PATCH] media: i2c: imx290: fix conditional function defintions
+Message-ID: <ZBgoHvg3kxsVoSzg@kekkonen.localdomain>
+References: <20230207161316.293923-1-arnd@kernel.org>
+ <Y+J+7lsf083k4x80@pendragon.ideasonboard.com>
+ <c5383d0e-d33c-d59f-3ee6-4635c1c4d334@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -47,30 +54,37 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230315111606.GB2006103@hirez.programming.kicks-ass.net>
+In-Reply-To: <c5383d0e-d33c-d59f-3ee6-4635c1c4d334@leemhuis.info>
 
-On Wed, Mar 15, 2023 at 12:16:06PM +0100, Peter Zijlstra wrote:
+Hello,
 
-> So ARM has a weird 'rule' in that idle state 0 (wfi) should not have
-> RCU_IDLE set, while others should have.
+On Mon, Mar 20, 2023 at 10:18:23AM +0100, Linux regression tracking (Thorsten Leemhuis) wrote:
+> On 07.02.23 17:40, Laurent Pinchart wrote:
+> > On Tue, Feb 07, 2023 at 05:13:12PM +0100, Arnd Bergmann wrote:
+> >> From: Arnd Bergmann <arnd@arndb.de>
+> >>
+> >> The runtime suspend/resume functions are only referenced from the
+> >> dev_pm_ops, but they use the old SET_RUNTIME_PM_OPS() helper
+> >> that requires a __maybe_unused annotation to avoid a warning:
+> >>
+> >> drivers/media/i2c/imx290.c:1082:12: error: unused function 'imx290_runtime_resume' [-Werror,-Wunused-function]
+> >> static int imx290_runtime_resume(struct device *dev)
+> >>            ^
+> >> drivers/media/i2c/imx290.c:1090:12: error: unused function 'imx290_runtime_suspend' [-Werror,-Wunused-function]
+> >> static int imx290_runtime_suspend(struct device *dev)
+> >>            ^
+> >>
 > 
-> Of the dt_init_idle_driver() users:
-> 
->  - cpuidle-arm: arm_enter_idle_state()
->  - cpuidle-big_little: bl_enter_powerdown() does ct_cpuidle_{enter,exit}()
->  - cpuidle-psci: psci_enter_idle_state() uses CPU_PM_CPU_IDLE_ENTER_PARAM_RCU()
->  - cpuidle-qcom-spm: spm_enter_idle_state() uses CPU_PM_CPU_IDLE_ENTER_PARAM()
->  - cpuidle-riscv-sbi: sbi_cpuidle_enter_state() uses CPU_PM_CPU_IDLE_ENTER_*_PARAM()
-> 
-> All of them start on index 1 and hence should have RCU_IDLE set, but at
-> least the arm, qcom-spm and riscv-sbi don't actually appear to abide by
-> the rules.
-> 
-> Fixing that gives me the below; does that help?
+> I might be missing something (if so, please tell me), but to me it looks
+>  this fix for a build issue in 6.3-rc (which shows up in Guenters weekly
+> reports to Linus) didn't make any progress in the past few weeks. Is
+> there a reason why? Who actually needs to pick it up and send it towards
+> mainline? Manivannan Sadhasivam? Sakari Ailus?
 
-FWIW..  I got the meaning of CPU_PM_CPU_IDLE_*'s _RCU thing inverted
-last week; they're actually ok as is.
+Mauro has recently pulled my PR including this and I understand it's in
+Mauro's tree now.
 
-Specifically _RCU wants the @low_level_idle_enter to do
-ct_cpuidle_{enter,exit}(). And since the ones I audited didn't in fact
-do that, they should not be using the _RCU version.
+-- 
+Kind regards,
+
+Sakari Ailus
