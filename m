@@ -1,162 +1,82 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23F711C3B
-	for <regressions@lists.linux.dev>; Mon, 20 Mar 2023 16:05:07 +0000 (UTC)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4C054AD7;
-	Mon, 20 Mar 2023 09:05:51 -0700 (PDT)
-Received: from FVFF77S0Q05N.cambridge.arm.com (FVFF77S0Q05N.cambridge.arm.com [10.1.35.35])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4E0A93F67D;
-	Mon, 20 Mar 2023 09:05:05 -0700 (PDT)
-Date: Mon, 20 Mar 2023 16:04:55 +0000
-From: Mark Rutland <mark.rutland@arm.com>
-To: Alexey Klimov <alexey.klimov@linaro.org>
-Cc: peterz@infradead.org, draszik@google.com, peter.griffin@linaro.org,
-	willmcvicker@google.com, mingo@kernel.org, ulf.hansson@linaro.org,
-	tony@atomide.com, linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org, axboe@kernel.dk,
-	alim.akhtar@samsung.com, regressions@lists.linux.dev,
-	avri.altman@wdc.com, bvanassche@acm.org, klimova@google.com
-Subject: Re: [REGRESSION] CPUIDLE_FLAG_RCU_IDLE, blk_mq_freeze_queue_wait()
- and slow-stuck reboots
-Message-ID: <ZBiEEyDaxq9oSXJk@FVFF77S0Q05N.cambridge.arm.com>
-References: <20230314230004.961993-1-alexey.klimov@linaro.org>
- <ZBhlL4tqSUi/c3qk@FVFF77S0Q05N.cambridge.arm.com>
+Received: from sender11-op-o11.zoho.eu (sender11-op-o11.zoho.eu [31.186.226.225])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD38F7C
+	for <regressions@lists.linux.dev>; Mon, 20 Mar 2023 17:15:49 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; t=1679332539; cv=none; 
+	d=zohomail.eu; s=zohoarc; 
+	b=K76DknHscbBDTU0sSSyTfCJ7L7AnY22/d6D+2Y0FwRBH6lLhVDwK3AAVRn/c9UMbAhjV+QJjj6+BHK85nFlkZkMDomwot0/Ojv/KP/8u4X/MykpfWGSXJWZuTpXEXuzNFoGDN6TS7IX7K0wKAF2m+H6Td8XMP0XpoAAOYw9/rUM=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
+	t=1679332539; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+	bh=kij+Nu6TPAtImDW5velvx+sq066vqEQd8TLn6gSAZs4=; 
+	b=GTIe+oP5MxVon2FuTT85geq3m5pEzEE9uQRdEwagk7wt5PsjOcYgv7ErdYHd4FQGWTvBWAPJGkE+b7k3uUtR7hHJv6TFjpsJQ8riaqQb0vUB6EyTf6Pq8acwR4TBKnO4W6W3wNXebWDkoCjmFG1nUiaWGKFSRnjoOHnrt19mqiE=
+ARC-Authentication-Results: i=1; mx.zohomail.eu;
+	spf=pass  smtp.mailfrom=jes@trained-monkey.org;
+	dmarc=pass header.from=<jes@trained-monkey.org>
+Received: from [192.168.99.50] (pool-98-113-67-206.nycmny.fios.verizon.net [98.113.67.206]) by mx.zoho.eu
+	with SMTPS id 1679332537517401.9625151952937; Mon, 20 Mar 2023 18:15:37 +0100 (CET)
+Message-ID: <c36ee145-c258-5a02-f268-30c145996759@trained-monkey.org>
+Date: Mon, 20 Mar 2023 13:15:35 -0400
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZBhlL4tqSUi/c3qk@FVFF77S0Q05N.cambridge.arm.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+Subject: Re: [PATCH - mdadm] mdopen: always try create_named_array()
+Content-Language: en-US
+To: NeilBrown <neilb@suse.de>
+Cc: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>,
+ Song Liu <song@kernel.org>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ linux-raid <linux-raid@vger.kernel.org>, LKML
+ <linux-kernel@vger.kernel.org>, Nikolay Kichukov <hijacker@oldum.net>
+References: <167875238571.8008.9808655454439667586@noble.neil.brown.name>
+ <318ff554-0694-64e1-72bd-d941a775a16f@trained-monkey.org>
+ <167926378352.8008.3450187952660050637@noble.neil.brown.name>
+From: Jes Sorensen <jes@trained-monkey.org>
+In-Reply-To: <167926378352.8008.3450187952660050637@noble.neil.brown.name>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ZohoMailClient: External
 
-On Mon, Mar 20, 2023 at 01:52:47PM +0000, Mark Rutland wrote:
-> On Tue, Mar 14, 2023 at 11:00:04PM +0000, Alexey Klimov wrote:
-> > #regzbot introduced: 0c5ffc3d7b15
-> > #regzbot title: CPUIDLE_FLAG_RCU_IDLE, blk_mq_freeze_queue_wait() and slow-stuck reboots
-> > 
-> > The upstream changes are being merged into android-mainline repo and at some
-> > point we started to observe kernel panics on reboot or long reboot times.
+On 3/19/23 18:09, NeilBrown wrote:
+> On Mon, 20 Mar 2023, Jes Sorensen wrote:
+>> On 3/13/23 20:06, NeilBrown wrote:
+>>>
+>>> mdopen() will use create_named_array() to ask the kernel to create the
+>>> given md array, but only if it is given a number or name.
+>>> If it is NOT given a name and is required to choose one itself using
+>>> find_free_devnm() it does NOT use create_named_array().
+>>>
+>>> On kernels with CONFIG_BLOCK_LEGACY_AUTOLOAD not set, this can result in
+>>> failure to assemble an array.  This can particularly seen when the
+>>> "name" of the array begins with a host name different to the name of the
+>>> host running the command.
+>>>
+>>> So add the missing call to create_named_array().
+>>>
+>>> Link: https://bugzilla.kernel.org/show_bug.cgi?id=217074
+>>> Signed-off-by: NeilBrown <neilb@suse.de>
+>>
+>> Applied!
 > 
-> Where can I find the android-mainline repo, and which specific branch/commit
-> from that repo is being merged in?
+> Thanks.
+> 
+> Do you have plans for releasing 4.3?  I'd like this patch to be in a
+> numbered release for at least a few months before we change the kernel
+> Kconfig to allow md to be built without CONFIG_BLOCK_LEGACY_AUTOLOAD.
 
-I assume that was the android-mainline branch in:
+No immediate plans, but no reason why we shouldn't do it. I think
+Mariusz has some pending changes he wants to get in as well, like the
+error number stuff.
 
-  https://android.googlesource.com/kernel/common/
-
-... and I had a go with commit:
-
-  8338670fd5bdf8d7 ("Merge "Merge 36289a03bcd3 ("Merge tag 'v6.3-p1' of git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6") into android-mainline" into android-mainline")
-
-... as that was the commit immediately before your local revert:
-
-  a32cec8e3f2253bc ("ANDROID: Revert "cpuidle, dt: Push RCU-idle into driver")
-
-Testing on Juno R2 with defconfig + PROVE_LOCKING=y + DEBUG_LOCKDEP=y, I cannot
-reproduce the reboot issue; everything seems to work just fine.
-
-Can you say which config you're using?
-
-Just to check: are you using a pristine version of that tree, or do you have
-any vendor hooks present? I note that there are special hooks added to the
-cpuidle and PSCI code, and I can imagine those might expect the old behaviour
-w.r.t. RCU and idle, so ruling those out would help.
+So lets make this a call for submitting changes for mdadm that are
+needed for the next release.
 
 Thanks,
-Mark.
+Jes
 
-> 
-> > The merge commit is 1f2d9ffc7a5f Merge tag 'sched-core-2023-02-20' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.
-> > Before, the reboot usually took significantly less than 15 seconds and after merge the reboot time fall in the range of 60-100 seconds.
-> > At some point watchdog-like functionality or softdog start to worry about the system stuck somewhere nd panic the system.
-> > 
-> > The delay is found to be in device's ->shutdown() methods called from kernel_restart():
-> > void kernel_restart_prepare(char *cmd)
-> > {
-> > 	blocking_notifier_call_chain(&reboot_notifier_list, SYS_RESTART, cmd);
-> > 	system_state = SYSTEM_RESTART;
-> > 	usermodehelper_disable();
-> > 	device_shutdown();	<---- here
-> > }
-> > 
-> > The driver in question is ufshcd and its ufshcd_wl_shutdown() shutdown method. It often blocks on scsi_device_quiesce() and upon manual checking it seems that it sleeps on blk_mq_freeze_queue_wait()/wait_event() in blk_freeze_queue():
-> > 
-> > scsi_device_quiesce(struct scsi_device *sdev)
-> > {
-> > 	...
-> > 	blk_mq_freeze_queue(q);
-> > 	...
-> > }
-> > 	||
-> > 	V
-> > void blk_freeze_queue(struct request_queue *q)
-> > {
-> > 	/*
-> > 	 * In the !blk_mq case we are only calling this to kill the
-> > 	 * q_usage_counter, otherwise this increases the freeze depth
-> > 	 * and waits for it to return to zero.  For this reason there is
-> > 	 * no blk_unfreeze_queue(), and blk_freeze_queue() is not
-> > 	 * exported to drivers as the only user for unfreeze is blk_mq.
-> > 	 */
-> > 	blk_freeze_queue_start(q);
-> > 	blk_mq_freeze_queue_wait(q);	<--- sleeps on wait_event() here
-> > }
-> > 
-> > Or in other words:
-> > 
-> > [   34.785050][    C4] sysrq: Show Blocked State
-> > [   34.785132][    C4] task:init            state:D stack:9680  pid:1     ppid:0      flags:0x04000008
-> > [   34.785301][    C4] Call trace:
-> > [   34.785360][    C4]  __switch_to+0x180/0x308
-> > [   34.785452][    C4]  __schedule+0x61c/0x9f0
-> > [   34.785530][    C4]  schedule+0x84/0xf4
-> > [   34.785602][    C4]  blk_mq_freeze_queue_wait+0x78/0xbc
-> > [   34.785707][    C4]  blk_freeze_queue+0x74/0x8c
-> > [   34.785850][    C4]  blk_mq_freeze_queue+0x18/0x2c
-> > [   34.786033][    C4]  scsi_device_quiesce+0x54/0xec
-> > [   34.786216][    C4]  ufshcd_wl_shutdown+0x98/0xc0
-> > [   34.786396][    C4]  device_shutdown+0x1a8/0x264
-> > [   34.786572][    C4]  kernel_restart+0x48/0x11c
-> > [   34.786742][    C4]  __arm64_sys_reboot+0x1a8/0x27c
-> > [   34.786927][    C4]  invoke_syscall+0x60/0x130
-> > [   34.787096][    C4]  el0_svc_common+0xbc/0x100
-> > [   34.787266][    C4]  do_el0_svc+0x38/0xc4
-> > [   34.787420][    C4]  el0_svc+0x34/0xc4
-> > [   34.787563][    C4]  el0t_64_sync_handler+0x8c/0xfc
-> > [   34.787749][    C4]  el0t_64_sync+0x1a4/0x1a8
-> > 
-> > 
-> > However, bisect pointed to 0c5ffc3d7b15 cpuidle, dt: Push RCU-idle into driver
-> > 
-> > ->BAD 924aed1646bf cpuidle, cpu_pm: Remove RCU fiddling from cpu_pm_{enter,exit}()
-> > ->BAD a01353cf1896 cpuidle: Fix ct_idle_*() usage
-> > ->BAD (doesn't compile, needs one missing header file) 0c5ffc3d7b15 cpuidle, dt: Push RCU-idle into driver
-> > ->good c3d42418dca5 cpuidle, OMAP4: Push RCU-idle into driver
-> > 
-> > Looks like adding CPUIDLE_FLAG_RCU_IDLE flag to idle driver caused this behaviour.
-> > The minimal change that is required for this system to avoid the regression
-> > would be one liner that removes the flag (below).
-> > 
-> > But if it is a real regression, then other idle drivers if used will likely
-> > cause this regression too withe same ufshcd driver. There is also a suspicion
-> > that CPUIDLE_FLAG_RCU_IDLE just revealed or uncovered some other problem.
-> > 
-> > Any thoughts on this? Some missing __cpuidle or noinstr annotations?
-> 
-> As Peter has suggested in another reply, this might not be an *upstream*
-> regression, but rather an interaction with those out-of-tree patches. If you
-> can provide a pointer to the branch above that, it'll make it much easier to
-> figure out what's going on.
-> 
-> The code in mainline is unfortunately convoluted, but it doesn't look to be
-> obviously wrong.
-> 
-> FWIW, I've just tried v6.3-rc3 on Juno R2 in a few configurations (ACPI, DT,
-> with PROVE_LOCKING=y and DEBUG_LOCKDEP=y, with PSCI_CHECKER=y) and I'm not
-> seeing similar issues. So either I'm not tickling the same code path, or
-> something else is involved.
-> 
-> Thanks,
-> Mark.
+
