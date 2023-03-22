@@ -1,70 +1,118 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90D526FAA
-	for <regressions@lists.linux.dev>; Wed, 22 Mar 2023 13:59:45 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pez07-0003Q5-2u; Wed, 22 Mar 2023 14:59:39 +0100
-Message-ID: <d1c9a828-bb20-bfa8-fb37-bbc3f57b4cfd@leemhuis.info>
-Date: Wed, 22 Mar 2023 14:59:38 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E6638C01
+	for <regressions@lists.linux.dev>; Wed, 22 Mar 2023 15:17:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC84EC433D2;
+	Wed, 22 Mar 2023 15:17:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1679498238;
+	bh=x14uXdcyN6NwgG+IiJ4mbAithUacI0jt05p67YoWCxo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=vHu19ck37uJ0Noh8bpkiMcCiwaHGbeUk3AoCX1D9/uQoq+m7Jeuc8mcRjW+sjs9Lk
+	 fbtSCGNHoVaCLkM+gy9b113QC3L9P3tPRFwAwXVYqne0L6m1WsStAc3vF68MVMmioy
+	 DFgwckFmD9AIGERIB82AVK9Ky5AeChx0LNAwp/CFcXL7eda2sw3GF0mPer4I4lyLnp
+	 gfkoc0/szZ4DO1Ledjhc2NLZDfgsL8NnB9ScltQ4AeiF9yhWDzy4Ovu7qZvWWgAy/5
+	 u3d8cxwwZoaBPfWmkClx6UKw4Dc/iBmHk4ZwkcWBzuibER73j2ug9b6v5sdS8H50su
+	 L4dbHUHyU98Zg==
+Date: Wed, 22 Mar 2023 15:17:13 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Andrew Jones <ajones@ventanamicro.com>
+Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>,
+	Jisheng Zhang <jszhang@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <anup@brainfault.org>,
+	Atish Patra <atishp@atishpatra.org>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org, kvm-riscv@lists.infradead.org,
+	regressions@leemhuis.info, regressions@lists.linux.dev
+Subject: Re: [PATCH] riscv: require alternatives framework when selecting FPU
+ support
+Message-ID: <1884bd96-2783-4556-bc57-8b733758baff@spud>
+References: <ZBruFRwt3rUVngPu@zx2c4.com>
+ <20230322120907.2968494-1-Jason@zx2c4.com>
+ <20230322124631.7p67thzeblrawsqj@orel>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Subject: Re: iwlwifi frequent drops between v6.2-rc3 and v6.3-rc1
-Content-Language: en-US, de-DE
-To: Vegard Nossum <vegard.nossum@oracle.com>,
- Alexander Wetzel <alexander@wetzel-home.de>, Thomas Mann
- <rauchwolke@gmx.net>, linux-wireless@vger.kernel.org
-Cc: Johannes Berg <johannes.berg@intel.com>, regressions@lists.linux.dev
-References: <9d11ed29-1114-055d-5b26-0899a5fc0d7f@oracle.com>
-From: "Linux regression tracking #adding (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <9d11ed29-1114-055d-5b26-0899a5fc0d7f@oracle.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1679493585;98c6c797;
-X-HE-SMSGID: 1pez07-0003Q5-2u
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="B7v5JtRVPQGXVgO3"
+Content-Disposition: inline
+In-Reply-To: <20230322124631.7p67thzeblrawsqj@orel>
 
-[TLDR: I'm adding this report to the list of tracked Linux kernel
-regressions; the text you find below is based on a few templates
-paragraphs you might have encountered already in similar form.
-See link in footer if these mails annoy you.]
 
-On 17.03.23 09:53, Vegard Nossum wrote:
-> 
-> Somewhere between e8f60cd7db24 (v6.2-rc3) and 2eb29d59ddf0 (v6.3-rc1) my
-> wifi started dropping a lot. I'm using iwlwifi and I've checked the old
-> logs that the firmware hasn't changed:
+--B7v5JtRVPQGXVgO3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks for the report. Due to Alexander's reply I hesitated first to add
-this regression to the tracking, as I wondered that this might solve
-itself quickly. But well, nothing happened since then, so I guess I
-better add it to ensure the issue doesn't fall through the cracks:
+On Wed, Mar 22, 2023 at 01:46:31PM +0100, Andrew Jones wrote:
+> On Wed, Mar 22, 2023 at 01:09:07PM +0100, Jason A. Donenfeld wrote:
+> > When moving switch_to's has_fpu() over to using riscv_has_extension_
+> > likely() rather than static branchs, the FPU code gained a dependency on
+> > the alternatives framework. If CONFIG_RISCV_ALTERNATIVE isn't selected
+> > when CONFIG_FPU is, then has_fpu() returns false, and switch_to does not
+> > work as intended. So select CONFIG_RISCV_ALTERNATIVE when CONFIG_FPU is
+> > selected.
+> >=20
+> > Fixes: 702e64550b12 ("riscv: fpu: switch has_fpu() to riscv_has_extensi=
+on_likely()")
+> > Link: https://lore.kernel.org/all/ZBruFRwt3rUVngPu@zx2c4.com/
+> > Cc: Jisheng Zhang <jszhang@kernel.org>
+> > Cc: Andrew Jones <ajones@ventanamicro.com>
+> > Cc: Heiko Stuebner <heiko@sntech.de>
+> > Cc: Conor Dooley <conor.dooley@microchip.com>
 
-#regzbot ^introduced e8f60cd7db24..2eb29d59ddf0
-#regzbot title iwlwifi: frequent drops between v6.2-rc3 and v6.3-rc1
-#regzbot ignore-activity
+Thanks for fixing it!
+Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
 
-This isn't a regression? This issue or a fix for it are already
-discussed somewhere else? It was fixed already? You want to clarify when
-the regression started to happen? Or point out I got the title or
-something else totally wrong? Then just reply and tell me -- ideally
-while also telling regzbot about it, as explained by the page listed in
-the footer of this mail.
+> > Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+> > ---
+> >  arch/riscv/Kconfig | 1 +
+> >  1 file changed, 1 insertion(+)
+> >=20
+> > diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+> > index c5e42cc37604..0f59350c699d 100644
+> > --- a/arch/riscv/Kconfig
+> > +++ b/arch/riscv/Kconfig
+> > @@ -467,6 +467,7 @@ config TOOLCHAIN_HAS_ZIHINTPAUSE
+> >  config FPU
+> >  	bool "FPU support"
+> >  	default y
+> > +	select RISCV_ALTERNATIVE
+> >  	help
+> >  	  Say N here if you want to disable all floating-point related proced=
+ure
+> >  	  in the kernel.
+> > --=20
+> > 2.40.0
+> >
+>=20
+> Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
+>=20
+> I took a look to see if we missed anything else and see that we should
+> do the same patch for KVM. I'll send one.
+>=20
+> (It's tempting to just select RISCV_ALTERNATIVE from RISCV, but maybe we
+>  can defer that wedding a bit longer.)
 
-Developers: When fixing the issue, remember to add 'Link:' tags pointing
-to the report (the parent of this mail). See page linked in footer for
-details.
+At that point, the config option should just go away entirely, no?
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+--B7v5JtRVPQGXVgO3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZBsb2wAKCRB4tDGHoIJi
+0m+3AQCe8JDweaSMp3gkW9PkqtzV9SdMdFtfRNgo0IR/sPVzowD/brjdaYh5/LCw
+MO5YGP9cVuRb+cGX+RlJV2Skhb0lHgA=
+=pPeQ
+-----END PGP SIGNATURE-----
+
+--B7v5JtRVPQGXVgO3--
