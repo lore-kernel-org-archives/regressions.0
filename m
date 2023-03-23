@@ -1,68 +1,63 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+Received: from l2mail1.panix.com (l2mail1.panix.com [166.84.1.75])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05E19A950
-	for <regressions@lists.linux.dev>; Thu, 23 Mar 2023 17:24:30 +0000 (UTC)
-Received: from localhost (unknown [IPv6:2601:281:8300:73::5f6])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id 1331B378;
-	Thu, 23 Mar 2023 17:24:24 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 1331B378
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1679592264; bh=//3s1kNIJ9QPM6gGRiXVa2F3NjAwTCsMDusmBfTtjFE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=SFTbwfM0BbTQG2drexoM1kMwQ+S+ZKd03rJtU4NE0/XZOzcqs2uAjhVo+MLFYB/KQ
-	 aEy9jPLFZHn5T6CFcbpPayks0UZV8J0jaajG/+vmd0YjdGcBKEr/mHwMI/aYRQstZ0
-	 c5yMGGYu0B0SqF+si6WrK/rJKFy0DGyj4SQIF/yXGl4rGpWlBEh5AHwXn2g0kAGj6S
-	 8vlDGldRZop4zJnofiuMmH/DW8vGszwir+KGp40dMAXbVjUFtw8ab5vWzZMBfobXBh
-	 doIlJE4IAAE9HO7Pc/VRaeWpCrlWLG5jUelA8JsFmTOTJ16WYefDIffv1xFqbHWJnm
-	 M8tVgHBj4homg==
-From: Jonathan Corbet <corbet@lwn.net>
-To: Thorsten Leemhuis <linux@leemhuis.info>
-Cc: Randy Dunlap <rdunlap@infradead.org>, Lukas Bulwahn
- <lukas.bulwahn@gmail.com>, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-Subject: Re: [PATCH v3] docs: describe how to quickly build a trimmed kernel
-In-Reply-To: <165bd284-580d-df03-ab04-f5214b1e6be4@leemhuis.info>
-References: <1a788a8e7ba8a2063df08668f565efa832016032.1678021408.git.linux@leemhuis.info>
- <87a60frxk0.fsf@meer.lwn.net>
- <d233a796-1cb8-a9b3-5a50-043dd2f98b3e@leemhuis.info>
- <87edpomtzn.fsf@meer.lwn.net>
- <165bd284-580d-df03-ab04-f5214b1e6be4@leemhuis.info>
-Date: Thu, 23 Mar 2023 11:24:23 -0600
-Message-ID: <87jzz7creg.fsf@meer.lwn.net>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26B4BA950
+	for <regressions@lists.linux.dev>; Thu, 23 Mar 2023 17:35:50 +0000 (UTC)
+Received: from mailbackend.panix.com (mailbackend.panix.com [166.84.1.89])
+	by l2mail1.panix.com (Postfix) with ESMTPS id 4PjBtn20HDzDR1
+	for <regressions@lists.linux.dev>; Thu, 23 Mar 2023 13:20:33 -0400 (EDT)
+Received: from mail.panix.com (localhost [127.0.0.1])
+	by mailbackend.panix.com (Postfix) with ESMTPA id 4PjBtX5RF7z467s;
+	Thu, 23 Mar 2023 13:20:20 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=panix.com; s=panix;
+	t=1679592021; bh=iIx7NcSq66PJ3KmXWTmH1eA6nDrxBVxiXpoKzbS8Fx0=;
+	h=In-Reply-To:References:Date:Subject:From:To:Cc;
+	b=BJa/36btjyCUjz9zZxH1/vj4A1ZplybWRm76YC8sQ2ciJ2S2kax6eDT4nWqdc6bP8
+	 5ActKHvnIkCvntIAx9aXBRRQeQ4wR0jWL93T89yGtb4jNi2gBtVsPRi5TOFpSyPaUw
+	 qFhFmnbQAbwZbdQ/dNOEM75xIqwoyeIeOu0kUje8=
+X-Panix-Received: from 166.84.1.2
+        (SquirrelMail authenticated user pa@panix.com)
+        by mail.panix.com with HTTP;
+        Thu, 23 Mar 2023 13:20:20 -0400
+Message-ID: <303883d55a6e3926918293878a173e50.squirrel@mail.panix.com>
+In-Reply-To: <20230323131646.xp3m2qvb7wp2wsqb@pengutronix.de>
+References: <9f6cba7a8a57e5a687c934e8e406e28c.squirrel@mail.panix.com>
+    <20230307093308.m5enhuegm3r4qwvo@pengutronix.de>
+    <220898e2276e4cae2572eb8f006f3a7b.squirrel@mail.panix.com>
+    <20230307161005.6m6fpi3oxa3jn2wg@pengutronix.de>
+    <6d97df76de719871c90fb59726f2d6b0.squirrel@mail.panix.com>
+    <47a90870-8a71-a28f-bd8a-032a69cda596@leemhuis.info>
+    <20230323131646.xp3m2qvb7wp2wsqb@pengutronix.de>
+Date: Thu, 23 Mar 2023 13:20:20 -0400
+Subject: Re: [Regression] acpi: laptop panics early in boot
+From: "Pierre Asselin" <pa@panix.com>
+To: =?iso-8859-1?Q?=22Uwe_Kleine-K=C3=B6nig=22?= <u.kleine-koenig@pengutronix.de>
+Cc: "Linux regressions mailing list" <regressions@lists.linux.dev>,
+ "Pierre Asselin" <pa@panix.com>,
+ linux-acpi@vger.kernel.org,
+ "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+User-Agent: SquirrelMail/1.4.23-p1
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain;charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+X-Priority: 3 (Normal)
+Importance: Normal
 
-Thorsten Leemhuis <linux@leemhuis.info> writes:
+> On Thu, Mar 23, 2023 at 01:31:37PM +0100, Linux regression tracking
+> (Thorsten Leemhuis) wrote:
+>
+> [snip]
+>
+> I didn't create a proper patch because I thought someone might want to
+> do a deeper dive and check the logging. If that doesn't happen, I can
+> followup with a patch.
+>
 
-> I currently can't really see the need for another book/top-level
-> directory and to be honest it's by far my least favorite solution among
-> the options on the table.
+I will test any patch anyone cares to throw at me.
+--PA
 
-Well, it was just an idea that crossed my mind as I was thinking about
-this stuff...it doesn't appear to have inspired a lot of enthusiasm.  So
-never mind that for now, I guess...I reserve the right to come back to
-it in the future once we're getting overwhelmed by these things :)
-
-> I'm taken back and forth between the other two options (e.g. put the
-> text in Documentation/admin-guide/ or
-> Documentation/admin-guide/tutorials/). Maybe I prefer the latter a
-> little bit more.
-
-Let's just put it in admin-guide, I guess, though the fit feels a bit
-awkward.  If we get more tutorials, we can make a separate section in
-index.html, I don't think we need another subdirectory there at this
-point.
-
-Did you have further tweaks, or should I take v3?
-
-Thanks,
-
-jon
