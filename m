@@ -1,159 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B29E2D2F1
-	for <regressions@lists.linux.dev>; Thu, 23 Mar 2023 22:20:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CD80C4339B;
-	Thu, 23 Mar 2023 22:19:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1679610000;
-	bh=EGro5R7FQWiMxlAAvFpkvWnKYj/UgWU6UGe7JmSDC+c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=D5fR7X4NGOeqePlms9r2wzI1F4U3DZhoilJCcWwgejrXBMbL4ZWwlk0iU7725Oyel
-	 Giyy59T2uqCMiI787vu3EfInUVmloOQcK2rackjlpDlzMaMQjyZMOFbKEZhtpuMgZi
-	 Ek4MoJCm9EI9zIBXo4H43zrHSBQ4LQhwGDqh5ZgkoR+t/AQqb+iVGr4HecAMUlOHdp
-	 lObO0xL69GahU6OqTx/YiOxvUV+uPh6xjzSlosVlITY03K+riOXoSeKrkSX4su0GqE
-	 o6oe1yfTEG47hNio434LDV/sH1HZoNaBcYW6nYWKWtDoCTjb9r6RNa4MtLVjFngEEH
-	 SJFeGt9P2Bh4w==
-Date: Thu, 23 Mar 2023 22:19:54 +0000
-From: Conor Dooley <conor@kernel.org>
-To: "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc: Conor Dooley <conor.dooley@microchip.com>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Jisheng Zhang <jszhang@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <anup@brainfault.org>,
-	Atish Patra <atishp@atishpatra.org>,
-	Heiko Stuebner <heiko@sntech.de>, linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-	kvm-riscv@lists.infradead.org, regressions@leemhuis.info,
-	regressions@lists.linux.dev
-Subject: Re: [PATCH] riscv: require alternatives framework when selecting FPU
- support
-Message-ID: <71fc0b56-0b63-4f0b-9f1d-5c4d6102ded6@spud>
-References: <ZBruFRwt3rUVngPu@zx2c4.com>
- <20230322120907.2968494-1-Jason@zx2c4.com>
- <20230322124631.7p67thzeblrawsqj@orel>
- <1884bd96-2783-4556-bc57-8b733758baff@spud>
- <20230322192610.sad42xau33ye5ayn@orel>
- <2a3b08ce-5ab1-41b6-ad58-edbeff7b1acb@spud>
- <ad445951-3d13-4644-94d9-e0989cda39c3@spud>
- <CAHmME9qEbUP7cq-iofN=ruSWhsHUva+qqavfEpNzDK_BjQVqxw@mail.gmail.com>
- <af690061-f962-498e-b2df-d2e6119292cf@spud>
- <ZBx2qFFiaRSyJubo@zx2c4.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C78DD2F1
+	for <regressions@lists.linux.dev>; Thu, 23 Mar 2023 22:26:13 +0000 (UTC)
+Received: by mail-wm1-f52.google.com with SMTP id i5-20020a05600c354500b003edd24054e0so2109723wmq.4
+        for <regressions@lists.linux.dev>; Thu, 23 Mar 2023 15:26:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1679610371;
+        h=mime-version:references:in-reply-to:message-id:subject:cc:to:from
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=FEqdAq5dRGl2hZDd9rsbCPnsRZ+oYPgKWv3lWfX6QUk=;
+        b=fQvI5wswOVO9Xc2MyXUhbKeHcMGF9PWLLuL9Chf0Vim0nAQz+SydWZ7/PuAnia8tGF
+         SxSrQCDtz+rvcRo677+15O9GMHmWHygBA6ryAFlCIBAqEr6gvXgc4tyIjK6SN0LA+Z2P
+         QdmS3d1DPrJcv8rzT+9nqqk2CeuXLCS9Vv28AkTyPQTRhuyTgm62VyqwLjVspC6v0uSY
+         ANsOad+9a/6HzYs++s7m49H3N5YWaa3DNBjmv45YgmL4Mb96gzkW9VhCudBBLgs7DEC5
+         2N1XLt7DAcaiVg6EGjARKCujAvVnURYGc7fw7DdwntBsVZ3k+k5B9HTUv/ltcifSari/
+         ytMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1679610371;
+        h=mime-version:references:in-reply-to:message-id:subject:cc:to:from
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=FEqdAq5dRGl2hZDd9rsbCPnsRZ+oYPgKWv3lWfX6QUk=;
+        b=aSRQmqV1l9oUVPmG33PB4viCPsX7ch3ByVVjS6iqa8tBYtt4K1VYpeDs5w58nJIn+c
+         7A39ecBAl+ZheW5uN9YEShGBpoubKAsco7xRC6tpiXTOAexNFWtw78lJ+IEQ1oXD/JP7
+         I33AK3EncQwKo126Narzr929sTHpltwEgJQd7zXPCRQF2ehI+ELRr/XeD2lStg2gPZkM
+         vjrl6guHqj73Mk9qaKd2LilGLoC6dYfPPIPSFs6mHv7wBkBT46OyAm5gIbUKQnkCOq01
+         DwpidF2c7fRYZbkPdr8ssDADdUKMzd/LGgrebmIbHoxJwDgMWt9rjy+BlKe+eF7F+HK8
+         Mf+Q==
+X-Gm-Message-State: AO0yUKVf2iVemKcy8hjo4vgndK84+ZZMUTr/maqNvoNxUd1rOQi3wgjk
+	db5774Vbkmtc66e9Nk6TUFc=
+X-Google-Smtp-Source: AK7set83O40+JAWj0KetLmMioYFmqCga+4NA+YIiohe9aWbtDFcXUXXbV+S+Tl/6vJ3E169n0+vmdQ==
+X-Received: by 2002:a1c:790b:0:b0:3ee:56f7:75d2 with SMTP id l11-20020a1c790b000000b003ee56f775d2mr870866wme.20.1679610371343;
+        Thu, 23 Mar 2023 15:26:11 -0700 (PDT)
+Received: from nz (host81-147-8-96.range81-147.btcentralplus.com. [81.147.8.96])
+        by smtp.gmail.com with ESMTPSA id u10-20020a05600c19ca00b003ee5fa61f45sm3284873wmq.3.2023.03.23.15.26.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Mar 2023 15:26:10 -0700 (PDT)
+Date: Thu, 23 Mar 2023 22:26:06 +0000
+From: Sergei Trofimovich <slyich@gmail.com>
+To: Christoph Hellwig <hch@infradead.org>
+Cc: Josef Bacik <josef@toxicpanda.com>, Christopher Price
+ <pricechrispy@gmail.com>, anand.jain@oracle.com, boris@bur.io, clm@fb.com,
+ dsterba@suse.com, linux-btrfs@vger.kernel.org, regressions@leemhuis.info,
+ regressions@lists.linux.dev
+Subject: Re: [6.2 regression][bisected]discard storm on idle since
+ v6.1-rc8-59-g63a7cb130718 discard=async
+Message-ID: <20230323222606.20d10de2@nz>
+In-Reply-To: <ZBq+ktWm2gZR/sgq@infradead.org>
+References: <CAHmG9huwQcQXvy3HS0OP9bKFxwUa3aQj9MXZCr74emn0U+efqQ@mail.gmail.com>
+	<CAEzrpqeOAiYCeHCuU2O8Hg5=xMwW_Suw1sXZtQ=f0f0WWHe9aw@mail.gmail.com>
+	<ZBq+ktWm2gZR/sgq@infradead.org>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.36; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="vddSnN5vfBB77SnX"
-Content-Disposition: inline
-In-Reply-To: <ZBx2qFFiaRSyJubo@zx2c4.com>
+Content-Type: multipart/signed; boundary="Sig_/lLb6Eq1VWQLRudR2XeIhZq3";
+ protocol="application/pgp-signature"; micalg=pgp-sha512
 
-
---vddSnN5vfBB77SnX
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+--Sig_/lLb6Eq1VWQLRudR2XeIhZq3
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
-Hey Jason,
+On Wed, 22 Mar 2023 01:38:42 -0700
+Christoph Hellwig <hch@infradead.org> wrote:
 
-I read this mail before I left work today & had a think about it on the
-bike home, and had a whole response thought out, got distracted and
-forgot it all.. Hopefully I've remembered everything I had to say!
-
-On Thu, Mar 23, 2023 at 04:56:24PM +0100, Jason A. Donenfeld wrote:
-> On Thu, Mar 23, 2023 at 02:49:34PM +0000, Conor Dooley wrote:
-> > This would requiring picking up your patch Jason, but with an
-> > "if !XIP_KERNEL" added to the select.
+> On Tue, Mar 21, 2023 at 05:26:49PM -0400, Josef Bacik wrote:
+> > We got the defaults based on our testing with our workloads inside of
+> > FB.  Clearly this isn't representative of a normal desktop usage, but
+> > we've also got a lot of workloads so figured if it made the whole
+> > fleet happy it would probably be fine everywhere.
+> >=20
+> > That being said this is tunable for a reason, your workload seems to
+> > generate a lot of free'd extents and discards.  We can probably mess
+> > with the async stuff to maybe pause discarding if there's no other
+> > activity happening on the device at the moment, but tuning it to let
+> > more discards through at a time is also completely valid.  Thanks, =20
 >=20
-> So the risk of making this all work is that we wind up forgetting to add
-> `select alternatives if !xip` to various places that need it (fpu, kvm,
-> maybe others? future others?), because it appears to work, thanks to the
-> code in your patch.
+> FYI, discard performance differs a lot between different SSDs.
+> It used to be pretty horrible for most devices early on, and then a
+> certain hyperscaler started requiring decent performance for enterprise
+> drives, so many of them are good now.  A lot less so for the typical
+> consumer drive, especially at the lower end of the spectrum.
 >=20
-> But making it work is also probably a good thing, since we obviously
-> want the fpu and maybe other things to work on xip kernels.
+> And that jut NVMe, the still shipping SATA SSDs are another different
+> story.  Not helped by the fact that we don't even support ranged
+> discards for them in Linux.
 
-I'm not super pushed about the "maybe other things", since the "maybe
-other things" that are in my head (errata and recently added extensions)
-have never worked on xip kernels, and losing them isn't a regression.
-Since XIP_KERNEL is deemed to be a "NONPORTABLE" option, we wouldn't
-need alternatives to enable it for them, but changes would be required
-for that to make the alternatives collapse to a build time thing.
-Can deal with that iff someone actually does come along wanting it.
+Josef, what did you use as a signal to detect what value was good
+enough? Did you crank up the number until discard backlog clears up in a
+reasonable time?
 
-We do need to fix this so that situations like the one you hit can't
-happen, while not regressing the level of support for xip, so some level
-of "making it work" is needed, but I do agree that it needs to be done
-in a less footgun way.
+I still don't understand what I should take into account to change the
+default and whether I should change it at all. Is it fine if the discard
+backlog takes a week to get through it? (Or a day? An hour? A minute?)
 
-> So maybe we should get rid of the CONFIG_RISCV_ALTERNATIVES knob
-> entirely, making it "always enabled", and then conditonalize the
-> alternatives code to BUILD_BUG_ON when called with CONFIG_XIP_KERNEL=3Dy.
-> Then, this build bug will get hit immediately by
-> riscv_has_extension_*(), which will then require your patch, which can
-> run in a `if (IS_ENABLED(XIP_KERNEL))` block or similar.
->=20
-> The result of that will be:
-> - !xip kernels properly use the fast riscv_has_extension_*() code and
->   any alternatives code needed, since it's always selected.
-> - xip kernels get a BUILD_BUG_ON if they use any alternatives-based code
->   that doesn't have a xip fallback yet.
->=20
-> What do you think of that approach?
+Is it fine to send discards as fast as device allows instead of doing 10
+IOPS? Does IOPS limit consider a device wearing tradeoff? Then low IOPS
+makes sense. Or IOPS limit is just a way to reserve most bandwidth to
+non-discard workloads? Then I would say unlimited IOPS as a default
+would make more sense for btrfs.
 
-Initially I thought "great, lets always enable the alternatives
-framework" but I don't think we can do that.
-For the has_extension() stuff a fallback is fine, but I don't think that
-applies to using alternatives for either errata or enabling extensions
-at runtime.
-I just don't really want to go through and modify the alternative macros
-so that they're evaluated at build time for xip unless that is
-absolutely required down the line. (I'd rather not even do it at all.)
+--=20
 
-Most of the things that are currently selecting RISCV_ALTERNATIVE do so
-to patch in support for extensions or enable errata, and I don't think
-we should expose those config options if the alternatives that they rely
-on cannot be used. I think that means something like...
+  Sergei
 
-> A "lighter weight" version of that approach would be to just remove all of
-> the `select RISCV_ALTERNATIVES` lines, and instead make
-> RISCV_ALTERNATIVES specify `default !XIP_KERNEL`. That would more or
-> less amount to the above too, though with weirder error cases.
-
-=2E..adding a "select RISCV_ALTERNATIVE if !XIP_KERNEL" to the
-CONFIG_RISCV entry, and similarly to what you suggest here, swapping all
-of the instances of "select RISCV_ALTERNATIVE" for "depends on
-RISCV_ALTERNATIVE". That does still mean we can drop all of the
-"depends on !XIP_KERNEL" that are littered around the place whereever we
-are using alternatives & should only get the slow path for extension
-checking for xip kernels.
-That'd handle the issue that you pointed out, where if the select is
-missing, my suggested change makes it appear to work if alternatives are
-not enabled too.
-
-The BUILD_BUG_ON idea is good too, probably not fixes material, but
-might be worth having to prevent alternatives somehow being used when
-XIP_KERNEL is set.
-
-I'll try to whip something up tomorrow...
-
-Thanks Jason,
-Conor.
-
---vddSnN5vfBB77SnX
-Content-Type: application/pgp-signature; name="signature.asc"
+--Sig_/lLb6Eq1VWQLRudR2XeIhZq3
+Content-Type: application/pgp-signature
+Content-Description: Цифровая подпись OpenPGP
 
 -----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZBzQigAKCRB4tDGHoIJi
-0ncsAP9X22z2ivSfhQdtuoUsRvCx/661lKb5fqk89hLsE94cIQEAufUulDwROTp8
-wCqlVN+Ecvxd5O0NDQNhmpzYyrBOyQo=
-=bI1F
+iQKTBAEBCgB9FiEE+g11JqJ4cL44QkmN7V5F4G8qwpMFAmQc0f5fFIAAAAAALgAo
+aXNzdWVyLWZwckBub3RhdGlvbnMub3BlbnBncC5maWZ0aGhvcnNlbWFuLm5ldEZB
+MEQ3NTI2QTI3ODcwQkUzODQyNDk4REVENUU0NUUwNkYyQUMyOTMACgkQ7V5F4G8q
+wpOt+Q/9GW1oKi5km0k+vf4L+fAKDF/pZTjjqCTj3SOI5HAjxMlYPj06bzHSzibE
+ZlW2AuWmDkms+lLVEsq88CKDKNGVIUe3l/z43kP1MtmcKLWXoKGtMPGyMfD2hpdT
+8W5zK2MRxNRofn5OcFzUwWYoq1GBB0qIr3uAjOlOssbDuMkLs6pRgb32X+YvOZ2v
+mrUZHRbQTVEJoEQf9y4A/MnFVjWvpp4r+CiR9+Qr+Jl6wn7qEbJ8BZsZDIEa/6ZY
+X+VtbEmsmZ07c6omP+ZgiShzWxZN/a3VI+fFDusSCgvboiUxaX3r2StaaRnSDLO4
+NJtTVUze3uq9au6RsLCYBdf6rCdeoo8S8x2RMIU7VNY1R/IirmUv169W7u2vXGtB
+iTDp2xAMTQrXh0Gi5yTNh37Acgiqkp466TEwZN5jBZkHIkY1s/2GywW6WjmDq+LM
+H4nTudJ/eUY1sZaCQJb64Y2aK7ikJSurkpms050oZXV0QnAjyXhrLTmhuOFgKFF5
+LqwuXE8PPPb0yhxzT9Sxqvnp7kvKZObOU/xbm0GJn8jY3GnsBVQgDknRVlU8AqRF
+cxwu5t2bOjftwQD671j1W2HH63iIDsg731m1v03hcNUzNFWfl0AsjZ78Co7NuQP0
+FLcDkUzjGT7Dc8gzwFrjwujFHvkhYkO8bE+N5KEQgVOl88yC818=
+=lMOH
 -----END PGP SIGNATURE-----
 
---vddSnN5vfBB77SnX--
+--Sig_/lLb6Eq1VWQLRudR2XeIhZq3--
