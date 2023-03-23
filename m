@@ -1,110 +1,281 @@
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [85.220.165.71])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 833338F6D
-	for <regressions@lists.linux.dev>; Thu, 23 Mar 2023 13:16:51 +0000 (UTC)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1pfKoD-0006DB-1d; Thu, 23 Mar 2023 14:16:49 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1pfKoB-006A60-QI; Thu, 23 Mar 2023 14:16:47 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1pfKoB-007LDY-3Q; Thu, 23 Mar 2023 14:16:47 +0100
-Date: Thu, 23 Mar 2023 14:16:46 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Pierre Asselin <pa@panix.com>, linux-acpi@vger.kernel.org,
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: Re: [Regression] acpi: laptop panics early in boot
-Message-ID: <20230323131646.xp3m2qvb7wp2wsqb@pengutronix.de>
-References: <9f6cba7a8a57e5a687c934e8e406e28c.squirrel@mail.panix.com>
- <20230307093308.m5enhuegm3r4qwvo@pengutronix.de>
- <220898e2276e4cae2572eb8f006f3a7b.squirrel@mail.panix.com>
- <20230307161005.6m6fpi3oxa3jn2wg@pengutronix.de>
- <6d97df76de719871c90fb59726f2d6b0.squirrel@mail.panix.com>
- <47a90870-8a71-a28f-bd8a-032a69cda596@leemhuis.info>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66EA19446
+	for <regressions@lists.linux.dev>; Thu, 23 Mar 2023 13:46:07 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1pfLGV-00067m-QT; Thu, 23 Mar 2023 14:46:03 +0100
+Message-ID: <c267ab1d-6451-0d2c-ec78-85ed80d93b5a@leemhuis.info>
+Date: Thu, 23 Mar 2023 14:46:03 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="jtnsbqy6se7cszif"
-Content-Disposition: inline
-In-Reply-To: <47a90870-8a71-a28f-bd8a-032a69cda596@leemhuis.info>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: regressions@lists.linux.dev
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
+Subject: Re: [Intel-wired-lan] Supermicro AOC-STGN-I1S (Intel 82599EN based
+ 10G adapter) - poor network perfomance after moving to Debian 11.5
+Content-Language: en-US, de-DE
+To: Bartek Kois <bartek.kois@gmail.com>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ Paul Menzel <pmenzel@molgen.mpg.de>
+Cc: intel-wired-lan@osuosl.org
+References: <d1530cba-1a72-cae8-6a04-ed8ec0f82e6e@gmail.com>
+ <652bf236-d97e-832c-e0f3-24927a46d7ad@molgen.mpg.de>
+ <744de70c-782d-5d36-87fc-e6b92ac84190@gmail.com>
+ <30de7b89-6a4f-8dab-d671-027140bbb52b@gmail.com>
+ <d20a0ae8-d46e-2b8a-5587-5416e9013643@molgen.mpg.de>
+ <3b957674-a559-ac1e-27b8-b81e6eeffe75@gmail.com>
+ <05d381af-5ccb-0d87-97d3-e2fc4ce870fc@molgen.mpg.de>
+ <a3be4866-5689-1276-5db4-168885a97091@gmail.com>
+ <04793400-b368-ecd8-ce52-009e60533753@molgen.mpg.de>
+ <8da81bdb-80e1-f1b8-1d49-af7cf7072128@gmail.com>
+ <26c4008e-d9de-0250-57ba-97d050fb405f@molgen.mpg.de>
+ <7d1347f4-4cf0-e8a8-000e-9128933181b9@leemhuis.info>
+ <ead1e9eb-944d-fa9b-e8ff-c087f8718c47@gmail.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <ead1e9eb-944d-fa9b-e8ff-c087f8718c47@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1679579167;88e442f8;
+X-HE-SMSGID: 1pfLGV-00067m-QT
 
+On 24.01.23 10:40, Bartek Kois wrote:
+> W dniu 24.01.2023 o 10:33, Linux kernel regression tracking (Thorsten
+> Leemhuis) pisze:
+>> On 23.01.23 20:03, Paul Menzel wrote:
+>>> Am 23.01.23 um 19:58 schrieb Bartek Kois:
+>>>> W dniu 23.01.2023 o 19:53, Paul Menzel pisze:
+>>>>> Am 23.01.23 um 19:38 schrieb Bartek Kois:
+>>>>>> W dniu 22.01.2023 o 21:28, Paul Menzel pisze:
+>>>>>>> Am 19.01.23 um 18:17 schrieb Bartek Kois:
+>>>>>>>> W dniu 19.01.2023 o 18:09, Paul Menzel pisze:
+>>>>>>>>> Am 19.01.23 um 17:58 schrieb Bartek Kois:
+>>>>>>>>>> W dniu 19.01.2023 o 13:24, Bartek Kois pisze:
+>>>>>>>>>>> W dniu 19.01.2023 o 11:17, Paul Menzel pisze:
+>>>>>>>>>>>> #regzbot ^introduced: 4.9.88..5.10.149
+>>>>>>>>>>>> Am 14.01.23 um 11:23 schrieb Bartek Kois:
+>>>>>>>>>>>>
+>>>>>>>>>>>>> After moving from Debian 9.7 to 11.5 as soon as I perform "ip
+>>>>>>>>>>>>> link set enp1s0 up" for my 10G adapter (AOC-STGN-I1S - Intel
+>>>>>>>>>>>>> 82599EN based 10G adapter) I am experiencing high cpu load
+>>>>>>>>>>>>> (even if no traffic is passing through the adapter) and
+>>>>>>>>>>>>> network performance is low (when network is connected).
+>>>>>>>>>>>> How do you test the network performance? Please give exact
+>>>>>>>>>>>> numbers for comparison.
+>>>>>>>>>>>>
+>>>>>>>>>>> I am using this server as a router for my subscribers with
+>>>>>>>>>>> iptables (for NAT and firewall) and hfsc (for QoS). First I
+>>>>>>>>>>> encountered this problem while migrating form Debian 9.7 to
+>>>>>>>>>>> 11.5. Routers based  on Supermicro X11SSL-F (Intel® C232
+>>>>>>>>>>> chipset) works with no problems after that migration, but
+>>>>>>>>>>> routers based on Supermicro X9SCL (Intel C202 PCH) and
+>>>>>>>>>>> Supermicro X10SLL+-F (Intel C222 Express PCH) starts behaving
+>>>>>>>>>>> strangely with high cpu load (0.5-0.8 while before it was
+>>>>>>>>>>> around 0.0-0.1) and subscribers not being able to utilize their
+>>>>>>>>>>> plans. I tried to strip down the problem and ends up with clean
+>>>>>>>>>>> system with no iptables or hfsc rules behaving the same (higher
+>>>>>>>>>>> load) right after setting the 10G link upeven if no traffic is
+>>>>>>>>>>> passing by.
+>>>>>>>>>>>
+>>>>>>>>>>>>> The cpu load is oscillating between 0.1 and 0.3 on vanilla
+>>>>>>>>>>>>> system
+>>>>>>>>>>>>> with no network attached. The problem can be observed on the
+>>>>>>>>>>>>> following platforms: Supermicro X9SCL (Intel C202 PCH) and
+>>>>>>>>>>>>> Supermicro X10SLL+-F (Intel C222 Express PCH), but for the
+>>>>>>>>>>>>> Supermicro
+>>>>>>>>>>>>> X11SSL-F (Intel® C232 chipset) everything is working well.
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> Tested environments:
+>>>>>>>>>>>>> Debian 9.7 - Linux 4.9.0-6-amd64 #1 SMP Debian
+>>>>>>>>>>>>> 4.9.88-1+deb9u1 (2018-05-07) x86_64 GNU/Linux [all platforms
+>>>>>>>>>>>>> working well with no problems: Supermicro X9SCL (Intel C202
+>>>>>>>>>>>>> PCH), Supermicro X10SLL+-F (Intel C222 Express PCH),
+>>>>>>>>>>>>> Supermicro X11SSL-F (Intel® C232 chipset)]
+>>>>>>>>>>>>> Debian 11.5 - Linux 5.10.0-19-amd64 #1 SMP Debian 5.10.149-2
+>>>>>>>>>>>>> (2022-10-21) x86_64 GNU/Linux [older platforms: Supermicro
+>>>>>>>>>>>>> X9SCL (Intel C202 PCH), Supermicro X10SLL+-F (Intel C222
+>>>>>>>>>>>>> Express PCH) behave problematic as described above | newer
+>>>>>>>>>>>>> platform: Supermicro X11SSL-F (Intel® C232 chipset) working
+>>>>>>>>>>>>> well with no problems]
+>>>>>>>>>>>> Maybe create a bug at the Linux kernel bug tracker [1], where
+>>>>>>>>>>>> you can attach all the logs (`dmesg`, `lspci -nnk -s …`, …).
+>>>>>>>>>>>>
+>>>>>>>>>>> I`ve already reported that to the Debian team
+>>>>>>>>>>> ttps://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1024763, but
+>>>>>>>>>>> so far nobody took care of this issue so far.
+>>>>>>>>>>>
+>>>>>>>>>>>>> So far to solve the problem I was trying to upgrade system to
+>>>>>>>>>>>>> the newest stable version, upgrade kernel to version 6.x,
+>>>>>>>>>>>>> upgrade ixgbe driver to the newest version but with no luck.
+>>>>>>>>>>>> Thank you for checking that. Too bad it’s still present. To
+>>>>>>>>>>>> rule out some user space problem, could you test Debian 9.7
+>>>>>>>>>>>> with a stable Linux release, currently 6.1.7?
+>>>>>>>>>>>>
+>>>>>>>>>>>> What does `sudo perf top --sort comm,dso` show, where the time
+>>>>>>>>>>>> is spent?
+>>>>>>>>>>> During my first test in real enviroment with subscribers I
+>>>>>>>>>>> gether the following data through the perf:
+>>>>>>>>>>>
+>>>>>>>>>>>    27.83%  [kernel]                   [k] strncpy
+>>>>>>>>>>>    14.80%  [kernel]                   [k] nft_do_chain
+>>>>>>>>>>>     7.61%  [kernel]                   [k] memcmp
+>>>>>>>>>>>     5.63%  [kernel]                   [k] nft_meta_get_eval
+>>>>>>>>>>>     3.14%  [kernel]                   [k] nft_cmp_eval
+>>>>>>>>>>>     2.79%  [kernel]                   [k] asm_exc_nmi
+>>>>>>>>>>>     1.07%  [kernel]                   [k] module_get_kallsym
+>>>>>>>>>>>     0.92%  [kernel]                   [k]
+>>>>>>>>>>> kallsyms_expand_symbol.constprop.0
+>>>>>>>>>>>     0.85%  [kernel]                   [k] ixgbe_poll
+>>>>>>>>>>>     0.75%  [kernel]                   [k] format_decode
+>>>>>>>>>>>     0.61%  [kernel]                   [k] number
+>>>>>>>>>>>     0.56%  [kernel]                   [k] menu_select
+>>>>>>>>>>>     0.54%  [kernel]                   [k] clflush_cache_range
+>>>>>>>>>>>     0.52%  [kernel]                   [k] cpuidle_enter_state
+>>>>>>>>>>>     0.51%  [kernel]                   [k] vsnprintf
+>>>>>>>>>>>     0.50%  [kernel]                   [k] u32_classify
+>>>>>>>>>>>     0.49%  [kernel]                   [k] fib_table_lookup
+>>>>>>>>>>>     0.40%  [kernel]                   [k] dma_pte_clear_level
+>>>>>>>>>>>     0.39%  [kernel]                   [k] domain_mapping
+>>>>>>>>>>>     0.36%  [kernel]                   [k] ixgbe_xmit_fram
+>>>>>>>>>>>
+>>>>>>>>>>>
+>>>>>>>>>>>      PID USER      PR  NI    VIRT    RES    SHR S  %CPU %MEM
+>>>>>>>>>>> TIME+ COMMAND
+>>>>>>>>>>>       18 root      20   0       0      0      0 S  28.2 0.0
+>>>>>>>>>>> 7:06.27 ksoftirqd/1
+>>>>>>>>>>>       12 root      20   0       0      0      0 R  12.0 0.0
+>>>>>>>>>>> 4:10.88 ksoftirqd/0
+>>>>>>>>> […]
+>>>>>>>>>
+>>>>>>>>> Do you see different behavior in `/proc/interrupts`?
+>>>>>>>>>
+>>>>>>>> This is how it looks like for Debian 11.5 - Linux 5.10.0-19-amd64
+>>>>>>>> #1 SMP Debian 5.10.149-2 (2022-10-21) x86_64 GNU/Linux on
+>>>>>>>> Supermicro X10SLL+-F (Intel C222 Express PCH):
+>>>>>>>>
+>>>>>>>>         1 root      20   0  163948  10288   7696 S   0.0 0.1
+>>>>>>>> 0:39.58 systemd
+>>>>>>> […]
+>>>>>>>
+>>>>>>> The content of `/proc/interrupts` has a different format on my
+>>>>>>> system.
+>>>>>>>
+>>>>>>> ```
+>>>>>>> $ head -3 /proc/interrupts
+>>>>>>>             CPU0       CPU1       CPU2       CPU3
+>>>>>>>    1:      55560          0        113          0  IR-IO-APIC 1-edge
+>>>>>>> i8042
+>>>>>>>    8:          0          0          0          0  IR-IO-APIC 8-edge
+>>>>>>> rtc0
+>>>>>>> ```
+>>>>>>> […]
+>>>>>>>
+>>>>>>>> and for Debian 9.7 - Linux 4.9.0-6-amd64 #1 SMP Debian
+>>>>>>>> 4.9.88-1+deb9u1 on Supermicro X10SLL+-F (Intel C222 Express PCH)
+>>>>>>>>
+>>>>>>>> 31659 root      20   0       0      0      0 S   0.3  0.0 0:00.92
+>>>>>>>> kworker/7:0
+>>>>>>>>       1 root      20   0   57032   6736   5256 S   0.0  0.1 2:28.14
+>>>>>>>> systemd
+>>>>>>> […]
+>>>>>>>>>>>>> Supermicro support suggested as follows:
+>>>>>>>>>>>>> it might be kernel related debian 11.5 has kernel 5.10 which
+>>>>>>>>>>>>> is a recent kernel it might not properly support the chipsets
+>>>>>>>>>>>>> for X9 therefore i suggest to use RHEL or CentOS as they use
+>>>>>>>>>>>>> much older kernel versions. I expect that with ubuntu 20.04
+>>>>>>>>>>>>> you see the same problem it uses kernel 5.4
+>>>>>>>>>>>>>>> Testing another GNU/Linux distribution for another data
+>>>>>>>>>>>> point, might be a good idea.
+>>>>>>>>>>>>
+>>>>>>>>>>>> As nobody has responded yet, bisecting the issue is probably
+>>>>>>>>>>>> the fastest way to get to the bottom of this. Luckily the
+>>>>>>>>>>>> problem seems reproducible and you seem to be able to build a
+>>>>>>>>>>>> Linux kernel yourself, so that should work. (For testing
+>>>>>>>>>>>> purposes you could also test with Ubuntu, as they provide
+>>>>>>>>>>>> Linux kernel builds for (almost) all releases in their Linux
+>>>>>>>>>>>> kernel mainline PPA [2].)
+>>>>>>>>>>>>
+>>>>>>>>>>> Of course  I can try Ubuntu and report how it is working.
+>>>>>>>>>>>
+>>>>>>>>>> Ubuntu (5.15.0-43-generic) seems to be working in the same way
+>>>>>>>>>> generating higher load after executing "ip link set enp1s0 up".
+>>>>>>>>> That is good to know. (Is this Ubuntu 22.04?) What about Ubuntu
+>>>>>>>>> 20.04 with Linux 5.4, and Ubuntu 18.04 with 4.15?
+>>>>>>>>>
+>>>>>>>>> Anyway, I think, you won’t come around bisecting. Another hint,
+>>>>>>>>> make sure that you can build a 4.9 Linux kernel yourself, that
+>>>>>>>>> does not exhibit that issue.
+>>>>>>>>>
+>>>>>>>> That`s right, it is 22.04. I don`t have to build it. Standard
+>>>>>>>> kernel Linux 4.9.0-6-amd64 from Debian 9.7 worked without problems
+>>>>>>>> for past 4 years.
+>>>>>>> If nobody of the developers/maintainers is going to step up, you
+>>>>>>> are on your own. Again, as you can reproduce this easily, the
+>>>>>>> fastest way is to bisect the issue, which you can do on your own.
+>>>>>> How can I investigate that further?
+>>>>> I repeat myself, please bisect the issue. It’s the fastest way.
+>>>>>
+>>>>>> I thought about trying to change some of the parameters related to
+>>>>>> ixgbe driver and observe if anything is changing, but when I am
+>>>>>> trying to do:
+>>>>>>
+>>>>>> sudo modprobe ixgbe IntMode=0
+>>>>>>
+>>>>>> I get the following error in the dmesg:
+>>>>>>
+>>>>>> [ 2137.324772] ixgbe: unknown parameter 'IntMode' ignored <<<<<<<<<
+>>>>> […]
+>>>>>
+>>>>> `modinfo ixgbe` shows the supported parameters.
+>>>>> PS: If you need help bisecting, please ask. Otherwise, I am out of
+>>>>> this thread.
+>>>> Ok, how exactly I can bisect this issue?
+>>> What have you tried so far? As written in the past, I’d first try more
+>>> distributions, for example, older Ubuntu versions. Then, if you have
+>>> some range, I’d use the Ubuntu PPA, and then between the release
+>>> candidate versions, only then start doing `git bisect` as documented in
+>>> the documentation [3].
+>> Hmmm. I'm not an expert in that area, but if you follow Paul's advice
+>> keep in mind that a deliberate config change by the distro might have an
+>> impact here. Hence it might be a good idea to rule that out first by
+>> taking a config from a working kernel and using it (with the help of
+>> "make olddefconfig") to build your own kernel from the version that is
+>> known to fail. But over such a wide range of versions this can be
+>> tricky. :-/
+>>
+>> But apart from that Paul is right afaics: nobody yet had an idea what
+>> might cause this regression, hence we need a bisection to pin-point the
+>> problem.
+> 
+> Thanks for the advice. I`ll try my best to find out which commit caused
+> the problem, but it will take me some time as I have never done
+> bisecting especially on that scale. 
 
---jtnsbqy6se7cszif
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Did you ever get closer to the root of the problem?
 
-On Thu, Mar 23, 2023 at 01:31:37PM +0100, Linux regression tracking (Thorst=
-en Leemhuis) wrote:
-> On 07.03.23 20:31, Pierre Asselin wrote:
-> >> Maybe the following patch helps (on top of v6.3-rc1):
-> >>
-> >> diff --git a/drivers/acpi/bus.c b/drivers/acpi/bus.c
-> >> index 9531dd0fef50..a5a8f82981ce 100644
-> >> --- a/drivers/acpi/bus.c
-> >> +++ b/drivers/acpi/bus.c
-> >> @@ -518,7 +518,7 @@ static void acpi_bus_notify(acpi_handle handle, u32
-> >> type, void *data)
-> >>  	if (!adev)
-> >>  		goto err;
-> >>
-> >> -	if (adev->dev.driver) {
-> >> +	if (device_is_bound(&adev->dev)) {
-> >>  		struct acpi_driver *driver =3D to_acpi_driver(adev->dev.driver);
-> >>
-> >>  		if (driver && driver->ops.notify &&
-> >>
-> >=20
-> > It does indeed "fix" 6.3-rc1.  Modulo locking issues, which I am
-> > not qualified to evaluate.
->=20
-> Uwe, what happens to this regression fix? It looks like it didn't make
-> any progress towards mainline, but maybe I missed something in my brief
-> search on lore.
+> What`s wondering me the most is that
+> nobody reported this issue so far taking into account that these
+> platforms along with Debian and Intel 82599EN NIC is quite common
+> configuration I think.
 
-If you missed something then so did I. From my POV the patch is not
-known to lead to a correct handling, but for sure it's better than the
-status quo.
+I guess the answer is the usual: the problem only shows up in some
+environments using that NIC -- for example if the firmware of the
+motherboard or the configuration somehow directly or indirectly trigger
+the problem.
 
-I didn't create a proper patch because I thought someone might want to
-do a deeper dive and check the logging. If that doesn't happen, I can
-followup with a patch.
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
 
-Best regards
-Uwe
+P.S.:
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---jtnsbqy6se7cszif
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmQcUT4ACgkQj4D7WH0S
-/k4BrAf/eTy4iJinpXgEBmbkNhRYShxnyM6jIPwHt0SxA31/ay5SOAqotbXAOGPl
-Cb7J4CxKuuxMXFk5rYPYW8G6+xzUdpvMvAKjJ9ykyu1u68FgTVDUehvkO8PyTIlU
-iEiDBdt+1Kq51vTSHWLAWhSij1QAku/fXE9+lmLkoIcFP6n4K9fkAOj8HiZeTxNh
-Nk4I2UXbZpYDUAGLAwbWYAXrUHzyhHqiLJKRnY/Qgs7gBB17ueYfsy9zk2pYolTj
-i1jG3PXb2J09Vojg02DT2bHBiTb0YplQJ5QxSr/uvLoDmPlD/6oeTw3lUrP/X2US
-NkloZFmHMRRtwIfXIrDWzN8zgWMWaA==
-=f2gj
------END PGP SIGNATURE-----
-
---jtnsbqy6se7cszif--
+#regzbot backburner: need bisection that will take some time to get done
+#regzbot poke
