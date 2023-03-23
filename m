@@ -1,147 +1,159 @@
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [85.220.165.71])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8321FD2E2
-	for <regressions@lists.linux.dev>; Thu, 23 Mar 2023 21:22:43 +0000 (UTC)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1pfSOD-0001nn-RV; Thu, 23 Mar 2023 22:22:29 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1pfSOA-006Eq4-TW; Thu, 23 Mar 2023 22:22:26 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1pfSOA-007RVl-2u; Thu, 23 Mar 2023 22:22:26 +0100
-Date: Thu, 23 Mar 2023 22:22:12 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Pierre Asselin <pa@panix.com>,
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Cc: linux-acpi@vger.kernel.org, regressions@lists.linux.dev,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Robert =?utf-8?B?xZp3acSZY2tp?= <robert@swiecki.net>
-Subject: Re: [Regression] acpi: laptop panics early in boot
-Message-ID: <20230323212212.udho2htrhd2vlzxm@pengutronix.de>
-References: <9f6cba7a8a57e5a687c934e8e406e28c.squirrel@mail.panix.com>
- <20230307093308.m5enhuegm3r4qwvo@pengutronix.de>
- <220898e2276e4cae2572eb8f006f3a7b.squirrel@mail.panix.com>
- <20230307161005.6m6fpi3oxa3jn2wg@pengutronix.de>
- <6d97df76de719871c90fb59726f2d6b0.squirrel@mail.panix.com>
- <20230307200843.yxhvnb23tpecjjng@pengutronix.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B29E2D2F1
+	for <regressions@lists.linux.dev>; Thu, 23 Mar 2023 22:20:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CD80C4339B;
+	Thu, 23 Mar 2023 22:19:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1679610000;
+	bh=EGro5R7FQWiMxlAAvFpkvWnKYj/UgWU6UGe7JmSDC+c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=D5fR7X4NGOeqePlms9r2wzI1F4U3DZhoilJCcWwgejrXBMbL4ZWwlk0iU7725Oyel
+	 Giyy59T2uqCMiI787vu3EfInUVmloOQcK2rackjlpDlzMaMQjyZMOFbKEZhtpuMgZi
+	 Ek4MoJCm9EI9zIBXo4H43zrHSBQ4LQhwGDqh5ZgkoR+t/AQqb+iVGr4HecAMUlOHdp
+	 lObO0xL69GahU6OqTx/YiOxvUV+uPh6xjzSlosVlITY03K+riOXoSeKrkSX4su0GqE
+	 o6oe1yfTEG47hNio434LDV/sH1HZoNaBcYW6nYWKWtDoCTjb9r6RNa4MtLVjFngEEH
+	 SJFeGt9P2Bh4w==
+Date: Thu, 23 Mar 2023 22:19:54 +0000
+From: Conor Dooley <conor@kernel.org>
+To: "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc: Conor Dooley <conor.dooley@microchip.com>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	Jisheng Zhang <jszhang@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <anup@brainfault.org>,
+	Atish Patra <atishp@atishpatra.org>,
+	Heiko Stuebner <heiko@sntech.de>, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+	kvm-riscv@lists.infradead.org, regressions@leemhuis.info,
+	regressions@lists.linux.dev
+Subject: Re: [PATCH] riscv: require alternatives framework when selecting FPU
+ support
+Message-ID: <71fc0b56-0b63-4f0b-9f1d-5c4d6102ded6@spud>
+References: <ZBruFRwt3rUVngPu@zx2c4.com>
+ <20230322120907.2968494-1-Jason@zx2c4.com>
+ <20230322124631.7p67thzeblrawsqj@orel>
+ <1884bd96-2783-4556-bc57-8b733758baff@spud>
+ <20230322192610.sad42xau33ye5ayn@orel>
+ <2a3b08ce-5ab1-41b6-ad58-edbeff7b1acb@spud>
+ <ad445951-3d13-4644-94d9-e0989cda39c3@spud>
+ <CAHmME9qEbUP7cq-iofN=ruSWhsHUva+qqavfEpNzDK_BjQVqxw@mail.gmail.com>
+ <af690061-f962-498e-b2df-d2e6119292cf@spud>
+ <ZBx2qFFiaRSyJubo@zx2c4.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="u5k4ghwxe22skqfn"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="vddSnN5vfBB77SnX"
 Content-Disposition: inline
-In-Reply-To: <20230307200843.yxhvnb23tpecjjng@pengutronix.de>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: regressions@lists.linux.dev
+In-Reply-To: <ZBx2qFFiaRSyJubo@zx2c4.com>
 
 
---u5k4ghwxe22skqfn
-Content-Type: text/plain; charset=iso-8859-1
+--vddSnN5vfBB77SnX
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hello Pierre,
+Hey Jason,
 
-On Tue, Mar 07, 2023 at 09:08:55PM +0100, Uwe Kleine-K=F6nig wrote:
-> On Tue, Mar 07, 2023 at 02:31:49PM -0500, Pierre Asselin wrote:
-> > > Maybe the following patch helps (on top of v6.3-rc1):
-> > >
-> > > diff --git a/drivers/acpi/bus.c b/drivers/acpi/bus.c
-> > > index 9531dd0fef50..a5a8f82981ce 100644
-> > > --- a/drivers/acpi/bus.c
-> > > +++ b/drivers/acpi/bus.c
-> > > @@ -518,7 +518,7 @@ static void acpi_bus_notify(acpi_handle handle, u=
-32
-> > > type, void *data)
-> > >  	if (!adev)
-> > >  		goto err;
-> > >
-> > > -	if (adev->dev.driver) {
-> > > +	if (device_is_bound(&adev->dev)) {
-> > >  		struct acpi_driver *driver =3D to_acpi_driver(adev->dev.driver);
-> > >
-> > >  		if (driver && driver->ops.notify &&
-> > >
-> >=20
-> > It does indeed "fix" 6.3-rc1.  Modulo locking issues, which I am
-> > not qualified to evaluate.
->=20
-> Thanks for your prompt test feedback.
->=20
-> The locked variant could look as follows:
->=20
-> diff --git a/drivers/acpi/bus.c b/drivers/acpi/bus.c
-> index 9531dd0fef50..fddca263ac40 100644
-> --- a/drivers/acpi/bus.c
-> +++ b/drivers/acpi/bus.c
-> @@ -518,13 +518,15 @@ static void acpi_bus_notify(acpi_handle handle, u32=
- type, void *data)
->  	if (!adev)
->  		goto err;
-> =20
-> -	if (adev->dev.driver) {
-> +	device_lock(&adev->dev);
-> +	if (device_is_bound(&adev->dev)) {
->  		struct acpi_driver *driver =3D to_acpi_driver(adev->dev.driver);
-> =20
->  		if (driver && driver->ops.notify &&
->  		    (driver->flags & ACPI_DRIVER_ALL_NOTIFY_EVENTS))
->  			driver->ops.notify(adev, type);
->  	}
-> +	device_unlock(&adev->dev);
-> =20
->  	if (!hotplug_event) {
->  		acpi_put_acpi_dev(adev);
->=20
-> Pierre: If you want to test that, I suggest to also enable
-> PROVE_LOCKING.
->=20
-> Rafael: I don't know if this would work and I hope you're able to judge
-> this better than I do. The change without the lock is for sure better
-> than the status quo.
->=20
-> I did a similar conversion as the blamed commit for pci that got
-> reverted for similiar reasons. See
-> 68da4e0eaaab421f228eac57cbe7505b136464af. (Added Bjorn and Robert to
-> Cc:) I think the pci code suffers from a similar race even after
-> reverting my change. If someone is able to find the right fix for one of
-> them, that might be transferable to the other?!
+I read this mail before I left work today & had a think about it on the
+bike home, and had a whole response thought out, got distracted and
+forgot it all.. Hopefully I've remembered everything I had to say!
 
-This mail didn't make it into the archive on lore.kernel.org. Did
-someone receive it? If not, that would explain why I didn't get any
-feedback on it ...
+On Thu, Mar 23, 2023 at 04:56:24PM +0100, Jason A. Donenfeld wrote:
+> On Thu, Mar 23, 2023 at 02:49:34PM +0000, Conor Dooley wrote:
+> > This would requiring picking up your patch Jason, but with an
+> > "if !XIP_KERNEL" added to the select.
+>=20
+> So the risk of making this all work is that we wind up forgetting to add
+> `select alternatives if !xip` to various places that need it (fpu, kvm,
+> maybe others? future others?), because it appears to work, thanks to the
+> code in your patch.
+>=20
+> But making it work is also probably a good thing, since we obviously
+> want the fpu and maybe other things to work on xip kernels.
 
-Best regards
-Uwe
+I'm not super pushed about the "maybe other things", since the "maybe
+other things" that are in my head (errata and recently added extensions)
+have never worked on xip kernels, and losing them isn't a regression.
+Since XIP_KERNEL is deemed to be a "NONPORTABLE" option, we wouldn't
+need alternatives to enable it for them, but changes would be required
+for that to make the alternatives collapse to a build time thing.
+Can deal with that iff someone actually does come along wanting it.
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+We do need to fix this so that situations like the one you hit can't
+happen, while not regressing the level of support for xip, so some level
+of "making it work" is needed, but I do agree that it needs to be done
+in a less footgun way.
 
---u5k4ghwxe22skqfn
+> So maybe we should get rid of the CONFIG_RISCV_ALTERNATIVES knob
+> entirely, making it "always enabled", and then conditonalize the
+> alternatives code to BUILD_BUG_ON when called with CONFIG_XIP_KERNEL=3Dy.
+> Then, this build bug will get hit immediately by
+> riscv_has_extension_*(), which will then require your patch, which can
+> run in a `if (IS_ENABLED(XIP_KERNEL))` block or similar.
+>=20
+> The result of that will be:
+> - !xip kernels properly use the fast riscv_has_extension_*() code and
+>   any alternatives code needed, since it's always selected.
+> - xip kernels get a BUILD_BUG_ON if they use any alternatives-based code
+>   that doesn't have a xip fallback yet.
+>=20
+> What do you think of that approach?
+
+Initially I thought "great, lets always enable the alternatives
+framework" but I don't think we can do that.
+For the has_extension() stuff a fallback is fine, but I don't think that
+applies to using alternatives for either errata or enabling extensions
+at runtime.
+I just don't really want to go through and modify the alternative macros
+so that they're evaluated at build time for xip unless that is
+absolutely required down the line. (I'd rather not even do it at all.)
+
+Most of the things that are currently selecting RISCV_ALTERNATIVE do so
+to patch in support for extensions or enable errata, and I don't think
+we should expose those config options if the alternatives that they rely
+on cannot be used. I think that means something like...
+
+> A "lighter weight" version of that approach would be to just remove all of
+> the `select RISCV_ALTERNATIVES` lines, and instead make
+> RISCV_ALTERNATIVES specify `default !XIP_KERNEL`. That would more or
+> less amount to the above too, though with weirder error cases.
+
+=2E..adding a "select RISCV_ALTERNATIVE if !XIP_KERNEL" to the
+CONFIG_RISCV entry, and similarly to what you suggest here, swapping all
+of the instances of "select RISCV_ALTERNATIVE" for "depends on
+RISCV_ALTERNATIVE". That does still mean we can drop all of the
+"depends on !XIP_KERNEL" that are littered around the place whereever we
+are using alternatives & should only get the slow path for extension
+checking for xip kernels.
+That'd handle the issue that you pointed out, where if the select is
+missing, my suggested change makes it appear to work if alternatives are
+not enabled too.
+
+The BUILD_BUG_ON idea is good too, probably not fixes material, but
+might be worth having to prevent alternatives somehow being used when
+XIP_KERNEL is set.
+
+I'll try to whip something up tomorrow...
+
+Thanks Jason,
+Conor.
+
+--vddSnN5vfBB77SnX
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmQcwwMACgkQj4D7WH0S
-/k5XkAf/ZfasOzLyUM6ldekxbkJ7mwVaqCbHLlp0iQWcZWCkuHqJ8qFaU2S6L2Rh
-6Fhi+ujxpp0pIX34so9t5CQtzWAoUrjOeEBAUuAjJ4d+Pc7vzGj6WzPefvzv3KmQ
-k8wskb+daozDmkQn2tpNjSz7Miqb12nB1LvKgF8mxHVJjjx5jcLhZdN1an1o7u7v
-wBGDKSKPrzOOjNIkCjEgtAZXcNiVmfgAbEyxKLFiiUk7+psigRFtXsT/aq38+aaO
-JatZ1DWRu2T/KeqRmHc38Msu4057amaZuYt0wiCd5W++4nS2H4gmweVIpTdBqcYQ
-1Ncx1QIpkwio+Z2YrxwYFyKB9l0Xuw==
-=uwlA
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZBzQigAKCRB4tDGHoIJi
+0ncsAP9X22z2ivSfhQdtuoUsRvCx/661lKb5fqk89hLsE94cIQEAufUulDwROTp8
+wCqlVN+Ecvxd5O0NDQNhmpzYyrBOyQo=
+=bI1F
 -----END PGP SIGNATURE-----
 
---u5k4ghwxe22skqfn--
+--vddSnN5vfBB77SnX--
