@@ -1,75 +1,53 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 783E9BA54
-	for <regressions@lists.linux.dev>; Thu, 23 Mar 2023 17:37:27 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pfOsH-0000nY-V0; Thu, 23 Mar 2023 18:37:18 +0100
-Message-ID: <a9c2fa30-569b-e69a-fb06-3dc093538b53@leemhuis.info>
-Date: Thu, 23 Mar 2023 18:37:17 +0100
-Precedence: bulk
-X-Mailing-List: regressions@lists.linux.dev
-List-Id: <regressions.lists.linux.dev>
-List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
-List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Content-Language: en-US, de-DE
-To: Jonathan Corbet <corbet@lwn.net>
-Cc: Randy Dunlap <rdunlap@infradead.org>,
- Lukas Bulwahn <lukas.bulwahn@gmail.com>, linux-doc@vger.kernel.org,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0FB3BA54
+	for <regressions@lists.linux.dev>; Thu, 23 Mar 2023 18:09:00 +0000 (UTC)
+Received: from localhost (unknown [IPv6:2601:281:8300:73::5f6])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id 0062F60A;
+	Thu, 23 Mar 2023 18:08:59 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 0062F60A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1679594940; bh=SlOsnE3ROIiiL+w8Oz/hp4NVxixmK2YoIp2+jx6LKP0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=OAp22PHG0zTEhZ++nCxC1kMRER81C4iyLXenSYYo2LqZU0LOxkeHM7BAsr37I/4J6
+	 RWfFH/L1wB+gowF7gAS4bAAY9j/sU3sDWX+48lVVWQBzzdk/+ROymRNuFSpG/wn/wj
+	 lnkosahI2q9ZNORX1FmQgSly/TChfNxfOXOU0AGyu8DMWv49l9N6dTktiUv0iIg2Je
+	 m8FtvglVEuZ0ZOT7dqXvIh/2TZR8edou6sKkVj3cNP8dM5ExbviYMIFXoicP+i5oRH
+	 vwSIY3uoZDLRKcrXMymggTGyi+2gawBPjYGHh3fMJzX9W5RBgGewviBX9vB27bItos
+	 +ExZwwKA02LIg==
+From: Jonathan Corbet <corbet@lwn.net>
+To: Thorsten Leemhuis <linux@leemhuis.info>
+Cc: Randy Dunlap <rdunlap@infradead.org>, Lukas Bulwahn
+ <lukas.bulwahn@gmail.com>, linux-doc@vger.kernel.org,
  linux-kernel@vger.kernel.org, regressions@lists.linux.dev
+Subject: Re: [PATCH v3] docs: describe how to quickly build a trimmed kernel
+In-Reply-To: <a9c2fa30-569b-e69a-fb06-3dc093538b53@leemhuis.info>
 References: <1a788a8e7ba8a2063df08668f565efa832016032.1678021408.git.linux@leemhuis.info>
  <87a60frxk0.fsf@meer.lwn.net>
  <d233a796-1cb8-a9b3-5a50-043dd2f98b3e@leemhuis.info>
  <87edpomtzn.fsf@meer.lwn.net>
  <165bd284-580d-df03-ab04-f5214b1e6be4@leemhuis.info>
  <87jzz7creg.fsf@meer.lwn.net>
-From: Thorsten Leemhuis <linux@leemhuis.info>
-Subject: Re: [PATCH v3] docs: describe how to quickly build a trimmed kernel
-In-Reply-To: <87jzz7creg.fsf@meer.lwn.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1679593047;d45b4075;
-X-HE-SMSGID: 1pfOsH-0000nY-V0
+ <a9c2fa30-569b-e69a-fb06-3dc093538b53@leemhuis.info>
+Date: Thu, 23 Mar 2023 12:08:59 -0600
+Message-ID: <87lejnbaro.fsf@meer.lwn.net>
+Precedence: bulk
+X-Mailing-List: regressions@lists.linux.dev
+List-Id: <regressions.lists.linux.dev>
+List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
+List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+Content-Type: text/plain
 
-On 23.03.23 18:24, Jonathan Corbet wrote:
-> Thorsten Leemhuis <linux@leemhuis.info> writes:
-> 
->> I currently can't really see the need for another book/top-level
->> directory and to be honest it's by far my least favorite solution among
->> the options on the table.
-> 
-> Well, it was just an idea that crossed my mind as I was thinking about
-> this stuff...it doesn't appear to have inspired a lot of enthusiasm.
+Thorsten Leemhuis <linux@leemhuis.info> writes:
 
-Yeah, looks like it, but was definitely worth mentioning and thinking
-about.
+>> Did you have further tweaks, or should I take v3?
+>
+> No further tweaks, so feel free to apply it as it is.
 
->  So
-> never mind that for now, I guess...I reserve the right to come back to
-> it in the future once we're getting overwhelmed by these things :)
+OK, that is now done - thanks.
 
-:-D
-
->> I'm taken back and forth between the other two options (e.g. put the
->> text in Documentation/admin-guide/ or
->> Documentation/admin-guide/tutorials/). Maybe I prefer the latter a
->> little bit more.
-> 
-> Let's just put it in admin-guide, I guess, though the fit feels a bit
-> awkward.  If we get more tutorials, we can make a separate section in
-> index.html, I don't think we need another subdirectory there at this
-> point.
-
-Okay.
-
-> Did you have further tweaks, or should I take v3?
-
-No further tweaks, so feel free to apply it as it is.
-
-tia!
-
-Ciao, Thorsten
+jon
