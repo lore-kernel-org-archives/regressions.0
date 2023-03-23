@@ -1,40 +1,39 @@
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49CCDC959
-	for <regressions@lists.linux.dev>; Thu, 23 Mar 2023 20:01:09 +0000 (UTC)
-Received: by mail-lf1-f45.google.com with SMTP id br6so29302910lfb.11
-        for <regressions@lists.linux.dev>; Thu, 23 Mar 2023 13:01:09 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0B092CA4
+	for <regressions@lists.linux.dev>; Thu, 23 Mar 2023 20:36:32 +0000 (UTC)
+Received: by mail-lj1-f182.google.com with SMTP id z42so23820158ljq.13
+        for <regressions@lists.linux.dev>; Thu, 23 Mar 2023 13:36:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1679601667;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CYgMKwwmghRmpVtJ77/gKQ0qSQFaMv343+RMHvCiaIc=;
-        b=jZ9NHpaOlmaQq29gRDVBv/nmK0HARx5tJ463lUOPfiUOB8Sg4oDFK85LbX+qlYSIf7
-         jtzNJfyY4ZY/1HlN2JoT3K4BoW6aSB1mPiD6y+0Tf2yMOPwEaBACZ6aeEJCV7T+2b10n
-         lLttc1CuKIWwEp723f6HEP0xX4+7UKbt1WxfRZHbNoCYPQPUpW3UI9EoyNGgybUzJiVH
-         oHNrahUY5YppVlTvlwiOJNVoSfRF6bj07S8j9V+8TCrnPY6g9YS2Qrpyz6qmXYlysoHv
-         SfB0ODmShfzCvq4qVdyFyzSBi2xv8i0EDoNn1ipFsqkTHMTDktMOkspeojj+JLBG5SF3
-         zrEA==
+        d=gmail.com; s=20210112; t=1679603791;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=/wWKgtplskX35Ooj0rAZs8TVWsN+tlsRPpgYFNhLgjc=;
+        b=QCERAZ6Vx534JVgfz+nGHSRlOHlsqXeKNYXAtrLPKiQguF7yLjPikV1QXsPrafsYXI
+         2e2SaXvRhOObHxlmDm8J2FDd1mXB4PJhP0DfF3B7PI0q8gX6RZAzoUiGRVUEN1qQrsb/
+         Bf6udFNVuWl5cRfgC1RrGTMM0D2KjL6Avywu2RyVKjRAgXAcmPvej/u/4mwsM0gEfR8K
+         6yNPvtrYpOkCOE7twBIR7GyncR4Dx1xAupHIPoDeiuxpIWdevZ+P/aFOFwZecpwzn9Km
+         Z/npkPFCJHi41ydklaNn2dd3XQoccEt2PsTZu6uTfTkbYybZHi/SFPj/VFw87S7dAaCG
+         rWjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679601667;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CYgMKwwmghRmpVtJ77/gKQ0qSQFaMv343+RMHvCiaIc=;
-        b=M3y3gpPMs/IEO8DmMLAP7oCNId7/4lohpFDzY0Ht4vXxxEeszUff4GQOsaZEA8F1Ee
-         6g/wZLh/0ebZ96tLu2LHAaRqM+utQ5QiSSoApzS88QW6CL96XQBEf5nbr7vlHgjnO4PV
-         tMsfw2xEcloMhWAyb7yFXxtPvoDaGoitodywXSmQWvVcSNR4n3EiNn2cLQ564fF6IeC1
-         cIQUumW4hYxXW8x1UzRhTyQzAph6WoDVz57ZbV2ZUxBzYynsawwNz6MzxA8MZX4wU79T
-         zoBnubKXHiUMjSvNGLsdTBi+1gwbZdkl0Xcfn7OBevMEhuPCMkCoRtZhp01h0ndLNKSv
-         hpQg==
-X-Gm-Message-State: AO0yUKU11lCs82EKx5lWsckvAGdoH9DQW4gJlWftSbq7jpDXiDEKVmS5
-	rbOQCaFeKfzQufGWjMcWd1/qgP/ygBzDGQjVhEo=
-X-Google-Smtp-Source: AK7set/BjwvGc+358bBWj++nqAOqD0WEkHTezfVSxCajk59gIPWhSnk04fjuqO0YmyLBuqB0y7We/6LwVm4JISFoWJc=
-X-Received: by 2002:a05:6512:b8a:b0:4e8:4409:bb76 with SMTP id
- b10-20020a0565120b8a00b004e84409bb76mr3910463lfv.2.1679601667117; Thu, 23 Mar
- 2023 13:01:07 -0700 (PDT)
+        d=1e100.net; s=20210112; t=1679603791;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/wWKgtplskX35Ooj0rAZs8TVWsN+tlsRPpgYFNhLgjc=;
+        b=Vq2+PihcY8fWSuKQlovrxHcboRmztYMFBQrzKN48eSGBBjmECcFUDuOT+DiPNEipxF
+         kAf5JEm0ScFg9rflJwTdDh1Vqx1PacDABFdQusIdLFSS9wYVb7bFsSfD5GYRG85ErPel
+         5pR5vVAE5PR5cqf3jn5icBTVwWwz9VZcibqPMbxSf1o6jprbQMZyjtOmpuPcyCaK9aw9
+         aZPfevJC3EXKCVAog9r7920s6v1jo4S8uICbZhpfxkOc7YAClmpA/AorYJ+lPc660Ud+
+         Rf057Wut51GvqVPT9M6AZJ9omx+OLMMpgTssVuYtwg2jhpx8hn1hdnnAfdP35BZsySc6
+         Zg1g==
+X-Gm-Message-State: AAQBX9ca0LENUipUVd4nIFsNWVOrlZ9BggTNOIdG4Sy/8XYkHaD+ltyG
+	+MJpNcHFhkvW0X62oCdAqiXABj7Ul2gzFGTMWzM=
+X-Google-Smtp-Source: AKy350YwWBk9gxR7KzJ68QeG9p+vu4IOSfqw5xttFfPBPC0dZJZXvDSKXvR5Y72WF+TdbDuvjYpzwa63XcssEqKWbn4=
+X-Received: by 2002:a2e:8882:0:b0:295:945d:b381 with SMTP id
+ k2-20020a2e8882000000b00295945db381mr164243lji.7.1679603790561; Thu, 23 Mar
+ 2023 13:36:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -46,8 +45,8 @@ References: <20220826022031.GA76590@inn2.lkp.intel.com> <c8310cba-36ef-2940-b2c2
  <997614df-10d4-af53-9571-edec36b0e2f3@intel.com>
 In-Reply-To: <997614df-10d4-af53-9571-edec36b0e2f3@intel.com>
 From: Steve French <smfrench@gmail.com>
-Date: Thu, 23 Mar 2023 15:00:55 -0500
-Message-ID: <CAH2r5mt8krLwUomWBb28rw6uRZgAhqCSjphrsUzWueGrd+VgGw@mail.gmail.com>
+Date: Thu, 23 Mar 2023 15:36:19 -0500
+Message-ID: <CAH2r5mu5zDysHUPgeSK9aEL=cByz9_9vBTxKvkqZ5xOObTXAWA@mail.gmail.com>
 Subject: Re: [smb3] 5efdd9122e: filebench.sum_operations/s -50.0% regression
 To: Yin Fengwei <fengwei.yin@intel.com>
 Cc: kernel test robot <yujie.liu@intel.com>, Steve French <stfrench@microsoft.com>, lkp@lists.01.org, 
@@ -56,13 +55,16 @@ Cc: kernel test robot <yujie.liu@intel.com>, Steve French <stfrench@microsoft.co
 	linux-cifs@vger.kernel.org, samba-technical@lists.samba.org, 
 	ying.huang@intel.com, feng.tang@intel.com, zhengjun.xing@linux.intel.com, 
 	regressions@lists.linux.dev
+Content-Type: multipart/mixed; boundary="0000000000004d29ac05f7973b18"
+
+--0000000000004d29ac05f7973b18
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-This is VERY useful data.  Thank you.   It show the SMB3 CLOSE
-operation on the wire takes twice as long to complete with
-closetimeo=3D5 rather than 1.  Can you do the same stats for
-closetimeo=3D0
+Patch attached to return default back to 1 second from 5 seconds
+(Bharath's recent closetimeo on lease break patch may also help)
+
+Let me know if you see any problems with it
 
 On Thu, Mar 23, 2023 at 2:48=E2=80=AFAM Yin Fengwei <fengwei.yin@intel.com>=
  wrote:
@@ -461,3 +463,47 @@ provided
 Thanks,
 
 Steve
+
+--0000000000004d29ac05f7973b18
+Content-Type: text/x-patch; charset="US-ASCII"; 
+	name="0001-smb3-lower-default-deferred-close-timeout-to-address.patch"
+Content-Disposition: attachment; 
+	filename="0001-smb3-lower-default-deferred-close-timeout-to-address.patch"
+Content-Transfer-Encoding: base64
+Content-ID: <f_lflkpu0r0>
+X-Attachment-Id: f_lflkpu0r0
+
+RnJvbSAwZTNlNGY2NjEzMGEwNzdmMGJmMjBiZDI5YjhhZDIxZDRkNWE5MzE0IE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiBTdGV2ZSBGcmVuY2ggPHN0ZnJlbmNoQG1pY3Jvc29mdC5jb20+
+CkRhdGU6IFRodSwgMjMgTWFyIDIwMjMgMTU6MTA6MjYgLTA1MDAKU3ViamVjdDogW1BBVENIXSBz
+bWIzOiBsb3dlciBkZWZhdWx0IGRlZmVycmVkIGNsb3NlIHRpbWVvdXQgdG8gYWRkcmVzcyBwZXJm
+CiByZWdyZXNzaW9uCgpQZXJmb3JtYW5jZSB0ZXN0cyB3aXRoIGxhcmdlIG51bWJlciBvZiB0aHJl
+YWRzIG5vdGVkIHRoYXQgdGhlIGNoYW5nZQpvZiB0aGUgZGVmYXVsdCBjbG9zZXRpbWVvIChkZWZl
+cnJlZCBjbG9zZSB0aW1lb3V0IGJldHdlZW4gd2hlbgpjbG9zZSBpcyBkb25lIGJ5IGFwcGxpY2F0
+aW9uIGFuZCB3aGVuIGNsaWVudCBoYXMgdG8gc2VuZCB0aGUgY2xvc2UKdG8gdGhlIHNlcnZlciks
+IHRvIDUgc2Vjb25kcyBmcm9tIDEgc2Vjb25kLCBzaWduaWZpY2FudGx5IGRlZ3JhZGVkCnBlcmYg
+aW4gc29tZSBjYXNlcyBsaWtlIHRoaXMgKGluIHRoZSBmaWxlYmVuY2ggZXhhbXBsZSByZXBvcnRl
+ZCwKdGhlIHN0YXRzIHNob3cgY2xvc2UgcmVxdWVzdHMgb24gdGhlIHdpcmUgdGFraW5nIHR3aWNl
+IGFzIGxvbmcsCmFuZCA1MCUgcmVncmVzc2lvbiBpbiBmaWxlYmVuY2ggcGVyZikuIFRoaXMgaXMg
+c3RpbCBjb25maWd1cmFibGUKdmlhIG1vdW50IHBhcm0gY2xvc2V0aW1lbywgYnV0IHRvIGJlIHNh
+ZmUsIGRlY3JlYXNlIGRlZmF1bHQgYmFjawp0byBpdHMgcHJldmlvdXMgdmFsdWUgb2YgMSBzZWNv
+bmQuCgpSZXBvcnRlZC1ieTogWWluIEZlbmd3ZWkgPGZlbmd3ZWkueWluQGludGVsLmNvbT4KUmVw
+b3J0ZWQtYnk6IGtlcm5lbCB0ZXN0IHJvYm90IDx5dWppZS5saXVAaW50ZWwuY29tPgpMaW5rOiBo
+dHRwczovL2xvcmUua2VybmVsLm9yZy9sa21sLzk5NzYxNGRmLTEwZDQtYWY1My05NTcxLWVkZWMz
+NmIwZTJmM0BpbnRlbC5jb20vCkZpeGVzOiA1ZWZkZDkxMjJlZmYgKCJzbWIzOiBhbGxvdyBkZWZl
+cnJlZCBjbG9zZSB0aW1lb3V0IHRvIGJlIGNvbmZpZ3VyYWJsZSIpCkNjOiBzdGFibGVAdmdlci5r
+ZXJuZWwub3JnICMgNi4wKwpSZXZpZXdlZC1ieTogUGF1bG8gQWxjYW50YXJhIChTVVNFKSA8cGNA
+bWFuZ3VlYml0LmNvbT4KQWNrZWQtYnk6IFNoeWFtIFByYXNhZCBOIDxzcHJhc2FkQG1pY3Jvc29m
+dC5jb20+ClNpZ25lZC1vZmYtYnk6IFN0ZXZlIEZyZW5jaCA8c3RmcmVuY2hAbWljcm9zb2Z0LmNv
+bT4KLS0tCiBmcy9jaWZzL2ZzX2NvbnRleHQuaCB8IDIgKy0KIDEgZmlsZSBjaGFuZ2VkLCAxIGlu
+c2VydGlvbigrKSwgMSBkZWxldGlvbigtKQoKZGlmZiAtLWdpdCBhL2ZzL2NpZnMvZnNfY29udGV4
+dC5oIGIvZnMvY2lmcy9mc19jb250ZXh0LmgKaW5kZXggMWI4ZDRlMjdmODMxLi4zZGUwMGU3MTI3
+ZWMgMTAwNjQ0Ci0tLSBhL2ZzL2NpZnMvZnNfY29udGV4dC5oCisrKyBiL2ZzL2NpZnMvZnNfY29u
+dGV4dC5oCkBAIC0yODYsNSArMjg2LDUgQEAgZXh0ZXJuIHZvaWQgc21iM191cGRhdGVfbW50X2Zs
+YWdzKHN0cnVjdCBjaWZzX3NiX2luZm8gKmNpZnNfc2IpOwogICogbWF4IGRlZmVycmVkIGNsb3Nl
+IHRpbWVvdXQgKGppZmZpZXMpIC0gMl4zMAogICovCiAjZGVmaW5lIFNNQjNfTUFYX0RDTE9TRVRJ
+TUVPICgxIDw8IDMwKQotI2RlZmluZSBTTUIzX0RFRl9EQ0xPU0VUSU1FTyAoNSAqIEhaKSAvKiBD
+YW4gaW5jcmVhc2UgbGF0ZXIsIG90aGVyIGNsaWVudHMgdXNlIGxhcmdlciAqLworI2RlZmluZSBT
+TUIzX0RFRl9EQ0xPU0VUSU1FTyAoMSAqIEhaKSAvKiBldmVuIDEgc2VjIGVub3VnaCB0byBoZWxw
+IGVnIG9wZW4vd3JpdGUvY2xvc2Uvb3Blbi9yZWFkICovCiAjZW5kaWYKLS0gCjIuMzQuMQoK
+--0000000000004d29ac05f7973b18--
