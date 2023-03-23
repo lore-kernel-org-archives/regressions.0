@@ -1,97 +1,110 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [85.220.165.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4CC62F32
-	for <regressions@lists.linux.dev>; Thu, 23 Mar 2023 12:39:38 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pfKEB-0007XV-1v; Thu, 23 Mar 2023 13:39:35 +0100
-Message-ID: <61065a7f-19ce-0308-57ed-4cd4c4d681a0@leemhuis.info>
-Date: Thu, 23 Mar 2023 13:39:33 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 833338F6D
+	for <regressions@lists.linux.dev>; Thu, 23 Mar 2023 13:16:51 +0000 (UTC)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1pfKoD-0006DB-1d; Thu, 23 Mar 2023 14:16:49 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1pfKoB-006A60-QI; Thu, 23 Mar 2023 14:16:47 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1pfKoB-007LDY-3Q; Thu, 23 Mar 2023 14:16:47 +0100
+Date: Thu, 23 Mar 2023 14:16:46 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Pierre Asselin <pa@panix.com>, linux-acpi@vger.kernel.org,
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: Re: [Regression] acpi: laptop panics early in boot
+Message-ID: <20230323131646.xp3m2qvb7wp2wsqb@pengutronix.de>
+References: <9f6cba7a8a57e5a687c934e8e406e28c.squirrel@mail.panix.com>
+ <20230307093308.m5enhuegm3r4qwvo@pengutronix.de>
+ <220898e2276e4cae2572eb8f006f3a7b.squirrel@mail.panix.com>
+ <20230307161005.6m6fpi3oxa3jn2wg@pengutronix.de>
+ <6d97df76de719871c90fb59726f2d6b0.squirrel@mail.panix.com>
+ <47a90870-8a71-a28f-bd8a-032a69cda596@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Subject: Re: [REGRESSION] kbl-r5514-5663-max hdmi no longer working
-Content-Language: en-US, de-DE
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc: Jason Montleon <jmontleo@redhat.com>, stable@vger.kernel.org,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- Mark Brown <broonie@kernel.org>, Alsa-devel <alsa-devel@alsa-project.org>,
- Takashi Iwai <tiwai@suse.com>, Bard Liao <yung-chuan.liao@linux.intel.com>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-References: <CAJD_bPKQdtaExvVEKxhQ47G-ZXDA=k+gzhMJRHLBe=mysPnuKA@mail.gmail.com>
- <f96431ee-abc0-ff76-3963-c45d3b092840@leemhuis.info>
-In-Reply-To: <f96431ee-abc0-ff76-3963-c45d3b092840@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1679575178;0a36e1c5;
-X-HE-SMSGID: 1pfKEB-0007XV-1v
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="jtnsbqy6se7cszif"
+Content-Disposition: inline
+In-Reply-To: <47a90870-8a71-a28f-bd8a-032a69cda596@leemhuis.info>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: regressions@lists.linux.dev
 
-On 13.03.23 18:32, Linux regression tracking (Thorsten Leemhuis) wrote:
-> [adding a push of people and lists to the recipients that dealt with the
-> culprit; leaving the stable list in CC for now, even if this is a
-> mainline issue (apart from the backport of the culprit to 5.10.y Takashi
-> asked for a while ago)]
-> 
-> On 13.03.23 17:34, Jason Montleon wrote:
->> It looks like HDMI audio stopped working in 5.17-rc1. I ran a bisect
->> which points to 636110411ca726f19ef8e87b0be51bb9a4cdef06.
-> 
-> FWIW, that's "ASoC: Intel/SOF: use set_stream() instead of
-> set_tdm_slots() for HDAudio" from Pierre-Louis Bossart.
 
-Pierre-Louis Bossart, did you find time to look into this?
+--jtnsbqy6se7cszif
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+On Thu, Mar 23, 2023 at 01:31:37PM +0100, Linux regression tracking (Thorst=
+en Leemhuis) wrote:
+> On 07.03.23 20:31, Pierre Asselin wrote:
+> >> Maybe the following patch helps (on top of v6.3-rc1):
+> >>
+> >> diff --git a/drivers/acpi/bus.c b/drivers/acpi/bus.c
+> >> index 9531dd0fef50..a5a8f82981ce 100644
+> >> --- a/drivers/acpi/bus.c
+> >> +++ b/drivers/acpi/bus.c
+> >> @@ -518,7 +518,7 @@ static void acpi_bus_notify(acpi_handle handle, u32
+> >> type, void *data)
+> >>  	if (!adev)
+> >>  		goto err;
+> >>
+> >> -	if (adev->dev.driver) {
+> >> +	if (device_is_bound(&adev->dev)) {
+> >>  		struct acpi_driver *driver =3D to_acpi_driver(adev->dev.driver);
+> >>
+> >>  		if (driver && driver->ops.notify &&
+> >>
+> >=20
+> > It does indeed "fix" 6.3-rc1.  Modulo locking issues, which I am
+> > not qualified to evaluate.
+>=20
+> Uwe, what happens to this regression fix? It looks like it didn't make
+> any progress towards mainline, but maybe I missed something in my brief
+> search on lore.
 
-#regzbot poke
+If you missed something then so did I. From my POV the patch is not
+known to lead to a correct handling, but for sure it's better than the
+status quo.
 
->> I built
->> 5.17.14 with it reverted and it restored HDMI output, but it doesn't
->> revert cleanly from 5.18 onward.
->>
->> >From what I can tell it looks like -ENOTSUPP is returned from
->> snd_soc_dai_set_stream for hdmi1 and hdmi2 now. I'm not sure if that's
->> expected, but I made the following change and I have working HDMI
->> audio now. https://gist.github.com/jmontleon/4780154c309f956d97ca9a304a00da3f
-> 
-> Thanks for the report and the patch. I CCed the relevant people for this.
-> 
-> [TLDR For the rest of the mail: : I'm adding this report to the list of
-> tracked Linux kernel regressions; the text you find below is based on a
-> few templates paragraphs you might have encountered already in similar
-> form. See link in footer if these mails annoy you.]
-> 
-> To be sure the issue doesn't fall through the cracks unnoticed, I'm
-> adding it to regzbot, the Linux kernel regression tracking bot:
-> 
-> #regzbot ^introduced 636110411ca726f19ef8e87b0be51bb9a4cdef06
-> #regzbot title alsa/asoc: kbl-r5514-5663-max hdmi stopped working
-> #regzbot ignore-activity
-> 
-> This isn't a regression? This issue or a fix for it are already
-> discussed somewhere else? It was fixed already? You want to clarify when
-> the regression started to happen? Or point out I got the title or
-> something else totally wrong? Then just reply and tell me -- ideally
-> while also telling regzbot about it, as explained by the page listed in
-> the footer of this mail.
-> 
-> Developers: When fixing the issue, remember to add 'Link:' tags pointing
-> to the report (the parent of this mail). See page linked in footer for
-> details.
-> 
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-> --
-> Everything you wanna know about Linux kernel regression tracking:
-> https://linux-regtracking.leemhuis.info/about/#tldr
-> That page also explains what to do if mails like this annoy you.
+I didn't create a proper patch because I thought someone might want to
+do a deeper dive and check the logging. If that doesn't happen, I can
+followup with a patch.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--jtnsbqy6se7cszif
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmQcUT4ACgkQj4D7WH0S
+/k4BrAf/eTy4iJinpXgEBmbkNhRYShxnyM6jIPwHt0SxA31/ay5SOAqotbXAOGPl
+Cb7J4CxKuuxMXFk5rYPYW8G6+xzUdpvMvAKjJ9ykyu1u68FgTVDUehvkO8PyTIlU
+iEiDBdt+1Kq51vTSHWLAWhSij1QAku/fXE9+lmLkoIcFP6n4K9fkAOj8HiZeTxNh
+Nk4I2UXbZpYDUAGLAwbWYAXrUHzyhHqiLJKRnY/Qgs7gBB17ueYfsy9zk2pYolTj
+i1jG3PXb2J09Vojg02DT2bHBiTb0YplQJ5QxSr/uvLoDmPlD/6oeTw3lUrP/X2US
+NkloZFmHMRRtwIfXIrDWzN8zgWMWaA==
+=f2gj
+-----END PGP SIGNATURE-----
+
+--jtnsbqy6se7cszif--
