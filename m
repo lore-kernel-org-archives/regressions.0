@@ -1,166 +1,130 @@
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [85.220.165.71])
+Received: from mailbackend.panix.com (mailbackend.panix.com [166.84.1.89])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60DB2525F
-	for <regressions@lists.linux.dev>; Fri, 24 Mar 2023 12:28:04 +0000 (UTC)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1pfgWO-00057H-Nj; Fri, 24 Mar 2023 13:27:52 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1pfgWN-006Nb6-5U; Fri, 24 Mar 2023 13:27:51 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1pfgWM-007blL-2o; Fri, 24 Mar 2023 13:27:50 +0100
-Date: Fri, 24 Mar 2023 13:27:49 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Pierre Asselin <pa@panix.com>,
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-	linux-acpi@vger.kernel.org, regressions@lists.linux.dev,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Robert =?utf-8?B?xZp3acSZY2tp?= <robert@swiecki.net>
-Subject: Re: [Regression] acpi: laptop panics early in boot
-Message-ID: <20230324122749.oqmkcc3ckaotkeye@pengutronix.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D00856FA1
+	for <regressions@lists.linux.dev>; Fri, 24 Mar 2023 15:02:20 +0000 (UTC)
+Received: from mail.panix.com (localhost [127.0.0.1])
+	by mailbackend.panix.com (Postfix) with ESMTPA id 4Pjlmh6l9Vz43yD;
+	Fri, 24 Mar 2023 11:02:12 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=panix.com; s=panix;
+	t=1679670133; bh=ChfbjGRiFL92LPJtGpRt/wgijRzpCQ49RN1Njtbwtpw=;
+	h=In-Reply-To:References:Date:Subject:From:To:Cc;
+	b=UvwCvjmdQ/cxywq865blRBmHCngJBPk2hr0y+EEPzlnkN1EDlDBwawIsvLiuJ23Et
+	 fJfgKVLt3+yWvldmOcDVfPK3nwBnw0iP0owRgQaqDZXV3BFNAtC/DiQCp/GyMde9oe
+	 szQCP0uREPrrxpC0BWcbM/73EDeQWMMmLZOi7Tl0=
+X-Panix-Received: from 166.84.1.3
+        (SquirrelMail authenticated user pa@panix.com)
+        by mail.panix.com with HTTP;
+        Fri, 24 Mar 2023 11:02:13 -0400
+Message-ID: <8ac89f507c8e5c14635d215284f2f2b1.squirrel@mail.panix.com>
+In-Reply-To: <20230323212212.udho2htrhd2vlzxm@pengutronix.de>
 References: <9f6cba7a8a57e5a687c934e8e406e28c.squirrel@mail.panix.com>
- <20230307093308.m5enhuegm3r4qwvo@pengutronix.de>
- <220898e2276e4cae2572eb8f006f3a7b.squirrel@mail.panix.com>
- <20230307161005.6m6fpi3oxa3jn2wg@pengutronix.de>
- <6d97df76de719871c90fb59726f2d6b0.squirrel@mail.panix.com>
- <20230307200843.yxhvnb23tpecjjng@pengutronix.de>
- <20230323212212.udho2htrhd2vlzxm@pengutronix.de>
- <CAJZ5v0haCTNn+MYA2wSNhC_MzWiyH7uBYQ3F__OgL4OuubRRUg@mail.gmail.com>
+    <20230307093308.m5enhuegm3r4qwvo@pengutronix.de>
+    <220898e2276e4cae2572eb8f006f3a7b.squirrel@mail.panix.com>
+    <20230307161005.6m6fpi3oxa3jn2wg@pengutronix.de>
+    <6d97df76de719871c90fb59726f2d6b0.squirrel@mail.panix.com>
+    <20230307200843.yxhvnb23tpecjjng@pengutronix.de>
+    <20230323212212.udho2htrhd2vlzxm@pengutronix.de>
+Date: Fri, 24 Mar 2023 11:02:13 -0400
+Subject: Re: [Regression] acpi: laptop panics early in boot
+From: "Pierre Asselin" <pa@panix.com>
+To: =?iso-8859-1?Q?=22Uwe_Kleine-K=C3=B6nig=22?= <u.kleine-koenig@pengutronix.de>
+Cc: "Pierre Asselin" <pa@panix.com>,
+ "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+ linux-acpi@vger.kernel.org,
+ regressions@lists.linux.dev,
+ "Bjorn Helgaas" <bhelgaas@google.com>,
+ =?iso-8859-1?Q?=22Robert_=C5=9Awi=C4=99cki=22?= <robert@swiecki.net>
+User-Agent: SquirrelMail/1.4.23-p1
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="bfdgtpvzimwjkmdp"
-Content-Disposition: inline
-In-Reply-To: <CAJZ5v0haCTNn+MYA2wSNhC_MzWiyH7uBYQ3F__OgL4OuubRRUg@mail.gmail.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: regressions@lists.linux.dev
+Content-Type: text/plain;charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+X-Priority: 3 (Normal)
+Importance: Normal
+
+> This mail didn't make it into the archive on lore.kernel.org. Did
+> someone receive it? If not, that would explain why I didn't get any
+> feedback on it ...
+
+First time I see it.
+
+>> diff --git a/drivers/acpi/bus.c b/drivers/acpi/bus.c
+>> index 9531dd0fef50..fddca263ac40 100644
+>> --- a/drivers/acpi/bus.c
+>> +++ b/drivers/acpi/bus.c
+>> @@ -518,13 +518,15 @@ static void acpi_bus_notify(acpi_handle handle,
+>> u32 type, void *data)
+>>  	if (!adev)
+>>  		goto err;
+>>
+>> -	if (adev->dev.driver) {
+>> +	device_lock(&adev->dev);
+>> +	if (device_is_bound(&adev->dev)) {
+>>  		struct acpi_driver *driver = to_acpi_driver(adev->dev.driver);
+>>
+>>  		if (driver && driver->ops.notify &&
+>>  		    (driver->flags & ACPI_DRIVER_ALL_NOTIFY_EVENTS))
+>>  			driver->ops.notify(adev, type);
+>>  	}
+>> +	device_unlock(&adev->dev);
+>>
+>>  	if (!hotplug_event) {
+>>  		acpi_put_acpi_dev(adev);
+>>
+
+This patch works, in that the kernel reaches early userspace reliably.
+I would want to test it more extensively, i.e. install the modules and
+run it for real instead of just kexec-ing the bzImage.  I'll test Rafael's
+patch first.
+
+Full disclosure: I made small changes to the starting .config, see below.
+6.3-rc1 is still bad with the new .config, the patch makes it good.
+The changes:
+  1) PROVE_LOCKING=y
+  2) CONFIG_DEBUG_ATOMIC_SLEEP=y  (why not, what could go wrong :)
+  3) radeon driver modular instead of built-in.
+I don't think it matters.  Here is the diffconfig, just in case.
+
+-EXTRA_FIRMWARE_DIR "/lib/firmware"
+ CEC_CORE y -> m
+ DEBUG_ATOMIC_SLEEP n -> y
+ DEBUG_LOCK_ALLOC n -> y
+ DEBUG_MUTEXES n -> y
+ DEBUG_RT_MUTEXES n -> y
+ DEBUG_RWSEMS n -> y
+ DEBUG_SPINLOCK n -> y
+ DEBUG_WW_MUTEX_SLOWPATH n -> y
+ DRM_DISPLAY_HELPER y -> m
+ DRM_KMS_HELPER y -> m
+ DRM_RADEON y -> m
+ DRM_TTM y -> m
+ DRM_TTM_HELPER y -> m
+ EXTRA_FIRMWARE "radeon/R300_cp.bin" -> ""
+ FB_CFB_COPYAREA y -> m
+ FB_CFB_FILLRECT y -> m
+ FB_CFB_IMAGEBLIT y -> m
+ FB_SYS_COPYAREA y -> m
+ FB_SYS_FILLRECT y -> m
+ FB_SYS_FOPS y -> m
+ FB_SYS_IMAGEBLIT y -> m
+ I2C_ALGOBIT y -> m
+ PROVE_LOCKING n -> y
++DEBUG_LOCKDEP n
++LOCKDEP y
++LOCKDEP_BITS 15
++LOCKDEP_CHAINS_BITS 16
++LOCKDEP_CIRCULAR_QUEUE_BITS 12
++LOCKDEP_STACK_TRACE_BITS 19
++LOCKDEP_STACK_TRACE_HASH_BITS 14
++PREEMPTIRQ_TRACEPOINTS y
++PROVE_RAW_LOCK_NESTING n
++PROVE_RCU y
++TRACE_IRQFLAGS y
++TRACE_IRQFLAGS_NMI y
 
 
---bfdgtpvzimwjkmdp
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hello Rafael,
-
-On Fri, Mar 24, 2023 at 01:12:35PM +0100, Rafael J. Wysocki wrote:
-> On Thu, Mar 23, 2023 at 10:22=E2=80=AFPM Uwe Kleine-K=C3=B6nig
-> <u.kleine-koenig@pengutronix.de> wrote:
-> >
-> > Hello Pierre,
-> >
-> > On Tue, Mar 07, 2023 at 09:08:55PM +0100, Uwe Kleine-K=C3=B6nig wrote:
-> > > On Tue, Mar 07, 2023 at 02:31:49PM -0500, Pierre Asselin wrote:
-> > > > > Maybe the following patch helps (on top of v6.3-rc1):
-> > > > >
-> > > > > diff --git a/drivers/acpi/bus.c b/drivers/acpi/bus.c
-> > > > > index 9531dd0fef50..a5a8f82981ce 100644
-> > > > > --- a/drivers/acpi/bus.c
-> > > > > +++ b/drivers/acpi/bus.c
-> > > > > @@ -518,7 +518,7 @@ static void acpi_bus_notify(acpi_handle handl=
-e, u32
-> > > > > type, void *data)
-> > > > >   if (!adev)
-> > > > >           goto err;
-> > > > >
-> > > > > - if (adev->dev.driver) {
-> > > > > + if (device_is_bound(&adev->dev)) {
-> > > > >           struct acpi_driver *driver =3D to_acpi_driver(adev->dev=
-=2Edriver);
-> > > > >
-> > > > >           if (driver && driver->ops.notify &&
-> > > > >
-> > > >
-> > > > It does indeed "fix" 6.3-rc1.  Modulo locking issues, which I am
-> > > > not qualified to evaluate.
-> > >
-> > > Thanks for your prompt test feedback.
-> > >
-> > > The locked variant could look as follows:
-> > >
-> > > diff --git a/drivers/acpi/bus.c b/drivers/acpi/bus.c
-> > > index 9531dd0fef50..fddca263ac40 100644
-> > > --- a/drivers/acpi/bus.c
-> > > +++ b/drivers/acpi/bus.c
-> > > @@ -518,13 +518,15 @@ static void acpi_bus_notify(acpi_handle handle,=
- u32 type, void *data)
-> > >       if (!adev)
-> > >               goto err;
-> > >
-> > > -     if (adev->dev.driver) {
-> > > +     device_lock(&adev->dev);
-> > > +     if (device_is_bound(&adev->dev)) {
-> > >               struct acpi_driver *driver =3D to_acpi_driver(adev->dev=
-=2Edriver);
-> > >
-> > >               if (driver && driver->ops.notify &&
-> > >                   (driver->flags & ACPI_DRIVER_ALL_NOTIFY_EVENTS))
-> > >                       driver->ops.notify(adev, type);
-> > >       }
-> > > +     device_unlock(&adev->dev);
-> > >
-> > >       if (!hotplug_event) {
-> > >               acpi_put_acpi_dev(adev);
-> > >
-> > > Pierre: If you want to test that, I suggest to also enable
-> > > PROVE_LOCKING.
-> > >
-> > > Rafael: I don't know if this would work and I hope you're able to jud=
-ge
-> > > this better than I do. The change without the lock is for sure better
-> > > than the status quo.
-> > >
-> > > I did a similar conversion as the blamed commit for pci that got
-> > > reverted for similiar reasons. See
-> > > 68da4e0eaaab421f228eac57cbe7505b136464af. (Added Bjorn and Robert to
-> > > Cc:) I think the pci code suffers from a similar race even after
-> > > reverting my change. If someone is able to find the right fix for one=
- of
-> > > them, that might be transferable to the other?!
-> >
-> > This mail didn't make it into the archive on lore.kernel.org. Did
-> > someone receive it?
->=20
-> I have received it.
-
-I bounced it to the list and Pierre. This was enough to make it appear
-in the archive on lore.kernel.org. If you got it yesterday, that was my
-bounce.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig         =
-   |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---bfdgtpvzimwjkmdp
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmQdl0QACgkQj4D7WH0S
-/k4TvggAjH83z4sby84iLNjtfetkT70BzLkdpRslRRFs/UQFV7pbc3cfY+IXierg
-IQGEz939gCVlRkhUYEV0ifWUmyRY/IHqSUSr6q327JhsfU3KQnoJxUL3w2zztPXE
-y+H1HQlTlOwAS8k7uHBlXPhEPy41XAgtvjHjeQaycsmFPwMIwpJFM9cwitqAfVqy
-khmtGeY16o98kDYKr58EHHnvUIlHfNdk0yUZR1o10PTdJPVEQDy5lN5txYUD6gxS
-Ddr8Q1SKwnGPkn/SR4diXybDHHRfrwDE5RvzgyWAkBW2ssVzt062ic9Dz8R/mXO+
-LlqYv8IQTJfroACZnUUH7YZzmXoAJQ==
-=8tnN
------END PGP SIGNATURE-----
-
---bfdgtpvzimwjkmdp--
