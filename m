@@ -1,130 +1,131 @@
-Received: from mailbackend.panix.com (mailbackend.panix.com [166.84.1.89])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D00856FA1
-	for <regressions@lists.linux.dev>; Fri, 24 Mar 2023 15:02:20 +0000 (UTC)
-Received: from mail.panix.com (localhost [127.0.0.1])
-	by mailbackend.panix.com (Postfix) with ESMTPA id 4Pjlmh6l9Vz43yD;
-	Fri, 24 Mar 2023 11:02:12 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=panix.com; s=panix;
-	t=1679670133; bh=ChfbjGRiFL92LPJtGpRt/wgijRzpCQ49RN1Njtbwtpw=;
-	h=In-Reply-To:References:Date:Subject:From:To:Cc;
-	b=UvwCvjmdQ/cxywq865blRBmHCngJBPk2hr0y+EEPzlnkN1EDlDBwawIsvLiuJ23Et
-	 fJfgKVLt3+yWvldmOcDVfPK3nwBnw0iP0owRgQaqDZXV3BFNAtC/DiQCp/GyMde9oe
-	 szQCP0uREPrrxpC0BWcbM/73EDeQWMMmLZOi7Tl0=
-X-Panix-Received: from 166.84.1.3
-        (SquirrelMail authenticated user pa@panix.com)
-        by mail.panix.com with HTTP;
-        Fri, 24 Mar 2023 11:02:13 -0400
-Message-ID: <8ac89f507c8e5c14635d215284f2f2b1.squirrel@mail.panix.com>
-In-Reply-To: <20230323212212.udho2htrhd2vlzxm@pengutronix.de>
-References: <9f6cba7a8a57e5a687c934e8e406e28c.squirrel@mail.panix.com>
-    <20230307093308.m5enhuegm3r4qwvo@pengutronix.de>
-    <220898e2276e4cae2572eb8f006f3a7b.squirrel@mail.panix.com>
-    <20230307161005.6m6fpi3oxa3jn2wg@pengutronix.de>
-    <6d97df76de719871c90fb59726f2d6b0.squirrel@mail.panix.com>
-    <20230307200843.yxhvnb23tpecjjng@pengutronix.de>
-    <20230323212212.udho2htrhd2vlzxm@pengutronix.de>
-Date: Fri, 24 Mar 2023 11:02:13 -0400
-Subject: Re: [Regression] acpi: laptop panics early in boot
-From: "Pierre Asselin" <pa@panix.com>
-To: =?iso-8859-1?Q?=22Uwe_Kleine-K=C3=B6nig=22?= <u.kleine-koenig@pengutronix.de>
-Cc: "Pierre Asselin" <pa@panix.com>,
- "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
- linux-acpi@vger.kernel.org,
- regressions@lists.linux.dev,
- "Bjorn Helgaas" <bhelgaas@google.com>,
- =?iso-8859-1?Q?=22Robert_=C5=9Awi=C4=99cki=22?= <robert@swiecki.net>
-User-Agent: SquirrelMail/1.4.23-p1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C09DC950
+	for <regressions@lists.linux.dev>; Fri, 24 Mar 2023 17:09:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1679677769;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=JLRKnXRPip+ks27gdmBMUhtEnFO7L9UtH6SSkGcCZo0=;
+	b=PSElvA6oErRcsNzAKAlpKS0iWYS5Uis453RfBBvmGC9p/PBUTiF4k78WnqlpJT8WUntCI6
+	DZDY4S8UEqFGXbdrrOQMP+X2cz2aLPMenAF5BMrV0FRGYDqEqHUXqP4TIVE7wZ9HUneZ77
+	uqyOH2v058Qsa/6414JFAZm1Q+xdwHI=
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
+ [209.85.219.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-265--tjQfrksNIqUAqobfl4P5Q-1; Fri, 24 Mar 2023 13:09:28 -0400
+X-MC-Unique: -tjQfrksNIqUAqobfl4P5Q-1
+Received: by mail-qv1-f72.google.com with SMTP id z14-20020a0cd78e000000b005adc8684170so1315771qvi.3
+        for <regressions@lists.linux.dev>; Fri, 24 Mar 2023 10:09:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1679677768;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=JLRKnXRPip+ks27gdmBMUhtEnFO7L9UtH6SSkGcCZo0=;
+        b=WjQ4TK8acnVB6ttx9jryK4t8k20hsuZ2dAtPexTcXrY3l4MTwgBHNxq7ZYuBFecoHX
+         nEb8fBWG9aAzEhmhmhJ0kDQOTBg4HQkYlK8fwVQgJu8bqYAZlv6zlz0bmVpqucqb96ky
+         iSnjMdC3CXD40cn30cxFbplIPDWlR6L9k3wv6VNiFTzvlWrgrenVy+B66pwTvMHuTQMv
+         BZRpeFOllfQYvoIIN5oRIqilNOjvVuYG1VKEVw2zCpV5ab+wknPVpRjDqgljXKFV5QHQ
+         E4yaILpNmjcZSOUcHXyMIvvbBnY+ZSfelx8EPraSIXPWu9obZ/dAWuM9NeB1cat5BQ5X
+         cjBA==
+X-Gm-Message-State: AAQBX9e2xbj7u/IHuUci+XSBWJGIH3Hl7jVtP/xbBLKPsCF1YQWSN47Y
+	AL9LCRgL6IboxKCnOY2YaznAKjOOAKG7sVanVjPyZXiQUKbx3EZIx6C3LexuC5bxdxwrF+HYvHP
+	5WVniWtgjjAr2vF63Qjfg8+I=
+X-Received: by 2002:a05:622a:352:b0:3e4:d90a:b12a with SMTP id r18-20020a05622a035200b003e4d90ab12amr1803628qtw.17.1679677767861;
+        Fri, 24 Mar 2023 10:09:27 -0700 (PDT)
+X-Google-Smtp-Source: AKy350apy3oW7a9FJs0e8hOcJ3R4VeI8/w3JZazN2ebmIBP53MZF2bGhguV/L5X6EHjjOcdVuhZaIQ==
+X-Received: by 2002:a05:622a:352:b0:3e4:d90a:b12a with SMTP id r18-20020a05622a035200b003e4d90ab12amr1803594qtw.17.1679677767627;
+        Fri, 24 Mar 2023 10:09:27 -0700 (PDT)
+Received: from p1.montleon.net (066-026-073-226.inf.spectrum.com. [66.26.73.226])
+        by smtp.gmail.com with ESMTPSA id de21-20020a05620a371500b007422fd3009esm14460324qkb.20.2023.03.24.10.09.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Mar 2023 10:09:27 -0700 (PDT)
+From: Jason Montleon <jmontleo@redhat.com>
+To: alsa-devel@alsa-project.org,
+	regressions@lists.linux.dev,
+	yung-chuan.liao@linux.intel.com,
+	broonie@kernel.org,
+	tiwai@suse.com,
+	bagasdotme@gmail.com,
+	pierre-louis.bossart@linux.intel.com
+Cc: Jason Montleon <jmontleo@redhat.com>,
+	stable@vger.kernel.org
+Subject: [PATCH] ASoC: hdac_hdmi: use set_stream() instead of set_tdm_slots()
+Date: Fri, 24 Mar 2023 13:07:11 -0400
+Message-Id: <20230324170711.2526-1-jmontleo@redhat.com>
+X-Mailer: git-send-email 2.40.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain;charset=iso-8859-1
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
-X-Priority: 3 (Normal)
-Importance: Normal
+Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-> This mail didn't make it into the archive on lore.kernel.org. Did
-> someone receive it? If not, that would explain why I didn't get any
-> feedback on it ...
+hdac_hdmi was not updated to use set_stream() instead of set_tdm_slots()
+in the original commit so HDMI no longer produces audio.
 
-First time I see it.
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/regressions/CAJD_bPKQdtaExvVEKxhQ47G-ZXDA=k+gzhMJRHLBe=mysPnuKA@mail.gmail.com/
+Fixes: 636110411ca7 ("ASoC: Intel/SOF: use set_stream() instead of set_tdm_slots() for HDAudio")
+Signed-off-by: Jason Montleon <jmontleo@redhat.com>
+---
+ sound/soc/codecs/hdac_hdmi.c | 17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
 
->> diff --git a/drivers/acpi/bus.c b/drivers/acpi/bus.c
->> index 9531dd0fef50..fddca263ac40 100644
->> --- a/drivers/acpi/bus.c
->> +++ b/drivers/acpi/bus.c
->> @@ -518,13 +518,15 @@ static void acpi_bus_notify(acpi_handle handle,
->> u32 type, void *data)
->>  	if (!adev)
->>  		goto err;
->>
->> -	if (adev->dev.driver) {
->> +	device_lock(&adev->dev);
->> +	if (device_is_bound(&adev->dev)) {
->>  		struct acpi_driver *driver = to_acpi_driver(adev->dev.driver);
->>
->>  		if (driver && driver->ops.notify &&
->>  		    (driver->flags & ACPI_DRIVER_ALL_NOTIFY_EVENTS))
->>  			driver->ops.notify(adev, type);
->>  	}
->> +	device_unlock(&adev->dev);
->>
->>  	if (!hotplug_event) {
->>  		acpi_put_acpi_dev(adev);
->>
-
-This patch works, in that the kernel reaches early userspace reliably.
-I would want to test it more extensively, i.e. install the modules and
-run it for real instead of just kexec-ing the bzImage.  I'll test Rafael's
-patch first.
-
-Full disclosure: I made small changes to the starting .config, see below.
-6.3-rc1 is still bad with the new .config, the patch makes it good.
-The changes:
-  1) PROVE_LOCKING=y
-  2) CONFIG_DEBUG_ATOMIC_SLEEP=y  (why not, what could go wrong :)
-  3) radeon driver modular instead of built-in.
-I don't think it matters.  Here is the diffconfig, just in case.
-
--EXTRA_FIRMWARE_DIR "/lib/firmware"
- CEC_CORE y -> m
- DEBUG_ATOMIC_SLEEP n -> y
- DEBUG_LOCK_ALLOC n -> y
- DEBUG_MUTEXES n -> y
- DEBUG_RT_MUTEXES n -> y
- DEBUG_RWSEMS n -> y
- DEBUG_SPINLOCK n -> y
- DEBUG_WW_MUTEX_SLOWPATH n -> y
- DRM_DISPLAY_HELPER y -> m
- DRM_KMS_HELPER y -> m
- DRM_RADEON y -> m
- DRM_TTM y -> m
- DRM_TTM_HELPER y -> m
- EXTRA_FIRMWARE "radeon/R300_cp.bin" -> ""
- FB_CFB_COPYAREA y -> m
- FB_CFB_FILLRECT y -> m
- FB_CFB_IMAGEBLIT y -> m
- FB_SYS_COPYAREA y -> m
- FB_SYS_FILLRECT y -> m
- FB_SYS_FOPS y -> m
- FB_SYS_IMAGEBLIT y -> m
- I2C_ALGOBIT y -> m
- PROVE_LOCKING n -> y
-+DEBUG_LOCKDEP n
-+LOCKDEP y
-+LOCKDEP_BITS 15
-+LOCKDEP_CHAINS_BITS 16
-+LOCKDEP_CIRCULAR_QUEUE_BITS 12
-+LOCKDEP_STACK_TRACE_BITS 19
-+LOCKDEP_STACK_TRACE_HASH_BITS 14
-+PREEMPTIRQ_TRACEPOINTS y
-+PROVE_RAW_LOCK_NESTING n
-+PROVE_RCU y
-+TRACE_IRQFLAGS y
-+TRACE_IRQFLAGS_NMI y
-
+diff --git a/sound/soc/codecs/hdac_hdmi.c b/sound/soc/codecs/hdac_hdmi.c
+index ed4f7cdda04f..8b6b76029694 100644
+--- a/sound/soc/codecs/hdac_hdmi.c
++++ b/sound/soc/codecs/hdac_hdmi.c
+@@ -436,23 +436,28 @@ static int hdac_hdmi_setup_audio_infoframe(struct hdac_device *hdev,
+ 	return 0;
+ }
+ 
+-static int hdac_hdmi_set_tdm_slot(struct snd_soc_dai *dai,
+-		unsigned int tx_mask, unsigned int rx_mask,
+-		int slots, int slot_width)
++static int hdac_hdmi_set_stream(struct snd_soc_dai *dai,
++				void *stream, int direction)
+ {
+ 	struct hdac_hdmi_priv *hdmi = snd_soc_dai_get_drvdata(dai);
+ 	struct hdac_device *hdev = hdmi->hdev;
+ 	struct hdac_hdmi_dai_port_map *dai_map;
+ 	struct hdac_hdmi_pcm *pcm;
++	struct hdac_stream *hstream;
+ 
+-	dev_dbg(&hdev->dev, "%s: strm_tag: %d\n", __func__, tx_mask);
++	if (!stream)
++		return -EINVAL;
++
++	hstream = (struct hdac_stream *)stream;
++
++	dev_dbg(&hdev->dev, "%s: strm_tag: %d\n", __func__, hstream->stream_tag);
+ 
+ 	dai_map = &hdmi->dai_map[dai->id];
+ 
+ 	pcm = hdac_hdmi_get_pcm_from_cvt(hdmi, dai_map->cvt);
+ 
+ 	if (pcm)
+-		pcm->stream_tag = (tx_mask << 4);
++		pcm->stream_tag = (hstream->stream_tag << 4);
+ 
+ 	return 0;
+ }
+@@ -1544,7 +1549,7 @@ static const struct snd_soc_dai_ops hdmi_dai_ops = {
+ 	.startup = hdac_hdmi_pcm_open,
+ 	.shutdown = hdac_hdmi_pcm_close,
+ 	.hw_params = hdac_hdmi_set_hw_params,
+-	.set_tdm_slot = hdac_hdmi_set_tdm_slot,
++	.set_stream = hdac_hdmi_set_stream,
+ };
+ 
+ /*
+-- 
+2.40.0
 
