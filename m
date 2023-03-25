@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48A7528EB
-	for <regressions@lists.linux.dev>; Sat, 25 Mar 2023 13:23:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD20328EB
+	for <regressions@lists.linux.dev>; Sat, 25 Mar 2023 13:31:17 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pg3rZ-0001gO-FN; Sat, 25 Mar 2023 14:23:17 +0100
-Message-ID: <dbb0d402-ac95-6355-03aa-42c2671727d7@leemhuis.info>
-Date: Sat, 25 Mar 2023 14:23:16 +0100
+	id 1pg3zB-0002xM-BH; Sat, 25 Mar 2023 14:31:09 +0100
+Message-ID: <57a944b3-6255-38bf-e53e-6a838e1f8ddf@leemhuis.info>
+Date: Sat, 25 Mar 2023 14:31:08 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,76 +16,44 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.9.0
+Subject: Re: [regression] Bug 217069 - Wake on Lan is broken on r8169 since
+ 6.2
 Content-Language: en-US, de-DE
+To: Jianmin Lv <lvjianmin@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: LKML <linux-kernel@vger.kernel.org>, Huacai Chen
+ <chenhuacai@loongson.cn>, Bob Moore <robert.moore@intel.com>,
+ "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+ acpica-devel@lists.linuxfoundation.org,
+ ACPI Devel Maling List <linux-acpi@vger.kernel.org>
+References: <e6aaddb9-afec-e77d-be33-570f9f10a9c2@leemhuis.info>
+ <53e8b4db-e8dd-4dfa-f873-7dcbeac09149@leemhuis.info>
+ <3089214d-292b-885d-9bc1-c81d0101d5f0@leemhuis.info>
+ <CAAhV-H5j29CnCN+F8Oz0qh1UCqp+CmL=aQXCSjqgX8CZ5sXTtg@mail.gmail.com>
+ <b39064e3-4f8b-f607-b270-1e0c8539d391@loongson.cn>
 From: "Linux regression tracking (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
-To: Felix Fietkau <nbd@nbd.name>, Lorenzo Bianconi <lorenzo@kernel.org>,
- Ryder Lee <ryder.lee@mediatek.com>
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Kalle Valo <kvalo@kernel.org>,
- "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
- netdev <netdev@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
- "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-Subject: Bug 217245 - mt7921e tries to load unnecessary firmware
+In-Reply-To: <b39064e3-4f8b-f607-b270-1e0c8539d391@loongson.cn>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1679750609;c28f4d4a;
-X-HE-SMSGID: 1pg3rZ-0001gO-FN
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1679751077;b2b65238;
+X-HE-SMSGID: 1pg3zB-0002xM-BH
 
-Hi, Thorsten here, the Linux kernel's regression tracker.
+On 24.03.23 11:09, Jianmin Lv wrote:
+> Please try the following patch:
+> https://github.com/acpica/acpica/pull/784/commits/0e66e6aae972dac3833bdcbd223aa6a8b1733176
 
-I noticed a regression report in bugzilla.kernel.org. As many (most?)
-kernel developers don't keep an eye on it, I decided to forward it by
-mail. Note, the reporter can be reached though bugzilla, as I sadly can
-not CCed them to mails like this[1].
+To interact with the reporters, please comment here:
+https://bugzilla.kernel.org/show_bug.cgi?id=217069
 
-Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=217245 :
+Sorry, I wish it was different, but I can't CC the reporters here
+without their permission, because bugzilla.kernel.org tells users upon
+registration their "email address will never be displayed to logged out
+users".
 
-> kitestramuort@autistici.org 2023-03-24 21:53:01 UTC
-> 
-> I compile mt7921e statically into the kernel, along with the firmware
-> binaries needed for my MT7922 chip:
-> WIFI_MT7922_patch_mcu_1_1_hdr.bin, WIFI_MT7922_patch_mcu_1_1_hdr.bin
-> and BT_RAM_CODE_MT7922_1_1_hdr.bin
-> 
-> Since 6.2, mt7921e also tries to load WIFI_RAM_CODE_MT7961_1.bin and
-> fails with
-> 
-> mt7921e 0000:02:00.0: Direct firmware load for
-> mediatek/WIFI_RAM_CODE_MT7961_1.bin failed with error -2
-> 
-> The card seems to work normally without that binary, so I guess it is
-> not needed and it shouldn't be requested. The error doesn't happen
-> with the 6.1 kernel
-
-See the ticket for more details.
-
-
-[TLDR for the rest of this mail: I'm adding this report to the list of
-tracked Linux kernel regressions; the text you find below is based on a
-few templates paragraphs you might have encountered already in similar
-form.]
-
-BTW, let me use this mail to also add the report to the list of tracked
-regressions to ensure it's doesn't fall through the cracks:
-
-#regzbot introduced: v6.1..v6.2
-https://bugzilla.kernel.org/show_bug.cgi?id=217245
-#regzbot title: net: wireless: mt7921e when build in now requires a new
-firmware file
-#regzbot ignore-activity
-
-This isn't a regression? This issue or a fix for it are already
-discussed somewhere else? It was fixed already? You want to clarify when
-the regression started to happen? Or point out I got the title or
-something else totally wrong? Then just reply and tell me -- ideally
-while also telling regzbot about it, as explained by the page listed in
-the footer of this mail.
-
-Developers: When fixing the issue, remember to add 'Link:' tags pointing
-to the report (e.g. the buzgzilla ticket and maybe this mail as well, if
-this thread sees some discussion). See page linked in footer for details.
+FWIW, I forwarded your request yesterday and one reporter commented that
+it didn't help. But having me as a man-in-the-middle is not a good idea.
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
@@ -93,5 +61,74 @@ Everything you wanna know about Linux kernel regression tracking:
 https://linux-regtracking.leemhuis.info/about/#tldr
 If I did something stupid, please tell me, as explained on that page.
 
-[1] because bugzilla.kernel.org tells users upon registration their
-"email address will never be displayed to logged out users"
+> On 2023/3/24 下午5:50, Huacai Chen wrote:
+>> Hi, Thorsten,
+>>
+>> I'm sorry I ignored this email, and Jianmin, could you please
+>> investigate this problem? Thank you.
+>>
+>> Huacai
+>>
+>> On Fri, Mar 24, 2023 at 5:46 PM Thorsten Leemhuis
+>> <regressions@leemhuis.info> wrote:
+>>>
+>>> On 19.03.23 08:20, Linux regression tracking (Thorsten Leemhuis) wrote:
+>>>> Hi, Thorsten here, the Linux kernel's regression tracker.
+>>>>
+>>>> On 22.02.23 08:57, Thorsten Leemhuis wrote:
+>>>>>
+>>>>> I noticed a regression report in bugzilla.kernel.org. As many (most?)
+>>>>> kernel developer don't keep an eye on it, I decided to forward it by
+>>>>> mail. Quoting from
+>>>>> https://bugzilla.kernel.org/show_bug.cgi?id=217069 :
+>>>>
+>>>> An issue that looked like a network bug was now bisected and it turns
+>>>> out it's cause by 5c62d5aab875 ("ACPICA: Events: Support fixed PCIe
+>>>> wake
+>>>> event") which Huacai Chen provided. Could you take a look at the ticket
+>>>> linked above?
+>>>
+>>> Huacai Chen, did you look into this? Would be good to have this
+>>> regression fixed rather sooner than later, as it seems to annoy quite a
+>>> few people.
+>>>
+>>> Should we maybe simply revert the problematic change for now and reapply
+>>> it later once the root-issue was found and fixed?
+>>>
+>>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+>>> -- 
+>>> Everything you wanna know about Linux kernel regression tracking:
+>>> https://linux-regtracking.leemhuis.info/about/#tldr
+>>> If I did something stupid, please tell me, as explained on that page.
+>>>
+>>> #regzbot poke
+>>>
+>>>> FWIW, the whole story started like this:
+>>>>
+>>>>>> Ivan Ivanich 2023-02-22 00:51:52 UTC
+>>>>>>
+>>>>>> After upgrade to 6.2 having issues with wake on lan on 2 systems: -
+>>>>>> first is an old lenovo laptop from 2012(Ivy Bridge) with realtek
+>>>>>> network adapter - second is a PC(Haswell refresh) with PCIE realtek
+>>>>>> network adapter
+>>>>>>
+>>>>>> Both uses r8169 driver for network.
+>>>>>>
+>>>>>> On laptop it's not possible to wake on lan after poweroff On PC it's
+>>>>>> not possible to wake on lan up after hibernate but works after
+>>>>>> poweroff
+>>>>>>
+>>>>>> In both cases downgrade to 6.1.x kernel fixes the issue.
+>>>>
+>>>> Meanwhile a few others that ran into the same problem with NICs from
+>>>> different vendors joined the ticket
+>>>>
+>>>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker'
+>>>> hat)
+>>>> -- 
+>>>> Everything you wanna know about Linux kernel regression tracking:
+>>>> https://linux-regtracking.leemhuis.info/about/#tldr
+>>>> If I did something stupid, please tell me, as explained on that page.
+> 
+> 
+> 
