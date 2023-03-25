@@ -1,34 +1,13 @@
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 619C92F2C
-	for <regressions@lists.linux.dev>; Fri, 24 Mar 2023 19:05:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1679684729; x=1711220729;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=X9n+yet3Mi5pd0MngLxWhEELp+DUWqRTDu9B5UBwZKc=;
-  b=TvKD7vlV4WRV/a+qz4dACLIATghGdGEFyR0g7YKe0hTjWZqx/x4N5zLO
-   VuCOPLES14AYPXhlkFkVd7J9uMm6fwltEx5XslPZT2wUrU0zgJOJBGQ0F
-   AlFWzotTukQwIQRpbTVHgrIYUfBfKcb77aSjV0Q8LEK6VjZ+zhec+0xad
-   qMueR2zr7ZI/EAzhamDk6zY4+0BuZH1DSK0rb6m3uZ98HLJqYmvEg7hXP
-   qj2mRAw2beYEMdeCLjOP3XTKWhTycK/ORa9zn/yFZSDdI+HuH++IMFHpj
-   Lr5RIICjPQ7Y3V6rr+x6KQ+Zx7Z+lpNiMJumM6UsIdWt6irhWUIsMIVSF
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10659"; a="338585079"
-X-IronPort-AV: E=Sophos;i="5.98,288,1673942400"; 
-   d="scan'208";a="338585079"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2023 12:05:27 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10659"; a="632936329"
-X-IronPort-AV: E=Sophos;i="5.98,288,1673942400"; 
-   d="scan'208";a="632936329"
-Received: from kvnguye3-mobl1.amr.corp.intel.com (HELO [10.212.145.31]) ([10.212.145.31])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2023 12:05:26 -0700
-Message-ID: <060ebffd-6ecd-f2f7-6fdf-5e7b8c544d0a@linux.intel.com>
-Date: Fri, 24 Mar 2023 14:05:25 -0500
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48A7528EB
+	for <regressions@lists.linux.dev>; Sat, 25 Mar 2023 13:23:29 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1pg3rZ-0001gO-FN; Sat, 25 Mar 2023 14:23:17 +0100
+Message-ID: <dbb0d402-ac95-6355-03aa-42c2671727d7@leemhuis.info>
+Date: Sat, 25 Mar 2023 14:23:16 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -36,31 +15,83 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.8.0
-Subject: Re: [PATCH] ASoC: hdac_hdmi: use set_stream() instead of
- set_tdm_slots()
-To: Jason Montleon <jmontleo@redhat.com>, alsa-devel@alsa-project.org,
- regressions@lists.linux.dev, yung-chuan.liao@linux.intel.com,
- broonie@kernel.org, tiwai@suse.com, bagasdotme@gmail.com
-Cc: stable@vger.kernel.org
-References: <20230324170711.2526-1-jmontleo@redhat.com>
-Content-Language: en-US
-From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-In-Reply-To: <20230324170711.2526-1-jmontleo@redhat.com>
+ Thunderbird/102.9.0
+Content-Language: en-US, de-DE
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+To: Felix Fietkau <nbd@nbd.name>, Lorenzo Bianconi <lorenzo@kernel.org>,
+ Ryder Lee <ryder.lee@mediatek.com>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Kalle Valo <kvalo@kernel.org>,
+ "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+ netdev <netdev@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+ "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+Subject: Bug 217245 - mt7921e tries to load unnecessary firmware
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1679750609;c28f4d4a;
+X-HE-SMSGID: 1pg3rZ-0001gO-FN
 
+Hi, Thorsten here, the Linux kernel's regression tracker.
 
+I noticed a regression report in bugzilla.kernel.org. As many (most?)
+kernel developers don't keep an eye on it, I decided to forward it by
+mail. Note, the reporter can be reached though bugzilla, as I sadly can
+not CCed them to mails like this[1].
 
-On 3/24/23 12:07, Jason Montleon wrote:
-> hdac_hdmi was not updated to use set_stream() instead of set_tdm_slots()
-> in the original commit so HDMI no longer produces audio.
+Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=217245 :
+
+> kitestramuort@autistici.org 2023-03-24 21:53:01 UTC
 > 
-> Cc: stable@vger.kernel.org
-> Link: https://lore.kernel.org/regressions/CAJD_bPKQdtaExvVEKxhQ47G-ZXDA=k+gzhMJRHLBe=mysPnuKA@mail.gmail.com/
-> Fixes: 636110411ca7 ("ASoC: Intel/SOF: use set_stream() instead of set_tdm_slots() for HDAudio")
-> Signed-off-by: Jason Montleon <jmontleo@redhat.com>
+> I compile mt7921e statically into the kernel, along with the firmware
+> binaries needed for my MT7922 chip:
+> WIFI_MT7922_patch_mcu_1_1_hdr.bin, WIFI_MT7922_patch_mcu_1_1_hdr.bin
+> and BT_RAM_CODE_MT7922_1_1_hdr.bin
+> 
+> Since 6.2, mt7921e also tries to load WIFI_RAM_CODE_MT7961_1.bin and
+> fails with
+> 
+> mt7921e 0000:02:00.0: Direct firmware load for
+> mediatek/WIFI_RAM_CODE_MT7961_1.bin failed with error -2
+> 
+> The card seems to work normally without that binary, so I guess it is
+> not needed and it shouldn't be requested. The error doesn't happen
+> with the 6.1 kernel
 
-Good catch indeed. Thanks Jason!
+See the ticket for more details.
 
-Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+
+[TLDR for the rest of this mail: I'm adding this report to the list of
+tracked Linux kernel regressions; the text you find below is based on a
+few templates paragraphs you might have encountered already in similar
+form.]
+
+BTW, let me use this mail to also add the report to the list of tracked
+regressions to ensure it's doesn't fall through the cracks:
+
+#regzbot introduced: v6.1..v6.2
+https://bugzilla.kernel.org/show_bug.cgi?id=217245
+#regzbot title: net: wireless: mt7921e when build in now requires a new
+firmware file
+#regzbot ignore-activity
+
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply and tell me -- ideally
+while also telling regzbot about it, as explained by the page listed in
+the footer of this mail.
+
+Developers: When fixing the issue, remember to add 'Link:' tags pointing
+to the report (e.g. the buzgzilla ticket and maybe this mail as well, if
+this thread sees some discussion). See page linked in footer for details.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
+
+[1] because bugzilla.kernel.org tells users upon registration their
+"email address will never be displayed to logged out users"
