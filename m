@@ -1,45 +1,13 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C605020F8
-	for <regressions@lists.linux.dev>; Sun, 26 Mar 2023 13:24:00 +0000 (UTC)
-Received: by mail-pl1-f170.google.com with SMTP id o11so6041426ple.1
-        for <regressions@lists.linux.dev>; Sun, 26 Mar 2023 06:24:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1679837040;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=pnOOlLKoWlVB67gp3RPUD05wT//LBY3yFpES74W1Vkc=;
-        b=qJ0qSreIpqg7n1M2RJjBDhJZNct/hh4eDFZw5tBFyTNWY3W/g8AYQZSPdR0vIiFA8i
-         JCA/D3T2q8BkY7jKPCRaJRH6ne7OzfhKZ18nN4jPztDcLZQASNS1YOP78h9cxdwHftKN
-         pG3dcGw8VKpbZDXsBClvssSgdr+gusQnrJLtld9M0u7ysTwWD99Ut8cT9xepT8G7cs+v
-         yyd6j85VBKXGPGe96u6zafNRWT9O3yQ9BsmY9I8KISTqEVhIVMNxxyiNjFwr6TCAuJnv
-         wArLHUpczHBiNXymvTma3ovhG+iAtWm1+dIyGCM8hpSpMy2Rvjqk27a9Ri4kw3d8PYLj
-         OWGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679837040;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pnOOlLKoWlVB67gp3RPUD05wT//LBY3yFpES74W1Vkc=;
-        b=ACH1qPG82HAyaA0MZDEkkTcj/9Fbr1P42GjhK7rY8o/bndQu+zOnbB4VvNINppRgvC
-         UB8XiOBPNZf7yedgVyBiI9aS0pGnz1Wj5Hn2EqM/1wk8RiUw/w4YDu9THrPpCG0CMzWj
-         5JdRDUq5DnBIv/cqBpPrAmlvEgqyMbJ6E9I4MNFIyKb5Lip+kYTdTFgFLmIpKH0p3rk0
-         w2ruoqdBox5UnchB6L+zMjLGMhGPV+hAamayxLK06VwG11Dl+kaxav2Nckctm+Jam3qc
-         comyb0iS2YYebmBb7hW4LvGBK3UrgE5et7ILFKuM7QMV+WSb6uMt7VyeMGnNu+XxKkHq
-         FuLQ==
-X-Gm-Message-State: AO0yUKVAsQmef+ZXiN9BQSdW8I8YZRS0JzDsSyBesPNvNw2hdQB66Agd
-	gjCCrUXA568eKwt365EcDY8=
-X-Google-Smtp-Source: AK7set9OzCDMKxr2gAfR4Tvv6pTg1Zs5M12Fp4wZblK+PYXBW0DBvuChv43wUrBkPscskOMgLpZZeA==
-X-Received: by 2002:a05:6a20:8b14:b0:da:fa65:cd89 with SMTP id l20-20020a056a208b1400b000dafa65cd89mr8874490pzh.9.1679837040117;
-        Sun, 26 Mar 2023 06:24:00 -0700 (PDT)
-Received: from [192.168.43.80] (subs28-116-206-12-54.three.co.id. [116.206.12.54])
-        by smtp.gmail.com with ESMTPSA id b23-20020aa78117000000b005ac8a51d591sm17108200pfi.21.2023.03.26.06.23.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 26 Mar 2023 06:23:59 -0700 (PDT)
-Message-ID: <d14fb08c-70e3-4cc7-caf9-87e73eab9194@gmail.com>
-Date: Sun, 26 Mar 2023 20:23:53 +0700
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21EB23C3A
+	for <regressions@lists.linux.dev>; Sun, 26 Mar 2023 18:03:08 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1pgUhs-0004Jo-RF; Sun, 26 Mar 2023 20:03:04 +0200
+Message-ID: <4fd4f5b1-0b73-5137-646a-a6d981c26696@leemhuis.info>
+Date: Sun, 26 Mar 2023 20:03:04 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -48,62 +16,67 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.9.0
-Subject: Re: kernel error at led trigger "phy0tpt"
-Content-Language: en-US
-To: Tobias Dahms <dahms.tobias@web.de>, Sean Wang <sean.wang@mediatek.com>,
- angelogioacchino.delregno@collabora.com
-Cc: stable@vger.kernel.org, Pavel Machek <pavel@ucw.cz>,
- Lee Jones <lee@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
- linux-leds@vger.kernel.org, linux-wireless@vger.kernel.org,
- Linux regressions mailing list <regressions@lists.linux.dev>
-References: <91feceb2-0df4-19b9-5ffa-d37e3d344fdf@web.de>
- <3fcc707b-f757-e74b-2800-3b6314217868@leemhuis.info>
- <fcecf6fc-bf18-73a0-9fc1-6850e183323a@web.de>
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-In-Reply-To: <fcecf6fc-bf18-73a0-9fc1-6850e183323a@web.de>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Re: [PATCH 8/8] btrfs: turn on -Wmaybe-uninitialized
+Content-Language: en-US, de-DE
+To: Guenter Roeck <linux@roeck-us.net>,
+ Linux regressions mailing list <regressions@lists.linux.dev>, dsterba@suse.cz
+Cc: Josef Bacik <josef@toxicpanda.com>, linux-btrfs@vger.kernel.org,
+ kernel-team@fb.com
+References: <cover.1671221596.git.josef@toxicpanda.com>
+ <1d9deaa274c13665eca60dee0ccbc4b56b506d06.1671221596.git.josef@toxicpanda.com>
+ <20230222025918.GA1651385@roeck-us.net>
+ <20230222163855.GU10580@twin.jikos.cz>
+ <6c308ddc-60f8-1b4d-28da-898286ddb48d@roeck-us.net>
+ <feb05eef-cc80-2fbe-f28a-b778de73b776@leemhuis.info>
+ <caed9824-c05d-19a9-d321-edefab17c4f0@roeck-us.net>
+From: "Linux regression tracking #update (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+In-Reply-To: <caed9824-c05d-19a9-d321-edefab17c4f0@roeck-us.net>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1679853788;4f9fd02b;
+X-HE-SMSGID: 1pgUhs-0004Jo-RF
 
-On 3/26/23 02:20, Tobias Dahms wrote:
-> Hello,
-> 
-> the bisection gives following result:
-> --------------------------------------------------------------------
-> 18c7deca2b812537aa4d928900e208710f1300aa is the first bad commit
-> commit 18c7deca2b812537aa4d928900e208710f1300aa
-> Author: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-> Date:   Tue May 17 12:47:08 2022 +0200
-> 
->     soc: mediatek: pwrap: Use readx_poll_timeout() instead of custom
-> function
-> 
->     Function pwrap_wait_for_state() is a function that polls an address
->     through a helper function, but this is the very same operation that
->     the readx_poll_timeout macro means to do.
->     Convert all instances of calling pwrap_wait_for_state() to instead
->     use the read_poll_timeout macro.
-> 
->     Signed-off-by: AngeloGioacchino Del Regno
-> <angelogioacchino.delregno@collabora.com>
->     Reviewed-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
->     Tested-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
->     Link:
-> https://lore.kernel.org/r/20220517104712.24579-2-angelogioacchino.delregno@collabora.com
->     Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
-> 
->  drivers/soc/mediatek/mtk-pmic-wrap.c | 60
-> ++++++++++++++++++++----------------
->  1 file changed, 33 insertions(+), 27 deletions(-)
-> --------------------------------------------------------------------
-> 
+[TLDR: This mail in primarily relevant for Linux kernel regression
+tracking. See link in footer if these mails annoy you.]
 
-OK, I'm updating the regression status:
+On 12.03.23 15:37, Guenter Roeck wrote:
+> On 3/12/23 06:06, Linux regression tracking (Thorsten Leemhuis) wrote:
+>> On 22.02.23 18:18, Guenter Roeck wrote:
+>>> On 2/22/23 08:38, David Sterba wrote:
+>>>> On Tue, Feb 21, 2023 at 06:59:18PM -0800, Guenter Roeck wrote:
+>>>>> On Fri, Dec 16, 2022 at 03:15:58PM -0500, Josef Bacik wrote:
+>>>>>> We had a recent bug that would have been caught by a newer compiler
+>>>>>> with
+>>>>>> -Wmaybe-uninitialized and would have saved us a month of failing
+>>>>>> tests
+>>>>>> that I didn't have time to investigate.
+>>>>>>
+>>>>>
+>>>>> Thanks to this patch, sparc64:allmodconfig and parisc:allmodconfig now
+>>>>> fail to commpile with the following error when trying to build images
+>>>>> with gcc 11.3.
+>>>>>
+>>>>> Building sparc64:allmodconfig ... failed
 
-#regzbot introduced: 18c7deca2b8125
 
-And for replying, don't top-post, but rather reply inline with
-appropriate context instead; hence I cut the replied context.
+> There was a patch:
+> 
+> #regzbot monitor:
+> https://patchwork.kernel.org/project/linux-btrfs/patch/dc091588d770923c3afe779e1eb512724662db71.1678290988.git.sweettea-kernel@dorminy.me/
+> #regzbot fix: btrfs: fix compilation error on sparc/parisc
+> #regzbot ignore-activity
 
--- 
-An old man doll... just what I always wanted! - Clara
+Thx for this, Guenter, unfortunately the fix got a different subject
+when it was applied. Happens, no worries, but regzbot thus needs to get
+told manually:
 
+#regzbot fix: 10a8857a1beaa015efba7d56e06243d484549fb6
+#regzbot ignore-activity
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+That page also explains what to do if mails like this annoy you.
