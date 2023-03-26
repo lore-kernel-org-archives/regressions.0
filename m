@@ -1,15 +1,45 @@
-Received: from ns2.wdyn.eu (ns2.wdyn.eu [5.252.227.236])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A7932574
-	for <regressions@lists.linux.dev>; Sat, 25 Mar 2023 20:40:01 +0000 (UTC)
-Message-ID: <c7fdd08a-5ca2-6b86-d45d-97ab442438e5@wetzel-home.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=wetzel-home.de;
-	s=wetzel-home; t=1679776425;
-	bh=uZ/agqinbJAZau7QZPVOv+hry1fnu0HPfbw+bMez23Q=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To;
-	b=ym321KLm5X2Xyo/RTK/mQtcQy5rHaw1fT8EVauMubhzv8Grc48XgXQwyP7JKsnWa0
-	 CpxQWiBZzIsD/0Gkk9GWBaTHu8lDk8N6Kn0nfVAi+k4XBVclfjrPsIjRKbqQdmSVDj
-	 /c+AbydsoVpAnsCpUSWU/1+ZVG5J+sIX59Wto/N4=
-Date: Sat, 25 Mar 2023 21:33:42 +0100
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C605020F8
+	for <regressions@lists.linux.dev>; Sun, 26 Mar 2023 13:24:00 +0000 (UTC)
+Received: by mail-pl1-f170.google.com with SMTP id o11so6041426ple.1
+        for <regressions@lists.linux.dev>; Sun, 26 Mar 2023 06:24:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1679837040;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=pnOOlLKoWlVB67gp3RPUD05wT//LBY3yFpES74W1Vkc=;
+        b=qJ0qSreIpqg7n1M2RJjBDhJZNct/hh4eDFZw5tBFyTNWY3W/g8AYQZSPdR0vIiFA8i
+         JCA/D3T2q8BkY7jKPCRaJRH6ne7OzfhKZ18nN4jPztDcLZQASNS1YOP78h9cxdwHftKN
+         pG3dcGw8VKpbZDXsBClvssSgdr+gusQnrJLtld9M0u7ysTwWD99Ut8cT9xepT8G7cs+v
+         yyd6j85VBKXGPGe96u6zafNRWT9O3yQ9BsmY9I8KISTqEVhIVMNxxyiNjFwr6TCAuJnv
+         wArLHUpczHBiNXymvTma3ovhG+iAtWm1+dIyGCM8hpSpMy2Rvjqk27a9Ri4kw3d8PYLj
+         OWGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1679837040;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=pnOOlLKoWlVB67gp3RPUD05wT//LBY3yFpES74W1Vkc=;
+        b=ACH1qPG82HAyaA0MZDEkkTcj/9Fbr1P42GjhK7rY8o/bndQu+zOnbB4VvNINppRgvC
+         UB8XiOBPNZf7yedgVyBiI9aS0pGnz1Wj5Hn2EqM/1wk8RiUw/w4YDu9THrPpCG0CMzWj
+         5JdRDUq5DnBIv/cqBpPrAmlvEgqyMbJ6E9I4MNFIyKb5Lip+kYTdTFgFLmIpKH0p3rk0
+         w2ruoqdBox5UnchB6L+zMjLGMhGPV+hAamayxLK06VwG11Dl+kaxav2Nckctm+Jam3qc
+         comyb0iS2YYebmBb7hW4LvGBK3UrgE5et7ILFKuM7QMV+WSb6uMt7VyeMGnNu+XxKkHq
+         FuLQ==
+X-Gm-Message-State: AO0yUKVAsQmef+ZXiN9BQSdW8I8YZRS0JzDsSyBesPNvNw2hdQB66Agd
+	gjCCrUXA568eKwt365EcDY8=
+X-Google-Smtp-Source: AK7set9OzCDMKxr2gAfR4Tvv6pTg1Zs5M12Fp4wZblK+PYXBW0DBvuChv43wUrBkPscskOMgLpZZeA==
+X-Received: by 2002:a05:6a20:8b14:b0:da:fa65:cd89 with SMTP id l20-20020a056a208b1400b000dafa65cd89mr8874490pzh.9.1679837040117;
+        Sun, 26 Mar 2023 06:24:00 -0700 (PDT)
+Received: from [192.168.43.80] (subs28-116-206-12-54.three.co.id. [116.206.12.54])
+        by smtp.gmail.com with ESMTPSA id b23-20020aa78117000000b005ac8a51d591sm17108200pfi.21.2023.03.26.06.23.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 26 Mar 2023 06:23:59 -0700 (PDT)
+Message-ID: <d14fb08c-70e3-4cc7-caf9-87e73eab9194@gmail.com>
+Date: Sun, 26 Mar 2023 20:23:53 +0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -18,116 +48,62 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.9.0
-Subject: Re: iwlwifi frequent drops between v6.2-rc3 and v6.3-rc1
-From: Alexander Wetzel <alexander@wetzel-home.de>
-To: Vegard Nossum <vegard.nossum@oracle.com>
-Cc: Johannes Berg <johannes.berg@intel.com>, regressions@leemhuis.info,
- regressions@lists.linux.dev, Thomas Mann <rauchwolke@gmx.net>,
- linux-wireless@vger.kernel.org
-References: <9d11ed29-1114-055d-5b26-0899a5fc0d7f@oracle.com>
- <70b7f54d-95b7-e01a-1a49-e29dc72d41b2@wetzel-home.de>
+Subject: Re: kernel error at led trigger "phy0tpt"
 Content-Language: en-US
-In-Reply-To: <70b7f54d-95b7-e01a-1a49-e29dc72d41b2@wetzel-home.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+To: Tobias Dahms <dahms.tobias@web.de>, Sean Wang <sean.wang@mediatek.com>,
+ angelogioacchino.delregno@collabora.com
+Cc: stable@vger.kernel.org, Pavel Machek <pavel@ucw.cz>,
+ Lee Jones <lee@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+ linux-leds@vger.kernel.org, linux-wireless@vger.kernel.org,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+References: <91feceb2-0df4-19b9-5ffa-d37e3d344fdf@web.de>
+ <3fcc707b-f757-e74b-2800-3b6314217868@leemhuis.info>
+ <fcecf6fc-bf18-73a0-9fc1-6850e183323a@web.de>
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+In-Reply-To: <fcecf6fc-bf18-73a0-9fc1-6850e183323a@web.de>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On 17.03.23 16:29, Alexander Wetzel wrote:
-> On 17.03.23 09:53, Vegard Nossum wrote:
->>
->> Hi,
->>
->> Somewhere between e8f60cd7db24 (v6.2-rc3) and 2eb29d59ddf0 (v6.3-rc1) my
->> wifi started dropping a lot. I'm using iwlwifi and I've checked the old
->> logs that the firmware hasn't changed:
->>
->> Feb 25 16:22:33 kernel: iwlwifi 0000:04:00.0: loaded firmware version 
->> 36.e91976c0.0 8000C-36.ucode op_mode iwlmvm
->>
->> My logs look like this:
->>
->> 09:01:50 kernel: wlp4s0: Connection to AP [REDACTED]:0b:25 lost
->> 09:01:50 wpa_supplicant[1279]: wlp4s0: CTRL-EVENT-DISCONNECTED 
->> bssid=[REDACTED]:0b:25 reason=4 locally_generated=1
->> 09:01:50 NetworkManager[8368]: <warn>  [1679040110.6548] 
->> sup-iface[0x5628f2495990,wlp4s0]: connection disconnected (reason -4)
->> 09:01:50 NetworkManager[8368]: <info>  [1679040110.6656] device 
->> (wlp4s0): supplicant interface state: completed -> disconnected
->> 09:01:50 NetworkManager[8368]: <info>  [1679040110.7609] device 
->> (wlp4s0): supplicant interface state: disconnected -> scanning
->> 09:01:53 wpa_supplicant[1279]: wlp4s0: SME: Trying to authenticate 
->> with [REDACTED]:0b:25 (SSID='[REDACTED]' freq=5500 MHz)
->> 09:01:53 kernel: wlp4s0: authenticate with [REDACTED]:0b:25
->> 09:01:53 kernel: wlp4s0: send auth to [REDACTED]:0b:25 (try 1/3)
->> 09:01:53 kernel: wlp4s0: authenticated
->> 09:01:53 wpa_supplicant[1279]: wlp4s0: Trying to associate with 
->> [REDACTED]:0b:25 (SSID='[REDACTED]' freq=5500 MHz)
->> 09:01:53 kernel: wlp4s0: associate with [REDACTED]:0b:25 (try 1/3)
->> 09:01:53 kernel: wlp4s0: RX AssocResp from [REDACTED]:0b:25 
->> (capab=0x1511 status=0 aid=36)
->> 09:01:53 NetworkManager[8368]: <info>  [1679040113.4553] device 
->> (wlp4s0): supplicant interface state: scanning -> authenticating
->> 09:01:53 kernel: wlp4s0: associated
->> 09:01:53 wpa_supplicant[1279]: wlp4s0: Associated with [REDACTED]:0b:25
->> 09:01:53 wpa_supplicant[1279]: wlp4s0: CTRL-EVENT-SUBNET-STATUS-UPDATE 
->> status=0
->> 09:01:53 NetworkManager[8368]: <info>  [1679040113.4645] device 
->> (wlp4s0): supplicant interface state: authenticating -> associating
->> 09:01:53 NetworkManager[8368]: <info>  [1679040113.4829] device 
->> (wlp4s0): supplicant interface state: associating -> associated
->> 09:01:53 NetworkManager[8368]: <info>  [1679040113.5175] device 
->> (wlp4s0): supplicant interface state: associated -> 4-way handshake
->> 09:01:53 kernel: wlp4s0: Connection to AP [REDACTED]:0b:25 lost
->> 09:01:53 wpa_supplicant[1279]: wlp4s0: CTRL-EVENT-DISCONNECTED 
->> bssid=[REDACTED]:0b:25 reason=4 locally_generated=1
->> 09:01:53 wpa_supplicant[1279]: wlp4s0: WPA: 4-Way Handshake failed - 
->> pre-shared key may be incorrect
->> 09:01:53 wpa_supplicant[1279]: wlp4s0: CTRL-EVENT-SSID-TEMP-DISABLED 
->> id=0 ssid="[REDACTED]" auth_failures=1 duration=10 reason=WRONG_KEY
->> 09:01:53 NetworkManager[8368]: <warn>  [1679040113.5685] 
->> sup-iface[0x5628f2495990,wlp4s0]: connection disconnected (reason -4)
->> 09:01:53 NetworkManager[8368]: <info>  [1679040113.5737] device 
->> (wlp4s0): supplicant interface state: 4-way handshake -> disconnected
->> 09:01:53 NetworkManager[8368]: <info>  [1679040113.6759] device 
->> (wlp4s0): supplicant interface state: disconnected -> scanning
->>
->> I did see that somebody else reported a similar regression, but I don't
->> know if it could be the same problem or not (I see the driver is
->> different, but the fix looks generic):
->>
->> https://linux-regtracking.leemhuis.info/regzbot/regression/217119/
->>
->> The buggy commit that was identified there does seem to be within the
->> range of potential culprits:
->>
->> $ git log --oneline e8f60cd7db24..2eb29d59ddf0 | grep resumption
->> 4444bc2116ae wifi: mac80211: Proper mark iTXQs for resumption
->>
->> If people think it's the same, I could try the proposed fix -- otherwise
->> let me know what else I can do to help track this down.
->>
+On 3/26/23 02:20, Tobias Dahms wrote:
+> Hello,
 > 
-> You are using a iwlwilf/mvm card. The fix we plan to merge for that 
-> regression above won't help you. (mvm cards do not use the function we 
-> serialized in the end. iwlwifi/dvm on the other uses it.)
+> the bisection gives following result:
+> --------------------------------------------------------------------
+> 18c7deca2b812537aa4d928900e208710f1300aa is the first bad commit
+> commit 18c7deca2b812537aa4d928900e208710f1300aa
+> Author: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+> Date:   Tue May 17 12:47:08 2022 +0200
 > 
-> But Johannes is working on a comparable issue affecting mvm cards.
-> Check out
-> https://lore.kernel.org/r/20230314103840.30771-1-jtornosm@redhat.com
+>     soc: mediatek: pwrap: Use readx_poll_timeout() instead of custom
+> function
 > 
-> That may well fix your issue.
+>     Function pwrap_wait_for_state() is a function that polls an address
+>     through a helper function, but this is the very same operation that
+>     the readx_poll_timeout macro means to do.
+>     Convert all instances of calling pwrap_wait_for_state() to instead
+>     use the read_poll_timeout macro.
+> 
+>     Signed-off-by: AngeloGioacchino Del Regno
+> <angelogioacchino.delregno@collabora.com>
+>     Reviewed-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
+>     Tested-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
+>     Link:
+> https://lore.kernel.org/r/20220517104712.24579-2-angelogioacchino.delregno@collabora.com
+>     Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
+> 
+>  drivers/soc/mediatek/mtk-pmic-wrap.c | 60
+> ++++++++++++++++++++----------------
+>  1 file changed, 33 insertions(+), 27 deletions(-)
+> --------------------------------------------------------------------
+> 
 
-It's surprisingly quiet here...
-Are these fixes helping? Honestly I'm not very optimistic.
-I expect that this is something else...
+OK, I'm updating the regression status:
 
-If so, we can debug that here together.
+#regzbot introduced: 18c7deca2b8125
 
-For start, I would like to see the full logs, starting from the initial 
-(working) connect.
+And for replying, don't top-post, but rather reply inline with
+appropriate context instead; hence I cut the replied context.
 
-I also would like to get a confirmation, that by booting an older kernel 
-(v6.2-rc3 or older) the system gets stable again. (Not that 
-wpa_supplicant or the router got an update, too.)
-
-Alexander
+-- 
+An old man doll... just what I always wanted! - Clara
 
