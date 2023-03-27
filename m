@@ -1,100 +1,72 @@
-Received: from madras.collabora.co.uk (madras.collabora.co.uk [46.235.227.172])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 350A1807
-	for <regressions@lists.linux.dev>; Mon, 27 Mar 2023 08:23:44 +0000 (UTC)
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by madras.collabora.co.uk (Postfix) with ESMTPSA id 06C9B6602087;
-	Mon, 27 Mar 2023 09:23:41 +0100 (BST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1679905422;
-	bh=oMn8QjU8/8qTC6gWtoCH/9yMmplAzpyb0h0XKNTrk2M=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=K5rfnodqvGxAWMjY8/S9KVsuWfTQAHGs0WoqV63XOC8E/2QNVMAjJ4HsHfyaYBd4K
-	 NKM2Xx2ObslQWygUvE3BLWJd30UvgTJxNEbZFuXdDpXqCAd8qFXlVuwbglZlrksm07
-	 9+7WYqd7QSu70VQOgHEPP6SnXIU2EiU1dDYZYWS6Dx/PoKDJsvSTYKcoCE8ZF1SooG
-	 djKOXCAd+t4coqU5dwMtmxzLPTENlBE9Twc2G5zHLUVxaX4+TuhW4yzpLAzkOVC3EZ
-	 R9r2AwlBGpPEzcRc7vT7jcy92j4Wr31u6uHoDydgtE7DbHU9XkN2iR25rowkP8fZ/X
-	 sqbZDbtqKlyZQ==
-Message-ID: <8b07ead5-f105-da86-e7da-ee49616f7c1d@collabora.com>
-Date: Mon, 27 Mar 2023 10:23:39 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CED62102
+	for <regressions@lists.linux.dev>; Mon, 27 Mar 2023 13:22:51 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DDDCC433EF;
+	Mon, 27 Mar 2023 13:22:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1679923371;
+	bh=+fcZvxX97vA2m/ogwTBOs9kzLHaA+njNUSUDR7zOHSI=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=u6fo6LTAQ4RARP9+kbRX0ydvNepTHHiRWm/Tj4NshewYQlu20tDwhn8nIFgF+5ugK
+	 xQQIv6l/fh3IVPUt0CLVD4NEQfi3KOL7e6heeFCqTRBNGSr8PWDI7KT//yWclspGAb
+	 p+8Mp0tkk3KM//ycR5G3kseORuFTitwQq2VMeWbYgB+v4Xxyu+W8sAHwhGv/T+l6G1
+	 +zHajyiCECTfNbYXVJ6vdk1aODzQsDU/+bgfBxSgYo9xl3jKUmZ8TDAzXIi9c/j0jd
+	 ZSUSoWwRbeZ+ioXMtcp1x3P8ZdlgYqAWTGrDYGgkGcRlke7ii0EI7JTa+4NJJh44Ry
+	 ncOxQekI9ae3g==
+From: Mark Brown <broonie@kernel.org>
+To: alsa-devel@alsa-project.org, regressions@lists.linux.dev, 
+ yung-chuan.liao@linux.intel.com, tiwai@suse.com, bagasdotme@gmail.com, 
+ pierre-louis.bossart@linux.intel.com, Jason Montleon <jmontleo@redhat.com>
+Cc: stable@vger.kernel.org
+In-Reply-To: <20230324170711.2526-1-jmontleo@redhat.com>
+References: <20230324170711.2526-1-jmontleo@redhat.com>
+Subject: Re: [PATCH] ASoC: hdac_hdmi: use set_stream() instead of
+ set_tdm_slots()
+Message-Id: <167992336898.3162140.14844931662953043048.b4-ty@kernel.org>
+Date: Mon, 27 Mar 2023 14:22:48 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Subject: Re: kernel error at led trigger "phy0tpt"
-Content-Language: en-US
-To: Bagas Sanjaya <bagasdotme@gmail.com>, Tobias Dahms <dahms.tobias@web.de>,
- Sean Wang <sean.wang@mediatek.com>
-Cc: stable@vger.kernel.org, Pavel Machek <pavel@ucw.cz>,
- Lee Jones <lee@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
- linux-leds@vger.kernel.org, linux-wireless@vger.kernel.org,
- Linux regressions mailing list <regressions@lists.linux.dev>
-References: <91feceb2-0df4-19b9-5ffa-d37e3d344fdf@web.de>
- <3fcc707b-f757-e74b-2800-3b6314217868@leemhuis.info>
- <fcecf6fc-bf18-73a0-9fc1-6850e183323a@web.de>
- <d14fb08c-70e3-4cc7-caf9-87e73eab9194@gmail.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-In-Reply-To: <d14fb08c-70e3-4cc7-caf9-87e73eab9194@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13-dev-2eb1a
 
-Il 26/03/23 15:23, Bagas Sanjaya ha scritto:
-> On 3/26/23 02:20, Tobias Dahms wrote:
->> Hello,
->>
->> the bisection gives following result:
->> --------------------------------------------------------------------
->> 18c7deca2b812537aa4d928900e208710f1300aa is the first bad commit
->> commit 18c7deca2b812537aa4d928900e208710f1300aa
->> Author: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
->> Date:   Tue May 17 12:47:08 2022 +0200
->>
->>      soc: mediatek: pwrap: Use readx_poll_timeout() instead of custom
->> function
->>
->>      Function pwrap_wait_for_state() is a function that polls an address
->>      through a helper function, but this is the very same operation that
->>      the readx_poll_timeout macro means to do.
->>      Convert all instances of calling pwrap_wait_for_state() to instead
->>      use the read_poll_timeout macro.
->>
->>      Signed-off-by: AngeloGioacchino Del Regno
->> <angelogioacchino.delregno@collabora.com>
->>      Reviewed-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
->>      Tested-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
->>      Link:
->> https://lore.kernel.org/r/20220517104712.24579-2-angelogioacchino.delregno@collabora.com
->>      Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
->>
->>   drivers/soc/mediatek/mtk-pmic-wrap.c | 60
->> ++++++++++++++++++++----------------
->>   1 file changed, 33 insertions(+), 27 deletions(-)
->> --------------------------------------------------------------------
->>
+On Fri, 24 Mar 2023 13:07:11 -0400, Jason Montleon wrote:
+> hdac_hdmi was not updated to use set_stream() instead of set_tdm_slots()
+> in the original commit so HDMI no longer produces audio.
 > 
-> OK, I'm updating the regression status:
-> 
-> #regzbot introduced: 18c7deca2b8125
-> 
-> And for replying, don't top-post, but rather reply inline with
-> appropriate context instead; hence I cut the replied context.
 > 
 
-There are two possible solutions to that, specifically, either:
-  1. Change readx_poll_timeout() to readx_poll_timeout_atomic(); or
-  2. Fix the mt6323-led driver so that this operation gets done
-     out of atomic context, which is IMO the option to prefer.
+Applied to
 
-Ideas?
+   broonie/sound.git for-next
 
-Regards,
-Angelo
+Thanks!
+
+[1/1] ASoC: hdac_hdmi: use set_stream() instead of set_tdm_slots()
+      commit: f6887a71bdd2f0dcba9b8180dd2223cfa8637e85
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
