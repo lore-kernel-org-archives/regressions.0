@@ -1,135 +1,85 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C85612772D
-	for <regressions@lists.linux.dev>; Tue, 28 Mar 2023 22:23:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1680042207;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YZOEXo//NG6ZuxMwWYZ3Q5XdOI468xHeInsZ4IotWAU=;
-	b=VpKnSvVy3Iu44o5B3NHoKWGXcHo/AZL8OCdote6puVY5Lj9BVdVKaZXPEsVBcvLNxojF91
-	OghwW83iQNCEulM6uALEYxKJZpoKSPnEN90mMRtGmT/DPKj4DKI2N8sT2S4IsqA7PbEOyV
-	39r4aDBQGGawVXhytLCP1275UvklYCI=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-368-w5VgryvbNKeybIVfODDFbw-1; Tue, 28 Mar 2023 18:23:26 -0400
-X-MC-Unique: w5VgryvbNKeybIVfODDFbw-1
-Received: by mail-qv1-f69.google.com with SMTP id pr2-20020a056214140200b005b3ed9328a3so5788734qvb.10
-        for <regressions@lists.linux.dev>; Tue, 28 Mar 2023 15:23:26 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1C20AFC1
+	for <regressions@lists.linux.dev>; Tue, 28 Mar 2023 23:08:46 +0000 (UTC)
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-54184571389so260624387b3.4
+        for <regressions@lists.linux.dev>; Tue, 28 Mar 2023 16:08:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore.com; s=google; t=1680044925;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=ZSQMHyUAqVGVS2BQigz/A6ja8dJSfiSf613vf2Qfabc=;
+        b=cVQt9bu7I3EGZHXeNHx3U4o57jcXzPIJjBZMjpKHD/FUnKowQFmQs2AQ4+hk0TZMLe
+         9ooVdivzmNZBQPN6C6EW8Zzx/Jh7uVO7Gb+BuedaxYeBCliIHiFPN4eAL10XC92aj7vH
+         +e9wUppKga8bQydQE3lwD6FMYb/oQoPDMBPXAOypC+IHg8WnBgQiShkQTltg/fpzFEy2
+         BGTYNjh9fqOjAGqkDlBQ8UBUiyYGELN85aHNIBkI/vOhS8mmlYPf6ympIB+hRvNaHq8T
+         QbWO1ipKw76wtjrPGos+97NgT9jJ7EW3fweMyFv3HyIGs0YvJncejNxkp0FgeymH/0Ze
+         AaSw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680042205;
-        h=mime-version:user-agent:content-transfer-encoding:organization
-         :references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=O/880kkvDFtCR5sIo7DiowXLZImkJfXYxCTOdE4arHY=;
-        b=KjJPYnxWDXFiSJXkH4YiN8KIB35crZJXHM+TndJP2WBe0dJuEmddfwz+wH0vVATKQ2
-         f+gMdxlQx8grUmN734iJ3K1JKHz+oXxRPZxbRnIKCcpXKx0A7PbMSRpe2CLfJQfW6C2i
-         oi5+4sz5HDMkg0S38mM3xPWyvzqbCKPqjzZ6rFJoTlPj6lrbyqQUjLdqI4GWqvRL9Opn
-         bsTmaGc45RaTuxpb6CJ7McS7efZlyc/diWpg5lwX7mNhvBNgKPA+FnF36wO0tjSjHFMn
-         iblqXAburefZgU9Af46ZTRabpd5YTE0+CT8yDCFjoBwkMvhNBJqro4VeE3l64G9f8QYm
-         vmsQ==
-X-Gm-Message-State: AAQBX9e9ASYOH084Ik23HrWMOBGJpewfWkDJh+LhWZe8DkwuW0lLmJGv
-	Y7UEKqtPADHXwAvSrqZ+7oOg8WQUSVPuT7NnVuIPWhzxcde2ssIN6A4QTvXhVN+T50Mit8uIDFb
-	LCgSBn4ltpoZIEUzAgpMAUtQ=
-X-Received: by 2002:a05:6214:20e8:b0:571:13c:6806 with SMTP id 8-20020a05621420e800b00571013c6806mr27337650qvk.33.1680042205717;
-        Tue, 28 Mar 2023 15:23:25 -0700 (PDT)
-X-Google-Smtp-Source: AKy350ZHs3HSZwuEOKXFrGu7Y8M8LAvPxj+euHxcA9SzX+HVHy5mGA1OUIs92Bd1flUbQgB9m2rGUg==
-X-Received: by 2002:a05:6214:20e8:b0:571:13c:6806 with SMTP id 8-20020a05621420e800b00571013c6806mr27337629qvk.33.1680042205469;
-        Tue, 28 Mar 2023 15:23:25 -0700 (PDT)
-Received: from ?IPv6:2600:4040:5c57:b700::feb? ([2600:4040:5c57:b700::feb])
-        by smtp.gmail.com with ESMTPSA id ec13-20020ad44e6d000000b005dd8b9345ddsm4123898qvb.117.2023.03.28.15.23.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Mar 2023 15:23:25 -0700 (PDT)
-Message-ID: <3b14406294755cde2b2be6ba54dc09105c071775.camel@redhat.com>
-Subject: Re: [PATCH 6.2 regression fix] drm/nouveau/kms: Fix backlight
- registration
-From: Lyude Paul <lyude@redhat.com>
-To: Hans de Goede <hdegoede@redhat.com>, Ben Skeggs <bskeggs@redhat.com>, 
-	Karol Herbst <kherbst@redhat.com>
-Cc: nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
-	regressions@lists.linux.dev, Mark Pearson <mpearson@lenovo.com>
-Date: Tue, 28 Mar 2023 18:23:24 -0400
-In-Reply-To: <20230326205433.36485-1-hdegoede@redhat.com>
-References: <20230326205433.36485-1-hdegoede@redhat.com>
-Organization: Red Hat Inc.
-User-Agent: Evolution 3.44.4 (3.44.4-2.fc36)
+        d=1e100.net; s=20210112; t=1680044925;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ZSQMHyUAqVGVS2BQigz/A6ja8dJSfiSf613vf2Qfabc=;
+        b=Im4CY+0aMFScAg0tabmsz2I4XXozhzLFj9U/8mrq7W1EE9Quust8kdpo4OMeqw7ac8
+         /W1VeAhxB5wGbMlXXoENoq8U4h2emr0Y9U0zrJl58rP495LUb1TGpuo0BLrj5C4r3UkD
+         fFv8ysLojeQ68N08NyUOd0leNU2Oyur+MPuRg6w/94CISypOeHyiupp9CI1k5n8J774N
+         F+hby5Ks20lJk+nklG7DUZBVYJ2DsyNym/la193le6Gr21+yY8iaT4Kw1iWk89GI/tRB
+         YwVdmS/+ANwuKAgYbNKRf+3vvIoBm/ay95r7IjxeJvg/pQmvIMHLajBCHN6wtLtiJqtG
+         wsWA==
+X-Gm-Message-State: AAQBX9dGf4d8VgkbFrFeRtLOpjl5fwqphqvwWFNEuUtFdmOmKG31KyXY
+	GG+LQldMbuNeHFhkN7ErC6K0Awu93jfcP94DNai3
+X-Google-Smtp-Source: AKy350abK8FdRjqum0rkpK7dFO74Ka6qWR1lzCgORAvXYVmNk4vPUiF0YnEYgjzDVu8XJA0CXmwa6+vQTcGj4938tKo=
+X-Received: by 2002:a81:af18:0:b0:541:7f7b:a2ff with SMTP id
+ n24-20020a81af18000000b005417f7ba2ffmr8217177ywh.8.1680044925502; Tue, 28 Mar
+ 2023 16:08:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
+From: Paul Moore <paul@paul-moore.com>
+Date: Tue, 28 Mar 2023 19:08:34 -0400
+Message-ID: <CAHC9VhQ7A4+msL38WpbOMYjAqLp0EtOjeLh4Dc6SQtD6OUvCQg@mail.gmail.com>
+Subject: Potential regression/bug in net/mlx5 driver
+To: Shay Drory <shayd@nvidia.com>, Saeed Mahameed <saeedm@nvidia.com>
+Cc: netdev@vger.kernel.org, regressions@lists.linux.dev, 
+	selinux@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Lyude Paul <lyude@redhat.com>
+Hello all,
 
-(Also note to Mark: this is my way of letting you know someone fixed the
-regression with backlight controls upstream, looking into the weird bright
-screen after resume issue)
+Starting with the v6.3-rcX kernel releases I noticed that my
+InfiniBand devices were no longer present under /sys/class/infiniband,
+causing some of my automated testing to fail.  It took me a while to
+find the time to bisect the issue, but I eventually identified the
+problematic commit:
 
-On Sun, 2023-03-26 at 22:54 +0200, Hans de Goede wrote:
-> The nouveau code used to call drm_fb_helper_initial_config() from
-> nouveau_fbcon_init() before calling drm_dev_register(). This would
-> probe all connectors so that drm_connector->status could be used during
-> backlight registration which runs from nouveau_connector_late_register().
->=20
-> After commit 4a16dd9d18a0 ("drm/nouveau/kms: switch to drm fbdev helpers"=
-)
-> the fbdev emulation code, which now is a drm-client, can only run after
-> drm_dev_register(). So during backlight registration the connectors are
-> not probed yet and the drm_connector->status =3D=3D connected check in
-> nv50_backlight_init() would now always fail.
->=20
-> Replace the drm_connector->status =3D=3D connected check with
-> a drm_helper_probe_detect() =3D=3D connected check to fix nv_backlight
-> no longer getting registered because of this.
->=20
-> Fixes: 4a16dd9d18a0 ("drm/nouveau/kms: switch to drm fbdev helpers")
-> Link: https://gitlab.freedesktop.org/drm/nouveau/-/issues/202
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
->  drivers/gpu/drm/nouveau/nouveau_backlight.c | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/gpu/drm/nouveau/nouveau_backlight.c b/drivers/gpu/dr=
-m/nouveau/nouveau_backlight.c
-> index 40409a29f5b6..91b5ecc57538 100644
-> --- a/drivers/gpu/drm/nouveau/nouveau_backlight.c
-> +++ b/drivers/gpu/drm/nouveau/nouveau_backlight.c
-> @@ -33,6 +33,7 @@
->  #include <linux/apple-gmux.h>
->  #include <linux/backlight.h>
->  #include <linux/idr.h>
-> +#include <drm/drm_probe_helper.h>
-> =20
->  #include "nouveau_drv.h"
->  #include "nouveau_reg.h"
-> @@ -299,8 +300,12 @@ nv50_backlight_init(struct nouveau_backlight *bl,
->  =09struct nouveau_drm *drm =3D nouveau_drm(nv_encoder->base.base.dev);
->  =09struct nvif_object *device =3D &drm->client.device.object;
-> =20
-> +=09/*
-> +=09 * Note when this runs the connectors have not been probed yet,
-> +=09 * so nv_conn->base.status is not set yet.
-> +=09 */
->  =09if (!nvif_rd32(device, NV50_PDISP_SOR_PWM_CTL(ffs(nv_encoder->dcb->or=
-) - 1)) ||
-> -=09    nv_conn->base.status !=3D connector_status_connected)
-> +=09    drm_helper_probe_detect(&nv_conn->base, NULL, false) !=3D connect=
-or_status_connected)
->  =09=09return -ENODEV;
-> =20
->  =09if (nv_conn->type =3D=3D DCB_CONNECTOR_eDP) {
+  commit fe998a3c77b9f989a30a2a01fb00d3729a6d53a4
+  Author: Shay Drory <shayd@nvidia.com>
+  Date:   Wed Jun 29 11:38:21 2022 +0300
 
---=20
-Cheers,
- Lyude Paul (she/her)
- Software Engineer at Red Hat
+   net/mlx5: Enable management PF initialization
 
+   Enable initialization of DPU Management PF, which is a new loopback PF
+   designed for communication with BMC.
+   For now Management PF doesn't support nor require most upper layer
+   protocols so avoid them.
+
+   Signed-off-by: Shay Drory <shayd@nvidia.com>
+   Reviewed-by: Eran Ben Elisha <eranbe@nvidia.com>
+   Reviewed-by: Moshe Shemesh <moshe@nvidia.com>
+   Signed-off-by: Saeed Mahameed <saeedm@nvidia.com>
+
+I'm not a mlx5 driver expert so I can't really offer much in the way
+of a fix, but as a quick test I did remove the
+'mlx5_core_is_management_pf(...)' calls in mlx5/core/dev.c and
+everything seemed to work okay on my test system (or rather the tests
+ran without problem).
+
+If you need any additional information, or would like me to test a
+patch, please let me know.
+
+-- 
+paul-moore.com
