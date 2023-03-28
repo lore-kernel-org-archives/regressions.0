@@ -1,72 +1,50 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CED62102
-	for <regressions@lists.linux.dev>; Mon, 27 Mar 2023 13:22:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DDDCC433EF;
-	Mon, 27 Mar 2023 13:22:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1679923371;
-	bh=+fcZvxX97vA2m/ogwTBOs9kzLHaA+njNUSUDR7zOHSI=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=u6fo6LTAQ4RARP9+kbRX0ydvNepTHHiRWm/Tj4NshewYQlu20tDwhn8nIFgF+5ugK
-	 xQQIv6l/fh3IVPUt0CLVD4NEQfi3KOL7e6heeFCqTRBNGSr8PWDI7KT//yWclspGAb
-	 p+8Mp0tkk3KM//ycR5G3kseORuFTitwQq2VMeWbYgB+v4Xxyu+W8sAHwhGv/T+l6G1
-	 +zHajyiCECTfNbYXVJ6vdk1aODzQsDU/+bgfBxSgYo9xl3jKUmZ8TDAzXIi9c/j0jd
-	 ZSUSoWwRbeZ+ioXMtcp1x3P8ZdlgYqAWTGrDYGgkGcRlke7ii0EI7JTa+4NJJh44Ry
-	 ncOxQekI9ae3g==
-From: Mark Brown <broonie@kernel.org>
-To: alsa-devel@alsa-project.org, regressions@lists.linux.dev, 
- yung-chuan.liao@linux.intel.com, tiwai@suse.com, bagasdotme@gmail.com, 
- pierre-louis.bossart@linux.intel.com, Jason Montleon <jmontleo@redhat.com>
-Cc: stable@vger.kernel.org
-In-Reply-To: <20230324170711.2526-1-jmontleo@redhat.com>
-References: <20230324170711.2526-1-jmontleo@redhat.com>
-Subject: Re: [PATCH] ASoC: hdac_hdmi: use set_stream() instead of
- set_tdm_slots()
-Message-Id: <167992336898.3162140.14844931662953043048.b4-ty@kernel.org>
-Date: Mon, 27 Mar 2023 14:22:48 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3367A7E6;
+	Tue, 28 Mar 2023 01:22:41 +0000 (UTC)
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 2F39C68AA6; Tue, 28 Mar 2023 03:22:32 +0200 (CEST)
+Date: Tue, 28 Mar 2023 03:22:31 +0200
+From: Christoph Hellwig <hch@lst.de>
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Christoph Hellwig <hch@lst.de>, LKML <linux-kernel@vger.kernel.org>,
+	Linux PCI <linux-pci@vger.kernel.org>, iommu@lists.linux.dev,
+	baolu.lu@linux.intel.com
+Subject: Re: [regression] Bug 217218 - Trying to boot Linux version 6-2.2
+ kernel with Marvell SATA controller 88SE9235
+Message-ID: <20230328012231.GB21977@lst.de>
+References: <a79ea7f5-6a41-a6c9-cfec-ba01aa2a3cfa@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13-dev-2eb1a
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a79ea7f5-6a41-a6c9-cfec-ba01aa2a3cfa@leemhuis.info>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-On Fri, 24 Mar 2023 13:07:11 -0400, Jason Montleon wrote:
-> hdac_hdmi was not updated to use set_stream() instead of set_tdm_slots()
-> in the original commit so HDMI no longer produces audio.
-> 
-> 
 
-Applied to
+I finally found some real time to look into this:
 
-   broonie/sound.git for-next
+On Tue, Mar 21, 2023 at 02:52:00PM +0100, Linux regression tracking (Thorsten Leemhuis) wrote:
+> > The man errors I am getting are
+> > 
+> > dmar_fault 8 callbacks suppressed
+> > DMAR : DRHD: handling fault status req 2
+> > DMAR : [DMA Write NO_PASID] Request device [07.00.1] fault addr
+> > 0xfffe0000 [fault reason 0x82] Present bit in contect entry is clear
 
-Thanks!
+This clearly indicates that my original idea about the AMD gart was
+completely bonkers, as we're obviously on an Intel platform.
 
-[1/1] ASoC: hdac_hdmi: use set_stream() instead of set_tdm_slots()
-      commit: f6887a71bdd2f0dcba9b8180dd2223cfa8637e85
+And this indicates that the device is trying to do a DMA write to
+something that isn't IOMMU mapped.  Getting this from an initialization
+change (commit 78013eaadf6 (x86: remove the IOMMU table infrastructure")
+feels very strange to me.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
+Can you maybe post the full dmesg?  I wonder if there is interesting
+initialization error in here.
 
