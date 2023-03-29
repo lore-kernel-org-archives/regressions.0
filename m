@@ -1,63 +1,87 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F16E6FA2
-	for <regressions@lists.linux.dev>; Wed, 29 Mar 2023 19:12:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57875C433D2;
-	Wed, 29 Mar 2023 19:12:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1680117153;
-	bh=IAbVbgzm8rotxtzqHo6+4J46rGYeg6Bl2004ztujgIc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=UcfQrlGENm/cQxGlxvCq07gNrRDbcz34nlLVjZtX2OjdOa1JLwlE0uUCT+Fu0qQWx
-	 oCPJAlCKP2ty1tCp/ZId1B2ztGJ//osrLFZItCqV8obg2o973NYV6DY2Gr/nESaDjU
-	 559NTFb2ycfH291klaXymDBi+l1c9uCb4y1usfPySEG5Fyv5VOhF40g4FVv31r77u6
-	 h8UcHH9mdPsfMODvDE27Z7qrpUdB/Sd5idaQjjmacE+TgblHZQ6VMqSKc1ctp8WElg
-	 vHJwVu3hTr59fOIR3m6rbrcGi7LSrGhHepNtv7a/aNpDY70CTidCg1PPdUNgp9p48f
-	 6Xo0MIlYHMxvg==
-Date: Wed, 29 Mar 2023 12:12:32 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Takashi Iwai <tiwai@suse.de>, Sasha Neftin <sasha.neftin@intel.com>
-Cc: Bagas Sanjaya <bagasdotme@gmail.com>, Paul Menzel
- <pmenzel@molgen.mpg.de>, Jesse Brandeburg <jesse.brandeburg@intel.com>,
- Tony Nguyen <anthony.l.nguyen@intel.com>, netdev@vger.kernel.org,
- intel-wired-lan@lists.osuosl.org, regressions@lists.linux.dev,
- linux-kernel@vger.kernel.org
-Subject: Re: [Intel-wired-lan] [REGRESSION] e1000e probe/link detection
- fails since 6.2 kernel
-Message-ID: <20230329121232.7873ad95@kernel.org>
-In-Reply-To: <87a5zwosd7.wl-tiwai@suse.de>
-References: <87jzz13v7i.wl-tiwai@suse.de>
-	<652a9a96-f499-f31f-2a55-3c80b6ac9c75@molgen.mpg.de>
-	<ZCP5jOTNypwG4xK6@debian.me>
-	<87a5zwosd7.wl-tiwai@suse.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 373A9882B
+	for <regressions@lists.linux.dev>; Wed, 29 Mar 2023 21:52:08 +0000 (UTC)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 0E56821ABF;
+	Wed, 29 Mar 2023 21:52:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1680126724; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gbyasE+U5G0etNVXeDJPsM6LV+TgTAw9J2CMCHV/AKk=;
+	b=bJWmz8jbUMFtFdRf84YxkPJz179Q8SYLD8FkEV/Ai+5Kwf0zn/qsjQAhKQPcgmAAaEBXUD
+	ZHVOTAPDEgnphqEXXh/c2Phhes5xzpDHHakoGi2chnlRHo+H0V1k8eJR1NCvi1y9RNs/hq
+	xwpianAeCln+vtsuD8RjPnW5aHlmL08=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1680126724;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gbyasE+U5G0etNVXeDJPsM6LV+TgTAw9J2CMCHV/AKk=;
+	b=cp+/JNy6F1c42CVnU5n0CDpAbXfsyYWkk5DlKhbkDm9yokxdP28jIOn14Umj2GJXUnNE/Z
+	bmegeFteuLxUEKBw==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 6C10A139D3;
+	Wed, 29 Mar 2023 21:52:01 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+	by imap2.suse-dmz.suse.de with ESMTPSA
+	id r5u+CAGzJGSvCwAAMHmgww
+	(envelope-from <neilb@suse.de>); Wed, 29 Mar 2023 21:52:01 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+From: "NeilBrown" <neilb@suse.de>
+To: "Xiao Ni" <xni@redhat.com>
+Cc: "Jes Sorensen" <jes@trained-monkey.org>,
+ "Mariusz Tkaczyk" <mariusz.tkaczyk@linux.intel.com>,
+ "Song Liu" <song@kernel.org>,
+ "Linux regressions mailing list" <regressions@lists.linux.dev>,
+ "linux-raid" <linux-raid@vger.kernel.org>,
+ "LKML" <linux-kernel@vger.kernel.org>,
+ "Nikolay Kichukov" <hijacker@oldum.net>
+Subject: Re: [PATCH - mdadm] mdopen: always try create_named_array()
+In-reply-to: <167945548970.8008.8910680813298326328@noble.neil.brown.name>
+References: <167875238571.8008.9808655454439667586@noble.neil.brown.name>,
+ <CALTww2916uiO8_ViJQXutO2BPasFmiUJtfz8MxW0HKjDzwGFeQ@mail.gmail.com>,
+ <167945548970.8008.8910680813298326328@noble.neil.brown.name>
+Date: Thu, 30 Mar 2023 08:51:54 +1100
+Message-id: <168012671413.8106.6812573281942242445@noble.neil.brown.name>
 
-On Wed, 29 Mar 2023 10:48:36 +0200 Takashi Iwai wrote:
-> On Wed, 29 Mar 2023 10:40:44 +0200,
-> Bagas Sanjaya wrote:
-> >=20
-> > On Tue, Mar 28, 2023 at 04:39:01PM +0200, Paul Menzel wrote: =20
-> > > Does openSUSE Tumbleweed make it easy to bisect the regression at lea=
-st on
-> > > =E2=80=9Crc level=E2=80=9D? It be great if narrow it more down, so we=
- know it for example
-> > > regressed in 6.2-rc7.
-> > >  =20
-> >=20
-> > Alternatively, can you do bisection using kernel sources from Linus's
-> > tree (git required)? =20
->=20
-> That'll be a last resort, if no one has idea at all :)
+On Wed, 22 Mar 2023, NeilBrown wrote:
+> On Wed, 22 Mar 2023, Xiao Ni wrote:
+> 
+> > 
+> > Second, are there possibilities that the arguments "dev" and "name" of
+> > function create_mddev
+> > are null at the same time?
+> 
+> No.  For Build or Create, dev is never NULL.  For Assemble and
+> Incremental, name is never NULL.
+> 
 
-I had a quick look yesterday, there's only ~6 or so commits to e1000e.
-Should be a fairly quick bisection, hopefully?
+I should clarify this a bit.  For Assemble and Incremental, "name" is
+never NULL *but* it might be an empty string.
+So:
+	if (name && name[0] == 0)
+		name = NULL;
 
-Adding Sasha.
+might cause it to become NULL.  So you cannot assume there is always
+either a valid "dev" or a valid "name".  "dev" might be NULL, and "name"
+might be "".
+
+NeilBrown
