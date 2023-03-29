@@ -1,85 +1,96 @@
-Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1C20AFC1
-	for <regressions@lists.linux.dev>; Tue, 28 Mar 2023 23:08:46 +0000 (UTC)
-Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-54184571389so260624387b3.4
-        for <regressions@lists.linux.dev>; Tue, 28 Mar 2023 16:08:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1680044925;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=ZSQMHyUAqVGVS2BQigz/A6ja8dJSfiSf613vf2Qfabc=;
-        b=cVQt9bu7I3EGZHXeNHx3U4o57jcXzPIJjBZMjpKHD/FUnKowQFmQs2AQ4+hk0TZMLe
-         9ooVdivzmNZBQPN6C6EW8Zzx/Jh7uVO7Gb+BuedaxYeBCliIHiFPN4eAL10XC92aj7vH
-         +e9wUppKga8bQydQE3lwD6FMYb/oQoPDMBPXAOypC+IHg8WnBgQiShkQTltg/fpzFEy2
-         BGTYNjh9fqOjAGqkDlBQ8UBUiyYGELN85aHNIBkI/vOhS8mmlYPf6ympIB+hRvNaHq8T
-         QbWO1ipKw76wtjrPGos+97NgT9jJ7EW3fweMyFv3HyIGs0YvJncejNxkp0FgeymH/0Ze
-         AaSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680044925;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ZSQMHyUAqVGVS2BQigz/A6ja8dJSfiSf613vf2Qfabc=;
-        b=Im4CY+0aMFScAg0tabmsz2I4XXozhzLFj9U/8mrq7W1EE9Quust8kdpo4OMeqw7ac8
-         /W1VeAhxB5wGbMlXXoENoq8U4h2emr0Y9U0zrJl58rP495LUb1TGpuo0BLrj5C4r3UkD
-         fFv8ysLojeQ68N08NyUOd0leNU2Oyur+MPuRg6w/94CISypOeHyiupp9CI1k5n8J774N
-         F+hby5Ks20lJk+nklG7DUZBVYJ2DsyNym/la193le6Gr21+yY8iaT4Kw1iWk89GI/tRB
-         YwVdmS/+ANwuKAgYbNKRf+3vvIoBm/ay95r7IjxeJvg/pQmvIMHLajBCHN6wtLtiJqtG
-         wsWA==
-X-Gm-Message-State: AAQBX9dGf4d8VgkbFrFeRtLOpjl5fwqphqvwWFNEuUtFdmOmKG31KyXY
-	GG+LQldMbuNeHFhkN7ErC6K0Awu93jfcP94DNai3
-X-Google-Smtp-Source: AKy350abK8FdRjqum0rkpK7dFO74Ka6qWR1lzCgORAvXYVmNk4vPUiF0YnEYgjzDVu8XJA0CXmwa6+vQTcGj4938tKo=
-X-Received: by 2002:a81:af18:0:b0:541:7f7b:a2ff with SMTP id
- n24-20020a81af18000000b005417f7ba2ffmr8217177ywh.8.1680044925502; Tue, 28 Mar
- 2023 16:08:45 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC567AFC9
+	for <regressions@lists.linux.dev>; Wed, 29 Mar 2023 08:16:45 +0000 (UTC)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id D888A211BD;
+	Wed, 29 Mar 2023 08:16:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1680077803; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type;
+	bh=1CxvA6Vec2L3ljY2X5FIZQTvJH82AAb0kajv763yrcc=;
+	b=iW/MznSzsWE386N5pghSZ9N24vlV3O2Mzd2+JGsHI/7viBN7PwsLjG1TQ1uuW8RhV0/Ag2
+	AqzK77izsDMztUVk3h+kx6+RgSd3VUDnzeWW8+N9t0umiuugo8aPxdgdOmlxo8sgtY78r/
+	WpigR4Lx1TYL1YfAY+jNcopnxJG85Og=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1680077803;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type;
+	bh=1CxvA6Vec2L3ljY2X5FIZQTvJH82AAb0kajv763yrcc=;
+	b=r+w23MQVpKc7HUx4vW1661I/fjvgrOSw4BHDHDlQD0ElHJSdAnhuxg5xvf+E3RIoJ0G7dT
+	TfhfKSZ8ZAuGpsCQ==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id B552C139D3;
+	Wed, 29 Mar 2023 08:16:43 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+	by imap2.suse-dmz.suse.de with ESMTPSA
+	id +yR9K+vzI2QoXAAAMHmgww
+	(envelope-from <tiwai@suse.de>); Wed, 29 Mar 2023 08:16:43 +0000
+Date: Wed, 29 Mar 2023 10:16:43 +0200
+Message-ID: <87h6u4otuc.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Pali =?ISO-8859-1?Q?Roh=E1r?= <pali@kernel.org>,    Dmitry Torokhov
+ <dmitry.torokhov@gmail.com>
+Cc: regressions@lists.linux.dev,
+    linux-input@vger.kernel.org,
+    linux-kernel@vger.kernel.org
+Subject: [REGRESSION] wrong coord from Thinkpad TrackPoint since 6.2 kernel
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-From: Paul Moore <paul@paul-moore.com>
-Date: Tue, 28 Mar 2023 19:08:34 -0400
-Message-ID: <CAHC9VhQ7A4+msL38WpbOMYjAqLp0EtOjeLh4Dc6SQtD6OUvCQg@mail.gmail.com>
-Subject: Potential regression/bug in net/mlx5 driver
-To: Shay Drory <shayd@nvidia.com>, Saeed Mahameed <saeedm@nvidia.com>
-Cc: netdev@vger.kernel.org, regressions@lists.linux.dev, 
-	selinux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
 
-Hello all,
+Hi,
 
-Starting with the v6.3-rcX kernel releases I noticed that my
-InfiniBand devices were no longer present under /sys/class/infiniband,
-causing some of my automated testing to fail.  It took me a while to
-find the time to bisect the issue, but I eventually identified the
-problematic commit:
+we've received a bug report about Thinkpad TrackPoint (ALPS DualPoint
+Stick) on 6.2 kernel:
+  https://bugzilla.opensuse.org/show_bug.cgi?id=1209805
 
-  commit fe998a3c77b9f989a30a2a01fb00d3729a6d53a4
-  Author: Shay Drory <shayd@nvidia.com>
-  Date:   Wed Jun 29 11:38:21 2022 +0300
+The device reports the wrong values as the movements, e.g. sometimes a
+value such as 255, 254 or -255 is returned while usually it should be
+a smaller value like -1 or 2.
 
-   net/mlx5: Enable management PF initialization
+The evtest on 6.2.x kernel shows the wrong values like:
 
-   Enable initialization of DPU Management PF, which is a new loopback PF
-   designed for communication with BMC.
-   For now Management PF doesn't support nor require most upper layer
-   protocols so avoid them.
+Event: time 1680037542.898747, type 2 (EV_REL), code 0 (REL_X), value 255
+Event: time 1680037542.898747, -------------- SYN_REPORT ------------
+Event: time 1680037543.145196, type 2 (EV_REL), code 0 (REL_X), value 1
+Event: time 1680037543.145196, -------------- SYN_REPORT ------------
+Event: time 1680037543.175087, type 2 (EV_REL), code 1 (REL_Y), value -255
+Event: time 1680037543.175087, -------------- SYN_REPORT ------------
+Event: time 1680037543.185421, type 2 (EV_REL), code 0 (REL_X), value 1
+Event: time 1680037543.185421, type 2 (EV_REL), code 1 (REL_Y), value -255
+Event: time 1680037543.185421, -------------- SYN_REPORT ------------
 
-   Signed-off-by: Shay Drory <shayd@nvidia.com>
-   Reviewed-by: Eran Ben Elisha <eranbe@nvidia.com>
-   Reviewed-by: Moshe Shemesh <moshe@nvidia.com>
-   Signed-off-by: Saeed Mahameed <saeedm@nvidia.com>
+while 6.1.x kernel shows the correct values like:
 
-I'm not a mlx5 driver expert so I can't really offer much in the way
-of a fix, but as a quick test I did remove the
-'mlx5_core_is_management_pf(...)' calls in mlx5/core/dev.c and
-everything seemed to work okay on my test system (or rather the tests
-ran without problem).
+Event: time 1680037386.318058, type 2 (EV_REL), code 0 (REL_X), value -1
+Event: time 1680037386.318058, type 2 (EV_REL), code 1 (REL_Y), value -1
+Event: time 1680037386.318058, -------------- SYN_REPORT ------------
+Event: time 1680037386.328087, type 2 (EV_REL), code 0 (REL_X), value -1
+Event: time 1680037386.328087, type 2 (EV_REL), code 1 (REL_Y), value -1
+Event: time 1680037386.328087, -------------- SYN_REPORT ------------
+Event: time 1680037386.338046, type 2 (EV_REL), code 0 (REL_X), value -1
+Event: time 1680037386.338046, type 2 (EV_REL), code 1 (REL_Y), value -2
+Event: time 1680037386.338046, -------------- SYN_REPORT ------------
+  
+I couldn't see any relevant changes in alps.c between those versions,
+so this is likely a breakage in a lower layer.
 
-If you need any additional information, or would like me to test a
-patch, please let me know.
+Could you guys take a look?
 
--- 
-paul-moore.com
+
+Thanks!
+
+Takashi
