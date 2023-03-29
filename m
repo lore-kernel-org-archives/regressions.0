@@ -1,87 +1,86 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 373A9882B
-	for <regressions@lists.linux.dev>; Wed, 29 Mar 2023 21:52:08 +0000 (UTC)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 0E56821ABF;
-	Wed, 29 Mar 2023 21:52:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1680126724; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gbyasE+U5G0etNVXeDJPsM6LV+TgTAw9J2CMCHV/AKk=;
-	b=bJWmz8jbUMFtFdRf84YxkPJz179Q8SYLD8FkEV/Ai+5Kwf0zn/qsjQAhKQPcgmAAaEBXUD
-	ZHVOTAPDEgnphqEXXh/c2Phhes5xzpDHHakoGi2chnlRHo+H0V1k8eJR1NCvi1y9RNs/hq
-	xwpianAeCln+vtsuD8RjPnW5aHlmL08=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1680126724;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gbyasE+U5G0etNVXeDJPsM6LV+TgTAw9J2CMCHV/AKk=;
-	b=cp+/JNy6F1c42CVnU5n0CDpAbXfsyYWkk5DlKhbkDm9yokxdP28jIOn14Umj2GJXUnNE/Z
-	bmegeFteuLxUEKBw==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 6C10A139D3;
-	Wed, 29 Mar 2023 21:52:01 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-	by imap2.suse-dmz.suse.de with ESMTPSA
-	id r5u+CAGzJGSvCwAAMHmgww
-	(envelope-from <neilb@suse.de>); Wed, 29 Mar 2023 21:52:01 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3806D882B
+	for <regressions@lists.linux.dev>; Wed, 29 Mar 2023 22:20:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4FFCC433EF;
+	Wed, 29 Mar 2023 22:20:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1680128421;
+	bh=JyQG/UdGv/JO7v6NbzC+gckJ9gXWZR/gb3N62fHlN3w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hrKTp5MmB2mbTquGX/5ZpPhP5pw3Ydn+mJ+lAzR5/LkrmuEhBNHyMieC/CzmCYnb2
+	 4mKlcisWNLujAHOKjWPMyf4YsCThFUCy7rA4hkPW/euLcOafyRVpRsTKZhi48tLZxE
+	 N11skSTpESB7D+SAXePpYJFJuopvybWrNPLfkwuI62JvmYzouSseD6j1zuOxolczzN
+	 W5SG7ARZ9e+XR+0JY67TpZJHU4dQQGtKJ7aSb5eCvGINmAQT/j+BuXjEZ4AInUEl1J
+	 nO+QLdCkEPtTnWrQP8UE5SORMlhuTSh0Es3/JbXfFOVqn8oFmJqn11iwcjnXrK03Bl
+	 QBoo0QSVLbmpA==
+Date: Wed, 29 Mar 2023 15:20:19 -0700
+From: Saeed Mahameed <saeed@kernel.org>
+To: Paul Moore <paul@paul-moore.com>
+Cc: Shay Drory <shayd@nvidia.com>, Saeed Mahameed <saeedm@nvidia.com>,
+	netdev@vger.kernel.org, regressions@lists.linux.dev,
+	selinux@vger.kernel.org
+Subject: Re: Potential regression/bug in net/mlx5 driver
+Message-ID: <ZCS5oxM/m9LuidL/@x130>
+References: <CAHC9VhQ7A4+msL38WpbOMYjAqLp0EtOjeLh4Dc6SQtD6OUvCQg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-To: "Xiao Ni" <xni@redhat.com>
-Cc: "Jes Sorensen" <jes@trained-monkey.org>,
- "Mariusz Tkaczyk" <mariusz.tkaczyk@linux.intel.com>,
- "Song Liu" <song@kernel.org>,
- "Linux regressions mailing list" <regressions@lists.linux.dev>,
- "linux-raid" <linux-raid@vger.kernel.org>,
- "LKML" <linux-kernel@vger.kernel.org>,
- "Nikolay Kichukov" <hijacker@oldum.net>
-Subject: Re: [PATCH - mdadm] mdopen: always try create_named_array()
-In-reply-to: <167945548970.8008.8910680813298326328@noble.neil.brown.name>
-References: <167875238571.8008.9808655454439667586@noble.neil.brown.name>,
- <CALTww2916uiO8_ViJQXutO2BPasFmiUJtfz8MxW0HKjDzwGFeQ@mail.gmail.com>,
- <167945548970.8008.8910680813298326328@noble.neil.brown.name>
-Date: Thu, 30 Mar 2023 08:51:54 +1100
-Message-id: <168012671413.8106.6812573281942242445@noble.neil.brown.name>
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <CAHC9VhQ7A4+msL38WpbOMYjAqLp0EtOjeLh4Dc6SQtD6OUvCQg@mail.gmail.com>
 
-On Wed, 22 Mar 2023, NeilBrown wrote:
-> On Wed, 22 Mar 2023, Xiao Ni wrote:
-> 
-> > 
-> > Second, are there possibilities that the arguments "dev" and "name" of
-> > function create_mddev
-> > are null at the same time?
-> 
-> No.  For Build or Create, dev is never NULL.  For Assemble and
-> Incremental, name is never NULL.
-> 
+On 28 Mar 19:08, Paul Moore wrote:
+>Hello all,
+>
+>Starting with the v6.3-rcX kernel releases I noticed that my
+>InfiniBand devices were no longer present under /sys/class/infiniband,
+>causing some of my automated testing to fail.  It took me a while to
+>find the time to bisect the issue, but I eventually identified the
+>problematic commit:
+>
+>  commit fe998a3c77b9f989a30a2a01fb00d3729a6d53a4
+>  Author: Shay Drory <shayd@nvidia.com>
+>  Date:   Wed Jun 29 11:38:21 2022 +0300
+>
+>   net/mlx5: Enable management PF initialization
+>
+>   Enable initialization of DPU Management PF, which is a new loopback PF
+>   designed for communication with BMC.
+>   For now Management PF doesn't support nor require most upper layer
+>   protocols so avoid them.
+>
+>   Signed-off-by: Shay Drory <shayd@nvidia.com>
+>   Reviewed-by: Eran Ben Elisha <eranbe@nvidia.com>
+>   Reviewed-by: Moshe Shemesh <moshe@nvidia.com>
+>   Signed-off-by: Saeed Mahameed <saeedm@nvidia.com>
+>
+>I'm not a mlx5 driver expert so I can't really offer much in the way
+>of a fix, but as a quick test I did remove the
+>'mlx5_core_is_management_pf(...)' calls in mlx5/core/dev.c and
+>everything seemed to work okay on my test system (or rather the tests
+>ran without problem).
+>
+>If you need any additional information, or would like me to test a
+>patch, please let me know.
+>
 
-I should clarify this a bit.  For Assemble and Incremental, "name" is
-never NULL *but* it might be an empty string.
-So:
-	if (name && name[0] == 0)
-		name = NULL;
+Hi Paul, 
 
-might cause it to become NULL.  So you cannot assume there is always
-either a valid "dev" or a valid "name".  "dev" might be NULL, and "name"
-might be "".
+Our team is looking into this, the current theory is that you have an old
+FW that doesn't have the correct capabilities set.
 
-NeilBrown
+Can you please provide the FW version and the ConnectX device you are
+testing ? 
+
+$ devlink dev info
+$ lspci -s <pci_dev> -vv
+since boot:
+$ dmesg 
+
+>-- 
+>paul-moore.com
