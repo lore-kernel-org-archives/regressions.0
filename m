@@ -1,86 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3806D882B
-	for <regressions@lists.linux.dev>; Wed, 29 Mar 2023 22:20:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4FFCC433EF;
-	Wed, 29 Mar 2023 22:20:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1680128421;
-	bh=JyQG/UdGv/JO7v6NbzC+gckJ9gXWZR/gb3N62fHlN3w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hrKTp5MmB2mbTquGX/5ZpPhP5pw3Ydn+mJ+lAzR5/LkrmuEhBNHyMieC/CzmCYnb2
-	 4mKlcisWNLujAHOKjWPMyf4YsCThFUCy7rA4hkPW/euLcOafyRVpRsTKZhi48tLZxE
-	 N11skSTpESB7D+SAXePpYJFJuopvybWrNPLfkwuI62JvmYzouSseD6j1zuOxolczzN
-	 W5SG7ARZ9e+XR+0JY67TpZJHU4dQQGtKJ7aSb5eCvGINmAQT/j+BuXjEZ4AInUEl1J
-	 nO+QLdCkEPtTnWrQP8UE5SORMlhuTSh0Es3/JbXfFOVqn8oFmJqn11iwcjnXrK03Bl
-	 QBoo0QSVLbmpA==
-Date: Wed, 29 Mar 2023 15:20:19 -0700
-From: Saeed Mahameed <saeed@kernel.org>
-To: Paul Moore <paul@paul-moore.com>
-Cc: Shay Drory <shayd@nvidia.com>, Saeed Mahameed <saeedm@nvidia.com>,
-	netdev@vger.kernel.org, regressions@lists.linux.dev,
-	selinux@vger.kernel.org
-Subject: Re: Potential regression/bug in net/mlx5 driver
-Message-ID: <ZCS5oxM/m9LuidL/@x130>
-References: <CAHC9VhQ7A4+msL38WpbOMYjAqLp0EtOjeLh4Dc6SQtD6OUvCQg@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D74D7173
+	for <regressions@lists.linux.dev>; Thu, 30 Mar 2023 00:11:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1680135059;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nJwwoseYXfDmJDLphLxlCuqi1MgqvP9f+lM5hWiKTuQ=;
+	b=EnChsljgEa3sc3f8Veh74LEyv8pQQm+CY3hZ9xNJinUktgOqIYvII9G7VffxxHy1zT2KCW
+	viL5aa+Z5i2bXAkM+Dyx/9Bm3N7cluIQbvWm1xns2zsppaGqJT2ZfHyti+xWtgl0CC6eoF
+	Bth0KenU5kScWSF7Upwz45hmBn3wWFM=
+Received: from mail-pf1-f197.google.com (mail-pf1-f197.google.com
+ [209.85.210.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-505-5rbTdooGNYe4TdV0Z7m21g-1; Wed, 29 Mar 2023 20:10:58 -0400
+X-MC-Unique: 5rbTdooGNYe4TdV0Z7m21g-1
+Received: by mail-pf1-f197.google.com with SMTP id x68-20020a628647000000b0062624c52117so7993779pfd.14
+        for <regressions@lists.linux.dev>; Wed, 29 Mar 2023 17:10:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680135056;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nJwwoseYXfDmJDLphLxlCuqi1MgqvP9f+lM5hWiKTuQ=;
+        b=UUVcrSvX050Wi++FeTXi9EShpa/hvuQQccnGncTWz74NLvEFjWGnf4yh04f+uQQh1y
+         uX4NOr2l7svk1q9zWabMXgVUMAvxnhd4suV3x2kSPTDeJUsKO+EVaS34X6hFoQyerDPl
+         vwA/QDoDWg+n6/frpWPu38aiN7iDWspjNMVypviWVlLzcjBCya9gP96MUViKf7A+g67f
+         Hy9IQvNL2yDsqTY7lR5w2abos9uJahQFV+1igHrXSBpR23Hqp1tybyt53rT2VsE9LMbL
+         hEgo7FYRKAFdQJj7309kv8xfvtSzuI/7kcVgxOxdvv8XPQW2tS47AkFj1+lvYDof7h5v
+         rIhA==
+X-Gm-Message-State: AAQBX9cVtEHV4tCfxHKy8DkD6xBR0+W/WYJ14/LD87r4E5Eg4RNlOw0k
+	KGAZSUzIlJDCFZhpnZyPMMokUNdjwLmotNKN1Ne+bekebUOyuldF2s9wfwvMHvApd/gC5PRSnSh
+	IBcroHbmiR+60BstMjraj7oIxcurZEuMWfcaiBC2G+o9DlrV4DQ==
+X-Received: by 2002:a17:903:2442:b0:19f:3aa9:bbb7 with SMTP id l2-20020a170903244200b0019f3aa9bbb7mr7677572pls.13.1680135056746;
+        Wed, 29 Mar 2023 17:10:56 -0700 (PDT)
+X-Google-Smtp-Source: AKy350YsEMj7r4L0z/wLASuJ8/zR4+nsT4Ssmbi1Yix7c8rVlq1R49pcvGXt96xxwz/5uYgKuTH3WDKxIrj1E+swa+s=
+X-Received: by 2002:a17:903:2442:b0:19f:3aa9:bbb7 with SMTP id
+ l2-20020a170903244200b0019f3aa9bbb7mr7677566pls.13.1680135056463; Wed, 29 Mar
+ 2023 17:10:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <CAHC9VhQ7A4+msL38WpbOMYjAqLp0EtOjeLh4Dc6SQtD6OUvCQg@mail.gmail.com>
+References: <167875238571.8008.9808655454439667586@noble.neil.brown.name>
+ <CALTww2916uiO8_ViJQXutO2BPasFmiUJtfz8MxW0HKjDzwGFeQ@mail.gmail.com>
+ <167945548970.8008.8910680813298326328@noble.neil.brown.name> <168012671413.8106.6812573281942242445@noble.neil.brown.name>
+In-Reply-To: <168012671413.8106.6812573281942242445@noble.neil.brown.name>
+From: Xiao Ni <xni@redhat.com>
+Date: Thu, 30 Mar 2023 08:10:45 +0800
+Message-ID: <CALTww28X1NQecTY3Jbkz_wbHc_N7GOw3hJLEyb2YnxAmQ8PRFw@mail.gmail.com>
+Subject: Re: [PATCH - mdadm] mdopen: always try create_named_array()
+To: NeilBrown <neilb@suse.de>
+Cc: Jes Sorensen <jes@trained-monkey.org>, 
+	Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>, Song Liu <song@kernel.org>, 
+	Linux regressions mailing list <regressions@lists.linux.dev>, linux-raid <linux-raid@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, Nikolay Kichukov <hijacker@oldum.net>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 28 Mar 19:08, Paul Moore wrote:
->Hello all,
+On Thu, Mar 30, 2023 at 5:52=E2=80=AFAM NeilBrown <neilb@suse.de> wrote:
 >
->Starting with the v6.3-rcX kernel releases I noticed that my
->InfiniBand devices were no longer present under /sys/class/infiniband,
->causing some of my automated testing to fail.  It took me a while to
->find the time to bisect the issue, but I eventually identified the
->problematic commit:
+> On Wed, 22 Mar 2023, NeilBrown wrote:
+> > On Wed, 22 Mar 2023, Xiao Ni wrote:
+> >
+> > >
+> > > Second, are there possibilities that the arguments "dev" and "name" o=
+f
+> > > function create_mddev
+> > > are null at the same time?
+> >
+> > No.  For Build or Create, dev is never NULL.  For Assemble and
+> > Incremental, name is never NULL.
+> >
 >
->  commit fe998a3c77b9f989a30a2a01fb00d3729a6d53a4
->  Author: Shay Drory <shayd@nvidia.com>
->  Date:   Wed Jun 29 11:38:21 2022 +0300
+> I should clarify this a bit.  For Assemble and Incremental, "name" is
+> never NULL *but* it might be an empty string.
+> So:
+>         if (name && name[0] =3D=3D 0)
+>                 name =3D NULL;
 >
->   net/mlx5: Enable management PF initialization
+> might cause it to become NULL.  So you cannot assume there is always
+> either a valid "dev" or a valid "name".  "dev" might be NULL, and "name"
+> might be "".
 >
->   Enable initialization of DPU Management PF, which is a new loopback PF
->   designed for communication with BMC.
->   For now Management PF doesn't support nor require most upper layer
->   protocols so avoid them.
->
->   Signed-off-by: Shay Drory <shayd@nvidia.com>
->   Reviewed-by: Eran Ben Elisha <eranbe@nvidia.com>
->   Reviewed-by: Moshe Shemesh <moshe@nvidia.com>
->   Signed-off-by: Saeed Mahameed <saeedm@nvidia.com>
->
->I'm not a mlx5 driver expert so I can't really offer much in the way
->of a fix, but as a quick test I did remove the
->'mlx5_core_is_management_pf(...)' calls in mlx5/core/dev.c and
->everything seemed to work okay on my test system (or rather the tests
->ran without problem).
->
->If you need any additional information, or would like me to test a
->patch, please let me know.
+> NeilBrown
 >
 
-Hi Paul, 
+Hi Neil
 
-Our team is looking into this, the current theory is that you have an old
-FW that doesn't have the correct capabilities set.
+The input argument name should be the metadata name. For incremental
+and assemble, why are there possibilities that the metadata name is
+invalid? A raid device should have a valid metadata name, right?
 
-Can you please provide the FW version and the ConnectX device you are
-testing ? 
 
-$ devlink dev info
-$ lspci -s <pci_dev> -vv
-since boot:
-$ dmesg 
+--=20
+Best Regards
+Xiao Ni
 
->-- 
->paul-moore.com
