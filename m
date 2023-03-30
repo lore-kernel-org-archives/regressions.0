@@ -1,120 +1,104 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4144C1857
-	for <regressions@lists.linux.dev>; Thu, 30 Mar 2023 04:55:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1680152121;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BA0E10FF
+	for <regressions@lists.linux.dev>; Thu, 30 Mar 2023 06:30:22 +0000 (UTC)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 38DFB21ACB;
+	Thu, 30 Mar 2023 06:30:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1680157818; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=AyTbRFMs97cAScAt4h83Kngqndm2W6jMyHVf8nQ7nPc=;
-	b=FR3FtfNpHY/W3sHQed6kcOZLNjJtg2TqS6Kjb1i5nNzoZJrD5fJvP3MhVgjjtP3/G7c6gZ
-	XTWLAZ+iwehEBY4Rr9MJ6QkXNj218U23xWB7gQdDrUBKUhXH+HLAbDRuKW1hIP2jEPheHS
-	SQ9DpOXGGxXQo1/I/YrOWzeDoGnIa2Y=
-Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com
- [209.85.210.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-496-Ax0IqSygMCu5LpSeLEalQg-1; Thu, 30 Mar 2023 00:55:20 -0400
-X-MC-Unique: Ax0IqSygMCu5LpSeLEalQg-1
-Received: by mail-pf1-f199.google.com with SMTP id o14-20020a62f90e000000b0062d87d997eeso5019891pfh.18
-        for <regressions@lists.linux.dev>; Wed, 29 Mar 2023 21:55:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680152119;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AyTbRFMs97cAScAt4h83Kngqndm2W6jMyHVf8nQ7nPc=;
-        b=44ODVK3aUWF7A9EGDWgG2/l+AQFXvTkXK740vLu8mKYaAJkTo/9ItWjJxyPMsfEdsQ
-         LFjyeHZ5bOu9OgFXjqZq9WFeuTR6/NiFOwN4dic9tzZhQdC4iXQNAJM3yw2v4W8t8HxF
-         4DGuaf1gK0BnndtspvJq7qCWuQeJbaoWYRX+qttlQNpNtCz5gbX37l+rTCNl7lJLVDaI
-         wi/pi2scdZLh94pCqKaQsOIeWbZfYeTllXV0fxisnE6+Bfh9Jy3e0/LZ6VG5qKHz7HRC
-         r7W5YtyjS52Tod2FfPAA27nXF1KMqO0mDr4o7L4mmdFnt6dzTeKF2YDlKMGS+B5/BN1B
-         O9Rw==
-X-Gm-Message-State: AAQBX9fCqCm2kMKIx0iZpSLaQqQD8/Mrf8ae9/6ydsGgudWfeif1HVKb
-	j+Gtt0bSl/iO0s9tbJ2p6ovhwPW9mgrG15hsGXoEd+W7OQXLjJI2dO/8l5ijy7HJ0JwcjXtlyKc
-	7wJz9qdH1QlyFUYG5lsFv8OeuC5xeQPIt7KodL1U=
-X-Received: by 2002:a17:903:455:b0:1a2:6e4d:782c with SMTP id iw21-20020a170903045500b001a26e4d782cmr1824096plb.13.1680152119326;
-        Wed, 29 Mar 2023 21:55:19 -0700 (PDT)
-X-Google-Smtp-Source: AKy350ZYn0YlGsE5d5/SvE3Xa4cQ9vWiHdShQwzms32z6+pM0mJhEaSXBrBGrhkAmiD4sB8++tb6bmQuv0Phxtq0AvQ=
-X-Received: by 2002:a17:903:455:b0:1a2:6e4d:782c with SMTP id
- iw21-20020a170903045500b001a26e4d782cmr1824087plb.13.1680152118983; Wed, 29
- Mar 2023 21:55:18 -0700 (PDT)
+	bh=lPdUL7qsCC5+xZw5fm9Qxx3Ah7+ai3R7LDJZ+y2oQ5M=;
+	b=vWoXmQ4r6gReR9gXr7IlAMvNNzEL+/vGjugdoeKOYolj7qENuhhBs7MJqpWUtcBJPDJ6u2
+	a2zSvUBOPhAWDiOCappyC2SeQG9Q4my8MSheNF8A15F5xfh1bW1NDI4KeIR9wNiyYEZr9T
+	D/bCjfn/s5lmxaxzCVgFyY9kCXPF+LQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1680157818;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lPdUL7qsCC5+xZw5fm9Qxx3Ah7+ai3R7LDJZ+y2oQ5M=;
+	b=VNhpj/+xmy/ycFf3JWfM1xQ/qc9MtV1rddXogg2OzUf6F+fV2ogV9sIQu0UTRjyBGih+nx
+	hgT8+WRvcV4OJKDg==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id EF5CF138FF;
+	Thu, 30 Mar 2023 06:30:17 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+	by imap2.suse-dmz.suse.de with ESMTPSA
+	id SL5tOXksJWTZWwAAMHmgww
+	(envelope-from <tiwai@suse.de>); Thu, 30 Mar 2023 06:30:17 +0000
+Date: Thu, 30 Mar 2023 08:30:17 +0200
+Message-ID: <87wn2yn43q.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Takashi Iwai <tiwai@suse.de>,
+	Sasha Neftin <sasha.neftin@intel.com>,
+	Bagas Sanjaya <bagasdotme@gmail.com>,
+	Paul Menzel
+ <pmenzel@molgen.mpg.de>,
+	Jesse Brandeburg <jesse.brandeburg@intel.com>,
+	Tony Nguyen <anthony.l.nguyen@intel.com>,
+	netdev@vger.kernel.org,
+	intel-wired-lan@lists.osuosl.org,
+	regressions@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [Intel-wired-lan] [REGRESSION] e1000e probe/link detection fails since 6.2 kernel
+In-Reply-To: <20230329121232.7873ad95@kernel.org>
+References: <87jzz13v7i.wl-tiwai@suse.de>
+	<652a9a96-f499-f31f-2a55-3c80b6ac9c75@molgen.mpg.de>
+	<ZCP5jOTNypwG4xK6@debian.me>
+	<87a5zwosd7.wl-tiwai@suse.de>
+	<20230329121232.7873ad95@kernel.org>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-References: <167875238571.8008.9808655454439667586@noble.neil.brown.name>
- <CALTww2916uiO8_ViJQXutO2BPasFmiUJtfz8MxW0HKjDzwGFeQ@mail.gmail.com>
- <167945548970.8008.8910680813298326328@noble.neil.brown.name>
- <168012671413.8106.6812573281942242445@noble.neil.brown.name>
- <CALTww28X1NQecTY3Jbkz_wbHc_N7GOw3hJLEyb2YnxAmQ8PRFw@mail.gmail.com> <168014613094.14629.7292916705339147692@noble.neil.brown.name>
-In-Reply-To: <168014613094.14629.7292916705339147692@noble.neil.brown.name>
-From: Xiao Ni <xni@redhat.com>
-Date: Thu, 30 Mar 2023 12:55:07 +0800
-Message-ID: <CALTww29CN4iqmneiAG31kZDBubCMop=gg299hdW-TXCNq1c4gQ@mail.gmail.com>
-Subject: Re: [PATCH - mdadm] mdopen: always try create_named_array()
-To: NeilBrown <neilb@suse.de>
-Cc: Jes Sorensen <jes@trained-monkey.org>, 
-	Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>, Song Liu <song@kernel.org>, 
-	Linux regressions mailing list <regressions@lists.linux.dev>, linux-raid <linux-raid@vger.kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, Nikolay Kichukov <hijacker@oldum.net>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=ISO-2022-JP
 
-On Thu, Mar 30, 2023 at 11:15=E2=80=AFAM NeilBrown <neilb@suse.de> wrote:
->
-> On Thu, 30 Mar 2023, Xiao Ni wrote:
-> > On Thu, Mar 30, 2023 at 5:52=E2=80=AFAM NeilBrown <neilb@suse.de> wrote=
-:
-> > >
-> > > On Wed, 22 Mar 2023, NeilBrown wrote:
-> > > > On Wed, 22 Mar 2023, Xiao Ni wrote:
-> > > >
-> > > > >
-> > > > > Second, are there possibilities that the arguments "dev" and "nam=
-e" of
-> > > > > function create_mddev
-> > > > > are null at the same time?
-> > > >
-> > > > No.  For Build or Create, dev is never NULL.  For Assemble and
-> > > > Incremental, name is never NULL.
-> > > >
-> > >
-> > > I should clarify this a bit.  For Assemble and Incremental, "name" is
-> > > never NULL *but* it might be an empty string.
-> > > So:
-> > >         if (name && name[0] =3D=3D 0)
-> > >                 name =3D NULL;
-> > >
-> > > might cause it to become NULL.  So you cannot assume there is always
-> > > either a valid "dev" or a valid "name".  "dev" might be NULL, and "na=
-me"
-> > > might be "".
-> > >
-> > > NeilBrown
-> > >
-> >
-> > Hi Neil
-> >
-> > The input argument name should be the metadata name. For incremental
-> > and assemble, why are there possibilities that the metadata name is
-> > invalid? A raid device should have a valid metadata name, right?
->
-> "should" do, yes.  But you can never completely trust data on disk.  It
-> is safest to be prepared for "name" being "".
->
-> NeilBrown
->
+On Wed, 29 Mar 2023 21:12:32 +0200,
+Jakub Kicinski wrote:
+> 
+> On Wed, 29 Mar 2023 10:48:36 +0200 Takashi Iwai wrote:
+> > On Wed, 29 Mar 2023 10:40:44 +0200,
+> > Bagas Sanjaya wrote:
+> > > 
+> > > On Tue, Mar 28, 2023 at 04:39:01PM +0200, Paul Menzel wrote:  
+> > > > Does openSUSE Tumbleweed make it easy to bisect the regression at least on
+> > > > “rc level”? It be great if narrow it more down, so we know it for example
+> > > > regressed in 6.2-rc7.
+> > > >   
+> > > 
+> > > Alternatively, can you do bisection using kernel sources from Linus's
+> > > tree (git required)?  
+> > 
+> > That'll be a last resort, if no one has idea at all :)
+> 
+> I had a quick look yesterday, there's only ~6 or so commits to e1000e.
+> Should be a fairly quick bisection, hopefully?
 
-That's right, thanks for this explanation :)
+*IFF* it's an e1000e-specific bug, right?
 
---=20
-Best Regards
-Xiao Ni
+Through a quick glance, the only significant change in e1000e is the
+commit 1060707e3809
+    ptp: introduce helpers to adjust by scaled parts per million
 
+Others are only for MTP/ADP and new devices, which must be irrelevant.
+The tracing must be irrelevant, and the kmap change must be OK.
+
+Can 1060707e3809 be the cause of such a bug?
+
+
+thanks,
+
+Takashi
