@@ -1,62 +1,121 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9542F1FAD;
-	Thu, 30 Mar 2023 12:18:54 +0000 (UTC)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ECBE42F4;
-	Thu, 30 Mar 2023 05:19:37 -0700 (PDT)
-Received: from [10.57.54.254] (unknown [10.57.54.254])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A06793F73F;
-	Thu, 30 Mar 2023 05:18:52 -0700 (PDT)
-Message-ID: <01c50370-002d-5e18-3edc-81c9527aedc9@arm.com>
-Date: Thu, 30 Mar 2023 13:18:45 +0100
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 954A22F3E
+	for <regressions@lists.linux.dev>; Thu, 30 Mar 2023 13:28:41 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1phsKO-00025P-KA; Thu, 30 Mar 2023 15:28:32 +0200
+Message-ID: <7fe4e169-1cf9-2a26-0567-021172dadd3c@leemhuis.info>
+Date: Thu, 30 Mar 2023 15:28:32 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:102.0) Gecko/20100101
- Thunderbird/102.9.1
-Subject: Re: [regression] Bug 217218 - Trying to boot Linux version 6-2.2
- kernel with Marvell SATA controller 88SE9235
-Content-Language: en-GB
-To: Christoph Hellwig <hch@lst.de>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux PCI
- <linux-pci@vger.kernel.org>, iommu@lists.linux.dev, baolu.lu@linux.intel.com
-References: <a79ea7f5-6a41-a6c9-cfec-ba01aa2a3cfa@leemhuis.info>
- <20230328012231.GB21977@lst.de>
-From: Robin Murphy <robin.murphy@arm.com>
-In-Reply-To: <20230328012231.GB21977@lst.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
+Content-Language: en-US, de-DE
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: "platform-driver-x86@vger.kernel.org"
+ <platform-driver-x86@vger.kernel.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ LKML <linux-kernel@vger.kernel.org>, Ike Panhc <ike.pan@canonical.com>,
+ Mark Gross <markgross@kernel.org>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: [regression] Bug 217234 - Touchpad disabled after wakeup from sleep
+ on Lenovo Yoga 7i 15ITL5 (bisected)
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1680182921;a47ad636;
+X-HE-SMSGID: 1phsKO-00025P-KA
 
-On 2023-03-28 02:22, Christoph Hellwig wrote:
-> 
-> I finally found some real time to look into this:
-> 
-> On Tue, Mar 21, 2023 at 02:52:00PM +0100, Linux regression tracking (Thorsten Leemhuis) wrote:
->>> The man errors I am getting are
->>>
->>> dmar_fault 8 callbacks suppressed
->>> DMAR : DRHD: handling fault status req 2
->>> DMAR : [DMA Write NO_PASID] Request device [07.00.1] fault addr
->>> 0xfffe0000 [fault reason 0x82] Present bit in contect entry is clear
-> 
-> This clearly indicates that my original idea about the AMD gart was
-> completely bonkers, as we're obviously on an Intel platform.
-> 
-> And this indicates that the device is trying to do a DMA write to
-> something that isn't IOMMU mapped.  Getting this from an initialization
-> change (commit 78013eaadf6 (x86: remove the IOMMU table infrastructure")
-> feels very strange to me.
-> 
-> Can you maybe post the full dmesg?  I wonder if there is interesting
-> initialization error in here.
+Hi, Thorsten here, the Linux kernel's regression tracker.
 
-FWIW "Marvell SATA" instantly makes me suspect the phantom function 
-quirk. What *should* happen is the IOMMU driver sees the PCI DMA aliases 
-correctly and sets up context entries for both 07.00.0 and 07.00.1, but 
-it looks like that may be what's gone awry.
+I noticed a regression report in bugzilla.kernel.org. As many (most?)
+kernel developers don't keep an eye on it, I decided to forward it by mail.
 
-Robin.
+Hans, apparently it's cause by a change of yours.
+
+Note, you have to use bugzilla to reach the reporter, as I sadly[1] can
+not CCed them in mails like this.
+
+Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=217234 :
+
+>  arsgeiger@gmail.com 2023-03-22 23:52:35 UTC
+> 
+> Created attachment 304002 [details]
+> libinput events on linux6.0
+> 
+> After booting linux6.1 and later upon closing the lid and opening it again, the touchpad is no longer usable. After powering off and booting linux6.0 again (no other changes), the touchpad does continue to work after closing the lid and opening it again.
+> 
+> When the touchpad gets disabled on linux6.1, after logging in to gnome, I can re-enable it from the settings. Using `libinput debug-events --verbose` Here is a comparison of the output on linux6.0:
+> 
+>>    2: event10 - lid: suspending touchpad
+>> -event1   SWITCH_TOGGLE           +0.000s     switch lid state 1
+>>    3: event10 - lid: resume touchpad
+>> -event6   KEYBOARD_KEY            +2.164s     KEY_F22 (192) pressed
+>>  event6   KEYBOARD_KEY            +2.164s     KEY_F22 (192) released
+>>  event6   KEYBOARD_KEY            +2.627s     KEY_F22 (192) pressed
+>>  event6   KEYBOARD_KEY            +2.627s     KEY_F22 (192) released
+>> -event1   SWITCH_TOGGLE           +2.168s     switch lid state 0
+> 
+> And linux 6.1+:
+> 
+>>   2: event10 - lid: suspending touchpad
+>> -event1   SWITCH_TOGGLE           +0.000s     switch lid state 1
+>>    3: event10 - lid: resume touchpad
+>> -event6   KEYBOARD_KEY            +2.000s     KEY_TOUCHPAD_TOGGLE (530)
+>> pressed
+>>  event6   KEYBOARD_KEY            +2.000s     KEY_TOUCHPAD_TOGGLE (530)
+>>  released
+>> -event1   SWITCH_TOGGLE           +2.000s     switch lid state 0
+
+> [...]
+
+>  arsgeiger@gmail.com 2023-03-30 11:50:11 UTC
+> 
+> Alright, I found the offending commit (which does not exist in linux6.0 but was backported to linux6.1):
+> https://gitlab.com/linux-kernel/stable/-/commit/5829f8a897e4f030cd2d32a930eea8954ab5dcd3
+> 
+> Building linux6.2 with this commit reverted does workaround the issue for me.
+
+See the ticket for more details.
+
+
+[TLDR for the rest of this mail: I'm adding this report to the list of
+tracked Linux kernel regressions; the text you find below is based on a
+few templates paragraphs you might have encountered already in similar
+form.]
+
+BTW, let me use this mail to also add the report to the list of tracked
+regressions to ensure it's doesn't fall through the cracks:
+
+#regzbot introduced: 5829f8a897e4f0
+https://bugzilla.kernel.org/show_bug.cgi?id=217234
+#regzbot title: platform/x86: ideapad-laptop: Touchpad disabled after
+wakeup
+#regzbot ignore-activity
+
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply and tell me -- ideally
+while also telling regzbot about it, as explained by the page listed in
+the footer of this mail.
+
+Developers: When fixing the issue, remember to add 'Link:' tags pointing
+to the report (e.g. the buzgzilla ticket and maybe this mail as well, if
+this thread sees some discussion). See page linked in footer for details.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
+
+[1] because bugzilla.kernel.org tells users upon registration their
+"email address will never be displayed to logged out users"
