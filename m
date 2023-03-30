@@ -1,121 +1,60 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 954A22F3E
-	for <regressions@lists.linux.dev>; Thu, 30 Mar 2023 13:28:41 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1phsKO-00025P-KA; Thu, 30 Mar 2023 15:28:32 +0200
-Message-ID: <7fe4e169-1cf9-2a26-0567-021172dadd3c@leemhuis.info>
-Date: Thu, 30 Mar 2023 15:28:32 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 962176FB1
+	for <regressions@lists.linux.dev>; Thu, 30 Mar 2023 14:39:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23283C4339C
+	for <regressions@lists.linux.dev>; Thu, 30 Mar 2023 14:39:21 +0000 (UTC)
+Authentication-Results: smtp.kernel.org;
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="kaMd4Plw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
+	t=1680187158;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Ay2zwlz3DTkBGmbYX0afOIkpNwyv8Ms2Z8LFn9fSDYk=;
+	b=kaMd4PlwRe7GAGaCLLUq/J6RCOJ6aY3R5k4W4nrDioMwcRnSqECWkNklw+Emoq1yIuBVmO
+	0xzabgYZaE1uxmz3hP0ujGhNIWoEO8gpTQ7sVWiPnEyp6JtJtiqshOauou7Sw1EL+O1VXE
+	vS4rVNVGEr9ZuiCLfd6MwW+x/hxnkKU=
+Received: 
+	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id b9bee01f (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO)
+	for <regressions@lists.linux.dev>;
+	Thu, 30 Mar 2023 14:39:18 +0000 (UTC)
+Received: by mail-vs1-f49.google.com with SMTP id cu36so16421072vsb.7
+        for <regressions@lists.linux.dev>; Thu, 30 Mar 2023 07:39:18 -0700 (PDT)
+X-Gm-Message-State: AAQBX9cvAtSrftr8iC1S15Q5MZkcPQuReZiHsFooMyVdWULcoztYpfWw
+	0WhMzwKQJNDFR8Dv1O4SAkUJihkV1TF2BPSBNSI=
+X-Google-Smtp-Source: AKy350ZYFYLgBJitIkT69kIPy8rdMO4raIXi6bXUVJ9CFzfKxZXNmmd7qo0exZmSwsLX9Yw6cKfU+jHEm3N9r6eDdsY=
+X-Received: by 2002:a67:e18e:0:b0:425:bbc6:aa64 with SMTP id
+ e14-20020a67e18e000000b00425bbc6aa64mr12813599vsl.5.1680187157665; Thu, 30
+ Mar 2023 07:39:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Content-Language: en-US, de-DE
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: "platform-driver-x86@vger.kernel.org"
- <platform-driver-x86@vger.kernel.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- LKML <linux-kernel@vger.kernel.org>, Ike Panhc <ike.pan@canonical.com>,
- Mark Gross <markgross@kernel.org>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: [regression] Bug 217234 - Touchpad disabled after wakeup from sleep
- on Lenovo Yoga 7i 15ITL5 (bisected)
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1680182921;a47ad636;
-X-HE-SMSGID: 1phsKO-00025P-KA
+References: <CQZ7HWJCK18F.1AUR9FMHKPOXB@crawfs>
+In-Reply-To: <CQZ7HWJCK18F.1AUR9FMHKPOXB@crawfs>
+From: "Jason A. Donenfeld" <Jason@zx2c4.com>
+Date: Thu, 30 Mar 2023 16:39:06 +0200
+X-Gmail-Original-Message-ID: <CAHmME9qi=26zP-A14pLVxtL86Zj1P-+i93t=_BnSd0t1Dj_U8A@mail.gmail.com>
+Message-ID: <CAHmME9qi=26zP-A14pLVxtL86Zj1P-+i93t=_BnSd0t1Dj_U8A@mail.gmail.com>
+Subject: Re: Possible regression between 5.18.2 and 6.2.1
+To: Dan Crawford <dnlcrwfrd@gmail.com>
+Cc: wireguard@lists.zx2c4.com, 
+	Linux regressions mailing list <regressions@lists.linux.dev>, Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi, Thorsten here, the Linux kernel's regression tracker.
+Hi Dan,
 
-I noticed a regression report in bugzilla.kernel.org. As many (most?)
-kernel developers don't keep an eye on it, I decided to forward it by mail.
+Hard to imagine that this is a WireGuard bug, but more likely
+something having to do with SNAT or something.
 
-Hans, apparently it's cause by a change of yours.
+What is the unallowed src IP when you get that error? Can you debug
+further? Maybe bisect a bit? Otherwise, not much I can do.
 
-Note, you have to use bugzilla to reach the reporter, as I sadly[1] can
-not CCed them in mails like this.
+The diff between those versions you listed is pretty minimal, so I
+suspect your bug is elsewhere.
 
-Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=217234 :
-
->  arsgeiger@gmail.com 2023-03-22 23:52:35 UTC
-> 
-> Created attachment 304002 [details]
-> libinput events on linux6.0
-> 
-> After booting linux6.1 and later upon closing the lid and opening it again, the touchpad is no longer usable. After powering off and booting linux6.0 again (no other changes), the touchpad does continue to work after closing the lid and opening it again.
-> 
-> When the touchpad gets disabled on linux6.1, after logging in to gnome, I can re-enable it from the settings. Using `libinput debug-events --verbose` Here is a comparison of the output on linux6.0:
-> 
->>    2: event10 - lid: suspending touchpad
->> -event1   SWITCH_TOGGLE           +0.000s     switch lid state 1
->>    3: event10 - lid: resume touchpad
->> -event6   KEYBOARD_KEY            +2.164s     KEY_F22 (192) pressed
->>  event6   KEYBOARD_KEY            +2.164s     KEY_F22 (192) released
->>  event6   KEYBOARD_KEY            +2.627s     KEY_F22 (192) pressed
->>  event6   KEYBOARD_KEY            +2.627s     KEY_F22 (192) released
->> -event1   SWITCH_TOGGLE           +2.168s     switch lid state 0
-> 
-> And linux 6.1+:
-> 
->>   2: event10 - lid: suspending touchpad
->> -event1   SWITCH_TOGGLE           +0.000s     switch lid state 1
->>    3: event10 - lid: resume touchpad
->> -event6   KEYBOARD_KEY            +2.000s     KEY_TOUCHPAD_TOGGLE (530)
->> pressed
->>  event6   KEYBOARD_KEY            +2.000s     KEY_TOUCHPAD_TOGGLE (530)
->>  released
->> -event1   SWITCH_TOGGLE           +2.000s     switch lid state 0
-
-> [...]
-
->  arsgeiger@gmail.com 2023-03-30 11:50:11 UTC
-> 
-> Alright, I found the offending commit (which does not exist in linux6.0 but was backported to linux6.1):
-> https://gitlab.com/linux-kernel/stable/-/commit/5829f8a897e4f030cd2d32a930eea8954ab5dcd3
-> 
-> Building linux6.2 with this commit reverted does workaround the issue for me.
-
-See the ticket for more details.
-
-
-[TLDR for the rest of this mail: I'm adding this report to the list of
-tracked Linux kernel regressions; the text you find below is based on a
-few templates paragraphs you might have encountered already in similar
-form.]
-
-BTW, let me use this mail to also add the report to the list of tracked
-regressions to ensure it's doesn't fall through the cracks:
-
-#regzbot introduced: 5829f8a897e4f0
-https://bugzilla.kernel.org/show_bug.cgi?id=217234
-#regzbot title: platform/x86: ideapad-laptop: Touchpad disabled after
-wakeup
-#regzbot ignore-activity
-
-This isn't a regression? This issue or a fix for it are already
-discussed somewhere else? It was fixed already? You want to clarify when
-the regression started to happen? Or point out I got the title or
-something else totally wrong? Then just reply and tell me -- ideally
-while also telling regzbot about it, as explained by the page listed in
-the footer of this mail.
-
-Developers: When fixing the issue, remember to add 'Link:' tags pointing
-to the report (e.g. the buzgzilla ticket and maybe this mail as well, if
-this thread sees some discussion). See page linked in footer for details.
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
-
-[1] because bugzilla.kernel.org tells users upon registration their
-"email address will never be displayed to logged out users"
+Jason
