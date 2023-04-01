@@ -1,122 +1,130 @@
-Received: from devico.uberspace.de (devico.uberspace.de [185.26.156.185])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47E128F66
-	for <regressions@lists.linux.dev>; Sat,  1 Apr 2023 21:00:33 +0000 (UTC)
-Received: (qmail 1969 invoked by uid 990); 1 Apr 2023 20:53:49 -0000
-Authentication-Results: devico.uberspace.de;
-	auth=pass (plain)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CB0B8F66
+	for <regressions@lists.linux.dev>; Sat,  1 Apr 2023 21:17:53 +0000 (UTC)
+Received: by mail-pg1-f178.google.com with SMTP id y35so15420127pgl.4
+        for <regressions@lists.linux.dev>; Sat, 01 Apr 2023 14:17:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1680383872;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=/aUE8x/14V3dMRPOVnDZcdRoITdGNMwL8Z4JZeeVb6o=;
+        b=P/2/vp/3V0LdJykPEDiqSME92a2SeIhnYBtj97hIgQFYmbRS68KrRXlFlMX7odtq7x
+         OfWyne4G1yIXlxT67x+qJIFot3WQ+pYHpXLiwxTzzRpjUkmjoXV+ev7b1+AqWzNpY8Aq
+         HcTuT7NjohhI3SmwKqFzaKK6DLBZ8m7BF+r9lSVEQm5x0f/Gz0bccd7gBUsL6qAwwBXH
+         oxO6L7pDblZ5RlzBh2NJXCsAvc0UW/aivyCU5lysg7JA43XRQ5kKwlz/1DVL+U6cQ7Gf
+         lQo0nxxR87Lx2y+8MgoiLFVer4tvD734MkiKT7YtfDigEIslStRDkRJSnalUF1eeojPT
+         F2bw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680383872;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/aUE8x/14V3dMRPOVnDZcdRoITdGNMwL8Z4JZeeVb6o=;
+        b=YGOJeyYNn5lJbAcM1zppt/DUdYygUW+otHy8VXLwqrXbAz26BdLpl3VMSLSDPbCP4+
+         7MzxlVtbuzO+OJSxkpOs8/fmcfaiFoINE85hQgH2uAZd8lioqRkdIlqyoHDdTuoUFCSQ
+         UhIhq3hqBSHWAjNYXjiOOtjo+zG4g1yfi4U3qfDJ+fvKfQ0ltB9NfYI5dKymYKJLMDoK
+         ADxkPlCTL6LUf44bthOXbVmZthjxooTV+wjNK0+FzQtdG5PxY/+FZpU1w2ha/C6IxwMt
+         c5ONI0a08K0TYksL6P0DMeDxLGtT58vWfM5TMFoTNPQe+gOVrkGQ/GyYCpgFAabrhNLm
+         HCMA==
+X-Gm-Message-State: AAQBX9d5OBmHIZgDZDgb/hLXVvTTrQA5AlT8fhPk5YMQsY9e40VnE2rW
+	Hqc/YWDBIkqfvS2iGBKNAMs=
+X-Google-Smtp-Source: AKy350ZZExF6wfrtRs0ucXe/UzYvAeirB6CVbO2KXFgKqMQGm8wugfaaSVhCuN8bWUzTIVtidyDXqw==
+X-Received: by 2002:a62:1948:0:b0:627:f740:51f9 with SMTP id 69-20020a621948000000b00627f74051f9mr14529387pfz.3.1680383872349;
+        Sat, 01 Apr 2023 14:17:52 -0700 (PDT)
+Received: from google.com ([2620:15c:9d:2:ac04:c59e:2de:5791])
+        by smtp.gmail.com with ESMTPSA id y1-20020a056a001c8100b005a90f2cce30sm3970890pfw.49.2023.04.01.14.17.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 01 Apr 2023 14:17:51 -0700 (PDT)
+Date: Sat, 1 Apr 2023 14:17:48 -0700
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Takashi Iwai <tiwai@suse.de>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+	regressions@lists.linux.dev, linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [REGRESSION] wrong coord from Thinkpad TrackPoint since 6.2
+ kernel
+Message-ID: <ZCiffEmTSi7aynk5@google.com>
+References: <87h6u4otuc.wl-tiwai@suse.de>
+ <3dec29bf-b772-d82d-fff9-6c8bcca5f464@redhat.com>
+ <874jq3q52i.wl-tiwai@suse.de>
+ <87mt3umyui.wl-tiwai@suse.de>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Date: Sat, 01 Apr 2023 20:53:48 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-From: "Leonard Lausen" <leonard@lausen.nl>
-Message-ID: <a2fec0a5855150966fa5a920216c205032965f98@lausen.nl>
-TLS-Required: No
-Subject: Re: [PATCH] Revert "venus: firmware: Correct non-pix start and end
- addresses"
-To: "Javier Martinez Canillas" <javierm@redhat.com>, "Dikshita Agarwal"
- <quic_dikshita@quicinc.com>, "Vikash Garodia" <vgarodia@qti.qualcomm.com>,
- "Linux regressions mailing list" <regressions@lists.linux.dev>, "Stanimir
- Varbanov" <stanimir.k.varbanov@gmail.com>
-Cc: linux-kernel@vger.kernel.org, mka@chromium.org, "Albert Esteve"
- <aesteve@redhat.com>, stanimir.varbanov@linaro.org, "Enric Balletbo i Serra"
- <eballetb@redhat.com>, "Andy Gross" <agross@kernel.org>, "Bjorn Andersson"
- <andersson@kernel.org>, "Konrad Dybcio" <konrad.dybcio@linaro.org>, "Vikash
- Garodia (QUIC)" <quic_vgarodia@quicinc.com>, linux-arm-msm@vger.kernel.org,
- linux-media@vger.kernel.org, "Fritz Koenig" <frkoenig@google.com>, "Rajeshwar
- Kurapaty (QUIC)" <quic_rkurapat@quicinc.com>, "Mauro Carvalho Chehab"
- <mchehab@kernel.org>
-In-Reply-To: <87edq2dus1.fsf@minerva.mail-host-address-is-not-set>
-References: <87edq2dus1.fsf@minerva.mail-host-address-is-not-set>
- <20230207102254.1446461-1-javierm@redhat.com>
- <DM8PR02MB8169809493BF2822E6C29EECF3DB9@DM8PR02MB8169.namprd02.prod.outlook.com>
- <ef09bc9f-d570-be11-238b-bd34063917fc@redhat.com>
- <70c01751-1dd7-c4bd-a96e-94dea437aa40@redhat.com>
- <DM8PR02MB81696369DBFE619E43F81EEFF3DE9@DM8PR02MB8169.namprd02.prod.outlook.com>
- <e87344c6-acef-7f3f-5cac-24961dbd9401@redhat.com>
- <6f97a117-0d9c-e21b-9adf-50f2233ba9e3@leemhuis.info>
- <ea283f0a-ca72-447e-ce87-68c1bbee793e@leemhuis.info>
- <CAFOAJEdBbzqkGVqw+vgNYNxyaTHwvjFyskTwjycP820L2tOctA@mail.gmail.com>
- <b548da46-bf91-6f1c-4b63-4002109056bc@leemhuis.info>
- <9a0bfef8-0b5d-f4d0-a8a5-4bbcacc5c0fb@leemhuis.info>
- <DM8PR02MB8169E16569616870A583B376F3AB9@DM8PR02MB8169.namprd02.prod.outlook.com>
- <87356wn6xf.fsf@minerva.mail-host-address-is-not-set>
- <87edq9hj4w.fsf@minerva.mail-host-address-is-not-set>
- <d18fac76-6b77-a446-5fe0-7236556e9187@quicinc.com>
- <0c84724d-08d4-ddcb-5f71-4eb8261240c6@quicinc.com>
-X-Rspamd-Bar: -
-X-Rspamd-Report: MIME_GOOD(-0.1) BAYES_HAM(-2.911118) SUSPICIOUS_RECIPS(1.5)
-X-Rspamd-Score: -1.511118
-Received: from unknown (HELO unkown) (::1)
-	by devico.uberspace.de (Haraka/3.0.1) with ESMTPSA; Sat, 01 Apr 2023 22:53:49 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-	d=lausen.nl; s=uberspace;
-	h=from;
-	bh=aA2msNrvcbbehcgKux4cUf7WB087VIC6mCd6AEtUyEQ=;
-	b=s4XtsGVE1M/EVfLROVnFJKY2m/ZJILlhO+a2J5zOVsO9r/5JzqHXwZOaORDxQewy+/oLt/E13Z
-	HvywSLWvByzGU9FYoycym8dl/qvMUXsLGg76aiYxtRz6nMJTK6ObltrPRW4UXHjh49Nt5/w6snor
-	uZ/vF9mVBfnhYTOKqsh/167Ga0AzjuczYNQVXHHPAxfb022TAWlmScJj1evxBryqU3t/8XGf4OjU
-	Tdqcrynq20Xdv+DjkzxvJ0KElIi6CbYvd4/C9S+wu4TcVGEpjZNGByI6Ht1xE3auxBpkHazadRza
-	KR8P07gnacvy3pxinaTz10ClHrkxtuqMFuqmbMV6eemFAm8+gKf7uuy7FHHbV4g8QSrVqiokM3VD
-	VOCU7qDxTb5ddA+BTgHMOEoeNUfMe2ZxeZVCOv1CC11c9jzKHtGUxu3IGfEB+pqykhVSd1OMmvnu
-	qSt+lruwuDGYb6fnmI0Spko/H8WYomjH8zE3F1O7TiAA06PjkpoZfXlmrvo6x0v/QU7n0vbGgEZq
-	RrgV4YDpxPtJ3yzXK3VxTaxKk7VOA+LNmz/wZ8hvh3BFY/S7poQ+cJzfBkX6BGMtxd+Lgxu/wcr1
-	IYadB4A2ajHkUHnNaYkufpaNtqKB/5pnw29CNGAcn+DPkO7f5BvSS5HMdBncjiuJyuaXzX/ozbfD
-	c=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87mt3umyui.wl-tiwai@suse.de>
 
-Hi Javier, Dikshita, Stan,
+On Thu, Mar 30, 2023 at 10:23:49AM +0200, Takashi Iwai wrote:
+> On Wed, 29 Mar 2023 11:28:53 +0200,
+> Takashi Iwai wrote:
+> > 
+> > On Wed, 29 Mar 2023 11:22:18 +0200,
+> > Hans de Goede wrote:
+> > > 
+> > > Hi Takashi,
+> > > 
+> > > On 3/29/23 10:16, Takashi Iwai wrote:
+> > > > Hi,
+> > > > 
+> > > > we've received a bug report about Thinkpad TrackPoint (ALPS DualPoint
+> > > > Stick) on 6.2 kernel:
+> > > >   https://bugzilla.opensuse.org/show_bug.cgi?id=1209805
+> > > > 
+> > > > The device reports the wrong values as the movements, e.g. sometimes a
+> > > > value such as 255, 254 or -255 is returned while usually it should be
+> > > > a smaller value like -1 or 2.
+> > > > 
+> > > > The evtest on 6.2.x kernel shows the wrong values like:
+> > > > 
+> > > > Event: time 1680037542.898747, type 2 (EV_REL), code 0 (REL_X), value 255
+> > > > Event: time 1680037542.898747, -------------- SYN_REPORT ------------
+> > > > Event: time 1680037543.145196, type 2 (EV_REL), code 0 (REL_X), value 1
+> > > > Event: time 1680037543.145196, -------------- SYN_REPORT ------------
+> > > > Event: time 1680037543.175087, type 2 (EV_REL), code 1 (REL_Y), value -255
+> > > > Event: time 1680037543.175087, -------------- SYN_REPORT ------------
+> > > > Event: time 1680037543.185421, type 2 (EV_REL), code 0 (REL_X), value 1
+> > > > Event: time 1680037543.185421, type 2 (EV_REL), code 1 (REL_Y), value -255
+> > > > Event: time 1680037543.185421, -------------- SYN_REPORT ------------
+> > > > 
+> > > > while 6.1.x kernel shows the correct values like:
+> > > > 
+> > > > Event: time 1680037386.318058, type 2 (EV_REL), code 0 (REL_X), value -1
+> > > > Event: time 1680037386.318058, type 2 (EV_REL), code 1 (REL_Y), value -1
+> > > > Event: time 1680037386.318058, -------------- SYN_REPORT ------------
+> > > > Event: time 1680037386.328087, type 2 (EV_REL), code 0 (REL_X), value -1
+> > > > Event: time 1680037386.328087, type 2 (EV_REL), code 1 (REL_Y), value -1
+> > > > Event: time 1680037386.328087, -------------- SYN_REPORT ------------
+> > > > Event: time 1680037386.338046, type 2 (EV_REL), code 0 (REL_X), value -1
+> > > > Event: time 1680037386.338046, type 2 (EV_REL), code 1 (REL_Y), value -2
+> > > > Event: time 1680037386.338046, -------------- SYN_REPORT ------------
+> > > >   
+> > > > I couldn't see any relevant changes in alps.c between those versions,
+> > > > so this is likely a breakage in a lower layer.
+> > > > 
+> > > > Could you guys take a look?
+> > > 
+> > > I believe this is caused by the kernel now using -funsigned-char
+> > > everywhere and this should be fixed by this commit:
+> > > 
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git/commit/?h=for-linus&id=754ff5060daf5a1cf4474eff9b4edeb6c17ef7ab
+> > 
+> > Ah, that makes sense!
+> > 
+> > I'll build a test kernel with this fix and ask the reporter for
+> > testing.
+> 
+> And it's confirmed that the commit above fixes the problem indeed.
 
-the revert wasn't applied to v6.2 series. Can you please apply it and inc=
-lude it for v6.2.10?
+Sorry for sitting on this, I just sent a pull request and it was merged.
 
-March 6, 2023 at 5:43 AM, "Javier Martinez Canillas" <javierm@redhat.com>=
- wrote:
->> On 3/1/2023 3:15 PM, Dikshita Agarwal wrote:
->>> On 2/28/2023 9:33 PM, Javier Martinez Canillas wrote:
->>>> Javier Martinez Canillas<javierm@redhat.com>  writes:
->>>>> Vikash Garodia<vgarodia@qti.qualcomm.com>  writes:
->>>>>
->>>>>> Stan, could you please help with the revert and a pull request hav=
-ing this revert
->>>>>> alongwith other pending changes ?
->>>>>>
->>>>> Other fix posted is "media: venus: dec: Fix capture formats enumera=
-tion order":
->>>>>
->>>>> https://patchwork.kernel.org/project/linux-media/patch/202302100818=
-35.2054482-1-javierm@redhat.com/
->>
->> Hi Javier,
->>
->> Thanks for this patch "media: venus: dec: Fix capture formats
->> enumeration order".
->>
->> Somehow I can't find it in my mailbox to be able to reply there.
->>
->> Could you please explain what is the regression you see here?
->>
->
->You can find the thread and explanation of the issue here:
->
->https://lore.kernel.org/lkml/Y+KPW18o%2FDa+N8UI@google.com/T/
->
->But Stanimir already picked it and sent a PR for v6.3 including it.
+Thanks.
 
-While "media: venus: dec: Fix capture formats enumeration order" may have=
- been
-applied to v6.3, this still leaves the regression introduced by "venus:
-firmware: Correct non-pix start and end addresses". As pointed out by Mat=
-thias
-Kaehlcke, the commit prevents SC7180 and sc7280 AOSS from entering sleep =
-mode
-during system suspend. This is a serious regression in v6.2 kernel series=
-.
-
-Best regards,
-Leonard Lausen
+-- 
+Dmitry
