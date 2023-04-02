@@ -1,76 +1,135 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DA4F2F30
-	for <regressions@lists.linux.dev>; Sun,  2 Apr 2023 17:49:55 +0000 (UTC)
-Received: by mail-ed1-f43.google.com with SMTP id t10so108587735edd.12
-        for <regressions@lists.linux.dev>; Sun, 02 Apr 2023 10:49:55 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45C1F53AA
+	for <regressions@lists.linux.dev>; Sun,  2 Apr 2023 18:46:44 +0000 (UTC)
+Received: by mail-wm1-f49.google.com with SMTP id o32so15828210wms.1
+        for <regressions@lists.linux.dev>; Sun, 02 Apr 2023 11:46:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1680457793; x=1683049793;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=twCPC0pauRSrcDGPcatZZnRn4es+o8hDMAtgf21b8Ls=;
-        b=V1xjAwxIQpU+AKtTAqNqQTXZ5XTfQpwo4FJqpSfOxuxfMAijag35GXzem9qcwW2Grl
-         137BTU5gvXiBbzDSEmPfs7+3Rl+4BFwl48XsV6MD8xvTpWZQeuvewmUgOrk/4OvhGu7h
-         9gtsaSAf1ocKhC28eHJD8r8M9nHMnnaA6JnUo=
+        d=gmail.com; s=20210112; t=1680461202;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:to:from:date:sender:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=fL5kMIjPYpnHHKeS2SPDtm2N2DyJU46jDFtlSQzTIdE=;
+        b=eVklQqCoz1Tq/KLQJ0bLn41TVCm/sG4SqGKgFTyuPaKg80AQoLJHKdDnFNzGEaAHNn
+         4ZWbSzpGKK/2Kyw8CO7H3Dus54q3YpTIvqpX9RjsYmxdwGBqViQ2PPKpJ4IxNYt3RcD1
+         QdrNBuDE/A6ZwtqBFsRkNRzRkTiH0qrE2gfBHuZPq8AZiSt5dE70R+IpAq6XZ1oDb/iv
+         0nZ0gB37fHPS5dgLGRI1gT/em4RNbD1t2fuDl4PyU0ooW9doPsauqcrecg27ZPRI5ULd
+         Gn1XlroOqmrnOxpOOdopEDsygKCTkF/g7fgsOEpXM5nGF2NstQ/aWSK0jevl2fNyXz+H
+         F9Lg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680457793; x=1683049793;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=twCPC0pauRSrcDGPcatZZnRn4es+o8hDMAtgf21b8Ls=;
-        b=dj6rIRGAeyaAqpafkVvG8Bs1QYUcHlXahGt7AC/epIgP0MMiWp0gw9iW7PWV8S2yAp
-         hQDznaRi3PR9WYofV/IF/BXrWTOaXiZnLG5qpfAwAiz5BKkjoJhzmcT1tK63U+5Dx0n9
-         R/zLMy86vABq4fXTYuI7S4COvqXshza8g7zipd2HWTaWYx03KuEVXsXz3qwIusmioa+J
-         s8mP63WLzvH9RCUCLPIpqxEOwshiKf0yE5mapiJcywjf9zA++aEZAjJnyrYRLegvgmfb
-         kv4XrvAogkOefZrVstyLnGiC0lVsQvE/Pu8YQxWLs0Am7lEdBMX0PrjBvp3b1sxOW68v
-         nU+Q==
-X-Gm-Message-State: AAQBX9ciCV7yP47GH09IOXMZZJGuBIfHCIv7ftUE+GGacwjE+v+8m9WO
-	0zcM29q1ALjW4XEk+asEceqvstOL2Gt0nHnEUR4=
-X-Google-Smtp-Source: AKy350ZUoMZ9u7awuLWHV/KQn0xMMtKoCfIg6dyJPK2MVx5AYtXjbK21QezKF/tt+KIoH4si9vhIew==
-X-Received: by 2002:a17:906:3590:b0:8b1:75a0:e5c6 with SMTP id o16-20020a170906359000b008b175a0e5c6mr34710593ejb.18.1680457793481;
-        Sun, 02 Apr 2023 10:49:53 -0700 (PDT)
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com. [209.85.208.47])
-        by smtp.gmail.com with ESMTPSA id j18-20020a508a92000000b005029c47f814sm984084edj.49.2023.04.02.10.49.52
+        d=1e100.net; s=20210112; t=1680461202;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:to:from:date:sender
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=fL5kMIjPYpnHHKeS2SPDtm2N2DyJU46jDFtlSQzTIdE=;
+        b=HNkSYmS3aYnZR83xIAjQBVmLH7S7XlZndP098hOe5juHq4CzsYidIbzqiAtP9IORev
+         67yKd7euXUQ+h1ejRXjh64arzGKzETr+n/hfMeylt+gJYNgn7DVwYa5ZWo1n5NAnQI67
+         r5hq8OS0drfbcGBHYH27TFpzW4d96eVPBxf/18Yweim/LJ9HwPQ+WX01caeZ+S6SXbvW
+         yh+SK6+L8ep58cKoR5+gtY6gp+vaXhib0bK2tS4Vw2g5qXnB28xTKL5NHwD47brnol7H
+         sH3QZFF1BhT4ysjtgAXAuQcK47Stnd8y9xDSkpCpdN9OZTJX6nHh9UD0pB2NNip8AXhI
+         Q8Zw==
+X-Gm-Message-State: AO0yUKXXomOaesvXN/QrDoRn3MvkY/L9odEvXi2W3IFLmRGoBL852neq
+	8Bn2bXZtZwR79gEdbeDdJRF25D13sMUYfw==
+X-Google-Smtp-Source: AK7set8ileFYcrcNgki5dzD+xnN6Nwba4uuVA6bQw6oGXycgB/Qi22mqAuWNotDV1zjpjd/skwe9pg==
+X-Received: by 2002:a7b:ce8f:0:b0:3eb:42fa:39d5 with SMTP id q15-20020a7bce8f000000b003eb42fa39d5mr24394767wmj.29.1680461202481;
+        Sun, 02 Apr 2023 11:46:42 -0700 (PDT)
+Received: from eldamar.lan (c-82-192-242-114.customer.ggaweb.ch. [82.192.242.114])
+        by smtp.gmail.com with ESMTPSA id u14-20020a05600c210e00b003f04785699asm6585996wml.43.2023.04.02.11.46.41
         for <regressions@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 02 Apr 2023 10:49:52 -0700 (PDT)
-Received: by mail-ed1-f47.google.com with SMTP id t10so108587607edd.12
-        for <regressions@lists.linux.dev>; Sun, 02 Apr 2023 10:49:52 -0700 (PDT)
-X-Received: by 2002:a05:6402:e93:b0:502:a4ec:a225 with SMTP id
- h19-20020a0564020e9300b00502a4eca225mr436161eda.4.1680457792538; Sun, 02 Apr
- 2023 10:49:52 -0700 (PDT)
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 02 Apr 2023 11:46:41 -0700 (PDT)
+Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
+Received: by eldamar.lan (Postfix, from userid 1000)
+	id C4877BE2DE0; Sun,  2 Apr 2023 20:46:40 +0200 (CEST)
+Date: Sun, 2 Apr 2023 20:46:40 +0200
+From: Salvatore Bonaccorso <carnil@debian.org>
+To: regressions@lists.linux.dev
+Subject: Re: Bug#1033732: [PATCH v2] x86/acpi/boot: Do not register
+ processors that cannot be onlined for x2apic
+Message-ID: <ZCnNkHJMdI7OvVHe@eldamar.lan>
+References: <20230105041059.39366-1-kvijayab@amd.com>
+ <88f59aa6-f3c4-999b-3994-0f2e3fd88c45@cegetel.net>
+ <c02a2a2f-2b40-e13e-ac40-e5d19a66b5ba@cegetel.net>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <168045676522.992122.1074253542608037015@leemhuis.info>
-In-Reply-To: <168045676522.992122.1074253542608037015@leemhuis.info>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Sun, 2 Apr 2023 10:49:35 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whRs_MavKCqtV3=K31dq9Z6HzbaG8Uxo-EV=uRxdsXduA@mail.gmail.com>
-Message-ID: <CAHk-=whRs_MavKCqtV3=K31dq9Z6HzbaG8Uxo-EV=uRxdsXduA@mail.gmail.com>
-Subject: Re: Linux regressions report for mainline [2023-04-02]
-To: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>
-Cc: LKML <linux-kernel@vger.kernel.org>, 
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <c02a2a2f-2b40-e13e-ac40-e5d19a66b5ba@cegetel.net>
 
-On Sun, Apr 2, 2023 at 10:34=E2=80=AFAM Regzbot (on behalf of Thorsten
-Leemhuis) <regressions@leemhuis.info> wrote:
->
-> But there is a 6.2 regression that annoys me. It's one of the two in the
-> media driver venus I mentioned a few times already in earlier reports.
+Hi
 
-Ok, something is rotten in the state of Denmark^Hmedia.
+On Sun, Apr 02, 2023 at 12:41:46PM +0200, Guy Durrieu wrote:
+> Le 05/01/2023 à 05:10, Kishon Vijay Abraham I a écrit :
+> 
+> > Section 5.2.12.12 Processor Local x2APIC Structure in the ACPI v6.5
+> > spec mandates that both "enabled" and "online capable" Local APIC Flags
+> > should be used to determine if the processor is usable or not.
+> > 
+> > However, Linux doesn't use the "online capable" flag for x2APIC to
+> > determine if the processor is usable. As a result, cpu_possible_mask has
+> > incorrect value and results in more memory getting allocated for per_cpu
+> > variables than it is going to be used.
+> > 
+> > Make sure Linux parses both "enabled" and "online capable" flags for
+> > x2APIC to correctly determine if the processor is usable.
+> > 
+> > Fixes: aa06e20f1be6 ("x86/ACPI: Don't add CPUs that are not online capable")
+> > Reviewed-by: Borislav Petkov (AMD) <bp@alien8.de>
+> > Reported-by: Leo Duran <leo.duran@amd.com>
+> > Signed-off-by: Kishon Vijay Abraham I <kvijayab@amd.com>
+> 
+> Hello everyone,
+> 
+> My system worked fine with kernel 6.1.15, but stopped booting after
+> upgrading to 6.1.20 and resulted in a kernel panic:
+> 
+> ---
+> [ 0.117782] Kernel panic — not syncing: timer doesn’t work through Interrupt-remapped IO-APIC
+> [ 0.117848] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 6.1.0-7-and64 #1 Debian 6.1.20-1
+> [ 0.117913] Hardware name: Gigabyte Technology Co., Ltd. ABS50M-Gaming 3/AB350M-Gaming 3-CF, BIOS F50d 07/02/2020
+> [ 0.117982] Call Trace:
+> [ 0.118634] <TASK>
+> [ 0.118685] dump_stack_lvl+0x44/0x5c
+> [ 0.118143] panic+0x118/0x2ed
+> [ 0.118198] panic_if_irq_remap.cold+0x5/0x5
+> [ 0.118256] setup_I0_APIC+0x3db/0x64b
+> [ 0.118313] ? _raw_spin_unlock_irqrestore+0x23/0x40
+> [ 0.118372] ? clear_IO_APIC_pin+0x169/0x240
+> [ 0.118429] apic_intr_node_init+0x101/0x106
+> [ 0.118485] x86_late_time_init+0x20/0x34
+> [ 0.118542] start_kerne1+0x667/0x727
+> [ 0.118598] secondary_startup_64_no_verify+0xe5/0xeb
+> [ 0.118658] </TASK>
+> [ 0.118711] ---[ end Kernel panic - not syncing: timer doesn’t work through Interrupt-remapped IO-APIC J---
+> ---
+> I tried an update of the BIOS up to F51h without any effect.
+> 
+> I sent a bug report to Debian Bug Tracking System. In reply Bjørn Mork
+> identified ce7d894bed1a539a8d6cff42f6f78f9db0c9c26b from the linux-6.1.y
+> branch as the likely culprit.
+> 
+> After building a 6.1.20 kernel with just that commit reverted, my system boots normally again.
+> 
+> I reported that all tohttps://bugs.debian.org/1033732  and were asked to report the issue 'upstream' (which is what that mail is).
+> 
+> Hope it will help!
+> 
+> Best regards.
 
-I've taken that revert directly, the same way I had to take Arnd's
-build fix. Both patches from way back on February 7.
+Trying to make as well the regression tracker bot aware of the issue
+(but dropping all CCs to not spam them with duplicate information):
 
-Oh well.
+#regzbot ^introduced e2869bd7af60
+#regzbot title: Regression from "x86/acpi/boot: Do not register processors that cannot be onlined for x2APIC"
+#regzbot link https://lore.kernel.org/lkml/c02a2a2f-2b40-e13e-ac40-e5d19a66b5ba@cegetel.net/
+#regzbot link https://bugs.debian.org/1033732
+#regzbot fixed-by: fed8d8773b8e
 
-                   Linus
+Regards,
+Salvatore
