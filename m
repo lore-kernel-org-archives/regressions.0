@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECDAC2F43
-	for <regressions@lists.linux.dev>; Sun,  2 Apr 2023 11:30:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CD2E360
+	for <regressions@lists.linux.dev>; Sun,  2 Apr 2023 12:40:51 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pivum-0005xd-ER; Sun, 02 Apr 2023 13:30:28 +0200
-Message-ID: <8ab36d80-8417-628f-9f51-e75eaf6b1a51@leemhuis.info>
-Date: Sun, 2 Apr 2023 13:30:27 +0200
+	id 1pix0b-0005dt-9D; Sun, 02 Apr 2023 14:40:33 +0200
+Message-ID: <3a2ca263-7f60-63d3-7f9a-208ab8197c07@leemhuis.info>
+Date: Sun, 2 Apr 2023 14:40:32 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,68 +16,74 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.9.1
-Subject: Re: [PATCH v3 1/3] wifi: rtw88: Move register access from
- rtw_bf_assoc() outside the RCU
+Subject: Re: [REGRESSION] CPUIDLE_FLAG_RCU_IDLE, blk_mq_freeze_queue_wait()
+ and slow-stuck reboots
 Content-Language: en-US, de-DE
-To: Sascha Hauer <s.hauer@pengutronix.de>,
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: linux-wireless@vger.kernel.org, tony0620emma@gmail.com, kvalo@kernel.org,
- pkshih@realtek.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <20230108211324.442823-1-martin.blumenstingl@googlemail.com>
- <20230108211324.442823-2-martin.blumenstingl@googlemail.com>
- <20230331125906.GF15436@pengutronix.de>
-From: "Linux regression tracking #adding (Thorsten Leemhuis)"
+To: Mark Rutland <mark.rutland@arm.com>,
+ Alexey Klimov <alexey.klimov@linaro.org>
+Cc: peterz@infradead.org, draszik@google.com, peter.griffin@linaro.org,
+ willmcvicker@google.com, mingo@kernel.org, ulf.hansson@linaro.org,
+ tony@atomide.com, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+ axboe@kernel.dk, alim.akhtar@samsung.com, regressions@lists.linux.dev,
+ avri.altman@wdc.com, bvanassche@acm.org, klimova@google.com
+References: <20230314230004.961993-1-alexey.klimov@linaro.org>
+ <ZBhlL4tqSUi/c3qk@FVFF77S0Q05N.cambridge.arm.com>
+ <ZBiEEyDaxq9oSXJk@FVFF77S0Q05N.cambridge.arm.com>
+From: "Linux regression tracking #update (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <20230331125906.GF15436@pengutronix.de>
+In-Reply-To: <ZBiEEyDaxq9oSXJk@FVFF77S0Q05N.cambridge.arm.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1680435035;ccf3341d;
-X-HE-SMSGID: 1pivum-0005xd-ER
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1680439251;c68387bd;
+X-HE-SMSGID: 1pix0b-0005dt-9D
 
-[CCing the regression list, as it should be in the loop for regressions:
-https://docs.kernel.org/admin-guide/reporting-regressions.html]
+[TLDR: This mail in primarily relevant for Linux kernel regression
+tracking. See link in footer if these mails annoy you.]
 
-On 31.03.23 14:59, Sascha Hauer wrote:
-> On Sun, Jan 08, 2023 at 10:13:22PM +0100, Martin Blumenstingl wrote:
->> USB and (upcoming) SDIO support may sleep in the read/write handlers.
->> Shrink the RCU critical section so it only cover the call to
->> ieee80211_find_sta() and finding the ic_vht_cap/vht_cap based on the
->> found station. This moves the chip's BFEE configuration outside the
->> rcu_read_lock section and thus prevent "scheduling while atomic" or
->> "Voluntary context switch within RCU read-side critical section!"
->> warnings when accessing the registers using an SDIO card (which is
->> where this issue has been spotted in the real world - but it also
->> affects USB cards).
+On 20.03.23 17:04, Mark Rutland wrote:
+> On Mon, Mar 20, 2023 at 01:52:47PM +0000, Mark Rutland wrote:
+>> On Tue, Mar 14, 2023 at 11:00:04PM +0000, Alexey Klimov wrote:
+>>> #regzbot introduced: 0c5ffc3d7b15
+>>> #regzbot title: CPUIDLE_FLAG_RCU_IDLE, blk_mq_freeze_queue_wait() and slow-stuck reboots
+>>>
+>>> The upstream changes are being merged into android-mainline repo and at some
+>>> point we started to observe kernel panics on reboot or long reboot times.
+>>
+>> Where can I find the android-mainline repo, and which specific branch/commit
+>> from that repo is being merged in?
 > 
-> Unfortunately this introduces a regression on my RTW8821CU chip. With
-> this it constantly looses connection to the AP and reconnects shortly
-> after:
+> I assume that was the android-mainline branch in:
+> 
+>   https://android.googlesource.com/kernel/common/
+> 
+> ... and I had a go with commit:
+> 
+>   8338670fd5bdf8d7 ("Merge "Merge 36289a03bcd3 ("Merge tag 'v6.3-p1' of git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6") into android-mainline" into android-mainline")
+> 
+> ... as that was the commit immediately before your local revert:
+> 
+>   a32cec8e3f2253bc ("ANDROID: Revert "cpuidle, dt: Push RCU-idle into driver")
+> 
+> Testing on Juno R2 with defconfig + PROVE_LOCKING=y + DEBUG_LOCKDEP=y, I cannot
+> reproduce the reboot issue; everything seems to work just fine.
+> 
+> Can you say which config you're using?
+> 
+> Just to check: are you using a pristine version of that tree, or do you have
+> any vendor hooks present? I note that there are special hooks added to the
+> cpuidle and PSCI code, and I can imagine those might expect the old behaviour
+> w.r.t. RCU and idle, so ruling those out would help.
 
-Thanks for the report. To be sure the issue doesn't fall through the
-cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
-tracking bot:
+No reply to this since more than 10 days afaics, hence for now assuming
+that this is not really a regression.
 
-#regzbot ^introduced c7eca79def44
-#regzbot title net: wifi: rtw88: RTW8821CU constantly looses connection
-to the AP and reconnects shortly after
+#regzbot inconclusive: another dev could not reproduce issue; reporter
+MIA and might have used a patched tree
 #regzbot ignore-activity
-
-This isn't a regression? This issue or a fix for it are already
-discussed somewhere else? It was fixed already? You want to clarify when
-the regression started to happen? Or point out I got the title or
-something else totally wrong? Then just reply and tell me -- ideally
-while also telling regzbot about it, as explained by the page listed in
-the footer of this mail.
-
-Developers: When fixing the issue, remember to add 'Link:' tags pointing
-to the report (the parent of this mail). See page linked in footer for
-details.
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
 Everything you wanna know about Linux kernel regression tracking:
 https://linux-regtracking.leemhuis.info/about/#tldr
 That page also explains what to do if mails like this annoy you.
-
