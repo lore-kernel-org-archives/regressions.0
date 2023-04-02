@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CD2E360
-	for <regressions@lists.linux.dev>; Sun,  2 Apr 2023 12:40:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A5453C02
+	for <regressions@lists.linux.dev>; Sun,  2 Apr 2023 14:21:14 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pix0b-0005dt-9D; Sun, 02 Apr 2023 14:40:33 +0200
-Message-ID: <3a2ca263-7f60-63d3-7f9a-208ab8197c07@leemhuis.info>
-Date: Sun, 2 Apr 2023 14:40:32 +0200
+	id 1piya0-0005ey-QQ; Sun, 02 Apr 2023 16:21:12 +0200
+Message-ID: <28548c85-ed1d-b366-a202-9bc0b448bc80@leemhuis.info>
+Date: Sun, 2 Apr 2023 16:21:12 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,70 +16,52 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.9.1
-Subject: Re: [REGRESSION] CPUIDLE_FLAG_RCU_IDLE, blk_mq_freeze_queue_wait()
- and slow-stuck reboots
+Subject: Re: [PATCH v3 14/17] media: i2c: imx290: Initialize runtime PM before
+ subdev
 Content-Language: en-US, de-DE
-To: Mark Rutland <mark.rutland@arm.com>,
- Alexey Klimov <alexey.klimov@linaro.org>
-Cc: peterz@infradead.org, draszik@google.com, peter.griffin@linaro.org,
- willmcvicker@google.com, mingo@kernel.org, ulf.hansson@linaro.org,
- tony@atomide.com, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
- axboe@kernel.dk, alim.akhtar@samsung.com, regressions@lists.linux.dev,
- avri.altman@wdc.com, bvanassche@acm.org, klimova@google.com
-References: <20230314230004.961993-1-alexey.klimov@linaro.org>
- <ZBhlL4tqSUi/c3qk@FVFF77S0Q05N.cambridge.arm.com>
- <ZBiEEyDaxq9oSXJk@FVFF77S0Q05N.cambridge.arm.com>
-From: "Linux regression tracking #update (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <ZBiEEyDaxq9oSXJk@FVFF77S0Q05N.cambridge.arm.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+References: <20230116144454.1012-1-laurent.pinchart@ideasonboard.com>
+ <20230116144454.1012-15-laurent.pinchart@ideasonboard.com>
+ <20230227175245.GA3728693@roeck-us.net>
+ <46d00d1a-9435-62d5-598d-49f0ea916f86@leemhuis.info>
+ <0c8579b2-85ef-6add-05c3-cfe73c60694f@leemhuis.info>
+In-Reply-To: <0c8579b2-85ef-6add-05c3-cfe73c60694f@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1680439251;c68387bd;
-X-HE-SMSGID: 1pix0b-0005dt-9D
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1680445275;dfe5de6c;
+X-HE-SMSGID: 1piya0-0005ey-QQ
 
 [TLDR: This mail in primarily relevant for Linux kernel regression
 tracking. See link in footer if these mails annoy you.]
 
-On 20.03.23 17:04, Mark Rutland wrote:
-> On Mon, Mar 20, 2023 at 01:52:47PM +0000, Mark Rutland wrote:
->> On Tue, Mar 14, 2023 at 11:00:04PM +0000, Alexey Klimov wrote:
->>> #regzbot introduced: 0c5ffc3d7b15
->>> #regzbot title: CPUIDLE_FLAG_RCU_IDLE, blk_mq_freeze_queue_wait() and slow-stuck reboots
->>>
->>> The upstream changes are being merged into android-mainline repo and at some
->>> point we started to observe kernel panics on reboot or long reboot times.
+On 20.03.23 11:50, Linux regression tracking #adding (Thorsten Leemhuis)
+wrote:
+> On 28.02.23 10:56, Linux regression tracking #update (Thorsten Leemhuis)
+> wrote:
 >>
->> Where can I find the android-mainline repo, and which specific branch/commit
->> from that repo is being merged in?
+>> On 27.02.23 18:52, Guenter Roeck wrote:
+>>> ---
+>>> #regzbot ^introduced 02852c01f6540
+>>>
+>>
+>> [this mail is just fixing up an accidental use of "^"; this is kinda my
+>> fault, the regzbot syntax is to confusing; I need to introduce something
+>> like "regzbot forward" to make things more obvious, I just didn't get
+>> around to it yet :-/ ]
+>>
+>> #regzbot ^introduced 02852c01f6540
+>> #regzbot title Build error in drivers/media/i2c/imx290.c if PM support
+>> is disabled
+>> #regzbot ignore-activity
 > 
-> I assume that was the android-mainline branch in:
-> 
->   https://android.googlesource.com/kernel/common/
-> 
-> ... and I had a go with commit:
-> 
->   8338670fd5bdf8d7 ("Merge "Merge 36289a03bcd3 ("Merge tag 'v6.3-p1' of git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6") into android-mainline" into android-mainline")
-> 
-> ... as that was the commit immediately before your local revert:
-> 
->   a32cec8e3f2253bc ("ANDROID: Revert "cpuidle, dt: Push RCU-idle into driver")
-> 
-> Testing on Juno R2 with defconfig + PROVE_LOCKING=y + DEBUG_LOCKDEP=y, I cannot
-> reproduce the reboot issue; everything seems to work just fine.
-> 
-> Can you say which config you're using?
-> 
-> Just to check: are you using a pristine version of that tree, or do you have
-> any vendor hooks present? I note that there are special hooks added to the
-> cpuidle and PSCI code, and I can imagine those might expect the old behaviour
-> w.r.t. RCU and idle, so ruling those out would help.
+> #regzbot fix: media: i2c: imx290: fix conditional function definitions
 
-No reply to this since more than 10 days afaics, hence for now assuming
-that this is not really a regression.
+Sadly the subject changed slightly, which makes this necessary:
 
-#regzbot inconclusive: another dev could not reproduce issue; reporter
-MIA and might have used a patched tree
+#regzbot fix: 7b50567bdcad8
 #regzbot ignore-activity
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
@@ -87,3 +69,4 @@ Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 Everything you wanna know about Linux kernel regression tracking:
 https://linux-regtracking.leemhuis.info/about/#tldr
 That page also explains what to do if mails like this annoy you.
+
