@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 268C428EA
-	for <regressions@lists.linux.dev>; Sun,  2 Apr 2023 10:26:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECDAC2F43
+	for <regressions@lists.linux.dev>; Sun,  2 Apr 2023 11:30:34 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1piuuY-00040N-5h; Sun, 02 Apr 2023 12:26:10 +0200
-Message-ID: <293df61a-1ea8-daa9-2606-e8fad3e71d1f@leemhuis.info>
-Date: Sun, 2 Apr 2023 12:26:09 +0200
+	id 1pivum-0005xd-ER; Sun, 02 Apr 2023 13:30:28 +0200
+Message-ID: <8ab36d80-8417-628f-9f51-e75eaf6b1a51@leemhuis.info>
+Date: Sun, 2 Apr 2023 13:30:27 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,49 +16,52 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.9.1
-Subject: Re: [BUG] net, pci: 6.3-rc1-4 hangs during boot on PowerEdge R620
- with igb
+Subject: Re: [PATCH v3 1/3] wifi: rtw88: Move register access from
+ rtw_bf_assoc() outside the RCU
 Content-Language: en-US, de-DE
-To: Donald Hunter <donald.hunter@gmail.com>, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org, Rob Herring <robh@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>, netdev@vger.kernel.org,
- Jesse Brandeburg <jesse.brandeburg@intel.com>,
- Tony Nguyen <anthony.l.nguyen@intel.com>,
+To: Sascha Hauer <s.hauer@pengutronix.de>,
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: linux-wireless@vger.kernel.org, tony0620emma@gmail.com, kvalo@kernel.org,
+ pkshih@realtek.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
  Linux kernel regressions list <regressions@lists.linux.dev>
-References: <m2fs9lgndw.fsf@gmail.com>
+References: <20230108211324.442823-1-martin.blumenstingl@googlemail.com>
+ <20230108211324.442823-2-martin.blumenstingl@googlemail.com>
+ <20230331125906.GF15436@pengutronix.de>
 From: "Linux regression tracking #adding (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <m2fs9lgndw.fsf@gmail.com>
+In-Reply-To: <20230331125906.GF15436@pengutronix.de>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1680431176;bdb4e3b4;
-X-HE-SMSGID: 1piuuY-00040N-5h
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1680435035;ccf3341d;
+X-HE-SMSGID: 1pivum-0005xd-ER
 
 [CCing the regression list, as it should be in the loop for regressions:
 https://docs.kernel.org/admin-guide/reporting-regressions.html]
 
-[TLDR: I'm adding this report to the list of tracked Linux kernel
-regressions; the text you find below is based on a few templates
-paragraphs you might have encountered already in similar form.
-See link in footer if these mails annoy you.]
-
-On 31.03.23 13:40, Donald Hunter wrote:
-> The 6.3-rc1 and later release candidates are hanging during boot on our
-> Dell PowerEdge R620 servers with Intel I350 nics (igb).
+On 31.03.23 14:59, Sascha Hauer wrote:
+> On Sun, Jan 08, 2023 at 10:13:22PM +0100, Martin Blumenstingl wrote:
+>> USB and (upcoming) SDIO support may sleep in the read/write handlers.
+>> Shrink the RCU critical section so it only cover the call to
+>> ieee80211_find_sta() and finding the ic_vht_cap/vht_cap based on the
+>> found station. This moves the chip's BFEE configuration outside the
+>> rcu_read_lock section and thus prevent "scheduling while atomic" or
+>> "Voluntary context switch within RCU read-side critical section!"
+>> warnings when accessing the registers using an SDIO card (which is
+>> where this issue has been spotted in the real world - but it also
+>> affects USB cards).
 > 
-> After bisecting from v6.2 to v6.3-rc1, I isolated the problem to:
-> 
-> [6fffbc7ae1373e10b989afe23a9eeb9c49fe15c3] PCI: Honor firmware's device
-> disabled status
-> [...]
+> Unfortunately this introduces a regression on my RTW8821CU chip. With
+> this it constantly looses connection to the AP and reconnects shortly
+> after:
 
 Thanks for the report. To be sure the issue doesn't fall through the
 cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
 tracking bot:
 
-#regzbot ^introduced 6fffbc7ae1373e10b989afe23a9eeb9c49fe15c3
-#regzbot title pci: / net: igb: hangs during boot on PowerEdge R620
+#regzbot ^introduced c7eca79def44
+#regzbot title net: wifi: rtw88: RTW8821CU constantly looses connection
+to the AP and reconnects shortly after
 #regzbot ignore-activity
 
 This isn't a regression? This issue or a fix for it are already
@@ -77,3 +80,4 @@ Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 Everything you wanna know about Linux kernel regression tracking:
 https://linux-regtracking.leemhuis.info/about/#tldr
 That page also explains what to do if mails like this annoy you.
+
