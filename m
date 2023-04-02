@@ -1,130 +1,110 @@
-Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CB0B8F66
-	for <regressions@lists.linux.dev>; Sat,  1 Apr 2023 21:17:53 +0000 (UTC)
-Received: by mail-pg1-f178.google.com with SMTP id y35so15420127pgl.4
-        for <regressions@lists.linux.dev>; Sat, 01 Apr 2023 14:17:53 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AC9C7C
+	for <regressions@lists.linux.dev>; Sun,  2 Apr 2023 01:14:40 +0000 (UTC)
+Received: by mail-pj1-f47.google.com with SMTP id f6-20020a17090ac28600b0023b9bf9eb63so27250924pjt.5
+        for <regressions@lists.linux.dev>; Sat, 01 Apr 2023 18:14:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1680383872;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=/aUE8x/14V3dMRPOVnDZcdRoITdGNMwL8Z4JZeeVb6o=;
-        b=P/2/vp/3V0LdJykPEDiqSME92a2SeIhnYBtj97hIgQFYmbRS68KrRXlFlMX7odtq7x
-         OfWyne4G1yIXlxT67x+qJIFot3WQ+pYHpXLiwxTzzRpjUkmjoXV+ev7b1+AqWzNpY8Aq
-         HcTuT7NjohhI3SmwKqFzaKK6DLBZ8m7BF+r9lSVEQm5x0f/Gz0bccd7gBUsL6qAwwBXH
-         oxO6L7pDblZ5RlzBh2NJXCsAvc0UW/aivyCU5lysg7JA43XRQ5kKwlz/1DVL+U6cQ7Gf
-         lQo0nxxR87Lx2y+8MgoiLFVer4tvD734MkiKT7YtfDigEIslStRDkRJSnalUF1eeojPT
-         F2bw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680383872;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20210112; t=1680398079;
+        h=in-reply-to:references:message-id:to:from:subject:cc:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=/aUE8x/14V3dMRPOVnDZcdRoITdGNMwL8Z4JZeeVb6o=;
-        b=YGOJeyYNn5lJbAcM1zppt/DUdYygUW+otHy8VXLwqrXbAz26BdLpl3VMSLSDPbCP4+
-         7MzxlVtbuzO+OJSxkpOs8/fmcfaiFoINE85hQgH2uAZd8lioqRkdIlqyoHDdTuoUFCSQ
-         UhIhq3hqBSHWAjNYXjiOOtjo+zG4g1yfi4U3qfDJ+fvKfQ0ltB9NfYI5dKymYKJLMDoK
-         ADxkPlCTL6LUf44bthOXbVmZthjxooTV+wjNK0+FzQtdG5PxY/+FZpU1w2ha/C6IxwMt
-         c5ONI0a08K0TYksL6P0DMeDxLGtT58vWfM5TMFoTNPQe+gOVrkGQ/GyYCpgFAabrhNLm
-         HCMA==
-X-Gm-Message-State: AAQBX9d5OBmHIZgDZDgb/hLXVvTTrQA5AlT8fhPk5YMQsY9e40VnE2rW
-	Hqc/YWDBIkqfvS2iGBKNAMs=
-X-Google-Smtp-Source: AKy350ZZExF6wfrtRs0ucXe/UzYvAeirB6CVbO2KXFgKqMQGm8wugfaaSVhCuN8bWUzTIVtidyDXqw==
-X-Received: by 2002:a62:1948:0:b0:627:f740:51f9 with SMTP id 69-20020a621948000000b00627f74051f9mr14529387pfz.3.1680383872349;
-        Sat, 01 Apr 2023 14:17:52 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:ac04:c59e:2de:5791])
-        by smtp.gmail.com with ESMTPSA id y1-20020a056a001c8100b005a90f2cce30sm3970890pfw.49.2023.04.01.14.17.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 01 Apr 2023 14:17:51 -0700 (PDT)
-Date: Sat, 1 Apr 2023 14:17:48 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Takashi Iwai <tiwai@suse.de>
-Cc: Hans de Goede <hdegoede@redhat.com>,
-	Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
-	regressions@lists.linux.dev, linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [REGRESSION] wrong coord from Thinkpad TrackPoint since 6.2
- kernel
-Message-ID: <ZCiffEmTSi7aynk5@google.com>
-References: <87h6u4otuc.wl-tiwai@suse.de>
- <3dec29bf-b772-d82d-fff9-6c8bcca5f464@redhat.com>
- <874jq3q52i.wl-tiwai@suse.de>
- <87mt3umyui.wl-tiwai@suse.de>
+        bh=3EFW307Q1a9NE2VnugeWPScnJzPzCa3UGr8h5iI6ixs=;
+        b=pYQAYvSp5VidtLn6DvumO2FxtxJJXjXVAfY3qkyGcDJlvOsJFFl/g2NGceEidR9Zzu
+         X31NXEi/GgZZ6ibiLi+tz3oKsdOmsWHeifdBC1GeBsjVj6jZSc4HBrdoObfS/A3MTOA2
+         /WWD66AaJ3CX07fBeEIMSVWU6siU2/v7RCQHyUbouVpPdkfFN339tDTf1PLp6xY43+3/
+         fOn1mLhX89Ib9pUm4F+uXyhfUWhfyfL0NDHyEN916nm2FJpc08DCqhpE15tpsb0r573U
+         XHuiLJWc/2ZNvS7FrFXwuYOZ21uUghhbHJN4zp59Wgx01OB42b7dXQWcOtVpKp1SyJFY
+         6PFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680398079;
+        h=in-reply-to:references:message-id:to:from:subject:cc:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=3EFW307Q1a9NE2VnugeWPScnJzPzCa3UGr8h5iI6ixs=;
+        b=xI8LWJ3p5ppFIVkjLwaaybgGCge6dykUjE/LaRQ5STEe1xyQgmxxNxJ6E9a4NqH36r
+         z1mp+TiUgB4ySr2/HGet7cegpTVGhFp2TZERyDJdbJ7exmgnNEnAn2YPNiZrGacR+gAC
+         lobtrmxjgvhz3L7kkwUawOn0Hw0wnGe+DyWfl1dIBa6FJeVi/X2FhJxMGUAvsvv4a17W
+         6He0KAugmtjMcFVO7dsti0WCveh7/yFR02R/quyUC1oyXaiKCEwvP2tipTIHxvJOqjNu
+         +5NVyQDRWajujUL/BhuUukipDRTJsHexGO+WFJWsET4/WiMAj/UOKhe5b6ALenYULrx9
+         nZHQ==
+X-Gm-Message-State: AAQBX9etXRVxeuimvF7uAAH8kCwO3tq3Ph5Kp7iwPQMI0Qg4qGJw1a0S
+	RrmzXlvTkFeZSu1o/Nf2cTE=
+X-Google-Smtp-Source: AKy350beiZvjFbsp2uNoUfafp6FgprAll6esTjn9YkkQ7/VWQedOb5SJpIsU6dEpxZMIIGdsrRi+kQ==
+X-Received: by 2002:a17:902:f0cb:b0:19d:b02:cca5 with SMTP id v11-20020a170902f0cb00b0019d0b02cca5mr27537058pla.12.1680398079418;
+        Sat, 01 Apr 2023 18:14:39 -0700 (PDT)
+Received: from localhost (110-175-169-212.tpgi.com.au. [110.175.169.212])
+        by smtp.gmail.com with ESMTPSA id p5-20020a170902eac500b0019928ce257dsm3967493pld.99.2023.04.01.18.14.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 01 Apr 2023 18:14:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87mt3umyui.wl-tiwai@suse.de>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Sun, 02 Apr 2023 11:14:45 +1000
+Cc: <wireguard@lists.zx2c4.com>, "Linux regressions mailing list"
+ <regressions@lists.linux.dev>, "Thorsten Leemhuis"
+ <regressions@leemhuis.info>
+Subject: Re: Possible regression between 5.18.2 and 6.2.1
+From: "Dan Crawford" <dnlcrwfrd@gmail.com>
+To: "Jason A. Donenfeld" <Jason@zx2c4.com>
+Message-Id: <CRLVEG5VRA7S.2XBZXJENZM4HK@crawfs>
+X-Mailer: aerc 0.14.0
+References: <CQZ7HWJCK18F.1AUR9FMHKPOXB@crawfs>
+ <CAHmME9qi=26zP-A14pLVxtL86Zj1P-+i93t=_BnSd0t1Dj_U8A@mail.gmail.com>
+In-Reply-To: <CAHmME9qi=26zP-A14pLVxtL86Zj1P-+i93t=_BnSd0t1Dj_U8A@mail.gmail.com>
 
-On Thu, Mar 30, 2023 at 10:23:49AM +0200, Takashi Iwai wrote:
-> On Wed, 29 Mar 2023 11:28:53 +0200,
-> Takashi Iwai wrote:
-> > 
-> > On Wed, 29 Mar 2023 11:22:18 +0200,
-> > Hans de Goede wrote:
-> > > 
-> > > Hi Takashi,
-> > > 
-> > > On 3/29/23 10:16, Takashi Iwai wrote:
-> > > > Hi,
-> > > > 
-> > > > we've received a bug report about Thinkpad TrackPoint (ALPS DualPoint
-> > > > Stick) on 6.2 kernel:
-> > > >   https://bugzilla.opensuse.org/show_bug.cgi?id=1209805
-> > > > 
-> > > > The device reports the wrong values as the movements, e.g. sometimes a
-> > > > value such as 255, 254 or -255 is returned while usually it should be
-> > > > a smaller value like -1 or 2.
-> > > > 
-> > > > The evtest on 6.2.x kernel shows the wrong values like:
-> > > > 
-> > > > Event: time 1680037542.898747, type 2 (EV_REL), code 0 (REL_X), value 255
-> > > > Event: time 1680037542.898747, -------------- SYN_REPORT ------------
-> > > > Event: time 1680037543.145196, type 2 (EV_REL), code 0 (REL_X), value 1
-> > > > Event: time 1680037543.145196, -------------- SYN_REPORT ------------
-> > > > Event: time 1680037543.175087, type 2 (EV_REL), code 1 (REL_Y), value -255
-> > > > Event: time 1680037543.175087, -------------- SYN_REPORT ------------
-> > > > Event: time 1680037543.185421, type 2 (EV_REL), code 0 (REL_X), value 1
-> > > > Event: time 1680037543.185421, type 2 (EV_REL), code 1 (REL_Y), value -255
-> > > > Event: time 1680037543.185421, -------------- SYN_REPORT ------------
-> > > > 
-> > > > while 6.1.x kernel shows the correct values like:
-> > > > 
-> > > > Event: time 1680037386.318058, type 2 (EV_REL), code 0 (REL_X), value -1
-> > > > Event: time 1680037386.318058, type 2 (EV_REL), code 1 (REL_Y), value -1
-> > > > Event: time 1680037386.318058, -------------- SYN_REPORT ------------
-> > > > Event: time 1680037386.328087, type 2 (EV_REL), code 0 (REL_X), value -1
-> > > > Event: time 1680037386.328087, type 2 (EV_REL), code 1 (REL_Y), value -1
-> > > > Event: time 1680037386.328087, -------------- SYN_REPORT ------------
-> > > > Event: time 1680037386.338046, type 2 (EV_REL), code 0 (REL_X), value -1
-> > > > Event: time 1680037386.338046, type 2 (EV_REL), code 1 (REL_Y), value -2
-> > > > Event: time 1680037386.338046, -------------- SYN_REPORT ------------
-> > > >   
-> > > > I couldn't see any relevant changes in alps.c between those versions,
-> > > > so this is likely a breakage in a lower layer.
-> > > > 
-> > > > Could you guys take a look?
-> > > 
-> > > I believe this is caused by the kernel now using -funsigned-char
-> > > everywhere and this should be fixed by this commit:
-> > > 
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git/commit/?h=for-linus&id=754ff5060daf5a1cf4474eff9b4edeb6c17ef7ab
-> > 
-> > Ah, that makes sense!
-> > 
-> > I'll build a test kernel with this fix and ask the reporter for
-> > testing.
-> 
-> And it's confirmed that the commit above fixes the problem indeed.
+Thanks for the suggestions. I've done some bisecting and I've found
+that the issue appears due to wg-quick, which means I can easily work
+around it. First, apologies but there's a typo in my original
+email, I upgraded from 5.12.8, not 5.18.2.
 
-Sorry for sitting on this, I just sent a pull request and it was merged.
+On versions prior to 5.14.0, wg-quick correctly adds routes for the
+appropriate addresses (line 341 and then line 177). However, on versions
+after 5.14.0, the condition doesn't work quite right and the ip route
+add command does not run (line 177).
 
-Thanks.
+To investigate this I print ip -4 route show dev wg1 match 192.168.1.3,
+on both 5.13.0 and 5.14.0, at line 177.
 
--- 
-Dmitry
+On 5.13.0 I get no output, and the ip route add command runs.
+However, on 5.14.0 the output is
+
+192.168.1.0/24 proto kernel scope link src 192.168.1.0=20
+
+and so the ip route add command does not run.
+
+Obviously I can easily work around the issue by patching the conditional
+out of wg-quick. But I don't have any clue why the output of ip varies
+between 5.13 and 5.14. I'm also surprised no-one has encountered
+this issue either (unless I missed something while searching).
+
+Possibly one way to resolve the issue is to replace the conditional with
+
+[[ -n $(ip $proto route show dev "$INTERFACE" match "$1" proto boot 2>/dev/=
+null) ]]
+
+
+Thanks
+Dan
+
+
+On Fri Mar 31, 2023 at 1:39 AM AEDT, Jason A. Donenfeld wrote:
+> Hi Dan,
+>
+> Hard to imagine that this is a WireGuard bug, but more likely
+> something having to do with SNAT or something.
+>
+> What is the unallowed src IP when you get that error? Can you debug
+> further? Maybe bisect a bit? Otherwise, not much I can do.
+>
+> The diff between those versions you listed is pretty minimal, so I
+> suspect your bug is elsewhere.
+>
+> Jason
+
