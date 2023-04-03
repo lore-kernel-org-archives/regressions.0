@@ -1,82 +1,120 @@
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46E27323B
-	for <regressions@lists.linux.dev>; Mon,  3 Apr 2023 10:19:00 +0000 (UTC)
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 333AIxRv066487;
-	Mon, 3 Apr 2023 05:18:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1680517139;
-	bh=lz60oJMNNApxne8XKp/602Q9lIfj7nEOb+EHhaiTYjs=;
-	h=From:To:CC:Subject:Date:References:In-Reply-To;
-	b=ut/O3TJrZ7cYB2UFtQbBxbcm4N+UKk8glOPyb4oXyWveZeXmoqxUgCuSEQjiNPYpm
-	 DCATvGnpEYcOwS90pUs4+RPCrYmtPeKUCxGYELON/Oz2vmiNCvU5/MyQq8+lDEIMi9
-	 H9JTQoKGXHhj7rSM3SOxESkIN8HBTmvBwcHObg9w=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 333AIxUh006403
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 3 Apr 2023 05:18:59 -0500
-Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.16; Mon, 3
- Apr 2023 05:18:58 -0500
-Received: from DLEE114.ent.ti.com ([fe80::bdc7:eccc:cd13:af84]) by
- DLEE114.ent.ti.com ([fe80::bdc7:eccc:cd13:af84%17]) with mapi id
- 15.01.2507.016; Mon, 3 Apr 2023 05:18:58 -0500
-From: "Purohit, Kaushal" <kaushal.purohit@ti.com>
-To: Oliver Neukum <oneukum@suse.com>,
-        "stable@vger.kernel.org"
-	<stable@vger.kernel.org>
-CC: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
-Subject: RE: [EXTERNAL] Re: issues with cdc ncm host class driver
-Thread-Topic: [EXTERNAL] Re: issues with cdc ncm host class driver
-Thread-Index: Adll85tYAc+Cq2MlRoaUYHp7CXh/XQASqSKAAAo4+VA=
-Date: Mon, 3 Apr 2023 10:18:58 +0000
-Message-ID: <6a8da52391f349ffbdaf2ab6d81e5cff@ti.com>
-References: <da37bb0d43de465185c10aad9924f265@ti.com>
- <28ec4e65-647f-2567-fb7d-f656940d4e43@suse.com>
-In-Reply-To: <28ec4e65-647f-2567-fb7d-f656940d4e43@suse.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-originating-ip: [10.249.138.33]
-x-exclaimer-md-config: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40329A93E
+	for <regressions@lists.linux.dev>; Mon,  3 Apr 2023 21:45:34 +0000 (UTC)
+Received: by mail-qv1-f50.google.com with SMTP id m6so22343105qvq.0
+        for <regressions@lists.linux.dev>; Mon, 03 Apr 2023 14:45:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1680558333;
+        h=content-disposition:mime-version:message-id:subject:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=YCsAikI9LZN3foJtntGxnCVRz6J2brUlKcWcL1/aA0E=;
+        b=U3OwkOish1dUXz1/0nN/pqNe9IvbewleTdajk5gdO7W8up/hDRnO26L0vo2Drat+lk
+         YjYX4aBHnUxfkYJEDwLBjD+++krqp50RTekLabUq98RLx9Tj0giOLkpUhBItz0rOtHHI
+         KIWde7oPfYnsNITIYtKQKkL3IYaVXWEn2py9w=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680558333;
+        h=content-disposition:mime-version:message-id:subject:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=YCsAikI9LZN3foJtntGxnCVRz6J2brUlKcWcL1/aA0E=;
+        b=OA9z6xuvKArt1BCYyS452akw0jlPBVjbme9htaXHS1Fh4/SVsQCVV4qeLuCdBsfNQz
+         8Z/I5y0WZq2Wgz1WP6rNPUoeH32Wznbxsxu53XcFbJB6Y1C2jWpOXDQ0AgiWoRSX680Q
+         l0oyhizEcwFrt1c6J8ZVres6lHnVoi6spZiOk3muQk1mmRQ2YwrvH2RKR0vr2BHBdPrz
+         2su7Mcl43WfifJxCgk+nAmy2ziZn6NXNawNTqjNzf/jznY0J6LuIT8Zc2/2Bu6IyFtOm
+         rqXfZxP5D/d0WkRf82U9rFRUqBeZeTszVPuWxolP63a95ko9r5CHpgrWTBuYKW8BXsiG
+         QwFg==
+X-Gm-Message-State: AAQBX9ddkyKfg1zr3qa2HPt3plKEEjmQdyUCiIqSLmweMiZ4yHeTna6q
+	rrDosndpJ9KZWzXU4y/j2IdgJxkh7q0o2IXfIKU=
+X-Google-Smtp-Source: AKy350anj74Enc0tWAmqbwHuJkd52fXhUQjpL4tXb8nmKbp6BcEjWTstJUD2sqT8bWDg5Lnalet8tQ==
+X-Received: by 2002:a05:6214:2a88:b0:5d9:a36d:3ed2 with SMTP id jr8-20020a0562142a8800b005d9a36d3ed2mr254132qvb.45.1680558333093;
+        Mon, 03 Apr 2023 14:45:33 -0700 (PDT)
+Received: from nitro.local (bras-base-mtrlpq5031w-grc-30-209-226-106-7.dsl.bell.ca. [209.226.106.7])
+        by smtp.gmail.com with ESMTPSA id 73-20020a37074c000000b0074672975d5csm3109229qkh.91.2023.04.03.14.45.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Apr 2023 14:45:32 -0700 (PDT)
+Date: Mon, 3 Apr 2023 17:45:31 -0400
+From: Konstantin Ryabitsev <konstantin@linuxfoundation.org>
+To: workflows@vger.kernel.org, aros@gmx.com, linux-kernel@vger.kernel.org, 
+	regressions@lists.linux.dev, tools@linux.kernel.org, linux@leemhuis.info
+Subject: Introducing bugbot
+Message-ID: <gmnswy45efztvcyc3xqymm52h7cdfwjz64go2wy3zyeqcqwb76@36fva4hyip4q>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-T2xpdmVyLCBUaGFua3MgZm9yIHRoZSBxdWljayBjb25maXJtYXRpb24uIFRyYWNrZWQgaW4ga2Vy
-bmVsIEJ1Z3ppbGxhIGJ5ICJCdWcgMjE3MjkwIi4NCg0KLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0t
-LS0NCkZyb206IE9saXZlciBOZXVrdW0gPG9uZXVrdW1Ac3VzZS5jb20+IA0KU2VudDogTW9uZGF5
-LCBBcHJpbCAzLCAyMDIzIDM6MzkgUE0NClRvOiBQdXJvaGl0LCBLYXVzaGFsIDxrYXVzaGFsLnB1
-cm9oaXRAdGkuY29tPjsgc3RhYmxlQHZnZXIua2VybmVsLm9yZw0KQ2M6IHJlZ3Jlc3Npb25zQGxp
-c3RzLmxpbnV4LmRldjsgbGludXgtdXNiQHZnZXIua2VybmVsLm9yZw0KU3ViamVjdDogW0VYVEVS
-TkFMXSBSZTogaXNzdWVzIHdpdGggY2RjIG5jbSBob3N0IGNsYXNzIGRyaXZlcg0KDQpPbiAwMy4w
-NC4yMyAwODoxNCwgUHVyb2hpdCwgS2F1c2hhbCB3cm90ZToNCj4gSGksDQo+IA0KDQpIaSwNCg0K
-PiBSZWZlcnJpbmcgdG8gcGF0Y2ggd2l0aCBjb21taXQgSUQgKCplMTBkY2IxYjZiYTcxNDI0M2Fk
-NWEzNWExMWI5MWNjMTQxMDNhOWE5KikuDQo+IA0KPiBUaGlzIGlzIGEgc3BlYyB2aW9sYXRpb24g
-Zm9ywqBDREMgTkNNIGNsYXNzIGRyaXZlci4gRHJpdmVyIGNsZWFybHkgc2F5cyANCj4gdGhlIHNp
-Z25pZmljYW5jZSBvZiBuZXR3b3JrIGNhcGFiaWxpdGllcy4gKHNuYXBzaG90IGJlbG93KQ0KPiAN
-Cj4gSG93ZXZlciwgd2l0aCB0aGUgbWVudGlvbmVkIHBhdGNoIHRoZXNlIHZhbHVlcyBhcmUgZGlz
-cmVzcGVjdGVkIGFuZCBjb21tYW5kcyBzcGVjaWZpYyB0byB0aGVzZSBjYXBhYmlsaXRpZXMgYXJl
-IHNlbnQgZnJvbSB0aGUgaG9zdCByZWdhcmRsZXNzIG9mIGRldmljZScgY2FwYWJpbGl0aWVzIHRv
-IGhhbmRsZSB0aGVtLg0KDQpSaWdodC4gU28gZm9yIHlvdXIgZGV2aWNlLCB0aGUgY29ycmVjdCBi
-ZWhhdmlvciB3b3VsZCBiZSB0byBkbyBub3RoaW5nLCB3b3VsZG4ndCBpdD8gVGhlIHBhY2tldHMg
-d291bGQgYmUgZGVsaXZlcmVkIGFuZCB0aGUgaG9zdCBuZWVkcyB0byBmaWx0ZXIgYW5kIGRpc2Nh
-cmQgdW5yZXF1ZXN0ZWQgcGFja2V0cy4NCg0KPiBDdXJyZW50bHkgd2UgYXJlIHNldHRpbmcgdGhl
-c2UgYml0cyB0byAwIGluZGljYXRpbmcgbm8gY2FwYWJpbGl0aWVzIG9uIG91ciBkZXZpY2UgYW5k
-IHN0aWxsIHdlIG9ic2VydmUgdGhhdCBIb3N0IChMaW51eCBrZXJuZWwgaG9zdCBjZGMgZHJpdmVy
-KSBoYXMgYmVlbiBzZW5kaW5nIHJlcXVlc3RzIHNwZWNpZmljIHRvIHRoZXNlIGNhcGFiaWxpdGll
-cy4NCj4gDQo+IFBsZWFzZSBsZXQgbWUga25vdyBpZiB0aGVyZSBpcyBhIGJldHRlciB3YXkgdG8g
-aW5kaWNhdGUgaG9zdCB0aGF0IGRldmljZSBkb2VzIG5vdCBoYXZlIHRoZXNlIGNhcGFiaWxpdGll
-cy4NCg0Kbm8geW91IGFyZSBkb2luZyB0aGluZ3MgYXMgdGhleSBhcmUgc3VwcG9zZWQgdG8gYmUg
-ZG9uZSBhbmQgdGhlIGhvc3QgaXMgYXQgZmF1bHQuIFRoaXMga2VybmVsIGJ1ZyBuZWVkcyB0byBi
-ZSBmaXhlZC4NCg0KCVJlZ2FyZHMNCgkJT2xpdmVyDQoNCg==
+Hi, all:
+
+Per our discussion last fall, I've been working on a bridge between bugzilla
+and public-inbox, which went live in the past few days. It's still a very
+early release, but it can do the following:
+
+1. Create bugs from mailing list discussions, with full history. For example,
+   it is sufficient for someone [1] to say "bugbot on" in a mailing list
+   discussion to request bugbot to convert that thread into a new bug. It will
+   then continue checking that thread for new messages, creating new comments
+   for any added communication. This works both ways -- any comments added on
+   bugzilla will be sent as follow-up messages to the original recipients.
+
+   New bugs will be created in the Linux/Kernel component of Bugzilla, but
+   they can then be reassigned to any other component. As long as they remain
+   open, bugbot will continue tracking threads for new messages until either
+   the bug is closed, or it has been over 30 days since any activity on the
+   bug.
+
+   [1] At this time, the From address of the person saying "bugbot on" has to
+   have an account on bugzilla and be part of the "editbugs" group.
+
+   Here's me using it to turn a thread into a bug:
+   https://lore.kernel.org/lkml/CAJfuBxwomDagbdNP-Q6WvzcWsNY0Z2Lu2Yy5aZQ1d9W7Ka1_NQ@mail.gmail.com/
+
+2. Start mailing list threads from pre-triaged bugzilla bugs. This works the
+   opposite way and creates mailing list threads based on bug reports filed in
+   bugzilla. The useful things here are:
+
+   - bugbot only gets triggered on open bugs in Linux/Kernel that have the
+     "bugbot" flag set to "+", which allows pre-triaging a bug before bugbot
+     sends it to the mailing list
+   - there is a special "cf_subsystem" field added to that component; bugbot
+     will match it verbatim to the MAINTAINERS file components and will send
+     mail to the M: and L: addresses for that subsystem
+   - bugbot will then monitor for any updates to that thread, so any mailing
+     list replies will be added as comments to the bug (thus sending a
+     bugzilla mail notification to the initial author)
+   - if the cf_subsystem is incorrect, it can be changed to a different
+     subsystem at any time, triggering a different set of recipients on the
+     next update
+   - any files added in bugzilla will trigger notification sent to the list
+     (but won't attach the actual files, so they don't clog everyone's mailbox
+     or list archives)
+
+   Artem, I'm not sure if you're still active with bugzilla.kernel.org, but I
+   believe the cf_subsystem functionality is pretty much what you wanted so it
+   was possible to bring bugs to the attention of actual subsystem
+   maintainers.
+
+   Here is a bug that was turned into a mailing list thread via cf_subsystem:
+   https://bugzilla.kernel.org/show_bug.cgi?id=217293
+
+Like I said, bugbot is very young and probably full of bugs, so it will still
+see a lot of change and will likely explode a couple of times. The code behind
+it is here, woefully lacking any documentation as yet:
+https://git.kernel.org/pub/scm/utils/peebz/peebz.git/
+
+At this time, I invite anyone with an account on bugzilla and "editbugs" group
+membership can start using bugbot in either direction and to report any bugs
+you find to the tools list.
+
+Next features on my todo list are:
+
+- documentation
+- tracking repositories and recording when bugs are mentioned in commits
+- whatever other feedback I receive
+
+Best regards,
+Konstantin
