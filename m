@@ -1,135 +1,91 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from devico.uberspace.de (devico.uberspace.de [185.26.156.185])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45C1F53AA
-	for <regressions@lists.linux.dev>; Sun,  2 Apr 2023 18:46:44 +0000 (UTC)
-Received: by mail-wm1-f49.google.com with SMTP id o32so15828210wms.1
-        for <regressions@lists.linux.dev>; Sun, 02 Apr 2023 11:46:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1680461202;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:to:from:date:sender:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=fL5kMIjPYpnHHKeS2SPDtm2N2DyJU46jDFtlSQzTIdE=;
-        b=eVklQqCoz1Tq/KLQJ0bLn41TVCm/sG4SqGKgFTyuPaKg80AQoLJHKdDnFNzGEaAHNn
-         4ZWbSzpGKK/2Kyw8CO7H3Dus54q3YpTIvqpX9RjsYmxdwGBqViQ2PPKpJ4IxNYt3RcD1
-         QdrNBuDE/A6ZwtqBFsRkNRzRkTiH0qrE2gfBHuZPq8AZiSt5dE70R+IpAq6XZ1oDb/iv
-         0nZ0gB37fHPS5dgLGRI1gT/em4RNbD1t2fuDl4PyU0ooW9doPsauqcrecg27ZPRI5ULd
-         Gn1XlroOqmrnOxpOOdopEDsygKCTkF/g7fgsOEpXM5nGF2NstQ/aWSK0jevl2fNyXz+H
-         F9Lg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680461202;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:to:from:date:sender
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fL5kMIjPYpnHHKeS2SPDtm2N2DyJU46jDFtlSQzTIdE=;
-        b=HNkSYmS3aYnZR83xIAjQBVmLH7S7XlZndP098hOe5juHq4CzsYidIbzqiAtP9IORev
-         67yKd7euXUQ+h1ejRXjh64arzGKzETr+n/hfMeylt+gJYNgn7DVwYa5ZWo1n5NAnQI67
-         r5hq8OS0drfbcGBHYH27TFpzW4d96eVPBxf/18Yweim/LJ9HwPQ+WX01caeZ+S6SXbvW
-         yh+SK6+L8ep58cKoR5+gtY6gp+vaXhib0bK2tS4Vw2g5qXnB28xTKL5NHwD47brnol7H
-         sH3QZFF1BhT4ysjtgAXAuQcK47Stnd8y9xDSkpCpdN9OZTJX6nHh9UD0pB2NNip8AXhI
-         Q8Zw==
-X-Gm-Message-State: AO0yUKXXomOaesvXN/QrDoRn3MvkY/L9odEvXi2W3IFLmRGoBL852neq
-	8Bn2bXZtZwR79gEdbeDdJRF25D13sMUYfw==
-X-Google-Smtp-Source: AK7set8ileFYcrcNgki5dzD+xnN6Nwba4uuVA6bQw6oGXycgB/Qi22mqAuWNotDV1zjpjd/skwe9pg==
-X-Received: by 2002:a7b:ce8f:0:b0:3eb:42fa:39d5 with SMTP id q15-20020a7bce8f000000b003eb42fa39d5mr24394767wmj.29.1680461202481;
-        Sun, 02 Apr 2023 11:46:42 -0700 (PDT)
-Received: from eldamar.lan (c-82-192-242-114.customer.ggaweb.ch. [82.192.242.114])
-        by smtp.gmail.com with ESMTPSA id u14-20020a05600c210e00b003f04785699asm6585996wml.43.2023.04.02.11.46.41
-        for <regressions@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 02 Apr 2023 11:46:41 -0700 (PDT)
-Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
-Received: by eldamar.lan (Postfix, from userid 1000)
-	id C4877BE2DE0; Sun,  2 Apr 2023 20:46:40 +0200 (CEST)
-Date: Sun, 2 Apr 2023 20:46:40 +0200
-From: Salvatore Bonaccorso <carnil@debian.org>
-To: regressions@lists.linux.dev
-Subject: Re: Bug#1033732: [PATCH v2] x86/acpi/boot: Do not register
- processors that cannot be onlined for x2apic
-Message-ID: <ZCnNkHJMdI7OvVHe@eldamar.lan>
-References: <20230105041059.39366-1-kvijayab@amd.com>
- <88f59aa6-f3c4-999b-3994-0f2e3fd88c45@cegetel.net>
- <c02a2a2f-2b40-e13e-ac40-e5d19a66b5ba@cegetel.net>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E4E47F
+	for <regressions@lists.linux.dev>; Mon,  3 Apr 2023 00:27:49 +0000 (UTC)
+Received: (qmail 7203 invoked by uid 990); 3 Apr 2023 00:27:41 -0000
+Authentication-Results: devico.uberspace.de;
+	auth=pass (plain)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <c02a2a2f-2b40-e13e-ac40-e5d19a66b5ba@cegetel.net>
+Date: Mon, 03 Apr 2023 00:27:41 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+From: "Leonard Lausen" <leonard@lausen.nl>
+Message-ID: <32657b4f2c8cf1219b8705db6cba7606b0119274@lausen.nl>
+TLS-Required: No
+Subject: Re: [PATCH] Revert "venus: firmware: Correct non-pix start and end
+ addresses"
+To: "Linux regressions mailing list" <regressions@lists.linux.dev>, "Javier
+ Martinez Canillas" <javierm@redhat.com>, "Dikshita Agarwal"
+ <quic_dikshita@quicinc.com>, "Vikash Garodia" <vgarodia@qti.qualcomm.com>,
+ "Stanimir Varbanov" <stanimir.k.varbanov@gmail.com>
+Cc: linux-kernel@vger.kernel.org, mka@chromium.org, "Albert Esteve"
+ <aesteve@redhat.com>, stanimir.varbanov@linaro.org, "Enric Balletbo i Serra"
+ <eballetb@redhat.com>, "Andy Gross" <agross@kernel.org>, "Bjorn Andersson"
+ <andersson@kernel.org>, "Konrad Dybcio" <konrad.dybcio@linaro.org>, "Vikash
+ Garodia (QUIC)" <quic_vgarodia@quicinc.com>, linux-arm-msm@vger.kernel.org,
+ linux-media@vger.kernel.org, "Fritz Koenig" <frkoenig@google.com>, "Rajeshwar
+ Kurapaty (QUIC)" <quic_rkurapat@quicinc.com>, "Mauro Carvalho Chehab"
+ <mchehab@kernel.org>
+In-Reply-To: <12c5a8f2-3082-68a2-e973-18fb957068ac@leemhuis.info>
+References: <12c5a8f2-3082-68a2-e973-18fb957068ac@leemhuis.info>
+ <87edq2dus1.fsf@minerva.mail-host-address-is-not-set>
+ <ef09bc9f-d570-be11-238b-bd34063917fc@redhat.com>
+ <70c01751-1dd7-c4bd-a96e-94dea437aa40@redhat.com>
+ <DM8PR02MB81696369DBFE619E43F81EEFF3DE9@DM8PR02MB8169.namprd02.prod.outlook.com>
+ <e87344c6-acef-7f3f-5cac-24961dbd9401@redhat.com>
+ <6f97a117-0d9c-e21b-9adf-50f2233ba9e3@leemhuis.info>
+ <ea283f0a-ca72-447e-ce87-68c1bbee793e@leemhuis.info>
+ <CAFOAJEdBbzqkGVqw+vgNYNxyaTHwvjFyskTwjycP820L2tOctA@mail.gmail.com>
+ <b548da46-bf91-6f1c-4b63-4002109056bc@leemhuis.info>
+ <9a0bfef8-0b5d-f4d0-a8a5-4bbcacc5c0fb@leemhuis.info>
+ <DM8PR02MB8169E16569616870A583B376F3AB9@DM8PR02MB8169.namprd02.prod.outlook.com>
+ <87356wn6xf.fsf@minerva.mail-host-address-is-not-set>
+ <87edq9hj4w.fsf@minerva.mail-host-address-is-not-set>
+ <d18fac76-6b77-a446-5fe0-7236556e9187@quicinc.com>
+ <0c84724d-08d4-ddcb-5f71-4eb8261240c6@quicinc.com>
+ <a2fec0a5855150966fa5a920216c205032965f98@lausen.nl>
+X-Rspamd-Bar: /
+X-Rspamd-Report: MIME_GOOD(-0.1) BAYES_HAM(-1.374321) SUSPICIOUS_RECIPS(1.5)
+X-Rspamd-Score: 0.025678
+Received: from unknown (HELO unkown) (::1)
+	by devico.uberspace.de (Haraka/3.0.1) with ESMTPSA; Mon, 03 Apr 2023 02:27:41 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+	d=lausen.nl; s=uberspace;
+	h=from;
+	bh=kU8/0hotsYPclOG1hg3ZENcMEY6U3LCuivpAib0hr74=;
+	b=oC2wAnUm5H1OfB4XE/nU3cIGhovmM0C/NHSvx/T3dtJPxU5ClHd670Y96FE5Xpc7+cRnzBfXyY
+	CqDSaOiEufS1Xt6wI74NpLW9F6W7IRr9nvJfcLJ91899z2S3hI7+fQF7AovSXO0StymLLNqzjZ+y
+	jnevWcL3mzmwAGEOpIvyej/4/gY4dD6SusGrTvDWBzTDWjtrxNfV67qE5xRLZ3/kWzf6GVzWD+0/
+	FBK0UXaeEwR3RFDetJK8G8Ju1ILF+ulWMaUtPksvjmYl4R+xoLmUOdP/0RIGtjghzbhw5ETnhi5L
+	O6aKnvAL8SraIF6FAJRWKjdbdhXflW/J9vAXjn/rASftHFS8Ex0C5J4g+uPuxE9H06i4ytQY2QIH
+	eIA/F7RFdSuc8kC2y0t6J6FUS1TGn3kKVZeY1EDwbrdcrTLG/oTzCVtuMk2f7x8gA3J6HXLXeAFg
+	K7mhsONNUH0+VSP+a5Qywsu43APiNCPcZBsPmWstvlVwWecKPRYp9GG1dRigizL52jsjl5/fSnhR
+	wVWN6WWwuhCmIOQmGaRcKDdT33/wcXAPxPvxiONKKIuSwKHeagUv8CkiMf/Nzuj0B7KmVZp6SduX
+	3fM5TGylJn+0JX58BPPmuABItZu1WqkyCmryH9if0xay/y77h45i2s9JPguG5WTQJ9YsRtHQIK01
+	0=
 
-Hi
+April 2, 2023 at 1:02 AM, <regressions@leemhuis.info> wrote:
+> > this still leaves the regression introduced by "venus:
+> >  firmware: Correct non-pix start and end addresses". As pointed out b=
+y Matthias
+> >  Kaehlcke, the commit prevents SC7180 and sc7280 AOSS from entering s=
+leep mode
+> >  during system suspend. This is a serious regression in v6.2 kernel s=
+eries.
+> >=20
+>=20That fix is sitting in the media tree for a while and afaics still
+> hasn't been sent to Linus (which is needed to get this fixed in 6.2.y).
+> Mauro, could you maybe take care of that?
 
-On Sun, Apr 02, 2023 at 12:41:46PM +0200, Guy Durrieu wrote:
-> Le 05/01/2023 à 05:10, Kishon Vijay Abraham I a écrit :
-> 
-> > Section 5.2.12.12 Processor Local x2APIC Structure in the ACPI v6.5
-> > spec mandates that both "enabled" and "online capable" Local APIC Flags
-> > should be used to determine if the processor is usable or not.
-> > 
-> > However, Linux doesn't use the "online capable" flag for x2APIC to
-> > determine if the processor is usable. As a result, cpu_possible_mask has
-> > incorrect value and results in more memory getting allocated for per_cpu
-> > variables than it is going to be used.
-> > 
-> > Make sure Linux parses both "enabled" and "online capable" flags for
-> > x2APIC to correctly determine if the processor is usable.
-> > 
-> > Fixes: aa06e20f1be6 ("x86/ACPI: Don't add CPUs that are not online capable")
-> > Reviewed-by: Borislav Petkov (AMD) <bp@alien8.de>
-> > Reported-by: Leo Duran <leo.duran@amd.com>
-> > Signed-off-by: Kishon Vijay Abraham I <kvijayab@amd.com>
-> 
-> Hello everyone,
-> 
-> My system worked fine with kernel 6.1.15, but stopped booting after
-> upgrading to 6.1.20 and resulted in a kernel panic:
-> 
-> ---
-> [ 0.117782] Kernel panic — not syncing: timer doesn’t work through Interrupt-remapped IO-APIC
-> [ 0.117848] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 6.1.0-7-and64 #1 Debian 6.1.20-1
-> [ 0.117913] Hardware name: Gigabyte Technology Co., Ltd. ABS50M-Gaming 3/AB350M-Gaming 3-CF, BIOS F50d 07/02/2020
-> [ 0.117982] Call Trace:
-> [ 0.118634] <TASK>
-> [ 0.118685] dump_stack_lvl+0x44/0x5c
-> [ 0.118143] panic+0x118/0x2ed
-> [ 0.118198] panic_if_irq_remap.cold+0x5/0x5
-> [ 0.118256] setup_I0_APIC+0x3db/0x64b
-> [ 0.118313] ? _raw_spin_unlock_irqrestore+0x23/0x40
-> [ 0.118372] ? clear_IO_APIC_pin+0x169/0x240
-> [ 0.118429] apic_intr_node_init+0x101/0x106
-> [ 0.118485] x86_late_time_init+0x20/0x34
-> [ 0.118542] start_kerne1+0x667/0x727
-> [ 0.118598] secondary_startup_64_no_verify+0xe5/0xeb
-> [ 0.118658] </TASK>
-> [ 0.118711] ---[ end Kernel panic - not syncing: timer doesn’t work through Interrupt-remapped IO-APIC J---
-> ---
-> I tried an update of the BIOS up to F51h without any effect.
-> 
-> I sent a bug report to Debian Bug Tracking System. In reply Bjørn Mork
-> identified ce7d894bed1a539a8d6cff42f6f78f9db0c9c26b from the linux-6.1.y
-> branch as the likely culprit.
-> 
-> After building a 6.1.20 kernel with just that commit reverted, my system boots normally again.
-> 
-> I reported that all tohttps://bugs.debian.org/1033732  and were asked to report the issue 'upstream' (which is what that mail is).
-> 
-> Hope it will help!
-> 
-> Best regards.
+I see the revert made it to 6.3-rc5 as commit f95b8ea7. Now it just needs=
+ to
+be included for v6.2.10
 
-Trying to make as well the regression tracker bot aware of the issue
-(but dropping all CCs to not spam them with duplicate information):
-
-#regzbot ^introduced e2869bd7af60
-#regzbot title: Regression from "x86/acpi/boot: Do not register processors that cannot be onlined for x2APIC"
-#regzbot link https://lore.kernel.org/lkml/c02a2a2f-2b40-e13e-ac40-e5d19a66b5ba@cegetel.net/
-#regzbot link https://bugs.debian.org/1033732
-#regzbot fixed-by: fed8d8773b8e
-
-Regards,
-Salvatore
+Thank you
+Leonard Lausen
