@@ -1,141 +1,82 @@
-Received: from EUR03-AM7-obe.outbound.protection.outlook.com (mail-am7eur03on2071.outbound.protection.outlook.com [40.107.105.71])
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 100C42FAF
-	for <regressions@lists.linux.dev>; Mon,  3 Apr 2023 10:09:23 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dcnQd8c/QbWvLVVASTThZlhTM3A17IXfF6U4I3jRE2Y9HOb9ZrFvyVnkz/rgeyRZvcBqBf+RHySZfAp/Mx4e1O8ttD3JgmMBKM3SxuD0KuDD41I5hNHEPzdT1dBF41SOm7YD6wVOlrVPK2S9YTnwxygfQcY207yC9bDpe57eQhNu8N6dPzz73LhNDOlJm5tf/2fBnxNI+Qu/rRWnkJF+fJvwFJV3HBgcDG6bC3UFcdKHis7WLzTzGx8A12MdeekUbbfschpTHBdMzw8GXVZowDmNxmIryVtbVf/BqElArBLl64HGjBmlOX3zq7tZiORm64FjPpDkO49jEBjji2/FAQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=cqBYy8+9RVsf+te3aMsiLo6/GEMh97TxhPMb0ywJ42Y=;
- b=g8LGMel4JRjtYALMP2awasyUSNXSjJ9af0nbqJ6ODxCre5IQpaTqzM2Rpg64BnuEiN7bXqd/6sBM/yZ0804qQDAsatnEwVC864vq8g++nZ4XvOJyjkm6lX5AIi2OfmroS+DfD7R73x56IFtZ/FusPuQTuUWT99KvH6o2UBTIgg+H/y0ToRF1itbXszeoRFFnZI8x6FLpGWrNJrGcD/RqPPY9pslSRBoWyQaFxDXG6j4EP9tHe1x6gK8qIcBnE8txLkatVRtjeokmbWYryFvneNrvt1wWETMHRlUPwAjy9ya8fZjosKRcEOOtAnwf1VkpSdGaW6dOjUYAQ4XTdBRWHg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
- dkim=pass header.d=suse.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cqBYy8+9RVsf+te3aMsiLo6/GEMh97TxhPMb0ywJ42Y=;
- b=YA8dbKOHTJtDNyQ+2qoCAhi6wV1yMMAZgJdYliKbggVjZyGF4NYMYr+BNBMpiT5HaO6t9nyAW/adKPt0R7v1AigIgkB/bY5fz/qOcTPVzsEJW903nzFXVWQvt20JBGMrZZUiDRAUUMzbl7kIFShA072aOjuW8MRYibsxyMGLY5HNnUHy1SfgIDmySekWgz3m37g+T5GzxoYOLjUETbeSmNrL3AEYVSw3/W9UXFgGoRwCbSe+Sh5qJGLqkvpiBmFFXRhFG5R7NqTNro16xFHrWIRTbMj5JUh4j1zlHiDcSoag/BXt12ZL7BvKkBNcHcznhXPOsgFAfm8KG/8f1psiBg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=suse.com;
-Received: from VI1PR04MB7104.eurprd04.prod.outlook.com (2603:10a6:800:126::9)
- by GVXPR04MB10071.eurprd04.prod.outlook.com (2603:10a6:150:11a::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6254.30; Mon, 3 Apr
- 2023 10:09:20 +0000
-Received: from VI1PR04MB7104.eurprd04.prod.outlook.com
- ([fe80::74bd:991c:527d:aa61]) by VI1PR04MB7104.eurprd04.prod.outlook.com
- ([fe80::74bd:991c:527d:aa61%9]) with mapi id 15.20.6254.033; Mon, 3 Apr 2023
- 10:09:20 +0000
-Message-ID: <28ec4e65-647f-2567-fb7d-f656940d4e43@suse.com>
-Date: Mon, 3 Apr 2023 12:09:13 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Subject: Re: issues with cdc ncm host class driver
-Content-Language: en-US
-To: "Purohit, Kaushal" <kaushal.purohit@ti.com>,
- "stable@vger.kernel.org" <stable@vger.kernel.org>
-Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46E27323B
+	for <regressions@lists.linux.dev>; Mon,  3 Apr 2023 10:19:00 +0000 (UTC)
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 333AIxRv066487;
+	Mon, 3 Apr 2023 05:18:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1680517139;
+	bh=lz60oJMNNApxne8XKp/602Q9lIfj7nEOb+EHhaiTYjs=;
+	h=From:To:CC:Subject:Date:References:In-Reply-To;
+	b=ut/O3TJrZ7cYB2UFtQbBxbcm4N+UKk8glOPyb4oXyWveZeXmoqxUgCuSEQjiNPYpm
+	 DCATvGnpEYcOwS90pUs4+RPCrYmtPeKUCxGYELON/Oz2vmiNCvU5/MyQq8+lDEIMi9
+	 H9JTQoKGXHhj7rSM3SOxESkIN8HBTmvBwcHObg9w=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 333AIxUh006403
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 3 Apr 2023 05:18:59 -0500
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.16; Mon, 3
+ Apr 2023 05:18:58 -0500
+Received: from DLEE114.ent.ti.com ([fe80::bdc7:eccc:cd13:af84]) by
+ DLEE114.ent.ti.com ([fe80::bdc7:eccc:cd13:af84%17]) with mapi id
+ 15.01.2507.016; Mon, 3 Apr 2023 05:18:58 -0500
+From: "Purohit, Kaushal" <kaushal.purohit@ti.com>
+To: Oliver Neukum <oneukum@suse.com>,
+        "stable@vger.kernel.org"
+	<stable@vger.kernel.org>
+CC: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
+Subject: RE: [EXTERNAL] Re: issues with cdc ncm host class driver
+Thread-Topic: [EXTERNAL] Re: issues with cdc ncm host class driver
+Thread-Index: Adll85tYAc+Cq2MlRoaUYHp7CXh/XQASqSKAAAo4+VA=
+Date: Mon, 3 Apr 2023 10:18:58 +0000
+Message-ID: <6a8da52391f349ffbdaf2ab6d81e5cff@ti.com>
 References: <da37bb0d43de465185c10aad9924f265@ti.com>
-From: Oliver Neukum <oneukum@suse.com>
-In-Reply-To: <da37bb0d43de465185c10aad9924f265@ti.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: FR0P281CA0136.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:96::10) To VI1PR04MB7104.eurprd04.prod.outlook.com
- (2603:10a6:800:126::9)
+ <28ec4e65-647f-2567-fb7d-f656940d4e43@suse.com>
+In-Reply-To: <28ec4e65-647f-2567-fb7d-f656940d4e43@suse.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-originating-ip: [10.249.138.33]
+x-exclaimer-md-config: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: VI1PR04MB7104:EE_|GVXPR04MB10071:EE_
-X-MS-Office365-Filtering-Correlation-Id: a650da2d-b676-4874-bbe5-08db342b7c87
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	uXccuJqktl/ZkbxKr5ykxslqeUzcQNwIes9RNoqxpIQzyJ9G2iT5glB69HlWGf7H64cXOZXkLlhiTf1MYh/3IwAe8tjFGfPTJD0zsyZxkEsZXvmss9I4Fj92k+JjFbWOmC/S1N0RmW+HDSP4/Vv+b/ulxEMbRoY7hg6Y1IodqRZjj3bdXj6gTM4fCK6XnfNms8Av5HqQFEej2ksJ6JkoNHA1vA3yVwFgRaAOQr2z4GQUvJ7E/F0FlmG3FNhNtH6kOg1iU0xLzLPRauyhqnJ/Ggt94L7YMoLfVTE0p/S251T+rw6R2MyU3UnDcJU3s2/1Q/iwDgTb2kOZ8vPFPttLPdVlCsMA4ZhAo0asHsD5V5r6YGjUcJe3Zv+8kXAro0dvR/fLGj1y6DBNqDfyNom2MhqPGy86wAMXnI9pwULLNejgiLWzfdDOdy/IgFYr4acBELFAUxGI+sNCQW0U/8+C1O98UQ0l1ApRAyQhP4PXURBSGvs6FDPoI1qsd5clbqd/aB70ZGe/GTr4eJd6ubjo71IreGZ4sVkNw4/LgTErDegclepnIBolgB3ng2s7iZdRUmcpMi6S+oe/gYp7SWXHyCCvpIXtHHMdD0x/173NAUCq7rAKR9C+u3s4DjNwq89Q+K9sInIXGgSOuG0V4b5Rpw==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR04MB7104.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(396003)(39860400002)(136003)(346002)(366004)(376002)(451199021)(31696002)(86362001)(36756003)(2906002)(31686004)(2616005)(53546011)(83380400001)(186003)(6506007)(6486002)(6666004)(6512007)(4326008)(8676002)(66476007)(478600001)(66556008)(66946007)(41300700001)(38100700002)(5660300002)(54906003)(110136005)(316002)(8936002)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?cFNTWkxNWVhXTm1tTW9raUE4djhEODBmRGJyYTlEeFpHaWd6cTRWZjdaOGxM?=
- =?utf-8?B?NEFaM0VSSnBVTXJJVUdwViszZysyNTA1THhscjNjbjAyS21wQm9UazMzV2JE?=
- =?utf-8?B?cTh6eklJQ1lpUytjSFhBUjlpdWptYWFucGpYZVFYTUdzM2hiU3d3eUdVeTVP?=
- =?utf-8?B?aVd5MjdsbHp1c3dCUXh3aTZPWWgrRHpkakVEUDVkeFBQbWJpQVRiYWtnWW1S?=
- =?utf-8?B?MmZFbE5ybWdnSkJSOGI2OUNhRExPU1BMdEozLzMyVTU3Sjd1MFJTekp5UlRM?=
- =?utf-8?B?M0E0cjJYV1VEdVBra1pzdXZvWFd4cThINjhjSUlSd3l1cnJHUXpnUEdWMG9S?=
- =?utf-8?B?V0F6WmZlZ0tYUThwaUljaGZFaXZFMHFHUHNGK0RQc09VRWViWkRodGlFOERQ?=
- =?utf-8?B?UEJRODNkVE05TjZqMFJmSkFQZ0tXVm1ITnRRTE1WWitXcEVVYVlJWDZqUXhX?=
- =?utf-8?B?b0ZoRmNNV2c0UjUzYXBwZ3AwYTlITU9qLzdNOUVNVi9ZTjRzKzZDZ3lFSU8r?=
- =?utf-8?B?cWlwb0dCclZVZjMvQ29YRHNRSmV5TDJvTitDOXZsczVrTkh1ZzRMbG1HWW95?=
- =?utf-8?B?TXN1RFNkSmw0TWRvL3ZHMW1MQkFQd0MxeHVOQzZWbkh1Q2FRcmJsSnloMFox?=
- =?utf-8?B?bGEvNWJjU0lJN3pXTVFKTTJTUVpHL21tU2VKVVNJVWtFd09KRWkrT092T0th?=
- =?utf-8?B?dndwRUpDMkpsUDFVenltVjNOWnY5ZFFiYjlIdVZYMldONTBiMGREVWY5WW1m?=
- =?utf-8?B?REpDZGpyU25GNWNRZCtSSGoxdWdYb2RZNE5obFlxaDBGKzBHWm1XNk9SYkhL?=
- =?utf-8?B?VitCdzJpVUtLaE01aU5pY0lvWnNZaVA1OGdnU3BOdkpTSEdZWXNRQ1lNOHFK?=
- =?utf-8?B?UlZTNitZcGRKd0ErYnNWQXBIdG9mVG1UclI4MFdickh5OUpGbTQwcTJ6UnhT?=
- =?utf-8?B?MlpIWE9mdWt0R3d1OHYrRklRZ0NDT3lQQkhMMXUwSis3RTJ5Z2VoekFBSDFh?=
- =?utf-8?B?NFlmUC9oaHdzaFM0UmYzWjgyQjZWZzRqWFZmQUM0L0NpbmZYNmhDNFdUbHg5?=
- =?utf-8?B?a25pamR2dmZ6WmV1d04zSm5QcW1iT0t2QmhaOWxsMHZlMFl5SnArVGovYjls?=
- =?utf-8?B?YWlFNy9lVGVIM1FqM1NJMXhsRTk3ZFJjdkRySjZ2alU2bkRvckQ4T3ZQQ29X?=
- =?utf-8?B?dHcrWE5zcytLNmliUVppVVk3c1lQdVdXY0wrdkE4Q3J1VUVoVjZxSVd2VzBn?=
- =?utf-8?B?aHZkZjVqbDh5Vm9HTWJUT1hrNGd3WUd5bkdvUE4wR1ErY0ptaGVQTWlRSitL?=
- =?utf-8?B?aXFpbUF2MDlnZW9pVkJaOHg3NXFRMlUxbXRJZFVybzFwcTRuTWU4eS8xek9Z?=
- =?utf-8?B?bzN6c1pjLzNuMTRyTjRJQW5TMjJld3U1Q0crcHNxQnlPdUVqUXhDSUpmeEd2?=
- =?utf-8?B?WkkxTTF0MFJGNStuK2g4cXBlMDlzdEVZUzl3c29qT2RzQ3dzc0w5b2dSZmFr?=
- =?utf-8?B?aFMzL3BWUmQzcHpNV3FWcExNQjVPcnl2UllPQ0toU1ZUM29uRjBuUTg2RVFZ?=
- =?utf-8?B?SThKT1BJRC9oZWJRVlBaMzFjaHc1Q2VFSFZuM2tPc0xkdmYxNEc5ZVEwTHVu?=
- =?utf-8?B?Z1ZoUzVyRmZtMWxham54WjVTeTMxVGFYcjNmdG4yUEZkZ1ROeWticzNmU01l?=
- =?utf-8?B?d3U5M0ZPNjJBbXJBdHB4TUl4VjNtVzdWL3dRRG44OS9mOXluWStrZzUrTXRt?=
- =?utf-8?B?dVFiRXJ1UnAvRGJTWUNUVDk5WVYvdWpSOE1NaWJKL3BMcW9CdmxQc0I4K0Yz?=
- =?utf-8?B?a0R0WnhROE5wam9NbXVPZ1VrZUZxdVIxbGlFd1lzRDIxb1JlWjVSRktXck92?=
- =?utf-8?B?UGc5ckFoTk5MK0dkRlcybWJqdzlpaHNLeXg2Z3R4elM1S2JLRXRucDJrTUJ6?=
- =?utf-8?B?SHN3Q0prcUx4Witkc2xaMVo1bEhpbDU4Tk9YajJPa29RbWk2VU9EQjArcG5P?=
- =?utf-8?B?N1pjSWRaWlFYcWE4aC9VQTJ5Z3NPMkxnVC9tcThkZkh5SWJuVXhQSW9DS1ov?=
- =?utf-8?B?cTNjbVMzT2JENU9GemhrR0xvN2hIMkZndE5XTm5Wc1JqMnNzODAzQXVMb3A0?=
- =?utf-8?B?eDZ0TG1ISlZVL2x6TjhmdE96WnJaa0tsZDJrdndqS052ei8rZkp4S042OXNx?=
- =?utf-8?Q?JN7qamF6owfn74RozfVtGdfhrXramhwylK0UgKNQYplB?=
-X-OriginatorOrg: suse.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a650da2d-b676-4874-bbe5-08db342b7c87
-X-MS-Exchange-CrossTenant-AuthSource: VI1PR04MB7104.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Apr 2023 10:09:20.4607
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: BPGPZy+ZxXlfbGXq6SXJKwsf4cqiAcSkgWxDqIxKvnqIZGqRqWFYUPUk8s0l57pdMSLCJdMMg2y1snMDklZ5Jg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GVXPR04MB10071
 
-On 03.04.23 08:14, Purohit, Kaushal wrote:
-> Hi,
-> 
-
-Hi,
-
-> Referring to patch with commit ID (*e10dcb1b6ba714243ad5a35a11b91cc14103a9a9*).
-> 
-> This is a spec violation for CDC NCM class driver. Driver clearly says the significance of network capabilities. (snapshot below)
-> 
-> However, with the mentioned patch these values are disrespected and commands specific to these capabilities are sent from the host regardless of device' capabilities to handle them.
-
-Right. So for your device, the correct behavior would be to do
-nothing, wouldn't it? The packets would be delivered and the host
-needs to filter and discard unrequested packets.
-
-> Currently we are setting these bits to 0 indicating no capabilities on our device and still we observe that Host (Linux kernel host cdc driver) has been sending requests specific to these capabilities.
-> 
-> Please let me know if there is a better way to indicate host that device does not have these capabilities.
-
-no you are doing things as they are supposed to be done and
-the host is at fault. This kernel bug needs to be fixed.
-
-	Regards
-		Oliver
-
+T2xpdmVyLCBUaGFua3MgZm9yIHRoZSBxdWljayBjb25maXJtYXRpb24uIFRyYWNrZWQgaW4ga2Vy
+bmVsIEJ1Z3ppbGxhIGJ5ICJCdWcgMjE3MjkwIi4NCg0KLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0t
+LS0NCkZyb206IE9saXZlciBOZXVrdW0gPG9uZXVrdW1Ac3VzZS5jb20+IA0KU2VudDogTW9uZGF5
+LCBBcHJpbCAzLCAyMDIzIDM6MzkgUE0NClRvOiBQdXJvaGl0LCBLYXVzaGFsIDxrYXVzaGFsLnB1
+cm9oaXRAdGkuY29tPjsgc3RhYmxlQHZnZXIua2VybmVsLm9yZw0KQ2M6IHJlZ3Jlc3Npb25zQGxp
+c3RzLmxpbnV4LmRldjsgbGludXgtdXNiQHZnZXIua2VybmVsLm9yZw0KU3ViamVjdDogW0VYVEVS
+TkFMXSBSZTogaXNzdWVzIHdpdGggY2RjIG5jbSBob3N0IGNsYXNzIGRyaXZlcg0KDQpPbiAwMy4w
+NC4yMyAwODoxNCwgUHVyb2hpdCwgS2F1c2hhbCB3cm90ZToNCj4gSGksDQo+IA0KDQpIaSwNCg0K
+PiBSZWZlcnJpbmcgdG8gcGF0Y2ggd2l0aCBjb21taXQgSUQgKCplMTBkY2IxYjZiYTcxNDI0M2Fk
+NWEzNWExMWI5MWNjMTQxMDNhOWE5KikuDQo+IA0KPiBUaGlzIGlzIGEgc3BlYyB2aW9sYXRpb24g
+Zm9ywqBDREMgTkNNIGNsYXNzIGRyaXZlci4gRHJpdmVyIGNsZWFybHkgc2F5cyANCj4gdGhlIHNp
+Z25pZmljYW5jZSBvZiBuZXR3b3JrIGNhcGFiaWxpdGllcy4gKHNuYXBzaG90IGJlbG93KQ0KPiAN
+Cj4gSG93ZXZlciwgd2l0aCB0aGUgbWVudGlvbmVkIHBhdGNoIHRoZXNlIHZhbHVlcyBhcmUgZGlz
+cmVzcGVjdGVkIGFuZCBjb21tYW5kcyBzcGVjaWZpYyB0byB0aGVzZSBjYXBhYmlsaXRpZXMgYXJl
+IHNlbnQgZnJvbSB0aGUgaG9zdCByZWdhcmRsZXNzIG9mIGRldmljZScgY2FwYWJpbGl0aWVzIHRv
+IGhhbmRsZSB0aGVtLg0KDQpSaWdodC4gU28gZm9yIHlvdXIgZGV2aWNlLCB0aGUgY29ycmVjdCBi
+ZWhhdmlvciB3b3VsZCBiZSB0byBkbyBub3RoaW5nLCB3b3VsZG4ndCBpdD8gVGhlIHBhY2tldHMg
+d291bGQgYmUgZGVsaXZlcmVkIGFuZCB0aGUgaG9zdCBuZWVkcyB0byBmaWx0ZXIgYW5kIGRpc2Nh
+cmQgdW5yZXF1ZXN0ZWQgcGFja2V0cy4NCg0KPiBDdXJyZW50bHkgd2UgYXJlIHNldHRpbmcgdGhl
+c2UgYml0cyB0byAwIGluZGljYXRpbmcgbm8gY2FwYWJpbGl0aWVzIG9uIG91ciBkZXZpY2UgYW5k
+IHN0aWxsIHdlIG9ic2VydmUgdGhhdCBIb3N0IChMaW51eCBrZXJuZWwgaG9zdCBjZGMgZHJpdmVy
+KSBoYXMgYmVlbiBzZW5kaW5nIHJlcXVlc3RzIHNwZWNpZmljIHRvIHRoZXNlIGNhcGFiaWxpdGll
+cy4NCj4gDQo+IFBsZWFzZSBsZXQgbWUga25vdyBpZiB0aGVyZSBpcyBhIGJldHRlciB3YXkgdG8g
+aW5kaWNhdGUgaG9zdCB0aGF0IGRldmljZSBkb2VzIG5vdCBoYXZlIHRoZXNlIGNhcGFiaWxpdGll
+cy4NCg0Kbm8geW91IGFyZSBkb2luZyB0aGluZ3MgYXMgdGhleSBhcmUgc3VwcG9zZWQgdG8gYmUg
+ZG9uZSBhbmQgdGhlIGhvc3QgaXMgYXQgZmF1bHQuIFRoaXMga2VybmVsIGJ1ZyBuZWVkcyB0byBi
+ZSBmaXhlZC4NCg0KCVJlZ2FyZHMNCgkJT2xpdmVyDQoNCg==
