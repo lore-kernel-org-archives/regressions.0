@@ -1,127 +1,128 @@
-Received: from out4-smtp.messagingengine.com (out4-smtp.messagingengine.com [66.111.4.28])
+Received: from wnew2-smtp.messagingengine.com (wnew2-smtp.messagingengine.com [64.147.123.27])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42553C942
-	for <regressions@lists.linux.dev>; Tue,  4 Apr 2023 19:39:17 +0000 (UTC)
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
-	by mailout.nyi.internal (Postfix) with ESMTP id 19AD85C0233;
-	Tue,  4 Apr 2023 15:39:16 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute2.internal (MEProxy); Tue, 04 Apr 2023 15:39:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bur.io; h=cc:cc
-	:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:sender
-	:subject:subject:to:to; s=fm2; t=1680637156; x=1680723556; bh=p5
-	2G99CbhqR6i4dan3E3Oigkd5Vn4r2zzm1v+U+cgTg=; b=cpCpIaieTC7t7CQKik
-	9YdT4HHmm4+jix9dazRp2Ki275jQSJLnuC+TGVfrBgj3TA2X7u8aF0DmJWv9lbZg
-	VVgaWb6reQfLp9ePzALbQ2H6wKtqWwS2geiw/LEX11H41qkot1crNYyBkRsqph+W
-	LZe4KhuRRB8Kt+imnlAymRwPUfROTZywbK7GhSTq7c2ykptDsgcDSbGrXyIw575p
-	sRiaSKB238wNjIwuAcb6MQgJZgERHVPjbiIn3NwAW4n+/Ii0Azgk9N6uwFOdTyPR
-	1lu6KSE4kSzvEFreW4fCEJ6OHzK2aICTa1gWQaMnuR50fKdtKqt5FTS5LCGmSdQd
-	hnzA==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E13303C07
+	for <regressions@lists.linux.dev>; Tue,  4 Apr 2023 23:37:31 +0000 (UTC)
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+	by mailnew.west.internal (Postfix) with ESMTP id 322B02B066D4;
+	Tue,  4 Apr 2023 19:37:30 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute1.internal (MEProxy); Tue, 04 Apr 2023 19:37:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fastmail.com; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:sender:subject:subject:to:to; s=fm2; t=
+	1680651449; x=1680655049; bh=J1BC/ZgMTCier5E+5tsATfmu2nswwvG40Pp
+	bGL8skUk=; b=RKrlzfzAIpmCS2O0dTAgEKCfGvIf0I6xJBkDMcAHH3+HsV+oYXQ
+	BWgi+Dj3auRNTYysGIPup+MFfUKMcA6hGVFpPXyQ0zzmL+ljhoDdDKpZ5EWholgk
+	X/9gS0R2ZGHZIrT8PhDXIY0vTT4U9ZYCVS0h5W0z4oHDDIclQO9Rtz4BluRT2GV4
+	CqJMwf4Ek+pxNWUNXdp2zDerQGdPshc4+thlZb5RTnIQ3yL+klzHn4HIOO6bYgYQ
+	Tia+fO+Tfxy9MMj2HOYjn99GcMGOLbeo8pgIbe/nlod0Oc3BgFf5HPhovHsAouzf
+	/L/a7oc/XI/9OXumavmQlRUfaDf2wgSdWOw==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:sender:subject
-	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-	:x-sasl-enc; s=fm2; t=1680637156; x=1680723556; bh=p52G99CbhqR6i
-	4dan3E3Oigkd5Vn4r2zzm1v+U+cgTg=; b=tfpX6twJdjUUCMEk3/vZoaWoZYzIT
-	Q8T+nbQ9qmb8esraRygWfb17XCqSaYkMaq0hhPqNCp0mNDh8l6bjFqTtrlpS0K+w
-	UfSBBfbmjsoR/M1JvmLciGk/HXsrs8Gut+OuGcOCLHP0azQUwMg6+sko8ThEdRsg
-	R///F5KQ92hWXEdq9MrQKw+RiUzz0B5Tdy9SBseDPfPhvvoDYAtYSMAxc1ThHrrs
-	9D4KW6Qp3yArgpKTKb4QVwKFXRtQunk1x7TzR7BnloKuFG6SfOKx5pxI77hgdkSl
-	HdiuJEe0VUNF0OVB8gllvhVaTHBDsvit7VO5tYURTpUbh1a/f5mgQ50PA==
-X-ME-Sender: <xms:43wsZMDguzZit4Tyo65K9glDMn1KLMcsMvy-PRZ62KDlXGt9NHzpNQ>
-    <xme:43wsZOhN4RJyYw7Ho0PG-NJ4oZHL02XRJa21lnRMxMQV8qMYQB7eh8ZJ0egBCUe-G
-    rfyBcsDtX23Wfm6EQo>
-X-ME-Received: <xmr:43wsZPnzLG9J_D7z0h66uJfnJ2u79I-LEK5dzLtk7TUB8jWWP_6Y04Jt>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrvdeiledgudegtdcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeeuohhr
-    ihhsuceuuhhrkhhovhcuoegsohhrihhssegsuhhrrdhioheqnecuggftrfgrthhtvghrnh
-    epkedvkeffjeellefhveehvdejudfhjedthfdvveeiieeiudfguefgtdejgfefleejnecu
-    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepsghorhhish
-    essghurhdrihho
-X-ME-Proxy: <xmx:43wsZCwDxdW0GfBKO5yyYrF-853ZF6uRyi1dEnrcN-pdw1LwdQjd2w>
-    <xmx:43wsZBSmj1blo4e-ABYa5rffAzyclK4cpSEb9izf1PdNaqo_waxoGw>
-    <xmx:43wsZNZKtt3UTRSzjl5X2N-JBxd8TcVumOkPXYWL1Pn93hHU70aBtQ>
-    <xmx:5HwsZO9GEd57pfc8TWrlskjnAjqOXFCv5ybbOlHRal3nc3yTlUW19w>
-Feedback-ID: i083147f8:Fastmail
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:sender:subject:subject:to:to:x-me-proxy
+	:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=i3db14652.fm2;
+	 t=1680651449; x=1680655049; bh=J1BC/ZgMTCier5E+5tsATfmu2nswwvG4
+	0PpbGL8skUk=; b=NUli5819vPakZfjWOAk1xje+MXfC/fhCSAwJ8zfbE7+SYLD4
+	rqAjUXZV93did1jYpaKd8r2aO0IIOzBeB4VjNbAm+LMbHLzSSJ27WJ+62vKZwZdE
+	DXoePGw0z20s2iuK2Mn10gFO0ncYRWnZxIDzXpHoxKaG6HN0mY9AlvgS7RoHG+mX
+	XLZB2KPDLt7LNNdk7+gEBUudkxiVGeBCpgDmktz2GLsy2vYfKyPb8tyXWxrwv0Oc
+	XcynzqOQXvEeVwQx/3dd2CG7ezqO8OEOsGf563sDZQp9k8YICGdpQSpPJljB37l6
+	NOuyOUEGQRYnmEv8noIwLhPbTdSWuZcSb6RtCg==
+X-ME-Sender: <xms:ubQsZCpktNsxhPss0DA61dKPIJtiRZddlQpS8_M5usJ9bKxOlFB5JQ>
+    <xme:ubQsZAp-eqgCGJrnnKunNmHyV6cuGin9TioQCDnXLUexUjiejjEgd4VjwNytQv6kn
+    yskK5fF10XRUh8fSwg>
+X-ME-Received: <xmr:ubQsZHP-_J1-PVdGYOuG4no2mw4HK9-Au2YDBw4GwemeSu7rGA33Hp_ATaVNqSI01T_tvrCapEpcB7Vgc74p0sAtJSL3i-ss>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrvdejtddgvdduucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepkfffgggfuffvvehfhfgjtgfgsehtjeertddtfeejnecuhfhrohhmpeffrghm
+    ihgvnhcunfgvucfoohgrlhcuoegulhgvmhhorghlsehfrghsthhmrghilhdrtghomheqne
+    cuggftrfgrthhtvghrnhepteefiefhieetgfevhfegfeehffetteduieetudfgleetvdff
+    udelveejfefhfeejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilh
+    hfrhhomhepughlvghmohgrlhesfhgrshhtmhgrihhlrdgtohhm
+X-ME-Proxy: <xmx:ubQsZB4VOyJ8rQxL1Y1HNN43un0cgZzjHBKa18xnjUsFxJQF5BLibg>
+    <xmx:ubQsZB62DGANJXcUpP6Ofbtx7b-XlywSkeq_c9SeCLgnJSIyXLUBeQ>
+    <xmx:ubQsZBgbl7kxlktD1d_VNpHHLG5LkgksPzFbR0m11AYpEz_Tj3ykVQ>
+    <xmx:ubQsZGG51xVmDn4Gbm1XGABQFHGUWX1HYk9RFlavU9xUQypX0LkCy52I6ME>
+Feedback-ID: i3db14652:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 4 Apr 2023 15:39:15 -0400 (EDT)
-Date: Tue, 4 Apr 2023 12:39:09 -0700
-From: Boris Burkov <boris@bur.io>
-To: David Sterba <dsterba@suse.cz>
-Cc: Chris Mason <clm@meta.com>, Christoph Hellwig <hch@infradead.org>,
-	Linux regressions mailing list <regressions@lists.linux.dev>,
-	Sergei Trofimovich <slyich@gmail.com>,
-	Josef Bacik <josef@toxicpanda.com>,
-	Christopher Price <pricechrispy@gmail.com>, anand.jain@oracle.com,
-	clm@fb.com, dsterba@suse.com, linux-btrfs@vger.kernel.org
-Subject: Re: [6.2 regression][bisected]discard storm on idle since
- v6.1-rc8-59-g63a7cb130718 discard=async
-Message-ID: <20230404193909.GC344341@zen>
-References: <CAHmG9huwQcQXvy3HS0OP9bKFxwUa3aQj9MXZCr74emn0U+efqQ@mail.gmail.com>
- <CAEzrpqeOAiYCeHCuU2O8Hg5=xMwW_Suw1sXZtQ=f0f0WWHe9aw@mail.gmail.com>
- <ZBq+ktWm2gZR/sgq@infradead.org>
- <20230323222606.20d10de2@nz>
- <20d85dc4-b6c2-dac1-fdc6-94e44b43692a@leemhuis.info>
- <ZCxKc5ZzP3Np71IC@infradead.org>
- <41141706-2685-1b32-8624-c895a3b219ea@meta.com>
- <20230404185138.GB344341@zen>
- <20230404192205.GF19619@suse.cz>
+ 4 Apr 2023 19:37:26 -0400 (EDT)
+Message-ID: <852ad310-092e-169c-d98a-9317aa0b4268@fastmail.com>
+Date: Wed, 5 Apr 2023 08:37:24 +0900
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230404192205.GF19619@suse.cz>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.1
+Subject: Re: [6.2 regression][bisected]discard storm on idle since
+ v6.1-rc8-59-g63a7cb130718 discard=async
+Content-Language: en-US
+To: Christoph Hellwig <hch@infradead.org>, Roman Mamedov <rm@romanrm.net>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
+ Sergei Trofimovich <slyich@gmail.com>, Josef Bacik <josef@toxicpanda.com>,
+ Christopher Price <pricechrispy@gmail.com>, anand.jain@oracle.com,
+ boris@bur.io, clm@fb.com, dsterba@suse.com, linux-btrfs@vger.kernel.org
+References: <CAHmG9huwQcQXvy3HS0OP9bKFxwUa3aQj9MXZCr74emn0U+efqQ@mail.gmail.com>
+ <CAEzrpqeOAiYCeHCuU2O8Hg5=xMwW_Suw1sXZtQ=f0f0WWHe9aw@mail.gmail.com>
+ <ZBq+ktWm2gZR/sgq@infradead.org> <20230323222606.20d10de2@nz>
+ <20d85dc4-b6c2-dac1-fdc6-94e44b43692a@leemhuis.info>
+ <ZCxKc5ZzP3Np71IC@infradead.org> <20230404212027.3730905d@nvm>
+ <ZCxP/ll7YjPdb9Ou@infradead.org>
+From: Damien Le Moal <dlemoal@fastmail.com>
+In-Reply-To: <ZCxP/ll7YjPdb9Ou@infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Apr 04, 2023 at 09:22:05PM +0200, David Sterba wrote:
-> On Tue, Apr 04, 2023 at 11:51:51AM -0700, Boris Burkov wrote:
-> > Our reasonable options, as I see them:
-> > - back to nodiscard, rely on periodic trims from the OS.
+On 4/5/23 01:27, Christoph Hellwig wrote:
+> On Tue, Apr 04, 2023 at 09:20:27PM +0500, Roman Mamedov wrote:
+>> SSDs do not physically erase blocks on discard, that would be very slow.
+>>
+>> Instead they nuke corresponding records in the Flash translation layer (FTL)
+>> tables, so that the discarded areas point "nowhere" instead of the actual
+>> stored blocks. And when facing such pointers on trying to resolve read
+>> requests, the controller knows to just return zeroes.
 > 
-> We had that before and it's a fallback in case we can't fix it but still
-> the problem would persist for anyone enabling async discard so it's only
-> limiting the impact.
+> Of course they don't erase blocks on every discard (although if you look
+> long enough you'll probably find a worst case implementation that does
+> this anyway).  But you still need to persist your FTL changes, and the
+> zeroing if any was done by the time your get a FLUSH command, because
+> without that you'd return different data when reading a block after a
+> powerfail (i.e. the old data) than before (zeros or a pattern), which is
+> a no-go.
 > 
-> > - leave low iops_limit, drives stay busy unexpectedly long, conclude that
-> >   that's OK, and communicate the tuning/measurement options better.
+>> Of course there can be varying behaviors per SSD, e.g. I know of some that
+>> return random garbage instead of zeroes, and some which for a puzzling reason
+>> prefer to return the byte FF instead.
 > 
-> This does not sound user friendly, tuning should be possible but not
-> required by default. We already have enough other things that users need
-> to decide and in this case I don't know if there's enough information to
-> even make a good decision upfront.
+> All of that is valid behavior per the relevant standards.  
 > 
-> > - set a high iops_limit (e.g. 1000) drives will get back to idle faster.
-> > - change an unset iops_limit to mean truly unlimited async discard, set
-> >   that as the default, and anyone who cares to meter it can set an
-> >   iops_limit.
-> > 
-> > The regression here is in drive idle time due to modest discard getting
-> > metered out over minutes rather than dealt with relatively quickly. So
-> > I would favor the unlimited async discard mode and will send a patch to
-> > that effect which we can discuss.
+>> But I think the 1st point above should
+>> be universal, pretty certain there are none where a discard/TRIM would take
+>> comparable time to "dd if=/dev/zero of=/dev/ssd" (making it unusable in
+>> practice).
 > 
-> Can we do options 3 and 4, i.e. set a high iops so that the batch gets
-> processed faster and (4) that there's the manual override to drop the
-> limit completely?
+> This is wishful thinking :)  SSDs generall optimize the fast path very
+> heavily, so slow path command even when they should in theory be faster
+> due to the underlying optimizations might not be, as they are processed
+> in software instead of hardware offloads, moved to slower cores, etc.
+> 
+> For discard things have gotten a lot better in the last years, but for
+> many older devices performance can be outright horrible.
+> 
+> For SATA SSDs the fact that classic TRIM isn't a queued command adds
+> insult to injury as it always means draining the queue first and not
+> issuing any I/O until the TRIM command is done.  There is a FPDMA
+> version not, but I don't think it ws all that widely implemented before
+> SATA SSDs fell out of favour.
 
-Yup, I'm on it.
+Not to mention that many of the SATA SSDs actually implementing queued trim are
+buggy. See ATA horkage flag ATA_HORKAGE_NO_NCQ_TRIM and the many consumer SSDs
+that need that flag.
 
-Chris also had a good idea for a "time since commit" check to further
-limit how long async discard would crank for.
-
-This would look something like "go as fast as I'm allowed for 5s after
-every transaction". It could lead to a big buildup that requires a
-periodic trim to clear.
-
-I'm playing with adding that as an additional tunable which would apply
-if set.
-
-Boris
