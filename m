@@ -1,94 +1,90 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD4AF7F3
-	for <regressions@lists.linux.dev>; Tue,  4 Apr 2023 08:16:10 +0000 (UTC)
-Received: by mail-pf1-f170.google.com with SMTP id dw14so20873059pfb.6
-        for <regressions@lists.linux.dev>; Tue, 04 Apr 2023 01:16:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1680596170;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=JS2FebHY5XwGhoN8TK3eRaOmFfR0S3vZkA1YVoRMUIs=;
-        b=lmQlXPLcQk6v+53GmQWwPGiWFGaxgNywsTVDf6emWF3qMsGLzWEkolbpW9Wab/+Hng
-         ccDnoRU2CF0+FUZYKm83Zx2yEpqaXvwbZ4Clbna+TkGtx+HYHVRSW9VgVbpUJ44Il3pC
-         XPzn2hwAk18MrT79n+0FBTOUaMqTqgTqq7Je4wE8/GIw2zsSkEirfbcZzI4jyiVhFt9W
-         40B7+jPgS34L2Yo6zaLeLBP9f918xVTSNj8JJt9udTXHGg6HovC3fdUrEEJ7UAsbnI13
-         FN/nUeN8Cm/35c6RXqjpY3DJ6aw+osJNV6HpSvvcsrhPc0w3oGEhApmgaCMfQlQsG1lk
-         NyaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680596170;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JS2FebHY5XwGhoN8TK3eRaOmFfR0S3vZkA1YVoRMUIs=;
-        b=YEV68Owd2sNubybtH6Y5Jsh8K7o39C5zPaxeWYLYurwSopceTmkTOQvD1IpGB7uI+c
-         TJdsRhRdL9tttW+9ogfIXpuBzOlXplLQRm9Fe184BjMXz1SzB1FfEJfRg63XYJY0VfOg
-         eKqYh+MuvKJ+rYVYakJyKmUHIZjpyNpsla3iGCjh9cQJJUaH41bcKNtKWPABwesBtT2y
-         kVEw9LODRCF37Bk5KmUovwkfXXjaUiS4zhS8Q+z0mXVSPzOcBLxuxqEiQu4DyFIOMfDc
-         6Z26Rv4YXvYhXmq2HOi7nQ9r1b0QHdTR/O0an/VBHwO7U0AKTl27qH4puGYBU3MPTEB+
-         CYVA==
-X-Gm-Message-State: AAQBX9eJszCGYB092aSpSuLIovlxxQBzgVBHbYShANwM2b1TTvcd8RBd
-	ljbrkVjlC2NLOmalg3zUswbZy8J2eu49qw==
-X-Google-Smtp-Source: AKy350Z4lly1T9IcXIhHUYSMRnTU3AptmLhEk+dLJn8of07Eqd+zRBjpehfcp30hgdrCUe2+X/xYCA==
-X-Received: by 2002:a62:6203:0:b0:62a:9d6f:98dc with SMTP id w3-20020a626203000000b0062a9d6f98dcmr1296816pfb.11.1680596169931;
-        Tue, 04 Apr 2023 01:16:09 -0700 (PDT)
-Received: from debian.me (subs02-180-214-232-10.three.co.id. [180.214.232.10])
-        by smtp.gmail.com with ESMTPSA id e14-20020a62aa0e000000b00622e01989cbsm1028070pff.176.2023.04.04.01.16.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Apr 2023 01:16:09 -0700 (PDT)
-Received: by debian.me (Postfix, from userid 1000)
-	id 181A41067AD; Tue,  4 Apr 2023 15:16:05 +0700 (WIB)
-Date: Tue, 4 Apr 2023 15:16:05 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Thorsten Leemhuis <linux@leemhuis.info>,
-	Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
-	workflows@vger.kernel.org, aros@gmx.com,
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
-	tools@linux.kernel.org
-Subject: Re: Introducing bugbot
-Message-ID: <ZCvcxVJBl/6pRMAw@debian.me>
-References: <gmnswy45efztvcyc3xqymm52h7cdfwjz64go2wy3zyeqcqwb76@36fva4hyip4q>
- <b38de7ff-3de1-cd4a-a532-66642aea587c@leemhuis.info>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 249F32C9C
+	for <regressions@lists.linux.dev>; Tue,  4 Apr 2023 09:53:14 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1pjdLg-0002IN-MX; Tue, 04 Apr 2023 11:53:08 +0200
+Message-ID: <cfcf852c-e9f0-f560-542d-0f72777a85b2@leemhuis.info>
+Date: Tue, 4 Apr 2023 11:53:08 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="XVlanjBueVby0D6k"
-Content-Disposition: inline
-In-Reply-To: <b38de7ff-3de1-cd4a-a532-66642aea587c@leemhuis.info>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.1
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Re: rq lock contention due to commit af7f588d8f73
+Content-Language: en-US, de-DE
+To: Aaron Lu <aaron.lu@intel.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <20230327080502.GA570847@ziqianlu-desk2>
+From: "Linux regression tracking #adding (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+In-Reply-To: <20230327080502.GA570847@ziqianlu-desk2>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1680601995;b0b71850;
+X-HE-SMSGID: 1pjdLg-0002IN-MX
 
+[CCing the regression list, as it should be in the loop for regressions:
+https://docs.kernel.org/admin-guide/reporting-regressions.html]
 
---XVlanjBueVby0D6k
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+[TLDR: I'm adding this report to the list of tracked Linux kernel
+regressions; the text you find below is based on a few templates
+paragraphs you might have encountered already in similar form.
+See link in footer if these mails annoy you.]
 
-On Tue, Apr 04, 2023 at 07:58:40AM +0200, Thorsten Leemhuis wrote:
-> How does one make bugbot forward a bug to everyone in the signed-off-by
-> chain of a commit that caused a regression, which might or might not
-> have a bugzilla account?  When the reporter performed a bisection these
-> are the primary contacts that need to be reached out to, but the
-> maintainers and lists for the subsystem obviously should be CCed.
+On 27.03.23 10:05, Aaron Lu wrote:
+> 
+> I was doing some optimization work[1] for kernel scheduler using a
+> database workload: sysbench+postgres and before I submit my work, I
+> rebased my patch on top of latest v6.3-rc kernels to see if everything
+> still works expected and then I found rq's lock became very heavily
+> contended as compared to v6.2 based kernels.
+> 
+> Using the above mentioned workload, before commit af7f588d8f73("sched:
+> Introduce per-memory-map concurrency ID"), the profile looked like:
+> 
+>      7.30%     0.71%  [kernel.vmlinux]            [k] __schedule
+>      0.03%     0.03%  [kernel.vmlinux]            [k] native_queued_spin_lock_slowpath
+> 
+> After that commit:
+> 
+>     49.01%     0.87%  [kernel.vmlinux]            [k] __schedule
+>     43.20%    43.18%  [kernel.vmlinux]            [k] native_queued_spin_lock_slowpath
+>
 
-The logic should be similar as on finding commit signers in
-get_maintainer.pl.
+Thanks for the report. To be sure the issue doesn't fall through the
+cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
+tracking bot:
 
---=20
-An old man doll... just what I always wanted! - Clara
+#regzbot ^introduced af7f588d8f73
+#regzbot monitor
+https://lore.kernel.org/lkml/20230403181342.210896-1-mathieu.desnoyers@efficios.com/
+#regzbot monitor
+https://lore.kernel.org/all/20230330230911.228720-1-mathieu.desnoyers@efficios.com/
+#regzbot title sched: PostgreSQL performance regression introduced by mm_cid
+#regzbot ignore-activity
 
---XVlanjBueVby0D6k
-Content-Type: application/pgp-signature; name="signature.asc"
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply and tell me -- ideally
+while also telling regzbot about it, as explained by the page listed in
+the footer of this mail.
 
------BEGIN PGP SIGNATURE-----
+Developers: When fixing the issue, remember to add 'Link:' tags pointing
+to the report (the parent of this mail). See page linked in footer for
+details.
 
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZCvcwAAKCRD2uYlJVVFO
-o2uhAQCMyE+Ey5rq+16PrdKhShHXPwd8HI5Q80T81YsEud+RHgEAtU2tL23X0loi
-hZWkyQ2/YpWj5RbjIBL9u5mAgL1EkAs=
-=kk/f
------END PGP SIGNATURE-----
-
---XVlanjBueVby0D6k--
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+That page also explains what to do if mails like this annoy you.
