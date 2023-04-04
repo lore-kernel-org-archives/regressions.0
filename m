@@ -1,79 +1,77 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9867F7C
-	for <regressions@lists.linux.dev>; Tue,  4 Apr 2023 12:23:48 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A92CC433A0
-	for <regressions@lists.linux.dev>; Tue,  4 Apr 2023 12:23:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1680611028;
-	bh=xPu8vfjSrCVgwrhzmwn/0p5UHMuS/nK+J+klpq8JqWc=;
-	h=References:In-Reply-To:From:Date:Subject:To:List-Id:Cc:From;
-	b=UBvh+FySmqDEdFMtTQpbKQAnBbyjxqAalRdrBT8fOvL57redaOPwXOHuSC5Z9Q3KC
-	 4gbd24ychBCkuY8HB5xpxogHqPSw8Hv7vAHnclTgGs+FefnCgd1Fx8YWW8vVHRuroW
-	 0DfT1wE+KT9yoOk6yqsVlKrUkCztJFdWBD3MocMM0/2dQkLNIrwGwU41v7KEORF2D3
-	 GC3KlhFrPn2fiGNvzzxlQyApR+0hn9nAYgFtiwFF1hF2RDohkDHt5iRvTK5LMCKtqE
-	 dFTTrwgs37UGUczPohVPvI8P5EzsiryPzmcVLvFLtHgnaGtHzKaTcwhrrTfssxNNSn
-	 CsCXGSDAylqnw==
-Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-545cb3c9898so534890297b3.7
-        for <regressions@lists.linux.dev>; Tue, 04 Apr 2023 05:23:48 -0700 (PDT)
-X-Gm-Message-State: AAQBX9fUVaaiVluyS8J9Oae6ODbF45p3VIuvMI6ur8ex/wRrhPDHOppi
-	p0YBziuesF3b4UFGwixJdPgvUcggPhrmatqZpLw=
-X-Google-Smtp-Source: AKy350ZBySpI0McsdrPqN/WXrKRZQ/2OoxLvTamgDcuwM2k1IV1dL8bOe4GdjE1bGF9L2+jYSFyWhk4kKH2RKGZJCms=
-X-Received: by 2002:a81:a9c7:0:b0:541:8ce6:b9ad with SMTP id
- g190-20020a81a9c7000000b005418ce6b9admr1443234ywh.2.1680611027228; Tue, 04
- Apr 2023 05:23:47 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A0A333C9
+	for <regressions@lists.linux.dev>; Tue,  4 Apr 2023 12:36:10 +0000 (UTC)
+Received: by mail-qt1-f173.google.com with SMTP id x17so9277562qtv.7
+        for <regressions@lists.linux.dev>; Tue, 04 Apr 2023 05:36:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1680611769;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=NSpzJzf1FOM6UnLnSTOqyKayxzDBWTCflEqOjyBSbCo=;
+        b=aROFRSMiUndfVZ0M+rPTRZvKbg0G3SrN6evNiK/VNwVed0c6Iio2IGw7q5tfNenTi/
+         ZYscQ8HaLXqbzKe6CtmHbNUUREysb2gwejhFwHpm/uSgW3TIKjFciYcG9KJwiDzBcBLD
+         ECIA0MoDBox8gBNQHDEB3ZwvKdpvw4ys0qypU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680611769;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NSpzJzf1FOM6UnLnSTOqyKayxzDBWTCflEqOjyBSbCo=;
+        b=erYfERtO99Hv/20GEiH3efJr7RfB9x89WCpYL4qCWpeV23A7Jam+cTNcac4krr5VfO
+         X2eVhrpBiVJ8rSuqWFIoTI5E5P/Ly15gizty5OTD6i52gDaAbow20sPXI9t4z5bioEhq
+         tcYi2N0tE/8dg3q/p2LKU32h9q+ak6a/8Fh40X6dhTrmYGTCbwizpCjc6Bd/kowGByzx
+         a1xgtzM9AhXMevbc3iDtKUWt1r6gTio3hjUsotdH9bDoG3slp3j/Ezh1ZDwZLBxiaD5X
+         qI1HCCFFUy6ADDaj7KAzLjOk0d0QIooNKTW4ss+BrenjjRkXijhuxkg2LbidUMODhkaA
+         PoCQ==
+X-Gm-Message-State: AAQBX9fbsl2qUhL7HZMQILERbxBmKYUbizUbyMjruZVFxZ2DPW2VdQoc
+	39eLXSsXskEa9LqvYhZldOW78Q==
+X-Google-Smtp-Source: AKy350bmIBXc+urbVoIz0HcgJ/oIEa1NP49n3CJPHcmGi2xKjny3EOfz6eI161rjIxZ0tXl+zYAJGA==
+X-Received: by 2002:a05:622a:148a:b0:3d8:6b0d:f9a4 with SMTP id t10-20020a05622a148a00b003d86b0df9a4mr3121325qtx.44.1680611769053;
+        Tue, 04 Apr 2023 05:36:09 -0700 (PDT)
+Received: from meerkat.local (bras-base-mtrlpq5031w-grc-30-209-226-106-7.dsl.bell.ca. [209.226.106.7])
+        by smtp.gmail.com with ESMTPSA id q19-20020ac87353000000b003e387a2fbdfsm3226631qtp.0.2023.04.04.05.36.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Apr 2023 05:36:08 -0700 (PDT)
+Date: Tue, 4 Apr 2023 08:36:07 -0400
+From: Konstantin Ryabitsev <konstantin@linuxfoundation.org>
+To: Thorsten Leemhuis <linux@leemhuis.info>
+Cc: workflows@vger.kernel.org, aros@gmx.com, linux-kernel@vger.kernel.org, 
+	regressions@lists.linux.dev, tools@linux.kernel.org
+Subject: Re: Introducing bugbot
+Message-ID: <20230404-bacteria-refinery-a97393@meerkat>
+References: <gmnswy45efztvcyc3xqymm52h7cdfwjz64go2wy3zyeqcqwb76@36fva4hyip4q>
+ <b38de7ff-3de1-cd4a-a532-66642aea587c@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <889f3db6ca4008047595f4392388acc1f165e03c.camel@realtek.com>
- <CA+5PVA4H9Quu1954ubbcZfH-e1cOy2K27r0GfLemQcMBG-6AQA@mail.gmail.com> <7cc69aa5-e003-6ac7-9b2f-a95b67eb98e8@leemhuis.info>
-In-Reply-To: <7cc69aa5-e003-6ac7-9b2f-a95b67eb98e8@leemhuis.info>
-From: Josh Boyer <jwboyer@kernel.org>
-Date: Tue, 4 Apr 2023 08:23:36 -0400
-X-Gmail-Original-Message-ID: <CA+5PVA5T=fNG4R-jfrnZEW2yF0g3tm2cBjkr70YZNDSh=V5G-A@mail.gmail.com>
-Message-ID: <CA+5PVA5T=fNG4R-jfrnZEW2yF0g3tm2cBjkr70YZNDSh=V5G-A@mail.gmail.com>
-Subject: Re: pull request: rtw89: 8852b: rollback firmware to v0.27.32.1 and
- introduce new file to new format
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-List-Id: <linux-firmware.lore.kernel.org>
-Cc: Ping-Ke Shih <pkshih@realtek.com>, 
-	"linux-firmware@kernel.org" <linux-firmware@kernel.org>, 
-	"linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, "kvalo@kernel.org" <kvalo@kernel.org>, 
-	"rb0171610@gmail.com" <rb0171610@gmail.com>, 
-	"Larry.Finger@lwfinger.net" <Larry.Finger@lwfinger.net>, "tiwai@suse.de" <tiwai@suse.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <b38de7ff-3de1-cd4a-a532-66642aea587c@leemhuis.info>
 
-On Thu, Mar 23, 2023 at 6:25=E2=80=AFAM Linux regression tracking (Thorsten
-Leemhuis) <regressions@leemhuis.info> wrote:
->
-> On 20.03.23 12:43, Josh Boyer wrote:
-> > On Sat, Mar 18, 2023 at 9:59=E2=80=AFAM Ping-Ke Shih <pkshih@realtek.co=
-m> wrote:
-> >>
-> >> In discussion threads [1] [2], the new format of 8852b break user spac=
-e.
-> >> To avoid this, introduce new filename rtw89/rtw8852b_fw-1.bin that old
-> >> drivers will not try to load it.
-> >>
-> >> Rollback firmware version of rtw89/rtw8852b_fw.bin to the latest
-> >> version of original format (i.e. v0.27.32.1) supported by old driver.
-> >>
-> >> The patches to support new filename in new driver are almost done,
-> >> and I will submit them soon. Thanks for the advice in mail and
-> >> bug threads.
-> >> [...]
-> > Pulled and pushed out.
->
-> Thx to both of you for submitting the revert and applying it.
->
-> Josh, do you plan to do another release soon? I fear that otherwise more
-> distros and users will run into this regression.
+On Tue, Apr 04, 2023 at 07:58:40AM +0200, Thorsten Leemhuis wrote:
+> Would be great if bugbot could CC the regressions list for all bugs that
+> have the regressions flag set to "yes"
 
-I've done another release.  Apologies, I was on PTO.
+I'll see if I can add this logic and make it configurable.
 
-josh
+> How does one make bugbot forward a bug to everyone in the signed-off-by
+> chain of a commit that caused a regression, which might or might not
+> have a bugzilla account?  When the reporter performed a bisection these
+> are the primary contacts that need to be reached out to, but the
+> maintainers and lists for the subsystem obviously should be CCed.
+
+I can add a cf_bisected_commit field that can take a commit-id. When gathering
+recipients, we can check if we know that commit in one of the tracked
+repositories, and get the author field out of it. Would that be sufficient, or
+do we need to run get_maintainer on it for a full picture?
+
+Note, that you can also add addresses to Cc: on the thread -- they will be
+collected behind the scenes as each message is processed and any bugbot
+notifications originating from the bugzilla side will also include them.
+
+-K
