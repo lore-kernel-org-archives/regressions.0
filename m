@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB1737C
-	for <regressions@lists.linux.dev>; Tue,  4 Apr 2023 11:25:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15DDA7C
+	for <regressions@lists.linux.dev>; Tue,  4 Apr 2023 12:14:53 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pjenL-0005Zk-3U; Tue, 04 Apr 2023 13:25:47 +0200
-Message-ID: <1473b364-777a-ede8-3ff6-36d9e1d577ad@leemhuis.info>
-Date: Tue, 4 Apr 2023 13:25:46 +0200
+	id 1pjfYo-0007I6-JD; Tue, 04 Apr 2023 14:14:50 +0200
+Message-ID: <b06c1999-e6b9-877c-d51f-c3dac24746a2@leemhuis.info>
+Date: Tue, 4 Apr 2023 14:14:50 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,131 +16,74 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.9.1
-Subject: Re: dmaengine: at_hdmac: Regression regarding rs485 via dma in v5.4
+Subject: Re: [BUG] BLE device unpairing triggers kernel panic
 Content-Language: en-US, de-DE
-To: tudor.ambarus@microchip.com
-References: <CADBnMvj93bSO=+wU4=pLTgONV7w_hhecxQHAc_YS4P4GaqMNrA@mail.gmail.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
+From: "Linux regression tracking #update (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
-Cc: Linux kernel regressions list <regressions@lists.linux.dev>,
- LKML <linux-kernel@vger.kernel.org>, Vinod Koul <vkoul@kernel.org>,
- Kristof Havasi <havasiefr@gmail.com>, dmaengine@vger.kernel.org,
- Peter Rosin <peda@axentia.se>, Nicolas Ferre <nicolas.ferre@microchip.com>,
- "stable@vger.kernel.org" <stable@vger.kernel.org>
+To: Ahmad Fatoum <a.fatoum@pengutronix.de>,
+ Luiz Augusto von Dentz <luiz.dentz@gmail.com>
+Cc: "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>,
+ Marcel Holtmann <marcel@holtmann.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Tedd Ho-Jeong An <hj.tedd.an@gmail.com>
+References: <a1ce1743-e450-6cdb-dfab-56a3e3eb9aed@pengutronix.de>
+ <CABBYNZ+z8kBUKGXbZSfb0ynJaTnPQRp0wFDUb12AW1ymbNx1eg@mail.gmail.com>
+ <CABBYNZ+zsuggTpaUSPsZKeL=qqvM1=sgMWzdWEqaS_oh6dhY2g@mail.gmail.com>
+ <8d5c4724-d511-39b1-21d7-116c91cada45@pengutronix.de>
+ <b0cb4fb0-6b89-b9df-9ae6-421ac52b0100@pengutronix.de>
+ <CABBYNZ+ubN2rc=zoN_53Pmp6kt3L5UcY3knbtjhhVOjPBpJv4Q@mail.gmail.com>
+ <d5654901-6b1f-a1fa-0101-8b52b345af7b@pengutronix.de>
+ <CABBYNZ+8dpPBqaQMr-Hz_DJRxT-0ucCjgAJH50FUaN7Sn9H6rA@mail.gmail.com>
+ <1d1b76cf-df6f-3935-5cd2-c45ea78f2c33@pengutronix.de>
+ <CABBYNZLdy-rndKczoG_WiWXQmacX+vzCbftQKvzJ3B6imtZopw@mail.gmail.com>
+ <1a5ec80d-690f-285c-3da8-ccdaf5516d85@pengutronix.de>
+ <CABBYNZJQKc9ozReXLeESWY8U648eQytKfGB4WmhZi4M+YOW7jw@mail.gmail.com>
+ <b7b080ff-a5da-a10c-674b-c3bb653f0aeb@leemhuis.info>
+ <577c7140-a30c-ca06-a81e-c791e44b1321@pengutronix.de>
+ <12cafbc4-39a2-1bea-c1d1-2cad406c8b83@leemhuis.info>
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <CADBnMvj93bSO=+wU4=pLTgONV7w_hhecxQHAc_YS4P4GaqMNrA@mail.gmail.com>
+In-Reply-To: <12cafbc4-39a2-1bea-c1d1-2cad406c8b83@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1680607549;38fe22e1;
-X-HE-SMSGID: 1pjenL-0005Zk-3U
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1680610494;baafb3d5;
+X-HE-SMSGID: 1pjfYo-0007I6-JD
 
-[Adding a few pople to the list of recipients that were involved in
-developing the culprit; also CCing the regression list, as it should be
-in the loop for regressions:
-https://docs.kernel.org/admin-guide/reporting-regressions.html]
+[TLDR: This mail in primarily relevant for Linux kernel regression
+tracking. See link in footer if these mails annoy you.]
 
-[TLDR: I'm adding this report to the list of tracked Linux kernel
-regressions; the text you find below is based on a few templates
-paragraphs you might have encountered already in similar form.
-See link in footer if these mails annoy you.]
+On 17.08.22 12:24, Thorsten Leemhuis wrote:
+> On 07.07.22 07:45, Ahmad Fatoum wrote:
+>> On 04.07.22 14:11, Thorsten Leemhuis wrote:
+>>> Hi, this is your Linux kernel regression tracker. Top-posting for once,
+>>> to make this easily accessible to everyone.
+>>>
+>>> Looks like the discussions to fix this regression got stuck. What can be
+>>> done to get thing rolling again? Or has progress been made and I just
+>>> missed it? Ciao, Thorsten
+>>
+>> No progress has been made as far as I am aware. I am reverting the commit
+>> introducing the regression on my systems and haven't yet had the time to
+>> debug this further to help find an alternative solution.
+> 
+> Just wondering: still no progress I assume?
+> 
+> Anyway: I'm putting it on the backburner to get it out of the
+> spot-light, as this doesn't look urgent and things seems to progress
+> very slowly.
+> 
+> #regzbot backburner: debuging is slow this further
 
-On 29.03.23 16:31, Kristof Havasi wrote:
-> 
-> I was rebasing the Kernel branch of our SAMA5D35 based board from
-> v5.4.189 to v5.4.238.
-> I noticed that after the rebase we could _only send, but not receive_
-> through our RS485 interface.
-> 
-> I could bisect the problem to 77b97ef4908aa917e7b68667ec6b344cc5dc5034
-> in the v5.4.225 release. 
+Great, I see (from interpreting
+https://lore.kernel.org/all/04377d2a-4d97-0345-18a1-1f18533436fe@pengutronix.de/
+[thx!] and looking at the described errors) that this was finally addressed:
 
-FWIW, that's 7176a6a8982d ("dmaengine: at_hdmac: Don't start
-transactions at tx_submit level") in mainline.
-
-Kristof Havasi: would be good to know if this is something that happens
-with recent mainline as well, because if not it might be something the
-stable team needs to handle.
-
-> If I revert this commit, the tx/rx works just
-> like before.
-> Maybe this use-case wasn't considered when this patch was created?
-> I haven't seen a documentation change regarding this in DT bindings,
-> but if the config should be something else, please let me know.
-> Otherwise this commit breaks the RS485 function of atmel_serial at
-> least in the v5.4.y branch.
-> 
-> Best Regards,
-> Kristóf Havasi
-> 
-> The relevant device tree nodes:
-> 
-> from sama5d3.dtsi:
-> 
-> usart1: serial@f0020000 {
->   compatible = "atmel,at91sam9260-usart";
->   reg = <0xf0020000 0x100>;
->   interrupts = <13 IRQ_TYPE_LEVEL_HIGH 5>;
->   dmas = <&dma0 2 AT91_DMA_CFG_PER_ID(5)>,
->   <&dma0 2 (AT91_DMA_CFG_PER_ID(6) | AT91_DMA_CFG_FIFOCFG_ASAP)>;
->   dma-names = "tx", "rx";
->   pinctrl-names = "default";
->   pinctrl-0 = <&pinctrl_usart1>;
->   clocks = <&usart1_clk>;
->   clock-names = "usart";
->   status = "disabled";
-> };
-> 
-> pinctrl_usart1: usart1-0 {
->   atmel,pins =
->   <AT91_PIOB 28 AT91_PERIPH_A AT91_PINCTRL_PULL_UP
->    AT91_PIOB 29 AT91_PERIPH_A AT91_PINCTRL_NONE>;
-> };
-> pinctrl_usart1_rts_cts: usart1_rts_cts-0 {
->   atmel,pins =
->   <AT91_PIOB 26 AT91_PERIPH_A AT91_PINCTRL_NONE /* PB26 periph A,
-> conflicts with GRX7 */
->    AT91_PIOB 27 AT91_PERIPH_A AT91_PINCTRL_NONE>; /* PB27 periph A,
-> conflicts with G125CKO */
-> };
-> 
-> from our dts:
-> 
-> &usart1 {
->   pinctrl-0 = <&pinctrl_usart1 &pinctrl_usart1_rts_cts>;
->   atmel,use-dma-rx;
->   atmel,use-dma-tx;
->   rs485-rx-during-tx;
->   linux,rs485-enabled-at-boot-time;
->   status = "okay";
-> };
-> 
-> HW:
-> The SAMA5D3's PB27 is connected to the |RE+DE of the RS485 transceiver
-> SP3458EN-L
-
-
-Thanks for the report. To be sure the issue doesn't fall through the
-cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
-tracking bot:
-
-#regzbot ^introduced 77b97ef4908aa
-#regzbot title dmaengine: at_hdmac: receiving data through the RS485
-interface broke
+#regzbot fix: 2731e038a76d
 #regzbot ignore-activity
-
-This isn't a regression? This issue or a fix for it are already
-discussed somewhere else? It was fixed already? You want to clarify when
-the regression started to happen? Or point out I got the title or
-something else totally wrong? Then just reply and tell me -- ideally
-while also telling regzbot about it, as explained by the page listed in
-the footer of this mail.
-
-Developers: When fixing the issue, remember to add 'Link:' tags pointing
-to the report (the parent of this mail). See page linked in footer for
-details.
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
 Everything you wanna know about Linux kernel regression tracking:
 https://linux-regtracking.leemhuis.info/about/#tldr
 That page also explains what to do if mails like this annoy you.
+
