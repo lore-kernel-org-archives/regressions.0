@@ -1,61 +1,61 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5629C942
-	for <regressions@lists.linux.dev>; Tue,  4 Apr 2023 19:08:43 +0000 (UTC)
-Received: by mail-wm1-f50.google.com with SMTP id p34so19634646wms.3
-        for <regressions@lists.linux.dev>; Tue, 04 Apr 2023 12:08:43 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76D2DC942
+	for <regressions@lists.linux.dev>; Tue,  4 Apr 2023 19:12:56 +0000 (UTC)
+Received: by mail-wm1-f49.google.com with SMTP id he13so23319wmb.2
+        for <regressions@lists.linux.dev>; Tue, 04 Apr 2023 12:12:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1680635322;
+        d=gmail.com; s=20210112; t=1680635574;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:subject:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=dte3PLoaekN6yboFgvAZ/nexHtXmErJtCxx7V5tDStk=;
-        b=i4jeMEYlpBVHQp2baLYoRIWNGiFabFkM+VNGuXT2EGJYOFoS3rfGYglVf8eh9oM3Lt
-         qjs7GV62fyUXfI56mXnkT0HGV1pc+1J19GkSZB2kBs/gQtiLkITkisWMCFObAeFqXa2Z
-         pWMsfosRU9QEFuw+O6vksQYzXHndrn7hjh0dCrRJCXT7ZAUuDmzpWDsF8DAYE91otFFm
-         2PoznVWZWdn9+jzot6arcd6JAJkf/S6/lXHpxtlyGbvsBtheCUfUHbHDvu7Nf8O2wWxR
-         Ctq2A1+yAnzD1O+KzlGmY4vQogAON7YCkVSyeYiniwFZSL905fPG3QU+watbKh4l5NaP
-         JRhA==
+        bh=8woTh6TmpAlNCOLoz71IZoc+E0qAgl5MU7Ao9EKbBHk=;
+        b=KPfuigLyv61uJyQUiNpe7ExwX9NFTtMCd8yEnPeSVIYWsxs6wE0WZ+GTbdlAH2fnJa
+         Qzk5pmjVxjAjWEwi3WbvjnHyA4mj8Sh/iiNp5nYDvZcrD/cYytnL4+QFolUk2Fz37qd+
+         BcLGWnSGj+BMfbemz8MzcUnKeGpztUvsh+SKK45WhZ1J61nv/roDLAhL4usrlTMI+bu4
+         Jhg1wHK1yLmNHKKYW4s7QerB/oVQfyLZfGP/oMePhK6kvqkyAtosg5ComgfbC6dhxzKy
+         NJiePeW/LmGW0OoUoMrwBEeTYR1QBvmaB2FKwnKmLx5ucrTJAQFnxneq8Iaz5ZxOAXMO
+         YolA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680635322;
+        d=1e100.net; s=20210112; t=1680635574;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=dte3PLoaekN6yboFgvAZ/nexHtXmErJtCxx7V5tDStk=;
-        b=W2J7Yp2VfTc0GqoVp9Eia+zVuTEn9u4lMRb42CZl87CO8p0Ugf12VhTNizRkZgWrkQ
-         u6fsTADKiBJwQToT2KPGxVgcf76RGOOE/o3PoqgZxHq3lSEuhIZm9tirPihe1Z9dx9A3
-         cy/djUahmcnPchBMfdyfjEm/3ZOePjosLR80mPelP7DO+HL3UsqpcnInqP4MSOfPMqzS
-         G28JHF4MKb5PJzTKOdWK9dJbVSsKKLoIUHuzjr+eMjNtrERyNDTU8ajsWbmfCTbFbNvZ
-         NwGNVx28+pq+iWjs95rSNnAaJ00hZsai4EmsREeVs+gZzI8X25ae3XdshdaJa8/gbtB5
-         guDA==
-X-Gm-Message-State: AAQBX9cwj3co5SVZmRH1PVBjueJ/EoJzw7Ck5bLskARvlrLb9jPTRWnv
-	sGPV4YgqUeuVWb39PoRbo/w=
-X-Google-Smtp-Source: AKy350bBo7HCgGwR4zLM82GIbzKZ1UNozFmZ6slv9ZIlI2zcqnn+TemNrfwicc03eHk+/mVJyL5XOA==
-X-Received: by 2002:a7b:cb87:0:b0:3db:8de:6993 with SMTP id m7-20020a7bcb87000000b003db08de6993mr204386wmi.4.1680635321592;
-        Tue, 04 Apr 2023 12:08:41 -0700 (PDT)
+        bh=8woTh6TmpAlNCOLoz71IZoc+E0qAgl5MU7Ao9EKbBHk=;
+        b=1qGQM20nVlaFaF+4hsUROcLE+46BrAeBXgJcKcjmk4vtVOUKesJ/MIieQsfD8gdk3Z
+         V7t8iVNLRakk1wVPhPDLVBBWVJaRXjsrisLgJWwExTr8jCBSePH+xeNlqmd0q6l7flFR
+         oPr0V2SESHL573HLGEpXDh5Q0zcm/N4mcP5aJ9BVAIpDjlRTQe62AouEOQOWSSkgfDEk
+         pil6QatvyiqPTlpQPWzRcmvp8PTuls71bhOEDjnAcUTHZGKIKamFfrvQX0JqT2N1YGGi
+         a+PUQFpanBlSjdTWikWjEkdxtaW+SOni43qEiCJ9q1wSB4DX6vBXQJ7DBKs0b2nWr6BD
+         Hlhg==
+X-Gm-Message-State: AAQBX9d0stOAoxpYXYo3U7XsOIvqm+VEglslqRd1Y7KeDRJzM/EuOVOk
+	GgKEW8J3qBtF3+hBHkBU5b4=
+X-Google-Smtp-Source: AKy350a73Urn/l+wooCjkGxIHwXnK8lQemFq8w430MLCs0ijarQgElWQgMZd5ttgExur64fUygzwHA==
+X-Received: by 2002:a05:600c:3658:b0:3ef:4138:9eef with SMTP id y24-20020a05600c365800b003ef41389eefmr2971884wmq.36.1680635574479;
+        Tue, 04 Apr 2023 12:12:54 -0700 (PDT)
 Received: from nz (host81-147-8-96.range81-147.btcentralplus.com. [81.147.8.96])
-        by smtp.gmail.com with ESMTPSA id p6-20020a05600c358600b003ef6708bc1esm23628306wmq.43.2023.04.04.12.08.40
+        by smtp.gmail.com with ESMTPSA id r16-20020a05600c459000b003f03d483966sm18201117wmo.44.2023.04.04.12.12.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Apr 2023 12:08:41 -0700 (PDT)
-Date: Tue, 4 Apr 2023 20:08:39 +0100
+        Tue, 04 Apr 2023 12:12:54 -0700 (PDT)
+Date: Tue, 4 Apr 2023 20:12:53 +0100
 From: Sergei Trofimovich <slyich@gmail.com>
-To: Chris Mason <clm@meta.com>
-Cc: Christoph Hellwig <hch@infradead.org>, Linux regressions mailing list
- <regressions@lists.linux.dev>, Josef Bacik <josef@toxicpanda.com>,
- Christopher Price <pricechrispy@gmail.com>, anand.jain@oracle.com,
- boris@bur.io, clm@fb.com, dsterba@suse.com, linux-btrfs@vger.kernel.org
+To: Boris Burkov <boris@bur.io>
+Cc: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>, Christoph Hellwig <hch@infradead.org>, Josef
+ Bacik <josef@toxicpanda.com>, Christopher Price <pricechrispy@gmail.com>,
+ anand.jain@oracle.com, clm@fb.com, dsterba@suse.com,
+ linux-btrfs@vger.kernel.org, regressions@lists.linux.dev
 Subject: Re: [6.2 regression][bisected]discard storm on idle since
  v6.1-rc8-59-g63a7cb130718 discard=async
-Message-ID: <20230404200839.3b466780@nz>
-In-Reply-To: <41141706-2685-1b32-8624-c895a3b219ea@meta.com>
+Message-ID: <20230404201253.096c9c09@nz>
+In-Reply-To: <20230404182256.GA344341@zen>
 References: <CAHmG9huwQcQXvy3HS0OP9bKFxwUa3aQj9MXZCr74emn0U+efqQ@mail.gmail.com>
 	<CAEzrpqeOAiYCeHCuU2O8Hg5=xMwW_Suw1sXZtQ=f0f0WWHe9aw@mail.gmail.com>
 	<ZBq+ktWm2gZR/sgq@infradead.org>
 	<20230323222606.20d10de2@nz>
 	<20d85dc4-b6c2-dac1-fdc6-94e44b43692a@leemhuis.info>
-	<ZCxKc5ZzP3Np71IC@infradead.org>
-	<41141706-2685-1b32-8624-c895a3b219ea@meta.com>
+	<20230404182256.GA344341@zen>
 X-Mailer: Claws Mail 4.1.1 (GTK 3.24.36; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
@@ -66,117 +66,132 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Tue, 4 Apr 2023 14:15:38 -0400
-Chris Mason <clm@meta.com> wrote:
+On Tue, 4 Apr 2023 11:23:12 -0700
+Boris Burkov <boris@bur.io> wrote:
 
-> On 4/4/23 12:04 PM, Christoph Hellwig wrote:
-> > On Tue, Apr 04, 2023 at 12:49:40PM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:  
-> >>>> And that jut NVMe, the still shipping SATA SSDs are another different
-> >>>> story.  Not helped by the fact that we don't even support ranged
-> >>>> discards for them in Linux.  
-> >>
-> >> Thx for your comments Christoph. Quick question, just to be sure I
-> >> understand things properly:
-> >>
-> >> I assume on some of those problematic devices these discard storms will
-> >> lead to a performance regression?  
-> 
-> I'm searching through the various threads, but I don't think I've seen
-> the discard storm quantified?
-> 
-> Boris sent me this:
-> https://lore.kernel.org/linux-btrfs/ZCxP%2Fll7YjPdb9Ou@infradead.org/T/#m65851e5b8b0caa5320d2b7e322805dd200686f01
-> 
-> Which seems to match the 10 discards per second setting?  We should be
-> doing more of a dribble than a storm, so I'd like to understand if this
-> is a separate bug that should be fixed.
-
-I called it a storm based on the following LED behaviour:
-
-    https://trofi.github.io/posts.data/281-a-signal-from-the-stars/01-shimmer.gif
-
-It's not a saturated device (as you can see the flashes on and off). But
-it's not idle either. "storm" was an exaggeration. Note that it takes
-linux 3-4 days to go through a backlog of 300GB of deleted files.
-
-Is 3-4 days expected? Or my setup is somehow unusual? Maybe
-`compress=zstd` makes things disproportionally problematic?
-
-> > Probably.
-> >   
-> >> I also heard people saying these discard storms might reduce the life
-> >> time of some devices - is that true?  
+> On Tue, Apr 04, 2023 at 12:49:40PM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
+> > On 23.03.23 23:26, Sergei Trofimovich wrote:  
+> > > On Wed, 22 Mar 2023 01:38:42 -0700
+> > > Christoph Hellwig <hch@infradead.org> wrote:
+> > >   
+> > >> On Tue, Mar 21, 2023 at 05:26:49PM -0400, Josef Bacik wrote:  
+> > >>> We got the defaults based on our testing with our workloads inside of
+> > >>> FB.  Clearly this isn't representative of a normal desktop usage, but
+> > >>> we've also got a lot of workloads so figured if it made the whole
+> > >>> fleet happy it would probably be fine everywhere.
+> > >>>
+> > >>> That being said this is tunable for a reason, your workload seems to
+> > >>> generate a lot of free'd extents and discards.  We can probably mess
+> > >>> with the async stuff to maybe pause discarding if there's no other
+> > >>> activity happening on the device at the moment, but tuning it to let
+> > >>> more discards through at a time is also completely valid.  Thanks,    
 > > 
-> > Also very much possible.  There are various SSDs that treat a discard
-> > as a write zeroes and always return zeroes from all discarded blocks.
-> > If the discards are smaller than or not aligned to the internal erase
-> > (super)blocks, this will actually cause additional writes.
-> >   
-> >> If the answer to at least one of these is "yes" I'd say we it might be
-> >> best to revert 63a7cb130718 for now.  
+> > BTW, there is another report about this issue here:
+> > https://bugzilla.redhat.com/show_bug.cgi?id=2182228
 > > 
-> > I don't think enabling it is a very a smart idea for most consumer
-> > devices.  
+> > /me wonders if there is a opensuse report as well, but a quick search
+> > didn't find one
+> > 
+> > And as fun fact or for completeness, the issue even made it to reddit, too:
+> > https://www.reddit.com/r/archlinux/comments/121htxn/btrfs_discard_storm_on_62x_kernel/  
 > 
-> It seems like a good time to talk through a variations of discard usage
-> in fb data centers.  We run a pretty wide variety of hardware from
-> consumer grade ssds to enterprise ssds, and we've run these on
-> ext4/btrfs/xfs.
+> Good find, but also:
+> https://www.reddit.com/r/Fedora/comments/vjfpkv/periodic_trim_freezes_ssd/
+> So without harder data, there is a bit of bias inherent in cherrypicking
+> negative impressions from the internet.
 > 
-> (Christoph knows most of this already, so I'm only partially replying to
-> him here)
+> >   
+> > >> FYI, discard performance differs a lot between different SSDs.
+> > >> It used to be pretty horrible for most devices early on, and then a
+> > >> certain hyperscaler started requiring decent performance for enterprise
+> > >> drives, so many of them are good now.  A lot less so for the typical
+> > >> consumer drive, especially at the lower end of the spectrum.
+> > >>
+> > >> And that jut NVMe, the still shipping SATA SSDs are another different
+> > >> story.  Not helped by the fact that we don't even support ranged
+> > >> discards for them in Linux.  
+> > 
+> > Thx for your comments Christoph. Quick question, just to be sure I
+> > understand things properly:
+> > 
+> > I assume on some of those problematic devices these discard storms will
+> > lead to a performance regression?
+> > 
+> > I also heard people saying these discard storms might reduce the life
+> > time of some devices - is that true?
+> > 
+> > If the answer to at least one of these is "yes" I'd say we it might be
+> > best to revert 63a7cb130718 for now.
+> >   
+> > > Josef, what did you use as a signal to detect what value was good
+> > > enough? Did you crank up the number until discard backlog clears up in a
+> > > reasonable time?  
 > 
-> First, there was synchronous discard.  These were pretty dark times
-> because all three of our filesystems would build a batch of synchronous
-> discards and then wait for them during filesystem commit.  There were
-> long tail latencies across all of our workloads, and so workload owners
-> would turn off discard and declare victory over terrible latencies.
+> Josef is OOO, so I'll try to clarify some things around async discard,
+> hopefully it's helpful to anyone wondering how to tune it.
 > 
-> Of course this predictably ends up with GC on the drives leading to
-> terrible latencies because we weren't discarding anymore, and nightly
-> trims are the obvious answer.  Different workloads would gyrate through
-> the variations and the only consistent result was unhappiness.
+> Like you guessed, our tuning basically consists of looking at the
+> discardable_extents/discardable_bytes metric in the fleet and ensuring
+> it looks sane, and that we see an improvement in I/O tail latencies or
+> fix some concrete instances of bad tail latencies. e.g. with
+> iops_limit=10, we see concrete cases of bad latency go away and don't
+> see a steady buildup of discardable_extents.
 > 
-> Some places in the fleet still do this, and it can be a pretty simple
-> tradeoff between the IO impacts of full drive trims vs the latency
-> impact of built up GC vs over-provisioning.  It works for consistent
-> workloads, but honestly there aren't many of those.
+> > > 
+> > > I still don't understand what I should take into account to change the
+> > > default and whether I should change it at all. Is it fine if the discard
+> > > backlog takes a week to get through it? (Or a day? An hour? A minute?)  
 > 
-> Along the way both btrfs and xfs have grown variations of async discard.
->  The XFS one (sorry if I'm out of date here), didn't include any kind of
-> rate limiting, so if you were bulk deleting a lot of data, XFS would
-> effectively queue up so many discards that it actually saturated the
-> device for a long time, starving reads and writes.  If your workload did
-> a constant stream of allocation and deletion, the async discards would
-> just saturate the drive forever.
+> I believe the relevant metrics are:
 > 
-> The workloads that care about latencies on XFS ended up going back to
-> synchronous discards, and they do a slow-rm hack that nibbles away at
-> the ends of files with periodic fsyncs mixed in until the file is zero
-> length.  They love this and it makes me cry.
+> - number of trims issued/bytes trimmed (you would measure this by tracing
+>   and by looking at discard_extent_bytes and discard_bitmap_bytes)
+> - bytes "wrongly" trimmed. (extents that were reallocated without getting
+>   trimmed are exposed in discard_bytes_saved, so if that drops, you are
+>   maybe trimming things that you may have not needed to)
+> - discardable_extents/discardable_bytes (in sysfs; the outstanding work)
+> - tail latency of file system operations
+> - disk idle time
 > 
-> The btrfs async discard feature was meant to address both of these
-> cases.  The primary features:
+> By doing periodic trim you tradeoff better bytes_saved and better disk
+> idle time (big trim once a week, vs. "trim all the time" against worse
+> tail latency during the trim itself, and risking trimming too
+> infrequently, leading to worse latency on a drive that needs a trim.
 > 
-> - Get rid of the transaction commit latency
-> - Enable allocations to steal from discards, reducing discard IO
-> - Avoid saturating the devices with discards by metering them out
+> > > 
+> > > Is it fine to send discards as fast as device allows instead of doing 10
+> > > IOPS? Does IOPS limit consider a device wearing tradeoff? Then low IOPS
+> > > makes sense. Or IOPS limit is just a way to reserve most bandwidth to
+> > > non-discard workloads? Then I would say unlimited IOPS as a default
+> > > would make more sense for btrfs.  
 > 
-> Christoph mentions that modern enterprise drives are much better at
-> discarding, and we see this in production too.  But, we still have
-> workloads that switched from XFS to Btrfs because the async discard
-> feature did a better job of reducing drive write-amp and latencies.
+> Unfortunately, btrfs currently doesn't have a "fully unlimited" async
+> discard no matter how you tune it. Ignoring kbps_limit, which only
+> serves to increase the delay, iops_limit has an effective range between
+> 1 and 1000. The basic premise of btrfs async discard is to meter out
+> the discards at a steady rate, asynchronously from file system
+> operations, so the effect of the tunables is to set that delay between
+> discard operations. The delay is clamped between 1ms and 1000ms, so
+> iops_limit > 1000 is the same as iops_limit = 1000. iops_limit=0 does
+> not lead to unmetered discards, but rather hits a hardcoded case of
+> metering them out over 6 hours. (no clue why, I don't personally love
+> that...)
 > 
-> So, honestly from my POV the async discard is best suited to consumer
-> devices.  Our defaults are probably wrong because no matter what you
-> choose there's a drive out there that makes it look bad.  Also, laptops
-> probably don't want the slow dribble.
-> 
-> I know Boris has some ideas on how to make the defaults better, so I'll
-> let him chime in there.
+> Hope that's somewhat helpful,
 
-That makes sense. Thank you!
+Thank you, Boris! That is very helpful. `discard_bytes_saved` is a good
+(and not very obvious to understand!) signal.
 
+> Boris
+> 
+> > 
+> > /me would be interested in answers to these questions as well
+> > 
+> > Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> > --
+> > Everything you wanna know about Linux kernel regression tracking:
+> > https://linux-regtracking.leemhuis.info/about/#tldr
+> > If I did something stupid, please tell me, as explained on that page.  
 
 -- 
 
