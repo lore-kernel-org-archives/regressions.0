@@ -1,109 +1,79 @@
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [85.220.165.71])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8AFD7C
-	for <regressions@lists.linux.dev>; Tue,  4 Apr 2023 12:17:44 +0000 (UTC)
-Received: from ptz.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::77] helo=[127.0.0.1])
-	by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-	(envelope-from <a.fatoum@pengutronix.de>)
-	id 1pjfba-0004fD-3q; Tue, 04 Apr 2023 14:17:42 +0200
-Message-ID: <11b65b4e-1b2e-d5d8-9ab8-f7d7f5238157@pengutronix.de>
-Date: Tue, 4 Apr 2023 14:17:39 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9867F7C
+	for <regressions@lists.linux.dev>; Tue,  4 Apr 2023 12:23:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A92CC433A0
+	for <regressions@lists.linux.dev>; Tue,  4 Apr 2023 12:23:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1680611028;
+	bh=xPu8vfjSrCVgwrhzmwn/0p5UHMuS/nK+J+klpq8JqWc=;
+	h=References:In-Reply-To:From:Date:Subject:To:List-Id:Cc:From;
+	b=UBvh+FySmqDEdFMtTQpbKQAnBbyjxqAalRdrBT8fOvL57redaOPwXOHuSC5Z9Q3KC
+	 4gbd24ychBCkuY8HB5xpxogHqPSw8Hv7vAHnclTgGs+FefnCgd1Fx8YWW8vVHRuroW
+	 0DfT1wE+KT9yoOk6yqsVlKrUkCztJFdWBD3MocMM0/2dQkLNIrwGwU41v7KEORF2D3
+	 GC3KlhFrPn2fiGNvzzxlQyApR+0hn9nAYgFtiwFF1hF2RDohkDHt5iRvTK5LMCKtqE
+	 dFTTrwgs37UGUczPohVPvI8P5EzsiryPzmcVLvFLtHgnaGtHzKaTcwhrrTfssxNNSn
+	 CsCXGSDAylqnw==
+Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-545cb3c9898so534890297b3.7
+        for <regressions@lists.linux.dev>; Tue, 04 Apr 2023 05:23:48 -0700 (PDT)
+X-Gm-Message-State: AAQBX9fUVaaiVluyS8J9Oae6ODbF45p3VIuvMI6ur8ex/wRrhPDHOppi
+	p0YBziuesF3b4UFGwixJdPgvUcggPhrmatqZpLw=
+X-Google-Smtp-Source: AKy350ZBySpI0McsdrPqN/WXrKRZQ/2OoxLvTamgDcuwM2k1IV1dL8bOe4GdjE1bGF9L2+jYSFyWhk4kKH2RKGZJCms=
+X-Received: by 2002:a81:a9c7:0:b0:541:8ce6:b9ad with SMTP id
+ g190-20020a81a9c7000000b005418ce6b9admr1443234ywh.2.1680611027228; Tue, 04
+ Apr 2023 05:23:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Subject: Re: [BUG] BLE device unpairing triggers kernel panic
-Content-Language: en-US
-To: Linux regressions mailing list <regressions@lists.linux.dev>,
- Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Cc: "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>,
- Marcel Holtmann <marcel@holtmann.org>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Tedd Ho-Jeong An <hj.tedd.an@gmail.com>
-References: <a1ce1743-e450-6cdb-dfab-56a3e3eb9aed@pengutronix.de>
- <CABBYNZ+z8kBUKGXbZSfb0ynJaTnPQRp0wFDUb12AW1ymbNx1eg@mail.gmail.com>
- <CABBYNZ+zsuggTpaUSPsZKeL=qqvM1=sgMWzdWEqaS_oh6dhY2g@mail.gmail.com>
- <8d5c4724-d511-39b1-21d7-116c91cada45@pengutronix.de>
- <b0cb4fb0-6b89-b9df-9ae6-421ac52b0100@pengutronix.de>
- <CABBYNZ+ubN2rc=zoN_53Pmp6kt3L5UcY3knbtjhhVOjPBpJv4Q@mail.gmail.com>
- <d5654901-6b1f-a1fa-0101-8b52b345af7b@pengutronix.de>
- <CABBYNZ+8dpPBqaQMr-Hz_DJRxT-0ucCjgAJH50FUaN7Sn9H6rA@mail.gmail.com>
- <1d1b76cf-df6f-3935-5cd2-c45ea78f2c33@pengutronix.de>
- <CABBYNZLdy-rndKczoG_WiWXQmacX+vzCbftQKvzJ3B6imtZopw@mail.gmail.com>
- <1a5ec80d-690f-285c-3da8-ccdaf5516d85@pengutronix.de>
- <CABBYNZJQKc9ozReXLeESWY8U648eQytKfGB4WmhZi4M+YOW7jw@mail.gmail.com>
- <b7b080ff-a5da-a10c-674b-c3bb653f0aeb@leemhuis.info>
- <577c7140-a30c-ca06-a81e-c791e44b1321@pengutronix.de>
- <12cafbc4-39a2-1bea-c1d1-2cad406c8b83@leemhuis.info>
- <b06c1999-e6b9-877c-d51f-c3dac24746a2@leemhuis.info>
-From: Ahmad Fatoum <a.fatoum@pengutronix.de>
-In-Reply-To: <b06c1999-e6b9-877c-d51f-c3dac24746a2@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:900:1d::77
-X-SA-Exim-Mail-From: a.fatoum@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: regressions@lists.linux.dev
+References: <889f3db6ca4008047595f4392388acc1f165e03c.camel@realtek.com>
+ <CA+5PVA4H9Quu1954ubbcZfH-e1cOy2K27r0GfLemQcMBG-6AQA@mail.gmail.com> <7cc69aa5-e003-6ac7-9b2f-a95b67eb98e8@leemhuis.info>
+In-Reply-To: <7cc69aa5-e003-6ac7-9b2f-a95b67eb98e8@leemhuis.info>
+From: Josh Boyer <jwboyer@kernel.org>
+Date: Tue, 4 Apr 2023 08:23:36 -0400
+X-Gmail-Original-Message-ID: <CA+5PVA5T=fNG4R-jfrnZEW2yF0g3tm2cBjkr70YZNDSh=V5G-A@mail.gmail.com>
+Message-ID: <CA+5PVA5T=fNG4R-jfrnZEW2yF0g3tm2cBjkr70YZNDSh=V5G-A@mail.gmail.com>
+Subject: Re: pull request: rtw89: 8852b: rollback firmware to v0.27.32.1 and
+ introduce new file to new format
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+List-Id: <linux-firmware.lore.kernel.org>
+Cc: Ping-Ke Shih <pkshih@realtek.com>, 
+	"linux-firmware@kernel.org" <linux-firmware@kernel.org>, 
+	"linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, "kvalo@kernel.org" <kvalo@kernel.org>, 
+	"rb0171610@gmail.com" <rb0171610@gmail.com>, 
+	"Larry.Finger@lwfinger.net" <Larry.Finger@lwfinger.net>, "tiwai@suse.de" <tiwai@suse.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello Thorsten,
+On Thu, Mar 23, 2023 at 6:25=E2=80=AFAM Linux regression tracking (Thorsten
+Leemhuis) <regressions@leemhuis.info> wrote:
+>
+> On 20.03.23 12:43, Josh Boyer wrote:
+> > On Sat, Mar 18, 2023 at 9:59=E2=80=AFAM Ping-Ke Shih <pkshih@realtek.co=
+m> wrote:
+> >>
+> >> In discussion threads [1] [2], the new format of 8852b break user spac=
+e.
+> >> To avoid this, introduce new filename rtw89/rtw8852b_fw-1.bin that old
+> >> drivers will not try to load it.
+> >>
+> >> Rollback firmware version of rtw89/rtw8852b_fw.bin to the latest
+> >> version of original format (i.e. v0.27.32.1) supported by old driver.
+> >>
+> >> The patches to support new filename in new driver are almost done,
+> >> and I will submit them soon. Thanks for the advice in mail and
+> >> bug threads.
+> >> [...]
+> > Pulled and pushed out.
+>
+> Thx to both of you for submitting the revert and applying it.
+>
+> Josh, do you plan to do another release soon? I fear that otherwise more
+> distros and users will run into this regression.
 
-On 04.04.23 14:14, Linux regression tracking #update (Thorsten Leemhuis) wrote:
-> [TLDR: This mail in primarily relevant for Linux kernel regression
-> tracking. See link in footer if these mails annoy you.]
-> 
-> On 17.08.22 12:24, Thorsten Leemhuis wrote:
->> On 07.07.22 07:45, Ahmad Fatoum wrote:
->>> On 04.07.22 14:11, Thorsten Leemhuis wrote:
->>>> Hi, this is your Linux kernel regression tracker. Top-posting for once,
->>>> to make this easily accessible to everyone.
->>>>
->>>> Looks like the discussions to fix this regression got stuck. What can be
->>>> done to get thing rolling again? Or has progress been made and I just
->>>> missed it? Ciao, Thorsten
->>>
->>> No progress has been made as far as I am aware. I am reverting the commit
->>> introducing the regression on my systems and haven't yet had the time to
->>> debug this further to help find an alternative solution.
->>
->> Just wondering: still no progress I assume?
->>
->> Anyway: I'm putting it on the backburner to get it out of the
->> spot-light, as this doesn't look urgent and things seems to progress
->> very slowly.
->>
->> #regzbot backburner: debuging is slow this further
-> 
-> Great, I see (from interpreting
-> https://lore.kernel.org/all/04377d2a-4d97-0345-18a1-1f18533436fe@pengutronix.de/
-> [thx!] and looking at the described errors) that this was finally addressed:
+I've done another release.  Apologies, I was on PTO.
 
-No. It's still broken for me, but now the kernel warning that came
-along with it is gone. I am discussing this with Luiz still on Github,
-but this regression is _not_ resolved.
-
-Thanks,
-Ahmad
-
-> 
-> #regzbot fix: 2731e038a76d
-> #regzbot ignore-activity
-> 
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-> --
-> Everything you wanna know about Linux kernel regression tracking:
-> https://linux-regtracking.leemhuis.info/about/#tldr
-> That page also explains what to do if mails like this annoy you.
-> 
-> 
-
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
-
+josh
