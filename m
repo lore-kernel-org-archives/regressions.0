@@ -1,61 +1,137 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E00F7EB
-	for <regressions@lists.linux.dev>; Wed,  5 Apr 2023 06:18:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=iy+DkM8QopnBWlLUvh2xM4PdmRnRYTADgbqyAMl3R8k=; b=E/6IctnuT7XUMqpi10BFNAo/MS
-	HekDrJr5UY/8b9PRaAcb/MpJXMfxIizZlNqKYI0sBSF3+P58heZ2kNs8T/wmLU6tCiQQkWiUEfGIh
-	Y4Gb+6Wu8Og1H5wFJYyvELvbNf9qh9VSa5gkVShoWr1YNdnBmjVL7HPvimGNSsS0tXD3PcrS42QX0
-	Q8iUbtKwXhpnf5iYS/x8TWb28jBMiKHh7xzBVrpz6QBEbZWksIgXfHQmP9c9sKiq6/8BzodfocZfC
-	Kg9M2Q9RzUJnvxTzYmJ5p9CL2KWfk1rUNNO/Gmh+jj13SWgCnhBbNkGxFqH6fG8+7GeuyBySz+GKU
-	xhWVGwEA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
-	id 1pjwTo-003UdU-3B;
-	Wed, 05 Apr 2023 06:18:48 +0000
-Date: Tue, 4 Apr 2023 23:18:48 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Chris Mason <clm@meta.com>
-Cc: Christoph Hellwig <hch@infradead.org>,
-	Linux regressions mailing list <regressions@lists.linux.dev>,
-	Sergei Trofimovich <slyich@gmail.com>,
-	Josef Bacik <josef@toxicpanda.com>,
-	Christopher Price <pricechrispy@gmail.com>, anand.jain@oracle.com,
-	boris@bur.io, clm@fb.com, dsterba@suse.com,
-	linux-btrfs@vger.kernel.org
-Subject: Re: [6.2 regression][bisected]discard storm on idle since
- v6.1-rc8-59-g63a7cb130718 discard=async
-Message-ID: <ZC0SyJbFJuS2ZEOY@infradead.org>
-References: <CAHmG9huwQcQXvy3HS0OP9bKFxwUa3aQj9MXZCr74emn0U+efqQ@mail.gmail.com>
- <CAEzrpqeOAiYCeHCuU2O8Hg5=xMwW_Suw1sXZtQ=f0f0WWHe9aw@mail.gmail.com>
- <ZBq+ktWm2gZR/sgq@infradead.org>
- <20230323222606.20d10de2@nz>
- <20d85dc4-b6c2-dac1-fdc6-94e44b43692a@leemhuis.info>
- <ZCxKc5ZzP3Np71IC@infradead.org>
- <41141706-2685-1b32-8624-c895a3b219ea@meta.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C75B67C
+	for <regressions@lists.linux.dev>; Wed,  5 Apr 2023 06:40:16 +0000 (UTC)
+Received: from pendragon.ideasonboard.com (fp76f193f3.tkyc206.ap.nuro.jp [118.241.147.243])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id F120B905;
+	Wed,  5 Apr 2023 08:40:12 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1680676814;
+	bh=H8F32ksNjUi4T3xN6eAKo1dKAXzTCF2dH1JCOI+L858=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=voe0Qmedgq49Hs1FoNUU1bfsZTUKcSrsI8xmgPuSvsFDipiG/1x3YRn2nRO77le9w
+	 CPeQ1bTiZJVu5449yvEW2WM+Zef/7Rp67rmtqQHNhvWgto+LgRfpq6C6q1wbP66TDS
+	 ZLniVG1DcM2NTAog18LigCQlqi5DfRAN4gTxhow8=
+Date: Wed, 5 Apr 2023 09:40:20 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Hans Verkuil <hverkuil@xs4all.nl>
+Cc: Ricardo Ribalda <ribalda@chromium.org>,
+	Linux Media Mailing List <linux-media@vger.kernel.org>,
+	regressions@lists.linux.dev, Hans de Goede <hdegoede@redhat.com>,
+	"Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>
+Subject: Re: [PATCH] media: usb: uvc: fill in description for unknown
+ pixelformats
+Message-ID: <20230405064020.GZ9915@pendragon.ideasonboard.com>
+References: <4b1bc0d5-808b-816d-d7de-5baa8851e74f@xs4all.nl>
+ <CANiDSCuiHLw6FBu8GV93Mm2WK5suCnGk8PBUDfn_krtMfPwdaw@mail.gmail.com>
+ <7bcc8593-a98d-6faa-2ec5-3cf59137cbcb@xs4all.nl>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <41141706-2685-1b32-8624-c895a3b219ea@meta.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <7bcc8593-a98d-6faa-2ec5-3cf59137cbcb@xs4all.nl>
 
-On Tue, Apr 04, 2023 at 02:15:38PM -0400, Chris Mason wrote:
-> It seems like a good time to talk through a variations of discard usage
-> in fb data centers.  We run a pretty wide variety of hardware from
-> consumer grade ssds to enterprise ssds, and we've run these on
-> ext4/btrfs/xfs.
+Hello,
 
-Remember what you guys call consumer grade is the top of the shelve
-consumer grade SSDs, or in fact low-end enterprise ones that are based
-on the latest and greatest top shelve SSDs with firmware specifically
-tweaked for you.  That is a whole differnet level from random crappy
-no-name SSD from 5 years ago.
+On Wed, Mar 29, 2023 at 07:20:59PM +0200, Hans Verkuil wrote:
+> On 29/03/2023 18:05, Ricardo Ribalda wrote:
+> > Hi Hans
+> > 
+> > Thanks for the patch.
+> > 
+> > I believe the user can fetch this info from lsusb, so this is kind of
+> > duplicated info, and this is why it was removed.
+> 
+> You got to set some description, so using the GUID this seems best.
+> 
+> > Is there an app that uses this unknown format code ? Or the only
+> > complaint is that WARN() is too loud for the user?
+> 
+> Normally drivers do not pass on unknown formats, but if a driver does,
+> then I want a WARN. If a driver does this legitimately (and I understand
+> that's the case for UVC), then the driver should fill in the description
+> to avoid this WARN.
 
+In hindsight we shouldn't have added a text description to formats :-)
+
+> > On Wed, 29 Mar 2023 at 14:39, Hans Verkuil wrote:
+> >>
+> >> If the fcc is 0 (indicating an unknown GUID format), then fill in the
+> >> description field in ENUM_FMT. Otherwise the V4L2 core will WARN.
+> >>
+> >> Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+> >> Fixes: 50459f103edf ("media: uvcvideo: Remove format descriptions")
+> >> ---
+> >> diff --git a/drivers/media/usb/uvc/uvc_driver.c b/drivers/media/usb/uvc/uvc_driver.c
+> >> index 7aefa76a42b3..2f1ced1212cd 100644
+> >> --- a/drivers/media/usb/uvc/uvc_driver.c
+> >> +++ b/drivers/media/usb/uvc/uvc_driver.c
+> >> @@ -256,6 +256,9 @@ static int uvc_parse_format(struct uvc_device *dev,
+> >>                 } else {
+> >>                         dev_info(&streaming->intf->dev,
+> >>                                  "Unknown video format %pUl\n", &buffer[5]);
+> >> +                       snprintf(format->name, sizeof(format->name), "%pUl\n",
+> >> +                                &buffer[5]);
+> > Don't we need at least 38 chars for this?
+> 
+> Yes. But all we have is 31 chars, so we take what we can :-)
+> 
+> This is what uvc did before this was removed.
+> 
+> Regards,
+> 
+> 	Hans
+> 
+> > https://docs.kernel.org/core-api/printk-formats.html#uuid-guid-addresses
+> > 
+> >> +
+> >>                         format->fcc = 0;
+> >>                 }
+> >>
+> >> diff --git a/drivers/media/usb/uvc/uvc_v4l2.c b/drivers/media/usb/uvc/uvc_v4l2.c
+> >> index 35453f81c1d9..fc6f9e7d8506 100644
+> >> --- a/drivers/media/usb/uvc/uvc_v4l2.c
+> >> +++ b/drivers/media/usb/uvc/uvc_v4l2.c
+> >> @@ -713,6 +713,10 @@ static int uvc_ioctl_enum_fmt(struct uvc_streaming *stream,
+> >>         if (format->flags & UVC_FMT_FLAG_COMPRESSED)
+> >>                 fmt->flags |= V4L2_FMT_FLAG_COMPRESSED;
+> >>         fmt->pixelformat = format->fcc;
+> >> +       if (format->name[0])
+> >> +               strscpy(fmt->description, format->name,
+> >> +                       sizeof(fmt->description));
+> >> +
+> >>         return 0;
+> >>  }
+> >>
+> >> diff --git a/drivers/media/usb/uvc/uvcvideo.h b/drivers/media/usb/uvc/uvcvideo.h
+> >> index 9a596c8d894a..22656755a801 100644
+> >> --- a/drivers/media/usb/uvc/uvcvideo.h
+> >> +++ b/drivers/media/usb/uvc/uvcvideo.h
+> >> @@ -264,6 +264,8 @@ struct uvc_format {
+> >>         u32 fcc;
+> >>         u32 flags;
+> >>
+> >> +       char name[32];
+> >> +
+
+I'd not really nice to have to store the name for every format, when we
+know it will very rarely be used.
+
+One alternative option would be to store the GUID, which would halve the
+amount of memory. Another option would be to stop reporting those
+formats to userspace in uvc_ioctl_enum_fmt(). They can't be selected
+anyway, they have no unique 4CC.
+
+> >>         unsigned int nframes;
+> >>         struct uvc_frame *frame;
+> >>  };
+
+-- 
+Regards,
+
+Laurent Pinchart
