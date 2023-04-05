@@ -1,70 +1,61 @@
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 815CB7EB
-	for <regressions@lists.linux.dev>; Wed,  5 Apr 2023 05:51:12 +0000 (UTC)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Prtrr2fm6z4wj7;
-	Wed,  5 Apr 2023 15:45:32 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
-	s=201909; t=1680673534;
-	bh=o8KRvfJEQOA5IMWHvyjzUH2dPZvrppEiI3bXRqQG8sc=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=dH/JE0e1J9CE7RklFkHr/mIYaWDpF0hW99rd3HjTNjlmS9XkruLoDEMEXWuOzh8mm
-	 tVq4lb/unuy8jNkTrg09C2vRDB8uhNm01irwvfSdFEfR1weSkI/Wxh7zCk/7djJ2ln
-	 d0tKA5H08Hqz0g5T9f4w8jD4N3eGFCo8M3DMu+TCiselKpdGSKGP5/fvqH5JgXTvEc
-	 M8RDfAYpKs2VS7g9ujNz+vG19P/QP2BDWNkC5N8l0Lfx9qjyrsBRO6vePZlXvDsxo4
-	 Stmu7PlZEEKYQf01aVhwgl8XcvyCM0rWqfaKfeCHV/e1nhoN+L05dggmvW1IgRoE8h
-	 ZUZ2HwjX7N4Ww==
-From: Michael Ellerman <mpe@ellerman.id.au>
-To: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>, Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-Cc: Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy
- <christophe.leroy@csgroup.eu>, Alexey Kardashevskiy <aik@ozlabs.ru>,
- linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
- sachinp@linux.vnet.ibm.com, Linux kernel regressions list
- <regressions@lists.linux.dev>
-Subject: Re: Probing nvme disks fails on Upstream kernels on powerpc Maxconfig
-In-Reply-To: <906d4d0e-b487-00a5-9399-7d1edc5e20a4@leemhuis.info>
-References: <20230323095333.GI1005120@linux.vnet.ibm.com>
- <906d4d0e-b487-00a5-9399-7d1edc5e20a4@leemhuis.info>
-Date: Wed, 05 Apr 2023 15:45:31 +1000
-Message-ID: <87bkk2khl0.fsf@mpe.ellerman.id.au>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E00F7EB
+	for <regressions@lists.linux.dev>; Wed,  5 Apr 2023 06:18:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=iy+DkM8QopnBWlLUvh2xM4PdmRnRYTADgbqyAMl3R8k=; b=E/6IctnuT7XUMqpi10BFNAo/MS
+	HekDrJr5UY/8b9PRaAcb/MpJXMfxIizZlNqKYI0sBSF3+P58heZ2kNs8T/wmLU6tCiQQkWiUEfGIh
+	Y4Gb+6Wu8Og1H5wFJYyvELvbNf9qh9VSa5gkVShoWr1YNdnBmjVL7HPvimGNSsS0tXD3PcrS42QX0
+	Q8iUbtKwXhpnf5iYS/x8TWb28jBMiKHh7xzBVrpz6QBEbZWksIgXfHQmP9c9sKiq6/8BzodfocZfC
+	Kg9M2Q9RzUJnvxTzYmJ5p9CL2KWfk1rUNNO/Gmh+jj13SWgCnhBbNkGxFqH6fG8+7GeuyBySz+GKU
+	xhWVGwEA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
+	id 1pjwTo-003UdU-3B;
+	Wed, 05 Apr 2023 06:18:48 +0000
+Date: Tue, 4 Apr 2023 23:18:48 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Chris Mason <clm@meta.com>
+Cc: Christoph Hellwig <hch@infradead.org>,
+	Linux regressions mailing list <regressions@lists.linux.dev>,
+	Sergei Trofimovich <slyich@gmail.com>,
+	Josef Bacik <josef@toxicpanda.com>,
+	Christopher Price <pricechrispy@gmail.com>, anand.jain@oracle.com,
+	boris@bur.io, clm@fb.com, dsterba@suse.com,
+	linux-btrfs@vger.kernel.org
+Subject: Re: [6.2 regression][bisected]discard storm on idle since
+ v6.1-rc8-59-g63a7cb130718 discard=async
+Message-ID: <ZC0SyJbFJuS2ZEOY@infradead.org>
+References: <CAHmG9huwQcQXvy3HS0OP9bKFxwUa3aQj9MXZCr74emn0U+efqQ@mail.gmail.com>
+ <CAEzrpqeOAiYCeHCuU2O8Hg5=xMwW_Suw1sXZtQ=f0f0WWHe9aw@mail.gmail.com>
+ <ZBq+ktWm2gZR/sgq@infradead.org>
+ <20230323222606.20d10de2@nz>
+ <20d85dc4-b6c2-dac1-fdc6-94e44b43692a@leemhuis.info>
+ <ZCxKc5ZzP3Np71IC@infradead.org>
+ <41141706-2685-1b32-8624-c895a3b219ea@meta.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <41141706-2685-1b32-8624-c895a3b219ea@meta.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-"Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info> writes:
-> [CCing the regression list, as it should be in the loop for regressions:
-> https://docs.kernel.org/admin-guide/reporting-regressions.html]
->
-> On 23.03.23 10:53, Srikar Dronamraju wrote:
->> 
->> I am unable to boot upstream kernels from v5.16 to the latest upstream
->> kernel on a maxconfig system. (Machine config details given below)
->> 
->> At boot, we see a series of messages like the below.
->> 
->> dracut-initqueue[13917]: Warning: dracut-initqueue: timeout, still waiting for following initqueue hooks:
->> dracut-initqueue[13917]: Warning: /lib/dracut/hooks/initqueue/finished/devexists-\x2fdev\x2fdisk\x2fby-uuid\x2f93dc0767-18aa-467f-afa7-5b4e9c13108a.sh: "if ! grep -q After=remote-fs-pre.target /run/systemd/generator/systemd-cryptsetup@*.service 2>/dev/null; then
->> dracut-initqueue[13917]:     [ -e "/dev/disk/by-uuid/93dc0767-18aa-467f-afa7-5b4e9c13108a" ]
->> dracut-initqueue[13917]: fi"
->
-> Alexey, did you look into this? This is apparently caused by a commit of
-> yours (see quoted part below) that Michael applied. Looks like it fell
-> through the cracks from here, but maybe I'm missing something.
+On Tue, Apr 04, 2023 at 02:15:38PM -0400, Chris Mason wrote:
+> It seems like a good time to talk through a variations of discard usage
+> in fb data centers.  We run a pretty wide variety of hardware from
+> consumer grade ssds to enterprise ssds, and we've run these on
+> ext4/btrfs/xfs.
 
-Unfortunately Alexey is not working at IBM any more, so he won't have
-access to any hardware to debug/test this.
+Remember what you guys call consumer grade is the top of the shelve
+consumer grade SSDs, or in fact low-end enterprise ones that are based
+on the latest and greatest top shelve SSDs with firmware specifically
+tweaked for you.  That is a whole differnet level from random crappy
+no-name SSD from 5 years ago.
 
-Srikar are you debugging this? If not we'll have to find someone else to
-look at it.
-
-cheers
