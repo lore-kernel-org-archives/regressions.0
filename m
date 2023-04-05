@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB54429B2
-	for <regressions@lists.linux.dev>; Wed,  5 Apr 2023 13:07:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D549C2C9A
+	for <regressions@lists.linux.dev>; Wed,  5 Apr 2023 13:30:13 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pk2rg-0001e1-LZ; Wed, 05 Apr 2023 15:07:52 +0200
-Message-ID: <1334e2af-b55f-3bb2-6e1a-6ab0b0ef93f0@leemhuis.info>
-Date: Wed, 5 Apr 2023 15:07:52 +0200
+	id 1pk3Cy-0006DQ-5p; Wed, 05 Apr 2023 15:29:52 +0200
+Message-ID: <065a556a-a4a1-cb94-7996-7c4eee373b2c@leemhuis.info>
+Date: Wed, 5 Apr 2023 15:29:51 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,42 +16,52 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.9.1
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: LMDB mdb_copy produces a corrupt database on btrfs, but not on
- ext4
+Subject: Re: scsi: Recent kernels drop into emergency shell
 Content-Language: en-US, de-DE
-To: Btrfs BTRFS <linux-btrfs@vger.kernel.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <aa1fb69e-b613-47aa-a99e-a0a2c9ed273f@app.fastmail.com>
-From: "Linux regression tracking #adding (Thorsten Leemhuis)"
+From: "Linux regression tracking #update (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
-In-Reply-To: <aa1fb69e-b613-47aa-a99e-a0a2c9ed273f@app.fastmail.com>
+To: Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+ "James E.J. Bottomley" <jejb@linux.ibm.com>,
+ "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+ bvanassche@acm.org, hare@suse.de, hch@lst.de, ming.lei@redhat.com,
+ sumanesh.samanta@broadcom.com, michael.christie@oracle.com,
+ john.garry@huawei.com, johannes.thumshirn@wdc.com, axboe@kernel.dk,
+ osandov@fb.com, kashyap.desai@broadcom.com, gregkh@linuxfoundation.org,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+References: <20230220061559.GJ159593@linux.vnet.ibm.com>
+ <8489afbb-2391-c22f-41fc-21726f09e444@leemhuis.info>
+In-Reply-To: <8489afbb-2391-c22f-41fc-21726f09e444@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1680700074;87e9146c;
-X-HE-SMSGID: 1pk2rg-0001e1-LZ
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1680701413;164d634f;
+X-HE-SMSGID: 1pk3Cy-0006DQ-5p
 
-[TLDR: I'm adding this report to the list of tracked Linux kernel
-regressions; the text you find below is based on a few templates
-paragraphs you might have encountered already in similar form.
-See link in footer if these mails annoy you.]
+[TLDR: This mail in primarily relevant for Linux kernel regression
+tracking. See link in footer if these mails annoy you.]
 
-On 15.02.23 21:04, Chris Murphy wrote:
-> Downstream bug report, reproducer test file, and gdb session transcript
-> https://bugzilla.redhat.com/show_bug.cgi?id=2169947
+On 20.02.23 08:40, Linux regression tracking (Thorsten Leemhuis) wrote:
+
+> On 20.02.23 07:15, Srikar Dronamraju wrote:
+>> On a freshly installed system, booting latest upstream kernels causes the
+>> system to drop into emergency shell. The reason for dropping into emergency
+>> shell is system is unable to mount /home partition.
+>
+> Thanks for the report. To be sure the issue doesn't fall through the
+> cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
+> tracking bot:
 > 
-> I speculated that maybe it's similar to the issue we have with VM's when O_DIRECT is used, but it seems that's not the case here.
+> #regzbot ^introduced c92a6b5d63359dd
+> #regzbot title scsi: storage not properly detected
+> #regzbot ignore-activity
 
-To properly track this, let me add this report as well to the tracking
-(I already track another report not mentioned in the commit log of the
-proposed fix: https://bugzilla.kernel.org/show_bug.cgi?id=217042 )
+I had missed that a fix for this was applied, as it didn't contain a
+link to the reports for this issue, hence I have to specify it manually
+to resolve this:
 
-#regzbot ^introduced 51bd9563b678
-#regzbot dup-of:
-https://lore.kernel.org/all/efc853aa-0592-e43d-3ad1-c42d33f0ab6b@leemhuis.info/
-#regzbot title btrfs: mdb_copy produces a corrupt database on btrfs
-#regzbot monitor
-https://lore.kernel.org/all/b7c72ffeb725c2a359965655df9827bdbeebfb4e.1679512207.git.boris@bur.io/
+#regzbot fix: 4b1a2c2a8e0ddcb89c
 #regzbot ignore-activity
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
@@ -59,3 +69,5 @@ Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 Everything you wanna know about Linux kernel regression tracking:
 https://linux-regtracking.leemhuis.info/about/#tldr
 That page also explains what to do if mails like this annoy you.
+
+
