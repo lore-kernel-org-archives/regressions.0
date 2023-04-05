@@ -1,137 +1,89 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C75B67C
-	for <regressions@lists.linux.dev>; Wed,  5 Apr 2023 06:40:16 +0000 (UTC)
-Received: from pendragon.ideasonboard.com (fp76f193f3.tkyc206.ap.nuro.jp [118.241.147.243])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id F120B905;
-	Wed,  5 Apr 2023 08:40:12 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1680676814;
-	bh=H8F32ksNjUi4T3xN6eAKo1dKAXzTCF2dH1JCOI+L858=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=voe0Qmedgq49Hs1FoNUU1bfsZTUKcSrsI8xmgPuSvsFDipiG/1x3YRn2nRO77le9w
-	 CPeQ1bTiZJVu5449yvEW2WM+Zef/7Rp67rmtqQHNhvWgto+LgRfpq6C6q1wbP66TDS
-	 ZLniVG1DcM2NTAog18LigCQlqi5DfRAN4gTxhow8=
-Date: Wed, 5 Apr 2023 09:40:20 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Hans Verkuil <hverkuil@xs4all.nl>
-Cc: Ricardo Ribalda <ribalda@chromium.org>,
-	Linux Media Mailing List <linux-media@vger.kernel.org>,
-	regressions@lists.linux.dev, Hans de Goede <hdegoede@redhat.com>,
-	"Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>
-Subject: Re: [PATCH] media: usb: uvc: fill in description for unknown
- pixelformats
-Message-ID: <20230405064020.GZ9915@pendragon.ideasonboard.com>
-References: <4b1bc0d5-808b-816d-d7de-5baa8851e74f@xs4all.nl>
- <CANiDSCuiHLw6FBu8GV93Mm2WK5suCnGk8PBUDfn_krtMfPwdaw@mail.gmail.com>
- <7bcc8593-a98d-6faa-2ec5-3cf59137cbcb@xs4all.nl>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 361E37FC
+	for <regressions@lists.linux.dev>; Wed,  5 Apr 2023 08:17:13 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1pjyKE-0000z7-Ih; Wed, 05 Apr 2023 10:17:02 +0200
+Message-ID: <fb5c2b8c-f1da-22e8-7e81-b1f79b2152ec@leemhuis.info>
+Date: Wed, 5 Apr 2023 10:17:01 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <7bcc8593-a98d-6faa-2ec5-3cf59137cbcb@xs4all.nl>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.1
+Subject: Re: [6.2 regression][bisected]discard storm on idle since
+ v6.1-rc8-59-g63a7cb130718 discard=async
+To: Boris Burkov <boris@bur.io>, David Sterba <dsterba@suse.cz>
+Cc: Chris Mason <clm@meta.com>, Christoph Hellwig <hch@infradead.org>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ Sergei Trofimovich <slyich@gmail.com>, Josef Bacik <josef@toxicpanda.com>,
+ Christopher Price <pricechrispy@gmail.com>, anand.jain@oracle.com,
+ clm@fb.com, dsterba@suse.com, linux-btrfs@vger.kernel.org
+References: <CAHmG9huwQcQXvy3HS0OP9bKFxwUa3aQj9MXZCr74emn0U+efqQ@mail.gmail.com>
+ <CAEzrpqeOAiYCeHCuU2O8Hg5=xMwW_Suw1sXZtQ=f0f0WWHe9aw@mail.gmail.com>
+ <ZBq+ktWm2gZR/sgq@infradead.org> <20230323222606.20d10de2@nz>
+ <20d85dc4-b6c2-dac1-fdc6-94e44b43692a@leemhuis.info>
+ <ZCxKc5ZzP3Np71IC@infradead.org>
+ <41141706-2685-1b32-8624-c895a3b219ea@meta.com> <20230404185138.GB344341@zen>
+ <20230404192205.GF19619@suse.cz> <20230404193909.GC344341@zen>
+Content-Language: en-US, de-DE
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <20230404193909.GC344341@zen>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1680682633;8e6b7127;
+X-HE-SMSGID: 1pjyKE-0000z7-Ih
 
-Hello,
-
-On Wed, Mar 29, 2023 at 07:20:59PM +0200, Hans Verkuil wrote:
-> On 29/03/2023 18:05, Ricardo Ribalda wrote:
-> > Hi Hans
-> > 
-> > Thanks for the patch.
-> > 
-> > I believe the user can fetch this info from lsusb, so this is kind of
-> > duplicated info, and this is why it was removed.
+On 04.04.23 21:39, Boris Burkov wrote:
+> On Tue, Apr 04, 2023 at 09:22:05PM +0200, David Sterba wrote:
+>> On Tue, Apr 04, 2023 at 11:51:51AM -0700, Boris Burkov wrote:
+>>> Our reasonable options, as I see them:
+>>> - back to nodiscard, rely on periodic trims from the OS.
+>>
+>> We had that before and it's a fallback in case we can't fix it but still
+>> the problem would persist for anyone enabling async discard so it's only
+>> limiting the impact.
+>>
+>>> - leave low iops_limit, drives stay busy unexpectedly long, conclude that
+>>>   that's OK, and communicate the tuning/measurement options better.
+>>
+>> This does not sound user friendly, tuning should be possible but not
+>> required by default. We already have enough other things that users need
+>> to decide and in this case I don't know if there's enough information to
+>> even make a good decision upfront.
+>>
+>>> - set a high iops_limit (e.g. 1000) drives will get back to idle faster.
+>>> - change an unset iops_limit to mean truly unlimited async discard, set
+>>>   that as the default, and anyone who cares to meter it can set an
+>>>   iops_limit.
+>>>
+>>> The regression here is in drive idle time due to modest discard getting
+>>> metered out over minutes rather than dealt with relatively quickly. So
+>>> I would favor the unlimited async discard mode and will send a patch to
+>>> that effect which we can discuss.
+>>
+>> Can we do options 3 and 4, i.e. set a high iops so that the batch gets
+>> processed faster and (4) that there's the manual override to drop the
+>> limit completely?
 > 
-> You got to set some description, so using the GUID this seems best.
-> 
-> > Is there an app that uses this unknown format code ? Or the only
-> > complaint is that WARN() is too loud for the user?
-> 
-> Normally drivers do not pass on unknown formats, but if a driver does,
-> then I want a WARN. If a driver does this legitimately (and I understand
-> that's the case for UVC), then the driver should fill in the description
-> to avoid this WARN.
+> Yup, I'm on it.
+> [...]
 
-In hindsight we shouldn't have added a text description to formats :-)
+Thx everyone for looking into this and the fruitful discussion
+yesterday, much appreciated.
 
-> > On Wed, 29 Mar 2023 at 14:39, Hans Verkuil wrote:
-> >>
-> >> If the fcc is 0 (indicating an unknown GUID format), then fill in the
-> >> description field in ENUM_FMT. Otherwise the V4L2 core will WARN.
-> >>
-> >> Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-> >> Fixes: 50459f103edf ("media: uvcvideo: Remove format descriptions")
-> >> ---
-> >> diff --git a/drivers/media/usb/uvc/uvc_driver.c b/drivers/media/usb/uvc/uvc_driver.c
-> >> index 7aefa76a42b3..2f1ced1212cd 100644
-> >> --- a/drivers/media/usb/uvc/uvc_driver.c
-> >> +++ b/drivers/media/usb/uvc/uvc_driver.c
-> >> @@ -256,6 +256,9 @@ static int uvc_parse_format(struct uvc_device *dev,
-> >>                 } else {
-> >>                         dev_info(&streaming->intf->dev,
-> >>                                  "Unknown video format %pUl\n", &buffer[5]);
-> >> +                       snprintf(format->name, sizeof(format->name), "%pUl\n",
-> >> +                                &buffer[5]);
-> > Don't we need at least 38 chars for this?
-> 
-> Yes. But all we have is 31 chars, so we take what we can :-)
-> 
-> This is what uvc did before this was removed.
-> 
-> Regards,
-> 
-> 	Hans
-> 
-> > https://docs.kernel.org/core-api/printk-formats.html#uuid-guid-addresses
-> > 
-> >> +
-> >>                         format->fcc = 0;
-> >>                 }
-> >>
-> >> diff --git a/drivers/media/usb/uvc/uvc_v4l2.c b/drivers/media/usb/uvc/uvc_v4l2.c
-> >> index 35453f81c1d9..fc6f9e7d8506 100644
-> >> --- a/drivers/media/usb/uvc/uvc_v4l2.c
-> >> +++ b/drivers/media/usb/uvc/uvc_v4l2.c
-> >> @@ -713,6 +713,10 @@ static int uvc_ioctl_enum_fmt(struct uvc_streaming *stream,
-> >>         if (format->flags & UVC_FMT_FLAG_COMPRESSED)
-> >>                 fmt->flags |= V4L2_FMT_FLAG_COMPRESSED;
-> >>         fmt->pixelformat = format->fcc;
-> >> +       if (format->name[0])
-> >> +               strscpy(fmt->description, format->name,
-> >> +                       sizeof(fmt->description));
-> >> +
-> >>         return 0;
-> >>  }
-> >>
-> >> diff --git a/drivers/media/usb/uvc/uvcvideo.h b/drivers/media/usb/uvc/uvcvideo.h
-> >> index 9a596c8d894a..22656755a801 100644
-> >> --- a/drivers/media/usb/uvc/uvcvideo.h
-> >> +++ b/drivers/media/usb/uvc/uvcvideo.h
-> >> @@ -264,6 +264,8 @@ struct uvc_format {
-> >>         u32 fcc;
-> >>         u32 flags;
-> >>
-> >> +       char name[32];
-> >> +
+/me will now get back to watching this only from afar and leave things
+to the experts
 
-I'd not really nice to have to store the name for every format, when we
-know it will very rarely be used.
-
-One alternative option would be to store the GUID, which would halve the
-amount of memory. Another option would be to stop reporting those
-formats to userspace in uvc_ioctl_enum_fmt(). They can't be selected
-anyway, they have no unique 4CC.
-
-> >>         unsigned int nframes;
-> >>         struct uvc_frame *frame;
-> >>  };
-
--- 
-Regards,
-
-Laurent Pinchart
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
