@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 453E02C9A
-	for <regressions@lists.linux.dev>; Wed,  5 Apr 2023 13:32:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A24963BC
+	for <regressions@lists.linux.dev>; Thu,  6 Apr 2023 13:30:12 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pk3F2-0006dY-C8; Wed, 05 Apr 2023 15:32:00 +0200
-Message-ID: <833120c6-8a96-4773-9205-6d3aadbba6b7@leemhuis.info>
-Date: Wed, 5 Apr 2023 15:31:59 +0200
+	id 1pkPgi-000699-Ma; Thu, 06 Apr 2023 15:30:04 +0200
+Message-ID: <c87add10-3e8f-b17e-f3f5-067431a23e16@leemhuis.info>
+Date: Thu, 6 Apr 2023 15:30:04 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,46 +16,56 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.9.1
-Subject: Re: [REGRESSION] v6.1+ bind() does not fail with EADDRINUSE if dual
- stack is bound
+Subject: Re: 6.1.22: Resume from hibernate fails; bisected
 Content-Language: en-US, de-DE
-To: Paul Holzinger <pholzing@redhat.com>, stable@vger.kernel.org
-Cc: netdev@vger.kernel.org, regressions@lists.linux.dev,
- martin.lau@kernel.org, kuba@kernel.org
-References: <e21bf153-80b0-9ec0-15ba-e04a4ad42c34@redhat.com>
-From: "Linux regression tracking #adding (Thorsten Leemhuis)"
+To: Rainer Fiebig <jrf@mailbox.org>, stable@vger.kernel.org,
+ tim.huang@amd.com, Alex Deucher <alexander.deucher@amd.com>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <b52bfd11-0d90-739b-be3e-058e246478f7@mailbox.org>
+From: "Linux regression tracking (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <e21bf153-80b0-9ec0-15ba-e04a4ad42c34@redhat.com>
+In-Reply-To: <b52bfd11-0d90-739b-be3e-058e246478f7@mailbox.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1680701522;959fd940;
-X-HE-SMSGID: 1pk3F2-0006dY-C8
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1680787813;8bc21e9f;
+X-HE-SMSGID: 1pkPgi-000699-Ma
 
-[TLDR: This mail in primarily relevant for Linux kernel regression
-tracking. See link in footer if these mails annoy you.]
+[CCing the regression list, as it should be in the loop for regressions:
+https://docs.kernel.org/admin-guide/reporting-regressions.html]
 
-On 10.03.23 17:01, Paul Holzinger wrote:
+On 06.04.23 14:06, Rainer Fiebig wrote:
+> Hi! Since kernel 6.1.22 starting a resume from hibernate by hitting a
+> key on the keyboard fails. However, if the PC was switched off and on
+> again (or reset), the resume is OK. The APU  is a Ryzen 5600G.
 > 
-> there seems to be a regression which allows you to bind the same port
-> twice when the first bind call bound to all ip addresses (i. e. dual
-> stack).
+> Bisecting between 6.1.21/22 turned up this:
+> 
+> 
+> Author: Tim Huang <tim.huang@amd.com>
+> Date:   Thu Mar 9 16:27:51 2023 +0800
+> 
+>     drm/amdgpu: skip ASIC reset for APUs when go to S4
+> 
+>     commit b589626674de94d977e81c99bf7905872b991197 upstream.
+> 
+>     For GC IP v11.0.4/11, PSP TMR need to be reserved
+>     for ASIC mode2 reset. But for S4, when psp suspend,
+>     it will destroy the TMR that fails the ASIC reset.
 > [...]
-> Original report: https://github.com/containers/podman/issues/17719
 > 
-> #regzbot introduced: 5456262d2baa
+> 
+> Reverting the commit solves the problem.
+> Thanks.
 
-I had missed that a fix for this was applied, as it didn't contain a
-link to the reports for this issue, hence I have to specify it manually
-to resolve this:
-
-#regzbot fix: d9ba9934285514f1f9
-#regzbot ignore-activity
+Please try 6.1.23 and report back, because from the thread
+https://lore.kernel.org/all/20230330160740.1dbff94b@schienar/
+it sounds a lot like "drm/amdgpu: allow more APUs to do mode2 reset when
+go to S4" might be fixing this, which went into 6.1.23.
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
 Everything you wanna know about Linux kernel regression tracking:
 https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
-
+If I did something stupid, please tell me, as explained on that page.
 
