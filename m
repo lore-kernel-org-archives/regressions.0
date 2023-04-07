@@ -1,37 +1,35 @@
-Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
+Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6287123C4
-	for <regressions@lists.linux.dev>; Fri,  7 Apr 2023 10:07:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAA8833F5
+	for <regressions@lists.linux.dev>; Fri,  7 Apr 2023 11:56:50 +0000 (UTC)
 Received: from smtp102.mailbox.org (smtp102.mailbox.org [IPv6:2001:67c:2050:b231:465::102])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4PtDQh2MH0z9sbm;
-	Fri,  7 Apr 2023 12:01:00 +0200 (CEST)
+	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4PtH0F3LbLz9scK;
+	Fri,  7 Apr 2023 13:56:45 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1680861660;
+	t=1680868605;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=2dcJG+h6D6Yjb6GKndwmF20WC1V+R9FG6kpjICyY6/M=;
-	b=UTNoS0fjiWzrKjLuQ8e5oAYh6vR9iRAyRwTySsvggiZ0NdI/Bl4OTlgwPOVimV7VfYq7/J
-	K7mADuktfbZTrTQnSFnY5gAHGvTR5dlfneE8gxpYpxty43uzky0y8C331luOd03k+p3OF5
-	OJQjNa0cHSkQSxI4xF3/qsNXwBUQCFF3wy3FeMGAHBUnItG+5NNvy6vFvy+tsz+4hSnhR1
-	xSSDf65WTZnTFdpL6yxsZmNjakc5EXCbV10FfRetrsntVpTOoZSFle1FQWUp+xaFJ6qWK4
-	N4KfFIkYvICY6GiS1PSRBSPkbCRLzRErdCBvdEMEO97x21eCGQH8SrVNRg+BJQ==
+	bh=5xFptS78ryJWQ9T89ayX33Yedi3fouqi4tSdbu3AxuE=;
+	b=J13gtFY7eoNVRQGOHjplbmWA2ftAwVNrSdN5OL5sqyWWrrMk03NpeToaS2plg6eT+H5wW+
+	TiK+0MjzDDav0pEhQqYjMTBSG5V+L4wS26DQV/lbF62K8aASAxVyrfcaZBbluyD+exlf15
+	ppWRQqBvZSax0F7eTv8whTZTpcfPIzWrPey/BgMo75euWlgDNNDA7sM68yrx/7lJTdFaGy
+	fL/KEG9DqFYhewUg83KFZtL7GaefbX9eywSRPf+cRGDsTfki8D5UXwFuPwwBJUJ7DIPnHx
+	45sNlZIxOwAwAtSv7eNsgD7G4VdzKx5al4yaPnqASDmv9mPXMqGaNygs53vdxA==
 Subject: Re: 6.1.22: Resume from hibernate fails; bisected
-To: "Huang, Tim" <Tim.Huang@amd.com>
+To: Greg KH <gregkh@linuxfoundation.org>
 Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
- "stable@vger.kernel.org" <stable@vger.kernel.org>,
- "Deucher, Alexander" <Alexander.Deucher@amd.com>,
- Greg KH <gregkh@linuxfoundation.org>
+ stable@vger.kernel.org, tim.huang@amd.com,
+ Alex Deucher <alexander.deucher@amd.com>
 References: <b52bfd11-0d90-739b-be3e-058e246478f7@mailbox.org>
  <c87add10-3e8f-b17e-f3f5-067431a23e16@leemhuis.info>
  <d3ac4ff5-863f-2179-1120-191774d80a27@mailbox.org>
  <ZC8m_gjbB4oVlO5t@kroah.com>
- <BY5PR12MB3873E2729AAA7D0FBB657611F6969@BY5PR12MB3873.namprd12.prod.outlook.com>
 From: Rainer Fiebig <jrf@mailbox.org>
 Autocrypt: addr=jrf@mailbox.org; prefer-encrypt=mutual; keydata=
  mQINBFohwNMBEADSyoSeizfx3D4yl2vTXfNamkLDCuXDN+7P5/UbB+Kj/d4RTbA/w0fqu3S3
@@ -76,23 +74,21 @@ Autocrypt: addr=jrf@mailbox.org; prefer-encrypt=mutual; keydata=
  t0GfVUkS4E8AhVNtPG1Z5vl7JkfX3irc4ld58j1STfhLuos5l4X+7lRncpbYCsuk9rz1Bjh8
  r/bUbqMkpj7m27JXi7cHIOtZ4up9O0O8WFdPpLRmy6GS67czo5dpV3CowY9LtZ0+0JmnUd59
  kutl2mu4Qd3cGFbZB4J8J3p+wtsx7bujP38lQvmqpyGTUtyoGO9nOL0X5Xi95CAqapnE
-Message-ID: <aecdece7-6652-c2c9-46eb-03abdb4204be@mailbox.org>
-Date: Fri, 7 Apr 2023 12:01:04 +0200
+Message-ID: <635357ce-8793-1788-e47e-369ed8ded673@mailbox.org>
+Date: Fri, 7 Apr 2023 13:56:49 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <BY5PR12MB3873E2729AAA7D0FBB657611F6969@BY5PR12MB3873.namprd12.prod.outlook.com>
-Content-Type: text/plain; charset=windows-1252
+In-Reply-To: <ZC8m_gjbB4oVlO5t@kroah.com>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-X-MBO-RS-META: t1f8gd757pqmu5yoxf9ipxmwrgonbgek
-X-MBO-RS-ID: 417553d25df8875dedc
+X-MBO-RS-META: 9durk4ohq9xzbiw5udisk8a8no5irb91
+X-MBO-RS-ID: bb264dcb417217733be
 
-Am 07.04.23 um 05:40 schrieb Huang, Tim:
-> [AMD Official Use Only - General]
-> 
+Am 06.04.23 um 22:09 schrieb Greg KH:
 > On Thu, Apr 06, 2023 at 05:39:07PM +0200, Rainer Fiebig wrote:
 >> Am 06.04.23 um 15:30 schrieb Linux regression tracking (Thorsten Leemhuis):
 >>> [CCing the regression list, as it should be in the loop for regressions:
@@ -128,16 +124,42 @@ Am 07.04.23 um 05:40 schrieb Huang, Tim:
 >>> go to S4" might be fixing this, which went into 6.1.23.
 >> Yes, 6.1.23 seems OK so far.
 >>
+>> I think, however, that rc-kernels and LTS-kernels are different matters.
+>>  With a bleeding edge kernel, problems are to be expected.  But an
+>> LTS-kernel is chosen for stability.  And this is the second time within
+>> just a few weeks that I've been bitten by a time-consuming hibernate-bug
+>> caused by a backport of a commit in amdgpu.
+>>
+>> So I'm asking the devs to either test their patches more thoroughly or
+>> to be a bit more conservative with what they recommend for backporting
+>> to LTS-kernels.  Thanks.
 > 
+> Please feel free to suggest better ways to have automated tests for
+> stuff like this, or to help provide testing for the -rc LTS/stable
+> kernel releases.
+Well, I'm afraid I can't offer a panacea or the ultimate automated
+quality assurance system.  But for the two cases that I've encountered
+lately, a simple hibernate/resume would have shown that there's a
+problem.  After all, that's how I and other users noticed it.
+
+So I think the primary line of defence against regressions remains the
+developer himself who should try hard to imagine what ramifications his
+patch might have and test it accordingly.  But I'm aware of the fact
+that we are all only humans.
+
+Another idea might be to give patches that introduce new features or
+only minimal improvements ample time to mature in the latest stable
+kernel before backporting them to LTS-kernels, say three or four
+point-releases.  Or to only backport fixes for bugs or security issues.
+
 > 
-> The patch " drm/amdgpu: allow more APUs to do mode2 reset when go to S4" is to fix this hibernate regression issue.
-> 
-> Sorry to have troubled you.
-No problem, please don't take it personally. It wasn't a big deal and I
-was just a bit grumpy yesterday.
+> We can't do this alone :)
+Right.  For now I can't commit to testing release-candidates because of
+a lack in time.  But I try to bisect and report problems as soon as
+possible so that they can be resolved quickly.
 
-Thanks for the info and have a good day!
-
-Rainer
+To avoid a false impression: kernelwise - and including amdgpu - I'm
+rather happy with the current state of affairs.  Thanks to all!
 
 
+Rainer Fiebig
