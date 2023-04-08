@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6DCDC2FE
-	for <regressions@lists.linux.dev>; Sat,  8 Apr 2023 11:52:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2BA9C2FF
+	for <regressions@lists.linux.dev>; Sat,  8 Apr 2023 12:01:32 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pl77l-0002Tp-FL; Sat, 08 Apr 2023 13:52:53 +0200
-Message-ID: <ed31b6fe-e73d-34af-445b-81c5c644d615@leemhuis.info>
-Date: Sat, 8 Apr 2023 13:52:52 +0200
+	id 1pl7G6-0003lE-Gc; Sat, 08 Apr 2023 14:01:30 +0200
+Message-ID: <1190d45f-28fd-271d-bfd7-e37c1e2acd7d@leemhuis.info>
+Date: Sat, 8 Apr 2023 14:01:30 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,80 +16,90 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.9.1
+Subject: Re: Possible regression between 5.18.2 and 6.2.1
 Content-Language: en-US, de-DE
-From: "Linux regression tracking (Thorsten Leemhuis)"
+To: Dan Crawford <dnlcrwfrd@gmail.com>, "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc: wireguard@lists.zx2c4.com,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+References: <CQZ7HWJCK18F.1AUR9FMHKPOXB@crawfs>
+ <CAHmME9qi=26zP-A14pLVxtL86Zj1P-+i93t=_BnSd0t1Dj_U8A@mail.gmail.com>
+ <CRLVEG5VRA7S.2XBZXJENZM4HK@crawfs>
+From: "Linux regression tracking #update (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
-To: Kalle Valo <kvalo@kernel.org>
-Cc: ath11k <ath11k@lists.infradead.org>,
- "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
- netdev <netdev@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: [regression] Bug 217286 - ath11k:deny assoc request, Invalid
- supported ch width and ext nss combination
+In-Reply-To: <CRLVEG5VRA7S.2XBZXJENZM4HK@crawfs>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1680954775;790f2b92;
-X-HE-SMSGID: 1pl77l-0002Tp-FL
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1680955292;e32cca20;
+X-HE-SMSGID: 1pl7G6-0003lE-Gc
 
-Hi, Thorsten here, the Linux kernel's regression tracker.
-
-I noticed a regression report in bugzilla.kernel.org. As many (most?)
-kernel developers don't keep an eye on it, I decided to forward it by mail.
-
-Note, you have to use bugzilla to reach the reporter, as I sadly[1] can
-not CCed them in mails like this.
-
-Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=217286 :
-
-> Built and installed v6.2 kernel (with ath11k_pci) on arm64 hardware
-> running Ubuntu22.04. Hardware has both Atheros QCN9074 module and Intel
-> AX210 module. Running each (separately) in station mode and try to
-> connect to Synology router with WiFi Access Point based on QCN9074.
-> AX210 has no problem connecting to AP but Atheros is successfully
-> authenticating but association is rejected by AP with this error message:
+On 02.04.23 03:14, Dan Crawford wrote:
+> Thanks for the suggestions. I've done some bisecting and I've found
+> that the issue appears due to wg-quick, which means I can easily work
+> around it. First, apologies but there's a typo in my original
+> email, I upgraded from 5.12.8, not 5.18.2.
 > 
+> On versions prior to 5.14.0, wg-quick correctly adds routes for the
+> appropriate addresses (line 341 and then line 177). However, on versions
+> after 5.14.0, the condition doesn't work quite right and the ip route
+> add command does not run (line 177).
 > 
-> wlan: [0:I:ANY] [UNSPECIFIED] vap-0(wlan100): [04:f0:21:a1:7c:3e]deny assoc request, Invalid supported ch width and ext nss combination
+> To investigate this I print ip -4 route show dev wg1 match 192.168.1.3,
+> on both 5.13.0 and 5.14.0, at line 177.
 > 
-> Please note that when running v5.15.5 kernel (with ath11k_pci), I am
-> able to connect to the same AP without problems.
+> On 5.13.0 I get no output, and the ip route add command runs.
+> However, on 5.14.0 the output is
 > 
-> Detailed logs follow:
-> [...]
+> 192.168.1.0/24 proto kernel scope link src 192.168.1.0 
 
-See the ticket for more details.
+Thx for your investigation.
 
+This per the Linux kernel policy might qualify as regression. But the
+thing is: the change was introduced quite a while ago already, hence
+fixing it now might itself lead to other regressions, as other scripts
+might have started to rely on the new behavior. If anyone wanted to
+discuss this upstream we'd also likely need a bisection to know which
+change caused the new behavior. Given all this and the relative simple...
 
-[TLDR for the rest of this mail: I'm adding this report to the list of
-tracked Linux kernel regressions; the text you find below is based on a
-few templates paragraphs you might have encountered already in similar
-form.]
+> and so the ip route add command does not run.
+> 
+> Obviously I can easily work around the issue by patching the conditional
+> out of wg-quick. But I don't have any clue why the output of ip varies
+> between 5.13 and 5.14. I'm also surprised no-one has encountered
+> this issue either (unless I missed something while searching).
+> 
+> Possibly one way to resolve the issue is to replace the conditional with
+> 
+> [[ -n $(ip $proto route show dev "$INTERFACE" match "$1" proto boot 2>/dev/null) ]]
 
-BTW, let me use this mail to also add the report to the list of tracked
-regressions to ensure it's doesn't fall through the cracks:
+...workaround you apparently have found I'd say it's better to fix this
+in wg-quick. I'll thus for now will remove this from the list of tracked
+Linux kernel regressions:
 
-#regzbot introduced: v5.15..v6.2
-https://bugzilla.kernel.org/show_bug.cgi?id=217286
-#regzbot title: net: wireless: association is rejected by AP
+#regzbot inconclusive: small change broke script, workaround found;
+fixing this now might lead to other regressions
 #regzbot ignore-activity
-
-This isn't a regression? This issue or a fix for it are already
-discussed somewhere else? It was fixed already? You want to clarify when
-the regression started to happen? Or point out I got the title or
-something else totally wrong? Then just reply and tell me -- ideally
-while also telling regzbot about it, as explained by the page listed in
-the footer of this mail.
-
-Developers: When fixing the issue, remember to add 'Link:' tags pointing
-to the report (e.g. the buzgzilla ticket and maybe this mail as well, if
-this thread sees some discussion). See page linked in footer for details.
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
 Everything you wanna know about Linux kernel regression tracking:
 https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+That page also explains what to do if mails like this annoy you.
 
-[1] because bugzilla.kernel.org tells users upon registration their
-"email address will never be displayed to logged out users"
+
+
+> On Fri Mar 31, 2023 at 1:39 AM AEDT, Jason A. Donenfeld wrote:
+>> Hi Dan,
+>>
+>> Hard to imagine that this is a WireGuard bug, but more likely
+>> something having to do with SNAT or something.
+>>
+>> What is the unallowed src IP when you get that error? Can you debug
+>> further? Maybe bisect a bit? Otherwise, not much I can do.
+>>
+>> The diff between those versions you listed is pretty minimal, so I
+>> suspect your bug is elsewhere.
+>>
+>> Jason
+> 
+> 
