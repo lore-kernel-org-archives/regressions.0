@@ -1,30 +1,67 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wout2-smtp.messagingengine.com (wout2-smtp.messagingengine.com [64.147.123.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A334F4408
-	for <regressions@lists.linux.dev>; Fri,  7 Apr 2023 12:14:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFC20C433EF;
-	Fri,  7 Apr 2023 12:14:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1680869643;
-	bh=G1IlEJktf8aHYscJpiEvM9nPG5cHp7XjR+h6qJYI0t0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jAOCK1dS+ESWNzpqskQ6BuIhICqiVqikpQC5U7To2K3em4xRyLDWEh3iR5/1y2Eyu
-	 WsGYKEnZ/GL/5cH9cSY26PTpFxoXsQcT9mi6fW+1oh31vwboEi6QneuhF6SOyYW0At
-	 GSG04kR79FizCQV/GFYCRWoukwt3MXeOI2q++LxA=
-Date: Fri, 7 Apr 2023 14:14:00 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Rainer Fiebig <jrf@mailbox.org>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
-	stable@vger.kernel.org, tim.huang@amd.com,
-	Alex Deucher <alexander.deucher@amd.com>
-Subject: Re: 6.1.22: Resume from hibernate fails; bisected
-Message-ID: <2023040709-register-feminize-d452@gregkh>
-References: <b52bfd11-0d90-739b-be3e-058e246478f7@mailbox.org>
- <c87add10-3e8f-b17e-f3f5-067431a23e16@leemhuis.info>
- <d3ac4ff5-863f-2179-1120-191774d80a27@mailbox.org>
- <ZC8m_gjbB4oVlO5t@kroah.com>
- <635357ce-8793-1788-e47e-369ed8ded673@mailbox.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0359CEA1
+	for <regressions@lists.linux.dev>; Sat,  8 Apr 2023 00:08:30 +0000 (UTC)
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+	by mailout.west.internal (Postfix) with ESMTP id 9812332008FE;
+	Fri,  7 Apr 2023 20:08:29 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute1.internal (MEProxy); Fri, 07 Apr 2023 20:08:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bur.io; h=cc:cc
+	:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:sender
+	:subject:subject:to:to; s=fm2; t=1680912509; x=1680998909; bh=Am
+	JxJXnwzau2fCMbsbSa2BePjhcFADGPY0eJ3a1Tq0o=; b=s+JIka9FHdLsrKNCgj
+	qOuqWAkqwdYziczz7UL1Qll4dEJvP+8GmvNUyrGcrWaM2ckqTLoy8+OTWnMQqqJf
+	+Le1ADb7H6xMuq239YWt3J8xbfC9EIf/QfBF3I6grBDuD5zOd2q6dVyFKIO7ocAy
+	huadg58vMAkZhfhqhcnivqnF26avAD6PDEMQmRjCs09wBPXG/Ha66nkMMLYNYMMK
+	ua+fKSJG8Ho1Z2gmvytm+WlqNHim7DOe4zPE05MG2OThJM2WG2y6hAJW1QL7GSJ8
+	d1oNf4DpQb1n0kDPan6jGFaAMKDDaEVIj1CdBZng5kGo+jvnq0Rr9gvTbN+484Pm
+	0FVw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:sender:subject
+	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+	:x-sasl-enc; s=fm2; t=1680912509; x=1680998909; bh=AmJxJXnwzau2f
+	CMbsbSa2BePjhcFADGPY0eJ3a1Tq0o=; b=VVTQVMKRH0kznZQ6qB/wpF+u8s3ug
+	WyHfBlE2oPTqn+LblAv7Id/5DhH8FpvCi6/Nz1dssLRpbMaNvPSdIos3Z2BHHJ3Y
+	f1zZVOr41IJn4SE7cv7Fl/sKnXJhiCAZ4Xy8ELOoPlZkBLpt0MJEok6Jy2YN4hbn
+	sET33N5qDR4tw6rZzpeKZk2rOYxNN9B3btflxUwDJitQDPDtJpMURwl2Cs+0EwJs
+	gkD9uYXKggtBageJOik0DwgZfJxR1eeZ8QaepfcblgJpUGgB9+V3OeU2YOfr/e4u
+	6UoVtVP6rfmd6kTga0GPZfK58nvOaPEKD/m/oWg523lzNC728KUs/Q2wA==
+X-ME-Sender: <xms:fLAwZEfR0PRb1ssdM5uKIZ0jVPQmr5Fj4lkGborP2nmcw5LTCmQKzg>
+    <xme:fLAwZGMBWaDSA40gQrj9aJFu1B-CICp29rmSWJu-bvHl9REY4MGg2fNzNyVBEN4d3
+    jmJumqQjpwRyQMANx8>
+X-ME-Received: <xmr:fLAwZFjhyFX9lFxQIZUKgjGrlFT7OQqVqtDEDOatUcBQO-15L57NdZQp>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrvdejiedgvdekucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepuehorhhi
+    shcuuehurhhkohhvuceosghorhhishessghurhdrihhoqeenucggtffrrghtthgvrhhnpe
+    ehueejudevkeffgeeghfegteegueetiefhfeektdehgedtteelteffieeghedtvdenucff
+    ohhmrghinheprhgvughhrghtrdgtohhmpdhkvghrnhgvlhdrohhrghdplhgvvghmhhhuih
+    hsrdhinhhfohenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhr
+    ohhmpegsohhrihhssegsuhhrrdhioh
+X-ME-Proxy: <xmx:fLAwZJ9uAFOjLPBx39P6bK_igWvAb9CQXo8RJfM_KANTVJK-1mAOOA>
+    <xmx:fLAwZAu4adMaj7xL3-M3RGkUzT2q75HuvHm63MM-o1vrVO4ld_tpAg>
+    <xmx:fLAwZAHbZ7TgnGCu8M8c6nhEcFSCm1SREyeRIKz_0xgZ1vnvU-CQ4w>
+    <xmx:fbAwZNUOFdGDUH1_tBVEVh4jzFdcwD5KO9M2l3g9dkthKkDMzgJczw>
+Feedback-ID: i083147f8:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 7 Apr 2023 20:08:28 -0400 (EDT)
+Date: Fri, 7 Apr 2023 17:08:17 -0700
+From: Boris Burkov <boris@bur.io>
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: dsterba@suse.cz, Btrfs BTRFS <linux-btrfs@vger.kernel.org>
+Subject: Re: LMDB mdb_copy produces a corrupt database on btrfs, but not on
+ ext4
+Message-ID: <20230408000817.GA2450@zen>
+References: <aa1fb69e-b613-47aa-a99e-a0a2c9ed273f@app.fastmail.com>
+ <1334e2af-b55f-3bb2-6e1a-6ab0b0ef93f0@leemhuis.info>
+ <20230406154732.GV19619@twin.jikos.cz>
+ <dbd7d712-0c46-7a18-d8fc-fc263f4de6e9@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -33,86 +70,79 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <635357ce-8793-1788-e47e-369ed8ded673@mailbox.org>
+In-Reply-To: <dbd7d712-0c46-7a18-d8fc-fc263f4de6e9@leemhuis.info>
 
-On Fri, Apr 07, 2023 at 01:56:49PM +0200, Rainer Fiebig wrote:
-> Am 06.04.23 um 22:09 schrieb Greg KH:
-> > On Thu, Apr 06, 2023 at 05:39:07PM +0200, Rainer Fiebig wrote:
-> >> Am 06.04.23 um 15:30 schrieb Linux regression tracking (Thorsten Leemhuis):
-> >>> [CCing the regression list, as it should be in the loop for regressions:
-> >>> https://docs.kernel.org/admin-guide/reporting-regressions.html]
-> >>>
-> >>> On 06.04.23 14:06, Rainer Fiebig wrote:
-> >>>> Hi! Since kernel 6.1.22 starting a resume from hibernate by hitting a
-> >>>> key on the keyboard fails. However, if the PC was switched off and on
-> >>>> again (or reset), the resume is OK. The APU  is a Ryzen 5600G.
-> >>>>
-> >>>> Bisecting between 6.1.21/22 turned up this:
-> >>>>
-> >>>>
-> >>>> Author: Tim Huang <tim.huang@amd.com>
-> >>>> Date:   Thu Mar 9 16:27:51 2023 +0800
-> >>>>
-> >>>>     drm/amdgpu: skip ASIC reset for APUs when go to S4
-> >>>>
-> >>>>     commit b589626674de94d977e81c99bf7905872b991197 upstream.
-> >>>>
-> >>>>     For GC IP v11.0.4/11, PSP TMR need to be reserved
-> >>>>     for ASIC mode2 reset. But for S4, when psp suspend,
-> >>>>     it will destroy the TMR that fails the ASIC reset.
-> >>>> [...]
-> >>>>
-> >>>>
-> >>>> Reverting the commit solves the problem.
-> >>>> Thanks.
-> >>>
-> >>> Please try 6.1.23 and report back, because from the thread
-> >>> https://lore.kernel.org/all/20230330160740.1dbff94b@schienar/
-> >>> it sounds a lot like "drm/amdgpu: allow more APUs to do mode2 reset when
-> >>> go to S4" might be fixing this, which went into 6.1.23.
-> >> Yes, 6.1.23 seems OK so far.
+On Fri, Apr 07, 2023 at 08:10:24AM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
+> On 06.04.23 17:47, David Sterba wrote:
+> > On Wed, Apr 05, 2023 at 03:07:52PM +0200, Linux regression tracking #adding (Thorsten Leemhuis) wrote:
+> >> [TLDR: I'm adding this report to the list of tracked Linux kernel
+> >> regressions; the text you find below is based on a few templates
+> >> paragraphs you might have encountered already in similar form.
+> >> See link in footer if these mails annoy you.]
 > >>
-> >> I think, however, that rc-kernels and LTS-kernels are different matters.
-> >>  With a bleeding edge kernel, problems are to be expected.  But an
-> >> LTS-kernel is chosen for stability.  And this is the second time within
-> >> just a few weeks that I've been bitten by a time-consuming hibernate-bug
-> >> caused by a backport of a commit in amdgpu.
+> >> On 15.02.23 21:04, Chris Murphy wrote:
+> >>> Downstream bug report, reproducer test file, and gdb session transcript
+> >>> https://bugzilla.redhat.com/show_bug.cgi?id=2169947
+> >>>
+> >>> I speculated that maybe it's similar to the issue we have with VM's when O_DIRECT is used, but it seems that's not the case here.
 > >>
-> >> So I'm asking the devs to either test their patches more thoroughly or
-> >> to be a bit more conservative with what they recommend for backporting
-> >> to LTS-kernels.  Thanks.
+> >> To properly track this, let me add this report as well to the tracking
+> >> (I already track another report not mentioned in the commit log of the
+> >> proposed fix: https://bugzilla.kernel.org/show_bug.cgi?id=217042 )
 > > 
-> > Please feel free to suggest better ways to have automated tests for
-> > stuff like this, or to help provide testing for the -rc LTS/stable
-> > kernel releases.
-> Well, I'm afraid I can't offer a panacea or the ultimate automated
-> quality assurance system.  But for the two cases that I've encountered
-> lately, a simple hibernate/resume would have shown that there's a
-> problem.  After all, that's how I and other users noticed it.
+> > There were several iterations of the fix and the final version is
+> > actually 11 patches (below), and it does not apply cleanly to current
+> > master because of other cleanups.
+> > 
+> > Given that it's fixing a corruption it should be merged and backported
+> > (at least to 6.1), but we may need to rework it again and minimize/drop
+> > the cleanups.
+> > 
+> > a8e793f97686 btrfs: add function to create and return an ordered extent
+> > b85d0977f5be btrfs: pass flags as unsigned long to btrfs_add_ordered_extent
+> > c5e9a883e7c8 btrfs: stash ordered extent in dio_data during iomap dio
+> > d90af6fe39e6 btrfs: move ordered_extent internal sanity checks into btrfs_split_ordered_extent
+> > 8d4f5839fe88 btrfs: simplify splitting logic in btrfs_extract_ordered_extent
+> > 880c3efad384 btrfs: sink parameter len to btrfs_split_ordered_extent
+> > 812f614a7ad7 btrfs: fold btrfs_clone_ordered_extent into btrfs_split_ordered_extent
+> > 1334edcf5fa2 btrfs: simplify extent map splitting and rename split_zoned_em
+> > 3e99488588fa btrfs: pass an ordered_extent to btrfs_extract_ordered_extent
+> > df701737e7a6 btrfs: don't split NOCOW extent_maps in btrfs_extract_ordered_extent
+> > 87606cb305ca btrfs: split partial dio bios before submit
 > 
-> So I think the primary line of defence against regressions remains the
-> developer himself who should try hard to imagine what ramifications his
-> patch might have and test it accordingly.  But I'm aware of the fact
-> that we are all only humans.
+> David, many thx for the update; and thx Boris for all your work on this.
 > 
-> Another idea might be to give patches that introduce new features or
-> only minimal improvements ample time to mature in the latest stable
-> kernel before backporting them to LTS-kernels, say three or four
-> point-releases.  Or to only backport fixes for bugs or security issues.
+> I kept a loose eye on this and noticed that fixing this turned out to be
+> quite complicated and thus required quite a bit of time. Well, that's a
+> bit unfortunate, but how it is sometimes, so nothing to worry about.
+> Makes me wonder if "revert the culprit temporarily, to get this fixed
+> quickly" was really properly evaluated in this case (if it was, sorry, I
+> might have missed it or forgotten). But whatever, for this particular
+> regression that's afaics not worth discussing anymore at this point.
 
-This is a long-running discussion.  How do you determine that a "bug
-fix" should not be backported now?  For example, this bugfix that caused
-a problem was a reported fix for something else, and it had passed the
-automated testing system that the DRM developers have.  So why wait on
-it?
+In this case, the broken patch was also a serious fix for a deadlock,
+so I worry it would be "out of the frying pan and into the fire." with
+reverting it, so it never really entered my mind as an option.
 
-There's always going to be slip ups, and fixes needed for fixes as we
-can't test all hardware configurations or use-cases, all we can do is
-react quickly to fix problems when reported.
+I'll try to keep that option top of mind next time, though, as it did
+take a while to iterate towards a (hopefully) successful fix.
 
-And in this case, it was fixed _before_ you reported it, which to be
-honest, is pretty fast :)
+Also thanks for linking that other report. I had no clue that someone
+had already found the previous patch on 2/15. I wasn't sure of it till
+the next day, when I finished root causing the bug, IIRC.
 
-thanks,
+Thanks,
+Boris
 
-greg k-h
+> 
+> Again, thx to everyone involved helping to get this fixed.
+> 
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> --
+> Everything you wanna know about Linux kernel regression tracking:
+> https://linux-regtracking.leemhuis.info/about/#tldr
+> If I did something stupid, please tell me, as explained on that page.
+> 
+> P.S.: let me use this opportunity to update the regzbot status
+> 
+> #regzbot fix: btrfs: split partial dio bios before submit
