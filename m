@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81F351851
-	for <regressions@lists.linux.dev>; Sun,  9 Apr 2023 08:59:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 784EE1C3E
+	for <regressions@lists.linux.dev>; Sun,  9 Apr 2023 09:18:53 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1plQtY-0002nQ-Ou; Sun, 09 Apr 2023 10:59:32 +0200
-Message-ID: <2e585944-b34f-5df0-54e3-fba1205c4c1f@leemhuis.info>
-Date: Sun, 9 Apr 2023 10:59:32 +0200
+	id 1plRCF-0005kS-6L; Sun, 09 Apr 2023 11:18:51 +0200
+Message-ID: <1bd64a7f-9bcb-3057-4c51-7144122370fc@leemhuis.info>
+Date: Sun, 9 Apr 2023 11:18:50 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,72 +16,56 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.9.1
-Subject: Re: question about mpt3sas commit b424eaa1b51c
+Subject: Re: [regression] Bug 217252 - warning: v4l_enum_fmt+0x125a/0x1c20 -
+ Unknown pixelformat 0x00000000
 Content-Language: en-US, de-DE
-To: Jerry Snitselaar <jsnitsel@redhat.com>,
- Sathya Prakash <sathya.prakash@broadcom.com>,
- Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
- "James E.J. Bottomley" <jejb@linux.ibm.com>,
- "Martin K. Petersen" <martin.petersen@oracle.com>,
- linux-scsi@vger.kernel.org,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <gn42g3poxa4aqgttt3ck6cb5jwhpwovm3l7hay5z65d5tlfec3@kfs5mtqb2rlh>
-From: "Linux regression tracking #adding (Thorsten Leemhuis)"
+From: "Linux regression tracking #update (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <gn42g3poxa4aqgttt3ck6cb5jwhpwovm3l7hay5z65d5tlfec3@kfs5mtqb2rlh>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Linux Media Mailing List <linux-media@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+References: <dc8e5276-ef88-648f-9f0d-10151ea62c90@leemhuis.info>
+In-Reply-To: <dc8e5276-ef88-648f-9f0d-10151ea62c90@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1681030778;0bf2f7b7;
-X-HE-SMSGID: 1plQtY-0002nQ-Ou
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1681031933;d92d05c2;
+X-HE-SMSGID: 1plRCF-0005kS-6L
 
-[CCing the regression list, as it should be in the loop for regressions:
-https://docs.kernel.org/admin-guide/reporting-regressions.html]
+[TLDR: This mail in primarily relevant for Linux kernel regression
+tracking. See link in footer if these mails annoy you.]
 
-[TLDR: I'm adding this report to the list of tracked Linux kernel
-regressions; the text you find below is based on a few templates
-paragraphs you might have encountered already in similar form.
-See link in footer if these mails annoy you.]
-
-On 08.04.23 21:18, Jerry Snitselaar wrote:
-> We've had some people trying to track a problem for months revolving
-> around a system hanging at shutdown, and last thing they see being a
-> message from mpt3sas about a reset. They quickly bisected down to the
-> commit below, and reverted it made the problem go away for the
-> customer.
+On 29.03.23 13:25, Linux regression tracking (Thorsten Leemhuis) wrote:
 > 
-> b424eaa1b51c ("scsi: mpt3sas: Transition IOC to Ready state during shutdown")
+> I noticed a regression report in bugzilla.kernel.org. As many (most?)
+> kernel developers don't keep an eye on it, I decided to forward it by mail.
+> 
+> Note, you have to use bugzilla to reach the reporter, as I sadly[1] can
+> not CCed them to mails like this.
+> 
+> Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=217252 :
+> 
+> #regzbot introduced: v5.15..v6.1.21
+> https://bugzilla.kernel.org/show_bug.cgi?id=217252
+> #regzbot title: media: Unknown pixelformat 0x00000000
+> #regzbot ignore-activity
 
-FWIW, that should have been fae21608c31c ("scsi: mpt3sas: Transition IOC
-to Ready state during shutdown") (see reply-to-self from Jerry)
+Update the status, this was caused by a backport of a recent mainline
+commit to various stable trees.
 
-> I got asked to look at something since I recently at another issue
-> that involved mpt3sas at shutdown, so I was looking through the
-> history, saw this commit being mentined. Looking at it, I'm not sure
-> why it is doing what is doing.
-> [...]
-
-Thanks for the report. To be sure the issue doesn't fall through the
-cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
-tracking bot:
-
-#regzbot ^introduced fae21608c31c
-#regzbot title scsi: mpt3sas: systems hang at shutdown
+#regzbot introduced: 50459f103edf
+#regzbot fix: media: usb: uvc: fill in description for unknown pixelformats
 #regzbot ignore-activity
 
-This isn't a regression? This issue or a fix for it are already
-discussed somewhere else? It was fixed already? You want to clarify when
-the regression started to happen? Or point out I got the title or
-something else totally wrong? Then just reply and tell me -- ideally
-while also telling regzbot about it, as explained by the page listed in
-the footer of this mail.
-
-Developers: When fixing the issue, remember to add 'Link:' tags pointing
-to the report (the parent of this mail). See page linked in footer for
-details.
+For details about the fix see:
+https://lore.kernel.org/all/4b1bc0d5-808b-816d-d7de-5baa8851e74f@xs4all.nl/
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
 Everything you wanna know about Linux kernel regression tracking:
 https://linux-regtracking.leemhuis.info/about/#tldr
 That page also explains what to do if mails like this annoy you.
+
