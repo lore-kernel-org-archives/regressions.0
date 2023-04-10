@@ -1,99 +1,111 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFE6315AE
-	for <regressions@lists.linux.dev>; Mon, 10 Apr 2023 02:03:41 +0000 (UTC)
-Received: by mail-wm1-f54.google.com with SMTP id n9-20020a05600c4f8900b003f05f617f3cso8732076wmq.2
-        for <regressions@lists.linux.dev>; Sun, 09 Apr 2023 19:03:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1681092220;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:from:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=U8+HYCJGCwTXkdKfc3wbjzMmuJZ78fDXX1DXuZa8+pA=;
-        b=Zn4L8Zn2SGkDhaCmjspN2hXev2E6AivTG9yp/AkqbFj/ciIiDBLGicGYRMEnGil75R
-         YjKuoti73ybffs4oaLBVBVepWt0qaakppp6FBpAjBLJA34kdvSA/mZnXo52baJUgCaWM
-         dBPEzy1OP8KkUOEiXkOEmnRnWPq0F9xpvhDXQKoIjXpa71HB4Ha7fXjIGwlHIiEdsqiW
-         d5lQ53RL6Gzh9oTwdxxCDwpC27i4z1Tdko0XbKvqrQhbDVOhQ5aLLQ/GoP2HoeNXrsBd
-         z4ajIOPl/peGLoxb48GJZNLj7vuBngGoMIRABOiCRO7sVPs/zRDoZStp0PVkFXvy2T6u
-         leBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1681092220;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:from:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=U8+HYCJGCwTXkdKfc3wbjzMmuJZ78fDXX1DXuZa8+pA=;
-        b=uFUyLzvPAmoUpZ9UC5lm9+RqFDjE7x+u614rx542XJ9tIkUHTr5UeNJXclekyhxjZy
-         +QApqZ5ErMBnyxp2tmLopt/cT1xAQUTCBe1FXxv7kO++vVZwmyaX0fTQibfgYQ160Ftc
-         3AhVMKz4VI6Wrcfqv/Kl1DbNr96ICG1DS8eMTTMpaFCKXdACK2VbGMm6B+g1mxK+zerd
-         XfxhUNoW7g+MQrBmpZOTJB3qYQk1EU0LDoOiLge9Oinm58xW+xT7l5pPpXeXUjdwDpsN
-         +zkoP2sbDw4hQsHeJv1eveaE2zAClrQ7ZLmGLl8c5dKL3ekZ44gNTwCnAzcMZiepzm8X
-         gp0g==
-X-Gm-Message-State: AAQBX9ffGaxihW2eyzbowYz0dB76P5oOIT/58LGhHgtALK/n1FlKOVIO
-	QKvgTjWzpAKgsmsxROgULSs=
-X-Google-Smtp-Source: AKy350Z/6Wz/AaSZAWSycWD7855m1cvAvEDlrhAdjGi0OyoFQMG9U4z1AiTpp3NxUPX0q4Fa8tmEXQ==
-X-Received: by 2002:a7b:cb4e:0:b0:3f0:7f07:e617 with SMTP id v14-20020a7bcb4e000000b003f07f07e617mr5088932wmj.8.1681092219869;
-        Sun, 09 Apr 2023 19:03:39 -0700 (PDT)
-Received: from [10.32.180.129] ([148.88.245.129])
-        by smtp.gmail.com with ESMTPSA id f3-20020a7bc8c3000000b003ee10fb56ebsm12176018wml.9.2023.04.09.19.03.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 09 Apr 2023 19:03:39 -0700 (PDT)
-Message-ID: <6a54fa77-9a0c-8844-2eb0-b65591e97a16@gmail.com>
-Date: Mon, 10 Apr 2023 03:03:37 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB65923A8
+	for <regressions@lists.linux.dev>; Mon, 10 Apr 2023 05:46:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 849AEC433D2;
+	Mon, 10 Apr 2023 05:46:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1681105571;
+	bh=I7ycCihJCH4JEfJlZ78JliEzlaBRQzptj+BNXcPlOP0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dY0+HKiAo1T3X9jWM2850XOuuZuGX8kPGtDqsnrlb/Dx4Qs/YBeUJ3CEzFpDFNZoz
+	 Jf6YH+EnSt5iJ9u3LWA69QzEPwHwjQoRWS2JfG8crg5qHPTR1O2c4XtAPE7C8/EVWx
+	 8a4+tXhhRS7e0Cfs+EbQjX9/XrKVQQdWSowC5rg5MNCIszDd3fsX5upHA9haRrZZym
+	 Z4PU+kKfH1MW7ZiCdJSVqBX13NAMLc1x38RDL0EDJRCSULsbZ/CJ+qQTFMd90dd6e5
+	 Y1Q+QFgNSLoZa8GnZHfl0rMYNQYByOWzSWtcS3Wu3WjfsOKHkk3YSb8EtIuJLfd4F8
+	 7XN/6YMjxnRBg==
+Date: Mon, 10 Apr 2023 08:46:05 +0300
+From: Leon Romanovsky <leon@kernel.org>
+To: Paul Moore <paul@paul-moore.com>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
+	Saeed Mahameed <saeed@kernel.org>, Shay Drory <shayd@nvidia.com>,
+	Saeed Mahameed <saeedm@nvidia.com>, netdev@vger.kernel.org,
+	selinux@vger.kernel.org
+Subject: Re: Potential regression/bug in net/mlx5 driver
+Message-ID: <20230410054605.GL182481@unreal>
+References: <CAHC9VhQ7A4+msL38WpbOMYjAqLp0EtOjeLh4Dc6SQtD6OUvCQg@mail.gmail.com>
+ <ZCS5oxM/m9LuidL/@x130>
+ <CAHC9VhTvQLa=+Ykwmr_Uhgjrc6dfi24ou=NBsACkhwZN7X4EtQ@mail.gmail.com>
+ <1c8a70fc-18cb-3da7-5240-b513bf1affb9@leemhuis.info>
+ <CAHC9VhT+=DtJ1K1CJDY4=L_RRJSGqRDvnaOdA6j9n+bF7y+36A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.1
-From: Michael Bromilow <stick.insects22@gmail.com>
-Subject: Re: [6.2 regression][bisected]discard storm on idle since
- v6.1-rc8-59-g63a7cb130718 discard=async
-To: Boris Burkov <boris@bur.io>, Chris Mason <clm@meta.com>
-Cc: Christoph Hellwig <hch@infradead.org>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- Sergei Trofimovich <slyich@gmail.com>, Josef Bacik <josef@toxicpanda.com>,
- Christopher Price <pricechrispy@gmail.com>, anand.jain@oracle.com,
- clm@fb.com, dsterba@suse.com, linux-btrfs@vger.kernel.org
-References: <CAHmG9huwQcQXvy3HS0OP9bKFxwUa3aQj9MXZCr74emn0U+efqQ@mail.gmail.com>
- <CAEzrpqeOAiYCeHCuU2O8Hg5=xMwW_Suw1sXZtQ=f0f0WWHe9aw@mail.gmail.com>
- <ZBq+ktWm2gZR/sgq@infradead.org> <20230323222606.20d10de2@nz>
- <20d85dc4-b6c2-dac1-fdc6-94e44b43692a@leemhuis.info>
- <ZCxKc5ZzP3Np71IC@infradead.org>
- <41141706-2685-1b32-8624-c895a3b219ea@meta.com> <20230404185138.GB344341@zen>
-Content-Language: en-GB
-In-Reply-To: <20230404185138.GB344341@zen>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHC9VhT+=DtJ1K1CJDY4=L_RRJSGqRDvnaOdA6j9n+bF7y+36A@mail.gmail.com>
 
-On 04/04/2023 19:51, Boris Burkov wrote:
-> On Tue, Apr 04, 2023 at 02:15:38PM -0400, Chris Mason wrote:
->> So, honestly from my POV the async discard is best suited to consumer
->> devices.  Our defaults are probably wrong because no matter what you
->> choose there's a drive out there that makes it look bad.  Also, laptops
->> probably don't want the slow dribble.
+On Sun, Apr 09, 2023 at 07:50:34PM -0400, Paul Moore wrote:
+> On Sun, Apr 9, 2023 at 4:48 AM Linux regression tracking (Thorsten
+> Leemhuis) <regressions@leemhuis.info> wrote:
+> > On 30.03.23 03:27, Paul Moore wrote:
+> > > On Wed, Mar 29, 2023 at 6:20 PM Saeed Mahameed <saeed@kernel.org> wrote:
+> > >> On 28 Mar 19:08, Paul Moore wrote:
+> > >>>
+> > >>> Starting with the v6.3-rcX kernel releases I noticed that my
+> > >>> InfiniBand devices were no longer present under /sys/class/infiniband,
+> > >>> causing some of my automated testing to fail.  It took me a while to
+> > >>> find the time to bisect the issue, but I eventually identified the
+> > >>> problematic commit:
+> > >>>
+> > >>>  commit fe998a3c77b9f989a30a2a01fb00d3729a6d53a4
+> > >>>  Author: Shay Drory <shayd@nvidia.com>
+> > >>>  Date:   Wed Jun 29 11:38:21 2022 +0300
+> > >>>
+> > >>>   net/mlx5: Enable management PF initialization
+> > >>>
+> > >>>   Enable initialization of DPU Management PF, which is a new loopback PF
+> > >>>   designed for communication with BMC.
+> > >>>   For now Management PF doesn't support nor require most upper layer
+> > >>>   protocols so avoid them.
+> > >>>
+> > >>>   Signed-off-by: Shay Drory <shayd@nvidia.com>
+> > >>>   Reviewed-by: Eran Ben Elisha <eranbe@nvidia.com>
+> > >>>   Reviewed-by: Moshe Shemesh <moshe@nvidia.com>
+> > >>>   Signed-off-by: Saeed Mahameed <saeedm@nvidia.com>
+> > >>>
+> > >>> I'm not a mlx5 driver expert so I can't really offer much in the way
+> > >>> of a fix, but as a quick test I did remove the
+> > >>> 'mlx5_core_is_management_pf(...)' calls in mlx5/core/dev.c and
+> > >>> everything seemed to work okay on my test system (or rather the tests
+> > >>> ran without problem).
+> > >>>
+> > >>> If you need any additional information, or would like me to test a
+> > >>> patch, please let me know.
+> > >>
+> > >> Our team is looking into this, the current theory is that you have an old
+> > >> FW that doesn't have the correct capabilities set.
+> > >
+> > > That's very possible; I installed this card many years ago and haven't
+> > > updated the FW once.
+> > >
+> > >  I'm happy to update the FW (do you have a
+> > > pointer/how-to?), but it might be good to identify a fix first as I'm
+> > > guessing there will be others like me ...
+> >
+> > Nothing happened here for about ten days afaics (or was there progress
+> > and I just missed it?). That made me wonder: how sound is Paul's guess
+> > that there will be others that might run into this? If that's likely it
+> > afaics would be good to get this regression fixed before the release,
+> > which is just two or three weeks away.
+> >
+> > Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> > --
+> > Everything you wanna know about Linux kernel regression tracking:
+> > https://linux-regtracking.leemhuis.info/about/#tldr
+> > If I did something stupid, please tell me, as explained on that page.
+> >
+> > #regzbot poke
 > 
-> Our reasonable options, as I see them:
-> - back to nodiscard, rely on periodic trims from the OS.
-> - leave low iops_limit, drives stay busy unexpectedly long, conclude that
->    that's OK, and communicate the tuning/measurement options better.
-> - set a high iops_limit (e.g. 1000) drives will get back to idle faster.
-> - change an unset iops_limit to mean truly unlimited async discard, set
->    that as the default, and anyone who cares to meter it can set an
->    iops_limit.
-> 
-> The regression here is in drive idle time due to modest discard getting
-> metered out over minutes rather than dealt with relatively quickly. So
-> I would favor the unlimited async discard mode and will send a patch to
-> that effect which we can discuss.
+> I haven't seen any updates from the mlx5 driver folks, although I may
+> not have been CC'd?
 
-Will power usage be taken into consideration? I only noticed this regression
-myself when my laptop started to draw a constant extra ~10W from the constant
-drive activity, so I imagine other laptop users would also prefer a default
-which avoids this if possible. If "relatively quickly" means anything more
-than a few seconds I could see that causing rather significant battery life
-reductions.
+We are extremely slow these days due to combination of holidays
+(Easter, Passover, Ramadan, spring break e.t.c).
 
-- Michael
+Thanks
