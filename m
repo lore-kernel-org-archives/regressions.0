@@ -1,216 +1,245 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E67F88C0D
-	for <regressions@lists.linux.dev>; Tue, 11 Apr 2023 13:43:38 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pmEHX-0008Tm-W6; Tue, 11 Apr 2023 15:43:36 +0200
-Message-ID: <9404a5a4-ef72-3583-4966-e7619340679f@leemhuis.info>
-Date: Tue, 11 Apr 2023 15:43:35 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F39AB8F4D
+	for <regressions@lists.linux.dev>; Tue, 11 Apr 2023 16:16:26 +0000 (UTC)
+Received: by mail-wm1-f45.google.com with SMTP id v14-20020a05600c470e00b003f06520825fso9932916wmo.0
+        for <regressions@lists.linux.dev>; Tue, 11 Apr 2023 09:16:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1681229785; x=1683821785;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rQOU2NxcA3yCNJObcmxy+gfhS7V/5K9QCr7rxWQRSCc=;
+        b=w4nLujlkK2kPUHBbGgWURVjMNtN7wv3feP7uzPldzYCs/EZ0GmNCQhhHFGLTAY+Gi5
+         +Lp8L9G1hkQsoR4T/dP2rnFkQKkZXj7JVGKt2lrBdp2Y9cUjeunzhGlijbiFiuE09YMq
+         8oYD9lZ/+fe3Tmd7PwYMP9Neo0olfAjzmJV4bg+3wvDDwtBoIp95WGcK3lzcKDyPBQbo
+         xr5gW0S3s9YIrEBW+lx4H009CWTnN7QSRWYImt3lc7oi4UOHjQVAn+FI7WBpxxNs7mMA
+         oYTwb7x0T2CieNCJ+JHcPAG+ZgWjhkKlYOaEY5U39P11b+wlJGKSllAt7arcPFJdCxn+
+         S4Gg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1681229785; x=1683821785;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rQOU2NxcA3yCNJObcmxy+gfhS7V/5K9QCr7rxWQRSCc=;
+        b=5o/UmTtksEJwxy329Zd4zImmiQweCoo8OIxk+ig2HvlJnNBtga3qWbNYjVZrzndeOM
+         1eRdRuNlvpCEd4qmkHTPyp3Hkno9Bq60jy1+Ac25lLbd77gsxxW8FH9vEu933Bb694T+
+         Vly01DsV287cNvHdqV0/At0kHFZgzFITRgm8scl4GMlgGoic9ZdjIApvKu26qAPpDqT6
+         MVsNKkfMGfYItqXdwjkqV+RNdIhN0c/W0y4rhNt8pB08txFkCGtpiSRKdK8EeEC96dAf
+         0qM90YyUTUZNooe+dI0JN/8qVI3ZoLM8xEXyjVbBDx5PoLjRHQDpDdZUK6dnRSPmvXXj
+         kaaA==
+X-Gm-Message-State: AAQBX9fUtwtLmJpcR/63Gp0XR7tK0oo/b9FGITrd8GA7VZoHh/QGD65h
+	ye7PcGhFla8+9ByQLhfSoRoSQA==
+X-Google-Smtp-Source: AKy350ZI3OMMZN8klF1UVUUig8s+iGaTms+boTblI8oKaQxUKj3bSCRKrhXp0lQDjqs/Ax6/me7yQA==
+X-Received: by 2002:a05:600c:4da5:b0:3f0:4275:395f with SMTP id v37-20020a05600c4da500b003f04275395fmr9211597wmp.13.1681229785055;
+        Tue, 11 Apr 2023 09:16:25 -0700 (PDT)
+Received: from klimova1.roam.corp.google.com ([194.75.181.122])
+        by smtp.gmail.com with ESMTPSA id n37-20020a05600c3ba500b003f0652084b8sm21282192wms.20.2023.04.11.09.16.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Apr 2023 09:16:24 -0700 (PDT)
+Date: Tue, 11 Apr 2023 17:16:21 +0100
+From: Alexey Klimov <alexey.klimov@linaro.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: draszik@google.com, peter.griffin@linaro.org, willmcvicker@google.com,
+ mingo@kernel.org, ulf.hansson@linaro.org, tony@atomide.com,
+ linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, axboe@kernel.dk,
+ alim.akhtar@samsung.com, regressions@lists.linux.dev, avri.altman@wdc.com,
+ bvanassche@acm.org, klimova@google.com, Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [REGRESSION] CPUIDLE_FLAG_RCU_IDLE, blk_mq_freeze_queue_wait()
+ and slow-stuck reboots
+Message-ID: <20230411171621.0544249a.alexey.klimov@linaro.org>
+In-Reply-To: <20230320093614.GB2196776@hirez.programming.kicks-ass.net>
+References: <20230314230004.961993-1-alexey.klimov@linaro.org>
+	<20230315111606.GB2006103@hirez.programming.kicks-ass.net>
+	<CANgGJDpd4Gm5HhQW__oMAv1yUqSPZ7FSGoQLYTmug=TUk4cn4g@mail.gmail.com>
+	<20230320090558.GF2194297@hirez.programming.kicks-ass.net>
+	<20230320093614.GB2196776@hirez.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.1
-Subject: Re: [PATCH] pinctrl: amd: Disable and mask interrupts on resume
-Content-Language: en-US, de-DE
-To: =?UTF-8?Q?Kornel_Dul=c4=99ba?= <korneld@chromium.org>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- Linus Walleij <linus.walleij@linaro.org>
-Cc: gregkh@linuxfoundation.org, Basavaraj Natikar
- <Basavaraj.Natikar@amd.com>, Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
- upstream@semihalf.com, rad@semihalf.com, mattedavis@google.com,
- stable@vger.kernel.org, Sasha Levin <sashal@kernel.org>,
- "Gong, Richard" <richard.gong@amd.com>,
- Mario Limonciello <mario.limonciello@amd.com>, linux-gpio@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20230320093259.845178-1-korneld@chromium.org>
- <d1d39179-33a0-d35b-7593-e0a02aa3b10a@amd.com>
- <ed840be8-b27b-191e-4122-72f62d8f1b7b@amd.com>
- <37178398-497c-900b-361a-34b1b77517aa@leemhuis.info>
- <CAD=NsqzFiQBxtVDmCiJ24HD0YZiwZ4PQkojHHic775EKfeuiaQ@mail.gmail.com>
- <36c7638f-964b-bee6-b44b-c8406e71dfec@leemhuis.info>
- <CAD=Nsqx2Gy08HHzjRoWxS7u559hUgi_GGRis0UDFxrUqLYjTfg@mail.gmail.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <CAD=Nsqx2Gy08HHzjRoWxS7u559hUgi_GGRis0UDFxrUqLYjTfg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1681220619;76de9980;
-X-HE-SMSGID: 1pmEHX-0008Tm-W6
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
+On Mon, 20 Mar 2023 10:36:14 +0100
+Peter Zijlstra <peterz@infradead.org> wrote:
 
+Sorry for the delay.
+(adding Mark in c/c)
 
-On 11.04.23 15:35, Kornel Dulęba wrote:
-> On Tue, Apr 11, 2023 at 3:29 PM Linux regression tracking (Thorsten
-> Leemhuis) <regressions@leemhuis.info> wrote:
->>
->> On 11.04.23 15:09, Kornel Dulęba wrote:
->>> On Tue, Apr 11, 2023 at 2:50 PM Linux regression tracking (Thorsten
->>> Leemhuis) <regressions@leemhuis.info> wrote:
->>>> On 10.04.23 17:29, Gong, Richard wrote:
->>>>> On 4/10/2023 12:03 AM, Mario Limonciello wrote:
->>>>>> On 3/20/23 04:32, Kornel Dulęba wrote:
->>>>>>
->>>>>>> This fixes a similar problem to the one observed in:
->>>>>>> commit 4e5a04be88fe ("pinctrl: amd: disable and mask interrupts on
->>>>>>> probe").
->>>>>>>
->>>>>>> On some systems, during suspend/resume cycle firmware leaves
->>>>>>> an interrupt enabled on a pin that is not used by the kernel.
->>>>>>> This confuses the AMD pinctrl driver and causes spurious interrupts.
->>>>>>>
->>>>>>> The driver already has logic to detect if a pin is used by the kernel.
->>>>>>> Leverage it to re-initialize interrupt fields of a pin only if it's not
->>>>>>> used by us.
->>>>>>>
->>>>>>> Signed-off-by: Kornel Dulęba <korneld@chromium.org>
->>>>>>> ---
->>>>>>>   drivers/pinctrl/pinctrl-amd.c | 36 +++++++++++++++++++----------------
->>>>>>>   1 file changed, 20 insertions(+), 16 deletions(-)
->>>>>>>
->>>>>>> diff --git a/drivers/pinctrl/pinctrl-amd.c
->>>>>>> b/drivers/pinctrl/pinctrl-amd.c
->>>>>>> index 9236a132c7ba..609821b756c2 100644
->>>>>>> --- a/drivers/pinctrl/pinctrl-amd.c
->>>>>>> +++ b/drivers/pinctrl/pinctrl-amd.c
->>>>>>> @@ -872,32 +872,34 @@ static const struct pinconf_ops amd_pinconf_ops
->>>>>>> = {
->>>>>>>       .pin_config_group_set = amd_pinconf_group_set,
->>>>>>>   };
->>>>>>>   -static void amd_gpio_irq_init(struct amd_gpio *gpio_dev)
->>>>>>> +static void amd_gpio_irq_init_pin(struct amd_gpio *gpio_dev, int pin)
->>>>>>>   {
->>>>>>> -    struct pinctrl_desc *desc = gpio_dev->pctrl->desc;
->>>>>>> +    const struct pin_desc *pd;
->>>>>>>       unsigned long flags;
->>>>>>>       u32 pin_reg, mask;
->>>>>>> -    int i;
->>>>>>>         mask = BIT(WAKE_CNTRL_OFF_S0I3) | BIT(WAKE_CNTRL_OFF_S3) |
->>>>>>>           BIT(INTERRUPT_MASK_OFF) | BIT(INTERRUPT_ENABLE_OFF) |
->>>>>>>           BIT(WAKE_CNTRL_OFF_S4);
->>>>>>>   -    for (i = 0; i < desc->npins; i++) {
->>>>>>> -        int pin = desc->pins[i].number;
->>>>>>> -        const struct pin_desc *pd = pin_desc_get(gpio_dev->pctrl, pin);
->>>>>>> -
->>>>>>> -        if (!pd)
->>>>>>> -            continue;
->>>>>>> +    pd = pin_desc_get(gpio_dev->pctrl, pin);
->>>>>>> +    if (!pd)
->>>>>>> +        return;
->>>>>>>   -        raw_spin_lock_irqsave(&gpio_dev->lock, flags);
->>>>>>> +    raw_spin_lock_irqsave(&gpio_dev->lock, flags);
->>>>>>> +    pin_reg = readl(gpio_dev->base + pin * 4);
->>>>>>> +    pin_reg &= ~mask;
->>>>>>> +    writel(pin_reg, gpio_dev->base + pin * 4);
->>>>>>> +    raw_spin_unlock_irqrestore(&gpio_dev->lock, flags);
->>>>>>> +}
->>>>>>>   -        pin_reg = readl(gpio_dev->base + i * 4);
->>>>>>> -        pin_reg &= ~mask;
->>>>>>> -        writel(pin_reg, gpio_dev->base + i * 4);
->>>>>>> +static void amd_gpio_irq_init(struct amd_gpio *gpio_dev)
->>>>>>> +{
->>>>>>> +    struct pinctrl_desc *desc = gpio_dev->pctrl->desc;
->>>>>>> +    int i;
->>>>>>>   -        raw_spin_unlock_irqrestore(&gpio_dev->lock, flags);
->>>>>>> -    }
->>>>>>> +    for (i = 0; i < desc->npins; i++)
->>>>>>> +        amd_gpio_irq_init_pin(gpio_dev, i);
->>>>>>>   }
->>>>>>>     #ifdef CONFIG_PM_SLEEP
->>>>>>> @@ -950,8 +952,10 @@ static int amd_gpio_resume(struct device *dev)
->>>>>>>       for (i = 0; i < desc->npins; i++) {
->>>>>>>           int pin = desc->pins[i].number;
->>>>>>>   -        if (!amd_gpio_should_save(gpio_dev, pin))
->>>>>>> +        if (!amd_gpio_should_save(gpio_dev, pin)) {
->>>>>>> +            amd_gpio_irq_init_pin(gpio_dev, pin);
->>>>>>>               continue;
->>>>>>> +        }
->>>>>>>             raw_spin_lock_irqsave(&gpio_dev->lock, flags);
->>>>>>>           gpio_dev->saved_regs[i] |= readl(gpio_dev->base + pin * 4)
->>>>>>> & PIN_IRQ_PENDING;
->>>>>>
->>>>>> Hello Kornel,
->>>>>>
->>>>>> I've found that this commit which was included in 6.3-rc5 is causing a
->>>>>> regression waking up from lid on a Lenovo Z13.
->>>>> observed "unable to wake from power button" on AMD based Dell platform.
->>>>
->>>> This sounds like something that we want to fix quickly.
->>>>
->>>>> Reverting "pinctrl: amd: Disable and mask interrupts on resume" on the
->>>>> top of 6.3-rc6 does fix the issue.
->>>>>>
->>>>>> Reverting it on top of 6.3-rc6 resolves the problem.
->>>>>>
->>>>>> I've collected what I can into this bug report:
->>>>>>
->>>>>> https://bugzilla.kernel.org/show_bug.cgi?id=217315
->>>>>>
->>>>>> Linus Walleij,
->>>>>>
->>>>>> It looks like this was CC to stable.  If we can't get a quick solution
->>>>>> we might want to pull this from stable.
->>>>>
->>>>> this commit landed into 6.1.23 as well
->>>>>
->>>>>         d9c63daa576b2 pinctrl: amd: Disable and mask interrupts on resume
->>>>
->>>> It made it back up to 5.10.y afaics.
->>>>
->>>> The culprit has no fixes tag, which makes me wonder: should we quickly
->>>> (e.g. today) revert this in mainline to get back to the previous state,
->>>> so that Greg can pick up the revert for the next stable releases he
->>>> apparently currently prepares?
->>>>
->>>> Greg, is there another way to make you quickly fix this in the stable
->>>> trees? One option obviously would be "revert this now in stable, reapply
->>>> it later together with a fix ". But I'm under the impression that this
->>>> is too much of a hassle and thus something you only do in dire situations?
->>>>
->>>> I'm asking because I over time noticed that quite a few regressions are
->>>> in a similar situation -- and quite a few of them take quite some time
->>>> to get fixed even when a developer provided a fix, because reviewing and
->>>> mainlining the fix takes a week or two (sometimes more). And that is a
->>>> situation that is more and more hitting a nerve here. :-/
->>>
->>> I've looked into this and at this moment I can't really find a quick fix.
->>> See https://bugzilla.kernel.org/show_bug.cgi?id=217315#c3.
->>> It seems that reverting this might be the best solution for now.
->>
->> Great, thx for the update (and BTW: Greg, thx for your answer, too).
->>
->> To speed things up a quick question:
->>
->> Linusw, what's your preferred course to realize this revert quickly?
->>
->>  * someone (Kornel?) sends a revert with a commit msg for review, which
->> you then apply and pass on to the other Linus?
->>
->>  * someone (Kornel?) sends a revert with a commit msg for review that
->> immediately asks the other Linus to pick this up directly?
->>
->>  * we ask the other Linus directly to revert this (who then has to come
->> up with a commit msg on his own)?
+> On Mon, Mar 20, 2023 at 10:05:58AM +0100, Peter Zijlstra wrote:
+> > On Fri, Mar 17, 2023 at 02:11:25AM +0000, Alexey Klimov wrote:  
+> > > On Wed, 15 Mar 2023 at 11:16, Peter Zijlstra
+> > > <peterz@infradead.org> wrote:  
+> > > >
+> > > >
+> > > > (could you wrap your email please)  
+> > > 
+> > > Ouch. Sorry.
+> > >   
+> > > > On Tue, Mar 14, 2023 at 11:00:04PM +0000, Alexey Klimov wrote:  
+> > > > > #regzbot introduced: 0c5ffc3d7b15 #regzbot title:
+> > > > > CPUIDLE_FLAG_RCU_IDLE, blk_mq_freeze_queue_wait() and
+> > > > > slow-stuck reboots
+> > > > >
+> > > > > The upstream changes are being merged into android-mainline
+> > > > > repo and at some point we started to observe kernel panics on
+> > > > > reboot or long reboot times.  
+> > > >
+> > > > On what hardware? I find it somewhat hard to follow this DT
+> > > > code :/  
+> > > 
+> > > Pixel 6.  
+> > 
+> > What actual cpuidle driver is that thing using? Is there any
+> > out-of-tree code involved? Mark tells me anything arm64 should be
+> > using PSCI, so let me to stare hard at that again.
+
+Yep, it uses PSCI (psci_idle). But there is some out-of-tree code
+involved.
+
+> So specifically, your problem sounds like rcu_synchronize() is taking
+> very much longer than it used to. Specifically combined with the patch
+> that makes it 'go-away' this seems to indicate you lost a
+> ct_cpuidle_enter() call, which is what ends up telling RCU the cpu is
+> idle and no longer partakes in the whole grace period machinery. Not
+> telling RCU this results in RCU waiting for an idle cpu to report back
+> on it's RCU progress, but it being idle means it's not going to be
+> doing that and things sorta wait around until RCU gets fed up and
+> starts spraying IPIs to try and get things moving.
+ 
+rcu_barrier().
+
+Eventually managed to make sysrq work and blocked tasks point to
+rcu_barrier():
+
+[  454.626264][    C4] task:init state:D stack:9728 pid:1 ppid:0
+flags:0x04000008
+[  454.626463][    C4] Call trace:
+[  454.626570][    C4]  __switch_to+0x180/0x308
+[  454.626733][    C4]  __schedule+0x620/0x9e4
+[  454.626892][    C4]  schedule+0x84/0xf4
+[  454.627039][    C4]  schedule_timeout+0x48/0x1d8
+[  454.627215][    C4]  wait_for_common+0xe0/0x1a8
+[  454.627388][    C4]  wait_for_completion+0x20/0x30
+[  454.627571][    C4]  rcu_barrier+0x3f8/0x674
+[  454.627734][    C4]  netdev_run_todo+0x74/0x5d8
+[  454.627907][    C4]  rtnl_unlock+0x18/0x2c
+[  454.628063][    C4]  dhd_unregister_net+0x30/0x54 [bcmdhd4389]
+[  454.629084][    C4]  wl_cfg80211_unregister_static_if+0x98/0x18c
+[bcmdhd4389]
+[  454.630101][    C4]  wl_cfg80211_detach+0xcc/0x344
+[bcmdhd4389]
+[  454.631091][    C4]  dhd_detach+0x4d0/0xc78 [bcmdhd4389]
+[  454.632064][    C4]  dhdpcie_bus_release+0x28c/0x6bc [bcmdhd4389]
+[  454.633052][    C4]  dhdpcie_pci_remove+0xb4/0x1a4 [bcmdhd4389]
+[  454.634036][    C4]  pci_device_remove+0x60/0x118
+[  454.634152][    C4]  device_release_driver_internal+0x19c/0x2f0
+[  454.634291][    C4]  driver_detach+0x98/0xe0
+[  454.634395][    C4]  bus_remove_driver+0x80/0xbc
+[  454.634504][    C4]  driver_unregister+0x38/0x64
+[  454.634616][    C4]  pci_unregister_driver+0x2c/0xb8
+[  454.634735][    C4]  dhdpcie_bus_unregister+0xd8/0x1b0 [bcmdhd4389]
+[  454.635739][    C4]  dhd_bus_unregister+0x24/0x50 [bcmdhd4389]
+[  454.636722][    C4]  dhd_reboot_callback+0x19c/0x1d8 [bcmdhd4389]
+[  454.637709][    C4]  blocking_notifier_call_chain+0x78/0xc8
+[  454.637836][    C4]  kernel_power_off+0x2c/0xfc
+[  454.637946][    C4]  __arm64_sys_reboot+0x270/0x27c
+[  454.638060][    C4]  invoke_syscall+0x60/0x130
+[  454.638169][    C4]  el0_svc_common+0xbc/0x100
+[  454.638278][    C4]  do_el0_svc+0x38/0xb0
+[  454.638377][    C4]  el0_svc+0x34/0xc4
+[  454.638464][    C4]  el0t_64_sync_handler+0x8c/0xfc
+[  454.638573][    C4]  el0t_64_sync+0x1a8/0x1ac
+
+and
+
+[   13.799675][    C2] task:kworker/1:1     state:D stack:12784 pid:97
+  ppid:2      flags:0x00000008
+[   13.799879][    C2] Workqueue: events
+slab_caches_to_rcu_destroy_workfn
+[   13.800112][    C2] Call trace:
+[   13.800231][    C2]  __switch_to+0x180/0x308
+[   13.800394][    C2]  __schedule+0x620/0x9e4
+[   13.800553][    C2]  schedule+0x84/0xf4
+[   13.800700][    C2]  schedule_timeout+0x48/0x1d8
+[   13.800876][    C2]  wait_for_common+0xe0/0x1a8
+[   13.801049][    C2]  wait_for_completion+0x20/0x30
+[   13.801232][    C2]  rcu_barrier+0x3f8/0x674
+[   13.801394][    C2]  slab_caches_to_rcu_destroy_workfn+0x90/0x108
+[   13.801627][    C2]  process_one_work+0x1f0/0x454
+[   13.801807][    C2]  worker_thread+0x330/0x43c
+[   13.801977][    C2]  kthread+0x10c/0x1b8
+[   13.802127][    C2]  ret_from_fork+0x10/0x20
+
+ 
+> Now...  if a driver sets CPUIDLE_FLAG_RCU_IDLE it promises to call
+> ct_cpuidle_{enter,exit}() itself. Hence for any driver that does *NOT*
+> set that flag, cpuidle_enter_state() calls these functions.
 > 
-> Would you like me to send a reverting change?
-> I can do this right away.
-
-Guess it would be helpful, as then we are down to option one or two.
-Many thx!
-
-> The commit message would contain something like:
+> Now, fo PSCI, the DT handler is psci_enter_idle_state(), which uses
+> CPU_PM_CPU_IDLE_ENTER_PARAM_RCU(), which per the other email, means
+> that it's low_level_idle_enter := psci_cpu_suspend_enter(), *will*
+> call ct_cpuidle_{enter,exit}().
 > 
-> This patch introduces a regression on Lenovo Z13, which can't wake
-> from the lid with it applied.
+> Then if we look at psci_cpu_suspend_enter(), it has two cases
+> depending on psci_power_state_loses_context(). If it doesn't lose
+> context it does ct_cpuidle_enter() right there and proceeds to call
+> psci_ops.cpu_suspend() -- whatever that does.
+> 
+> If it does lose state, then it depends on CONFIG_ARM64, on arm64 we do
+> not call ct_cpuidle_{enter,exit}() but proceed into cpu_suspend().
+> 
+> We can find that function in arch/arm64/kernel/suspend.c, and if you
+> look at it, you'll note it does in fact call ct_cpuidle_{enter,exit}()
+> as per promises made.
+> 
+> So AFAICT every path into idle will pass through ct_cpuidle_enter().
+ 
+I tried to understand where ct_cpuidle_{enter,exit}() is missing and
+narrow it down until found out that the problem is cpu pm notifier
+returning NOTIFY_BAD during reboot and calls to ct_cpuidle_{enter,exit}
+are correct. Thanks for checking.
 
-Maybe add "; and some unspecified AMD based Dell platforms are unable to
-wake from hitting the power button". (see Richard's mail earlier in the
-thread).
+In __CPU_PM_CPU_IDLE_ENTER() macro we have:
 
-Ciao, Thorsten
+	if (!is_retention)
+		__ret =  cpu_pm_enter();
+	if (!__ret) {
+		if (!is_rcu)
+			ct_cpuidle_enter();
+		__ret = low_level_idle_enter(state);
+		if (!is_rcu)
+			ct_cpuidle_exit();
+		if (!is_retention)
+			cpu_pm_exit();
+	}
+
+While rebooting cpu_pm_enter() returns an error since one of the
+notifiers starts to return NOTIFY_BAD. Looks like kernel starts to
+"spin" trying to put CPUs in idle state and always gets an error from
+cpu_pm_enter() never reaching the section covered by
+ct_cpuidle_{enter,exit}. Before the mentioned commit all of this were
+under ct_cpuidle_{enter,exit}. Hence, yes, in some sense we lost a
+ct_cpuidle_enter+exit() call. As long as I manually cover this small
+piece with ct_cpuidle_{enter,exit} for testing, the reboot times return
+back to as it was before the commit. Currently I removed returning
+NOTIFY_BAD from notifier when rebooting.
+
+It seems RCU waits for these CPUs to attend RCU machinery.
+Also it probably does not count as an upstream regression since it
+involves out of tree code but in theory this could happen with any
+other notifier. Probably WARN_ONCE() will be too bad too.
+
+The cpu pm notifier is this one, line 972,
+exynos_cpu_pm_notify_callback():
+https://android.googlesource.com/kernel/gs/+/refs/tags/android-t-qpr3-beta-2_r0.5/drivers/soc/google/exynos-cpupm.c#972
+
+Thank you for checking all this!
+
+Best regards,
+Alexey
+
