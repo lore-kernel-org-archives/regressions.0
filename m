@@ -1,104 +1,93 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88F04944C
-	for <regressions@lists.linux.dev>; Tue, 11 Apr 2023 17:52:57 +0000 (UTC)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id C4A1F1F45E;
-	Tue, 11 Apr 2023 17:52:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1681235569;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=V0QLN+GLgy+rl63YEhwLCa7r98y0nxnfHvq4nEsirqI=;
-	b=bqqU66/ukH0Mxj4gXm8ab8AeozbNkY7Y10k8QxUlMBs7UbC6WGbGNxzlQvEXB7DdKRz5qQ
-	zBZ/1wyi8o0LAWnq3ZLYyoYFynIzL8CLdlAHIZgtNBZJZtbuBsOY+ba8rSnhkeyrZu1kPo
-	vJas6nuGh/AaiNNBnD4R7Qb50DEPgbs=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1681235569;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=V0QLN+GLgy+rl63YEhwLCa7r98y0nxnfHvq4nEsirqI=;
-	b=0WF40b15tzJTBcd7/1fsk+OWduxBU6VVwf4++dPu9wFhM2m3ZtoDXbQtaBXLZszm8aGQAV
-	4xMa8j7ezy80gOBw==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 86C1113519;
-	Tue, 11 Apr 2023 17:52:49 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-	by imap2.suse-dmz.suse.de with ESMTPSA
-	id 5pktIHGeNWSdSAAAMHmgww
-	(envelope-from <dsterba@suse.cz>); Tue, 11 Apr 2023 17:52:49 +0000
-Date: Tue, 11 Apr 2023 19:52:39 +0200
-From: David Sterba <dsterba@suse.cz>
-To: Michael Bromilow <stick.insects22@gmail.com>
-Cc: Boris Burkov <boris@bur.io>, Chris Mason <clm@meta.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	Linux regressions mailing list <regressions@lists.linux.dev>,
-	Sergei Trofimovich <slyich@gmail.com>,
-	Josef Bacik <josef@toxicpanda.com>,
-	Christopher Price <pricechrispy@gmail.com>, anand.jain@oracle.com,
-	clm@fb.com, dsterba@suse.com, linux-btrfs@vger.kernel.org
-Subject: Re: [6.2 regression][bisected]discard storm on idle since
- v6.1-rc8-59-g63a7cb130718 discard=async
-Message-ID: <20230411175239.GA19619@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-References: <CAHmG9huwQcQXvy3HS0OP9bKFxwUa3aQj9MXZCr74emn0U+efqQ@mail.gmail.com>
- <CAEzrpqeOAiYCeHCuU2O8Hg5=xMwW_Suw1sXZtQ=f0f0WWHe9aw@mail.gmail.com>
- <ZBq+ktWm2gZR/sgq@infradead.org>
- <20230323222606.20d10de2@nz>
- <20d85dc4-b6c2-dac1-fdc6-94e44b43692a@leemhuis.info>
- <ZCxKc5ZzP3Np71IC@infradead.org>
- <41141706-2685-1b32-8624-c895a3b219ea@meta.com>
- <20230404185138.GB344341@zen>
- <6a54fa77-9a0c-8844-2eb0-b65591e97a16@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4868D944C
+	for <regressions@lists.linux.dev>; Tue, 11 Apr 2023 18:15:23 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1pmIWS-0008I4-H9; Tue, 11 Apr 2023 20:15:16 +0200
+Message-ID: <7e2ec2c1-e962-603c-17e7-a3c11285bf63@leemhuis.info>
+Date: Tue, 11 Apr 2023 20:15:15 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6a54fa77-9a0c-8844-2eb0-b65591e97a16@gmail.com>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.1
+Subject: Re: [6.2 regression][bisected]discard storm on idle since
+ v6.1-rc8-59-g63a7cb130718 discard=async
+Content-Language: en-US, de-DE
+To: dsterba@suse.cz, Michael Bromilow <stick.insects22@gmail.com>
+Cc: Boris Burkov <boris@bur.io>, Chris Mason <clm@meta.com>,
+ Christoph Hellwig <hch@infradead.org>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ Sergei Trofimovich <slyich@gmail.com>, Josef Bacik <josef@toxicpanda.com>,
+ Christopher Price <pricechrispy@gmail.com>, anand.jain@oracle.com,
+ clm@fb.com, dsterba@suse.com, linux-btrfs@vger.kernel.org
+References: <CAHmG9huwQcQXvy3HS0OP9bKFxwUa3aQj9MXZCr74emn0U+efqQ@mail.gmail.com>
+ <CAEzrpqeOAiYCeHCuU2O8Hg5=xMwW_Suw1sXZtQ=f0f0WWHe9aw@mail.gmail.com>
+ <ZBq+ktWm2gZR/sgq@infradead.org> <20230323222606.20d10de2@nz>
+ <20d85dc4-b6c2-dac1-fdc6-94e44b43692a@leemhuis.info>
+ <ZCxKc5ZzP3Np71IC@infradead.org>
+ <41141706-2685-1b32-8624-c895a3b219ea@meta.com> <20230404185138.GB344341@zen>
+ <6a54fa77-9a0c-8844-2eb0-b65591e97a16@gmail.com>
+ <20230411175239.GA19619@twin.jikos.cz>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <20230411175239.GA19619@twin.jikos.cz>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1681236923;51142a00;
+X-HE-SMSGID: 1pmIWS-0008I4-H9
 
-On Mon, Apr 10, 2023 at 03:03:37AM +0100, Michael Bromilow wrote:
-> On 04/04/2023 19:51, Boris Burkov wrote:
-> > On Tue, Apr 04, 2023 at 02:15:38PM -0400, Chris Mason wrote:
-> >> So, honestly from my POV the async discard is best suited to consumer
-> >> devices.  Our defaults are probably wrong because no matter what you
-> >> choose there's a drive out there that makes it look bad.  Also, laptops
-> >> probably don't want the slow dribble.
-> > 
-> > Our reasonable options, as I see them:
-> > - back to nodiscard, rely on periodic trims from the OS.
-> > - leave low iops_limit, drives stay busy unexpectedly long, conclude that
-> >    that's OK, and communicate the tuning/measurement options better.
-> > - set a high iops_limit (e.g. 1000) drives will get back to idle faster.
-> > - change an unset iops_limit to mean truly unlimited async discard, set
-> >    that as the default, and anyone who cares to meter it can set an
-> >    iops_limit.
-> > 
-> > The regression here is in drive idle time due to modest discard getting
-> > metered out over minutes rather than dealt with relatively quickly. So
-> > I would favor the unlimited async discard mode and will send a patch to
-> > that effect which we can discuss.
+
+
+On 11.04.23 19:52, David Sterba wrote:
+> On Mon, Apr 10, 2023 at 03:03:37AM +0100, Michael Bromilow wrote:
+>> On 04/04/2023 19:51, Boris Burkov wrote:
+>>> On Tue, Apr 04, 2023 at 02:15:38PM -0400, Chris Mason wrote:
+>>>> So, honestly from my POV the async discard is best suited to consumer
+>>>> devices.  Our defaults are probably wrong because no matter what you
+>>>> choose there's a drive out there that makes it look bad.  Also, laptops
+>>>> probably don't want the slow dribble.
+>>>
+>>> Our reasonable options, as I see them:
+>>> - back to nodiscard, rely on periodic trims from the OS.
+>>> - leave low iops_limit, drives stay busy unexpectedly long, conclude that
+>>>    that's OK, and communicate the tuning/measurement options better.
+>>> - set a high iops_limit (e.g. 1000) drives will get back to idle faster.
+>>> - change an unset iops_limit to mean truly unlimited async discard, set
+>>>    that as the default, and anyone who cares to meter it can set an
+>>>    iops_limit.
+>>>
+>>> The regression here is in drive idle time due to modest discard getting
+>>> metered out over minutes rather than dealt with relatively quickly. So
+>>> I would favor the unlimited async discard mode and will send a patch to
+>>> that effect which we can discuss.
+>>
+>> Will power usage be taken into consideration? I only noticed this regression
+>> myself when my laptop started to draw a constant extra ~10W from the constant
+>> drive activity, so I imagine other laptop users would also prefer a default
+>> which avoids this if possible. If "relatively quickly" means anything more
+>> than a few seconds I could see that causing rather significant battery life
+>> reductions.
 > 
-> Will power usage be taken into consideration? I only noticed this regression
-> myself when my laptop started to draw a constant extra ~10W from the constant
-> drive activity, so I imagine other laptop users would also prefer a default
-> which avoids this if possible. If "relatively quickly" means anything more
-> than a few seconds I could see that causing rather significant battery life
-> reductions.
+> This may need to be configured from userspace, e.g. from
+> laptop-mode-tools, I'm not sure if any of the power usage info is
+> available from kernel.
 
-This may need to be configured from userspace, e.g. from
-laptop-mode-tools, I'm not sure if any of the power usage info is
-available from kernel.
+Well, from the point of the regression tracker this looks a bit
+different: if a system after a kernel updates draw a constant extra
+~10W, it's a regression that needs to be fixed. But in the end it's of
+course Linus option that matters.
+
+But whatever, Boris afaics is looking for an improved solution that
+hopefully avoids the extra power consumption and at the same time does
+the right thing on modern enterprise storage devices, so that the
+defaults work for the majority of the users. Hopefully this will work
+out. :-D
+
+Ciao, Thorsten
