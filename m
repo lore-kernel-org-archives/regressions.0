@@ -1,46 +1,13 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F011B5250
-	for <regressions@lists.linux.dev>; Mon, 10 Apr 2023 20:15:23 +0000 (UTC)
-Received: by mail-pl1-f178.google.com with SMTP id e13so5335733plc.12
-        for <regressions@lists.linux.dev>; Mon, 10 Apr 2023 13:15:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1681157723; x=1683749723;
-        h=content-transfer-encoding:in-reply-to:subject:from:references:cc:to
-         :content-language:user-agent:mime-version:date:message-id:sender
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=7MfpiSE/BEmv/ibb2zWU6o10fgYsbnSc6vQEnuBfczw=;
-        b=oZpRg5wjUojWvpLCLumlxsqXKog5i2Lno15loJ2GYc/+jV5GxXvLHTPArQBJ2jCW4W
-         X/Hh66Y3Yv7G/B42T/gVNLwW51Agn7BUUYnH73lw8pdbpHPY1bm+/a1AIqVroEKVpe/3
-         15SNP3wupz2tZtmdrUMBMu7w6xDDETIpKMj8bEm9bnpyznlNopQO1H1BRynBK4LYLXcI
-         sPX1z6Jtc81bSJ6/muk+VejBmr/mcmJje4QmJ9H45feFIL57dwPXZmXuMVefNQ5+f2fw
-         ijrxop8OfvsWxoYHO+N3TF8qZFFW7E0/UylQL5t3oAXoELgc54qiHTwQfmL4EINtVkeI
-         yrcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1681157723; x=1683749723;
-        h=content-transfer-encoding:in-reply-to:subject:from:references:cc:to
-         :content-language:user-agent:mime-version:date:message-id:sender
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7MfpiSE/BEmv/ibb2zWU6o10fgYsbnSc6vQEnuBfczw=;
-        b=OY0LYVXu4mTUOJPQibYt9P1J6Aykw6fRD7PM7stXqoubEoiRZuYNDmr/811ZVkAcSM
-         qxGccpoDVGaxUGhB5B4R9dfGIp/WsAvP0mLTu9+4GfYA+wXcThCwsS5LwFke7THlCcrr
-         yApPuU3UT0IBlEISCH6DVMqwvzSejlGqV/CpA+4dZNkSizGloTKLEtqichQ9LXhY8hwH
-         AVJoWNjc95hkC6LsqFVYsbwA/V4ethPEGzzoY/kyUvGuraTVl9QGAQ2EMZl3KykJRCf+
-         Bwwy6ClbvUur0PKMc5t8jkxkXSEJYeExsCfizcQif6Vj26hbrfUzyw3WPyv/3kRQSzKG
-         VMYQ==
-X-Gm-Message-State: AAQBX9dKh5tf1Nw4QyDMPpaNjWJV5nHRp9t0dhfPbPbchPX+pnc3VRV5
-	ZJ0w7qHBZyQ499ue9ZtGmRlHlRhNKQo=
-X-Google-Smtp-Source: AKy350YibfwmV4kJ4WQ2m4e9kwh42vq7awW/ooCK3Q8OYrMsDDSZGz7raR8PHw4cKYmTflFBBBLCXA==
-X-Received: by 2002:a17:902:e752:b0:1a6:3630:16e1 with SMTP id p18-20020a170902e75200b001a6363016e1mr6045788plf.13.1681157722547;
-        Mon, 10 Apr 2023 13:15:22 -0700 (PDT)
-Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id s1-20020a17090ae68100b002349fcf17f8sm9810375pjy.15.2023.04.10.13.15.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Apr 2023 13:15:21 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <629f3d60-3200-6da3-1d84-220d2b9ae1e8@roeck-us.net>
-Date: Mon, 10 Apr 2023 13:15:20 -0700
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C95FA2F29
+	for <regressions@lists.linux.dev>; Tue, 11 Apr 2023 11:49:12 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1pmCUi-0001CC-Ck; Tue, 11 Apr 2023 13:49:04 +0200
+Message-ID: <e66fceb5-6621-54bb-cffb-66889941cf17@leemhuis.info>
+Date: Tue, 11 Apr 2023 13:49:03 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -48,68 +15,101 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Content-Language: en-US
-To: Linux regressions mailing list <regressions@lists.linux.dev>,
- Ard Biesheuvel <ardb@kernel.org>, linux-arm-kernel@lists.infradead.org,
- linux@armlinux.org.uk
-Cc: Frederic Weisbecker <frederic@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>,
- Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>
-References: <20230320131845.3138015-1-ardb@kernel.org>
- <20230320131845.3138015-4-ardb@kernel.org>
- <934225fd-6cc0-4c83-a322-94ddc8598366@leemhuis.info>
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v4 03/12] ARM: vfp: Fix broken softirq handling with
- instrumentation enabled
-In-Reply-To: <934225fd-6cc0-4c83-a322-94ddc8598366@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+ Thunderbird/102.9.1
+Subject: Re: [PATCH] media: usb: uvc: fill in description for unknown
+ pixelformats
+Content-Language: en-US, de-DE
+To: Hans Verkuil <hverkuil@xs4all.nl>,
+ Linux Media Mailing List <linux-media@vger.kernel.org>
+Cc: regressions@lists.linux.dev,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Hans de Goede <hdegoede@redhat.com>
+References: <4b1bc0d5-808b-816d-d7de-5baa8851e74f@xs4all.nl>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <4b1bc0d5-808b-816d-d7de-5baa8851e74f@xs4all.nl>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1681213752;7316627f;
+X-HE-SMSGID: 1pmCUi-0001CC-Ck
 
-On 4/9/23 07:29, Linux regression tracking (Thorsten Leemhuis) wrote:
-> On 20.03.23 14:18, Ard Biesheuvel wrote:
->> Commit 62b95a7b44d1 ("ARM: 9282/1: vfp: Manipulate task VFP state with
->> softirqs disabled") replaced the en/disable preemption calls inside the
->> VFP state handling code with en/disabling of soft IRQs, which is
->> necessary to allow kernel use of the VFP/SIMD unit when handling a soft
->> IRQ.
->>
->> Unfortunately, when lockdep is enabled (or other instrumentation that
->> enables TRACE_IRQFLAGS), the disable path implemented in asm fails to
->> perform the lockdep and RCU related bookkeeping, resulting in spurious
->> warnings and other badness.
->>
->> Set let's rework the VFP entry code a little bit so we can make the
->> local_bh_disable() call from C, with all the instrumentations that
->> happen to have been configured. Calling local_bh_enable() can be done
->> from asm, as it is a simple wrapper around __local_bh_enable_ip(), which
->> is always a callable function.
->>
->> Link: https://lore.kernel.org/all/ZBBYCSZUJOWBg1s8@localhost.localdomain/
->> Fixes: 62b95a7b44d1 ("ARM: 9282/1: vfp: Manipulate task VFP state with softirqs disabled")
->> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
->> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
->> Tested-by: Guenter Roeck <linux@roeck-us.net>
->> [...]
+On 29.03.23 14:28, Hans Verkuil wrote:
+> If the fcc is 0 (indicating an unknown GUID format), then fill in the
+> description field in ENUM_FMT. Otherwise the V4L2 core will WARN.
 > 
-> It feels a lot like I'm missing something, but I can't figure out what,
-> I thus have to ask:
-> 
-> What happened to this patch and/or the series? From my very limited
-> viewpoint it looks like there was no progress for nearly three week now.
-> 
-> Reminder, 62b95a7b44d1 is a commit from 6.3 cycle and fixing a problem
-> Guenter ran into. Hence it to me looks like it's something that better
-> would be fixed this cycle. Or is this considered too dangerous for some
-> reason and thus need to wait? But even then I wonder a little bit why
-> it's not in next by now.
-> 
+> Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+> Fixes: 50459f103edf ("media: uvcvideo: Remove format descriptions")
 
-Something for sure has changed. I can no longer reproduce the problem
-with the latest kernel (v6.3-rc6). I can still reproduce it with
-v6.3-rc2. Further testing shows that it is no longer reproducible
-for me with v6.3-rc3. That made me curious. I am currently bisecting,
-but that will take a while.
+Thx for working on this.
 
-Guenter
+Would be good to have Reported-by and Link tags for any reports about
+the issue; I'm aware of the following two, maybe there were more:
 
+https://bugzilla.kernel.org/show_bug.cgi?id=217252
+https://bugzilla.redhat.com/show_bug.cgi?id=2180107
+
+And a Cc: <stable@vger.kernel.org> # 5.15.x would likely be good as
+well, as the culprit was backported.
+
+But I write for a different reason: how urgent is this fix? Is this
+"just" fixing a kernel warning, or do users notice this as some apps
+crash? The bugzilla.redhat.com ticket's subject indicates it's the
+latter; and I think I saw someone else mentioning that this leads to
+crashes, but maybe I'm mixing things up.
+
+Because if this fixes a crash, it afaics would be good to get this fixed
+rather sooner than later in mainline, so that it can be fixed in stable
+as well.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
+
+
+> ---
+> diff --git a/drivers/media/usb/uvc/uvc_driver.c b/drivers/media/usb/uvc/uvc_driver.c
+> index 7aefa76a42b3..2f1ced1212cd 100644
+> --- a/drivers/media/usb/uvc/uvc_driver.c
+> +++ b/drivers/media/usb/uvc/uvc_driver.c
+> @@ -256,6 +256,9 @@ static int uvc_parse_format(struct uvc_device *dev,
+>  		} else {
+>  			dev_info(&streaming->intf->dev,
+>  				 "Unknown video format %pUl\n", &buffer[5]);
+> +			snprintf(format->name, sizeof(format->name), "%pUl\n",
+> +				 &buffer[5]);
+> +
+>  			format->fcc = 0;
+>  		}
+> 
+> diff --git a/drivers/media/usb/uvc/uvc_v4l2.c b/drivers/media/usb/uvc/uvc_v4l2.c
+> index 35453f81c1d9..fc6f9e7d8506 100644
+> --- a/drivers/media/usb/uvc/uvc_v4l2.c
+> +++ b/drivers/media/usb/uvc/uvc_v4l2.c
+> @@ -713,6 +713,10 @@ static int uvc_ioctl_enum_fmt(struct uvc_streaming *stream,
+>  	if (format->flags & UVC_FMT_FLAG_COMPRESSED)
+>  		fmt->flags |= V4L2_FMT_FLAG_COMPRESSED;
+>  	fmt->pixelformat = format->fcc;
+> +	if (format->name[0])
+> +		strscpy(fmt->description, format->name,
+> +			sizeof(fmt->description));
+> +
+>  	return 0;
+>  }
+> 
+> diff --git a/drivers/media/usb/uvc/uvcvideo.h b/drivers/media/usb/uvc/uvcvideo.h
+> index 9a596c8d894a..22656755a801 100644
+> --- a/drivers/media/usb/uvc/uvcvideo.h
+> +++ b/drivers/media/usb/uvc/uvcvideo.h
+> @@ -264,6 +264,8 @@ struct uvc_format {
+>  	u32 fcc;
+>  	u32 flags;
+> 
+> +	char name[32];
+> +
+>  	unsigned int nframes;
+>  	struct uvc_frame *frame;
+>  };
+> 
+> 
+> 
