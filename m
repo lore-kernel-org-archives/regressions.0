@@ -1,126 +1,202 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81F418BEE
-	for <regressions@lists.linux.dev>; Tue, 11 Apr 2023 12:26:51 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pmD5F-000746-9e; Tue, 11 Apr 2023 14:26:49 +0200
-Message-ID: <a5d11be7-e443-38a7-83a9-bf8d82ea5761@leemhuis.info>
-Date: Tue, 11 Apr 2023 14:26:48 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C6DA15A5
+	for <regressions@lists.linux.dev>; Tue, 11 Apr 2023 13:10:09 +0000 (UTC)
+Received: by mail-qk1-f177.google.com with SMTP id 73so3001884qkg.1
+        for <regressions@lists.linux.dev>; Tue, 11 Apr 2023 06:10:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1681218608;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zf73QU/vp2FR2MAJTQ+Ali/CjjJipWz08ZhCoQgQ1ms=;
+        b=PHsTIwBY3MYsQ9dnFd+Ps0AgLQyXKa/g7dqspz1ZYbVa8+wrNGnkqtn8TZHNMkMUSr
+         og3xCWJDxpwBegBEV/xShi4Lz6ogAqCiCKiRCkkbY8CLqcaJrwHKCXeAD74+t/ZVR++Q
+         +bUahcSevbUmAy716SNvl6UHXnPAuHRYyAErI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1681218608;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zf73QU/vp2FR2MAJTQ+Ali/CjjJipWz08ZhCoQgQ1ms=;
+        b=w9sRcSmG8MLRXadSFluTMXoUPhGBMP6gsJCsGpZTuhAWRU4+syHsR2JcaNzEMGEBVi
+         b14ALbK3evmQHIsR0yCnipQh5MupUXHUKxHOuF3es5OEH2WitxGhW/rh8vOUoSUPWFjQ
+         VhgtzR+XfnqsuL85reko97pn3IFS+BZ06gVc0SE85Q6olCRvRGkGS0S6qxW6bpqBmubf
+         crLkjmS7r+XbAQ1SvRbaUL4gaX1Wl93ixhAB2jkCdkrRPBrMrnK2pWglJYhh364OgI6q
+         rBKBWvybV2TgUH1T5bE8KPpy29qZnrHpUg0DRDyclqCfZi//2j+MJMsQIJtpozlATflM
+         Unbw==
+X-Gm-Message-State: AAQBX9c4xxNFlm4qVo0sc6LNXBHI4eQ8T1JRh6BOsIN6iZlb7g+S2tNr
+	5vb+zSnWsHqluwCpW527CKeNR16DhuCc8iYtreoKD9JWX+m/i8HcOdQ=
+X-Google-Smtp-Source: AKy350aytpXAmt2I4/HuOkFhNjWfbiyryLtfZciMpH4rg8ps+0TEo4wgOX9w5A+Nz5hz/IFjHMD3zaA2/sonr1A8iRs=
+X-Received: by 2002:a05:620a:28c4:b0:745:a35f:ad71 with SMTP id
+ l4-20020a05620a28c400b00745a35fad71mr4712462qkp.13.1681218607964; Tue, 11 Apr
+ 2023 06:10:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.1
-Subject: Re: [PATCH] media: usb: uvc: fill in description for unknown
- pixelformats
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Hans Verkuil <hverkuil@xs4all.nl>,
- Linux Media Mailing List <linux-media@vger.kernel.org>,
- regressions@lists.linux.dev, Hans de Goede <hdegoede@redhat.com>
-References: <4b1bc0d5-808b-816d-d7de-5baa8851e74f@xs4all.nl>
- <e66fceb5-6621-54bb-cffb-66889941cf17@leemhuis.info>
- <20230411120617.GI11253@pendragon.ideasonboard.com>
-Content-Language: en-US, de-DE
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <20230411120617.GI11253@pendragon.ideasonboard.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1681216011;5c2a44c0;
-X-HE-SMSGID: 1pmD5F-000746-9e
+References: <20230320093259.845178-1-korneld@chromium.org> <d1d39179-33a0-d35b-7593-e0a02aa3b10a@amd.com>
+ <ed840be8-b27b-191e-4122-72f62d8f1b7b@amd.com> <37178398-497c-900b-361a-34b1b77517aa@leemhuis.info>
+In-Reply-To: <37178398-497c-900b-361a-34b1b77517aa@leemhuis.info>
+From: =?UTF-8?Q?Kornel_Dul=C4=99ba?= <korneld@chromium.org>
+Date: Tue, 11 Apr 2023 15:09:56 +0200
+Message-ID: <CAD=NsqzFiQBxtVDmCiJ24HD0YZiwZ4PQkojHHic775EKfeuiaQ@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: amd: Disable and mask interrupts on resume
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: gregkh@linuxfoundation.org, Basavaraj Natikar <Basavaraj.Natikar@amd.com>, 
+	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, Linus Walleij <linus.walleij@linaro.org>, 
+	upstream@semihalf.com, rad@semihalf.com, mattedavis@google.com, 
+	stable@vger.kernel.org, Sasha Levin <sashal@kernel.org>, 
+	"Gong, Richard" <richard.gong@amd.com>, Mario Limonciello <mario.limonciello@amd.com>, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, Apr 11, 2023 at 2:50=E2=80=AFPM Linux regression tracking (Thorsten
+Leemhuis) <regressions@leemhuis.info> wrote:
+>
+>
+>
+> On 10.04.23 17:29, Gong, Richard wrote:
+> > On 4/10/2023 12:03 AM, Mario Limonciello wrote:
+> >> On 3/20/23 04:32, Kornel Dul=C4=99ba wrote:
+> >>
+> >>> This fixes a similar problem to the one observed in:
+> >>> commit 4e5a04be88fe ("pinctrl: amd: disable and mask interrupts on
+> >>> probe").
+> >>>
+> >>> On some systems, during suspend/resume cycle firmware leaves
+> >>> an interrupt enabled on a pin that is not used by the kernel.
+> >>> This confuses the AMD pinctrl driver and causes spurious interrupts.
+> >>>
+> >>> The driver already has logic to detect if a pin is used by the kernel=
+.
+> >>> Leverage it to re-initialize interrupt fields of a pin only if it's n=
+ot
+> >>> used by us.
+> >>>
+> >>> Signed-off-by: Kornel Dul=C4=99ba <korneld@chromium.org>
+> >>> ---
+> >>>   drivers/pinctrl/pinctrl-amd.c | 36 +++++++++++++++++++-------------=
+---
+> >>>   1 file changed, 20 insertions(+), 16 deletions(-)
+> >>>
+> >>> diff --git a/drivers/pinctrl/pinctrl-amd.c
+> >>> b/drivers/pinctrl/pinctrl-amd.c
+> >>> index 9236a132c7ba..609821b756c2 100644
+> >>> --- a/drivers/pinctrl/pinctrl-amd.c
+> >>> +++ b/drivers/pinctrl/pinctrl-amd.c
+> >>> @@ -872,32 +872,34 @@ static const struct pinconf_ops amd_pinconf_ops
+> >>> =3D {
+> >>>       .pin_config_group_set =3D amd_pinconf_group_set,
+> >>>   };
+> >>>   -static void amd_gpio_irq_init(struct amd_gpio *gpio_dev)
+> >>> +static void amd_gpio_irq_init_pin(struct amd_gpio *gpio_dev, int pin=
+)
+> >>>   {
+> >>> -    struct pinctrl_desc *desc =3D gpio_dev->pctrl->desc;
+> >>> +    const struct pin_desc *pd;
+> >>>       unsigned long flags;
+> >>>       u32 pin_reg, mask;
+> >>> -    int i;
+> >>>         mask =3D BIT(WAKE_CNTRL_OFF_S0I3) | BIT(WAKE_CNTRL_OFF_S3) |
+> >>>           BIT(INTERRUPT_MASK_OFF) | BIT(INTERRUPT_ENABLE_OFF) |
+> >>>           BIT(WAKE_CNTRL_OFF_S4);
+> >>>   -    for (i =3D 0; i < desc->npins; i++) {
+> >>> -        int pin =3D desc->pins[i].number;
+> >>> -        const struct pin_desc *pd =3D pin_desc_get(gpio_dev->pctrl, =
+pin);
+> >>> -
+> >>> -        if (!pd)
+> >>> -            continue;
+> >>> +    pd =3D pin_desc_get(gpio_dev->pctrl, pin);
+> >>> +    if (!pd)
+> >>> +        return;
+> >>>   -        raw_spin_lock_irqsave(&gpio_dev->lock, flags);
+> >>> +    raw_spin_lock_irqsave(&gpio_dev->lock, flags);
+> >>> +    pin_reg =3D readl(gpio_dev->base + pin * 4);
+> >>> +    pin_reg &=3D ~mask;
+> >>> +    writel(pin_reg, gpio_dev->base + pin * 4);
+> >>> +    raw_spin_unlock_irqrestore(&gpio_dev->lock, flags);
+> >>> +}
+> >>>   -        pin_reg =3D readl(gpio_dev->base + i * 4);
+> >>> -        pin_reg &=3D ~mask;
+> >>> -        writel(pin_reg, gpio_dev->base + i * 4);
+> >>> +static void amd_gpio_irq_init(struct amd_gpio *gpio_dev)
+> >>> +{
+> >>> +    struct pinctrl_desc *desc =3D gpio_dev->pctrl->desc;
+> >>> +    int i;
+> >>>   -        raw_spin_unlock_irqrestore(&gpio_dev->lock, flags);
+> >>> -    }
+> >>> +    for (i =3D 0; i < desc->npins; i++)
+> >>> +        amd_gpio_irq_init_pin(gpio_dev, i);
+> >>>   }
+> >>>     #ifdef CONFIG_PM_SLEEP
+> >>> @@ -950,8 +952,10 @@ static int amd_gpio_resume(struct device *dev)
+> >>>       for (i =3D 0; i < desc->npins; i++) {
+> >>>           int pin =3D desc->pins[i].number;
+> >>>   -        if (!amd_gpio_should_save(gpio_dev, pin))
+> >>> +        if (!amd_gpio_should_save(gpio_dev, pin)) {
+> >>> +            amd_gpio_irq_init_pin(gpio_dev, pin);
+> >>>               continue;
+> >>> +        }
+> >>>             raw_spin_lock_irqsave(&gpio_dev->lock, flags);
+> >>>           gpio_dev->saved_regs[i] |=3D readl(gpio_dev->base + pin * 4=
+)
+> >>> & PIN_IRQ_PENDING;
+> >>
+> >> Hello Kornel,
+> >>
+> >> I've found that this commit which was included in 6.3-rc5 is causing a
+> >> regression waking up from lid on a Lenovo Z13.
+> > observed "unable to wake from power button" on AMD based Dell platform.
+>
+> This sounds like something that we want to fix quickly.
+>
+> > Reverting "pinctrl: amd: Disable and mask interrupts on resume" on the
+> > top of 6.3-rc6 does fix the issue.
+> >>
+> >> Reverting it on top of 6.3-rc6 resolves the problem.
+> >>
+> >> I've collected what I can into this bug report:
+> >>
+> >> https://bugzilla.kernel.org/show_bug.cgi?id=3D217315
+> >>
+> >> Linus Walleij,
+> >>
+> >> It looks like this was CC to stable.  If we can't get a quick solution
+> >> we might want to pull this from stable.
+> >
+> > this commit landed into 6.1.23 as well
+> >
+> >         d9c63daa576b2 pinctrl: amd: Disable and mask interrupts on resu=
+me
+>
+> It made it back up to 5.10.y afaics.
+>
+> The culprit has no fixes tag, which makes me wonder: should we quickly
+> (e.g. today) revert this in mainline to get back to the previous state,
+> so that Greg can pick up the revert for the next stable releases he
+> apparently currently prepares?
+>
+> Greg, is there another way to make you quickly fix this in the stable
+> trees? One option obviously would be "revert this now in stable, reapply
+> it later together with a fix ". But I'm under the impression that this
+> is too much of a hassle and thus something you only do in dire situations=
+?
+>
+> I'm asking because I over time noticed that quite a few regressions are
+> in a similar situation -- and quite a few of them take quite some time
+> to get fixed even when a developer provided a fix, because reviewing and
+> mainlining the fix takes a week or two (sometimes more). And that is a
+> situation that is more and more hitting a nerve here. :-/
 
+I've looked into this and at this moment I can't really find a quick fix.
+See https://bugzilla.kernel.org/show_bug.cgi?id=3D217315#c3.
+It seems that reverting this might be the best solution for now.
 
-On 11.04.23 14:06, Laurent Pinchart wrote:
-> Hi Thorsten,
-> 
-> On Tue, Apr 11, 2023 at 01:49:03PM +0200, Thorsten Leemhuis wrote:
->> On 29.03.23 14:28, Hans Verkuil wrote:
->>> If the fcc is 0 (indicating an unknown GUID format), then fill in the
->>> description field in ENUM_FMT. Otherwise the V4L2 core will WARN.
->>>
->>> Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
->>> Fixes: 50459f103edf ("media: uvcvideo: Remove format descriptions")
->>
->> Thx for working on this.
->>
->> Would be good to have Reported-by and Link tags for any reports about
->> the issue; I'm aware of the following two, maybe there were more:
->>
->> https://bugzilla.kernel.org/show_bug.cgi?id=217252
->> https://bugzilla.redhat.com/show_bug.cgi?id=2180107
->>
->> And a Cc: <stable@vger.kernel.org> # 5.15.x would likely be good as
->> well, as the culprit was backported.
->>
->> But I write for a different reason: how urgent is this fix? Is this
->> "just" fixing a kernel warning, or do users notice this as some apps
->> crash? The bugzilla.redhat.com ticket's subject indicates it's the
->> latter; and I think I saw someone else mentioning that this leads to
->> crashes, but maybe I'm mixing things up.
->>
->> Because if this fixes a crash, it afaics would be good to get this fixed
->> rather sooner than later in mainline, so that it can be fixed in stable
->> as well.
-> 
-> As far as I understand, it fixes a WARN_ON(). That's technically not a
-> crash, but it looks like a big scary one to anyone watching the kernel
-> log.
-
-Thx for clarifying. I know what WARN_ON() does, but for some reason was
-under the strong impression that one of the reports mentioned the video
-app was crashing in parallel to the kernel warning. Well, guess I mixed
-this up with some other regression. Sorry for the noise!
-
-Ciao, Thorsten
-
->>> ---
->>> diff --git a/drivers/media/usb/uvc/uvc_driver.c b/drivers/media/usb/uvc/uvc_driver.c
->>> index 7aefa76a42b3..2f1ced1212cd 100644
->>> --- a/drivers/media/usb/uvc/uvc_driver.c
->>> +++ b/drivers/media/usb/uvc/uvc_driver.c
->>> @@ -256,6 +256,9 @@ static int uvc_parse_format(struct uvc_device *dev,
->>>  		} else {
->>>  			dev_info(&streaming->intf->dev,
->>>  				 "Unknown video format %pUl\n", &buffer[5]);
->>> +			snprintf(format->name, sizeof(format->name), "%pUl\n",
->>> +				 &buffer[5]);
->>> +
->>>  			format->fcc = 0;
->>>  		}
->>>
->>> diff --git a/drivers/media/usb/uvc/uvc_v4l2.c b/drivers/media/usb/uvc/uvc_v4l2.c
->>> index 35453f81c1d9..fc6f9e7d8506 100644
->>> --- a/drivers/media/usb/uvc/uvc_v4l2.c
->>> +++ b/drivers/media/usb/uvc/uvc_v4l2.c
->>> @@ -713,6 +713,10 @@ static int uvc_ioctl_enum_fmt(struct uvc_streaming *stream,
->>>  	if (format->flags & UVC_FMT_FLAG_COMPRESSED)
->>>  		fmt->flags |= V4L2_FMT_FLAG_COMPRESSED;
->>>  	fmt->pixelformat = format->fcc;
->>> +	if (format->name[0])
->>> +		strscpy(fmt->description, format->name,
->>> +			sizeof(fmt->description));
->>> +
->>>  	return 0;
->>>  }
->>>
->>> diff --git a/drivers/media/usb/uvc/uvcvideo.h b/drivers/media/usb/uvc/uvcvideo.h
->>> index 9a596c8d894a..22656755a801 100644
->>> --- a/drivers/media/usb/uvc/uvcvideo.h
->>> +++ b/drivers/media/usb/uvc/uvcvideo.h
->>> @@ -264,6 +264,8 @@ struct uvc_format {
->>>  	u32 fcc;
->>>  	u32 flags;
->>>
->>> +	char name[32];
->>> +
->>>  	unsigned int nframes;
->>>  	struct uvc_frame *frame;
->>>  };
-> 
+Regards
+Kornel
