@@ -1,86 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B78B3C02;
-	Wed, 12 Apr 2023 12:23:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53377C4339B;
-	Wed, 12 Apr 2023 12:23:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1681302211;
-	bh=D85mqhWoBtVu7CAzMrgEbwz60PEDS/RonuJOphKnaSU=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-	b=MsGq+SOydUlADJ4Rg8uCFtXnqlNTiIoBxrN35Fx2Mu3zLkSgmn2z31v/t+t+ViciY
-	 Y8ThdvURExiIc+bohB/Cg8pOQMyFcFQkA8HZuJheruXtVcYy5VDq6nymEklKqdnlEu
-	 NPRbr3YM0FL5BLgCIl7gG06tBJZGDAzkA3WdEN9ayCuDDIM/exN6WowpzytFog53cr
-	 kvhr3QEgj6RFGyqERy3eBZVGRkwfX9QvwN7J1wQuH6kOqic4UskYH4TDI0P74N/4Yk
-	 s1XiP+4C+5cb1e/RbVgAz9EoBmDmME7qAZMg1m2oiRDeez6hXVbPIVZLkJf45d7tg7
-	 386S9gUpb2+XQ==
-From: Kalle Valo <kvalo@kernel.org>
-To: Thorsten Leemhuis <linux@leemhuis.info>
-Cc: Konstantin Ryabitsev <konstantin@linuxfoundation.org>,  workflows@vger.kernel.org,  aros@gmx.com,  linux-kernel@vger.kernel.org,  regressions@lists.linux.dev,  tools@linux.kernel.org
-Subject: Re: Introducing bugbot
-References: <gmnswy45efztvcyc3xqymm52h7cdfwjz64go2wy3zyeqcqwb76@36fva4hyip4q>
-	<1f0ebf13-ab0f-d512-6106-3ebf7cb372f1@leemhuis.info>
-Date: Wed, 12 Apr 2023 15:23:25 +0300
-In-Reply-To: <1f0ebf13-ab0f-d512-6106-3ebf7cb372f1@leemhuis.info> (Thorsten
-	Leemhuis's message of "Sat, 8 Apr 2023 14:10:40 +0200")
-Message-ID: <87fs958f2a.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9E333C02
+	for <regressions@lists.linux.dev>; Wed, 12 Apr 2023 12:24:36 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1pmZWX-0006e2-3C; Wed, 12 Apr 2023 14:24:29 +0200
+Message-ID: <ba7e422f-9468-cb3f-f5da-ccefdd018a2a@leemhuis.info>
+Date: Wed, 12 Apr 2023 14:24:28 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.1
+Subject: Re: [Bug 217321] New: Intel platforms can't sleep deeper than PC3
+ during long idle
+Content-Language: en-US, de-DE
+To: Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org
+Cc: Vidya Sagar <vidyas@nvidia.com>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <20230411204229.GA4168208@bhelgaas>
+From: "Linux regression tracking #adding (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <20230411204229.GA4168208@bhelgaas>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1681302277;5b97d7ba;
+X-HE-SMSGID: 1pmZWX-0006e2-3C
 
-Thorsten Leemhuis <linux@leemhuis.info> writes:
+A quick note before the usual boilerplate:
 
-> CCing Kalle (JFYI)
->
-> On 03.04.23 23:45, Konstantin Ryabitsev wrote:
->> 
->> 2. Start mailing list threads from pre-triaged bugzilla bugs. This works the
->>    opposite way and creates mailing list threads based on bug reports filed in
->>    bugzilla. The useful things here are:
->> 
->>    - bugbot only gets triggered on open bugs in Linux/Kernel that have the
->>      "bugbot" flag set to "+", which allows pre-triaging a bug before bugbot
->>      sends it to the mailing list
->> [...]
->
-> Are there any policies or best practices on how people should/are
-> allowed to use this? From what I can see it seems one needs to change
-> the Product/Component of the bug to start a thread. I wonder if a few
-> maintainers that are active in bugzilla might be annoyed by this, as
-> that might break their workflow.
->
-> Which puts me in an awkward position when I see regressions reports in
-> bugzilla and would like to create threads for them. Using bugbot would
-> be better then the manual forwards I do now, like this one:
->
-> https://lore.kernel.org/all/ed31b6fe-e73d-34af-445b-81c5c644d615@leemhuis.info/
->
-> But here I decided to *not* use bugbot, as I know Kalle sometimes is
-> active in bugzilla -- and thus might hate it, if I re-categorize the bug.
+Bjorn, you asked KobaKo some questions, but didn't CC him -- and the
+comment apparently did not make it to the bugzilla ticket. Something
+wrong there? I wish I could CC him, but due to bugzilla's "never show
+your email address to logged out users" policies I can't. I added a
+comment to the ticket pointing him to your mail.
 
-Yeah, for me moving ath11k bugs away from Drivers/network-wireless
-component is not really helpful. And for ath11k I try to look at all
-reported bugs in bugzilla anyway, though just slowly.
+[TLDR for the rest of the mail: adding this reported to the regression
+tracking]
 
-While at it, I have some things on my wishlist to make my use of
-bugzilla.kernel.org easier:
+[CCing the regression list, as it should be in the loop for regressions:
+https://docs.kernel.org/admin-guide/reporting-regressions.html]
 
-* A new state named UNCONFIRMED and have it as the default state for
-  reported bugs. This would help triaging bugs as some of the reports
-  are not valid. In other words only valid bugs would have NEW state.
-  IIRC the Mozilla project did this back in the day.
+On 11.04.23 22:42, Bjorn Helgaas wrote:
+> On Tue, Apr 11, 2023 at 08:32:04AM +0000, bugzilla-daemon@kernel.org wrote:
+>> https://bugzilla.kernel.org/show_bug.cgi?id=217321
+>> ... 
+>>         Regression: No
+>>
+>> [Symptom]
+>> Intel cpu can't sleep deeper than pcˇ during long idle
+>> ~~~
+>> Pkg%pc2 Pkg%pc3 Pkg%pc6 Pkg%pc7 Pkg%pc8 Pkg%pc9 Pk%pc10
+>> 15.08   75.02   0.00    0.00    0.00    0.00    0.00
+>> 15.09   75.02   0.00    0.00    0.00    0.00    0.00
+>> ^CPkg%pc2       Pkg%pc3 Pkg%pc6 Pkg%pc7 Pkg%pc8 Pkg%pc9 Pk%pc10
+>> 15.38   68.97   0.00    0.00    0.00    0.00    0.00
+>> 15.38   68.96   0.00    0.00    0.00    0.00    0.00
+>> ~~~
+>> [How to Reproduce]
+>> 1. run turbostat to monitor
+>> 2. leave machine idle
+>> 3. turbostat show cpu only go into pc2~pc3.
+>>
+>> [Misc]
+>> The culprit are this 
+>> a7152be79b62) Revert "PCI/ASPM: Save L1 PM Substates Capability for
+>> suspend/resume”
+>>
+>> if revert a7152be79b62, the issue is gone
+> 
+> Relevant commits:
+> 
+>   4ff116d0d5fd ("PCI/ASPM: Save L1 PM Substates Capability for suspend/resume")
+>   a7152be79b62 ("Revert "PCI/ASPM: Save L1 PM Substates Capability for suspend/resume"")
+> 
+> 4ff116d0d5fd appeared in v6.1-rc1.  Prior to 4ff116d0d5fd, ASPM L1 PM
+> Substates configuration was not preserved across suspend/resume, so
+> the system *worked* after resume, but used more power than expected.
+> 
+> But 4ff116d0d5fd caused resume to fail completely on some systems, so
+> a7152be79b62 reverted it.  With a7152be79b62 reverted, ASPM L1 PM
+> Substates configuration is likely not preserved across suspend/resume.
+> a7152be79b62 appeared in v6.2-rc8 and was backported to the v6.1
+> stable series starting with v6.1.12.
+> 
+> KobaKo, you don't mention any suspend/resume in this bug report, but
+> neither patch should make any difference unless suspend/resume is
+> involved.  Does the platform sleep as expected *before* suspend, but
+> fail to sleep after resume?
+> 
+> Or maybe some individual device was suspended via runtime power
+> management, and that device lost its L1 PM Substates config?  I don't
+> know if there's a way to disable runtime PM easily.
+> 
+> The lspci output attached to the bugzilla was not collected as root,
+> so it lacks the ASPM-related information.  Can you do this again with
+> "sudo lspci -vv"?
+#regzbot introduced: a7152be79b62
+https://bugzilla.kernel.org/show_bug.cgi?id=217321
+#regzbot title: PCI/ASPM: Intel system does not sleep deeper than PC3
+(caused by a revert applied to fixes another regression)
+#regzbot ignore-activity
 
-* Use P3 as the default priority for the new bugs. I try to keep ath11k
-  bugs in priority order but new reported bugs having P1 always messes
-  up the list always.
-
--- 
-https://patchwork.kernel.org/project/linux-wireless/list/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+That page also explains what to do if mails like this annoy you.
