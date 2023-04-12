@@ -1,157 +1,86 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B464C3C02
-	for <regressions@lists.linux.dev>; Wed, 12 Apr 2023 11:38:47 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pmYoF-0005po-AT; Wed, 12 Apr 2023 13:38:43 +0200
-Message-ID: <257beca4-0c9b-66a1-37ca-aa7d37a45d5d@leemhuis.info>
-Date: Wed, 12 Apr 2023 13:38:42 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B78B3C02;
+	Wed, 12 Apr 2023 12:23:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53377C4339B;
+	Wed, 12 Apr 2023 12:23:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1681302211;
+	bh=D85mqhWoBtVu7CAzMrgEbwz60PEDS/RonuJOphKnaSU=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+	b=MsGq+SOydUlADJ4Rg8uCFtXnqlNTiIoBxrN35Fx2Mu3zLkSgmn2z31v/t+t+ViciY
+	 Y8ThdvURExiIc+bohB/Cg8pOQMyFcFQkA8HZuJheruXtVcYy5VDq6nymEklKqdnlEu
+	 NPRbr3YM0FL5BLgCIl7gG06tBJZGDAzkA3WdEN9ayCuDDIM/exN6WowpzytFog53cr
+	 kvhr3QEgj6RFGyqERy3eBZVGRkwfX9QvwN7J1wQuH6kOqic4UskYH4TDI0P74N/4Yk
+	 s1XiP+4C+5cb1e/RbVgAz9EoBmDmME7qAZMg1m2oiRDeez6hXVbPIVZLkJf45d7tg7
+	 386S9gUpb2+XQ==
+From: Kalle Valo <kvalo@kernel.org>
+To: Thorsten Leemhuis <linux@leemhuis.info>
+Cc: Konstantin Ryabitsev <konstantin@linuxfoundation.org>,  workflows@vger.kernel.org,  aros@gmx.com,  linux-kernel@vger.kernel.org,  regressions@lists.linux.dev,  tools@linux.kernel.org
+Subject: Re: Introducing bugbot
+References: <gmnswy45efztvcyc3xqymm52h7cdfwjz64go2wy3zyeqcqwb76@36fva4hyip4q>
+	<1f0ebf13-ab0f-d512-6106-3ebf7cb372f1@leemhuis.info>
+Date: Wed, 12 Apr 2023 15:23:25 +0300
+In-Reply-To: <1f0ebf13-ab0f-d512-6106-3ebf7cb372f1@leemhuis.info> (Thorsten
+	Leemhuis's message of "Sat, 8 Apr 2023 14:10:40 +0200")
+Message-ID: <87fs958f2a.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.1
-Subject: Re: iwlwifi frequent drops between v6.2-rc3 and v6.3-rc1
-Content-Language: en-US, de-DE
-To: Vegard Nossum <vegard.nossum@oracle.com>
-Cc: Johannes Berg <johannes.berg@intel.com>, regressions@lists.linux.dev,
- Thomas Mann <rauchwolke@gmx.net>, linux-wireless@vger.kernel.org,
- Alexander Wetzel <alexander@wetzel-home.de>
-References: <9d11ed29-1114-055d-5b26-0899a5fc0d7f@oracle.com>
- <70b7f54d-95b7-e01a-1a49-e29dc72d41b2@wetzel-home.de>
- <c7fdd08a-5ca2-6b86-d45d-97ab442438e5@wetzel-home.de>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <c7fdd08a-5ca2-6b86-d45d-97ab442438e5@wetzel-home.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1681299527;e8a6a582;
-X-HE-SMSGID: 1pmYoF-0005po-AT
+Content-Type: text/plain
 
-Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
-for once, to make this easily accessible to everyone.
+Thorsten Leemhuis <linux@leemhuis.info> writes:
 
-Vegard, any news here? Is this still happening?
+> CCing Kalle (JFYI)
+>
+> On 03.04.23 23:45, Konstantin Ryabitsev wrote:
+>> 
+>> 2. Start mailing list threads from pre-triaged bugzilla bugs. This works the
+>>    opposite way and creates mailing list threads based on bug reports filed in
+>>    bugzilla. The useful things here are:
+>> 
+>>    - bugbot only gets triggered on open bugs in Linux/Kernel that have the
+>>      "bugbot" flag set to "+", which allows pre-triaging a bug before bugbot
+>>      sends it to the mailing list
+>> [...]
+>
+> Are there any policies or best practices on how people should/are
+> allowed to use this? From what I can see it seems one needs to change
+> the Product/Component of the bug to start a thread. I wonder if a few
+> maintainers that are active in bugzilla might be annoyed by this, as
+> that might break their workflow.
+>
+> Which puts me in an awkward position when I see regressions reports in
+> bugzilla and would like to create threads for them. Using bugbot would
+> be better then the manual forwards I do now, like this one:
+>
+> https://lore.kernel.org/all/ed31b6fe-e73d-34af-445b-81c5c644d615@leemhuis.info/
+>
+> But here I decided to *not* use bugbot, as I know Kalle sometimes is
+> active in bugzilla -- and thus might hate it, if I re-categorize the bug.
 
-And out of curiosity: how often is "[wifi started] dropping a lot"
-actually? I have seen occasional disconnects with iwlwifi myself, but I
-have no idea what's causing them -- and I think it started earlier
-already (and might have started when I switched to iwd, not sure). And
-the error messages in the log only look similar in a few cases.
+Yeah, for me moving ath11k bugs away from Drivers/network-wireless
+component is not really helpful. And for ath11k I try to look at all
+reported bugs in bugzilla anyway, though just slowly.
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+While at it, I have some things on my wishlist to make my use of
+bugzilla.kernel.org easier:
 
-#regzbot poke
+* A new state named UNCONFIRMED and have it as the default state for
+  reported bugs. This would help triaging bugs as some of the reports
+  are not valid. In other words only valid bugs would have NEW state.
+  IIRC the Mozilla project did this back in the day.
 
-On 25.03.23 21:33, Alexander Wetzel wrote:
-> On 17.03.23 16:29, Alexander Wetzel wrote:
->> On 17.03.23 09:53, Vegard Nossum wrote:
->>>
->>> Hi,
->>>
->>> Somewhere between e8f60cd7db24 (v6.2-rc3) and 2eb29d59ddf0 (v6.3-rc1) my
->>> wifi started dropping a lot. I'm using iwlwifi and I've checked the old
->>> logs that the firmware hasn't changed:
->>>
->>> Feb 25 16:22:33 kernel: iwlwifi 0000:04:00.0: loaded firmware version
->>> 36.e91976c0.0 8000C-36.ucode op_mode iwlmvm
->>>
->>> My logs look like this:
->>>
->>> 09:01:50 kernel: wlp4s0: Connection to AP [REDACTED]:0b:25 lost
->>> 09:01:50 wpa_supplicant[1279]: wlp4s0: CTRL-EVENT-DISCONNECTED
->>> bssid=[REDACTED]:0b:25 reason=4 locally_generated=1
->>> 09:01:50 NetworkManager[8368]: <warn>  [1679040110.6548]
->>> sup-iface[0x5628f2495990,wlp4s0]: connection disconnected (reason -4)
->>> 09:01:50 NetworkManager[8368]: <info>  [1679040110.6656] device
->>> (wlp4s0): supplicant interface state: completed -> disconnected
->>> 09:01:50 NetworkManager[8368]: <info>  [1679040110.7609] device
->>> (wlp4s0): supplicant interface state: disconnected -> scanning
->>> 09:01:53 wpa_supplicant[1279]: wlp4s0: SME: Trying to authenticate
->>> with [REDACTED]:0b:25 (SSID='[REDACTED]' freq=5500 MHz)
->>> 09:01:53 kernel: wlp4s0: authenticate with [REDACTED]:0b:25
->>> 09:01:53 kernel: wlp4s0: send auth to [REDACTED]:0b:25 (try 1/3)
->>> 09:01:53 kernel: wlp4s0: authenticated
->>> 09:01:53 wpa_supplicant[1279]: wlp4s0: Trying to associate with
->>> [REDACTED]:0b:25 (SSID='[REDACTED]' freq=5500 MHz)
->>> 09:01:53 kernel: wlp4s0: associate with [REDACTED]:0b:25 (try 1/3)
->>> 09:01:53 kernel: wlp4s0: RX AssocResp from [REDACTED]:0b:25
->>> (capab=0x1511 status=0 aid=36)
->>> 09:01:53 NetworkManager[8368]: <info>  [1679040113.4553] device
->>> (wlp4s0): supplicant interface state: scanning -> authenticating
->>> 09:01:53 kernel: wlp4s0: associated
->>> 09:01:53 wpa_supplicant[1279]: wlp4s0: Associated with [REDACTED]:0b:25
->>> 09:01:53 wpa_supplicant[1279]: wlp4s0:
->>> CTRL-EVENT-SUBNET-STATUS-UPDATE status=0
->>> 09:01:53 NetworkManager[8368]: <info>  [1679040113.4645] device
->>> (wlp4s0): supplicant interface state: authenticating -> associating
->>> 09:01:53 NetworkManager[8368]: <info>  [1679040113.4829] device
->>> (wlp4s0): supplicant interface state: associating -> associated
->>> 09:01:53 NetworkManager[8368]: <info>  [1679040113.5175] device
->>> (wlp4s0): supplicant interface state: associated -> 4-way handshake
->>> 09:01:53 kernel: wlp4s0: Connection to AP [REDACTED]:0b:25 lost
->>> 09:01:53 wpa_supplicant[1279]: wlp4s0: CTRL-EVENT-DISCONNECTED
->>> bssid=[REDACTED]:0b:25 reason=4 locally_generated=1
->>> 09:01:53 wpa_supplicant[1279]: wlp4s0: WPA: 4-Way Handshake failed -
->>> pre-shared key may be incorrect
->>> 09:01:53 wpa_supplicant[1279]: wlp4s0: CTRL-EVENT-SSID-TEMP-DISABLED
->>> id=0 ssid="[REDACTED]" auth_failures=1 duration=10 reason=WRONG_KEY
->>> 09:01:53 NetworkManager[8368]: <warn>  [1679040113.5685]
->>> sup-iface[0x5628f2495990,wlp4s0]: connection disconnected (reason -4)
->>> 09:01:53 NetworkManager[8368]: <info>  [1679040113.5737] device
->>> (wlp4s0): supplicant interface state: 4-way handshake -> disconnected
->>> 09:01:53 NetworkManager[8368]: <info>  [1679040113.6759] device
->>> (wlp4s0): supplicant interface state: disconnected -> scanning
->>>
->>> I did see that somebody else reported a similar regression, but I don't
->>> know if it could be the same problem or not (I see the driver is
->>> different, but the fix looks generic):
->>>
->>> https://linux-regtracking.leemhuis.info/regzbot/regression/217119/
->>>
->>> The buggy commit that was identified there does seem to be within the
->>> range of potential culprits:
->>>
->>> $ git log --oneline e8f60cd7db24..2eb29d59ddf0 | grep resumption
->>> 4444bc2116ae wifi: mac80211: Proper mark iTXQs for resumption
->>>
->>> If people think it's the same, I could try the proposed fix -- otherwise
->>> let me know what else I can do to help track this down.
->>>
->>
->> You are using a iwlwilf/mvm card. The fix we plan to merge for that
->> regression above won't help you. (mvm cards do not use the function we
->> serialized in the end. iwlwifi/dvm on the other uses it.)
->>
->> But Johannes is working on a comparable issue affecting mvm cards.
->> Check out
->> https://lore.kernel.org/r/20230314103840.30771-1-jtornosm@redhat.com
->>
->> That may well fix your issue.
-> 
-> It's surprisingly quiet here...
-> Are these fixes helping? Honestly I'm not very optimistic.
-> I expect that this is something else...
-> 
-> If so, we can debug that here together.
-> 
-> For start, I would like to see the full logs, starting from the initial
-> (working) connect.
-> 
-> I also would like to get a confirmation, that by booting an older kernel
-> (v6.2-rc3 or older) the system gets stable again. (Not that
-> wpa_supplicant or the router got an update, too.)
-> 
-> Alexander
-> 
-> 
+* Use P3 as the default priority for the new bugs. I try to keep ath11k
+  bugs in priority order but new reported bugs having P1 always messes
+  up the list always.
+
+-- 
+https://patchwork.kernel.org/project/linux-wireless/list/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
