@@ -1,99 +1,80 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from gnuweeb.org (gnuweeb.org [51.81.211.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF86329CA
-	for <regressions@lists.linux.dev>; Wed, 12 Apr 2023 10:48:01 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pmY19-0004FO-MH; Wed, 12 Apr 2023 12:47:59 +0200
-Message-ID: <949fc214-3216-c012-0ddd-b6e1745c35ae@leemhuis.info>
-Date: Wed, 12 Apr 2023 12:47:58 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20F8733C1
+	for <regressions@lists.linux.dev>; Wed, 12 Apr 2023 11:09:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gnuweeb.org;
+	s=default; t=1681297218;
+	bh=xR4GuTL5Nmxsxu18JrbipI8OGiSCJg9nlLups6OAbag=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=THfXqEBdjK14et4Ik0idqXMu7LfYqJY7h/jq/AXfwPLM9Lico4dOaOkW7jkqfFwQK
+	 b1pZ2hoKCYrblbz0q/6YkguN6Ejq8zm1O9W/XLdrdSPE42Pi1neLaqLPqhL91LIkrF
+	 3jOjZ7XmbNY6Aq5DMJItnxRSS2jBlw2PMUA03eQk/6Hof38BXvBdpsQ3m7Ua4ofCAI
+	 V/SLD1x8nkrmO7bYb+rAx0IRaxGxMp5sIVic7l3Ag/IEZsqU6TsL4CrXpahHcOMgdv
+	 h7KnVf/JaR+mdmoBqC7ZHDjEn65aRbYGyX295KOGs5uhu+wR+lEEnHGiHmZetM9umA
+	 pcx1ExMLp2Oqg==
+Received: from biznet-home.integral.gnuweeb.org (unknown [182.253.88.211])
+	by gnuweeb.org (Postfix) with ESMTPSA id C9409245324;
+	Wed, 12 Apr 2023 18:00:11 +0700 (WIB)
+Date: Wed, 12 Apr 2023 18:00:07 +0700
+From: Ammar Faizi <ammarfaizi2@gnuweeb.org>
+To: Bagas Sanjaya <bagasdotme@gmail.com>
+Cc: Jani Nikula <jani.nikula@linux.intel.com>,
+	Intel GFX Mailing List <intel-gfx@lists.freedesktop.org>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+	Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>,
+	Stanislav Lisovskiy <stanislav.lisovskiy@intel.com>,
+	Niranjana Vishwanathapura <niranjana.vishwanathapura@intel.com>,
+	Manasi Navare <manasi.d.navare@intel.com>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
+	Linux Regressions <regressions@lists.linux.dev>,
+	Linux regression tracking <regressions@leemhuis.info>
+Subject: Re: Linux 6.2.1 hits a display driver bug (list_del corruption,
+ ffff88811b4af298->next is NULL)
+Message-ID: <ZDaPNx7WSKeMqgmj@biznet-home.integral.gnuweeb.org>
+References: <6feae796-db3f-1135-a607-cfefb0259788@gnuweeb.org>
+ <ZAGqet3U8AMm4Uf1@debian.me>
+ <ZAOTU5CRwdEC1lGH@biznet-home.integral.gnuweeb.org>
+ <87v8jetaik.fsf@intel.com>
+ <ZAXT1B1GTlmA78Ld@biznet-home.integral.gnuweeb.org>
+ <ZDYw0vVg7Y1oExJL@debian.me>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.1
-Subject: Re: [PATCH] pinctrl: amd: Disable and mask interrupts on resume
-Content-Language: en-US, de-DE
-To: Linus Walleij <linus.walleij@linaro.org>,
- =?UTF-8?Q?Kornel_Dul=c4=99ba?= <korneld@chromium.org>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
- gregkh@linuxfoundation.org, Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
- Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, upstream@semihalf.com,
- rad@semihalf.com, mattedavis@google.com, stable@vger.kernel.org,
- Sasha Levin <sashal@kernel.org>, "Gong, Richard" <richard.gong@amd.com>,
- Mario Limonciello <mario.limonciello@amd.com>, linux-gpio@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20230320093259.845178-1-korneld@chromium.org>
- <d1d39179-33a0-d35b-7593-e0a02aa3b10a@amd.com>
- <ed840be8-b27b-191e-4122-72f62d8f1b7b@amd.com>
- <37178398-497c-900b-361a-34b1b77517aa@leemhuis.info>
- <CAD=NsqzFiQBxtVDmCiJ24HD0YZiwZ4PQkojHHic775EKfeuiaQ@mail.gmail.com>
- <36c7638f-964b-bee6-b44b-c8406e71dfec@leemhuis.info>
- <CAD=Nsqx2Gy08HHzjRoWxS7u559hUgi_GGRis0UDFxrUqLYjTfg@mail.gmail.com>
- <CACRpkdYoALVKFPoxxac=c9x3vRhYge+VAUSqKdkqSvgvS+PiXw@mail.gmail.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <CACRpkdYoALVKFPoxxac=c9x3vRhYge+VAUSqKdkqSvgvS+PiXw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1681296481;429f3a37;
-X-HE-SMSGID: 1pmY19-0004FO-MH
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZDYw0vVg7Y1oExJL@debian.me>
+X-Bpl: hUx9VaHkTWcLO7S8CQCslj6OzqBx2hfLChRz45nPESx5VSB/xuJQVOKOB1zSXE3yc9ntP27bV1M1
 
-On 11.04.23 22:44, Linus Walleij wrote:
-> On Tue, Apr 11, 2023 at 3:35 PM Kornel Dulęba <korneld@chromium.org> wrote:
->> On Tue, Apr 11, 2023 at 3:29 PM Linux regression tracking (Thorsten
->> Leemhuis) <regressions@leemhuis.info> wrote:
+On Wed, Apr 12, 2023 at 11:17:22AM +0700, Bagas Sanjaya wrote:
+> From gitlab issue above, I don't see any progress on bisection attempt.
+> Ammar, have you successfully boot Ubuntu 20.04 with v5.10 kernel and
+> test there?
+
+I am still using Ubuntu 22.04. Haven't tried 20.04. I'll arrange time
+for it this week.
+
+> Anyway, I'm adding this to regzbot (with tentative commit range):
 > 
->>> Linusw, what's your preferred course to realize this revert quickly?
->>>
->>>  * someone (Kornel?) sends a revert with a commit msg for review, which
->>> you then apply and pass on to the other Linus?
->>>
->>>  * someone (Kornel?) sends a revert with a commit msg for review that
->>> immediately asks the other Linus to pick this up directly?
->>>
->>>  * we ask the other Linus directly to revert this (who then has to come
->>> up with a commit msg on his own)?
->>
->> Would you like me to send a reverting change?
->> I can do this right away.
+> #regzbot introduced: v5.10..v5.15.103
+> #regzbot title: Linux 6.2.1 hits a display driver bug (list_del corruption, ffff88811b4af298->next is NULL)
+> #regzbot link: https://gitlab.freedesktop.org/drm/intel/-/issues/8274
 > 
-> Yeah that is best.
-> 
->> The commit message would contain something like:
->>
->> This patch introduces a regression on Lenovo Z13, which can't wake
->> from the lid with it applied.
-> 
-> Looks good!
-> 
-> Thorsten: thanks for watching over this issue, we'll have it
-> resolved pronto.
+> (Also Cc: Thorsten)
 
-Thx for saying that, in cases like this there is always something in my
-head that says "maybe the developers and maintainers would have done
-everything just the same way and just as quickly, even if I hadn't made
-so much annoying noise". But well, better save that sorry.
+Not sure why you marked it as regression. I haven't even found the last
+good commit. It's possible that it's always broken since the beginning.
 
-Side note: I sometimes wonder if reverts like this maybe should be send
-directly to LinusT for mainlining with a ACK from the maintainer (e.g.
-you in this case) to speed things up. Sure, having things in next for at
-least a day (and running it through subsystem specific CI) can help
-finding unexpected problems, but it delays things, too -- which
-sometimes might result in a revert coming to late for a new stable
-release. And that easily can mean that our users have to face known
-issues for about one more week. :-/
+-- 
+Ammar Faizi
 
-Ciao, Thorsten
-
-/me meanwhile wonders if Greg will still pick the revert up for the next
-stable releases (currently in rc), if the revert reaches mainline before
-they are released on Friday
-
-/me will wait for the revert to hit mainline before he'll prod Greg
-about it
