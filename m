@@ -1,96 +1,128 @@
-Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
+Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEECC2F21
-	for <regressions@lists.linux.dev>; Tue, 11 Apr 2023 20:45:03 +0000 (UTC)
-Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-54ee0b73e08so184129867b3.0
-        for <regressions@lists.linux.dev>; Tue, 11 Apr 2023 13:45:03 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9420B362
+	for <regressions@lists.linux.dev>; Wed, 12 Apr 2023 04:17:27 +0000 (UTC)
+Received: by mail-pj1-f44.google.com with SMTP id h24-20020a17090a9c1800b002404be7920aso10370327pjp.5
+        for <regressions@lists.linux.dev>; Tue, 11 Apr 2023 21:17:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1681245903;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DgS6IEmvWs5WBVd7nSRmmrb6udze83mNz8YT1MPLDCw=;
-        b=GdSPoHYWHmtNABB1G6TVf4ymN/dF9UJquIdJ9tvM9Pasonho5T92PYWxjrVhIzKZHD
-         Q/cLvb85bMTzJm2p11YMPa+cGC3qfFX+DkR43XX3h0egvZZIGgk+YWA8gqQwfMBTqV1C
-         C5PD4IP02UVOLhnsrrbHimnVveJssROD44RQliKa5z+Ev8ItEzhsf484wS/ns35KWdFA
-         quyneT7fHRJRKAGktD67mL5ym+yG+uH7A9UwT6Qz7AMTTdC24SuvBoHMs+0FLeIgzqhd
-         DOCDqTik0rBEP9xTCjVRPCttcH0ltT+H75ispCFOk8gFL42yLf/1FDDwe0dwlRzmgPwQ
-         KbQw==
+        d=gmail.com; s=20221208; t=1681273047;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=hq/mTM6vqO5fl2BFqwBvgyto2iWy4lzSUp2jXy0gRvg=;
+        b=RlIwUSvX9oZQhTPSDp7e+uIzThMoEzwTnlmdzri1CU8jQEHwALdI51Ah9ME0rf11m8
+         7FBcjhBbnQsB2nj7UQ252Cm2VovvzUnIWs5NgJC82dc2QEKzbvedLwHoBiYjteANduV+
+         TncT6mBXRyL5H+gKtP2KFuRPMhbBxhVCoTAIt1QQX+T/AZW7Ds2+D659FZ2HTIDDXhBP
+         XmFiCFMCMG6N9AaAfEkio6U97Kc4LEWSW170wVV1FfqW8wgH8c3AMGdwWUnWqbandO+L
+         1IBoF+a+I0TrGwnCV20sM9chdMgodtRD9VNBAP/BH2ATfU6bnm4QwzC4ZO/WdJq3TNXb
+         CGGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1681245903;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DgS6IEmvWs5WBVd7nSRmmrb6udze83mNz8YT1MPLDCw=;
-        b=k7vtn6EZyqAnNm9PfVyU5Jwa3v8OzjUuvyGXRU5ZeU77WXt6V15PIi1jXfl91CfeOf
-         nAvLr22kiMOPsB6nBP0IkSUf3GWwvNgi/Q2/so03Rgbt1jQOjq1NKow6GMq5XHrXuExq
-         3G+TDd7P7kN+gZkazP7AOIGbPhDsZZHafCKQA4+sqRkL0MKVZGAuQmqIJe9DvrxISiD0
-         BBBiVFOnL8cBx8r4NRgk2EEvKdMKF/ftsLqFkr59DfkAJ7vvVOel2+aMvLVq+PcbFSIm
-         4BGlq8lpQIMPpRS6NvlBN7U+uzTZCBDfZZfPaqMeeIHaQ2C03rZui44f0J39L6F1fNyO
-         68DQ==
-X-Gm-Message-State: AAQBX9efQRkfXaNOxI81SnmbBRfrKI6hJH8WKSCwMV3c6FI+Ay9UK0u1
-	ctUCx0FxKGxQMPZ85mdF9PchQY5Zab2lpq3BON8yfg==
-X-Google-Smtp-Source: AKy350Z+vv84TfPXjGXWUbXDW7zPAcZWRO2q/uRnM/9iQT/1/Y97Z4uyZuZxOjgZXA883a13iohrKJ6ZnyDUyKogSXc=
-X-Received: by 2002:a81:ae5b:0:b0:541:693f:cdd1 with SMTP id
- g27-20020a81ae5b000000b00541693fcdd1mr8623016ywk.9.1681245902804; Tue, 11 Apr
- 2023 13:45:02 -0700 (PDT)
+        d=1e100.net; s=20210112; t=1681273047;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hq/mTM6vqO5fl2BFqwBvgyto2iWy4lzSUp2jXy0gRvg=;
+        b=35/w8G6oyJk9Vc91Q4zeoN9z10MwwYxSlTD1YD2g+qrvPR1f0dijdPHhbBDjySa1co
+         d1RKVOY/euRdjKp7UmrCRLSbm9IrcRQzIso5YEbS5YizhtYGPQOqs3XrAHj+qyFb6QQF
+         W8xRY6cH9IBTka9K8Sn7xx59duwAgMMDiE8OgPW4B2QE8tAmrqHDswBZYDkgYLKl9bQA
+         PzxXZSC8rJCLmmJeYW3H/4Jgx0NDzBphnBseiCBYLKVZkhGbiLLnhAmg45zyHaC19Ldk
+         YAcDJj0pevUXkCLMFONZWalIOw1Rwl+vkEgqj+bc0V0013FHbFo3R8Xn5a2trIjfr+a6
+         zjvg==
+X-Gm-Message-State: AAQBX9e+QvjhsGqq4ztNigbVuQwcOoMoNJ+ztNjrqGCD6KEvXHqoBDGe
+	Ph5YStw6iT8R0rOrMte4yV0=
+X-Google-Smtp-Source: AKy350a1z06v0KqJPjvsjepiCUuBZua9rRdG2dJCxmd9vvnWAItbO2F6KpdEGZApvgHF1OZx5jWKFg==
+X-Received: by 2002:a05:6a20:b705:b0:d9:a792:8e52 with SMTP id fg5-20020a056a20b70500b000d9a7928e52mr3986430pzb.57.1681273046927;
+        Tue, 11 Apr 2023 21:17:26 -0700 (PDT)
+Received: from debian.me (subs03-180-214-233-66.three.co.id. [180.214.233.66])
+        by smtp.gmail.com with ESMTPSA id x24-20020a62fb18000000b0062de9ef6915sm10571496pfm.216.2023.04.11.21.17.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Apr 2023 21:17:26 -0700 (PDT)
+Received: by debian.me (Postfix, from userid 1000)
+	id C07181068E7; Wed, 12 Apr 2023 11:17:22 +0700 (WIB)
+Date: Wed, 12 Apr 2023 11:17:22 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Ammar Faizi <ammarfaizi2@gnuweeb.org>,
+	Jani Nikula <jani.nikula@linux.intel.com>
+Cc: Intel GFX Mailing List <intel-gfx@lists.freedesktop.org>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+	Ville =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
+	Stanislav Lisovskiy <stanislav.lisovskiy@intel.com>,
+	Niranjana Vishwanathapura <niranjana.vishwanathapura@intel.com>,
+	Manasi Navare <manasi.d.navare@intel.com>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
+	Linux Regressions <regressions@lists.linux.dev>,
+	Linux regression tracking <regressions@leemhuis.info>
+Subject: Re: Linux 6.2.1 hits a display driver bug (list_del corruption,
+ ffff88811b4af298->next is NULL)
+Message-ID: <ZDYw0vVg7Y1oExJL@debian.me>
+References: <6feae796-db3f-1135-a607-cfefb0259788@gnuweeb.org>
+ <ZAGqet3U8AMm4Uf1@debian.me>
+ <ZAOTU5CRwdEC1lGH@biznet-home.integral.gnuweeb.org>
+ <87v8jetaik.fsf@intel.com>
+ <ZAXT1B1GTlmA78Ld@biznet-home.integral.gnuweeb.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230320093259.845178-1-korneld@chromium.org> <d1d39179-33a0-d35b-7593-e0a02aa3b10a@amd.com>
- <ed840be8-b27b-191e-4122-72f62d8f1b7b@amd.com> <37178398-497c-900b-361a-34b1b77517aa@leemhuis.info>
- <CAD=NsqzFiQBxtVDmCiJ24HD0YZiwZ4PQkojHHic775EKfeuiaQ@mail.gmail.com>
- <36c7638f-964b-bee6-b44b-c8406e71dfec@leemhuis.info> <CAD=Nsqx2Gy08HHzjRoWxS7u559hUgi_GGRis0UDFxrUqLYjTfg@mail.gmail.com>
-In-Reply-To: <CAD=Nsqx2Gy08HHzjRoWxS7u559hUgi_GGRis0UDFxrUqLYjTfg@mail.gmail.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 11 Apr 2023 22:44:51 +0200
-Message-ID: <CACRpkdYoALVKFPoxxac=c9x3vRhYge+VAUSqKdkqSvgvS+PiXw@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: amd: Disable and mask interrupts on resume
-To: =?UTF-8?Q?Kornel_Dul=C4=99ba?= <korneld@chromium.org>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>, gregkh@linuxfoundation.org, 
-	Basavaraj Natikar <Basavaraj.Natikar@amd.com>, Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
-	upstream@semihalf.com, rad@semihalf.com, mattedavis@google.com, 
-	stable@vger.kernel.org, Sasha Levin <sashal@kernel.org>, 
-	"Gong, Richard" <richard.gong@amd.com>, Mario Limonciello <mario.limonciello@amd.com>, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="riLMWEg/4LOAeueD"
+Content-Disposition: inline
+In-Reply-To: <ZAXT1B1GTlmA78Ld@biznet-home.integral.gnuweeb.org>
+
+
+--riLMWEg/4LOAeueD
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 11, 2023 at 3:35=E2=80=AFPM Kornel Dul=C4=99ba <korneld@chromiu=
-m.org> wrote:
-> On Tue, Apr 11, 2023 at 3:29=E2=80=AFPM Linux regression tracking (Thorst=
-en
-> Leemhuis) <regressions@leemhuis.info> wrote:
+On Mon, Mar 06, 2023 at 06:51:48PM +0700, Ammar Faizi wrote:
+> On Mon, Mar 06, 2023 at 12:54:59PM +0200, Jani Nikula wrote:
+> > Please file a bug at fdo gitlab:
+> >=20
+> > https://gitlab.freedesktop.org/drm/intel/wikis/How-to-file-i915-bugs
+>=20
+> OK, I posted it here https://gitlab.freedesktop.org/drm/intel/-/issues/82=
+74
+>=20
 
-> > Linusw, what's your preferred course to realize this revert quickly?
-> >
-> >  * someone (Kornel?) sends a revert with a commit msg for review, which
-> > you then apply and pass on to the other Linus?
-> >
-> >  * someone (Kornel?) sends a revert with a commit msg for review that
-> > immediately asks the other Linus to pick this up directly?
-> >
-> >  * we ask the other Linus directly to revert this (who then has to come
-> > up with a commit msg on his own)?
->
-> Would you like me to send a reverting change?
-> I can do this right away.
+Hi,
 
-Yeah that is best.
+=46rom gitlab issue above, I don't see any progress on bisection attempt.
+Ammar, have you successfully boot Ubuntu 20.04 with v5.10 kernel and
+test there?
 
-> The commit message would contain something like:
->
-> This patch introduces a regression on Lenovo Z13, which can't wake
-> from the lid with it applied.
+Anyway, I'm adding this to regzbot (with tentative commit range):
 
-Looks good!
+#regzbot introduced: v5.10..v5.15.103
+#regzbot title: Linux 6.2.1 hits a display driver bug (list_del corruption,=
+ ffff88811b4af298->next is NULL)
+#regzbot link: https://gitlab.freedesktop.org/drm/intel/-/issues/8274
 
-Thorsten: thanks for watching over this issue, we'll have it
-resolved pronto.
+(Also Cc: Thorsten)
 
-Yours,
-Linus Walleij
+Thanks.
+
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--riLMWEg/4LOAeueD
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZDYwzAAKCRD2uYlJVVFO
+o5/sAQCOZEp244paV37hHVVszEf/eKSIXWtgAAMsix36DcZ4pQEAkRjyNdxRZdYv
+qEYxt6Z1lmleaN5i4eQGxbGF4VyCHw8=
+=6JIi
+-----END PGP SIGNATURE-----
+
+--riLMWEg/4LOAeueD--
