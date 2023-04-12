@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 103BE17D9
-	for <regressions@lists.linux.dev>; Wed, 12 Apr 2023 10:34:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF86329CA
+	for <regressions@lists.linux.dev>; Wed, 12 Apr 2023 10:48:01 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pmXnc-0001gq-N8; Wed, 12 Apr 2023 12:34:00 +0200
-Message-ID: <c63dab2b-906d-5383-39f9-b02e7d7d2659@leemhuis.info>
-Date: Wed, 12 Apr 2023 12:34:00 +0200
+	id 1pmY19-0004FO-MH; Wed, 12 Apr 2023 12:47:59 +0200
+Message-ID: <949fc214-3216-c012-0ddd-b6e1745c35ae@leemhuis.info>
+Date: Wed, 12 Apr 2023 12:47:58 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,95 +16,84 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.9.1
+Subject: Re: [PATCH] pinctrl: amd: Disable and mask interrupts on resume
 Content-Language: en-US, de-DE
+To: Linus Walleij <linus.walleij@linaro.org>,
+ =?UTF-8?Q?Kornel_Dul=c4=99ba?= <korneld@chromium.org>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
+ gregkh@linuxfoundation.org, Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
+ Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, upstream@semihalf.com,
+ rad@semihalf.com, mattedavis@google.com, stable@vger.kernel.org,
+ Sasha Levin <sashal@kernel.org>, "Gong, Richard" <richard.gong@amd.com>,
+ Mario Limonciello <mario.limonciello@amd.com>, linux-gpio@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20230320093259.845178-1-korneld@chromium.org>
+ <d1d39179-33a0-d35b-7593-e0a02aa3b10a@amd.com>
+ <ed840be8-b27b-191e-4122-72f62d8f1b7b@amd.com>
+ <37178398-497c-900b-361a-34b1b77517aa@leemhuis.info>
+ <CAD=NsqzFiQBxtVDmCiJ24HD0YZiwZ4PQkojHHic775EKfeuiaQ@mail.gmail.com>
+ <36c7638f-964b-bee6-b44b-c8406e71dfec@leemhuis.info>
+ <CAD=Nsqx2Gy08HHzjRoWxS7u559hUgi_GGRis0UDFxrUqLYjTfg@mail.gmail.com>
+ <CACRpkdYoALVKFPoxxac=c9x3vRhYge+VAUSqKdkqSvgvS+PiXw@mail.gmail.com>
 From: "Linux regression tracking (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: [regression] Bug 217310 - mt7921e swiotlb buffer is full
-Cc: Petr Tesarik <petr.tesarik.ext@huawei.com>,
- "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
- LKML <linux-kernel@vger.kernel.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-To: Ryder Lee <ryder.lee@mediatek.com>, Lorenzo Bianconi
- <lorenzo@kernel.org>, Felix Fietkau <nbd@nbd.name>
+In-Reply-To: <CACRpkdYoALVKFPoxxac=c9x3vRhYge+VAUSqKdkqSvgvS+PiXw@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1681295649;ea8daaea;
-X-HE-SMSGID: 1pmXnc-0001gq-N8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1681296481;429f3a37;
+X-HE-SMSGID: 1pmY19-0004FO-MH
 
-Hi, Thorsten here, the Linux kernel's regression tracker.
-
-I noticed a regression report in bugzilla.kernel.org. As many (most?)
-kernel developers don't keep an eye on it, I decided to forward it by mail.
-
-Note, you have to use bugzilla to reach the reporter, as I sadly[1] can
-not CCed them in mails like this.
-
-Petr, I CCed you because you apparently dealt with another case with a
-similar error message.
-
-Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=217310 :
-
->  Mike Lothian 2023-04-08 12:03:01 UTC
+On 11.04.23 22:44, Linus Walleij wrote:
+> On Tue, Apr 11, 2023 at 3:35 PM Kornel Dulęba <korneld@chromium.org> wrote:
+>> On Tue, Apr 11, 2023 at 3:29 PM Linux regression tracking (Thorsten
+>> Leemhuis) <regressions@leemhuis.info> wrote:
 > 
-> Created attachment 304097 [details]
-> dmesg
+>>> Linusw, what's your preferred course to realize this revert quickly?
+>>>
+>>>  * someone (Kornel?) sends a revert with a commit msg for review, which
+>>> you then apply and pass on to the other Linus?
+>>>
+>>>  * someone (Kornel?) sends a revert with a commit msg for review that
+>>> immediately asks the other Linus to pick this up directly?
+>>>
+>>>  * we ask the other Linus directly to revert this (who then has to come
+>>> up with a commit msg on his own)?
+>>
+>> Would you like me to send a reverting change?
+>> I can do this right away.
 > 
-> Since the start of the 6.3 kernel cycle I've been having issues with my
-> wifi when it's been going at high speeds, which usually requires me
-> having to disable and re enable wifi to get it going again
+> Yeah that is best.
 > 
-> When this happens I see this in the logs:
+>> The commit message would contain something like:
+>>
+>> This patch introduces a regression on Lenovo Z13, which can't wake
+>> from the lid with it applied.
 > 
-> mt7921e 0000:05:00.0: swiotlb buffer is full (sz: 4096 bytes), total
-> 32768 (slots), used 32160 (slots)
+> Looks good!
 > 
-> I'm running the latest firmware from
-> https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git
-> 
-> And I don't see this on 6.2
-> 
-> I've attached my dmesg and the device is listed as:
-> 
-> 05:00.0 Network controller [0280]: MEDIATEK Corp. MT7921 802.11ax PCI
-> Express Wireless Network Adapter [14c3:7961]
+> Thorsten: thanks for watching over this issue, we'll have it
+> resolved pronto.
 
-And later:
+Thx for saying that, in cases like this there is always something in my
+head that says "maybe the developers and maintainers would have done
+everything just the same way and just as quickly, even if I hadn't made
+so much annoying noise". But well, better save that sorry.
 
-> I managed to work around it by setting swiotlb=131072
+Side note: I sometimes wonder if reverts like this maybe should be send
+directly to LinusT for mainlining with a ACK from the maintainer (e.g.
+you in this case) to speed things up. Sure, having things in next for at
+least a day (and running it through subsystem specific CI) can help
+finding unexpected problems, but it delays things, too -- which
+sometimes might result in a revert coming to late for a new stable
+release. And that easily can mean that our users have to face known
+issues for about one more week. :-/
 
-See the ticket for more details.
+Ciao, Thorsten
 
+/me meanwhile wonders if Greg will still pick the revert up for the next
+stable releases (currently in rc), if the revert reaches mainline before
+they are released on Friday
 
-[TLDR for the rest of this mail: I'm adding this report to the list of
-tracked Linux kernel regressions; the text you find below is based on a
-few templates paragraphs you might have encountered already in similar
-form.]
-
-BTW, let me use this mail to also add the report to the list of tracked
-regressions to ensure it's doesn't fall through the cracks:
-
-#regzbot introduced: v6.2..v6.3-rc6
-https://bugzilla.kernel.org/show_bug.cgi?id=217310
-#regzbot title: dma-mapping: / net: wireless: mt7921e swiotlb buffer is full
-#regzbot ignore-activity
-
-This isn't a regression? This issue or a fix for it are already
-discussed somewhere else? It was fixed already? You want to clarify when
-the regression started to happen? Or point out I got the title or
-something else totally wrong? Then just reply and tell me -- ideally
-while also telling regzbot about it, as explained by the page listed in
-the footer of this mail.
-
-Developers: When fixing the issue, remember to add 'Link:' tags pointing
-to the report (e.g. the buzgzilla ticket and maybe this mail as well, if
-this thread sees some discussion). See page linked in footer for details.
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
-
-[1] because bugzilla.kernel.org tells users upon registration their
-"email address will never be displayed to logged out users"
+/me will wait for the revert to hit mainline before he'll prod Greg
+about it
