@@ -1,87 +1,118 @@
-Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from tilde.cafe (tilde.cafe [51.222.161.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EFB77E
-	for <regressions@lists.linux.dev>; Thu, 13 Apr 2023 15:20:06 +0000 (UTC)
-Received: by mail-yb1-f179.google.com with SMTP id h198so22267114ybg.12
-        for <regressions@lists.linux.dev>; Thu, 13 Apr 2023 08:20:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1681399205; x=1683991205;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KspaEPrDplSYvcKzIX5D8e6YFnwmmvrPbcdh5kQyGqQ=;
-        b=eKsilHFPmEUZDQVDrV9qu6JEEtfDZIu1cSMeGpjLy2izDH0nTEnTGwBipq3zsshyab
-         nhbOlmES78QjhhnMgQkj22ESrWyFzgzKzq1koPMtnDuhJUge3qys4hEgqbRg2Uaa1qMw
-         D8XAmsrmTCcvyrjpC1QyWniZRlpnIicqQEPNJoWqg7dkQI8LyZEQOW9YZscE1Rg46FfH
-         90OOn+GcQaMbQofV4lMHCa+6Mxyyf6vli8DxJ31t2250oaETaCK3q5KLmQriHXxUMj0F
-         T4xRJw8PnKKkP7AgMCFlDutKxO0xsAk6Moug72SglwxzeceUIPyx+sIVfsM6YRewHlGa
-         W9pQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681399205; x=1683991205;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KspaEPrDplSYvcKzIX5D8e6YFnwmmvrPbcdh5kQyGqQ=;
-        b=Dxs32ZOXDhUS0Ytt5PYfhqbEn/gfIeoZUuNf7O/25WiHDEFB9C7Q6CURX25ipTeP42
-         ieM6TPb5QBTWYerecbbmPTAraTbQ5UaK5m1yarvQdb/vVIO2A/BmBvEjwDiVhG70f8Tc
-         s9qDKowG/+ngUui88F9l8vF+v4dY6smo5KHmFYAnp2GuBakdh42Nh/Ota3NAMb7tsLc3
-         /sma1+9tojfo9yjTQ9GQ1ynHu74+pu6XEYQXYzYjzjTFjmwvslfXzLprxb5vteca5Guj
-         JWx/CRyuG5TF1c6ChX6F0XulPbITLbm8ZPfFNXcYWTtpLGL3NX2oGfXRFmSGoTjLOUjg
-         ss/g==
-X-Gm-Message-State: AAQBX9cPIqw/ok2ddFKZv4eLqxX4oRMb5mvsNvUlWxh9RY7rNEprIfvf
-	FmtXUhDNoxF89qEmvVyCdo3t3SPCeJdjfueBtUP3
-X-Google-Smtp-Source: AKy350bJPUvWcLZaaM0kHY/y3MXoFhJfvIHrtDKoCad0pksGkPPZzxEGyK/GfpgQZ7Mj6t5iYE1p77a5Wr3zfNz/la4=
-X-Received: by 2002:a25:d2ce:0:b0:b8b:f1ac:9c6c with SMTP id
- j197-20020a25d2ce000000b00b8bf1ac9c6cmr1687953ybg.3.1681399204370; Thu, 13
- Apr 2023 08:20:04 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89D93BA32
+	for <regressions@lists.linux.dev>; Thu, 13 Apr 2023 19:42:34 +0000 (UTC)
+Received: from localhost (124.250.94.80.dyn.idknet.com [80.94.250.124])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by tilde.cafe (Postfix) with ESMTPSA id 016EA20703;
+	Thu, 13 Apr 2023 15:35:51 -0400 (EDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-References: <CAHC9VhQ7A4+msL38WpbOMYjAqLp0EtOjeLh4Dc6SQtD6OUvCQg@mail.gmail.com>
- <ZCS5oxM/m9LuidL/@x130> <CAHC9VhTvQLa=+Ykwmr_Uhgjrc6dfi24ou=NBsACkhwZN7X4EtQ@mail.gmail.com>
- <1c8a70fc-18cb-3da7-5240-b513bf1affb9@leemhuis.info> <CAHC9VhT+=DtJ1K1CJDY4=L_RRJSGqRDvnaOdA6j9n+bF7y+36A@mail.gmail.com>
- <20230410054605.GL182481@unreal> <20230413075421.044d7046@kernel.org>
-In-Reply-To: <20230413075421.044d7046@kernel.org>
-From: Paul Moore <paul@paul-moore.com>
-Date: Thu, 13 Apr 2023 11:19:53 -0400
-Message-ID: <CAHC9VhRKBLHfGHvFAsmcBQQEmbOxZ=M9TE4-pV70E+Y6G=uXWA@mail.gmail.com>
-Subject: Re: Potential regression/bug in net/mlx5 driver
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Leon Romanovsky <leon@kernel.org>, 
-	Linux regressions mailing list <regressions@lists.linux.dev>, Saeed Mahameed <saeed@kernel.org>, 
-	Shay Drory <shayd@nvidia.com>, Saeed Mahameed <saeedm@nvidia.com>, netdev@vger.kernel.org, 
-	selinux@vger.kernel.org, Tariq Toukan <tariqt@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 13 Apr 2023 22:35:50 +0300
+Cc: <stable@vger.kernel.org>, <linux-acpi@vger.kernel.org>
+From: "Acid Bong" <acidbong@tilde.cafe>
+To: <regressions@lists.linux.dev>
+Subject: [REGRESSION] Asus X541UAK hangs on suspend and poweroff (v6.1.6
+ onward)
+Message-Id: <CRVU11I7JJWF.367PSO4YAQQEI@bong>
+X-Mailer: aerc 0.14.0-126-g6d59ad3f02bc
 
-On Thu, Apr 13, 2023 at 10:54=E2=80=AFAM Jakub Kicinski <kuba@kernel.org> w=
-rote:
-> On Mon, 10 Apr 2023 08:46:05 +0300 Leon Romanovsky wrote:
-> > > I haven't seen any updates from the mlx5 driver folks, although I may
-> > > not have been CC'd?
-> >
-> > We are extremely slow these days due to combination of holidays
-> > (Easter, Passover, Ramadan, spring break e.t.c).
->
-> Let's get this fixed ASAP, please. I understand that there are
-> holidays, but it's been over 2 weeks, and addressing regressions
-> should be highest priority for any maintainer! :(
->
-> From what I gather all we need here is to throw in an extra condition
-> for "FW is hella old" into mlx5_core_is_management_pf(), no?
+Hi there, hello,
 
-That's my gut feeling too, at least for a quick solution.  I'd offer
-to cobble together a fix, but my kernel expertise ends well before I
-get to the mlx5 driver :)
+Sometimes when I suspend (by closing the lid, less often - by pressing
+Fn+F1 (sleep key combo)) or poweroff my laptop (both by pressing powerit
+button and running "loginctl poweroff"), it goes in such a state when it
+doesn't respond to opening/closing the lid, power button nor
+Ctrl+Alt+Del, but, unlike in sleep mode, the fan is rotating and the
+"awake status" LED is on. I checked /var/log/kern.log, but it didn't
+report suspend at that moment at all: went straight from [UFW BLOCK] to
+"Microcode updated" on force reboot (marked with an arrow):
 
-I have been running for a while now with that small patch reverted on
-my test machines (so I can keep my tests running) and everything seems
-to be okay, but there may be other issues caused by the revert that
-I'm not seeing.
+	Apr 13 10:40:32 bong kernel: asus_wmi: Unknown key code 0xcf
+	Apr 13 10:44:05 bong kernel: [UFW BLOCK] IN=3Dwlan0 OUT=3D MAC=3D/*confide=
+ntial*/
+	Apr 13 10:47:45 bong kernel: [UFW BLOCK] IN=3Dwlan0 OUT=3D MAC=3D/*confide=
+ntial*/
+	Apr 13 10:47:46 bong kernel: ICMPv6: NA: /*router*/ advertised our address=
+ /*ipv6*/ on wlan0!
+	Apr 13 10:47:48 bong last message buffered 2 times
+->	Apr 13 10:49:11 bong kernel: [UFW BLOCK] IN=3Dwlan0 OUT=3D MAC=3D/*confi=
+dential*/
+	Apr 13 10:52:34 bong kernel: microcode: microcode updated early to revisio=
+n 0xf0, date =3D 2021-11-12
+	Apr 13 10:52:34 bong kernel: Linux version 6.1.23-bong+ (acid@bong) (gcc (=
+Gentoo Hardened 12.2.1_p20230121-r1 p10) 12.2.1 20230121, GNU ld (Gentoo 2.=
+39 p5) 2.39.0) #1 SMP PREEMPT_DYNAMIC Tue Apr 11 15:21:57 EEST 2023
+	Apr 13 10:52:34 bong kernel: Command line: root=3D/dev/genston/root ro log=
+level=3D4 rd.lvm.vg=3Dgenston rd.luks.uuid=3D97d10669-2da1-452d-a372-887e42=
+0b2ad4 rd.luks.allow-discards pci=3Dnomsi initrd=3D\x5cinitramfs-6.1.23-bon=
+g+.img
+	Apr 13 10:52:34 bong kernel: x86/fpu: Supporting XSAVE feature 0x001: 'x87=
+ floating point registers'
+	Apr 13 10:52:34 bong kernel: x86/fpu: Supporting XSAVE feature 0x002: 'SSE=
+ registers'
+	Apr 13 10:52:34 bong kernel: x86/fpu: Supporting XSAVE feature 0x004: 'AVX=
+ registers'
 
---=20
-paul-moore.com
+Normally it starts like this (taken from dmesg to sync with elogind message=
+s)
+
+	[ 7835.869228] elogind-daemon[2033]: Lid closed.
+	[ 7835.872875] elogind-daemon[2033]: Suspending...
+	[ 7835.873955] elogind-daemon[2033]: Suspending system...
+	[ 7835.873970] PM: suspend entry (deep)
+	[ 7835.902814] Filesystems sync: 0.028 seconds
+	[ 7835.920362] Freezing user space processes
+	[ 7835.923030] Freezing user space processes completed (elapsed 0.002 seco=
+nds)
+	[ 7835.923046] OOM killer disabled.
+	[ 7835.923049] Freezing remaining freezable tasks
+	[ 7835.924445] Freezing remaining freezable tasks completed (elapsed 0.001=
+ seconds)
+	[ 7835.924624] printk: Suspending console(s) (use no_console_suspend to de=
+bug)
+
+The issue appeared when I was using pf-kernel with genpatches and
+updated from 6.1-pf2 to 6.1-pf3 (corresponding to vanilla versions 6.1.3
+-> 6.1.6). I used that fork until 6.2-pf2, but since then (early March)
+moved to vanilla sources and started following the 6.1.y branch when it
+was declared LTS. And the issue was present on all of them.
+
+The hang was last detected 3 days ago on 6.1.22 and today on 6.1.23.
+
+I'd like to bisect it, but it could take ages for a couple of reasons:
+
+1) I don't know exact patterns it follows. One of the scenarios I've
+noticed was this one (sorry if too ridiculous):
+	- put the laptop on the nearby couch and simultaneously close
+	  the lid; the loose charger jack might disconnect;
+	- lay the mouse upside down (so it doesn't wake up when I
+	  reconnect the charger),
+but it's not a 100% guarantee of the bug and, as I said earlier, the
+laptop also misbehaves on shutdown.
+
+2) The issue happens rarely, once in a few days (sometimes up to a week;
+I haven't measured it precisely back then).
+
+Hardware: https://tilde.cafe/u/acidbong/kernel/lspci (`lspci -vvnn`)
+Config (latest vanilla): https://git.sr.ht/~acid-bong/kernel/tree/806e6639d=
+a610952798e1b5d8c0d700062f915de/item/.config
+Built with KCFLAGS=3D"-march=3Dnative"
+Isolated cmdline: root=3D/dev/genston/root ro loglevel=3D4 rd.lvm.vg=3Dgens=
+ton rd.luks.uuid=3D97d10669-2da1-452d-a372-887e420b2ad4 rd.luks.allow-disca=
+rds pci=3Dnomsi initrd=3D\initramfs-6.1.23-bong+.img
+
+# regzbot introduced v6.1.3..v6.1.6
+
+---
+Regards,
+~acidbong
