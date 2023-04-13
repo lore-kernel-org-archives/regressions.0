@@ -1,68 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71C8220EE;
-	Wed, 12 Apr 2023 16:47:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95008C4339B;
-	Wed, 12 Apr 2023 16:47:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1681318060;
-	bh=BqTptBLVI1dCnRJ0/GjMix6ij4TtxuV6kJqDROI1j1Q=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-	b=f6oplni109CwS2TqFnZbWPjPKmBqu2qk0XUDILlq7jlI0H5AhPqADCEuPHgJNMi9Q
-	 TMt3vYRC7poMtBsl58dq6guqo6q8wPicuV+ZQfqflOVunfwdWG6h29HPw5uYWfA7NP
-	 v9Xlh3wNUk/bduO2svXz0Mk5pYZDGjC2O9i0rxIQdmMg9q+0tzlzN7zXPn9o+yYqKg
-	 7TLQCUfOZewjc22DBCNxW+bGdUFHraml7r06bMEIzvteHu9LV56kJQOVd6dVrT9ey8
-	 K6SsNKrtKZYqopQlGknxNte1hZtviRqn5adnBbB/7mEiWJ2k59eQpU4VsNbtj5W/fq
-	 7Qeml2g3+RE1g==
-From: Kalle Valo <kvalo@kernel.org>
-To: Konstantin Ryabitsev <konstantin@linuxfoundation.org>
-Cc: Thorsten Leemhuis <linux@leemhuis.info>,  workflows@vger.kernel.org,  aros@gmx.com,  linux-kernel@vger.kernel.org,  regressions@lists.linux.dev,  tools@linux.kernel.org
-Subject: Re: Introducing bugbot
-References: <gmnswy45efztvcyc3xqymm52h7cdfwjz64go2wy3zyeqcqwb76@36fva4hyip4q>
-	<1f0ebf13-ab0f-d512-6106-3ebf7cb372f1@leemhuis.info>
-	<87fs958f2a.fsf@kernel.org> <20230412-appear-tiring-f5a896@meerkat>
-Date: Wed, 12 Apr 2023 19:47:35 +0300
-In-Reply-To: <20230412-appear-tiring-f5a896@meerkat> (Konstantin Ryabitsev's
-	message of "Wed, 12 Apr 2023 10:07:21 -0400")
-Message-ID: <87y1mx6o9k.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6445662F
+	for <regressions@lists.linux.dev>; Thu, 13 Apr 2023 04:16:19 +0000 (UTC)
+Received: by mail-pl1-f180.google.com with SMTP id ke16so13680711plb.6
+        for <regressions@lists.linux.dev>; Wed, 12 Apr 2023 21:16:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1681359379; x=1683951379;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=IVdcMCSPC9IdbB1xsDX6nGCc2/KXvPpMpeLbbNIoZdo=;
+        b=ixhStj/lXF2Wb6en9bP6aQn57tdm/ux1IsYvjHemNcm/wBViqRJNPuEFXppLu0E/t2
+         uleZxtEXXiVc6dyJrKWpl7HpfdmkOHFAgl1OxRTbZ9Q+uEQ3+rVyduNe/a/fuE60UE+u
+         uZ/5TJDBkch0aS5/uXkpo8XWmMdTS+k8mFJbyHuzacE+aTvFivhdrHEBeACfuvbLCdcI
+         FI1AtMgnxjrvfF4uBfUxdHZ1TGJXpM+5KJo/9hjgwHT9FlG40e2G5kZ8sK/AhU17YP4/
+         adlzlQoYHHsl6QaDPE+7Q4IShVTBtt0Zrr+XFGq5yuPWPKSNP1ctOj5El1Bglxox+aGA
+         j3GA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1681359379; x=1683951379;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IVdcMCSPC9IdbB1xsDX6nGCc2/KXvPpMpeLbbNIoZdo=;
+        b=Uql0WRd0MKOKSP+ciQ+0XaMksW1ymSSScq0QSB2pf96V9By2JBZxf/6Q5I1XXwMcBb
+         C02fvVFksIG4Zz+6GFS4jKHtjnDS2DDRj2Zbd8jnEp1rrSZ7N14qRaSvqQmmSU+kJTAF
+         O6V9BYU5YiqZ4oAcwjRaUYyercsJLaK0Sc3q+sYGN8iqbS1UZbv6xP0KPOUZZXoUCruX
+         aqsTbDVi2jKfQbS73808Q7Xx8SDUoJxvDmJ0x5J0Nu6iX9CW9XvYEoqNoDoqOgQ9icEb
+         viVLtQNoQdGVTCBhqBvdsJFBdSfL25ZotE+iWo6pBxB0LaSmxQu8dSw8ZJUzY4GCADfZ
+         EpQg==
+X-Gm-Message-State: AAQBX9etQEdW6ifQyacP+Vz/8YuJnyA4To9Z/ohw++aiTqX7qbZG2aT8
+	X3HcIgmUJedAr6MvhvtwICU=
+X-Google-Smtp-Source: AKy350ZxVVjpIXli7JXsRewIfhWAjg80eCXA9xHAm4QsrsGgjV6RpllcsCD234fzfx934OmJduhV0g==
+X-Received: by 2002:a05:6a20:c110:b0:d9:33a3:e7c5 with SMTP id bh16-20020a056a20c11000b000d933a3e7c5mr781664pzb.35.1681359378790;
+        Wed, 12 Apr 2023 21:16:18 -0700 (PDT)
+Received: from debian.me (subs03-180-214-233-66.three.co.id. [180.214.233.66])
+        by smtp.gmail.com with ESMTPSA id x47-20020a056a000bef00b0063418ea5032sm284183pfu.1.2023.04.12.21.16.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Apr 2023 21:16:18 -0700 (PDT)
+Received: by debian.me (Postfix, from userid 1000)
+	id 70224106755; Thu, 13 Apr 2023 11:16:15 +0700 (WIB)
+Date: Thu, 13 Apr 2023 11:16:15 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Ammar Faizi <ammarfaizi2@gnuweeb.org>
+Cc: Jani Nikula <jani.nikula@linux.intel.com>,
+	Intel GFX Mailing List <intel-gfx@lists.freedesktop.org>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+	Ville =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
+	Stanislav Lisovskiy <stanislav.lisovskiy@intel.com>,
+	Niranjana Vishwanathapura <niranjana.vishwanathapura@intel.com>,
+	Manasi Navare <manasi.d.navare@intel.com>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
+	Linux Regressions <regressions@lists.linux.dev>,
+	Linux regression tracking <regressions@leemhuis.info>
+Subject: Re: Linux 6.2.1 hits a display driver bug (list_del corruption,
+ ffff88811b4af298->next is NULL)
+Message-ID: <ZDeCD5HuM7KJt4fu@debian.me>
+References: <6feae796-db3f-1135-a607-cfefb0259788@gnuweeb.org>
+ <ZAGqet3U8AMm4Uf1@debian.me>
+ <ZAOTU5CRwdEC1lGH@biznet-home.integral.gnuweeb.org>
+ <87v8jetaik.fsf@intel.com>
+ <ZAXT1B1GTlmA78Ld@biznet-home.integral.gnuweeb.org>
+ <ZDYw0vVg7Y1oExJL@debian.me>
+ <ZDaPNx7WSKeMqgmj@biznet-home.integral.gnuweeb.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="bhJLHQiEgQvFLfqm"
+Content-Disposition: inline
+In-Reply-To: <ZDaPNx7WSKeMqgmj@biznet-home.integral.gnuweeb.org>
 
-Konstantin Ryabitsev <konstantin@linuxfoundation.org> writes:
 
-> On Wed, Apr 12, 2023 at 03:23:25PM +0300, Kalle Valo wrote:
->
->> While at it, I have some things on my wishlist to make my use of
->> bugzilla.kernel.org easier:
->> 
->> * A new state named UNCONFIRMED and have it as the default state for
->>   reported bugs. This would help triaging bugs as some of the reports
->>   are not valid. In other words only valid bugs would have NEW state.
->>   IIRC the Mozilla project did this back in the day.
->
-> This is more hairy than it looks, but I'll try to figure out what happened to
-> the UNCONFIRMED state in our bugzilla.
+--bhJLHQiEgQvFLfqm
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I can only imagine how difficult bugzilla can to administer. So if it's
-too hairy to get UNCONFIRMED working again don't use too much on it.
-This is more like a nice to have feature, not a critical thing.
+On Wed, Apr 12, 2023 at 06:00:07PM +0700, Ammar Faizi wrote:
+> On Wed, Apr 12, 2023 at 11:17:22AM +0700, Bagas Sanjaya wrote:
+> > From gitlab issue above, I don't see any progress on bisection attempt.
+> > Ammar, have you successfully boot Ubuntu 20.04 with v5.10 kernel and
+> > test there?
+>=20
+> I am still using Ubuntu 22.04. Haven't tried 20.04. I'll arrange time
+> for it this week.
+>=20
+> > Anyway, I'm adding this to regzbot (with tentative commit range):
+> >=20
+> > #regzbot introduced: v5.10..v5.15.103
+> > #regzbot title: Linux 6.2.1 hits a display driver bug (list_del corrupt=
+ion, ffff88811b4af298->next is NULL)
+> > #regzbot link: https://gitlab.freedesktop.org/drm/intel/-/issues/8274
+> >=20
+> > (Also Cc: Thorsten)
+>=20
+> Not sure why you marked it as regression. I haven't even found the last
+> good commit. It's possible that it's always broken since the beginning.
+>=20
 
->> * Use P3 as the default priority for the new bugs. I try to keep ath11k
->>   bugs in priority order but new reported bugs having P1 always messes
->>   up the list always.
->
-> Okay, I set the default to P3, which is nicely in the middle.
+OK, marking this as inconclusive for now:
 
-Nice, thanks!
+#regzbot inconclusive: Still on process on finding last known good commit
 
--- 
-https://patchwork.kernel.org/project/linux-wireless/list/
+Thanks!
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--bhJLHQiEgQvFLfqm
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZDeCDwAKCRD2uYlJVVFO
+oyDQAQCpRHiwWX5dI6Er50EYf4tUXS1tL3eFJnh7YP059N3xcgD/WqgxlPTZGAiH
+sI/ZeNdqtFgb4R4FLXyRHG1gh18ugQA=
+=US0W
+-----END PGP SIGNATURE-----
+
+--bhJLHQiEgQvFLfqm--
