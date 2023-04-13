@@ -1,138 +1,56 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 895CE6AB4
-	for <regressions@lists.linux.dev>; Thu, 13 Apr 2023 14:01:00 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pmxVR-0000jX-MA; Thu, 13 Apr 2023 16:00:57 +0200
-Message-ID: <2e4521c5-b291-e228-c926-525e9a50a023@leemhuis.info>
-Date: Thu, 13 Apr 2023 16:00:57 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACFA37E
+	for <regressions@lists.linux.dev>; Thu, 13 Apr 2023 14:54:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E83F6C433D2;
+	Thu, 13 Apr 2023 14:54:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1681397663;
+	bh=1K6whjALxumgxRYYK0wH4JcChq+2mh8I/hWM/ZKSTx0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Jh1XJJ5iy1FUDFpLxlvGUY5LeubD6UBVT8j//2eWNW1nmnj80VGWFTgdtYnpbf3eN
+	 8bEDfxOOLF4jO4cgdbeWRqD84P1fn7B7oslrTPcQce6Yt0by4HZiSATLY+dkacuOSC
+	 quzUPZUv3V75PENHZavZowcbHyuOyMvzXMl1CvebNi8dOvk8RiD0p58vEfA+LZc+hq
+	 4Au+tOfydhmrBM/yXv0u1fFD0KVHxwXEtsj5w+5rJ0XUh6D/wDv7CFkxoFGGuo0PGj
+	 SisKtwy7VmSjYqlQrBZxeZRMadm45np91hj1rz4v2ohjVmkpQU5riKsJkOo3cqsAtg
+	 4oOIBhSq4gWKQ==
+Date: Thu, 13 Apr 2023 07:54:21 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Leon Romanovsky <leon@kernel.org>
+Cc: Paul Moore <paul@paul-moore.com>, Linux regressions mailing list
+ <regressions@lists.linux.dev>, Saeed Mahameed <saeed@kernel.org>, Shay
+ Drory <shayd@nvidia.com>, Saeed Mahameed <saeedm@nvidia.com>,
+ netdev@vger.kernel.org, selinux@vger.kernel.org, Tariq Toukan
+ <tariqt@nvidia.com>
+Subject: Re: Potential regression/bug in net/mlx5 driver
+Message-ID: <20230413075421.044d7046@kernel.org>
+In-Reply-To: <20230410054605.GL182481@unreal>
+References: <CAHC9VhQ7A4+msL38WpbOMYjAqLp0EtOjeLh4Dc6SQtD6OUvCQg@mail.gmail.com>
+	<ZCS5oxM/m9LuidL/@x130>
+	<CAHC9VhTvQLa=+Ykwmr_Uhgjrc6dfi24ou=NBsACkhwZN7X4EtQ@mail.gmail.com>
+	<1c8a70fc-18cb-3da7-5240-b513bf1affb9@leemhuis.info>
+	<CAHC9VhT+=DtJ1K1CJDY4=L_RRJSGqRDvnaOdA6j9n+bF7y+36A@mail.gmail.com>
+	<20230410054605.GL182481@unreal>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.1
-Subject: Re: Odroid-C1 regression with commit 4bc31edebde5 ("mmc: core: Set HS
- clock speed before sending HS CMD13")
-Content-Language: en-US, de-DE
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
- Ulf Hansson <ulf.hansson@linaro.org>
-Cc: linux-amlogic@lists.infradead.org, linux-mmc@vger.kernel.org,
- Brian Norris <briannorris@chromium.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <CAFBinCD0RT0p-jk86W0JuMT3ufohRh1RqWCcM35DKZJpuc10HQ@mail.gmail.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <CAFBinCD0RT0p-jk86W0JuMT3ufohRh1RqWCcM35DKZJpuc10HQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1681394460;c538e318;
-X-HE-SMSGID: 1pmxVR-0000jX-MA
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-[TLDR: I'm adding this report to the list of tracked Linux kernel
-regressions; the text you find below is based on a few templates
-paragraphs you might have encountered already in similar form.
-See link in footer if these mails annoy you.]
+On Mon, 10 Apr 2023 08:46:05 +0300 Leon Romanovsky wrote:
+> > I haven't seen any updates from the mlx5 driver folks, although I may
+> > not have been CC'd? =20
+>=20
+> We are extremely slow these days due to combination of holidays
+> (Easter, Passover, Ramadan, spring break e.t.c).
 
-[CCing the regression list, as it should be in the loop for regressions:
-https://docs.kernel.org/admin-guide/reporting-regressions.html]
+Let's get this fixed ASAP, please. I understand that there are
+holidays, but it's been over 2 weeks, and addressing regressions
+should be highest priority for any maintainer! :(
 
-On 11.04.23 01:13, Martin Blumenstingl wrote:
-> 
-> today I found that upstream commit 4bc31edebde5 ("mmc: core: Set HS
-> clock speed before sending HS CMD13") breaks eMMC support on my
-> Odroid-C1.
-> (yes, I know that I am very late to the party...)
-> 
-> The .dts for this board is upstream using
-> arch/arm/boot/dts/meson8b-odroidc1.dts (&sdhc node)
-> The MMC host driver used is drivers/mmc/host/meson-mx-sdhc*.
-> 
-> The problem I'm seeing is that the eMMC module is simply not detected.
-> There are no errors in the kernel log (note that mmc1 is the eMMC
-> while mmc0 is the SD card which is attached to another controller on
-> that SoC):
-> # dmesg | grep mmc
-> [    2.742136] meson-mx-sdhc c1108e00.mmc: allocated mmc-pwrseq
-> [    4.315905] platform c1108c20.mmc:slot@1: Got CD GPIO
-> [    4.450921] mmc0: new high speed SDHC card at address 0001
-> [    4.456985] mmcblk0: mmc0:0001 EB1QT 29.8 GiB
-> [    4.466108]  mmcblk0: p1
-> 
-> In this state I get:
-> # cat /sys/kernel/debug/mmc1/ios
-> clock:          52000000 Hz
-> actual clock:   51000000 Hz
-> vdd:            21 (3.3 ~ 3.4 V)
-> bus mode:       2 (push-pull)
-> chip select:    0 (don't care)
-> power mode:     2 (on)
-> bus width:      3 (8 bits)
-> timing spec:    9 (mmc HS200)
-> signal voltage: 1 (1.80 V)
-> driver type:    0 (driver type B)
-> 
-> After reverting the mentioned commit I get:
-> # dmesg | grep mmc
-> [    2.744226] meson-mx-sdhc c1108e00.mmc: allocated mmc-pwrseq
-> [    2.970944] mmc1: new HS200 MMC card at address 0001
-> [    2.974492] mmcblk1: mmc1:0001 8GND3R 7.28 GiB
-> [    2.985126]  mmcblk1: p1
-> [    2.987810] mmcblk1boot0: mmc1:0001 8GND3R 4.00 MiB
-> [    3.003007] mmcblk1boot1: mmc1:0001 8GND3R 4.00 MiB
-> [    4.311754] platform c1108c20.mmc:slot@1: Got CD GPIO
-> [    4.374732] mmc0: new high speed SDHC card at address 0001
-> [    4.377228] mmcblk0: mmc0:0001 EB1QT 29.8 GiB
-> [    4.399152]  mmcblk0: p1
-> # cat /sys/kernel/debug/mmc1/ios
-> clock:          100000000 Hz
-> actual clock:   94444445 Hz
-> vdd:            21 (3.3 ~ 3.4 V)
-> bus mode:       2 (push-pull)
-> chip select:    0 (don't care)
-> power mode:     2 (on)
-> bus width:      3 (8 bits)
-> timing spec:    9 (mmc HS200)
-> signal voltage: 1 (1.80 V)
-> driver type:    0 (driver type B)
-> 
-> Please let me know which additional information would be helpful for
-> debugging this further.
-> Also I'd like to highlight that I'm not blaming the above commit
-> (unless I know better). It's entirely possible that the meson-mx-sdhc
-> driver (which I wrote) can be at fault and that I was previously just
-> lucky.
-> 
-> [...]
-> # first bad commit: [4bc31edebde51fcf8ad0794763b8679a7ecb5ec0] mmc:
-> core: Set HS clock speed before sending HS CMD13
-
-Thanks for the report. To be sure the issue doesn't fall through the
-cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
-tracking bot:
-
-#regzbot ^introduced 4bc31edebde51fcf8ad079
-#regzbot title mmc: core: eMMC support broken on Odroid-C1
-#regzbot ignore-activity
-
-This isn't a regression? This issue or a fix for it are already
-discussed somewhere else? It was fixed already? You want to clarify when
-the regression started to happen? Or point out I got the title or
-something else totally wrong? Then just reply and tell me -- ideally
-while also telling regzbot about it, as explained by the page listed in
-the footer of this mail.
-
-Developers: When fixing the issue, remember to add 'Link:' tags pointing
-to the report (the parent of this mail). See page linked in footer for
-details.
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+=46rom what I gather all we need here is to throw in an extra condition
+for "FW is hella old" into mlx5_core_is_management_pf(), no?
