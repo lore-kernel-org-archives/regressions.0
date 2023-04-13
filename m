@@ -1,56 +1,87 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACFA37E
-	for <regressions@lists.linux.dev>; Thu, 13 Apr 2023 14:54:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E83F6C433D2;
-	Thu, 13 Apr 2023 14:54:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1681397663;
-	bh=1K6whjALxumgxRYYK0wH4JcChq+2mh8I/hWM/ZKSTx0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Jh1XJJ5iy1FUDFpLxlvGUY5LeubD6UBVT8j//2eWNW1nmnj80VGWFTgdtYnpbf3eN
-	 8bEDfxOOLF4jO4cgdbeWRqD84P1fn7B7oslrTPcQce6Yt0by4HZiSATLY+dkacuOSC
-	 quzUPZUv3V75PENHZavZowcbHyuOyMvzXMl1CvebNi8dOvk8RiD0p58vEfA+LZc+hq
-	 4Au+tOfydhmrBM/yXv0u1fFD0KVHxwXEtsj5w+5rJ0XUh6D/wDv7CFkxoFGGuo0PGj
-	 SisKtwy7VmSjYqlQrBZxeZRMadm45np91hj1rz4v2ohjVmkpQU5riKsJkOo3cqsAtg
-	 4oOIBhSq4gWKQ==
-Date: Thu, 13 Apr 2023 07:54:21 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Leon Romanovsky <leon@kernel.org>
-Cc: Paul Moore <paul@paul-moore.com>, Linux regressions mailing list
- <regressions@lists.linux.dev>, Saeed Mahameed <saeed@kernel.org>, Shay
- Drory <shayd@nvidia.com>, Saeed Mahameed <saeedm@nvidia.com>,
- netdev@vger.kernel.org, selinux@vger.kernel.org, Tariq Toukan
- <tariqt@nvidia.com>
-Subject: Re: Potential regression/bug in net/mlx5 driver
-Message-ID: <20230413075421.044d7046@kernel.org>
-In-Reply-To: <20230410054605.GL182481@unreal>
-References: <CAHC9VhQ7A4+msL38WpbOMYjAqLp0EtOjeLh4Dc6SQtD6OUvCQg@mail.gmail.com>
-	<ZCS5oxM/m9LuidL/@x130>
-	<CAHC9VhTvQLa=+Ykwmr_Uhgjrc6dfi24ou=NBsACkhwZN7X4EtQ@mail.gmail.com>
-	<1c8a70fc-18cb-3da7-5240-b513bf1affb9@leemhuis.info>
-	<CAHC9VhT+=DtJ1K1CJDY4=L_RRJSGqRDvnaOdA6j9n+bF7y+36A@mail.gmail.com>
-	<20230410054605.GL182481@unreal>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EFB77E
+	for <regressions@lists.linux.dev>; Thu, 13 Apr 2023 15:20:06 +0000 (UTC)
+Received: by mail-yb1-f179.google.com with SMTP id h198so22267114ybg.12
+        for <regressions@lists.linux.dev>; Thu, 13 Apr 2023 08:20:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore.com; s=google; t=1681399205; x=1683991205;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KspaEPrDplSYvcKzIX5D8e6YFnwmmvrPbcdh5kQyGqQ=;
+        b=eKsilHFPmEUZDQVDrV9qu6JEEtfDZIu1cSMeGpjLy2izDH0nTEnTGwBipq3zsshyab
+         nhbOlmES78QjhhnMgQkj22ESrWyFzgzKzq1koPMtnDuhJUge3qys4hEgqbRg2Uaa1qMw
+         D8XAmsrmTCcvyrjpC1QyWniZRlpnIicqQEPNJoWqg7dkQI8LyZEQOW9YZscE1Rg46FfH
+         90OOn+GcQaMbQofV4lMHCa+6Mxyyf6vli8DxJ31t2250oaETaCK3q5KLmQriHXxUMj0F
+         T4xRJw8PnKKkP7AgMCFlDutKxO0xsAk6Moug72SglwxzeceUIPyx+sIVfsM6YRewHlGa
+         W9pQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1681399205; x=1683991205;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=KspaEPrDplSYvcKzIX5D8e6YFnwmmvrPbcdh5kQyGqQ=;
+        b=Dxs32ZOXDhUS0Ytt5PYfhqbEn/gfIeoZUuNf7O/25WiHDEFB9C7Q6CURX25ipTeP42
+         ieM6TPb5QBTWYerecbbmPTAraTbQ5UaK5m1yarvQdb/vVIO2A/BmBvEjwDiVhG70f8Tc
+         s9qDKowG/+ngUui88F9l8vF+v4dY6smo5KHmFYAnp2GuBakdh42Nh/Ota3NAMb7tsLc3
+         /sma1+9tojfo9yjTQ9GQ1ynHu74+pu6XEYQXYzYjzjTFjmwvslfXzLprxb5vteca5Guj
+         JWx/CRyuG5TF1c6ChX6F0XulPbITLbm8ZPfFNXcYWTtpLGL3NX2oGfXRFmSGoTjLOUjg
+         ss/g==
+X-Gm-Message-State: AAQBX9cPIqw/ok2ddFKZv4eLqxX4oRMb5mvsNvUlWxh9RY7rNEprIfvf
+	FmtXUhDNoxF89qEmvVyCdo3t3SPCeJdjfueBtUP3
+X-Google-Smtp-Source: AKy350bJPUvWcLZaaM0kHY/y3MXoFhJfvIHrtDKoCad0pksGkPPZzxEGyK/GfpgQZ7Mj6t5iYE1p77a5Wr3zfNz/la4=
+X-Received: by 2002:a25:d2ce:0:b0:b8b:f1ac:9c6c with SMTP id
+ j197-20020a25d2ce000000b00b8bf1ac9c6cmr1687953ybg.3.1681399204370; Thu, 13
+ Apr 2023 08:20:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <CAHC9VhQ7A4+msL38WpbOMYjAqLp0EtOjeLh4Dc6SQtD6OUvCQg@mail.gmail.com>
+ <ZCS5oxM/m9LuidL/@x130> <CAHC9VhTvQLa=+Ykwmr_Uhgjrc6dfi24ou=NBsACkhwZN7X4EtQ@mail.gmail.com>
+ <1c8a70fc-18cb-3da7-5240-b513bf1affb9@leemhuis.info> <CAHC9VhT+=DtJ1K1CJDY4=L_RRJSGqRDvnaOdA6j9n+bF7y+36A@mail.gmail.com>
+ <20230410054605.GL182481@unreal> <20230413075421.044d7046@kernel.org>
+In-Reply-To: <20230413075421.044d7046@kernel.org>
+From: Paul Moore <paul@paul-moore.com>
+Date: Thu, 13 Apr 2023 11:19:53 -0400
+Message-ID: <CAHC9VhRKBLHfGHvFAsmcBQQEmbOxZ=M9TE4-pV70E+Y6G=uXWA@mail.gmail.com>
+Subject: Re: Potential regression/bug in net/mlx5 driver
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Leon Romanovsky <leon@kernel.org>, 
+	Linux regressions mailing list <regressions@lists.linux.dev>, Saeed Mahameed <saeed@kernel.org>, 
+	Shay Drory <shayd@nvidia.com>, Saeed Mahameed <saeedm@nvidia.com>, netdev@vger.kernel.org, 
+	selinux@vger.kernel.org, Tariq Toukan <tariqt@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, 10 Apr 2023 08:46:05 +0300 Leon Romanovsky wrote:
-> > I haven't seen any updates from the mlx5 driver folks, although I may
-> > not have been CC'd? =20
->=20
-> We are extremely slow these days due to combination of holidays
-> (Easter, Passover, Ramadan, spring break e.t.c).
+On Thu, Apr 13, 2023 at 10:54=E2=80=AFAM Jakub Kicinski <kuba@kernel.org> w=
+rote:
+> On Mon, 10 Apr 2023 08:46:05 +0300 Leon Romanovsky wrote:
+> > > I haven't seen any updates from the mlx5 driver folks, although I may
+> > > not have been CC'd?
+> >
+> > We are extremely slow these days due to combination of holidays
+> > (Easter, Passover, Ramadan, spring break e.t.c).
+>
+> Let's get this fixed ASAP, please. I understand that there are
+> holidays, but it's been over 2 weeks, and addressing regressions
+> should be highest priority for any maintainer! :(
+>
+> From what I gather all we need here is to throw in an extra condition
+> for "FW is hella old" into mlx5_core_is_management_pf(), no?
 
-Let's get this fixed ASAP, please. I understand that there are
-holidays, but it's been over 2 weeks, and addressing regressions
-should be highest priority for any maintainer! :(
+That's my gut feeling too, at least for a quick solution.  I'd offer
+to cobble together a fix, but my kernel expertise ends well before I
+get to the mlx5 driver :)
 
-=46rom what I gather all we need here is to throw in an extra condition
-for "FW is hella old" into mlx5_core_is_management_pf(), no?
+I have been running for a while now with that small patch reverted on
+my test machines (so I can keep my tests running) and everything seems
+to be okay, but there may be other issues caused by the revert that
+I'm not seeing.
+
+--=20
+paul-moore.com
