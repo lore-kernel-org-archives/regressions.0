@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55E6036B
-	for <regressions@lists.linux.dev>; Fri, 14 Apr 2023 12:48:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 675D120F6
+	for <regressions@lists.linux.dev>; Fri, 14 Apr 2023 14:04:28 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pnIqu-0007Am-AC; Fri, 14 Apr 2023 14:48:32 +0200
-Message-ID: <13aea525-108a-e018-987d-2447ff1d42df@leemhuis.info>
-Date: Fri, 14 Apr 2023 14:48:31 +0200
+	id 1pnK27-0007By-7l; Fri, 14 Apr 2023 16:04:11 +0200
+Message-ID: <d6990d00-6fd5-cd89-755d-d7f566c574fa@leemhuis.info>
+Date: Fri, 14 Apr 2023 16:04:10 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,53 +16,78 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.9.1
-Subject: Re: [regression] Bug 217069 - Wake on Lan is broken on r8169 since
- 6.2
-Content-Language: en-US, de-DE
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Jianmin Lv <lvjianmin@loongson.cn>,
- "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- Huacai Chen <chenhuacai@loongson.cn>, Bob Moore <robert.moore@intel.com>,
- acpica-devel@lists.linuxfoundation.org,
- ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
- Huacai Chen <chenhuacai@kernel.org>
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-References: <e6aaddb9-afec-e77d-be33-570f9f10a9c2@leemhuis.info>
- <53e8b4db-e8dd-4dfa-f873-7dcbeac09149@leemhuis.info>
-In-Reply-To: <53e8b4db-e8dd-4dfa-f873-7dcbeac09149@leemhuis.info>
+Subject: Re: [PATCH net] bgmac: fix *initial* chip reset to support BCM5358
+Content-Language: en-US, de-DE
+To: Florian Fainelli <f.fainelli@gmail.com>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?=
+ <rafal@milecki.pl>, =?UTF-8?Q?Ricardo_Ca=c3=b1uelo?=
+ <ricardo.canuelo@collabora.com>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?=
+ <zajec5@gmail.com>
+Cc: "David S . Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
+ netdev@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
+ Jon Mason <jdmason@kudzu.us>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <20230227091156.19509-1-zajec5@gmail.com>
+ <20230404134613.wtikjp6v63isofoc@rcn-XPS-13-9305>
+ <002c1f96-b82f-6be7-2530-68c5ae1d962d@milecki.pl>
+ <b7b11a57-9512-cda9-1b15-5dd5aa12f162@gmail.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+In-Reply-To: <b7b11a57-9512-cda9-1b15-5dd5aa12f162@gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1681476518;9b74d5a0;
-X-HE-SMSGID: 1pnIqu-0007Am-AC
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1681481068;1c1f49af;
+X-HE-SMSGID: 1pnK27-0007By-7l
 
-On 19.03.23 08:20, Linux regression tracking (Thorsten Leemhuis) wrote:
-> On 22.02.23 08:57, Thorsten Leemhuis wrote:
+On 05.04.23 14:42, Florian Fainelli wrote:
+> On 4/4/2023 6:52 AM, Rafał Miłecki wrote:
+
+>> On 4.04.2023 15:46, Ricardo Cañuelo wrote:
+>>> On mar 07-02-2023 23:53:27, Rafał Miłecki wrote:
+>>>> While bringing hardware up we should perform a full reset including the
+>>>> switch bit (BGMAC_BCMA_IOCTL_SW_RESET aka SICF_SWRST). It's what
+>>>> specification says and what reference driver does.
+>>>>
+>>>> This seems to be critical for the BCM5358. Without this hardware
+>>>> doesn't
+>>>> get initialized properly and doesn't seem to transmit or receive any
+>>>> packets.
+>>>>
+>>>> Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
+>>>
+>>> KernelCI found this patch causes a regression in the
+>>> bootrr.deferred-probe-empty test [1] on sun8i-h3-libretech-all-h3-cc
+>>> [2], see the bisection report for more details [3]
+>>>
+>>> Does it make sense to you?
 >>
->> I noticed a regression report in bugzilla.kernel.org. As many (most?)
->> kernel developer don't keep an eye on it, I decided to forward it by
->> mail. Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=217069 :
+>> It doesn't seem to make any sense. I guess that on your platform
+>> /sys/kernel/debug/devices_deferred
+>> is not empty anymore?
+>>
+>> Does your platform use Broadcom Ethernet controller at all?
 > 
-> An issue that looked like a network bug was now bisected and it turns
-> out it's cause by 5c62d5aab875 ("ACPICA: Events: Support fixed PCIe wake
-> event") which Huacai Chen provided. Could you take a look at the ticket
-> linked above?
+> I do not believe it does, however according to the log, the driver is
+> enabled:
+> 
+> <6>[    1.819466] bgmac_bcma: Broadcom 47xx GBit MAC driver loaded
+> 
+> but it should not be probing any device since you don't have any
+> internal BCMA bus to match gigabit devices with. Later in the log we see:
+> 
+> 1c22c00.codec    sun4i-codec: Failed to register our card
+> 
+> and most likely as you already wrote the deferred device list might not
+> be empty.
 
-Jianmin did get close to a proper fix a while ago
-(https://bugzilla.kernel.org/show_bug.cgi?id=217069#c46 ), but it
-appears there wasn't any progress to fix this during the last week. Or
-did I miss it?
-
-This is kinda unsatisfying, as the culprit is now known for nearly four
-weeks; especially as this is a issue that is present in 6.2 since it was
-released and would have been possible to fix there and in mainline with
-a simple revert. We even got close to one two weeks ago already
-(https://bugzilla.kernel.org/show_bug.cgi?id=217069#c49 ).
-
-#sigh
-
-I'd say we should revert this. Rafael, what's your opinion here?
+What happened to this? It seems there wasn't any progress since above
+mail week. But well, seems to be a odd issue anyway (is that one of
+those issues that CI systems find, but don't cause practical issues in
+the field?). Hence: can somebody with more knowledge about this please
+tell if it this is something I can likely drop from the list of tacked
+regressions?
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
