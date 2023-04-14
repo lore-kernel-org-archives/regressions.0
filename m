@@ -1,113 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 700F3630
-	for <regressions@lists.linux.dev>; Fri, 14 Apr 2023 03:26:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AED9BC433D2;
-	Fri, 14 Apr 2023 03:26:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1681442793;
-	bh=RJDVGjjLW9wPMhTKvMcwo53pRkCDc84UcdDQ5nCZb7g=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=kcW0Yg5gftV7F1VwXH/O/XhGNYCdoOaZvAQCugKeQq9fFR1tC9wxVCNENX7Q8SSyt
-	 9o+t6FwIVbPuKG1lpmdQSCIdB6z3dHd1Ykp2trZIuyd3EZdQH2H8E3BaeIEdWoWz6Y
-	 o326BWbteJc+6v5tppbqPEDrZ/IK9UkJr8z6M6Ub7+FQmlx7Lb/6ZnD5ddz79HWK6p
-	 KVAByTxK/nzcUQDpks5/j5xU/Jvp9VEQB2AByRjDk913CXkEkbd2yMqVTcesOZhMyZ
-	 stKAA0TKtnULlhtMsZnPwojUDl9St6gB4My5tGpr2pd8fi2v2pjvyrzrzN8k17ygev
-	 jKvKZZSe2jEjw==
-Date: Thu, 13 Apr 2023 20:26:31 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Saeed Mahameed <saeedm@nvidia.com>
-Cc: Paul Moore <paul@paul-moore.com>, Leon Romanovsky <leon@kernel.org>,
- Linux regressions mailing list <regressions@lists.linux.dev>, Saeed
- Mahameed <saeed@kernel.org>, Shay Drory <shayd@nvidia.com>,
- netdev@vger.kernel.org, selinux@vger.kernel.org, Tariq Toukan
- <tariqt@nvidia.com>
-Subject: Re: Potential regression/bug in net/mlx5 driver
-Message-ID: <20230413202631.7e3bd713@kernel.org>
-In-Reply-To: <ZDjCdpWcchQGNBs1@x130>
-References: <CAHC9VhTvQLa=+Ykwmr_Uhgjrc6dfi24ou=NBsACkhwZN7X4EtQ@mail.gmail.com>
-	<1c8a70fc-18cb-3da7-5240-b513bf1affb9@leemhuis.info>
-	<CAHC9VhT+=DtJ1K1CJDY4=L_RRJSGqRDvnaOdA6j9n+bF7y+36A@mail.gmail.com>
-	<20230410054605.GL182481@unreal>
-	<20230413075421.044d7046@kernel.org>
-	<CAHC9VhRKBLHfGHvFAsmcBQQEmbOxZ=M9TE4-pV70E+Y6G=uXWA@mail.gmail.com>
-	<ZDhwUYpMFvCRf1EC@x130>
-	<20230413152150.4b54d6f4@kernel.org>
-	<ZDiDbQL5ksMwaMeB@x130>
-	<20230413155139.22d3b2f4@kernel.org>
-	<ZDjCdpWcchQGNBs1@x130>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B058B7F1
+	for <regressions@lists.linux.dev>; Fri, 14 Apr 2023 07:51:53 +0000 (UTC)
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-63b145b3b03so3515058b3a.1
+        for <regressions@lists.linux.dev>; Fri, 14 Apr 2023 00:51:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1681458713; x=1684050713;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=K5rTwOdgFJZZPJX3fXkfiAvyTbB7Q3vbD/59Gc9iVe8=;
+        b=HAc5MiWnDnFtyBTlxHKLzbEMGTFyAgbTTZrlLdU0FS9A9k8jl+iq0lngjS757FM4Xy
+         i0w8Hi4GZw8epIIPNjnmIMfIKwRn7hROlz19QTFX7BCm9js9koBzidT+Gm9ZguRlYwvp
+         26xrtKFt96+vQQF4h7+I5ULtIAd1G8Nu6rMFRxF1x8fj4hF+2So/uPj6KrnH4TO4YbZL
+         cVZbPVUkhNcZIaEgGOaGJw3KuI8rGhO6T17WED5BTImY4B4TTHQrPVJTxEP2oD4iW1jC
+         SDf8h8VqGBW+Dv1OXtmO7ceK80U6n6UsqnHsocaz63WYTpkBjxmGIQL+JI9mVEqiVkIt
+         evpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1681458713; x=1684050713;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=K5rTwOdgFJZZPJX3fXkfiAvyTbB7Q3vbD/59Gc9iVe8=;
+        b=kB8oIncv0astg6VH1ZqmcG0n11tVHSN0azeDfvV0V/OUo3cXgLBuFvbXl3pPfs4nJu
+         wCIkbxUGg8hD5TnwtWDJSN0MrNNMPUyGM8BYe2+FlzncEvtR6FBl5JRFJfAp2vi9oCoV
+         w4OZ0mR5UNss97R2BGJpaziwSVt6emv2X28pYlQ8Nz6epQsQ3DoZAjmYtDj8Zv9jONMW
+         GCyXzISxWK98HIlyecz9f1kkjQMBWrojLO6h9QqTxoNz5mhB2EilhzFEKZgn/TYELK9c
+         /pJSF9/5dzPDD+CjXrhkHuDYXvIqFGqOvwNtWaB8+lGHbtvJktHk8IJ8a+cPWg7IzzPY
+         j1xA==
+X-Gm-Message-State: AAQBX9f/kpLSaHRoEL8NLUyFNiIfSMypQSuPKkhqROOcB1m39AGN5XiR
+	44+uQj10S94ReI/dtsD7O2w=
+X-Google-Smtp-Source: AKy350ZnWysc0UeSs48nYjpcN4LkbUG3Rcp4C3XtxQgqKYU5gC4EHhKTSZrUqgds2FWiCaEDRaEu0g==
+X-Received: by 2002:a05:6a00:430e:b0:62d:d85b:fcfc with SMTP id cb14-20020a056a00430e00b0062dd85bfcfcmr10116197pfb.8.1681458713036;
+        Fri, 14 Apr 2023 00:51:53 -0700 (PDT)
+Received: from [192.168.43.80] (subs28-116-206-12-58.three.co.id. [116.206.12.58])
+        by smtp.gmail.com with ESMTPSA id g14-20020aa7818e000000b005d61829db4fsm2465430pfi.168.2023.04.14.00.51.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 14 Apr 2023 00:51:52 -0700 (PDT)
+Message-ID: <5f445dab-a152-bcaa-4462-1665998c3e2e@gmail.com>
+Date: Fri, 14 Apr 2023 14:51:47 +0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [REGRESSION] Asus X541UAK hangs on suspend and poweroff (v6.1.6
+ onward)
+To: Acid Bong <acidbong@tilde.cafe>, regressions@lists.linux.dev
+Cc: stable@vger.kernel.org, linux-acpi@vger.kernel.org,
+ Thorsten Leemhuis <regressions@leemhuis.info>
+References: <CRVU11I7JJWF.367PSO4YAQQEI@bong>
+Content-Language: en-US
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+In-Reply-To: <CRVU11I7JJWF.367PSO4YAQQEI@bong>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On Thu, 13 Apr 2023 20:03:18 -0700 Saeed Mahameed wrote:
-> On 13 Apr 15:51, Jakub Kicinski wrote:
-> >On Thu, 13 Apr 2023 15:34:21 -0700 Saeed Mahameed wrote:  
-> >> But this management connection function has the same architecture as other
-> >> "Normal" mlx5 functions, from the driver pov. The same way mlx5
-> >> doesn't care if the underlaying function is CX4/5/6 we don't care if it was
-> >> a "management function".  
-> >
-> >Yes, and that's why every single IPU implementation thinks that it's
-> >a great idea. Because it's easy to implement. But what is it for
-> >architecturally? Running what is effectively FW commands over TCP?  
+On 4/14/23 02:35, Acid Bong wrote:
+> The issue appeared when I was using pf-kernel with genpatches and
+> updated from 6.1-pf2 to 6.1-pf3 (corresponding to vanilla versions 6.1.3
+> -> 6.1.6). I used that fork until 6.2-pf2, but since then (early March)
+> moved to vanilla sources and started following the 6.1.y branch when it
+> was declared LTS. And the issue was present on all of them.
 > 
-> Where did you get this idea from? maybe we got the name wrong, 
-> "management PF" is simply a minimalistic netdev PF to have eth connection
-> with the on board BMC .. 
+> The hang was last detected 3 days ago on 6.1.22 and today on 6.1.23.
 > 
-> I agree that the name "management PF" sounds scary, but it is not a control
-> function as you think, not at all. As the original commit message states:
-> "loopback PF designed for communication with BMC".
 
-Can you draw a small diagram with the bare metal guest, IPU, and BMC?
-What's talking to what? And what packets are exchanged?
+Have you tried testing latest mainline to see if commits which are
+backported to 6.1.y cause your regression?
 
-> >> But let's discuss what's wrong with it, and what are your thoughts ?
-> >> the fact that it breaks a 6 years OLD FW, doesn't make it so horrible.  
-> >
-> >Right, the breakage is a separate topic.
-> >
-> >You say 6 years old but the part is EOL, right? The part is old and
-> >stable, AFAIU the breakage stems from development work for parts which
-> >are 3 or so generations newer.
+> # regzbot introduced v6.1.3..v6.1.6
 > 
-> Officially we test only 3 GA FWs back. The fact that mlx5 is a generic CX
-> driver makes it really hard to test all the possible combinations, so we
-> need to be strict with how back we want to officially support and test old
-> generations.
 
-Would you be able to pull the datapoints for what 3 GA FWs means 
-in case of CX4? Release number and date when it was released?
+Anyway, I'm adding this to regzbot:
 
-I understand the challenge of backward compat with a multi-gen
-driver. It's a trade off.
+#regzbot ^introduced v6.1.3..v6.1.6
+#regzbot title Asus X541UAK hangs on suspend and poweroff
+#regzbot ignore-activity
 
-> >The question is who's supposed to be paying the price of mlx5 being
-> >used for old and new parts? What is fair to expect from the user
-> >when the FW Paul has presumably works just fine for him?
-> >  
-> Upgrade FW when possible, it is always easier than upgrading the kernel.
-> Anyways this was a very rare FW/Arch bug, We should've exposed an
-> explicit cap for this new type of PF when we had the chance, now it's too
-> late since a proper fix will require FW and Driver upgrades and breaking
-> the current solution we have over other OSes as well.
->
-> Yes I can craft an if condition to explicitly check for chip id and FW
-> version for this corner case, which has no precedence in mlx5, but I prefer
-> to ask to upgrade FW first, and if that's an acceptable solution, I would
-> like to keep the mlx5 clean and device agnostic as much as possible.
+Thanks.
 
-IMO you either need a fully fleshed out FW update story, with advanced
-warnings for a few releases, distributing the FW via linux-firmware or
-fwupdmgr or such.  Or deal with the corner cases in the driver :(
+-- 
+An old man doll... just what I always wanted! - Clara
 
-We can get Paul to update, sure, but if he noticed so quickly the
-question remains how many people out in the wild will get affected 
-and not know what the cause is?
