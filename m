@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A37A31C11
-	for <regressions@lists.linux.dev>; Sun, 16 Apr 2023 12:53:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2453C1C11
+	for <regressions@lists.linux.dev>; Sun, 16 Apr 2023 13:14:15 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1po1sJ-0000Ha-VW; Sun, 16 Apr 2023 14:53:00 +0200
-Message-ID: <2d9b786b-ed1f-0687-ea6f-575faa6036a3@leemhuis.info>
-Date: Sun, 16 Apr 2023 14:52:59 +0200
+	id 1po2Cq-0003L1-9w; Sun, 16 Apr 2023 15:14:12 +0200
+Message-ID: <e25e2e81-47e6-63a0-9c0d-00258397e47b@leemhuis.info>
+Date: Sun, 16 Apr 2023 15:14:11 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,99 +16,172 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.9.1
-Subject: Re: [regression] Bug 217069 - Wake on Lan is broken on r8169 since
- 6.2
+Subject: Re: v6.2 client behaviour change (repeat access calls)?
 Content-Language: en-US, de-DE
-To: Jianmin Lv <lvjianmin@loongson.cn>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Huacai Chen
- <chenhuacai@loongson.cn>, Bob Moore <robert.moore@intel.com>,
- acpica-devel@lists.linuxfoundation.org,
- ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
- Huacai Chen <chenhuacai@kernel.org>
-References: <e6aaddb9-afec-e77d-be33-570f9f10a9c2@leemhuis.info>
- <53e8b4db-e8dd-4dfa-f873-7dcbeac09149@leemhuis.info>
- <13aea525-108a-e018-987d-2447ff1d42df@leemhuis.info>
- <754225a2-95a9-2c36-1886-7da1a78308c2@loongson.cn>
-From: "Linux regression tracking (Thorsten Leemhuis)"
+To: Daire Byrne <daire@dneg.com>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: linux-nfs <linux-nfs@vger.kernel.org>, Anna Schumaker <anna@kernel.org>,
+ Trond Myklebust <trond.myklebust@hammerspace.com>
+References: <CAPt2mGMgCCWYP-ZaHCovMuRZmHYYPhApNiUybKTw4pr5XwZkjw@mail.gmail.com>
+ <2f2473a4-5fd2-a772-e1af-885e21700467@leemhuis.info>
+ <0cfd6568-de03-9ea5-2778-42ab2e6515db@leemhuis.info>
+ <7912bba8-7127-abb0-4366-1abbb88db504@leemhuis.info>
+ <CAPt2mGNaNTD=a+UsDLDeRWqd+PVHk6Rh-OX0+0BxGc+xgovraA@mail.gmail.com>
+From: "Linux regression tracking #update (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <754225a2-95a9-2c36-1886-7da1a78308c2@loongson.cn>
+In-Reply-To: <CAPt2mGNaNTD=a+UsDLDeRWqd+PVHk6Rh-OX0+0BxGc+xgovraA@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1681649585;faa48d2b;
-X-HE-SMSGID: 1po1sJ-0000Ha-VW
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1681650856;3188784b;
+X-HE-SMSGID: 1po2Cq-0003L1-9w
 
-On 16.04.23 14:35, Jianmin Lv wrote:
-> From the feedbacks, the WOL issue has been fixed, and I have submitted a
-> fixed patch to ACPICA, which has been reviewing in last week (Rafael
-> also looked into the fixed patch).
-
-Great, many thx. I looked for something like that, but failed to find it.
-
-FWIW, a link to the patch submission would have been nice. I tried to
-find it just now, but maybe it's not on lore.kernel.org or I did
-something stupid. And
-https://lists.linuxfoundation.org/pipermail/acpica-devel/ seems to lack
-behind or might not be the list you submitted the patch to. Whatever.
-
-> There are two kinds of issues in the bug, one is WOL failed in kexec
-> reboot, another is WOL failed in cold reboot. The former one still exist
-> after reverted patch(5c62d5aab8752e5ee7bfbe75ed6060db1c787f98),
-> so this issue is not caused by the reverted patch. The second is caused
-> by the reverted patch, and has been fixed with my provided patch.
+On 23.03.23 13:02, Daire Byrne wrote:
+> Yes, sorry, I did see that patch was posted not long after I reported
+> the excessive repeat ACCESS calls but I have not had a chance to test
+> it.
 > 
-> Please see:
-> https://bugzilla.kernel.org/show_bug.cgi?id=217069#c54
-> https://bugzilla.kernel.org/show_bug.cgi?id=217069#c59
+> It certainly looks promising. I will try to get to it next week and
+> update my original email.
 
-I'll post a quick update there.
+Hmm, no update afaics (or I missed it). No worries, but I for now will
+assume this was fixed. Please correct me if it later turns out that I've
+been wrong.
 
-Thx again.
+#regzbot fix: 21fd9e8700de86d1169
+#regzbot ignore-activity
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
 Everything you wanna know about Linux kernel regression tracking:
 https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+That page also explains what to do if mails like this annoy you.
 
-> On 2023/4/14 下午8:48, Thorsten Leemhuis wrote:
->> On 19.03.23 08:20, Linux regression tracking (Thorsten Leemhuis) wrote:
->>> On 22.02.23 08:57, Thorsten Leemhuis wrote:
+
+> On Thu, 23 Mar 2023 at 11:54, Thorsten Leemhuis
+> <regressions@leemhuis.info> wrote:
+>>
+>> On 20.03.23 13:34, Thorsten Leemhuis wrote:
+>>> On 10.03.23 11:43, Linux regression tracking (Thorsten Leemhuis) wrote:
+>>>> [CCing the regression list, as it should be in the loop for regressions:
+>>>> https://docs.kernel.org/admin-guide/reporting-regressions.html]
 >>>>
->>>> I noticed a regression report in bugzilla.kernel.org. As many (most?)
->>>> kernel developer don't keep an eye on it, I decided to forward it by
->>>> mail. Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=217069 :
+>>>> [also adding the author of the culprit (Trond) and the second NFS client
+>>>> maintainer (Anna) to the list of recipients]
 >>>
->>> An issue that looked like a network bug was now bisected and it turns
->>> out it's cause by 5c62d5aab875 ("ACPICA: Events: Support fixed PCIe wake
->>> event") which Huacai Chen provided. Could you take a look at the ticket
->>> linked above?
+>>> Trond, sorry to bother you, but do you still have this regression report
+>>> on your radar? It looks a bit like it fall through the cracks, as I
+>>> don't see any reply since it was posted nearly two weeks ago. Or did
+>>> some progress to address this happen and I just missed it?
 >>
->> Jianmin did get close to a proper fix a while ago
->> (https://bugzilla.kernel.org/show_bug.cgi?id=217069#c46 ), but it
->> appears there wasn't any progress to fix this during the last week. Or
->> did I miss it?
+>> Daire, it seems the NFS developers ignore my inquiries, sorry.
 >>
->> This is kinda unsatisfying, as the culprit is now known for nearly four
->> weeks; especially as this is a issue that is present in 6.2 since it was
->> released and would have been possible to fix there and in mainline with
->> a simple revert. We even got close to one two weeks ago already
->> (https://bugzilla.kernel.org/show_bug.cgi?id=217069#c49 ).
+>> But well, I noticed there is a patch that references the culprit you
+>> found in the bisection:
 >>
->> #sigh
+>> https://lore.kernel.org/all/20230308080327.33906-1-chengen.du@canonical.com/
+>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?h=master&id=21fd9e8700de86d1169f6336e97d7a74916ed04a
 >>
->> I'd say we should revert this. Rafael, what's your opinion here?
+>> I wonder if you are aware of it or maybe even tested it already. To me
+>> it sounds like it could fix your problem, but this is not my area of
+>> expertise, so I might be totally wrong.
 >>
 >> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
->> -- 
+>> --
 >> Everything you wanna know about Linux kernel regression tracking:
 >> https://linux-regtracking.leemhuis.info/about/#tldr
 >> If I did something stupid, please tell me, as explained on that page.
 >>
->> #regzbot poke
+>> #regzbot ignore-activity
 >>
-> 
+>>>> [TLDR: I'm adding this report to the list of tracked Linux kernel
+>>>> regressions; the text you find below is based on a few templates
+>>>> paragraphs you might have encountered already in similar form.
+>>>> See link in footer if these mails annoy you.]
+>>>>
+>>>> On 07.03.23 18:38, Daire Byrne wrote:
+>>>>> I noticed a change in behaviour in the v6.2.x client versus v6.1.12 (and below).
+>>>>>
+>>>>> We have some servers that mount Netapps from different locations many
+>>>>> milliseconds away, and these contain apps and libs that get added to
+>>>>> the LD_LIBRARY_PATH and PATH on remote login.
+>>>>>
+>>>>> I then noticed that when I ssh'd into a remote server that had these
+>>>>> mounts and the shell was starting, the first login was normal and I
+>>>>> observed an expected flurry of lookups,getattrs and access calls for a
+>>>>> grand total of only ~120 packets to the Netapp.
+>>>>>
+>>>>> But when I disconnect and reconnect (ssh), now I see a flood of access
+>>>>> calls to the netapp for a handful of repeating filehandles which look
+>>>>> something like:
+>>>>>
+>>>>>  2700 85.942563180 10.23.112.10 → 10.23.21.11  NFS 254 V3 ACCESS Call,
+>>>>> FH: 0x7f36addc, [Check: RD LU MD XT DL]
+>>>>>  2701 85.999838796  10.23.21.11 → 10.23.112.10 NFS 190 V3 ACCESS Reply
+>>>>> (Call In 2700), [Allowed: RD LU MD XT DL]
+>>>>>  2702 85.999970825 10.23.112.10 → 10.23.21.11  NFS 254 V3 ACCESS Call,
+>>>>> FH: 0x7f36addc, [Check: RD LU MD XT DL]
+>>>>>  2703 86.055340946  10.23.21.11 → 10.23.112.10 NFS 190 V3 ACCESS Reply
+>>>>> (Call In 2702), [Allowed: RD LU MD XT DL]
+>>>>>  2704 86.056865308 10.23.112.10 → 10.23.21.11  NFS 254 V3 ACCESS Call,
+>>>>> FH: 0x7f36addc, [Check: RD LU MD XT DL]
+>>>>>  2705 86.112233415  10.23.21.11 → 10.23.112.10 NFS 190 V3 ACCESS Reply
+>>>>> (Call In 2704), [Allowed: RD LU MD XT DL]
+>>>>>
+>>>>> This time we total 5000+ packets for this login which becomes very
+>>>>> noticeable when the Netapp is 50ms away.
+>>>>>
+>>>>> I didn't understand why the first login was fine but the second goes
+>>>>> into this repeating access pattern. I set actimeo=3600 (long) but it
+>>>>> does not seem to affect it.
+>>>>>
+>>>>> I do not see this prior to v6.2 where repeated logins are equally fast
+>>>>> and we don't see the repeating access calls.
+>>>>>
+>>>>> So a bit of digging through the v6.2 changes and this looked like the
+>>>>> relevant change:
+>>>>>
+>>>>> commit 0eb43812c027 ("NFS: Clear the file access cache upon login”)
+>>>>> [PATCH] NFS: Judge the file access cache's timestamp in rcu path?
+>>>>>
+>>>>> I reverted those and got the prior (v6.1) performance.
+>>>>>
+>>>>> What constitutes a login exactly? I also have services like "sysstat"
+>>>>> or pcp that cause a systemd-logind to trigger regularly on our
+>>>>> machines.... does that count and invalidate the cache?
+>>>>>
+>>>>> Do the repeated access calls on the same handful of filehandles make
+>>>>> sense? Even prior to those patches (or v6.1) there are only a couple
+>>>>> of ACCESS calls to the Netapp on login.
+>>>>>
+>>>>> We are a bit unique in that we run quite a few WAN high latency NFS
+>>>>> workflows so are happy to trade long lived caches (e.g. actimeo and
+>>>>> even nocto on occasion) for lower ops at the expense of total
+>>>>> correctness.
+>>>>
+>>>> Thanks for the report. To be sure the issue doesn't fall through the
+>>>> cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
+>>>> tracking bot:
+>>>>
+>>>> #regzbot ^introduced 0eb43812c027
+>>>> #regzbot title nfs: flood of access on second log-in (first is fine)
+>>>> #regzbot ignore-activity
+>>>>
+>>>> This isn't a regression? This issue or a fix for it are already
+>>>> discussed somewhere else? It was fixed already? You want to clarify when
+>>>> the regression started to happen? Or point out I got the title or
+>>>> something else totally wrong? Then just reply and tell me -- ideally
+>>>> while also telling regzbot about it, as explained by the page listed in
+>>>> the footer of this mail.
+>>>>
+>>>> Developers: When fixing the issue, remember to add 'Link:' tags pointing
+>>>> to the report (the parent of this mail). See page linked in footer for
+>>>> details.
+>>>>
+>>>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+>>>> --
+>>>> Everything you wanna know about Linux kernel regression tracking:
+>>>> https://linux-regtracking.leemhuis.info/about/#tldr
+>>>> That page also explains what to do if mails like this annoy you.
 > 
 > 
