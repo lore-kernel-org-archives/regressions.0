@@ -1,123 +1,38 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA657EDD
-	for <regressions@lists.linux.dev>; Sat, 15 Apr 2023 08:06:47 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pnavj-0004mq-U6; Sat, 15 Apr 2023 10:06:44 +0200
-Message-ID: <c19e41e5-ec8c-e6e0-2148-fec36698b947@leemhuis.info>
-Date: Sat, 15 Apr 2023 10:06:43 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A50C310FB;
+	Sun, 16 Apr 2023 06:42:00 +0000 (UTC)
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 8649C67373; Sun, 16 Apr 2023 08:41:56 +0200 (CEST)
+Date: Sun, 16 Apr 2023 08:41:56 +0200
+From: Christoph Hellwig <hch@lst.de>
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: Christoph Hellwig <hch@lst.de>,
+	Linux regressions mailing list <regressions@lists.linux.dev>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Linux PCI <linux-pci@vger.kernel.org>, iommu@lists.linux.dev,
+	baolu.lu@linux.intel.com
+Subject: Re: [regression] Bug 217218 - Trying to boot Linux version 6-2.2
+ kernel with Marvell SATA controller 88SE9235
+Message-ID: <20230416064156.GA6410@lst.de>
+References: <a79ea7f5-6a41-a6c9-cfec-ba01aa2a3cfa@leemhuis.info> <20230328012231.GB21977@lst.de> <01c50370-002d-5e18-3edc-81c9527aedc9@arm.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.1
-Subject: Re: [REGRESSION] Asus X541UAK hangs on suspend and poweroff (v6.1.6
- onward)
-Content-Language: en-US, de-DE
-To: Acid Bong <acidbong@tilde.cafe>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- Bagas Sanjaya <bagasdotme@gmail.com>
-Cc: stable@vger.kernel.org, linux-acpi@vger.kernel.org
-References: <CRVU11I7JJWF.367PSO4YAQQEI@bong>
- <5f445dab-a152-bcaa-4462-1665998c3e2e@gmail.com>
- <b2edf1ed-2777-03ef-4d5e-e355a6074f78@leemhuis.info>
- <CRWCUOAB4JKZ.3EKQN1TFFMVQL@bong>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <CRWCUOAB4JKZ.3EKQN1TFFMVQL@bong>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1681546007;27945d1c;
-X-HE-SMSGID: 1pnavj-0004mq-U6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <01c50370-002d-5e18-3edc-81c9527aedc9@arm.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
+On Thu, Mar 30, 2023 at 01:18:45PM +0100, Robin Murphy wrote:
+> FWIW "Marvell SATA" instantly makes me suspect the phantom function quirk. 
+> What *should* happen is the IOMMU driver sees the PCI DMA aliases correctly 
+> and sets up context entries for both 07.00.0 and 07.00.1, but it looks like 
+> that may be what's gone awry.
 
-
-On 14.04.23 11:07, Acid Bong wrote:
->> Thorsten
->> why do you pass pci=nomsi
-> It's a workaround for another issue i've been facing for about 2 or 3
-> years, since when I first tried out Linux (started with loading Kubuntu
-> and Mint live images). Without that workaround Kubuntu didn't boot for
-> me - on kernel 5.8 it only reached the graphic installer part, but hung
-> after language selection menu, on 5.4 and 5.11 - didn't even reach the
-> graphic session. With Mint it was more severe - the screen was flooded
-> with PCIe errors, like so:
-> 
-> 	Apr 10 18:47:08 bong last message buffered 3 times
-> 	Apr 10 18:47:08 bong kernel: pcieport 0000:00:1c.5:   device [8086:9d15] error status/mask000001/00002000
-> 	Apr 10 18:47:08 bong kernel: pcieport 0000:00:1c.5: PCIe Bus Error: severity=Corrected, type=Physical Layer, (Receiver ID)
-> 	Apr 10 18:47:08 bong last message buffered 5 times
-> 	Apr 10 18:47:08 bong kernel: pcieport 0000:00:1c.5:   device [8086:9d15] error status/mask000001/00002000
-> 	Apr 10 18:47:08 bong kernel: pcieport 0000:00:1c.5: PCIe Bus Error: severity=Corrected, type=Physical Layer, (Receiver ID)
-> 	Apr 10 18:47:08 bong last message buffered 13 times
-> 	Apr 10 18:47:08 bong kernel: pcieport 0000:00:1c.5:   device [8086:9d15] error status/mask000001/00002000
-> 	Apr 10 18:47:08 bong kernel: pcieport 0000:00:1c.5: PCIe Bus Error: severity=Corrected, type=Physical Layer, (Receiver ID)
-> 	Apr 10 18:47:08 bong last message buffered 5 times
-> 	Apr 10 18:47:08 bong kernel: pcieport 0000:00:1c.5:   device [8086:9d15] error status/mask000001/00002000
-> 	Apr 10 18:47:08 bong kernel: pcieport 0000:00:1c.5: PCIe Bus Error: severity=Corrected, type=Physical Layer, (Receiver ID)
-> 	Apr 10 18:47:08 bong last message buffered 6 times
-> 
-> `pci=nomsi` saved me also during Debian installation - without it the
-> live ISO just crashed mid-installation.
-> 
-> But it wasn't a complete cure for Debian- and Ubuntu-based distros, and
-> they still crashed even with this parameter (I don't know how exactly,
-> at least they didn't flood with PCIe bus errors).
-> 
-> Since I moved to Manjaro, Void, Arch and now to Gentoo (which bases its
-> config on the Fedora one), PCIe errors were my only trouble, which was
-> easily mitigated with `pci=nomsi`. Recently I discovered that without it
-> one of the kernel modules (irq/124-aerdrv) had high CPU load, so double
-> useful.
-> 
-> https://forums.linuxmint.com/viewtopic.php?p=2237628
-> Just googled and there's a guy with a very similar model as me (UVK
-> instead of UAK) and same issues, but `noaer` and `nomsi` work identically
-> for me (I found `nomsi` in a different thread).
-> 
-> Since I'm building my own kernel for the last 3 months, I've disabled
-> the MSI in kernel config - and with that, a big part of IOMMU part as well:
-> https://git.sr.ht/~acid-bong/kernel/commit/cac5c09dec0bea919ca071a9b738108b0d8a8ee5
-> but I did it _after_ I first experienced the issue I described in the
-> thread head, hoping that it'll save me from these hangs as well. It
-> didn't.
-> 
-> I'm keeping it in the bootloader config for cases when I boot with a
-> prebuilt Gentoo kernel, and add every time I'm booting with Arch or Void
-> live USB for rescue purposes. It's not a constant issue tho, happens every
-> other time.
-> 
-> ---
->> Bagas
->> Have you tried testing latest mainline?
-> Just built and will boot in a moment. But we'll gotta wait for a couple
-> of days, since the hanging is unexpected.
-
-This is not my area of expertise, but the pre-existing hardware config
-trouble the kernel apparently has makes this a problematic case, as what
-causes those problems might directly or indirectly cause the regression
-you see by chance -- and might be something that only happens on your
-machine.
-
-Maybe we are lucky and some developer of the affected kernel code areas
-will see your report and have an idea what might cause the regressions.
-But I'd say chances are slim. So unless we are lucky, we'll likely won't
-can any closer to a solution without a bisection.
-
-But I wouldn't take that path; instead I in your place would report and
-sort out the hardware config trouble, as the problem might vanish by
-solving that.
-
-But as I said, this is not my area of expertise, so maybe it's a bad advice.
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+Looking at the bug report it seems this is device 9235, which doesn't
+need the DMA alias quirks.
