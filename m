@@ -1,224 +1,108 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0320A46B7
-	for <regressions@lists.linux.dev>; Sun, 16 Apr 2023 17:59:08 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:5054:ff:feb3:8f48] (helo=regzbot.fritz.box); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	id 1po6eY-0008JP-N0; Sun, 16 Apr 2023 19:59:06 +0200
-From: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>
-To: LKML <linux-kernel@vger.kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Linux regressions report  for mainline [2023-04-16]
-Date: Sun, 16 Apr 2023 17:59:06 +0000
-Message-Id: <168166781352.1843526.278570500979918184@leemhuis.info>
-X-Mailer: git-send-email 2.39.2
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2416810FA
+	for <regressions@lists.linux.dev>; Sun, 16 Apr 2023 20:49:12 +0000 (UTC)
+Received: by mail-ej1-f42.google.com with SMTP id dm2so59243108ejc.8
+        for <regressions@lists.linux.dev>; Sun, 16 Apr 2023 13:49:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1681678151; x=1684270151;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0ZEsb5dT9JO5UxHpI/ZZDj8yyg+vAiJhotQU2y6VbC0=;
+        b=QX1O63B1DvlmEfOLY2QXMfeqpmL7wzaN6e34rXqconsismbTHRfm+OvrZx9KKD5GDD
+         ayLdp006S4kuoFXsEf/zMKdJYZx4kLyEG6pgwTbegWE9o1cwA8C6nl55UwrX4o0F9Pv4
+         w58HMUm+NkHp6anSt1+Vv7py/HxRIQmeZ4USE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1681678151; x=1684270151;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0ZEsb5dT9JO5UxHpI/ZZDj8yyg+vAiJhotQU2y6VbC0=;
+        b=LAcRJbVzeC4p3yUXs3Ujksf9n/vtAi5CHR+Pi10KysVjZycW8XIMa6HjbQfvvoWrj2
+         dDPIh9F+spuYFHWuNCzQxUev7H4NIWPrPpH0Uzf771+LqeftbOKk5T88sufMZ9VnduiB
+         JvORT8pLpazCCU1/qX1Nqp9tl6A7VzvsNfmaHRBi2AXoptXMwDCjd7LxVTSHdQUYhnoX
+         6hMpYf9HVa3eWZC+ylOZ40rT6FaWH6S9ZI4UYqQ/hy95lz3BAeHEZaMgaFksUGgqa5A4
+         OCGi70WUBXef72g/lLS+yE09+RmxkQVLUiiE/5xOMV7iL37NSzBExFvApWRYaIMPFNgB
+         bvBg==
+X-Gm-Message-State: AAQBX9faYp31sf1TUDdATD78ksy0HGeaG1rtOPh6RiD/QaqDwTfWAgNY
+	mkmCcUq9yJ0+KACNGQw6V06pgYzyZ9efDMprBTx0og==
+X-Google-Smtp-Source: AKy350ZTn1aSa0aMEP1INx5e//i+zeK2tXoHdmOAIVAamGFyoEbzF5FYcuWM0F7PWoHPHbFQGDhNvQ==
+X-Received: by 2002:a17:907:7b0a:b0:94f:2840:14c9 with SMTP id mn10-20020a1709077b0a00b0094f284014c9mr3583569ejc.62.1681678150689;
+        Sun, 16 Apr 2023 13:49:10 -0700 (PDT)
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com. [209.85.218.48])
+        by smtp.gmail.com with ESMTPSA id z18-20020a1709060ad200b0094f7b713e40sm388252ejf.126.2023.04.16.13.49.09
+        for <regressions@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 16 Apr 2023 13:49:09 -0700 (PDT)
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-94a34a0baf9so544548066b.1
+        for <regressions@lists.linux.dev>; Sun, 16 Apr 2023 13:49:09 -0700 (PDT)
+X-Received: by 2002:a50:8d5d:0:b0:506:833e:6129 with SMTP id
+ t29-20020a508d5d000000b00506833e6129mr4215411edt.2.1681678149466; Sun, 16 Apr
+ 2023 13:49:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1681667949;0a3fa6de;
-X-HE-SMSGID: 1po6eY-0008JP-N0
+References: <168166781352.1843526.278570500979918184@leemhuis.info>
+In-Reply-To: <168166781352.1843526.278570500979918184@leemhuis.info>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Sun, 16 Apr 2023 13:48:52 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjQaxmXTR68VnEJvLgB=H2agMTrrF4EXkXT4Hbdf2ZuMQ@mail.gmail.com>
+Message-ID: <CAHk-=wjQaxmXTR68VnEJvLgB=H2agMTrrF4EXkXT4Hbdf2ZuMQ@mail.gmail.com>
+Subject: Re: Linux regressions report for mainline [2023-04-16]
+To: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>, Rafael Wysocki <rafael@kernel.org>, 
+	David Sterba <dsterba@suse.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, 
+	Linux regressions mailing list <regressions@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Linus. I'm down to four regressions that I and regzbot are aware of
-and worth mentioning. All of them are worked on by developers. See below
-for details.
+On Sun, Apr 16, 2023 at 10:59=E2=80=AFAM Regzbot (on behalf of Thorsten
+Leemhuis) <regressions@leemhuis.info> wrote:
+>
+> Wake-on-lan (WOL) apparently is broken for a huge number of users since
+> 6.2 was released[1]. This is known for 8 weeks now and about 4 weeks ago
+> it was bisected to commit 5c62d5aab87 ("ACPICA: Events: Support fixed
+> PCIe wake event") we immediately could have reverted. The developer that
+> looked into this was even willing to do the revert late March, but then
+> got discouraged by a maintainer [2]. But well, a fix was apparently[3]
+> finally posted for review last week (to the acpica-devel list); with a
+> bit of luck your might get it next week. Still a bit sad that 6.2 is
+> broken for so long now, as Greg wants to see it fixed in mainline first.
+>
+> [1] https://bugzilla.kernel.org/show_bug.cgi?id=3D217069
+> [2] https://bugzilla.kernel.org/show_bug.cgi?id=3D217069#c50
+> [3] https://lore.kernel.org/all/754225a2-95a9-2c36-1886-7da1a78308c2@loon=
+gson.cn/
 
-What currently worries me more are two regressions from the 6.2 cycle
-still not fixed.
+I find that bugzilla discussion very confusing, it's not clear what
+the status of the patch actually is.
 
-Wake-on-lan (WOL) apparently is broken for a huge number of users since
-6.2 was released[1]. This is known for 8 weeks now and about 4 weeks ago
-it was bisected to commit 5c62d5aab87 ("ACPICA: Events: Support fixed
-PCIe wake event") we immediately could have reverted. The developer that
-looked into this was even willing to do the revert late March, but then
-got discouraged by a maintainer [2]. But well, a fix was apparently[3]
-finally posted for review last week (to the acpica-devel list); with a
-bit of luck your might get it next week. Still a bit sad that 6.2 is
-broken for so long now, as Greg wants to see it fixed in mainline first.
+And the sane lkml thread just says "the patch is under review" without
+actually saying *where* said patch is, or where the review is.
 
-[1] https://bugzilla.kernel.org/show_bug.cgi?id=217069
-[2] https://bugzilla.kernel.org/show_bug.cgi?id=217069#c50
-[3]
-https://lore.kernel.org/all/754225a2-95a9-2c36-1886-7da1a78308c2@loongson.cn/
+It sounds like it got perhaps into some internal ACPCICA queue? None
+of those links are very clear on any of this.
 
-I have see similar situations a few times already. I sometimes wonder if
-I should post reverts for review in cases like this (say a few days or a
-week after bisection, is no fix is in sight) to enforce the issue and at
-least trigger a discussion about the revert -- and depending on its
-outcome ask you a few days later to consider picking it up. But I'm not
-sure if that's really a wise move.
+Rafael?
 
+> Another issue from the 6.2 days still not fixed are a huge number of
+> DISCARD request on NVME devices with Btrfs caused by 63a7cb13071
+> ("btrfs: auto enable discard=3Dasync when possible") [1, 2].
 
-Another issue from the 6.2 days still not fixed are a huge number of
-DISCARD request on NVME devices with Btrfs caused by 63a7cb13071
-("btrfs: auto enable discard=async when possible") [1, 2]. This is known
-for 7 weeks and likely results in a performance regression for some
-users and might also reduce the life time of some devices. One user even
-reported his laptop now uses ~10W more due to the constant drive
-activity [3]. After some back and forth the Btrfs developers agreed on
-working towards a fix recently [4]; but I doubt we'll see it this week.
-I have no idea if a revert would be possible here. But I thought you
-might want to be aware of this.
+Yeah, automatic discard is a broken idea, and that should just be reverted.
 
-[1] https://lore.kernel.org/linux-btrfs/Y%2F%2Bn1wS%2F4XAH7X1p@nz/
-[2]
-https://lore.kernel.org/linux-btrfs/CAHmG9huwQcQXvy3HS0OP9bKFxwUa3aQj9MXZCr74emn0U+efqQ@mail.gmail.com/
-[3]
-https://lore.kernel.org/linux-btrfs/6a54fa77-9a0c-8844-2eb0-b65591e97a16@gmail.com/
-[4] https://lore.kernel.org/linux-btrfs/20230404193909.GC344341@zen/
+The number of devices that have *horrible* problems with discard is
+too high for any kind of "do discard by default" logic.
 
-HTH, Ciao, Thorsten
+David, please don't do that. Just because discard happens to work well
+on some disk, *you* care about, does not in any way mean that "do
+discard by default" is sane.
 
-P.S.: Sorry for bringing up a regression last week that was just a
-kernel warning; for some reason I was under the wrong impression that
-video apps were crashing; I guess my mind confused this with another
-regression.
+Discard needs to be opt-in. Not out-opt.
 
----
-
-Hi, this is regzbot, the Linux kernel regression tracking bot.
-
-Currently I'm aware of 4 regressions in linux-mainline. Find the
-current status below and the latest on the web:
-
-https://linux-regtracking.leemhuis.info/regzbot/mainline/
-
-Bye bye, hope to see you soon for the next report.
-   Regzbot (on behalf of Thorsten Leemhuis)
-
-
-======================================================
-current cycle (v6.2.. aka v6.3-rc), culprit identified
-======================================================
-
-
-net: mlx5: InfiniBand devices were no longer present
-----------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/CAHC9VhQ7A4+msL38WpbOMYjAqLp0EtOjeLh4Dc6SQtD6OUvCQg@mail.gmail.com/
-https://lore.kernel.org/netdev/CAHC9VhQ7A4%2BmsL38WpbOMYjAqLp0EtOjeLh4Dc6SQtD6OUvCQg@mail.gmail.com/
-
-By Paul Moore; 18 days ago; 18 activities, latest 1 days ago.
-Introduced in fe998a3c77b9 (v6.3-rc1)
-
-Recent activities from: Jakub Kicinski (6), Saeed Mahameed (5), Paul
-  Moore (3), Leon Romanovsky (1)
-
-Noteworthy links:
-* [PATCH net] Revert "net/mlx5: Enable management PF initialization"
-  https://lore.kernel.org/netdev/20230413222547.56901-1-kuba@kernel.org/
-  2 days ago, by Jakub Kicinski; thread monitored.
-
-
-sched: PostgreSQL performance regression introduced by mm_cid
--------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/20230327080502.GA570847@ziqianlu-desk2/
-https://lore.kernel.org/lkml/20230327080502.GA570847@ziqianlu-desk2/
-
-By Aaron Lu; 20 days ago; 75 activities, latest 2 days ago.
-Introduced in af7f588d8f73 (v6.3-rc1)
-
-Recent activities from: Mathieu Desnoyers (15), Aaron Lu (13), Peter
-  Zijlstra (11), michael.christie@oracle.com (1)
-
-5 patch postings are associated with this regression, the latest is this:
-* Re: [RFC PATCH v4] sched: Fix performance regression introduced by mm_cid
-  https://lore.kernel.org/lkml/20230413131353.GA214119@ziqianlu-desk2/
-  3 days ago, by Aaron Lu
-
-Noteworthy links:
-* [RFC PATCH] sched: Introduce per-mm/cpu concurrency id state
-  https://lore.kernel.org/lkml/20230330230911.228720-1-mathieu.desnoyers@efficios.com/
-  16 days ago, by Mathieu Desnoyers; thread monitored.
-* [RFC PATCH] sched: Fix performance regression introduced by mm_cid
-  https://lore.kernel.org/lkml/20230403181342.210896-1-mathieu.desnoyers@efficios.com/
-  12 days ago, by Mathieu Desnoyers; thread monitored.
-* [RFC PATCH] sched: Fix performance regression introduced by mm_cid (v2)
-  https://lore.kernel.org/lkml/20230405121535.3891327-1-mathieu.desnoyers@efficios.com/
-  11 days ago, by Mathieu Desnoyers; thread monitored.
-* [RFC PATCH v3] sched: Fix performance regression introduced by mm_cid
-  https://lore.kernel.org/lkml/20230405162635.225245-1-mathieu.desnoyers@efficios.com/
-  11 days ago, by Mathieu Desnoyers; thread monitored.
-* [RFC PATCH v4] sched: Fix performance regression introduced by mm_cid
-  https://lore.kernel.org/lkml/20230410150150.2179062-1-mathieu.desnoyers@efficios.com/
-  6 days ago, by Mathieu Desnoyers; thread monitored.
-* [RFC PATCH] sched: Rate limit migrations
-  https://lore.kernel.org/lkml/20230411214116.361016-1-mathieu.desnoyers@efficios.com/
-  4 days ago, by Mathieu Desnoyers; thread monitored.
-* [RFC PATCH v5] sched: Fix performance regression introduced by mm_cid
-  https://lore.kernel.org/lkml/20230413140248.230479-1-mathieu.desnoyers@efficios.com/
-  3 days ago, by Mathieu Desnoyers; thread monitored.
-* [RFC PATCH v6] sched: Fix performance regression introduced by mm_cid
-  https://lore.kernel.org/lkml/20230413223356.17195-1-mathieu.desnoyers@efficios.com/
-  2 days ago, by Mathieu Desnoyers; thread monitored.
-
-
-firmware/sysfb: wrong mode and display garbled on 16-year old i686 laptop
--------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/4Psm6B6Lqkz1QXM@panix3.panix.com/
-https://lore.kernel.org/dri-devel/4Psm6B6Lqkz1QXM@panix3.panix.com/
-
-By pa@panix.com; 10 days ago; 24 activities, latest 2 days ago.
-Introduced in f35cd3fa7729 (v6.3-rc1)
-
-Recent activities from: Javier Martinez Canillas (12), Pierre
-  Asselin (9), pa@panix.com (1)
-
-4 patch postings are associated with this regression, the latest is this:
-* Re: [PATCH] firmware/sysfb: Fix wrong stride when bits-per-pixel is calculated
-  https://lore.kernel.org/lkml/87o7nsuumt.fsf@minerva.mail-host-address-is-not-set/
-  3 days ago, by Javier Martinez Canillas
-
-Noteworthy links:
-* [PATCH] firmware/sysfb: Fix wrong stride when bits-per-pixel is calculated
-  https://lore.kernel.org/lkml/20230412150225.3757223-1-javierm@redhat.com/
-  4 days ago, by Javier Martinez Canillas; thread monitored.
-
-
-pci: / net: igb: hangs during boot on PowerEdge R620
-----------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/m2fs9lgndw.fsf@gmail.com/
-https://lore.kernel.org/lkml/m2fs9lgndw.fsf@gmail.com/
-
-By Donald Hunter; 16 days ago; 9 activities, latest 4 days ago.
-Introduced in 6fffbc7ae137 (v6.3-rc1)
-
-Recent activities from: Donald Hunter (2), Andy Shevchenko (1), Rob
-  Herring (1), Bjorn Helgaas (1)
-
-
-=============
-End of report
-=============
-
-All regressions marked '[ *NEW* ]' were added since the previous report,
-which can be found here:
-https://lore.kernel.org/r/168106197596.1411382.4633915108737130144@leemhuis.info
-
-Thanks for your attention, have a nice day!
-
-  Regzbot, your hard working Linux kernel regression tracking robot
-
-
-P.S.: Wanna know more about regzbot or how to use it to track regressions
-for your subsystem? Then check out the getting started guide or the
-reference documentation:
-
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
-
-The short version: if you see a regression report you want to see
-tracked, just send a reply to the report where you Cc
-regressions@lists.linux.dev with a line like this:
-
-#regzbot introduced: v5.13..v5.14-rc1
-
-If you want to fix a tracked regression, just do what is expected
-anyway: add a 'Link:' tag with the url to the report, e.g.:
-
-Link: https://lore.kernel.org/all/30th.anniversary.repost@klaava.Helsinki.FI/
+                   Linus
