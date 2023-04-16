@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AE381C10
-	for <regressions@lists.linux.dev>; Sun, 16 Apr 2023 12:40:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A37A31C11
+	for <regressions@lists.linux.dev>; Sun, 16 Apr 2023 12:53:05 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1po1fr-0006lP-E0; Sun, 16 Apr 2023 14:40:07 +0200
-Message-ID: <b1d19249-d232-2088-3b90-22017ca2ddde@leemhuis.info>
-Date: Sun, 16 Apr 2023 14:40:06 +0200
+	id 1po1sJ-0000Ha-VW; Sun, 16 Apr 2023 14:53:00 +0200
+Message-ID: <2d9b786b-ed1f-0687-ea6f-575faa6036a3@leemhuis.info>
+Date: Sun, 16 Apr 2023 14:52:59 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,158 +16,99 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.9.1
-Subject: Re: iwlwifi frequent drops between v6.2-rc3 and v6.3-rc1
+Subject: Re: [regression] Bug 217069 - Wake on Lan is broken on r8169 since
+ 6.2
 Content-Language: en-US, de-DE
-From: "Linux regression tracking #update (Thorsten Leemhuis)"
+To: Jianmin Lv <lvjianmin@loongson.cn>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, Huacai Chen
+ <chenhuacai@loongson.cn>, Bob Moore <robert.moore@intel.com>,
+ acpica-devel@lists.linuxfoundation.org,
+ ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+ Huacai Chen <chenhuacai@kernel.org>
+References: <e6aaddb9-afec-e77d-be33-570f9f10a9c2@leemhuis.info>
+ <53e8b4db-e8dd-4dfa-f873-7dcbeac09149@leemhuis.info>
+ <13aea525-108a-e018-987d-2447ff1d42df@leemhuis.info>
+ <754225a2-95a9-2c36-1886-7da1a78308c2@loongson.cn>
+From: "Linux regression tracking (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
-To: regressions@lists.linux.dev
-Cc: Johannes Berg <johannes.berg@intel.com>, Thomas Mann
- <rauchwolke@gmx.net>, linux-wireless@vger.kernel.org,
- Alexander Wetzel <alexander@wetzel-home.de>,
- Vegard Nossum <vegard.nossum@oracle.com>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-References: <9d11ed29-1114-055d-5b26-0899a5fc0d7f@oracle.com>
- <70b7f54d-95b7-e01a-1a49-e29dc72d41b2@wetzel-home.de>
- <c7fdd08a-5ca2-6b86-d45d-97ab442438e5@wetzel-home.de>
- <257beca4-0c9b-66a1-37ca-aa7d37a45d5d@leemhuis.info>
-In-Reply-To: <257beca4-0c9b-66a1-37ca-aa7d37a45d5d@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <754225a2-95a9-2c36-1886-7da1a78308c2@loongson.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1681648811;22e297a9;
-X-HE-SMSGID: 1po1fr-0006lP-E0
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1681649585;faa48d2b;
+X-HE-SMSGID: 1po1sJ-0000Ha-VW
 
-On 12.04.23 13:38, Linux regression tracking (Thorsten Leemhuis) wrote:
-> Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
-> for once, to make this easily accessible to everyone.
-> 
-> Vegard, any news here? Is this still happening?
-> 
-> And out of curiosity: how often is "[wifi started] dropping a lot"
-> actually? I have seen occasional disconnects with iwlwifi myself, but I
-> have no idea what's causing them -- and I think it started earlier
-> already (and might have started when I switched to iwd, not sure). And
-> the error messages in the log only look similar in a few cases.
-> 
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-> --
-> Everything you wanna know about Linux kernel regression tracking:
-> https://linux-regtracking.leemhuis.info/about/#tldr
-> If I did something stupid, please tell me, as explained on that page.
-> 
-> #regzbot poke
+On 16.04.23 14:35, Jianmin Lv wrote:
+> From the feedbacks, the WOL issue has been fixed, and I have submitted a
+> fixed patch to ACPICA, which has been reviewing in last week (Rafael
+> also looked into the fixed patch).
 
-Putting this on the backburner to reduce the noise in the list of
-tracked issues:
+Great, many thx. I looked for something like that, but failed to find it.
 
-#regzbot backburner: not bisected and lack of data to debug this further
-#regzbot ignore-activity
+FWIW, a link to the patch submission would have been nice. I tried to
+find it just now, but maybe it's not on lore.kernel.org or I did
+something stupid. And
+https://lists.linuxfoundation.org/pipermail/acpica-devel/ seems to lack
+behind or might not be the list you submitted the patch to. Whatever.
+
+> There are two kinds of issues in the bug, one is WOL failed in kexec
+> reboot, another is WOL failed in cold reboot. The former one still exist
+> after reverted patch(5c62d5aab8752e5ee7bfbe75ed6060db1c787f98),
+> so this issue is not caused by the reverted patch. The second is caused
+> by the reverted patch, and has been fixed with my provided patch.
+> 
+> Please see:
+> https://bugzilla.kernel.org/show_bug.cgi?id=217069#c54
+> https://bugzilla.kernel.org/show_bug.cgi?id=217069#c59
+
+I'll post a quick update there.
+
+Thx again.
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
 Everything you wanna know about Linux kernel regression tracking:
 https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+If I did something stupid, please tell me, as explained on that page.
 
-> On 25.03.23 21:33, Alexander Wetzel wrote:
->> On 17.03.23 16:29, Alexander Wetzel wrote:
->>> On 17.03.23 09:53, Vegard Nossum wrote:
+> On 2023/4/14 下午8:48, Thorsten Leemhuis wrote:
+>> On 19.03.23 08:20, Linux regression tracking (Thorsten Leemhuis) wrote:
+>>> On 22.02.23 08:57, Thorsten Leemhuis wrote:
 >>>>
->>>> Hi,
->>>>
->>>> Somewhere between e8f60cd7db24 (v6.2-rc3) and 2eb29d59ddf0 (v6.3-rc1) my
->>>> wifi started dropping a lot. I'm using iwlwifi and I've checked the old
->>>> logs that the firmware hasn't changed:
->>>>
->>>> Feb 25 16:22:33 kernel: iwlwifi 0000:04:00.0: loaded firmware version
->>>> 36.e91976c0.0 8000C-36.ucode op_mode iwlmvm
->>>>
->>>> My logs look like this:
->>>>
->>>> 09:01:50 kernel: wlp4s0: Connection to AP [REDACTED]:0b:25 lost
->>>> 09:01:50 wpa_supplicant[1279]: wlp4s0: CTRL-EVENT-DISCONNECTED
->>>> bssid=[REDACTED]:0b:25 reason=4 locally_generated=1
->>>> 09:01:50 NetworkManager[8368]: <warn>  [1679040110.6548]
->>>> sup-iface[0x5628f2495990,wlp4s0]: connection disconnected (reason -4)
->>>> 09:01:50 NetworkManager[8368]: <info>  [1679040110.6656] device
->>>> (wlp4s0): supplicant interface state: completed -> disconnected
->>>> 09:01:50 NetworkManager[8368]: <info>  [1679040110.7609] device
->>>> (wlp4s0): supplicant interface state: disconnected -> scanning
->>>> 09:01:53 wpa_supplicant[1279]: wlp4s0: SME: Trying to authenticate
->>>> with [REDACTED]:0b:25 (SSID='[REDACTED]' freq=5500 MHz)
->>>> 09:01:53 kernel: wlp4s0: authenticate with [REDACTED]:0b:25
->>>> 09:01:53 kernel: wlp4s0: send auth to [REDACTED]:0b:25 (try 1/3)
->>>> 09:01:53 kernel: wlp4s0: authenticated
->>>> 09:01:53 wpa_supplicant[1279]: wlp4s0: Trying to associate with
->>>> [REDACTED]:0b:25 (SSID='[REDACTED]' freq=5500 MHz)
->>>> 09:01:53 kernel: wlp4s0: associate with [REDACTED]:0b:25 (try 1/3)
->>>> 09:01:53 kernel: wlp4s0: RX AssocResp from [REDACTED]:0b:25
->>>> (capab=0x1511 status=0 aid=36)
->>>> 09:01:53 NetworkManager[8368]: <info>  [1679040113.4553] device
->>>> (wlp4s0): supplicant interface state: scanning -> authenticating
->>>> 09:01:53 kernel: wlp4s0: associated
->>>> 09:01:53 wpa_supplicant[1279]: wlp4s0: Associated with [REDACTED]:0b:25
->>>> 09:01:53 wpa_supplicant[1279]: wlp4s0:
->>>> CTRL-EVENT-SUBNET-STATUS-UPDATE status=0
->>>> 09:01:53 NetworkManager[8368]: <info>  [1679040113.4645] device
->>>> (wlp4s0): supplicant interface state: authenticating -> associating
->>>> 09:01:53 NetworkManager[8368]: <info>  [1679040113.4829] device
->>>> (wlp4s0): supplicant interface state: associating -> associated
->>>> 09:01:53 NetworkManager[8368]: <info>  [1679040113.5175] device
->>>> (wlp4s0): supplicant interface state: associated -> 4-way handshake
->>>> 09:01:53 kernel: wlp4s0: Connection to AP [REDACTED]:0b:25 lost
->>>> 09:01:53 wpa_supplicant[1279]: wlp4s0: CTRL-EVENT-DISCONNECTED
->>>> bssid=[REDACTED]:0b:25 reason=4 locally_generated=1
->>>> 09:01:53 wpa_supplicant[1279]: wlp4s0: WPA: 4-Way Handshake failed -
->>>> pre-shared key may be incorrect
->>>> 09:01:53 wpa_supplicant[1279]: wlp4s0: CTRL-EVENT-SSID-TEMP-DISABLED
->>>> id=0 ssid="[REDACTED]" auth_failures=1 duration=10 reason=WRONG_KEY
->>>> 09:01:53 NetworkManager[8368]: <warn>  [1679040113.5685]
->>>> sup-iface[0x5628f2495990,wlp4s0]: connection disconnected (reason -4)
->>>> 09:01:53 NetworkManager[8368]: <info>  [1679040113.5737] device
->>>> (wlp4s0): supplicant interface state: 4-way handshake -> disconnected
->>>> 09:01:53 NetworkManager[8368]: <info>  [1679040113.6759] device
->>>> (wlp4s0): supplicant interface state: disconnected -> scanning
->>>>
->>>> I did see that somebody else reported a similar regression, but I don't
->>>> know if it could be the same problem or not (I see the driver is
->>>> different, but the fix looks generic):
->>>>
->>>> https://linux-regtracking.leemhuis.info/regzbot/regression/217119/
->>>>
->>>> The buggy commit that was identified there does seem to be within the
->>>> range of potential culprits:
->>>>
->>>> $ git log --oneline e8f60cd7db24..2eb29d59ddf0 | grep resumption
->>>> 4444bc2116ae wifi: mac80211: Proper mark iTXQs for resumption
->>>>
->>>> If people think it's the same, I could try the proposed fix -- otherwise
->>>> let me know what else I can do to help track this down.
->>>>
+>>>> I noticed a regression report in bugzilla.kernel.org. As many (most?)
+>>>> kernel developer don't keep an eye on it, I decided to forward it by
+>>>> mail. Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=217069 :
 >>>
->>> You are using a iwlwilf/mvm card. The fix we plan to merge for that
->>> regression above won't help you. (mvm cards do not use the function we
->>> serialized in the end. iwlwifi/dvm on the other uses it.)
->>>
->>> But Johannes is working on a comparable issue affecting mvm cards.
->>> Check out
->>> https://lore.kernel.org/r/20230314103840.30771-1-jtornosm@redhat.com
->>>
->>> That may well fix your issue.
+>>> An issue that looked like a network bug was now bisected and it turns
+>>> out it's cause by 5c62d5aab875 ("ACPICA: Events: Support fixed PCIe wake
+>>> event") which Huacai Chen provided. Could you take a look at the ticket
+>>> linked above?
 >>
->> It's surprisingly quiet here...
->> Are these fixes helping? Honestly I'm not very optimistic.
->> I expect that this is something else...
+>> Jianmin did get close to a proper fix a while ago
+>> (https://bugzilla.kernel.org/show_bug.cgi?id=217069#c46 ), but it
+>> appears there wasn't any progress to fix this during the last week. Or
+>> did I miss it?
 >>
->> If so, we can debug that here together.
+>> This is kinda unsatisfying, as the culprit is now known for nearly four
+>> weeks; especially as this is a issue that is present in 6.2 since it was
+>> released and would have been possible to fix there and in mainline with
+>> a simple revert. We even got close to one two weeks ago already
+>> (https://bugzilla.kernel.org/show_bug.cgi?id=217069#c49 ).
 >>
->> For start, I would like to see the full logs, starting from the initial
->> (working) connect.
+>> #sigh
 >>
->> I also would like to get a confirmation, that by booting an older kernel
->> (v6.2-rc3 or older) the system gets stable again. (Not that
->> wpa_supplicant or the router got an update, too.)
+>> I'd say we should revert this. Rafael, what's your opinion here?
 >>
->> Alexander
+>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+>> -- 
+>> Everything you wanna know about Linux kernel regression tracking:
+>> https://linux-regtracking.leemhuis.info/about/#tldr
+>> If I did something stupid, please tell me, as explained on that page.
 >>
+>> #regzbot poke
 >>
+> 
+> 
+> 
