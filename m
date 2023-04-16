@@ -1,53 +1,78 @@
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4D2210FB;
-	Sun, 16 Apr 2023 06:55:08 +0000 (UTC)
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 80B4167373; Sun, 16 Apr 2023 08:55:04 +0200 (CEST)
-Date: Sun, 16 Apr 2023 08:55:03 +0200
-From: Christoph Hellwig <hch@lst.de>
-To: Jason Adriaanse <jason_a69@yahoo.co.uk>
-Cc: robin.murphy@arm.com, baolu.lu@linux.intel.com, hch@lst.de,
-	iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, regressions@lists.linux.dev
-Subject: Re: [regression] Bug 217218 - Trying to boot Linux version 6-2.2
- kernel with Marvell SATA controller 88SE9235
-Message-ID: <20230416065503.GB6410@lst.de>
-References: <01c50370-002d-5e18-3edc-81c9527aedc9@arm.com> <04a94830-f626-2cd7-d220-7ba3025a409c@yahoo.co.uk>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FDB47B
+	for <regressions@lists.linux.dev>; Sun, 16 Apr 2023 12:06:24 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1po18w-0001TX-Gw; Sun, 16 Apr 2023 14:06:06 +0200
+Message-ID: <812d42bf-157b-7478-27e3-7086e6f00a8e@leemhuis.info>
+Date: Sun, 16 Apr 2023 14:06:05 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <04a94830-f626-2cd7-d220-7ba3025a409c@yahoo.co.uk>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.1
+Subject: Re: [PATCH v3 01/13] firmware/sysfb: Fix EFI/VESA format selection
+Content-Language: en-US, de-DE
+From: "Linux regression tracking #update (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+To: Pierre Asselin <pa@panix.com>, tzimmermann@suse.de, mripard@kernel.org,
+ mairacanal@riseup.net, maarten.lankhorst@linux.intel.com,
+ jose.exposito89@gmail.com, javierm@redhat.com, daniel@ffwll.ch,
+ airlied@gmail.com
+Cc: dri-devel@lists.freedesktop.org,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+References: <20230102112927.26565-1-tzimmermann@suse.de>
+ <20230102112927.26565-2-tzimmermann@suse.de>
+ <4Psm6B6Lqkz1QXM@panix3.panix.com>
+ <b6e7abcf-499c-da4b-7249-749fa525a911@leemhuis.info>
+In-Reply-To: <b6e7abcf-499c-da4b-7249-749fa525a911@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1681646784;a19552cc;
+X-HE-SMSGID: 1po18w-0001TX-Gw
 
-Hi Jason,
+[TLDR: This mail in primarily relevant for Linux regression tracking. A
+change or fix related to the regression discussed in this thread was
+posted or applied, but it did not use a Link: tag to point to the
+report, as Linus and the documentation call for. Things happen, no
+worries -- but now the regression tracking bot needs to be told manually
+about the fix. See link in footer if these mails annoy you.]
 
-sorry for the late reply.  I had some email issues and am still
-recovering from the backlog.
+On 08.04.23 13:26, Linux regression tracking #adding (Thorsten Leemhuis)
+wrote:
+> 
+> On 06.04.23 17:45, Pierre Asselin wrote:
+>> Thomas Zimmermann <tzimmermann@suse.de> wrote:
+>> [...] 
+>> Starting at linux-6.3-rc1 my simplefb picks the wrong mode and garbles
+>> the display This is on a 16-year old i686 laptop.  I can post lshw or
+>> dmidecode output if it helps.
+>> [...] 
+>> I bisected it to f35cd3fa77293c2cd03e94b6a6151e1a7d9309cf
+>>     firmware/sysfb: Fix EFI/VESA format selection
+> 
+> Thanks for the report. To be sure the issue doesn't fall through the
+> cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
+> tracking bot:
+> 
+> #regzbot ^introduced f35cd3fa77293c2cd03e
+> #regzbot title firmware/sysfb: wrong mode and display garbled on 16-year
+> old i686 laptop
+> #regzbot ignore-activity
 
-On Fri, Mar 31, 2023 at 10:20:37AM +0800, Jason Adriaanse wrote:
-> Hi Christoph and Robin,
->
-> Christoph - I would like to send you more dmesg information but as my boot 
-> device cannot be detected that information is not being written to disk. Is 
-> there any way to specifically write boot debug information to say a USB 
-> device with some kernel parameters?
+#regzbot monitor:
+https://lore.kernel.org/lkml/20230412150225.3757223-1-javierm@redhat.com/
+#regzbot ignore-activity
 
-I don't know of any good way.  pstore has some ways to save kernel
-messages, but it doesn't work to well with normal block devices in
-case of crashes.
-
-I'm a bit lost at the moment.
-
-Two ideas I have, would be to
-
- 1) boot with the intel_iommu=off kernel command line
- 3) build a kernel with CONFIG_INTEL_IOMMU
-
-and see if that works and report the dmesg.
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+That page also explains what to do if mails like this annoy you.
