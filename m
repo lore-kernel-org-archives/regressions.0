@@ -1,187 +1,224 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2453C1C11
-	for <regressions@lists.linux.dev>; Sun, 16 Apr 2023 13:14:15 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1po2Cq-0003L1-9w; Sun, 16 Apr 2023 15:14:12 +0200
-Message-ID: <e25e2e81-47e6-63a0-9c0d-00258397e47b@leemhuis.info>
-Date: Sun, 16 Apr 2023 15:14:11 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0320A46B7
+	for <regressions@lists.linux.dev>; Sun, 16 Apr 2023 17:59:08 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:5054:ff:feb3:8f48] (helo=regzbot.fritz.box); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	id 1po6eY-0008JP-N0; Sun, 16 Apr 2023 19:59:06 +0200
+From: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>
+To: LKML <linux-kernel@vger.kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Linux regressions report  for mainline [2023-04-16]
+Date: Sun, 16 Apr 2023 17:59:06 +0000
+Message-Id: <168166781352.1843526.278570500979918184@leemhuis.info>
+X-Mailer: git-send-email 2.39.2
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.1
-Subject: Re: v6.2 client behaviour change (repeat access calls)?
-Content-Language: en-US, de-DE
-To: Daire Byrne <daire@dneg.com>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: linux-nfs <linux-nfs@vger.kernel.org>, Anna Schumaker <anna@kernel.org>,
- Trond Myklebust <trond.myklebust@hammerspace.com>
-References: <CAPt2mGMgCCWYP-ZaHCovMuRZmHYYPhApNiUybKTw4pr5XwZkjw@mail.gmail.com>
- <2f2473a4-5fd2-a772-e1af-885e21700467@leemhuis.info>
- <0cfd6568-de03-9ea5-2778-42ab2e6515db@leemhuis.info>
- <7912bba8-7127-abb0-4366-1abbb88db504@leemhuis.info>
- <CAPt2mGNaNTD=a+UsDLDeRWqd+PVHk6Rh-OX0+0BxGc+xgovraA@mail.gmail.com>
-From: "Linux regression tracking #update (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <CAPt2mGNaNTD=a+UsDLDeRWqd+PVHk6Rh-OX0+0BxGc+xgovraA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1681650856;3188784b;
-X-HE-SMSGID: 1po2Cq-0003L1-9w
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1681667949;0a3fa6de;
+X-HE-SMSGID: 1po6eY-0008JP-N0
 
-On 23.03.23 13:02, Daire Byrne wrote:
-> Yes, sorry, I did see that patch was posted not long after I reported
-> the excessive repeat ACCESS calls but I have not had a chance to test
-> it.
-> 
-> It certainly looks promising. I will try to get to it next week and
-> update my original email.
+Hi Linus. I'm down to four regressions that I and regzbot are aware of
+and worth mentioning. All of them are worked on by developers. See below
+for details.
 
-Hmm, no update afaics (or I missed it). No worries, but I for now will
-assume this was fixed. Please correct me if it later turns out that I've
-been wrong.
+What currently worries me more are two regressions from the 6.2 cycle
+still not fixed.
 
-#regzbot fix: 21fd9e8700de86d1169
-#regzbot ignore-activity
+Wake-on-lan (WOL) apparently is broken for a huge number of users since
+6.2 was released[1]. This is known for 8 weeks now and about 4 weeks ago
+it was bisected to commit 5c62d5aab87 ("ACPICA: Events: Support fixed
+PCIe wake event") we immediately could have reverted. The developer that
+looked into this was even willing to do the revert late March, but then
+got discouraged by a maintainer [2]. But well, a fix was apparently[3]
+finally posted for review last week (to the acpica-devel list); with a
+bit of luck your might get it next week. Still a bit sad that 6.2 is
+broken for so long now, as Greg wants to see it fixed in mainline first.
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+[1] https://bugzilla.kernel.org/show_bug.cgi?id=217069
+[2] https://bugzilla.kernel.org/show_bug.cgi?id=217069#c50
+[3]
+https://lore.kernel.org/all/754225a2-95a9-2c36-1886-7da1a78308c2@loongson.cn/
+
+I have see similar situations a few times already. I sometimes wonder if
+I should post reverts for review in cases like this (say a few days or a
+week after bisection, is no fix is in sight) to enforce the issue and at
+least trigger a discussion about the revert -- and depending on its
+outcome ask you a few days later to consider picking it up. But I'm not
+sure if that's really a wise move.
 
 
-> On Thu, 23 Mar 2023 at 11:54, Thorsten Leemhuis
-> <regressions@leemhuis.info> wrote:
->>
->> On 20.03.23 13:34, Thorsten Leemhuis wrote:
->>> On 10.03.23 11:43, Linux regression tracking (Thorsten Leemhuis) wrote:
->>>> [CCing the regression list, as it should be in the loop for regressions:
->>>> https://docs.kernel.org/admin-guide/reporting-regressions.html]
->>>>
->>>> [also adding the author of the culprit (Trond) and the second NFS client
->>>> maintainer (Anna) to the list of recipients]
->>>
->>> Trond, sorry to bother you, but do you still have this regression report
->>> on your radar? It looks a bit like it fall through the cracks, as I
->>> don't see any reply since it was posted nearly two weeks ago. Or did
->>> some progress to address this happen and I just missed it?
->>
->> Daire, it seems the NFS developers ignore my inquiries, sorry.
->>
->> But well, I noticed there is a patch that references the culprit you
->> found in the bisection:
->>
->> https://lore.kernel.org/all/20230308080327.33906-1-chengen.du@canonical.com/
->> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?h=master&id=21fd9e8700de86d1169f6336e97d7a74916ed04a
->>
->> I wonder if you are aware of it or maybe even tested it already. To me
->> it sounds like it could fix your problem, but this is not my area of
->> expertise, so I might be totally wrong.
->>
->> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
->> --
->> Everything you wanna know about Linux kernel regression tracking:
->> https://linux-regtracking.leemhuis.info/about/#tldr
->> If I did something stupid, please tell me, as explained on that page.
->>
->> #regzbot ignore-activity
->>
->>>> [TLDR: I'm adding this report to the list of tracked Linux kernel
->>>> regressions; the text you find below is based on a few templates
->>>> paragraphs you might have encountered already in similar form.
->>>> See link in footer if these mails annoy you.]
->>>>
->>>> On 07.03.23 18:38, Daire Byrne wrote:
->>>>> I noticed a change in behaviour in the v6.2.x client versus v6.1.12 (and below).
->>>>>
->>>>> We have some servers that mount Netapps from different locations many
->>>>> milliseconds away, and these contain apps and libs that get added to
->>>>> the LD_LIBRARY_PATH and PATH on remote login.
->>>>>
->>>>> I then noticed that when I ssh'd into a remote server that had these
->>>>> mounts and the shell was starting, the first login was normal and I
->>>>> observed an expected flurry of lookups,getattrs and access calls for a
->>>>> grand total of only ~120 packets to the Netapp.
->>>>>
->>>>> But when I disconnect and reconnect (ssh), now I see a flood of access
->>>>> calls to the netapp for a handful of repeating filehandles which look
->>>>> something like:
->>>>>
->>>>>  2700 85.942563180 10.23.112.10 → 10.23.21.11  NFS 254 V3 ACCESS Call,
->>>>> FH: 0x7f36addc, [Check: RD LU MD XT DL]
->>>>>  2701 85.999838796  10.23.21.11 → 10.23.112.10 NFS 190 V3 ACCESS Reply
->>>>> (Call In 2700), [Allowed: RD LU MD XT DL]
->>>>>  2702 85.999970825 10.23.112.10 → 10.23.21.11  NFS 254 V3 ACCESS Call,
->>>>> FH: 0x7f36addc, [Check: RD LU MD XT DL]
->>>>>  2703 86.055340946  10.23.21.11 → 10.23.112.10 NFS 190 V3 ACCESS Reply
->>>>> (Call In 2702), [Allowed: RD LU MD XT DL]
->>>>>  2704 86.056865308 10.23.112.10 → 10.23.21.11  NFS 254 V3 ACCESS Call,
->>>>> FH: 0x7f36addc, [Check: RD LU MD XT DL]
->>>>>  2705 86.112233415  10.23.21.11 → 10.23.112.10 NFS 190 V3 ACCESS Reply
->>>>> (Call In 2704), [Allowed: RD LU MD XT DL]
->>>>>
->>>>> This time we total 5000+ packets for this login which becomes very
->>>>> noticeable when the Netapp is 50ms away.
->>>>>
->>>>> I didn't understand why the first login was fine but the second goes
->>>>> into this repeating access pattern. I set actimeo=3600 (long) but it
->>>>> does not seem to affect it.
->>>>>
->>>>> I do not see this prior to v6.2 where repeated logins are equally fast
->>>>> and we don't see the repeating access calls.
->>>>>
->>>>> So a bit of digging through the v6.2 changes and this looked like the
->>>>> relevant change:
->>>>>
->>>>> commit 0eb43812c027 ("NFS: Clear the file access cache upon login”)
->>>>> [PATCH] NFS: Judge the file access cache's timestamp in rcu path?
->>>>>
->>>>> I reverted those and got the prior (v6.1) performance.
->>>>>
->>>>> What constitutes a login exactly? I also have services like "sysstat"
->>>>> or pcp that cause a systemd-logind to trigger regularly on our
->>>>> machines.... does that count and invalidate the cache?
->>>>>
->>>>> Do the repeated access calls on the same handful of filehandles make
->>>>> sense? Even prior to those patches (or v6.1) there are only a couple
->>>>> of ACCESS calls to the Netapp on login.
->>>>>
->>>>> We are a bit unique in that we run quite a few WAN high latency NFS
->>>>> workflows so are happy to trade long lived caches (e.g. actimeo and
->>>>> even nocto on occasion) for lower ops at the expense of total
->>>>> correctness.
->>>>
->>>> Thanks for the report. To be sure the issue doesn't fall through the
->>>> cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
->>>> tracking bot:
->>>>
->>>> #regzbot ^introduced 0eb43812c027
->>>> #regzbot title nfs: flood of access on second log-in (first is fine)
->>>> #regzbot ignore-activity
->>>>
->>>> This isn't a regression? This issue or a fix for it are already
->>>> discussed somewhere else? It was fixed already? You want to clarify when
->>>> the regression started to happen? Or point out I got the title or
->>>> something else totally wrong? Then just reply and tell me -- ideally
->>>> while also telling regzbot about it, as explained by the page listed in
->>>> the footer of this mail.
->>>>
->>>> Developers: When fixing the issue, remember to add 'Link:' tags pointing
->>>> to the report (the parent of this mail). See page linked in footer for
->>>> details.
->>>>
->>>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
->>>> --
->>>> Everything you wanna know about Linux kernel regression tracking:
->>>> https://linux-regtracking.leemhuis.info/about/#tldr
->>>> That page also explains what to do if mails like this annoy you.
-> 
-> 
+Another issue from the 6.2 days still not fixed are a huge number of
+DISCARD request on NVME devices with Btrfs caused by 63a7cb13071
+("btrfs: auto enable discard=async when possible") [1, 2]. This is known
+for 7 weeks and likely results in a performance regression for some
+users and might also reduce the life time of some devices. One user even
+reported his laptop now uses ~10W more due to the constant drive
+activity [3]. After some back and forth the Btrfs developers agreed on
+working towards a fix recently [4]; but I doubt we'll see it this week.
+I have no idea if a revert would be possible here. But I thought you
+might want to be aware of this.
+
+[1] https://lore.kernel.org/linux-btrfs/Y%2F%2Bn1wS%2F4XAH7X1p@nz/
+[2]
+https://lore.kernel.org/linux-btrfs/CAHmG9huwQcQXvy3HS0OP9bKFxwUa3aQj9MXZCr74emn0U+efqQ@mail.gmail.com/
+[3]
+https://lore.kernel.org/linux-btrfs/6a54fa77-9a0c-8844-2eb0-b65591e97a16@gmail.com/
+[4] https://lore.kernel.org/linux-btrfs/20230404193909.GC344341@zen/
+
+HTH, Ciao, Thorsten
+
+P.S.: Sorry for bringing up a regression last week that was just a
+kernel warning; for some reason I was under the wrong impression that
+video apps were crashing; I guess my mind confused this with another
+regression.
+
+---
+
+Hi, this is regzbot, the Linux kernel regression tracking bot.
+
+Currently I'm aware of 4 regressions in linux-mainline. Find the
+current status below and the latest on the web:
+
+https://linux-regtracking.leemhuis.info/regzbot/mainline/
+
+Bye bye, hope to see you soon for the next report.
+   Regzbot (on behalf of Thorsten Leemhuis)
+
+
+======================================================
+current cycle (v6.2.. aka v6.3-rc), culprit identified
+======================================================
+
+
+net: mlx5: InfiniBand devices were no longer present
+----------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/CAHC9VhQ7A4+msL38WpbOMYjAqLp0EtOjeLh4Dc6SQtD6OUvCQg@mail.gmail.com/
+https://lore.kernel.org/netdev/CAHC9VhQ7A4%2BmsL38WpbOMYjAqLp0EtOjeLh4Dc6SQtD6OUvCQg@mail.gmail.com/
+
+By Paul Moore; 18 days ago; 18 activities, latest 1 days ago.
+Introduced in fe998a3c77b9 (v6.3-rc1)
+
+Recent activities from: Jakub Kicinski (6), Saeed Mahameed (5), Paul
+  Moore (3), Leon Romanovsky (1)
+
+Noteworthy links:
+* [PATCH net] Revert "net/mlx5: Enable management PF initialization"
+  https://lore.kernel.org/netdev/20230413222547.56901-1-kuba@kernel.org/
+  2 days ago, by Jakub Kicinski; thread monitored.
+
+
+sched: PostgreSQL performance regression introduced by mm_cid
+-------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/20230327080502.GA570847@ziqianlu-desk2/
+https://lore.kernel.org/lkml/20230327080502.GA570847@ziqianlu-desk2/
+
+By Aaron Lu; 20 days ago; 75 activities, latest 2 days ago.
+Introduced in af7f588d8f73 (v6.3-rc1)
+
+Recent activities from: Mathieu Desnoyers (15), Aaron Lu (13), Peter
+  Zijlstra (11), michael.christie@oracle.com (1)
+
+5 patch postings are associated with this regression, the latest is this:
+* Re: [RFC PATCH v4] sched: Fix performance regression introduced by mm_cid
+  https://lore.kernel.org/lkml/20230413131353.GA214119@ziqianlu-desk2/
+  3 days ago, by Aaron Lu
+
+Noteworthy links:
+* [RFC PATCH] sched: Introduce per-mm/cpu concurrency id state
+  https://lore.kernel.org/lkml/20230330230911.228720-1-mathieu.desnoyers@efficios.com/
+  16 days ago, by Mathieu Desnoyers; thread monitored.
+* [RFC PATCH] sched: Fix performance regression introduced by mm_cid
+  https://lore.kernel.org/lkml/20230403181342.210896-1-mathieu.desnoyers@efficios.com/
+  12 days ago, by Mathieu Desnoyers; thread monitored.
+* [RFC PATCH] sched: Fix performance regression introduced by mm_cid (v2)
+  https://lore.kernel.org/lkml/20230405121535.3891327-1-mathieu.desnoyers@efficios.com/
+  11 days ago, by Mathieu Desnoyers; thread monitored.
+* [RFC PATCH v3] sched: Fix performance regression introduced by mm_cid
+  https://lore.kernel.org/lkml/20230405162635.225245-1-mathieu.desnoyers@efficios.com/
+  11 days ago, by Mathieu Desnoyers; thread monitored.
+* [RFC PATCH v4] sched: Fix performance regression introduced by mm_cid
+  https://lore.kernel.org/lkml/20230410150150.2179062-1-mathieu.desnoyers@efficios.com/
+  6 days ago, by Mathieu Desnoyers; thread monitored.
+* [RFC PATCH] sched: Rate limit migrations
+  https://lore.kernel.org/lkml/20230411214116.361016-1-mathieu.desnoyers@efficios.com/
+  4 days ago, by Mathieu Desnoyers; thread monitored.
+* [RFC PATCH v5] sched: Fix performance regression introduced by mm_cid
+  https://lore.kernel.org/lkml/20230413140248.230479-1-mathieu.desnoyers@efficios.com/
+  3 days ago, by Mathieu Desnoyers; thread monitored.
+* [RFC PATCH v6] sched: Fix performance regression introduced by mm_cid
+  https://lore.kernel.org/lkml/20230413223356.17195-1-mathieu.desnoyers@efficios.com/
+  2 days ago, by Mathieu Desnoyers; thread monitored.
+
+
+firmware/sysfb: wrong mode and display garbled on 16-year old i686 laptop
+-------------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/4Psm6B6Lqkz1QXM@panix3.panix.com/
+https://lore.kernel.org/dri-devel/4Psm6B6Lqkz1QXM@panix3.panix.com/
+
+By pa@panix.com; 10 days ago; 24 activities, latest 2 days ago.
+Introduced in f35cd3fa7729 (v6.3-rc1)
+
+Recent activities from: Javier Martinez Canillas (12), Pierre
+  Asselin (9), pa@panix.com (1)
+
+4 patch postings are associated with this regression, the latest is this:
+* Re: [PATCH] firmware/sysfb: Fix wrong stride when bits-per-pixel is calculated
+  https://lore.kernel.org/lkml/87o7nsuumt.fsf@minerva.mail-host-address-is-not-set/
+  3 days ago, by Javier Martinez Canillas
+
+Noteworthy links:
+* [PATCH] firmware/sysfb: Fix wrong stride when bits-per-pixel is calculated
+  https://lore.kernel.org/lkml/20230412150225.3757223-1-javierm@redhat.com/
+  4 days ago, by Javier Martinez Canillas; thread monitored.
+
+
+pci: / net: igb: hangs during boot on PowerEdge R620
+----------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/m2fs9lgndw.fsf@gmail.com/
+https://lore.kernel.org/lkml/m2fs9lgndw.fsf@gmail.com/
+
+By Donald Hunter; 16 days ago; 9 activities, latest 4 days ago.
+Introduced in 6fffbc7ae137 (v6.3-rc1)
+
+Recent activities from: Donald Hunter (2), Andy Shevchenko (1), Rob
+  Herring (1), Bjorn Helgaas (1)
+
+
+=============
+End of report
+=============
+
+All regressions marked '[ *NEW* ]' were added since the previous report,
+which can be found here:
+https://lore.kernel.org/r/168106197596.1411382.4633915108737130144@leemhuis.info
+
+Thanks for your attention, have a nice day!
+
+  Regzbot, your hard working Linux kernel regression tracking robot
+
+
+P.S.: Wanna know more about regzbot or how to use it to track regressions
+for your subsystem? Then check out the getting started guide or the
+reference documentation:
+
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
+
+The short version: if you see a regression report you want to see
+tracked, just send a reply to the report where you Cc
+regressions@lists.linux.dev with a line like this:
+
+#regzbot introduced: v5.13..v5.14-rc1
+
+If you want to fix a tracked regression, just do what is expected
+anyway: add a 'Link:' tag with the url to the report, e.g.:
+
+Link: https://lore.kernel.org/all/30th.anniversary.repost@klaava.Helsinki.FI/
