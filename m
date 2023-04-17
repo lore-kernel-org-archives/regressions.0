@@ -1,93 +1,58 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from tilde.cafe (tilde.cafe [51.222.161.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D4D01848
-	for <regressions@lists.linux.dev>; Mon, 17 Apr 2023 07:05:33 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1poIvY-0005nV-Ek; Mon, 17 Apr 2023 09:05:28 +0200
-Message-ID: <416a5def-cbd7-2acf-0dd6-1b8826b5dfc1@leemhuis.info>
-Date: Mon, 17 Apr 2023 09:05:27 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A1631848
+	for <regressions@lists.linux.dev>; Mon, 17 Apr 2023 07:37:58 +0000 (UTC)
+Received: from localhost (124.250.94.80.dyn.idknet.com [80.94.250.124])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by tilde.cafe (Postfix) with ESMTPSA id 12717204E8;
+	Mon, 17 Apr 2023 03:37:49 -0400 (EDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.1
-Subject: Re: Linux regressions report for mainline [2023-04-16]
-Content-Language: en-US, de-DE
-To: Linus Torvalds <torvalds@linux-foundation.org>,
- Rafael Wysocki <rafael@kernel.org>, David Sterba <dsterba@suse.com>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-References: <168166781352.1843526.278570500979918184@leemhuis.info>
- <CAHk-=wjQaxmXTR68VnEJvLgB=H2agMTrrF4EXkXT4Hbdf2ZuMQ@mail.gmail.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <CAHk-=wjQaxmXTR68VnEJvLgB=H2agMTrrF4EXkXT4Hbdf2ZuMQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1681715133;3722bb22;
-X-HE-SMSGID: 1poIvY-0005nV-Ek
+Date: Mon, 17 Apr 2023 10:37:49 +0300
+Subject: Re: [REGRESSION] Asus X541UAK hangs on suspend and poweroff (v6.1.6
+ onward)
+Cc: <acidbong@tilde.cafe>, <bagasdotme@gmail.com>,
+ <linux-acpi@vger.kernel.org>, <regressions@lists.linux.dev>,
+ <stable@vger.kernel.org>
+From: "Acid Bong" <acidbong@tilde.cafe>
+To: <regressions@leemhuis.info>
+Message-Id: <CRYTB8JBZ2LK.BAFK0AHDHPNA@bong>
+In-Reply-To: <b2edf1ed-2777-03ef-4d5e-e355a6074f78@leemhuis.info>
 
-On 16.04.23 22:48, Linus Torvalds wrote:
-> On Sun, Apr 16, 2023 at 10:59 AM Regzbot (on behalf of Thorsten
-> Leemhuis) <regressions@leemhuis.info> wrote:
->>
->> Wake-on-lan (WOL) apparently is broken for a huge number of users since
->> 6.2 was released[1]. This is known for 8 weeks now and about 4 weeks ago
->> it was bisected to commit 5c62d5aab87 ("ACPICA: Events: Support fixed
->> PCIe wake event") we immediately could have reverted. The developer that
->> looked into this was even willing to do the revert late March, but then
->> got discouraged by a maintainer [2]. But well, a fix was apparently[3]
->> finally posted for review last week (to the acpica-devel list); with a
->> bit of luck your might get it next week. Still a bit sad that 6.2 is
->> broken for so long now, as Greg wants to see it fixed in mainline first.
->>
->> [1] https://bugzilla.kernel.org/show_bug.cgi?id=217069
->> [2] https://bugzilla.kernel.org/show_bug.cgi?id=217069#c50
->> [3] https://lore.kernel.org/all/754225a2-95a9-2c36-1886-7da1a78308c2@loongson.cn/
-> 
-> I find that bugzilla discussion very confusing, it's not clear what
-> the status of the patch actually is.
-> 
-> And the sane lkml thread just says "the patch is under review" without
-> actually saying *where* said patch is, or where the review is.
->
-> It sounds like it got perhaps into some internal ACPCICA queue? None
-> of those links are very clear on any of this.
-> 
-> Rafael?
+So, I followed your advice and used the sources (6.3-rc6). Compiled even
+two versions: with my config (cf. head letter) and the Arch Linux one
+(I'm using Gentoo, but it still fits well), both updated with
+`olddefconfig`. Just to make sure that the problem is independent from
+the config.
 
-FWIW, yeah, had the same problems and already had asked for a link to
-the patch submission. A few hours ago Jianmin Lv replied and pointed me
-here: https://github.com/acpica/acpica/pull/866
+Good news: I experienced the hanging 3 times with both kernels
+yesterday.
 
-/me meanwhile wonders if acpica-devel was abandoned or if its list
-archive (https://lists.linuxfoundation.org/pipermail/acpica-devel/ ) is
-just broken.
+Two of them were on the custom kernel, and they were of the rare kind -
+they occured on shutdown. It goes normally, init disables the services,
+unmounts the filesystems, turns off the screen, but then - no response
+and the LED and the fan are still on. Another couple of shutdowns went
+normal, so the issue it still irregular.
 
->> Another issue from the 6.2 days still not fixed are a huge number of
->> DISCARD request on NVME devices with Btrfs caused by 63a7cb13071
->> ("btrfs: auto enable discard=async when possible") [1, 2].
-> 
-> Yeah, automatic discard is a broken idea, and that should just be reverted.
-> 
-> The number of devices that have *horrible* problems with discard is
-> too high for any kind of "do discard by default" logic.
-> 
-> David, please don't do that. Just because discard happens to work well
-> on some disk, *you* care about, does not in any way mean that "do
-> discard by default" is sane.
-> 
-> Discard needs to be opt-in. Not out-opt.
+One happened later on the Arch-based one and after a suspend.
 
-Not my area of expertise, but is this maybe something where we can
-automatically enable async discard by default if some easily detectable
-conditions are met? E.g. if the device supports PCIe 12.0, NVMe 9.1, or
-was produced in 2030 and later (note, I used bogus numbers here on purpose).
+/var/log/kern.log showed nothing specific in all cases.
 
-Ciao, Thorsten
+Bad news: it seems, the fix hasn't arrived yet.
+
+How do I proceed next?
+
+--
+
+P.S. On the `pci=3Dnomsi` case: I don't consider it being related to the
+issue we're discussing. For me it seems like a hardware issue that can
+be bypassed by reconfiguration.
