@@ -1,115 +1,81 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73D935385
-	for <regressions@lists.linux.dev>; Mon, 17 Apr 2023 11:25:20 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1poMyw-0000Lo-Iw; Mon, 17 Apr 2023 13:25:14 +0200
-Message-ID: <69602f1b-4afa-d864-b6d3-d8237f81a51d@leemhuis.info>
-Date: Mon, 17 Apr 2023 13:25:13 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFB5D63DD
+	for <regressions@lists.linux.dev>; Mon, 17 Apr 2023 11:38:19 +0000 (UTC)
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-94a342f4c8eso98976666b.0
+        for <regressions@lists.linux.dev>; Mon, 17 Apr 2023 04:38:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1681731498; x=1684323498;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=P/aw1KR9w+aBrMUs+mn4AJ435pOJ7Rn5INzRUj92jpQ=;
+        b=LVea+r4H9AifQCuM5/7cwHL7pjwX7z+KXdUnD9+1PnkJ7W2FhD3EA6XieflIQJODai
+         BgeDWZmDBEhGpsmCf2S0qutuvfM410RJYVKgFV3wJbLZhiH4I0tDwy37yCmyjMONbQ2w
+         CLCXRhlFfR0ZF3A3e5z9GFjH4FiJwh+L6VFyDnDRxc8jQ/LgUAqd862QApst6U1II/lP
+         f1MtpuwEQjZzBc3y6Tr4HakZBm1tOlsJb0O6q+RPd0tBTX7Ou74HTt9/I2wOMQcUT/j/
+         e0+QZbSCTaDjhASHtkspEcU+2Itb9OJ5ndJdGd013QPTT/skgyqWgJ2jiapSWdKCfGIv
+         oWsw==
+X-Gm-Message-State: AAQBX9dp6yxrnJK9uqkz9ewsnAYnkmOqwkAutl3ttBkVEE+9oo1ap1F4
+	WjMU9TwF+yl2FyioeqnON9CUu5WnA6OYWf2vmEU=
+X-Google-Smtp-Source: AKy350baN95neUjNrHOgHmvL1tImB5jWGwoeZyUEBqSe9LGD7WyoU+WMIOuCwueZTzuRur34sCie9B8HuleYIvm9e5U=
+X-Received: by 2002:a17:906:74c8:b0:94e:d688:fca6 with SMTP id
+ z8-20020a17090674c800b0094ed688fca6mr8253384ejl.0.1681731497811; Mon, 17 Apr
+ 2023 04:38:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.1
-Subject: Re: kernel error at led trigger "phy0tpt"
-Content-Language: en-US, de-DE
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Bagas Sanjaya <bagasdotme@gmail.com>, Tobias Dahms <dahms.tobias@web.de>,
- Sean Wang <sean.wang@mediatek.com>
-Cc: stable@vger.kernel.org, Pavel Machek <pavel@ucw.cz>,
- Lee Jones <lee@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
- linux-leds@vger.kernel.org, linux-wireless@vger.kernel.org,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- Matthias Brugger <matthias.bgg@gmail.com>
-References: <91feceb2-0df4-19b9-5ffa-d37e3d344fdf@web.de>
- <3fcc707b-f757-e74b-2800-3b6314217868@leemhuis.info>
- <fcecf6fc-bf18-73a0-9fc1-6850e183323a@web.de>
- <d14fb08c-70e3-4cc7-caf9-87e73eab9194@gmail.com>
- <8b07ead5-f105-da86-e7da-ee49616f7c1d@collabora.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <8b07ead5-f105-da86-e7da-ee49616f7c1d@collabora.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1681730720;f968533a;
-X-HE-SMSGID: 1poMyw-0000Lo-Iw
+References: <168166781352.1843526.278570500979918184@leemhuis.info> <CAHk-=wjQaxmXTR68VnEJvLgB=H2agMTrrF4EXkXT4Hbdf2ZuMQ@mail.gmail.com>
+In-Reply-To: <CAHk-=wjQaxmXTR68VnEJvLgB=H2agMTrrF4EXkXT4Hbdf2ZuMQ@mail.gmail.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Mon, 17 Apr 2023 13:38:06 +0200
+Message-ID: <CAJZ5v0j_MwW6JaqTRNhmz=LcW8==GZ0X-=W0+z0tOsGQyDd0Dw@mail.gmail.com>
+Subject: Re: Linux regressions report for mainline [2023-04-16]
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>, Rafael Wysocki <rafael@kernel.org>, 
+	David Sterba <dsterba@suse.com>, LKML <linux-kernel@vger.kernel.org>, 
+	Linux regressions mailing list <regressions@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-[adding Matthias to the list of recipients, who back then applied to
-culprit]
+On Sun, Apr 16, 2023 at 10:49=E2=80=AFPM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> On Sun, Apr 16, 2023 at 10:59=E2=80=AFAM Regzbot (on behalf of Thorsten
+> Leemhuis) <regressions@leemhuis.info> wrote:
+> >
+> > Wake-on-lan (WOL) apparently is broken for a huge number of users since
+> > 6.2 was released[1]. This is known for 8 weeks now and about 4 weeks ag=
+o
+> > it was bisected to commit 5c62d5aab87 ("ACPICA: Events: Support fixed
+> > PCIe wake event") we immediately could have reverted. The developer tha=
+t
+> > looked into this was even willing to do the revert late March, but then
+> > got discouraged by a maintainer [2]. But well, a fix was apparently[3]
+> > finally posted for review last week (to the acpica-devel list); with a
+> > bit of luck your might get it next week. Still a bit sad that 6.2 is
+> > broken for so long now, as Greg wants to see it fixed in mainline first=
+.
+> >
+> > [1] https://bugzilla.kernel.org/show_bug.cgi?id=3D217069
+> > [2] https://bugzilla.kernel.org/show_bug.cgi?id=3D217069#c50
+> > [3] https://lore.kernel.org/all/754225a2-95a9-2c36-1886-7da1a78308c2@lo=
+ongson.cn/
+>
+> I find that bugzilla discussion very confusing, it's not clear what
+> the status of the patch actually is.
+>
+> And the sane lkml thread just says "the patch is under review" without
+> actually saying *where* said patch is, or where the review is.
+>
+> It sounds like it got perhaps into some internal ACPCICA queue? None
+> of those links are very clear on any of this.
+>
+> Rafael?
 
-Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
-for once, to make this easily accessible to everyone.
-
-AngeloGioacchino, Has any progress been made to fix below regression? It
-doesn't look like it from here, hence I wondered if it fall through the
-cracks.
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
-
-#regzbot poke
-
-On 27.03.23 10:23, AngeloGioacchino Del Regno wrote:
-> Il 26/03/23 15:23, Bagas Sanjaya ha scritto:
->> On 3/26/23 02:20, Tobias Dahms wrote:
->>> Hello,
->>>
->>> the bisection gives following result:
->>> --------------------------------------------------------------------
->>> 18c7deca2b812537aa4d928900e208710f1300aa is the first bad commit
->>> commit 18c7deca2b812537aa4d928900e208710f1300aa
->>> Author: AngeloGioacchino Del Regno
->>> <angelogioacchino.delregno@collabora.com>
->>> Date:   Tue May 17 12:47:08 2022 +0200
->>>
->>>      soc: mediatek: pwrap: Use readx_poll_timeout() instead of custom
->>> function
->>>
->>>      Function pwrap_wait_for_state() is a function that polls an address
->>>      through a helper function, but this is the very same operation that
->>>      the readx_poll_timeout macro means to do.
->>>      Convert all instances of calling pwrap_wait_for_state() to instead
->>>      use the read_poll_timeout macro.
->>>
->>>      Signed-off-by: AngeloGioacchino Del Regno
->>> <angelogioacchino.delregno@collabora.com>
->>>      Reviewed-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
->>>      Tested-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
->>>      Link:
->>> https://lore.kernel.org/r/20220517104712.24579-2-angelogioacchino.delregno@collabora.com
->>>      Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
->>>
->>>   drivers/soc/mediatek/mtk-pmic-wrap.c | 60
->>> ++++++++++++++++++++----------------
->>>   1 file changed, 33 insertions(+), 27 deletions(-)
->>> --------------------------------------------------------------------
->>>
->>
->> OK, I'm updating the regression status:
->>
->> #regzbot introduced: 18c7deca2b8125
->>
->> And for replying, don't top-post, but rather reply inline with
->> appropriate context instead; hence I cut the replied context.
->>
-> 
-> There are two possible solutions to that, specifically, either:
->  1. Change readx_poll_timeout() to readx_poll_timeout_atomic(); or
->  2. Fix the mt6323-led driver so that this operation gets done
->     out of atomic context, which is IMO the option to prefer.
-> 
-> Ideas?
-> 
-> Regards,
-> Angelo
-> 
-> 
+There is a pull request for ACPICA that corresponds to this (IIUC),
+https://github.com/acpica/acpica/pull/866
