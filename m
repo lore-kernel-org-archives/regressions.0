@@ -1,57 +1,115 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C73D5385;
-	Mon, 17 Apr 2023 11:22:03 +0000 (UTC)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2CBD71063;
-	Mon, 17 Apr 2023 04:22:47 -0700 (PDT)
-Received: from [10.57.80.202] (unknown [10.57.80.202])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 858853F6C4;
-	Mon, 17 Apr 2023 04:22:02 -0700 (PDT)
-Message-ID: <6a775920-9260-f82e-dace-0b792f5371c4@arm.com>
-Date: Mon, 17 Apr 2023 12:21:58 +0100
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73D935385
+	for <regressions@lists.linux.dev>; Mon, 17 Apr 2023 11:25:20 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1poMyw-0000Lo-Iw; Mon, 17 Apr 2023 13:25:14 +0200
+Message-ID: <69602f1b-4afa-d864-b6d3-d8237f81a51d@leemhuis.info>
+Date: Mon, 17 Apr 2023 13:25:13 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [regression] Bug 217218 - Trying to boot Linux version 6-2.2
- kernel with Marvell SATA controller 88SE9235
-Content-Language: en-GB
-To: Christoph Hellwig <hch@lst.de>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
- LKML <linux-kernel@vger.kernel.org>, Linux PCI <linux-pci@vger.kernel.org>,
- iommu@lists.linux.dev, baolu.lu@linux.intel.com
-References: <a79ea7f5-6a41-a6c9-cfec-ba01aa2a3cfa@leemhuis.info>
- <20230328012231.GB21977@lst.de>
- <01c50370-002d-5e18-3edc-81c9527aedc9@arm.com> <20230416064156.GA6410@lst.de>
-From: Robin Murphy <robin.murphy@arm.com>
-In-Reply-To: <20230416064156.GA6410@lst.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.1
+Subject: Re: kernel error at led trigger "phy0tpt"
+Content-Language: en-US, de-DE
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Bagas Sanjaya <bagasdotme@gmail.com>, Tobias Dahms <dahms.tobias@web.de>,
+ Sean Wang <sean.wang@mediatek.com>
+Cc: stable@vger.kernel.org, Pavel Machek <pavel@ucw.cz>,
+ Lee Jones <lee@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+ linux-leds@vger.kernel.org, linux-wireless@vger.kernel.org,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ Matthias Brugger <matthias.bgg@gmail.com>
+References: <91feceb2-0df4-19b9-5ffa-d37e3d344fdf@web.de>
+ <3fcc707b-f757-e74b-2800-3b6314217868@leemhuis.info>
+ <fcecf6fc-bf18-73a0-9fc1-6850e183323a@web.de>
+ <d14fb08c-70e3-4cc7-caf9-87e73eab9194@gmail.com>
+ <8b07ead5-f105-da86-e7da-ee49616f7c1d@collabora.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <8b07ead5-f105-da86-e7da-ee49616f7c1d@collabora.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1681730720;f968533a;
+X-HE-SMSGID: 1poMyw-0000Lo-Iw
 
-On 2023-04-16 07:41, Christoph Hellwig wrote:
-> On Thu, Mar 30, 2023 at 01:18:45PM +0100, Robin Murphy wrote:
->> FWIW "Marvell SATA" instantly makes me suspect the phantom function quirk.
->> What *should* happen is the IOMMU driver sees the PCI DMA aliases correctly
->> and sets up context entries for both 07.00.0 and 07.00.1, but it looks like
->> that may be what's gone awry.
+[adding Matthias to the list of recipients, who back then applied to
+culprit]
+
+Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
+for once, to make this easily accessible to everyone.
+
+AngeloGioacchino, Has any progress been made to fix below regression? It
+doesn't look like it from here, hence I wondered if it fall through the
+cracks.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
+
+#regzbot poke
+
+On 27.03.23 10:23, AngeloGioacchino Del Regno wrote:
+> Il 26/03/23 15:23, Bagas Sanjaya ha scritto:
+>> On 3/26/23 02:20, Tobias Dahms wrote:
+>>> Hello,
+>>>
+>>> the bisection gives following result:
+>>> --------------------------------------------------------------------
+>>> 18c7deca2b812537aa4d928900e208710f1300aa is the first bad commit
+>>> commit 18c7deca2b812537aa4d928900e208710f1300aa
+>>> Author: AngeloGioacchino Del Regno
+>>> <angelogioacchino.delregno@collabora.com>
+>>> Date:   Tue May 17 12:47:08 2022 +0200
+>>>
+>>>      soc: mediatek: pwrap: Use readx_poll_timeout() instead of custom
+>>> function
+>>>
+>>>      Function pwrap_wait_for_state() is a function that polls an address
+>>>      through a helper function, but this is the very same operation that
+>>>      the readx_poll_timeout macro means to do.
+>>>      Convert all instances of calling pwrap_wait_for_state() to instead
+>>>      use the read_poll_timeout macro.
+>>>
+>>>      Signed-off-by: AngeloGioacchino Del Regno
+>>> <angelogioacchino.delregno@collabora.com>
+>>>      Reviewed-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
+>>>      Tested-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
+>>>      Link:
+>>> https://lore.kernel.org/r/20220517104712.24579-2-angelogioacchino.delregno@collabora.com
+>>>      Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
+>>>
+>>>   drivers/soc/mediatek/mtk-pmic-wrap.c | 60
+>>> ++++++++++++++++++++----------------
+>>>   1 file changed, 33 insertions(+), 27 deletions(-)
+>>> --------------------------------------------------------------------
+>>>
+>>
+>> OK, I'm updating the regression status:
+>>
+>> #regzbot introduced: 18c7deca2b8125
+>>
+>> And for replying, don't top-post, but rather reply inline with
+>> appropriate context instead; hence I cut the replied context.
+>>
 > 
-> Looking at the bug report it seems this is device 9235, which doesn't
-> need the DMA alias quirks.
-
-Indeed that one doesn't appear to be in the quirk list currently. 
-However the symptom of DMA traffic from function 1 which the IOMMU 
-clearly wasn't expecting firmly suggests that it *does* need the quirk. 
-Digging up the original report, the lspci output there suggests that 
-07:00.1 isn't a real function, which would further confirm it.
-
-The other thing which catches my interest is the seemingly-conflicting 
-"iommu=soft" and "intel_iommu=on" arguments - I could well believe that 
-refactoring the x86 IOMMU detection stuff might have subtly changed the 
-interaction there, such that previously it ended up not actually using 
-the IOMMU for DMA ops, but now it is?
-
-Robin.
+> There are two possible solutions to that, specifically, either:
+>  1. Change readx_poll_timeout() to readx_poll_timeout_atomic(); or
+>  2. Fix the mt6323-led driver so that this operation gets done
+>     out of atomic context, which is IMO the option to prefer.
+> 
+> Ideas?
+> 
+> Regards,
+> Angelo
+> 
+> 
