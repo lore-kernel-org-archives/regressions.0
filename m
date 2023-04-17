@@ -1,98 +1,135 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C01B563CC
-	for <regressions@lists.linux.dev>; Sun, 16 Apr 2023 21:37:32 +0000 (UTC)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 8BB8721A37;
-	Sun, 16 Apr 2023 21:30:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1681680646; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SFzJ92Ds6qpIDo63JHIGufVFHdpCoBu1yLuu/vLCv/E=;
-	b=pGl/KhniKaKPA2AmoBurACAVaaEw0wJKpHXCEvx09/+Et5bamkJV5N9nzWbz8u3E/+IpfV
-	htRQpqyBzljMiHS7B0u8fq+Ez/kmqH5C4vcpQ9hvAhzKmEA6pFdq5Lo7n3LoGkDwadFGqD
-	zJFEZXHJDEjy7vsHxFBK0ZmaGzugQw4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1681680646;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SFzJ92Ds6qpIDo63JHIGufVFHdpCoBu1yLuu/vLCv/E=;
-	b=BDeaN3KXAI1ePtF+toCwdJGEMbVvQYhwhpwCgyArKB5oi5/ucjo30JSNFNMsgSB/xvvVjY
-	W0uTTSzU7vqwpzAQ==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 0AA59139CC;
-	Sun, 16 Apr 2023 21:30:43 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-	by imap2.suse-dmz.suse.de with ESMTPSA
-	id bYeUKwNpPGReWgAAMHmgww
-	(envelope-from <neilb@suse.de>); Sun, 16 Apr 2023 21:30:43 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8CEFBED1
+	for <regressions@lists.linux.dev>; Mon, 17 Apr 2023 00:54:53 +0000 (UTC)
+Received: from loongson.cn (unknown [10.20.42.153])
+	by gateway (Coremail) with SMTP id _____8Cxf83bmDxkPbEdAA--.46070S3;
+	Mon, 17 Apr 2023 08:54:51 +0800 (CST)
+Received: from [10.20.42.153] (unknown [10.20.42.153])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxB73WmDxkfSoqAA--.47967S3;
+	Mon, 17 Apr 2023 08:54:46 +0800 (CST)
+Subject: Re: [regression] Bug 217069 - Wake on Lan is broken on r8169 since
+ 6.2
+To: Linux regressions mailing list <regressions@lists.linux.dev>,
+ "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, Huacai Chen
+ <chenhuacai@loongson.cn>, Bob Moore <robert.moore@intel.com>,
+ acpica-devel@lists.linuxfoundation.org,
+ ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+ Huacai Chen <chenhuacai@kernel.org>
+References: <e6aaddb9-afec-e77d-be33-570f9f10a9c2@leemhuis.info>
+ <53e8b4db-e8dd-4dfa-f873-7dcbeac09149@leemhuis.info>
+ <13aea525-108a-e018-987d-2447ff1d42df@leemhuis.info>
+ <754225a2-95a9-2c36-1886-7da1a78308c2@loongson.cn>
+ <2d9b786b-ed1f-0687-ea6f-575faa6036a3@leemhuis.info>
+From: Jianmin Lv <lvjianmin@loongson.cn>
+Message-ID: <653dbfb0-da67-8d1b-9efc-f4e0d67fe9fd@loongson.cn>
+Date: Mon, 17 Apr 2023 08:54:46 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-To: "Sylvain Menu" <sylvain.menu@gmail.com>
-Cc: "Greg KH" <gregkh@linuxfoundation.org>, stable@vger.kernel.org,
- regressions@lists.linux.dev, chuck.lever@oracle.com, jlayton@kernel.org,
- linux-nfs@vger.kernel.org
-Subject: Re: nfs mount disappears due to inode revalidate failure
-In-reply-to:
- <CACH9xG_v_2Y9d3Q16YB57Q5xVwSXe5FqLFSnjox6GotOT3DPmw@mail.gmail.com>
-References:
- <CACH9xG8-tEtWstUVmD9eZFEEAqx-E8Gs14wDL+=uNtBK=-KJvQ@mail.gmail.com>,
- <ZAmv57xeNqs7v9hY@kroah.com>,
- <CACH9xG9=BFszD9OXspttTFdki0e68b5Hw7o11AUQ7pptSMy9wQ@mail.gmail.com>,
- <ZAmzT/D8YxJ3844j@kroah.com>,
- <CACH9xG_v_2Y9d3Q16YB57Q5xVwSXe5FqLFSnjox6GotOT3DPmw@mail.gmail.com>
-Date: Mon, 17 Apr 2023 07:30:40 +1000
-Message-id: <168168064006.24821.8358959637978538396@noble.neil.brown.name>
-
-On Fri, 10 Mar 2023, Sylvain Menu wrote:
-> No I don't have that, I found the bug in production by no chance.
-> I tried to dive into the code but it quickly becomes complex for me,
-> at least it's easy to reproduce with a little script (while(1) timeout
-> my_c.code)
->=20
-> thanks
-> sylvain menu
->=20
-> Le jeu. 9 mars 2023 =C3=A0 11:22, Greg KH <gregkh@linuxfoundation.org> a =
-=C3=A9crit :
-> >
-> > On Thu, Mar 09, 2023 at 11:17:30AM +0100, Sylvain Menu wrote:
-> > > I think it's a regression according to the old resolved bugs/tickets
-> > > but no idea since when it's broken again
-> >
-> > Any chance you can do 'git bisect' to find where it broke and what
-> > commit broke it?
-
-Please see
-   https://lore.kernel.org/linux-nfs/87361aovm3.fsf@notabene.neil.brown.name/
-
-I posted a patch for this a couple of years ago, but Trond wouldn't take
-it.
-
-NeilBrown
+In-Reply-To: <2d9b786b-ed1f-0687-ea6f-575faa6036a3@leemhuis.info>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8DxB73WmDxkfSoqAA--.47967S3
+X-CM-SenderInfo: 5oymxthqpl0qxorr0wxvrqhubq/
+X-Coremail-Antispam: 1Uk129KBjvJXoWxCF1fCr1DuFy5ZrWfAF1fZwb_yoW5uryxpF
+	WrKan8Xr4DJr1xJws7Kw109FWjvwn8Jr909r9rXr4rJF90va4FvF4Igr43uFyjyr97Ca1a
+	qF43ZrySgryUAaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	bxxYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwA2z4
+	x0Y4vEx4A2jsIE14v26r4j6F4UM28EF7xvwVC2z280aVCY1x0267AKxVW8JVW8Jr1le2I2
+	62IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4
+	CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvj
+	eVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67vIY487MxAIw2
+	8IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4l
+	x2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrw
+	CI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI
+	42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z2
+	80aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU25EfUUUUU
 
 
-> >
-> > thanks,
-> >
-> > greg k-h
->=20
+
+On 2023/4/16 下午8:52, Linux regression tracking (Thorsten Leemhuis) wrote:
+> On 16.04.23 14:35, Jianmin Lv wrote:
+>>  From the feedbacks, the WOL issue has been fixed, and I have submitted a
+>> fixed patch to ACPICA, which has been reviewing in last week (Rafael
+>> also looked into the fixed patch).
+> 
+> Great, many thx. I looked for something like that, but failed to find it.
+> 
+> FWIW, a link to the patch submission would have been nice. I tried to
+> find it just now, but maybe it's not on lore.kernel.org or I did
+> something stupid. And
+> https://lists.linuxfoundation.org/pipermail/acpica-devel/ seems to lack
+> behind or might not be the list you submitted the patch to. Whatever.
+> 
+The link is here: https://github.com/acpica/acpica/pull/866
+
+>> There are two kinds of issues in the bug, one is WOL failed in kexec
+>> reboot, another is WOL failed in cold reboot. The former one still exist
+>> after reverted patch(5c62d5aab8752e5ee7bfbe75ed6060db1c787f98),
+>> so this issue is not caused by the reverted patch. The second is caused
+>> by the reverted patch, and has been fixed with my provided patch.
+>>
+>> Please see:
+>> https://bugzilla.kernel.org/show_bug.cgi?id=217069#c54
+>> https://bugzilla.kernel.org/show_bug.cgi?id=217069#c59
+> 
+> I'll post a quick update there.
+> 
+> Thx again.
+> 
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> --
+> Everything you wanna know about Linux kernel regression tracking:
+> https://linux-regtracking.leemhuis.info/about/#tldr
+> If I did something stupid, please tell me, as explained on that page.
+> 
+>> On 2023/4/14 下午8:48, Thorsten Leemhuis wrote:
+>>> On 19.03.23 08:20, Linux regression tracking (Thorsten Leemhuis) wrote:
+>>>> On 22.02.23 08:57, Thorsten Leemhuis wrote:
+>>>>>
+>>>>> I noticed a regression report in bugzilla.kernel.org. As many (most?)
+>>>>> kernel developer don't keep an eye on it, I decided to forward it by
+>>>>> mail. Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=217069 :
+>>>>
+>>>> An issue that looked like a network bug was now bisected and it turns
+>>>> out it's cause by 5c62d5aab875 ("ACPICA: Events: Support fixed PCIe wake
+>>>> event") which Huacai Chen provided. Could you take a look at the ticket
+>>>> linked above?
+>>>
+>>> Jianmin did get close to a proper fix a while ago
+>>> (https://bugzilla.kernel.org/show_bug.cgi?id=217069#c46 ), but it
+>>> appears there wasn't any progress to fix this during the last week. Or
+>>> did I miss it?
+>>>
+>>> This is kinda unsatisfying, as the culprit is now known for nearly four
+>>> weeks; especially as this is a issue that is present in 6.2 since it was
+>>> released and would have been possible to fix there and in mainline with
+>>> a simple revert. We even got close to one two weeks ago already
+>>> (https://bugzilla.kernel.org/show_bug.cgi?id=217069#c49 ).
+>>>
+>>> #sigh
+>>>
+>>> I'd say we should revert this. Rafael, what's your opinion here?
+>>>
+>>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+>>> -- 
+>>> Everything you wanna know about Linux kernel regression tracking:
+>>> https://linux-regtracking.leemhuis.info/about/#tldr
+>>> If I did something stupid, please tell me, as explained on that page.
+>>>
+>>> #regzbot poke
+>>>
+>>
+>>
+>>
 
