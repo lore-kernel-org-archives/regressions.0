@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15CD663DD
-	for <regressions@lists.linux.dev>; Mon, 17 Apr 2023 11:55:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD66F6FAE
+	for <regressions@lists.linux.dev>; Mon, 17 Apr 2023 12:27:43 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1poNRz-0006Cl-1Z; Mon, 17 Apr 2023 13:55:15 +0200
-Message-ID: <993dd537-2f74-3657-1dd3-c3a0a74e37e1@leemhuis.info>
-Date: Mon, 17 Apr 2023 13:55:14 +0200
+	id 1poNx9-0005H7-Lh; Mon, 17 Apr 2023 14:27:27 +0200
+Message-ID: <c04a9a24-a802-261a-0d98-d4eef0ebfbe5@leemhuis.info>
+Date: Mon, 17 Apr 2023 14:27:26 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,80 +16,34 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.9.1
-Subject: Re: [regression] Bug 216946 - Toshiba satellite click mini l9w-b:
- touchscreen: no touch events with kernel 6.1.4
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Re: Kernel Panic - V6.2 - Reseved memory issue
 Content-Language: en-US, de-DE
-To: Hans de Goede <hdegoede@redhat.com>,
- Benjamin Tissoires <benjamin.tissoires@redhat.com>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Jiri Kosina <jikos@kernel.org>,
- Dmitry Torokhov <dmitry.torokhov@gmail.com>,
- "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
- LKML <linux-kernel@vger.kernel.org>, =?UTF-8?Q?G=c3=a9_Koerkamp?=
- <ge.koerkamp@gmail.com>
-References: <32a14a8a-9795-4c8c-7e00-da9012f548f8@leemhuis.info>
- <abb495f7-f973-4614-846b-d3922dc0fe25@leemhuis.info>
- <CAO-hwJJ2OMFgpmrXK_Z43z0ddujaS1fNjaAJSWwao4qQN+pJ6w@mail.gmail.com>
- <13c5e60d-d9ba-f840-f43e-40db957a6617@redhat.com>
+To: Christian Hewitt <christianshewitt@gmail.com>, tanure@linux.com,
+ Stefan Agner <stefan@agner.ch>
+Cc: kernelnewbies <kernelnewbies@kernelnewbies.org>,
+ Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>,
+ devicetree <devicetree@vger.kernel.org>, LKML
+ <linux-kernel@vger.kernel.org>, AML <linux-amlogic@lists.infradead.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <CAJX_Q+1Tjc+-TjZ6JW9X0NxEdFe=82a9626yL63j7uVD4LpxEA@mail.gmail.com>
+ <9BAD677A-74AF-4515-B19C-A15A69CE53EF@gmail.com>
 From: "Linux regression tracking (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <13c5e60d-d9ba-f840-f43e-40db957a6617@redhat.com>
+In-Reply-To: <9BAD677A-74AF-4515-B19C-A15A69CE53EF@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1681732517;a56fa51a;
-X-HE-SMSGID: 1poNRz-0006Cl-1Z
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1681734463;0b03dfd0;
+X-HE-SMSGID: 1poNx9-0005H7-Lh
 
+Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
+for once, to make this easily accessible to everyone.
 
+This is apparently is a regression and thus got on my radar.
 
-On 01.03.23 12:41, Hans de Goede wrote:
-> On 2/28/23 14:26, Benjamin Tissoires wrote:
->> On Tue, Feb 28, 2023 at 12:32 PM Thorsten Leemhuis
->> <regressions@leemhuis.info> wrote:
->>>
->>> On 19.01.23 16:06, Linux kernel regression tracking (Thorsten Leemhuis)
->>> wrote:
->>>> Hi, this is your Linux kernel regression tracker.
->>>>
->>>> I noticed a regression report in bugzilla.kernel.org. As many (most?)
->>>> kernel developer don't keep an eye on it, I decided to forward it by
->>>> mail. Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=216946 :
->>>
->>> The reporter recently confirmed in the ticket that the issue still
->>> happens with 6.2.
->>>
->>> There wasn't any reply from any of the input developers here or in
->>> bugzilla afaics. :-/ Hmmm. Could someone from that camp maybe please
->>> take a minute and at least briefly look into this as answer something
->>> like "that might be due to a problem in subsystem 'foo'", "maybe ask bar
->>> for an option", or "we have no idea what might cause this, this needs to
->>> be bisected"? That would help a lot.
->>
->> The working dmesg shows a line with:
->> hid-generic 0018:0457:10FB.0002: input,hidraw1: I2C HID v1.00 Device
->> [SIS0817:00 0457:10FB] on i2c-SIS0817:00
->> and then
->> hid-multitouch 0018:0457:10FB.0002: input,hidraw1: I2C HID v1.00
->> Device [SIS0817:00 0457:10FB] on i2c-SIS0817:00
->>
->> But these 2 lines do not appear on the 6.1.4 logs.
->>
->> So the device is not properly enumerated by ACPI or I2C. Hans might
->> have an idea on how to debug/solve that issue.
-> 
-> I actually have a Toshiba satellite click mini l9w-b lying around
-> myself. I already made a note to try and reproduce this
-> 
-> But I'm very much swamped with too much kernel work, so no promises
-> when I will get around to this ...
-
-Has anyone made any progress with this? Doesn't look like it, hence I
-wondered if this fall through the cracks; but maybe I'm just missing
-something.
-
-Gé Koerkamp: with a bit of luck Hans sooner or later will have time to
-look into this, but it might speed things up if you could try to bisect
-this.
+This all sounds a bit unfortunate. What can we do to get this properly
+solved? Which commit actually causes this? I wonder if poking maintainer
+higher in the hierarchy might help getting this finally fixed.
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
@@ -99,81 +53,90 @@ If I did something stupid, please tell me, as explained on that page.
 
 #regzbot poke
 
->>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
->>> --
->>> Everything you wanna know about Linux kernel regression tracking:
->>> https://linux-regtracking.leemhuis.info/about/#tldr
->>> If I did something stupid, please tell me, as explained on that page.
->>>
->>> #regzbot poke
->>>>>  Gé Koerkamp 2023-01-17 20:21:51 UTC
->>>>>
->>>>> Created attachment 303619 [details]
->>>>> Kernel configuration for v6.1.4/ journalctl (dmesg)/ ACPIdump/lsmod
->>>>>
->>>>> Overview:
->>>>> The touchscreen does not react on touch events.
->>>>> Touchscreen display and touchpad are working.
->>>>>
->>>>> Step to reproduce:
->>>>> Open any UI page
->>>>> Try to use touch on relevant UI controls (buttons etc.)
->>>>>
->>>>> Result:
->>>>> No reaction on screen touches
->>>>>
->>>>> Expected result:
->>>>> Reaction on touched control, same as when using the touch pad or connected mouse (which do work).
->>>>>
->>>>> Build information:
->>>>> The error happens with kernel version 6.1.4
->>>>> After rebuilding with different kernel versions, it appears that it first fails with kernel 5.16
->>>>>
->>>>> Additional builds:
->>>>> The click mini l9w-b still works with kernel 5.10.y LTS and 5.15.y LTS.
->>>>>
->>>>> Important remark:
->>>>> Touchscreen still works fine with kernel 6.1.4 using
->>>>> - an HP x2 detachable 10-p0xx or
->>>>> - a Lenovo yoga 520-14ikb
->>>>>
->>>>> So it could be a hardware dependent issue
->>>>
->>>> See the ticket for more details.
->>>>
->>>>
->>>> [TLDR for the rest of this mail: I'm adding this report to the list of
->>>> tracked Linux kernel regressions; the text you find below is based on a
->>>> few templates paragraphs you might have encountered already in similar
->>>> form.]
->>>>
->>>> BTW, let me use this mail to also add the report to the list of tracked
->>>> regressions to ensure it's doesn't fall through the cracks:
->>>>
->>>> #regzbot introduced: v5.15..v5.16
->>>> https://bugzilla.kernel.org/show_bug.cgi?id=216946
->>>> #regzbot title: hid: touchscreen broken with Toshiba satellite click
->>>> mini l9w-b
->>>> #regzbot ignore-activity
->>>>
->>>> This isn't a regression? This issue or a fix for it are already
->>>> discussed somewhere else? It was fixed already? You want to clarify when
->>>> the regression started to happen? Or point out I got the title or
->>>> something else totally wrong? Then just reply and tell me -- ideally
->>>> while also telling regzbot about it, as explained by the page listed in
->>>> the footer of this mail.
->>>>
->>>> Developers: When fixing the issue, remember to add 'Link:' tags pointing
->>>> to the report (e.g. the buzgzilla ticket and maybe this mail as well, if
->>>> this thread sees some discussion). See page linked in footer for details.
->>>>
->>>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
->>>> --
->>>> Everything you wanna know about Linux kernel regression tracking:
->>>> https://linux-regtracking.leemhuis.info/about/#tldr
->>>> If I did something stupid, please tell me, as explained on that page.
->>>
+On 02.04.23 15:11, Christian Hewitt wrote:
+>> On 2 Apr 2023, at 12:10 pm, Lucas Tanure <tanure@linux.com> wrote:
 >>
+>> I am trying to fix a kernel panic I am seeing on my vim3 board (Amlogic A311D).
+>> I don't have enough knowledge about this area, but my current guess is
+>> the kernel is using a piece of memory belonging to ARM-trusted
+>> firmware that I shouldn't.
+>> Log:
+>>
+>> [ 9.792966] SError Interrupt on CPU3, code 0x00000000bf000000 -- SError
+>> [ 9.792980] CPU: 3 PID: 3471 Comm: kded5 Tainted: G C 6.2.0 #1
+>> [ 9.792985] Hardware name: Khadas VIM3 (DT)
+>> [ 9.792987] pstate: 20000005 (nzCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+>> [ 9.792991] pc : kmem_cache_free_bulk.part.98+0x1f0/0x528
+>> [ 9.793004] lr : kmem_cache_free_bulk.part.98+0x2f8/0x528
+>> [ 9.793008] sp : ffff80000a2eb7f0
+>> [ 9.793009] x29: ffff80000a2eb7f0 x28: ffff00001f358518 x27: ffff000000008800
+>> [ 9.793016] x26: ffff00000262b300 x25: ffff00000262b300 x24: 0000000000000001
+>> [ 9.793019] x23: ffff00000262b000 x22: 0000000000000000 x21: ffff00001f358538
+>> [ 9.793022] x20: fffffc0000098ac0 x19: 0000000000000004 x18: 0000000000000040
+>> [ 9.793025] x17: 0000000000000018 x16: 00000000000007f8 x15: 0000000000000003
+>> [ 9.793028] x14: 0000000000000006 x13: ffff800008e48550 x12: 0000ffff9dc91fff
+>> [ 9.793031] x11: 0000000000000004 x10: 0000000000000001 x9 : ffff000007e93680
+>> [ 9.793035] x8 : 0000000000000020 x7 : ffff000001d2b100 x6 : 0000000000000007
+>> [ 9.793037] x5 : 0000000000000020 x4 : ffff000000008800 x3 : 0000000000000001
+>> [ 9.793040] x2 : 0000000000000007 x1 : 0000000000000000 x0 : ffff00001f358540
+>> [ 9.793045] Kernel panic - not syncing: Asynchronous SError Interrupt
+>>
+>> This doesn't happen with downstream Khadas 6.2 kernel, and that's
+>> because the downstream kernel removed this from
+>> early_init_dt_reserve_memory (drivers/of/fdt.c):
+>>
+>> /*
+>> * If the memory is already reserved (by another region), we
+>> * should not allow it to be marked nomap, but don't worry
+>> * if the region isn't memory as it won't be mapped.
+>> */
+>> if (memblock_overlaps_region(&memblock.memory, base, size) &&
+>>    memblock_is_region_reserved(base, size))
+>>          return -EBUSY;
+>>
+>>
+>> And this causes 3 MiB of memory belonging to ARM Trusted firmware to
+>> be reserved.
+>>
+>> arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi :
+>> /* 3 MiB reserved for ARM Trusted Firmware (BL31) */
+>> secmon_reserved: secmon@5000000 {
+>>        reg = <0x0 0x05000000 0x0 0x300000>;
+>>        no-map;
+>> };
+>>
+>> And the mainline kernel fails to reserve that memory:
+>> [    0.000000] OF: fdt: Reserved memory: failed to reserve memory for
+>> node 'secmon@5000000': base 0x0000000005000000, size 3 MiB
+>>
+>> It fails to reserve because memblock_overlaps_region and
+>> memblock_is_region_reserved return one.
+>> I think memblock_is_region_reserved is saying the memory is already
+>> reserved by uboot and shouldn't be nomap, but it should.
+>>
+>> Is there a bug here?
+>> Why the kernel is failing to reserve this memory?
+>> Is this an u-boot issue?
+>>
+>> I would appreciate any help. The current mainline kernel fails 90% of
+>> the time to boot into the Vim3 board.
 > 
+> The issue was raised before by Stefan Agner here:
 > 
+> https://lore.kernel.org/linux-arm-kernel/40ca11f84b7cdbfb9ad2ddd480cb204a@agner.ch/
+> 
+> The thread sort of points at the general issue but the conversation
+> fizzled out and didn’t lead to any changes. At one point Stefan made
+> a suggestion about reverting part of the code, leading to this patch
+> in my own patchset:
+> 
+> https://github.com/chewitt/linux/commit/9633c9b24f6f16afdb7fa8c2e163b6ea7a7ac5f8
+> 
+> The issue is still present and the patch does work around it. The
+> crashes would probably show up more, only a large percentage of
+> distros that actively support Amlogic boards (and several vendors)
+> are picking chunks of my curated LibreELEC patchset for their own
+> kernels and thus that patch is quite widely used.
+> 
+> Christian
 > 
