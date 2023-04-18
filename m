@@ -1,144 +1,89 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41652AFE6
-	for <regressions@lists.linux.dev>; Tue, 18 Apr 2023 19:12:11 +0000 (UTC)
-Received: by mail-ej1-f43.google.com with SMTP id c9so37060684ejz.1
-        for <regressions@lists.linux.dev>; Tue, 18 Apr 2023 12:12:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1681845129; x=1684437129;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5O/u9jEo7tTXxqFeP9AYKB4xUAFuRax6QX9V+31xwXs=;
-        b=XJeD+SduivfQWDRuxp6WilkqyLPbQ85OZkbWr4xh7JDdXguUtKAwblod0XYuI1L5k/
-         /QyG4NtiHCmINA/6jrylNoLZC8DFcgZ0KuinVSuwjxfesb5gVIYq0Slb9jucaZDN6YvB
-         fogPDrYyePyZdNTfA48Ig6kfx2HxgP6SECVs8=
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC545C94A
+	for <regressions@lists.linux.dev>; Tue, 18 Apr 2023 21:33:02 +0000 (UTC)
+Received: by mail-qv1-f52.google.com with SMTP id m16so18902464qvx.9
+        for <regressions@lists.linux.dev>; Tue, 18 Apr 2023 14:33:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681845129; x=1684437129;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20221208; t=1681853582; x=1684445582;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=5O/u9jEo7tTXxqFeP9AYKB4xUAFuRax6QX9V+31xwXs=;
-        b=avIhJ90JAKz5noQPUcXPMcpTLZtLBUoSssS/cS6g61hfT5TFAhWZ2Bl5G37H7m8JYl
-         zX00x+5qy6M2GCcS13w/OwrAf0lEqEAvCQ3Xn48fQkYizqvF9A1FM1wlWzDieD5DIm1l
-         dAZbvv0IeLhSu+UNhzVvaYbziH/kf8yKu1JmGLjEczFdIiZTNWzWI/0SYWKSzI721ZpQ
-         rNT+krThIPErdJK54ipNv+URTqwKqatJoREpOxGmV9571gZ3qnRKyutXZcID0eBjwLa1
-         pQqbWTfbnu3zTMmhEu/vdNKX3upTDoeOSXkItnnrvjgb2N0RCDh+6MwBuiv1Z4Q8uK88
-         x4OA==
-X-Gm-Message-State: AAQBX9c1AQ846XV6Vg2pNM3TAfq3pMHnY5oyl8wY4uhAZ7zK0W9ulbY0
-	WqO+UbPYAGfceBWDcA1mJWrsjIvXTlligv9Bb7oWjA==
-X-Google-Smtp-Source: AKy350ag9Solx7ZylGybbZJZl/1jcvYHNwjuxQoD5aQYP4PspF5zcYzCeucCTxbhZ3wPbMkH1FKoRA==
-X-Received: by 2002:a17:906:6816:b0:951:786f:e3b3 with SMTP id k22-20020a170906681600b00951786fe3b3mr3396100ejr.34.1681845128846;
-        Tue, 18 Apr 2023 12:12:08 -0700 (PDT)
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com. [209.85.218.49])
-        by smtp.gmail.com with ESMTPSA id x17-20020aa7dad1000000b005027d31615dsm7274309eds.62.2023.04.18.12.12.08
-        for <regressions@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Apr 2023 12:12:08 -0700 (PDT)
-Received: by mail-ej1-f49.google.com with SMTP id kt6so37743959ejb.0
-        for <regressions@lists.linux.dev>; Tue, 18 Apr 2023 12:12:08 -0700 (PDT)
-X-Received: by 2002:a17:906:57c7:b0:94e:fe9a:31ff with SMTP id
- u7-20020a17090657c700b0094efe9a31ffmr5866849ejr.4.1681845127864; Tue, 18 Apr
- 2023 12:12:07 -0700 (PDT)
+        bh=FcixbIsW3kO64h6Jtj5sJY2E9ztLhq82+LQGVeq96m8=;
+        b=dsP1TmWizw3N+PDB2MUwhxT4Ej85EjCTFMF7vdg3SUdZayCbLomYJorXgYYH9vl1zD
+         rH1v/SbxIbQCin/GLsP43Jk0tVJfYazvl880heo+zjDegGj8ohdDaksvMLJdVenzgHNJ
+         oAVGbNzD/M7+UPSsZPu+mJi5GoZ6iVWz2PZXFoC9N98LQW1E7MeqcUxHeoV6SfIDOXnx
+         kUFITWxtPpDe/CJb9p5nnsBIh0diBak1ih5nHsi0AbeEzrRUprtr2bhmvAtQcAuIcYP3
+         eljP3gHrgS9DaOU8gVzdafCjnD7BTHJeoYZ+1G2M+lSyRzAA7Rsnbfk0CILWOmqLl33u
+         feTA==
+X-Gm-Message-State: AAQBX9cldc3Glrnxrvi9qekWxkasBB5ZcJvQyVTcerI/knofWoSNnFYY
+	qv90jze5MrkEKc+IUjxUpv8=
+X-Google-Smtp-Source: AKy350bEq70ceFE7+W1TpymqrSVvydtzlM1MkpbnuWmZgo0ndiXdLjyliZhRp3htjRDp6fJxK0qN3g==
+X-Received: by 2002:a05:6214:1304:b0:5e8:63ae:a9a9 with SMTP id pn4-20020a056214130400b005e863aea9a9mr29773327qvb.47.1681853581644;
+        Tue, 18 Apr 2023 14:33:01 -0700 (PDT)
+Received: from Belldandy-Slimbook.tail03774.ts.net ([32.221.209.96])
+        by smtp.gmail.com with ESMTPSA id u5-20020a05620a454500b0074debbb36b1sm2008309qkp.69.2023.04.18.14.33.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Apr 2023 14:33:01 -0700 (PDT)
+From: Neal Gompa <neal@gompa.dev>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: David Sterba <dsterba@suse.com>,
+	David Sterba <dsterba@suse.cz>,
+	linux-kernel@vger.kernel.org,
+	Rafael Wysocki <rafael@kernel.org>,
+	Chris Mason <clm@meta.com>,
+	Boris Burkov <boris@bur.io>,
+	regressions@leemhuis.info,
+	regressions@lists.linux.dev,
+	Neal Gompa <neal@gompa.dev>
+Subject: Re: Linux regressions report for mainline [2023-04-16]
+Date: Tue, 18 Apr 2023 17:32:28 -0400
+Message-Id: <20230418213228.1273218-1-neal@gompa.dev>
+X-Mailer: git-send-email 2.40.0
+In-Reply-To: <CAHk-=wjL7GG9s9Y2+u2725M+Ru=bUXnzOnXRwoSktY0fVdhhzw@mail.gmail.com>
+References: <CAHk-=wjL7GG9s9Y2+u2725M+Ru=bUXnzOnXRwoSktY0fVdhhzw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <168166781352.1843526.278570500979918184@leemhuis.info>
- <CAHk-=wjQaxmXTR68VnEJvLgB=H2agMTrrF4EXkXT4Hbdf2ZuMQ@mail.gmail.com> <20230418182036.GS19619@suse.cz>
-In-Reply-To: <20230418182036.GS19619@suse.cz>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Tue, 18 Apr 2023 12:11:51 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjL7GG9s9Y2+u2725M+Ru=bUXnzOnXRwoSktY0fVdhhzw@mail.gmail.com>
-Message-ID: <CAHk-=wjL7GG9s9Y2+u2725M+Ru=bUXnzOnXRwoSktY0fVdhhzw@mail.gmail.com>
-Subject: Re: Linux regressions report for mainline [2023-04-16]
-To: dsterba@suse.cz
-Cc: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>, Rafael Wysocki <rafael@kernel.org>, 
-	David Sterba <dsterba@suse.com>, LKML <linux-kernel@vger.kernel.org>, 
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 18, 2023 at 11:20=E2=80=AFAM David Sterba <dsterba@suse.cz> wro=
-te:
->
-> There's also in-memory cache of already trimmed ranges since last mount
-> so even running discard repeatedly (either fstrim or as mount option)
-> will not do extra IO. We try hard not to provoke the firmware bugs.
+Hi Linus and David,
 
-So we've had devices that claim to support discard, and then simply don't.
+I'm the guy that sort of kickstarted this whole thing a year ago.
+From my perspective in Fedora-land, we've been running automatic
+weekly fstrim on every Fedora system for three years now[1] and
+have not received any complaints about SSDs pushing daises from
+that.
 
-I have dim memories of people reporting IO simply stopping working
-after a discard when it confused the GC logic too much.
+When we started discussing btrfs discard=async within Fedora
+two years ago[2], I started soliciting feedback and information
+from the Btrfs developers I was regularly working with at the time.
 
-And yes, those dim memories are from many years ago when SSD's were
-new and fancy, and we had all kinds of crazy stuff going on, including
-serious big SSD manufacturers that came to the kernel summit and said
-that we need to do IO in 64kB aligned hunks, because doing GC was too
-hard.
+Last year, I had a face-to-face with Chris Mason and we discussed
+the idea in depth and decided to go for this, based on both Fedora's
+data with consumer disks and Facebook's data with their datacenters.
 
-Those people have now thankfully gone off and done shingled drives
-instead and we can mostly ignore them (although I do note that btrfs
-seems to be gulping down the shingled drive koolaid too), but I'm
-afraid that some of that incompetence still exists in the form of old
-drives.
+The only real surprise we had was the so-called "discard storm",
+which Boris Burkov made adjustments to resolve a couple weeks ago[3].
 
-And some of it isn't even that old. See commit 07d2872bf4c8 ("mmc:
-core: Add SD card quirk for broken discard") which is from late last
-year. I'm not sure what the failure case there was (apart from the
-"mk2fs failed", which I _assume_ was mkfs or mke2fs).
+With all that context in mind, I'm not sure we really should be panicking
+about having async discard enabled, since it's the same operation
+that the fstrim timer was doing before, just queued by btrfs itself instead.
 
-The real problem cases tend to be things like random USB memory sticks
-etc. I think the Sandisk MMC case is not that different. A lot of odd
-small embedded flash controllers that have never been tested except
-under Windows or in cameras or whatever.
+So personally, I would prefer *not* to revert the new default.
 
-So discard tends to have two classes of problems
+Thanks in advance and best regards,
+Neal
 
- (a) performance problems due to being non-queued, or simply because
-the flash controller is small and latency can be absolutely *huge*
-when it processes trims
+[1]: https://fedoraproject.org/wiki/Changes/EnableFSTrimTimer
+[2]: https://pagure.io/fedora-btrfs/project/issue/6
+[3]: https://lore.kernel.org/linux-btrfs/cover.1680723651.git.boris@bur.io/T/#t
 
- (b) the "it doesn't work at all" problem
 
-and it's really that "it doesn't work" case I worry about.
-
-We have quite a few trim-related quirks. Do this:
-
-    git grep HORKAGE.*TRIM
-
-to see just the libata cases. Yes, some of those are "the queued
-version doesn't work". Others are just "it's not zero after trim".
-Whatever. But some of them are literally "do not use trim at all".
-
-See commit cda57b1b05cf ("libata: force disable trim for SuperSSpeed
-S238"), and tell me that the sentence
-
-  "This device loses blocks, often the partition table area, on trim"
-
-doesn't worry you? Ok, so that's from 2015, so "old drives only".
-
-Or how about c8ea23d5fa59 ("ata: libata-core: Disable TRIM on M88V29")
-from last year:
-
-   "While it also advertises TRIM support, I/O errors are reported
-    when the discard mount option fstrim is used. TRIM also fails
-    when disabling NCQ and not just as an NCQ command"
-
-Again, that's libata - odd crazy hardware. But it's exactly the odd
-crazy hardware that worries me. When the failure mode isn't "it's
-slow", but "it ATE MY WHOLE DISK", that's a scary scary problem.
-
-Hmm?
-
-I dunno. Maybe you have reason to believe that all of these cases have
-been fixed, or that some of these were caused by kernel bugs because
-we did things wrong, and those have been fixed.
-
-But the failure modes just makes me worry. From your email, it *seems*
-like you think that the failures were primarily performance-related.
-
-                Linus
+-- 
+真実はいつも一つ！/ Always, there's only one truth!
