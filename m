@@ -1,234 +1,240 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9990D8839
-	for <regressions@lists.linux.dev>; Wed, 19 Apr 2023 16:21:59 +0000 (UTC)
-Received: by mail-ej1-f49.google.com with SMTP id ud9so83034715ejc.7
-        for <regressions@lists.linux.dev>; Wed, 19 Apr 2023 09:21:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1681921318; x=1684513318;
-        h=to:in-reply-to:cc:references:message-id:date:subject:mime-version
-         :from:content-transfer-encoding:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+BEvd+Ckhfg92pd/KODoBmrL0OH00ykJT8cB5I+RP/8=;
-        b=LblpJsms5ybwCCZcdSpJHeE5wh5fwEK5Dq7hrVBOvCzO0AEZOE78qdsJMvbFgXot0r
-         pKUUa+C2WBQLmLoeSDzyqXyOBzvZhNOGdrVAJmT+mR5CYqg1zN28qidyBa2sIdah6yrU
-         ANql85gy5Y6ec6ne9KukD9xhgVkLUJ/42dmfzUm7R9hUnncW+/gotu7M5Jyc8L8HR9lz
-         tbdKZPyvmQs3ZSkEGYSRPM8BWlee5VW7UDRKaBHYdMW3+u9+551nXhk9ZV3DiYw7SGVx
-         zzYTKVThrvlk066b6woWwnj5Uyalepkgmf//XBhSD4Ed3rgmALQ//AgCRRITsVCxrJcA
-         2nEg==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ECA72564
+	for <regressions@lists.linux.dev>; Wed, 19 Apr 2023 16:40:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1681922407;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gXUuv+N623PwXzIE9Rxtipi189EMDtbCL0zmp70YW88=;
+	b=Lhr2C7k69ZsW9lzAVJaXM0Vaj9n+TH0tEavlcWpf7+778QZCNGMHn8zaym7F5rclD39Lfi
+	6f32SGt5KAd98JV77VL/wHwY6EhHOK4IVtuViGlDmyvhYv2ACz5pPNc4st0z4eAUYl14IY
+	uErH6Wt415ZkWlnwu+n+SlHKEMELoQc=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-41-xkK7J8F6Ntu1wOmLPbBs0A-1; Wed, 19 Apr 2023 12:40:06 -0400
+X-MC-Unique: xkK7J8F6Ntu1wOmLPbBs0A-1
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-94e8dae3134so287814466b.3
+        for <regressions@lists.linux.dev>; Wed, 19 Apr 2023 09:40:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681921318; x=1684513318;
-        h=to:in-reply-to:cc:references:message-id:date:subject:mime-version
-         :from:content-transfer-encoding:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+BEvd+Ckhfg92pd/KODoBmrL0OH00ykJT8cB5I+RP/8=;
-        b=KJvLQZnOjN0vjTAxvyJJU6sFPVEB85sj9kGPy5fdK9pAw29+IfxZLD5x/Cq8ul4zV0
-         QVC1R689VhXmjazmzNBIQq8cPfvYVmHi7trgUkOK1jUqe1X+z3FFcuUQqk71MYblQnWq
-         qOfFTNBy3N6oPucyWwJJplq4/X734zNOMLy+EwRLBDyaSV/9zSiqEI+61HpBrVh0h+hl
-         RmEEnhc3m83FAMDMFq4Eyi34MmrvlkNUdtw9jOHX2swW9CWkrEcA7JqmsvtzaNueW9LY
-         QHhGhtTkHOrutCO8HT7s1IfdDIxY51WrLKKn1N1i/B6O2UlQt8zG/HA31wyBvffqiKTn
-         bXSw==
-X-Gm-Message-State: AAQBX9esQ9FoHraXxluy/HD1DaMKF4SbeKKP/9txQfsUp2kiJm01whDT
-	pl5KQPJWdiCfIs+J//NRCUM=
-X-Google-Smtp-Source: AKy350b06YeOMKY/GSVYDQZ/QrxVBtpQ9wR4js7+KniwtxAqj4Nli9vG7PpXMWczRAVGaexGhqRjJA==
-X-Received: by 2002:a17:907:8a21:b0:94f:3521:394 with SMTP id sc33-20020a1709078a2100b0094f35210394mr13935287ejc.51.1681921317551;
-        Wed, 19 Apr 2023 09:21:57 -0700 (PDT)
-Received: from smtpclient.apple (120.87.196.178.dynamic.wline.res.cust.swisscom.ch. [178.196.87.120])
-        by smtp.gmail.com with ESMTPSA id ry13-20020a1709068d8d00b0094ee3e4c934sm7996459ejc.221.2023.04.19.09.21.56
+        d=1e100.net; s=20221208; t=1681922405; x=1684514405;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=gXUuv+N623PwXzIE9Rxtipi189EMDtbCL0zmp70YW88=;
+        b=ChuZdOQLXhUzFqNdMGCPFZT29WPQXMJOfNhc/rsD2ux6UmdMtpL2ltu6Mm71HnVZWz
+         6W6wHH4M6yr2Q8ST1jrOPHjkUEa+D0KzdJwIUOnzei749TyyFdEI0carsEN8KvhL1WqH
+         +JRP9pZbIIOgYFOWChSfGJrwQDkIQb7vOu3BOZxYOMzB4EGbVe4memtvbzQe6xOd5hci
+         EDEWC5YbEGCm4aJmdCjlGuneE3rozIvhKxjnnYhY/togCRjJX3kBHIz40IC2Zb7F0iOI
+         kaz42C4q2LwLUSKiQEcRh4X5JBh5bGJxhZxuzMDtKwdMEBbrJlF1jZbaqnTPIJ4yb3Rt
+         YbVQ==
+X-Gm-Message-State: AAQBX9ebUtsrRfonSWnP+mxV2nzXTyolhfOeWnd/J2+IhPTLsCbA7BDD
+	4vFIj24XEsGx9M0QHkW8AR38gRpGeSHI06c4CpaZwJ8vmAQPu8pmZCc4zj48z6d3D1uWe+0fE8I
+	cYELihB5Ed/mwmDCmaVPkAZo=
+X-Received: by 2002:a50:ec92:0:b0:502:1cae:8b11 with SMTP id e18-20020a50ec92000000b005021cae8b11mr5785516edr.23.1681922405229;
+        Wed, 19 Apr 2023 09:40:05 -0700 (PDT)
+X-Google-Smtp-Source: AKy350bIlSVT95rW1hj8ejmytg93v7b25J08Hbj6/OoScTlUZFaWN54H/62fG3YYEFY+rLfh7S97zA==
+X-Received: by 2002:a50:ec92:0:b0:502:1cae:8b11 with SMTP id e18-20020a50ec92000000b005021cae8b11mr5785504edr.23.1681922404904;
+        Wed, 19 Apr 2023 09:40:04 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id g12-20020a056402180c00b00508480633bdsm94685edy.74.2023.04.19.09.40.04
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 Apr 2023 09:21:56 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From: =?utf-8?Q?G=C3=A9_Koerkamp?= <ge.koerkamp@gmail.com>
+        Wed, 19 Apr 2023 09:40:04 -0700 (PDT)
+Message-ID: <07f2417e-9d47-3e73-cae5-3e7c95856f72@redhat.com>
+Date: Wed, 19 Apr 2023 18:40:03 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [regression] Bug 216946 - Toshiba satellite click mini l9w-b: touchscreen: no touch events with kernel 6.1.4
-Date: Wed, 19 Apr 2023 18:21:46 +0200
-Message-Id: <E4123C4B-D6C0-4CB2-8328-E0D03599ED16@gmail.com>
-References: <993dd537-2f74-3657-1dd3-c3a0a74e37e1@leemhuis.info>
-Cc: Hans de Goede <hdegoede@redhat.com>,
- Benjamin Tissoires <benjamin.tissoires@redhat.com>,
- Jiri Kosina <jikos@kernel.org>,
- Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [regression] Bug 216946 - Toshiba satellite click mini l9w-b:
+ touchscreen: no touch events with kernel 6.1.4
+To: =?UTF-8?Q?G=c3=a9_Koerkamp?= <ge.koerkamp@gmail.com>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+ Jiri Kosina <jikos@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>,
  "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
  LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <993dd537-2f74-3657-1dd3-c3a0a74e37e1@leemhuis.info>
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-X-Mailer: iPhone Mail (20E252)
+References: <993dd537-2f74-3657-1dd3-c3a0a74e37e1@leemhuis.info>
+ <E4123C4B-D6C0-4CB2-8328-E0D03599ED16@gmail.com>
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <E4123C4B-D6C0-4CB2-8328-E0D03599ED16@gmail.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US, nl
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Thorsten,
+Hi Gé,
 
-travelling at the moment, but I=E2=80=99ll try. Not really into bisecting ke=
-rnel issues, but let=E2=80=99s see where this goes. Another issue is, that I=
- don=E2=80=99t have a Toshiba Mini Click myself, so I need to build the test=
- Volumio images (volumio.org) with the different 5.16-rc kernel patch versio=
-ns for a colleague to work with, hopefully  he has time to do this.
+On 4/19/23 18:21, Gé Koerkamp wrote:
+> Hi Thorsten,
+> 
+> travelling at the moment, but I’ll try. Not really into bisecting kernel issues, but let’s see where this goes. Another issue is, that I don’t have a Toshiba Mini Click myself, so I need to build the test Volumio images (volumio.org) with the different 5.16-rc kernel patch versions for a colleague to work with, hopefully  he has time to do this.
 
-Thanks - G=C3=A9
+I have just dug my own Toshiba Mini Click up from the bottom of the storage box it was in.
 
-Sent from my iPhone
+It is currently charging since the battery was fully flat.
 
-> On 17 Apr 2023, at 13:55, Linux regression tracking (Thorsten Leemhuis) <r=
-egressions@leemhuis.info> wrote:
->=20
-> =EF=BB=BF
->=20
->> On 01.03.23 12:41, Hans de Goede wrote:
->>> On 2/28/23 14:26, Benjamin Tissoires wrote:
->>> On Tue, Feb 28, 2023 at 12:32=E2=80=AFPM Thorsten Leemhuis
->>> <regressions@leemhuis.info> wrote:
->>>>=20
->>>> On 19.01.23 16:06, Linux kernel regression tracking (Thorsten Leemhuis)=
+So I suggest you give me a couple of days to take a look before you go to all this trouble.
 
->>>> wrote:
->>>>> Hi, this is your Linux kernel regression tracker.
->>>>>=20
->>>>> I noticed a regression report in bugzilla.kernel.org. As many (most?)
->>>>> kernel developer don't keep an eye on it, I decided to forward it by
->>>>> mail. Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=3D21694=
-6 :
->>>>=20
->>>> The reporter recently confirmed in the ticket that the issue still
->>>> happens with 6.2.
->>>>=20
->>>> There wasn't any reply from any of the input developers here or in
->>>> bugzilla afaics. :-/ Hmmm. Could someone from that camp maybe please
->>>> take a minute and at least briefly look into this as answer something
->>>> like "that might be due to a problem in subsystem 'foo'", "maybe ask ba=
-r
->>>> for an option", or "we have no idea what might cause this, this needs t=
-o
->>>> be bisected"? That would help a lot.
->>>=20
->>> The working dmesg shows a line with:
->>> hid-generic 0018:0457:10FB.0002: input,hidraw1: I2C HID v1.00 Device
->>> [SIS0817:00 0457:10FB] on i2c-SIS0817:00
->>> and then
->>> hid-multitouch 0018:0457:10FB.0002: input,hidraw1: I2C HID v1.00
->>> Device [SIS0817:00 0457:10FB] on i2c-SIS0817:00
->>>=20
->>> But these 2 lines do not appear on the 6.1.4 logs.
->>>=20
->>> So the device is not properly enumerated by ACPI or I2C. Hans might
->>> have an idea on how to debug/solve that issue.
->>=20
->> I actually have a Toshiba satellite click mini l9w-b lying around
->> myself. I already made a note to try and reproduce this
->>=20
->> But I'm very much swamped with too much kernel work, so no promises
->> when I will get around to this ...
->=20
-> Has anyone made any progress with this? Doesn't look like it, hence I
-> wondered if this fall through the cracks; but maybe I'm just missing
-> something.
->=20
-> G=C3=A9 Koerkamp: with a bit of luck Hans sooner or later will have time t=
-o
-> look into this, but it might speed things up if you could try to bisect
-> this.
->=20
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-> --
-> Everything you wanna know about Linux kernel regression tracking:
-> https://linux-regtracking.leemhuis.info/about/#tldr
-> If I did something stupid, please tell me, as explained on that page.
->=20
-> #regzbot poke
->=20
->>>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat=
-)
->>>> --
->>>> Everything you wanna know about Linux kernel regression tracking:
->>>> https://linux-regtracking.leemhuis.info/about/#tldr
->>>> If I did something stupid, please tell me, as explained on that page.
->>>>=20
->>>> #regzbot poke
->>>>>> G=C3=A9 Koerkamp 2023-01-17 20:21:51 UTC
->>>>>>=20
->>>>>> Created attachment 303619 [details]
->>>>>> Kernel configuration for v6.1.4/ journalctl (dmesg)/ ACPIdump/lsmod
->>>>>>=20
->>>>>> Overview:
->>>>>> The touchscreen does not react on touch events.
->>>>>> Touchscreen display and touchpad are working.
->>>>>>=20
->>>>>> Step to reproduce:
->>>>>> Open any UI page
->>>>>> Try to use touch on relevant UI controls (buttons etc.)
->>>>>>=20
->>>>>> Result:
->>>>>> No reaction on screen touches
->>>>>>=20
->>>>>> Expected result:
->>>>>> Reaction on touched control, same as when using the touch pad or conn=
-ected mouse (which do work).
->>>>>>=20
->>>>>> Build information:
->>>>>> The error happens with kernel version 6.1.4
->>>>>> After rebuilding with different kernel versions, it appears that it f=
-irst fails with kernel 5.16
->>>>>>=20
->>>>>> Additional builds:
->>>>>> The click mini l9w-b still works with kernel 5.10.y LTS and 5.15.y LT=
-S.
->>>>>>=20
->>>>>> Important remark:
->>>>>> Touchscreen still works fine with kernel 6.1.4 using
->>>>>> - an HP x2 detachable 10-p0xx or
->>>>>> - a Lenovo yoga 520-14ikb
->>>>>>=20
->>>>>> So it could be a hardware dependent issue
->>>>>=20
->>>>> See the ticket for more details.
->>>>>=20
->>>>>=20
->>>>> [TLDR for the rest of this mail: I'm adding this report to the list of=
+Regards,
 
->>>>> tracked Linux kernel regressions; the text you find below is based on a=
+Hans
 
->>>>> few templates paragraphs you might have encountered already in similar=
 
->>>>> form.]
->>>>>=20
->>>>> BTW, let me use this mail to also add the report to the list of tracke=
-d
->>>>> regressions to ensure it's doesn't fall through the cracks:
->>>>>=20
->>>>> #regzbot introduced: v5.15..v5.16
->>>>> https://bugzilla.kernel.org/show_bug.cgi?id=3D216946
->>>>> #regzbot title: hid: touchscreen broken with Toshiba satellite click
->>>>> mini l9w-b
->>>>> #regzbot ignore-activity
->>>>>=20
->>>>> This isn't a regression? This issue or a fix for it are already
->>>>> discussed somewhere else? It was fixed already? You want to clarify wh=
-en
->>>>> the regression started to happen? Or point out I got the title or
->>>>> something else totally wrong? Then just reply and tell me -- ideally
->>>>> while also telling regzbot about it, as explained by the page listed i=
-n
->>>>> the footer of this mail.
->>>>>=20
->>>>> Developers: When fixing the issue, remember to add 'Link:' tags pointi=
-ng
->>>>> to the report (e.g. the buzgzilla ticket and maybe this mail as well, i=
-f
->>>>> this thread sees some discussion). See page linked in footer for detai=
-ls.
->>>>>=20
->>>>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' ha=
-t)
+
+
+> 
+> Thanks - Gé
+> 
+> Sent from my iPhone
+> 
+>> On 17 Apr 2023, at 13:55, Linux regression tracking (Thorsten Leemhuis) <regressions@leemhuis.info> wrote:
+>>
+>> ﻿
+>>
+>>> On 01.03.23 12:41, Hans de Goede wrote:
+>>>> On 2/28/23 14:26, Benjamin Tissoires wrote:
+>>>> On Tue, Feb 28, 2023 at 12:32 PM Thorsten Leemhuis
+>>>> <regressions@leemhuis.info> wrote:
+>>>>>
+>>>>> On 19.01.23 16:06, Linux kernel regression tracking (Thorsten Leemhuis)
+>>>>> wrote:
+>>>>>> Hi, this is your Linux kernel regression tracker.
+>>>>>>
+>>>>>> I noticed a regression report in bugzilla.kernel.org. As many (most?)
+>>>>>> kernel developer don't keep an eye on it, I decided to forward it by
+>>>>>> mail. Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=216946 :
+>>>>>
+>>>>> The reporter recently confirmed in the ticket that the issue still
+>>>>> happens with 6.2.
+>>>>>
+>>>>> There wasn't any reply from any of the input developers here or in
+>>>>> bugzilla afaics. :-/ Hmmm. Could someone from that camp maybe please
+>>>>> take a minute and at least briefly look into this as answer something
+>>>>> like "that might be due to a problem in subsystem 'foo'", "maybe ask bar
+>>>>> for an option", or "we have no idea what might cause this, this needs to
+>>>>> be bisected"? That would help a lot.
+>>>>
+>>>> The working dmesg shows a line with:
+>>>> hid-generic 0018:0457:10FB.0002: input,hidraw1: I2C HID v1.00 Device
+>>>> [SIS0817:00 0457:10FB] on i2c-SIS0817:00
+>>>> and then
+>>>> hid-multitouch 0018:0457:10FB.0002: input,hidraw1: I2C HID v1.00
+>>>> Device [SIS0817:00 0457:10FB] on i2c-SIS0817:00
+>>>>
+>>>> But these 2 lines do not appear on the 6.1.4 logs.
+>>>>
+>>>> So the device is not properly enumerated by ACPI or I2C. Hans might
+>>>> have an idea on how to debug/solve that issue.
+>>>
+>>> I actually have a Toshiba satellite click mini l9w-b lying around
+>>> myself. I already made a note to try and reproduce this
+>>>
+>>> But I'm very much swamped with too much kernel work, so no promises
+>>> when I will get around to this ...
+>>
+>> Has anyone made any progress with this? Doesn't look like it, hence I
+>> wondered if this fall through the cracks; but maybe I'm just missing
+>> something.
+>>
+>> Gé Koerkamp: with a bit of luck Hans sooner or later will have time to
+>> look into this, but it might speed things up if you could try to bisect
+>> this.
+>>
+>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+>> --
+>> Everything you wanna know about Linux kernel regression tracking:
+>> https://linux-regtracking.leemhuis.info/about/#tldr
+>> If I did something stupid, please tell me, as explained on that page.
+>>
+>> #regzbot poke
+>>
+>>>>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 >>>>> --
 >>>>> Everything you wanna know about Linux kernel regression tracking:
 >>>>> https://linux-regtracking.leemhuis.info/about/#tldr
 >>>>> If I did something stupid, please tell me, as explained on that page.
->>>>=20
->>>=20
->>=20
->>=20
->>=20
+>>>>>
+>>>>> #regzbot poke
+>>>>>>> Gé Koerkamp 2023-01-17 20:21:51 UTC
+>>>>>>>
+>>>>>>> Created attachment 303619 [details]
+>>>>>>> Kernel configuration for v6.1.4/ journalctl (dmesg)/ ACPIdump/lsmod
+>>>>>>>
+>>>>>>> Overview:
+>>>>>>> The touchscreen does not react on touch events.
+>>>>>>> Touchscreen display and touchpad are working.
+>>>>>>>
+>>>>>>> Step to reproduce:
+>>>>>>> Open any UI page
+>>>>>>> Try to use touch on relevant UI controls (buttons etc.)
+>>>>>>>
+>>>>>>> Result:
+>>>>>>> No reaction on screen touches
+>>>>>>>
+>>>>>>> Expected result:
+>>>>>>> Reaction on touched control, same as when using the touch pad or connected mouse (which do work).
+>>>>>>>
+>>>>>>> Build information:
+>>>>>>> The error happens with kernel version 6.1.4
+>>>>>>> After rebuilding with different kernel versions, it appears that it first fails with kernel 5.16
+>>>>>>>
+>>>>>>> Additional builds:
+>>>>>>> The click mini l9w-b still works with kernel 5.10.y LTS and 5.15.y LTS.
+>>>>>>>
+>>>>>>> Important remark:
+>>>>>>> Touchscreen still works fine with kernel 6.1.4 using
+>>>>>>> - an HP x2 detachable 10-p0xx or
+>>>>>>> - a Lenovo yoga 520-14ikb
+>>>>>>>
+>>>>>>> So it could be a hardware dependent issue
+>>>>>>
+>>>>>> See the ticket for more details.
+>>>>>>
+>>>>>>
+>>>>>> [TLDR for the rest of this mail: I'm adding this report to the list of
+>>>>>> tracked Linux kernel regressions; the text you find below is based on a
+>>>>>> few templates paragraphs you might have encountered already in similar
+>>>>>> form.]
+>>>>>>
+>>>>>> BTW, let me use this mail to also add the report to the list of tracked
+>>>>>> regressions to ensure it's doesn't fall through the cracks:
+>>>>>>
+>>>>>> #regzbot introduced: v5.15..v5.16
+>>>>>> https://bugzilla.kernel.org/show_bug.cgi?id=216946
+>>>>>> #regzbot title: hid: touchscreen broken with Toshiba satellite click
+>>>>>> mini l9w-b
+>>>>>> #regzbot ignore-activity
+>>>>>>
+>>>>>> This isn't a regression? This issue or a fix for it are already
+>>>>>> discussed somewhere else? It was fixed already? You want to clarify when
+>>>>>> the regression started to happen? Or point out I got the title or
+>>>>>> something else totally wrong? Then just reply and tell me -- ideally
+>>>>>> while also telling regzbot about it, as explained by the page listed in
+>>>>>> the footer of this mail.
+>>>>>>
+>>>>>> Developers: When fixing the issue, remember to add 'Link:' tags pointing
+>>>>>> to the report (e.g. the buzgzilla ticket and maybe this mail as well, if
+>>>>>> this thread sees some discussion). See page linked in footer for details.
+>>>>>>
+>>>>>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+>>>>>> --
+>>>>>> Everything you wanna know about Linux kernel regression tracking:
+>>>>>> https://linux-regtracking.leemhuis.info/about/#tldr
+>>>>>> If I did something stupid, please tell me, as explained on that page.
+>>>>>
+>>>>
+>>>
+>>>
+>>>
+> 
+
