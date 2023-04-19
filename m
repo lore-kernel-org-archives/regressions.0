@@ -1,144 +1,189 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-200161.simplelogin.co (mail-200161.simplelogin.co [176.119.200.161])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1F2D23B3
-	for <regressions@lists.linux.dev>; Wed, 19 Apr 2023 06:48:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63BE3C433EF;
-	Wed, 19 Apr 2023 06:48:56 +0000 (UTC)
-Message-ID: <85954ff0-4165-43a4-37ec-610d06668ee7@xs4all.nl>
-Date: Wed, 19 Apr 2023 08:48:54 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EA992580
+	for <regressions@lists.linux.dev>; Wed, 19 Apr 2023 08:52:57 +0000 (UTC)
+Date: Wed, 19 Apr 2023 08:46:42 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=8shield.net; s=dkim;
+	t=1681894012;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=svMD8qCdCdMeuX7byvejAfnFeoEkqnuCAiytCVsrX9I=;
+	b=BN91Nhk3WNk2wdWndHhRGlVATg8Gk5ZPGxw42M5y6/jyMpQNUePNX8WM5K58t1WBZzOTWe
+	5JwvONJVdlZTvvE5ClXvoJcR5oqWAijcLEg6Bn0t5YJriwoh0eQkFV4CiL54glBZe5iMzE
+	Ep+DYCoNI7BOrbb+34rIJHlnP5fpkU0=
+Subject: Re: btusb driver need to be unloaded and reloaded after boot & lag
+ issue
+In-Reply-To: <dbbf4556-2719-5827-efbd-da9e87c0de40@molgen.mpg.de>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [PATCH] media: usb: uvc: fill in description for unknown
- pixelformats
-Content-Language: en-US
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Ricardo Ribalda <ribalda@chromium.org>,
- Linux Media Mailing List <linux-media@vger.kernel.org>,
- regressions@lists.linux.dev, Hans de Goede <hdegoede@redhat.com>,
- "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>
-References: <4b1bc0d5-808b-816d-d7de-5baa8851e74f@xs4all.nl>
- <CANiDSCuiHLw6FBu8GV93Mm2WK5suCnGk8PBUDfn_krtMfPwdaw@mail.gmail.com>
- <7bcc8593-a98d-6faa-2ec5-3cf59137cbcb@xs4all.nl>
- <20230405064020.GZ9915@pendragon.ideasonboard.com>
- <20230419062359.GA13848@pendragon.ideasonboard.com>
-From: Hans Verkuil <hverkuil@xs4all.nl>
-In-Reply-To: <20230419062359.GA13848@pendragon.ideasonboard.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: multipart/signed; protocol="application/pgp-signature";
+ micalg=pgp-sha512;
+ boundary="------58bb509cbf61eb58031cdc6e0e682bf96f7bc10ce8327a5812e43e037274263f";
+ charset=utf-8
 Content-Transfer-Encoding: 7bit
+From: help.7ocym@8shield.net
+To: Paul Menzel <pmenzel@molgen.mpg.de>
+Cc: 
+ linux-usb@vger.kernel.org,linux-bluetooth@vger.kernel.org,regressions@lists.linux.dev
+Message-ID: <168189401011.9.1190609165422904967.121288919@8shield.net>
+References: <168133719213.7.14774994518515251513.119182329@8shield.net>
+ <dbbf4556-2719-5827-efbd-da9e87c0de40@molgen.mpg.de>
+X-SimpleLogin-Type: Reply
+X-SimpleLogin-EmailLog-ID: 121288932
+X-SimpleLogin-Want-Signing: yes
 
-On 19/04/2023 08:23, Laurent Pinchart wrote:
-> Hi Hans,
-> 
-> On Wed, Apr 05, 2023 at 09:40:20AM +0300, Laurent Pinchart wrote:
->> On Wed, Mar 29, 2023 at 07:20:59PM +0200, Hans Verkuil wrote:
->>> On 29/03/2023 18:05, Ricardo Ribalda wrote:
->>>> Hi Hans
->>>>
->>>> Thanks for the patch.
->>>>
->>>> I believe the user can fetch this info from lsusb, so this is kind of
->>>> duplicated info, and this is why it was removed.
->>>
->>> You got to set some description, so using the GUID this seems best.
->>>
->>>> Is there an app that uses this unknown format code ? Or the only
->>>> complaint is that WARN() is too loud for the user?
->>>
->>> Normally drivers do not pass on unknown formats, but if a driver does,
->>> then I want a WARN. If a driver does this legitimately (and I understand
->>> that's the case for UVC), then the driver should fill in the description
->>> to avoid this WARN.
->>
->> In hindsight we shouldn't have added a text description to formats :-)
->>
->>>> On Wed, 29 Mar 2023 at 14:39, Hans Verkuil wrote:
->>>>>
->>>>> If the fcc is 0 (indicating an unknown GUID format), then fill in the
->>>>> description field in ENUM_FMT. Otherwise the V4L2 core will WARN.
->>>>>
->>>>> Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
->>>>> Fixes: 50459f103edf ("media: uvcvideo: Remove format descriptions")
->>>>> ---
->>>>> diff --git a/drivers/media/usb/uvc/uvc_driver.c b/drivers/media/usb/uvc/uvc_driver.c
->>>>> index 7aefa76a42b3..2f1ced1212cd 100644
->>>>> --- a/drivers/media/usb/uvc/uvc_driver.c
->>>>> +++ b/drivers/media/usb/uvc/uvc_driver.c
->>>>> @@ -256,6 +256,9 @@ static int uvc_parse_format(struct uvc_device *dev,
->>>>>                 } else {
->>>>>                         dev_info(&streaming->intf->dev,
->>>>>                                  "Unknown video format %pUl\n", &buffer[5]);
->>>>> +                       snprintf(format->name, sizeof(format->name), "%pUl\n",
->>>>> +                                &buffer[5]);
->>>> Don't we need at least 38 chars for this?
->>>
->>> Yes. But all we have is 31 chars, so we take what we can :-)
->>>
->>> This is what uvc did before this was removed.
->>>
->>> Regards,
->>>
->>> 	Hans
->>>
->>>> https://docs.kernel.org/core-api/printk-formats.html#uuid-guid-addresses
->>>>
->>>>> +
->>>>>                         format->fcc = 0;
->>>>>                 }
->>>>>
->>>>> diff --git a/drivers/media/usb/uvc/uvc_v4l2.c b/drivers/media/usb/uvc/uvc_v4l2.c
->>>>> index 35453f81c1d9..fc6f9e7d8506 100644
->>>>> --- a/drivers/media/usb/uvc/uvc_v4l2.c
->>>>> +++ b/drivers/media/usb/uvc/uvc_v4l2.c
->>>>> @@ -713,6 +713,10 @@ static int uvc_ioctl_enum_fmt(struct uvc_streaming *stream,
->>>>>         if (format->flags & UVC_FMT_FLAG_COMPRESSED)
->>>>>                 fmt->flags |= V4L2_FMT_FLAG_COMPRESSED;
->>>>>         fmt->pixelformat = format->fcc;
->>>>> +       if (format->name[0])
->>>>> +               strscpy(fmt->description, format->name,
->>>>> +                       sizeof(fmt->description));
->>>>> +
->>>>>         return 0;
->>>>>  }
->>>>>
->>>>> diff --git a/drivers/media/usb/uvc/uvcvideo.h b/drivers/media/usb/uvc/uvcvideo.h
->>>>> index 9a596c8d894a..22656755a801 100644
->>>>> --- a/drivers/media/usb/uvc/uvcvideo.h
->>>>> +++ b/drivers/media/usb/uvc/uvcvideo.h
->>>>> @@ -264,6 +264,8 @@ struct uvc_format {
->>>>>         u32 fcc;
->>>>>         u32 flags;
->>>>>
->>>>> +       char name[32];
->>>>> +
->>
->> I'd not really nice to have to store the name for every format, when we
->> know it will very rarely be used.
->>
->> One alternative option would be to store the GUID, which would halve the
->> amount of memory. Another option would be to stop reporting those
->> formats to userspace in uvc_ioctl_enum_fmt(). They can't be selected
->> anyway, they have no unique 4CC.
-> 
-> Any opinion on this ? I'm increasingly tempted by not reporting
-> unsupported formats to userspace.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------58bb509cbf61eb58031cdc6e0e682bf96f7bc10ce8327a5812e43e037274263f
+Content-Type: multipart/mixed;boundary=---------------------d434d8696c798ef5f060dccd015a521b
 
-Since they cannot be selected, I think that is the best approach.
-Perhaps only show them in the kernel log if debugging is enabled.
+-----------------------d434d8696c798ef5f060dccd015a521b
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;charset=utf-8
 
-Regards,
+Hi,
 
-	Hans
+------- Original Message -------
+On Thursday, April 13th, 2023 at 7:39 AM, Paul Menzel - pmenzel at molgen.=
+mpg.de <pmenzel_at_molgen_mpg_de_rislbjit@simplelogin.co> wrote:
 
-> 
->>>>>         unsigned int nframes;
->>>>>         struct uvc_frame *frame;
->>>>>  };
-> 
+
+> [Cc: +regressions@lists.linux.dev]
+>
+> Dear JLM,
+>
+>
+> Am 13.04.23 um 00:06 schrieb help.7ocym@8shield.net:
+>
+> > sorry to address both list, but this issue seems related, without
+> > knowing where lies the issue > my hardware : https://wiki.gentoo.org/w=
+iki/Lenovo_Yoga_900
+> > I use the pre-built gentoo linux kernel,
+> > 6.2.8-gentoo-dist #1 SMP PREEMPT_DYNAMIC Wed Mar 22 17:15:39 -00 2023 =
+x86_64 Intel(R) Core(TM) i7-6500U CPU @ 2.50GHz GenuineIntel GNU/Linux
+> >
+> > since a few update (sadly I didn't noted the latest kernel version
+> > that didn't had the issue), after a boot, the bluetooth isn't
+> > working, nothing bad in dmesg, I just have to unload btusb module and
+> > modprobe it again to have bluetooth working again...
+> >
+> > after a suspend to ram, I have to power off-power on the bluetooth to
+> > have it work again (bluetoothctl power off; bluetoothctl power on)
+> >
+> > bluetooth mouse can also be extremely laggy sometimes,but without
+> > error message in dmesg, most of the time `bluetoothctl power` off-on
+> > cycling do solve the issue....
+> >
+> > I also included the usb mailing list because it might be related to
+> > some behavior I noticed :
+> >
+> > I have usb3.0 micro sd card reader (SanDisk MobileMate UHS-I microSD
+> > Reader/Writer USB 3.0 Reader, Kingston MobileLite Plus (MLPM) microSD
+> > Card Reader USB 3.1 microSDHC/SDXC UHS-II, for example) and some
+> > extra fast micro sd cards (like sandisk extrem 512G), when
+> > transferring data the read rate can be as high as 110Mo/s and write
+> > 70Mo/s sustained, nothing impressive but when such rate is achieved
+> > for a long time (big file transfer) either reading only access,
+> > writing only access or read write, the usb bus become unusable, I
+> > can't even use a usb mouse connected to it by wire... even if cpu
+> > usage is really low (less than 10%) I don't have the issue if I
+> > connect a M2 usb3 flash drive, with comparable transfert speed... so
+> > not related to some bus over usage...
+> >
+> > so I suspect that there is an issue with the usb driver, and that
+> > maybe the bluetooth issue can be related to the usb issue, since the
+> > bluetooth controller is on the usb bus on the laptop >
+> > the transfer issue of usb is much more older than the bluetooth
+> > issue, it's approximative, but : > - the btusb boot issue is about 3 m=
+onth old,
+> > - the suspend/resume issue of bluetooth is more than a year old
+> > - the usb transfer issue as more than a year...
+> >
+> > I'll gladly provide any useful information, can also do patch tries...
+>
+> As you use Gentoo and are able to build your own Linux kernel, the
+> fastest way to get these issues addressed is to bisect them. To shorten
+> the test cycles, I recommend to try, if you can reproduce the issues in
+> QEMU and passing through the problematic devices to the VM [1][2].
+>
+> I also recommend to start a separate thread for each issue and, as these
+> seem to be regressions, also keep the regression folks in the loop [3].
+>
+>
+> Kind regards,
+>
+> Paul
+>
+>
+> [1]:
+> https://lore.kernel.org/all/5891f0d5-8d51-9da5-7663-718f301490b1@molgen.=
+mpg.de/
+> (The commands were working for after all, and the device didn=E2=80=99t
+> show up due to a (second) Linux kernel regression.)
+> [2]: https://station.eciton.net/qemu-usb-host-device-pass-through.html
+> [3]:
+> https://www.kernel.org/doc/html/latest/admin-guide/reporting-regressions=
+.html
+
+thanks for the reply,
+after upgrade to 6.2.11 version, =
+
+
+- seems that the issue at boot of btusb module is gone... I don't have any=
+more to unload btusb module after a boot... so that's great news! =
+
+
+- the bluetooth resumes also after a suspend S3 (suspend to ram)! so great=
+ news again! (I've to check for suspend to disk, but I'm confident about s=
+uccess)
+
+I still have to do some check with the micro usb readers to see if the bug=
+ "bus monopolization" is still present, so far so good!
+
+
+
+Sent with Proton Mail secure email.
+
+-----------------------d434d8696c798ef5f060dccd015a521b
+Content-Type: application/pgp-keys; filename="publickey - jl.malet@protonmail.com - 0xA25F20CF.asc"; name="publickey - jl.malet@protonmail.com - 0xA25F20CF.asc"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="publickey - jl.malet@protonmail.com - 0xA25F20CF.asc"; name="publickey - jl.malet@protonmail.com - 0xA25F20CF.asc"
+
+LS0tLS1CRUdJTiBQR1AgUFVCTElDIEtFWSBCTE9DSy0tLS0tCgp4ak1FWkRHNGx4WUpLd1lCQkFI
+YVJ3OEJBUWRBc0o4TVNPaVhCR2tKWnlzYm52cExJN3NXR0xHaXNXeDQKbmxlUkRiRlpiRy9OTVdw
+c0xtMWhiR1YwUUhCeWIzUnZibTFoYVd3dVkyOXRJRHhxYkM1dFlXeGxkRUJ3CmNtOTBiMjV0WVds
+c0xtTnZiVDdDakFRUUZnb0FQZ1dDWkRHNGx3UUxDUWNJQ1pEVy9aZ2x2N3RnQ2dNVgpDQW9FRmdB
+Q0FRSVpBUUtiQXdJZUFSWWhCS0pmSU05bm5OS2RzS2RMcnRiOW1DVy91MkFLQUFES3lnRUEKdlpr
+VjRWV3l4dXJxUWVOSDM2UmhncjR2QVdUQ1RRQjl6Z1ZrTXFFTHF5VUEvUk9UbFJOMnFVQjAzdE5r
+CmRwZXJPV0VQa3JvWG1XRHBYWU0rMldOWk1uWVB6amdFWkRHNGx4SUtLd1lCQkFHWFZRRUZBUUVI
+UURJWQpIOHpvdytIeFowSkUyeHJkcy96WlRIa3pZS2lmc0RUUXVRL2o0dEFKQXdFSUI4SjRCQmdX
+Q0FBcUJZSmsKTWJpWENaRFcvWmdsdjd0Z0NnS2JEQlloQktKZklNOW5uTktkc0tkTHJ0YjltQ1cv
+dTJBS0FBQmFqd0Q4CkM5VmNtRWVTWmpyNFNabWlOSFM2MUtqZlZlaEZJYkJmZnEzTUVCZGFxcHdB
+LzJHSTY4a010MzdOSkhTcAo1Q2Fid2UrZ05HZVg5S3RESUxjS2NUbVRjVmNECj04SW9hCi0tLS0t
+RU5EIFBHUCBQVUJMSUMgS0VZIEJMT0NLLS0tLS0K
+-----------------------d434d8696c798ef5f060dccd015a521b--
+
+--------58bb509cbf61eb58031cdc6e0e682bf96f7bc10ce8327a5812e43e037274263f
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: ProtonMail
+
+wnUEARYKACcFgmQ/qmIJkNb9mCW/u2AKFiEEol8gz2ec0p2wp0uu1v2YJb+7
+YAoAAK/OAP0XIqIp32TYnR4LaBq82EkLkqgQdADqzn2qFgOQuNb+kQEAgfZO
+/gl/jcYzocTpyJ/ew05D5D2OXkZoI4EhtqVKIgk=
+=ogYk
+-----END PGP SIGNATURE-----
+
+
+--------58bb509cbf61eb58031cdc6e0e682bf96f7bc10ce8327a5812e43e037274263f--
+
 
