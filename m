@@ -1,142 +1,144 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2026B23A2
-	for <regressions@lists.linux.dev>; Wed, 19 Apr 2023 06:23:54 +0000 (UTC)
-Received: from pendragon.ideasonboard.com (133-32-181-51.west.xps.vectant.ne.jp [133.32.181.51])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 0601512F;
-	Wed, 19 Apr 2023 08:23:39 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1681885420;
-	bh=3A20KhiDpDbVtWI/reZRdctZ1ThqdaU4E8Pz1f04Tyw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Al1YD6CDS72S8M01s2TcBsrbNuLyRbsRzll0qduyMOw38+7SjA77E1n8UbR4HztYY
-	 BigXBKsonKgRQ7U+A5YGiOEJgbxtD87OhDTt8JXswDc+ZM0TrI+dBtF9H/BiSGWUP1
-	 az/Wz3u3GyzQ0R/HncG39tidPOhG9hkN1qQjxCJ8=
-Date: Wed, 19 Apr 2023 09:23:59 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Hans Verkuil <hverkuil@xs4all.nl>
-Cc: Ricardo Ribalda <ribalda@chromium.org>,
-	Linux Media Mailing List <linux-media@vger.kernel.org>,
-	regressions@lists.linux.dev, Hans de Goede <hdegoede@redhat.com>,
-	"Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>
-Subject: Re: [PATCH] media: usb: uvc: fill in description for unknown
- pixelformats
-Message-ID: <20230419062359.GA13848@pendragon.ideasonboard.com>
-References: <4b1bc0d5-808b-816d-d7de-5baa8851e74f@xs4all.nl>
- <CANiDSCuiHLw6FBu8GV93Mm2WK5suCnGk8PBUDfn_krtMfPwdaw@mail.gmail.com>
- <7bcc8593-a98d-6faa-2ec5-3cf59137cbcb@xs4all.nl>
- <20230405064020.GZ9915@pendragon.ideasonboard.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1F2D23B3
+	for <regressions@lists.linux.dev>; Wed, 19 Apr 2023 06:48:57 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63BE3C433EF;
+	Wed, 19 Apr 2023 06:48:56 +0000 (UTC)
+Message-ID: <85954ff0-4165-43a4-37ec-610d06668ee7@xs4all.nl>
+Date: Wed, 19 Apr 2023 08:48:54 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20230405064020.GZ9915@pendragon.ideasonboard.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+Subject: Re: [PATCH] media: usb: uvc: fill in description for unknown
+ pixelformats
+Content-Language: en-US
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Ricardo Ribalda <ribalda@chromium.org>,
+ Linux Media Mailing List <linux-media@vger.kernel.org>,
+ regressions@lists.linux.dev, Hans de Goede <hdegoede@redhat.com>,
+ "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>
+References: <4b1bc0d5-808b-816d-d7de-5baa8851e74f@xs4all.nl>
+ <CANiDSCuiHLw6FBu8GV93Mm2WK5suCnGk8PBUDfn_krtMfPwdaw@mail.gmail.com>
+ <7bcc8593-a98d-6faa-2ec5-3cf59137cbcb@xs4all.nl>
+ <20230405064020.GZ9915@pendragon.ideasonboard.com>
+ <20230419062359.GA13848@pendragon.ideasonboard.com>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+In-Reply-To: <20230419062359.GA13848@pendragon.ideasonboard.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Hans,
-
-On Wed, Apr 05, 2023 at 09:40:20AM +0300, Laurent Pinchart wrote:
-> On Wed, Mar 29, 2023 at 07:20:59PM +0200, Hans Verkuil wrote:
-> > On 29/03/2023 18:05, Ricardo Ribalda wrote:
-> > > Hi Hans
-> > > 
-> > > Thanks for the patch.
-> > > 
-> > > I believe the user can fetch this info from lsusb, so this is kind of
-> > > duplicated info, and this is why it was removed.
-> > 
-> > You got to set some description, so using the GUID this seems best.
-> > 
-> > > Is there an app that uses this unknown format code ? Or the only
-> > > complaint is that WARN() is too loud for the user?
-> > 
-> > Normally drivers do not pass on unknown formats, but if a driver does,
-> > then I want a WARN. If a driver does this legitimately (and I understand
-> > that's the case for UVC), then the driver should fill in the description
-> > to avoid this WARN.
+On 19/04/2023 08:23, Laurent Pinchart wrote:
+> Hi Hans,
 > 
-> In hindsight we shouldn't have added a text description to formats :-)
+> On Wed, Apr 05, 2023 at 09:40:20AM +0300, Laurent Pinchart wrote:
+>> On Wed, Mar 29, 2023 at 07:20:59PM +0200, Hans Verkuil wrote:
+>>> On 29/03/2023 18:05, Ricardo Ribalda wrote:
+>>>> Hi Hans
+>>>>
+>>>> Thanks for the patch.
+>>>>
+>>>> I believe the user can fetch this info from lsusb, so this is kind of
+>>>> duplicated info, and this is why it was removed.
+>>>
+>>> You got to set some description, so using the GUID this seems best.
+>>>
+>>>> Is there an app that uses this unknown format code ? Or the only
+>>>> complaint is that WARN() is too loud for the user?
+>>>
+>>> Normally drivers do not pass on unknown formats, but if a driver does,
+>>> then I want a WARN. If a driver does this legitimately (and I understand
+>>> that's the case for UVC), then the driver should fill in the description
+>>> to avoid this WARN.
+>>
+>> In hindsight we shouldn't have added a text description to formats :-)
+>>
+>>>> On Wed, 29 Mar 2023 at 14:39, Hans Verkuil wrote:
+>>>>>
+>>>>> If the fcc is 0 (indicating an unknown GUID format), then fill in the
+>>>>> description field in ENUM_FMT. Otherwise the V4L2 core will WARN.
+>>>>>
+>>>>> Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+>>>>> Fixes: 50459f103edf ("media: uvcvideo: Remove format descriptions")
+>>>>> ---
+>>>>> diff --git a/drivers/media/usb/uvc/uvc_driver.c b/drivers/media/usb/uvc/uvc_driver.c
+>>>>> index 7aefa76a42b3..2f1ced1212cd 100644
+>>>>> --- a/drivers/media/usb/uvc/uvc_driver.c
+>>>>> +++ b/drivers/media/usb/uvc/uvc_driver.c
+>>>>> @@ -256,6 +256,9 @@ static int uvc_parse_format(struct uvc_device *dev,
+>>>>>                 } else {
+>>>>>                         dev_info(&streaming->intf->dev,
+>>>>>                                  "Unknown video format %pUl\n", &buffer[5]);
+>>>>> +                       snprintf(format->name, sizeof(format->name), "%pUl\n",
+>>>>> +                                &buffer[5]);
+>>>> Don't we need at least 38 chars for this?
+>>>
+>>> Yes. But all we have is 31 chars, so we take what we can :-)
+>>>
+>>> This is what uvc did before this was removed.
+>>>
+>>> Regards,
+>>>
+>>> 	Hans
+>>>
+>>>> https://docs.kernel.org/core-api/printk-formats.html#uuid-guid-addresses
+>>>>
+>>>>> +
+>>>>>                         format->fcc = 0;
+>>>>>                 }
+>>>>>
+>>>>> diff --git a/drivers/media/usb/uvc/uvc_v4l2.c b/drivers/media/usb/uvc/uvc_v4l2.c
+>>>>> index 35453f81c1d9..fc6f9e7d8506 100644
+>>>>> --- a/drivers/media/usb/uvc/uvc_v4l2.c
+>>>>> +++ b/drivers/media/usb/uvc/uvc_v4l2.c
+>>>>> @@ -713,6 +713,10 @@ static int uvc_ioctl_enum_fmt(struct uvc_streaming *stream,
+>>>>>         if (format->flags & UVC_FMT_FLAG_COMPRESSED)
+>>>>>                 fmt->flags |= V4L2_FMT_FLAG_COMPRESSED;
+>>>>>         fmt->pixelformat = format->fcc;
+>>>>> +       if (format->name[0])
+>>>>> +               strscpy(fmt->description, format->name,
+>>>>> +                       sizeof(fmt->description));
+>>>>> +
+>>>>>         return 0;
+>>>>>  }
+>>>>>
+>>>>> diff --git a/drivers/media/usb/uvc/uvcvideo.h b/drivers/media/usb/uvc/uvcvideo.h
+>>>>> index 9a596c8d894a..22656755a801 100644
+>>>>> --- a/drivers/media/usb/uvc/uvcvideo.h
+>>>>> +++ b/drivers/media/usb/uvc/uvcvideo.h
+>>>>> @@ -264,6 +264,8 @@ struct uvc_format {
+>>>>>         u32 fcc;
+>>>>>         u32 flags;
+>>>>>
+>>>>> +       char name[32];
+>>>>> +
+>>
+>> I'd not really nice to have to store the name for every format, when we
+>> know it will very rarely be used.
+>>
+>> One alternative option would be to store the GUID, which would halve the
+>> amount of memory. Another option would be to stop reporting those
+>> formats to userspace in uvc_ioctl_enum_fmt(). They can't be selected
+>> anyway, they have no unique 4CC.
 > 
-> > > On Wed, 29 Mar 2023 at 14:39, Hans Verkuil wrote:
-> > >>
-> > >> If the fcc is 0 (indicating an unknown GUID format), then fill in the
-> > >> description field in ENUM_FMT. Otherwise the V4L2 core will WARN.
-> > >>
-> > >> Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-> > >> Fixes: 50459f103edf ("media: uvcvideo: Remove format descriptions")
-> > >> ---
-> > >> diff --git a/drivers/media/usb/uvc/uvc_driver.c b/drivers/media/usb/uvc/uvc_driver.c
-> > >> index 7aefa76a42b3..2f1ced1212cd 100644
-> > >> --- a/drivers/media/usb/uvc/uvc_driver.c
-> > >> +++ b/drivers/media/usb/uvc/uvc_driver.c
-> > >> @@ -256,6 +256,9 @@ static int uvc_parse_format(struct uvc_device *dev,
-> > >>                 } else {
-> > >>                         dev_info(&streaming->intf->dev,
-> > >>                                  "Unknown video format %pUl\n", &buffer[5]);
-> > >> +                       snprintf(format->name, sizeof(format->name), "%pUl\n",
-> > >> +                                &buffer[5]);
-> > > Don't we need at least 38 chars for this?
-> > 
-> > Yes. But all we have is 31 chars, so we take what we can :-)
-> > 
-> > This is what uvc did before this was removed.
-> > 
-> > Regards,
-> > 
-> > 	Hans
-> > 
-> > > https://docs.kernel.org/core-api/printk-formats.html#uuid-guid-addresses
-> > > 
-> > >> +
-> > >>                         format->fcc = 0;
-> > >>                 }
-> > >>
-> > >> diff --git a/drivers/media/usb/uvc/uvc_v4l2.c b/drivers/media/usb/uvc/uvc_v4l2.c
-> > >> index 35453f81c1d9..fc6f9e7d8506 100644
-> > >> --- a/drivers/media/usb/uvc/uvc_v4l2.c
-> > >> +++ b/drivers/media/usb/uvc/uvc_v4l2.c
-> > >> @@ -713,6 +713,10 @@ static int uvc_ioctl_enum_fmt(struct uvc_streaming *stream,
-> > >>         if (format->flags & UVC_FMT_FLAG_COMPRESSED)
-> > >>                 fmt->flags |= V4L2_FMT_FLAG_COMPRESSED;
-> > >>         fmt->pixelformat = format->fcc;
-> > >> +       if (format->name[0])
-> > >> +               strscpy(fmt->description, format->name,
-> > >> +                       sizeof(fmt->description));
-> > >> +
-> > >>         return 0;
-> > >>  }
-> > >>
-> > >> diff --git a/drivers/media/usb/uvc/uvcvideo.h b/drivers/media/usb/uvc/uvcvideo.h
-> > >> index 9a596c8d894a..22656755a801 100644
-> > >> --- a/drivers/media/usb/uvc/uvcvideo.h
-> > >> +++ b/drivers/media/usb/uvc/uvcvideo.h
-> > >> @@ -264,6 +264,8 @@ struct uvc_format {
-> > >>         u32 fcc;
-> > >>         u32 flags;
-> > >>
-> > >> +       char name[32];
-> > >> +
-> 
-> I'd not really nice to have to store the name for every format, when we
-> know it will very rarely be used.
-> 
-> One alternative option would be to store the GUID, which would halve the
-> amount of memory. Another option would be to stop reporting those
-> formats to userspace in uvc_ioctl_enum_fmt(). They can't be selected
-> anyway, they have no unique 4CC.
+> Any opinion on this ? I'm increasingly tempted by not reporting
+> unsupported formats to userspace.
 
-Any opinion on this ? I'm increasingly tempted by not reporting
-unsupported formats to userspace.
+Since they cannot be selected, I think that is the best approach.
+Perhaps only show them in the kernel log if debugging is enabled.
 
-> > >>         unsigned int nframes;
-> > >>         struct uvc_frame *frame;
-> > >>  };
-
--- 
 Regards,
 
-Laurent Pinchart
+	Hans
+
+> 
+>>>>>         unsigned int nframes;
+>>>>>         struct uvc_frame *frame;
+>>>>>  };
+> 
+
