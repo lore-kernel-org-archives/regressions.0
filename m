@@ -1,189 +1,234 @@
-Received: from mail-200161.simplelogin.co (mail-200161.simplelogin.co [176.119.200.161])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EA992580
-	for <regressions@lists.linux.dev>; Wed, 19 Apr 2023 08:52:57 +0000 (UTC)
-Date: Wed, 19 Apr 2023 08:46:42 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=8shield.net; s=dkim;
-	t=1681894012;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=svMD8qCdCdMeuX7byvejAfnFeoEkqnuCAiytCVsrX9I=;
-	b=BN91Nhk3WNk2wdWndHhRGlVATg8Gk5ZPGxw42M5y6/jyMpQNUePNX8WM5K58t1WBZzOTWe
-	5JwvONJVdlZTvvE5ClXvoJcR5oqWAijcLEg6Bn0t5YJriwoh0eQkFV4CiL54glBZe5iMzE
-	Ep+DYCoNI7BOrbb+34rIJHlnP5fpkU0=
-Subject: Re: btusb driver need to be unloaded and reloaded after boot & lag
- issue
-In-Reply-To: <dbbf4556-2719-5827-efbd-da9e87c0de40@molgen.mpg.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9990D8839
+	for <regressions@lists.linux.dev>; Wed, 19 Apr 2023 16:21:59 +0000 (UTC)
+Received: by mail-ej1-f49.google.com with SMTP id ud9so83034715ejc.7
+        for <regressions@lists.linux.dev>; Wed, 19 Apr 2023 09:21:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1681921318; x=1684513318;
+        h=to:in-reply-to:cc:references:message-id:date:subject:mime-version
+         :from:content-transfer-encoding:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+BEvd+Ckhfg92pd/KODoBmrL0OH00ykJT8cB5I+RP/8=;
+        b=LblpJsms5ybwCCZcdSpJHeE5wh5fwEK5Dq7hrVBOvCzO0AEZOE78qdsJMvbFgXot0r
+         pKUUa+C2WBQLmLoeSDzyqXyOBzvZhNOGdrVAJmT+mR5CYqg1zN28qidyBa2sIdah6yrU
+         ANql85gy5Y6ec6ne9KukD9xhgVkLUJ/42dmfzUm7R9hUnncW+/gotu7M5Jyc8L8HR9lz
+         tbdKZPyvmQs3ZSkEGYSRPM8BWlee5VW7UDRKaBHYdMW3+u9+551nXhk9ZV3DiYw7SGVx
+         zzYTKVThrvlk066b6woWwnj5Uyalepkgmf//XBhSD4Ed3rgmALQ//AgCRRITsVCxrJcA
+         2nEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1681921318; x=1684513318;
+        h=to:in-reply-to:cc:references:message-id:date:subject:mime-version
+         :from:content-transfer-encoding:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+BEvd+Ckhfg92pd/KODoBmrL0OH00ykJT8cB5I+RP/8=;
+        b=KJvLQZnOjN0vjTAxvyJJU6sFPVEB85sj9kGPy5fdK9pAw29+IfxZLD5x/Cq8ul4zV0
+         QVC1R689VhXmjazmzNBIQq8cPfvYVmHi7trgUkOK1jUqe1X+z3FFcuUQqk71MYblQnWq
+         qOfFTNBy3N6oPucyWwJJplq4/X734zNOMLy+EwRLBDyaSV/9zSiqEI+61HpBrVh0h+hl
+         RmEEnhc3m83FAMDMFq4Eyi34MmrvlkNUdtw9jOHX2swW9CWkrEcA7JqmsvtzaNueW9LY
+         QHhGhtTkHOrutCO8HT7s1IfdDIxY51WrLKKn1N1i/B6O2UlQt8zG/HA31wyBvffqiKTn
+         bXSw==
+X-Gm-Message-State: AAQBX9esQ9FoHraXxluy/HD1DaMKF4SbeKKP/9txQfsUp2kiJm01whDT
+	pl5KQPJWdiCfIs+J//NRCUM=
+X-Google-Smtp-Source: AKy350b06YeOMKY/GSVYDQZ/QrxVBtpQ9wR4js7+KniwtxAqj4Nli9vG7PpXMWczRAVGaexGhqRjJA==
+X-Received: by 2002:a17:907:8a21:b0:94f:3521:394 with SMTP id sc33-20020a1709078a2100b0094f35210394mr13935287ejc.51.1681921317551;
+        Wed, 19 Apr 2023 09:21:57 -0700 (PDT)
+Received: from smtpclient.apple (120.87.196.178.dynamic.wline.res.cust.swisscom.ch. [178.196.87.120])
+        by smtp.gmail.com with ESMTPSA id ry13-20020a1709068d8d00b0094ee3e4c934sm7996459ejc.221.2023.04.19.09.21.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 19 Apr 2023 09:21:56 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From: =?utf-8?Q?G=C3=A9_Koerkamp?= <ge.koerkamp@gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: multipart/signed; protocol="application/pgp-signature";
- micalg=pgp-sha512;
- boundary="------58bb509cbf61eb58031cdc6e0e682bf96f7bc10ce8327a5812e43e037274263f";
- charset=utf-8
-Content-Transfer-Encoding: 7bit
-From: help.7ocym@8shield.net
-To: Paul Menzel <pmenzel@molgen.mpg.de>
-Cc: 
- linux-usb@vger.kernel.org,linux-bluetooth@vger.kernel.org,regressions@lists.linux.dev
-Message-ID: <168189401011.9.1190609165422904967.121288919@8shield.net>
-References: <168133719213.7.14774994518515251513.119182329@8shield.net>
- <dbbf4556-2719-5827-efbd-da9e87c0de40@molgen.mpg.de>
-X-SimpleLogin-Type: Reply
-X-SimpleLogin-EmailLog-ID: 121288932
-X-SimpleLogin-Want-Signing: yes
+Mime-Version: 1.0 (1.0)
+Subject: Re: [regression] Bug 216946 - Toshiba satellite click mini l9w-b: touchscreen: no touch events with kernel 6.1.4
+Date: Wed, 19 Apr 2023 18:21:46 +0200
+Message-Id: <E4123C4B-D6C0-4CB2-8328-E0D03599ED16@gmail.com>
+References: <993dd537-2f74-3657-1dd3-c3a0a74e37e1@leemhuis.info>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+ Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+ Jiri Kosina <jikos@kernel.org>,
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+ "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <993dd537-2f74-3657-1dd3-c3a0a74e37e1@leemhuis.info>
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+X-Mailer: iPhone Mail (20E252)
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------58bb509cbf61eb58031cdc6e0e682bf96f7bc10ce8327a5812e43e037274263f
-Content-Type: multipart/mixed;boundary=---------------------d434d8696c798ef5f060dccd015a521b
+Hi Thorsten,
 
------------------------d434d8696c798ef5f060dccd015a521b
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain;charset=utf-8
+travelling at the moment, but I=E2=80=99ll try. Not really into bisecting ke=
+rnel issues, but let=E2=80=99s see where this goes. Another issue is, that I=
+ don=E2=80=99t have a Toshiba Mini Click myself, so I need to build the test=
+ Volumio images (volumio.org) with the different 5.16-rc kernel patch versio=
+ns for a colleague to work with, hopefully  he has time to do this.
 
-Hi,
+Thanks - G=C3=A9
 
-------- Original Message -------
-On Thursday, April 13th, 2023 at 7:39 AM, Paul Menzel - pmenzel at molgen.=
-mpg.de <pmenzel_at_molgen_mpg_de_rislbjit@simplelogin.co> wrote:
+Sent from my iPhone
 
+> On 17 Apr 2023, at 13:55, Linux regression tracking (Thorsten Leemhuis) <r=
+egressions@leemhuis.info> wrote:
+>=20
+> =EF=BB=BF
+>=20
+>> On 01.03.23 12:41, Hans de Goede wrote:
+>>> On 2/28/23 14:26, Benjamin Tissoires wrote:
+>>> On Tue, Feb 28, 2023 at 12:32=E2=80=AFPM Thorsten Leemhuis
+>>> <regressions@leemhuis.info> wrote:
+>>>>=20
+>>>> On 19.01.23 16:06, Linux kernel regression tracking (Thorsten Leemhuis)=
 
-> [Cc: +regressions@lists.linux.dev]
->
-> Dear JLM,
->
->
-> Am 13.04.23 um 00:06 schrieb help.7ocym@8shield.net:
->
-> > sorry to address both list, but this issue seems related, without
-> > knowing where lies the issue > my hardware : https://wiki.gentoo.org/w=
-iki/Lenovo_Yoga_900
-> > I use the pre-built gentoo linux kernel,
-> > 6.2.8-gentoo-dist #1 SMP PREEMPT_DYNAMIC Wed Mar 22 17:15:39 -00 2023 =
-x86_64 Intel(R) Core(TM) i7-6500U CPU @ 2.50GHz GenuineIntel GNU/Linux
-> >
-> > since a few update (sadly I didn't noted the latest kernel version
-> > that didn't had the issue), after a boot, the bluetooth isn't
-> > working, nothing bad in dmesg, I just have to unload btusb module and
-> > modprobe it again to have bluetooth working again...
-> >
-> > after a suspend to ram, I have to power off-power on the bluetooth to
-> > have it work again (bluetoothctl power off; bluetoothctl power on)
-> >
-> > bluetooth mouse can also be extremely laggy sometimes,but without
-> > error message in dmesg, most of the time `bluetoothctl power` off-on
-> > cycling do solve the issue....
-> >
-> > I also included the usb mailing list because it might be related to
-> > some behavior I noticed :
-> >
-> > I have usb3.0 micro sd card reader (SanDisk MobileMate UHS-I microSD
-> > Reader/Writer USB 3.0 Reader, Kingston MobileLite Plus (MLPM) microSD
-> > Card Reader USB 3.1 microSDHC/SDXC UHS-II, for example) and some
-> > extra fast micro sd cards (like sandisk extrem 512G), when
-> > transferring data the read rate can be as high as 110Mo/s and write
-> > 70Mo/s sustained, nothing impressive but when such rate is achieved
-> > for a long time (big file transfer) either reading only access,
-> > writing only access or read write, the usb bus become unusable, I
-> > can't even use a usb mouse connected to it by wire... even if cpu
-> > usage is really low (less than 10%) I don't have the issue if I
-> > connect a M2 usb3 flash drive, with comparable transfert speed... so
-> > not related to some bus over usage...
-> >
-> > so I suspect that there is an issue with the usb driver, and that
-> > maybe the bluetooth issue can be related to the usb issue, since the
-> > bluetooth controller is on the usb bus on the laptop >
-> > the transfer issue of usb is much more older than the bluetooth
-> > issue, it's approximative, but : > - the btusb boot issue is about 3 m=
-onth old,
-> > - the suspend/resume issue of bluetooth is more than a year old
-> > - the usb transfer issue as more than a year...
-> >
-> > I'll gladly provide any useful information, can also do patch tries...
->
-> As you use Gentoo and are able to build your own Linux kernel, the
-> fastest way to get these issues addressed is to bisect them. To shorten
-> the test cycles, I recommend to try, if you can reproduce the issues in
-> QEMU and passing through the problematic devices to the VM [1][2].
->
-> I also recommend to start a separate thread for each issue and, as these
-> seem to be regressions, also keep the regression folks in the loop [3].
->
->
-> Kind regards,
->
-> Paul
->
->
-> [1]:
-> https://lore.kernel.org/all/5891f0d5-8d51-9da5-7663-718f301490b1@molgen.=
-mpg.de/
-> (The commands were working for after all, and the device didn=E2=80=99t
-> show up due to a (second) Linux kernel regression.)
-> [2]: https://station.eciton.net/qemu-usb-host-device-pass-through.html
-> [3]:
-> https://www.kernel.org/doc/html/latest/admin-guide/reporting-regressions=
-.html
+>>>> wrote:
+>>>>> Hi, this is your Linux kernel regression tracker.
+>>>>>=20
+>>>>> I noticed a regression report in bugzilla.kernel.org. As many (most?)
+>>>>> kernel developer don't keep an eye on it, I decided to forward it by
+>>>>> mail. Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=3D21694=
+6 :
+>>>>=20
+>>>> The reporter recently confirmed in the ticket that the issue still
+>>>> happens with 6.2.
+>>>>=20
+>>>> There wasn't any reply from any of the input developers here or in
+>>>> bugzilla afaics. :-/ Hmmm. Could someone from that camp maybe please
+>>>> take a minute and at least briefly look into this as answer something
+>>>> like "that might be due to a problem in subsystem 'foo'", "maybe ask ba=
+r
+>>>> for an option", or "we have no idea what might cause this, this needs t=
+o
+>>>> be bisected"? That would help a lot.
+>>>=20
+>>> The working dmesg shows a line with:
+>>> hid-generic 0018:0457:10FB.0002: input,hidraw1: I2C HID v1.00 Device
+>>> [SIS0817:00 0457:10FB] on i2c-SIS0817:00
+>>> and then
+>>> hid-multitouch 0018:0457:10FB.0002: input,hidraw1: I2C HID v1.00
+>>> Device [SIS0817:00 0457:10FB] on i2c-SIS0817:00
+>>>=20
+>>> But these 2 lines do not appear on the 6.1.4 logs.
+>>>=20
+>>> So the device is not properly enumerated by ACPI or I2C. Hans might
+>>> have an idea on how to debug/solve that issue.
+>>=20
+>> I actually have a Toshiba satellite click mini l9w-b lying around
+>> myself. I already made a note to try and reproduce this
+>>=20
+>> But I'm very much swamped with too much kernel work, so no promises
+>> when I will get around to this ...
+>=20
+> Has anyone made any progress with this? Doesn't look like it, hence I
+> wondered if this fall through the cracks; but maybe I'm just missing
+> something.
+>=20
+> G=C3=A9 Koerkamp: with a bit of luck Hans sooner or later will have time t=
+o
+> look into this, but it might speed things up if you could try to bisect
+> this.
+>=20
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> --
+> Everything you wanna know about Linux kernel regression tracking:
+> https://linux-regtracking.leemhuis.info/about/#tldr
+> If I did something stupid, please tell me, as explained on that page.
+>=20
+> #regzbot poke
+>=20
+>>>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat=
+)
+>>>> --
+>>>> Everything you wanna know about Linux kernel regression tracking:
+>>>> https://linux-regtracking.leemhuis.info/about/#tldr
+>>>> If I did something stupid, please tell me, as explained on that page.
+>>>>=20
+>>>> #regzbot poke
+>>>>>> G=C3=A9 Koerkamp 2023-01-17 20:21:51 UTC
+>>>>>>=20
+>>>>>> Created attachment 303619 [details]
+>>>>>> Kernel configuration for v6.1.4/ journalctl (dmesg)/ ACPIdump/lsmod
+>>>>>>=20
+>>>>>> Overview:
+>>>>>> The touchscreen does not react on touch events.
+>>>>>> Touchscreen display and touchpad are working.
+>>>>>>=20
+>>>>>> Step to reproduce:
+>>>>>> Open any UI page
+>>>>>> Try to use touch on relevant UI controls (buttons etc.)
+>>>>>>=20
+>>>>>> Result:
+>>>>>> No reaction on screen touches
+>>>>>>=20
+>>>>>> Expected result:
+>>>>>> Reaction on touched control, same as when using the touch pad or conn=
+ected mouse (which do work).
+>>>>>>=20
+>>>>>> Build information:
+>>>>>> The error happens with kernel version 6.1.4
+>>>>>> After rebuilding with different kernel versions, it appears that it f=
+irst fails with kernel 5.16
+>>>>>>=20
+>>>>>> Additional builds:
+>>>>>> The click mini l9w-b still works with kernel 5.10.y LTS and 5.15.y LT=
+S.
+>>>>>>=20
+>>>>>> Important remark:
+>>>>>> Touchscreen still works fine with kernel 6.1.4 using
+>>>>>> - an HP x2 detachable 10-p0xx or
+>>>>>> - a Lenovo yoga 520-14ikb
+>>>>>>=20
+>>>>>> So it could be a hardware dependent issue
+>>>>>=20
+>>>>> See the ticket for more details.
+>>>>>=20
+>>>>>=20
+>>>>> [TLDR for the rest of this mail: I'm adding this report to the list of=
 
-thanks for the reply,
-after upgrade to 6.2.11 version, =
+>>>>> tracked Linux kernel regressions; the text you find below is based on a=
 
+>>>>> few templates paragraphs you might have encountered already in similar=
 
-- seems that the issue at boot of btusb module is gone... I don't have any=
-more to unload btusb module after a boot... so that's great news! =
-
-
-- the bluetooth resumes also after a suspend S3 (suspend to ram)! so great=
- news again! (I've to check for suspend to disk, but I'm confident about s=
-uccess)
-
-I still have to do some check with the micro usb readers to see if the bug=
- "bus monopolization" is still present, so far so good!
-
-
-
-Sent with Proton Mail secure email.
-
------------------------d434d8696c798ef5f060dccd015a521b
-Content-Type: application/pgp-keys; filename="publickey - jl.malet@protonmail.com - 0xA25F20CF.asc"; name="publickey - jl.malet@protonmail.com - 0xA25F20CF.asc"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="publickey - jl.malet@protonmail.com - 0xA25F20CF.asc"; name="publickey - jl.malet@protonmail.com - 0xA25F20CF.asc"
-
-LS0tLS1CRUdJTiBQR1AgUFVCTElDIEtFWSBCTE9DSy0tLS0tCgp4ak1FWkRHNGx4WUpLd1lCQkFI
-YVJ3OEJBUWRBc0o4TVNPaVhCR2tKWnlzYm52cExJN3NXR0xHaXNXeDQKbmxlUkRiRlpiRy9OTVdw
-c0xtMWhiR1YwUUhCeWIzUnZibTFoYVd3dVkyOXRJRHhxYkM1dFlXeGxkRUJ3CmNtOTBiMjV0WVds
-c0xtTnZiVDdDakFRUUZnb0FQZ1dDWkRHNGx3UUxDUWNJQ1pEVy9aZ2x2N3RnQ2dNVgpDQW9FRmdB
-Q0FRSVpBUUtiQXdJZUFSWWhCS0pmSU05bm5OS2RzS2RMcnRiOW1DVy91MkFLQUFES3lnRUEKdlpr
-VjRWV3l4dXJxUWVOSDM2UmhncjR2QVdUQ1RRQjl6Z1ZrTXFFTHF5VUEvUk9UbFJOMnFVQjAzdE5r
-CmRwZXJPV0VQa3JvWG1XRHBYWU0rMldOWk1uWVB6amdFWkRHNGx4SUtLd1lCQkFHWFZRRUZBUUVI
-UURJWQpIOHpvdytIeFowSkUyeHJkcy96WlRIa3pZS2lmc0RUUXVRL2o0dEFKQXdFSUI4SjRCQmdX
-Q0FBcUJZSmsKTWJpWENaRFcvWmdsdjd0Z0NnS2JEQlloQktKZklNOW5uTktkc0tkTHJ0YjltQ1cv
-dTJBS0FBQmFqd0Q4CkM5VmNtRWVTWmpyNFNabWlOSFM2MUtqZlZlaEZJYkJmZnEzTUVCZGFxcHdB
-LzJHSTY4a010MzdOSkhTcAo1Q2Fid2UrZ05HZVg5S3RESUxjS2NUbVRjVmNECj04SW9hCi0tLS0t
-RU5EIFBHUCBQVUJMSUMgS0VZIEJMT0NLLS0tLS0K
------------------------d434d8696c798ef5f060dccd015a521b--
-
---------58bb509cbf61eb58031cdc6e0e682bf96f7bc10ce8327a5812e43e037274263f
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: ProtonMail
-
-wnUEARYKACcFgmQ/qmIJkNb9mCW/u2AKFiEEol8gz2ec0p2wp0uu1v2YJb+7
-YAoAAK/OAP0XIqIp32TYnR4LaBq82EkLkqgQdADqzn2qFgOQuNb+kQEAgfZO
-/gl/jcYzocTpyJ/ew05D5D2OXkZoI4EhtqVKIgk=
-=ogYk
------END PGP SIGNATURE-----
-
-
---------58bb509cbf61eb58031cdc6e0e682bf96f7bc10ce8327a5812e43e037274263f--
-
-
+>>>>> form.]
+>>>>>=20
+>>>>> BTW, let me use this mail to also add the report to the list of tracke=
+d
+>>>>> regressions to ensure it's doesn't fall through the cracks:
+>>>>>=20
+>>>>> #regzbot introduced: v5.15..v5.16
+>>>>> https://bugzilla.kernel.org/show_bug.cgi?id=3D216946
+>>>>> #regzbot title: hid: touchscreen broken with Toshiba satellite click
+>>>>> mini l9w-b
+>>>>> #regzbot ignore-activity
+>>>>>=20
+>>>>> This isn't a regression? This issue or a fix for it are already
+>>>>> discussed somewhere else? It was fixed already? You want to clarify wh=
+en
+>>>>> the regression started to happen? Or point out I got the title or
+>>>>> something else totally wrong? Then just reply and tell me -- ideally
+>>>>> while also telling regzbot about it, as explained by the page listed i=
+n
+>>>>> the footer of this mail.
+>>>>>=20
+>>>>> Developers: When fixing the issue, remember to add 'Link:' tags pointi=
+ng
+>>>>> to the report (e.g. the buzgzilla ticket and maybe this mail as well, i=
+f
+>>>>> this thread sees some discussion). See page linked in footer for detai=
+ls.
+>>>>>=20
+>>>>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' ha=
+t)
+>>>>> --
+>>>>> Everything you wanna know about Linux kernel regression tracking:
+>>>>> https://linux-regtracking.leemhuis.info/about/#tldr
+>>>>> If I did something stupid, please tell me, as explained on that page.
+>>>>=20
+>>>=20
+>>=20
+>>=20
+>>=20
