@@ -1,174 +1,99 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15C868F44
-	for <regressions@lists.linux.dev>; Thu, 20 Apr 2023 18:27:42 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1ppZ0O-0001vs-0w; Thu, 20 Apr 2023 20:27:40 +0200
-Message-ID: <fc39889a-1353-c023-32a7-15bfdbc4176e@leemhuis.info>
-Date: Thu, 20 Apr 2023 20:27:39 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF4208F68
+	for <regressions@lists.linux.dev>; Thu, 20 Apr 2023 19:02:51 +0000 (UTC)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 0A215219DF;
+	Thu, 20 Apr 2023 19:02:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1682017370;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wyOpH1UnQrvVJw6kWYdzta6t/ke0kX3oYrzbrP5nCuQ=;
+	b=v1d+3DaMAllHzLN5tsGSUp+ae/unfKhbqg+TQFsgWHC+t4iTyrrUgFOp5USdxySWmOnw88
+	xrkk/1PF4C/qgKHJH2Q4s1IlBbXov5PXa3Mg8iea3F2Vl6oK7WhiygJvLuaVAbGnsc51xs
+	1b2KHd6La1ccwopUyNu3ZglA21e9Sss=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1682017370;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wyOpH1UnQrvVJw6kWYdzta6t/ke0kX3oYrzbrP5nCuQ=;
+	b=NNsgpZgAKDpS40EAM3z4xvLFkP2uLB+Pl1kG6ul1+v08CNRiszf8icDRDKzWCnWrD34DSU
+	J/BuQwFuLRia8NCA==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id CDD0F1333C;
+	Thu, 20 Apr 2023 19:02:49 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+	by imap2.suse-dmz.suse.de with ESMTPSA
+	id 7lVxMVmMQWTKQgAAMHmgww
+	(envelope-from <dsterba@suse.cz>); Thu, 20 Apr 2023 19:02:49 +0000
+Date: Thu, 20 Apr 2023 21:02:39 +0200
+From: David Sterba <dsterba@suse.cz>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>,
+	Rafael Wysocki <rafael@kernel.org>, David Sterba <dsterba@suse.com>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Re: Linux regressions report for mainline [2023-04-16]
+Message-ID: <20230420190239.GX19619@suse.cz>
+Reply-To: dsterba@suse.cz
+References: <168166781352.1843526.278570500979918184@leemhuis.info>
+ <CAHk-=wjQaxmXTR68VnEJvLgB=H2agMTrrF4EXkXT4Hbdf2ZuMQ@mail.gmail.com>
+ <20230418182036.GS19619@suse.cz>
+ <CAHk-=wjL7GG9s9Y2+u2725M+Ru=bUXnzOnXRwoSktY0fVdhhzw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.1
-Subject: Re: [PATCH] wifi: ath9k: Don't mark channelmap stack variable
- read-only in ath9k_mci_update_wlan_channels()
-Content-Language: en-US, de-DE
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: =?UTF-8?Q?Toke_H=c3=b8iland-J=c3=b8rgensen?= <toke@toke.dk>,
- Kalle Valo <kvalo@kernel.org>, Colin Ian King <colin.i.king@gmail.com>,
- linux-wireless@vger.kernel.org,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- Greg KH <gregkh@linuxfoundation.org>,
- Linus Torvalds <torvalds@linux-foundation.org>
-References: <20230413214118.153781-1-toke@toke.dk> <87v8hysrzx.fsf@kernel.org>
- <87bkjqzrdm.fsf@toke.dk> <87edom7i6i.fsf@kernel.org> <877cu9wl7r.fsf@toke.dk>
- <87zg74v5cy.fsf@kernel.org>
- <f4939cb3-bc01-c9e1-aac9-2adb554bc3c4@leemhuis.info> <87edoetyve.fsf@toke.dk>
- <20230420075027.6852197a@kernel.org>
- <04d69168-8ead-84fb-a411-fa781502cceb@leemhuis.info>
- <20230420095506.671a8e34@kernel.org>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <20230420095506.671a8e34@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1682015263;785ebe2a;
-X-HE-SMSGID: 1ppZ0O-0001vs-0w
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHk-=wjL7GG9s9Y2+u2725M+Ru=bUXnzOnXRwoSktY0fVdhhzw@mail.gmail.com>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
 
-[CCing Linus: there are two things near the end of this mail where we're
-wondering how you feel about them]
+On Tue, Apr 18, 2023 at 12:11:51PM -0700, Linus Torvalds wrote:
+> On Tue, Apr 18, 2023 at 11:20 AM David Sterba <dsterba@suse.cz> wrote:
+> >
+> > There's also in-memory cache of already trimmed ranges since last mount
+> > so even running discard repeatedly (either fstrim or as mount option)
+> > will not do extra IO. We try hard not to provoke the firmware bugs.
 
-On 20.04.23 18:55, Jakub Kicinski wrote:
-> On Thu, 20 Apr 2023 17:59:49 +0200 Thorsten Leemhuis wrote:
->>> Out of curiosity, Thorsten, do you have stats on "how long does it take
->>> fixes to reach Linus" per tree? Stats get people to act much quicker
->>> than pleas, just sayin' ;)  
->>
->> I know, I know... :-( Nevertheless thx for the reminder. :-D
->>
->> I really wish that I had some, but right now the data I have in regzbot
->> is too messy and not a good base to generate such stats, as they would
->> likely be misleading (that's the long story short).
->>
->> I once had the rough plan to approach this differently by looking at all
->> commits that ended up in the first big batches of stable updates (e.g.
->> releases like 6.0.3 with many hundreds of changes). I wanted to filter
->> out the regression fixes and then (1)look how long it took from posting
->> the fix till it was mainlined and (2)backported to stable. But there
->> afaics is no good way to automate the first part of the job: filtering
->> out fixes for regressions that actually bothered someone and might or
->> might not have been tracked by regzbot (the "might not" share might be
->> the bigger one, which is part of the valid stats problem indicated above).
+[...]
+
+> Again, that's libata - odd crazy hardware. But it's exactly the odd
+> crazy hardware that worries me. When the failure mode isn't "it's
+> slow", but "it ATE MY WHOLE DISK", that's a scary scary problem.
 > 
-> I wouldn't bother with the patches you didn't track in regzbot.
-> This probably depends on how various people apply / maintain their
-> patches (sigh) but for networking (and anything else that's pretty 
-> pure git management) author date of the commit should give you the
-> time when patch was posted.
-
-Unless the patch went through several revisions during review. But
-that's just a detail.
-
-> So we could go regzbot report date -> author date in upstream -> commit
-> date in stable potentially without much coding.
->
-> Going to Linus's tree vs stable should also be possible. Chris Mason
-> has showed me once a git incantation which finds the merge commit in
-> Linus's tree at which a given patch has arrived.. but I lost it.
-
-I have something ugly for that (I needed a python variant of this
-somewhere in regzbot):
-
-commit=91dcf1e80;
-branch=origin/master;
-git show $(git rev-list "${commit}".."${branch}" --ancestry-path |
-grep -f <(git rev-list "${commit}".."${branch}" --first-parent) |
-tail -1)
-
-[note: this will fail for any changes Linus committed directly to mainline]
-
->>>> I'm OK with doing it that way; I'll do so later tonight unless Kalle or
->>>> Jakub complains before then...  
->>>
->>> Ah, just after our last(?) 6.3 PR was submitted :(
->>> No objections to you posting this directly to Linus...
->>>
->>> That said it is a 6.2 regression AFAICT so it's not exactly in the
->>> "must be fixed in 6.3" category.  
->>
->> Out of curiosity (really, it's not meant as a rhetorical device, I'm
->> trying to understand this point of view):
->>
->> Why do you think that? And should it really be like that?
->>
->> Sure, if it was an old problem (say from 5.18) that was only recently
->> found I'd agree, especially if the fix might have a more than average
->> risk of causing other trouble. But shouldn't we care about regressions
->> that were found shortly after a release (e.g. 6.2 in this case) at least
->> as much (or maybe even more?) as we care about those found during the
->> weeks preceding it?
->>
->> FWIW, it's not the first time I hear a statement like that and every
->> time I wonder how Linus thinks about this. But whatever, not going to CC
->> him for that.
+> Hmm?
 > 
-> I'm a but curious what Linus would think, too.
+> I dunno. Maybe you have reason to believe that all of these cases have
+> been fixed, or that some of these were caused by kernel bugs because
+> we did things wrong, and those have been fixed.
+> 
+> But the failure modes just makes me worry. From your email, it *seems*
+> like you think that the failures were primarily performance-related.
 
-:-)
+No, the main concern is if discard works without destroying data,
+performance is more like an optimization. I too worry about buggy
+hardware, we have a page just about that
+https://btrfs.readthedocs.io/en/latest/Hardware.html .
 
-I CCed Linus now, as another question for him came up below. With a bit
-of luck he'll share his view on these matters. And if not I'm pretty
-sure we'll all live happily ever after, too. :-D
+I've taken notes from your reply and will enhance the page, or page
+about discard in particular. The info about device quirks/horkage could
+be linked too or I thought about generating a static page from the
+per-bus tables so it's on one page.
 
-> Just to be clear the assumption I operate on is that all regressions
-> are important to fix within reasonable time frame. The question is
-> whether it matters for this regression that we're close to final.
-> Whether we should engage extraordinary means to get the fix in before
-> final is cut.
-
-Well, the risk obviously is a factor here, especially during a potential
-release week (like the one we're in); but I don't think the risk
-evaluation for "fixes for regressions introduced in the previous cycle"
-and "fixes for regressions introduced this cycle" should be much
-different. But that's see what Linus thinks about this.
-
-> If it was a 6.3 regression we should try as hard as we can to fix it
-> in final (e.g. the mlx5 regression), if it's in 6.2 already - the extra
-> week 
-
-Well, yes, in the ideal case it is just a week. But at this point of the
-devel cycle a one week delay in mainlining can easily result in a two
-week delay till the fix reaches users through the stable trees. To explain:
-
-* Assume this fix (posted one week ago) is not merged this week and
-Linus releases 6.3 on Sunday; assume further the fix then will go to
-mainline during the merge window (e.g. the one week delay scenario). If
-that happens during the first or second week of the merge window doesn't
-even matter much, as Greg apparently often waits till after -rc1 is
-released before be starts backporting most fixes. And that's where the
-extra week comes from. We of course could avoid this by bothering Greg
-to pick up the fix once it reached mainline; but then it might be better
-to bother Linus in the first place to merge is this week.
-
-Not to mention that there would have been another week of delay, if (a)
-I had not spoken up in this thread and (b) we get a rc8. But we afaics
-avoided that scenario already with the plan to merge the fix next week
-through the -net tree in case we get a rc8.
-
-> of waiting may not be worth skipping trees and bothering Linus.
-
-Linus, to you feel bothered by an occational additional pull request or
-a mail asking you to pick up a patch directly from the list?
-
-> IOW for older regressions there's only the question of whether the fix
-> is in upstream in a reasonable time. It doesn't matter as much which
-> particular tag it hits.
-
-Ciao, Thorsten
+I'll send pull request with fixes for the regression.
