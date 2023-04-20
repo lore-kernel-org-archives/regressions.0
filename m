@@ -1,175 +1,72 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BD0ED2EA
-	for <regressions@lists.linux.dev>; Wed, 19 Apr 2023 20:20:44 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AABFAC433D2;
-	Wed, 19 Apr 2023 20:20:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 748EA15CC
+	for <regressions@lists.linux.dev>; Thu, 20 Apr 2023 00:43:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6316AC433EF;
+	Thu, 20 Apr 2023 00:43:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1681935644;
-	bh=yXhqdjRuvB4MB1gbj846qH8olAdMjNumzM2kBEOaLXU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=RlvdEgJc6QTxAZm/m2XbHBQY7a3og4fKONfQIfvUd4Sup2cgK6Y88Ja2vDawDsqUy
-	 EWIOT2PDx3fdGalr2SUcH52j4cQzKs/ZHP952TIzqZpEf8NJd/aeLAhjF8ysLUjWBB
-	 oH9Zim3LBiH/3AGrq6s5EKNGSGUVwdgUV0EgCWXOQFFh6nGpmfFEr+DwIuAJkk3FIc
-	 79I4fqI0FaYUpghRD3AtVZhO5xlndfXN+vAM3xGnj3fx7gdcd1fwAsRM/6k8iVwfkL
-	 hpx21cH/lh2GVC7VvWrGq6P5SutS2DNnwGroORuuXyxZ/ghBXmWhWitkviOyVQ/RcC
-	 5gHG98IH3xrMQ==
-Date: Wed, 19 Apr 2023 15:20:42 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Rob Herring <robh@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	Donald Hunter <donald.hunter@gmail.com>,
-	Binbin Zhou <zhoubinbin@loongson.cn>,
-	Liu Peibao <liupeibao@loongson.cn>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Jesse Brandeburg <jesse.brandeburg@intel.com>,
-	Tony Nguyen <anthony.l.nguyen@intel.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: Re: [PATCH] PCI: Restrict device disabled status check to DT
-Message-ID: <20230419202042.GA223738@bhelgaas>
+	s=k20201202; t=1681951396;
+	bh=3TfSNpFYsuhxboTNumVnC5z5KX5U1yvWsKH2bQsrios=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XXm7+VqkcSuSfr75tU1q/8kzjPiLx9R2H7MT+z59XkHoh7y+n6BFa4ZsP/lSS5Op/
+	 //Bv6mhBEG0ADIGRs0IlXQ3BaZIetBr+kiHpMJsEQTokgBUpsr+ZMyGeWAABqVMqyS
+	 DpcYp3RCl/TZuauDdZLOezqu25ymatHL/dcGQoOuLdyr8WxsAaI0LIAp/OOQmx6gIn
+	 z2LsaXJqe09nmyImfbN2gllFiUHdJMyUs7RkFgVmdWpaZCt+j1K4SoOPLkFjqsJ9co
+	 dN8k975bSGvdD/xJ8vsltoN/NJSDMcnfEC7Acm63wFzu2Vm8PyATtdCO2MWh2CIWWZ
+	 vDLMLd9U8VMkA==
+Date: Wed, 19 Apr 2023 17:43:11 -0700
+From: Saeed Mahameed <saeed@kernel.org>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Saeed Mahameed <saeedm@nvidia.com>, Paul Moore <paul@paul-moore.com>,
+	Leon Romanovsky <leon@kernel.org>,
+	Linux regressions mailing list <regressions@lists.linux.dev>,
+	Shay Drory <shayd@nvidia.com>, netdev@vger.kernel.org,
+	selinux@vger.kernel.org, Tariq Toukan <tariqt@nvidia.com>
+Subject: Re: Potential regression/bug in net/mlx5 driver
+Message-ID: <ZECKn2WwX22wrsMt@x130>
+References: <ZDhwUYpMFvCRf1EC@x130>
+ <20230413152150.4b54d6f4@kernel.org>
+ <ZDiDbQL5ksMwaMeB@x130>
+ <20230413155139.22d3b2f4@kernel.org>
+ <ZDjCdpWcchQGNBs1@x130>
+ <20230413202631.7e3bd713@kernel.org>
+ <ZDnRkVNYlHk4QVqy@x130>
+ <20230414173445.0800b7cf@kernel.org>
+ <ZDoqw8x7+UHOTCyM@x130>
+ <20230417083825.6e034c75@kernel.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20230419193513.708818-1-robh@kernel.org>
+In-Reply-To: <20230417083825.6e034c75@kernel.org>
 
-[+cc Vitaly, Jesse, Tony, Andy, regressions, regarding reports of
-hang or crash during boot in igb driver, some with AWS Xen]
+On 17 Apr 08:38, Jakub Kicinski wrote:
+>On Fri, 14 Apr 2023 21:40:35 -0700 Saeed Mahameed wrote:
+>> >What do we do now, tho? If the main side effect of a revert is that
+>> >users of a newfangled device with an order of magnitude lower
+>> >deployment continue to see a warning/error in the logs - I'm leaning
+>> >towards applying it :(
+>>
+>> I tend to agree with you but let me check with the FW architect what he has
+>> to offer, either we provide a FW version check or another more accurate
+>> FW cap test that could solve the issue for everyone. If I don't come up with
+>> a solution by next Wednesday I will repost your revert in my next net PR
+>> on Wednesday. You can mark it awaiting-upstream for now, if that works for
+>> you.
+>
+>OK, sounds good.
 
-On Wed, Apr 19, 2023 at 02:35:13PM -0500, Rob Herring wrote:
-> Commit 6fffbc7ae137 ("PCI: Honor firmware's device disabled status")
-> checked the firmware device status for both DT and ACPI devices. That
-> caused a regression in some ACPI systems. The exact reason isn't clear.
-> It's possibly a firmware bug. For now, at least, refactor the check to
-> be for DT based systems only.
-> 
-> Note that the original implementation leaked a refcount which is now
-> correctly handled.
-> 
-> Fixes: 6fffbc7ae137 ("PCI: Honor firmware's device disabled status")
-> Link: https://lore.kernel.org/all/m2fs9lgndw.fsf@gmail.com/
-> Reported-by: Donald Hunter <donald.hunter@gmail.com>
-> Cc: Binbin Zhou <zhoubinbin@loongson.cn>
-> Cc: Liu Peibao <liupeibao@loongson.cn>
-> Cc: Huacai Chen <chenhuacai@loongson.cn>
-> Signed-off-by: Rob Herring <robh@kernel.org>
 
-Applied to for-linus for (hopefully) v6.3.  I added:
+So I checked with Arch and we agreed that the only devices that need to
+expose this management PF are Bluefield chips, which have dedicated device
+IDs, and newer than the affected FW, so we can fix this by making the check
+more strict by testing device IDs as well.
 
-  [bhelgaas: Per ACPI r6.5, sec 6.3.7, for devices on an enumerable
-  bus, _STA must return with bit[0] ("device is present") set]
+I will provide a patch by tomorrow, will let Paul test it first.
 
-  Link: https://bugzilla.kernel.org/show_bug.cgi?id=217317
 
-It would be really great if anybody who has seen this issue could test
-and report whether this patch solves it.
-
-> ---
->  drivers/pci/of.c    | 30 ++++++++++++++++++++++++------
->  drivers/pci/pci.h   |  4 ++--
->  drivers/pci/probe.c |  8 ++++----
->  3 files changed, 30 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-> index 196834ed44fe..4c2ef2e28fb5 100644
-> --- a/drivers/pci/of.c
-> +++ b/drivers/pci/of.c
-> @@ -16,14 +16,32 @@
->  #include "pci.h"
->  
->  #ifdef CONFIG_PCI
-> -void pci_set_of_node(struct pci_dev *dev)
-> +/**
-> + * pci_set_of_node - Find and set device's DT device_node
-> + * @dev: the PCI device structure to fill
-> + *
-> + * Returns 0 on success with of_node set or when no device is described in the
-> + * DT. Returns -ENODEV if the device is present, but disabled in the DT.
-> + */
-> +int pci_set_of_node(struct pci_dev *dev)
->  {
-> +	struct device_node *node;
-> +
->  	if (!dev->bus->dev.of_node)
-> -		return;
-> -	dev->dev.of_node = of_pci_find_child_device(dev->bus->dev.of_node,
-> -						    dev->devfn);
-> -	if (dev->dev.of_node)
-> -		dev->dev.fwnode = &dev->dev.of_node->fwnode;
-> +		return 0;
-> +
-> +	node = of_pci_find_child_device(dev->bus->dev.of_node, dev->devfn);
-> +	if (!node)
-> +		return 0;
-> +
-> +	if (!of_device_is_available(node)) {
-> +		of_node_put(node);
-> +		return -ENODEV;
-> +	}
-> +
-> +	dev->dev.of_node = node;
-> +	dev->dev.fwnode = &node->fwnode;
-> +	return 0;
->  }
->  
->  void pci_release_of_node(struct pci_dev *dev)
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index d2c08670a20e..2b48a0aa8008 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -624,7 +624,7 @@ int of_pci_get_max_link_speed(struct device_node *node);
->  u32 of_pci_get_slot_power_limit(struct device_node *node,
->  				u8 *slot_power_limit_value,
->  				u8 *slot_power_limit_scale);
-> -void pci_set_of_node(struct pci_dev *dev);
-> +int pci_set_of_node(struct pci_dev *dev);
->  void pci_release_of_node(struct pci_dev *dev);
->  void pci_set_bus_of_node(struct pci_bus *bus);
->  void pci_release_bus_of_node(struct pci_bus *bus);
-> @@ -662,7 +662,7 @@ of_pci_get_slot_power_limit(struct device_node *node,
->  	return 0;
->  }
->  
-> -static inline void pci_set_of_node(struct pci_dev *dev) { }
-> +static inline int pci_set_of_node(struct pci_dev *dev) { return 0; }
->  static inline void pci_release_of_node(struct pci_dev *dev) { }
->  static inline void pci_set_bus_of_node(struct pci_bus *bus) { }
->  static inline void pci_release_bus_of_node(struct pci_bus *bus) { }
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index a3f68b6ba6ac..f96fa83f2627 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -1826,7 +1826,7 @@ int pci_setup_device(struct pci_dev *dev)
->  	u32 class;
->  	u16 cmd;
->  	u8 hdr_type;
-> -	int pos = 0;
-> +	int err, pos = 0;
->  	struct pci_bus_region region;
->  	struct resource *res;
->  
-> @@ -1840,10 +1840,10 @@ int pci_setup_device(struct pci_dev *dev)
->  	dev->error_state = pci_channel_io_normal;
->  	set_pcie_port_type(dev);
->  
-> -	pci_set_of_node(dev);
-> +	err = pci_set_of_node(dev);
-> +	if (err)
-> +		return err;
->  	pci_set_acpi_fwnode(dev);
-> -	if (dev->dev.fwnode && !fwnode_device_is_available(dev->dev.fwnode))
-> -		return -ENODEV;
->  
->  	pci_dev_assign_slot(dev);
->  
-> -- 
-> 2.39.2
-> 
