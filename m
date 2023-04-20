@@ -1,87 +1,87 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.toke.dk (mail.toke.dk [45.145.95.4])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DA088F68
-	for <regressions@lists.linux.dev>; Thu, 20 Apr 2023 19:39:39 +0000 (UTC)
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-95316faa3a8so110985366b.2
-        for <regressions@lists.linux.dev>; Thu, 20 Apr 2023 12:39:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1682019577; x=1684611577;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HILdVpnxn60sz/1+sruxM2PcPSxjEhfqFGF21BfXJgw=;
-        b=Z0Lfl9rFznZK4+XC+YnJ7OGtVVP93xBVIgp8L5wPabiyMHayvEMcGTYqR1eg349HZ8
-         m/QouQ721ax/Eo9Xrn038i8idFWh6bm/Q1FKDYnjfWbxh+J4nB015gI0zdPunVznSNzb
-         LhsuFG6RmoMIpiTDav3CJhrMXYmFkjdfKh0ho=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682019577; x=1684611577;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HILdVpnxn60sz/1+sruxM2PcPSxjEhfqFGF21BfXJgw=;
-        b=G/EdOwCUW7hYZnQFYG4lt1+UjfQIdJ5PRTwZZdG8JLwOCAVHLVKuoLrDVqMNS4yoYj
-         AJyr6TOVLxbre85zemVS7cLCaWqCv5ZLDfMu4Tad/I4jREdUdMP6d4fKTAOuj3W/Tg0e
-         ICZk3jFf1SVhmGP7/i8xyoOhOltFclKDW3l9EeUnbhNNONHnK+YfGG0S6AINT1RbLZ9/
-         5l+A4O52u+Wel/73wyRKaYo724cf4w905tZL6iY60PMsvKXOMGnlJriaLpD2It6AvsX4
-         eB+0m42HKRfmVam/s5HDrI8iLDSR3lGMgjoISrVUVNL+xDGRyXXBhEof6QdiGKKfcy9F
-         7F+Q==
-X-Gm-Message-State: AAQBX9ekBFFFvbOxO1Mmn7IymKSgwDgph6cfB40sBoUj++WRD7hhzCkY
-	v2nTbHsHxa8irZsYE8zCo9ySU2yhkbQzMhRn+VGKtw==
-X-Google-Smtp-Source: AKy350ZXmbgl0VtUNC+tlikqJPlYJ3twwxD2z4YrY9LoRMbjSYvr9rBVZneClfP055/kH3idGCcIdg==
-X-Received: by 2002:a17:907:2907:b0:953:93ab:50cf with SMTP id eq7-20020a170907290700b0095393ab50cfmr24392ejc.70.1682019577168;
-        Thu, 20 Apr 2023 12:39:37 -0700 (PDT)
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com. [209.85.208.46])
-        by smtp.gmail.com with ESMTPSA id r20-20020a170906705400b0094f05fee9d3sm1064752ejj.211.2023.04.20.12.39.36
-        for <regressions@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 Apr 2023 12:39:36 -0700 (PDT)
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5052caa1e32so1306279a12.2
-        for <regressions@lists.linux.dev>; Thu, 20 Apr 2023 12:39:36 -0700 (PDT)
-X-Received: by 2002:aa7:cc98:0:b0:506:b120:8df2 with SMTP id
- p24-20020aa7cc98000000b00506b1208df2mr2667877edt.12.1682019575666; Thu, 20
- Apr 2023 12:39:35 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BE38320A
+	for <regressions@lists.linux.dev>; Thu, 20 Apr 2023 21:09:56 +0000 (UTC)
+From: Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@toke.dk>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=toke.dk; s=20161023;
+	t=1682024993; bh=e/+N2oFyRcFf1leQm0okZY38id+c7Uk4APOwA1A79GA=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=ZpN9C5TDA5nNRpPvLpb0I6VQyKze6wtjkuje/bvI+vCVIqOMWRn8uLWtE4cdsbNkh
+	 9uJ+QdRCbzTdpymslBNXH8tOuEh47CQuU3MIRfj6Amk/5M3T9ZAvkobSiqp1SjO1a8
+	 APtEdFA76SZXsXp4SdOJam2tJiTxEcjcqsOvY5VSagqtk0wH33Y/rMzME++2vuFIqW
+	 UbbkGakiUuu6ZND877pnCmwHpKhSjoYKFF0mLwa18/Rw/4CrR056jLHs061Rlrn5nM
+	 kaObEyR7xXowlWj5vmHTOFSH+Lh8gfSMvP+2XHsYYcY/cVwXBAWFVTgo5bQ68fuLhM
+	 J6tYADf61+F7Q==
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-wireless@vger.kernel.org, netdev@vger.kernel.org, Colin Ian King
+ <colin.i.king@gmail.com>, Thorsten Leemhuis <regressions@leemhuis.info>,
+ Jakub Kicinski <kuba@kernel.org>, Kalle Valo <kvalo@kernel.org>, Linux
+ kernel regressions list <regressions@lists.linux.dev>
+Subject: One-off regression fix for 6.3 [was: Re: [PATCH] wifi: ath9k: Don't
+ mark channelmap stack variable read-only in
+ ath9k_mci_update_wlan_channels()]
+In-Reply-To: <20230413214118.153781-1-toke@toke.dk>
+References: <20230413214118.153781-1-toke@toke.dk>
+Date: Thu, 20 Apr 2023 23:09:52 +0200
+X-Clacks-Overhead: GNU Terry Pratchett
+Message-ID: <87zg72s1jz.fsf@toke.dk>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <168166781352.1843526.278570500979918184@leemhuis.info>
- <CAHk-=wjQaxmXTR68VnEJvLgB=H2agMTrrF4EXkXT4Hbdf2ZuMQ@mail.gmail.com>
- <20230418182036.GS19619@suse.cz> <CAHk-=wjL7GG9s9Y2+u2725M+Ru=bUXnzOnXRwoSktY0fVdhhzw@mail.gmail.com>
- <20230420190239.GX19619@suse.cz>
-In-Reply-To: <20230420190239.GX19619@suse.cz>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Thu, 20 Apr 2023 12:39:18 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgwWaoeL-PGSWbfAHipORoiiQN0CJEehQyTt8NB+WRKgg@mail.gmail.com>
-Message-ID: <CAHk-=wgwWaoeL-PGSWbfAHipORoiiQN0CJEehQyTt8NB+WRKgg@mail.gmail.com>
-Subject: Re: Linux regressions report for mainline [2023-04-16]
-To: dsterba@suse.cz
-Cc: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>, Rafael Wysocki <rafael@kernel.org>, 
-	David Sterba <dsterba@suse.com>, LKML <linux-kernel@vger.kernel.org>, 
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 20, 2023 at 12:02=E2=80=AFPM David Sterba <dsterba@suse.cz> wro=
-te:
+Toke H=C3=B8iland-J=C3=B8rgensen <toke@toke.dk> writes:
+
+> This partially reverts commit e161d4b60ae3a5356e07202e0bfedb5fad82c6aa.
 >
-> No, the main concern is if discard works without destroying data,
+> Turns out the channelmap variable is not actually read-only, it's modified
+> through the MCI_GPM_CLR_CHANNEL_BIT() macro further down in the function,
+> so making it read-only causes page faults when that code is hit.
+>
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D217183
+> Fixes: e161d4b60ae3 ("wifi: ath9k: Make arrays prof_prio and channelmap s=
+tatic const")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Toke H=C3=B8iland-J=C3=B8rgensen <toke@toke.dk>
 
-I actually ended up googling it, and I'm a lot less worried now,
-because at least according to my limited searching it seems like
-Windows enables trim by default at least since Win10.
+Hi Linus
 
-Of course, I also found some conflicting statements claiming that USB
-drives aren't considered SSDs, so who knows. But it does seem like
-probably new hardware ends up getting tested for trim, and the bad
-situation is likely really limited to only the bad old days.
+Thorsten already pulled you into the thread further down, but I figured
+I'd do this writeup anyway so you have the full context:
 
-So together with Fedora having apparently enabled timed auto-trimming
-for some time, I guess I will just have to believe that the world has
-turned into a less dark and scary place than I thought it was.
+The patch quoted above[0] fixes a regression in the ath9k driver that was
+introduced in 6.2, which causes a kernel BUG() whenever the "Bluetooth
+co-existence" feature in the driver is enabled (which seems to be the
+default on at least some systems).
 
-Knock wood.
+Because of unfortunate timing (caused by an impedance mismatch between
+the wireless tree and the -net tree, and my failure to realise this and
+push it directly to -net), this patch did not make it into this week's
+network tree pull request to you. Which means that unless you decide to
+do an -rc8, this regression will also be in the 6.3 release, and it may
+take several more weeks before the fix makes it into a stable release.
 
-            Linus
+So, with a bit of prodding from Thorsten, I'm writing this to ask you if
+you'd be willing to pull this patch directly from the mailing list as a
+one-off? It's a fairly small patch, and since it's a (partial) revert
+the risk of it being the cause of new regressions should be fairly
+small. One of the reporters on the Bugzilla (linked above) confirmed
+that the patch does indeed fix the regression.
+
+In case you *don't* want to take this patch directly, Jakub has agreed
+to pull it directly into -net, in which case it'll land in your tree via
+the next networking pull request. Either way, as indicated by the
+sibling thread Thorsten Cc'ed you on, we'll take your opinion on the
+best way to handle this into account in the future. Just let us know :)
+
+Thanks,
+-Toke
+
+
+[0] Direct Lore link: https://lore.kernel.org/r/20230413214118.153781-1-tok=
+e@toke.dk
