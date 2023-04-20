@@ -1,122 +1,242 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 485C75661
-	for <regressions@lists.linux.dev>; Thu, 20 Apr 2023 11:02:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B9055661
+	for <regressions@lists.linux.dev>; Thu, 20 Apr 2023 11:17:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1681988546;
+	s=mimecast20190719; t=1681989477;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=Hq3QNEMudW51eMDzNrroNHBYxi5M+MAF5mxOYyUo23U=;
-	b=ZndlDcOgszfOAZj4pBEzvms3/hKigFoYOEev3XWaoe4R4HBy8IeHS+06MZb+tjF3FGtpsA
-	47RVnl/a1fm6tUJpHjVLqQ+OlRJMRBtTpRZOwvc5XFPurxvF0CAQjHgtWOnF6Vs0jIt1zY
-	cwiDAwDHMVKo6YV+IidcoPxoKOVb0zw=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-247--BaZiDkLPmGhpw1imRHhmA-1; Thu, 20 Apr 2023 07:02:23 -0400
-X-MC-Unique: -BaZiDkLPmGhpw1imRHhmA-1
-Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 8CC38800047;
-	Thu, 20 Apr 2023 11:02:22 +0000 (UTC)
-Received: from shalem.redhat.com (unknown [10.39.194.216])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id B7026492B05;
-	Thu, 20 Apr 2023 11:02:21 +0000 (UTC)
-From: Hans de Goede <hdegoede@redhat.com>
-To: "Rafael J . Wysocki" <rafael@kernel.org>
-Cc: Hans de Goede <hdegoede@redhat.com>,
-	regressions@lists.linux.dev,
-	linux-acpi@vger.kernel.org,
-	=?UTF-8?q?G=C3=A9=20Koerkamp?= <ge.koerkamp@gmail.com>
-Subject: [PATCH] ACPI: PM: Do not turn of unused power resources on the Toshiba Click Mini
-Date: Thu, 20 Apr 2023 13:02:20 +0200
-Message-Id: <20230420110220.23168-1-hdegoede@redhat.com>
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3fj2r/TkPzDnAeDyrgLHgNMn11ACqVGaGMoYDpYSS5c=;
+	b=iHnvAvRxfw/KSZcTwtBeVYCKelwdemIKL8VNCeJy9NuXA1JRFxHPMeDxrtIPp0Urdy4aFs
+	bvtQ16Wl79rm244qrIe3KqJo3DIbZ99sLZyHxCcYgHskYV5NICpJTVMVPpC4llaFpMUlT6
+	Fy2Vcfc5DAmjhV1UL9TjhaOPxyS3Shg=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-414-_YTDvlPkPZu-bpFAkDdoFQ-1; Thu, 20 Apr 2023 07:17:56 -0400
+X-MC-Unique: _YTDvlPkPZu-bpFAkDdoFQ-1
+Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-505149e1a4eso2318835a12.1
+        for <regressions@lists.linux.dev>; Thu, 20 Apr 2023 04:17:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1681989475; x=1684581475;
+        h=content-transfer-encoding:in-reply-to:references:cc:to:from
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=3fj2r/TkPzDnAeDyrgLHgNMn11ACqVGaGMoYDpYSS5c=;
+        b=E33MJffd/veCXwCwMPgRV/LjUnfJtAlSNUnVAVQKQHraX3VsBlWIsKYXdGBqx8lA9e
+         YDZSda5lLAcs/ZOXKKJfjB2XRJONwNmlYJpcmgLn/ZHigtDaR9ur/ncxuYivmEHgvSxH
+         6Jjwn/Q/uDJD7vihAlZOcglHUxQ0GMmxCm3UKUUbTvNs5bVGR5IQvlpiZqn/NVo+YWD2
+         oqZo1Pv7kEfp1gBDpEHCmGjAdCUjnkKWt1GRspSkqCse+Ce4aPRim1wC4+m/Ji6eBFb6
+         5wn479NUK7PZE81v2v38mPn3RouLb+bBV4K0CczP7/ZIBTbA5+1y/QofddxPTN8dI9pU
+         hPtg==
+X-Gm-Message-State: AAQBX9d+sz/S66FAwcyU2gl0pJTXIzRfQmFmPA+Z40fdKGcp41dPyDHf
+	EftVYQ6GY19uHrQSNJKTOamUpf8GkUxcrCeuN/lVBkYWT8g6wGV1IWH5tUcQMqhn11w1JW6q5Qo
+	jlxkzyCDYYKrTcYuqFocYjYc=
+X-Received: by 2002:a05:6402:42c8:b0:506:72f8:eb10 with SMTP id i8-20020a05640242c800b0050672f8eb10mr6246916edc.0.1681989475193;
+        Thu, 20 Apr 2023 04:17:55 -0700 (PDT)
+X-Google-Smtp-Source: AKy350b3jAqGnAwsth15pGrMGa2D7VuFf1zlUKjfUMNzTwQ2UxXTdq3HGlP1D/tE1wL/TwlBWXjRww==
+X-Received: by 2002:a05:6402:42c8:b0:506:72f8:eb10 with SMTP id i8-20020a05640242c800b0050672f8eb10mr6246896edc.0.1681989474837;
+        Thu, 20 Apr 2023 04:17:54 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id d12-20020a50fb0c000000b004bf999f8e57sm645809edq.19.2023.04.20.04.17.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Apr 2023 04:17:54 -0700 (PDT)
+Message-ID: <06b5119a-63f7-e62b-cc28-0009e17ad4ed@redhat.com>
+Date: Thu, 20 Apr 2023 13:17:53 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [regression] Bug 216946 - Toshiba satellite click mini l9w-b:
+ touchscreen: no touch events with kernel 6.1.4
+From: Hans de Goede <hdegoede@redhat.com>
+To: =?UTF-8?Q?G=c3=a9_Koerkamp?= <ge.koerkamp@gmail.com>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+ Jiri Kosina <jikos@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+ "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>
+References: <993dd537-2f74-3657-1dd3-c3a0a74e37e1@leemhuis.info>
+ <E4123C4B-D6C0-4CB2-8328-E0D03599ED16@gmail.com>
+ <07f2417e-9d47-3e73-cae5-3e7c95856f72@redhat.com>
+In-Reply-To: <07f2417e-9d47-3e73-cae5-3e7c95856f72@redhat.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US, nl
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.9
 
-The CPR3 power resource on the Toshiba Click Mini toggles a GPIO
-which is called SISP (for SIS touchscreen power?) on/off.
+Hi,
 
-This CPR3 power resource is not listed in any _PR? lists, let alone
-in a _PR0 list for the SIS0817 touchscreen ACPI device which needs it.
+On 4/19/23 18:40, Hans de Goede wrote:
+> Hi Gé,
+> 
+> On 4/19/23 18:21, Gé Koerkamp wrote:
+>> Hi Thorsten,
+>>
+>> travelling at the moment, but I’ll try. Not really into bisecting kernel issues, but let’s see where this goes. Another issue is, that I don’t have a Toshiba Mini Click myself, so I need to build the test Volumio images (volumio.org) with the different 5.16-rc kernel patch versions for a colleague to work with, hopefully  he has time to do this.
+> 
+> I have just dug my own Toshiba Mini Click up from the bottom of the storage box it was in.
+> 
+> It is currently charging since the battery was fully flat.
+> 
+> So I suggest you give me a couple of days to take a look before you go to all this trouble.
 
-Before commit a1224f34d72a ("ACPI: PM: Check states of power resources
-during initialization") this was not an issue because since nothing
-referenced the CPR3 power resource its state was always
-ACPI_POWER_RESOURCE_STATE_UNKNOWN and power resources with this state
-get ignored by acpi_turn_off_unused_power_resources().
+I have posted a patch fixing this upstream now:
 
-This clearly is a bug in the DSDT of this device. Add a DMI quirk
-to make acpi_turn_off_unused_power_resources() a no-op on this
-model to fix the touchscreen no longer working since kernel 5.16 .
+https://lore.kernel.org/linux-acpi/20230420110220.23168-1-hdegoede@redhat.com/T/#u
 
-This quirk also causes 2 other power resources to not get turned
-off, but the _OFF method on these already was a no-op, so this makes
-no difference for the other 2 power resources.
+Regards,
 
-Fixes: a1224f34d72a ("ACPI: PM: Check states of power resources during initialization")
-Reported-by: Gé Koerkamp <ge.koerkamp@gmail.com>
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=216946
-Link: https://lore.kernel.org/regressions/32a14a8a-9795-4c8c-7e00-da9012f548f8@leemhuis.info/
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/acpi/power.c | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+Hans
 
-diff --git a/drivers/acpi/power.c b/drivers/acpi/power.c
-index 292cec3691cc..5dc792961ab8 100644
---- a/drivers/acpi/power.c
-+++ b/drivers/acpi/power.c
-@@ -23,6 +23,7 @@
- 
- #define pr_fmt(fmt) "ACPI: PM: " fmt
- 
-+#include <linux/dmi.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/init.h>
-@@ -1022,6 +1023,21 @@ void acpi_resume_power_resources(void)
- }
- #endif
- 
-+static const struct dmi_system_id dmi_leave_unused_power_resources_on[] = {
-+	{
-+		/*
-+		 * The Toshiba Click Mini has a CPR3 power-resource which must
-+		 * be on for the touchscreen to work, but which is not in any
-+		 * _PR? lists. The other 2 affected power-resources are no-ops.
-+		 */
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "TOSHIBA"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "SATELLITE Click Mini L9W-B"),
-+		},
-+	},
-+	{}
-+};
-+
- /**
-  * acpi_turn_off_unused_power_resources - Turn off power resources not in use.
-  */
-@@ -1029,6 +1045,9 @@ void acpi_turn_off_unused_power_resources(void)
- {
- 	struct acpi_power_resource *resource;
- 
-+	if (dmi_check_system(dmi_leave_unused_power_resources_on))
-+		return;
-+
- 	mutex_lock(&power_resource_list_lock);
- 
- 	list_for_each_entry_reverse(resource, &acpi_power_resource_list, list_node) {
--- 
-2.39.2
+
+>>> On 17 Apr 2023, at 13:55, Linux regression tracking (Thorsten Leemhuis) <regressions@leemhuis.info> wrote:
+>>>
+>>> ﻿
+>>>
+>>>> On 01.03.23 12:41, Hans de Goede wrote:
+>>>>> On 2/28/23 14:26, Benjamin Tissoires wrote:
+>>>>> On Tue, Feb 28, 2023 at 12:32 PM Thorsten Leemhuis
+>>>>> <regressions@leemhuis.info> wrote:
+>>>>>>
+>>>>>> On 19.01.23 16:06, Linux kernel regression tracking (Thorsten Leemhuis)
+>>>>>> wrote:
+>>>>>>> Hi, this is your Linux kernel regression tracker.
+>>>>>>>
+>>>>>>> I noticed a regression report in bugzilla.kernel.org. As many (most?)
+>>>>>>> kernel developer don't keep an eye on it, I decided to forward it by
+>>>>>>> mail. Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=216946 :
+>>>>>>
+>>>>>> The reporter recently confirmed in the ticket that the issue still
+>>>>>> happens with 6.2.
+>>>>>>
+>>>>>> There wasn't any reply from any of the input developers here or in
+>>>>>> bugzilla afaics. :-/ Hmmm. Could someone from that camp maybe please
+>>>>>> take a minute and at least briefly look into this as answer something
+>>>>>> like "that might be due to a problem in subsystem 'foo'", "maybe ask bar
+>>>>>> for an option", or "we have no idea what might cause this, this needs to
+>>>>>> be bisected"? That would help a lot.
+>>>>>
+>>>>> The working dmesg shows a line with:
+>>>>> hid-generic 0018:0457:10FB.0002: input,hidraw1: I2C HID v1.00 Device
+>>>>> [SIS0817:00 0457:10FB] on i2c-SIS0817:00
+>>>>> and then
+>>>>> hid-multitouch 0018:0457:10FB.0002: input,hidraw1: I2C HID v1.00
+>>>>> Device [SIS0817:00 0457:10FB] on i2c-SIS0817:00
+>>>>>
+>>>>> But these 2 lines do not appear on the 6.1.4 logs.
+>>>>>
+>>>>> So the device is not properly enumerated by ACPI or I2C. Hans might
+>>>>> have an idea on how to debug/solve that issue.
+>>>>
+>>>> I actually have a Toshiba satellite click mini l9w-b lying around
+>>>> myself. I already made a note to try and reproduce this
+>>>>
+>>>> But I'm very much swamped with too much kernel work, so no promises
+>>>> when I will get around to this ...
+>>>
+>>> Has anyone made any progress with this? Doesn't look like it, hence I
+>>> wondered if this fall through the cracks; but maybe I'm just missing
+>>> something.
+>>>
+>>> Gé Koerkamp: with a bit of luck Hans sooner or later will have time to
+>>> look into this, but it might speed things up if you could try to bisect
+>>> this.
+>>>
+>>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+>>> --
+>>> Everything you wanna know about Linux kernel regression tracking:
+>>> https://linux-regtracking.leemhuis.info/about/#tldr
+>>> If I did something stupid, please tell me, as explained on that page.
+>>>
+>>> #regzbot poke
+>>>
+>>>>>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+>>>>>> --
+>>>>>> Everything you wanna know about Linux kernel regression tracking:
+>>>>>> https://linux-regtracking.leemhuis.info/about/#tldr
+>>>>>> If I did something stupid, please tell me, as explained on that page.
+>>>>>>
+>>>>>> #regzbot poke
+>>>>>>>> Gé Koerkamp 2023-01-17 20:21:51 UTC
+>>>>>>>>
+>>>>>>>> Created attachment 303619 [details]
+>>>>>>>> Kernel configuration for v6.1.4/ journalctl (dmesg)/ ACPIdump/lsmod
+>>>>>>>>
+>>>>>>>> Overview:
+>>>>>>>> The touchscreen does not react on touch events.
+>>>>>>>> Touchscreen display and touchpad are working.
+>>>>>>>>
+>>>>>>>> Step to reproduce:
+>>>>>>>> Open any UI page
+>>>>>>>> Try to use touch on relevant UI controls (buttons etc.)
+>>>>>>>>
+>>>>>>>> Result:
+>>>>>>>> No reaction on screen touches
+>>>>>>>>
+>>>>>>>> Expected result:
+>>>>>>>> Reaction on touched control, same as when using the touch pad or connected mouse (which do work).
+>>>>>>>>
+>>>>>>>> Build information:
+>>>>>>>> The error happens with kernel version 6.1.4
+>>>>>>>> After rebuilding with different kernel versions, it appears that it first fails with kernel 5.16
+>>>>>>>>
+>>>>>>>> Additional builds:
+>>>>>>>> The click mini l9w-b still works with kernel 5.10.y LTS and 5.15.y LTS.
+>>>>>>>>
+>>>>>>>> Important remark:
+>>>>>>>> Touchscreen still works fine with kernel 6.1.4 using
+>>>>>>>> - an HP x2 detachable 10-p0xx or
+>>>>>>>> - a Lenovo yoga 520-14ikb
+>>>>>>>>
+>>>>>>>> So it could be a hardware dependent issue
+>>>>>>>
+>>>>>>> See the ticket for more details.
+>>>>>>>
+>>>>>>>
+>>>>>>> [TLDR for the rest of this mail: I'm adding this report to the list of
+>>>>>>> tracked Linux kernel regressions; the text you find below is based on a
+>>>>>>> few templates paragraphs you might have encountered already in similar
+>>>>>>> form.]
+>>>>>>>
+>>>>>>> BTW, let me use this mail to also add the report to the list of tracked
+>>>>>>> regressions to ensure it's doesn't fall through the cracks:
+>>>>>>>
+>>>>>>> #regzbot introduced: v5.15..v5.16
+>>>>>>> https://bugzilla.kernel.org/show_bug.cgi?id=216946
+>>>>>>> #regzbot title: hid: touchscreen broken with Toshiba satellite click
+>>>>>>> mini l9w-b
+>>>>>>> #regzbot ignore-activity
+>>>>>>>
+>>>>>>> This isn't a regression? This issue or a fix for it are already
+>>>>>>> discussed somewhere else? It was fixed already? You want to clarify when
+>>>>>>> the regression started to happen? Or point out I got the title or
+>>>>>>> something else totally wrong? Then just reply and tell me -- ideally
+>>>>>>> while also telling regzbot about it, as explained by the page listed in
+>>>>>>> the footer of this mail.
+>>>>>>>
+>>>>>>> Developers: When fixing the issue, remember to add 'Link:' tags pointing
+>>>>>>> to the report (e.g. the buzgzilla ticket and maybe this mail as well, if
+>>>>>>> this thread sees some discussion). See page linked in footer for details.
+>>>>>>>
+>>>>>>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+>>>>>>> --
+>>>>>>> Everything you wanna know about Linux kernel regression tracking:
+>>>>>>> https://linux-regtracking.leemhuis.info/about/#tldr
+>>>>>>> If I did something stupid, please tell me, as explained on that page.
+>>>>>>
+>>>>>
+>>>>
+>>>>
+>>>>
+>>
+> 
 
