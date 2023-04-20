@@ -1,112 +1,122 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 875424432
-	for <regressions@lists.linux.dev>; Thu, 20 Apr 2023 09:30:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 485C75661
+	for <regressions@lists.linux.dev>; Thu, 20 Apr 2023 11:02:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1681983009;
+	s=mimecast20190719; t=1681988546;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cDEs65ZY4C9svszuIZjn2vdR/JFQxFQIyNLFZevs4tE=;
-	b=cIYoCgnBIPSd7QH2/2Lm/7TiivV9+D26d+LPdsSqbOD6YuyML1hb6TBo/ais3rG0+K/EBm
-	XfSPV4noL2NBrTYSsPZ3eNAudrCYhVddrzB15hpWLV8dtzdlL8K1Iw+ZlshSicMPR56e7O
-	rovrifU1UOOImd2IRGeE7DrNJbD1mKs=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-651-ZBy4ar7iOOOoGvUJ6dUU9A-1; Thu, 20 Apr 2023 05:30:08 -0400
-X-MC-Unique: ZBy4ar7iOOOoGvUJ6dUU9A-1
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-2f40f52c604so284494f8f.0
-        for <regressions@lists.linux.dev>; Thu, 20 Apr 2023 02:30:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681983007; x=1684575007;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=cDEs65ZY4C9svszuIZjn2vdR/JFQxFQIyNLFZevs4tE=;
-        b=X/0MdaIer3EiFTmVmFfmTWB3O3YK/TLTvwgHwJSK0jJD5XXKNJ6UO6KTB69kHuqhMT
-         fzkrqpCIAO1h9R8apW7EnI+8vwZ5dOldRv1DKniocGyJltJJduuYInzs+fVvzdndYPKS
-         9fzu32RQGVAssnt7krYmYlWGjRZse70ewhNghwAo4U+9eE4ufyePgAOppdyxx+dakktN
-         MJ2E9VMvZw4kSCvqdwSJneasdVypMc9wV9lxxJkQdNyPyadRXJEJM5lYS/hKwibbXdvP
-         P5Zi0oxPl5gbtx9E0CwJGnS+4fZsSUMCHkmMpv2LGySuNrz24NtqzcJxrWL2yKj3csu0
-         jv/g==
-X-Gm-Message-State: AAQBX9cPjZl/RSCGYStPWrIIWnGz0Zt8SjlzzcMVB/Ikk5xtylL4Kmos
-	nZujoqtW+0R0r7uHMqGgLFNAADrL0q9rrBSa9CrMAuFAFN0a4OCxyRkfeMTCIwqwix/NBE3b13L
-	yhd14tOCrY7CYnZoBYT6jBV4=
-X-Received: by 2002:adf:efca:0:b0:2f5:5538:2589 with SMTP id i10-20020adfefca000000b002f555382589mr845801wrp.31.1681983007069;
-        Thu, 20 Apr 2023 02:30:07 -0700 (PDT)
-X-Google-Smtp-Source: AKy350YMtYMcOObUPin35/aM2AJ1xnbjW42cLOVhTBp9bVJzETGAUNOgAqF9WAusiYj56KscOLEdXw==
-X-Received: by 2002:adf:efca:0:b0:2f5:5538:2589 with SMTP id i10-20020adfefca000000b002f555382589mr845771wrp.31.1681983006729;
-        Thu, 20 Apr 2023 02:30:06 -0700 (PDT)
-Received: from fedora (g2.ign.cz. [91.219.240.8])
-        by smtp.gmail.com with ESMTPSA id t15-20020adfe44f000000b002f00793bd7asm1478740wrm.27.2023.04.20.02.30.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Apr 2023 02:30:06 -0700 (PDT)
-From: Vitaly Kuznetsov <vkuznets@redhat.com>
-To: Bjorn Helgaas <helgaas@kernel.org>, Rob Herring <robh@kernel.org>
-Cc: Donald Hunter <donald.hunter@gmail.com>, Binbin Zhou
- <zhoubinbin@loongson.cn>, Liu Peibao <liupeibao@loongson.cn>, Huacai Chen
- <chenhuacai@loongson.cn>, Jesse Brandeburg <jesse.brandeburg@intel.com>,
- Tony Nguyen <anthony.l.nguyen@intel.com>, Andy Shevchenko
- <andriy.shevchenko@linux.intel.com>, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
- mstowe@redhat.com
-Subject: Re: [PATCH] PCI: Restrict device disabled status check to DT
-In-Reply-To: <20230419202042.GA223738@bhelgaas>
-References: <20230419202042.GA223738@bhelgaas>
-Date: Thu, 20 Apr 2023 11:30:04 +0200
-Message-ID: <87leimnboj.fsf@redhat.com>
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Hq3QNEMudW51eMDzNrroNHBYxi5M+MAF5mxOYyUo23U=;
+	b=ZndlDcOgszfOAZj4pBEzvms3/hKigFoYOEev3XWaoe4R4HBy8IeHS+06MZb+tjF3FGtpsA
+	47RVnl/a1fm6tUJpHjVLqQ+OlRJMRBtTpRZOwvc5XFPurxvF0CAQjHgtWOnF6Vs0jIt1zY
+	cwiDAwDHMVKo6YV+IidcoPxoKOVb0zw=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-247--BaZiDkLPmGhpw1imRHhmA-1; Thu, 20 Apr 2023 07:02:23 -0400
+X-MC-Unique: -BaZiDkLPmGhpw1imRHhmA-1
+Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 8CC38800047;
+	Thu, 20 Apr 2023 11:02:22 +0000 (UTC)
+Received: from shalem.redhat.com (unknown [10.39.194.216])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id B7026492B05;
+	Thu, 20 Apr 2023 11:02:21 +0000 (UTC)
+From: Hans de Goede <hdegoede@redhat.com>
+To: "Rafael J . Wysocki" <rafael@kernel.org>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	regressions@lists.linux.dev,
+	linux-acpi@vger.kernel.org,
+	=?UTF-8?q?G=C3=A9=20Koerkamp?= <ge.koerkamp@gmail.com>
+Subject: [PATCH] ACPI: PM: Do not turn of unused power resources on the Toshiba Click Mini
+Date: Thu, 20 Apr 2023 13:02:20 +0200
+Message-Id: <20230420110220.23168-1-hdegoede@redhat.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.9
 
-Bjorn Helgaas <helgaas@kernel.org> writes:
+The CPR3 power resource on the Toshiba Click Mini toggles a GPIO
+which is called SISP (for SIS touchscreen power?) on/off.
 
-> [+cc Vitaly, Jesse, Tony, Andy, regressions, regarding reports of
-> hang or crash during boot in igb driver, some with AWS Xen]
->
-> On Wed, Apr 19, 2023 at 02:35:13PM -0500, Rob Herring wrote:
->> Commit 6fffbc7ae137 ("PCI: Honor firmware's device disabled status")
->> checked the firmware device status for both DT and ACPI devices. That
->> caused a regression in some ACPI systems. The exact reason isn't clear.
->> It's possibly a firmware bug. For now, at least, refactor the check to
->> be for DT based systems only.
->> 
->> Note that the original implementation leaked a refcount which is now
->> correctly handled.
->> 
->> Fixes: 6fffbc7ae137 ("PCI: Honor firmware's device disabled status")
->> Link: https://lore.kernel.org/all/m2fs9lgndw.fsf@gmail.com/
->> Reported-by: Donald Hunter <donald.hunter@gmail.com>
->> Cc: Binbin Zhou <zhoubinbin@loongson.cn>
->> Cc: Liu Peibao <liupeibao@loongson.cn>
->> Cc: Huacai Chen <chenhuacai@loongson.cn>
->> Signed-off-by: Rob Herring <robh@kernel.org>
->
-> Applied to for-linus for (hopefully) v6.3.  I added:
->
->   [bhelgaas: Per ACPI r6.5, sec 6.3.7, for devices on an enumerable
->   bus, _STA must return with bit[0] ("device is present") set]
->
->   Link: https://bugzilla.kernel.org/show_bug.cgi?id=217317
->
-> It would be really great if anybody who has seen this issue could test
-> and report whether this patch solves it.
->
+This CPR3 power resource is not listed in any _PR? lists, let alone
+in a _PR0 list for the SIS0817 touchscreen ACPI device which needs it.
 
-[Cc: Myron]
+Before commit a1224f34d72a ("ACPI: PM: Check states of power resources
+during initialization") this was not an issue because since nothing
+referenced the CPR3 power resource its state was always
+ACPI_POWER_RESOURCE_STATE_UNKNOWN and power resources with this state
+get ignored by acpi_turn_off_unused_power_resources().
 
-I can confirm the patch fixes the issue I've reported with AWS Xen
-instances, so:
+This clearly is a bug in the DSDT of this device. Add a DMI quirk
+to make acpi_turn_off_unused_power_resources() a no-op on this
+model to fix the touchscreen no longer working since kernel 5.16 .
 
-Tested-by:  Vitaly Kuznetsov <vkuznets@redhat.com>
+This quirk also causes 2 other power resources to not get turned
+off, but the _OFF method on these already was a no-op, so this makes
+no difference for the other 2 power resources.
 
+Fixes: a1224f34d72a ("ACPI: PM: Check states of power resources during initialization")
+Reported-by: Gé Koerkamp <ge.koerkamp@gmail.com>
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=216946
+Link: https://lore.kernel.org/regressions/32a14a8a-9795-4c8c-7e00-da9012f548f8@leemhuis.info/
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/acpi/power.c | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+
+diff --git a/drivers/acpi/power.c b/drivers/acpi/power.c
+index 292cec3691cc..5dc792961ab8 100644
+--- a/drivers/acpi/power.c
++++ b/drivers/acpi/power.c
+@@ -23,6 +23,7 @@
+ 
+ #define pr_fmt(fmt) "ACPI: PM: " fmt
+ 
++#include <linux/dmi.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/init.h>
+@@ -1022,6 +1023,21 @@ void acpi_resume_power_resources(void)
+ }
+ #endif
+ 
++static const struct dmi_system_id dmi_leave_unused_power_resources_on[] = {
++	{
++		/*
++		 * The Toshiba Click Mini has a CPR3 power-resource which must
++		 * be on for the touchscreen to work, but which is not in any
++		 * _PR? lists. The other 2 affected power-resources are no-ops.
++		 */
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "TOSHIBA"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "SATELLITE Click Mini L9W-B"),
++		},
++	},
++	{}
++};
++
+ /**
+  * acpi_turn_off_unused_power_resources - Turn off power resources not in use.
+  */
+@@ -1029,6 +1045,9 @@ void acpi_turn_off_unused_power_resources(void)
+ {
+ 	struct acpi_power_resource *resource;
+ 
++	if (dmi_check_system(dmi_leave_unused_power_resources_on))
++		return;
++
+ 	mutex_lock(&power_resource_list_lock);
+ 
+ 	list_for_each_entry_reverse(resource, &acpi_power_resource_list, list_node) {
 -- 
-Vitaly
+2.39.2
 
