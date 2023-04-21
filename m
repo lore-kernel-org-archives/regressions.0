@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACC0023A6
-	for <regressions@lists.linux.dev>; Fri, 21 Apr 2023 08:50:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 752B223A6
+	for <regressions@lists.linux.dev>; Fri, 21 Apr 2023 09:11:58 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1ppmTJ-0003x6-Gm; Fri, 21 Apr 2023 10:50:25 +0200
-Message-ID: <8a182d08-d09c-14ed-3075-c40d264916e6@leemhuis.info>
-Date: Fri, 21 Apr 2023 10:50:24 +0200
+	id 1ppmo7-0007z4-LR; Fri, 21 Apr 2023 11:11:55 +0200
+Message-ID: <5fa67291-98d0-c8d5-ca71-5a86b9adff41@leemhuis.info>
+Date: Fri, 21 Apr 2023 11:11:53 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -15,116 +15,82 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.1
+ Thunderbird/102.10.0
+Content-Language: en-US, de-DE
 From: "Linux regression tracking (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
-Subject: Re: Linux regressions report for mainline [2023-04-16]
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-To: dsterba@suse.cz,
- Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Neal Gompa <neal@gompa.dev>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- David Sterba <dsterba@suse.com>, linux-kernel@vger.kernel.org,
- Rafael Wysocki <rafael@kernel.org>, Chris Mason <clm@meta.com>,
- Boris Burkov <boris@bur.io>
-References: <CAHk-=wjL7GG9s9Y2+u2725M+Ru=bUXnzOnXRwoSktY0fVdhhzw@mail.gmail.com>
- <20230418213228.1273218-1-neal@gompa.dev>
- <d1b7b62d-bec8-e290-d12c-0b641ab382dd@leemhuis.info>
- <20230420192156.GY19619@suse.cz>
-Content-Language: en-US, de-DE
-In-Reply-To: <20230420192156.GY19619@suse.cz>
+To: Bastien Nocera <hadess@hadess.net>
+Cc: Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+ Jiri Kosina <jikos@kernel.org>,
+ "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+Subject: [REGRESSION] Bug 217353 - Logitech MX Anywhere 3 scroll wheel works
+ incorrectly over USB dongle
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1682067028;1c98cbe9;
-X-HE-SMSGID: 1ppmTJ-0003x6-Gm
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1682068318;5b7f9e95;
+X-HE-SMSGID: 1ppmo7-0007z4-LR
 
-On 20.04.23 21:21, David Sterba wrote:
-> On Wed, Apr 19, 2023 at 07:03:31AM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
->> On 18.04.23 23:32, Neal Gompa wrote:
->>>
->>> I'm the guy that sort of kickstarted this whole thing a year ago.
->>> >From my perspective in Fedora-land, we've been running automatic
->>> weekly fstrim on every Fedora system for three years now[1] and
->>> have not received any complaints about SSDs pushing daises from
->>> that.
->>>
->>> When we started discussing btrfs discard=async within Fedora
->>> two years ago[2], I started soliciting feedback and information
->>> from the Btrfs developers I was regularly working with at the time.
->>>
->>> Last year, I had a face-to-face with Chris Mason and we discussed
->>> the idea in depth and decided to go for this, based on both Fedora's
->>> data with consumer disks and Facebook's data with their datacenters.
->>>
->>> The only real surprise we had was the so-called "discard storm",
->>> which Boris Burkov made adjustments to resolve a couple weeks ago[3].
->>> [...]
->>> [3]: https://lore.kernel.org/linux-btrfs/cover.1680723651.git.boris@bur.io/T/#t
->>
->> Wait, what? Argh. Sorry, if I had seen that patch, I wouldn't have
->> brought this up in my report at all. I missed it, as I wasn't CCed; and
->> regzbot missed it, because the patch uses a odd format for the lore link
->> (but not totally uncommon, will change regzbot to ensure that doesn't
->> happen again).
+Hi, Thorsten here, the Linux kernel's regression tracker.
 
-[for the record: I noticed the odd format was not the real problem; see
-below]
+I noticed a regression report in bugzilla.kernel.org. As many (most?)
+kernel developers don't keep an eye on it, I decided to forward it by mail.
 
-> I'd need pay more attention when the regression tracking process is
-> involved in case there are more patch versions floating around. People
-> usually don't "CC enough" so that you have the regzbot in place helps
-> to track the state.
+Bastien, from the bug report it to me sounds like it might be another
+case caused by 908d325e166 ("HID: logitech-hidpp: Detect hi-res
+scrolling support"), but I might be totally wrong with that (and the
+reporter didn't even explicitly state that it's a regression, but it
+sounds like one). If I got something wrong I apologize in advance.
 
-First off: Sorry again for the trouble I caused.
+Note, you have to use bugzilla to reach the reporter, as I sadly[1] can
+not CCed them in mails like this.
 
-Yes, a CC would have prevent it, as then I (aka the "human fallback")
-would have seen the patch and noticed that regzbot missed something.
+Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=217353 :
 
-But normally it should have worked fine without the CC. In this case it
-just didn't due to a bug in regzbot: the msg-id of the tracked report
-contains slashes and it seems something in the url en/decoding within
-regzbot went wrong somewhere. IOW: the fix in next (2e55571fddf ("btrfs:
-set default discard iops_limit to 1000")) is fine the way it is from
-regzbot point of view and I have to fix regzbot.
-
->> P.S.: /me meanwhile yet again wonders if we should tell people to add a
->> "CC: <regressions@lists.linux.dev>" on patches fixing regressions. Then
->> in this case I would have become aware of the patch. And it makes it
->> obvious for anybody handling patches that the patch is fixing a
->> regression. But whatever, might not be worth it.
+>  vova7890 2023-04-18 22:40:07 UTC
 > 
-> I'm not sure if it would fit how regzbot workflow works, but syzbot
-> provides links with the reports and then changes the state when the
-> patch is committed containing the links.
+> Need a solution similar as for
+> https://bugzilla.kernel.org/show_bug.cgi?id=216885 but for the usb dongle.
+> 
+> hid_is_usb(hidpp->hid_dev) always return 0 for the usb dongle. Through
+> bluetooth it's working fine as hid_logitech_hidpp is not loading for
+> this mouse with over BT mode.
 
-You can't see it on the lists and only it regzbot web-ui, but regzbot
-works similarly: it marks a regression as "fix incoming" when it notices
-the fix hit linux-next.
+See the ticket for more details.
 
-> I don't see anything similar in
-> the process/handling-regression document. If the "Link: <report>" is
-> sufficient
 
-It is, but maybe handling-regressions should point that out more
-clearly. It currently is more implicit: "These tags are also crucial for
-tools and scripts used by other kernel developers or Linux
-distributions; one of these tools is regzbot, which heavily relies on
-the “Link:” tags to associate reports for regression with changes
-resolving them."
+[TLDR for the rest of this mail: I'm adding this report to the list of
+tracked Linux kernel regressions; the text you find below is based on a
+few templates paragraphs you might have encountered already in similar
+form.]
 
-> then it should work already but there's no guarantee that the
-> submitted patches would contain that. I add links to the committed
-> versions
+BTW, let me use this mail to also add the report to the list of tracked
+regressions to ensure it's doesn't fall through the cracks:
 
-Thx for that, as the one Boris initially used[1] in the submission[2] is
-not easily to resolve.
+#regzbot introduced: 908d325e1665
+https://bugzilla.kernel.org/show_bug.cgi?id=217353
+#regzbot title: hid: Logitech MX Anywhere 3 scroll wheel works
+incorrectly over USB dongle
+#regzbot ignore-activity
 
-[1]
-https://lore.kernel.org/linux-btrfs/ZCxKc5ZzP3Np71IC@infradead.org/T/#m6ebdeb475809ed7714b21b8143103fb7e5a966da
-[2]
-https://lore.kernel.org/linux-btrfs/cover.1680723651.git.boris@bur.io/T/#me406ebc5dc35e7fdbb59aece2158ac1a86b0c11b
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply and tell me -- ideally
+while also telling regzbot about it, as explained by the page listed in
+the footer of this mail.
 
-> but then you'd need to scan at least linux-next. In any case
-> with the regzbot it's fixable.
+Developers: When fixing the issue, remember to add 'Link:' tags pointing
+to the report (e.g. the buzgzilla ticket and maybe this mail as well, if
+this thread sees some discussion). See page linked in footer for details.
 
-Ciao, Thorsten
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
+
+[1] because bugzilla.kernel.org tells users upon registration their
+"email address will never be displayed to logged out users"
