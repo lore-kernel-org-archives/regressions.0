@@ -1,53 +1,61 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DEFF5689
-	for <regressions@lists.linux.dev>; Fri, 21 Apr 2023 18:15:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id B0B84C433D2;
-	Fri, 21 Apr 2023 18:15:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1682100921;
-	bh=AJswIoPQK4jl9psU0GdM/Vpu2uMzvXFWvHDFwIEmotA=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=IDuOOodLgG8JHoVEZxK4xmdXhtX6xRv9fSzCXJhZ3h7nMqmsx9oiygXlPFEz0a1Oa
-	 f2AfM7gn79S7aAUxmcDGE9lzb1qDLFENqGHgrNHz9szdX9LjJLWUWQFmb/FVbdc2z+
-	 W+watTykxuUEeUdyMwW/F/taqndKLUWPFUvpPzMGwZBs7ehCUNOuKYJAiPtNd/TWWO
-	 QbH1LfZInmcMcsQs3PMFUc3W1G9Is7CIJB49V4MPxNEzWe1vo4eRQyIahwiNNSNeC5
-	 5PGXmNM/CJ7+tPibCW2GzDkMU46VZsHHXq8v1IAm4/T42FWx9U3C0QFqv4x5wW83pM
-	 Wsxe8C+UYL8bA==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 9D056E270DA;
-	Fri, 21 Apr 2023 18:15:21 +0000 (UTC)
-Subject: Re: [GIT PULL] Btrfs fixes for 6.3-rc8
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <cover.1682088075.git.dsterba@suse.com>
-References: <cover.1682088075.git.dsterba@suse.com>
-X-PR-Tracked-List-Id: <linux-btrfs.vger.kernel.org>
-X-PR-Tracked-Message-Id: <cover.1682088075.git.dsterba@suse.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git for-6.3-rc7-tag
-X-PR-Tracked-Commit-Id: ef9cddfe57d86aac6b509b550136395669159b30
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: c337b23f32c87320dffd389e4f0f793db35f0a9b
-Message-Id: <168210092163.26173.4961431818128675021.pr-tracker-bot@kernel.org>
-Date: Fri, 21 Apr 2023 18:15:21 +0000
-To: David Sterba <dsterba@suse.com>
-Cc: torvalds@linux-foundation.org, David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org, regressions@lists.linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEA6C5689
+	for <regressions@lists.linux.dev>; Fri, 21 Apr 2023 18:27:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4AA9AC4339E
+	for <regressions@lists.linux.dev>; Fri, 21 Apr 2023 18:27:14 +0000 (UTC)
+Authentication-Results: smtp.kernel.org;
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="cy2E2wei"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
+	t=1682101630;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3FB3B43eYjyBAM7IDYJSH0nqffg9h/A3cKDOQDAa8U0=;
+	b=cy2E2weiOUbZb+vT2a6PJMO6rkRoCYHmSZl2wIfSUJmlXrwKWVGMFXPRwuTqCkTIW1IymQ
+	0a4Lu7ZypmvfhJKzoPoNB3A1Nb/yLBX1S6MwO7GnrA+M/TOza15aqV92kszkfZrEWMcSDs
+	D5t3QmLEKXiaZGRM+vj3dzLDLV97Pqs=
+Received: 
+	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 32a86181 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO)
+	for <regressions@lists.linux.dev>;
+	Fri, 21 Apr 2023 18:27:09 +0000 (UTC)
+Received: by mail-ua1-f43.google.com with SMTP id a1e0cc1a2514c-771d9ec5aa5so8282193241.0
+        for <regressions@lists.linux.dev>; Fri, 21 Apr 2023 11:27:09 -0700 (PDT)
+X-Gm-Message-State: AAQBX9foNzxb2NqHlR8Id7VZITYoFWc9RwPp0AcemWxX5hSvlRTZOY2C
+	4ADBZWS/LlTdfhGBXb6UfsDxUGzngPa8d2W+7o0=
+X-Google-Smtp-Source: AKy350Zha+rMVky/6DSggH+0NpteQqjJJloUu7qVQUIBSeFSBoua6JVr0i++DO9cdKalbSrUG3+c2kWyp7o5GrZMfqw=
+X-Received: by 2002:a05:6102:1629:b0:430:b1f:56dc with SMTP id
+ cu41-20020a056102162900b004300b1f56dcmr3773848vsb.1.1682101627919; Fri, 21
+ Apr 2023 11:27:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+Received: by 2002:ab0:6196:0:b0:75c:e750:ab with HTTP; Fri, 21 Apr 2023
+ 11:27:07 -0700 (PDT)
+In-Reply-To: <ZEKlzaQhjd8sbE7I@kernel.org>
+References: <Y60RoP77HnwaukEA@zx2c4.com> <7ebab1ff-48f1-2737-f0d3-25c72666d041@leemhuis.info>
+ <Y7w74EBYP3+FHlkw@zx2c4.com> <4268d0ac-278a-28e4-66d1-e0347f011f46@leemhuis.info>
+ <ZBBmVhwsTf/URoqs@kernel.org> <CAHmME9rxeE32g7nKqeVLwRodDNM8QyZUNd54cyE6mZW7FcqD-g@mail.gmail.com>
+ <ZBBxMl5rVjY9FGS9@kernel.org> <ZBBxxftnXHVOjm92@kernel.org>
+ <ZBB8R9H3CyQnNfCt@zx2c4.com> <ZBCDeleGG/fFlkt+@kernel.org> <ZEKlzaQhjd8sbE7I@kernel.org>
+From: "Jason A. Donenfeld" <Jason@zx2c4.com>
+Date: Fri, 21 Apr 2023 20:27:07 +0200
+X-Gmail-Original-Message-ID: <CAHmME9q9DZyYo7G__ks=XSrS4kS8sUUZ+eF3c1VSnGCAvfBR+Q@mail.gmail.com>
+Message-ID: <CAHmME9q9DZyYo7G__ks=XSrS4kS8sUUZ+eF3c1VSnGCAvfBR+Q@mail.gmail.com>
+Subject: Re: [REGRESSION] suspend to ram fails in 6.2-rc1 due to tpm errors
+To: Jarkko Sakkinen <jarkko@kernel.org>
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>, 
+	James Bottomley <James.Bottomley@hansenpartnership.com>, Vlastimil Babka <vbabka@suse.cz>, 
+	Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>, Jan Dabros <jsd@semihalf.com>, 
+	regressions@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>, 
+	linux-integrity@vger.kernel.org, 
+	Dominik Brodowski <linux@dominikbrodowski.net>, Herbert Xu <herbert@gondor.apana.org.au>, 
+	Linus Torvalds <torvalds@linux-foundation.org>, Johannes Altmanninger <aclopte@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 
-The pull request you sent on Fri, 21 Apr 2023 17:21:31 +0200:
-
-> git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git for-6.3-rc7-tag
-
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/c337b23f32c87320dffd389e4f0f793db35f0a9b
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Did you use the patch I sent you and suspend and resume according to
+the instructions I gave you? If not, I don't have much to add.
