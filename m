@@ -1,76 +1,108 @@
-Received: from l2mail1.panix.com (l2mail1.panix.com [166.84.1.75])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C78DC3C05
-	for <regressions@lists.linux.dev>; Fri, 21 Apr 2023 14:01:24 +0000 (UTC)
-Received: from mailbackend.panix.com (mailbackend.panix.com [166.84.1.89])
-	by l2mail1.panix.com (Postfix) with ESMTPS id 4Q2wgs6CtDzDWx
-	for <regressions@lists.linux.dev>; Fri, 21 Apr 2023 09:42:33 -0400 (EDT)
-Received: from mail.panix.com (localhost [127.0.0.1])
-	by mailbackend.panix.com (Postfix) with ESMTPA id 4Q2wgj4dRTz48Zd;
-	Fri, 21 Apr 2023 09:42:25 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=panix.com; s=panix;
-	t=1682084546; bh=ilKSAXYbb2I3tPDKY5tTE2ROdSFgRHhDclUFKT6+ApU=;
-	h=In-Reply-To:References:Date:Subject:From:To:Cc;
-	b=W0XJKCS1EOMytKJyx//xVUT6RCVCk8urGcWwzNCNZo6FHURPscK52TThLWj4C36S4
-	 ActEb0SHiKjBRi1sqqNHfZAvFTMxV1355G792EvHdEd3+PRHipOcJpWBF+d1u4JVW8
-	 IZBMD1YO0W+VtLPEQeD3LXULPCuSGFHiuUixjI5g=
-X-Panix-Received: from 166.84.1.2
-        (SquirrelMail authenticated user pa@panix.com)
-        by mail.panix.com with HTTP;
-        Fri, 21 Apr 2023 09:42:25 -0400
-Message-ID: <40075ac685423d46663dd6a4038add90.squirrel@mail.panix.com>
-In-Reply-To: <d8d22c77-1bde-774f-aa6e-41234ffa6e8d@suse.de>
-References: <20230420155705.21463-1-pa@panix.com>
-    <c4c09a67-6897-751c-c091-6e33f48542cc@leemhuis.info>
-    <d8d22c77-1bde-774f-aa6e-41234ffa6e8d@suse.de>
-Date: Fri, 21 Apr 2023 09:42:25 -0400
-Subject: Re: [PATCH v3] firmware/sysfb: Fix VESA format selection
-From: "Pierre Asselin" <pa@panix.com>
-To: "Thomas Zimmermann" <tzimmermann@suse.de>
-Cc: "Linux regressions mailing list" <regressions@lists.linux.dev>,
- "Pierre Asselin" <pa@panix.com>,
- dri-devel@lists.freedesktop.org,
- "Daniel Vetter" <daniel.vetter@ffwll.ch>,
- "Javier Martinez Canillas" <javierm@redhat.com>,
- linux-kernel@vger.kernel.org,
- "Hans de Goede" <hdegoede@redhat.com>,
- "Ard Biesheuvel" <ardb@kernel.org>
-User-Agent: SquirrelMail/1.4.23-p1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C42B3D6E
+	for <regressions@lists.linux.dev>; Fri, 21 Apr 2023 15:03:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 528E3C433EF;
+	Fri, 21 Apr 2023 15:03:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1682089424;
+	bh=Ssl54N08hcIsL4K1OwVsyYR15G7wERqkfvdOZ49GqUg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Nqtg1DtSN9c2qm79I5pki/emr651+SWVvPrDxYxCLyXT3myuhVo6dj9IGaox7IIYO
+	 KIsEtGywhpS4Yb6Ka18RqepA4tWxJeUgQS17X5rgqqqAzAvykRPrXTIQGiDWDS4iCz
+	 0F5ncMvRIGwDJsybytKhX1YGkzWB36N1V5yziETw+/OjEym9YQGYrogh7wMoRJ97Ei
+	 3/nyVkAtSdHZXd1iWefNCUGOb6yMfdXtsYjKiGZH1yy2Q17B49x8TS+ie2VnJ4ciWY
+	 iaGdFZA3+KXL0ENohLFqvj2SdSVb5VvW7g6BR0UbUAHgAmwZGxyVgADJk2yvgs2fhu
+	 5i2CtSUlrZ3Pw==
+Date: Fri, 21 Apr 2023 18:03:41 +0300
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
+	James Bottomley <James.Bottomley@hansenpartnership.com>,
+	Vlastimil Babka <vbabka@suse.cz>, Peter Huewe <peterhuewe@gmx.de>,
+	Jason Gunthorpe <jgg@ziepe.ca>, Jan Dabros <jsd@semihalf.com>,
+	regressions@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>,
+	linux-integrity@vger.kernel.org,
+	Dominik Brodowski <linux@dominikbrodowski.net>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Johannes Altmanninger <aclopte@gmail.com>
+Subject: Re: [REGRESSION] suspend to ram fails in 6.2-rc1 due to tpm errors
+Message-ID: <ZEKlzaQhjd8sbE7I@kernel.org>
+References: <Y60RoP77HnwaukEA@zx2c4.com>
+ <7ebab1ff-48f1-2737-f0d3-25c72666d041@leemhuis.info>
+ <Y7w74EBYP3+FHlkw@zx2c4.com>
+ <4268d0ac-278a-28e4-66d1-e0347f011f46@leemhuis.info>
+ <ZBBmVhwsTf/URoqs@kernel.org>
+ <CAHmME9rxeE32g7nKqeVLwRodDNM8QyZUNd54cyE6mZW7FcqD-g@mail.gmail.com>
+ <ZBBxMl5rVjY9FGS9@kernel.org>
+ <ZBBxxftnXHVOjm92@kernel.org>
+ <ZBB8R9H3CyQnNfCt@zx2c4.com>
+ <ZBCDeleGG/fFlkt+@kernel.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain;charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-X-Priority: 3 (Normal)
-Importance: Normal
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZBCDeleGG/fFlkt+@kernel.org>
 
-Thomas Zimmerman writes:
->
-> Am 21.04.23 um 13:32 schrieb Linux regression tracking (Thorsten
-> Leemhuis):
->>
->> Pierre, Tomas, Javier, et. al: how many "legacy BIOSes" do we suspect
->> are affected by this?
+On Tue, Mar 14, 2023 at 04:23:54PM +0200, Jarkko Sakkinen wrote:
+> > diff --git a/drivers/char/random.c b/drivers/char/random.c
+> > index ce3ccd172cc8..708110c780aa 100644
+> > --- a/drivers/char/random.c
+> > +++ b/drivers/char/random.c
+> > @@ -934,20 +934,20 @@ EXPORT_SYMBOL(add_device_randomness);
+> >  void add_hwgenerator_randomness(const void *buf, size_t len, size_t entropy, bool sleep_after)
+> >  {
+> >  	mix_pool_bytes(buf, len);
+> >  	credit_init_bits(entropy);
+> > 
+> >  	/*
+> >  	 * Throttle writing to once every reseed interval, unless we're not yet
+> >  	 * initialized or no entropy is credited.
+> >  	 */
+> > -	if (sleep_after && !kthread_should_stop() && (crng_ready() || !entropy))
+> > -		schedule_timeout_interruptible(crng_reseed_interval());
+> > +//	if (sleep_after && !kthread_should_stop() && (crng_ready() || !entropy))
+> > +//		schedule_timeout_interruptible(crng_reseed_interval());
+> >  }
+> >  EXPORT_SYMBOL_GPL(add_hwgenerator_randomness);
+> > 
+> >  /*
+> >   * Handle random seed passed by bootloader, and credit it depending
+> >   * on the command line option 'random.trust_bootloader'.
+> >   */
+> >  void __init add_bootloader_randomness(const void *buf, size_t len)
+> >  {
+> > 
+> > Then I hooked the tpm emulator up to qemu and put it in tpm1 mode. I had
+> > userspace `echo mem > /sys/power/state` every couple of seconds (or
+> > continuously maybe?), and then I used the qemu monitor interface to wake
+> > the system from sleep. And kaboom.
+> 
+> Thanks for the tips! I'll try various patch combinations and see what
+> happens.
 
-So far, two:
-1) my Gateway laptop (Intel(R) Core(TM) Duo CPU,
-   Phoenix BIOS 83.08 Revision: 131.8 Release Date: 03/06/07)
-2) my Dell Precision T3610 (Intel(R) Xeon(R) CPU E5-1650,
-   Dell BIOS A19 Revision: 65.19 Release Date: 09/11/2019)
+I created a VM using libvirt with the following configuration [*]
 
-I don't know how to give a more precise description.
+<tpm model='tpm-tis'>
+  <backend type='emulator' version='1.2'/>
+  <alias name='tpm0'/>
+</tpm>
 
->> might it be worth asking Linus to merge this patch directly[1]?
->
-> IMHO it's a fairly obscure bug and certainly not a release blocker. I'll
-> send it through the regular channels of the DRM subsystem.
+I do not have issues with suspend so far with unmodified v6.3-rc7.
 
-I agree.  Even when the regression bites, it's not a blocker.  The screen
-is strange but readable.
+It would be nice to have a script that gives a guaranteed crash with
+unmodified kernel even if run for some hours.
 
---PA
+Instead of using QEMU monitor interface and /sys/power/state, I wonder
+if a stress test could be based on looping rtcwake for easier comparison
+of results?
 
+[*] full description: https://gist.github.com/jarkkojs/66ea0d8d6a927311e8abb8b35e1ddbcd
+
+BR, Jarkko
