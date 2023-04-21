@@ -1,73 +1,130 @@
-Received: from mail.toke.dk (mail.toke.dk [45.145.95.4])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 004F5946F
-	for <regressions@lists.linux.dev>; Thu, 20 Apr 2023 22:38:23 +0000 (UTC)
-From: Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@toke.dk>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=toke.dk; s=20161023;
-	t=1682030301; bh=RROvBsZouizJZbT/+MfyL7hKGqy3iT9UJY9igD8NDzw=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=Iy9/XFF+Awcyj4f+sJGX2vESbkpe64jr7xETrPXZPVoyPLLIU+k8209adYxvP1lWz
-	 4oCCeZNArJikadqyTkQDg5nY94142ezE/m/b00OtLfvLCUowEet2ekMgBrDosfawuO
-	 zc0IEOtEiNA8WWahd/WC4P/BTJ0fk7uzYVWc7GQwkfLExz0zcHYWsilKBGC5A3qMFO
-	 hK56A9351YyjsCqFJ02KXMr8TAxbNWJE6kx85w5er2ue+fzTl14ED+maskqNLbplqR
-	 kYvvK7yOQle66mQWcluKK9mmhMbhgtO5W0VwUP5Zl55uVEJrYxVgttK4m08RqErBPt
-	 em5SaA/mmLpdA==
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-wireless@vger.kernel.org, netdev@vger.kernel.org, Colin Ian King
- <colin.i.king@gmail.com>, Thorsten Leemhuis <regressions@leemhuis.info>,
- Jakub Kicinski <kuba@kernel.org>, Kalle Valo <kvalo@kernel.org>, Linux
- kernel regressions list <regressions@lists.linux.dev>
-Subject: Re: One-off regression fix for 6.3 [was: Re: [PATCH] wifi: ath9k:
- Don't mark channelmap stack variable read-only in
- ath9k_mci_update_wlan_channels()]
-In-Reply-To: <CAHk-=wis_qQy4oDNynNKi5b7Qhosmxtoj1jxo5wmB6SRUwQUBQ@mail.gmail.com>
-References: <20230413214118.153781-1-toke@toke.dk> <87zg72s1jz.fsf@toke.dk>
- <CAHk-=wis_qQy4oDNynNKi5b7Qhosmxtoj1jxo5wmB6SRUwQUBQ@mail.gmail.com>
-Date: Fri, 21 Apr 2023 00:38:19 +0200
-X-Clacks-Overhead: GNU Terry Pratchett
-Message-ID: <87ttxarxgk.fsf@toke.dk>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACC0023A6
+	for <regressions@lists.linux.dev>; Fri, 21 Apr 2023 08:50:28 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1ppmTJ-0003x6-Gm; Fri, 21 Apr 2023 10:50:25 +0200
+Message-ID: <8a182d08-d09c-14ed-3075-c40d264916e6@leemhuis.info>
+Date: Fri, 21 Apr 2023 10:50:24 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.1
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Subject: Re: Linux regressions report for mainline [2023-04-16]
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+To: dsterba@suse.cz,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Neal Gompa <neal@gompa.dev>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ David Sterba <dsterba@suse.com>, linux-kernel@vger.kernel.org,
+ Rafael Wysocki <rafael@kernel.org>, Chris Mason <clm@meta.com>,
+ Boris Burkov <boris@bur.io>
+References: <CAHk-=wjL7GG9s9Y2+u2725M+Ru=bUXnzOnXRwoSktY0fVdhhzw@mail.gmail.com>
+ <20230418213228.1273218-1-neal@gompa.dev>
+ <d1b7b62d-bec8-e290-d12c-0b641ab382dd@leemhuis.info>
+ <20230420192156.GY19619@suse.cz>
+Content-Language: en-US, de-DE
+In-Reply-To: <20230420192156.GY19619@suse.cz>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1682067028;1c98cbe9;
+X-HE-SMSGID: 1ppmTJ-0003x6-Gm
 
-Linus Torvalds <torvalds@linux-foundation.org> writes:
-
-> On Thu, Apr 20, 2023 at 2:09=E2=80=AFPM Toke H=C3=B8iland-J=C3=B8rgensen =
-<toke@toke.dk> wrote:
+On 20.04.23 21:21, David Sterba wrote:
+> On Wed, Apr 19, 2023 at 07:03:31AM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
+>> On 18.04.23 23:32, Neal Gompa wrote:
+>>>
+>>> I'm the guy that sort of kickstarted this whole thing a year ago.
+>>> >From my perspective in Fedora-land, we've been running automatic
+>>> weekly fstrim on every Fedora system for three years now[1] and
+>>> have not received any complaints about SSDs pushing daises from
+>>> that.
+>>>
+>>> When we started discussing btrfs discard=async within Fedora
+>>> two years ago[2], I started soliciting feedback and information
+>>> from the Btrfs developers I was regularly working with at the time.
+>>>
+>>> Last year, I had a face-to-face with Chris Mason and we discussed
+>>> the idea in depth and decided to go for this, based on both Fedora's
+>>> data with consumer disks and Facebook's data with their datacenters.
+>>>
+>>> The only real surprise we had was the so-called "discard storm",
+>>> which Boris Burkov made adjustments to resolve a couple weeks ago[3].
+>>> [...]
+>>> [3]: https://lore.kernel.org/linux-btrfs/cover.1680723651.git.boris@bur.io/T/#t
 >>
->> So, with a bit of prodding from Thorsten, I'm writing this to ask you if
->> you'd be willing to pull this patch directly from the mailing list as a
->> one-off? It's a fairly small patch, and since it's a (partial) revert
->> the risk of it being the cause of new regressions should be fairly
->> small.
->
-> Sure. I'm always open to direct fixes when there is no controversy
-> about the fix. No problem. I still happily deal with individual
-> patches.
+>> Wait, what? Argh. Sorry, if I had seen that patch, I wouldn't have
+>> brought this up in my report at all. I missed it, as I wasn't CCed; and
+>> regzbot missed it, because the patch uses a odd format for the lore link
+>> (but not totally uncommon, will change regzbot to ensure that doesn't
+>> happen again).
 
-Awesome, thanks!
+[for the record: I noticed the odd format was not the real problem; see
+below]
 
-> And yes, I do consider "regression in an earlier release" to be a
-> regression that needs fixing.
->
-> There's obviously a time limit: if that "regression in an earlier
-> release" was a year or more ago, and just took forever for people to
-> notice, and it had semantic changes that now mean that fixing the
-> regression could cause a _new_ regression, then that can cause me to
-> go "Oh, now the new semantics are what we have to live with".
->
-> But something like this, where the regression was in the previous
-> release and it's just a clear fix with no semantic subtlety, I
-> consider to be just a regular regression that should be expedited -
-> partly to make it into stable, and partly to avoid having to put the
-> fix into _another_ stable kernel..
+> I'd need pay more attention when the regression tracking process is
+> involved in case there are more patch versions floating around. People
+> usually don't "CC enough" so that you have the regzbot in place helps
+> to track the state.
 
-OK, duly noted; thank you for clarifying :)
+First off: Sorry again for the trouble I caused.
 
--Toke
+Yes, a CC would have prevent it, as then I (aka the "human fallback")
+would have seen the patch and noticed that regzbot missed something.
+
+But normally it should have worked fine without the CC. In this case it
+just didn't due to a bug in regzbot: the msg-id of the tracked report
+contains slashes and it seems something in the url en/decoding within
+regzbot went wrong somewhere. IOW: the fix in next (2e55571fddf ("btrfs:
+set default discard iops_limit to 1000")) is fine the way it is from
+regzbot point of view and I have to fix regzbot.
+
+>> P.S.: /me meanwhile yet again wonders if we should tell people to add a
+>> "CC: <regressions@lists.linux.dev>" on patches fixing regressions. Then
+>> in this case I would have become aware of the patch. And it makes it
+>> obvious for anybody handling patches that the patch is fixing a
+>> regression. But whatever, might not be worth it.
+> 
+> I'm not sure if it would fit how regzbot workflow works, but syzbot
+> provides links with the reports and then changes the state when the
+> patch is committed containing the links.
+
+You can't see it on the lists and only it regzbot web-ui, but regzbot
+works similarly: it marks a regression as "fix incoming" when it notices
+the fix hit linux-next.
+
+> I don't see anything similar in
+> the process/handling-regression document. If the "Link: <report>" is
+> sufficient
+
+It is, but maybe handling-regressions should point that out more
+clearly. It currently is more implicit: "These tags are also crucial for
+tools and scripts used by other kernel developers or Linux
+distributions; one of these tools is regzbot, which heavily relies on
+the “Link:” tags to associate reports for regression with changes
+resolving them."
+
+> then it should work already but there's no guarantee that the
+> submitted patches would contain that. I add links to the committed
+> versions
+
+Thx for that, as the one Boris initially used[1] in the submission[2] is
+not easily to resolve.
+
+[1]
+https://lore.kernel.org/linux-btrfs/ZCxKc5ZzP3Np71IC@infradead.org/T/#m6ebdeb475809ed7714b21b8143103fb7e5a966da
+[2]
+https://lore.kernel.org/linux-btrfs/cover.1680723651.git.boris@bur.io/T/#me406ebc5dc35e7fdbb59aece2158ac1a86b0c11b
+
+> but then you'd need to scan at least linux-next. In any case
+> with the regzbot it's fixable.
+
+Ciao, Thorsten
