@@ -1,74 +1,53 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 437E95670
-	for <regressions@lists.linux.dev>; Fri, 21 Apr 2023 15:21:50 +0000 (UTC)
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-	by smtp-out2.suse.de (Postfix) with ESMTP id 015C61FDDC;
-	Fri, 21 Apr 2023 15:21:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1682090502; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=bdiIvQPwKmYoGHMpDHx6EM7WPu+/IERO4BhzE+MyWl4=;
-	b=lzEMZVy25bS0Kv5H2ArHMqkQlkMGvS2C6Os7GX1bgx5qYDlGMSC0KTCsj/IsacnhiEmKOp
-	lfP2CSjsftmHYWbfk9P2/h7Nn7i5slOM7MGZcnefIu7kD54n6VOWP3H5ciFzs9qDegsc85
-	oZH9jXW5AtmZ49CLzK4HGIwq2UD9Ypc=
-Received: from ds.suse.cz (ds.suse.cz [10.100.12.205])
-	by relay2.suse.de (Postfix) with ESMTP id DD8DE2C141;
-	Fri, 21 Apr 2023 15:21:41 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-	id 42ED9DAB4F; Fri, 21 Apr 2023 17:21:32 +0200 (CEST)
-From: David Sterba <dsterba@suse.com>
-To: torvalds@linux-foundation.org
-Cc: David Sterba <dsterba@suse.com>,
-	linux-btrfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: [GIT PULL] Btrfs fixes for 6.3-rc8
-Date: Fri, 21 Apr 2023 17:21:31 +0200
-Message-Id: <cover.1682088075.git.dsterba@suse.com>
-X-Mailer: git-send-email 2.40.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DEFF5689
+	for <regressions@lists.linux.dev>; Fri, 21 Apr 2023 18:15:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id B0B84C433D2;
+	Fri, 21 Apr 2023 18:15:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1682100921;
+	bh=AJswIoPQK4jl9psU0GdM/Vpu2uMzvXFWvHDFwIEmotA=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=IDuOOodLgG8JHoVEZxK4xmdXhtX6xRv9fSzCXJhZ3h7nMqmsx9oiygXlPFEz0a1Oa
+	 f2AfM7gn79S7aAUxmcDGE9lzb1qDLFENqGHgrNHz9szdX9LjJLWUWQFmb/FVbdc2z+
+	 W+watTykxuUEeUdyMwW/F/taqndKLUWPFUvpPzMGwZBs7ehCUNOuKYJAiPtNd/TWWO
+	 QbH1LfZInmcMcsQs3PMFUc3W1G9Is7CIJB49V4MPxNEzWe1vo4eRQyIahwiNNSNeC5
+	 5PGXmNM/CJ7+tPibCW2GzDkMU46VZsHHXq8v1IAm4/T42FWx9U3C0QFqv4x5wW83pM
+	 Wsxe8C+UYL8bA==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 9D056E270DA;
+	Fri, 21 Apr 2023 18:15:21 +0000 (UTC)
+Subject: Re: [GIT PULL] Btrfs fixes for 6.3-rc8
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <cover.1682088075.git.dsterba@suse.com>
+References: <cover.1682088075.git.dsterba@suse.com>
+X-PR-Tracked-List-Id: <linux-btrfs.vger.kernel.org>
+X-PR-Tracked-Message-Id: <cover.1682088075.git.dsterba@suse.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git for-6.3-rc7-tag
+X-PR-Tracked-Commit-Id: ef9cddfe57d86aac6b509b550136395669159b30
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: c337b23f32c87320dffd389e4f0f793db35f0a9b
+Message-Id: <168210092163.26173.4961431818128675021.pr-tracker-bot@kernel.org>
+Date: Fri, 21 Apr 2023 18:15:21 +0000
+To: David Sterba <dsterba@suse.com>
+Cc: torvalds@linux-foundation.org, David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org, regressions@lists.linux.dev
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Hi,
+The pull request you sent on Fri, 21 Apr 2023 17:21:31 +0200:
 
-two patches fixing the problem with aync discard. The default settings
-had a low IOPS limit and processing a large batch to discard would take
-a long time. On laptops this can cause increased power consumption due
-to disk activity. As async discard has been on by default since 6.2 this
-likely affects a lot of users.
+> git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git for-6.3-rc7-tag
 
-Please pull, thanks.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/c337b23f32c87320dffd389e4f0f793db35f0a9b
 
-- increase the default IOPS limit 10x which reportedly helped
+Thank you!
 
-- setting the sysfs IOPS value to 0 now does not throttle anymore
-  allowing the discards to be processed at full speed, previously there
-  was an arbitrary 6 hour target for processing the pending batch
-
-----------------------------------------------------------------
-The following changes since commit 68d99ab0e9221ef54506f827576c5a914680eeaf:
-
-  btrfs: fix fast csum implementation detection (2023-04-06 16:34:13 +0200)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git for-6.3-rc7-tag
-
-for you to fetch changes up to ef9cddfe57d86aac6b509b550136395669159b30:
-
-  btrfs: reinterpret async discard iops_limit=0 as no delay (2023-04-21 00:28:23 +0200)
-
-----------------------------------------------------------------
-Boris Burkov (2):
-      btrfs: set default discard iops_limit to 1000
-      btrfs: reinterpret async discard iops_limit=0 as no delay
-
- fs/btrfs/discard.c | 21 +++++++++++++--------
- 1 file changed, 13 insertions(+), 8 deletions(-)
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
