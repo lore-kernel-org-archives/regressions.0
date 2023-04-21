@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 752B223A6
-	for <regressions@lists.linux.dev>; Fri, 21 Apr 2023 09:11:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 055B928E2
+	for <regressions@lists.linux.dev>; Fri, 21 Apr 2023 11:32:31 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1ppmo7-0007z4-LR; Fri, 21 Apr 2023 11:11:55 +0200
-Message-ID: <5fa67291-98d0-c8d5-ca71-5a86b9adff41@leemhuis.info>
-Date: Fri, 21 Apr 2023 11:11:53 +0200
+	id 1ppp05-000755-84; Fri, 21 Apr 2023 13:32:25 +0200
+Message-ID: <c4c09a67-6897-751c-c091-6e33f48542cc@leemhuis.info>
+Date: Fri, 21 Apr 2023 13:32:24 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,75 +16,56 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.10.0
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Re: [PATCH v3] firmware/sysfb: Fix VESA format selection
 Content-Language: en-US, de-DE
+To: Pierre Asselin <pa@panix.com>, dri-devel@lists.freedesktop.org
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>,
+ Javier Martinez Canillas <javierm@redhat.com>, linux-kernel@vger.kernel.org,
+ Hans de Goede <hdegoede@redhat.com>, Thomas Zimmermann
+ <tzimmermann@suse.de>, Ard Biesheuvel <ardb@kernel.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <20230420155705.21463-1-pa@panix.com>
 From: "Linux regression tracking (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-To: Bastien Nocera <hadess@hadess.net>
-Cc: Benjamin Tissoires <benjamin.tissoires@redhat.com>,
- Jiri Kosina <jikos@kernel.org>,
- "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
- LKML <linux-kernel@vger.kernel.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-Subject: [REGRESSION] Bug 217353 - Logitech MX Anywhere 3 scroll wheel works
- incorrectly over USB dongle
+In-Reply-To: <20230420155705.21463-1-pa@panix.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1682068318;5b7f9e95;
-X-HE-SMSGID: 1ppmo7-0007z4-LR
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1682076752;462411f9;
+X-HE-SMSGID: 1ppp05-000755-84
 
-Hi, Thorsten here, the Linux kernel's regression tracker.
-
-I noticed a regression report in bugzilla.kernel.org. As many (most?)
-kernel developers don't keep an eye on it, I decided to forward it by mail.
-
-Bastien, from the bug report it to me sounds like it might be another
-case caused by 908d325e166 ("HID: logitech-hidpp: Detect hi-res
-scrolling support"), but I might be totally wrong with that (and the
-reporter didn't even explicitly state that it's a regression, but it
-sounds like one). If I got something wrong I apologize in advance.
-
-Note, you have to use bugzilla to reach the reporter, as I sadly[1] can
-not CCed them in mails like this.
-
-Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=217353 :
-
->  vova7890 2023-04-18 22:40:07 UTC
+On 20.04.23 17:57, Pierre Asselin wrote:
+> Some legacy BIOSes report no reserved bits in their 32-bit rgb mode,
+> breaking the calculation of bits_per_pixel in commit f35cd3fa7729
+> ("firmware/sysfb: Fix EFI/VESA format selection").  However they report
+> lfb_depth correctly for those modes.  Keep the computation but
+> set bits_per_pixel to lfb_depth if the latter is larger.
 > 
-> Need a solution similar as for
-> https://bugzilla.kernel.org/show_bug.cgi?id=216885 but for the usb dongle.
+> v2 fixes the warnings from a max3() macro with arguments of different
+> types;  split the bits_per_pixel assignment to avoid uglyfing the code
+> with too many casts.
 > 
-> hid_is_usb(hidpp->hid_dev) always return 0 for the usb dongle. Through
-> bluetooth it's working fine as hid_logitech_hidpp is not loading for
-> this mouse with over BT mode.
+> v3 fixes space and formatting blips pointed out by Javier, and change
+> the bit_per_pixel assignment back to a single statement using two casts.
+> 
+> Link: https://lore.kernel.org/r/4Psm6B6Lqkz1QXM@panix3.panix.com
+> Link: https://lore.kernel.org/r/20230412150225.3757223-1-javierm@redhat.com
+> Link: https://lore.kernel.org/dri-devel/20230418183325.2327-1-pa@panix.com/T/#u
+> Link: https://lore.kernel.org/dri-devel/20230419044834.10816-1-pa@panix.com/T/#u
+> Fixes: f35cd3fa7729 ("firmware/sysfb: Fix EFI/VESA format selection")
+> Signed-off-by: Pierre Asselin <pa@panix.com>
 
-See the ticket for more details.
+Linus might release the final this weekend and this is among the last
+few 6.3 regressions I track. Hence please allow me to ask:
 
+Pierre, Tomas, Javier, et. al: how many "legacy BIOSes" do we suspect
+are affected by this? So many that it might be worth delaying the
+release by one week? And in case everybody involved might agree that
+this patch is ready by today or tomorrow: might it be worth asking Linus
+to merge this patch directly[1]?
 
-[TLDR for the rest of this mail: I'm adding this report to the list of
-tracked Linux kernel regressions; the text you find below is based on a
-few templates paragraphs you might have encountered already in similar
-form.]
-
-BTW, let me use this mail to also add the report to the list of tracked
-regressions to ensure it's doesn't fall through the cracks:
-
-#regzbot introduced: 908d325e1665
-https://bugzilla.kernel.org/show_bug.cgi?id=217353
-#regzbot title: hid: Logitech MX Anywhere 3 scroll wheel works
-incorrectly over USB dongle
-#regzbot ignore-activity
-
-This isn't a regression? This issue or a fix for it are already
-discussed somewhere else? It was fixed already? You want to clarify when
-the regression started to happen? Or point out I got the title or
-something else totally wrong? Then just reply and tell me -- ideally
-while also telling regzbot about it, as explained by the page listed in
-the footer of this mail.
-
-Developers: When fixing the issue, remember to add 'Link:' tags pointing
-to the report (e.g. the buzgzilla ticket and maybe this mail as well, if
-this thread sees some discussion). See page linked in footer for details.
+[FWIW, I highly suspect the answer to the last two questions is "no,
+that's definitely not worth is", just wanted to confirm]
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
@@ -92,5 +73,5 @@ Everything you wanna know about Linux kernel regression tracking:
 https://linux-regtracking.leemhuis.info/about/#tldr
 If I did something stupid, please tell me, as explained on that page.
 
-[1] because bugzilla.kernel.org tells users upon registration their
-"email address will never be displayed to logged out users"
+[1] yes, that's a thing we do:
+https://lore.kernel.org/all/CAHk-=wis_qQy4oDNynNKi5b7Qhosmxtoj1jxo5wmB6SRUwQUBQ@mail.gmail.com/
