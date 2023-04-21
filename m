@@ -1,71 +1,76 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from l2mail1.panix.com (l2mail1.panix.com [166.84.1.75])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0B7F3C05
-	for <regressions@lists.linux.dev>; Fri, 21 Apr 2023 13:56:10 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pprF5-0005TD-AU; Fri, 21 Apr 2023 15:56:03 +0200
-Message-ID: <6c9da229-7040-cc2b-a3c3-f650ab3e1d6b@leemhuis.info>
-Date: Fri, 21 Apr 2023 15:56:02 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C78DC3C05
+	for <regressions@lists.linux.dev>; Fri, 21 Apr 2023 14:01:24 +0000 (UTC)
+Received: from mailbackend.panix.com (mailbackend.panix.com [166.84.1.89])
+	by l2mail1.panix.com (Postfix) with ESMTPS id 4Q2wgs6CtDzDWx
+	for <regressions@lists.linux.dev>; Fri, 21 Apr 2023 09:42:33 -0400 (EDT)
+Received: from mail.panix.com (localhost [127.0.0.1])
+	by mailbackend.panix.com (Postfix) with ESMTPA id 4Q2wgj4dRTz48Zd;
+	Fri, 21 Apr 2023 09:42:25 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=panix.com; s=panix;
+	t=1682084546; bh=ilKSAXYbb2I3tPDKY5tTE2ROdSFgRHhDclUFKT6+ApU=;
+	h=In-Reply-To:References:Date:Subject:From:To:Cc;
+	b=W0XJKCS1EOMytKJyx//xVUT6RCVCk8urGcWwzNCNZo6FHURPscK52TThLWj4C36S4
+	 ActEb0SHiKjBRi1sqqNHfZAvFTMxV1355G792EvHdEd3+PRHipOcJpWBF+d1u4JVW8
+	 IZBMD1YO0W+VtLPEQeD3LXULPCuSGFHiuUixjI5g=
+X-Panix-Received: from 166.84.1.2
+        (SquirrelMail authenticated user pa@panix.com)
+        by mail.panix.com with HTTP;
+        Fri, 21 Apr 2023 09:42:25 -0400
+Message-ID: <40075ac685423d46663dd6a4038add90.squirrel@mail.panix.com>
+In-Reply-To: <d8d22c77-1bde-774f-aa6e-41234ffa6e8d@suse.de>
+References: <20230420155705.21463-1-pa@panix.com>
+    <c4c09a67-6897-751c-c091-6e33f48542cc@leemhuis.info>
+    <d8d22c77-1bde-774f-aa6e-41234ffa6e8d@suse.de>
+Date: Fri, 21 Apr 2023 09:42:25 -0400
+Subject: Re: [PATCH v3] firmware/sysfb: Fix VESA format selection
+From: "Pierre Asselin" <pa@panix.com>
+To: "Thomas Zimmermann" <tzimmermann@suse.de>
+Cc: "Linux regressions mailing list" <regressions@lists.linux.dev>,
+ "Pierre Asselin" <pa@panix.com>,
+ dri-devel@lists.freedesktop.org,
+ "Daniel Vetter" <daniel.vetter@ffwll.ch>,
+ "Javier Martinez Canillas" <javierm@redhat.com>,
+ linux-kernel@vger.kernel.org,
+ "Hans de Goede" <hdegoede@redhat.com>,
+ "Ard Biesheuvel" <ardb@kernel.org>
+User-Agent: SquirrelMail/1.4.23-p1
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [6.2 regression][bisected]discard storm on idle since
- v6.1-rc8-59-g63a7cb130718 discard=async
-Content-Language: en-US, de-DE
-From: "Linux regression tracking #update (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-To: linux-btrfs@vger.kernel.org
-Cc: Linux kernel regressions list <regressions@lists.linux.dev>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-References: <Y/+n1wS/4XAH7X1p@nz>
- <fcba79c6-7d1b-0e17-7c75-42e25fedae69@leemhuis.info>
-In-Reply-To: <fcba79c6-7d1b-0e17-7c75-42e25fedae69@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1682085370;5de1d78a;
-X-HE-SMSGID: 1pprF5-0005TD-AU
+Content-Type: text/plain;charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+X-Priority: 3 (Normal)
+Importance: Normal
 
-[TLDR: This mail in primarily relevant for Linux kernel regression
-tracking. See link in footer if these mails annoy you.]
-
-On 02.03.23 09:04, Linux regression tracking #adding (Thorsten Leemhuis)
-wrote:
-> On 01.03.23 20:30, Sergei Trofimovich wrote:
+Thomas Zimmerman writes:
+>
+> Am 21.04.23 um 13:32 schrieb Linux regression tracking (Thorsten
+> Leemhuis):
 >>
->> Tl;DR:
->>
->>   After 63a7cb13071842 "btrfs: auto enable discard=async when possible" I
->>   see constant DISCARD storm towards my NVME device be it idle or not.
->>
->>   No storm: v6.1 and older
->>   Has storm: v6.2 and newer
-> 
-> Thanks for the report. To be sure the issue doesn't fall through the
-> cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
-> tracking bot:
-> 
-> #regzbot ^introduced 63a7cb13071842
-> #regzbot title btrfs: DISCARD storm towards NVME device be it idle or not
-> #regzbot ignore-activity
+>> Pierre, Tomas, Javier, et. al: how many "legacy BIOSes" do we suspect
+>> are affected by this?
 
-FWIW, the fix is in next now, regzbot just missed it due to a url
-encoding bug:
+So far, two:
+1) my Gateway laptop (Intel(R) Core(TM) Duo CPU,
+   Phoenix BIOS 83.08 Revision: 131.8 Release Date: 03/06/07)
+2) my Dell Precision T3610 (Intel(R) Xeon(R) CPU E5-1650,
+   Dell BIOS A19 Revision: 65.19 Release Date: 09/11/2019)
 
-#regzbot monitor:
-https://lore.kernel.org/linux-btrfs/cover.1680723651.git.boris@bur.io/T/#m21c1856ccc8fd24ccb6fbad7d9b54f0bae115d25
-#regzbot fix: 2e55571fddf
-#regzbot ignore-activity
+I don't know how to give a more precise description.
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+>> might it be worth asking Linus to merge this patch directly[1]?
+>
+> IMHO it's a fairly obscure bug and certainly not a release blocker. I'll
+> send it through the regular channels of the DRM subsystem.
+
+I agree.  Even when the regression bites, it's not a blocker.  The screen
+is strange but readable.
+
+--PA
+
