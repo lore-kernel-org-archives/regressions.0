@@ -1,189 +1,128 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from soltyk.jannau.net (soltyk.jannau.net [144.76.91.90])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAB3E29A8
-	for <regressions@lists.linux.dev>; Sun, 23 Apr 2023 16:53:45 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:5054:ff:feb3:8f48] (helo=regzbot.fritz.box); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	id 1pqcy1-00033n-QS; Sun, 23 Apr 2023 18:53:37 +0200
-From: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>
-To: LKML <linux-kernel@vger.kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Linux regressions report  for mainline [2023-04-23]
-Date: Sun, 23 Apr 2023 16:53:37 +0000
-Message-Id: <168226876591.2194644.7877001821155596037@leemhuis.info>
-X-Mailer: git-send-email 2.40.0
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2350A7F2
+	for <regressions@lists.linux.dev>; Sun, 23 Apr 2023 20:57:30 +0000 (UTC)
+Received: by soltyk.jannau.net (Postfix, from userid 1000)
+	id 4361826FC9D; Sun, 23 Apr 2023 22:51:02 +0200 (CEST)
+Date: Sun, 23 Apr 2023 22:51:02 +0200
+From: Janne Grunau <j@jannau.net>
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Zongmin Zhou <zhouzongmin@kylinos.cn>,
+	maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+	tzimmermann@suse.de, airlied@gmail.com, daniel@ffwll.ch,
+	neil.armstrong@linaro.org, tony.luck@intel.com,
+	keescook@chromium.org, linux-kernel@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, gpiccoli@igalia.com,
+	linux-hardening@vger.kernel.org, laurentiu.palcu@oss.nxp.com,
+	regressions@lists.linux.dev
+Subject: Re: [PATCH] drm/probe_helper: fix the warning reported when calling
+ drm_kms_helper_poll_disable during suspend
+Message-ID: <20230423205102.GE3280@jannau.net>
+References: <20230328023129.3596968-1-zhouzongmin@kylinos.cn>
+ <20230420200148.GD3280@jannau.net>
+ <CAA8EJpoK3yv3E==bJuDoQhsW2Q1LdqKakJgdZx6S=ec-CvyGyw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1682268825;fc3f7b87;
-X-HE-SMSGID: 1pqcy1-00033n-QS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAA8EJpoK3yv3E==bJuDoQhsW2Q1LdqKakJgdZx6S=ec-CvyGyw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-Hi Linus. Just for completeness: nothing much to report.
+On 2023-04-20 23:07:01 +0300, Dmitry Baryshkov wrote:
+> On Thu, 20 Apr 2023 at 23:01, Janne Grunau <j@jannau.net> wrote:
+> >
+> > On 2023-03-28 10:31:29 +0800, Zongmin Zhou wrote:
+> > > When drivers call drm_kms_helper_poll_disable from
+> > > their device suspend implementation without enabled output polling before,
+> > > following warning will be reported,due to work->func not be initialized:
+> >
+> > we see the same warning with the wpork in progress kms driver for apple
+> > silicon SoCs. The connectors do not need to polled so the driver never
+> > calls drm_kms_helper_poll_init().
+> >
+> > > [   55.141361] WARNING: CPU: 3 PID: 372 at kernel/workqueue.c:3066 __flush_work+0x22f/0x240
+> > > [   55.141382] Modules linked in: nls_iso8859_1 snd_hda_codec_generic ledtrig_audio snd_hda_intel snd_intel_dspcfg snd_intel_sdw_acpi snd_hda_codec snd_hda_core snd_hwdep snd_pcm snd_seq_midi snd_seq_midi_event snd_rawmidi snd_seq intel_rapl_msr intel_rapl_common bochs drm_vram_helper drm_ttm_helper snd_seq_device nfit ttm crct10dif_pclmul snd_timer ghash_clmulni_intel binfmt_misc sha512_ssse3 aesni_intel drm_kms_helper joydev input_leds syscopyarea crypto_simd snd cryptd sysfillrect sysimgblt mac_hid serio_raw soundcore qemu_fw_cfg sch_fq_codel msr parport_pc ppdev lp parport drm ramoops reed_solomon pstore_blk pstore_zone efi_pstore virtio_rng ip_tables x_tables autofs4 hid_generic usbhid hid ahci virtio_net i2c_i801 crc32_pclmul psmouse virtio_scsi libahci i2c_smbus lpc_ich xhci_pci net_failover virtio_blk xhci_pci_renesas failover
+> > > [   55.141430] CPU: 3 PID: 372 Comm: kworker/u16:9 Not tainted 6.2.0-rc6+ #16
+> > > [   55.141433] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.12.1-0-ga5cab58e9a3f-prebuilt.qemu.org 04/01/2014
+> > > [   55.141435] Workqueue: events_unbound async_run_entry_fn
+> > > [   55.141441] RIP: 0010:__flush_work+0x22f/0x240
+> > > [   55.141444] Code: 8b 43 28 48 8b 53 30 89 c1 e9 f9 fe ff ff 4c 89 f7 e8 b5 95 d9 00 e8 00 53 08 00 45 31 ff e9 11 ff ff ff 0f 0b e9 0a ff ff ff <0f> 0b 45 31 ff e9 00 ff ff ff e8 e2 54 d8 00 66 90 90 90 90 90 90
+> > > [   55.141446] RSP: 0018:ff59221940833c18 EFLAGS: 00010246
+> > > [   55.141449] RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffffff9b72bcbe
+> > > [   55.141450] RDX: 0000000000000001 RSI: 0000000000000001 RDI: ff3ea01e4265e330
+> > > [   55.141451] RBP: ff59221940833c90 R08: 0000000000000000 R09: 8080808080808080
+> > > [   55.141453] R10: ff3ea01e42b3caf4 R11: 000000000000000f R12: ff3ea01e4265e330
+> > > [   55.141454] R13: 0000000000000001 R14: ff3ea01e505e5e80 R15: 0000000000000001
+> > > [   55.141455] FS:  0000000000000000(0000) GS:ff3ea01fb7cc0000(0000) knlGS:0000000000000000
+> > > [   55.141456] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > > [   55.141458] CR2: 0000563543ad1546 CR3: 000000010ee82005 CR4: 0000000000771ee0
+> > > [   55.141464] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> > > [   55.141465] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> > > [   55.141466] PKRU: 55555554
+> > > [   55.141467] Call Trace:
+> > > [   55.141469]  <TASK>
+> > > [   55.141472]  ? pcie_wait_cmd+0xdf/0x220
+> > > [   55.141478]  ? mptcp_seq_show+0xe0/0x180
+> > > [   55.141484]  __cancel_work_timer+0x124/0x1b0
+> > > [   55.141487]  cancel_delayed_work_sync+0x17/0x20
+> > > [   55.141490]  drm_kms_helper_poll_disable+0x26/0x40 [drm_kms_helper]
+> > > [   55.141516]  drm_mode_config_helper_suspend+0x25/0x90 [drm_kms_helper]
+> > > [   55.141531]  ? __pm_runtime_resume+0x64/0x90
+> > > [   55.141536]  bochs_pm_suspend+0x16/0x20 [bochs]
+> > > [   55.141540]  pci_pm_suspend+0x8b/0x1b0
+> > > [   55.141545]  ? __pfx_pci_pm_suspend+0x10/0x10
+> > > [   55.141547]  dpm_run_callback+0x4c/0x160
+> > > [   55.141550]  __device_suspend+0x14c/0x4c0
+> > > [   55.141553]  async_suspend+0x24/0xa0
+> > > [   55.141555]  async_run_entry_fn+0x34/0x120
+> > > [   55.141557]  process_one_work+0x21a/0x3f0
+> > > [   55.141560]  worker_thread+0x4e/0x3c0
+> > > [   55.141563]  ? __pfx_worker_thread+0x10/0x10
+> > > [   55.141565]  kthread+0xf2/0x120
+> > > [   55.141568]  ? __pfx_kthread+0x10/0x10
+> > > [   55.141570]  ret_from_fork+0x29/0x50
+> > > [   55.141575]  </TASK>
+> > > [   55.141575] ---[ end trace 0000000000000000 ]---
+> > >
+> > > Fixes: a4e771729a51 ("drm/probe_helper: sort out poll_running vs poll_enabled")
+> > > Signed-off-by: Zongmin Zhou<zhouzongmin@kylinos.cn>
+> > > ---
+> > >  drivers/gpu/drm/drm_probe_helper.c | 3 ++-
+> > >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/drivers/gpu/drm/drm_probe_helper.c b/drivers/gpu/drm/drm_probe_helper.c
+> > > index 8127be134c39..ac72b18e2257 100644
+> > > --- a/drivers/gpu/drm/drm_probe_helper.c
+> > > +++ b/drivers/gpu/drm/drm_probe_helper.c
+> > > @@ -855,7 +855,8 @@ void drm_kms_helper_poll_disable(struct drm_device *dev)
+> > >       if (dev->mode_config.poll_running)
+> > >               drm_kms_helper_disable_hpd(dev);
+> > >
+> > > -     cancel_delayed_work_sync(&dev->mode_config.output_poll_work);
+> > > +     if (dev->mode_config.poll_enabled)
+> > > +             cancel_delayed_work_sync(&dev->mode_config.output_poll_work);
+> >
+> > Checking for dev->mode_config.poll_enabled at the start of the function
+> > and return early if it is not true looks more in style with the rest of
+> > drm_probe_helper.c.
+> 
+> I think it is an error to call drm_kms_helper_poll_disable() if
+> polling was not initialized. So, in my opinion the fix should go to
+> the drm_mode_config_helper_suspend() / _resume() instead. Please add a
+> guard there using dev->mode_config.poll_enabled.
 
-There are still two regressions from the 6.3 cycle that I and regzbot
-are aware of and worth mentioning.
+While I tend to agree to the sentiment I do not think this is the 
+correct fix in this situation. drm_kms_helper_poll_disable had the
+check since at least 2014. a4e771729a51 is a regression. If we want to  
+change the behavior it should be done explicitly and after verifying all 
+drm_kms_helper_poll_disable() calls.
 
-One is a performance regression with PostgreSQL that Mathieu after some
-back and forth was able to fix. But the fix afaics is nothing for 6.3,
-as it's big and wasn't even yet in next, as it only landed in tip
-sched/core on Saturday:
-https://lore.kernel.org/lkml/168214940343.404.10896712987516429042.tip-bot2@tip-bot2/
+#regzbot ^introduced a4e771729a51
 
-The other is a "fairly obscure bug" with VESA format selection occurring
-on some x86 system with legacy BIOSes:
-https://lore.kernel.org/lkml/40075ac685423d46663dd6a4038add90.squirrel@mail.panix.com/
-
-HTH, Ciao, Thorsten
-
-P.S.: BTW, thx for reverting the 6.2 change that causes the wake-on-lan
-and directly picking up Toke's ath9k fix directly; also thx for the
-messages you send to the list in those cases, they will be a handy
-reference I can pull up in my future efforts trying to convince
-developers to "do the right thing"(tm).
-
-
----
-
-Hi, this is regzbot, the Linux kernel regression tracking bot.
-
-Currently I'm aware of 2 regressions in linux-mainline. Find the
-current status below and the latest on the web:
-
-https://linux-regtracking.leemhuis.info/regzbot/mainline/
-
-Bye bye, hope to see you soon for the next report.
-   Regzbot (on behalf of Thorsten Leemhuis)
-
-
-======================================================
-current cycle (v6.2.. aka v6.3-rc), culprit identified
-======================================================
-
-
-sched: PostgreSQL performance regression introduced by mm_cid
--------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/20230327080502.GA570847@ziqianlu-desk2/
-https://lore.kernel.org/lkml/20230327080502.GA570847@ziqianlu-desk2/
-
-By Aaron Lu; 27 days ago; 100 activities, latest 1 days ago.
-Introduced in af7f588d8f73 (v6.3-rc1)
-
-Recent activities from: Mathieu Desnoyers (14), Aaron Lu (10), tip-bot2
-  for Mathieu Desnoyers (1)
-
-9 patch postings are associated with this regression, the latest is this:
-* Re: [RFC PATCH v9 2/2] sched: Fix performance regression introduced by mm_cid
-  https://lore.kernel.org/lkml/20230420143910.GB154815@ziqianlu-desk2/
-  3 days ago, by Aaron Lu
-
-Noteworthy links:
-* [RFC PATCH] sched: Introduce per-mm/cpu concurrency id state
-  https://lore.kernel.org/lkml/20230330230911.228720-1-mathieu.desnoyers@efficios.com/
-  23 days ago, by Mathieu Desnoyers; thread monitored.
-* [RFC PATCH] sched: Fix performance regression introduced by mm_cid
-  https://lore.kernel.org/lkml/20230403181342.210896-1-mathieu.desnoyers@efficios.com/
-  19 days ago, by Mathieu Desnoyers; thread monitored.
-* [RFC PATCH] sched: Fix performance regression introduced by mm_cid (v2)
-  https://lore.kernel.org/lkml/20230405121535.3891327-1-mathieu.desnoyers@efficios.com/
-  18 days ago, by Mathieu Desnoyers; thread monitored.
-* [RFC PATCH v3] sched: Fix performance regression introduced by mm_cid
-  https://lore.kernel.org/lkml/20230405162635.225245-1-mathieu.desnoyers@efficios.com/
-  18 days ago, by Mathieu Desnoyers; thread monitored.
-* [RFC PATCH v4] sched: Fix performance regression introduced by mm_cid
-  https://lore.kernel.org/lkml/20230410150150.2179062-1-mathieu.desnoyers@efficios.com/
-  13 days ago, by Mathieu Desnoyers; thread monitored.
-* [RFC PATCH] sched: Rate limit migrations
-  https://lore.kernel.org/lkml/20230411214116.361016-1-mathieu.desnoyers@efficios.com/
-  11 days ago, by Mathieu Desnoyers; thread monitored.
-* [RFC PATCH v5] sched: Fix performance regression introduced by mm_cid
-  https://lore.kernel.org/lkml/20230413140248.230479-1-mathieu.desnoyers@efficios.com/
-  10 days ago, by Mathieu Desnoyers; thread monitored.
-* [RFC PATCH v6] sched: Fix performance regression introduced by mm_cid
-  https://lore.kernel.org/lkml/20230413223356.17195-1-mathieu.desnoyers@efficios.com/
-  9 days ago, by Mathieu Desnoyers; thread monitored.
-* [RFC PATCH v7] sched: Fix performance regression introduced by mm_cid
-  https://lore.kernel.org/lkml/20230416223217.191261-1-mathieu.desnoyers@efficios.com/
-  6 days ago, by Mathieu Desnoyers; thread monitored.
-* [RFC PATCH v8] sched: Fix performance regression introduced by mm_cid
-  https://lore.kernel.org/lkml/20230417150831.264780-1-mathieu.desnoyers@efficios.com/
-  6 days ago, by Mathieu Desnoyers; thread monitored.
-* [RFC PATCH v9 2/2] sched: Fix performance regression introduced by mm_cid
-  https://lore.kernel.org/lkml/20230419155012.63901-2-mathieu.desnoyers@efficios.com/
-  4 days ago, by Mathieu Desnoyers; thread monitored.
-* [PATCH v10] sched: Fix performance regression introduced by mm_cid
-  https://lore.kernel.org/lkml/20230420145548.232747-1-mathieu.desnoyers@efficios.com/
-  3 days ago, by Mathieu Desnoyers; thread monitored.
-* [tip: sched/core] sched: Fix performance regression introduced by mm_cid
-  https://lore.kernel.org/lkml/168214940343.404.10896712987516429042.tip-bot2@tip-bot2/
-  1 days ago, by tip-bot2 for Mathieu Desnoyers; thread monitored.
-
-
-firmware/sysfb: wrong mode and display garbled on 16-year old i686 laptop
--------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/4Psm6B6Lqkz1QXM@panix3.panix.com/
-https://lore.kernel.org/dri-devel/4Psm6B6Lqkz1QXM@panix3.panix.com/
-
-By pa@panix.com; 17 days ago; 43 activities, latest 2 days ago.
-Introduced in f35cd3fa7729 (v6.3-rc1)
-
-Recent activities from: Pierre Asselin (7), Thomas Zimmermann (7),
-  Javier Martinez Canillas (3), Linux regression tracking (Thorsten
-  Leemhuis) (1), kernel test robot (1)
-
-4 patch postings are associated with this regression, the latest is this:
-* Re: [PATCH] firmware/sysfb: Fix wrong stride when bits-per-pixel is calculated
-  https://lore.kernel.org/lkml/87o7nsuumt.fsf@minerva.mail-host-address-is-not-set/
-  10 days ago, by Javier Martinez Canillas
-
-Noteworthy links:
-* [PATCH] firmware/sysfb: Fix wrong stride when bits-per-pixel is calculated
-  https://lore.kernel.org/lkml/20230412150225.3757223-1-javierm@redhat.com/
-  11 days ago, by Javier Martinez Canillas; thread monitored.
-* [PATCH] firmware/sysfb: Fix VESA format selection
-  https://lore.kernel.org/lkml/20230418183325.2327-1-pa@panix.com/
-  4 days ago, by Pierre Asselin; thread monitored.
-* [PATCH v2] firmware/sysfb: Fix VESA format selection
-  https://lore.kernel.org/lkml/20230419044834.10816-1-pa@panix.com/
-  4 days ago, by Pierre Asselin; thread monitored.
-* [PATCH v3] firmware/sysfb: Fix VESA format selection
-  https://lore.kernel.org/lkml/20230420155705.21463-1-pa@panix.com/
-  3 days ago, by Pierre Asselin; thread monitored.
-
-
-=============
-End of report
-=============
-
-All regressions marked '[ *NEW* ]' were added since the previous report,
-which can be found here:
-https://lore.kernel.org/r/168166781352.1843526.278570500979918184@leemhuis.info
-
-Thanks for your attention, have a nice day!
-
-  Regzbot, your hard working Linux kernel regression tracking robot
-
-
-P.S.: Wanna know more about regzbot or how to use it to track regressions
-for your subsystem? Then check out the getting started guide or the
-reference documentation:
-
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
-
-The short version: if you see a regression report you want to see
-tracked, just send a reply to the report where you Cc
-regressions@lists.linux.dev with a line like this:
-
-#regzbot introduced: v5.13..v5.14-rc1
-
-If you want to fix a tracked regression, just do what is expected
-anyway: add a 'Link:' tag with the url to the report, e.g.:
-
-Link: https://lore.kernel.org/all/30th.anniversary.repost@klaava.Helsinki.FI/
+ciao
+Janne
