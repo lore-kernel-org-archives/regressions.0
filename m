@@ -1,94 +1,145 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2040.outbound.protection.outlook.com [40.107.212.40])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74EF52108
-	for <regressions@lists.linux.dev>; Mon, 24 Apr 2023 14:25:00 +0000 (UTC)
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-95227e5164dso133444866b.1
-        for <regressions@lists.linux.dev>; Mon, 24 Apr 2023 07:25:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682346298; x=1684938298;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6iPDVN2JRvAs5aBXvDi0v6AAx42pZdYcsBFV+oN7Sro=;
-        b=SJ3Ff6u6uyY11CecugwG17BeG1ikUlKbBnRBiZXU4HlC0ZSHADzIv8NuxeoA6rBBS4
-         zO+sb9COlUTvqAwMXrXICrWnkEwGZnQR/EaIiooRseS/87yB2RxiFOUikytnxDx7FfWD
-         cQiQy+or2v8JGhASMooDnTQoz4rozezc+MBXUL9d81ilnOCuX1j/1HJYUY/jpHcjSVzS
-         /iOr2SToTXj6Rg2vi2bZJGI3cpeTTvbnTMFiU64jdRnkanLPdran/WuxRw8xssEOHL/q
-         oH5NZkyI11RSqx6x0CTTwdaf3WWaGMQaxWD8DfbmYDy9oGpeo2vd5XKkZs5Np1cTtnoO
-         9VrA==
-X-Gm-Message-State: AAQBX9cYeH3uCAvAaRpoHOtjzD5y0g7MGjRL+a5VQ7uz52usuVnG0GSj
-	6T2+RpVzcfBi+Dku9JnS4o2Dy0HyKKaXIKNXPSU=
-X-Google-Smtp-Source: AKy350ZCeSYhWrQ72tvK73ERvNG92qwB5cxgU2R3y8X36I//xTYq1VhY110Y7Fxl5AXYolbqZGjaI65XSXtylBSw/7k=
-X-Received: by 2002:a17:906:a246:b0:94f:4ec3:f0e8 with SMTP id
- bi6-20020a170906a24600b0094f4ec3f0e8mr10421243ejb.4.1682346298426; Mon, 24
- Apr 2023 07:24:58 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 016222CA2
+	for <regressions@lists.linux.dev>; Mon, 24 Apr 2023 16:13:26 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BrtT3aiTsiABG25WkALc8WVwfebTpU8gd2rrBRxpzFgDB8qtLpVhyq+PntfO0FqLpiraywjfRRaVIyLLDFQU+UieFKMuWCCa3ZF9na0vyfw/pwFe9+RFuz8PMv1flf06kgr54PQ9C10k06d99ZEjR14NB51g068r1l15WFs1QyP9bBuqaHC4OkyVit6CqSgfpMBhyANN47wmFerGqHJA113aIuSx7mYHU5FnG9P3sFXFwLHKHRNuTVz7t3x0ise5JANuwQxhJ6LlN5HQBlDIPM6DjiP3IaIrYu3njW65XqinOVnTP8lutbnaYp525iFY4b93/bM5hUiHYoK3A30sfg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=8CcHdfsyX3aWLM6CJbrD26Ro3ZQepvZU8IikNuNHPgA=;
+ b=aTPDVgNTFHcQaAmA8KPq9qZDNOij/jMTGkRpRY1RIMhg1uqRvLej1zvZOjrVIDCrdfOLBefvqxkRt7CRAiTIfRAth+xwMd3Xo0ROqJzR76Nb/NBLNQMm1iUL6tnBhHTED13yX2vxvV2IzZqt9RNCiiNXZT21SgJwfvlOPjAwgnhVXKSYsHY7wQDjeA/NaBnrqIJ0hGnLM37q1QBZUYquoBg3ABBssL3DcNwtFpO4uUe3WPUh0Cahik/s+IuqvzhDAuMNCuDMJ2Es1wS0npGmE2cD1X988KkfZTAzCA7LFNIjKJBN3dglEGs5naKHmrEtWvuqUKNoT3Z00dlJpnJkFw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8CcHdfsyX3aWLM6CJbrD26Ro3ZQepvZU8IikNuNHPgA=;
+ b=G5B+dMcK009m5rH1lPlwR2taW1d6FQcZc4Gt5loF0MP8yeGNBvm0mekGImG/JuNzq0G2Gbv3TMC3tI4s7jxIQkjXrhTdZjPXDMxFa4GlERkxr0UHs78HpJYSFR+Lkhp6V6KgLTi4jMLl/u0Odo5arLvkPkcDqUboSv+JFzb2UZs=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM4PR12MB5040.namprd12.prod.outlook.com (2603:10b6:5:38b::19)
+ by DM4PR12MB5295.namprd12.prod.outlook.com (2603:10b6:5:39f::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6319.33; Mon, 24 Apr
+ 2023 16:13:24 +0000
+Received: from DM4PR12MB5040.namprd12.prod.outlook.com
+ ([fe80::61c3:1cd:90b6:c307]) by DM4PR12MB5040.namprd12.prod.outlook.com
+ ([fe80::61c3:1cd:90b6:c307%3]) with mapi id 15.20.6319.033; Mon, 24 Apr 2023
+ 16:13:24 +0000
+Message-ID: <4dca182f-60e1-4322-ee30-33c75771cd1d@amd.com>
+Date: Mon, 24 Apr 2023 21:43:11 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH] HID: amd_sfh: Support for additional light sensor
+To: Linux regressions mailing list <regressions@lists.linux.dev>,
+ Jiri Kosina <jikos@kernel.org>, Basavaraj Natikar <Basavaraj.Natikar@amd.com>
+Cc: benjamin.tissoires@redhat.com, linux-input@vger.kernel.org
+References: <20230411161901.909940-1-Basavaraj.Natikar@amd.com>
+ <nycvar.YFH.7.76.2304131557420.29760@cbobk.fhfr.pm>
+ <0b83318b-5ae2-9b90-5d5a-11d95f3501c4@leemhuis.info>
+Content-Language: en-US
+From: Basavaraj Natikar <bnatikar@amd.com>
+In-Reply-To: <0b83318b-5ae2-9b90-5d5a-11d95f3501c4@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: PN2PR01CA0225.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:ea::20) To DM4PR12MB5040.namprd12.prod.outlook.com
+ (2603:10b6:5:38b::19)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <168166781352.1843526.278570500979918184@leemhuis.info>
- <CAHk-=wjQaxmXTR68VnEJvLgB=H2agMTrrF4EXkXT4Hbdf2ZuMQ@mail.gmail.com>
- <CAJZ5v0j_MwW6JaqTRNhmz=LcW8==GZ0X-=W0+z0tOsGQyDd0Dw@mail.gmail.com>
- <b51f571a-d6b2-1908-d94a-bc0b2a751905@leemhuis.info> <CAJZ5v0j+VieZvQUXtyEJg47oggji2zgcJ6W9Mnge9Xz867QTJQ@mail.gmail.com>
- <CAHk-=wgD98pmSK3ZyHk_d9kZ2bhgN6DuNZMAJaV0WTtbkf=RDw@mail.gmail.com>
-In-Reply-To: <CAHk-=wgD98pmSK3ZyHk_d9kZ2bhgN6DuNZMAJaV0WTtbkf=RDw@mail.gmail.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Mon, 24 Apr 2023 16:24:41 +0200
-Message-ID: <CAJZ5v0jVoUQAuW6GAE1tkW616F9x_0SK21BvtcqGzhLjVx02cQ@mail.gmail.com>
-Subject: Re: the wake-on-lan regression from 6.2 (was: Re: Linux regressions
- report for mainline [2023-04-16])
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Linux regressions mailing list <regressions@lists.linux.dev>, David Sterba <dsterba@suse.com>, 
-	LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR12MB5040:EE_|DM4PR12MB5295:EE_
+X-MS-Office365-Filtering-Correlation-Id: d85f78f8-cbc0-4646-edda-08db44ded437
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	Yj1fnkGY2zrBVUE6h7h1p8Jqyg6dE0qp3kIvf25ogayb9p6r1TKhPegjqhAZvrIFI6krIlrUY/Y3Kb6CJ/IFVe/vNZcVifAI7QhPY0Pug0VFjIrRnP/+JgY6+resZGuHaCI1e2G/bQP8q6ZAZUzTdwWPPsNtDR/BucWKevyBKoqp6sPcbWCMsFy/qgiKC7YT/gvoNhhaBn+3qGZOGS/fp6Z2x7LPPw6hvdLRGkfZ+VltJeQebRqMlqS6URDqa63bq/XSo3xj+KuWtq3v8bs0MWyz8/DnFA4m36R0iDIhlyAnntdlkngy16DsUW28uOnyrlZd19Wl8vyCVFo2jEc/zuqCSy0jU1017MO7lxPrfYXbnD7Jovum30gUkECs47Kl649ScwgKGPMx5cUHuq3WfSRXLUIyUZPRo6Ym4HiQxxcxtypvLc4V/B0Q6R803OdExggzpS5ydd4Vu9RqqqH+kU1A38HCoMss9zmoxexwjB7l/GNNYj40+ENwI8hapI81WUjJQjnGW/ZwtJQFx7Hcjcz1ooReZBDs/2bBP2gIv289XHJ2s+3r3ATV/n7TSvaAtkcDRPo+xc4YfHOzTYtkcvhAvtKHVBPxuGlusFbyro77rYYqVMN/NWi2SDazMIS9GpM+chFXiPBqx3qjRhhMmjL0SM0Glvm98lSIbjGK+OFPaSGLIka9csx/wT40/1dp
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB5040.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(136003)(366004)(39860400002)(396003)(346002)(376002)(451199021)(2906002)(4744005)(6486002)(966005)(2616005)(6666004)(6512007)(6506007)(26005)(53546011)(186003)(66946007)(66556008)(66476007)(8676002)(8936002)(316002)(41300700001)(4326008)(478600001)(5660300002)(6636002)(110136005)(38100700002)(36756003)(31696002)(83380400001)(31686004)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?MXp6MURIcGZyQkhmbFk1TURvbmg5TkZoZVh6ZmYydUd6elZrUTBiYmRZSGdi?=
+ =?utf-8?B?eUx2TmU1RWpYOVFOblVjSFM0eDRTSHlpVEc0bnBmcWIxT3p2R1dwNGNOUE1w?=
+ =?utf-8?B?QlhwLzRYSjNHdmRRVnl3bDBvY1FnS29WNnkwbVZ1OTZNTi9oejhSSmJYQWJp?=
+ =?utf-8?B?Tm4rci9hS21nMWt1YzlWMFhhNlhOcm0zMXQzcUlRNG8vYTh4bmZPWmJkOS9J?=
+ =?utf-8?B?STY5NnlCbEU1R1ZCQ2VjZTBJVXV6SE1GZ1ZWSlV0OG9TWmdzOWc4STJweTRw?=
+ =?utf-8?B?dGt4TmNSYnRNRWQzWXhndU93SVlvUkt4UlBKVGRhYy9rWjdnM0FBdkg0SmZQ?=
+ =?utf-8?B?SklWNXJlakVXSitUTHBoRlJ4Y01mR2xsbUcwSUkvbFNsTkIzZ0VvZ041MjdN?=
+ =?utf-8?B?SlphWEhDeS93R3pBY0hPcVEvUUxMNC82clh6SjgyMzhyamhPWGEwUUd4YStv?=
+ =?utf-8?B?eXdQTDljcWFqZUo1MjJJVFhxUnJZVVJKZW5xOHRRUjk5VjNIditxelo3TWwx?=
+ =?utf-8?B?QzNzdS9IMWR3YjNVNCsrV0p4SWw5blhSU1dqWXZ1NFZKRTdTbmxnZU9TSkpq?=
+ =?utf-8?B?THZEVXpUT1JINkhIalByYlJ5VmE4SnBkNnhQaDR3TzBPcklwRlA1UTZQNUcx?=
+ =?utf-8?B?L3cwa05KY0ZNcmpZZ2ZFQWxNNDkrN000WS96T1pQa1g5VXRHaXdqdS9hL3kr?=
+ =?utf-8?B?blRyaVBOdG53bGlrZ2dqSTdiUzhCUjU5U0VTOTlwcnNVcXhIQ0NEd2JTUExl?=
+ =?utf-8?B?NVNwZXNaZDMxN01mVENHeUY5dFNxc1lmbk1ZenlLZVpXQVZKTnUrR20wSGFz?=
+ =?utf-8?B?VjBLdVhrWm56SVFMVEtwL1ZwTXd6cFlteS9TR1p5OWltWWsrdkVINTRMYXdB?=
+ =?utf-8?B?YzdwYStxenlQWlFMVURwOTZUQVdtTTZHVSt1ZkdEZnh2cHhYSFIwZmdmb05k?=
+ =?utf-8?B?TnduYldtaEhOdDE1c21LbW0xdTZwTUxRRGFUTlVZMS9JYXFGYVlocFNuQ1Ro?=
+ =?utf-8?B?eE1SbVhZelNFZnBYanhNMFlUam5IK2VvVU1hdDZ0MHgxVFJnT09KdUhnWnBp?=
+ =?utf-8?B?WXliVzRvanRKamNKNkV6OHpZdFJKWTF4eU1Vd1I4VUNyN0tsL1o2TFBDZ2FI?=
+ =?utf-8?B?SmdEZm41RXU3alQrWUxEL2lMNzBjQzZGTUFPUTc2TTI4aXZHOHN1LzkyWFpj?=
+ =?utf-8?B?ekl0OERSS254QzhxeFRUZWJjSkplSVhFZTJmd3pUVVk3S2NSV1VBcnJqY0tt?=
+ =?utf-8?B?NFRDSExQMUpwN1RDdW9nbmNpMmNham9FZlh4LzNQaFdkcERRemUxMUM5KzhC?=
+ =?utf-8?B?Z2VFcmdHYWdKY1ZHMkU1Q2d0eEJXYkFoejR5b1BUYkJTMVlQWkVleC9UcUgw?=
+ =?utf-8?B?NGtjanV0OUdsVm1xNkhoOVZnQ1BnQTU3UzR3RnVNNnpTWHhDaUhqZkpPWFY0?=
+ =?utf-8?B?RkpxeFZkaUpiTlpUSUVsVHZadWVhb1ZneVRWYzVXcTRpVWNBb3dRNk5EcmYr?=
+ =?utf-8?B?b0FPVTdnRG9pblplbG1POUVwaDFEVDhwcVNKSSswY3BqSGhiUjFuc3NpeG1O?=
+ =?utf-8?B?bHl2aWREckNSaDgwSE5NU1JpeXdYdDFrTTZzcitIWkF6Z1c0NEtmVFVCVWdD?=
+ =?utf-8?B?Q0loUDE3UWtCSXdaLytBc2VGbzhRckg5SlR3elpGeFMyaXFYYVBPNHF0a085?=
+ =?utf-8?B?NHB3VWU2UGlCTzZaS20rUVNaNEd6L2h6bHkvNU5iOVR6YUVUZGxvNmEra2ZT?=
+ =?utf-8?B?VXdhYU9CVWFEaE1JTmxJbEFFWnMxdFlKOUZVN0RhT0VFdHdvaE91Y1hrK24w?=
+ =?utf-8?B?cUtOTTFJVWEySUl5QTF1NmtoQnRrcFlhTHFFTWgyUnRpUUlwNHJFU1RFOWRH?=
+ =?utf-8?B?YjFNL2cwdmpmRmJRNFllTldhSW03dVVpeVd5R1ZCVnQzRHYvbjZEM29KZVVp?=
+ =?utf-8?B?TTlsYVVaU2svaFAxQUtXOVd1cC82dlliOHkvZzloaUFrTEh2S01tYkRDSWc5?=
+ =?utf-8?B?ZDNxVTNiSlVnbG5ZS3dOeThWS2hmUVpJNTZKRTFyeStrM212OUtrbE1nbDRm?=
+ =?utf-8?B?dTlud1ppSzduUVFYSUFGWHhtZndsSXZUOVYxQzh3dzFYaTltSjZrUExpeDRT?=
+ =?utf-8?Q?iM2cMMTpwPNYs/AcxG5ablWgI?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d85f78f8-cbc0-4646-edda-08db44ded437
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB5040.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Apr 2023 16:13:24.2725
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: e3iECal2JwB37tOVR2T3GJDHyqBLKJ74oMAPtJ0nSkpA1blV4dM8C7Ry4miPQxNHbPk6mLHHe9/MDKvQRIDKrQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5295
 
-On Fri, Apr 21, 2023 at 10:45=E2=80=AFPM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> On Fri, Apr 21, 2023 at 12:22=E2=80=AFPM Rafael J. Wysocki <rafael@kernel=
-.org> wrote:
-> >
-> > It will get fixed, most likely by reverting the offending commit and
-> > most likely during the 6.4 merge window.
->
-> No.
->
-> It's now reverted in my tree.
 
-Thanks for taking care of this and sorry for the trouble.
+On 4/24/2023 2:02 PM, Linux regression tracking (Thorsten Leemhuis) wrote:
+> On 13.04.23 15:57, Jiri Kosina wrote:
+>> On Tue, 11 Apr 2023, Basavaraj Natikar wrote:
+>>
+>>> There is support for additional light sensors in the SFH firmware.
+>>> As a result, add support for additional light sensors.
+>>>
+>>> Signed-off-by: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
+>> Applied.
+> FWIW, there is a report about a hang at boot that was bisected to this
+> patch. For details see:
+> https://bugzilla.kernel.org/show_bug.cgi?id=217354
 
-I was traveling Fri - Sun and I wouldn't have been able to push the
-revert myself before today.
+Thanks a lot for information.
 
-> We're not doing *another* release with this known-broken garbage. It's
-> been pending for much too long already.
->
-> Known-broken commits either
->
->  (a) get a timely fix that doesn't have other questions
->
-> or
->
->  (b) get reverted
->
-> Not this kind of "this is broken, has been known to be broken for a
-> long time, people have bisected it, and we're just sitting here
-> wondering what to do".
->
-> > Note that ACPICA is involved, so the analogous revert needs to be
-> > submitted there and I'm traveling right now.
->
-> No, we're not waiting for "it's broken in the ACPICA tree" and using
-> that as an excuse to have a broken kernel.
->
-> If the ACPICA tree can't get their act together in two months, that's
-> their problem. It does not mean that users should need to suffer known
-> issues.
+Added a Fix in
 
-OK, in the future I'll deal with problematic commits coming from
-ACPICA more timely without waiting for upstream.
+https://lore.kernel.org/all/20230424160406.2579888-1-Basavaraj.Natikar@amd.com/ 
+
+Thanks,
+--
+Basavaraj
+
+>
+> Ciao, Thorsten
+>
+> P.S. I normally don't track regressions in -next, I just noticed that
+> report and wanted to let you know about it.
+
