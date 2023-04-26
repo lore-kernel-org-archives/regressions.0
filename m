@@ -1,220 +1,126 @@
-Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.17.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF1A21FC6
-	for <regressions@lists.linux.dev>; Wed, 26 Apr 2023 13:10:50 +0000 (UTC)
-Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-54fb8a8a597so84564987b3.0
-        for <regressions@lists.linux.dev>; Wed, 26 Apr 2023 06:10:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1682514649; x=1685106649;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=vACPPwznA8lYuRITSgExcomV76WPtMWhcF8RbyTwndA=;
-        b=fMhTuIxYyjqcIRk7bNjFHjFTLxIR/NgtstPtVj3WioAhAVoRs14RCZuUsEp7zm42za
-         r3J/pj/HEagTGG4Lcqw+RBC1PZGI676/GNG/FDP5wFdu/9A85CYGba8w63KGz/GSlZCj
-         MBhzuMqNBNhUy9xhZAKROBAUt1oQQMcAU/4TMi6m523zKUioHQVM6UskyiX5SXBz/Ze/
-         wJDG7ktkrWCUturRJT4KmKiIDwZH6mACsX/KYvw/pG2v5zq1l3L0r60+94ZBIq7QnI8/
-         VZ+Qg/OYGAfDYukKxwcvHzTUHn7J1y+SCs+Z40GKABzvK7J7SxZfdeUpdlzb6R+PP7SZ
-         gGZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682514649; x=1685106649;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=vACPPwznA8lYuRITSgExcomV76WPtMWhcF8RbyTwndA=;
-        b=YgR1lLCrUUqPDClz5x3EIywACyo5VDGomsP3Y6Vk+Ey1ciZYQspZcBpspBh0hjmt3z
-         TNab3Shd+pOHzJFc4Bu/td4a6ZAkV3lj0Qh1pZoff3ZwODWzQdzkUo6DixiLzly2zpPj
-         umlY423AM3rXloThfKbaAsPD9dFacTSNowMzZIrD5IFNeL/xc1e2NPBXY4qXmrDR5Oj2
-         3xqt1vv+a9db0FuxGwIbQvt1rTMlvKFu/LftDtVhxj/x1q+1G8gOJg0FS4J5Z3Me+xy1
-         OnVrEiAQncfBIvaQSactFYNZo8eSNfmOwFAbtklK6T4NoY9JjSOAQHFADkJrCA9h+SP6
-         upGw==
-X-Gm-Message-State: AAQBX9dFXW5sLHmPsEorWV/xUTakNH0tNwViduFiN/NMm/ZK0mkn1xoe
-	jFtcTPCVF18nD9/WLMVYfiJR7sez3RIzBZ6yNUmioQ==
-X-Google-Smtp-Source: AKy350abVQY9pCdngRInq66MxUfYChdxizykYfojy5FBTOfIDPipL5pE7RezoHZGUg6jLlcnlpxRCIzcnYOjb/A+Se0=
-X-Received: by 2002:a0d:f207:0:b0:54f:e78d:b592 with SMTP id
- b7-20020a0df207000000b0054fe78db592mr13321837ywf.44.1682514649453; Wed, 26
- Apr 2023 06:10:49 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F50723BE
+	for <regressions@lists.linux.dev>; Wed, 26 Apr 2023 13:44:36 +0000 (UTC)
+Received: from [192.168.1.141] ([37.4.248.58]) by mrelayeu.kundenserver.de
+ (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1MYe6H-1pnavA34xn-00Vh0J; Wed, 26 Apr 2023 15:39:15 +0200
+Message-ID: <b1093de5-9f62-6714-0063-7c719dc4f6ca@i2se.com>
+Date: Wed, 26 Apr 2023 15:39:15 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230328023129.3596968-1-zhouzongmin@kylinos.cn>
- <20230420200148.GD3280@jannau.net> <CAA8EJpoK3yv3E==bJuDoQhsW2Q1LdqKakJgdZx6S=ec-CvyGyw@mail.gmail.com>
- <1682386644754589.204.seg@mailgw> <1186d62a5fe7f2aa6e06f06a3dc7605c0072f1eb.camel@kylinos.cn>
-In-Reply-To: <1186d62a5fe7f2aa6e06f06a3dc7605c0072f1eb.camel@kylinos.cn>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Wed, 26 Apr 2023 16:10:37 +0300
-Message-ID: <CAA8EJppmUtuhAF+VHPh3Q8tNYp1m4T6P7dZ0wYZ8Vzwo0DF6cg@mail.gmail.com>
-Subject: Re: [PATCH] drm/probe_helper: fix the warning reported when calling
- drm_kms_helper_poll_disable during suspend
-To: zongmin zhou <zhouzongmin@kylinos.cn>
-Cc: Janne Grunau <j@jannau.net>, maarten.lankhorst@linux.intel.com, mripard@kernel.org, 
-	tzimmermann@suse.de, airlied@gmail.com, daniel@ffwll.ch, 
-	neil.armstrong@linaro.org, tony.luck@intel.com, keescook@chromium.org, 
-	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	gpiccoli@igalia.com, linux-hardening@vger.kernel.org, 
-	laurentiu.palcu@oss.nxp.com, regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Content-Language: en-US
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Akira Shimahara <akira215corp@gmail.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Stefan Wahren <stefan.wahren@chargebyte.com>, regressions@lists.linux.dev
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Regression: w1_therm: sysfs w1_slave sometimes report 85 degrees
+ Celsius
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:9+Vlw4+jn2N/v7j0vxMPWLyDRwGYp+CO/tXiR5tccEMsaSaH5aQ
+ R9ecZ1Xs+q6sHX62lwerzUDDiNhj845FifgwpOZ1VJgSWCou2fvSfNe7+JpFVLNF1L0zSiD
+ i2ZYBeApV27GGz95hWR/h2Hyj4YRG/zqPKVEEpmwjSV90jkFKMsB9LYvk6y7a3NmVh/4tX+
+ +emoW4k2Y2WPqYNZ+5nCw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:nk+SJ3Skr2A=;+cogvs2GoIuI9QE3rGVaSUzEYdT
+ xrXADDJ/vaBxtZU4/iha4mOp4R4x04VC3Lhb9zw9hWbNgFtjFIAMGrcGfNndJbQrOk3I6sOWW
+ h87w+0Xc7dFH+9FroUdFW1kS78tKyNnsUFuEC4VonnHwIbr6RtlDPd6KKEpZIPqRQ/jBBg/kS
+ UYZkyedrO950gJevgliU73Wa4cwdgF1/rgiFC7lLHaHeaSE+9guiwWA6OWE/3QxuQZY2vYtcm
+ kqJlB58C1NQxyAaMMn5dD8UT6YTXyk+3N24312z345S2Lf605UTlszZDw11yywO+gy3zDrJxO
+ EjSxExsk2xct3MqHShIq5DiLjxoCRlKqO9u/dHv1YZrbts8/YK8FUFQWDOu3LV3t0R1UZy/Lm
+ 4TEytn5KT8CQCa8UFcMng+oyVjON411FtvVxiGOdfDc67T5KH0tGwaZs/z7c4ijnuQoc2QQSv
+ aN6to0E7oviT4W5lXiYS/vlO/Bi4jYx7aFYaPDnglAyS8Rb3R+QJAjUQasr2UzAyesn9+HZfw
+ fBdI0a9lwDLK9XAZQuy5XLiUOpB4mt6UI/zuIRUYj5ZryMmPiPd3+AcXld5gj+RXuNpxeXJ5d
+ vFsTGR3H7/hPcRVMDYgV8lZF8Sy0hgeuDm2tQ079KeVcsBmAb6GHi9zE5dz7ixFjvzt5ag5yf
+ WgGHAv5viGZWYsih8XXXQouA7/9wOJqFRA6Iy360pw==
 
-On Wed, 26 Apr 2023 at 12:09, zongmin zhou <zhouzongmin@kylinos.cn> wrote:
->
-> On Sun, 2023-04-23 at 22:51 +0200, Janne Grunau wrote:
-> > On 2023-04-20 23:07:01 +0300, Dmitry Baryshkov wrote:
-> > > On Thu, 20 Apr 2023 at 23:01, Janne Grunau <j@jannau.net> wrote:
-> > > >
-> > > > On 2023-03-28 10:31:29 +0800, Zongmin Zhou wrote:
-> > > > > When drivers call drm_kms_helper_poll_disable from
-> > > > > their device suspend implementation without enabled output
-> > > > > polling before,
-> > > > > following warning will be reported,due to work->func not be
-> > > > > initialized:
-> > > >
-> > > > we see the same warning with the wpork in progress kms driver for
-> > > > apple
-> > > > silicon SoCs. The connectors do not need to polled so the driver
-> > > > never
-> > > > calls drm_kms_helper_poll_init().
-> > > >
-> > > > > [   55.141361] WARNING: CPU: 3 PID: 372 at
-> > > > > kernel/workqueue.c:3066 __flush_work+0x22f/0x240
-> > > > > [   55.141382] Modules linked in: nls_iso8859_1
-> > > > > snd_hda_codec_generic ledtrig_audio snd_hda_intel
-> > > > > snd_intel_dspcfg snd_intel_sdw_acpi snd_hda_codec snd_hda_core
-> > > > > snd_hwdep snd_pcm snd_seq_midi snd_seq_midi_event snd_rawmidi
-> > > > > snd_seq intel_rapl_msr intel_rapl_common bochs drm_vram_helper
-> > > > > drm_ttm_helper snd_seq_device nfit ttm crct10dif_pclmul
-> > > > > snd_timer ghash_clmulni_intel binfmt_misc sha512_ssse3
-> > > > > aesni_intel drm_kms_helper joydev input_leds syscopyarea
-> > > > > crypto_simd snd cryptd sysfillrect sysimgblt mac_hid serio_raw
-> > > > > soundcore qemu_fw_cfg sch_fq_codel msr parport_pc ppdev lp
-> > > > > parport drm ramoops reed_solomon pstore_blk pstore_zone
-> > > > > efi_pstore virtio_rng ip_tables x_tables autofs4 hid_generic
-> > > > > usbhid hid ahci virtio_net i2c_i801 crc32_pclmul psmouse
-> > > > > virtio_scsi libahci i2c_smbus lpc_ich xhci_pci net_failover
-> > > > > virtio_blk xhci_pci_renesas failover
-> > > > > [   55.141430] CPU: 3 PID: 372 Comm: kworker/u16:9 Not tainted
-> > > > > 6.2.0-rc6+ #16
-> > > > > [   55.141433] Hardware name: QEMU Standard PC (Q35 + ICH9,
-> > > > > 2009), BIOS rel-1.12.1-0-ga5cab58e9a3f-prebuilt.qemu.org
-> > > > > 04/01/2014
-> > > > > [   55.141435] Workqueue: events_unbound async_run_entry_fn
-> > > > > [   55.141441] RIP: 0010:__flush_work+0x22f/0x240
-> > > > > [   55.141444] Code: 8b 43 28 48 8b 53 30 89 c1 e9 f9 fe ff ff
-> > > > > 4c 89 f7 e8 b5 95 d9 00 e8 00 53 08 00 45 31 ff e9 11 ff ff ff
-> > > > > 0f 0b e9 0a ff ff ff <0f> 0b 45 31 ff e9 00 ff ff ff e8 e2 54
-> > > > > d8 00 66 90 90 90 90 90 90
-> > > > > [   55.141446] RSP: 0018:ff59221940833c18 EFLAGS: 00010246
-> > > > > [   55.141449] RAX: 0000000000000000 RBX: 0000000000000000 RCX:
-> > > > > ffffffff9b72bcbe
-> > > > > [   55.141450] RDX: 0000000000000001 RSI: 0000000000000001 RDI:
-> > > > > ff3ea01e4265e330
-> > > > > [   55.141451] RBP: ff59221940833c90 R08: 0000000000000000 R09:
-> > > > > 8080808080808080
-> > > > > [   55.141453] R10: ff3ea01e42b3caf4 R11: 000000000000000f R12:
-> > > > > ff3ea01e4265e330
-> > > > > [   55.141454] R13: 0000000000000001 R14: ff3ea01e505e5e80 R15:
-> > > > > 0000000000000001
-> > > > > [   55.141455] FS:  0000000000000000(0000)
-> > > > > GS:ff3ea01fb7cc0000(0000) knlGS:0000000000000000
-> > > > > [   55.141456] CS:  0010 DS: 0000 ES: 0000 CR0:
-> > > > > 0000000080050033
-> > > > > [   55.141458] CR2: 0000563543ad1546 CR3: 000000010ee82005 CR4:
-> > > > > 0000000000771ee0
-> > > > > [   55.141464] DR0: 0000000000000000 DR1: 0000000000000000 DR2:
-> > > > > 0000000000000000
-> > > > > [   55.141465] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7:
-> > > > > 0000000000000400
-> > > > > [   55.141466] PKRU: 55555554
-> > > > > [   55.141467] Call Trace:
-> > > > > [   55.141469]  <TASK>
-> > > > > [   55.141472]  ? pcie_wait_cmd+0xdf/0x220
-> > > > > [   55.141478]  ? mptcp_seq_show+0xe0/0x180
-> > > > > [   55.141484]  __cancel_work_timer+0x124/0x1b0
-> > > > > [   55.141487]  cancel_delayed_work_sync+0x17/0x20
-> > > > > [   55.141490]  drm_kms_helper_poll_disable+0x26/0x40
-> > > > > [drm_kms_helper]
-> > > > > [   55.141516]  drm_mode_config_helper_suspend+0x25/0x90
-> > > > > [drm_kms_helper]
-> > > > > [   55.141531]  ? __pm_runtime_resume+0x64/0x90
-> > > > > [   55.141536]  bochs_pm_suspend+0x16/0x20 [bochs]
-> > > > > [   55.141540]  pci_pm_suspend+0x8b/0x1b0
-> > > > > [   55.141545]  ? __pfx_pci_pm_suspend+0x10/0x10
-> > > > > [   55.141547]  dpm_run_callback+0x4c/0x160
-> > > > > [   55.141550]  __device_suspend+0x14c/0x4c0
-> > > > > [   55.141553]  async_suspend+0x24/0xa0
-> > > > > [   55.141555]  async_run_entry_fn+0x34/0x120
-> > > > > [   55.141557]  process_one_work+0x21a/0x3f0
-> > > > > [   55.141560]  worker_thread+0x4e/0x3c0
-> > > > > [   55.141563]  ? __pfx_worker_thread+0x10/0x10
-> > > > > [   55.141565]  kthread+0xf2/0x120
-> > > > > [   55.141568]  ? __pfx_kthread+0x10/0x10
-> > > > > [   55.141570]  ret_from_fork+0x29/0x50
-> > > > > [   55.141575]  </TASK>
-> > > > > [   55.141575] ---[ end trace 0000000000000000 ]---
-> > > > >
-> > > > > Fixes: a4e771729a51 ("drm/probe_helper: sort out poll_running
-> > > > > vs poll_enabled")
-> > > > > Signed-off-by: Zongmin Zhou<zhouzongmin@kylinos.cn>
-> > > > > ---
-> > > > >  drivers/gpu/drm/drm_probe_helper.c | 3 ++-
-> > > > >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > > > >
-> > > > > diff --git a/drivers/gpu/drm/drm_probe_helper.c
-> > > > > b/drivers/gpu/drm/drm_probe_helper.c
-> > > > > index 8127be134c39..ac72b18e2257 100644
-> > > > > --- a/drivers/gpu/drm/drm_probe_helper.c
-> > > > > +++ b/drivers/gpu/drm/drm_probe_helper.c
-> > > > > @@ -855,7 +855,8 @@ void drm_kms_helper_poll_disable(struct
-> > > > > drm_device *dev)
-> > > > >       if (dev->mode_config.poll_running)
-> > > > >               drm_kms_helper_disable_hpd(dev);
-> > > > >
-> > > > > -     cancel_delayed_work_sync(&dev-
-> > > > > >mode_config.output_poll_work);
-> > > > > +     if (dev->mode_config.poll_enabled)
-> > > > > +             cancel_delayed_work_sync(&dev-
-> > > > > >mode_config.output_poll_work);
-> > > >
-> > > > Checking for dev->mode_config.poll_enabled at the start of the
-> > > > function
-> > > > and return early if it is not true looks more in style with the
-> > > > rest of
-> > > > drm_probe_helper.c.
-> > >
-> > > I think it is an error to call drm_kms_helper_poll_disable() if
-> > > polling was not initialized. So, in my opinion the fix should go to
-> > > the drm_mode_config_helper_suspend() / _resume() instead. Please
-> > > add a
-> > > guard there using dev->mode_config.poll_enabled.
-> >
-> > While I tend to agree to the sentiment I do not think this is the
-> > correct fix in this situation. drm_kms_helper_poll_disable had the
-> > check since at least 2014. a4e771729a51 is a regression. If we want
-> > to
-> > change the behavior it should be done explicitly and after verifying
-> > all
-> > drm_kms_helper_poll_disable() calls.
-> >
-> > #regzbot ^introduced a4e771729a51
-> >
-> > ciao
-> > Janne
->
-> Dear Janne:
->
-> I agree with you like I mentioned on last letter.
-> Thanks for your time.
->
->
-> Dear Dmitry:
->
-> Is there anything else I can do?
-> Looking forward to your reply.
+Hi,
 
-If it is a common consensus, I'm fine with your approach.
+recently we switch on our Tarragon board (i.MX6ULL) to Linux 6.1 and 
+noticed that the connected 1-wire temperature sensors 
+(w1_therm.w1_strong_pull=0) sometimes (~ 1 of 20 times) report 85 
+degrees Celsius, which is AFAIK the only way to report errors to the 
+1-wire master:
 
--- 
-With best wishes
-Dmitry
+sys/bus/w1/devices/28-04168158faff# cat w1_slave
+50 05 4b 46 7f ff 0c 10 1c : crc=1c YES
+50 05 4b 46 7f ff 0c 10 1c t=85000
+
+I wasn't able to reproduce this issue with the old kernel 4.9.
+
+After that i successfully bisected the issue to this commit:
+67b392f7b8ed ("w1_therm: optimizing temperature read timings")
+
+Unfortunately this commit contains a lot of independent changes, which 
+makes it hard to figured out the cause of this issue. So i tried to 
+split this patch in seven independent changes [1]. Now i was able to 
+bisect the cause further to this change [2] which seems to rework the 
+pullup handling within read_therm().
+
+Looking closer at the code change and verify it some debug messages, the 
+change inverted the locking behavior (before: no pullup -> keep lock, 
+after: no pullup -> release lock during sleep).
+
+Before:
+	if (external_power) {
+		mutex_unlock(&dev_master->bus_mutex);
+
+		sleep_rem = msleep_interruptible(tm);
+		if (sleep_rem != 0) {
+			ret = -EINTR;
+			goto dec_refcnt;
+		}
+
+		ret = mutex_lock_interruptible(&dev_master->bus_mutex);
+		if (ret != 0)
+			goto dec_refcnt;
+	} else if (!w1_strong_pullup) {
+		sleep_rem = msleep_interruptible(tm);
+		if (sleep_rem != 0) {
+			ret = -EINTR;
+			goto mt_unlock;
+		}
+	}
+
+After:
+	if (strong_pullup) { /*some device need pullup */
+		sleep_rem = msleep_interruptible(tm);
+		if (sleep_rem != 0) {
+			ret = -EINTR;
+			goto mt_unlock;
+		}
+	} else { /*no device need pullup */
+		mutex_unlock(&dev_master->bus_mutex);
+
+		sleep_rem = msleep_interruptible(tm);
+		if (sleep_rem != 0) {
+			ret = -EINTR;
+			goto dec_refcnt;
+		}
+
+		ret = mutex_lock_interruptible(&dev_master->bus_mutex);
+		if (ret != 0)
+			goto dec_refcnt;
+	}
+
+I don't believe this is intended. After inverting the strong_pullup 
+check, the issue wasn't reproducible on our platform anymore. But i'm 
+not sure this is clean.
+
+Best regards
+
+#regzbot introduced: 67b392f7b8ed
+
+[1] - https://github.com/chargebyte/linux/commits/v6.1-tarragon_w1
+[2] - 
+https://github.com/chargebyte/linux/commit/17ca863a32a6a1bdd376959f05c954bef12fc1b5
