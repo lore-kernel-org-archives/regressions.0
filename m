@@ -1,90 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from madras.collabora.co.uk (madras.collabora.co.uk [46.235.227.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04C793FC2
-	for <regressions@lists.linux.dev>; Wed, 26 Apr 2023 17:00:18 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EEA04C433D2;
-	Wed, 26 Apr 2023 17:00:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1682528418;
-	bh=MHqWRvkl5Cm+oF+SgyhqgDdM1Q4M/yDXHwZMMADe8N0=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=hNecQijVZZORG15ytwJCNNM5O9bn8FYhmGWYhiICBh2STfG07xDCjy46L6FysE1Bj
-	 WTaU/9GDnboVILfS0vvG0rmGoW67jP6T1Yr5GOwRD0mwbAWxW8/eFONzxAWRlu2P3r
-	 BbqJ0YrOsmuH5cNKOuQSYzQOUnVdhu08O+MMDJdLLPmB9KHvwMZXmCnvQ1FdTsl2Ri
-	 Z9G6NcIJ8ZTwVktb8NYdW6HKK4wEB+sLRqpCiknzbEVuiZVYpaDqOrsrV0quamwfLq
-	 DDUVLaCX0Zq+6bHnC8wTEzK6lYcv1KzxnUgNKCWtYzqKzovH/NNM7+8O4CnK2Vvi8s
-	 rKE54/gww4ImA==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 038826FC7
+	for <regressions@lists.linux.dev>; Wed, 26 Apr 2023 22:19:58 +0000 (UTC)
+Received: from [IPV6:2405:201:0:21ea:73f6:2283:f432:3936] (unknown [IPv6:2405:201:0:21ea:73f6:2283:f432:3936])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: shreeya)
+	by madras.collabora.co.uk (Postfix) with ESMTPSA id F09E2660309E;
+	Wed, 26 Apr 2023 23:19:52 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1682547596;
+	bh=+OscA6mJnbIYnZfMg7bAO4iT6/B0MVE8PNNsUBI7ZJU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=VEDcQrFdE1I+omJfqHC8m/BHpXEM7wrEriDN2hxAn4O3x5NnuVgnf72/71aMwJ/Jo
+	 gDhkCAd5C9lFGLlUhTdsgI8HmvAP6PVhLvXTyR3DcImczEzLtX8zBP9lgcDx3xhFon
+	 0vdJYo8OihQDlCT50sm1WWvpqgpo0/BzLR1DEY8/JKZnekpQC5Je9Z23lpnFqNYxus
+	 rB02gfObh36TMPh2yLtBTnT6N41C4BJxbiv4tn6Z5kOJeR5i+e7hv+XYeGN5Pn+Bqa
+	 HaEH6nSRFsV5pv/L76U2U86ufVKMWzzRS3DuC9o946821M3ZSF9g6sfislLIvmyrK7
+	 yp3NsqEZo2M0A==
+Message-ID: <26addb7d-bb9d-34e8-d4fe-e323ff488101@collabora.com>
+Date: Thu, 27 Apr 2023 03:49:48 +0530
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 26 Apr 2023 20:00:14 +0300
-Message-Id: <CS6UJMSTVA4L.FRQ5VL1I1EF4@suppilovahvero>
-Cc: "Thorsten Leemhuis" <regressions@leemhuis.info>, "James Bottomley"
- <James.Bottomley@hansenpartnership.com>, "Vlastimil Babka"
- <vbabka@suse.cz>, "Peter Huewe" <peterhuewe@gmx.de>, "Jason Gunthorpe"
- <jgg@ziepe.ca>, "Jan Dabros" <jsd@semihalf.com>,
- <regressions@lists.linux.dev>, "LKML" <linux-kernel@vger.kernel.org>,
- <linux-integrity@vger.kernel.org>, "Dominik Brodowski"
- <linux@dominikbrodowski.net>, "Herbert Xu" <herbert@gondor.apana.org.au>,
- "Linus Torvalds" <torvalds@linux-foundation.org>, "Johannes Altmanninger"
- <aclopte@gmail.com>
-Subject: Re: [REGRESSION] suspend to ram fails in 6.2-rc1 due to tpm errors
-From: "Jarkko Sakkinen" <jarkko@kernel.org>
-To: "Jarkko Sakkinen" <jarkko@kernel.org>, "Jason A. Donenfeld"
- <Jason@zx2c4.com>
-X-Mailer: aerc 0.14.0
-References: <Y60RoP77HnwaukEA@zx2c4.com>
- <7ebab1ff-48f1-2737-f0d3-25c72666d041@leemhuis.info>
- <Y7w74EBYP3+FHlkw@zx2c4.com>
- <4268d0ac-278a-28e4-66d1-e0347f011f46@leemhuis.info>
- <ZBBmVhwsTf/URoqs@kernel.org>
- <CAHmME9rxeE32g7nKqeVLwRodDNM8QyZUNd54cyE6mZW7FcqD-g@mail.gmail.com>
- <ZBBxMl5rVjY9FGS9@kernel.org> <ZBBxxftnXHVOjm92@kernel.org>
- <ZBB8R9H3CyQnNfCt@zx2c4.com> <ZBCDeleGG/fFlkt+@kernel.org>
- <ZEKlzaQhjd8sbE7I@kernel.org>
- <CAHmME9q9DZyYo7G__ks=XSrS4kS8sUUZ+eF3c1VSnGCAvfBR+Q@mail.gmail.com>
- <CS48U6SYIBVB.V05DUEX5I01F@suppilovahvero>
- <CS68AWILHXS4.3M36M1EKZLUMS@suppilovahvero>
- <CAHmME9o3HK2ju-HBYpSbB_7-9x5A2rD0ev3gaiLLjB_J8-Ju4Q@mail.gmail.com>
- <CS6TEW6NY7FJ.39VTQYTEN8FBH@suppilovahvero>
-In-Reply-To: <CS6TEW6NY7FJ.39VTQYTEN8FBH@suppilovahvero>
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
+Subject: Re: [PATCH v9 1/6] media: verisilicon: Do not set context src/dst
+ formats in reset functions
+To: Benjamin Gaignard <benjamin.gaignard@collabora.com>
+Cc: linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ kernel@collabora.com, robert.mader@collabora.com,
+ nicolas.dufresne@collabora.co.uk, ezequiel@vanguardiasur.com.ar,
+ festevam@gmail.com, p.zabel@pengutronix.de, mchehab@kernel.org,
+ shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+ hverkuil-cisco@xs4all.nl, linux-imx@nxp.com, regressions@lists.linux.dev
+References: <20230220104849.398203-1-benjamin.gaignard@collabora.com>
+ <20230220104849.398203-2-benjamin.gaignard@collabora.com>
+Content-Language: en-US
+From: Shreeya Patel <shreeya.patel@collabora.com>
+In-Reply-To: <20230220104849.398203-2-benjamin.gaignard@collabora.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed Apr 26, 2023 at 7:07 PM EEST, Jarkko Sakkinen wrote:
-> On Wed Apr 26, 2023 at 4:32 AM EEST, Jason A. Donenfeld wrote:
-> > Nice work! Happy that you got it figured out. That trace seems
-> > consistent with what I was seeing in my traces, so I think you've
-> > spotted the right bug.
-> >
-> > Jason
->
-> Unfortunately there might be two bugs. Unless I interpreted logs
-> incorrectly also hwrng can race with resume (sorry, I forgot to
-> save it).
->
-> Looking at drivers/char/hw_random/core.c there seems to be no
-> binding to the PM so I guess that this it supports what I'm
-> observing [*].
->
-> So there's two ways to fix the issue:
->
-> 1. Unregister hwrng for the course of suspend
-> 2. Add something like TPM_CHIP_SUSPENDED, which is set by suspend and
->    cleared by the resume.
->
-> I try the 2nd option first because I see it less complicated.
-> Probably would make sense to turn chip flags as atomic while
-> at it.
->
-> [*] https://elixir.bootlin.com/linux/latest/source/drivers/char/hw_random=
-/core.c
+Hi Benjamin,
 
-OK, so I implemented fix also for hwrng and now I get a clean
-resume. I'll add all necessary tags etc. and send for review.
+On 20/02/23 16:18, Benjamin Gaignard wrote:
+> Setting context source and destination formats should only be done
+> in hantro_set_fmt_out() and hantro_set_fmt_cap() after check that
+> the targeted queue is not busy.
+> Remove these calls from hantro_reset_encoded_fmt() and
+> hantro_reset_raw_fmt() to clean the driver.
+>
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@collabora.com>
 
-BR, Jarkko
+KernelCI found this patch causes a regression in the
+baseline.dmesg.alert test [1] on rk3399-rock-pi-4b [2],
+see the bisection report for more details [3].
+
+Let us know if you have any questions.
+
+
+[1] https://github.com/kernelci/kernelci-core/blob/main/config/rootfs/debos/overlays/baseline/opt/kernelci/dmesg.sh
+[2] https://linux.kernelci.org/test/case/id/6442e825f19134d74c2e865d/
+[3] https://groups.io/g/kernelci-results/message/40740
+
+
+Thanks,
+Shreeya Patel
+
+#regzbot introduced: db6f68b51e5c
+
+> ---
+>   drivers/media/platform/verisilicon/hantro_v4l2.c | 9 ++-------
+>   1 file changed, 2 insertions(+), 7 deletions(-)
+>
+> diff --git a/drivers/media/platform/verisilicon/hantro_v4l2.c b/drivers/media/platform/verisilicon/hantro_v4l2.c
+> index c0d427956210..d8aa42bd4cd4 100644
+> --- a/drivers/media/platform/verisilicon/hantro_v4l2.c
+> +++ b/drivers/media/platform/verisilicon/hantro_v4l2.c
+> @@ -382,13 +382,10 @@ hantro_reset_encoded_fmt(struct hantro_ctx *ctx)
+>   
+>   	vpu_fmt = hantro_get_default_fmt(ctx, true);
+>   
+> -	if (ctx->is_encoder) {
+> -		ctx->vpu_dst_fmt = vpu_fmt;
+> +	if (ctx->is_encoder)
+>   		fmt = &ctx->dst_fmt;
+> -	} else {
+> -		ctx->vpu_src_fmt = vpu_fmt;
+> +	else
+>   		fmt = &ctx->src_fmt;
+> -	}
+>   
+>   	hantro_reset_fmt(fmt, vpu_fmt);
+>   	fmt->width = vpu_fmt->frmsize.min_width;
+> @@ -408,11 +405,9 @@ hantro_reset_raw_fmt(struct hantro_ctx *ctx)
+>   	raw_vpu_fmt = hantro_get_default_fmt(ctx, false);
+>   
+>   	if (ctx->is_encoder) {
+> -		ctx->vpu_src_fmt = raw_vpu_fmt;
+>   		raw_fmt = &ctx->src_fmt;
+>   		encoded_fmt = &ctx->dst_fmt;
+>   	} else {
+> -		ctx->vpu_dst_fmt = raw_vpu_fmt;
+>   		raw_fmt = &ctx->dst_fmt;
+>   		encoded_fmt = &ctx->src_fmt;
+>   	}
