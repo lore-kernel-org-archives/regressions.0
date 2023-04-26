@@ -1,122 +1,84 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C23B62F33
-	for <regressions@lists.linux.dev>; Wed, 26 Apr 2023 14:01:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 001C7C433D2;
-	Wed, 26 Apr 2023 14:01:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1682517670;
-	bh=gYUt9qtbJF9vSk4ZmRnp3b+Bi4fD/rx0/xrXT1dyo4Y=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49B6F4C97
+	for <regressions@lists.linux.dev>; Wed, 26 Apr 2023 16:07:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67E3AC4339B;
+	Wed, 26 Apr 2023 16:07:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1682525226;
+	bh=MtdltU0gId4xiQS9pBYRsib3cwgvWJxO+NqnGQqu2vM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DuZn/zCzwNY7KJZNpAElilLJyrEvuC9CeeePgKu67s1cR3Q+4eQ7IPQHSJ0qieDL5
-	 wMm9MzTFuy7J2F/fX3Q6jBCPDCxt6DXJb9wtJRezxibeu/oHPKgZC3/g+li20lAOON
-	 GQgQj87u9bu8661NJDTQ+4JFQJyQ+xEqPOV12R8I=
-Date: Wed, 26 Apr 2023 16:01:07 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Stefan Wahren <stefan.wahren@i2se.com>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Akira Shimahara <akira215corp@gmail.com>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Stefan Wahren <stefan.wahren@chargebyte.com>,
-	regressions@lists.linux.dev
-Subject: Re: Regression: w1_therm: sysfs w1_slave sometimes report 85 degrees
- Celsius
-Message-ID: <2023042645-attentive-amends-7b0b@gregkh>
-References: <b1093de5-9f62-6714-0063-7c719dc4f6ca@i2se.com>
+	b=H7r9VsvZreCFlc+MHRmUOvuUsDXVcks2Q/e7B+wnn+0tuHK2O7dPNtfFcFbyB8Msk
+	 2rib2E5XuVZ0n3ZXHisfJQkJi8nmvPJegXx73MK1ufwAZ6SAN/pHGjfbCsWvpIU0VZ
+	 rzfHi41OPYzHwp2PmEP1fRLSBx4ep0vb9JNH4q1mNED4vk7zXWxPSFwrq52NZvvK4J
+	 LeP9O5Ckh+8Zo6Ajhy/B5FetnjHkDCPLeErRXKkeR8Vjsql55S/WEq43MHiBBH8oIU
+	 M1nhck9oIfacvQfZiY2CNV9PvCZUXMaCFina+WZK7N/NDSDDrNAd2egH5CFvElGdti
+	 edn8Fqk6KiQvg==
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b1093de5-9f62-6714-0063-7c719dc4f6ca@i2se.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 26 Apr 2023 19:07:01 +0300
+Message-Id: <CS6TEW6NY7FJ.39VTQYTEN8FBH@suppilovahvero>
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+To: "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc: "Thorsten Leemhuis" <regressions@leemhuis.info>, "James Bottomley"
+ <James.Bottomley@hansenpartnership.com>, "Vlastimil Babka"
+ <vbabka@suse.cz>, "Peter Huewe" <peterhuewe@gmx.de>, "Jason Gunthorpe"
+ <jgg@ziepe.ca>, "Jan Dabros" <jsd@semihalf.com>,
+ <regressions@lists.linux.dev>, "LKML" <linux-kernel@vger.kernel.org>,
+ <linux-integrity@vger.kernel.org>, "Dominik Brodowski"
+ <linux@dominikbrodowski.net>, "Herbert Xu" <herbert@gondor.apana.org.au>,
+ "Linus Torvalds" <torvalds@linux-foundation.org>, "Johannes Altmanninger"
+ <aclopte@gmail.com>
+Subject: Re: [REGRESSION] suspend to ram fails in 6.2-rc1 due to tpm errors
+X-Mailer: aerc 0.14.0
+References: <Y60RoP77HnwaukEA@zx2c4.com>
+ <7ebab1ff-48f1-2737-f0d3-25c72666d041@leemhuis.info>
+ <Y7w74EBYP3+FHlkw@zx2c4.com>
+ <4268d0ac-278a-28e4-66d1-e0347f011f46@leemhuis.info>
+ <ZBBmVhwsTf/URoqs@kernel.org>
+ <CAHmME9rxeE32g7nKqeVLwRodDNM8QyZUNd54cyE6mZW7FcqD-g@mail.gmail.com>
+ <ZBBxMl5rVjY9FGS9@kernel.org> <ZBBxxftnXHVOjm92@kernel.org>
+ <ZBB8R9H3CyQnNfCt@zx2c4.com> <ZBCDeleGG/fFlkt+@kernel.org>
+ <ZEKlzaQhjd8sbE7I@kernel.org>
+ <CAHmME9q9DZyYo7G__ks=XSrS4kS8sUUZ+eF3c1VSnGCAvfBR+Q@mail.gmail.com>
+ <CS48U6SYIBVB.V05DUEX5I01F@suppilovahvero>
+ <CS68AWILHXS4.3M36M1EKZLUMS@suppilovahvero>
+ <CAHmME9o3HK2ju-HBYpSbB_7-9x5A2rD0ev3gaiLLjB_J8-Ju4Q@mail.gmail.com>
+In-Reply-To: <CAHmME9o3HK2ju-HBYpSbB_7-9x5A2rD0ev3gaiLLjB_J8-Ju4Q@mail.gmail.com>
 
-On Wed, Apr 26, 2023 at 03:39:15PM +0200, Stefan Wahren wrote:
-> Hi,
-> 
-> recently we switch on our Tarragon board (i.MX6ULL) to Linux 6.1 and noticed
-> that the connected 1-wire temperature sensors (w1_therm.w1_strong_pull=0)
-> sometimes (~ 1 of 20 times) report 85 degrees Celsius, which is AFAIK the
-> only way to report errors to the 1-wire master:
-> 
-> sys/bus/w1/devices/28-04168158faff# cat w1_slave
-> 50 05 4b 46 7f ff 0c 10 1c : crc=1c YES
-> 50 05 4b 46 7f ff 0c 10 1c t=85000
-> 
-> I wasn't able to reproduce this issue with the old kernel 4.9.
-> 
-> After that i successfully bisected the issue to this commit:
-> 67b392f7b8ed ("w1_therm: optimizing temperature read timings")
-> 
-> Unfortunately this commit contains a lot of independent changes, which makes
-> it hard to figured out the cause of this issue. So i tried to split this
-> patch in seven independent changes [1]. Now i was able to bisect the cause
-> further to this change [2] which seems to rework the pullup handling within
-> read_therm().
-> 
-> Looking closer at the code change and verify it some debug messages, the
-> change inverted the locking behavior (before: no pullup -> keep lock, after:
-> no pullup -> release lock during sleep).
-> 
-> Before:
-> 	if (external_power) {
-> 		mutex_unlock(&dev_master->bus_mutex);
-> 
-> 		sleep_rem = msleep_interruptible(tm);
-> 		if (sleep_rem != 0) {
-> 			ret = -EINTR;
-> 			goto dec_refcnt;
-> 		}
-> 
-> 		ret = mutex_lock_interruptible(&dev_master->bus_mutex);
-> 		if (ret != 0)
-> 			goto dec_refcnt;
-> 	} else if (!w1_strong_pullup) {
-> 		sleep_rem = msleep_interruptible(tm);
-> 		if (sleep_rem != 0) {
-> 			ret = -EINTR;
-> 			goto mt_unlock;
-> 		}
-> 	}
-> 
-> After:
-> 	if (strong_pullup) { /*some device need pullup */
-> 		sleep_rem = msleep_interruptible(tm);
-> 		if (sleep_rem != 0) {
-> 			ret = -EINTR;
-> 			goto mt_unlock;
-> 		}
-> 	} else { /*no device need pullup */
-> 		mutex_unlock(&dev_master->bus_mutex);
-> 
-> 		sleep_rem = msleep_interruptible(tm);
-> 		if (sleep_rem != 0) {
-> 			ret = -EINTR;
-> 			goto dec_refcnt;
-> 		}
-> 
-> 		ret = mutex_lock_interruptible(&dev_master->bus_mutex);
-> 		if (ret != 0)
-> 			goto dec_refcnt;
-> 	}
-> 
-> I don't believe this is intended. After inverting the strong_pullup check,
-> the issue wasn't reproducible on our platform anymore. But i'm not sure this
-> is clean.
-> 
-> Best regards
-> 
-> #regzbot introduced: 67b392f7b8ed
-> 
-> [1] - https://github.com/chargebyte/linux/commits/v6.1-tarragon_w1
-> [2] - https://github.com/chargebyte/linux/commit/17ca863a32a6a1bdd376959f05c954bef12fc1b5
+On Wed Apr 26, 2023 at 4:32 AM EEST, Jason A. Donenfeld wrote:
+> Nice work! Happy that you got it figured out. That trace seems
+> consistent with what I was seeing in my traces, so I think you've
+> spotted the right bug.
+>
+> Jason
 
-Can you send a patch that shows the change you wish to have made here so
-that you can get credit for fixing the issue?
+Unfortunately there might be two bugs. Unless I interpreted logs
+incorrectly also hwrng can race with resume (sorry, I forgot to
+save it).
 
-thanks,
+Looking at drivers/char/hw_random/core.c there seems to be no
+binding to the PM so I guess that this it supports what I'm
+observing [*].
 
-greg k-h
+So there's two ways to fix the issue:
+
+1. Unregister hwrng for the course of suspend
+2. Add something like TPM_CHIP_SUSPENDED, which is set by suspend and
+   cleared by the resume.
+
+I try the 2nd option first because I see it less complicated.
+Probably would make sense to turn chip flags as atomic while
+at it.
+
+[*] https://elixir.bootlin.com/linux/latest/source/drivers/char/hw_random/c=
+ore.c
+
+BR, Jarkko
