@@ -1,170 +1,66 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE4D51FD7
-	for <regressions@lists.linux.dev>; Tue, 25 Apr 2023 23:34:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B055C433EF;
-	Tue, 25 Apr 2023 23:34:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1682465670;
-	bh=K1s+noYHRNni1Pq8/RE/Mli4hvd2z61+wK3Y1vv2LyM=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=IvyVDNCDCp2/r5VUoQebr/oJMDXprGJWwwUPukWZJTyggmDDXq2zfulSb8y5dg3S+
-	 ity3qLWMdUtRj2O7fQVWOoUcT6wIbHMuf5Ng9ZXVSeKwxpDcNgPO9nBj9c5fJNsRzQ
-	 1/wPHzv7d4OYTly4E7Vb1DB7MAIbXJ0WkaJVZ5LYE2Ycl+kztWZAYZ8gF1e3OSzYWT
-	 45lUd9QwH9I3gSxrpKHJARTqNcEVu68C50jshkFFkizf0AE5nmIcDTQ0XTurTuV+ou
-	 Cf4JFjB++Jc/5fT8ylTV0sTaSUooMn3ENKxf/NVHnCBghFauxj735kaHOEmrMx+t/3
-	 tnwGYgaMPdoTw==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B75C110B
+	for <regressions@lists.linux.dev>; Wed, 26 Apr 2023 01:32:53 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8613C4339E
+	for <regressions@lists.linux.dev>; Wed, 26 Apr 2023 01:32:52 +0000 (UTC)
+Authentication-Results: smtp.kernel.org;
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="SAItAn7N"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
+	t=1682472769;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=r25p03fdrefLLIs3GBzIbC3crrQbvzO3nczQ2QmY0cg=;
+	b=SAItAn7NMSY77eg9Io6CBYsewpW1LLwwan8mYW1btzeQGi/YnRPmCHw4/ZvsMr+BFdJiRX
+	t69QdbfOKfZ8USMkbKkC6lwyEs84OuOkk1NzbPc1+Z8efqB0pEKxA5/EfuoNwpQkDD+7DI
+	A1Dn+esTfUAP02YzQWpc+W9PztitKk0=
+Received: 
+	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id a29e4640 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO)
+	for <regressions@lists.linux.dev>;
+	Wed, 26 Apr 2023 01:32:48 +0000 (UTC)
+Received: by mail-vs1-f48.google.com with SMTP id ada2fe7eead31-42e58fcbfb4so1578604137.0
+        for <regressions@lists.linux.dev>; Tue, 25 Apr 2023 18:32:48 -0700 (PDT)
+X-Gm-Message-State: AAQBX9ePRklDYQmRYywrdPQoDkOKUWirkCuoK7UH+60L9I6HZH8kptBp
+	sB4xKJ2GuBstrPkaYwiWIkZixW/9A6WTRigSinY=
+X-Google-Smtp-Source: AKy350aXPJ0Ug8IJ+bpj8J2OAtNFfW/UZ7/mN9FffQSgP6UrZtYSZuN1ItVA3sI3nX+1gV2epfv9qJEh6aTpDr3Hxfc=
+X-Received: by 2002:a67:b34a:0:b0:42e:6689:d762 with SMTP id
+ b10-20020a67b34a000000b0042e6689d762mr8917039vsm.8.1682472766555; Tue, 25 Apr
+ 2023 18:32:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 26 Apr 2023 02:34:25 +0300
-Message-Id: <CS68AWILHXS4.3M36M1EKZLUMS@suppilovahvero>
-Cc: "Thorsten Leemhuis" <regressions@leemhuis.info>, "James Bottomley"
- <James.Bottomley@hansenpartnership.com>, "Vlastimil Babka"
- <vbabka@suse.cz>, "Peter Huewe" <peterhuewe@gmx.de>, "Jason Gunthorpe"
- <jgg@ziepe.ca>, "Jan Dabros" <jsd@semihalf.com>,
- <regressions@lists.linux.dev>, "LKML" <linux-kernel@vger.kernel.org>,
- <linux-integrity@vger.kernel.org>, "Dominik Brodowski"
- <linux@dominikbrodowski.net>, "Herbert Xu" <herbert@gondor.apana.org.au>,
- "Linus Torvalds" <torvalds@linux-foundation.org>, "Johannes Altmanninger"
- <aclopte@gmail.com>
-Subject: Re: [REGRESSION] suspend to ram fails in 6.2-rc1 due to tpm errors
-From: "Jarkko Sakkinen" <jarkko@kernel.org>
-To: "Jarkko Sakkinen" <jarkko@kernel.org>, "Jason A. Donenfeld"
- <Jason@zx2c4.com>
-X-Mailer: aerc 0.14.0
-References: <Y60RoP77HnwaukEA@zx2c4.com>
- <7ebab1ff-48f1-2737-f0d3-25c72666d041@leemhuis.info>
- <Y7w74EBYP3+FHlkw@zx2c4.com>
- <4268d0ac-278a-28e4-66d1-e0347f011f46@leemhuis.info>
- <ZBBmVhwsTf/URoqs@kernel.org>
- <CAHmME9rxeE32g7nKqeVLwRodDNM8QyZUNd54cyE6mZW7FcqD-g@mail.gmail.com>
+MIME-Version: 1.0
+Received: by 2002:ab0:2695:0:b0:75c:e750:ab with HTTP; Tue, 25 Apr 2023
+ 18:32:45 -0700 (PDT)
+In-Reply-To: <CS68AWILHXS4.3M36M1EKZLUMS@suppilovahvero>
+References: <Y60RoP77HnwaukEA@zx2c4.com> <7ebab1ff-48f1-2737-f0d3-25c72666d041@leemhuis.info>
+ <Y7w74EBYP3+FHlkw@zx2c4.com> <4268d0ac-278a-28e4-66d1-e0347f011f46@leemhuis.info>
+ <ZBBmVhwsTf/URoqs@kernel.org> <CAHmME9rxeE32g7nKqeVLwRodDNM8QyZUNd54cyE6mZW7FcqD-g@mail.gmail.com>
  <ZBBxMl5rVjY9FGS9@kernel.org> <ZBBxxftnXHVOjm92@kernel.org>
  <ZBB8R9H3CyQnNfCt@zx2c4.com> <ZBCDeleGG/fFlkt+@kernel.org>
- <ZEKlzaQhjd8sbE7I@kernel.org>
- <CAHmME9q9DZyYo7G__ks=XSrS4kS8sUUZ+eF3c1VSnGCAvfBR+Q@mail.gmail.com>
- <CS48U6SYIBVB.V05DUEX5I01F@suppilovahvero>
-In-Reply-To: <CS48U6SYIBVB.V05DUEX5I01F@suppilovahvero>
+ <ZEKlzaQhjd8sbE7I@kernel.org> <CAHmME9q9DZyYo7G__ks=XSrS4kS8sUUZ+eF3c1VSnGCAvfBR+Q@mail.gmail.com>
+ <CS48U6SYIBVB.V05DUEX5I01F@suppilovahvero> <CS68AWILHXS4.3M36M1EKZLUMS@suppilovahvero>
+From: "Jason A. Donenfeld" <Jason@zx2c4.com>
+Date: Wed, 26 Apr 2023 03:32:45 +0200
+X-Gmail-Original-Message-ID: <CAHmME9o3HK2ju-HBYpSbB_7-9x5A2rD0ev3gaiLLjB_J8-Ju4Q@mail.gmail.com>
+Message-ID: <CAHmME9o3HK2ju-HBYpSbB_7-9x5A2rD0ev3gaiLLjB_J8-Ju4Q@mail.gmail.com>
+Subject: Re: [REGRESSION] suspend to ram fails in 6.2-rc1 due to tpm errors
+To: Jarkko Sakkinen <jarkko@kernel.org>
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>, 
+	James Bottomley <James.Bottomley@hansenpartnership.com>, Vlastimil Babka <vbabka@suse.cz>, 
+	Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>, Jan Dabros <jsd@semihalf.com>, 
+	regressions@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>, 
+	linux-integrity@vger.kernel.org, 
+	Dominik Brodowski <linux@dominikbrodowski.net>, Herbert Xu <herbert@gondor.apana.org.au>, 
+	Linus Torvalds <torvalds@linux-foundation.org>, Johannes Altmanninger <aclopte@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Sun Apr 23, 2023 at 6:34 PM EEST, Jarkko Sakkinen wrote:
-> On Fri Apr 21, 2023 at 9:27 PM EEST, Jason A. Donenfeld wrote:
-> > Did you use the patch I sent you and suspend and resume according to
-> > the instructions I gave you? If not, I don't have much to add.
->
-> Finally, I got it reproduced at my side with TPM 1.2:
->
-> [    0.379677] tpm_tis 00:00: 1.2 TPM (device-id 0x1, rev-id 1)
-> [   32.453447] tpm tpm0: tpm_transmit: tpm_recv: error -5
-> [   33.450601] tpm tpm0: Unable to read header
-> [   33.450607] tpm tpm0: tpm_transmit: tpm_recv: error -62
->
-> I'll look at this further after I've sent v6.3 PR.
+Nice work! Happy that you got it figured out. That trace seems
+consistent with what I was seeing in my traces, so I think you've
+spotted the right bug.
 
-OK, so this gives the exact tpm_transmit call where it fails:
-
-$ sudo bpftrace -e 'kprobe:tpm_transmit { @[kstack] =3D count(); }'
-[sudo] password for jarkko:
-Attaching 1 probe...
-^C
-
-@[
-    tpm_transmit+1
-    tpm1_pcr_read+177
-    tpm1_do_selftest+287
-    tpm_tis_resume+443
-    pnp_bus_resume+102
-    dpm_run_callback+81
-    device_resume+173
-    dpm_resume+238
-    dpm_resume_end+17
-    suspend_devices_and_enter+473
-    enter_state+563
-    pm_suspend+68
-    state_store+43
-    kobj_attr_store+15
-    sysfs_kf_write+59
-    kernfs_fop_write_iter+304
-    vfs_write+590
-    ksys_write+115
-    __x64_sys_write+25
-    do_syscall_64+88
-    entry_SYSCALL_64_after_hwframe+114
-]: 1
-@[
-    tpm_transmit+1
-    tpm1_do_selftest+179
-    tpm_tis_resume+443
-    pnp_bus_resume+102
-    dpm_run_callback+81
-    device_resume+173
-    dpm_resume+238
-    dpm_resume_end+17
-    suspend_devices_and_enter+473
-    enter_state+563
-    pm_suspend+68
-    state_store+43
-    kobj_attr_store+15
-    sysfs_kf_write+59
-    kernfs_fop_write_iter+304
-    vfs_write+590
-    ksys_write+115
-    __x64_sys_write+25
-    do_syscall_64+88
-    entry_SYSCALL_64_after_hwframe+114
-]: 1
-@[
-    tpm_transmit+1
-    tpm1_pm_suspend+203
-    tpm_pm_suspend+131
-    __pnp_bus_suspend+65
-    pnp_bus_suspend+19
-    dpm_run_callback+81
-    __device_suspend+329
-    dpm_suspend+432
-    dpm_suspend_start+155
-    suspend_devices_and_enter+370
-    enter_state+563
-    pm_suspend+68
-    state_store+43
-    kobj_attr_store+15
-    sysfs_kf_write+59
-    kernfs_fop_write_iter+304
-    vfs_write+590
-    ksys_write+115
-    __x64_sys_write+25
-    do_syscall_64+88
-    entry_SYSCALL_64_after_hwframe+114
-]: 1
-@[
-    tpm_transmit+1
-    tpm1_get_random+206
-    tpm_get_random+70
-    tpm_hwrng_read+21
-    hwrng_fillfn+234
-    kthread+230
-    ret_from_fork+41
-]: 75897
-
-So it is the very first PCR read in tpm1_do_selftest.
-
-There is a bug at plain sight in tpm1_tis_resume(): before
-tpm_tis_resume() calls tpm1_do_selftest(), it only requests
-and relinquishes locality. This is not sufficient: it should
-also disable clkrun protocol.
-
-tpm1_do_selftest() is called also during the driver initialization
-successfully, the difference being that clkrun protocol is disabled.
-
-I'm compiling now a kernel with a test fix that calls tpm_chip_start()
-and tpm_chip_stop() as a substitute for request/relinquish locality.
-These should be used anyway instead of ad-hoc code.
-
-BR, Jarkko
-
-BR, Jarkko
+Jason
