@@ -1,114 +1,92 @@
-Received: from madras.collabora.co.uk (madras.collabora.co.uk [46.235.227.172])
+Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 038826FC7
-	for <regressions@lists.linux.dev>; Wed, 26 Apr 2023 22:19:58 +0000 (UTC)
-Received: from [IPV6:2405:201:0:21ea:73f6:2283:f432:3936] (unknown [IPv6:2405:201:0:21ea:73f6:2283:f432:3936])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7329E2CA9
+	for <regressions@lists.linux.dev>; Wed, 26 Apr 2023 23:27:22 +0000 (UTC)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	(Authenticated sender: shreeya)
-	by madras.collabora.co.uk (Postfix) with ESMTPSA id F09E2660309E;
-	Wed, 26 Apr 2023 23:19:52 +0100 (BST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1682547596;
-	bh=+OscA6mJnbIYnZfMg7bAO4iT6/B0MVE8PNNsUBI7ZJU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=VEDcQrFdE1I+omJfqHC8m/BHpXEM7wrEriDN2hxAn4O3x5NnuVgnf72/71aMwJ/Jo
-	 gDhkCAd5C9lFGLlUhTdsgI8HmvAP6PVhLvXTyR3DcImczEzLtX8zBP9lgcDx3xhFon
-	 0vdJYo8OihQDlCT50sm1WWvpqgpo0/BzLR1DEY8/JKZnekpQC5Je9Z23lpnFqNYxus
-	 rB02gfObh36TMPh2yLtBTnT6N41C4BJxbiv4tn6Z5kOJeR5i+e7hv+XYeGN5Pn+Bqa
-	 HaEH6nSRFsV5pv/L76U2U86ufVKMWzzRS3DuC9o946821M3ZSF9g6sfislLIvmyrK7
-	 yp3NsqEZo2M0A==
-Message-ID: <26addb7d-bb9d-34e8-d4fe-e323ff488101@collabora.com>
-Date: Thu, 27 Apr 2023 03:49:48 +0530
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Q6FQH2HbHz4x1f;
+	Thu, 27 Apr 2023 09:27:19 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
+	s=201909; t=1682551640;
+	bh=DLduUxDCqD+drsoher8gw60YxikLfg8+ksqsWYQD0bw=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=Fh7qn6Pl5yimaY+GizbnYDMfzarcELB7R7o/nr/1Wq/Mi43gfdVNFht9N8NI725ih
+	 HpEqObnXsKhZ3QV9/wIem1Mi86OwvJRXYYrDm+OA/z0cSpb++CPzgKT5sCIElZC6qK
+	 V81qxPEL0F+47s1rVAmuDoBC325PBICZtfU4vjr31MT4Edand2LmrrcTcktzqemI5y
+	 5mJw7RvGu03vKv29VUR2bBo0WlTum2/2I9KSfGmqqrfxSZbvHzxDlSOrPHd9mnNbyJ
+	 DNxMX4hTJrOnE5+U9X0/C7C1LiyOZAyNC9X5jDIoONpwg/ENhcIM5ANmGeijaHV8+5
+	 0DIqENnZjEvHw==
+From: Michael Ellerman <mpe@ellerman.id.au>
+To: Thorsten Leemhuis <regressions@leemhuis.info>, Dave Airlie
+ <airlied@redhat.com>, DRI <dri-devel@lists.freedesktop.org>
+Cc: Thomas =?utf-8?Q?Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
+ Christian =?utf-8?Q?K=C3=B6nig?=
+ <christian.koenig@amd.com>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>, Linux kernel regressions list
+ <regressions@lists.linux.dev>, Justin Forbes <jforbes@redhat.com>, Stephen
+ Rothwell <sfr@canb.auug.org.au>
+Subject: Re: build failure from drm/ttm commit now in mainline (was:
+ linux-next: build failure after merge of the drm tree)
+In-Reply-To: <872f3ba1-1771-2ef4-1353-4cadd92eb5e1@leemhuis.info>
+References: <20230411164714.2ce79bcb@canb.auug.org.au>
+ <872f3ba1-1771-2ef4-1353-4cadd92eb5e1@leemhuis.info>
+Date: Thu, 27 Apr 2023 09:27:15 +1000
+Message-ID: <87y1mexm0c.fsf@mail.concordia>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Subject: Re: [PATCH v9 1/6] media: verisilicon: Do not set context src/dst
- formats in reset functions
-To: Benjamin Gaignard <benjamin.gaignard@collabora.com>
-Cc: linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- kernel@collabora.com, robert.mader@collabora.com,
- nicolas.dufresne@collabora.co.uk, ezequiel@vanguardiasur.com.ar,
- festevam@gmail.com, p.zabel@pengutronix.de, mchehab@kernel.org,
- shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
- hverkuil-cisco@xs4all.nl, linux-imx@nxp.com, regressions@lists.linux.dev
-References: <20230220104849.398203-1-benjamin.gaignard@collabora.com>
- <20230220104849.398203-2-benjamin.gaignard@collabora.com>
-Content-Language: en-US
-From: Shreeya Patel <shreeya.patel@collabora.com>
-In-Reply-To: <20230220104849.398203-2-benjamin.gaignard@collabora.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
-Hi Benjamin,
-
-On 20/02/23 16:18, Benjamin Gaignard wrote:
-> Setting context source and destination formats should only be done
-> in hantro_set_fmt_out() and hantro_set_fmt_cap() after check that
-> the targeted queue is not busy.
-> Remove these calls from hantro_reset_encoded_fmt() and
-> hantro_reset_raw_fmt() to clean the driver.
+Thorsten Leemhuis <regressions@leemhuis.info> writes:
+> Lo!
 >
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@collabora.com>
-
-KernelCI found this patch causes a regression in the
-baseline.dmesg.alert test [1] on rk3399-rock-pi-4b [2],
-see the bisection report for more details [3].
-
-Let us know if you have any questions.
-
-
-[1] https://github.com/kernelci/kernelci-core/blob/main/config/rootfs/debos/overlays/baseline/opt/kernelci/dmesg.sh
-[2] https://linux.kernelci.org/test/case/id/6442e825f19134d74c2e865d/
-[3] https://groups.io/g/kernelci-results/message/40740
-
-
-Thanks,
-Shreeya Patel
-
-#regzbot introduced: db6f68b51e5c
-
-> ---
->   drivers/media/platform/verisilicon/hantro_v4l2.c | 9 ++-------
->   1 file changed, 2 insertions(+), 7 deletions(-)
+> Sometimes the regression tracker runs into regressions himself... :-D
 >
-> diff --git a/drivers/media/platform/verisilicon/hantro_v4l2.c b/drivers/media/platform/verisilicon/hantro_v4l2.c
-> index c0d427956210..d8aa42bd4cd4 100644
-> --- a/drivers/media/platform/verisilicon/hantro_v4l2.c
-> +++ b/drivers/media/platform/verisilicon/hantro_v4l2.c
-> @@ -382,13 +382,10 @@ hantro_reset_encoded_fmt(struct hantro_ctx *ctx)
->   
->   	vpu_fmt = hantro_get_default_fmt(ctx, true);
->   
-> -	if (ctx->is_encoder) {
-> -		ctx->vpu_dst_fmt = vpu_fmt;
-> +	if (ctx->is_encoder)
->   		fmt = &ctx->dst_fmt;
-> -	} else {
-> -		ctx->vpu_src_fmt = vpu_fmt;
-> +	else
->   		fmt = &ctx->src_fmt;
-> -	}
->   
->   	hantro_reset_fmt(fmt, vpu_fmt);
->   	fmt->width = vpu_fmt->frmsize.min_width;
-> @@ -408,11 +405,9 @@ hantro_reset_raw_fmt(struct hantro_ctx *ctx)
->   	raw_vpu_fmt = hantro_get_default_fmt(ctx, false);
->   
->   	if (ctx->is_encoder) {
-> -		ctx->vpu_src_fmt = raw_vpu_fmt;
->   		raw_fmt = &ctx->src_fmt;
->   		encoded_fmt = &ctx->dst_fmt;
->   	} else {
-> -		ctx->vpu_dst_fmt = raw_vpu_fmt;
->   		raw_fmt = &ctx->dst_fmt;
->   		encoded_fmt = &ctx->src_fmt;
->   	}
+> On 11.04.23 08:47, Stephen Rothwell wrote:
+>> 
+>> After merging the drm tree, today's linux-next build (powerpc
+>> allyesconfig) failed like this:
+>> 
+>> drivers/gpu/drm/ttm/ttm_pool.c:73:29: error: variably modified 'global_write_combined' at file scope
+>>    73 | static struct ttm_pool_type global_write_combined[TTM_DIM_ORDER];
+>>       |                             ^~~~~~~~~~~~~~~~~~~~~
+>> drivers/gpu/drm/ttm/ttm_pool.c:74:29: error: variably modified 'global_uncached' at file scope
+>>    74 | static struct ttm_pool_type global_uncached[TTM_DIM_ORDER];
+>>       |                             ^~~~~~~~~~~~~~~
+>> drivers/gpu/drm/ttm/ttm_pool.c:76:29: error: variably modified 'global_dma32_write_combined' at file scope
+>>    76 | static struct ttm_pool_type global_dma32_write_combined[TTM_DIM_ORDER];
+>>       |                             ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+>> drivers/gpu/drm/ttm/ttm_pool.c:77:29: error: variably modified 'global_dma32_uncached' at file scope
+>>    77 | static struct ttm_pool_type global_dma32_uncached[TTM_DIM_ORDER];
+>>       |                             ^~~~~~~~~~~~~~~~~~~~~
+>> 
+>> Caused by commit
+>> 
+>>   322458c2bb1a ("drm/ttm: Reduce the number of used allocation orders for TTM pages")
+>> 
+>> PMD_SHIFT is not necessarily a constant on ppc (see
+>> arch/powerpc/include/asm/book3s/64/pgtable.h).
+>> 
+>> I have reverted that commit for today.
+>
+> Did anyone look into this?
+
+Christian sent a revert:
+  56e51681246e ("drm/ttm: revert "Reduce the number of used allocation orders for TTM pages"")
+
+Which has been in linux-next since the 21st. But I guess it missed being
+in the initial DRM pull request.
+
+See also other thread:
+  https://lore.kernel.org/all/ZEljCgVFnDl%2FC+l3@debian/
+
+Where Christian says the revert is "on the way" to Linus.
+
+cheers
