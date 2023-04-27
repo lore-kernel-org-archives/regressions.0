@@ -1,92 +1,125 @@
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from mout.kundenserver.de (mout.kundenserver.de [217.72.192.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7329E2CA9
-	for <regressions@lists.linux.dev>; Wed, 26 Apr 2023 23:27:22 +0000 (UTC)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Q6FQH2HbHz4x1f;
-	Thu, 27 Apr 2023 09:27:19 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
-	s=201909; t=1682551640;
-	bh=DLduUxDCqD+drsoher8gw60YxikLfg8+ksqsWYQD0bw=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=Fh7qn6Pl5yimaY+GizbnYDMfzarcELB7R7o/nr/1Wq/Mi43gfdVNFht9N8NI725ih
-	 HpEqObnXsKhZ3QV9/wIem1Mi86OwvJRXYYrDm+OA/z0cSpb++CPzgKT5sCIElZC6qK
-	 V81qxPEL0F+47s1rVAmuDoBC325PBICZtfU4vjr31MT4Edand2LmrrcTcktzqemI5y
-	 5mJw7RvGu03vKv29VUR2bBo0WlTum2/2I9KSfGmqqrfxSZbvHzxDlSOrPHd9mnNbyJ
-	 DNxMX4hTJrOnE5+U9X0/C7C1LiyOZAyNC9X5jDIoONpwg/ENhcIM5ANmGeijaHV8+5
-	 0DIqENnZjEvHw==
-From: Michael Ellerman <mpe@ellerman.id.au>
-To: Thorsten Leemhuis <regressions@leemhuis.info>, Dave Airlie
- <airlied@redhat.com>, DRI <dri-devel@lists.freedesktop.org>
-Cc: Thomas =?utf-8?Q?Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
- Christian =?utf-8?Q?K=C3=B6nig?=
- <christian.koenig@amd.com>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>, Linux kernel regressions list
- <regressions@lists.linux.dev>, Justin Forbes <jforbes@redhat.com>, Stephen
- Rothwell <sfr@canb.auug.org.au>
-Subject: Re: build failure from drm/ttm commit now in mainline (was:
- linux-next: build failure after merge of the drm tree)
-In-Reply-To: <872f3ba1-1771-2ef4-1353-4cadd92eb5e1@leemhuis.info>
-References: <20230411164714.2ce79bcb@canb.auug.org.au>
- <872f3ba1-1771-2ef4-1353-4cadd92eb5e1@leemhuis.info>
-Date: Thu, 27 Apr 2023 09:27:15 +1000
-Message-ID: <87y1mexm0c.fsf@mail.concordia>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E87423D9
+	for <regressions@lists.linux.dev>; Thu, 27 Apr 2023 11:22:15 +0000 (UTC)
+Received: from stefanw-SCHENKER ([37.4.248.58]) by mrelayeu.kundenserver.de
+ (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1MIxmm-1pXZ8b08oE-00KRYq; Thu, 27 Apr 2023 13:22:11 +0200
+From: Stefan Wahren <stefan.wahren@i2se.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Akira Shimahara <akira215corp@gmail.com>,
+	Ivan Zaentsev <ivan.zaentsev@wirenboard.ru>
+Cc: Stefan Wahren <stefan.wahren@chargebyte.com>,
+	Michael Heimpold <mhei@heimpold.de>,
+	regressions@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Stefan Wahren <stefan.wahren@i2se.com>
+Subject: [PATCH RFC] w1: w1_therm: fix locking behavior in convert_t
+Date: Thu, 27 Apr 2023 13:21:52 +0200
+Message-Id: <20230427112152.12313-1-stefan.wahren@i2se.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:mXFTlYMEyuqMNvMKHHrdHh1Is3vTgLjW5BzKHiZ6Pep4b+X3AjJ
+ 2edpqL1cXdA7MsjPPtYlUADuhzVrFsJIQjFnV+oZ697nN84lIO++nrKpmjpNJlWTlzDVkoK
+ rDqvSLq5vmTdH21q0nQqanFHTNGiXhBvCce7F9FZPEutOG00PXqw3OV88WeTUebqYplNhPt
+ YvKz1js7aryNscSsoS0mQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:K1YwzZGSK34=;eXhRhPHJh04h1bzdxS3ffGL7HAp
+ /ADBL6HW5GDQkCcjdcqgJvQYCs10zTCmegatxh/e7lvAGnPdBFHusYZQHMw1IxNrv5lZA26Jr
+ koBfeWpL9Y2SKGvQ+FaYopJQnvlZhfJS1JmyAmp/t277gHpDQMel8EtReYWleBCswe8rDdnL5
+ VLhIgjXFw1hhm/iWeQaF4AZoIBCaCTPBxpvXnJUMwO7PeCc3XL1uC8dv2nYa1BZs/dG6qqjds
+ w828K6PBoRr3JUEUwbV+f1Cr7evP9o+DD/8nDkBsAz3uYzfv4/UlltrjYSnNH65wwBw4jJh+3
+ a2xGJyQIlQ2ULEr1HIt64RlEIlRrRJ6DkoOSSdIMDe9uF2/INsgX3VxkqmiPZ+FiklSO5nICc
+ IX+Ik0gZYDjWXgllStiN7Q4jIBfqbDR6gOMipbGnADUY+d2QVASvKXVkNujkYMleZCYpJNUNt
+ 7ovQd2iPIuMAph2KIyD2qGioriZyGCumy0exAZmHwHleeaTxWO+wCdt0y74Zi2t50kYAuz/If
+ 62UElpP9sjKL0bDE0SgbpOZAIJ6sa8IDlxZl2ysi1Hf93rNbx0JaPyjts2uNUGMETLQEF4NhC
+ aokNkg3u2tiToTlRWzvWodF9AnJv1iZ+mlo70bQJTzdIYs11HYqLP0KsJMLAQqZeQftkkiaBa
+ MKDaYepOmvaejFLX8fc7/wbyLVNc2gy3j4t/o8yWjw==
 
-Thorsten Leemhuis <regressions@leemhuis.info> writes:
-> Lo!
->
-> Sometimes the regression tracker runs into regressions himself... :-D
->
-> On 11.04.23 08:47, Stephen Rothwell wrote:
->> 
->> After merging the drm tree, today's linux-next build (powerpc
->> allyesconfig) failed like this:
->> 
->> drivers/gpu/drm/ttm/ttm_pool.c:73:29: error: variably modified 'global_write_combined' at file scope
->>    73 | static struct ttm_pool_type global_write_combined[TTM_DIM_ORDER];
->>       |                             ^~~~~~~~~~~~~~~~~~~~~
->> drivers/gpu/drm/ttm/ttm_pool.c:74:29: error: variably modified 'global_uncached' at file scope
->>    74 | static struct ttm_pool_type global_uncached[TTM_DIM_ORDER];
->>       |                             ^~~~~~~~~~~~~~~
->> drivers/gpu/drm/ttm/ttm_pool.c:76:29: error: variably modified 'global_dma32_write_combined' at file scope
->>    76 | static struct ttm_pool_type global_dma32_write_combined[TTM_DIM_ORDER];
->>       |                             ^~~~~~~~~~~~~~~~~~~~~~~~~~~
->> drivers/gpu/drm/ttm/ttm_pool.c:77:29: error: variably modified 'global_dma32_uncached' at file scope
->>    77 | static struct ttm_pool_type global_dma32_uncached[TTM_DIM_ORDER];
->>       |                             ^~~~~~~~~~~~~~~~~~~~~
->> 
->> Caused by commit
->> 
->>   322458c2bb1a ("drm/ttm: Reduce the number of used allocation orders for TTM pages")
->> 
->> PMD_SHIFT is not necessarily a constant on ppc (see
->> arch/powerpc/include/asm/book3s/64/pgtable.h).
->> 
->> I have reverted that commit for today.
->
-> Did anyone look into this?
+The commit 67b392f7b8ed ("w1_therm: optimizing temperature read timings")
+accidentially inverted the logic for lock handling of the bus mutex.
 
-Christian sent a revert:
-  56e51681246e ("drm/ttm: revert "Reduce the number of used allocation orders for TTM pages"")
+Before:
+  pullup -> release lock before sleep
+  no pullup -> release lock after sleep
 
-Which has been in linux-next since the 21st. But I guess it missed being
-in the initial DRM pull request.
+After:
+  pullup -> release lock after sleep
+  no pullup -> release lock before sleep
 
-See also other thread:
-  https://lore.kernel.org/all/ZEljCgVFnDl%2FC+l3@debian/
+This cause spurious measurements of 85 degree (powerup value) on the
+Tarragon board with connected 1-w temperature sensor
+(w1_therm.w1_strong_pull=0).
 
-Where Christian says the revert is "on the way" to Linus.
+In the meantime a new feature for polling the conversion
+completion has been integrated in these branches with
+commit 021da53e65fd ("w1: w1_therm: Add sysfs entries to control
+conversion time and driver features"). But this feature isn't
+available for parasite power mode, so handle this separately.
 
-cheers
+Link: https://lore.kernel.org/regressions/2023042645-attentive-amends-7b0b@gregkh/T/
+Fixes: 67b392f7b8ed ("w1_therm: optimizing temperature read timings")
+Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+---
+ drivers/w1/slaves/w1_therm.c | 31 ++++++++++++++-----------------
+ 1 file changed, 14 insertions(+), 17 deletions(-)
+
+diff --git a/drivers/w1/slaves/w1_therm.c b/drivers/w1/slaves/w1_therm.c
+index 067692626cf0..99c58bd9d2df 100644
+--- a/drivers/w1/slaves/w1_therm.c
++++ b/drivers/w1/slaves/w1_therm.c
+@@ -1159,29 +1159,26 @@ static int convert_t(struct w1_slave *sl, struct therm_info *info)
+ 
+ 			w1_write_8(dev_master, W1_CONVERT_TEMP);
+ 
+-			if (strong_pullup) { /*some device need pullup */
++			if (SLAVE_FEATURES(sl) & W1_THERM_POLL_COMPLETION) {
++				ret = w1_poll_completion(dev_master, W1_POLL_CONVERT_TEMP);
++				if (ret) {
++					dev_dbg(&sl->dev, "%s: Timeout\n", __func__);
++					goto mt_unlock;
++				}
++				mutex_unlock(&dev_master->bus_mutex);
++			} else if (!strong_pullup) { /*no device need pullup */
+ 				sleep_rem = msleep_interruptible(t_conv);
+ 				if (sleep_rem != 0) {
+ 					ret = -EINTR;
+ 					goto mt_unlock;
+ 				}
+ 				mutex_unlock(&dev_master->bus_mutex);
+-			} else { /*no device need pullup */
+-				if (SLAVE_FEATURES(sl) & W1_THERM_POLL_COMPLETION) {
+-					ret = w1_poll_completion(dev_master, W1_POLL_CONVERT_TEMP);
+-					if (ret) {
+-						dev_dbg(&sl->dev, "%s: Timeout\n", __func__);
+-						goto mt_unlock;
+-					}
+-					mutex_unlock(&dev_master->bus_mutex);
+-				} else {
+-					/* Fixed delay */
+-					mutex_unlock(&dev_master->bus_mutex);
+-					sleep_rem = msleep_interruptible(t_conv);
+-					if (sleep_rem != 0) {
+-						ret = -EINTR;
+-						goto dec_refcnt;
+-					}
++			} else { /*some device need pullup */
++				mutex_unlock(&dev_master->bus_mutex);
++				sleep_rem = msleep_interruptible(t_conv);
++				if (sleep_rem != 0) {
++					ret = -EINTR;
++					goto dec_refcnt;
+ 				}
+ 			}
+ 			ret = read_scratchpad(sl, info);
+-- 
+2.34.1
+
