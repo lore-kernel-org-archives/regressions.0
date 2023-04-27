@@ -1,13 +1,13 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.17.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B744923D9
-	for <regressions@lists.linux.dev>; Thu, 27 Apr 2023 11:32:41 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1przrT-0002AB-CO; Thu, 27 Apr 2023 13:32:31 +0200
-Message-ID: <4a50726a-8a8e-b224-85e8-c97f3f0a3c87@leemhuis.info>
-Date: Thu, 27 Apr 2023 13:32:30 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80F5E23D9
+	for <regressions@lists.linux.dev>; Thu, 27 Apr 2023 11:47:08 +0000 (UTC)
+Received: from [192.168.1.141] ([37.4.248.58]) by mrelayeu.kundenserver.de
+ (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1MO9r5-1pcpoc48xF-00OWDH; Thu, 27 Apr 2023 13:47:04 +0200
+Message-ID: <7e89c6ea-3ea0-bbd7-1261-9ca687e4d09d@i2se.com>
+Date: Thu, 27 Apr 2023 13:47:03 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,37 +16,45 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.10.0
-Content-Language: en-US, de-DE
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: deadlock (on 6.1.21+) and lockdep warnings (in 6.2) when using a
- MT7610U chip as AP
-To: Greg KH <gregkh@linuxfoundation.org>, Felix Fietkau <nbd@nbd.name>,
- Lorenzo Bianconi <lorenzo@kernel.org>, Ryder Lee <ryder.lee@mediatek.com>
-Cc: "stable@vger.kernel.org" <stable@vger.kernel.org>,
- "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-Content-Type: text/plain; charset=UTF-8
+Subject: Re: Regression: w1_therm: sysfs w1_slave sometimes report 85 degrees
+ Celsius
+Content-Language: en-US
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Akira Shimahara <akira215corp@gmail.com>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Stefan Wahren <stefan.wahren@chargebyte.com>, regressions@lists.linux.dev
+References: <b1093de5-9f62-6714-0063-7c719dc4f6ca@i2se.com>
+ <2023042645-attentive-amends-7b0b@gregkh>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+In-Reply-To: <2023042645-attentive-amends-7b0b@gregkh>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1682595161;c928bbee;
-X-HE-SMSGID: 1przrT-0002AB-CO
+X-Provags-ID: V03:K1:DywFAflWM0RArQGlZHMeRccCQPE695q/C0HyS5erfKRh7g0cAyp
+ UndXvZym9ujBvdG1o+8SlYHVdsumnlCMDGSdCZGXbQzkREDKGki1Q2fOQ1nS6Ck3bzZ1nCn
+ tvXPtkDRBf/cPz3ciNGMM4zdPS68tp/I0dvLanOwgHNW8f8Yfcr51pmRk6zroFMOhgFy6sY
+ tgSrTJ3/1PkqmcJkum77w==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:FYdSZXaX/kU=;MpA4uryXMae2Sv1ywSY2DHF5TPj
+ lXPcUJS2fnjHk/iHSl9mvngxpgsoGPWCEsIZYJu26fo2I5xgcLPflUy0R6vjhs8JgpT1afSqo
+ 07PGALW4TVB9wgjWohSOxdmnYLGlMzgaici0mBwFKWMSnoCezwutYeo/sEhBqwHkcDxw3Yus+
+ d32SoqTzl6jxIgiBHj4E1AnB4DsRqlhqeVEAsDYD3BFyPDKWG6vl/gI37kxtpmHne//fa1Jxn
+ NZVYvZZ3oTV88QLo9QsqYd6bo0HHjpAE1AeC8jmhzrnQX1y0dv5Sd3YUxHUBRiELe/qFr0iDt
+ 4FgBVbITq7wBCGQpAP3DJP+QJGVJwfnWuEvV17srJRbICMNV6F4+TD0v2uqyVT8v29EN/SBOZ
+ 4U1UGDkU3ew03P5688G3PRSnvomCZD+Zh3d4FeSvbhhDR5QFc5tlfaMH1KK3GILUMwuxHzj2R
+ HLyD1UzstsoIGHWTK064wK/t36hzJlEVzp0C0RcDcjP8N54OlFpgD+eTK0CmVv7/FEoHuqbd4
+ 2ZyR8dnS4p0TCTermP8K/Z5pdu0kuzxFzMow2dyi+Ly2QnYvGaumNWYzHPKr9R6j3ph2icO/Q
+ PJoWSgaSj5K8O2NdnanmBJVZKZ7B0B3OWb7biso4ElaUYD5PnZMlH+nSSd6L7rEUg2UbiBxKu
+ kBeS4MU6PdBHaYl7iWjuWuRIWH+aSCenXwBurOfiew==
 
-Hi! I noticed a report about a regression (hang due to a deadlock with
-mt76x02u_pre_tbtt_work when using a MT7610U chip as AP) that according
-to the reporter started with 6.1.21; 6.2 and 6.3 work, but there
-lockdep warnings occur.
+> Can you send a patch that shows the change you wish to have made here so
+> that you can get credit for fixing the issue?
 
-There thus apparently is at least one bug in a stable tree that might or
-might not be caused by a backported change that leads to the lockdep
-warnings in later series.
+Sure, just for reference:
 
-But the reporter apparently doesn't care about 6.1.y anymore and plans
-to move to 6.3. Hence the reporter afaics has no interest in bisecting
-the problem on 6.1.y. But maybe some of you care or even have an idea
-what's causing this. For details see:
+https://lore.kernel.org/lkml/20230427112152.12313-1-stefan.wahren@i2se.com/T/
 
-https://bugzilla.kernel.org/show_bug.cgi?id=217341
-
-Ciao, Thorsten
+> 
+> thanks,
+> 
+> greg k-h
