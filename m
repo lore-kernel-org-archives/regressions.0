@@ -1,132 +1,267 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E20923D5
-	for <regressions@lists.linux.dev>; Thu, 27 Apr 2023 16:47:04 +0000 (UTC)
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-9594916df23so161075166b.1
-        for <regressions@lists.linux.dev>; Thu, 27 Apr 2023 09:47:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682614023; x=1685206023;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KjsrLK++1Ok9mkPQh5RzlJPsuvae+2fAnwHy/bXuTZQ=;
-        b=iGUz+yha5eyPi12tErNnmiFwYqrCebxrO6Pih0R3yQu/Zx7Kr0GSZabmgJzr5QboZ1
-         I8I7RJR+mcI4QR6uAP5e0umLudXKTWzLYysMMleWLwOYcG4tAJFfYVbavPgPFBNh95Ix
-         VT40EJ/izCzDBPYFtqKWlhjItFqUf0CSrnuEFxXKUFKVfaV+1QQ/f1fhEGDwFOwFwebj
-         sqt2jnNQUTznZNmBDznVITtCuWgROPDGO4LBbYlLnomVC84ZjjwjP2oVzODb5mcP+ddz
-         FVFJBOs1wGKRIqN424pyyf+JFfddfyAdd11yiC/1BKCZTqX6m6Wz4NadxO8lbNUu63Jn
-         PsMg==
-X-Gm-Message-State: AC+VfDzc+5xHOnuhJNYV/3eSECCwLXjgyywxBlynhEjbXfl40LID9/A4
-	5Gt3zvMS0gK1ncSLte2dFvtcaMocGAiFapCwDgk=
-X-Google-Smtp-Source: ACHHUZ7D1zPxvk3A3EfX41SNrGI4Oj+vvVgaiLJaFUX28cuiAeNQp++k07zyro+shIsRsSfHNs5lDdKbXwvh2ifcbAQ=
-X-Received: by 2002:a17:906:64c4:b0:930:7f40:c1bb with SMTP id
- p4-20020a17090664c400b009307f40c1bbmr2189658ejn.4.1682614022494; Thu, 27 Apr
- 2023 09:47:02 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DB1F15AC
+	for <regressions@lists.linux.dev>; Fri, 28 Apr 2023 01:17:30 +0000 (UTC)
+X-UUID: cd50ef11d3c34755ab4be2551cc1b666-20230428
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.22,REQID:408dea53-6e23-4300-b724-4ae2918a6d1e,IP:5,U
+	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:-9,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:-4
+X-CID-INFO: VERSION:1.1.22,REQID:408dea53-6e23-4300-b724-4ae2918a6d1e,IP:5,URL
+	:0,TC:0,Content:0,EDM:0,RT:0,SF:-9,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
+	elease,TS:-4
+X-CID-META: VersionHash:120426c,CLOUDID:8eda256a-2f20-4998-991c-3b78627e4938,B
+	ulkID:230428091715JX7J7YU3,BulkQuantity:0,Recheck:0,SF:19|41|24|17|102,TC:
+	nil,Content:0,EDM:-3,IP:-2,URL:1,File:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OS
+	I:0,OSA:0,AV:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-UUID: cd50ef11d3c34755ab4be2551cc1b666-20230428
+X-User: zhouzongmin@kylinos.cn
+Received: from [172.20.12.156] [(116.128.244.169)] by mailgw
+	(envelope-from <zhouzongmin@kylinos.cn>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 710927598; Fri, 28 Apr 2023 09:17:14 +0800
+Message-ID: <6599319fea8ed1e3d6968e5b986661f0cf175902.camel@kylinos.cn>
+Subject: Re: [PATCH] drm/probe_helper: fix the warning reported when calling
+ drm_kms_helper_poll_disable during suspend
+From: zongmin zhou <zhouzongmin@kylinos.cn>
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Janne Grunau <j@jannau.net>, maarten.lankhorst@linux.intel.com, 
+ mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com,
+ daniel@ffwll.ch,  neil.armstrong@linaro.org, tony.luck@intel.com,
+ keescook@chromium.org,  linux-kernel@vger.kernel.org,
+ dri-devel@lists.freedesktop.org,  gpiccoli@igalia.com,
+ linux-hardening@vger.kernel.org,  laurentiu.palcu@oss.nxp.com,
+ regressions@lists.linux.dev
+Date: Fri, 28 Apr 2023 09:17:12 +0800
+In-Reply-To: <CAA8EJppmUtuhAF+VHPh3Q8tNYp1m4T6P7dZ0wYZ8Vzwo0DF6cg@mail.gmail.com>
+References: <20230328023129.3596968-1-zhouzongmin@kylinos.cn>
+	 <20230420200148.GD3280@jannau.net>
+	 <CAA8EJpoK3yv3E==bJuDoQhsW2Q1LdqKakJgdZx6S=ec-CvyGyw@mail.gmail.com>
+	 <1682386644754589.204.seg@mailgw>
+	 <1186d62a5fe7f2aa6e06f06a3dc7605c0072f1eb.camel@kylinos.cn>
+	 <CAA8EJppmUtuhAF+VHPh3Q8tNYp1m4T6P7dZ0wYZ8Vzwo0DF6cg@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4-0ubuntu1 
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230420110220.23168-1-hdegoede@redhat.com>
-In-Reply-To: <20230420110220.23168-1-hdegoede@redhat.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Thu, 27 Apr 2023 18:46:51 +0200
-Message-ID: <CAJZ5v0jUC24BanTT_-RTm=5z0Hnpdvyse4VgFsV-VFsM1nbxHg@mail.gmail.com>
-Subject: Re: [PATCH] ACPI: PM: Do not turn of unused power resources on the
- Toshiba Click Mini
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: "Rafael J . Wysocki" <rafael@kernel.org>, regressions@lists.linux.dev, 
-	linux-acpi@vger.kernel.org, =?UTF-8?B?R8OpIEtvZXJrYW1w?= <ge.koerkamp@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 20, 2023 at 1:02=E2=80=AFPM Hans de Goede <hdegoede@redhat.com>=
- wrote:
->
-> The CPR3 power resource on the Toshiba Click Mini toggles a GPIO
-> which is called SISP (for SIS touchscreen power?) on/off.
->
-> This CPR3 power resource is not listed in any _PR? lists, let alone
-> in a _PR0 list for the SIS0817 touchscreen ACPI device which needs it.
->
-> Before commit a1224f34d72a ("ACPI: PM: Check states of power resources
-> during initialization") this was not an issue because since nothing
-> referenced the CPR3 power resource its state was always
-> ACPI_POWER_RESOURCE_STATE_UNKNOWN and power resources with this state
-> get ignored by acpi_turn_off_unused_power_resources().
->
-> This clearly is a bug in the DSDT of this device. Add a DMI quirk
-> to make acpi_turn_off_unused_power_resources() a no-op on this
-> model to fix the touchscreen no longer working since kernel 5.16 .
->
-> This quirk also causes 2 other power resources to not get turned
-> off, but the _OFF method on these already was a no-op, so this makes
-> no difference for the other 2 power resources.
->
-> Fixes: a1224f34d72a ("ACPI: PM: Check states of power resources during in=
-itialization")
-> Reported-by: G=C3=A9 Koerkamp <ge.koerkamp@gmail.com>
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D216946
-> Link: https://lore.kernel.org/regressions/32a14a8a-9795-4c8c-7e00-da9012f=
-548f8@leemhuis.info/
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
->  drivers/acpi/power.c | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
->
-> diff --git a/drivers/acpi/power.c b/drivers/acpi/power.c
-> index 292cec3691cc..5dc792961ab8 100644
-> --- a/drivers/acpi/power.c
-> +++ b/drivers/acpi/power.c
-> @@ -23,6 +23,7 @@
->
->  #define pr_fmt(fmt) "ACPI: PM: " fmt
->
-> +#include <linux/dmi.h>
->  #include <linux/kernel.h>
->  #include <linux/module.h>
->  #include <linux/init.h>
-> @@ -1022,6 +1023,21 @@ void acpi_resume_power_resources(void)
->  }
->  #endif
->
-> +static const struct dmi_system_id dmi_leave_unused_power_resources_on[] =
-=3D {
-> +       {
-> +               /*
-> +                * The Toshiba Click Mini has a CPR3 power-resource which=
- must
-> +                * be on for the touchscreen to work, but which is not in=
- any
-> +                * _PR? lists. The other 2 affected power-resources are n=
-o-ops.
-> +                */
-> +               .matches =3D {
-> +                       DMI_MATCH(DMI_SYS_VENDOR, "TOSHIBA"),
-> +                       DMI_MATCH(DMI_PRODUCT_NAME, "SATELLITE Click Mini=
- L9W-B"),
-> +               },
-> +       },
-> +       {}
-> +};
-> +
->  /**
->   * acpi_turn_off_unused_power_resources - Turn off power resources not i=
-n use.
->   */
-> @@ -1029,6 +1045,9 @@ void acpi_turn_off_unused_power_resources(void)
->  {
->         struct acpi_power_resource *resource;
->
-> +       if (dmi_check_system(dmi_leave_unused_power_resources_on))
-> +               return;
-> +
->         mutex_lock(&power_resource_list_lock);
->
->         list_for_each_entry_reverse(resource, &acpi_power_resource_list, =
-list_node) {
-> --
+On Wed, 2023-04-26 at 16:10 +0300, Dmitry Baryshkov wrote:
+> On Wed, 26 Apr 2023 at 12:09, zongmin zhou <zhouzongmin@kylinos.cn>
+> wrote:
+> >=20
+> > On Sun, 2023-04-23 at 22:51 +0200, Janne Grunau wrote:
+> > > On 2023-04-20 23:07:01 +0300, Dmitry Baryshkov wrote:
+> > > > On Thu, 20 Apr 2023 at 23:01, Janne Grunau <j@jannau.net>
+> > > > wrote:
+> > > > >=20
+> > > > > On 2023-03-28 10:31:29 +0800, Zongmin Zhou wrote:
+> > > > > > When drivers call drm_kms_helper_poll_disable from
+> > > > > > their device suspend implementation without enabled output
+> > > > > > polling before,
+> > > > > > following warning will be reported,due to work->func not be
+> > > > > > initialized:
+> > > > >=20
+> > > > > we see the same warning with the wpork in progress kms driver
+> > > > > for
+> > > > > apple
+> > > > > silicon SoCs. The connectors do not need to polled so the
+> > > > > driver
+> > > > > never
+> > > > > calls drm_kms_helper_poll_init().
+> > > > >=20
+> > > > > > [=C2=A0=C2=A0 55.141361] WARNING: CPU: 3 PID: 372 at
+> > > > > > kernel/workqueue.c:3066 __flush_work+0x22f/0x240
+> > > > > > [=C2=A0=C2=A0 55.141382] Modules linked in: nls_iso8859_1
+> > > > > > snd_hda_codec_generic ledtrig_audio snd_hda_intel
+> > > > > > snd_intel_dspcfg snd_intel_sdw_acpi snd_hda_codec
+> > > > > > snd_hda_core
+> > > > > > snd_hwdep snd_pcm snd_seq_midi snd_seq_midi_event
+> > > > > > snd_rawmidi
+> > > > > > snd_seq intel_rapl_msr intel_rapl_common bochs
+> > > > > > drm_vram_helper
+> > > > > > drm_ttm_helper snd_seq_device nfit ttm crct10dif_pclmul
+> > > > > > snd_timer ghash_clmulni_intel binfmt_misc sha512_ssse3
+> > > > > > aesni_intel drm_kms_helper joydev input_leds syscopyarea
+> > > > > > crypto_simd snd cryptd sysfillrect sysimgblt mac_hid
+> > > > > > serio_raw
+> > > > > > soundcore qemu_fw_cfg sch_fq_codel msr parport_pc ppdev lp
+> > > > > > parport drm ramoops reed_solomon pstore_blk pstore_zone
+> > > > > > efi_pstore virtio_rng ip_tables x_tables autofs4
+> > > > > > hid_generic
+> > > > > > usbhid hid ahci virtio_net i2c_i801 crc32_pclmul psmouse
+> > > > > > virtio_scsi libahci i2c_smbus lpc_ich xhci_pci net_failover
+> > > > > > virtio_blk xhci_pci_renesas failover
+> > > > > > [=C2=A0=C2=A0 55.141430] CPU: 3 PID: 372 Comm: kworker/u16:9 No=
+t
+> > > > > > tainted
+> > > > > > 6.2.0-rc6+ #16
+> > > > > > [=C2=A0=C2=A0 55.141433] Hardware name: QEMU Standard PC (Q35 +=
+ ICH9,
+> > > > > > 2009), BIOS rel-1.12.1-0-ga5cab58e9a3f-prebuilt.qemu.org
+> > > > > > 04/01/2014
+> > > > > > [=C2=A0=C2=A0 55.141435] Workqueue: events_unbound async_run_en=
+try_fn
+> > > > > > [=C2=A0=C2=A0 55.141441] RIP: 0010:__flush_work+0x22f/0x240
+> > > > > > [=C2=A0=C2=A0 55.141444] Code: 8b 43 28 48 8b 53 30 89 c1 e9 f9=
+ fe ff
+> > > > > > ff
+> > > > > > 4c 89 f7 e8 b5 95 d9 00 e8 00 53 08 00 45 31 ff e9 11 ff ff
+> > > > > > ff
+> > > > > > 0f 0b e9 0a ff ff ff <0f> 0b 45 31 ff e9 00 ff ff ff e8 e2
+> > > > > > 54
+> > > > > > d8 00 66 90 90 90 90 90 90
+> > > > > > [=C2=A0=C2=A0 55.141446] RSP: 0018:ff59221940833c18 EFLAGS: 000=
+10246
+> > > > > > [=C2=A0=C2=A0 55.141449] RAX: 0000000000000000 RBX: 00000000000=
+00000
+> > > > > > RCX:
+> > > > > > ffffffff9b72bcbe
+> > > > > > [=C2=A0=C2=A0 55.141450] RDX: 0000000000000001 RSI: 00000000000=
+00001
+> > > > > > RDI:
+> > > > > > ff3ea01e4265e330
+> > > > > > [=C2=A0=C2=A0 55.141451] RBP: ff59221940833c90 R08: 00000000000=
+00000
+> > > > > > R09:
+> > > > > > 8080808080808080
+> > > > > > [=C2=A0=C2=A0 55.141453] R10: ff3ea01e42b3caf4 R11: 00000000000=
+0000f
+> > > > > > R12:
+> > > > > > ff3ea01e4265e330
+> > > > > > [=C2=A0=C2=A0 55.141454] R13: 0000000000000001 R14: ff3ea01e505=
+e5e80
+> > > > > > R15:
+> > > > > > 0000000000000001
+> > > > > > [=C2=A0=C2=A0 55.141455] FS:=C2=A0 0000000000000000(0000)
+> > > > > > GS:ff3ea01fb7cc0000(0000) knlGS:0000000000000000
+> > > > > > [=C2=A0=C2=A0 55.141456] CS:=C2=A0 0010 DS: 0000 ES: 0000 CR0:
+> > > > > > 0000000080050033
+> > > > > > [=C2=A0=C2=A0 55.141458] CR2: 0000563543ad1546 CR3: 000000010ee=
+82005
+> > > > > > CR4:
+> > > > > > 0000000000771ee0
+> > > > > > [=C2=A0=C2=A0 55.141464] DR0: 0000000000000000 DR1: 00000000000=
+00000
+> > > > > > DR2:
+> > > > > > 0000000000000000
+> > > > > > [=C2=A0=C2=A0 55.141465] DR3: 0000000000000000 DR6: 00000000fff=
+e0ff0
+> > > > > > DR7:
+> > > > > > 0000000000000400
+> > > > > > [=C2=A0=C2=A0 55.141466] PKRU: 55555554
+> > > > > > [=C2=A0=C2=A0 55.141467] Call Trace:
+> > > > > > [=C2=A0=C2=A0 55.141469]=C2=A0 <TASK>
+> > > > > > [=C2=A0=C2=A0 55.141472]=C2=A0 ? pcie_wait_cmd+0xdf/0x220
+> > > > > > [=C2=A0=C2=A0 55.141478]=C2=A0 ? mptcp_seq_show+0xe0/0x180
+> > > > > > [=C2=A0=C2=A0 55.141484]=C2=A0 __cancel_work_timer+0x124/0x1b0
+> > > > > > [=C2=A0=C2=A0 55.141487]=C2=A0 cancel_delayed_work_sync+0x17/0x=
+20
+> > > > > > [=C2=A0=C2=A0 55.141490]=C2=A0 drm_kms_helper_poll_disable+0x26=
+/0x40
+> > > > > > [drm_kms_helper]
+> > > > > > [=C2=A0=C2=A0 55.141516]=C2=A0 drm_mode_config_helper_suspend+0=
+x25/0x90
+> > > > > > [drm_kms_helper]
+> > > > > > [=C2=A0=C2=A0 55.141531]=C2=A0 ? __pm_runtime_resume+0x64/0x90
+> > > > > > [=C2=A0=C2=A0 55.141536]=C2=A0 bochs_pm_suspend+0x16/0x20 [boch=
+s]
+> > > > > > [=C2=A0=C2=A0 55.141540]=C2=A0 pci_pm_suspend+0x8b/0x1b0
+> > > > > > [=C2=A0=C2=A0 55.141545]=C2=A0 ? __pfx_pci_pm_suspend+0x10/0x10
+> > > > > > [=C2=A0=C2=A0 55.141547]=C2=A0 dpm_run_callback+0x4c/0x160
+> > > > > > [=C2=A0=C2=A0 55.141550]=C2=A0 __device_suspend+0x14c/0x4c0
+> > > > > > [=C2=A0=C2=A0 55.141553]=C2=A0 async_suspend+0x24/0xa0
+> > > > > > [=C2=A0=C2=A0 55.141555]=C2=A0 async_run_entry_fn+0x34/0x120
+> > > > > > [=C2=A0=C2=A0 55.141557]=C2=A0 process_one_work+0x21a/0x3f0
+> > > > > > [=C2=A0=C2=A0 55.141560]=C2=A0 worker_thread+0x4e/0x3c0
+> > > > > > [=C2=A0=C2=A0 55.141563]=C2=A0 ? __pfx_worker_thread+0x10/0x10
+> > > > > > [=C2=A0=C2=A0 55.141565]=C2=A0 kthread+0xf2/0x120
+> > > > > > [=C2=A0=C2=A0 55.141568]=C2=A0 ? __pfx_kthread+0x10/0x10
+> > > > > > [=C2=A0=C2=A0 55.141570]=C2=A0 ret_from_fork+0x29/0x50
+> > > > > > [=C2=A0=C2=A0 55.141575]=C2=A0 </TASK>
+> > > > > > [=C2=A0=C2=A0 55.141575] ---[ end trace 0000000000000000 ]---
+> > > > > >=20
+> > > > > > Fixes: a4e771729a51 ("drm/probe_helper: sort out
+> > > > > > poll_running
+> > > > > > vs poll_enabled")
+> > > > > > Signed-off-by: Zongmin Zhou<zhouzongmin@kylinos.cn>
+> > > > > > ---
+> > > > > > =C2=A0drivers/gpu/drm/drm_probe_helper.c | 3 ++-
+> > > > > > =C2=A01 file changed, 2 insertions(+), 1 deletion(-)
+> > > > > >=20
+> > > > > > diff --git a/drivers/gpu/drm/drm_probe_helper.c
+> > > > > > b/drivers/gpu/drm/drm_probe_helper.c
+> > > > > > index 8127be134c39..ac72b18e2257 100644
+> > > > > > --- a/drivers/gpu/drm/drm_probe_helper.c
+> > > > > > +++ b/drivers/gpu/drm/drm_probe_helper.c
+> > > > > > @@ -855,7 +855,8 @@ void drm_kms_helper_poll_disable(struct
+> > > > > > drm_device *dev)
+> > > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (dev->mode_config.poll_runnin=
+g)
+> > > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 drm_kms_helper_disable_hpd(dev);
+> > > > > >=20
+> > > > > > -=C2=A0=C2=A0=C2=A0=C2=A0 cancel_delayed_work_sync(&dev-
+> > > > > > > mode_config.output_poll_work);
+> > > > > > +=C2=A0=C2=A0=C2=A0=C2=A0 if (dev->mode_config.poll_enabled)
+> > > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 cancel_delayed_work_sync(&dev-
+> > > > > > > mode_config.output_poll_work);
+> > > > >=20
+> > > > > Checking for dev->mode_config.poll_enabled at the start of
+> > > > > the
+> > > > > function
+> > > > > and return early if it is not true looks more in style with
+> > > > > the
+> > > > > rest of
+> > > > > drm_probe_helper.c.
+> > > >=20
+> > > > I think it is an error to call drm_kms_helper_poll_disable() if
+> > > > polling was not initialized. So, in my opinion the fix should
+> > > > go to
+> > > > the drm_mode_config_helper_suspend() / _resume() instead.
+> > > > Please
+> > > > add a
+> > > > guard there using dev->mode_config.poll_enabled.
+> > >=20
+> > > While I tend to agree to the sentiment I do not think this is the
+> > > correct fix in this situation. drm_kms_helper_poll_disable had
+> > > the
+> > > check since at least 2014. a4e771729a51 is a regression. If we
+> > > want
+> > > to
+> > > change the behavior it should be done explicitly and after
+> > > verifying
+> > > all
+> > > drm_kms_helper_poll_disable() calls.
+> > >=20
+> > > #regzbot ^introduced a4e771729a51
+> > >=20
+> > > ciao
+> > > Janne
+> >=20
+> > Dear Janne:
+> >=20
+> > I agree with you like I mentioned on last letter.
+> > Thanks for your time.
+> >=20
+> >=20
+> > Dear Dmitry:
+> >=20
+> > Is there anything else I can do?
+> > Looking forward to your reply.
+>=20
+> If it is a common consensus, I'm fine with your approach.
+>=20
+Dear Dmitry:
 
-Applied as 6.4-rc material, thanks!
+Ok.Thanks for your reply.
+
+Best regards!
