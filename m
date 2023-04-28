@@ -1,13 +1,44 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 162CB23A4
-	for <regressions@lists.linux.dev>; Fri, 28 Apr 2023 06:52:55 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1psHyP-0006Aj-Uz; Fri, 28 Apr 2023 08:52:54 +0200
-Message-ID: <aea6c4a7-5bb0-9395-8883-6b163c181995@leemhuis.info>
-Date: Fri, 28 Apr 2023 08:52:53 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47C0223A4;
+	Fri, 28 Apr 2023 07:13:12 +0000 (UTC)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 428511FFFA;
+	Fri, 28 Apr 2023 07:13:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1682665991; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LJ+TMkCiDgfegvvsz0b3841mXTh3rnZkeHoyCdZ3g2o=;
+	b=W9kYRwWGdploRnynCxhQA6nn/OPsw3CdOInic8+pvp7oDcet2eShcDStKef/Ma72D5kMp5
+	UZKPdwh88ZSsAnYG5r/die/XpbmsAO+GjZ6/fTaD4HG3bAyUtYN5zzdnI7kaTWpJCLHYXH
+	I9BsMVyxKILhHqhDrWtTZ08UPT5OcmQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1682665991;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LJ+TMkCiDgfegvvsz0b3841mXTh3rnZkeHoyCdZ3g2o=;
+	b=hI0/yIUG0x80oyE863aFGoetKlHqs9fMKCgzSEVLD5N7r6P4oduv/mBvD++Lt7TDCNEvNn
+	irMGXGwb/GBARwBQ==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 0F36D138FA;
+	Fri, 28 Apr 2023 07:13:11 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+	by imap2.suse-dmz.suse.de with ESMTPSA
+	id 60bxAgdyS2SzTQAAMHmgww
+	(envelope-from <vbabka@suse.cz>); Fri, 28 Apr 2023 07:13:11 +0000
+Message-ID: <dbe9d5cc-80ed-7fcf-f0dc-197ed8885676@suse.cz>
+Date: Fri, 28 Apr 2023 09:13:10 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,61 +47,57 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.10.0
-Subject: Re: v4l2-async: regression due to endpoint matching
-Content-Language: en-US, de-DE
-To: Alexander Stein <alexander.stein@ew.tq-group.com>,
- linux-media@vger.kernel.org,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <8360125.31r3eYUQgx@steina-w>
-From: "Linux regression tracking #adding (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <8360125.31r3eYUQgx@steina-w>
+Subject: Re: [PATCH for v6.3 regression] mm/mremap: fix vm_pgoff in
+ vma_merge() case 3
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Greg KH <greg@kroah.com>, Andrew Morton <akpm@linux-foundation.org>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, lstoakes@gmail.com,
+ regressions@lists.linux.dev, linux-mm@kvack.org, patches@lists.linux.dev,
+ linux-kernel@vger.kernel.org, Jiri Slaby <jirislaby@kernel.org>,
+ Fabian Vogt <fvogt@suse.com>, stable@vger.kernel.org
+References: <20230427140959.27655-1-vbabka@suse.cz>
+ <2023042719-stratus-pavestone-505e@gregkh>
+ <3cc6e10c-f054-a30a-bf87-966098ccb7bf@suse.cz>
+ <CAHk-=wgdGzy6-3jzN6Kvtz1QxStTZBZPz1zy9i4gM9nbe5FGbA@mail.gmail.com>
+ <CAHk-=whwoKFbrCGXW9uwX3SPOezLdOKstuLAju1KTi5Ryq+ZcQ@mail.gmail.com>
+Content-Language: en-US
+From: Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <CAHk-=whwoKFbrCGXW9uwX3SPOezLdOKstuLAju1KTi5Ryq+ZcQ@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1682664776;f6856113;
-X-HE-SMSGID: 1psHyP-0006Aj-Uz
+Content-Transfer-Encoding: 8bit
 
-[CCing the regression list, as it should be in the loop for regressions:
-https://docs.kernel.org/admin-guide/reporting-regressions.html]
+On 4/28/23 04:53, Linus Torvalds wrote:
+> Hi Vlastimil,
 
-[TLDR: I'm adding this report to the list of tracked Linux kernel
-regressions; the text you find below is based on a few templates
-paragraphs you might have encountered already in similar form.
-See link in footer if these mails annoy you.]
+Hi Linus,
 
-On 27.04.23 16:40, Alexander Stein wrote:
+> On Thu, Apr 27, 2023 at 8:12 AM Linus Torvalds
+> <torvalds@linux-foundation.org> wrote:
+>>
+>> Ack. It's in my tree as commit 7e7757876f25 right now (not pushed out
+>> yet, will do the usual build tests and look around for other things
+>> pending).
 > 
-> I have a setup on my TQMa6x (imx6q-mba6a.dts) with a tc358743 attached to the 
-> MIPI CSI input.
-> I noticed that since commit 1f391df44607 ("media: v4l2-async: Use endpoints in 
-> __v4l2_async_nf_add_fwnode_remote()") the async subdevice probing does not 
-> work anymore. If I revert that, it is working again, even on next-20230425.
-> [...]
+> Gaah. I just merged Andrew's MM tree, and while it had a lot of small
+> conflicts (and the ext4 ones were annoying semantic ones), the only
+> one that was in *confusing* code was the one introduced by this
+> one-liner fix.
+> 
+> I'm pretty sure I did the right thing, particularly given your other
+> patch for the mm tree, but please humor me and take a look at it?
 
-Thanks for the report. To be sure the issue doesn't fall through the
-cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
-tracking bot:
+Sure, took a look and looks correct to me, thanks!
 
-#regzbot ^introduced 1f391df44607
-#regzbot title media: v4l2-async: async subdevice probing stopped
-working on TQMa6x
-#regzbot ignore-activity
+> That 'vma_merge()' function is the function from hell.
 
-This isn't a regression? This issue or a fix for it are already
-discussed somewhere else? It was fixed already? You want to clarify when
-the regression started to happen? Or point out I got the title or
-something else totally wrong? Then just reply and tell me -- ideally
-while also telling regzbot about it, as explained by the page listed in
-the footer of this mail.
+Yeah, unfortunately. But despite the bugs, I believe Liam's changes in 6.3
+improved it a lot, as with __vma_adjust() it was much worse (it did e.g.
+things like "swap(vma, expand)" in some cases). And hopefully the cleanups
+from me and Lorenzo in the mm 6.4 pull request improved readability too,
+even though it made the merge tricky.
 
-Developers: When fixing the issue, remember to add 'Link:' tags pointing
-to the report (the parent of this mail). See page linked in footer for
-details.
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+> I haven't pushed out yet because it's still going through my build
+> tests, but it should be out soon.
+> 
+>                        Linus
 
