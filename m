@@ -1,124 +1,81 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-vs1-f45.google.com (mail-vs1-f45.google.com [209.85.217.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7B992F26
-	for <regressions@lists.linux.dev>; Sun, 30 Apr 2023 21:34:21 +0000 (UTC)
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1a950b982d4so665335ad.0
-        for <regressions@lists.linux.dev>; Sun, 30 Apr 2023 14:34:21 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 357E523AE
+	for <regressions@lists.linux.dev>; Sun, 30 Apr 2023 23:57:54 +0000 (UTC)
+Received: by mail-vs1-f45.google.com with SMTP id ada2fe7eead31-42febf67609so561957137.2
+        for <regressions@lists.linux.dev>; Sun, 30 Apr 2023 16:57:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1682890461; x=1685482461;
+        d=gmail.com; s=20221208; t=1682899073; x=1685491073;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=bXvWfcPwYE0l610o5narxo1kaxveEE8bMSO3FZe1UVo=;
-        b=hDMD+683FV9awGOim+l3BgEF4meaq+TP43gjtapNGzLkLF5zY5YsesXkf7cRd4dD5S
-         Iw8UMAZsf/7oUUoofWgWKdhivDRLbC6NpwgpNuwogs3zIkEUu42YsumVcan5J8iYnEYc
-         UhiZQiveG08+Wf68OfDFL1xZNwfDfoCGV+exPdRJpb0z2xHPWSO2MT7ujT7eatyl2+mH
-         OdvZkK5bPRy6xutc7aET2dU267ixeRr5CPC0c4vZdKDHPk0qSH9Npvtk82KM5gMJQcc7
-         e14DZSPQzOFuJKQVEYPcIWhHvozrIRyCilZW/srEDBcXv9bdHk80X5juPl9UZMl3NBV4
-         K7Sw==
+        bh=y5yOMPitISYAlbpaB11MkGcUAwlL+JYlE7n3Iz8ufFk=;
+        b=f1AaNZHBnAEJzKBd0h6IkFWqk9amZi25t38VA17+VcbfH0J97hr4b1RVLBZGgGlPjq
+         0Y1/N3juwlzIclF748EhRHOG1BhWVwgxNm8OMGAj2FzxdKwfbLf2qCUkb33XWDBnq70l
+         Mn1lPoULdMUDgQUAxHlpKUnHwWMxkTaS/AHL/Mp34FQaEmCUEzSeYL6FGUH8ZUBGybvm
+         SwtHBelp1iO3TCETcTDwLCm7tnBV1gmKudx3b7Ycel2XXSbx2sI5H+T3rc7npn0lvREq
+         rAwNuHrYLGr21AHWTirKstqsn/j6mdxdW+/3n7FQy/nnbhejIRRWw1mmgjI11UUfkuqN
+         d1uA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682890461; x=1685482461;
+        d=1e100.net; s=20221208; t=1682899073; x=1685491073;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=bXvWfcPwYE0l610o5narxo1kaxveEE8bMSO3FZe1UVo=;
-        b=LTnDVvjuDejyVNhoYzDkqnD1E1KrxXMeMbbrQVdf0hGPCtS4XRsoksO7kUnFTi3PAj
-         tscbCA7z7WmaeRxQDDNYayEgtuY2DlRi4sG2+7HgtLovaIS7GVbNHWggBT22+WevCRXP
-         i8gU1Px02GFG2CV0HRUWPQ6AEDDCNm74En+XixQ6XtZDmg8TfbIhrf85koFkiPJkuq80
-         cGM/qPFAMqJah5C7407YUdI28YtdbOjJVfvrc8L9M96+aEfnSLLiZl/UpaO2C4OYOyzQ
-         Cadu6kbdLE/O4UTSNdjqm1+DpN6f/BQBLQsx1v2hqXKyNNqX0cPHUCaWx3O4cKxePPAn
-         u7qw==
-X-Gm-Message-State: AC+VfDxSyO7sc0LRkEVeGMQSXCI3DFaG+1tlL78XaK4uOyBq5wUtXMJA
-	CYFVh8hjckC6WfBhn8wivATSIcW5m+2JWBkz3K80rQ==
-X-Google-Smtp-Source: ACHHUZ4ggBLuGq7jC2q832O9om3D3hjpgadwUqVDNqfRn7eoOKxA5MqKMSS7c9EM4oTS5Ucy0OevPZVq+8ZgCGrt0XU=
-X-Received: by 2002:a17:902:b20a:b0:1a6:42f0:e575 with SMTP id
- t10-20020a170902b20a00b001a642f0e575mr299829plr.5.1682890460920; Sun, 30 Apr
- 2023 14:34:20 -0700 (PDT)
+        bh=y5yOMPitISYAlbpaB11MkGcUAwlL+JYlE7n3Iz8ufFk=;
+        b=BoL/m/DxytGyyjb9mD1HswCNf40x6kUJEtucc0pi1TKHNt8RYRYpRyjRZlaPEUDWTZ
+         4yzRYLNELYByzRdujm/Oafp8/yRUi6d6/mPTPZ/hHPmbHnk9Qa5kYt6Zs6knqXxMVTQb
+         /OBYUB8RuqXh8rSsHi3iY0QSKa9NFPNsUsc0cJ+oH0nQmZ5aGELude66JxmQAgQRF8Cx
+         5ykFLsBlYpN1HqRcRprr4nG+4zykG3gSPh2K9/YkZIGdCo+s4e/ojQTaNzlkdppu7Nf1
+         y/nntqBdcSjo6PQLxKU4YboEVqVO7dLc9pijJdwBl/g4w2fCzHB4dEpYngpTA6nD04a9
+         9iig==
+X-Gm-Message-State: AC+VfDyCRhUrsTVTBqNPukzyIIaTMXv6Mu/V9Ken0jg2jH+iTB5ViW+X
+	koM77BmLlX+cR6PzonNGxrDji8fypGjBpHiSM6k=
+X-Google-Smtp-Source: ACHHUZ5CsWQV7H563NgOgOzxqRbohUZKUSDeVX7Jo4SjdJwXY1g6eQIHAUoxDtw7DESK/5724qipuhp9akOGPe6jhMs=
+X-Received: by 2002:a67:edd1:0:b0:42e:6298:801d with SMTP id
+ e17-20020a67edd1000000b0042e6298801dmr4655196vsp.20.1682899072981; Sun, 30
+ Apr 2023 16:57:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230316220638.983743-1-dlatypov@google.com> <20230430181500.122664-1-sj@kernel.org>
-In-Reply-To: <20230430181500.122664-1-sj@kernel.org>
-From: Daniel Latypov <dlatypov@google.com>
-Date: Sun, 30 Apr 2023 14:34:09 -0700
-Message-ID: <CAGS_qxqmWYzTBkfmFoALoteaG303tJNh1K5N2=Pmykqk+2BeTg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] kunit: tool: add subscripts for type annotations
- where appropriate
-To: SeongJae Park <sj@kernel.org>
-Cc: brendanhiggins@google.com, davidgow@google.com, rmoar@google.com, 
-	linux-kernel@vger.kernel.org, kunit-dev@googlegroups.com, 
-	linux-kselftest@vger.kernel.org, skhan@linuxfoundation.org, 
-	johannes@sipsolutions.net, Johannes Berg <johannes.berg@intel.com>, 
-	regressions@lists.linux.dev
+References: <20230429020951.082353595@lindbergh.monkeyblade.net>
+ <CAAJw_ZueYAHQtM++4259TXcxQ_btcRQKiX93u85WEs2b2p19wA@mail.gmail.com>
+ <ZE0kndhsXNBIb1g7@debian.me> <CAAJw_Zvxtf-Ny2iymoZdBGF577aeNomWP7u7-5rWyn6A7rzKRg@mail.gmail.com>
+ <CAAJw_ZvZdFpw9W2Hisc9c2BAFbYAnQuaFFaFG6N7qPUP2fOL_w@mail.gmail.com>
+ <e9c289bea2c36c496c3425b7dc42c6324d2a43e3.camel@intel.com> <0785e432f1776b3531e8e033cb5b48eeb58b12b6.camel@intel.com>
+In-Reply-To: <0785e432f1776b3531e8e033cb5b48eeb58b12b6.camel@intel.com>
+From: Jeff Chua <jeff.chua.linux@gmail.com>
+Date: Mon, 1 May 2023 07:57:42 +0800
+Message-ID: <CAAJw_Zvafhng8oP8E6HyhB5DK-WSQm2_yNbbHhgbTQb74pM-fA@mail.gmail.com>
+Subject: Re: iwlwifi broken in post-linux-6.3.0 after April 26
+To: "Greenman, Gregory" <gregory.greenman@intel.com>
+Cc: "bagasdotme@gmail.com" <bagasdotme@gmail.com>, "davem@davemloft.net" <davem@davemloft.net>, 
+	"Berg, Johannes" <johannes.berg@intel.com>, "kvalo@kernel.org" <kvalo@kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, 
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>, "kuba@kernel.org" <kuba@kernel.org>, 
+	"edumazet@google.com" <edumazet@google.com>, "pabeni@redhat.com" <pabeni@redhat.com>, 
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Apr 30, 2023 at 11:15=E2=80=AFAM SeongJae Park <sj@kernel.org> wrot=
-e:
->
-> Hi Daniel,
->
-> On Thu, 16 Mar 2023 15:06:36 -0700 Daniel Latypov <dlatypov@google.com> w=
-rote:
->
-> > E.g. for subprocess.Popen, it can be opened in `text=3DTrue` mode where=
- it
-> > returns strings, or `text=3DFalse` where it returns bytes.
-> > To differentiate, you can annotate types as `Popen[str]` or
-> > `Popen[bytes]`.
-> >
-> > This patch should add subscripts in all the places we were missing them=
-.
->
-> I just found this patch is in the latest mainline tree, and it causes kun=
-it
-> failure on my test machine like below.
->
->     $ python3 --version
->     Python 3.8.10
->     $
->     $ ./tools/testing/kunit/kunit.py run --build_dir ../kunit.out/
->     Traceback (most recent call last):
->       File "./tools/testing/kunit/kunit.py", line 24, in <module>
->         import kunit_kernel
->       File "/home/sjpark/linux/tools/testing/kunit/kunit_kernel.py", line=
- 42, in <module>
->         class LinuxSourceTreeOperations:
->       File "/home/sjpark/linux/tools/testing/kunit/kunit_kernel.py", line=
- 95, in LinuxSourceTreeOperations
->         def start(self, params: List[str], build_dir: str) -> subprocess.=
-Popen[str]:
->     TypeError: 'type' object is not subscriptable
->     $
->
-> I further confirmed reverting this patch makes it run again.  Do you have=
- any
-> idea?
+On Mon, May 1, 2023 at 2:00=E2=80=AFAM Greenman, Gregory
+<gregory.greenman@intel.com> wrote:
 
-It seems like support for the subscript wasn't added until Python 3.9.
+> > Strangely, I couldn't reproduce it on my system. But, anyway this featu=
+re
+> > better be disabled for a while. I'll send a patch with a fix shortly.
+> May I ask you to try this fix in [1] (also cc-ed you on the patch itself)=
+?
+>
+> [1] https://lore.kernel.org/linux-wireless/20230430201830.2f8f88fe49f6.I2=
+f0076ef1d1cbe5d10010549c875b7038ec4c365@changeid/
 
-I know support for subscripting other types like re.Pattern was added
-in 3.9 per https://peps.python.org/pep-0585/ but it doesn't mention
-Popen there...
-This patch also added typing.IO[str] and concurrent.Future[None], so
-those might be problematic too.
+Hi Greg,
 
-Can you check if the typing.IO and concurrent.Future[None] changes
-cause problems?
-(I don't have an easy way of testing against older Python versions currentl=
-y).
+Applied the patch. It worked! Thank you!
 
-If so, we should revert the patch.
-If not, we can undo just the Popen changes.
-
-And in either case, we'll need to update ./tools/testing/kunit/run_checks.p=
-y.
-Currently, it runs `mypy --strict` which will start failing if we
-revert any part of this patch.
-
-Thanks,
-Daniel
+Jeff
