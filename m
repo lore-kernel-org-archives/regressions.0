@@ -1,40 +1,40 @@
-Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com [209.85.221.175])
+Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com [209.85.217.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F21E753A1
-	for <regressions@lists.linux.dev>; Sat, 29 Apr 2023 18:18:00 +0000 (UTC)
-Received: by mail-vk1-f175.google.com with SMTP id 71dfb90a1353d-44307db5d24so299320e0c.0
-        for <regressions@lists.linux.dev>; Sat, 29 Apr 2023 11:18:00 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71390364
+	for <regressions@lists.linux.dev>; Sun, 30 Apr 2023 10:58:56 +0000 (UTC)
+Received: by mail-vs1-f43.google.com with SMTP id ada2fe7eead31-42e5b934f1aso1397791137.2
+        for <regressions@lists.linux.dev>; Sun, 30 Apr 2023 03:58:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1682792280; x=1685384280;
+        d=gmail.com; s=20221208; t=1682852335; x=1685444335;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=r1iDAowj027iaBmQvYLZLlsdgLbrABEug20GI/GfAo4=;
-        b=qFbq5Sj7+zxZlOrpitzMN8wuN/wkDrUeRn3nzPHxlf6QYDD9BDV9wa2Z5bpOvBCqOt
-         R3UtJb7Pa/DUIRT6gTEKPJgTsf2BurAFEj8Qo2Mh9AS5gowIPPbkEhuiRcNVmW8+pQG7
-         RInOsoIsMZQpz2rFLgXUzlZXgiW/ZfqP+ZRzNiv7PuuHLubvw6i3WD/68aiqqnadFchi
-         Btv0PmA25qZ9ZihhRg+1Hgf8YcR7yCeteBIhppqaXyP/CRF69CrJWzNW4dqid56hpfL2
-         1luN881Qa2CmFsUAkhd8OAV1aahJAbC6mVGVZmvXSQ2eaPOA1nz4UJQiIRbkZyu1Ud83
-         7DWA==
+        bh=4yRqbMK5ZOoBV7oEjfeaEkeOFx+akdbA76Qn7HPAVqQ=;
+        b=dVMpPKQmYtWA6bJvjmz2oUs7Wz81r6A0Hf2HQ5ktdXKqC9/EssFIuc1FCvs5XK8G4/
+         3ReRrdhMgAuyIZZiMhZ/viFQWa9qNKtsb8kRcr8BYqOftrfDLlB4GSN36KNthl8VMs8W
+         rYiktJNrp7nRtqvsHpngoi920qwJe9Ka9aJGvaoj+O10qhJbFzoFdhh3hPjLNWRuzm37
+         +DrX87nCscfqdK1r2aRCsZPSW1C5xcQYZbQzidGFRDnIgCCp2jsPcVcAULf2UAuiqUM6
+         l9CcezKLCtX9SzM3NPYonxniXd91G2ZOBGl8X8z1vNljN7mfGFwPqvDmM+qI7YITX+XC
+         8ESw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682792280; x=1685384280;
+        d=1e100.net; s=20221208; t=1682852335; x=1685444335;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=r1iDAowj027iaBmQvYLZLlsdgLbrABEug20GI/GfAo4=;
-        b=Z8gKQmusxcQiidvdFX8/+DdMEk5BG0d1f4wicjhdUP3KMxr1JTZVXpztfKavfuoSYV
-         +KFrZPAi7A5t00kdIsAhS7haopPNMnyHxd/0DSkc3nhVZ6MirTSxbIZT1eR3JW108/KM
-         NqMcIaJZJevWAAgVo5G+8uQgRA9sjc9T/igYecvDnOtA14IhA64eQSpRvy3s/E1pL8II
-         gNgNZ+zTBjQrHkJn+/4+jQ1tjsnIbnUpXU53kWMg6XQPyQ3fIPr15TrnPTMfJcG5rA2i
-         +d3SegIFrQMf2gEyKiaYCre9bd7XoklF3IOZscXMxOam0XJEC0o7rSf+XVWxH/ORpJGm
-         S3Uw==
-X-Gm-Message-State: AC+VfDyhz9TP3LRnt097EA50f/dD2aF8iOPQg8Dr47Q6gHUqBFYDUbt3
-	HW7vOImovO5eAYbevQ+JjrIrORhbutPRytRF/Qo=
-X-Google-Smtp-Source: ACHHUZ4gAyBPwxEd6oY9ni3Df1iyIVtAfUw2w1QS6RzCTPmfziF/rQAQXVApUObLwF1k+G4lvXaJeFWCuo7dyiF05b4=
-X-Received: by 2002:a1f:e282:0:b0:440:8a24:e71f with SMTP id
- z124-20020a1fe282000000b004408a24e71fmr3264011vkg.7.1682792279508; Sat, 29
- Apr 2023 11:17:59 -0700 (PDT)
+        bh=4yRqbMK5ZOoBV7oEjfeaEkeOFx+akdbA76Qn7HPAVqQ=;
+        b=YP69CocRJ2zIh3/JRltAigYksODxp3uTCfNP0EVb9cWWbcttO/WK2LTXcCH9SCmR//
+         T4d4sl8deHyMN0/j0+uAUb/jnAFGtPyiIPxPA2PBf36/8voYbr0L0sXyLLeqIBoCsx/E
+         9Qin/Rco4PeS03g3E9cc5SS3NEGCKyDaJAY4K2M58G/Mh0dYHhmjIg8fC9r4AwFtxKW2
+         yPXnIzmQzbEzQrTuv8PHu9KLmnMROi8QBSkCk5i+UkxTdqBm2KcZI02ouBWAry4chBI/
+         0cKHrzBSIjr2EMCB7c6HUykb1soUtjXY9lsPV5RSuFV1tNvLcs42A0MaCkSZUe4GNr8t
+         3eIA==
+X-Gm-Message-State: AC+VfDxOo1OLREJIs9v/GsGz9u+WDGWeiGLwH5pAiSG+wfMtn+geZwcz
+	2gRG7xhcq0qeZqDW5x0C2kTgAoSr6JQ58q34JlQ=
+X-Google-Smtp-Source: ACHHUZ7GMdfJ8slwBPsfUk71KrHUgsMc+fh9xNLqcaE7QzlNfL4EAdW411L/9EJySS4ALmov/ANNbaKnPRv9bB+Jg4w=
+X-Received: by 2002:a67:f883:0:b0:42f:78d5:d987 with SMTP id
+ h3-20020a67f883000000b0042f78d5d987mr4858393vso.1.1682852335098; Sun, 30 Apr
+ 2023 03:58:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -42,11 +42,12 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 References: <20230429020951.082353595@lindbergh.monkeyblade.net>
- <CAAJw_ZueYAHQtM++4259TXcxQ_btcRQKiX93u85WEs2b2p19wA@mail.gmail.com> <ZE0kndhsXNBIb1g7@debian.me>
-In-Reply-To: <ZE0kndhsXNBIb1g7@debian.me>
+ <CAAJw_ZueYAHQtM++4259TXcxQ_btcRQKiX93u85WEs2b2p19wA@mail.gmail.com>
+ <ZE0kndhsXNBIb1g7@debian.me> <CAAJw_Zvxtf-Ny2iymoZdBGF577aeNomWP7u7-5rWyn6A7rzKRg@mail.gmail.com>
+In-Reply-To: <CAAJw_Zvxtf-Ny2iymoZdBGF577aeNomWP7u7-5rWyn6A7rzKRg@mail.gmail.com>
 From: Jeff Chua <jeff.chua.linux@gmail.com>
-Date: Sun, 30 Apr 2023 02:17:48 +0800
-Message-ID: <CAAJw_Zvxtf-Ny2iymoZdBGF577aeNomWP7u7-5rWyn6A7rzKRg@mail.gmail.com>
+Date: Sun, 30 Apr 2023 18:58:44 +0800
+Message-ID: <CAAJw_ZvZdFpw9W2Hisc9c2BAFbYAnQuaFFaFG6N7qPUP2fOL_w@mail.gmail.com>
 Subject: Re: iwlwifi broken in post-linux-6.3.0 after April 26
 To: Bagas Sanjaya <bagasdotme@gmail.com>
 Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
@@ -54,27 +55,96 @@ Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
 	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
 	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
 	Linux Wireless <linux-wireless@vger.kernel.org>, Linux Networking <netdev@vger.kernel.org>, 
-	Linux Regressions <regressions@lists.linux.dev>
+	Linux Regressions <regressions@lists.linux.dev>, Johannes Berg <johannes.berg@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, Apr 29, 2023 at 10:07=E2=80=AFPM Bagas Sanjaya <bagasdotme@gmail.co=
+On Sun, Apr 30, 2023 at 2:17=E2=80=AFAM Jeff Chua <jeff.chua.linux@gmail.co=
 m> wrote:
 >
-> On Sat, Apr 29, 2023 at 01:22:03PM +0800, Jeff Chua wrote:
-> > Can't start wifi on latest linux git pull ... started happening 3 days =
-ago ...
+> On Sat, Apr 29, 2023 at 10:07=E2=80=AFPM Bagas Sanjaya <bagasdotme@gmail.=
+com> wrote:
+> >
+> > On Sat, Apr 29, 2023 at 01:22:03PM +0800, Jeff Chua wrote:
+> > > Can't start wifi on latest linux git pull ... started happening 3 day=
+s ago ...
+> >
+> > Are you testing mainline?
 >
-> Are you testing mainline?
+> I'm pulling from https://github.com/torvalds/linux.git, currently at ...
+>
+> commit 1ae78a14516b9372e4c90a89ac21b259339a3a3a (HEAD -> master,
+> origin/master, origin/HEAD)
+> Merge: 4e1c80ae5cf4 74d7970febf7
+> Author: Linus Torvalds <torvalds@linux-foundation.org>
+> Date:   Sat Apr 29 11:10:39 2023 -0700
+>
+> > Certainly you should do bisection.
+>
+> ok, will do.
 
-I'm pulling from https://github.com/torvalds/linux.git, currently at ...
+Bisected!
 
-commit 1ae78a14516b9372e4c90a89ac21b259339a3a3a (HEAD -> master,
-origin/master, origin/HEAD)
-Merge: 4e1c80ae5cf4 74d7970febf7
-Author: Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sat Apr 29 11:10:39 2023 -0700
+ef3ed33dfc8f0f1c81ca103e6b68b4f77ee0ab65 is the first bad commit
+commit ef3ed33dfc8f0f1c81ca103e6b68b4f77ee0ab65
+Author: Gregory Greenman <gregory.greenman@intel.com>
+Date:   Sun Apr 16 15:47:33 2023 +0300
 
-> Certainly you should do bisection.
+    wifi: iwlwifi: bump FW API to 77 for AX devices
 
-ok, will do.
+    Start supporting API version 77 for AX devices.
+
+    Signed-off-by: Gregory Greenman <gregory.greenman@intel.com>
+    Link: https://lore.kernel.org/r/20230416154301.e522ccefe354.If7628363fa=
+feb7687163103e734206915c445197@changeid
+    Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+
+ drivers/net/wireless/intel/iwlwifi/cfg/22000.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+
+I had to downgrade FW API to 75 to make it work again!
+
+--- a/drivers/net/wireless/intel/iwlwifi/cfg/22000.c    2023-04-30
+18:27:21.719983505 +0800
++++ a/drivers/net/wireless/intel/iwlwifi/cfg/22000.c    2023-04-30
+18:27:25.749983446 +0800
+@@ -10,7 +10,7 @@
+ #include "fw/api/txq.h"
+
+ /* Highest firmware API version supported */
+-#define IWL_22000_UCODE_API_MAX        78
++#define IWL_22000_UCODE_API_MAX        75
+
+ /* Lowest firmware API version supported */
+ #define IWL_22000_UCODE_API_MIN        39
+
+
+My h/w is Lenovo X1 with ...
+
+00:14.3 Network controller: Intel Corporation Alder Lake-P PCH CNVi
+WiFi (rev 01)
+
+
+I've the following firmware .. I've tried 77, 78, 79, 81 .. .all not workin=
+g
+
+-rw-r--r-- 1 root root 1560532 Mar 14 08:05 iwlwifi-so-a0-gf-a0-72.ucode
+-rw-r--r-- 1 root root 1563692 Mar  6 14:07 iwlwifi-so-a0-gf-a0-73.ucode
+-rw-r--r-- 1 root root 1577460 Mar 14 08:05 iwlwifi-so-a0-gf-a0-74.ucode
+-rw-r--r-- 1 root root 1641260 Mar  6 14:07 iwlwifi-so-a0-gf-a0-77.ucode
+-rw-r--r-- 1 root root 1667236 Mar  6 14:07 iwlwifi-so-a0-gf-a0-78.ucode
+-rw-r--r-- 1 root root 1672988 Mar  6 14:07 iwlwifi-so-a0-gf-a0-79.ucode
+-rw-r--r-- 1 root root 1682852 Apr  5 08:22 iwlwifi-so-a0-gf-a0-81.ucode
+
+
+# working dmesg attached ...
+cfg80211: Loading compiled-in X.509 certificates for regulatory database
+Loaded X.509 cert 'sforshee: 00b28ddf47aef9cea7'
+iwlwifi 0000:00:14.3: enabling device (0000 -> 0002)
+iwlwifi 0000:00:14.3: Direct firmware load for
+iwlwifi-so-a0-gf-a0-75.ucode failed with error -2
+iwlwifi 0000:00:14.3: api flags index 2 larger than supported by driver
+thermal thermal_zone1: failed to read out thermal zone (-61)
+iwlwifi 0000:00:14.3: Sorry - debug buffer is only 4096K while you
+requested 65536K
