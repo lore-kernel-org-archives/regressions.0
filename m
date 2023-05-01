@@ -1,81 +1,117 @@
-Received: from mail-vs1-f45.google.com (mail-vs1-f45.google.com [209.85.217.45])
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 357E523AE
-	for <regressions@lists.linux.dev>; Sun, 30 Apr 2023 23:57:54 +0000 (UTC)
-Received: by mail-vs1-f45.google.com with SMTP id ada2fe7eead31-42febf67609so561957137.2
-        for <regressions@lists.linux.dev>; Sun, 30 Apr 2023 16:57:54 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67D1F18F
+	for <regressions@lists.linux.dev>; Mon,  1 May 2023 04:36:54 +0000 (UTC)
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-63b5c830d5eso1448398b3a.2
+        for <regressions@lists.linux.dev>; Sun, 30 Apr 2023 21:36:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1682899073; x=1685491073;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=y5yOMPitISYAlbpaB11MkGcUAwlL+JYlE7n3Iz8ufFk=;
-        b=f1AaNZHBnAEJzKBd0h6IkFWqk9amZi25t38VA17+VcbfH0J97hr4b1RVLBZGgGlPjq
-         0Y1/N3juwlzIclF748EhRHOG1BhWVwgxNm8OMGAj2FzxdKwfbLf2qCUkb33XWDBnq70l
-         Mn1lPoULdMUDgQUAxHlpKUnHwWMxkTaS/AHL/Mp34FQaEmCUEzSeYL6FGUH8ZUBGybvm
-         SwtHBelp1iO3TCETcTDwLCm7tnBV1gmKudx3b7Ycel2XXSbx2sI5H+T3rc7npn0lvREq
-         rAwNuHrYLGr21AHWTirKstqsn/j6mdxdW+/3n7FQy/nnbhejIRRWw1mmgjI11UUfkuqN
-         d1uA==
+        d=gmail.com; s=20221208; t=1682915813; x=1685507813;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=3FJ838k1C5SRQ1QpV0bbphF5iaPyZZZtQhPRQozOF0E=;
+        b=F4EB75vdxlyBg6SiDCxwOFFk0jHoIqsKC2teM5GNnn++1DACxQXC7cXmCsLFgfZhTj
+         KYPjg3DTWK86sw/T257HeoOj38YOWktSytjNIWrJdw6eIl6JWB2wFv24oXQ8gDRPUaB9
+         JQfVdC169ZqjJmEq+UkDOjM1i4p+atA1L+loY9E+uGXjebBp9o0AbaYDWCd21K7rhV0m
+         dxF83Gi+GeKA7Lo9nS6Qp8XWGQdxkbLXG0X0BnhWv6h0S1GhHiC+uzSzMiQpiC0jhqAQ
+         hnjEbvPeiEq2QJNsrh20TB/7DgLChQhj8iv8jtrPciemzQJTABbXU5hKjHrlUbfG7fvK
+         M5Ew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682899073; x=1685491073;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=y5yOMPitISYAlbpaB11MkGcUAwlL+JYlE7n3Iz8ufFk=;
-        b=BoL/m/DxytGyyjb9mD1HswCNf40x6kUJEtucc0pi1TKHNt8RYRYpRyjRZlaPEUDWTZ
-         4yzRYLNELYByzRdujm/Oafp8/yRUi6d6/mPTPZ/hHPmbHnk9Qa5kYt6Zs6knqXxMVTQb
-         /OBYUB8RuqXh8rSsHi3iY0QSKa9NFPNsUsc0cJ+oH0nQmZ5aGELude66JxmQAgQRF8Cx
-         5ykFLsBlYpN1HqRcRprr4nG+4zykG3gSPh2K9/YkZIGdCo+s4e/ojQTaNzlkdppu7Nf1
-         y/nntqBdcSjo6PQLxKU4YboEVqVO7dLc9pijJdwBl/g4w2fCzHB4dEpYngpTA6nD04a9
-         9iig==
-X-Gm-Message-State: AC+VfDyCRhUrsTVTBqNPukzyIIaTMXv6Mu/V9Ken0jg2jH+iTB5ViW+X
-	koM77BmLlX+cR6PzonNGxrDji8fypGjBpHiSM6k=
-X-Google-Smtp-Source: ACHHUZ5CsWQV7H563NgOgOzxqRbohUZKUSDeVX7Jo4SjdJwXY1g6eQIHAUoxDtw7DESK/5724qipuhp9akOGPe6jhMs=
-X-Received: by 2002:a67:edd1:0:b0:42e:6298:801d with SMTP id
- e17-20020a67edd1000000b0042e6298801dmr4655196vsp.20.1682899072981; Sun, 30
- Apr 2023 16:57:52 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1682915813; x=1685507813;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3FJ838k1C5SRQ1QpV0bbphF5iaPyZZZtQhPRQozOF0E=;
+        b=QH7iqulXV843iSVIcy5qWIFKbIKYHpR1hbsvw27QysMEMnnWQipfFIJOH4wYitv5zx
+         oPmD393Wk4HulxrsXNXfG8R9AQbK7aUYQLWBaPwcYgtkKY2ndYyqcWT4H+7vsQ33sY5J
+         Li1SamwzeJbkkpmpXqWBT8k7X/Pky8PFDnumfE+rG0JWeuJkQHrbeGZkJoxyaicSX48L
+         ErOBgN3VV2cru7KO5qcWdN13nWQ9ouGvgyET/XnQv1lJEXFxBf6rGmC6qcAl0Ylh5STk
+         rGLA9MovmP98EKZRF9lyQdisqTgwjxTg6MSvqYC+lHwfjliC00Q8g20qxHuJ2ih5JtyH
+         qOBg==
+X-Gm-Message-State: AC+VfDyTcmGWykDxYBskLLh08msPQSB0s13Mn7LpSfp1ZzcefXZBWJtm
+	0djtl8VZZWgn5g9k+80NJyk=
+X-Google-Smtp-Source: ACHHUZ49A3xDD6h5SJXvoZmv6tt7PFayV/qkvPMH1okiMRZdcD5LOro7oWQinZDqAooNTW9iUU4ZzA==
+X-Received: by 2002:a05:6a20:6a1e:b0:d7:3b62:3cf with SMTP id p30-20020a056a206a1e00b000d73b6203cfmr15224013pzk.54.1682915813043;
+        Sun, 30 Apr 2023 21:36:53 -0700 (PDT)
+Received: from debian.me (subs32-116-206-28-46.three.co.id. [116.206.28.46])
+        by smtp.gmail.com with ESMTPSA id k128-20020a632486000000b00502ecc282e2sm16723810pgk.5.2023.04.30.21.36.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 30 Apr 2023 21:36:52 -0700 (PDT)
+Received: by debian.me (Postfix, from userid 1000)
+	id 7E4CF10695F; Mon,  1 May 2023 11:36:49 +0700 (WIB)
+Date: Mon, 1 May 2023 11:36:49 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Jeff Chua <jeff.chua.linux@gmail.com>,
+	lkml <linux-kernel@vger.kernel.org>,
+	Oswald Buddenhagen <oswald.buddenhagen@gmx.de>,
+	Takashi Iwai <tiwai@suse.de>, Jaroslav Kysela <perex@perex.cz>,
+	Linux ALSA Subsystem Development <alsa-devel@alsa-project.org>,
+	Linux Regressions <regressions@lists.linux.dev>
+Subject: Re: linux-6.4 alsa sound broken
+Message-ID: <ZE9B4avbDtIXOu4O@debian.me>
+References: <CAAJw_ZsbTVd3Es373x_wTNDF7RknGhCD0r+NKUSwAO7HpLAkYA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230429020951.082353595@lindbergh.monkeyblade.net>
- <CAAJw_ZueYAHQtM++4259TXcxQ_btcRQKiX93u85WEs2b2p19wA@mail.gmail.com>
- <ZE0kndhsXNBIb1g7@debian.me> <CAAJw_Zvxtf-Ny2iymoZdBGF577aeNomWP7u7-5rWyn6A7rzKRg@mail.gmail.com>
- <CAAJw_ZvZdFpw9W2Hisc9c2BAFbYAnQuaFFaFG6N7qPUP2fOL_w@mail.gmail.com>
- <e9c289bea2c36c496c3425b7dc42c6324d2a43e3.camel@intel.com> <0785e432f1776b3531e8e033cb5b48eeb58b12b6.camel@intel.com>
-In-Reply-To: <0785e432f1776b3531e8e033cb5b48eeb58b12b6.camel@intel.com>
-From: Jeff Chua <jeff.chua.linux@gmail.com>
-Date: Mon, 1 May 2023 07:57:42 +0800
-Message-ID: <CAAJw_Zvafhng8oP8E6HyhB5DK-WSQm2_yNbbHhgbTQb74pM-fA@mail.gmail.com>
-Subject: Re: iwlwifi broken in post-linux-6.3.0 after April 26
-To: "Greenman, Gregory" <gregory.greenman@intel.com>
-Cc: "bagasdotme@gmail.com" <bagasdotme@gmail.com>, "davem@davemloft.net" <davem@davemloft.net>, 
-	"Berg, Johannes" <johannes.berg@intel.com>, "kvalo@kernel.org" <kvalo@kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, 
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>, "kuba@kernel.org" <kuba@kernel.org>, 
-	"edumazet@google.com" <edumazet@google.com>, "pabeni@redhat.com" <pabeni@redhat.com>, 
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="LJ2qQOdS72n8ceav"
+Content-Disposition: inline
+In-Reply-To: <CAAJw_ZsbTVd3Es373x_wTNDF7RknGhCD0r+NKUSwAO7HpLAkYA@mail.gmail.com>
+
+
+--LJ2qQOdS72n8ceav
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 1, 2023 at 2:00=E2=80=AFAM Greenman, Gregory
-<gregory.greenman@intel.com> wrote:
+On Mon, May 01, 2023 at 11:59:12AM +0800, Jeff Chua wrote:
+> Latest git pull from Linus's tree ... playing a simple sound file will
+> resulted in a lot of echo.
+>=20
+> Running on Lenovo X1 with ..
+> 00:1f.3 Audio device: Intel Corporation Alder Lake PCH-P High
+> Definition Audio Controller (rev 01)
+>=20
+> I've bisected and reverted the following patch fixed the problem.
+>=20
+> commit 9f656705c5faa18afb26d922cfc64f9fd103c38d
 
-> > Strangely, I couldn't reproduce it on my system. But, anyway this featu=
-re
-> > better be disabled for a while. I'll send a patch with a fix shortly.
-> May I ask you to try this fix in [1] (also cc-ed you on the patch itself)=
-?
->
-> [1] https://lore.kernel.org/linux-wireless/20230430201830.2f8f88fe49f6.I2=
-f0076ef1d1cbe5d10010549c875b7038ec4c365@changeid/
+Thanks for the regression report. However, where is your dmesg and/or ALSA =
+log
+when the regression occurs? What is the playback test file?
 
-Hi Greg,
+FYI, 9f656705c5faa1 ("ALSA: pcm: rewrite snd_pcm_playback_silence()") is
+originated as [1/2] of patch series that pokes around the auto-silencer. The
+other patch ([2/2]) got NAKed since autofilling buffer should have been don=
+e in
+alsa-lib (still to be discussed) [1].
 
-Applied the patch. It worked! Thank you!
+Anyway, I'm adding this to regzbot:
 
-Jeff
+#regzbot ^introduced 9f656705c5faa1
+#regzbot title Much echoing when playing sound files on Intel Alder Lake PC=
+H-P Audio Controller
+
+Thanks.
+
+[1]: https://lore.kernel.org/all/bb342e84-b468-8adc-6688-88da2c857da1@perex=
+=2Ecz/
+
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--LJ2qQOdS72n8ceav
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZE9B3QAKCRD2uYlJVVFO
+oybmAP9qZl6m3BGfCju4IYA/iNDLxZpCPY+PPR5V6jt2I12r0gEAiduhNNevDzK/
+ts24tNhoskNd+rPICIYUV6L02qtfBwI=
+=IYeY
+-----END PGP SIGNATURE-----
+
+--LJ2qQOdS72n8ceav--
