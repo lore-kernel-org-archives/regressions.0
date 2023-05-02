@@ -1,131 +1,118 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f175.google.com (mail-oi1-f175.google.com [209.85.167.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4204510E4;
-	Tue,  2 May 2023 11:58:11 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1ptodz-00072b-Gd; Tue, 02 May 2023 13:58:07 +0200
-Message-ID: <b61b60cb-0e8e-0a27-5f7b-71e7639e02f6@leemhuis.info>
-Date: Tue, 2 May 2023 13:58:06 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 394727E
+	for <regressions@lists.linux.dev>; Tue,  2 May 2023 13:13:31 +0000 (UTC)
+Received: by mail-oi1-f175.google.com with SMTP id 5614622812f47-38dec65ab50so2293139b6e.2
+        for <regressions@lists.linux.dev>; Tue, 02 May 2023 06:13:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1683033210; x=1685625210;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TUEF3QLxn693rhXEaa/WFrAyt3GuRVvWAiFCi9LSxcE=;
+        b=McJXSsAU5Kv+u7NJNkICwAIOR4MvXA5FzSyceSQyzzQVCvUrQAIBXdDLu+jLBJRSyH
+         fhG6nLkQ+v+55EZoYF8f0s/3hI6JQvjXLlHpXHQ69WpwYiNElrf/63p2QdSB+O8KufCT
+         uuLYqd/f/EFc4G9GKiMApMFMoy5Eq8W0W9KlhI2ezHtCc1W2yNZDFdMeyLkSAsjgpFlM
+         vhWY1ESgKvfonCglKqFLulvr93RSkKxuCb010MegetYJtgEAAO01i0Jul8LYmWOrgT0Z
+         5yxn2Qw/bp/qT2RaHm/2HXgqK5nvfh50XjUMOfx2G33AXTuYmjx4ELMtPaiHfvl+klGK
+         izrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683033210; x=1685625210;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TUEF3QLxn693rhXEaa/WFrAyt3GuRVvWAiFCi9LSxcE=;
+        b=FrY9pghsCCtaJuQb5VvJI+ommgVAcR19F82eaNHKjQR84FbT4KAizE2fOFJQmtFvcl
+         QMsC3pV993xAua12YhpMIHd/D1U8wRLaVPQm38cD15WLpHUikAKNCKcnb9djqi/aySFn
+         w8SiLxAQD5dM02VS9/WFIN+gROZ2gjCQKq8nRFBqZdD3p0jJ0q2JIZsNn7NnSNgMRSIA
+         /+YOjyhcpnAgEswUWq56Mk7nnskzlXJdn9vWWLvZWmLVWB/G/CzpGouEeDYvTR50vZyv
+         6H5HMuqHltDh7l+OuOba7aCSjyw4USjq0PR6uZ3qa32zvpgREvF/TavP4PQjxdwiMy2i
+         FpGw==
+X-Gm-Message-State: AC+VfDylMymMU+PoBHLCbbdM28pSYJ7t0wOxj2KWuZetMHNW5UUfOiq8
+	izUexTYNBWphUImKm569bkVd6INem3iTpMLCRGhpHbS5ZgQ=
+X-Google-Smtp-Source: ACHHUZ6aRVheMqHSh8QUmB0hKQpMwgH2/GyX3GEgmh2IQMnlT7Oe56Km5F6q9EowHCCWC2dThF6LQAf2An0Psav2uq4=
+X-Received: by 2002:a05:6808:4285:b0:38d:f03f:935b with SMTP id
+ dq5-20020a056808428500b0038df03f935bmr8748291oib.24.1683033210002; Tue, 02
+ May 2023 06:13:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH v4] Makefile.compiler: replace cc-ifversion with
- compiler-specific macros
-Content-Language: en-US, de-DE
-To: Shreeya Patel <shreeya.patel@collabora.com>,
- Nick Desaulniers <ndesaulniers@google.com>
-Cc: Michal Marek <michal.lkml@markovi.net>,
- Masahiro Yamada <masahiroy@kernel.org>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- clang-built-linux <llvm@lists.linux.dev>, Bill Wendling <morbo@google.com>,
- Nathan Chancellor <nathan@kernel.org>, regressions@lists.linux.dev,
- kernelci@lists.linux.dev,
- "gustavo.padovan@collabora.com" <gustavo.padovan@collabora.com>,
- Guillaume Charles Tucker <guillaume.tucker@collabora.com>,
- ricardo.canuelo@collabora.com, denys.f@collabora.com
-References: <CAK7LNAT_cMLGLBz7ugaLpJD3QmZmY8FK56x9nihvWeYhJpi2ag@mail.gmail.com>
- <20220919170828.3718437-1-ndesaulniers@google.com>
- <597ef55f-e7c1-ab60-b4aa-0071ff4b5e0e@collabora.com>
- <325ae81d-b3a5-71b3-39e9-96408968ab0b@leemhuis.info>
- <1209349b-9634-c1ca-d2ee-182e8dec2de5@collabora.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <1209349b-9634-c1ca-d2ee-182e8dec2de5@collabora.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1683028691;b202daa3;
-X-HE-SMSGID: 1ptodz-00072b-Gd
+References: <46a7eb80-5f09-4f6a-4fd3-9550dafd497c@felixrichter.tech> <1efbf587-e7b5-74a3-89e4-ca70386bd191@leemhuis.info>
+In-Reply-To: <1efbf587-e7b5-74a3-89e4-ca70386bd191@leemhuis.info>
+From: Alex Deucher <alexdeucher@gmail.com>
+Date: Tue, 2 May 2023 09:13:18 -0400
+Message-ID: <CADnq5_M-5SD6HDRVtFHPNF3q9XKz75PECdUxR-OaVpPe2Zw=EQ@mail.gmail.com>
+Subject: Re: PROBLEM: AMD Ryzen 9 7950X iGPU - Blinking Issue
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Felix Richter <judge@felixrichter.tech>, amd-gfx@lists.freedesktop.org, 
+	dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 02.05.23 11:48, Shreeya Patel wrote:
-> On 28/04/23 13:11, Thorsten Leemhuis wrote:
->> On 27.04.23 13:53, Shreeya Patel wrote:
->>> On 19/09/22 22:38, Nick Desaulniers wrote:
->>>> cc-ifversion is GCC specific. Replace it with compiler specific
->>>> variants. Update the users of cc-ifversion to use these new macros.
->>>>
->>>> Link: https://github.com/ClangBuiltLinux/linux/issues/350
->>>> Link:
->>>> https://lore.kernel.org/llvm/CAGG=3QWSAUakO42kubrCap8fp-gm1ERJJAYXTnP1iHk_wrH=BQ@mail.gmail.com/
->>>> Suggested-by: Bill Wendling <morbo@google.com>
->>>> Reviewed-by: Nathan Chancellor <nathan@kernel.org>
->>>> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
->>> KernelCI found this patch causes a regression in the
->>> baseline.logintest on qemu_arm-virt-gicv3-uefi [1],
->>> see the bisection report for more details [2].
->>>
->>> Let me know if you have any questions.
->>>
->>> [1] https://linux.kernelci.org/test/case/id/644596a0beca2ead032e8669/
->>> [2] https://groups.io/g/kernelci-results/message/40804> [...]
->>> #regzbot introduced: 88b61e3bff93
->> How much of this text is auto generated? I ask for two reasons:
-> 
-> None of this text is auto generated yet but we plan to do it soon once
-> we think the format of the reporting email is good enough for people to
-> understand
-> and look into it. Which is why your comments are really helpful here.
+On Tue, May 2, 2023 at 7:45=E2=80=AFAM Linux regression tracking (Thorsten
+Leemhuis) <regressions@leemhuis.info> wrote:
+>
+> [CCing the regression list, as it should be in the loop for regressions:
+> https://docs.kernel.org/admin-guide/reporting-regressions.html]
+>
+> [TLDR: I'm adding this report to the list of tracked Linux kernel
+> regressions; the text you find below is based on a few templates
+> paragraphs you might have encountered already in similar form.
+> See link in footer if these mails annoy you.]
+>
+> On 30.04.23 13:44, Felix Richter wrote:
+> > Hi,
+> >
+> > I am running into an issue with the integrated GPU of the Ryzen 9 7950X=
+. It seems to be a regression from kernel version 6.1 to 6.2.
+> > The bug materializes in from of my monitor blinking, meaning it turns f=
+ull white shortly. This happens very often so that the system becomes unple=
+asant to use.
+> >
+> > I am running the Archlinux Kernel:
+> > The Issue happens on the bleeding edge kernel: 6.2.13
+> > Switching back to the LTS kernel resolves the issue: 6.1.26
+> >
+> > I have two monitors attached to the system. One 42 inch 4k Display and =
+a 24 inch 1080p Display and am running sway as my desktop.
+> >
+> > Let me know if there is more information I could provide to help narrow=
+ down the issue.
+>
+> Thanks for the report. To be sure the issue doesn't fall through the
+> cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
+> tracking bot:
+>
+> #regzbot ^introduced v6.1..v6.2
+> #regzbot title drm: amdgpu: system becomes unpleasant to use after
+> monitor starts blinking and turns full white
+> #regzbot ignore-activity
+>
+> This isn't a regression? This issue or a fix for it are already
+> discussed somewhere else? It was fixed already? You want to clarify when
+> the regression started to happen? Or point out I got the title or
+> something else totally wrong? Then just reply and tell me -- ideally
+> while also telling regzbot about it, as explained by the page listed in
+> the footer of this mail.
+>
+> Developers: When fixing the issue, remember to add 'Link:' tags pointing
+> to the report (the parent of this mail). See page linked in footer for
+> details.
 
-Thx, glad to hear that. FWIW and YMMV, but I'm not sure if fully
-automating things is a good idea, as a bad report or two might be enough
-to make some developers start ignoring kernelci reports; a quick human
-review with small adjustments might help prevent that, as it's hard to
-get that ship turned around later (that's why regzbot up to this day
-doesn't send any mails automatically).
+This sounds exactly like the issue that was fixed in this patch which
+is already on it's way to Linus:
+https://gitlab.freedesktop.org/agd5f/linux/-/commit/08da182175db4c7f8085035=
+4849d95f2670e8cd9
 
->> * You made regzbot track this, which is great, but didn't specify a
->> title. That is fine in general, if the subject round about says what the
->> regression is about. But in this case it doesn't; hence it would be
->> great if you in the future could specify one through "#regzbot title:"
->> or adjust the mail's subject (I guess the former is what developers will
->> prefer).
-> 
-> Noted. If I think the title is not very explanatory then I'll change it
-> to reflect the problem in future.
+Alex
 
-Many thx!
-
-> [...]
-> 
-> I understand that it might be more helpful to atleast put little more
-> information about what is causing the regression here.
-> I'll provide some more details in future for it to be easy for
-> developers to look into it.
-
-Yeah, especially a obvious "what's the actual problem (in 10 words or
-less)" afaics would have been really good here.
-
->> To check if those were old or new problems, I tired to go back in the
->> history and on page 9 found an entry for the last succeeding test. But
->> clicking on the logs got me a 404 :-/
->>
->> Then I looked at the logs on [1] again and in the html view "Boot
->> result: FAIL". Is that the actual problem?
-> 
-> Unfortunately, we do have some broken links in the current KernelCI
-> dashboard [...]
-
-Happens :-D
-
-> What I can do from my side is to attach logs of the working kernel if I
-> can get them through LAVA.
-> But one thing to note is that even LAVA stores limited logs and we won't
-> be able to provide them always like in this case
-> since the regression has been happening from a long time.
-
-Before going down that route I'd work out with Nick why things work for
-him, maybe all that isn't needed.
-
-> Thanks for your input though, we will work on it and get a better format
-> ready for reporting the regressions.
-
-Thx for your work!
-
-Ciao, Thorsten
+>
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> --
+> Everything you wanna know about Linux kernel regression tracking:
+> https://linux-regtracking.leemhuis.info/about/#tldr
+> That page also explains what to do if mails like this annoy you.
