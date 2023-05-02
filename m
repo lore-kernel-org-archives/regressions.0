@@ -1,27 +1,13 @@
-Received: from madras.collabora.co.uk (madras.collabora.co.uk [46.235.227.172])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EF12A45;
-	Tue,  2 May 2023 09:48:49 +0000 (UTC)
-Received: from [IPV6:2405:201:0:21ea:73f6:2283:f432:3936] (unknown [IPv6:2405:201:0:21ea:73f6:2283:f432:3936])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: shreeya)
-	by madras.collabora.co.uk (Postfix) with ESMTPSA id 8C9AA66029AB;
-	Tue,  2 May 2023 10:48:44 +0100 (BST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1683020927;
-	bh=BTDP5HQlkjzIWb3E0kJ/uZm+RAC0iF2hvRKA0Tg7Bn0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=PWvIxPMjXhzU3qoNaB3i1oE/ZQ9YV4vibOjIaRY4pw/dcd3S1e3c2jvAf5J+6ZZiy
-	 zK5t2UyNs8SWVt07L3g6O1TO41J1HkI3g7cC/BHclvKCTmr+EJlDESje9Oyw4fniVz
-	 gUL9Tyy1pmehNS8gUjzagLwuieX66RRcGHAUy+pPsVZQMhQ6qZq9cDPNRyqryIeuNf
-	 F+qnJ2tM+NSVh/I7oOiQM3v1o9KtxYdgAKwsUHWh/k/SM457ZNAv9FXZ0vpW42v3wD
-	 M/u8BbZEPH+sQI450thEGix9czWItzeXo7AphxYUjTW1ASqzP5tV9Wri+qUz+L1Ml4
-	 NUi5mRhReHwbA==
-Message-ID: <1209349b-9634-c1ca-d2ee-182e8dec2de5@collabora.com>
-Date: Tue, 2 May 2023 15:18:41 +0530
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B18B9A45
+	for <regressions@lists.linux.dev>; Tue,  2 May 2023 10:26:24 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1ptnD7-0004cs-4G; Tue, 02 May 2023 12:26:17 +0200
+Message-ID: <0fd55257-5b26-1969-18b7-97b39c3f620b@leemhuis.info>
+Date: Tue, 2 May 2023 12:26:16 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -29,294 +15,140 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Subject: Re: [PATCH v4] Makefile.compiler: replace cc-ifversion with
- compiler-specific macros
-To: Thorsten Leemhuis <regressions@leemhuis.info>,
- Nick Desaulniers <ndesaulniers@google.com>
-Cc: Michal Marek <michal.lkml@markovi.net>,
- Masahiro Yamada <masahiroy@kernel.org>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- clang-built-linux <llvm@lists.linux.dev>, Bill Wendling <morbo@google.com>,
- Nathan Chancellor <nathan@kernel.org>, regressions@lists.linux.dev,
- kernelci@lists.linux.dev,
- "gustavo.padovan@collabora.com" <gustavo.padovan@collabora.com>,
- Guillaume Charles Tucker <guillaume.tucker@collabora.com>,
- ricardo.canuelo@collabora.com, denys.f@collabora.com
-References: <CAK7LNAT_cMLGLBz7ugaLpJD3QmZmY8FK56x9nihvWeYhJpi2ag@mail.gmail.com>
- <20220919170828.3718437-1-ndesaulniers@google.com>
- <597ef55f-e7c1-ab60-b4aa-0071ff4b5e0e@collabora.com>
- <325ae81d-b3a5-71b3-39e9-96408968ab0b@leemhuis.info>
-Content-Language: en-US
-From: Shreeya Patel <shreeya.patel@collabora.com>
-In-Reply-To: <325ae81d-b3a5-71b3-39e9-96408968ab0b@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+ Thunderbird/102.10.0
+Content-Language: en-US, de-DE
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: [regression] Bug 217386 - intel_powerclamp null pointer dereference
+ in Linux 6.3.x
+To: "Rafael J. Wysocki" <rafael@kernel.org>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Linux PM <linux-pm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-
-Hi Thorsten,
-
-On 28/04/23 13:11, Thorsten Leemhuis wrote:
-> Hi Shreeya!
->
-> On 27.04.23 13:53, Shreeya Patel wrote:
->> On 19/09/22 22:38, Nick Desaulniers wrote:
->>> cc-ifversion is GCC specific. Replace it with compiler specific
->>> variants. Update the users of cc-ifversion to use these new macros.
->>>
->>> Link: https://github.com/ClangBuiltLinux/linux/issues/350
->>> Link:
->>> https://lore.kernel.org/llvm/CAGG=3QWSAUakO42kubrCap8fp-gm1ERJJAYXTnP1iHk_wrH=BQ@mail.gmail.com/
->>> Suggested-by: Bill Wendling <morbo@google.com>
->>> Reviewed-by: Nathan Chancellor <nathan@kernel.org>
->>> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
->> KernelCI found this patch causes a regression in the
->> baseline.logintest on qemu_arm-virt-gicv3-uefi [1],
->> see the bisection report for more details [2].
->>
->> Let me know if you have any questions.
->>
->> [1] https://linux.kernelci.org/test/case/id/644596a0beca2ead032e8669/
->> [2] https://groups.io/g/kernelci-results/message/40804> [...]
->> #regzbot introduced: 88b61e3bff93
-> How much of this text is auto generated? I ask for two reasons:
-
-None of this text is auto generated yet but we plan to do it soon once
-we think the format of the reporting email is good enough for people to 
-understand
-and look into it. Which is why your comments are really helpful here.
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1683023184;3d0e5d90;
+X-HE-SMSGID: 1ptnD7-0004cs-4G
 
 
->
-> * You made regzbot track this, which is great, but didn't specify a
-> title. That is fine in general, if the subject round about says what the
-> regression is about. But in this case it doesn't; hence it would be
-> great if you in the future could specify one through "#regzbot title:"
-> or adjust the mail's subject (I guess the former is what developers will
-> prefer).
+Hi, Thorsten here, the Linux kernel's regression tracker.
+
+I noticed a regression report in bugzilla.kernel.org. As many (most?)
+kernel developers don't keep an eye on it, I decided to forward it by mail.
+
+Note, you have to use bugzilla to reach the reporter, as I sadly[1] can
+not CCed them in mails like this.
+
+Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=217386 :
+
+>  Risto A. Paju 2023-05-01 09:49:03 UTC
+> 
+> Created attachment 304199 [details]
+> dmesg-6.3.1
+> 
+> I use intel_powerclamp on a Thinkpad X220i via a custom script for
+> thermal management, and it triggers a kernel bug in Linux 6.3.0 and
+> 6.3.1. The script has a part
+> 
+> awk something > /sys/class/thermal/cooling_device4/cur_state
+> 
+> and the awk process hangs, with the null pointer bug reported in dmesg.
+> 
+> The script has worked fine for years, and for now I've switched back to
+> the 6.2 series for this laptop.
+> 
+> [tag] [reply] [−]
+> Private
+> Comment 1 Risto A. Paju 2023-05-01 12:23:15 UTC
+> 
+> The affected CPU is an i3-2310M. I tested the same on a newer Intel
+> laptop with an i5-7300HQ, and there's no sign of the bug there.
+
+From the dmesg:
+
+> [   16.495596] Oops: 0002 [#1] PREEMPT SMP PTI
+> [   16.496084] CPU: 0 PID: 2792 Comm: awk Not tainted 6.3.1 #2
+> [   16.496589] Hardware name: LENOVO 428737G/428737G, BIOS 8DET76WW (1.46 ) 06/21/2018
+> [   16.497095] RIP: 0010:idle_inject_set_duration+0x6/0x20
+> [   16.497607] Code: 00 49 c7 c4 f4 ff ff ff eb 92 49 c7 c4 f4 ff ff ff eb 91 cc 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 89 f0 01 d0 74 06 <89> 77 44 89 57 40 c3 cc cc cc cc 66 66 2e 0f 1f 84 00 00 00 00 00
+> [   16.498824] RSP: 0018:ffffc900005e7de8 EFLAGS: 00010206
+> [   16.499461] RAX: 00000000000927c0 RBX: 0000000000000000 RCX: 0000000000001770
+> [   16.500103] RDX: 0000000000001770 RSI: 0000000000091050 RDI: 0000000000000000
+> [   16.500752] RBP: 0000000000000002 R08: 0000000000000001 R09: 000000000000000a
+> [   16.501405] R10: 000000000000000a R11: f000000000000000 R12: 0000000000000000
+> [   16.502071] R13: ffff8881064bd720 R14: ffffc900005e7ea0 R15: ffff8881022283e0
+> [   16.502745] FS:  00007fe494782b80(0000) GS:ffff888216200000(0000) knlGS:0000000000000000
+> [   16.503421] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [   16.504095] CR2: 0000000000000044 CR3: 000000010f94c006 CR4: 00000000000606f0
+> [   16.504783] Call Trace:
+> [   16.505456]  <TASK>
+> [   16.506124]  powerclamp_set_cur_state+0x56/0x200 [intel_powerclamp]
+> [   16.506810]  cur_state_store+0x74/0xd0
+> [   16.507497]  kernfs_fop_write_iter+0x128/0x1c0
+> [   16.508193]  vfs_write+0x2be/0x3f0
+> [   16.508897]  ksys_write+0x5a/0xe0
+> [   16.509794]  do_syscall_64+0x3b/0x90
+> [   16.510607]  entry_SYSCALL_64_after_hwframe+0x72/0xdc
+> [   16.511444] RIP: 0033:0x7fe4948c0be0
+> [   16.512247] Code: 40 00 48 8b 15 49 c2 0d 00 f7 d8 64 89 02 48 c7 c0 ff ff ff ff eb b7 0f 1f 00 80 3d 01 4a 0e 00 00 74 17 b8 01 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 58 c3 0f 1f 80 00 00 00 00 48 83 ec 28 48 89
+> [   16.514025] RSP: 002b:00007ffc045bd0d8 EFLAGS: 00000202 ORIG_RAX: 0000000000000001
+> [   16.515180] RAX: ffffffffffffffda RBX: 0000000000000002 RCX: 00007fe4948c0be0
+> [   16.516346] RDX: 0000000000000002 RSI: 0000562bc4d50990 RDI: 0000000000000001
+> [   16.517543] RBP: 00007fe49499e780 R08: 0000000000000007 R09: 0000562bc4d46da0
+> [   16.518751] R10: 00007fe4947d5f50 R11: 0000000000000202 R12: 0000000000000002
+> [   16.519977] R13: 0000562bc4d50990 R14: 0000000000000002 R15: 00007fe494999d60
+> [   16.521234]  </TASK>
+> [   16.522479] Modules linked in: 
+> [...]
+> [   16.534416] CR2: 0000000000000044
+> [   16.536059] ---[ end trace 0000000000000000 ]---
+> [   16.537819] RIP: 0010:idle_inject_set_duration+0x6/0x20
+> [   16.537827] Code: 00 49 c7 c4 f4 ff ff ff eb 92 49 c7 c4 f4 ff ff ff eb 91 cc 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 89 f0 01 d0 74 06 <89> 77 44 89 57 40 c3 cc cc cc cc 66 66 2e 0f 1f 84 00 00 00 00 00
+> [   16.543180] RSP: 0018:ffffc900005e7de8 EFLAGS: 00010206
+> [   16.543189] RAX: 00000000000927c0 RBX: 0000000000000000 RCX: 0000000000001770
+> [   16.543193] RDX: 0000000000001770 RSI: 0000000000091050 RDI: 0000000000000000
+> [   16.549435] RBP: 0000000000000002 R08: 0000000000000001 R09: 000000000000000a
+> [   16.551087] R10: 000000000000000a R11: f000000000000000 R12: 0000000000000000
+> [   16.551091] R13: ffff8881064bd720 R14: ffffc900005e7ea0 R15: ffff8881022283e0
+> [   16.554264] FS:  00007fe494782b80(0000) GS:ffff888216200000(0000) knlGS:0000000000000000
+> [   16.554270] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [   16.554281] CR2: 0000560363a98298 CR3: 000000010f94c006 CR4: 00000000000606f0
+> [   17.635258] memfd_create() without MFD_EXEC nor MFD_NOEXEC_SEAL, pid=2842 'X'
 
 
-Noted. If I think the title is not very explanatory then I'll change it 
-to reflect the problem in future.
+See the ticket for more details.
 
 
-> * I'm not a developer that has to look into bugs like this, but from my
-> experience I expect a lot more developers are likely willing to look
-> into reports like this if you specified what the actual problem is --
-> ideally with the relevant error messages.
->
-> Side note: I for one still am unsure what this is actually about after
-> looking at the page you provided as [1] and clicking on a few links
-> there (which took me a few minutes, which I guess not everyone is
-> willing to invest). I noticed two kernel warning in the log (one from
-> "arch/arm/kernel/insn.c:48 __arm_gen_branch+0x88/0xa4", the other
-> "kernel/trace/ftrace.c:2176 ftrace_bug+0x340/0x3b4") and a complaint
-> UBSAN (btw: those newlines in the logs make things harder to read, at
-> least for me).
+[TLDR for the rest of this mail: I'm adding this report to the list of
+tracked Linux kernel regressions; the text you find below is based on a
+few templates paragraphs you might have encountered already in similar
+form.]
 
-For this particular regression, it is possible that the following kernel 
-warnings/errors could be the reason of failure.
+BTW, let me use this mail to also add the report to the list of tracked
+regressions to ensure it's doesn't fall through the cracks:
 
+#regzbot introduced: v6.2..v6.3
+https://bugzilla.kernel.org/show_bug.cgi?id=217386
+#regzbot title: pm: thermal: intel_powerclamp null pointer dereference
+#regzbot ignore-activity
 
-   572 20:30:46.811318  <3>[    0.417001][    T1] UBSAN: 
-array-index-out-of-bounds in ../arch/arm/mach-sunxi/mc_smp.c:811:29
-   574 20:30:46.812203  <3>[    0.417963][    T1] index 2 is out of 
-range for type 'sunxi_mc_smp_data [2]'
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply and tell me -- ideally
+while also telling regzbot about it, as explained by the page listed in
+the footer of this mail.
 
+Developers: When fixing the issue, remember to add 'Link:' tags pointing
+to the report (e.g. the buzgzilla ticket and maybe this mail as well, if
+this thread sees some discussion). See page linked in footer for details.
 
-and
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
 
-   426 20:30:44.726421  <4>[    0.000000][    T0] WARNING: CPU: 0 PID: 0 
-at kernel/trace/ftrace.c:2176 ftrace_bug+0x340/0x3b4
-   428 20:30:44.727284  <4>[    0.000000][    T0] Modules linked in:
-   430 20:30:44.728487  <4>[    0.000000][    T0] CPU: 0 PID: 0 Comm: 
-swapper Tainted: G        W          6.3.0 #1
-.........
-
-I understand that it might be more helpful to atleast put little more 
-information about what is causing the regression here.
-I'll provide some more details in future for it to be easy for 
-developers to look into it.
-
-> To check if those were old or new problems, I tired to go back in the
-> history and on page 9 found an entry for the last succeeding test. But
-> clicking on the logs got me a 404 :-/
->
-> Then I looked at the logs on [1] again and in the html view "Boot
-> result: FAIL". Is that the actual problem?
-
-Unfortunately, we do have some broken links in the current KernelCI 
-dashboard but the KernelCI team
-is working on a new API and database interface which will fix these issues.
-It might not be worth to spend time to fix issues on the current 
-dashboard since the process for getting the archived
-logs is not very straightforward.
-
-What I can do from my side is to attach logs of the working kernel if I 
-can get them through LAVA.
-But one thing to note is that even LAVA stores limited logs and we won't 
-be able to provide them always like in this case
-since the regression has been happening from a long time.
-
-Thanks for your input though, we will work on it and get a better format 
-ready for reporting the regressions.
-
-
-Thanks,
-Shreeya Patel
-
->
-> Ciao, Thorsten
->
-> P.S.: let me update the regzbot title while at it:
->
-> #regzbot title: kernelci: qemu_arm-virt-gicv3-uefi stopped booting
->
->>> ---
->>> Changes v3 -> v4:
->>> * Split into its own patch again from series, as per Masahiro.
->>> * Rebase on top of b0839b281c427e844143dba3893e25c83cdd6c17 and update
->>>     clang -Wformat logic in scripts/Makefile.extrawarn, as per Masahiro.
->>>
->>>    Documentation/kbuild/makefiles.rst          | 29 ++++++++++++---------
->>>    Makefile                                    |  6 ++---
->>>    drivers/gpu/drm/amd/display/dc/dml/Makefile |  2 +-
->>>    scripts/Makefile.compiler                   | 10 ++++---
->>>    scripts/Makefile.extrawarn                  |  4 +--
->>>    5 files changed, 29 insertions(+), 22 deletions(-)
->>>
->>> diff --git a/Documentation/kbuild/makefiles.rst
->>> b/Documentation/kbuild/makefiles.rst
->>> index 11a296e52d68..ee7e3ea1fbe1 100644
->>> --- a/Documentation/kbuild/makefiles.rst
->>> +++ b/Documentation/kbuild/makefiles.rst
->>> @@ -682,22 +682,27 @@ more details, with real examples.
->>>        In the above example, -Wno-unused-but-set-variable will be added to
->>>        KBUILD_CFLAGS only if gcc really accepts it.
->>>    -    cc-ifversion
->>> -    cc-ifversion tests the version of $(CC) and equals the fourth
->>> parameter
->>> -    if version expression is true, or the fifth (if given) if the
->>> version
->>> -    expression is false.
->>> +    gcc-min-version
->>> +    gcc-min-version tests if the value of $(CONFIG_GCC_VERSION) is
->>> greater than
->>> +    or equal to the provided value and evaluates to y if so.
->>>          Example::
->>>    -        #fs/reiserfs/Makefile
->>> -        ccflags-y := $(call cc-ifversion, -lt, 0402, -O1)
->>> +        cflags-$(call gcc-min-version, 70100) := -foo
->>>    -    In this example, ccflags-y will be assigned the value -O1 if the
->>> -    $(CC) version is less than 4.2.
->>> -    cc-ifversion takes all the shell operators:
->>> -    -eq, -ne, -lt, -le, -gt, and -ge
->>> -    The third parameter may be a text as in this example, but it may
->>> also
->>> -    be an expanded variable or a macro.
->>> +    In this example, cflags-y will be assigned the value -foo if
->>> $(CC) is gcc and
->>> +    $(CONFIG_GCC_VERSION) is >= 7.1.
->>> +
->>> +    clang-min-version
->>> +    clang-min-version tests if the value of $(CONFIG_CLANG_VERSION)
->>> is greater
->>> +    than or equal to the provided value and evaluates to y if so.
->>> +
->>> +    Example::
->>> +
->>> +        cflags-$(call clang-min-version, 110000) := -foo
->>> +
->>> +    In this example, cflags-y will be assigned the value -foo if
->>> $(CC) is clang
->>> +    and $(CONFIG_CLANG_VERSION) is >= 11.0.0.
->>>          cc-cross-prefix
->>>        cc-cross-prefix is used to check if there exists a $(CC) in path
->>> with
->>> diff --git a/Makefile b/Makefile
->>> index 298f69060f10..411c8480b37e 100644
->>> --- a/Makefile
->>> +++ b/Makefile
->>> @@ -790,7 +790,6 @@ KBUILD_CFLAGS += $(stackp-flags-y)
->>>      KBUILD_CFLAGS-$(CONFIG_WERROR) += -Werror
->>>    KBUILD_CFLAGS-$(CONFIG_CC_NO_ARRAY_BOUNDS) += -Wno-array-bounds
->>> -KBUILD_CFLAGS += $(KBUILD_CFLAGS-y) $(CONFIG_CC_IMPLICIT_FALLTHROUGH)
->>>      ifdef CONFIG_CC_IS_CLANG
->>>    KBUILD_CPPFLAGS += -Qunused-arguments
->>> @@ -972,7 +971,6 @@ ifdef CONFIG_CC_IS_GCC
->>>    KBUILD_CFLAGS += -Wno-maybe-uninitialized
->>>    endif
->>>    -ifdef CONFIG_CC_IS_GCC
->>>    # The allocators already balk at large sizes, so silence the compiler
->>>    # warnings for bounds checks involving those possible values. While
->>>    # -Wno-alloc-size-larger-than would normally be used here, earlier
->>> versions
->>> @@ -984,8 +982,8 @@ ifdef CONFIG_CC_IS_GCC
->>>    # ignored, continuing to default to PTRDIFF_MAX. So, left with no other
->>>    # choice, we must perform a versioned check to disable this warning.
->>>    # https://lore.kernel.org/lkml/20210824115859.187f272f@canb.auug.org.au
->>> -KBUILD_CFLAGS += $(call cc-ifversion, -ge, 0901,
->>> -Wno-alloc-size-larger-than)
->>> -endif
->>> +KBUILD_CFLAGS-$(call gcc-min-version, 90100) +=
->>> -Wno-alloc-size-larger-than
->>> +KBUILD_CFLAGS += $(KBUILD_CFLAGS-y) $(CONFIG_CC_IMPLICIT_FALLTHROUGH)
->>>      # disable invalid "can't wrap" optimizations for signed / pointers
->>>    KBUILD_CFLAGS    += -fno-strict-overflow
->>> diff --git a/drivers/gpu/drm/amd/display/dc/dml/Makefile
->>> b/drivers/gpu/drm/amd/display/dc/dml/Makefile
->>> index cb81ed2fbd53..d70838edba80 100644
->>> --- a/drivers/gpu/drm/amd/display/dc/dml/Makefile
->>> +++ b/drivers/gpu/drm/amd/display/dc/dml/Makefile
->>> @@ -34,7 +34,7 @@ dml_ccflags := -mhard-float -maltivec
->>>    endif
->>>      ifdef CONFIG_CC_IS_GCC
->>> -ifeq ($(call cc-ifversion, -lt, 0701, y), y)
->>> +ifneq ($(call gcc-min-version, 70100),y)
->>>    IS_OLD_GCC = 1
->>>    endif
->>>    endif
->>> diff --git a/scripts/Makefile.compiler b/scripts/Makefile.compiler
->>> index 94d0d40cddb3..9d18fb91890e 100644
->>> --- a/scripts/Makefile.compiler
->>> +++ b/scripts/Makefile.compiler
->>> @@ -61,9 +61,13 @@ cc-option-yn = $(call try-run,\
->>>    cc-disable-warning = $(call try-run,\
->>>        $(CC) -Werror $(KBUILD_CPPFLAGS) $(KBUILD_CFLAGS) -W$(strip
->>> $(1)) -c -x c /dev/null -o "$$TMP",-Wno-$(strip $(1)))
->>>    -# cc-ifversion
->>> -# Usage:  EXTRA_CFLAGS += $(call cc-ifversion, -lt, 0402, -O1)
->>> -cc-ifversion = $(shell [ $(CONFIG_GCC_VERSION)0 $(1) $(2)000 ] &&
->>> echo $(3) || echo $(4))
->>> +# gcc-min-version
->>> +# Usage: cflags-$(call gcc-min-version, 70100) += -foo
->>> +gcc-min-version = $(shell [ $(CONFIG_GCC_VERSION) -ge $(1) ] && echo y)
->>> +
->>> +# clang-min-version
->>> +# Usage: cflags-$(call clang-min-version, 110000) += -foo
->>> +clang-min-version = $(shell [ $(CONFIG_CLANG_VERSION) -ge $(1) ] &&
->>> echo y)
->>>      # ld-option
->>>    # Usage: KBUILD_LDFLAGS += $(call ld-option, -X, -Y)
->>> diff --git a/scripts/Makefile.extrawarn b/scripts/Makefile.extrawarn
->>> index 6ae482158bc4..5769c1939d40 100644
->>> --- a/scripts/Makefile.extrawarn
->>> +++ b/scripts/Makefile.extrawarn
->>> @@ -48,7 +48,7 @@ else
->>>    ifdef CONFIG_CC_IS_CLANG
->>>    KBUILD_CFLAGS += -Wno-initializer-overrides
->>>    # Clang before clang-16 would warn on default argument promotions.
->>> -ifeq ($(shell [ $(CONFIG_CLANG_VERSION) -lt 160000 ] && echo y),y)
->>> +ifneq ($(call clang-min-version, 160000),y)
->>>    # Disable -Wformat
->>>    KBUILD_CFLAGS += -Wno-format
->>>    # Then re-enable flags that were part of the -Wformat group that aren't
->>> @@ -56,7 +56,7 @@ KBUILD_CFLAGS += -Wno-format
->>>    KBUILD_CFLAGS += -Wformat-extra-args -Wformat-invalid-specifier
->>>    KBUILD_CFLAGS += -Wformat-zero-length -Wnonnull
->>>    # Requires clang-12+.
->>> -ifeq ($(shell [ $(CONFIG_CLANG_VERSION) -ge 120000 ] && echo y),y)
->>> +ifeq ($(call clang-min-version, 120000),y)
->>>    KBUILD_CFLAGS += -Wformat-insufficient-args
->>>    endif
->>>    endif
->>
+[1] because bugzilla.kernel.org tells users upon registration their
+"email address will never be displayed to logged out users"
