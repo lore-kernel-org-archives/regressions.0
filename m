@@ -1,20 +1,27 @@
-Received: from dijkstra.felixrichter.tech (dijkstra.felixrichter.tech [37.120.184.171])
+Received: from madras.collabora.co.uk (madras.collabora.co.uk [46.235.227.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9CBB7E
-	for <regressions@lists.linux.dev>; Tue,  2 May 2023 13:58:22 +0000 (UTC)
-Received: from [10.130.10.2] (unknown [10.130.10.2])
-	by dijkstra.felixrichter.tech (Postfix) with ESMTPSA id 035BE1A024E;
-	Tue,  2 May 2023 15:49:21 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=felixrichter.tech;
-	s=20210926; t=1683035362;
-	bh=4NZnipmb6YLcla5+VI50cBbXH7XresFxdMeUMfT+nFs=;
-	h=Date:To:Cc:References:From:Subject:In-Reply-To;
-	b=iWA+eweRcLqlXCVN87Vx0b4EpJ7S7jpTwjJxOxliVP8RbRV4bhr9pIZ8zTVuH7vxo
-	 xlyiuiuI+TOEhfIjpkM7XRPNqAtdXTJpexdaYgOxj8pjmpY41D2zKM2yWnED3AcDyu
-	 f5nHXISSfEQ038flnICYalca658j9VYWOEDUWPMI=
-Message-ID: <0cac032a-0f65-5134-cde5-f535fc58c5ab@felixrichter.tech>
-Date: Tue, 2 May 2023 15:48:50 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B48C07E;
+	Tue,  2 May 2023 14:02:36 +0000 (UTC)
+Received: from [IPV6:2405:201:0:21ea:73f6:2283:f432:3936] (unknown [IPv6:2405:201:0:21ea:73f6:2283:f432:3936])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: shreeya)
+	by madras.collabora.co.uk (Postfix) with ESMTPSA id 8A12B6603232;
+	Tue,  2 May 2023 15:02:29 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1683036153;
+	bh=xq+GCvhWDrpI4kqWLTSjKMKXim4TcqGGOuePu/Nq+us=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Mt6IWboNQ0mOLVpDukyzH4UNRI1F1ButfAO3t2pVQpqK0dNm87o1QXydpVJNNwMV2
+	 CsgV8zzxN4MY6W+oLs1rqQztOBNk1tHs3vCCivnS1ri9bLC9l+gtKvrbn5ABYJdKZH
+	 8uYRrlf21McuoEpn3kX0JQ22547y+gQnV5wKwTsPDHQr4wSrJMEuWpyOBhdX806MkE
+	 aFcJiv6RMR9+ouhCse0WR/3uP6ZGOBmzihGpsoDEXQKcQcHHXgcWPD9bhukmCwex94
+	 YZzPDFjUZ10zcZXXP8STALbsRodu7kd99cwh4qIw49SIgCZM0nbSMTX+RNf9t70Vje
+	 Oe07oyFxXDyqg==
+Message-ID: <5cfdd715-a59a-3bb2-1bec-1cc59e9b05c4@collabora.com>
+Date: Tue, 2 May 2023 19:32:25 +0530
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -22,101 +29,90 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.1
+ Thunderbird/102.9.0
+Subject: Re: [PATCH v9 1/6] media: verisilicon: Do not set context src/dst
+ formats in reset functions
 To: Linux regressions mailing list <regressions@lists.linux.dev>,
- Alex Deucher <alexdeucher@gmail.com>
-Cc: amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
-References: <46a7eb80-5f09-4f6a-4fd3-9550dafd497c@felixrichter.tech>
- <1efbf587-e7b5-74a3-89e4-ca70386bd191@leemhuis.info>
- <CADnq5_M-5SD6HDRVtFHPNF3q9XKz75PECdUxR-OaVpPe2Zw=EQ@mail.gmail.com>
- <8d23a70e-b132-9b25-917a-1f45918533cc@leemhuis.info>
-From: Felix Richter <judge@felixrichter.tech>
-Subject: Re: PROBLEM: AMD Ryzen 9 7950X iGPU - Blinking Issue
-In-Reply-To: <8d23a70e-b132-9b25-917a-1f45918533cc@leemhuis.info>
+ Benjamin Gaignard <benjamin.gaignard@collabora.com>
+Cc: linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ kernel@collabora.com, robert.mader@collabora.com,
+ nicolas.dufresne@collabora.co.uk, ezequiel@vanguardiasur.com.ar,
+ festevam@gmail.com, p.zabel@pengutronix.de, mchehab@kernel.org,
+ shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+ hverkuil-cisco@xs4all.nl, linux-imx@nxp.com, kernelci@lists.linux.dev,
+ "gustavo.padovan@collabora.com" <gustavo.padovan@collabora.com>,
+ ricardo.canuelo@collabora.com,
+ Guillaume Charles Tucker <guillaume.tucker@collabora.com>,
+ denys.f@collabora.com
+References: <20230220104849.398203-1-benjamin.gaignard@collabora.com>
+ <20230220104849.398203-2-benjamin.gaignard@collabora.com>
+ <26addb7d-bb9d-34e8-d4fe-e323ff488101@collabora.com>
+ <dcd317db-3c24-895d-572b-1b139c370ff7@leemhuis.info>
+ <05da00c0-2180-62ee-6276-8553ad9341c4@collabora.com>
+ <5a070053-2151-56d7-26a2-03871e1e4e8e@leemhuis.info>
+Content-Language: en-US
+From: Shreeya Patel <shreeya.patel@collabora.com>
+In-Reply-To: <5a070053-2151-56d7-26a2-03871e1e4e8e@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 5/2/23 15:34, Linux regression tracking (Thorsten Leemhuis) wrote:
-> On 02.05.23 15:13, Alex Deucher wrote:
->> On Tue, May 2, 2023 at 7:45 AM Linux regression tracking (Thorsten
->> Leemhuis) <regressions@leemhuis.info> wrote:
->>
->>> On 30.04.23 13:44, Felix Richter wrote:
->>>> Hi,
->>>>
->>>> I am running into an issue with the integrated GPU of the Ryzen 9 7950X. It seems to be a regression from kernel version 6.1 to 6.2.
->>>> The bug materializes in from of my monitor blinking, meaning it turns full white shortly. This happens very often so that the system becomes unpleasant to use.
->>>>
->>>> I am running the Archlinux Kernel:
->>>> The Issue happens on the bleeding edge kernel: 6.2.13
->>>> Switching back to the LTS kernel resolves the issue: 6.1.26
->>>>
->>>> I have two monitors attached to the system. One 42 inch 4k Display and a 24 inch 1080p Display and am running sway as my desktop.
->>>>
->>>> Let me know if there is more information I could provide to help narrow down the issue.
->>> Thanks for the report. To be sure the issue doesn't fall through the
->>> cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
->>> tracking bot:
->>>
->>> #regzbot ^introduced v6.1..v6.2
->>> #regzbot title drm: amdgpu: system becomes unpleasant to use after
->>> monitor starts blinking and turns full white
->>> #regzbot ignore-activity
->>>
->>> This isn't a regression? This issue or a fix for it are already
->>> discussed somewhere else? It was fixed already? You want to clarify when
->>> the regression started to happen? Or point out I got the title or
->>> something else totally wrong? Then just reply and tell me -- ideally
->>> while also telling regzbot about it, as explained by the page listed in
->>> the footer of this mail.
->>>
->>> Developers: When fixing the issue, remember to add 'Link:' tags pointing
->>> to the report (the parent of this mail). See page linked in footer for
->>> details.
->> This sounds exactly like the issue that was fixed in this patch which
->> is already on it's way to Linus:
->> https://gitlab.freedesktop.org/agd5f/linux/-/commit/08da182175db4c7f80850354849d95f2670e8cd9
-> FWIW, you in the flood of emails likely missed that this is the same
-> thread where you yesterday replied "If the module parameter didn't help
-> then perhaps you are seeing some other issue.  Can you bisect?". That's
-> why I decided to add this to the tracking. Or am I missing something
-> obvious here?
->
-> /me looks around again and can't see anything, but that doesn't have to
-> mean anything...
->
-> Felix, btw, this guide might help you with the bisection, even if it's
-> just for kernel compilation:
->
-> https://docs.kernel.org/next/admin-guide/quickly-build-trimmed-linux.html
->
-> And to indirectly reply to your mail from yesterday[1]. You might want
-> to ignore the arch linux kernel git repo and just do a bisection between
-> 6.1 and the latest 6.2.y kernel using upstream repos; and if I were you
-> I'd also try 6.3 or even mainline before that, in case the issue was
-> fixed already.
->
-> [1]
-> https://lore.kernel.org/all/04749ee4-0728-92fe-bcb0-a7320279eaac@felixrichter.tech/
->
-> Ciao, Thorsten
-Thanks for the pointers, I'll do a bisection on my desktop from 6.1 to 
-the newest commit. That was the part I was mostly unsure about … where 
-to start from.
+Hi Thorsten,
 
-I was planning to use PKGBUILD scripts from arch to achieve the same 
-configuration as I would when installing
-the package and just rewrite the script to use a local copy of the 
-source code instead of the repository.
-That way I can just use the bisect command, rebuild the package and test 
-again.
+On 02/05/23 16:42, Linux regression tracking (Thorsten Leemhuis) wrote:
+> On 02.05.23 08:56, Benjamin Gaignard wrote:
+>> Le 01/05/2023 à 09:21, Thorsten Leemhuis a écrit :
+>>> On 27.04.23 00:19, Shreeya Patel wrote:
+>>>> On 20/02/23 16:18, Benjamin Gaignard wrote:
+>>>>> Setting context source and destination formats should only be done
+>>>>> in hantro_set_fmt_out() and hantro_set_fmt_cap() after check that
+>>>>> the targeted queue is not busy.
+>>>>> Remove these calls from hantro_reset_encoded_fmt() and
+>>>>> hantro_reset_raw_fmt() to clean the driver.
+>>>>>
+>>>>> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@collabora.com>
+>>>> KernelCI found this patch causes a regression in the
+>>>> baseline.dmesg.alert test [1] on rk3399-rock-pi-4b [2],
+>>>> see the bisection report for more details [3].
+>>>>
+>>>> Let us know if you have any questions.
+>>>>
+>>>> [1]
+>>>> https://github.com/kernelci/kernelci-core/blob/main/config/rootfs/debos/overlays/baseline/opt/kernelci/dmesg.sh
+>>>> [2] https://linux.kernelci.org/test/case/id/6442e825f19134d74c2e865d/
+>>>> [3] https://groups.io/g/kernelci-results/message/40740
+>>> Thx for the report. FWIW, regzbot noticed there is a patch that refers
+>>> to the culprit that might have been landed in next after your test ran
+>>> for the last time (and meanwhile it was mainlined): f100ce3bbd6 ("media:
+>>> verisilicon: Fix crash when probing encoder")
+>> Yes that patch should fix the probing issue.
+>> Marek is working on an additional one to fix pixel format negotiation
+>> but that doesn't impact the boot.
+> Great, thx for the reply.
+>
+> Shreeya, normally I believe developers in cases like this and would have
+> included
+>
+>   #regzbot fix: f100ce3bbd6
+>
+> in this mail (without the space in front of the #) to mark the
+> regression as resolved. Would that be okay for you and other kernel.ci
+> people? Or do you want to confirm this first?
 
-But I probably won't be able to finish it this week, since I am on 
-vacation starting tomorrow and will not have access to the computer in 
-question. I will be back next week, by that time the patch Alex is 
-talking about might
-already be in mainline. So if that fixes it, I will notice and let you 
-know. If not I will do the bisection to figure out what the actual issue is.
+I checked the commit pointed out and also double checked with Benjamin 
+internally so
+we are good to mark this as fixed.
 
-Kind regards,
-Felix
+
+#regzbot fix: f100ce3bbd6a
+
+
+Thanks,
+Shreeya Patel
+
+>
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> --
+> Everything you wanna know about Linux kernel regression tracking:
+> https://linux-regtracking.leemhuis.info/about/#tldr
+> If I did something stupid, please tell me, as explained on that page.
