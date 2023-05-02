@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76F6510E4
-	for <regressions@lists.linux.dev>; Tue,  2 May 2023 11:41:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A49E10E4
+	for <regressions@lists.linux.dev>; Tue,  2 May 2023 11:45:01 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1ptoNt-0003FQ-17; Tue, 02 May 2023 13:41:29 +0200
-Message-ID: <2f07294a-b9a2-62c2-29a3-cd52d0ecb386@leemhuis.info>
-Date: Tue, 2 May 2023 13:41:26 +0200
+	id 1ptoRG-00042P-Tx; Tue, 02 May 2023 13:44:58 +0200
+Message-ID: <1efbf587-e7b5-74a3-89e4-ca70386bd191@leemhuis.info>
+Date: Tue, 2 May 2023 13:44:56 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,28 +16,22 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.10.0
-Subject: Re: Fwd: 6.1.23: 0fc6fea41c71 breaks GPD Pocket 3 modeset
+Subject: Re: PROBLEM: AMD Ryzen 9 7950X iGPU - Blinking Issue
 Content-Language: en-US, de-DE
-To: =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>
-References: <4115dc28-45b6-cad1-1e38-39e5a0484a8a@garloff.de>
- <fce7ea8d-d89c-daf0-f900-d26455d1bb74@garloff.de>
+To: Felix Richter <judge@felixrichter.tech>, amd-gfx@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org
+References: <46a7eb80-5f09-4f6a-4fd3-9550dafd497c@felixrichter.tech>
 From: "Linux regression tracking (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
+Cc: Linux kernel regressions list <regressions@lists.linux.dev>
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Linux kernel regressions list <regressions@lists.linux.dev>,
- Jani Nikula <jani.nikula@linux.intel.com>,
- Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
- Rodrigo Vivi <rodrigo.vivi@intel.com>,
- Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
- Kurt Garloff <kurt@garloff.de>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <fce7ea8d-d89c-daf0-f900-d26455d1bb74@garloff.de>
+In-Reply-To: <46a7eb80-5f09-4f6a-4fd3-9550dafd497c@felixrichter.tech>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1683027694;e38e0c78;
-X-HE-SMSGID: 1ptoNt-0003FQ-17
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1683027901;f41c8c40;
+X-HE-SMSGID: 1ptoRG-00042P-Tx
 
-[CCing the intel drm maintainers and the lists; also CCing the
-regression list, as it should be in the loop for regressions:
+[CCing the regression list, as it should be in the loop for regressions:
 https://docs.kernel.org/admin-guide/reporting-regressions.html]
 
 [TLDR: I'm adding this report to the list of tracked Linux kernel
@@ -45,44 +39,27 @@ regressions; the text you find below is based on a few templates
 paragraphs you might have encountered already in similar form.
 See link in footer if these mails annoy you.]
 
-On 29.04.23 23:38, Kurt Garloff wrote:
-> Hi Ville,
+On 30.04.23 13:44, Felix Richter wrote:
+> Hi,
 > 
-> (sorry for the resend, had forgotten that LKML still believes
-> that multipart with an HTML version is evil)
+> I am running into an issue with the integrated GPU of the Ryzen 9 7950X. It seems to be a regression from kernel version 6.1 to 6.2. 
+> The bug materializes in from of my monitor blinking, meaning it turns full white shortly. This happens very often so that the system becomes unpleasant to use.
 > 
-> While
-> 0fc6fea41c71 drm/i915: Disable DC states for all commits
-> (cherry picked from commit 41b4c7fe72b6105a4b49395eea9aa40cef94288d)
-
-/me wonders if 6.3 is affected as well, but will treat it as stable
-specific regression for now
-
-> does look correct to me, it does break modesetting on the
-> GPD Pocket 3, a i7-1195G7 laptop. I run the kernel with
-> fbcon=rotate:1 video=DSI-1:panel_orientation=right_side_up \
->   mem_sleep_default=s2idle
-> No special i915 parameters.
+> I am running the Archlinux Kernel:
+> The Issue happens on the bleeding edge kernel: 6.2.13
+> Switching back to the LTS kernel resolves the issue: 6.1.26
 > 
-> Hardware is described here:
-> https://wiki.archlinux.org/title/GPD_Pocket_3
+> I have two monitors attached to the system. One 42 inch 4k Display and a 24 inch 1080p Display and am running sway as my desktop.
 > 
-> I disected this patch which was merged (backported) for 6.1.23.
-> I currently run 6.1.26 with it reverted and life is good.
-> 
-> Without reverting it, when fbcon is switched to show the splash
-> screen (GPD logo with Ubuntu added in on working kernels), the
-> screen remains black (backlight on, but nothing displayed) and
-> nothing happens any more. It looks like something more serious
-> than just blackness, as SysRq or Ctrl-Alt-Del don't do anything.
-> Deadlocking?
+> Let me know if there is more information I could provide to help narrow down the issue.
 
 Thanks for the report. To be sure the issue doesn't fall through the
 cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
 tracking bot:
 
-#regzbot ^introduced 0fc6fea41c71
-#regzbot title drm: i915: GPD Pocket 3 modeset broken
+#regzbot ^introduced v6.1..v6.2
+#regzbot title drm: amdgpu: system becomes unpleasant to use after
+monitor starts blinking and turns full white
 #regzbot ignore-activity
 
 This isn't a regression? This issue or a fix for it are already
