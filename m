@@ -1,54 +1,126 @@
-Received: from tilde.cafe (tilde.cafe [51.222.161.16])
+Received: from madras.collabora.co.uk (madras.collabora.co.uk [46.235.227.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 117108C05
-	for <regressions@lists.linux.dev>; Mon,  1 May 2023 21:10:13 +0000 (UTC)
-Received: from localhost (124.250.94.80.dyn.idknet.com [80.94.250.124])
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73B697E
+	for <regressions@lists.linux.dev>; Tue,  2 May 2023 06:56:42 +0000 (UTC)
+Received: from [IPV6:2a01:e0a:120:3210:99ed:5b64:8e6c:9ae8] (unknown [IPv6:2a01:e0a:120:3210:99ed:5b64:8e6c:9ae8])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by tilde.cafe (Postfix) with ESMTPSA id 835DC20584;
-	Mon,  1 May 2023 17:02:27 -0400 (EDT)
+	(Authenticated sender: benjamin.gaignard)
+	by madras.collabora.co.uk (Postfix) with ESMTPSA id 29511660321C;
+	Tue,  2 May 2023 07:56:34 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1683010594;
+	bh=8t4NEIsAniO3bd4vVmshsKlWfKThNbxeZzung0MKcYQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=CxRipMmYZnEJokm7XxvfHMn0v1DBzq4htksP9Ch1Ly30DVrbA2Lf+NVuacQR36bXg
+	 sDb5sqfb6ovBim+Ivm/Tda+aNmT+fF7vp6hF1soQ64867Oqh1NcCkb2Oz0+gbwLGIW
+	 TmsqsojR9eM2zlDUFtiIYUG+4hhEoJIP98bqo7WniUpdZgecqlLcd09EbBzQ7J9rxQ
+	 5Pzs1DHnIISvbH9fW9gnYIRHVCFFWB5K34pPPuZYRxc05s7wvtQeJmWKQZ0USzZPCx
+	 kQJ3IebZ8CkDQ5VAMLbQqo4zk2VSmIDgeoKJMTf5k47tx/Dg6V0uErtOt6H0a/sR8y
+	 VwDr83a7fdfRw==
+Message-ID: <05da00c0-2180-62ee-6276-8553ad9341c4@collabora.com>
+Date: Tue, 2 May 2023 08:56:31 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 02 May 2023 00:02:26 +0300
-Message-Id: <CSB8TSV6LXJ8.7SHI9VM2YMAR@bong>
-Cc: <stable@vger.kernel.org>, <linux-acpi@vger.kernel.org>, "Thorsten
- Leemhuis" <regressions@leemhuis.info>, "Rafael J. Wysocki"
- <rafael@kernel.org>
-From: "Acid Bong" <acidbong@tilde.cafe>
-To: "Bagas Sanjaya" <bagasdotme@gmail.com>, <regressions@lists.linux.dev>
-Subject: Re: [REGRESSION] Asus X541UAK hangs on suspend and poweroff (v6.1.6
- onward)
-X-Mailer: aerc 0.14.0-126-g6d59ad3f02bc
-References: <CRVU11I7JJWF.367PSO4YAQQEI@bong>
- <5f445dab-a152-bcaa-4462-1665998c3e2e@gmail.com>
- <ZE+1pKbfy1l/tTo6@debian.me>
-In-Reply-To: <ZE+1pKbfy1l/tTo6@debian.me>
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH v9 1/6] media: verisilicon: Do not set context src/dst
+ formats in reset functions
+To: Thorsten Leemhuis <linux@leemhuis.info>,
+ Shreeya Patel <shreeya.patel@collabora.com>
+Cc: linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ kernel@collabora.com, robert.mader@collabora.com,
+ nicolas.dufresne@collabora.co.uk, ezequiel@vanguardiasur.com.ar,
+ festevam@gmail.com, p.zabel@pengutronix.de, mchehab@kernel.org,
+ shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+ hverkuil-cisco@xs4all.nl, linux-imx@nxp.com, regressions@lists.linux.dev
+References: <20230220104849.398203-1-benjamin.gaignard@collabora.com>
+ <20230220104849.398203-2-benjamin.gaignard@collabora.com>
+ <26addb7d-bb9d-34e8-d4fe-e323ff488101@collabora.com>
+ <dcd317db-3c24-895d-572b-1b139c370ff7@leemhuis.info>
+Content-Language: en-US
+From: Benjamin Gaignard <benjamin.gaignard@collabora.com>
+In-Reply-To: <dcd317db-3c24-895d-572b-1b139c370ff7@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi there, and thank you for the reminder.
 
-Bisecting, unfortunately, takes a long time: I'm only trying out the 7th
-commit, 15e7433e1dc2 (previous 6 marked as bad). The bug, as noted in
-the head, doesn't have any (strict) patterns and takes randomly long
-times: some kernels hung on the next day after compilation, one took 5
-days. I'm not excluding a possibility that I might've got the versions
-wrong and the bug occured on the update from 6.1-pf1 to 6.1-pf2 (6.1 and
-6.1.3; could be unrelated, but I saw a bunch of commits related to i915
-and Skylake).
+Le 01/05/2023 à 09:21, Thorsten Leemhuis a écrit :
+> On 27.04.23 00:19, Shreeya Patel wrote:
+>> On 20/02/23 16:18, Benjamin Gaignard wrote:
+>>> Setting context source and destination formats should only be done
+>>> in hantro_set_fmt_out() and hantro_set_fmt_cap() after check that
+>>> the targeted queue is not busy.
+>>> Remove these calls from hantro_reset_encoded_fmt() and
+>>> hantro_reset_raw_fmt() to clean the driver.
+>>>
+>>> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@collabora.com>
+>> KernelCI found this patch causes a regression in the
+>> baseline.dmesg.alert test [1] on rk3399-rock-pi-4b [2],
+>> see the bisection report for more details [3].
+>>
+>> Let us know if you have any questions.
+>>
+>>
+>> [1]
+>> https://github.com/kernelci/kernelci-core/blob/main/config/rootfs/debos/overlays/baseline/opt/kernelci/dmesg.sh
+>> [2] https://linux.kernelci.org/test/case/id/6442e825f19134d74c2e865d/
+>> [3] https://groups.io/g/kernelci-results/message/40740
+> Thx for the report. FWIW, regzbot noticed there is a patch that refers
+> to the culprit that might have been landed in next after your test ran
+> for the last time (and meanwhile it was mainlined): f100ce3bbd6 ("media:
+> verisilicon: Fix crash when probing encoder")
 
-I also checked my package manager log, no programs related to kernel
-compilation (glibc, gcc, archivers and such) were updated until I
-updated to the problematic version, and for about two weeks after the
-upgrade (the first occurence happened soon after it).
+Yes that patch should fix the probing issue.
+Marek is working on an additional one to fix pixel format negotiation
+but that doesn't impact the boot.
 
-What exactly do you mean by "swapping the hardware"? I'm already sure
-it's not related to my storage, because a month ago I replaced my faulty
-HDD with an SSD, but the bug still remained. Unfortunately, I don't have
-spare PCs or resources to purchase new hardware.
+Regards,
+Benjamin
+
+>
+> I wonder if that is related or might even fix the issue.
+>
+> Ciao, Thorsten
+>
+>>> ---
+>>>    drivers/media/platform/verisilicon/hantro_v4l2.c | 9 ++-------
+>>>    1 file changed, 2 insertions(+), 7 deletions(-)
+>>>
+>>> diff --git a/drivers/media/platform/verisilicon/hantro_v4l2.c
+>>> b/drivers/media/platform/verisilicon/hantro_v4l2.c
+>>> index c0d427956210..d8aa42bd4cd4 100644
+>>> --- a/drivers/media/platform/verisilicon/hantro_v4l2.c
+>>> +++ b/drivers/media/platform/verisilicon/hantro_v4l2.c
+>>> @@ -382,13 +382,10 @@ hantro_reset_encoded_fmt(struct hantro_ctx *ctx)
+>>>          vpu_fmt = hantro_get_default_fmt(ctx, true);
+>>>    -    if (ctx->is_encoder) {
+>>> -        ctx->vpu_dst_fmt = vpu_fmt;
+>>> +    if (ctx->is_encoder)
+>>>            fmt = &ctx->dst_fmt;
+>>> -    } else {
+>>> -        ctx->vpu_src_fmt = vpu_fmt;
+>>> +    else
+>>>            fmt = &ctx->src_fmt;
+>>> -    }
+>>>          hantro_reset_fmt(fmt, vpu_fmt);
+>>>        fmt->width = vpu_fmt->frmsize.min_width;
+>>> @@ -408,11 +405,9 @@ hantro_reset_raw_fmt(struct hantro_ctx *ctx)
+>>>        raw_vpu_fmt = hantro_get_default_fmt(ctx, false);
+>>>          if (ctx->is_encoder) {
+>>> -        ctx->vpu_src_fmt = raw_vpu_fmt;
+>>>            raw_fmt = &ctx->src_fmt;
+>>>            encoded_fmt = &ctx->dst_fmt;
+>>>        } else {
+>>> -        ctx->vpu_dst_fmt = raw_vpu_fmt;
+>>>            raw_fmt = &ctx->dst_fmt;
+>>>            encoded_fmt = &ctx->src_fmt;
+>>>        }
+>>
