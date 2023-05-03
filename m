@@ -1,109 +1,200 @@
-Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com [209.85.217.44])
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33531A45
-	for <regressions@lists.linux.dev>; Wed,  3 May 2023 05:43:07 +0000 (UTC)
-Received: by mail-vs1-f44.google.com with SMTP id ada2fe7eead31-4300ba45037so1758462137.2
-        for <regressions@lists.linux.dev>; Tue, 02 May 2023 22:43:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1683092586; x=1685684586;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rsAmWnHYdqf8PxIDTx7JVpNph88uEqYsba4Oi5M9pys=;
-        b=ERzOwCN8Snpnb6R6BMPDcCWmrygLOdCFBKCPjPfmNrRa9r/Bde491tD+EBUO98Pr0p
-         PcYay5OeQR1WNpFBwkdiaJIM3+7iqCOlKWMHHMJye7Atdu9Zb1AXDB2Npq44wRmcUwya
-         fT9UCI9jNpd5nzKnTAiA4RiZ5eQKjVAkYXREU/mWQP0b6z00COHDWedWjnAIFXF1mG2g
-         jVQTFpY3OSTck2RfgXgOJYWJFuIRizX2uecYY6kr6Rg/WxtYCl4mc669GUNBZa33AZM1
-         BV8zqOBEt5IvAUNRKH1DuV38cIW5jEK3tCOuqPoQYxu82LJovSQ7MCSld2eA2GwZEAMP
-         P8Qw==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 696B946AC
+	for <regressions@lists.linux.dev>; Wed,  3 May 2023 12:34:32 +0000 (UTC)
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-94a342f4c8eso141792166b.0
+        for <regressions@lists.linux.dev>; Wed, 03 May 2023 05:34:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683092586; x=1685684586;
+        d=1e100.net; s=20221208; t=1683117270; x=1685709270;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=rsAmWnHYdqf8PxIDTx7JVpNph88uEqYsba4Oi5M9pys=;
-        b=RSWN3Fw1+PFQyo5akiUabkXmMk3kpag+sP6ONxebkQZfaKEuWi3O6dMVaWl/JxXpgh
-         pG2vm1QPw38bZhiLPFJqbWT3kXdfM1t4WC7tfss/KoXFkT1lF9XpSny8q4psdxLZRepK
-         8k0LVBbHOGoRQx1iYBbDvxjlPldqosqK79fsGL2nmopN+iSSXyeKf4yqhaL+RGvNAeIg
-         Vz4bBW+eCJuGc3IUdIQQCBDbT/xT6AgPYH4F2UVzdzm7L4ODs6Y+xWnl4qd729dSC26b
-         7XTTH0jUYgSzN24v+jBt3U4l11iiH/WXQPCvYUf4qP5sKl/8GJEXXbF8OjuAGRsBRST+
-         OceA==
-X-Gm-Message-State: AC+VfDw5MTWzUs46mE0Ad9fi6RN3DB1g0ZxtmTd89vsSSQ0nSTMLfYgu
-	ss1lO3oupP9qcnblHklAg80XI/+PN1IA9N+kfyc=
-X-Google-Smtp-Source: ACHHUZ7ykK9Pomy4WV89OB6bwk9/UoxMqZtNJrFwUkc6HainGydy65lfIkZPMMydRIzSTL7GURxd1oHI9zPRV9FHxyI=
-X-Received: by 2002:a67:fb11:0:b0:42e:38c1:8a54 with SMTP id
- d17-20020a67fb11000000b0042e38c18a54mr942121vsr.0.1683092585868; Tue, 02 May
- 2023 22:43:05 -0700 (PDT)
+        bh=V2oE6X7zBaNlF7iodKx6/ZAG6W6nFzdQmEQ8VxaGGaY=;
+        b=ImvFExLL6SI5kQuS5VEF6RAwa9cgxDtY8wGSMjOBJ8xRtr4x57jQ8oyg5gDNOxiL7G
+         WEcBUXIsJbbXXw4xU5SvWINGcKfvZsBSUZB7RKFKbRN6QwLE0g1lvMFzLAbYhJprHBbX
+         5rtphJhjwJSiWdR03Sn0cie8kVGlnWxmqKftgdRjtKjlzI5YeBysMN7f7A5Taq8TLfxR
+         zT43my9WICIveh4Zl0MVOvG5wth5vP4znJWG403QKCuW++Ejz8Ta9nnpgx+UoMOG5uIP
+         kw8wGs87aMbEjTTfbgJrcAOksA2VA1FCWlBTVt9SECo1o1fkZVtLCqe6h912If68+b5A
+         QSMw==
+X-Gm-Message-State: AC+VfDwugtLHZtUKwJY/T6A/bINg1T02VNSoyXZfpRCouP7f601akqvu
+	94SWNPhLWqjbJZhzDUy9d+c4tyvaPmG8Qph3Ts4Gz+CW
+X-Google-Smtp-Source: ACHHUZ7BDtcS+4i213lDsTPoQOaH89g57GL5S5KXC662Rng+JmuhdwlFUQvZM81+IC2XKDlw1h4pzdDUGAEEupJvGy0=
+X-Received: by 2002:a17:906:7381:b0:957:297a:d50c with SMTP id
+ f1-20020a170906738100b00957297ad50cmr14458384ejl.6.1683117270143; Wed, 03 May
+ 2023 05:34:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAAJw_ZsbTVd3Es373x_wTNDF7RknGhCD0r+NKUSwAO7HpLAkYA@mail.gmail.com>
- <ZE9B4avbDtIXOu4O@debian.me> <87r0s0pnim.wl-tiwai@suse.de>
- <CAAJw_ZsDdiB=b2PZydQWF2fjSULit3NWE-Bf1icBEryN-GuqUw@mail.gmail.com>
- <87fs8gp0i7.wl-tiwai@suse.de> <CAAJw_ZveoPfnBsSkHZqmLiVWATcOosR--6Ds4cdekdi=t1yV7A@mail.gmail.com>
- <b449cbf6-8286-e22d-ca87-b1bc3dce29d7@gmail.com>
-In-Reply-To: <b449cbf6-8286-e22d-ca87-b1bc3dce29d7@gmail.com>
-From: Jeff Chua <jeff.chua.linux@gmail.com>
-Date: Wed, 3 May 2023 13:42:55 +0800
-Message-ID: <CAAJw_Zur2fz7FnO-qyzd_mSoCcroCREcvHKo8sOMrrMDGxXv2g@mail.gmail.com>
-Subject: Re: linux-6.4 alsa sound broken
-To: Bagas Sanjaya <bagasdotme@gmail.com>
-Cc: Takashi Iwai <tiwai@suse.de>, lkml <linux-kernel@vger.kernel.org>, 
-	Oswald Buddenhagen <oswald.buddenhagen@gmx.de>, Jaroslav Kysela <perex@perex.cz>, 
-	Linux ALSA Subsystem Development <alsa-devel@alsa-project.org>, 
-	Linux Regressions <regressions@lists.linux.dev>
+References: <0fd55257-5b26-1969-18b7-97b39c3f620b@leemhuis.info>
+In-Reply-To: <0fd55257-5b26-1969-18b7-97b39c3f620b@leemhuis.info>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 3 May 2023 14:34:11 +0200
+Message-ID: <CAJZ5v0hZXJYU6Maz39u2EyV=tqm-JZ9OErcByMD+=C8YgTKXpA@mail.gmail.com>
+Subject: Re: [regression] Bug 217386 - intel_powerclamp null pointer
+ dereference in Linux 6.3.x
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
+	Linux PM <linux-pm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 3, 2023 at 12:40=E2=80=AFPM Bagas Sanjaya <bagasdotme@gmail.com=
-> wrote:
+CC: Srinivas
+
+On Tue, May 2, 2023 at 12:26=E2=80=AFPM Linux regression tracking (Thorsten
+Leemhuis) <regressions@leemhuis.info> wrote:
 >
-> On 5/1/23 22:03, Jeff Chua wrote:
-> >> There was no description about which sound backend is used.  Is it
-> >> PulseAudio, pipewire or dmix/dsnoop?
-> >
-> > Just pure alsautils.
-> >
-> > arecord -D hw:1,0,0 -f S16_LE -r 48000 recorded.wav
-> > aplay -D hw:1,1,0 /local/share/sounds/alsa/Side_Right.wav
-> >
-> > [recorded.wav] attached.
-> > [Side_Right.wav] attached.
-> > aplay: version 1.2.8 by Jaroslav Kysela <perex@perex.cz>
-> > arecord: version 1.2.8 by Jaroslav Kysela <perex@perex.cz>
-> >
-> > alsautils, alsaplugins alsalibs all using latest git pull.
 >
-> Are you sure you build alsa tools straight from the git repo?
-> Can you also reproduce with latest stable version of these?
-> Otherwise it's anyone's guess due to moving parts...
-
-
-All cloned from ...
-https://github.com/alsa-project/alsa-lib.git
-https://github.com/alsa-project/alsa-utils.git
-https://github.com/alsa-project/alsa-plugins.git
-
-arecord is symbolic link to aplay.
-
-I just recompiled all the alsa-lib, utils and plugins, and retest and
-it's the same issue.
-
-GNU C Library (GNU libc) development release version 2.37.9000.
-gcc version 11.3.1 20230315 (GCC)
-binutils-2.40
-
-Linux kernel is ...
-commit 348551ddaf311c76b01cdcbaf61b6fef06a49144 (HEAD -> master,
-origin/master, origin/HEAD)
-Merge: 7df047b3f0aa b7badd752de0
-Author: Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue May 2 15:40:41 2023 -0700
-
-
-Thanks,
-Jeff
+> Hi, Thorsten here, the Linux kernel's regression tracker.
+>
+> I noticed a regression report in bugzilla.kernel.org. As many (most?)
+> kernel developers don't keep an eye on it, I decided to forward it by mai=
+l.
+>
+> Note, you have to use bugzilla to reach the reporter, as I sadly[1] can
+> not CCed them in mails like this.
+>
+> Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=3D217386 :
+>
+> >  Risto A. Paju 2023-05-01 09:49:03 UTC
+> >
+> > Created attachment 304199 [details]
+> > dmesg-6.3.1
+> >
+> > I use intel_powerclamp on a Thinkpad X220i via a custom script for
+> > thermal management, and it triggers a kernel bug in Linux 6.3.0 and
+> > 6.3.1. The script has a part
+> >
+> > awk something > /sys/class/thermal/cooling_device4/cur_state
+> >
+> > and the awk process hangs, with the null pointer bug reported in dmesg.
+> >
+> > The script has worked fine for years, and for now I've switched back to
+> > the 6.2 series for this laptop.
+> >
+> > [tag] [reply] [=E2=88=92]
+> > Private
+> > Comment 1 Risto A. Paju 2023-05-01 12:23:15 UTC
+> >
+> > The affected CPU is an i3-2310M. I tested the same on a newer Intel
+> > laptop with an i5-7300HQ, and there's no sign of the bug there.
+>
+> From the dmesg:
+>
+> > [   16.495596] Oops: 0002 [#1] PREEMPT SMP PTI
+> > [   16.496084] CPU: 0 PID: 2792 Comm: awk Not tainted 6.3.1 #2
+> > [   16.496589] Hardware name: LENOVO 428737G/428737G, BIOS 8DET76WW (1.=
+46 ) 06/21/2018
+> > [   16.497095] RIP: 0010:idle_inject_set_duration+0x6/0x20
+> > [   16.497607] Code: 00 49 c7 c4 f4 ff ff ff eb 92 49 c7 c4 f4 ff ff ff=
+ eb 91 cc 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 89 f0 01 d0 74 06=
+ <89> 77 44 89 57 40 c3 cc cc cc cc 66 66 2e 0f 1f 84 00 00 00 00 00
+> > [   16.498824] RSP: 0018:ffffc900005e7de8 EFLAGS: 00010206
+> > [   16.499461] RAX: 00000000000927c0 RBX: 0000000000000000 RCX: 0000000=
+000001770
+> > [   16.500103] RDX: 0000000000001770 RSI: 0000000000091050 RDI: 0000000=
+000000000
+> > [   16.500752] RBP: 0000000000000002 R08: 0000000000000001 R09: 0000000=
+00000000a
+> > [   16.501405] R10: 000000000000000a R11: f000000000000000 R12: 0000000=
+000000000
+> > [   16.502071] R13: ffff8881064bd720 R14: ffffc900005e7ea0 R15: ffff888=
+1022283e0
+> > [   16.502745] FS:  00007fe494782b80(0000) GS:ffff888216200000(0000) kn=
+lGS:0000000000000000
+> > [   16.503421] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > [   16.504095] CR2: 0000000000000044 CR3: 000000010f94c006 CR4: 0000000=
+0000606f0
+> > [   16.504783] Call Trace:
+> > [   16.505456]  <TASK>
+> > [   16.506124]  powerclamp_set_cur_state+0x56/0x200 [intel_powerclamp]
+> > [   16.506810]  cur_state_store+0x74/0xd0
+> > [   16.507497]  kernfs_fop_write_iter+0x128/0x1c0
+> > [   16.508193]  vfs_write+0x2be/0x3f0
+> > [   16.508897]  ksys_write+0x5a/0xe0
+> > [   16.509794]  do_syscall_64+0x3b/0x90
+> > [   16.510607]  entry_SYSCALL_64_after_hwframe+0x72/0xdc
+> > [   16.511444] RIP: 0033:0x7fe4948c0be0
+> > [   16.512247] Code: 40 00 48 8b 15 49 c2 0d 00 f7 d8 64 89 02 48 c7 c0=
+ ff ff ff ff eb b7 0f 1f 00 80 3d 01 4a 0e 00 00 74 17 b8 01 00 00 00 0f 05=
+ <48> 3d 00 f0 ff ff 77 58 c3 0f 1f 80 00 00 00 00 48 83 ec 28 48 89
+> > [   16.514025] RSP: 002b:00007ffc045bd0d8 EFLAGS: 00000202 ORIG_RAX: 00=
+00000000000001
+> > [   16.515180] RAX: ffffffffffffffda RBX: 0000000000000002 RCX: 00007fe=
+4948c0be0
+> > [   16.516346] RDX: 0000000000000002 RSI: 0000562bc4d50990 RDI: 0000000=
+000000001
+> > [   16.517543] RBP: 00007fe49499e780 R08: 0000000000000007 R09: 0000562=
+bc4d46da0
+> > [   16.518751] R10: 00007fe4947d5f50 R11: 0000000000000202 R12: 0000000=
+000000002
+> > [   16.519977] R13: 0000562bc4d50990 R14: 0000000000000002 R15: 00007fe=
+494999d60
+> > [   16.521234]  </TASK>
+> > [   16.522479] Modules linked in:
+> > [...]
+> > [   16.534416] CR2: 0000000000000044
+> > [   16.536059] ---[ end trace 0000000000000000 ]---
+> > [   16.537819] RIP: 0010:idle_inject_set_duration+0x6/0x20
+> > [   16.537827] Code: 00 49 c7 c4 f4 ff ff ff eb 92 49 c7 c4 f4 ff ff ff=
+ eb 91 cc 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 89 f0 01 d0 74 06=
+ <89> 77 44 89 57 40 c3 cc cc cc cc 66 66 2e 0f 1f 84 00 00 00 00 00
+> > [   16.543180] RSP: 0018:ffffc900005e7de8 EFLAGS: 00010206
+> > [   16.543189] RAX: 00000000000927c0 RBX: 0000000000000000 RCX: 0000000=
+000001770
+> > [   16.543193] RDX: 0000000000001770 RSI: 0000000000091050 RDI: 0000000=
+000000000
+> > [   16.549435] RBP: 0000000000000002 R08: 0000000000000001 R09: 0000000=
+00000000a
+> > [   16.551087] R10: 000000000000000a R11: f000000000000000 R12: 0000000=
+000000000
+> > [   16.551091] R13: ffff8881064bd720 R14: ffffc900005e7ea0 R15: ffff888=
+1022283e0
+> > [   16.554264] FS:  00007fe494782b80(0000) GS:ffff888216200000(0000) kn=
+lGS:0000000000000000
+> > [   16.554270] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > [   16.554281] CR2: 0000560363a98298 CR3: 000000010f94c006 CR4: 0000000=
+0000606f0
+> > [   17.635258] memfd_create() without MFD_EXEC nor MFD_NOEXEC_SEAL, pid=
+=3D2842 'X'
+>
+>
+> See the ticket for more details.
+>
+>
+> [TLDR for the rest of this mail: I'm adding this report to the list of
+> tracked Linux kernel regressions; the text you find below is based on a
+> few templates paragraphs you might have encountered already in similar
+> form.]
+>
+> BTW, let me use this mail to also add the report to the list of tracked
+> regressions to ensure it's doesn't fall through the cracks:
+>
+> #regzbot introduced: v6.2..v6.3
+> https://bugzilla.kernel.org/show_bug.cgi?id=3D217386
+> #regzbot title: pm: thermal: intel_powerclamp null pointer dereference
+> #regzbot ignore-activity
+>
+> This isn't a regression? This issue or a fix for it are already
+> discussed somewhere else? It was fixed already? You want to clarify when
+> the regression started to happen? Or point out I got the title or
+> something else totally wrong? Then just reply and tell me -- ideally
+> while also telling regzbot about it, as explained by the page listed in
+> the footer of this mail.
+>
+> Developers: When fixing the issue, remember to add 'Link:' tags pointing
+> to the report (e.g. the buzgzilla ticket and maybe this mail as well, if
+> this thread sees some discussion). See page linked in footer for details.
+>
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> --
+> Everything you wanna know about Linux kernel regression tracking:
+> https://linux-regtracking.leemhuis.info/about/#tldr
+> If I did something stupid, please tell me, as explained on that page.
+>
+> [1] because bugzilla.kernel.org tells users upon registration their
+> "email address will never be displayed to logged out users"
