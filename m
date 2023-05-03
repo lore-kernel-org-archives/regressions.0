@@ -1,117 +1,244 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2181ADF62
-	for <regressions@lists.linux.dev>; Wed,  3 May 2023 19:00:41 +0000 (UTC)
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1ab267e3528so5369455ad.0
-        for <regressions@lists.linux.dev>; Wed, 03 May 2023 12:00:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1683140440; x=1685732440;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=TixecA9/pAM4HarsIzbsqo9aEePqi7NlMoMwpBqZ4sg=;
-        b=nj0vJNwdVVt0leIQqG7LNcDsn0HBv/2LB5bpwahmUCsC/miRMRioHYtWRmIyKRa4q7
-         /LerloBVswHzbFX9CCyUDnpxP/IQ/6PnLLqQpfWnc1NbH+CLoy/qomCuLXbQ/hm7GXbY
-         9K1llkLMVIzXH+9erLCPKYeKOCMjPHTi+/CtZTNMV7mXRuC6JsIf5ggN/rnrAz1NhNXa
-         eh05/yDdnx52+JINCk6ZeL/o57hnKkS0hVq+XSd3MGLHBk2Mi4AWCPwwxseywCc+V8EF
-         Yaorgf1eIpLSqB3Zpcj6GvY7Tq1yLUSj/1p4qXhmSy1aAY4pRffG6YTjpr/A2bnDbK8l
-         sQJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683140440; x=1685732440;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TixecA9/pAM4HarsIzbsqo9aEePqi7NlMoMwpBqZ4sg=;
-        b=YNr4PpYnLYuzR2qAfByUs9+D0KKCjQJlcXUL5kWSurHXuwQrz1woTd8o+kvvoEyec9
-         xwKBy4+7Eysbc5HmcDtQzdVF66Fcf0k/wjPtPJ0VGsYy4dibOUEoIFAuGiORCZ16NFDW
-         JCP7QzyU8p5ydqi7HSMv8bHmcnbuz0qBu9tGRhXyU4b1GxV4JpCyDWgSw93ugt8IZ94d
-         dukTtmlwDYzAQaKsEuNr0WNAmwFomXCLJETF821XVgcIVXtyVtgymMsggPVUrk2qiHOw
-         ZE1nO6JN5mXBFOLADVvlUxOYZapzXU+ZeE9Zkkwc1wGAXIkfT77H7Sgg3pCR1rd1OFMu
-         rEXA==
-X-Gm-Message-State: AC+VfDwDurOUfihMXeMFGKJbcXYBEAVxBccy+x01nPIHnWyxysvDSd10
-	FwDxNYiOTnRe6DkyjpXUuFejbK2sdgg=
-X-Google-Smtp-Source: ACHHUZ6pUVtfnjx3yCSyP11V3DoOQqy3SF3n3ZcLqHfmDMnSaaQgXO4Z1nHM4fwjQoyk8033mvq5hQ==
-X-Received: by 2002:a17:902:b198:b0:1a1:b174:836c with SMTP id s24-20020a170902b19800b001a1b174836cmr1001919plr.16.1683140440270;
-        Wed, 03 May 2023 12:00:40 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:9390:e396:49ef:54dc])
-        by smtp.gmail.com with ESMTPSA id be12-20020a170902aa0c00b001a6a53c3b04sm21958039plb.306.2023.05.03.12.00.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 May 2023 12:00:39 -0700 (PDT)
-Date: Wed, 3 May 2023 12:00:36 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: "Limonciello, Mario" <mlimonci@amd.com>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
-	Chuanhong Guo <gch981213@gmail.com>, linux-input@vger.kernel.org,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-	ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [regression] Bug 217394 - IRQ override skipping breaks the Aya
- Neo Air Plus 6800U keyboard buttons
-Message-ID: <ZFKvVKMesT+3NthN@google.com>
-References: <01ea5c8e-ed2f-7568-f6ed-896329e7b673@leemhuis.info>
- <68d017d9-d815-01d4-23c1-49c0aaf5f20b@amd.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 051AEBE4C
+	for <regressions@lists.linux.dev>; Wed,  3 May 2023 20:59:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1683147553; x=1714683553;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=+VUBpjIflHIZ6BkhxsKFrSLNBkeBDDE+dMqP74XAxBE=;
+  b=DSeRsV18VZtwEIEa0s+KvW2YLL0krs6Pp5k1jD1Ch9sP1htk7rW3GESv
+   i1NZ4QgUiupxtAukXmdKGsbRdNvMcDm+G5EKzhSQsX3JPrrv+XSObl4ve
+   0cSAFXzthfoKnZHncNqTBzUXG3kBU18301lgXoo9Eb3o+bgzkm9SQhv2n
+   ++l2eIzEj4DyDUl+q1K+6/WeXJCoGg7wU4vyWy7OeraNSpFdSPTbqiC58
+   2ESwomnXRFP1Rt4+35NWKoxYSzHH9FnpaVff1LJ+VVWAnhxuoHRZas04e
+   u9G9DmL/n3yYNwCDeK05lckP5CZqPpPQch10rz34rLMwxuR8vW33Z9i80
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10699"; a="329126248"
+X-IronPort-AV: E=Sophos;i="5.99,248,1677571200"; 
+   d="scan'208";a="329126248"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 May 2023 13:59:12 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10699"; a="699569603"
+X-IronPort-AV: E=Sophos;i="5.99,248,1677571200"; 
+   d="scan'208";a="699569603"
+Received: from jrath-mobl2.amr.corp.intel.com (HELO spandruv-desk1.amr.corp.intel.com) ([10.209.115.67])
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 May 2023 13:59:12 -0700
+Message-ID: <c029b85ad2c26ce37683d6e15406b7a90564ceb8.camel@linux.intel.com>
+Subject: Re: [regression] Bug 217386 - intel_powerclamp null pointer
+ dereference in Linux 6.3.x
+From: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>, Linux regressions mailing list
+	 <regressions@lists.linux.dev>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Linux PM
+	 <linux-pm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Date: Wed, 03 May 2023 13:59:11 -0700
+In-Reply-To: <CAJZ5v0hZXJYU6Maz39u2EyV=tqm-JZ9OErcByMD+=C8YgTKXpA@mail.gmail.com>
+References: <0fd55257-5b26-1969-18b7-97b39c3f620b@leemhuis.info>
+	 <CAJZ5v0hZXJYU6Maz39u2EyV=tqm-JZ9OErcByMD+=C8YgTKXpA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.42.4 (3.42.4-2.fc35) 
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <68d017d9-d815-01d4-23c1-49c0aaf5f20b@amd.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, May 03, 2023 at 11:11:33AM -0500, Limonciello, Mario wrote:
-> +linux-input
+Hi All,
+
+On Wed, 2023-05-03 at 14:34 +0200, Rafael J. Wysocki wrote:
+> CC: Srinivas
 > 
-> On 5/3/2023 7:58 AM, Linux regression tracking (Thorsten Leemhuis) wrote:
+> On Tue, May 2, 2023 at 12:26 PM Linux regression tracking (Thorsten
+> Leemhuis) <regressions@leemhuis.info> wrote:
+> > 
+> > 
 > > Hi, Thorsten here, the Linux kernel's regression tracker.
 > > 
-> > I noticed a regression report in bugzilla.kernel.org. As many (most?)
-> > kernel developers don't keep an eye on it, I decided to forward it by mail.
+> > I noticed a regression report in bugzilla.kernel.org. As many
+> > (most?)
+> > kernel developers don't keep an eye on it, I decided to forward it
+> > by mail.
 > > 
-> > Chuanhong Guo, apparently it's cause by a change of yours.
-> > 
-> > Note, you have to use bugzilla to reach the reporter, as I sadly[1] can
+> > Note, you have to use bugzilla to reach the reporter, as I sadly[1]
+> > can
 > > not CCed them in mails like this.
 > > 
-> > Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=217394 :
+> > Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=217386 :
 > > 
-> > >   Matthew 2023-05-03 02:28:33 UTC
+
+I have added the fix to
+https://bugzilla.kernel.org/show_bug.cgi?id=217386
+
+Please check.
+
+Thanks,
+Srinivas
+
+
+> > >  Risto A. Paju 2023-05-01 09:49:03 UTC
 > > > 
-> > > Reverting the changes found in this patch fixes the issue:
-> > > > https://lore.kernel.org/all/20220712020058.90374-1-gch981213@gmail.com/
-> > > With that patch the AT Translated Set 2 Keyboard doesn't show up with the evtest and is not usable.
+> > > Created attachment 304199 [details]
+> > > dmesg-6.3.1
 > > > 
-> > > Hardware:
+> > > I use intel_powerclamp on a Thinkpad X220i via a custom script
+> > > for
+> > > thermal management, and it triggers a kernel bug in Linux 6.3.0
+> > > and
+> > > 6.3.1. The script has a part
 > > > 
-> > > Aya Neo Air Plus
-> > > AMD Ryzen 7 6800U
+> > > awk something > /sys/class/thermal/cooling_device4/cur_state
+> > > 
+> > > and the awk process hangs, with the null pointer bug reported in
+> > > dmesg.
+> > > 
+> > > The script has worked fine for years, and for now I've switched
+> > > back to
+> > > the 6.2 series for this laptop.
+> > > 
+> > > [tag] [reply] [−]
+> > > Private
+> > > Comment 1 Risto A. Paju 2023-05-01 12:23:15 UTC
+> > > 
+> > > The affected CPU is an i3-2310M. I tested the same on a newer
+> > > Intel
+> > > laptop with an i5-7300HQ, and there's no sign of the bug there.
+> > 
+> > From the dmesg:
+> > 
+> > > [   16.495596] Oops: 0002 [#1] PREEMPT SMP PTI
+> > > [   16.496084] CPU: 0 PID: 2792 Comm: awk Not tainted 6.3.1 #2
+> > > [   16.496589] Hardware name: LENOVO 428737G/428737G, BIOS
+> > > 8DET76WW (1.46 ) 06/21/2018
+> > > [   16.497095] RIP: 0010:idle_inject_set_duration+0x6/0x20
+> > > [   16.497607] Code: 00 49 c7 c4 f4 ff ff ff eb 92 49 c7 c4 f4 ff
+> > > ff ff eb 91 cc 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 89
+> > > f0 01 d0 74 06 <89> 77 44 89 57 40 c3 cc cc cc cc 66 66 2e 0f 1f
+> > > 84 00 00 00 00 00
+> > > [   16.498824] RSP: 0018:ffffc900005e7de8 EFLAGS: 00010206
+> > > [   16.499461] RAX: 00000000000927c0 RBX: 0000000000000000 RCX:
+> > > 0000000000001770
+> > > [   16.500103] RDX: 0000000000001770 RSI: 0000000000091050 RDI:
+> > > 0000000000000000
+> > > [   16.500752] RBP: 0000000000000002 R08: 0000000000000001 R09:
+> > > 000000000000000a
+> > > [   16.501405] R10: 000000000000000a R11: f000000000000000 R12:
+> > > 0000000000000000
+> > > [   16.502071] R13: ffff8881064bd720 R14: ffffc900005e7ea0 R15:
+> > > ffff8881022283e0
+> > > [   16.502745] FS:  00007fe494782b80(0000)
+> > > GS:ffff888216200000(0000) knlGS:0000000000000000
+> > > [   16.503421] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > > [   16.504095] CR2: 0000000000000044 CR3: 000000010f94c006 CR4:
+> > > 00000000000606f0
+> > > [   16.504783] Call Trace:
+> > > [   16.505456]  <TASK>
+> > > [   16.506124]  powerclamp_set_cur_state+0x56/0x200
+> > > [intel_powerclamp]
+> > > [   16.506810]  cur_state_store+0x74/0xd0
+> > > [   16.507497]  kernfs_fop_write_iter+0x128/0x1c0
+> > > [   16.508193]  vfs_write+0x2be/0x3f0
+> > > [   16.508897]  ksys_write+0x5a/0xe0
+> > > [   16.509794]  do_syscall_64+0x3b/0x90
+> > > [   16.510607]  entry_SYSCALL_64_after_hwframe+0x72/0xdc
+> > > [   16.511444] RIP: 0033:0x7fe4948c0be0
+> > > [   16.512247] Code: 40 00 48 8b 15 49 c2 0d 00 f7 d8 64 89 02 48
+> > > c7 c0 ff ff ff ff eb b7 0f 1f 00 80 3d 01 4a 0e 00 00 74 17 b8 01
+> > > 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 58 c3 0f 1f 80 00 00 00 00
+> > > 48 83 ec 28 48 89
+> > > [   16.514025] RSP: 002b:00007ffc045bd0d8 EFLAGS: 00000202
+> > > ORIG_RAX: 0000000000000001
+> > > [   16.515180] RAX: ffffffffffffffda RBX: 0000000000000002 RCX:
+> > > 00007fe4948c0be0
+> > > [   16.516346] RDX: 0000000000000002 RSI: 0000562bc4d50990 RDI:
+> > > 0000000000000001
+> > > [   16.517543] RBP: 00007fe49499e780 R08: 0000000000000007 R09:
+> > > 0000562bc4d46da0
+> > > [   16.518751] R10: 00007fe4947d5f50 R11: 0000000000000202 R12:
+> > > 0000000000000002
+> > > [   16.519977] R13: 0000562bc4d50990 R14: 0000000000000002 R15:
+> > > 00007fe494999d60
+> > > [   16.521234]  </TASK>
+> > > [   16.522479] Modules linked in:
+> > > [...]
+> > > [   16.534416] CR2: 0000000000000044
+> > > [   16.536059] ---[ end trace 0000000000000000 ]---
+> > > [   16.537819] RIP: 0010:idle_inject_set_duration+0x6/0x20
+> > > [   16.537827] Code: 00 49 c7 c4 f4 ff ff ff eb 92 49 c7 c4 f4 ff
+> > > ff ff eb 91 cc 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 89
+> > > f0 01 d0 74 06 <89> 77 44 89 57 40 c3 cc cc cc cc 66 66 2e 0f 1f
+> > > 84 00 00 00 00 00
+> > > [   16.543180] RSP: 0018:ffffc900005e7de8 EFLAGS: 00010206
+> > > [   16.543189] RAX: 00000000000927c0 RBX: 0000000000000000 RCX:
+> > > 0000000000001770
+> > > [   16.543193] RDX: 0000000000001770 RSI: 0000000000091050 RDI:
+> > > 0000000000000000
+> > > [   16.549435] RBP: 0000000000000002 R08: 0000000000000001 R09:
+> > > 000000000000000a
+> > > [   16.551087] R10: 000000000000000a R11: f000000000000000 R12:
+> > > 0000000000000000
+> > > [   16.551091] R13: ffff8881064bd720 R14: ffffc900005e7ea0 R15:
+> > > ffff8881022283e0
+> > > [   16.554264] FS:  00007fe494782b80(0000)
+> > > GS:ffff888216200000(0000) knlGS:0000000000000000
+> > > [   16.554270] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > > [   16.554281] CR2: 0000560363a98298 CR3: 000000010f94c006 CR4:
+> > > 00000000000606f0
+> > > [   17.635258] memfd_create() without MFD_EXEC nor
+> > > MFD_NOEXEC_SEAL, pid=2842 'X'
+> > 
+> > 
 > > See the ticket for more details.
 > > 
-> > BTW: there apparently is another IRQ override needed for a different
-> > machine. See https://bugzilla.kernel.org/show_bug.cgi?id=216804#c8 for
-> > details (ignore the comments before that, the quirk entry for that
-> > machine was merged; comment 8 and all related to it really should have a
-> > separate bug; that's also why this partly fall through the cracks here
-> > :-/ ). The user is currently trying to create a patch.
 > > 
-> Something I'm wondering about is if it's possible for i8042 to detect the
-> polarity is incorrect when it probes and
-> to try to correct it.
-> 
-> If we could do that we can probably drop 9946e39fe8d0 ("ACPI: resource: skip
-> IRQ override on AMD Zen platforms")
-> to fix this issue along with all the other quirks that have collected over
-> time on i8042 polarity issues.
-> 
+> > [TLDR for the rest of this mail: I'm adding this report to the list
+> > of
+> > tracked Linux kernel regressions; the text you find below is based
+> > on a
+> > few templates paragraphs you might have encountered already in
+> > similar
+> > form.]
+> > 
+> > BTW, let me use this mail to also add the report to the list of
+> > tracked
+> > regressions to ensure it's doesn't fall through the cracks:
+> > 
+> > #regzbot introduced: v6.2..v6.3
+> > https://bugzilla.kernel.org/show_bug.cgi?id=217386
+> > #regzbot title: pm: thermal: intel_powerclamp null pointer
+> > dereference
+> > #regzbot ignore-activity
+> > 
+> > This isn't a regression? This issue or a fix for it are already
+> > discussed somewhere else? It was fixed already? You want to clarify
+> > when
+> > the regression started to happen? Or point out I got the title or
+> > something else totally wrong? Then just reply and tell me --
+> > ideally
+> > while also telling regzbot about it, as explained by the page
+> > listed in
+> > the footer of this mail.
+> > 
+> > Developers: When fixing the issue, remember to add 'Link:' tags
+> > pointing
+> > to the report (e.g. the buzgzilla ticket and maybe this mail as
+> > well, if
+> > this thread sees some discussion). See page linked in footer for
+> > details.
+> > 
+> > Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker'
+> > hat)
+> > --
+> > Everything you wanna know about Linux kernel regression tracking:
+> > https://linux-regtracking.leemhuis.info/about/#tldr
+> > If I did something stupid, please tell me, as explained on that
+> > page.
+> > 
+> > [1] because bugzilla.kernel.org tells users upon registration their
+> > "email address will never be displayed to logged out users"
 
-8042 is shared between multiple platforms and is quite fragile as it is.
-If there are issues in AMD firmware and you know the polarity that is
-needed for 8042 on these platforms you should add a proper fixup for
-override. Maybe you should only skip override for IRQ 1?
-
-Thanks.
-
--- 
-Dmitry
