@@ -1,65 +1,109 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com [209.85.217.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 877BF7E4
-	for <regressions@lists.linux.dev>; Wed,  3 May 2023 04:46:22 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pu4Ng-0007IN-0A; Wed, 03 May 2023 06:46:20 +0200
-Message-ID: <ebb280e4-d381-0bf8-d134-0318c5cfdf83@leemhuis.info>
-Date: Wed, 3 May 2023 06:46:19 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33531A45
+	for <regressions@lists.linux.dev>; Wed,  3 May 2023 05:43:07 +0000 (UTC)
+Received: by mail-vs1-f44.google.com with SMTP id ada2fe7eead31-4300ba45037so1758462137.2
+        for <regressions@lists.linux.dev>; Tue, 02 May 2023 22:43:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1683092586; x=1685684586;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rsAmWnHYdqf8PxIDTx7JVpNph88uEqYsba4Oi5M9pys=;
+        b=ERzOwCN8Snpnb6R6BMPDcCWmrygLOdCFBKCPjPfmNrRa9r/Bde491tD+EBUO98Pr0p
+         PcYay5OeQR1WNpFBwkdiaJIM3+7iqCOlKWMHHMJye7Atdu9Zb1AXDB2Npq44wRmcUwya
+         fT9UCI9jNpd5nzKnTAiA4RiZ5eQKjVAkYXREU/mWQP0b6z00COHDWedWjnAIFXF1mG2g
+         jVQTFpY3OSTck2RfgXgOJYWJFuIRizX2uecYY6kr6Rg/WxtYCl4mc669GUNBZa33AZM1
+         BV8zqOBEt5IvAUNRKH1DuV38cIW5jEK3tCOuqPoQYxu82LJovSQ7MCSld2eA2GwZEAMP
+         P8Qw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683092586; x=1685684586;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rsAmWnHYdqf8PxIDTx7JVpNph88uEqYsba4Oi5M9pys=;
+        b=RSWN3Fw1+PFQyo5akiUabkXmMk3kpag+sP6ONxebkQZfaKEuWi3O6dMVaWl/JxXpgh
+         pG2vm1QPw38bZhiLPFJqbWT3kXdfM1t4WC7tfss/KoXFkT1lF9XpSny8q4psdxLZRepK
+         8k0LVBbHOGoRQx1iYBbDvxjlPldqosqK79fsGL2nmopN+iSSXyeKf4yqhaL+RGvNAeIg
+         Vz4bBW+eCJuGc3IUdIQQCBDbT/xT6AgPYH4F2UVzdzm7L4ODs6Y+xWnl4qd729dSC26b
+         7XTTH0jUYgSzN24v+jBt3U4l11iiH/WXQPCvYUf4qP5sKl/8GJEXXbF8OjuAGRsBRST+
+         OceA==
+X-Gm-Message-State: AC+VfDw5MTWzUs46mE0Ad9fi6RN3DB1g0ZxtmTd89vsSSQ0nSTMLfYgu
+	ss1lO3oupP9qcnblHklAg80XI/+PN1IA9N+kfyc=
+X-Google-Smtp-Source: ACHHUZ7ykK9Pomy4WV89OB6bwk9/UoxMqZtNJrFwUkc6HainGydy65lfIkZPMMydRIzSTL7GURxd1oHI9zPRV9FHxyI=
+X-Received: by 2002:a67:fb11:0:b0:42e:38c1:8a54 with SMTP id
+ d17-20020a67fb11000000b0042e38c18a54mr942121vsr.0.1683092585868; Tue, 02 May
+ 2023 22:43:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: Hang loading initrd since last Friday.
-Content-Language: en-US, de-DE
-To: Bagas Sanjaya <bagasdotme@gmail.com>, Ben Greear
- <greearb@candelatech.com>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>
-References: <9d87defc-5376-d690-b483-bc314e4f568b@candelatech.com>
- <ZFHHh/m0pkOYIzo7@debian.me>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <ZFHHh/m0pkOYIzo7@debian.me>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1683089182;c7db01d3;
-X-HE-SMSGID: 1pu4Ng-0007IN-0A
+References: <CAAJw_ZsbTVd3Es373x_wTNDF7RknGhCD0r+NKUSwAO7HpLAkYA@mail.gmail.com>
+ <ZE9B4avbDtIXOu4O@debian.me> <87r0s0pnim.wl-tiwai@suse.de>
+ <CAAJw_ZsDdiB=b2PZydQWF2fjSULit3NWE-Bf1icBEryN-GuqUw@mail.gmail.com>
+ <87fs8gp0i7.wl-tiwai@suse.de> <CAAJw_ZveoPfnBsSkHZqmLiVWATcOosR--6Ds4cdekdi=t1yV7A@mail.gmail.com>
+ <b449cbf6-8286-e22d-ca87-b1bc3dce29d7@gmail.com>
+In-Reply-To: <b449cbf6-8286-e22d-ca87-b1bc3dce29d7@gmail.com>
+From: Jeff Chua <jeff.chua.linux@gmail.com>
+Date: Wed, 3 May 2023 13:42:55 +0800
+Message-ID: <CAAJw_Zur2fz7FnO-qyzd_mSoCcroCREcvHKo8sOMrrMDGxXv2g@mail.gmail.com>
+Subject: Re: linux-6.4 alsa sound broken
+To: Bagas Sanjaya <bagasdotme@gmail.com>
+Cc: Takashi Iwai <tiwai@suse.de>, lkml <linux-kernel@vger.kernel.org>, 
+	Oswald Buddenhagen <oswald.buddenhagen@gmx.de>, Jaroslav Kysela <perex@perex.cz>, 
+	Linux ALSA Subsystem Development <alsa-devel@alsa-project.org>, 
+	Linux Regressions <regressions@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 03.05.23 04:31, Bagas Sanjaya wrote:
-> On Tue, May 02, 2023 at 02:03:33PM -0700, Ben Greear wrote:
->>
->> Pulling today's upstream 6.3+ tree, my system now hangs loading initrd.
+On Wed, May 3, 2023 at 12:40=E2=80=AFPM Bagas Sanjaya <bagasdotme@gmail.com=
+> wrote:
+>
+> On 5/1/23 22:03, Jeff Chua wrote:
+> >> There was no description about which sound backend is used.  Is it
+> >> PulseAudio, pipewire or dmix/dsnoop?
+> >
+> > Just pure alsautils.
+> >
+> > arecord -D hw:1,0,0 -f S16_LE -r 48000 recorded.wav
+> > aplay -D hw:1,1,0 /local/share/sounds/alsa/Side_Right.wav
+> >
+> > [recorded.wav] attached.
+> > [Side_Right.wav] attached.
+> > aplay: version 1.2.8 by Jaroslav Kysela <perex@perex.cz>
+> > arecord: version 1.2.8 by Jaroslav Kysela <perex@perex.cz>
+> >
+> > alsautils, alsaplugins alsalibs all using latest git pull.
+>
+> Are you sure you build alsa tools straight from the git repo?
+> Can you also reproduce with latest stable version of these?
+> Otherwise it's anyone's guess due to moving parts...
 
-Just to understand this properly: you mean after the boot loader said it
-loaded the initramfs, not when the kernel starts using it?
 
->>  Nothing useful is seen on
->> serial console after that.  This was working late last week.  Other older kernels boot OK, so
->> I think is is related to the kernel.
-> 
-> What is your setup (especially kernel config)?
-> 
-> Is v6.3 works for you? I haven't seen this regression on my computer
-> using v6.3.
+All cloned from ...
+https://github.com/alsa-project/alsa-lib.git
+https://github.com/alsa-project/alsa-utils.git
+https://github.com/alsa-project/alsa-plugins.git
 
-Ben, you just to be sure might want to check if a kernel image that
-currently works still boots if you regenerate its initramfs: maybe the
-initramfs generator or something it uses changed recently and is causing
-your problem. I've seen a case or two where that was the case.
+arecord is symbolic link to aplay.
 
->> I have not yet started bisect, curious if this is already know problem.
-> Certainly you should try bisection.
+I just recompiled all the alsa-lib, utils and plugins, and retest and
+it's the same issue.
 
-Yeah.
+GNU C Library (GNU libc) development release version 2.37.9000.
+gcc version 11.3.1 20230315 (GCC)
+binutils-2.40
 
-BTW: What kind of platform is this?
+Linux kernel is ...
+commit 348551ddaf311c76b01cdcbaf61b6fef06a49144 (HEAD -> master,
+origin/master, origin/HEAD)
+Merge: 7df047b3f0aa b7badd752de0
+Author: Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue May 2 15:40:41 2023 -0700
 
-Ciao, Thorsten
+
+Thanks,
+Jeff
