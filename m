@@ -1,141 +1,103 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A60FE7E
-	for <regressions@lists.linux.dev>; Tue,  2 May 2023 14:12:53 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1ptqkN-0007tN-Cn; Tue, 02 May 2023 16:12:51 +0200
-Message-ID: <e7eed5ce-e7a0-e03e-f8c7-3582d9771a33@leemhuis.info>
-Date: Tue, 2 May 2023 16:12:48 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DBFA7E9
+	for <regressions@lists.linux.dev>; Wed,  3 May 2023 02:31:44 +0000 (UTC)
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-63d2ba63dddso3513373b3a.2
+        for <regressions@lists.linux.dev>; Tue, 02 May 2023 19:31:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1683081103; x=1685673103;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=XQWXAejBoMjPdddOvsfd20voWlUxAHiXq27bsxhVrrA=;
+        b=iF3f9ZTsPUroq+qz9RYT8xXZjd8aeG7ryhIjgpLEAvrmmQ5AIsRCyF4V3OqLESJ+0l
+         E7bh5pml6MDtZAM71jqbmki2XHhaQ3gxgJgDdCT7ci54A7QFqCRxMX9pnaklC8zvid47
+         VmQtQZ59Kf3mE+XdyAMJ6VmtEifgRc5SaBn82X05KVyKFx4wJzPqOngy4kSumzZYyB9F
+         NuRm6E3eOj9gh/p9cadK9zYqj9o8YM0kk0MRY/f1zQAiw46RyoKYORtM+xH+QEEVDW2L
+         YHw0t04Z6WsU1JGSPCtvEoiUbKL8NipTs0+bIzN2Jrz1TGzskW6DU5f9kcNXUOBhiX3M
+         AHIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683081103; x=1685673103;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XQWXAejBoMjPdddOvsfd20voWlUxAHiXq27bsxhVrrA=;
+        b=HzSXZq0AkDkbKSxHFPPgciIYwbtuqTc00qzPE+NdVRmQqdiA4W93TXeVybJMjRLwxc
+         seVb1C80uDB6tFXR/2ic72GDCSO6YMigDDR4mZ6A5I9JdyHPTNq8VDbRmbITbVG7QhhY
+         ZMXF/5eRbuhIXUWLo3QjLwyutypldvrkdg6BEyS8RtmPWhgPL5KXJW98LekskC7mZMN5
+         1l3vGwJn16+ATeRzbJBTtfnJaiCorLxTPT8VwxgOS2StcKB8PurwvKa56Pk0C+GWtPEF
+         FSKGXDWXjLpr6QDPGQXSFz8UmngQJKsBuJfTOnIJA65w7P7xRaYwTISQU+zbSUsIKyrP
+         FUjg==
+X-Gm-Message-State: AC+VfDxltonDWDj4dmwNli9dDzwpr5aqQr+wjREIQBrYMOVNZ9KmYOc8
+	TsegAKzSDnTe/eN65muQNeA=
+X-Google-Smtp-Source: ACHHUZ7qSQBTjPkDbG4CIDwko6r4i175+lLPZ2So71jv3P+SxPrT7TYzzl71wtPXzXExwCHljAlGMg==
+X-Received: by 2002:a05:6a00:ac6:b0:62a:4503:53ba with SMTP id c6-20020a056a000ac600b0062a450353bamr28192123pfl.26.1683081103382;
+        Tue, 02 May 2023 19:31:43 -0700 (PDT)
+Received: from debian.me (subs03-180-214-233-11.three.co.id. [180.214.233.11])
+        by smtp.gmail.com with ESMTPSA id ei23-20020a056a0080d700b006410f4f3ecdsm11165335pfb.83.2023.05.02.19.31.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 May 2023 19:31:42 -0700 (PDT)
+Received: by debian.me (Postfix, from userid 1000)
+	id 094D2106248; Wed,  3 May 2023 09:31:36 +0700 (WIB)
+Date: Wed, 3 May 2023 09:31:35 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Ben Greear <greearb@candelatech.com>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Regressions <regressions@lists.linux.dev>,
+	"Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>
+Subject: Re: Hang loading initrd since last Friday.
+Message-ID: <ZFHHh/m0pkOYIzo7@debian.me>
+References: <9d87defc-5376-d690-b483-bc314e4f568b@candelatech.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: PROBLEM: AMD Ryzen 9 7950X iGPU - Blinking Issue
-Content-Language: en-US, de-DE
-To: Felix Richter <judge@felixrichter.tech>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- Alex Deucher <alexdeucher@gmail.com>
-Cc: amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
-References: <46a7eb80-5f09-4f6a-4fd3-9550dafd497c@felixrichter.tech>
- <1efbf587-e7b5-74a3-89e4-ca70386bd191@leemhuis.info>
- <CADnq5_M-5SD6HDRVtFHPNF3q9XKz75PECdUxR-OaVpPe2Zw=EQ@mail.gmail.com>
- <8d23a70e-b132-9b25-917a-1f45918533cc@leemhuis.info>
- <0cac032a-0f65-5134-cde5-f535fc58c5ab@felixrichter.tech>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <0cac032a-0f65-5134-cde5-f535fc58c5ab@felixrichter.tech>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1683036773;b9fade46;
-X-HE-SMSGID: 1ptqkN-0007tN-Cn
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="+Hw2PTMtapHrPCLo"
+Content-Disposition: inline
+In-Reply-To: <9d87defc-5376-d690-b483-bc314e4f568b@candelatech.com>
 
-On 02.05.23 15:48, Felix Richter wrote:
-> On 5/2/23 15:34, Linux regression tracking (Thorsten Leemhuis) wrote:
->> On 02.05.23 15:13, Alex Deucher wrote:
->>> On Tue, May 2, 2023 at 7:45 AM Linux regression tracking (Thorsten
->>> Leemhuis) <regressions@leemhuis.info> wrote:
->>>
->>>> On 30.04.23 13:44, Felix Richter wrote:
->>>>> Hi,
->>>>>
->>>>> I am running into an issue with the integrated GPU of the Ryzen 9
->>>>> 7950X. It seems to be a regression from kernel version 6.1 to 6.2.
->>>>> The bug materializes in from of my monitor blinking, meaning it
->>>>> turns full white shortly. This happens very often so that the
->>>>> system becomes unpleasant to use.
->>>>>
->>>>> I am running the Archlinux Kernel:
->>>>> The Issue happens on the bleeding edge kernel: 6.2.13
->>>>> Switching back to the LTS kernel resolves the issue: 6.1.26
->>>>>
->>>>> I have two monitors attached to the system. One 42 inch 4k Display
->>>>> and a 24 inch 1080p Display and am running sway as my desktop.
->>>>>
->>>>> Let me know if there is more information I could provide to help
->>>>> narrow down the issue.
->>>> Thanks for the report. To be sure the issue doesn't fall through the
->>>> cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
->>>> tracking bot:
->>>>
->>>> #regzbot ^introduced v6.1..v6.2
->>>> #regzbot title drm: amdgpu: system becomes unpleasant to use after
->>>> monitor starts blinking and turns full white
->>>> #regzbot ignore-activity
->>>>
->>>> This isn't a regression? This issue or a fix for it are already
->>>> discussed somewhere else? It was fixed already? You want to clarify
->>>> when
->>>> the regression started to happen? Or point out I got the title or
->>>> something else totally wrong? Then just reply and tell me -- ideally
->>>> while also telling regzbot about it, as explained by the page listed in
->>>> the footer of this mail.
->>>>
->>>> Developers: When fixing the issue, remember to add 'Link:' tags
->>>> pointing
->>>> to the report (the parent of this mail). See page linked in footer for
->>>> details.
->>> This sounds exactly like the issue that was fixed in this patch which
->>> is already on it's way to Linus:
->>> https://gitlab.freedesktop.org/agd5f/linux/-/commit/08da182175db4c7f80850354849d95f2670e8cd9
->> FWIW, you in the flood of emails likely missed that this is the same
->> thread where you yesterday replied "If the module parameter didn't help
->> then perhaps you are seeing some other issue.  Can you bisect?". That's
->> why I decided to add this to the tracking. Or am I missing something
->> obvious here?
->>
->> /me looks around again and can't see anything, but that doesn't have to
->> mean anything...
->>
->> Felix, btw, this guide might help you with the bisection, even if it's
->> just for kernel compilation:
->>
->> https://docs.kernel.org/next/admin-guide/quickly-build-trimmed-linux.html
->>
->> And to indirectly reply to your mail from yesterday[1]. You might want
->> to ignore the arch linux kernel git repo and just do a bisection between
->> 6.1 and the latest 6.2.y kernel using upstream repos; and if I were you
->> I'd also try 6.3 or even mainline before that, in case the issue was
->> fixed already.
->>
->> [1]
->> https://lore.kernel.org/all/04749ee4-0728-92fe-bcb0-a7320279eaac@felixrichter.tech/
->>
-> Thanks for the pointers, I'll do a bisection on my desktop from 6.1 to
-> the newest commit.
 
-FWIW, I wonder what you actually mean with "newest commit" here: a
-bisection between 6.1 and mainline HEAD might be a waste of time, *if*
-this is something that only happens in 6.2.y (say due to a broken or
-incomplete backport)
+--+Hw2PTMtapHrPCLo
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> That was the part I was mostly unsure about … where
-> to start from.
-> 
-> I was planning to use PKGBUILD scripts from arch to achieve the same
-> configuration as I would when installing
-> the package and just rewrite the script to use a local copy of the
-> source code instead of the repository.
-> That way I can just use the bisect command, rebuild the package and test
-> again.
+On Tue, May 02, 2023 at 02:03:33PM -0700, Ben Greear wrote:
+> Hello,
+>=20
+> Pulling today's upstream 6.3+ tree, my system now hangs loading initrd.  =
+Nothing useful is seen on
+> serial console after that.  This was working late last week.  Other older=
+ kernels boot OK, so
+> I think is is related to the kernel.
 
-In my experience trying to deal with Linux distro's package managers
-creates more trouble than it's worth.
+What is your setup (especially kernel config)?
 
-> But I probably won't be able to finish it this week, since I am on
-> vacation starting tomorrow and will not have access to the computer in
-> question. I will be back next week, by that time the patch Alex is
-> talking about might
-> already be in mainline. So if that fixes it, I will notice and let you
-> know. If not I will do the bisection to figure out what the actual issue
-> is.
+Is v6.3 works for you? I haven't seen this regression on my computer
+using v6.3.
 
-Enjoy your vacation!
+>=20
+> I have not yet started bisect, curious if this is already know problem.
 
-Ciao, Thorsten
+Certainly you should try bisection.
+
+Thanks.
+
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--+Hw2PTMtapHrPCLo
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZFHHfgAKCRD2uYlJVVFO
+o+M9AP9ddVhJGRpf3Znz9l+FuRJ8N5un3nnRad9n2QUGHacIBAD/SYGQRpZCTu4w
+xPp/awk6QFqYfEH8a+PtgQ+80s2S2wg=
+=mmUT
+-----END PGP SIGNATURE-----
+
+--+Hw2PTMtapHrPCLo--
