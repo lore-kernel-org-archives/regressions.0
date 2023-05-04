@@ -1,135 +1,113 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A30310EC
-	for <regressions@lists.linux.dev>; Thu,  4 May 2023 11:28:56 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1puX8m-00075K-Oa; Thu, 04 May 2023 13:28:52 +0200
-Message-ID: <a42f43e1-8586-a608-d073-3190af4eca94@leemhuis.info>
-Date: Thu, 4 May 2023 13:28:52 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86E13FC06
+	for <regressions@lists.linux.dev>; Thu,  4 May 2023 15:23:46 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2407DC433EF;
+	Thu,  4 May 2023 15:23:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1683213826;
+	bh=cx2Pm4KLnBIf9oBX5HGLD4VmQLIA+zu/GxMXPdHg/eg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=aj6Nfc4Gl+msjemNwyZNwCgB1B/zmnVAnrM7qWTX/zQKemHVGLFMuMQvfRlerV1vr
+	 Q+B/Olc5ZGF8F8Ci6lbu3dwC2Cs79C2QbmJPU5POZelQXnhNe9U7yDNcrrRwHsRQdP
+	 ziin9OT4uajH6+q6aSNZAtBt/2CncFbJwkWrlgjijh4PaF8Kglt8fa1HyqmG1edJSA
+	 PffYm8AUXJcYZduA0W3qoax1/6S4EUyVbFdyd0zHG0w0UOU3MNzHf1AoPJw1d10h2P
+	 3BMelG36vBJqlw8e3ATNFIW5dtGX+ZbPodAukzNgAiESW6LeHfkjA8XfPXkWomRkQo
+	 fqgU99c9UmY1w==
+Date: Thu, 4 May 2023 10:23:44 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: linux-pci@vger.kernel.org
+Cc: Vidya Sagar <vidyas@nvidia.com>, Koba Ko <koba.ko@canonical.com>,
+	Ajay Agarwal <ajayagarwal@google.com>,
+	Tasev Nikola <tasev.stefanoska@skynet.be>,
+	Mark Enriquez <enriquezmark36@gmail.com>,
+	Thomas Witt <kernel@witt.link>, regressions@lists.linux.dev
+Subject: Re: [Bug 217321] New: Intel platforms can't sleep deeper than PC3
+ during long idle
+Message-ID: <20230504152344.GA857680@bhelgaas>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: stable-rc/linux-4.14.y bisection: baseline.login on
- meson8b-odroidc1
-Content-Language: en-US, de-DE
-To: =?UTF-8?Q?Ricardo_Ca=c3=b1uelo?= <ricardo.canuelo@collabora.com>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- stable@vger.kernel.org
-References: <1fcff522-337a-c334-42a7-bc9b4f0daec4@collabora.com>
- <585b00d1-5ad7-ecff-e905-71e370613dfb@leemhuis.info>
- <4f77c914-562c-42ef-dfd0-43239398815d@collabora.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: Greg KH <gregkh@linuxfoundation.org>
-In-Reply-To: <4f77c914-562c-42ef-dfd0-43239398815d@collabora.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1683199737;b81f7da9;
-X-HE-SMSGID: 1puX8m-00075K-Oa
+In-Reply-To: <20230411204229.GA4168208@bhelgaas>
 
-[CCing Greg, in case he's interested]
+[+cc Koba, Ajay, Tasev, Mark, Thomas, regressions list]
 
-On 04.05.23 12:22, Ricardo Cañuelo wrote:
+On Tue, Apr 11, 2023 at 03:42:29PM -0500, Bjorn Helgaas wrote:
+> On Tue, Apr 11, 2023 at 08:32:04AM +0000, bugzilla-daemon@kernel.org wrote:
+> > https://bugzilla.kernel.org/show_bug.cgi?id=217321
+> > ... 
+> >         Regression: No
+> > 
+> > [Symptom]
+> > Intel cpu can't sleep deeper than pcˇ during long idle
+> > ~~~
+> > Pkg%pc2 Pkg%pc3 Pkg%pc6 Pkg%pc7 Pkg%pc8 Pkg%pc9 Pk%pc10
+> > 15.08   75.02   0.00    0.00    0.00    0.00    0.00
+> > 15.09   75.02   0.00    0.00    0.00    0.00    0.00
+> > ^CPkg%pc2       Pkg%pc3 Pkg%pc6 Pkg%pc7 Pkg%pc8 Pkg%pc9 Pk%pc10
+> > 15.38   68.97   0.00    0.00    0.00    0.00    0.00
+> > 15.38   68.96   0.00    0.00    0.00    0.00    0.00
+> > ~~~
+> > [How to Reproduce]
+> > 1. run turbostat to monitor
+> > 2. leave machine idle
+> > 3. turbostat show cpu only go into pc2~pc3.
+> > 
+> > [Misc]
+> > The culprit are this 
+> > a7152be79b62) Revert "PCI/ASPM: Save L1 PM Substates Capability for
+> > suspend/resume”
+> > 
+> > if revert a7152be79b62, the issue is gone
 > 
-> Thanks for bringing this up, I think what you mentioned is
-> interesting in a more general way, so let me use this email to
-> share my impressions about the approach to reporting regressions
-> and the role of the reporter.
-
-Many thx for this, let me follow suit a bit.
-
-> On 4/5/23 11:06, Linux regression tracking (Thorsten Leemhuis) wrote:
->> Have you tried if reverting the change on top of the latest 4.14.y
->> kernel works and looks safe (e.g. doesn't cause a regression on its own)?
+> Relevant commits:
 > 
-> No, I haven't. To be honest, my current approach when I'm
-> reporting regressions is to act merely as a reporter, making sure
-> the regression summaries reach the right people and providing as
-> much info as possible with the data we gather from the test runs
-> in KernelCI.
+>   4ff116d0d5fd ("PCI/ASPM: Save L1 PM Substates Capability for suspend/resume")
+>   a7152be79b62 ("Revert "PCI/ASPM: Save L1 PM Substates Capability for suspend/resume"")
 > 
-> Sometimes I stop for some more time in a particular regression
-> and I test it / investigate it more thoroughly to find the exact
-> root cause and try to fix it, but I consider that to be beyond
-> the role of a reporter. At that point I'm basically trying to
-> find a fix, and that's much more time consuming.
-
-Yeah, my situation is quite similar -- just that I'm not the reporter
-and instead someone supposed to handle the tracking. But just like you I
-sometimes do a bit more than the job description in the strict sense
-requires. That msg you replied to was written in one of those moments. :-D
-
-But FWIW, I have lines I don't cross myself (or at least try to).
-Submitting fixes myself for example, even if they are simple -- like
-patches adding quirk entries to resolve regressions (recently I
-nevertheless got close to ignore that line, but then found a better
-solution...).
-
->> I also briefly looked into "git log v4.14..v4.19 --
->> arch/arm/boot/dts/meson.dtsi" and noticed commit 291f45dd6da ("ARM: dts:
->> meson: fixing USB support on Meson6, Meson8 and Meson8b") [v4.15-rc1]
->> that mentions a fix for the Odroid-C1+ board -- which afaics wasn't
->> backported to 4.14.y. Is that maybe why this happens on 4.14.y and not
->> on 4.19.y? Note though: It's just a wild guess from the peanut gallery,
->> as this is not my area of expertise!
+> 4ff116d0d5fd appeared in v6.1-rc1.  Prior to 4ff116d0d5fd, ASPM L1 PM
+> Substates configuration was not preserved across suspend/resume, so
+> the system *worked* after resume, but used more power than expected.
 > 
-> Maybe, that's the kind of thing that someone who's familiar with
-> the code (author / maintainers) can quickly evaluate.
-
-Definitely. Maybe I should have CCed them in my mail, but I didn't, as
-that the point where I thought "the reporter is the better judge here".
-
-> What you
-> said about that not being your area of expertise is key, IMO. I
-> don't think it's reasonable to expect a single person to
-> investigate every possible type of regression. Investigating a
-> bug could take me 5 minutes if it's something trivial or a few
-> days if it's not and I'm not familiar with it, while the patch
-> author/s could probably have it assessed and fixed in
-> minutes. That's why I think that providing the regression info to
-> the right people is a better use of the reporter's time.
+> But 4ff116d0d5fd caused resume to fail completely on some systems, so
+> a7152be79b62 reverted it.  With a7152be79b62 reverted, ASPM L1 PM
+> Substates configuration is likely not preserved across suspend/resume.
+> a7152be79b62 appeared in v6.2-rc8 and was backported to the v6.1
+> stable series starting with v6.1.12.
 > 
-> There are many of us now in the community that are working
-> towards building a common effort for regression reporting, so
-> maybe we should take some time to define the roles involved and
-> gather ideas about how to approach certain types of problems.
+> KobaKo, you don't mention any suspend/resume in this bug report, but
+> neither patch should make any difference unless suspend/resume is
+> involved.  Does the platform sleep as expected *before* suspend, but
+> fail to sleep after resume?
+>
+> Or maybe some individual device was suspended via runtime power
+> management, and that device lost its L1 PM Substates config?  I don't
+> know if there's a way to disable runtime PM easily.
 
-Yeah, maybe.
+Koba, per your bugzilla update, the issue happens even without
+suspend/resume.  And we don't know whether some particular device is
+responsible.
 
-But OTOH I think we (e.g. reporters and developers) are all volunteers
-here (e.g. as hobbyist or because our employer wants us to contribute).
-Volunteers with a common goal. And all of us only have 24 hours in a day
-(at least as far as I know) -- which is often not enough to get
-everything done one is supposed to do. That in an ideal world should not
-affect duties like "fix any regressions you caused". But well, we don't
-live in an ideal world.
+But if we save/restore L1SS state, we can sleep deeper than PC3.  If
+we don't preserve L1SS state, we can't.
 
-That's why I sometimes ignore the strict role definitions and also
-wonder if defining them is worth it. But it's totally fine for me if
-someone wants to do that.
+We definitely want to preserve the L1SS state, but we can't simply
+apply 4ff116d0d5fd ("PCI/ASPM: Save L1 PM Substates Capability for
+suspend/resume") again because it caused its own regressions [1,2,3]
 
+So somebody needs to figure out what was wrong with 4ff116d0d5fd, fix
+it, verify that it doesn't cause the issues reported by Tasev, Thomas,
+and Mark, and then we can apply it.
 
-That might sound a bit like a speech I'm giving trying to convince you
-to follow my model. But be assured: that's not the case at all. After
-your words I just felt I wanted to share my view on things.
+Bjorn
 
-Maybe that's because this is afaics a situation where a regression
-likely will remain unfixed, unless some of us do a bit more than what is
-expected from them. That's because I guess most people don't care much
-about 4.14.y anymore -- either in general or on the particular platform
-affected by this regression.
-
-That leads to the question: should we spend our time on it? Maybe the
-time would better be spend on more important things, even if that means
-this particular regressions then likely will remain unfixed in 4.14.y.
-Heck, maybe we should define that such an outcome is totally fine in
-cases like this -- not sure, but I currently think leaving that
-undefined might be better approach for the project as a whole.
-
-Ciao, Thorsten
+[1] https://git.kernel.org/linus/a7152be79b62
+[2] https://bugzilla.kernel.org/show_bug.cgi?id=216782
+[3] https://bugzilla.kernel.org/show_bug.cgi?id=216877
