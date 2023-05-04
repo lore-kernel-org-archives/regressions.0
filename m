@@ -1,30 +1,13 @@
-Received: from dispatch1-us1.ppe-hosted.com (dispatch1-us1.ppe-hosted.com [148.163.129.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7423229A8
-	for <regressions@lists.linux.dev>; Wed,  3 May 2023 23:58:06 +0000 (UTC)
-Received: from dispatch1-us1.ppe-hosted.com (ip6-localhost [127.0.0.1])
-	by dispatch1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTP id AA41A285E4C
-	for <regressions@lists.linux.dev>; Wed,  3 May 2023 23:49:59 +0000 (UTC)
-X-Virus-Scanned: Proofpoint Essentials engine
-Received: from mail3.candelatech.com (mail2.candelatech.com [208.74.158.173])
-	by mx1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTP id D788BC40067;
-	Wed,  3 May 2023 23:49:50 +0000 (UTC)
-Received: from [192.168.100.159] (50-251-239-81-static.hfc.comcastbusiness.net [50.251.239.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by mail3.candelatech.com (Postfix) with ESMTPSA id 23B4513C2B0;
-	Wed,  3 May 2023 16:49:51 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail3.candelatech.com 23B4513C2B0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=candelatech.com;
-	s=default; t=1683157791;
-	bh=XALtbwbcOBSbPJpwrY4JfEAx3ICt0e7TO0hiS2sJnI4=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=pg6Z+rLUdoNg5zcZ0c6fcIp8qOXW4CPGV/lj2xDATSIV/pesEN+z85tk9Xgc028Dg
-	 JDt7tASfefbqfvujpGm9l8F1zJepao+DeEaTcQAFBtoabnvWS0bJi35o4G4z7/aNpr
-	 siE2SUoIH8MlCJoalP+l9JwoLqyHJcPqsN3gGHq8=
-Message-ID: <f12a8f23-5aac-b615-300c-38001b9583c2@candelatech.com>
-Date: Wed, 3 May 2023 16:49:50 -0700
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB6817E1
+	for <regressions@lists.linux.dev>; Thu,  4 May 2023 08:38:42 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1puUU4-0006Th-9F; Thu, 04 May 2023 10:38:40 +0200
+Message-ID: <3db12698-bae2-9484-1c2b-f12587dba8ef@leemhuis.info>
+Date: Thu, 4 May 2023 10:38:39 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -33,67 +16,64 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.10.0
-Subject: Re: Hang loading initrd since last Friday.
-Content-Language: en-US
-To: Linux regressions mailing list <regressions@lists.linux.dev>,
- Bagas Sanjaya <bagasdotme@gmail.com>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <9d87defc-5376-d690-b483-bc314e4f568b@candelatech.com>
- <ZFHHh/m0pkOYIzo7@debian.me>
- <ebb280e4-d381-0bf8-d134-0318c5cfdf83@leemhuis.info>
-From: Ben Greear <greearb@candelatech.com>
-Organization: Candela Technologies
-In-Reply-To: <ebb280e4-d381-0bf8-d134-0318c5cfdf83@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Subject: Re: 6.2 regression: BTRFS_LOGICAL_INO_ARGS_IGNORE_OFFSET broken
+Content-Language: en-US, de-DE
+To: Vladimir Panteleev <git@vladimir.panteleev.md>,
+ Btrfs BTRFS <linux-btrfs@vger.kernel.org>
+Cc: Filipe Manana <fdmanana@suse.com>, David Sterba <dsterba@suse.com>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <CAHhfkvwo=nmzrJSqZ2qMfF-rZB-ab6ahHnCD_sq9h4o8v+M7QQ@mail.gmail.com>
+From: "Linux regression tracking #adding (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <CAHhfkvwo=nmzrJSqZ2qMfF-rZB-ab6ahHnCD_sq9h4o8v+M7QQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-MDID: 1683157792-XA8JeW0ymIKj
-X-MDID-O:
- us5;ut7;1683157792;XA8JeW0ymIKj;<greearb@candelatech.com>;3e693a8d56a8eeb61aa6e0137c1c1bf1
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1683189523;d22750e7;
+X-HE-SMSGID: 1puUU4-0006Th-9F
 
-On 5/2/23 21:46, Linux regression tracking (Thorsten Leemhuis) wrote:
-> On 03.05.23 04:31, Bagas Sanjaya wrote:
->> On Tue, May 02, 2023 at 02:03:33PM -0700, Ben Greear wrote:
->>>
->>> Pulling today's upstream 6.3+ tree, my system now hangs loading initrd.
-> 
-> Just to understand this properly: you mean after the boot loader said it
-> loaded the initramfs, not when the kernel starts using it?
+[CCing the regression list, as it should be in the loop for regressions:
+https://docs.kernel.org/admin-guide/reporting-regressions.html]
 
-I am bisecting...it appears to be .config related.  If I skip enabling things
-during bisect, then I do not see the problem.  But I copied my original buggy .config
-into an otherwise good kernel commit, and now it fails.  I'm manually bisecting
-the .config settings....
+[TLDR: I'm adding this report to the list of tracked Linux kernel
+regressions; the text you find below is based on a few templates
+paragraphs you might have encountered already in similar form.
+See link in footer if these mails annoy you.]
 
-Thanks,
-Ben
+On 03.05.23 14:27, Vladimir Panteleev wrote:
+> 
+> Commit 6ce6ba534418132f4c727d5707fe2794c797299c appears to have broken
+> the BTRFS_LOGICAL_INO_ARGS_IGNORE_OFFSET flag to
+> BTRFS_IOC_LOGICAL_INO_V2. The ioctl now always seems to return zero
+> inodes with the flag, if the same happened without the flag, thus
+> making it not very useful.
+> 
+> Context: I maintain btdu, a disk usage profiler for btrfs. It uses
+> BTRFS_LOGICAL_INO_ARGS_IGNORE_OFFSET to help users estimate the amount
+> of space wasted by bookend extents, and identify files / applications
+> / IO patterns which create excessive amounts of them.
 
-> 
->>>   Nothing useful is seen on
->>> serial console after that.  This was working late last week.  Other older kernels boot OK, so
->>> I think is is related to the kernel.
->>
->> What is your setup (especially kernel config)?
->>
->> Is v6.3 works for you? I haven't seen this regression on my computer
->> using v6.3.
-> 
-> Ben, you just to be sure might want to check if a kernel image that
-> currently works still boots if you regenerate its initramfs: maybe the
-> initramfs generator or something it uses changed recently and is causing
-> your problem. I've seen a case or two where that was the case.
-> 
->>> I have not yet started bisect, curious if this is already know problem.
->> Certainly you should try bisection.
-> 
-> Yeah.
-> 
-> BTW: What kind of platform is this?
-> 
-> Ciao, Thorsten
-> 
+Thanks for the report. To be sure the issue doesn't fall through the
+cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
+tracking bot:
 
--- 
-Ben Greear <greearb@candelatech.com>
-Candela Technologies Inc  http://www.candelatech.com
+#regzbot ^introduced 6ce6ba534418132f4c727d5707fe2794c79729
+#regzbot title btrfs: BTRFS_LOGICAL_INO_ARGS_IGNORE_OFFSET broken
+#regzbot ignore-activity
 
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply and tell me -- ideally
+while also telling regzbot about it, as explained by the page listed in
+the footer of this mail.
 
+Developers: When fixing the issue, remember to add 'Link:' tags pointing
+to the report (the parent of this mail). See page linked in footer for
+details.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+That page also explains what to do if mails like this annoy you.
