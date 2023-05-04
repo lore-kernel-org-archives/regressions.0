@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB6817E1
-	for <regressions@lists.linux.dev>; Thu,  4 May 2023 08:38:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7455BA2D
+	for <regressions@lists.linux.dev>; Thu,  4 May 2023 09:06:57 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1puUU4-0006Th-9F; Thu, 04 May 2023 10:38:40 +0200
-Message-ID: <3db12698-bae2-9484-1c2b-f12587dba8ef@leemhuis.info>
-Date: Thu, 4 May 2023 10:38:39 +0200
+	id 1puUvP-0004Ux-C3; Thu, 04 May 2023 11:06:55 +0200
+Message-ID: <585b00d1-5ad7-ecff-e905-71e370613dfb@leemhuis.info>
+Date: Thu, 4 May 2023 11:06:54 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,64 +16,81 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.10.0
-Subject: Re: 6.2 regression: BTRFS_LOGICAL_INO_ARGS_IGNORE_OFFSET broken
-Content-Language: en-US, de-DE
-To: Vladimir Panteleev <git@vladimir.panteleev.md>,
- Btrfs BTRFS <linux-btrfs@vger.kernel.org>
-Cc: Filipe Manana <fdmanana@suse.com>, David Sterba <dsterba@suse.com>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <CAHhfkvwo=nmzrJSqZ2qMfF-rZB-ab6ahHnCD_sq9h4o8v+M7QQ@mail.gmail.com>
-From: "Linux regression tracking #adding (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <CAHhfkvwo=nmzrJSqZ2qMfF-rZB-ab6ahHnCD_sq9h4o8v+M7QQ@mail.gmail.com>
+Subject: Re: stable-rc/linux-4.14.y bisection: baseline.login on
+ meson8b-odroidc1
+Content-Language: en-US, de-DE
+To: =?UTF-8?Q?Ricardo_Ca=c3=b1uelo?= <ricardo.canuelo@collabora.com>,
+ stable@vger.kernel.org,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <1fcff522-337a-c334-42a7-bc9b4f0daec4@collabora.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+In-Reply-To: <1fcff522-337a-c334-42a7-bc9b4f0daec4@collabora.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1683189523;d22750e7;
-X-HE-SMSGID: 1puUU4-0006Th-9F
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1683191217;11338ef6;
+X-HE-SMSGID: 1puUvP-0004Ux-C3
 
 [CCing the regression list, as it should be in the loop for regressions:
 https://docs.kernel.org/admin-guide/reporting-regressions.html]
 
-[TLDR: I'm adding this report to the list of tracked Linux kernel
-regressions; the text you find below is based on a few templates
-paragraphs you might have encountered already in similar form.
-See link in footer if these mails annoy you.]
-
-On 03.05.23 14:27, Vladimir Panteleev wrote:
+On 10.04.23 08:06, Ricardo Cañuelo wrote:
+> Culprit:
+> https://lore.kernel.org/r/20211227180026.4068352-2-martin.blumenstingl@googlemail.com
 > 
-> Commit 6ce6ba534418132f4c727d5707fe2794c797299c appears to have broken
-> the BTRFS_LOGICAL_INO_ARGS_IGNORE_OFFSET flag to
-> BTRFS_IOC_LOGICAL_INO_V2. The ioctl now always seems to return zero
-> inodes with the flag, if the same happened without the flag, thus
-> making it not very useful.
+> On lun 27-12-2021 19:00:24, Martin Blumenstingl wrote:
+>> The dt-bindings for the UART controller only allow the following values
+>> for Meson6 SoCs:
+>> - "amlogic,meson6-uart", "amlogic,meson-ao-uart"
+>> - "amlogic,meson6-uart"
+>>
+>> Use the correct fallback compatible string "amlogic,meson-ao-uart" for
+>> AO UART. Drop the "amlogic,meson-uart" compatible string from the EE
+>> domain UART controllers.
 > 
-> Context: I maintain btdu, a disk usage profiler for btrfs. It uses
-> BTRFS_LOGICAL_INO_ARGS_IGNORE_OFFSET to help users estimate the amount
-> of space wasted by bookend extents, and identify files / applications
-> / IO patterns which create excessive amounts of them.
+> KernelCI detected that this patch introduced a regression in
+> stable-rc/linux-4.14.y (4.14.267) on a meson8b-odroidc1.
+> After this patch was applied the tests running on this platform don't
+> show any serial output.
+> 
+> This doesn't happen in other stable branches nor in mainline, but 4.14
+> hasn't still reached EOL and it'd be good to find a fix.
+> 
+> Here's the bisection report:
+> https://groups.io/g/kernelci-results/message/40147
+> 
+> KernelCI info:
+> https://linux.kernelci.org/test/case/id/64234f7761021a30b262f776/
+> 
+> Test log:
+> https://storage.kernelci.org/stable-rc/linux-4.14.y/v4.14.311-43-g88e481d604e9/arm/multi_v7_defconfig/gcc-10/lab-baylibre/baseline-meson8b-odroidc1.html
 
-Thanks for the report. To be sure the issue doesn't fall through the
-cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
-tracking bot:
+Lo! From the earlier discussion[1] it seems the mainline developers of
+the patch-set don't care (which is fine). And the stable team always has
+a lot of work at hand, which might explain why they haven't looked into
+this. Hence let me try to fill this gap a little here by asking:
 
-#regzbot ^introduced 6ce6ba534418132f4c727d5707fe2794c79729
-#regzbot title btrfs: BTRFS_LOGICAL_INO_ARGS_IGNORE_OFFSET broken
-#regzbot ignore-activity
+Have you tried if reverting the change on top of the latest 4.14.y
+kernel works and looks safe (e.g. doesn't cause a regression on its own)?
 
-This isn't a regression? This issue or a fix for it are already
-discussed somewhere else? It was fixed already? You want to clarify when
-the regression started to happen? Or point out I got the title or
-something else totally wrong? Then just reply and tell me -- ideally
-while also telling regzbot about it, as explained by the page listed in
-the footer of this mail.
+I also briefly looked into "git log v4.14..v4.19 --
+arch/arm/boot/dts/meson.dtsi" and noticed commit 291f45dd6da ("ARM: dts:
+meson: fixing USB support on Meson6, Meson8 and Meson8b") [v4.15-rc1]
+that mentions a fix for the Odroid-C1+ board -- which afaics wasn't
+backported to 4.14.y. Is that maybe why this happens on 4.14.y and not
+on 4.19.y? Note though: It's just a wild guess from the peanut gallery,
+as this is not my area of expertise!
 
-Developers: When fixing the issue, remember to add 'Link:' tags pointing
-to the report (the parent of this mail). See page linked in footer for
-details.
+Ciao, Thorsten
+
+[1]
+https://lore.kernel.org/lkml/20230405132900.ci35xji3xbb3igar@rcn-XPS-13-9305/
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
 Everything you wanna know about Linux kernel regression tracking:
 https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+If I did something stupid, please tell me, as explained on that page.
+
+#regzbot poke
