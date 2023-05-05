@@ -1,152 +1,149 @@
-Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22D8B1FDD
-	for <regressions@lists.linux.dev>; Fri,  5 May 2023 07:05:04 +0000 (UTC)
-Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com [209.85.216.72])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 7BC113F205
-	for <regressions@lists.linux.dev>; Fri,  5 May 2023 06:57:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1683269828;
-	bh=8Ffn34QdIPteAhuo1D55q6Psg3jmIbfrccXTKRJ40S0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type;
-	b=NfU3WA7eujrzWkerGNvcJDIU6KMltE1nGL52dRJy2EaaNhhBGEopPNMsJbYDnAQaQ
-	 Rl5AeShfZbxEjWlUD3Rn4J5kuoczccJ26D5QWzvucWus4lH41p6AdSqtAmihDmkHcy
-	 Cr2GM9QFInxdHk6mgU8Y1T7ya6CI0arZS8RaYyCT+ed6Zc0eeoYJXIHWT70k4JKD7z
-	 kOO/7u2yyBNv5Mv7R1XQAr/Pz/z/XGI8HOZY0lm9h/i2Cq0Pno+m/4ijo/S308MvX0
-	 z+ExvgsVOQTJEmGpN6FRMsAqsbN84QqPuMKNfR/Xhe3WrLc+IiYWqNBoFQAQUEkSAs
-	 e8Xq8tTmuKARw==
-Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-24e43240e9fso676847a91.3
-        for <regressions@lists.linux.dev>; Thu, 04 May 2023 23:57:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683269827; x=1685861827;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8Ffn34QdIPteAhuo1D55q6Psg3jmIbfrccXTKRJ40S0=;
-        b=iKKpxDVlvKBqI7Pnr3PkXu2iBO2v+a6ec8EAAZ7AyHDyxpkvp4m+FKokdl6XmIFQQk
-         xQmhynMUYJDNLSSGEKXfeXy7qDZoXSqKexigy1Vv1HbD820GgLQs2XNoXK+swwfo8O1I
-         dL1vMxXVljXErOwsS/UTUj0f4qilv5ADwDzZESScJUxNAr6T++YjSE6VGSyx0sJiH7Ka
-         TztoxZffo2emqHqTUHLHIB8kJlmqWAwIxqtVNlzqfyF6KhLTWrujxTgMsIRlUWYWMgyE
-         e0g+tgmp0LIBEdJfFPYyRv4bKpT2Ef02+Xl3eAQov5cNLPGoqfEKzXBeM97Xw/oMhAYW
-         Kw8w==
-X-Gm-Message-State: AC+VfDyvxpV8tqSmrqSzUWygLBICoJ8W/tlnLd6VeKzkFT6VGOezuJRs
-	2UPFSXCLtOOCKzvunLHlYB+2aRkUo2LNv4vig8GrWSCTz48KnCgUDIoP7vMZ+8NeqXic3pN+bEL
-	ANeRy1b+eg7Dcqf9jd8rUcxrlCFyDthsl48bAJEghjRUk0t/JxG7pOltD
-X-Received: by 2002:a17:90b:b15:b0:246:bb61:4a56 with SMTP id bf21-20020a17090b0b1500b00246bb614a56mr484462pjb.27.1683269826877;
-        Thu, 04 May 2023 23:57:06 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ53iTMBSNhcrnIPyTfvwZ8N19AD181tDNAR5buVj0cJloI3cWhtExnX2UdH5CGdk2teqlzLhTHDhq/f/wafQfw=
-X-Received: by 2002:a17:90b:b15:b0:246:bb61:4a56 with SMTP id
- bf21-20020a17090b0b1500b00246bb614a56mr484451pjb.27.1683269826445; Thu, 04
- May 2023 23:57:06 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD3941FC9
+	for <regressions@lists.linux.dev>; Fri,  5 May 2023 09:39:43 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1puruY-0006kN-Dd; Fri, 05 May 2023 11:39:34 +0200
+Message-ID: <ec4be122-e213-ca5b-f5d6-e8f9c3fd3bee@leemhuis.info>
+Date: Fri, 5 May 2023 11:39:33 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230411204229.GA4168208@bhelgaas> <20230504152344.GA857680@bhelgaas>
-In-Reply-To: <20230504152344.GA857680@bhelgaas>
-From: Koba Ko <koba.ko@canonical.com>
-Date: Fri, 5 May 2023 08:56:54 +0200
-Message-ID: <CAJB-X+Vu8HJSNza896ELGrUKk64gPH=MjbYQMSxW6Xiw4MSiJw@mail.gmail.com>
-Subject: Re: [Bug 217321] New: Intel platforms can't sleep deeper than PC3
- during long idle
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org, Vidya Sagar <vidyas@nvidia.com>, 
-	Ajay Agarwal <ajayagarwal@google.com>, Tasev Nikola <tasev.stefanoska@skynet.be>, 
-	Mark Enriquez <enriquezmark36@gmail.com>, Thomas Witt <kernel@witt.link>, regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Content-Language: en-US, de-DE
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+To: Hayes Wang <hayeswang@realtek.com>, =?UTF-8?Q?Bj=c3=b8rn_Mork?=
+ <bjorn@mork.no>
+Cc: netdev@vger.kernel.org,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ Paolo Abeni <pabeni@redhat.com>, Jakub Kicinski <kuba@kernel.org>,
+ Eric Dumazet <edumazet@google.com>, "David S. Miller" <davem@davemloft.net>
+Subject: [regression] Kernel OOPS on boot with Kernel 6.3(.1) and RTL8153
+ Gigabit Ethernet Adapter
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1683279583;620088aa;
+X-HE-SMSGID: 1puruY-0006kN-Dd
 
-On Thu, May 4, 2023 at 5:23=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.org> w=
-rote:
->
-> [+cc Koba, Ajay, Tasev, Mark, Thomas, regressions list]
->
-> On Tue, Apr 11, 2023 at 03:42:29PM -0500, Bjorn Helgaas wrote:
-> > On Tue, Apr 11, 2023 at 08:32:04AM +0000, bugzilla-daemon@kernel.org wr=
-ote:
-> > > https://bugzilla.kernel.org/show_bug.cgi?id=3D217321
-> > > ...
-> > >         Regression: No
-> > >
-> > > [Symptom]
-> > > Intel cpu can't sleep deeper than pc=CB=87 during long idle
-> > > ~~~
-> > > Pkg%pc2 Pkg%pc3 Pkg%pc6 Pkg%pc7 Pkg%pc8 Pkg%pc9 Pk%pc10
-> > > 15.08   75.02   0.00    0.00    0.00    0.00    0.00
-> > > 15.09   75.02   0.00    0.00    0.00    0.00    0.00
-> > > ^CPkg%pc2       Pkg%pc3 Pkg%pc6 Pkg%pc7 Pkg%pc8 Pkg%pc9 Pk%pc10
-> > > 15.38   68.97   0.00    0.00    0.00    0.00    0.00
-> > > 15.38   68.96   0.00    0.00    0.00    0.00    0.00
-> > > ~~~
-> > > [How to Reproduce]
-> > > 1. run turbostat to monitor
-> > > 2. leave machine idle
-> > > 3. turbostat show cpu only go into pc2~pc3.
-> > >
-> > > [Misc]
-> > > The culprit are this
-> > > a7152be79b62) Revert "PCI/ASPM: Save L1 PM Substates Capability for
-> > > suspend/resume=E2=80=9D
-> > >
-> > > if revert a7152be79b62, the issue is gone
-> >
-> > Relevant commits:
-> >
-> >   4ff116d0d5fd ("PCI/ASPM: Save L1 PM Substates Capability for suspend/=
-resume")
-> >   a7152be79b62 ("Revert "PCI/ASPM: Save L1 PM Substates Capability for =
-suspend/resume"")
-> >
-> > 4ff116d0d5fd appeared in v6.1-rc1.  Prior to 4ff116d0d5fd, ASPM L1 PM
-> > Substates configuration was not preserved across suspend/resume, so
-> > the system *worked* after resume, but used more power than expected.
-> >
-> > But 4ff116d0d5fd caused resume to fail completely on some systems, so
-> > a7152be79b62 reverted it.  With a7152be79b62 reverted, ASPM L1 PM
-> > Substates configuration is likely not preserved across suspend/resume.
-> > a7152be79b62 appeared in v6.2-rc8 and was backported to the v6.1
-> > stable series starting with v6.1.12.
-> >
-> > KobaKo, you don't mention any suspend/resume in this bug report, but
-> > neither patch should make any difference unless suspend/resume is
-> > involved.  Does the platform sleep as expected *before* suspend, but
-> > fail to sleep after resume?
-> >
-> > Or maybe some individual device was suspended via runtime power
-> > management, and that device lost its L1 PM Substates config?  I don't
-> > know if there's a way to disable runtime PM easily.
->
-> Koba, per your bugzilla update, the issue happens even without
-> suspend/resume.  And we don't know whether some particular device is
-> responsible.
->
-> But if we save/restore L1SS state, we can sleep deeper than PC3.  If
-> we don't preserve L1SS state, we can't.
->
-> We definitely want to preserve the L1SS state, but we can't simply
-> apply 4ff116d0d5fd ("PCI/ASPM: Save L1 PM Substates Capability for
-> suspend/resume") again because it caused its own regressions [1,2,3]
->
-> So somebody needs to figure out what was wrong with 4ff116d0d5fd, fix
-> it, verify that it doesn't cause the issues reported by Tasev, Thomas,
-> and Mark, and then we can apply it.
->
-> Bjorn
+Hi, Thorsten here, the Linux kernel's regression tracker.
 
-Good days, discussed with Kai-Heng and he mentioned  the GPU may not
-be pulled off the power.
-then the GPU needs L1ss to get into power saving.
+I noticed a regression report in bugzilla.kernel.org. As many (most?)
+kernel developers don't keep an eye on it, I decided to forward it by mail.
 
-I will investigate further on this way.
+Note, you have to use bugzilla to reach the reporter, as I sadly[1] can
+not CCed them in mails like this.
 
->
-> [1] https://git.kernel.org/linus/a7152be79b62
-> [2] https://bugzilla.kernel.org/show_bug.cgi?id=3D216782
-> [3] https://bugzilla.kernel.org/show_bug.cgi?id=3D216877
+Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=217399 :
+
+>  Bernd Buschinski 2023-05-04 11:11:24 UTC
+> 
+> Created attachment 304215 [details]
+> Kernel OOPS on boot
+> 
+> Hello,
+> 
+> on my laptop with kernel 6.3.0 and 6.3.1 fails to correctly boot if the usb-c device "RTL8153 Gigabit Ethernet Adapter" is connected.
+> 
+> If I unplug it, boot and the plug it in, everything works fine.
+> 
+> This used to work fine with 6.2.10.
+> 
+> HW:
+> - Dell Inc. Latitude 7410/0M5G57, BIOS 1.22.0 03/20/2023
+> - Realtek Semiconductor Corp. RTL8153 Gigabit Ethernet Adapter
+> 
+> 
+> Call Trace (manually typed from the image, typos maybe be included)
+> - bpf_dev_bound_netdeuv _unregister
+> - unregister_netdevice_many_notify
+> - unregister_netdevice_gueue
+> - unregister_netdev
+> - usbnet_disconnect
+> - usb_unbind_interface
+> - device_release_driver_internal
+> - bus_remove_device
+> - device_del
+> - ? kobject_put
+> - usb_disable_device
+> - usb_set_configuration
+> - rt18152_cfgselector_probe
+> - usb_probe_device
+> - really_probe
+> - ? driver_probe_device
+> - ...
+> 
+> 
+> For the full output, please see the attached image.
+> 
+> [tag] [reply] [−]
+> Private
+> Comment 1 Bernd Buschinski 2023-05-04 11:49:33 UTC
+> 
+> lsusb:
+> Bus 004 Device 003: ID 0bda:8153 Realtek Semiconductor Corp. RTL8153 Gigabit Ethernet Adapter
+> 
+> 
+> and yes, I made a typo in the call trace, it is `rtl8152_cfgselector_probe`
+> 
+> [tag] [reply] [−]
+> Private
+> Comment 2 Bernd Buschinski 2023-05-04 11:51:44 UTC
+> 
+> Created attachment 304216 [details]
+> lsusb -v, for the the device
+> 
+> [tag] [reply] [−]
+> Private
+> Comment 3 Bernd Buschinski 2023-05-04 11:58:28 UTC
+> 
+> I did not bisect it, but I think 
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=v6.3.1&id=ec51fbd1b8a2bca2948dede99c14ec63dc57ff6b
+> 
+> is at least related, maybe.... feel free to correct me.
+
+
+See the ticket for more details.
+
+
+[TLDR for the rest of this mail: I'm adding this report to the list of
+tracked Linux kernel regressions; the text you find below is based on a
+few templates paragraphs you might have encountered already in similar
+form.]
+
+BTW, let me use this mail to also add the report to the list of tracked
+regressions to ensure it's doesn't fall through the cracks:
+
+#regzbot introduced: v6.2..v6.3
+https://bugzilla.kernel.org/show_bug.cgi?id=217399
+#regzbot title: net/usb: RTL8153 Gigabit Ethernet Adapter stopped working
+#regzbot ignore-activity
+
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply and tell me -- ideally
+while also telling regzbot about it, as explained by the page listed in
+the footer of this mail.
+
+Developers: When fixing the issue, remember to add 'Link:' tags pointing
+to the report (e.g. the buzgzilla ticket and maybe this mail as well, if
+this thread sees some discussion). See page linked in footer for details.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
+
+[1] because bugzilla.kernel.org tells users upon registration their
+"email address will never be displayed to logged out users"
