@@ -1,173 +1,152 @@
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2101.outbound.protection.outlook.com [40.107.101.101])
+Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8950E17C0
-	for <regressions@lists.linux.dev>; Fri,  5 May 2023 00:04:14 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OvSawUybx8W7SvksB1xlv+YKU96YFCKwRXAfNxI2cCX4l4cEOlrIZpgBW0QdePTVX+WqkXSSsSBop/iv+rwGOiEmD/K5isKW6W11xCs/5n2/3OjVUzUDGvS3k3OEWhKvQXiSkfU4x2VQlTlBDo1BTOv0w78DRMTVs86wfPuU9+lWOBGwuuhFdZaNOvfnd6ccD3c+t1K0ILjxIIfgJVE3STUnF3NgBBwWz6Wz1E9kkTQ2VzlyjgrzbGQThcKwqRI+B2kjYe9MI+TdgZdhrc03qYgDpEK9fF+N4WzYFyII23HQJ+FfPmjJPCzmH4MJp2i6pYBzSksVtLPekukBPmMwWQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=L4lq7OFCiulGh+0EHCrU8eEl+Df2tvkxJD2RFubtmsc=;
- b=Mrn2BkSqStdj78FrI0iEIY3XldrF5lg+QJJLMxY3292Q8b9Xn9zhA+kOzjllCIvASNKhSvEAW9+2E5sANtCC5TrASfh9yUdlPHSD5yOpsMBD6FiPQTTq913HOh+tKRn4V6MSZF5ONqg/BlFfh4wfL3QnLjKwfSKNRIcUaaU7mVs4G2KZHWT7Y84BCmIP1vtOJ5zIR92QPx9biD//sCkAO4KOSonEhmgmza/+aVXjjTyiETDdeSaOPrqyK66goOVIBwJ9z3l/fgqSvKzWxzRH+FDn4UTJqc2PjoDKYmZ65CwOnbTo6bmD73e91rcUo6BHeEmkOUnMmsBc973ycgBIEg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=L4lq7OFCiulGh+0EHCrU8eEl+Df2tvkxJD2RFubtmsc=;
- b=czvZVy6AUNw5jW6/0RQakF3fazHRJ7sxOc1VzjKimKR9LVOTTiW9hQ5c+KLeuaoJ3DDFoWLS6jEO/BwiDzG5y7vt9Ao5B6SEnBGbdjJqV9BZSo6i8pAICLGmlz5yzGALYs4rhTkuP4uETTGYDi2VV49naogMfniTfrCAMwjHpJs=
-Received: from BYAPR21MB1688.namprd21.prod.outlook.com (2603:10b6:a02:bf::26)
- by DM4PR21MB3731.namprd21.prod.outlook.com (2603:10b6:8:a0::5) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6387.9; Fri, 5 May 2023 00:04:12 +0000
-Received: from BYAPR21MB1688.namprd21.prod.outlook.com
- ([fe80::9a0f:a04d:69bd:e622]) by BYAPR21MB1688.namprd21.prod.outlook.com
- ([fe80::9a0f:a04d:69bd:e622%4]) with mapi id 15.20.6387.011; Fri, 5 May 2023
- 00:04:11 +0000
-From: "Michael Kelley (LINUX)" <mikelley@microsoft.com>
-To: Ben Greear <greearb@candelatech.com>, Linux regressions mailing list
-	<regressions@lists.linux.dev>, Bagas Sanjaya <bagasdotme@gmail.com>, Linux
- Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: RE: Hang loading initrd since last Friday.
-Thread-Topic: Hang loading initrd since last Friday.
-Thread-Index:
- AQHZfTr2qR4xve2R+0yhSMLHlSGWLq9H1EyAgAAlpYCAAT9/AIABJi8AgAAJFvCAAGIGgIAAAvTg
-Date: Fri, 5 May 2023 00:04:11 +0000
-Message-ID:
- <BYAPR21MB1688E60DA4D61852125549BDD7729@BYAPR21MB1688.namprd21.prod.outlook.com>
-References: <9d87defc-5376-d690-b483-bc314e4f568b@candelatech.com>
- <ZFHHh/m0pkOYIzo7@debian.me>
- <ebb280e4-d381-0bf8-d134-0318c5cfdf83@leemhuis.info>
- <f12a8f23-5aac-b615-300c-38001b9583c2@candelatech.com>
- <a227583c-ef41-e954-fd4c-0cdb23c77222@candelatech.com>
- <BYAPR21MB168889708435D073352C4A46D76D9@BYAPR21MB1688.namprd21.prod.outlook.com>
- <745e1e38-85ed-76dc-9cbb-2c3d71d70d97@candelatech.com>
-In-Reply-To: <745e1e38-85ed-76dc-9cbb-2c3d71d70d97@candelatech.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=d8372d20-9424-4fc2-be0d-9b74472d7f2c;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2023-05-04T23:56:41Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BYAPR21MB1688:EE_|DM4PR21MB3731:EE_
-x-ms-office365-filtering-correlation-id: f730df15-3c9c-4f4a-4346-08db4cfc4117
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- xL73j6ltNXfUhqnBC1e2SQSRpJcT7dubYDkG7slzuCTcwd64uOzlJ2pnxBT24mYvhF02OfCQb1kUoW57PNC39+72S86PyZg58s1LKoFgm7EmlBL9avw21DS5JqTAT3wvaupmQzIczM/na4RCcOzyRPkTnPY1Wl1qnL8mo5xy1J+5YavkE3hVDRxpT88RjubWo5OlwSjbNA/R1fKx1dNiHSZtLqFqFf/S8ntX5TjhMGFlpVQNCEjaNIw4BxOyQEmqWNAm2SgWIPLwNGQNilT1aYdvrcdckw194W0DzOV8wguw3hpIUIqyG1kixJP4PR+UrSqKNMOQ3Dul3xrlXQETW7qBaJKVkcWxq8GSyTdxtqsgw+TRdhffhDVw+Wwt2nIPSfKsuCZvfLLYWEIrT4w1OpHngND/iUIdkTZsVejvg+nfMwcr2WhHQn0nPLLXkwBAqAy6Zc45hcjPJaWaTE1GtiHUfaeJ6Peh+6GD0BOZKK1qPICuBQM+fIl/LxzxGD73q+oI0KR4w3UgD9Vo4hzuyqT8fn0d21oPWj3J016Wn3cU6sY8dgqJY07Wvy767m+1P8zF461VAUIbXHzGmG9wLeivSVdgNtEBTXbEGgu/lFkuMQI89c30bx2wgvx4grFTCKh1AUKQGEJUKZhOzWBogzY/qx2mQ38F++g9t0dwqKU=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR21MB1688.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(366004)(396003)(39860400002)(136003)(376002)(346002)(451199021)(82960400001)(33656002)(122000001)(38100700002)(52536014)(2906002)(55016003)(86362001)(8676002)(38070700005)(8936002)(316002)(786003)(41300700001)(66476007)(66946007)(66556008)(5660300002)(66446008)(64756008)(82950400001)(83380400001)(76116006)(26005)(8990500004)(186003)(9686003)(53546011)(7696005)(6506007)(110136005)(10290500003)(478600001)(71200400001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-1?Q?fO+fPA99eR1aMUF0LKLh/7Q5zEwAR9nHv2Ri3qLW6PzmAQqxBpxRVW7+dG?=
- =?iso-8859-1?Q?c0I9321kc+PELTsjnRbgWPM7/1E1/adMHY9wW/CH+MeAvb5bmKcI849wKS?=
- =?iso-8859-1?Q?3UxHeA2uG7k4wRDystr7dzSEfjIINjyzK/urWtKEak8epfca2N2Cym1kMe?=
- =?iso-8859-1?Q?RVhsW6W/LyYdEoBQBJdikEoZEU03kpkfpqx36h7WD9YvTpHukavxiYq4q8?=
- =?iso-8859-1?Q?jeBJr7gVSJ66dPpS2/T5EsJoWohV3tydGfCtkdkE4YGoZDqTLQimzN9cTj?=
- =?iso-8859-1?Q?MHi1NBlUa/Y9dkZHKnIuJMFgBM3bca7NUtVrv9OZFosIF/Hg67+o1bALZG?=
- =?iso-8859-1?Q?XVoYQJZeTquZWecckg679lVuEnDT2WfQkkMVee5cHjR6BpdX/A3Y/ZgkVK?=
- =?iso-8859-1?Q?5LWgym0AZX9uxenhc71jVw0WuonTm/xVUARql7rzDfVxjWx3grNfZMhMnK?=
- =?iso-8859-1?Q?74/JPHstOotgGmCguaJR3ZG5moWAUZHZL9nSXVk2tjucXqhp1MDDxRM835?=
- =?iso-8859-1?Q?9/MMholN1bhemMUIAF2mHg838G4NuQRvHFx7qDlZZnrXcKRTz0UrGr8hk5?=
- =?iso-8859-1?Q?lxoWdqpx+tCRWXcOEPK+0LR6m4PO9qGXaExL9SGnMbrA0SdOVGHwWnxurU?=
- =?iso-8859-1?Q?IZ9bJ8Iuia73bdW6YJI4mQGwEzGw+xFt7skqErPpntCySLAlE4GvQ7pTmJ?=
- =?iso-8859-1?Q?x26Nbd+46R5k9HVo8ft8GF9z3CqIECqcsc8qQ7FgJNEhNpvnOUTzqBQz9C?=
- =?iso-8859-1?Q?6xN9h/zLPcA1cj5UT8k8Nfk/yNKG+z1NJkIL6hPyFlIuU8wa6W8ajy08SW?=
- =?iso-8859-1?Q?pGRzOsnXS8t3iC/4hKaNvjYndCG9jwRwX0KC5kGkPMdA47KTHZxWnTjKFU?=
- =?iso-8859-1?Q?arIlb0PrktGZ6vmFWvQia8tZm8oBA6hJUE5B3rLe7spaO1jKL17kEuz+fs?=
- =?iso-8859-1?Q?oW8WQBw5d8y7P8Z9TijPtij7duqs8QcYPwR9huIvX2XyomJHlE4Z0isunX?=
- =?iso-8859-1?Q?Wcn0mxFwYaud3X+cxQT8GsF8BPtWMsd+H8noa+2F2+W7jT7jHQ7qEHeHHV?=
- =?iso-8859-1?Q?cugwynnpvkso1iKUXteWkdMewUq6LZes6eI0Ndk3Yr7njvBd+elqFX0DZD?=
- =?iso-8859-1?Q?kA0PKsfdXZx/2rGeJyeMcvDJuSEpWefdf4PMDezDhBKa1uZlZ5IOD6h0tn?=
- =?iso-8859-1?Q?R60h+CESJ/HDzghbMRclSQ59EKHz55T1AfusXOuIAGkUJ3qKhVHGVVO+k7?=
- =?iso-8859-1?Q?9mfqBO6OqJ589ZEDIYsn1CElVHsEeEuvRwbfOmLKLfQeyQ/GgZKY+Vz01t?=
- =?iso-8859-1?Q?X8DxqXy49hPTdbJuk8paLxgV019+/ii0OoLQNMzmQvN53564wi5WXVknUp?=
- =?iso-8859-1?Q?4Y2YHh4Jn5OfCrDRF7SSj2RPWzXzYDg/W1Zn74f2jhzeU8J2Bo+EpjGBVM?=
- =?iso-8859-1?Q?2lm7BdN8V8uptzAA9TiTIE7RMwqyY5z9VVXXEtTtU2WpEW6zcOdYiN1Hjo?=
- =?iso-8859-1?Q?caHaY7eg6pnQoLQ8cQpSur4hWRm84nGO+t3/IWbK2s92jywqdknGuK4bqg?=
- =?iso-8859-1?Q?ocP668ZYHF/s80BKewT+Fs/psmGnhBb7VfWy8EV5o+wiUhG7Q3lLeD2o5b?=
- =?iso-8859-1?Q?0RDdC1Y5HnPP5j1jI5Lq+tjl/397bVlE8bNp3VAnNlRReU6TJVUAE5cQ?=
- =?iso-8859-1?Q?=3D=3D?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22D8B1FDD
+	for <regressions@lists.linux.dev>; Fri,  5 May 2023 07:05:04 +0000 (UTC)
+Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com [209.85.216.72])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 7BC113F205
+	for <regressions@lists.linux.dev>; Fri,  5 May 2023 06:57:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1683269828;
+	bh=8Ffn34QdIPteAhuo1D55q6Psg3jmIbfrccXTKRJ40S0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type;
+	b=NfU3WA7eujrzWkerGNvcJDIU6KMltE1nGL52dRJy2EaaNhhBGEopPNMsJbYDnAQaQ
+	 Rl5AeShfZbxEjWlUD3Rn4J5kuoczccJ26D5QWzvucWus4lH41p6AdSqtAmihDmkHcy
+	 Cr2GM9QFInxdHk6mgU8Y1T7ya6CI0arZS8RaYyCT+ed6Zc0eeoYJXIHWT70k4JKD7z
+	 kOO/7u2yyBNv5Mv7R1XQAr/Pz/z/XGI8HOZY0lm9h/i2Cq0Pno+m/4ijo/S308MvX0
+	 z+ExvgsVOQTJEmGpN6FRMsAqsbN84QqPuMKNfR/Xhe3WrLc+IiYWqNBoFQAQUEkSAs
+	 e8Xq8tTmuKARw==
+Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-24e43240e9fso676847a91.3
+        for <regressions@lists.linux.dev>; Thu, 04 May 2023 23:57:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683269827; x=1685861827;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8Ffn34QdIPteAhuo1D55q6Psg3jmIbfrccXTKRJ40S0=;
+        b=iKKpxDVlvKBqI7Pnr3PkXu2iBO2v+a6ec8EAAZ7AyHDyxpkvp4m+FKokdl6XmIFQQk
+         xQmhynMUYJDNLSSGEKXfeXy7qDZoXSqKexigy1Vv1HbD820GgLQs2XNoXK+swwfo8O1I
+         dL1vMxXVljXErOwsS/UTUj0f4qilv5ADwDzZESScJUxNAr6T++YjSE6VGSyx0sJiH7Ka
+         TztoxZffo2emqHqTUHLHIB8kJlmqWAwIxqtVNlzqfyF6KhLTWrujxTgMsIRlUWYWMgyE
+         e0g+tgmp0LIBEdJfFPYyRv4bKpT2Ef02+Xl3eAQov5cNLPGoqfEKzXBeM97Xw/oMhAYW
+         Kw8w==
+X-Gm-Message-State: AC+VfDyvxpV8tqSmrqSzUWygLBICoJ8W/tlnLd6VeKzkFT6VGOezuJRs
+	2UPFSXCLtOOCKzvunLHlYB+2aRkUo2LNv4vig8GrWSCTz48KnCgUDIoP7vMZ+8NeqXic3pN+bEL
+	ANeRy1b+eg7Dcqf9jd8rUcxrlCFyDthsl48bAJEghjRUk0t/JxG7pOltD
+X-Received: by 2002:a17:90b:b15:b0:246:bb61:4a56 with SMTP id bf21-20020a17090b0b1500b00246bb614a56mr484462pjb.27.1683269826877;
+        Thu, 04 May 2023 23:57:06 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ53iTMBSNhcrnIPyTfvwZ8N19AD181tDNAR5buVj0cJloI3cWhtExnX2UdH5CGdk2teqlzLhTHDhq/f/wafQfw=
+X-Received: by 2002:a17:90b:b15:b0:246:bb61:4a56 with SMTP id
+ bf21-20020a17090b0b1500b00246bb614a56mr484451pjb.27.1683269826445; Thu, 04
+ May 2023 23:57:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR21MB1688.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f730df15-3c9c-4f4a-4346-08db4cfc4117
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 May 2023 00:04:11.0534
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ilS7WK5118Xq/yMoAN4nGrRZwdn9m13PAla0Qb7yRZVItdoiz5LeUomZspfTg09rPPc3SU8OgB2vaLy0LzbFAGfKr2CSH/pFIu4oUkSUc2c=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR21MB3731
+References: <20230411204229.GA4168208@bhelgaas> <20230504152344.GA857680@bhelgaas>
+In-Reply-To: <20230504152344.GA857680@bhelgaas>
+From: Koba Ko <koba.ko@canonical.com>
+Date: Fri, 5 May 2023 08:56:54 +0200
+Message-ID: <CAJB-X+Vu8HJSNza896ELGrUKk64gPH=MjbYQMSxW6Xiw4MSiJw@mail.gmail.com>
+Subject: Re: [Bug 217321] New: Intel platforms can't sleep deeper than PC3
+ during long idle
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org, Vidya Sagar <vidyas@nvidia.com>, 
+	Ajay Agarwal <ajayagarwal@google.com>, Tasev Nikola <tasev.stefanoska@skynet.be>, 
+	Mark Enriquez <enriquezmark36@gmail.com>, Thomas Witt <kernel@witt.link>, regressions@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Ben Greear <greearb@candelatech.com> Sent: Thursday, May 4, 2023 4:46=
- PM
->=20
-> On 5/4/23 10:59, Michael Kelley (LINUX) wrote:
-> > From: Ben Greear <greearb@candelatech.com> Sent: Thursday, May 4, 2023 =
-10:23 AM
-> >>
-> >> On 5/3/23 16:49, Ben Greear wrote:
-> >>> On 5/2/23 21:46, Linux regression tracking (Thorsten Leemhuis) wrote:
-> >>>> On 03.05.23 04:31, Bagas Sanjaya wrote:
-> >>>>> On Tue, May 02, 2023 at 02:03:33PM -0700, Ben Greear wrote:
-> >>>>>>
-> >>>>>> Pulling today's upstream 6.3+ tree, my system now hangs loading in=
-itrd.
-> >>>>
-> >>>> Just to understand this properly: you mean after the boot loader sai=
-d it
-> >>>> loaded the initramfs, not when the kernel starts using it?
-> >>>
-> >>> I am bisecting...it appears to be .config related.=A0 If I skip enabl=
-ing things
-> >>> during bisect, then I do not see the problem.=A0 But I copied my orig=
-inal buggy .config
-> >>> into an otherwise good kernel commit, and now it fails.=A0 I'm manual=
-ly bisecting
-> >>> the .config settings....
-> >>
-> >> I had enabled this option:  CONFIG_HYPERV_VTL_MODE
-> >>
-> >> And that makes it not boot.  Not sure that is expected or not, but
-> >> I will simply un-select it and continue on, as I do not actually need =
-that feature.
-> >>
+On Thu, May 4, 2023 at 5:23=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.org> w=
+rote:
+>
+> [+cc Koba, Ajay, Tasev, Mark, Thomas, regressions list]
+>
+> On Tue, Apr 11, 2023 at 03:42:29PM -0500, Bjorn Helgaas wrote:
+> > On Tue, Apr 11, 2023 at 08:32:04AM +0000, bugzilla-daemon@kernel.org wr=
+ote:
+> > > https://bugzilla.kernel.org/show_bug.cgi?id=3D217321
+> > > ...
+> > >         Regression: No
+> > >
+> > > [Symptom]
+> > > Intel cpu can't sleep deeper than pc=CB=87 during long idle
+> > > ~~~
+> > > Pkg%pc2 Pkg%pc3 Pkg%pc6 Pkg%pc7 Pkg%pc8 Pkg%pc9 Pk%pc10
+> > > 15.08   75.02   0.00    0.00    0.00    0.00    0.00
+> > > 15.09   75.02   0.00    0.00    0.00    0.00    0.00
+> > > ^CPkg%pc2       Pkg%pc3 Pkg%pc6 Pkg%pc7 Pkg%pc8 Pkg%pc9 Pk%pc10
+> > > 15.38   68.97   0.00    0.00    0.00    0.00    0.00
+> > > 15.38   68.96   0.00    0.00    0.00    0.00    0.00
+> > > ~~~
+> > > [How to Reproduce]
+> > > 1. run turbostat to monitor
+> > > 2. leave machine idle
+> > > 3. turbostat show cpu only go into pc2~pc3.
+> > >
+> > > [Misc]
+> > > The culprit are this
+> > > a7152be79b62) Revert "PCI/ASPM: Save L1 PM Substates Capability for
+> > > suspend/resume=E2=80=9D
+> > >
+> > > if revert a7152be79b62, the issue is gone
 > >
-> > What you observed is expected when CONFIG_HYPERV_VTL_MODE is selected,
-> > which is why it defaults to N.  The comment for that option in the Kcon=
-fig file says:
+> > Relevant commits:
 > >
-> > 	  Select this option to build a Linux kernel to run at a VTL other tha=
-n
-> > 	  the normal VTL0, which currently is only VTL2.  This option
-> > 	  initializes the x86 platform for VTL2, and adds the ability to boot
-> > 	  secondary CPUs directly into 64-bit context as required for VTLs oth=
-er
-> > 	  than 0.  A kernel built with this option must run at VTL2, and will
-> > 	  not run as a normal guest.
->=20
-> I didn't read it close enough, but that is my fault.
->=20
+> >   4ff116d0d5fd ("PCI/ASPM: Save L1 PM Substates Capability for suspend/=
+resume")
+> >   a7152be79b62 ("Revert "PCI/ASPM: Save L1 PM Substates Capability for =
+suspend/resume"")
+> >
+> > 4ff116d0d5fd appeared in v6.1-rc1.  Prior to 4ff116d0d5fd, ASPM L1 PM
+> > Substates configuration was not preserved across suspend/resume, so
+> > the system *worked* after resume, but used more power than expected.
+> >
+> > But 4ff116d0d5fd caused resume to fail completely on some systems, so
+> > a7152be79b62 reverted it.  With a7152be79b62 reverted, ASPM L1 PM
+> > Substates configuration is likely not preserved across suspend/resume.
+> > a7152be79b62 appeared in v6.2-rc8 and was backported to the v6.1
+> > stable series starting with v6.1.12.
+> >
+> > KobaKo, you don't mention any suspend/resume in this bug report, but
+> > neither patch should make any difference unless suspend/resume is
+> > involved.  Does the platform sleep as expected *before* suspend, but
+> > fail to sleep after resume?
+> >
+> > Or maybe some individual device was suspended via runtime power
+> > management, and that device lost its L1 PM Substates config?  I don't
+> > know if there's a way to disable runtime PM easily.
+>
+> Koba, per your bugzilla update, the issue happens even without
+> suspend/resume.  And we don't know whether some particular device is
+> responsible.
+>
+> But if we save/restore L1SS state, we can sleep deeper than PC3.  If
+> we don't preserve L1SS state, we can't.
+>
+> We definitely want to preserve the L1SS state, but we can't simply
+> apply 4ff116d0d5fd ("PCI/ASPM: Save L1 PM Substates Capability for
+> suspend/resume") again because it caused its own regressions [1,2,3]
+>
+> So somebody needs to figure out what was wrong with 4ff116d0d5fd, fix
+> it, verify that it doesn't cause the issues reported by Tasev, Thomas,
+> and Mark, and then we can apply it.
+>
+> Bjorn
 
-No problem. :-)   Just FYI, in the future if you are come across issues
-specifically related to running Linux as a guest on Hyper-V, feel free
-to copy the linux-hyperv@vger.kernel.org mailing list.  That may
-elicit faster help from someone with Hyper-V expertise and potentially
-save you some trouble.
+Good days, discussed with Kai-Heng and he mentioned  the GPU may not
+be pulled off the power.
+then the GPU needs L1ss to get into power saving.
 
-Michael
+I will investigate further on this way.
+
+>
+> [1] https://git.kernel.org/linus/a7152be79b62
+> [2] https://bugzilla.kernel.org/show_bug.cgi?id=3D216782
+> [3] https://bugzilla.kernel.org/show_bug.cgi?id=3D216877
