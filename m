@@ -1,111 +1,124 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37558816
-	for <regressions@lists.linux.dev>; Sat,  6 May 2023 06:47:41 +0000 (UTC)
-Received: from [185.238.219.2] (helo=[192.168.44.27]); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pvBhh-0001It-5W; Sat, 06 May 2023 08:47:37 +0200
-Message-ID: <5df240d4-03f1-31cd-03e1-a6cfddd5cc1d@leemhuis.info>
-Date: Sat, 6 May 2023 08:47:35 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE12217E1
+	for <regressions@lists.linux.dev>; Sat,  6 May 2023 08:25:31 +0000 (UTC)
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3077d134028so1001118f8f.3
+        for <regressions@lists.linux.dev>; Sat, 06 May 2023 01:25:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1683361530; x=1685953530;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uAG11WhA1HXvQIF+mSp0DLYzC7zL0QVffaPND8UKw2Y=;
+        b=lILooLTDbz66qVPSPD7HHx6/1X+eW9A1ysaNySwn1Livh+Uhp1cDkVl6hpzFMiFxp2
+         g9W0gH/QgjOYoX1BamTHKbo0LrdOUaFzUrCC8GIPMcNIIqjD1ea8QLTNePPyiGsYtiDZ
+         leIP1YRoEDV+o+u49Lx5yb1DgJU26jqdpMyNHCjZX8PecdWb0qKJ2VXpUYNNQ403v0Xc
+         MiFIQCRX4zdp45GH9KJoNkzdiAR4mo7BWLrUMcnLs4kdP+eQAJuZAkh/2NuLHkfje6Br
+         PPqstCtwdc2ucLUnHjV2/vp5xaSddDYZiPR1OBQdNLg3mVOEGE1zCcVj5Kd57L6yLGxE
+         UL1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683361530; x=1685953530;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=uAG11WhA1HXvQIF+mSp0DLYzC7zL0QVffaPND8UKw2Y=;
+        b=Du6FDJSHbVSaQl1yoEd1aqiErcHB6aDVqUT1vAzA3HffWvO0kOorXvUA/XUuYI3w/f
+         AnnHBG8wIcBN/lHRRmlY1OuTcGcGwOaGNT22UPxTpPX5JaI5AbngkkHW1JgYO0uvVys+
+         Kp1O4KD5pzHUjAz+PLP5TBUUJqOgGV1Td0gVCSPh96lQtbjMNG+kpO1X8ju4bzgWpymP
+         whNPpct0QvLMmC13gm2YLge/JLmqizme55Wjtxg37g02xBs2Fg/FevdyCFiAThSP/0yH
+         tNnl5+o0cLFwALaoeoEOifKo73GTPBmAIV+q3N8I5XOEPhAfaZjOQeA66H0ygPhKxRtv
+         gMsA==
+X-Gm-Message-State: AC+VfDwBxdKPwt9xO68MVc+1H4t5P870nkwsPqRx5NTpY9Qs/nAFfSV+
+	lbxMDJ/2phLeLPhVCg5zdgGzhE2AlIT8R7dLlggZiYle
+X-Google-Smtp-Source: ACHHUZ6IdbgpYJm/lb3Z7bSaP10+Kh1tYLIA1fmy0q5Xmn96YsWSpNkfbWQJfplXgFzUCQhFe5ib01IdJKdtzydFYHQ=
+X-Received: by 2002:a5d:40cf:0:b0:306:39a8:6fa2 with SMTP id
+ b15-20020a5d40cf000000b0030639a86fa2mr2361800wrq.61.1683361529811; Sat, 06
+ May 2023 01:25:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Content-Language: en-US, de-DE
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
- "Limonciello, Mario" <mlimonci@amd.com>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
- Chuanhong Guo <gch981213@gmail.com>, linux-input@vger.kernel.org,
- Mario Limonciello <mario.limonciello@amd.com>,
- "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
- ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
- LKML <linux-kernel@vger.kernel.org>
-References: <01ea5c8e-ed2f-7568-f6ed-896329e7b673@leemhuis.info>
- <68d017d9-d815-01d4-23c1-49c0aaf5f20b@amd.com> <ZFKvVKMesT+3NthN@google.com>
-From: Thorsten Leemhuis <linux@leemhuis.info>
+References: <01ea5c8e-ed2f-7568-f6ed-896329e7b673@leemhuis.info> <68d017d9-d815-01d4-23c1-49c0aaf5f20b@amd.com>
+In-Reply-To: <68d017d9-d815-01d4-23c1-49c0aaf5f20b@amd.com>
+From: Chuanhong Guo <gch981213@gmail.com>
+Date: Sat, 6 May 2023 16:25:17 +0800
+Message-ID: <CAJsYDVKY0V4V5fCseGJ7SPW6+-4r7d04RTgkF82VgYcNLk5DtQ@mail.gmail.com>
 Subject: Re: [regression] Bug 217394 - IRQ override skipping breaks the Aya
  Neo Air Plus 6800U keyboard buttons
-In-Reply-To: <ZFKvVKMesT+3NthN@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1683355661;746852ba;
-X-HE-SMSGID: 1pvBhh-0001It-5W
+To: "Limonciello, Mario" <mlimonci@amd.com>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>, linux-input@vger.kernel.org, 
+	Mario Limonciello <mario.limonciello@amd.com>, 
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, 
+	ACPI Devel Maling List <linux-acpi@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 03.05.23 21:00, Dmitry Torokhov wrote:
-> On Wed, May 03, 2023 at 11:11:33AM -0500, Limonciello, Mario wrote:
->> On 5/3/2023 7:58 AM, Linux regression tracking (Thorsten Leemhuis) wrote:
->>>
->>> I noticed a regression report in bugzilla.kernel.org. As many (most?)
->>> kernel developers don't keep an eye on it, I decided to forward it by mail.
->>>
->>> Chuanhong Guo, apparently it's cause by a change of yours.
+Hi Mario!
 
-BTW, there is another report caused by the change:
-https://bugzilla.kernel.org/show_bug.cgi?id=217406
+On Thu, May 4, 2023 at 12:11=E2=80=AFAM Limonciello, Mario <mlimonci@amd.co=
+m> wrote:
+>
+> +linux-input
+>
+> On 5/3/2023 7:58 AM, Linux regression tracking (Thorsten Leemhuis) wrote:
+> > Hi, Thorsten here, the Linux kernel's regression tracker.
+> >
+> > I noticed a regression report in bugzilla.kernel.org. As many (most?)
+> > kernel developers don't keep an eye on it, I decided to forward it by m=
+ail.
+> >
+> > Chuanhong Guo, apparently it's cause by a change of yours.
+> >
+> > Note, you have to use bugzilla to reach the reporter, as I sadly[1] can
+> > not CCed them in mails like this.
+> >
+> > Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=3D217394 :
+> >
+> >>   Matthew 2023-05-03 02:28:33 UTC
+> >>
+> >> Reverting the changes found in this patch fixes the issue:
+> >>> https://lore.kernel.org/all/20220712020058.90374-1-gch981213@gmail.co=
+m/
+> >> With that patch the AT Translated Set 2 Keyboard doesn't show up with =
+the evtest and is not usable.
+> >>
+> >> Hardware:
+> >>
+> >> Aya Neo Air Plus
+> >> AMD Ryzen 7 6800U
+> > See the ticket for more details.
+> >
+> > BTW: there apparently is another IRQ override needed for a different
+> > machine. See https://bugzilla.kernel.org/show_bug.cgi?id=3D216804#c8 fo=
+r
+> > details (ignore the comments before that, the quirk entry for that
+> > machine was merged; comment 8 and all related to it really should have =
+a
+> > separate bug; that's also why this partly fall through the cracks here
+> > :-/ ). The user is currently trying to create a patch.
+> >
+> Something I'm wondering about is if it's possible for i8042 to detect
+> the polarity is incorrect when it probes and
+> to try to correct it.
+>
+> If we could do that we can probably drop 9946e39fe8d0 ("ACPI: resource:
+> skip IRQ override on AMD Zen platforms")
+> to fix this issue along with all the other quirks that have collected
+> over time on i8042 polarity issues.
+>
 
-```
-I have an HP Pavilion Aero 13 laptop that comes with an AMD Ryzen 7735U
-CPU and an up-to-date BIOS. Using any kernel version that is strictly
-greater than 5.19.9 on it is causing the typing with the integrated
-keyboard to be extremely slow. "Slow" is subjective but let's say [...]"
-```
+I don't really understand why there are more and more new laptops
+appearing with broken IRQ settings in ACPI, especially considering
+the fact that some of these laptops were released after the original
+problem was already identified almost a year ago.
+What exactly was the solution when AMD internally discovered this IRQ
+mismatch problem? Did you guys changed the emulated IRQ polarity
+without updating the ACPI table with the corresponding polarity
+description in your reference design?
 
-/me wonders how many machines out there show problems we never hear about
-
-Anyway:
-
->>> Note, you have to use bugzilla to reach the reporter, as I sadly[1] can
->>> not CCed them in mails like this.
->>>
->>> Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=217394 :
->>>
->>>>   Matthew 2023-05-03 02:28:33 UTC
->>>>
->>>> Reverting the changes found in this patch fixes the issue:
->>>>> https://lore.kernel.org/all/20220712020058.90374-1-gch981213@gmail.com/
->>>> With that patch the AT Translated Set 2 Keyboard doesn't show up with the evtest and is not usable.
->>>>
->>>> Hardware:
->>>>
->>>> Aya Neo Air Plus
->>>> AMD Ryzen 7 6800U
->>> See the ticket for more details.
->>>
->>> BTW: there apparently is another IRQ override needed for a different
->>> machine. See https://bugzilla.kernel.org/show_bug.cgi?id=216804#c8 for
->>> details (ignore the comments before that, the quirk entry for that
->>> machine was merged; comment 8 and all related to it really should have a
->>> separate bug; that's also why this partly fall through the cracks here
->>> :-/ ). The user is currently trying to create a patch.
->>>
->> Something I'm wondering about is if it's possible for i8042 to detect the
->> polarity is incorrect when it probes and
->> to try to correct it.
->>
->> If we could do that we can probably drop 9946e39fe8d0 ("ACPI: resource: skip
->> IRQ override on AMD Zen platforms")
->> to fix this issue along with all the other quirks that have collected over
->> time on i8042 polarity issues.
-> 
-> 8042 is shared between multiple platforms and is quite fragile as it is.
-> If there are issues in AMD firmware and you know the polarity that is
-> needed for 8042 on these platforms you should add a proper fixup for
-> override. Maybe you should only skip override for IRQ 1?
-
-Stupid question from the peanut gallery: does anyone know what Windows
-is doing on those machines? I wonder if this is one of those situation
-where we just must follow suite to make things work reliably long term
-for users, even if that might mean 8042 needs to be modified.
-
-Or is the problem likely to go away with new hardware?
-
-Ciao, Thorsten
-
-P.S.: BTW:
-
-#regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=217406
+--=20
+Regards,
+Chuanhong Guo
