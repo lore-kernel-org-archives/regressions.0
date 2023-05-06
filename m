@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6E8D156EB
-	for <regressions@lists.linux.dev>; Sat,  6 May 2023 06:20:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37558816
+	for <regressions@lists.linux.dev>; Sat,  6 May 2023 06:47:41 +0000 (UTC)
 Received: from [185.238.219.2] (helo=[192.168.44.27]); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pvBHM-0005z1-Kv; Sat, 06 May 2023 08:20:24 +0200
-Message-ID: <9284a9ec-d7c9-68e8-7384-07291894937b@leemhuis.info>
-Date: Sat, 6 May 2023 08:20:23 +0200
+	id 1pvBhh-0001It-5W; Sat, 06 May 2023 08:47:37 +0200
+Message-ID: <5df240d4-03f1-31cd-03e1-a6cfddd5cc1d@leemhuis.info>
+Date: Sat, 6 May 2023 08:47:35 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,77 +16,96 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.10.0
-Subject: Re: [regression] Kernel OOPS on boot with Kernel 6.3(.1) and RTL8153
- Gigabit Ethernet Adapter
 Content-Language: en-US, de-DE
-To: Jakub Kicinski <kuba@kernel.org>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+ "Limonciello, Mario" <mlimonci@amd.com>
 Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
- =?UTF-8?Q?Bj=c3=b8rn_Mork?= <bjorn@mork.no>,
- Hayes Wang <hayeswang@realtek.com>, netdev@vger.kernel.org,
- Paolo Abeni <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>,
- "David S. Miller" <davem@davemloft.net>, Stanislav Fomichev <sdf@fomichev.me>
-References: <ec4be122-e213-ca5b-f5d6-e8f9c3fd3bee@leemhuis.info>
- <87lei36q27.fsf@miraculix.mork.no> <20230505120436.6ff8cfca@kernel.org>
- <57dbce31-daa9-9674-513e-f123b94950da@leemhuis.info>
- <20230505123744.16666106@kernel.org>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <20230505123744.16666106@kernel.org>
+ Chuanhong Guo <gch981213@gmail.com>, linux-input@vger.kernel.org,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+ ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>
+References: <01ea5c8e-ed2f-7568-f6ed-896329e7b673@leemhuis.info>
+ <68d017d9-d815-01d4-23c1-49c0aaf5f20b@amd.com> <ZFKvVKMesT+3NthN@google.com>
+From: Thorsten Leemhuis <linux@leemhuis.info>
+Subject: Re: [regression] Bug 217394 - IRQ override skipping breaks the Aya
+ Neo Air Plus 6800U keyboard buttons
+In-Reply-To: <ZFKvVKMesT+3NthN@google.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1683354029;54b04070;
-X-HE-SMSGID: 1pvBHM-0005z1-Kv
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1683355661;746852ba;
+X-HE-SMSGID: 1pvBhh-0001It-5W
 
+On 03.05.23 21:00, Dmitry Torokhov wrote:
+> On Wed, May 03, 2023 at 11:11:33AM -0500, Limonciello, Mario wrote:
+>> On 5/3/2023 7:58 AM, Linux regression tracking (Thorsten Leemhuis) wrote:
+>>>
+>>> I noticed a regression report in bugzilla.kernel.org. As many (most?)
+>>> kernel developers don't keep an eye on it, I decided to forward it by mail.
+>>>
+>>> Chuanhong Guo, apparently it's cause by a change of yours.
 
+BTW, there is another report caused by the change:
+https://bugzilla.kernel.org/show_bug.cgi?id=217406
 
-On 05.05.23 21:37, Jakub Kicinski wrote:
-> On Fri, 5 May 2023 21:20:15 +0200 Linux regression tracking (Thorsten
-> Leemhuis) wrote:
->>> Thorsten, how is the communication supposed to work in this case?
->>> Can you ask the reporter to test this?  
+```
+I have an HP Pavilion Aero 13 laptop that comes with an AMD Ryzen 7735U
+CPU and an up-to-date BIOS. Using any kernel version that is strictly
+greater than 5.19.9 on it is causing the typing with the integrated
+keyboard to be extremely slow. "Slow" is subjective but let's say [...]"
+```
+
+/me wonders how many machines out there show problems we never hear about
+
+Anyway:
+
+>>> Note, you have to use bugzilla to reach the reporter, as I sadly[1] can
+>>> not CCed them in mails like this.
+>>>
+>>> Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=217394 :
+>>>
+>>>>   Matthew 2023-05-03 02:28:33 UTC
+>>>>
+>>>> Reverting the changes found in this patch fixes the issue:
+>>>>> https://lore.kernel.org/all/20220712020058.90374-1-gch981213@gmail.com/
+>>>> With that patch the AT Translated Set 2 Keyboard doesn't show up with the evtest and is not usable.
+>>>>
+>>>> Hardware:
+>>>>
+>>>> Aya Neo Air Plus
+>>>> AMD Ryzen 7 6800U
+>>> See the ticket for more details.
+>>>
+>>> BTW: there apparently is another IRQ override needed for a different
+>>> machine. See https://bugzilla.kernel.org/show_bug.cgi?id=216804#c8 for
+>>> details (ignore the comments before that, the quirk entry for that
+>>> machine was merged; comment 8 and all related to it really should have a
+>>> separate bug; that's also why this partly fall through the cracks here
+>>> :-/ ). The user is currently trying to create a patch.
+>>>
+>> Something I'm wondering about is if it's possible for i8042 to detect the
+>> polarity is incorrect when it probes and
+>> to try to correct it.
 >>
->> I'd prefer to not become the man-in-the middle, that just delays things
->> and is fragile; but I can do that occasionally if developers really are
->> unwilling to go to bugzilla.
->>
->> Bugbot afaics will solve this, but using it right now would require me
->> to do something some maintainers don't like. See this sub-thread:
->>
->> https://lore.kernel.org/all/1f0ebf13-ab0f-d512-6106-3ebf7cb372f1@leemhuis.info/
->>
->> :-/
->>
->> This got me thinking: we could tell bugbot to start monitoring this
->> thread and then tell the reporter to CC to the new bug bugbot created.
->> Ugly, but might work.
->>
->>> I don't see them on CC...  
->>
->> Yeah, as stated in the initial mail of this thread: I sadly can't CC
->> them, because bugzilla.kernel.org tells users upon registration their
->> "email address will never be displayed to logged out users"... #sigh
->>
->> I wish things were different, I'm unhappy about this situation myself.
+>> If we could do that we can probably drop 9946e39fe8d0 ("ACPI: resource: skip
+>> IRQ override on AMD Zen platforms")
+>> to fix this issue along with all the other quirks that have collected over
+>> time on i8042 polarity issues.
 > 
-> Let's work something out, because forwarding enough info for Bjorn to
-> respond on the list means that we now have the conversation going in
-> both places. So it's confusing & double the work for developers.
+> 8042 is shared between multiple platforms and is quite fragile as it is.
+> If there are issues in AMD firmware and you know the polarity that is
+> needed for 8042 on these platforms you should add a proper fixup for
+> override. Maybe you should only skip override for IRQ 1?
 
-I know, I know, but I saw no other way.
+Stupid question from the peanut gallery: does anyone know what Windows
+is doing on those machines? I wonder if this is one of those situation
+where we just must follow suite to make things work reliably long term
+for users, even if that might mean 8042 needs to be modified.
 
-> I don't seem to have the permissions on BZ, but I'm guessing we could
-> do the opposite - you could flip bugbot on first to have it flush the BZ
-> report to the list, and then reply on the list with regzbot tracking?
-
-That's the plan for the future, but for now I don't want to do that, as
-it might mess up other peoples workflows, as hinted above already and
-discussed here:
-
-https://lore.kernel.org/all/1f0ebf13-ab0f-d512-6106-3ebf7cb372f1@leemhuis.info/
-
-That was only recently, but if you jump in there as well it might
-persuade Konstantin to enable bugbot for other products/components. Then
-I could and would do what you suggested.
+Or is the problem likely to go away with new hardware?
 
 Ciao, Thorsten
+
+P.S.: BTW:
+
+#regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=217406
