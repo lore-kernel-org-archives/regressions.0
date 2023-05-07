@@ -1,156 +1,85 @@
-Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dilbert.mork.no (dilbert.mork.no [65.108.154.246])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D40417C6
-	for <regressions@lists.linux.dev>; Sun,  7 May 2023 14:55:29 +0000 (UTC)
-Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-54f9e2d0714so4989867b3.1
-        for <regressions@lists.linux.dev>; Sun, 07 May 2023 07:55:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1683471328; x=1686063328;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=0a1+UeLlATmgaT4hIrkt4/5zUzk0Ow/J8sqcb3kQi/A=;
-        b=D8oNiHkuVxig1gep6gO0cHT+strbDtVEhVzzvoIChhlbWN/T/LiQ8muaBiYDeiRam4
-         k6Hg2eluXy0Sd5ij6o8X1aGaE0vGB1Qc3V9+XxqrgPMFf10ePTg3CnBf9YrpWpr8KrFo
-         90DTLR6nzd76YT9akek53DDpYDb/WZUV27MMl+kScqkq5mqAH4kJSkzUGZicjF8NHzz2
-         zKg3G2CzKJjeXH5fNmTKnilz5uqYYqIP8BehbGvWdHn0zPxjC4bNodpQf2ADdBsbvk7C
-         M6oHXqcw6xkxz7hQj1kZ33FhQMNuk1vVsbAf2kk6Z+lLg0HH1AuuaFWqX/FbBplT6QQ5
-         z3nQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683471328; x=1686063328;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0a1+UeLlATmgaT4hIrkt4/5zUzk0Ow/J8sqcb3kQi/A=;
-        b=MhG+OKNrOHvXpjGsnU+diA8KBb6l7//uj3EhY9nOLQcpNxkaIpNQ9+mLJeB5BxbXqB
-         dZ51lOtRy4vscUtZv3J1Bb0+cMr5Zl9ARHHcsgTzy6p2+FgQPFqXVLOaUK+aqeXmEMeB
-         WvWzGjUpIKn8q8WJvWIfdtuHVruYpcKcvRhdK0nYOPA3QQvndRY6Jz3QVfWDPKbOUoYF
-         kRxodymGw6VZIugAYuXZMrr9lMY6EUypN9De474V/kBZgELS0x6d7STHPjAAZdPpxDvr
-         R0hOkR19yUYbsBiACN/J15XqihjJQUyg6tdklQY4TJ1+0pAvFBtdMuVF58lBVwfM3hxf
-         Ttww==
-X-Gm-Message-State: AC+VfDxnL3Jnm1eYoGxzVEBb+K6u7KFnTjUQv3qiZPBNucEWEyrEh/ov
-	dB0e69qP66xPZqGKtwLGxoM=
-X-Google-Smtp-Source: ACHHUZ73lLFaaN5yQqcTGVDNauL6G7L1c8diOqwAnZkrCIPUGbPOEqJzxEAO4HctJp8fF4IsC5fB7A==
-X-Received: by 2002:a25:aa71:0:b0:b9d:b2b6:7fd9 with SMTP id s104-20020a25aa71000000b00b9db2b67fd9mr6939647ybi.1.1683471328071;
-        Sun, 07 May 2023 07:55:28 -0700 (PDT)
-Received: from [192.168.75.211] ([173.23.87.62])
-        by smtp.gmail.com with ESMTPSA id s4-20020a259a84000000b00b9dfcc7a1fasm1712432ybo.7.2023.05.07.07.55.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 07 May 2023 07:55:27 -0700 (PDT)
-Message-ID: <0bb0439e-b066-ad05-371b-73d3135b39a3@gmail.com>
-Date: Sun, 7 May 2023 09:55:25 -0500
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 899B0523F
+	for <regressions@lists.linux.dev>; Sun,  7 May 2023 18:33:03 +0000 (UTC)
+Received: from canardo.dyn.mork.no ([IPv6:2a01:799:c9a:3200:0:0:0:1])
+	(authenticated bits=0)
+	by dilbert.mork.no (8.17.1.9/8.17.1.9) with ESMTPSA id 347IWUYP2239068
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=OK);
+	Sun, 7 May 2023 19:32:32 +0100
+Received: from miraculix.mork.no ([IPv6:2a01:799:964:4b0a:9af7:269:d286:bcf0])
+	(authenticated bits=0)
+	by canardo.dyn.mork.no (8.15.2/8.15.2) with ESMTPSA id 347IWmTd2063124
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=OK);
+	Sun, 7 May 2023 20:32:48 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mork.no; s=b;
+	t=1683484372; bh=c3j3BZff3ZxiuGutkiPmpfibMn/fulCmnrh81cyL4m0=;
+	h=From:To:Cc:Subject:References:Date:Message-ID:From;
+	b=idFbGy4hFQPfcBad4p0J+3gR/ggohIqXC3O1lC4F1qLM5N4UxYvg/JARL9lyfr9HS
+	 wqUDush5Zd+oPOHqnZBy1iu3WadeVpV6PVYmJM3LjMJ0Gwe7GvfiyA107EiwF3DaW1
+	 gtmmJ34AxC8UqALVrTWgbuNJo5/5iStRK1xtnkgI=
+Received: (nullmailer pid 40964 invoked by uid 1000);
+	Sun, 07 May 2023 18:32:17 -0000
+From: =?utf-8?Q?Bj=C3=B8rn_Mork?= <bjorn@mork.no>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>,
+        Hayes Wang <hayeswang@realtek.com>,
+        Linux regressions mailing list <regressions@lists.linux.dev>,
+        netdev@vger.kernel.org, Paolo Abeni <pabeni@redhat.com>,
+        Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Stanislav Fomichev <sdf@fomichev.me>
+Subject: Re: [regression] Kernel OOPS on boot with Kernel 6.3(.1) and
+ RTL8153 Gigabit Ethernet Adapter
+Organization: m
+References: <ec4be122-e213-ca5b-f5d6-e8f9c3fd3bee@leemhuis.info>
+	<87lei36q27.fsf@miraculix.mork.no>
+	<20230505120436.6ff8cfca@kernel.org>
+Date: Sun, 07 May 2023 20:32:16 +0200
+In-Reply-To: <20230505120436.6ff8cfca@kernel.org> (Jakub Kicinski's message of
+	"Fri, 5 May 2023 12:04:36 -0700")
+Message-ID: <87fs88kn67.fsf@miraculix.mork.no>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.1
-Subject: Re: [regression] Bug 217394 - IRQ override skipping breaks the Aya
- Neo Air Plus 6800U keyboard buttons
-To: Mario Limonciello <mario.limonciello@amd.com>,
- Chuanhong Guo <gch981213@gmail.com>, "Limonciello, Mario" <mlimonci@amd.com>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
- linux-input@vger.kernel.org, "Rafael J. Wysocki"
- <rafael.j.wysocki@intel.com>,
- ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
- LKML <linux-kernel@vger.kernel.org>
-References: <01ea5c8e-ed2f-7568-f6ed-896329e7b673@leemhuis.info>
- <68d017d9-d815-01d4-23c1-49c0aaf5f20b@amd.com>
- <CAJsYDVKY0V4V5fCseGJ7SPW6+-4r7d04RTgkF82VgYcNLk5DtQ@mail.gmail.com>
- <1b3e5df0-6190-e560-72c8-f600f715f89e@amd.com>
-Content-Language: en-US
-From: Matthew Anderson <ruinairas1992@gmail.com>
-In-Reply-To: <1b3e5df0-6190-e560-72c8-f600f715f89e@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Virus-Scanned: clamav-milter 0.103.8 at canardo
+X-Virus-Status: Clean
 
-On the Ayaneo Air Plus I modified the DSDT based on another handheld 
-with a 6800U that does not have the problem and it resolved the issue. I 
-hope this information helps in some way.
+Jakub Kicinski <kuba@kernel.org> writes:
 
-<             Name (_HID, EisaId ("PNP0303") /* IBM Enhanced Keyboard 
-(101/102-key, PS/2 Mouse) */)  // _HID: Hardware ID
-<             Name (_UID, Zero)  // _UID: Unique ID
----
- >             Name (_HID, "MSFT0001")  // _HID: Hardware ID
- >             Name (_CID, EisaId ("PNP0303") /* IBM Enhanced Keyboard 
-(101/102-key, PS/2 Mouse) */)  // _CID: Compatible ID
-6135c6135
-<                 IRQNoFlags ()
----
- >                 IRQ (Edge, ActiveLow, Shared, )
-
-
-On 5/7/23 7:41 AM, Mario Limonciello wrote:
+> It's just a hashtable init, I think that we can do:
 >
-> On 5/6/23 03:25, Chuanhong Guo wrote:
->> Hi Mario!
->>
->> On Thu, May 4, 2023 at 12:11 AM Limonciello, Mario <mlimonci@amd.com> 
->> wrote:
->>> +linux-input
->>>
->>> On 5/3/2023 7:58 AM, Linux regression tracking (Thorsten Leemhuis) 
->>> wrote:
->>>> Hi, Thorsten here, the Linux kernel's regression tracker.
->>>>
->>>> I noticed a regression report in bugzilla.kernel.org. As many (most?)
->>>> kernel developers don't keep an eye on it, I decided to forward it 
->>>> by mail.
->>>>
->>>> Chuanhong Guo, apparently it's cause by a change of yours.
->>>>
->>>> Note, you have to use bugzilla to reach the reporter, as I sadly[1] 
->>>> can
->>>> not CCed them in mails like this.
->>>>
->>>> Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=217394 :
->>>>
->>>>>    Matthew 2023-05-03 02:28:33 UTC
->>>>>
->>>>> Reverting the changes found in this patch fixes the issue:
->>>>>> https://lore.kernel.org/all/20220712020058.90374-1-gch981213@gmail.com/ 
->>>>>>
->>>>> With that patch the AT Translated Set 2 Keyboard doesn't show up 
->>>>> with the evtest and is not usable.
->>>>>
->>>>> Hardware:
->>>>>
->>>>> Aya Neo Air Plus
->>>>> AMD Ryzen 7 6800U
->>>> See the ticket for more details.
->>>>
->>>> BTW: there apparently is another IRQ override needed for a different
->>>> machine. See https://bugzilla.kernel.org/show_bug.cgi?id=216804#c8 for
->>>> details (ignore the comments before that, the quirk entry for that
->>>> machine was merged; comment 8 and all related to it really should 
->>>> have a
->>>> separate bug; that's also why this partly fall through the cracks here
->>>> :-/ ). The user is currently trying to create a patch.
->>>>
->>> Something I'm wondering about is if it's possible for i8042 to detect
->>> the polarity is incorrect when it probes and
->>> to try to correct it.
->>>
->>> If we could do that we can probably drop 9946e39fe8d0 ("ACPI: resource:
->>> skip IRQ override on AMD Zen platforms")
->>> to fix this issue along with all the other quirks that have collected
->>> over time on i8042 polarity issues.
->>>
->> I don't really understand why there are more and more new laptops
->> appearing with broken IRQ settings in ACPI, especially considering
->> the fact that some of these laptops were released after the original
->> problem was already identified almost a year ago.
->> What exactly was the solution when AMD internally discovered this IRQ
->> mismatch problem? Did you guys changed the emulated IRQ polarity
->> without updating the ACPI table with the corresponding polarity
->> description in your reference design?
->>
-> In the reference design the tables are updated to be accurate and
-> reflect the appropriate polarity.  It seems that the vendors must be
-> changing this and it not breaking Windows for some reason.
+> diff --git a/kernel/bpf/offload.c b/kernel/bpf/offload.c
+> index d9c9f45e3529..8a26cd8814c1 100644
+> --- a/kernel/bpf/offload.c
+> +++ b/kernel/bpf/offload.c
+> @@ -859,4 +859,4 @@ static int __init bpf_offload_init(void)
+>  	return rhashtable_init(&offdevs, &offdevs_params);
+>  }
+>=20=20
+> -late_initcall(bpf_offload_init);
+> +core_initcall(bpf_offload_init);
 >
 >
+> Thorsten, how is the communication supposed to work in this case?
+> Can you ask the reporter to test this? I don't see them on CC...
+
+FWIW, I tried to reproduce the oops in the hope that I could confirm
+a fix.  But I failed. The netdev is successfully deregistered on my
+laptop no matter what I do. Tested v6.3 and current net/main, and
+tried different tricks to change probe timing.
+
+Guess this is timing sensitive enough that it only shows up on certain
+systems.
+
+So we will need the reporter to chime in.
+
+
+Bj=C3=B8rn
