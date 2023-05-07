@@ -1,202 +1,156 @@
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2040.outbound.protection.outlook.com [40.107.100.40])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8311533F1
-	for <regressions@lists.linux.dev>; Sun,  7 May 2023 12:51:45 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=eA6Y2vSIETahadTSM9qm2m4UuEsf+335cu5snqGLZNVegD4rKtqcv5UFmCjKOfBnjMapQBv5u6aeOROFfU0wAl2R3wnQTsLSfF0H8mX0zRVB2nTpclOTS+jl1cgTzkL9xDcbWZy64lQyVK7PT4hB4uticbgC9DBVKTF+c4JtKlClPvQptAYnGjRNS5pj3ZyrHfVf7ElBUqU3yB4LSaKpT0E+K3Gws0PQoZeajmvm+lngVPd9eX6FleOnu72AfpGIvLLrY1M4pJDZignKqsklhmKprHlfitS4T6WSWfUwoxA9hCYRJx3S7mUYtwttn2e/B0JcKlnEBvfafGu0N2UOQQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=8+KQ9iLeqb+Mb/FnFeH+7X5EFsicFw6ZJrVxgpO00cI=;
- b=Yv2GeKlxcGzWtvnX+f/KzQhacDL9eKrLYPh4HSy2SGLCnMWN2CfDc7LlcpfPpB5qC0+hZX7oVXTlDdmIV9gWS3N5WKIfI0AUVLks/YYTXHeIRfL5ujittWn3HovmYymk0+cY1FJ3lIKZew9BKUTUDomPtiNwLWLBy1wKn/M8li4vp3BGUqJqyXkEIeclc+0Io/uZ+Sf8/R/hqtxaTBEKtpnzRN8a89DHWhMwya2rMnYBOPsA0Dlm9gShAK8G+IP6+VP+wNz0Jo7FP8XAeLHWpeKVgNF57NPi28DPN7tNrRVeiWwtf3AdpY1vTi56BQSgJrqDGOwgRIGBQs9sjumzUg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8+KQ9iLeqb+Mb/FnFeH+7X5EFsicFw6ZJrVxgpO00cI=;
- b=sW0I16Mxah46SyJuqW3l/8PEjNPJ8//nUL5s8PnHI8iXgQ3hOP0zmA3JkWHiz/JDFE9ELS58vw4+YdhniRtIIG+UwSvm5zSZZ8U8Sgxz+7mzNdSZDn9W4a9QA2IuIDyxSqAzlgPdlRmf2+TKkVu2+e3OJUvMFX6kGYmNQnZA5Io=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DS7PR12MB6095.namprd12.prod.outlook.com (2603:10b6:8:9c::19) by
- SA0PR12MB4398.namprd12.prod.outlook.com (2603:10b6:806:9f::8) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6363.31; Sun, 7 May 2023 12:51:42 +0000
-Received: from DS7PR12MB6095.namprd12.prod.outlook.com
- ([fe80::ea3d:ec42:656e:a248]) by DS7PR12MB6095.namprd12.prod.outlook.com
- ([fe80::ea3d:ec42:656e:a248%4]) with mapi id 15.20.6363.031; Sun, 7 May 2023
- 12:51:42 +0000
-Message-ID: <f2b81356-e702-3026-660f-d9a88edff632@amd.com>
-Date: Sun, 7 May 2023 07:51:44 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH 1/2] amd_nb: Add PCI ID for family 19h model 78h
-Content-Language: en-US
-To: Guenter Roeck <linux@roeck-us.net>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Hans de Goede <hdegoede@redhat.com>,
- Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
- Sanket Goswami <Sanket.Goswami@amd.com>, Richard gong
- <richard.gong@amd.com>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org
-References: <20230427053338.16653-1-mario.limonciello@amd.com>
- <20230427053338.16653-2-mario.limonciello@amd.com>
- <7b74c389-97b7-4f56-851b-6ce17950a4d1@roeck-us.net>
-From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <7b74c389-97b7-4f56-851b-6ce17950a4d1@roeck-us.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: DM5PR07CA0056.namprd07.prod.outlook.com
- (2603:10b6:4:ad::21) To DS7PR12MB6095.namprd12.prod.outlook.com
- (2603:10b6:8:9c::19)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D40417C6
+	for <regressions@lists.linux.dev>; Sun,  7 May 2023 14:55:29 +0000 (UTC)
+Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-54f9e2d0714so4989867b3.1
+        for <regressions@lists.linux.dev>; Sun, 07 May 2023 07:55:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1683471328; x=1686063328;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=0a1+UeLlATmgaT4hIrkt4/5zUzk0Ow/J8sqcb3kQi/A=;
+        b=D8oNiHkuVxig1gep6gO0cHT+strbDtVEhVzzvoIChhlbWN/T/LiQ8muaBiYDeiRam4
+         k6Hg2eluXy0Sd5ij6o8X1aGaE0vGB1Qc3V9+XxqrgPMFf10ePTg3CnBf9YrpWpr8KrFo
+         90DTLR6nzd76YT9akek53DDpYDb/WZUV27MMl+kScqkq5mqAH4kJSkzUGZicjF8NHzz2
+         zKg3G2CzKJjeXH5fNmTKnilz5uqYYqIP8BehbGvWdHn0zPxjC4bNodpQf2ADdBsbvk7C
+         M6oHXqcw6xkxz7hQj1kZ33FhQMNuk1vVsbAf2kk6Z+lLg0HH1AuuaFWqX/FbBplT6QQ5
+         z3nQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683471328; x=1686063328;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=0a1+UeLlATmgaT4hIrkt4/5zUzk0Ow/J8sqcb3kQi/A=;
+        b=MhG+OKNrOHvXpjGsnU+diA8KBb6l7//uj3EhY9nOLQcpNxkaIpNQ9+mLJeB5BxbXqB
+         dZ51lOtRy4vscUtZv3J1Bb0+cMr5Zl9ARHHcsgTzy6p2+FgQPFqXVLOaUK+aqeXmEMeB
+         WvWzGjUpIKn8q8WJvWIfdtuHVruYpcKcvRhdK0nYOPA3QQvndRY6Jz3QVfWDPKbOUoYF
+         kRxodymGw6VZIugAYuXZMrr9lMY6EUypN9De474V/kBZgELS0x6d7STHPjAAZdPpxDvr
+         R0hOkR19yUYbsBiACN/J15XqihjJQUyg6tdklQY4TJ1+0pAvFBtdMuVF58lBVwfM3hxf
+         Ttww==
+X-Gm-Message-State: AC+VfDxnL3Jnm1eYoGxzVEBb+K6u7KFnTjUQv3qiZPBNucEWEyrEh/ov
+	dB0e69qP66xPZqGKtwLGxoM=
+X-Google-Smtp-Source: ACHHUZ73lLFaaN5yQqcTGVDNauL6G7L1c8diOqwAnZkrCIPUGbPOEqJzxEAO4HctJp8fF4IsC5fB7A==
+X-Received: by 2002:a25:aa71:0:b0:b9d:b2b6:7fd9 with SMTP id s104-20020a25aa71000000b00b9db2b67fd9mr6939647ybi.1.1683471328071;
+        Sun, 07 May 2023 07:55:28 -0700 (PDT)
+Received: from [192.168.75.211] ([173.23.87.62])
+        by smtp.gmail.com with ESMTPSA id s4-20020a259a84000000b00b9dfcc7a1fasm1712432ybo.7.2023.05.07.07.55.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 07 May 2023 07:55:27 -0700 (PDT)
+Message-ID: <0bb0439e-b066-ad05-371b-73d3135b39a3@gmail.com>
+Date: Sun, 7 May 2023 09:55:25 -0500
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR12MB6095:EE_|SA0PR12MB4398:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4862c393-bcf2-486b-0b9b-08db4ef9ce57
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	XOyN24Y3EVcMFe6AUhdDALL420NL6wXMc5YHeh8gfJOFWI+LR4/8f6eXgktCiSzfCMyvVp5kkJahediIM77bVxGbUqNBlp6b6U94vokTozYABd+dNH3Z3BH0gbsigIKLoBgn9gKssjnpghi0NZeoqrdzhEFf17sh5wy5+2REvVUC1cttT7jZzych7X9hUiraE/hdDQih4HZeqvfRil59CW2E1eYM1dqagLlA+jDdMSMjA64CkCTa0si091jq6b2dl/hMncw07gLWIizq/i+k7GtBlkdSz18ZI7Oso9dN/yAPxfZ+z4xqFe2wZhAnf0PzF3O8ozJ00eR1HzziHtGI5eMAXjYmQzDiGCL1dtCyn+6PQ0krfXsH/C11YVcIVKoMkvWRS6Lex1vm4Q1eyJuXV1LY63icJn8nDzsFu+y7CsV/fa363NdKaGLhMtvvNKZ7L24+dgmkmww+5mcksmBno6mjmaVoN+e52PLmHp5JMoHnszR49TvJlFTv50nbWqf+hpQJA3rFhtAVrx5OIgbL/sVp6ZeFQvcwFQt8K+f9jCA7P51pkFZl+iFioAexFr2OHF0G3oY7Q6hJgO5ztdW5+tg6Dn/5nsSU8sf6u0heGvmEGG81i91e3FxY+izTNW5DujYT1xOvqoLmWwE4XpBwgQ==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB6095.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(366004)(136003)(346002)(376002)(39860400002)(396003)(451199021)(83380400001)(478600001)(6486002)(54906003)(110136005)(2616005)(6512007)(6506007)(53546011)(186003)(44832011)(7416002)(2906002)(36756003)(38100700002)(66476007)(66556008)(66946007)(4326008)(41300700001)(5660300002)(8676002)(8936002)(31696002)(86362001)(316002)(31686004)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?ZmY2UEoyL0tMTGEybWgxWVZQK0poYzNMQTZWS1kwejhEcFRxUGlEWjQzeG5T?=
- =?utf-8?B?MDZiWnowdk5lRXFRbU5BTTNZYUNhaW9lY0xrQlM3MkkxMm9ZQkZUUkFQOHMr?=
- =?utf-8?B?ZnFtZlJTZXd1RHhZSktCZ1FjV2NMa3g4T1BGMS9DKzdpeXRKV1VXM25qais0?=
- =?utf-8?B?WXJ0U1hzZVFEYnBUVFBYaFc4VEZ5L0hWUkExQjIyeUpEV0JSVTdvSTVXT1NO?=
- =?utf-8?B?NUQ4UkMrUDVCNzY3ZzZJTEcwSUtyY2sxUDZycDhuZ1hOSXpiaS9Pd2YyTmhs?=
- =?utf-8?B?akZRY0Q4VmQ4TGVBOFpXTE9LT1Q3V0c0Vk5seU1JVWZ0RTE2MUREWjRKZjln?=
- =?utf-8?B?aUxFQ2dPK1UzL09CUnNpZnhVQ05JVXhhQzRNYWhmVis1ZjdUN3VEWEIreHJN?=
- =?utf-8?B?NTI2Z2haMnplY0lmVmVORW9LUVlyT3R5aUV2cXRrd2tBaDlRc3RxK25veUs0?=
- =?utf-8?B?b3VVSjhHT3FYcEdWZVMyNk52Rk91Y2dsSEVrQzJ5WGJZV091UXBuT2xCdnky?=
- =?utf-8?B?Q3pFM1JIVHhrLzVaS2Y3SHVOa0k2bDlCRWIwNmFFazZsNGh3TERpUnp3YnJ1?=
- =?utf-8?B?bjU3MlhvR2lLaEs0S094TXEyaUhzL2J5TUlnVGJLV2hnWkZRYU9SNFVRRDBo?=
- =?utf-8?B?eWhobmxQQmhMZW43SEF6bk90dFIrb0Vna0Z4dkVSQytKV2lxc0NEeEFreU0y?=
- =?utf-8?B?emZwWDNScjF3U2kzZldZcmg2QjRXbElOV2EzRDYrcFVCUk9BVWRBWjRVWTE3?=
- =?utf-8?B?Z292bDdPVWVpZEV0NXJYUUZtbmxPMUdOSENrSXJUOWNFUVBleFNHV3FlR1Br?=
- =?utf-8?B?b01lUDNGM0MvMTJsNTlkalc2Tjh0QTFpcFFwdHM3b1dDWVhkcmpUd3g0ejQv?=
- =?utf-8?B?ejRiRU81bzhoenA1YkVqand5bkUzbkFldC9ZUUpFQ0dSNkRhdTIvT1FicjZX?=
- =?utf-8?B?MzRPbFNCd3JKNDhWUnVhQlF1bEFIRkFIVlB6Y2RoL0Z1eFZMNk5FaWVINFF6?=
- =?utf-8?B?RmJUYkswTmdNUk9Fa3NQaGJxOXBDY0ZJd013dXJBYVVLSUJFS1NrMGNZelQ5?=
- =?utf-8?B?dVJ3T2pPbTg3a3V3ckJsczNacEhVVktKTXhnejBVZDhBOFJoakJPOFZoQ3pH?=
- =?utf-8?B?WjB3K0pwbmlYRzVHVFE0aVJlZDdmV1R1K3R0VHRsZkVQdm5zRUhGSTRsa3hs?=
- =?utf-8?B?UVFqRkZqZTNVVVFsUXRvaFFKVWRuZ2xoQjRBNUFoU3FKOWF4alVYYVBNS2xO?=
- =?utf-8?B?Nm9YK0NCb0pjRUpKN0xTSG1DdVpuREQwalh0UFc1SjA3Z1pGY1RQRVV4M3Ew?=
- =?utf-8?B?NlJQSk9MSTBweVVrZWM2b2JtNHVDeDZyUm5tRU5Zd05LeUR0eE85eFo1Y091?=
- =?utf-8?B?d3JkdllGSVNOQkVadzBOUnhiZG9hekpiSWFibkphZWNUa0JRV1AvWU1jcmg3?=
- =?utf-8?B?K2xKdUhNejcraVJOaElueEY5cUQ2eko3cUMzZmd6SDlEdEMvRnR0eW1mT0dK?=
- =?utf-8?B?UFhXN012Ykd5OTlYSTJ4V3dPeEJyb0ZDYkNseXBCSTVOWHZTTkJnbjhNSHN6?=
- =?utf-8?B?VFdHMnEzeExPTWdNdlVvOVNPU0FrSjUrem8vWGx3bjU3MENSWmgzYU9EK0pE?=
- =?utf-8?B?SzZIOExqNlp6L1VQbC9sNVVMY1hzVnNvL2VLTHIxSUNqZjZCY2pVT1BDa2s3?=
- =?utf-8?B?OTFPSVhReXQvMEUxVmU3ZndBQWVBYkVvamFDUnRqcmhLa3VNNkJyVUluNCtS?=
- =?utf-8?B?Yk94QjJrcFdwTVJLUkx6MnNFTVk3UkJOWUVTSmFsUWlRVEQvOUZJYjVyZkZE?=
- =?utf-8?B?WXJnTFBhcDNYd3BobDNEa2Naa05MMnl2eHAyTWlOU2llczlwS09wbU5GbktW?=
- =?utf-8?B?VWNzQlk4dWRPN3JPNVpvcmY1SzR2Vjd5R2VYUDZPa20xdlBRcE84VzJ5Y21W?=
- =?utf-8?B?dFllN0ZQRDErR2luWFhPWkNoZzlydW5rQ2ZYK3U0YitZQUNvT21yMU43RG9z?=
- =?utf-8?B?dWM1U0hhVFBNTVpmTWZiQkRERHA0SFN4YmhkbFMyckV2cE5MMGliNTE5RmF0?=
- =?utf-8?B?Y3hBZE5jZnY1WkIrZE90Ri9kTUlvdTFoL1d3blpJVmNDMjFPQmhtTXowOFh3?=
- =?utf-8?B?dGZKellMUFV3d3dFTW9sRDh6eUFTZFBkUkR3ajQxSXBFM2tOdWRYZmo0OFZl?=
- =?utf-8?Q?0MSrwSUXnExTWz4De6Fz82epvW9q36ADl2kWikWzf+Up?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4862c393-bcf2-486b-0b9b-08db4ef9ce57
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB6095.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 May 2023 12:51:42.0582
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: LAdr9Jo7IvjaIfEn/114TpuvHS2XJ/zZV4PsfHKJSXtRUVz01rHlpclXtJ3sfaoV8lj+laCpXm3euauKF8mDkA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4398
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.1
+Subject: Re: [regression] Bug 217394 - IRQ override skipping breaks the Aya
+ Neo Air Plus 6800U keyboard buttons
+To: Mario Limonciello <mario.limonciello@amd.com>,
+ Chuanhong Guo <gch981213@gmail.com>, "Limonciello, Mario" <mlimonci@amd.com>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
+ linux-input@vger.kernel.org, "Rafael J. Wysocki"
+ <rafael.j.wysocki@intel.com>,
+ ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>
+References: <01ea5c8e-ed2f-7568-f6ed-896329e7b673@leemhuis.info>
+ <68d017d9-d815-01d4-23c1-49c0aaf5f20b@amd.com>
+ <CAJsYDVKY0V4V5fCseGJ7SPW6+-4r7d04RTgkF82VgYcNLk5DtQ@mail.gmail.com>
+ <1b3e5df0-6190-e560-72c8-f600f715f89e@amd.com>
+Content-Language: en-US
+From: Matthew Anderson <ruinairas1992@gmail.com>
+In-Reply-To: <1b3e5df0-6190-e560-72c8-f600f715f89e@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+
+On the Ayaneo Air Plus I modified the DSDT based on another handheld 
+with a 6800U that does not have the problem and it resolved the issue. I 
+hope this information helps in some way.
+
+<             Name (_HID, EisaId ("PNP0303") /* IBM Enhanced Keyboard 
+(101/102-key, PS/2 Mouse) */)  // _HID: Hardware ID
+<             Name (_UID, Zero)  // _UID: Unique ID
+---
+ >             Name (_HID, "MSFT0001")  // _HID: Hardware ID
+ >             Name (_CID, EisaId ("PNP0303") /* IBM Enhanced Keyboard 
+(101/102-key, PS/2 Mouse) */)  // _CID: Compatible ID
+6135c6135
+<                 IRQNoFlags ()
+---
+ >                 IRQ (Edge, ActiveLow, Shared, )
 
 
-On 5/6/23 09:05, Guenter Roeck wrote:
-> On Thu, Apr 27, 2023 at 12:33:36AM -0500, Mario Limonciello wrote:
->> s2idle previously worked on this system, but it regressed in kernel
->> 6.4 due to commit 310e782a99c7 ("platform/x86/amd: pmc: Utilize SMN
->> index 0 for driver probe").
->>
->> The reason for the regression is that before this commit the SMN
->> communication was hardcoded, but after amd_smn_read() is used which
->> relies upon the misc PCI ID used by DF function 3 being included in
->> a table.  The ID was missing for model 78h, so this meant that the
->> amd_smn_read() wouldn't work.
->>
->> Add the missing ID into amd_nb, restoring s2idle on this system.
->>
->> Fixes: 310e782a99c7 ("platform/x86/amd: pmc: Utilize SMN index 0 for driver probe")
->> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> FWIW:
+On 5/7/23 7:41 AM, Mario Limonciello wrote:
 >
-> Acked-by: Guenter Roeck <linux@roeck-us.net>
->
-> Note that this patch is not upstream, meaning the second patch
-> in the series can not be applied either. I am not sure if that is
-> because of "regressed in kernel 6.4" - after all, that kernel does not
-> exist yet. The offending patch _is_ in the upstream kernel, though.
-> It might make sense to inform the regression bot if the problem is
-> not fixed when v6.4-rc1 is made available.
-
-You're right; the commit message should:
-
-s,but it regressed in kernel 6.4 due,but it regressed in,
-
-
-Boris told me that he's waiting for 6.4-rc1 to pick this series up.
-
-#regzbot ^introduced 310e782a99c7
-
->
-> Guenter
->
->> ---
->>   arch/x86/kernel/amd_nb.c | 2 ++
->>   include/linux/pci_ids.h  | 1 +
->>   2 files changed, 3 insertions(+)
+> On 5/6/23 03:25, Chuanhong Guo wrote:
+>> Hi Mario!
 >>
->> diff --git a/arch/x86/kernel/amd_nb.c b/arch/x86/kernel/amd_nb.c
->> index 4266b64631a4..7e331e8f3692 100644
->> --- a/arch/x86/kernel/amd_nb.c
->> +++ b/arch/x86/kernel/amd_nb.c
->> @@ -36,6 +36,7 @@
->>   #define PCI_DEVICE_ID_AMD_19H_M50H_DF_F4 0x166e
->>   #define PCI_DEVICE_ID_AMD_19H_M60H_DF_F4 0x14e4
->>   #define PCI_DEVICE_ID_AMD_19H_M70H_DF_F4 0x14f4
->> +#define PCI_DEVICE_ID_AMD_19H_M78H_DF_F4 0x12fc
->>   
->>   /* Protect the PCI config register pairs used for SMN. */
->>   static DEFINE_MUTEX(smn_mutex);
->> @@ -79,6 +80,7 @@ static const struct pci_device_id amd_nb_misc_ids[] = {
->>   	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_M50H_DF_F3) },
->>   	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_M60H_DF_F3) },
->>   	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_M70H_DF_F3) },
->> +	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_M78H_DF_F3) },
->>   	{}
->>   };
->>   
->> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
->> index 45c3d62e616d..95f33dadb2be 100644
->> --- a/include/linux/pci_ids.h
->> +++ b/include/linux/pci_ids.h
->> @@ -567,6 +567,7 @@
->>   #define PCI_DEVICE_ID_AMD_19H_M50H_DF_F3 0x166d
->>   #define PCI_DEVICE_ID_AMD_19H_M60H_DF_F3 0x14e3
->>   #define PCI_DEVICE_ID_AMD_19H_M70H_DF_F3 0x14f3
->> +#define PCI_DEVICE_ID_AMD_19H_M78H_DF_F3 0x12fb
->>   #define PCI_DEVICE_ID_AMD_CNB17H_F3	0x1703
->>   #define PCI_DEVICE_ID_AMD_LANCE		0x2000
->>   #define PCI_DEVICE_ID_AMD_LANCE_HOME	0x2001
->> -- 
->> 2.34.1
+>> On Thu, May 4, 2023 at 12:11 AM Limonciello, Mario <mlimonci@amd.com> 
+>> wrote:
+>>> +linux-input
+>>>
+>>> On 5/3/2023 7:58 AM, Linux regression tracking (Thorsten Leemhuis) 
+>>> wrote:
+>>>> Hi, Thorsten here, the Linux kernel's regression tracker.
+>>>>
+>>>> I noticed a regression report in bugzilla.kernel.org. As many (most?)
+>>>> kernel developers don't keep an eye on it, I decided to forward it 
+>>>> by mail.
+>>>>
+>>>> Chuanhong Guo, apparently it's cause by a change of yours.
+>>>>
+>>>> Note, you have to use bugzilla to reach the reporter, as I sadly[1] 
+>>>> can
+>>>> not CCed them in mails like this.
+>>>>
+>>>> Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=217394 :
+>>>>
+>>>>>    Matthew 2023-05-03 02:28:33 UTC
+>>>>>
+>>>>> Reverting the changes found in this patch fixes the issue:
+>>>>>> https://lore.kernel.org/all/20220712020058.90374-1-gch981213@gmail.com/ 
+>>>>>>
+>>>>> With that patch the AT Translated Set 2 Keyboard doesn't show up 
+>>>>> with the evtest and is not usable.
+>>>>>
+>>>>> Hardware:
+>>>>>
+>>>>> Aya Neo Air Plus
+>>>>> AMD Ryzen 7 6800U
+>>>> See the ticket for more details.
+>>>>
+>>>> BTW: there apparently is another IRQ override needed for a different
+>>>> machine. See https://bugzilla.kernel.org/show_bug.cgi?id=216804#c8 for
+>>>> details (ignore the comments before that, the quirk entry for that
+>>>> machine was merged; comment 8 and all related to it really should 
+>>>> have a
+>>>> separate bug; that's also why this partly fall through the cracks here
+>>>> :-/ ). The user is currently trying to create a patch.
+>>>>
+>>> Something I'm wondering about is if it's possible for i8042 to detect
+>>> the polarity is incorrect when it probes and
+>>> to try to correct it.
+>>>
+>>> If we could do that we can probably drop 9946e39fe8d0 ("ACPI: resource:
+>>> skip IRQ override on AMD Zen platforms")
+>>> to fix this issue along with all the other quirks that have collected
+>>> over time on i8042 polarity issues.
+>>>
+>> I don't really understand why there are more and more new laptops
+>> appearing with broken IRQ settings in ACPI, especially considering
+>> the fact that some of these laptops were released after the original
+>> problem was already identified almost a year ago.
+>> What exactly was the solution when AMD internally discovered this IRQ
+>> mismatch problem? Did you guys changed the emulated IRQ polarity
+>> without updating the ACPI table with the corresponding polarity
+>> description in your reference design?
 >>
+> In the reference design the tables are updated to be accurate and
+> reflect the appropriate polarity.  It seems that the vendors must be
+> changing this and it not breaking Windows for some reason.
+>
+>
