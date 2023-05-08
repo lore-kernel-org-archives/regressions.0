@@ -1,85 +1,89 @@
-Received: from dilbert.mork.no (dilbert.mork.no [65.108.154.246])
+Received: from devico.uberspace.de (devico.uberspace.de [185.26.156.185])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 899B0523F
-	for <regressions@lists.linux.dev>; Sun,  7 May 2023 18:33:03 +0000 (UTC)
-Received: from canardo.dyn.mork.no ([IPv6:2a01:799:c9a:3200:0:0:0:1])
-	(authenticated bits=0)
-	by dilbert.mork.no (8.17.1.9/8.17.1.9) with ESMTPSA id 347IWUYP2239068
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=OK);
-	Sun, 7 May 2023 19:32:32 +0100
-Received: from miraculix.mork.no ([IPv6:2a01:799:964:4b0a:9af7:269:d286:bcf0])
-	(authenticated bits=0)
-	by canardo.dyn.mork.no (8.15.2/8.15.2) with ESMTPSA id 347IWmTd2063124
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=OK);
-	Sun, 7 May 2023 20:32:48 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mork.no; s=b;
-	t=1683484372; bh=c3j3BZff3ZxiuGutkiPmpfibMn/fulCmnrh81cyL4m0=;
-	h=From:To:Cc:Subject:References:Date:Message-ID:From;
-	b=idFbGy4hFQPfcBad4p0J+3gR/ggohIqXC3O1lC4F1qLM5N4UxYvg/JARL9lyfr9HS
-	 wqUDush5Zd+oPOHqnZBy1iu3WadeVpV6PVYmJM3LjMJ0Gwe7GvfiyA107EiwF3DaW1
-	 gtmmJ34AxC8UqALVrTWgbuNJo5/5iStRK1xtnkgI=
-Received: (nullmailer pid 40964 invoked by uid 1000);
-	Sun, 07 May 2023 18:32:17 -0000
-From: =?utf-8?Q?Bj=C3=B8rn_Mork?= <bjorn@mork.no>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>,
-        Hayes Wang <hayeswang@realtek.com>,
-        Linux regressions mailing list <regressions@lists.linux.dev>,
-        netdev@vger.kernel.org, Paolo Abeni <pabeni@redhat.com>,
-        Eric Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Stanislav Fomichev <sdf@fomichev.me>
-Subject: Re: [regression] Kernel OOPS on boot with Kernel 6.3(.1) and
- RTL8153 Gigabit Ethernet Adapter
-Organization: m
-References: <ec4be122-e213-ca5b-f5d6-e8f9c3fd3bee@leemhuis.info>
-	<87lei36q27.fsf@miraculix.mork.no>
-	<20230505120436.6ff8cfca@kernel.org>
-Date: Sun, 07 May 2023 20:32:16 +0200
-In-Reply-To: <20230505120436.6ff8cfca@kernel.org> (Jakub Kicinski's message of
-	"Fri, 5 May 2023 12:04:36 -0700")
-Message-ID: <87fs88kn67.fsf@miraculix.mork.no>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6806315A7
+	for <regressions@lists.linux.dev>; Mon,  8 May 2023 01:12:57 +0000 (UTC)
+Received: (qmail 8302 invoked by uid 990); 8 May 2023 01:06:14 -0000
+Authentication-Results: devico.uberspace.de;
+	auth=pass (plain)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Date: Mon, 08 May 2023 01:06:13 +0000
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
-X-Virus-Scanned: clamav-milter 0.103.8 at canardo
-X-Virus-Status: Clean
+From: "Leonard Lausen" <leonard@lausen.nl>
+Message-ID: <ebbcd56ac883d3c3d3024d368fab63d26e02637a@lausen.nl>
+TLS-Required: No
+Subject: [PATCH] Revert "drm/msm/dp: Remove INIT_SETUP delay"
+To: regressions@lists.linux.dev, "Bjorn Andersson"
+ <quic_bjorande@quicinc.com>, "Dmitry Baryshkov" <dmitry.baryshkov@linaro.org>,
+ "Rob Clark" <robdclark@gmail.com>, "Abhinav Kumar"
+ <quic_abhinavk@quicinc.com>, "Stephen Boyd" <swboyd@chromium.org>, "Kuogee
+ Hsieh" <quic_khsieh@quicinc.com>, "Johan Hovold" <johan+linaro@kernel.org>,
+ "Sankeerth Billakanti" <quic_sbillaka@quicinc.com>
+Cc: "Sean Paul" <sean@poorly.run>, "David Airlie" <airlied@gmail.com>, "Daniel
+ Vetter" <daniel@ffwll.ch>, linux-arm-msm@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, "Nikita Travkin" <nikita@trvn.ru>
+X-Rspamd-Bar: -
+X-Rspamd-Report: MIME_GOOD(-0.1) BAYES_HAM(-2.999968) SUSPICIOUS_RECIPS(1.5)
+X-Rspamd-Score: -1.599968
+Received: from unknown (HELO unkown) (::1)
+	by devico.uberspace.de (Haraka/3.0.1) with ESMTPSA; Mon, 08 May 2023 03:06:13 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+	d=lausen.nl; s=uberspace;
+	h=from;
+	bh=Ew+ga4R4XmyLDd+z40yzIO7CFGKrkhYk+0CcdiQL9Sw=;
+	b=od7KhyxiI988/H0wo80l6KXEewxhiWVhz0SfXY/weB6DUvv7GRv3Rb/20C0sRcopopbYInGJAy
+	u0LpHpGjdT10DN1ywJ9gw54CY4sTZ1EK+qfwoWlK6Lse+2EHQ/egTwgmIjUs+3z5u3Wwgf2Iy6Ov
+	8+JjmHzraSUXx1gN376lVMSrsd5uBADfq6ae0aeSTI+rNg4zf6AV1xa3l5aiQndVbCH6lE0WEeEm
+	zYVDBem9t6Hx3ZS8gyRPqIkcfQbP90eDXu/W0EeiG19jKZPa/Y3Co/7K7W63phd7QdspH60A9w7K
+	VwwVw/VfIp+qZk7/k1/P+Ml6xftCKNVMRj0wvXjVH2HF+ZiYSdtQCAuN2GHBFd/loesiMFjEzv+I
+	0HosD/qeYweyP2l7P8Zo5M9BCVOS5D+sQ7hANY/c0S9Gs+r1qOHyYh7Ao3RIPYs40pW2Dkyg2jEQ
+	aHQ0tdpJavp7CCkSAp/9YrYiLAwe3X5B7EZtR/Ps98/1/vbTd/qmkEGg92iF9QRm/5ksjayNrbY7
+	/bELzo3Iku+i5IQJi3ViM9T2NYaNUCbY2b3VCzRVNM6rEuAIGMOjqs3/oNj+fY9fwnQ54frY+pk0
+	l6ggn2GIbzVozsNkDoO3VfNBRY9HlabFLpLiNVWt7loWZDv2y3sxN83aeCKOHQIdTZq+mLtgvcaJ
+	E=
 
-Jakub Kicinski <kuba@kernel.org> writes:
+This reverts commit e17af1c9d861dc177e5b56009bd4f71ace688d97.
 
-> It's just a hashtable init, I think that we can do:
->
-> diff --git a/kernel/bpf/offload.c b/kernel/bpf/offload.c
-> index d9c9f45e3529..8a26cd8814c1 100644
-> --- a/kernel/bpf/offload.c
-> +++ b/kernel/bpf/offload.c
-> @@ -859,4 +859,4 @@ static int __init bpf_offload_init(void)
->  	return rhashtable_init(&offdevs, &offdevs_params);
->  }
->=20=20
-> -late_initcall(bpf_offload_init);
-> +core_initcall(bpf_offload_init);
->
->
-> Thorsten, how is the communication supposed to work in this case?
-> Can you ask the reporter to test this? I don't see them on CC...
+Removing the delay of 100 units broke hot plug detection for USB-C displa=
+ys on
+qcom sc7180 lazor devices. Lazor uses mdss for hot plug detection and dec=
+lares
+dp_hot_plug_det in the dts. Other sc7180 based devices like aspire1 were =
+not
+affected by the regression, as they do not rely on mdss and dp_hot_plug_d=
+et for
+hot plug detection.
 
-FWIW, I tried to reproduce the oops in the hope that I could confirm
-a fix.  But I failed. The netdev is successfully deregistered on my
-laptop no matter what I do. Tested v6.3 and current net/main, and
-tried different tricks to change probe timing.
+Signed-off-by: Leonard Lausen <leonard@lausen.nl>
+Tested-by: Leonard Lausen <leonard@lausen.nl> # Trogdor (sc7180)
+Suggested-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
-Guess this is timing sensitive enough that it only shows up on certain
-systems.
+---
+ drivers/gpu/drm/msm/dp/dp_display.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-So we will need the reporter to chime in.
-
-
-Bj=C3=B8rn
+diff --git a/drivers/gpu/drm/msm/dp/dp_display.c b/drivers/gpu/drm/msm/dp=
+/dp_display.c
+index bde1a7ce442f..db9783ffd5cf 100644
+--- a/drivers/gpu/drm/msm/dp/dp_display.c
++++ b/drivers/gpu/drm/msm/dp/dp_display.c
+@@ -1506,7 +1506,7 @@ void msm_dp_irq_postinstall(struct msm_dp *dp_displ=
+ay)
+        dp =3D container_of(dp_display, struct dp_display_private, dp_dis=
+play);
+=20
+=20       if (!dp_display->is_edp)
+-               dp_add_event(dp, EV_HPD_INIT_SETUP, 0, 0);
++               dp_add_event(dp, EV_HPD_INIT_SETUP, 0, 100);
+ }
+=20
+=20bool msm_dp_wide_bus_available(const struct msm_dp *dp_display)
+--=20
+2.30.2
