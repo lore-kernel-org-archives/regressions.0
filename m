@@ -1,164 +1,84 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C832C210C
-	for <regressions@lists.linux.dev>; Mon,  8 May 2023 08:39:34 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pvwP6-0007CA-K0; Mon, 08 May 2023 10:39:32 +0200
-Message-ID: <9d1022a5-847b-13f0-84d3-5b7d81355d59@leemhuis.info>
-Date: Mon, 8 May 2023 10:39:32 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE0003C22
+	for <regressions@lists.linux.dev>; Mon,  8 May 2023 09:00:14 +0000 (UTC)
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-50bc5197d33so8136571a12.1
+        for <regressions@lists.linux.dev>; Mon, 08 May 2023 02:00:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1683536413; x=1686128413;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PBzioUPmPxWqOkTI6gwe94hiIYOth3djVQkKcgaJJpA=;
+        b=ymGaXjTcqrqZoMVRQkQ04gJL1AHkZPPitqc4vcsmL/ha+FwwjIfcFM3DFC+Wq2bw/y
+         7eb6+6xQmYsdGNpZCRb0LFi980txKsKV/unPFfH4uF98SYgMIO4MifSicgyTEbOoLiNZ
+         iyhTefQR1/ldbuV4GnhLqtp4mJveVIZKydS7qtpq9bHfNgFklzzj/oD7piCvjhCkgaLg
+         Wsx/xQrCgMrwxtxcdViTpkzjBBfu/yxcOXgGbrpRsZF4pr9M4j1LH6TTGB75byLS+Kwb
+         fTNjWO70B69m54FyeTbphR/aq5qrYJWOlXpQUJZ8jrzubPjQw1X13limcPlCOWuJd6xX
+         8qGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683536413; x=1686128413;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PBzioUPmPxWqOkTI6gwe94hiIYOth3djVQkKcgaJJpA=;
+        b=QxK9FjBJrD0KQAw6HhXaJPfEOvbx/bsihUskcc0uE6GifAKQ/LOUTRkkBX6l/NBQfQ
+         wdGZeNgR9W/9XHz/Unjtc4t71fNvu/PC7OqICEhIBOTyPIXuTBIorZmTXhUAZvOt/PEt
+         KGHbWsDTKkz8+Rh1Jnd5wDg61fTEHi9ukDIWf41Ve5QuYcSjrrDy6akQWX8Wjl6NnIdK
+         PR0XcZU7f8BwJ+pmqj4Wx6BerG3ZIR7Uzb0rS512v0kSNNwlr8IZ20KEDkjr1mbx0ya3
+         cCuKP41ErGeD/D6Mw3SsLwB/TxzyXDhk3kU6iwI0pwWwI2J/+dYX+cXvJMR7f5Wbec7f
+         57AA==
+X-Gm-Message-State: AC+VfDzxBBU5+/PPnCL8gxOScQUrxug63BbfR6+KrLOk7JAAJ9JPMrw/
+	EaS6VpYoDB3/Idu27ixLiSm7uQ==
+X-Google-Smtp-Source: ACHHUZ6Fj426vCUbioccDPAAlleFxGw5RQLbiaE0CVoWWeV1G1vSEI4G8XcRqc+GdlepxttZ4QqZcw==
+X-Received: by 2002:a17:907:9482:b0:968:4d51:800b with SMTP id dm2-20020a170907948200b009684d51800bmr941959ejc.1.1683536412950;
+        Mon, 08 May 2023 02:00:12 -0700 (PDT)
+Received: from krzk-bin.. ([2a02:810d:15c0:828:50e0:ebdf:b755:b300])
+        by smtp.gmail.com with ESMTPSA id jz4-20020a170906bb0400b0094bb4c75695sm4718953ejb.194.2023.05.08.02.00.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 May 2023 02:00:12 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Akira Shimahara <akira215corp@gmail.com>,
+	Ivan Zaentsev <ivan.zaentsev@wirenboard.ru>,
+	Stefan Wahren <stefan.wahren@i2se.com>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Stefan Wahren <stefan.wahren@chargebyte.com>,
+	Michael Heimpold <mhei@heimpold.de>,
+	regressions@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC] w1: w1_therm: fix locking behavior in convert_t
+Date: Mon,  8 May 2023 10:59:45 +0200
+Message-Id: <168353638584.78189.6729435069680377239.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20230427112152.12313-1-stefan.wahren@i2se.com>
+References: <20230427112152.12313-1-stefan.wahren@i2se.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: PROBLEM: ThinkPad T430 (BCM20702) Can't Detect Bluetooth Devices
- Starting from Kernel v6.1.0 Until Now v6.3.1
-Content-Language: en-US, de-DE
-To: Moh Oktavi Aziz Nugraha <moktavizzen@gmail.com>, marcel@holtmann.org,
- johan.hedberg@gmail.com, luiz.dentz@gmail.com, avisaziz123@gmail.com
-Cc: linux-bluetooth@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <CAHCNbp3ztCcp31JdVYuxy+s1qXaa+Zy74eGJmfPmyrx_6Wjhhw@mail.gmail.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <CAHCNbp3ztCcp31JdVYuxy+s1qXaa+Zy74eGJmfPmyrx_6Wjhhw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1683535174;acdecd99;
-X-HE-SMSGID: 1pvwP6-0007CA-K0
 
-[CCing the regression list, as it should be in the loop for regressions:
-https://docs.kernel.org/admin-guide/reporting-regressions.html]
 
-[TLDR: I'm adding this report to the list of tracked Linux kernel
-regressions; the text you find below is based on a few templates
-paragraphs you might have encountered already in similar form.
-See link in footer if these mails annoy you.]
-
-On 06.05.23 13:33, Moh Oktavi Aziz Nugraha wrote:
-> [1.] One line summary of the problem:
-> ThinkPad T430 (BCM20702) Can't Detect Bluetooth Devices Starting from
-> Kernel v6.1.0 Until Now v6.3.1
+On Thu, 27 Apr 2023 13:21:52 +0200, Stefan Wahren wrote:
+> The commit 67b392f7b8ed ("w1_therm: optimizing temperature read timings")
+> accidentially inverted the logic for lock handling of the bus mutex.
 > 
-> [2.] Full description of the problem/report:
-> Last week I installed Ubuntu, but my bluetooth can't detect devices
-> when I use kernel 6.1 and above. My bluetooth was fine when I used
-> kernel 6.0 and before. I'm filing this bug on the kernel because when
-> I tested this bug on Fedora and Ubuntu, the same problem appeared when
-> I used kernel version 6.1 and above.
-> The workaround for version 6.1 and above is to run "hcitool scan" on
-> the terminal if I want to detect bluetooth devices.
-> There are similar problem in earlier kernel version, but it was fixed
-> according to this post https://askubuntu.com/a/1169415
-> Here is the video i made to reproduce the issue https://youtu.be/pHjOIAk90Zc
-> Here is the information about my Bluetooth card:
-> Bus 001 Device 007: ID 0a5c:21e6 Broadcom Corp. BCM20702 Bluetooth 4.0
-> [ThinkPad]
-> What I have tried:
-> - Installed Fedora 38 and then Install bluetooth firmware
-> https://github.com/winterheart/broadcom-bt-firmware, and then
-> downgrade bluez (bluetooth cant detect devices)
-> - Installed Fedora 37 (no problem, because the default kernel is 6.0)
-> - installed Ubuntu 23.04 and then  install bluetooth firmware
-> https://github.com/winterheart/broadcom-bt-firmware (bluetooth cant
-> detect devices)
-> - Installed Ubuntu 22.10 (no problem, because the default kernel is 5.19)
-> - Installed Ubuntu 22.04 (no problem, because the default kernel is 5.19)
-> - Go back to Ubuntu 23.04 and then try these kernel:
-> v5.15.110 (good)
-> v5.19.17 (good)
-> v6.0.12 (good)
-> v6.0.19 (good)
-> v6.1.27 (bad)
-> v6.2.14 (bad)
-> v6.3.1 (bad)
-> After trying all of that I came to conclusion that this bug is caused
-> by the kernel.
-> I want to try git bisect to find the commit that caused the regression
-> between kernel versions 6.0 and 6.1, but it might take me a while
-> since it’s my first time using it. Plus, I’ve got a bunch of college
-> assignments to finish up this week, so I’m a bit strapped for time.
-
-FWIW, the following guide recently added might help you (a similar
-document to also cover bisection is planned, but I haven't started on it
-yet...):
-https://docs.kernel.org/admin-guide/quickly-build-trimmed-linux.html
-
-> [3.] Keywords (i.e., modules, networking, kernel):
-> bluetooth, networking, broadcom, bcm20702, thinkpad, t430
->
-> [4.] Kernel information
-> [4.1.] Kernel version (from /proc/version):
-> Linux version 6.3.1-060301-generic (kernel@kathleen)
->
-> (x86_64-linux-gnu-gcc-12 (Ubuntu 12.2.0-17ubuntu1) 12.2.0, GNU ld (GNU
-> Binutils for Ubuntu) 2.40) #202304302031 SMP PREEMPT_DYNAMIC Mon May
-> 1 00:41:22 UTC 2023
-> [4.2.] Kernel .config file:
-> <attachment1-KernelConfig.txt>
+> Before:
+>   pullup -> release lock before sleep
+>   no pullup -> release lock after sleep
 > 
-> [5.] Most recent kernel version which did not have the bug:
-> 6.0.19
-> 
-> [6.] Output of Oops.. message (if applicable) with symbolic
-> information resolved (see Documentation/admin-guide/bug-hunting.rst)
-> I can't find the Oops message when i use "journalctl | grep Oops"
-> 
-> [7.] A small shell script or example program which triggers the
-> problem (if possible)
-> I cant write a shell script yet, but i have made a video to show the
-> trigger and how to reproduce the issue https://youtu.be/pHjOIAk90Zc
-> 
-> [8.] Environment
-> [8.1.] Software (add the output of the ver_linux script here)
-> <attachment2-Software.txt>
-> [8.2.] Processor information (from /proc/cpuinfo):
-> <attachment3-Processor.txt>
-> [8.3.] Module information (from /proc/modules):
-> <attachment4-Module.txt>
-> [8.4.] Loaded driver and hardware information (/proc/ioports, /proc/iomem)
-> <attachment5-DriverHW.txt>
-> [8.5.] PCI information ('lspci -vvv' as root)
-> <attachment6-PCI.txt>
-> [8.6.] SCSI information (from /proc/scsi/scsi)
-> <attachment7-SCSI.txt>
-> [8.7.] Other information that might be relevant to the problem (please
-> look in /proc and include all information that you think to be
-> relevant):
-> <attachment9-lsusb.txt>
-> 
-> [X.] Other notes, patches, fixes, workarounds:
-> The workaround for version 6.1 and above is to run "hcitool scan" on
-> the terminal if I want to detect bluetooth devices.
+> [...]
 
-Thanks for the report. To be sure the issue doesn't fall through the
-cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
-tracking bot:
+Applied, thanks!
 
-#regzbot ^introduced v6.0..v6.1
-#regzbot title bluetooth: ThinkPad T430 (BCM20702) does not  Detect
-Bluetooth Devices anymore
-#regzbot ignore-activity
+[1/1] w1: w1_therm: fix locking behavior in convert_t
+      https://git.kernel.org/krzk/linux-w1/c/dca5480ab7b77a889088ab7cac81934604510ac7
 
-This isn't a regression? This issue or a fix for it are already
-discussed somewhere else? It was fixed already? You want to clarify when
-the regression started to happen? Or point out I got the title or
-something else totally wrong? Then just reply and tell me -- ideally
-while also telling regzbot about it, as explained by the page listed in
-the footer of this mail.
-
-Developers: When fixing the issue, remember to add 'Link:' tags pointing
-to the report (the parent of this mail). See page linked in footer for
-details.
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+Best regards,
+-- 
+Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
