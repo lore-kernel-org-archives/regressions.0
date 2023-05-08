@@ -1,126 +1,101 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AE1D64C
-	for <regressions@lists.linux.dev>; Mon,  8 May 2023 12:58:11 +0000 (UTC)
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-64115eef620so34193352b3a.1
-        for <regressions@lists.linux.dev>; Mon, 08 May 2023 05:58:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1683550691; x=1686142691;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=gvfV9+PCzsvkjwntJF8d+j7w4e2sZC/L2Vk5lbbZ8yc=;
-        b=K0XZq6EoperWmzBR1Hz+pq8+x1s6xcIye3EBGQsu/sv/XZET6xhhL+Ns9Di+eoJHXK
-         ygg8ytnL3o9fToMGhFlezakX8m1tT6JZGr0tkB8QaGsjMd3B1sGCpxrtJUlRZC9IrogY
-         s80BCP0DSC3K4HmgdHxMoEyve/hXY47jY0FEqZLjPVYOXGP0OwOcwc8TAfU06sOM16kb
-         dfAE0IKtOOQ/5lfCk1vPN3UpskGg6pxstVoIcwCs7KqhKy/ZxlV2RLWKy01AAO9lEy1f
-         ffrKxVik7a97JC5nUHxRzFMtEcHGTRKjyn1MR/1Dj2DTl4j1kvvsu2xFskQG8cV9jsBG
-         qrrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683550691; x=1686142691;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gvfV9+PCzsvkjwntJF8d+j7w4e2sZC/L2Vk5lbbZ8yc=;
-        b=Mvsu/V7ZorzGVq2K4xX7bvMbR7PxTfvmR3YUQpYFpYtR5uXBphbXfpdboObFS2HEh8
-         tOCNRr1kUV3hLr1MfePyaBfMZiQgw++lcobzUtSWkHSKctWtGdw21Z/QZk42/kxWY4PX
-         UcQniPf77fr1lmlloblxgxquRIzwBH2k/zOjzuZm6CbJXavlxg9gMOF6jgqGev7tEPhF
-         vZKT42IM4P4umRKtN2gva2XLTWN/t13mKfmqm72wk3Zid/XKjfhlblP/QbQS3FDnaWWN
-         vynl0BreIU035htAJ2HzbYxFd3Bst4qwE72OJ+y4lKIHMmo6C7c9IoREAGSL928d2EjX
-         M82A==
-X-Gm-Message-State: AC+VfDw9H53mNoBdy04JF0AZk1NL0MNr56q2YEwz8KyIkHJqVZ3OuwZA
-	7ayK/+Q8pXfLi3ncwPWTaxQ=
-X-Google-Smtp-Source: ACHHUZ7tvcZUwhmWYK1KL8fvJvl/gWOTCK0hnFrNrGP2zfguq0vBDTk0YwoABqhe+nORAwMFU1llWA==
-X-Received: by 2002:a17:903:1208:b0:1aa:d235:6dd4 with SMTP id l8-20020a170903120800b001aad2356dd4mr18399382plh.19.1683550690873;
-        Mon, 08 May 2023 05:58:10 -0700 (PDT)
-Received: from debian.me (subs32-116-206-28-47.three.co.id. [116.206.28.47])
-        by smtp.gmail.com with ESMTPSA id h12-20020a170902eecc00b001a0742b0806sm7153503plb.108.2023.05.08.05.58.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 May 2023 05:58:10 -0700 (PDT)
-Received: by debian.me (Postfix, from userid 1000)
-	id 5626810629F; Mon,  8 May 2023 19:58:07 +0700 (WIB)
-Date: Mon, 8 May 2023 19:58:07 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Linux regressions mailing list <regressions@lists.linux.dev>,
-	Christian Zigotzky <chzigotzky@xenosoft.de>,
-	linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Cc: Olof Johansson <olof@lixom.net>,
-	Darren Stevens <darren@stevens-zone.net>,
-	"R.T.Dickinson" <rtd2@xtra.co.nz>,
-	Christian Zigotzky <info@xenosoft.de>,
-	Rob Herring <robh@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFD231361
+	for <regressions@lists.linux.dev>; Mon,  8 May 2023 12:58:54 +0000 (UTC)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4QFLjH4B1pz4x1R;
+	Mon,  8 May 2023 22:49:55 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
+	s=201909; t=1683550197;
+	bh=eO5q3it3xvvYdSrNIsevKUBw8GnvvPHh7AKieuy9aNg=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=JtiLlBI0TQGn5mQMQvePVg2mc44sEVMrRTGjYF+fJQL6AJHXUYXN+m/DA4C4IEo8i
+	 m8hRfR3lPGeHWmMfPLt4OS5/O5EgnAiVjnyAbe6Il921BcbxKt0jtTwwRuQ0yjGJf3
+	 ezLZXT2YlIdc39MB679D/Qa1+nC/7KaV0wSVjFK2K7CRIyU1xELiZqSApXRb0Akf4J
+	 ofbHNTMGF/O1cwfBQUaxEkJrdYsqhsNH4l3W+pETpK47jKrDqLXzRzBWTulbUnqB4K
+	 LuTrVU6Pm+yw592Us13k3yKhuf1aYU3n75gwjqYn8OaEA9bqgpf6cXfTf97ldYQPua
+	 TuQ0FsI/cfJOg==
+From: Michael Ellerman <mpe@ellerman.id.au>
+To: "Linux regression tracking #adding (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>, Christian Zigotzky <chzigotzky@xenosoft.de>,
+ linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Cc: Rob Herring <robh@kernel.org>, Darren Stevens <darren@stevens-zone.net>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ "R.T.Dickinson" <rtd2@xtra.co.nz>, Olof Johansson <olof@lixom.net>,
+ Christian Zigotzky <info@xenosoft.de>
 Subject: Re: [PASEMI NEMO] Boot issue with the PowerPC updates 6.4-1
-Message-ID: <ZFjx31Rw79GF+E7p@debian.me>
+In-Reply-To: <71f580c7-0890-b622-62c9-f58fa9537a90@leemhuis.info>
 References: <301595ad-0edf-2113-b55f-f5b8051ed24c@xenosoft.de>
  <71f580c7-0890-b622-62c9-f58fa9537a90@leemhuis.info>
+Date: Mon, 08 May 2023 22:49:54 +1000
+Message-ID: <87ttwn56od.fsf@mail.lhotse>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="NH6qK9uLFuUReiH4"
-Content-Disposition: inline
-In-Reply-To: <71f580c7-0890-b622-62c9-f58fa9537a90@leemhuis.info>
+Content-Type: text/plain
 
-
---NH6qK9uLFuUReiH4
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, May 08, 2023 at 01:29:22PM +0200, Linux regression tracking #adding=
- (Thorsten Leemhuis) wrote:
+"Linux regression tracking #adding (Thorsten Leemhuis)"
+<regressions@leemhuis.info> writes:
 > [CCing the regression list, as it should be in the loop for regressions:
 > https://docs.kernel.org/admin-guide/reporting-regressions.html]
->=20
+>
 > [TLDR: I'm adding this report to the list of tracked Linux kernel
 > regressions; the text you find below is based on a few templates
 > paragraphs you might have encountered already in similar form.
 > See link in footer if these mails annoy you.]
->=20
+
+Patch is in testing.
+
+https://lore.kernel.org/linuxppc-dev/20230505171816.3175865-1-robh@kernel.org/
+
+cheers
+
 > On 02.05.23 04:22, Christian Zigotzky wrote:
-> > Hello,
-> >=20
-> > Our PASEMI Nemo board [1] doesn't boot with the PowerPC updates 6.4-1 [=
-2].
-> >=20
-> > The kernel hangs right after the booting Linux via __start() @
-> > 0x0000000000000000 ...
-> >=20
-> > I was able to revert the PowerPC updates 6.4-1 [2] with the following
-> > command: git revert 70cc1b5307e8ee3076fdf2ecbeb89eb973aa0ff7 -m 1
-> >=20
-> <snipped> ...=20
+>> Hello,
+>> 
+>> Our PASEMI Nemo board [1] doesn't boot with the PowerPC updates 6.4-1 [2].
+>> 
+>> The kernel hangs right after the booting Linux via __start() @
+>> 0x0000000000000000 ...
+>> 
+>> I was able to revert the PowerPC updates 6.4-1 [2] with the following
+>> command: git revert 70cc1b5307e8ee3076fdf2ecbeb89eb973aa0ff7 -m 1
+>> 
+>> After a re-compiling, the kernel boots without any problems without the
+>> PowerPC updates 6.4-1 [2].
+>> 
+>> Could you please explain me, what you have done in the boot area?
+>> 
+>> Please find attached the kernel config.
+>
 > Thanks for the report. To be sure the issue doesn't fall through the
 > cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
 > tracking bot:
->=20
+>
 > #regzbot ^introduced e4ab08be5b4902e5
-
-Hi Thorsten,
-
-Why and how can you conclude that the culprit is e4ab08be5b4902 ("powerpc/i=
-sa-bridge:
-Remove open coded "ranges" parsing") rather than powerpc PR merge commit
-70cc1b5307e8ee ("Merge tag 'powerpc-6.4-1' of
-git://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux")?=20
-
-Thanks.
-
---=20
-An old man doll... just what I always wanted! - Clara
-
---NH6qK9uLFuUReiH4
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZFjx2wAKCRD2uYlJVVFO
-o4xEAQDcf1cLJer4o/CrYHWbWulSD8sBhiGfD7yHvrFxA9OMnAD/WihMJ1YuvPap
-N4TzwlUdqHowFwnhkI1hKVr7LWF8gAk=
-=slin
------END PGP SIGNATURE-----
-
---NH6qK9uLFuUReiH4--
+> #regzbot title powerpc: boot issues on PASEMI Nemo board
+> #regzbot ignore-activity
+>
+> This isn't a regression? This issue or a fix for it are already
+> discussed somewhere else? It was fixed already? You want to clarify when
+> the regression started to happen? Or point out I got the title or
+> something else totally wrong? Then just reply and tell me -- ideally
+> while also telling regzbot about it, as explained by the page listed in
+> the footer of this mail.
+>
+> Developers: When fixing the issue, remember to add 'Link:' tags pointing
+> to the report (the parent of this mail). See page linked in footer for
+> details.
+>
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> --
+> Everything you wanna know about Linux kernel regression tracking:
+> https://linux-regtracking.leemhuis.info/about/#tldr
+> That page also explains what to do if mails like this annoy you.
