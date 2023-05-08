@@ -1,173 +1,130 @@
-Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5547817D0
-	for <regressions@lists.linux.dev>; Mon,  8 May 2023 15:18:01 +0000 (UTC)
-Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-52160f75920so3096827a12.2
-        for <regressions@lists.linux.dev>; Mon, 08 May 2023 08:18:01 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A88E920F9
+	for <regressions@lists.linux.dev>; Mon,  8 May 2023 16:27:48 +0000 (UTC)
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-50bcb229adaso9027479a12.2
+        for <regressions@lists.linux.dev>; Mon, 08 May 2023 09:27:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1683559081; x=1686151081;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=ddVg5NwpexUXVTyyMr05Lwv6CZGiw2vqLYMkPFFIBYQ=;
-        b=JOt53aFzZR9CZNQIoTICa+8Nc75Sx6hdN4ogm7btYica7EBns7zTHkPa65XqoCIUeM
-         bZTOBlbKlRBdAFj30NcgOexEqu2h9/HWl8WZg8sG6dVHhIdVPK7u79Q/WlwTdz6N7Q7W
-         Ou61NmkStKfOU4b38Gdh1beRn9F6UAstyLWq2pplwciiezAn3rtdQUT7v6jE1yO7e/Cb
-         FZTd+hGxLp7NF+hYGv3bpN567IpMP1jKhTTQXVwXU0qXIJsStO/Se5xftXIIsZTPp3md
-         ME+UXt+oWYhyJKKi/bug8KX0dilegSs1DiOg7YSmcX8nNxNx8uOtEDIfGAilh2Ns22Fn
-         rUpQ==
+        d=linux-foundation.org; s=google; t=1683563266; x=1686155266;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CVAb8RwSaMOd+9poMiDAevwfkVDh6+GTnWJJXhYlKlU=;
+        b=e8JGtPmLkYYwvJvBu5i4aqFu9fcudhyLRfOZVCQVUdVCzNdixsVzU05fQi78JBmV3p
+         J7LqkeXDs1Q0EiAnFHpLpNn2DQKnApt405C9psxCRVKJ53+5Sb2RRG1IzN+mXVAq33wj
+         YzeYc2SC2VMssxD9nAsOMSVBECU0T1Kk3GmyY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683559081; x=1686151081;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ddVg5NwpexUXVTyyMr05Lwv6CZGiw2vqLYMkPFFIBYQ=;
-        b=d2m7lOUUn3BaaZ1WQCV9gaC0GQTXyGu62FbzU12gbguXOx7Wbhjaomk16BkwBFcWBV
-         aTCw5aZw28cV5loyZz3r8hLUwzikR6+pblwc1IzpqvtnLkc8m0k58Y+p7Clzg8/tiGQd
-         bYJixCWGHKsYuQJaeQb94y+yMvl7XYJI+6U5HbFvBspfO8ZZFCUj0zmCbRkV5f2ndsut
-         /PDfvp0qUt/M+f3bfKveXQuttcouSGH4NCy6muEz9NcV4Fwg4dpCMjIV+gd+CQyaxkle
-         o9+hqGTaT3ZgGAZ3h0H3ffH2S2XVO5RJjXBpTF+anvo88KPt0IqbdhZ17tWke8jdWnLb
-         bdDg==
-X-Gm-Message-State: AC+VfDyxxJFRSRpuKxLSWs4RPkk5QcHuWdbpkANEoBl0oKrC7y5URwDO
-	o/80aTVylkeG1KLFKo+VqpUIUGGJO4w=
-X-Google-Smtp-Source: ACHHUZ6RD4eTgwFtetlrlNU3p6Jd4rK3oGhwkiuhLUv8Z5bGlLP50566XiXLBq7PoeKqK10zc71bdg==
-X-Received: by 2002:a17:90a:af86:b0:250:5194:b135 with SMTP id w6-20020a17090aaf8600b002505194b135mr7136903pjq.34.1683559080588;
-        Mon, 08 May 2023 08:18:00 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:4d1:db5a:dbba:cd34])
-        by smtp.gmail.com with ESMTPSA id n21-20020a17090a929500b0024de93877acsm9944960pjo.47.2023.05.08.08.17.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 May 2023 08:17:59 -0700 (PDT)
-Date: Mon, 8 May 2023 08:17:56 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Mario Limonciello <mario.limonciello@amd.com>
-Cc: Thorsten Leemhuis <linux@leemhuis.info>,
-	"Limonciello, Mario" <mlimonci@amd.com>,
-	Linux regressions mailing list <regressions@lists.linux.dev>,
-	Chuanhong Guo <gch981213@gmail.com>, linux-input@vger.kernel.org,
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-	ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [regression] Bug 217394 - IRQ override skipping breaks the Aya
- Neo Air Plus 6800U keyboard buttons
-Message-ID: <ZFkSpOpPpwJqpJHI@google.com>
-References: <01ea5c8e-ed2f-7568-f6ed-896329e7b673@leemhuis.info>
- <68d017d9-d815-01d4-23c1-49c0aaf5f20b@amd.com>
- <ZFKvVKMesT+3NthN@google.com>
- <5df240d4-03f1-31cd-03e1-a6cfddd5cc1d@leemhuis.info>
- <f60edac7-8ba9-216e-568b-2fb2aeb72cfb@amd.com>
+        d=1e100.net; s=20221208; t=1683563266; x=1686155266;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CVAb8RwSaMOd+9poMiDAevwfkVDh6+GTnWJJXhYlKlU=;
+        b=OUn5bdbpArqp6XUinfRPGjmK5bJGGS6EwL8R2FYMyCqhG/44SE+MZSq1nVMpMR6bPK
+         lSMQ2vXgic35ojeefzqKmZ3HptW+4vLkp5eVdPKOBpTiQltRE1PKyaLMJcnkLtNXBGBe
+         3sPiEGuIH/tfC6HfwkPyQJ5sfAf+AgXxqQsztFUJEwMhN16GwZ2VJ1x4Jek8/goteHhZ
+         5yJp8Mu3KHLqMvbRja1mzB93PmYEESuDyeZS8zqEHxv25BJJMYe/CrHwx0fsFWAgudgq
+         3cfwHWRXMcZuj6azGo68L6qdaI24N2Q3Qht4NKrbZjK0cBdNG8t8cceQ++02HSx2Oa0Y
+         O7VA==
+X-Gm-Message-State: AC+VfDwOEnkCjAmurJKD7JgBraM7lXviBtc4uKMHbl9ToTEATFUM5U9p
+	ZV5nMk1V+C3YXfIu/xl34eTkEeInlTRl6gUFCvDgSg==
+X-Google-Smtp-Source: ACHHUZ4MubsWhDnJHaqH5geOh9HZFAvnCEMXhGVHDnRxmRQndLOSjWVJlRzg4lWv03LnWghhjNqUqw==
+X-Received: by 2002:a17:907:9482:b0:968:4d51:800b with SMTP id dm2-20020a170907948200b009684d51800bmr2203525ejc.1.1683563266549;
+        Mon, 08 May 2023 09:27:46 -0700 (PDT)
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com. [209.85.218.42])
+        by smtp.gmail.com with ESMTPSA id ib10-20020a1709072c6a00b009531d9efcc4sm156038ejc.133.2023.05.08.09.27.45
+        for <regressions@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 08 May 2023 09:27:45 -0700 (PDT)
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-965fc25f009so563709566b.3
+        for <regressions@lists.linux.dev>; Mon, 08 May 2023 09:27:45 -0700 (PDT)
+X-Received: by 2002:a17:907:8692:b0:967:142b:ff07 with SMTP id
+ qa18-20020a170907869200b00967142bff07mr3121227ejc.21.1683563265068; Mon, 08
+ May 2023 09:27:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <f60edac7-8ba9-216e-568b-2fb2aeb72cfb@amd.com>
+References: <ZElaVmxDsOkZj2DK@debian> <51cff63a-3a04-acf5-8264-bb19b0bee8a3@leemhuis.info>
+In-Reply-To: <51cff63a-3a04-acf5-8264-bb19b0bee8a3@leemhuis.info>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Mon, 8 May 2023 09:27:28 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgzU8_dGn0Yg+DyX7ammTkDUCyEJ4C=NvnHRhxKWC7Wpw@mail.gmail.com>
+Message-ID: <CAHk-=wgzU8_dGn0Yg+DyX7ammTkDUCyEJ4C=NvnHRhxKWC7Wpw@mail.gmail.com>
+Subject: Re: mainline build failure due to cf21f328fcaf ("media: nxp: Add
+ i.MX8 ISI driver")
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: "Sudip Mukherjee (Codethink)" <sudipm.mukherjee@gmail.com>, 
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+	Mauro Carvalho Chehab <mchehab@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, linux-media@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, May 07, 2023 at 07:45:01AM -0500, Mario Limonciello wrote:
-> 
-> On 5/6/23 01:47, Thorsten Leemhuis wrote:
-> > On 03.05.23 21:00, Dmitry Torokhov wrote:
-> > > On Wed, May 03, 2023 at 11:11:33AM -0500, Limonciello, Mario wrote:
-> > > > On 5/3/2023 7:58 AM, Linux regression tracking (Thorsten Leemhuis) wrote:
-> > > > > I noticed a regression report in bugzilla.kernel.org. As many (most?)
-> > > > > kernel developers don't keep an eye on it, I decided to forward it by mail.
-> > > > > 
-> > > > > Chuanhong Guo, apparently it's cause by a change of yours.
-> > BTW, there is another report caused by the change:
-> > https://bugzilla.kernel.org/show_bug.cgi?id=217406
-> > 
-> > ```
-> > I have an HP Pavilion Aero 13 laptop that comes with an AMD Ryzen 7735U
-> > CPU and an up-to-date BIOS. Using any kernel version that is strictly
-> > greater than 5.19.9 on it is causing the typing with the integrated
-> > keyboard to be extremely slow. "Slow" is subjective but let's say [...]"
-> > ```
-> > 
-> > /me wonders how many machines out there show problems we never hear about
-> > 
-> > Anyway:
-> > 
-> > > > > Note, you have to use bugzilla to reach the reporter, as I sadly[1] can
-> > > > > not CCed them in mails like this.
-> > > > > 
-> > > > > Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=217394 :
-> > > > > 
-> > > > > >    Matthew 2023-05-03 02:28:33 UTC
-> > > > > > 
-> > > > > > Reverting the changes found in this patch fixes the issue:
-> > > > > > > https://lore.kernel.org/all/20220712020058.90374-1-gch981213@gmail.com/
-> > > > > > With that patch the AT Translated Set 2 Keyboard doesn't show up with the evtest and is not usable.
-> > > > > > 
-> > > > > > Hardware:
-> > > > > > 
-> > > > > > Aya Neo Air Plus
-> > > > > > AMD Ryzen 7 6800U
-> > > > > See the ticket for more details.
-> > > > > 
-> > > > > BTW: there apparently is another IRQ override needed for a different
-> > > > > machine. See https://bugzilla.kernel.org/show_bug.cgi?id=216804#c8 for
-> > > > > details (ignore the comments before that, the quirk entry for that
-> > > > > machine was merged; comment 8 and all related to it really should have a
-> > > > > separate bug; that's also why this partly fall through the cracks here
-> > > > > :-/ ). The user is currently trying to create a patch.
-> > > > > 
-> > > > Something I'm wondering about is if it's possible for i8042 to detect the
-> > > > polarity is incorrect when it probes and
-> > > > to try to correct it.
-> > > > 
-> > > > If we could do that we can probably drop 9946e39fe8d0 ("ACPI: resource: skip
-> > > > IRQ override on AMD Zen platforms")
-> > > > to fix this issue along with all the other quirks that have collected over
-> > > > time on i8042 polarity issues.
-> > > 8042 is shared between multiple platforms and is quite fragile as it is.
-> > > If there are issues in AMD firmware and you know the polarity that is
-> > > needed for 8042 on these platforms you should add a proper fixup for
-> > > override. Maybe you should only skip override for IRQ 1?
-> > Stupid question from the peanut gallery: does anyone know what Windows
-> > is doing on those machines? I wonder if this is one of those situation
-> > where we just must follow suite to make things work reliably long term
-> > for users, even if that might mean 8042 needs to be modified.
+On Mon, May 8, 2023 at 3:55=E2=80=AFAM Linux regression tracking #adding
+(Thorsten Leemhuis) <regressions@leemhuis.info> wrote:
+>
+> Thanks for the report. The fixes (see the mail from Laurent) apparently
+> are still not mainlined (or am I missing something?), so let me add this
+> report to the tracking to ensure this is not forgotten:
 
-Maybe Windows simply selects "falling edge" trigger in the driver? They
-do not need to deal with multiple atchitectures, so it may work for
-them.
+Gaah. I was intending to apply the patch directly before rc1, but then
+I forgot about this issue.
 
-> > 
-> > Or is the problem likely to go away with new hardware?
-> > 
-> > Ciao, Thorsten
-> > 
-> > P.S.: BTW:
-> > 
-> > #regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=217406
-> I've got the same question.  This issue doesn't happen in AMD's
-> reference platform; it's not in AMD's firmware.
-> It seems to be happening in some OEM platforms only.
-> 
-> Dmitry,
-> 
-> Can you think about what a polarity detection scheme would look
-> like for i8042?  If it's put in the error path (device not responding to
-> probe)
-> I would think it should be relatively low risk to otherwise working
-> hardware.
+Mauro: I'm currently really *really* fed up with the media tree. This
+exact same thing happened last merge window, where the media tree
+caused pointless build errors, and it took way too long to get the
+fixes the proper ways.
 
-Mario, I feel strongly that this kind of kludges belong in the platform
-handling code. If you know the polarity of keyboard interrupt on AMD
-platforms and that it is sometimes described incorrectly in the firmware
-you should fix it up in the code that deals with the firmware.
+If something doesn't even build, it should damn well be fixed ASAP.
 
-We have some code trying to test AUX interrupt and it has all kinds of
-exceptions because many ECs do not implement AUX LOOP command properly,
-on some the interrupt is not delivered for the LOOP command and so
-forth. It is a disaster. I shudder to think about trying to use KBD
-LOOP.
+Last release it was imx290.c and PM support being disabled, and I had
+to apply the fix manually because it continued to not come in the
+proper way.
 
-Thanks.
+See commit 7b50567bdcad ("media: i2c: imx290: fix conditional function
+defintions").
 
--- 
-Dmitry
+But also see commit b928db940448 ("media: i2c: imx290: fix conditional
+function definitions"), which you *did* commit, but note this on that
+commit:
+
+    AuthorDate: Tue Feb 7 17:13
+    CommitDate: Sat Mar 18 08:44
+
+so it took you a MONTH AND A HALF to react to a build failure.
+
+And see this:
+
+    git name-rev b928db940448
+    b928db940448 tags/v6.4-rc1~161^2~458
+
+ie that build fix that you finally committed came in *AFTER* the 6.3
+release, even though the bug it fixes was introduced in the 6.3 merge
+window:
+
+    git name-rev 02852c01f654
+    02852c01f654 tags/v6.3-rc1~72^2~2^2~193
+
+and now we're in the *EXACT*SAME* situation, with me applying a build
+fix directly, because you couldn't get it fixed in a timely manner.
+
+End result: you and the media tree is on my shit-list, and I will not
+take any pull requests from you that aren't just fixes.
+
+Not just this release, but the next one.
+
+Because I'm completely and utterly fed up with you ignoring
+fundamental "it doesn't even build" issues.
+
+If you can't be bothered fix the build issues that get introduced
+during the merge window, then I'm not going to merge new stuff from
+you.
+
+It's *that* simple.
+
+                  Linus
