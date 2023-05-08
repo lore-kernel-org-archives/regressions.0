@@ -1,83 +1,128 @@
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 666A51361
-	for <regressions@lists.linux.dev>; Mon,  8 May 2023 13:20:10 +0000 (UTC)
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-6439b410679so2593487b3a.0
-        for <regressions@lists.linux.dev>; Mon, 08 May 2023 06:20:10 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 459B7136A
+	for <regressions@lists.linux.dev>; Mon,  8 May 2023 13:28:06 +0000 (UTC)
+Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-24df758db1cso3102215a91.2
+        for <regressions@lists.linux.dev>; Mon, 08 May 2023 06:28:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1683552009; x=1686144009;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=o5gcBvfYJlzZmMkTxk2h2j2g6ckvX/k2lViWHLDwGtw=;
-        b=NYtl9s3Ld1fQJDR+VrYeqdM2/sUlMS9Qek93q4zCpHDFzmXlDZze41R4MCnunwL0PD
-         GPXbuIHTdgT7BctFzxcrzNgO+vZO4LFiHDK58LsQRltboAbY7mkFUR+cW2CK4izooreA
-         +NTGlQHkbKM+BZ+n6oGfXfP0pPyOptBZfSlmzwMw3HC/z5ikPR86P3vOOpd7jlz5dE8d
-         14W7o8PhsGZBW38rYX0mIY936DgDGu56c53RFsgUY08zIg+QD3f7TmTzfRJ7k5NjOBgh
-         DSDf460W23FXIY0vTOAphRDaCTyS2Lam9N/SmNll7nZG6J+cWYLZRh1uPA/BqDhrSMoa
-         2Wbw==
+        d=gmail.com; s=20221208; t=1683552485; x=1686144485;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hJL7on47Y+qnReWK+RN8hsZ4/lRT/GdxonZVZJkZNFc=;
+        b=L0wSaMX47AxHW+5mwIPiPG/LQyY070h6LJllIePcS0Sv63IYnmEKAxprG7ulLTB+bH
+         Bi04krbmZ+1+aUPcvtl38Rf+WNUx2fuZje/fD6QlJ67/Kc5/1U6kkA7vqW/KJ//OBLHV
+         bwKg2UF6Gl5ahTvzQSjbAi3IpW0EGnxZ27tXmzgk8bokLmeEZTQitq+Yf30EBJ65kBqC
+         pMytV3CruCfrvMZWAx4uGdYJYC75WEjWjnUQZN6eqf4f79g68YqPLCOBfMBuFwfALXr+
+         m+CSnYPXFzT2O8djZ58xoWOKYQM0gYAssrTjzx23YiE2o4aiiUxGjrsLsVIVHNLsKnwj
+         xf3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683552009; x=1686144009;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=o5gcBvfYJlzZmMkTxk2h2j2g6ckvX/k2lViWHLDwGtw=;
-        b=ivb59km4nfb1xN9hpV7NcTkjMIiAm+8ntl5zVAY5AOJgEBogX/7dA/XxcynRGYzjSd
-         QJeP6/SISzhTraIyhKNjKAKK3Rvf0M5WWnINhaLJjB7HiMszONTtC37ueuCCTv+oXvbh
-         rKErd5foat9HV6wkSReKwiR0d+jGlca+oPohibSM5vhP14lNIfSWz9Gb4h3CpRDnk9Dm
-         ewqQz5DW/1uoZ07i6MAd9BieY0Ll0v+Y4QAWsmkd8Aw5yQBDof+WVMSm+L/gkvn37xea
-         zY+gOP3AUk/GtB3poOzDFr1DY0GHqf376v4yduMpgTt/lsif5kSQ7D9p2A+cuowbROf7
-         NZlg==
-X-Gm-Message-State: AC+VfDxfewJ1s+WUQVGb2AW5sgJbof4Aht9+uHi4T0AwnlQf9KduUj4N
-	2RqOcokwh9Qz4zMZ+Vm7Swa7PZQW3B8=
-X-Google-Smtp-Source: ACHHUZ58r+AP9tUQfy2pmFlw+UCdJJdya/1z0EdBVs+Edz0Om2vXLSJ+k7kmdVXeKyHFrkKKkx6xKg==
-X-Received: by 2002:a05:6a00:1a46:b0:641:d9b:a444 with SMTP id h6-20020a056a001a4600b006410d9ba444mr12336588pfv.31.1683552009437;
-        Mon, 08 May 2023 06:20:09 -0700 (PDT)
-Received: from [192.168.43.80] (subs32-116-206-28-47.three.co.id. [116.206.28.47])
-        by smtp.gmail.com with ESMTPSA id c1-20020aa781c1000000b0062e0010c6c1sm6052062pfn.164.2023.05.08.06.20.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 08 May 2023 06:20:08 -0700 (PDT)
-Message-ID: <85ca82b1-8a53-c0d7-e1b6-93288a6e129c@gmail.com>
-Date: Mon, 8 May 2023 20:20:03 +0700
+        d=1e100.net; s=20221208; t=1683552485; x=1686144485;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hJL7on47Y+qnReWK+RN8hsZ4/lRT/GdxonZVZJkZNFc=;
+        b=UQv6y/iTmET+OqsohI5nMJG9hQQZZEykZSuQ9+KaEo1f7xGYGdbu+DOjm1KLGFHJ13
+         PWUhcFc5w0MIZGSarZHz71BYCXKYpvaWboJvrlwYfPEq5eVkYGHT5blDzXw0uoWPw9zt
+         dS9jvAKaAiSjkH1jYrnzizveH2ctp42o7kheM74nI/QfSOmmV/RXfjLtiR5XwjVT7GvT
+         s7IyA9t/3JVb6EMHDoSU/HCVA6Tbhsxucb+j2Z0tNIFLEmGaIX0VtJrHNaLWvdf/yMDI
+         x3noW6YB4oh/lr+70Wx92L62IaIVKJzg7bIN4HxyJ4FF2NYjtGbpwE1abVCyHKyUpr+h
+         CT/w==
+X-Gm-Message-State: AC+VfDxZxXGDN6oxOwGCBUziphzrBqNjM/UvOTWWnS/J5w34vye69wr9
+	/wG51s9vucUDRgH5l8rm3NA=
+X-Google-Smtp-Source: ACHHUZ7SfPi65V3zWt309n46kENPv3m7W6VlKo6duJegzYEYg4ZrHDn5RTJrY1k/8sJlgWcvVxtxpg==
+X-Received: by 2002:a17:90b:a48:b0:24d:f2f5:f571 with SMTP id gw8-20020a17090b0a4800b0024df2f5f571mr10606107pjb.36.1683552485567;
+        Mon, 08 May 2023 06:28:05 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id fs9-20020a17090af28900b002470f179b92sm9869455pjb.43.2023.05.08.06.28.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 May 2023 06:28:04 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Mon, 8 May 2023 06:28:03 -0700
+From: Guenter Roeck <linux@roeck-us.net>
+To: Borislav Petkov <bp@alien8.de>
+Cc: Thorsten Leemhuis <linux@leemhuis.info>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Linux regressions mailing list <regressions@lists.linux.dev>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+	Sanket Goswami <Sanket.Goswami@amd.com>,
+	Richard gong <richard.gong@amd.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH 1/2] amd_nb: Add PCI ID for family 19h model 78h
+Message-ID: <a8b29619-f1da-4cb9-a5bd-a396b52e159f@roeck-us.net>
+References: <20230427053338.16653-1-mario.limonciello@amd.com>
+ <20230427053338.16653-2-mario.limonciello@amd.com>
+ <7b74c389-97b7-4f56-851b-6ce17950a4d1@roeck-us.net>
+ <f2b81356-e702-3026-660f-d9a88edff632@amd.com>
+ <084837c4-72c8-be92-fd1c-5ccbd805c559@leemhuis.info>
+ <20230508112543.GBZFjcN2oxk4do31w4@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PASEMI NEMO] Boot issue with the PowerPC updates 6.4-1
-To: Linux regressions mailing list <regressions@lists.linux.dev>,
- Christian Zigotzky <chzigotzky@xenosoft.de>,
- linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Cc: Olof Johansson <olof@lixom.net>, Darren Stevens
- <darren@stevens-zone.net>, "R.T.Dickinson" <rtd2@xtra.co.nz>,
- Christian Zigotzky <info@xenosoft.de>, Rob Herring <robh@kernel.org>
-References: <301595ad-0edf-2113-b55f-f5b8051ed24c@xenosoft.de>
- <71f580c7-0890-b622-62c9-f58fa9537a90@leemhuis.info>
- <ZFjx31Rw79GF+E7p@debian.me>
- <fa6de026-1444-7beb-197c-d6a637eef86e@leemhuis.info>
-Content-Language: en-US
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-In-Reply-To: <fa6de026-1444-7beb-197c-d6a637eef86e@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230508112543.GBZFjcN2oxk4do31w4@fat_crate.local>
 
-On 5/8/23 20:17, Linux regression tracking (Thorsten Leemhuis) wrote:
->> Why and how can you conclude that the culprit is e4ab08be5b4902 ("powerpc/isa-bridge:
->> Remove open coded "ranges" parsing") rather than powerpc PR merge commit
->> 70cc1b5307e8ee ("Merge tag 'powerpc-6.4-1' of
->> git://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux")? 
+On Mon, May 08, 2023 at 01:25:43PM +0200, Borislav Petkov wrote:
+> On Mon, May 08, 2023 at 01:13:14PM +0200, Thorsten Leemhuis wrote:
+> > Which afaics means that users of -rc1 are now affected by this and might
+> > waste time bisecting a known issue that could easily have been fixed
+> > already. :-/ That doesn't feel right. Or am I missing something?
 > 
-> I looked at the thread and noticed it was mentioned later (
-> https://lore.kernel.org/all/3fa42c8c-09bd-d0f0-401b-315b484f4bb0@xenosoft.de/
-> ).
+> -rc1 is pretty much the most broken tree there is. And it is not an
+> officially released tree but a, well, the first release candidate. So
+> fixes are trickling in, there's lag between what gets found, when the
+> maintainers pick it up and when it ends up upstream and so on and so on.
+> 
+> Some fixes need longer testing because there have been cases where a fix
+> breaks something else.
+> 
+> And yes, maintainers can always expedite a fix or Linus will pick it up
+> directly if it breaks a lot of boxes in a nasty way.
+> 
+> So, long story short, I don't think you should track -rcs. You are
+> tracking the reports already and you're tracking where their fixes land
+> so I guess that's good enough.
 > 
 
-Oops, I wasn't seeing the whole thread. Thanks anyway.
+I absolutely disagree. Without Thorsten's tracking, Linus would have no
+idea what the status of the kernel is.
 
--- 
-An old man doll... just what I always wanted! - Clara
+> > /me wonders I he should start tracking regressions more closely during
+> > the merge window to catch and prevent situations like this...
+> 
+> I don't see a "situation" here. rcs can be broken for some use cases and
+> that is fine as long as that breakage doesn't get released.
+> 
 
+Again, I disagree. The whole point of testing release candidates is to get
+problems fixed. If issues are not fixed timely, they just pile up on top
+of each other and make it difficult to identify new issues (and, in many
+cases, to test the kernel in the first place).
+
+I find it quite annoying that problems are identfied, often even in -next,
+the patch intoducing them is applied to mainline anyway, and then
+it sometimes takes until -rc5 or even later to get the fix applied (even if
+the fix has been known for weeks or even months). It sometimes even takes
+Linus' intervention to get fixes applied to the upstream kernel. That
+really should not be necessary. Telling those who track regressions
+to stay away from release candidates is absolutely the wrong thing to do
+and would only serve to make release candidates quite pointless.
+
+v6.4-rc1 is a good example. Fixes for all build breakages were published
+before the commit window opened, yet at least one of them did not make
+it into -rc1. Together with this patch there are now at least two
+regressions if -rc1 whch could have been avoided and may impact testability
+on affected systems.
+
+Guenter
