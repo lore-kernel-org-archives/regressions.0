@@ -1,106 +1,76 @@
-Received: from smtp-fw-6002.amazon.com (smtp-fw-6002.amazon.com [52.95.49.90])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04DA1AD25
-	for <regressions@lists.linux.dev>; Mon,  8 May 2023 19:44:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1683575065; x=1715111065;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=IdlXveSBrEnzAvq8Ep4fSHWjmFryj36YE8R7HO/fYGU=;
-  b=HxNXAjh4HLXh3EkhUzI2GwzjmKcM6FfQ7TTxcuIc+bdoJk/wDy+x5F81
-   GQiLXNTiGI6a7igjD8WyN5ymObtqPA96H53M3/f1YL/293qyX0pQd43pU
-   I59Hvx3R4pHv5avfMWEND5fWNQSF3rA43/FM3NZPLjtqH/CcCy8MTq/z9
-   A=;
-X-IronPort-AV: E=Sophos;i="5.99,259,1677542400"; 
-   d="scan'208";a="327316451"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-iad-1e-m6i4x-3554bfcf.us-east-1.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-6002.iad6.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2023 19:44:20 +0000
-Received: from EX19MTAUWB002.ant.amazon.com (iad12-ws-svc-p26-lb9-vlan2.iad.amazon.com [10.40.163.34])
-	by email-inbound-relay-iad-1e-m6i4x-3554bfcf.us-east-1.amazon.com (Postfix) with ESMTPS id 8A43D81040;
-	Mon,  8 May 2023 19:44:17 +0000 (UTC)
-Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
- EX19MTAUWB002.ant.amazon.com (10.250.64.231) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Mon, 8 May 2023 19:44:16 +0000
-Received: from 88665a182662.ant.amazon.com (10.187.170.41) by
- EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Mon, 8 May 2023 19:44:14 +0000
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
-To: <kuba@kernel.org>, <anjali.rai@intel.com>
-CC: <gregkh@linuxfoundation.org>, <jinen.gandhi@intel.com>,
-	<joannelkoong@gmail.com>, <kailun.qin@intel.com>, <kuniyu@amazon.com>,
-	<netdev@vger.kernel.org>, <regressions@lists.linux.dev>,
-	<stable@vger.kernel.org>
-Subject: Re: Regression Issue
-Date: Mon, 8 May 2023 12:44:06 -0700
-Message-ID: <20230508194406.73759-1-kuniyu@amazon.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20230508123138.41b5dc48@kernel.org>
-References: <20230508123138.41b5dc48@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BD9211193;
+	Mon,  8 May 2023 20:09:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C60AC433EF;
+	Mon,  8 May 2023 20:09:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1683576585;
+	bh=4ZYRG+YiH474zWpI41416ytA6fpX7/XY91vw37d1V5w=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Du/4nYep6dkPXZKJNA6Z9jEfR6lIxMQuGap7tYvJrsw9JYzjhzrccZdH64OteUZWm
+	 nZsVJf1efhpmHyVJkqimDHKEg+4yH540/QUx84gSZSC01kMkdh6UyvLVigWmro8L/p
+	 MKDMZxH8Ir7TkYtYcBzkiFdJtdUIVOJvdYJzLV+obsbFvZEYfJ8hDjjDcoPJyTvKE6
+	 G8ooKh94bZLCIwVUWr7dCj5JsC0az/5m4DlFSSUWRBbhn+BqK4kJpTVYqxC+7bkro9
+	 ul/NAXUYm7B7eI54oxbbgAVNTWRktNDNNoRspsoRp2ry/SxBB6Yi0qUwxDWaXXfLfj
+	 +3CYP0a+FsuBQ==
+Date: Mon, 8 May 2023 13:09:44 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
+ =?UTF-8?B?QmrDuHJu?= Mork <bjorn@mork.no>, Hayes Wang
+ <hayeswang@realtek.com>, netdev@vger.kernel.org, Paolo Abeni
+ <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>, "David S. Miller"
+ <davem@davemloft.net>, Stanislav Fomichev <sdf@fomichev.me>,
+ workflows@vger.kernel.org
+Subject: Re: [regression] Kernel OOPS on boot with Kernel 6.3(.1) and
+ RTL8153 Gigabit Ethernet Adapter
+Message-ID: <20230508130944.30699c33@kernel.org>
+In-Reply-To: <9284a9ec-d7c9-68e8-7384-07291894937b@leemhuis.info>
+References: <ec4be122-e213-ca5b-f5d6-e8f9c3fd3bee@leemhuis.info>
+	<87lei36q27.fsf@miraculix.mork.no>
+	<20230505120436.6ff8cfca@kernel.org>
+	<57dbce31-daa9-9674-513e-f123b94950da@leemhuis.info>
+	<20230505123744.16666106@kernel.org>
+	<9284a9ec-d7c9-68e8-7384-07291894937b@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.187.170.41]
-X-ClientProxiedBy: EX19D033UWC002.ant.amazon.com (10.13.139.196) To
- EX19D004ANA001.ant.amazon.com (10.37.240.138)
-Precedence: Bulk
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Jakub Kicinski <kuba@kernel.org>
-Date: Mon, 8 May 2023 12:31:38 -0700
-> On Mon, 8 May 2023 08:27:49 +0000 Rai, Anjali wrote:
-> > On Mon, May 08, 2023 at 07:33:58AM +0000, Rai, Anjali wrote:
-> >>> > We have one test which test the functionality of "using the same 
-> >>> > loopback address and port for both IPV6 and IPV4", The test should 
-> >>> > result in EADDRINUSE for binding IPv4 to same port, but it was 
-> >>> > successful
-> >>> > 
-> >>> > Test Description:
-> >>> > The test creates sockets for both IPv4 and IPv6, and forces IPV6 to 
-> >>> > listen for both IPV4 and IPV6 connections; this in turn makes binding 
-> >>> > another (IPV4) socket on the same port meaningless and results in 
-> >>> > -EADDRINUSE
-> >>> > 
-> >>> > Our systems had Kernel v6.0.9 and the test was successfully executing, we recently upgraded our systems to v6.2, and we saw this as a failure. The systems which are not upgraded, there it is still passing.
-> >>> > 
-> >>> > We don't exactly at which point this test broke, but our assumption is
-> >>> > https://github.com/torvalds/linux/commit/28044fc1d4953b07acec0da4d2fc4
-> >>> > 784c57ea6fb  
-> >>> 
-> >>> Is there a specific reason you did not add cc: for the authors of that commit?
-> >>> 
-> >>> > Can you please check on your end whether this is an actual regression of a feature request.  
-> >>>
-> >>> If you revert that commit, does it resolve the issue?  Have you worked with the Intel networking developers to help debug this further?
+On Sat, 6 May 2023 08:20:23 +0200 Linux regression tracking (Thorsten
+Leemhuis) wrote:
+> > I don't seem to have the permissions on BZ, but I'm guessing we could
+> > do the opposite - you could flip bugbot on first to have it flush the BZ
+> > report to the list, and then reply on the list with regzbot tracking?  
 > 
-> > > I am part of Gramine OpenSource Project, I don't know someone from
-> > > Intel Networking developers team, if you know someone, please feel
-> > > free to add them.
-> > > 
-> > > Building completely linux source code and trying with different
-> > > commits, I will not be able to do it today, I can check that may be
-> > > tomorrow or day after. 
-> >
-> > The C code was passing earlier, and output was " test completed
-> > successfully" but now with v6.2 it is failing and returning
-> > "bind(ipv4) was successful even though there is no IPV6_V6ONLY on
-> > same port\n"
+> That's the plan for the future, but for now I don't want to do that, as
+> it might mess up other peoples workflows, as hinted above already and
+> discussed here:
 > 
-> Adding the mailing list and the experts. Cleaning up the quoting,
-> please don't top post going forward.
+> https://lore.kernel.org/all/1f0ebf13-ab0f-d512-6106-3ebf7cb372f1@leemhuis.info/
 > 
-> Kuniyuki, have we seen this before?
+> That was only recently, but if you jump in there as well it might
+> persuade Konstantin to enable bugbot for other products/components. Then
+> I could and would do what you suggested.
 
-Yes, we had the same report [0] and fixed with this patch [1], and it
-seems to be backported to v6.1.21 and v6.2.8, not v6.0.y (EOL).
+CC: workflows
 
-[0]: https://lore.kernel.org/netdev/e21bf153-80b0-9ec0-15ba-e04a4ad42c34@redhat.com/ 
-[1]: https://lore.kernel.org/netdev/20230312031904.4674-2-kuniyu@amazon.com/
-[2]: https://lore.kernel.org/stable/?q=tcp%3A+Fix+bind%28%29+conflict+check+for+dual-stack+wildcard+address.
+I'm a bit confused. I understand that we don't want to automatically
+send all bugzilla reports to the ML. But AFAIU this is to avoid spamming
+the list / messing with people's existing BZ workflow.
+If you pre-triage the problem and decide to forward it to the list -
+whether you do it with buzbot + regzbot or manual + regzbot is moot.
+
+The bugbot can be enabled per BZ entry (AFAIU), so you can flip it
+individually for the thread you want to report. It should flush that 
+BZ to the list. At which point you can follow your normal ML regression
+process.
+
+Where did I go off the rails?
