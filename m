@@ -1,212 +1,162 @@
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9293B20EF
-	for <regressions@lists.linux.dev>; Tue,  9 May 2023 05:47:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1683611221; x=1715147221;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=yhYWxeRwg+s340DZgd7Un/rXBhgLurZt8ak1Ot+eHmw=;
-  b=Cqa8e3KNcT9tWKfIubjhJnwcHQoaVHr9sWWwOl3YYhOIXQ8tBNCR4ECh
-   Q8ZVz7xKn2Px/0/dwbJe+jGPDQ9gwgAhn91fBLJjBA+nvF26l/j9gAa/8
-   MGH6up7mo9ncNvpc4ICaTrC47asOg+0vSNZE226oNtPakwwz07csD/8ys
-   +FwyTXFmLWPccxXJ6/3ihGa6lk0v4vvq9TNghptk55phlZI5XkthoLELc
-   W38mf7toOWGXfYJn2UPEB/BhjBctYhTxvVHW6wDHoGzirUldvFt4yP2tL
-   OlzGNpt+Rn/RFA+/PoeFbPc+i6bTmO3XJuf1NgGxnlz/eE+aXv2B065CC
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10704"; a="334263958"
-X-IronPort-AV: E=Sophos;i="5.99,261,1677571200"; 
-   d="scan'208";a="334263958"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2023 22:47:01 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10704"; a="788375842"
-X-IronPort-AV: E=Sophos;i="5.99,261,1677571200"; 
-   d="scan'208";a="788375842"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by FMSMGA003.fm.intel.com with ESMTP; 08 May 2023 22:47:00 -0700
-Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Mon, 8 May 2023 22:46:59 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23 via Frontend Transport; Mon, 8 May 2023 22:46:59 -0700
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (104.47.73.43) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.23; Mon, 8 May 2023 22:46:59 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YAcqotm8aY/joN7cyN+qfzE7YlHSv/yiUHKJfFGzNpy+Ha03orJxmFq2uPEN1pvJhFMiTfnyuBBucCdPJKlQO0fpmmOfAZst9YAsdem3cnX0X1ohF0KbxdEzctO4wxVlumn9tumDA+4MhpyZmDqmkBxXR6txPjnPbWliFsXBxE76u8lh51SzIfN+0vvAqD9yw96q5+l1wNF00IShcR50CYZDYBlZDiKew7e+r0MwgiI1xV04zGnRI4AaEcdgsixWU2yBmjX2lvRY1+yCf7t6MWHf2adjRfBN7oW+PgBntadF2wcHZmBNLVvDK43GIQytOf/Y1WxCncOVQax9IRBDrw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=qe+mfyKDTGlnwX87SACr54wAjmVhx8aKlzOnggU5sZ0=;
- b=QRi57zPE7MDTeGDbKm67O95LPJ5HU77PQdRDPxImSBib/14dHAbQhG+J+HBjbdFGCGEcTAeXxdrdD2VK/8jOBEwHgEgj2WbgDtc5iq0z7+lLveOpEN9haC40hFSk/e41kA8tKMUbB/ZrkcNly2k5LhzNqnrvLz8CNasMVgBah0pBcp1L0zOS/xE4qZsvBgtbYUQkS41TUbjMZuHupyj4eceZQtEVebhv499bFUkh1TrIdnniZ+88OWhGtwswVgNf7p5vOhwc6HnRS1sC2E5pDUY00eGI3lp7PX0xMKKWATY8L7w8s2uHjLrEcAd2c2hpWv+zX/mqPuE5f2Wfx7ISkA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from DM4PR11MB5518.namprd11.prod.outlook.com (2603:10b6:5:39a::8) by
- DS7PR11MB6063.namprd11.prod.outlook.com (2603:10b6:8:76::11) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6363.32; Tue, 9 May 2023 05:46:57 +0000
-Received: from DM4PR11MB5518.namprd11.prod.outlook.com
- ([fe80::3124:6fbf:e20a:f14a]) by DM4PR11MB5518.namprd11.prod.outlook.com
- ([fe80::3124:6fbf:e20a:f14a%2]) with mapi id 15.20.6363.032; Tue, 9 May 2023
- 05:46:57 +0000
-From: "Rai, Anjali" <anjali.rai@intel.com>
-To: Kuniyuki Iwashima <kuniyu@amazon.com>, "kuba@kernel.org" <kuba@kernel.org>
-CC: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "Gandhi, Jinen"
-	<jinen.gandhi@intel.com>, "joannelkoong@gmail.com" <joannelkoong@gmail.com>,
-	"Qin, Kailun" <kailun.qin@intel.com>, "netdev@vger.kernel.org"
-	<netdev@vger.kernel.org>, "regressions@lists.linux.dev"
-	<regressions@lists.linux.dev>, "stable@vger.kernel.org"
-	<stable@vger.kernel.org>
-Subject: RE: Regression Issue
-Thread-Topic: Regression Issue
-Thread-Index: AdmBflVc4Ic7nWyeSlqpAyBHS0vdoQAAg7EAAAAQuLAAAXPEEAAXT8IAAABvdgAAFQWSIA==
-Date: Tue, 9 May 2023 05:46:57 +0000
-Message-ID: <DM4PR11MB55184DF5A8FE63E6AD8AB2F49A769@DM4PR11MB5518.namprd11.prod.outlook.com>
-References: <20230508123138.41b5dc48@kernel.org>
- <20230508194406.73759-1-kuniyu@amazon.com>
-In-Reply-To: <20230508194406.73759-1-kuniyu@amazon.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DM4PR11MB5518:EE_|DS7PR11MB6063:EE_
-x-ms-office365-filtering-correlation-id: 1b1208e8-d572-493a-41ea-08db5050cd2c
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: bJkfZnX7/yPHXNOsngQHQfc0b9DRoWM+SokPg0wcuU1S6p+wuRrOxsTQs+UHIrcuKNbRsv8r0linqgZmd0UjQ9MwWMF0IUCCHRU4GNYa++DOV+uviZpWd1qMJODFvfMTAO0tBgb63fI8KIBZ4HMqM7dYXZiAW2bgt6fIxYaIVNmUF6h8ku9iUoQfln7SpbkkuUJ3SD5S+O72ypndHe6S2ojPHImD73zeSb9f2wVJAUCwC1db7MDqSnCVpHFXR3MZIRNe5+YZQn+eVjCoTimZWK6Ei2jqzvw1WDU78Qg695zs7puzoQFhnvKfZZh+knaRt0VwuWhYSK0il98r+uUgiHq3YUdjbMODT2r6BIzoJW+qJhV/kAyLEyzggpc0CG25fJxAu5IlWTpHMn91J0TaHL/jU3c1HyWD97uLpjDurdDkqzAUxsdrK1iGFpeyp2In2bPFEgg08GROkNDldrtFJ2iQdOEvW5DBRksn/Df7tTNfyI4EmNfrFkHLVh0oRkipYOwcMzamqCOZJB4qklftAxBp3PE3CmtcLIOpf3x1bOiRnNle8XWS/1wMJTvU+7inqPcTAcJ+SsMXkMKFtPhBUtxbpWssWXnYx/NLszEhBHLXpt4n2FYONsV+DdKWGQ9V0f0u7gDdIVGFHUDrOdo9SQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR11MB5518.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(39860400002)(366004)(396003)(346002)(376002)(136003)(451199021)(86362001)(33656002)(966005)(316002)(110136005)(54906003)(4326008)(478600001)(76116006)(66946007)(66556008)(66476007)(66446008)(64756008)(7696005)(41300700001)(55016003)(5660300002)(52536014)(7116003)(8676002)(8936002)(2906002)(3480700007)(82960400001)(38070700005)(38100700002)(122000001)(186003)(53546011)(9686003)(26005)(6506007)(83380400001)(71200400001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?EdaDfUVkevE6bq5DKOi9WaoBPjbxoS1yW2XNVyS6sUI96zKkrMCLQET2TNjY?=
- =?us-ascii?Q?/2H+KgAPi3duMaoc/IDcNtdPDXQl49ab5nfBZC22DEhGwWQuiGgLrWlGjWT3?=
- =?us-ascii?Q?mQThH7dGbn1SSvucK73lFDshrxHcIhoizsgLAmNCvjHCw8H2dVT3ismWVIZ/?=
- =?us-ascii?Q?3pkVfGeLZNjPMCG9zEIyJjuU2QKmsNKJVIyWw0TF3xLg3aaVLZ877M8uj2si?=
- =?us-ascii?Q?biUxpZHTaJBPXYYCso9MqMiS3j2NKHo7j07AEIm7nY07NVCHPmbzcJR/mKLL?=
- =?us-ascii?Q?m0FD2oTMwxK+GX4tMaGGahEkocVQj/hjQex7+58p9fsS4RT58xCIQQM37Gju?=
- =?us-ascii?Q?oSXxNe6btodzL7V9dQfp1dJDCRCaKZNUu3DhtzijfG0yGFI+/bZdZS8JY0p7?=
- =?us-ascii?Q?6StWThrVh1hQQ4yF1PErWnetxxby7R2VsFyF8fSL9rAYjjbxlZUrSK7P3hNz?=
- =?us-ascii?Q?J11pn6N0JuwdV8olw2XrXvxNZKqmjmj0iUiqYwAIDQCN3/q/WAlwdS3gDprY?=
- =?us-ascii?Q?FxjxyOHgVXsDdu0M6l3gfGkumUyS3o8Nhawp9fnWMZwggP7RJmwl1jZNsF2N?=
- =?us-ascii?Q?gEyb0DXbjBv8oBUGfSKFrylSqk6si6w5otosACgtLnwrm+hQwKU6+MX6jCiq?=
- =?us-ascii?Q?bO5b6Pb+zzfjHuU8x0Px5JLvxXmEt7cg3y5MGXO241i6xx0npHWzUjoCQIKr?=
- =?us-ascii?Q?pX9q3rAT7baGOQKYfpI9wfewOjBm0jaSvPk8dtzSzpVhYao687bAFgGWBmQG?=
- =?us-ascii?Q?00uv8HDFV4iJVdS7KNvsWhHhQOO4OfZQW8K3crkOa0LT5ybKosZg3MHYx0ds?=
- =?us-ascii?Q?cj4uH//iBuSXI40PUD/gRYL4/i7ch2iXiS7YGbpKsW4xierI+CCMPAPWRDcy?=
- =?us-ascii?Q?oXNtImMeCBIs70vZLV3LxUo+6cDTyhknO7UDXTEBxXKSYBTvNNJ/fWinjGSi?=
- =?us-ascii?Q?xphOxtwnreqGHvTJdRpccS8UOFywH+/fi6MY95S6nhee5XHqYQv9h9HJFUh5?=
- =?us-ascii?Q?+0IGFmbqECgZAWSQhjldfnsnJIhlKX4KBBj/5OkwBozG+uDtcawlTc/OR7o7?=
- =?us-ascii?Q?9gMhSUAHkFj0Z9DMZiJKOY/IF0DgygOCsw1y13YwQykb+JMisZbvF5xCfP1K?=
- =?us-ascii?Q?LByBsOnbsGLzxF8K5A/tJ+grj98eyw56BB8tkLQhjuollUZ5qNCjBkBDLt3w?=
- =?us-ascii?Q?TJi/teqmljDESfprBc2IksaAe5+QRrdrHn+TL+FMbQGQX5gVFjX7HvrTX+02?=
- =?us-ascii?Q?VJV5nWu+v837VqlLFmDaPhUf/tCd1u6jCz+wE9IAwqCsHYOee7AIAhwIkF6n?=
- =?us-ascii?Q?pq5aX32gcMBWXYY97p5fOtVLPwwHqWN9/Ya4aV7krYAHDaYPGdjUeLUA6MaR?=
- =?us-ascii?Q?gydTIpv31XA/IbH8QBipfnf77LQwgjYHiQV7MBu4wq6jI7ehcRBNnu9ubuU2?=
- =?us-ascii?Q?hTS7RATjg65EEPJ5aymAvfKS4aI4EFT3GVJU/O1oLSZu9Nvo8gooy/YRzI90?=
- =?us-ascii?Q?S/20FUY1nxYURRIIXQ2ewM+71+n3tzuWT06SStBQw9BGOMu/eY9lFapQuhDH?=
- =?us-ascii?Q?mBTBF2B3oGRK/uGiwZYwcNchCV4z4VG6Kuus5me4?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D4A414A81
+	for <regressions@lists.linux.dev>; Tue,  9 May 2023 19:10:28 +0000 (UTC)
+Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 349ER8Ym002726;
+	Tue, 9 May 2023 19:10:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2023-03-30;
+ bh=ewPY1TNUNNQgf5lnWkZB2J41Mv5DBP76uVt2kOutHyE=;
+ b=DFsTKNcwX3Y9/MFZ//7eKUVjY0YvMazqyJiJDMZDmVCGWOhD25YJPowySiyT0q1aCJjL
+ Fq7QlvHykp/F+mxu735tIQFpsz0hQZ7n1jMUull1sMF2tnPVOa4BOLxe5z7ljXdKV7bS
+ 63WfomRETDyI2UhhHfstMpqqTHAAHyoAfDCHEaaMFIe33KdssHQiPLWM8zvLRu6W3J+i
+ gYHnYogeTugaF/KV13UK8NOPiWsuVurKtnC6oSb3OEadaINCd3WKt09bOgNVB4AmwgCF
+ G0iXfEWF1BaOzinJNmkG9AP/01nos894+qUO3FJ9p3C5nH+g9EgYVxGo1mv9NwRv3mxW bw== 
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3qf77c2qp3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 09 May 2023 19:10:11 +0000
+Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 349I0qWa002118;
+	Tue, 9 May 2023 19:10:11 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3qf81eu3en-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 09 May 2023 19:10:11 +0000
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 349J8CFi033427;
+	Tue, 9 May 2023 19:10:10 GMT
+Received: from gkennedy-linux.us.oracle.com (gkennedy-linux.us.oracle.com [10.152.170.45])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 3qf81eu3de-1;
+	Tue, 09 May 2023 19:10:10 +0000
+From: George Kennedy <george.kennedy@oracle.com>
+To: gregkh@linuxfoundation.org, jirislaby@kernel.org
+Cc: george.kennedy@oracle.com, sfr@canb.auug.org.au, akpm@linux-foundation.org,
+        linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux@weissschuh.net, regressions@lists.linux.dev
+Subject: [PATCH] vc_screen: reload load of struct vc_data pointer in vcs_write() to avoid UAF
+Date: Tue,  9 May 2023 14:08:39 -0500
+Message-Id: <1683659319-29701-1-git-send-email-george.kennedy@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-05-09_12,2023-05-05_01,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0 mlxscore=0
+ bulkscore=0 suspectscore=0 malwarescore=0 spamscore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2304280000
+ definitions=main-2305090158
+X-Proofpoint-GUID: j9uN6TZ7areNZWC1Pk6Ho4UONls_fWW5
+X-Proofpoint-ORIG-GUID: j9uN6TZ7areNZWC1Pk6Ho4UONls_fWW5
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR11MB5518.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1b1208e8-d572-493a-41ea-08db5050cd2c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 May 2023 05:46:57.2698
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: KcuSNzAGpEsjL7nsxZm3lIbP9ota/f3/2+qa7OATScAUtAgFCCErH6mUxdZvlwOvXoto4M5fx3kKZu+nzJV9RQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR11MB6063
-X-OriginatorOrg: intel.com
 
-I updated the kernel to v6.2.8 and the test runs fine.
+After a call to console_unlock() in vcs_write() the vc_data struct can be
+freed by vc_port_destruct(). Because of that, the struct vc_data pointer
+must be reloaded in the while loop in vcs_write() after console_lock() to
+avoid a UAF when vcs_size() is called.
 
-Thank you for the help
+Syzkaller reported a UAF in vcs_size().
 
------Original Message-----
-From: Kuniyuki Iwashima <kuniyu@amazon.com>=20
-Sent: Tuesday, May 9, 2023 1:14 AM
-To: kuba@kernel.org; Rai, Anjali <anjali.rai@intel.com>
-Cc: gregkh@linuxfoundation.org; Gandhi, Jinen <jinen.gandhi@intel.com>; joa=
-nnelkoong@gmail.com; Qin, Kailun <kailun.qin@intel.com>; kuniyu@amazon.com;=
- netdev@vger.kernel.org; regressions@lists.linux.dev; stable@vger.kernel.or=
-g
-Subject: Re: Regression Issue
+BUG: KASAN: slab-use-after-free in vcs_size (drivers/tty/vt/vc_screen.c:215)
+Read of size 4 at addr ffff8880beab89a8 by task repro_vcs_size/4119
 
-From: Jakub Kicinski <kuba@kernel.org>
-Date: Mon, 8 May 2023 12:31:38 -0700
-> On Mon, 8 May 2023 08:27:49 +0000 Rai, Anjali wrote:
-> > On Mon, May 08, 2023 at 07:33:58AM +0000, Rai, Anjali wrote:
-> >>> > We have one test which test the functionality of "using the same=20
-> >>> > loopback address and port for both IPV6 and IPV4", The test=20
-> >>> > should result in EADDRINUSE for binding IPv4 to same port, but=20
-> >>> > it was successful
-> >>> >=20
-> >>> > Test Description:
-> >>> > The test creates sockets for both IPv4 and IPv6, and forces IPV6=20
-> >>> > to listen for both IPV4 and IPV6 connections; this in turn makes=20
-> >>> > binding another (IPV4) socket on the same port meaningless and=20
-> >>> > results in -EADDRINUSE
-> >>> >=20
-> >>> > Our systems had Kernel v6.0.9 and the test was successfully executi=
-ng, we recently upgraded our systems to v6.2, and we saw this as a failure.=
- The systems which are not upgraded, there it is still passing.
-> >>> >=20
-> >>> > We don't exactly at which point this test broke, but our=20
-> >>> > assumption is
-> >>> > https://github.com/torvalds/linux/commit/28044fc1d4953b07acec0da
-> >>> > 4d2fc4
-> >>> > 784c57ea6fb
-> >>>=20
-> >>> Is there a specific reason you did not add cc: for the authors of tha=
-t commit?
-> >>>=20
-> >>> > Can you please check on your end whether this is an actual regressi=
-on of a feature request. =20
-> >>>
-> >>> If you revert that commit, does it resolve the issue?  Have you worke=
-d with the Intel networking developers to help debug this further?
->=20
-> > > I am part of Gramine OpenSource Project, I don't know someone from=20
-> > > Intel Networking developers team, if you know someone, please feel=20
-> > > free to add them.
-> > >=20
-> > > Building completely linux source code and trying with different=20
-> > > commits, I will not be able to do it today, I can check that may=20
-> > > be tomorrow or day after.
-> >
-> > The C code was passing earlier, and output was " test completed=20
-> > successfully" but now with v6.2 it is failing and returning
-> > "bind(ipv4) was successful even though there is no IPV6_V6ONLY on=20
-> > same port\n"
->=20
-> Adding the mailing list and the experts. Cleaning up the quoting,=20
-> please don't top post going forward.
->=20
-> Kuniyuki, have we seen this before?
+Call Trace:
+ <TASK>
+__asan_report_load4_noabort (mm/kasan/report_generic.c:380)
+vcs_size (drivers/tty/vt/vc_screen.c:215)
+vcs_write (drivers/tty/vt/vc_screen.c:664)
+vfs_write (fs/read_write.c:582 fs/read_write.c:564)
+...
+ <TASK>
 
-Yes, we had the same report [0] and fixed with this patch [1], and it seems=
- to be backported to v6.1.21 and v6.2.8, not v6.0.y (EOL).
+Allocated by task 1213:
+kmalloc_trace (mm/slab_common.c:1064)
+vc_allocate (./include/linux/slab.h:559 ./include/linux/slab.h:680
+    drivers/tty/vt/vt.c:1078 drivers/tty/vt/vt.c:1058)
+con_install (drivers/tty/vt/vt.c:3334)
+tty_init_dev (drivers/tty/tty_io.c:1303 drivers/tty/tty_io.c:1415
+    drivers/tty/tty_io.c:1392)
+tty_open (drivers/tty/tty_io.c:2082 drivers/tty/tty_io.c:2128)
+chrdev_open (fs/char_dev.c:415)
+do_dentry_open (fs/open.c:921)
+vfs_open (fs/open.c:1052)
+...
 
-[0]: https://lore.kernel.org/netdev/e21bf153-80b0-9ec0-15ba-e04a4ad42c34@re=
-dhat.com/
-[1]: https://lore.kernel.org/netdev/20230312031904.4674-2-kuniyu@amazon.com=
-/
-[2]: https://lore.kernel.org/stable/?q=3Dtcp%3A+Fix+bind%28%29+conflict+che=
-ck+for+dual-stack+wildcard+address.
+Freed by task 4116:
+kfree (mm/slab_common.c:1016)
+vc_port_destruct (drivers/tty/vt/vt.c:1044)
+tty_port_destructor (drivers/tty/tty_port.c:296)
+tty_port_put (drivers/tty/tty_port.c:312)
+vt_disallocate_all (drivers/tty/vt/vt_ioctl.c:662 (discriminator 2))
+vt_ioctl (drivers/tty/vt/vt_ioctl.c:903)
+tty_ioctl (drivers/tty/tty_io.c:2778)
+...
+
+The buggy address belongs to the object at ffff8880beab8800
+ which belongs to the cache kmalloc-1k of size 1024
+The buggy address is located 424 bytes inside of
+ freed 1024-byte region [ffff8880beab8800, ffff8880beab8c00)
+
+The buggy address belongs to the physical page:
+page:00000000afc77580 refcount:1 mapcount:0 mapping:0000000000000000
+    index:0x0 pfn:0xbeab8
+head:00000000afc77580 order:3 entire_mapcount:0 nr_pages_mapped:0
+    pincount:0
+flags: 0xfffffc0010200(slab|head|node=0|zone=1|lastcpupid=0x1fffff)
+page_type: 0xffffffff()
+raw: 000fffffc0010200 ffff888100042dc0 ffffea000426de00 dead000000000002
+raw: 0000000000000000 0000000000100010 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff8880beab8880: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff8880beab8900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff8880beab8980: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                  ^
+ ffff8880beab8a00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff8880beab8a80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+Disabling lock debugging due to kernel taint
+
+Fixes: ac751efa6a0d ("console: rename acquire/release_console_sem() to console_lock/unlock()")
+Reported-by: syzkaller <syzkaller@googlegroups.com>
+Signed-off-by: George Kennedy <george.kennedy@oracle.com>
+---
+This patch is similar to the recent UAF vcs_read() patches (226fae124b2d & 46d733d0efc7).
+vcs_write() should have been checked for the same UAF issue at the same time the fixes went
+into vcs_read().
+
+ drivers/tty/vt/vc_screen.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/tty/vt/vc_screen.c b/drivers/tty/vt/vc_screen.c
+index 498ba9c0ee93..cbd534a5cead 100644
+--- a/drivers/tty/vt/vc_screen.c
++++ b/drivers/tty/vt/vc_screen.c
+@@ -656,10 +656,16 @@ vcs_write(struct file *file, const char __user *buf, size_t count, loff_t *ppos)
+ 			}
+ 		}
+ 
+-		/* The vcs_size might have changed while we slept to grab
+-		 * the user buffer, so recheck.
++		/* The vc might have been freed or vcs_size might have changed
++		 * while we slept to grab the user buffer, so recheck.
+ 		 * Return data written up to now on failure.
+ 		 */
++		vc = vcs_vc(inode, &viewed);
++		if (!vc) {
++			if (written)
++				break;
++			goto unlock_out;
++		}
+ 		size = vcs_size(vc, attr, false);
+ 		if (size < 0) {
+ 			if (written)
+-- 
+2.31.1
+
