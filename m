@@ -1,142 +1,232 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 376E665D
-	for <regressions@lists.linux.dev>; Wed, 10 May 2023 08:05:34 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 297C9C433D2;
-	Wed, 10 May 2023 08:05:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1683705933;
-	bh=zAtZ70naQXiiJhGVd2X1W6n4PKQ2vnqsXMKHc0aV1PA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=GKKyKA42JDR90NrVwF45MXcGgM8C6GYVbd/ltDYA/rLLcBwYNSCbdLqKOuL4Qv314
-	 Yo6DDlidCG0a1SPvpzZsBcUehYoRPa3WieWEvZThD6u0fCFrwCfQS+fMuIecCE/uGv
-	 SfVwCx2PN2BEPQKl+WtrEp/EK8e+nXKHI/FoypIUxXVgMW6rTi1H3bLdZPwbsnDjMF
-	 h0N+iroiEEfh405dmPAS7IwJ+fXvlV7efHo6FqGBkOnM15XKW/uDjBGxt+cOX+FVft
-	 7aPEamaz4tLDKZqOKCD6AK0Wd5vPbpuTa3AtTwS5ehEcaUXbnZhujH7246TqNeIyzx
-	 PD+sQsUMMsjmg==
-Date: Wed, 10 May 2023 09:05:27 +0100
-From: Mauro Carvalho Chehab <mchehab@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>, "Sudip
- Mukherjee (Codethink)" <sudipm.mukherjee@gmail.com>, Laurent Pinchart
- <laurent.pinchart@ideasonboard.com>, Shawn Guo <shawnguo@kernel.org>,
- Sascha Hauer <s.hauer@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>,
- linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, Pengutronix Kernel Team
- <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>
-Subject: Re: mainline build failure due to cf21f328fcaf ("media: nxp: Add
- i.MX8 ISI driver")
-Message-ID: <20230510090527.25e26127@sal.lan>
-In-Reply-To: <CAHk-=wgzU8_dGn0Yg+DyX7ammTkDUCyEJ4C=NvnHRhxKWC7Wpw@mail.gmail.com>
-References: <ZElaVmxDsOkZj2DK@debian>
-	<51cff63a-3a04-acf5-8264-bb19b0bee8a3@leemhuis.info>
-	<CAHk-=wgzU8_dGn0Yg+DyX7ammTkDUCyEJ4C=NvnHRhxKWC7Wpw@mail.gmail.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.37; x86_64-redhat-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D32C76129
+	for <regressions@lists.linux.dev>; Wed, 10 May 2023 08:25:16 +0000 (UTC)
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3063afa2372so6329341f8f.0
+        for <regressions@lists.linux.dev>; Wed, 10 May 2023 01:25:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1683707115; x=1686299115;
+        h=mime-version:user-agent:date:cc:to:from:subject:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=KLIVhK0Yp9xjk8c1Z2hzmB9QxMCsfDdqY5Th7VSf/7w=;
+        b=qkg1BlE5ntbk5jTX2sivdRVeO5qbpvyEwz93bd3pP45QShyzY9EFUcT3tu364RwwtE
+         5b44bTQAt6nhjr2r8/CR4pA3PdE766I0F1JYyYavR/KN84+Q0YxZRfcoCEjQWORbgVt4
+         Z1mcAvWez0BPr33Yai2AFswToO3fDogZGHgClfd7F8aFmV+DNmWekmSBF+jbB1oSO9qc
+         9j+k2LD0iQB9UWdJHsdynd9htNK9/G+Bs3UUZCF1yEyzLsJxx8kY8dNRT+S8wBd4ZnAR
+         vvw3CWTeUvrWmwycbzimEiqmKcirIiJiDhQg6nKd9G2sVi/uIon5SR8CLiISCfjlHQag
+         tW+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683707115; x=1686299115;
+        h=mime-version:user-agent:date:cc:to:from:subject:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=KLIVhK0Yp9xjk8c1Z2hzmB9QxMCsfDdqY5Th7VSf/7w=;
+        b=LelMRbmZ7vBMExAVS/bORXnzAtR4b/L0veP1cZKc96EsgTGCwar6v7c3EHlHBQ2Md8
+         8cDVN/8AMfsOBdyset+j5I2dkwXw+4WALV/oZZfwivE6omYk8sSUh6m0QXD7GjNo5qFq
+         qrzuY4xIAg+XpRfUPQ5wMRvepTk5KgUJlEZtQ7nLYViUq6I9vTXktxvHfuO/IYlBkF+Q
+         vgxe47VWNi8Q3aLurYMEHFNcYsahYMKtRgr7k6zsQkWxZo7IC+lTUHhdpGZyGo5A4snP
+         lZIQWQMMoTZJArzUV/jU2kzHjg+nwzsTPBew6zk1hyM29c4I2diVeguJNxaI+GtRn++6
+         UfvQ==
+X-Gm-Message-State: AC+VfDzffLouBT+aO/8GyrA2YqRecUHs5l+oYgG8Z/qqxiYtM1FmegVm
+	PF0Wjbf7qWrhKjqTU1OFruc=
+X-Google-Smtp-Source: ACHHUZ7YiSC8XEZvjIS1auRj3I9d/IDWjHB+0KdqqZQgXC4DxEaqOLnbxyXNg5aU2J6m5w1GIUofXA==
+X-Received: by 2002:a5d:6751:0:b0:307:7c2d:dc80 with SMTP id l17-20020a5d6751000000b003077c2ddc80mr11784385wrw.34.1683707114830;
+        Wed, 10 May 2023 01:25:14 -0700 (PDT)
+Received: from [192.168.8.84] (213-225-15-168.nat.highway.a1.net. [213.225.15.168])
+        by smtp.gmail.com with ESMTPSA id r10-20020a056000014a00b00307972e46fasm8313307wrx.107.2023.05.10.01.25.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 May 2023 01:25:14 -0700 (PDT)
+Message-ID: <4ef3f252ff530cbfa336f5a0d80710020fc5cb1e.camel@gmail.com>
+Subject: [REGRESSION] wifi: brcmfmac: add firmware vendor info in driver info
+From: Felix <nimrod4garoa@gmail.com>
+To: Arend van Spriel <aspriel@gmail.com>, Franky Lin
+ <franky.lin@broadcom.com>,  Hante Meuleman <hante.meuleman@broadcom.com>
+Cc: regressions@lists.linux.dev, Arend van Spriel
+ <arend.vanspriel@broadcom.com>,  Kalle Valo <kvalo@kernel.org>,
+ linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org, 
+ brcm80211-dev-list.pdl@broadcom.com, SHA-cyfmac-dev-list@infineon.com
+Date: Wed, 10 May 2023 10:25:12 +0200
+Content-Type: multipart/mixed; boundary="=-4Yv0aQnA60OXIoYx5DFN"
+User-Agent: Evolution 3.48.1 
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+
+--=-4Yv0aQnA60OXIoYx5DFN
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Linus,
+Changes made by the mentioned commit lead to Oops when waking up after
+suspend to RAM.
 
-Em Mon, 8 May 2023 09:27:28 -0700
-Linus Torvalds <torvalds@linux-foundation.org> escreveu:
+When waking up a Dell XPS 13 9350 with BCM4350 wifi card after suspend
+to RAM,=C2=A0the kernel hangs with a NULL pointer dereference and Oops. The
+issues was introduced by commit
+da6d9c8ecd00e20218461007948f2b0a8e7fa242 and only happens when the
+brcmfmac module is loaded. This issue is the reason we could not
+upgrade to newer kernels than the 6.1 series on the affected machine.
 
-> On Mon, May 8, 2023 at 3:55=E2=80=AFAM Linux regression tracking #adding
-> (Thorsten Leemhuis) <regressions@leemhuis.info> wrote:
-> >
-> > Thanks for the report. The fixes (see the mail from Laurent) apparently
-> > are still not mainlined (or am I missing something?), so let me add this
-> > report to the tracking to ensure this is not forgotten: =20
->=20
-> Gaah. I was intending to apply the patch directly before rc1, but then
-> I forgot about this issue.
->=20
-> Mauro: I'm currently really *really* fed up with the media tree. This
-> exact same thing happened last merge window, where the media tree
-> caused pointless build errors, and it took way too long to get the
-> fixes the proper ways.
->=20
-> If something doesn't even build, it should damn well be fixed ASAP.
->=20
-> Last release it was imx290.c and PM support being disabled, and I had
-> to apply the fix manually because it continued to not come in the
-> proper way.
->=20
-> See commit 7b50567bdcad ("media: i2c: imx290: fix conditional function
-> defintions").
->=20
-> But also see commit b928db940448 ("media: i2c: imx290: fix conditional
-> function definitions"), which you *did* commit, but note this on that
-> commit:
->=20
->     AuthorDate: Tue Feb 7 17:13
->     CommitDate: Sat Mar 18 08:44
->=20
-> so it took you a MONTH AND A HALF to react to a build failure.
->=20
-> And see this:
->=20
->     git name-rev b928db940448
->     b928db940448 tags/v6.4-rc1~161^2~458
->=20
-> ie that build fix that you finally committed came in *AFTER* the 6.3
-> release, even though the bug it fixes was introduced in the 6.3 merge
-> window:
->=20
->     git name-rev 02852c01f654
->     02852c01f654 tags/v6.3-rc1~72^2~2^2~193
->=20
-> and now we're in the *EXACT*SAME* situation, with me applying a build
-> fix directly, because you couldn't get it fixed in a timely manner.
 
-Sorry for the mess. I'll work to improve the process to avoid this
-to happen again.
+Details:
 
-FYI, in order to reduce build issues, we have a Jenkins instance
-doing builds with gcc and CLANG at the media stage tree, before we even mer=
-ge
-them at the main media development tree. They run with allyesconfig for
-x86_64 arch, with W=3D1:
+On a Dell XPS 13 9350 laptop with Broadcom BCM4350 wifi card (according
+to lspci), every kernel starting with 6.2 hangs when waking up after
+suspend to RAM. The issue persisted as of May 2nd (last tested commit
+was 348551ddaf311c76b01cdcbaf61b6fef06a49144). Passing the debug and
+no_console_suspend parameters to the kernel show that a NULL pointer
+dereference and an Oops happen at wakeup. Please find the kernel
+messages readable on the screen at this point attached
+(kernel_log_after_suspend.txt).
 
-	https://builder.linuxtv.org/job/media_stage_clang/
-	https://builder.linuxtv.org/job/media_stage_gcc/
+A bisection was successful and produced the first bad commit
+[da6d9c8ecd00e20218461007948f2b0a8e7fa242]=C2=A0wifi: brcmfmac: add firmwar=
+e
+vendor info in driver info
+I've attached the bisection log as well (bisect.txt).
 
-And another CI job testing bisect breakages as I receive pull requests,
-applying patch per patch and using both allyesconfig and allmodconfig,
-also on x86_64 arch with W=3D1:
+Suspend to RAM works on this machine on newer kernels once the brcmfmac
+module is unloaded.
 
-	https://builder.linuxtv.org/job/patchwork/
+Distribution: Arch Linux
+Architecture: x86_64
+Device: Dell XPS 13 9350 with BCM4350 wifi card
+Kernel config used at compilation (created using the Arch Linux default
+config and make olddefconfig):
+https://gist.githubusercontent.com/maclomhair/e33fa7eece8f8c77e5a88c4eede2f=
+523/raw/429dfb022498c026225865dbb3ab2f75d5030a54/config
+Dmesg output after boot:
+https://gist.githubusercontent.com/maclomhair/47c75fa759d93800e7fb5e937fabe=
+f3e/raw/10750996a1ea9dcb3fa14d9b94e11fedd3abf280/dmesg
 
-The rule is to not merge stuff on media tree if any of those jobs
-fail. I also fast-forward merging patches whose subject states that
-the build has failed.
+#regzbot introduced da6d9c8ecd00e20218461007948f2b0a8e7fa242
 
-In order to help with that, on normal situation, I usually take one week
-to merge stuff from media_stage into media_tree, doing rebases at
-media_stage if needed to avoid git bisect build breakages at media_tree
-(which is from where I send my update PRs to you).
+Thank you for your time,
+Felix
 
-Unfortunately, currently we don't have resources to do multiple randconfig
-on Jenkins, as the build machines on the server are very slow. Yet, I'll
-add CONFIG_PM disabled to the test set, as it seems to be a recurrent source
-of troubles those days. I'll also try to identify a couple of other=20
-randconfigs that would help to catch earlier problems like that.
-If some other problematic Kconfig variables comes to your mind, please
-feel free to suggest them for us to add to the CI automation.
 
--
 
-In the specific case of this fixup patch, I didn't identify it as a build
-issue, so it followed the usual workflow. We have a huge number of patches
-for media, and it usually takes some time to handle all of them. This one
-just followed the normal flow, as it didn't break Jenkins builds nor the
-subject mentioned anything about build breakage.
+--=-4Yv0aQnA60OXIoYx5DFN
+Content-Disposition: attachment; filename="kernel_log_after_suspend.txt"
+Content-Type: text/plain; name="kernel_log_after_suspend.txt"; charset="UTF-8"
+Content-Transfer-Encoding: base64
 
-Regards,
-Mauro
+RnJlZXppbmcgcmVtYWluaW5nIGZyZWV6YWJsZSB0YXNrcyAuLi4gKGVsYXBzZWQgMC4wMDAuIHNl
+Y29uZHMpIGRvbmUuCkFDUEk6IEVDOiBpbnRlcnJ1cHQgYmxvY2tlZApBQ1BJOiBQTTogUHJlcGFy
+aW5nIHRvIGVudGVyIHN5c3RlbiBzbGVlcCBzdGF0ZSBTMwpBQ1BJOiBFQzogZXZlbnQgYmxvY2tl
+ZApBQ1BJOiBFQzogRUMgc3RvcHBlZApBQ1BJOiBQTTogU2F2aW5nIHBsYXRmb3JtIE5WUyBtZW1v
+cnkKRGlzYWJsaW5nIG5vbi1ib290IENQVXMgLi4uCnNtcGJvb3Q6IENQVSAxIGlzIG5vdyBvZmZs
+aW5lCnNtcGJvb3Q6IENQVSAyIGlzIG5vdyBvZmZsaW5lCnNtcGJvb3Q6IENQVSAzIGlzIG5vdyBv
+ZmZsaW5lCkFDUEk6IFBNOiBMb3ctbGV2ZWwgcmVzdW1lIGNvbXBsZXRlCkFDUEk6IEVDOiBFQyBz
+dGFydGVkCkFDUEk6IFBNOiBSZXN0b3JpbmcgcGxhdGZvcm0gTlZTIG1lbW9yeQpFbmFibGluZyBu
+b24tYm9vdCBDUFVzIC4uLgp4ODY6IEJvb3RpbmcgU01QIGNvbmZpZ3VyYXRpb246CnNtcGJvb3Q6
+IEJvb3RpbmcgTm9kZSAwIFByb2Nlc3NvciAxIEFQSUMgT3gyCkNQVTEgaXMgdXAKc21wYm9vdDog
+Qm9vdGluZyBOb2RlIDAgUHJvY2Vzc29yIDIgQVBJQyAweDEKQ1BVMiBpcyB1cApzbXBib290OiBC
+b290aW5nIE5vZGUgMCBQcm9jZXNzb3IgMyBBUElDIDB4MwpDUFUzIGlzIHVwCkFDUEk6IFBNOiBX
+YWtpbmcgdXAgZnJvbSBzeXN0ZW0gc2xlZXAgc3RhdGUgUzMKQUNQSTogRUM6IGludGVycnVwdCB1
+bmJsb2NrZWQKQUNQSTogRUM6IGV2ZW50IHVuYmxvY2tlZAp4aGNpIGhjZCAwMDAwOjAwOjE0LjA6
+IHhIQyBlcnJvciBpbiByZXN1bWUsIFVTQlNUUyBPeDQxMSwgUmVpbml0CnVzYiB1c2IxOiByb290
+IGh1YiBsb3N0IHBvd2VyIG9yIHdhcyByZXNldAp1c2IgdXNiMjogcm9vdCBodWIgbG9zdCBwb3dl
+ciBvciB3YXMgcmVzZXQKaTkxNSAwMDAwOjAwOjAyLjA6IFtkcm1dIFtFTkNPREVSOjk0OkRESSBB
+L1BIWSBBXSBpcyBkaXNhYmxlZC9pbiBEU0kgbm9kZSB3aXRoIGFuIHVuZ2F0ZWQgRERJIGNsb2Nr
+LCBnYXRlIGl0Cmk5MTUgMDAwMDowMDowMi4wOiBbZHJtXSBbRU5DT0RFUjoxMDI6RERJIEIvUEhZ
+IEJdIGlzIGRpc2FibGVkL2luIERTSSBtb2RlIHdpdGggYW4gdW5nYXRlZCBEREkgY2xvY2ssIGdh
+dGUgaXQKaTkxNSAwMDAwOjAwOjAyLjA6IFtkcm1dIFtFTkNPREVSOjExNzpEREkgQy9QSFkgQzEg
+aXMgZGlzYWJsZWQvaW4gRFNJIG5vZGUgd2l0aCBhbiB1bmdhdGVkIERESSBjbG9jaywgZ2F0ZSBp
+dApudm1lIG52bWUwOiA0LzAvMCBkZWZhdWx0L3JlYWQvcG9sbCBxdWV1ZXMKQlVHOiBrZXJuZWwg
+TlVMTCBwb2ludGVyIGRlcmVmZXJlbmNlLCBhZGRyZXNzOiAwMDAwMDAwMDAwMDAwMDE4CiNQRjog
+c3VwZXJ2aXNvciByZWFkIGFjY2VzcyBpbiBrZXJuZWwgbW9kZQojUEY6IGVycm9yX2NvZGUoMHgw
+MDAwKSDigJQgbm90LXByZXNlbnQgcGFnZQpQR0QgMCBQNEQgMApPb3BzOiAwMDAwIFsjMV0gUFJF
+RU1QVCBTTVAgUFRJCkNQVTogMyBQSUQ6IDU3NiBDb21tOiBrd29ya2VyL3VCOjE4IFRhaW50ZWQ6
+IEcgICAgICAgICBJICAgICAgICAgNi4xLjAtcmM3LTEtZ2l0LTAxNzY2LWdkYTZkOWM4ZWNkMDAg
+IzIwIGZhMmUzMmZmYWQwYjM5ZDUzYjVlNTJlYTlmOWU1OTkxMjNiMWQxMTIKSGFyZHdhcmUgbmFt
+ZTogRGVsbCBJbmMuIFhQUyAxMyA5MzUwLzBQV05DUiwgQklEUyAxLjEzLjAgMDIvMTAvMjAyMApX
+b3JrZ3VldWU6IGV2ZW50c191bmJvdW5kIGFzeW5jX3J1bl9lbnRyeV9mbgpSSVA6IDAwMTA6YnJj
+bWZfcGNpZV9wcm9iZStPeDE2Yi8weDdhMCBbYnJjbWZtYWNdCkNvZGU6IDQ5IDg5IDQ0IDI0IDQ4
+IDQ4IDg1IGMwIE9mIDg0IGY0IDA1IDAwIDAwIDQ4IDhkIDg1IGQwIDAwIDAwIDAwIDQ4IDhiIDM0
+IDI0IDQ4IDg5IGVmIDQ5IGM3IDQ0IDI0IDQwIGUwIDM5IDBkIGMxIDQ5IDg5IDQ0IDI0IDEwIDw0
+OT4gOGIgNDUgMTggNDggODkgNWUgMDggNDEgODkgNDQgMjQgMzggOGIgODMgMDAgMDQgMDAgMDAg
+NGMgODkgMjYKUlNQOiAwMDAwOmZmZmZiZDgwNDE4NTNkNzggRUZMQUdTOiAwMDAxMDI4NgpSQVg6
+IGZmZmY5N2ExMDE1NGYwZDAgUkJYOiBmZmZmOTdhMTA1ZmMyODAwIFJDWDogMDAwMDAwMDAwMDAw
+MDAwMQpSRFg6IDAwMDAwMDAwMDAwMDAwMDAgUlNJOiBmZmZmOTdhMjc1ZjA0ZmYwIFJESTogZmZm
+Zjk3YTEwMTU0ZjAwMApSQlA6IGZmZmY5N2ExMDE1NGYwMDAgUk84OiAwMDAwMDAwMDAwMDAwMDQw
+IFIwOTogZmZmZjk3YTEwMmJlYzBjMApSMTA6IDAwMDAwMDAwNjYwMDAwNTAgUjExOiBmZmZmZmZm
+ZmE2MDAwMDMxIFIxMjogZmZmZjk3YTEwNDkzNzljMApSMTM6IDAwMDAwMDAwMDAwMDAwMDAgUjE0
+OiAwMDAwMDAwMDAwMDAwMDAwIFIxNTogZmZmZjk3YTEwNDMwYzFhOApGUzogIDAwMDAwMDAwMDAw
+MDAwMDAoMDAwMCkgR1M6ZmZmZjk3YTI3NmQ4MDAwMCgwMDAwKSBrbmxHUzowMDAwMDAwMDAwMDAw
+MDAwCkNTOiAwMDEwIERTOiAwMDAwIEVTOiAwMDAwIENSMDogMDAwMDAwMDAwODAwNTAwMzMKQ1Iy
+OiAwMDAwMDAwMDAwMDAwMDE4IENSMzogMDAwMDAwMDE3NzgxMDAwMSBDUjQ6IDAwMDAwMDAwMDAz
+NzA2ZTAKQ2FsbCBUcmFjZToKIDxUQVNLPgogYnJjbWZfcGNpZV9wbV9sZWF2ZV9EMysweGM1Lzh4
+MWEwIFticmNtZm1hYyBiZTNiNGNlZmNhNDUxZTE5MGZhMzViZThmMDBkYjFiYmVjMjkzODg3XQog
+PyBwY2lfcG1fcmVzdW1lKzB4NWIvMHhmMAogPyBwY2lfbGVnYWN5X3Jlc3VtZSsweDgwLzB4ODAK
+IGRwbV9ydW5fY2FsbGJhY2srMHg0Ny8weDE1MAogZGV2aWNlX3Jlc3VtZSsweGEyLzB4MWYwCiBh
+c3luY19yZXN1bWUrMHgxZC8weDMwCiBhc3luY19ydW5fZW50cnlfZm4rMHgzMS8weDEzMAogcHJv
+Y2Vzc19vbmVfd29yaysweDFjNC8weDM4MAogd29ya2VyX3RocmVhZCsweDUxLzB4MzkwCiA/IHJl
+c2N1ZXJfdGhyZWFkKzB4M2IwLzB4M2IwCiBrdGhyZWFkK094ZGIvMHgxMTAKID8ga3RocmVhZF9j
+b21wbGV0ZV9hbmRfZXhpdCsweDIwLzB4MjAKdXNiIDEtMzogcmVzZXQgZnVsbC1zcGVlZCBVU0Ig
+ZGV2aWNlIG51bWJlciAyIHVzaW5nIHhoY2lfaGNkNzA2ZTAwMDAwMDAwMDAwMDQgMjQgNDggODkg
+ZWYgNDkgYzcgNDQgMjQgNDAgZTAgMzkgMGQgYzEgNDkgODkgNDQgMjQgMTAgPDQ5PiA4YiA0NSAx
+OCA0OCA4OSA1ZSAwOCA0MSA4OSA0NCAyNCAzOCA4YiA4MyAwMCAwNCAwMCAwMCA0YyA4OSAyNnZp
+ZGVvIGk4MDMyIHNlcmlvIHdtaXNoX2NsCnVzYiAxLTU6IHJlc2V0IGhpZ2gtc3BlZWQgVVNCIGRl
+dmljZSBudW1iZXIgMyB1c2luZyB4aGNpX2hjZAo=
+
+
+--=-4Yv0aQnA60OXIoYx5DFN
+Content-Disposition: attachment; filename="bisect.log"
+Content-Type: text/x-log; name="bisect.log"; charset="UTF-8"
+Content-Transfer-Encoding: base64
+
+IyBiYWQ6IFtjOWMzMzk1ZDVlM2RjYzZkYWVlNjZjNjkwODM1NGQ0N2JmOThjYjBjXSBMaW51eCA2
+LjIKIyBnb29kOiBbODMwYjNjNjhjMWZiMWU5MTc2MDI4ZDAyZWY4NmYzY2Y3NmFhMjQ3Nl0gTGlu
+dXggNi4xCmdpdCBiaXNlY3Qgc3RhcnQgJ3Y2LjInICd2Ni4xJwojIGdvb2Q6IFsxY2EwNmYxYzFh
+Y2VjYmUwMjEyNGYxNGEzN2NjZTM0N2I4YzFhOTBjXSBNZXJnZSB0YWcgJ3h0ZW5zYS0yMDIyMTIx
+Mycgb2YgaHR0cHM6Ly9naXRodWIuY29tL2pjbXZia2JjL2xpbnV4LXh0ZW5zYQpnaXQgYmlzZWN0
+IGdvb2QgMWNhMDZmMWMxYWNlY2JlMDIxMjRmMTRhMzdjY2UzNDdiOGMxYTkwYwojIGJhZDogW2I4
+M2E3MDgwZDMwMDMyY2Y3MDgzMmJjMmJiMDRjYzM0MmUyMDNiODhdIE1lcmdlIHRhZyAnc3RhZ2lu
+Zy02LjItcmMxJyBvZiBnaXQ6Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4L2tlcm5lbC9n
+aXQvZ3JlZ2toL3N0YWdpbmcKZ2l0IGJpc2VjdCBiYWQgYjgzYTcwODBkMzAwMzJjZjcwODMyYmMy
+YmIwNGNjMzQyZTIwM2I4OAojIGJhZDogWzdlNjhkZDdkMDdhMjhmYWEyZTY1NzRkZDZiOWRiZDkw
+Y2RlYWFlOTFdIE1lcmdlIHRhZyAnbmV0LW5leHQtNi4yJyBvZiBnaXQ6Ly9naXQua2VybmVsLm9y
+Zy9wdWIvc2NtL2xpbnV4L2tlcm5lbC9naXQvbmV0ZGV2L25ldC1uZXh0CmdpdCBiaXNlY3QgYmFk
+IDdlNjhkZDdkMDdhMjhmYWEyZTY1NzRkZDZiOWRiZDkwY2RlYWFlOTEKIyBnb29kOiBbYzYwOWQ3
+Mzk5NDc4OTRkNzM3MGVhZTRjZjA0ZWIyYzQ5ZTkxMGJjZl0gTWVyZ2UgdGFnICd3aXJlbGVzcy1u
+ZXh0LTIwMjItMTEtMTgnIG9mIGdpdDovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20vbGludXgva2Vy
+bmVsL2dpdC93aXJlbGVzcy93aXJlbGVzcy1uZXh0CmdpdCBiaXNlY3QgZ29vZCBjNjA5ZDczOTk0
+Nzg5NGQ3MzcwZWFlNGNmMDRlYjJjNDllOTEwYmNmCiMgZ29vZDogWzMyMTYzNDkxYzBjMjA1ZmZi
+MTU5NmJhZjljMzA4ZGVlNTMzOGFlOTRdIE1lcmdlIGJyYW5jaCAncjgxNjktaXJxLWNvYWxlc2Nl
+JwpnaXQgYmlzZWN0IGdvb2QgMzIxNjM0OTFjMGMyMDVmZmIxNTk2YmFmOWMzMDhkZWU1MzM4YWU5
+NAojIGdvb2Q6IFtiMmI1MDlmYjVhMWU2YWYxZTYzMGE3NTViMzJjNDY1ODA5OWRmNzBiXSBNZXJn
+ZSB0YWcgJ2xpbnV4LWNhbi1uZXh0LWZvci02LjItMjAyMjEyMTInIG9mIGdpdDovL2dpdC5rZXJu
+ZWwub3JnL3B1Yi9zY20vbGludXgva2VybmVsL2dpdC9ta2wvbGludXgtY2FuLW5leHQKZ2l0IGJp
+c2VjdCBnb29kIGIyYjUwOWZiNWExZTZhZjFlNjMwYTc1NWIzMmM0NjU4MDk5ZGY3MGIKIyBiYWQ6
+IFtmOWM1Y2JkNTJjNjJmMmZhOWQyZGZiZTFhZjhmYjAwZTUwNTZhZWZlXSBidHVzYjogQXZvaWQg
+cmVzZXQgb2YgSVNPQyBlbmRwb2ludCBhbHQgc2V0dGluZ3MgdG8gemVybwpnaXQgYmlzZWN0IGJh
+ZCBmOWM1Y2JkNTJjNjJmMmZhOWQyZGZiZTFhZjhmYjAwZTUwNTZhZWZlCiMgZ29vZDogWzZiNzVi
+ZDNkMDM2NzQ1YjliZTMwOTE3OTA5ZjAzNjAyMDk5YWRiZGJdIGJwZjogUmVmYWN0b3IgQVJHX1BU
+Ul9UT19EWU5QVFIgY2hlY2tzIGludG8gcHJvY2Vzc19keW5wdHJfZnVuYwpnaXQgYmlzZWN0IGdv
+b2QgNmI3NWJkM2QwMzY3NDViOWJlMzA5MTc5MDlmMDM2MDIwOTlhZGJkYgojIGJhZDogWzY5NWM1
+ZDNhODA1NWRjYjk3OTY2NDk2YWRlNTE5NjhjOWE3NWY1YzZdIHdpZmk6IHJ0bDh4eHh1OiBmaXhp
+bmcgSVFLIGZhaWx1cmVzIGZvciBydGw4MTkyZXUKZ2l0IGJpc2VjdCBiYWQgNjk1YzVkM2E4MDU1
+ZGNiOTc5NjY0OTZhZGU1MTk2OGM5YTc1ZjVjNgojIGJhZDogW2Q1OTJiOWY3NDI2NDNmMDdkYjUz
+YWMzNGJhZjZiYmQzY2U5NDc4ZGNdIHdpZmk6IHJ0dzg5OiBzdG9wIG1hYyBwb3J0IGZ1bmN0aW9u
+IHdoZW4gc3RvcF9hcCgpCmdpdCBiaXNlY3QgYmFkIGQ1OTJiOWY3NDI2NDNmMDdkYjUzYWMzNGJh
+ZjZiYmQzY2U5NDc4ZGMKIyBiYWQ6IFs4MDQxZjJiZmZiZjFjMDg1NGQ5ZjY2NzVhZDAxZGM2Y2E3
+MmY3MWRkXSB3aWZpOiBicmNtZm1hYzogaW50cm9kdWNlIEJSQ01GTUFDIGV4cG9ydGVkIHN5bWJv
+bHMgbmFtZXNwYWNlCmdpdCBiaXNlY3QgYmFkIDgwNDFmMmJmZmJmMWMwODU0ZDlmNjY3NWFkMDFk
+YzZjYTcyZjcxZGQKIyBiYWQ6IFtkNmE1YzU2MjIxNGYyNmU0NDJjOGVjM2ZmMWUyOGUxNjY3NWQx
+YmNmXSB3aWZpOiBicmNtZm1hYzogYWRkIHN1cHBvcnQgZm9yIHZlbmRvci1zcGVjaWZpYyBmaXJt
+d2FyZSBhcGkKZ2l0IGJpc2VjdCBiYWQgZDZhNWM1NjIyMTRmMjZlNDQyYzhlYzNmZjFlMjhlMTY2
+NzVkMWJjZgojIGdvb2Q6IFs3NjgyMWFhZDQ5Y2ViYzY5ZWNhODY4MDBmNDFlODEzMzEwNGU5MWQz
+XSB3aWZpOiBicmNtZm1hYzogYWRkIGZ1bmN0aW9uIHRvIHVuYmluZCBkZXZpY2UgdG8gYnVzIGxh
+eWVyIGFwaQpnaXQgYmlzZWN0IGdvb2QgNzY4MjFhYWQ0OWNlYmM2OWVjYTg2ODAwZjQxZTgxMzMx
+MDRlOTFkMwojIGJhZDogW2RhNmQ5YzhlY2QwMGUyMDIxODQ2MTAwNzk0OGYyYjBhOGU3ZmEyNDJd
+IHdpZmk6IGJyY21mbWFjOiBhZGQgZmlybXdhcmUgdmVuZG9yIGluZm8gaW4gZHJpdmVyIGluZm8K
+Z2l0IGJpc2VjdCBiYWQgZGE2ZDljOGVjZDAwZTIwMjE4NDYxMDA3OTQ4ZjJiMGE4ZTdmYTI0Mgoj
+IGZpcnN0IGJhZCBjb21taXQ6IFtkYTZkOWM4ZWNkMDBlMjAyMTg0NjEwMDc5NDhmMmIwYThlN2Zh
+MjQyXSB3aWZpOiBicmNtZm1hYzogYWRkIGZpcm13YXJlIHZlbmRvciBpbmZvIGluIGRyaXZlciBp
+bmZvCg==
+
+
+--=-4Yv0aQnA60OXIoYx5DFN--
