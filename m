@@ -1,96 +1,159 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AD206127
-	for <regressions@lists.linux.dev>; Wed, 10 May 2023 09:51:06 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pwgTP-0000gz-7f; Wed, 10 May 2023 11:51:03 +0200
-Message-ID: <9cf29c20-5b82-89bb-0927-e6f66b3bd8d5@leemhuis.info>
-Date: Wed, 10 May 2023 11:51:01 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E95820B41
+	for <regressions@lists.linux.dev>; Wed, 10 May 2023 10:00:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1683712857;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=dJ4F6g28hq8D1nFIvqzmkMiK9sXqDGEezYdmUJFKfMw=;
+	b=AMe5LPB+SKR/SPlRFQDqJtTvEgv9WvcLtdfmrwvsTws0TPqCL5APdse5qCtbIAgJImqOe+
+	Z8ZNMD+r8ThZpzm0VEgT9ptO1TLykEy057GyqJ9OymbqHURNU7Ma0zYGY930XmRskmv972
+	cSxygMr5Eo/NPwoyAcImflzuRzW0yfk=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-318-iZ3bdhTnNHCYjCmBDjDpUQ-1; Wed, 10 May 2023 06:00:53 -0400
+X-MC-Unique: iZ3bdhTnNHCYjCmBDjDpUQ-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 44B03805F5A;
+	Wed, 10 May 2023 10:00:53 +0000 (UTC)
+Received: from shalem.redhat.com (unknown [10.39.195.159])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 9E07F4078906;
+	Wed, 10 May 2023 10:00:51 +0000 (UTC)
+From: Hans de Goede <hdegoede@redhat.com>
+To: Arend van Spriel <aspriel@gmail.com>,
+	Franky Lin <franky.lin@broadcom.com>,
+	Hante Meuleman <hante.meuleman@broadcom.com>,
+	Kalle Valo <kvalo@kernel.org>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	linux-wireless@vger.kernel.org,
+	brcm80211-dev-list.pdl@broadcom.com,
+	SHA-cyfmac-dev-list@infineon.com,
+	regressions@lists.linux.dev,
+	Felix <nimrod4garoa@gmail.com>,
+	Arend van Spriel <arend.vanspriel@broadcom.com>,
+	stable@vger.kernel.org
+Subject: [PATCH] wifi: brcmfmac: Check for probe() id argument being NULL
+Date: Wed, 10 May 2023 12:00:50 +0200
+Message-Id: <20230510100050.27099-1-hdegoede@redhat.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: Fwd: Kernel 5.11 crashes when it boots, it produces black screen.
-Content-Language: en-US, de-DE
-To: Bagas Sanjaya <bagasdotme@gmail.com>,
- Alex Deucher <alexander.deucher@amd.com>,
- =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
- "Pan, Xinhui" <Xinhui.Pan@amd.com>, David Airlie <airlied@gmail.com>,
- Daniel Vetter <daniel@ffwll.ch>, Hawking Zhang <Hawking.Zhang@amd.com>,
- Le Ma <le.ma@amd.com>, Tao Zhou <tao.zhou1@amd.com>,
- YiPeng Chai <YiPeng.Chai@amd.com>, "Jiadong.Zhu" <Jiadong.Zhu@amd.com>,
- Yang Wang <KevinYang.Wang@amd.com>, Candice Li <candice.li@amd.com>,
- Xiaojian Du <Xiaojian.Du@amd.com>, Likun Gao <Likun.Gao@amd.com>,
- Linux AMDGPU <amd-gfx@lists.freedesktop.org>,
- Linux DRI Development <dri-devel@lists.freedesktop.org>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>
-Cc: "Azamat S. Kalimoulline" <turtle@bazon.ru>,
- max <kernel-ODwfxu5zp4@maxxor.org>
-References: <c2168e4f-4d47-0d5d-a1b7-d237f0760df8@gmail.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <c2168e4f-4d47-0d5d-a1b7-d237f0760df8@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1683712266;5524982e;
-X-HE-SMSGID: 1pwgTP-0000gz-7f
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.2
 
-Hi!
+The probe() id argument may be NULL in 2 scenarios:
 
-On 10.05.23 10:26, Bagas Sanjaya wrote:
-> 
-> I noticed a regression report on Bugzilla ([1]). As many developers don't
-> have a look on it, I decided to forward it by email. See the report
-> for the full thread.
-> 
-> Quoting from the report:
-> 
->>  Azamat S. Kalimoulline 2021-04-06 15:45:08 UTC
->>
->> Same as in https://bugzilla.kernel.org/show_bug.cgi?id=212133, but not StoneyRidge related. I have same issue in 5.11.9 kernel, but on Renoir architecture. I have AMD Ryzen 5 PRO 4650U with Radeon Graphics. Same stuck on loading initial ramdisk. modprobe.blacklist=amdgpu 3` didn't help to boot. Same stuck. Also iommu=off and acpi=off too. 5.10.26 boots fine. I boot via efi and I have no option boot without it.
-> 
-> Azamat, can you try reproducing this issue on latest mainline?
->
-> [1]: https://bugzilla.kernel.org/show_bug.cgi?id=212579
+1. brcmf_pcie_pm_leave_D3() calling brcmf_pcie_probe() to reprobe
+   the device.
 
-Bagas, thx for all your help with regression tracking, much appreciated
-(side note, as I'm curious for a while already: what is your motivation?
-Just want to help? But whatever, any help is great!).
+2. If a user tries to manually bind the driver from sysfs then the sdio /
+   pcie / usb probe() function gets called with NULL as id argument.
 
-That being said: I'm not sure if I like what you did in this particular
-case, as developers might start getting annoyed by regression tracking
-if we throw too many bug reports of lesser quality before their feet --
-and then they might start to ignore us, which we really need to prevent.
+1. Is being hit by users causing the following oops on resume and causing
+wifi to stop working:
 
-That's why I would not have forwarded that report at this point of time,
-mainly for these reasons:
+BUG: kernel NULL pointer dereference, address: 0000000000000018
+<snip>
+Hardware name: Dell Inc. XPS 13 9350/0PWNCR, BIDS 1.13.0 02/10/2020
+Workgueue: events_unbound async_run_entry_fn
+RIP: 0010:brcmf_pcie_probe+Ox16b/0x7a0 [brcmfmac]
+<snip>
+Call Trace:
+ <TASK>
+ brcmf_pcie_pm_leave_D3+0xc5/8x1a0 [brcmfmac be3b4cefca451e190fa35be8f00db1bbec293887]
+ ? pci_pm_resume+0x5b/0xf0
+ ? pci_legacy_resume+0x80/0x80
+ dpm_run_callback+0x47/0x150
+ device_resume+0xa2/0x1f0
+ async_resume+0x1d/0x30
+<snip>
 
- * The initial report is quite old already, as it fall through the
-cracks (not good, but happens; sorry Azamat!). Hence in this case it
-would definitely be better to *first* ask the reporter to check if the
-problem still happens with latest mainline (or at least latest stable)
-before involving the kernel developers, as it might have been fixed
-already.
+Fix this by checking for id being NULL.
 
- * This might not be a amdgpu bug at all; in fact the other bug the
-reporter mentioned was an iommu thing. Hence this might be one of those
-regressions where a bisection is the only way to get down to the
-problem. Sure, sending a few developers a quick inquiry along the lines
-of "do you maybe have an idea what's up there" is fine, but that's not
-what you did in your mail. Your list of recipients is also quite long;
-that's risky: if you do that too often, as then they might start
-ignoring mail from you.
+In the case of brcmf_pcie_probe() also add a manual lookup of the id
+when it is NULL so that fwvid will still get set correctly on reprobe
+on resume.
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+Fixes: da6d9c8ecd00 ("wifi: brcmfmac: add firmware vendor info in driver info")
+Reported-by: Felix <nimrod4garoa@gmail.com>
+Link: https://lore.kernel.org/regressions/4ef3f252ff530cbfa336f5a0d80710020fc5cb1e.camel@gmail.com/
+Cc: Arend van Spriel <arend.vanspriel@broadcom.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c | 2 +-
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/pcie.c   | 8 +++++++-
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c    | 2 +-
+ 3 files changed, 9 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c
+index 65d4799a5658..833524bc9b50 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c
+@@ -1067,7 +1067,7 @@ static int brcmf_ops_sdio_probe(struct sdio_func *func,
+ 	sdiodev->bus_if = bus_if;
+ 	bus_if->bus_priv.sdio = sdiodev;
+ 	bus_if->proto_type = BRCMF_PROTO_BCDC;
+-	bus_if->fwvid = id->driver_data;
++	bus_if->fwvid = id ? id->driver_data : BRCMF_FWVENDOR_INVALID;
+ 	dev_set_drvdata(&func->dev, bus_if);
+ 	dev_set_drvdata(&sdiodev->func1->dev, bus_if);
+ 	sdiodev->dev = &sdiodev->func1->dev;
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/pcie.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/pcie.c
+index a9b9b2dc62d4..b29ab19d695d 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/pcie.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/pcie.c
+@@ -2339,6 +2339,9 @@ static void brcmf_pcie_debugfs_create(struct device *dev)
+ }
+ #endif
+ 
++/* Forward declaration for pci_match_id() call */
++static const struct pci_device_id brcmf_pcie_devid_table[];
++
+ static int
+ brcmf_pcie_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ {
+@@ -2351,6 +2354,9 @@ brcmf_pcie_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 
+ 	brcmf_dbg(PCIE, "Enter %x:%x\n", pdev->vendor, pdev->device);
+ 
++	if (!id)
++		id = pci_match_id(brcmf_pcie_devid_table, pdev);
++
+ 	ret = -ENOMEM;
+ 	devinfo = kzalloc(sizeof(*devinfo), GFP_KERNEL);
+ 	if (devinfo == NULL)
+@@ -2406,7 +2412,7 @@ brcmf_pcie_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	bus->bus_priv.pcie = pcie_bus_dev;
+ 	bus->ops = &brcmf_pcie_bus_ops;
+ 	bus->proto_type = BRCMF_PROTO_MSGBUF;
+-	bus->fwvid = id->driver_data;
++	bus->fwvid = id ? id->driver_data : BRCMF_FWVENDOR_INVALID;
+ 	bus->chip = devinfo->coreid;
+ 	bus->wowl_supported = pci_pme_capable(pdev, PCI_D3hot);
+ 	dev_set_drvdata(&pdev->dev, bus);
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
+index 246843aeb696..2541a47b1f8f 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
+@@ -1425,7 +1425,7 @@ brcmf_usb_probe(struct usb_interface *intf, const struct usb_device_id *id)
+ 	else
+ 		brcmf_dbg(USB, "Broadcom full speed USB WLAN interface detected\n");
+ 
+-	ret = brcmf_usb_probe_cb(devinfo, id->driver_info);
++	ret = brcmf_usb_probe_cb(devinfo, id ? id->driver_info : BRCMF_FWVENDOR_INVALID);
+ 	if (ret)
+ 		goto fail;
+ 
+-- 
+2.40.1
+
