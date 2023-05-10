@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0040364
-	for <regressions@lists.linux.dev>; Wed, 10 May 2023 09:03:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AD206127
+	for <regressions@lists.linux.dev>; Wed, 10 May 2023 09:51:06 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pwfir-0000w9-Vv; Wed, 10 May 2023 11:02:58 +0200
-Message-ID: <742856c0-ab93-1a6c-4fc8-9451c0908930@leemhuis.info>
-Date: Wed, 10 May 2023 11:02:57 +0200
+	id 1pwgTP-0000gz-7f; Wed, 10 May 2023 11:51:03 +0200
+Message-ID: <9cf29c20-5b82-89bb-0927-e6f66b3bd8d5@leemhuis.info>
+Date: Wed, 10 May 2023 11:51:01 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,73 +16,81 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.10.0
-Subject: Re: mainline build failure due to cf21f328fcaf ("media: nxp: Add
- i.MX8 ISI driver")
-To: Mauro Carvalho Chehab <mchehab@kernel.org>,
- Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
- "Sudip Mukherjee (Codethink)" <sudipm.mukherjee@gmail.com>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
- NXP Linux Team <linux-imx@nxp.com>, linux-media@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>
-References: <ZElaVmxDsOkZj2DK@debian>
- <51cff63a-3a04-acf5-8264-bb19b0bee8a3@leemhuis.info>
- <CAHk-=wgzU8_dGn0Yg+DyX7ammTkDUCyEJ4C=NvnHRhxKWC7Wpw@mail.gmail.com>
- <20230510090527.25e26127@sal.lan>
+Subject: Re: Fwd: Kernel 5.11 crashes when it boots, it produces black screen.
 Content-Language: en-US, de-DE
+To: Bagas Sanjaya <bagasdotme@gmail.com>,
+ Alex Deucher <alexander.deucher@amd.com>,
+ =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+ "Pan, Xinhui" <Xinhui.Pan@amd.com>, David Airlie <airlied@gmail.com>,
+ Daniel Vetter <daniel@ffwll.ch>, Hawking Zhang <Hawking.Zhang@amd.com>,
+ Le Ma <le.ma@amd.com>, Tao Zhou <tao.zhou1@amd.com>,
+ YiPeng Chai <YiPeng.Chai@amd.com>, "Jiadong.Zhu" <Jiadong.Zhu@amd.com>,
+ Yang Wang <KevinYang.Wang@amd.com>, Candice Li <candice.li@amd.com>,
+ Xiaojian Du <Xiaojian.Du@amd.com>, Likun Gao <Likun.Gao@amd.com>,
+ Linux AMDGPU <amd-gfx@lists.freedesktop.org>,
+ Linux DRI Development <dri-devel@lists.freedesktop.org>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>
+Cc: "Azamat S. Kalimoulline" <turtle@bazon.ru>,
+ max <kernel-ODwfxu5zp4@maxxor.org>
+References: <c2168e4f-4d47-0d5d-a1b7-d237f0760df8@gmail.com>
 From: "Linux regression tracking (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <20230510090527.25e26127@sal.lan>
+In-Reply-To: <c2168e4f-4d47-0d5d-a1b7-d237f0760df8@gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1683709389;3dc75c39;
-X-HE-SMSGID: 1pwfir-0000w9-Vv
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1683712266;5524982e;
+X-HE-SMSGID: 1pwgTP-0000gz-7f
 
-On 10.05.23 10:05, Mauro Carvalho Chehab wrote:
-> Em Mon, 8 May 2023 09:27:28 -0700
-> Linus Torvalds <torvalds@linux-foundation.org> escreveu:
->> On Mon, May 8, 2023 at 3:55 AM Linux regression tracking #adding
->> (Thorsten Leemhuis) <regressions@leemhuis.info> wrote:
->>>
->>> Thanks for the report. The fixes (see the mail from Laurent) apparently
->>> are still not mainlined (or am I missing something?), so let me add this
->>> report to the tracking to ensure this is not forgotten:  
+Hi!
+
+On 10.05.23 10:26, Bagas Sanjaya wrote:
+> 
+> I noticed a regression report on Bugzilla ([1]). As many developers don't
+> have a look on it, I decided to forward it by email. See the report
+> for the full thread.
+> 
+> Quoting from the report:
+> 
+>>  Azamat S. Kalimoulline 2021-04-06 15:45:08 UTC
 >>
->> Gaah. I was intending to apply the patch directly before rc1, but then
->> I forgot about this issue.
->>
->> Mauro: I'm currently really *really* fed up with the media tree. This
->> exact same thing happened last merge window, where the media tree
->> caused pointless build errors, and it took way too long to get the
->> fixes the proper ways.
-> [...]
+>> Same as in https://bugzilla.kernel.org/show_bug.cgi?id=212133, but not StoneyRidge related. I have same issue in 5.11.9 kernel, but on Renoir architecture. I have AMD Ryzen 5 PRO 4650U with Radeon Graphics. Same stuck on loading initial ramdisk. modprobe.blacklist=amdgpu 3` didn't help to boot. Same stuck. Also iommu=off and acpi=off too. 5.10.26 boots fine. I boot via efi and I have no option boot without it.
+> 
+> Azamat, can you try reproducing this issue on latest mainline?
 >
-> In the specific case of this fixup patch, I didn't identify it as a build
-> issue, so it followed the usual workflow. We have a huge number of patches
-> for media, and it usually takes some time to handle all of them. This one
-> just followed the normal flow, as it didn't break Jenkins builds nor the
-> subject mentioned anything about build breakage.
+> [1]: https://bugzilla.kernel.org/show_bug.cgi?id=212579
 
-Makes me wonder again if we should start adding
+Bagas, thx for all your help with regression tracking, much appreciated
+(side note, as I'm curious for a while already: what is your motivation?
+Just want to help? But whatever, any help is great!).
 
- CC: regressions@lists.linux.dev
+That being said: I'm not sure if I like what you did in this particular
+case, as developers might start getting annoyed by regression tracking
+if we throw too many bug reports of lesser quality before their feet --
+and then they might start to ignore us, which we really need to prevent.
 
-to any patches that fix regressions, that way maintainers and reviewers
-would have something to filter for -- and I would become aware of all
-regression fixes in the work, too.
+That's why I would not have forwarded that report at this point of time,
+mainly for these reasons:
 
-Ciao, Thorsten
+ * The initial report is quite old already, as it fall through the
+cracks (not good, but happens; sorry Azamat!). Hence in this case it
+would definitely be better to *first* ask the reporter to check if the
+problem still happens with latest mainline (or at least latest stable)
+before involving the kernel developers, as it might have been fixed
+already.
 
-P.S.: BTW, let me tell regzbot that Linus merged the fix for the build
-failure.
+ * This might not be a amdgpu bug at all; in fact the other bug the
+reporter mentioned was an iommu thing. Hence this might be one of those
+regressions where a bisection is the only way to get down to the
+problem. Sure, sending a few developers a quick inquiry along the lines
+of "do you maybe have an idea what's up there" is fine, but that's not
+what you did in your mail. Your list of recipients is also quite long;
+that's risky: if you do that too often, as then they might start
+ignoring mail from you.
 
-#regzbot fix: ba0ad6ed89f
-
-FWIW, the one for the gcc warnings[1] Laurent mentioned elsewhere in
-this thread is not merged yet afaics.
-
-[1] https://lore.kernel.org/all/20230418092007.2902984-1-arnd@kernel.org/
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
