@@ -1,100 +1,142 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49C5463E
-	for <regressions@lists.linux.dev>; Wed, 10 May 2023 04:50:25 +0000 (UTC)
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-64115e652eeso47576375b3a.0
-        for <regressions@lists.linux.dev>; Tue, 09 May 2023 21:50:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1683694224; x=1686286224;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fjvF0okmkO6bRnSuK5692kJbO2O9eLlNpM3QSK5raGA=;
-        b=Z1VR9OCE3JfLqABa9qplnc18A4vve7+jhk6ZZRLyvX6nhH9TgzGWcOxVy2KE7+RHDB
-         IFxpICz2YqFTIB2mJjq85MD/6FtCgvLnmn+b9wuUFGQeMIYOIiKFy/2xFG/3ci6lE8YM
-         QF5EgixnPPNKrvU2yg+LnC/NA+bUCaoPOh5z5uiWfRlKDs1yOuP6CcLvf+fsdNvS+mbH
-         bhsZ7TejvQW/8HDTCyKr1J9YjPmJ9EksOiMyNScXdyanLpRxgiRXLs0gyuD0iJ6MbEPH
-         SDHMIOMRt6SXRoyg72j5Blo4wnwFrxaLFxVmKEuY6ac1HW9hvIp/fNKR53cWHf3TyqvH
-         FvdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683694224; x=1686286224;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=fjvF0okmkO6bRnSuK5692kJbO2O9eLlNpM3QSK5raGA=;
-        b=MSna4nUq5nw78EY4rgkfHH0rRQwVKB3v8UwIexVnyjx60YCfT/r67jhpSijb5LOpWA
-         Hz+SNcZeU2lRE8Ze5Up/ILWF1IAlXwfDlsUPvIbB1btGrxhqphQ17Lq5vLyX4kkIhk+L
-         zDtjmM1GvIfQnHKSvqcvAaJORo2mvAZs9YfSDyvbERZHQgnBb01noazdXfwB9K3sDHci
-         hxx2li1Jer0tazjclVSQIDOQDrZOwfMi7AaXoGvIbDf9t1V0jxZ7tXw9H76elFM654ou
-         wn7YhJDfy4xZe9XYPlJAVQVOuBph4KE11w97GOxeWvqHcGgwjfJb9rwz4BXzZbNJNuCq
-         RD4Q==
-X-Gm-Message-State: AC+VfDyd6r41JDgFqwfhKRE0xQfbPVDRRy+I1oAjherTUXHaZaHuOj1Y
-	70+0QBO2NBFvyiKWdCZryw9J4VmgkNI=
-X-Google-Smtp-Source: ACHHUZ5GguK/UatlKScuuJ1FXRgLeUPfVlIBVrcz7ePqO0X62Qzo3Wnjdr2zlHi5SgqKj6owWZ3pSA==
-X-Received: by 2002:a17:90a:feb:b0:24e:463c:c4a7 with SMTP id 98-20020a17090a0feb00b0024e463cc4a7mr24450607pjz.15.1683694224295;
-        Tue, 09 May 2023 21:50:24 -0700 (PDT)
-Received: from [192.168.43.80] (subs32-116-206-28-2.three.co.id. [116.206.28.2])
-        by smtp.gmail.com with ESMTPSA id ot5-20020a17090b3b4500b002508d73f4e8sm4404727pjb.57.2023.05.09.21.50.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 09 May 2023 21:50:23 -0700 (PDT)
-Message-ID: <acf162e6-3dc2-6976-bceb-fa82b5e7b2c2@gmail.com>
-Date: Wed, 10 May 2023 11:49:49 +0700
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 376E665D
+	for <regressions@lists.linux.dev>; Wed, 10 May 2023 08:05:34 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 297C9C433D2;
+	Wed, 10 May 2023 08:05:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1683705933;
+	bh=zAtZ70naQXiiJhGVd2X1W6n4PKQ2vnqsXMKHc0aV1PA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=GKKyKA42JDR90NrVwF45MXcGgM8C6GYVbd/ltDYA/rLLcBwYNSCbdLqKOuL4Qv314
+	 Yo6DDlidCG0a1SPvpzZsBcUehYoRPa3WieWEvZThD6u0fCFrwCfQS+fMuIecCE/uGv
+	 SfVwCx2PN2BEPQKl+WtrEp/EK8e+nXKHI/FoypIUxXVgMW6rTi1H3bLdZPwbsnDjMF
+	 h0N+iroiEEfh405dmPAS7IwJ+fXvlV7efHo6FqGBkOnM15XKW/uDjBGxt+cOX+FVft
+	 7aPEamaz4tLDKZqOKCD6AK0Wd5vPbpuTa3AtTwS5ehEcaUXbnZhujH7246TqNeIyzx
+	 PD+sQsUMMsjmg==
+Date: Wed, 10 May 2023 09:05:27 +0100
+From: Mauro Carvalho Chehab <mchehab@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>, "Sudip
+ Mukherjee (Codethink)" <sudipm.mukherjee@gmail.com>, Laurent Pinchart
+ <laurent.pinchart@ideasonboard.com>, Shawn Guo <shawnguo@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>,
+ linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, Pengutronix Kernel Team
+ <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>
+Subject: Re: mainline build failure due to cf21f328fcaf ("media: nxp: Add
+ i.MX8 ISI driver")
+Message-ID: <20230510090527.25e26127@sal.lan>
+In-Reply-To: <CAHk-=wgzU8_dGn0Yg+DyX7ammTkDUCyEJ4C=NvnHRhxKWC7Wpw@mail.gmail.com>
+References: <ZElaVmxDsOkZj2DK@debian>
+	<51cff63a-3a04-acf5-8264-bb19b0bee8a3@leemhuis.info>
+	<CAHk-=wgzU8_dGn0Yg+DyX7ammTkDUCyEJ4C=NvnHRhxKWC7Wpw@mail.gmail.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.37; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Content-Language: en-US
-To: Linux Regressions <regressions@lists.linux.dev>
-Cc: Jesse Brandeburg <jesse.brandeburg@intel.com>,
- Tony Nguyen <anthony.l.nguyen@intel.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Linux Intel LAN Drivers <intel-wired-lan@lists.osuosl.org>,
- Linux Networking <netdev@vger.kernel.org>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-Subject: Fwd: e1000e - slow receive / rx - i219-LM (Alder Lake)
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+Hi Linus,
 
-I noticed a regression report on bugzilla [1]. As many developers don't
-take a look on it, I decided to forward it by email. To reach the
-reporter, though, you need to log in to bugzilla.
+Em Mon, 8 May 2023 09:27:28 -0700
+Linus Torvalds <torvalds@linux-foundation.org> escreveu:
 
-Quoting from the report:
->  Scott Silverman 2023-03-03 17:55:10 UTC > When running kernels 5.15 and newer, poor rx speeds are observed on Alder Lake i219-LM (8086:1A1C) on a Dell Precision 3260 Compact.
-> 
-> To Reproduce:
-> Using iperf3 from the system under test:
-> `iperf3 -c <server on local LAN> -R`
-> 
-> Under kernels 5.7-5.14 (inclusive) performance is near line rate, ~990 Mbps.
-> From kernels 5.15 through 6.2 performance is approximately 10-20 Mbps.
-> 
-> Also of note, the issue doesn't present with servers over the internet (i.e. higher latency links). Over a link with a latency of approximately 20ms I was able to achieve about 600Mbps.
-> 
-> Interesting workaround, on affected kernels (5.15+) I am able to resolve the issue if an additional device is installed into the systems PCIe slot (tested with an Intel i210 NIC (not connected to LAN) and an Nvidia Quadro P620 GPU).
+> On Mon, May 8, 2023 at 3:55=E2=80=AFAM Linux regression tracking #adding
+> (Thorsten Leemhuis) <regressions@leemhuis.info> wrote:
+> >
+> > Thanks for the report. The fixes (see the mail from Laurent) apparently
+> > are still not mainlined (or am I missing something?), so let me add this
+> > report to the tracking to ensure this is not forgotten: =20
+>=20
+> Gaah. I was intending to apply the patch directly before rc1, but then
+> I forgot about this issue.
+>=20
+> Mauro: I'm currently really *really* fed up with the media tree. This
+> exact same thing happened last merge window, where the media tree
+> caused pointless build errors, and it took way too long to get the
+> fixes the proper ways.
+>=20
+> If something doesn't even build, it should damn well be fixed ASAP.
+>=20
+> Last release it was imx290.c and PM support being disabled, and I had
+> to apply the fix manually because it continued to not come in the
+> proper way.
+>=20
+> See commit 7b50567bdcad ("media: i2c: imx290: fix conditional function
+> defintions").
+>=20
+> But also see commit b928db940448 ("media: i2c: imx290: fix conditional
+> function definitions"), which you *did* commit, but note this on that
+> commit:
+>=20
+>     AuthorDate: Tue Feb 7 17:13
+>     CommitDate: Sat Mar 18 08:44
+>=20
+> so it took you a MONTH AND A HALF to react to a build failure.
+>=20
+> And see this:
+>=20
+>     git name-rev b928db940448
+>     b928db940448 tags/v6.4-rc1~161^2~458
+>=20
+> ie that build fix that you finally committed came in *AFTER* the 6.3
+> release, even though the bug it fixes was introduced in the 6.3 merge
+> window:
+>=20
+>     git name-rev 02852c01f654
+>     02852c01f654 tags/v6.3-rc1~72^2~2^2~193
+>=20
+> and now we're in the *EXACT*SAME* situation, with me applying a build
+> fix directly, because you couldn't get it fixed in a timely manner.
 
-See bugzilla for details.
+Sorry for the mess. I'll work to improve the process to avoid this
+to happen again.
 
-To the reporter: It had been great if you also test the latest mainline
-(6.4-rc1) to see if this regression has been already fixed.
+FYI, in order to reduce build issues, we have a Jenkins instance
+doing builds with gcc and CLANG at the media stage tree, before we even mer=
+ge
+them at the main media development tree. They run with allyesconfig for
+x86_64 arch, with W=3D1:
 
-Anyway, I'm adding this to regzbot:
+	https://builder.linuxtv.org/job/media_stage_clang/
+	https://builder.linuxtv.org/job/media_stage_gcc/
 
-#regzbot introduced: v5.14..v5.15 https://bugzilla.kernel.org/show_bug.cgi?id=217120
-#regzbot title: e1000e performance drop (slow receive/rx) on i219-LM (Alder Lake)
+And another CI job testing bisect breakages as I receive pull requests,
+applying patch per patch and using both allyesconfig and allmodconfig,
+also on x86_64 arch with W=3D1:
 
-Thanks.
+	https://builder.linuxtv.org/job/patchwork/
 
-[1]: https://bugzilla.kernel.org/show_bug.cgi?id=217120
+The rule is to not merge stuff on media tree if any of those jobs
+fail. I also fast-forward merging patches whose subject states that
+the build has failed.
 
--- 
-An old man doll... just what I always wanted! - Clara
+In order to help with that, on normal situation, I usually take one week
+to merge stuff from media_stage into media_tree, doing rebases at
+media_stage if needed to avoid git bisect build breakages at media_tree
+(which is from where I send my update PRs to you).
+
+Unfortunately, currently we don't have resources to do multiple randconfig
+on Jenkins, as the build machines on the server are very slow. Yet, I'll
+add CONFIG_PM disabled to the test set, as it seems to be a recurrent source
+of troubles those days. I'll also try to identify a couple of other=20
+randconfigs that would help to catch earlier problems like that.
+If some other problematic Kconfig variables comes to your mind, please
+feel free to suggest them for us to add to the CI automation.
+
+-
+
+In the specific case of this fixup patch, I didn't identify it as a build
+issue, so it followed the usual workflow. We have a huge number of patches
+for media, and it usually takes some time to handle all of them. This one
+just followed the normal flow, as it didn't break Jenkins builds nor the
+subject mentioned anything about build breakage.
+
+Regards,
+Mauro
