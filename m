@@ -1,12 +1,45 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3B9920B4A
-	for <regressions@lists.linux.dev>; Wed, 10 May 2023 13:17:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08706C433EF;
-	Wed, 10 May 2023 13:17:00 +0000 (UTC)
-Message-ID: <88ff9837-36e3-b16f-537f-af21f738383a@xs4all.nl>
-Date: Wed, 10 May 2023 15:16:58 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3936F6ADE
+	for <regressions@lists.linux.dev>; Wed, 10 May 2023 13:29:56 +0000 (UTC)
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-644d9bf05b7so3274733b3a.3
+        for <regressions@lists.linux.dev>; Wed, 10 May 2023 06:29:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1683725395; x=1686317395;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=OrTJVzC+N9h0nc4ZEduLU/NeM+jyxDAulMwnlFxtxlY=;
+        b=kcGS4d9Ff2Pu8W5Olf1KJebhCAujWewMOB6b0tIuJLOPlgbGAi0+EHQL06R/FR2b4l
+         7Q+TwEvxESLbJQSotuf0OAMuigufp3algJowPWUKPD0aFpKy6GG2HVUc32f8hQgC8h4k
+         6Tgx7e0YVqZLcxIYq2lBBO4Jww+ybjKvmz0ZV5exuG0oytodCIFo++EYDNC6LULe16Gq
+         W7B/S9rvB1M1H0+1nrr0zadgBkqQ6PgGuNWZpB5k19HOM70VgqSaNaT0nnsoRt/LhYIA
+         JJtE+KHDYYND+ke9umBSAxYlCC2F9z96tPVFciQG4K4mtF1qbUZQR9+uYfY46rC7dbyH
+         FJeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683725395; x=1686317395;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=OrTJVzC+N9h0nc4ZEduLU/NeM+jyxDAulMwnlFxtxlY=;
+        b=eyUIGLDsYrNm+M6a0NdmknaxM/7BMMsxprMW/6i+0goLBHqsC9/73lWre8PbcnqUze
+         JUHwugvIhNZwgFAlBnnn3D8S+q8AmHIbGvn7bFHNjDX6PxkqoPf3TCE6TRZ2Oy5AZcKg
+         7IndWBYTeX2dVAlhHHH0y1Pc7Zl+8kPqqrgZfe+KByBzkrI5teA37HrmWzgMg/34FjRQ
+         1ICeNrsOXqrLI2XthcjM8BUhUWX1C+vzMcEsb3DDl7nxaMxGBxY1uSqfNxnHNeh0iHKx
+         O9WM97AVW0CnNykQ7lg2K5X9LKakixrls/AVuhNkbKEJ8rpr9KXZnKuFo933f6mWWzax
+         p5bA==
+X-Gm-Message-State: AC+VfDxshDFotTOSn3gIb0Cvsw6cexEO81mutqQSMOlK0uVJxakarnFK
+	qFbaowgOPbt9FYHJObSCQAtcgjnALQgPBA==
+X-Google-Smtp-Source: ACHHUZ7GzCWcQ4sO6wa/oMA7dIBZeJ9MBwS332ZFkL0WO3bHNFgWW4AFCg5oMkj7bOXj98w5QLwlfg==
+X-Received: by 2002:a05:6a00:2289:b0:625:fe95:f120 with SMTP id f9-20020a056a00228900b00625fe95f120mr23709634pfe.8.1683725395276;
+        Wed, 10 May 2023 06:29:55 -0700 (PDT)
+Received: from [192.168.43.80] (subs32-116-206-28-53.three.co.id. [116.206.28.53])
+        by smtp.gmail.com with ESMTPSA id x9-20020aa784c9000000b006475f831838sm2524832pfn.30.2023.05.10.06.29.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 10 May 2023 06:29:54 -0700 (PDT)
+Message-ID: <cfb6bcf7-a6c2-7e52-d7dd-3e054574942e@gmail.com>
+Date: Wed, 10 May 2023 20:29:44 +0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -14,138 +47,74 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: mainline build failure due to cf21f328fcaf ("media: nxp: Add
- i.MX8 ISI driver")
+ Thunderbird/102.10.0
+Subject: Re: Fwd: Kernel 5.11 crashes when it boots, it produces black screen.
+To: Linux regressions mailing list <regressions@lists.linux.dev>,
+ Alex Deucher <alexander.deucher@amd.com>,
+ =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+ "Pan, Xinhui" <Xinhui.Pan@amd.com>, David Airlie <airlied@gmail.com>,
+ Daniel Vetter <daniel@ffwll.ch>, Hawking Zhang <Hawking.Zhang@amd.com>,
+ Le Ma <le.ma@amd.com>, Tao Zhou <tao.zhou1@amd.com>,
+ YiPeng Chai <YiPeng.Chai@amd.com>, "Jiadong.Zhu" <Jiadong.Zhu@amd.com>,
+ Yang Wang <KevinYang.Wang@amd.com>, Candice Li <candice.li@amd.com>,
+ Xiaojian Du <Xiaojian.Du@amd.com>, Likun Gao <Likun.Gao@amd.com>,
+ Linux AMDGPU <amd-gfx@lists.freedesktop.org>,
+ Linux DRI Development <dri-devel@lists.freedesktop.org>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Cc: "Azamat S. Kalimoulline" <turtle@bazon.ru>,
+ max <kernel-ODwfxu5zp4@maxxor.org>
+References: <c2168e4f-4d47-0d5d-a1b7-d237f0760df8@gmail.com>
+ <9cf29c20-5b82-89bb-0927-e6f66b3bd8d5@leemhuis.info>
 Content-Language: en-US
-To: Mauro Carvalho Chehab <mchehab@kernel.org>,
- Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
- "Sudip Mukherjee (Codethink)" <sudipm.mukherjee@gmail.com>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
- NXP Linux Team <linux-imx@nxp.com>, linux-media@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>
-References: <ZElaVmxDsOkZj2DK@debian>
- <51cff63a-3a04-acf5-8264-bb19b0bee8a3@leemhuis.info>
- <CAHk-=wgzU8_dGn0Yg+DyX7ammTkDUCyEJ4C=NvnHRhxKWC7Wpw@mail.gmail.com>
- <20230510090527.25e26127@sal.lan>
-From: Hans Verkuil <hverkuil@xs4all.nl>
-In-Reply-To: <20230510090527.25e26127@sal.lan>
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+In-Reply-To: <9cf29c20-5b82-89bb-0927-e6f66b3bd8d5@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 10/05/2023 10:05, Mauro Carvalho Chehab wrote:
-> Hi Linus,
+On 5/10/23 16:51, Linux regression tracking (Thorsten Leemhuis) wrote:
+> Bagas, thx for all your help with regression tracking, much appreciated
+> (side note, as I'm curious for a while already: what is your motivation?
+> Just want to help? But whatever, any help is great!).
 > 
-> Em Mon, 8 May 2023 09:27:28 -0700
-> Linus Torvalds <torvalds@linux-foundation.org> escreveu:
-> 
->> On Mon, May 8, 2023 at 3:55 AM Linux regression tracking #adding
->> (Thorsten Leemhuis) <regressions@leemhuis.info> wrote:
->>>
->>> Thanks for the report. The fixes (see the mail from Laurent) apparently
->>> are still not mainlined (or am I missing something?), so let me add this
->>> report to the tracking to ensure this is not forgotten:  
->>
->> Gaah. I was intending to apply the patch directly before rc1, but then
->> I forgot about this issue.
->>
->> Mauro: I'm currently really *really* fed up with the media tree. This
->> exact same thing happened last merge window, where the media tree
->> caused pointless build errors, and it took way too long to get the
->> fixes the proper ways.
->>
->> If something doesn't even build, it should damn well be fixed ASAP.
->>
->> Last release it was imx290.c and PM support being disabled, and I had
->> to apply the fix manually because it continued to not come in the
->> proper way.
->>
->> See commit 7b50567bdcad ("media: i2c: imx290: fix conditional function
->> defintions").
->>
->> But also see commit b928db940448 ("media: i2c: imx290: fix conditional
->> function definitions"), which you *did* commit, but note this on that
->> commit:
->>
->>     AuthorDate: Tue Feb 7 17:13
->>     CommitDate: Sat Mar 18 08:44
->>
->> so it took you a MONTH AND A HALF to react to a build failure.
->>
->> And see this:
->>
->>     git name-rev b928db940448
->>     b928db940448 tags/v6.4-rc1~161^2~458
->>
->> ie that build fix that you finally committed came in *AFTER* the 6.3
->> release, even though the bug it fixes was introduced in the 6.3 merge
->> window:
->>
->>     git name-rev 02852c01f654
->>     02852c01f654 tags/v6.3-rc1~72^2~2^2~193
->>
->> and now we're in the *EXACT*SAME* situation, with me applying a build
->> fix directly, because you couldn't get it fixed in a timely manner.
-> 
-> Sorry for the mess. I'll work to improve the process to avoid this
-> to happen again.
-> 
-> FYI, in order to reduce build issues, we have a Jenkins instance
-> doing builds with gcc and CLANG at the media stage tree, before we even merge
-> them at the main media development tree. They run with allyesconfig for
-> x86_64 arch, with W=1:
-> 
-> 	https://builder.linuxtv.org/job/media_stage_clang/
-> 	https://builder.linuxtv.org/job/media_stage_gcc/
-> 
-> And another CI job testing bisect breakages as I receive pull requests,
-> applying patch per patch and using both allyesconfig and allmodconfig,
-> also on x86_64 arch with W=1:
-> 
-> 	https://builder.linuxtv.org/job/patchwork/
-> 
-> The rule is to not merge stuff on media tree if any of those jobs
-> fail. I also fast-forward merging patches whose subject states that
-> the build has failed.
-> 
-> In order to help with that, on normal situation, I usually take one week
-> to merge stuff from media_stage into media_tree, doing rebases at
-> media_stage if needed to avoid git bisect build breakages at media_tree
-> (which is from where I send my update PRs to you).
-> 
-> Unfortunately, currently we don't have resources to do multiple randconfig
-> on Jenkins, as the build machines on the server are very slow. Yet, I'll
-> add CONFIG_PM disabled to the test set, as it seems to be a recurrent source
-> of troubles those days. I'll also try to identify a couple of other 
-> randconfigs that would help to catch earlier problems like that.
-> If some other problematic Kconfig variables comes to your mind, please
-> feel free to suggest them for us to add to the CI automation.
-> 
-> -
-> 
-> In the specific case of this fixup patch, I didn't identify it as a build
-> issue, so it followed the usual workflow. We have a huge number of patches
-> for media, and it usually takes some time to handle all of them. This one
-> just followed the normal flow, as it didn't break Jenkins builds nor the
-> subject mentioned anything about build breakage.
 
-In the end it was my fault: I pushed the fix to our staging tree thinking
-that there was enough time for it to be included in the PR for 6.4.
-But I was wrong, the window for that closed a week earlier (which Mauro
-even documented!). So Mauro never knew that this patch had to be included
-in the PR to you. The right procedure would have been for me to tell Mauro
-about this patch. Hopefully this will be the first and also last time that
-I make that mistake.
+I did this when I was on "gabut" (an Indonesian slang term that means
+doing nothing but get rewarded). In other words, I was finding a task
+when there is no documentation review or issues that needs to be worked
+on.
 
-We do have a major problem with too many incoming patches and not enough
-maintainers & time. Some of it can be improved with better procedures and
-testing, but that won't help the often slow code review times. It will be a
-big topic during the upcoming media mini summit in Prague.
+> That being said: I'm not sure if I like what you did in this particular
+> case, as developers might start getting annoyed by regression tracking
+> if we throw too many bug reports of lesser quality before their feet --
+> and then they might start to ignore us, which we really need to prevent.
+> 
+> That's why I would not have forwarded that report at this point of time,
+> mainly for these reasons:
+> 
+>  * The initial report is quite old already, as it fall through the
+> cracks (not good, but happens; sorry Azamat!). Hence in this case it
+> would definitely be better to *first* ask the reporter to check if the
+> problem still happens with latest mainline (or at least latest stable)
+> before involving the kernel developers, as it might have been fixed
+> already.
+> 
 
-Regards,
+Oh dear, I have already seen the bug age (two years old, from Reported
+date).
 
-	Hans
+>  * This might not be a amdgpu bug at all; in fact the other bug the
+> reporter mentioned was an iommu thing. Hence this might be one of those
+> regressions where a bisection is the only way to get down to the
+> problem. Sure, sending a few developers a quick inquiry along the lines
+> of "do you maybe have an idea what's up there" is fine, but that's not
+> what you did in your mail. Your list of recipients is also quite long;
+> that's risky: if you do that too often, as then they might start
+> ignoring mail from you.
+> 
+
+Oops, I was blindly copy-paste get_maintainer.pl list at that time.
+
+Anyway, thanks for the reminder!
+
+-- 
+An old man doll... just what I always wanted! - Clara
+
