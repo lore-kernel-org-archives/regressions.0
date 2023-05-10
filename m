@@ -1,141 +1,151 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6826720B42
-	for <regressions@lists.linux.dev>; Wed, 10 May 2023 12:53:38 +0000 (UTC)
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-3f4c6c4b425so3295345e9.2
-        for <regressions@lists.linux.dev>; Wed, 10 May 2023 05:53:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1683723216; x=1686315216;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=mEnydj+sztBx3mYVi8wHkJZbcQn+3Lp8nVVqu2XXxM0=;
-        b=XA78EC4Q1d77CejcfRDQ3mTDVvNzoGVtb4ZRJOW+pKdLF9ocgxC8Vf4MkaRUj5c0Nq
-         kVBURW4tI/OVHd95/CBR+PcnsQ/Qow4TdKI3NaXeTZcOXw9Y1pHlmxJ1AoWvzQTU8JeW
-         bIgYZI/WsmFMU0pOkVrxPPhUKcjGATq0Wa5qY+TB7PMgbooMWbB8M0DeV3YFMoPbLIKk
-         KJotyGMrDbCJ4AAqYbU0MjwpGMkxyFRycgrI+56cB950w95EE6Mmn64l6wIT0N2MjcQp
-         CVW6vgmoyAgsqe2ZyJHn3IDXctG2wUdAIIEGq/lKSCRjXcC24AsIA16bBQuaOjTOMIVj
-         llrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683723216; x=1686315216;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=mEnydj+sztBx3mYVi8wHkJZbcQn+3Lp8nVVqu2XXxM0=;
-        b=PsE9/i0zrpglVrwXfNB3I1lkuKh+JwvU+yzwu7kraVQtQot18p8i2Jg+DLu0+QKfX5
-         0Ja3WN0WDZLavjUcCQoonuho3Tk6PkNfqEmoD41GVGVwKDb9MbuTC+PGK5D64t6RQM88
-         XV0VwL3UJkkNACxW+/rhOcz+di99eAZ16YpOJM5wFy180RSFgSCxfT5YPHi2pRqzyLHm
-         sarN9/BnrUtmK8SS/X4I3rZLS2Zi9LD7RCoJA2YklkKd3XUfY2ix4u85B4jG5wxYTU1e
-         k771ZJSe7YFnG5AVTps+n217536Cjb/HVgldjlqyeM9WjVEraIwregTYo23Fz6yF9Qzy
-         EK2w==
-X-Gm-Message-State: AC+VfDzGWj9ocudhqDb5QvSPzGeJCDdafrf3lfjiHVujgVwd62UqGFCs
-	648LET6ScwJXwRmrl0CqmsE=
-X-Google-Smtp-Source: ACHHUZ7SgPVN45FISMZYl+La7pgsUhn+Zx/xyuhl+cPxR7tuL1FVJGGnkUx8442M7dRTNSqSjr3tYA==
-X-Received: by 2002:a7b:ca45:0:b0:3f4:22da:c3f1 with SMTP id m5-20020a7bca45000000b003f422dac3f1mr7747167wml.17.1683723216362;
-        Wed, 10 May 2023 05:53:36 -0700 (PDT)
-Received: from [192.168.8.84] (213-225-15-168.nat.highway.a1.net. [213.225.15.168])
-        by smtp.gmail.com with ESMTPSA id a6-20020a056000050600b003079c402762sm7888259wrf.19.2023.05.10.05.53.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 May 2023 05:53:36 -0700 (PDT)
-Message-ID: <3c195b2430668788f993df7872b21e52f4450ef0.camel@gmail.com>
-Subject: Re: [REGRESSION] wifi: brcmfmac: add firmware vendor info in driver
- info
-From: Felix <nimrod4garoa@gmail.com>
-To: Kalle Valo <kvalo@kernel.org>, Hans de Goede <hdegoede@redhat.com>
-Cc: Arend van Spriel <aspriel@gmail.com>, Franky Lin
- <franky.lin@broadcom.com>,  Hante Meuleman <hante.meuleman@broadcom.com>,
- regressions@lists.linux.dev, Arend van Spriel
- <arend.vanspriel@broadcom.com>, linux-kernel@vger.kernel.org, 
- linux-wireless@vger.kernel.org, brcm80211-dev-list.pdl@broadcom.com, 
- SHA-cyfmac-dev-list@infineon.com
-Date: Wed, 10 May 2023 14:53:34 +0200
-In-Reply-To: <87bkiso0aw.fsf@kernel.org>
-References: <4ef3f252ff530cbfa336f5a0d80710020fc5cb1e.camel@gmail.com>
-	 <c7aa9034-59f8-11aa-7170-86c0db012dda@redhat.com>
-	 <87bkiso0aw.fsf@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.1 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3B9920B4A
+	for <regressions@lists.linux.dev>; Wed, 10 May 2023 13:17:03 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08706C433EF;
+	Wed, 10 May 2023 13:17:00 +0000 (UTC)
+Message-ID: <88ff9837-36e3-b16f-537f-af21f738383a@xs4all.nl>
+Date: Wed, 10 May 2023 15:16:58 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+Subject: Re: mainline build failure due to cf21f328fcaf ("media: nxp: Add
+ i.MX8 ISI driver")
+Content-Language: en-US
+To: Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
+ "Sudip Mukherjee (Codethink)" <sudipm.mukherjee@gmail.com>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
+ NXP Linux Team <linux-imx@nxp.com>, linux-media@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>
+References: <ZElaVmxDsOkZj2DK@debian>
+ <51cff63a-3a04-acf5-8264-bb19b0bee8a3@leemhuis.info>
+ <CAHk-=wgzU8_dGn0Yg+DyX7ammTkDUCyEJ4C=NvnHRhxKWC7Wpw@mail.gmail.com>
+ <20230510090527.25e26127@sal.lan>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+In-Reply-To: <20230510090527.25e26127@sal.lan>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, 2023-05-10 at 15:09 +0300, Kalle Valo wrote:
-> Hans de Goede <hdegoede@redhat.com> writes:
->=20
-> > On 5/10/23 10:25, Felix wrote:
-> > > Changes made by the mentioned commit lead to Oops when waking up afte=
-r
-> > > suspend to RAM.
-> > >=20
-> > > When waking up a Dell XPS 13 9350 with BCM4350 wifi card after suspen=
-d
-> > > to RAM,=C2=A0the kernel hangs with a NULL pointer dereference and Oop=
-s. The
-> > > issues was introduced by commit
-> > > da6d9c8ecd00e20218461007948f2b0a8e7fa242 and only happens when the
-> > > brcmfmac module is loaded. This issue is the reason we could not
-> > > upgrade to newer kernels than the 6.1 series on the affected machine.
-> > >=20
-> > >=20
-> > > Details:
-> > >=20
-> > > On a Dell XPS 13 9350 laptop with Broadcom BCM4350 wifi card (accordi=
-ng
-> > > to lspci), every kernel starting with 6.2 hangs when waking up after
-> > > suspend to RAM. The issue persisted as of May 2nd (last tested commit
-> > > was 348551ddaf311c76b01cdcbaf61b6fef06a49144). Passing the debug and
-> > > no_console_suspend parameters to the kernel show that a NULL pointer
-> > > dereference and an Oops happen at wakeup. Please find the kernel
-> > > messages readable on the screen at this point attached
-> > > (kernel_log_after_suspend.txt).
-> > >=20
-> > > A bisection was successful and produced the first bad commit
-> > > [da6d9c8ecd00e20218461007948f2b0a8e7fa242]=C2=A0wifi: brcmfmac: add f=
-irmware
-> > > vendor info in driver info
-> > > I've attached the bisection log as well (bisect.txt).
-> > >=20
-> > > Suspend to RAM works on this machine on newer kernels once the brcmfm=
-ac
-> > > module is unloaded.
-> > >=20
-> > > Distribution: Arch Linux
-> > > Architecture: x86_64
-> > > Device: Dell XPS 13 9350 with BCM4350 wifi card
-> > > Kernel config used at compilation (created using the Arch Linux defau=
-lt
-> > > config and make olddefconfig):
-> > > https://gist.githubusercontent.com/maclomhair/e33fa7eece8f8c77e5a88c4=
-eede2f523/raw/429dfb022498c026225865dbb3ab2f75d5030a54/config
-> > > Dmesg output after boot:
-> > > https://gist.githubusercontent.com/maclomhair/47c75fa759d93800e7fb5e9=
-37fabef3e/raw/10750996a1ea9dcb3fa14d9b94e11fedd3abf280/dmesg
-> > >=20
-> > > #regzbot introduced da6d9c8ecd00e20218461007948f2b0a8e7fa242
-> >=20
-> > Thank you for reporting this and thank you for bisecting it too!
-> >=20
-> > As a result of your excellent bug report I've been able to write
-> > a fix for this. I'm confident enough in the fix that I've submitted
-> > it upstream right away.
-> >=20
-> > But it would still be good if you can test the fix and let us know
-> > if it fixes this issue for you. You should have received a copy
-> > of the patch when I submitted it upstream.
+On 10/05/2023 10:05, Mauro Carvalho Chehab wrote:
+> Hi Linus,
+> 
+> Em Mon, 8 May 2023 09:27:28 -0700
+> Linus Torvalds <torvalds@linux-foundation.org> escreveu:
+> 
+>> On Mon, May 8, 2023 at 3:55 AM Linux regression tracking #adding
+>> (Thorsten Leemhuis) <regressions@leemhuis.info> wrote:
+>>>
+>>> Thanks for the report. The fixes (see the mail from Laurent) apparently
+>>> are still not mainlined (or am I missing something?), so let me add this
+>>> report to the tracking to ensure this is not forgotten:  
+>>
+>> Gaah. I was intending to apply the patch directly before rc1, but then
+>> I forgot about this issue.
+>>
+>> Mauro: I'm currently really *really* fed up with the media tree. This
+>> exact same thing happened last merge window, where the media tree
+>> caused pointless build errors, and it took way too long to get the
+>> fixes the proper ways.
+>>
+>> If something doesn't even build, it should damn well be fixed ASAP.
+>>
+>> Last release it was imx290.c and PM support being disabled, and I had
+>> to apply the fix manually because it continued to not come in the
+>> proper way.
+>>
+>> See commit 7b50567bdcad ("media: i2c: imx290: fix conditional function
+>> defintions").
+>>
+>> But also see commit b928db940448 ("media: i2c: imx290: fix conditional
+>> function definitions"), which you *did* commit, but note this on that
+>> commit:
+>>
+>>     AuthorDate: Tue Feb 7 17:13
+>>     CommitDate: Sat Mar 18 08:44
+>>
+>> so it took you a MONTH AND A HALF to react to a build failure.
+>>
+>> And see this:
+>>
+>>     git name-rev b928db940448
+>>     b928db940448 tags/v6.4-rc1~161^2~458
+>>
+>> ie that build fix that you finally committed came in *AFTER* the 6.3
+>> release, even though the bug it fixes was introduced in the 6.3 merge
+>> window:
+>>
+>>     git name-rev 02852c01f654
+>>     02852c01f654 tags/v6.3-rc1~72^2~2^2~193
+>>
+>> and now we're in the *EXACT*SAME* situation, with me applying a build
+>> fix directly, because you couldn't get it fixed in a timely manner.
+> 
+> Sorry for the mess. I'll work to improve the process to avoid this
+> to happen again.
+> 
+> FYI, in order to reduce build issues, we have a Jenkins instance
+> doing builds with gcc and CLANG at the media stage tree, before we even merge
+> them at the main media development tree. They run with allyesconfig for
+> x86_64 arch, with W=1:
+> 
+> 	https://builder.linuxtv.org/job/media_stage_clang/
+> 	https://builder.linuxtv.org/job/media_stage_gcc/
+> 
+> And another CI job testing bisect breakages as I receive pull requests,
+> applying patch per patch and using both allyesconfig and allmodconfig,
+> also on x86_64 arch with W=1:
+> 
+> 	https://builder.linuxtv.org/job/patchwork/
+> 
+> The rule is to not merge stuff on media tree if any of those jobs
+> fail. I also fast-forward merging patches whose subject states that
+> the build has failed.
+> 
+> In order to help with that, on normal situation, I usually take one week
+> to merge stuff from media_stage into media_tree, doing rebases at
+> media_stage if needed to avoid git bisect build breakages at media_tree
+> (which is from where I send my update PRs to you).
+> 
+> Unfortunately, currently we don't have resources to do multiple randconfig
+> on Jenkins, as the build machines on the server are very slow. Yet, I'll
+> add CONFIG_PM disabled to the test set, as it seems to be a recurrent source
+> of troubles those days. I'll also try to identify a couple of other 
+> randconfigs that would help to catch earlier problems like that.
+> If some other problematic Kconfig variables comes to your mind, please
+> feel free to suggest them for us to add to the CI automation.
+> 
+> -
+> 
+> In the specific case of this fixup patch, I didn't identify it as a build
+> issue, so it followed the usual workflow. We have a huge number of patches
+> for media, and it usually takes some time to handle all of them. This one
+> just followed the normal flow, as it didn't break Jenkins builds nor the
+> subject mentioned anything about build breakage.
 
-I have now tested the patch you sent and it indeed fixes the issue for
-me! Thank you for your quick response!
+In the end it was my fault: I pushed the fix to our staging tree thinking
+that there was enough time for it to be included in the PR for 6.4.
+But I was wrong, the window for that closed a week earlier (which Mauro
+even documented!). So Mauro never knew that this patch had to be included
+in the PR to you. The right procedure would have been for me to tell Mauro
+about this patch. Hopefully this will be the first and also last time that
+I make that mistake.
 
+We do have a major problem with too many incoming patches and not enough
+maintainers & time. Some of it can be improved with better procedures and
+testing, but that won't help the often slow code review times. It will be a
+big topic during the upcoming media mini summit in Prague.
 
->=20
-> For the archives here's the patch:
->=20
-> https://patchwork.kernel.org/project/linux-wireless/patch/20230510100050.=
-27099-1-hdegoede@redhat.com/
->=20
+Regards,
 
+	Hans
