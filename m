@@ -1,232 +1,95 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D32C76129
-	for <regressions@lists.linux.dev>; Wed, 10 May 2023 08:25:16 +0000 (UTC)
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3063afa2372so6329341f8f.0
-        for <regressions@lists.linux.dev>; Wed, 10 May 2023 01:25:16 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6A656129
+	for <regressions@lists.linux.dev>; Wed, 10 May 2023 08:27:04 +0000 (UTC)
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-64395e2a715so6879219b3a.3
+        for <regressions@lists.linux.dev>; Wed, 10 May 2023 01:27:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1683707115; x=1686299115;
-        h=mime-version:user-agent:date:cc:to:from:subject:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=KLIVhK0Yp9xjk8c1Z2hzmB9QxMCsfDdqY5Th7VSf/7w=;
-        b=qkg1BlE5ntbk5jTX2sivdRVeO5qbpvyEwz93bd3pP45QShyzY9EFUcT3tu364RwwtE
-         5b44bTQAt6nhjr2r8/CR4pA3PdE766I0F1JYyYavR/KN84+Q0YxZRfcoCEjQWORbgVt4
-         Z1mcAvWez0BPr33Yai2AFswToO3fDogZGHgClfd7F8aFmV+DNmWekmSBF+jbB1oSO9qc
-         9j+k2LD0iQB9UWdJHsdynd9htNK9/G+Bs3UUZCF1yEyzLsJxx8kY8dNRT+S8wBd4ZnAR
-         vvw3CWTeUvrWmwycbzimEiqmKcirIiJiDhQg6nKd9G2sVi/uIon5SR8CLiISCfjlHQag
-         tW+A==
+        d=gmail.com; s=20221208; t=1683707224; x=1686299224;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fGI6Lm0AtHzSQXtW9u+HWh/q47GLCgh6RMnfXKjtk10=;
+        b=YnwK0D3uKISsnbmkLu/Sz2qEaUpF/rrJT6uvrOoLYwds3FdiFRlmjeK476qnd3MGE9
+         AJdtQgkElfru8rnQ2nKkw1UTf/5MfGgd9GnsCVqvHrkuD+Emyu2IBMWaIJmUVRi5RxG4
+         sMisuF/kJ4orfSI6BK56uzDEOAjgthG/g/oY/TWl+MN49yBtsIIca3n8+bwT67POXErD
+         embuMk0HH8YV1SA0WHY4yqOoYeh4r5EBo24AxQcTR65mDc6KIrAC0MvG6pQ9pXRD57PT
+         F/hWGRPfhJP6LE/bSa6zVUUxJ/pd7L/60Lw1VYq80XAovRMRZz+kJ7zuqngQnWOr6snr
+         iYug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683707115; x=1686299115;
-        h=mime-version:user-agent:date:cc:to:from:subject:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KLIVhK0Yp9xjk8c1Z2hzmB9QxMCsfDdqY5Th7VSf/7w=;
-        b=LelMRbmZ7vBMExAVS/bORXnzAtR4b/L0veP1cZKc96EsgTGCwar6v7c3EHlHBQ2Md8
-         8cDVN/8AMfsOBdyset+j5I2dkwXw+4WALV/oZZfwivE6omYk8sSUh6m0QXD7GjNo5qFq
-         qrzuY4xIAg+XpRfUPQ5wMRvepTk5KgUJlEZtQ7nLYViUq6I9vTXktxvHfuO/IYlBkF+Q
-         vgxe47VWNi8Q3aLurYMEHFNcYsahYMKtRgr7k6zsQkWxZo7IC+lTUHhdpGZyGo5A4snP
-         lZIQWQMMoTZJArzUV/jU2kzHjg+nwzsTPBew6zk1hyM29c4I2diVeguJNxaI+GtRn++6
-         UfvQ==
-X-Gm-Message-State: AC+VfDzffLouBT+aO/8GyrA2YqRecUHs5l+oYgG8Z/qqxiYtM1FmegVm
-	PF0Wjbf7qWrhKjqTU1OFruc=
-X-Google-Smtp-Source: ACHHUZ7YiSC8XEZvjIS1auRj3I9d/IDWjHB+0KdqqZQgXC4DxEaqOLnbxyXNg5aU2J6m5w1GIUofXA==
-X-Received: by 2002:a5d:6751:0:b0:307:7c2d:dc80 with SMTP id l17-20020a5d6751000000b003077c2ddc80mr11784385wrw.34.1683707114830;
-        Wed, 10 May 2023 01:25:14 -0700 (PDT)
-Received: from [192.168.8.84] (213-225-15-168.nat.highway.a1.net. [213.225.15.168])
-        by smtp.gmail.com with ESMTPSA id r10-20020a056000014a00b00307972e46fasm8313307wrx.107.2023.05.10.01.25.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 May 2023 01:25:14 -0700 (PDT)
-Message-ID: <4ef3f252ff530cbfa336f5a0d80710020fc5cb1e.camel@gmail.com>
-Subject: [REGRESSION] wifi: brcmfmac: add firmware vendor info in driver info
-From: Felix <nimrod4garoa@gmail.com>
-To: Arend van Spriel <aspriel@gmail.com>, Franky Lin
- <franky.lin@broadcom.com>,  Hante Meuleman <hante.meuleman@broadcom.com>
-Cc: regressions@lists.linux.dev, Arend van Spriel
- <arend.vanspriel@broadcom.com>,  Kalle Valo <kvalo@kernel.org>,
- linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org, 
- brcm80211-dev-list.pdl@broadcom.com, SHA-cyfmac-dev-list@infineon.com
-Date: Wed, 10 May 2023 10:25:12 +0200
-Content-Type: multipart/mixed; boundary="=-4Yv0aQnA60OXIoYx5DFN"
-User-Agent: Evolution 3.48.1 
+        d=1e100.net; s=20221208; t=1683707224; x=1686299224;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=fGI6Lm0AtHzSQXtW9u+HWh/q47GLCgh6RMnfXKjtk10=;
+        b=UF0QgAYSxl3A/W6M+IQZQoBbZgARH0UFTwyAe1aEEwnX2IDHLNziqCo2GEwqHnSYtG
+         Ffxs/k+YIf3HTzqZVKUiJoyeaZzUoqZnWleDih1Rg0YqrfFZbyOoD+ox7ESHmyY3C4bW
+         pW2wfnT9q6d0ztH27aRtXkjtSWDcs4zdwOOZ3Ztrp/HX5mwCKhMZTpYj5gqpAHTK3kNd
+         vNMuX1SW3jdsFsXiFaeLbb/29XcS4a+mKD5UHEmsGwKa/Zssio2G58ID2RiYSeuMzwt9
+         jn+nMuUEjj/6c6+r6QkaX4dUYe7dsF3ApilRGDrBEpITMeIaL9mC+2CunbsjMkhy+Ln+
+         NQjg==
+X-Gm-Message-State: AC+VfDwOKJu0hBtQkJtqQw7uAZRBOvyOUYVqfKYTvdOMoT1bWjINNndD
+	sIDCoRmGtSmzuXLJgfKB7gw=
+X-Google-Smtp-Source: ACHHUZ7G4coGPv/o20Pt3xAf2wqBDv9uLRjifxHDFgKM8gjudvDiKaJ8QVkC6VJLFijHhAiDaiMFGg==
+X-Received: by 2002:a05:6a20:6a14:b0:d9:250:665c with SMTP id p20-20020a056a206a1400b000d90250665cmr20275025pzk.15.1683707224082;
+        Wed, 10 May 2023 01:27:04 -0700 (PDT)
+Received: from [192.168.43.80] (subs03-180-214-233-68.three.co.id. [180.214.233.68])
+        by smtp.gmail.com with ESMTPSA id p15-20020a63fe0f000000b00514256c05c2sm2671485pgh.7.2023.05.10.01.26.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 10 May 2023 01:27:03 -0700 (PDT)
+Message-ID: <c2168e4f-4d47-0d5d-a1b7-d237f0760df8@gmail.com>
+Date: Wed, 10 May 2023 15:26:56 +0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Content-Language: en-US
+To: Alex Deucher <alexander.deucher@amd.com>,
+ =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+ "Pan, Xinhui" <Xinhui.Pan@amd.com>, David Airlie <airlied@gmail.com>,
+ Daniel Vetter <daniel@ffwll.ch>, Hawking Zhang <Hawking.Zhang@amd.com>,
+ Le Ma <le.ma@amd.com>, Tao Zhou <tao.zhou1@amd.com>,
+ YiPeng Chai <YiPeng.Chai@amd.com>, "Jiadong.Zhu" <Jiadong.Zhu@amd.com>,
+ Yang Wang <KevinYang.Wang@amd.com>, Candice Li <candice.li@amd.com>,
+ Xiaojian Du <Xiaojian.Du@amd.com>, Likun Gao <Likun.Gao@amd.com>,
+ Linux AMDGPU <amd-gfx@lists.freedesktop.org>,
+ Linux DRI Development <dri-devel@lists.freedesktop.org>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>
+Cc: "Azamat S. Kalimoulline" <turtle@bazon.ru>,
+ max <kernel-ODwfxu5zp4@maxxor.org>
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+Subject: Fwd: Kernel 5.11 crashes when it boots, it produces black screen.
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
---=-4Yv0aQnA60OXIoYx5DFN
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Hi,
 
-Changes made by the mentioned commit lead to Oops when waking up after
-suspend to RAM.
+I noticed a regression report on Bugzilla ([1]). As many developers don't
+have a look on it, I decided to forward it by email. See the report
+for the full thread.
 
-When waking up a Dell XPS 13 9350 with BCM4350 wifi card after suspend
-to RAM,=C2=A0the kernel hangs with a NULL pointer dereference and Oops. The
-issues was introduced by commit
-da6d9c8ecd00e20218461007948f2b0a8e7fa242 and only happens when the
-brcmfmac module is loaded. This issue is the reason we could not
-upgrade to newer kernels than the 6.1 series on the affected machine.
+Quoting from the report:
 
+>  Azamat S. Kalimoulline 2021-04-06 15:45:08 UTC
+> 
+> Same as in https://bugzilla.kernel.org/show_bug.cgi?id=212133, but not StoneyRidge related. I have same issue in 5.11.9 kernel, but on Renoir architecture. I have AMD Ryzen 5 PRO 4650U with Radeon Graphics. Same stuck on loading initial ramdisk. modprobe.blacklist=amdgpu 3` didn't help to boot. Same stuck. Also iommu=off and acpi=off too. 5.10.26 boots fine. I boot via efi and I have no option boot without it.
 
-Details:
+Azamat, can you try reproducing this issue on latest mainline?
 
-On a Dell XPS 13 9350 laptop with Broadcom BCM4350 wifi card (according
-to lspci), every kernel starting with 6.2 hangs when waking up after
-suspend to RAM. The issue persisted as of May 2nd (last tested commit
-was 348551ddaf311c76b01cdcbaf61b6fef06a49144). Passing the debug and
-no_console_suspend parameters to the kernel show that a NULL pointer
-dereference and an Oops happen at wakeup. Please find the kernel
-messages readable on the screen at this point attached
-(kernel_log_after_suspend.txt).
+Anyway, let me add this regression to regzbot:
 
-A bisection was successful and produced the first bad commit
-[da6d9c8ecd00e20218461007948f2b0a8e7fa242]=C2=A0wifi: brcmfmac: add firmwar=
-e
-vendor info in driver info
-I've attached the bisection log as well (bisect.txt).
+#regzbot introduced: v5.10..v5.11 https://bugzilla.kernel.org/show_bug.cgi?id=212579
+#regzbot title: Booting kernel on AMD Ryzen 5 PRO stucks in loading initrd
 
-Suspend to RAM works on this machine on newer kernels once the brcmfmac
-module is unloaded.
+Thanks.
 
-Distribution: Arch Linux
-Architecture: x86_64
-Device: Dell XPS 13 9350 with BCM4350 wifi card
-Kernel config used at compilation (created using the Arch Linux default
-config and make olddefconfig):
-https://gist.githubusercontent.com/maclomhair/e33fa7eece8f8c77e5a88c4eede2f=
-523/raw/429dfb022498c026225865dbb3ab2f75d5030a54/config
-Dmesg output after boot:
-https://gist.githubusercontent.com/maclomhair/47c75fa759d93800e7fb5e937fabe=
-f3e/raw/10750996a1ea9dcb3fa14d9b94e11fedd3abf280/dmesg
+[1]: https://bugzilla.kernel.org/show_bug.cgi?id=212579
 
-#regzbot introduced da6d9c8ecd00e20218461007948f2b0a8e7fa242
-
-Thank you for your time,
-Felix
-
-
-
---=-4Yv0aQnA60OXIoYx5DFN
-Content-Disposition: attachment; filename="kernel_log_after_suspend.txt"
-Content-Type: text/plain; name="kernel_log_after_suspend.txt"; charset="UTF-8"
-Content-Transfer-Encoding: base64
-
-RnJlZXppbmcgcmVtYWluaW5nIGZyZWV6YWJsZSB0YXNrcyAuLi4gKGVsYXBzZWQgMC4wMDAuIHNl
-Y29uZHMpIGRvbmUuCkFDUEk6IEVDOiBpbnRlcnJ1cHQgYmxvY2tlZApBQ1BJOiBQTTogUHJlcGFy
-aW5nIHRvIGVudGVyIHN5c3RlbiBzbGVlcCBzdGF0ZSBTMwpBQ1BJOiBFQzogZXZlbnQgYmxvY2tl
-ZApBQ1BJOiBFQzogRUMgc3RvcHBlZApBQ1BJOiBQTTogU2F2aW5nIHBsYXRmb3JtIE5WUyBtZW1v
-cnkKRGlzYWJsaW5nIG5vbi1ib290IENQVXMgLi4uCnNtcGJvb3Q6IENQVSAxIGlzIG5vdyBvZmZs
-aW5lCnNtcGJvb3Q6IENQVSAyIGlzIG5vdyBvZmZsaW5lCnNtcGJvb3Q6IENQVSAzIGlzIG5vdyBv
-ZmZsaW5lCkFDUEk6IFBNOiBMb3ctbGV2ZWwgcmVzdW1lIGNvbXBsZXRlCkFDUEk6IEVDOiBFQyBz
-dGFydGVkCkFDUEk6IFBNOiBSZXN0b3JpbmcgcGxhdGZvcm0gTlZTIG1lbW9yeQpFbmFibGluZyBu
-b24tYm9vdCBDUFVzIC4uLgp4ODY6IEJvb3RpbmcgU01QIGNvbmZpZ3VyYXRpb246CnNtcGJvb3Q6
-IEJvb3RpbmcgTm9kZSAwIFByb2Nlc3NvciAxIEFQSUMgT3gyCkNQVTEgaXMgdXAKc21wYm9vdDog
-Qm9vdGluZyBOb2RlIDAgUHJvY2Vzc29yIDIgQVBJQyAweDEKQ1BVMiBpcyB1cApzbXBib290OiBC
-b290aW5nIE5vZGUgMCBQcm9jZXNzb3IgMyBBUElDIDB4MwpDUFUzIGlzIHVwCkFDUEk6IFBNOiBX
-YWtpbmcgdXAgZnJvbSBzeXN0ZW0gc2xlZXAgc3RhdGUgUzMKQUNQSTogRUM6IGludGVycnVwdCB1
-bmJsb2NrZWQKQUNQSTogRUM6IGV2ZW50IHVuYmxvY2tlZAp4aGNpIGhjZCAwMDAwOjAwOjE0LjA6
-IHhIQyBlcnJvciBpbiByZXN1bWUsIFVTQlNUUyBPeDQxMSwgUmVpbml0CnVzYiB1c2IxOiByb290
-IGh1YiBsb3N0IHBvd2VyIG9yIHdhcyByZXNldAp1c2IgdXNiMjogcm9vdCBodWIgbG9zdCBwb3dl
-ciBvciB3YXMgcmVzZXQKaTkxNSAwMDAwOjAwOjAyLjA6IFtkcm1dIFtFTkNPREVSOjk0OkRESSBB
-L1BIWSBBXSBpcyBkaXNhYmxlZC9pbiBEU0kgbm9kZSB3aXRoIGFuIHVuZ2F0ZWQgRERJIGNsb2Nr
-LCBnYXRlIGl0Cmk5MTUgMDAwMDowMDowMi4wOiBbZHJtXSBbRU5DT0RFUjoxMDI6RERJIEIvUEhZ
-IEJdIGlzIGRpc2FibGVkL2luIERTSSBtb2RlIHdpdGggYW4gdW5nYXRlZCBEREkgY2xvY2ssIGdh
-dGUgaXQKaTkxNSAwMDAwOjAwOjAyLjA6IFtkcm1dIFtFTkNPREVSOjExNzpEREkgQy9QSFkgQzEg
-aXMgZGlzYWJsZWQvaW4gRFNJIG5vZGUgd2l0aCBhbiB1bmdhdGVkIERESSBjbG9jaywgZ2F0ZSBp
-dApudm1lIG52bWUwOiA0LzAvMCBkZWZhdWx0L3JlYWQvcG9sbCBxdWV1ZXMKQlVHOiBrZXJuZWwg
-TlVMTCBwb2ludGVyIGRlcmVmZXJlbmNlLCBhZGRyZXNzOiAwMDAwMDAwMDAwMDAwMDE4CiNQRjog
-c3VwZXJ2aXNvciByZWFkIGFjY2VzcyBpbiBrZXJuZWwgbW9kZQojUEY6IGVycm9yX2NvZGUoMHgw
-MDAwKSDigJQgbm90LXByZXNlbnQgcGFnZQpQR0QgMCBQNEQgMApPb3BzOiAwMDAwIFsjMV0gUFJF
-RU1QVCBTTVAgUFRJCkNQVTogMyBQSUQ6IDU3NiBDb21tOiBrd29ya2VyL3VCOjE4IFRhaW50ZWQ6
-IEcgICAgICAgICBJICAgICAgICAgNi4xLjAtcmM3LTEtZ2l0LTAxNzY2LWdkYTZkOWM4ZWNkMDAg
-IzIwIGZhMmUzMmZmYWQwYjM5ZDUzYjVlNTJlYTlmOWU1OTkxMjNiMWQxMTIKSGFyZHdhcmUgbmFt
-ZTogRGVsbCBJbmMuIFhQUyAxMyA5MzUwLzBQV05DUiwgQklEUyAxLjEzLjAgMDIvMTAvMjAyMApX
-b3JrZ3VldWU6IGV2ZW50c191bmJvdW5kIGFzeW5jX3J1bl9lbnRyeV9mbgpSSVA6IDAwMTA6YnJj
-bWZfcGNpZV9wcm9iZStPeDE2Yi8weDdhMCBbYnJjbWZtYWNdCkNvZGU6IDQ5IDg5IDQ0IDI0IDQ4
-IDQ4IDg1IGMwIE9mIDg0IGY0IDA1IDAwIDAwIDQ4IDhkIDg1IGQwIDAwIDAwIDAwIDQ4IDhiIDM0
-IDI0IDQ4IDg5IGVmIDQ5IGM3IDQ0IDI0IDQwIGUwIDM5IDBkIGMxIDQ5IDg5IDQ0IDI0IDEwIDw0
-OT4gOGIgNDUgMTggNDggODkgNWUgMDggNDEgODkgNDQgMjQgMzggOGIgODMgMDAgMDQgMDAgMDAg
-NGMgODkgMjYKUlNQOiAwMDAwOmZmZmZiZDgwNDE4NTNkNzggRUZMQUdTOiAwMDAxMDI4NgpSQVg6
-IGZmZmY5N2ExMDE1NGYwZDAgUkJYOiBmZmZmOTdhMTA1ZmMyODAwIFJDWDogMDAwMDAwMDAwMDAw
-MDAwMQpSRFg6IDAwMDAwMDAwMDAwMDAwMDAgUlNJOiBmZmZmOTdhMjc1ZjA0ZmYwIFJESTogZmZm
-Zjk3YTEwMTU0ZjAwMApSQlA6IGZmZmY5N2ExMDE1NGYwMDAgUk84OiAwMDAwMDAwMDAwMDAwMDQw
-IFIwOTogZmZmZjk3YTEwMmJlYzBjMApSMTA6IDAwMDAwMDAwNjYwMDAwNTAgUjExOiBmZmZmZmZm
-ZmE2MDAwMDMxIFIxMjogZmZmZjk3YTEwNDkzNzljMApSMTM6IDAwMDAwMDAwMDAwMDAwMDAgUjE0
-OiAwMDAwMDAwMDAwMDAwMDAwIFIxNTogZmZmZjk3YTEwNDMwYzFhOApGUzogIDAwMDAwMDAwMDAw
-MDAwMDAoMDAwMCkgR1M6ZmZmZjk3YTI3NmQ4MDAwMCgwMDAwKSBrbmxHUzowMDAwMDAwMDAwMDAw
-MDAwCkNTOiAwMDEwIERTOiAwMDAwIEVTOiAwMDAwIENSMDogMDAwMDAwMDAwODAwNTAwMzMKQ1Iy
-OiAwMDAwMDAwMDAwMDAwMDE4IENSMzogMDAwMDAwMDE3NzgxMDAwMSBDUjQ6IDAwMDAwMDAwMDAz
-NzA2ZTAKQ2FsbCBUcmFjZToKIDxUQVNLPgogYnJjbWZfcGNpZV9wbV9sZWF2ZV9EMysweGM1Lzh4
-MWEwIFticmNtZm1hYyBiZTNiNGNlZmNhNDUxZTE5MGZhMzViZThmMDBkYjFiYmVjMjkzODg3XQog
-PyBwY2lfcG1fcmVzdW1lKzB4NWIvMHhmMAogPyBwY2lfbGVnYWN5X3Jlc3VtZSsweDgwLzB4ODAK
-IGRwbV9ydW5fY2FsbGJhY2srMHg0Ny8weDE1MAogZGV2aWNlX3Jlc3VtZSsweGEyLzB4MWYwCiBh
-c3luY19yZXN1bWUrMHgxZC8weDMwCiBhc3luY19ydW5fZW50cnlfZm4rMHgzMS8weDEzMAogcHJv
-Y2Vzc19vbmVfd29yaysweDFjNC8weDM4MAogd29ya2VyX3RocmVhZCsweDUxLzB4MzkwCiA/IHJl
-c2N1ZXJfdGhyZWFkKzB4M2IwLzB4M2IwCiBrdGhyZWFkK094ZGIvMHgxMTAKID8ga3RocmVhZF9j
-b21wbGV0ZV9hbmRfZXhpdCsweDIwLzB4MjAKdXNiIDEtMzogcmVzZXQgZnVsbC1zcGVlZCBVU0Ig
-ZGV2aWNlIG51bWJlciAyIHVzaW5nIHhoY2lfaGNkNzA2ZTAwMDAwMDAwMDAwMDQgMjQgNDggODkg
-ZWYgNDkgYzcgNDQgMjQgNDAgZTAgMzkgMGQgYzEgNDkgODkgNDQgMjQgMTAgPDQ5PiA4YiA0NSAx
-OCA0OCA4OSA1ZSAwOCA0MSA4OSA0NCAyNCAzOCA4YiA4MyAwMCAwNCAwMCAwMCA0YyA4OSAyNnZp
-ZGVvIGk4MDMyIHNlcmlvIHdtaXNoX2NsCnVzYiAxLTU6IHJlc2V0IGhpZ2gtc3BlZWQgVVNCIGRl
-dmljZSBudW1iZXIgMyB1c2luZyB4aGNpX2hjZAo=
-
-
---=-4Yv0aQnA60OXIoYx5DFN
-Content-Disposition: attachment; filename="bisect.log"
-Content-Type: text/x-log; name="bisect.log"; charset="UTF-8"
-Content-Transfer-Encoding: base64
-
-IyBiYWQ6IFtjOWMzMzk1ZDVlM2RjYzZkYWVlNjZjNjkwODM1NGQ0N2JmOThjYjBjXSBMaW51eCA2
-LjIKIyBnb29kOiBbODMwYjNjNjhjMWZiMWU5MTc2MDI4ZDAyZWY4NmYzY2Y3NmFhMjQ3Nl0gTGlu
-dXggNi4xCmdpdCBiaXNlY3Qgc3RhcnQgJ3Y2LjInICd2Ni4xJwojIGdvb2Q6IFsxY2EwNmYxYzFh
-Y2VjYmUwMjEyNGYxNGEzN2NjZTM0N2I4YzFhOTBjXSBNZXJnZSB0YWcgJ3h0ZW5zYS0yMDIyMTIx
-Mycgb2YgaHR0cHM6Ly9naXRodWIuY29tL2pjbXZia2JjL2xpbnV4LXh0ZW5zYQpnaXQgYmlzZWN0
-IGdvb2QgMWNhMDZmMWMxYWNlY2JlMDIxMjRmMTRhMzdjY2UzNDdiOGMxYTkwYwojIGJhZDogW2I4
-M2E3MDgwZDMwMDMyY2Y3MDgzMmJjMmJiMDRjYzM0MmUyMDNiODhdIE1lcmdlIHRhZyAnc3RhZ2lu
-Zy02LjItcmMxJyBvZiBnaXQ6Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4L2tlcm5lbC9n
-aXQvZ3JlZ2toL3N0YWdpbmcKZ2l0IGJpc2VjdCBiYWQgYjgzYTcwODBkMzAwMzJjZjcwODMyYmMy
-YmIwNGNjMzQyZTIwM2I4OAojIGJhZDogWzdlNjhkZDdkMDdhMjhmYWEyZTY1NzRkZDZiOWRiZDkw
-Y2RlYWFlOTFdIE1lcmdlIHRhZyAnbmV0LW5leHQtNi4yJyBvZiBnaXQ6Ly9naXQua2VybmVsLm9y
-Zy9wdWIvc2NtL2xpbnV4L2tlcm5lbC9naXQvbmV0ZGV2L25ldC1uZXh0CmdpdCBiaXNlY3QgYmFk
-IDdlNjhkZDdkMDdhMjhmYWEyZTY1NzRkZDZiOWRiZDkwY2RlYWFlOTEKIyBnb29kOiBbYzYwOWQ3
-Mzk5NDc4OTRkNzM3MGVhZTRjZjA0ZWIyYzQ5ZTkxMGJjZl0gTWVyZ2UgdGFnICd3aXJlbGVzcy1u
-ZXh0LTIwMjItMTEtMTgnIG9mIGdpdDovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20vbGludXgva2Vy
-bmVsL2dpdC93aXJlbGVzcy93aXJlbGVzcy1uZXh0CmdpdCBiaXNlY3QgZ29vZCBjNjA5ZDczOTk0
-Nzg5NGQ3MzcwZWFlNGNmMDRlYjJjNDllOTEwYmNmCiMgZ29vZDogWzMyMTYzNDkxYzBjMjA1ZmZi
-MTU5NmJhZjljMzA4ZGVlNTMzOGFlOTRdIE1lcmdlIGJyYW5jaCAncjgxNjktaXJxLWNvYWxlc2Nl
-JwpnaXQgYmlzZWN0IGdvb2QgMzIxNjM0OTFjMGMyMDVmZmIxNTk2YmFmOWMzMDhkZWU1MzM4YWU5
-NAojIGdvb2Q6IFtiMmI1MDlmYjVhMWU2YWYxZTYzMGE3NTViMzJjNDY1ODA5OWRmNzBiXSBNZXJn
-ZSB0YWcgJ2xpbnV4LWNhbi1uZXh0LWZvci02LjItMjAyMjEyMTInIG9mIGdpdDovL2dpdC5rZXJu
-ZWwub3JnL3B1Yi9zY20vbGludXgva2VybmVsL2dpdC9ta2wvbGludXgtY2FuLW5leHQKZ2l0IGJp
-c2VjdCBnb29kIGIyYjUwOWZiNWExZTZhZjFlNjMwYTc1NWIzMmM0NjU4MDk5ZGY3MGIKIyBiYWQ6
-IFtmOWM1Y2JkNTJjNjJmMmZhOWQyZGZiZTFhZjhmYjAwZTUwNTZhZWZlXSBidHVzYjogQXZvaWQg
-cmVzZXQgb2YgSVNPQyBlbmRwb2ludCBhbHQgc2V0dGluZ3MgdG8gemVybwpnaXQgYmlzZWN0IGJh
-ZCBmOWM1Y2JkNTJjNjJmMmZhOWQyZGZiZTFhZjhmYjAwZTUwNTZhZWZlCiMgZ29vZDogWzZiNzVi
-ZDNkMDM2NzQ1YjliZTMwOTE3OTA5ZjAzNjAyMDk5YWRiZGJdIGJwZjogUmVmYWN0b3IgQVJHX1BU
-Ul9UT19EWU5QVFIgY2hlY2tzIGludG8gcHJvY2Vzc19keW5wdHJfZnVuYwpnaXQgYmlzZWN0IGdv
-b2QgNmI3NWJkM2QwMzY3NDViOWJlMzA5MTc5MDlmMDM2MDIwOTlhZGJkYgojIGJhZDogWzY5NWM1
-ZDNhODA1NWRjYjk3OTY2NDk2YWRlNTE5NjhjOWE3NWY1YzZdIHdpZmk6IHJ0bDh4eHh1OiBmaXhp
-bmcgSVFLIGZhaWx1cmVzIGZvciBydGw4MTkyZXUKZ2l0IGJpc2VjdCBiYWQgNjk1YzVkM2E4MDU1
-ZGNiOTc5NjY0OTZhZGU1MTk2OGM5YTc1ZjVjNgojIGJhZDogW2Q1OTJiOWY3NDI2NDNmMDdkYjUz
-YWMzNGJhZjZiYmQzY2U5NDc4ZGNdIHdpZmk6IHJ0dzg5OiBzdG9wIG1hYyBwb3J0IGZ1bmN0aW9u
-IHdoZW4gc3RvcF9hcCgpCmdpdCBiaXNlY3QgYmFkIGQ1OTJiOWY3NDI2NDNmMDdkYjUzYWMzNGJh
-ZjZiYmQzY2U5NDc4ZGMKIyBiYWQ6IFs4MDQxZjJiZmZiZjFjMDg1NGQ5ZjY2NzVhZDAxZGM2Y2E3
-MmY3MWRkXSB3aWZpOiBicmNtZm1hYzogaW50cm9kdWNlIEJSQ01GTUFDIGV4cG9ydGVkIHN5bWJv
-bHMgbmFtZXNwYWNlCmdpdCBiaXNlY3QgYmFkIDgwNDFmMmJmZmJmMWMwODU0ZDlmNjY3NWFkMDFk
-YzZjYTcyZjcxZGQKIyBiYWQ6IFtkNmE1YzU2MjIxNGYyNmU0NDJjOGVjM2ZmMWUyOGUxNjY3NWQx
-YmNmXSB3aWZpOiBicmNtZm1hYzogYWRkIHN1cHBvcnQgZm9yIHZlbmRvci1zcGVjaWZpYyBmaXJt
-d2FyZSBhcGkKZ2l0IGJpc2VjdCBiYWQgZDZhNWM1NjIyMTRmMjZlNDQyYzhlYzNmZjFlMjhlMTY2
-NzVkMWJjZgojIGdvb2Q6IFs3NjgyMWFhZDQ5Y2ViYzY5ZWNhODY4MDBmNDFlODEzMzEwNGU5MWQz
-XSB3aWZpOiBicmNtZm1hYzogYWRkIGZ1bmN0aW9uIHRvIHVuYmluZCBkZXZpY2UgdG8gYnVzIGxh
-eWVyIGFwaQpnaXQgYmlzZWN0IGdvb2QgNzY4MjFhYWQ0OWNlYmM2OWVjYTg2ODAwZjQxZTgxMzMx
-MDRlOTFkMwojIGJhZDogW2RhNmQ5YzhlY2QwMGUyMDIxODQ2MTAwNzk0OGYyYjBhOGU3ZmEyNDJd
-IHdpZmk6IGJyY21mbWFjOiBhZGQgZmlybXdhcmUgdmVuZG9yIGluZm8gaW4gZHJpdmVyIGluZm8K
-Z2l0IGJpc2VjdCBiYWQgZGE2ZDljOGVjZDAwZTIwMjE4NDYxMDA3OTQ4ZjJiMGE4ZTdmYTI0Mgoj
-IGZpcnN0IGJhZCBjb21taXQ6IFtkYTZkOWM4ZWNkMDBlMjAyMTg0NjEwMDc5NDhmMmIwYThlN2Zh
-MjQyXSB3aWZpOiBicmNtZm1hYzogYWRkIGZpcm13YXJlIHZlbmRvciBpbmZvIGluIGRyaXZlciBp
-bmZvCg==
-
-
---=-4Yv0aQnA60OXIoYx5DFN--
+-- 
+An old man doll... just what I always wanted! - Clara
