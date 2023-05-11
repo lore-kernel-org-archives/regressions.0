@@ -1,45 +1,13 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FFA71B8E0
-	for <regressions@lists.linux.dev>; Thu, 11 May 2023 08:06:38 +0000 (UTC)
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1adc913094aso3449875ad.0
-        for <regressions@lists.linux.dev>; Thu, 11 May 2023 01:06:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1683792397; x=1686384397;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=A7QbPnBDL1WlC0RtCpxIH+4dZbN5BQbuvyxRLAdP9w4=;
-        b=TrRGOX+L2x0710EGYTBWrtlPClFSWOELaPCGC2vhtalQnIRtFtvo81NA8mV2DndSq8
-         3iE3P+eMA+0LCRJlsz2dWx8ApH3/1NatXMyOkQ2FdOn53ncaEpa6KrioKX2zVMFuYYW6
-         2RWVJUEtjMN2W+J9zKVYxeK7bm/ecYyMuNeu+0684Prb+iqYa/xfZ5GI9HwOp38jRM9B
-         DqNSLiWhqOAkHCJqG/yLJzJ5S9sH+NJhx7HPzgW5qb8xxCJ4RKLi1hUh2ETuaYWLH+vJ
-         nFTSjwJe6UUUMt7dlZFdaBWukWDfLfblYN+S6tsFtsPmX3wYggB85IkSQQJPQEHUCOOy
-         kNGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683792397; x=1686384397;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=A7QbPnBDL1WlC0RtCpxIH+4dZbN5BQbuvyxRLAdP9w4=;
-        b=GyEbbPXTrHHFO8KrqLsZ5QcfB4YfgWu784N5p8ILIsVp7M197PnH6A19gF5+txeOQo
-         10S3T+ObtQcm20Gr7BX8sUqVDi6wmYSOYMec4VNztquqGiUzxUBUy9Rp0GGMBVXGppcP
-         4ENRVIhHgL5Qft47OfmX/rZoCiZzJisSmq75MWTGAe0fp0VhJ51DwryUHL+6/X5jjwuT
-         Msef+/W0tKnTl4ZkWm5gCO3lz2GCo2iTL917LglR1aGJH8UiTErEvYNlA5clZqa7y7v4
-         eFQxgGcrIngKK51XHfyTDbC1XCeJo68wOR8Solpybn2MMHOHs6lm0OyfmAR4ylpzv10g
-         eccQ==
-X-Gm-Message-State: AC+VfDwP5QAUI/DKErHhyM4Ko6DXzF7jXi1iRvVymnTr/XBdSgTgIU8f
-	jTZFX2DS1lwtYJr+Y25rWz3osr6gEXA=
-X-Google-Smtp-Source: ACHHUZ7ULQYFgsqX1Oj0GVr3eEYZZUmzujxkY1jm2RQrpViuEZWmkaaytm5Mkf4lELo/fqD5/gEHTg==
-X-Received: by 2002:a17:902:e806:b0:1ac:727b:3a60 with SMTP id u6-20020a170902e80600b001ac727b3a60mr16266666plg.4.1683792397296;
-        Thu, 11 May 2023 01:06:37 -0700 (PDT)
-Received: from [192.168.43.80] (subs10b-223-255-225-226.three.co.id. [223.255.225.226])
-        by smtp.gmail.com with ESMTPSA id h5-20020a170902748500b001ac2a73dbf2sm5187538pll.291.2023.05.11.01.06.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 11 May 2023 01:06:36 -0700 (PDT)
-Message-ID: <588c1a66-9976-c96f-dcdd-beec8b7410f0@gmail.com>
-Date: Thu, 11 May 2023 15:06:29 +0700
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09DB6817
+	for <regressions@lists.linux.dev>; Thu, 11 May 2023 11:58:55 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1px4wV-0007jK-Md; Thu, 11 May 2023 13:58:43 +0200
+Message-ID: <bec024d5-4088-00ae-f7b5-7188868b1707@leemhuis.info>
+Date: Thu, 11 May 2023 13:58:43 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -48,96 +16,138 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.10.0
-Content-Language: en-US
-To: Linux Regressions <regressions@lists.linux.dev>,
- Linux for PowerPC <linuxppc-dev@lists.ozlabs.org>,
- Linux AMDGPU <amd-gfx@lists.freedesktop.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>,
- Christophe Leroy <christophe.leroy@csgroup.eu>,
- Alex Deucher <alexander.deucher@amd.com>, darkbasic@linuxsystems.it
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-Subject: Fwd: Linux 6.3.1 + AMD RX 570 on ppc64le 4K: Kernel attempted to read
- user page (1128) - exploit attempt? (uid: 0)
+Subject: Re: [regression] Since kernel 6.3.1 logitech unify receiver not
+ working properly
+Content-Language: en-US, de-DE
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: =?UTF-8?Q?Filipe_La=c3=adns?= <lains@riseup.net>,
+ Bastien Nocera <hadess@hadess.net>, Jiri Kosina <jikos@kernel.org>,
+ Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc: "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>, guy.b@bluewin.ch
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+References: <9b987585-0834-bb8c-3414-283c29f3f2ab@leemhuis.info>
+In-Reply-To: <9b987585-0834-bb8c-3414-283c29f3f2ab@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1683806336;7ee9f58d;
+X-HE-SMSGID: 1px4wV-0007jK-Md
 
-Hi,
+Hi, Thorsten here, the Linux kernel's regression tracker.
 
-I notice a regression report on bugzilla ([1]). As many developers
-don't keep an eye on it, I decide to forward it by email.
-
-Quoting from it:
-
->  darkbasic 2023-05-10 13:36:37 UTC
+On 08.05.23 11:55, Linux regression tracking (Thorsten Leemhuis) wrote:
+> Hi, Thorsten here, the Linux kernel's regression tracker.
 > 
-> I'm using Gentoo Linux on a Raptor CS Talos 2 ppc64le, GPU is an AMD RX 570. So far the past dozen of kernels (up to 6.2.14) worked flawlessly, but with 6.3.1 I don't get any video output and I get the following in journalctl:
+> I noticed a regression report in bugzilla.kernel.org. As many (most?)
+> kernel developers don't keep an eye on it, I decided to forward it by mail.
 > 
-> May 10 15:09:01 talos2 kernel: Kernel attempted to read user page (1128) - exploit attempt? (uid: 0)
-> May 10 15:09:01 talos2 kernel: BUG: Unable to handle kernel data access on read at 0x00001128
-> May 10 15:09:01 talos2 kernel: Faulting instruction address: 0xc00800000d1a805c
-> May 10 15:09:01 talos2 kernel: Oops: Kernel access of bad area, sig: 11 [#1]
-> May 10 15:09:01 talos2 kernel: LE PAGE_SIZE=4K MMU=Radix SMP NR_CPUS=512 NUMA PowerNV
-> May 10 15:09:01 talos2 kernel: Modules linked in: rfkill(+) 8021q garp mrp stp llc binfmt_misc amdgpu uvcvideo uvc videobuf2_vmalloc videobuf2_memops gpu_sched snd_hda_codec_hdmi i2c_algo_bit at24(+) videobuf2_v4l2 drm_ttm_helper regmap_i2c videobuf2_common ttm snd_usb_audio drm_di>
-> May 10 15:09:01 talos2 kernel: CPU: 0 PID: 188 Comm: kworker/0:3 Not tainted 6.3.1-gentoo-dist #1
-> May 10 15:09:01 talos2 kernel: Hardware name: T2P9S01 REV 1.01 POWER9 0x4e1202 opal:skiboot-9858186 PowerNV
-> May 10 15:09:01 talos2 kernel: Workqueue: events_long drm_dp_check_and_send_link_address [drm_display_helper]
-> May 10 15:09:01 talos2 kernel: NIP:  c00800000d1a805c LR: c00800000d1a8018 CTR: c000000000c87900
-> May 10 15:09:01 talos2 kernel: REGS: c00000000beb3370 TRAP: 0300   Not tainted  (6.3.1-gentoo-dist)
-> May 10 15:09:01 talos2 kernel: MSR:  900000000280b033 <SF,HV,VEC,VSX,EE,FP,ME,IR,DR,RI,LE>  CR: 88048223  XER: 0000005a
-> May 10 15:09:01 talos2 kernel: CFAR: c000000000c87980 DAR: 0000000000001128 DSISR: 40000000 IRQMASK: 0 
->                                GPR00: c00800000d1a8018 c00000000beb3610 c00800000d690f00 0000000000000000 
->                                GPR04: 0000000000000002 c00800000d6297c0 0000000000000000 c00000002a00b740 
->                                GPR08: 0000000000000000 0000000000001124 0000000000000000 c00800000d431560 
->                                GPR12: c000000000c87900 c000000002a6b000 c000000000170ad8 c00000001a460310 
->                                GPR16: 0000000000000045 c000000022858388 c000000026000340 0000000000000001 
->                                GPR20: 0000000000000000 0000000000000001 c0000000260001a0 0000000000004000 
->                                GPR24: 0000000000004000 c000000026000010 c0000000228580b8 fffffffffffffffd 
->                                GPR28: 0000000000000000 c0000000228580a0 c000000022856000 c000000022858000 
-> May 10 15:09:01 talos2 kernel: NIP [c00800000d1a805c] is_synaptics_cascaded_panamera+0x244/0x600 [amdgpu]
-> May 10 15:09:01 talos2 kernel: LR [c00800000d1a8018] is_synaptics_cascaded_panamera+0x200/0x600 [amdgpu]
-> May 10 15:09:01 talos2 kernel: Call Trace:
-> May 10 15:09:01 talos2 kernel: [c00000000beb3610] [c00800000d1a8018] is_synaptics_cascaded_panamera+0x200/0x600 [amdgpu] (unreliable)
-> May 10 15:09:01 talos2 kernel: [c00000000beb36d0] [c00800000b7c2b18] drm_helper_probe_single_connector_modes+0x230/0x698 [drm_kms_helper]
-> May 10 15:09:01 talos2 kernel: [c00000000beb3810] [c000000000c57174] drm_client_modeset_probe+0x2b4/0x16c0
-> May 10 15:09:01 talos2 kernel: [c00000000beb3a10] [c00800000b7c7a30] __drm_fb_helper_initial_config_and_unlock+0x68/0x640 [drm_kms_helper]
-> May 10 15:09:01 talos2 kernel: [c00000000beb3af0] [c00800000b7c5b08] drm_fbdev_client_hotplug+0x40/0x1d0 [drm_kms_helper]
-> May 10 15:09:01 talos2 kernel: [c00000000beb3b70] [c000000000c55480] drm_client_dev_hotplug+0x120/0x1b0
-> May 10 15:09:01 talos2 kernel: [c00000000beb3c00] [c00800000b7c1130] drm_kms_helper_hotplug_event+0x58/0x80 [drm_kms_helper]
-> May 10 15:09:01 talos2 kernel: [c00000000beb3c30] [c00800000b80b298] drm_dp_check_and_send_link_address+0x330/0x3a0 [drm_display_helper]
-> May 10 15:09:01 talos2 kernel: [c00000000beb3cd0] [c000000000162d84] process_one_work+0x2f4/0x580
-> May 10 15:09:01 talos2 kernel: [c00000000beb3d70] [c0000000001630b8] worker_thread+0xa8/0x600
-> May 10 15:09:01 talos2 kernel: [c00000000beb3e00] [c000000000170bf4] kthread+0x124/0x130
-> May 10 15:09:01 talos2 kernel: [c00000000beb3e50] [c00000000000dd14] ret_from_kernel_thread+0x5c/0x64
-> May 10 15:09:01 talos2 kernel: --- interrupt: 0 at 0x0
-> May 10 15:09:01 talos2 kernel: NIP:  0000000000000000 LR: 0000000000000000 CTR: 0000000000000000
-> May 10 15:09:01 talos2 kernel: REGS: c00000000beb3e80 TRAP: 0000   Not tainted  (6.3.1-gentoo-dist)
-> May 10 15:09:01 talos2 kernel: MSR:  0000000000000000 <>  CR: 00000000  XER: 00000000
-> May 10 15:09:01 talos2 kernel: CFAR: 0000000000000000 IRQMASK: 0 
->                                GPR00: 0000000000000000 c00000000beb4000 0000000000000000 0000000000000000 
->                                GPR04: 0000000000000000 0000000000000000 0000000000000000 0000000000000000 
->                                GPR08: 0000000000000000 0000000000000000 0000000000000000 0000000000000000 
->                                GPR12: 0000000000000000 0000000000000000 c000000000170ad8 c00000000a8fb240 
->                                GPR16: 0000000000000000 0000000000000000 0000000000000000 0000000000000000 
->                                GPR20: 0000000000000000 0000000000000000 0000000000000000 0000000000000000 
->                                GPR24: 0000000000000000 0000000000000000 0000000000000000 0000000000000000 
->                                GPR28: 0000000000000000 0000000000000000 0000000000000000 0000000000000000 
-> May 10 15:09:01 talos2 kernel: NIP [0000000000000000] 0x0
-> May 10 15:09:01 talos2 kernel: LR [0000000000000000] 0x0
-> May 10 15:09:01 talos2 kernel: --- interrupt: 0
-> May 10 15:09:01 talos2 kernel: Code: 41820094 e91f0568 e95f0000 813f0088 81080030 3d4a0001 39290444 e94a7ca0 79291764 1d0811f0 7d4a4214 7d2a4a14 <81290004> 91270074 813f0088 39290424 
-> May 10 15:09:01 talos2 kernel: ---[ end trace 0000000000000000 ]---
-> May 10 15:09:01 talos2 kernel: at24 4-0054: supply vcc not found, using dummy regulator
+> Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=217412 :
 
-See the report for details.
+TWIMC: a few other users (three or four iirc) showed up in that ticket
+and reported problems with the receiver, albeit the symptoms are not
+exactly the same for all of them, so there might be more than one problem.
 
-Anyway, I'm adding this to regzbot:
+I'll try to motivate the affected users to perform a bisection. But
+would be great if those with more knowledge about this code could
+briefly look into the ticket, maybe the details the users shared allows
+one of you to guess what causes this.
 
-#regzbot introduced: v6.2..v6.3 https://bugzilla.kernel.org/show_bug.cgi?id=217427
-#regzbot title: No video output from AMD RX 570 and kernel exploit attempt on ppc64le
+Ciao, Thorsten
 
-Thanks.
-
-[1]: https://bugzilla.kernel.org/show_bug.cgi?id=217427
-
--- 
-An old man doll... just what I always wanted! - Clara
+>>  guy.b 2023-05-07 07:37:34 UTC
+>>
+>> Hello,
+>>
+>> Since kernel 6.3.1 the boot process hangs (~ 5 seconds) by uevent triggering with the following errors :
+>>
+>> logitech-hidpp-device 0003:046D:405E.0004: hidpp_devicenametype_get_count: received protocol error 0x07
+>>
+>>
+>> The logs about logitech input:
+>>
+>> usb 1-8: new full-speed USB device number 2 using xhci_hcd
+>> mai 06 11:54:24 Cockpit kernel: usb 1-8: New USB device found, idVendor=046d, idProduct=c52b, bcdDevice=24.10
+>> mai 06 11:54:24 Cockpit kernel: usb 1-8: New USB device strings: Mfr=1, Product=2, SerialNumber=0
+>> mai 06 11:54:24 Cockpit kernel: usb 1-8: Product: USB Receiver
+>> mai 06 11:54:24 Cockpit kernel: usb 1-8: Manufacturer: Logitech
+>> mai 06 11:54:24 Cockpit kernel: input: Logitech USB Receiver as /devices/pci0000:00/0000:00:14.0/usb1/1-8/1-8:1.0/0003:046D:C52B.0001/input/input4
+>> mai 06 11:54:24 Cockpit kernel: hid-generic 0003:046D:C52B.0001: input,hidraw0: USB HID v1.11 Keyboard [Logitech USB Receiver] on usb-0000:00:14.0-8/input0
+>> mai 06 11:54:24 Cockpit kernel: input: Logitech USB Receiver Mouse as /devices/pci0000:00/0000:00:14.0/usb1/1-8/1-8:1.1/0003:046D:C52B.0002/input/input5
+>> mai 06 11:54:24 Cockpit kernel: input: Logitech USB Receiver Consumer Control as /devices/pci0000:00/0000:00:14.0/usb1/1-8/1-8:1.1/0003:046D:C52B.0002/input/input6
+>> mai 06 11:54:24 Cockpit kernel: input: Logitech USB Receiver System Control as /devices/pci0000:00/0000:00:14.0/usb1/1-8/1-8:1.1/0003:046D:C52B.0002/input/input7
+>> mai 06 11:54:24 Cockpit kernel: hid-generic 0003:046D:C52B.0002: input,hiddev96,hidraw1: USB HID v1.11 Mouse [Logitech USB Receiver] on usb-0000:00:14.0-8/input1
+>> mai 06 11:54:24 Cockpit kernel: hid-generic 0003:046D:C52B.0003: hiddev97,hidraw2: USB HID v1.11 Device [Logitech USB Receiver] on usb-0000:00:14.0-8/input2
+>> mai 06 11:54:24 Cockpit kernel: usbcore: registered new interface driver usbhid
+>> mai 06 11:54:24 Cockpit kernel: usbhid: USB HID core driver
+>> mai 06 11:54:24 Cockpit kernel: logitech-djreceiver 0003:046D:C52B.0003: hiddev96,hidraw0: USB HID v1.11 Device [Logitech USB Receiver] on usb-0000:00:14.0-8/input2
+>> mai 06 11:54:24 Cockpit kernel: input: Logitech Wireless Device PID:405e Keyboard as /devices/pci0000:00/0000:00:14.0/usb1/1-8/1-8:1.2/0003:046D:C52B.0003/0003:046D:405E.0004/input/input9
+>> mai 06 11:54:24 Cockpit kernel: input: Logitech Wireless Device PID:405e Mouse as /devices/pci0000:00/0000:00:14.0/usb1/1-8/1-8:1.2/0003:046D:C52B.0003/0003:046D:405E.0004/input/input10
+>> mai 06 11:54:24 Cockpit kernel: hid-generic 0003:046D:405E.0004: input,hidraw1: USB HID v1.11 Keyboard [Logitech Wireless Device PID:405e] on usb-0000:00:14.0-8/input2:1
+>> mai 06 11:54:24 Cockpit kernel: input: Logitech Wireless Device PID:2010 Keyboard as /devices/pci0000:00/0000:00:14.0/usb1/1-8/1-8:1.2/0003:046D:C52B.0003/0003:046D:2010.0005/input/input14
+>> mai 06 11:54:24 Cockpit kernel: hid-generic 0003:046D:2010.0005: input,hidraw2: USB HID v1.11 Keyboard [Logitech Wireless Device PID:2010] on usb-0000:00:14.0-8/input2:2
+>> mai 06 11:54:24 Cockpit kernel: logitech-hidpp-device 0003:046D:405E.0004: HID++ 4.5 device connected.
+>> mai 06 11:54:24 Cockpit kernel: logitech-hidpp-device 0003:046D:405E.0004: hidpp_devicenametype_get_count: received protocol error 0x07
+>> mai 06 11:54:24 Cockpit kernel: input: Logitech Wireless Device PID:405e as /devices/pci0000:00/0000:00:14.0/usb1/1-8/1-8:1.2/0003:046D:C52B.0003/0003:046D:405E.0004/input/input18
+>> mai 06 11:54:24 Cockpit kernel: logitech-hidpp-device 0003:046D:405E.0004: input,hidraw1: USB HID v1.11 Keyboard [Logitech Wireless Device PID:405e] on usb-0000:00:14.0-8/input2:1
+>> mai 06 11:54:24 Cockpit kernel: input: Logitech Wireless Device PID:2010 as /devices/pci0000:00/0000:00:14.0/usb1/1-8/1-8:1.2/0003:046D:C52B.0003/0003:046D:2010.0005/input/input19
+>> mai 06 11:54:24 Cockpit kernel: logitech-hidpp-device 0003:046D:2010.0005: input,hidraw2: USB HID v1.11 Keyboard [Logitech Wireless Device PID:2010] on usb-0000:00:14.0-8/input2:2
+>>
+>> Next, once booted and remove the unify receiver and plug it again there is a massive lag (~ 15 seconds) before that the receiver get ready for the mouse and keyboard to be functional with following errors :
+>>
+>> kernel: logitech-hidpp-device 0003:046D:405E.0022: hidpp_devicenametype_get_count: received protocol error 0x07
+>> kernel: logitech-hidpp-device 0003:046D:405E.0023: Couldn't get wheel multiplier (error -110)
+>>
+>> Unify receiver with K800 keyboard and M720 Triathlon mouse paired.
+>>
+>> This happens on my desktop computer but not on my laptop with a unify receiver and a marathon M705 mouse.
+>>
+>> Both computer are on Archlinux and up to date.
+>>
+>> On the desktop the boot is fine without the unify receiver.
+>>
+>> Let me know if you need more info.
+>>
+>> Thank you.
+> 
+> 
+> See the ticket for more details.
+> 
+> Note, there are two users affected by this (see Comment 5 for the
+> second), but you have to use bugzilla to reach the second reporter, as I
+> sadly[1] can not simply CCed them in mails like this (the initial
+> reporter gave permission).
+> 
+> 
+> [TLDR for the rest of this mail: I'm adding this report to the list of
+> tracked Linux kernel regressions; the text you find below is based on a
+> few templates paragraphs you might have encountered already in similar
+> form.]
+> 
+> BTW, let me use this mail to also add the report to the list of tracked
+> regressions to ensure it's doesn't fall through the cracks:
+> 
+> #regzbot introduced: v6.2..v6.3
+> https://bugzilla.kernel.org/show_bug.cgi?id=217412
+> #regzbot title: input: hid: logitech unify receiver not working properly
+> #regzbot ignore-activity
+> 
+> This isn't a regression? This issue or a fix for it are already
+> discussed somewhere else? It was fixed already? You want to clarify when
+> the regression started to happen? Or point out I got the title or
+> something else totally wrong? Then just reply and tell me -- ideally
+> while also telling regzbot about it, as explained by the page listed in
+> the footer of this mail.
+> 
+> Developers: When fixing the issue, remember to add 'Link:' tags pointing
+> to the report (e.g. the buzgzilla ticket and maybe this mail as well, if
+> this thread sees some discussion). See page linked in footer for details.
+> 
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> --
+> Everything you wanna know about Linux kernel regression tracking:
+> https://linux-regtracking.leemhuis.info/about/#tldr
+> If I did something stupid, please tell me, as explained on that page.
+> 
+> [1] because bugzilla.kernel.org tells users upon registration their
+> "email address will never be displayed to logged out users"
