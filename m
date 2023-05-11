@@ -1,165 +1,180 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 531AA3D60
-	for <regressions@lists.linux.dev>; Wed, 10 May 2023 17:09:07 +0000 (UTC)
-Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34ADwx3r014162;
-	Wed, 10 May 2023 17:08:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id; s=corp-2023-03-30;
- bh=Cnv47P/yMcrmh+FaCz05BZSuMrv22ypz4lgstoFRav0=;
- b=S/HGBPIl9S0TtkNeNI9ZsJgLvXWl8WfAiLv6QOINT8/Jafzr5iluouE40aI+iYF2VjTu
- 2QOD2VRWY1SSqF7hVWZiETC1G25kR/fEpPOyUT1iLU15DxCPTyKnY99YLWL5ToHC6s3g
- S7eKVH5bhKNNGvWvMUm6evGgr9UqCw2+QzCy7cLjhseWnp5UQgZi8y9LyE/hz8HvHHfP
- 0eW1rhh4/ctjNH74sPrIKmt4OlZMUUIb6oHHmtMzikAJgNnPnCH8SUNp5bY6hFqxvO+X
- aSJm5WZ6zSyi/g4JM4POUNT+OcKmJ7MvO5BdwvR4/nxdCIBHVIbhyvnn1jOjuYdc99hN vQ== 
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3qf7755759-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 10 May 2023 17:08:42 +0000
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 34AGVvfX004415;
-	Wed, 10 May 2023 17:08:41 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3qf7pjv8ts-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 10 May 2023 17:08:41 +0000
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 34AH8fCf031266;
-	Wed, 10 May 2023 17:08:41 GMT
-Received: from gkennedy-linux.us.oracle.com (gkennedy-linux.us.oracle.com [10.152.170.45])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3qf7pjv8t3-1;
-	Wed, 10 May 2023 17:08:41 +0000
-From: George Kennedy <george.kennedy@oracle.com>
-To: gregkh@linuxfoundation.org, jirislaby@kernel.org
-Cc: george.kennedy@oracle.com, sfr@canb.auug.org.au, akpm@linux-foundation.org,
-        linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux@weissschuh.net, regressions@lists.linux.dev
-Subject: [PATCH v2] vc_screen: reload load of struct vc_data pointer in vcs_write() to avoid UAF
-Date: Wed, 10 May 2023 12:07:11 -0500
-Message-Id: <1683738431-3647-1-git-send-email-george.kennedy@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
- definitions=2023-05-10_04,2023-05-05_01,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0
- suspectscore=0 malwarescore=0 phishscore=0 bulkscore=0 mlxscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2304280000 definitions=main-2305100138
-X-Proofpoint-GUID: cOaHX4ehEeBSa5D0BUijYco7cfZC_EoU
-X-Proofpoint-ORIG-GUID: cOaHX4ehEeBSa5D0BUijYco7cfZC_EoU
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57BE1371
+	for <regressions@lists.linux.dev>; Thu, 11 May 2023 06:46:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39502C433D2;
+	Thu, 11 May 2023 06:46:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1683787573;
+	bh=IVpbV+z9YGskfzW19j0+bVKEYWgiU3nQ/4t5bI4Ex9Y=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=JN4WBZ9UViPjCxYnQfYCefKlJ1XQX1q9CxTPb2vznnv2P2LSHUsvJ9et0CD6Yb6uJ
+	 pXVEEIvSv8+cG5Xkz2kKMI1pG4chJn9D+WpBcPLSpm9zE1+NJU+RxOrjNnVI3d3+9X
+	 XBIm0wNq5tY5FpwsAfyg3cb3KoBHzk+VwmEMvh//gP7kJHps8jF0oO/KfHa9uQvFKZ
+	 t8U3faC4xVOVX+AXCs3jkxudLRLYG2VvHvLtJgEq1SWMbOq41Amr/ywFlfnm8OebEc
+	 wYa0ym67nUKgcc1p7V7Ikd0QGAy1GXdmJ9x1b32G2QLMT1nZDXes53rEQifvcC4jS3
+	 k+fVVzWcfsOjw==
+Date: Thu, 11 May 2023 07:46:06 +0100
+From: Mauro Carvalho Chehab <mchehab@kernel.org>
+To: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>, Linus
+ Torvalds <torvalds@linux-foundation.org>, "Sudip Mukherjee (Codethink)"
+ <sudipm.mukherjee@gmail.com>, Laurent Pinchart
+ <laurent.pinchart@ideasonboard.com>, Shawn Guo <shawnguo@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>,
+ linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, Pengutronix Kernel Team
+ <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>
+Subject: Re: mainline build failure due to cf21f328fcaf ("media: nxp: Add
+ i.MX8 ISI driver")
+Message-ID: <20230511074606.0349fc69@sal.lan>
+In-Reply-To: <742856c0-ab93-1a6c-4fc8-9451c0908930@leemhuis.info>
+References: <ZElaVmxDsOkZj2DK@debian>
+	<51cff63a-3a04-acf5-8264-bb19b0bee8a3@leemhuis.info>
+	<CAHk-=wgzU8_dGn0Yg+DyX7ammTkDUCyEJ4C=NvnHRhxKWC7Wpw@mail.gmail.com>
+	<20230510090527.25e26127@sal.lan>
+	<742856c0-ab93-1a6c-4fc8-9451c0908930@leemhuis.info>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.37; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-After a call to console_unlock() in vcs_write() the vc_data struct can be
-freed by vc_port_destruct(). Because of that, the struct vc_data pointer
-must be reloaded in the while loop in vcs_write() after console_lock() to
-avoid a UAF when vcs_size() is called.
+Em Wed, 10 May 2023 11:02:57 +0200
+"Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>=
+ escreveu:
 
-Syzkaller reported a UAF in vcs_size().
+> On 10.05.23 10:05, Mauro Carvalho Chehab wrote:
+> > Em Mon, 8 May 2023 09:27:28 -0700
+> > Linus Torvalds <torvalds@linux-foundation.org> escreveu: =20
+> >> On Mon, May 8, 2023 at 3:55=E2=80=AFAM Linux regression tracking #addi=
+ng
+> >> (Thorsten Leemhuis) <regressions@leemhuis.info> wrote: =20
+> >>>
+> >>> Thanks for the report. The fixes (see the mail from Laurent) apparent=
+ly
+> >>> are still not mainlined (or am I missing something?), so let me add t=
+his
+> >>> report to the tracking to ensure this is not forgotten:   =20
+> >>
+> >> Gaah. I was intending to apply the patch directly before rc1, but then
+> >> I forgot about this issue.
+> >>
+> >> Mauro: I'm currently really *really* fed up with the media tree. This
+> >> exact same thing happened last merge window, where the media tree
+> >> caused pointless build errors, and it took way too long to get the
+> >> fixes the proper ways. =20
+> > [...]
+> >
+> > In the specific case of this fixup patch, I didn't identify it as a bui=
+ld
+> > issue, so it followed the usual workflow. We have a huge number of patc=
+hes
+> > for media, and it usually takes some time to handle all of them. This o=
+ne
+> > just followed the normal flow, as it didn't break Jenkins builds nor the
+> > subject mentioned anything about build breakage. =20
+>=20
+> Makes me wonder again if we should start adding
+>=20
+>  CC: regressions@lists.linux.dev
+>=20
+> to any patches that fix regressions, that way maintainers and reviewers
+> would have something to filter for -- and I would become aware of all
+> regression fixes in the work, too.
 
-BUG: KASAN: slab-use-after-free in vcs_size (drivers/tty/vt/vc_screen.c:215)
-Read of size 4 at addr ffff8880beab89a8 by task repro_vcs_size/4119
+Having some way that could be parsed by e-mail filters would be
+nice.=20
 
-Call Trace:
- <TASK>
-__asan_report_load4_noabort (mm/kasan/report_generic.c:380)
-vcs_size (drivers/tty/vt/vc_screen.c:215)
-vcs_write (drivers/tty/vt/vc_screen.c:664)
-vfs_write (fs/read_write.c:582 fs/read_write.c:564)
-...
- <TASK>
+>=20
+> Ciao, Thorsten
+>=20
+> P.S.: BTW, let me tell regzbot that Linus merged the fix for the build
+> failure.
+>=20
+> #regzbot fix: ba0ad6ed89f
+>=20
+> FWIW, the one for the gcc warnings[1] Laurent mentioned elsewhere in
+> this thread is not merged yet afaics.
+>=20
+> [1] https://lore.kernel.org/all/20230418092007.2902984-1-arnd@kernel.org/
 
-Allocated by task 1213:
-kmalloc_trace (mm/slab_common.c:1064)
-vc_allocate (./include/linux/slab.h:559 ./include/linux/slab.h:680
-    drivers/tty/vt/vt.c:1078 drivers/tty/vt/vt.c:1058)
-con_install (drivers/tty/vt/vt.c:3334)
-tty_init_dev (drivers/tty/tty_io.c:1303 drivers/tty/tty_io.c:1415
-    drivers/tty/tty_io.c:1392)
-tty_open (drivers/tty/tty_io.c:2082 drivers/tty/tty_io.c:2128)
-chrdev_open (fs/char_dev.c:415)
-do_dentry_open (fs/open.c:921)
-vfs_open (fs/open.c:1052)
-...
+Just sent a pull request.
 
-Freed by task 4116:
-kfree (mm/slab_common.c:1016)
-vc_port_destruct (drivers/tty/vt/vt.c:1044)
-tty_port_destructor (drivers/tty/tty_port.c:296)
-tty_port_put (drivers/tty/tty_port.c:312)
-vt_disallocate_all (drivers/tty/vt/vt_ioctl.c:662 (discriminator 2))
-vt_ioctl (drivers/tty/vt/vt_ioctl.c:903)
-tty_ioctl (drivers/tty/tty_io.c:2778)
-...
+Btw, I did some changes at linux-media Jenkins instance to help early
+track some extra build issues. They're all against
+https://git.linuxtv.org/media_stage.git/, which is the tree where we place
+media patches that are ready. We move them later, after a couple of days
+to https://git.linuxtv.org/media_tree.git/. So, if something bad happens,
+we have a chance to fix before setting them into a stone. With such
+changes, we now have:
 
-The buggy address belongs to the object at ffff8880beab8800
- which belongs to the cache kmalloc-1k of size 1024
-The buggy address is located 424 bytes inside of
- freed 1024-byte region [ffff8880beab8800, ffff8880beab8c00)
+1. https://builder.linuxtv.org/job/patchwork/
 
-The buggy address belongs to the physical page:
-page:00000000afc77580 refcount:1 mapcount:0 mapping:0000000000000000
-    index:0x0 pfn:0xbeab8
-head:00000000afc77580 order:3 entire_mapcount:0 nr_pages_mapped:0
-    pincount:0
-flags: 0xfffffc0010200(slab|head|node=0|zone=1|lastcpupid=0x1fffff)
-page_type: 0xffffffff()
-raw: 000fffffc0010200 ffff888100042dc0 ffffea000426de00 dead000000000002
-raw: 0000000000000000 0000000000100010 00000001ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
+   This is a pre-merge test. It tests patch per patch the PRs with patch
+   sets ready to be merged, with W=3D1, allyesconfig/almodconfig[1] on x86_=
+64.=20
+   Builds drivers/media and drivers/staging/media.=20
+   This is there already for a long time;
 
-Memory state around the buggy address:
- ffff8880beab8880: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff8880beab8900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->ffff8880beab8980: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                  ^
- ffff8880beab8a00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff8880beab8a80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
-Disabling lock debugging due to kernel taint
+2. https://builder.linuxtv.org/job/media_stage_clang/
 
-Fixes: ac751efa6a0d ("console: rename acquire/release_console_sem() to console_lock/unlock()")
-Reported-by: syzkaller <syzkaller@googlegroups.com>
-Signed-off-by: George Kennedy <george.kennedy@oracle.com>
----
-v2: added "ret = -EINVAL;"
+   Checks build with clang-12 on x86_64 with W=3D1. Builds drivers/media
+   and drivers/staging/media with allyesconfig[1].
 
-v1: This patch is similar to the recent UAF vcs_read() patches (226fae124b2d & 46d733d0efc7).
-vcs_write() should have been checked for the same UAF issue at the same time the fixes went
-into vcs_read().
+   It was building with WERROR disabled, as some core macros were
+   producing errors at the time I created it (and for a while).
+   It was modified to enable WERROR as well.=20
 
- drivers/tty/vt/vc_screen.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+3. https://builder.linuxtv.org/job/media_stage_gcc-pipeline/=20
 
-diff --git a/drivers/tty/vt/vc_screen.c b/drivers/tty/vt/vc_screen.c
-index 498ba9c0ee93..79a8e8189000 100644
---- a/drivers/tty/vt/vc_screen.c
-+++ b/drivers/tty/vt/vc_screen.c
-@@ -656,10 +656,17 @@ vcs_write(struct file *file, const char __user *buf, size_t count, loff_t *ppos)
- 			}
- 		}
- 
--		/* The vcs_size might have changed while we slept to grab
--		 * the user buffer, so recheck.
-+		/* The vc might have been freed or vcs_size might have changed
-+		 * while we slept to grab the user buffer, so recheck.
- 		 * Return data written up to now on failure.
- 		 */
-+		vc = vcs_vc(inode, &viewed);
-+		if (!vc) {
-+			if (written)
-+				break;
-+			ret = -EINVAL;
-+			goto unlock_out;
-+		}
- 		size = vcs_size(vc, attr, false);
- 		if (size < 0) {
- 			if (written)
--- 
-2.31.1
+   It replaces another job that was just doing builds for x86_64
+   with W=3D1. Builds drivers/media and drivers/staging/media with
+   different configurations[1]:
+      x86_64: allyesconfig, allmodconfig, almodconfig with PM disabled;
+      arm32: allyesconfig
+      arm64: allyesconfig
 
+4. https://builder.linuxtv.org/job/linux-media/
+
+   Does full builds with different configurations[1]:
+      x86_64: allyesconfig, allmodconfig, almodconfig with PM disabled;
+      arm32: allyesconfig
+      arm64: allyesconfig
+      docs: htmldocs and pdfdocs
+
+I hope this will help avoiding future build regressions from our side.
+Feel free to suggest a couple of other configs that we might add to
+jobs (3) and (4).
+
+I'm still adjusting the pipeline for (4), but currently, it is failing
+on an issue that seems unrelated with the media subsystem with gcc 10.2.1:
+
+	  AR      drivers/built-in.a
+	  AR      built-in.a
+	  AR      vmlinux.a
+	  LD      vmlinux.o
+	vmlinux.o: warning: objtool: vmx_vcpu_enter_exit+0x2d8: call to vmread_err=
+or_trampoline() leaves .noinstr.text section
+	vmlinux.o: warning: objtool: lkdtm_UNSET_SMEP+0xe1: relocation to !ENDBR: =
+native_write_cr4+0x40
+     =20
+Is this a known regression? The media-stage tree is on the top of
+Kernel 6.4-rc1.
+
+Regards,
+Mauro
+
+-
+
+[1] On all builds, the jobs disable some symbols that should not affect
+    media subsystem, to speedup the builds:
+
+   scripts/config -d MODULE_SIG -d KEYS -d IMA -d CONFIG_DEBUG_INFO -d SYST=
+EM_TRUSTED_KEYRING -d MODVERSIONS
