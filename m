@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09DB6817
-	for <regressions@lists.linux.dev>; Thu, 11 May 2023 11:58:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 921FD1F931
+	for <regressions@lists.linux.dev>; Thu, 11 May 2023 13:10:46 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1px4wV-0007jK-Md; Thu, 11 May 2023 13:58:43 +0200
-Message-ID: <bec024d5-4088-00ae-f7b5-7188868b1707@leemhuis.info>
-Date: Thu, 11 May 2023 13:58:43 +0200
+	id 1px64B-0006xe-FC; Thu, 11 May 2023 15:10:43 +0200
+Message-ID: <110bcda8-f832-c858-3b61-5c0c7cf9e058@leemhuis.info>
+Date: Thu, 11 May 2023 15:10:42 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,138 +16,81 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.10.0
-Subject: Re: [regression] Since kernel 6.3.1 logitech unify receiver not
- working properly
+Subject: Re: 6.4-rc1 xfstests-bld adv regressions
 Content-Language: en-US, de-DE
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: =?UTF-8?Q?Filipe_La=c3=adns?= <lains@riseup.net>,
- Bastien Nocera <hadess@hadess.net>, Jiri Kosina <jikos@kernel.org>,
- Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc: "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
- LKML <linux-kernel@vger.kernel.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>, guy.b@bluewin.ch
+To: Eric Whitney <enwlinux@gmail.com>, jack@suse.cz
+Cc: linux-ext4@vger.kernel.org,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <ZFqO3xVnmhL7zv1x@debian-BULLSEYE-live-builder-AMD64>
+From: "Linux regression tracking #adding (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-References: <9b987585-0834-bb8c-3414-283c29f3f2ab@leemhuis.info>
-In-Reply-To: <9b987585-0834-bb8c-3414-283c29f3f2ab@leemhuis.info>
+In-Reply-To: <ZFqO3xVnmhL7zv1x@debian-BULLSEYE-live-builder-AMD64>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1683806336;7ee9f58d;
-X-HE-SMSGID: 1px4wV-0007jK-Md
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1683810646;6ac8c3c1;
+X-HE-SMSGID: 1px64B-0006xe-FC
 
-Hi, Thorsten here, the Linux kernel's regression tracker.
+[CCing the regression list, as it should be in the loop for regressions:
+https://docs.kernel.org/admin-guide/reporting-regressions.html]
 
-On 08.05.23 11:55, Linux regression tracking (Thorsten Leemhuis) wrote:
-> Hi, Thorsten here, the Linux kernel's regression tracker.
-> 
-> I noticed a regression report in bugzilla.kernel.org. As many (most?)
-> kernel developers don't keep an eye on it, I decided to forward it by mail.
-> 
-> Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=217412 :
+[TLDR: I'm adding this report to the list of tracked Linux kernel
+regressions; the text you find below is based on a few templates
+paragraphs you might have encountered already in similar form.
+See link in footer if these mails annoy you.]
 
-TWIMC: a few other users (three or four iirc) showed up in that ticket
-and reported problems with the receiver, albeit the symptoms are not
-exactly the same for all of them, so there might be more than one problem.
+On 09.05.23 20:20, Eric Whitney wrote:
+> 
+> I'm seeing two test regressions on 6.4-rc1 while running the adv test case
+> with kvm-xfstests.  Both tests fail with 100% reliability in 100 trial runs,
+> and the failures appear to depend solely upon the fast commit mount option.
+> 
+> The first is generic/065, where the relevant info from 065.full is:
+> 
+> _check_generic_filesystem: filesystem on /dev/vdc is inconsistent
+> *** fsck.ext4 output ***
+> fsck from util-linux 2.36.1
+> e2fsck 1.47.0 (5-Feb-2023)
+> Pass 1: Checking inodes, blocks, and sizes
+> Pass 2: Checking directory structure
+> Pass 3: Checking directory connectivity
+> Pass 4: Checking reference counts
+> Pass 5: Checking group summary information
+> Directories count wrong for group #16 (4294967293, counted=0).
+> 
+> 
+> The second is generic/535, where the test output is:
+> 
+>      QA output created by 535
+>      Silence is golden
+>     +Before: 755
+>     +After : 777
+> 
+> Both test failures bisect to:  e360c6ed7274 ("ext4: Drop special handling of
+> journalled data from ext4_sync_file()").  Reverting this patch eliminates the
+> test failures.  So, I thought I'd bring these to your attention.
 
-I'll try to motivate the affected users to perform a bisection. But
-would be great if those with more knowledge about this code could
-briefly look into the ticket, maybe the details the users shared allows
-one of you to guess what causes this.
+Thanks for the report. To be sure the issue doesn't fall through the
+cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
+tracking bot:
 
-Ciao, Thorsten
+#regzbot ^introduced e360c6ed7274
+#regzbot title ext4: adv test cases of kvm-xfstests fail
+#regzbot ignore-activity
 
->>  guy.b 2023-05-07 07:37:34 UTC
->>
->> Hello,
->>
->> Since kernel 6.3.1 the boot process hangs (~ 5 seconds) by uevent triggering with the following errors :
->>
->> logitech-hidpp-device 0003:046D:405E.0004: hidpp_devicenametype_get_count: received protocol error 0x07
->>
->>
->> The logs about logitech input:
->>
->> usb 1-8: new full-speed USB device number 2 using xhci_hcd
->> mai 06 11:54:24 Cockpit kernel: usb 1-8: New USB device found, idVendor=046d, idProduct=c52b, bcdDevice=24.10
->> mai 06 11:54:24 Cockpit kernel: usb 1-8: New USB device strings: Mfr=1, Product=2, SerialNumber=0
->> mai 06 11:54:24 Cockpit kernel: usb 1-8: Product: USB Receiver
->> mai 06 11:54:24 Cockpit kernel: usb 1-8: Manufacturer: Logitech
->> mai 06 11:54:24 Cockpit kernel: input: Logitech USB Receiver as /devices/pci0000:00/0000:00:14.0/usb1/1-8/1-8:1.0/0003:046D:C52B.0001/input/input4
->> mai 06 11:54:24 Cockpit kernel: hid-generic 0003:046D:C52B.0001: input,hidraw0: USB HID v1.11 Keyboard [Logitech USB Receiver] on usb-0000:00:14.0-8/input0
->> mai 06 11:54:24 Cockpit kernel: input: Logitech USB Receiver Mouse as /devices/pci0000:00/0000:00:14.0/usb1/1-8/1-8:1.1/0003:046D:C52B.0002/input/input5
->> mai 06 11:54:24 Cockpit kernel: input: Logitech USB Receiver Consumer Control as /devices/pci0000:00/0000:00:14.0/usb1/1-8/1-8:1.1/0003:046D:C52B.0002/input/input6
->> mai 06 11:54:24 Cockpit kernel: input: Logitech USB Receiver System Control as /devices/pci0000:00/0000:00:14.0/usb1/1-8/1-8:1.1/0003:046D:C52B.0002/input/input7
->> mai 06 11:54:24 Cockpit kernel: hid-generic 0003:046D:C52B.0002: input,hiddev96,hidraw1: USB HID v1.11 Mouse [Logitech USB Receiver] on usb-0000:00:14.0-8/input1
->> mai 06 11:54:24 Cockpit kernel: hid-generic 0003:046D:C52B.0003: hiddev97,hidraw2: USB HID v1.11 Device [Logitech USB Receiver] on usb-0000:00:14.0-8/input2
->> mai 06 11:54:24 Cockpit kernel: usbcore: registered new interface driver usbhid
->> mai 06 11:54:24 Cockpit kernel: usbhid: USB HID core driver
->> mai 06 11:54:24 Cockpit kernel: logitech-djreceiver 0003:046D:C52B.0003: hiddev96,hidraw0: USB HID v1.11 Device [Logitech USB Receiver] on usb-0000:00:14.0-8/input2
->> mai 06 11:54:24 Cockpit kernel: input: Logitech Wireless Device PID:405e Keyboard as /devices/pci0000:00/0000:00:14.0/usb1/1-8/1-8:1.2/0003:046D:C52B.0003/0003:046D:405E.0004/input/input9
->> mai 06 11:54:24 Cockpit kernel: input: Logitech Wireless Device PID:405e Mouse as /devices/pci0000:00/0000:00:14.0/usb1/1-8/1-8:1.2/0003:046D:C52B.0003/0003:046D:405E.0004/input/input10
->> mai 06 11:54:24 Cockpit kernel: hid-generic 0003:046D:405E.0004: input,hidraw1: USB HID v1.11 Keyboard [Logitech Wireless Device PID:405e] on usb-0000:00:14.0-8/input2:1
->> mai 06 11:54:24 Cockpit kernel: input: Logitech Wireless Device PID:2010 Keyboard as /devices/pci0000:00/0000:00:14.0/usb1/1-8/1-8:1.2/0003:046D:C52B.0003/0003:046D:2010.0005/input/input14
->> mai 06 11:54:24 Cockpit kernel: hid-generic 0003:046D:2010.0005: input,hidraw2: USB HID v1.11 Keyboard [Logitech Wireless Device PID:2010] on usb-0000:00:14.0-8/input2:2
->> mai 06 11:54:24 Cockpit kernel: logitech-hidpp-device 0003:046D:405E.0004: HID++ 4.5 device connected.
->> mai 06 11:54:24 Cockpit kernel: logitech-hidpp-device 0003:046D:405E.0004: hidpp_devicenametype_get_count: received protocol error 0x07
->> mai 06 11:54:24 Cockpit kernel: input: Logitech Wireless Device PID:405e as /devices/pci0000:00/0000:00:14.0/usb1/1-8/1-8:1.2/0003:046D:C52B.0003/0003:046D:405E.0004/input/input18
->> mai 06 11:54:24 Cockpit kernel: logitech-hidpp-device 0003:046D:405E.0004: input,hidraw1: USB HID v1.11 Keyboard [Logitech Wireless Device PID:405e] on usb-0000:00:14.0-8/input2:1
->> mai 06 11:54:24 Cockpit kernel: input: Logitech Wireless Device PID:2010 as /devices/pci0000:00/0000:00:14.0/usb1/1-8/1-8:1.2/0003:046D:C52B.0003/0003:046D:2010.0005/input/input19
->> mai 06 11:54:24 Cockpit kernel: logitech-hidpp-device 0003:046D:2010.0005: input,hidraw2: USB HID v1.11 Keyboard [Logitech Wireless Device PID:2010] on usb-0000:00:14.0-8/input2:2
->>
->> Next, once booted and remove the unify receiver and plug it again there is a massive lag (~ 15 seconds) before that the receiver get ready for the mouse and keyboard to be functional with following errors :
->>
->> kernel: logitech-hidpp-device 0003:046D:405E.0022: hidpp_devicenametype_get_count: received protocol error 0x07
->> kernel: logitech-hidpp-device 0003:046D:405E.0023: Couldn't get wheel multiplier (error -110)
->>
->> Unify receiver with K800 keyboard and M720 Triathlon mouse paired.
->>
->> This happens on my desktop computer but not on my laptop with a unify receiver and a marathon M705 mouse.
->>
->> Both computer are on Archlinux and up to date.
->>
->> On the desktop the boot is fine without the unify receiver.
->>
->> Let me know if you need more info.
->>
->> Thank you.
-> 
-> 
-> See the ticket for more details.
-> 
-> Note, there are two users affected by this (see Comment 5 for the
-> second), but you have to use bugzilla to reach the second reporter, as I
-> sadly[1] can not simply CCed them in mails like this (the initial
-> reporter gave permission).
-> 
-> 
-> [TLDR for the rest of this mail: I'm adding this report to the list of
-> tracked Linux kernel regressions; the text you find below is based on a
-> few templates paragraphs you might have encountered already in similar
-> form.]
-> 
-> BTW, let me use this mail to also add the report to the list of tracked
-> regressions to ensure it's doesn't fall through the cracks:
-> 
-> #regzbot introduced: v6.2..v6.3
-> https://bugzilla.kernel.org/show_bug.cgi?id=217412
-> #regzbot title: input: hid: logitech unify receiver not working properly
-> #regzbot ignore-activity
-> 
-> This isn't a regression? This issue or a fix for it are already
-> discussed somewhere else? It was fixed already? You want to clarify when
-> the regression started to happen? Or point out I got the title or
-> something else totally wrong? Then just reply and tell me -- ideally
-> while also telling regzbot about it, as explained by the page listed in
-> the footer of this mail.
-> 
-> Developers: When fixing the issue, remember to add 'Link:' tags pointing
-> to the report (e.g. the buzgzilla ticket and maybe this mail as well, if
-> this thread sees some discussion). See page linked in footer for details.
-> 
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-> --
-> Everything you wanna know about Linux kernel regression tracking:
-> https://linux-regtracking.leemhuis.info/about/#tldr
-> If I did something stupid, please tell me, as explained on that page.
-> 
-> [1] because bugzilla.kernel.org tells users upon registration their
-> "email address will never be displayed to logged out users"
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply and tell me -- ideally
+while also telling regzbot about it, as explained by the page listed in
+the footer of this mail.
+
+Developers: When fixing the issue, remember to add 'Link:' tags pointing
+to the report (the parent of this mail). See page linked in footer for
+details.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+That page also explains what to do if mails like this annoy you.
