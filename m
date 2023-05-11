@@ -1,36 +1,40 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC3E9206B0
-	for <regressions@lists.linux.dev>; Thu, 11 May 2023 20:09:11 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pxCb5-0000QH-Hy; Thu, 11 May 2023 22:09:07 +0200
-Message-ID: <c45f3a39-2103-6beb-ae6d-5bdf070854e0@leemhuis.info>
-Date: Thu, 11 May 2023 22:09:06 +0200
-Precedence: bulk
-X-Mailing-List: regressions@lists.linux.dev
-List-Id: <regressions.lists.linux.dev>
-List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
-List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Content-Language: en-US, de-DE
-To: "Limonciello, Mario" <Mario.Limonciello@amd.com>,
- Sasha Levin <sashal@kernel.org>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
- Bjorn Helgaas <bhelgaas@google.com>, Hans de Goede <hdegoede@redhat.com>,
- "S-k, Shyam-sundar" <Shyam-sundar.S-k@amd.com>,
- "Goswami, Sanket" <Sanket.Goswami@amd.com>,
- "Gong, Richard" <Richard.Gong@amd.com>, Thomas Gleixner
- <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Dave Hansen <dave.hansen@linux.intel.com>, "x86@kernel.org"
- <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
- Borislav Petkov <bp@alien8.de>, Guenter Roeck <linux@roeck-us.net>,
- "stable@vger.kernel.org" <stable@vger.kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DBE72918
+	for <regressions@lists.linux.dev>; Thu, 11 May 2023 21:50:51 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4118C433EF;
+	Thu, 11 May 2023 21:50:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1683841851;
+	bh=K4WgEsYyO81HfMwY9MP7UqaYLOk4som61w9X0fncpTA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=D1Ma5etn8qiIyII92l350T7Kxgywc1UZMcdJDZ2SWzXv7qCxL0vkrwEik9Ckw0b3R
+	 y4RzWkniCey3x25t9y8sL53vQsyQOPgoZGp6qcUyM5RzCDeIh3JuuJAf260dmjuiRK
+	 5ClqUIV2tXrig9u8DpnkR7LofOh5EleiEC+9GVo4dzp5MIdCJLMkGDePR4uKax8IZQ
+	 6SyelbV1jhY8YtiB2Nl1zV6K057I6tPJlkCleXot1Z9gIwrC7nfnWqiOiVnYs8T4bP
+	 mTL9PAA3GFA2MeA04BmoIOiN6tcWVLmJCGQb8V+wIEDEFk/OD2FOUDoXes4W31fHgZ
+	 Op9Zwe0tIvwwg==
+Date: Thu, 11 May 2023 17:50:46 -0400
+From: Sasha Levin <sashal@kernel.org>
+To: "Limonciello, Mario" <Mario.Limonciello@amd.com>
+Cc: Thorsten Leemhuis <linux@leemhuis.info>,
+	Linux regressions mailing list <regressions@lists.linux.dev>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	"S-k, Shyam-sundar" <Shyam-sundar.S-k@amd.com>,
+	"Goswami, Sanket" <Sanket.Goswami@amd.com>,
+	"Gong, Richard" <Richard.Gong@amd.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"x86@kernel.org" <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	Borislav Petkov <bp@alien8.de>, Guenter Roeck <linux@roeck-us.net>,
+	"stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCH 1/2] amd_nb: Add PCI ID for family 19h model 78h
+Message-ID: <ZF1jNnETIZD97XmQ@sashalap>
 References: <20230427053338.16653-1-mario.limonciello@amd.com>
  <20230427053338.16653-2-mario.limonciello@amd.com>
  <7b74c389-97b7-4f56-851b-6ce17950a4d1@roeck-us.net>
@@ -40,22 +44,24 @@ References: <20230427053338.16653-1-mario.limonciello@amd.com>
  <a8b29619-f1da-4cb9-a5bd-a396b52e159f@roeck-us.net>
  <20230508134414.GCZFj8rieNwF1AOerB@fat_crate.local>
  <MN0PR12MB610132F2277B0F1DB1039A15E2749@MN0PR12MB6101.namprd12.prod.outlook.com>
-From: Thorsten Leemhuis <linux@leemhuis.info>
-Subject: Re: [PATCH 1/2] amd_nb: Add PCI ID for family 19h model 78h
+Precedence: bulk
+X-Mailing-List: regressions@lists.linux.dev
+List-Id: <regressions.lists.linux.dev>
+List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
+List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
 In-Reply-To: <MN0PR12MB610132F2277B0F1DB1039A15E2749@MN0PR12MB6101.namprd12.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1683835752;3d925a0e;
-X-HE-SMSGID: 1pxCb5-0000QH-Hy
 
-On 11.05.23 21:51, Limonciello, Mario wrote:
-> [AMD Official Use Only - General]
-> 
-> +stable, Sasha
-> 
->>> Together with this patch there are now at least two regressions if
->>> -rc1 whch could have been avoided and may impact testability on
->>> affected systems.
+On Thu, May 11, 2023 at 07:51:42PM +0000, Limonciello, Mario wrote:
+>[AMD Official Use Only - General]
+>
+>+stable, Sasha
+>
+>> > Together with this patch there are now at least two regressions if
+>> > -rc1 whch could have been avoided and may impact testability on
+>> > affected systems.
 >>
 >> Are you saying that this patch which fixes s2idle on some random box
 >> should've gone to Linus *immediately*?
@@ -69,31 +75,18 @@ On 11.05.23 21:51, Limonciello, Mario wrote:
 >> - whatever that means - then sure but not all of them are such.
 >>
 >> --
-> 
-> Unfortunately, it looks like the broken commit got backported into 6.1.28,
-> but the fix still isn't in Linus' tree.
-> 
-> Sasha,
-> 
-> Can you please pick up
-> https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/commit/?h=x86/urgent&id=23a5b8bb022c1e071ca91b1a9c10f0ad6a0966e9
-> for 6.1.29 to fix the regression?
+>
+>Unfortunately, it looks like the broken commit got backported into 6.1.28,
+>but the fix still isn't in Linus' tree.
+>
+>Sasha,
+>
+>Can you please pick up
+>https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/commit/?h=x86/urgent&id=23a5b8bb022c1e071ca91b1a9c10f0ad6a0966e9
+>for 6.1.29 to fix the regression?
 
-FWIW, the stable team afaics usually does not fix anything in stable
-trees before it's fixed in mainline. IOW: that fix now quickly needs to
-go to Linus to get it quickly fixed in 6.1.y.
+Happily, once it lands upstream :)
 
-Side note: I'll soon post a rewritten section of 'Prioritize work on
-fixing regressions' which is part of
-Documentation/process/handling-regressions.rst. It among others will
-cover this case:
-
-```
-* Whenever you want to swiftly resolve a regression that recently also
-made it into a proper mainline, stable, or longterm release, fix it
-quickly in mainline; when appropriate thus involve Linus to fast-track
-the fix. That's because the stable team normally does neither revert nor
-fix any changes that cause a regression in mainline, too.
-```
-
-Ciao, Thorsten
+-- 
+Thanks,
+Sasha
