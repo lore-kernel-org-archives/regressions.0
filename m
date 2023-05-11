@@ -1,195 +1,143 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F94481F
-	for <regressions@lists.linux.dev>; Thu, 11 May 2023 07:12:42 +0000 (UTC)
-Received: from pendragon.ideasonboard.com (softbank126090219015.bbtec.net [126.90.219.15])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id EBCEB2D8;
-	Thu, 11 May 2023 09:01:51 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1683788512;
-	bh=A53poAkEzuZFNXT7uUwb/MQQ1q82De35S8dPpNeNMFw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uYvBVRioIKXTcd3whT3QMKDfyN2fBBN0M2th3KQTSInnTx02R+pheW+HwOUQSwbql
-	 sXUz/Vj5x3Uuvr2LT9ycDtMI6kWs/Ux49DW2ZsssugCBGjDriS065qaEBfr8I/TGNW
-	 WWlDl1vgQAyZUr4G0r3C2m4jBIwHoRmH11Q7PHZo=
-Date: Thu, 11 May 2023 10:01:56 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>,
-	Linux regressions mailing list <regressions@lists.linux.dev>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	"Sudip Mukherjee (Codethink)" <sudipm.mukherjee@gmail.com>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	NXP Linux Team <linux-imx@nxp.com>, linux-media@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>
-Subject: Re: mainline build failure due to cf21f328fcaf ("media: nxp: Add
- i.MX8 ISI driver")
-Message-ID: <20230511070156.GQ11711@pendragon.ideasonboard.com>
-References: <ZElaVmxDsOkZj2DK@debian>
- <51cff63a-3a04-acf5-8264-bb19b0bee8a3@leemhuis.info>
- <CAHk-=wgzU8_dGn0Yg+DyX7ammTkDUCyEJ4C=NvnHRhxKWC7Wpw@mail.gmail.com>
- <20230510090527.25e26127@sal.lan>
- <742856c0-ab93-1a6c-4fc8-9451c0908930@leemhuis.info>
- <20230511074606.0349fc69@sal.lan>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FFA71B8E0
+	for <regressions@lists.linux.dev>; Thu, 11 May 2023 08:06:38 +0000 (UTC)
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1adc913094aso3449875ad.0
+        for <regressions@lists.linux.dev>; Thu, 11 May 2023 01:06:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1683792397; x=1686384397;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=A7QbPnBDL1WlC0RtCpxIH+4dZbN5BQbuvyxRLAdP9w4=;
+        b=TrRGOX+L2x0710EGYTBWrtlPClFSWOELaPCGC2vhtalQnIRtFtvo81NA8mV2DndSq8
+         3iE3P+eMA+0LCRJlsz2dWx8ApH3/1NatXMyOkQ2FdOn53ncaEpa6KrioKX2zVMFuYYW6
+         2RWVJUEtjMN2W+J9zKVYxeK7bm/ecYyMuNeu+0684Prb+iqYa/xfZ5GI9HwOp38jRM9B
+         DqNSLiWhqOAkHCJqG/yLJzJ5S9sH+NJhx7HPzgW5qb8xxCJ4RKLi1hUh2ETuaYWLH+vJ
+         nFTSjwJe6UUUMt7dlZFdaBWukWDfLfblYN+S6tsFtsPmX3wYggB85IkSQQJPQEHUCOOy
+         kNGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683792397; x=1686384397;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=A7QbPnBDL1WlC0RtCpxIH+4dZbN5BQbuvyxRLAdP9w4=;
+        b=GyEbbPXTrHHFO8KrqLsZ5QcfB4YfgWu784N5p8ILIsVp7M197PnH6A19gF5+txeOQo
+         10S3T+ObtQcm20Gr7BX8sUqVDi6wmYSOYMec4VNztquqGiUzxUBUy9Rp0GGMBVXGppcP
+         4ENRVIhHgL5Qft47OfmX/rZoCiZzJisSmq75MWTGAe0fp0VhJ51DwryUHL+6/X5jjwuT
+         Msef+/W0tKnTl4ZkWm5gCO3lz2GCo2iTL917LglR1aGJH8UiTErEvYNlA5clZqa7y7v4
+         eFQxgGcrIngKK51XHfyTDbC1XCeJo68wOR8Solpybn2MMHOHs6lm0OyfmAR4ylpzv10g
+         eccQ==
+X-Gm-Message-State: AC+VfDwP5QAUI/DKErHhyM4Ko6DXzF7jXi1iRvVymnTr/XBdSgTgIU8f
+	jTZFX2DS1lwtYJr+Y25rWz3osr6gEXA=
+X-Google-Smtp-Source: ACHHUZ7ULQYFgsqX1Oj0GVr3eEYZZUmzujxkY1jm2RQrpViuEZWmkaaytm5Mkf4lELo/fqD5/gEHTg==
+X-Received: by 2002:a17:902:e806:b0:1ac:727b:3a60 with SMTP id u6-20020a170902e80600b001ac727b3a60mr16266666plg.4.1683792397296;
+        Thu, 11 May 2023 01:06:37 -0700 (PDT)
+Received: from [192.168.43.80] (subs10b-223-255-225-226.three.co.id. [223.255.225.226])
+        by smtp.gmail.com with ESMTPSA id h5-20020a170902748500b001ac2a73dbf2sm5187538pll.291.2023.05.11.01.06.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 11 May 2023 01:06:36 -0700 (PDT)
+Message-ID: <588c1a66-9976-c96f-dcdd-beec8b7410f0@gmail.com>
+Date: Thu, 11 May 2023 15:06:29 +0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230511074606.0349fc69@sal.lan>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Content-Language: en-US
+To: Linux Regressions <regressions@lists.linux.dev>,
+ Linux for PowerPC <linuxppc-dev@lists.ozlabs.org>,
+ Linux AMDGPU <amd-gfx@lists.freedesktop.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>,
+ Alex Deucher <alexander.deucher@amd.com>, darkbasic@linuxsystems.it
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+Subject: Fwd: Linux 6.3.1 + AMD RX 570 on ppc64le 4K: Kernel attempted to read
+ user page (1128) - exploit attempt? (uid: 0)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, May 11, 2023 at 07:46:06AM +0100, Mauro Carvalho Chehab wrote:
-> Em Wed, 10 May 2023 11:02:57 +0200 "Linux regression tracking (Thorsten Leemhuis)" escreveu:
-> > On 10.05.23 10:05, Mauro Carvalho Chehab wrote:
-> > > Em Mon, 8 May 2023 09:27:28 -0700
-> > > Linus Torvalds <torvalds@linux-foundation.org> escreveu:  
-> > >> On Mon, May 8, 2023 at 3:55 AM Linux regression tracking #adding
-> > >> (Thorsten Leemhuis) <regressions@leemhuis.info> wrote:  
-> > >>>
-> > >>> Thanks for the report. The fixes (see the mail from Laurent) apparently
-> > >>> are still not mainlined (or am I missing something?), so let me add this
-> > >>> report to the tracking to ensure this is not forgotten:    
-> > >>
-> > >> Gaah. I was intending to apply the patch directly before rc1, but then
-> > >> I forgot about this issue.
-> > >>
-> > >> Mauro: I'm currently really *really* fed up with the media tree. This
-> > >> exact same thing happened last merge window, where the media tree
-> > >> caused pointless build errors, and it took way too long to get the
-> > >> fixes the proper ways.  
-> > > [...]
-> > >
-> > > In the specific case of this fixup patch, I didn't identify it as a build
-> > > issue, so it followed the usual workflow. We have a huge number of patches
-> > > for media, and it usually takes some time to handle all of them. This one
-> > > just followed the normal flow, as it didn't break Jenkins builds nor the
-> > > subject mentioned anything about build breakage.  
-> > 
-> > Makes me wonder again if we should start adding
-> > 
-> >  CC: regressions@lists.linux.dev
-> > 
-> > to any patches that fix regressions, that way maintainers and reviewers
-> > would have something to filter for -- and I would become aware of all
-> > regression fixes in the work, too.
-> 
-> Having some way that could be parsed by e-mail filters would be
-> nice. 
+Hi,
 
-The presence of a Fixes: tag is already a strong indication that the
-patch should be prioritized. Looking at the last 10 kernel releases,
-here's the number of commits with a Fixes: tag in drivers/media/:
+I notice a regression report on bugzilla ([1]). As many developers
+don't keep an eye on it, I decide to forward it by email.
 
-v5.14 - v5.15:    19
-v5.15 - v5.16:    36
-v5.16 - v5.17:    50
-v5.17 - v5.18:    49
-v5.18 - v5.19:    25
-v5.19 - v6.0:     44
-v6.0  - v6.1:     35
-v6.1  - v6.2:     72
-v6.2  - v6.3:     39
-v6.3  - v6.4-rc1: 39
+Quoting from it:
 
-Some are likely not regressions and wouldn't need to be treated with the
-highest priority, but keeping an eye on patches with a Fixes: tag seems
-doable.
+>  darkbasic 2023-05-10 13:36:37 UTC
+> 
+> I'm using Gentoo Linux on a Raptor CS Talos 2 ppc64le, GPU is an AMD RX 570. So far the past dozen of kernels (up to 6.2.14) worked flawlessly, but with 6.3.1 I don't get any video output and I get the following in journalctl:
+> 
+> May 10 15:09:01 talos2 kernel: Kernel attempted to read user page (1128) - exploit attempt? (uid: 0)
+> May 10 15:09:01 talos2 kernel: BUG: Unable to handle kernel data access on read at 0x00001128
+> May 10 15:09:01 talos2 kernel: Faulting instruction address: 0xc00800000d1a805c
+> May 10 15:09:01 talos2 kernel: Oops: Kernel access of bad area, sig: 11 [#1]
+> May 10 15:09:01 talos2 kernel: LE PAGE_SIZE=4K MMU=Radix SMP NR_CPUS=512 NUMA PowerNV
+> May 10 15:09:01 talos2 kernel: Modules linked in: rfkill(+) 8021q garp mrp stp llc binfmt_misc amdgpu uvcvideo uvc videobuf2_vmalloc videobuf2_memops gpu_sched snd_hda_codec_hdmi i2c_algo_bit at24(+) videobuf2_v4l2 drm_ttm_helper regmap_i2c videobuf2_common ttm snd_usb_audio drm_di>
+> May 10 15:09:01 talos2 kernel: CPU: 0 PID: 188 Comm: kworker/0:3 Not tainted 6.3.1-gentoo-dist #1
+> May 10 15:09:01 talos2 kernel: Hardware name: T2P9S01 REV 1.01 POWER9 0x4e1202 opal:skiboot-9858186 PowerNV
+> May 10 15:09:01 talos2 kernel: Workqueue: events_long drm_dp_check_and_send_link_address [drm_display_helper]
+> May 10 15:09:01 talos2 kernel: NIP:  c00800000d1a805c LR: c00800000d1a8018 CTR: c000000000c87900
+> May 10 15:09:01 talos2 kernel: REGS: c00000000beb3370 TRAP: 0300   Not tainted  (6.3.1-gentoo-dist)
+> May 10 15:09:01 talos2 kernel: MSR:  900000000280b033 <SF,HV,VEC,VSX,EE,FP,ME,IR,DR,RI,LE>  CR: 88048223  XER: 0000005a
+> May 10 15:09:01 talos2 kernel: CFAR: c000000000c87980 DAR: 0000000000001128 DSISR: 40000000 IRQMASK: 0 
+>                                GPR00: c00800000d1a8018 c00000000beb3610 c00800000d690f00 0000000000000000 
+>                                GPR04: 0000000000000002 c00800000d6297c0 0000000000000000 c00000002a00b740 
+>                                GPR08: 0000000000000000 0000000000001124 0000000000000000 c00800000d431560 
+>                                GPR12: c000000000c87900 c000000002a6b000 c000000000170ad8 c00000001a460310 
+>                                GPR16: 0000000000000045 c000000022858388 c000000026000340 0000000000000001 
+>                                GPR20: 0000000000000000 0000000000000001 c0000000260001a0 0000000000004000 
+>                                GPR24: 0000000000004000 c000000026000010 c0000000228580b8 fffffffffffffffd 
+>                                GPR28: 0000000000000000 c0000000228580a0 c000000022856000 c000000022858000 
+> May 10 15:09:01 talos2 kernel: NIP [c00800000d1a805c] is_synaptics_cascaded_panamera+0x244/0x600 [amdgpu]
+> May 10 15:09:01 talos2 kernel: LR [c00800000d1a8018] is_synaptics_cascaded_panamera+0x200/0x600 [amdgpu]
+> May 10 15:09:01 talos2 kernel: Call Trace:
+> May 10 15:09:01 talos2 kernel: [c00000000beb3610] [c00800000d1a8018] is_synaptics_cascaded_panamera+0x200/0x600 [amdgpu] (unreliable)
+> May 10 15:09:01 talos2 kernel: [c00000000beb36d0] [c00800000b7c2b18] drm_helper_probe_single_connector_modes+0x230/0x698 [drm_kms_helper]
+> May 10 15:09:01 talos2 kernel: [c00000000beb3810] [c000000000c57174] drm_client_modeset_probe+0x2b4/0x16c0
+> May 10 15:09:01 talos2 kernel: [c00000000beb3a10] [c00800000b7c7a30] __drm_fb_helper_initial_config_and_unlock+0x68/0x640 [drm_kms_helper]
+> May 10 15:09:01 talos2 kernel: [c00000000beb3af0] [c00800000b7c5b08] drm_fbdev_client_hotplug+0x40/0x1d0 [drm_kms_helper]
+> May 10 15:09:01 talos2 kernel: [c00000000beb3b70] [c000000000c55480] drm_client_dev_hotplug+0x120/0x1b0
+> May 10 15:09:01 talos2 kernel: [c00000000beb3c00] [c00800000b7c1130] drm_kms_helper_hotplug_event+0x58/0x80 [drm_kms_helper]
+> May 10 15:09:01 talos2 kernel: [c00000000beb3c30] [c00800000b80b298] drm_dp_check_and_send_link_address+0x330/0x3a0 [drm_display_helper]
+> May 10 15:09:01 talos2 kernel: [c00000000beb3cd0] [c000000000162d84] process_one_work+0x2f4/0x580
+> May 10 15:09:01 talos2 kernel: [c00000000beb3d70] [c0000000001630b8] worker_thread+0xa8/0x600
+> May 10 15:09:01 talos2 kernel: [c00000000beb3e00] [c000000000170bf4] kthread+0x124/0x130
+> May 10 15:09:01 talos2 kernel: [c00000000beb3e50] [c00000000000dd14] ret_from_kernel_thread+0x5c/0x64
+> May 10 15:09:01 talos2 kernel: --- interrupt: 0 at 0x0
+> May 10 15:09:01 talos2 kernel: NIP:  0000000000000000 LR: 0000000000000000 CTR: 0000000000000000
+> May 10 15:09:01 talos2 kernel: REGS: c00000000beb3e80 TRAP: 0000   Not tainted  (6.3.1-gentoo-dist)
+> May 10 15:09:01 talos2 kernel: MSR:  0000000000000000 <>  CR: 00000000  XER: 00000000
+> May 10 15:09:01 talos2 kernel: CFAR: 0000000000000000 IRQMASK: 0 
+>                                GPR00: 0000000000000000 c00000000beb4000 0000000000000000 0000000000000000 
+>                                GPR04: 0000000000000000 0000000000000000 0000000000000000 0000000000000000 
+>                                GPR08: 0000000000000000 0000000000000000 0000000000000000 0000000000000000 
+>                                GPR12: 0000000000000000 0000000000000000 c000000000170ad8 c00000000a8fb240 
+>                                GPR16: 0000000000000000 0000000000000000 0000000000000000 0000000000000000 
+>                                GPR20: 0000000000000000 0000000000000000 0000000000000000 0000000000000000 
+>                                GPR24: 0000000000000000 0000000000000000 0000000000000000 0000000000000000 
+>                                GPR28: 0000000000000000 0000000000000000 0000000000000000 0000000000000000 
+> May 10 15:09:01 talos2 kernel: NIP [0000000000000000] 0x0
+> May 10 15:09:01 talos2 kernel: LR [0000000000000000] 0x0
+> May 10 15:09:01 talos2 kernel: --- interrupt: 0
+> May 10 15:09:01 talos2 kernel: Code: 41820094 e91f0568 e95f0000 813f0088 81080030 3d4a0001 39290444 e94a7ca0 79291764 1d0811f0 7d4a4214 7d2a4a14 <81290004> 91270074 813f0088 39290424 
+> May 10 15:09:01 talos2 kernel: ---[ end trace 0000000000000000 ]---
+> May 10 15:09:01 talos2 kernel: at24 4-0054: supply vcc not found, using dummy regulator
 
-There's also the issue of regression fixes missing a Fixes: tag, but I
-doubt those would get CC: regressions@lists.linux.dev, so from a mail
-filtering point of view, that wouldn't help.
+See the report for details.
 
-> > Ciao, Thorsten
-> > 
-> > P.S.: BTW, let me tell regzbot that Linus merged the fix for the build
-> > failure.
-> > 
-> > #regzbot fix: ba0ad6ed89f
-> > 
-> > FWIW, the one for the gcc warnings[1] Laurent mentioned elsewhere in
-> > this thread is not merged yet afaics.
-> > 
-> > [1] https://lore.kernel.org/all/20230418092007.2902984-1-arnd@kernel.org/
-> 
-> Just sent a pull request.
-> 
-> Btw, I did some changes at linux-media Jenkins instance to help early
-> track some extra build issues. They're all against
-> https://git.linuxtv.org/media_stage.git/, which is the tree where we place
-> media patches that are ready. We move them later, after a couple of days
-> to https://git.linuxtv.org/media_tree.git/. So, if something bad happens,
-> we have a chance to fix before setting them into a stone. With such
-> changes, we now have:
-> 
-> 1. https://builder.linuxtv.org/job/patchwork/
-> 
->    This is a pre-merge test. It tests patch per patch the PRs with patch
->    sets ready to be merged, with W=1, allyesconfig/almodconfig[1] on x86_64. 
->    Builds drivers/media and drivers/staging/media. 
->    This is there already for a long time;
-> 
-> 2. https://builder.linuxtv.org/job/media_stage_clang/
-> 
->    Checks build with clang-12 on x86_64 with W=1. Builds drivers/media
->    and drivers/staging/media with allyesconfig[1].
-> 
->    It was building with WERROR disabled, as some core macros were
->    producing errors at the time I created it (and for a while).
->    It was modified to enable WERROR as well. 
-> 
-> 3. https://builder.linuxtv.org/job/media_stage_gcc-pipeline/ 
-> 
->    It replaces another job that was just doing builds for x86_64
->    with W=1. Builds drivers/media and drivers/staging/media with
->    different configurations[1]:
->       x86_64: allyesconfig, allmodconfig, almodconfig with PM disabled;
->       arm32: allyesconfig
->       arm64: allyesconfig
-> 
-> 4. https://builder.linuxtv.org/job/linux-media/
-> 
->    Does full builds with different configurations[1]:
->       x86_64: allyesconfig, allmodconfig, almodconfig with PM disabled;
->       arm32: allyesconfig
->       arm64: allyesconfig
->       docs: htmldocs and pdfdocs
-> 
-> I hope this will help avoiding future build regressions from our side.
-> Feel free to suggest a couple of other configs that we might add to
-> jobs (3) and (4).
-> 
-> I'm still adjusting the pipeline for (4), but currently, it is failing
-> on an issue that seems unrelated with the media subsystem with gcc 10.2.1:
-> 
-> 	  AR      drivers/built-in.a
-> 	  AR      built-in.a
-> 	  AR      vmlinux.a
-> 	  LD      vmlinux.o
-> 	vmlinux.o: warning: objtool: vmx_vcpu_enter_exit+0x2d8: call to vmread_error_trampoline() leaves .noinstr.text section
-> 	vmlinux.o: warning: objtool: lkdtm_UNSET_SMEP+0xe1: relocation to !ENDBR: native_write_cr4+0x40
->       
-> Is this a known regression? The media-stage tree is on the top of
-> Kernel 6.4-rc1.
-> 
-> Regards,
-> Mauro
-> 
-> -
-> 
-> [1] On all builds, the jobs disable some symbols that should not affect
->     media subsystem, to speedup the builds:
-> 
->    scripts/config -d MODULE_SIG -d KEYS -d IMA -d CONFIG_DEBUG_INFO -d SYSTEM_TRUSTED_KEYRING -d MODVERSIONS
+Anyway, I'm adding this to regzbot:
+
+#regzbot introduced: v6.2..v6.3 https://bugzilla.kernel.org/show_bug.cgi?id=217427
+#regzbot title: No video output from AMD RX 570 and kernel exploit attempt on ppc64le
+
+Thanks.
+
+[1]: https://bugzilla.kernel.org/show_bug.cgi?id=217427
 
 -- 
-Regards,
-
-Laurent Pinchart
+An old man doll... just what I always wanted! - Clara
