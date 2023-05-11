@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 921FD1F931
-	for <regressions@lists.linux.dev>; Thu, 11 May 2023 13:10:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4192A1F920
+	for <regressions@lists.linux.dev>; Thu, 11 May 2023 13:26:04 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1px64B-0006xe-FC; Thu, 11 May 2023 15:10:43 +0200
-Message-ID: <110bcda8-f832-c858-3b61-5c0c7cf9e058@leemhuis.info>
-Date: Thu, 11 May 2023 15:10:42 +0200
+	id 1px6Im-00022X-Gn; Thu, 11 May 2023 15:25:48 +0200
+Message-ID: <71f119ab-24e2-6a35-2b7d-43ea2a9578b8@leemhuis.info>
+Date: Thu, 11 May 2023 15:25:47 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,81 +16,69 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.10.0
-Subject: Re: 6.4-rc1 xfstests-bld adv regressions
+Subject: Re: [regression] Kernel OOPS on boot with Kernel 6.3(.1) and RTL8153
+ Gigabit Ethernet Adapter
 Content-Language: en-US, de-DE
-To: Eric Whitney <enwlinux@gmail.com>, jack@suse.cz
-Cc: linux-ext4@vger.kernel.org,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <ZFqO3xVnmhL7zv1x@debian-BULLSEYE-live-builder-AMD64>
-From: "Linux regression tracking #adding (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <ZFqO3xVnmhL7zv1x@debian-BULLSEYE-live-builder-AMD64>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
+ =?UTF-8?Q?Bj=c3=b8rn_Mork?= <bjorn@mork.no>,
+ Hayes Wang <hayeswang@realtek.com>, netdev@vger.kernel.org,
+ Paolo Abeni <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>,
+ "David S. Miller" <davem@davemloft.net>, Stanislav Fomichev
+ <sdf@fomichev.me>, workflows@vger.kernel.org,
+ Konstantin Ryabitsev <konstantin@linuxfoundation.org>
+References: <ec4be122-e213-ca5b-f5d6-e8f9c3fd3bee@leemhuis.info>
+ <87lei36q27.fsf@miraculix.mork.no> <20230505120436.6ff8cfca@kernel.org>
+ <57dbce31-daa9-9674-513e-f123b94950da@leemhuis.info>
+ <20230505123744.16666106@kernel.org>
+ <9284a9ec-d7c9-68e8-7384-07291894937b@leemhuis.info>
+ <20230508130944.30699c33@kernel.org>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <20230508130944.30699c33@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1683810646;6ac8c3c1;
-X-HE-SMSGID: 1px64B-0006xe-FC
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1683811564;710dbdf5;
+X-HE-SMSGID: 1px6Im-00022X-Gn
 
-[CCing the regression list, as it should be in the loop for regressions:
-https://docs.kernel.org/admin-guide/reporting-regressions.html]
 
-[TLDR: I'm adding this report to the list of tracked Linux kernel
-regressions; the text you find below is based on a few templates
-paragraphs you might have encountered already in similar form.
-See link in footer if these mails annoy you.]
 
-On 09.05.23 20:20, Eric Whitney wrote:
+On 08.05.23 22:09, Jakub Kicinski wrote:
+> On Sat, 6 May 2023 08:20:23 +0200 Linux regression tracking (Thorsten
+> Leemhuis) wrote:
+>>> I don't seem to have the permissions on BZ, but I'm guessing we could
+>>> do the opposite - you could flip bugbot on first to have it flush the BZ
+>>> report to the list, and then reply on the list with regzbot tracking?  
+>>
+>> That's the plan for the future, but for now I don't want to do that, as
+>> it might mess up other peoples workflows, as hinted above already and
+>> discussed here:
+>>
+>> https://lore.kernel.org/all/1f0ebf13-ab0f-d512-6106-3ebf7cb372f1@leemhuis.info/
+>>
+>> That was only recently, but if you jump in there as well it might
+>> persuade Konstantin to enable bugbot for other products/components. Then
+>> I could and would do what you suggested.
 > 
-> I'm seeing two test regressions on 6.4-rc1 while running the adv test case
-> with kvm-xfstests.  Both tests fail with 100% reliability in 100 trial runs,
-> and the failures appear to depend solely upon the fast commit mount option.
+> CC: workflows
 > 
-> The first is generic/065, where the relevant info from 065.full is:
+> I'm a bit confused. I understand that we don't want to automatically
+> send all bugzilla reports to the ML. But AFAIU this is to avoid spamming
+> the list / messing with people's existing BZ workflow.
+> If you pre-triage the problem and decide to forward it to the list -
+> whether you do it with buzbot + regzbot or manual + regzbot is moot.
 > 
-> _check_generic_filesystem: filesystem on /dev/vdc is inconsistent
-> *** fsck.ext4 output ***
-> fsck from util-linux 2.36.1
-> e2fsck 1.47.0 (5-Feb-2023)
-> Pass 1: Checking inodes, blocks, and sizes
-> Pass 2: Checking directory structure
-> Pass 3: Checking directory connectivity
-> Pass 4: Checking reference counts
-> Pass 5: Checking group summary information
-> Directories count wrong for group #16 (4294967293, counted=0).
+> The bugbot can be enabled per BZ entry (AFAIU), so you can flip it
+> individually for the thread you want to report. It should flush that 
+> BZ to the list. At which point you can follow your normal ML regression
+> process.
 > 
-> 
-> The second is generic/535, where the test output is:
-> 
->      QA output created by 535
->      Silence is golden
->     +Before: 755
->     +After : 777
-> 
-> Both test failures bisect to:  e360c6ed7274 ("ext4: Drop special handling of
-> journalled data from ext4_sync_file()").  Reverting this patch eliminates the
-> test failures.  So, I thought I'd bring these to your attention.
+> Where did I go off the rails?
 
-Thanks for the report. To be sure the issue doesn't fall through the
-cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
-tracking bot:
+You missed that Konstantin (now CCed) is just a bit careful for the
+bugbot bring up and therefore for now only allows bugbot to be enabled
+for BZ entries that are filed against the product/component combination
+Linux/Kernel. I could reassigning bugs there, but that would break the
+workflow for maintainers like Kalle, which look at all bugs assigned to
+their product/component combo (Drivers/network-wireless in Kalle's case).
 
-#regzbot ^introduced e360c6ed7274
-#regzbot title ext4: adv test cases of kvm-xfstests fail
-#regzbot ignore-activity
-
-This isn't a regression? This issue or a fix for it are already
-discussed somewhere else? It was fixed already? You want to clarify when
-the regression started to happen? Or point out I got the title or
-something else totally wrong? Then just reply and tell me -- ideally
-while also telling regzbot about it, as explained by the page listed in
-the footer of this mail.
-
-Developers: When fixing the issue, remember to add 'Link:' tags pointing
-to the report (the parent of this mail). See page linked in footer for
-details.
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+Ciao, Thorsten
