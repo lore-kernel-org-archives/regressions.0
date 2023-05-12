@@ -1,69 +1,82 @@
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BE0DA3C
-	for <regressions@lists.linux.dev>; Fri, 12 May 2023 04:10:30 +0000 (UTC)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4QHZzx1T1wz4wgq;
-	Fri, 12 May 2023 14:10:21 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
-	s=201909; t=1683864622;
-	bh=oPl2u+/zOEaXoqgX2SzPHpQZUB4sh8X/PGH3dqm+ybA=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=qIZp8R1n4cIyH/hNyjZkk2IV4G0ZOXKDQqy2cJhfbmBuplc3obqPfoXxG+xjLSrPN
-	 m/5+Cb/9dP1m0OdyVYbBqSmEsBni/+zSx7ENgMxcH5B3lKZLZ8+Tld2Lb70yMbe4A4
-	 oGsOsLV/NKaD0inXUGddjlwl7iMDdPixS/1g2nkBcA7IUNRK+C1hMbiUOwF71VwG3M
-	 TJcqbzr25oq0p/8wyelcbKOFqtORfvH3JY/ZeiFaizyGzUyqC3iL5pyZtNeI2zfd8w
-	 1FjTjGc+6KHW28kAtNzc3JgUsDqIsOTBAGlyUSilsoAuDTHMEimP13UPE4Yn16vmaM
-	 ncFj2L2LuO39Q==
-From: Michael Ellerman <mpe@ellerman.id.au>
-To: Bagas Sanjaya <bagasdotme@gmail.com>, Linux Regressions
- <regressions@lists.linux.dev>, Linux for PowerPC
- <linuxppc-dev@lists.ozlabs.org>, Linux AMDGPU
- <amd-gfx@lists.freedesktop.org>
-Cc: Christophe Leroy <christophe.leroy@csgroup.eu>, Alex Deucher
- <alexander.deucher@amd.com>, darkbasic@linuxsystems.it
-Subject: Re: Fwd: Linux 6.3.1 + AMD RX 570 on ppc64le 4K: Kernel attempted
- to read user page (1128) - exploit attempt? (uid: 0)
-In-Reply-To: <588c1a66-9976-c96f-dcdd-beec8b7410f0@gmail.com>
-References: <588c1a66-9976-c96f-dcdd-beec8b7410f0@gmail.com>
-Date: Fri, 12 May 2023 14:10:11 +1000
-Message-ID: <87zg6ajil8.fsf@mail.lhotse>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 204892597
+	for <regressions@lists.linux.dev>; Fri, 12 May 2023 08:33:06 +0000 (UTC)
+Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-52867360efcso6826552a12.2
+        for <regressions@lists.linux.dev>; Fri, 12 May 2023 01:33:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1683880385; x=1686472385;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=x53jitR+5ZS0lsQhUwqNwHmvFRGxLktN4AjS2lQkxd0=;
+        b=XJuAKB5UOqUfZw9wUydMc9bHTnQC6/O56kq0p5Igr+wJbo6sBG48L1NRzhleKc3nNY
+         XMuVg7apUg5ub68mszAzEc1y8L1qu8x3oHlQt37k/M7wKdVeYuAsL40xk45z3LCvx6Ad
+         sPYMxeEzD8sBDkiSDh3Z206JWx9LyrRdB+QPbGFycI6l9WyJdx8e4GrqPrvnXM4sNs/l
+         Dp6lyLhugBiuZO1Rv6c2TgRzfpTf44jCmX6Gj0wasWpW1YZpxpc0+LwKmSLTkX6oN128
+         ImYsuGMuElDLt64p+XeFLXgRiHSDWKJ+ZIUR4AxDKk9oYvXP0GAeVJOIyVhdNZFojM63
+         Ipxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683880385; x=1686472385;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=x53jitR+5ZS0lsQhUwqNwHmvFRGxLktN4AjS2lQkxd0=;
+        b=YVNs46/M65q1PozC63yk4r6/Fvo8mWZRGss1Xg+M4ZUm+GYOBLkLFarA15yJIG/bd/
+         EIECEzMSECeC4V5VA8PqNAaCE6h3DLUjzY6SyyN+JyxGA5l4fBK5Cavkfw/EzeJwNsRD
+         0fpGJzVrStabPtd6XIqXbmuWIMavBI1qDuI1fTiQOYU09YP2paZdhTcsE2RHuLw33zcm
+         Z6DLP7yGAr8IJ8dHj3XgxBcApGo5roByJKNxoXjic215WvGt4stGoXkVKSlQqFIP9zjo
+         S/O2KQBvQS2uCYYl9ILi40VcV8dp7uD6vaiU4JLcEAVzJbNizFFT2nNkH7nwN4ymmdqx
+         AWHg==
+X-Gm-Message-State: AC+VfDy6Kx8ziWKxe7PDm6YtDNL6saTZZeFKJGw3Ehln/QRDUsWcMrwz
+	2zAZA3mXhsbJqroCiaiBRjf6LbTtXFw=
+X-Google-Smtp-Source: ACHHUZ69dfi0/XuETklEsPrw1ZScu3oU8yr8yBQSdIPoHvkw6INo2XlIycmvllqn0DtqiCmUr6GJqA==
+X-Received: by 2002:a17:903:238d:b0:1a6:83fa:b370 with SMTP id v13-20020a170903238d00b001a683fab370mr22681306plh.2.1683880385195;
+        Fri, 12 May 2023 01:33:05 -0700 (PDT)
+Received: from [192.168.43.80] (subs32-116-206-28-8.three.co.id. [116.206.28.8])
+        by smtp.gmail.com with ESMTPSA id i2-20020a170902c94200b001a988a71617sm7360566pla.192.2023.05.12.01.33.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 12 May 2023 01:33:04 -0700 (PDT)
+Message-ID: <3e5548e4-5a3e-9346-ec58-3617e1947186@gmail.com>
+Date: Fri, 12 May 2023 15:32:57 +0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: Fwd: Linux 6.3.1 + AMD RX 570 on ppc64le 4K: Kernel attempted to
+ read user page (1128) - exploit attempt? (uid: 0)
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Linux Regressions <regressions@lists.linux.dev>,
+ Linux for PowerPC <linuxppc-dev@lists.ozlabs.org>,
+ Linux AMDGPU <amd-gfx@lists.freedesktop.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>,
+ Alex Deucher <alexander.deucher@amd.com>, darkbasic@linuxsystems.it,
+ Hersen Wu <hersenxs.wu@amd.com>, Qingqing Zhuo <qingqing.zhuo@amd.com>,
+ Fangzhi Zuo <Jerry.Zuo@amd.com>, Daniel Wheeler <daniel.wheeler@amd.com>
+References: <588c1a66-9976-c96f-dcdd-beec8b7410f0@gmail.com>
+Content-Language: en-US
+In-Reply-To: <588c1a66-9976-c96f-dcdd-beec8b7410f0@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Bagas Sanjaya <bagasdotme@gmail.com> writes:
+On 5/11/23 15:06, Bagas Sanjaya wrote:
 > Hi,
->
+> 
 > I notice a regression report on bugzilla ([1]). As many developers
 > don't keep an eye on it, I decide to forward it by email.
-
-Bugs filed against powerpc do get Cc'ed to linuxppc-dev, so we do see
-them. Though that doesn't always mean we have time to fix them :)
-
-I have a talos machine with an AMD GPU, but not this model, and mainline
-is booting fine for me. So we'll need the original reporter to do some
-more debugging.
-
-Looks like there's a possible culprit identified on the gitlab issue:
-https://gitlab.freedesktop.org/drm/amd/-/issues/2553
-
-cheers
-
+> 
 > Quoting from it:
->
+> 
 >>  darkbasic 2023-05-10 13:36:37 UTC
->> 
+>>
 >> I'm using Gentoo Linux on a Raptor CS Talos 2 ppc64le, GPU is an AMD RX 570. So far the past dozen of kernels (up to 6.2.14) worked flawlessly, but with 6.3.1 I don't get any video output and I get the following in journalctl:
->> 
+>>
 >> May 10 15:09:01 talos2 kernel: Kernel attempted to read user page (1128) - exploit attempt? (uid: 0)
 >> May 10 15:09:01 talos2 kernel: BUG: Unable to handle kernel data access on read at 0x00001128
 >> May 10 15:09:01 talos2 kernel: Faulting instruction address: 0xc00800000d1a805c
@@ -119,17 +132,18 @@ cheers
 >> May 10 15:09:01 talos2 kernel: Code: 41820094 e91f0568 e95f0000 813f0088 81080030 3d4a0001 39290444 e94a7ca0 79291764 1d0811f0 7d4a4214 7d2a4a14 <81290004> 91270074 813f0088 39290424 
 >> May 10 15:09:01 talos2 kernel: ---[ end trace 0000000000000000 ]---
 >> May 10 15:09:01 talos2 kernel: at24 4-0054: supply vcc not found, using dummy regulator
->
+> 
 > See the report for details.
->
+> 
 > Anyway, I'm adding this to regzbot:
->
+> 
 > #regzbot introduced: v6.2..v6.3 https://bugzilla.kernel.org/show_bug.cgi?id=217427
 > #regzbot title: No video output from AMD RX 570 and kernel exploit attempt on ppc64le
->
-> Thanks.
->
-> [1]: https://bugzilla.kernel.org/show_bug.cgi?id=217427
->
-> -- 
-> An old man doll... just what I always wanted! - Clara
+> 
+
+#regzbot introduced: f4f3b7dedbe849
+#regzbot link: https://gitlab.freedesktop.org/drm/amd/-/issues/2553
+
+-- 
+An old man doll... just what I always wanted! - Clara
+
