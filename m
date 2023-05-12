@@ -1,59 +1,167 @@
-Received: from mail.linuxsystems.it (mail.linuxsystems.it [79.7.78.67])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 061FC2597
-	for <regressions@lists.linux.dev>; Fri, 12 May 2023 08:59:09 +0000 (UTC)
-Received: by mail.linuxsystems.it (Postfix, from userid 33)
-	id 8FE56215913; Thu, 11 May 2023 19:25:26 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxsystems.it;
-	s=linuxsystems.it; t=1683825926;
-	bh=yhp7v3luRGJ6mq7f7i4QZFLveEgF64yIuE8ANbdh7GA=;
-	h=To:Subject:Date:From:Cc:In-Reply-To:References:From;
-	b=l1b8aQpTATQR13/g/283QB5g1vVSF33CfqUnpPF7R0RUk2S+daOGymYtQIpZjIh1u
-	 06SQLvNI2ryQZzryPHkJm2WDq6ccI50rSgLnWQWuxz339kF+r8ty1Z9w/m97zX6SXM
-	 UFYKxruaQcQvqqcNG2kKtcaod6rVcMDLGEsqhMOA=
-To: Bagas Sanjaya <bagasdotme@gmail.com>
-Subject: Re: Fwd: Linux 6.3.1 + AMD RX 570 on ppc64le 4K: Kernel attempted to  read user page (1128) - exploit attempt? (uid: 0)
-X-PHP-Originating-Script: 0:rcube.php
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0F897F0
+	for <regressions@lists.linux.dev>; Fri, 12 May 2023 11:10:40 +0000 (UTC)
+Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34C8hsxL013292;
+	Fri, 12 May 2023 11:10:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2023-03-30;
+ bh=EhHRMxQUAvJv28sSn27p4IBcuGnpARk978evYXUSIos=;
+ b=a+AUGvNRS7MFIVl94FwMjgeRp+jEfl2GSL4cZ01Hn2O4yi4Vdb7hwDzNr9sQpMRLZboH
+ ulyCldwQiAvxpsangNMapaUKncY4cPmM+C3Dr5FNn5TruNv7JF7V+RuKG9WC9zlfR4IC
+ RR2n0nLvUVGT0XEm6di2whNjCjT1sNhEqCLALysrlBb1Gp+RELx5biEyTNmGXP0jYu9r
+ muCc1djCEfclgehB3hCoHAvlbuPG0Q+mOOd8mJpR6kTKe+aBuIKjP0fRQetfFU7Xv39u
+ kmwFLVE57JD3mb7CwdLtdOHPnQIDa+HC23p1EYU8uCqx+aTpczX2qSPD/HOdx4P86+fV zg== 
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3qf7779yg5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 12 May 2023 11:10:17 +0000
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 34C95DEX024177;
+	Fri, 12 May 2023 11:10:17 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3qf7y7yxqy-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 12 May 2023 11:10:17 +0000
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 34CBAGoA009896;
+	Fri, 12 May 2023 11:10:16 GMT
+Received: from gkennedy-linux.us.oracle.com (gkennedy-linux.us.oracle.com [10.152.170.45])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3qf7y7yxq7-1;
+	Fri, 12 May 2023 11:10:16 +0000
+From: George Kennedy <george.kennedy@oracle.com>
+To: linux@weissschuh.net, gregkh@linuxfoundation.org, jirislaby@kernel.org
+Cc: george.kennedy@oracle.com, sfr@canb.auug.org.au, akpm@linux-foundation.org,
+        linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
+        regressions@lists.linux.dev
+Subject: [PATCH v3] vc_screen: reload load of struct vc_data pointer in vcs_write() to avoid UAF
+Date: Fri, 12 May 2023 06:08:48 -0500
+Message-Id: <1683889728-10411-1-git-send-email-george.kennedy@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-05-12_08,2023-05-05_01,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ mlxlogscore=999 phishscore=0 adultscore=0 bulkscore=0 spamscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2304280000 definitions=main-2305120093
+X-Proofpoint-GUID: hGQ6P4oZXJxFHAeqdHv-K_sdzsV6xsNH
+X-Proofpoint-ORIG-GUID: hGQ6P4oZXJxFHAeqdHv-K_sdzsV6xsNH
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date: Thu, 11 May 2023 19:25:26 +0200
-From: =?UTF-8?Q?Niccol=C3=B2_Belli?= <darkbasic@linuxsystems.it>
-Cc: Linux Regressions <regressions@lists.linux.dev>, Linux for PowerPC
- <linuxppc-dev@lists.ozlabs.org>, Linux AMDGPU
- <amd-gfx@lists.freedesktop.org>, Michael Ellerman <mpe@ellerman.id.au>,
- Christophe Leroy <christophe.leroy@csgroup.eu>, Alex Deucher
- <alexander.deucher@amd.com>, Hersen Wu <hersenxs.wu@amd.com>, Qingqing Zhuo
- <qingqing.zhuo@amd.com>, Fangzhi Zuo <Jerry.Zuo@amd.com>, Daniel Wheeler
- <daniel.wheeler@amd.com>
-In-Reply-To: <3e5548e4-5a3e-9346-ec58-3617e1947186@gmail.com>
-References: <588c1a66-9976-c96f-dcdd-beec8b7410f0@gmail.com>
- <3e5548e4-5a3e-9346-ec58-3617e1947186@gmail.com>
-Message-ID: <a50537d1f1af34104793218acb954a61@linuxsystems.it>
-X-Sender: darkbasic@linuxsystems.it
-User-Agent: Roundcube Webmail/1.1.5
 
-Il 2023-05-12 10:32 Bagas Sanjaya ha scritto:
-> #regzbot introduced: f4f3b7dedbe849
-> #regzbot link: https://gitlab.freedesktop.org/drm/amd/-/issues/2553
+After a call to console_unlock() in vcs_write() the vc_data struct can be
+freed by vc_port_destruct(). Because of that, the struct vc_data pointer
+must be reloaded in the while loop in vcs_write() after console_lock() to
+avoid a UAF when vcs_size() is called.
 
-It doesn't look like the aforementioned patch made its way into 6.3 yet:
+Syzkaller reported a UAF in vcs_size().
 
-niko@talos2 ~/devel/linux-stable $ git branch
-* linux-6.3.y
-   master
-niko@talos2 ~/devel/linux-stable $ git show f4f3b7dedbe8 | patch -p1
-patching file 
-drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c
-Hunk #1 succeeded at 227 (offset 15 lines).
-Hunk #2 succeeded at 269 with fuzz 2 (offset 19 lines).
-patching file 
-drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.h
-Hunk #1 succeeded at 49 with fuzz 2 (offset 15 lines).
+BUG: KASAN: slab-use-after-free in vcs_size (drivers/tty/vt/vc_screen.c:215)
+Read of size 4 at addr ffff8880beab89a8 by task repro_vcs_size/4119
+
+Call Trace:
+ <TASK>
+__asan_report_load4_noabort (mm/kasan/report_generic.c:380)
+vcs_size (drivers/tty/vt/vc_screen.c:215)
+vcs_write (drivers/tty/vt/vc_screen.c:664)
+vfs_write (fs/read_write.c:582 fs/read_write.c:564)
+...
+ <TASK>
+
+Allocated by task 1213:
+kmalloc_trace (mm/slab_common.c:1064)
+vc_allocate (./include/linux/slab.h:559 ./include/linux/slab.h:680
+    drivers/tty/vt/vt.c:1078 drivers/tty/vt/vt.c:1058)
+con_install (drivers/tty/vt/vt.c:3334)
+tty_init_dev (drivers/tty/tty_io.c:1303 drivers/tty/tty_io.c:1415
+    drivers/tty/tty_io.c:1392)
+tty_open (drivers/tty/tty_io.c:2082 drivers/tty/tty_io.c:2128)
+chrdev_open (fs/char_dev.c:415)
+do_dentry_open (fs/open.c:921)
+vfs_open (fs/open.c:1052)
+...
+
+Freed by task 4116:
+kfree (mm/slab_common.c:1016)
+vc_port_destruct (drivers/tty/vt/vt.c:1044)
+tty_port_destructor (drivers/tty/tty_port.c:296)
+tty_port_put (drivers/tty/tty_port.c:312)
+vt_disallocate_all (drivers/tty/vt/vt_ioctl.c:662 (discriminator 2))
+vt_ioctl (drivers/tty/vt/vt_ioctl.c:903)
+tty_ioctl (drivers/tty/tty_io.c:2778)
+...
+
+The buggy address belongs to the object at ffff8880beab8800
+ which belongs to the cache kmalloc-1k of size 1024
+The buggy address is located 424 bytes inside of
+ freed 1024-byte region [ffff8880beab8800, ffff8880beab8c00)
+
+The buggy address belongs to the physical page:
+page:00000000afc77580 refcount:1 mapcount:0 mapping:0000000000000000
+    index:0x0 pfn:0xbeab8
+head:00000000afc77580 order:3 entire_mapcount:0 nr_pages_mapped:0
+    pincount:0
+flags: 0xfffffc0010200(slab|head|node=0|zone=1|lastcpupid=0x1fffff)
+page_type: 0xffffffff()
+raw: 000fffffc0010200 ffff888100042dc0 ffffea000426de00 dead000000000002
+raw: 0000000000000000 0000000000100010 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff8880beab8880: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff8880beab8900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff8880beab8980: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                  ^
+ ffff8880beab8a00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff8880beab8a80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+Disabling lock debugging due to kernel taint
+
+Fixes: ac751efa6a0d ("console: rename acquire/release_console_sem() to console_lock/unlock()")
+Reported-by: syzkaller <syzkaller@googlegroups.com>
+Signed-off-by: George Kennedy <george.kennedy@oracle.com>
+---
+v3: changed to "ret = -ENXIO;"
+
+v2: added "ret = -EINVAL;"
+
+v1: This patch is similar to the recent UAF vcs_read() patches (226fae124b2d & 46d733d0efc7).
+vcs_write() should have been checked for the same UAF issue at the same time the fixes went
+into vcs_read().
+
+ drivers/tty/vt/vc_screen.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/tty/vt/vc_screen.c b/drivers/tty/vt/vc_screen.c
+index 498ba9c0ee93..829c4be66f3b 100644
+--- a/drivers/tty/vt/vc_screen.c
++++ b/drivers/tty/vt/vc_screen.c
+@@ -656,10 +656,17 @@ vcs_write(struct file *file, const char __user *buf, size_t count, loff_t *ppos)
+ 			}
+ 		}
+ 
+-		/* The vcs_size might have changed while we slept to grab
+-		 * the user buffer, so recheck.
++		/* The vc might have been freed or vcs_size might have changed
++		 * while we slept to grab the user buffer, so recheck.
+ 		 * Return data written up to now on failure.
+ 		 */
++		vc = vcs_vc(inode, &viewed);
++		if (!vc) {
++			if (written)
++				break;
++			ret = -ENXIO;
++			goto unlock_out;
++		}
+ 		size = vcs_size(vc, attr, false);
+ 		if (size < 0) {
+ 			if (written)
+-- 
+2.31.1
+
