@@ -1,169 +1,75 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C0BA63AF
-	for <regressions@lists.linux.dev>; Fri, 12 May 2023 11:20:50 +0000 (UTC)
-Date: Fri, 12 May 2023 13:20:45 +0200 (GMT+02:00)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1683890447;
-	bh=hhXJMQCxvKp1+nw4q9TnQfrvs9S4cFgeJ2xbcbMgzA8=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=sOYZqPveunTfOvlt9WEFn46042o8mQNf+WxYBsVaTlIva+v10+YMqChMjRhcKvDA9
-	 PPjXCIO3foJDYv1EoECrFEE8p6ne4erqZOTIgz1OqM8lRATH+HimOdW/w600N23NNr
-	 joMVW280V39dOC/9YNzdTzD7EJ5AiqLCZzw2BJLA=
-From: linux@weissschuh.net
-To: George Kennedy <george.kennedy@oracle.com>
-Cc: linux@weissschuh.net, gregkh@linuxfoundation.org, jirislaby@kernel.org,
-	sfr@canb.auug.org.au, akpm@linux-foundation.org,
-	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
-	regressions@lists.linux.dev
-Message-ID: <bb2ca0cf-0a0a-4e60-8fe6-c18efacbfa99@weissschuh.net>
-In-Reply-To: <1683889728-10411-1-git-send-email-george.kennedy@oracle.com>
-References: <1683889728-10411-1-git-send-email-george.kennedy@oracle.com>
-Subject: Re: [PATCH v3] vc_screen: reload load of struct vc_data pointer in
- vcs_write() to avoid UAF
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4A707F0
+	for <regressions@lists.linux.dev>; Fri, 12 May 2023 11:47:11 +0000 (UTC)
+Received: from francesco-nb.int.toradex.com (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
+	by mail11.truemail.it (Postfix) with ESMTPA id 585A02034F
+	for <regressions@lists.linux.dev>; Fri, 12 May 2023 13:40:28 +0200 (CEST)
+Date: Fri, 12 May 2023 13:40:26 +0200
+From: Francesco Dolcini <francesco@dolcini.it>
+To: Linux Regressions <regressions@lists.linux.dev>
+Subject: Re: USB gadget regression on v6.4-rc1 and v6.1.28
+Message-ID: <ZF4lqka+PxjHAlrh@francesco-nb.int.toradex.com>
+References: <ZF4BvgsOyoKxdPFF@francesco-nb.int.toradex.com>
+ <ZF4bMptC3Lf2Hnee@gerhold.net>
+ <ZF4kBJEKDy5T39sj@francesco-nb.int.toradex.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Correlation-ID: <bb2ca0cf-0a0a-4e60-8fe6-c18efacbfa99@weissschuh.net>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZF4kBJEKDy5T39sj@francesco-nb.int.toradex.com>
 
+On Fri, May 12, 2023 at 01:33:24PM +0200, Francesco Dolcini wrote:
+> On Fri, May 12, 2023 at 12:55:46PM +0200, Stephan Gerhold wrote:
+> > On Fri, May 12, 2023 at 11:07:10AM +0200, Francesco Dolcini wrote:
+> > > Hello all,
+> > > I recently did have a regression on v6.4rc1, and it seems that the same
+> > > exact issue is now happening also on v6.1.28.
+> > > 
+> > > I was not able yet to bisect it (yet), but what is happening is that
+> > > libusbgx[1] that we use to configure a USB NCM gadget interface[2][3] just
+> > > hang completely at boot.
+> > > 
+> > > This is happening with multiple ARM32 and ARM64 i.MX SOC (i.MX6, i.MX7,
+> > > i.MX8MM).
+> > > 
+> > > The logs is something like that
+> > > 
+> > > ```
+> > > [*     �F] A start job is running for Load def…t schema g1.schema (6s / no limit)
+> > > M[K[**    �F] A start job is running for Load def…t schema g1.schema (7s / no limit)
+> > > M[K[***   �F] A start job is running for Load def…t schema g1.schema (8s / no limit)
+> > > M[K[ ***  �F] A start job is running for Load def…t schema g1.schema (8s / no limit)
+> > > ```
+> > > 
+> > > I will try to bisect this and provide more useful feedback ASAP, I
+> > > decided to not wait for it and just send this email in case someone has
+> > > some insight on what is going on.
+> > > 
+> > 
+> > I noticed a similar problem on the Qualcomm MSM8916 SoC (chipidea USB
+> > driver) and reverting commit 0db213ea8eed ("usb: gadget: udc: core:
+> > Invoke usb_gadget_connect only when started") fixes it for me. The
+> > follow-up commit a3afbf5cc887 ("usb: gadget: udc: core: Prevent
+> > redundant calls to pullup") must be reverted first to avoid conflicts.
+> > These two were also backported into 6.1.28.
+> 
+> Thanks for the confirmation.
+> 
+> > I didn't have time to investigate it further yet. With these patches it
+> > just hangs forever when setting up the USB gadget.
+> 
+> I will double check that the same is happening to me and send a revert
+> afterward.
 
-May 12, 2023 13:10:48 George Kennedy <george.kennedy@oracle.com>:
-
-> After a call to console_unlock() in vcs_write() the vc_data struct can be
-> freed by vc_port_destruct(). Because of that, the struct vc_data pointer
-> must be reloaded in the while loop in vcs_write() after console_lock() to
-> avoid a UAF when vcs_size() is called.
->
-> Syzkaller reported a UAF in vcs_size().
->
-> BUG: KASAN: slab-use-after-free in vcs_size (drivers/tty/vt/vc_screen.c:2=
-15)
-> Read of size 4 at addr ffff8880beab89a8 by task repro_vcs_size/4119
->
-> Call Trace:
-> <TASK>
-> __asan_report_load4_noabort (mm/kasan/report_generic.c:380)
-> vcs_size (drivers/tty/vt/vc_screen.c:215)
-> vcs_write (drivers/tty/vt/vc_screen.c:664)
-> vfs_write (fs/read_write.c:582 fs/read_write.c:564)
-> ...
-> <TASK>
->
-> Allocated by task 1213:
-> kmalloc_trace (mm/slab_common.c:1064)
-> vc_allocate (./include/linux/slab.h:559 ./include/linux/slab.h:680
-> =C2=A0=C2=A0=C2=A0 drivers/tty/vt/vt.c:1078 drivers/tty/vt/vt.c:1058)
-> con_install (drivers/tty/vt/vt.c:3334)
-> tty_init_dev (drivers/tty/tty_io.c:1303 drivers/tty/tty_io.c:1415
-> =C2=A0=C2=A0=C2=A0 drivers/tty/tty_io.c:1392)
-> tty_open (drivers/tty/tty_io.c:2082 drivers/tty/tty_io.c:2128)
-> chrdev_open (fs/char_dev.c:415)
-> do_dentry_open (fs/open.c:921)
-> vfs_open (fs/open.c:1052)
-> ...
->
-> Freed by task 4116:
-> kfree (mm/slab_common.c:1016)
-> vc_port_destruct (drivers/tty/vt/vt.c:1044)
-> tty_port_destructor (drivers/tty/tty_port.c:296)
-> tty_port_put (drivers/tty/tty_port.c:312)
-> vt_disallocate_all (drivers/tty/vt/vt_ioctl.c:662 (discriminator 2))
-> vt_ioctl (drivers/tty/vt/vt_ioctl.c:903)
-> tty_ioctl (drivers/tty/tty_io.c:2778)
-> ...
->
-> The buggy address belongs to the object at ffff8880beab8800
-> which belongs to the cache kmalloc-1k of size 1024
-> The buggy address is located 424 bytes inside of
-> freed 1024-byte region [ffff8880beab8800, ffff8880beab8c00)
->
-> The buggy address belongs to the physical page:
-> page:00000000afc77580 refcount:1 mapcount:0 mapping:0000000000000000
-> =C2=A0=C2=A0=C2=A0 index:0x0 pfn:0xbeab8
-> head:00000000afc77580 order:3 entire_mapcount:0 nr_pages_mapped:0
-> =C2=A0=C2=A0=C2=A0 pincount:0
-> flags: 0xfffffc0010200(slab|head|node=3D0|zone=3D1|lastcpupid=3D0x1fffff)
-> page_type: 0xffffffff()
-> raw: 000fffffc0010200 ffff888100042dc0 ffffea000426de00 dead000000000002
-> raw: 0000000000000000 0000000000100010 00000001ffffffff 0000000000000000
-> page dumped because: kasan: bad access detected
->
-> Memory state around the buggy address:
-> ffff8880beab8880: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> ffff8880beab8900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->> ffff8880beab8980: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ^
-> ffff8880beab8a00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> ffff8880beab8a80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> Disabling lock debugging due to kernel taint
->
-> Fixes: ac751efa6a0d ("console: rename acquire/release_console_sem() to co=
-nsole_lock/unlock()")
-> Reported-by: syzkaller <syzkaller@googlegroups.com>
-> Signed-off-by: George Kennedy <george.kennedy@oracle.com>
-
-Reviewed-by: Thomas Wei=C3=9Fschuh <linux@weissschuh.net>
-
-> ---
-> v3: changed to "ret =3D -ENXIO;"
->
-> v2: added "ret =3D -EINVAL;"
->
-> v1: This patch is similar to the recent UAF vcs_read() patches (226fae124=
-b2d & 46d733d0efc7).
-> vcs_write() should have been checked for the same UAF issue at the same t=
-ime the fixes went
-> into vcs_read().
->
-> drivers/tty/vt/vc_screen.c | 11 +++++++++--
-> 1 file changed, 9 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/tty/vt/vc_screen.c b/drivers/tty/vt/vc_screen.c
-> index 498ba9c0ee93..829c4be66f3b 100644
-> --- a/drivers/tty/vt/vc_screen.c
-> +++ b/drivers/tty/vt/vc_screen.c
-> @@ -656,10 +656,17 @@ vcs_write(struct file *file, const char __user *buf=
-, size_t count, loff_t *ppos)
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* The vcs_size might have changed =
-while we slept to grab
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * the user buffer, so recheck=
-.
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* The vc might have been freed or =
-vcs_size might have changed
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * while we slept to grab the =
-user buffer, so recheck.
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * Return data written up=
- to now on failure.
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 vc =3D vcs_vc(inode, &viewed);
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!vc) {
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (written=
-)
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 break;
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D -EN=
-XIO;
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 goto unlock=
-_out;
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 size =3D vcs_size(vc, attr, fa=
-lse);
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (size < 0) {
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (wr=
-itten)
-> -- > 2.31.1
+#regzbot introduced: 0db213ea8eed
+#regzbot introduced: v6.4-rc1
+#regzbot introduced: v6.1.28
+#regzbot title: USB gadget hangs forever
 
