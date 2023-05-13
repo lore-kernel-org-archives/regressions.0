@@ -1,74 +1,57 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from tilde.cafe (tilde.cafe [51.222.161.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8743C1102
-	for <regressions@lists.linux.dev>; Sat, 13 May 2023 09:48:25 +0000 (UTC)
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-643aad3bc41so10136485b3a.0
-        for <regressions@lists.linux.dev>; Sat, 13 May 2023 02:48:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1683971305; x=1686563305;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=3QfA5JCbN8OCiQT2s4BkmQZvf/DQ8KNSZSDVsW/zQ1M=;
-        b=RYDkfZ4/QQEKJ1CfJgUqgjSjGcOjSsEV7WHMGqR6E7FHtMtXAmbOrHZJQTb9Jtu6q7
-         Qf2scV15CONKLVQKtKMCTYpQ/R7frjt4FWoLfKRMq3MQIxaHQidn9H9Beh/kv4x6UInl
-         sR5eV9BnU7E7fARS4EnCjmkTtRgpMnpmE2YNz4CK3/vovfPcYx34JV5ZSMKo/9WHol3m
-         FkLDYD+mq4wnoEDQysWl97iTEuiT2NbJuAfBNiq+OSE2kt2jTKFIKVzxrPr5ghkAhK+1
-         HdSe+FfumQwf4HCilsT5Oy31RQIN8ZsQGVOAxh91MgeRswjuQCaPntFLkITyMdv1WUBB
-         hehg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683971305; x=1686563305;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3QfA5JCbN8OCiQT2s4BkmQZvf/DQ8KNSZSDVsW/zQ1M=;
-        b=P2Jzp6uKgjoZgNUuskx8XQFJW56cF9ApHVMWus1XmWxGw9XlcQXQydbh9etFGW2Ry1
-         Xr4cnvPUgl9DCFDKS9guLYJc6Ad4faTNeUxkLMDr6PtfBqNaQE5D8KGY77DL4h3TY39+
-         O5X9tx3zhnpmYjJfuCBHxQjOg6+SbEhABVFlrnSCahdcPmM9Y8JPdrnixKAZ5ImDHIde
-         oTySu5xtuN265esBM7aMFZyPbu0SLF0N1dP82/qZTJmEn4u17vqyI4lO+SIdAcqUhhkr
-         +ba9xFUcIKRDTLBRcJjc6TUERsNu1OPCVc60rybspjYqv7bkFmoKPSmYrjNM/YfJvyIg
-         Xq1A==
-X-Gm-Message-State: AC+VfDzXOAuuUcGom/4XCUEqzA2MxMX5Gr5EBjQMb5HNQG5Uu5nroRzG
-	HwV6G9+oNnD1sXSVZmU4TkzncV3RUM8=
-X-Google-Smtp-Source: ACHHUZ5SDwB48Eoj8AoI0Db2AOMxxmBcBoNVVeW0ZQuX1Z5z4Cr/VbBTea7kRFu7Of3IFQbCldXyvQ==
-X-Received: by 2002:a17:902:ee8a:b0:1ac:6c26:c32f with SMTP id a10-20020a170902ee8a00b001ac6c26c32fmr23035913pld.46.1683971304826;
-        Sat, 13 May 2023 02:48:24 -0700 (PDT)
-Received: from debian.me (subs02-180-214-232-69.three.co.id. [180.214.232.69])
-        by smtp.gmail.com with ESMTPSA id a14-20020a170902ecce00b001ab016e7916sm27256plh.234.2023.05.13.02.48.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 13 May 2023 02:48:24 -0700 (PDT)
-Received: by debian.me (Postfix, from userid 1000)
-	id 48A381068C5; Sat, 13 May 2023 16:48:21 +0700 (WIB)
-Date: Sat, 13 May 2023 16:48:20 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Francesco Dolcini <francesco@dolcini.it>,
-	Linux Regressions <regressions@lists.linux.dev>
-Subject: Re: USB gadget regression on v6.4-rc1 and v6.1.28
-Message-ID: <ZF9c5AdK2NZ0oa8H@debian.me>
-References: <ZF4BvgsOyoKxdPFF@francesco-nb.int.toradex.com>
- <ZF4bMptC3Lf2Hnee@gerhold.net>
- <ZF4kBJEKDy5T39sj@francesco-nb.int.toradex.com>
- <ZF4lqka+PxjHAlrh@francesco-nb.int.toradex.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C6F1EC0
+	for <regressions@lists.linux.dev>; Sat, 13 May 2023 11:00:25 +0000 (UTC)
+Received: from localhost (94.250.94.80.dyn.idknet.com [80.94.250.94])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by tilde.cafe (Postfix) with ESMTPSA id 1BF3F20251;
+	Sat, 13 May 2023 06:50:56 -0400 (EDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ZF4lqka+PxjHAlrh@francesco-nb.int.toradex.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Sat, 13 May 2023 13:50:55 +0300
+Subject: Re: [REGRESSION] Asus X541UAK hangs on suspend and poweroff (v6.1.6
+ onward)
+Cc: <stable@vger.kernel.org>, <linux-acpi@vger.kernel.org>, "Thorsten
+ Leemhuis" <regressions@leemhuis.info>, "Rafael J. Wysocki"
+ <rafael@kernel.org>
+From: "Acid Bong" <acidbong@tilde.cafe>
+To: "Bagas Sanjaya" <bagasdotme@gmail.com>, <regressions@lists.linux.dev>
+Message-Id: <CSL3BO4G05T7.TXT503TF8XQC@bong>
+X-Mailer: aerc 0.14.0-126-g6d59ad3f02bc
+References: <CRVU11I7JJWF.367PSO4YAQQEI@bong>
+ <5f445dab-a152-bcaa-4462-1665998c3e2e@gmail.com>
+ <ZE+1pKbfy1l/tTo6@debian.me>
+In-Reply-To: <ZE+1pKbfy1l/tTo6@debian.me>
 
-On Fri, May 12, 2023 at 01:40:26PM +0200, Francesco Dolcini wrote:
-> #regzbot introduced: 0db213ea8eed
-> #regzbot introduced: v6.4-rc1
-> #regzbot introduced: v6.1.28
-> #regzbot title: USB gadget hangs forever
-> 
+Hi there, hello. A little mid-update.
 
-dupping...
+I bisected almost all range after 6.1.3 and the only untested commits
+left are unrelated to my hardware (AMD-specific stuff). I spent a week
+with a 6.1.1 kernel and didn't experience a single hang since, which
+leads me to a couple of conclusions:
 
-#regzbot dup-of: https://lore.kernel.org/all/ZF4BvgsOyoKxdPFF@francesco-nb.int.toradex.com/
+1) it's not a hardware issue after all, since certain versions don't
+produce the bug
+2) (this one's more an assumption) I might've got the version range
+wrong.
 
--- 
-An old man doll... just what I always wanted! - Clara
+I'm gonna try 6.1.2 and 6.1.3 as well (up to 7 more days for each), and,
+depending on the output, bisect in a different range (now I regret not
+doing it in the beginning).
+
+At the moment the earliest *tested* commit is:
+```
+[15e7433e1dc202] arm64: dts: qcom: sc8280xp: fix UFS DMA coherency.
+```
+and it's marked as "bad".
+
+Thank you for your patience.
