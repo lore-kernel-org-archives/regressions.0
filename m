@@ -1,57 +1,67 @@
-Received: from tilde.cafe (tilde.cafe [51.222.161.16])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C6F1EC0
-	for <regressions@lists.linux.dev>; Sat, 13 May 2023 11:00:25 +0000 (UTC)
-Received: from localhost (94.250.94.80.dyn.idknet.com [80.94.250.94])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by tilde.cafe (Postfix) with ESMTPSA id 1BF3F20251;
-	Sat, 13 May 2023 06:50:56 -0400 (EDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA0BB1861
+	for <regressions@lists.linux.dev>; Sat, 13 May 2023 11:05:25 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1pxn3s-0005a8-PR; Sat, 13 May 2023 13:05:16 +0200
+Message-ID: <09d649a7-6245-2689-7791-ba173e8ac852@leemhuis.info>
+Date: Sat, 13 May 2023 13:05:15 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [regression] Bug 217122 - "Transfer event TRB DMA ptr not part of
+ current TD" messages since 6.1
+Content-Language: en-US, de-DE
+From: "Linux regression tracking #update (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+Cc: "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ LKML <linux-kernel@vger.kernel.org>, Mathias Nyman <mathias.nyman@intel.com>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+References: <72579321-2cc9-2de1-d28c-0c56562f3a28@leemhuis.info>
+In-Reply-To: <72579321-2cc9-2de1-d28c-0c56562f3a28@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
-Date: Sat, 13 May 2023 13:50:55 +0300
-Subject: Re: [REGRESSION] Asus X541UAK hangs on suspend and poweroff (v6.1.6
- onward)
-Cc: <stable@vger.kernel.org>, <linux-acpi@vger.kernel.org>, "Thorsten
- Leemhuis" <regressions@leemhuis.info>, "Rafael J. Wysocki"
- <rafael@kernel.org>
-From: "Acid Bong" <acidbong@tilde.cafe>
-To: "Bagas Sanjaya" <bagasdotme@gmail.com>, <regressions@lists.linux.dev>
-Message-Id: <CSL3BO4G05T7.TXT503TF8XQC@bong>
-X-Mailer: aerc 0.14.0-126-g6d59ad3f02bc
-References: <CRVU11I7JJWF.367PSO4YAQQEI@bong>
- <5f445dab-a152-bcaa-4462-1665998c3e2e@gmail.com>
- <ZE+1pKbfy1l/tTo6@debian.me>
-In-Reply-To: <ZE+1pKbfy1l/tTo6@debian.me>
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1683975925;bcea9cd6;
+X-HE-SMSGID: 1pxn3s-0005a8-PR
 
-Hi there, hello. A little mid-update.
+[TLDR: This mail in primarily relevant for Linux kernel regression
+tracking. See link in footer if these mails annoy you.]
 
-I bisected almost all range after 6.1.3 and the only untested commits
-left are unrelated to my hardware (AMD-specific stuff). I spent a week
-with a 6.1.1 kernel and didn't experience a single hang since, which
-leads me to a couple of conclusions:
+On 05.03.23 10:18, Linux regression tracking (Thorsten Leemhuis) wrote:
 
-1) it's not a hardware issue after all, since certain versions don't
-produce the bug
-2) (this one's more an assumption) I might've got the version range
-wrong.
+> I noticed a regression report in bugzilla.kernel.org. As many (most?)
+> kernel developer don't keep an eye on it, I decided to forward it by
+> mail. Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=217122 :
+> 
+>>  Jürgen Herrmann 2023-03-03 19:53:55 UTC
+>>
+>> Created attachment 303837 [details]
+>> collection of txt files with various hardware/software states
+>>
+>> Occasionally this error happens:
+>>
+>> [94467.984745] xhci_hcd 0000:05:00.4: ERROR Transfer event TRB DMA ptr not part of current TD ep_index 3 comp_code 1
+>> [94467.984751] xhci_hcd 0000:05:00.4: Looking for event-dma 000000010f10c730 trb-start 000000010f10c740 trb-end 000000010f10c740 seg-start 000000010f10
+>> c000 seg-end 000000010f10cff0
 
-I'm gonna try 6.1.2 and 6.1.3 as well (up to 7 more days for each), and,
-depending on the output, bisect in a different range (now I regret not
-doing it in the beginning).
+#regzbot introduced: b006c439d58d
+#regzbot fix: f1324bbc401
+#regzbot ignore-activity
 
-At the moment the earliest *tested* commit is:
-```
-[15e7433e1dc202] arm64: dts: qcom: sc8280xp: fix UFS DMA coherency.
-```
-and it's marked as "bad".
+For details see bugzilla
 
-Thank you for your patience.
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+That page also explains what to do if mails like this annoy you.
