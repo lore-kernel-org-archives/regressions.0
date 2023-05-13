@@ -1,102 +1,74 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B322922603
-	for <regressions@lists.linux.dev>; Fri, 12 May 2023 22:34:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10813C433D2;
-	Fri, 12 May 2023 22:34:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1683930879;
-	bh=C4/3tftPmfjnwOxJgXC4WqCyGzMl5SxDSvLNREcRE9M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oorJa7oUTKyw2EhCfdYhAIFDMoM4ghO+MDH8Gsb+nOziXzc0Oxf7uYS5n6T/nDThX
-	 JQedPLG3e+9PfjlaEW6IvPMP9XrOpylCEn1PCXGSu/DM57iFFLX7U7HxFEDb0jlz84
-	 lIyFCWq5nRQ7C68CMnuK+MideTCwqc0KQpUuExUE=
-Date: Sat, 13 May 2023 07:34:33 +0900
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: =?iso-8859-1?Q?Niccol=F2?= Belli <darkbasic@linuxsystems.it>,
-	Bagas Sanjaya <bagasdotme@gmail.com>,
-	Sasha Levin <sashal@kernel.org>,
-	Linux Regressions <regressions@lists.linux.dev>,
-	Linux for PowerPC <linuxppc-dev@lists.ozlabs.org>,
-	Linux AMDGPU <amd-gfx@lists.freedesktop.org>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Hersen Wu <hersenxs.wu@amd.com>,
-	Qingqing Zhuo <qingqing.zhuo@amd.com>,
-	Fangzhi Zuo <Jerry.Zuo@amd.com>,
-	Daniel Wheeler <daniel.wheeler@amd.com>
-Subject: Re: Fwd: Linux 6.3.1 + AMD RX 570 on ppc64le 4K: Kernel attempted to
- read user page (1128) - exploit attempt? (uid: 0)
-Message-ID: <2023051353-epiphany-retorted-4ad1@gregkh>
-References: <588c1a66-9976-c96f-dcdd-beec8b7410f0@gmail.com>
- <3e5548e4-5a3e-9346-ec58-3617e1947186@gmail.com>
- <a50537d1f1af34104793218acb954a61@linuxsystems.it>
- <3383ba6e-e62b-cd9b-8a61-39b0de8af579@csgroup.eu>
- <57100be6-d379-0bc7-6d45-228cd46f9c81@csgroup.eu>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8743C1102
+	for <regressions@lists.linux.dev>; Sat, 13 May 2023 09:48:25 +0000 (UTC)
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-643aad3bc41so10136485b3a.0
+        for <regressions@lists.linux.dev>; Sat, 13 May 2023 02:48:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1683971305; x=1686563305;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=3QfA5JCbN8OCiQT2s4BkmQZvf/DQ8KNSZSDVsW/zQ1M=;
+        b=RYDkfZ4/QQEKJ1CfJgUqgjSjGcOjSsEV7WHMGqR6E7FHtMtXAmbOrHZJQTb9Jtu6q7
+         Qf2scV15CONKLVQKtKMCTYpQ/R7frjt4FWoLfKRMq3MQIxaHQidn9H9Beh/kv4x6UInl
+         sR5eV9BnU7E7fARS4EnCjmkTtRgpMnpmE2YNz4CK3/vovfPcYx34JV5ZSMKo/9WHol3m
+         FkLDYD+mq4wnoEDQysWl97iTEuiT2NbJuAfBNiq+OSE2kt2jTKFIKVzxrPr5ghkAhK+1
+         HdSe+FfumQwf4HCilsT5Oy31RQIN8ZsQGVOAxh91MgeRswjuQCaPntFLkITyMdv1WUBB
+         hehg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683971305; x=1686563305;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3QfA5JCbN8OCiQT2s4BkmQZvf/DQ8KNSZSDVsW/zQ1M=;
+        b=P2Jzp6uKgjoZgNUuskx8XQFJW56cF9ApHVMWus1XmWxGw9XlcQXQydbh9etFGW2Ry1
+         Xr4cnvPUgl9DCFDKS9guLYJc6Ad4faTNeUxkLMDr6PtfBqNaQE5D8KGY77DL4h3TY39+
+         O5X9tx3zhnpmYjJfuCBHxQjOg6+SbEhABVFlrnSCahdcPmM9Y8JPdrnixKAZ5ImDHIde
+         oTySu5xtuN265esBM7aMFZyPbu0SLF0N1dP82/qZTJmEn4u17vqyI4lO+SIdAcqUhhkr
+         +ba9xFUcIKRDTLBRcJjc6TUERsNu1OPCVc60rybspjYqv7bkFmoKPSmYrjNM/YfJvyIg
+         Xq1A==
+X-Gm-Message-State: AC+VfDzXOAuuUcGom/4XCUEqzA2MxMX5Gr5EBjQMb5HNQG5Uu5nroRzG
+	HwV6G9+oNnD1sXSVZmU4TkzncV3RUM8=
+X-Google-Smtp-Source: ACHHUZ5SDwB48Eoj8AoI0Db2AOMxxmBcBoNVVeW0ZQuX1Z5z4Cr/VbBTea7kRFu7Of3IFQbCldXyvQ==
+X-Received: by 2002:a17:902:ee8a:b0:1ac:6c26:c32f with SMTP id a10-20020a170902ee8a00b001ac6c26c32fmr23035913pld.46.1683971304826;
+        Sat, 13 May 2023 02:48:24 -0700 (PDT)
+Received: from debian.me (subs02-180-214-232-69.three.co.id. [180.214.232.69])
+        by smtp.gmail.com with ESMTPSA id a14-20020a170902ecce00b001ab016e7916sm27256plh.234.2023.05.13.02.48.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 13 May 2023 02:48:24 -0700 (PDT)
+Received: by debian.me (Postfix, from userid 1000)
+	id 48A381068C5; Sat, 13 May 2023 16:48:21 +0700 (WIB)
+Date: Sat, 13 May 2023 16:48:20 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Francesco Dolcini <francesco@dolcini.it>,
+	Linux Regressions <regressions@lists.linux.dev>
+Subject: Re: USB gadget regression on v6.4-rc1 and v6.1.28
+Message-ID: <ZF9c5AdK2NZ0oa8H@debian.me>
+References: <ZF4BvgsOyoKxdPFF@francesco-nb.int.toradex.com>
+ <ZF4bMptC3Lf2Hnee@gerhold.net>
+ <ZF4kBJEKDy5T39sj@francesco-nb.int.toradex.com>
+ <ZF4lqka+PxjHAlrh@francesco-nb.int.toradex.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <57100be6-d379-0bc7-6d45-228cd46f9c81@csgroup.eu>
+In-Reply-To: <ZF4lqka+PxjHAlrh@francesco-nb.int.toradex.com>
 
-On Fri, May 12, 2023 at 03:25:47PM +0000, Christophe Leroy wrote:
+On Fri, May 12, 2023 at 01:40:26PM +0200, Francesco Dolcini wrote:
+> #regzbot introduced: 0db213ea8eed
+> #regzbot introduced: v6.4-rc1
+> #regzbot introduced: v6.1.28
+> #regzbot title: USB gadget hangs forever
 > 
-> 
-> Le 12/05/2023 à 17:16, Christophe Leroy a écrit :
-> > 
-> > 
-> > Le 11/05/2023 à 19:25, Niccolò Belli a écrit :
-> >> [Vous ne recevez pas souvent de courriers de 
-> >> darkbasic@linuxsystems.it. D?couvrez pourquoi ceci est important ? 
-> >> https://aka.ms/LearnAboutSenderIdentification ]
-> >>
-> >> Il 2023-05-12 10:32 Bagas Sanjaya ha scritto:
-> >>> #regzbot introduced: f4f3b7dedbe849
-> >>> #regzbot link: https://gitlab.freedesktop.org/drm/amd/-/issues/2553
-> >>
-> >> It doesn't look like the aforementioned patch made its way into 6.3 yet:
-> >>
-> >> niko@talos2 ~/devel/linux-stable $ git branch
-> >> * linux-6.3.y
-> >>    master
-> >> niko@talos2 ~/devel/linux-stable $ git show f4f3b7dedbe8 | patch -p1
-> >> patching file
-> >> drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c
-> >> Hunk #1 succeeded at 227 (offset 15 lines).
-> >> Hunk #2 succeeded at 269 with fuzz 2 (offset 19 lines).
-> >> patching file
-> >> drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.h
-> >> Hunk #1 succeeded at 49 with fuzz 2 (offset 15 lines).
-> > 
-> > As far as I can see that patch has no Fixes: tag, so it will unlikely be 
-> > automatically merged into stable.
-> > 
-> > Has anybody requested greg/sasha to get it into 6.3 ?
-> > 
-> 
-> In fact, it seems that patch is already part of 6.3:
-> 
-> $ git tag --contains f4f3b7dedbe8
-> v6.3
-> v6.3-rc5
-> v6.3-rc6
-> v6.3-rc7
-> v6.3.1
-> v6.3.2
-> v6.4-rc1
 
-And that commit is already in the following releases:
-	5.10.177 5.15.106 6.1.23 6.2.10 6.3
+dupping...
 
-So what needs to be done here?
+#regzbot dup-of: https://lore.kernel.org/all/ZF4BvgsOyoKxdPFF@francesco-nb.int.toradex.com/
 
-confused,
-
-greg k-h
+-- 
+An old man doll... just what I always wanted! - Clara
