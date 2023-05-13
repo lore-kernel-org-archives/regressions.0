@@ -1,152 +1,105 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB856EDB
-	for <regressions@lists.linux.dev>; Sat, 13 May 2023 12:39:48 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pxoXG-0000NV-2p; Sat, 13 May 2023 14:39:42 +0200
-Message-ID: <48842e92-835e-bc3f-7118-48b8f415f532@leemhuis.info>
-Date: Sat, 13 May 2023 14:39:41 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CA23EC0
+	for <regressions@lists.linux.dev>; Sat, 13 May 2023 15:08:25 +0000 (UTC)
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-50bc0117683so19534584a12.1
+        for <regressions@lists.linux.dev>; Sat, 13 May 2023 08:08:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1683990503; x=1686582503;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xrMPRtTxcv74Ng8wNryDIV11KZXuJe9+P1FFJBFwcZ0=;
+        b=JYPfd3aSMqnoHARUlznUxq8gBAeDmi51c7HoNwt0ALTFRaD7rrsH57twX6F20vtb81
+         x2Icy37sGJW+K503Y7UfjVdURfDnqXeEEca8GU77GSzKZZ25XnWs8TZTSZ9PDXC1eFg7
+         jGrFfyt71Dx37Ki0IdH5iJI3EjPEri7Er+c1I=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683990503; x=1686582503;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xrMPRtTxcv74Ng8wNryDIV11KZXuJe9+P1FFJBFwcZ0=;
+        b=iUYPobhT0nOWxmnfLNHRo+sMjHQuv50OtdVGoh296TOrPJPiCT3oxF+mD0Hbe4Gg8d
+         I4KVbdaqmqNJaW/XfLban+3GdeXP1TIQCk5BiEyuiL1SWaKczp3dtziDPvMXVKU72o8S
+         GToB9VnupQ7pbdokxjcdzbKy6fX5zGdnKWs2ibqWn6NbVWIBSMqZ5aDgHzz5FWNmisrn
+         wQmHmWpSR9CpP7Ni1BW7OMibUVQX60bX0/0tsFTf4Vkv2XfzREGTujoaoOur3udssxMm
+         62j2fzrgVEz/M3MA+yAUBhYGinprccDbZ/6cR5Tj90yF2wF6/2/4RiVUboyZIclToY+h
+         aAqA==
+X-Gm-Message-State: AC+VfDylvVRKV4XX0xeUyLd4eD6m3HgEki0F8z+Eq11CC3Te1+ZlSwlx
+	pcWmemPUDFsFXqOX1H6SYh0ZrrgGXz3TsCktMBvtQQ==
+X-Google-Smtp-Source: ACHHUZ67behf1xZ2ynOQquLwpfIZI1dJP8zNkSFPCKW+Hr2HjJGCiDepNoLaszpWr6zjDbxQJXwedw==
+X-Received: by 2002:a17:907:9287:b0:959:6fb2:1c3b with SMTP id bw7-20020a170907928700b009596fb21c3bmr24462521ejc.39.1683990503070;
+        Sat, 13 May 2023 08:08:23 -0700 (PDT)
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com. [209.85.218.54])
+        by smtp.gmail.com with ESMTPSA id gs13-20020a170906f18d00b0095ef7268ba9sm6756383ejb.41.2023.05.13.08.08.21
+        for <regressions@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 13 May 2023 08:08:21 -0700 (PDT)
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-966287b0f72so1601047466b.0
+        for <regressions@lists.linux.dev>; Sat, 13 May 2023 08:08:21 -0700 (PDT)
+X-Received: by 2002:a17:907:783:b0:862:c1d5:ea1b with SMTP id
+ xd3-20020a170907078300b00862c1d5ea1bmr25847436ejb.8.1683990501510; Sat, 13
+ May 2023 08:08:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-To: Mike Christie <michael.christie@oracle.com>,
- Linus Torvalds <torvalds@linux-foundation.org>, nicolas.dichtel@6wind.com,
- Christian Brauner <brauner@kernel.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-Cc: hch@infradead.org, stefanha@redhat.com, jasowang@redhat.com,
- mst@redhat.com, sgarzare@redhat.com,
- virtualization@lists.linux-foundation.org, ebiederm@xmission.com,
- konrad.wilk@oracle.com, linux-kernel@vger.kernel.org
 References: <20230202232517.8695-1-michael.christie@oracle.com>
- <20230202232517.8695-9-michael.christie@oracle.com>
- <aba6cca4-e66c-768f-375c-b38c8ba5e8a8@6wind.com>
+ <20230202232517.8695-9-michael.christie@oracle.com> <aba6cca4-e66c-768f-375c-b38c8ba5e8a8@6wind.com>
  <CAHk-=wgadfsCnKHLON7op=Qs5t3w3PVz5ZDbvbKsfb=yBg=yjQ@mail.gmail.com>
- <78c5e150-26cf-7724-74ee-4a0b16b944b1@oracle.com>
-Content-Language: en-US, de-DE
-From: Thorsten Leemhuis <linux@leemhuis.info>
+ <78c5e150-26cf-7724-74ee-4a0b16b944b1@oracle.com> <48842e92-835e-bc3f-7118-48b8f415f532@leemhuis.info>
+In-Reply-To: <48842e92-835e-bc3f-7118-48b8f415f532@leemhuis.info>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Sat, 13 May 2023 10:08:04 -0500
+X-Gmail-Original-Message-ID: <CAHk-=wicXCNR1bBioaAiBqEDgv-CoQD9z2RsM2VOTPzkK0xr8g@mail.gmail.com>
+Message-ID: <CAHk-=wicXCNR1bBioaAiBqEDgv-CoQD9z2RsM2VOTPzkK0xr8g@mail.gmail.com>
 Subject: Re: [PATCH v11 8/8] vhost: use vhost_tasks for worker threads
-In-Reply-To: <78c5e150-26cf-7724-74ee-4a0b16b944b1@oracle.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1683981589;b20fe6ed;
-X-HE-SMSGID: 1pxoXG-0000NV-2p
+To: Thorsten Leemhuis <linux@leemhuis.info>
+Cc: Mike Christie <michael.christie@oracle.com>, nicolas.dichtel@6wind.com, 
+	Christian Brauner <brauner@kernel.org>, 
+	Linux kernel regressions list <regressions@lists.linux.dev>, hch@infradead.org, stefanha@redhat.com, 
+	jasowang@redhat.com, mst@redhat.com, sgarzare@redhat.com, 
+	virtualization@lists.linux-foundation.org, ebiederm@xmission.com, 
+	konrad.wilk@oracle.com, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-[CCing the regression list]
+On Sat, May 13, 2023 at 7:39=E2=80=AFAM Thorsten Leemhuis <linux@leemhuis.i=
+nfo> wrote:
+>
+> Jumping in here, as I found another problem with that patch: it broke
+> s2idle on my laptop when a qemu-kvm VM is running, as freezing user
+> space processes now fails for me:
 
-On 06.05.23 00:37, Mike Christie wrote:
-> On 5/5/23 1:22 PM, Linus Torvalds wrote:
->> On Fri, May 5, 2023 at 6:40 AM Nicolas Dichtel
->> <nicolas.dichtel@6wind.com> wrote:
->>>
->>> Is this an intended behavior?
->>> This breaks some of our scripts.
+Hmm. kthreads have PF_NOFREEZE by default, which is probably the reason.
 
-Jumping in here, as I found another problem with that patch: it broke
-s2idle on my laptop when a qemu-kvm VM is running, as freezing user
-space processes now fails for me:
+Adding
 
-```
- [  195.442949] PM: suspend entry (s2idle)
- [  195.641271] Filesystems sync: 0.198 seconds
- [  195.833828] Freezing user space processes
- [  215.841084] Freezing user space processes failed after 20.007
-seconds (1 tasks refusing to freeze, wq_busy=0):
- [  215.841255] task:vhost-3221      state:R stack:0     pid:3250
-ppid:3221   flags:0x00004006
- [  215.841264] Call Trace:
- [  215.841266]  <TASK>
- [  215.841270]  ? update_rq_clock+0x39/0x270
- [  215.841283]  ? _raw_spin_unlock+0x19/0x40
- [  215.841290]  ? __schedule+0x3f/0x1510
- [  215.841296]  ? sysvec_apic_timer_interrupt+0xaf/0xd0
- [  215.841306]  ? schedule+0x61/0xe0
- [  215.841313]  ? vhost_worker+0x87/0xb0 [vhost]
- [  215.841329]  ? vhost_task_fn+0x1a/0x30
- [  215.841336]  ? __pfx_vhost_task_fn+0x10/0x10
- [  215.841341]  ? ret_from_fork+0x2c/0x50
- [  215.841352]  </TASK>
- [  215.841936] OOM killer enabled.
- [  215.841938] Restarting tasks ... done.
- [  215.844204] random: crng reseeded on system resumption
- [  215.957095] PM: suspend exit
- [  215.957185] PM: suspend entry (s2idle)
- [  215.967646] Filesystems sync: 0.010 seconds
- [  215.971326] Freezing user space processes
- [  235.974400] Freezing user space processes failed after 20.003
-seconds (1 tasks refusing to freeze, wq_busy=0):
- [  235.974574] task:vhost-3221      state:R stack:0     pid:3250
-ppid:3221   flags:0x00004806
- [  235.974583] Call Trace:
- [  235.974586]  <TASK>
- [  235.974593]  ? __schedule+0x184/0x1510
- [  235.974605]  ? sysvec_apic_timer_interrupt+0xaf/0xd0
- [  235.974616]  ? schedule+0x61/0xe0
- [  235.974624]  ? vhost_worker+0x87/0xb0 [vhost]
- [  235.974648]  ? vhost_task_fn+0x1a/0x30
- [  235.974656]  ? __pfx_vhost_task_fn+0x10/0x10
- [  235.974662]  ? ret_from_fork+0x2c/0x50
- [  235.974673]  </TASK>
- [  235.975190] OOM killer enabled.
- [  235.975192] Restarting tasks ... done.
- [  235.978131] random: crng reseeded on system resumption
- [  236.091219] PM: suspend exit
-```
+        current->flags |=3D PF_NOFREEZE;
 
-After running into the problem I booted 6.3.1-rc1 again and there s2idle
-still worked. Didn't do a bisection, just looked at the vhost commits
-during the latest merge window; 6e890c5d502 ("vhost: use vhost_tasks for
-worker threads") looked suspicious, so I reverted it on top of latest
-mainline and then things work again. Through a search on lore I arrived
-in this thread and found below patch from Mike. Gave it a try on top of
-latest mainline, but it didn't help.
+to the vhost_task setup might just fix it, but it feels a bit off.
 
-Ciao, Thorsten
+The way io_uring does this is to  do
 
-> [...]
-> If it's ok to change the behavior of "ps -u root", then we can do this patch:
-> (Nicolas, I confirmed it fixes the 'ps a' case, but couldn't replicate the 'ps'
-> case. If you could test the ps only case or give me info on what /usr/bin/example
-> was doing I can replicate and test here):
-> 
-> 
-> diff --git a/kernel/fork.c b/kernel/fork.c
-> index ed4e01daccaa..eb9ffc58e211 100644
-> --- a/kernel/fork.c
-> +++ b/kernel/fork.c
-> @@ -2269,8 +2269,14 @@ __latent_entropy struct task_struct *copy_process(
->  	/*
->  	 * Thread groups must share signals as well, and detached threads
->  	 * can only be started up within the thread group.
-> +	 *
-> +	 * A userworker's parent thread will normally have a signal handler
-> +	 * that performs management operations, but the worker will not
-> +	 * because the parent will handle the signal then user a worker
-> +	 * specific interface to manage the thread and related resources.
->  	 */
-> -	if ((clone_flags & CLONE_THREAD) && !(clone_flags & CLONE_SIGHAND))
-> +	if ((clone_flags & CLONE_THREAD) && !(clone_flags & CLONE_SIGHAND) &&
-> +	    !args->user_worker && !args->ignore_signals)
->  		return ERR_PTR(-EINVAL);
->  
->  	/*
-> diff --git a/kernel/vhost_task.c b/kernel/vhost_task.c
-> index b7cbd66f889e..3700c21ea39d 100644
-> --- a/kernel/vhost_task.c
-> +++ b/kernel/vhost_task.c
-> @@ -75,7 +78,8 @@ struct vhost_task *vhost_task_create(int (*fn)(void *), void *arg,
->  				     const char *name)
->  {
->  	struct kernel_clone_args args = {
-> -		.flags		= CLONE_FS | CLONE_UNTRACED | CLONE_VM,
-> +		.flags		= CLONE_FS | CLONE_THREAD | CLONE_VM |
-> +				  CLONE_UNTRACED,
->  		.exit_signal	= 0,
->  		.fn		= vhost_task_fn,
->  		.name		= name
+                if (signal_pending(current)) {
+                        struct ksignal ksig;
+
+                        if (!get_signal(&ksig))
+                                continue;
+                        break;
+                }
+
+in the main loop, which ends up handling the freezer situation too.
+But it should handle things like SIGSTOP etc as well, and also exit on
+actual signals.
+
+I get the feeling that the whole "vhost_task_should_stop()" logic
+should have the exact logic above, and basically make those threads
+killable as well.
+
+Hmm?
+
+                Linus
