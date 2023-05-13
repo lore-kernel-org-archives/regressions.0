@@ -1,218 +1,119 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f49.google.com (mail-oa1-f49.google.com [209.85.160.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E4FB2583
-	for <regressions@lists.linux.dev>; Sat, 13 May 2023 19:48:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1684007293;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vOWXtGClXTGyVkmNieaR+4IKrzuDtp9Iq5EkIJHQ6Bk=;
-	b=IPEDpWMHxCSJ2tYOHuDt6X81bKPXnWO5Lf5Vl/kDPNlz1SA1vZvZDL/W7VlPGm83236D81
-	iziecoR5lpDTWWzV+OXOseW3wJHyMwCqM4NBsKd7jP7VuziJx09ZGTX90rCoXeg3FjkN/6
-	ZQshVLs2G8wbwA6iq6Ie8wukhdrhpW8=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-126-BM3j6IBWOSa0JC9dAxez_w-1; Sat, 13 May 2023 15:48:11 -0400
-X-MC-Unique: BM3j6IBWOSa0JC9dAxez_w-1
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-965e5cfca7cso1179706466b.1
-        for <regressions@lists.linux.dev>; Sat, 13 May 2023 12:48:11 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F2CA79F6
+	for <regressions@lists.linux.dev>; Sat, 13 May 2023 19:53:10 +0000 (UTC)
+Received: by mail-oa1-f49.google.com with SMTP id 586e51a60fabf-199ba5154b3so666566fac.1
+        for <regressions@lists.linux.dev>; Sat, 13 May 2023 12:53:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1684007589; x=1686599589;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EKnUGuMyQddL8Uvsex1Z0TjgGFq0tLnmJqvcma+3L5k=;
+        b=HbCngJG4uTOze1qPsdYCZbxWziGcPon0eIHT9dn1jiZW9KyEHitJhdfDVv4cBMyZo3
+         9oab0ViVhQy8qojtbWL2jp5718+c22qXvSUr7mdgD3ym0VRp3iwklZQDWtX0hQxYfFVh
+         aOdaskmHKknzy433KAJwh6vXJKW6yHsPSkgMl4xj+5fQkw1ANq33/A4Og66QeKOyCqCt
+         jdeDHYMIdVYcRyeMhZHDge66puDZbZ8A21wNPWTqF3e2RPKwz+pOCjVx9R46mQwdnqxz
+         sVWXNZ1cq2L2hZu8pULvV+PWiyNty9BAEtmBMWzMpwmOdlZfx9W0/2MbEzv6I1Mus/nT
+         1IrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684007290; x=1686599290;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vOWXtGClXTGyVkmNieaR+4IKrzuDtp9Iq5EkIJHQ6Bk=;
-        b=isQnuEI0kpQC6/xBm03XO1NUTypzp67nQsx6jiwj0zuk0hwktNqDYxUWfAkDGKgg9P
-         VWseCJ7IBd0RjnF8H/TgkhmjHvPj3PpqAq/Lf9FhjS62EuS+MWJ1G3UaUhe5YAqKUEzv
-         YZkA9JyvhVLtqWr/v0S04gMHSdRx2jqUKVbebrx+B4ecSlUh7eMKE/hLoSGu0hfUSlK6
-         KDeaLBxKljZvFdhNXnNJ8Zsd0UzaWm6Bw/WATU19RSt0KyyvIl3WlLQh4lD/cTAenRyz
-         plRsRL3glU+7lLmGPXrFAQ5aQ9xHGm9mNpAeIuoNVp7GbhVT6Ed41gQfFXrLjQ7CYV5J
-         Ztyw==
-X-Gm-Message-State: AC+VfDzcWfL1abKjcOk0/hpGz8wBthQXG8lI+EDtqxlMQepBDyVqPmjx
-	jzBWgc8fiZrpEVVbk9p1o8d4k2HQjYZVl1ZO42pkUjD/YV5tFdcpq8qKYZB5k+HN2yfNI7TPxp+
-	v1eXZHw+JUSPy5VbF+UDtBwM=
-X-Received: by 2002:a17:907:3f83:b0:94e:8d26:f610 with SMTP id hr3-20020a1709073f8300b0094e8d26f610mr25849266ejc.28.1684007290631;
-        Sat, 13 May 2023 12:48:10 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ4uV0zikgGK1Uto4jgYWjfBrTLZ/7APRhpNdrc9hzNOujOvfLfyiV1UUUtLhdEQKwx2H9scSQ==
-X-Received: by 2002:a17:907:3f83:b0:94e:8d26:f610 with SMTP id hr3-20020a1709073f8300b0094e8d26f610mr25849252ejc.28.1684007290273;
-        Sat, 13 May 2023 12:48:10 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id tk13-20020a170907c28d00b0094f185d82dcsm7030372ejc.21.2023.05.13.12.48.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 13 May 2023 12:48:09 -0700 (PDT)
-Message-ID: <b2f19e4b-7d33-695d-4a7a-e4aabe5d2d99@redhat.com>
-Date: Sat, 13 May 2023 21:48:08 +0200
+        d=1e100.net; s=20221208; t=1684007589; x=1686599589;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EKnUGuMyQddL8Uvsex1Z0TjgGFq0tLnmJqvcma+3L5k=;
+        b=TNZ3tDFmL0RGJPDBnlPq1OaPO7arI3GFJ1C4vEGmy/dC1eBLSgb9+OYEm6W72cg7mu
+         lmEXSJ2IVOrMwnV5UW0DnjqhW0AQCf1bd3O6UU+q6xoNcR2ke3g6E4NtZ5k9tf2N+c4o
+         3dLVeYf7uHW1SyZUDAkIfF/nfoIAkNKO6xh6dYCBJE2qPk8m9lhD3OWutF5p/RvfF+s3
+         BenPpdCJUZv9qB4Oax/rZ4YE44P7BYKK7htSBahce/aT+qStc+pZwK+SY9v5GiYePEwN
+         Gfbfd8GNN+3eFDZr7eZPEy5ltjcBe08nbI05h1LQeAJt+STsN0U40lrQIxMZzpUWJerV
+         G9jA==
+X-Gm-Message-State: AC+VfDx1wYiXw3/9S5P8WY3xfRPNXydaJ7vNxltsvM+dgjgUin5Yfkb8
+	4vHGROWabneJTTFNai/Q/8W8T6k2bPEL4W+kkdqR/KgZuN6svg==
+X-Google-Smtp-Source: ACHHUZ4+9ESMyjKgM1moUKdJXq8n11MQ+BwtANHeBZ62+Ic4FnhLljw4ilR0v04fepPxlhQ3q2S+C+VJ7ZWQWHwC9r8=
+X-Received: by 2002:a05:6870:738d:b0:187:f238:3db with SMTP id
+ z13-20020a056870738d00b00187f23803dbmr15431411oam.19.1684007589147; Sat, 13
+ May 2023 12:53:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH REGRESSION FIX v2] wifi: brcmfmac: Check for probe() id
- argument being NULL
-To: Arend van Spriel <aspriel@gmail.com>, Franky Lin
- <franky.lin@broadcom.com>, Hante Meuleman <hante.meuleman@broadcom.com>,
- Kalle Valo <kvalo@kernel.org>
-Cc: linux-wireless@vger.kernel.org, brcm80211-dev-list.pdl@broadcom.com,
- SHA-cyfmac-dev-list@infineon.com, regressions@lists.linux.dev,
- Felix <nimrod4garoa@gmail.com>,
- Arend van Spriel <arend.vanspriel@broadcom.com>, stable@vger.kernel.org
-References: <20230510141856.46532-1-hdegoede@redhat.com>
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230510141856.46532-1-hdegoede@redhat.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US, nl
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <bug-217440-225600@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-217440-225600@https.bugzilla.kernel.org/>
+From: "Joseph C. Sible" <josephcsible@gmail.com>
+Date: Sat, 13 May 2023 15:52:53 -0400
+Message-ID: <CABpewhE4REgn9RJZduuEU6Z_ijXNeQWnrxO1tg70Gkw=F8qNYg@mail.gmail.com>
+Subject: Fwd: [Bug 217440] New: ALC236 audio disappears from HP 15z-fc000 on
+ warm boot
+To: regressions@lists.linux.dev
+Cc: kailang@realtek.com, perex@perex.cz, tiwai@suse.com, 
+	alsa-devel@alsa-project.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+Hello,
 
-On 5/10/23 16:18, Hans de Goede wrote:
-> The probe() id argument may be NULL in 2 scenarios:
-> 
-> 1. brcmf_pcie_pm_leave_D3() calling brcmf_pcie_probe() to reprobe
->    the device.
-> 
-> 2. If a user tries to manually bind the driver from sysfs then the sdio /
->    pcie / usb probe() function gets called with NULL as id argument.
-> 
-> 1. Is being hit by users causing the following oops on resume and causing
-> wifi to stop working:
-> 
-> BUG: kernel NULL pointer dereference, address: 0000000000000018
-> <snip>
-> Hardware name: Dell Inc. XPS 13 9350/0PWNCR, BIDS 1.13.0 02/10/2020
-> Workgueue: events_unbound async_run_entry_fn
-> RIP: 0010:brcmf_pcie_probe+Ox16b/0x7a0 [brcmfmac]
-> <snip>
-> Call Trace:
->  <TASK>
->  brcmf_pcie_pm_leave_D3+0xc5/8x1a0 [brcmfmac be3b4cefca451e190fa35be8f00db1bbec293887]
->  ? pci_pm_resume+0x5b/0xf0
->  ? pci_legacy_resume+0x80/0x80
->  dpm_run_callback+0x47/0x150
->  device_resume+0xa2/0x1f0
->  async_resume+0x1d/0x30
-> <snip>
-> 
-> Fix this by checking for id being NULL.
-> 
-> In the PCI and USB cases try a manual lookup of the id so that manually
-> binding the driver through sysfs and more importantly brcmf_pcie_probe()
-> on resume will work.
-> 
-> For the SDIO case there is no helper to do a manual sdio_device_id lookup,
-> so just directly error out on a NULL id there.
-> 
-> Fixes: da6d9c8ecd00 ("wifi: brcmfmac: add firmware vendor info in driver info")
-> Reported-by: Felix <nimrod4garoa@gmail.com>
-> Link: https://lore.kernel.org/regressions/4ef3f252ff530cbfa336f5a0d80710020fc5cb1e.camel@gmail.com/
-> Cc: Arend van Spriel <arend.vanspriel@broadcom.com>
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Forwarding my regression bug report submission per the instructions in
+"Reporting regressions".
 
-This is now also:
-
-Tested by: Nimrod MacIomhair <nimrod4garoa@gmail.com>
-
-Can we get this regression fix merged please ?
+#regzbot introduced: 5aec989130
+https://bugzilla.kernel.org/show_bug.cgi?id=3D217440
 
 Regards,
 
-Hans
+Joseph C. Sible
 
 
+---------- Forwarded message ---------
+From: <bugzilla-daemon@kernel.org>
+Date: Sat, May 13, 2023 at 3:46=E2=80=AFPM
+Subject: [Bug 217440] New: ALC236 audio disappears from HP 15z-fc000
+on warm boot
+To: <josephcsible@gmail.com>
 
 
-> ---
-> Changes in v2:
-> - Using BRCMF_FWVENDOR_INVALID will just lead to a probe() error later on,
->   if NULL error out immediately instead of using BRCMF_FWVENDOR_INVALID.
-> ---
->  .../net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c |  5 +++++
->  .../net/wireless/broadcom/brcm80211/brcmfmac/pcie.c   | 11 +++++++++++
->  .../net/wireless/broadcom/brcm80211/brcmfmac/usb.c    | 11 +++++++++++
->  3 files changed, 27 insertions(+)
-> 
-> diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c
-> index 65d4799a5658..f06684f84789 100644
-> --- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c
-> +++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c
-> @@ -1032,6 +1032,11 @@ static int brcmf_ops_sdio_probe(struct sdio_func *func,
->  	struct brcmf_sdio_dev *sdiodev;
->  	struct brcmf_bus *bus_if;
->  
-> +	if (!id) {
-> +		dev_err(&func->dev, "Error no sdio_device_id passed for %x:%x\n", func->vendor, func->device);
-> +		return -ENODEV;
-> +	}
-> +
->  	brcmf_dbg(SDIO, "Enter\n");
->  	brcmf_dbg(SDIO, "Class=%x\n", func->class);
->  	brcmf_dbg(SDIO, "sdio vendor ID: 0x%04x\n", func->vendor);
-> diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/pcie.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/pcie.c
-> index a9b9b2dc62d4..d9ecaa0cfdc4 100644
-> --- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/pcie.c
-> +++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/pcie.c
-> @@ -2339,6 +2339,9 @@ static void brcmf_pcie_debugfs_create(struct device *dev)
->  }
->  #endif
->  
-> +/* Forward declaration for pci_match_id() call */
-> +static const struct pci_device_id brcmf_pcie_devid_table[];
-> +
->  static int
->  brcmf_pcie_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->  {
-> @@ -2349,6 +2352,14 @@ brcmf_pcie_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->  	struct brcmf_core *core;
->  	struct brcmf_bus *bus;
->  
-> +	if (!id) {
-> +		id = pci_match_id(brcmf_pcie_devid_table, pdev);
-> +		if (!id) {
-> +			pci_err(pdev, "Error could not find pci_device_id for %x:%x\n", pdev->vendor, pdev->device);
-> +			return -ENODEV;
-> +		}
-> +	}
-> +
->  	brcmf_dbg(PCIE, "Enter %x:%x\n", pdev->vendor, pdev->device);
->  
->  	ret = -ENOMEM;
-> diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
-> index 246843aeb696..2178675ae1a4 100644
-> --- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
-> +++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
-> @@ -1331,6 +1331,9 @@ brcmf_usb_disconnect_cb(struct brcmf_usbdev_info *devinfo)
->  	brcmf_usb_detach(devinfo);
->  }
->  
-> +/* Forward declaration for usb_match_id() call */
-> +static const struct usb_device_id brcmf_usb_devid_table[];
-> +
->  static int
->  brcmf_usb_probe(struct usb_interface *intf, const struct usb_device_id *id)
->  {
-> @@ -1342,6 +1345,14 @@ brcmf_usb_probe(struct usb_interface *intf, const struct usb_device_id *id)
->  	u32 num_of_eps;
->  	u8 endpoint_num, ep;
->  
-> +	if (!id) {
-> +		id = usb_match_id(intf, brcmf_usb_devid_table);
-> +		if (!id) {
-> +			dev_err(&intf->dev, "Error could not find matching usb_device_id\n");
-> +			return -ENODEV;
-> +		}
-> +	}
-> +
->  	brcmf_dbg(USB, "Enter 0x%04x:0x%04x\n", id->idVendor, id->idProduct);
->  
->  	devinfo = kzalloc(sizeof(*devinfo), GFP_ATOMIC);
+https://bugzilla.kernel.org/show_bug.cgi?id=3D217440
 
+            Bug ID: 217440
+           Summary: ALC236 audio disappears from HP 15z-fc000 on warm boot
+           Product: Drivers
+           Version: 2.5
+    Kernel Version: 6.3.2
+          Hardware: All
+                OS: Linux
+            Status: NEW
+          Severity: normal
+          Priority: P3
+         Component: Sound(ALSA)
+          Assignee: perex@perex.cz
+          Reporter: josephcsible@gmail.com
+        Regression: Yes
+           Bisected 5aec98913095ed3b4424ed6c5fdeb6964e9734da
+         commit-id:
+
+On an HP 15z-fc000 laptop that uses Realtek ALC236 for sound, once the syst=
+em
+is warm booted ("reboot" from within Linux), sound stops working completely=
+ and
+the device doesn't even show up anymore. Once this happens, the only way to=
+ get
+it to come back is to cold boot ("poweroff" from within Linux, wait for it =
+to
+turn completely off, and turn it back on with the physical power button). I=
+n
+particular, once you boot from a "bad" kernel, no number of warm boots with
+"good" kernels will ever bring sound back.
+
+I bisected this to commit 5aec989, which first appeared in 5.15-rc6. In
+addition, I confirmed by doing a custom build of 6.3.2 with reverts of both
+f30741c (just to avoid a conflict) and 5aec989, which works correctly for m=
+e.
+
+--
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You reported the bug.
