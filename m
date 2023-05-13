@@ -1,105 +1,132 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+Received: from mail-oo1-f53.google.com (mail-oo1-f53.google.com [209.85.161.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CA23EC0
-	for <regressions@lists.linux.dev>; Sat, 13 May 2023 15:08:25 +0000 (UTC)
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-50bc0117683so19534584a12.1
-        for <regressions@lists.linux.dev>; Sat, 13 May 2023 08:08:24 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B815D22637
+	for <regressions@lists.linux.dev>; Sat, 13 May 2023 16:15:40 +0000 (UTC)
+Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-54fb0fce238so2161404eaf.1
+        for <regressions@lists.linux.dev>; Sat, 13 May 2023 09:15:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1683990503; x=1686582503;
+        d=gmail.com; s=20221208; t=1683994540; x=1686586540;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=xrMPRtTxcv74Ng8wNryDIV11KZXuJe9+P1FFJBFwcZ0=;
-        b=JYPfd3aSMqnoHARUlznUxq8gBAeDmi51c7HoNwt0ALTFRaD7rrsH57twX6F20vtb81
-         x2Icy37sGJW+K503Y7UfjVdURfDnqXeEEca8GU77GSzKZZ25XnWs8TZTSZ9PDXC1eFg7
-         jGrFfyt71Dx37Ki0IdH5iJI3EjPEri7Er+c1I=
+        bh=dAwewp2kthWWSif09t8xwGEOcMXmK89hPwkmMo5Is8o=;
+        b=UzeUzpMkVve/6x5RUROzP/Pr5G/uJ2wpTGBpSqFq3m33qS0mqNnW7Cqftq97NZfHqV
+         DjMoLczD9/vL/YNfUpD9ThJ/dQv1asxhZByVhrnpJE1pCFmRlmCGgenZJrlzwP0Cr2LU
+         xYWsKzbWXUvm6ANZ4oTPEmAXH4Dhb3jL3cp4p1Ke/xjERpKxuHRbCCSdhyiUtvT9zNHl
+         +AIIGndzn2TXDGJmmHPjQBoK2OIpW6NRz6bSonKBZvZhhqhszU5T1Rzz+UI7nGcINhB2
+         yR6DFmoI3i69TgKNuSv7cBx/EsmB/litG19WXpII47sKjZYVMv5+kRy1z6PwQmdGVLXr
+         Wg4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683990503; x=1686582503;
+        d=1e100.net; s=20221208; t=1683994540; x=1686586540;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=xrMPRtTxcv74Ng8wNryDIV11KZXuJe9+P1FFJBFwcZ0=;
-        b=iUYPobhT0nOWxmnfLNHRo+sMjHQuv50OtdVGoh296TOrPJPiCT3oxF+mD0Hbe4Gg8d
-         I4KVbdaqmqNJaW/XfLban+3GdeXP1TIQCk5BiEyuiL1SWaKczp3dtziDPvMXVKU72o8S
-         GToB9VnupQ7pbdokxjcdzbKy6fX5zGdnKWs2ibqWn6NbVWIBSMqZ5aDgHzz5FWNmisrn
-         wQmHmWpSR9CpP7Ni1BW7OMibUVQX60bX0/0tsFTf4Vkv2XfzREGTujoaoOur3udssxMm
-         62j2fzrgVEz/M3MA+yAUBhYGinprccDbZ/6cR5Tj90yF2wF6/2/4RiVUboyZIclToY+h
-         aAqA==
-X-Gm-Message-State: AC+VfDylvVRKV4XX0xeUyLd4eD6m3HgEki0F8z+Eq11CC3Te1+ZlSwlx
-	pcWmemPUDFsFXqOX1H6SYh0ZrrgGXz3TsCktMBvtQQ==
-X-Google-Smtp-Source: ACHHUZ67behf1xZ2ynOQquLwpfIZI1dJP8zNkSFPCKW+Hr2HjJGCiDepNoLaszpWr6zjDbxQJXwedw==
-X-Received: by 2002:a17:907:9287:b0:959:6fb2:1c3b with SMTP id bw7-20020a170907928700b009596fb21c3bmr24462521ejc.39.1683990503070;
-        Sat, 13 May 2023 08:08:23 -0700 (PDT)
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com. [209.85.218.54])
-        by smtp.gmail.com with ESMTPSA id gs13-20020a170906f18d00b0095ef7268ba9sm6756383ejb.41.2023.05.13.08.08.21
-        for <regressions@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 13 May 2023 08:08:21 -0700 (PDT)
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-966287b0f72so1601047466b.0
-        for <regressions@lists.linux.dev>; Sat, 13 May 2023 08:08:21 -0700 (PDT)
-X-Received: by 2002:a17:907:783:b0:862:c1d5:ea1b with SMTP id
- xd3-20020a170907078300b00862c1d5ea1bmr25847436ejb.8.1683990501510; Sat, 13
- May 2023 08:08:21 -0700 (PDT)
+        bh=dAwewp2kthWWSif09t8xwGEOcMXmK89hPwkmMo5Is8o=;
+        b=Z1oM77D6+6/kqQ/B3qA46YAxm2uzO1H+uuKh5K59EJCldGVnbUu5SqBI5Z7Gsw/EfZ
+         iFAnrGxTchTcUy+h9syvZjMWjKSFXNIrA8oIfoxIr5+BZZalZjACLze+A8kmez9iP+Kz
+         jhwYC0YjEauoaIjWQnhHrLBlwzaCrl/YJOXcSySXv8Jhi9311MacGmUNoUPRF69ver55
+         47DqVza2SFqY2eIQpInt/MUQNyLKm74WpB90M4bv25e/gZI2SdEP0gmfuzTKvmjbDWRV
+         DAG7qIRuK7VixFvDXldbLn1VIXvvRMmDkfTtQx5nP8hTXBAGz9fGRnR34dEMC26QH0DC
+         jPlQ==
+X-Gm-Message-State: AC+VfDw6UhJsG2QHanZZhIt+tmzP0lhaIN1K0171JXPBpawXUBiKHLkf
+	CHZqaekDoV19zuBuQTzgyjxzNEib8AXczGuSuos=
+X-Google-Smtp-Source: ACHHUZ4JwIaY02RrtBZwd7KHuPZBw7jqM0UkUh1Tb9GM7JscTzR1I4ronR9NBKH6BvNHjh5sREtms0J7+SCs4+C7Ido=
+X-Received: by 2002:a4a:d218:0:b0:546:bf26:49c7 with SMTP id
+ c24-20020a4ad218000000b00546bf2649c7mr8214553oos.8.1683994538269; Sat, 13 May
+ 2023 09:15:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230202232517.8695-1-michael.christie@oracle.com>
- <20230202232517.8695-9-michael.christie@oracle.com> <aba6cca4-e66c-768f-375c-b38c8ba5e8a8@6wind.com>
- <CAHk-=wgadfsCnKHLON7op=Qs5t3w3PVz5ZDbvbKsfb=yBg=yjQ@mail.gmail.com>
- <78c5e150-26cf-7724-74ee-4a0b16b944b1@oracle.com> <48842e92-835e-bc3f-7118-48b8f415f532@leemhuis.info>
-In-Reply-To: <48842e92-835e-bc3f-7118-48b8f415f532@leemhuis.info>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Sat, 13 May 2023 10:08:04 -0500
-X-Gmail-Original-Message-ID: <CAHk-=wicXCNR1bBioaAiBqEDgv-CoQD9z2RsM2VOTPzkK0xr8g@mail.gmail.com>
-Message-ID: <CAHk-=wicXCNR1bBioaAiBqEDgv-CoQD9z2RsM2VOTPzkK0xr8g@mail.gmail.com>
-Subject: Re: [PATCH v11 8/8] vhost: use vhost_tasks for worker threads
-To: Thorsten Leemhuis <linux@leemhuis.info>
-Cc: Mike Christie <michael.christie@oracle.com>, nicolas.dichtel@6wind.com, 
-	Christian Brauner <brauner@kernel.org>, 
-	Linux kernel regressions list <regressions@lists.linux.dev>, hch@infradead.org, stefanha@redhat.com, 
-	jasowang@redhat.com, mst@redhat.com, sgarzare@redhat.com, 
-	virtualization@lists.linux-foundation.org, ebiederm@xmission.com, 
-	konrad.wilk@oracle.com, linux-kernel@vger.kernel.org
+References: <588c1a66-9976-c96f-dcdd-beec8b7410f0@gmail.com>
+ <3e5548e4-5a3e-9346-ec58-3617e1947186@gmail.com> <a50537d1f1af34104793218acb954a61@linuxsystems.it>
+ <3383ba6e-e62b-cd9b-8a61-39b0de8af579@csgroup.eu> <57100be6-d379-0bc7-6d45-228cd46f9c81@csgroup.eu>
+ <2023051353-epiphany-retorted-4ad1@gregkh>
+In-Reply-To: <2023051353-epiphany-retorted-4ad1@gregkh>
+From: Alex Deucher <alexdeucher@gmail.com>
+Date: Sat, 13 May 2023 12:15:26 -0400
+Message-ID: <CADnq5_OqgEP1S25VfnuptWiOvicXyX3Waq8rq_62rQsqeJTXYQ@mail.gmail.com>
+Subject: Re: Fwd: Linux 6.3.1 + AMD RX 570 on ppc64le 4K: Kernel attempted to
+ read user page (1128) - exploit attempt? (uid: 0)
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>, Sasha Levin <sashal@kernel.org>, 
+	Linux Regressions <regressions@lists.linux.dev>, Michael Ellerman <mpe@ellerman.id.au>, 
+	Qingqing Zhuo <qingqing.zhuo@amd.com>, Fangzhi Zuo <Jerry.Zuo@amd.com>, 
+	Linux AMDGPU <amd-gfx@lists.freedesktop.org>, Daniel Wheeler <daniel.wheeler@amd.com>, 
+	=?UTF-8?Q?Niccol=C3=B2_Belli?= <darkbasic@linuxsystems.it>, 
+	Hersen Wu <hersenxs.wu@amd.com>, Bagas Sanjaya <bagasdotme@gmail.com>, 
+	Alex Deucher <alexander.deucher@amd.com>, 
+	Linux for PowerPC <linuxppc-dev@lists.ozlabs.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, May 13, 2023 at 7:39=E2=80=AFAM Thorsten Leemhuis <linux@leemhuis.i=
-nfo> wrote:
+On Sat, May 13, 2023 at 12:11=E2=80=AFPM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
-> Jumping in here, as I found another problem with that patch: it broke
-> s2idle on my laptop when a qemu-kvm VM is running, as freezing user
-> space processes now fails for me:
+> On Fri, May 12, 2023 at 03:25:47PM +0000, Christophe Leroy wrote:
+> >
+> >
+> > Le 12/05/2023 =C3=A0 17:16, Christophe Leroy a =C3=A9crit :
+> > >
+> > >
+> > > Le 11/05/2023 =C3=A0 19:25, Niccol=C3=B2 Belli a =C3=A9crit :
+> > >> [Vous ne recevez pas souvent de courriers de
+> > >> darkbasic@linuxsystems.it. D?couvrez pourquoi ceci est important ?
+> > >> https://aka.ms/LearnAboutSenderIdentification ]
+> > >>
+> > >> Il 2023-05-12 10:32 Bagas Sanjaya ha scritto:
+> > >>> #regzbot introduced: f4f3b7dedbe849
+> > >>> #regzbot link: https://gitlab.freedesktop.org/drm/amd/-/issues/2553
+> > >>
+> > >> It doesn't look like the aforementioned patch made its way into 6.3 =
+yet:
+> > >>
+> > >> niko@talos2 ~/devel/linux-stable $ git branch
+> > >> * linux-6.3.y
+> > >>    master
+> > >> niko@talos2 ~/devel/linux-stable $ git show f4f3b7dedbe8 | patch -p1
+> > >> patching file
+> > >> drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c
+> > >> Hunk #1 succeeded at 227 (offset 15 lines).
+> > >> Hunk #2 succeeded at 269 with fuzz 2 (offset 19 lines).
+> > >> patching file
+> > >> drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.h
+> > >> Hunk #1 succeeded at 49 with fuzz 2 (offset 15 lines).
+> > >
+> > > As far as I can see that patch has no Fixes: tag, so it will unlikely=
+ be
+> > > automatically merged into stable.
+> > >
+> > > Has anybody requested greg/sasha to get it into 6.3 ?
+> > >
+> >
+> > In fact, it seems that patch is already part of 6.3:
+> >
+> > $ git tag --contains f4f3b7dedbe8
+> > v6.3
+> > v6.3-rc5
+> > v6.3-rc6
+> > v6.3-rc7
+> > v6.3.1
+> > v6.3.2
+> > v6.4-rc1
+>
+> And that commit is already in the following releases:
+>         5.10.177 5.15.106 6.1.23 6.2.10 6.3
+>
+> So what needs to be done here?
 
-Hmm. kthreads have PF_NOFREEZE by default, which is probably the reason.
+Nothing needs to be done here.  We still don't know what the problem
+is.  We are working on the issue on:
+https://gitlab.freedesktop.org/drm/amd/-/issues/2553
+Let's just track it there.  This email thread is just causing confusion.
 
-Adding
+Alex
 
-        current->flags |=3D PF_NOFREEZE;
-
-to the vhost_task setup might just fix it, but it feels a bit off.
-
-The way io_uring does this is to  do
-
-                if (signal_pending(current)) {
-                        struct ksignal ksig;
-
-                        if (!get_signal(&ksig))
-                                continue;
-                        break;
-                }
-
-in the main loop, which ends up handling the freezer situation too.
-But it should handle things like SIGSTOP etc as well, and also exit on
-actual signals.
-
-I get the feeling that the whole "vhost_task_should_stop()" logic
-should have the exact logic above, and basically make those threads
-killable as well.
-
-Hmm?
-
-                Linus
+>
+> confused,
+>
+> greg k-h
