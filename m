@@ -1,22 +1,13 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30E767E3
-	for <regressions@lists.linux.dev>; Sun, 14 May 2023 10:59:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2DD5C433D2;
-	Sun, 14 May 2023 10:59:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1684061978;
-	bh=fWwZ3vYa6O/Gb+7Owes2wmBd6NQXiz+nV9ckH3UmStA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=sArBdor0LgFtCo6uSy4nn3aGdO7S4R9LqZ5Eb5/JefMe6iT6w69kJsNs2JZr4XSDR
-	 d3xqQ7SPIdOquKQ1W3MpwW1lZKnm50olquy8dvy0+qdkQVokt6G3wKlKPaS9AR0gew
-	 zbSfNyYSDSw+MsH4weVkTeIP8L0FOOs8uXjuxroTBcpzy60gh7USQUcbmBdHFj1kU+
-	 qENFtYfp9uvcVhYhUnOGPm4Zi9CEgEYTyb22opnxd/pb4+yWxe3h7i4/2UtaHu7Khz
-	 Eyw8FDpmh0di3VC2b7qZRIH7ReCbjZ8qgNVnMh0cXo2w1+50u13sr2tgwAs1hRbmnv
-	 UUygWa3SWkJ2w==
-Message-ID: <55d5ec29-f30f-4596-a3b9-7e5b8adf0582@kernel.org>
-Date: Sun, 14 May 2023 12:59:32 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 055BA4C95
+	for <regressions@lists.linux.dev>; Sun, 14 May 2023 11:54:29 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1pyAIu-0006tG-Qg; Sun, 14 May 2023 13:54:20 +0200
+Message-ID: <83a92f91-f126-94e8-a7ef-3da0298c0d4f@leemhuis.info>
+Date: Sun, 14 May 2023 13:54:20 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -24,55 +15,106 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: mainline build failure due to cf21f328fcaf ("media: nxp: Add
- i.MX8 ISI driver")
-To: Mauro Carvalho Chehab <mchehab@kernel.org>,
- Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
- "Sudip Mukherjee (Codethink)" <sudipm.mukherjee@gmail.com>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
- NXP Linux Team <linux-imx@nxp.com>, linux-media@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>
-References: <ZElaVmxDsOkZj2DK@debian>
- <51cff63a-3a04-acf5-8264-bb19b0bee8a3@leemhuis.info>
- <CAHk-=wgzU8_dGn0Yg+DyX7ammTkDUCyEJ4C=NvnHRhxKWC7Wpw@mail.gmail.com>
- <20230510090527.25e26127@sal.lan>
-Content-Language: en-US
-From: Krzysztof Kozlowski <krzk@kernel.org>
-In-Reply-To: <20230510090527.25e26127@sal.lan>
+ Thunderbird/102.10.0
+Subject: Re: [PATCH] regulator: qcom-rpmh: Revert "regulator: qcom-rpmh: Use
+ PROBE_FORCE_SYNCHRONOUS"
+Content-Language: en-US, de-DE
+To: Amit Pundir <amit.pundir@linaro.org>,
+ Douglas Anderson <dianders@chromium.org>
+Cc: Mark Brown <broonie@kernel.org>,
+ Marek Szyprowski <m.szyprowski@samsung.com>, Andy Gross <agross@kernel.org>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>, Liam Girdwood
+ <lgirdwood@gmail.com>, linux-arm-msm@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <20230324063357.1.Ifdf3625a3c5c9467bd87bfcdf726c884ad220a35@changeid>
+ <CAMi1Hd1avQDcDQf137m2auz2znov4XL8YGrLZsw5edb-NtRJRw@mail.gmail.com>
+From: "Linux regression tracking #adding (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <CAMi1Hd1avQDcDQf137m2auz2znov4XL8YGrLZsw5edb-NtRJRw@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1684065270;507b9c26;
+X-HE-SMSGID: 1pyAIu-0006tG-Qg
 
-On 10/05/2023 10:05, Mauro Carvalho Chehab wrote:
-> And another CI job testing bisect breakages as I receive pull requests,
-> applying patch per patch and using both allyesconfig and allmodconfig,
-> also on x86_64 arch with W=1:
+[CCing the regression list, as it should be in the loop for regressions:
+https://docs.kernel.org/admin-guide/reporting-regressions.html]
+
+[TLDR: I'm adding this report to the list of tracked Linux kernel
+regressions; the text you find below is based on a few templates
+paragraphs you might have encountered already in similar form.
+See link in footer if these mails annoy you.]
+
+On 13.05.23 20:08, Amit Pundir wrote:
+> On Fri, 24 Mar 2023 at 19:05, Douglas Anderson <dianders@chromium.org> wrote:
+>>
+>> This reverts commit 58973046c1bf ("regulator: qcom-rpmh: Use
+>> PROBE_FORCE_SYNCHRONOUS"). Further digging into the problems that
+>> prompted the us to switch to synchronous probe showed that the root
+>> cause was a missing "rootwait" in the kernel command line
+>> arguments. Let's reinstate asynchronous probe.
 > 
-> 	https://builder.linuxtv.org/job/patchwork/
+> Hi, the asynchronous probe is broken on Dragonboard 845c (SDM845)
+> running AOSP (Android Open Source Project) with v6.4-rc1
+> https://bugs.linaro.org/show_bug.cgi?id=5975.
+> Can we please go back to synchronous probe.
 > 
-> The rule is to not merge stuff on media tree if any of those jobs
-> fail. I also fast-forward merging patches whose subject states that
-> the build has failed.
+> AOSP do not make use of rootwait, IIRC, but it is added by the
+> bootloader anyway. And the device fails to boot AOSP regardless of
+> "rootwait" bootarg being present or not.
 > 
-> In order to help with that, on normal situation, I usually take one week
-> to merge stuff from media_stage into media_tree, doing rebases at
-> media_stage if needed to avoid git bisect build breakages at media_tree
-> (which is from where I send my update PRs to you).
-> 
-> Unfortunately, currently we don't have resources to do multiple randconfig
+> FWIW I do not see this regression on RB5 (QRB5165/SM8250) running the
+> same set of AOSP images.
 
-Hi Mauro,
+Thanks for the report. To be sure the issue doesn't fall through the
+cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
+tracking bot:
 
-Is you media staging tree included in LKP (kernel test robot)? You would
-get huge build coverage after every push to your staging repo.
+#regzbot ^introduced ad44ac082fd
+#regzbot title regulator: qcom-rpmh: Dragonboard 845c broken due to
+asynchronous probe
+#regzbot ignore-activity
 
-Except of maintainer trees, it is also useful to add there development
-trees. That way for 'free' I can get early warnings about all my patches.
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply and tell me -- ideally
+while also telling regzbot about it, as explained by the page listed in
+the footer of this mail.
 
-Best regards,
-Krzysztof
+Developers: When fixing the issue, remember to add 'Link:' tags pointing
+to the report (the parent of this mail). See page linked in footer for
+details.
 
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+That page also explains what to do if mails like this annoy you.
+
+>> Fixes: 58973046c1bf ("regulator: qcom-rpmh: Use PROBE_FORCE_SYNCHRONOUS")
+>> Cc: Marek Szyprowski <m.szyprowski@samsung.com>
+>> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+>> ---
+>>
+>>  drivers/regulator/qcom-rpmh-regulator.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/regulator/qcom-rpmh-regulator.c b/drivers/regulator/qcom-rpmh-regulator.c
+>> index 903032b2875f..4826d60e5d95 100644
+>> --- a/drivers/regulator/qcom-rpmh-regulator.c
+>> +++ b/drivers/regulator/qcom-rpmh-regulator.c
+>> @@ -1462,7 +1462,7 @@ MODULE_DEVICE_TABLE(of, rpmh_regulator_match_table);
+>>  static struct platform_driver rpmh_regulator_driver = {
+>>         .driver = {
+>>                 .name = "qcom-rpmh-regulator",
+>> -               .probe_type = PROBE_FORCE_SYNCHRONOUS,
+>> +               .probe_type = PROBE_PREFER_ASYNCHRONOUS,
+>>                 .of_match_table = of_match_ptr(rpmh_regulator_match_table),
+>>         },
+>>         .probe = rpmh_regulator_probe,
+>> --
+>> 2.40.0.348.gf938b09366-goog
+>>
