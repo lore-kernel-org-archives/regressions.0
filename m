@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 055BA4C95
-	for <regressions@lists.linux.dev>; Sun, 14 May 2023 11:54:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D3087E3
+	for <regressions@lists.linux.dev>; Sun, 14 May 2023 12:05:32 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pyAIu-0006tG-Qg; Sun, 14 May 2023 13:54:20 +0200
-Message-ID: <83a92f91-f126-94e8-a7ef-3da0298c0d4f@leemhuis.info>
-Date: Sun, 14 May 2023 13:54:20 +0200
+	id 1pyATg-0008Pv-5u; Sun, 14 May 2023 14:05:28 +0200
+Message-ID: <efd48a80-dd07-4084-d61d-4e02c35a1300@leemhuis.info>
+Date: Sun, 14 May 2023 14:05:27 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,28 +16,23 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.10.0
-Subject: Re: [PATCH] regulator: qcom-rpmh: Revert "regulator: qcom-rpmh: Use
- PROBE_FORCE_SYNCHRONOUS"
+Subject: Re: Situation of CONFIG_BLK_WBT_MQ after commit b11d31ae01e6
+ ("blk-wbt: remove unnecessary check in wbt_enable_default()")
 Content-Language: en-US, de-DE
-To: Amit Pundir <amit.pundir@linaro.org>,
- Douglas Anderson <dianders@chromium.org>
-Cc: Mark Brown <broonie@kernel.org>,
- Marek Szyprowski <m.szyprowski@samsung.com>, Andy Gross <agross@kernel.org>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konrad.dybcio@linaro.org>, Liam Girdwood
- <lgirdwood@gmail.com>, linux-arm-msm@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <20230324063357.1.Ifdf3625a3c5c9467bd87bfcdf726c884ad220a35@changeid>
- <CAMi1Hd1avQDcDQf137m2auz2znov4XL8YGrLZsw5edb-NtRJRw@mail.gmail.com>
+To: Lukas Bulwahn <lukas.bulwahn@gmail.com>, Yu Kuai <yukuai3@huawei.com>,
+ Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+ linux-block@vger.kernel.org,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <CAKXUXMzfKq_J9nKHGyr5P5rvUETY4B-fxoQD4sO+NYjFOfVtZA@mail.gmail.com>
 From: "Linux regression tracking #adding (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
+Cc: Linux kernel regressions list <regressions@lists.linux.dev>
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <CAMi1Hd1avQDcDQf137m2auz2znov4XL8YGrLZsw5edb-NtRJRw@mail.gmail.com>
+In-Reply-To: <CAKXUXMzfKq_J9nKHGyr5P5rvUETY4B-fxoQD4sO+NYjFOfVtZA@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1684065270;507b9c26;
-X-HE-SMSGID: 1pyAIu-0006tG-Qg
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1684065933;d8cc7cff;
+X-HE-SMSGID: 1pyATg-0008Pv-5u
 
 [CCing the regression list, as it should be in the loop for regressions:
 https://docs.kernel.org/admin-guide/reporting-regressions.html]
@@ -47,35 +42,22 @@ regressions; the text you find below is based on a few templates
 paragraphs you might have encountered already in similar form.
 See link in footer if these mails annoy you.]
 
-On 13.05.23 20:08, Amit Pundir wrote:
-> On Fri, 24 Mar 2023 at 19:05, Douglas Anderson <dianders@chromium.org> wrote:
->>
->> This reverts commit 58973046c1bf ("regulator: qcom-rpmh: Use
->> PROBE_FORCE_SYNCHRONOUS"). Further digging into the problems that
->> prompted the us to switch to synchronous probe showed that the root
->> cause was a missing "rootwait" in the kernel command line
->> arguments. Let's reinstate asynchronous probe.
+On 08.05.23 06:37, Lukas Bulwahn wrote:
 > 
-> Hi, the asynchronous probe is broken on Dragonboard 845c (SDM845)
-> running AOSP (Android Open Source Project) with v6.4-rc1
-> https://bugs.linaro.org/show_bug.cgi?id=5975.
-> Can we please go back to synchronous probe.
-> 
-> AOSP do not make use of rootwait, IIRC, but it is added by the
-> bootloader anyway. And the device fails to boot AOSP regardless of
-> "rootwait" bootarg being present or not.
-> 
-> FWIW I do not see this regression on RB5 (QRB5165/SM8250) running the
-> same set of AOSP images.
+> The commit b11d31ae01e6 ("blk-wbt: remove unnecessary check in
+> wbt_enable_default()") removes the only reference to the config
+> BLK_WBT_MQ in the kernel tree.
+> [...]
 
-Thanks for the report. To be sure the issue doesn't fall through the
-cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
-tracking bot:
+Thanks for the report. I know a fix is already in the works but to
+ensure the issue doesn't fall through the cracks unnoticed, I'm adding
+it to regzbot, the Linux kernel regression tracking bot:
 
-#regzbot ^introduced ad44ac082fd
-#regzbot title regulator: qcom-rpmh: Dragonboard 845c broken due to
-asynchronous probe
+#regzbot ^introduced b11d31ae01e6
+#regzbot title block/blk-wbt: wbt can't be disabled by default
 #regzbot ignore-activity
+#regzbot monitor:
+https://lore.kernel.org/all/20230512093554.911753-2-yukuai1@huaweicloud.com/
 
 This isn't a regression? This issue or a fix for it are already
 discussed somewhere else? It was fixed already? You want to clarify when
@@ -94,27 +76,3 @@ Everything you wanna know about Linux kernel regression tracking:
 https://linux-regtracking.leemhuis.info/about/#tldr
 That page also explains what to do if mails like this annoy you.
 
->> Fixes: 58973046c1bf ("regulator: qcom-rpmh: Use PROBE_FORCE_SYNCHRONOUS")
->> Cc: Marek Szyprowski <m.szyprowski@samsung.com>
->> Signed-off-by: Douglas Anderson <dianders@chromium.org>
->> ---
->>
->>  drivers/regulator/qcom-rpmh-regulator.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/regulator/qcom-rpmh-regulator.c b/drivers/regulator/qcom-rpmh-regulator.c
->> index 903032b2875f..4826d60e5d95 100644
->> --- a/drivers/regulator/qcom-rpmh-regulator.c
->> +++ b/drivers/regulator/qcom-rpmh-regulator.c
->> @@ -1462,7 +1462,7 @@ MODULE_DEVICE_TABLE(of, rpmh_regulator_match_table);
->>  static struct platform_driver rpmh_regulator_driver = {
->>         .driver = {
->>                 .name = "qcom-rpmh-regulator",
->> -               .probe_type = PROBE_FORCE_SYNCHRONOUS,
->> +               .probe_type = PROBE_PREFER_ASYNCHRONOUS,
->>                 .of_match_table = of_match_ptr(rpmh_regulator_match_table),
->>         },
->>         .probe = rpmh_regulator_probe,
->> --
->> 2.40.0.348.gf938b09366-goog
->>
