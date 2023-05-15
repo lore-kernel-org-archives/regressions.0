@@ -1,105 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC33463CA
-	for <regressions@lists.linux.dev>; Mon, 15 May 2023 14:23:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CE93C433EF;
-	Mon, 15 May 2023 14:23:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1684160633;
-	bh=BS6JVi3U6AfGKU8Juy8abcYENm4+fIaoNY9mN6+Bwy8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GrK32zAplnlrqy40OU3XJSBXClfmG9O7ZOlTlNfLZCNAlZqPWij/MvKdYbCd95gR2
-	 aqBJ9Phg/BhKmSH3JKt+kK36Yp/sCMMpu/hWfqT82d/Jb2G4M3mJusvu6e3ksv2lpE
-	 pRedKzAVyDGXLVPsGb1RLCwMmDe33hoWngAKowOcuFqmAj6ue952HtF7GcJd31dx8S
-	 GaX/sf4DiWvSy52m27xRONQ8jgx9Z9kAUXUy8FoHrvVXYrv/R0FQntd8ziWJx9Zt9x
-	 u40aiCpN4LNpF3i/wJXZaAFB4YJPNraVBZqlzdMwTf3oHdOkbawI64usc7zsQu3nJH
-	 Xl2vfX5SxQyRA==
-Date: Mon, 15 May 2023 16:23:46 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Thorsten Leemhuis <linux@leemhuis.info>,
-	Mike Christie <michael.christie@oracle.com>,
-	nicolas.dichtel@6wind.com,
-	Linux kernel regressions list <regressions@lists.linux.dev>,
-	hch@infradead.org, stefanha@redhat.com, jasowang@redhat.com,
-	mst@redhat.com, sgarzare@redhat.com,
-	virtualization@lists.linux-foundation.org, ebiederm@xmission.com,
-	konrad.wilk@oracle.com, linux-kernel@vger.kernel.org,
-	Jens Axboe <axboe@kernel.dk>
-Subject: Re: [PATCH v11 8/8] vhost: use vhost_tasks for worker threads
-Message-ID: <20230515-vollrausch-liebgeworden-2765f3ca3540@brauner>
-References: <20230202232517.8695-1-michael.christie@oracle.com>
- <20230202232517.8695-9-michael.christie@oracle.com>
- <aba6cca4-e66c-768f-375c-b38c8ba5e8a8@6wind.com>
- <CAHk-=wgadfsCnKHLON7op=Qs5t3w3PVz5ZDbvbKsfb=yBg=yjQ@mail.gmail.com>
- <78c5e150-26cf-7724-74ee-4a0b16b944b1@oracle.com>
- <48842e92-835e-bc3f-7118-48b8f415f532@leemhuis.info>
- <CAHk-=wicXCNR1bBioaAiBqEDgv-CoQD9z2RsM2VOTPzkK0xr8g@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6156BC2FD
+	for <regressions@lists.linux.dev>; Mon, 15 May 2023 14:55:34 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1pyZbg-0007JP-V0; Mon, 15 May 2023 16:55:25 +0200
+Message-ID: <1079eef3-b770-8d65-1dd8-70d5d476417f@leemhuis.info>
+Date: Mon, 15 May 2023 16:55:24 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: mainline build failure due to cf21f328fcaf ("media: nxp: Add
+ i.MX8 ISI driver")
+Content-Language: en-US, de-DE
+To: Geert Uytterhoeven <geert@linux-m68k.org>,
+ Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ "Sudip Mukherjee (Codethink)" <sudipm.mukherjee@gmail.com>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
+ NXP Linux Team <linux-imx@nxp.com>, linux-media@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>
+References: <ZElaVmxDsOkZj2DK@debian>
+ <51cff63a-3a04-acf5-8264-bb19b0bee8a3@leemhuis.info>
+ <CAHk-=wgzU8_dGn0Yg+DyX7ammTkDUCyEJ4C=NvnHRhxKWC7Wpw@mail.gmail.com>
+ <20230510090527.25e26127@sal.lan>
+ <55d5ec29-f30f-4596-a3b9-7e5b8adf0582@kernel.org>
+ <CAMuHMdV=b8j=X3XEBWsAghsHrPT58xp7peaMiTZisqf7wRJf3w@mail.gmail.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <CAMuHMdV=b8j=X3XEBWsAghsHrPT58xp7peaMiTZisqf7wRJf3w@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHk-=wicXCNR1bBioaAiBqEDgv-CoQD9z2RsM2VOTPzkK0xr8g@mail.gmail.com>
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1684162534;edde1566;
+X-HE-SMSGID: 1pyZbg-0007JP-V0
 
-On Sat, May 13, 2023 at 10:08:04AM -0500, Linus Torvalds wrote:
-> On Sat, May 13, 2023 at 7:39 AM Thorsten Leemhuis <linux@leemhuis.info> wrote:
-> >
-> > Jumping in here, as I found another problem with that patch: it broke
-> > s2idle on my laptop when a qemu-kvm VM is running, as freezing user
-> > space processes now fails for me:
+On 15.05.23 09:46, Geert Uytterhoeven wrote:
+> On Sun, May 14, 2023 at 1:01 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>> On 10/05/2023 10:05, Mauro Carvalho Chehab wrote:
+>>> And another CI job testing bisect breakages as I receive pull requests,
+>>> applying patch per patch and using both allyesconfig and allmodconfig,
+>>> also on x86_64 arch with W=1:
+>>>
+>>>       https://builder.linuxtv.org/job/patchwork/
+>>>
+>>> The rule is to not merge stuff on media tree if any of those jobs
+>>> fail. I also fast-forward merging patches whose subject states that
+>>> the build has failed.
+>>>
+>>> In order to help with that, on normal situation, I usually take one week
+>>> to merge stuff from media_stage into media_tree, doing rebases at
+>>> media_stage if needed to avoid git bisect build breakages at media_tree
+>>> (which is from where I send my update PRs to you).
+>>>
+>>> Unfortunately, currently we don't have resources to do multiple randconfig
+>>
+>> Is you media staging tree included in LKP (kernel test robot)? You would
+>> get huge build coverage after every push to your staging repo.
 > 
-> Hmm. kthreads have PF_NOFREEZE by default, which is probably the reason.
+> As (multiple[*[) fixes for the build issues were submitted before the
+> opening of the merge window, there must have been some build coverage,
+> with even some people acting upon it...
 > 
-> Adding
-> 
->         current->flags |= PF_NOFREEZE;
-> 
-> to the vhost_task setup might just fix it, but it feels a bit off.
-> 
-> The way io_uring does this is to  do
-> 
->                 if (signal_pending(current)) {
->                         struct ksignal ksig;
-> 
->                         if (!get_signal(&ksig))
->                                 continue;
->                         break;
->                 }
-> 
-> in the main loop, which ends up handling the freezer situation too.
-> But it should handle things like SIGSTOP etc as well, and also exit on
-> actual signals.
-> 
-> I get the feeling that the whole "vhost_task_should_stop()" logic
-> should have the exact logic above, and basically make those threads
-> killable as well.
-> 
-> Hmm?
+> [*] General note, not limited to media: please apply build fixes and
+>     regression fixes ASAP, to avoid multiple people running into the
+>     same issues, and spending time on bisecting, investigating,
+>     fixing, ...
+>     Thanks a lot!
 
-I'm still trying to catch up after LSFMM with everything that's happened
-on the fs side so coming back to this thread with a fresh set of eyes is
-difficult. Sorry about the delay here.
+FWIW, I proposed a rewritten section of
+Documentation/process/handling-regressions.rst that is closely related
+to this. The new text says:
 
-So we seem to two immediate issues:
-(1) The current logic breaks ps output because vhost creates helper
-    processes instead of threads. The suggested patch by Mike was to
-    make them proper threads again but somehow special threads in the
-    sense that they don't unshare signal handlers. The latter part is
-    possibly broken and seems hacky. (That's earlier in the thread.)
-(2) Freezing of vhost tasks fails. (This mail.)
+```
++ * Do not consider regressions from the current cycle as something that
+can wait
++   till the end of the cycle, as the issue might discourage or prevent
+users and
++   CI systems from testing mainline now or generally.
+[...]
++ * Aim to mainline a fix within two or three days, if the issue is
+severe or
++   bothering many users -- either in general or in prevalent conditions
+like a
++   particular hardware environment, distribution, or stable/longterm
+series.```
 
-So I think we will be able to address (1) and (2) by making vhost tasks
-proper threads and blocking every signal except for SIGKILL and SIGSTOP
-and then having vhost handle get_signal() - as you mentioned - the same
-way io uring already does. We should also remove the ingore_signals
-thing completely imho. I don't think we ever want to do this with user
-workers.
+For details and context see
+https://lore.kernel.org/linux-doc/6971680941a5b7b9cb0c2839c75b5cc4ddb2d162.1684139586.git.linux@leemhuis.info/
 
-@Mike, can you get a patch ready ideally this week so we can get this
-fixed soon?
+Let me known if you think I should be more explicit; I could simply add
+a "this includes, but is not limited to fixes for build errors" to the
+second segment mentioned above. But well, that yet again would make the
+text longer. :-(
+
+Ciao, Thorsten
