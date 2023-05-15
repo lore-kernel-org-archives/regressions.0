@@ -1,67 +1,114 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 741496FC9
-	for <regressions@lists.linux.dev>; Mon, 15 May 2023 09:10:05 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pyUDS-0002Wj-0h; Mon, 15 May 2023 11:10:02 +0200
-Message-ID: <36eac50e-912b-a9af-2041-4d28b2eeb4e8@leemhuis.info>
-Date: Mon, 15 May 2023 11:10:01 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 748E08831
+	for <regressions@lists.linux.dev>; Mon, 15 May 2023 09:25:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB94AC433D2;
+	Mon, 15 May 2023 09:25:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1684142732;
+	bh=I/JHQf4eIEsXKezsZsMd1fV+aRLmrENZDEW/GBeFnBM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=IkcvM/nf4fogAbzM9g7VY/ONJN+bLvbZW8FynVvvFGqsI2oH7QiTGAHjnb5eil/qh
+	 dobgamg0SCITkPm7wwLMoRmDqJQSOdcHdPgBjbrzotay8LF23muG+3uwHPve5beoP6
+	 00pd35Y0AvLPKt/AP5P0FQVMYkiWN4mDQyDvhSiZV5YboHWJmNIR08ABvYK1OMsOHY
+	 ZfYm1Ukq7iU6DRsmjg+gNVyj10kPpfQDoJlhdKLzL+zYFoCPPqRL7g5983Ym4k5HLh
+	 g6a1tOm5UVQiafQAf3g58jh1NZSnXiFF/N8Z+Ycu9OqMjpCvqN5DQJeFZLlVjVCbtS
+	 8jhSybGaVDI/Q==
+Date: Mon, 15 May 2023 10:25:25 +0100
+From: Mauro Carvalho Chehab <mchehab@kernel.org>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, Linus Torvalds
+ <torvalds@linux-foundation.org>, Linux regressions mailing list
+ <regressions@lists.linux.dev>, "Sudip Mukherjee (Codethink)"
+ <sudipm.mukherjee@gmail.com>, Laurent Pinchart
+ <laurent.pinchart@ideasonboard.com>, Shawn Guo <shawnguo@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>,
+ linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, Pengutronix Kernel Team
+ <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>
+Subject: Re: mainline build failure due to cf21f328fcaf ("media: nxp: Add
+ i.MX8 ISI driver")
+Message-ID: <20230515102525.65150633@sal.lan>
+In-Reply-To: <CAMuHMdV=b8j=X3XEBWsAghsHrPT58xp7peaMiTZisqf7wRJf3w@mail.gmail.com>
+References: <ZElaVmxDsOkZj2DK@debian>
+	<51cff63a-3a04-acf5-8264-bb19b0bee8a3@leemhuis.info>
+	<CAHk-=wgzU8_dGn0Yg+DyX7ammTkDUCyEJ4C=NvnHRhxKWC7Wpw@mail.gmail.com>
+	<20230510090527.25e26127@sal.lan>
+	<55d5ec29-f30f-4596-a3b9-7e5b8adf0582@kernel.org>
+	<CAMuHMdV=b8j=X3XEBWsAghsHrPT58xp7peaMiTZisqf7wRJf3w@mail.gmail.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.37; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: [PATCH] wifi: iwlwifi: mvm: rfi: disable RFI feature
-Content-Language: en-US, de-DE
-To: Jeff Chua <jeff.chua.linux@gmail.com>, gregory.greenman@intel.com
-Cc: johannes@sipsolutions.net, linux-wireless@vger.kernel.org,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <20230430201830.2f8f88fe49f6.I2f0076ef1d1cbe5d10010549c875b7038ec4c365@changeid>
- <CAAJw_ZuFaE-oYWQWQ+k0Lz_GcJH+adF6SZuwaKpV8UB0XGqVzw@mail.gmail.com>
- <CAAJw_ZsK5c5Y7NpFeNG6i2-kozeT9jscog57+bwwEy6RtiFm8Q@mail.gmail.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-In-Reply-To: <CAAJw_ZsK5c5Y7NpFeNG6i2-kozeT9jscog57+bwwEy6RtiFm8Q@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1684141805;bed85796;
-X-HE-SMSGID: 1pyUDS-0002Wj-0h
+Content-Transfer-Encoding: quoted-printable
 
-On 04.05.23 15:30, Jeff Chua wrote:
-> On Mon, May 1, 2023 at 7:56 AM Jeff Chua <jeff.chua.linux@gmail.com> wrote:
->>
->> On Mon, May 1, 2023 at 1:18 AM <gregory.greenman@intel.com> wrote:
->>>
->>> From: Gregory Greenman <gregory.greenman@intel.com>
->>>
->>> This feature depends on a platform bugfix. Until we have a
->>> mechanism that can verify a platform has the required bugfix,
->>> disable RFI.
+Em Mon, 15 May 2023 09:46:41 +0200
+Geert Uytterhoeven <geert@linux-m68k.org> escreveu:
 
-Hmm, looks from here like there was no progress with this for two weeks
-now. :-/
+> Hi Krzysztof,
+>=20
+> On Sun, May 14, 2023 at 1:01=E2=80=AFPM Krzysztof Kozlowski <krzk@kernel.=
+org> wrote:
+> > On 10/05/2023 10:05, Mauro Carvalho Chehab wrote: =20
+> > > And another CI job testing bisect breakages as I receive pull request=
+s,
+> > > applying patch per patch and using both allyesconfig and allmodconfig,
+> > > also on x86_64 arch with W=3D1:
+> > >
+> > >       https://builder.linuxtv.org/job/patchwork/
+> > >
+> > > The rule is to not merge stuff on media tree if any of those jobs
+> > > fail. I also fast-forward merging patches whose subject states that
+> > > the build has failed.
+> > >
+> > > In order to help with that, on normal situation, I usually take one w=
+eek
+> > > to merge stuff from media_stage into media_tree, doing rebases at
+> > > media_stage if needed to avoid git bisect build breakages at media_tr=
+ee
+> > > (which is from where I send my update PRs to you).
+> > >
+> > > Unfortunately, currently we don't have resources to do multiple randc=
+onfig =20
+> >
+> > Is you media staging tree included in LKP (kernel test robot)? You would
+> > get huge build coverage after every push to your staging repo. =20
 
->> Greg,
->>
->> Patch applied and worked! Thank you!
-> 
-> Only issue with that is I was in the office with EAP, and couldn't
-> connect to the WIFI. I'll need more time to bisect next week at the
-> office.
+No idea, as I don't know where LKP settings are stored, nor what frequency
+it is doing builds from git://linuxtv.org/media_stage.git, if any. Do you k=
+now
+where we can check such configuration?
 
-Jeff, did you ever look into this and check if that's due to the
-proposed patch or some other change applied for 6.4? If it's (likely)
-the latter it might be the best if we go ahead with this change and
-handle the other problem separately.
+In the end, patches there will end going to linux-next, so at least some
+sort of coverage is there, but I'm not sure if LKP will always reply to
+linux-media if the patch causing build regressions is there.
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+While being helpful, one problem with LKP is that it is hard to filter out=
+=20
+reports per git tree. The only way to check if the report is applicable to
+media trees seems to be looking inside the e-mail's body.
+
+> As (multiple[*[) fixes for the build issues were submitted before the
+> opening of the merge window, there must have been some build coverage,
+> with even some people acting upon it...
+>=20
+> [*] General note, not limited to media: please apply build fixes and
+>     regression fixes ASAP, to avoid multiple people running into the
+>     same issues, and spending time on bisecting, investigating,
+>     fixing, ...
+>     Thanks a lot!
+
+Fully agreed. That's why we opted to have a CI instance focused on media:
+we should be able to program it to give feedback with the kernel build
+parameters we use (Like W=3D1) and set it up in a way that it we can
+customize to our needs (like testing for the architectures where media
+drivers are known to be used in practice), and setting up an e-mail subject
+that can be easily be filtered by our e-mail filters.
+
+Regards,
+Mauro
