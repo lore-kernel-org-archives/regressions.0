@@ -1,91 +1,63 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 626BCC8CE
-	for <regressions@lists.linux.dev>; Mon, 15 May 2023 15:57:00 +0000 (UTC)
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-50bd37ca954so113074711a12.0
-        for <regressions@lists.linux.dev>; Mon, 15 May 2023 08:57:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1684166218; x=1686758218;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WgkXNey1qqkRYDn0ndFfina8YyIW2oFgV1/nBHyisSM=;
-        b=YZo1H9eZpJRkzw5ht2n2lnI1hRUcjISC9pI5y//xBtwqQEYaL9IFZ5UDF+GkRA6rTq
-         jUB9koxU41CnKU5sPUihM2QwSCft0TC6k75ZBZ/8m7ELlOzSMbpWkkrh6xu+XgdfLd9w
-         34Budb0lZyj8ZKg4thzlIvtH1JM5gyikwO+FU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684166218; x=1686758218;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WgkXNey1qqkRYDn0ndFfina8YyIW2oFgV1/nBHyisSM=;
-        b=a4+TdJtCVC0C9mdc37nOogGFskc0HhBN0iNmeARpKtoWzTt0MFiY5S+fw/h02F8Ro9
-         1lzPY9Hjm6FpDg+0chlUPBUVvt+cXRyLb+aoItVsVwr7yijVMILnFOrV1Wa2rjfmk3GO
-         7j/27EeiwefH4nX6mk3Q6fb5/Y2l9RyEdL/UfaTNxtVUQsqqswMRJAqI0h+fvaiTwjKy
-         yJ0ZyAh0zrsnRqJcmkf3eTEEN7Q5h5td6hLY6KedTyFUD/uJlE09NewgxU2zpN7Zq9Xu
-         hQrQXh8u7yUl0n+MKp/ikhgU1pioQ8n43S4eaabauWwhk2BCkSyd0K1vv1a+OAhGgjIt
-         8WmQ==
-X-Gm-Message-State: AC+VfDztUds11sk9HfV5c0REl/7wL6wG1wFIgs//yMAopoNcbEG663ji
-	6Xgksv4yc8E1mCCF7I8VCJ2JQE+04F7XYrx5p7Md3w==
-X-Google-Smtp-Source: ACHHUZ7kclKqO/PzIdeKr11Mk40en3KPfvTT3C6l1bOLw74R4TN1mVEvJz9hB/5gprtp2B5N4TM7bg==
-X-Received: by 2002:a17:907:7d88:b0:967:2595:b099 with SMTP id oz8-20020a1709077d8800b009672595b099mr21256377ejc.28.1684166218310;
-        Mon, 15 May 2023 08:56:58 -0700 (PDT)
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com. [209.85.208.54])
-        by smtp.gmail.com with ESMTPSA id q18-20020a1709060f9200b00965e1be3002sm9645612ejj.166.2023.05.15.08.56.57
-        for <regressions@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 15 May 2023 08:56:57 -0700 (PDT)
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-50bd2d7ba74so112938643a12.1
-        for <regressions@lists.linux.dev>; Mon, 15 May 2023 08:56:57 -0700 (PDT)
-X-Received: by 2002:a17:907:97c4:b0:966:4669:7e8d with SMTP id
- js4-20020a17090797c400b0096646697e8dmr27235914ejc.16.1684166217079; Mon, 15
- May 2023 08:56:57 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 061E6DF40
+	for <regressions@lists.linux.dev>; Mon, 15 May 2023 16:43:30 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1pybIG-0007b4-AX; Mon, 15 May 2023 18:43:28 +0200
+Message-ID: <547c4c61-26af-ee0d-146f-d0db077dc53f@leemhuis.info>
+Date: Mon, 15 May 2023 18:43:27 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230202232517.8695-1-michael.christie@oracle.com>
- <20230202232517.8695-9-michael.christie@oracle.com> <aba6cca4-e66c-768f-375c-b38c8ba5e8a8@6wind.com>
- <CAHk-=wgadfsCnKHLON7op=Qs5t3w3PVz5ZDbvbKsfb=yBg=yjQ@mail.gmail.com>
- <78c5e150-26cf-7724-74ee-4a0b16b944b1@oracle.com> <48842e92-835e-bc3f-7118-48b8f415f532@leemhuis.info>
- <CAHk-=wicXCNR1bBioaAiBqEDgv-CoQD9z2RsM2VOTPzkK0xr8g@mail.gmail.com>
- <20230515-vollrausch-liebgeworden-2765f3ca3540@brauner> <CAHk-=wgXJ5VS1iBkfsG=HDjsyhn5XYDKt5xhQcNuz-e7VKyg8A@mail.gmail.com>
- <33b84605-1d0c-1b0e-7927-7ffa96b3c308@kernel.dk>
-In-Reply-To: <33b84605-1d0c-1b0e-7927-7ffa96b3c308@kernel.dk>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Mon, 15 May 2023 08:56:39 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whmN7cxAgmhDBqiE=c67Q2pp2+SqCknNcj3K+QNKivaSg@mail.gmail.com>
-Message-ID: <CAHk-=whmN7cxAgmhDBqiE=c67Q2pp2+SqCknNcj3K+QNKivaSg@mail.gmail.com>
-Subject: Re: [PATCH v11 8/8] vhost: use vhost_tasks for worker threads
-To: Jens Axboe <axboe@kernel.dk>
-Cc: Christian Brauner <brauner@kernel.org>, Thorsten Leemhuis <linux@leemhuis.info>, 
-	Mike Christie <michael.christie@oracle.com>, nicolas.dichtel@6wind.com, 
-	Linux kernel regressions list <regressions@lists.linux.dev>, hch@infradead.org, stefanha@redhat.com, 
-	jasowang@redhat.com, mst@redhat.com, sgarzare@redhat.com, 
-	virtualization@lists.linux-foundation.org, ebiederm@xmission.com, 
-	konrad.wilk@oracle.com, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: Fwd: Freeze after resuming from hibernation (culprit is brcmfmac
+ change?)
+Content-Language: en-US, de-DE
+To: Bagas Sanjaya <bagasdotme@gmail.com>, Hans de Goede
+ <hdegoede@redhat.com>, Linux Regressions <regressions@lists.linux.dev>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Wireless <linux-wireless@vger.kernel.org>,
+ Broadcom 80211 Devices <brcm80211-dev-list.pdl@broadcom.com>,
+ SHA cyfmac Subsystem <SHA-cyfmac-dev-list@infineon.com>,
+ Linux Kernel Network Developers <netdev@vger.kernel.org>
+Cc: Hante Meuleman <hante.meuleman@broadcom.com>,
+ Pieter-Paul Giesberts <pieter-paul.giesberts@broadcom.com>,
+ Franky Lin <franky.lin@broadcom.com>,
+ Arend van Spriel <arend.vanspriel@broadcom.com>,
+ Kalle Valo <kvalo@kernel.org>, julien.falque@gmail.com
+References: <018f62d0-ee1d-9198-9c38-e45b10921e2e@gmail.com>
+ <f629341e-5920-8061-6120-cb954d22ffe9@redhat.com>
+ <b3bb9fc7-c7ec-ad32-5d6f-e6ba55e2dd7d@gmail.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <b3bb9fc7-c7ec-ad32-5d6f-e6ba55e2dd7d@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1684169011;8609d8b3;
+X-HE-SMSGID: 1pybIG-0007b4-AX
 
-On Mon, May 15, 2023 at 8:52=E2=80=AFAM Jens Axboe <axboe@kernel.dk> wrote:
->
-> Only potential downside is that it does make file references more
-> expensive for other syscalls, since you now have a shared file table.
-> But probably not something to worry about here?
+On 15.05.23 15:09, Bagas Sanjaya wrote:
+> On 5/15/23 15:56, Hans de Goede wrote:
+>> On 5/15/23 04:21, Bagas Sanjaya wrote:
+>>> I notice a regression report on bugzilla [1]. Quoting from it:
+> [...]
+>>>> A bisect on linux-git gave commit da6d9c8ecd00 as the cause of the problem.
+>>
+>> da6d9c8ecd00e2 is known to cause a NULL pointer deref on resume,
 
-Would the vhost user worker user processes ever be otherwise single-threade=
-d?
+Bagas, fwiw, to prevent situations like these I usually search on lore
+for a shorted variant of the commit-id[1] before telling regzbot about
+it. In quite a lot of cases I find something useful that might mean that
+tracking is not worth it.
 
-I'd *assume* that a vhost user is already doing its own threads. But
-maybe that's a completely bogus assumption. I don't actually use any
-of this, so...
+Ciao, Thorsten
 
-Because you are obviously 100% right that if you're otherwise
-single-threaded, then a CLONE_FILES kernel helper thread will cause
-the extra cost for file descriptor lookup/free due to all the race
-prevention.
+e.g. [1] https://lore.kernel.org/all/?q=da6d9c8*
 
-                 Linus
