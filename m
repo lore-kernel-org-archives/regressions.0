@@ -1,126 +1,124 @@
-Received: from out1-smtp.messagingengine.com (out1-smtp.messagingengine.com [66.111.4.25])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C88AC8CB
-	for <regressions@lists.linux.dev>; Mon, 15 May 2023 12:26:25 +0000 (UTC)
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailout.nyi.internal (Postfix) with ESMTP id E40AA5C00EC;
-	Mon, 15 May 2023 08:26:24 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute5.internal (MEProxy); Mon, 15 May 2023 08:26:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:sender
-	:subject:subject:to:to; s=fm1; t=1684153584; x=1684239984; bh=FS
-	hj9jhaCJscn4VhLGeY2HLL/OvONSHw3LtQ6873UHU=; b=bDn/R9R8UiUb1g96qU
-	s+BUMqi4w9X4MLqr/g66nNXkUHJb5Urp1qbIoZIC785Oye4Wnmb3At4gt6DQEvls
-	iPbBgS2vyJShq0orBrjZpdCLA77U3y2zBPQqTTFuH7VW40jCDOZic2FtVTVSMeC/
-	NMgvz2+Wwcq1+UbUWNenbsdUev+qHTLSsx+fHCKRlKEzDDqSHnqPR+lecFQqUlyW
-	Z1DNL5jAoSAnBaznrg9gSrLI+Zhg11uKMHPx3v6x6QN2CSqnCsTCe5WCyYvfsohT
-	JH/89wdHigdYyKAD+zi3fFiSYCnbezyBWLBWImJOU8/1BA4uNVxokvxNICxjCuGI
-	+Ulg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:sender:subject
-	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-	:x-sasl-enc; s=fm1; t=1684153584; x=1684239984; bh=FShj9jhaCJscn
-	4VhLGeY2HLL/OvONSHw3LtQ6873UHU=; b=gBpqrQuF+8pxllcGPFkkD3GSCz2FO
-	EE3r2LuO4J9FF5K2optxIWEyx5d6X/xjJXrdyEGSObRu26TxH3bhmIjo4EUn8Vut
-	hTpZGnor3W/21sNv1fjfXIvQL6DHA9K9lsVLYNC+6aiKkR2U9M3v6EH6GTPf/hom
-	hH4uTbLc3sG4bVovoWiBxAWQB7Ori0a4yF98Ylo9xf1lc5aXiI1YNRdBaWfBbeuZ
-	x/VlRrsHhgcaNdi7x2oy03OvN7WoYKUK7gZhGQxXw7H8wYLug+FaSxrAHPmtJcL6
-	aZu1YClcYlBko77gQWgxVJcu+40QswikFkdjUYscgahiLUg5Cr2vLIyaA==
-X-ME-Sender: <xms:8CRiZFrfwhwajeZFioYSVAGnYub6dqDlmm-62eSXWs53CI4tOXS2nA>
-    <xme:8CRiZHoRko6houI2cfdSdLHQCaiVVb3HANDGtt_BqdU0Vv2qEGFA65pJ_Yl-ZWUuP
-    Zc1BiPzXM9lng>
-X-ME-Received: <xmr:8CRiZCNlvc9XxVVLnttcSWqxzwJyuJGTGivNjHawZ8kzjeb523F8q_T4tWxrIbVwDRzmQCC6AeHgvPxDs8seZ7YvORsPrICfhZT8Hw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrfeehjedgheefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepifhrvghg
-    ucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecuggftrfgrthhtvghrnhepgeehue
-    ehgfdtledutdelkeefgeejteegieekheefudeiffdvudeffeelvedttddvnecuffhomhgr
-    ihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
-    epmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomh
-X-ME-Proxy: <xmx:8CRiZA7uqHeMKjthjza3RwkPFFhVppxNQImtfSey6HkV0b8u4GQHTQ>
-    <xmx:8CRiZE60-Y2lbAJTsCnqIxjuq5S7lmImGlDCkSNaRu-lTohSmoWXNQ>
-    <xmx:8CRiZIh1HihDM6eDV9i30eenngYlQasZz0VWY3MauP0NiFpYqjERng>
-    <xmx:8CRiZCZ5Ou2kkYhgzqRl7F09D5fGbR8bV9ENmqsf7t5w2xIzrvE6Yg>
-Feedback-ID: i787e41f1:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 15 May 2023 08:26:23 -0400 (EDT)
-Date: Mon, 15 May 2023 14:26:16 +0200
-From: Greg KH <greg@kroah.com>
-To: "Limonciello, Mario" <Mario.Limonciello@amd.com>
-Cc: Sasha Levin <sashal@kernel.org>,
-	Thorsten Leemhuis <linux@leemhuis.info>,
-	Linux regressions mailing list <regressions@lists.linux.dev>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	"S-k, Shyam-sundar" <Shyam-sundar.S-k@amd.com>,
-	"Goswami, Sanket" <Sanket.Goswami@amd.com>,
-	"Gong, Richard" <Richard.Gong@amd.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"x86@kernel.org" <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	Borislav Petkov <bp@alien8.de>, Guenter Roeck <linux@roeck-us.net>,
-	"stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH 1/2] amd_nb: Add PCI ID for family 19h model 78h
-Message-ID: <2023051505-bright-armrest-028e@gregkh>
-References: <20230427053338.16653-1-mario.limonciello@amd.com>
- <20230427053338.16653-2-mario.limonciello@amd.com>
- <7b74c389-97b7-4f56-851b-6ce17950a4d1@roeck-us.net>
- <f2b81356-e702-3026-660f-d9a88edff632@amd.com>
- <084837c4-72c8-be92-fd1c-5ccbd805c559@leemhuis.info>
- <20230508112543.GBZFjcN2oxk4do31w4@fat_crate.local>
- <a8b29619-f1da-4cb9-a5bd-a396b52e159f@roeck-us.net>
- <20230508134414.GCZFj8rieNwF1AOerB@fat_crate.local>
- <MN0PR12MB610132F2277B0F1DB1039A15E2749@MN0PR12MB6101.namprd12.prod.outlook.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 408B6C2D6
+	for <regressions@lists.linux.dev>; Mon, 15 May 2023 13:10:01 +0000 (UTC)
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1ab0c697c2bso117611785ad.1
+        for <regressions@lists.linux.dev>; Mon, 15 May 2023 06:10:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1684156201; x=1686748201;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=/pd7IH8iQ4KOAD+IGRJ2kpU4wAM/iguRWIx6a9cMo2M=;
+        b=G4iss71zL/pAgQitGB/tMRoEosPEK6miLaIAsf+UOJ6GJwmgzEft4m29hABqk+l8nb
+         F0V9nt4vcBsaCor6syjSCxACXETUI54Gx4QF5Au3YbYNbI9JcxejZEaFYYLpGkLVajIT
+         Yq95TK1jpDTkoSp0xtSBIsHS4orOrXPKMfOsaSQNEYRoOqkjBmLuwwbOPPGM6S144M8I
+         PqqTnHX6MAH7SKOS+JWuVZh30B7tBQutM/SSCblobe1HMnhLiQRXWbfI8N80RwfD15Ua
+         U3k+05Xza9Dp3M+hlyyFsXF7pln+SC+Qr7Pizzd/EhUl285lvsKilqeWZwnMsndW0M6f
+         Y8Ww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684156201; x=1686748201;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/pd7IH8iQ4KOAD+IGRJ2kpU4wAM/iguRWIx6a9cMo2M=;
+        b=fb0dcZ7y8GC53TLIgIf7iHM8zWrSL19wW5njV8w1wjf5hdputJO/GJgL4ocDn3/wis
+         eYayC95B4LNbB3AlBv8lXaAJxftA4fPEbNmNhpizn4aNmlVVStpOiQHsBtjLbO4suK2H
+         MjmT6D3wAMKtLboJCG+TMFf/vHNgX+BhuEkBTry6lIgGxTq2URJ8n/LvYEQG4XzirsFw
+         Z3wiYD022+EHwekv75Ugf714EldoGA3usER6exzX2MoQh6jMTcTGqHGviDCSlCdjrr6B
+         Ahfwk202s6k8vJGB6gw715RU05+jR5A4BmvMx06EPGlPdzRx6Ez0rlnep7P1tXuGqDMJ
+         cWcQ==
+X-Gm-Message-State: AC+VfDxRX4oBhElNmF1fNuvPtS+X5sLK0rnzkhlkFRgMwKFzfgTXKQgx
+	erHsEoq0YTJwKRy0n8sUntw=
+X-Google-Smtp-Source: ACHHUZ6tAg9ha1mMvaWILouNIGS4l8+m+gtn+R6sNaWAfRPEal9tyuaSig5YDstqPJlQfVeWhCPh7A==
+X-Received: by 2002:a17:902:d2c2:b0:1ac:5dfa:3545 with SMTP id n2-20020a170902d2c200b001ac5dfa3545mr36716635plc.68.1684156200448;
+        Mon, 15 May 2023 06:10:00 -0700 (PDT)
+Received: from [192.168.43.80] (subs03-180-214-233-3.three.co.id. [180.214.233.3])
+        by smtp.gmail.com with ESMTPSA id m9-20020a170902db0900b001a6a53c3b04sm13519333plx.306.2023.05.15.06.09.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 15 May 2023 06:09:59 -0700 (PDT)
+Message-ID: <b3bb9fc7-c7ec-ad32-5d6f-e6ba55e2dd7d@gmail.com>
+Date: Mon, 15 May 2023 20:09:49 +0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <MN0PR12MB610132F2277B0F1DB1039A15E2749@MN0PR12MB6101.namprd12.prod.outlook.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: Fwd: Freeze after resuming from hibernation (culprit is brcmfmac
+ change?)
+To: Hans de Goede <hdegoede@redhat.com>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Wireless <linux-wireless@vger.kernel.org>,
+ Broadcom 80211 Devices <brcm80211-dev-list.pdl@broadcom.com>,
+ SHA cyfmac Subsystem <SHA-cyfmac-dev-list@infineon.com>,
+ Linux Kernel Network Developers <netdev@vger.kernel.org>
+Cc: Hante Meuleman <hante.meuleman@broadcom.com>,
+ Pieter-Paul Giesberts <pieter-paul.giesberts@broadcom.com>,
+ Franky Lin <franky.lin@broadcom.com>,
+ Arend van Spriel <arend.vanspriel@broadcom.com>,
+ Kalle Valo <kvalo@kernel.org>, julien.falque@gmail.com
+References: <018f62d0-ee1d-9198-9c38-e45b10921e2e@gmail.com>
+ <f629341e-5920-8061-6120-cb954d22ffe9@redhat.com>
+Content-Language: en-US
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+In-Reply-To: <f629341e-5920-8061-6120-cb954d22ffe9@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, May 11, 2023 at 07:51:42PM +0000, Limonciello, Mario wrote:
-> [AMD Official Use Only - General]
+On 5/15/23 15:56, Hans de Goede wrote:
+> Hi,
 > 
-> +stable, Sasha
+> On 5/15/23 04:21, Bagas Sanjaya wrote:
+>> Hi,
+>>
+>> I notice a regression report on bugzilla [1]. Quoting from it:
+>>
+>>>  julien.falque@gmail.com 2023-05-14 09:55:38 UTC
+>>>
+>>> Since a Kernel update a few weeks ago, my laptop freezes when resuming from hibernation. It seems to handle the resume process normally but at the moment I should see Gnome login screen, I either get a black screen with just a white underscore instead, or nothing displayed at all (no backlight). I can't do anything at that point and I have to hard reboot.
+>>>
+>>> Steps to reproduce:
+>>> - hibernate
+>>> - resume
+>>> - wait until the resuming process should finish: black screen instead of e.g. Gnome's login screen
+>>>
+>>> journalctl gives nothing between the beginning of the resume and the crash, as if it never happened.
+>>>
+>>> I have a Dell XPS 15 (9550) with Arch Linux. The issue happens on linux (since v6.2.0 I think) but linux-lts (currently v6.1.28) is fine.
+>>>
+>>> A bisect on linux-git gave commit da6d9c8ecd00 as the cause of the problem.
+>>
+>> See bugzilla for the full thread.
+>>
+>> Julien: I asked you to also provide dmesg log as I don't know
+>> what exactly happened, but you mentioned the culprit was
+>> da6d9c8ecd00e2 ("wifi: brcmfmac: add firmware vendor info in driver info"),
+>> which implies that the crash involves your wifi device. From my experience
+>> though, GDM crashes are usually caused by xwayland.
+>>
+>> Anyway, I'm adding this to regzbot:
+>>
+>> #regzbot introduced: da6d9c8ecd00e2 https://bugzilla.kernel.org/show_bug.cgi?id=217442
+>> #regzbot title: brcmfmac firmware vendor info addition triggers GDM crash on resuming from hibernation
 > 
-> > > Together with this patch there are now at least two regressions if
-> > > -rc1 whch could have been avoided and may impact testability on
-> > > affected systems.
-> >
-> > Are you saying that this patch which fixes s2idle on some random box
-> > should've gone to Linus *immediately*?
-> >
-> > And read my mail again:
-> >
-> > "Some fixes need longer testing because there have been cases where
-> > a fix breaks something else."
-> >
-> > So yes, I disagree with rushing fixes immediately. If they're obvious
-> > - whatever that means - then sure but not all of them are such.
-> >
-> > --
+> da6d9c8ecd00e2 is known to cause a NULL pointer deref on resume,
+> which is likely what is happening here. This is fixed by:
 > 
-> Unfortunately, it looks like the broken commit got backported into 6.1.28,
-> but the fix still isn't in Linus' tree.
+> https://lore.kernel.org/regressions/20230510141856.46532-1-hdegoede@redhat.com/
 > 
-> Sasha,
+> This patch is ready for merging and is waiting for the wireless-maintainer
+> to merge it and send it to Linus.
 > 
-> Can you please pick up
-> https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/commit/?h=x86/urgent&id=23a5b8bb022c1e071ca91b1a9c10f0ad6a0966e9
-> for 6.1.29 to fix the regression?
 
-Now that this is in Linus's tree, it's queued up, thanks.
+OK, thanks for the fixup!
 
-greg k-h
+#regzbot fix: wifi: brcmfmac: Check for probe() id argument being NULL
+
+-- 
+An old man doll... just what I always wanted! - Clara
+
