@@ -1,111 +1,204 @@
-Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
+Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 294B98469
-	for <regressions@lists.linux.dev>; Mon, 15 May 2023 07:46:56 +0000 (UTC)
-Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-ba7327cd32eso4096490276.0
-        for <regressions@lists.linux.dev>; Mon, 15 May 2023 00:46:56 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFD118831
+	for <regressions@lists.linux.dev>; Mon, 15 May 2023 08:29:07 +0000 (UTC)
+Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-75764d20db3so855389585a.2
+        for <regressions@lists.linux.dev>; Mon, 15 May 2023 01:29:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1684139346; x=1686731346;
+        h=in-reply-to:from:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=jmA5SMXO5ka/h26RblqQTnWmVT4C1BxcXR9XGyBEyr0=;
+        b=flYB3kXMkCQ5AKMA7EsUmmH5oGjyM6xx5OjtaYrZ+SmkFnPhefKNUc9DQDQCWOV8Ru
+         dggkOYXT1ouZhHaY4QQCstqsFolQNTEJenrsCwDyer7ajUS5tsQXMmXkHU+vG5+xfblS
+         RqC4HwHWp610leeRwvZ7cYcRSD4O5stZjjDjU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684136815; x=1686728815;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=x+sesuhYFb2sMrWYAczp8907eYFIY/Qn6ML1DW9XCIk=;
-        b=K2GPf8rQ2rVbXA4G3KYwt3PN43rM6F5vie1bmgW+BP5ZmUi7AW9nTD7ZkeqHjlJjkn
-         0q/+m84vZjijYcVXFCZsOfc5WfSDGelaKIoPUnprjtPqYVBecOT2px6ntzhsfCg9CL6K
-         ShHiS6D4MDp6r0lHXMlYqId6VXnleC8MrkLBBnaIaAEZOR0gCgluuzxJqx3b262UejfA
-         GXJvmwH2CQ2TBRsa2N8gsPTBKIuD4hC+SebI+tuauui3I1sItCLRPDrFeoTPJr1eMsez
-         2hNwXhIaOpaaz+NDVRjmI8lwVpRZ3BJ91GZBuzhGKMzl5W7wZtSQCU1rxHyy+Ax3+p7L
-         Hy6Q==
-X-Gm-Message-State: AC+VfDwCSEctgeSF4Ke9b8oufTtFq5hnZ/5aCUrI6Ny3/DWUFneK1d/Z
-	I439p9LC1CGOhMORpHJT8gtcoauwLo/KiA==
-X-Google-Smtp-Source: ACHHUZ6NtpfOjoQ2P3vGPVRY/qWKDrbiDCZ51V7XaghajMXB9f3mkOm3MrPRwqiZIMQmhdNs7/ReSw==
-X-Received: by 2002:a0d:d781:0:b0:55a:142e:b178 with SMTP id z123-20020a0dd781000000b0055a142eb178mr29957622ywd.50.1684136814806;
-        Mon, 15 May 2023 00:46:54 -0700 (PDT)
-Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com. [209.85.219.177])
-        by smtp.gmail.com with ESMTPSA id w63-20020a0ded42000000b00561608bc0dfsm694494ywe.56.2023.05.15.00.46.53
-        for <regressions@lists.linux.dev>
+        d=1e100.net; s=20221208; t=1684139346; x=1686731346;
+        h=in-reply-to:from:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jmA5SMXO5ka/h26RblqQTnWmVT4C1BxcXR9XGyBEyr0=;
+        b=klQRS25gUiajy5Sg7+T1zKyDcFDRGOn6yqWYPbrypuTEHRbsQC1hiplhiGdmJnFZuF
+         b8Rm6DkF0L3yCrg1CGmGTOQQsu5j6/4ftbJQ9RZeFSqqI+BLJohcG/BEjULMGM+sUYuk
+         xloMXrMqUhiHemxu3yfE3cpVGPO0x8MQX/VnewGGn8At68HzbI9oOgqcVccYe1sWeG2j
+         HoxYoWDrtdyc9FZTGlpfGx9dBKCZlTQRDklCmLwezQlRn5rUtTt0COHpqSFiAAzHBUz0
+         0hAnA9Tg0e6VME0SR8jwESppfiqwRZeBNsmTgtx5ycn/KycFgiF7QMUkig5T02gFpb49
+         7U0w==
+X-Gm-Message-State: AC+VfDzzGxHC1Ar9OXg2htjpUnifgG/zgwl9oYKPk5AfIZuXjegSD8t/
+	5kiwmnNqZ37LexkHEQGUYXiJIw==
+X-Google-Smtp-Source: ACHHUZ7ra2i0kzDkw7v4EULRwFxoiy8LmOEK5xbwn8y0xoqFugt4iozYM+8Mij/XDTX8Ty3XphpMQw==
+X-Received: by 2002:a05:6214:e49:b0:623:4ca9:5b24 with SMTP id o9-20020a0562140e4900b006234ca95b24mr10824147qvc.12.1684139346585;
+        Mon, 15 May 2023 01:29:06 -0700 (PDT)
+Received: from [10.176.68.61] ([192.19.148.250])
+        by smtp.gmail.com with ESMTPSA id n25-20020a05620a153900b0074def53eca5sm1769994qkk.53.2023.05.15.01.29.03
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 15 May 2023 00:46:53 -0700 (PDT)
-Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-ba7bf25a010so1294863276.3
-        for <regressions@lists.linux.dev>; Mon, 15 May 2023 00:46:53 -0700 (PDT)
-X-Received: by 2002:a25:d308:0:b0:b92:3ed2:1cae with SMTP id
- e8-20020a25d308000000b00b923ed21caemr33787915ybf.12.1684136812848; Mon, 15
- May 2023 00:46:52 -0700 (PDT)
+        Mon, 15 May 2023 01:29:04 -0700 (PDT)
+Message-ID: <ffc25bf3-e4ef-9f8c-abdc-e6ea41e266b2@broadcom.com>
+Date: Mon, 15 May 2023 10:29:02 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <ZElaVmxDsOkZj2DK@debian> <51cff63a-3a04-acf5-8264-bb19b0bee8a3@leemhuis.info>
- <CAHk-=wgzU8_dGn0Yg+DyX7ammTkDUCyEJ4C=NvnHRhxKWC7Wpw@mail.gmail.com>
- <20230510090527.25e26127@sal.lan> <55d5ec29-f30f-4596-a3b9-7e5b8adf0582@kernel.org>
-In-Reply-To: <55d5ec29-f30f-4596-a3b9-7e5b8adf0582@kernel.org>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 15 May 2023 09:46:41 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdV=b8j=X3XEBWsAghsHrPT58xp7peaMiTZisqf7wRJf3w@mail.gmail.com>
-Message-ID: <CAMuHMdV=b8j=X3XEBWsAghsHrPT58xp7peaMiTZisqf7wRJf3w@mail.gmail.com>
-Subject: Re: mainline build failure due to cf21f328fcaf ("media: nxp: Add
- i.MX8 ISI driver")
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>, 
-	Linux regressions mailing list <regressions@lists.linux.dev>, 
-	"Sudip Mukherjee (Codethink)" <sudipm.mukherjee@gmail.com>, 
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, linux-media@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.1
+Subject: Re: [PATCH v2] wifi: brcmfmac: Check for probe() id argument being
+ NULL
+To: Hans de Goede <hdegoede@redhat.com>, Arend van Spriel
+ <aspriel@gmail.com>, Franky Lin <franky.lin@broadcom.com>,
+ Hante Meuleman <hante.meuleman@broadcom.com>, Kalle Valo <kvalo@kernel.org>
+Cc: linux-wireless@vger.kernel.org, brcm80211-dev-list.pdl@broadcom.com,
+ SHA-cyfmac-dev-list@infineon.com, regressions@lists.linux.dev,
+ Felix <nimrod4garoa@gmail.com>, stable@vger.kernel.org
+References: <20230510141856.46532-1-hdegoede@redhat.com>
+From: Arend van Spriel <arend.vanspriel@broadcom.com>
+In-Reply-To: <20230510141856.46532-1-hdegoede@redhat.com>
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+	boundary="00000000000085ac2405fbb73f9c"
 
-Hi Krzysztof,
+--00000000000085ac2405fbb73f9c
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Sun, May 14, 2023 at 1:01=E2=80=AFPM Krzysztof Kozlowski <krzk@kernel.or=
-g> wrote:
-> On 10/05/2023 10:05, Mauro Carvalho Chehab wrote:
-> > And another CI job testing bisect breakages as I receive pull requests,
-> > applying patch per patch and using both allyesconfig and allmodconfig,
-> > also on x86_64 arch with W=3D1:
-> >
-> >       https://builder.linuxtv.org/job/patchwork/
-> >
-> > The rule is to not merge stuff on media tree if any of those jobs
-> > fail. I also fast-forward merging patches whose subject states that
-> > the build has failed.
-> >
-> > In order to help with that, on normal situation, I usually take one wee=
-k
-> > to merge stuff from media_stage into media_tree, doing rebases at
-> > media_stage if needed to avoid git bisect build breakages at media_tree
-> > (which is from where I send my update PRs to you).
-> >
-> > Unfortunately, currently we don't have resources to do multiple randcon=
-fig
->
-> Is you media staging tree included in LKP (kernel test robot)? You would
-> get huge build coverage after every push to your staging repo.
+On 5/10/2023 4:18 PM, Hans de Goede wrote:
+> The probe() id argument may be NULL in 2 scenarios:
+> 
+> 1. brcmf_pcie_pm_leave_D3() calling brcmf_pcie_probe() to reprobe
+>     the device.
+> 
+> 2. If a user tries to manually bind the driver from sysfs then the sdio /
+>     pcie / usb probe() function gets called with NULL as id argument.
+> 
+> 1. Is being hit by users causing the following oops on resume and causing
+> wifi to stop working:
+> 
+> BUG: kernel NULL pointer dereference, address: 0000000000000018
+> <snip>
+> Hardware name: Dell Inc. XPS 13 9350/0PWNCR, BIDS 1.13.0 02/10/2020
+> Workgueue: events_unbound async_run_entry_fn
+> RIP: 0010:brcmf_pcie_probe+Ox16b/0x7a0 [brcmfmac]
+> <snip>
+> Call Trace:
+>   <TASK>
+>   brcmf_pcie_pm_leave_D3+0xc5/8x1a0 [brcmfmac be3b4cefca451e190fa35be8f00db1bbec293887]
+>   ? pci_pm_resume+0x5b/0xf0
+>   ? pci_legacy_resume+0x80/0x80
+>   dpm_run_callback+0x47/0x150
+>   device_resume+0xa2/0x1f0
+>   async_resume+0x1d/0x30
+> <snip>
+> 
+> Fix this by checking for id being NULL.
+> 
+> In the PCI and USB cases try a manual lookup of the id so that manually
+> binding the driver through sysfs and more importantly brcmf_pcie_probe()
+> on resume will work.
+> 
+> For the SDIO case there is no helper to do a manual sdio_device_id lookup,
+> so just directly error out on a NULL id there.
+> 
+> Fixes: da6d9c8ecd00 ("wifi: brcmfmac: add firmware vendor info in driver info")
+> Reported-by: Felix <nimrod4garoa@gmail.com>
+> Link: https://lore.kernel.org/regressions/4ef3f252ff530cbfa336f5a0d80710020fc5cb1e.camel@gmail.com/
+> Cc: Arend van Spriel <arend.vanspriel@broadcom.com>
 
-As (multiple[*[) fixes for the build issues were submitted before the
-opening of the merge window, there must have been some build coverage,
-with even some people acting upon it...
+You can change this to:
 
-[*] General note, not limited to media: please apply build fixes and
-    regression fixes ASAP, to avoid multiple people running into the
-    same issues, and spending time on bisecting, investigating,
-    fixing, ...
-    Thanks a lot!
+Reviewed-by: Arend van Spriel <arend.vanspriel@broadcom.com>
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+> Changes in v2:
+> - Using BRCMF_FWVENDOR_INVALID will just lead to a probe() error later on,
+>    if NULL error out immediately instead of using BRCMF_FWVENDOR_INVALID.
+> ---
+>   .../net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c |  5 +++++
+>   .../net/wireless/broadcom/brcm80211/brcmfmac/pcie.c   | 11 +++++++++++
+>   .../net/wireless/broadcom/brcm80211/brcmfmac/usb.c    | 11 +++++++++++
+>   3 files changed, 27 insertions(+)
 
-Gr{oetje,eeting}s,
+--00000000000085ac2405fbb73f9c
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
 
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+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
+2Gzj3QNJRLsZu1TLyOyBBIr/BE7UiY3RabgRzknBGAPmzhS+fmyM8OtM5BYBsFBrSUFtZZO2p/tf
+Nbc24J2zf2peoZ8MK+7WQqummYlOnz+FyDkA9EybeNMcS5C+xi/PAgMBAAGjggHdMIIB2TAOBgNV
+HQ8BAf8EBAMCBaAwgaMGCCsGAQUFBwEBBIGWMIGTME4GCCsGAQUFBzAChkJodHRwOi8vc2VjdXJl
+Lmdsb2JhbHNpZ24uY29tL2NhY2VydC9nc2djY3IzcGVyc29uYWxzaWduMmNhMjAyMC5jcnQwQQYI
+KwYBBQUHMAGGNWh0dHA6Ly9vY3NwLmdsb2JhbHNpZ24uY29tL2dzZ2NjcjNwZXJzb25hbHNpZ24y
+Y2EyMDIwME0GA1UdIARGMEQwQgYKKwYBBAGgMgEoCjA0MDIGCCsGAQUFBwIBFiZodHRwczovL3d3
+dy5nbG9iYWxzaWduLmNvbS9yZXBvc2l0b3J5LzAJBgNVHRMEAjAAMEkGA1UdHwRCMEAwPqA8oDqG
+OGh0dHA6Ly9jcmwuZ2xvYmFsc2lnbi5jb20vZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAuY3Js
+MCcGA1UdEQQgMB6BHGFyZW5kLnZhbnNwcmllbEBicm9hZGNvbS5jb20wEwYDVR0lBAwwCgYIKwYB
+BQUHAwQwHwYDVR0jBBgwFoAUljPR5lgXWzR1ioFWZNW+SN6hj88wHQYDVR0OBBYEFIikAXd8CEtv
+ZbDflDRnf3tuStPuMA0GCSqGSIb3DQEBCwUAA4IBAQCdS5XCYx6k2GGZui9DlFsFm75khkqAU7rT
+zBX04sJU1+B1wtgmWTVIzW7ugdtDZ4gzaV0S9xRhpDErjJaltxPbCylb1DEsLj+AIvBR34caW6ZG
+sQk444t0HPb29HnWYj+OllIGMbdJWr0/P95ZrKk2bP24ub3ZP/8SyzrohfIba9WZKMq6g2nTLZE3
+BtkeSGJx/8dy0h8YmRn+adOrxKXHxhSL8BNn8wsmIZyYWe6fRcBtO3Ks2DOLyHCdkoFlN8x9VUQF
+N2ulEgqCbRKkx+qNirW86eF138lr1gRxzclu/38ko//MmkAYR/+hP3WnBll7zbpIt0jc9wyFkSqH
+p8a1MYICbTCCAmkCAQEwazBbMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1z
+YTExMC8GA1UEAxMoR2xvYmFsU2lnbiBHQ0MgUjMgUGVyc29uYWxTaWduIDIgQ0EgMjAyMAIMTv1t
+bpIzNUky46LXMA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEiBCDWOzRixGGq+NncoF5S
+dgMvGf6xj/4SS/khrq+lIRBGwzAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJ
+BTEPFw0yMzA1MTUwODI5MDZaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZIAWUDBAEqMAsGCWCGSAFl
+AwQBFjALBglghkgBZQMEAQIwCgYIKoZIhvcNAwcwCwYJKoZIhvcNAQEKMAsGCSqGSIb3DQEBBzAL
+BglghkgBZQMEAgEwDQYJKoZIhvcNAQEBBQAEggEAGyeQCdxL0TL1zyZcxRWnUcxspTrYalQ7AOnh
+K03ImEjUFtdNXKcoUNEyjY+C+B2ysodMIsR9+z3JTiiVHpgQTRDm4F+cP1FEaHRo7ysamLKmwt3a
+z4QU83a2fMMeV4YkmHB97TNypirVJnr4Yn1NHi6CiqzL12PsASeZC9+i9NUPSvbxK8v/24ZSWR5q
+ATVjvLsHSuRHczsIEq6UiFGcpT/V+Aw4U1Ik2XhC3OAno1a3o1aomXCurqcUT+0wPRjlsXTpIAeT
+4P/nyS03Zo+LIu36cfdoagckMTvsMxxWfQvX5MflFLcYliDK2IObmSaFmWvcGp5ysXw9DM0Kz3c6
+EQ==
+--00000000000085ac2405fbb73f9c--
