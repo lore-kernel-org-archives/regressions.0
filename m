@@ -1,45 +1,45 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 994EB1381
-	for <regressions@lists.linux.dev>; Mon, 15 May 2023 02:21:55 +0000 (UTC)
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1aafa03f541so117831885ad.0
-        for <regressions@lists.linux.dev>; Sun, 14 May 2023 19:21:55 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 431721381
+	for <regressions@lists.linux.dev>; Mon, 15 May 2023 02:23:26 +0000 (UTC)
+Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-517bdc9e81dso6364076a12.1
+        for <regressions@lists.linux.dev>; Sun, 14 May 2023 19:23:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684117315; x=1686709315;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=niU+K5V3bpGotdNKpKxWKa4Y6tYufU19KgTr2VkMAOs=;
-        b=TzK1q0I0oFDYjnlEeRsc/RoZzCBtJzngsvHVhHS26gVUo+WtNoR51Fq2J0eVQ7V9JY
-         XX0str2BASSFHiaTZa1p20RDKWbCbOTBcVuekLzpi+JmZ4hAQLVVVB90JscQ/O6LCq1m
-         33xxZQotsk6xDNqaz6r/SXYBOFjKiK34BEgRgIf3SE8nx/vpkktc1z5RUd4lzSW7sJB2
-         P3RGZxJ3dl0sty4J4Jtsg1bY3TLj3M9bGjC0VJ+RR/8NDFZFpuj/779GgmLIhRQ1UThQ
-         qCYHhUs9gdv2JpOwsO6mZQe93pMNthS3PcHmjjjp2VFKGesJhteE0NfOKhrUYUfNqBgH
-         +zsw==
+        d=gmail.com; s=20221208; t=1684117405; x=1686709405;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=2ctYwXC1YUjZKdl7Y3ohGsN195nvG7PVKrDsBWnokCY=;
+        b=qpWeXYthILdYqHwzqnI1i4dq+bWfLs+IuS6n/gF6Jx7onIIZTTOEzoFNPvwXKnI9y6
+         vfz3LHKsbDSn+Zi06JO3XNnoqsZc/DoyRqxsMknwawgnZrqAJD0tdnDF4MVrRvCadeMf
+         Eo2D/D47KRIoCcPUezFEEsIwTYijDbUNkpHDEZ4pVrjG4t5HSuUleYK5mkWga/44ou4T
+         Wm0R/Vh5/83pJ+up1GB2OS3WL+dWAPfB8mCAtYaJIzuvlyayQl1ab1nBiIqMWSVzs/mq
+         lnrqk5TlI8faUTNUdC6cDsFshd9/L0P5TV13R3iKHQKfFsme8N4Z96qk4KHRoqmuKNCr
+         gclw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684117315; x=1686709315;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=niU+K5V3bpGotdNKpKxWKa4Y6tYufU19KgTr2VkMAOs=;
-        b=ZGnX4j0TTMsfG2ncBlwRgLzw9s7DrP216QgxX4AHLI696h97uujG9bf/EZMT91MZAb
-         RZGBvSPlPVItVLBjGhVE7N4W2B5QlVrZ4k4uixhOqFkoFqo7PkGG9ks7LDg7LDWiMSVi
-         X1ayLFVulVP2ksVFvoI7r0L+DO3v1nBnQr6b/qQrdEBwIg6h+4CyhxfsOv/tnRBBvegI
-         VrP65IEjzZl1QK+dW6Kk5YLS6gprwRSbOJg8ze+0qM2dofaG4AL8kcjxJ8aer7C5HVsI
-         gtZkKO1WaZDXEJ/O8qYTLsgd4qxlmAIMvii4pxrTI9pyDdlx/DGA9UBQcJ9YBRNjUbjL
-         AwZQ==
-X-Gm-Message-State: AC+VfDwgMGE85j98Y491SrkcPavzh6U/gSIm5U+WIW5L7QBKV0nlaHdB
-	esEXlvWUIOjGDZzGOd2JUNRz9kGqIHM=
-X-Google-Smtp-Source: ACHHUZ6b0O29/SbNOOB1m/nfqjkm8TsYEwR4PWrH+ndWxFONqfoISHkRpOfAkfaFUYT1OsPN24E65Q==
-X-Received: by 2002:a17:902:f7c9:b0:1ad:eb62:f617 with SMTP id h9-20020a170902f7c900b001adeb62f617mr9893964plw.45.1684117314765;
-        Sun, 14 May 2023 19:21:54 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1684117405; x=1686709405;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=2ctYwXC1YUjZKdl7Y3ohGsN195nvG7PVKrDsBWnokCY=;
+        b=ger+ODXCNJzD4/4yQotTc+il/3oWdvnrgFgic6tHQQpcNqZjjRYhqOLVHiswnMR3XG
+         oujFcYDLWTuAgW0UKUiz1/BwJhtHpWBPvqs7aGH8EYye8RY1oM19fwbk1+ewDLqNWv7l
+         dZSwxoPLBO7kCkLsn4pUCgXWjgLIk8p+8sxOpfwTfry6DbSPrGANW54EcDMTfYMoiWbu
+         PRJhnm70CLYm24qX2e3/QrcPtKFg4HJ9Jop1l1HTGCOGhfH1QfzPBeaCqhtBrp1xXg/e
+         R9APNSwGPo02aSp46RZjJ0x09rgb3aXjgbUDh5EaM/CYxS/mr8Xygb5fB+xAOVOeItI8
+         QY0w==
+X-Gm-Message-State: AC+VfDzjI02Qc0crtWVGu87a/AMBWX7HJG6/4Qa5X33gJOIBV68e1oks
+	FfEJOKCdwqGIk35R3qLbZxs=
+X-Google-Smtp-Source: ACHHUZ5hvE1oOW0HR2n8p5NBw+2baxIFG6toJU18YluCfOM1aVCojT707But9JVCCZSdGUewI8ZuWQ==
+X-Received: by 2002:a17:90a:9f44:b0:250:7273:cc3e with SMTP id q4-20020a17090a9f4400b002507273cc3emr27398431pjv.8.1684117405592;
+        Sun, 14 May 2023 19:23:25 -0700 (PDT)
 Received: from [192.168.43.80] (subs03-180-214-233-25.three.co.id. [180.214.233.25])
-        by smtp.gmail.com with ESMTPSA id r4-20020a1709028bc400b001a95aef9728sm4568073plo.19.2023.05.14.19.21.50
+        by smtp.gmail.com with ESMTPSA id j11-20020a170902da8b00b001aafde15ff3sm8316005plx.293.2023.05.14.19.23.22
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 14 May 2023 19:21:54 -0700 (PDT)
-Message-ID: <018f62d0-ee1d-9198-9c38-e45b10921e2e@gmail.com>
-Date: Mon, 15 May 2023 09:21:38 +0700
+        Sun, 14 May 2023 19:23:25 -0700 (PDT)
+Message-ID: <626d677d-ead7-7ec8-b91a-162c914fe1d5@gmail.com>
+Date: Mon, 15 May 2023 09:23:20 +0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -48,59 +48,51 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.10.0
+Subject: Re: Fwd: [Bug 217440] New: ALC236 audio disappears from HP 15z-fc000
+ on warm boot
 Content-Language: en-US
-To: Linux Regressions <regressions@lists.linux.dev>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Wireless <linux-wireless@vger.kernel.org>,
- Broadcom 80211 Devices <brcm80211-dev-list.pdl@broadcom.com>,
- SHA cyfmac Subsystem <SHA-cyfmac-dev-list@infineon.com>,
- Linux Kernel Network Developers <netdev@vger.kernel.org>
-Cc: Hante Meuleman <hante.meuleman@broadcom.com>,
- Pieter-Paul Giesberts <pieter-paul.giesberts@broadcom.com>,
- Franky Lin <franky.lin@broadcom.com>,
- Arend van Spriel <arend.vanspriel@broadcom.com>,
- Kalle Valo <kvalo@kernel.org>, julien.falque@gmail.com
+To: "Joseph C. Sible" <josephcsible@gmail.com>, Takashi Iwai <tiwai@suse.de>
+Cc: regressions@lists.linux.dev, kailang@realtek.com, perex@perex.cz,
+ tiwai@suse.com, alsa-devel@alsa-project.org
+References: <bug-217440-225600@https.bugzilla.kernel.org/>
+ <CABpewhE4REgn9RJZduuEU6Z_ijXNeQWnrxO1tg70Gkw=F8qNYg@mail.gmail.com>
+ <ZGB0cVVI7OgaJU6t@debian.me>
+ <CABpewhGJE7-k52j8L2kJ2zKupgp3Ma+LdZazzzV4w1Bgihp7nw@mail.gmail.com>
+ <87cz338ix4.wl-tiwai@suse.de>
+ <CABpewhF01AK4cFPbwYVvKR9yWaO7o-ZE-2+MZjYSUF0BKUdYvw@mail.gmail.com>
 From: Bagas Sanjaya <bagasdotme@gmail.com>
-Subject: Fwd: Freeze after resuming from hibernation (culprit is brcmfmac
- change?)
+In-Reply-To: <CABpewhF01AK4cFPbwYVvKR9yWaO7o-ZE-2+MZjYSUF0BKUdYvw@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi,
-
-I notice a regression report on bugzilla [1]. Quoting from it:
-
->  julien.falque@gmail.com 2023-05-14 09:55:38 UTC
+On 5/15/23 04:48, Joseph C. Sible wrote:
+> On 5/14/23, Takashi Iwai wrote:
+>> The patch changes two places (the change in alc_shutup_pins() and
+>> alc256_shutup()), and I guess the latter is the culprit.  Could you
+>> verify that only reverting the latter fixes the problem?
 > 
-> Since a Kernel update a few weeks ago, my laptop freezes when resuming from hibernation. It seems to handle the resume process normally but at the moment I should see Gnome login screen, I either get a black screen with just a white underscore instead, or nothing displayed at all (no backlight). I can't do anything at that point and I have to hard reboot.
+> Yes, only reverting the latter fixes the problem. I just tried a
+> kernel consisting of 6.3.2 plus the below change, and it works fine:
 > 
-> Steps to reproduce:
-> - hibernate
-> - resume
-> - wait until the resuming process should finish: black screen instead of e.g. Gnome's login screen
+> --- a/sound/pci/hda/patch_realtek.c
+> +++ b/sound/pci/hda/patch_realtek.c
+> @@ -3638,8 +3638,7 @@ static void alc256_shutup(struct hda_codec *codec)
+>         /* If disable 3k pulldown control for alc257, the Mic
+> detection will not work correctly
+>          * when booting with headset plugged. So skip setting it for
+> the codec alc257
+>          */
+> -       if (codec->core.vendor_id != 0x10ec0236 &&
+> -           codec->core.vendor_id != 0x10ec0257)
+> +       if (codec->core.vendor_id != 0x10ec0257)
+>                 alc_update_coef_idx(codec, 0x46, 0, 3 << 12);
 > 
-> journalctl gives nothing between the beginning of the resume and the crash, as if it never happened.
+>         if (!spec->no_shutup_pins)
 > 
-> I have a Dell XPS 15 (9550) with Arch Linux. The issue happens on linux (since v6.2.0 I think) but linux-lts (currently v6.1.28) is fine.
-> 
-> A bisect on linux-git gave commit da6d9c8ecd00 as the cause of the problem.
 
-See bugzilla for the full thread.
-
-Julien: I asked you to also provide dmesg log as I don't know
-what exactly happened, but you mentioned the culprit was
-da6d9c8ecd00e2 ("wifi: brcmfmac: add firmware vendor info in driver info"),
-which implies that the crash involves your wifi device. From my experience
-though, GDM crashes are usually caused by xwayland.
-
-Anyway, I'm adding this to regzbot:
-
-#regzbot introduced: da6d9c8ecd00e2 https://bugzilla.kernel.org/show_bug.cgi?id=217442
-#regzbot title: brcmfmac firmware vendor info addition triggers GDM crash on resuming from hibernation
-
-Thanks. 
-
-[1]: https://bugzilla.kernel.org/show_bug.cgi?id=217442
+Thanks for the fixup. Can you send it as proper patch for review?
+See Documentation/process/submitting-patches.rst for instructions.
 
 -- 
 An old man doll... just what I always wanted! - Clara
+
