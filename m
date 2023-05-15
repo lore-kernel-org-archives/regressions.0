@@ -1,95 +1,75 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE404E554
-	for <regressions@lists.linux.dev>; Mon, 15 May 2023 18:19:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0548BC433EF;
-	Mon, 15 May 2023 18:19:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B4BA1FBE
+	for <regressions@lists.linux.dev>; Mon, 15 May 2023 20:51:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C992BC433EF;
+	Mon, 15 May 2023 20:51:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1684174745;
-	bh=lXn4/zb+8zA/44joIb7RJ/8M0SqiyaD6fWxJaePD334=;
-	h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-	b=pJk9W1N/tU7YdZNKnWhelPsah1WtS6AEMRSG50aD1YXSNJxvFu5ulgwikz42uZEzu
-	 cQ7Xxxsbf8GVFomC3xjsw71xEfd7hmIuZURcOmooCoehdJd8IXqhTa8V/FCAkiEh+U
-	 R421aoEQYuQhflN+ASSNhExsoNdak9aYBFAw53gdQjbrBcv5WG/8fI3RKcWN8h8E4F
-	 UIx7Dsl35Pj1Jt4RCdpMOsxQFugRCdHpbAeBRiwSmV/9x5c3ASBmlBzpWk47BXVUH6
-	 6y9g202U+s7sUeJkYyMIS6q7HS5VPMIc2ewW0feGLSrq3yT6XPT4xhGuH8uGmQRsZL
-	 jVtTVzX2nfw8w==
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1684183880;
+	bh=gAaxqdEUQkw8LfkOGDpq841oskaFlCAl0W84Cnjnr8U=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=ESlXR15gAAalNchEl/7wvfkLF+B8S5CEYoCOTnFbUGWKUOZk7RR0NJDykrQ7DACYG
+	 5iNjd6FDUWrQ3tX0mvwBJoFv2S3aSvK7kA/3FueeLzUgEu/7evw6ce4BqRY+k/Wnfj
+	 frX6fiVx0W1+FyF5mEUThyQgypPAjtgrjtOmX945fjemDFV74fer0HVhiHM+ATR+E2
+	 AwHXRIY4Bd08I7Xsd7xbfdlnLe9iLuhwkqELvVUibgqbxTqenyNt65hVDTDPcBixYB
+	 uwtESfvOKJjzlw0hF650zwi4Bl6SRIatK5vUItA4Gvl7PRd+Rf1wCb3SdGpymXFZnq
+	 RvF3qujEiZwvg==
+Date: Mon, 15 May 2023 15:51:18 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Acid Bong <acidbong@tilde.cafe>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
+	Bagas Sanjaya <bagasdotme@gmail.com>, stable@vger.kernel.org,
+	linux-acpi@vger.kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>,
+	linux-pci@vger.kernel.org
+Subject: Re: [REGRESSION] Asus X541UAK hangs on suspend and poweroff (v6.1.6
+ onward)
+Message-ID: <ZGKbRo9shUcR0myC@bhelgaas>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [v2] wifi: brcmfmac: Check for probe() id argument being NULL
-From: Kalle Valo <kvalo@kernel.org>
-In-Reply-To: <20230510141856.46532-1-hdegoede@redhat.com>
-References: <20230510141856.46532-1-hdegoede@redhat.com>
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Arend van Spriel <aspriel@gmail.com>,
- Franky Lin <franky.lin@broadcom.com>,
- Hante Meuleman <hante.meuleman@broadcom.com>,
- Hans de Goede <hdegoede@redhat.com>, linux-wireless@vger.kernel.org,
- brcm80211-dev-list.pdl@broadcom.com, SHA-cyfmac-dev-list@infineon.com,
- regressions@lists.linux.dev, Felix <nimrod4garoa@gmail.com>,
- Arend van Spriel <arend.vanspriel@broadcom.com>, stable@vger.kernel.org
-User-Agent: pwcli/0.1.1-git (https://github.com/kvalo/pwcli/) Python/3.7.3
-Message-ID: <168417474077.32723.9868823702580384780.kvalo@kernel.org>
-Date: Mon, 15 May 2023 18:19:02 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CRWCUOAB4JKZ.3EKQN1TFFMVQL@bong>
 
-Hans de Goede <hdegoede@redhat.com> wrote:
+[+cc linux-pci; thread at
+https://lore.kernel.org/r/CRVU11I7JJWF.367PSO4YAQQEI@bong]
 
-> The probe() id argument may be NULL in 2 scenarios:
+On Fri, Apr 14, 2023 at 12:07:42PM +0300, Acid Bong wrote:
+> > Thorsten
+> > why do you pass pci=nomsi
+>
+> It's a workaround for another issue i've been facing for about 2 or 3
+> years, since when I first tried out Linux (started with loading Kubuntu
+> and Mint live images). Without that workaround Kubuntu didn't boot for
+> me - on kernel 5.8 it only reached the graphic installer part, but hung
+> after language selection menu, on 5.4 and 5.11 - didn't even reach the
+> graphic session. With Mint it was more severe - the screen was flooded
+> with PCIe errors, like so:
 > 
-> 1. brcmf_pcie_pm_leave_D3() calling brcmf_pcie_probe() to reprobe
->    the device.
+> 	Apr 10 18:47:08 bong last message buffered 3 times
+> 	Apr 10 18:47:08 bong kernel: pcieport 0000:00:1c.5:   device [8086:9d15] error status/mask
+> 	Apr 10 18:47:08 bong last message buffered 5 times
+> 	Apr 10 18:47:08 bong kernel: pcieport 0000:00:1c.5:   device [8086:9d15] error status/mask
+> 	Apr 10 18:47:08 bong last message buffered 13 times
+> 	Apr 10 18:47:08 bong kernel: pcieport 0000:00:1c.5:   device [8086:9d15] error status/mask
+> 	Apr 10 18:47:08 bong last message buffered 5 times
+> 	Apr 10 18:47:08 bong kernel: pcieport 0000:00:1c.5:   device [8086:9d15] error status/mask
+> 	Apr 10 18:47:08 bong last message buffered 6 times
 > 
-> 2. If a user tries to manually bind the driver from sysfs then the sdio /
->    pcie / usb probe() function gets called with NULL as id argument.
-> 
-> 1. Is being hit by users causing the following oops on resume and causing
-> wifi to stop working:
-> 
-> BUG: kernel NULL pointer dereference, address: 0000000000000018
-> <snip>
-> Hardware name: Dell Inc. XPS 13 9350/0PWNCR, BIDS 1.13.0 02/10/2020
-> Workgueue: events_unbound async_run_entry_fn
-> RIP: 0010:brcmf_pcie_probe+Ox16b/0x7a0 [brcmfmac]
-> <snip>
-> Call Trace:
->  <TASK>
->  brcmf_pcie_pm_leave_D3+0xc5/8x1a0 [brcmfmac be3b4cefca451e190fa35be8f00db1bbec293887]
->  ? pci_pm_resume+0x5b/0xf0
->  ? pci_legacy_resume+0x80/0x80
->  dpm_run_callback+0x47/0x150
->  device_resume+0xa2/0x1f0
->  async_resume+0x1d/0x30
-> <snip>
-> 
-> Fix this by checking for id being NULL.
-> 
-> In the PCI and USB cases try a manual lookup of the id so that manually
-> binding the driver through sysfs and more importantly brcmf_pcie_probe()
-> on resume will work.
-> 
-> For the SDIO case there is no helper to do a manual sdio_device_id lookup,
-> so just directly error out on a NULL id there.
-> 
-> Fixes: da6d9c8ecd00 ("wifi: brcmfmac: add firmware vendor info in driver info")
-> Reported-by: Felix <nimrod4garoa@gmail.com>
-> Link: https://lore.kernel.org/regressions/4ef3f252ff530cbfa336f5a0d80710020fc5cb1e.camel@gmail.com/
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> Reviewed-by: Arend van Spriel <arend.vanspriel@broadcom.com>
+> `pci=nomsi` saved me also during Debian installation - without it the
+> live ISO just crashed mid-installation.
 
-Patch applied to wireless.git, thanks.
+Likely "pci=nomsi" or "pci=noaer" are not related to the
+suspend/poweroff issue, but I'd really like to fix the AER problem
+anyway.
 
-60fc756fc8e6 wifi: brcmfmac: Check for probe() id argument being NULL
+Can you collect the complete dmesg log and output of "sudo lspci -vv"
+and post them somewhere (https://bugzilla.kernel.org is a good place)?
 
--- 
-https://patchwork.kernel.org/project/linux-wireless/patch/20230510141856.46532-1-hdegoede@redhat.com/
+Ideally the dmesg would be from the most recent kernel you have.
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
-
+Bjorn
