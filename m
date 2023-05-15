@@ -1,113 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out1-smtp.messagingengine.com (out1-smtp.messagingengine.com [66.111.4.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD592C13C
-	for <regressions@lists.linux.dev>; Mon, 15 May 2023 10:01:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36FC1C433EF;
-	Mon, 15 May 2023 10:01:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1684144863;
-	bh=fMhblgCX0MmlqsV6DKGBf8/4TTWFE8GRs/BIGufIOwE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=bKYTew/pzJ3IeA051ltdl8Z7lwsBHUwI3WXkGXCnKwcB6qqzI70rpHK3CRoGUz/AO
-	 KUuDfTbc1kC465S2hgmqviWLzpkn29dWTojB0qKXbBNWwYLLr1+QKhnO5P68U//Emg
-	 reqeCPiArZcbW6mRXe3u1d/Bv/uMF1h6Zu5I4IWT2e3/XeQencNLZWF/9+kkxDVGm+
-	 Z6cLgiVyYQP/aSLSMTYV+2PlZoxYwZ1rhporspRlLWKM9RgkpQuauS1fNpYRLci4/9
-	 YvBBguevoUUXmf/dSBuksSlG+l1wAmdd6aYa49VqnKX/z9pFBTXCqPRG/k3pa7pLQv
-	 5p+prnFrMmoeg==
-Message-ID: <d12b3e4d-2edf-8451-2f2c-9cd171a830f2@kernel.org>
-Date: Mon, 15 May 2023 12:00:36 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C88AC8CB
+	for <regressions@lists.linux.dev>; Mon, 15 May 2023 12:26:25 +0000 (UTC)
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailout.nyi.internal (Postfix) with ESMTP id E40AA5C00EC;
+	Mon, 15 May 2023 08:26:24 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute5.internal (MEProxy); Mon, 15 May 2023 08:26:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:sender
+	:subject:subject:to:to; s=fm1; t=1684153584; x=1684239984; bh=FS
+	hj9jhaCJscn4VhLGeY2HLL/OvONSHw3LtQ6873UHU=; b=bDn/R9R8UiUb1g96qU
+	s+BUMqi4w9X4MLqr/g66nNXkUHJb5Urp1qbIoZIC785Oye4Wnmb3At4gt6DQEvls
+	iPbBgS2vyJShq0orBrjZpdCLA77U3y2zBPQqTTFuH7VW40jCDOZic2FtVTVSMeC/
+	NMgvz2+Wwcq1+UbUWNenbsdUev+qHTLSsx+fHCKRlKEzDDqSHnqPR+lecFQqUlyW
+	Z1DNL5jAoSAnBaznrg9gSrLI+Zhg11uKMHPx3v6x6QN2CSqnCsTCe5WCyYvfsohT
+	JH/89wdHigdYyKAD+zi3fFiSYCnbezyBWLBWImJOU8/1BA4uNVxokvxNICxjCuGI
+	+Ulg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:sender:subject
+	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+	:x-sasl-enc; s=fm1; t=1684153584; x=1684239984; bh=FShj9jhaCJscn
+	4VhLGeY2HLL/OvONSHw3LtQ6873UHU=; b=gBpqrQuF+8pxllcGPFkkD3GSCz2FO
+	EE3r2LuO4J9FF5K2optxIWEyx5d6X/xjJXrdyEGSObRu26TxH3bhmIjo4EUn8Vut
+	hTpZGnor3W/21sNv1fjfXIvQL6DHA9K9lsVLYNC+6aiKkR2U9M3v6EH6GTPf/hom
+	hH4uTbLc3sG4bVovoWiBxAWQB7Ori0a4yF98Ylo9xf1lc5aXiI1YNRdBaWfBbeuZ
+	x/VlRrsHhgcaNdi7x2oy03OvN7WoYKUK7gZhGQxXw7H8wYLug+FaSxrAHPmtJcL6
+	aZu1YClcYlBko77gQWgxVJcu+40QswikFkdjUYscgahiLUg5Cr2vLIyaA==
+X-ME-Sender: <xms:8CRiZFrfwhwajeZFioYSVAGnYub6dqDlmm-62eSXWs53CI4tOXS2nA>
+    <xme:8CRiZHoRko6houI2cfdSdLHQCaiVVb3HANDGtt_BqdU0Vv2qEGFA65pJ_Yl-ZWUuP
+    Zc1BiPzXM9lng>
+X-ME-Received: <xmr:8CRiZCNlvc9XxVVLnttcSWqxzwJyuJGTGivNjHawZ8kzjeb523F8q_T4tWxrIbVwDRzmQCC6AeHgvPxDs8seZ7YvORsPrICfhZT8Hw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrfeehjedgheefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepifhrvghg
+    ucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecuggftrfgrthhtvghrnhepgeehue
+    ehgfdtledutdelkeefgeejteegieekheefudeiffdvudeffeelvedttddvnecuffhomhgr
+    ihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
+    epmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomh
+X-ME-Proxy: <xmx:8CRiZA7uqHeMKjthjza3RwkPFFhVppxNQImtfSey6HkV0b8u4GQHTQ>
+    <xmx:8CRiZE60-Y2lbAJTsCnqIxjuq5S7lmImGlDCkSNaRu-lTohSmoWXNQ>
+    <xmx:8CRiZIh1HihDM6eDV9i30eenngYlQasZz0VWY3MauP0NiFpYqjERng>
+    <xmx:8CRiZCZ5Ou2kkYhgzqRl7F09D5fGbR8bV9ENmqsf7t5w2xIzrvE6Yg>
+Feedback-ID: i787e41f1:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 15 May 2023 08:26:23 -0400 (EDT)
+Date: Mon, 15 May 2023 14:26:16 +0200
+From: Greg KH <greg@kroah.com>
+To: "Limonciello, Mario" <Mario.Limonciello@amd.com>
+Cc: Sasha Levin <sashal@kernel.org>,
+	Thorsten Leemhuis <linux@leemhuis.info>,
+	Linux regressions mailing list <regressions@lists.linux.dev>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	"S-k, Shyam-sundar" <Shyam-sundar.S-k@amd.com>,
+	"Goswami, Sanket" <Sanket.Goswami@amd.com>,
+	"Gong, Richard" <Richard.Gong@amd.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"x86@kernel.org" <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	Borislav Petkov <bp@alien8.de>, Guenter Roeck <linux@roeck-us.net>,
+	"stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCH 1/2] amd_nb: Add PCI ID for family 19h model 78h
+Message-ID: <2023051505-bright-armrest-028e@gregkh>
+References: <20230427053338.16653-1-mario.limonciello@amd.com>
+ <20230427053338.16653-2-mario.limonciello@amd.com>
+ <7b74c389-97b7-4f56-851b-6ce17950a4d1@roeck-us.net>
+ <f2b81356-e702-3026-660f-d9a88edff632@amd.com>
+ <084837c4-72c8-be92-fd1c-5ccbd805c559@leemhuis.info>
+ <20230508112543.GBZFjcN2oxk4do31w4@fat_crate.local>
+ <a8b29619-f1da-4cb9-a5bd-a396b52e159f@roeck-us.net>
+ <20230508134414.GCZFj8rieNwF1AOerB@fat_crate.local>
+ <MN0PR12MB610132F2277B0F1DB1039A15E2749@MN0PR12MB6101.namprd12.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: mainline build failure due to cf21f328fcaf ("media: nxp: Add
- i.MX8 ISI driver")
-To: Mauro Carvalho Chehab <mchehab@kernel.org>,
- Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- "Sudip Mukherjee (Codethink)" <sudipm.mukherjee@gmail.com>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
- NXP Linux Team <linux-imx@nxp.com>, linux-media@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>
-References: <ZElaVmxDsOkZj2DK@debian>
- <51cff63a-3a04-acf5-8264-bb19b0bee8a3@leemhuis.info>
- <CAHk-=wgzU8_dGn0Yg+DyX7ammTkDUCyEJ4C=NvnHRhxKWC7Wpw@mail.gmail.com>
- <20230510090527.25e26127@sal.lan>
- <55d5ec29-f30f-4596-a3b9-7e5b8adf0582@kernel.org>
- <CAMuHMdV=b8j=X3XEBWsAghsHrPT58xp7peaMiTZisqf7wRJf3w@mail.gmail.com>
- <20230515102525.65150633@sal.lan>
-Content-Language: en-US
-From: Krzysztof Kozlowski <krzk@kernel.org>
-In-Reply-To: <20230515102525.65150633@sal.lan>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <MN0PR12MB610132F2277B0F1DB1039A15E2749@MN0PR12MB6101.namprd12.prod.outlook.com>
 
-On 15/05/2023 11:25, Mauro Carvalho Chehab wrote:
-> Em Mon, 15 May 2023 09:46:41 +0200
-> Geert Uytterhoeven <geert@linux-m68k.org> escreveu:
+On Thu, May 11, 2023 at 07:51:42PM +0000, Limonciello, Mario wrote:
+> [AMD Official Use Only - General]
 > 
->> Hi Krzysztof,
->>
->> On Sun, May 14, 2023 at 1:01 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
->>> On 10/05/2023 10:05, Mauro Carvalho Chehab wrote:  
->>>> And another CI job testing bisect breakages as I receive pull requests,
->>>> applying patch per patch and using both allyesconfig and allmodconfig,
->>>> also on x86_64 arch with W=1:
->>>>
->>>>       https://builder.linuxtv.org/job/patchwork/
->>>>
->>>> The rule is to not merge stuff on media tree if any of those jobs
->>>> fail. I also fast-forward merging patches whose subject states that
->>>> the build has failed.
->>>>
->>>> In order to help with that, on normal situation, I usually take one week
->>>> to merge stuff from media_stage into media_tree, doing rebases at
->>>> media_stage if needed to avoid git bisect build breakages at media_tree
->>>> (which is from where I send my update PRs to you).
->>>>
->>>> Unfortunately, currently we don't have resources to do multiple randconfig  
->>>
->>> Is you media staging tree included in LKP (kernel test robot)? You would
->>> get huge build coverage after every push to your staging repo.  
+> +stable, Sasha
 > 
-> No idea, as I don't know where LKP settings are stored, nor what frequency
-> it is doing builds from git://linuxtv.org/media_stage.git, if any. Do you know
-> where we can check such configuration?
-
-AFAIR, it checks all kernel.org repos, but anything outside should be
-manually added. See:
-https://github.com/intel/lkp-tests/pull/271
-
-I actually proposed a talk around this for LPC, so it seems it might be
-useful.
-
+> > > Together with this patch there are now at least two regressions if
+> > > -rc1 whch could have been avoided and may impact testability on
+> > > affected systems.
+> >
+> > Are you saying that this patch which fixes s2idle on some random box
+> > should've gone to Linus *immediately*?
+> >
+> > And read my mail again:
+> >
+> > "Some fixes need longer testing because there have been cases where
+> > a fix breaks something else."
+> >
+> > So yes, I disagree with rushing fixes immediately. If they're obvious
+> > - whatever that means - then sure but not all of them are such.
+> >
+> > --
 > 
-> In the end, patches there will end going to linux-next, so at least some
-> sort of coverage is there, but I'm not sure if LKP will always reply to
-> linux-media if the patch causing build regressions is there.
+> Unfortunately, it looks like the broken commit got backported into 6.1.28,
+> but the fix still isn't in Linus' tree.
 > 
-> While being helpful, one problem with LKP is that it is hard to filter out 
-> reports per git tree. The only way to check if the report is applicable to
-> media trees seems to be looking inside the e-mail's body.
+> Sasha,
+> 
+> Can you please pick up
+> https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/commit/?h=x86/urgent&id=23a5b8bb022c1e071ca91b1a9c10f0ad6a0966e9
+> for 6.1.29 to fix the regression?
 
-If you setup specific repo entry in LKP, you will get a quite specific
-email, e.g. with subject:
+Now that this is in Linus's tree, it's queued up, thanks.
 
-[krzk:for-next] BUILD SUCCESS 5b248db78d1aa679009efa4763794890572e63fb
-[krzk-github:n/of-device-id-of-match-ptr-rebase] BUILD SUCCESS ce0964f4
-
-(where krzk/krzk-github are the names of repos in LKP)
-
-
-Best regards,
-Krzysztof
-
+greg k-h
