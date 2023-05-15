@@ -1,204 +1,357 @@
-Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFD118831
-	for <regressions@lists.linux.dev>; Mon, 15 May 2023 08:29:07 +0000 (UTC)
-Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-75764d20db3so855389585a.2
-        for <regressions@lists.linux.dev>; Mon, 15 May 2023 01:29:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1684139346; x=1686731346;
-        h=in-reply-to:from:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=jmA5SMXO5ka/h26RblqQTnWmVT4C1BxcXR9XGyBEyr0=;
-        b=flYB3kXMkCQ5AKMA7EsUmmH5oGjyM6xx5OjtaYrZ+SmkFnPhefKNUc9DQDQCWOV8Ru
-         dggkOYXT1ouZhHaY4QQCstqsFolQNTEJenrsCwDyer7ajUS5tsQXMmXkHU+vG5+xfblS
-         RqC4HwHWp610leeRwvZ7cYcRSD4O5stZjjDjU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684139346; x=1686731346;
-        h=in-reply-to:from:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jmA5SMXO5ka/h26RblqQTnWmVT4C1BxcXR9XGyBEyr0=;
-        b=klQRS25gUiajy5Sg7+T1zKyDcFDRGOn6yqWYPbrypuTEHRbsQC1hiplhiGdmJnFZuF
-         b8Rm6DkF0L3yCrg1CGmGTOQQsu5j6/4ftbJQ9RZeFSqqI+BLJohcG/BEjULMGM+sUYuk
-         xloMXrMqUhiHemxu3yfE3cpVGPO0x8MQX/VnewGGn8At68HzbI9oOgqcVccYe1sWeG2j
-         HoxYoWDrtdyc9FZTGlpfGx9dBKCZlTQRDklCmLwezQlRn5rUtTt0COHpqSFiAAzHBUz0
-         0hAnA9Tg0e6VME0SR8jwESppfiqwRZeBNsmTgtx5ycn/KycFgiF7QMUkig5T02gFpb49
-         7U0w==
-X-Gm-Message-State: AC+VfDzzGxHC1Ar9OXg2htjpUnifgG/zgwl9oYKPk5AfIZuXjegSD8t/
-	5kiwmnNqZ37LexkHEQGUYXiJIw==
-X-Google-Smtp-Source: ACHHUZ7ra2i0kzDkw7v4EULRwFxoiy8LmOEK5xbwn8y0xoqFugt4iozYM+8Mij/XDTX8Ty3XphpMQw==
-X-Received: by 2002:a05:6214:e49:b0:623:4ca9:5b24 with SMTP id o9-20020a0562140e4900b006234ca95b24mr10824147qvc.12.1684139346585;
-        Mon, 15 May 2023 01:29:06 -0700 (PDT)
-Received: from [10.176.68.61] ([192.19.148.250])
-        by smtp.gmail.com with ESMTPSA id n25-20020a05620a153900b0074def53eca5sm1769994qkk.53.2023.05.15.01.29.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 15 May 2023 01:29:04 -0700 (PDT)
-Message-ID: <ffc25bf3-e4ef-9f8c-abdc-e6ea41e266b2@broadcom.com>
-Date: Mon, 15 May 2023 10:29:02 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBC1E8829
+	for <regressions@lists.linux.dev>; Mon, 15 May 2023 08:40:53 +0000 (UTC)
+Received: from ip4d148da6.dynamic.kabel-deutschland.de ([77.20.141.166] helo=truhe.fritz.box); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	id 1pyTlC-0004Ot-9Q; Mon, 15 May 2023 10:40:50 +0200
+From: Thorsten Leemhuis <linux@leemhuis.info>
+To: Jonathan Corbet <corbet@lwn.net>
+Cc: linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Greg KH <gregkh@linuxfoundation.org>,
+	Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Subject: [PATCH v1] docs: handling-regressions: rework section about fixing procedures
+Date: Mon, 15 May 2023 10:40:48 +0200
+Message-Id: <6971680941a5b7b9cb0c2839c75b5cc4ddb2d162.1684139586.git.linux@leemhuis.info>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.1
-Subject: Re: [PATCH v2] wifi: brcmfmac: Check for probe() id argument being
- NULL
-To: Hans de Goede <hdegoede@redhat.com>, Arend van Spriel
- <aspriel@gmail.com>, Franky Lin <franky.lin@broadcom.com>,
- Hante Meuleman <hante.meuleman@broadcom.com>, Kalle Valo <kvalo@kernel.org>
-Cc: linux-wireless@vger.kernel.org, brcm80211-dev-list.pdl@broadcom.com,
- SHA-cyfmac-dev-list@infineon.com, regressions@lists.linux.dev,
- Felix <nimrod4garoa@gmail.com>, stable@vger.kernel.org
-References: <20230510141856.46532-1-hdegoede@redhat.com>
-From: Arend van Spriel <arend.vanspriel@broadcom.com>
-In-Reply-To: <20230510141856.46532-1-hdegoede@redhat.com>
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="00000000000085ac2405fbb73f9c"
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1684140053;801c34d6;
+X-HE-SMSGID: 1pyTlC-0004Ot-9Q
 
---00000000000085ac2405fbb73f9c
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+This basically rewrites the 'Prioritize work on fixing regressions'
+section of Documentation/process/handling-regressions.rst for various
+reasons. Among them: some things were too demanding, some didn't align
+well with the usual workflows, and some apparently were not clear enough
+-- and of course a few things were missing that would be good to have in
+there.
 
-On 5/10/2023 4:18 PM, Hans de Goede wrote:
-> The probe() id argument may be NULL in 2 scenarios:
-> 
-> 1. brcmf_pcie_pm_leave_D3() calling brcmf_pcie_probe() to reprobe
->     the device.
-> 
-> 2. If a user tries to manually bind the driver from sysfs then the sdio /
->     pcie / usb probe() function gets called with NULL as id argument.
-> 
-> 1. Is being hit by users causing the following oops on resume and causing
-> wifi to stop working:
-> 
-> BUG: kernel NULL pointer dereference, address: 0000000000000018
-> <snip>
-> Hardware name: Dell Inc. XPS 13 9350/0PWNCR, BIDS 1.13.0 02/10/2020
-> Workgueue: events_unbound async_run_entry_fn
-> RIP: 0010:brcmf_pcie_probe+Ox16b/0x7a0 [brcmfmac]
-> <snip>
-> Call Trace:
->   <TASK>
->   brcmf_pcie_pm_leave_D3+0xc5/8x1a0 [brcmfmac be3b4cefca451e190fa35be8f00db1bbec293887]
->   ? pci_pm_resume+0x5b/0xf0
->   ? pci_legacy_resume+0x80/0x80
->   dpm_run_callback+0x47/0x150
->   device_resume+0xa2/0x1f0
->   async_resume+0x1d/0x30
-> <snip>
-> 
-> Fix this by checking for id being NULL.
-> 
-> In the PCI and USB cases try a manual lookup of the id so that manually
-> binding the driver through sysfs and more importantly brcmf_pcie_probe()
-> on resume will work.
-> 
-> For the SDIO case there is no helper to do a manual sdio_device_id lookup,
-> so just directly error out on a NULL id there.
-> 
-> Fixes: da6d9c8ecd00 ("wifi: brcmfmac: add firmware vendor info in driver info")
-> Reported-by: Felix <nimrod4garoa@gmail.com>
-> Link: https://lore.kernel.org/regressions/4ef3f252ff530cbfa336f5a0d80710020fc5cb1e.camel@gmail.com/
-> Cc: Arend van Spriel <arend.vanspriel@broadcom.com>
+Linus for example recently stated that regressions introduced during the
+past year should be handled similarly to regressions from the current
+cycle, if it's a clear fix with no semantic subtlety. His exact
+wording[1] didn't fit well into the text structure, but the author tried
+to stick close to the apparent intention.
 
-You can change this to:
+It was a noble goal from the original author to state "[prevent
+situations that might force users to] continue running an outdated and
+thus potentially insecure kernel version for more than two weeks after a
+regression's culprit was identified"; this directly led to the goal "fix
+regression in mainline within one week, if the issue made it into a
+stable/longterm kernel", because the stable team needs time to pick up
+and prepare a new release. But apparently all that was a bit too
+demanding.
 
-Reviewed-by: Arend van Spriel <arend.vanspriel@broadcom.com>
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
-> Changes in v2:
-> - Using BRCMF_FWVENDOR_INVALID will just lead to a probe() error later on,
->    if NULL error out immediately instead of using BRCMF_FWVENDOR_INVALID.
-> ---
->   .../net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c |  5 +++++
->   .../net/wireless/broadcom/brcm80211/brcmfmac/pcie.c   | 11 +++++++++++
->   .../net/wireless/broadcom/brcm80211/brcmfmac/usb.c    | 11 +++++++++++
->   3 files changed, 27 insertions(+)
+That "one week" target for example doesn't align well with the usual
+habits of the subsystem maintainers, which normally send their fixes to
+Linus once a week; and it doesn't align too well with stable/longterm
+releases either, which often enter a -rc phase on Mondays or Tuesdays
+and then are released two to three days later. And asking developers to
+create, review, and mainline fixes within one week might be too much to
+ask for in general. Hence tone the general goal down to three weeks and
+use an approach that better aligns with the usual merging and release
+habits.
 
---00000000000085ac2405fbb73f9c
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
+While at it, also make the rules of thumb a bit easier to follow by
+grouping them by topic (e.g. generic things, timing, procedures, ...).
 
-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
-2Gzj3QNJRLsZu1TLyOyBBIr/BE7UiY3RabgRzknBGAPmzhS+fmyM8OtM5BYBsFBrSUFtZZO2p/tf
-Nbc24J2zf2peoZ8MK+7WQqummYlOnz+FyDkA9EybeNMcS5C+xi/PAgMBAAGjggHdMIIB2TAOBgNV
-HQ8BAf8EBAMCBaAwgaMGCCsGAQUFBwEBBIGWMIGTME4GCCsGAQUFBzAChkJodHRwOi8vc2VjdXJl
-Lmdsb2JhbHNpZ24uY29tL2NhY2VydC9nc2djY3IzcGVyc29uYWxzaWduMmNhMjAyMC5jcnQwQQYI
-KwYBBQUHMAGGNWh0dHA6Ly9vY3NwLmdsb2JhbHNpZ24uY29tL2dzZ2NjcjNwZXJzb25hbHNpZ24y
-Y2EyMDIwME0GA1UdIARGMEQwQgYKKwYBBAGgMgEoCjA0MDIGCCsGAQUFBwIBFiZodHRwczovL3d3
-dy5nbG9iYWxzaWduLmNvbS9yZXBvc2l0b3J5LzAJBgNVHRMEAjAAMEkGA1UdHwRCMEAwPqA8oDqG
-OGh0dHA6Ly9jcmwuZ2xvYmFsc2lnbi5jb20vZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAuY3Js
-MCcGA1UdEQQgMB6BHGFyZW5kLnZhbnNwcmllbEBicm9hZGNvbS5jb20wEwYDVR0lBAwwCgYIKwYB
-BQUHAwQwHwYDVR0jBBgwFoAUljPR5lgXWzR1ioFWZNW+SN6hj88wHQYDVR0OBBYEFIikAXd8CEtv
-ZbDflDRnf3tuStPuMA0GCSqGSIb3DQEBCwUAA4IBAQCdS5XCYx6k2GGZui9DlFsFm75khkqAU7rT
-zBX04sJU1+B1wtgmWTVIzW7ugdtDZ4gzaV0S9xRhpDErjJaltxPbCylb1DEsLj+AIvBR34caW6ZG
-sQk444t0HPb29HnWYj+OllIGMbdJWr0/P95ZrKk2bP24ub3ZP/8SyzrohfIba9WZKMq6g2nTLZE3
-BtkeSGJx/8dy0h8YmRn+adOrxKXHxhSL8BNn8wsmIZyYWe6fRcBtO3Ks2DOLyHCdkoFlN8x9VUQF
-N2ulEgqCbRKkx+qNirW86eF138lr1gRxzclu/38ko//MmkAYR/+hP3WnBll7zbpIt0jc9wyFkSqH
-p8a1MYICbTCCAmkCAQEwazBbMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1z
-YTExMC8GA1UEAxMoR2xvYmFsU2lnbiBHQ0MgUjMgUGVyc29uYWxTaWduIDIgQ0EgMjAyMAIMTv1t
-bpIzNUky46LXMA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEiBCDWOzRixGGq+NncoF5S
-dgMvGf6xj/4SS/khrq+lIRBGwzAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJ
-BTEPFw0yMzA1MTUwODI5MDZaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZIAWUDBAEqMAsGCWCGSAFl
-AwQBFjALBglghkgBZQMEAQIwCgYIKoZIhvcNAwcwCwYJKoZIhvcNAQEKMAsGCSqGSIb3DQEBBzAL
-BglghkgBZQMEAgEwDQYJKoZIhvcNAQEBBQAEggEAGyeQCdxL0TL1zyZcxRWnUcxspTrYalQ7AOnh
-K03ImEjUFtdNXKcoUNEyjY+C+B2ysodMIsR9+z3JTiiVHpgQTRDm4F+cP1FEaHRo7ysamLKmwt3a
-z4QU83a2fMMeV4YkmHB97TNypirVJnr4Yn1NHi6CiqzL12PsASeZC9+i9NUPSvbxK8v/24ZSWR5q
-ATVjvLsHSuRHczsIEq6UiFGcpT/V+Aw4U1Ik2XhC3OAno1a3o1aomXCurqcUT+0wPRjlsXTpIAeT
-4P/nyS03Zo+LIu36cfdoagckMTvsMxxWfQvX5MflFLcYliDK2IObmSaFmWvcGp5ysXw9DM0Kz3c6
-EQ==
---00000000000085ac2405fbb73f9c--
+Also add text for a few cases where recent discussions showed they need
+covering. Among them are multiple points that better explain the
+relations to stable and longterm kernels and the team that manages them;
+they and the group seperators are the primary reason why this whole
+section sadly grew somewhat in the rewrite.
+
+The group about those relations led to one addition the author came up
+with without any precedent from Linus: the text now tells developers to
+add a stable tag for any regression that made it into a proper mainline
+release during the past 12 months. This is meant to ensure the stable
+team will definitely notice any fixes for recent regressions. That
+includes those introduced shortly before a new mainline release and
+found right after it; without such a rule the stable team might miss the
+fix, which then would only reach users after weeks or months with later
+releases.
+
+Note, the aspect "Do not consider regressions from the current cycle as
+something that can wait till the cycle's end [...]" might look like an
+addition, but was kinda was in the old text as well -- but only
+indirectly. That apparently was too subtle, as many developers seem to
+assume waiting till the end of the cycle is fine (even for build
+fixes).
+
+In practice this was especially problematic when a cause of a regression
+made it into a proper release (either directly or through a backport). A
+revert performed by Linus shortly before the 6.3 release illustrated
+that[2], as the developer of the culprit had been willing to revert the
+culprit about three weeks earlier already -- but didn't do so when a fix
+came into sight and a maintainer suggested it can wait. Due to that the
+issue in the end plagued users of 6.2.y at least two weeks longer than
+necessary, as the fix in the end didn't become ready in time. This issue
+in fact could have been resolved one or two additional weeks earlier, if
+the developer had reverted the culprit shortly after it had been
+identified (which even the old version of the text suggest to do in such
+cases).
+
+[1] https://lore.kernel.org/all/CAHk-=wis_qQy4oDNynNKi5b7Qhosmxtoj1jxo5wmB6SRUwQUBQ@mail.gmail.com/
+
+[2] https://lore.kernel.org/all/CAHk-=wgD98pmSK3ZyHk_d9kZ2bhgN6DuNZMAJaV0WTtbkf=RDw@mail.gmail.com/
+
+CC: Linus Torvalds <torvalds@linux-foundation.org>
+CC: Greg KH <gregkh@linuxfoundation.org>
+CC: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Signed-off-by: Thorsten Leemhuis <linux@leemhuis.info>
+
+---
+Lo! Over time I became more and more unhappy with this section of
+Documentation/process/handling-regressions.rst I wrote about one and
+a half years ago. And it seems developers were unhappy about quite a bit
+of it as well and thus didn't take it seriously. No wonder I ended up
+basically rewriting the section when I recently set out to add a few
+aspects Linus recently clarified.
+
+Apart from what the patch description above already highlights, the
+rules of thumb in the end don't change. But I'm looking at the text a
+lot for three weeks now, hence I might have become too blind to spot
+unwanted changes.
+
+Hence let me know if you think I went too far somewhere (especially with
+the "tag recent regressions for backporting if they recently made it
+into a mainline release" thing)  -- or if you think some things should
+be stricter or more relaxed in general.
+
+Ciao, Thorsten
+---
+ .../process/handling-regressions.rst          | 208 +++++++++++-------
+ 1 file changed, 126 insertions(+), 82 deletions(-)
+
+diff --git a/Documentation/process/handling-regressions.rst b/Documentation/process/handling-regressions.rst
+index abb741b1aeee..5d3c3de3f4ec 100644
+--- a/Documentation/process/handling-regressions.rst
++++ b/Documentation/process/handling-regressions.rst
+@@ -129,88 +129,132 @@ tools and scripts used by other kernel developers or Linux distributions; one of
+ these tools is regzbot, which heavily relies on the "Link:" tags to associate
+ reports for regression with changes resolving them.
+ 
+-Prioritize work on fixing regressions
+-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-
+-You should fix any reported regression as quickly as possible, to provide
+-affected users with a solution in a timely manner and prevent more users from
+-running into the issue; nevertheless developers need to take enough time and
+-care to ensure regression fixes do not cause additional damage.
+-
+-In the end though, developers should give their best to prevent users from
+-running into situations where a regression leaves them only three options: "run
+-a kernel with a regression that seriously impacts usage", "continue running an
+-outdated and thus potentially insecure kernel version for more than two weeks
+-after a regression's culprit was identified", and "downgrade to a still
+-supported kernel series that lack required features".
+-
+-How to realize this depends a lot on the situation. Here are a few rules of
+-thumb for you, in order or importance:
+-
+- * Prioritize work on handling regression reports and fixing regression over all
+-   other Linux kernel work, unless the latter concerns acute security issues or
+-   bugs causing data loss or damage.
+-
+- * Always consider reverting the culprit commits and reapplying them later
+-   together with necessary fixes, as this might be the least dangerous and
+-   quickest way to fix a regression.
+-
+- * Developers should handle regressions in all supported kernel series, but are
+-   free to delegate the work to the stable team, if the issue probably at no
+-   point in time occurred with mainline.
+-
+- * Try to resolve any regressions introduced in the current development before
+-   its end. If you fear a fix might be too risky to apply only days before a new
+-   mainline release, let Linus decide: submit the fix separately to him as soon
+-   as possible with the explanation of the situation. He then can make a call
+-   and postpone the release if necessary, for example if multiple such changes
+-   show up in his inbox.
+-
+- * Address regressions in stable, longterm, or proper mainline releases with
+-   more urgency than regressions in mainline pre-releases. That changes after
+-   the release of the fifth pre-release, aka "-rc5": mainline then becomes as
+-   important, to ensure all the improvements and fixes are ideally tested
+-   together for at least one week before Linus releases a new mainline version.
+-
+- * Fix regressions within two or three days, if they are critical for some
+-   reason -- for example, if the issue is likely to affect many users of the
+-   kernel series in question on all or certain architectures. Note, this
+-   includes mainline, as issues like compile errors otherwise might prevent many
+-   testers or continuous integration systems from testing the series.
+-
+- * Aim to fix regressions within one week after the culprit was identified, if
+-   the issue was introduced in either:
+-
+-    * a recent stable/longterm release
+-
+-    * the development cycle of the latest proper mainline release
+-
+-   In the latter case (say Linux v5.14), try to address regressions even
+-   quicker, if the stable series for the predecessor (v5.13) will be abandoned
+-   soon or already was stamped "End-of-Life" (EOL) -- this usually happens about
+-   three to four weeks after a new mainline release.
+-
+- * Try to fix all other regressions within two weeks after the culprit was
+-   found. Two or three additional weeks are acceptable for performance
+-   regressions and other issues which are annoying, but don't prevent anyone
+-   from running Linux (unless it's an issue in the current development cycle,
+-   as those should ideally be addressed before the release). A few weeks in
+-   total are acceptable if a regression can only be fixed with a risky change
+-   and at the same time is affecting only a few users; as much time is
+-   also okay if the regression is already present in the second newest longterm
+-   kernel series.
+-
+-Note: The aforementioned time frames for resolving regressions are meant to
+-include getting the fix tested, reviewed, and merged into mainline, ideally with
+-the fix being in linux-next at least briefly. This leads to delays you need to
+-account for.
+-
+-Subsystem maintainers are expected to assist in reaching those periods by doing
+-timely reviews and quick handling of accepted patches. They thus might have to
+-send git-pull requests earlier or more often than usual; depending on the fix,
+-it might even be acceptable to skip testing in linux-next. Especially fixes for
+-regressions in stable and longterm kernels need to be handled quickly, as fixes
+-need to be merged in mainline before they can be backported to older series.
++Expectations and best practices for fixing regressions
++~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
++
++As a Linux kernel developer, you are expected to give your best to prevent
++situations where a regression caused by a recent change of yours leaves users
++only these options:
++
++ * Run a kernel with a regression that impacts usage.
++
++ * Switch to an older or newer kernel series.
++
++ * Continue running an outdated and thus potentially insecure kernel for more
++   than three weeks after the regression's culprit was identified. Ideally it
++   should be less than two. And it ought to be just a few days, if the issue is
++   severe or affects many users -- either in general or in prevalent
++   environments.
++
++How to realize that in practice depends on various factors. Use the following
++rules of thumb as a guide.
++
++In general:
++
++ * Prioritize work on regressions over all other Linux kernel work, unless the
++   latter concerns a severe issue (e.g. acute security vulnerability, data loss,
++   bricked hardware, ...).
++
++ * Expedite fixing mainline regressions that recently made it into a proper
++   mainline, stable, or longterm release (either directly or via backport).
++
++ * Do not consider regressions from the current cycle as something that can wait
++   till the end of the cycle, as the issue might discourage or prevent users and
++   CI systems from testing mainline now or generally.
++
++ * Work with the required care to avoid additional or bigger damage, even if
++   resolving an issue then might take longer than outlined below.
++
++On timing once the culprit of a regression is known:
++
++ * Aim to mainline a fix within two or three days, if the issue is severe or
++   bothering many users -- either in general or in prevalent conditions like a
++   particular hardware environment, distribution, or stable/longterm series.
++
++ * Aim to mainline a fix by Sunday after the next, if the culprit made it
++   into a recent mainline, stable, or longterm release (either directly or via
++   backport); if the culprit became known early during a week and is simple to
++   resolve, try to mainline the fix within the same week.
++
++ * For other regressions, aim to mainline fixes before the hindmost Sunday
++   within the next three weeks. One or two Sundays later are acceptable, if the
++   regression is something people can live with easily for a while -- like a
++   mild performance regression.
++
++ * It's strongly discouraged to delay mainlining regression fixes till the next
++   merge window, except when the fix is extraordinarily risky or when the
++   culprit was mainlined more than a year ago.
++
++On procedure:
++
++ * Always consider reverting the culprit, as it's often the quickest and least
++   dangerous way to fix a regression. Don't worry about mainlining a fixed
++   variant later: that should be straight-forward, as most of the code went
++   through review once already.
++
++ * Try to resolve any regressions introduced in mainline during the past
++   twelve months before the current development cycle ends: Linus wants such
++   regressions to be handled like those from the current cycle, unless fixing
++   bears unusual risks.
++
++ * Consider CCing Linus on discussions or patch review, if a regression seems
++   tangly. Do the same in precarious or urgent cases -- especially if the
++   subsystem maintainer might be unavailable. Also CC the stable team, when you
++   know such a regression made it into a mainline, stable, or longterm release.
++
++ * For urgent regressions, consider asking Linus to pick up the fix straight
++   from the mailing list: he is totally fine with that for uncontroversial
++   fixes. Ideally though such requests should happen in accordance with the
++   subsystem maintainers or come directly from them.
++
++ * In case you are unsure if a fix is worth the risk applying just days before
++   a new mainline release, send Linus a mail with the usual lists and people in
++   CC; in it, summarize the situation while asking him to consider picking up
++   the fix straight from the list. He then himself can make the call and when
++   needed even postpone the release. Such requests again should ideally happen
++   in accordance with the subsystem maintainers or come directly from them.
++
++Regarding stable and longterm kernels:
++
++ * You are free to leave regressions to the stable team, if they at no point in
++   time occurred with mainline or were fixed there already.
++
++ * If a regression made it into a proper mainline release during the past
++   twelve months, ensure to tag the fix with "Cc: stable@vger.kernel.org", as a
++   "Fixes:" tag alone does not guarantee a backport. Please add the same tag,
++   in case you know the culprit was backported to stable or longterm kernels.
++
++ * When receiving reports about regressions in recent stable or longterm kernel
++   series, please evaluate at least briefly if the issue might happen in current
++   mainline as well -- and if that seems likely, take hold of the report. If in
++   doubt, ask the reporter to check mainline.
++
++ * Whenever you want to swiftly resolve a regression that recently also made it
++   into a proper mainline, stable, or longterm release, fix it quickly in
++   mainline; when appropriate thus involve Linus to fast-track the fix (see
++   above). That's because the stable team normally does neither revert nor fix
++   any changes that cause the same problems in mainline.
++
++ * In case of urgent regression fixes you might want to ensure prompt
++   backporting by dropping the stable team a note once the fix was mainlined;
++   this is especially advisable during merge windows and shortly thereafter, as
++   the fix otherwise might land at the end of a huge patch queue.
++
++On patch flow:
++
++ * Developers, when trying to reach the time periods mentioned above, remember
++   to account for the time it takes to get fixes tested, reviewed, and merged by
++   Linus, ideally with them being in linux-next at least briefly. Hence, if a
++   fix is urgent, make it obvious to ensure others handle it appropriately.
++
++ * Reviewers, you are kindly asked to assist developers in reaching the time
++   periods mentioned above by reviewing regression fixes in a timely manner.
++
++ * Subsystem maintainers, you likewise are encouraged to expedite the handling
++   of regression fixes. Thus evaluate if skipping linux-next is an option for
++   the particular fix. Also consider sending git pull requests more often than
++   usual when needed. And try to avoid holding onto regression fixes over
++   weekends -- especially when the fix is marked for backporting.
+ 
+ 
+ More aspects regarding regressions developers should be aware of
+
+base-commit: cdc822dda6f82269b94d5fa60ddc71d98c160fa0
+-- 
+2.40.1
+
