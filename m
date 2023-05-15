@@ -1,87 +1,95 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3A39FBE7
-	for <regressions@lists.linux.dev>; Mon, 15 May 2023 17:23:48 +0000 (UTC)
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-50bd2d7ba74so113739480a12.1
-        for <regressions@lists.linux.dev>; Mon, 15 May 2023 10:23:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1684171427; x=1686763427;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fd5dtKhNyHGq8Bf62oHV9wGTTQyA1cr8VVarKwpvWbY=;
-        b=e5qRkzpa/8VhhbJMscvnEGPfw9W/cHLNrZpKiq1kf0sBmFTuOrX9Cjdss75ibaWvbt
-         bAL5jDYyd6tNCBVwIdUi37T5zTW0UxOTXjR+ICuXYCwlL/KlrZpsDAbpKw+B05YZdYE0
-         yc3ak/7suJI3mRtUCZ2YAnAAleqka2hNCWblU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684171427; x=1686763427;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fd5dtKhNyHGq8Bf62oHV9wGTTQyA1cr8VVarKwpvWbY=;
-        b=eEs6HqckqQBORHtx9KK07EBgGZnBcvjUNxnCbJUqzzOMq4T0JPlA0AY547if+h6LfG
-         uouEjujo10kYsRh6nwMWfbe5nfysNRi/RstNc2sGhJisCAjlPh4q2h0tzLW7OgdWj2fK
-         nMZM2/wSigkM4nFcU46yqQRA/y6a1JpI4N+KGU5u5B9hj8v2nDMw2d7C9EnVCzPdsGEA
-         1F+r8BRkWNOqz8ncwwxbHfxZ9Ax9OaWnLapYV9z6j7ilNEJhnTQGeHOeR9MC7rFmsULp
-         ziAkkIlFheIoDaxdyxl/UnRX/Yn6kIxB9gYhHXdyb5CGYsSHwifq3foqqT2nqsgs5dKN
-         uSBA==
-X-Gm-Message-State: AC+VfDzZ+CAQxBWCf3Nb6AJdpYOXaSeIklr+mks+6dQTEm3zB4ZkrSDd
-	FLUx5cgqS/Fd5zorLQrRKvqUs2Z7//hrCCB/K+84buzN
-X-Google-Smtp-Source: ACHHUZ7VOEVULuUqfe68BkfgLbLpX10jSlqqCQOZe1mmxuujlfnPXzlZJUIy4zZSRiNrSnr3xnmEdw==
-X-Received: by 2002:a17:907:e91:b0:968:892b:1902 with SMTP id ho17-20020a1709070e9100b00968892b1902mr23750496ejc.6.1684171427158;
-        Mon, 15 May 2023 10:23:47 -0700 (PDT)
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com. [209.85.208.53])
-        by smtp.gmail.com with ESMTPSA id jy17-20020a170907763100b00969dc13d0b1sm9396345ejc.43.2023.05.15.10.23.46
-        for <regressions@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 15 May 2023 10:23:47 -0700 (PDT)
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-50bd37ca954so113866936a12.0
-        for <regressions@lists.linux.dev>; Mon, 15 May 2023 10:23:46 -0700 (PDT)
-X-Received: by 2002:a17:907:6e11:b0:96a:2210:7dd8 with SMTP id
- sd17-20020a1709076e1100b0096a22107dd8mr16414147ejc.38.1684171426288; Mon, 15
- May 2023 10:23:46 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE404E554
+	for <regressions@lists.linux.dev>; Mon, 15 May 2023 18:19:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0548BC433EF;
+	Mon, 15 May 2023 18:19:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1684174745;
+	bh=lXn4/zb+8zA/44joIb7RJ/8M0SqiyaD6fWxJaePD334=;
+	h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+	b=pJk9W1N/tU7YdZNKnWhelPsah1WtS6AEMRSG50aD1YXSNJxvFu5ulgwikz42uZEzu
+	 cQ7Xxxsbf8GVFomC3xjsw71xEfd7hmIuZURcOmooCoehdJd8IXqhTa8V/FCAkiEh+U
+	 R421aoEQYuQhflN+ASSNhExsoNdak9aYBFAw53gdQjbrBcv5WG/8fI3RKcWN8h8E4F
+	 UIx7Dsl35Pj1Jt4RCdpMOsxQFugRCdHpbAeBRiwSmV/9x5c3ASBmlBzpWk47BXVUH6
+	 6y9g202U+s7sUeJkYyMIS6q7HS5VPMIc2ewW0feGLSrq3yT6XPT4xhGuH8uGmQRsZL
+	 jVtTVzX2nfw8w==
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230202232517.8695-1-michael.christie@oracle.com>
- <20230202232517.8695-9-michael.christie@oracle.com> <aba6cca4-e66c-768f-375c-b38c8ba5e8a8@6wind.com>
- <CAHk-=wgadfsCnKHLON7op=Qs5t3w3PVz5ZDbvbKsfb=yBg=yjQ@mail.gmail.com>
- <78c5e150-26cf-7724-74ee-4a0b16b944b1@oracle.com> <48842e92-835e-bc3f-7118-48b8f415f532@leemhuis.info>
- <CAHk-=wicXCNR1bBioaAiBqEDgv-CoQD9z2RsM2VOTPzkK0xr8g@mail.gmail.com>
- <20230515-vollrausch-liebgeworden-2765f3ca3540@brauner> <CAHk-=wgXJ5VS1iBkfsG=HDjsyhn5XYDKt5xhQcNuz-e7VKyg8A@mail.gmail.com>
- <33b84605-1d0c-1b0e-7927-7ffa96b3c308@kernel.dk> <CAHk-=wiDqe+H7UnhD0qLbL8K8hnWUEdsRqcM4QnY=gZ3GytBRQ@mail.gmail.com>
-In-Reply-To: <CAHk-=wiDqe+H7UnhD0qLbL8K8hnWUEdsRqcM4QnY=gZ3GytBRQ@mail.gmail.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Mon, 15 May 2023 10:23:28 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjudDcq+TSaxOVX03iMTAhBDf6fup-tDhDpdQjGnKXgTw@mail.gmail.com>
-Message-ID: <CAHk-=wjudDcq+TSaxOVX03iMTAhBDf6fup-tDhDpdQjGnKXgTw@mail.gmail.com>
-Subject: Re: [PATCH v11 8/8] vhost: use vhost_tasks for worker threads
-To: Jens Axboe <axboe@kernel.dk>
-Cc: Christian Brauner <brauner@kernel.org>, Thorsten Leemhuis <linux@leemhuis.info>, 
-	Mike Christie <michael.christie@oracle.com>, nicolas.dichtel@6wind.com, 
-	Linux kernel regressions list <regressions@lists.linux.dev>, hch@infradead.org, stefanha@redhat.com, 
-	jasowang@redhat.com, mst@redhat.com, sgarzare@redhat.com, 
-	virtualization@lists.linux-foundation.org, ebiederm@xmission.com, 
-	konrad.wilk@oracle.com, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+Subject: Re: [v2] wifi: brcmfmac: Check for probe() id argument being NULL
+From: Kalle Valo <kvalo@kernel.org>
+In-Reply-To: <20230510141856.46532-1-hdegoede@redhat.com>
+References: <20230510141856.46532-1-hdegoede@redhat.com>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Arend van Spriel <aspriel@gmail.com>,
+ Franky Lin <franky.lin@broadcom.com>,
+ Hante Meuleman <hante.meuleman@broadcom.com>,
+ Hans de Goede <hdegoede@redhat.com>, linux-wireless@vger.kernel.org,
+ brcm80211-dev-list.pdl@broadcom.com, SHA-cyfmac-dev-list@infineon.com,
+ regressions@lists.linux.dev, Felix <nimrod4garoa@gmail.com>,
+ Arend van Spriel <arend.vanspriel@broadcom.com>, stable@vger.kernel.org
+User-Agent: pwcli/0.1.1-git (https://github.com/kvalo/pwcli/) Python/3.7.3
+Message-ID: <168417474077.32723.9868823702580384780.kvalo@kernel.org>
+Date: Mon, 15 May 2023 18:19:02 +0000 (UTC)
 
-On Mon, May 15, 2023 at 8:54=E2=80=AFAM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> Blush. I decided to build-test it, and then forgot to attach it. Here.
+Hans de Goede <hdegoede@redhat.com> wrote:
 
-Btw, if this tests out good and we end up doing this, I think we
-should also just rename that '.ignore_signals' bitfield to
-'.block_signals' to actually match what it does.
+> The probe() id argument may be NULL in 2 scenarios:
+> 
+> 1. brcmf_pcie_pm_leave_D3() calling brcmf_pcie_probe() to reprobe
+>    the device.
+> 
+> 2. If a user tries to manually bind the driver from sysfs then the sdio /
+>    pcie / usb probe() function gets called with NULL as id argument.
+> 
+> 1. Is being hit by users causing the following oops on resume and causing
+> wifi to stop working:
+> 
+> BUG: kernel NULL pointer dereference, address: 0000000000000018
+> <snip>
+> Hardware name: Dell Inc. XPS 13 9350/0PWNCR, BIDS 1.13.0 02/10/2020
+> Workgueue: events_unbound async_run_entry_fn
+> RIP: 0010:brcmf_pcie_probe+Ox16b/0x7a0 [brcmfmac]
+> <snip>
+> Call Trace:
+>  <TASK>
+>  brcmf_pcie_pm_leave_D3+0xc5/8x1a0 [brcmfmac be3b4cefca451e190fa35be8f00db1bbec293887]
+>  ? pci_pm_resume+0x5b/0xf0
+>  ? pci_legacy_resume+0x80/0x80
+>  dpm_run_callback+0x47/0x150
+>  device_resume+0xa2/0x1f0
+>  async_resume+0x1d/0x30
+> <snip>
+> 
+> Fix this by checking for id being NULL.
+> 
+> In the PCI and USB cases try a manual lookup of the id so that manually
+> binding the driver through sysfs and more importantly brcmf_pcie_probe()
+> on resume will work.
+> 
+> For the SDIO case there is no helper to do a manual sdio_device_id lookup,
+> so just directly error out on a NULL id there.
+> 
+> Fixes: da6d9c8ecd00 ("wifi: brcmfmac: add firmware vendor info in driver info")
+> Reported-by: Felix <nimrod4garoa@gmail.com>
+> Link: https://lore.kernel.org/regressions/4ef3f252ff530cbfa336f5a0d80710020fc5cb1e.camel@gmail.com/
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> Reviewed-by: Arend van Spriel <arend.vanspriel@broadcom.com>
 
-But that's an entirely cosmetic thing just to clarify things. The
-patch would look almost identical, apart from the new name (and the
-small additional parts to rename the two existing users that weren't
-touched by that patch - the header file and the vhost use-case).
+Patch applied to wireless.git, thanks.
 
-                   Linus
+60fc756fc8e6 wifi: brcmfmac: Check for probe() id argument being NULL
+
+-- 
+https://patchwork.kernel.org/project/linux-wireless/patch/20230510141856.46532-1-hdegoede@redhat.com/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+
