@@ -1,56 +1,30 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86014187E
-	for <regressions@lists.linux.dev>; Tue, 16 May 2023 18:38:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1684262300;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bR7XFUDwDwS2QCuwLOFs/PBnLvy7FY7D7eHZBo5Cn1w=;
-	b=GWX6e1QLXUmS8XRGslSSnWAozRYrkSuB+E806Q3nEHdaTeQ/M1WLKNzaUTvW1m3k45/QXo
-	1WqqMHzIgjnUQ4DdtpNYSD0gKcD8EG1mlEXuR/vYsVVvhgaF4VrWtkz0FB9eYwu23SAwnK
-	h/C7JJg+xK6NRm/IabqXE+oloSJaEcg=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-288-Qs50wazRPeS9HugWOpEC4A-1; Tue, 16 May 2023 14:38:16 -0400
-X-MC-Unique: Qs50wazRPeS9HugWOpEC4A-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E5D5D2802537;
-	Tue, 16 May 2023 18:38:15 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.147])
-	by smtp.corp.redhat.com (Postfix) with SMTP id F1DD22166B31;
-	Tue, 16 May 2023 18:38:11 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Tue, 16 May 2023 20:38:02 +0200 (CEST)
-Date: Tue, 16 May 2023 20:37:57 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
-	Mike Christie <michael.christie@oracle.com>,
-	Christian Brauner <brauner@kernel.org>,
-	Thorsten Leemhuis <linux@leemhuis.info>, nicolas.dichtel@6wind.com,
-	Linux kernel regressions list <regressions@lists.linux.dev>,
-	hch@infradead.org, stefanha@redhat.com, jasowang@redhat.com,
-	mst@redhat.com, sgarzare@redhat.com,
-	virtualization@lists.linux-foundation.org, konrad.wilk@oracle.com,
-	linux-kernel@vger.kernel.org, Jens Axboe <axboe@kernel.dk>
-Subject: Re: [PATCH v11 8/8] vhost: use vhost_tasks for worker threads
-Message-ID: <20230516183757.GA1286@redhat.com>
-References: <aba6cca4-e66c-768f-375c-b38c8ba5e8a8@6wind.com>
- <CAHk-=wgadfsCnKHLON7op=Qs5t3w3PVz5ZDbvbKsfb=yBg=yjQ@mail.gmail.com>
- <78c5e150-26cf-7724-74ee-4a0b16b944b1@oracle.com>
- <48842e92-835e-bc3f-7118-48b8f415f532@leemhuis.info>
- <CAHk-=wicXCNR1bBioaAiBqEDgv-CoQD9z2RsM2VOTPzkK0xr8g@mail.gmail.com>
- <20230515-vollrausch-liebgeworden-2765f3ca3540@brauner>
- <CAHk-=wgXJ5VS1iBkfsG=HDjsyhn5XYDKt5xhQcNuz-e7VKyg8A@mail.gmail.com>
- <122b597e-a5fa-daf7-27bb-6f04fa98d496@oracle.com>
- <CAHk-=wgTpRDwS+F0Gd6+bM+TEh+x4Aiz8EBDTnTm3Q4TFdWOww@mail.gmail.com>
- <87cz30s20y.fsf@email.froward.int.ebiederm.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAE7F290E9
+	for <regressions@lists.linux.dev>; Tue, 16 May 2023 19:32:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3CF40C433D2;
+	Tue, 16 May 2023 19:32:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1684265567;
+	bh=WBnwfoUdwMV1Gu+XaFHfWeScAtyaISLBR5Bwfq3CzQY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=Lnx2M4IFPeFpS0vIWlzOSuxKenTmpzWiVrEcOMTLCpwMMpiDt20WgxmFFj0sh4I3U
+	 G1H4Dc2COxind+KG4cfY5aN2MWvrStV/rIefo0lXw9av/CUDRnkLyLXfNhuiYc8YpC
+	 eWLDCr/Av6FsPZOK4IHFEZdiJj8A7jjPfTAmaJVLVemLg55a+rvw54Y696IsfnMq4j
+	 hkCMNtRU+yQIa28y+Bfzs8nuN3p+cwIuv7IB98De50VRRrG7JLFpXZr0o9GQBMBBoC
+	 FnlYFwlEWIx5uqA57dpYCGiqhY9k2sjodskyMFYAPV0mBTsjLilqmAC+93rI5sq5iO
+	 3HP2/lHYWQ2lw==
+Date: Tue, 16 May 2023 14:32:45 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Acid Bong <acidbong@tilde.cafe>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
+	Bagas Sanjaya <bagasdotme@gmail.com>, stable@vger.kernel.org,
+	linux-acpi@vger.kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>,
+	linux-pci@vger.kernel.org
+Subject: Re: [REGRESSION] Asus X541UAK hangs on suspend and poweroff (v6.1.6
+ onward)
+Message-ID: <ZGPaXfV6+RUb6fXs@bhelgaas>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -59,50 +33,51 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87cz30s20y.fsf@email.froward.int.ebiederm.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.6
+In-Reply-To: <A5B9D233-A082-4C60-9DCB-2B0A2081C089@tilde.cafe>
 
-On 05/16, Eric W. Biederman wrote:
+On Tue, May 16, 2023 at 01:26:23PM +0300, Acid Bong wrote:
+> >Can you collect the complete dmesg log and output of "sudo lspci -vv"
+> >and post them somewhere (https://bugzilla.kernel.org is a good place)?
+> `lspci -vvnn` output is linked in the head of the thread. Append .txt to make it readable in the browser (I only understood it after the upload).
+> 
+> >Ideally the dmesg would be from the most recent kernel you have.
 >
-> A kernel thread can block SIGKILL and that is supported.
->
-> For a thread that is part of a process you can't block SIGKILL when the
-> task is part of a user mode process.
+> Speaking of that, a couple of questions:
+> 
+> 1) Should I post them with or without pci=nomsi/noaer? The problem
+> with disabling it is that it floods the logs so fast, that they
+> reach 700M in 5-7 minutes, and, when rotation is enabled (my
+> parameters are default, up to 10 copies 10M each), all pre-flood
+> data is lost instantly.
 
-Or SIGSTOP. Another thread can call do_signal_stop()->signal_wake_up/etc.
+You're seeing AER logging, and that's what I'm interested in, so if
+you could do one quick boot *without* "pci=nomsi" and "pci=noaer",
+that would be great.  Then turn it off again so you don't drown in
+logs.
 
-> There is this bit in complete_signal when SIGKILL is delivered to any
-> thread in the process.
->
-> 			t = p;
-> 			do {
-> 				task_clear_jobctl_pending(t, JOBCTL_PENDING_MASK);
-> 				sigaddset(&t->pending.signal, SIGKILL);
-> 				signal_wake_up(t, 1);
-> 			} while_each_thread(p, t);
+The snippet from [1] shows a few messages related to 00:1c.5, and it
+would be useful to know if there are errors related to other devices
+as well.
 
-That is why the latest version adds try_set_pending_sigkill(). No, no,
-it is not that I think this is a good idea.
+Something like "head -c500K /var/log/dmesg > file" should be plenty.
 
-> For clarity that sigaddset(&t->pending.signal, SIGKILL);  Really isn't
-> setting SIGKILL pending,
+> Also I'm currently bisecting the kernel with MSI disabled in the
+> config. But I'm keeping the parameter in the bootloader for cases
+> when I'm using Gentoo's prebuilt kernel.
+> 
+> 2) Can I delete messages by ufw? They contain MACs of my router,
+> laptop and cellphone and I don't really wanna share them
 
-Hmm. it does? Nevermind.
+Sure, delete those.
 
-> The important part of that code is that SIGNAL_GROUP_EXIT gets set.
-> That indicates the entire process is being torn down.
+> 3) I'm not savvy in logs, how exactly should I share dmesg? `dmesg >
+> file`? /var/log/syslog? I already know kern.log doesn't contain
+> logind and some other messages that are present in dmesg
+> 
+> 4) Should we continue in this thread or rather start a new one?
 
-Yes. and the same is true for io-thread even if it calls get_signal()
-and dequeues SIGKILL and clears TIF_SIGPENDING.
+Good point, a new thread would probably be better.
 
-> but in that case the vhost logic needs to act like a process, just
-> like io_uring does.
+Bjorn
 
-confused... create_io_thread() creates a sub-thread too?
-
-Although I never understood this logic. I can't even understand the usage
-of lower_32_bits() in create_io_thread().
-
-Oleg.
-
+[1] https://lore.kernel.org/all/CRWCUOAB4JKZ.3EKQN1TFFMVQL@bong/
