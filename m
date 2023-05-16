@@ -1,141 +1,59 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from tilde.cafe (tilde.cafe [51.222.161.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 694BC1C26
-	for <regressions@lists.linux.dev>; Tue, 16 May 2023 08:40:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B049C433D2;
-	Tue, 16 May 2023 08:39:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1684226401;
-	bh=L//2mJqpJe73Cmk74amA5WtIVkNTK2EJMElKgY4Oifw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HllN8HjVjfHFg0iKJPiSZ+Ym2m9sd35ggzSOD6myB8PVaHbOVyxF9vNF6JCWqpRTd
-	 GSJ/qoF84U8qBkM6Ikskkgi5Wi7fwb6evjn/mrZFaEFSsjVf0hT6Mme9PThb3IbOc+
-	 5GgWXkL74/h9xy4Pn4WSCkjUysVIF4HnnjQgck9UN4x5uXA/qcAeZ/JeqYf+NHD241
-	 cuPjBVe8somRlu6CjRrMttWHt5XrMWYNQoz29dG21zk0PBGc1nbdF4r+wtNFSUo98C
-	 tVOxOBb40VoktDmsHMrLQksJZOBPtiZ3MKXTlG7Iq6IjIFJ2/nWFLZl7vxXmcIWa+z
-	 RXHLm6mijvu7g==
-Date: Tue, 16 May 2023 10:39:53 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Mike Christie <michael.christie@oracle.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Thorsten Leemhuis <linux@leemhuis.info>, nicolas.dichtel@6wind.com,
-	Linux kernel regressions list <regressions@lists.linux.dev>,
-	hch@infradead.org, stefanha@redhat.com, jasowang@redhat.com,
-	mst@redhat.com, sgarzare@redhat.com,
-	virtualization@lists.linux-foundation.org, ebiederm@xmission.com,
-	konrad.wilk@oracle.com, linux-kernel@vger.kernel.org,
-	Jens Axboe <axboe@kernel.dk>
-Subject: Re: [PATCH v11 8/8] vhost: use vhost_tasks for worker threads
-Message-ID: <20230516-weltmeere-backofen-27f12ae2c9e0@brauner>
-References: <20230202232517.8695-1-michael.christie@oracle.com>
- <20230202232517.8695-9-michael.christie@oracle.com>
- <aba6cca4-e66c-768f-375c-b38c8ba5e8a8@6wind.com>
- <CAHk-=wgadfsCnKHLON7op=Qs5t3w3PVz5ZDbvbKsfb=yBg=yjQ@mail.gmail.com>
- <78c5e150-26cf-7724-74ee-4a0b16b944b1@oracle.com>
- <48842e92-835e-bc3f-7118-48b8f415f532@leemhuis.info>
- <CAHk-=wicXCNR1bBioaAiBqEDgv-CoQD9z2RsM2VOTPzkK0xr8g@mail.gmail.com>
- <20230515-vollrausch-liebgeworden-2765f3ca3540@brauner>
- <CAHk-=wgXJ5VS1iBkfsG=HDjsyhn5XYDKt5xhQcNuz-e7VKyg8A@mail.gmail.com>
- <122b597e-a5fa-daf7-27bb-6f04fa98d496@oracle.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61D33F4FD
+	for <regressions@lists.linux.dev>; Tue, 16 May 2023 10:26:34 +0000 (UTC)
+Received: from [127.0.0.1] (106.208.19.217.sta.idknet.com [217.19.208.106])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by tilde.cafe (Postfix) with ESMTPSA id 7588B2027D;
+	Tue, 16 May 2023 06:26:26 -0400 (EDT)
+Date: Tue, 16 May 2023 13:26:23 +0300
+From: Acid Bong <acidbong@tilde.cafe>
+To: Bjorn Helgaas <helgaas@kernel.org>
+CC: Linux regressions mailing list <regressions@lists.linux.dev>,
+ Bagas Sanjaya <bagasdotme@gmail.com>, stable@vger.kernel.org,
+ linux-acpi@vger.kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>,
+ linux-pci@vger.kernel.org
+Subject: =?US-ASCII?Q?Re=3A_=5BREGRESSION=5D_Asus_X541UAK_hangs_o?= =?US-ASCII?Q?n_suspend_and_poweroff_=28v6=2E1=2E6_onward=29?=
+In-Reply-To: <ZGKbRo9shUcR0myC@bhelgaas>
+References: <ZGKbRo9shUcR0myC@bhelgaas>
+Message-ID: <A5B9D233-A082-4C60-9DCB-2B0A2081C089@tilde.cafe>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <122b597e-a5fa-daf7-27bb-6f04fa98d496@oracle.com>
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 15, 2023 at 05:23:12PM -0500, Mike Christie wrote:
-> On 5/15/23 10:44 AM, Linus Torvalds wrote:
-> > On Mon, May 15, 2023 at 7:23 AM Christian Brauner <brauner@kernel.org> wrote:
-> >>
-> >> So I think we will be able to address (1) and (2) by making vhost tasks
-> >> proper threads and blocking every signal except for SIGKILL and SIGSTOP
-> >> and then having vhost handle get_signal() - as you mentioned - the same
-> >> way io uring already does. We should also remove the ingore_signals
-> >> thing completely imho. I don't think we ever want to do this with user
-> >> workers.
-> > 
-> > Right. That's what IO_URING does:
-> > 
-> >         if (args->io_thread) {
-> >                 /*
-> >                  * Mark us an IO worker, and block any signal that isn't
-> >                  * fatal or STOP
-> >                  */
-> >                 p->flags |= PF_IO_WORKER;
-> >                 siginitsetinv(&p->blocked, sigmask(SIGKILL)|sigmask(SIGSTOP));
-> >         }
-> > 
-> > and I really think that vhost should basically do exactly what io_uring does.
-> > 
-> > Not because io_uring fundamentally got this right - but simply because
-> > io_uring had almost all the same bugs (and then some), and what the
-> > io_uring worker threads ended up doing was to basically zoom in on
-> > "this works".
-> > 
-> > And it zoomed in on it largely by just going for "make it look as much
-> > as possible as a real user thread", because every time the kernel
-> > thread did something different, it just caused problems.
-> > 
-> > So I think the patch should just look something like the attached.
-> > Mike, can you test this on whatever vhost test-suite?
-> 
-> I tried that approach already and it doesn't work because io_uring and vhost
-> differ in that vhost drivers implement a device where each device has a vhost_task
-> and the drivers have a file_operations for the device. When the vhost_task's
-> parent gets signal like SIGKILL, then it will exit and call into the vhost
-> driver's file_operations->release function. At this time, we need to do cleanup
+>Can you collect the complete dmesg log and output of "sudo lspci -vv"
+>and post them somewhere (https://bugzilla=2Ekernel=2Eorg is a good place)=
+?
+`lspci -vvnn` output is linked in the head of the thread=2E Append =2Etxt =
+to make it readable in the browser (I only understood it after the upload)=
+=2E
 
-But that's no reason why the vhost worker couldn't just be allowed to
-exit on SIGKILL cleanly similar to io_uring. That's just describing the
-current architecture which isn't a necessity afaict. And the helper
-thread could e.g., crash.
+>Ideally the dmesg would be from the most recent kernel you have=2E
+Speaking of that, a couple of questions:
 
-> like flush the device which uses the vhost_task. There is also the case where if
-> the vhost_task gets a SIGKILL, we can just exit from under the vhost layer.
+1) Should I post them with or without pci=3Dnomsi/noaer? The problem with =
+disabling it is that it floods the logs so fast, that they reach 700M in 5-=
+7 minutes, and, when rotation is enabled (my parameters are default, up to =
+10 copies 10M each), all pre-flood data is lost instantly=2E
 
-In a way I really don't like the patch below. Because this should be
-solvable by adapting vhost workers. Right now, vhost is coming from a
-kthread model and we ported it to a user worker model and the whole
-point of this excercise has been that the workers behave more like
-regular userspace processes. So my tendency is to not massage kernel
-signal handling to now also include a special case for user workers in
-addition to kthreads. That's just the wrong way around and then vhost
-could've just stuck with kthreads in the first place.
+Also I'm currently bisecting the kernel with MSI disabled in the config=2E=
+ But I'm keeping the parameter in the bootloader for cases when I'm using G=
+entoo's prebuilt kernel=2E
 
-So I'm fine with skipping over the freezing case for now but SIGKILL
-should be handled imho. Only init and kthreads should get the luxury of
-ignoring SIGKILL.
+2) Can I delete messages by ufw? They contain MACs of my router, laptop an=
+d cellphone and I don't really wanna share them
 
-So, I'm afraid I'm asking some work here of you but how feasible would a
-model be where vhost_worker() similar to io_wq_worker() gracefully
-handles SIGKILL. Yes, I see there's
+3) I'm not savvy in logs, how exactly should I share dmesg? `dmesg > file`=
+? /var/log/syslog? I already know kern=2Elog doesn't contain logind and som=
+e other messages that are present in dmesg
 
-net.c:   .release = vhost_net_release
-scsi.c:  .release = vhost_scsi_release
-test.c:  .release = vhost_test_release
-vdpa.c:  .release = vhost_vdpa_release
-vsock.c: .release = virtio_transport_release
-vsock.c: .release = vhost_vsock_dev_release
-
-but that means you have all the basic logic in place and all of those
-drivers also support the VHOST_RESET_OWNER ioctl which also stops the
-vhost worker. I'm confident that a lof this can be leveraged to just
-cleanup on SIGKILL.
-
-So it feels like this should be achievable by adding a callback to
-struct vhost_worker that get's called when vhost_worker() gets SIGKILL
-and that all the users of vhost workers are forced to implement.
-
-Yes, it is more work but I think that's the right thing to do and not to
-complicate our signal handling.
-
-Worst case if this can't be done fast enough we'll have to revert the
-vhost parts. I think the user worker parts are mostly sane and are
-useful.
-Thoughts?
+4) Should we continue in this thread or rather start a new one?
