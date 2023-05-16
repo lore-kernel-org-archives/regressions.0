@@ -1,83 +1,104 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18CDC34CEB
-	for <regressions@lists.linux.dev>; Tue, 16 May 2023 11:36:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1684236981; x=1715772981;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=CTuARb/YrAFoLf//M9oeOcM9jK+YYhZvEJI0/BqCYLc=;
-  b=wTwt3V1U0u5r3vWxUWzyd/XBfiGy628jA5MdGmKSZvOz4mHcE7Q9yytW
-   NEXUOnMfZEE2Ji5HcbqCMD5ezPpZqhOfc8dLAbfMvNEYpSXlIvD5TGlpJ
-   0zOGWLzYzL6fzvAHKvBWvMg+f6EdG3v6lxUpA2kVAhFW2c/8W2mfD/qvJ
-   FVnVUJNZJCWSegP+yWii+s8U1aU4/pRm9j6Lap8nEJ5RYn90jL8hCNDzc
-   TZkWXnkZwpx9+f/veQlJpZR5b2BV4Ayx3PH1C//vCa2vSa720q84sBKYT
-   9V87Sqj9cXCi5QQA86zhGXBBzEeIarbTdgfGERCXR8UWLxwGGKZGHoA/G
-   g==;
-X-IronPort-AV: E=Sophos;i="5.99,278,1677567600"; 
-   d="asc'?scan'208";a="213509855"
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 16 May 2023 04:36:19 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.21; Tue, 16 May 2023 04:36:18 -0700
-Received: from wendy (10.10.115.15) by chn-vm-ex03.mchp-main.com
- (10.10.85.151) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.21 via Frontend
- Transport; Tue, 16 May 2023 04:36:16 -0700
-Date: Tue, 16 May 2023 12:35:55 +0100
-From: Conor Dooley <conor.dooley@microchip.com>
-To: Song Shuai <suagrfillet@gmail.com>
-CC: <alexghiti@rivosinc.com>, <robh@kernel.org>, Andrew Jones
-	<ajones@ventanamicro.com>, <anup@brainfault.org>, <palmer@rivosinc.com>,
-	<jeeheng.sia@starfivetech.com>, <leyfoon.tan@starfivetech.com>,
-	<mason.huo@starfivetech.com>, Paul Walmsley <paul.walmsley@sifive.com>, Guo
- Ren <guoren@kernel.org>, <linux-riscv@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>, <regressions@lists.linux.dev>
-Subject: Re: Bug report: kernel paniced when system hibernates
-Message-ID: <20230516-figure-vanity-d8b671ca1aa0@wendy>
-References: <CAAYs2=gQvkhTeioMmqRDVGjdtNF_vhB+vm_1dHJxPNi75YDQ_Q@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 286B434CD9
+	for <regressions@lists.linux.dev>; Tue, 16 May 2023 12:33:26 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1pytro-0005Hc-6i; Tue, 16 May 2023 14:33:24 +0200
+Message-ID: <8941c5f2-3861-da68-06ca-adc68a37e53b@leemhuis.info>
+Date: Tue, 16 May 2023 14:33:23 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="Thw0RZ3mGVPR1apd"
-Content-Disposition: inline
-In-Reply-To: <CAAYs2=gQvkhTeioMmqRDVGjdtNF_vhB+vm_1dHJxPNi75YDQ_Q@mail.gmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Re: [BUG: 6.3 kernel] Logitech Trackball M575 misidentified
+Content-Language: en-US, de-DE
+To: Xose Vazquez Perez <xose.vazquez@gmail.com>, linux-input@vger.kernel.org
+References: <eeb19342-3499-a1fb-388f-d4670472b16c@gmail.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Cc: Linux kernel regressions list <regressions@lists.linux.dev>,
+ Bastien Nocera <hadess@hadess.net>, =?UTF-8?Q?Filipe_La=c3=adns?=
+ <lains@riseup.net>, Jiri Kosina <jikos@kernel.org>,
+ Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+ LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <eeb19342-3499-a1fb-388f-d4670472b16c@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1684240407;c058947a;
+X-HE-SMSGID: 1pytro-0005Hc-6i
 
---Thw0RZ3mGVPR1apd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+[CCing a few people and the the regression list, as it should be in the
+loop for regressions:
+https://docs.kernel.org/admin-guide/reporting-regressions.html]
 
-On Tue, May 16, 2023 at 09:24:07AM +0000, Song Shuai wrote:
-> Description of problem:
->=20
-> The latest hibernation support[1] of RISC-V Linux produced a kernel panic.
-> The entire log has been posted at this link: https://termbin.com/sphl .
+On 11.05.23 23:22, Xose Vazquez Perez wrote:
+> 
+> 6.3.2 kernel identifies "Logitech" "ERGO M575" as "Logitech"
+> "(\xc9_O\x04)",
+> 6.2.15 works fine.
+> 
+> 
+> 6.2.15 boot log:
+> input: Logitech ERGO M575 as
+> /devices/pci0000:00/0000:00:1a.0/usb3/3-1/3-1.3/3-1.3:1.2/0003:046D:C52B.0003/0003:046D:4096.0005/input/input15
+> logitech-hidpp-device 0003:046D:4096.0005: input,hidraw1: USB HID v1.11
+> Mouse [Logitech ERGO M575] on usb-0000:00:1a.0-1.3/input2:1
+> 
+> 6.3.2 boot log:
+> input: Logitech \xc9_O\x04 as
+> /devices/pci0000:00/0000:00:1a.0/usb3/3-1/3-1.3/3-1.3:1.2/0003:046D:C52B.0003/0003:046D:4096.0005/input/input15
+> logitech-hidpp-device 0003:046D:4096.0005: input,hidraw2: USB HID v1.11
+> Mouse [Logitech \xc9_O\x04] on usb-0000:00:1a.0-1.3/input2:1
 
-Since the reporting is a bit scattered between here and the sw-dev list:
+I wonder if this if this is some related to this issue:
+https://bugzilla.kernel.org/show_bug.cgi?id=217412
+("Since kernel 6.3.1 logitech unify receiver not working properly")
 
-#regzbot introduced: v6.4-rc1.. ^
-#regzbot title: kernel accessing opensbi reserved memory
+That one so far seems to be ignored by the developers. Your report one
+also didn't get any reply yet.
 
---Thw0RZ3mGVPR1apd
-Content-Type: application/pgp-signature; name="signature.asc"
+Could you maybe perform a bisection to get down to this?
 
------BEGIN PGP SIGNATURE-----
+Side note: there is also
+https://bugzilla.kernel.org/show_bug.cgi?id=217330
+("Broken Logitech unifying battery names in hid-next tree")
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZGNqiwAKCRB4tDGHoIJi
-0kCaAQCKg2EPoULgExcqaStj6FVDGF8glj2Zx8FXdFbroDJd1AD/YDqMn5PkGi/W
-MVkHIVMQ0QwpL9sXst2NadGypRkw7Ao=
-=QQ5L
------END PGP SIGNATURE-----
 
---Thw0RZ3mGVPR1apd--
+Anyway, for the rest of this mail:
+
+[TLDR: I'm adding this report to the list of tracked Linux kernel
+regressions; the text you find below is based on a few templates
+paragraphs you might have encountered already in similar form.
+See link in footer if these mails annoy you.]
+
+Thanks for the report. To be sure the issue doesn't fall through the
+cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
+tracking bot:
+
+#regzbot ^introduced v6.2..v6.3
+#regzbot title input: Logitech Trackball M575 misidentified
+#regzbot ignore-activity
+
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply and tell me -- ideally
+while also telling regzbot about it, as explained by the page listed in
+the footer of this mail.
+
+Developers: When fixing the issue, remember to add 'Link:' tags pointing
+to the report (the parent of this mail). See page linked in footer for
+details.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+That page also explains what to do if mails like this annoy you.
