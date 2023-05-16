@@ -1,127 +1,83 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0593B34CD9
-	for <regressions@lists.linux.dev>; Tue, 16 May 2023 13:34:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E77BC34CD9
+	for <regressions@lists.linux.dev>; Tue, 16 May 2023 13:40:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1684244077;
+	s=mimecast20190719; t=1684244427;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=45UqYriNQVtdBFesR+jleqsSy4ksjE6lhJMxVSYplvo=;
-	b=jImryifERTRRuLIyl4VEko9QE84zkBWlKRJfKrqxVyrKkdFNbNh1aQa9O8NzWnIyg/h+fo
-	SUfHZjqptjJN3yhUyvWKs3MK9Zcz8mNpb/JUZPldGcwG6AcAFfdGTIH7TDrWx2iwcnfXVC
-	vxrVUOT/Z8pQD2q0EGqLbx4SSsPF0aI=
-Received: from mail-yb1-f197.google.com (mail-yb1-f197.google.com
- [209.85.219.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-124-RypaQf-eN-i7iukOFaOemg-1; Tue, 16 May 2023 09:34:36 -0400
-X-MC-Unique: RypaQf-eN-i7iukOFaOemg-1
-Received: by mail-yb1-f197.google.com with SMTP id 3f1490d57ef6-ba712bb7b28so5210680276.1
-        for <regressions@lists.linux.dev>; Tue, 16 May 2023 06:34:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684244075; x=1686836075;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=45UqYriNQVtdBFesR+jleqsSy4ksjE6lhJMxVSYplvo=;
-        b=FDQJkj/TEWbV0y0Ll/g9UvTgg0eiXGNgZ0bYXNBXVfP5J5CrnWiTYaf+4zIyXfzH0d
-         qsu7LfQkVbUic6YtPgkoWZadST/hcR98DhBiZbt2EqiSeFu2PY3LhSUIk7VYobOgwJIo
-         XPiudVDgayAEBHRi1QFH96pvSZj9TqRpc1AfwRksZMfhjhwtAvSiA6FhTTw370PbbsVp
-         ojB8eiozxJQNWWJwAqslqhZ0EMT0vGjGojF8LqqnOfWuR42L0Gy3BbYqXJdSzCVPPFLw
-         +jijP2AVoBE+XhltLMEuAJ6TgxfdojcMwy61DgI0g9fwQOlbf1wZgS4OkQ8Dg/Zp9+wq
-         vgNA==
-X-Gm-Message-State: AC+VfDxlEwLHJIS0k7h0kqGbD8w8F5xCV6NcUNOB792sb2EcUEioHvBq
-	SZTTSN1QnaKUvB0hYPNYqPtzRx2/xTq5SzmhvUoDqOSZ+xWobIB6Rs9lEQmpkN2iWXWTTjaQENp
-	qLkWgOUqGLkcgMuulZHsJItRrBWxPSvgTVf1aZes=
-X-Received: by 2002:a0d:d847:0:b0:561:b246:77df with SMTP id a68-20020a0dd847000000b00561b24677dfmr491849ywe.16.1684244075581;
-        Tue, 16 May 2023 06:34:35 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ5a8XsAcCfmDEhTwmeBSPI5gRAlk+fKBy37/4QgPjAyDxSQYLttDSUO8ua8sZeUNWVP3Ts21WU0gwhJWqir3M4=
-X-Received: by 2002:a0d:d847:0:b0:561:b246:77df with SMTP id
- a68-20020a0dd847000000b00561b24677dfmr491841ywe.16.1684244075332; Tue, 16 May
- 2023 06:34:35 -0700 (PDT)
+	bh=XmVZa6rWHxSlUUKvwO4ykn0iGDBDGTKqwvGiklVx1pE=;
+	b=E87Pii9aDAyLFgl4TvWSOFHNq+xE3wUoBlTtDYs9umAdhRPqFm1/VP1pXs+ZbdD08DkHeD
+	K5gQ2WCFhxUVjODvjYtGJxen38g3iCyBJR5afRCKDbtQ0tDmNkOCceJX/oqLNtJj1Zvr41
+	opOJ69XRGl8wm8xIhqA3yCEnb2ieDLM=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-515-dIddS3M_Mu2_jKYn5PS7Nw-1; Tue, 16 May 2023 09:40:24 -0400
+X-MC-Unique: dIddS3M_Mu2_jKYn5PS7Nw-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 76AC680B2BB;
+	Tue, 16 May 2023 13:40:22 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.147])
+	by smtp.corp.redhat.com (Postfix) with SMTP id D57D82166B31;
+	Tue, 16 May 2023 13:40:17 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Tue, 16 May 2023 15:40:08 +0200 (CEST)
+Date: Tue, 16 May 2023 15:40:03 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Mike Christie <michael.christie@oracle.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+	Christian Brauner <brauner@kernel.org>,
+	Thorsten Leemhuis <linux@leemhuis.info>, nicolas.dichtel@6wind.com,
+	Linux kernel regressions list <regressions@lists.linux.dev>,
+	hch@infradead.org, stefanha@redhat.com, jasowang@redhat.com,
+	mst@redhat.com, sgarzare@redhat.com,
+	virtualization@lists.linux-foundation.org, ebiederm@xmission.com,
+	konrad.wilk@oracle.com, linux-kernel@vger.kernel.org,
+	Jens Axboe <axboe@kernel.dk>
+Subject: Re: [PATCH v11 8/8] vhost: use vhost_tasks for worker threads
+Message-ID: <20230516134002.GB28890@redhat.com>
+References: <aba6cca4-e66c-768f-375c-b38c8ba5e8a8@6wind.com>
+ <CAHk-=wgadfsCnKHLON7op=Qs5t3w3PVz5ZDbvbKsfb=yBg=yjQ@mail.gmail.com>
+ <78c5e150-26cf-7724-74ee-4a0b16b944b1@oracle.com>
+ <48842e92-835e-bc3f-7118-48b8f415f532@leemhuis.info>
+ <CAHk-=wicXCNR1bBioaAiBqEDgv-CoQD9z2RsM2VOTPzkK0xr8g@mail.gmail.com>
+ <20230515-vollrausch-liebgeworden-2765f3ca3540@brauner>
+ <CAHk-=wgXJ5VS1iBkfsG=HDjsyhn5XYDKt5xhQcNuz-e7VKyg8A@mail.gmail.com>
+ <122b597e-a5fa-daf7-27bb-6f04fa98d496@oracle.com>
+ <CAHk-=wgTpRDwS+F0Gd6+bM+TEh+x4Aiz8EBDTnTm3Q4TFdWOww@mail.gmail.com>
+ <8bfb7d1d-f7d0-94ca-4777-e31a2003027a@oracle.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <9b987585-0834-bb8c-3414-283c29f3f2ab@leemhuis.info>
- <bec024d5-4088-00ae-f7b5-7188868b1707@leemhuis.info> <b7717c43-74bf-b91d-d3ce-874493df602c@gmail.com>
-In-Reply-To: <b7717c43-74bf-b91d-d3ce-874493df602c@gmail.com>
-From: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Date: Tue, 16 May 2023 15:34:24 +0200
-Message-ID: <CAO-hwJ+At1J_yUpX2q_dJekzZ-PoTDAvxmkTk_e4Yu0Z338bEA@mail.gmail.com>
-Subject: Re: [regression] Since kernel 6.3.1 logitech unify receiver not
- working properly
-To: Bagas Sanjaya <bagasdotme@gmail.com>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>, =?UTF-8?Q?Filipe_La=C3=ADns?= <lains@riseup.net>, 
-	Bastien Nocera <hadess@hadess.net>, Jiri Kosina <jikos@kernel.org>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, 
-	"open list:HID CORE LAYER" <linux-input@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	guy.b@bluewin.ch
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8bfb7d1d-f7d0-94ca-4777-e31a2003027a@oracle.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.6
 
-On Tue, May 16, 2023 at 3:25=E2=80=AFPM Bagas Sanjaya <bagasdotme@gmail.com=
-> wrote:
+On 05/15, Mike Christie wrote:
 >
-> On 5/11/23 18:58, Thorsten Leemhuis wrote:
-> > Hi, Thorsten here, the Linux kernel's regression tracker.
-> >
-> > On 08.05.23 11:55, Linux regression tracking (Thorsten Leemhuis) wrote:
-> >> Hi, Thorsten here, the Linux kernel's regression tracker.
-> >>
-> >> I noticed a regression report in bugzilla.kernel.org. As many (most?)
-> >> kernel developers don't keep an eye on it, I decided to forward it by =
-mail.
-> >>
-> >> Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=3D217412 :
-> >
-> > TWIMC: a few other users (three or four iirc) showed up in that ticket
-> > and reported problems with the receiver, albeit the symptoms are not
-> > exactly the same for all of them, so there might be more than one probl=
-em.
-> >
-> > I'll try to motivate the affected users to perform a bisection. But
-> > would be great if those with more knowledge about this code could
-> > briefly look into the ticket, maybe the details the users shared allows
-> > one of you to guess what causes this.
-> >
->
-> Hmm,
->
-> You noted in the similar report [1] that developers involved here
-> ignore this regressions. I wonder if Linus has to be hired in
-> this case, and if it is the case, let's take a look and hear closely what
-> he will say.
+> --- a/kernel/vhost_task.c
+> +++ b/kernel/vhost_task.c
+> @@ -75,13 +75,13 @@ struct vhost_task *vhost_task_create(int (*fn)(void *), void *arg,
+>  				     const char *name)
+>  {
+>  	struct kernel_clone_args args = {
+> -		.flags		= CLONE_FS | CLONE_UNTRACED | CLONE_VM,
+> +		.flags		= CLONE_FS | CLONE_UNTRACED | CLONE_VM |
+> +				  CLONE_THREAD | CLONE_SIGHAND,
 
-Sigh... Not answering an email is bad, but maybe you can also
-understand that developers can take days off?
+I am looking at 6/8 on https://lore.kernel.org/lkml/ ...
 
-And it turns out that I was waiting for Bastien to chime in, but I can
-access his calendar too and just found out that he was AFK for the
-entire month, except for the first week, which I wasn't aware. May is
-a time where people in France have a lot of public holidays and is
-also the cut to use those time off or they expire.
+with this change kernel_wait4() in vhost_task_stop() won't work?
 
-For me, I'll also be taking time off the rest of this week, so I won't
-be able to have a look at this until next week at the earliest.
-
-Cheers,
-Benjamin
-
->
-> Thanks.
->
->
-> [1]: https://lore.kernel.org/regressions/8941c5f2-3861-da68-06ca-adc68a37=
-e53b@leemhuis.info/
->
-> --
-> An old man doll... just what I always wanted! - Clara
->
+Oleg.
 
