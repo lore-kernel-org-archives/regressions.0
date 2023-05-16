@@ -1,43 +1,44 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out03.mta.xmission.com (out03.mta.xmission.com [166.70.13.233])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1170B34CD4
-	for <regressions@lists.linux.dev>; Tue, 16 May 2023 16:44:34 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22229C433EF;
-	Tue, 16 May 2023 16:44:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1684255474;
-	bh=oI/w41//LmhBbTJUIIKUoIgJT4tMuwewNU0CYpQ25/4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=C5EARszE4TyE9KS7I51W38SR5n7Bc74hVJRONPVLwM0Go7PY72IqtJaYgX7vrZaNY
-	 rqj1vAIJxec9TNeLh/re6W8ROBz33fszELvWzvvMQ701PUkTa+PFdVwmChp9jinPlv
-	 zm89889dgT1+XV/vKtr53Y6O7EFxxEioSt4SjxWFv81aY+433OmOeNH+P6IglH5Evs
-	 ggzxpsYViBLsSNNTVbiiyMQvr70TcM0gBLCMRR7mDgYg2jv7tLlRTuyfNB99GIi8Dl
-	 RhtfiBAtQ5kG4DAhzQqyZ6flxWolTYzsZErQT2Ge/RaImD07AnYKDYHNV5YKOvuJV+
-	 CowyLHoX7rcjQ==
-Date: Tue, 16 May 2023 18:44:27 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Mike Christie <michael.christie@oracle.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
-	Thorsten Leemhuis <linux@leemhuis.info>, nicolas.dichtel@6wind.com,
-	Linux kernel regressions list <regressions@lists.linux.dev>,
-	hch@infradead.org, stefanha@redhat.com, jasowang@redhat.com,
-	mst@redhat.com, sgarzare@redhat.com,
-	virtualization@lists.linux-foundation.org, ebiederm@xmission.com,
-	konrad.wilk@oracle.com, linux-kernel@vger.kernel.org,
-	Jens Axboe <axboe@kernel.dk>
-Subject: Re: [PATCH v11 8/8] vhost: use vhost_tasks for worker threads
-Message-ID: <20230516-summieren-bankintern-7def19d6ec45@brauner>
-References: <aba6cca4-e66c-768f-375c-b38c8ba5e8a8@6wind.com>
- <CAHk-=wgadfsCnKHLON7op=Qs5t3w3PVz5ZDbvbKsfb=yBg=yjQ@mail.gmail.com>
- <78c5e150-26cf-7724-74ee-4a0b16b944b1@oracle.com>
- <48842e92-835e-bc3f-7118-48b8f415f532@leemhuis.info>
- <CAHk-=wicXCNR1bBioaAiBqEDgv-CoQD9z2RsM2VOTPzkK0xr8g@mail.gmail.com>
- <20230515-vollrausch-liebgeworden-2765f3ca3540@brauner>
- <CAHk-=wgXJ5VS1iBkfsG=HDjsyhn5XYDKt5xhQcNuz-e7VKyg8A@mail.gmail.com>
- <122b597e-a5fa-daf7-27bb-6f04fa98d496@oracle.com>
- <20230516-weltmeere-backofen-27f12ae2c9e0@brauner>
- <683d0c30-4aeb-3547-49a9-90ce6eb1a7d0@oracle.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C19D234CD7
+	for <regressions@lists.linux.dev>; Tue, 16 May 2023 17:07:41 +0000 (UTC)
+Received: from in02.mta.xmission.com ([166.70.13.52]:50950)
+	by out03.mta.xmission.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.93)
+	(envelope-from <ebiederm@xmission.com>)
+	id 1pyx2l-0025sd-8t; Tue, 16 May 2023 09:56:55 -0600
+Received: from ip68-110-29-46.om.om.cox.net ([68.110.29.46]:40674 helo=email.froward.int.ebiederm.org.xmission.com)
+	by in02.mta.xmission.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.93)
+	(envelope-from <ebiederm@xmission.com>)
+	id 1pyx2j-006GOt-S4; Tue, 16 May 2023 09:56:54 -0600
+From: "Eric W. Biederman" <ebiederm@xmission.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Mike Christie <michael.christie@oracle.com>,  Oleg Nesterov
+ <oleg@redhat.com>,  Christian Brauner <brauner@kernel.org>,  Thorsten
+ Leemhuis <linux@leemhuis.info>,  nicolas.dichtel@6wind.com,  Linux kernel
+ regressions list <regressions@lists.linux.dev>,  hch@infradead.org,
+  stefanha@redhat.com,  jasowang@redhat.com,  mst@redhat.com,
+  sgarzare@redhat.com,  virtualization@lists.linux-foundation.org,
+  konrad.wilk@oracle.com,  linux-kernel@vger.kernel.org,  Jens Axboe
+ <axboe@kernel.dk>
+References: <20230202232517.8695-1-michael.christie@oracle.com>
+	<20230202232517.8695-9-michael.christie@oracle.com>
+	<aba6cca4-e66c-768f-375c-b38c8ba5e8a8@6wind.com>
+	<CAHk-=wgadfsCnKHLON7op=Qs5t3w3PVz5ZDbvbKsfb=yBg=yjQ@mail.gmail.com>
+	<78c5e150-26cf-7724-74ee-4a0b16b944b1@oracle.com>
+	<48842e92-835e-bc3f-7118-48b8f415f532@leemhuis.info>
+	<CAHk-=wicXCNR1bBioaAiBqEDgv-CoQD9z2RsM2VOTPzkK0xr8g@mail.gmail.com>
+	<20230515-vollrausch-liebgeworden-2765f3ca3540@brauner>
+	<CAHk-=wgXJ5VS1iBkfsG=HDjsyhn5XYDKt5xhQcNuz-e7VKyg8A@mail.gmail.com>
+	<122b597e-a5fa-daf7-27bb-6f04fa98d496@oracle.com>
+	<CAHk-=wgTpRDwS+F0Gd6+bM+TEh+x4Aiz8EBDTnTm3Q4TFdWOww@mail.gmail.com>
+Date: Tue, 16 May 2023 10:56:45 -0500
+In-Reply-To: <CAHk-=wgTpRDwS+F0Gd6+bM+TEh+x4Aiz8EBDTnTm3Q4TFdWOww@mail.gmail.com>
+	(Linus Torvalds's message of "Mon, 15 May 2023 15:54:49 -0700")
+Message-ID: <87cz30s20y.fsf@email.froward.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.1 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -45,137 +46,133 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <683d0c30-4aeb-3547-49a9-90ce6eb1a7d0@oracle.com>
+Content-Transfer-Encoding: quoted-printable
+X-XM-SPF: eid=1pyx2j-006GOt-S4;;;mid=<87cz30s20y.fsf@email.froward.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.110.29.46;;;frm=ebiederm@xmission.com;;;spf=pass
+X-XM-AID: U2FsdGVkX1/VfBwRPfud8jr0vc2IuGNU4bzbZFMEkfc=
+X-SA-Exim-Connect-IP: 68.110.29.46
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on sa01.xmission.com
+X-Spam-Level: 
+X-Spam-Status: No, score=0.5 required=8.0 tests=ALL_TRUSTED,BAYES_50,
+	DCC_CHECK_NEGATIVE,T_SCC_BODY_TEXT_LINE,T_TM2_M_HEADER_IN_MSG,
+	T_TooManySym_01,XMSubLong,XM_B_Unicode shortcircuit=no
+	autolearn=disabled version=3.4.2
+X-Spam-Virus: No
+X-Spam-Report: 
+	* -1.0 ALL_TRUSTED Passed through trusted hosts only via SMTP
+	*  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+	*      [score: 0.5000]
+	*  0.7 XMSubLong Long Subject
+	*  0.0 T_TM2_M_HEADER_IN_MSG BODY: No description available.
+	*  0.0 XM_B_Unicode BODY: Testing for specific types of unicode
+	* -0.0 DCC_CHECK_NEGATIVE Not listed in DCC
+	*      [sa01 1397; Body=1 Fuz1=1 Fuz2=1]
+	* -0.0 T_SCC_BODY_TEXT_LINE No description available.
+	*  0.0 T_TooManySym_01 4+ unique symbols in subject
+X-Spam-DCC: XMission; sa01 1397; Body=1 Fuz1=1 Fuz2=1 
+X-Spam-Combo: ;Linus Torvalds <torvalds@linux-foundation.org>
+X-Spam-Relay-Country: 
+X-Spam-Timing: total 836 ms - load_scoreonly_sql: 0.03 (0.0%),
+	signal_user_changed: 4.6 (0.5%), b_tie_ro: 3.1 (0.4%), parse: 0.79
+	(0.1%), extract_message_metadata: 9 (1.1%), get_uri_detail_list: 1.73
+	(0.2%), tests_pri_-2000: 3.9 (0.5%), tests_pri_-1000: 2.2 (0.3%),
+	tests_pri_-950: 1.05 (0.1%), tests_pri_-900: 0.85 (0.1%),
+	tests_pri_-200: 0.69 (0.1%), tests_pri_-100: 3.8 (0.5%),
+	tests_pri_-90: 152 (18.2%), check_bayes: 141 (16.9%), b_tokenize: 7
+	(0.9%), b_tok_get_all: 10 (1.2%), b_comp_prob: 2.2 (0.3%),
+	b_tok_touch_all: 117 (14.0%), b_finish: 0.86 (0.1%), tests_pri_0: 329
+	(39.4%), check_dkim_signature: 0.70 (0.1%), check_dkim_adsp: 3.8
+	(0.5%), poll_dns_idle: 313 (37.4%), tests_pri_10: 1.80 (0.2%),
+	tests_pri_500: 322 (38.5%), rewrite_mail: 0.00 (0.0%)
+Subject: Re: [PATCH v11 8/8] vhost: use vhost_tasks for worker threads
+X-SA-Exim-Version: 4.2.1 (built Sat, 08 Feb 2020 21:53:50 +0000)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 
-On Tue, May 16, 2023 at 11:24:48AM -0500, Mike Christie wrote:
-> On 5/16/23 3:39 AM, Christian Brauner wrote:
-> > On Mon, May 15, 2023 at 05:23:12PM -0500, Mike Christie wrote:
-> >> On 5/15/23 10:44 AM, Linus Torvalds wrote:
-> >>> On Mon, May 15, 2023 at 7:23 AM Christian Brauner <brauner@kernel.org> wrote:
-> >>>>
-> >>>> So I think we will be able to address (1) and (2) by making vhost tasks
-> >>>> proper threads and blocking every signal except for SIGKILL and SIGSTOP
-> >>>> and then having vhost handle get_signal() - as you mentioned - the same
-> >>>> way io uring already does. We should also remove the ingore_signals
-> >>>> thing completely imho. I don't think we ever want to do this with user
-> >>>> workers.
-> >>>
-> >>> Right. That's what IO_URING does:
-> >>>
-> >>>         if (args->io_thread) {
-> >>>                 /*
-> >>>                  * Mark us an IO worker, and block any signal that isn't
-> >>>                  * fatal or STOP
-> >>>                  */
-> >>>                 p->flags |= PF_IO_WORKER;
-> >>>                 siginitsetinv(&p->blocked, sigmask(SIGKILL)|sigmask(SIGSTOP));
-> >>>         }
-> >>>
-> >>> and I really think that vhost should basically do exactly what io_uring does.
-> >>>
-> >>> Not because io_uring fundamentally got this right - but simply because
-> >>> io_uring had almost all the same bugs (and then some), and what the
-> >>> io_uring worker threads ended up doing was to basically zoom in on
-> >>> "this works".
-> >>>
-> >>> And it zoomed in on it largely by just going for "make it look as much
-> >>> as possible as a real user thread", because every time the kernel
-> >>> thread did something different, it just caused problems.
-> >>>
-> >>> So I think the patch should just look something like the attached.
-> >>> Mike, can you test this on whatever vhost test-suite?
-> >>
-> >> I tried that approach already and it doesn't work because io_uring and vhost
-> >> differ in that vhost drivers implement a device where each device has a vhost_task
-> >> and the drivers have a file_operations for the device. When the vhost_task's
-> >> parent gets signal like SIGKILL, then it will exit and call into the vhost
-> >> driver's file_operations->release function. At this time, we need to do cleanup
-> > 
-> > But that's no reason why the vhost worker couldn't just be allowed to
-> > exit on SIGKILL cleanly similar to io_uring. That's just describing the
-> > current architecture which isn't a necessity afaict. And the helper
-> > thread could e.g., crash.
-> > 
-> >> like flush the device which uses the vhost_task. There is also the case where if
-> >> the vhost_task gets a SIGKILL, we can just exit from under the vhost layer.
-> > 
-> > In a way I really don't like the patch below. Because this should be
-> > solvable by adapting vhost workers. Right now, vhost is coming from a
-> > kthread model and we ported it to a user worker model and the whole
-> > point of this excercise has been that the workers behave more like
-> > regular userspace processes. So my tendency is to not massage kernel
-> > signal handling to now also include a special case for user workers in
-> > addition to kthreads. That's just the wrong way around and then vhost
-> > could've just stuck with kthreads in the first place.
-> 
-> I would have preferred that :) Maybe let's take a step back and revisit
-> that decision to make sure it was right. The vhost layer wants:
-> 
-> 1. inherit cgroups.
-> 2. share mm.
-> 3. no signals
-> 4. to not show up was an extra process like in Nicolas's bug.
-> 5. have it's worker threads counted under its parent nproc limit.
-> 
-> We can do 1 - 4 today with kthreads. Can we do #5 with kthreads? My first
-> attempt which passed around the creds to use for kthreads or exported a
-> helper for the nproc accounting was not liked and we eventually ended up
-> here.
-> 
-> Is this hybird user/kernel thread/task still the right way to go or is
-> better to use kthreads and add some way to handle #5?
+Linus Torvalds <torvalds@linux-foundation.org> writes:
 
-I think the io_uring model makes a lot more sense for vhost than the
-current approach.
+> On Mon, May 15, 2023 at 3:23=E2=80=AFPM Mike Christie
+> <michael.christie@oracle.com> wrote:
+>>
+>> The vhost layer really doesn't want any signals and wants to work like k=
+threads
+>> for that case. To make it really simple can we do something like this wh=
+ere it
+>> separates user and io worker behavior where the major diff is how they h=
+andle
+>> signals and exit. I also included a fix for the freeze case:
+>
+> I don't love the SIGKILL special case, but I also don't find this
+> deeply offensive. So if this is what it takes, I'm ok with it.
+>
+> I wonder if we could make that special case simply check for "is
+> SIGKILL blocked" instead? No normal case will cause that, and it means
+> that a PF_USER_WORKER thread could decide per-thread what it wants to
+> do wrt SIGKILL.
 
-> 
-> 
-> > 
-> > So I'm fine with skipping over the freezing case for now but SIGKILL
-> > should be handled imho. Only init and kthreads should get the luxury of
-> > ignoring SIGKILL.
-> > 
-> > So, I'm afraid I'm asking some work here of you but how feasible would a
-> > model be where vhost_worker() similar to io_wq_worker() gracefully
-> > handles SIGKILL. Yes, I see there's
-> > 
-> > net.c:   .release = vhost_net_release
-> > scsi.c:  .release = vhost_scsi_release
-> > test.c:  .release = vhost_test_release
-> > vdpa.c:  .release = vhost_vdpa_release
-> > vsock.c: .release = virtio_transport_release
-> > vsock.c: .release = vhost_vsock_dev_release
-> > 
-> > but that means you have all the basic logic in place and all of those
-> > drivers also support the VHOST_RESET_OWNER ioctl which also stops the
-> > vhost worker. I'm confident that a lof this can be leveraged to just
-> > cleanup on SIGKILL.
-> 
-> We can do this, but the issue I'm worried about is that right now if there
-> is queued/running IO and userspace escalates to SIGKILL, then the vhost layer
-> will still complete those IOs. If we now allow SIGKILL on the vhost thread,
-> then those IOs might fail.
-> 
-> If we get a SIGKILL, I can modify vhost_worker() so that it temporarily
-> ignores the signal and allows IO/flushes/whatever-operations to complete
-> at that level. However, we could hit issues where when vhost_worker()
+A kernel thread can block SIGKILL and that is supported.
 
-It's really not that different from io_uring though which also flushes
-out remaining io, no? This seems to basically line up with what
-io_wq_worker() does.
+For a thread that is part of a process you can't block SIGKILL when the
+task is part of a user mode process.
 
-> calls into the drivers listed above, and those drivers call into whatever
-> kernel layer they use, that might do
-> 
-> if (signal_pending(current))
-> 	return failure;
-> 
-> and we now fail.
-> 
-> If we say that since we got a SIGKILL, then failing is acceptable behavior
-> now, I can code what you are requesting.
+There is this bit in complete_signal when SIGKILL is delivered to any
+thread in the process.
 
-I think this is fine but I don't maintain vhost and we'd need their
-opinion.
+
+			/*
+			 * Start a group exit and wake everybody up.
+			 * This way we don't have other threads
+			 * running and doing things after a slower
+			 * thread has the fatal signal pending.
+			 */
+			signal->flags =3D SIGNAL_GROUP_EXIT;
+			signal->group_exit_code =3D sig;
+			signal->group_stop_count =3D 0;
+			t =3D p;
+			do {
+				task_clear_jobctl_pending(t, JOBCTL_PENDING_MASK);
+				sigaddset(&t->pending.signal, SIGKILL);
+				signal_wake_up(t, 1);
+			} while_each_thread(p, t);
+
+For clarity that sigaddset(&t->pending.signal, SIGKILL);  Really isn't
+setting SIGKILL pending, it is part of the short circuit delivery logic,
+and that sigaddset(SIGKILL) is just setting a flag to tell the process
+it needs to die.
+
+
+The important part of that code is that SIGNAL_GROUP_EXIT gets set.
+That indicates the entire process is being torn down.
+
+Where this becomes important is exit_notify and release_task work
+together to ensure that the first thread in the process (a user space
+thread that can not block SIGKILL) will not send SIGCHLD to it's parent
+process until every thread in the process has exited.
+
+The delay_group_leader logic in wait_consider_task part of wait(2) has
+the same logic.
+
+Having been through this with io_uring the threads really need to call
+get_signal to handle that case.
+
+
+This is pretty much why I said at the outset you they needed to decided
+if they were going to implement a thread or if they were going to be a
+process.  Changing the decision to be a thread from a process is fine
+but in that case the vhost logic needs to act like a process, just
+like io_uring does.
+
+
+> Christian? And I guess we should Cc: Oleg too, since the signal parts
+> are an area he's familiar with and has worked on.. Eric Biederman has
+> already been on the list and has also been involved
+
+>
+> Oleg: see
+>
+>   https://lore.kernel.org/lkml/122b597e-a5fa-daf7-27bb-6f04fa98d496@oracl=
+e.com/
+>
+> for the context here.
+
+Eric
+
