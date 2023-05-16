@@ -1,103 +1,142 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEECE19E55
-	for <regressions@lists.linux.dev>; Mon, 15 May 2023 23:03:07 +0000 (UTC)
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-50bc394919cso19680157a12.2
-        for <regressions@lists.linux.dev>; Mon, 15 May 2023 16:03:07 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B64923B9
+	for <regressions@lists.linux.dev>; Tue, 16 May 2023 02:45:02 +0000 (UTC)
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1ab267e3528so97212485ad.0
+        for <regressions@lists.linux.dev>; Mon, 15 May 2023 19:45:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1684191786; x=1686783786;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20221208; t=1684205102; x=1686797102;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=10cFuMF+WVG9ce0NQecfKwGM15VTiPed2+yziwbzR84=;
-        b=XKyGHsIRaldhP1Il44c+NIFHK309YYSFhNN8+pFIRvcFznupS20ovbijxQcb6RJ2Z4
-         y9LIO7cvbIj7O7dwKndOpNJXsrWKt13nU0HHJDpfs4v7HVtILUqaUSev5XHoqvWWmAG/
-         JI4YOEYvo8Gkh4yazY2K0rGYGS9HCsZFuarzs=
+        bh=GNrwrxEXioPVU1CHB+NMHjC+VIIUqcxI7JMhaUrSWzw=;
+        b=dJ4Hmy3CaKT4Ee1HiDj2nV6ZHGbgYqFpv1QMLVSDrBv9JqTkLbQz53HqcyS+5uUPeH
+         V9WN9IhbsnBidl+LVUjFgIqmrNiXQY1iaY4erbQh+4eYQ6IPKBEd9aC7L0B73fUDaQns
+         9T9LR9fkb2XR5U0H7lGo+8nAPBCwPBJrOClmJHCXA8ZF0af9Ow4Ty7Rd3D2T0DohIuk3
+         uLQdexWGJond3609bpwpYbm7PBpjFZ+vmuGyLb9TyJm/1XNqiO6Dpbf4UQIoU322U6vU
+         0WLZymNq0eGGZCMHyxYJsqazgZ8cZzKpLA1Fguh9H/lRO+gvA54Geq2jgcgzE3SjJWJL
+         Qgew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684191786; x=1686783786;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=10cFuMF+WVG9ce0NQecfKwGM15VTiPed2+yziwbzR84=;
-        b=UCwiKciWsPAlRMksf6rgPPG7ZwvM7rS3Y0lsUp0DNY8/m4PcOGtQq53dscFmSiIqXW
-         f1HG1iAQpd2XcN5jqbXNWxpCP75+8sHq67Ne4Br/MME+lCXs77d5wXmwCegcHdlGfBJK
-         qXB5Xp85vqFPIevyZDgmj6iJO6pmGfoYAo85sD29ufRKvG3/71vPg9zR6sMaGFUinXVq
-         qIPxQC1QZqqviLK6ajZ5IXvkffmASmOkdwaV1pO2JRbmCce6nzHeO3VJgRx3pxYnZXCn
-         is7f8hEoE7RgvcwFaXj7HwSj3XNKe9Gt2KnotEYHjq7etm6deYv4wQ9S/+6ITdDf4sz6
-         Qqpw==
-X-Gm-Message-State: AC+VfDzpZBdUqVVV2kscMbQb2WUq4cNAKhe6S51YCcQT1UZVY9PMDnJX
-	aXAFfWRhpD/CZQjr1pV7C/GpA0BcsRZ7F3lxYsYYqUCP
-X-Google-Smtp-Source: ACHHUZ6NMKs2UrcMSpkbDs7vLaOgCMY9HCjC+XjvryGFuFZtaUnVDN9TK5vXqEnrHOQX8m+lbR2Rdw==
-X-Received: by 2002:a17:906:58d2:b0:956:fdb6:bc77 with SMTP id e18-20020a17090658d200b00956fdb6bc77mr37794183ejs.30.1684191785672;
-        Mon, 15 May 2023 16:03:05 -0700 (PDT)
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com. [209.85.128.42])
-        by smtp.gmail.com with ESMTPSA id p15-20020a17090653cf00b0094ebc041e20sm9984589ejo.46.2023.05.15.16.03.05
-        for <regressions@lists.linux.dev>
+        d=1e100.net; s=20221208; t=1684205102; x=1686797102;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=GNrwrxEXioPVU1CHB+NMHjC+VIIUqcxI7JMhaUrSWzw=;
+        b=NYC/d5UZmRJKls14DaT0690/8AFfqkBa9kUxyMFWsSejASiKCCf9Y+GYpYlldX4t7b
+         z8FOIJTRa0s8ozcdrlAesao20te+7eg5Y2Vc2kT5kHa8Hoggp+8z1uhdrcqWKbOsbjai
+         xz/1ICkAkcNEU0fZOb/xWnb7AKe6b3Iayp2jgtEtlRJnTb/fe+GGdADI25IRzA7JnS8U
+         bs2Lp3hSSNURG+hS7EPJ17uuOqdgBpuFSSofMEsWRvB3WSKgH2VBIkTONF0u/5bERwY7
+         2r4iMLozIQgPQGWny2o0vrdjYLfd2aYoCCvsNIr8mhz4jFiZjYV4WMz1h6660/6iFj5C
+         aARw==
+X-Gm-Message-State: AC+VfDx3bVJDErNyRFhr1CNwUGhsGTVIm90nFXtZCRo5QTfiu1D6nI8Z
+	1QsmwR375F4FgB94hOAp0HQ=
+X-Google-Smtp-Source: ACHHUZ4aAjo16mYYVJw56/Ey7MpV0voqIMFvFyHGqu/Q9QHjMqsHSp1BSS1zWi4rVF3Rn9w3xV3BVA==
+X-Received: by 2002:a17:903:234f:b0:1ae:bf5:7b5 with SMTP id c15-20020a170903234f00b001ae0bf507b5mr8733272plh.34.1684205101918;
+        Mon, 15 May 2023 19:45:01 -0700 (PDT)
+Received: from [192.168.43.80] (subs32-116-206-28-4.three.co.id. [116.206.28.4])
+        by smtp.gmail.com with ESMTPSA id j10-20020a170902690a00b001ac7c6fd12asm14168055plk.104.2023.05.15.19.44.58
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 15 May 2023 16:03:05 -0700 (PDT)
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-3f4271185daso90067615e9.2
-        for <regressions@lists.linux.dev>; Mon, 15 May 2023 16:03:05 -0700 (PDT)
-X-Received: by 2002:a17:907:6d8e:b0:966:5c04:2c61 with SMTP id
- sb14-20020a1709076d8e00b009665c042c61mr26963047ejc.8.1684191305862; Mon, 15
- May 2023 15:55:05 -0700 (PDT)
+        Mon, 15 May 2023 19:45:01 -0700 (PDT)
+Message-ID: <24fb92c2-27e1-e98b-c163-74b530d613fa@gmail.com>
+Date: Tue, 16 May 2023 09:44:52 +0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230202232517.8695-1-michael.christie@oracle.com>
- <20230202232517.8695-9-michael.christie@oracle.com> <aba6cca4-e66c-768f-375c-b38c8ba5e8a8@6wind.com>
- <CAHk-=wgadfsCnKHLON7op=Qs5t3w3PVz5ZDbvbKsfb=yBg=yjQ@mail.gmail.com>
- <78c5e150-26cf-7724-74ee-4a0b16b944b1@oracle.com> <48842e92-835e-bc3f-7118-48b8f415f532@leemhuis.info>
- <CAHk-=wicXCNR1bBioaAiBqEDgv-CoQD9z2RsM2VOTPzkK0xr8g@mail.gmail.com>
- <20230515-vollrausch-liebgeworden-2765f3ca3540@brauner> <CAHk-=wgXJ5VS1iBkfsG=HDjsyhn5XYDKt5xhQcNuz-e7VKyg8A@mail.gmail.com>
- <122b597e-a5fa-daf7-27bb-6f04fa98d496@oracle.com>
-In-Reply-To: <122b597e-a5fa-daf7-27bb-6f04fa98d496@oracle.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Mon, 15 May 2023 15:54:49 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgTpRDwS+F0Gd6+bM+TEh+x4Aiz8EBDTnTm3Q4TFdWOww@mail.gmail.com>
-Message-ID: <CAHk-=wgTpRDwS+F0Gd6+bM+TEh+x4Aiz8EBDTnTm3Q4TFdWOww@mail.gmail.com>
-Subject: Re: [PATCH v11 8/8] vhost: use vhost_tasks for worker threads
-To: Mike Christie <michael.christie@oracle.com>, Oleg Nesterov <oleg@redhat.com>
-Cc: Christian Brauner <brauner@kernel.org>, Thorsten Leemhuis <linux@leemhuis.info>, nicolas.dichtel@6wind.com, 
-	Linux kernel regressions list <regressions@lists.linux.dev>, hch@infradead.org, stefanha@redhat.com, 
-	jasowang@redhat.com, mst@redhat.com, sgarzare@redhat.com, 
-	virtualization@lists.linux-foundation.org, ebiederm@xmission.com, 
-	konrad.wilk@oracle.com, linux-kernel@vger.kernel.org, 
-	Jens Axboe <axboe@kernel.dk>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Content-Language: en-US
+To: Linux Memory Management List <linux-mm@kvack.org>,
+ Linux Filesystems <linux-fsdevel@vger.kernel.org>, Linux x86
+ <x86@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>
+Cc: Vladimir Lomov <lomov.vl@bkoty.ru>, Matthew Wilcox <willy@infradead.org>
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+Subject: Fwd: _filemap_get_folio and NULL pointer dereference
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, May 15, 2023 at 3:23=E2=80=AFPM Mike Christie
-<michael.christie@oracle.com> wrote:
->
-> The vhost layer really doesn't want any signals and wants to work like kt=
-hreads
-> for that case. To make it really simple can we do something like this whe=
-re it
-> separates user and io worker behavior where the major diff is how they ha=
-ndle
-> signals and exit. I also included a fix for the freeze case:
+Hi,
 
-I don't love the SIGKILL special case, but I also don't find this
-deeply offensive. So if this is what it takes, I'm ok with it.
+I notice a regression report on bugzilla [1]. Quoting from it:
 
-I wonder if we could make that special case simply check for "is
-SIGKILL blocked" instead? No normal case will cause that, and it means
-that a PF_USER_WORKER thread could decide per-thread what it wants to
-do wrt SIGKILL.
+> Hello.
+> 
+> (I apologize if I chose the wrong "Product" and "Component".)
+> 
+> On two of my systems, I see strange "bug" when running 6+ kernels (below is a recent one):
+> 
+> ```
+> May 14 14:48:07 smoon7.bkoty.ru kernel: RIP: 0010:__filemap_get_folio+0xbf/0x6a0
+> May 14 14:48:07 smoon7.bkoty.ru kernel: Code: ef e8 c5 60 c3 00 48 89 c7 48 3d 02 04 00 00 74 e4 48 3d 06 04 00 00 74 dc 48 85 c0 0f 84 6a 04 00 00 a8 01 0f 85 6c 04 00 00 <8b> 40 34 85 c0 74 c4 8d 50 01 4c 8d 47 34 f0 0f b1 57 34 75 ee 48
+> May 14 14:48:07 smoon7.bkoty.ru kernel: RSP: 0000:ffffa7800b1dfbf8 EFLAGS: 00010246
+> May 14 14:48:07 smoon7.bkoty.ru kernel: RAX: 0000000000000002 RBX: 0000000000000000 RCX: 0000000000000004
+> May 14 14:48:07 smoon7.bkoty.ru kernel: RDX: ffffa7800b1dfc50 RSI: ffff9a2413646910 RDI: 0000000000000002
+> May 14 14:48:07 smoon7.bkoty.ru kernel: RBP: 0000000000000000 R08: ffffffffffffffc0 R09: 00007f862b600000
+> May 14 14:48:07 smoon7.bkoty.ru kernel: R10: 00007f8659246f48 R11: ffff9a21c1494a0c R12: 000000000002dc46
+> May 14 14:48:07 smoon7.bkoty.ru kernel: R13: ffffa7800b1dfc50 R14: ffff9a21e2cb82b0 R15: 00007f8659246f48
+> May 14 14:48:07 smoon7.bkoty.ru kernel: FS:  00007f87fcff96c0(0000) GS:ffff9a295e280000(0000) knlGS:0000000000000000
+> May 14 14:48:07 smoon7.bkoty.ru kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> May 14 14:48:07 smoon7.bkoty.ru kernel: CR2: 0000000000000036 CR3: 0000000105b2c003 CR4: 00000000003706e0
+> May 14 14:48:07 smoon7.bkoty.ru kernel: Call Trace:
+> May 14 14:48:07 smoon7.bkoty.ru kernel:  <TASK>
+> May 14 14:48:07 smoon7.bkoty.ru kernel:  ? psi_group_change+0x274/0x430
+> May 14 14:48:07 smoon7.bkoty.ru kernel:  filemap_fault+0x6f/0xfd0
+> May 14 14:48:07 smoon7.bkoty.ru kernel:  ? filemap_map_pages+0x15f/0x640
+> May 14 14:48:07 smoon7.bkoty.ru kernel:  __do_fault+0x30/0x130
+> May 14 14:48:07 smoon7.bkoty.ru kernel:  do_fault+0x1d7/0x400
+> May 14 14:48:07 smoon7.bkoty.ru kernel:  handle_mm_fault+0xb48/0x1450
+> May 14 14:48:07 smoon7.bkoty.ru kernel:  do_user_addr_fault+0x1c7/0x740
+> May 14 14:48:07 smoon7.bkoty.ru kernel:  exc_page_fault+0x7c/0x180
+> May 14 14:48:07 smoon7.bkoty.ru kernel:  asm_exc_page_fault+0x26/0x30
+> May 14 14:48:07 smoon7.bkoty.ru kernel: RIP: 0033:0x7f881a56cb0d
+> May 14 14:48:07 smoon7.bkoty.ru kernel: Code: 00 00 00 00 00 66 66 2e 0f 1f 84 00 00 00 00 00 66 66 2e 0f 1f 84 00 00 00 00 00 66 90 f3 0f 1e fa 48 89 f8 48 83 fa 20 72 23 <c5> fe 6f 06 48 83 fa 40 0f 87 a5 00 00 00 c5 fe 6f 4c 16 e0 c5 fe
+> May 14 14:48:07 smoon7.bkoty.ru kernel: RSP: 002b:00007f87fcff72c8 EFLAGS: 00010202
+> May 14 14:48:07 smoon7.bkoty.ru kernel: RAX: 00007f87dc02a700 RBX: 00007f87fcff8308 RCX: 00007f87fcff7500
+> May 14 14:48:07 smoon7.bkoty.ru kernel: RDX: 0000000000004000 RSI: 00007f8659246f48 RDI: 00007f87dc02a700
+> May 14 14:48:07 smoon7.bkoty.ru kernel: RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
+> May 14 14:48:07 smoon7.bkoty.ru kernel: R10: 0000000000000008 R11: 0000000000000246 R12: 0000000000000000
+> May 14 14:48:07 smoon7.bkoty.ru kernel: R13: 00007f87dc001370 R14: 0000000000000009 R15: 00005645d0719a70
+> May 14 14:48:07 smoon7.bkoty.ru kernel:  </TASK>
+> ```
+> 
+> I've seen these errors since the very first kernel of the 6 series, while I see no problem with 5.15 on the same hardware.
+> 
+> These two systems have the same CPU (Intel(R) Core(TM) i5-10500 CPU @ 3.10GHz) but slightly different motherboards, same amount of memory (same  manufacturer, I tested it when plugged in).
+> 
+> The hosts in question don't show this "bug" immediately, but after some time while having "heavy" disk load (torrents). The "bug" shows up whether I use `mitigations=off` or not (at first I thought the "bug" might be related to `mitigations=off`, but I got the above output when I removed that setting from the kernel command line).
+> 
+> What puzzles me is that I don't see these errors on the other hosts (but they don't have "heavy" disk loads), they work just fine. On the other hand, they have different CPUs (not i5-10500). Sometimes (less often than this error) I saw the following in the kernel log (dmesg):
+> 
+> ```
+> May 14 08:09:09 smoon7.bkoty.ru kernel: mce: [Hardware Error]: Machine check events logged
+> May 14 08:09:09 smoon7.bkoty.ru kernel: mce: [Hardware Error]: CPU 0: Machine Check: 0 Bank 0: 9000004000010005
+> May 14 08:09:09 smoon7.bkoty.ru kernel: mce: [Hardware Error]: TSC 95596a63008b
+> May 14 08:09:09 smoon7.bkoty.ru kernel: mce: [Hardware Error]: PROCESSOR 0:a0653 TIME 1684022949 SOCKET 0 APIC 0 microcode f6
+> May 14 08:11:39 smoon7.bkoty.ru kernel: mce: [Hardware Error]: Machine check events logged
+> May 14 08:11:39 smoon7.bkoty.ru kernel: mce: [Hardware Error]: CPU 5: Machine Check: 0 Bank 0: 9000004000010005
+> May 14 08:11:39 smoon7.bkoty.ru kernel: mce: [Hardware Error]: TSC 95c56b82abf0
+> May 14 08:11:39 smoon7.bkoty.ru kernel: mce: [Hardware Error]: PROCESSOR 0:a0653 TIME 1684023099 SOCKET 0 APIC a microcode f6
+> ```
+> 
+> So now I'm thinking of buying a new CPU (same socket) and see if I will see the same error.
 
-Christian? And I guess we should Cc: Oleg too, since the signal parts
-are an area he's familiar with and has worked on.. Eric Biederman has
-already been on the list and has also been involved
+For the full thread, see bugzilla.
 
-Oleg: see
+FYI, filemap_get_folio() is introduced in 3f0c6a07fee6a1 ("mm/filemap:
+Add filemap_get_folio").
 
-  https://lore.kernel.org/lkml/122b597e-a5fa-daf7-27bb-6f04fa98d496@oracle.=
-com/
+Anyway, I'm adding this to regzbot:
 
-for the context here.
+#regzbot introduced: v5.15..v6.0 https://bugzilla.kernel.org/show_bug.cgi?id=217441
+#regzbot title: NULL pointer dereference on filemap_get_folio() on Intel Core i5-10500
 
-              Linus
+Thanks.
+
+[1]: https://bugzilla.kernel.org/show_bug.cgi?id=217441
+
+-- 
+An old man doll... just what I always wanted! - Clara
