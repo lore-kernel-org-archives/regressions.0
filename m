@@ -1,198 +1,188 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58EBE10966
-	for <regressions@lists.linux.dev>; Wed, 17 May 2023 18:22:43 +0000 (UTC)
-Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34HIGT6Y006338;
-	Wed, 17 May 2023 18:22:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=corp-2023-03-30;
- bh=kI7aP++5flwjImaEjKm+0bY8rUGrjAmwxhvFqu5byVw=;
- b=fzu8ngaqQkZ30rHP5GaqSwU+hMMDWcQK4DJtPy78AfSbuFtasgHAfXDNtuMiEQYXUVoT
- jroLQ8cweyZxsC4Ou5P2HEVLLEkUo2jEH9Of3D1HYJQr+o/ox4hLcbVYVCTFQxU3zDfr
- nb531JWikFUSiHFsyQ+2UuBmPqoe+cO7J+my+apgUyX/VLTSDDwqMStBx6Qfd39hXeoN
- +w9HVBP18B9x2tMbvvS0L8xCckYL2nvIZmyI1ZT2AMhzP0tG1TCZ3XHelu+YDPSVLP++
- IbA8T04bwpTGtckMvxt8e4dUGPyrZMRW0+Y1LAH6asSltb0t76h2iBAakZqAK9I+fhvP 8A== 
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3qj2kdpm2k-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 17 May 2023 18:22:23 +0000
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 34HI2K8g033857;
-	Wed, 17 May 2023 18:22:22 GMT
-Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2175.outbound.protection.outlook.com [104.47.57.175])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3qj106973j-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 17 May 2023 18:22:22 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=StM6D5Qk5ghxZRjLEdvd/7NyiZS6RZ+zQWbg8w9eNUIutLZ0CcyfhSnnvnHFNJjgvQW/w5hh5Dyf+w8oo+HX9hLHrew2xjIce+mCCE4HzGZXqd0IMmTKOkk/J7iX3PWIMOQycUHwBAmPPAjy0s4j/AqQcLOGQrRRdV3iGb2OjO8vPXwHMVlA8mJ2w/pv5ucUcp/gP1p/M0MHTzVWrm6er0AyuHR97jSFWvC9wjvUD8qkvPuExsrr2gDAWudlJic/da9Pggi4hyDpxpYZ0NuO5suI98ssLvVOaWl+GQAPvFBVg6BVbsoQDadq+INW4baaNtIIcCgNK0jKxJh30T4ULA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=kI7aP++5flwjImaEjKm+0bY8rUGrjAmwxhvFqu5byVw=;
- b=U8cOZoIvzWdOO+KqgajOigl45jAveHS75g5U+P+WWSxN/nAkZTcHxHyu66XraA8uedMMpF+Jo3WzOKZHq05hxcDc10J+Px2qREnTee8EwvmymlpJvVb0ib4lYNSbDI/NXVEr+oagDJYUiqI5KLLMRP5YplrC3L8WYeXceNwin0W10LJAHgjF0OC1IuaLHp5YMbpKUenwKLERKl81oZOBYzmbGLGE+vWwWdYMYd+aC5x3Qzfts9naXw93Li1XXHNEyh4MbNXlG3uFkns95hLWltenE4/7juIWanAwR53hxgPaxUUBn2vCUWQfbamDzO9sUdivqr9yc/KFUlspa8Nkig==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kI7aP++5flwjImaEjKm+0bY8rUGrjAmwxhvFqu5byVw=;
- b=EEWvhb3UXYCLnd9Pk5ecSkC+IoQ6WQnqvMaPE/vg+Rf6CvRRm1b+Sa52oca+A/84ERFGXRt2Ih4WiqT6gfNuNfdxK04O+ONQiQdYTAtIolqC2ovqRnLNe6NKuEpWidKsc2GpTTLTySB0ba7rg/Fdd1P22xcXpXN0xNj0MPJ+wmE=
-Received: from CY8PR10MB7243.namprd10.prod.outlook.com (2603:10b6:930:7c::10)
- by CY8PR10MB6611.namprd10.prod.outlook.com (2603:10b6:930:55::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6387.33; Wed, 17 May
- 2023 18:22:20 +0000
-Received: from CY8PR10MB7243.namprd10.prod.outlook.com
- ([fe80::13d6:c3f3:2447:6559]) by CY8PR10MB7243.namprd10.prod.outlook.com
- ([fe80::13d6:c3f3:2447:6559%5]) with mapi id 15.20.6411.017; Wed, 17 May 2023
- 18:22:20 +0000
-Message-ID: <abab1eaf-267f-d61a-a52a-be131cce5f8a@oracle.com>
-Date: Wed, 17 May 2023 13:22:17 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.1
-Subject: Re: [PATCH v11 8/8] vhost: use vhost_tasks for worker threads
-To: Oleg Nesterov <oleg@redhat.com>,
-        "Eric W. Biederman"
- <ebiederm@xmission.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
-        Christian Brauner <brauner@kernel.org>,
-        Thorsten Leemhuis <linux@leemhuis.info>, nicolas.dichtel@6wind.com,
-        Linux kernel regressions list <regressions@lists.linux.dev>,
-        hch@infradead.org, stefanha@redhat.com, jasowang@redhat.com,
-        mst@redhat.com, sgarzare@redhat.com,
-        virtualization@lists.linux-foundation.org, konrad.wilk@oracle.com,
-        linux-kernel@vger.kernel.org, Jens Axboe <axboe@kernel.dk>
-References: <78c5e150-26cf-7724-74ee-4a0b16b944b1@oracle.com>
- <48842e92-835e-bc3f-7118-48b8f415f532@leemhuis.info>
- <CAHk-=wicXCNR1bBioaAiBqEDgv-CoQD9z2RsM2VOTPzkK0xr8g@mail.gmail.com>
- <20230515-vollrausch-liebgeworden-2765f3ca3540@brauner>
- <CAHk-=wgXJ5VS1iBkfsG=HDjsyhn5XYDKt5xhQcNuz-e7VKyg8A@mail.gmail.com>
- <122b597e-a5fa-daf7-27bb-6f04fa98d496@oracle.com>
- <CAHk-=wgTpRDwS+F0Gd6+bM+TEh+x4Aiz8EBDTnTm3Q4TFdWOww@mail.gmail.com>
- <87cz30s20y.fsf@email.froward.int.ebiederm.org>
- <20230516183757.GA1286@redhat.com>
- <87mt24ox2d.fsf@email.froward.int.ebiederm.org>
- <20230517170917.GA17016@redhat.com>
-Content-Language: en-US
-From: Mike Christie <michael.christie@oracle.com>
-In-Reply-To: <20230517170917.GA17016@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: DM6PR13CA0043.namprd13.prod.outlook.com
- (2603:10b6:5:134::20) To CY8PR10MB7243.namprd10.prod.outlook.com
- (2603:10b6:930:7c::10)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0D4C136A
+	for <regressions@lists.linux.dev>; Wed, 17 May 2023 20:32:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1684355567; x=1715891567;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=ZaocSryMN3S2xGk5idvkXFNRKcVpJQOK/wBC4YdljGA=;
+  b=aGrHA1fualCfbgKI8xHkwcOKYDjYOTYMQnRGFg3eYBicGHGbTLAUB+P1
+   3ZfgAupWc84B363tVzFY1qqgnocZTnv9WlJHWSNtEOIQDxIf5CJesgt0v
+   sGkaBFVdrBc9gnccRmRHSPWKtoWgS1FBHSIKkvhuxQYjUvUdGIeNEE975
+   lXbJlWhKSnKK/d6f+PX9QjeA+gcNPllWzEkn/oI3keDUrxtD1MMl0MYLd
+   WRrqIUFCQ9WoJMFjdBx/1SfBKZ5JzV56x6aMNOgLMyydYuvYvQQKYttBB
+   tN25hCpqBytrdQWSQum4EhzG0uYGlhAGzQAiWIk6NeHLAicYHLHMCKVjw
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10713"; a="380069504"
+X-IronPort-AV: E=Sophos;i="5.99,283,1677571200"; 
+   d="scan'208";a="380069504"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2023 13:32:46 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10713"; a="826088760"
+X-IronPort-AV: E=Sophos;i="5.99,283,1677571200"; 
+   d="scan'208";a="826088760"
+Received: from stinkpipe.fi.intel.com (HELO stinkbox) ([10.237.72.70])
+  by orsmga004.jf.intel.com with SMTP; 17 May 2023 13:32:43 -0700
+Received: by stinkbox (sSMTP sendmail emulation); Wed, 17 May 2023 23:32:42 +0300
+Date: Wed, 17 May 2023 23:32:42 +0300
+From: Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
+To: =?iso-8859-1?Q?=C9ric?= Brunet <eric.brunet@ens.fr>
+Cc: stable@vger.kernel.org, regressions@lists.linux.dev,
+	jouni.hogander@intel.com, jani.nikula@intel.com,
+	gregkh@linuxfoundation.org
+Subject: Re: Regression on drm/i915, with bisected commit
+Message-ID: <ZGU56n66OAe0DqN3@intel.com>
+References: <3236901.44csPzL39Z@skaro>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY8PR10MB7243:EE_|CY8PR10MB6611:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3e19de66-afe6-4b97-d114-08db5703a6f7
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	LRET6cEIFXJ4YTca5LCoGV7J/IBMIm/LXW/s+C4VoBIHjgZbLzgg7Tj91XE65vs7S2FxtxwY/RNRA5lZGS7CRYnNnxIPm4aE7zPc2++84fZPWDgO2UtB+qsi2nGWdKJCluQUi/wzH6c9lcK3VFY/juXfIBlXGAIIa1IEgqY2ebqb4D6Cl0ZSmfDlY73InRjgIrOebBFZx0yfBrbcZFwzwl2HPmt1DrkYf3JQqwXRQtK8aJ0F+dbf8PN4OBYqYtiS3iexvZ5O1Iw0xfpHvwaj8/QnIxTlBbKSFLUOH5W9yk8J/PYd7boM6uJEdMv+7pnME9R+5Up8GjpbQ8s2r2jSu+ky5C/fqED96novnxE86pFvYDAVAS0TxYJhKqEqal10dikSz9q2HWIBBDYPJ1Spg3CkK0xs0vuhHDejueONgDemAe7JRVAvzADaj5qtfbZz7euWrtArbkVXhxOhuJZaP7H7VJoHteTrqHLQViCUaI9NvAdmcXj5Fs/mCjSNHF/I5g86EiJYicgdQfmeEb0u9klMNawLTgkZMiROIjZEiuGWenKbg+YWqBFFf404TXKbMQ600MHfcinB6UizooXaUIZ+iIgM2vwX8aXaIAnXoxnOODbF4is6IFHxkFf5GcMF8aHdSKYdPGlpTCMOu2qMcQ==
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY8PR10MB7243.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(136003)(346002)(366004)(396003)(376002)(39860400002)(451199021)(66476007)(86362001)(110136005)(66946007)(66556008)(6666004)(6486002)(53546011)(478600001)(4326008)(316002)(31686004)(54906003)(41300700001)(2616005)(5660300002)(6512007)(6506007)(186003)(558084003)(26005)(8676002)(7416002)(8936002)(2906002)(36756003)(38100700002)(31696002)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?utf-8?B?dXJSNXZZY1RRWkRrR0YwNC9nMnU2bVFwNWNGNmNPbkl1WDVIZllNenZ4aHJr?=
- =?utf-8?B?ZWx4SDdaYlk3Y2hKd2hQOW0vb2VtODZTU1diVCtsUXpQajltQWROSHpMY0Ev?=
- =?utf-8?B?MzNOV1ZSOVpmU2h4djVUUC9pbDBmRFluZ3lmMWUydTNGMW9kZVVnVnJKdWIw?=
- =?utf-8?B?dUlYNWVNTHJEOUMxSUxkUkM0UERCREc1S2pKWFNmeHRIZDJSWE5QUzRQRDJy?=
- =?utf-8?B?MWtTQU03NmlLZEJOdllSYVJXYWY0MHJNRlQ0U1d4Q2RKUmdXKzJ0c3B3c2Uz?=
- =?utf-8?B?alRWU1daVDF3Z3NieHREcStMaERwZkpTaytGUmhIeGhIUVFXNXpNbm9lSmk0?=
- =?utf-8?B?RENXYW9kbm1HVVMzQWpYb29FUW1ldWowdXVaWWN6YWRKTUtWVHYzbWRqdG4w?=
- =?utf-8?B?N25zQ3BBbkxUcEViUDM1UzhKSkVGc2RWZjlHWFRvSkgrclpwMHFQVjNuQWVW?=
- =?utf-8?B?YUFoZC9CSUdGNzhIa0x2RXhOSHZIMlViUkJQQnl1cDAyRWZhbkFuY2JRTWZK?=
- =?utf-8?B?OVhXdnhrZWRMcTF4Qlh5Q3lnRlNPbkZENGhFT1BvMVRBL2RaZ3FkMnZXTHAr?=
- =?utf-8?B?NHVJa0NkWDN0RWVDazZFbnMyTytxQjVHdzdOWjdvTnlNT3JHMkFXS0VXdlpZ?=
- =?utf-8?B?S1pXbXAwVlVURmJQRlhldGc3b0tXbStxbEJWSTFTQXA0Q00wN0l1RGVYTHhz?=
- =?utf-8?B?LzdLOFFIbk54Q3FvbnA1TDVnNUNNL1RKcG1heFlyTHRYN1VBY0tiZE5CUUFN?=
- =?utf-8?B?ODNWT08xRWJUZ2V5WGRra1lYRW9WVGdqKzhCUjI0ODZ0UWNxUllMcmNGNzAy?=
- =?utf-8?B?ME9JQi9yM3lOR2kyaURBY1JoS2hNR1hVOENReS9VR1hmM1pHdTNpNWFuUGVD?=
- =?utf-8?B?ZHE2QVdaais0bFdEd0RQUHNjRmdlTDRiRDE2U2FCQTFXQVFkZnlYQ3h3cEMx?=
- =?utf-8?B?cEFsamdxblZqQjFzT1NiZmFocnVjSTdTVEtzdWZVZ3dYUEJKaUprNnVWZVVJ?=
- =?utf-8?B?ZkxkK0JpMDk4dzVpK2p1UjJ2QjRVZlhFK0k2MWRVaHBXN0dpVlU1a1NXRlVF?=
- =?utf-8?B?WFpYejFWNEZWUFo0Q3kvSUpubXhNVzN3MFBjS1FnSS81WU5FZ2hzY0FlZjF6?=
- =?utf-8?B?bFdRVEpnT0R4ZDN5Vi9JRFV2d0Zvb3JPR3lVYnZ4R1pwVzZ3bTFUKzl5OFVW?=
- =?utf-8?B?VlFKbnpFRTBVUnVYb0ZsNFArTjc1Mm04azVqUlhVNnN2QlQ5MkNncjAxd1Mv?=
- =?utf-8?B?ZHk2QmpkUWZuUFpVdGdDeEdFaWpzZ1FuVXU4aXQzSEhaWUdscEFPcDMrd1g4?=
- =?utf-8?B?YmhSZ3Rzd1JUWVhJeEk4Yis0SVNzTUhLZjZSMElzQ3UxUjZRU1BrVzVmVzVH?=
- =?utf-8?B?T1lDc3Jpd21CMzRsOWk3aHFhZGlKU1ZqVDh5VnBmZ2dXU3NySVZ1c1ZjYzc5?=
- =?utf-8?B?WjJqbWgxRVFrd1pEQlNJLzNYcTBXR3RPUmRDU1VNdVY4YjUyNHRwZ2JNSkZm?=
- =?utf-8?B?M29CcTlUeitzRldCZWlQcmdsZ0pwQlFzNWdUSkprTzVmWXZtNkF6Y3o2ZU9a?=
- =?utf-8?B?SXh5ZjRTSzJ1TGU5NEpaMGp5WUFrL1c3MFZUNzFzWUhPbnpBVXJkaEYybkNi?=
- =?utf-8?B?MHExTjFGdzh5MHF4b1VpdXlZL01WdjJkY1k1ZGhxb3JuaVVxV2R0N1I4K3ZF?=
- =?utf-8?B?dDVQYWFWNitFc2s0K3BvcFJVWUdPT3NiRnpsM0NuK3V5WHRiQlQyWGgyTjFN?=
- =?utf-8?B?RTZFTTlrZFdlb1FKaG5kWjgvVUdtT29KNEpNcTBpWm1xZXkrMHN4RkZnN0VJ?=
- =?utf-8?B?V3JYRUh3M0g0TFJoUzJVWGdMekQvb2xKOENlZEZaSWxKMWMyekg1ekpQTVo0?=
- =?utf-8?B?V3g0bWRnTkEvaUg0VVNJV1JqOTNTblRKUE9YTkx5RjBVOVVTZFNaTlcwRS8w?=
- =?utf-8?B?cU0wWXJvdHBpNDg1cUF4dkYvalRtaU9ZNWQydFloOHBuT0hSOWJSY3ZGcmxR?=
- =?utf-8?B?bWJpcTlBY0JuQkR5bC9BR3YxMEMzdVQrcHVmWStxTXVLTGZPY1VrSzJ2cGU1?=
- =?utf-8?B?TTlacVJOOHBYZTdkdk16cnk5SkJ4WjV6RkgrcS9IOFZTclZGcXQ0cTg0Y1JX?=
- =?utf-8?B?YzNQR041WnNtbEpYaVdqajY4aXNCY1JJSW1Ga1h5YkVsY0lLc05YVjk4QjJW?=
- =?utf-8?B?Rnc9PQ==?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	=?utf-8?B?OEl5bUJwSDNFRWZzUnJGMnZKTEtBL1ZBNHdrV3ViMThkNXMyemdUb0RZaGd6?=
- =?utf-8?B?dUt4ZmhwRkxxNjNIeXcvTlFQazdZOHQxVDFEUE1aQVJLcFAxOER1OXlHRG1a?=
- =?utf-8?B?V0ZrN2JISEdzZFBKVGN0ei9JN1JaWkk5Z0NrVisvK0tuRDlOdnM3aWtaS0sx?=
- =?utf-8?B?b2VUbk4ybUdyMUJaQ1NVMzd5SmFERUNOSzRCQjg3RHc1SlNOZ1Y0aEVIZmpx?=
- =?utf-8?B?K1h1TDAwYjYwSUZnN2JIY1RtbnV6cVowWjVNOE1vcTF1OWpqaDczS3NZRG93?=
- =?utf-8?B?UUo3bDlISCtCWitIb1BpeUYySThFZkFHYklCUHBWUjV6cWplUnhSNGJFVGw2?=
- =?utf-8?B?UWx2Vlg1ZXBOUE8vT3J5RXI1aUpGOVRYR3gyRWlQVHlTY050VVp3enFMa1l6?=
- =?utf-8?B?VXo5VVpLYndOaDdITlBYYVRLZFV6byt4RmFNYW41L25ibWV2VzZkTmNrajBk?=
- =?utf-8?B?NWdEL2VEMFpoOHZTS091RHFIUUkvTFhrK2xQQTREQisyeklVcTVFUkNIWWti?=
- =?utf-8?B?RGRmd0M1NHBxaURpcDJnbFBjenJGbk51Z2NqUDAvTkR4QjRnNVl0MWNIOWNk?=
- =?utf-8?B?VDB4YXNGNWRmMkt5RlY2OGZ3NE8zbWZUVjF6UE85RGMySVY4MnBxeDcyWHRX?=
- =?utf-8?B?bGhkQXlOQ3FjMGZLdm9DUGsvcGRtcDQ2WjFXQTFuVVI4OUUwR2VmeGxsNHZP?=
- =?utf-8?B?SFJQT0dWL2Z3Z1plUDZkdEhhYVFXcVMzTkZiRmFkaDZLaGJEa1d1Y2J0czZi?=
- =?utf-8?B?SEppRXpCd0pCZDBXYTN2VVFqYVZMOXFFcTNnRlRhQU9VYW16Ulc3ZXlHUmZT?=
- =?utf-8?B?QmRjWndiUDR6cXpmTG9NdkVzUVI3Z1ZoTGNFcEFhM21hNEU0NldmT0xHY0Zk?=
- =?utf-8?B?bnd1THU5WFE0bmIwRUZ4UXdpN0E1MWx1Z0tqbndmRUJsNnh0ZzRBL3RQZGt0?=
- =?utf-8?B?Z09oMkJWQlhIU1Fjc3ppM1ZNOGRrKzdjRzVnWUdGaVdPUi9YZUVwcDdJVzFk?=
- =?utf-8?B?ckJtNWlBOEl3U3lxYUYwVnZITmpTNVptMVd3aDVlaENVY0k0N3ZjSHBnVmFP?=
- =?utf-8?B?NWh2aFg2bmpsbDFIV3E4bHhWZFdMTDVTMFo2ZjRjYktneE4zNWdEdy80UlIz?=
- =?utf-8?B?TlZ5N1NCUDRmT1haS08yQklkdHNFU2p1T1p1N0xKeGhzSEVKc29tazVvUUM3?=
- =?utf-8?B?UkFpYXFuN2xwNlVmdUY0b0R2MHU0NUluSWE5MVZHdnBudWgyak1FbTF5aTRS?=
- =?utf-8?B?UjRYZGIvb1FUd0FYdHJhOXpNOU9MZEVkVVN6bjZ3bDBUTks3VFdDblpCbkFy?=
- =?utf-8?B?NkxraE1KeWwyTTltbk40UlhjT21qdTg5eGd5M3FWWHN0Rm43OXlvL2wyUkNB?=
- =?utf-8?B?cGZvK21sNVlQVnRXbkxzYlBWdSt1Q2R6SlEvL3hkZnVORGdqaUNvWThSODBM?=
- =?utf-8?B?blNGbGJPcUkvUEVHaGtBMHZaVFpBSmZ4TnAwcVA5VndXalA2Q3pYS3RLWW1h?=
- =?utf-8?B?QzhpY2Foci91ZjgwQlNpZmJvUWdsbUxjRkFPNGdoellpbG1LL0NPUzVQekpX?=
- =?utf-8?B?VXViZz09?=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3e19de66-afe6-4b97-d114-08db5703a6f7
-X-MS-Exchange-CrossTenant-AuthSource: CY8PR10MB7243.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 May 2023 18:22:20.2470
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 11K3+87DPOLD/6EcS4ZYbVNPVcIsRMFAOK7ISJDQcdxYdiWCm7A0HxEtLnwZ/ACBe+Q0FfN3lsY33xN/pkI1TQuoJCmGwPPkajAKPqjI2bc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR10MB6611
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.170.22
- definitions=2023-05-17_03,2023-05-17_02,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 phishscore=0 spamscore=0
- bulkscore=0 suspectscore=0 mlxlogscore=909 adultscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2304280000
- definitions=main-2305170151
-X-Proofpoint-GUID: cS_I0ta3ovh4YMCPDdQWKtukHIM70xcL
-X-Proofpoint-ORIG-GUID: cS_I0ta3ovh4YMCPDdQWKtukHIM70xcL
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3236901.44csPzL39Z@skaro>
+X-Patchwork-Hint: comment
 
-On 5/17/23 12:09 PM, Oleg Nesterov wrote:
-> IIUC, Mike is going to send the next version? So I think we can delay
-> the further discussions until then.
+On Tue, May 16, 2023 at 03:04:53PM +0200, Éric Brunet wrote:
+> Hello all,
+> 
+> I have a HP Elite x360 1049 G9 2-in-1 notebook running fedora 38 with an Adler 
+> Lake intel video card.
+> 
+> After upgrading to kernel 6.2.13 (as packaged by fedora), I started seeing 
+> severe video glitches made of random pixels in a vertical band occupying about 
+> 20% of my screen, on the right. The glitches would happen both with X.org and 
+> wayland.
+> 
+> I checked that vanilla 6.2.12 does not have the bug and that both vanilla 
+> 6.2.13 and vanilla 6.3.2 do have the bug.
+> 
+> I bisected the problem to commit e2b789bc3dc34edc87ffb85634967d24ed351acb (it 
+> is a one-liner reproduced at the end of this message).
+> 
+> I checked that vanilla 6.3.2 with this commit reverted does not have the bug.
+> 
+> I am CC-ing every e-mail appearing in this commit , I hope this is ok, and I 
+> apologize if it is not.
 
-Yeah, I'm working on a version that supports signals so it will be easier
-to discuss with the vhost devs and you, Christian and Eric.
+Please file a bug at https://gitlab.freedesktop.org/drm/intel/issues/new
+boot with "log_buf_len=4M drm.debug=0xe" passed to kernel cmdline, and
+attach the resulting dmesg to the bug.
+
+> 
+> I have filled a fedora bug report about this, see https://bugzilla.redhat.com/
+> show_bug.cgi?id=2203549 . You will find there a small video (made with fedora 
+> kernel 2.6.14) demonstrating the issue.
+> 
+> Some more details:
+> 
+> % sudo lspci -vk -s 00:02.0
+> 00:02.0 VGA compatible controller: Intel Corporation Alder Lake-UP3 GT2 [Iris 
+> Xe Graphics] (rev 0c) (prog-if 00 [VGA controller])
+>         DeviceName: Onboard IGD
+>         Subsystem: Hewlett-Packard Company Device 896d
+>         Flags: bus master, fast devsel, latency 0, IRQ 143
+>         Memory at 603c000000 (64-bit, non-prefetchable) [size=16M]
+>         Memory at 4000000000 (64-bit, prefetchable) [size=256M]
+>         I/O ports at 3000 [size=64]
+>         Expansion ROM at 000c0000 [virtual] [disabled] [size=128K]
+>         Capabilities: [40] Vendor Specific Information: Len=0c <?>
+>         Capabilities: [70] Express Root Complex Integrated Endpoint, MSI 00
+>         Capabilities: [ac] MSI: Enable+ Count=1/1 Maskable+ 64bit-
+>         Capabilities: [d0] Power Management version 2
+>         Capabilities: [100] Process Address Space ID (PASID)
+>         Capabilities: [200] Address Translation Service (ATS)
+>         Capabilities: [300] Page Request Interface (PRI)
+>         Capabilities: [320] Single Root I/O Virtualization (SR-IOV)
+>         Kernel driver in use: i915
+>         Kernel modules: i915
+> 
+> Relevant kernel boot messages: (appart from timestamps, these lines are 
+> identical for 6.2.12 and 6.2.14):
+> 
+> [    2.790043] i915 0000:00:02.0: vgaarb: deactivate vga console
+> [    2.790089] i915 0000:00:02.0: [drm] Using Transparent Hugepages
+> [    2.790497] i915 0000:00:02.0: vgaarb: changed VGA decodes: 
+> olddecodes=io+mem,decodes=io+mem:owns=io+mem
+> [    2.793812] i915 0000:00:02.0: [drm] Finished loading DMC firmware i915/
+> adlp_dmc_ver2_16.bin (v2.16)
+> [    2.825058] i915 0000:00:02.0: [drm] GuC firmware i915/adlp_guc_70.bin 
+> version 70.5.1
+> [    2.825061] i915 0000:00:02.0: [drm] HuC firmware i915/tgl_huc.bin version 
+> 7.9.3
+> [    2.842906] i915 0000:00:02.0: [drm] HuC authenticated
+> [    2.843778] i915 0000:00:02.0: [drm] GuC submission enabled
+> [    2.843779] i915 0000:00:02.0: [drm] GuC SLPC enabled
+> [    2.844200] i915 0000:00:02.0: [drm] GuC RC: enabled
+> [    2.845010] i915 0000:00:02.0: [drm] Protected Xe Path (PXP) protected 
+> content support initialized
+> [    3.964766] [drm] Initialized i915 1.6.0 20201103 for 0000:00:02.0 on minor 
+> 1
+> [    3.968403] ACPI: video: Video Device [GFX0] (multi-head: yes  rom: no  
+> post: no)
+> [    3.968981] input: Video Bus as /devices/LNXSYSTM:00/LNXSYBUS:00/
+> PNP0A08:00/LNXVIDEO:00/input/input18
+> [    3.977892] fbcon: i915drmfb (fb0) is primary device
+> [    3.977899] fbcon: Deferring console take-over
+> [    3.977904] i915 0000:00:02.0: [drm] fb0: i915drmfb frame buffer device
+> [    4.026120] i915 0000:00:02.0: [drm] Selective fetch area calculation 
+> failed in pipe A
+> 
+> Is there anything else I should provide? I am willing to run some tests, of 
+> course.
+> 
+> Thanks for your help,
+> 
+> Éric Brunet
+> 
+> =================================================
+> 
+> commit e2b789bc3dc34edc87ffb85634967d24ed351acb (HEAD)
+> Author: Ville Syrjälä <ville.syrjala@linux.intel.com>
+> Date:   Wed Mar 29 20:24:33 2023 +0300
+> 
+>     drm/i915: Fix fast wake AUX sync len
+>     
+>     commit e1c71f8f918047ce822dc19b42ab1261ed259fd1 upstream.
+>     
+>     Fast wake should use 8 SYNC pulses for the preamble
+>     and 10-16 SYNC pulses for the precharge. Reduce our
+>     fast wake SYNC count to match the maximum value.
+>     We also use the maximum precharge length for normal
+>     AUX transactions.
+>     
+>     Cc: stable@vger.kernel.org
+>     Cc: Jouni Högander <jouni.hogander@intel.com>
+>     Signed-off-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
+>     Link: https://patchwork.freedesktop.org/patch/msgid/
+> 20230329172434.18744-1-ville.syrjala@linux.intel.com
+>     Reviewed-by: Jouni Högander <jouni.hogander@intel.com>
+>     (cherry picked from commit 605f7c73133341d4b762cbd9a22174cc22d4c38b)
+>     Signed-off-by: Jani Nikula <jani.nikula@intel.com>
+>     Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> 
+> diff --git a/drivers/gpu/drm/i915/display/intel_dp_aux.c b/drivers/gpu/drm/
+> i915/display/intel_dp_aux.c
+> index 664bebdecea7..d5fed2eb66d2 100644
+> --- a/drivers/gpu/drm/i915/display/intel_dp_aux.c
+> +++ b/drivers/gpu/drm/i915/display/intel_dp_aux.c
+> @@ -166,7 +166,7 @@ static u32 skl_get_aux_send_ctl(struct intel_dp *intel_dp,
+>               DP_AUX_CH_CTL_TIME_OUT_MAX |
+>               DP_AUX_CH_CTL_RECEIVE_ERROR |
+>               (send_bytes << DP_AUX_CH_CTL_MESSAGE_SIZE_SHIFT) |
+> -             DP_AUX_CH_CTL_FW_SYNC_PULSE_SKL(32) |
+> +             DP_AUX_CH_CTL_FW_SYNC_PULSE_SKL(24) |
+>               DP_AUX_CH_CTL_SYNC_PULSE_SKL(32);
+>  
+>         if (intel_tc_port_in_tbt_alt_mode(dig_port))
+> 
+
+-- 
+Ville Syrjälä
+Intel
