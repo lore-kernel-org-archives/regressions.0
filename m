@@ -1,106 +1,148 @@
-Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBE951DDD9
-	for <regressions@lists.linux.dev>; Wed, 17 May 2023 16:27:53 +0000 (UTC)
-Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-6238daae378so667596d6.1
-        for <regressions@lists.linux.dev>; Wed, 17 May 2023 09:27:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1684340873; x=1686932873;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gKP3y2yRA1niickBAZNGt652pVuj+gN+BwTUxLrXHNQ=;
-        b=x6IZmmBCbPWXYEV1s7cwpW+6JSUPvlKX/pEzz5bkryXn1zZebfylT4DUapS4sia6Bm
-         593nM5GeWZJyZU3elQthsjSQjaLVUhiT1xATIBTlx6rJyiWe0BccHZKUZGy7Z49VVOLd
-         ULfJnBAe1kcFUWU2OIxI2oQBL0av3WUv1TcT/EojkwXeF6gWCYxGzmC+msS0zdE7h2c6
-         fFxl6SEEE9bf4C/2eLRqperK6PFAMdAo5Anph13Y+2ohfRM3KPQVKxLEiepYwlcZclQY
-         Kbs6f6WlYEPs0MMgn7IKu31Wd88GMhBytneV3IfZ4EFpknd5ojk0j/bgaMZ1fWbTt4V/
-         rOkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684340873; x=1686932873;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gKP3y2yRA1niickBAZNGt652pVuj+gN+BwTUxLrXHNQ=;
-        b=Qkc/s01ubFj/pLRnSaj4sSCcBJz3WZqqQo3RdOBUpNt1w9TzBNBpZOe5CKwkHPocQF
-         bP19FNoLZ+cygo2i7WN59MNALubiDo+C5HWt4TLgqn7EeUG8AilOz3LP3LVq9AtJYQdu
-         WReQ4y9TThPTYyfQws6guJV30Je7ffwIMCLtgnJk2J6k9NZLWE8AqP3BEnu+Cx4qYolC
-         k6FXDeOqJTKFMjPnKU6hO+KfGOgcWWtvBzLFlVZ/vKX3du61+6lNHskvrtGitU7yIlI0
-         ifMIxvgvRXQw7FWUxanBsasTJlzY2+b6OTnMCbIgpNntrdPa4E+fjYTS/vTzyrJwjnXG
-         ayEw==
-X-Gm-Message-State: AC+VfDxpvLb5TzcYyAsPyqR8xqDPM1Lopq30weTmqMXWXcfJCze77MrA
-	buG7HjkYc4FCDPpyK767AiPVtvkMHKUCjSX9eFlXNA==
-X-Google-Smtp-Source: ACHHUZ5i7gqrt52vlZ8Nnb/F0kMFD8QMC/x9Q5gQRUQ0nTJlG6e6Y29/q9q1G0M5KBatPnK9A2vJ9E/t/pXyL0yzlQ8=
-X-Received: by 2002:ad4:5dc4:0:b0:61a:c2bf:9f0b with SMTP id
- m4-20020ad45dc4000000b0061ac2bf9f0bmr658197qvh.6.1684340872605; Wed, 17 May
- 2023 09:27:52 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED992442F
+	for <regressions@lists.linux.dev>; Wed, 17 May 2023 17:09:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1684343381;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=O77FUeBqVv09R6tDA90nsHnvloA7B+EnHXU7+4rYNQ0=;
+	b=FNFHmK12/rXOU7b5Y1jbzzasQB2i7ZdYHYDrIXhC7VpRUQgjF6mRPaLNoPiJAGw56nvrCO
+	Mv2F41rtyCfSsWRXegX9MBOA3CNVASKR9t8yXZPNgnddehlA1jQOp3eE3eErU8ETNF5oNY
+	8rKKZDWogKYyUETQETgyewhYPg97Kuw=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-221-3nq0b3zjNVGGhTxPrHkZdA-1; Wed, 17 May 2023 13:09:37 -0400
+X-MC-Unique: 3nq0b3zjNVGGhTxPrHkZdA-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id BC7AB185A7A4;
+	Wed, 17 May 2023 17:09:36 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.8])
+	by smtp.corp.redhat.com (Postfix) with SMTP id 22B9EC15BA0;
+	Wed, 17 May 2023 17:09:32 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Wed, 17 May 2023 19:09:22 +0200 (CEST)
+Date: Wed, 17 May 2023 19:09:18 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+	Mike Christie <michael.christie@oracle.com>,
+	Christian Brauner <brauner@kernel.org>,
+	Thorsten Leemhuis <linux@leemhuis.info>, nicolas.dichtel@6wind.com,
+	Linux kernel regressions list <regressions@lists.linux.dev>,
+	hch@infradead.org, stefanha@redhat.com, jasowang@redhat.com,
+	mst@redhat.com, sgarzare@redhat.com,
+	virtualization@lists.linux-foundation.org, konrad.wilk@oracle.com,
+	linux-kernel@vger.kernel.org, Jens Axboe <axboe@kernel.dk>
+Subject: Re: [PATCH v11 8/8] vhost: use vhost_tasks for worker threads
+Message-ID: <20230517170917.GA17016@redhat.com>
+References: <78c5e150-26cf-7724-74ee-4a0b16b944b1@oracle.com>
+ <48842e92-835e-bc3f-7118-48b8f415f532@leemhuis.info>
+ <CAHk-=wicXCNR1bBioaAiBqEDgv-CoQD9z2RsM2VOTPzkK0xr8g@mail.gmail.com>
+ <20230515-vollrausch-liebgeworden-2765f3ca3540@brauner>
+ <CAHk-=wgXJ5VS1iBkfsG=HDjsyhn5XYDKt5xhQcNuz-e7VKyg8A@mail.gmail.com>
+ <122b597e-a5fa-daf7-27bb-6f04fa98d496@oracle.com>
+ <CAHk-=wgTpRDwS+F0Gd6+bM+TEh+x4Aiz8EBDTnTm3Q4TFdWOww@mail.gmail.com>
+ <87cz30s20y.fsf@email.froward.int.ebiederm.org>
+ <20230516183757.GA1286@redhat.com>
+ <87mt24ox2d.fsf@email.froward.int.ebiederm.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAK7LNAT_cMLGLBz7ugaLpJD3QmZmY8FK56x9nihvWeYhJpi2ag@mail.gmail.com>
- <20220919170828.3718437-1-ndesaulniers@google.com> <597ef55f-e7c1-ab60-b4aa-0071ff4b5e0e@collabora.com>
- <CAKwvOdmSrAxx-YY1Na3BSdYuxXCPKK+F0K5V6i+adTn_bVJEsw@mail.gmail.com>
- <89961dfc-d40f-78e4-5d34-b86b7d152182@collabora.com> <CAKwvOd=4hBcU4fAkddU0b-GOZc9FzTZoj3PFW6ZZrX0jS8x+bg@mail.gmail.com>
- <17c91d37-7d9c-0df4-2438-2b30ca0b5777@collabora.com> <CAKwvOdk4QO8x_bs64fFRCsMu__AjhXd4Ew2KfgzQOb9Q3FMqSA@mail.gmail.com>
- <b5d0cf82-0e42-f6a1-c9f5-c145fdc4c622@collabora.com>
-In-Reply-To: <b5d0cf82-0e42-f6a1-c9f5-c145fdc4c622@collabora.com>
-From: Nick Desaulniers <ndesaulniers@google.com>
-Date: Wed, 17 May 2023 09:27:41 -0700
-Message-ID: <CAKwvOdkFxu9hYSL_RCXadpR0dQd1+dZmAUVXdfFiLUfxg4D_Xw@mail.gmail.com>
-Subject: Re: [PATCH v4] Makefile.compiler: replace cc-ifversion with
- compiler-specific macros
-To: =?UTF-8?Q?Ricardo_Ca=C3=B1uelo?= <ricardo.canuelo@collabora.com>
-Cc: Shreeya Patel <shreeya.patel@collabora.com>, Michal Marek <michal.lkml@markovi.net>, 
-	Masahiro Yamada <masahiroy@kernel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, clang-built-linux <llvm@lists.linux.dev>, 
-	Bill Wendling <morbo@google.com>, Nathan Chancellor <nathan@kernel.org>, regressions@lists.linux.dev, 
-	"gustavo.padovan@collabora.com" <gustavo.padovan@collabora.com>, 
-	Guillaume Charles Tucker <guillaume.tucker@collabora.com>, denys.f@collabora.com, 
-	kernelci@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87mt24ox2d.fsf@email.froward.int.ebiederm.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.8
 
-On Wed, May 17, 2023 at 8:39=E2=80=AFAM Ricardo Ca=C3=B1uelo
-<ricardo.canuelo@collabora.com> wrote:
+On 05/16, Eric W. Biederman wrote:
 >
-> Hi Nick,
+> Oleg Nesterov <oleg@redhat.com> writes:
 >
-> On 16/5/23 1:01, Nick Desaulniers wrote:
-> > Can you please help verify this failure by hand, and see if applying
-> > https://github.com/ClangBuiltLinux/linux/commit/45c4fb6095d872785e07794=
-2da896d65d87ab56b.patch
-> > helps?  If you can repro; mind sharing your precise steps to reproduce?
+> >> There is this bit in complete_signal when SIGKILL is delivered to any
+> >> thread in the process.
+> >>
+> >> 			t = p;
+> >> 			do {
+> >> 				task_clear_jobctl_pending(t, JOBCTL_PENDING_MASK);
+> >> 				sigaddset(&t->pending.signal, SIGKILL);
+> >> 				signal_wake_up(t, 1);
+> >> 			} while_each_thread(p, t);
+> >
+> > That is why the latest version adds try_set_pending_sigkill(). No, no,
+> > it is not that I think this is a good idea.
 >
-> I ran a few tests but the commit that introduced your changes
-> passes every time. There's a chance that the bisector got misled
-> due to the test runs failing for whatever reason unrelated to the
-> patch. There's definitely something introducing a bug somewhere,
-> as current mainline/master makes this test fail on this target
-> when kernel/configs/debug.config is applied, but it must be
-> somewhere else. I'll investigate this some more to see what I can
-> find.
-
-Thanks for verifying/reporting.
-
-
+> I see that try_set_pending_sigkill in the patch now.
 >
-> About the steps to reproduce it, we're using the current KernelCI
-> tools (kci_build) to generate the kernel. To actually launch the
-> tests I'm submitting jobs to Collabora's LAVA lab, which is
-> something that isn't available to external users, so it might be
-> a bit hard for you to reproduce the exact environment from the
-> original test. If you need to test something, I can do it for
-> you.
+> That try_set_pending_sigkill just keeps the process from reporting
+> that it has exited, and extend the process exit indefinitely.
+>
+> SIGNAL_GROUP_EXIT has already been set, so the KILL signal was
+> already delivered and the process is exiting.
 
-Shreeya mentioned upthread that `qemu_arm-virt-gicv3-uefi` was
-failing, so I assume others should be able to repro in qemu. I'd guess
-that LAVA lets you have VMs adjacent to physical hardware.  Having the
-qemu command line, kernel config, and perhaps the initramfs are going
-to be the three most useful things for any similar bug report.
---=20
-Thanks,
-~Nick Desaulniers
+Agreed, that is why I said I don't think try_set_pending_sigkill() is
+a good idea.
+
+And again, the same is true for the threads created by
+create_io_thread(). get_signal() from io_uring/ can dequeue a pending
+SIGKILL and return, but that is all.
+
+> >> For clarity that sigaddset(&t->pending.signal, SIGKILL);  Really isn't
+> >> setting SIGKILL pending,
+> >
+> > Hmm. it does? Nevermind.
+>
+> The point is that what try_set_pending_sigkill in the patch is doing is
+> keeping the "you are dead exit now" flag, from being set.
+>
+> That flag is what fatal_signal_pending always tests, because we can only
+> know if a fatal signal is pending if we have performed short circuit
+> delivery on the signal.
+>
+> The result is the effects of the change are mostly what people expect.
+> The difference the semantics being changed aren't what people think they
+> are.
+>
+> AKA process exit is being ignored for the thread, not that SIGKILL is
+> being blocked.
+
+Sorry, I don't understand. I just tried to say that
+sigaddset(&t->pending.signal, SIGKILL) really sets SIGKILL pending.
+Nevermind.
+
+> > Although I never understood this logic.
+
+I meant I never really liked how io-threads play with signals,
+
+> I can't even understand the usage
+> > of lower_32_bits() in create_io_thread().
+>
+> As far as I can tell lower_32_bits(flags) is just defensive programming
+
+Cough. but this is ugly. Or I missed something.
+
+> or have just populated .flags directly.
+
+Exactly,
+
+> Then .exit_signal
+> could have been set to 0.
+
+Exactly.
+
+-------------------------------------------------------------------------------
+OK. It doesn't matter. I tried to read the whole thread and got lost.
+
+IIUC, Mike is going to send the next version? So I think we can delay
+the further discussions until then.
+
+Oleg.
+
