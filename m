@@ -1,118 +1,257 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 764D418B0D
-	for <regressions@lists.linux.dev>; Wed, 17 May 2023 13:17:07 +0000 (UTC)
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-64ab2a37812so12993489b3a.1
-        for <regressions@lists.linux.dev>; Wed, 17 May 2023 06:17:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684329427; x=1686921427;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=yHXuyHwVCeuY27Dn1Z0at52ryyIy4L1nPjIskZAszmI=;
-        b=dUOMQp99ITY+BLsYtUfBUox35t4cHq8L99aLU4kEb/muIhogRXPxriKIy3bGhM2cIk
-         Qm5vHpgfi8JzuSS7TXFXzvIqNHoiDNg8ykl4RxdhyNw2/95P5OOZ3XaaaYRmaXr+9qhP
-         eyQaDeiUK+M30Y/rP999YAu1c8iQZ5pjqwpQ9JE7ugH7Nbg1YITtikepM3Qp1WTRdCnU
-         1253YWL3lLBG1gZt2okIuiR8zJZWO/lEQu4rvuuCv+tzNM2FDnmT12ftVQ4uGF9aNNuf
-         Zg2/0sxkU0fIXqL80dbr/59DUAxpaUJKK8K5iNjoNMj7t2IuJkYzHLjjjQr7KYO84X96
-         XeKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684329427; x=1686921427;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yHXuyHwVCeuY27Dn1Z0at52ryyIy4L1nPjIskZAszmI=;
-        b=O7h64MhsBcg8IXaYxAaLl6LYW3eOjdwnblrzYsxWgeNPiXP463rB9x1pJNT7RyYFX8
-         hr7cVTNnlbdRBFQ2E2dRg5rGrHiLfKpTPbi65HxVhACX01vduDzm1Orza2va07bCFBma
-         pJyE5wuveoJ1qBBAjdz5kfvHaoDtoNPM+SRrbxPzOhHvQk8DNsumb1ihyVxVD/IMPAnd
-         rzzvRwyHU7CE0rUmlZc/zFsGCx887ckcaquhFM7EKicuRC8AW5bpM3duWBqWL+T6rzgx
-         KJhVxPNcwKfHvPnkPepIRJisiNfQXU5ATRCHCf+W13HWyeTkzFORGYF7pDif/ty5xrq9
-         cndw==
-X-Gm-Message-State: AC+VfDwhbJLs/oy6zL0SUo8OJHmEuRzjrFShec9dVhrg77S3TMjIhFXS
-	p42zGGdIgDcnllkOpidzdII=
-X-Google-Smtp-Source: ACHHUZ53Bt8k3To/ZCJUCFRY1gJ/yj1dblrLK/SwggOMj6JCejIVpvqNUPmQiL1F96xkVOy3qaQmXw==
-X-Received: by 2002:a17:903:11c6:b0:1aa:d235:6dd4 with SMTP id q6-20020a17090311c600b001aad2356dd4mr2718253plh.19.1684329426721;
-        Wed, 17 May 2023 06:17:06 -0700 (PDT)
-Received: from debian.me (subs28-116-206-12-43.three.co.id. [116.206.12.43])
-        by smtp.gmail.com with ESMTPSA id o18-20020a17090aeb9200b0024decfb1ec2sm1527675pjy.30.2023.05.17.06.17.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 May 2023 06:17:06 -0700 (PDT)
-Received: by debian.me (Postfix, from userid 1000)
-	id 37E13104714; Wed, 17 May 2023 20:17:03 +0700 (WIB)
-Date: Wed, 17 May 2023 20:17:02 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Linux regressions mailing list <regressions@lists.linux.dev>,
-	Filipe =?utf-8?B?TGHDrW5z?= <lains@riseup.net>,
-	Bastien Nocera <hadess@hadess.net>, Jiri Kosina <jikos@kernel.org>,
-	Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc: Linux Input Devices <linux-input@vger.kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>, guy.b@bluewin.ch,
-	poncho@spahan.ch, Bastien Nocera <hadess@hadess.net>
-Subject: Re: [regression] Since kernel 6.3.1 logitech unify receiver not
- working properly
-Message-ID: <ZGTTznb+zal7XRkv@debian.me>
-References: <9b987585-0834-bb8c-3414-283c29f3f2ab@leemhuis.info>
- <bec024d5-4088-00ae-f7b5-7188868b1707@leemhuis.info>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C4453FFB
+	for <regressions@lists.linux.dev>; Wed, 17 May 2023 15:16:00 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1pzIsS-0007mi-By; Wed, 17 May 2023 17:15:44 +0200
+Message-ID: <48deb3fa-1784-a08d-aa8c-93ccf63a4aba@leemhuis.info>
+Date: Wed, 17 May 2023 17:15:43 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="MBlPoFm2IDF6Uk9n"
-Content-Disposition: inline
-In-Reply-To: <bec024d5-4088-00ae-f7b5-7188868b1707@leemhuis.info>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH] drm/probe_helper: fix the warning reported when calling
+ drm_kms_helper_poll_disable during suspend
+Content-Language: en-US, de-DE
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Janne Grunau <j@jannau.net>, maarten.lankhorst@linux.intel.com,
+ mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com, daniel@ffwll.ch,
+ neil.armstrong@linaro.org, tony.luck@intel.com, keescook@chromium.org,
+ linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ gpiccoli@igalia.com, linux-hardening@vger.kernel.org,
+ laurentiu.palcu@oss.nxp.com, regressions@lists.linux.dev,
+ zongmin zhou <zhouzongmin@kylinos.cn>
+References: <20230328023129.3596968-1-zhouzongmin@kylinos.cn>
+ <20230420200148.GD3280@jannau.net>
+ <CAA8EJpoK3yv3E==bJuDoQhsW2Q1LdqKakJgdZx6S=ec-CvyGyw@mail.gmail.com>
+ <1682386644754589.204.seg@mailgw>
+ <1186d62a5fe7f2aa6e06f06a3dc7605c0072f1eb.camel@kylinos.cn>
+ <CAA8EJppmUtuhAF+VHPh3Q8tNYp1m4T6P7dZ0wYZ8Vzwo0DF6cg@mail.gmail.com>
+ <6599319fea8ed1e3d6968e5b986661f0cf175902.camel@kylinos.cn>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <6599319fea8ed1e3d6968e5b986661f0cf175902.camel@kylinos.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1684336560;9bded850;
+X-HE-SMSGID: 1pzIsS-0007mi-By
 
+Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
+for once, to make this easily accessible to everyone.
 
---MBlPoFm2IDF6Uk9n
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Dmitry, was any progress made to address this regression? Doesn't look
+like it, but I strongly suspect I'm missing something, as I'm not really
+sure if I properly understood this thread. It sounded a bit like
+a4e771729a51 should be reverted for now until all
+drm_kms_helper_poll_disable() calls have been verified. Is that right?
+Or did somebody already verify and fix all of them with bugs?
 
-On Thu, May 11, 2023 at 01:58:43PM +0200, Thorsten Leemhuis wrote:
-> Hi, Thorsten here, the Linux kernel's regression tracker.
->=20
-> On 08.05.23 11:55, Linux regression tracking (Thorsten Leemhuis) wrote:
-> > Hi, Thorsten here, the Linux kernel's regression tracker.
-> >=20
-> > I noticed a regression report in bugzilla.kernel.org. As many (most?)
-> > kernel developers don't keep an eye on it, I decided to forward it by m=
-ail.
-> >=20
-> > Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=3D217412 :
->=20
-> TWIMC: a few other users (three or four iirc) showed up in that ticket
-> and reported problems with the receiver, albeit the symptoms are not
-> exactly the same for all of them, so there might be more than one problem.
->=20
-> I'll try to motivate the affected users to perform a bisection. But
-> would be great if those with more knowledge about this code could
-> briefly look into the ticket, maybe the details the users shared allows
-> one of you to guess what causes this.
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
 
-Hi Thorsten,
+#regzbot poke
 
-Another reporter in the same bug ticket has already pinned down the
-culprit to 586e8fede7953b ("HID: logitech-hidpp: Retry commands when device
-is busy"). I'm now updating regzbot entry (and Cc'ing the culprit author):
-
-#regzbot introduced: 586e8fede7953b
-
-Thanks.
-
---=20
-An old man doll... just what I always wanted! - Clara
-
---MBlPoFm2IDF6Uk9n
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZGTTzgAKCRD2uYlJVVFO
-o8v/AQDMzxXPL0aJTjJvzDxxNi7DhL90709+agUP7k6Ys1BHdwEA8KY+RvcY9h4G
-b9R7HSqlbCmnbX1nhs9j/8Zq4ghLzA0=
-=uvie
------END PGP SIGNATURE-----
-
---MBlPoFm2IDF6Uk9n--
+On 28.04.23 03:17, zongmin zhou wrote:
+> On Wed, 2023-04-26 at 16:10 +0300, Dmitry Baryshkov wrote:
+>> On Wed, 26 Apr 2023 at 12:09, zongmin zhou <zhouzongmin@kylinos.cn>
+>> wrote:
+>>> On Sun, 2023-04-23 at 22:51 +0200, Janne Grunau wrote:
+>>>> On 2023-04-20 23:07:01 +0300, Dmitry Baryshkov wrote:
+>>>>> On Thu, 20 Apr 2023 at 23:01, Janne Grunau <j@jannau.net>
+>>>>> wrote:
+>>>>>>
+>>>>>> On 2023-03-28 10:31:29 +0800, Zongmin Zhou wrote:
+>>>>>>> When drivers call drm_kms_helper_poll_disable from
+>>>>>>> their device suspend implementation without enabled output
+>>>>>>> polling before,
+>>>>>>> following warning will be reported,due to work->func not be
+>>>>>>> initialized:
+>>>>>>
+>>>>>> we see the same warning with the wpork in progress kms driver
+>>>>>> for
+>>>>>> apple
+>>>>>> silicon SoCs. The connectors do not need to polled so the
+>>>>>> driver
+>>>>>> never
+>>>>>> calls drm_kms_helper_poll_init().
+>>>>>>
+>>>>>>> [   55.141361] WARNING: CPU: 3 PID: 372 at
+>>>>>>> kernel/workqueue.c:3066 __flush_work+0x22f/0x240
+>>>>>>> [   55.141382] Modules linked in: nls_iso8859_1
+>>>>>>> snd_hda_codec_generic ledtrig_audio snd_hda_intel
+>>>>>>> snd_intel_dspcfg snd_intel_sdw_acpi snd_hda_codec
+>>>>>>> snd_hda_core
+>>>>>>> snd_hwdep snd_pcm snd_seq_midi snd_seq_midi_event
+>>>>>>> snd_rawmidi
+>>>>>>> snd_seq intel_rapl_msr intel_rapl_common bochs
+>>>>>>> drm_vram_helper
+>>>>>>> drm_ttm_helper snd_seq_device nfit ttm crct10dif_pclmul
+>>>>>>> snd_timer ghash_clmulni_intel binfmt_misc sha512_ssse3
+>>>>>>> aesni_intel drm_kms_helper joydev input_leds syscopyarea
+>>>>>>> crypto_simd snd cryptd sysfillrect sysimgblt mac_hid
+>>>>>>> serio_raw
+>>>>>>> soundcore qemu_fw_cfg sch_fq_codel msr parport_pc ppdev lp
+>>>>>>> parport drm ramoops reed_solomon pstore_blk pstore_zone
+>>>>>>> efi_pstore virtio_rng ip_tables x_tables autofs4
+>>>>>>> hid_generic
+>>>>>>> usbhid hid ahci virtio_net i2c_i801 crc32_pclmul psmouse
+>>>>>>> virtio_scsi libahci i2c_smbus lpc_ich xhci_pci net_failover
+>>>>>>> virtio_blk xhci_pci_renesas failover
+>>>>>>> [   55.141430] CPU: 3 PID: 372 Comm: kworker/u16:9 Not
+>>>>>>> tainted
+>>>>>>> 6.2.0-rc6+ #16
+>>>>>>> [   55.141433] Hardware name: QEMU Standard PC (Q35 + ICH9,
+>>>>>>> 2009), BIOS rel-1.12.1-0-ga5cab58e9a3f-prebuilt.qemu.org
+>>>>>>> 04/01/2014
+>>>>>>> [   55.141435] Workqueue: events_unbound async_run_entry_fn
+>>>>>>> [   55.141441] RIP: 0010:__flush_work+0x22f/0x240
+>>>>>>> [   55.141444] Code: 8b 43 28 48 8b 53 30 89 c1 e9 f9 fe ff
+>>>>>>> ff
+>>>>>>> 4c 89 f7 e8 b5 95 d9 00 e8 00 53 08 00 45 31 ff e9 11 ff ff
+>>>>>>> ff
+>>>>>>> 0f 0b e9 0a ff ff ff <0f> 0b 45 31 ff e9 00 ff ff ff e8 e2
+>>>>>>> 54
+>>>>>>> d8 00 66 90 90 90 90 90 90
+>>>>>>> [   55.141446] RSP: 0018:ff59221940833c18 EFLAGS: 00010246
+>>>>>>> [   55.141449] RAX: 0000000000000000 RBX: 0000000000000000
+>>>>>>> RCX:
+>>>>>>> ffffffff9b72bcbe
+>>>>>>> [   55.141450] RDX: 0000000000000001 RSI: 0000000000000001
+>>>>>>> RDI:
+>>>>>>> ff3ea01e4265e330
+>>>>>>> [   55.141451] RBP: ff59221940833c90 R08: 0000000000000000
+>>>>>>> R09:
+>>>>>>> 8080808080808080
+>>>>>>> [   55.141453] R10: ff3ea01e42b3caf4 R11: 000000000000000f
+>>>>>>> R12:
+>>>>>>> ff3ea01e4265e330
+>>>>>>> [   55.141454] R13: 0000000000000001 R14: ff3ea01e505e5e80
+>>>>>>> R15:
+>>>>>>> 0000000000000001
+>>>>>>> [   55.141455] FS:  0000000000000000(0000)
+>>>>>>> GS:ff3ea01fb7cc0000(0000) knlGS:0000000000000000
+>>>>>>> [   55.141456] CS:  0010 DS: 0000 ES: 0000 CR0:
+>>>>>>> 0000000080050033
+>>>>>>> [   55.141458] CR2: 0000563543ad1546 CR3: 000000010ee82005
+>>>>>>> CR4:
+>>>>>>> 0000000000771ee0
+>>>>>>> [   55.141464] DR0: 0000000000000000 DR1: 0000000000000000
+>>>>>>> DR2:
+>>>>>>> 0000000000000000
+>>>>>>> [   55.141465] DR3: 0000000000000000 DR6: 00000000fffe0ff0
+>>>>>>> DR7:
+>>>>>>> 0000000000000400
+>>>>>>> [   55.141466] PKRU: 55555554
+>>>>>>> [   55.141467] Call Trace:
+>>>>>>> [   55.141469]  <TASK>
+>>>>>>> [   55.141472]  ? pcie_wait_cmd+0xdf/0x220
+>>>>>>> [   55.141478]  ? mptcp_seq_show+0xe0/0x180
+>>>>>>> [   55.141484]  __cancel_work_timer+0x124/0x1b0
+>>>>>>> [   55.141487]  cancel_delayed_work_sync+0x17/0x20
+>>>>>>> [   55.141490]  drm_kms_helper_poll_disable+0x26/0x40
+>>>>>>> [drm_kms_helper]
+>>>>>>> [   55.141516]  drm_mode_config_helper_suspend+0x25/0x90
+>>>>>>> [drm_kms_helper]
+>>>>>>> [   55.141531]  ? __pm_runtime_resume+0x64/0x90
+>>>>>>> [   55.141536]  bochs_pm_suspend+0x16/0x20 [bochs]
+>>>>>>> [   55.141540]  pci_pm_suspend+0x8b/0x1b0
+>>>>>>> [   55.141545]  ? __pfx_pci_pm_suspend+0x10/0x10
+>>>>>>> [   55.141547]  dpm_run_callback+0x4c/0x160
+>>>>>>> [   55.141550]  __device_suspend+0x14c/0x4c0
+>>>>>>> [   55.141553]  async_suspend+0x24/0xa0
+>>>>>>> [   55.141555]  async_run_entry_fn+0x34/0x120
+>>>>>>> [   55.141557]  process_one_work+0x21a/0x3f0
+>>>>>>> [   55.141560]  worker_thread+0x4e/0x3c0
+>>>>>>> [   55.141563]  ? __pfx_worker_thread+0x10/0x10
+>>>>>>> [   55.141565]  kthread+0xf2/0x120
+>>>>>>> [   55.141568]  ? __pfx_kthread+0x10/0x10
+>>>>>>> [   55.141570]  ret_from_fork+0x29/0x50
+>>>>>>> [   55.141575]  </TASK>
+>>>>>>> [   55.141575] ---[ end trace 0000000000000000 ]---
+>>>>>>>
+>>>>>>> Fixes: a4e771729a51 ("drm/probe_helper: sort out
+>>>>>>> poll_running
+>>>>>>> vs poll_enabled")
+>>>>>>> Signed-off-by: Zongmin Zhou<zhouzongmin@kylinos.cn>
+>>>>>>> ---
+>>>>>>>  drivers/gpu/drm/drm_probe_helper.c | 3 ++-
+>>>>>>>  1 file changed, 2 insertions(+), 1 deletion(-)
+>>>>>>>
+>>>>>>> diff --git a/drivers/gpu/drm/drm_probe_helper.c
+>>>>>>> b/drivers/gpu/drm/drm_probe_helper.c
+>>>>>>> index 8127be134c39..ac72b18e2257 100644
+>>>>>>> --- a/drivers/gpu/drm/drm_probe_helper.c
+>>>>>>> +++ b/drivers/gpu/drm/drm_probe_helper.c
+>>>>>>> @@ -855,7 +855,8 @@ void drm_kms_helper_poll_disable(struct
+>>>>>>> drm_device *dev)
+>>>>>>>       if (dev->mode_config.poll_running)
+>>>>>>>               drm_kms_helper_disable_hpd(dev);
+>>>>>>>
+>>>>>>> -     cancel_delayed_work_sync(&dev-
+>>>>>>>> mode_config.output_poll_work);
+>>>>>>> +     if (dev->mode_config.poll_enabled)
+>>>>>>> +             cancel_delayed_work_sync(&dev-
+>>>>>>>> mode_config.output_poll_work);
+>>>>>>
+>>>>>> Checking for dev->mode_config.poll_enabled at the start of
+>>>>>> the
+>>>>>> function
+>>>>>> and return early if it is not true looks more in style with
+>>>>>> the
+>>>>>> rest of
+>>>>>> drm_probe_helper.c.
+>>>>>
+>>>>> I think it is an error to call drm_kms_helper_poll_disable() if
+>>>>> polling was not initialized. So, in my opinion the fix should
+>>>>> go to
+>>>>> the drm_mode_config_helper_suspend() / _resume() instead.
+>>>>> Please
+>>>>> add a
+>>>>> guard there using dev->mode_config.poll_enabled.
+>>>>
+>>>> While I tend to agree to the sentiment I do not think this is the
+>>>> correct fix in this situation. drm_kms_helper_poll_disable had
+>>>> the
+>>>> check since at least 2014. a4e771729a51 is a regression. If we
+>>>> want
+>>>> to
+>>>> change the behavior it should be done explicitly and after
+>>>> verifying
+>>>> all
+>>>> drm_kms_helper_poll_disable() calls.
+>>>>
+>>>> #regzbot ^introduced a4e771729a51
+>>>>
+>>>> ciao
+>>>> Janne
+>>>
+>>> Dear Janne:
+>>>
+>>> I agree with you like I mentioned on last letter.
+>>> Thanks for your time.
+>>>
+>>>
+>>> Dear Dmitry:
+>>>
+>>> Is there anything else I can do?
+>>> Looking forward to your reply.
+>>
+>> If it is a common consensus, I'm fine with your approach.
+>>
+> Dear Dmitry:
+> 
+> Ok.Thanks for your reply.
+> 
+> Best regards!
+> 
+> 
