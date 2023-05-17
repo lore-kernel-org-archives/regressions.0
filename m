@@ -1,97 +1,118 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0850C168B4
-	for <regressions@lists.linux.dev>; Wed, 17 May 2023 10:57:03 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pzEq4-0005Ph-I3; Wed, 17 May 2023 12:57:00 +0200
-Message-ID: <53213ba8-be58-0f97-8a06-3c9380bdff53@leemhuis.info>
-Date: Wed, 17 May 2023 12:56:59 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 764D418B0D
+	for <regressions@lists.linux.dev>; Wed, 17 May 2023 13:17:07 +0000 (UTC)
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-64ab2a37812so12993489b3a.1
+        for <regressions@lists.linux.dev>; Wed, 17 May 2023 06:17:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1684329427; x=1686921427;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=yHXuyHwVCeuY27Dn1Z0at52ryyIy4L1nPjIskZAszmI=;
+        b=dUOMQp99ITY+BLsYtUfBUox35t4cHq8L99aLU4kEb/muIhogRXPxriKIy3bGhM2cIk
+         Qm5vHpgfi8JzuSS7TXFXzvIqNHoiDNg8ykl4RxdhyNw2/95P5OOZ3XaaaYRmaXr+9qhP
+         eyQaDeiUK+M30Y/rP999YAu1c8iQZ5pjqwpQ9JE7ugH7Nbg1YITtikepM3Qp1WTRdCnU
+         1253YWL3lLBG1gZt2okIuiR8zJZWO/lEQu4rvuuCv+tzNM2FDnmT12ftVQ4uGF9aNNuf
+         Zg2/0sxkU0fIXqL80dbr/59DUAxpaUJKK8K5iNjoNMj7t2IuJkYzHLjjjQr7KYO84X96
+         XeKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684329427; x=1686921427;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yHXuyHwVCeuY27Dn1Z0at52ryyIy4L1nPjIskZAszmI=;
+        b=O7h64MhsBcg8IXaYxAaLl6LYW3eOjdwnblrzYsxWgeNPiXP463rB9x1pJNT7RyYFX8
+         hr7cVTNnlbdRBFQ2E2dRg5rGrHiLfKpTPbi65HxVhACX01vduDzm1Orza2va07bCFBma
+         pJyE5wuveoJ1qBBAjdz5kfvHaoDtoNPM+SRrbxPzOhHvQk8DNsumb1ihyVxVD/IMPAnd
+         rzzvRwyHU7CE0rUmlZc/zFsGCx887ckcaquhFM7EKicuRC8AW5bpM3duWBqWL+T6rzgx
+         KJhVxPNcwKfHvPnkPepIRJisiNfQXU5ATRCHCf+W13HWyeTkzFORGYF7pDif/ty5xrq9
+         cndw==
+X-Gm-Message-State: AC+VfDwhbJLs/oy6zL0SUo8OJHmEuRzjrFShec9dVhrg77S3TMjIhFXS
+	p42zGGdIgDcnllkOpidzdII=
+X-Google-Smtp-Source: ACHHUZ53Bt8k3To/ZCJUCFRY1gJ/yj1dblrLK/SwggOMj6JCejIVpvqNUPmQiL1F96xkVOy3qaQmXw==
+X-Received: by 2002:a17:903:11c6:b0:1aa:d235:6dd4 with SMTP id q6-20020a17090311c600b001aad2356dd4mr2718253plh.19.1684329426721;
+        Wed, 17 May 2023 06:17:06 -0700 (PDT)
+Received: from debian.me (subs28-116-206-12-43.three.co.id. [116.206.12.43])
+        by smtp.gmail.com with ESMTPSA id o18-20020a17090aeb9200b0024decfb1ec2sm1527675pjy.30.2023.05.17.06.17.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 May 2023 06:17:06 -0700 (PDT)
+Received: by debian.me (Postfix, from userid 1000)
+	id 37E13104714; Wed, 17 May 2023 20:17:03 +0700 (WIB)
+Date: Wed, 17 May 2023 20:17:02 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Linux regressions mailing list <regressions@lists.linux.dev>,
+	Filipe =?utf-8?B?TGHDrW5z?= <lains@riseup.net>,
+	Bastien Nocera <hadess@hadess.net>, Jiri Kosina <jikos@kernel.org>,
+	Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc: Linux Input Devices <linux-input@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>, guy.b@bluewin.ch,
+	poncho@spahan.ch, Bastien Nocera <hadess@hadess.net>
+Subject: Re: [regression] Since kernel 6.3.1 logitech unify receiver not
+ working properly
+Message-ID: <ZGTTznb+zal7XRkv@debian.me>
+References: <9b987585-0834-bb8c-3414-283c29f3f2ab@leemhuis.info>
+ <bec024d5-4088-00ae-f7b5-7188868b1707@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH v4 1/2] usb: gadget: udc: core: Invoke usb_gadget_connect
- only when started
-Content-Language: en-US, de-DE
-To: Francesco Dolcini <francesco@dolcini.it>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Alistair <alistair@alistair23.me>,
- Badhri Jagan Sridharan <badhri@google.com>, gregkh@linuxfoundation.org,
- stern@rowland.harvard.edu, colin.i.king@gmail.com, xuetao09@huawei.com,
- quic_eserrao@quicinc.com, water.zhangjiantao@huawei.com,
- peter.chen@freescale.com, balbi@ti.com, linux-usb@vger.kernel.org,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org
-References: <20230407030741.3163220-1-badhri@google.com>
- <0cf8c588b701d7cf25ffe1a9217b81716e6a5c51.camel@alistair23.me>
- <1ac16f0a-3cca-40ca-c444-82719f85a24c@leemhuis.info>
- <ZGStr1oZvmJ0XzSu@francesco-nb.int.toradex.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <ZGStr1oZvmJ0XzSu@francesco-nb.int.toradex.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1684321024;5471cada;
-X-HE-SMSGID: 1pzEq4-0005Ph-I3
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="MBlPoFm2IDF6Uk9n"
+Content-Disposition: inline
+In-Reply-To: <bec024d5-4088-00ae-f7b5-7188868b1707@leemhuis.info>
 
-On 17.05.23 12:35, Francesco Dolcini wrote:
-> On Wed, May 17, 2023 at 12:23:39PM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
->> [CCing Francesco Dolcini; and the regression list too, as it should be
->> in the loop for regressions:
->> https://docs.kernel.org/admin-guide/reporting-regressions.html]
->>
->> On 16.05.23 14:53, Alistair wrote:
->>> On Fri, 2023-04-07 at 03:07 +0000, Badhri Jagan Sridharan wrote:
->>>> usb_udc_connect_control does not check to see if the udc has already
->>>> been started. This causes gadget->ops->pullup to be called through
->>>> usb_gadget_connect when invoked from usb_udc_vbus_handler even before
->>>> usb_gadget_udc_start is called. Guard this by checking for udc-
->>>>> started
->>>> in usb_udc_connect_control before invoking usb_gadget_connect.
->>> [...]
->>>> Cc: stable@vger.kernel.org
->>>> Fixes: 628ef0d273a6 ("usb: udc: add usb_udc_vbus_handler")
->>>> Signed-off-by: Badhri Jagan Sridharan <badhri@google.com>
->>>
->>> This patch causes a kernel hang when trying to boot with the
->>> usb/chipidea/udc.c driver.
->>>
->>> The call stack below causes the hang:
->>>
->>>  - gadget_bind_driver(struct device *dev)
->>>     - mutex_lock(&udc->connect_lock);
->>>     - usb_gadget_udc_start_locked(struct usb_udc *udc)
->>>         - udc->gadget->ops->udc_start(udc->gadget, udc->driver)
->>>
->>> At which point we are calling ci_udc_start(..), but with the
->>> connect_lock mutex locked.
->>>
->>> ci_udc_start() then calls usb_udc_vbus_handler() which tries to lock
->>> the connect_lock while it's already locked. Resulting in a kernel hang.
->>>
->>> Reverting this patch fixes the hang.
->>
->> Not my area of expertise, but I guess it might be the same error as this
->> one:
->>
->> https://lore.kernel.org/all/ZF4BvgsOyoKxdPFF@francesco-nb.int.toradex.com/
->>
->> Francesco sent a revert on Friday, but no reaction from Badhri Jagan
->> Sridharan or Greg yet afaics.
->>
->> https://lore.kernel.org/all/20230512131435.205464-1-francesco@dolcini.it/
-> 
-> Revert patches were applied and are in linux-next. I expect those to
-> land in Linus tree with the next pull request from Greg.
 
-Ha, sorry, I missed that, as I only looked at lore. Should have looked
-in my own regression tracking, there it's marked as "fix incoming", as
-regzbot noticed the fix in next...
+--MBlPoFm2IDF6Uk9n
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Ciao, Thorsten
+On Thu, May 11, 2023 at 01:58:43PM +0200, Thorsten Leemhuis wrote:
+> Hi, Thorsten here, the Linux kernel's regression tracker.
+>=20
+> On 08.05.23 11:55, Linux regression tracking (Thorsten Leemhuis) wrote:
+> > Hi, Thorsten here, the Linux kernel's regression tracker.
+> >=20
+> > I noticed a regression report in bugzilla.kernel.org. As many (most?)
+> > kernel developers don't keep an eye on it, I decided to forward it by m=
+ail.
+> >=20
+> > Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=3D217412 :
+>=20
+> TWIMC: a few other users (three or four iirc) showed up in that ticket
+> and reported problems with the receiver, albeit the symptoms are not
+> exactly the same for all of them, so there might be more than one problem.
+>=20
+> I'll try to motivate the affected users to perform a bisection. But
+> would be great if those with more knowledge about this code could
+> briefly look into the ticket, maybe the details the users shared allows
+> one of you to guess what causes this.
+
+Hi Thorsten,
+
+Another reporter in the same bug ticket has already pinned down the
+culprit to 586e8fede7953b ("HID: logitech-hidpp: Retry commands when device
+is busy"). I'm now updating regzbot entry (and Cc'ing the culprit author):
+
+#regzbot introduced: 586e8fede7953b
+
+Thanks.
+
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--MBlPoFm2IDF6Uk9n
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZGTTzgAKCRD2uYlJVVFO
+o8v/AQDMzxXPL0aJTjJvzDxxNi7DhL90709+agUP7k6Ys1BHdwEA8KY+RvcY9h4G
+b9R7HSqlbCmnbX1nhs9j/8Zq4ghLzA0=
+=uvie
+-----END PGP SIGNATURE-----
+
+--MBlPoFm2IDF6Uk9n--
