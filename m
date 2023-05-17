@@ -1,86 +1,97 @@
-Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD8782CA6
-	for <regressions@lists.linux.dev>; Wed, 17 May 2023 10:36:10 +0000 (UTC)
-Received: from francesco-nb.int.toradex.com (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
-	by mail11.truemail.it (Postfix) with ESMTPA id 03C5420B66;
-	Wed, 17 May 2023 12:36:00 +0200 (CEST)
-Date: Wed, 17 May 2023 12:35:57 +0200
-From: Francesco Dolcini <francesco@dolcini.it>
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Alistair <alistair@alistair23.me>,
-	Badhri Jagan Sridharan <badhri@google.com>,
-	gregkh@linuxfoundation.org, stern@rowland.harvard.edu,
-	colin.i.king@gmail.com, xuetao09@huawei.com,
-	quic_eserrao@quicinc.com, water.zhangjiantao@huawei.com,
-	peter.chen@freescale.com, balbi@ti.com, linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-	Francesco Dolcini <francesco@dolcini.it>
-Subject: Re: [PATCH v4 1/2] usb: gadget: udc: core: Invoke usb_gadget_connect
- only when started
-Message-ID: <ZGStr1oZvmJ0XzSu@francesco-nb.int.toradex.com>
-References: <20230407030741.3163220-1-badhri@google.com>
- <0cf8c588b701d7cf25ffe1a9217b81716e6a5c51.camel@alistair23.me>
- <1ac16f0a-3cca-40ca-c444-82719f85a24c@leemhuis.info>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0850C168B4
+	for <regressions@lists.linux.dev>; Wed, 17 May 2023 10:57:03 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1pzEq4-0005Ph-I3; Wed, 17 May 2023 12:57:00 +0200
+Message-ID: <53213ba8-be58-0f97-8a06-3c9380bdff53@leemhuis.info>
+Date: Wed, 17 May 2023 12:56:59 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1ac16f0a-3cca-40ca-c444-82719f85a24c@leemhuis.info>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH v4 1/2] usb: gadget: udc: core: Invoke usb_gadget_connect
+ only when started
+Content-Language: en-US, de-DE
+To: Francesco Dolcini <francesco@dolcini.it>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Alistair <alistair@alistair23.me>,
+ Badhri Jagan Sridharan <badhri@google.com>, gregkh@linuxfoundation.org,
+ stern@rowland.harvard.edu, colin.i.king@gmail.com, xuetao09@huawei.com,
+ quic_eserrao@quicinc.com, water.zhangjiantao@huawei.com,
+ peter.chen@freescale.com, balbi@ti.com, linux-usb@vger.kernel.org,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org
+References: <20230407030741.3163220-1-badhri@google.com>
+ <0cf8c588b701d7cf25ffe1a9217b81716e6a5c51.camel@alistair23.me>
+ <1ac16f0a-3cca-40ca-c444-82719f85a24c@leemhuis.info>
+ <ZGStr1oZvmJ0XzSu@francesco-nb.int.toradex.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <ZGStr1oZvmJ0XzSu@francesco-nb.int.toradex.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1684321024;5471cada;
+X-HE-SMSGID: 1pzEq4-0005Ph-I3
 
-On Wed, May 17, 2023 at 12:23:39PM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
-> [CCing Francesco Dolcini; and the regression list too, as it should be
-> in the loop for regressions:
-> https://docs.kernel.org/admin-guide/reporting-regressions.html]
+On 17.05.23 12:35, Francesco Dolcini wrote:
+> On Wed, May 17, 2023 at 12:23:39PM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
+>> [CCing Francesco Dolcini; and the regression list too, as it should be
+>> in the loop for regressions:
+>> https://docs.kernel.org/admin-guide/reporting-regressions.html]
+>>
+>> On 16.05.23 14:53, Alistair wrote:
+>>> On Fri, 2023-04-07 at 03:07 +0000, Badhri Jagan Sridharan wrote:
+>>>> usb_udc_connect_control does not check to see if the udc has already
+>>>> been started. This causes gadget->ops->pullup to be called through
+>>>> usb_gadget_connect when invoked from usb_udc_vbus_handler even before
+>>>> usb_gadget_udc_start is called. Guard this by checking for udc-
+>>>>> started
+>>>> in usb_udc_connect_control before invoking usb_gadget_connect.
+>>> [...]
+>>>> Cc: stable@vger.kernel.org
+>>>> Fixes: 628ef0d273a6 ("usb: udc: add usb_udc_vbus_handler")
+>>>> Signed-off-by: Badhri Jagan Sridharan <badhri@google.com>
+>>>
+>>> This patch causes a kernel hang when trying to boot with the
+>>> usb/chipidea/udc.c driver.
+>>>
+>>> The call stack below causes the hang:
+>>>
+>>>  - gadget_bind_driver(struct device *dev)
+>>>     - mutex_lock(&udc->connect_lock);
+>>>     - usb_gadget_udc_start_locked(struct usb_udc *udc)
+>>>         - udc->gadget->ops->udc_start(udc->gadget, udc->driver)
+>>>
+>>> At which point we are calling ci_udc_start(..), but with the
+>>> connect_lock mutex locked.
+>>>
+>>> ci_udc_start() then calls usb_udc_vbus_handler() which tries to lock
+>>> the connect_lock while it's already locked. Resulting in a kernel hang.
+>>>
+>>> Reverting this patch fixes the hang.
+>>
+>> Not my area of expertise, but I guess it might be the same error as this
+>> one:
+>>
+>> https://lore.kernel.org/all/ZF4BvgsOyoKxdPFF@francesco-nb.int.toradex.com/
+>>
+>> Francesco sent a revert on Friday, but no reaction from Badhri Jagan
+>> Sridharan or Greg yet afaics.
+>>
+>> https://lore.kernel.org/all/20230512131435.205464-1-francesco@dolcini.it/
 > 
-> On 16.05.23 14:53, Alistair wrote:
-> > On Fri, 2023-04-07 at 03:07 +0000, Badhri Jagan Sridharan wrote:
-> >> usb_udc_connect_control does not check to see if the udc has already
-> >> been started. This causes gadget->ops->pullup to be called through
-> >> usb_gadget_connect when invoked from usb_udc_vbus_handler even before
-> >> usb_gadget_udc_start is called. Guard this by checking for udc-
-> >>> started
-> >> in usb_udc_connect_control before invoking usb_gadget_connect.
-> > [...]
-> >> Cc: stable@vger.kernel.org
-> >> Fixes: 628ef0d273a6 ("usb: udc: add usb_udc_vbus_handler")
-> >> Signed-off-by: Badhri Jagan Sridharan <badhri@google.com>
-> > 
-> > This patch causes a kernel hang when trying to boot with the
-> > usb/chipidea/udc.c driver.
-> > 
-> > The call stack below causes the hang:
-> > 
-> >  - gadget_bind_driver(struct device *dev)
-> >     - mutex_lock(&udc->connect_lock);
-> >     - usb_gadget_udc_start_locked(struct usb_udc *udc)
-> >         - udc->gadget->ops->udc_start(udc->gadget, udc->driver)
-> > 
-> > At which point we are calling ci_udc_start(..), but with the
-> > connect_lock mutex locked.
-> > 
-> > ci_udc_start() then calls usb_udc_vbus_handler() which tries to lock
-> > the connect_lock while it's already locked. Resulting in a kernel hang.
-> > 
-> > Reverting this patch fixes the hang.
-> 
-> Not my area of expertise, but I guess it might be the same error as this
-> one:
-> 
-> https://lore.kernel.org/all/ZF4BvgsOyoKxdPFF@francesco-nb.int.toradex.com/
-> 
-> Francesco sent a revert on Friday, but no reaction from Badhri Jagan
-> Sridharan or Greg yet afaics.
-> 
-> https://lore.kernel.org/all/20230512131435.205464-1-francesco@dolcini.it/
+> Revert patches were applied and are in linux-next. I expect those to
+> land in Linus tree with the next pull request from Greg.
 
-Revert patches were applied and are in linux-next. I expect those to
-land in Linus tree with the next pull request from Greg.
+Ha, sorry, I missed that, as I only looked at lore. Should have looked
+in my own regression tracking, there it's marked as "fix incoming", as
+regzbot noticed the fix in next...
 
-Francesco
-
+Ciao, Thorsten
