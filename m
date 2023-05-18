@@ -1,135 +1,84 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from nef.ens.fr (nef2.ens.fr [129.199.96.40])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CC361FA4
-	for <regressions@lists.linux.dev>; Thu, 18 May 2023 05:52:00 +0000 (UTC)
-X-SpamFilter-By: ArmorX SpamTrap 5.77 with qID 34I5iEWN1001346, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
-	by rtits2.realtek.com.tw (8.15.2/2.81/5.90) with ESMTPS id 34I5iEWN1001346
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=OK);
-	Thu, 18 May 2023 13:44:14 +0800
-Received: from RTEXMBS06.realtek.com.tw (172.21.6.99) by
- RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.17; Thu, 18 May 2023 13:44:23 +0800
-Received: from RTEXMBS01.realtek.com.tw (172.21.6.94) by
- RTEXMBS06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.34; Thu, 18 May 2023 13:44:23 +0800
-Received: from RTEXMBS01.realtek.com.tw ([fe80::4d7:e49a:674a:598]) by
- RTEXMBS01.realtek.com.tw ([fe80::4d7:e49a:674a:598%5]) with mapi id
- 15.01.2375.007; Thu, 18 May 2023 13:44:23 +0800
-From: Kailang <kailang@realtek.com>
-To: Takashi Iwai <tiwai@suse.de>, "Joseph C. Sible" <josephcsible@gmail.com>
-CC: Bagas Sanjaya <bagasdotme@gmail.com>,
-        "regressions@lists.linux.dev"
-	<regressions@lists.linux.dev>,
-        "perex@perex.cz" <perex@perex.cz>, "tiwai@suse.com" <tiwai@suse.com>,
-        "alsa-devel@alsa-project.org"
-	<alsa-devel@alsa-project.org>
-Subject: RE: Fwd: [Bug 217440] New: ALC236 audio disappears from HP 15z-fc000 on warm boot
-Thread-Topic: Fwd: [Bug 217440] New: ALC236 audio disappears from HP 15z-fc000
- on warm boot
-Thread-Index: AQHZhdSOD7kY6mXBDkGA3ryhp811r69Yu5SAgAASNACAAA22gIAA7n+AgAEJrYCABLe/YA==
-Date: Thu, 18 May 2023 05:44:23 +0000
-Message-ID: <415d4bc84aa74c74af913048f28b42a9@realtek.com>
-References: <bug-217440-225600@https.bugzilla.kernel.org/>
-	<CABpewhE4REgn9RJZduuEU6Z_ijXNeQWnrxO1tg70Gkw=F8qNYg@mail.gmail.com>
-	<ZGB0cVVI7OgaJU6t@debian.me>
-	<CABpewhGJE7-k52j8L2kJ2zKupgp3Ma+LdZazzzV4w1Bgihp7nw@mail.gmail.com>
-	<87cz338ix4.wl-tiwai@suse.de>
-	<CABpewhF01AK4cFPbwYVvKR9yWaO7o-ZE-2+MZjYSUF0BKUdYvw@mail.gmail.com>
- <874jodlnmi.wl-tiwai@suse.de>
-In-Reply-To: <874jodlnmi.wl-tiwai@suse.de>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-originating-ip: [172.22.102.106]
-x-kse-serverinfo: RTEXMBS06.realtek.com.tw, 9
-x-kse-antispam-interceptor-info: fallback
-x-kse-antivirus-interceptor-info: fallback
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 857CE3C39
+	for <regressions@lists.linux.dev>; Thu, 18 May 2023 08:15:15 +0000 (UTC)
+X-ENS-nef-client:   129.199.127.85 ( name = mail.phys.ens.fr )
+Received: from mail.phys.ens.fr (mail.phys.ens.fr [129.199.127.85])
+          by nef.ens.fr (8.14.4/1.01.28121999) with ESMTP id 34I8EVjQ019440
+          ; Thu, 18 May 2023 10:14:31 +0200
+Received: from skaro.localnet (unknown [176.151.100.134])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(Client did not present a certificate)
+	by mail.phys.ens.fr (Postfix) with ESMTPSA id B19771A1A55;
+	Thu, 18 May 2023 10:14:30 +0200 (CEST)
+From: =?ISO-8859-1?Q?=C9ric?= Brunet <eric.brunet@ens.fr>
+To: Ville =?ISO-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
+Cc: stable@vger.kernel.org, regressions@lists.linux.dev,
+        jouni.hogander@intel.com, jani.nikula@intel.com,
+        gregkh@linuxfoundation.org
+Subject: Re: Regression on drm/i915, with bisected commit
+Date: Thu, 18 May 2023 10:14:30 +0200
+Message-ID: <5681706.DvuYhMxLoT@skaro>
+In-Reply-To: <ZGU56n66OAe0DqN3@intel.com>
+References: <3236901.44csPzL39Z@skaro> <ZGU56n66OAe0DqN3@intel.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-KSE-AntiSpam-Interceptor-Info: fallback
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
+X-Rspamd-Queue-Id: B19771A1A55
+X-Spamd-Bar: /
+X-Spamd-Result: default: False [-0.38 / 150.00];
+	 ARC_NA(0.00)[];
+	 R_SPF_NEUTRAL(0.00)[?all];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 MIME_TRACE(0.00)[0:+];
+	 DMARC_NA(0.00)[ens.fr];
+	 RCPT_COUNT_FIVE(0.00)[6];
+	 HFILTER_HELO_IP_A(1.00)[skaro.localnet];
+	 HFILTER_HELO_NORES_A_OR_MX(0.30)[skaro.localnet];
+	 NEURAL_HAM(-0.00)[-1.000,0];
+	 IP_SCORE(-1.76)[ip: (-0.16), ipnet: 176.128.0.0/10(-4.87), asn: 5410(-3.66), country: FR(-0.09)];
+	 RCVD_COUNT_ZERO(0.00)[0];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 R_DKIM_NA(0.00)[];
+	 MID_RHS_NOT_FQDN(0.50)[];
+	 ASN(0.00)[asn:5410, ipnet:176.128.0.0/10, country:FR];
+	 HFILTER_HOSTNAME_UNKNOWN(2.50)[];
+	 BAYES_HAM(-2.92)[99.66%];
+	 ONCE_RECEIVED(0.10)[]
+X-Rspamd-Server: mail
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.4.3 (nef.ens.fr [129.199.96.32]); Thu, 18 May 2023 10:14:31 +0200 (CEST)
+
+Le mercredi 17 mai 2023, 22:32:42 CEST Ville Syrj=E4l=E4 a =E9crit :
+> On Tue, May 16, 2023 at 03:04:53PM +0200, =C9ric Brunet wrote:
+> > Hello all,
+> >=20
+> > I have a HP Elite x360 1049 G9 2-in-1 notebook running fedora 38 with an
+> > Adler Lake intel video card.
+> >=20
+> > After upgrading to kernel 6.2.13 (as packaged by fedora), I started see=
+ing
+> > severe video glitches made of random pixels in a vertical band occupying
+> > about 20% of my screen, on the right. The glitches would happen both wi=
+th
+> > X.org and wayland.
+>=20
+> Please file a bug at https://gitlab.freedesktop.org/drm/intel/issues/new
+> boot with "log_buf_len=3D4M drm.debug=3D0xe" passed to kernel cmdline, and
+> attach the resulting dmesg to the bug.
+
+Thank you for your answer, I have just opened the issue as requested.
+
+https://gitlab.freedesktop.org/drm/intel/-/issues/8480
+
+=C9ric Brunet
 
 
-
-> -----Original Message-----
-> From: Takashi Iwai <tiwai@suse.de>
-> Sent: Monday, May 15, 2023 9:40 PM
-> To: Joseph C. Sible <josephcsible@gmail.com>
-> Cc: Bagas Sanjaya <bagasdotme@gmail.com>; regressions@lists.linux.dev;
-> Kailang <kailang@realtek.com>; perex@perex.cz; tiwai@suse.com;
-> alsa-devel@alsa-project.org
-> Subject: Re: Fwd: [Bug 217440] New: ALC236 audio disappears from HP
-> 15z-fc000 on warm boot
->=20
->=20
-> External mail.
->=20
->=20
->=20
-> On Sun, 14 May 2023 23:48:55 +0200,
-> Joseph C. Sible wrote:
-> >
-> > On 5/14/23, Takashi Iwai wrote:
-> > > The patch changes two places (the change in alc_shutup_pins() and
-> > > alc256_shutup()), and I guess the latter is the culprit.  Could you
-> > > verify that only reverting the latter fixes the problem?
-> >
-> > Yes, only reverting the latter fixes the problem. I just tried a
-> > kernel consisting of 6.3.2 plus the below change, and it works fine:
-> >
-> > --- a/sound/pci/hda/patch_realtek.c
-> > +++ b/sound/pci/hda/patch_realtek.c
-> > @@ -3638,8 +3638,7 @@ static void alc256_shutup(struct hda_codec
-> *codec)
-> >         /* If disable 3k pulldown control for alc257, the Mic
-> > detection will not work correctly
-> >          * when booting with headset plugged. So skip setting it for
-> > the codec alc257
-> >          */
-> > -       if (codec->core.vendor_id !=3D 0x10ec0236 &&
-> > -           codec->core.vendor_id !=3D 0x10ec0257)
-> > +       if (codec->core.vendor_id !=3D 0x10ec0257)
-> >                 alc_update_coef_idx(codec, 0x46, 0, 3 << 12);
-> >
-> >         if (!spec->no_shutup_pins)
->=20
-> OK, thanks for confirmation.
->=20
-> Kailang, could you check this issue?
-
-OK. I will take it a look for these days.
-
-> Judging from the comment there:
->=20
->         /* 3k pull low control for Headset jack. */
->         /* NOTE: call this before clearing the pin, otherwise codec stall=
-s */
->         /* If disable 3k pulldown control for alc257, the Mic detection w=
-ill
-> not work correctly
->          * when booting with headset plugged. So skip setting it for the
-> codec alc257
->          */
->=20
-> ... it seems that the codec got screwed with this setup, which leaded to =
-the
-> non-response at the probe after reboot.
->=20
-> In the worst case, I'll revert that part.
->=20
->=20
-> thanks,
->=20
-> Takashi
->=20
-> ------Please consider the environment before printing this e-mail.
