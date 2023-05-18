@@ -1,118 +1,316 @@
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A15FAD3C
-	for <regressions@lists.linux.dev>; Thu, 18 May 2023 08:54:48 +0000 (UTC)
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-4f14468ef54so2116895e87.0
-        for <regressions@lists.linux.dev>; Thu, 18 May 2023 01:54:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1684400086; x=1686992086;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=BjAvVBk1hRLHZrA8OFaE6F4f4RtrYr9WV2xvjiGYmh4=;
-        b=g32/8heJ3DktSiEENGsRXd/v01cczhkq4W1Yo5mCj/C2Ef4XQ3F8RBjeoC3Cm3DN8S
-         7M/2xNp7FAvmxQ9FOwsLAQ801Rl13p7l+bPmWxjhWSofWnKJJ3RlBpOVsBp6BddReuYe
-         OBgU9Ahs9LpQM2V0pui+DuCGk5FrCpA07QC1eBgCz8eQWG/FCFyQXMTkPMZzR9PjJWE6
-         15dma5h07NttmZepJmV9ilnjYzDM4HmqK543iEqme5pbcZFchnMll0aV+zuPCO8drIv7
-         u+8cRTckWZ3Qsddb3ZEtRBkclqOnus/KX6IqkIqNyes5kdUCnbi1GXgB5K6RLjc+i99A
-         9Z8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684400086; x=1686992086;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=BjAvVBk1hRLHZrA8OFaE6F4f4RtrYr9WV2xvjiGYmh4=;
-        b=hF28Gf4oFKpZU2aPr0XcDY+gMfASEOY+O0j07Xuj5MNHE22HfLhzW3KxVjYs9jImGc
-         bepIO4QDwcI6AUi/ynb+8+3nSIPL+Pa+jywc610CbGuBWiUTXbc6YEzyWPFR8dTSAGo1
-         /3pWyMfgtQSCLLxPNar2V3zwiYYtncmxzX2PJD6gfZZLUHJ8+qrkR1xrFWevP8+lm17m
-         B93hvUW+jsmkRdMR6FYEfT5d66KrH2/ZZhXlHd/F3yRMqWmec388aH8tQ73Y3bSY8IF3
-         tBZWDbBrmj8NTnFJa+g0sPTOxDlp+tGSrTRgrLCaxYznGnOW8MCMIKbgf0pQT1nMFG0R
-         r4Hg==
-X-Gm-Message-State: AC+VfDxdcD7ZbkhsbnSyCpONMfJnnelhP4NYc0H6JdhieWUT1OkU6fRh
-	aSLBtXN95ytMi+V1yH5JREKgXA==
-X-Google-Smtp-Source: ACHHUZ66yUDz9VH5R8zAhzwAIypF9QSua+hRd28G08W56sm7WWljOyDQ3Gn2wHIXgoozj0EISiOr9w==
-X-Received: by 2002:ac2:5dc2:0:b0:4f3:82aa:142d with SMTP id x2-20020ac25dc2000000b004f382aa142dmr1171051lfq.47.1684400086103;
-        Thu, 18 May 2023 01:54:46 -0700 (PDT)
-Received: from ta1.c.googlers.com.com (61.215.228.35.bc.googleusercontent.com. [35.228.215.61])
-        by smtp.gmail.com with ESMTPSA id r4-20020a056512102400b004f24db9248dsm177513lfr.141.2023.05.18.01.54.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 May 2023 01:54:45 -0700 (PDT)
-From: Tudor Ambarus <tudor.ambarus@linaro.org>
-To: miquel.raynal@bootlin.com,
-	richard@nod.at,
-	todd.e.brandt@intel.com
-Cc: vigneshr@ti.com,
-	pratyush@kernel.org,
-	michael@walle.cc,
-	linux-mtd@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	regressions@leemhuis.info,
-	bagasdotme@gmail.com,
-	regressions@lists.linux.dev,
-	joneslee@google.com,
-	Tudor Ambarus <tudor.ambarus@linaro.org>,
-	Todd Brandt <todd.e.brandt@linux.intel.com>
-Subject: [PATCH] mtd: spi-nor: Fix divide by zero for spi-nor-generic flashes
-Date: Thu, 18 May 2023 08:54:40 +0000
-Message-ID: <20230518085440.2363676-1-tudor.ambarus@linaro.org>
-X-Mailer: git-send-email 2.40.1.606.ga4b1b128d6-goog
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44F24646
+	for <regressions@lists.linux.dev>; Thu, 18 May 2023 10:36:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1684406163; x=1715942163;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=TGbjzXlpyPDCAA+v9gTrHku4sp+phmrRg2wUR0ljEx0=;
+  b=RR7cksbXuV/W2WXJQdhDIPh5Bs8VmQhDHuzBhoo+4y75OzhdUfvLzp3K
+   4zFLwyY+9zf52GdhU5oywkQMSo3t0tBtIfGGddgNmWSWL98NsPkp9+geS
+   BYeq4XTIm0SlpRHKPhB8Qbypyrxs18LNa7HpaeJjbXQcRqWVUsw+w1Jcl
+   fHNXm1BHJoa8HKMKRKy8et0zEWaUpwnJG+GUFrX0/Y12ECJiLzOwx+Hty
+   YWKP5zkqRDxwXFw/sUx8apYjLMfw8GH7RGM/6Mlphbdl0P/7m4HY8VDQT
+   xdLYZs6yOR0pW3FkROihAGGuuzEA9IV0Zr6x2NY1L9F/GhZOfdcytcPqI
+   w==;
+X-IronPort-AV: E=Sophos;i="5.99,285,1677567600"; 
+   d="asc'?scan'208";a="152734416"
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 18 May 2023 03:35:52 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21; Thu, 18 May 2023 03:35:52 -0700
+Received: from wendy (10.10.115.15) by chn-vm-ex01.mchp-main.com
+ (10.10.85.143) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.21 via Frontend
+ Transport; Thu, 18 May 2023 03:35:50 -0700
+Date: Thu, 18 May 2023 11:35:29 +0100
+From: Conor Dooley <conor.dooley@microchip.com>
+To: Alexandre Ghiti <alexghiti@rivosinc.com>
+CC: Anup Patel <anup@brainfault.org>, Song Shuai <suagrfillet@gmail.com>,
+	<robh@kernel.org>, Andrew Jones <ajones@ventanamicro.com>,
+	<palmer@rivosinc.com>, <jeeheng.sia@starfivetech.com>,
+	<leyfoon.tan@starfivetech.com>, <mason.huo@starfivetech.com>, Paul Walmsley
+	<paul.walmsley@sifive.com>, Guo Ren <guoren@kernel.org>,
+	<linux-riscv@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<regressions@lists.linux.dev>
+Subject: Re: Bug report: kernel paniced when system hibernates
+Message-ID: <20230518-cauterize-game-636a6aac4871@wendy>
+References: <CAAYs2=gQvkhTeioMmqRDVGjdtNF_vhB+vm_1dHJxPNi75YDQ_Q@mail.gmail.com>
+ <CAHVXubgse4Lw7ucg52FkQW4c=QrNo56BXsRZ_nkCHAAPxUXUig@mail.gmail.com>
+ <CAHVXubj92O_dwGShOJgrYezqk2pA2NtFyhNFbAPyhn7=PztK6Q@mail.gmail.com>
+ <20230517-preacher-primer-f41020b3376a@wendy>
+ <CAHVXubhMLgb54_7zV2yFuGPoMKCkUXwozHbDvghc7kQqNLK-JA@mail.gmail.com>
+ <CAAhSdy3tKAk1xjinwnSWan0ivdDapcLvSb+hGNynPFZMUsoB9A@mail.gmail.com>
+ <20230518-mobilize-dipper-051dfbc41971@wendy>
+ <CAHVXubhpkkC_1sYkHJvjuHB24YhmHJJ_ZvjRhzaqvygCvfbRnw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="QTnTHD42azm6IN2F"
+Content-Disposition: inline
+In-Reply-To: <CAHVXubhpkkC_1sYkHJvjuHB24YhmHJJ_ZvjRhzaqvygCvfbRnw@mail.gmail.com>
 
-We failed to initialize n_banks for spi-nor-generic flashes, which
-caused a devide by zero when computing the bank_size.
+--QTnTHD42azm6IN2F
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-By default we consider that all chips have a single bank. Initialize
-the default number of banks for spi-nor-generic flashes. Even if the
-bug is fixed with this simple initialization, check the n_banks value
-before dividing so that we make sure this kind of bug won't occur again
-if some other struct instance is created uninitialized.
+On Thu, May 18, 2023 at 10:41:19AM +0200, Alexandre Ghiti wrote:
+> On Thu, May 18, 2023 at 10:00=E2=80=AFAM Conor Dooley
+> <conor.dooley@microchip.com> wrote:
+> > On Thu, May 18, 2023 at 12:23:59PM +0530, Anup Patel wrote:
+> > > On Wed, May 17, 2023 at 8:26=E2=80=AFPM Alexandre Ghiti <alexghiti@ri=
+vosinc.com> wrote:
+> > > > On Wed, May 17, 2023 at 1:28=E2=80=AFPM Conor Dooley <conor.dooley@=
+microchip.com> wrote:
+> > > > > On Wed, May 17, 2023 at 10:58:02AM +0200, Alexandre Ghiti wrote:
+> > > > > > On Tue, May 16, 2023 at 1:12=E2=80=AFPM Alexandre Ghiti <alexgh=
+iti@rivosinc.com> wrote:
+> > > > >
+> > > > > > > On Tue, May 16, 2023 at 11:24=E2=80=AFAM Song Shuai <suagrfil=
+let@gmail.com> wrote:
+> > > > > > > I actually removed this flag a few years ago, and I have to a=
+dmit that
+> > > > > > > I need to check if that's necessary: the goal of commit 33350=
+68f8721
+> > > > > > > ("riscv: Use PUD/P4D/PGD pages for the linear mapping") is to=
+ expose
+> > > > > > > the "right" start of DRAM so that we can align virtual and ph=
+ysical
+> > > > > > > addresses on a 1GB boundary.
+> > > > > > >
+> > > > > > > So I have to check if a nomap region is actually added as a
+> > > > > > > memblock.memory.regions[] or not: if yes, that's perfect, let=
+'s add
+> > > > > > > the nomap attributes to the PMP regions, otherwise, I don't t=
+hink that
+> > > > > > > is a good solution.
+> > > > > >
+> > > > > > So here is the current linear mapping without nomap in openSBI:
+> > > > > >
+> > > > > > ---[ Linear mapping ]---
+> > > > > > 0xff60000000000000-0xff60000000200000    0x0000000080000000    =
+     2M
+> > > > > > PMD     D A G . . W R V
+> > > > > > 0xff60000000200000-0xff60000000e00000    0x0000000080200000    =
+    12M
+> > > > > > PMD     D A G . . . R V
+> > > > > >
+> > > > > > And below the linear mapping with nomap in openSBI:
+> > > > > >
+> > > > > > ---[ Linear mapping ]---
+> > > > > > 0xff60000000080000-0xff60000000200000    0x0000000080080000    =
+  1536K
+> > > > > > PTE     D A G . . W R V
+> > > > > > 0xff60000000200000-0xff60000000e00000    0x0000000080200000    =
+    12M
+> > > > > > PMD     D A G . . . R V
+> > > > > >
+> > > > > > So adding nomap does not misalign virtual and physical addresse=
+s, it
+> > > > > > prevents the usage of 1GB page for this area though, so that's a
+> > > > > > solution, we just lose this 1GB page here.
+> > > > > >
+> > > > > > But even though that may be the fix, I think we also need to fi=
+x that
+> > > > > > in the kernel as it would break compatibility with certain vers=
+ions of
+> > > > > > openSBI *if* we fix openSBI...So here are a few solutions:
+> > > > > >
+> > > > > > 1. we can mark all "mmode_resv" nodes in the device tree as nom=
+ap,
+> > > > > > before the linear mapping is established (IIUC, those nodes are=
+ added
+> > > > > > by openSBI to advertise PMP regions)
+> > > > > >     -> This amounts to the same fix as opensbi and we lose the =
+1GB hugepage.
+> > > > >
+> > > > > AFAIU, losing the 1 GB hugepage is a regression, which would make=
+ this
+> > > > > not an option, right?
+> > > >
+> > > > Not sure this is a real regression, I'd rather avoid it, but as
+> > > > mentioned in my first answer, Mike Rapoport showed that it was maki=
+ng
+> > > > no difference performance-wise...
+> >
+> > My point was that if someone has hugepages enabled & we handle this in a
+> > way that causes the first hugepage to be unusable, is that not a
+> > regression? Whether hugepages provide a performance benefit is not
+> > really related to that question AFAICT.
+>=20
+> Not being able to map certain regions of the linear mapping with a 1GB
+> hugepage will happen, for example the kernel mapping is protected in
+> the linear mapping so that it can't be written: so we can only map
+> this region with 2MB hugepages. A firmware could mark a region as
+> "no-map" and there again we would not be able to use a 1GB hugepage. I
+> don't see that as a regression as the intention is not to *always* use
+> 1GB hugepages, but rather to use them when possible. Does that make
+> sense?
 
-Suggested-by: Todd Brandt <todd.e.brandt@linux.intel.com>
-Reported-by: Todd Brandt <todd.e.brandt@linux.intel.com>
-Closes: https://bugzilla.kernel.org/show_bug.cgi?id=217448
-Fixes: 9d6c5d64f028 ("mtd: spi-nor: Introduce the concept of bank")
-Link: https://lore.kernel.org/all/20230516225108.29194-1-todd.e.brandt@intel.com/
-Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
----
- drivers/mtd/spi-nor/core.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+Ah, so it was as I expected - I don't/didn't properly understand
+hugepages. Thanks.
 
-diff --git a/drivers/mtd/spi-nor/core.c b/drivers/mtd/spi-nor/core.c
-index 0bb0ad14a2fc..5f29fac8669a 100644
---- a/drivers/mtd/spi-nor/core.c
-+++ b/drivers/mtd/spi-nor/core.c
-@@ -2018,6 +2018,7 @@ static const struct spi_nor_manufacturer *manufacturers[] = {
- 
- static const struct flash_info spi_nor_generic_flash = {
- 	.name = "spi-nor-generic",
-+	.n_banks = 1,
- 	/*
- 	 * JESD216 rev A doesn't specify the page size, therefore we need a
- 	 * sane default.
-@@ -2921,7 +2922,8 @@ static void spi_nor_late_init_params(struct spi_nor *nor)
- 	if (nor->flags & SNOR_F_HAS_LOCK && !nor->params->locking_ops)
- 		spi_nor_init_default_locking_ops(nor);
- 
--	nor->params->bank_size = div64_u64(nor->params->size, nor->info->n_banks);
-+	if (nor->info->n_banks > 1)
-+		params->bank_size = div64_u64(params->size, nor->info->n_banks);
- }
- 
- /**
-@@ -2987,6 +2989,7 @@ static void spi_nor_init_default_params(struct spi_nor *nor)
- 	/* Set SPI NOR sizes. */
- 	params->writesize = 1;
- 	params->size = (u64)info->sector_size * info->n_sectors;
-+	params->bank_size = params->size;
- 	params->page_size = info->page_size;
- 
- 	if (!(info->flags & SPI_NOR_NO_FR)) {
--- 
-2.40.1.606.ga4b1b128d6-goog
+> > Were you suggesting reverting hugepage support entirely in your original
+> > message? If we entirely remove hugepage support, then I guess the first
+> > hugepage cannot be lost..
+>=20
+> Given Mike Rapoport's recent talk, I think that's an option, yes.
+>=20
+> >
+> > > > > > 2. we can tweak pfn_is_nosave function to *not* save pfn corres=
+ponding
+> > > > > > to PMP regions
+> > > > > >     -> We don't lose the 1GB hugepage \o/
+> > > > > > 3. we can use register_nosave_region() to not save the "mmode_r=
+esv"
+> > > > > > regions (x86 does that
+> > > > > > https://elixir.bootlin.com/linux/v6.4-rc1/source/arch/x86/kerne=
+l/e820.c#L753)
+> > > > > >     -> We don't lose the 1GB hugepage \o/
+> > > > > > 4. Given JeeHeng pointer to
+> > > > > > https://elixir.bootlin.com/linux/v6.4-rc1/source/kernel/power/s=
+napshot.c#L1340,
+> > > > > > we can mark those pages as non-readable and make the hibernation
+> > > > > > process not save those pages
+> > > > > >     -> Very late-in-the-day idea, not sure what it's worth, we =
+also
+> > > > > > lose the 1GB hugepage...
+> > > > >
+> > > > > Ditto here re: introducing another regression.
+> > > > >
+> > > > > > To me, the best solution is 3 as it would prepare for other sim=
+ilar
+> > > > > > issues later, it is similar to x86 and it allows us to keep 1GB
+> > > > > > hugepages.
+> > > > > >
+> > > > > > I have been thinking, and to me nomap does not provide anything=
+ since
+> > > > > > the kernel should not address this memory range, so if it does,=
+ we
+> > > > > > must fix the kernel.
+> > > > > >
+> > > > > > Let me know what you all think, I'll be preparing a PoC of 3 in=
+ the meantime!
+> > > > >
+> > > > > #3 would probably get my vote too. It seems like you could use it
+> > > > > dynamically if there was to be a future other provider of "mmode_=
+resv"
+> > > > > regions, rather than doing something location-specific.
+> > > > >
+> > > > > We should probably document these opensbi reserved memory nodes t=
+hough
+> > > > > in a dt-binding or w/e if we are going to be relying on them to n=
+ot
+> > > > > crash!
+> > >
+> > > Depending on a particular node name is fragile. If we really need
+> > > information from DT then I suggest adding "no-save-restore" DT
+> > > property in reserved memory nodes.
+> >
+> > We can add whatever properties we like, but where does that leave us for
+> > the systems in the wild where their reserved memory nodes do not contain
+> > a "no-save-restore" property or "no-map"?
+> >
+> > Ideally, yes, we do not depend on the node name and instead use explicit
+> > properties - but I think we may be "forced" to fall back to checking the
+> > node-name to cover the opensbi versions that do not contain one.
+> > LMK if I have missed something there!
+>=20
+> Yes I agree with you, we can implement Anup's solution #1, but we need
+> to fix the kernel anyway since if we don't, that would make the kernel
+> hibernation support depend on a certain version of openSBI.
 
+It's not unreasonable to have things depend on versions of the SBI
+implementation, but it is if they're not things that can be probed using
+the standard interfaces!
+
+> > > > Yes, you're right, let's see what Atish and Anup think!
+> > >
+> > > I think we have two possible approaches:
+> > >
+> > > 1) Update OpenSBI to set "no-map" DT property for firmware
+> > >     reserved regions. We were doing this previously but removed
+> > >     it later for performance reasons mentioned by Alex. It is also
+> > >     worth mentioning that ARM Trusted Firmware also sets "no-map"
+> > >     DT property for firmware reserved regions.
+> > >
+> > > 2) Add a new "no-save-restore" DT property in the reserved
+> > >     memory DT bindings. The hibernate support of Linux arch/riscv
+> > >     will use this DT property to exclude memory regions from
+> > >     save-restore. The EFI implementation of EDK2 and U-Boot
+> > >     should do the following:
+> > >     1) Treat all memory having "no-map" DT property as EFI
+> > >         reserved memory
+> > >     2) Treat all memory not having "no-map" DT property and
+> > >         not having "no-save-restore" DT property as EfiBootServicesDa=
+ta
+> > >     3) Treat all memory not having "no-map" DT property and
+> > >          having "no-save-restore" DT property as EfiRuntimeServiceData
+> > >          (Refer,
+> > > https://devicetree-specification.readthedocs.io/en/latest/chapter3-de=
+vicenodes.html#reserved-memory-and-uefi)
+> > >
+> > > Personally, I am leaning towards approach#1 since approach#2
+> > > will require changing DeviceTree specification as well.
+> >
+> > #1 is by far the simpler option of the two, if the consensus is that the
+> > loss of the first hugepage is not a problem (or if it is a problem that
+> > realistically is unavoidable).
+>=20
+> The "no-map" property does not provide much security anyway: the
+> kernel should not touch a page that is reserved (this is where I may
+> be wrong), so the real fix to this issue is to make the hibernation
+> process not save those pages.
+
+Right, the kernel clearly needs to be able to handle the regions. I, at
+least, was commenting on re-using no-map versus creating new properties
+for this situation.
+I was advocating for re-using the property & changing the kernel so as
+not to touch the regions during hibernation.
+
+> > There's something else I think I might be missing here, given the
+> > scattered nature of the reporting. This is not a problem for a system
+> > that does not implement hibernation, which was only added in v6.4-rc1?
+> >
+> > That would make it not a regression after all. I think I misunderstood
+> > the report on sw-dev to mean that this was a problem generally after
+> > v6.4-rc1, which would have been one. Could someone please confirm that?
+>=20
+> The problem is only present since v6.4-rc1, that's not a regression,
+> it's just that both patches landed at the same time and gave rise to
+> this issue.
+
+Sick. Glad to be wrong here!
+
+#regzbot resolve: not a regression, feature introduced this cycle
+
+> > If it only affects hibernation, and is not a regression, should we make
+> > ARCH_HIBERNATION_POSSIBLE def_bool n in Kconfig until we have agreed on
+> > a solution for the problem?
+
+Any thoughts on this one?
+
+--QTnTHD42azm6IN2F
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZGX/cAAKCRB4tDGHoIJi
+0rasAQCcwNtag1vaq27zuQLN1UPnFeR1KNguEBpz5JHe6LkngwD/bQ5ZeOtl6Jve
+4+WwqQKwrihCbrjLgMjZvtJ/wSWsHAU=
+=NrpG
+-----END PGP SIGNATURE-----
+
+--QTnTHD42azm6IN2F--
