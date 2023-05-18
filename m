@@ -1,56 +1,56 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDCCA23C8A
-	for <regressions@lists.linux.dev>; Thu, 18 May 2023 13:31:26 +0000 (UTC)
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-253570deb8dso925323a91.1
-        for <regressions@lists.linux.dev>; Thu, 18 May 2023 06:31:26 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C683E23C7E
+	for <regressions@lists.linux.dev>; Thu, 18 May 2023 13:36:39 +0000 (UTC)
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-25332422531so921365a91.0
+        for <regressions@lists.linux.dev>; Thu, 18 May 2023 06:36:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684416686; x=1687008686;
+        d=gmail.com; s=20221208; t=1684416999; x=1687008999;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=07jbkWZvVWjpNcKjxaXoMx/wlMgnDj/DjSx7DmqYFT8=;
-        b=lzpDaJAXMALSOUcCHSZtsWI12iYitCMms76PC56TCFywRRfHP1N5L6XZE6NeF4PaMu
-         nBUihCwtYHfjTDrzNznS/atSsJYSiHiGx4wL+yNWWsLr8P6BcW1vljTvxt8FuE4VMRw5
-         eX18NtgpssDdkdsR5UPI9Fnv9Qcnp8ixsuU41+AzfWVt+GgDW8p4owawNuHv4GmVyZbG
-         zlud1ijZwULP4ZxeFyRLk+gIKlTvqIkkFSDKDuVRVvfnDKL3nlTTTVoG3DFCDhTdTwFI
-         LKDYWpOVsUQMrpM6rnwdBvK7JQdsUNQnJwZN2m/f50nj7xB0WZZyUTlaG1LLIA1ozF2H
-         nRtg==
+        bh=UDwcH7cU2Z4j4/nc6uJ/p7zWwFLs0nTsurbtyh0XnyM=;
+        b=OzX4noVCWIAJmzM3uYbq7kRW2CzMb3ne+8p1UQ22BK2rhd/f0dIzjmxZPRnzeP/AvF
+         FA6YRwALKKHDSOtt9pwF7kPKKtT6ZEAtv4k9EI719CCpt3WngXXLyobGjb4t0AVn/OTT
+         zi84c1dOL/HZStK3zM3iABUinFXlNoOPjZVTS/WnwV5A5HTL90bwIIfVy6pmDFC6dsYb
+         +VO3v/xlnYQw6VzMy/nhpqlw7MQqXXCmdCVpHTA7yneJsUbFmCmMjE4yb4gxrKiVvhEr
+         EtOBICFhta/kfPL6Qzg6eCWctnCODztpz0Jcg82XJf6puw78nqX8xM9VX36oModumTVJ
+         Do2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684416686; x=1687008686;
+        d=1e100.net; s=20221208; t=1684416999; x=1687008999;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=07jbkWZvVWjpNcKjxaXoMx/wlMgnDj/DjSx7DmqYFT8=;
-        b=b0R3cHlKvSov7Pgn7e+4R755AEkoz1Ji92kXMLwaP5Ej3GWxcjrnSelKUDtlM1ZHVU
-         7ioUKofANIZ8jS2UdnwHfUQi5OoFLpZY0mhWg0mH5nyvM0nSH64Ya2dSEzd7TpCnjZYr
-         wMqZB9m0pcGkAK3btnZDqgnVgGUTX/V+m8OHdZm2Ha+YA/e2v2fOuBowbt8kZ0K0zSfb
-         YcRCSMRcg/C76f654RuaIDMCykBB6pXg0rlskKCbF3aiw+mKVPP5qKcg03zJv8+AHmrV
-         nijFArSfTA+dwOrEM3jrYo2+pBhxZLSDzps4J0oAGodrpcxHvDLWHOWoQfNRZ6t8D1ue
-         lbpg==
-X-Gm-Message-State: AC+VfDzwB39cy77qjK8FSsPPD7rvK3SGCVfa2uCFdVLnpUoF0DqF30zW
-	IvcXdI8lPLxmk2fLiLJNXdD5rC2bxaA=
-X-Google-Smtp-Source: ACHHUZ6Rg39C5s3A5szjjXrbwt9+lrhInJP56naXUPdn570zbNmxeD3burzDiugaUyMp+7pNS5at4Q==
-X-Received: by 2002:a17:90a:ba8a:b0:252:b14a:55c2 with SMTP id t10-20020a17090aba8a00b00252b14a55c2mr2560424pjr.9.1684416686127;
-        Thu, 18 May 2023 06:31:26 -0700 (PDT)
+        bh=UDwcH7cU2Z4j4/nc6uJ/p7zWwFLs0nTsurbtyh0XnyM=;
+        b=VMwICogEV9mW8aoC2+vKVNwpAczDjowYZVvEhLbE9g4BrHqyH+TUIZTaVVaFH4K9/0
+         fzOIdEQZYftZ6Xk0UMNkC9RFzCtqrbVFqEmPLqNW9XUDq5ZsbO+sFEzmyXGYBA7RN/9z
+         9JWjMWZ3A9nYxvL/Dh8VSRDwVuG80Ac2QCYnmfIYpMJq4phrehgSwnmlvEb3gibKbQBd
+         A6q9yl2pQxG/XNmdw6123KnHkeEkwjrQok9uV+7wASETZqvj3G0Pczh3EF7Rea6G0347
+         X5KGTOQv1jKdIoLDPXjiiTmnFA1YSTRYIghE2JfDIWWYuW+0GRzi/HOy1fn80Y38miGP
+         HSFA==
+X-Gm-Message-State: AC+VfDzQbGe2Wt6EZWP5TR1MiMuklAXDnnstlD0TjhHc2qh3fuvcTWK9
+	FMv8aB37LUCvxOYPGPQQN/M=
+X-Google-Smtp-Source: ACHHUZ4TYZewHWEX7Y0czl+9D0edvrcRViYE7+3bhPW4NoqK3p2sxbI4RNBbvWxOcLWI8z1A06zdgA==
+X-Received: by 2002:a17:90a:dc12:b0:252:977e:c257 with SMTP id i18-20020a17090adc1200b00252977ec257mr2601286pjv.23.1684416998991;
+        Thu, 18 May 2023 06:36:38 -0700 (PDT)
 Received: from debian.me (subs03-180-214-233-78.three.co.id. [180.214.233.78])
-        by smtp.gmail.com with ESMTPSA id u11-20020a63f64b000000b00513cc8c9597sm1213765pgj.10.2023.05.18.06.31.25
+        by smtp.gmail.com with ESMTPSA id s12-20020a17090aba0c00b0025289bc1ce4sm3437542pjr.17.2023.05.18.06.36.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 May 2023 06:31:25 -0700 (PDT)
+        Thu, 18 May 2023 06:36:38 -0700 (PDT)
 Received: by debian.me (Postfix, from userid 1000)
-	id 0AED1105431; Thu, 18 May 2023 20:31:21 +0700 (WIB)
-Date: Thu, 18 May 2023 20:31:21 +0700
+	id DAB0810558B; Thu, 18 May 2023 20:36:34 +0700 (WIB)
+Date: Thu, 18 May 2023 20:36:34 +0700
 From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: =?utf-8?B?w4lyaWM=?= Brunet <eric.brunet@ens.fr>,
-	Ville =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>
-Cc: stable@vger.kernel.org, regressions@lists.linux.dev,
-	jouni.hogander@intel.com, jani.nikula@intel.com,
-	gregkh@linuxfoundation.org
-Subject: Re: Regression on drm/i915, with bisected commit
-Message-ID: <ZGYoqbhkxkCg9m7d@debian.me>
-References: <3236901.44csPzL39Z@skaro>
- <ZGU56n66OAe0DqN3@intel.com>
- <5681706.DvuYhMxLoT@skaro>
+To: Linux Regressions <regressions@lists.linux.dev>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Cc: Todd Brandt <todd.e.brandt@intel.com>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Pratyush Yadav <pratyush@kernel.org>,
+	Tudor Ambarus <tudor.ambarus@linaro.org>
+Subject: Re: Fwd: BUG: Patch to spi-nor hangs Lenovo ThinkPad X1 Titanium
+ with divide by zero
+Message-ID: <ZGYp4jnJxZJlfpeB@debian.me>
+References: <b984f839-cf0a-fc25-41d5-656171774e4e@gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -58,63 +58,44 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="EoPTFpm/moMAQdNP"
+	protocol="application/pgp-signature"; boundary="FwK44x7py3NWqpFz"
 Content-Disposition: inline
-In-Reply-To: <5681706.DvuYhMxLoT@skaro>
+In-Reply-To: <b984f839-cf0a-fc25-41d5-656171774e4e@gmail.com>
 
 
---EoPTFpm/moMAQdNP
+--FwK44x7py3NWqpFz
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 18, 2023 at 10:14:30AM +0200, =C3=89ric Brunet wrote:
-> Le mercredi 17 mai 2023, 22:32:42 CEST Ville Syrj=C3=A4l=C3=A4 a =C3=A9cr=
-it :
-> > On Tue, May 16, 2023 at 03:04:53PM +0200, =C3=89ric Brunet wrote:
-> > > Hello all,
-> > >=20
-> > > I have a HP Elite x360 1049 G9 2-in-1 notebook running fedora 38 with=
- an
-> > > Adler Lake intel video card.
-> > >=20
-> > > After upgrading to kernel 6.2.13 (as packaged by fedora), I started s=
-eeing
-> > > severe video glitches made of random pixels in a vertical band occupy=
-ing
-> > > about 20% of my screen, on the right. The glitches would happen both =
-with
-> > > X.org and wayland.
-> >=20
-> > Please file a bug at https://gitlab.freedesktop.org/drm/intel/issues/new
-> > boot with "log_buf_len=3D4M drm.debug=3D0xe" passed to kernel cmdline, =
-and
-> > attach the resulting dmesg to the bug.
+On Thu, May 18, 2023 at 08:42:19AM +0700, Bagas Sanjaya wrote:
+> Fortunately, the reporter also sent out potential fix for this regression;
+> but to be sure it doesn't fall through cracks, I'm adding it to regzbot:
 >=20
-> Thank you for your answer, I have just opened the issue as requested.
->=20
-> https://gitlab.freedesktop.org/drm/intel/-/issues/8480
+> #regzbot introduced: 9d6c5d64f0288a https://bugzilla.kernel.org/show_bug.=
+cgi?id=3D217448
+> #regzbot title: SPI NOR bank divide by zero on Lenovo ThinkPad X1 Titanium
+> #regzbot fix: MTD SPI-NOR: BUG FIX of divide by zero in new n_banks value
 >=20
 
-Thanks for the ticket link. Now telling regzbot (and updating the
-culprit since you also mention the mainline commit that I assume to
-be the culprit [please verify if it is indeed the case]):
+Updating with formal fix:
 
-#regzbot introduced: e1c71f8f918047
-#regzbot link: https://gitlab.freedesktop.org/drm/intel/-/issues/8480
+#regzbot fix: mtd: spi-nor: Fix divide by zero for spi-nor-generic flashes
+
+Thanks.
 
 --=20
 An old man doll... just what I always wanted! - Clara
 
---EoPTFpm/moMAQdNP
+--FwK44x7py3NWqpFz
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZGYopAAKCRD2uYlJVVFO
-o8G8APwJFW+7qatzqJqrpNTFfK9bpbBnUHaHoPoNI1Tyx0MpYwEAlnopo9cQ2Zxe
-70ZgR4r8JbUANNEcYs8gkToi/+ClAQs=
-=J/5J
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZGYp4gAKCRD2uYlJVVFO
+o6NyAP9crcMtHqVvZVuAmBpiDGpDb/Jn+oi1scf4bv6fl0HF0AEA1DGDq43VZFFh
+jqQCoTtT4SqI67AgW4hDHcgkBWZlhgE=
+=5ubZ
 -----END PGP SIGNATURE-----
 
---EoPTFpm/moMAQdNP--
+--FwK44x7py3NWqpFz--
