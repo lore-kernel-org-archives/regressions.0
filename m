@@ -1,127 +1,127 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 869E8134CB
-	for <regressions@lists.linux.dev>; Thu, 18 May 2023 20:44:55 +0000 (UTC)
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-510b7b6ef59so4500125a12.3
-        for <regressions@lists.linux.dev>; Thu, 18 May 2023 13:44:55 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7BA5134BD
+	for <regressions@lists.linux.dev>; Thu, 18 May 2023 21:12:42 +0000 (UTC)
+Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-759413d99afso7057785a.1
+        for <regressions@lists.linux.dev>; Thu, 18 May 2023 14:12:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1684442693; x=1687034693;
+        d=google.com; s=20221208; t=1684444361; x=1687036361;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=yxp/usaVw20e5cr4YAHYGVQhvDy/fYNeFaw790wIOpk=;
-        b=VHyuu4CSMDkGakMg4WkM/wF0RvPw/rtrAvZX8raWPvw2JvRPZ/SviD1y7Z9ocx4bO7
-         kp4l2zQMthmzz7i6hFdTxpC2JKbSyhCz/3JDVBHUi8U1JaZF5HIPM3Sbl5ACDLS0jUC8
-         fUvHL6PQl5Z46BkocMc7+BavaTadgGW+qIatE=
+        bh=GeXIFJ3JEeo/UPihwwJMMq/gen8h1/yR0LlFojypqtg=;
+        b=IJQZIBPwBAV7RFU4Ro9T5xQElAOPO5EnWbRgrNsDte1JajluVqxlXwUIF5q9uj6oD8
+         PKQ/DeL0Y14TIyXTmDT5xa1Kq0hSI1fn3Rg4NvaXXeVMioWUifcpwGkYtLJG+ouJ0q7l
+         qTpFaTO0RehaI6TrIw1tKXAkqMagq6UpfQTwFyS3jDx3jfDNgEiVl1jzOAjnGYAGNeSO
+         UKKk1+4+7Gb7mOMo+GBBa8WE+9PgW1nqRxnlObrzoFJJmXgX6IyeAJc1KqVEk+6KYIy+
+         u65LCzHT7BdgtGNSuHtNsdaIOhvyCihefbo4XTH0czp2xQ3KwCSMOGpUp3010By6nqPI
+         E1XA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684442693; x=1687034693;
+        d=1e100.net; s=20221208; t=1684444361; x=1687036361;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=yxp/usaVw20e5cr4YAHYGVQhvDy/fYNeFaw790wIOpk=;
-        b=YpXWpYei43eg0sEyKHjuSh9C4w2NZPrHTs2aQ9WTfayYCJDE1kdI95aubx2E/qDSbN
-         nXGRyM4NehHzlD6YkLxQhy5NDz5BsUSyEzTkJNbrUBprYd/b5XtbKd9wbYRV8anFYljH
-         1CCZlQDPtp/by4CrG2dNyj2/I61pGxsEEj5jAvWmw5lsStTjkh0eqv7nkgwPxfLO5E0V
-         4G23xGWXCXWNIrvyAsr8y+zd86qg57Ihcd4D+ff8v4krqGh36TVL5M5jBK65SsW0lSt+
-         GTQvX1wyaEJrAg6aObDjmJm10A5JIeLxFbbNKBQ2zc9qG2vNOMTjxvjkM3CBVz+QYOqZ
-         5y2Q==
-X-Gm-Message-State: AC+VfDwLVJQi1cs1FmoO/F4fkTsNfblYa4NkxLfUPY+8cyXm89/WrK/g
-	9/N1HqOupNpGC8objWkANEdpNrF4glbvHAEpB1wj67Ww
-X-Google-Smtp-Source: ACHHUZ6f5nsIRC+uCQk1u+K3wJVu2RHWFEtDm3J98WjMOMbHYWMIhOY/Wyci1TiiXlcPvbAbnoixKQ==
-X-Received: by 2002:aa7:cd81:0:b0:506:bcd6:b125 with SMTP id x1-20020aa7cd81000000b00506bcd6b125mr5754181edv.40.1684442693511;
-        Thu, 18 May 2023 13:44:53 -0700 (PDT)
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com. [209.85.218.48])
-        by smtp.gmail.com with ESMTPSA id l1-20020a056402344100b0050be0b14672sm952452edc.3.2023.05.18.13.44.52
-        for <regressions@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 18 May 2023 13:44:52 -0700 (PDT)
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-966400ee79aso477270566b.0
-        for <regressions@lists.linux.dev>; Thu, 18 May 2023 13:44:52 -0700 (PDT)
-X-Received: by 2002:a17:907:3e2a:b0:96f:5f44:ea02 with SMTP id
- hp42-20020a1709073e2a00b0096f5f44ea02mr438181ejc.8.1684442691873; Thu, 18 May
- 2023 13:44:51 -0700 (PDT)
+        bh=GeXIFJ3JEeo/UPihwwJMMq/gen8h1/yR0LlFojypqtg=;
+        b=l9nk1py8ih/arrJ4Le9AbIYAcP/zmL508Gwl6hYbZlpdTpii9tn7H5okZuz1dkyITU
+         /FFgnNr3Zh+8eZwSjFzw2Udw8+QAVf5imZMLuvTrdYe+HwoVLkHCp79vnCjQW3iCoTwp
+         uTwy+gmeVTPUzrNrl9QMnRojRBxowy0nC+DGEjqszTGKjrZ1MzEbUeGQYcRzqbn2yJ7t
+         Zznho7PmaRdxQfsk6Ju74kivan3Xc++FfsaAgwQ70U3N3hnJ5SupvjaDk2LXLU8zbKmW
+         vS/v2nwXHYfk5uk+TuADhm8cliDFF2V9VAwsm/QkzpVgwdpxozzJ3OwSCJSOruJdPkUl
+         69Pw==
+X-Gm-Message-State: AC+VfDyBX8ecDT+3mq5uhAIo0Yb6LWtXGkYdV08JFes8mYBFMn0wie0L
+	kMm2oVZiOklOwdTzoxAYM/0lXGhazLTJcXRSVLOoaA==
+X-Google-Smtp-Source: ACHHUZ5LjYwzBsYuczoDOiaXn4kG1nFtTCA3gNWtNx+RzZCZXNhFkKqRffrv7ErE6ma+ueKe6zxkZMCnIAe5pMpWLFM=
+X-Received: by 2002:a05:6214:29ee:b0:5ea:9fc5:fcb1 with SMTP id
+ jv14-20020a05621429ee00b005ea9fc5fcb1mr2236810qvb.9.1684444361498; Thu, 18
+ May 2023 14:12:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <ZElaVmxDsOkZj2DK@debian> <51cff63a-3a04-acf5-8264-bb19b0bee8a3@leemhuis.info>
- <CAHk-=wgzU8_dGn0Yg+DyX7ammTkDUCyEJ4C=NvnHRhxKWC7Wpw@mail.gmail.com> <a9a9017cceb65aeca285a06c7b46970788301ce8.camel@ndufresne.ca>
-In-Reply-To: <a9a9017cceb65aeca285a06c7b46970788301ce8.camel@ndufresne.ca>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Thu, 18 May 2023 13:44:35 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjypw2PL-w5ZBxY97SgRWd21f2V2Cuyw-ebsiTpSNQjBg@mail.gmail.com>
-Message-ID: <CAHk-=wjypw2PL-w5ZBxY97SgRWd21f2V2Cuyw-ebsiTpSNQjBg@mail.gmail.com>
-Subject: Re: mainline build failure due to cf21f328fcaf ("media: nxp: Add
- i.MX8 ISI driver")
-To: Nicolas Dufresne <nicolas@ndufresne.ca>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>, 
-	"Sudip Mukherjee (Codethink)" <sudipm.mukherjee@gmail.com>, 
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
-	Mauro Carvalho Chehab <mchehab@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, linux-media@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>
+References: <CAK7LNAT_cMLGLBz7ugaLpJD3QmZmY8FK56x9nihvWeYhJpi2ag@mail.gmail.com>
+ <20220919170828.3718437-1-ndesaulniers@google.com> <597ef55f-e7c1-ab60-b4aa-0071ff4b5e0e@collabora.com>
+ <CAKwvOdmSrAxx-YY1Na3BSdYuxXCPKK+F0K5V6i+adTn_bVJEsw@mail.gmail.com>
+ <89961dfc-d40f-78e4-5d34-b86b7d152182@collabora.com> <CAKwvOd=4hBcU4fAkddU0b-GOZc9FzTZoj3PFW6ZZrX0jS8x+bg@mail.gmail.com>
+ <17c91d37-7d9c-0df4-2438-2b30ca0b5777@collabora.com> <CAKwvOdk4QO8x_bs64fFRCsMu__AjhXd4Ew2KfgzQOb9Q3FMqSA@mail.gmail.com>
+ <b5d0cf82-0e42-f6a1-c9f5-c145fdc4c622@collabora.com> <CAKwvOdkFxu9hYSL_RCXadpR0dQd1+dZmAUVXdfFiLUfxg4D_Xw@mail.gmail.com>
+ <878rdlk9bi.fsf@rcn-XPS-13-9305.i-did-not-set--mail-host-address--so-tickle-me>
+In-Reply-To: <878rdlk9bi.fsf@rcn-XPS-13-9305.i-did-not-set--mail-host-address--so-tickle-me>
+From: Nick Desaulniers <ndesaulniers@google.com>
+Date: Thu, 18 May 2023 14:12:30 -0700
+Message-ID: <CAKwvOd=8LVU+iANkFx18Wm1jg7gYiAXovAmo9t5ZZaVdMULn-Q@mail.gmail.com>
+Subject: Re: [PATCH v4] Makefile.compiler: replace cc-ifversion with
+ compiler-specific macros
+To: =?UTF-8?Q?Ricardo_Ca=C3=B1uelo?= <ricardo.canuelo@collabora.com>
+Cc: Shreeya Patel <shreeya.patel@collabora.com>, Michal Marek <michal.lkml@markovi.net>, 
+	Masahiro Yamada <masahiroy@kernel.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, clang-built-linux <llvm@lists.linux.dev>, 
+	Bill Wendling <morbo@google.com>, Nathan Chancellor <nathan@kernel.org>, regressions@lists.linux.dev, 
+	"gustavo.padovan@collabora.com" <gustavo.padovan@collabora.com>, 
+	Guillaume Charles Tucker <guillaume.tucker@collabora.com>, denys.f@collabora.com, 
+	kernelci@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 18, 2023 at 12:53=E2=80=AFPM Nicolas Dufresne <nicolas@ndufresn=
-e.ca> wrote:
+On Thu, May 18, 2023 at 7:23=E2=80=AFAM Ricardo Ca=C3=B1uelo
+<ricardo.canuelo@collabora.com> wrote:
 >
-> I'm expected to be flamed for getting in the way, but whatever. To me thi=
-s
-> decision lacks any kind of consideration toward who will be affected. Thi=
-s will
-> hit those that makes the new features and are working hard to convince th=
-eir
-> customers to go mainline first.
+>
+> Hi Nick,
+>
+> On mi=C3=A9, may 17 2023 at 09:27:41, Nick Desaulniers <ndesaulniers@goog=
+le.com> wrote:
+> > Shreeya mentioned upthread that `qemu_arm-virt-gicv3-uefi` was
+> > failing, so I assume others should be able to repro in qemu. I'd guess
+> > that LAVA lets you have VMs adjacent to physical hardware.  Having the
+> > qemu command line, kernel config, and perhaps the initramfs are going
+> > to be the three most useful things for any similar bug report.
+>
+> Sure, I'm using LAVA because that's the safest way to match exactly the
+> same setup from the original test, but anyone can try to reproduce it on
+> their own. You can get the job info and setup from any of the related
+> LAVA jobs. This one for example:
+> https://lava.collabora.dev/scheduler/job/10373216
+>
+> Trying to reproduce this type of setups is not as straightforward as
+> we'd like, specially for people not familiar with KernelCI, but we're
+> putting in some effort to improve that so that anyone can pick up a
+> regression report and work on it right away.
 
-I think the solution may be for those affected people to help Mauro & co.
+Yeah makes sense.  Having reports surface the most relevant info for
+developers to understand what went wrong where and how to reproduce is
+something I'm passionate about.  We've been through this with Intel
+0day bot folks; it takes a few iterations until everyone is happy.
 
-Clearly the media maintenance doesn't have enough time. I'm not going
-to pull from a tree where I know that it then may take six *weeks* and
-one whole release for simple bugs to be fixed.
+>
+> By the way, I found a breaking point in the commit right after the one
+> that the bisector reported:
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit=
+/?id=3D5750121ae7382ebac8d47ce6d68012d6cd1d7926
 
-That is literally what happened. And if it had been once, that would
-be one thing. But when the same thing starts happening again the very
-next release, it's no longer a one-off. It's a pattern.
+That's a higher risk change (and has my name on the tested-by tag, yikes).
 
-> Punishment and shame is not something I encourage or think is nice in gen=
-eral.
+So is that the culprit of the boot failure you're observing?
 
-This is NOT about punishment.,
+> but I can't find anything there either that makes the boot hang,
+> specifically for configs including kernel/configs/debug.config. I
+> wouldn't rule out a problem with the qemu configuration.
+>
+> Anyway, this is not a critical problem in any way, although it'd be
 
-It's very simple: if I cannot trust the tree to be maintained, I'm not
-going to pull it.
+But you still have a boot failure/regression to track down for that
+config, right?
 
-That's not punishment, that is simply about kernel maintenance.
+> interesting to find the cause in case we can use the findings to improve
+> the test setups.
+>
+> Cheers,
+> Ricardo
 
-If you want to help fix the media maintenance issue, then by all means
-help. But as things are now, if I cannot rely on the media tree
-getting even simple build fixes in a timely manner, then I'm not
-pulling it.
 
-Please realize: to misquote Shakespeare, I have two options: to pull
-or not to pull. And in order to pull a tree, I need to know that I can
-expect any problems from that pull to be fixed.
 
-Would you expect me to pull known-buggy trees? I sure hope you don't
-expect that. Not pulling buggy trees isn't "punishment". It's the only
-sane thing to do.
-
-And the exact same thing is true when a tree isn't maintained
-properly. Bugs happen. That's inevitable. And sometimes bugs can be
-hard to find, or hard to fix. But when the maintainer has been sent a
-fix, and that fix doesn't get handled for SIX WEEKS, then that tree is
-buggy.
-
-Something is very rotten in the state of media. It needs to get fixed.
-Until it is fixed, I don't want to take random new code.
-
-The fix *may* be as simple as more testing, and better automation. But
-really, the thing that annoyed me enormously was that these bugs were
-all found by automation and testing. And still they were left to rot.
-
-                 Linus
+--=20
+Thanks,
+~Nick Desaulniers
