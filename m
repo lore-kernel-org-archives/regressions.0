@@ -1,113 +1,135 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA8917E
-	for <regressions@lists.linux.dev>; Thu, 18 May 2023 01:42:25 +0000 (UTC)
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1ae507af2e5so5233815ad.1
-        for <regressions@lists.linux.dev>; Wed, 17 May 2023 18:42:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684374145; x=1686966145;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pvjw77fQ/ErJLaCJSMiJ2Mn6niHh8kIyIMJpAj+Is8w=;
-        b=dfJL0x+uiW7HCq/mVm5ocC80LIodXAAhJkjZaDe8t9jsmomYEj0syfMDnaploNCaXk
-         t7CHu5+a+/02szN/sn00ijEUpgxlJN62lWCceNY8iwobuU5NrKViYr2L3MWL55WwtM87
-         eo7NiqEtSpjem6zPgChp/lKxelOt1JsIkr8pwp0o8gbe0wubIBCiWfk7udrgO03i4RdT
-         ueRGKgeizfMHYaeb4BIlOtPbCrxL0+aoKwZvXHXdY0c2HRqWc5GiPUFz8uy06irzC+ZN
-         jBkDdZ38UqW9j5Na7tscUzMAq230D4aer7h2UrzJf22gWBKsh8B/nK0kJZI8mYiAjs+L
-         35nQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684374145; x=1686966145;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=pvjw77fQ/ErJLaCJSMiJ2Mn6niHh8kIyIMJpAj+Is8w=;
-        b=Z9g/TvXlBZg3qHr9jbb3zWJlNAlyoY3O8kpLph9UU3hKTQ0ZzSQkSShpVmZyJ+8flk
-         KaKBtnPxBBe0ZQdRmN3UCYevOGTU9cA0IQHi6efp00v6k5/0c/190bycvipC/hp+6wEY
-         fi+Fs0lKxQoXpOUS27XyqaENPNo3SQ6l/4rdoakjxqWEzgbm+NcRm0/yQ3+qfen8F0fs
-         CfyoZ9csCWulA5+h5vIks3RCOlF28vfBnnzFEkfYBByOWZct1Xq++KUw8h67LtcKoJSh
-         VvbFpK9zPDSm3Y0RDZjea09H/AjbjBkYLsZd9Fc/P02pzcQCDhYpr5FdZ5+a+6xk8TaG
-         4kHA==
-X-Gm-Message-State: AC+VfDz13SSI4CLMnMgNBE00Xu+UsyqGB74QdsSZg+v6jxkDh9a1UWZI
-	osKSnDsreV3zrKJuTB0zQthl0YrOdQ4=
-X-Google-Smtp-Source: ACHHUZ5voyf0SZ/Qhe3EXUj4hd+AncQZuBwZ2/hJ2/4P4tl5mLWcvpjhwwo2z8kmHFYryOnWdVzAKA==
-X-Received: by 2002:a17:902:ec82:b0:1ad:b5ed:e951 with SMTP id x2-20020a170902ec8200b001adb5ede951mr532805plg.13.1684374144882;
-        Wed, 17 May 2023 18:42:24 -0700 (PDT)
-Received: from [192.168.43.80] (subs03-180-214-233-73.three.co.id. [180.214.233.73])
-        by smtp.gmail.com with ESMTPSA id f5-20020a17090274c500b001ac6293577fsm47640plt.110.2023.05.17.18.42.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 17 May 2023 18:42:24 -0700 (PDT)
-Message-ID: <b984f839-cf0a-fc25-41d5-656171774e4e@gmail.com>
-Date: Thu, 18 May 2023 08:42:19 +0700
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CC361FA4
+	for <regressions@lists.linux.dev>; Thu, 18 May 2023 05:52:00 +0000 (UTC)
+X-SpamFilter-By: ArmorX SpamTrap 5.77 with qID 34I5iEWN1001346, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
+	by rtits2.realtek.com.tw (8.15.2/2.81/5.90) with ESMTPS id 34I5iEWN1001346
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=OK);
+	Thu, 18 May 2023 13:44:14 +0800
+Received: from RTEXMBS06.realtek.com.tw (172.21.6.99) by
+ RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.17; Thu, 18 May 2023 13:44:23 +0800
+Received: from RTEXMBS01.realtek.com.tw (172.21.6.94) by
+ RTEXMBS06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.34; Thu, 18 May 2023 13:44:23 +0800
+Received: from RTEXMBS01.realtek.com.tw ([fe80::4d7:e49a:674a:598]) by
+ RTEXMBS01.realtek.com.tw ([fe80::4d7:e49a:674a:598%5]) with mapi id
+ 15.01.2375.007; Thu, 18 May 2023 13:44:23 +0800
+From: Kailang <kailang@realtek.com>
+To: Takashi Iwai <tiwai@suse.de>, "Joseph C. Sible" <josephcsible@gmail.com>
+CC: Bagas Sanjaya <bagasdotme@gmail.com>,
+        "regressions@lists.linux.dev"
+	<regressions@lists.linux.dev>,
+        "perex@perex.cz" <perex@perex.cz>, "tiwai@suse.com" <tiwai@suse.com>,
+        "alsa-devel@alsa-project.org"
+	<alsa-devel@alsa-project.org>
+Subject: RE: Fwd: [Bug 217440] New: ALC236 audio disappears from HP 15z-fc000 on warm boot
+Thread-Topic: Fwd: [Bug 217440] New: ALC236 audio disappears from HP 15z-fc000
+ on warm boot
+Thread-Index: AQHZhdSOD7kY6mXBDkGA3ryhp811r69Yu5SAgAASNACAAA22gIAA7n+AgAEJrYCABLe/YA==
+Date: Thu, 18 May 2023 05:44:23 +0000
+Message-ID: <415d4bc84aa74c74af913048f28b42a9@realtek.com>
+References: <bug-217440-225600@https.bugzilla.kernel.org/>
+	<CABpewhE4REgn9RJZduuEU6Z_ijXNeQWnrxO1tg70Gkw=F8qNYg@mail.gmail.com>
+	<ZGB0cVVI7OgaJU6t@debian.me>
+	<CABpewhGJE7-k52j8L2kJ2zKupgp3Ma+LdZazzzV4w1Bgihp7nw@mail.gmail.com>
+	<87cz338ix4.wl-tiwai@suse.de>
+	<CABpewhF01AK4cFPbwYVvKR9yWaO7o-ZE-2+MZjYSUF0BKUdYvw@mail.gmail.com>
+ <874jodlnmi.wl-tiwai@suse.de>
+In-Reply-To: <874jodlnmi.wl-tiwai@suse.de>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-originating-ip: [172.22.102.106]
+x-kse-serverinfo: RTEXMBS06.realtek.com.tw, 9
+x-kse-antispam-interceptor-info: fallback
+x-kse-antivirus-interceptor-info: fallback
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Content-Language: en-US
-To: Linux Regressions <regressions@lists.linux.dev>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Cc: Todd Brandt <todd.e.brandt@intel.com>,
- Miquel Raynal <miquel.raynal@bootlin.com>,
- Pratyush Yadav <pratyush@kernel.org>,
- Tudor Ambarus <tudor.ambarus@linaro.org>
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-Subject: Fwd: BUG: Patch to spi-nor hangs Lenovo ThinkPad X1 Titanium with
- divide by zero
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-KSE-AntiSpam-Interceptor-Info: fallback
 
-Hi,
 
-I notice a regression report on Bugzilla [1]. Quoting from it:
 
-> This is the system I'm having troubles with:
-> 
-> os-version              : Ubuntu 20.04.2 LTS
-> baseboard-manufacturer  : LENOVO
-> baseboard-product-name  : 20QA000FUS
-> baseboard-serial-number : W1KS11R111D
-> baseboard-version       : SDK0J40697 WIN
-> bios-release-date       : 05/20/2021
-> bios-vendor             : LENOVO
-> bios-version            : N2MET49W (1.14 )
-> chassis-manufacturer    : LENOVO
-> chassis-serial-number   : R911Q4MM
-> chassis-version         : None
-> processor-manufacturer  : Intel(R) Corporation
-> processor-version       : 11th Gen Intel(R) Core(TM) i7-1160G7 @ 1.20GHz
-> system-manufacturer     : LENOVO
-> system-product-name     : 20QA000FUS
-> system-serial-number    : R911Q4MM
-> system-version          : ThinkPad X1 Titanium Gen 1
-> cpucount                : 8
-> memtotal                : 15939728 kB
-> memfree                 : 8428028 kB
-> 
-> Ever since 6.4-rc1 this system has hung on every S3/S2idle suspend and shutdown during reboot. I've bisected it to a patch to the MTD: SPI-NOR subsystem about introducing the "concept of a bank"
-> Basically something about the new code is improperly handling the memory size on this machine. It's not complex but I haven't dug any deeper since I want it posted as quickly as possible. To reproduce, run any of these 3 commands and the system will hang:
-> 
-> echo freeze > /sys/power/state
-> echo mem > /sys/power/state
-> sudo reboot
-> 
+> -----Original Message-----
+> From: Takashi Iwai <tiwai@suse.de>
+> Sent: Monday, May 15, 2023 9:40 PM
+> To: Joseph C. Sible <josephcsible@gmail.com>
+> Cc: Bagas Sanjaya <bagasdotme@gmail.com>; regressions@lists.linux.dev;
+> Kailang <kailang@realtek.com>; perex@perex.cz; tiwai@suse.com;
+> alsa-devel@alsa-project.org
+> Subject: Re: Fwd: [Bug 217440] New: ALC236 audio disappears from HP
+> 15z-fc000 on warm boot
+>=20
+>=20
+> External mail.
+>=20
+>=20
+>=20
+> On Sun, 14 May 2023 23:48:55 +0200,
+> Joseph C. Sible wrote:
+> >
+> > On 5/14/23, Takashi Iwai wrote:
+> > > The patch changes two places (the change in alc_shutup_pins() and
+> > > alc256_shutup()), and I guess the latter is the culprit.  Could you
+> > > verify that only reverting the latter fixes the problem?
+> >
+> > Yes, only reverting the latter fixes the problem. I just tried a
+> > kernel consisting of 6.3.2 plus the below change, and it works fine:
+> >
+> > --- a/sound/pci/hda/patch_realtek.c
+> > +++ b/sound/pci/hda/patch_realtek.c
+> > @@ -3638,8 +3638,7 @@ static void alc256_shutup(struct hda_codec
+> *codec)
+> >         /* If disable 3k pulldown control for alc257, the Mic
+> > detection will not work correctly
+> >          * when booting with headset plugged. So skip setting it for
+> > the codec alc257
+> >          */
+> > -       if (codec->core.vendor_id !=3D 0x10ec0236 &&
+> > -           codec->core.vendor_id !=3D 0x10ec0257)
+> > +       if (codec->core.vendor_id !=3D 0x10ec0257)
+> >                 alc_update_coef_idx(codec, 0x46, 0, 3 << 12);
+> >
+> >         if (!spec->no_shutup_pins)
+>=20
+> OK, thanks for confirmation.
+>=20
+> Kailang, could you check this issue?
 
-For the full thread, see bugzilla.
+OK. I will take it a look for these days.
 
-Fortunately, the reporter also sent out potential fix for this regression;
-but to be sure it doesn't fall through cracks, I'm adding it to regzbot:
-
-#regzbot introduced: 9d6c5d64f0288a https://bugzilla.kernel.org/show_bug.cgi?id=217448
-#regzbot title: SPI NOR bank divide by zero on Lenovo ThinkPad X1 Titanium
-#regzbot fix: MTD SPI-NOR: BUG FIX of divide by zero in new n_banks value
-
-Thanks.
-
-[1]: https://bugzilla.kernel.org/show_bug.cgi?id=217448
-
--- 
-An old man doll... just what I always wanted! - Clara
+> Judging from the comment there:
+>=20
+>         /* 3k pull low control for Headset jack. */
+>         /* NOTE: call this before clearing the pin, otherwise codec stall=
+s */
+>         /* If disable 3k pulldown control for alc257, the Mic detection w=
+ill
+> not work correctly
+>          * when booting with headset plugged. So skip setting it for the
+> codec alc257
+>          */
+>=20
+> ... it seems that the codec got screwed with this setup, which leaded to =
+the
+> non-response at the probe after reboot.
+>=20
+> In the worst case, I'll revert that part.
+>=20
+>=20
+> thanks,
+>=20
+> Takashi
+>=20
+> ------Please consider the environment before printing this e-mail.
