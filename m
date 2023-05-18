@@ -1,55 +1,56 @@
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFE7B23C7D
-	for <regressions@lists.linux.dev>; Thu, 18 May 2023 13:12:08 +0000 (UTC)
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-64cfb8d33a5so1024108b3a.2
-        for <regressions@lists.linux.dev>; Thu, 18 May 2023 06:12:08 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDCCA23C8A
+	for <regressions@lists.linux.dev>; Thu, 18 May 2023 13:31:26 +0000 (UTC)
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-253570deb8dso925323a91.1
+        for <regressions@lists.linux.dev>; Thu, 18 May 2023 06:31:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684415528; x=1687007528;
+        d=gmail.com; s=20221208; t=1684416686; x=1687008686;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=hGN2Xn1/y4nxz6sqvPsCN0vbEykHl0P+bF4ElA00DBs=;
-        b=X9kB1RU8NBGfYG40MfB604JqrcQdmVSVkWBpnHu4TuhqnEsk96TZ3ri7trsBxqHuas
-         pxEPdABtEctmjOmDEczsOynfWSkwswLsWhhi+HK8MJHvwZ18U67AzKg5zOmZsuAscJ7H
-         Ami77IW9/BI1gbdicZ3KuRKsFW+MFATedONala6OI/M2shsoKD+TPFyC+GjyHCLtr50H
-         POgPfe+ikUd3ZcKy/W3yezzb2OayBpKJpMXJyK5U70RoIrgHqbxgNUZTedEAk4uoazMv
-         1IlgAE4SCDEm+XFnbfgNAPmQiYuLv+bIrWlW9NxkHLLcP5akqwmKGOOp+6l5zVygSDms
-         53ew==
+        bh=07jbkWZvVWjpNcKjxaXoMx/wlMgnDj/DjSx7DmqYFT8=;
+        b=lzpDaJAXMALSOUcCHSZtsWI12iYitCMms76PC56TCFywRRfHP1N5L6XZE6NeF4PaMu
+         nBUihCwtYHfjTDrzNznS/atSsJYSiHiGx4wL+yNWWsLr8P6BcW1vljTvxt8FuE4VMRw5
+         eX18NtgpssDdkdsR5UPI9Fnv9Qcnp8ixsuU41+AzfWVt+GgDW8p4owawNuHv4GmVyZbG
+         zlud1ijZwULP4ZxeFyRLk+gIKlTvqIkkFSDKDuVRVvfnDKL3nlTTTVoG3DFCDhTdTwFI
+         LKDYWpOVsUQMrpM6rnwdBvK7JQdsUNQnJwZN2m/f50nj7xB0WZZyUTlaG1LLIA1ozF2H
+         nRtg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684415528; x=1687007528;
+        d=1e100.net; s=20221208; t=1684416686; x=1687008686;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=hGN2Xn1/y4nxz6sqvPsCN0vbEykHl0P+bF4ElA00DBs=;
-        b=DcDXFRujBWZSDxm/HmXaN+MOBVitxL4ai206w9Ax2G6uFYLShcBDPv9nd0gmL99gtn
-         neIMgRNXwnXyN1NVWxLz2GCLxAIJSJ3kNjLXtAiK9xRhixcltzGfP6GPYmnz6JfenMJO
-         w6cceoiMOfYTLbHrSY0C7XV5+pIwLcaZsROsVwPUxS3IwcVxamK+liIjo/DVZx5RjKBf
-         uo/GNLZ1RpFVZBIrMNaqj3p53FNDwjy2rct0xMkCb4Ec4kI1O2DOIuboOxV7CWaUYk8c
-         rAws52IBzus1Up1fjlrUZCtx0Cw3EZKVNulzs990AUHp4c3xz3GB62UarC0fnQMDhrP2
-         JAwA==
-X-Gm-Message-State: AC+VfDxGwIdZqOFoV18u7lb+/51xFqf0gG2GLGQTYQpbfk0DiS9xWuW1
-	LZYUhnO6jHQcF02LX3TYQtI=
-X-Google-Smtp-Source: ACHHUZ5zAZ8IAGdmbuDU0W9FVajNnoEGidt01DFtxp2ppa1598wb5+MlB8N2Z7u0ygkAIoZ8bc2JHQ==
-X-Received: by 2002:a05:6a20:d817:b0:100:132e:c7c4 with SMTP id iv23-20020a056a20d81700b00100132ec7c4mr2080684pzb.11.1684415528069;
-        Thu, 18 May 2023 06:12:08 -0700 (PDT)
+        bh=07jbkWZvVWjpNcKjxaXoMx/wlMgnDj/DjSx7DmqYFT8=;
+        b=b0R3cHlKvSov7Pgn7e+4R755AEkoz1Ji92kXMLwaP5Ej3GWxcjrnSelKUDtlM1ZHVU
+         7ioUKofANIZ8jS2UdnwHfUQi5OoFLpZY0mhWg0mH5nyvM0nSH64Ya2dSEzd7TpCnjZYr
+         wMqZB9m0pcGkAK3btnZDqgnVgGUTX/V+m8OHdZm2Ha+YA/e2v2fOuBowbt8kZ0K0zSfb
+         YcRCSMRcg/C76f654RuaIDMCykBB6pXg0rlskKCbF3aiw+mKVPP5qKcg03zJv8+AHmrV
+         nijFArSfTA+dwOrEM3jrYo2+pBhxZLSDzps4J0oAGodrpcxHvDLWHOWoQfNRZ6t8D1ue
+         lbpg==
+X-Gm-Message-State: AC+VfDzwB39cy77qjK8FSsPPD7rvK3SGCVfa2uCFdVLnpUoF0DqF30zW
+	IvcXdI8lPLxmk2fLiLJNXdD5rC2bxaA=
+X-Google-Smtp-Source: ACHHUZ6Rg39C5s3A5szjjXrbwt9+lrhInJP56naXUPdn570zbNmxeD3burzDiugaUyMp+7pNS5at4Q==
+X-Received: by 2002:a17:90a:ba8a:b0:252:b14a:55c2 with SMTP id t10-20020a17090aba8a00b00252b14a55c2mr2560424pjr.9.1684416686127;
+        Thu, 18 May 2023 06:31:26 -0700 (PDT)
 Received: from debian.me (subs03-180-214-233-78.three.co.id. [180.214.233.78])
-        by smtp.gmail.com with ESMTPSA id cq20-20020a17090af99400b002535a0f2028sm1676081pjb.51.2023.05.18.06.12.07
+        by smtp.gmail.com with ESMTPSA id u11-20020a63f64b000000b00513cc8c9597sm1213765pgj.10.2023.05.18.06.31.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 May 2023 06:12:07 -0700 (PDT)
+        Thu, 18 May 2023 06:31:25 -0700 (PDT)
 Received: by debian.me (Postfix, from userid 1000)
-	id 58CE21069DF; Thu, 18 May 2023 14:39:30 +0700 (WIB)
-Date: Thu, 18 May 2023 14:39:29 +0700
+	id 0AED1105431; Thu, 18 May 2023 20:31:21 +0700 (WIB)
+Date: Thu, 18 May 2023 20:31:21 +0700
 From: Bagas Sanjaya <bagasdotme@gmail.com>
 To: =?utf-8?B?w4lyaWM=?= Brunet <eric.brunet@ens.fr>,
-	stable@vger.kernel.org
-Cc: regressions@lists.linux.dev, ville.syrjala@linux.intel.com,
+	Ville =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>
+Cc: stable@vger.kernel.org, regressions@lists.linux.dev,
 	jouni.hogander@intel.com, jani.nikula@intel.com,
 	gregkh@linuxfoundation.org
 Subject: Re: Regression on drm/i915, with bisected commit
-Message-ID: <ZGXWMdTactecOP/0@debian.me>
+Message-ID: <ZGYoqbhkxkCg9m7d@debian.me>
 References: <3236901.44csPzL39Z@skaro>
- <ZGQXELf3MSt4oUsR@debian.me>
+ <ZGU56n66OAe0DqN3@intel.com>
+ <5681706.DvuYhMxLoT@skaro>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -57,61 +58,63 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="+8GRMAJR8db13eJZ"
+	protocol="application/pgp-signature"; boundary="EoPTFpm/moMAQdNP"
 Content-Disposition: inline
-In-Reply-To: <ZGQXELf3MSt4oUsR@debian.me>
+In-Reply-To: <5681706.DvuYhMxLoT@skaro>
 
 
---+8GRMAJR8db13eJZ
+--EoPTFpm/moMAQdNP
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 17, 2023 at 06:51:44AM +0700, Bagas Sanjaya wrote:
-> On Tue, May 16, 2023 at 03:04:53PM +0200, =C3=89ric Brunet wrote:
-> > Hello all,
+On Thu, May 18, 2023 at 10:14:30AM +0200, =C3=89ric Brunet wrote:
+> Le mercredi 17 mai 2023, 22:32:42 CEST Ville Syrj=C3=A4l=C3=A4 a =C3=A9cr=
+it :
+> > On Tue, May 16, 2023 at 03:04:53PM +0200, =C3=89ric Brunet wrote:
+> > > Hello all,
+> > >=20
+> > > I have a HP Elite x360 1049 G9 2-in-1 notebook running fedora 38 with=
+ an
+> > > Adler Lake intel video card.
+> > >=20
+> > > After upgrading to kernel 6.2.13 (as packaged by fedora), I started s=
+eeing
+> > > severe video glitches made of random pixels in a vertical band occupy=
+ing
+> > > about 20% of my screen, on the right. The glitches would happen both =
+with
+> > > X.org and wayland.
 > >=20
-> > I have a HP Elite x360 1049 G9 2-in-1 notebook running fedora 38 with a=
-n Adler=20
-> > Lake intel video card.
-> >=20
-> > After upgrading to kernel 6.2.13 (as packaged by fedora), I started see=
-ing=20
-> > severe video glitches made of random pixels in a vertical band occupyin=
-g about=20
-> > 20% of my screen, on the right. The glitches would happen both with X.o=
-rg and=20
-> > wayland.
-> >=20
-> > I checked that vanilla 6.2.12 does not have the bug and that both vanil=
-la=20
-> > 6.2.13 and vanilla 6.3.2 do have the bug.
-> >=20
-> > I bisected the problem to commit e2b789bc3dc34edc87ffb85634967d24ed351a=
-cb (it=20
-> > is a one-liner reproduced at the end of this message).
-> >=20
-> > I checked that vanilla 6.3.2 with this commit reverted does not have th=
-e bug.
-> >=20
+> > Please file a bug at https://gitlab.freedesktop.org/drm/intel/issues/new
+> > boot with "log_buf_len=3D4M drm.debug=3D0xe" passed to kernel cmdline, =
+and
+> > attach the resulting dmesg to the bug.
+>=20
+> Thank you for your answer, I have just opened the issue as requested.
+>=20
+> https://gitlab.freedesktop.org/drm/intel/-/issues/8480
+>=20
 
-There is a similar regression reported on freedesktop gitlab tracker
-(by different reporter):
+Thanks for the ticket link. Now telling regzbot (and updating the
+culprit since you also mention the mainline commit that I assume to
+be the culprit [please verify if it is indeed the case]):
 
-#regzbot link: https://gitlab.freedesktop.org/drm/intel/-/issues/8475
+#regzbot introduced: e1c71f8f918047
+#regzbot link: https://gitlab.freedesktop.org/drm/intel/-/issues/8480
 
 --=20
 An old man doll... just what I always wanted! - Clara
 
---+8GRMAJR8db13eJZ
+--EoPTFpm/moMAQdNP
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZGXWIQAKCRD2uYlJVVFO
-o2gVAQDLNFodNLRIMTBFAijZkPKoToY4dzUk95BosvRCNP6VbAEAoYrMSgfiQ1ia
-4HVtW1MqhLC+Vw0FeyIoUxK/jq1PPQ0=
-=7rEA
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZGYopAAKCRD2uYlJVVFO
+o8G8APwJFW+7qatzqJqrpNTFfK9bpbBnUHaHoPoNI1Tyx0MpYwEAlnopo9cQ2Zxe
+70ZgR4r8JbUANNEcYs8gkToi/+ClAQs=
+=J/5J
 -----END PGP SIGNATURE-----
 
---+8GRMAJR8db13eJZ--
+--EoPTFpm/moMAQdNP--
