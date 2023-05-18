@@ -1,188 +1,113 @@
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0D4C136A
-	for <regressions@lists.linux.dev>; Wed, 17 May 2023 20:32:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1684355567; x=1715891567;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=ZaocSryMN3S2xGk5idvkXFNRKcVpJQOK/wBC4YdljGA=;
-  b=aGrHA1fualCfbgKI8xHkwcOKYDjYOTYMQnRGFg3eYBicGHGbTLAUB+P1
-   3ZfgAupWc84B363tVzFY1qqgnocZTnv9WlJHWSNtEOIQDxIf5CJesgt0v
-   sGkaBFVdrBc9gnccRmRHSPWKtoWgS1FBHSIKkvhuxQYjUvUdGIeNEE975
-   lXbJlWhKSnKK/d6f+PX9QjeA+gcNPllWzEkn/oI3keDUrxtD1MMl0MYLd
-   WRrqIUFCQ9WoJMFjdBx/1SfBKZ5JzV56x6aMNOgLMyydYuvYvQQKYttBB
-   tN25hCpqBytrdQWSQum4EhzG0uYGlhAGzQAiWIk6NeHLAicYHLHMCKVjw
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10713"; a="380069504"
-X-IronPort-AV: E=Sophos;i="5.99,283,1677571200"; 
-   d="scan'208";a="380069504"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2023 13:32:46 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10713"; a="826088760"
-X-IronPort-AV: E=Sophos;i="5.99,283,1677571200"; 
-   d="scan'208";a="826088760"
-Received: from stinkpipe.fi.intel.com (HELO stinkbox) ([10.237.72.70])
-  by orsmga004.jf.intel.com with SMTP; 17 May 2023 13:32:43 -0700
-Received: by stinkbox (sSMTP sendmail emulation); Wed, 17 May 2023 23:32:42 +0300
-Date: Wed, 17 May 2023 23:32:42 +0300
-From: Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
-To: =?iso-8859-1?Q?=C9ric?= Brunet <eric.brunet@ens.fr>
-Cc: stable@vger.kernel.org, regressions@lists.linux.dev,
-	jouni.hogander@intel.com, jani.nikula@intel.com,
-	gregkh@linuxfoundation.org
-Subject: Re: Regression on drm/i915, with bisected commit
-Message-ID: <ZGU56n66OAe0DqN3@intel.com>
-References: <3236901.44csPzL39Z@skaro>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA8917E
+	for <regressions@lists.linux.dev>; Thu, 18 May 2023 01:42:25 +0000 (UTC)
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1ae507af2e5so5233815ad.1
+        for <regressions@lists.linux.dev>; Wed, 17 May 2023 18:42:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1684374145; x=1686966145;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pvjw77fQ/ErJLaCJSMiJ2Mn6niHh8kIyIMJpAj+Is8w=;
+        b=dfJL0x+uiW7HCq/mVm5ocC80LIodXAAhJkjZaDe8t9jsmomYEj0syfMDnaploNCaXk
+         t7CHu5+a+/02szN/sn00ijEUpgxlJN62lWCceNY8iwobuU5NrKViYr2L3MWL55WwtM87
+         eo7NiqEtSpjem6zPgChp/lKxelOt1JsIkr8pwp0o8gbe0wubIBCiWfk7udrgO03i4RdT
+         ueRGKgeizfMHYaeb4BIlOtPbCrxL0+aoKwZvXHXdY0c2HRqWc5GiPUFz8uy06irzC+ZN
+         jBkDdZ38UqW9j5Na7tscUzMAq230D4aer7h2UrzJf22gWBKsh8B/nK0kJZI8mYiAjs+L
+         35nQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684374145; x=1686966145;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=pvjw77fQ/ErJLaCJSMiJ2Mn6niHh8kIyIMJpAj+Is8w=;
+        b=Z9g/TvXlBZg3qHr9jbb3zWJlNAlyoY3O8kpLph9UU3hKTQ0ZzSQkSShpVmZyJ+8flk
+         KaKBtnPxBBe0ZQdRmN3UCYevOGTU9cA0IQHi6efp00v6k5/0c/190bycvipC/hp+6wEY
+         fi+Fs0lKxQoXpOUS27XyqaENPNo3SQ6l/4rdoakjxqWEzgbm+NcRm0/yQ3+qfen8F0fs
+         CfyoZ9csCWulA5+h5vIks3RCOlF28vfBnnzFEkfYBByOWZct1Xq++KUw8h67LtcKoJSh
+         VvbFpK9zPDSm3Y0RDZjea09H/AjbjBkYLsZd9Fc/P02pzcQCDhYpr5FdZ5+a+6xk8TaG
+         4kHA==
+X-Gm-Message-State: AC+VfDz13SSI4CLMnMgNBE00Xu+UsyqGB74QdsSZg+v6jxkDh9a1UWZI
+	osKSnDsreV3zrKJuTB0zQthl0YrOdQ4=
+X-Google-Smtp-Source: ACHHUZ5voyf0SZ/Qhe3EXUj4hd+AncQZuBwZ2/hJ2/4P4tl5mLWcvpjhwwo2z8kmHFYryOnWdVzAKA==
+X-Received: by 2002:a17:902:ec82:b0:1ad:b5ed:e951 with SMTP id x2-20020a170902ec8200b001adb5ede951mr532805plg.13.1684374144882;
+        Wed, 17 May 2023 18:42:24 -0700 (PDT)
+Received: from [192.168.43.80] (subs03-180-214-233-73.three.co.id. [180.214.233.73])
+        by smtp.gmail.com with ESMTPSA id f5-20020a17090274c500b001ac6293577fsm47640plt.110.2023.05.17.18.42.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 17 May 2023 18:42:24 -0700 (PDT)
+Message-ID: <b984f839-cf0a-fc25-41d5-656171774e4e@gmail.com>
+Date: Thu, 18 May 2023 08:42:19 +0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <3236901.44csPzL39Z@skaro>
-X-Patchwork-Hint: comment
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Content-Language: en-US
+To: Linux Regressions <regressions@lists.linux.dev>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Cc: Todd Brandt <todd.e.brandt@intel.com>,
+ Miquel Raynal <miquel.raynal@bootlin.com>,
+ Pratyush Yadav <pratyush@kernel.org>,
+ Tudor Ambarus <tudor.ambarus@linaro.org>
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+Subject: Fwd: BUG: Patch to spi-nor hangs Lenovo ThinkPad X1 Titanium with
+ divide by zero
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, May 16, 2023 at 03:04:53PM +0200, Éric Brunet wrote:
-> Hello all,
-> 
-> I have a HP Elite x360 1049 G9 2-in-1 notebook running fedora 38 with an Adler 
-> Lake intel video card.
-> 
-> After upgrading to kernel 6.2.13 (as packaged by fedora), I started seeing 
-> severe video glitches made of random pixels in a vertical band occupying about 
-> 20% of my screen, on the right. The glitches would happen both with X.org and 
-> wayland.
-> 
-> I checked that vanilla 6.2.12 does not have the bug and that both vanilla 
-> 6.2.13 and vanilla 6.3.2 do have the bug.
-> 
-> I bisected the problem to commit e2b789bc3dc34edc87ffb85634967d24ed351acb (it 
-> is a one-liner reproduced at the end of this message).
-> 
-> I checked that vanilla 6.3.2 with this commit reverted does not have the bug.
-> 
-> I am CC-ing every e-mail appearing in this commit , I hope this is ok, and I 
-> apologize if it is not.
+Hi,
 
-Please file a bug at https://gitlab.freedesktop.org/drm/intel/issues/new
-boot with "log_buf_len=4M drm.debug=0xe" passed to kernel cmdline, and
-attach the resulting dmesg to the bug.
+I notice a regression report on Bugzilla [1]. Quoting from it:
 
+> This is the system I'm having troubles with:
 > 
-> I have filled a fedora bug report about this, see https://bugzilla.redhat.com/
-> show_bug.cgi?id=2203549 . You will find there a small video (made with fedora 
-> kernel 2.6.14) demonstrating the issue.
+> os-version              : Ubuntu 20.04.2 LTS
+> baseboard-manufacturer  : LENOVO
+> baseboard-product-name  : 20QA000FUS
+> baseboard-serial-number : W1KS11R111D
+> baseboard-version       : SDK0J40697 WIN
+> bios-release-date       : 05/20/2021
+> bios-vendor             : LENOVO
+> bios-version            : N2MET49W (1.14 )
+> chassis-manufacturer    : LENOVO
+> chassis-serial-number   : R911Q4MM
+> chassis-version         : None
+> processor-manufacturer  : Intel(R) Corporation
+> processor-version       : 11th Gen Intel(R) Core(TM) i7-1160G7 @ 1.20GHz
+> system-manufacturer     : LENOVO
+> system-product-name     : 20QA000FUS
+> system-serial-number    : R911Q4MM
+> system-version          : ThinkPad X1 Titanium Gen 1
+> cpucount                : 8
+> memtotal                : 15939728 kB
+> memfree                 : 8428028 kB
 > 
-> Some more details:
+> Ever since 6.4-rc1 this system has hung on every S3/S2idle suspend and shutdown during reboot. I've bisected it to a patch to the MTD: SPI-NOR subsystem about introducing the "concept of a bank"
+> Basically something about the new code is improperly handling the memory size on this machine. It's not complex but I haven't dug any deeper since I want it posted as quickly as possible. To reproduce, run any of these 3 commands and the system will hang:
 > 
-> % sudo lspci -vk -s 00:02.0
-> 00:02.0 VGA compatible controller: Intel Corporation Alder Lake-UP3 GT2 [Iris 
-> Xe Graphics] (rev 0c) (prog-if 00 [VGA controller])
->         DeviceName: Onboard IGD
->         Subsystem: Hewlett-Packard Company Device 896d
->         Flags: bus master, fast devsel, latency 0, IRQ 143
->         Memory at 603c000000 (64-bit, non-prefetchable) [size=16M]
->         Memory at 4000000000 (64-bit, prefetchable) [size=256M]
->         I/O ports at 3000 [size=64]
->         Expansion ROM at 000c0000 [virtual] [disabled] [size=128K]
->         Capabilities: [40] Vendor Specific Information: Len=0c <?>
->         Capabilities: [70] Express Root Complex Integrated Endpoint, MSI 00
->         Capabilities: [ac] MSI: Enable+ Count=1/1 Maskable+ 64bit-
->         Capabilities: [d0] Power Management version 2
->         Capabilities: [100] Process Address Space ID (PASID)
->         Capabilities: [200] Address Translation Service (ATS)
->         Capabilities: [300] Page Request Interface (PRI)
->         Capabilities: [320] Single Root I/O Virtualization (SR-IOV)
->         Kernel driver in use: i915
->         Kernel modules: i915
+> echo freeze > /sys/power/state
+> echo mem > /sys/power/state
+> sudo reboot
 > 
-> Relevant kernel boot messages: (appart from timestamps, these lines are 
-> identical for 6.2.12 and 6.2.14):
-> 
-> [    2.790043] i915 0000:00:02.0: vgaarb: deactivate vga console
-> [    2.790089] i915 0000:00:02.0: [drm] Using Transparent Hugepages
-> [    2.790497] i915 0000:00:02.0: vgaarb: changed VGA decodes: 
-> olddecodes=io+mem,decodes=io+mem:owns=io+mem
-> [    2.793812] i915 0000:00:02.0: [drm] Finished loading DMC firmware i915/
-> adlp_dmc_ver2_16.bin (v2.16)
-> [    2.825058] i915 0000:00:02.0: [drm] GuC firmware i915/adlp_guc_70.bin 
-> version 70.5.1
-> [    2.825061] i915 0000:00:02.0: [drm] HuC firmware i915/tgl_huc.bin version 
-> 7.9.3
-> [    2.842906] i915 0000:00:02.0: [drm] HuC authenticated
-> [    2.843778] i915 0000:00:02.0: [drm] GuC submission enabled
-> [    2.843779] i915 0000:00:02.0: [drm] GuC SLPC enabled
-> [    2.844200] i915 0000:00:02.0: [drm] GuC RC: enabled
-> [    2.845010] i915 0000:00:02.0: [drm] Protected Xe Path (PXP) protected 
-> content support initialized
-> [    3.964766] [drm] Initialized i915 1.6.0 20201103 for 0000:00:02.0 on minor 
-> 1
-> [    3.968403] ACPI: video: Video Device [GFX0] (multi-head: yes  rom: no  
-> post: no)
-> [    3.968981] input: Video Bus as /devices/LNXSYSTM:00/LNXSYBUS:00/
-> PNP0A08:00/LNXVIDEO:00/input/input18
-> [    3.977892] fbcon: i915drmfb (fb0) is primary device
-> [    3.977899] fbcon: Deferring console take-over
-> [    3.977904] i915 0000:00:02.0: [drm] fb0: i915drmfb frame buffer device
-> [    4.026120] i915 0000:00:02.0: [drm] Selective fetch area calculation 
-> failed in pipe A
-> 
-> Is there anything else I should provide? I am willing to run some tests, of 
-> course.
-> 
-> Thanks for your help,
-> 
-> Éric Brunet
-> 
-> =================================================
-> 
-> commit e2b789bc3dc34edc87ffb85634967d24ed351acb (HEAD)
-> Author: Ville Syrjälä <ville.syrjala@linux.intel.com>
-> Date:   Wed Mar 29 20:24:33 2023 +0300
-> 
->     drm/i915: Fix fast wake AUX sync len
->     
->     commit e1c71f8f918047ce822dc19b42ab1261ed259fd1 upstream.
->     
->     Fast wake should use 8 SYNC pulses for the preamble
->     and 10-16 SYNC pulses for the precharge. Reduce our
->     fast wake SYNC count to match the maximum value.
->     We also use the maximum precharge length for normal
->     AUX transactions.
->     
->     Cc: stable@vger.kernel.org
->     Cc: Jouni Högander <jouni.hogander@intel.com>
->     Signed-off-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
->     Link: https://patchwork.freedesktop.org/patch/msgid/
-> 20230329172434.18744-1-ville.syrjala@linux.intel.com
->     Reviewed-by: Jouni Högander <jouni.hogander@intel.com>
->     (cherry picked from commit 605f7c73133341d4b762cbd9a22174cc22d4c38b)
->     Signed-off-by: Jani Nikula <jani.nikula@intel.com>
->     Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> 
-> diff --git a/drivers/gpu/drm/i915/display/intel_dp_aux.c b/drivers/gpu/drm/
-> i915/display/intel_dp_aux.c
-> index 664bebdecea7..d5fed2eb66d2 100644
-> --- a/drivers/gpu/drm/i915/display/intel_dp_aux.c
-> +++ b/drivers/gpu/drm/i915/display/intel_dp_aux.c
-> @@ -166,7 +166,7 @@ static u32 skl_get_aux_send_ctl(struct intel_dp *intel_dp,
->               DP_AUX_CH_CTL_TIME_OUT_MAX |
->               DP_AUX_CH_CTL_RECEIVE_ERROR |
->               (send_bytes << DP_AUX_CH_CTL_MESSAGE_SIZE_SHIFT) |
-> -             DP_AUX_CH_CTL_FW_SYNC_PULSE_SKL(32) |
-> +             DP_AUX_CH_CTL_FW_SYNC_PULSE_SKL(24) |
->               DP_AUX_CH_CTL_SYNC_PULSE_SKL(32);
->  
->         if (intel_tc_port_in_tbt_alt_mode(dig_port))
-> 
+
+For the full thread, see bugzilla.
+
+Fortunately, the reporter also sent out potential fix for this regression;
+but to be sure it doesn't fall through cracks, I'm adding it to regzbot:
+
+#regzbot introduced: 9d6c5d64f0288a https://bugzilla.kernel.org/show_bug.cgi?id=217448
+#regzbot title: SPI NOR bank divide by zero on Lenovo ThinkPad X1 Titanium
+#regzbot fix: MTD SPI-NOR: BUG FIX of divide by zero in new n_banks value
+
+Thanks.
+
+[1]: https://bugzilla.kernel.org/show_bug.cgi?id=217448
 
 -- 
-Ville Syrjälä
-Intel
+An old man doll... just what I always wanted! - Clara
