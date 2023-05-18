@@ -1,84 +1,118 @@
-Received: from nef.ens.fr (nef2.ens.fr [129.199.96.40])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 857CE3C39
-	for <regressions@lists.linux.dev>; Thu, 18 May 2023 08:15:15 +0000 (UTC)
-X-ENS-nef-client:   129.199.127.85 ( name = mail.phys.ens.fr )
-Received: from mail.phys.ens.fr (mail.phys.ens.fr [129.199.127.85])
-          by nef.ens.fr (8.14.4/1.01.28121999) with ESMTP id 34I8EVjQ019440
-          ; Thu, 18 May 2023 10:14:31 +0200
-Received: from skaro.localnet (unknown [176.151.100.134])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(Client did not present a certificate)
-	by mail.phys.ens.fr (Postfix) with ESMTPSA id B19771A1A55;
-	Thu, 18 May 2023 10:14:30 +0200 (CEST)
-From: =?ISO-8859-1?Q?=C9ric?= Brunet <eric.brunet@ens.fr>
-To: Ville =?ISO-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
-Cc: stable@vger.kernel.org, regressions@lists.linux.dev,
-        jouni.hogander@intel.com, jani.nikula@intel.com,
-        gregkh@linuxfoundation.org
-Subject: Re: Regression on drm/i915, with bisected commit
-Date: Thu, 18 May 2023 10:14:30 +0200
-Message-ID: <5681706.DvuYhMxLoT@skaro>
-In-Reply-To: <ZGU56n66OAe0DqN3@intel.com>
-References: <3236901.44csPzL39Z@skaro> <ZGU56n66OAe0DqN3@intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A15FAD3C
+	for <regressions@lists.linux.dev>; Thu, 18 May 2023 08:54:48 +0000 (UTC)
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-4f14468ef54so2116895e87.0
+        for <regressions@lists.linux.dev>; Thu, 18 May 2023 01:54:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1684400086; x=1686992086;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=BjAvVBk1hRLHZrA8OFaE6F4f4RtrYr9WV2xvjiGYmh4=;
+        b=g32/8heJ3DktSiEENGsRXd/v01cczhkq4W1Yo5mCj/C2Ef4XQ3F8RBjeoC3Cm3DN8S
+         7M/2xNp7FAvmxQ9FOwsLAQ801Rl13p7l+bPmWxjhWSofWnKJJ3RlBpOVsBp6BddReuYe
+         OBgU9Ahs9LpQM2V0pui+DuCGk5FrCpA07QC1eBgCz8eQWG/FCFyQXMTkPMZzR9PjJWE6
+         15dma5h07NttmZepJmV9ilnjYzDM4HmqK543iEqme5pbcZFchnMll0aV+zuPCO8drIv7
+         u+8cRTckWZ3Qsddb3ZEtRBkclqOnus/KX6IqkIqNyes5kdUCnbi1GXgB5K6RLjc+i99A
+         9Z8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684400086; x=1686992086;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BjAvVBk1hRLHZrA8OFaE6F4f4RtrYr9WV2xvjiGYmh4=;
+        b=hF28Gf4oFKpZU2aPr0XcDY+gMfASEOY+O0j07Xuj5MNHE22HfLhzW3KxVjYs9jImGc
+         bepIO4QDwcI6AUi/ynb+8+3nSIPL+Pa+jywc610CbGuBWiUTXbc6YEzyWPFR8dTSAGo1
+         /3pWyMfgtQSCLLxPNar2V3zwiYYtncmxzX2PJD6gfZZLUHJ8+qrkR1xrFWevP8+lm17m
+         B93hvUW+jsmkRdMR6FYEfT5d66KrH2/ZZhXlHd/F3yRMqWmec388aH8tQ73Y3bSY8IF3
+         tBZWDbBrmj8NTnFJa+g0sPTOxDlp+tGSrTRgrLCaxYznGnOW8MCMIKbgf0pQT1nMFG0R
+         r4Hg==
+X-Gm-Message-State: AC+VfDxdcD7ZbkhsbnSyCpONMfJnnelhP4NYc0H6JdhieWUT1OkU6fRh
+	aSLBtXN95ytMi+V1yH5JREKgXA==
+X-Google-Smtp-Source: ACHHUZ66yUDz9VH5R8zAhzwAIypF9QSua+hRd28G08W56sm7WWljOyDQ3Gn2wHIXgoozj0EISiOr9w==
+X-Received: by 2002:ac2:5dc2:0:b0:4f3:82aa:142d with SMTP id x2-20020ac25dc2000000b004f382aa142dmr1171051lfq.47.1684400086103;
+        Thu, 18 May 2023 01:54:46 -0700 (PDT)
+Received: from ta1.c.googlers.com.com (61.215.228.35.bc.googleusercontent.com. [35.228.215.61])
+        by smtp.gmail.com with ESMTPSA id r4-20020a056512102400b004f24db9248dsm177513lfr.141.2023.05.18.01.54.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 May 2023 01:54:45 -0700 (PDT)
+From: Tudor Ambarus <tudor.ambarus@linaro.org>
+To: miquel.raynal@bootlin.com,
+	richard@nod.at,
+	todd.e.brandt@intel.com
+Cc: vigneshr@ti.com,
+	pratyush@kernel.org,
+	michael@walle.cc,
+	linux-mtd@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	regressions@leemhuis.info,
+	bagasdotme@gmail.com,
+	regressions@lists.linux.dev,
+	joneslee@google.com,
+	Tudor Ambarus <tudor.ambarus@linaro.org>,
+	Todd Brandt <todd.e.brandt@linux.intel.com>
+Subject: [PATCH] mtd: spi-nor: Fix divide by zero for spi-nor-generic flashes
+Date: Thu, 18 May 2023 08:54:40 +0000
+Message-ID: <20230518085440.2363676-1-tudor.ambarus@linaro.org>
+X-Mailer: git-send-email 2.40.1.606.ga4b1b128d6-goog
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
-X-Rspamd-Queue-Id: B19771A1A55
-X-Spamd-Bar: /
-X-Spamd-Result: default: False [-0.38 / 150.00];
-	 ARC_NA(0.00)[];
-	 R_SPF_NEUTRAL(0.00)[?all];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 MIME_TRACE(0.00)[0:+];
-	 DMARC_NA(0.00)[ens.fr];
-	 RCPT_COUNT_FIVE(0.00)[6];
-	 HFILTER_HELO_IP_A(1.00)[skaro.localnet];
-	 HFILTER_HELO_NORES_A_OR_MX(0.30)[skaro.localnet];
-	 NEURAL_HAM(-0.00)[-1.000,0];
-	 IP_SCORE(-1.76)[ip: (-0.16), ipnet: 176.128.0.0/10(-4.87), asn: 5410(-3.66), country: FR(-0.09)];
-	 RCVD_COUNT_ZERO(0.00)[0];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 R_DKIM_NA(0.00)[];
-	 MID_RHS_NOT_FQDN(0.50)[];
-	 ASN(0.00)[asn:5410, ipnet:176.128.0.0/10, country:FR];
-	 HFILTER_HOSTNAME_UNKNOWN(2.50)[];
-	 BAYES_HAM(-2.92)[99.66%];
-	 ONCE_RECEIVED(0.10)[]
-X-Rspamd-Server: mail
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.4.3 (nef.ens.fr [129.199.96.32]); Thu, 18 May 2023 10:14:31 +0200 (CEST)
+Content-Transfer-Encoding: 8bit
 
-Le mercredi 17 mai 2023, 22:32:42 CEST Ville Syrj=E4l=E4 a =E9crit :
-> On Tue, May 16, 2023 at 03:04:53PM +0200, =C9ric Brunet wrote:
-> > Hello all,
-> >=20
-> > I have a HP Elite x360 1049 G9 2-in-1 notebook running fedora 38 with an
-> > Adler Lake intel video card.
-> >=20
-> > After upgrading to kernel 6.2.13 (as packaged by fedora), I started see=
-ing
-> > severe video glitches made of random pixels in a vertical band occupying
-> > about 20% of my screen, on the right. The glitches would happen both wi=
-th
-> > X.org and wayland.
->=20
-> Please file a bug at https://gitlab.freedesktop.org/drm/intel/issues/new
-> boot with "log_buf_len=3D4M drm.debug=3D0xe" passed to kernel cmdline, and
-> attach the resulting dmesg to the bug.
+We failed to initialize n_banks for spi-nor-generic flashes, which
+caused a devide by zero when computing the bank_size.
 
-Thank you for your answer, I have just opened the issue as requested.
+By default we consider that all chips have a single bank. Initialize
+the default number of banks for spi-nor-generic flashes. Even if the
+bug is fixed with this simple initialization, check the n_banks value
+before dividing so that we make sure this kind of bug won't occur again
+if some other struct instance is created uninitialized.
 
-https://gitlab.freedesktop.org/drm/intel/-/issues/8480
+Suggested-by: Todd Brandt <todd.e.brandt@linux.intel.com>
+Reported-by: Todd Brandt <todd.e.brandt@linux.intel.com>
+Closes: https://bugzilla.kernel.org/show_bug.cgi?id=217448
+Fixes: 9d6c5d64f028 ("mtd: spi-nor: Introduce the concept of bank")
+Link: https://lore.kernel.org/all/20230516225108.29194-1-todd.e.brandt@intel.com/
+Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
+---
+ drivers/mtd/spi-nor/core.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-=C9ric Brunet
-
+diff --git a/drivers/mtd/spi-nor/core.c b/drivers/mtd/spi-nor/core.c
+index 0bb0ad14a2fc..5f29fac8669a 100644
+--- a/drivers/mtd/spi-nor/core.c
++++ b/drivers/mtd/spi-nor/core.c
+@@ -2018,6 +2018,7 @@ static const struct spi_nor_manufacturer *manufacturers[] = {
+ 
+ static const struct flash_info spi_nor_generic_flash = {
+ 	.name = "spi-nor-generic",
++	.n_banks = 1,
+ 	/*
+ 	 * JESD216 rev A doesn't specify the page size, therefore we need a
+ 	 * sane default.
+@@ -2921,7 +2922,8 @@ static void spi_nor_late_init_params(struct spi_nor *nor)
+ 	if (nor->flags & SNOR_F_HAS_LOCK && !nor->params->locking_ops)
+ 		spi_nor_init_default_locking_ops(nor);
+ 
+-	nor->params->bank_size = div64_u64(nor->params->size, nor->info->n_banks);
++	if (nor->info->n_banks > 1)
++		params->bank_size = div64_u64(params->size, nor->info->n_banks);
+ }
+ 
+ /**
+@@ -2987,6 +2989,7 @@ static void spi_nor_init_default_params(struct spi_nor *nor)
+ 	/* Set SPI NOR sizes. */
+ 	params->writesize = 1;
+ 	params->size = (u64)info->sector_size * info->n_sectors;
++	params->bank_size = params->size;
+ 	params->page_size = info->page_size;
+ 
+ 	if (!(info->flags & SPI_NOR_NO_FR)) {
+-- 
+2.40.1.606.ga4b1b128d6-goog
 
