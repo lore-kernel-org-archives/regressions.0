@@ -1,177 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BACCA8C16
-	for <regressions@lists.linux.dev>; Fri, 19 May 2023 12:15:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BFA66C4339B;
-	Fri, 19 May 2023 12:15:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1684498509;
-	bh=VTGX2OX7+uxXQDH3wTNN0vLi9cF62gFXdXsTqtCJTac=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=fK+xUpikHVk7SLGvhUmZ/eIe/LYtPJ+bfRAvQVAABqfteacqCyZYUJTvPKSB69UFF
-	 s6wqd2q0tFtPAeLWT5A6/uiN4sbm8/FkB1g4HWziYSJNqAKRbVENpv/yUwHPYtwIC+
-	 EOvs9TcRbaOlxiNmBX+/KVBx6KTkbf7BCGojiCPhYRJq8lM7g/pQQxJ1HIAgjnZMHU
-	 IZXN1ULEkl3BMaOh+BZ2qE/uZb/zTbp69ILfMWEkOgtRM5yEwVdzONXTqC/d6B7E34
-	 CymmGbwFthyPCVN1wX9OGqd6BpiOTpGFVvW92tu+hf+Lsx18Qz8TgikZn32G/pqv7X
-	 XLMQ/diS6+/TQ==
-Date: Fri, 19 May 2023 14:15:02 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Mike Christie <michael.christie@oracle.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Cc: oleg@redhat.com, linux@leemhuis.info, nicolas.dichtel@6wind.com,
-	axboe@kernel.dk, ebiederm@xmission.com,
-	linux-kernel@vger.kernel.org,
-	virtualization@lists.linux-foundation.org, mst@redhat.com,
-	sgarzare@redhat.com, jasowang@redhat.com, stefanha@redhat.com,
-	Linux kernel regressions list <regressions@lists.linux.dev>,
-	hch@infradead.org, konrad.wilk@oracle.com
-Subject: Re: [RFC PATCH 0/8] vhost_tasks: Use CLONE_THREAD/SIGHAND
-Message-ID: <20230519-vormittag-dschungel-83607e9d2255@brauner>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C09B7C
+	for <regressions@lists.linux.dev>; Fri, 19 May 2023 13:19:45 +0000 (UTC)
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-643846c006fso3299302b3a.0
+        for <regressions@lists.linux.dev>; Fri, 19 May 2023 06:19:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1684502385; x=1687094385;
+        h=content-transfer-encoding:cc:subject:from:to:content-language
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PNZa4ZUMMTvbUod6znd3wvg9/UWL/p4a2pQAi7M2zVw=;
+        b=Tjrk99BRY28Fy8/OjZNMP8CiMQ6zmFrMXQL10thchpXS9detrOCrK1IGYiRrbYzhVO
+         zZWgRORL6Vo1JuL8ToPXNHE1MQdRgSzbz0oBKJN7O6RKsuuZyf4iknt3hNShh77400Vw
+         np77K8+ficWm8RlwW5j/sLMxK6G9akwUPWOlvZNDitIzXEavwnEDe5HBI8YkAKvX8R2c
+         /na81XIjC1Yd8QxLI0blip5op5dSEIwITsZXugLcZbgVk/3n8z5/fCaOOogmhU3Jxico
+         Or2/5SdX91MIyP/MLUT2hiljx0TfEp3RoeDIiobBmQ1QLOkZd1LPqlSXbyjCj4PTObs2
+         5Twg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684502385; x=1687094385;
+        h=content-transfer-encoding:cc:subject:from:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=PNZa4ZUMMTvbUod6znd3wvg9/UWL/p4a2pQAi7M2zVw=;
+        b=QXYgC+K/XhQt2174v3fChH9/9VsSW4bXGI2Wx7KtS3TvBtX7ZWRjNN3R0cUg0aZsg5
+         rXrk8Q5YVupVsRgiStvbSv0zmxUqCe0mgN2JOxtIUT0KToThCAOGaXNjIJ5kG4+pcgSG
+         qMa/69DyJqBNcErrklael+DYtCJR6rAm3ZbAv26+tX8K5O+i+oivPI9+MzwLhD8y1DT6
+         UB2ZRMeTpb9kdshmx4mCo5o78lAZsYC5tQopLkcGNq1vAUJnGNTqnj3NL6jQuveCYey3
+         EpfVA0//tU3lArnT3bqMsMMyWWsdXeV+RcRQyPvo78mcCxBR6J0wA4TfbMtnfRdriCQJ
+         tyDg==
+X-Gm-Message-State: AC+VfDwyUKU4nLbmDEgRqDdKjIot3sQSPg4Gdjiv6FOiemUaK8H/apf8
+	+xbJ8i02/p1lVUjIzBf3HIw=
+X-Google-Smtp-Source: ACHHUZ5QF8RST84gVY23LOwTXUDqa2rVOApCMeiJNnggae4EC8S0ssgapsdL48wiE9f2cSirgy7pXw==
+X-Received: by 2002:a05:6a00:15c7:b0:64d:2e8a:4cc1 with SMTP id o7-20020a056a0015c700b0064d2e8a4cc1mr3149325pfu.27.1684502385276;
+        Fri, 19 May 2023 06:19:45 -0700 (PDT)
+Received: from [192.168.43.80] (subs32-116-206-28-19.three.co.id. [116.206.28.19])
+        by smtp.gmail.com with ESMTPSA id f18-20020aa782d2000000b00571cdbd0771sm2981023pfn.102.2023.05.19.06.19.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 19 May 2023 06:19:44 -0700 (PDT)
+Message-ID: <73883c7d-42db-7ac6-fa43-b9be45cdc795@gmail.com>
+Date: Fri, 19 May 2023 20:19:39 +0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230518-appetit-aufsicht-238e950b97d6@brauner>
- <20230516-weltmeere-backofen-27f12ae2c9e0@brauner>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Content-Language: en-US
+To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Linux Input <linux-input@vger.kernel.org>,
+ Linux i2c Devices <linux-i2c@vger.kernel.org>
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+Subject: Fwd: ThinkPad L540: suspend not working (deep / S3 / standby,
+ regression Linux 4.19 -> 6.1)
+Cc: Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+ Wolfram Sang <wsa@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+ kolAflash@kolahilft.de
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, May 18, 2023 at 10:25:11AM +0200, Christian Brauner wrote:
-> On Wed, May 17, 2023 at 07:09:12PM -0500, Mike Christie wrote:
-> > This patch allows the vhost and vhost_task code to use CLONE_THREAD,
-> > CLONE_SIGHAND and CLONE_FILES. It's a RFC because I didn't do all the
-> > normal testing, haven't coverted vsock and vdpa, and I know you guys
-> > will not like the first patch. However, I think it better shows what
-> 
-> Just to summarize the core idea behind my proposal is that no signal
-> handling changes are needed unless there's a bug in the current way
-> io_uring workers already work. All that should be needed is
-> s/PF_IO_WORKER/PF_USER_WORKER/ in signal.c.
-> 
-> If you follow my proposal than vhost and io_uring workers should almost
-> collapse into the same concept. Specifically, io_uring workers and vhost
-> workers should behave the same when it comes ot handling signals.
-> 
-> See 
-> https://lore.kernel.org/lkml/20230518-kontakt-geduckt-25bab595f503@brauner
-> 
-> 
-> > we need from the signal code and how we can support signals in the
-> > vhost_task layer.
-> > 
-> > Note that I took the super simple route and kicked off some work to
-> > the system workqueue. We can do more invassive approaches:
-> > 1. Modify the vhost drivers so they can check for IO completions using
-> > a non-blocking interface. We then don't need to run from the system
-> > workqueue and can run from the vhost_task.
-> > 
-> > 2. We could drop patch 1 and just say we are doing a polling type
-> > of approach. We then modify the vhost layer similar to #1 where we
-> > can check for completions using a non-blocking interface and use
-> > the vhost_task task.
-> 
-> My preference would be to do whatever is the minimal thing now and has
-> the least bug potential and is the easiest to review for us non-vhost
-> experts. Then you can take all the time to rework and improve the vhost
-> infra based on the possibilities that using user workers offers. Plus,
-> that can easily happen in the next kernel cycle.
-> 
-> Remember, that we're trying to fix a regression here. A regression on an
-> unreleased kernel but still.
+Hi,
 
-On Tue, May 16, 2023 at 10:40:01AM +0200, Christian Brauner wrote:
-> On Mon, May 15, 2023 at 05:23:12PM -0500, Mike Christie wrote:
-> > On 5/15/23 10:44 AM, Linus Torvalds wrote:
-> > > On Mon, May 15, 2023 at 7:23 AM Christian Brauner <brauner@kernel.org> wrote:
-> > >>
-> > >> So I think we will be able to address (1) and (2) by making vhost tasks
-> > >> proper threads and blocking every signal except for SIGKILL and SIGSTOP
-> > >> and then having vhost handle get_signal() - as you mentioned - the same
-> > >> way io uring already does. We should also remove the ingore_signals
-> > >> thing completely imho. I don't think we ever want to do this with user
-> > >> workers.
-> > > 
-> > > Right. That's what IO_URING does:
-> > > 
-> > >         if (args->io_thread) {
-> > >                 /*
-> > >                  * Mark us an IO worker, and block any signal that isn't
-> > >                  * fatal or STOP
-> > >                  */
-> > >                 p->flags |= PF_IO_WORKER;
-> > >                 siginitsetinv(&p->blocked, sigmask(SIGKILL)|sigmask(SIGSTOP));
-> > >         }
-> > > 
-> > > and I really think that vhost should basically do exactly what io_uring does.
-> > > 
-> > > Not because io_uring fundamentally got this right - but simply because
-> > > io_uring had almost all the same bugs (and then some), and what the
-> > > io_uring worker threads ended up doing was to basically zoom in on
-> > > "this works".
-> > > 
-> > > And it zoomed in on it largely by just going for "make it look as much
-> > > as possible as a real user thread", because every time the kernel
-> > > thread did something different, it just caused problems.
-> > > 
-> > > So I think the patch should just look something like the attached.
-> > > Mike, can you test this on whatever vhost test-suite?
-> > 
-> > I tried that approach already and it doesn't work because io_uring and vhost
-> > differ in that vhost drivers implement a device where each device has a vhost_task
-> > and the drivers have a file_operations for the device. When the vhost_task's
-> > parent gets signal like SIGKILL, then it will exit and call into the vhost
-> > driver's file_operations->release function. At this time, we need to do cleanup
-> 
-> But that's no reason why the vhost worker couldn't just be allowed to
-> exit on SIGKILL cleanly similar to io_uring. That's just describing the
-> current architecture which isn't a necessity afaict. And the helper
-> thread could e.g., crash.
-> 
-> > like flush the device which uses the vhost_task. There is also the case where if
-> > the vhost_task gets a SIGKILL, we can just exit from under the vhost layer.
-> 
-> In a way I really don't like the patch below. Because this should be
-> solvable by adapting vhost workers. Right now, vhost is coming from a
-> kthread model and we ported it to a user worker model and the whole
-> point of this excercise has been that the workers behave more like
-> regular userspace processes. So my tendency is to not massage kernel
-> signal handling to now also include a special case for user workers in
-> addition to kthreads. That's just the wrong way around and then vhost
-> could've just stuck with kthreads in the first place.
-> 
-> So I'm fine with skipping over the freezing case for now but SIGKILL
-> should be handled imho. Only init and kthreads should get the luxury of
-> ignoring SIGKILL.
-> 
-> So, I'm afraid I'm asking some work here of you but how feasible would a
-> model be where vhost_worker() similar to io_wq_worker() gracefully
-> handles SIGKILL. Yes, I see there's
-> 
-> net.c:   .release = vhost_net_release
-> scsi.c:  .release = vhost_scsi_release
-> test.c:  .release = vhost_test_release
-> vdpa.c:  .release = vhost_vdpa_release
-> vsock.c: .release = virtio_transport_release
-> vsock.c: .release = vhost_vsock_dev_release
-> 
-> but that means you have all the basic logic in place and all of those
-> drivers also support the VHOST_RESET_OWNER ioctl which also stops the
-> vhost worker. I'm confident that a lof this can be leveraged to just
-> cleanup on SIGKILL.
-> 
-> So it feels like this should be achievable by adding a callback to
-> struct vhost_worker that get's called when vhost_worker() gets SIGKILL
-> and that all the users of vhost workers are forced to implement.
-> 
-> Yes, it is more work but I think that's the right thing to do and not to
-> complicate our signal handling.
-> 
-> Worst case if this can't be done fast enough we'll have to revert the
-> vhost parts. I think the user worker parts are mostly sane and are
+I notice a regression report on Bugzilla [1]. Quoting from it:
 
-As mentioned, if we can't settle this cleanly before -rc4 we should
-revert the vhost parts unless Linus wants to have it earlier.
+> ThinkPad L540 failed suspend deep dmesg output - Linux-6.1.27 from Debian-12
+> 
+> Since updating from Linux-4.19 to Linux-6.1.27 suspend deep is not working anymore.
+> (a.k.a. S3, standby or suspend to ram)
+> 
+> Notebook: ThinkPad L540 20AU-S00N00
+> OS: Debian-12 "Bookworm" (was Debian-10 "Buster" before)
+> Kernel: Linux-6.1.27 from Debian-12 (was Linux-4.19 from Debian-10 before)
+> 
+> Can I provide any other helpful information?
+> Do you need a test with a vanilla Linux-6.1 kernel?
+> Should I perform any other tests or maybe try out boot parameters?
+> 
+> Full dmesg output attached.
+> Excerpt:
+> rmi4_f01 rmi4-00.fn01: Failed to write sleep mode: -6.
+> rmi4_f01 rmi4-00.fn01: Suspend failed with code -6.
+> rmi4_physical rmi4-00: Failed to suspend functions: -6
+> rmi4_smbus 0-002c: Failed to suspend device: -6
+> rmi4_smbus 0-002c: PM: dpm_run_callback(): rmi_smb_suspend+0x0/0x40 [rmi_smbus] returns -6
+> rmi4_smbus 0-002c: PM: failed to suspend async: error -6
+> sd 4:0:0:0: [sda] Synchronizing SCSI cache
+> sd 4:0:0:0: [sda] Stopping disk
+> PM: Some devices failed to suspend, or early wake event detected
+> sd 4:0:0:0: [sda] Starting disk
+> OOM killer enabled.
+> Restarting tasks ... 
+> rmi4_physical rmi4-00: rmi_driver_set_irq_bits: Failed to change enabled interrupts!
+> psmouse: probe of serio2 failed with error -1
+> 
+> 
+> 
+> Maybe related:
+> 
+> 5.17-rc regression: X1 Carbon touchpad not resumed
+> https://lore.kernel.org/lkml/YgF%2F0QGFN4SppLKg@shikoro/T/
+
+FYI, I guess the regression is also introduced by 172d931910e1db
+("i2c: enable async suspend/resume on i2c client devices") and
+should have been fixed by 7b1f781f2d2460 ("Input: psmouse - set up
+dependency between PS/2 and SMBus companions"), but it doesn't
+fix the reporter's issue.
+
+Anyway, I'm adding this to regzbot:
+
+#regzbot introduced: v4.19..v6.1 https://bugzilla.kernel.org/show_bug.cgi?id=217462
+#regzbot title: psmouse suspend failed on ThinkPad L540
+
+Thanks.
+
+[1]: https://bugzilla.kernel.org/show_bug.cgi?id=217462
+
+-- 
+An old man doll... just what I always wanted! - Clara
