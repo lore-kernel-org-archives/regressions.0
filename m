@@ -1,116 +1,91 @@
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE79220EE
-	for <regressions@lists.linux.dev>; Thu, 18 May 2023 23:52:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1684453948; x=1715989948;
-  h=message-id:subject:from:reply-to:to:cc:date:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=IXmHbAMvAuGDv6jp5wg/LI21QGk/kwHV6av1y5qzHhI=;
-  b=RUnM27r+fSKOboMR/EwToD6c8mr3WSjiIJ745DjmKbadel0xmDLL+lcQ
-   zpySAT/jQjvi8XS3xzM45Qm0UcfHbGJRGTHcwpOr0GAoGogj7Q+5acQC4
-   CwHtfjcN9ds5OjSBZpbXJomaRe0eiEwysLBbrzAGzr7ZLrtAXyXY5t2DZ
-   6cX/M2+7Mf1M8OlaS/BE7ikSF7/7hc39bomXuL/3e+5bfAD1NNuBgeDPn
-   /+YRQxJTwvSKy1mIsDfVZsYw2QTn0gfg4Deb+QTPBIKpPh3V4j8lPLgc1
-   qQA9MTP3waXY14/uKnkaCG3goYmTfJ3g8YyvEpFkC4+NudLc/JStE8JpG
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10714"; a="438578303"
-X-IronPort-AV: E=Sophos;i="6.00,175,1681196400"; 
-   d="scan'208";a="438578303"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2023 16:52:27 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10714"; a="705365734"
-X-IronPort-AV: E=Sophos;i="6.00,175,1681196400"; 
-   d="scan'208";a="705365734"
-Received: from wopr.jf.intel.com ([10.54.75.136])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2023 16:52:27 -0700
-Message-ID: <07caefbe35cab20ed881c9364c3d26204aea1653.camel@linux.intel.com>
-Subject: Re: [PATCH] mtd: spi-nor: Fix divide by zero for spi-nor-generic
- flashes
-From: Todd Brandt <todd.e.brandt@linux.intel.com>
-Reply-To: todd.e.brandt@linux.intel.com
-To: Tudor Ambarus <tudor.ambarus@linaro.org>, miquel.raynal@bootlin.com, 
-	richard@nod.at, todd.e.brandt@intel.com
-Cc: vigneshr@ti.com, pratyush@kernel.org, michael@walle.cc, 
- linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, 
- regressions@leemhuis.info, bagasdotme@gmail.com,
- regressions@lists.linux.dev,  joneslee@google.com
-Date: Thu, 18 May 2023 16:52:27 -0700
-In-Reply-To: <20230518085440.2363676-1-tudor.ambarus@linaro.org>
-References: <20230518085440.2363676-1-tudor.ambarus@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 102B55663
+	for <regressions@lists.linux.dev>; Fri, 19 May 2023 08:19:36 +0000 (UTC)
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-64d15660784so1240178b3a.0
+        for <regressions@lists.linux.dev>; Fri, 19 May 2023 01:19:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1684484376; x=1687076376;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=cBPTBQJcWgrD1ck85tj9B2uBPpRSLI2KXmbj8yOJQPY=;
+        b=KuLJyU6hW58eytl8iY+ZnDCNBxula7ibr0UbUgsh+h4MAd0V7XUfBOrGhbcLaII8qr
+         3kxz3SzkiCRc4G8LFxkJxizFOurvP6gkM38usO2exmF84H8nSxvFjq1d1sQWMoxZaIRb
+         GBkkLZAdlXNo61/d8CQkKIpe5nHkEIMtDREObIz2C6kBDkxTnpWZULEp7CqnmfJeHKFf
+         yFOKErP1+dS8SR+lcI27BYqHa2OO7u1Xd35bKO2b/1b8AgynxFQ/8HTKMwRiCvO8B4Mu
+         FMumc45E/ewJLb1BSMn3SXTo3ogpYOcO9teEVAHzQZqp/EZu4Obv8/bPvIUO+SMyu5+m
+         nTdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684484376; x=1687076376;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=cBPTBQJcWgrD1ck85tj9B2uBPpRSLI2KXmbj8yOJQPY=;
+        b=Oxypes6iVat0kaYifF4U2aN3jMIUjnYYipIbgjIjrimvwgDlZfsRtCxe4hSZp2Y30K
+         yHA2ypi82JFOB5jYHUQISAk0gF4XPfhbB/1JCfSvUx6P5bqsxAYMuNljRgfC+a1XtCJ1
+         LBt+gP0ogVxLV9O2YYuABOrXxAA2V8wm+biD7z8/2wR0eYrrmvMCYrvUB2uinQBNmS9S
+         3He0IJtcOpdGjBqP/ZwOuJKr0uTHbbZqxSHotuZjAY0VpnGHFCs2iTruKAnmnEQrVclr
+         dKf45cxwhmjwBLH+fQoY30IBd7i/1Z3Kgpo9/2xYQU3YUdmDNW8Wa0JmlqsFExi3MtUa
+         Fg3Q==
+X-Gm-Message-State: AC+VfDzipU9Mbadm/kQ/sJjftjt3GIP2ga8nAk5+ESuBtcl78/7TEaiV
+	P4PnErpytiX7Q9/lvG+fZmI=
+X-Google-Smtp-Source: ACHHUZ47olpGeP4NYofUMmsojjC4HPGjCkXAQts1zGDobaEvLHQRbRVqpQO6570VKS9gBn5qKL9zhw==
+X-Received: by 2002:a17:902:f813:b0:1ae:48b2:3c2b with SMTP id ix19-20020a170902f81300b001ae48b23c2bmr1794928plb.30.1684484376320;
+        Fri, 19 May 2023 01:19:36 -0700 (PDT)
+Received: from [192.168.43.80] (subs32-116-206-28-39.three.co.id. [116.206.28.39])
+        by smtp.gmail.com with ESMTPSA id a4-20020a1709027d8400b001ab12545508sm2827353plm.67.2023.05.19.01.19.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 19 May 2023 01:19:35 -0700 (PDT)
+Message-ID: <68577e7d-a8ea-a3b5-4289-436a55e57f41@gmail.com>
+Date: Fri, 19 May 2023 15:19:32 +0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: Fwd: Persistent rt_sigreturn segfaults on KVM VMs after upgrade
+ to 5.15
+Content-Language: en-US
+To: Sean Christopherson <seanjc@google.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Linux KVM <kvm@vger.kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
+ Theodor Milkov <tm@del.bg>
+References: <71288f04-546c-9af3-e29a-eb3c44e0d948@gmail.com>
+ <babafe0f-3154-fb0a-346f-2bbea48a366e@gmail.com>
+ <ZGY9twXBuTWpliAB@google.com>
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+In-Reply-To: <ZGY9twXBuTWpliAB@google.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Looks good, tested and confirmed
+On 5/18/23 22:01, Sean Christopherson wrote:
+> On Thu, May 18, 2023, Bagas Sanjaya wrote:
+>> On 5/18/23 20:57, Bagas Sanjaya wrote:
+>>> Hi,
+>>>
+>>> I notice a regression report on Bugzilla [1]. Quoting from it:
+>>>
+>>>> I'm experiencing sporadic but persistent segmentation faults on the KVM
+>>>> VMs I manage. These faults began appearing after upgrading from Linux
+>>>> Kernel 4.x to 5.15.59. I further upgraded to 5.15.91 and transitioned the
+>>>> userspace from Debian 10 (buster) to Debian 11 (bullseye), yet the issues
+>>>> persist. Notably, the libc has also changed in the process as seen in the
+>>>> following error logs:
+> 
+> Was the host or guest kernel upgraded?  If the guest kernel was upgraded, it's
+> unlikely, though still possible, that this is a KVM bug.
+> 
 
-Tested-by: Todd Brandt <todd.e.brandt@linux.intel.com>
+The reporter [1] said that this regression occurs on guest kernel.
 
-On Thu, 2023-05-18 at 08:54 +0000, Tudor Ambarus wrote:
-> We failed to initialize n_banks for spi-nor-generic flashes, which
-> caused a devide by zero when computing the bank_size.
-> 
-> By default we consider that all chips have a single bank. Initialize
-> the default number of banks for spi-nor-generic flashes. Even if the
-> bug is fixed with this simple initialization, check the n_banks value
-> before dividing so that we make sure this kind of bug won't occur
-> again
-> if some other struct instance is created uninitialized.
-> 
-> Suggested-by: Todd Brandt <todd.e.brandt@linux.intel.com>
-> Reported-by: Todd Brandt <todd.e.brandt@linux.intel.com>
-> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=217448
-> Fixes: 9d6c5d64f028 ("mtd: spi-nor: Introduce the concept of bank")
-> Link: 
-> https://lore.kernel.org/all/20230516225108.29194-1-todd.e.brandt@intel.com/
-> Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
-> ---
->  drivers/mtd/spi-nor/core.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/mtd/spi-nor/core.c b/drivers/mtd/spi-nor/core.c
-> index 0bb0ad14a2fc..5f29fac8669a 100644
-> --- a/drivers/mtd/spi-nor/core.c
-> +++ b/drivers/mtd/spi-nor/core.c
-> @@ -2018,6 +2018,7 @@ static const struct spi_nor_manufacturer
-> *manufacturers[] = {
->  
->  static const struct flash_info spi_nor_generic_flash = {
->  	.name = "spi-nor-generic",
-> +	.n_banks = 1,
->  	/*
->  	 * JESD216 rev A doesn't specify the page size, therefore we
-> need a
->  	 * sane default.
-> @@ -2921,7 +2922,8 @@ static void spi_nor_late_init_params(struct
-> spi_nor *nor)
->  	if (nor->flags & SNOR_F_HAS_LOCK && !nor->params->locking_ops)
->  		spi_nor_init_default_locking_ops(nor);
->  
-> -	nor->params->bank_size = div64_u64(nor->params->size, nor-
-> >info->n_banks);
-> +	if (nor->info->n_banks > 1)
-> +		params->bank_size = div64_u64(params->size, nor->info-
-> >n_banks);
->  }
->  
->  /**
-> @@ -2987,6 +2989,7 @@ static void spi_nor_init_default_params(struct
-> spi_nor *nor)
->  	/* Set SPI NOR sizes. */
->  	params->writesize = 1;
->  	params->size = (u64)info->sector_size * info->n_sectors;
-> +	params->bank_size = params->size;
->  	params->page_size = info->page_size;
->  
->  	if (!(info->flags & SPI_NOR_NO_FR)) {
+[1]: https://bugzilla.kernel.org/show_bug.cgi?id=217457#c3
+
+-- 
+An old man doll... just what I always wanted! - Clara
 
