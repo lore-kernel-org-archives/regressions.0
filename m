@@ -1,91 +1,71 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from madras.collabora.co.uk (madras.collabora.co.uk [46.235.227.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 102B55663
-	for <regressions@lists.linux.dev>; Fri, 19 May 2023 08:19:36 +0000 (UTC)
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-64d15660784so1240178b3a.0
-        for <regressions@lists.linux.dev>; Fri, 19 May 2023 01:19:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684484376; x=1687076376;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=cBPTBQJcWgrD1ck85tj9B2uBPpRSLI2KXmbj8yOJQPY=;
-        b=KuLJyU6hW58eytl8iY+ZnDCNBxula7ibr0UbUgsh+h4MAd0V7XUfBOrGhbcLaII8qr
-         3kxz3SzkiCRc4G8LFxkJxizFOurvP6gkM38usO2exmF84H8nSxvFjq1d1sQWMoxZaIRb
-         GBkkLZAdlXNo61/d8CQkKIpe5nHkEIMtDREObIz2C6kBDkxTnpWZULEp7CqnmfJeHKFf
-         yFOKErP1+dS8SR+lcI27BYqHa2OO7u1Xd35bKO2b/1b8AgynxFQ/8HTKMwRiCvO8B4Mu
-         FMumc45E/ewJLb1BSMn3SXTo3ogpYOcO9teEVAHzQZqp/EZu4Obv8/bPvIUO+SMyu5+m
-         nTdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684484376; x=1687076376;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=cBPTBQJcWgrD1ck85tj9B2uBPpRSLI2KXmbj8yOJQPY=;
-        b=Oxypes6iVat0kaYifF4U2aN3jMIUjnYYipIbgjIjrimvwgDlZfsRtCxe4hSZp2Y30K
-         yHA2ypi82JFOB5jYHUQISAk0gF4XPfhbB/1JCfSvUx6P5bqsxAYMuNljRgfC+a1XtCJ1
-         LBt+gP0ogVxLV9O2YYuABOrXxAA2V8wm+biD7z8/2wR0eYrrmvMCYrvUB2uinQBNmS9S
-         3He0IJtcOpdGjBqP/ZwOuJKr0uTHbbZqxSHotuZjAY0VpnGHFCs2iTruKAnmnEQrVclr
-         dKf45cxwhmjwBLH+fQoY30IBd7i/1Z3Kgpo9/2xYQU3YUdmDNW8Wa0JmlqsFExi3MtUa
-         Fg3Q==
-X-Gm-Message-State: AC+VfDzipU9Mbadm/kQ/sJjftjt3GIP2ga8nAk5+ESuBtcl78/7TEaiV
-	P4PnErpytiX7Q9/lvG+fZmI=
-X-Google-Smtp-Source: ACHHUZ47olpGeP4NYofUMmsojjC4HPGjCkXAQts1zGDobaEvLHQRbRVqpQO6570VKS9gBn5qKL9zhw==
-X-Received: by 2002:a17:902:f813:b0:1ae:48b2:3c2b with SMTP id ix19-20020a170902f81300b001ae48b23c2bmr1794928plb.30.1684484376320;
-        Fri, 19 May 2023 01:19:36 -0700 (PDT)
-Received: from [192.168.43.80] (subs32-116-206-28-39.three.co.id. [116.206.28.39])
-        by smtp.gmail.com with ESMTPSA id a4-20020a1709027d8400b001ab12545508sm2827353plm.67.2023.05.19.01.19.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 19 May 2023 01:19:35 -0700 (PDT)
-Message-ID: <68577e7d-a8ea-a3b5-4289-436a55e57f41@gmail.com>
-Date: Fri, 19 May 2023 15:19:32 +0700
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB63B3D393;
+	Fri, 19 May 2023 08:35:47 +0000 (UTC)
+Received: from localhost (unknown [IPv6:2a0c:5a83:9203:ad00:12f5:ce1d:c8ab:bb96])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: rcn)
+	by madras.collabora.co.uk (Postfix) with ESMTPSA id 6B4C76605960;
+	Fri, 19 May 2023 09:35:45 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1684485345;
+	bh=yjBON+zRg7ZjvIUz47H8LbZbKfsz5bLofO+XkmCgFJ4=;
+	h=From:To:Cc:Subject:References:In-reply-to:Date:From;
+	b=IcoakT/g2c1m4s5VFi+BkmaHbAURqRJja//PpqPmnXeQhBejvqWfOSVV8XpGGdzhM
+	 Cmzsj032C+qIC/W74j1UQ3UtfaCoLNmCqMeHeWcwogS/5o6MizX+FgVLqmnEXlw7IQ
+	 UjPXL7k6eZ40unEus5b2+yVrU7cqDkq3IbstrCfb4XFPgx8patMgoJDtebofTCsJ08
+	 D8wJ9Ek732eFA8aAcVdqkppa/X/oZjhl1sM11DFn40ND+DWAl1BK2Zm2SXwR3I7xEF
+	 XePn0EICqwI/x32Jsz+8om2MJ9M2E91WX9YPWiskvD4RTx4CeJv1XueK/dxREryOTc
+	 dZLzNJkefYBbQ==
+From: Ricardo =?utf-8?Q?Ca=C3=B1uelo?= <ricardo.canuelo@collabora.com>
+To: Nick Desaulniers <ndesaulniers@google.com>
+Cc: Shreeya Patel <shreeya.patel@collabora.com>, Michal Marek <michal.lkml@markovi.net>, Masahiro Yamada <masahiroy@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, clang-built-linux <llvm@lists.linux.dev>, Bill Wendling <morbo@google.com>, Nathan Chancellor <nathan@kernel.org>, regressions@lists.linux.dev, "gustavo.padovan\@collabora.com" <gustavo.padovan@collabora.com>, Guillaume Charles Tucker <guillaume.tucker@collabora.com>, denys.f@collabora.com, kernelci@lists.linux.dev
+Subject: Re: [PATCH v4] Makefile.compiler: replace cc-ifversion with compiler-specific macros
+References: <CAK7LNAT_cMLGLBz7ugaLpJD3QmZmY8FK56x9nihvWeYhJpi2ag@mail.gmail.com> <20220919170828.3718437-1-ndesaulniers@google.com> <597ef55f-e7c1-ab60-b4aa-0071ff4b5e0e@collabora.com> <CAKwvOdmSrAxx-YY1Na3BSdYuxXCPKK+F0K5V6i+adTn_bVJEsw@mail.gmail.com> <89961dfc-d40f-78e4-5d34-b86b7d152182@collabora.com> <CAKwvOd=4hBcU4fAkddU0b-GOZc9FzTZoj3PFW6ZZrX0jS8x+bg@mail.gmail.com> <17c91d37-7d9c-0df4-2438-2b30ca0b5777@collabora.com> <CAKwvOdk4QO8x_bs64fFRCsMu__AjhXd4Ew2KfgzQOb9Q3FMqSA@mail.gmail.com> <b5d0cf82-0e42-f6a1-c9f5-c145fdc4c622@collabora.com> <CAKwvOdkFxu9hYSL_RCXadpR0dQd1+dZmAUVXdfFiLUfxg4D_Xw@mail.gmail.com> <878rdlk9bi.fsf@rcn-XPS-13-9305.i-did-not-set--mail-host-address--so-tickle-me> <CAKwvOd=8LVU+iANkFx18Wm1jg7gYiAXovAmo9t5ZZaVdMULn-Q@mail.gmail.com>
+In-reply-to: <CAKwvOd=8LVU+iANkFx18Wm1jg7gYiAXovAmo9t5ZZaVdMULn-Q@mail.gmail.com>
+Date: Fri, 19 May 2023 10:35:42 +0200
+Message-ID: <875y8ok9b5.fsf@rcn-XPS-13-9305.i-did-not-set--mail-host-address--so-tickle-me>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: Fwd: Persistent rt_sigreturn segfaults on KVM VMs after upgrade
- to 5.15
-Content-Language: en-US
-To: Sean Christopherson <seanjc@google.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>,
- Linux KVM <kvm@vger.kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
- Theodor Milkov <tm@del.bg>
-References: <71288f04-546c-9af3-e29a-eb3c44e0d948@gmail.com>
- <babafe0f-3154-fb0a-346f-2bbea48a366e@gmail.com>
- <ZGY9twXBuTWpliAB@google.com>
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-In-Reply-To: <ZGY9twXBuTWpliAB@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
-On 5/18/23 22:01, Sean Christopherson wrote:
-> On Thu, May 18, 2023, Bagas Sanjaya wrote:
->> On 5/18/23 20:57, Bagas Sanjaya wrote:
->>> Hi,
->>>
->>> I notice a regression report on Bugzilla [1]. Quoting from it:
->>>
->>>> I'm experiencing sporadic but persistent segmentation faults on the KVM
->>>> VMs I manage. These faults began appearing after upgrading from Linux
->>>> Kernel 4.x to 5.15.59. I further upgraded to 5.15.91 and transitioned the
->>>> userspace from Debian 10 (buster) to Debian 11 (bullseye), yet the issues
->>>> persist. Notably, the libc has also changed in the process as seen in the
->>>> following error logs:
-> 
-> Was the host or guest kernel upgraded?  If the guest kernel was upgraded, it's
-> unlikely, though still possible, that this is a KVM bug.
-> 
+On jue, may 18 2023 at 14:12:30, Nick Desaulniers <ndesaulniers@google.com> wrote:
+> That's a higher risk change (and has my name on the tested-by tag, yikes).
+>
+> So is that the culprit of the boot failure you're observing?
 
-The reporter [1] said that this regression occurs on guest kernel.
+Right now it is.
 
-[1]: https://bugzilla.kernel.org/show_bug.cgi?id=217457#c3
+Here's a test run using that commit
+(5750121ae7382ebac8d47ce6d68012d6cd1d7926):
+https://lava.collabora.dev/scheduler/job/10373216
 
--- 
-An old man doll... just what I always wanted! - Clara
+Here's one with the commit right after that one
+(26ef40de5cbb24728a34a319e8d42cdec99f186c):
+https://lava.collabora.dev/scheduler/job/10371513
 
+Then one with 26ef40de5cbb24728a34a319e8d42cdec99f186c with a revert
+commit for 5750121ae7382ebac8d47ce6d68012d6cd1d7926 on top:
+https://lava.collabora.dev/scheduler/job/10371882
+
+But I'm not confident enough to jump ahead and call this a kernel
+regression, specially after the bisector confidently said that about
+your commit and then it turned out none of us could reproduce it.
+
+There have been some cases where a commit made a test fail (kernel
+failing to load, for instance) and the real problem was that the kernel
+got bigger than the target was capable of handling. So not a problem
+with the commit at all, it was just that the memory mappings needed to
+be redefined for that target. What I'm saying is that sometimes a
+regression report is really uncovering a problem in the test setup
+rather than introducing a bug. Maybe this is one of those cases.
+
+Cheers,
+Ricardo
