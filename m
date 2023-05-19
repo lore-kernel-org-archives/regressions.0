@@ -1,71 +1,177 @@
-Received: from madras.collabora.co.uk (madras.collabora.co.uk [46.235.227.172])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB63B3D393;
-	Fri, 19 May 2023 08:35:47 +0000 (UTC)
-Received: from localhost (unknown [IPv6:2a0c:5a83:9203:ad00:12f5:ce1d:c8ab:bb96])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: rcn)
-	by madras.collabora.co.uk (Postfix) with ESMTPSA id 6B4C76605960;
-	Fri, 19 May 2023 09:35:45 +0100 (BST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1684485345;
-	bh=yjBON+zRg7ZjvIUz47H8LbZbKfsz5bLofO+XkmCgFJ4=;
-	h=From:To:Cc:Subject:References:In-reply-to:Date:From;
-	b=IcoakT/g2c1m4s5VFi+BkmaHbAURqRJja//PpqPmnXeQhBejvqWfOSVV8XpGGdzhM
-	 Cmzsj032C+qIC/W74j1UQ3UtfaCoLNmCqMeHeWcwogS/5o6MizX+FgVLqmnEXlw7IQ
-	 UjPXL7k6eZ40unEus5b2+yVrU7cqDkq3IbstrCfb4XFPgx8patMgoJDtebofTCsJ08
-	 D8wJ9Ek732eFA8aAcVdqkppa/X/oZjhl1sM11DFn40ND+DWAl1BK2Zm2SXwR3I7xEF
-	 XePn0EICqwI/x32Jsz+8om2MJ9M2E91WX9YPWiskvD4RTx4CeJv1XueK/dxREryOTc
-	 dZLzNJkefYBbQ==
-From: Ricardo =?utf-8?Q?Ca=C3=B1uelo?= <ricardo.canuelo@collabora.com>
-To: Nick Desaulniers <ndesaulniers@google.com>
-Cc: Shreeya Patel <shreeya.patel@collabora.com>, Michal Marek <michal.lkml@markovi.net>, Masahiro Yamada <masahiroy@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, clang-built-linux <llvm@lists.linux.dev>, Bill Wendling <morbo@google.com>, Nathan Chancellor <nathan@kernel.org>, regressions@lists.linux.dev, "gustavo.padovan\@collabora.com" <gustavo.padovan@collabora.com>, Guillaume Charles Tucker <guillaume.tucker@collabora.com>, denys.f@collabora.com, kernelci@lists.linux.dev
-Subject: Re: [PATCH v4] Makefile.compiler: replace cc-ifversion with compiler-specific macros
-References: <CAK7LNAT_cMLGLBz7ugaLpJD3QmZmY8FK56x9nihvWeYhJpi2ag@mail.gmail.com> <20220919170828.3718437-1-ndesaulniers@google.com> <597ef55f-e7c1-ab60-b4aa-0071ff4b5e0e@collabora.com> <CAKwvOdmSrAxx-YY1Na3BSdYuxXCPKK+F0K5V6i+adTn_bVJEsw@mail.gmail.com> <89961dfc-d40f-78e4-5d34-b86b7d152182@collabora.com> <CAKwvOd=4hBcU4fAkddU0b-GOZc9FzTZoj3PFW6ZZrX0jS8x+bg@mail.gmail.com> <17c91d37-7d9c-0df4-2438-2b30ca0b5777@collabora.com> <CAKwvOdk4QO8x_bs64fFRCsMu__AjhXd4Ew2KfgzQOb9Q3FMqSA@mail.gmail.com> <b5d0cf82-0e42-f6a1-c9f5-c145fdc4c622@collabora.com> <CAKwvOdkFxu9hYSL_RCXadpR0dQd1+dZmAUVXdfFiLUfxg4D_Xw@mail.gmail.com> <878rdlk9bi.fsf@rcn-XPS-13-9305.i-did-not-set--mail-host-address--so-tickle-me> <CAKwvOd=8LVU+iANkFx18Wm1jg7gYiAXovAmo9t5ZZaVdMULn-Q@mail.gmail.com>
-In-reply-to: <CAKwvOd=8LVU+iANkFx18Wm1jg7gYiAXovAmo9t5ZZaVdMULn-Q@mail.gmail.com>
-Date: Fri, 19 May 2023 10:35:42 +0200
-Message-ID: <875y8ok9b5.fsf@rcn-XPS-13-9305.i-did-not-set--mail-host-address--so-tickle-me>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BACCA8C16
+	for <regressions@lists.linux.dev>; Fri, 19 May 2023 12:15:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BFA66C4339B;
+	Fri, 19 May 2023 12:15:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1684498509;
+	bh=VTGX2OX7+uxXQDH3wTNN0vLi9cF62gFXdXsTqtCJTac=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=fK+xUpikHVk7SLGvhUmZ/eIe/LYtPJ+bfRAvQVAABqfteacqCyZYUJTvPKSB69UFF
+	 s6wqd2q0tFtPAeLWT5A6/uiN4sbm8/FkB1g4HWziYSJNqAKRbVENpv/yUwHPYtwIC+
+	 EOvs9TcRbaOlxiNmBX+/KVBx6KTkbf7BCGojiCPhYRJq8lM7g/pQQxJ1HIAgjnZMHU
+	 IZXN1ULEkl3BMaOh+BZ2qE/uZb/zTbp69ILfMWEkOgtRM5yEwVdzONXTqC/d6B7E34
+	 CymmGbwFthyPCVN1wX9OGqd6BpiOTpGFVvW92tu+hf+Lsx18Qz8TgikZn32G/pqv7X
+	 XLMQ/diS6+/TQ==
+Date: Fri, 19 May 2023 14:15:02 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Mike Christie <michael.christie@oracle.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Cc: oleg@redhat.com, linux@leemhuis.info, nicolas.dichtel@6wind.com,
+	axboe@kernel.dk, ebiederm@xmission.com,
+	linux-kernel@vger.kernel.org,
+	virtualization@lists.linux-foundation.org, mst@redhat.com,
+	sgarzare@redhat.com, jasowang@redhat.com, stefanha@redhat.com,
+	Linux kernel regressions list <regressions@lists.linux.dev>,
+	hch@infradead.org, konrad.wilk@oracle.com
+Subject: Re: [RFC PATCH 0/8] vhost_tasks: Use CLONE_THREAD/SIGHAND
+Message-ID: <20230519-vormittag-dschungel-83607e9d2255@brauner>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230518-appetit-aufsicht-238e950b97d6@brauner>
+ <20230516-weltmeere-backofen-27f12ae2c9e0@brauner>
 
-On jue, may 18 2023 at 14:12:30, Nick Desaulniers <ndesaulniers@google.com> wrote:
-> That's a higher risk change (and has my name on the tested-by tag, yikes).
->
-> So is that the culprit of the boot failure you're observing?
+On Thu, May 18, 2023 at 10:25:11AM +0200, Christian Brauner wrote:
+> On Wed, May 17, 2023 at 07:09:12PM -0500, Mike Christie wrote:
+> > This patch allows the vhost and vhost_task code to use CLONE_THREAD,
+> > CLONE_SIGHAND and CLONE_FILES. It's a RFC because I didn't do all the
+> > normal testing, haven't coverted vsock and vdpa, and I know you guys
+> > will not like the first patch. However, I think it better shows what
+> 
+> Just to summarize the core idea behind my proposal is that no signal
+> handling changes are needed unless there's a bug in the current way
+> io_uring workers already work. All that should be needed is
+> s/PF_IO_WORKER/PF_USER_WORKER/ in signal.c.
+> 
+> If you follow my proposal than vhost and io_uring workers should almost
+> collapse into the same concept. Specifically, io_uring workers and vhost
+> workers should behave the same when it comes ot handling signals.
+> 
+> See 
+> https://lore.kernel.org/lkml/20230518-kontakt-geduckt-25bab595f503@brauner
+> 
+> 
+> > we need from the signal code and how we can support signals in the
+> > vhost_task layer.
+> > 
+> > Note that I took the super simple route and kicked off some work to
+> > the system workqueue. We can do more invassive approaches:
+> > 1. Modify the vhost drivers so they can check for IO completions using
+> > a non-blocking interface. We then don't need to run from the system
+> > workqueue and can run from the vhost_task.
+> > 
+> > 2. We could drop patch 1 and just say we are doing a polling type
+> > of approach. We then modify the vhost layer similar to #1 where we
+> > can check for completions using a non-blocking interface and use
+> > the vhost_task task.
+> 
+> My preference would be to do whatever is the minimal thing now and has
+> the least bug potential and is the easiest to review for us non-vhost
+> experts. Then you can take all the time to rework and improve the vhost
+> infra based on the possibilities that using user workers offers. Plus,
+> that can easily happen in the next kernel cycle.
+> 
+> Remember, that we're trying to fix a regression here. A regression on an
+> unreleased kernel but still.
 
-Right now it is.
+On Tue, May 16, 2023 at 10:40:01AM +0200, Christian Brauner wrote:
+> On Mon, May 15, 2023 at 05:23:12PM -0500, Mike Christie wrote:
+> > On 5/15/23 10:44 AM, Linus Torvalds wrote:
+> > > On Mon, May 15, 2023 at 7:23 AM Christian Brauner <brauner@kernel.org> wrote:
+> > >>
+> > >> So I think we will be able to address (1) and (2) by making vhost tasks
+> > >> proper threads and blocking every signal except for SIGKILL and SIGSTOP
+> > >> and then having vhost handle get_signal() - as you mentioned - the same
+> > >> way io uring already does. We should also remove the ingore_signals
+> > >> thing completely imho. I don't think we ever want to do this with user
+> > >> workers.
+> > > 
+> > > Right. That's what IO_URING does:
+> > > 
+> > >         if (args->io_thread) {
+> > >                 /*
+> > >                  * Mark us an IO worker, and block any signal that isn't
+> > >                  * fatal or STOP
+> > >                  */
+> > >                 p->flags |= PF_IO_WORKER;
+> > >                 siginitsetinv(&p->blocked, sigmask(SIGKILL)|sigmask(SIGSTOP));
+> > >         }
+> > > 
+> > > and I really think that vhost should basically do exactly what io_uring does.
+> > > 
+> > > Not because io_uring fundamentally got this right - but simply because
+> > > io_uring had almost all the same bugs (and then some), and what the
+> > > io_uring worker threads ended up doing was to basically zoom in on
+> > > "this works".
+> > > 
+> > > And it zoomed in on it largely by just going for "make it look as much
+> > > as possible as a real user thread", because every time the kernel
+> > > thread did something different, it just caused problems.
+> > > 
+> > > So I think the patch should just look something like the attached.
+> > > Mike, can you test this on whatever vhost test-suite?
+> > 
+> > I tried that approach already and it doesn't work because io_uring and vhost
+> > differ in that vhost drivers implement a device where each device has a vhost_task
+> > and the drivers have a file_operations for the device. When the vhost_task's
+> > parent gets signal like SIGKILL, then it will exit and call into the vhost
+> > driver's file_operations->release function. At this time, we need to do cleanup
+> 
+> But that's no reason why the vhost worker couldn't just be allowed to
+> exit on SIGKILL cleanly similar to io_uring. That's just describing the
+> current architecture which isn't a necessity afaict. And the helper
+> thread could e.g., crash.
+> 
+> > like flush the device which uses the vhost_task. There is also the case where if
+> > the vhost_task gets a SIGKILL, we can just exit from under the vhost layer.
+> 
+> In a way I really don't like the patch below. Because this should be
+> solvable by adapting vhost workers. Right now, vhost is coming from a
+> kthread model and we ported it to a user worker model and the whole
+> point of this excercise has been that the workers behave more like
+> regular userspace processes. So my tendency is to not massage kernel
+> signal handling to now also include a special case for user workers in
+> addition to kthreads. That's just the wrong way around and then vhost
+> could've just stuck with kthreads in the first place.
+> 
+> So I'm fine with skipping over the freezing case for now but SIGKILL
+> should be handled imho. Only init and kthreads should get the luxury of
+> ignoring SIGKILL.
+> 
+> So, I'm afraid I'm asking some work here of you but how feasible would a
+> model be where vhost_worker() similar to io_wq_worker() gracefully
+> handles SIGKILL. Yes, I see there's
+> 
+> net.c:   .release = vhost_net_release
+> scsi.c:  .release = vhost_scsi_release
+> test.c:  .release = vhost_test_release
+> vdpa.c:  .release = vhost_vdpa_release
+> vsock.c: .release = virtio_transport_release
+> vsock.c: .release = vhost_vsock_dev_release
+> 
+> but that means you have all the basic logic in place and all of those
+> drivers also support the VHOST_RESET_OWNER ioctl which also stops the
+> vhost worker. I'm confident that a lof this can be leveraged to just
+> cleanup on SIGKILL.
+> 
+> So it feels like this should be achievable by adding a callback to
+> struct vhost_worker that get's called when vhost_worker() gets SIGKILL
+> and that all the users of vhost workers are forced to implement.
+> 
+> Yes, it is more work but I think that's the right thing to do and not to
+> complicate our signal handling.
+> 
+> Worst case if this can't be done fast enough we'll have to revert the
+> vhost parts. I think the user worker parts are mostly sane and are
 
-Here's a test run using that commit
-(5750121ae7382ebac8d47ce6d68012d6cd1d7926):
-https://lava.collabora.dev/scheduler/job/10373216
-
-Here's one with the commit right after that one
-(26ef40de5cbb24728a34a319e8d42cdec99f186c):
-https://lava.collabora.dev/scheduler/job/10371513
-
-Then one with 26ef40de5cbb24728a34a319e8d42cdec99f186c with a revert
-commit for 5750121ae7382ebac8d47ce6d68012d6cd1d7926 on top:
-https://lava.collabora.dev/scheduler/job/10371882
-
-But I'm not confident enough to jump ahead and call this a kernel
-regression, specially after the bisector confidently said that about
-your commit and then it turned out none of us could reproduce it.
-
-There have been some cases where a commit made a test fail (kernel
-failing to load, for instance) and the real problem was that the kernel
-got bigger than the target was capable of handling. So not a problem
-with the commit at all, it was just that the memory mappings needed to
-be redefined for that target. What I'm saying is that sometimes a
-regression report is really uncovering a problem in the test setup
-rather than introducing a bug. Maybe this is one of those cases.
-
-Cheers,
-Ricardo
+As mentioned, if we can't settle this cleanly before -rc4 we should
+revert the vhost parts unless Linus wants to have it earlier.
