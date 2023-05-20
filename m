@@ -1,57 +1,64 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E2DB624
-	for <regressions@lists.linux.dev>; Sat, 20 May 2023 02:16:22 +0000 (UTC)
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1a516fb6523so36970625ad.3
-        for <regressions@lists.linux.dev>; Fri, 19 May 2023 19:16:22 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11D0A3D71
+	for <regressions@lists.linux.dev>; Sat, 20 May 2023 13:51:04 +0000 (UTC)
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-25332b3915bso3317759a91.2
+        for <regressions@lists.linux.dev>; Sat, 20 May 2023 06:51:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684548981; x=1687140981;
+        d=gmail.com; s=20221208; t=1684590664; x=1687182664;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=lFgyeYw4uPK6HO8hs9FRdVOfgCGNivxnwmXr9VMJrDo=;
-        b=DoD8GwmF2nlWu+yHJ3xHDVInM293//B2zW3ZK73ZkXnOZeVJNv1G91PULPGAOZJLRX
-         wzxIwTxaouX37dwag+QW0ieFMFiiVmx0RWrD6jUjOH6fv1xHGzn7k/E2Oj8YPeHXBBkX
-         u0fShKanlW6S+FA9ENGR/kpgjexVAXoWjJJ7PJxN81rYNljeE3NmnivGaBtoJlvcfIPv
-         Om/06THeksmrbjY7sW4hdtbTvc2xG/zBLKrZ6LFq7WFPYcjv99sTUYaIGkLYnEHHlu9m
-         4dW3aYROEM8yzwHPuBdCekQ16zm2Hv1DEDHYbdUlh6CLFVMKklt0c3odVWBDtzgNFOQE
-         KwZQ==
+        bh=v1DjKkNqJxAe4f+qRtBPeAc8nITQor5FKijXM6qfCso=;
+        b=NzJBUaOZA5G1WnPV+WkVooIG9lLQAVrTDQ16cKheCsE9jy1VAvjCpC0Ba3XyIfi5nJ
+         9LWlk3IfKgjqEO4ErgqOTA7eUeTruF13mNro9mGxjz6BpwJuTy4KingJNL3PAERWhjPJ
+         Lp69ICG7lxaJHwR5gShqUY3CusIgX8JXm7z94Y7R/qzg71wOZS8xOxMRBgB5+xY6hsSu
+         S0+uAvAlOgIj8mdKIg2mijFPg8rNL8YGSPFia0FMvZgaKYyS2tFtaFbghIPu5iPjCoo0
+         SqCtsiNMKPJ136R/5CZ72mmPxUDpG8zgYSevDFpqxFBSbHNuHF5lm1KvNEmmygCOfQyN
+         guJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684548981; x=1687140981;
+        d=1e100.net; s=20221208; t=1684590664; x=1687182664;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=lFgyeYw4uPK6HO8hs9FRdVOfgCGNivxnwmXr9VMJrDo=;
-        b=AUJKfOBFetVSeYWjluWlmEdqWa4hevArAI8/NxrSoC7fG59o2JvTHNpeHOFETHDbc9
-         gVUXvj6Hy7MGBK6LUAN9Xem1Yg+/lFrfaFkoGXDmNGImVzE0OLKv93ZJRWs81T8dejAO
-         0dgsTnp9EY7sX0ZwirX4yRJhx+HZyiV3mLSN6eMRYgWcyFlnhZwxlhQdT9GaypD0WHlA
-         JOrY+XQljr+yOqNMDIuJla3QfuYta55xEZFntKhLHuSF/qtuzbR18PdadZ2q9PzTPt2F
-         8mVoKb4I2jYtVA4ib4h+hHSKK9pP/t4wpXcL3rQhyoIul40ygalLncsMndO4ZAq6qCHd
-         Iyiw==
-X-Gm-Message-State: AC+VfDw9j3H98dqB0ijXnnE2nUiJnS7VHbt6fwh5AkMVwcrpOttB311+
-	d6HFXM1RV1d3nzau+FsuVoM=
-X-Google-Smtp-Source: ACHHUZ5uDX9A05fqyl3r2z7ZsQfBkXnB/zDTEtuHhK4CITCJcUviCGg40/57dB4lFG3yVKDfjiQfow==
-X-Received: by 2002:a17:902:d382:b0:1ae:3991:e4f9 with SMTP id e2-20020a170902d38200b001ae3991e4f9mr3897402pld.61.1684548981433;
-        Fri, 19 May 2023 19:16:21 -0700 (PDT)
-Received: from debian.me (subs03-180-214-233-25.three.co.id. [180.214.233.25])
-        by smtp.gmail.com with ESMTPSA id jh12-20020a170903328c00b001a19f3a661esm295628plb.138.2023.05.19.19.16.20
+        bh=v1DjKkNqJxAe4f+qRtBPeAc8nITQor5FKijXM6qfCso=;
+        b=gQ9DVixgwzFwht4Mc6Alh9WrIVO2UbvEnSBGxy3o20YZ+eZxgRjMdJ1QSGUo+CCKTR
+         1nrHedzxAEMdFnuZBkF7pADmQJT8G9oIBwG2H1VxaEBd/g6WJryFEMiAW5H4MQ28EFO7
+         xFNcW+ezsRBS5rhcgbY+I1wVMSAra9Q020kQC+muW1ldlOWXJ9RvmQL9wysyKZy/abqj
+         Kjll2v6B/+HbEEi66dt3FLTpQSn+KYIKtQBLlEUqvU/F9HuALD0lKTgo9wJhnbA/jvYk
+         IYkRF1d44EQce3ONboJmUL5JeQLMxBYWuRGHJc6vBy2BkS74y+aiBiTQ55VEJ+85c1LE
+         S7mA==
+X-Gm-Message-State: AC+VfDwNpcM2TAnW2zgwikzOrNX2x2db0sYBNz/zxHyl/XXUKSqmPR5N
+	+Wp6CP0cBLgxCuZbE9q1bvM=
+X-Google-Smtp-Source: ACHHUZ6GaD8+abD+X/MQmS2hqD4IMHqYPqXScSS516EF/bZdrcHeYGnN0LSVRqnmFGvDnJ/0sqS3Uw==
+X-Received: by 2002:a17:90b:400a:b0:253:8e47:40b8 with SMTP id ie10-20020a17090b400a00b002538e4740b8mr4286223pjb.1.1684590664240;
+        Sat, 20 May 2023 06:51:04 -0700 (PDT)
+Received: from debian.me (subs09a-223-255-225-69.three.co.id. [223.255.225.69])
+        by smtp.gmail.com with ESMTPSA id i7-20020a17090aee8700b0023a84911df2sm1283255pjz.7.2023.05.20.06.51.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 May 2023 19:16:20 -0700 (PDT)
+        Sat, 20 May 2023 06:51:03 -0700 (PDT)
 Received: by debian.me (Postfix, from userid 1000)
-	id 988531069E8; Sat, 20 May 2023 09:16:17 +0700 (WIB)
-Date: Sat, 20 May 2023 09:16:17 +0700
+	id 21CFB105634; Sat, 20 May 2023 20:50:52 +0700 (WIB)
+Date: Sat, 20 May 2023 20:50:52 +0700
 From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Regressions <regressions@lists.linux.dev>,
-	Linux Input <linux-input@vger.kernel.org>,
-	Linux i2c Devices <linux-i2c@vger.kernel.org>
-Cc: Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-	Wolfram Sang <wsa@kernel.org>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>, kolAflash@kolahilft.de
-Subject: Re: Fwd: ThinkPad L540: suspend not working (deep / S3 / standby,
- regression Linux 4.19 -> 6.1)
-Message-ID: <ZGgtcaGIECpaXKvp@debian.me>
-References: <73883c7d-42db-7ac6-fa43-b9be45cdc795@gmail.com>
+To: Alex Deucher <alexander.deucher@amd.com>,
+	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+	"Pan, Xinhui" <Xinhui.Pan@amd.com>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	Hawking Zhang <Hawking.Zhang@amd.com>, Le Ma <le.ma@amd.com>,
+	Tao Zhou <tao.zhou1@amd.com>, YiPeng Chai <YiPeng.Chai@amd.com>,
+	"Jiadong.Zhu" <Jiadong.Zhu@amd.com>,
+	Yang Wang <KevinYang.Wang@amd.com>, Candice Li <candice.li@amd.com>,
+	Xiaojian Du <Xiaojian.Du@amd.com>, Likun Gao <Likun.Gao@amd.com>,
+	Linux AMDGPU <amd-gfx@lists.freedesktop.org>,
+	Linux DRI Development <dri-devel@lists.freedesktop.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Regressions <regressions@lists.linux.dev>
+Cc: "Azamat S. Kalimoulline" <turtle@bazon.ru>,
+	max <kernel-ODwfxu5zp4@maxxor.org>
+Subject: Re: Fwd: Kernel 5.11 crashes when it boots, it produces black screen.
+Message-ID: <ZGjQPFvnAvN6MJnc@debian.me>
+References: <c2168e4f-4d47-0d5d-a1b7-d237f0760df8@gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -59,43 +66,43 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="wREUupUIgHJ2Wbjf"
+	protocol="application/pgp-signature"; boundary="BrcuXWEws5Ub7YHG"
 Content-Disposition: inline
-In-Reply-To: <73883c7d-42db-7ac6-fa43-b9be45cdc795@gmail.com>
+In-Reply-To: <c2168e4f-4d47-0d5d-a1b7-d237f0760df8@gmail.com>
 
 
---wREUupUIgHJ2Wbjf
+--BrcuXWEws5Ub7YHG
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 19, 2023 at 08:19:39PM +0700, Bagas Sanjaya wrote:
-> #regzbot introduced: v4.19..v6.1 https://bugzilla.kernel.org/show_bug.cgi=
-?id=3D217462
-> #regzbot title: psmouse suspend failed on ThinkPad L540
+On Wed, May 10, 2023 at 03:26:56PM +0700, Bagas Sanjaya wrote:
+> Anyway, let me add this regression to regzbot:
 >=20
+> #regzbot introduced: v5.10..v5.11 https://bugzilla.kernel.org/show_bug.cg=
+i?id=3D212579
+> #regzbot title: Booting kernel on AMD Ryzen 5 PRO stucks in loading initrd
 
-The reporter had narrowed down possible culprit commit range [1],
-thus telling regzbot:
+Resolving...
 
-#regzbot introduced: v5.16.18..v5.17-rc3
+#regzbot resolve: reporter found a workaround to the presumably firmware bug
 
-Thanks.
+See [1] for the precise workaround.
 
-[1]: https://bugzilla.kernel.org/show_bug.cgi?id=3D217462#c3
+[1]: https://bugzilla.kernel.org/show_bug.cgi?id=3D216340#c53
 
 --=20
 An old man doll... just what I always wanted! - Clara
 
---wREUupUIgHJ2Wbjf
+--BrcuXWEws5Ub7YHG
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZGgtZQAKCRD2uYlJVVFO
-o9aLAQC6hU7NN4GSTfBKgKeqs8JmCvfJgpTt6DbB6FgDW1030AD/cTZsWR+xE1xU
-pw87w0X/mt7M0TWhJbvezzYs/i/cIg8=
-=s0ct
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZGjQNQAKCRD2uYlJVVFO
+ow8xAP95LId80yotLjJuCqAvScT3zVqlzU3jw0za7laxNjvTOAD+IoX87VSLE1u5
+TGII8nt/cEhCPC6HB1p6JcsDu48a3Ag=
+=cXnc
 -----END PGP SIGNATURE-----
 
---wREUupUIgHJ2Wbjf--
+--BrcuXWEws5Ub7YHG--
