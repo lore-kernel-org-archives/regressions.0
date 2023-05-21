@@ -1,108 +1,57 @@
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11D0A3D71
-	for <regressions@lists.linux.dev>; Sat, 20 May 2023 13:51:04 +0000 (UTC)
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-25332b3915bso3317759a91.2
-        for <regressions@lists.linux.dev>; Sat, 20 May 2023 06:51:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684590664; x=1687182664;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=v1DjKkNqJxAe4f+qRtBPeAc8nITQor5FKijXM6qfCso=;
-        b=NzJBUaOZA5G1WnPV+WkVooIG9lLQAVrTDQ16cKheCsE9jy1VAvjCpC0Ba3XyIfi5nJ
-         9LWlk3IfKgjqEO4ErgqOTA7eUeTruF13mNro9mGxjz6BpwJuTy4KingJNL3PAERWhjPJ
-         Lp69ICG7lxaJHwR5gShqUY3CusIgX8JXm7z94Y7R/qzg71wOZS8xOxMRBgB5+xY6hsSu
-         S0+uAvAlOgIj8mdKIg2mijFPg8rNL8YGSPFia0FMvZgaKYyS2tFtaFbghIPu5iPjCoo0
-         SqCtsiNMKPJ136R/5CZ72mmPxUDpG8zgYSevDFpqxFBSbHNuHF5lm1KvNEmmygCOfQyN
-         guJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684590664; x=1687182664;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=v1DjKkNqJxAe4f+qRtBPeAc8nITQor5FKijXM6qfCso=;
-        b=gQ9DVixgwzFwht4Mc6Alh9WrIVO2UbvEnSBGxy3o20YZ+eZxgRjMdJ1QSGUo+CCKTR
-         1nrHedzxAEMdFnuZBkF7pADmQJT8G9oIBwG2H1VxaEBd/g6WJryFEMiAW5H4MQ28EFO7
-         xFNcW+ezsRBS5rhcgbY+I1wVMSAra9Q020kQC+muW1ldlOWXJ9RvmQL9wysyKZy/abqj
-         Kjll2v6B/+HbEEi66dt3FLTpQSn+KYIKtQBLlEUqvU/F9HuALD0lKTgo9wJhnbA/jvYk
-         IYkRF1d44EQce3ONboJmUL5JeQLMxBYWuRGHJc6vBy2BkS74y+aiBiTQ55VEJ+85c1LE
-         S7mA==
-X-Gm-Message-State: AC+VfDwNpcM2TAnW2zgwikzOrNX2x2db0sYBNz/zxHyl/XXUKSqmPR5N
-	+Wp6CP0cBLgxCuZbE9q1bvM=
-X-Google-Smtp-Source: ACHHUZ6GaD8+abD+X/MQmS2hqD4IMHqYPqXScSS516EF/bZdrcHeYGnN0LSVRqnmFGvDnJ/0sqS3Uw==
-X-Received: by 2002:a17:90b:400a:b0:253:8e47:40b8 with SMTP id ie10-20020a17090b400a00b002538e4740b8mr4286223pjb.1.1684590664240;
-        Sat, 20 May 2023 06:51:04 -0700 (PDT)
-Received: from debian.me (subs09a-223-255-225-69.three.co.id. [223.255.225.69])
-        by smtp.gmail.com with ESMTPSA id i7-20020a17090aee8700b0023a84911df2sm1283255pjz.7.2023.05.20.06.51.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 20 May 2023 06:51:03 -0700 (PDT)
-Received: by debian.me (Postfix, from userid 1000)
-	id 21CFB105634; Sat, 20 May 2023 20:50:52 +0700 (WIB)
-Date: Sat, 20 May 2023 20:50:52 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Alex Deucher <alexander.deucher@amd.com>,
-	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-	"Pan, Xinhui" <Xinhui.Pan@amd.com>,
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-	Hawking Zhang <Hawking.Zhang@amd.com>, Le Ma <le.ma@amd.com>,
-	Tao Zhou <tao.zhou1@amd.com>, YiPeng Chai <YiPeng.Chai@amd.com>,
-	"Jiadong.Zhu" <Jiadong.Zhu@amd.com>,
-	Yang Wang <KevinYang.Wang@amd.com>, Candice Li <candice.li@amd.com>,
-	Xiaojian Du <Xiaojian.Du@amd.com>, Likun Gao <Likun.Gao@amd.com>,
-	Linux AMDGPU <amd-gfx@lists.freedesktop.org>,
-	Linux DRI Development <dri-devel@lists.freedesktop.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Regressions <regressions@lists.linux.dev>
-Cc: "Azamat S. Kalimoulline" <turtle@bazon.ru>,
-	max <kernel-ODwfxu5zp4@maxxor.org>
-Subject: Re: Fwd: Kernel 5.11 crashes when it boots, it produces black screen.
-Message-ID: <ZGjQPFvnAvN6MJnc@debian.me>
-References: <c2168e4f-4d47-0d5d-a1b7-d237f0760df8@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 747703D3B6
+	for <regressions@lists.linux.dev>; Sun, 21 May 2023 11:43:03 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1q0h7l-0004k3-6q; Sun, 21 May 2023 13:21:17 +0200
+Message-ID: <99b996f5-b25c-3d4a-5e2f-2d7cc20bfa31@leemhuis.info>
+Date: Sun, 21 May 2023 13:21:16 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="BrcuXWEws5Ub7YHG"
-Content-Disposition: inline
-In-Reply-To: <c2168e4f-4d47-0d5d-a1b7-d237f0760df8@gmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: Fwd: Linux 6.3.1 + AMD RX 570 on ppc64le 4K: Kernel attempted to
+ read user page (1128) - exploit attempt? (uid: 0)
+Content-Language: en-US, de-DE
+To: Bagas Sanjaya <bagasdotme@gmail.com>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Linux for PowerPC <linuxppc-dev@lists.ozlabs.org>,
+ Linux AMDGPU <amd-gfx@lists.freedesktop.org>
+References: <588c1a66-9976-c96f-dcdd-beec8b7410f0@gmail.com>
+From: "Linux regression tracking #update (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <588c1a66-9976-c96f-dcdd-beec8b7410f0@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1684669383;5f74da10;
+X-HE-SMSGID: 1q0h7l-0004k3-6q
 
+/me removes a few people from CC, as this thread already annoyed a few
+people
 
---BrcuXWEws5Ub7YHG
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 11.05.23 10:06, Bagas Sanjaya wrote:
+> 
+> I notice a regression report on bugzilla ([1]). As many developers
+> don't keep an eye on it, I decide to forward it by email.
+> [...] 
+> #regzbot introduced: v6.2..v6.3 https://bugzilla.kernel.org/show_bug.cgi?id=217427
+> #regzbot title: No video output from AMD RX 570 and kernel exploit attempt on ppc64le
 
-On Wed, May 10, 2023 at 03:26:56PM +0700, Bagas Sanjaya wrote:
-> Anyway, let me add this regression to regzbot:
->=20
-> #regzbot introduced: v5.10..v5.11 https://bugzilla.kernel.org/show_bug.cg=
-i?id=3D212579
-> #regzbot title: Booting kernel on AMD Ryzen 5 PRO stucks in loading initrd
+per https://gitlab.freedesktop.org/drm/amd/-/issues/2553#note_1911308
 
-Resolving...
+#regzbot fix: 3cf7cd3f770a0b89dc
+#regzbot ignore-activity
 
-#regzbot resolve: reporter found a workaround to the presumably firmware bug
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+That page also explains what to do if mails like this annoy you.
 
-See [1] for the precise workaround.
-
-[1]: https://bugzilla.kernel.org/show_bug.cgi?id=3D216340#c53
-
---=20
-An old man doll... just what I always wanted! - Clara
-
---BrcuXWEws5Ub7YHG
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZGjQNQAKCRD2uYlJVVFO
-ow8xAP95LId80yotLjJuCqAvScT3zVqlzU3jw0za7laxNjvTOAD+IoX87VSLE1u5
-TGII8nt/cEhCPC6HB1p6JcsDu48a3Ag=
-=cXnc
------END PGP SIGNATURE-----
-
---BrcuXWEws5Ub7YHG--
