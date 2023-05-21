@@ -1,57 +1,160 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 747703D3B6
-	for <regressions@lists.linux.dev>; Sun, 21 May 2023 11:43:03 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1q0h7l-0004k3-6q; Sun, 21 May 2023 13:21:17 +0200
-Message-ID: <99b996f5-b25c-3d4a-5e2f-2d7cc20bfa31@leemhuis.info>
-Date: Sun, 21 May 2023 13:21:16 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A137F10E8
+	for <regressions@lists.linux.dev>; Sun, 21 May 2023 16:57:11 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:5054:ff:feb3:8f48] (helo=regzbot.fritz.box); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	id 1q0mMn-0005sz-At; Sun, 21 May 2023 18:57:09 +0200
+From: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>
+To: LKML <linux-kernel@vger.kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Linux regressions report  for mainline [2023-05-21]
+Date: Sun, 21 May 2023 16:57:08 +0000
+Message-Id: <168468791405.573950.5461774961481617442@leemhuis.info>
+X-Mailer: git-send-email 2.40.1
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: Fwd: Linux 6.3.1 + AMD RX 570 on ppc64le 4K: Kernel attempted to
- read user page (1128) - exploit attempt? (uid: 0)
-Content-Language: en-US, de-DE
-To: Bagas Sanjaya <bagasdotme@gmail.com>,
- Linux Regressions <regressions@lists.linux.dev>,
- Linux for PowerPC <linuxppc-dev@lists.ozlabs.org>,
- Linux AMDGPU <amd-gfx@lists.freedesktop.org>
-References: <588c1a66-9976-c96f-dcdd-beec8b7410f0@gmail.com>
-From: "Linux regression tracking #update (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <588c1a66-9976-c96f-dcdd-beec8b7410f0@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1684669383;5f74da10;
-X-HE-SMSGID: 1q0h7l-0004k3-6q
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1684688231;d70ec839;
+X-HE-SMSGID: 1q0mMn-0005sz-At
 
-/me removes a few people from CC, as this thread already annoyed a few
-people
+Hi Linus. Nothing much to report, so without further ado find regzbot's
+report below. Ciao, Thorsten
 
-On 11.05.23 10:06, Bagas Sanjaya wrote:
-> 
-> I notice a regression report on bugzilla ([1]). As many developers
-> don't keep an eye on it, I decide to forward it by email.
-> [...] 
-> #regzbot introduced: v6.2..v6.3 https://bugzilla.kernel.org/show_bug.cgi?id=217427
-> #regzbot title: No video output from AMD RX 570 and kernel exploit attempt on ppc64le
+---
 
-per https://gitlab.freedesktop.org/drm/amd/-/issues/2553#note_1911308
+Hi, this is regzbot, the Linux kernel regression tracking bot.
 
-#regzbot fix: 3cf7cd3f770a0b89dc
-#regzbot ignore-activity
+Currently I'm aware of 7 regressions in linux-mainline. Find the
+current status below and the latest on the web:
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+https://linux-regtracking.leemhuis.info/regzbot/mainline/
 
+Bye bye, hope to see you soon for the next report.
+   Regzbot (on behalf of Thorsten Leemhuis)
+
+
+======================================================
+current cycle (v6.3.. aka v6.4-rc), culprit identified
+======================================================
+
+
+[ *NEW* ] SPI NOR bank divide by zero on Lenovo ThinkPad X1 Titanium
+--------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/217448/
+https://bugzilla.kernel.org/show_bug.cgi?id=217448
+https://lore.kernel.org/lkml/b984f839-cf0a-fc25-41d5-656171774e4e@gmail.com/
+
+By Todd Brandt and Todd Brandt; 4 days ago; 11 activities, latest 2 days ago.
+Introduced in 9d6c5d64f028 (v6.4-rc1)
+
+Fix incoming:
+* mtd: spi-nor: Fix divide by zero for spi-nor-generic flashes
+  https://lore.kernel.org/lkml/ZGYp4jnJxZJlfpeB@debian.me/
+
+
+[ *NEW* ] vhost: ps output changed and suspend fails when VMs are running
+-------------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/aba6cca4-e66c-768f-375c-b38c8ba5e8a8@6wind.com/
+https://lore.kernel.org/lkml/aba6cca4-e66c-768f-375c-b38c8ba5e8a8@6wind.com/
+
+By Nicolas Dichtel; 16 days ago; 28 activities, latest 3 days ago.
+Introduced in 6e890c5d502 (v6.4-rc1)
+
+Recent activities from: Linus Torvalds (5), Mike Christie (4), Oleg
+  Nesterov (4), Christian Brauner (3), Eric W. Biederman (2), Jens
+  Axboe (1)
+
+3 patch postings are associated with this regression, the latest is this:
+* Re: [PATCH v11 8/8] vhost: use vhost_tasks for worker threads
+  https://lore.kernel.org/lkml/8bfb7d1d-f7d0-94ca-4777-e31a2003027a@oracle.com/
+  5 days ago, by Mike Christie
+
+
+regulator: qcom-rpmh: Dragonboard 845c broken due to asynchronous probe
+-----------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/CAMi1Hd1avQDcDQf137m2auz2znov4XL8YGrLZsw5edb-NtRJRw@mail.gmail.com/
+https://lore.kernel.org/lkml/CAMi1Hd1avQDcDQf137m2auz2znov4XL8YGrLZsw5edb-NtRJRw@mail.gmail.com/
+
+By Amit Pundir; 7 days ago; 7 activities, latest 4 days ago.
+Introduced in ad44ac082fd (v6.4-rc1)
+
+Recent activities from: Doug Anderson (2), Amit Pundir (2), Mark
+  Brown (1)
+
+One patch associated with this regression:
+* Re: [PATCH] regulator: qcom-rpmh: Revert "regulator: qcom-rpmh: Use PROBE_FORCE_SYNCHRONOUS"
+  https://lore.kernel.org/lkml/552345c5-b1e9-41f6-f275-b6eeeb51df25@linaro.org/
+  7 days ago, by Caleb Connolly
+
+
+system hang on start-up (irq or mlx5 problem?)
+----------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/A1E5B427-897B-409E-B8E3-E417678E81F6@oracle.com/
+https://lore.kernel.org/netdev/A1E5B427-897B-409E-B8E3-E417678E81F6@oracle.com/
+
+By Chuck Lever III; 18 days ago; 9 activities, latest 4 days ago.
+Introduced in bbac70c74183 (v6.4-rc1)
+
+Recent activities from: Chuck Lever III (1)
+
+
+ext4: adv test cases of kvm-xfstests fail
+-----------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/ZFqO3xVnmhL7zv1x@debian-BULLSEYE-live-builder-AMD64/
+https://lore.kernel.org/linux-ext4/ZFqO3xVnmhL7zv1x@debian-BULLSEYE-live-builder-AMD64/
+
+By Eric Whitney; 11 days ago; 2 activities, latest 11 days ago.
+Introduced in e360c6ed7274 (v6.4-rc1)
+
+
+powerpc: boot issues on PASEMI Nemo board
+-----------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/301595ad-0edf-2113-b55f-f5b8051ed24c@xenosoft.de/
+https://lore.kernel.org/linuxppc-dev/301595ad-0edf-2113-b55f-f5b8051ed24c@xenosoft.de/
+
+By Christian Zigotzky; 19 days ago; 20 activities, latest 12 days ago.
+Introduced in e4ab08be5b49 (v6.4-rc1)
+
+Fix incoming:
+* powerpc/isa-bridge: Fix ISA mapping when "ranges" is not present
+  https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=master&id=79de36042eecb684e0f748d17ba52f365fde0d65
+
+
+=============
+End of report
+=============
+
+All regressions marked '[ *NEW* ]' were added since the previous report,
+which can be found here:
+https://lore.kernel.org/r/168407416011.74685.9039980276616254723@leemhuis.info
+
+Thanks for your attention, have a nice day!
+
+  Regzbot, your hard working Linux kernel regression tracking robot
+
+
+P.S.: Wanna know more about regzbot or how to use it to track regressions
+for your subsystem? Then check out the getting started guide or the
+reference documentation:
+
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
+
+The short version: if you see a regression report you want to see
+tracked, just send a reply to the report where you Cc
+regressions@lists.linux.dev with a line like this:
+
+#regzbot introduced: v5.13..v5.14-rc1
+
+If you want to fix a tracked regression, just do what is expected
+anyway: add a 'Link:' tag with the url to the report, e.g.:
+
+Link: https://lore.kernel.org/all/30th.anniversary.repost@klaava.Helsinki.FI/
