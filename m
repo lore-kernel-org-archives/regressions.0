@@ -1,51 +1,13 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3BDA9445
-	for <regressions@lists.linux.dev>; Mon, 22 May 2023 09:35:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1684748099;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=s0HWbIz79jqstRiiPOG36SG7ZPFhmVB7Gw9iEKt9R5M=;
-	b=gJCblsum5JrPO77P+NOUHW964CO6PhsfUq/b3HS3tehrSJs6H+opmSzvL16bVSchxG//G4
-	uK744ePA6RaOmlQuEXYZ+z4iPkZdTJorfI3Hgs4QvN38v9kFnqoxSLcVShWROb9k7Dvig5
-	i0Ai5UPV1dp9mX1aH7rHIcL4TOiWiKw=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-590-AzKL1bWYOOW4kEAwQrOKkg-1; Mon, 22 May 2023 05:34:58 -0400
-X-MC-Unique: AzKL1bWYOOW4kEAwQrOKkg-1
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-94a35b0d4ceso570983366b.3
-        for <regressions@lists.linux.dev>; Mon, 22 May 2023 02:34:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684748097; x=1687340097;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=s0HWbIz79jqstRiiPOG36SG7ZPFhmVB7Gw9iEKt9R5M=;
-        b=ODagLSWhrmIywxncyrQZhp4eIuh7RwlmTpewHKnKkgJoNTGUYAMhNutvDS4muN2P6+
-         7xgZzalBodYioJRy7XhPVFNZ1Yw7opQuwroheJc8/UbfCJZRG97ag/0jVe7RVLpyqcq+
-         S+dq4vE2mUF/vyc3KVxaML4Ty9lCWaV8IY4XprWhps1Njyf9h32Ts+/i0mltqBpLJuZR
-         54s87ClBhYmnYPP6Pj5fF3z0vYgQMlzLK3PbndbxLjpQOBXgz4O+yrPR9zhKZ3ywate4
-         I2vo86RRLvMLtC68YvyHw4/MxZkWWvwBoufBA2lDVHqFBVRwiyUlF2XnL5LNH3dZWoMC
-         9jRw==
-X-Gm-Message-State: AC+VfDzu5lk+8m9IJOKODtxhnbL8jvnkUqF/zeoEgd9P96b2EugU4hV8
-	IsenaESPd5WNKhlgJ4ZO2ziXMefXRrcTVmVZQNHec0FfAkPgm7uw9KgYpFRWS+YdMnbZDUzyzMy
-	RUWKY6qdR6yE9LG2CCmR114Q=
-X-Received: by 2002:a17:907:7d91:b0:960:c5fe:a36a with SMTP id oz17-20020a1709077d9100b00960c5fea36amr9989526ejc.61.1684748097147;
-        Mon, 22 May 2023 02:34:57 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ7G4Aabt20UoUt7U2d6KfSkBhUKt1mY2DF39rXsEP+ph95Qg6sN5V8w3ZfmrgnR/H/Dk6NszA==
-X-Received: by 2002:a17:907:7d91:b0:960:c5fe:a36a with SMTP id oz17-20020a1709077d9100b00960c5fea36amr9989503ejc.61.1684748096739;
-        Mon, 22 May 2023 02:34:56 -0700 (PDT)
-Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id j27-20020a170906535b00b0096f4c9ce526sm2950604ejo.225.2023.05.22.02.34.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 22 May 2023 02:34:56 -0700 (PDT)
-Message-ID: <e7d682f3-c1a3-6ddb-5854-8e814dd66333@redhat.com>
-Date: Mon, 22 May 2023 11:34:55 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC8FC9445
+	for <regressions@lists.linux.dev>; Mon, 22 May 2023 09:37:34 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1q11yt-0007Y3-RF; Mon, 22 May 2023 11:37:31 +0200
+Message-ID: <d1aee7d3-05f6-0920-b8e1-4ed5cf3f9f70@leemhuis.info>
+Date: Mon, 22 May 2023 11:37:31 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -54,137 +16,108 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.10.0
-Subject: Re: [PATCH] mtd: spi-nor: Fix divide by zero for spi-nor-generic
- flashes
-To: Tudor Ambarus <tudor.ambarus@linaro.org>,
- Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: richard@nod.at, todd.e.brandt@intel.com, vigneshr@ti.com,
- pratyush@kernel.org, michael@walle.cc, linux-mtd@lists.infradead.org,
- linux-kernel@vger.kernel.org, regressions@leemhuis.info,
- bagasdotme@gmail.com, regressions@lists.linux.dev, joneslee@google.com,
- Todd Brandt <todd.e.brandt@linux.intel.com>
-References: <20230518085440.2363676-1-tudor.ambarus@linaro.org>
- <20230522102953.2fdf2b02@xps-13>
- <0c8a54ae-7f32-2614-9717-a00fe561513e@linaro.org>
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <0c8a54ae-7f32-2614-9717-a00fe561513e@linaro.org>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Re: [PATCH 2/2] drm/ofdrm: Update expected device name
+Content-Language: en-US, de-DE
+To: Helge Deller <deller@gmx.de>, Thomas Zimmermann <tzimmermann@suse.de>,
+ Geert Uytterhoeven <geert@linux-m68k.org>,
+ Cyril Brulebois <cyril@debamax.com>
+Cc: linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ Rob Herring <robh@kernel.org>, Michal Suchanek <msuchanek@suse.de>,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+ "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
+ <devicetree@vger.kernel.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <20230412095509.2196162-1-cyril@debamax.com>
+ <20230412095509.2196162-3-cyril@debamax.com>
+ <CAMuHMdW4rZn4p=gQZRWQQSEbQPmzZUd5eN+kP_Yr7bLgTHyvig@mail.gmail.com>
+ <5694a9ab-d474-c101-9398-eea55aab29df@suse.de>
+ <10077a22-3055-75dd-2168-310468618f99@gmx.de>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+In-Reply-To: <10077a22-3055-75dd-2168-310468618f99@gmx.de>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1684748255;a0bec253;
+X-HE-SMSGID: 1q11yt-0007Y3-RF
 
-Hi,
+Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
+for once, to make this easily accessible to everyone.
 
-On 5/22/23 11:22, Tudor Ambarus wrote:
-> 
-> 
-> On 5/22/23 09:29, Miquel Raynal wrote:
->> Hi Tudor,
-> 
-> Hi, Miquel,
-> 
->>
->> tudor.ambarus@linaro.org wrote on Thu, 18 May 2023 08:54:40 +0000:
->>
->>> We failed to initialize n_banks for spi-nor-generic flashes, which
->>> caused a devide by zero when computing the bank_size.
+Was a proper solution for the regression the initial mail in this thread
+is about ever found? Doesn't look like it for here, but maybe I'm
+missing something.
+
+Reminder, the problem afaik is caused by 241d2fb56a ("of: Make OF
+framebuffer device names unique") [merged for v6.2-rc8, authored by
+Michal Suchanek; committed by Rob Herring].
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
+
+#regzbot poke
+
+On 24.04.23 11:35, Helge Deller wrote:
+> On 4/24/23 11:07, Thomas Zimmermann wrote:
+>> Am 24.04.23 um 09:33 schrieb Geert Uytterhoeven:
+>>> On Wed, Apr 12, 2023 at 12:05 PM Cyril Brulebois <cyril@debamax.com>
+>>> wrote:
+>>>> Since commit 241d2fb56a18 ("of: Make OF framebuffer device names
+>>>> unique"),
+>>>> as spotted by Frédéric Bonnard, the historical "of-display" device is
+>>>> gone: the updated logic creates "of-display.0" instead, then as many
+>>>> "of-display.N" as required.
+>>>>
+>>>> This means that offb no longer finds the expected device, which
+>>>> prevents
+>>>> the Debian Installer from setting up its interface, at least on
+>>>> ppc64el.
+>>>>
+>>>> Given the code similarity it is likely to affect ofdrm in the same way.
+>>>>
+>>>> It might be better to iterate on all possible nodes, but updating the
+>>>> hardcoded device from "of-display" to "of-display.0" is likely to help
+>>>> as a first step.
+>>>>
+>>>> Link: https://bugzilla.kernel.org/show_bug.cgi?id=217328
+>>>> Link: https://bugs.debian.org/1033058
+>>>> Fixes: 241d2fb56a18 ("of: Make OF framebuffer device names unique")
+>>>> Cc: stable@vger.kernel.org # v6.2+
+>>>> Signed-off-by: Cyril Brulebois <cyril@debamax.com>
 >>>
->>> By default we consider that all chips have a single bank. Initialize
->>> the default number of banks for spi-nor-generic flashes. Even if the
->>> bug is fixed with this simple initialization, check the n_banks value
->>> before dividing so that we make sure this kind of bug won't occur again
->>> if some other struct instance is created uninitialized.
+>>> Thanks for your patch, which is now commit 3a9d8ea2539ebebd
+>>> ("drm/ofdrm: Update expected device name") in fbdev/for-next.
 >>>
->>> Suggested-by: Todd Brandt <todd.e.brandt@linux.intel.com>
->>> Reported-by: Todd Brandt <todd.e.brandt@linux.intel.com>
->>> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=217448
->>> Fixes: 9d6c5d64f028 ("mtd: spi-nor: Introduce the concept of bank")
->>> Link: https://lore.kernel.org/all/20230516225108.29194-1-todd.e.brandt@intel.com/
->>> Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
->>> ---
->>>  drivers/mtd/spi-nor/core.c | 5 ++++-
->>>  1 file changed, 4 insertions(+), 1 deletion(-)
+>>>> --- a/drivers/gpu/drm/tiny/ofdrm.c
+>>>> +++ b/drivers/gpu/drm/tiny/ofdrm.c
+>>>> @@ -1390,7 +1390,7 @@ MODULE_DEVICE_TABLE(of, ofdrm_of_match_display);
+>>>>
+>>>>   static struct platform_driver ofdrm_platform_driver = {
+>>>>          .driver = {
+>>>> -               .name = "of-display",
+>>>> +               .name = "of-display.0",
+>>>>                  .of_match_table = ofdrm_of_match_display,
+>>>>          },
+>>>>          .probe = ofdrm_probe,
 >>>
->>> diff --git a/drivers/mtd/spi-nor/core.c b/drivers/mtd/spi-nor/core.c
->>> index 0bb0ad14a2fc..5f29fac8669a 100644
->>> --- a/drivers/mtd/spi-nor/core.c
->>> +++ b/drivers/mtd/spi-nor/core.c
->>> @@ -2018,6 +2018,7 @@ static const struct spi_nor_manufacturer *manufacturers[] = {
->>>  
->>>  static const struct flash_info spi_nor_generic_flash = {
->>>  	.name = "spi-nor-generic",
->>> +	.n_banks = 1,
+>>> Same comment as for "[PATCH 1/2] fbdev/offb: Update expected device
+>>> name".
+>>>
+>>> https://lore.kernel.org/r/CAMuHMdVGEeAsmb4tAuuqqGJ-4+BBETwEwYJA+M9NyJv0BJ_hNg@mail.gmail.com
 >>
->> I definitely missed that structure.
->>
->>>  	/*
->>>  	 * JESD216 rev A doesn't specify the page size, therefore we need a
->>>  	 * sane default.
->>> @@ -2921,7 +2922,8 @@ static void spi_nor_late_init_params(struct spi_nor *nor)
->>>  	if (nor->flags & SNOR_F_HAS_LOCK && !nor->params->locking_ops)
->>>  		spi_nor_init_default_locking_ops(nor);
->>>  
->>> -	nor->params->bank_size = div64_u64(nor->params->size, nor->info->n_banks);
->>> +	if (nor->info->n_banks > 1)
->>> +		params->bank_size = div64_u64(params->size, nor->info->n_banks);
->>
->> I'm fine with the check as it is written because it also look like an
->> optimization, but bank_size should never be 0 otherwise it's a real bug
+>> Sorry that I missed this patch. I agree that it's probably not
+>> correct. At least in ofdrm, we want to be able to use multiple
+>> framebuffers at the same time; a feature that has been broken by this
+>> change.
 > 
-> bank_size was introduced just for chips featuring several banks, but we
-> made this field mandatory for all flashes, regardless of their type. I
-> find this restriction unnecessary, because we can differentiate the RWW
-> flashes by checking the SNOR_F_RWW flag. So the alternative to this
-> patch is to remove the n_banks restriction and set it just for the RWW
-> flashes. I think I prefer this, but keep in mind that I never read a RWW
-> flash's datasheet, not publicly available, so the decision is in your
-> court. Happy to make a patch.
-
-Since this is causing a serious regression causing people's laptops to hang
-on suspend I believe it would be best to queue up the simplest fix for
-this (which seems to be this patch as is) for 6.4 asap.
-
-Any more involved changes to fix this in a better way can then be added
-on top for the 6.5 cycle.
-
-Regards,
-
-Hans
-
-
-
+> Geert & Thomas, thanks for the review!
 > 
->> that must be catch and fixed. We do not want uninitialized bank_size's.>
->>>  }
->>>  
->>>  /**
->>> @@ -2987,6 +2989,7 @@ static void spi_nor_init_default_params(struct spi_nor *nor)
->>>  	/* Set SPI NOR sizes. */
->>>  	params->writesize = 1;
->>>  	params->size = (u64)info->sector_size * info->n_sectors;
->>> +	params->bank_size = params->size;
->>>  	params->page_size = info->page_size;
->>
->> We actually discarded that line in a previous discussion:
->> https://lore.kernel.org/linux-mtd/20230331194620.839899-1-miquel.raynal@bootlin.com/T/#mcb4f90f7ca48ffe3d9838b2ac6f74e44460c51bd
->>
->> I'm fine to re-add it though, it does not hurt.
+> I've dropped both patches from fbdev tree for now.
+> Would be great to find another good solution though, as it breaks the
+> debian
+> installer.
 > 
-> we would get rid of this init as well with my suggestion.
-> 
-> Keep in mind that the bug was introduced in 6.4, so we'll have to fix
-> this fast, let's come to an agreement.
-> 
-> Cheers,
-> ta
->>
->>>  
->>>  	if (!(info->flags & SPI_NOR_NO_FR)) {
->>
->> Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
->>
->> Thanks,
->> Miquèl
-> 
-
+> Helge
