@@ -1,121 +1,125 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from mslow1.mail.gandi.net (mslow1.mail.gandi.net [217.70.178.240])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CCD55380
-	for <regressions@lists.linux.dev>; Mon, 22 May 2023 08:17:50 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1q10jf-0007xN-3F; Mon, 22 May 2023 10:17:43 +0200
-Message-ID: <d78088d6-7989-7538-c4e1-7976a21cf680@leemhuis.info>
-Date: Mon, 22 May 2023 10:17:42 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3557EA922
+	for <regressions@lists.linux.dev>; Mon, 22 May 2023 08:30:13 +0000 (UTC)
+Received: from relay8-d.mail.gandi.net (unknown [IPv6:2001:4b98:dc4:8::228])
+	by mslow1.mail.gandi.net (Postfix) with ESMTP id 56513C9D2C
+	for <regressions@lists.linux.dev>; Mon, 22 May 2023 08:30:06 +0000 (UTC)
+Received: (Authenticated sender: miquel.raynal@bootlin.com)
+	by mail.gandi.net (Postfix) with ESMTPSA id 6680A1BF216;
+	Mon, 22 May 2023 08:29:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1684744197;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=B5Fe74h5JTNsqGr8I0pihoWU3MQrRGJcpIZ7H5+Yuaw=;
+	b=a8a4j4Clxo8d5bzikhJNekIR81/QiEf//S8c/8AmZB6aQokS0b8929x+y91azAmh5XfwvZ
+	f3RlZcqPlv/ikgmwXlenr/lzRTdukZD4ZAkpR3s0YYn4fsSvMdCW4pKdFUxfwy4LnheIMG
+	uOB+oS8lZTSGn09/jDUf+znTBJgsIE23Xxf2hDxlpko0+ulyFgi8mOa6LskWvTOOVULL2M
+	dAnzBhi/H+9UEjtpkv+fq91qe+WnntNkHvxOJa2j0anFyIvLEGi6CzYpVQEtqJ+K5n32gT
+	B0nr3CkhV/71lnXQ6RO/jnQqcp4V0NqfEE3Xd79lqBSKe3llkhYpHXD4FGXRZQ==
+Date: Mon, 22 May 2023 10:29:53 +0200
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: Tudor Ambarus <tudor.ambarus@linaro.org>
+Cc: richard@nod.at, todd.e.brandt@intel.com, vigneshr@ti.com,
+ pratyush@kernel.org, michael@walle.cc, linux-mtd@lists.infradead.org,
+ linux-kernel@vger.kernel.org, regressions@leemhuis.info,
+ bagasdotme@gmail.com, regressions@lists.linux.dev, joneslee@google.com,
+ Todd Brandt <todd.e.brandt@linux.intel.com>
+Subject: Re: [PATCH] mtd: spi-nor: Fix divide by zero for spi-nor-generic
+ flashes
+Message-ID: <20230522102953.2fdf2b02@xps-13>
+In-Reply-To: <20230518085440.2363676-1-tudor.ambarus@linaro.org>
+References: <20230518085440.2363676-1-tudor.ambarus@linaro.org>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: kernel error at led trigger "phy0tpt"
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Bagas Sanjaya <bagasdotme@gmail.com>, Tobias Dahms <dahms.tobias@web.de>,
- Sean Wang <sean.wang@mediatek.com>
-Cc: stable@vger.kernel.org, Pavel Machek <pavel@ucw.cz>,
- Lee Jones <lee@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
- linux-leds@vger.kernel.org, linux-wireless@vger.kernel.org,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- Matthias Brugger <matthias.bgg@gmail.com>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-References: <91feceb2-0df4-19b9-5ffa-d37e3d344fdf@web.de>
- <3fcc707b-f757-e74b-2800-3b6314217868@leemhuis.info>
- <fcecf6fc-bf18-73a0-9fc1-6850e183323a@web.de>
- <d14fb08c-70e3-4cc7-caf9-87e73eab9194@gmail.com>
- <8b07ead5-f105-da86-e7da-ee49616f7c1d@collabora.com>
- <69602f1b-4afa-d864-b6d3-d8237f81a51d@leemhuis.info>
-Content-Language: en-US, de-DE
-In-Reply-To: <69602f1b-4afa-d864-b6d3-d8237f81a51d@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1684743470;3aabc297;
-X-HE-SMSGID: 1q10jf-0007xN-3F
+Content-Transfer-Encoding: quoted-printable
 
-On 17.04.23 13:25, Linux regression tracking (Thorsten Leemhuis) wrote:
-> [adding Matthias to the list of recipients, who back then applied to
-> culprit]
-> 
-> Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
-> for once, to make this easily accessible to everyone.
-> 
-> AngeloGioacchino, Has any progress been made to fix below regression? It
-> doesn't look like it from here, hence I wondered if it fall through the
-> cracks.
+Hi Tudor,
 
-Hmmm, nobody replied. Does nobody (including the reporters!) care
-anymore for valid reasons? Then I'd drop this from the tracking.
+tudor.ambarus@linaro.org wrote on Thu, 18 May 2023 08:54:40 +0000:
 
-Or was progress made and I just missed it?
+> We failed to initialize n_banks for spi-nor-generic flashes, which
+> caused a devide by zero when computing the bank_size.
+>=20
+> By default we consider that all chips have a single bank. Initialize
+> the default number of banks for spi-nor-generic flashes. Even if the
+> bug is fixed with this simple initialization, check the n_banks value
+> before dividing so that we make sure this kind of bug won't occur again
+> if some other struct instance is created uninitialized.
+>=20
+> Suggested-by: Todd Brandt <todd.e.brandt@linux.intel.com>
+> Reported-by: Todd Brandt <todd.e.brandt@linux.intel.com>
+> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=3D217448
+> Fixes: 9d6c5d64f028 ("mtd: spi-nor: Introduce the concept of bank")
+> Link: https://lore.kernel.org/all/20230516225108.29194-1-todd.e.brandt@in=
+tel.com/
+> Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
+> ---
+>  drivers/mtd/spi-nor/core.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/mtd/spi-nor/core.c b/drivers/mtd/spi-nor/core.c
+> index 0bb0ad14a2fc..5f29fac8669a 100644
+> --- a/drivers/mtd/spi-nor/core.c
+> +++ b/drivers/mtd/spi-nor/core.c
+> @@ -2018,6 +2018,7 @@ static const struct spi_nor_manufacturer *manufactu=
+rers[] =3D {
+> =20
+>  static const struct flash_info spi_nor_generic_flash =3D {
+>  	.name =3D "spi-nor-generic",
+> +	.n_banks =3D 1,
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+I definitely missed that structure.
 
-#regzbot poke
+>  	/*
+>  	 * JESD216 rev A doesn't specify the page size, therefore we need a
+>  	 * sane default.
+> @@ -2921,7 +2922,8 @@ static void spi_nor_late_init_params(struct spi_nor=
+ *nor)
+>  	if (nor->flags & SNOR_F_HAS_LOCK && !nor->params->locking_ops)
+>  		spi_nor_init_default_locking_ops(nor);
+> =20
+> -	nor->params->bank_size =3D div64_u64(nor->params->size, nor->info->n_ba=
+nks);
+> +	if (nor->info->n_banks > 1)
+> +		params->bank_size =3D div64_u64(params->size, nor->info->n_banks);
 
-> On 27.03.23 10:23, AngeloGioacchino Del Regno wrote:
->> Il 26/03/23 15:23, Bagas Sanjaya ha scritto:
->>> On 3/26/23 02:20, Tobias Dahms wrote:
->>>> Hello,
->>>>
->>>> the bisection gives following result:
->>>> --------------------------------------------------------------------
->>>> 18c7deca2b812537aa4d928900e208710f1300aa is the first bad commit
->>>> commit 18c7deca2b812537aa4d928900e208710f1300aa
->>>> Author: AngeloGioacchino Del Regno
->>>> <angelogioacchino.delregno@collabora.com>
->>>> Date:   Tue May 17 12:47:08 2022 +0200
->>>>
->>>>      soc: mediatek: pwrap: Use readx_poll_timeout() instead of custom
->>>> function
->>>>
->>>>      Function pwrap_wait_for_state() is a function that polls an address
->>>>      through a helper function, but this is the very same operation that
->>>>      the readx_poll_timeout macro means to do.
->>>>      Convert all instances of calling pwrap_wait_for_state() to instead
->>>>      use the read_poll_timeout macro.
->>>>
->>>>      Signed-off-by: AngeloGioacchino Del Regno
->>>> <angelogioacchino.delregno@collabora.com>
->>>>      Reviewed-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
->>>>      Tested-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
->>>>      Link:
->>>> https://lore.kernel.org/r/20220517104712.24579-2-angelogioacchino.delregno@collabora.com
->>>>      Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
->>>>
->>>>   drivers/soc/mediatek/mtk-pmic-wrap.c | 60
->>>> ++++++++++++++++++++----------------
->>>>   1 file changed, 33 insertions(+), 27 deletions(-)
->>>> --------------------------------------------------------------------
->>>>
->>>
->>> OK, I'm updating the regression status:
->>>
->>> #regzbot introduced: 18c7deca2b8125
->>>
->>> And for replying, don't top-post, but rather reply inline with
->>> appropriate context instead; hence I cut the replied context.
->>>
->>
->> There are two possible solutions to that, specifically, either:
->>  1. Change readx_poll_timeout() to readx_poll_timeout_atomic(); or
->>  2. Fix the mt6323-led driver so that this operation gets done
->>     out of atomic context, which is IMO the option to prefer.
->>
->> Ideas?
->>
->> Regards,
->> Angelo
->>
->>
+I'm fine with the check as it is written because it also look like an
+optimization, but bank_size should never be 0 otherwise it's a real bug
+that must be catch and fixed. We do not want uninitialized bank_size's.
+
+>  }
+> =20
+>  /**
+> @@ -2987,6 +2989,7 @@ static void spi_nor_init_default_params(struct spi_=
+nor *nor)
+>  	/* Set SPI NOR sizes. */
+>  	params->writesize =3D 1;
+>  	params->size =3D (u64)info->sector_size * info->n_sectors;
+> +	params->bank_size =3D params->size;
+>  	params->page_size =3D info->page_size;
+
+We actually discarded that line in a previous discussion:
+https://lore.kernel.org/linux-mtd/20230331194620.839899-1-miquel.raynal@boo=
+tlin.com/T/#mcb4f90f7ca48ffe3d9838b2ac6f74e44460c51bd
+
+I'm fine to re-add it though, it does not hurt.
+
+> =20
+>  	if (!(info->flags & SPI_NOR_NO_FR)) {
+
+Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
+
+Thanks,
+Miqu=C3=A8l
