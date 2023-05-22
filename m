@@ -1,98 +1,132 @@
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3A2B10F4
-	for <regressions@lists.linux.dev>; Mon, 22 May 2023 06:45:32 +0000 (UTC)
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-25332422531so2253224a91.0
-        for <regressions@lists.linux.dev>; Sun, 21 May 2023 23:45:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684737932; x=1687329932;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=LjDrbtvTn67xGfPbBeqbRLDQjDn4H8fCj2S01FROHyU=;
-        b=g/EFfzC9Z7HcAGAWKjt+aUgy6W0DPQMT+1xjQg5SPiT/Msoht7eDsHNHRYEAj4/crL
-         XOCzG8Y/DbjXMeSeLDfOmZAoC4q6cfQV3/rZzFwBLCLcYSnu0hUosCqhrqeoJs5wO+b7
-         7OKpQi66Td6/2/GnVUs7ljyJqUUBLkytW796W93fcp0+dSMfpLAGOkoH46dCevRr+Ey2
-         LOr59k8DA5SigJdzK+7SDr3e7mg6kSSJ96WmLSOsh1rVoS59N/X0EPRwWM2BGQQYzjaf
-         P488HrDSntk5LQxa4fmanQZYwyT6xuauZHWPn9MW8mitawxUt0LBYzQvaOpEFZwmtl/T
-         JtnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684737932; x=1687329932;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LjDrbtvTn67xGfPbBeqbRLDQjDn4H8fCj2S01FROHyU=;
-        b=WL+DZwxfCgh8LZUpMfJvJScGOGvQYO56rUjQ+A7phYiXMY2dfw8L6HaTS3rK8UDNws
-         RceoOf7JSEN9Cz+OWsX+/2+Mm5LYEA2uD2fjWAvVQodKyDQ6Uod6DwZcMJukbmMpZFr8
-         iRPvCa658eQtr5R5c06aPLvDWVXlmIikc9xh0AuZCjv9m1zLCJfs7Mv+OVohr8lwjJgd
-         PBrk0PjZUoOjXzC8M4ZvMIwuy9Hxj8kGvh3mB/KO/SSc8GbNrZmW8wfRsX2iqGCeYFEC
-         91vt2eo2aDhoeIgpWObE8VXm4Ye46aCZFkqS2B6Q6/5HDWdKwdQI3ngnrrHAHA5itpYw
-         XP2A==
-X-Gm-Message-State: AC+VfDylVM8FesZS7vXSoYFrO+su6VkjX4Xg//mvqUQRaQcnrmKlzVBA
-	2YUhvLXDy0D3wfFO9kpd4cI=
-X-Google-Smtp-Source: ACHHUZ6hVR2GnXu1H1lD10qc8nxDW2RagqhHiOIeBdBCoqAFkjve7R17MHzRR8hknZmiBFsNFsXi4w==
-X-Received: by 2002:a17:90a:db16:b0:250:1b4c:d861 with SMTP id g22-20020a17090adb1600b002501b4cd861mr10934788pjv.13.1684737932055;
-        Sun, 21 May 2023 23:45:32 -0700 (PDT)
-Received: from debian.me (subs09a-223-255-225-68.three.co.id. [223.255.225.68])
-        by smtp.gmail.com with ESMTPSA id ha11-20020a17090af3cb00b0025368c90773sm5207523pjb.34.2023.05.21.23.45.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 21 May 2023 23:45:31 -0700 (PDT)
-Received: by debian.me (Postfix, from userid 1000)
-	id D225F106ABB; Mon, 22 May 2023 13:45:28 +0700 (WIB)
-Date: Mon, 22 May 2023 13:45:28 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Ard Biesheuvel <ardb@kernel.org>,
-	Pedro Falcato <pedro.falcato@gmail.com>
-Cc: Linux ARM <linux-arm-kernel@lists.infradead.org>,
-	Linux Kernel Build System <linux-kbuild@vger.kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Regressions <regressions@lists.linux.dev>,
-	Linux EFI <linux-efi@vger.kernel.org>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>, Alan Bartlett <ajb@elrepo.org>
-Subject: Re: Regression. -6.3.X Good. -6.4-rcY Bad.
-Message-ID: <ZGsPiEq/yE1taACL@debian.me>
-References: <8a79151b-ef75-08ad-ae3d-f6cdabfeaa47@gmail.com>
- <CAKbZUD3FBiaLGWq=TipfevqXP0SBz8F+=L6JSO+FMZOv0QQ9AQ@mail.gmail.com>
- <CAMj1kXEJj4+CFX3YfCZZu7RwxoVf=5PHZcZ8tG7x8xO3x4KPAw@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0BEC63BE
+	for <regressions@lists.linux.dev>; Mon, 22 May 2023 07:24:39 +0000 (UTC)
+Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34M6fZrM002159;
+	Mon, 22 May 2023 07:24:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : reply-to : references : content-type : in-reply-to
+ : mime-version; s=pp1; bh=QWCfiUU6i7bRLnCpHBU44p8sg8pJP+j/9vghbjX6vsI=;
+ b=n2CqLrCAO0LcZO7eazo0hg4H4cU2pZnGz1l5fJ4LR3eNpUy3Hw/dGUg3hQieMnkOQ7QT
+ uKjYZr0ORCCdVyN1I0gHEg0VKFKUZLZjNVlilZmwxbfXqwAw1MikkO+566kPHH5fln0F
+ DfZCCPZT17tlF8FM9r+if2zX7ojaU1Eifmw+pK3q4xdw3ZxWCQ10O1Qh98IeqsmEaVBR
+ 9yiiC3ebENzt7qWPr5ZPyuuaK2FxSpETBro/MVLQq+EDcPM5aK7BM6bugAv3j1nZCUYP
+ 0JODvszMqmvw79CjW4N42YTKKIH2kqaEL0CDEX4M5rFRGw9037Qzz4XcDQbhY+VzXSz6 6Q== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3qqgbq3s1k-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 22 May 2023 07:24:21 +0000
+Received: from m0353722.ppops.net (m0353722.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 34M6rd1c009710;
+	Mon, 22 May 2023 07:24:21 GMT
+Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3qqgbq3s16-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 22 May 2023 07:24:20 +0000
+Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
+	by ppma01fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 34M4duVD032081;
+	Mon, 22 May 2023 07:24:19 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma01fra.de.ibm.com (PPS) with ESMTPS id 3qppc10ppp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 22 May 2023 07:24:19 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 34M7OFK819137218
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 22 May 2023 07:24:15 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 84B8D20043;
+	Mon, 22 May 2023 07:24:15 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 6EF1520040;
+	Mon, 22 May 2023 07:24:13 +0000 (GMT)
+Received: from linux.vnet.ibm.com (unknown [9.126.150.29])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with SMTP;
+	Mon, 22 May 2023 07:24:13 +0000 (GMT)
+Date: Mon, 22 May 2023 12:54:12 +0530
+From: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+To: Alexey Kardashevskiy <aik@ozlabs.ru>
+Cc: Michael Ellerman <mpe@ellerman.id.au>,
+        "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        sachinp@linux.vnet.ibm.com, Abdul Haleem <abdhalee@linux.vnet.ibm.com>,
+        Gaurav Batra <gbatra@linux.vnet.ibm.com>,
+        Linux kernel regressions list <regressions@lists.linux.dev>
+Subject: Re: Probing nvme disks fails on Upstream kernels on powerpc Maxconfig
+Message-ID: <20230522072412.GA3902@linux.vnet.ibm.com>
+Reply-To: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+References: <20230323095333.GI1005120@linux.vnet.ibm.com>
+ <906d4d0e-b487-00a5-9399-7d1edc5e20a4@leemhuis.info>
+ <87bkk2khl0.fsf@mpe.ellerman.id.au>
+ <2a80cb20-0c9f-2d0c-e951-c4f005f3e4b3@ozlabs.ru>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+In-Reply-To: <2a80cb20-0c9f-2d0c-e951-c4f005f3e4b3@ozlabs.ru>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 13Z39uafd8HPXd7QhOiUouFbFLxN8SLs
+X-Proofpoint-ORIG-GUID: a3HDUesWl0Wck6bFVLwW1molImew3S4r
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="U1fv8V3wsTFbNp5O"
-Content-Disposition: inline
-In-Reply-To: <CAMj1kXEJj4+CFX3YfCZZu7RwxoVf=5PHZcZ8tG7x8xO3x4KPAw@mail.gmail.com>
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-05-22_04,2023-05-17_02,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 spamscore=0
+ phishscore=0 clxscore=1011 impostorscore=0 adultscore=0 mlxlogscore=999
+ lowpriorityscore=0 mlxscore=0 malwarescore=0 suspectscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2304280000 definitions=main-2305220059
 
+* Alexey Kardashevskiy <aik@ozlabs.ru> [2023-04-13 22:09:22]:
 
---U1fv8V3wsTFbNp5O
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> > > On 23.03.23 10:53, Srikar Dronamraju wrote:
+> > > > 
+> > > > I am unable to boot upstream kernels from v5.16 to the latest upstream
+> > > > kernel on a maxconfig system. (Machine config details given below)
+> > > > 
+> > > > At boot, we see a series of messages like the below.
+> > > > 
+> > > > dracut-initqueue[13917]: Warning: dracut-initqueue: timeout, still waiting for following initqueue hooks:
+> > > > dracut-initqueue[13917]: Warning: /lib/dracut/hooks/initqueue/finished/devexists-\x2fdev\x2fdisk\x2fby-uuid\x2f93dc0767-18aa-467f-afa7-5b4e9c13108a.sh: "if ! grep -q After=remote-fs-pre.target /run/systemd/generator/systemd-cryptsetup@*.service 2>/dev/null; then
+> > > > dracut-initqueue[13917]:     [ -e "/dev/disk/by-uuid/93dc0767-18aa-467f-afa7-5b4e9c13108a" ]
+> > > > dracut-initqueue[13917]: fi"
+> > > 
+> > > Alexey, did you look into this? This is apparently caused by a commit of
+> > > yours (see quoted part below) that Michael applied. Looks like it fell
+> > > through the cracks from here, but maybe I'm missing something.
+> > 
+> > Unfortunately Alexey is not working at IBM any more, so he won't have
+> > access to any hardware to debug/test this.
+> > 
+> > Srikar are you debugging this? If not we'll have to find someone else to
+> > look at it.
+> 
+> Has this been fixed and I missed cc:? Anyway, without the full log, I still
+> see it is a huge guest so chances are the guest could not map all RAM so
+> instead it uses the biggest possible DDW with 2M pages. If that's the case,
+> this might help it:
+> 
 
-On Mon, May 22, 2023 at 08:33:47AM +0200, Ard Biesheuvel wrote:
-> I've sent this out as a patch and queued it up as a EFI fix. Thanks!
+Hi Alexey, Michael
 
-Telling regzbot about the fix since Ard forgot to add required tags:
+Sorry for the late reply, but I didnt have access to this large system.
+This weekend, I did get access and tested with the patch. However it didn't
+help much, system is still stuck at dracut with similar message except the
+trace.
 
-#regzbot fix: 3610dc36f4fd76
+However this patch
+https://lore.kernel.org/all/20230418204401.13168-1-gbatra@linux.vnet.ibm.com/
+from Gaurav Batra does solve this issue.
 
-Thanks.
+-- 
+Thanks and Regards
+Srikar Dronamraju
 
---=20
-An old man doll... just what I always wanted! - Clara
-
---U1fv8V3wsTFbNp5O
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZGsPiAAKCRD2uYlJVVFO
-o7IkAQCfW5qyntrvODsBdWvQiLtt3bRqaM3rk/LVflVoxmAF9QEAjEkECq63YpYO
-cKqqQjSu7Gqa7Naz0QTnCTXte8DzDwA=
-=KFm8
------END PGP SIGNATURE-----
-
---U1fv8V3wsTFbNp5O--
