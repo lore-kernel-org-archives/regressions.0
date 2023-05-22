@@ -1,95 +1,101 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from durkon.wrar.name (wrar.name [116.203.248.210])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE9F5134AF
-	for <regressions@lists.linux.dev>; Mon, 22 May 2023 13:25:49 +0000 (UTC)
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1ae4d1d35e6so42904475ad.0
-        for <regressions@lists.linux.dev>; Mon, 22 May 2023 06:25:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684761949; x=1687353949;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4b3cl3OODzw5cbGHTkbsgtSEp8oZPxcTDpluClxVbUk=;
-        b=eO3rIpsi40iN+2w6btP49efxsdxTdxFOiCQQBcJFc1qjQAPCHGM1ndbcirI2jrHElM
-         82mIWTyUiKNEbcA1OqxJxV/cy8w860ZuUZa19gI7FohoWQGljuvwuTXWG6ypc1UYjeRJ
-         esqRmGWv3h5sai88fccF5Dgo4w9HWJAtapyegg02sBy8GwiNkMcpONHU+DaRbJgnAaTH
-         zkgUTctpnh2Ne/hUgJAL4SZX8j7XBYl7B+DtXgbLWg+U/FWkH+SqwB9hHy0Y322M9872
-         Ipie/tzXpsQqNs0CAZlNF7H0EYGqA9Hq7uYvp0b+UWxQc99RLw7B7VNSkRXF24233fxJ
-         RntA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684761949; x=1687353949;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=4b3cl3OODzw5cbGHTkbsgtSEp8oZPxcTDpluClxVbUk=;
-        b=aEMbQhdUW+sGrj+wE5ilYBYDdxY9AAgAiPHe0zS1IC+KFgMXsuvADXGW7MUgbK7BKC
-         LX5ec+Gqq31agaVQtedLNJ+WDKEzNhqkyiDBeT0DCQXlOhFVwzN0CiP9zLleKZ5fw4GO
-         QnNmFs/y0MV6XbaQZFfs9NfaC3JslyWwwWXyu1QsrOyfiuwHfOSQs2R3bQqQmRIYSmER
-         DKOD2ijuTDkUtnp2DDCjYtcYgp90Y/zz/n9SSf0icqLPv4sCQtPcw+miUlEag7jVpjh/
-         iGLC8ApBCb0CeE1L2OjWhnyycETP8GeRgMULaTf7jkKrlw+w2OdExW6L7gjvZgyUjSQm
-         kUaA==
-X-Gm-Message-State: AC+VfDzThYGf0LXnjUtlF2VtR5Fbxh3fBf57NIOAqHQxMoEgWooGLHsg
-	2s0PVwEnPv18EOMaJyr9Zm0=
-X-Google-Smtp-Source: ACHHUZ6W3TTQEgMmXQa5zURSi0AtXuxh42yw2+Qd5pWuLLi/EMw6NyJGi1HDsSizjXkveQPFhxVT7w==
-X-Received: by 2002:a17:902:b496:b0:1ae:bf5:7b5 with SMTP id y22-20020a170902b49600b001ae0bf507b5mr9747125plr.34.1684761949072;
-        Mon, 22 May 2023 06:25:49 -0700 (PDT)
-Received: from [192.168.43.80] (subs02-180-214-232-24.three.co.id. [180.214.232.24])
-        by smtp.gmail.com with ESMTPSA id d6-20020a170902c18600b001addf547a6esm4883562pld.17.2023.05.22.06.25.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 22 May 2023 06:25:48 -0700 (PDT)
-Message-ID: <efa04d56-cd7f-6620-bca7-1df89f49bf4b@gmail.com>
-Date: Mon, 22 May 2023 20:25:42 +0700
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 663F513AEC
+	for <regressions@lists.linux.dev>; Mon, 22 May 2023 14:05:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=wrar.name;
+	s=20160710; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=uczL89PeQfTFc4Ofx8WWBsn9Sdow9ixsP921LnJkcnA=; b=vumynjcyMWeEVVOXFYXKsAsVO3
+	BApVg1vNpxhOD6je33bDBxPZ9XWRS9QymGzPxh2oher0y/6plS7M2yv3bzY7MrIVTjQw6/BYXERV8
+	a7teTCVv1NciWRF3wofZVLYSKSVUsW3lNc4fj3YnZUasC3/G2UunJ4aKG5HM25ImIZDo=;
+Received: from wrar by durkon.wrar.name with local (Exim 4.96)
+	(envelope-from <wrar@wrar.name>)
+	id 1q15T2-0046An-0j;
+	Mon, 22 May 2023 15:20:52 +0200
+Date: Mon, 22 May 2023 15:20:52 +0200
+From: Andrey Rakhmatullin <wrar@wrar.name>
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: linux-wireless@vger.kernel.org, Neil Chen <yn.chen@mediatek.com>,
+	Deren Wu <deren.wu@mediatek.com>,
+	Lorenzo Bianconi <lorenzo@kernel.org>, Felix Fietkau <nbd@nbd.name>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Subject: Re: MT7922 problem with "fix rx filter incorrect by drv/fw
+ inconsistent"
+Message-ID: <ZGtsNO0VZQDWJG+A@durkon.wrar.name>
+References: <ZGY4peApQnPAmDkY@durkon.wrar.name>
+ <ad948b42-74d3-b4f1-bbd6-449f71703083@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Content-Language: en-US
-To: Linux btrfs <linux-btrfs@vger.kernel.org>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>,
- Linux Stable <stable@vger.kernel.org>
-Cc: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
- David Sterba <dsterba@suse.com>, a1bert@atlas.cz
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-Subject: Fwd: vmalloc error: btrfs-delalloc btrfs_work_helper [btrfs] in
- kernel 6.3.x
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <ad948b42-74d3-b4f1-bbd6-449f71703083@leemhuis.info>
 
-Hi,
-
-I notice a regression report on Bugzilla [1]. Quoting from it:
-
-> after updating from 6.2.x to 6.3.x, vmalloc error messages started to appear in the dmesg
+On Mon, May 22, 2023 at 03:00:30PM +0200, Linux regression tracking #adding (Thorsten Leemhuis) wrote:
+> [CCing the regression list, as it should be in the loop for regressions:
+> https://docs.kernel.org/admin-guide/reporting-regressions.html]
 > 
+> [TLDR: I'm adding this report to the list of tracked Linux kernel
+> regressions; the text you find below is based on a few templates
+> paragraphs you might have encountered already in similar form.
+> See link in footer if these mails annoy you.]
 > 
+> On 18.05.23 16:39, Andrey Rakhmatullin wrote:
+> > Hello. I have a "MEDIATEK Corp. MT7922 802.11ax PCI Express Wireless
+> > Network Adapter" (14c3:0616) and when the commit c222f77fd4 ("wifi: mt76:
+> > mt7921: fix rx filter incorrect by drv/fw inconsistent") is applied (found
+> > by bisecting, checked by reverting it on v6.3) I have the following
+> > problem on my machine: when I connect to my router no DHCPv4 exchange
+> > happens, I don't see responses in tcpdump. My network setup is non-trivial
+> > though, and it looks like the problem is specific to it, but I still
+> > wonder if it's some bug in the aforementioned patch as my setup works with
+> > all other devices and I would expect it to work as long as the network
+> > packets sent by the device are the same.
+> > 
+> > My setup is as follows: I have an ISP router which provides a 2.4GHz
+> > network and another router (Xiaomi R4AC with OpenWRT) connected by
+> > Ethernet to it that provides a 5GHz network and is configured as a "Relay
+> > bridge" (using relayd) to forward packets to the ISP router and back. This
+> > includes DHCPv4 packets, which are handled by the ISP router. tcpdump on
+> > the machine with MT7922 shows that the DHCP requests are sent while the
+> > responses are not received, while tcpdump on the bridge router shows both
+> > requests and responses.
+> > 
+> > I've tried connecting the machine to the ISP router network directly and
+> > also to another AP (one on my phone) and those work correctly on all
+> > kernels.
+> > 
+> > Please let me know if I need to do any other debugging or troubleshooting
+> > steps. Thank you.
 > 
-> # free 
->                total        used        free      shared  buff/cache   available
-> Mem:        16183724     1473068      205664       33472    14504992    14335700
-> Swap:       16777212      703596    16073616
+> Thanks for the report. To be sure the issue doesn't fall through the
+> cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
+> tracking bot:
 > 
+> #regzbot ^introduced c222f77fd
+> #regzbot title wifi: mt76: mt7921: DHCPv4 exchange broke
+> #regzbot ignore-activity
 > 
-> (zswap enabled)
+> This isn't a regression? This issue or a fix for it are already
+> discussed somewhere else? It was fixed already? You want to clarify when
+> the regression started to happen? Or point out I got the title or
+> something else totally wrong? Then just reply and tell me -- ideally
+> while also telling regzbot about it, as explained by the page listed in
+> the footer of this mail.
+Deren Wu asked me privately if I'm using the latest firmware, and I
+wasn't. I updated the firmware and now the problem doesn't happen.
+The firmware where the problem happens is
+mediatek/WIFI_RAM_CODE_MT7922_1.bin from the linux-firmware commit
+e2d11744ef (file size 826740, md5sum 8ff1bdc0f54f255bb2a1d6825781506b),
+the one where the problem doesn't happen is from the commit 6569484e6b
+(file size 827124, md5sum 14c08c8298b639ee52409b5e9711a083). I haven't
+tried the version committed between these ones.
+Not sure if this should be reported to regzbot and if there are any
+further actions needed by the kernel maintainers.
 
-See bugzilla for the full thread and attached dmesg.
-
-On the report, the reporter can't perform the required bisection,
-unfortunately.
-
-Anyway, I'm adding it to regzbot:
-
-#regzbot introduced: v6.2..v6.3 https://bugzilla.kernel.org/show_bug.cgi?id=217466
-#regzbot title: btrfs_work_helper dealloc error in v6.3.x
-
-Thanks.
-
-[1]: https://bugzilla.kernel.org/show_bug.cgi?id=217466
-
--- 
-An old man doll... just what I always wanted! - Clara
