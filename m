@@ -1,72 +1,242 @@
-Received: from madras.collabora.co.uk (madras.collabora.co.uk [46.235.227.172])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD6A9A94C;
-	Mon, 22 May 2023 10:09:45 +0000 (UTC)
-Received: from localhost (unknown [IPv6:2a0c:5a83:9203:ad00:c068:e703:1301:7049])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: rcn)
-	by madras.collabora.co.uk (Postfix) with ESMTPSA id 96EB36605706;
-	Mon, 22 May 2023 11:09:37 +0100 (BST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1684750177;
-	bh=6rimz3xbCtOIAsgtzqTRf5vqJmiKmuivxmZtfJtFqCI=;
-	h=From:To:Cc:Subject:References:In-reply-to:Date:From;
-	b=BSK1xoZm/IlfL0P2CI3I3YbJsUU8lZSAIrGKGgUQiJ7odBhMH22zguUC+xNsHcdVO
-	 2LCJXoaTEATkpK/ZlNsSisuMThoQdIRp75V85qbkBbXcH5EpULVkY0z6L5vfP4q3rZ
-	 LOGRmm+cAQUZFNyeaFkKHi1ANHYn7dF7tscSTYc1hMFgYCwUadXkmfkbrsKMkQdDhU
-	 MQrjFsEKl60dR9U0IGPkc4HCUtRhMtSwp4rs7R676LQc7nY2ZahVmAdNmfR/xBuuW8
-	 rIowwyVVqaBa4c/ha/RZaffma63e7jl6O1PTm0uj4o3Yp7Z6Mx4iXmOWrwqyZAsUIS
-	 RLihHMT+ezdOg==
-From: Ricardo =?utf-8?Q?Ca=C3=B1uelo?= <ricardo.canuelo@collabora.com>
-To: Nick Desaulniers <ndesaulniers@google.com>
-Cc: Shreeya Patel <shreeya.patel@collabora.com>, Michal Marek <michal.lkml@markovi.net>, Masahiro Yamada <masahiroy@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, clang-built-linux <llvm@lists.linux.dev>, Bill Wendling <morbo@google.com>, Nathan Chancellor <nathan@kernel.org>, regressions@lists.linux.dev, "gustavo.padovan\@collabora.com" <gustavo.padovan@collabora.com>, Guillaume Charles Tucker <guillaume.tucker@collabora.com>, denys.f@collabora.com, kernelci@lists.linux.dev, Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v4] Makefile.compiler: replace cc-ifversion with compiler-specific macros
-References: <CAK7LNAT_cMLGLBz7ugaLpJD3QmZmY8FK56x9nihvWeYhJpi2ag@mail.gmail.com> <20220919170828.3718437-1-ndesaulniers@google.com> <597ef55f-e7c1-ab60-b4aa-0071ff4b5e0e@collabora.com> <CAKwvOdmSrAxx-YY1Na3BSdYuxXCPKK+F0K5V6i+adTn_bVJEsw@mail.gmail.com> <89961dfc-d40f-78e4-5d34-b86b7d152182@collabora.com> <CAKwvOd=4hBcU4fAkddU0b-GOZc9FzTZoj3PFW6ZZrX0jS8x+bg@mail.gmail.com> <17c91d37-7d9c-0df4-2438-2b30ca0b5777@collabora.com> <CAKwvOdk4QO8x_bs64fFRCsMu__AjhXd4Ew2KfgzQOb9Q3FMqSA@mail.gmail.com> <b5d0cf82-0e42-f6a1-c9f5-c145fdc4c622@collabora.com> <CAKwvOdkFxu9hYSL_RCXadpR0dQd1+dZmAUVXdfFiLUfxg4D_Xw@mail.gmail.com> <878rdlk9bi.fsf@rcn-XPS-13-9305.i-did-not-set--mail-host-address--so-tickle-me> <CAKwvOd=8LVU+iANkFx18Wm1jg7gYiAXovAmo9t5ZZaVdMULn-Q@mail.gmail.com> <875y8ok9b5.fsf@rcn-XPS-13-9305.i-did-not-set--mail-host-address--so-tickle-me> <CAKwvOdmJJibt6sHSp91v2s7BxUWBC6xG7F7+3C6gUxNMzZ2xRA@mail.gmail.com>
-In-reply-to: <CAKwvOdmJJibt6sHSp91v2s7BxUWBC6xG7F7+3C6gUxNMzZ2xRA@mail.gmail.com>
-Date: Mon, 22 May 2023 12:09:34 +0200
-Message-ID: <87353ok78h.fsf@rcn-XPS-13-9305.i-did-not-set--mail-host-address--so-tickle-me>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16C08AD55;
+	Mon, 22 May 2023 10:27:00 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1q12ki-0000zO-2o; Mon, 22 May 2023 12:26:56 +0200
+Message-ID: <1928df45-7b56-a8a4-21b5-22e5d8ef95eb@leemhuis.info>
+Date: Mon, 22 May 2023 12:26:55 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [regression] Bug 217218 - Trying to boot Linux version 6-2.2
+ kernel with Marvell SATA controller 88SE9235
+Content-Language: en-US, de-DE
+To: Jason Adriaanse <jason_a69@yahoo.co.uk>,
+ Robin Murphy <robin.murphy@arm.com>, hch@lst.de
+Cc: baolu.lu@linux.intel.com, iommu@lists.linux.dev,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+ regressions@lists.linux.dev
+References: <20230416065503.GB6410@lst.de>
+ <fc9f4cef-9426-c9d2-3c2c-3ce12fe5f6c3@yahoo.co.uk>
+ <5f37b0b0-6cb5-b210-a894-d1e91976126e@arm.com>
+ <2a699a99-545c-1324-e052-7d2f41fed1ae@yahoo.co.uk>
+ <07ee0cf7-a5c2-f87a-d627-8dd8fb082345@arm.com>
+ <9648f668-a3bc-3296-71d1-c91cd4c9980e@yahoo.co.uk>
+ <1539e760-392f-a33e-436e-bbf043e79bfc@arm.com>
+ <14f2b1ab-2c7c-fa4d-5854-3df08ac9feef@yahoo.co.uk>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <14f2b1ab-2c7c-fa4d-5854-3df08ac9feef@yahoo.co.uk>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1684751221;cfe17d12;
+X-HE-SMSGID: 1q12ki-0000zO-2o
 
-On vie, may 19 2023 at 08:57:24, Nick Desaulniers <ndesaulniers@google.com> wrote:
-> It could be; if the link order was changed, it's possible that this
-> target may be hitting something along the lines of:
-> https://isocpp.org/wiki/faq/ctors#static-init-order i.e. the "static
-> initialization order fiasco"
->
-> I'm struggling to think of how this appears in C codebases, but I
-> swear years ago I had a discussion with GKH (maybe?) about this. I
-> think I was playing with converting Kbuild to use Ninja rather than
-> Make; the resulting kernel image wouldn't boot because I had modified
-> the order the object files were linked in.  If you were to randomly
-> shuffle the object files in the kernel, I recall some hazard that may
-> prevent boot.
+Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
+for once, to make this easily accessible to everyone.
 
-I thought that was specifically a C++ problem? But then again, the
-kernel docs explicitly say that the ordering of obj-y goals in kbuild is
-significant in some instances [1]:
+I might be missing something, but it looks to me like this regression
+was never fixed in mainline. Which is strange, as we apparently had a
+patch from Robin that fixed the issue for the reporter.
 
-    --- 3.2 Built-in object goals - obj-y
+Did it fall through the cracks or what am I missing?
 
-    [...]
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
 
-    Link order is significant, because certain functions (module_init()
-    / __initcall) will be called during boot in the order they
-    appear. So keep in mind that changing the link order may e.g. change
-    the order in which your SCSI controllers are detected, and thus your
-    disks are renumbered.
+#regzbot poke
 
-We'll dig deeper into this. Thanks for your insight.
-
-Cheers,
-Ricardo
-
-[1]: https://www.kernel.org/doc/Documentation/kbuild/makefiles.txt
+On 25.04.23 15:58, Jason Adriaanse wrote:
+> I am happy to report that the change worked, this is what
+> drivers/pci/quirks.c looks like
+> 
+> /* https://bugzilla.kernel.org/show_bug.cgi?id=42679#c49 */
+> DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_MARVELL_EXT, 0x9230,
+>                          quirk_dma_func1_alias);
+> /* https://bugzilla.kernel.org/show_bug.cgi?id=217218 */
+> DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_MARVELL_EXT, 0x9235,
+>                          quirk_dma_func1_alias);
+> DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_TTI, 0x0642,
+>                          quirk_dma_func1_alias);
+> 
+> Relevant output of dmesg -T with the new kernel running
+> 
+> Tue Apr 25 21:45:13 2023] scsi host0: ahci
+> [Tue Apr 25 21:45:13 2023] scsi host1: ahci
+> [Tue Apr 25 21:45:13 2023] scsi host2: ahci
+> [Tue Apr 25 21:45:13 2023] scsi host3: ahci
+> [Tue Apr 25 21:45:13 2023] ata1: SATA max UDMA/133 abar m2048@0xf7d06000
+> port 0xf7d06100 irq 40
+> [Tue Apr 25 21:45:13 2023] ata2: SATA max UDMA/133 abar m2048@0xf7d06000
+> port 0xf7d06180 irq 40
+> [Tue Apr 25 21:45:13 2023] ata3: DUMMY
+> [Tue Apr 25 21:45:13 2023] ata4: DUMMY
+> [Tue Apr 25 21:45:13 2023] igb 0000:05:00.0 enp5s0: renamed from eth0
+> [Tue Apr 25 21:45:13 2023] ahci 0000:07:00.0: AHCI 0001.0000 32 slots 4
+> ports 6 Gbps 0xf impl SATA mode
+> [Tue Apr 25 21:45:13 2023] ahci 0000:07:00.0: flags: 64bit ncq sntf led
+> only pmp fbs pio slum part sxs
+> [Tue Apr 25 21:45:13 2023] scsi host4: ahci
+> [Tue Apr 25 21:45:13 2023] scsi host5: ahci
+> [Tue Apr 25 21:45:13 2023] scsi host6: ahci
+> [Tue Apr 25 21:45:13 2023] scsi host7: ahci
+> [Tue Apr 25 21:45:13 2023] ata5: SATA max UDMA/133 abar m2048@0xf7b10000
+> port 0xf7b10100 irq 41
+> [Tue Apr 25 21:45:13 2023] ata6: SATA max UDMA/133 abar m2048@0xf7b10000
+> port 0xf7b10180 irq 41
+> [Tue Apr 25 21:45:13 2023] ata7: SATA max UDMA/133 abar m2048@0xf7b10000
+> port 0xf7b10200 irq 41
+> [Tue Apr 25 21:45:13 2023] ata8: SATA max UDMA/133 abar m2048@0xf7b10000
+> port 0xf7b10280 irq 41
+> [Tue Apr 25 21:45:13 2023] usb 1-1: new high-speed USB device number 2
+> using ehci-pci
+> [Tue Apr 25 21:45:14 2023] usb 3-1: new high-speed USB device number 2
+> using ehci-pci
+> [Tue Apr 25 21:45:14 2023] ata8: SATA link up 6.0 Gbps (SStatus 133
+> SControl 300)
+> [Tue Apr 25 21:45:14 2023] ata6: SATA link up 6.0 Gbps (SStatus 133
+> SControl 300)
+> [Tue Apr 25 21:45:14 2023] ata7: SATA link up 6.0 Gbps (SStatus 133
+> SControl 300)
+> [Tue Apr 25 21:45:14 2023] ata5: SATA link up 6.0 Gbps (SStatus 133
+> SControl 300)
+> [Tue Apr 25 21:45:14 2023] ata7.00: ATA-9: WDC WD40EFRX-68WT0N0,
+> 80.00A80, max UDMA/133
+> [Tue Apr 25 21:45:14 2023] ata6.00: ATA-9: WDC WD40EFRX-68WT0N0,
+> 80.00A80, max UDMA/133
+> [Tue Apr 25 21:45:14 2023] ata8.00: ATA-9: WDC WD40EFRX-68WT0N0,
+> 80.00A80, max UDMA/133
+> [Tue Apr 25 21:45:14 2023] ata5.00: ATA-10: CT2000BX500SSD1, M6CR030,
+> max UDMA/133
+> [Tue Apr 25 21:45:14 2023] ata6.00: 7814037168 sectors, multi 0: LBA48
+> NCQ (depth 32), AA
+> [Tue Apr 25 21:45:14 2023] ata7.00: 7814037168 sectors, multi 0: LBA48
+> NCQ (depth 32), AA
+> [Tue Apr 25 21:45:14 2023] ata8.00: 7814037168 sectors, multi 0: LBA48
+> NCQ (depth 32), AA
+> [Tue Apr 25 21:45:14 2023] ata5.00: 3907029168 sectors, multi 1: LBA48
+> NCQ (depth 32), AA
+> [Tue Apr 25 21:45:14 2023] ata6.00: configured for UDMA/133
+> [Tue Apr 25 21:45:14 2023] ata7.00: configured for UDMA/133
+> [Tue Apr 25 21:45:14 2023] ata8.00: configured for UDMA/133
+> [Tue Apr 25 21:45:14 2023] ata1: SATA link down (SStatus 0 SControl 300)
+> [Tue Apr 25 21:45:14 2023] ata5.00: Features: Dev-Sleep
+> [Tue Apr 25 21:45:14 2023] ata5.00: configured for UDMA/133
+> [Tue Apr 25 21:45:14 2023] usb 1-1: New USB device found, idVendor=8087,
+> idProduct=0024, bcdDevice= 0.00
+> [Tue Apr 25 21:45:14 2023] usb 1-1: New USB device strings: Mfr=0,
+> Product=0, SerialNumber=0
+> [Tue Apr 25 21:45:14 2023] hub 1-1:1.0: USB hub found
+> [Tue Apr 25 21:45:14 2023] hub 1-1:1.0: 4 ports detected
+> [Tue Apr 25 21:45:14 2023] usb 3-1: New USB device found, idVendor=8087,
+> idProduct=0024, bcdDevice= 0.00
+> [Tue Apr 25 21:45:14 2023] usb 3-1: New USB device strings: Mfr=0,
+> Product=0, SerialNumber=0
+> [Tue Apr 25 21:45:14 2023] hub 3-1:1.0: USB hub found
+> [Tue Apr 25 21:45:14 2023] hub 3-1:1.0: 6 ports detected
+> [Tue Apr 25 21:45:14 2023] ata2: SATA link down (SStatus 0 SControl 300)
+> [Tue Apr 25 21:45:14 2023] scsi 4:0:0:0: Direct-Access ATA     
+> CT2000BX500SSD1  030  PQ: 0 ANSI: 5
+> [Tue Apr 25 21:45:14 2023] scsi 5:0:0:0: Direct-Access ATA      WDC
+> WD40EFRX-68W 0A80 PQ: 0 ANSI: 5
+> [Tue Apr 25 21:45:14 2023] scsi 6:0:0:0: Direct-Access ATA      WDC
+> WD40EFRX-68W 0A80 PQ: 0 ANSI: 5
+> [Tue Apr 25 21:45:14 2023] scsi 7:0:0:0: Direct-Access ATA      WDC
+> WD40EFRX-68W 0A80 PQ: 0 ANSI: 5
+> 
+> Thanks everyone for all your help.
+> 
+> Jason
+> 
+> 
+> On 25/04/2023 19:37, Robin Murphy wrote:
+>> On 2023-04-25 05:17, Jason Adriaanse wrote:
+>>> Ok great,
+>>>
+>>> I take it a change needs to be made in
+>>> drivers/pci/quirks.c
+>>> ?
+>>> I do not mind making the change locally here and letting you know if
+>>> it works or not.
+>>
+>> Indeed, something like this (make sure the IDs actually match what your
+>> device reports, I'm just guessing):
+>>
+>>
+>> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+>> index 44cab813bf95..a9166e886b75 100644
+>> --- a/drivers/pci/quirks.c
+>> +++ b/drivers/pci/quirks.c
+>> @@ -4161,6 +4161,8 @@
+>> DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_MARVELL_EXT, 0x9220,
+>>  /* https://bugzilla.kernel.org/show_bug.cgi?id=42679#c49 */
+>>  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_MARVELL_EXT, 0x9230,
+>>               quirk_dma_func1_alias);
+>> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_MARVELL_EXT, 0x9235,
+>> +             quirk_dma_func1_alias);
+>>  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_TTI, 0x0642,
+>>               quirk_dma_func1_alias);
+>>  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_TTI, 0x0645,
+>>
+>>
+>> Marvell themselves seem to lump the 88SE92xx products together as a
+>> closely-related family, so given that we do have quirks for 3 of the 4
+>> already, this one does rather seem conspicuous by its absence...
+>>
+>> Thanks,
+>> Robin.
+>>
+>>> On 24/04/2023 22:07, Robin Murphy wrote:
+>>>> On 2023-04-24 14:44, Jason Adriaanse wrote:
+>>>>> I took out "iommu=soft" and the server failed to boot, so yes it
+>>>>> does break.
+>>>>>
+>>>>> The first error was
+>>>>> ata7.00: Failed to IDENTIFY (INIT_DEV_PARAMS failed , err_mask=0x80)
+>>>>
+>>>> OK, great, that confirms the underlying issue existed all along, so
+>>>> the regression is only a change in who wins a fight between certain
+>>>> conflicting command-line arguments, which is arguably not so critical.
+>>>>
+>>>> The rest of the evidence points to 88SE9235 wanting the same phantom
+>>>> function quirk as most other Marvell controllers, since although
+>>>> it's apparently been half-fixed such that DMA for two of the ports
+>>>> is being correctly emitted from function 0 - given that you say two
+>>>> of the disks *are* detected OK - the other two are still claiming to
+>>>> be function 1 after all.
+>>>>
+>>>> Thanks,
+>>>> Robin.
+>>>>
+>>>>> On 24/04/2023 21:20, Robin Murphy wrote:
+>>>>>> On 2023-04-22 07:25, Jason Adriaanse wrote:
+>>>>>>> Hi Christoph,
+>>>>>>>
+>>>>>>> Sorry for my late reply, I have been on the road.
+>>>>>>>
+>>>>>>> So, if I boot with
+>>>>>>> intel_iommu=off
+>>>>>>> Then the server boots fine..although that is not a solution
+>>>>>>> because I need Intel iommu for virtualisation.
+>>>>>>>
+>>>>>>> Also, I build all my kernels with CONFIG_INTEL_IOMMU=y
+>>>>>>>
+>>>>>>
+>>>>>> If you boot 5.15 *without* the "iommu=soft" argument, just
+>>>>>> "intel_iommu=on", does that also break?
+>>>>>>
+>>>>>> Robin.
+> 
+> 
