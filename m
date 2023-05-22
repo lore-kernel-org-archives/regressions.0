@@ -1,142 +1,96 @@
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6BEFBA53
-	for <regressions@lists.linux.dev>; Mon, 22 May 2023 12:51:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1684759883; x=1716295883;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=pL1idd6XbB8DSJRKMloscbHAhbrOtykQpSVbdAGm2Gk=;
-  b=ASVxjNYmFC6DUMJRj0wRVig4fGNFBu6utHyQ+1mfsREQIxz8ZsHgq5Wt
-   sHDfTW/Ncj6wucoaVZjpL2JKYn/9EyRlIDIcg1n+sc0zCYcomeLGU3EEn
-   u8WOJmBQwZf/zuO1e2dHmqOyVJljg6+BO/OMmAWqNrd0+mDUHucKY+Sle
-   tM3Rw8DgEvy7eK9XFfa0xtRRRDzRD0ZlOgIgp0rxN/Vces8SP2Ur8d7yX
-   n07khxbNq5L10rnDVpSWI2yi0UjeGfot0h6+7Lojo9XQtA74gVgo1Kmhq
-   u61YZj62Lm7arM0y7ldZOJ/rU91MnU1p9FaisVCcrRecHNLYq0nqoRRue
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10717"; a="416370940"
-X-IronPort-AV: E=Sophos;i="6.00,184,1681196400"; 
-   d="scan'208";a="416370940"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2023 05:51:22 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10717"; a="768499280"
-X-IronPort-AV: E=Sophos;i="6.00,184,1681196400"; 
-   d="scan'208";a="768499280"
-Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2023 05:51:20 -0700
-Received: from kekkonen.localdomain (localhost [IPv6:::1])
-	by kekkonen.fi.intel.com (Postfix) with SMTP id 70047120BF9;
-	Mon, 22 May 2023 15:51:18 +0300 (EEST)
-Date: Mon, 22 May 2023 12:51:18 +0000
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Jacopo Mondi <jacopo.mondi@ideasonboard.com>,
-	Alexander Stein <alexander.stein@ew.tq-group.com>,
-	linux-media@vger.kernel.org, niklas.soderlund@ragnatech.se
-Subject: Re: v4l2-async: regression due to endpoint matching
-Message-ID: <ZGtlRnPE5k/W4vGY@kekkonen.localdomain>
-References: <8360125.31r3eYUQgx@steina-w>
- <5676976.irdbgypaU6@steina-w>
- <ob373sf6lmg6qfkdqy5ovxescw5gp7yedb2flk4ax762abo7b3@w33eqx3erdg7>
- <6415252.e9J7NaK4W3@steina-w>
- <3u5xed27to5bnwo3dksviydw6z2lga3udjkgvvzor4tlobjlxv@hsnam3wurgxc>
- <ZEtytxcB2+DA8Xs/@kekkonen.localdomain>
- <f30d063b-e131-a659-9a1f-8f47e5736b44@leemhuis.info>
- <ZGtZGzZ3wiwiJBkp@kekkonen.localdomain>
- <618ab198-836e-16ba-4c02-476feac2ffaa@leemhuis.info>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 554B3BA53
+	for <regressions@lists.linux.dev>; Mon, 22 May 2023 13:00:39 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1q159K-00027Q-RD; Mon, 22 May 2023 15:00:30 +0200
+Message-ID: <ad948b42-74d3-b4f1-bbd6-449f71703083@leemhuis.info>
+Date: Mon, 22 May 2023 15:00:30 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <618ab198-836e-16ba-4c02-476feac2ffaa@leemhuis.info>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: MT7922 problem with "fix rx filter incorrect by drv/fw
+ inconsistent"
+Content-Language: en-US, de-DE
+To: Andrey Rakhmatullin <wrar@wrar.name>, linux-wireless@vger.kernel.org,
+ Neil Chen <yn.chen@mediatek.com>, Deren Wu <deren.wu@mediatek.com>
+Cc: Lorenzo Bianconi <lorenzo@kernel.org>, Felix Fietkau <nbd@nbd.name>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <ZGY4peApQnPAmDkY@durkon.wrar.name>
+From: "Linux regression tracking #adding (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <ZGY4peApQnPAmDkY@durkon.wrar.name>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1684760439;29e865bd;
+X-HE-SMSGID: 1q159K-00027Q-RD
 
-Hi Thorsten,
+[CCing the regression list, as it should be in the loop for regressions:
+https://docs.kernel.org/admin-guide/reporting-regressions.html]
 
-On Mon, May 22, 2023 at 02:11:29PM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
-> On 22.05.23 13:59, Sakari Ailus wrote:
-> > On Mon, May 22, 2023 at 12:53:52PM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
-> >> On 28.04.23 09:16, Sakari Ailus wrote:
-> >>> On Fri, Apr 28, 2023 at 08:43:21AM +0200, Jacopo Mondi wrote:
-> >>>> On Fri, Apr 28, 2023 at 08:33:30AM +0200, Alexander Stein wrote:
-> >>>>> Am Freitag, 28. April 2023, 08:31:54 CEST schrieb Jacopo Mondi:
-> >>>>>> On Fri, Apr 28, 2023 at 08:24:22AM +0200, Alexander Stein wrote:
-> >>>>>>> Am Donnerstag, 27. April 2023, 18:01:38 CEST schrieb Jacopo Mondi:
-> >>>>>>>> On Thu, Apr 27, 2023 at 04:40:46PM +0200, Alexander Stein wrote:
-> >>>>>>>>> I have a setup on my TQMa6x (imx6q-mba6a.dts) with a tc358743 attached
-> >>>>>>>>> to
-> >>>>>>>>> the MIPI CSI input.
-> >>>>>>>>> I noticed that since commit 1f391df44607 ("media: v4l2-async: Use
-> >>>>>>>>> endpoints in __v4l2_async_nf_add_fwnode_remote()") the async subdevice
-> >>>>>>>>> probing does not work anymore. If I revert that, it is working again,
-> >>>>>>>>> even on next-20230425.
-> >>>>>>>>
-> >>>>>>>> A similar issue has been discussed at
-> >>>>>>>> https://www.spinics.net/lists/linux-media/msg223351.html
-> >>>>>>>>
-> >>>>>>>> Unfortunately there was no conclusion as far as I can tell if not that
-> >>>>>>>> imx6 is now broken
-> >>>>>>>
-> >>>>>>> Thanks for the link, seems like a non-trivial thing :(
-> >>>>>>>
-> >>>>>>> From a glimpse, this series seems to deal with multiple async subdevs:
-> >>>>>>> https://lore.kernel.org/all/20230330115853.1628216-1-sakari.ailus@linux.in
-> >>>>>>> tel.com/
-> >>>>>>>
-> >>>>>>> So imx-media-csi should be adjusted as well, no?
-> >>>>>>
-> >>>>>> It would really be helpful if you can give that series a spin on imx6
-> >>>>>> if you already have a test setup.
-> >>>>>
-> >>>>> I tried, but it failed to apply on my current development tree. What base does
-> >>>>> this series apply to? Is there also a repository available I can fetch from?
-> >>>>
-> >>>> Sakari could tell, for me it applied on v6.3-rc2 but I recall I had to
-> >>>> manually fix a few things.
-> >>>
-> >>> Don't try v1, it won't work. I missed some object relation changes in the
-> >>> linked lists. I'll post v2, hopefully some time next week, to address these
-> >>> issues.
-> >>
-> >> Hi, Thorsten here, the Linux kernel's regression tracker.
-> >>
-> >> I see that v2[1] got a lot of ACKs, but is not even yet in next. And
-> >> it's a lot of patches, so maybe too much for backporting to stable
-> >> kernels. Which leads to the question: Will the regression this thread is
-> >> about (introduced in 5.19 afaics) ever be fixed in v6.1?
-> >> Normally/Ideally it should be.
-> > 
-> > We'll need v3 (at least), a problem that's not trivial to fix was
-> > identified with v2. There patches aren't really fixes either: it's new
-> > functionality that wasn't there previously. I.MX6 just happened to work due
-> > to missing checks in the V4L2 async framework, what it needs was never
-> > supported (without this set).
-> > 
-> > Dropping endpoint matching will break adv748x driver that relies on it.
-> > 
-> > So I'd expect i.MX6 to work again once we have this set in, but I wouldn't
-> > try to backport the set.
+[TLDR: I'm adding this report to the list of tracked Linux kernel
+regressions; the text you find below is based on a few templates
+paragraphs you might have encountered already in similar form.
+See link in footer if these mails annoy you.]
+
+On 18.05.23 16:39, Andrey Rakhmatullin wrote:
+> Hello. I have a "MEDIATEK Corp. MT7922 802.11ax PCI Express Wireless
+> Network Adapter" (14c3:0616) and when the commit c222f77fd4 ("wifi: mt76:
+> mt7921: fix rx filter incorrect by drv/fw inconsistent") is applied (found
+> by bisecting, checked by reverting it on v6.3) I have the following
+> problem on my machine: when I connect to my router no DHCPv4 exchange
+> happens, I don't see responses in tcpdump. My network setup is non-trivial
+> though, and it looks like the problem is specific to it, but I still
+> wonder if it's some bug in the aforementioned patch as my setup works with
+> all other devices and I would expect it to work as long as the network
+> packets sent by the device are the same.
 > 
-> Thx for the update. Makes me wonder if reverting the culprit[1] is an
-> option. Assuming the problem still happens. Alexander, is that the case?
+> My setup is as follows: I have an ISP router which provides a 2.4GHz
+> network and another router (Xiaomi R4AC with OpenWRT) connected by
+> Ethernet to it that provides a 5GHz network and is configured as a "Relay
+> bridge" (using relayd) to forward packets to the ISP router and back. This
+> includes DHCPv4 packets, which are handled by the ISP router. tcpdump on
+> the machine with MT7922 shows that the DHCP requests are sent while the
+> responses are not received, while tcpdump on the bridge router shows both
+> requests and responses.
 > 
-> Ciao, Thorsten
+> I've tried connecting the machine to the ISP router network directly and
+> also to another AP (one on my phone) and those work correctly on all
+> kernels.
 > 
-> [1] 1f391df4460 ("media: v4l2-async: Use endpoints in
-> __v4l2_async_nf_add_fwnode_remote()") (v5.19-rc1; authored by Laurent,
-> commited by Mauro (both now CCed))
+> Please let me know if I need to do any other debugging or troubleshooting
+> steps. Thank you.
 
-I prioritise an in-kernel driver over a staging driver.
+Thanks for the report. To be sure the issue doesn't fall through the
+cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
+tracking bot:
 
--- 
-Regards,
+#regzbot ^introduced c222f77fd
+#regzbot title wifi: mt76: mt7921: DHCPv4 exchange broke
+#regzbot ignore-activity
 
-Sakari Ailus
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply and tell me -- ideally
+while also telling regzbot about it, as explained by the page listed in
+the footer of this mail.
+
+Developers: When fixing the issue, remember to add 'Link:' tags pointing
+to the report (the parent of this mail). See page linked in footer for
+details.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+That page also explains what to do if mails like this annoy you.
