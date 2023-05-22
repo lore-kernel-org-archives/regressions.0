@@ -1,106 +1,121 @@
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D8D610F4
-	for <regressions@lists.linux.dev>; Mon, 22 May 2023 07:41:27 +0000 (UTC)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4QPqBp6vY8z4x3x;
-	Mon, 22 May 2023 17:41:22 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
-	s=201909; t=1684741285;
-	bh=GjeGaNzNWtwtfRRm1b1ouqteUst+s4Mvd+JyTpGYURs=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=Ixl/y+Ivja1fcLNUxy/lob16vq86tLXx0GIPO2v0yYNq4iaCAVKKvW7aKt7BiieRZ
-	 cBckiQigthAWzA6b6/NDSyKC4Ty1hot//ArRd67kQI+oSs1wBBKwauQpq75+O3yZdc
-	 wPt2HLltRqGodtPEn3ad1ISq/zzB8BR5EHYfEiqHVbeDl78U+s6yAuDMezrJZk/Gmo
-	 Uo5wT2q2V/Tp1LsqYsHRbpEG0wl29mi4PP8oRdRwa9Xc7seSvJyGwWOdfkaNmq6c44
-	 izok3ZuCpZYbzJY/JlZ4d8KV9fQzTa9znBp7zAa5FWF+NeWhWUvrZo+XTSUmMXaUlZ
-	 Y75TX8jmE0vBg==
-From: Michael Ellerman <mpe@ellerman.id.au>
-To: Srikar Dronamraju <srikar@linux.vnet.ibm.com>, Alexey Kardashevskiy
- <aik@ozlabs.ru>
-Cc: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>, Nicholas Piggin <npiggin@gmail.com>,
- Christophe Leroy <christophe.leroy@csgroup.eu>,
- linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
- sachinp@linux.vnet.ibm.com, Abdul Haleem <abdhalee@linux.vnet.ibm.com>,
- Gaurav Batra <gbatra@linux.vnet.ibm.com>, Linux kernel regressions list
- <regressions@lists.linux.dev>
-Subject: Re: Probing nvme disks fails on Upstream kernels on powerpc Maxconfig
-In-Reply-To: <20230522072412.GA3902@linux.vnet.ibm.com>
-References: <20230323095333.GI1005120@linux.vnet.ibm.com>
- <906d4d0e-b487-00a5-9399-7d1edc5e20a4@leemhuis.info>
- <87bkk2khl0.fsf@mpe.ellerman.id.au>
- <2a80cb20-0c9f-2d0c-e951-c4f005f3e4b3@ozlabs.ru>
- <20230522072412.GA3902@linux.vnet.ibm.com>
-Date: Mon, 22 May 2023 17:41:22 +1000
-Message-ID: <87edn8ak4d.fsf@mail.lhotse>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CCD55380
+	for <regressions@lists.linux.dev>; Mon, 22 May 2023 08:17:50 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1q10jf-0007xN-3F; Mon, 22 May 2023 10:17:43 +0200
+Message-ID: <d78088d6-7989-7538-c4e1-7976a21cf680@leemhuis.info>
+Date: Mon, 22 May 2023 10:17:42 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: kernel error at led trigger "phy0tpt"
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Bagas Sanjaya <bagasdotme@gmail.com>, Tobias Dahms <dahms.tobias@web.de>,
+ Sean Wang <sean.wang@mediatek.com>
+Cc: stable@vger.kernel.org, Pavel Machek <pavel@ucw.cz>,
+ Lee Jones <lee@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+ linux-leds@vger.kernel.org, linux-wireless@vger.kernel.org,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ Matthias Brugger <matthias.bgg@gmail.com>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+References: <91feceb2-0df4-19b9-5ffa-d37e3d344fdf@web.de>
+ <3fcc707b-f757-e74b-2800-3b6314217868@leemhuis.info>
+ <fcecf6fc-bf18-73a0-9fc1-6850e183323a@web.de>
+ <d14fb08c-70e3-4cc7-caf9-87e73eab9194@gmail.com>
+ <8b07ead5-f105-da86-e7da-ee49616f7c1d@collabora.com>
+ <69602f1b-4afa-d864-b6d3-d8237f81a51d@leemhuis.info>
+Content-Language: en-US, de-DE
+In-Reply-To: <69602f1b-4afa-d864-b6d3-d8237f81a51d@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1684743470;3aabc297;
+X-HE-SMSGID: 1q10jf-0007xN-3F
 
-Srikar Dronamraju <srikar@linux.vnet.ibm.com> writes:
-> * Alexey Kardashevskiy <aik@ozlabs.ru> [2023-04-13 22:09:22]:
->
->> > > On 23.03.23 10:53, Srikar Dronamraju wrote:
->> > > > 
->> > > > I am unable to boot upstream kernels from v5.16 to the latest upstream
->> > > > kernel on a maxconfig system. (Machine config details given below)
->> > > > 
->> > > > At boot, we see a series of messages like the below.
->> > > > 
->> > > > dracut-initqueue[13917]: Warning: dracut-initqueue: timeout, still waiting for following initqueue hooks:
->> > > > dracut-initqueue[13917]: Warning: /lib/dracut/hooks/initqueue/finished/devexists-\x2fdev\x2fdisk\x2fby-uuid\x2f93dc0767-18aa-467f-afa7-5b4e9c13108a.sh: "if ! grep -q After=remote-fs-pre.target /run/systemd/generator/systemd-cryptsetup@*.service 2>/dev/null; then
->> > > > dracut-initqueue[13917]:     [ -e "/dev/disk/by-uuid/93dc0767-18aa-467f-afa7-5b4e9c13108a" ]
->> > > > dracut-initqueue[13917]: fi"
->> > > 
->> > > Alexey, did you look into this? This is apparently caused by a commit of
->> > > yours (see quoted part below) that Michael applied. Looks like it fell
->> > > through the cracks from here, but maybe I'm missing something.
->> > 
->> > Unfortunately Alexey is not working at IBM any more, so he won't have
->> > access to any hardware to debug/test this.
->> > 
->> > Srikar are you debugging this? If not we'll have to find someone else to
->> > look at it.
->> 
->> Has this been fixed and I missed cc:? Anyway, without the full log, I still
->> see it is a huge guest so chances are the guest could not map all RAM so
->> instead it uses the biggest possible DDW with 2M pages. If that's the case,
->> this might help it:
->> 
->
-> Hi Alexey, Michael
->
-> Sorry for the late reply, but I didnt have access to this large system.
-> This weekend, I did get access and tested with the patch. However it didn't
-> help much, system is still stuck at dracut with similar message except the
-> trace.
->
-> However this patch
-> https://lore.kernel.org/all/20230418204401.13168-1-gbatra@linux.vnet.ibm.com/
-> from Gaurav Batra does solve this issue.
+On 17.04.23 13:25, Linux regression tracking (Thorsten Leemhuis) wrote:
+> [adding Matthias to the list of recipients, who back then applied to
+> culprit]
+> 
+> Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
+> for once, to make this easily accessible to everyone.
+> 
+> AngeloGioacchino, Has any progress been made to fix below regression? It
+> doesn't look like it from here, hence I wondered if it fall through the
+> cracks.
 
-Thanks.
+Hmmm, nobody replied. Does nobody (including the reporters!) care
+anymore for valid reasons? Then I'd drop this from the tracking.
 
-There was a v3 of that patch:
-  https://lore.kernel.org/all/20230504175913.83844-1-gbatra@linux.vnet.ibm.com/
+Or was progress made and I just missed it?
 
-Which is merged now into mainline as:
-  096339ab84f3 ("powerpc/iommu: DMA address offset is incorrectly calculated with 2MB TCEs")
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
 
-Presumably it also fixes the bug for you, so I'll mark this as fixed,
-but if you can test that exact commit that would be good to confirm the
-bug is fixed in mainline.
+#regzbot poke
 
-cheers
-
-
-#regzbot fixed-by: 096339ab84f3 
+> On 27.03.23 10:23, AngeloGioacchino Del Regno wrote:
+>> Il 26/03/23 15:23, Bagas Sanjaya ha scritto:
+>>> On 3/26/23 02:20, Tobias Dahms wrote:
+>>>> Hello,
+>>>>
+>>>> the bisection gives following result:
+>>>> --------------------------------------------------------------------
+>>>> 18c7deca2b812537aa4d928900e208710f1300aa is the first bad commit
+>>>> commit 18c7deca2b812537aa4d928900e208710f1300aa
+>>>> Author: AngeloGioacchino Del Regno
+>>>> <angelogioacchino.delregno@collabora.com>
+>>>> Date:   Tue May 17 12:47:08 2022 +0200
+>>>>
+>>>>      soc: mediatek: pwrap: Use readx_poll_timeout() instead of custom
+>>>> function
+>>>>
+>>>>      Function pwrap_wait_for_state() is a function that polls an address
+>>>>      through a helper function, but this is the very same operation that
+>>>>      the readx_poll_timeout macro means to do.
+>>>>      Convert all instances of calling pwrap_wait_for_state() to instead
+>>>>      use the read_poll_timeout macro.
+>>>>
+>>>>      Signed-off-by: AngeloGioacchino Del Regno
+>>>> <angelogioacchino.delregno@collabora.com>
+>>>>      Reviewed-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
+>>>>      Tested-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
+>>>>      Link:
+>>>> https://lore.kernel.org/r/20220517104712.24579-2-angelogioacchino.delregno@collabora.com
+>>>>      Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
+>>>>
+>>>>   drivers/soc/mediatek/mtk-pmic-wrap.c | 60
+>>>> ++++++++++++++++++++----------------
+>>>>   1 file changed, 33 insertions(+), 27 deletions(-)
+>>>> --------------------------------------------------------------------
+>>>>
+>>>
+>>> OK, I'm updating the regression status:
+>>>
+>>> #regzbot introduced: 18c7deca2b8125
+>>>
+>>> And for replying, don't top-post, but rather reply inline with
+>>> appropriate context instead; hence I cut the replied context.
+>>>
+>>
+>> There are two possible solutions to that, specifically, either:
+>>  1. Change readx_poll_timeout() to readx_poll_timeout_atomic(); or
+>>  2. Fix the mt6323-led driver so that this operation gets done
+>>     out of atomic context, which is IMO the option to prefer.
+>>
+>> Ideas?
+>>
+>> Regards,
+>> Angelo
+>>
+>>
