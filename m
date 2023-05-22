@@ -1,98 +1,142 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D8F612B70
-	for <regressions@lists.linux.dev>; Mon, 22 May 2023 12:38:48 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1q14oH-0006AD-S6; Mon, 22 May 2023 14:38:45 +0200
-Message-ID: <55dda0bb-fe42-6dee-28ea-00121554d092@leemhuis.info>
-Date: Mon, 22 May 2023 14:38:45 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6BEFBA53
+	for <regressions@lists.linux.dev>; Mon, 22 May 2023 12:51:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1684759883; x=1716295883;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=pL1idd6XbB8DSJRKMloscbHAhbrOtykQpSVbdAGm2Gk=;
+  b=ASVxjNYmFC6DUMJRj0wRVig4fGNFBu6utHyQ+1mfsREQIxz8ZsHgq5Wt
+   sHDfTW/Ncj6wucoaVZjpL2JKYn/9EyRlIDIcg1n+sc0zCYcomeLGU3EEn
+   u8WOJmBQwZf/zuO1e2dHmqOyVJljg6+BO/OMmAWqNrd0+mDUHucKY+Sle
+   tM3Rw8DgEvy7eK9XFfa0xtRRRDzRD0ZlOgIgp0rxN/Vces8SP2Ur8d7yX
+   n07khxbNq5L10rnDVpSWI2yi0UjeGfot0h6+7Lojo9XQtA74gVgo1Kmhq
+   u61YZj62Lm7arM0y7ldZOJ/rU91MnU1p9FaisVCcrRecHNLYq0nqoRRue
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10717"; a="416370940"
+X-IronPort-AV: E=Sophos;i="6.00,184,1681196400"; 
+   d="scan'208";a="416370940"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2023 05:51:22 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10717"; a="768499280"
+X-IronPort-AV: E=Sophos;i="6.00,184,1681196400"; 
+   d="scan'208";a="768499280"
+Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2023 05:51:20 -0700
+Received: from kekkonen.localdomain (localhost [IPv6:::1])
+	by kekkonen.fi.intel.com (Postfix) with SMTP id 70047120BF9;
+	Mon, 22 May 2023 15:51:18 +0300 (EEST)
+Date: Mon, 22 May 2023 12:51:18 +0000
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Jacopo Mondi <jacopo.mondi@ideasonboard.com>,
+	Alexander Stein <alexander.stein@ew.tq-group.com>,
+	linux-media@vger.kernel.org, niklas.soderlund@ragnatech.se
+Subject: Re: v4l2-async: regression due to endpoint matching
+Message-ID: <ZGtlRnPE5k/W4vGY@kekkonen.localdomain>
+References: <8360125.31r3eYUQgx@steina-w>
+ <5676976.irdbgypaU6@steina-w>
+ <ob373sf6lmg6qfkdqy5ovxescw5gp7yedb2flk4ax762abo7b3@w33eqx3erdg7>
+ <6415252.e9J7NaK4W3@steina-w>
+ <3u5xed27to5bnwo3dksviydw6z2lga3udjkgvvzor4tlobjlxv@hsnam3wurgxc>
+ <ZEtytxcB2+DA8Xs/@kekkonen.localdomain>
+ <f30d063b-e131-a659-9a1f-8f47e5736b44@leemhuis.info>
+ <ZGtZGzZ3wiwiJBkp@kekkonen.localdomain>
+ <618ab198-836e-16ba-4c02-476feac2ffaa@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [regression] Since kernel 6.3.1 logitech unify receiver not
- working properly
-Content-Language: en-US, de-DE
-To: Benjamin Tissoires <benjamin.tissoires@redhat.com>,
- Bagas Sanjaya <bagasdotme@gmail.com>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
- =?UTF-8?Q?Filipe_La=c3=adns?= <lains@riseup.net>,
- Bastien Nocera <hadess@hadess.net>, Jiri Kosina <jikos@kernel.org>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
- LKML <linux-kernel@vger.kernel.org>, guy.b@bluewin.ch
-References: <9b987585-0834-bb8c-3414-283c29f3f2ab@leemhuis.info>
- <bec024d5-4088-00ae-f7b5-7188868b1707@leemhuis.info>
- <b7717c43-74bf-b91d-d3ce-874493df602c@gmail.com>
- <CAO-hwJ+At1J_yUpX2q_dJekzZ-PoTDAvxmkTk_e4Yu0Z338bEA@mail.gmail.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <CAO-hwJ+At1J_yUpX2q_dJekzZ-PoTDAvxmkTk_e4Yu0Z338bEA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1684759128;def9e723;
-X-HE-SMSGID: 1q14oH-0006AD-S6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <618ab198-836e-16ba-4c02-476feac2ffaa@leemhuis.info>
 
-On 16.05.23 15:34, Benjamin Tissoires wrote:
-> On Tue, May 16, 2023 at 3:25 PM Bagas Sanjaya <bagasdotme@gmail.com> wrote:
->> On 5/11/23 18:58, Thorsten Leemhuis wrote:
->>> On 08.05.23 11:55, Linux regression tracking (Thorsten Leemhuis) wrote:
->>>> I noticed a regression report in bugzilla.kernel.org. As many (most?)
->>>> kernel developers don't keep an eye on it, I decided to forward it by mail.
->>>>
->>>> Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=217412 :
->>>
->>> TWIMC: a few other users (three or four iirc) showed up in that ticket
->>> and reported problems with the receiver, albeit the symptoms are not
->>> exactly the same for all of them, so there might be more than one problem.
->>>
->>> I'll try to motivate the affected users to perform a bisection. But
->>> would be great if those with more knowledge about this code could
->>> briefly look into the ticket, maybe the details the users shared allows
->>> one of you to guess what causes this.
->>
->> Hmm,
->>
->> You noted in the similar report [1] that developers involved here
->> ignore this regressions. I wonder if Linus has to be hired in
->> this case, and if it is the case, let's take a look and hear closely what
->> he will say.
+Hi Thorsten,
+
+On Mon, May 22, 2023 at 02:11:29PM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
+> On 22.05.23 13:59, Sakari Ailus wrote:
+> > On Mon, May 22, 2023 at 12:53:52PM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
+> >> On 28.04.23 09:16, Sakari Ailus wrote:
+> >>> On Fri, Apr 28, 2023 at 08:43:21AM +0200, Jacopo Mondi wrote:
+> >>>> On Fri, Apr 28, 2023 at 08:33:30AM +0200, Alexander Stein wrote:
+> >>>>> Am Freitag, 28. April 2023, 08:31:54 CEST schrieb Jacopo Mondi:
+> >>>>>> On Fri, Apr 28, 2023 at 08:24:22AM +0200, Alexander Stein wrote:
+> >>>>>>> Am Donnerstag, 27. April 2023, 18:01:38 CEST schrieb Jacopo Mondi:
+> >>>>>>>> On Thu, Apr 27, 2023 at 04:40:46PM +0200, Alexander Stein wrote:
+> >>>>>>>>> I have a setup on my TQMa6x (imx6q-mba6a.dts) with a tc358743 attached
+> >>>>>>>>> to
+> >>>>>>>>> the MIPI CSI input.
+> >>>>>>>>> I noticed that since commit 1f391df44607 ("media: v4l2-async: Use
+> >>>>>>>>> endpoints in __v4l2_async_nf_add_fwnode_remote()") the async subdevice
+> >>>>>>>>> probing does not work anymore. If I revert that, it is working again,
+> >>>>>>>>> even on next-20230425.
+> >>>>>>>>
+> >>>>>>>> A similar issue has been discussed at
+> >>>>>>>> https://www.spinics.net/lists/linux-media/msg223351.html
+> >>>>>>>>
+> >>>>>>>> Unfortunately there was no conclusion as far as I can tell if not that
+> >>>>>>>> imx6 is now broken
+> >>>>>>>
+> >>>>>>> Thanks for the link, seems like a non-trivial thing :(
+> >>>>>>>
+> >>>>>>> From a glimpse, this series seems to deal with multiple async subdevs:
+> >>>>>>> https://lore.kernel.org/all/20230330115853.1628216-1-sakari.ailus@linux.in
+> >>>>>>> tel.com/
+> >>>>>>>
+> >>>>>>> So imx-media-csi should be adjusted as well, no?
+> >>>>>>
+> >>>>>> It would really be helpful if you can give that series a spin on imx6
+> >>>>>> if you already have a test setup.
+> >>>>>
+> >>>>> I tried, but it failed to apply on my current development tree. What base does
+> >>>>> this series apply to? Is there also a repository available I can fetch from?
+> >>>>
+> >>>> Sakari could tell, for me it applied on v6.3-rc2 but I recall I had to
+> >>>> manually fix a few things.
+> >>>
+> >>> Don't try v1, it won't work. I missed some object relation changes in the
+> >>> linked lists. I'll post v2, hopefully some time next week, to address these
+> >>> issues.
+> >>
+> >> Hi, Thorsten here, the Linux kernel's regression tracker.
+> >>
+> >> I see that v2[1] got a lot of ACKs, but is not even yet in next. And
+> >> it's a lot of patches, so maybe too much for backporting to stable
+> >> kernels. Which leads to the question: Will the regression this thread is
+> >> about (introduced in 5.19 afaics) ever be fixed in v6.1?
+> >> Normally/Ideally it should be.
+> > 
+> > We'll need v3 (at least), a problem that's not trivial to fix was
+> > identified with v2. There patches aren't really fixes either: it's new
+> > functionality that wasn't there previously. I.MX6 just happened to work due
+> > to missing checks in the V4L2 async framework, what it needs was never
+> > supported (without this set).
+> > 
+> > Dropping endpoint matching will break adv748x driver that relies on it.
+> > 
+> > So I'd expect i.MX6 to work again once we have this set in, but I wouldn't
+> > try to backport the set.
 > 
-> Sigh... Not answering an email is bad, but maybe you can also
-> understand that developers can take days off?
+> Thx for the update. Makes me wonder if reverting the culprit[1] is an
+> option. Assuming the problem still happens. Alexander, is that the case?
+> 
+> Ciao, Thorsten
+> 
+> [1] 1f391df4460 ("media: v4l2-async: Use endpoints in
+> __v4l2_async_nf_add_fwnode_remote()") (v5.19-rc1; authored by Laurent,
+> commited by Mauro (both now CCed))
 
-Yup, also a totally valid reason I forgot to mention in my reply last week.
+I prioritise an in-kernel driver over a staging driver.
 
-> And it turns out that I was waiting for Bastien to chime in, but I can
-> access his calendar too and just found out that he was AFK for the
-> entire month, except for the first week, which I wasn't aware. May is
-> a time where people in France have a lot of public holidays and is
-> also the cut to use those time off or they expire.
+-- 
+Regards,
 
-Thx for that, knowing that Bastien is unavailable is really helpful.
-
-> For me, I'll also be taking time off the rest of this week, so I won't
-> be able to have a look at this until next week at the earliest.
-
-Hope your enjoyed your days off!
-
-FWIW, in case anybody is interested in a status update: one reporter
-bisected the problem down to 586e8fede79 ("HID: logitech-hidpp: Retry
-commands when device is busy"); reverting that commit on-top of 6.3
-fixes the problem for that reporter. For that reporter things also work
-on 6.4-rc; but for someone else that is affected that's not the case.
-
-Makes me wonder if we deal with two different issues here. Just asked
-where 6.4 does not work if reverting 586e8fede79 fixes things for them
-as well.
-
-For more details, see https://bugzilla.kernel.org/show_bug.cgi?id=217412
-
-Ciao, Thorsten
+Sakari Ailus
