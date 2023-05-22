@@ -1,130 +1,116 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCB4A168D1
-	for <regressions@lists.linux.dev>; Mon, 22 May 2023 19:25:37 +0000 (UTC)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 8A12C200F6;
-	Mon, 22 May 2023 19:15:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1684782943;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Fpgikaj4b/fIR4oq3PCGfq5sJzdvVfaJIjtWnHRA6R0=;
-	b=D70ZT6b1fjWsuL+W1yj9TGbzMb0C5NWUnfgJRwHMF/T18jNEQuWzzMrZ5WgrNX6Fuqiofu
-	9gIyExPl+ESAj1eopVNEcMi2aMU7mlhOCEyhVFSAfijvBLJFvs6ueVYTZvgHmAz5mHlNo9
-	XyvAIcTLpeqhNHo/L04sjJrUjTYguTQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1684782943;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Fpgikaj4b/fIR4oq3PCGfq5sJzdvVfaJIjtWnHRA6R0=;
-	b=XtD6nqwgq+tgbSkSxyJ62p07UNPB1IyTTPrapmj+inkYSMN3ePjmWutdZo9t4Up0qUKIxp
-	gtrOQSCuPuRaBjCA==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 3303E13336;
-	Mon, 22 May 2023 19:15:43 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-	by imap2.suse-dmz.suse.de with ESMTPSA
-	id nl8AC1+/a2QPNgAAMHmgww
-	(envelope-from <dsterba@suse.cz>); Mon, 22 May 2023 19:15:43 +0000
-Date: Mon, 22 May 2023 21:09:36 +0200
-From: David Sterba <dsterba@suse.cz>
-To: Uladzislau Rezki <urezki@gmail.com>
-Cc: Bagas Sanjaya <bagasdotme@gmail.com>,
-	Linux btrfs <linux-btrfs@vger.kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Regressions <regressions@lists.linux.dev>,
-	Linux Stable <stable@vger.kernel.org>, Chris Mason <clm@fb.com>,
-	Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
-	a1bert@atlas.cz, linux-mm@kvack.org
-Subject: Re: Fwd: vmalloc error: btrfs-delalloc btrfs_work_helper [btrfs] in
- kernel 6.3.x
-Message-ID: <20230522190936.GP32559@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-References: <efa04d56-cd7f-6620-bca7-1df89f49bf4b@gmail.com>
- <ZGuRqtPkmeP07M6x@pc636>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94AC0171A9
+	for <regressions@lists.linux.dev>; Mon, 22 May 2023 19:52:25 +0000 (UTC)
+Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-75b14216386so72613885a.0
+        for <regressions@lists.linux.dev>; Mon, 22 May 2023 12:52:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1684785144; x=1687377144;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=p52m+WWp6aApwkHVTkNg5kh/c1TUE8xWnOr/swu4YQM=;
+        b=lRpK3qNuuiQELF1mYf+pdqtoRndN/uBy+fRujNOBmFoKNNZHXdQGn1YvzpvVdJmEsc
+         o3aMGlzGMRo5bQ1kgH0uISw+aX/9dQxYn75ifiSczdRoxgRETgSHrFpUk4Qz4Bw1R2IJ
+         MhyAJcR09p9R18n7Ziq0C2mjuHP7B4FjFS+arj7kNxBLuT0bp/xmQbQiuodgr3hztHl/
+         4CPSJAhCovLJTkhnzO8WN/7IrW0xiT3nz9471apMj6tER1aIMTmaI6NmSsejQ1mOhrk3
+         3MLyEXrK/w5i0DCPURMZjSV0NUoL5yt0rFbJz/MTHoB08PJ8bVAkFVwax4tQar1VwO4p
+         hNrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684785144; x=1687377144;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=p52m+WWp6aApwkHVTkNg5kh/c1TUE8xWnOr/swu4YQM=;
+        b=DZzVArgrell+Pq6gE/kcq2QHXk5litKisGRooCU0LQMLQWrVAqyVOjh3P8Oh8L6YPV
+         jhGwhOjzmIJtq76xWnsRra9VZOeEHBb46kTOecNjsLizROxB2SqjNsSVERCTgY8k9jvq
+         ZfZ6ISCWmNllygI5AxeCH5orsG0b0JGwqjBq+GM3WIY8kmLBUSW12jdzNaLi8XSBjN86
+         ctxGLp9qMVW00jwXAzO6etFepIfOTSI/FcSvw/sRCpQkOgrH4dRnplXILAGsxHR+fQwl
+         kH3i7kSIsOfKt+ITF6Df5d+UD4R0njatjSOGYINSx9RTHT9IT8BrMooT5Nu9bPTZHC5x
+         UrmQ==
+X-Gm-Message-State: AC+VfDwZq2pJmlzzWLYVJPYl8IXrHcCus994x7tuE7W8iFQCSI5LXql1
+	lnMOEZEXasISXyragWMUfHgT9VrqMCrFvaNmMVZ5zQ==
+X-Google-Smtp-Source: ACHHUZ62p53t5Jx/dLsMCHu7hh9zeJ6bLdglFzoT+d04I0no2SNO9KMZS5dewAaI/LY85SD7r51/PuKHsSa9AFk227A=
+X-Received: by 2002:a05:6214:f0a:b0:5fd:7701:88c5 with SMTP id
+ gw10-20020a0562140f0a00b005fd770188c5mr23825727qvb.6.1684785144362; Mon, 22
+ May 2023 12:52:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZGuRqtPkmeP07M6x@pc636>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+References: <CAKwvOd=4hBcU4fAkddU0b-GOZc9FzTZoj3PFW6ZZrX0jS8x+bg@mail.gmail.com>
+ <17c91d37-7d9c-0df4-2438-2b30ca0b5777@collabora.com> <CAKwvOdk4QO8x_bs64fFRCsMu__AjhXd4Ew2KfgzQOb9Q3FMqSA@mail.gmail.com>
+ <b5d0cf82-0e42-f6a1-c9f5-c145fdc4c622@collabora.com> <CAKwvOdkFxu9hYSL_RCXadpR0dQd1+dZmAUVXdfFiLUfxg4D_Xw@mail.gmail.com>
+ <878rdlk9bi.fsf@rcn-XPS-13-9305.i-did-not-set--mail-host-address--so-tickle-me>
+ <CAKwvOd=8LVU+iANkFx18Wm1jg7gYiAXovAmo9t5ZZaVdMULn-Q@mail.gmail.com>
+ <875y8ok9b5.fsf@rcn-XPS-13-9305.i-did-not-set--mail-host-address--so-tickle-me>
+ <CAKwvOdmJJibt6sHSp91v2s7BxUWBC6xG7F7+3C6gUxNMzZ2xRA@mail.gmail.com>
+ <87353ok78h.fsf@rcn-XPS-13-9305.i-did-not-set--mail-host-address--so-tickle-me>
+ <2023052247-bobtail-factsheet-d104@gregkh>
+In-Reply-To: <2023052247-bobtail-factsheet-d104@gregkh>
+From: Nick Desaulniers <ndesaulniers@google.com>
+Date: Mon, 22 May 2023 12:52:13 -0700
+Message-ID: <CAKwvOd=2zAV_mizvzLFdyHE_4OzBY5OVu6KLWuQPOMZK37vsmQ@mail.gmail.com>
+Subject: Re: [PATCH v4] Makefile.compiler: replace cc-ifversion with
+ compiler-specific macros
+To: Greg KH <gregkh@linuxfoundation.org>, Maksim Panchenko <maks@meta.com>, 
+	=?UTF-8?Q?Ricardo_Ca=C3=B1uelo?= <ricardo.canuelo@collabora.com>
+Cc: Shreeya Patel <shreeya.patel@collabora.com>, Michal Marek <michal.lkml@markovi.net>, 
+	Masahiro Yamada <masahiroy@kernel.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, clang-built-linux <llvm@lists.linux.dev>, 
+	Bill Wendling <morbo@google.com>, Nathan Chancellor <nathan@kernel.org>, regressions@lists.linux.dev, 
+	"gustavo.padovan@collabora.com" <gustavo.padovan@collabora.com>, 
+	Guillaume Charles Tucker <guillaume.tucker@collabora.com>, denys.f@collabora.com, 
+	kernelci@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 22, 2023 at 06:00:42PM +0200, Uladzislau Rezki wrote:
-> > Hi,
-> > 
-> > I notice a regression report on Bugzilla [1]. Quoting from it:
-> > 
-> > > after updating from 6.2.x to 6.3.x, vmalloc error messages started to appear in the dmesg
-> > > 
-> > > 
-> > > 
-> > > # free 
-> > >                total        used        free      shared  buff/cache   available
-> > > Mem:        16183724     1473068      205664       33472    14504992    14335700
-> > > Swap:       16777212      703596    16073616
-> > > 
-> > > 
-> > > (zswap enabled)
-> > 
-> > See bugzilla for the full thread and attached dmesg.
-> > 
-> > On the report, the reporter can't perform the required bisection,
-> > unfortunately.
-> > 
-> > Anyway, I'm adding it to regzbot:
-> > 
-> > #regzbot introduced: v6.2..v6.3 https://bugzilla.kernel.org/show_bug.cgi?id=217466
-> > #regzbot title: btrfs_work_helper dealloc error in v6.3.x
-> > 
-> > Thanks.
-> > 
-> > [1]: https://bugzilla.kernel.org/show_bug.cgi?id=217466
-> > 
-> According to dmesg output from the bugzilla, the vmalloc tries to
-> allocate high order pages: 1 << 9. Since it fails to get a order-9 page
-> you get the warning:
+On Mon, May 22, 2023 at 9:52=E2=80=AFAM Greg KH <gregkh@linuxfoundation.org=
+> wrote:
+>
+> On Mon, May 22, 2023 at 12:09:34PM +0200, Ricardo Ca=C3=B1uelo wrote:
+> > On vie, may 19 2023 at 08:57:24, Nick Desaulniers <ndesaulniers@google.=
+com> wrote:
+> > > It could be; if the link order was changed, it's possible that this
+> > > target may be hitting something along the lines of:
+> > > https://isocpp.org/wiki/faq/ctors#static-init-order i.e. the "static
+> > > initialization order fiasco"
+> > >
+> > > I'm struggling to think of how this appears in C codebases, but I
+> > > swear years ago I had a discussion with GKH (maybe?) about this. I
+> > > think I was playing with converting Kbuild to use Ninja rather than
+> > > Make; the resulting kernel image wouldn't boot because I had modified
+> > > the order the object files were linked in.  If you were to randomly
+> > > shuffle the object files in the kernel, I recall some hazard that may
+> > > prevent boot.
+> >
+> > I thought that was specifically a C++ problem? But then again, the
+> > kernel docs explicitly say that the ordering of obj-y goals in kbuild i=
+s
+> > significant in some instances [1]:
+>
+> Yes, it matters, you can not change it.  If you do, systems will break.
+> It is the only way we have of properly ordering our init calls within
+> the same "level".
 
-That we want a order 9 is intentional, it's for a compression workspace
-(bugzilla comment 5). It's allocated as kvzalloc i.e. with the fallback
-to vmalloc in case the first one fails.
+Ah, right it was the initcall ordering. Thanks for the reminder.
 
-> <snip>
-> 	if (area->nr_pages != nr_small_pages) {
-> 		/* vm_area_alloc_pages() can also fail due to a fatal signal */
-> 		if (!fatal_signal_pending(current))
-> 			warn_alloc(gfp_mask, NULL,
-> 				"vmalloc error: size %lu, page order %u, failed to allocate pages",
-> 				area->nr_pages * PAGE_SIZE, page_order);
-> 		goto fail;
-> 	}
-> <snip>
-> 
-> and it fails.
-> 
-> If the __GFP_NOFAIL is passed, the vm_area_alloc_pages() function switches
-> to allocate 0-order pages instead. I think the fix is to call the
-> kvmalloc_node() with __GFP_NOFAIL flag.
+(There's a joke in there similar to the use of regexes to solve a
+problem resulting in two new problems; initcalls have levels for
+ordering, but we still have (unexpressed) dependencies between calls
+of the same level; brittle!).
 
-__GFP_NOFAIL does not make sense here and we've tried hard not to used
-it anywhere because of the deadlocky effects. Did you mean __GFP_NOWARN?
-That's a patch I sent today but there's another comment in the bugzilla
-that we got more allocation warnings for huge (2M) allocations, this
-time it was for a deduplication ioctl.
++Maksim, since that might be relevant info for the BOLT+Kernel work.
 
-This seems to be a noticeable change in 6.3, before we disable the
-warning in our code I think the MM guys could have a look. So far it
-seems we're about to paper of a problem.
+Ricardo,
+https://elinux.org/images/e/e8/2020_ELCE_initcalls_myjosserand.pdf
+mentions that there's a kernel command line param `initcall_debug`.
+Perhaps that can be used to see if
+5750121ae7382ebac8d47ce6d68012d6cd1d7926 somehow changed initcall
+ordering, resulting in a config that cannot boot?
+--=20
+Thanks,
+~Nick Desaulniers
