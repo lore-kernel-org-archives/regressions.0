@@ -1,160 +1,128 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A137F10E8
-	for <regressions@lists.linux.dev>; Sun, 21 May 2023 16:57:11 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:5054:ff:feb3:8f48] (helo=regzbot.fritz.box); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	id 1q0mMn-0005sz-At; Sun, 21 May 2023 18:57:09 +0200
-From: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>
-To: LKML <linux-kernel@vger.kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Linux regressions report  for mainline [2023-05-21]
-Date: Sun, 21 May 2023 16:57:08 +0000
-Message-Id: <168468791405.573950.5461774961481617442@leemhuis.info>
-X-Mailer: git-send-email 2.40.1
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACEBC161
+	for <regressions@lists.linux.dev>; Mon, 22 May 2023 00:23:08 +0000 (UTC)
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1afa6afcf4fso8652025ad.0
+        for <regressions@lists.linux.dev>; Sun, 21 May 2023 17:23:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1684714988; x=1687306988;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RAfoTJTuXzknmLlBI5ViwPZYI1PuWLrhmX2kfKQYWIE=;
+        b=RYEEWS33yTgfPCb74moX5aEj6ndxqzoWnof3duGQMxZas6FXdPPoHGJBNswtPlAill
+         RrScBJg7TYWXDserxwV6DuHPqABbz1P7zX/DphoImhGYMKbQns1EYLty/pbnbq3+Jq5X
+         AqkYGosOKt6TlhBwq55WBXfnFHfED2MYWdg14gUnm1chdm3NbFHNr5HPx5CeurADeYrg
+         fHtwj0WVci330egv06ExwIQHJWRJqe8GT9W6oQ+pKrXFc36giClGFiOrjA3Fge00Lxgq
+         zGXgqOp5xBdzRFKQuePirqcFzhjyTcC3e53Y7/4/c0bghuoz0q3HEle6E+bhV9tAGbJ5
+         Iyjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684714988; x=1687306988;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=RAfoTJTuXzknmLlBI5ViwPZYI1PuWLrhmX2kfKQYWIE=;
+        b=WOIafrWlc3hN4PmmDUCL/W3fjrWG6rpm83DRP/h9Wq3OK3VjAOKSAZNsw7VwtFiu9g
+         9GXRX7wvilMtckWzk52RvR1QK7tWzKmONblqPRn2pir85kEc95MJOVOFS05NvesI7ml7
+         2mn4Tl9a466d5YFIVqqyeQzcUxS+WMm+sujZTosGPAE51v2+SRkS11+iHicea1jBE+pN
+         Rd/Zq73pdzT70vuKGUaIulkc2tn/cGN/kTCcalLg2FUFDCmdFyRAbcnIOdsjczlyyf+w
+         czd/xlL8dv2M+/80brIPSBk+WuEgkFBgbPHWfJ7k8/HftX9S454R57MRTqacHFLjeYxx
+         vmgQ==
+X-Gm-Message-State: AC+VfDwBhORZstFnHfbWRMBV/caYjmOOasDmn1IRu56SZpyD5aRcByDb
+	NF6EAtmvBbdidCrIcDyDYPc=
+X-Google-Smtp-Source: ACHHUZ6LM0I6jd4rJh2WZnhuiAVSEf7C4wytsXW2Ncj6jyUBMEeabOyNCk3EFFkm2JBYy4NGDrqMmg==
+X-Received: by 2002:a17:902:e547:b0:1ac:815e:320b with SMTP id n7-20020a170902e54700b001ac815e320bmr11075276plf.17.1684714987934;
+        Sun, 21 May 2023 17:23:07 -0700 (PDT)
+Received: from [192.168.43.80] (subs02-180-214-232-10.three.co.id. [180.214.232.10])
+        by smtp.gmail.com with ESMTPSA id u6-20020a17090282c600b0019a773419a6sm3458854plz.170.2023.05.21.17.23.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 21 May 2023 17:23:07 -0700 (PDT)
+Message-ID: <8a79151b-ef75-08ad-ae3d-f6cdabfeaa47@gmail.com>
+Date: Mon, 22 May 2023 07:23:00 +0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1684688231;d70ec839;
-X-HE-SMSGID: 1q0mMn-0005sz-At
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Content-Language: en-US
+To: Linux ARM <linux-arm-kernel@lists.infradead.org>,
+ Linux Kernel Build System <linux-kbuild@vger.kernel.org>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Linux EFI <linux-efi@vger.kernel.org>
+Cc: Masahiro Yamada <masahiroy@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, Alan Bartlett <ajb@elrepo.org>
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+Subject: Fwd: Regression. -6.3.X Good. -6.4-rcY Bad.
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Linus. Nothing much to report, so without further ado find regzbot's
-report below. Ciao, Thorsten
+Hi,
 
----
+I notice a simple build-time regression on Bugzilla [1]. Quoting from it:
 
-Hi, this is regzbot, the Linux kernel regression tracking bot.
+> This is a very simple to see regression.
+> 
+> On arm64 hardware, take any one of the -6.4-rcY tarballs created by Linus. Extract the contents of the tarball and cd to the linux-6.4-rcY directory. Issue a "make clean" or a "make mrproper" or a "make distclean" command. Look at the output (there should not be any). In every case, the output is --
+> 
+> nm: 'vmlinux': No such file
+> 
+> A bisection of Linus' full tree was performed specifying v6.4-rc1 as bad and v6.3 as good. Here is the result --
+> 
+> git bisect start
+> # status: waiting for both good and bad commits
+> # bad: [ac9a78681b921877518763ba0e89202254349d1b] Linux 6.4-rc1
+> git bisect bad ac9a78681b921877518763ba0e89202254349d1b
+> # status: waiting for good commit(s), bad commit known
+> # good: [457391b0380335d5e9a5babdec90ac53928b23b4] Linux 6.3
+> git bisect good 457391b0380335d5e9a5babdec90ac53928b23b4
+> # good: [6e98b09da931a00bf4e0477d0fa52748bf28fcce] Merge tag 'net-next-6.4' of git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next
+> git bisect good 6e98b09da931a00bf4e0477d0fa52748bf28fcce
+> # good: [70cc1b5307e8ee3076fdf2ecbeb89eb973aa0ff7] Merge tag 'powerpc-6.4-1' of git://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux
+> git bisect good 70cc1b5307e8ee3076fdf2ecbeb89eb973aa0ff7
+> # bad: [865fdb08197e657c59e74a35fa32362b12397f58] Merge tag 'input-for-v6.4-rc0' of git://git.kernel.org/pub/scm/linux/kernel/git/dtor/input
+> git bisect bad 865fdb08197e657c59e74a35fa32362b12397f58
+> # good: [e81507acdc19d91df4121f409871f3e4e055f6c2] Merge tag 'clk-for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/clk/linux
+> git bisect good e81507acdc19d91df4121f409871f3e4e055f6c2
+> # bad: [26c009dffca89b0f8fe7facc41d1ccf88a66825a] Merge tag '6.4-rc-smb3-client-fixes-part1' of git://git.samba.org/sfrench/cifs-2.6
+> git bisect bad 26c009dffca89b0f8fe7facc41d1ccf88a66825a
+> # bad: [10de638d8ea57ebab4231ea077bed01d9bade775] Merge tag 's390-6.4-1' of git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux
+> git bisect bad 10de638d8ea57ebab4231ea077bed01d9bade775
+> # good: [680957b3b8b0b2e8697592fcb77369d4f643908a] s390/relocate_kernel: use SYM* macros instead of ENTRY(), etc.
+> git bisect good 680957b3b8b0b2e8697592fcb77369d4f643908a
+> # good: [ea76e08f4d901a450619831a255e9e0a4c0ed162] rust: ioctl: Add ioctl number manipulation functions
+> git bisect good ea76e08f4d901a450619831a255e9e0a4c0ed162
+> # bad: [825a0714d2b3883d4f8ff64f6933fb73ee3f1834] Merge tag 'efi-next-for-v6.4' of git://git.kernel.org/pub/scm/linux/kernel/git/efi/efi
+> git bisect bad 825a0714d2b3883d4f8ff64f6933fb73ee3f1834
+> # good: [9489d1bdb763a3dd954e61522043190a9fd1cb4c] power: supply: generic-adc-battery: simplify read_channel logic
+> git bisect good 9489d1bdb763a3dd954e61522043190a9fd1cb4c
+> # good: [528bd42615f4bb564613cc76dead90d7fbae76ba] power: supply: rk817: Drop unneeded debugging code
+> git bisect good 528bd42615f4bb564613cc76dead90d7fbae76ba
+> # good: [538bc0f40b364f2c7b81f11aa163f723b138b40f] efi/zboot: Set forward edge CFI compat header flag if supported
+> git bisect good 538bc0f40b364f2c7b81f11aa163f723b138b40f
+> # bad: [026b85796ab4d52af56f8a1c60d2613983ecd845] efi/zboot: arm64: Grab code size from ELF symbol in payload
+> git bisect bad 026b85796ab4d52af56f8a1c60d2613983ecd845
+> # bad: [45dd403da851124412d32e3193c21de4a51d29da] efi/zboot: arm64: Inject kernel code size symbol into the zboot payload
+> git bisect bad 45dd403da851124412d32e3193c21de4a51d29da
+> # first bad commit: [45dd403da851124412d32e3193c21de4a51d29da] efi/zboot: arm64: Inject kernel code size symbol into the zboot payload
+> 
+> Reverting the commit 45dd403da851124412d32e3193c21de4a51d29da resolves the problem.
 
-Currently I'm aware of 7 regressions in linux-mainline. Find the
-current status below and the latest on the web:
+The regression looks like arm-specific, but the first bad commit
+IMO isn't related to kbuild system.
 
-https://linux-regtracking.leemhuis.info/regzbot/mainline/
+Anyway, I'm adding it to regzbot:
 
-Bye bye, hope to see you soon for the next report.
-   Regzbot (on behalf of Thorsten Leemhuis)
+#regzbot introduced: 45dd403da85112 https://bugzilla.kernel.org/show_bug.cgi?id=217468
+#regzbot title: nm vmlinux ENOENT when "make mrproper" on arm64
 
+Thanks.
 
-======================================================
-current cycle (v6.3.. aka v6.4-rc), culprit identified
-======================================================
+[1]: https://bugzilla.kernel.org/show_bug.cgi?id=217468
 
-
-[ *NEW* ] SPI NOR bank divide by zero on Lenovo ThinkPad X1 Titanium
---------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/217448/
-https://bugzilla.kernel.org/show_bug.cgi?id=217448
-https://lore.kernel.org/lkml/b984f839-cf0a-fc25-41d5-656171774e4e@gmail.com/
-
-By Todd Brandt and Todd Brandt; 4 days ago; 11 activities, latest 2 days ago.
-Introduced in 9d6c5d64f028 (v6.4-rc1)
-
-Fix incoming:
-* mtd: spi-nor: Fix divide by zero for spi-nor-generic flashes
-  https://lore.kernel.org/lkml/ZGYp4jnJxZJlfpeB@debian.me/
-
-
-[ *NEW* ] vhost: ps output changed and suspend fails when VMs are running
--------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/aba6cca4-e66c-768f-375c-b38c8ba5e8a8@6wind.com/
-https://lore.kernel.org/lkml/aba6cca4-e66c-768f-375c-b38c8ba5e8a8@6wind.com/
-
-By Nicolas Dichtel; 16 days ago; 28 activities, latest 3 days ago.
-Introduced in 6e890c5d502 (v6.4-rc1)
-
-Recent activities from: Linus Torvalds (5), Mike Christie (4), Oleg
-  Nesterov (4), Christian Brauner (3), Eric W. Biederman (2), Jens
-  Axboe (1)
-
-3 patch postings are associated with this regression, the latest is this:
-* Re: [PATCH v11 8/8] vhost: use vhost_tasks for worker threads
-  https://lore.kernel.org/lkml/8bfb7d1d-f7d0-94ca-4777-e31a2003027a@oracle.com/
-  5 days ago, by Mike Christie
-
-
-regulator: qcom-rpmh: Dragonboard 845c broken due to asynchronous probe
------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/CAMi1Hd1avQDcDQf137m2auz2znov4XL8YGrLZsw5edb-NtRJRw@mail.gmail.com/
-https://lore.kernel.org/lkml/CAMi1Hd1avQDcDQf137m2auz2znov4XL8YGrLZsw5edb-NtRJRw@mail.gmail.com/
-
-By Amit Pundir; 7 days ago; 7 activities, latest 4 days ago.
-Introduced in ad44ac082fd (v6.4-rc1)
-
-Recent activities from: Doug Anderson (2), Amit Pundir (2), Mark
-  Brown (1)
-
-One patch associated with this regression:
-* Re: [PATCH] regulator: qcom-rpmh: Revert "regulator: qcom-rpmh: Use PROBE_FORCE_SYNCHRONOUS"
-  https://lore.kernel.org/lkml/552345c5-b1e9-41f6-f275-b6eeeb51df25@linaro.org/
-  7 days ago, by Caleb Connolly
-
-
-system hang on start-up (irq or mlx5 problem?)
-----------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/A1E5B427-897B-409E-B8E3-E417678E81F6@oracle.com/
-https://lore.kernel.org/netdev/A1E5B427-897B-409E-B8E3-E417678E81F6@oracle.com/
-
-By Chuck Lever III; 18 days ago; 9 activities, latest 4 days ago.
-Introduced in bbac70c74183 (v6.4-rc1)
-
-Recent activities from: Chuck Lever III (1)
-
-
-ext4: adv test cases of kvm-xfstests fail
------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/ZFqO3xVnmhL7zv1x@debian-BULLSEYE-live-builder-AMD64/
-https://lore.kernel.org/linux-ext4/ZFqO3xVnmhL7zv1x@debian-BULLSEYE-live-builder-AMD64/
-
-By Eric Whitney; 11 days ago; 2 activities, latest 11 days ago.
-Introduced in e360c6ed7274 (v6.4-rc1)
-
-
-powerpc: boot issues on PASEMI Nemo board
------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/301595ad-0edf-2113-b55f-f5b8051ed24c@xenosoft.de/
-https://lore.kernel.org/linuxppc-dev/301595ad-0edf-2113-b55f-f5b8051ed24c@xenosoft.de/
-
-By Christian Zigotzky; 19 days ago; 20 activities, latest 12 days ago.
-Introduced in e4ab08be5b49 (v6.4-rc1)
-
-Fix incoming:
-* powerpc/isa-bridge: Fix ISA mapping when "ranges" is not present
-  https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=master&id=79de36042eecb684e0f748d17ba52f365fde0d65
-
-
-=============
-End of report
-=============
-
-All regressions marked '[ *NEW* ]' were added since the previous report,
-which can be found here:
-https://lore.kernel.org/r/168407416011.74685.9039980276616254723@leemhuis.info
-
-Thanks for your attention, have a nice day!
-
-  Regzbot, your hard working Linux kernel regression tracking robot
-
-
-P.S.: Wanna know more about regzbot or how to use it to track regressions
-for your subsystem? Then check out the getting started guide or the
-reference documentation:
-
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
-
-The short version: if you see a regression report you want to see
-tracked, just send a reply to the report where you Cc
-regressions@lists.linux.dev with a line like this:
-
-#regzbot introduced: v5.13..v5.14-rc1
-
-If you want to fix a tracked regression, just do what is expected
-anyway: add a 'Link:' tag with the url to the report, e.g.:
-
-Link: https://lore.kernel.org/all/30th.anniversary.repost@klaava.Helsinki.FI/
+-- 
+An old man doll... just what I always wanted! - Clara
