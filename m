@@ -1,78 +1,170 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4F7813AE5;
-	Mon, 22 May 2023 16:52:50 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28B6CC433D2;
-	Mon, 22 May 2023 16:52:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1684774370;
-	bh=vOQbWWEEqd8EQVksWSFEy4waMaZII1vIhTX3SzTbbko=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=e3MLFpG2OoR6zPuYXlOFRm68JelSBH0QDndXPwKeHRgL9+reSIMdQe6CNgI/cfc9f
-	 miDxNritVnfcvqwuHDuMk5Rn/GbaQD+om4+8MowbFMZnHWSN9ZE0shhe5sjt+9/A0J
-	 BNSZ2iolJWZw8v1cc/eom6LTzfCJ1k1NevOLgfiI=
-Date: Mon, 22 May 2023 17:52:32 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Ricardo =?iso-8859-1?Q?Ca=F1uelo?= <ricardo.canuelo@collabora.com>
-Cc: Nick Desaulniers <ndesaulniers@google.com>,
-	Shreeya Patel <shreeya.patel@collabora.com>,
-	Michal Marek <michal.lkml@markovi.net>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	clang-built-linux <llvm@lists.linux.dev>,
-	Bill Wendling <morbo@google.com>,
-	Nathan Chancellor <nathan@kernel.org>, regressions@lists.linux.dev,
-	"gustavo.padovan@collabora.com" <gustavo.padovan@collabora.com>,
-	Guillaume Charles Tucker <guillaume.tucker@collabora.com>,
-	denys.f@collabora.com, kernelci@lists.linux.dev
-Subject: Re: [PATCH v4] Makefile.compiler: replace cc-ifversion with
- compiler-specific macros
-Message-ID: <2023052247-bobtail-factsheet-d104@gregkh>
-References: <CAKwvOd=4hBcU4fAkddU0b-GOZc9FzTZoj3PFW6ZZrX0jS8x+bg@mail.gmail.com>
- <17c91d37-7d9c-0df4-2438-2b30ca0b5777@collabora.com>
- <CAKwvOdk4QO8x_bs64fFRCsMu__AjhXd4Ew2KfgzQOb9Q3FMqSA@mail.gmail.com>
- <b5d0cf82-0e42-f6a1-c9f5-c145fdc4c622@collabora.com>
- <CAKwvOdkFxu9hYSL_RCXadpR0dQd1+dZmAUVXdfFiLUfxg4D_Xw@mail.gmail.com>
- <878rdlk9bi.fsf@rcn-XPS-13-9305.i-did-not-set--mail-host-address--so-tickle-me>
- <CAKwvOd=8LVU+iANkFx18Wm1jg7gYiAXovAmo9t5ZZaVdMULn-Q@mail.gmail.com>
- <875y8ok9b5.fsf@rcn-XPS-13-9305.i-did-not-set--mail-host-address--so-tickle-me>
- <CAKwvOdmJJibt6sHSp91v2s7BxUWBC6xG7F7+3C6gUxNMzZ2xRA@mail.gmail.com>
- <87353ok78h.fsf@rcn-XPS-13-9305.i-did-not-set--mail-host-address--so-tickle-me>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E40F16401
+	for <regressions@lists.linux.dev>; Mon, 22 May 2023 17:05:09 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1q18xy-0003Vv-E9; Mon, 22 May 2023 19:05:02 +0200
+Message-ID: <aa3fcf2f-013b-358f-e2d3-205e40b6908a@leemhuis.info>
+Date: Mon, 22 May 2023 19:05:01 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <87353ok78h.fsf@rcn-XPS-13-9305.i-did-not-set--mail-host-address--so-tickle-me>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [Syzkaller & bisect] There is BUG: unable to handle kernel NULL
+ pointer dereference in xfs_extent_free_diff_items in v6.4-rc3
+Content-Language: en-US, de-DE
+To: "Darrick J. Wong" <djwong@kernel.org>,
+ Bagas Sanjaya <bagasdotme@gmail.com>
+Cc: Pengfei Xu <pengfei.xu@intel.com>, linux-xfs@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, heng.su@intel.com, dchinner@redhat.com,
+ lkp@intel.com, Linux Regressions <regressions@lists.linux.dev>
+References: <ZGrOYDZf+k0i4jyM@xpf.sh.intel.com> <ZGsOH5D5vLTLWzoB@debian.me>
+ <20230522160525.GB11620@frogsfrogsfrogs>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <20230522160525.GB11620@frogsfrogsfrogs>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1684775109;d01df294;
+X-HE-SMSGID: 1q18xy-0003Vv-E9
 
-On Mon, May 22, 2023 at 12:09:34PM +0200, Ricardo Cañuelo wrote:
-> On vie, may 19 2023 at 08:57:24, Nick Desaulniers <ndesaulniers@google.com> wrote:
-> > It could be; if the link order was changed, it's possible that this
-> > target may be hitting something along the lines of:
-> > https://isocpp.org/wiki/faq/ctors#static-init-order i.e. the "static
-> > initialization order fiasco"
-> >
-> > I'm struggling to think of how this appears in C codebases, but I
-> > swear years ago I had a discussion with GKH (maybe?) about this. I
-> > think I was playing with converting Kbuild to use Ninja rather than
-> > Make; the resulting kernel image wouldn't boot because I had modified
-> > the order the object files were linked in.  If you were to randomly
-> > shuffle the object files in the kernel, I recall some hazard that may
-> > prevent boot.
+On 22.05.23 18:05, Darrick J. Wong wrote:
+> On Mon, May 22, 2023 at 01:39:27PM +0700, Bagas Sanjaya wrote:
+>> On Mon, May 22, 2023 at 10:07:28AM +0800, Pengfei Xu wrote:
+>>> Greeting!
+>>> There is BUG: unable to handle kernel NULL pointer dereference in
+>>> xfs_extent_free_diff_items in v6.4-rc3:
+>>>
+>>> Above issue could be reproduced in v6.4-rc3 and v6.4-rc2 kernel in guest.
+>>>
+>>> Bisected this issue between v6.4-rc2 and v5.11, found the problem commit is:
+>>> "
+>>> f6b384631e1e xfs: give xfs_extfree_intent its own perag reference
+>>> "
+>>>
+>>> report0, repro.stat and so on detailed info is link: https://github.com/xupengfe/syzkaller_logs/tree/main/230521_043336_xfs_extent_free_diff_items
+>>> Syzkaller reproduced code: https://github.com/xupengfe/syzkaller_logs/blob/main/230521_043336_xfs_extent_free_diff_items/repro.c
+>>> Syzkaller reproduced prog: https://github.com/xupengfe/syzkaller_logs/blob/main/230521_043336_xfs_extent_free_diff_items/repro.prog
+>>> Kconfig: https://github.com/xupengfe/syzkaller_logs/blob/main/230521_043336_xfs_extent_free_diff_items/kconfig_origin
+>>> Bisect info: https://github.com/xupengfe/syzkaller_logs/blob/main/230521_043336_xfs_extent_free_diff_items/bisect_info.log
+>>> Issue dmesg: https://github.com/xupengfe/syzkaller_logs/blob/main/230521_043336_xfs_extent_free_diff_items/v6.4-rc3_reproduce_dmesg.log
+>>>
+>>> v6.4-rc3 reproduced info:
 > 
-> I thought that was specifically a C++ problem? But then again, the
-> kernel docs explicitly say that the ordering of obj-y goals in kbuild is
-> significant in some instances [1]:
+> Diagnosis and patches welcomed.
+> 
+> Or are we doing the usual syzbot bullshit where you all assume that I'm
+> going to do all the fucking work for you?
 
-Yes, it matters, you can not change it.  If you do, systems will break.
-It is the only way we have of properly ordering our init calls within
-the same "level".
+Darrick, sorry for the trouble. Bagas recently out of the blue started
+to help with adding regressions to the tracking. That's great, but OTOH
+it means that it's likely time to write a few things up that are obvious
+to some of us and myself.
 
-thanks,
+Bagas, please for the foreseeable future don't add regressions found by
+syzkaller to the regression tracking, unless some well known developer
+actually looked into the issue and indicated that it's something that
+needs to be fixed.
 
-greg k-h
+Syzbot is great. But it occasionally does odd things or goes of the
+rails. And in can easily find problems that didn't happen in an earlier
+version, but are unlikely to be encountered by users in practice (aka
+"in the wild"). And we normally don't consider those regressions that
+needs to be fixed.
+
+Ciao, Thorsten
+
+#regzbot inconclusive: syzbot regression that would need further analysis
+
+>>> [   91.419498] loop0: detected capacity change from 0 to 65536
+>>> [   91.420095] XFS: attr2 mount option is deprecated.
+>>> [   91.420500] XFS: ikeep mount option is deprecated.
+>>> [   91.422379] XFS (loop0): Deprecated V4 format (crc=0) will not be supported after September 2030.
+>>> [   91.423468] XFS (loop0): Mounting V4 Filesystem d28317a9-9e04-4f2a-be27-e55b4c413ff6
+>>> [   91.428169] XFS (loop0): Ending clean mount
+>>> [   91.429120] XFS (loop0): Quotacheck needed: Please wait.
+>>> [   91.432182] BUG: kernel NULL pointer dereference, address: 0000000000000008
+>>> [   91.432770] #PF: supervisor read access in kernel mode
+>>> [   91.433216] #PF: error_code(0x0000) - not-present page
+>>> [   91.433640] PGD 0 P4D 0 
+>>> [   91.433864] Oops: 0000 [#1] PREEMPT SMP NOPTI
+>>> [   91.434232] CPU: 0 PID: 33 Comm: kworker/u4:2 Not tainted 6.4.0-rc3-kvm #2
+>>> [   91.434793] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+>>> [   91.435445] Workqueue: xfs_iwalk-393 xfs_pwork_work
+>>> [   91.435855] RIP: 0010:xfs_extent_free_diff_items+0x27/0x40
+>>> [   91.436312] Code: 90 90 90 f3 0f 1e fa 0f 1f 44 00 00 55 48 89 e5 41 54 49 89 f4 53 48 89 d3 e8 05 73 7d ff 49 8b 44 24 28 48 8b 53 28 5b 41 5c <8b> 40 08 5d 2b 42 08 c3 cc cc cc cc 66 66 2e 0f 1f 84 00 00 00 00
+>>> [   91.437812] RSP: 0000:ffffc9000012b8c0 EFLAGS: 00010246
+>>> [   91.438250] RAX: 0000000000000000 RBX: ffff8880015826c8 RCX: ffffffff81d71e41
+>>> [   91.438840] RDX: 0000000000000000 RSI: ffff888001ca4800 RDI: 0000000000000002
+>>> [   91.439430] RBP: ffffc9000012b8c0 R08: ffffc9000012b8e0 R09: 0000000000000000
+>>> [   91.440019] R10: ffff88800613f290 R11: ffffffff83e426c0 R12: ffff888001582230
+>>> [   91.440610] R13: ffff888001582428 R14: ffffffff81b042c0 R15: ffffc9000012b908
+>>> [   91.441202] FS:  0000000000000000(0000) GS:ffff88807ec00000(0000) knlGS:0000000000000000
+>>> [   91.441864] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>>> [   91.442343] CR2: 0000000000000008 CR3: 000000000ed22006 CR4: 0000000000770ef0
+>>> [   91.442941] PKRU: 55555554
+>>> [   91.443178] Call Trace:
+>>> [   91.443394]  <TASK>
+>>> [   91.443585]  list_sort+0xb8/0x3a0
+>>> [   91.443885]  xfs_extent_free_create_intent+0xb6/0xc0
+>>> [   91.444312]  xfs_defer_create_intents+0xc3/0x220
+>>> [   91.444711]  ? write_comp_data+0x2f/0x90
+>>> [   91.445056]  xfs_defer_finish_noroll+0x9e/0xbc0
+>>> [   91.445449]  ? list_sort+0x344/0x3a0
+>>> [   91.445768]  __xfs_trans_commit+0x4be/0x630
+>>> [   91.446135]  xfs_trans_commit+0x20/0x30
+>>> [   91.446473]  xfs_dquot_disk_alloc+0x45d/0x4e0
+>>> [   91.446860]  xfs_qm_dqread+0x2f7/0x310
+>>> [   91.447192]  xfs_qm_dqget+0xd5/0x300
+>>> [   91.447506]  xfs_qm_quotacheck_dqadjust+0x5a/0x230
+>>> [   91.447921]  xfs_qm_dqusage_adjust+0x249/0x300
+>>> [   91.448313]  xfs_iwalk_ag_recs+0x1bd/0x2e0
+>>> [   91.448671]  xfs_iwalk_run_callbacks+0xc3/0x1c0
+>>> [   91.449071]  xfs_iwalk_ag+0x32e/0x3f0
+>>> [   91.449398]  xfs_iwalk_ag_work+0xbe/0xf0
+>>> [   91.449744]  xfs_pwork_work+0x2c/0xc0
+>>> [   91.450064]  process_one_work+0x3b1/0x860
+>>> [   91.450416]  worker_thread+0x52/0x660
+>>> [   91.450739]  ? __pfx_worker_thread+0x10/0x10
+>>> [   91.451113]  kthread+0x16d/0x1c0
+>>> [   91.451406]  ? __pfx_kthread+0x10/0x10
+>>> [   91.451740]  ret_from_fork+0x29/0x50
+>>> [   91.452064]  </TASK>
+>>> [   91.452261] Modules linked in:
+>>> [   91.452530] CR2: 0000000000000008
+>>> [   91.452819] ---[ end trace 0000000000000000 ]---
+>>> [   91.487979] RIP: 0010:xfs_extent_free_diff_items+0x27/0x40
+>>> [   91.488463] Code: 90 90 90 f3 0f 1e fa 0f 1f 44 00 00 55 48 89 e5 41 54 49 89 f4 53 48 89 d3 e8 05 73 7d ff 49 8b 44 24 28 48 8b 53 28 5b 41 5c <8b> 40 08 5d 2b 42 08 c3 cc cc cc cc 66 66 2e 0f 1f 84 00 00 00 00
+>>> [   91.490021] RSP: 0000:ffffc9000012b8c0 EFLAGS: 00010246
+>>> [   91.490472] RAX: 0000000000000000 RBX: ffff8880015826c8 RCX: ffffffff81d71e41
+>>> [   91.491080] RDX: 0000000000000000 RSI: ffff888001ca4800 RDI: 0000000000000002
+>>> [   91.491689] RBP: ffffc9000012b8c0 R08: ffffc9000012b8e0 R09: 0000000000000000
+>>> [   91.492298] R10: ffff88800613f290 R11: ffffffff83e426c0 R12: ffff888001582230
+>>> [   91.492909] R13: ffff888001582428 R14: ffffffff81b042c0 R15: ffffc9000012b908
+>>> [   91.493516] FS:  0000000000000000(0000) GS:ffff88807ec00000(0000) knlGS:0000000000000000
+>>> [   91.494199] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>>> [   91.494695] CR2: 0000000000000008 CR3: 000000000ed22006 CR4: 0000000000770ef0
+>>> [   91.495306] PKRU: 55555554
+>>> [   91.495549] note: kworker/u4:2[33] exited with irqs disabled
+>>> "
+>>>
+>>
+>> Thanks for the regression report. I'm adding it to regzbot:
+>>
+>> #regzbot ^introduced: f6b384631e1e34
+>> #regzbot title: unable to handle kernel NULL pointer dereference in xfs_extent_free_diff_items (due to xfs_extfree_intent perag change)
+>> #regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=217470
+>>
+>> -- 
+>> An old man doll... just what I always wanted! - Clara
+> 
+> 
+> 
+> 
