@@ -1,131 +1,216 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B48E5A5F
-	for <regressions@lists.linux.dev>; Mon, 22 May 2023 06:34:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62BADC4339C
-	for <regressions@lists.linux.dev>; Mon, 22 May 2023 06:34:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1684737241;
-	bh=5QejO/8RzBizb4dikXLmKT91Why1bpOl1mj4A6dWHS8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=UXzZ7Nq2TrOuSeLncmjsBxOsC9Uj1Boyqh5UDf0lZ2amargXwk8dOQEnxJXpgGSax
-	 gHTRYjjz3lJ1vWsaU6YX2SFtMl8BX6DycmHlqj6VZCtof3Sk8exGQlgTl9HlwCYGMj
-	 1zsCN9y5ovw7QG4uzE6/+7j2hP/VZW2fkeu3E6Z8hkFxqpDJuQsiZFH7vIMWvvHAf5
-	 Xe3/QZKyB/4ALuD9mi5psVTMMDO7vL24smF4PWVz5jgntOha7DwJVxZjjnEmBmnZNx
-	 lK0EtQJ1+xYjeh/l8wTJWQWrzTnzQy1j6a2g74O7/vCbm7hbQxdqTx9Z9X5Af4D+v3
-	 JuO8wmZxeyFVw==
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-4f3b4ed6fdeso2193175e87.3
-        for <regressions@lists.linux.dev>; Sun, 21 May 2023 23:34:01 -0700 (PDT)
-X-Gm-Message-State: AC+VfDyzNhHW4ilAkpPn8K47aY9ySJ3e/oWJyddPAbmiaQiBU8R6MdjP
-	OOWCR5HsuRVA1ki1fFnA1zUvil9YZt/cDH/pFo8=
-X-Google-Smtp-Source: ACHHUZ6XN3+gQDN1GWBgXFJoCR3MjEnZ8hjJL7PpAQeD4JQq3JEmZ2u9XtHaZ0eKb8xVC6Bpygj3+aYd9NdI/J9Xblo=
-X-Received: by 2002:a19:c202:0:b0:4f3:9001:848c with SMTP id
- l2-20020a19c202000000b004f39001848cmr2878257lfc.33.1684737239417; Sun, 21 May
- 2023 23:33:59 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98B5210F9
+	for <regressions@lists.linux.dev>; Mon, 22 May 2023 06:39:33 +0000 (UTC)
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1ae852a5330so17552285ad.3
+        for <regressions@lists.linux.dev>; Sun, 21 May 2023 23:39:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1684737573; x=1687329573;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=RBmxCmNG5TbOL9hECYtzQYsyAMgW+U7Lbu2rwI+Qn8Q=;
+        b=dyL7bFmf44VLQgc5jicE1PgJG8sMUKwO0jb+3iUXQiqKHq3sTHcWxSzWKGxmj+L6A2
+         QVIT3zNPSeK1aZ/9i6+d/3/NPTrOcoGKXr4XMAeDIXZ74VFL/zEGyJ0tu8sGjVtXPSDG
+         AByYNDncFsBJV2xrcmsLRjKQ/JIX4VHFFFeIiARhiqW6ImeWeMCvdRlTcs18V65qtzYW
+         RQUwymWXiPlR9HB/FhfMiKtOo2iYIDKkAL8v7A01ysewmDhbEd9Alnq14/17wJ2r0COo
+         oPCH47V4qBwWr2CfGbkO07taQr9EyxBTx2KR0EzQVSpKyiqamwQWinbl3QgJ6Dj0ytDt
+         Bxeg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684737573; x=1687329573;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RBmxCmNG5TbOL9hECYtzQYsyAMgW+U7Lbu2rwI+Qn8Q=;
+        b=klz0J51fZxhhoexYSYBemBYa31ir8Nuo4D/vo+/1sT+z80VK3SabHmAJLwMjZYAVSR
+         nVaMsXdHBtkLhMZVUqcR9nI5YDHQQXQHCaE0AlpMj+yS8kxNwrIwbFCpIBTK1JltMbjc
+         HtL5cENnx1/+2Zs0B0elZXvqhr5SGS4vmIEv21/+Gk8JgzOM/fblv3fVfkQR4JlrMtOw
+         EpZ93+4shXCJaDZiQJ0P2CdgtlusIMDKMDaLMQTlJ/TpilwboVNVyPZyKsvs2D5Oe2aN
+         hZmfprVHcjx0MGeKpe2WIMR/48CcmGInIWSKrsLRHLOrio810wSiy44fb9jjmZfzn16X
+         Rdyw==
+X-Gm-Message-State: AC+VfDxhXDjbKUFPkC1wqwiAhQBBpbde/RLRfQGHJBYUPu2uPBCRon9s
+	KZx/lHEnXyGc0cIncl3DfBw=
+X-Google-Smtp-Source: ACHHUZ6tJMvJggE8Q+oRsvOGPrINSkRCKhnSVHnpGKNhNUrLijJCzQv9s71jBG83FJ9Ei6iDIvK3jQ==
+X-Received: by 2002:a17:903:234a:b0:1ac:85b0:1bdb with SMTP id c10-20020a170903234a00b001ac85b01bdbmr14354045plh.55.1684737572826;
+        Sun, 21 May 2023 23:39:32 -0700 (PDT)
+Received: from debian.me (subs09a-223-255-225-68.three.co.id. [223.255.225.68])
+        by smtp.gmail.com with ESMTPSA id i8-20020a170902c94800b001ae8b4dc497sm4011947pla.44.2023.05.21.23.39.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 21 May 2023 23:39:32 -0700 (PDT)
+Received: by debian.me (Postfix, from userid 1000)
+	id 01E97106ABB; Mon, 22 May 2023 13:39:27 +0700 (WIB)
+Date: Mon, 22 May 2023 13:39:27 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Pengfei Xu <pengfei.xu@intel.com>, djwong@kernel.org
+Cc: linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	heng.su@intel.com, dchinner@redhat.com, lkp@intel.com,
+	Linux Regressions <regressions@lists.linux.dev>
+Subject: Re: [Syzkaller & bisect] There is BUG: unable to handle kernel NULL
+ pointer dereference in xfs_extent_free_diff_items in v6.4-rc3
+Message-ID: <ZGsOH5D5vLTLWzoB@debian.me>
+References: <ZGrOYDZf+k0i4jyM@xpf.sh.intel.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <8a79151b-ef75-08ad-ae3d-f6cdabfeaa47@gmail.com> <CAKbZUD3FBiaLGWq=TipfevqXP0SBz8F+=L6JSO+FMZOv0QQ9AQ@mail.gmail.com>
-In-Reply-To: <CAKbZUD3FBiaLGWq=TipfevqXP0SBz8F+=L6JSO+FMZOv0QQ9AQ@mail.gmail.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Mon, 22 May 2023 08:33:47 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXEJj4+CFX3YfCZZu7RwxoVf=5PHZcZ8tG7x8xO3x4KPAw@mail.gmail.com>
-Message-ID: <CAMj1kXEJj4+CFX3YfCZZu7RwxoVf=5PHZcZ8tG7x8xO3x4KPAw@mail.gmail.com>
-Subject: Re: Regression. -6.3.X Good. -6.4-rcY Bad.
-To: Pedro Falcato <pedro.falcato@gmail.com>
-Cc: Bagas Sanjaya <bagasdotme@gmail.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, 
-	Linux Kernel Build System <linux-kbuild@vger.kernel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Linux Regressions <regressions@lists.linux.dev>, Linux EFI <linux-efi@vger.kernel.org>, 
-	Masahiro Yamada <masahiroy@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alan Bartlett <ajb@elrepo.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="iEMK2826TNLNRJkI"
+Content-Disposition: inline
+In-Reply-To: <ZGrOYDZf+k0i4jyM@xpf.sh.intel.com>
+
+
+--iEMK2826TNLNRJkI
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, 22 May 2023 at 03:15, Pedro Falcato <pedro.falcato@gmail.com> wrote=
-:
->
-> On Mon, May 22, 2023 at 1:43=E2=80=AFAM Bagas Sanjaya <bagasdotme@gmail.c=
-om> wrote:
-> >
-> > Hi,
-> >
-> > I notice a simple build-time regression on Bugzilla [1]. Quoting from i=
-t:
-> >
-> > > This is a very simple to see regression.
-> > >
-> > > On arm64 hardware, take any one of the -6.4-rcY tarballs created by L=
-inus. Extract the contents of the tarball and cd to the linux-6.4-rcY direc=
-tory. Issue a "make clean" or a "make mrproper" or a "make distclean" comma=
-nd. Look at the output (there should not be any). In every case, the output=
- is --
-> > >
-> > > nm: 'vmlinux': No such file
-> > >
-...
-> > > # first bad commit: [45dd403da851124412d32e3193c21de4a51d29da] efi/zb=
-oot: arm64: Inject kernel code size symbol into the zboot payload
-> > >
-> > > Reverting the commit 45dd403da851124412d32e3193c21de4a51d29da resolve=
-s the problem.
-> >
-> > The regression looks like arm-specific, but the first bad commit
-> > IMO isn't related to kbuild system.
-> >
-> > Anyway, I'm adding it to regzbot:
-> >
-> > #regzbot introduced: 45dd403da85112 https://bugzilla.kernel.org/show_bu=
-g.cgi?id=3D217468
-> > #regzbot title: nm vmlinux ENOENT when "make mrproper" on arm64
->
+On Mon, May 22, 2023 at 10:07:28AM +0800, Pengfei Xu wrote:
+> Hi Darrick,
+>=20
+> Greeting!
+> There is BUG: unable to handle kernel NULL pointer dereference in
+> xfs_extent_free_diff_items in v6.4-rc3:
+>=20
+> Above issue could be reproduced in v6.4-rc3 and v6.4-rc2 kernel in guest.
+>=20
+> Bisected this issue between v6.4-rc2 and v5.11, found the problem commit =
+is:
+> "
+> f6b384631e1e xfs: give xfs_extfree_intent its own perag reference
+> "
+>=20
+> report0, repro.stat and so on detailed info is link: https://github.com/x=
+upengfe/syzkaller_logs/tree/main/230521_043336_xfs_extent_free_diff_items
+> Syzkaller reproduced code: https://github.com/xupengfe/syzkaller_logs/blo=
+b/main/230521_043336_xfs_extent_free_diff_items/repro.c
+> Syzkaller reproduced prog: https://github.com/xupengfe/syzkaller_logs/blo=
+b/main/230521_043336_xfs_extent_free_diff_items/repro.prog
+> Kconfig: https://github.com/xupengfe/syzkaller_logs/blob/main/230521_0433=
+36_xfs_extent_free_diff_items/kconfig_origin
+> Bisect info: https://github.com/xupengfe/syzkaller_logs/blob/main/230521_=
+043336_xfs_extent_free_diff_items/bisect_info.log
+> Issue dmesg: https://github.com/xupengfe/syzkaller_logs/blob/main/230521_=
+043336_xfs_extent_free_diff_items/v6.4-rc3_reproduce_dmesg.log
+>=20
+> v6.4-rc3 reproduced info:
+> "
+> [   91.419498] loop0: detected capacity change from 0 to 65536
+> [   91.420095] XFS: attr2 mount option is deprecated.
+> [   91.420500] XFS: ikeep mount option is deprecated.
+> [   91.422379] XFS (loop0): Deprecated V4 format (crc=3D0) will not be su=
+pported after September 2030.
+> [   91.423468] XFS (loop0): Mounting V4 Filesystem d28317a9-9e04-4f2a-be2=
+7-e55b4c413ff6
+> [   91.428169] XFS (loop0): Ending clean mount
+> [   91.429120] XFS (loop0): Quotacheck needed: Please wait.
+> [   91.432182] BUG: kernel NULL pointer dereference, address: 00000000000=
+00008
+> [   91.432770] #PF: supervisor read access in kernel mode
+> [   91.433216] #PF: error_code(0x0000) - not-present page
+> [   91.433640] PGD 0 P4D 0=20
+> [   91.433864] Oops: 0000 [#1] PREEMPT SMP NOPTI
+> [   91.434232] CPU: 0 PID: 33 Comm: kworker/u4:2 Not tainted 6.4.0-rc3-kv=
+m #2
+> [   91.434793] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIO=
+S 0.0.0 02/06/2015
+> [   91.435445] Workqueue: xfs_iwalk-393 xfs_pwork_work
+> [   91.435855] RIP: 0010:xfs_extent_free_diff_items+0x27/0x40
+> [   91.436312] Code: 90 90 90 f3 0f 1e fa 0f 1f 44 00 00 55 48 89 e5 41 5=
+4 49 89 f4 53 48 89 d3 e8 05 73 7d ff 49 8b 44 24 28 48 8b 53 28 5b 41 5c <=
+8b> 40 08 5d 2b 42 08 c3 cc cc cc cc 66 66 2e 0f 1f 84 00 00 00 00
+> [   91.437812] RSP: 0000:ffffc9000012b8c0 EFLAGS: 00010246
+> [   91.438250] RAX: 0000000000000000 RBX: ffff8880015826c8 RCX: ffffffff8=
+1d71e41
+> [   91.438840] RDX: 0000000000000000 RSI: ffff888001ca4800 RDI: 000000000=
+0000002
+> [   91.439430] RBP: ffffc9000012b8c0 R08: ffffc9000012b8e0 R09: 000000000=
+0000000
+> [   91.440019] R10: ffff88800613f290 R11: ffffffff83e426c0 R12: ffff88800=
+1582230
+> [   91.440610] R13: ffff888001582428 R14: ffffffff81b042c0 R15: ffffc9000=
+012b908
+> [   91.441202] FS:  0000000000000000(0000) GS:ffff88807ec00000(0000) knlG=
+S:0000000000000000
+> [   91.441864] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [   91.442343] CR2: 0000000000000008 CR3: 000000000ed22006 CR4: 000000000=
+0770ef0
+> [   91.442941] PKRU: 55555554
+> [   91.443178] Call Trace:
+> [   91.443394]  <TASK>
+> [   91.443585]  list_sort+0xb8/0x3a0
+> [   91.443885]  xfs_extent_free_create_intent+0xb6/0xc0
+> [   91.444312]  xfs_defer_create_intents+0xc3/0x220
+> [   91.444711]  ? write_comp_data+0x2f/0x90
+> [   91.445056]  xfs_defer_finish_noroll+0x9e/0xbc0
+> [   91.445449]  ? list_sort+0x344/0x3a0
+> [   91.445768]  __xfs_trans_commit+0x4be/0x630
+> [   91.446135]  xfs_trans_commit+0x20/0x30
+> [   91.446473]  xfs_dquot_disk_alloc+0x45d/0x4e0
+> [   91.446860]  xfs_qm_dqread+0x2f7/0x310
+> [   91.447192]  xfs_qm_dqget+0xd5/0x300
+> [   91.447506]  xfs_qm_quotacheck_dqadjust+0x5a/0x230
+> [   91.447921]  xfs_qm_dqusage_adjust+0x249/0x300
+> [   91.448313]  xfs_iwalk_ag_recs+0x1bd/0x2e0
+> [   91.448671]  xfs_iwalk_run_callbacks+0xc3/0x1c0
+> [   91.449071]  xfs_iwalk_ag+0x32e/0x3f0
+> [   91.449398]  xfs_iwalk_ag_work+0xbe/0xf0
+> [   91.449744]  xfs_pwork_work+0x2c/0xc0
+> [   91.450064]  process_one_work+0x3b1/0x860
+> [   91.450416]  worker_thread+0x52/0x660
+> [   91.450739]  ? __pfx_worker_thread+0x10/0x10
+> [   91.451113]  kthread+0x16d/0x1c0
+> [   91.451406]  ? __pfx_kthread+0x10/0x10
+> [   91.451740]  ret_from_fork+0x29/0x50
+> [   91.452064]  </TASK>
+> [   91.452261] Modules linked in:
+> [   91.452530] CR2: 0000000000000008
+> [   91.452819] ---[ end trace 0000000000000000 ]---
+> [   91.487979] RIP: 0010:xfs_extent_free_diff_items+0x27/0x40
+> [   91.488463] Code: 90 90 90 f3 0f 1e fa 0f 1f 44 00 00 55 48 89 e5 41 5=
+4 49 89 f4 53 48 89 d3 e8 05 73 7d ff 49 8b 44 24 28 48 8b 53 28 5b 41 5c <=
+8b> 40 08 5d 2b 42 08 c3 cc cc cc cc 66 66 2e 0f 1f 84 00 00 00 00
+> [   91.490021] RSP: 0000:ffffc9000012b8c0 EFLAGS: 00010246
+> [   91.490472] RAX: 0000000000000000 RBX: ffff8880015826c8 RCX: ffffffff8=
+1d71e41
+> [   91.491080] RDX: 0000000000000000 RSI: ffff888001ca4800 RDI: 000000000=
+0000002
+> [   91.491689] RBP: ffffc9000012b8c0 R08: ffffc9000012b8e0 R09: 000000000=
+0000000
+> [   91.492298] R10: ffff88800613f290 R11: ffffffff83e426c0 R12: ffff88800=
+1582230
+> [   91.492909] R13: ffff888001582428 R14: ffffffff81b042c0 R15: ffffc9000=
+012b908
+> [   91.493516] FS:  0000000000000000(0000) GS:ffff88807ec00000(0000) knlG=
+S:0000000000000000
+> [   91.494199] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [   91.494695] CR2: 0000000000000008 CR3: 000000000ed22006 CR4: 000000000=
+0770ef0
+> [   91.495306] PKRU: 55555554
+> [   91.495549] note: kworker/u4:2[33] exited with irqs disabled
+> "
+>=20
 
-How on earth is this a regression? It is not even a build error, only
-a warning, with no adverse impact whatsoever on the resulting
-binaries.
+Thanks for the regression report. I'm adding it to regzbot:
 
-Could we stop being so trigger happy when calling things regressions, pleas=
-e?
+#regzbot ^introduced: f6b384631e1e34
+#regzbot title: unable to handle kernel NULL pointer dereference in xfs_ext=
+ent_free_diff_items (due to xfs_extfree_intent perag change)
+#regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=3D217470
 
-> I was able to track down the issue.
-> In line 47, arch/arm64/boot/Makefile, a variable (that gets expanded
-> on use, hence =3D and not :=3D) gets defined, that requires vmlinux to
-> exist (see the $(shell) invocation).
-> drivers/firmware/efi/libstub/Makefile.zboot then defines a variable
-> with :=3D, which expands on site and not when it actually needs to be
-> used. This expands EFI_ZBOOT_OBJCOPY_FLAGS without vmlinux existing,
-> which ENOENTs.
->
-> The below patch should fix it. I'm not submitting an actual patch
-> because I simply don't know if there are any possible side effects
-> here (although it frankly seems unlikely).
->
-> diff --git a/drivers/firmware/efi/libstub/Makefile.zboot
-> b/drivers/firmware/efi/libstub/Makefile.zboot
-> index 89ef820f3b3..3fb39dea114 100644
-> --- a/drivers/firmware/efi/libstub/Makefile.zboot
-> +++ b/drivers/firmware/efi/libstub/Makefile.zboot
-> @@ -32,7 +32,7 @@ zboot-size-len-$(CONFIG_KERNEL_GZIP)   :=3D 0
->  $(obj)/vmlinuz: $(obj)/vmlinux.bin FORCE
->         $(call if_changed,$(zboot-method-y))
->
-> -OBJCOPYFLAGS_vmlinuz.o :=3D -I binary -O $(EFI_ZBOOT_BFD_TARGET)
-> $(EFI_ZBOOT_OBJCOPY_FLAGS) \
-> +OBJCOPYFLAGS_vmlinuz.o =3D -I binary -O $(EFI_ZBOOT_BFD_TARGET)
-> $(EFI_ZBOOT_OBJCOPY_FLAGS) \
->                           --rename-section
-> .data=3D.gzdata,load,alloc,readonly,contents
->  $(obj)/vmlinuz.o: $(obj)/vmlinuz FORCE
->         $(call if_changed,objcopy)
->
+--=20
+An old man doll... just what I always wanted! - Clara
 
-Thanks for the fix. So the reason I used =3D and not :=3D in the first
-place in the assignment of EFI_ZBOOT_OBJCOPY_FLAGS was to ensure that
-it will not be evaluated eagerly, but obviously, forcing the eager
-evaluation further down defeats that.
+--iEMK2826TNLNRJkI
+Content-Type: application/pgp-signature; name="signature.asc"
 
-I've sent this out as a patch and queued it up as a EFI fix. Thanks!
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZGsOGQAKCRD2uYlJVVFO
+oysxAP9Q02Vq7ukcGo+qOuDS2nk6fTEJPCYz5pNezVhr6n3UXAD/UwGhmiex7pif
+Jn5+120XMJF31Y6pjksERo62Wb8N5Ac=
+=pj27
+-----END PGP SIGNATURE-----
+
+--iEMK2826TNLNRJkI--
