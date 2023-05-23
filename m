@@ -1,115 +1,135 @@
-Received: from pio-pvt-msa3.bahnhof.se (pio-pvt-msa3.bahnhof.se [79.136.2.42])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9D19BA4C
-	for <regressions@lists.linux.dev>; Tue, 23 May 2023 21:31:18 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by pio-pvt-msa3.bahnhof.se (Postfix) with ESMTP id 53B533F4FA;
-	Tue, 23 May 2023 23:25:43 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at bahnhof.se
-X-Spam-Flag: NO
-X-Spam-Score: -1.91
-X-Spam-Level:
-X-Spam-Status: No, score=-1.91 tagged_above=-999 required=6.31
-	tests=[BAYES_00=-1.9, T_SCC_BODY_TEXT_LINE=-0.01]
-	autolearn=ham autolearn_force=no
-Received: from pio-pvt-msa3.bahnhof.se ([127.0.0.1])
-	by localhost (pio-pvt-msa3.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id xWoa5MYq7N-Q; Tue, 23 May 2023 23:25:42 +0200 (CEST)
-Received: 
-	by pio-pvt-msa3.bahnhof.se (Postfix) with ESMTPA id 61CCF3F414;
-	Tue, 23 May 2023 23:25:41 +0200 (CEST)
-Received: from [192.168.0.126] (port=60034)
-	by tnonline.net with esmtpsa  (TLS1.3) tls TLS_AES_128_GCM_SHA256
-	(Exim 4.94.2)
-	(envelope-from <forza@tnonline.net>)
-	id 1q1ZVk-000GEM-Nn; Tue, 23 May 2023 23:25:40 +0200
-Date: Tue, 23 May 2023 23:25:38 +0200 (GMT+02:00)
-From: Forza <forza@tnonline.net>
-To: Uladzislau Rezki <urezki@gmail.com>,
-	Bagas Sanjaya <bagasdotme@gmail.com>
-Cc: Linux btrfs <linux-btrfs@vger.kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Regressions <regressions@lists.linux.dev>,
-	Linux Stable <stable@vger.kernel.org>, Chris Mason <clm@fb.com>,
-	Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
-	a1bert@atlas.cz, urezki@gmail.com
-Message-ID: <26007e3.faed4a1b.1884a80d9e8@tnonline.net>
-In-Reply-To: <ZGyVVQxnw6Tn7Xb8@pc636>
-References: <efa04d56-cd7f-6620-bca7-1df89f49bf4b@gmail.com> <fcf1d04.faed4a1a.18844d8e78f@tnonline.net> <ZGwcVTpQNBoJHBB+@debian.me> <ZGyVVQxnw6Tn7Xb8@pc636>
-Subject: Re: Fwd: vmalloc error: btrfs-delalloc btrfs_work_helper [btrfs] in
- kernel 6.3.x
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 239979465
+	for <regressions@lists.linux.dev>; Tue, 23 May 2023 21:49:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DEC0C4339B;
+	Tue, 23 May 2023 21:49:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1684878544;
+	bh=TnJ6jiYtBK7mcF14WGtDQDIOiNdcMlMjELE+BXkZbY4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=TB69PdLWUvfv6+L6MkDlF6NTd9hDwdwBHWlnxO8TMkvTJu4u7ZZKr/yzpOAWU7Cff
+	 2WEuWCU+iz6iH37ZasvPHnfyDnq8ejY6j1pl30jc7dGM9sHztqircMlesojoTShtMC
+	 smx/yMir4gOEJdukrQ7vOToXND6XPnCy/bjWMtTEzrqh2x20o+qDCI8ggdrz6ReNuY
+	 uoV4cBzwne4iKzipfKFLKw7WXcUF6ztevyZtx9kjxJ6wdiplrKE9iUXrQev81Fn2p6
+	 atoCjxgF2Gbx/QLxGahbXFtZkqTzBhmwSEMWuSQaRCHHsjbrk0UxLWit0Kl5uBTQ0i
+	 VIxmeFWmoPl0A==
+Date: Tue, 23 May 2023 16:49:02 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Koba Ko <koba.ko@canonical.com>, linux-pci@vger.kernel.org,
+	Vidya Sagar <vidyas@nvidia.com>,
+	Ajay Agarwal <ajayagarwal@google.com>,
+	Tasev Nikola <tasev.stefanoska@skynet.be>,
+	Mark Enriquez <enriquezmark36@gmail.com>,
+	Thomas Witt <kernel@witt.link>
+Subject: Re: [Bug 217321] New: Intel platforms can't sleep deeper than PC3
+ during long idle
+Message-ID: <ZG00zhXPMigJIISI@bhelgaas>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: R2Mail2
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <844f3819-c819-bc55-0518-0b1b9651825f@leemhuis.info>
 
+On Mon, May 22, 2023 at 01:45:55PM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
+> On 05.05.23 08:56, Koba Ko wrote:
+> > On Thu, May 4, 2023 at 5:23 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> >> [+cc Koba, Ajay, Tasev, Mark, Thomas, regressions list]
+> >> On Tue, Apr 11, 2023 at 03:42:29PM -0500, Bjorn Helgaas wrote:
+> >>> On Tue, Apr 11, 2023 at 08:32:04AM +0000, bugzilla-daemon@kernel.org wrote:
+> >>>> https://bugzilla.kernel.org/show_bug.cgi?id=217321
+> >>>> ...
+> >>>>         Regression: No
+> >>>>
+> >>>> [Symptom]
+> >>>> Intel cpu can't sleep deeper than pcˇ during long idle
+> >>>> ~~~
+> >>>> Pkg%pc2 Pkg%pc3 Pkg%pc6 Pkg%pc7 Pkg%pc8 Pkg%pc9 Pk%pc10
+> >>>> 15.08   75.02   0.00    0.00    0.00    0.00    0.00
+> >>>> 15.09   75.02   0.00    0.00    0.00    0.00    0.00
+> >>>> ^CPkg%pc2       Pkg%pc3 Pkg%pc6 Pkg%pc7 Pkg%pc8 Pkg%pc9 Pk%pc10
+> >>>> 15.38   68.97   0.00    0.00    0.00    0.00    0.00
+> >>>> 15.38   68.96   0.00    0.00    0.00    0.00    0.00
+> >>>> ~~~
+> >>>> [How to Reproduce]
+> >>>> 1. run turbostat to monitor
+> >>>> 2. leave machine idle
+> >>>> 3. turbostat show cpu only go into pc2~pc3.
+> >>>>
+> >>>> [Misc]
+> >>>> The culprit are this
+> >>>> a7152be79b62) Revert "PCI/ASPM: Save L1 PM Substates Capability for
+> >>>> suspend/resume”
+> >>>>
+> >>>> if revert a7152be79b62, the issue is gone
+> >>>
+> >>> Relevant commits:
+> >>>
+> >>>   4ff116d0d5fd ("PCI/ASPM: Save L1 PM Substates Capability for suspend/resume")
+> >>>   a7152be79b62 ("Revert "PCI/ASPM: Save L1 PM Substates Capability for suspend/resume"")
+> >>>
+> >>> 4ff116d0d5fd appeared in v6.1-rc1.  Prior to 4ff116d0d5fd, ASPM L1 PM
+> >>> Substates configuration was not preserved across suspend/resume, so
+> >>> the system *worked* after resume, but used more power than expected.
+> >>>
+> >>> But 4ff116d0d5fd caused resume to fail completely on some systems, so
+> >>> a7152be79b62 reverted it.  With a7152be79b62 reverted, ASPM L1 PM
+> >>> Substates configuration is likely not preserved across suspend/resume.
+> >>> a7152be79b62 appeared in v6.2-rc8 and was backported to the v6.1
+> >>> stable series starting with v6.1.12.
+> >>>
+> >>> KobaKo, you don't mention any suspend/resume in this bug report, but
+> >>> neither patch should make any difference unless suspend/resume is
+> >>> involved.  Does the platform sleep as expected *before* suspend, but
+> >>> fail to sleep after resume?
+> >>>
+> >>> Or maybe some individual device was suspended via runtime power
+> >>> management, and that device lost its L1 PM Substates config?  I don't
+> >>> know if there's a way to disable runtime PM easily.
+> >>
+> >> Koba, per your bugzilla update, the issue happens even without
+> >> suspend/resume.  And we don't know whether some particular device is
+> >> responsible.
+> >>
+> >> But if we save/restore L1SS state, we can sleep deeper than PC3.  If
+> >> we don't preserve L1SS state, we can't.
+> >>
+> >> We definitely want to preserve the L1SS state, but we can't simply
+> >> apply 4ff116d0d5fd ("PCI/ASPM: Save L1 PM Substates Capability for
+> >> suspend/resume") again because it caused its own regressions [1,2,3]
+> >>
+> >> So somebody needs to figure out what was wrong with 4ff116d0d5fd, fix
+> >> it, verify that it doesn't cause the issues reported by Tasev, Thomas,
+> >> and Mark, and then we can apply it.
+> > 
+> > Good days, discussed with Kai-Heng and he mentioned  the GPU may not
+> > be pulled off the power.
+> > then the GPU needs L1ss to get into power saving.
+> > 
+> > I will investigate further on this way.
+> 
+> Did anything come our of this?
+> 
+> FWIW, I'm considering to drop this from the list of tracked regressions.
+> Yes, this is a regression, but it's caused by fix for another (worse)
+> regression -- so there is nothing we can do for now anyway (and Koba
+> seems motivated already to look properly into all of this). Or does
+> anyone consider this to be a problem?
 
+I would drop this from the regression list.
 
----- From: Uladzislau Rezki <urezki@gmail.com> -- Sent: 2023-05-23 - 12:28 =
-----
+Yes, bz 217321 is a bug, and yes, 4ff116d0d5fd is a partial fix for
+it, but 4ff116d0d5fd causes worse problems (it breaks resume from
+suspend) than just living with bz 217321, which is a "mere" power
+consumption issue.
 
-> On Tue, May 23, 2023 at 08:52:21AM +0700, Bagas Sanjaya wrote:
->> On Mon, May 22, 2023 at 09:04:05PM +0200, Forza wrote:
->> > I have a similar experience with kernel 6.3 where vmalloc fails in a s=
-imilar way. I was able to reproduce it in a QEMU VM as well as on my system=
-.=20
->> >=20
->> > https://lore.kernel.org/all/d11418b6-38e5-eb78-1537-c39245dc0b78@tnonl=
-ine.net/T/
->>=20
->> Thanks for your similar report. Telling regzbot about it:
->>=20
->> #regzbot link: https://lore.kernel.org/all/d11418b6-38e5-eb78-1537-c3924=
-5dc0b78@tnonline.net/
->>=20
-> It is good that you can reproduce it. Could you please test below patch?
+I updated bz 217321 to drop the "regression" label there.
 
-Yes, applied it to my test VM and will let it run over night to see how it =
-turns out. I'll post again tomorrow.=20
-
-Thanks.=20
->=20
-> <snip>
-> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-> index 31ff782d368b..7a06452f7807 100644
-> --- a/mm/vmalloc.c
-> +++ b/mm/vmalloc.c
-> @@ -2957,14 +2957,18 @@ vm_area_alloc_pages(gfp_t gfp, int nid,
->                         page =3D alloc_pages(alloc_gfp, order);
->                 else
->                         page =3D alloc_pages_node(nid, alloc_gfp, order);
-> +
->                 if (unlikely(!page)) {
-> -                       if (!nofail)
-> -                               break;
-> +                       if (nofail)
-> +                               alloc_gfp |=3D __GFP_NOFAIL;
->=20
-> -                       /* fall back to the zero order allocations */
-> -                       alloc_gfp |=3D __GFP_NOFAIL;
-> -                       order =3D 0;
-> -                       continue;
-> +                       /* Fall back to the zero order allocations. */
-> +                       if (order || nofail) {
-> +                               order =3D 0;
-> +                               continue;
-> +                       }
-> +
-> +                       break;
->                 }
->=20
->                 /*
-> <snip>
->=20
-> Thanks!
->=20
-> --
-> Uladzislau Rezki
-
-
+Bjorn
