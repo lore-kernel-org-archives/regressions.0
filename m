@@ -1,135 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 239979465
-	for <regressions@lists.linux.dev>; Tue, 23 May 2023 21:49:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DEC0C4339B;
-	Tue, 23 May 2023 21:49:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1684878544;
-	bh=TnJ6jiYtBK7mcF14WGtDQDIOiNdcMlMjELE+BXkZbY4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=TB69PdLWUvfv6+L6MkDlF6NTd9hDwdwBHWlnxO8TMkvTJu4u7ZZKr/yzpOAWU7Cff
-	 2WEuWCU+iz6iH37ZasvPHnfyDnq8ejY6j1pl30jc7dGM9sHztqircMlesojoTShtMC
-	 smx/yMir4gOEJdukrQ7vOToXND6XPnCy/bjWMtTEzrqh2x20o+qDCI8ggdrz6ReNuY
-	 uoV4cBzwne4iKzipfKFLKw7WXcUF6ztevyZtx9kjxJ6wdiplrKE9iUXrQev81Fn2p6
-	 atoCjxgF2Gbx/QLxGahbXFtZkqTzBhmwSEMWuSQaRCHHsjbrk0UxLWit0Kl5uBTQ0i
-	 VIxmeFWmoPl0A==
-Date: Tue, 23 May 2023 16:49:02 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Koba Ko <koba.ko@canonical.com>, linux-pci@vger.kernel.org,
-	Vidya Sagar <vidyas@nvidia.com>,
-	Ajay Agarwal <ajayagarwal@google.com>,
-	Tasev Nikola <tasev.stefanoska@skynet.be>,
-	Mark Enriquez <enriquezmark36@gmail.com>,
-	Thomas Witt <kernel@witt.link>
-Subject: Re: [Bug 217321] New: Intel platforms can't sleep deeper than PC3
- during long idle
-Message-ID: <ZG00zhXPMigJIISI@bhelgaas>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02BD29465
+	for <regressions@lists.linux.dev>; Tue, 23 May 2023 21:53:02 +0000 (UTC)
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1ae3f6e5d70so1678175ad.1
+        for <regressions@lists.linux.dev>; Tue, 23 May 2023 14:53:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fromorbit-com.20221208.gappssmtp.com; s=20221208; t=1684878782; x=1687470782;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Im/fXNrdtdh448/x5vPWa+KOEv9ipXtehLMOS6lDlss=;
+        b=uZAsBWtqR4l/fFgleDDi1e4cBPSXQn6MLIkXNqldkh28u96vZVG4S7tzPCzjl8kkk4
+         3sJyz5LXU3JCKwd5EXZLOTHGXqfIl4DvHwuILOtZ52f/l7yIcByUZyQBjXo9+O33Jraa
+         ETqCVuFWhNVNkGO1s7/KXoFztBAMw8K7NZnNxxJuLMx7pKWNRQ4KLBfcCiOxwkbZssU0
+         axah+nx/7Fv1Lcm+U+7PxW5IR5/Xl4jTypJgk72uOnPsQeZ1DnB6hGWZ6QbVgHYJ3N9C
+         6vvW8ymvWcbnIGvR1peDLbdyaGLWeIwCg52h/tmIB/hGoq5rqshphSWZQMsjIXBvFck2
+         v+NA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684878782; x=1687470782;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Im/fXNrdtdh448/x5vPWa+KOEv9ipXtehLMOS6lDlss=;
+        b=Erutpsfv9IxIGQ6wH9wgZE5GD1RTwiyeX1lIisabjsBrL3x14wfbRloSRIBEws6uxR
+         e+CwIb6hwDw5DPU667KILjmW4+WNyTNi4fRmvtA8krHDNx7aQdClWlfI0Qdm+fjyFHfN
+         ynko8GRMEpXTrwja7evt8MalJfZQ0ol/uR/sN597jNXZnP6g1b8pKeKn6pG4KH6sbsX7
+         gduKI2pLgvzSKqeT394LvMiUpMq8RWJ2Aye1byDG78dLLI9RrbOl3vYE/D2QFHs6oaUl
+         xF/FZp4IyzMTHuXpI6nMfE74cblFSzPocbqNfU1xUh0lDaLJpIiz3jJVbsjeE3+dml7/
+         jbiA==
+X-Gm-Message-State: AC+VfDxA9PppbH0m9OSfDxF+DUbaLgPVFcMDuWtDFpAxCJeTeES6O47b
+	v5lvyXvJRIgYMnxYK9Wecmtsow==
+X-Google-Smtp-Source: ACHHUZ7fyzANrlD5gDYJjywUoAY1KKzWqRPDkZMuU5ssh+xI2BalbzVXVwX1qAbOA/A/CxsEdUYjEg==
+X-Received: by 2002:a17:902:c40d:b0:1af:ddef:f605 with SMTP id k13-20020a170902c40d00b001afddeff605mr486823plk.65.1684878782390;
+        Tue, 23 May 2023 14:53:02 -0700 (PDT)
+Received: from dread.disaster.area (pa49-179-0-188.pa.nsw.optusnet.com.au. [49.179.0.188])
+        by smtp.gmail.com with ESMTPSA id j16-20020a170902759000b001a6a6169d45sm7279540pll.168.2023.05.23.14.53.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 May 2023 14:53:01 -0700 (PDT)
+Received: from dave by dread.disaster.area with local (Exim 4.96)
+	(envelope-from <david@fromorbit.com>)
+	id 1q1ZwB-0035VU-0I;
+	Wed, 24 May 2023 07:52:59 +1000
+Date: Wed, 24 May 2023 07:52:59 +1000
+From: Dave Chinner <david@fromorbit.com>
+To: Pengfei Xu <pengfei.xu@intel.com>
+Cc: Eric Biggers <ebiggers@kernel.org>,
+	"Darrick J. Wong" <djwong@kernel.org>,
+	Bagas Sanjaya <bagasdotme@gmail.com>, linux-xfs@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, heng.su@intel.com,
+	dchinner@redhat.com, lkp@intel.com,
+	Linux Regressions <regressions@lists.linux.dev>
+Subject: Re: [Syzkaller & bisect] There is BUG: unable to handle kernel NULL
+ pointer dereference in xfs_extent_free_diff_items in v6.4-rc3
+Message-ID: <ZG01u5KGsCBnWVGu@dread.disaster.area>
+References: <ZGrOYDZf+k0i4jyM@xpf.sh.intel.com>
+ <ZGsOH5D5vLTLWzoB@debian.me>
+ <20230522160525.GB11620@frogsfrogsfrogs>
+ <20230523000029.GB3187780@google.com>
+ <ZGxry4yMn+DKCWcJ@dread.disaster.area>
+ <ZGyD8CNObpTbEeGQ@xpf.sh.intel.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <844f3819-c819-bc55-0518-0b1b9651825f@leemhuis.info>
+In-Reply-To: <ZGyD8CNObpTbEeGQ@xpf.sh.intel.com>
 
-On Mon, May 22, 2023 at 01:45:55PM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
-> On 05.05.23 08:56, Koba Ko wrote:
-> > On Thu, May 4, 2023 at 5:23 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> >> [+cc Koba, Ajay, Tasev, Mark, Thomas, regressions list]
-> >> On Tue, Apr 11, 2023 at 03:42:29PM -0500, Bjorn Helgaas wrote:
-> >>> On Tue, Apr 11, 2023 at 08:32:04AM +0000, bugzilla-daemon@kernel.org wrote:
-> >>>> https://bugzilla.kernel.org/show_bug.cgi?id=217321
-> >>>> ...
-> >>>>         Regression: No
-> >>>>
-> >>>> [Symptom]
-> >>>> Intel cpu can't sleep deeper than pcˇ during long idle
-> >>>> ~~~
-> >>>> Pkg%pc2 Pkg%pc3 Pkg%pc6 Pkg%pc7 Pkg%pc8 Pkg%pc9 Pk%pc10
-> >>>> 15.08   75.02   0.00    0.00    0.00    0.00    0.00
-> >>>> 15.09   75.02   0.00    0.00    0.00    0.00    0.00
-> >>>> ^CPkg%pc2       Pkg%pc3 Pkg%pc6 Pkg%pc7 Pkg%pc8 Pkg%pc9 Pk%pc10
-> >>>> 15.38   68.97   0.00    0.00    0.00    0.00    0.00
-> >>>> 15.38   68.96   0.00    0.00    0.00    0.00    0.00
-> >>>> ~~~
-> >>>> [How to Reproduce]
-> >>>> 1. run turbostat to monitor
-> >>>> 2. leave machine idle
-> >>>> 3. turbostat show cpu only go into pc2~pc3.
-> >>>>
-> >>>> [Misc]
-> >>>> The culprit are this
-> >>>> a7152be79b62) Revert "PCI/ASPM: Save L1 PM Substates Capability for
-> >>>> suspend/resume”
-> >>>>
-> >>>> if revert a7152be79b62, the issue is gone
-> >>>
-> >>> Relevant commits:
-> >>>
-> >>>   4ff116d0d5fd ("PCI/ASPM: Save L1 PM Substates Capability for suspend/resume")
-> >>>   a7152be79b62 ("Revert "PCI/ASPM: Save L1 PM Substates Capability for suspend/resume"")
-> >>>
-> >>> 4ff116d0d5fd appeared in v6.1-rc1.  Prior to 4ff116d0d5fd, ASPM L1 PM
-> >>> Substates configuration was not preserved across suspend/resume, so
-> >>> the system *worked* after resume, but used more power than expected.
-> >>>
-> >>> But 4ff116d0d5fd caused resume to fail completely on some systems, so
-> >>> a7152be79b62 reverted it.  With a7152be79b62 reverted, ASPM L1 PM
-> >>> Substates configuration is likely not preserved across suspend/resume.
-> >>> a7152be79b62 appeared in v6.2-rc8 and was backported to the v6.1
-> >>> stable series starting with v6.1.12.
-> >>>
-> >>> KobaKo, you don't mention any suspend/resume in this bug report, but
-> >>> neither patch should make any difference unless suspend/resume is
-> >>> involved.  Does the platform sleep as expected *before* suspend, but
-> >>> fail to sleep after resume?
-> >>>
-> >>> Or maybe some individual device was suspended via runtime power
-> >>> management, and that device lost its L1 PM Substates config?  I don't
-> >>> know if there's a way to disable runtime PM easily.
-> >>
-> >> Koba, per your bugzilla update, the issue happens even without
-> >> suspend/resume.  And we don't know whether some particular device is
-> >> responsible.
-> >>
-> >> But if we save/restore L1SS state, we can sleep deeper than PC3.  If
-> >> we don't preserve L1SS state, we can't.
-> >>
-> >> We definitely want to preserve the L1SS state, but we can't simply
-> >> apply 4ff116d0d5fd ("PCI/ASPM: Save L1 PM Substates Capability for
-> >> suspend/resume") again because it caused its own regressions [1,2,3]
-> >>
-> >> So somebody needs to figure out what was wrong with 4ff116d0d5fd, fix
-> >> it, verify that it doesn't cause the issues reported by Tasev, Thomas,
-> >> and Mark, and then we can apply it.
-> > 
-> > Good days, discussed with Kai-Heng and he mentioned  the GPU may not
-> > be pulled off the power.
-> > then the GPU needs L1ss to get into power saving.
-> > 
-> > I will investigate further on this way.
-> 
-> Did anything come our of this?
-> 
-> FWIW, I'm considering to drop this from the list of tracked regressions.
-> Yes, this is a regression, but it's caused by fix for another (worse)
-> regression -- so there is nothing we can do for now anyway (and Koba
-> seems motivated already to look properly into all of this). Or does
-> anyone consider this to be a problem?
+On Tue, May 23, 2023 at 05:14:24PM +0800, Pengfei Xu wrote:
+>   I did not do well in two points, which led to the problem of this useless
+>   bisect info:
+>   1. Should double check "V4 Filesystem" related issue carefully, and should
+>      give reason of problem.
+>   2. Double check the bisect bad and good dmesg info, this time actually
+>      "good(actually not good)" dmesg also contains "BUG" related
+>      dmesg, but it doesn't contain the keyword "xfs_extent_free_diff_items"
+>      dmesg info, and give the wrong bisect info.
+>      Sorry for inconvenience...
 
-I would drop this from the regression list.
+I think you misunderstand.
 
-Yes, bz 217321 is a bug, and yes, 4ff116d0d5fd is a partial fix for
-it, but 4ff116d0d5fd causes worse problems (it breaks resume from
-suspend) than just living with bz 217321, which is a "mere" power
-consumption issue.
+The bisect you did was correct - the commit it
+identified was certainly does expose the underlying issue.
 
-I updated bz 217321 to drop the "regression" label there.
+The reason the bisect, while correct, is actually useless is that it
+the underlying issue that the commit tripped over is not caused by
+the change in the commit. The underlying issue has been there for a
+long while - probably a decade - and it's that old, underlying issue
+that has caused the new code to fail.
 
-Bjorn
+IOWs, the problem is not the new code (i.e. it is not a regression
+in the new code identified by the bisect), the problem is in other
+code that has been silently propagating undetected corruption for
+years. Hence the bisect is not actually useful in diagnosing the
+root cause of the problem.
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
