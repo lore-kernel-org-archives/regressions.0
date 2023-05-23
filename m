@@ -1,125 +1,96 @@
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [85.220.165.71])
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B8B71F168
-	for <regressions@lists.linux.dev>; Tue, 23 May 2023 14:54:39 +0000 (UTC)
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-	by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mtr@pengutronix.de>)
-	id 1q1TPE-0008TL-9A; Tue, 23 May 2023 16:54:32 +0200
-Received: from mtr by ptx.hi.pengutronix.de with local (Exim 4.92)
-	(envelope-from <mtr@pengutronix.de>)
-	id 1q1TPC-0000ix-7X; Tue, 23 May 2023 16:54:30 +0200
-Date: Tue, 23 May 2023 16:54:30 +0200
-From: Michael Tretter <m.tretter@pengutronix.de>
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Diederik de Haas <didi.debian@cknow.org>,
-	Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
-	Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-	Benjamin Gaignard <benjamin.gaignard@collabora.com>,
-	p.zabel@pengutronix.de, mchehab@kernel.org,
-	m.szyprowski@samsung.com, linux-media@vger.kernel.org,
-	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-	kernel@collabora.com, hverkuil-cisco@xs4all.nl,
-	Pengutronix Kernel Team <kernel@pengutronix.de>
-Subject: Re: [PATCH v2] media: verisilicon: Fix crash when probing encoder
-Message-ID: <20230523145430.GB9943@pengutronix.de>
-Mail-Followup-To: Michael Tretter <m.tretter@pengutronix.de>,
-	Linux regressions mailing list <regressions@lists.linux.dev>,
-	Diederik de Haas <didi.debian@cknow.org>,
-	Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
-	Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-	Benjamin Gaignard <benjamin.gaignard@collabora.com>,
-	p.zabel@pengutronix.de, mchehab@kernel.org,
-	m.szyprowski@samsung.com, linux-media@vger.kernel.org,
-	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-	kernel@collabora.com, hverkuil-cisco@xs4all.nl,
-	Pengutronix Kernel Team <kernel@pengutronix.de>
-References: <20230413104756.356695-1-benjamin.gaignard@collabora.com>
- <4995215.LvFx2qVVIh@bagend>
- <7c1bf9c4-f14b-30cd-2610-871f5f512d06@collabora.com>
- <12724349.O9o76ZdvQC@bagend>
- <5d871928-dcd5-3f27-e975-d1639525dad0@leemhuis.info>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B549D4C7B
+	for <regressions@lists.linux.dev>; Tue, 23 May 2023 15:13:34 +0000 (UTC)
+Received: from [192.168.1.141] ([37.4.248.58]) by mrelayeu.kundenserver.de
+ (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1M6H7o-1q3fYI1H3Y-006eJT; Tue, 23 May 2023 17:12:34 +0200
+Message-ID: <af86a1d9-cdf5-f72d-3aea-ced37d3e7c2b@i2se.com>
+Date: Tue, 23 May 2023 17:12:32 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <5d871928-dcd5-3f27-e975-d1639525dad0@leemhuis.info>
-X-Sent-From: Pengutronix Hildesheim
-X-URL: http://www.pengutronix.de/
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: mtr@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: regressions@lists.linux.dev
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: Regression: serial: imx: overrun errors on debug UART
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+ Sergey Organov <sorganov@gmail.com>, Fabio Estevam <festevam@gmail.com>,
+ =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Stefan Wahren <stefan.wahren@chargebyte.com>, linux-serial@vger.kernel.org,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Shawn Guo <shawnguo@kernel.org>, Jiri Slaby <jirislaby@kernel.org>,
+ =?UTF-8?Q?Tomasz_Mo=c5=84?= <tomasz.mon@camlingroup.com>,
+ Linux ARM <linux-arm-kernel@lists.infradead.org>
+References: <2c29454b-9369-4360-8eb4-c151f59460cb@i2se.com>
+ <d660e3cf-5686-d989-3b59-efe83ec9d590@linux.intel.com>
+ <CAOMZO5A+GujiQY-UT3Q-8o0AKujJb_4kY+5L4x1e07ovGfo31w@mail.gmail.com>
+ <9e22f237-f3ee-0415-9e6b-89a137769b8f@i2se.com>
+ <5d59dec6-9f6f-7b20-1221-f57c94b29cca@i2se.com>
+ <20230325151100.mskydt3hwbnspqp4@pengutronix.de>
+ <cb16ddb7-f22f-d637-8670-bccc77add0af@i2se.com> <87mt3ynsa7.fsf@osv.gnss.ru>
+ <d5009984-d2eb-0343-5bb4-df8a7f526121@i2se.com> <87sfcy8ncu.fsf@osv.gnss.ru>
+ <534ac8db-ae8f-1ea3-9aa9-2105db7f7a52@i2se.com>
+ <203ce87f-2898-eb10-2f8c-f237859d75e6@leemhuis.info>
+Content-Language: en-US
+From: Stefan Wahren <stefan.wahren@i2se.com>
+In-Reply-To: <203ce87f-2898-eb10-2f8c-f237859d75e6@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:sEbmaW1JDon0+hqyoaTCNWWmbTDHXLIHs3rlX986ChIrl9Lvl2F
+ H+h4G+OjM+Ns6kIH+7ZgcpAF+5uHObK0o16nqzs5h/0qHZC4ZZ3eUtrOhOhlu4aO4xqAk4Q
+ FCbhMWKAmg92QylpFCSUoAsTolc9hBxhbJ38TBfFJgvWPyzDJS2kNJbdg34roTa1CatPKKM
+ epGj5m545mZ4tzv8ryYAA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:GH6w6FREy9M=;6S3n9umgjaGIWcy8cTLMGm960ep
+ rrCKJAXIwpvPOdRFqeMJUWw10MBlIW/1NFhJ8bOlb+rELgt29/TUngMNBS+2Z+pOXjryGf0Lj
+ hdqNMyg4W/SdgJYzCazCUKrWZqLkjh1V9UHx8AHbn/brvAngnOfKs42XpX0ZgpWJdVGpGn/+r
+ Hk45P2yl+Qv9A7CYdYUGDVekuKhN7Fu8AyNrngum5XsyCbkwp+JP6RA4xROJi8LwZs8rUi4wj
+ 8LsuCzS6mWVRyBK92uE6/wMPQDFXGiQWpcoTsKOk72wnQhBVPwIOROOgYqGLDDg7XeoVUb0uY
+ /WrqyYUGzdRdTF+ksFsjiHC76y/M+jb5csrdT9xxaj5IOlHl0Bog1me5aSREy4XOa/TwewMA6
+ sk3aRa6DTGoQb3Br1L1pkiNGCltjZ6mFK8ooQXcqWnGrBQ3c30XswFfvk/R5IyomQ3kihbcxS
+ zqRnTGEvvOZpt5zK2Dqv3Z26hAqwp0EDw0FhXJ/rnY26T7RQ+yJHjCJSO5r31Px8sdltHooFK
+ nJd9w3HiwgcpRhwdUCDbSdbzxMYCD/gfL3HLtPUoZCYahjGPKgfXEU/4lHHvnbtmgrRft6L4N
+ BLRtD8vtUPWDwo514xDfcgy6ihp2gSu9AKZjK6TQCgkglWK3G2TGXehGzpcHI/wwtMcDAPFsT
+ hVIx9hVpS+wyyhmBW5RNWXC6h8bfS7gv6xoOx8gNWw==
 
-On Tue, 23 May 2023 12:50:42 +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
-> CCing the Regression list and a bunch of other people that were CCed in
-> threads that look related:
+Hi Thorsten,
 
-Thanks!
+Am 22.05.23 um 11:25 schrieb Linux regression tracking (Thorsten Leemhuis):
+> Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
+> for once, to make this easily accessible to everyone.
+> 
+> Stefan, was this regression ever solved? It doesn't look like it, but
+> maybe I'm missing something.
+> 
+> If it wasn't solved: what needs to be done to get this rolling again?
+
+thanks for the reminder. From a user point of view this issue hasn't 
+been fixed so far. For our product we just reverted the commit in a 
+downstream repo.
+
+ From my understanding there was already an issue there and the 
+optimizing commit by Tomasz just make the situation worse. Unfortunately 
+my time budget to investigate this issue further is exhausted, so i 
+stopped working at this.
+
+In case someone can give clear instructions to investigate this further, 
+i will try to look at it in my spare time. But i cannot make any promises.
+
+Best regards
 
 > 
-> On 23.05.23 00:38, Diederik de Haas wrote:
-> > On Monday, 22 May 2023 18:17:39 CEST Benjamin Gaignard wrote:
-> >> Le 20/05/2023 à 00:34, Diederik de Haas a écrit :
-> >>> On Thursday, 13 April 2023 21:52:50 CEST Nicolas Dufresne wrote:
-> > [...]
-> >>> When I booted into my 6.4-rc1 (but also rc2) kernel on my
-> >>> Pine64 Quartz64 Model A, I noticed a crash which seems the same as
-> >>> above, but I didn't have such a crash with my 6.3 kernel.
-> >>> Searching for 'hantro' led me to this commit as the most likely culprit
-> >>> but when I build a new 6.4-rcX kernel with this commit reverted,
-> >>> I still had this crash.
-> >>> Do you have suggestions which commit would then be the likely culprit?
-> >>
-> >> This patch fix the crash at boot time, revert it doesn't seem to be the
-> >> solution. Maybe this proposal from Marek can help you ?
-> >>
-> >> https://patchwork.kernel.org/project/linux-media/patch/20230421104759.2236463-1-m.szyprowski@samsung.com/
-> > 
-> > That helped :) After applying that patch I no longer have the crash.
-> > Thanks!
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> --
+> Everything you wanna know about Linux kernel regression tracking:
+> https://linux-regtracking.leemhuis.info/about/#tldr
+> If I did something stupid, please tell me, as explained on that page.
 > 
-> That regression fix is now a month old, but not yet merged afaics --
-> guess due to Nicolas comment that wasn't addressed yet and likely
-> requires a updated patch.
-
-I agree with Nicolas comment on that patch and it needs to be updated.
-
+> #regzbot poke
 > 
-> Michael afaics a week ago posted a patch that to my *very limited
-> understanding of things* (I hope I don't confuse matters here!) seems to
-> address the same problem, but slightly differently:
-> https://lore.kernel.org/all/20230516091209.3098262-1-m.tretter@pengutronix.de/
-
-Correct, my patch addresses the same problem.
-
-> 
-> No reply yet.
-> 
-> That's all a bit unfortunate, as it's not how regression fixes should be
-> dealt with -- and caused multiple people headaches that could have been
-> avoided. :-/
-> 
-> But well, things happen. But it leads to the question:
-> 
-> How can we finally address the issue quickly now to ensure is doesn't
-> cause headaches for even more people?
-> 
-> Marek, Michael, could you work on a patch together that we then get
-> somewhat fast-tracked to Linus to avoid him getting even more unhappy
-> about the state of things[1]?
-
-Marek, if you have an updated patch, I will happily test and review it.
-Otherwise, please take a look at my patch.
-
-Michael
