@@ -1,119 +1,113 @@
-Received: from madras.collabora.co.uk (madras.collabora.co.uk [46.235.227.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7661A1E501;
-	Tue, 23 May 2023 10:27:19 +0000 (UTC)
-Received: from [IPV6:2405:201:0:21ea:e49:10dd:40c0:e842] (unknown [IPv6:2405:201:0:21ea:e49:10dd:40c0:e842])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
-	(No client certificate requested)
-	(Authenticated sender: shreeya)
-	by madras.collabora.co.uk (Postfix) with ESMTPSA id 9FE4A6606E75;
-	Tue, 23 May 2023 11:27:09 +0100 (BST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1684837632;
-	bh=/cZpY/DKk5fAZOo6SiYRERzxSUjyx353F4endTRRSo4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=btnZAAQPlKxgroncGmTp3yjgSRL5MgT6cZvPcPX4larqhFPob0jvaz5BeIOl18OPl
-	 PZd+Pbf8QIJY5xSHJ6y57ZzWy3167LwYDoLqg3ENVXMBaBsDVZ5R3fJBJDu+ePfeKi
-	 Frh1Mc313r6OdfIUrP1trhhPaqCXTlOWfwecZgDZwd3tkNNp36VndrF8XXwgYVYMGc
-	 MjoDNgU78Aza3z8wgCJhMaffnZFAWFhqdDVzLFYgmivitI403nWwNZbb2oNXJeQKDG
-	 ZLUcrBeZT51Pw5gLMhdvqLf60ndM2RWjKiSgmILIOKmpI7cU/v+nf5+KAw3wn1SGmQ
-	 3fyLvdowXCRyw==
-Message-ID: <cff33e12-3d80-7e62-1993-55411ccabc01@collabora.com>
-Date: Tue, 23 May 2023 15:57:06 +0530
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D33AB1F92E
+	for <regressions@lists.linux.dev>; Tue, 23 May 2023 10:28:42 +0000 (UTC)
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-4f4b0a0b557so2255275e87.1
+        for <regressions@lists.linux.dev>; Tue, 23 May 2023 03:28:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1684837721; x=1687429721;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=eWUyqe1Hx0qJvTJ8mr6ssQT6TVvbWeNPeCd8kj4GkHM=;
+        b=hOve3PIgESzmA1/VwP9qwbqQQJq41+7E4NS4NExcIxi7kGA9xY3KUSYUgZ6E2CR6eu
+         teZIz2BZSliKnG9iC/5e0txWLNlb5yHuQnuIX2GotfaWc8z1S1Cg08mETbuGrWqoTNlh
+         jHw4vTN0K3+s+UbHSaa+o5d2EVBvI4YssvxDkYVk5/3gB/tRGJNfi1/S2VtF0tQDKV1D
+         q/s/OeGc8Tfr0XUc701qADiqbWwX9QX0RsryuvcjBY4d6iLh+DKD0RBZALAsoFKZk2/s
+         3duS0k4z3T4Z2W2RBHRM7kEfryP6nJLWdN77HgkrIRDel9hXu5CFr8T3k6nA+D38ken9
+         BAcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684837721; x=1687429721;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eWUyqe1Hx0qJvTJ8mr6ssQT6TVvbWeNPeCd8kj4GkHM=;
+        b=iTSB4IYKwNnoTch9zWbzPmKYtKRfCB9ABoWW0to4bNBIbgRnF98wB1iiJqlBdbOSG9
+         tpUvmyHbPFr/Yix5/kARBw87hcS1pOjaPAdLPpIAI9mQPRxMBVM2tMyVx1ugFOGPB1o9
+         XqV1qw64mP0OfHoZnBq8jyIHGnM6yv5fEnucfAKlt6nxupsrs1Od8tUsrXqikrj/VIIi
+         jpGfObbCpit+cK/EC06Y1xmiSzp6HqYgS5XylCBb4DtIiCAhSUE3G+FFEEPebOvFIlxq
+         kvOZa2eBVQhVtOJ9EMpOjY0FaaYlQVwfJ5Y/4einq4IQXhEZGSaQxb1jH5fdQfz64K5g
+         JTQw==
+X-Gm-Message-State: AC+VfDz8+WEqK8tf6ShHxymRSiRdQaXLHk5NGxcEC0x2ENEEZdHcgKMl
+	AsdN8J/xyOV+UZvdyrmD3GU=
+X-Google-Smtp-Source: ACHHUZ7FKsiuoxhPaIQ8Yvpa5bGSvahqza7ModaNmEwxSScEs404CydwamQ+ox/0Y2qLDp7NTdU9PA==
+X-Received: by 2002:ac2:555e:0:b0:4f3:880b:285a with SMTP id l30-20020ac2555e000000b004f3880b285amr4572686lfk.29.1684837720546;
+        Tue, 23 May 2023 03:28:40 -0700 (PDT)
+Received: from pc636 (host-90-235-19-70.mobileonline.telia.com. [90.235.19.70])
+        by smtp.gmail.com with ESMTPSA id t15-20020ac243af000000b004f121c8beddsm1297639lfl.124.2023.05.23.03.28.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 May 2023 03:28:40 -0700 (PDT)
+From: Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date: Tue, 23 May 2023 12:28:37 +0200
+To: Bagas Sanjaya <bagasdotme@gmail.com>, Forza <forza@tnonline.net>
+Cc: Forza <forza@tnonline.net>, Linux btrfs <linux-btrfs@vger.kernel.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Regressions <regressions@lists.linux.dev>,
+	Linux Stable <stable@vger.kernel.org>, Chris Mason <clm@fb.com>,
+	Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
+	a1bert@atlas.cz, urezki@gmail.com
+Subject: Re: Fwd: vmalloc error: btrfs-delalloc btrfs_work_helper [btrfs] in
+ kernel 6.3.x
+Message-ID: <ZGyVVQxnw6Tn7Xb8@pc636>
+References: <efa04d56-cd7f-6620-bca7-1df89f49bf4b@gmail.com>
+ <fcf1d04.faed4a1a.18844d8e78f@tnonline.net>
+ <ZGwcVTpQNBoJHBB+@debian.me>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Subject: Re: [PATCH v4] Makefile.compiler: replace cc-ifversion with
- compiler-specific macros
-Content-Language: en-US
-To: Nick Desaulniers <ndesaulniers@google.com>,
- Masahiro Yamada <masahiroy@kernel.org>, Greg KH
- <gregkh@linuxfoundation.org>, Maksim Panchenko <maks@meta.com>,
- =?UTF-8?Q?Ricardo_Ca=c3=b1uelo?= <ricardo.canuelo@collabora.com>
-Cc: Michal Marek <michal.lkml@markovi.net>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- clang-built-linux <llvm@lists.linux.dev>, Bill Wendling <morbo@google.com>,
- Nathan Chancellor <nathan@kernel.org>, regressions@lists.linux.dev,
- "gustavo.padovan@collabora.com" <gustavo.padovan@collabora.com>,
- Guillaume Charles Tucker <guillaume.tucker@collabora.com>,
- denys.f@collabora.com, kernelci@lists.linux.dev
-References: <CAKwvOd=4hBcU4fAkddU0b-GOZc9FzTZoj3PFW6ZZrX0jS8x+bg@mail.gmail.com>
- <17c91d37-7d9c-0df4-2438-2b30ca0b5777@collabora.com>
- <CAKwvOdk4QO8x_bs64fFRCsMu__AjhXd4Ew2KfgzQOb9Q3FMqSA@mail.gmail.com>
- <b5d0cf82-0e42-f6a1-c9f5-c145fdc4c622@collabora.com>
- <CAKwvOdkFxu9hYSL_RCXadpR0dQd1+dZmAUVXdfFiLUfxg4D_Xw@mail.gmail.com>
- <878rdlk9bi.fsf@rcn-XPS-13-9305.i-did-not-set--mail-host-address--so-tickle-me>
- <CAKwvOd=8LVU+iANkFx18Wm1jg7gYiAXovAmo9t5ZZaVdMULn-Q@mail.gmail.com>
- <875y8ok9b5.fsf@rcn-XPS-13-9305.i-did-not-set--mail-host-address--so-tickle-me>
- <CAKwvOdmJJibt6sHSp91v2s7BxUWBC6xG7F7+3C6gUxNMzZ2xRA@mail.gmail.com>
- <87353ok78h.fsf@rcn-XPS-13-9305.i-did-not-set--mail-host-address--so-tickle-me>
- <2023052247-bobtail-factsheet-d104@gregkh>
- <CAKwvOd=2zAV_mizvzLFdyHE_4OzBY5OVu6KLWuQPOMZK37vsmQ@mail.gmail.com>
-From: Shreeya Patel <shreeya.patel@collabora.com>
-In-Reply-To: <CAKwvOd=2zAV_mizvzLFdyHE_4OzBY5OVu6KLWuQPOMZK37vsmQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZGwcVTpQNBoJHBB+@debian.me>
 
-Hi Nick and Masahiro,
+On Tue, May 23, 2023 at 08:52:21AM +0700, Bagas Sanjaya wrote:
+> On Mon, May 22, 2023 at 09:04:05PM +0200, Forza wrote:
+> > I have a similar experience with kernel 6.3 where vmalloc fails in a similar way. I was able to reproduce it in a QEMU VM as well as on my system. 
+> > 
+> > https://lore.kernel.org/all/d11418b6-38e5-eb78-1537-c39245dc0b78@tnonline.net/T/
+> 
+> Thanks for your similar report. Telling regzbot about it:
+> 
+> #regzbot link: https://lore.kernel.org/all/d11418b6-38e5-eb78-1537-c39245dc0b78@tnonline.net/
+> 
+It is good that you can reproduce it. Could you please test below patch?
 
-On 23/05/23 01:22, Nick Desaulniers wrote:
-> On Mon, May 22, 2023 at 9:52 AM Greg KH <gregkh@linuxfoundation.org> wrote:
->> On Mon, May 22, 2023 at 12:09:34PM +0200, Ricardo Cañuelo wrote:
->>> On vie, may 19 2023 at 08:57:24, Nick Desaulniers <ndesaulniers@google.com> wrote:
->>>> It could be; if the link order was changed, it's possible that this
->>>> target may be hitting something along the lines of:
->>>> https://isocpp.org/wiki/faq/ctors#static-init-order i.e. the "static
->>>> initialization order fiasco"
->>>>
->>>> I'm struggling to think of how this appears in C codebases, but I
->>>> swear years ago I had a discussion with GKH (maybe?) about this. I
->>>> think I was playing with converting Kbuild to use Ninja rather than
->>>> Make; the resulting kernel image wouldn't boot because I had modified
->>>> the order the object files were linked in.  If you were to randomly
->>>> shuffle the object files in the kernel, I recall some hazard that may
->>>> prevent boot.
->>> I thought that was specifically a C++ problem? But then again, the
->>> kernel docs explicitly say that the ordering of obj-y goals in kbuild is
->>> significant in some instances [1]:
->> Yes, it matters, you can not change it.  If you do, systems will break.
->> It is the only way we have of properly ordering our init calls within
->> the same "level".
-> Ah, right it was the initcall ordering. Thanks for the reminder.
->
-> (There's a joke in there similar to the use of regexes to solve a
-> problem resulting in two new problems; initcalls have levels for
-> ordering, but we still have (unexpressed) dependencies between calls
-> of the same level; brittle!).
->
-> +Maksim, since that might be relevant info for the BOLT+Kernel work.
->
-> Ricardo,
-> https://elinux.org/images/e/e8/2020_ELCE_initcalls_myjosserand.pdf
-> mentions that there's a kernel command line param `initcall_debug`.
-> Perhaps that can be used to see if
-> 5750121ae7382ebac8d47ce6d68012d6cd1d7926 somehow changed initcall
-> ordering, resulting in a config that cannot boot?
+<snip>
+diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+index 31ff782d368b..7a06452f7807 100644
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -2957,14 +2957,18 @@ vm_area_alloc_pages(gfp_t gfp, int nid,
+                        page = alloc_pages(alloc_gfp, order);
+                else
+                        page = alloc_pages_node(nid, alloc_gfp, order);
++
+                if (unlikely(!page)) {
+-                       if (!nofail)
+-                               break;
++                       if (nofail)
++                               alloc_gfp |= __GFP_NOFAIL;
 
+-                       /* fall back to the zero order allocations */
+-                       alloc_gfp |= __GFP_NOFAIL;
+-                       order = 0;
+-                       continue;
++                       /* Fall back to the zero order allocations. */
++                       if (order || nofail) {
++                               order = 0;
++                               continue;
++                       }
++
++                       break;
+                }
 
-Here are the links to Lava jobs ran with initcall_debug added to the 
-kernel command line.
+                /*
+<snip>
 
-1. Where regression happens (5750121ae7382ebac8d47ce6d68012d6cd1d7926)
-https://lava.collabora.dev/scheduler/job/10417706
-<https://lava.collabora.dev/scheduler/job/10417706>
+Thanks!
 
-2. With a revert of the commit 5750121ae7382ebac8d47ce6d68012d6cd1d7926
-https://lava.collabora.dev/scheduler/job/10418012 
-<https://lava.collabora.dev/scheduler/job/10418012>
-
-
-Thanks,
-Shreeya Patel
-
+--
+Uladzislau Rezki
