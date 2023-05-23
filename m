@@ -1,80 +1,125 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [85.220.165.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0327A1F173
-	for <regressions@lists.linux.dev>; Tue, 23 May 2023 14:20:59 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1q1Ssb-0007OG-Pc; Tue, 23 May 2023 16:20:49 +0200
-Message-ID: <71346a9d-d892-c473-ddff-53475191d4b0@leemhuis.info>
-Date: Tue, 23 May 2023 16:20:49 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B8B71F168
+	for <regressions@lists.linux.dev>; Tue, 23 May 2023 14:54:39 +0000 (UTC)
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+	by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <mtr@pengutronix.de>)
+	id 1q1TPE-0008TL-9A; Tue, 23 May 2023 16:54:32 +0200
+Received: from mtr by ptx.hi.pengutronix.de with local (Exim 4.92)
+	(envelope-from <mtr@pengutronix.de>)
+	id 1q1TPC-0000ix-7X; Tue, 23 May 2023 16:54:30 +0200
+Date: Tue, 23 May 2023 16:54:30 +0200
+From: Michael Tretter <m.tretter@pengutronix.de>
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Diederik de Haas <didi.debian@cknow.org>,
+	Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
+	Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+	Benjamin Gaignard <benjamin.gaignard@collabora.com>,
+	p.zabel@pengutronix.de, mchehab@kernel.org,
+	m.szyprowski@samsung.com, linux-media@vger.kernel.org,
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+	kernel@collabora.com, hverkuil-cisco@xs4all.nl,
+	Pengutronix Kernel Team <kernel@pengutronix.de>
+Subject: Re: [PATCH v2] media: verisilicon: Fix crash when probing encoder
+Message-ID: <20230523145430.GB9943@pengutronix.de>
+Mail-Followup-To: Michael Tretter <m.tretter@pengutronix.de>,
+	Linux regressions mailing list <regressions@lists.linux.dev>,
+	Diederik de Haas <didi.debian@cknow.org>,
+	Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
+	Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+	Benjamin Gaignard <benjamin.gaignard@collabora.com>,
+	p.zabel@pengutronix.de, mchehab@kernel.org,
+	m.szyprowski@samsung.com, linux-media@vger.kernel.org,
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+	kernel@collabora.com, hverkuil-cisco@xs4all.nl,
+	Pengutronix Kernel Team <kernel@pengutronix.de>
+References: <20230413104756.356695-1-benjamin.gaignard@collabora.com>
+ <4995215.LvFx2qVVIh@bagend>
+ <7c1bf9c4-f14b-30cd-2610-871f5f512d06@collabora.com>
+ <12724349.O9o76ZdvQC@bagend>
+ <5d871928-dcd5-3f27-e975-d1639525dad0@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: system hang on start-up (mlx5?)
-Content-Language: en-US, de-DE
-To: Chuck Lever III <chuck.lever@oracle.com>,
- Leon Romanovsky <leon@kernel.org>, Eli Cohen <elic@nvidia.com>
-Cc: Saeed Mahameed <saeedm@nvidia.com>,
- linux-rdma <linux-rdma@vger.kernel.org>,
- "open list:NETWORKING [GENERAL]" <netdev@vger.kernel.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <A1E5B427-897B-409E-B8E3-E417678E81F6@oracle.com>
- <DM8PR12MB54003FBFCABCCB37EE807B45AB6C9@DM8PR12MB5400.namprd12.prod.outlook.com>
- <91176545-61D2-44BF-B736-513B78728DC7@oracle.com>
- <20230504072953.GP525452@unreal>
- <46EB453C-3CEB-43E8-BEE5-CD788162A3C9@oracle.com>
- <DBFBD6F9-FAC3-4C04-A9C5-4E126BC96090@oracle.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-In-Reply-To: <DBFBD6F9-FAC3-4C04-A9C5-4E126BC96090@oracle.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1684851660;7f77a85f;
-X-HE-SMSGID: 1q1Ssb-0007OG-Pc
+In-Reply-To: <5d871928-dcd5-3f27-e975-d1639525dad0@leemhuis.info>
+X-Sent-From: Pengutronix Hildesheim
+X-URL: http://www.pengutronix.de/
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: mtr@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: regressions@lists.linux.dev
 
-[CCing the regression list, as it should be in the loop for regressions:
-https://docs.kernel.org/admin-guide/reporting-regressions.html]
+On Tue, 23 May 2023 12:50:42 +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
+> CCing the Regression list and a bunch of other people that were CCed in
+> threads that look related:
 
-On 16.05.23 21:23, Chuck Lever III wrote:
->> On May 4, 2023, at 3:02 PM, Chuck Lever III <chuck.lever@oracle.com> wrote:
->>> On May 4, 2023, at 3:29 AM, Leon Romanovsky <leon@kernel.org> wrote:
->>> On Wed, May 03, 2023 at 02:02:33PM +0000, Chuck Lever III wrote:
->>>>> On May 3, 2023, at 2:34 AM, Eli Cohen <elic@nvidia.com> wrote:
->>>>> Just verifying, could you make sure your server and card firmware are up to date?
->>>> Device firmware updated to 16.35.2000; no change.
->>>> System firmware is dated September 2016. I'll see if I can get
->>>> something more recent installed.
->>> We are trying to reproduce this issue internally.
->> More information. I captured the serial console during boot.
->> Here are the last messages:
->[…]
-> Following up.
+Thanks!
+
 > 
-> Jason shamed me into replacing a working CX-3Pro in one of
-> my lab systems with a CX-5 VPI, and the same problem occurs.
-> Removing the CX-5 from the system alleviates the problem.
+> On 23.05.23 00:38, Diederik de Haas wrote:
+> > On Monday, 22 May 2023 18:17:39 CEST Benjamin Gaignard wrote:
+> >> Le 20/05/2023 à 00:34, Diederik de Haas a écrit :
+> >>> On Thursday, 13 April 2023 21:52:50 CEST Nicolas Dufresne wrote:
+> > [...]
+> >>> When I booted into my 6.4-rc1 (but also rc2) kernel on my
+> >>> Pine64 Quartz64 Model A, I noticed a crash which seems the same as
+> >>> above, but I didn't have such a crash with my 6.3 kernel.
+> >>> Searching for 'hantro' led me to this commit as the most likely culprit
+> >>> but when I build a new 6.4-rcX kernel with this commit reverted,
+> >>> I still had this crash.
+> >>> Do you have suggestions which commit would then be the likely culprit?
+> >>
+> >> This patch fix the crash at boot time, revert it doesn't seem to be the
+> >> solution. Maybe this proposal from Marek can help you ?
+> >>
+> >> https://patchwork.kernel.org/project/linux-media/patch/20230421104759.2236463-1-m.szyprowski@samsung.com/
+> > 
+> > That helped :) After applying that patch I no longer have the crash.
+> > Thanks!
 > 
-> Supermicro SYS-6028R-T/X10DRi, v6.4-rc2
+> That regression fix is now a month old, but not yet merged afaics --
+> guess due to Nicolas comment that wasn't addressed yet and likely
+> requires a updated patch.
 
-I wondered what happened to this, as this looks stalled. Or was progress
-to fix this regression made I just missed it?
+I agree with Nicolas comment on that patch and it needs to be updated.
 
-I noticed the patch "net/mlx5: Fix irq affinity management" (
-https://lore.kernel.org/all/20230523054242.21596-15-saeed@kernel.org/
-) refers to the culprit of this regression. Is that supposed to fix this
-issue and just lacks proper tags to indicate that?
+> 
+> Michael afaics a week ago posted a patch that to my *very limited
+> understanding of things* (I hope I don't confuse matters here!) seems to
+> address the same problem, but slightly differently:
+> https://lore.kernel.org/all/20230516091209.3098262-1-m.tretter@pengutronix.de/
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+Correct, my patch addresses the same problem.
 
-#regzbot poke
+> 
+> No reply yet.
+> 
+> That's all a bit unfortunate, as it's not how regression fixes should be
+> dealt with -- and caused multiple people headaches that could have been
+> avoided. :-/
+> 
+> But well, things happen. But it leads to the question:
+> 
+> How can we finally address the issue quickly now to ensure is doesn't
+> cause headaches for even more people?
+> 
+> Marek, Michael, could you work on a patch together that we then get
+> somewhat fast-tracked to Linus to avoid him getting even more unhappy
+> about the state of things[1]?
+
+Marek, if you have an updated patch, I will happily test and review it.
+Otherwise, please take a look at my patch.
+
+Michael
