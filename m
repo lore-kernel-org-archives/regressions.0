@@ -1,97 +1,112 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E31454A840
-	for <regressions@lists.linux.dev>; Tue, 23 May 2023 10:50:51 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1q1PbI-0006Kn-VK; Tue, 23 May 2023 12:50:45 +0200
-Message-ID: <5d871928-dcd5-3f27-e975-d1639525dad0@leemhuis.info>
-Date: Tue, 23 May 2023 12:50:42 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EED2D1C750
+	for <regressions@lists.linux.dev>; Tue, 23 May 2023 12:31:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4987C433EF;
+	Tue, 23 May 2023 12:31:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1684845079;
+	bh=g2m24cQ4gdROItmruRoaFFe92RJLnSrCp+y/ymODJ8s=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=L+0fOCK34D1zmuin8Wl7I2gS8xbpwc+/hTe4sw9jiQW0h2b20dbAJPF0a34lmLh/F
+	 XmrAxb1GibB/Dxs3YT6w0dZlJyUOmhUwbidEUmlevoXGzRk38O/ww9tnPxgB0HkyJl
+	 ae0ROulk07UdRyR5wjzJ2IbmfQhdWXvdaGIfFRJfllboDOkuiBfNj3dUAQ1GESJcxR
+	 2t2wxumoQwJTHLWFtHU/ZTtOholkBfcBLDm62TGI6it7X1TYjcZWCPeR9PnSccK4nH
+	 MgoI7Mi7VM5x6dPhpms9OWUTA4srYIpad+p/SuyT8FPt59/rj/vNoR5hulsmjWYKZn
+	 VSPTIjGlA+krQ==
+Date: Tue, 23 May 2023 14:31:15 +0200 (CEST)
+From: Jiri Kosina <jikos@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+cc: Linux regressions mailing list <regressions@lists.linux.dev>, 
+    Benjamin Tissoires <benjamin.tissoires@redhat.com>, 
+    Bagas Sanjaya <bagasdotme@gmail.com>, 
+    =?ISO-8859-15?Q?Filipe_La=EDns?= <lains@riseup.net>, 
+    Bastien Nocera <hadess@hadess.net>, 
+    "open list:HID CORE LAYER" <linux-input@vger.kernel.org>, 
+    LKML <linux-kernel@vger.kernel.org>, guy.b@bluewin.ch
+Subject: Re: [regression] Since kernel 6.3.1 logitech unify receiver not
+ working properly
+In-Reply-To: <CAHk-=whvhkSk6m8_AidhofgR9nq0Md+HbNad5r1RE69tZgbv6Q@mail.gmail.com>
+Message-ID: <nycvar.YFH.7.76.2305231422180.29760@cbobk.fhfr.pm>
+References: <9b987585-0834-bb8c-3414-283c29f3f2ab@leemhuis.info> <bec024d5-4088-00ae-f7b5-7188868b1707@leemhuis.info> <b7717c43-74bf-b91d-d3ce-874493df602c@gmail.com> <CAO-hwJ+At1J_yUpX2q_dJekzZ-PoTDAvxmkTk_e4Yu0Z338bEA@mail.gmail.com>
+ <55dda0bb-fe42-6dee-28ea-00121554d092@leemhuis.info> <CAHk-=whvhkSk6m8_AidhofgR9nq0Md+HbNad5r1RE69tZgbv6Q@mail.gmail.com>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: [PATCH v2] media: verisilicon: Fix crash when probing encoder
-Content-Language: en-US, de-DE
-To: Diederik de Haas <didi.debian@cknow.org>,
- Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
- Nicolas Dufresne <nicolas.dufresne@collabora.com>,
- Benjamin Gaignard <benjamin.gaignard@collabora.com>,
- Michael Tretter <m.tretter@pengutronix.de>
-Cc: p.zabel@pengutronix.de, mchehab@kernel.org, m.szyprowski@samsung.com,
- linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
- linux-kernel@vger.kernel.org, kernel@collabora.com,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, hverkuil-cisco@xs4all.nl,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Philipp Zabel <p.zabel@pengutronix.de>
-References: <20230413104756.356695-1-benjamin.gaignard@collabora.com>
- <4995215.LvFx2qVVIh@bagend>
- <7c1bf9c4-f14b-30cd-2610-871f5f512d06@collabora.com>
- <12724349.O9o76ZdvQC@bagend>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-In-Reply-To: <12724349.O9o76ZdvQC@bagend>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1684839052;2e1d533a;
-X-HE-SMSGID: 1q1PbI-0006Kn-VK
+Content-Type: text/plain; charset=US-ASCII
 
-CCing the Regression list and a bunch of other people that were CCed in
-threads that look related:
+On Mon, 22 May 2023, Linus Torvalds wrote:
 
-On 23.05.23 00:38, Diederik de Haas wrote:
-> On Monday, 22 May 2023 18:17:39 CEST Benjamin Gaignard wrote:
->> Le 20/05/2023 à 00:34, Diederik de Haas a écrit :
->>> On Thursday, 13 April 2023 21:52:50 CEST Nicolas Dufresne wrote:
-> [...]
->>> When I booted into my 6.4-rc1 (but also rc2) kernel on my
->>> Pine64 Quartz64 Model A, I noticed a crash which seems the same as
->>> above, but I didn't have such a crash with my 6.3 kernel.
->>> Searching for 'hantro' led me to this commit as the most likely culprit
->>> but when I build a new 6.4-rcX kernel with this commit reverted,
->>> I still had this crash.
->>> Do you have suggestions which commit would then be the likely culprit?
->>
->> This patch fix the crash at boot time, revert it doesn't seem to be the
->> solution. Maybe this proposal from Marek can help you ?
->>
->> https://patchwork.kernel.org/project/linux-media/patch/20230421104759.2236463-1-m.szyprowski@samsung.com/
+> > FWIW, in case anybody is interested in a status update: one reporter
+> > bisected the problem down to 586e8fede79 ("HID: logitech-hidpp: Retry
+> > commands when device is busy"); reverting that commit on-top of 6.3
+> > fixes the problem for that reporter. For that reporter things also work
+> > on 6.4-rc; but for someone else that is affected that's not the case.
+
+FWIW, I was pretty much away for past few weeks as well, same as Benjamin 
+as Bastien. Which is unfortunate timing, but that's how things pan out 
+sometimes.
+
+> Hmm. It's likely timing-dependent.
 > 
-> That helped :) After applying that patch I no longer have the crash.
-> Thanks!
+> But that code is clearly buggy.
+> 
+> If the wait_event_timeout() returns early, the device hasn't replied,
+> but the code does
+> 
+>                 if (!wait_event_timeout(hidpp->wait, hidpp->answer_available,
+>                                         5*HZ)) {
+>                         dbg_hid("%s:timeout waiting for response\n", __func__);
+>                         memset(response, 0, sizeof(struct hidpp_report));
+>                         ret = -ETIMEDOUT;
+>                 }
+> 
+> and then continues to look at the response _anyway_.
 
-That regression fix is now a month old, but not yet merged afaics --
-guess due to Nicolas comment that wasn't addressed yet and likely
-requires a updated patch.
+Yeah; we are zeroing it out, but that doesn't really make things any 
+better in principle, given all the dereferences later.
 
-Michael afaics a week ago posted a patch that to my *very limited
-understanding of things* (I hope I don't confuse matters here!) seems to
-address the same problem, but slightly differently:
-https://lore.kernel.org/all/20230516091209.3098262-1-m.tretter@pengutronix.de/
+The issue seems to be existing ever since 2f31c52529 ("HID: Introduce 
+hidpp, a module to handle Logitech hid++ devices") when this whole driver 
+was introduced, as far as I can tell.
 
-No reply yet.
+> Now, depending on out hardening options, that response may have been 
+> initialized by the compiler, or may just be random stack contents.
 
-That's all a bit unfortunate, as it's not how regression fixes should be
-dealt with -- and caused multiple people headaches that could have been
-avoided. :-/
+Again, as in case of timeout the buffer is just zeroed out, I'd just much 
+more expect NULL pointer dereference in such case. Which is not what we 
+are seeing here.
 
-But well, things happen. But it leads to the question:
+> That bug is pre-existing (ie the problem was not introduced by that 
+> commit), but who knows if the retry makes things worse (ie if it then 
+> triggers on a retry, the response data will be the *previous* response).
+> 
+> The whole "goto exit" games should be removed too, because we're in a
+> for-loop, and instead of "goto exit" it should just do "break".
+> 
+> IOW, something like this might be worth testing.
+> 
+> That said, while I think the code is buggy, I doubt this is the actual
+> cause of the problem people are reporting. But it would be lovely to
+> hear if the attached patch makes any difference, and I think this is
+> fixing a real - but unlikely - problem anyway.
+> 
+> And obviously it might be helpful to actually enable those dbg_hid()
+> messages, but I didn't look at what the magic config option to do so
+> was.
 
-How can we finally address the issue quickly now to ensure is doesn't
-cause headaches for even more people?
+dbg_hid() is just pr_debug(), which means that on kernels with 
+CONFIG_DYNAMIC_DEBUG, this makes use of the dynamic debug facility; 
+otherwsie it just becomes printk(KERN_DEBUG...).
 
-Marek, Michael, could you work on a patch together that we then get
-somewhat fast-tracked to Linus to avoid him getting even more unhappy
-about the state of things[1]?
+Thanks,
 
-Ciao, Thorsten
+-- 
+Jiri Kosina
+SUSE Labs
 
-[1] see
-https://lore.kernel.org/all/CAHk-=wgzU8_dGn0Yg+DyX7ammTkDUCyEJ4C=NvnHRhxKWC7Wpw@mail.gmail.com/
