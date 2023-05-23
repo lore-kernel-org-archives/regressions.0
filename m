@@ -1,96 +1,116 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.131])
+Received: from madras.collabora.co.uk (madras.collabora.co.uk [46.235.227.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B549D4C7B
-	for <regressions@lists.linux.dev>; Tue, 23 May 2023 15:13:34 +0000 (UTC)
-Received: from [192.168.1.141] ([37.4.248.58]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1M6H7o-1q3fYI1H3Y-006eJT; Tue, 23 May 2023 17:12:34 +0200
-Message-ID: <af86a1d9-cdf5-f72d-3aea-ced37d3e7c2b@i2se.com>
-Date: Tue, 23 May 2023 17:12:32 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFC7D20681
+	for <regressions@lists.linux.dev>; Tue, 23 May 2023 16:25:24 +0000 (UTC)
+Received: from benjamin-XPS-13-9310.. (unknown [IPv6:2a01:e0a:120:3210:1ba:3e91:de16:9b34])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: benjamin.gaignard)
+	by madras.collabora.co.uk (Postfix) with ESMTPSA id CFFC56605961;
+	Tue, 23 May 2023 17:25:22 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1684859123;
+	bh=m0wdRLijBXDpapk6u3bXRwyWKtwK52v854JhKYzO1nY=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Sjc4Xq4ABljQOpIT49MZaaPtLrwgnBcr6oDj8CHt+k7Lhj2kdV3uHLCPoNtziCzTu
+	 rec4ISSSxD8WNs2hJMFigTXAt2D2M2iH+E1jgxTDFAPBrMKDheBGgAMDDUXmt8TxUP
+	 yAIxDPZBwgGkZQrmfM1TELJkhvnSNDohXPmre6mGbBouxQBh17/992/yzaFiB1GoRw
+	 9H+avykPJeQS5hgDoZyBOX+0+apYSA+oHFdB/qHBDgBiNu11BPAzNmN7Ws1ICJ5fSg
+	 GTQMk6hYEvAeXUklumgZCWnQGRBlXHttBYy7dbR7iMVT6uWol39BG2crC0codYNsIZ
+	 HK4Kti7Ps9sUg==
+From: Benjamin Gaignard <benjamin.gaignard@collabora.com>
+To: ezequiel@vanguardiasur.com.ar,
+	nicolas.dufresne@collabora.com,
+	p.zabel@pengutronix.de,
+	mchehab@kernel.org,
+	m.szyprowski@samsung.com,
+	m.tretter@pengutronix.de,
+	didi.debian@cknow.org
+Cc: linux-media@vger.kernel.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	kernel@collabora.com,
+	hverkuil-cisco@xs4all.nl,
+	kernel@pengutronix.de,
+	regressions@lists.linux.dev,
+	Benjamin Gaignard <benjamin.gaignard@collabora.com>
+Subject: [PATCH] media: verisilicon: Additional fix for the crash when opening the driver
+Date: Tue, 23 May 2023 18:25:15 +0200
+Message-Id: <20230523162515.993862-1-benjamin.gaignard@collabora.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: Regression: serial: imx: overrun errors on debug UART
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
- Sergey Organov <sorganov@gmail.com>, Fabio Estevam <festevam@gmail.com>,
- =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Stefan Wahren <stefan.wahren@chargebyte.com>, linux-serial@vger.kernel.org,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Sascha Hauer <s.hauer@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Shawn Guo <shawnguo@kernel.org>, Jiri Slaby <jirislaby@kernel.org>,
- =?UTF-8?Q?Tomasz_Mo=c5=84?= <tomasz.mon@camlingroup.com>,
- Linux ARM <linux-arm-kernel@lists.infradead.org>
-References: <2c29454b-9369-4360-8eb4-c151f59460cb@i2se.com>
- <d660e3cf-5686-d989-3b59-efe83ec9d590@linux.intel.com>
- <CAOMZO5A+GujiQY-UT3Q-8o0AKujJb_4kY+5L4x1e07ovGfo31w@mail.gmail.com>
- <9e22f237-f3ee-0415-9e6b-89a137769b8f@i2se.com>
- <5d59dec6-9f6f-7b20-1221-f57c94b29cca@i2se.com>
- <20230325151100.mskydt3hwbnspqp4@pengutronix.de>
- <cb16ddb7-f22f-d637-8670-bccc77add0af@i2se.com> <87mt3ynsa7.fsf@osv.gnss.ru>
- <d5009984-d2eb-0343-5bb4-df8a7f526121@i2se.com> <87sfcy8ncu.fsf@osv.gnss.ru>
- <534ac8db-ae8f-1ea3-9aa9-2105db7f7a52@i2se.com>
- <203ce87f-2898-eb10-2f8c-f237859d75e6@leemhuis.info>
-Content-Language: en-US
-From: Stefan Wahren <stefan.wahren@i2se.com>
-In-Reply-To: <203ce87f-2898-eb10-2f8c-f237859d75e6@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:sEbmaW1JDon0+hqyoaTCNWWmbTDHXLIHs3rlX986ChIrl9Lvl2F
- H+h4G+OjM+Ns6kIH+7ZgcpAF+5uHObK0o16nqzs5h/0qHZC4ZZ3eUtrOhOhlu4aO4xqAk4Q
- FCbhMWKAmg92QylpFCSUoAsTolc9hBxhbJ38TBfFJgvWPyzDJS2kNJbdg34roTa1CatPKKM
- epGj5m545mZ4tzv8ryYAA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:GH6w6FREy9M=;6S3n9umgjaGIWcy8cTLMGm960ep
- rrCKJAXIwpvPOdRFqeMJUWw10MBlIW/1NFhJ8bOlb+rELgt29/TUngMNBS+2Z+pOXjryGf0Lj
- hdqNMyg4W/SdgJYzCazCUKrWZqLkjh1V9UHx8AHbn/brvAngnOfKs42XpX0ZgpWJdVGpGn/+r
- Hk45P2yl+Qv9A7CYdYUGDVekuKhN7Fu8AyNrngum5XsyCbkwp+JP6RA4xROJi8LwZs8rUi4wj
- 8LsuCzS6mWVRyBK92uE6/wMPQDFXGiQWpcoTsKOk72wnQhBVPwIOROOgYqGLDDg7XeoVUb0uY
- /WrqyYUGzdRdTF+ksFsjiHC76y/M+jb5csrdT9xxaj5IOlHl0Bog1me5aSREy4XOa/TwewMA6
- sk3aRa6DTGoQb3Br1L1pkiNGCltjZ6mFK8ooQXcqWnGrBQ3c30XswFfvk/R5IyomQ3kihbcxS
- zqRnTGEvvOZpt5zK2Dqv3Z26hAqwp0EDw0FhXJ/rnY26T7RQ+yJHjCJSO5r31Px8sdltHooFK
- nJd9w3HiwgcpRhwdUCDbSdbzxMYCD/gfL3HLtPUoZCYahjGPKgfXEU/4lHHvnbtmgrRft6L4N
- BLRtD8vtUPWDwo514xDfcgy6ihp2gSu9AKZjK6TQCgkglWK3G2TGXehGzpcHI/wwtMcDAPFsT
- hVIx9hVpS+wyyhmBW5RNWXC6h8bfS7gv6xoOx8gNWw==
+Content-Transfer-Encoding: 8bit
 
-Hi Thorsten,
+This fixes the following issue observed on Odroid-M1 board:
 
-Am 22.05.23 um 11:25 schrieb Linux regression tracking (Thorsten Leemhuis):
-> Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
-> for once, to make this easily accessible to everyone.
-> 
-> Stefan, was this regression ever solved? It doesn't look like it, but
-> maybe I'm missing something.
-> 
-> If it wasn't solved: what needs to be done to get this rolling again?
+ Unable to handle kernel NULL pointer dereference at virtual address 0000000000000008
+ Mem abort info:
+ ...
+ Modules linked in: crct10dif_ce hantro_vpu snd_soc_simple_card snd_soc_simple_card_utils v4l2_vp9 v4l2_h264 rockchip_saradc v4l2_mem2mem videobuf2_dma_contig videobuf2_memops rtc_rk808 videobuf2_v4l2 industrialio_triggered_buffer rockchip_thermal dwmac_rk stmmac_platform stmmac videodev kfifo_buf display_connector videobuf2_common pcs_xpcs mc rockchipdrm analogix_dp dw_mipi_dsi dw_hdmi drm_display_helper panfrost drm_shmem_helper gpu_sched ip_tables x_tables ipv6
+ CPU: 3 PID: 176 Comm: v4l_id Not tainted 6.3.0-rc7-next-20230420 #13481
+ Hardware name: Hardkernel ODROID-M1 (DT)
+ pstate: 60400009 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+ pc : hantro_try_fmt+0xa0/0x278 [hantro_vpu]
+ lr : hantro_try_fmt+0x94/0x278 [hantro_vpu]
+ ...
+ Call trace:
+  hantro_try_fmt+0xa0/0x278 [hantro_vpu]
+  hantro_set_fmt_out+0x3c/0x298 [hantro_vpu]
+  hantro_reset_raw_fmt+0x98/0x128 [hantro_vpu]
+  hantro_set_fmt_cap+0x240/0x254 [hantro_vpu]
+  hantro_reset_encoded_fmt+0x94/0xcc [hantro_vpu]
+  hantro_reset_fmts+0x18/0x38 [hantro_vpu]
+  hantro_open+0xd4/0x20c [hantro_vpu]
+  v4l2_open+0x80/0x120 [videodev]
+  chrdev_open+0xc0/0x22c
+  do_dentry_open+0x13c/0x48c
+  vfs_open+0x2c/0x38
+  path_openat+0x550/0x934
+  do_filp_open+0x80/0x12c
+  do_sys_openat2+0xb4/0x168
+  __arm64_sys_openat+0x64/0xac
+  invoke_syscall+0x48/0x114
+  el0_svc_common+0x100/0x120
+  do_el0_svc+0x3c/0xa8
+  el0_svc+0x40/0xa8
+  el0t_64_sync_handler+0xb8/0xbc
+  el0t_64_sync+0x190/0x194
+ Code: 97fc8a7f f940aa80 52864a61 72a686c1 (b9400800)
+ ---[ end trace 0000000000000000 ]---
 
-thanks for the reminder. From a user point of view this issue hasn't 
-been fixed so far. For our product we just reverted the commit in a 
-downstream repo.
+Fixes: db6f68b51e5c ("media: verisilicon: Do not set context src/dst formats in reset functions")
 
- From my understanding there was already an issue there and the 
-optimizing commit by Tomasz just make the situation worse. Unfortunately 
-my time budget to investigate this issue further is exhausted, so i 
-stopped working at this.
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@collabora.com>
+---
+ drivers/media/platform/verisilicon/hantro_v4l2.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-In case someone can give clear instructions to investigate this further, 
-i will try to look at it in my spare time. But i cannot make any promises.
+diff --git a/drivers/media/platform/verisilicon/hantro_v4l2.c b/drivers/media/platform/verisilicon/hantro_v4l2.c
+index 835518534e3b..61cfaaf4e927 100644
+--- a/drivers/media/platform/verisilicon/hantro_v4l2.c
++++ b/drivers/media/platform/verisilicon/hantro_v4l2.c
+@@ -397,10 +397,12 @@ hantro_reset_raw_fmt(struct hantro_ctx *ctx, int bit_depth)
+ 	if (!raw_vpu_fmt)
+ 		return -EINVAL;
+ 
+-	if (ctx->is_encoder)
++	if (ctx->is_encoder) {
+ 		encoded_fmt = &ctx->dst_fmt;
+-	else
++		ctx->vpu_src_fmt = raw_vpu_fmt;
++	} else {
+ 		encoded_fmt = &ctx->src_fmt;
++	}
+ 
+ 	hantro_reset_fmt(&raw_fmt, raw_vpu_fmt);
+ 	raw_fmt.width = encoded_fmt->width;
+-- 
+2.34.1
 
-Best regards
-
-> 
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-> --
-> Everything you wanna know about Linux kernel regression tracking:
-> https://linux-regtracking.leemhuis.info/about/#tldr
-> If I did something stupid, please tell me, as explained on that page.
-> 
-> #regzbot poke
-> 
