@@ -1,139 +1,104 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 345331F93C
-	for <regressions@lists.linux.dev>; Tue, 23 May 2023 18:57:19 +0000 (UTC)
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34NIul9v023767;
-	Tue, 23 May 2023 18:56:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=9lZOSqbq4ClXoZ461i/wo54CsZkL/8Ckc1FDOGqWcf8=;
- b=FJVZSAD1OwYErcTV3OlqVkTw8j/XWWUXMM36zYRmWEvJjUuuTPNNpV6YvbSBT5D49I4R
- RysBSB/3c0vTTzfmrN4ocHuc2Qps+8+tUK5EO9uemZIir0gkTq5FMwJ8/BALXJUH5GKZ
- ayWZctMyNUWX6SRwmm+GPS81Hv74OF+p4O5C5zpMoCk3mRFzBI9/Ua3lv3mFNvFBCZrX
- XiL+CWkjlXth0puw57Ap5UIV263KfCtPR4F0bD/mHxIE3PrQ1US273XWBAoLxDPJwti7
- zqGs6jGY6l7tviiTrYNkdC9iJ6jjJ67VWa6yD/0ak+hjFO/hpFzXWLA9fymjOmLQzrAZ Yw== 
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3qraasuhg1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 23 May 2023 18:56:59 +0000
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 34NIuvpi032358
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 23 May 2023 18:56:57 GMT
-Received: from [10.134.70.142] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.42; Tue, 23 May
- 2023 11:56:56 -0700
-Message-ID: <f2d1bb37-ea83-4d5d-6ef5-ae84c26d6ac1@quicinc.com>
-Date: Tue, 23 May 2023 11:56:56 -0700
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 055341F934
+	for <regressions@lists.linux.dev>; Tue, 23 May 2023 19:44:23 +0000 (UTC)
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-4ec8eca56cfso362556e87.0
+        for <regressions@lists.linux.dev>; Tue, 23 May 2023 12:44:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1684871062; x=1687463062;
+        h=mime-version:user-agent:message-id:date:references:subject:cc:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=1Mfj/60mjyD73Y0fwFda1Tha6oubsygP6ts2VrhNkbc=;
+        b=mYOikAlfCj8worvBWIhVLd6IXm/AHFx9xelX9M0uFZAKcUGtiVvLjoTagbJOS0MGTv
+         b4KiXjOhYsZHxLGcUDg54qZrfuRgAvTmcj7aC2/C3lZVJKzwfewXBs/9StTWrd5wVMI9
+         Isy6lf4/KTrF4cz6DTCJ/p73/mVMGf9CehVA493Ao+jKUU46V2rK/MDi0zQRlIwAS9QW
+         9Jo81+hXYHPm7Tqxw7R9292qmhpuYi1LBE0HgDWIzbITFu4K5wF8rZoktD3f9taX90iu
+         VqP1qSrwLPxobYOuQy2k+yAFmedLdmWjcZbX+TGopoanGfiSYMl6n8bbfr4y5hrbkK3w
+         lgfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684871062; x=1687463062;
+        h=mime-version:user-agent:message-id:date:references:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1Mfj/60mjyD73Y0fwFda1Tha6oubsygP6ts2VrhNkbc=;
+        b=IjnWLR92ciDcVidCeGD017tuWaXy4EoLHIo8nXW0ODaj8ufHFS9Yk/fv+uUxVKswDR
+         W19stm7Ka7lvq7J7yA/NdqXe/ZAc4eU9m5IV4Q/DZ0GWHnzIxkcmwdYYa2BPh7sa6F0w
+         /S6wQNoUGokvjLu6ZRdFNoJ23Lfzt+h778Wgora2VvZbfSf8+kX1ClUGwbV5q65P8RP3
+         ykZpCLHy5FQKtUMqLfRFrr9bIIVTV6EDh4iJ6Vhj2kfC0R+zJLLAPr+jfCiGHTLT2dPd
+         zh3ZMvBkxAFISETCRv142cVbNq3UdDdb06Jf9HiDnSFnRFORA+H1Nrp7/Lcy/BNbREuv
+         Wnmg==
+X-Gm-Message-State: AC+VfDwAlMH5el1HN2pik8NdmwAn7L1JK8WvreubQ4oAyYdTTo4dJqbb
+	OkA7MuxQgHcI/t/V5OPOiec=
+X-Google-Smtp-Source: ACHHUZ5MPAkzkzsCp7ND/Vdo4WvJjlw8QV8CUBLYf0Th5rgBo7prOVhC6h9KOFMXYft75h0WgClnlw==
+X-Received: by 2002:ac2:532b:0:b0:4f3:895f:f3f8 with SMTP id f11-20020ac2532b000000b004f3895ff3f8mr4455650lfh.16.1684871061529;
+        Tue, 23 May 2023 12:44:21 -0700 (PDT)
+Received: from osv.localdomain ([89.175.180.246])
+        by smtp.gmail.com with ESMTPSA id t15-20020ac243af000000b004f121c8beddsm1445346lfl.124.2023.05.23.12.44.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 May 2023 12:44:20 -0700 (PDT)
+From: Sergey Organov <sorganov@gmail.com>
+To: "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>
+Cc: Stefan Wahren <stefan.wahren@i2se.com>,  Linux regressions mailing list
+ <regressions@lists.linux.dev>,  Uwe =?utf-8?Q?Kleine-K=C3=B6nig?=
+ <u.kleine-koenig@pengutronix.de>,  Fabio Estevam <festevam@gmail.com>,
+  Ilpo =?utf-8?Q?J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,  Stefan
+ Wahren
+ <stefan.wahren@chargebyte.com>,  linux-serial@vger.kernel.org,  Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>,  Sascha Hauer
+ <s.hauer@pengutronix.de>,  NXP Linux Team <linux-imx@nxp.com>,
+  Pengutronix Kernel Team <kernel@pengutronix.de>,  Shawn Guo
+ <shawnguo@kernel.org>,  Jiri Slaby <jirislaby@kernel.org>,  Tomasz
+ =?utf-8?Q?Mo=C5=84?=
+ <tomasz.mon@camlingroup.com>,  Linux ARM
+ <linux-arm-kernel@lists.infradead.org>
+Subject: Re: Regression: serial: imx: overrun errors on debug UART
+References: <2c29454b-9369-4360-8eb4-c151f59460cb@i2se.com>
+	<d660e3cf-5686-d989-3b59-efe83ec9d590@linux.intel.com>
+	<CAOMZO5A+GujiQY-UT3Q-8o0AKujJb_4kY+5L4x1e07ovGfo31w@mail.gmail.com>
+	<9e22f237-f3ee-0415-9e6b-89a137769b8f@i2se.com>
+	<5d59dec6-9f6f-7b20-1221-f57c94b29cca@i2se.com>
+	<20230325151100.mskydt3hwbnspqp4@pengutronix.de>
+	<cb16ddb7-f22f-d637-8670-bccc77add0af@i2se.com>
+	<87mt3ynsa7.fsf@osv.gnss.ru>
+	<d5009984-d2eb-0343-5bb4-df8a7f526121@i2se.com>
+	<87sfcy8ncu.fsf@osv.gnss.ru>
+	<534ac8db-ae8f-1ea3-9aa9-2105db7f7a52@i2se.com>
+	<203ce87f-2898-eb10-2f8c-f237859d75e6@leemhuis.info>
+Date: Tue, 23 May 2023 22:44:19 +0300
+Message-ID: <87ttw2vnn0.fsf@osv.gnss.ru>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.1 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [Freedreno] [PATCH] Revert "drm/msm/dp: Remove INIT_SETUP delay"
-Content-Language: en-US
-To: Leonard Lausen <leonard@lausen.nl>,
-        Dmitry Baryshkov
-	<dmitry.baryshkov@linaro.org>,
-        Bjorn Andersson <andersson@kernel.org>
-CC: <freedreno@lists.freedesktop.org>,
-        Sankeerth Billakanti
-	<quic_sbillaka@quicinc.com>,
-        Bjorn Andersson <quic_bjorande@quicinc.com>,
-        <regressions@lists.linux.dev>, David Airlie <airlied@gmail.com>,
-        "Nikita
- Travkin" <nikita@trvn.ru>, <linux-kernel@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>,
-        Kuogee Hsieh <quic_khsieh@quicinc.com>,
-        Rob Clark <robdclark@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-        <linux-arm-msm@vger.kernel.org>, Stephen Boyd <swboyd@chromium.org>,
-        "Sean
- Paul" <sean@poorly.run>, Johan Hovold <johan+linaro@kernel.org>
-References: <1345a125-f745-4fe3-0f5e-bfe84225958d@quicinc.com>
- <b0cc40d5-6de1-91cc-e2cd-f47cc53551e4@quicinc.com>
- <ebbcd56ac883d3c3d3024d368fab63d26e02637a@lausen.nl>
- <20230508021536.txtamifw2vkfncnx@ripper>
- <3802269cd54ce105ef6dece03b1b9af575b4fa06@lausen.nl>
- <ad351c02-1c29-3601-53e8-f8cdeca2ac63@linaro.org>
- <49d175ec16e3f65a18265063e51092ee8d0d79c1@lausen.nl>
-From: Abhinav Kumar <quic_abhinavk@quicinc.com>
-In-Reply-To: <49d175ec16e3f65a18265063e51092ee8d0d79c1@lausen.nl>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: rLBmCTl-U4Z5s3a-8SPvcTnbMYDCy6us
-X-Proofpoint-ORIG-GUID: rLBmCTl-U4Z5s3a-8SPvcTnbMYDCy6us
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.176.26
- definitions=2023-05-23_12,2023-05-23_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 suspectscore=0
- priorityscore=1501 mlxscore=0 lowpriorityscore=0 mlxlogscore=999
- spamscore=0 impostorscore=0 bulkscore=0 malwarescore=0 phishscore=0
- clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2304280000 definitions=main-2305230153
+Content-Type: text/plain
 
-Hi Leonard
+"Linux regression tracking (Thorsten Leemhuis)"
+<regressions@leemhuis.info> writes:
 
-On 5/22/2023 7:39 PM, Leonard Lausen wrote:
-> Abhinav Kumar <quic_abhinavk@quicinc.com> writes:
->>>>> There is no need to add the 100ms delay back yet.
->>>>>
->>>>> thanks for posting this but NAK on this patch till we post the fix this
->>>>> week.
->>>>>
->>>>> Appreciate a bit of patience till then.
->>>>
->>>> This regression is already part of the 6.3 stable release series. Will
->>>> the new patch qualify for inclusion in 6.3.y? Or will it be part of 6.4
->>>> and this revert should go into 6.3.y?
->>>
->>> This is a tough situation, as landing a revert will break x13s, as noted
->>> by Bjorn. Given that the workaround is known at this moment, I would
->>> like to wait for the patch from Abhinav to appear, then we can decide
->>> which of the fixes should go to the stable kernel.
-> 
-> I wasn't able to find new patches, though may have missed them. Is there
-> a decision yet how to proceed with this regression? 6.2 now being EOL
-> may make this a good moment to decide on the next steps.
-> 
+> Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
+> for once, to make this easily accessible to everyone.
+>
+> Stefan, was this regression ever solved? It doesn't look like it, but
+> maybe I'm missing something.
+>
+> If it wasn't solved: what needs to be done to get this rolling again?
 
-Yes, the new patch to fix this issue is here
+Hi Thorsten,
 
-https://patchwork.freedesktop.org/patch/538601/?series=118148&rev=3
+Not Stefan, but as far as I can tell, the problem is that on Stefan's
+build the kernel has rather large periods of interrupts being disabled,
+so any attempt to decrease IRQs frequency from UART by raising FIFO IRQ
+threshold causes "regression" that manifests itself as missing
+characters on receive. I'm not sure if it's tuning FIFO level that is in
+fact a regression in this case.
 
-Apologies if you were not CCed on this, if a next version is CCed, will 
-ask kuogee to cc you.
+Solving this would need to identify the cause of interrupts being
+disabled for prolonged times, and nobody volunteered to investigate this
+further. One suspect, the Linux serial console, has been likely excluded
+already though, as not actually being in use for printk() output.
 
-Meanwhile, will be great if you can verify if it works for you and 
-provide Tested-by tags.
-
->>>> [  275.025497] [drm:dpu_encoder_phys_vid_wait_for_commit_done:488]
->>>> [dpu error]vblank timeout
->>>> [  275.025514] [drm:dpu_kms_wait_for_commit_done:510] [dpu error]wait
->>>> for commit done returned -110
->>>> [  275.064141] [drm:dpu_encoder_frame_done_timeout:2382] [dpu
->>>> error]enc33 frame done timeout
->>
->> This is a different crash but the root-cause of both the issues is the
->> bridge hpd_enable/disable series.
->>
->> https://patchwork.freedesktop.org/patch/514414/
->>
->> This is breaking the sequence and logic of internal hpd as per my
->> discussion with kuogee.
->>
->> We are analyzing the issue and the fix internally first and once we
->> figure out all the details will post it.
-> 
-> Thank you!
+-- 
+Sergey Organov
