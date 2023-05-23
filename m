@@ -1,165 +1,78 @@
-Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57D86174C0
-	for <regressions@lists.linux.dev>; Mon, 22 May 2023 20:16:22 +0000 (UTC)
-Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-62385a3106dso29149076d6.2
-        for <regressions@lists.linux.dev>; Mon, 22 May 2023 13:16:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1684786581; x=1687378581;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WyIggrMGmu/jRmPpyCa3rtzViddyX1LyKifAy1G4+Uc=;
-        b=PD1hZQfhLc6pj4VPtdmKIvrY3F9a1RU2vIeI121lux3Wy9XF+YXxyPvYKre8KLpT1U
-         HCMypgp2eTlR9ZYttd3voBbAwIoDevB+f5hhTTnkgcqH35TRIxrQkM5hQYRI69Ukmz/Q
-         Dopuc/Y+aZkxgYqlxccCspubTwwnqMB3z9sWsb0tkDPUMDUywdwoXiSEQW5nY38hz/Cr
-         Q+qOnU+WJAiIQ41xSnw1qHvaT1NBdx7H67PlRpb6DSeeZ0Dz07pFtGFVCFXrSivEpAwU
-         AaR2zbGA1OdogFZ9jN/rcGBR2u/gbCdKBlLp5M3H+ji4q399xZuSdTN1u2r26ENcRHgz
-         DMYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684786581; x=1687378581;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WyIggrMGmu/jRmPpyCa3rtzViddyX1LyKifAy1G4+Uc=;
-        b=DoKEv8524QU9sLh6mS2aSvTwPtSUxihcdISnLHc1GI0SSeSSRp+KnbZRpNZrFDttVD
-         jFGvEpOJrwdEQTYaxda9DHhrKKanpewaxVoA7iGqChm52Ru3w5Gy71jFoT/PKnejWUPw
-         Y8h8CUtpz6rbh5hn3AZ2t3R0pzthKcAQrjJoHoIq4/KU6Fb14+dIJCekcytRo5H2G2mo
-         hFficQLJst8dR4ptjqmfpWicchugoOFbIb3AG4rqps9AjpcrIqK5A3xFZIptI5GivPws
-         asVGuHXg4zSAubo/R1dMMdqKMcGuC/40hwS12W1rwfC7KdH3FzhUMWdNm8Mhv/K6Oo1o
-         RBIw==
-X-Gm-Message-State: AC+VfDyYjt42hEUPgcvGlfbyEKZIMT03OSDA2f8cBw06wIXjO2LBs0P7
-	CmqNwHIAWAykX1ziSTQlwKeha4LiVibMG3gTGffgXw==
-X-Google-Smtp-Source: ACHHUZ7UMHbaTH3n/yjJbWJrQjcyQm2HsY9DIIff+uu7l+FKk8s5p/W/hh2NlgLI6OVzKkJecTe+YOGG7t3SIf4AWwQ=
-X-Received: by 2002:ad4:5967:0:b0:5e0:ad80:6846 with SMTP id
- eq7-20020ad45967000000b005e0ad806846mr19534204qvb.0.1684786581069; Mon, 22
- May 2023 13:16:21 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9434510FF
+	for <regressions@lists.linux.dev>; Tue, 23 May 2023 00:00:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14837C4339B;
+	Tue, 23 May 2023 00:00:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1684800031;
+	bh=lyfJmGLkgdjgHeJSrLwwF6HfUqdYiWsGQeIjY/eZY1I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ScFA+6V/haACDctyNZcJLiBoeSdsbN1/9GRgY0vOch4RpWSQFKgM1bgtrdD06dQUc
+	 Bzdm6yUWJmf69K0Vd10lOudLMjqO4bfURM5zGjvi+zsuunoLarb4r0I2sBZI8ZqFgb
+	 tgxusQdeSMYpv+Naki3HAekF/GQPmeFIkKgItnPLHJfUG+zc5LINDg83GLwxGlLm7z
+	 CXAQd4XKKJXb640o3oRKTwqmtbufleHG3gBbkcbSbxjTd692KuVk/UVhSs/rKdOI2E
+	 WuOULd1zxmWLGr5xoIVY1i3s7el31WsSpWZ+K/EFXUWoCyhq6EqbloBhps/JZTlvGk
+	 qVSLYgtLjKNlg==
+Date: Tue, 23 May 2023 00:00:29 +0000
+From: Eric Biggers <ebiggers@kernel.org>
+To: "Darrick J. Wong" <djwong@kernel.org>
+Cc: Bagas Sanjaya <bagasdotme@gmail.com>, Pengfei Xu <pengfei.xu@intel.com>,
+	linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	heng.su@intel.com, dchinner@redhat.com, lkp@intel.com,
+	Linux Regressions <regressions@lists.linux.dev>
+Subject: Re: [Syzkaller & bisect] There is BUG: unable to handle kernel NULL
+ pointer dereference in xfs_extent_free_diff_items in v6.4-rc3
+Message-ID: <20230523000029.GB3187780@google.com>
+References: <ZGrOYDZf+k0i4jyM@xpf.sh.intel.com>
+ <ZGsOH5D5vLTLWzoB@debian.me>
+ <20230522160525.GB11620@frogsfrogsfrogs>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAKwvOdk4QO8x_bs64fFRCsMu__AjhXd4Ew2KfgzQOb9Q3FMqSA@mail.gmail.com>
- <b5d0cf82-0e42-f6a1-c9f5-c145fdc4c622@collabora.com> <CAKwvOdkFxu9hYSL_RCXadpR0dQd1+dZmAUVXdfFiLUfxg4D_Xw@mail.gmail.com>
- <878rdlk9bi.fsf@rcn-XPS-13-9305.i-did-not-set--mail-host-address--so-tickle-me>
- <CAKwvOd=8LVU+iANkFx18Wm1jg7gYiAXovAmo9t5ZZaVdMULn-Q@mail.gmail.com>
- <875y8ok9b5.fsf@rcn-XPS-13-9305.i-did-not-set--mail-host-address--so-tickle-me>
- <CAKwvOdmJJibt6sHSp91v2s7BxUWBC6xG7F7+3C6gUxNMzZ2xRA@mail.gmail.com>
- <87353ok78h.fsf@rcn-XPS-13-9305.i-did-not-set--mail-host-address--so-tickle-me>
- <2023052247-bobtail-factsheet-d104@gregkh> <CAKwvOd=2zAV_mizvzLFdyHE_4OzBY5OVu6KLWuQPOMZK37vsmQ@mail.gmail.com>
- <2023052251-oncoming-glance-f1b0@gregkh>
-In-Reply-To: <2023052251-oncoming-glance-f1b0@gregkh>
-From: Nick Desaulniers <ndesaulniers@google.com>
-Date: Mon, 22 May 2023 13:16:09 -0700
-Message-ID: <CAKwvOdmOhuBJ0f1ZpmeP-jSg6cN=v3_oHjvnhUXc4XHp7nY9hg@mail.gmail.com>
-Subject: Re: [PATCH v4] Makefile.compiler: replace cc-ifversion with
- compiler-specific macros
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Maksim Panchenko <maks@meta.com>, =?UTF-8?Q?Ricardo_Ca=C3=B1uelo?= <ricardo.canuelo@collabora.com>, 
-	Shreeya Patel <shreeya.patel@collabora.com>, Michal Marek <michal.lkml@markovi.net>, 
-	Masahiro Yamada <masahiroy@kernel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, clang-built-linux <llvm@lists.linux.dev>, 
-	Bill Wendling <morbo@google.com>, Nathan Chancellor <nathan@kernel.org>, regressions@lists.linux.dev, 
-	"gustavo.padovan@collabora.com" <gustavo.padovan@collabora.com>, 
-	Guillaume Charles Tucker <guillaume.tucker@collabora.com>, denys.f@collabora.com, 
-	kernelci@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230522160525.GB11620@frogsfrogsfrogs>
 
-On Mon, May 22, 2023 at 1:01=E2=80=AFPM Greg KH <gregkh@linuxfoundation.org=
-> wrote:
->
-> On Mon, May 22, 2023 at 12:52:13PM -0700, Nick Desaulniers wrote:
-> > On Mon, May 22, 2023 at 9:52=E2=80=AFAM Greg KH <gregkh@linuxfoundation=
-.org> wrote:
-> > >
-> > > On Mon, May 22, 2023 at 12:09:34PM +0200, Ricardo Ca=C3=B1uelo wrote:
-> > > > On vie, may 19 2023 at 08:57:24, Nick Desaulniers <ndesaulniers@goo=
-gle.com> wrote:
-> > > > > It could be; if the link order was changed, it's possible that th=
-is
-> > > > > target may be hitting something along the lines of:
-> > > > > https://isocpp.org/wiki/faq/ctors#static-init-order i.e. the "sta=
-tic
-> > > > > initialization order fiasco"
-> > > > >
-> > > > > I'm struggling to think of how this appears in C codebases, but I
-> > > > > swear years ago I had a discussion with GKH (maybe?) about this. =
-I
-> > > > > think I was playing with converting Kbuild to use Ninja rather th=
-an
-> > > > > Make; the resulting kernel image wouldn't boot because I had modi=
-fied
-> > > > > the order the object files were linked in.  If you were to random=
-ly
-> > > > > shuffle the object files in the kernel, I recall some hazard that=
- may
-> > > > > prevent boot.
-> > > >
-> > > > I thought that was specifically a C++ problem? But then again, the
-> > > > kernel docs explicitly say that the ordering of obj-y goals in kbui=
-ld is
-> > > > significant in some instances [1]:
-> > >
-> > > Yes, it matters, you can not change it.  If you do, systems will brea=
-k.
-> > > It is the only way we have of properly ordering our init calls within
-> > > the same "level".
-> >
-> > Ah, right it was the initcall ordering. Thanks for the reminder.
-> >
-> > (There's a joke in there similar to the use of regexes to solve a
-> > problem resulting in two new problems; initcalls have levels for
-> > ordering, but we still have (unexpressed) dependencies between calls
-> > of the same level; brittle!).
->
-> No, the dependencies are explicitly expressed with the linker order.  So
+On Mon, May 22, 2023 at 09:05:25AM -0700, Darrick J. Wong wrote:
+> On Mon, May 22, 2023 at 01:39:27PM +0700, Bagas Sanjaya wrote:
+> > On Mon, May 22, 2023 at 10:07:28AM +0800, Pengfei Xu wrote:
+> > > Hi Darrick,
+> > > 
+> > > Greeting!
+> > > There is BUG: unable to handle kernel NULL pointer dereference in
+> > > xfs_extent_free_diff_items in v6.4-rc3:
+> > > 
+> > > Above issue could be reproduced in v6.4-rc3 and v6.4-rc2 kernel in guest.
+> > > 
+> > > Bisected this issue between v6.4-rc2 and v5.11, found the problem commit is:
+> > > "
+> > > f6b384631e1e xfs: give xfs_extfree_intent its own perag reference
+> > > "
+> > > 
+> > > report0, repro.stat and so on detailed info is link: https://github.com/xupengfe/syzkaller_logs/tree/main/230521_043336_xfs_extent_free_diff_items
+> > > Syzkaller reproduced code: https://github.com/xupengfe/syzkaller_logs/blob/main/230521_043336_xfs_extent_free_diff_items/repro.c
+> > > Syzkaller reproduced prog: https://github.com/xupengfe/syzkaller_logs/blob/main/230521_043336_xfs_extent_free_diff_items/repro.prog
+> > > Kconfig: https://github.com/xupengfe/syzkaller_logs/blob/main/230521_043336_xfs_extent_free_diff_items/kconfig_origin
+> > > Bisect info: https://github.com/xupengfe/syzkaller_logs/blob/main/230521_043336_xfs_extent_free_diff_items/bisect_info.log
+> > > Issue dmesg: https://github.com/xupengfe/syzkaller_logs/blob/main/230521_043336_xfs_extent_free_diff_items/v6.4-rc3_reproduce_dmesg.log
+> > > 
+> > > v6.4-rc3 reproduced info:
+> 
+> Diagnosis and patches welcomed.
+> 
+> Or are we doing the usual syzbot bullshit where you all assume that I'm
+> going to do all the fucking work for you?
+> 
 
-I don't consider that "explicit."
+It looks like Pengfei already took the time to manually bisect this issue to a
+very recent commit authored by you.  Is that not helpful?
 
-The link order of object files does not express what symbols (if any)
-are initcalls which are dependent on other symbols/initcalls from
-which object file.
+(Apologies if I didn't include enough profanities for this email to be suitable
+for linux-xfs@.)
 
-> it's not brittle, but rather very deterministic.
-
-Brittle !=3D non-deterministic.
-
-We now have implicit dependencies between some init calls, but not all.
-
-Given two initcalls, are you confident that you could tell which must
-run before the other, if there is even such a dependency?
-
-It prevents us from reordering symbol layout for performance (or
-security via FGKASLR), safely.  If such dependencies were *explicit*,
-we could do so safely since we'd have information about which
-initcalls are dependencies or not.
-
-The implicit nature of such dependencies is thus what I would consider brit=
-tle.
-
-Hopefully initcall ordering related changes isn't the root cause of
-the boot failure reported here, lest that lend more evidence to my
-claim.
-
->
-> When linker order didn't work for all sorts of things, we added
-> different levels, but due to the huge number of init calls, of course
-> can not give each one their own level.
->
-> It's always been this way with Linux, nothing new here at all :)
-
-:^)
-
->
-> thanks,
->
-> greg k-h
-
-
-
---=20
-Thanks,
-~Nick Desaulniers
+- Eric
