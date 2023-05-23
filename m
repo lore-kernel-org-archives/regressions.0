@@ -1,99 +1,108 @@
-Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from devico.uberspace.de (devico.uberspace.de [185.26.156.185])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34DFC1874
-	for <regressions@lists.linux.dev>; Tue, 23 May 2023 01:52:33 +0000 (UTC)
-Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-51452556acdso4632387a12.2
-        for <regressions@lists.linux.dev>; Mon, 22 May 2023 18:52:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684806752; x=1687398752;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=YJHAFjFAFtXjAaqHIvSdrHTyDRtStagvgqxmFGoZrEs=;
-        b=fvAowqmBUdokZAle+a3AtujbmSt9kJHxneghHI6yLcaiuJU54ux+RzaaRkkXZjXh1Y
-         Uskuzb9J5jsl6SGiWJU6Zxpxkwsvo6dA0MkOZrK2ERzSv7cs/wma971Zn4SVVkYjRYdt
-         SDrW0zijKzppieUgaklVHfoGQxQdL5/tKn4zTNgQHLSnpQS/Y8/9PjlpDbtacaQaTaN3
-         Qf48A0quPb+TggVDHYcjyEGqAmGFGJkM9odiFZA0e1jDKU9z8taN3PaK7eEm7ponjAqi
-         ap+a3fNnp6aXNmDWG86/ZUs5OkUBH5gFp2Jm5cQo7BZ9WfoT0+1tQj0hnmKq3jFAv7wg
-         /tNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684806752; x=1687398752;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YJHAFjFAFtXjAaqHIvSdrHTyDRtStagvgqxmFGoZrEs=;
-        b=BE6Jj+O/ScdpGZbTfiuhOgkxlidZefJoScYbcOTffH1dD69QdKrXn5PZZzQXAMpd5U
-         AXuqhyXbwoGicmw9cdJOxwfXtxaOoqyXrjAIEcDiT9b3A/SdoLUCMuur27L0sOKsxTZU
-         sMgIZC1QTHD/08HdX+4RgeXt46BnxNuzxIpt+s2bJvVAurlg9ENhsCJ2Tv28f+lqWnBQ
-         n6j+MqXQC1TWD9HFugilkogP6pjrmiKQji0TXXcjvnDxZq2v/pLslrZuLiw1nx13JElj
-         tMZDFo5P0hi2YOVdOparx8UH+MvosbSj7jCK2GYc23R+apDsrmi7il+N3YgyIWV4/lfX
-         6nWA==
-X-Gm-Message-State: AC+VfDz9zMXGinyWNLRO+OJ90LwvLfufDFuihYkMzGXXL7e60Cq62jmQ
-	Hqkh/8AUo1h2+r5J/u4f00E=
-X-Google-Smtp-Source: ACHHUZ65ZrBdnHglzvC2r3og9XZPcPvr1clzbhLbJrV2UUKfcgNkL/RDkzgg80OEUwNJDiuQwvH3LQ==
-X-Received: by 2002:a17:903:1208:b0:1aa:feca:b616 with SMTP id l8-20020a170903120800b001aafecab616mr13317495plh.65.1684806747723;
-        Mon, 22 May 2023 18:52:27 -0700 (PDT)
-Received: from debian.me (subs02-180-214-232-65.three.co.id. [180.214.232.65])
-        by smtp.gmail.com with ESMTPSA id jj20-20020a170903049400b001aaf1679c9fsm5423489plb.221.2023.05.22.18.52.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 May 2023 18:52:27 -0700 (PDT)
-Received: by debian.me (Postfix, from userid 1000)
-	id 4A973106998; Tue, 23 May 2023 08:52:21 +0700 (WIB)
-Date: Tue, 23 May 2023 08:52:21 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Forza <forza@tnonline.net>, Linux btrfs <linux-btrfs@vger.kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Regressions <regressions@lists.linux.dev>,
-	Linux Stable <stable@vger.kernel.org>
-Cc: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-	David Sterba <dsterba@suse.com>, a1bert@atlas.cz
-Subject: Re: Fwd: vmalloc error: btrfs-delalloc btrfs_work_helper [btrfs] in
- kernel 6.3.x
-Message-ID: <ZGwcVTpQNBoJHBB+@debian.me>
-References: <efa04d56-cd7f-6620-bca7-1df89f49bf4b@gmail.com>
- <fcf1d04.faed4a1a.18844d8e78f@tnonline.net>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C5BF20E7
+	for <regressions@lists.linux.dev>; Tue, 23 May 2023 02:46:37 +0000 (UTC)
+Received: (qmail 7637 invoked by uid 990); 23 May 2023 02:39:55 -0000
+Authentication-Results: devico.uberspace.de;
+	auth=pass (plain)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="vilJHAGKshW8eYzU"
-Content-Disposition: inline
-In-Reply-To: <fcf1d04.faed4a1a.18844d8e78f@tnonline.net>
-
-
---vilJHAGKshW8eYzU
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Date: Tue, 23 May 2023 02:39:50 +0000
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
+From: "Leonard Lausen" <leonard@lausen.nl>
+Message-ID: <49d175ec16e3f65a18265063e51092ee8d0d79c1@lausen.nl>
+TLS-Required: No
+Subject: Re: [PATCH] Revert "drm/msm/dp: Remove INIT_SETUP delay"
+To: "Abhinav Kumar" <quic_abhinavk@quicinc.com>, "Dmitry Baryshkov"
+ <dmitry.baryshkov@linaro.org>, "Bjorn Andersson" <andersson@kernel.org>
+Cc: regressions@lists.linux.dev, "Bjorn Andersson"
+ <quic_bjorande@quicinc.com>, "Rob Clark" <robdclark@gmail.com>, "Stephen Boyd"
+ <swboyd@chromium.org>, "Kuogee Hsieh" <quic_khsieh@quicinc.com>, "Johan
+ Hovold" <johan+linaro@kernel.org>, "Sankeerth Billakanti"
+ <quic_sbillaka@quicinc.com>, "Sean Paul" <sean@poorly.run>, "David Airlie"
+ <airlied@gmail.com>, "Daniel Vetter" <daniel@ffwll.ch>,
+ linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org, "Nikita
+ Travkin" <nikita@trvn.ru>
+In-Reply-To: <1345a125-f745-4fe3-0f5e-bfe84225958d@quicinc.com>
+References: <1345a125-f745-4fe3-0f5e-bfe84225958d@quicinc.com>
+ <b0cc40d5-6de1-91cc-e2cd-f47cc53551e4@quicinc.com>
+ <ebbcd56ac883d3c3d3024d368fab63d26e02637a@lausen.nl>
+ <20230508021536.txtamifw2vkfncnx@ripper>
+ <3802269cd54ce105ef6dece03b1b9af575b4fa06@lausen.nl>
+ <ad351c02-1c29-3601-53e8-f8cdeca2ac63@linaro.org>
+X-Rspamd-Bar: +
+X-Rspamd-Report: MIME_GOOD(-0.1) BAYES_HAM(-0.000128) SUSPICIOUS_RECIPS(1.5)
+X-Rspamd-Score: 1.399871
+Received: from unknown (HELO unkown) (::1)
+	by devico.uberspace.de (Haraka/3.0.1) with ESMTPSA; Tue, 23 May 2023 04:39:55 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+	d=lausen.nl; s=uberspace;
+	h=from;
+	bh=2py7sSWEr5LcTyrtnazJBVn2Bb0q8G3RqcXydECid+g=;
+	b=n4BaIr5cgPGpaY3VsxvHYwHY2OFbcIsnsLMF+WZjO5zBzudI+hklJbnyT3jwDCylB5xzHTyulc
+	JOVSV42wZ5o4b1XlCxXjGdnDNuldhk/KDYlYP/MgEiyLO9tBS/G2EAFnO1K6AldFnRqjtygruD6L
+	PLFLjlUOfT164e+5rgxSNZrizg/e8xjQIt1ecLsaHFI/ZMN0Sk/pVca7q9inPYHMqpnIN/5/dZFn
+	PhPlW2THAPx4G6AmJt8Zkz0oEoNVbZ0xmxr1QNUTFMn9pQorqNBh7kcIsYHpXLDLi5Rd0pqAEf4P
+	g75xmDs+EtWpH28yQr9koJBcUT4dCL/dWG1wmMbSzox0xSwyisovpBGEKlY+PtS3sR83n/dQ0BrU
+	IEJwvelq7LqPQ9eUFSY4FRCaM1ap4wEvinBpIG0m2CwKh7WdU5XOMD8s4CTB1FUPHaeu/Ae1iwqs
+	mUT6EG9Yx3yWQuh8CHucbntKbiWXvo7WlJe0L+Jdy/vJDvp5z2+YeDTOkkHxnLlyjSACv/g2cApk
+	hrRsqGIwWbqBT9L6qczY857RL7xdmY2kkgY3osn2YK2At/UgUriA51to6ZIq1VKZ7C75W4fyH9Tm
+	0ENPzUD92avmLXqnHoYJJMLzgMNPVkfwji/OGLgBOHY6yfym4aYvucjEQsrqQTx9MNFHs+DxoJi/
+	A=
 
-On Mon, May 22, 2023 at 09:04:05PM +0200, Forza wrote:
-> I have a similar experience with kernel 6.3 where vmalloc fails in a simi=
-lar way. I was able to reproduce it in a QEMU VM as well as on my system.=
+Abhinav Kumar <quic_abhinavk@quicinc.com> writes:
+>>>> There is no need to add the 100ms delay back yet.
+>>>>
+>>>> thanks for posting this but NAK on this patch till we post the fix t=
+his
+>>>> week.
+>>>>
+>>>> Appreciate a bit of patience till then.
+>>>
+>>> This regression is already part of the 6.3 stable release series. Wil=
+l
+>>> the new patch qualify for inclusion in 6.3.y? Or will it be part of 6=
+.4
+>>> and this revert should go into 6.3.y?
+>>=20
+>>=20This is a tough situation, as landing a revert will break x13s, as n=
+oted=20
+>>=20by Bjorn. Given that the workaround is known at this moment, I would=
 =20
->=20
-> https://lore.kernel.org/all/d11418b6-38e5-eb78-1537-c39245dc0b78@tnonline=
-=2Enet/T/
+>>=20like to wait for the patch from Abhinav to appear, then we can decid=
+e=20
+>>=20which of the fixes should go to the stable kernel.
 
-Thanks for your similar report. Telling regzbot about it:
+I wasn't able to find new patches, though may have missed them. Is there
+a decision yet how to proceed with this regression? 6.2 now being EOL
+may make this a good moment to decide on the next steps.
 
-#regzbot link: https://lore.kernel.org/all/d11418b6-38e5-eb78-1537-c39245dc=
-0b78@tnonline.net/
+>>> [=C2=A0 275.025497] [drm:dpu_encoder_phys_vid_wait_for_commit_done:48=
+8]=20
+>>>=20[dpu error]vblank timeout
+>>> [=C2=A0 275.025514] [drm:dpu_kms_wait_for_commit_done:510] [dpu error=
+]wait=20
+>>>=20for commit done returned -110
+>>> [=C2=A0 275.064141] [drm:dpu_encoder_frame_done_timeout:2382] [dpu=20
+>>>=20error]enc33 frame done timeout
+>
+> This is a different crash but the root-cause of both the issues is the=
+=20
+>=20bridge hpd_enable/disable series.
+>
+> https://patchwork.freedesktop.org/patch/514414/
+>
+> This is breaking the sequence and logic of internal hpd as per my=20
+>=20discussion with kuogee.
+>
+> We are analyzing the issue and the fix internally first and once we=20
+>=20figure out all the details will post it.
 
---=20
-An old man doll... just what I always wanted! - Clara
-
---vilJHAGKshW8eYzU
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZGwcUgAKCRD2uYlJVVFO
-o3JoAP4i8o9ucMk1qqpBMd8ABO/bcREF3CrJ2WPC/g31f/TX0gEAxA5XA9TJOQcO
-qMAV7/h2Dj3zsyNZYLkYlk+euTGovgM=
-=Jj6d
------END PGP SIGNATURE-----
-
---vilJHAGKshW8eYzU--
+Thank you!
