@@ -1,181 +1,139 @@
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 937A3206A8
-	for <regressions@lists.linux.dev>; Tue, 23 May 2023 17:36:46 +0000 (UTC)
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-4f4b0ee606cso25027e87.0
-        for <regressions@lists.linux.dev>; Tue, 23 May 2023 10:36:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=vanguardiasur-com-ar.20221208.gappssmtp.com; s=20221208; t=1684863404; x=1687455404;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=a3yXKkNvbD+E6srtcqBKqjjdVLMr+2MZVea2zCLfMe8=;
-        b=0r7HQVPZQmFhLAOKLplvY2wNgS/qAl+m6CmzaeCRaGTsClDItlrQyP51RPTo4XW+CI
-         SIPPMwdA9ljVRqJPjS1xxUXHWbsCdlqdKOulKgksVwE0P8J8U26YAuNBWtXyKck8Nx05
-         os5HJkcaDEATwKU3d/v/yV2BJiHLxcJkascIhUOYf5TjIEk2fhbRBAx2SpHej/PJF5z1
-         bmAg6yInYVQh9+4Uk5i62YV/UA3hNBwPdFqGbxQlbm6QdbxL8dzTHF1yZ12tHXyIoSOp
-         e8fsAuR7HQXSYf1/6G1j4Zh6eybCoB3WQh9Rs7iZyafyCQIGrqRLr+fCkZadRt2iL1mq
-         5E3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684863404; x=1687455404;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=a3yXKkNvbD+E6srtcqBKqjjdVLMr+2MZVea2zCLfMe8=;
-        b=cGF4XajojTSy6LgW/twrJ0jP/BNC5tpzlWDAIZ6OusjmtanboFyQPfNXheObed+uI5
-         TD4oALWulkvUFCszrWWCrOrxfrC32+C/EAyE65wDZrSWTwXlq2QpKmpcCpoML0nRcJXQ
-         1aizdQi9oZ5axu/L5+jnHcqvfpyCd8xoUniCDl6WG3JRFmDGdQGyGTxyDSEATuWWOUsa
-         f2dFrPelCNWbWw6GGq6eFoBadKwX0wIHpJql+FbN7NQS8FoZamdQdqBgNgiAKy0Hcy9J
-         nLefoKg+mnNOLsMe/NQIXAjvbivpI6Hd1LMSBh6NeLFUGBFAR4me69x2E3ZYK25odkNp
-         SHRw==
-X-Gm-Message-State: AC+VfDzWjVL9FUZhtZZZu6ttWWwuC3IQFmdqyG3j99kgR8IZ+zd25IW2
-	RF9KPFLSe8Jzs5fkua/M17yLwv7AVcnaKI364ODMbQ==
-X-Google-Smtp-Source: ACHHUZ45tDHeXtcr5cUrhHtCcVJ0bxNdoTLxFJA1Tm0vWWWfOdwjrl8bJobJMQ/GXB0uy9MPfYlNokGme7HBr2WnkPs=
-X-Received: by 2002:a19:f61a:0:b0:4f3:8267:a2f3 with SMTP id
- x26-20020a19f61a000000b004f38267a2f3mr4796279lfe.0.1684863404435; Tue, 23 May
- 2023 10:36:44 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 345331F93C
+	for <regressions@lists.linux.dev>; Tue, 23 May 2023 18:57:19 +0000 (UTC)
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34NIul9v023767;
+	Tue, 23 May 2023 18:56:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=9lZOSqbq4ClXoZ461i/wo54CsZkL/8Ckc1FDOGqWcf8=;
+ b=FJVZSAD1OwYErcTV3OlqVkTw8j/XWWUXMM36zYRmWEvJjUuuTPNNpV6YvbSBT5D49I4R
+ RysBSB/3c0vTTzfmrN4ocHuc2Qps+8+tUK5EO9uemZIir0gkTq5FMwJ8/BALXJUH5GKZ
+ ayWZctMyNUWX6SRwmm+GPS81Hv74OF+p4O5C5zpMoCk3mRFzBI9/Ua3lv3mFNvFBCZrX
+ XiL+CWkjlXth0puw57Ap5UIV263KfCtPR4F0bD/mHxIE3PrQ1US273XWBAoLxDPJwti7
+ zqGs6jGY6l7tviiTrYNkdC9iJ6jjJ67VWa6yD/0ak+hjFO/hpFzXWLA9fymjOmLQzrAZ Yw== 
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3qraasuhg1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 23 May 2023 18:56:59 +0000
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 34NIuvpi032358
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 23 May 2023 18:56:57 GMT
+Received: from [10.134.70.142] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.42; Tue, 23 May
+ 2023 11:56:56 -0700
+Message-ID: <f2d1bb37-ea83-4d5d-6ef5-ae84c26d6ac1@quicinc.com>
+Date: Tue, 23 May 2023 11:56:56 -0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230523162515.993862-1-benjamin.gaignard@collabora.com>
- <c034db29-b664-793d-35e0-406fdfe2b145@collabora.com> <20230523170637.GE9943@pengutronix.de>
-In-Reply-To: <20230523170637.GE9943@pengutronix.de>
-From: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
-Date: Tue, 23 May 2023 14:36:32 -0300
-Message-ID: <CAAEAJfAG_Z_tW8_LzgL7D+tGFYRhyJz3n0uy0gZiOkMnz6FOGA@mail.gmail.com>
-Subject: Re: [PATCH] media: verisilicon: Additional fix for the crash when
- opening the driver
-To: Michael Tretter <m.tretter@pengutronix.de>, 
-	Benjamin Gaignard <benjamin.gaignard@collabora.com>, ezequiel@vanguardiasur.com.ar, 
-	nicolas.dufresne@collabora.com, p.zabel@pengutronix.de, mchehab@kernel.org, 
-	m.szyprowski@samsung.com, didi.debian@cknow.org, linux-media@vger.kernel.org, 
-	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	kernel@collabora.com, hverkuil-cisco@xs4all.nl, kernel@pengutronix.de, 
-	regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [Freedreno] [PATCH] Revert "drm/msm/dp: Remove INIT_SETUP delay"
+Content-Language: en-US
+To: Leonard Lausen <leonard@lausen.nl>,
+        Dmitry Baryshkov
+	<dmitry.baryshkov@linaro.org>,
+        Bjorn Andersson <andersson@kernel.org>
+CC: <freedreno@lists.freedesktop.org>,
+        Sankeerth Billakanti
+	<quic_sbillaka@quicinc.com>,
+        Bjorn Andersson <quic_bjorande@quicinc.com>,
+        <regressions@lists.linux.dev>, David Airlie <airlied@gmail.com>,
+        "Nikita
+ Travkin" <nikita@trvn.ru>, <linux-kernel@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>,
+        Kuogee Hsieh <quic_khsieh@quicinc.com>,
+        Rob Clark <robdclark@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+        <linux-arm-msm@vger.kernel.org>, Stephen Boyd <swboyd@chromium.org>,
+        "Sean
+ Paul" <sean@poorly.run>, Johan Hovold <johan+linaro@kernel.org>
+References: <1345a125-f745-4fe3-0f5e-bfe84225958d@quicinc.com>
+ <b0cc40d5-6de1-91cc-e2cd-f47cc53551e4@quicinc.com>
+ <ebbcd56ac883d3c3d3024d368fab63d26e02637a@lausen.nl>
+ <20230508021536.txtamifw2vkfncnx@ripper>
+ <3802269cd54ce105ef6dece03b1b9af575b4fa06@lausen.nl>
+ <ad351c02-1c29-3601-53e8-f8cdeca2ac63@linaro.org>
+ <49d175ec16e3f65a18265063e51092ee8d0d79c1@lausen.nl>
+From: Abhinav Kumar <quic_abhinavk@quicinc.com>
+In-Reply-To: <49d175ec16e3f65a18265063e51092ee8d0d79c1@lausen.nl>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: rLBmCTl-U4Z5s3a-8SPvcTnbMYDCy6us
+X-Proofpoint-ORIG-GUID: rLBmCTl-U4Z5s3a-8SPvcTnbMYDCy6us
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.176.26
+ definitions=2023-05-23_12,2023-05-23_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 suspectscore=0
+ priorityscore=1501 mlxscore=0 lowpriorityscore=0 mlxlogscore=999
+ spamscore=0 impostorscore=0 bulkscore=0 malwarescore=0 phishscore=0
+ clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2304280000 definitions=main-2305230153
 
-Hi guys,
+Hi Leonard
 
-After reviewing the format logic (hantro_reset_encoded_fmt and
-hantro_reset_raw_fmt).
-It seems to me trying to support Decoders, Encoders and so many
-different SoC Variants, is getting increasingly fragile.
-This driver is becoming a big fat monolith. Regressions like this will
-be increasingly frequent.
+On 5/22/2023 7:39 PM, Leonard Lausen wrote:
+> Abhinav Kumar <quic_abhinavk@quicinc.com> writes:
+>>>>> There is no need to add the 100ms delay back yet.
+>>>>>
+>>>>> thanks for posting this but NAK on this patch till we post the fix this
+>>>>> week.
+>>>>>
+>>>>> Appreciate a bit of patience till then.
+>>>>
+>>>> This regression is already part of the 6.3 stable release series. Will
+>>>> the new patch qualify for inclusion in 6.3.y? Or will it be part of 6.4
+>>>> and this revert should go into 6.3.y?
+>>>
+>>> This is a tough situation, as landing a revert will break x13s, as noted
+>>> by Bjorn. Given that the workaround is known at this moment, I would
+>>> like to wait for the patch from Abhinav to appear, then we can decide
+>>> which of the fixes should go to the stable kernel.
+> 
+> I wasn't able to find new patches, though may have missed them. Is there
+> a decision yet how to proceed with this regression? 6.2 now being EOL
+> may make this a good moment to decide on the next steps.
+> 
 
-The only codec that supports encoding right now is JPEG, so I think
-it's a good idea to remove it for good,
-and split it to its own driver.
+Yes, the new patch to fix this issue is here
 
-Anyone volunteering? :-)
+https://patchwork.freedesktop.org/patch/538601/?series=118148&rev=3
 
-Thanks,
-Ezequiel
+Apologies if you were not CCed on this, if a next version is CCed, will 
+ask kuogee to cc you.
 
-On Tue, May 23, 2023 at 2:06=E2=80=AFPM Michael Tretter
-<m.tretter@pengutronix.de> wrote:
->
-> On Tue, 23 May 2023 18:36:09 +0200, Benjamin Gaignard wrote:
-> >
-> > Le 23/05/2023 =C3=A0 18:25, Benjamin Gaignard a =C3=A9crit :
-> > > This fixes the following issue observed on Odroid-M1 board:
-> > >
-> > >   Unable to handle kernel NULL pointer dereference at virtual address=
- 0000000000000008
-> > >   Mem abort info:
-> > >   ...
-> > >   Modules linked in: crct10dif_ce hantro_vpu snd_soc_simple_card snd_=
-soc_simple_card_utils v4l2_vp9 v4l2_h264 rockchip_saradc v4l2_mem2mem video=
-buf2_dma_contig videobuf2_memops rtc_rk808 videobuf2_v4l2 industrialio_trig=
-gered_buffer rockchip_thermal dwmac_rk stmmac_platform stmmac videodev kfif=
-o_buf display_connector videobuf2_common pcs_xpcs mc rockchipdrm analogix_d=
-p dw_mipi_dsi dw_hdmi drm_display_helper panfrost drm_shmem_helper gpu_sche=
-d ip_tables x_tables ipv6
-> > >   CPU: 3 PID: 176 Comm: v4l_id Not tainted 6.3.0-rc7-next-20230420 #1=
-3481
-> > >   Hardware name: Hardkernel ODROID-M1 (DT)
-> > >   pstate: 60400009 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=3D--)
-> > >   pc : hantro_try_fmt+0xa0/0x278 [hantro_vpu]
-> > >   lr : hantro_try_fmt+0x94/0x278 [hantro_vpu]
-> > >   ...
-> > >   Call trace:
-> > >    hantro_try_fmt+0xa0/0x278 [hantro_vpu]
-> > >    hantro_set_fmt_out+0x3c/0x298 [hantro_vpu]
-> > >    hantro_reset_raw_fmt+0x98/0x128 [hantro_vpu]
-> > >    hantro_set_fmt_cap+0x240/0x254 [hantro_vpu]
-> > >    hantro_reset_encoded_fmt+0x94/0xcc [hantro_vpu]
-> > >    hantro_reset_fmts+0x18/0x38 [hantro_vpu]
-> > >    hantro_open+0xd4/0x20c [hantro_vpu]
-> > >    v4l2_open+0x80/0x120 [videodev]
-> > >    chrdev_open+0xc0/0x22c
-> > >    do_dentry_open+0x13c/0x48c
-> > >    vfs_open+0x2c/0x38
-> > >    path_openat+0x550/0x934
-> > >    do_filp_open+0x80/0x12c
-> > >    do_sys_openat2+0xb4/0x168
-> > >    __arm64_sys_openat+0x64/0xac
-> > >    invoke_syscall+0x48/0x114
-> > >    el0_svc_common+0x100/0x120
-> > >    do_el0_svc+0x3c/0xa8
-> > >    el0_svc+0x40/0xa8
-> > >    el0t_64_sync_handler+0xb8/0xbc
-> > >    el0t_64_sync+0x190/0x194
-> > >   Code: 97fc8a7f f940aa80 52864a61 72a686c1 (b9400800)
-> > >   ---[ end trace 0000000000000000 ]---
-> > >
-> > > Fixes: db6f68b51e5c ("media: verisilicon: Do not set context src/dst =
-formats in reset functions")
->
-> This patch partially reverts the previous commit. I wonder whether the re=
-ason
-> for resetting the context format only if the targeted queue is not busy s=
-till
-> stands.
->
-> > >
-> > > Signed-off-by: Benjamin Gaignard <benjamin.gaignard@collabora.com>
->
-> Tested-by: Michael Tretter <m.tretter@pengutronix.de>
->
-> > > ---
-> >
-> > Diederick, Marek, Michael,
-> > I have tested this patch on my boards and I see no regressions on
-> > decoder part and no more crash when probing the encoder.
-> > Could you test it on your side to confirm it is ok ?
-> >
-> > Thorsten, I try/test regzbot commands, please tell me if it is correct.
-> >
-> > #regzbot ^introduced db6f68b51e5c
-> > #regzbot title media: verisilicon: null pointer dereference in try_fmt
-> > #regzbot ignore-activity
-> >
-> >
-> > >   drivers/media/platform/verisilicon/hantro_v4l2.c | 6 ++++--
-> > >   1 file changed, 4 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/drivers/media/platform/verisilicon/hantro_v4l2.c b/drive=
-rs/media/platform/verisilicon/hantro_v4l2.c
-> > > index 835518534e3b..61cfaaf4e927 100644
-> > > --- a/drivers/media/platform/verisilicon/hantro_v4l2.c
-> > > +++ b/drivers/media/platform/verisilicon/hantro_v4l2.c
-> > > @@ -397,10 +397,12 @@ hantro_reset_raw_fmt(struct hantro_ctx *ctx, in=
-t bit_depth)
-> > >     if (!raw_vpu_fmt)
-> > >             return -EINVAL;
-> > > -   if (ctx->is_encoder)
-> > > +   if (ctx->is_encoder) {
-> > >             encoded_fmt =3D &ctx->dst_fmt;
-> > > -   else
-> > > +           ctx->vpu_src_fmt =3D raw_vpu_fmt;
-> > > +   } else {
-> > >             encoded_fmt =3D &ctx->src_fmt;
-> > > +   }
-> > >     hantro_reset_fmt(&raw_fmt, raw_vpu_fmt);
-> > >     raw_fmt.width =3D encoded_fmt->width;
-> >
+Meanwhile, will be great if you can verify if it works for you and 
+provide Tested-by tags.
+
+>>>> [  275.025497] [drm:dpu_encoder_phys_vid_wait_for_commit_done:488]
+>>>> [dpu error]vblank timeout
+>>>> [  275.025514] [drm:dpu_kms_wait_for_commit_done:510] [dpu error]wait
+>>>> for commit done returned -110
+>>>> [  275.064141] [drm:dpu_encoder_frame_done_timeout:2382] [dpu
+>>>> error]enc33 frame done timeout
+>>
+>> This is a different crash but the root-cause of both the issues is the
+>> bridge hpd_enable/disable series.
+>>
+>> https://patchwork.freedesktop.org/patch/514414/
+>>
+>> This is breaking the sequence and logic of internal hpd as per my
+>> discussion with kuogee.
+>>
+>> We are analyzing the issue and the fix internally first and once we
+>> figure out all the details will post it.
+> 
+> Thank you!
