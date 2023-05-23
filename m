@@ -1,112 +1,80 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EED2D1C750
-	for <regressions@lists.linux.dev>; Tue, 23 May 2023 12:31:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4987C433EF;
-	Tue, 23 May 2023 12:31:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1684845079;
-	bh=g2m24cQ4gdROItmruRoaFFe92RJLnSrCp+y/ymODJ8s=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=L+0fOCK34D1zmuin8Wl7I2gS8xbpwc+/hTe4sw9jiQW0h2b20dbAJPF0a34lmLh/F
-	 XmrAxb1GibB/Dxs3YT6w0dZlJyUOmhUwbidEUmlevoXGzRk38O/ww9tnPxgB0HkyJl
-	 ae0ROulk07UdRyR5wjzJ2IbmfQhdWXvdaGIfFRJfllboDOkuiBfNj3dUAQ1GESJcxR
-	 2t2wxumoQwJTHLWFtHU/ZTtOholkBfcBLDm62TGI6it7X1TYjcZWCPeR9PnSccK4nH
-	 MgoI7Mi7VM5x6dPhpms9OWUTA4srYIpad+p/SuyT8FPt59/rj/vNoR5hulsmjWYKZn
-	 VSPTIjGlA+krQ==
-Date: Tue, 23 May 2023 14:31:15 +0200 (CEST)
-From: Jiri Kosina <jikos@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-cc: Linux regressions mailing list <regressions@lists.linux.dev>, 
-    Benjamin Tissoires <benjamin.tissoires@redhat.com>, 
-    Bagas Sanjaya <bagasdotme@gmail.com>, 
-    =?ISO-8859-15?Q?Filipe_La=EDns?= <lains@riseup.net>, 
-    Bastien Nocera <hadess@hadess.net>, 
-    "open list:HID CORE LAYER" <linux-input@vger.kernel.org>, 
-    LKML <linux-kernel@vger.kernel.org>, guy.b@bluewin.ch
-Subject: Re: [regression] Since kernel 6.3.1 logitech unify receiver not
- working properly
-In-Reply-To: <CAHk-=whvhkSk6m8_AidhofgR9nq0Md+HbNad5r1RE69tZgbv6Q@mail.gmail.com>
-Message-ID: <nycvar.YFH.7.76.2305231422180.29760@cbobk.fhfr.pm>
-References: <9b987585-0834-bb8c-3414-283c29f3f2ab@leemhuis.info> <bec024d5-4088-00ae-f7b5-7188868b1707@leemhuis.info> <b7717c43-74bf-b91d-d3ce-874493df602c@gmail.com> <CAO-hwJ+At1J_yUpX2q_dJekzZ-PoTDAvxmkTk_e4Yu0Z338bEA@mail.gmail.com>
- <55dda0bb-fe42-6dee-28ea-00121554d092@leemhuis.info> <CAHk-=whvhkSk6m8_AidhofgR9nq0Md+HbNad5r1RE69tZgbv6Q@mail.gmail.com>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0327A1F173
+	for <regressions@lists.linux.dev>; Tue, 23 May 2023 14:20:59 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1q1Ssb-0007OG-Pc; Tue, 23 May 2023 16:20:49 +0200
+Message-ID: <71346a9d-d892-c473-ddff-53475191d4b0@leemhuis.info>
+Date: Tue, 23 May 2023 16:20:49 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Re: system hang on start-up (mlx5?)
+Content-Language: en-US, de-DE
+To: Chuck Lever III <chuck.lever@oracle.com>,
+ Leon Romanovsky <leon@kernel.org>, Eli Cohen <elic@nvidia.com>
+Cc: Saeed Mahameed <saeedm@nvidia.com>,
+ linux-rdma <linux-rdma@vger.kernel.org>,
+ "open list:NETWORKING [GENERAL]" <netdev@vger.kernel.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <A1E5B427-897B-409E-B8E3-E417678E81F6@oracle.com>
+ <DM8PR12MB54003FBFCABCCB37EE807B45AB6C9@DM8PR12MB5400.namprd12.prod.outlook.com>
+ <91176545-61D2-44BF-B736-513B78728DC7@oracle.com>
+ <20230504072953.GP525452@unreal>
+ <46EB453C-3CEB-43E8-BEE5-CD788162A3C9@oracle.com>
+ <DBFBD6F9-FAC3-4C04-A9C5-4E126BC96090@oracle.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+In-Reply-To: <DBFBD6F9-FAC3-4C04-A9C5-4E126BC96090@oracle.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1684851660;7f77a85f;
+X-HE-SMSGID: 1q1Ssb-0007OG-Pc
 
-On Mon, 22 May 2023, Linus Torvalds wrote:
+[CCing the regression list, as it should be in the loop for regressions:
+https://docs.kernel.org/admin-guide/reporting-regressions.html]
 
-> > FWIW, in case anybody is interested in a status update: one reporter
-> > bisected the problem down to 586e8fede79 ("HID: logitech-hidpp: Retry
-> > commands when device is busy"); reverting that commit on-top of 6.3
-> > fixes the problem for that reporter. For that reporter things also work
-> > on 6.4-rc; but for someone else that is affected that's not the case.
-
-FWIW, I was pretty much away for past few weeks as well, same as Benjamin 
-as Bastien. Which is unfortunate timing, but that's how things pan out 
-sometimes.
-
-> Hmm. It's likely timing-dependent.
+On 16.05.23 21:23, Chuck Lever III wrote:
+>> On May 4, 2023, at 3:02 PM, Chuck Lever III <chuck.lever@oracle.com> wrote:
+>>> On May 4, 2023, at 3:29 AM, Leon Romanovsky <leon@kernel.org> wrote:
+>>> On Wed, May 03, 2023 at 02:02:33PM +0000, Chuck Lever III wrote:
+>>>>> On May 3, 2023, at 2:34 AM, Eli Cohen <elic@nvidia.com> wrote:
+>>>>> Just verifying, could you make sure your server and card firmware are up to date?
+>>>> Device firmware updated to 16.35.2000; no change.
+>>>> System firmware is dated September 2016. I'll see if I can get
+>>>> something more recent installed.
+>>> We are trying to reproduce this issue internally.
+>> More information. I captured the serial console during boot.
+>> Here are the last messages:
+>[…]
+> Following up.
 > 
-> But that code is clearly buggy.
+> Jason shamed me into replacing a working CX-3Pro in one of
+> my lab systems with a CX-5 VPI, and the same problem occurs.
+> Removing the CX-5 from the system alleviates the problem.
 > 
-> If the wait_event_timeout() returns early, the device hasn't replied,
-> but the code does
-> 
->                 if (!wait_event_timeout(hidpp->wait, hidpp->answer_available,
->                                         5*HZ)) {
->                         dbg_hid("%s:timeout waiting for response\n", __func__);
->                         memset(response, 0, sizeof(struct hidpp_report));
->                         ret = -ETIMEDOUT;
->                 }
-> 
-> and then continues to look at the response _anyway_.
+> Supermicro SYS-6028R-T/X10DRi, v6.4-rc2
 
-Yeah; we are zeroing it out, but that doesn't really make things any 
-better in principle, given all the dereferences later.
+I wondered what happened to this, as this looks stalled. Or was progress
+to fix this regression made I just missed it?
 
-The issue seems to be existing ever since 2f31c52529 ("HID: Introduce 
-hidpp, a module to handle Logitech hid++ devices") when this whole driver 
-was introduced, as far as I can tell.
+I noticed the patch "net/mlx5: Fix irq affinity management" (
+https://lore.kernel.org/all/20230523054242.21596-15-saeed@kernel.org/
+) refers to the culprit of this regression. Is that supposed to fix this
+issue and just lacks proper tags to indicate that?
 
-> Now, depending on out hardening options, that response may have been 
-> initialized by the compiler, or may just be random stack contents.
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
 
-Again, as in case of timeout the buffer is just zeroed out, I'd just much 
-more expect NULL pointer dereference in such case. Which is not what we 
-are seeing here.
-
-> That bug is pre-existing (ie the problem was not introduced by that 
-> commit), but who knows if the retry makes things worse (ie if it then 
-> triggers on a retry, the response data will be the *previous* response).
-> 
-> The whole "goto exit" games should be removed too, because we're in a
-> for-loop, and instead of "goto exit" it should just do "break".
-> 
-> IOW, something like this might be worth testing.
-> 
-> That said, while I think the code is buggy, I doubt this is the actual
-> cause of the problem people are reporting. But it would be lovely to
-> hear if the attached patch makes any difference, and I think this is
-> fixing a real - but unlikely - problem anyway.
-> 
-> And obviously it might be helpful to actually enable those dbg_hid()
-> messages, but I didn't look at what the magic config option to do so
-> was.
-
-dbg_hid() is just pr_debug(), which means that on kernels with 
-CONFIG_DYNAMIC_DEBUG, this makes use of the dynamic debug facility; 
-otherwsie it just becomes printk(KERN_DEBUG...).
-
-Thanks,
-
--- 
-Jiri Kosina
-SUSE Labs
-
+#regzbot poke
