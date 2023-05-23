@@ -1,125 +1,219 @@
-Received: from madras.collabora.co.uk (madras.collabora.co.uk [46.235.227.172])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DE591EA69
-	for <regressions@lists.linux.dev>; Tue, 23 May 2023 16:36:13 +0000 (UTC)
-Received: from [IPV6:2a01:e0a:120:3210:1ba:3e91:de16:9b34] (unknown [IPv6:2a01:e0a:120:3210:1ba:3e91:de16:9b34])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
-	(No client certificate requested)
-	(Authenticated sender: benjamin.gaignard)
-	by madras.collabora.co.uk (Postfix) with ESMTPSA id AB39566058F2;
-	Tue, 23 May 2023 17:36:11 +0100 (BST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1684859772;
-	bh=3CHENV+5lz2J3P/NrtkeHy+T26fSrnBLYvY12RFPujU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Bn/9h34rplwZ8vt11Bie+wDUicXHyWL16UJevssSKdtIhuZdvsOWd59sLMpgNTVke
-	 O/kQ+cWgurR1TtUR9ztJy6CuT2wR4ov4Y+6ArXmgUNOT4nC1RC2p01y+3t/y1TyjRz
-	 PdaAMa24UeY+oYBNmNyqEb+UX3nksoipZ4MZv2LWF2JQjgtp52oyOKqMXyS9vsN8Z8
-	 /Cu5emY1niveMq6OoMuZ9DP24C6nOqEI5pPTrh+K0ZmhHg4OZO7TDpk5xBuLaHgMEN
-	 ES5XJu5vg/wF6+/qQNLuc2ILy9d5qCB23+Z1BJFlN3UcjOStELmSaoy0+wZ6Rrk8j8
-	 WJ/6zywxuozNQ==
-Message-ID: <c034db29-b664-793d-35e0-406fdfe2b145@collabora.com>
-Date: Tue, 23 May 2023 18:36:09 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5D7B2068D
+	for <regressions@lists.linux.dev>; Tue, 23 May 2023 16:50:46 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44664C4339B;
+	Tue, 23 May 2023 16:50:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1684860646;
+	bh=lJQMEEaxH+X5TCsKaSBgdt24AuBJP7OZ4bA8D/UqV24=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BKfsDvkPX9hnJluM6cAbjJOLhcJatkMyMTm8yIznEEn2FNx68bWLHRCub1RaC5dej
+	 PwOk+cHFYFi12MwfPUwzp634oqXiVYuGmPWK7kBBq9s0ROlExPS2rt+o4/16zx2dXY
+	 0+3Hyd+5/M90vVqQTM+8QeBYaLlz+prRXuMZkXjpHB7wUKRV0faZJ1idjK8NcGI+cw
+	 8PKMPOr7GfnK0H0+txLVbd3zz4fw7c4Z1GppaLmUNyarWsHMtDDDpReaFfAf/7dPo2
+	 1UkSdyoa+DZCAwKeWuCWDAc/L1OC6/8A4v5MQGtvHUj18FTCbkEhumgZ5JqaOD1IrG
+	 BENvj0jgLsiUA==
+Date: Tue, 23 May 2023 16:50:44 +0000
+From: Eric Biggers <ebiggers@kernel.org>
+To: Dave Chinner <david@fromorbit.com>
+Cc: "Darrick J. Wong" <djwong@kernel.org>,
+	Bagas Sanjaya <bagasdotme@gmail.com>,
+	Pengfei Xu <pengfei.xu@intel.com>, linux-xfs@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, heng.su@intel.com,
+	dchinner@redhat.com, lkp@intel.com,
+	Linux Regressions <regressions@lists.linux.dev>
+Subject: Re: [Syzkaller & bisect] There is BUG: unable to handle kernel NULL
+ pointer dereference in xfs_extent_free_diff_items in v6.4-rc3
+Message-ID: <20230523165044.GA862686@google.com>
+References: <ZGrOYDZf+k0i4jyM@xpf.sh.intel.com>
+ <ZGsOH5D5vLTLWzoB@debian.me>
+ <20230522160525.GB11620@frogsfrogsfrogs>
+ <20230523000029.GB3187780@google.com>
+ <ZGxry4yMn+DKCWcJ@dread.disaster.area>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH] media: verisilicon: Additional fix for the crash when
- opening the driver
-Content-Language: en-US
-To: ezequiel@vanguardiasur.com.ar, nicolas.dufresne@collabora.com,
- p.zabel@pengutronix.de, mchehab@kernel.org, m.szyprowski@samsung.com,
- m.tretter@pengutronix.de, didi.debian@cknow.org
-Cc: linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
- linux-kernel@vger.kernel.org, kernel@collabora.com,
- hverkuil-cisco@xs4all.nl, kernel@pengutronix.de, regressions@lists.linux.dev
-References: <20230523162515.993862-1-benjamin.gaignard@collabora.com>
-From: Benjamin Gaignard <benjamin.gaignard@collabora.com>
-In-Reply-To: <20230523162515.993862-1-benjamin.gaignard@collabora.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZGxry4yMn+DKCWcJ@dread.disaster.area>
 
+Hi Dave,
 
-Le 23/05/2023 à 18:25, Benjamin Gaignard a écrit :
-> This fixes the following issue observed on Odroid-M1 board:
->
->   Unable to handle kernel NULL pointer dereference at virtual address 0000000000000008
->   Mem abort info:
->   ...
->   Modules linked in: crct10dif_ce hantro_vpu snd_soc_simple_card snd_soc_simple_card_utils v4l2_vp9 v4l2_h264 rockchip_saradc v4l2_mem2mem videobuf2_dma_contig videobuf2_memops rtc_rk808 videobuf2_v4l2 industrialio_triggered_buffer rockchip_thermal dwmac_rk stmmac_platform stmmac videodev kfifo_buf display_connector videobuf2_common pcs_xpcs mc rockchipdrm analogix_dp dw_mipi_dsi dw_hdmi drm_display_helper panfrost drm_shmem_helper gpu_sched ip_tables x_tables ipv6
->   CPU: 3 PID: 176 Comm: v4l_id Not tainted 6.3.0-rc7-next-20230420 #13481
->   Hardware name: Hardkernel ODROID-M1 (DT)
->   pstate: 60400009 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
->   pc : hantro_try_fmt+0xa0/0x278 [hantro_vpu]
->   lr : hantro_try_fmt+0x94/0x278 [hantro_vpu]
->   ...
->   Call trace:
->    hantro_try_fmt+0xa0/0x278 [hantro_vpu]
->    hantro_set_fmt_out+0x3c/0x298 [hantro_vpu]
->    hantro_reset_raw_fmt+0x98/0x128 [hantro_vpu]
->    hantro_set_fmt_cap+0x240/0x254 [hantro_vpu]
->    hantro_reset_encoded_fmt+0x94/0xcc [hantro_vpu]
->    hantro_reset_fmts+0x18/0x38 [hantro_vpu]
->    hantro_open+0xd4/0x20c [hantro_vpu]
->    v4l2_open+0x80/0x120 [videodev]
->    chrdev_open+0xc0/0x22c
->    do_dentry_open+0x13c/0x48c
->    vfs_open+0x2c/0x38
->    path_openat+0x550/0x934
->    do_filp_open+0x80/0x12c
->    do_sys_openat2+0xb4/0x168
->    __arm64_sys_openat+0x64/0xac
->    invoke_syscall+0x48/0x114
->    el0_svc_common+0x100/0x120
->    do_el0_svc+0x3c/0xa8
->    el0_svc+0x40/0xa8
->    el0t_64_sync_handler+0xb8/0xbc
->    el0t_64_sync+0x190/0x194
->   Code: 97fc8a7f f940aa80 52864a61 72a686c1 (b9400800)
->   ---[ end trace 0000000000000000 ]---
->
-> Fixes: db6f68b51e5c ("media: verisilicon: Do not set context src/dst formats in reset functions")
->
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@collabora.com>
-> ---
+On Tue, May 23, 2023 at 05:31:23PM +1000, Dave Chinner wrote:
+> On Tue, May 23, 2023 at 12:00:29AM +0000, Eric Biggers wrote:
+> > On Mon, May 22, 2023 at 09:05:25AM -0700, Darrick J. Wong wrote:
+> > > On Mon, May 22, 2023 at 01:39:27PM +0700, Bagas Sanjaya wrote:
+> > > > On Mon, May 22, 2023 at 10:07:28AM +0800, Pengfei Xu wrote:
+> > > > > Hi Darrick,
+> > > > > 
+> > > > > Greeting!
+> > > > > There is BUG: unable to handle kernel NULL pointer dereference in
+> > > > > xfs_extent_free_diff_items in v6.4-rc3:
+> > > > > 
+> > > > > Above issue could be reproduced in v6.4-rc3 and v6.4-rc2 kernel in guest.
+> > > > > 
+> > > > > Bisected this issue between v6.4-rc2 and v5.11, found the problem commit is:
+> > > > > "
+> > > > > f6b384631e1e xfs: give xfs_extfree_intent its own perag reference
+> > > > > "
+> > > > > 
+> > > > > report0, repro.stat and so on detailed info is link: https://github.com/xupengfe/syzkaller_logs/tree/main/230521_043336_xfs_extent_free_diff_items
+> > > > > Syzkaller reproduced code: https://github.com/xupengfe/syzkaller_logs/blob/main/230521_043336_xfs_extent_free_diff_items/repro.c
+> > > > > Syzkaller reproduced prog: https://github.com/xupengfe/syzkaller_logs/blob/main/230521_043336_xfs_extent_free_diff_items/repro.prog
+> > > > > Kconfig: https://github.com/xupengfe/syzkaller_logs/blob/main/230521_043336_xfs_extent_free_diff_items/kconfig_origin
+> > > > > Bisect info: https://github.com/xupengfe/syzkaller_logs/blob/main/230521_043336_xfs_extent_free_diff_items/bisect_info.log
+> > > > > Issue dmesg: https://github.com/xupengfe/syzkaller_logs/blob/main/230521_043336_xfs_extent_free_diff_items/v6.4-rc3_reproduce_dmesg.log
+> > > > > 
+> > > > > v6.4-rc3 reproduced info:
+> > > 
+> > > Diagnosis and patches welcomed.
+> > > 
+> > > Or are we doing the usual syzbot bullshit where you all assume that I'm
+> > > going to do all the fucking work for you?
+> > > 
+> > 
+> > It looks like Pengfei already took the time to manually bisect this issue to a
+> > very recent commit authored by you.  Is that not helpful?
+> 
+> No. The bisect is completely meaningless.
+> 
+> The cause of the problem is going to be some piece of corrupted
+> metadata has got through a verifier check or log recovery and has
+> resulted in a perag lookup failing. The bisect landed on the commit
+> where the perag dependency was introduced; whatever is letting
+> unchecked corrupted metadata throught he verifiers has existed long
+> before this recent change was made.
+> 
+> I've already spent two hours analysing this report - I've got to the
+> point where I've isolated the transaction in the trace, I see the
+> allocation being run as expected, I see all the right things
+> happening, and then it goes splat after the allocation has committed
+> and it starts processing defered extent free operations. Neither the
+> code nor the trace actually tell me anything about the nature of the
+> failure that has occurred.
+> 
+> At this point, I still don't know where the corrupted metadata is
+> coming from. That's the next thing I need to look at, and then I
+> realised that this bug report *doesn't include a pointer to the
+> corrupted filesystem image that is being mounted*.
+> 
+> IOWs, the bug report is deficient and not complete, and so I'm
+> forced to spend unnecessary time trying to work out how to extract
+> the filesystem image from a weird syzkaller report that is basically
+> just a bunch of undocumented blobs in a github tree.
+> 
+> This is the same sort of shit we've been having to deal rigth from
+> teh start with syzkaller. It doesn't matter that syzbot might have
+> improved it's reporting a bit these days, we still have to deal with
+> this sort of poor reporting from all the private syzkaller bot crank
+> handles that are being turned by people who know little more than
+> how to turn a crank handle.
+> 
+> To make matters worse, this is a v4 filesystem which has known
+> unfixable issues when handling corrupted filesystems in both log
+> replay and in runtime detection of corruption. We've repeatedly told
+> people running syzkaller (including Pengfei) to stop running it on
+> v4 filesystems and only report bugs on V5 format filesystems. This
+> is to avoid wasting time triaging these problems back down to v4
+> specific format bugs that ican only be fixed by moving to the v5
+> format.
+> 
+> .....
+> 
+> And now after 4 hours, I have found several corruptions in the on
+> disk format that v5 filesystems will have caught and v4 filesystems
+> will not.
+> 
+> The AGFL indexes in the AGF have been corrupted. They are within
+> valid bounds, but first + last != count. On a V5 filesystem we catch
+> this and trigger an AGFL reset that is done of the first allocation.
+> v4 filesystems do not do this last - first = count validation at
+> all.
+> 
+> Further, the AGFL has also been corrupted - it is full of null
+> blocks. This is another problem that V5 filesystems can catch and
+> report, but v4 filesystems don't because they don't have headers in
+> the AGFL that enable verification.
+> 
+> Yes, there's definitely scope for further improvements in validation
+> here, but the unhandled corruptions that I've found still don't
+> explain how we got a null perag in the xefi created from a
+> referenced perag that is causing the crash.
+> 
+> So, yeah, the bisect is completely useless, and I've got half a day
+> into triage and I still don't have any clue what the corruption is
+> that is causing the kernel to crash....
+> 
+> ----
+> 
+> Do you see the problem now, Eric?
+> 
+> Performing root-cause analysis of syzkaller based malicious
+> filesystem corruption bugs is anything but simple. It takes hours to
+> days just to work through triage of a single bug report, and we're
+> getting a couple of these sorts of bug reported every week.
+> 
+> People who do nothing but turn the bot crank handle throw stuff like
+> this over the wall at usi are easy to find. Bots and bot crank
+> turners scale really easily. Engineers who can find and fix the
+> problems, OTOH, don't.
+> 
+> And just to rub salt into the wounds, we now have people who turn
+> crank handles on other bots to tell everyone else how important
+> they think the problem is without having performed any triage at
+> all. And then we're expected to make an untriaged bug report our
+> highest priority and immediately spend hours of time to make sense
+> of the steaming pile that has just been dumped on us.
+> 
+> Worse, we've had people who track regressions imply that if we don't
+> prioritise fixing regressions ahead of anything else we might be
+> working on, then we might not get new work merged until the
+> regressions have been fixed. In my book, that's akin to extortion,
+> and it might give you some insight to why Darrick reacted so
+> vigorously to having an untriaged syzkaller bug tracked as a high
+> visibility, must fix regression.
+> 
+> What we really need is more people who are capable to triaging bug
+> reports like this instead of having lots of people cranking on bot
+> handles and dumping untriaged bug reports on the maintainer.
+> Further, if you aren't capable of triaging the bug report, then you
+> aren't qualified to classify it as a "must fix" regression.
+> 
+> It's like people don't have any common sense or decency anymore:
+> it's not very nice to classify a bug as a "must fix" regression
+> without first having consulted the engineers responsible for that
+> code. If you don't know what the cause of the bug is, then don't
+> crank handles that cause people to have to address it immediately!
+> 
+> If nothing changes, then the ever increasing amount of bot cranking
+> is going to burn us out completely. Nobody wins when that
+> happens....
+> 
 
-Diederick, Marek, Michael,
-I have tested this patch on my boards and I see no regressions on
-decoder part and no more crash when probing the encoder.
-Could you test it on your side to confirm it is ok ?
+Thanks for the explanation.  I personally didn't need such a long explanation,
+but it should be helpful for Pengfei and others.
 
-Thorsten, I try/test regzbot commands, please tell me if it is correct.
+I was mostly just concerned that a report of a bug with a reproducer and a
+bisection to a recent commit just got a response from the maintainer with
+profanities and no helpful information.  ("It's like people don't have any
+common sense or decency anymore...")  I think that makes it hard for people like
+Pengfei to understand what they did wrong, especially when they might have
+gotten very different responses from other kernel subsystems.  So, thank you for
+providing a more detailed explanation, though honestly, something much shorter
+would have sufficed.  (Maybe you should even have a write-up on the XFS wiki or
+in Documentation/ that you point to whenever this sort of thing comes up?)
 
-#regzbot ^introduced db6f68b51e5c
-#regzbot title media: verisilicon: null pointer dereference in try_fmt
-#regzbot ignore-activity
+BTW, given that XFS has a policy of not fixing bugs in XFS v4 filesystems, I
+suggest adding a kconfig option that disables the support for mounting XFS v4
+filesystems.  Then you could just tell the people fuzzing XFS filesystem images
+that they need to use that option.  That would save everyone a lot of time.
+(To be clear, I'm not arguing for the XFS policy on v4 filesystems being right
+or wrong; that's really not something I'd like to get into again...  I'm just
+saying that if that's indeed your policy, this is what you should do.)
 
-
->   drivers/media/platform/verisilicon/hantro_v4l2.c | 6 ++++--
->   1 file changed, 4 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/media/platform/verisilicon/hantro_v4l2.c b/drivers/media/platform/verisilicon/hantro_v4l2.c
-> index 835518534e3b..61cfaaf4e927 100644
-> --- a/drivers/media/platform/verisilicon/hantro_v4l2.c
-> +++ b/drivers/media/platform/verisilicon/hantro_v4l2.c
-> @@ -397,10 +397,12 @@ hantro_reset_raw_fmt(struct hantro_ctx *ctx, int bit_depth)
->   	if (!raw_vpu_fmt)
->   		return -EINVAL;
->   
-> -	if (ctx->is_encoder)
-> +	if (ctx->is_encoder) {
->   		encoded_fmt = &ctx->dst_fmt;
-> -	else
-> +		ctx->vpu_src_fmt = raw_vpu_fmt;
-> +	} else {
->   		encoded_fmt = &ctx->src_fmt;
-> +	}
->   
->   	hantro_reset_fmt(&raw_fmt, raw_vpu_fmt);
->   	raw_fmt.width = encoded_fmt->width;
+- Eric
