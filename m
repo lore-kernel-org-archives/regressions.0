@@ -1,94 +1,100 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ADB51FB1
-	for <regressions@lists.linux.dev>; Wed, 24 May 2023 10:45:00 +0000 (UTC)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 6862E22216;
-	Wed, 24 May 2023 10:44:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1684925098; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=oF66gYTB+QJSrVWI5RQG+Ao4fzWor/HhKUumZiTVkUY=;
-	b=Zu0r1soRm7McpET6O/13sBoq40nW4Z7NDdCwU0Ibk2pTdtPbLcvHy0lPgI2uO1O29FDvPM
-	4xMJckKmR9SeDCyxSB5jrUf2Ta8fiOfUALe62iQm9XLNNRjH2puYSI+GmBXFPBWCmZ3fXD
-	GTnXJRddJeZZ/ColGbOQIpWG+VqQXCM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1684925098;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=oF66gYTB+QJSrVWI5RQG+Ao4fzWor/HhKUumZiTVkUY=;
-	b=k8+S6YJ/ZW7iDI3an2ZpZ5uWLlxXnDyBm2WxrOM1gdNTZQnLrxdYARkQMHQ3pGALLX/3aG
-	kR5uwxvpyvWh9ZDQ==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 5B34A133E6;
-	Wed, 24 May 2023 10:44:58 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-	by imap2.suse-dmz.suse.de with ESMTPSA
-	id 6M89FqrqbWQ/LAAAMHmgww
-	(envelope-from <jack@suse.cz>); Wed, 24 May 2023 10:44:58 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id E101CA075C; Wed, 24 May 2023 12:44:57 +0200 (CEST)
-From: Jan Kara <jack@suse.cz>
-To: Ted Tso <tytso@mit.edu>
-Cc: <linux-ext4@vger.kernel.org>,
-	Eric Whitney <enwlinux@gmail.com>,
-	Linux kernel regressions list <regressions@lists.linux.dev>,
-	Jan Kara <jack@suse.cz>
-Subject: [PATCH] ext4: Fix fsync for non-directories
-Date: Wed, 24 May 2023 12:44:53 +0200
-Message-Id: <20230524104453.8734-1-jack@suse.cz>
-X-Mailer: git-send-email 2.35.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4371C15C
+	for <regressions@lists.linux.dev>; Wed, 24 May 2023 10:48:55 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1q1m32-0006BQ-9b; Wed, 24 May 2023 12:48:52 +0200
+Message-ID: <80207a43-6047-4493-da5d-8bd87ef74551@leemhuis.info>
+Date: Wed, 24 May 2023 12:48:51 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1552; i=jack@suse.cz; h=from:subject; bh=CnRcWpd6OnMHLy8/NZ55lHLQg3F2ybI4ioyT51lJNHc=; b=owEBbQGS/pANAwAIAZydqgc/ZEDZAcsmYgBkbeqfFO1A3LPH9Paeik1Y+6+DlD10KnitiqDCrLSz 9ePz32iJATMEAAEIAB0WIQSrWdEr1p4yirVVKBycnaoHP2RA2QUCZG3qnwAKCRCcnaoHP2RA2Tn0B/ 93Mb+xkVoQjg2Ytljh2wgyrXZEvFWIaMcAL3Sg5W55KkcPSXFEN7OOc2l0kjnDiBy3DheRqu8iQ/7p g9zlvM9N0uWjuHwcnkTYlWh2GkLqm981gmg4dNHIT1H0mvrtk3BUDHtJY2vQsXj1w+8MJlp9tsB7kB GTChfaRfoZBkpHbZg0Gx3okbnLW4f/ijxDDXf4RaSSlDSglJP+AFGxHC4nVOLb6oBv1iTKqRYrE3yl pur7K3MTOLlBmBb9aLtmUVK/bCTGpc33jsvpDz9tNfZmSCa32OGKqdVjeoAqke4lpeQISeIyFcvYhy fquiGizVbTbUbbgkcnD9Q3197UMAXk
-X-Developer-Key: i=jack@suse.cz; a=openpgp; fpr=93C6099A142276A28BBE35D815BC833443038D8C
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: Regression: serial: imx: overrun errors on debug UART
+Content-Language: en-US, de-DE
+To: Sergey Organov <sorganov@gmail.com>
+Cc: Stefan Wahren <stefan.wahren@i2se.com>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>,
+ =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Stefan Wahren <stefan.wahren@chargebyte.com>, linux-serial@vger.kernel.org,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Shawn Guo <shawnguo@kernel.org>, Jiri Slaby <jirislaby@kernel.org>,
+ =?UTF-8?Q?Tomasz_Mo=c5=84?= <tomasz.mon@camlingroup.com>,
+ Linux ARM <linux-arm-kernel@lists.infradead.org>
+References: <2c29454b-9369-4360-8eb4-c151f59460cb@i2se.com>
+ <d660e3cf-5686-d989-3b59-efe83ec9d590@linux.intel.com>
+ <CAOMZO5A+GujiQY-UT3Q-8o0AKujJb_4kY+5L4x1e07ovGfo31w@mail.gmail.com>
+ <9e22f237-f3ee-0415-9e6b-89a137769b8f@i2se.com>
+ <5d59dec6-9f6f-7b20-1221-f57c94b29cca@i2se.com>
+ <20230325151100.mskydt3hwbnspqp4@pengutronix.de>
+ <cb16ddb7-f22f-d637-8670-bccc77add0af@i2se.com> <87mt3ynsa7.fsf@osv.gnss.ru>
+ <d5009984-d2eb-0343-5bb4-df8a7f526121@i2se.com> <87sfcy8ncu.fsf@osv.gnss.ru>
+ <534ac8db-ae8f-1ea3-9aa9-2105db7f7a52@i2se.com>
+ <203ce87f-2898-eb10-2f8c-f237859d75e6@leemhuis.info>
+ <87ttw2vnn0.fsf@osv.gnss.ru>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <87ttw2vnn0.fsf@osv.gnss.ru>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1684925336;512e7d91;
+X-HE-SMSGID: 1q1m32-0006BQ-9b
 
-Commit e360c6ed7274 ("ext4: Drop special handling of journalled data
-from ext4_sync_file()") simplified ext4_sync_file() by dropping special
-handling of journalled data mode as it was not needed anymore. However
-that branch was also used for directories and symlinks and since the
-fastcommit code does not track metadata changes to non-regular files, the
-change has caused e.g. fsync(2) on directories to not commit transaction
-as it should. Fix the problem by adding handling for non-regular files.
+On 23.05.23 21:44, Sergey Organov wrote:
+> "Linux regression tracking (Thorsten Leemhuis)"
+> <regressions@leemhuis.info> writes:
+> 
+>> Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
+>> for once, to make this easily accessible to everyone.
+>>
+>> Stefan, was this regression ever solved? It doesn't look like it, but
+>> maybe I'm missing something.
+>>
+>> If it wasn't solved: what needs to be done to get this rolling again?
+> 
+> Not Stefan,
 
-Fixes: e360c6ed7274 ("ext4: Drop special handling of journalled data from ext4_sync_file()")
-Reported-by: Eric Whitney <enwlinux@gmail.com>
-Link: https://lore.kernel.org/all/ZFqO3xVnmhL7zv1x@debian-BULLSEYE-live-builder-AMD64
-Signed-off-by: Jan Kara <jack@suse.cz>
----
- fs/ext4/fsync.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+Thx to both you and Stefan for the update.
 
-diff --git a/fs/ext4/fsync.c b/fs/ext4/fsync.c
-index f65fdb27ce14..2a143209aa0c 100644
---- a/fs/ext4/fsync.c
-+++ b/fs/ext4/fsync.c
-@@ -108,6 +108,13 @@ static int ext4_fsync_journal(struct inode *inode, bool datasync,
- 	journal_t *journal = EXT4_SB(inode->i_sb)->s_journal;
- 	tid_t commit_tid = datasync ? ei->i_datasync_tid : ei->i_sync_tid;
- 
-+	/*
-+	 * Fastcommit does not really support fsync on directories or other
-+	 * special files. Force a full commit.
-+	 */
-+	if (!S_ISREG(inode->i_mode))
-+		return ext4_force_commit(inode->i_sb);
-+
- 	if (journal->j_flags & JBD2_BARRIER &&
- 	    !jbd2_trans_will_send_data_barrier(journal, commit_tid))
- 		*needs_barrier = true;
--- 
-2.35.3
+> but as far as I can tell, the problem is that on Stefan's
+> build the kernel has rather large periods of interrupts being disabled,
+> so any attempt to decrease IRQs frequency from UART by raising FIFO IRQ
+> threshold causes "regression" that manifests itself as missing
+> characters on receive. I'm not sure if it's tuning FIFO level that is in
+> fact a regression in this case.
 
+Not totally sure, but I guess Linus stance in this case would be along
+the lines of "commit 7a637784d517 made an existing issue worse; either
+the people involved in it fix it, or we revert that commit[1], as it's
+causing a regression". At least we *iirc* had situations he handled like
+that.
+
+[1] of course unless a revert would cause regressions for others --
+which i guess might be the case here, as that was added in 5.18 already.
+So let's not bring Linus in.
+
+> Solving this would need to identify the cause of interrupts being
+> disabled for prolonged times, and nobody volunteered to investigate this
+> further. 
+
+Well, Stefan kind of did to do so in his spare time, but asked for
+"clear instructions to investigate this further". Could you maybe
+provide those? If not: who could?
+
+> One suspect, the Linux serial console, has been likely excluded
+> already though, as not actually being in use for printk() output.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
