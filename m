@@ -1,13 +1,45 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4371C15C
-	for <regressions@lists.linux.dev>; Wed, 24 May 2023 10:48:55 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1q1m32-0006BQ-9b; Wed, 24 May 2023 12:48:52 +0200
-Message-ID: <80207a43-6047-4493-da5d-8bd87ef74551@leemhuis.info>
-Date: Wed, 24 May 2023 12:48:51 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38D9B1FB1
+	for <regressions@lists.linux.dev>; Wed, 24 May 2023 10:58:14 +0000 (UTC)
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-253e0f1e514so70119a91.1
+        for <regressions@lists.linux.dev>; Wed, 24 May 2023 03:58:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1684925893; x=1687517893;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EtNtYGFCrVyZey4VNLOickd29YxbAE5d03gdnH81J+U=;
+        b=l3Y8DRIQWeZSAkdFMfWSj0ifqiRCoUl+MxNzyGPTw4ZMaQ6QWphZ802TjCA9rSm9so
+         WMG3R44sc0gr+xXBTBY7TCuICT3d45vwv+Fhc2Kif7HhDdftbNF0EkAGL8oVUJSe2Eay
+         ZUaEtkJpPuwE8y8NK/iA7PUeSMknfa4tcoav5tGrXwUQFy8oRiNb9MqyPcTeGkb27rHp
+         hMzPGBz5WgbeekaXTC+5mYde3P4XFoDPx30/BpGiJJRyymxVzStX6k13W/tbQ/2bM4zm
+         Va38TCsEtvSD8nOdlVZbYfj30hYNmcztUhE7KWlVnuBOtz6HCt6W+ZPxpyac7saVfI9j
+         9sDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684925893; x=1687517893;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=EtNtYGFCrVyZey4VNLOickd29YxbAE5d03gdnH81J+U=;
+        b=Nj3FbZEfV3n+Xnl8RLKfPagH5FwPWQ35IGh7IaBKB9085OPI0v/WTXFr6ljE0f+Rha
+         wjFdvKuXpHLshkDCktna64VsIIhKg/V76+xXvKDSBhJSLmwdo8U4vHUSWiTpdAs0QFl+
+         Gcipun07KtWU+wUtorhLTGx4WiNERqTs31dmO8dxW9wg5DOkNLdHmF7BKafkpd25ktNK
+         ccl3933GKmrr+4gtEkfaOnSC8xuDn/JwK35yGCwo3/s0Kn6Qdj0H9aZWLpdvPEWt6Uyk
+         go9gZFLKnOABXBk73Ur5Ke0bLYH3yrpWWy6njwp1RhRFZ56r2JTwOuPI/oa7vzlvZ8xh
+         jyrQ==
+X-Gm-Message-State: AC+VfDwteiWcFhCcDYbRbae/hw0wH2vhq8aPT9bwyZIeInvmDofoQACE
+	Xy/TaJ1ikAO9/KDn5Wa09qo=
+X-Google-Smtp-Source: ACHHUZ4x3mbRZza/OnPc7Hf62AB/tvNESZBkKaby/M3eKCGQRKizRlGE/zRB69YbxrIb8Twc5v/liA==
+X-Received: by 2002:a17:90a:bf8b:b0:253:727e:4b41 with SMTP id d11-20020a17090abf8b00b00253727e4b41mr15726441pjs.34.1684925893529;
+        Wed, 24 May 2023 03:58:13 -0700 (PDT)
+Received: from [192.168.43.80] (subs02-180-214-232-28.three.co.id. [180.214.232.28])
+        by smtp.gmail.com with ESMTPSA id i2-20020a17090ac40200b0024de39e8746sm1110323pjt.11.2023.05.24.03.58.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 24 May 2023 03:58:13 -0700 (PDT)
+Message-ID: <2a1cd5e6-01f7-66f9-1f9d-c655cc3f919b@gmail.com>
+Date: Wed, 24 May 2023 17:58:07 +0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -15,86 +47,55 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: Regression: serial: imx: overrun errors on debug UART
-Content-Language: en-US, de-DE
-To: Sergey Organov <sorganov@gmail.com>
-Cc: Stefan Wahren <stefan.wahren@i2se.com>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>,
- =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Stefan Wahren <stefan.wahren@chargebyte.com>, linux-serial@vger.kernel.org,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Sascha Hauer <s.hauer@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Shawn Guo <shawnguo@kernel.org>, Jiri Slaby <jirislaby@kernel.org>,
- =?UTF-8?Q?Tomasz_Mo=c5=84?= <tomasz.mon@camlingroup.com>,
- Linux ARM <linux-arm-kernel@lists.infradead.org>
-References: <2c29454b-9369-4360-8eb4-c151f59460cb@i2se.com>
- <d660e3cf-5686-d989-3b59-efe83ec9d590@linux.intel.com>
- <CAOMZO5A+GujiQY-UT3Q-8o0AKujJb_4kY+5L4x1e07ovGfo31w@mail.gmail.com>
- <9e22f237-f3ee-0415-9e6b-89a137769b8f@i2se.com>
- <5d59dec6-9f6f-7b20-1221-f57c94b29cca@i2se.com>
- <20230325151100.mskydt3hwbnspqp4@pengutronix.de>
- <cb16ddb7-f22f-d637-8670-bccc77add0af@i2se.com> <87mt3ynsa7.fsf@osv.gnss.ru>
- <d5009984-d2eb-0343-5bb4-df8a7f526121@i2se.com> <87sfcy8ncu.fsf@osv.gnss.ru>
- <534ac8db-ae8f-1ea3-9aa9-2105db7f7a52@i2se.com>
- <203ce87f-2898-eb10-2f8c-f237859d75e6@leemhuis.info>
- <87ttw2vnn0.fsf@osv.gnss.ru>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <87ttw2vnn0.fsf@osv.gnss.ru>
+ Thunderbird/102.11.0
+Content-Language: en-US
+To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux PowerPC <linuxppc-dev@lists.ozlabs.org>,
+ Linux Memory Management List <linux-mm@kvack.org>,
+ Linux Regressions <regressions@lists.linux.dev>
+Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+ Michael Ellerman <mpe@ellerman.id.au>, Zi Yan <ziy@nvidia.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ doru iorgulescu <doru.iorgulescu1@gmail.com>,
+ Nicholas Piggin <npiggin@gmail.com>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>,
+ Fabiano Rosas <farosas@linux.ibm.com>,
+ Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+ Disha Goel <disgoel@linux.vnet.ibm.com>
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+Subject: Fwd: ./include/linux/mmzone.h:1735:2: error: #error Allocator
+ MAX_ORDER exceeds SECTION_SIZE (v6.4-rc3 build regression)
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1684925336;512e7d91;
-X-HE-SMSGID: 1q1m32-0006BQ-9b
 
-On 23.05.23 21:44, Sergey Organov wrote:
-> "Linux regression tracking (Thorsten Leemhuis)"
-> <regressions@leemhuis.info> writes:
-> 
->> Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
->> for once, to make this easily accessible to everyone.
->>
->> Stefan, was this regression ever solved? It doesn't look like it, but
->> maybe I'm missing something.
->>
->> If it wasn't solved: what needs to be done to get this rolling again?
-> 
-> Not Stefan,
+Hi,
 
-Thx to both you and Stefan for the update.
+I notice a powerpc[64?] build regression on Bugzilla [1]. Quoting from it:
 
-> but as far as I can tell, the problem is that on Stefan's
-> build the kernel has rather large periods of interrupts being disabled,
-> so any attempt to decrease IRQs frequency from UART by raising FIFO IRQ
-> threshold causes "regression" that manifests itself as missing
-> characters on receive. I'm not sure if it's tuning FIFO level that is in
-> fact a regression in this case.
+>  CC      arch/powerpc/kernel/asm-offsets.s
+> In file included from ./include/linux/gfp.h:7,
+>                 from ./include/linux/xarray.h:15,
+>                 from ./include/linux/list_lru.h:14,
+>                 from ./include/linux/fs.h:13,
+>                 from ./include/linux/compat.h:17,
+>                 from arch/powerpc/kernel/asm-offsets.c:12:
+> ./include/linux/mmzone.h:1735:2: error: #error Allocator MAX_ORDER exceeds SECTION_SIZE
+> 1735 | #error Allocator MAX_ORDER exceeds SECTION_SIZE
+>      |  ^~~~~
+> make[5]: *** [scripts/Makefile.build:114: arch/powerpc/kernel/asm-offsets.s] Error 1
 
-Not totally sure, but I guess Linus stance in this case would be along
-the lines of "commit 7a637784d517 made an existing issue worse; either
-the people involved in it fix it, or we revert that commit[1], as it's
-causing a regression". At least we *iirc* had situations he handled like
-that.
+Apparently removing the errored line solves the problem for the reporter
+(the attached dmesg on [2] looks fine at a glance).
 
-[1] of course unless a revert would cause regressions for others --
-which i guess might be the case here, as that was added in 5.18 already.
-So let's not bring Linus in.
+Anyway, I'm adding it to regzbot:
 
-> Solving this would need to identify the cause of interrupts being
-> disabled for prolonged times, and nobody volunteered to investigate this
-> further. 
+#regzbot introduced: 23baf831a32c04f https://bugzilla.kernel.org/show_bug.cgi?id=217477
+#regzbot title: Allocator MAX_ORDER exceeds SECTION_SIZE caused by MAX_ORDER redefinition
 
-Well, Stefan kind of did to do so in his spare time, but asked for
-"clear instructions to investigate this further". Could you maybe
-provide those? If not: who could?
+Thanks.
 
-> One suspect, the Linux serial console, has been likely excluded
-> already though, as not actually being in use for printk() output.
+[1]: https://bugzilla.kernel.org/show_bug.cgi?id=217477
+[2]: https://bugzilla.kernel.org/show_bug.cgi?id=217477#c1
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+-- 
+An old man doll... just what I always wanted! - Clara
