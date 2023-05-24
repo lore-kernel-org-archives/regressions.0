@@ -1,171 +1,110 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B843618AF6
-	for <regressions@lists.linux.dev>; Wed, 24 May 2023 15:27:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1684942063;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pRD5Edte+ebDzPioS2wNC3VCfpjAvpMy1rZvcq/7BjA=;
-	b=cIZ7P5O8Oz6G88m4SGuujYaVQTed7kdOPTJTuayRQFytVG0IuRseBTTBW6fPxhL2BJR/zt
-	ft6hM8m9/n340LWb7PLWPy0ONIwaz94LOR9488TjilT8x2C1b1Zy9aiMa1iTb/lnlRAhDv
-	XKwCc+aopO40CEd+2WAW33/19524zp8=
-Received: from mail-yw1-f200.google.com (mail-yw1-f200.google.com
- [209.85.128.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-669-gq_ZYWn5Odih-CbPSQgZng-1; Wed, 24 May 2023 11:27:42 -0400
-X-MC-Unique: gq_ZYWn5Odih-CbPSQgZng-1
-Received: by mail-yw1-f200.google.com with SMTP id 00721157ae682-561bad0999aso24832207b3.0
-        for <regressions@lists.linux.dev>; Wed, 24 May 2023 08:27:42 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B2B122627
+	for <regressions@lists.linux.dev>; Wed, 24 May 2023 22:12:29 +0000 (UTC)
+Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-75b1975ea18so17816685a.3
+        for <regressions@lists.linux.dev>; Wed, 24 May 2023 15:12:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1684966349; x=1687558349;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=b1l/0qie4req/UQOwYfmZHsuT9joQERFp9mtBgi/+Sw=;
+        b=kzGFFuKKMv1z86PsXNNkYryChfRTphcbuWNHNVkz3R6lAcch1+7gBETZMR9o38Tuee
+         sD2G6QJlCAHU5qiKQKniZ3nw5RIMowXPiP1Ng2lF7KriLKBJppYjfY95uecdT2BQqSyG
+         +BpWFAowI7S0RQ+d8x3ks1ijVBoLWdcZBJNlq2AkzCrqAsvGMGa9d0Pm31Wjcs3jekzp
+         xO15/I72IuK3EWOJV3IsxTuu0X8+mpKvj+7YbtSFlfdkPENT/MH1WBxco6D2e54h6lIJ
+         02SDfJ/HLu8CbMU7xVpEv1DkZTVKFz87NTLLvUlO1vo6YmPKChswf5S8q4LzI8pd3Sq4
+         LvEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684942062; x=1687534062;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pRD5Edte+ebDzPioS2wNC3VCfpjAvpMy1rZvcq/7BjA=;
-        b=C6eYXfXGoDekYqbNWUE9QdntCSuoLcT2KArcj4daqGrdHuFTem/rwWTHIsouIX/KJ/
-         T/ZyZj4Fei9ViprlvaTT5u1nBtj22lJ3mxKMNE/14vBww8U3udRm/5bv+cGE10HEApMK
-         TWuXEaVfLo8ajwjgwtIzWQJSPuwavtdV/y/+MBPY3oOth/1PWUcbZ4rvG4mPHysBvkEJ
-         WYEZ+xxLfknOn3UmlSucp22Q+y8QSS97cXGuh8FVlYZta20iBePDTObycTETljKQc4fj
-         68pSkXFepg/lzQMvQgGu2Sn2NdIP+neHhIn4P42NZgVdoSfspQn0UHJzs1BU8qk0yiu5
-         QnQg==
-X-Gm-Message-State: AC+VfDyh+qRBGdBCcqrOo+ZOPEr0TmsMb4kPO3c1sLcktYJWUhaoL7V7
-	MgbD8L/dyEdBvTpXqDGZSGmE6BsGd4O5GVxekhrZq6T5+nVJrNPTxF3w81wwkZGtxAS6Uuk2BHi
-	zZAeJxjbtArGH/Dhf1ZZeaGVNSNjKbAGsnbw34yw=
-X-Received: by 2002:a25:541:0:b0:ba8:bb80:87 with SMTP id 62-20020a250541000000b00ba8bb800087mr136311ybf.59.1684942061865;
-        Wed, 24 May 2023 08:27:41 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ5zOnfgYOls8GO46XNLGEjZ6QHYpl0/ZnDtlEknirvfa2o52TirkADmMFJbv94kbs8hSVE/fMRGbncqq5X8iqQ=
-X-Received: by 2002:a25:541:0:b0:ba8:bb80:87 with SMTP id 62-20020a250541000000b00ba8bb800087mr136289ybf.59.1684942061594;
- Wed, 24 May 2023 08:27:41 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1684966349; x=1687558349;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=b1l/0qie4req/UQOwYfmZHsuT9joQERFp9mtBgi/+Sw=;
+        b=CukCnFxSwJVkzL/VeIRERbp177NwAQRZyU2nQNaKmLPKM8fMGH/sE3/UxcDydWvAGs
+         PWZgigBbXlfR36ej+x3jsOZ6YbWhxChTxlSOAZu0hyj5lRp539rx74TtKmyCVrpXZXNM
+         +aXiAgfTBnmPEkUiNwwsow8wI5EsqUgxzFqI+Ip/HBOmwYdsLr9IQ4nl5WN/8AInY57E
+         Z09ZDPPd7DnQxwu4cZfyP9RzdigWF1zXYrm46pDaVVb1jaqHa3YErfSg5Q4xxMpmrsah
+         OV0KHOCFYH19Lnyx1zyF1tYIHT6UQRae+dGVC3VNW/8+Jn1voEqlmvQidO1Tap5SWyiX
+         dApg==
+X-Gm-Message-State: AC+VfDyDBAL+Cfs4eJJMKKHOhSv42t5BSck+y1W6d9UDztmlypWDwaE4
+	1s3OPo+Z+xY31U78sghER1I=
+X-Google-Smtp-Source: ACHHUZ4LQl+sMom57SWJGat+dzZZHusXYWow4q9mi5ixXb7ZlaxbQEy8LL0FryAMBB6fCDIPDIoN5Q==
+X-Received: by 2002:a05:620a:3d89:b0:75b:23a0:e7b8 with SMTP id ts9-20020a05620a3d8900b0075b23a0e7b8mr7648120qkn.25.1684966348958;
+        Wed, 24 May 2023 15:12:28 -0700 (PDT)
+Received: from debian-BULLSEYE-live-builder-AMD64 (h64-35-202-119.cntcnh.broadband.dynamic.tds.net. [64.35.202.119])
+        by smtp.gmail.com with ESMTPSA id u13-20020ae9c00d000000b0075783f6c2b4sm3550775qkk.128.2023.05.24.15.12.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 May 2023 15:12:28 -0700 (PDT)
+Date: Wed, 24 May 2023 18:12:26 -0400
+From: Eric Whitney <enwlinux@gmail.com>
+To: Jan Kara <jack@suse.cz>
+Cc: Ted Tso <tytso@mit.edu>, linux-ext4@vger.kernel.org,
+	Eric Whitney <enwlinux@gmail.com>,
+	Linux kernel regressions list <regressions@lists.linux.dev>
+Subject: Re: [PATCH] ext4: Fix fsync for non-directories
+Message-ID: <ZG6Lyq4iq/HnBvPu@debian-BULLSEYE-live-builder-AMD64>
+References: <20230524104453.8734-1-jack@suse.cz>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <9b987585-0834-bb8c-3414-283c29f3f2ab@leemhuis.info>
- <bec024d5-4088-00ae-f7b5-7188868b1707@leemhuis.info> <b7717c43-74bf-b91d-d3ce-874493df602c@gmail.com>
- <CAO-hwJ+At1J_yUpX2q_dJekzZ-PoTDAvxmkTk_e4Yu0Z338bEA@mail.gmail.com>
- <55dda0bb-fe42-6dee-28ea-00121554d092@leemhuis.info> <CAHk-=whvhkSk6m8_AidhofgR9nq0Md+HbNad5r1RE69tZgbv6Q@mail.gmail.com>
- <nycvar.YFH.7.76.2305231422180.29760@cbobk.fhfr.pm>
-In-Reply-To: <nycvar.YFH.7.76.2305231422180.29760@cbobk.fhfr.pm>
-From: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Date: Wed, 24 May 2023 17:27:30 +0200
-Message-ID: <CAO-hwJ+MTRu9KxqwQc7UYFBsa0kkrnYfwVB30KsLZnw=wfcOMg@mail.gmail.com>
-Subject: Re: [regression] Since kernel 6.3.1 logitech unify receiver not
- working properly
-To: Jiri Kosina <jikos@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, 
-	Linux regressions mailing list <regressions@lists.linux.dev>, Bagas Sanjaya <bagasdotme@gmail.com>, 
-	=?UTF-8?Q?Filipe_La=C3=ADns?= <lains@riseup.net>, 
-	Bastien Nocera <hadess@hadess.net>, 
-	"open list:HID CORE LAYER" <linux-input@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	guy.b@bluewin.ch
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230524104453.8734-1-jack@suse.cz>
 
-On Tue, May 23, 2023 at 2:31=E2=80=AFPM Jiri Kosina <jikos@kernel.org> wrot=
-e:
+* Jan Kara <jack@suse.cz>:
+> Commit e360c6ed7274 ("ext4: Drop special handling of journalled data
+> from ext4_sync_file()") simplified ext4_sync_file() by dropping special
+> handling of journalled data mode as it was not needed anymore. However
+> that branch was also used for directories and symlinks and since the
+> fastcommit code does not track metadata changes to non-regular files, the
+> change has caused e.g. fsync(2) on directories to not commit transaction
+> as it should. Fix the problem by adding handling for non-regular files.
+> 
+> Fixes: e360c6ed7274 ("ext4: Drop special handling of journalled data from ext4_sync_file()")
+> Reported-by: Eric Whitney <enwlinux@gmail.com>
+> Link: https://lore.kernel.org/all/ZFqO3xVnmhL7zv1x@debian-BULLSEYE-live-builder-AMD64
+> Signed-off-by: Jan Kara <jack@suse.cz>
+> ---
+>  fs/ext4/fsync.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/fs/ext4/fsync.c b/fs/ext4/fsync.c
+> index f65fdb27ce14..2a143209aa0c 100644
+> --- a/fs/ext4/fsync.c
+> +++ b/fs/ext4/fsync.c
+> @@ -108,6 +108,13 @@ static int ext4_fsync_journal(struct inode *inode, bool datasync,
+>  	journal_t *journal = EXT4_SB(inode->i_sb)->s_journal;
+>  	tid_t commit_tid = datasync ? ei->i_datasync_tid : ei->i_sync_tid;
+>  
+> +	/*
+> +	 * Fastcommit does not really support fsync on directories or other
+> +	 * special files. Force a full commit.
+> +	 */
+> +	if (!S_ISREG(inode->i_mode))
+> +		return ext4_force_commit(inode->i_sb);
+> +
+>  	if (journal->j_flags & JBD2_BARRIER &&
+>  	    !jbd2_trans_will_send_data_barrier(journal, commit_tid))
+>  		*needs_barrier = true;
+> -- 
+> 2.35.3
 >
-> On Mon, 22 May 2023, Linus Torvalds wrote:
->
-> > > FWIW, in case anybody is interested in a status update: one reporter
-> > > bisected the problem down to 586e8fede79 ("HID: logitech-hidpp: Retry
-> > > commands when device is busy"); reverting that commit on-top of 6.3
-> > > fixes the problem for that reporter. For that reporter things also wo=
-rk
-> > > on 6.4-rc; but for someone else that is affected that's not the case.
->
-> FWIW, I was pretty much away for past few weeks as well, same as Benjamin
-> as Bastien. Which is unfortunate timing, but that's how things pan out
-> sometimes.
->
-> > Hmm. It's likely timing-dependent.
-> >
-> > But that code is clearly buggy.
-> >
-> > If the wait_event_timeout() returns early, the device hasn't replied,
-> > but the code does
-> >
-> >                 if (!wait_event_timeout(hidpp->wait, hidpp->answer_avai=
-lable,
-> >                                         5*HZ)) {
-> >                         dbg_hid("%s:timeout waiting for response\n", __=
-func__);
-> >                         memset(response, 0, sizeof(struct hidpp_report)=
-);
-> >                         ret =3D -ETIMEDOUT;
-> >                 }
-> >
-> > and then continues to look at the response _anyway_.
->
-> Yeah; we are zeroing it out, but that doesn't really make things any
-> better in principle, given all the dereferences later.
->
-> The issue seems to be existing ever since 2f31c52529 ("HID: Introduce
-> hidpp, a module to handle Logitech hid++ devices") when this whole driver
-> was introduced, as far as I can tell.
 
-Yep, that was on me. But the weird part is that I should be able to
-reproduce this locally then, but I don't.
+Hi Jan:
 
->
-> > Now, depending on out hardening options, that response may have been
-> > initialized by the compiler, or may just be random stack contents.
->
-> Again, as in case of timeout the buffer is just zeroed out, I'd just much
-> more expect NULL pointer dereference in such case. Which is not what we
-> are seeing here.
+100/100 trials of both the original test regressions - generic/065 and
+generic/535 - passed when I used kvm-xfstests to run them on a 6.4-rc3 kernel
+modified with this patch.  A complete run of the adv test case also passed
+without new regressions.
 
-Returning -ETIMEDOUT seems good to me FWIW.
+So,
+Tested-by: Eric Whitney <enwlinux@gmail.com>
 
->
-> > That bug is pre-existing (ie the problem was not introduced by that
-> > commit), but who knows if the retry makes things worse (ie if it then
-> > triggers on a retry, the response data will be the *previous* response)=
-.
-> >
-> > The whole "goto exit" games should be removed too, because we're in a
-> > for-loop, and instead of "goto exit" it should just do "break".
-> >
-> > IOW, something like this might be worth testing.
-> >
-> > That said, while I think the code is buggy, I doubt this is the actual
-> > cause of the problem people are reporting. But it would be lovely to
-> > hear if the attached patch makes any difference, and I think this is
-> > fixing a real - but unlikely - problem anyway.
-
-FWIW, Linus, your patch is
-Reviewed-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-
-Feel free to submit it to us or to apply it directly if you prefer as
-this is clearly a fix for a code path issue.
-
-I am barely struggling with everything now that I am back from last
-week, being sick at the beginning of the week and still not feeling
-completely well doesn't help.
-
-Cheers,
-Benjamin
-
-> >
-> > And obviously it might be helpful to actually enable those dbg_hid()
-> > messages, but I didn't look at what the magic config option to do so
-> > was.
->
-> dbg_hid() is just pr_debug(), which means that on kernels with
-> CONFIG_DYNAMIC_DEBUG, this makes use of the dynamic debug facility;
-> otherwsie it just becomes printk(KERN_DEBUG...).
->
-> Thanks,
->
-> --
-> Jiri Kosina
-> SUSE Labs
->
+Thanks!
+Eric
 
