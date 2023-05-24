@@ -1,199 +1,130 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2085.outbound.protection.outlook.com [40.107.223.85])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00F6F174D1
-	for <regressions@lists.linux.dev>; Wed, 24 May 2023 11:48:26 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=aiP9zb4kXvNP5MZOjAWLD/udPgmgj5suLXGjAKCmqjkhcq0XTQkHCW9QZJM01p3S3SDeAlkwMLBr+xCDAtLwb4yHDvgHC+W3Pl/ZRf4vG2fq9wR+qZVhsM15G4sgObIgKy7HJjq9dV8L7y8rTiMR1nqbYknutO5xjrA70mYWmrY3jcvH1qtzqE0mDmuAIIkhiDfHSF4KeIXBPcj61F7KqmztP5NOcI2oeuyFRuSxLKn3kfKyg959vD41oTGsJMe/sywAAPEhZMAUGhTNFAkuWlWedQhoY9plY6w+S+HGR2YY9HsAkNQUchm3WdWbrYgXvTI2U4uUDmeq76kCH+xr1w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=kYM0iOM1AuyPnfikZZGdw3XgQbjuhqJ9wiH/NzQFmAY=;
- b=RSpS4LozMjExDr+qqkgwrrVDz1ki9786XvgwZU/cSCdL2Ic/jKqj685Sb4/y/K3lGwh3Pw7Yirb2cc6/55EKDa0sT9WZf5UyhY1lMaElR9l11M3m4BcvWeV5tU2BN3XJzxkhWEDnlTcGAssHl/snujnXvNsQyaZD7pyL+V+dPNIElWkQRIxKBhr5vf89JyERsnS1tfn6pBUjvIQK5jLTfEO+V9ZJ6TJwp9JXPcJAl+hmBmc8Pz3zTG8sgFMkI1dWIaMMIlJPWYjH1yWAlffdGpz9txZkPUT1wZaXqg3Jh3rXedY7ZCfSjdEAV5TN68jtGOemjH6b3DzsOSbxfOibsg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kYM0iOM1AuyPnfikZZGdw3XgQbjuhqJ9wiH/NzQFmAY=;
- b=olf3r7/v/hsFYaLvAc9Tkja1TA/JdaGW+hS26k7ireLKhXfhaqmNoziv6k10rWJUORYs2td8fWenPhJvXK8ebLwzboGh/8LrYexaJpH1pMGGxO0Ia6xYABIyIN6LtlyCxZByIU/oNYmWsfpZBIAS6oIAWBHobLxBGSNqxLfUMymlF0xaaSXb6df9NWpm9STTaj++ET9s9mZX0MsTytvfrCNAEQNl/QmruOSqsulTTerOoAaiFWamT0GRjnbkkai4HHTKH+Za768iHx7TN2qF5LvRFMnjabT/HbjDLWWh6YLHkDzn4fZ1yURDCETGQY7njkkcMlrVpHOVU6UYL5WrOw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DS7PR12MB5744.namprd12.prod.outlook.com (2603:10b6:8:73::18) by
- IA0PR12MB8983.namprd12.prod.outlook.com (2603:10b6:208:490::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6411.28; Wed, 24 May
- 2023 11:48:24 +0000
-Received: from DS7PR12MB5744.namprd12.prod.outlook.com
- ([fe80::847b:988d:86fe:a0f8]) by DS7PR12MB5744.namprd12.prod.outlook.com
- ([fe80::847b:988d:86fe:a0f8%5]) with mapi id 15.20.6411.028; Wed, 24 May 2023
- 11:48:24 +0000
-From: Zi Yan <ziy@nvidia.com>
-To: Bagas Sanjaya <bagasdotme@gmail.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux PowerPC <linuxppc-dev@lists.ozlabs.org>,
- Linux Memory Management List <linux-mm@kvack.org>,
- Linux Regressions <regressions@lists.linux.dev>,
- "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
- Michael Ellerman <mpe@ellerman.id.au>,
- Andrew Morton <akpm@linux-foundation.org>,
- doru iorgulescu <doru.iorgulescu1@gmail.com>,
- Nicholas Piggin <npiggin@gmail.com>,
- Christophe Leroy <christophe.leroy@csgroup.eu>,
- Fabiano Rosas <farosas@linux.ibm.com>,
- Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
- Disha Goel <disgoel@linux.vnet.ibm.com>
-Subject: Re: ./include/linux/mmzone.h:1735:2: error: #error Allocator
- MAX_ORDER exceeds SECTION_SIZE (v6.4-rc3 build regression)
-Date: Wed, 24 May 2023 07:48:21 -0400
-X-Mailer: MailMate (1.14r5964)
-Message-ID: <D0217FEF-6E59-4458-BC34-A5FDB3097176@nvidia.com>
-In-Reply-To: <2a1cd5e6-01f7-66f9-1f9d-c655cc3f919b@gmail.com>
-References: <2a1cd5e6-01f7-66f9-1f9d-c655cc3f919b@gmail.com>
-Content-Type: multipart/signed;
- boundary="=_MailMate_6BECA252-51F8-4F56-A924-E26362AA67F0_=";
- micalg=pgp-sha512; protocol="application/pgp-signature"
-X-ClientProxiedBy: BLAPR03CA0047.namprd03.prod.outlook.com
- (2603:10b6:208:32d::22) To DS7PR12MB5744.namprd12.prod.outlook.com
- (2603:10b6:8:73::18)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FFC0C8FF
+	for <regressions@lists.linux.dev>; Wed, 24 May 2023 11:52:19 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1q1n2N-0007Ut-8v; Wed, 24 May 2023 13:52:15 +0200
+Message-ID: <6b55ed5a-e02d-93c9-e57f-97cd9acba376@leemhuis.info>
+Date: Wed, 24 May 2023 13:52:14 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR12MB5744:EE_|IA0PR12MB8983:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3902b260-92fc-4b4b-80aa-08db5c4cc7bd
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	2fZlfIK+IFIdNVvD7+gI05mdPYDfHjZMLMqFW6orC5G0x3treqX3ZGEKDqsIG0ae6fYSZtXbASiBapgsqeUGWdRp2bC4h9L8DsFhSJKH/hjt0nT3yAMsMl3rrMR+APK+TyC2GRfs+qy7lvT5odB2wvS97S8BWoF/PLDotd4fpIpMLLignulUK6H3d+uMW94k22ClB7F9+o2fZnvgCT67SJMF4x5cjIkkB9AdUVS3/4tSP7KKWrU50dHNQCs5fyamdZW667hI6OQnDjP9OGdnk6jocYNrsUc6UpYzokQdBl9KM+niDh1ZaUM8XiDvTYPGub0GsnLQywVSMN91qeEq5a79/AxtqoLTgHkPdOptKMoLgUGcgpsxoDpHAdncnSbH4hrt1R12RUXJAQB6qrknjVmeu8X5/b1jDoueS2T3kG9P+KfWhjito9F6jZNWRmfESQFAMxH8m0RIs2uh9n4ShP91yAJtMmTiVt0MrewgQuyGWPtzmsPsGv1fIjzDDfP5tQCbk9PupzGu0m+Hxo11cCgPPTHYvToX/LfAvNaGhbeyWu38n93hie2tIIT+lUJjeJSVByQ5EX/FUsjt1HfEQzLTS3oMwKjKdamrowiv4xK0uFO0x2eAsfNdgtkbJvnShwKaIyHyKLGpj0WUd6uJYSZK+mIL5SCku9V3O59d2ORI8Cq7HZJEJNae+v3WXAjZ
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB5744.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(136003)(366004)(396003)(376002)(39860400002)(346002)(451199021)(38100700002)(6486002)(54906003)(41300700001)(966005)(478600001)(316002)(4326008)(6916009)(86362001)(6666004)(66946007)(66556008)(66476007)(235185007)(5660300002)(8936002)(8676002)(2906002)(26005)(6512007)(6506007)(33656002)(186003)(53546011)(7416002)(83380400001)(2616005)(36756003)(45980500001)(72826004);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?2T/7WMClc3vydjuMIMHPVchUiOcsfiJ+fkhXM5Hxeuc1wNBid4ubghFOjo1N?=
- =?us-ascii?Q?wNImqFeR4wy9mEeIYUmaZCNTnLNtbnWkhAttKg1owCDIly8DfdfgIZPy+FK6?=
- =?us-ascii?Q?lcf6gcTRtbbEnY04Ve49/KPb+UGpYnQyN7Vtsf3c1tWjHinSBVvC/jhAmkZ+?=
- =?us-ascii?Q?MUYklaXng+1gMUO+Sb9q7L+Dkp3BvBNcJoArxtB6aJiAZiACQIj7UYVAyrD8?=
- =?us-ascii?Q?GzO4DKZsRGMXs1eiKyBXwJgkIY2LuE6kUhNxe3/r8B05N0CVWxv6TpQpqIa+?=
- =?us-ascii?Q?eiXPtFQPt8qYEl3yCqgKxKq6LSqfZIk2olFAcyWiISlBkOyMXB0VZXaOc94Y?=
- =?us-ascii?Q?0XsLHLnWOm9RNu+xYo1GytqLx8Q6gVLEZVDKjfzErtF+7NRaKrJS4LtuoC9d?=
- =?us-ascii?Q?OI3P4/Gj2nWOiag918HOXUtEBJc6YWvJUeARXVgEwgHq0a2PZ251XRDbNFVv?=
- =?us-ascii?Q?USxaFl2MjFlnXGljUpFkKf/o8jiujULEWAu0KeKabhNLPAfkF54frs3rLnxR?=
- =?us-ascii?Q?U2CP7HEXAc57h0zWoaEoJvDpP4rqO7b+lvfLXitEUgWyU0DQCr9/h7wYD0we?=
- =?us-ascii?Q?DM+gc4L+qTw9lAMq12gwJAVmz7lUhBZkGUim2uexupUfMtlOi9DnTKR9ct6U?=
- =?us-ascii?Q?c0r/ScfzlvoPaf3bAgg4xYwj5h8LJRNu7UptiqyITH20oiuXOOUPWJjS+Oo0?=
- =?us-ascii?Q?mnaGGp1yVVds5ywKbHhN+8VlNB509z1oe5l0mufHGxghbY9NpeixejZr94Ap?=
- =?us-ascii?Q?dVmUkFAcIHwU2rONryVcz6hDDHIuQz0V+Fi0twDsKSbwneyaTpfPDhLNnpKy?=
- =?us-ascii?Q?D/hkWTfmux2okwOSMUlM2JCZ+wqGEuEWVEodSQROLilShyZ/Cig2VuGxI4W3?=
- =?us-ascii?Q?zTtLBES7CKXfDotk26QJYvkS2KrP51iJGll53Xs290w2jKAmlceWQhWRnbn0?=
- =?us-ascii?Q?VB2j/modtiTaK5303cbPBozbd4UwCCyNRpZJt+9B6Dh4n7z1ZSECTyggVAxT?=
- =?us-ascii?Q?k0PtY4atQXMGkRVHohFSSRTU0QUx/ibWje0CojXCU4zO4xuISlrm1rctqHl+?=
- =?us-ascii?Q?SI9lQ83V/9FiLQg+UqoHVDj+DUt0jWAuKDLtnMtuI5nunVLQhJz+8R9KbLnn?=
- =?us-ascii?Q?pAl8NX7j0nFKkAhBXeSOQ0CsDwyZo0R7bAk0I75g5RgAhvz1qFXsTRG59IYd?=
- =?us-ascii?Q?OKP9q9P6yyES0aF/pOcpS7HcaFnxcsNi2OdRCFU7RGbFQ7ZWj0mZ8fSAYPTr?=
- =?us-ascii?Q?HxECcdLX/XzcExiAE0Vn29ZN/O0JFNu8XMH8ySnOWAXPyHXPULW6hda1JUZ7?=
- =?us-ascii?Q?m1VNun/ihK16ew2k7Gryh6tyS2iPrBwuY6Z95oFZ53nh5iT2BoWmLXUEQ0jS?=
- =?us-ascii?Q?l+UHIuZV007U5gQgpI3t65sPEWKdbgbS9GNKEHHJpTTJprX8VpuYyPHUlXsm?=
- =?us-ascii?Q?bN2RgLg9LduXwBuIyxHXImqKG9YKjiFsQ8MvWLYK8TJ4o7UhAljFPE4UG2kH?=
- =?us-ascii?Q?BIAogBzUehj3Cn3qu+AXXOoERv1xeHQ2IqBYTeCNnEwOXyqp2JHqhwMhjGkJ?=
- =?us-ascii?Q?wzfnr4Z3JXbyhmOpD3I=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3902b260-92fc-4b4b-80aa-08db5c4cc7bd
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB5744.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 May 2023 11:48:24.3194
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: XC1ns+UdL96cK8rcgiFBNIhaR7cdxbDkCqM9NNx53bbjBzjEhi1gnBimEV3pjMgc
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8983
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Content-Language: en-US, de-DE
+To: Sakari Ailus <sakari.ailus@linux.intel.com>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Jacopo Mondi <jacopo.mondi@ideasonboard.com>,
+ Alexander Stein <alexander.stein@ew.tq-group.com>,
+ linux-media@vger.kernel.org, niklas.soderlund@ragnatech.se
+References: <8360125.31r3eYUQgx@steina-w> <5676976.irdbgypaU6@steina-w>
+ <ob373sf6lmg6qfkdqy5ovxescw5gp7yedb2flk4ax762abo7b3@w33eqx3erdg7>
+ <6415252.e9J7NaK4W3@steina-w>
+ <3u5xed27to5bnwo3dksviydw6z2lga3udjkgvvzor4tlobjlxv@hsnam3wurgxc>
+ <ZEtytxcB2+DA8Xs/@kekkonen.localdomain>
+ <f30d063b-e131-a659-9a1f-8f47e5736b44@leemhuis.info>
+ <ZGtZGzZ3wiwiJBkp@kekkonen.localdomain>
+ <618ab198-836e-16ba-4c02-476feac2ffaa@leemhuis.info>
+ <ZGtlRnPE5k/W4vGY@kekkonen.localdomain>
+From: Thorsten Leemhuis <linux@leemhuis.info>
+Subject: Re: v4l2-async: regression due to endpoint matching
+In-Reply-To: <ZGtlRnPE5k/W4vGY@kekkonen.localdomain>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1684929139;fe9acb11;
+X-HE-SMSGID: 1q1n2N-0007Ut-8v
 
---=_MailMate_6BECA252-51F8-4F56-A924-E26362AA67F0_=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+On 22.05.23 14:51, Sakari Ailus wrote:
+> On Mon, May 22, 2023 at 02:11:29PM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
+>> On 22.05.23 13:59, Sakari Ailus wrote:
+>>> On Mon, May 22, 2023 at 12:53:52PM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
+>>>> On 28.04.23 09:16, Sakari Ailus wrote:
+>>>>> On Fri, Apr 28, 2023 at 08:43:21AM +0200, Jacopo Mondi wrote:
+>>>>>> On Fri, Apr 28, 2023 at 08:33:30AM +0200, Alexander Stein wrote:
+>>>>>>> Am Freitag, 28. April 2023, 08:31:54 CEST schrieb Jacopo Mondi:
+>>>>>>>> On Fri, Apr 28, 2023 at 08:24:22AM +0200, Alexander Stein wrote:
+>>>>>>>>> Am Donnerstag, 27. April 2023, 18:01:38 CEST schrieb Jacopo Mondi:
+>>>>>>>>>> On Thu, Apr 27, 2023 at 04:40:46PM +0200, Alexander Stein wrote:
+>>>>>>>>>>> I have a setup on my TQMa6x (imx6q-mba6a.dts) with a tc358743 attached
+>>>>>>>>>>> to
+>>>>>>>>>>> the MIPI CSI input.
+>>>>>>>>>>> I noticed that since commit 1f391df44607 ("media: v4l2-async: Use
+>>>>>>>>>>> endpoints in __v4l2_async_nf_add_fwnode_remote()") the async subdevice
+>>>>>>>>>>> probing does not work anymore. If I revert that, it is working again,
+>>>>>>>>>>> even on next-20230425.
+>>>>>>>>>>
+>>>>>>>>>> A similar issue has been discussed at
+>>>>>>>>>> https://www.spinics.net/lists/linux-media/msg223351.html
+>>>>>>>>>>
+>>>>>>>>>> Unfortunately there was no conclusion as far as I can tell if not that
+>>>>>>>>>> imx6 is now broken
+>>>>>>>>>
+>>>>>>>>> Thanks for the link, seems like a non-trivial thing :(
+>>>>>>>>>
+>>>>>>>>> From a glimpse, this series seems to deal with multiple async subdevs:
+>>>>>>>>> https://lore.kernel.org/all/20230330115853.1628216-1-sakari.ailus@linux.in
+>>>>>>>>> tel.com/
+>>>>>>>>>
+>>>>>>>>> So imx-media-csi should be adjusted as well, no?
+>>>>>>>>
+>>>>>>>> It would really be helpful if you can give that series a spin on imx6
+>>>>>>>> if you already have a test setup.
+>>>>>>>
+>>>>>>> I tried, but it failed to apply on my current development tree. What base does
+>>>>>>> this series apply to? Is there also a repository available I can fetch from?
+>>>>>>
+>>>>>> Sakari could tell, for me it applied on v6.3-rc2 but I recall I had to
+>>>>>> manually fix a few things.
+>>>>>
+>>>>> Don't try v1, it won't work. I missed some object relation changes in the
+>>>>> linked lists. I'll post v2, hopefully some time next week, to address these
+>>>>> issues.
+>>>>
+>>>> Hi, Thorsten here, the Linux kernel's regression tracker.
+>>>>
+>>>> I see that v2[1] got a lot of ACKs, but is not even yet in next. And
+>>>> it's a lot of patches, so maybe too much for backporting to stable
+>>>> kernels. Which leads to the question: Will the regression this thread is
+>>>> about (introduced in 5.19 afaics) ever be fixed in v6.1?
+>>>> Normally/Ideally it should be.
+>>>
+>>> We'll need v3 (at least), a problem that's not trivial to fix was
+>>> identified with v2. There patches aren't really fixes either: it's new
+>>> functionality that wasn't there previously. I.MX6 just happened to work due
+>>> to missing checks in the V4L2 async framework, what it needs was never
+>>> supported (without this set).
+>>>
+>>> Dropping endpoint matching will break adv748x driver that relies on it.
+>>>
+>>> So I'd expect i.MX6 to work again once we have this set in, but I wouldn't
+>>> try to backport the set.
+>>
+>> Thx for the update. Makes me wonder if reverting the culprit[1] is an
+>> option. Assuming the problem still happens. Alexander, is that the case?
+>>
+>> Ciao, Thorsten
+>>
+>> [1] 1f391df4460 ("media: v4l2-async: Use endpoints in
+>> __v4l2_async_nf_add_fwnode_remote()") (v5.19-rc1; authored by Laurent,
+>> commited by Mauro (both now CCed))
+> 
+> I prioritise an in-kernel driver over a staging driver.
 
-On 24 May 2023, at 6:58, Bagas Sanjaya wrote:
+Sorry, can't follow. I track regressions all over the kernel and try to
+follow the best I can, but here I failed, as I have no idea which
+staging driver I mean.
 
-> Hi,
->
-> I notice a powerpc[64?] build regression on Bugzilla [1]. Quoting from =
-it:
->
->>  CC      arch/powerpc/kernel/asm-offsets.s
->> In file included from ./include/linux/gfp.h:7,
->>                 from ./include/linux/xarray.h:15,
->>                 from ./include/linux/list_lru.h:14,
->>                 from ./include/linux/fs.h:13,
->>                 from ./include/linux/compat.h:17,
->>                 from arch/powerpc/kernel/asm-offsets.c:12:
->> ./include/linux/mmzone.h:1735:2: error: #error Allocator MAX_ORDER exc=
-eeds SECTION_SIZE
->> 1735 | #error Allocator MAX_ORDER exceeds SECTION_SIZE
->>      |  ^~~~~
->> make[5]: *** [scripts/Makefile.build:114: arch/powerpc/kernel/asm-offs=
-ets.s] Error 1
+I see a regression that is not really addressed and I wonder if there is
+a way to fix this until a proper solution is ready. Usually in this
+cases the culprit is reverted, unless that itself would cause another
+regression. Is that the case here? It sounds a bit like it, but would be
+great if somebody could confirm that.
 
-By checking the config file from the bugzilla, ARCH_FORCE_MAX_ORDER is se=
-t to 9,
-(SECTION_SIZE is 24 and 64KB page is used, so 9+16=3D25>24) but it should=
- be 8
-after recent MAX_ORDER changes. I guess the user was using an old config =
-file.
-
-Changing ARCH_FORCE_MAX_ORDER to 8 in the config should fix the issue.
-
->
-> Apparently removing the errored line solves the problem for the reporte=
-r
-> (the attached dmesg on [2] looks fine at a glance).
->
-> Anyway, I'm adding it to regzbot:
->
-> #regzbot introduced: 23baf831a32c04f https://bugzilla.kernel.org/show_b=
-ug.cgi?id=3D217477
-> #regzbot title: Allocator MAX_ORDER exceeds SECTION_SIZE caused by MAX_=
-ORDER redefinition
->
-> Thanks.
->
-> [1]: https://bugzilla.kernel.org/show_bug.cgi?id=3D217477
-> [2]: https://bugzilla.kernel.org/show_bug.cgi?id=3D217477#c1
->
-> -- =
-
-> An old man doll... just what I always wanted! - Clara
-
---
-Best Regards,
-Yan, Zi
-
---=_MailMate_6BECA252-51F8-4F56-A924-E26362AA67F0_=
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename=signature.asc
-Content-Type: application/pgp-signature; name=signature.asc
-
------BEGIN PGP SIGNATURE-----
-
-iQJDBAEBCgAtFiEE6rR4j8RuQ2XmaZol4n+egRQHKFQFAmRt+YYPHHppeUBudmlk
-aWEuY29tAAoJEOJ/noEUByhU7G8QAJOGYRCE4YMQwhMeW2+N/KMD+JdFub8OIoCB
-P8HgjWXlv1vFZ7jOnQfx1EPXFkfImwjIUdPwajGzCaBFI2AkILjAzYuhb0TVGJyJ
-1ivu2DzXAsSjR2w849kgSEjDQRm1QM9qcfktVULJfURS9ZbX1wa21xAvmicDu3ho
-aegFDnzcn2Sb8Ct15CiWe1IerAL8zSlDHjGnZM07j7m2wJrtif2940eR2ZKyaS6D
-JcEtzPwkF0JpHi+JFnhwdYKbQxzuPMrGm9DJm9JK+1EeqfAC6gBt46kkrKuhBBVV
-qj2QMukcFRIxxJttaPXcm3SnRB+mQ9mKRDE7czhUGyHai8yZiGiIJYGS6DR7XLzb
-OjXUdSz7OUxBwND1g4D8vP0u0s7k2Z/1Vpq16Kkag3ePtO3fVXWfoH2Bef3/PWLs
-F0IqHO7eX7ZF/CTNSP854pFcl7/NmqBlu3JLkrklWFsFod0oMyev153XIVyJK8Up
-hnHeT7fg0fiBKlr9Cn4XQIbtF5a1Bhq6ukQJJ0cbiu2Tbo8ws5EWrcWamsEQU9H7
-Objge4EB3S2oEUpMIEeF34xMCxcLvRU1bpSZtNXdXSPCq+AL+FUHvtR6XCAFxHee
-5+GHTAIBistEEvB2bMQK3ounSvn+56+dbKoaroSs3sijuBHXjQZdaRJjDVxvL7Ev
-bO2Evk2g
-=t3bz
------END PGP SIGNATURE-----
-
---=_MailMate_6BECA252-51F8-4F56-A924-E26362AA67F0_=--
+Ciao, Thorsten
