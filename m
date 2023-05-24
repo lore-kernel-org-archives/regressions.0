@@ -1,13 +1,45 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.187])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C6386084C
-	for <regressions@lists.linux.dev>; Wed, 24 May 2023 13:07:52 +0000 (UTC)
-Received: from [192.168.1.141] ([37.4.248.58]) by mrelayeu.kundenserver.de
- (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1M6lUk-1q2Mhy1jMU-008Ntb; Wed, 24 May 2023 15:07:28 +0200
-Message-ID: <d1b6209d-a174-406a-cc81-86b391940c0c@i2se.com>
-Date: Wed, 24 May 2023 15:07:26 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5428F60874
+	for <regressions@lists.linux.dev>; Wed, 24 May 2023 13:39:22 +0000 (UTC)
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-64d3e5e5980so1023920b3a.2
+        for <regressions@lists.linux.dev>; Wed, 24 May 2023 06:39:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1684935561; x=1687527561;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=hPsAoeioL5fBV6oESCE3p4zCum2vadqzjSJd4gAo1As=;
+        b=UerkxAe1cuAxMa0tMwzHRnm4yoFoo00xmDBj9EJfjTIpxnl1u9y/hQqnjm8YEhVTT8
+         MMUWAqbxySMSY+RpXGj5k7H2lEU5qkq3UiFziaJqOIZHRGjSQL5ihhcNaJf5my3W5Twk
+         fiIwWjmlRLOgCf5ICcpGIxE3vlIEqiIzZsIbie8lsr9T41dAEasU1oKiTlkgpEcKE1aS
+         nAKi6S1P4xSLNyKwAUctQiHvx3FZ3W0uVxsNKW3fe1hTf6pDPTRSXwVuYAJOKhUxnoop
+         Rpl+MgcRgmRRD3DkGdSnUJCMBT9cr9nqhVXPAbQPOt+uU7HrcDIizGzIC+jz1kzQlk/H
+         58oQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684935561; x=1687527561;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=hPsAoeioL5fBV6oESCE3p4zCum2vadqzjSJd4gAo1As=;
+        b=gqqF2AyJOkiCQ0nzunSCBYGtMAnoA74sqKjhECIvwPI5IYHVKfcBjOinUv3QPsWXXb
+         Bp8YYLeG6Yjafsr7+UVpJ+RjIFJ4EI65QKw6j71ec6eIcEgNCOoBpVbHALHgibuBO5lQ
+         tsJ3xvII8RoLk37UpHmFQc+1KZfoReD+eY5Cx7LSfyYZ4phr/pscYcEbfaqU4UgtcW/j
+         zBWU7dTD63l2280UHcCZxwedpIJWPb3UH4VSD8dCwUv3mM0hgZ58UfcG5CosVhwjWubX
+         vAQO2NXy1Dqnj1Vdm50S1K/dHZtz+NDQaIV0FQmf4o1LpdECjg/z9RUl8Vg4z8izZigx
+         sNHw==
+X-Gm-Message-State: AC+VfDxlJKyNp7sQ953vPoW+nElK33XA/ZnRrCLQlpqKVJjTedM3flRv
+	LTvuotTSeqUmAKEzHLF+l88=
+X-Google-Smtp-Source: ACHHUZ6+4ecfLPKCvweUFLek2AuikwAHHFdmp7lDN93yiPKuONCVLxG+xoNnfueMOPPVRsYfibfDxA==
+X-Received: by 2002:a05:6a00:b52:b0:64d:5f1d:3d77 with SMTP id p18-20020a056a000b5200b0064d5f1d3d77mr3858529pfo.34.1684935561609;
+        Wed, 24 May 2023 06:39:21 -0700 (PDT)
+Received: from [192.168.43.80] (subs02-180-214-232-11.three.co.id. [180.214.232.11])
+        by smtp.gmail.com with ESMTPSA id y4-20020aa78044000000b0064928cb5f03sm7461051pfm.69.2023.05.24.06.39.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 24 May 2023 06:39:21 -0700 (PDT)
+Message-ID: <5df92692-296e-3956-24fa-2bd439337953@gmail.com>
+Date: Wed, 24 May 2023 20:39:16 +0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,69 +48,56 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.11.0
-Subject: Re: Regression: serial: imx: overrun errors on debug UART
-To: Sergey Organov <sorganov@gmail.com>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
- =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>,
- =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Stefan Wahren <stefan.wahren@chargebyte.com>, linux-serial@vger.kernel.org,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Sascha Hauer <s.hauer@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Shawn Guo <shawnguo@kernel.org>, Jiri Slaby <jirislaby@kernel.org>,
- =?UTF-8?Q?Tomasz_Mo=c5=84?= <tomasz.mon@camlingroup.com>,
- Linux ARM <linux-arm-kernel@lists.infradead.org>,
- "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>
-References: <2c29454b-9369-4360-8eb4-c151f59460cb@i2se.com>
- <d660e3cf-5686-d989-3b59-efe83ec9d590@linux.intel.com>
- <CAOMZO5A+GujiQY-UT3Q-8o0AKujJb_4kY+5L4x1e07ovGfo31w@mail.gmail.com>
- <9e22f237-f3ee-0415-9e6b-89a137769b8f@i2se.com>
- <5d59dec6-9f6f-7b20-1221-f57c94b29cca@i2se.com>
- <20230325151100.mskydt3hwbnspqp4@pengutronix.de>
- <cb16ddb7-f22f-d637-8670-bccc77add0af@i2se.com> <87mt3ynsa7.fsf@osv.gnss.ru>
- <d5009984-d2eb-0343-5bb4-df8a7f526121@i2se.com> <87sfcy8ncu.fsf@osv.gnss.ru>
- <534ac8db-ae8f-1ea3-9aa9-2105db7f7a52@i2se.com>
- <203ce87f-2898-eb10-2f8c-f237859d75e6@leemhuis.info>
- <87ttw2vnn0.fsf@osv.gnss.ru>
+Subject: Re: Fwd: ./include/linux/mmzone.h:1735:2: error: #error Allocator
+ MAX_ORDER exceeds SECTION_SIZE (v6.4-rc3 build regression)
 Content-Language: en-US
-From: Stefan Wahren <stefan.wahren@i2se.com>
-In-Reply-To: <87ttw2vnn0.fsf@osv.gnss.ru>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:N0dJId55/pLvRxTdMF8vMQANbrm4jDPmy3Y+2f82DdyNSgA9WEA
- V19vafEw+q8H8lMFLXyTIg/o7GtqHbwIjw+I1RMQ6Hg0JWuS2fdvQwMYMBr++omOVvK2ju6
- KX12X0MxEbQMcoqDamVg8pULwWryDN6XQkBqFW05uRWqIctYbZPqvxFtJP92ygwATZVFb41
- LQg5TpR+TXF7viTRObnGw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:hEss6wdf+bU=;tJjsYPCAgWWUl8pjmlavUmdIKRh
- scquokCrq+w43r8CJ4KsIDGdoLx476mjMT8LIg31cwi23cWXAJg/Xo6qu/EOFXGnX453IMpZv
- KBboaOPnSaeTFx1cR955IEXTkxfuUv2PYXXZCoqSSw41WYjuFcm6yCFrjbLDGPEppgYVxX83p
- 5cLgRgiMNKhih6xHAku4Wp1xALwHJ4fKWglmhlltnci1x36CNrt4tELgXvh6cbHvcJo3PdPw1
- VZ+oMng95TB/7WymisiCAjjVYeEck/cnRisgerB2u8bDZESxfKZvTHuXduqXjBNuXYUBczhTF
- jwIsI533IXWas3gyEJjHglLzhrPjuXOSr5kKjIDrG/9pOfGTafrvE5rswOM7pfDNq2vlyUq7m
- em/ITH3oQMGe6iPy2L7LA8td2yu0cSMpijqUp/ePpRldD0nQIufSQ4cTDBGgYCLX3xU9ggkYn
- 82q2RIF14yBgQsXjccMdz+0buU6WxzQXM+KLIA714MAuukMJHhngYgrjGSDs6Ec7K7wlQ+18A
- iTTifSBmpXC2e+kO24MZAhtcrzWBmKJLTpk96u2xMGe6BSEDbc8bH9/DlY1P1PfdmKd7SsKi0
- nysUr/dTa6HHM6yT0Eo00zV9JtigZkraLwY26y4gfzxsd05uNTGxCPV3EDvqHEy4TRwXf4WRw
- rqCl1nv2cjoWmnZRAzcrQqqR31Tpwvt9D2kNrnvZTg==
+To: Doru Iorgulescu <doru.iorgulescu1@gmail.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux PowerPC <linuxppc-dev@lists.ozlabs.org>,
+ Linux Memory Management List <linux-mm@kvack.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+ Michael Ellerman <mpe@ellerman.id.au>, Zi Yan <ziy@nvidia.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Nicholas Piggin <npiggin@gmail.com>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>,
+ Fabiano Rosas <farosas@linux.ibm.com>,
+ Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+ Disha Goel <disgoel@linux.vnet.ibm.com>
+References: <2a1cd5e6-01f7-66f9-1f9d-c655cc3f919b@gmail.com>
+ <5d22e1e9-0307-3664-8b4a-99caaaaa4315@gmail.com>
+ <CA+39qUjOA53UO4oYOzrUJqdYq8A3hbnnxpSV8nfqh0T5KiNL9A@mail.gmail.com>
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+In-Reply-To: <CA+39qUjOA53UO4oYOzrUJqdYq8A3hbnnxpSV8nfqh0T5KiNL9A@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Sergey,
+On 5/24/23 20:11, Doru Iorgulescu wrote:
+> Glad to hear it! 
+> Thank you
 
-Am 23.05.23 um 21:44 schrieb Sergey Organov:
-> "Linux regression tracking (Thorsten Leemhuis)"
-> <regressions@leemhuis.info> writes:
+tl;dr:
+
+> A: http://en.wikipedia.org/wiki/Top_post
+> Q: Were do I find info about this thing called top-posting?
+> A: Because it messes up the order in which people normally read text.
+> Q: Why is top-posting such a bad thing?
+> A: Top-posting.
+> Q: What is the most annoying thing in e-mail?
 > 
-...
+> A: No.
+> Q: Should I include quotations after my reply?
 > 
-> Solving this would need to identify the cause of interrupts being
-> disabled for prolonged times, and nobody volunteered to investigate this
-> further. One suspect, the Linux serial console, has been likely excluded
-> already though, as not actually being in use for printk() output.
-> 
+> http://daringfireball.net/2007/07/on_top
 
-I don't think that we can exclude the serial console as a whole, i never 
-made such a observation. But at least we can exclude kernel logging on 
-the debug UART.
+(IOW, I have no idea what you're referring to. Please stop top-posting;
+reply inline with appropriate context instead.)
 
-Best regards
+Also, don't send HTML emails as many mailing lists (including LKML)
+don't like it.
+
+Thanks.
+
+-- 
+An old man doll... just what I always wanted! - Clara
+
