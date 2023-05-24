@@ -1,130 +1,132 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [85.220.165.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FFC0C8FF
-	for <regressions@lists.linux.dev>; Wed, 24 May 2023 11:52:19 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1q1n2N-0007Ut-8v; Wed, 24 May 2023 13:52:15 +0200
-Message-ID: <6b55ed5a-e02d-93c9-e57f-97cd9acba376@leemhuis.info>
-Date: Wed, 24 May 2023 13:52:14 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 215BA33D9
+	for <regressions@lists.linux.dev>; Wed, 24 May 2023 12:42:08 +0000 (UTC)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1q1noZ-0000WJ-2t; Wed, 24 May 2023 14:42:03 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1q1noW-002URv-AR; Wed, 24 May 2023 14:42:00 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1q1noV-007Yip-L5; Wed, 24 May 2023 14:41:59 +0200
+Date: Wed, 24 May 2023 14:41:56 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Sergey Organov <sorganov@gmail.com>,
+	Stefan Wahren <stefan.wahren@i2se.com>,
+	Linux regressions mailing list <regressions@lists.linux.dev>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Stefan Wahren <stefan.wahren@chargebyte.com>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Tomasz =?utf-8?Q?Mo=C5=84?= <tomasz.mon@camlingroup.com>,
+	NXP Linux Team <linux-imx@nxp.com>, linux-serial@vger.kernel.org,
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	Fabio Estevam <festevam@gmail.com>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: Re: Regression: serial: imx: overrun errors on debug UART
+Message-ID: <20230524124156.2slamfnkvwsgxdvx@pengutronix.de>
+References: <5d59dec6-9f6f-7b20-1221-f57c94b29cca@i2se.com>
+ <20230325151100.mskydt3hwbnspqp4@pengutronix.de>
+ <cb16ddb7-f22f-d637-8670-bccc77add0af@i2se.com>
+ <87mt3ynsa7.fsf@osv.gnss.ru>
+ <d5009984-d2eb-0343-5bb4-df8a7f526121@i2se.com>
+ <87sfcy8ncu.fsf@osv.gnss.ru>
+ <534ac8db-ae8f-1ea3-9aa9-2105db7f7a52@i2se.com>
+ <203ce87f-2898-eb10-2f8c-f237859d75e6@leemhuis.info>
+ <87ttw2vnn0.fsf@osv.gnss.ru>
+ <80207a43-6047-4493-da5d-8bd87ef74551@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Content-Language: en-US, de-DE
-To: Sakari Ailus <sakari.ailus@linux.intel.com>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>,
- Jacopo Mondi <jacopo.mondi@ideasonboard.com>,
- Alexander Stein <alexander.stein@ew.tq-group.com>,
- linux-media@vger.kernel.org, niklas.soderlund@ragnatech.se
-References: <8360125.31r3eYUQgx@steina-w> <5676976.irdbgypaU6@steina-w>
- <ob373sf6lmg6qfkdqy5ovxescw5gp7yedb2flk4ax762abo7b3@w33eqx3erdg7>
- <6415252.e9J7NaK4W3@steina-w>
- <3u5xed27to5bnwo3dksviydw6z2lga3udjkgvvzor4tlobjlxv@hsnam3wurgxc>
- <ZEtytxcB2+DA8Xs/@kekkonen.localdomain>
- <f30d063b-e131-a659-9a1f-8f47e5736b44@leemhuis.info>
- <ZGtZGzZ3wiwiJBkp@kekkonen.localdomain>
- <618ab198-836e-16ba-4c02-476feac2ffaa@leemhuis.info>
- <ZGtlRnPE5k/W4vGY@kekkonen.localdomain>
-From: Thorsten Leemhuis <linux@leemhuis.info>
-Subject: Re: v4l2-async: regression due to endpoint matching
-In-Reply-To: <ZGtlRnPE5k/W4vGY@kekkonen.localdomain>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1684929139;fe9acb11;
-X-HE-SMSGID: 1q1n2N-0007Ut-8v
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="bnfkfw26ufr65s4f"
+Content-Disposition: inline
+In-Reply-To: <80207a43-6047-4493-da5d-8bd87ef74551@leemhuis.info>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: regressions@lists.linux.dev
 
-On 22.05.23 14:51, Sakari Ailus wrote:
-> On Mon, May 22, 2023 at 02:11:29PM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
->> On 22.05.23 13:59, Sakari Ailus wrote:
->>> On Mon, May 22, 2023 at 12:53:52PM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
->>>> On 28.04.23 09:16, Sakari Ailus wrote:
->>>>> On Fri, Apr 28, 2023 at 08:43:21AM +0200, Jacopo Mondi wrote:
->>>>>> On Fri, Apr 28, 2023 at 08:33:30AM +0200, Alexander Stein wrote:
->>>>>>> Am Freitag, 28. April 2023, 08:31:54 CEST schrieb Jacopo Mondi:
->>>>>>>> On Fri, Apr 28, 2023 at 08:24:22AM +0200, Alexander Stein wrote:
->>>>>>>>> Am Donnerstag, 27. April 2023, 18:01:38 CEST schrieb Jacopo Mondi:
->>>>>>>>>> On Thu, Apr 27, 2023 at 04:40:46PM +0200, Alexander Stein wrote:
->>>>>>>>>>> I have a setup on my TQMa6x (imx6q-mba6a.dts) with a tc358743 attached
->>>>>>>>>>> to
->>>>>>>>>>> the MIPI CSI input.
->>>>>>>>>>> I noticed that since commit 1f391df44607 ("media: v4l2-async: Use
->>>>>>>>>>> endpoints in __v4l2_async_nf_add_fwnode_remote()") the async subdevice
->>>>>>>>>>> probing does not work anymore. If I revert that, it is working again,
->>>>>>>>>>> even on next-20230425.
->>>>>>>>>>
->>>>>>>>>> A similar issue has been discussed at
->>>>>>>>>> https://www.spinics.net/lists/linux-media/msg223351.html
->>>>>>>>>>
->>>>>>>>>> Unfortunately there was no conclusion as far as I can tell if not that
->>>>>>>>>> imx6 is now broken
->>>>>>>>>
->>>>>>>>> Thanks for the link, seems like a non-trivial thing :(
->>>>>>>>>
->>>>>>>>> From a glimpse, this series seems to deal with multiple async subdevs:
->>>>>>>>> https://lore.kernel.org/all/20230330115853.1628216-1-sakari.ailus@linux.in
->>>>>>>>> tel.com/
->>>>>>>>>
->>>>>>>>> So imx-media-csi should be adjusted as well, no?
->>>>>>>>
->>>>>>>> It would really be helpful if you can give that series a spin on imx6
->>>>>>>> if you already have a test setup.
->>>>>>>
->>>>>>> I tried, but it failed to apply on my current development tree. What base does
->>>>>>> this series apply to? Is there also a repository available I can fetch from?
->>>>>>
->>>>>> Sakari could tell, for me it applied on v6.3-rc2 but I recall I had to
->>>>>> manually fix a few things.
->>>>>
->>>>> Don't try v1, it won't work. I missed some object relation changes in the
->>>>> linked lists. I'll post v2, hopefully some time next week, to address these
->>>>> issues.
->>>>
->>>> Hi, Thorsten here, the Linux kernel's regression tracker.
->>>>
->>>> I see that v2[1] got a lot of ACKs, but is not even yet in next. And
->>>> it's a lot of patches, so maybe too much for backporting to stable
->>>> kernels. Which leads to the question: Will the regression this thread is
->>>> about (introduced in 5.19 afaics) ever be fixed in v6.1?
->>>> Normally/Ideally it should be.
->>>
->>> We'll need v3 (at least), a problem that's not trivial to fix was
->>> identified with v2. There patches aren't really fixes either: it's new
->>> functionality that wasn't there previously. I.MX6 just happened to work due
->>> to missing checks in the V4L2 async framework, what it needs was never
->>> supported (without this set).
->>>
->>> Dropping endpoint matching will break adv748x driver that relies on it.
->>>
->>> So I'd expect i.MX6 to work again once we have this set in, but I wouldn't
->>> try to backport the set.
->>
->> Thx for the update. Makes me wonder if reverting the culprit[1] is an
->> option. Assuming the problem still happens. Alexander, is that the case?
->>
->> Ciao, Thorsten
->>
->> [1] 1f391df4460 ("media: v4l2-async: Use endpoints in
->> __v4l2_async_nf_add_fwnode_remote()") (v5.19-rc1; authored by Laurent,
->> commited by Mauro (both now CCed))
-> 
-> I prioritise an in-kernel driver over a staging driver.
 
-Sorry, can't follow. I track regressions all over the kernel and try to
-follow the best I can, but here I failed, as I have no idea which
-staging driver I mean.
+--bnfkfw26ufr65s4f
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I see a regression that is not really addressed and I wonder if there is
-a way to fix this until a proper solution is ready. Usually in this
-cases the culprit is reverted, unless that itself would cause another
-regression. Is that the case here? It sounds a bit like it, but would be
-great if somebody could confirm that.
+On Wed, May 24, 2023 at 12:48:51PM +0200, Thorsten Leemhuis wrote:
+> On 23.05.23 21:44, Sergey Organov wrote:
+> > "Linux regression tracking (Thorsten Leemhuis)"
+> > <regressions@leemhuis.info> writes:
+> >=20
+> >> Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
+> >> for once, to make this easily accessible to everyone.
+> >>
+> >> Stefan, was this regression ever solved? It doesn't look like it, but
+> >> maybe I'm missing something.
+> >>
+> >> If it wasn't solved: what needs to be done to get this rolling again?
+> >=20
+> > Not Stefan,
+>=20
+> Thx to both you and Stefan for the update.
+>=20
+> > but as far as I can tell, the problem is that on Stefan's
+> > build the kernel has rather large periods of interrupts being disabled,
+> > so any attempt to decrease IRQs frequency from UART by raising FIFO IRQ
+> > threshold causes "regression" that manifests itself as missing
+> > characters on receive. I'm not sure if it's tuning FIFO level that is in
+> > fact a regression in this case.
+>=20
+> Not totally sure, but I guess Linus stance in this case would be along
+> the lines of "commit 7a637784d517 made an existing issue worse; either
+> the people involved in it fix it, or we revert that commit[1], as it's
+> causing a regression". At least we *iirc* had situations he handled like
+> that.
+>=20
+> [1] of course unless a revert would cause regressions for others --
+> which i guess might be the case here, as that was added in 5.18 already.
+> So let's not bring Linus in.
 
-Ciao, Thorsten
+Well in my eyes this regression is in the same league as: That patch
+over made a driver use some more memory and on my (memory limited)
+machine this makes the difference to trigger an OOM. You could apply
+this to pretty much any patch that increases the memory foot print /
+latency / cpu usage.
+(TL;DR: I agree to not revert the patch under discussion for this
+reason.)
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--bnfkfw26ufr65s4f
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmRuBhQACgkQj4D7WH0S
+/k6/WggAh4Ur/F5Mc1EVHDFSZT5n1xyX9GqM+K24Revr2cn4A02F4PGAREZzXxod
+1bcZEsEG4iWJkIRKZuHHqpM4iRZXUEupGqrNRawDz40ipvu++v1m5JsMci/XXC9v
+ACxzFvw77nj4WyKjUeTC8mGQh6zJTlXDMMk3co7OjlJR1n2ZZFocbeXmQkZv36Zz
+sur8VFQk63ryARDdemAFQ1Q2pd/4kStM3P12xAE2i7GfyjEwyNP9Fs+Lp961/yKg
+1KHlud8zJbKaKwifm+LV5qygl+aXJZQzWf0uHLZSmSczsonyluWlCUDDtIIbJvEz
+B1vXCeOYRzBnXVR5uO48GkFIFgVd4w==
+=VpgB
+-----END PGP SIGNATURE-----
+
+--bnfkfw26ufr65s4f--
