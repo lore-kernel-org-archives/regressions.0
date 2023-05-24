@@ -1,83 +1,97 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from devico.uberspace.de (devico.uberspace.de [185.26.156.185])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ACEF1FB1
-	for <regressions@lists.linux.dev>; Wed, 24 May 2023 11:20:51 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1q1mXv-0006TT-Nh; Wed, 24 May 2023 13:20:47 +0200
-Message-ID: <e9b1039c-253f-d7be-fcf3-40fdbddd53d9@leemhuis.info>
-Date: Wed, 24 May 2023 13:20:45 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3948B174D1
+	for <regressions@lists.linux.dev>; Wed, 24 May 2023 11:46:29 +0000 (UTC)
+Received: (qmail 19997 invoked by uid 990); 24 May 2023 11:46:21 -0000
+Authentication-Results: devico.uberspace.de;
+	auth=pass (plain)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: Possible regression in 8250_dw driver
-Content-Language: en-US, de-DE
-To: Richard Tresidder <rtresidd@electromag.com.au>,
- linux-serial@vger.kernel.org
-References: <f8a86ecd-64b1-573f-c2fa-59f541083f1a@electromag.com.au>
-From: "Linux regression tracking #adding (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Cc: Linux kernel regressions list <regressions@lists.linux.dev>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <f8a86ecd-64b1-573f-c2fa-59f541083f1a@electromag.com.au>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1684927251;be324cfc;
-X-HE-SMSGID: 1q1mXv-0006TT-Nh
+Date: Wed, 24 May 2023 11:46:21 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+From: "Leonard Lausen" <leonard@lausen.nl>
+Message-ID: <3a11741c9cc699e178f9b705a34342add03ea0df@lausen.nl>
+TLS-Required: No
+Subject: Re: [PATCH v6] drm/msm/dp: enable HDP plugin/unplugged interrupts at
+ hpd_enable/disable
+To: "Kuogee Hsieh" <quic_khsieh@quicinc.com>, dri-devel@lists.freedesktop.org,
+ robdclark@gmail.com, sean@poorly.run, swboyd@chromium.org,
+ dianders@chromium.org, vkoul@kernel.org, daniel@ffwll.ch, airlied@gmail.com,
+ agross@kernel.org, dmitry.baryshkov@linaro.org, andersson@kernel.org,
+ regressions@lists.linux.dev
+Cc: "Kuogee Hsieh" <quic_khsieh@quicinc.com>, quic_abhinavk@quicinc.com,
+ quic_jesszhan@quicinc.com, quic_sbillaka@quicinc.com,
+ marijn.suijten@somainline.org, freedreno@lists.freedesktop.org,
+ linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1684878756-17830-1-git-send-email-quic_khsieh@quicinc.com>
+References: <1684878756-17830-1-git-send-email-quic_khsieh@quicinc.com>
+X-Rspamd-Bar: /
+X-Rspamd-Report: MIME_GOOD(-0.1) BAYES_HAM(-1.80269) SUSPICIOUS_RECIPS(1.5)
+X-Rspamd-Score: -0.40269
+Received: from unknown (HELO unkown) (::1)
+	by devico.uberspace.de (Haraka/3.0.1) with ESMTPSA; Wed, 24 May 2023 13:46:21 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+	d=lausen.nl; s=uberspace;
+	h=from;
+	bh=yvML/N3WJWiB2LyumltXUYRXVUY6T1Z0/T8xB4Juop4=;
+	b=BW79TuMU14I2zQ1/iZDlcMklY9d8hFqDFVqNll7kptlo750aTKf/9+xmPYQuVKOK8D1pPFwgoG
+	CtO/GUTdpodwO1GVY1pDTvEzL8g4Lw0aoz4aNSjSaluTfpqig+jW1v6adCTpPzuI4dw/TJpOGTJe
+	xfemmQFpSMpDe251TKcjHIxN4DJEDRaWfBzPmicXBrooUdIF/dIb2KZND/uh3stRVnqsqJ1nSZnK
+	gMwoWQ8CGwjdBmC/exGcwRpsbUuezc7WRwa+cdR/wT7Qq6o9c9/bkqkHlrObjKYiXeNs+nUF+C4w
+	RFZpIj6UxXScvs1Eg+LvT8VUNnApNhgr8riIg32AAE/67TgFGxMIFV8I9moIUPmwezY022c5adm9
+	KDkx/fQi5VIp1aHEwuPVraOFI4apNz/gaBjt2Vb73DGaZfX6Hyf5a8L1kttx+r9dxOgy9pW2R7oz
+	nqbGNGbBSD16wYwsJ6wPtp05fRBSswm9J8Yjs3dT49YGRJdlGPnWP/Og/UdB/u2jtU0dM4a9cU/Z
+	Suut2A4cQqYzlbFv5oQ+Hl1OIETlT9E1GW5hXrl1m/s6qn1G3rI4p76ZPCKAFskxPRKgcYlQ4fyE
+	eUXQdOGRBnvug3exP9XNUqiB9gQsmh4J6sRE5WCpwPZsy/MZfYsJy65wqW/1Xdz1Hg0uIuOLqztv
+	w=
 
-[CCing the regression list, as it should be in the loop for regressions:
-https://docs.kernel.org/admin-guide/reporting-regressions.html]
+Kuogee Hsieh <quic_khsieh@quicinc.com> writes:
+> The internal_hpd flag is set to true by dp_bridge_hpd_enable() and set =
+to
+> false by dp_bridge_hpd_disable() to handle GPIO pinmuxed into DP contro=
+ller
+> case. HDP related interrupts can not be enabled until internal_hpd is s=
+et
+> to true. At current implementation dp_display_config_hpd() will initial=
+ize
+> DP host controller first followed by enabling HDP related interrupts if
+> internal_hpd was true at that time. Enable HDP related interrupts depen=
+ds on
+> internal_hpd status may leave system with DP driver host is in running =
+state
+> but without HDP related interrupts being enabled. This will prevent ext=
+ernal
+> display from being detected. Eliminated this dependency by moving HDP r=
+elated
+> interrupts enable/disable be done at dp_bridge_hpd_enable/disable() dir=
+ectly
+> regardless of internal_hpd status.
+>
+> Changes in V3:
+> -- dp_catalog_ctrl_hpd_enable() and dp_catalog_ctrl_hpd_disable()
+> -- rewording ocmmit text
+>
+> Changes in V4:
+> -- replace dp_display_config_hpd() with dp_display_host_start()
+> -- move enable_irq() at dp_display_host_start();
+>
+> Changes in V5:
+> -- replace dp_display_host_start() with dp_display_host_init()
+>
+> Changes in V6:
+> -- squash remove enable_irq() and disable_irq()
+>
+> Fixes: cd198caddea7 ("drm/msm/dp: Rely on hpd_enable/disable callbacks"=
+)
+> Signed-off-by: Kuogee Hsieh <quic_khsieh@quicinc.com>
 
-[TLDR: I'm adding this report to the list of tracked Linux kernel
-regressions; the text you find below is based on a few templates
-paragraphs you might have encountered already in similar form.
-See link in footer if these mails annoy you.]
+Cherry-picked on top of v6.3.3 and verified fixes the USB-C DP
+regression on sc7180 lazor. Thank you!
 
-On 23.05.23 10:59, Richard Tresidder wrote:
->    We seem to be getting corruption of received data from a ublox GPS unit
-> To me it looks like a fifo overrun of some sort??
-> 
-> background:
-> I'm attempting to use 6.3.3 as a new base for one of our systems.
-> Previously it was using 5.1.7 as a base.
-> The uart in question is one of the two in the Cyclone V SOC HPS.
-> And to muddy the waters the linux console TTYS0 is the other Uart from
-> the same HPS core
-> Yet the console appears to be working ok.
-> Note all other libs and apps are at the same revision and build, it is
-> only the kernel that is different.
-> Both versions of the kernel are also built using the same bitbake bsdk..
-> 
-> Seeing the following with 6.3.3:
-> [...]
-
-Thanks for the report. To be sure the issue doesn't fall through the
-cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
-tracking bot:
-
-#regzbot ^introduced 57e9af7831dcf211c5c689c2a
-#regzbot title serial: 8250_dma: data corruption with ublox GPS unit
-#regzbot ignore-activity
-
-This isn't a regression? This issue or a fix for it are already
-discussed somewhere else? It was fixed already? You want to clarify when
-the regression started to happen? Or point out I got the title or
-something else totally wrong? Then just reply and tell me -- ideally
-while also telling regzbot about it, as explained by the page listed in
-the footer of this mail.
-
-Developers: When fixing the issue, remember to add 'Link:' tags pointing
-to the report (the parent of this mail). See page linked in footer for
-details.
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+Tested-by: Leonard Lausen <leonard@lausen.nl> # on sc7180 lazor
