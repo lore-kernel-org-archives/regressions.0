@@ -1,99 +1,128 @@
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5489C8EB
-	for <regressions@lists.linux.dev>; Wed, 24 May 2023 10:10:49 +0000 (UTC)
-Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-5307502146aso55824a12.1
-        for <regressions@lists.linux.dev>; Wed, 24 May 2023 03:10:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684923049; x=1687515049;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=OKshTk4F9QVPSAyh2wH6wvvsO6NUvLxghil8WKBqIOI=;
-        b=Rpkx8+xqTcHNWjjZa3rXg2ufm0F++oGcrSMNSLhFmzjGokRwVEbWgoaks6ClhflSce
-         MkFqRow2nTjtAc0BWgEchTba40SxJSkKh+qm1lQsHQbhBUxRQN+zHGmHhAZersMasod2
-         L4CsXfvmdZvDntVI54ssFriYH3LKqFcHDOvK8mBz34Gh9QtwFfoAc+LNPdSnvrfcps9/
-         gYU/Tu1DoWJQZmrB6DCky6k8nP2hokYA3+ONZRjK7JYKIgGBQY/mY1Hp48GgBePuvFGQ
-         bT5lZgTbjGeuYrUUDZp+ZbV2XVG86+MWZEKp9TXqkwuUDvoDWaPlxceLXzJSCx2hhxRC
-         qZpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684923049; x=1687515049;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OKshTk4F9QVPSAyh2wH6wvvsO6NUvLxghil8WKBqIOI=;
-        b=GyRQg3VfQRKEKVwJKY4s38Ud1j4TuGdpWX+x8CP/dPPZ9Rdf0AeP0sC9WNXFGy8eSP
-         BdVC5bYn5JVgqGUkJy+GVhqJ8QfpJmQoxBZPaZgqV6/JZQ2ID/vinQ6q4f7Q1zbGYJir
-         kzpW2DtkchU4mKSE6/GwOtykdwbCmhYQWxTeskzxoOXZfUNQznt35mrw0tOYNAbYdql8
-         ZkgGNlwMCNFHUHg1oAarFNHZRYLv8sNSxvVK0inJUjLhMMZvrKsQeJl+nAOrvh3e2Uhy
-         OMtDJ3ZP/itIcGighTS+LUVOiJ4QV3SHRisIMMfcjr95CWQXi28oDqgEDyKlQxOO0Yfj
-         LazA==
-X-Gm-Message-State: AC+VfDzH8fcd7wzkSNWnBTT1mcHS4hIdqX9I2kYnFIx7kucUYyhOMKtS
-	3BIjz3oVJgt2FQlj0qQZ3do=
-X-Google-Smtp-Source: ACHHUZ7Oy0YRt80g9VhUqsfwOARVdtsRiwEJf6XRVg3GlJESp60Uq+R5SpX+v+rp3KLZx4wa/AAFAQ==
-X-Received: by 2002:a17:902:d501:b0:1ae:2e0d:b38c with SMTP id b1-20020a170902d50100b001ae2e0db38cmr19322667plg.12.1684923049138;
-        Wed, 24 May 2023 03:10:49 -0700 (PDT)
-Received: from debian.me (subs02-180-214-232-28.three.co.id. [180.214.232.28])
-        by smtp.gmail.com with ESMTPSA id d12-20020a170903230c00b001ac7c6fd12asm8367442plh.104.2023.05.24.03.10.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 May 2023 03:10:48 -0700 (PDT)
-Received: by debian.me (Postfix, from userid 1000)
-	id 54270106A0A; Wed, 24 May 2023 17:10:45 +0700 (WIB)
-Date: Wed, 24 May 2023 17:10:45 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Haochen Tong <linux@hexchain.org>, stable@vger.kernel.org
-Cc: regressions@lists.linux.dev, linux-input@vger.kernel.org,
-	Basavaraj Natikar <basavaraj.natikar@amd.com>
-Subject: Re: amd_sfh driver causes kernel oops during boot
-Message-ID: <ZG3ipauL9FTnQJiC@debian.me>
-References: <f40e3897-76f1-2cd0-2d83-e48d87130eab@hexchain.org>
- <ZG2LXN2+Sa2PWJqz@debian.me>
- <ee2c30a5-3927-d892-2a66-00cd513c3899@hexchain.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ABE4C8F4
+	for <regressions@lists.linux.dev>; Wed, 24 May 2023 10:16:58 +0000 (UTC)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 9606B1F45F;
+	Wed, 24 May 2023 10:16:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1684923410; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Zttj4265y2tK/w+ymfGwU9nqseVLNqS6aHowZnIqk18=;
+	b=QN104DB2Qo5wHo5pITkMoFrwIDNDS/CJBBddwmJbaRh63aj4f5/esqTq0fzrkJc4Epdsia
+	IYbS8ovt9rRCqJjrOCTKrQoY0WGpi4kn5h7/YxOb3o2S82Zj/7cQRJh4r3IiTCAzzBXylo
+	OOmkUbLnZ7K9hlLiORTZxyGtTsPLDEs=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1684923410;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Zttj4265y2tK/w+ymfGwU9nqseVLNqS6aHowZnIqk18=;
+	b=arA3ctFdkWhFtKl81yuRmcLg3pAxTETekhLKmrFjpemmNbnDjufyhnoEh8EXV8MrbDH8CT
+	pBESrN/tdXXjZsAQ==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 6821613425;
+	Wed, 24 May 2023 10:16:50 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+	by imap2.suse-dmz.suse.de with ESMTPSA
+	id bl95GBLkbWTvHAAAMHmgww
+	(envelope-from <tiwai@suse.de>); Wed, 24 May 2023 10:16:50 +0000
+Date: Wed, 24 May 2023 12:16:49 +0200
+Message-ID: <87fs7mdofi.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Kailang <kailang@realtek.com>
+Cc: "Joseph C. Sible" <josephcsible@gmail.com>,
+	Bagas Sanjaya <bagasdotme@gmail.com>,
+	"regressions@lists.linux.dev"
+	<regressions@lists.linux.dev>,
+	"perex@perex.cz" <perex@perex.cz>,
+	"tiwai@suse.com" <tiwai@suse.com>,
+	"alsa-devel@alsa-project.org"
+	<alsa-devel@alsa-project.org>
+Subject: Re: Fwd: [Bug 217440] New: ALC236 audio disappears from HP 15z-fc000 on warm boot
+In-Reply-To: <415d4bc84aa74c74af913048f28b42a9@realtek.com>
+References: <bug-217440-225600@https.bugzilla.kernel.org/>
+	<CABpewhE4REgn9RJZduuEU6Z_ijXNeQWnrxO1tg70Gkw=F8qNYg@mail.gmail.com>
+	<ZGB0cVVI7OgaJU6t@debian.me>
+	<CABpewhGJE7-k52j8L2kJ2zKupgp3Ma+LdZazzzV4w1Bgihp7nw@mail.gmail.com>
+	<87cz338ix4.wl-tiwai@suse.de>
+	<CABpewhF01AK4cFPbwYVvKR9yWaO7o-ZE-2+MZjYSUF0BKUdYvw@mail.gmail.com>
+	<874jodlnmi.wl-tiwai@suse.de>
+	<415d4bc84aa74c74af913048f28b42a9@realtek.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="Oqc3JrxTJwBoPC/u"
-Content-Disposition: inline
-In-Reply-To: <ee2c30a5-3927-d892-2a66-00cd513c3899@hexchain.org>
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+
+On Thu, 18 May 2023 07:44:23 +0200,
+Kailang wrote:
+> 
+> > -----Original Message-----
+> > From: Takashi Iwai <tiwai@suse.de>
+> > Sent: Monday, May 15, 2023 9:40 PM
+> > To: Joseph C. Sible <josephcsible@gmail.com>
+> > Cc: Bagas Sanjaya <bagasdotme@gmail.com>; regressions@lists.linux.dev;
+> > Kailang <kailang@realtek.com>; perex@perex.cz; tiwai@suse.com;
+> > alsa-devel@alsa-project.org
+> > Subject: Re: Fwd: [Bug 217440] New: ALC236 audio disappears from HP
+> > 15z-fc000 on warm boot
+> > 
+> > 
+> > External mail.
+> > 
+> > 
+> > 
+> > On Sun, 14 May 2023 23:48:55 +0200,
+> > Joseph C. Sible wrote:
+> > >
+> > > On 5/14/23, Takashi Iwai wrote:
+> > > > The patch changes two places (the change in alc_shutup_pins() and
+> > > > alc256_shutup()), and I guess the latter is the culprit.  Could you
+> > > > verify that only reverting the latter fixes the problem?
+> > >
+> > > Yes, only reverting the latter fixes the problem. I just tried a
+> > > kernel consisting of 6.3.2 plus the below change, and it works fine:
+> > >
+> > > --- a/sound/pci/hda/patch_realtek.c
+> > > +++ b/sound/pci/hda/patch_realtek.c
+> > > @@ -3638,8 +3638,7 @@ static void alc256_shutup(struct hda_codec
+> > *codec)
+> > >         /* If disable 3k pulldown control for alc257, the Mic
+> > > detection will not work correctly
+> > >          * when booting with headset plugged. So skip setting it for
+> > > the codec alc257
+> > >          */
+> > > -       if (codec->core.vendor_id != 0x10ec0236 &&
+> > > -           codec->core.vendor_id != 0x10ec0257)
+> > > +       if (codec->core.vendor_id != 0x10ec0257)
+> > >                 alc_update_coef_idx(codec, 0x46, 0, 3 << 12);
+> > >
+> > >         if (!spec->no_shutup_pins)
+> > 
+> > OK, thanks for confirmation.
+> > 
+> > Kailang, could you check this issue?
+> 
+> OK. I will take it a look for these days.
+
+Kailang, any chance to get this fixed?
+Otherwise I'll revert the commit as a temporary solution at first.
+You can re-apply the change (with the proper workaround for this
+problem) later, too.
 
 
---Oqc3JrxTJwBoPC/u
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+thanks,
 
-On Wed, May 24, 2023 at 02:10:31PM +0800, Haochen Tong wrote:
-> > What last kernel version before this regression occurs? Do you mean
-> > v6.2?
-> >=20
->=20
-> I was using 6.2.12 (Arch Linux distro kernel) before seeing this regressi=
-on.
-
-Can you perform bisection to find the culprit that introduces the
-regression? Since you're on Arch Linux, see its wiki article [1] for
-instructions.
-
-Thanks.
-
-[1]: https://wiki.archlinux.org/title/Bisecting_bugs_with_Git
-
---=20
-An old man doll... just what I always wanted! - Clara
-
---Oqc3JrxTJwBoPC/u
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZG3ipQAKCRD2uYlJVVFO
-oz+CAPwP430JY/PI70bKymcpuGulTPefXKmJNPRhxT8zC86X2QEApwQzWkHvgC2b
-ze/+47FXy7VOT9KzVktrWCJ3QnfpOAA=
-=ClE8
------END PGP SIGNATURE-----
-
---Oqc3JrxTJwBoPC/u--
+Takashi
