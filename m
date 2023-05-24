@@ -1,128 +1,94 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ABE4C8F4
-	for <regressions@lists.linux.dev>; Wed, 24 May 2023 10:16:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ADB51FB1
+	for <regressions@lists.linux.dev>; Wed, 24 May 2023 10:45:00 +0000 (UTC)
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 9606B1F45F;
-	Wed, 24 May 2023 10:16:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1684923410; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Zttj4265y2tK/w+ymfGwU9nqseVLNqS6aHowZnIqk18=;
-	b=QN104DB2Qo5wHo5pITkMoFrwIDNDS/CJBBddwmJbaRh63aj4f5/esqTq0fzrkJc4Epdsia
-	IYbS8ovt9rRCqJjrOCTKrQoY0WGpi4kn5h7/YxOb3o2S82Zj/7cQRJh4r3IiTCAzzBXylo
-	OOmkUbLnZ7K9hlLiORTZxyGtTsPLDEs=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1684923410;
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 6862E22216;
+	Wed, 24 May 2023 10:44:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1684925098; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=oF66gYTB+QJSrVWI5RQG+Ao4fzWor/HhKUumZiTVkUY=;
+	b=Zu0r1soRm7McpET6O/13sBoq40nW4Z7NDdCwU0Ibk2pTdtPbLcvHy0lPgI2uO1O29FDvPM
+	4xMJckKmR9SeDCyxSB5jrUf2Ta8fiOfUALe62iQm9XLNNRjH2puYSI+GmBXFPBWCmZ3fXD
+	GTnXJRddJeZZ/ColGbOQIpWG+VqQXCM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1684925098;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Zttj4265y2tK/w+ymfGwU9nqseVLNqS6aHowZnIqk18=;
-	b=arA3ctFdkWhFtKl81yuRmcLg3pAxTETekhLKmrFjpemmNbnDjufyhnoEh8EXV8MrbDH8CT
-	pBESrN/tdXXjZsAQ==
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=oF66gYTB+QJSrVWI5RQG+Ao4fzWor/HhKUumZiTVkUY=;
+	b=k8+S6YJ/ZW7iDI3an2ZpZ5uWLlxXnDyBm2WxrOM1gdNTZQnLrxdYARkQMHQ3pGALLX/3aG
+	kR5uwxvpyvWh9ZDQ==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
 	(No client certificate requested)
-	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 6821613425;
-	Wed, 24 May 2023 10:16:50 +0000 (UTC)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 5B34A133E6;
+	Wed, 24 May 2023 10:44:58 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
 	by imap2.suse-dmz.suse.de with ESMTPSA
-	id bl95GBLkbWTvHAAAMHmgww
-	(envelope-from <tiwai@suse.de>); Wed, 24 May 2023 10:16:50 +0000
-Date: Wed, 24 May 2023 12:16:49 +0200
-Message-ID: <87fs7mdofi.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Kailang <kailang@realtek.com>
-Cc: "Joseph C. Sible" <josephcsible@gmail.com>,
-	Bagas Sanjaya <bagasdotme@gmail.com>,
-	"regressions@lists.linux.dev"
-	<regressions@lists.linux.dev>,
-	"perex@perex.cz" <perex@perex.cz>,
-	"tiwai@suse.com" <tiwai@suse.com>,
-	"alsa-devel@alsa-project.org"
-	<alsa-devel@alsa-project.org>
-Subject: Re: Fwd: [Bug 217440] New: ALC236 audio disappears from HP 15z-fc000 on warm boot
-In-Reply-To: <415d4bc84aa74c74af913048f28b42a9@realtek.com>
-References: <bug-217440-225600@https.bugzilla.kernel.org/>
-	<CABpewhE4REgn9RJZduuEU6Z_ijXNeQWnrxO1tg70Gkw=F8qNYg@mail.gmail.com>
-	<ZGB0cVVI7OgaJU6t@debian.me>
-	<CABpewhGJE7-k52j8L2kJ2zKupgp3Ma+LdZazzzV4w1Bgihp7nw@mail.gmail.com>
-	<87cz338ix4.wl-tiwai@suse.de>
-	<CABpewhF01AK4cFPbwYVvKR9yWaO7o-ZE-2+MZjYSUF0BKUdYvw@mail.gmail.com>
-	<874jodlnmi.wl-tiwai@suse.de>
-	<415d4bc84aa74c74af913048f28b42a9@realtek.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	id 6M89FqrqbWQ/LAAAMHmgww
+	(envelope-from <jack@suse.cz>); Wed, 24 May 2023 10:44:58 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id E101CA075C; Wed, 24 May 2023 12:44:57 +0200 (CEST)
+From: Jan Kara <jack@suse.cz>
+To: Ted Tso <tytso@mit.edu>
+Cc: <linux-ext4@vger.kernel.org>,
+	Eric Whitney <enwlinux@gmail.com>,
+	Linux kernel regressions list <regressions@lists.linux.dev>,
+	Jan Kara <jack@suse.cz>
+Subject: [PATCH] ext4: Fix fsync for non-directories
+Date: Wed, 24 May 2023 12:44:53 +0200
+Message-Id: <20230524104453.8734-1-jack@suse.cz>
+X-Mailer: git-send-email 2.35.3
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
+MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1552; i=jack@suse.cz; h=from:subject; bh=CnRcWpd6OnMHLy8/NZ55lHLQg3F2ybI4ioyT51lJNHc=; b=owEBbQGS/pANAwAIAZydqgc/ZEDZAcsmYgBkbeqfFO1A3LPH9Paeik1Y+6+DlD10KnitiqDCrLSz 9ePz32iJATMEAAEIAB0WIQSrWdEr1p4yirVVKBycnaoHP2RA2QUCZG3qnwAKCRCcnaoHP2RA2Tn0B/ 93Mb+xkVoQjg2Ytljh2wgyrXZEvFWIaMcAL3Sg5W55KkcPSXFEN7OOc2l0kjnDiBy3DheRqu8iQ/7p g9zlvM9N0uWjuHwcnkTYlWh2GkLqm981gmg4dNHIT1H0mvrtk3BUDHtJY2vQsXj1w+8MJlp9tsB7kB GTChfaRfoZBkpHbZg0Gx3okbnLW4f/ijxDDXf4RaSSlDSglJP+AFGxHC4nVOLb6oBv1iTKqRYrE3yl pur7K3MTOLlBmBb9aLtmUVK/bCTGpc33jsvpDz9tNfZmSCa32OGKqdVjeoAqke4lpeQISeIyFcvYhy fquiGizVbTbUbbgkcnD9Q3197UMAXk
+X-Developer-Key: i=jack@suse.cz; a=openpgp; fpr=93C6099A142276A28BBE35D815BC833443038D8C
+Content-Transfer-Encoding: 8bit
 
-On Thu, 18 May 2023 07:44:23 +0200,
-Kailang wrote:
-> 
-> > -----Original Message-----
-> > From: Takashi Iwai <tiwai@suse.de>
-> > Sent: Monday, May 15, 2023 9:40 PM
-> > To: Joseph C. Sible <josephcsible@gmail.com>
-> > Cc: Bagas Sanjaya <bagasdotme@gmail.com>; regressions@lists.linux.dev;
-> > Kailang <kailang@realtek.com>; perex@perex.cz; tiwai@suse.com;
-> > alsa-devel@alsa-project.org
-> > Subject: Re: Fwd: [Bug 217440] New: ALC236 audio disappears from HP
-> > 15z-fc000 on warm boot
-> > 
-> > 
-> > External mail.
-> > 
-> > 
-> > 
-> > On Sun, 14 May 2023 23:48:55 +0200,
-> > Joseph C. Sible wrote:
-> > >
-> > > On 5/14/23, Takashi Iwai wrote:
-> > > > The patch changes two places (the change in alc_shutup_pins() and
-> > > > alc256_shutup()), and I guess the latter is the culprit.  Could you
-> > > > verify that only reverting the latter fixes the problem?
-> > >
-> > > Yes, only reverting the latter fixes the problem. I just tried a
-> > > kernel consisting of 6.3.2 plus the below change, and it works fine:
-> > >
-> > > --- a/sound/pci/hda/patch_realtek.c
-> > > +++ b/sound/pci/hda/patch_realtek.c
-> > > @@ -3638,8 +3638,7 @@ static void alc256_shutup(struct hda_codec
-> > *codec)
-> > >         /* If disable 3k pulldown control for alc257, the Mic
-> > > detection will not work correctly
-> > >          * when booting with headset plugged. So skip setting it for
-> > > the codec alc257
-> > >          */
-> > > -       if (codec->core.vendor_id != 0x10ec0236 &&
-> > > -           codec->core.vendor_id != 0x10ec0257)
-> > > +       if (codec->core.vendor_id != 0x10ec0257)
-> > >                 alc_update_coef_idx(codec, 0x46, 0, 3 << 12);
-> > >
-> > >         if (!spec->no_shutup_pins)
-> > 
-> > OK, thanks for confirmation.
-> > 
-> > Kailang, could you check this issue?
-> 
-> OK. I will take it a look for these days.
+Commit e360c6ed7274 ("ext4: Drop special handling of journalled data
+from ext4_sync_file()") simplified ext4_sync_file() by dropping special
+handling of journalled data mode as it was not needed anymore. However
+that branch was also used for directories and symlinks and since the
+fastcommit code does not track metadata changes to non-regular files, the
+change has caused e.g. fsync(2) on directories to not commit transaction
+as it should. Fix the problem by adding handling for non-regular files.
 
-Kailang, any chance to get this fixed?
-Otherwise I'll revert the commit as a temporary solution at first.
-You can re-apply the change (with the proper workaround for this
-problem) later, too.
+Fixes: e360c6ed7274 ("ext4: Drop special handling of journalled data from ext4_sync_file()")
+Reported-by: Eric Whitney <enwlinux@gmail.com>
+Link: https://lore.kernel.org/all/ZFqO3xVnmhL7zv1x@debian-BULLSEYE-live-builder-AMD64
+Signed-off-by: Jan Kara <jack@suse.cz>
+---
+ fs/ext4/fsync.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
+diff --git a/fs/ext4/fsync.c b/fs/ext4/fsync.c
+index f65fdb27ce14..2a143209aa0c 100644
+--- a/fs/ext4/fsync.c
++++ b/fs/ext4/fsync.c
+@@ -108,6 +108,13 @@ static int ext4_fsync_journal(struct inode *inode, bool datasync,
+ 	journal_t *journal = EXT4_SB(inode->i_sb)->s_journal;
+ 	tid_t commit_tid = datasync ? ei->i_datasync_tid : ei->i_sync_tid;
+ 
++	/*
++	 * Fastcommit does not really support fsync on directories or other
++	 * special files. Force a full commit.
++	 */
++	if (!S_ISREG(inode->i_mode))
++		return ext4_force_commit(inode->i_sb);
++
+ 	if (journal->j_flags & JBD2_BARRIER &&
+ 	    !jbd2_trans_will_send_data_barrier(journal, commit_tid))
+ 		*needs_barrier = true;
+-- 
+2.35.3
 
-thanks,
-
-Takashi
