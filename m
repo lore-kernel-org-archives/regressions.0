@@ -1,63 +1,63 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 165BD101E4
-	for <regressions@lists.linux.dev>; Thu, 25 May 2023 14:04:52 +0000 (UTC)
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1ae85b71141so13922445ad.0
-        for <regressions@lists.linux.dev>; Thu, 25 May 2023 07:04:51 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83111101E4
+	for <regressions@lists.linux.dev>; Thu, 25 May 2023 14:05:58 +0000 (UTC)
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-64d3e5e5980so2586783b3a.2
+        for <regressions@lists.linux.dev>; Thu, 25 May 2023 07:05:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1685023491; x=1687615491;
+        d=gmail.com; s=20221208; t=1685023558; x=1687615558;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=5OTtpvBZsd1mzIar/P+7WCe42Wjpq9sEz4353rghUnk=;
-        b=og/EY73MWp6vFDXAgLGjJXne44Xe6KFU24j/h8OLEkZLZCSbUOdt8EH80nqlW0xV7j
-         hlYoGllMwTl94Cf3flS2MresG0DFpfkvSNkQPBMEd+JSA9i7kAm6awYrjsR3qh6sD0Py
-         XGMNDdWP3A+NE1nb7PGHts1FyTGheVSIvNdk/RqqTJ8dr84fRlAxEHHGvHS4bpwFIXJI
-         pkVkNaUBPUSh0AyBF8GyBDOSqRvXwg4i7jpX5Y2fcCxLz/1NN9QpOnRhboivUCW9y4T0
-         7H6X/v08qFmcVE0sa4pkd/QOFuMNgP26MOp+clFonTTKjv5y3E5C51w/GbdWtmgDlRwi
-         lkYw==
+        bh=nPgjNadYh8O7MO97+r7j/d1jHMHXaP+jYO/Oxgqowkw=;
+        b=ommVYYHtLu2Vj/VFDhve63ednPa4iUIK0BRPyAFZDujd9Xt3JeLe+O3NF8Q8zlzkb3
+         aAXyFBFxNP7JQq+72gNtmddn2k/TBovdx3V+3Yz9YMyNttqh+BBSrX9Zfb+xSFw/gPcr
+         BySOJjvCUI6vMlc6mRMYWDZ+Bz5xuY2eUtxI3YpE7E65jL0TVHE+nwtzVcrukf3bLDrr
+         aYfWvmJT/hI+RvF9yWEnRe3yTezD0hZVbSYP6jgO+d8W8pYSJmwv8Pa6LscCpMrOyENV
+         GSXMHLuYp0SDMYbwBePjskTW1ktJ+ZlqbpP6qGOjnYHcjksb8MXfpQE2C4NJhDVIE7dj
+         sYqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685023491; x=1687615491;
+        d=1e100.net; s=20221208; t=1685023558; x=1687615558;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=5OTtpvBZsd1mzIar/P+7WCe42Wjpq9sEz4353rghUnk=;
-        b=kguvO0TcJjy2tGYpC8CAxXZrMXMi5JMiojHgrlFfTkz+9t6Ew4SDVMmyoo+GqHVK0P
-         JsfQ2Dz1mu+mfmoGFd8JYl4eQiQUA4dn7NFG0nUIXKIbo/5Sq1fuoRkan34+b9A8f1rv
-         0v4Ic12drm8zTo5QEC1p6I7lYKyUmcLIDVuwIuAtpv1EiyB3BaQZcT3Xtr1xpsvA576I
-         hPkzRdM0ldbwR1mWBkV6fPvWLZwciDn5ICWipgxg+aWMtK5f8Drh+beEABPfJzPCUfsP
-         +4Kd2OHzFPsD0WRCJZ+CBKUQGjnrXTd7Ga10wjS+3sp1gdDzwhthaImoaIAm/dJkdxsW
-         0jdA==
-X-Gm-Message-State: AC+VfDyAQ4dqWRUAsYxuQo9weoXCIm1LvTtZRXhgKZhWVOPoUiK2sChv
-	13ks2UWA4yfHwXMQHtL7dII=
-X-Google-Smtp-Source: ACHHUZ5ph8WUg3toWhCGyBDAVOLPd9jm+Mr4SBQCkwQjrwZcjsUKsQv6aQKJWln09yU5hmCxQ4Q5WQ==
-X-Received: by 2002:a17:902:bc8a:b0:1ad:1c29:80ef with SMTP id bb10-20020a170902bc8a00b001ad1c2980efmr1575077plb.18.1685023491295;
-        Thu, 25 May 2023 07:04:51 -0700 (PDT)
+        bh=nPgjNadYh8O7MO97+r7j/d1jHMHXaP+jYO/Oxgqowkw=;
+        b=LAQFLLWpukSvWJUo4209fNY8xeNShoAi9HeYu/zu2adflXsvN4HyEAGXbUdWBqdFC2
+         WeCrdr1fvXUgUTkwcdzXjUS8trt/phymb0nOfonFByneHsZf3nnLqAoIORdMCYJ1DoDD
+         JFnln6UeMIxmJomrmfnh01WjmikgDC0iMF7/zme4Gl4bAtMIBPwHe4gDsYjoCz8k3uQy
+         ELzyACes5/MhEFsCeLrxb+LuVnvS9wzbFnuj3GCAjCn7oh5toP51ko4ZkcDj667CPb3Y
+         YY159ZtP/kEVVYiJznuvkAdmcsgC9HG1YIsSdhVAc0X0TTfG6tY5yMLHtQ0iUboQZRGO
+         MEeg==
+X-Gm-Message-State: AC+VfDyJaVvwrhvTdO886bL3CiexgO5vTXqiPFoNhUfWGhlfFL3y0meI
+	CelJ1EIcoxiD+wVZuV32bBw=
+X-Google-Smtp-Source: ACHHUZ47Dl0L7k8F6DW64BTj9LkTtrQ2DbW8Gx4wNp/sPCbMg+J5frhhwcYCQPMqLQmTxkr+7BdQlQ==
+X-Received: by 2002:a05:6a00:1a0f:b0:64d:42f6:4c7b with SMTP id g15-20020a056a001a0f00b0064d42f64c7bmr8027787pfv.27.1685023557843;
+        Thu, 25 May 2023 07:05:57 -0700 (PDT)
 Received: from debian.me (subs03-180-214-233-28.three.co.id. [180.214.233.28])
-        by smtp.gmail.com with ESMTPSA id u4-20020a170902e80400b001a682a195basm1475018plg.28.2023.05.25.07.04.50
+        by smtp.gmail.com with ESMTPSA id s5-20020a62e705000000b0063b7f3250e9sm1242426pfh.7.2023.05.25.07.05.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 May 2023 07:04:50 -0700 (PDT)
+        Thu, 25 May 2023 07:05:57 -0700 (PDT)
 Received: by debian.me (Postfix, from userid 1000)
-	id F066D1068F8; Thu, 25 May 2023 21:04:45 +0700 (WIB)
-Date: Thu, 25 May 2023 21:04:45 +0700
+	id BF66B1068F8; Thu, 25 May 2023 21:05:54 +0700 (WIB)
+Date: Thu, 25 May 2023 21:05:54 +0700
 From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+To: Thorsten Leemhuis <regressions@leemhuis.info>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
 	Linux Regressions <regressions@lists.linux.dev>,
 	Linux Framebuffer <linux-fbdev@vger.kernel.org>,
 	DRI Development List <dri-devel@lists.freedesktop.org>,
 	Linux Nouveau/NVIDIA <nouveau@lists.freedesktop.org>,
 	Linux Stable <stable@vger.kernel.org>
-Cc: Daniel Vetter <daniel@ffwll.ch>, Helge Deller <deller@gmx.de>,
-	Antonino Daplas <adaplas@gmail.com>,
-	Ben Skeggs <bskeggs@redhat.com>, Karol Herbst <kherbst@redhat.com>,
-	Lyude Paul <lyude@redhat.com>, Felix Miata <mrmazda@earthlink.net>
-Subject: Re: Fwd: absent both plymouth, and video= on linu lines, vtty[1-6]
- framebuffers produce vast raster right and bottom borders on the larger
- resolution of two displays
-Message-ID: <ZG9q_bb1rDj79mgv@debian.me>
+Cc: Antonino Daplas <adaplas@gmail.com>, Helge Deller <deller@gmx.de>,
+	Felix Miata <mrmazda@earthlink.net>,
+	Ben Skeggs <bskeggs@redhat.com>, Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [Nouveau] Fwd: absent both plymouth, and video= on linu lines,
+ vtty[1-6] framebuffers produce vast raster right and bottom borders on the
+ larger resolution of two displays
+Message-ID: <ZG9rQmIs1W8IcEcY@debian.me>
 References: <e8f93560-a2f6-8e9f-031a-88d333482a31@gmail.com>
  <585f36f8-431a-e929-0a04-ffb65f02e9df@gmail.com>
- <b34c7037-7f4b-e4bb-dac8-48bbbade327c@gmail.com>
+ <d4879ff1-b9ac-0373-ceb2-beaa645fba23@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -65,45 +65,48 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="tX6NsCAgxtfTaPFl"
+	protocol="application/pgp-signature"; boundary="grvaiosJJE1u57Uo"
 Content-Disposition: inline
-In-Reply-To: <b34c7037-7f4b-e4bb-dac8-48bbbade327c@gmail.com>
+In-Reply-To: <d4879ff1-b9ac-0373-ceb2-beaa645fba23@leemhuis.info>
 
 
---tX6NsCAgxtfTaPFl
+--grvaiosJJE1u57Uo
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 25, 2023 at 06:37:05PM +0700, Bagas Sanjaya wrote:
-> Oops, again, I messed up the regzbot entry (reporter field still assigned
-> to me). Inconclusiving...
+On Thu, May 25, 2023 at 01:24:42PM +0200, Thorsten Leemhuis wrote:
+> Bagas, thx again for your efforts, much appreciated. But I guess for drm
+> drivers that have a line like
 >=20
-> #regzbot inconclusive: Wrong reporter assigned (from: doesn't take effect)
+> B: https://gitlab.freedesktop.org/drm/[...]
 >=20
-> Please ignore this thread as I will send a new one with proper regzbot
-> commands.
+> in MAINTAINERS (which includes all the popular drm drivers) this just
+> creates a lot of confusion for everyone, as one issue will likely end up
+> being discussed in two or three places in parallel (bugzilla,
+> freedesktop, email). Better tell reporters to move their issue to the
+> freedesktop drm tracker and close the ticket in bugzilla. And don't get
+> regzbot involved, as it for now it sadly is unable to monitor the
+> freedesktop drm tracker (sooner or later I'll fix that, but for now it's
+> a blind spot :-/).
+>=20
+> Pretty sure none of the DRM developers will disagree, but if I'm wrong,
+> please holler.
 
-No need to resend this report as Thorsten noted that DRM subsystem already
-have gitlab tracker [1].
-
-Sorry for inconvenience.
-
-[1]: https://lore.kernel.org/regressions/d4879ff1-b9ac-0373-ceb2-beaa645fba=
-23@leemhuis.info/
+OK, thanks!
 
 --=20
 An old man doll... just what I always wanted! - Clara
 
---tX6NsCAgxtfTaPFl
+--grvaiosJJE1u57Uo
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZG9q+QAKCRD2uYlJVVFO
-o2BVAQDxdf+VgNKjUWWNEhoNwmXh+P+87BVSt4rVppMOM1QEUQD/ZeG6yqM0deuL
-YNpG/cKVM4KHln3Qnh18gmVJbXFlIgg=
-=O6hc
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZG9rQgAKCRD2uYlJVVFO
+o2q1AP0at4ur6rVluyiWwI+vlx6EPDtqu5dzAi4NoyxwtVFJuwEArRNKmZCx78ih
+F/NmfUXKN6TG2PwPATDa1cn4Qwp+9g8=
+=9SOh
 -----END PGP SIGNATURE-----
 
---tX6NsCAgxtfTaPFl--
+--grvaiosJJE1u57Uo--
