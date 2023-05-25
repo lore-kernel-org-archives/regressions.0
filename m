@@ -1,360 +1,108 @@
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F290C6087A
-	for <regressions@lists.linux.dev>; Wed, 24 May 2023 23:54:12 +0000 (UTC)
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2af2958db45so18428071fa.1
-        for <regressions@lists.linux.dev>; Wed, 24 May 2023 16:54:12 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4A4815A6
+	for <regressions@lists.linux.dev>; Thu, 25 May 2023 00:58:05 +0000 (UTC)
+Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-53469299319so720357a12.3
+        for <regressions@lists.linux.dev>; Wed, 24 May 2023 17:58:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=atishpatra.org; s=google; t=1684972451; x=1687564451;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QcCRp0LFpuo7QMm9DbnFC3rTU4rCkAGrzLjZTJ0uzE8=;
-        b=olo9C9Afn/8GOsefTuP72OGjJi6ie7FbKR+ZnS7ru/Vhe+pSMd0/sHLufsMmLJ5lFI
-         P3f2akUlsv85cPvcXbCoKVkZw4q8RVVWbElo5l0JJn5a6CPiufXdCCx54ULcG7mO59/x
-         jndhe5kliqTcSH/uN1iYvLfwIbHiHIaNAHrvQ=
+        d=gmail.com; s=20221208; t=1684976285; x=1687568285;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=DAPj42Llo1zBn7j5EbZjUwNn1stxlOLmIFbZP+Hkftw=;
+        b=sWE5ttu3IOXvq5dPyRBpeVf+bDhetwFF738sdeIWuimyyiaHOkxhav9sQg3tTgc91z
+         bK7sKVesnW5qwF+P3y1gUG0uoH73rhx+bkvwhXldiYbhYUV+RrMpl0exxYN7PP6+HGEU
+         FU+s9gSBGTDVP3WIF0BjcE1UdvboZ1FE/dkAjCpPiDDutsaZ/u7pi5/9WQpPpNkvb1Gs
+         Z8TpW8V59Lqn3Xti6S16RkRWlOpslsh5mDZs15+ZZYf1jVvj999Snw9VgawFwlkCBsHo
+         eqHSppNjj7DpNC14XSkoBhooTRdrKVsjAfG+aG3zr4Z34f9LuIxigXjPpOKk1AKZM0so
+         7Cbg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684972451; x=1687564451;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QcCRp0LFpuo7QMm9DbnFC3rTU4rCkAGrzLjZTJ0uzE8=;
-        b=ky+AA/ifbVXUI6vWVDOfUmVwEtIPNthXmHK5XqvLcWjIbIGOHF89kiOzXInvFEkOY/
-         WJ2QeDkRwvPcVsW5Si+aIIPnIxf4ZIwpwr/Xa6eRkqHOz0ppvtXv8esGoeNmg7m0P7xf
-         giUvImX6o0m/q4HJyv69XT0BTyudN8ziKz73xBkzZO0+OSsX+yjftIcagHRo/nT9JvP0
-         Tf5TNckgo8TIkSouXnIWDqcX0l0XXNfyN0LyHn1hXNXWz7uiMyKqLT23xBuWtUXlOvLg
-         YTMn8fmJzclerVduJNe3tgm/L0RZgXYcgFmfuC+bF8tgPKOdKvZT1nsOPmJKwKzoHb3X
-         oYJg==
-X-Gm-Message-State: AC+VfDwu0PVahcVrJgGU++Z0kqltx6lmMFFMdMndPWSZdFWYBahVxk/v
-	DeS1Vl1l6pU6xRAjXd12GFzvIjTPwbELliYVCASQ
-X-Google-Smtp-Source: ACHHUZ47iGouzM2FGhVHEI6ee+wnH4Y1E+n76IvuE59H7vpD5VRNIQLGj2c4VcpoQV8Q93ttd1zHStqfsqaHuqOYHwI=
-X-Received: by 2002:ac2:5936:0:b0:4f3:c774:1923 with SMTP id
- v22-20020ac25936000000b004f3c7741923mr4331438lfi.11.1684972450771; Wed, 24
- May 2023 16:54:10 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1684976285; x=1687568285;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DAPj42Llo1zBn7j5EbZjUwNn1stxlOLmIFbZP+Hkftw=;
+        b=iLaovhFr5SOWrtQPdy26fT6obd48X/BDKBJKOsvRMEX3jCVw799RX4O95s39P7wIMc
+         MnaPCEC3cyfTmpyxxsZNqMrOmhc9+SSBKun5j4mX1trun0ihikt906KZHy7qFyi9y1YW
+         IwLb/r6+KCDICSn15iFRzGmUn9PgvfU8IPaJzogkrXdKorbqo9JKcR2dCLRHQI/J1knE
+         n74e/QLoQdIpF0L6qdBT43ZlJjOKBvbgU8teJwS1CX51rq5N2POT0HNeUAcf8RoLH36J
+         J14JC9o7Y2z7365Mht2mX/UzqZxuuCvg07jsL2km4AKpgjHCCAAmLtZa/VfdtObH3qEA
+         p84g==
+X-Gm-Message-State: AC+VfDydDXDgTLKvI3pvE79do5KqPqY+VR61nkia1ewI1AAqgpH/h9W1
+	GiXCLz1FnJpl7ftCKpKnzws=
+X-Google-Smtp-Source: ACHHUZ6vCwyHjQH58WcHE/CqcAAdVyARITzyZWBize5iGPj/Rzy5RhPCJclyEbqnFkeiDbOlfU74IQ==
+X-Received: by 2002:a17:903:124f:b0:1af:9c18:a160 with SMTP id u15-20020a170903124f00b001af9c18a160mr17670692plh.17.1684976284891;
+        Wed, 24 May 2023 17:58:04 -0700 (PDT)
+Received: from debian.me (subs32-116-206-28-12.three.co.id. [116.206.28.12])
+        by smtp.gmail.com with ESMTPSA id c2-20020a170902b68200b001ac8218ddb7sm76943pls.84.2023.05.24.17.58.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 May 2023 17:58:04 -0700 (PDT)
+Received: by debian.me (Postfix, from userid 1000)
+	id 6D35D10625B; Thu, 25 May 2023 07:58:00 +0700 (WIB)
+Date: Thu, 25 May 2023 07:57:59 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Michael Ellerman <mpe@ellerman.id.au>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux PowerPC <linuxppc-dev@lists.ozlabs.org>,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	Linux Regressions <regressions@lists.linux.dev>
+Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	Zi Yan <ziy@nvidia.com>, Andrew Morton <akpm@linux-foundation.org>,
+	doru iorgulescu <doru.iorgulescu1@gmail.com>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Fabiano Rosas <farosas@linux.ibm.com>,
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+	Disha Goel <disgoel@linux.vnet.ibm.com>
+Subject: Re: Fwd: ./include/linux/mmzone.h:1735:2: error: #error Allocator
+ MAX_ORDER exceeds SECTION_SIZE (v6.4-rc3 build regression)
+Message-ID: <ZG6yl8RN0ChIfNGG@debian.me>
+References: <2a1cd5e6-01f7-66f9-1f9d-c655cc3f919b@gmail.com>
+ <5d22e1e9-0307-3664-8b4a-99caaaaa4315@gmail.com>
+ <87bki9ai11.fsf@mail.lhotse>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAAYs2=gQvkhTeioMmqRDVGjdtNF_vhB+vm_1dHJxPNi75YDQ_Q@mail.gmail.com>
- <CAHVXubgse4Lw7ucg52FkQW4c=QrNo56BXsRZ_nkCHAAPxUXUig@mail.gmail.com>
- <CAHVXubj92O_dwGShOJgrYezqk2pA2NtFyhNFbAPyhn7=PztK6Q@mail.gmail.com>
- <20230517-preacher-primer-f41020b3376a@wendy> <CAHVXubhMLgb54_7zV2yFuGPoMKCkUXwozHbDvghc7kQqNLK-JA@mail.gmail.com>
- <CAAhSdy3tKAk1xjinwnSWan0ivdDapcLvSb+hGNynPFZMUsoB9A@mail.gmail.com>
- <20230518-mobilize-dipper-051dfbc41971@wendy> <CAHVXubhpkkC_1sYkHJvjuHB24YhmHJJ_ZvjRhzaqvygCvfbRnw@mail.gmail.com>
- <20230518-cauterize-game-636a6aac4871@wendy> <CAHVXubgsHKfNaRgvXT0A=7cnnCMrZMrpvxEGrGobcytuFCsLKQ@mail.gmail.com>
-In-Reply-To: <CAHVXubgsHKfNaRgvXT0A=7cnnCMrZMrpvxEGrGobcytuFCsLKQ@mail.gmail.com>
-From: Atish Patra <atishp@atishpatra.org>
-Date: Wed, 24 May 2023 16:53:59 -0700
-Message-ID: <CAOnJCUJQdZZ3kT099Z6gcj+A4fP7ste3dC9QZ8G-2XH7x8DL7A@mail.gmail.com>
-Subject: Re: Bug report: kernel paniced when system hibernates
-To: Alexandre Ghiti <alexghiti@rivosinc.com>
-Cc: Conor Dooley <conor.dooley@microchip.com>, Anup Patel <anup@brainfault.org>, 
-	Song Shuai <suagrfillet@gmail.com>, robh@kernel.org, 
-	Andrew Jones <ajones@ventanamicro.com>, palmer@rivosinc.com, jeeheng.sia@starfivetech.com, 
-	leyfoon.tan@starfivetech.com, mason.huo@starfivetech.com, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Guo Ren <guoren@kernel.org>, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="uI/IsBv88xgOn6QO"
+Content-Disposition: inline
+In-Reply-To: <87bki9ai11.fsf@mail.lhotse>
+
+
+--uI/IsBv88xgOn6QO
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 18, 2023 at 4:58=E2=80=AFAM Alexandre Ghiti <alexghiti@rivosinc=
-.com> wrote:
->
-> On Thu, May 18, 2023 at 12:35=E2=80=AFPM Conor Dooley
-> <conor.dooley@microchip.com> wrote:
-> >
-> > On Thu, May 18, 2023 at 10:41:19AM +0200, Alexandre Ghiti wrote:
-> > > On Thu, May 18, 2023 at 10:00=E2=80=AFAM Conor Dooley
-> > > <conor.dooley@microchip.com> wrote:
-> > > > On Thu, May 18, 2023 at 12:23:59PM +0530, Anup Patel wrote:
-> > > > > On Wed, May 17, 2023 at 8:26=E2=80=AFPM Alexandre Ghiti <alexghit=
-i@rivosinc.com> wrote:
-> > > > > > On Wed, May 17, 2023 at 1:28=E2=80=AFPM Conor Dooley <conor.doo=
-ley@microchip.com> wrote:
-> > > > > > > On Wed, May 17, 2023 at 10:58:02AM +0200, Alexandre Ghiti wro=
-te:
-> > > > > > > > On Tue, May 16, 2023 at 1:12=E2=80=AFPM Alexandre Ghiti <al=
-exghiti@rivosinc.com> wrote:
-> > > > > > >
-> > > > > > > > > On Tue, May 16, 2023 at 11:24=E2=80=AFAM Song Shuai <suag=
-rfillet@gmail.com> wrote:
-> > > > > > > > > I actually removed this flag a few years ago, and I have =
-to admit that
-> > > > > > > > > I need to check if that's necessary: the goal of commit 3=
-335068f8721
-> > > > > > > > > ("riscv: Use PUD/P4D/PGD pages for the linear mapping") i=
-s to expose
-> > > > > > > > > the "right" start of DRAM so that we can align virtual an=
-d physical
-> > > > > > > > > addresses on a 1GB boundary.
-> > > > > > > > >
-> > > > > > > > > So I have to check if a nomap region is actually added as=
- a
-> > > > > > > > > memblock.memory.regions[] or not: if yes, that's perfect,=
- let's add
-> > > > > > > > > the nomap attributes to the PMP regions, otherwise, I don=
-'t think that
-> > > > > > > > > is a good solution.
-> > > > > > > >
-> > > > > > > > So here is the current linear mapping without nomap in open=
-SBI:
-> > > > > > > >
-> > > > > > > > ---[ Linear mapping ]---
-> > > > > > > > 0xff60000000000000-0xff60000000200000    0x0000000080000000=
-         2M
-> > > > > > > > PMD     D A G . . W R V
-> > > > > > > > 0xff60000000200000-0xff60000000e00000    0x0000000080200000=
-        12M
-> > > > > > > > PMD     D A G . . . R V
-> > > > > > > >
-> > > > > > > > And below the linear mapping with nomap in openSBI:
-> > > > > > > >
-> > > > > > > > ---[ Linear mapping ]---
-> > > > > > > > 0xff60000000080000-0xff60000000200000    0x0000000080080000=
-      1536K
-> > > > > > > > PTE     D A G . . W R V
-> > > > > > > > 0xff60000000200000-0xff60000000e00000    0x0000000080200000=
-        12M
-> > > > > > > > PMD     D A G . . . R V
-> > > > > > > >
-> > > > > > > > So adding nomap does not misalign virtual and physical addr=
-esses, it
-> > > > > > > > prevents the usage of 1GB page for this area though, so tha=
-t's a
-> > > > > > > > solution, we just lose this 1GB page here.
-> > > > > > > >
-> > > > > > > > But even though that may be the fix, I think we also need t=
-o fix that
-> > > > > > > > in the kernel as it would break compatibility with certain =
-versions of
-> > > > > > > > openSBI *if* we fix openSBI...So here are a few solutions:
-> > > > > > > >
-> > > > > > > > 1. we can mark all "mmode_resv" nodes in the device tree as=
- nomap,
-> > > > > > > > before the linear mapping is established (IIUC, those nodes=
- are added
-> > > > > > > > by openSBI to advertise PMP regions)
-> > > > > > > >     -> This amounts to the same fix as opensbi and we lose =
-the 1GB hugepage.
-> > > > > > >
-> > > > > > > AFAIU, losing the 1 GB hugepage is a regression, which would =
-make this
-> > > > > > > not an option, right?
-> > > > > >
-> > > > > > Not sure this is a real regression, I'd rather avoid it, but as
-> > > > > > mentioned in my first answer, Mike Rapoport showed that it was =
-making
-> > > > > > no difference performance-wise...
-> > > >
-> > > > My point was that if someone has hugepages enabled & we handle this=
- in a
-> > > > way that causes the first hugepage to be unusable, is that not a
-> > > > regression? Whether hugepages provide a performance benefit is not
-> > > > really related to that question AFAICT.
-> > >
-> > > Not being able to map certain regions of the linear mapping with a 1G=
-B
-> > > hugepage will happen, for example the kernel mapping is protected in
-> > > the linear mapping so that it can't be written: so we can only map
-> > > this region with 2MB hugepages. A firmware could mark a region as
-> > > "no-map" and there again we would not be able to use a 1GB hugepage. =
-I
-> > > don't see that as a regression as the intention is not to *always* us=
-e
-> > > 1GB hugepages, but rather to use them when possible. Does that make
-> > > sense?
-> >
-> > Ah, so it was as I expected - I don't/didn't properly understand
-> > hugepages. Thanks.
-> >
-> > > > Were you suggesting reverting hugepage support entirely in your ori=
-ginal
-> > > > message? If we entirely remove hugepage support, then I guess the f=
-irst
-> > > > hugepage cannot be lost..
-> > >
-> > > Given Mike Rapoport's recent talk, I think that's an option, yes.
-> > >
-> > > >
-> > > > > > > > 2. we can tweak pfn_is_nosave function to *not* save pfn co=
-rresponding
-> > > > > > > > to PMP regions
-> > > > > > > >     -> We don't lose the 1GB hugepage \o/
-> > > > > > > > 3. we can use register_nosave_region() to not save the "mmo=
-de_resv"
-> > > > > > > > regions (x86 does that
-> > > > > > > > https://elixir.bootlin.com/linux/v6.4-rc1/source/arch/x86/k=
-ernel/e820.c#L753)
-> > > > > > > >     -> We don't lose the 1GB hugepage \o/
-> > > > > > > > 4. Given JeeHeng pointer to
-> > > > > > > > https://elixir.bootlin.com/linux/v6.4-rc1/source/kernel/pow=
-er/snapshot.c#L1340,
-> > > > > > > > we can mark those pages as non-readable and make the hibern=
-ation
-> > > > > > > > process not save those pages
-> > > > > > > >     -> Very late-in-the-day idea, not sure what it's worth,=
- we also
-> > > > > > > > lose the 1GB hugepage...
-> > > > > > >
-> > > > > > > Ditto here re: introducing another regression.
-> > > > > > >
-> > > > > > > > To me, the best solution is 3 as it would prepare for other=
- similar
-> > > > > > > > issues later, it is similar to x86 and it allows us to keep=
- 1GB
-> > > > > > > > hugepages.
-> > > > > > > >
-> > > > > > > > I have been thinking, and to me nomap does not provide anyt=
-hing since
-> > > > > > > > the kernel should not address this memory range, so if it d=
-oes, we
-> > > > > > > > must fix the kernel.
-> > > > > > > >
-> > > > > > > > Let me know what you all think, I'll be preparing a PoC of =
-3 in the meantime!
-> > > > > > >
-> > > > > > > #3 would probably get my vote too. It seems like you could us=
-e it
-> > > > > > > dynamically if there was to be a future other provider of "mm=
-ode_resv"
-> > > > > > > regions, rather than doing something location-specific.
-> > > > > > >
-> > > > > > > We should probably document these opensbi reserved memory nod=
-es though
-> > > > > > > in a dt-binding or w/e if we are going to be relying on them =
-to not
-> > > > > > > crash!
-> > > > >
-> > > > > Depending on a particular node name is fragile. If we really need
-> > > > > information from DT then I suggest adding "no-save-restore" DT
-> > > > > property in reserved memory nodes.
-> > > >
-> > > > We can add whatever properties we like, but where does that leave u=
-s for
-> > > > the systems in the wild where their reserved memory nodes do not co=
-ntain
-> > > > a "no-save-restore" property or "no-map"?
-> > > >
-> > > > Ideally, yes, we do not depend on the node name and instead use exp=
-licit
-> > > > properties - but I think we may be "forced" to fall back to checkin=
-g the
-> > > > node-name to cover the opensbi versions that do not contain one.
-> > > > LMK if I have missed something there!
-> > >
-> > > Yes I agree with you, we can implement Anup's solution #1, but we nee=
-d
-> > > to fix the kernel anyway since if we don't, that would make the kerne=
-l
-> > > hibernation support depend on a certain version of openSBI.
-> >
-> > It's not unreasonable to have things depend on versions of the SBI
-> > implementation, but it is if they're not things that can be probed usin=
-g
-> > the standard interfaces!
-> >
-> > > > > > Yes, you're right, let's see what Atish and Anup think!
-> > > > >
-> > > > > I think we have two possible approaches:
-> > > > >
-> > > > > 1) Update OpenSBI to set "no-map" DT property for firmware
-> > > > >     reserved regions. We were doing this previously but removed
-> > > > >     it later for performance reasons mentioned by Alex. It is als=
-o
-> > > > >     worth mentioning that ARM Trusted Firmware also sets "no-map"
-> > > > >     DT property for firmware reserved regions.
-> > > > >
-> > > > > 2) Add a new "no-save-restore" DT property in the reserved
-> > > > >     memory DT bindings. The hibernate support of Linux arch/riscv
-> > > > >     will use this DT property to exclude memory regions from
-> > > > >     save-restore. The EFI implementation of EDK2 and U-Boot
-> > > > >     should do the following:
-> > > > >     1) Treat all memory having "no-map" DT property as EFI
-> > > > >         reserved memory
-> > > > >     2) Treat all memory not having "no-map" DT property and
-> > > > >         not having "no-save-restore" DT property as EfiBootServic=
-esData
-> > > > >     3) Treat all memory not having "no-map" DT property and
-> > > > >          having "no-save-restore" DT property as EfiRuntimeServic=
-eData
-> > > > >          (Refer,
-> > > > > https://devicetree-specification.readthedocs.io/en/latest/chapter=
-3-devicenodes.html#reserved-memory-and-uefi)
-> > > > >
-> > > > > Personally, I am leaning towards approach#1 since approach#2
-> > > > > will require changing DeviceTree specification as well.
-> > > >
-> > > > #1 is by far the simpler option of the two, if the consensus is tha=
-t the
-> > > > loss of the first hugepage is not a problem (or if it is a problem =
-that
-> > > > realistically is unavoidable).
-> > >
-> > > The "no-map" property does not provide much security anyway: the
-> > > kernel should not touch a page that is reserved (this is where I may
-> > > be wrong), so the real fix to this issue is to make the hibernation
-> > > process not save those pages.
-> >
-> > Right, the kernel clearly needs to be able to handle the regions. I, at
-> > least, was commenting on re-using no-map versus creating new properties
-> > for this situation.
-> > I was advocating for re-using the property & changing the kernel so as
-> > not to touch the regions during hibernation.
-> >
-> > > > There's something else I think I might be missing here, given the
-> > > > scattered nature of the reporting. This is not a problem for a syst=
-em
-> > > > that does not implement hibernation, which was only added in v6.4-r=
-c1?
-> > > >
-> > > > That would make it not a regression after all. I think I misunderst=
-ood
-> > > > the report on sw-dev to mean that this was a problem generally afte=
-r
-> > > > v6.4-rc1, which would have been one. Could someone please confirm t=
-hat?
-> > >
-> > > The problem is only present since v6.4-rc1, that's not a regression,
-> > > it's just that both patches landed at the same time and gave rise to
-> > > this issue.
-> >
-> > Sick. Glad to be wrong here!
-> >
-> > #regzbot resolve: not a regression, feature introduced this cycle
-> >
-> > > > If it only affects hibernation, and is not a regression, should we =
-make
-> > > > ARCH_HIBERNATION_POSSIBLE def_bool n in Kconfig until we have agree=
-d on
-> > > > a solution for the problem?
-> >
-> > Any thoughts on this one?
->
-> Ahah, I don't know, I tried to dodge the question :) But if we don't
-> fix this issue, hibernation won't work so is it enough?
->
+On Thu, May 25, 2023 at 01:03:22AM +1000, Michael Ellerman wrote:
+> Should be fixed properly by:
+>=20
+> https://patchwork.ozlabs.org/project/linuxppc-dev/patch/20230519113806.37=
+0635-1-mpe@ellerman.id.au/
+>=20
+> Which is in powerpc-fixes as 358e526a1648.
 
-We can also just revert the commit
-3335068 ("riscv: Use PUD/P4D/PGD pages for the linear mapping")
-until a proper solution is available.
+Telling regzbot:
 
-IIRC, Alex also suggested the same as there is no measured benefit
-with this patch.
-It is good to have 1GB huge page mappings but it can be delayed until
-we have the fix
-for the hibernation issue.
+#regzbot fix: 358e526a1648cd
 
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
-
-
+Thanks.
 
 --=20
-Regards,
-Atish
+An old man doll... just what I always wanted! - Clara
+
+--uI/IsBv88xgOn6QO
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZG6ykgAKCRD2uYlJVVFO
+oxijAP45l+3tHS1RyfI0SLq839DSHCEILcLXGqrYLoT/703ziwEArDioVbgb0kUO
+HKdcUrooAH0IKxya1qWE/qkt2ZKQpwo=
+=oXBj
+-----END PGP SIGNATURE-----
+
+--uI/IsBv88xgOn6QO--
