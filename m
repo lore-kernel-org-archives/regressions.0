@@ -1,108 +1,154 @@
-Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4A4815A6
-	for <regressions@lists.linux.dev>; Thu, 25 May 2023 00:58:05 +0000 (UTC)
-Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-53469299319so720357a12.3
-        for <regressions@lists.linux.dev>; Wed, 24 May 2023 17:58:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684976285; x=1687568285;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=DAPj42Llo1zBn7j5EbZjUwNn1stxlOLmIFbZP+Hkftw=;
-        b=sWE5ttu3IOXvq5dPyRBpeVf+bDhetwFF738sdeIWuimyyiaHOkxhav9sQg3tTgc91z
-         bK7sKVesnW5qwF+P3y1gUG0uoH73rhx+bkvwhXldiYbhYUV+RrMpl0exxYN7PP6+HGEU
-         FU+s9gSBGTDVP3WIF0BjcE1UdvboZ1FE/dkAjCpPiDDutsaZ/u7pi5/9WQpPpNkvb1Gs
-         Z8TpW8V59Lqn3Xti6S16RkRWlOpslsh5mDZs15+ZZYf1jVvj999Snw9VgawFwlkCBsHo
-         eqHSppNjj7DpNC14XSkoBhooTRdrKVsjAfG+aG3zr4Z34f9LuIxigXjPpOKk1AKZM0so
-         7Cbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684976285; x=1687568285;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DAPj42Llo1zBn7j5EbZjUwNn1stxlOLmIFbZP+Hkftw=;
-        b=iLaovhFr5SOWrtQPdy26fT6obd48X/BDKBJKOsvRMEX3jCVw799RX4O95s39P7wIMc
-         MnaPCEC3cyfTmpyxxsZNqMrOmhc9+SSBKun5j4mX1trun0ihikt906KZHy7qFyi9y1YW
-         IwLb/r6+KCDICSn15iFRzGmUn9PgvfU8IPaJzogkrXdKorbqo9JKcR2dCLRHQI/J1knE
-         n74e/QLoQdIpF0L6qdBT43ZlJjOKBvbgU8teJwS1CX51rq5N2POT0HNeUAcf8RoLH36J
-         J14JC9o7Y2z7365Mht2mX/UzqZxuuCvg07jsL2km4AKpgjHCCAAmLtZa/VfdtObH3qEA
-         p84g==
-X-Gm-Message-State: AC+VfDydDXDgTLKvI3pvE79do5KqPqY+VR61nkia1ewI1AAqgpH/h9W1
-	GiXCLz1FnJpl7ftCKpKnzws=
-X-Google-Smtp-Source: ACHHUZ6vCwyHjQH58WcHE/CqcAAdVyARITzyZWBize5iGPj/Rzy5RhPCJclyEbqnFkeiDbOlfU74IQ==
-X-Received: by 2002:a17:903:124f:b0:1af:9c18:a160 with SMTP id u15-20020a170903124f00b001af9c18a160mr17670692plh.17.1684976284891;
-        Wed, 24 May 2023 17:58:04 -0700 (PDT)
-Received: from debian.me (subs32-116-206-28-12.three.co.id. [116.206.28.12])
-        by smtp.gmail.com with ESMTPSA id c2-20020a170902b68200b001ac8218ddb7sm76943pls.84.2023.05.24.17.58.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 May 2023 17:58:04 -0700 (PDT)
-Received: by debian.me (Postfix, from userid 1000)
-	id 6D35D10625B; Thu, 25 May 2023 07:58:00 +0700 (WIB)
-Date: Thu, 25 May 2023 07:57:59 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Michael Ellerman <mpe@ellerman.id.au>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux PowerPC <linuxppc-dev@lists.ozlabs.org>,
-	Linux Memory Management List <linux-mm@kvack.org>,
-	Linux Regressions <regressions@lists.linux.dev>
-Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	Zi Yan <ziy@nvidia.com>, Andrew Morton <akpm@linux-foundation.org>,
-	doru iorgulescu <doru.iorgulescu1@gmail.com>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Fabiano Rosas <farosas@linux.ibm.com>,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-	Disha Goel <disgoel@linux.vnet.ibm.com>
-Subject: Re: Fwd: ./include/linux/mmzone.h:1735:2: error: #error Allocator
- MAX_ORDER exceeds SECTION_SIZE (v6.4-rc3 build regression)
-Message-ID: <ZG6yl8RN0ChIfNGG@debian.me>
-References: <2a1cd5e6-01f7-66f9-1f9d-c655cc3f919b@gmail.com>
- <5d22e1e9-0307-3664-8b4a-99caaaaa4315@gmail.com>
- <87bki9ai11.fsf@mail.lhotse>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00AC88F53
+	for <regressions@lists.linux.dev>; Thu, 25 May 2023 07:26:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1684999565; x=1716535565;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=rWM2utdSZOaxdI1ZIIx/T+zLQycBI2Zj4iEo9dK0xyg=;
+  b=HwAMl4RA5Vyx33cgFXnJest+Y32+MmENMIo8r4WfpVzZt/uRTa2XWcOY
+   /9IstcMQiQaGf44WjdAR+adS/7igWvA9rCJqeL7kl87y5au+84YsFukPx
+   UV6vzPJ3m67dPTRoGN8E+PzuhvvWlZ7hRS7Hz8OS32+pn3OWOkjSR70i+
+   POInd61/Cw4w0nMD6qhBwUMjOnnqjk+csv39ZnTQPAZzM93lQ6+onjzBs
+   5zjWSJOmhc5EO9vzwhh4K4I61lr5BhA6vNjopBxZHNrvegeVQJOcOU+as
+   1lzFUk/Dng/qCbTJzFzRoiFv+XTUJ6sJgFKCUskC3swObYD62680Yt1Ul
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10720"; a="334159755"
+X-IronPort-AV: E=Sophos;i="6.00,190,1681196400"; 
+   d="scan'208";a="334159755"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2023 00:23:45 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10720"; a="704692726"
+X-IronPort-AV: E=Sophos;i="6.00,190,1681196400"; 
+   d="scan'208";a="704692726"
+Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2023 00:23:42 -0700
+Received: from kekkonen.localdomain (localhost [IPv6:::1])
+	by kekkonen.fi.intel.com (Postfix) with SMTP id CD6381202A9;
+	Thu, 25 May 2023 10:23:39 +0300 (EEST)
+Date: Thu, 25 May 2023 07:23:39 +0000
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Thorsten Leemhuis <linux@leemhuis.info>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
+	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Jacopo Mondi <jacopo.mondi@ideasonboard.com>,
+	Alexander Stein <alexander.stein@ew.tq-group.com>,
+	linux-media@vger.kernel.org, niklas.soderlund@ragnatech.se
+Subject: Re: v4l2-async: regression due to endpoint matching
+Message-ID: <ZG8M+00BDPIO61df@kekkonen.localdomain>
+References: <5676976.irdbgypaU6@steina-w>
+ <ob373sf6lmg6qfkdqy5ovxescw5gp7yedb2flk4ax762abo7b3@w33eqx3erdg7>
+ <6415252.e9J7NaK4W3@steina-w>
+ <3u5xed27to5bnwo3dksviydw6z2lga3udjkgvvzor4tlobjlxv@hsnam3wurgxc>
+ <ZEtytxcB2+DA8Xs/@kekkonen.localdomain>
+ <f30d063b-e131-a659-9a1f-8f47e5736b44@leemhuis.info>
+ <ZGtZGzZ3wiwiJBkp@kekkonen.localdomain>
+ <618ab198-836e-16ba-4c02-476feac2ffaa@leemhuis.info>
+ <ZGtlRnPE5k/W4vGY@kekkonen.localdomain>
+ <6b55ed5a-e02d-93c9-e57f-97cd9acba376@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="uI/IsBv88xgOn6QO"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87bki9ai11.fsf@mail.lhotse>
+In-Reply-To: <6b55ed5a-e02d-93c9-e57f-97cd9acba376@leemhuis.info>
 
+On Wed, May 24, 2023 at 01:52:14PM +0200, Thorsten Leemhuis wrote:
+> On 22.05.23 14:51, Sakari Ailus wrote:
+> > On Mon, May 22, 2023 at 02:11:29PM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
+> >> On 22.05.23 13:59, Sakari Ailus wrote:
+> >>> On Mon, May 22, 2023 at 12:53:52PM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
+> >>>> On 28.04.23 09:16, Sakari Ailus wrote:
+> >>>>> On Fri, Apr 28, 2023 at 08:43:21AM +0200, Jacopo Mondi wrote:
+> >>>>>> On Fri, Apr 28, 2023 at 08:33:30AM +0200, Alexander Stein wrote:
+> >>>>>>> Am Freitag, 28. April 2023, 08:31:54 CEST schrieb Jacopo Mondi:
+> >>>>>>>> On Fri, Apr 28, 2023 at 08:24:22AM +0200, Alexander Stein wrote:
+> >>>>>>>>> Am Donnerstag, 27. April 2023, 18:01:38 CEST schrieb Jacopo Mondi:
+> >>>>>>>>>> On Thu, Apr 27, 2023 at 04:40:46PM +0200, Alexander Stein wrote:
+> >>>>>>>>>>> I have a setup on my TQMa6x (imx6q-mba6a.dts) with a tc358743 attached
+> >>>>>>>>>>> to
+> >>>>>>>>>>> the MIPI CSI input.
+> >>>>>>>>>>> I noticed that since commit 1f391df44607 ("media: v4l2-async: Use
+> >>>>>>>>>>> endpoints in __v4l2_async_nf_add_fwnode_remote()") the async subdevice
+> >>>>>>>>>>> probing does not work anymore. If I revert that, it is working again,
+> >>>>>>>>>>> even on next-20230425.
+> >>>>>>>>>>
+> >>>>>>>>>> A similar issue has been discussed at
+> >>>>>>>>>> https://www.spinics.net/lists/linux-media/msg223351.html
+> >>>>>>>>>>
+> >>>>>>>>>> Unfortunately there was no conclusion as far as I can tell if not that
+> >>>>>>>>>> imx6 is now broken
+> >>>>>>>>>
+> >>>>>>>>> Thanks for the link, seems like a non-trivial thing :(
+> >>>>>>>>>
+> >>>>>>>>> From a glimpse, this series seems to deal with multiple async subdevs:
+> >>>>>>>>> https://lore.kernel.org/all/20230330115853.1628216-1-sakari.ailus@linux.in
+> >>>>>>>>> tel.com/
+> >>>>>>>>>
+> >>>>>>>>> So imx-media-csi should be adjusted as well, no?
+> >>>>>>>>
+> >>>>>>>> It would really be helpful if you can give that series a spin on imx6
+> >>>>>>>> if you already have a test setup.
+> >>>>>>>
+> >>>>>>> I tried, but it failed to apply on my current development tree. What base does
+> >>>>>>> this series apply to? Is there also a repository available I can fetch from?
+> >>>>>>
+> >>>>>> Sakari could tell, for me it applied on v6.3-rc2 but I recall I had to
+> >>>>>> manually fix a few things.
+> >>>>>
+> >>>>> Don't try v1, it won't work. I missed some object relation changes in the
+> >>>>> linked lists. I'll post v2, hopefully some time next week, to address these
+> >>>>> issues.
+> >>>>
+> >>>> Hi, Thorsten here, the Linux kernel's regression tracker.
+> >>>>
+> >>>> I see that v2[1] got a lot of ACKs, but is not even yet in next. And
+> >>>> it's a lot of patches, so maybe too much for backporting to stable
+> >>>> kernels. Which leads to the question: Will the regression this thread is
+> >>>> about (introduced in 5.19 afaics) ever be fixed in v6.1?
+> >>>> Normally/Ideally it should be.
+> >>>
+> >>> We'll need v3 (at least), a problem that's not trivial to fix was
+> >>> identified with v2. There patches aren't really fixes either: it's new
+> >>> functionality that wasn't there previously. I.MX6 just happened to work due
+> >>> to missing checks in the V4L2 async framework, what it needs was never
+> >>> supported (without this set).
+> >>>
+> >>> Dropping endpoint matching will break adv748x driver that relies on it.
+> >>>
+> >>> So I'd expect i.MX6 to work again once we have this set in, but I wouldn't
+> >>> try to backport the set.
+> >>
+> >> Thx for the update. Makes me wonder if reverting the culprit[1] is an
+> >> option. Assuming the problem still happens. Alexander, is that the case?
+> >>
+> >> Ciao, Thorsten
+> >>
+> >> [1] 1f391df4460 ("media: v4l2-async: Use endpoints in
+> >> __v4l2_async_nf_add_fwnode_remote()") (v5.19-rc1; authored by Laurent,
+> >> commited by Mauro (both now CCed))
+> > 
+> > I prioritise an in-kernel driver over a staging driver.
+> 
+> Sorry, can't follow. I track regressions all over the kernel and try to
+> follow the best I can, but here I failed, as I have no idea which
+> staging driver I mean.
+> 
+> I see a regression that is not really addressed and I wonder if there is
+> a way to fix this until a proper solution is ready. Usually in this
+> cases the culprit is reverted, unless that itself would cause another
+> regression. Is that the case here? It sounds a bit like it, but would be
+> great if somebody could confirm that.
 
---uI/IsBv88xgOn6QO
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+As I explained earlier, reverting the patch will break adv748x.
 
-On Thu, May 25, 2023 at 01:03:22AM +1000, Michael Ellerman wrote:
-> Should be fixed properly by:
->=20
-> https://patchwork.ozlabs.org/project/linuxppc-dev/patch/20230519113806.37=
-0635-1-mpe@ellerman.id.au/
->=20
-> Which is in powerpc-fixes as 358e526a1648.
-
-Telling regzbot:
-
-#regzbot fix: 358e526a1648cd
-
-Thanks.
-
---=20
-An old man doll... just what I always wanted! - Clara
-
---uI/IsBv88xgOn6QO
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZG6ykgAKCRD2uYlJVVFO
-oxijAP45l+3tHS1RyfI0SLq839DSHCEILcLXGqrYLoT/703ziwEArDioVbgb0kUO
-HKdcUrooAH0IKxya1qWE/qkt2ZKQpwo=
-=oXBj
------END PGP SIGNATURE-----
-
---uI/IsBv88xgOn6QO--
+-- 
+Sakari Ailus
