@@ -1,112 +1,139 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from madras.collabora.co.uk (madras.collabora.co.uk [46.235.227.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83111101E4
-	for <regressions@lists.linux.dev>; Thu, 25 May 2023 14:05:58 +0000 (UTC)
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-64d3e5e5980so2586783b3a.2
-        for <regressions@lists.linux.dev>; Thu, 25 May 2023 07:05:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1685023558; x=1687615558;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=nPgjNadYh8O7MO97+r7j/d1jHMHXaP+jYO/Oxgqowkw=;
-        b=ommVYYHtLu2Vj/VFDhve63ednPa4iUIK0BRPyAFZDujd9Xt3JeLe+O3NF8Q8zlzkb3
-         aAXyFBFxNP7JQq+72gNtmddn2k/TBovdx3V+3Yz9YMyNttqh+BBSrX9Zfb+xSFw/gPcr
-         BySOJjvCUI6vMlc6mRMYWDZ+Bz5xuY2eUtxI3YpE7E65jL0TVHE+nwtzVcrukf3bLDrr
-         aYfWvmJT/hI+RvF9yWEnRe3yTezD0hZVbSYP6jgO+d8W8pYSJmwv8Pa6LscCpMrOyENV
-         GSXMHLuYp0SDMYbwBePjskTW1ktJ+ZlqbpP6qGOjnYHcjksb8MXfpQE2C4NJhDVIE7dj
-         sYqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685023558; x=1687615558;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nPgjNadYh8O7MO97+r7j/d1jHMHXaP+jYO/Oxgqowkw=;
-        b=LAQFLLWpukSvWJUo4209fNY8xeNShoAi9HeYu/zu2adflXsvN4HyEAGXbUdWBqdFC2
-         WeCrdr1fvXUgUTkwcdzXjUS8trt/phymb0nOfonFByneHsZf3nnLqAoIORdMCYJ1DoDD
-         JFnln6UeMIxmJomrmfnh01WjmikgDC0iMF7/zme4Gl4bAtMIBPwHe4gDsYjoCz8k3uQy
-         ELzyACes5/MhEFsCeLrxb+LuVnvS9wzbFnuj3GCAjCn7oh5toP51ko4ZkcDj667CPb3Y
-         YY159ZtP/kEVVYiJznuvkAdmcsgC9HG1YIsSdhVAc0X0TTfG6tY5yMLHtQ0iUboQZRGO
-         MEeg==
-X-Gm-Message-State: AC+VfDyJaVvwrhvTdO886bL3CiexgO5vTXqiPFoNhUfWGhlfFL3y0meI
-	CelJ1EIcoxiD+wVZuV32bBw=
-X-Google-Smtp-Source: ACHHUZ47Dl0L7k8F6DW64BTj9LkTtrQ2DbW8Gx4wNp/sPCbMg+J5frhhwcYCQPMqLQmTxkr+7BdQlQ==
-X-Received: by 2002:a05:6a00:1a0f:b0:64d:42f6:4c7b with SMTP id g15-20020a056a001a0f00b0064d42f64c7bmr8027787pfv.27.1685023557843;
-        Thu, 25 May 2023 07:05:57 -0700 (PDT)
-Received: from debian.me (subs03-180-214-233-28.three.co.id. [180.214.233.28])
-        by smtp.gmail.com with ESMTPSA id s5-20020a62e705000000b0063b7f3250e9sm1242426pfh.7.2023.05.25.07.05.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 May 2023 07:05:57 -0700 (PDT)
-Received: by debian.me (Postfix, from userid 1000)
-	id BF66B1068F8; Thu, 25 May 2023 21:05:54 +0700 (WIB)
-Date: Thu, 25 May 2023 21:05:54 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Thorsten Leemhuis <regressions@leemhuis.info>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Regressions <regressions@lists.linux.dev>,
-	Linux Framebuffer <linux-fbdev@vger.kernel.org>,
-	DRI Development List <dri-devel@lists.freedesktop.org>,
-	Linux Nouveau/NVIDIA <nouveau@lists.freedesktop.org>,
-	Linux Stable <stable@vger.kernel.org>
-Cc: Antonino Daplas <adaplas@gmail.com>, Helge Deller <deller@gmx.de>,
-	Felix Miata <mrmazda@earthlink.net>,
-	Ben Skeggs <bskeggs@redhat.com>, Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [Nouveau] Fwd: absent both plymouth, and video= on linu lines,
- vtty[1-6] framebuffers produce vast raster right and bottom borders on the
- larger resolution of two displays
-Message-ID: <ZG9rQmIs1W8IcEcY@debian.me>
-References: <e8f93560-a2f6-8e9f-031a-88d333482a31@gmail.com>
- <585f36f8-431a-e929-0a04-ffb65f02e9df@gmail.com>
- <d4879ff1-b9ac-0373-ceb2-beaa645fba23@leemhuis.info>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D969BE62
+	for <regressions@lists.linux.dev>; Thu, 25 May 2023 14:32:32 +0000 (UTC)
+Received: from nicolas-tpx395.localdomain (unknown [IPv6:2606:6d00:17:6c0::7a9])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: nicolas)
+	by madras.collabora.co.uk (Postfix) with ESMTPSA id AEDD2660571B;
+	Thu, 25 May 2023 15:32:23 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1685025145;
+	bh=bKbvtkUjIXfSUWM6dkyu+X6aQMMPjIEiQFqcy9qp028=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=JfIV8qpz5SLjVJ59PNVTZZJKHSNSvUS5Qug+7PWKXWK3wTXxSIJY5c4PC7gRBwS9j
+	 i/CM0SrFbAzLeHEJAdyE0mwU5YD5or8yLv3+YsQ/ef8SfwKU7YmB40bwlIjdgb0ACb
+	 /YMKtddMmPscABm5Yifra7az7Qqsy7Cr1by9umc4ww5dzAa9Fhfw1I5S3FMA2YBTHL
+	 3UFEqPcdqYwEUEFbkTdK+vHRJHLyb3ZYTwFORVXMPI7izlYGcnMjiV+aOf943gGK2S
+	 qrPNPUIS2cWepzogDg3nbzsRP33PIcXVMiEzuzATfX18D762xmZxepZRw9a0x/GtNp
+	 M2oV4aNp56RIA==
+Message-ID: <bec8c0b0decc16b3533fadec8ad0f6d5c2f37d98.camel@collabora.com>
+Subject: Re: [PATCH v2] media: verisilicon: Fix crash when probing encoder
+From: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+To: Michael Tretter <m.tretter@pengutronix.de>, Linux regressions mailing
+	list <regressions@lists.linux.dev>
+Cc: Diederik de Haas <didi.debian@cknow.org>, Ezequiel Garcia
+ <ezequiel@vanguardiasur.com.ar>, Benjamin Gaignard
+ <benjamin.gaignard@collabora.com>, p.zabel@pengutronix.de,
+ mchehab@kernel.org,  m.szyprowski@samsung.com, linux-media@vger.kernel.org,
+  linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ kernel@collabora.com, hverkuil-cisco@xs4all.nl, Pengutronix Kernel Team
+ <kernel@pengutronix.de>
+Date: Thu, 25 May 2023 10:32:15 -0400
+In-Reply-To: <20230523145430.GB9943@pengutronix.de>
+References: <20230413104756.356695-1-benjamin.gaignard@collabora.com>
+	 <4995215.LvFx2qVVIh@bagend>
+	 <7c1bf9c4-f14b-30cd-2610-871f5f512d06@collabora.com>
+	 <12724349.O9o76ZdvQC@bagend>
+	 <5d871928-dcd5-3f27-e975-d1639525dad0@leemhuis.info>
+	 <20230523145430.GB9943@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.1 (3.48.1-1.fc38) 
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="grvaiosJJE1u57Uo"
-Content-Disposition: inline
-In-Reply-To: <d4879ff1-b9ac-0373-ceb2-beaa645fba23@leemhuis.info>
 
+Hi Micheal,
 
---grvaiosJJE1u57Uo
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, May 25, 2023 at 01:24:42PM +0200, Thorsten Leemhuis wrote:
-> Bagas, thx again for your efforts, much appreciated. But I guess for drm
-> drivers that have a line like
+Le mardi 23 mai 2023 =C3=A0 16:54 +0200, Michael Tretter a =C3=A9crit=C2=A0=
+:
+> On Tue, 23 May 2023 12:50:42 +0200, Linux regression tracking (Thorsten L=
+eemhuis) wrote:
+> > CCing the Regression list and a bunch of other people that were CCed in
+> > threads that look related:
 >=20
-> B: https://gitlab.freedesktop.org/drm/[...]
+> Thanks!
 >=20
-> in MAINTAINERS (which includes all the popular drm drivers) this just
-> creates a lot of confusion for everyone, as one issue will likely end up
-> being discussed in two or three places in parallel (bugzilla,
-> freedesktop, email). Better tell reporters to move their issue to the
-> freedesktop drm tracker and close the ticket in bugzilla. And don't get
-> regzbot involved, as it for now it sadly is unable to monitor the
-> freedesktop drm tracker (sooner or later I'll fix that, but for now it's
-> a blind spot :-/).
+> >=20
+> > On 23.05.23 00:38, Diederik de Haas wrote:
+> > > On Monday, 22 May 2023 18:17:39 CEST Benjamin Gaignard wrote:
+> > > > Le 20/05/2023 =C3=A0 00:34, Diederik de Haas a =C3=A9crit :
+> > > > > On Thursday, 13 April 2023 21:52:50 CEST Nicolas Dufresne wrote:
+> > > [...]
+> > > > > When I booted into my 6.4-rc1 (but also rc2) kernel on my
+> > > > > Pine64 Quartz64 Model A, I noticed a crash which seems the same a=
+s
+> > > > > above, but I didn't have such a crash with my 6.3 kernel.
+> > > > > Searching for 'hantro' led me to this commit as the most likely c=
+ulprit
+> > > > > but when I build a new 6.4-rcX kernel with this commit reverted,
+> > > > > I still had this crash.
+> > > > > Do you have suggestions which commit would then be the likely cul=
+prit?
+> > > >=20
+> > > > This patch fix the crash at boot time, revert it doesn't seem to be=
+ the
+> > > > solution. Maybe this proposal from Marek can help you ?
+> > > >=20
+> > > > https://patchwork.kernel.org/project/linux-media/patch/202304211047=
+59.2236463-1-m.szyprowski@samsung.com/
+> > >=20
+> > > That helped :) After applying that patch I no longer have the crash.
+> > > Thanks!
+> >=20
+> > That regression fix is now a month old, but not yet merged afaics --
+> > guess due to Nicolas comment that wasn't addressed yet and likely
+> > requires a updated patch.
 >=20
-> Pretty sure none of the DRM developers will disagree, but if I'm wrong,
-> please holler.
+> I agree with Nicolas comment on that patch and it needs to be updated.
+>=20
+> >=20
+> > Michael afaics a week ago posted a patch that to my *very limited
+> > understanding of things* (I hope I don't confuse matters here!) seems t=
+o
+> > address the same problem, but slightly differently:
+> > https://lore.kernel.org/all/20230516091209.3098262-1-m.tretter@pengutro=
+nix.de/
+>=20
+> Correct, my patch addresses the same problem.
 
-OK, thanks!
+Sorry, just got really busy and missed the second fix. From a hot fix stand
+point, your patch seems a lot safer. It does not go as far, and probably do=
+es
+not make the driver better, but considering we had such a slow response we =
+need
+to do something about it.
 
---=20
-An old man doll... just what I always wanted! - Clara
+Ezequiel, will you be fine with the approach ?
 
---grvaiosJJE1u57Uo
-Content-Type: application/pgp-signature; name="signature.asc"
+>=20
+> >=20
+> > No reply yet.
+> >=20
+> > That's all a bit unfortunate, as it's not how regression fixes should b=
+e
+> > dealt with -- and caused multiple people headaches that could have been
+> > avoided. :-/
+> >=20
+> > But well, things happen. But it leads to the question:
+> >=20
+> > How can we finally address the issue quickly now to ensure is doesn't
+> > cause headaches for even more people?
+> >=20
+> > Marek, Michael, could you work on a patch together that we then get
+> > somewhat fast-tracked to Linus to avoid him getting even more unhappy
+> > about the state of things[1]?
+>=20
+> Marek, if you have an updated patch, I will happily test and review it.
+> Otherwise, please take a look at my patch.
+>=20
+> Michael
+>=20
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZG9rQgAKCRD2uYlJVVFO
-o2q1AP0at4ur6rVluyiWwI+vlx6EPDtqu5dzAi4NoyxwtVFJuwEArRNKmZCx78ih
-F/NmfUXKN6TG2PwPATDa1cn4Qwp+9g8=
-=9SOh
------END PGP SIGNATURE-----
-
---grvaiosJJE1u57Uo--
