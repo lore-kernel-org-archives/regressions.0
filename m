@@ -1,139 +1,151 @@
-Received: from madras.collabora.co.uk (madras.collabora.co.uk [46.235.227.172])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D969BE62
-	for <regressions@lists.linux.dev>; Thu, 25 May 2023 14:32:32 +0000 (UTC)
-Received: from nicolas-tpx395.localdomain (unknown [IPv6:2606:6d00:17:6c0::7a9])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: nicolas)
-	by madras.collabora.co.uk (Postfix) with ESMTPSA id AEDD2660571B;
-	Thu, 25 May 2023 15:32:23 +0100 (BST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1685025145;
-	bh=bKbvtkUjIXfSUWM6dkyu+X6aQMMPjIEiQFqcy9qp028=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=JfIV8qpz5SLjVJ59PNVTZZJKHSNSvUS5Qug+7PWKXWK3wTXxSIJY5c4PC7gRBwS9j
-	 i/CM0SrFbAzLeHEJAdyE0mwU5YD5or8yLv3+YsQ/ef8SfwKU7YmB40bwlIjdgb0ACb
-	 /YMKtddMmPscABm5Yifra7az7Qqsy7Cr1by9umc4ww5dzAa9Fhfw1I5S3FMA2YBTHL
-	 3UFEqPcdqYwEUEFbkTdK+vHRJHLyb3ZYTwFORVXMPI7izlYGcnMjiV+aOf943gGK2S
-	 qrPNPUIS2cWepzogDg3nbzsRP33PIcXVMiEzuzATfX18D762xmZxepZRw9a0x/GtNp
-	 M2oV4aNp56RIA==
-Message-ID: <bec8c0b0decc16b3533fadec8ad0f6d5c2f37d98.camel@collabora.com>
-Subject: Re: [PATCH v2] media: verisilicon: Fix crash when probing encoder
-From: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-To: Michael Tretter <m.tretter@pengutronix.de>, Linux regressions mailing
-	list <regressions@lists.linux.dev>
-Cc: Diederik de Haas <didi.debian@cknow.org>, Ezequiel Garcia
- <ezequiel@vanguardiasur.com.ar>, Benjamin Gaignard
- <benjamin.gaignard@collabora.com>, p.zabel@pengutronix.de,
- mchehab@kernel.org,  m.szyprowski@samsung.com, linux-media@vger.kernel.org,
-  linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
- kernel@collabora.com, hverkuil-cisco@xs4all.nl, Pengutronix Kernel Team
- <kernel@pengutronix.de>
-Date: Thu, 25 May 2023 10:32:15 -0400
-In-Reply-To: <20230523145430.GB9943@pengutronix.de>
-References: <20230413104756.356695-1-benjamin.gaignard@collabora.com>
-	 <4995215.LvFx2qVVIh@bagend>
-	 <7c1bf9c4-f14b-30cd-2610-871f5f512d06@collabora.com>
-	 <12724349.O9o76ZdvQC@bagend>
-	 <5d871928-dcd5-3f27-e975-d1639525dad0@leemhuis.info>
-	 <20230523145430.GB9943@pengutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.1 (3.48.1-1.fc38) 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2D8D1C77F
+	for <regressions@lists.linux.dev>; Thu, 25 May 2023 17:57:45 +0000 (UTC)
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34PG0EXt019837;
+	Thu, 25 May 2023 17:57:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=zqLmtibLKU7869PGFrgjEJRIXzWm6C1SWM2UnNl/rDs=;
+ b=hbvENCXCI1I4YJ+Nr98RcWYketC7X6uPMRkQa8mvU0H02Tx4+xd6POkEikroNmb/KSlH
+ LhVUSEXIaVdVAy/v+EXdqbwdUatPp5mhcxifCCKMaWSiTeJa3BR8afcSUCJqVFM8NrNT
+ j1gl4UM7WB1RS49Ko+iuh3nJ8xrhOjv/Ro4cO4ki2lp6UjOfryJwIEmYp3MYF/BXI80Y
+ TwQjCCTAIoihU1206g7BtaXzC6qyZize5utTfDLc3CSChYHOwna8aWXZ2GjtVC9G0Jqv
+ 2ZfOcZBUvjzR3+OyqBhXnGRtr+RKru79QhIdr1TjdD/yilX5Wk1l1kW8Td2XQSoUTbUI mQ== 
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3qt47es6ag-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 25 May 2023 17:57:17 +0000
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 34PHvGMT027813
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 25 May 2023 17:57:16 GMT
+Received: from [10.71.110.189] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.42; Thu, 25 May
+ 2023 10:57:16 -0700
+Message-ID: <7deff127-4c6d-1f59-33a8-f44eea86bacd@quicinc.com>
+Date: Thu, 25 May 2023 10:57:15 -0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [Freedreno] [PATCH] Revert "drm/msm/dp: Remove INIT_SETUP delay"
+Content-Language: en-US
+To: Leonard Lausen <leonard@lausen.nl>,
+        Abhinav Kumar
+	<quic_abhinavk@quicinc.com>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Bjorn Andersson <andersson@kernel.org>
+CC: <freedreno@lists.freedesktop.org>,
+        Sankeerth Billakanti
+	<quic_sbillaka@quicinc.com>,
+        Bjorn Andersson <quic_bjorande@quicinc.com>,
+        <regressions@lists.linux.dev>, David Airlie <airlied@gmail.com>,
+        "Nikita
+ Travkin" <nikita@trvn.ru>, <linux-kernel@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, Rob Clark <robdclark@gmail.com>,
+        "Daniel
+ Vetter" <daniel@ffwll.ch>, <linux-arm-msm@vger.kernel.org>,
+        Stephen Boyd
+	<swboyd@chromium.org>, Sean Paul <sean@poorly.run>,
+        Johan Hovold
+	<johan+linaro@kernel.org>
+References: <e547edf4-1b48-5d12-1600-45f78e7cab49@quicinc.com>
+ <1345a125-f745-4fe3-0f5e-bfe84225958d@quicinc.com>
+ <b0cc40d5-6de1-91cc-e2cd-f47cc53551e4@quicinc.com>
+ <ebbcd56ac883d3c3d3024d368fab63d26e02637a@lausen.nl>
+ <20230508021536.txtamifw2vkfncnx@ripper>
+ <3802269cd54ce105ef6dece03b1b9af575b4fa06@lausen.nl>
+ <ad351c02-1c29-3601-53e8-f8cdeca2ac63@linaro.org>
+ <49d175ec16e3f65a18265063e51092ee8d0d79c1@lausen.nl>
+ <f2d1bb37-ea83-4d5d-6ef5-ae84c26d6ac1@quicinc.com>
+ <b9c8243ed53c5c9d7c1b5711237f6130976ea99b@lausen.nl>
+From: Kuogee Hsieh <quic_khsieh@quicinc.com>
+In-Reply-To: <b9c8243ed53c5c9d7c1b5711237f6130976ea99b@lausen.nl>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: tvNJ97bIjRQRLiNJT5nPHuQUXfBH6D4N
+X-Proofpoint-ORIG-GUID: tvNJ97bIjRQRLiNJT5nPHuQUXfBH6D4N
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.176.26
+ definitions=2023-05-25_10,2023-05-25_03,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 phishscore=0
+ suspectscore=0 clxscore=1015 adultscore=0 bulkscore=0 malwarescore=0
+ priorityscore=1501 impostorscore=0 lowpriorityscore=0 spamscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2304280000 definitions=main-2305250150
 
-Hi Micheal,
 
-Le mardi 23 mai 2023 =C3=A0 16:54 +0200, Michael Tretter a =C3=A9crit=C2=A0=
-:
-> On Tue, 23 May 2023 12:50:42 +0200, Linux regression tracking (Thorsten L=
-eemhuis) wrote:
-> > CCing the Regression list and a bunch of other people that were CCed in
-> > threads that look related:
->=20
-> Thanks!
->=20
-> >=20
-> > On 23.05.23 00:38, Diederik de Haas wrote:
-> > > On Monday, 22 May 2023 18:17:39 CEST Benjamin Gaignard wrote:
-> > > > Le 20/05/2023 =C3=A0 00:34, Diederik de Haas a =C3=A9crit :
-> > > > > On Thursday, 13 April 2023 21:52:50 CEST Nicolas Dufresne wrote:
-> > > [...]
-> > > > > When I booted into my 6.4-rc1 (but also rc2) kernel on my
-> > > > > Pine64 Quartz64 Model A, I noticed a crash which seems the same a=
-s
-> > > > > above, but I didn't have such a crash with my 6.3 kernel.
-> > > > > Searching for 'hantro' led me to this commit as the most likely c=
-ulprit
-> > > > > but when I build a new 6.4-rcX kernel with this commit reverted,
-> > > > > I still had this crash.
-> > > > > Do you have suggestions which commit would then be the likely cul=
-prit?
-> > > >=20
-> > > > This patch fix the crash at boot time, revert it doesn't seem to be=
- the
-> > > > solution. Maybe this proposal from Marek can help you ?
-> > > >=20
-> > > > https://patchwork.kernel.org/project/linux-media/patch/202304211047=
-59.2236463-1-m.szyprowski@samsung.com/
-> > >=20
-> > > That helped :) After applying that patch I no longer have the crash.
-> > > Thanks!
-> >=20
-> > That regression fix is now a month old, but not yet merged afaics --
-> > guess due to Nicolas comment that wasn't addressed yet and likely
-> > requires a updated patch.
->=20
-> I agree with Nicolas comment on that patch and it needs to be updated.
->=20
-> >=20
-> > Michael afaics a week ago posted a patch that to my *very limited
-> > understanding of things* (I hope I don't confuse matters here!) seems t=
-o
-> > address the same problem, but slightly differently:
-> > https://lore.kernel.org/all/20230516091209.3098262-1-m.tretter@pengutro=
-nix.de/
->=20
-> Correct, my patch addresses the same problem.
+On 5/24/2023 5:58 AM, Leonard Lausen wrote:
+>>>>>>> [  275.025497] [drm:dpu_encoder_phys_vid_wait_for_commit_done:488]
+>>>>>>> [dpu error]vblank timeout
+>>>>>>> [  275.025514] [drm:dpu_kms_wait_for_commit_done:510] [dpu error]wait
+>>>>>>> for commit done returned -110
+>>>>>>> [  275.064141] [drm:dpu_encoder_frame_done_timeout:2382] [dpu
+>>>>>>> error]enc33 frame done timeout
+>>>>> This is a different crash but the root-cause of both the issues is the
+>>>>> bridge hpd_enable/disable series.
+>>>>>
+>>>>> https://patchwork.freedesktop.org/patch/514414/
+>>> Yes, the new patch to fix this issue is here
+>>>
+>>> https://patchwork.freedesktop.org/patch/538601/?series=118148&rev=3
+>>>
+>>> Apologies if you were not CCed on this, if a next version is CCed,
+>>> will ask kuogee to cc you.
+>>>
+>>> Meanwhile, will be great if you can verify if it works for you and
+>>> provide Tested-by tags.
+>> Hi Leonard,
+>>
+>> I had  cc you with v5 patches.
+>>
+>> Would you please verify it.
+> Hi Kuogee,
+>
+> thank you. Verified the v6 patch fixes the regression when ported to
+> 6.3.3. One non-fatal issue remains: Suspending and resuming the system
+> while USB-C DP monitor is connected triggers an error, though the system
+> recovers within a second without the need to unplug the cable.
+>
+> [drm:drm_mode_config_helper_resume] *ERROR* Failed to resume (-107)
+>
+>
+> dmesg snippet related to the suspend below
+>
+>
+> [  197.845110] usb 2-1.4.4: reset SuperSpeed USB device number 12 using xhci-hcd
+> [  198.235191] [drm:drm_mode_config_helper_resume] *ERROR* Failed to resume (-107)
 
-Sorry, just got really busy and missed the second fix. From a hot fix stand
-point, your patch seems a lot safer. It does not go as far, and probably do=
-es
-not make the driver better, but considering we had such a slow response we =
-need
-to do something about it.
+Hi Leonard,
 
-Ezequiel, will you be fine with the approach ?
+I did not see this problem at my setup (Kodiak) during suspend/resume.
 
->=20
-> >=20
-> > No reply yet.
-> >=20
-> > That's all a bit unfortunate, as it's not how regression fixes should b=
-e
-> > dealt with -- and caused multiple people headaches that could have been
-> > avoided. :-/
-> >=20
-> > But well, things happen. But it leads to the question:
-> >=20
-> > How can we finally address the issue quickly now to ensure is doesn't
-> > cause headaches for even more people?
-> >=20
-> > Marek, Michael, could you work on a patch together that we then get
-> > somewhat fast-tracked to Linus to avoid him getting even more unhappy
-> > about the state of things[1]?
->=20
-> Marek, if you have an updated patch, I will happily test and review it.
-> Otherwise, please take a look at my patch.
->=20
-> Michael
->=20
+Will investigate more on Trogdor device.
 
+Thanks,
+
+
+> [  198.528638] OOM killer enabled.
+> [  198.531866] Restarting tasks ...
+> [  198.531994] usb 1-1.4.4.1: USB disconnect, device number 27
+> [  198.532223] usb 1-1.4.3: USB disconnect, device number 23
+> [  198.532509] usb 1-1.4.2.1: USB disconnect, device number 29
+> [  198.534805] r8152-cfgselector 2-1.4.4.2: USB disconnect, device number 13
+> [  198.535444] done.
+> [  198.535536] usb 1-1.1: USB disconnect, device number 15
+> [  198.567811] random: crng reseeded on system resumption
+> [  198.583431] PM: suspend exit
