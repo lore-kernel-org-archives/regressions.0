@@ -1,100 +1,109 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0F1C101C9
-	for <regressions@lists.linux.dev>; Thu, 25 May 2023 12:56:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1685019369; x=1716555369;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=dCZ7qHilHCnoBJIJpLO6SCWRxEDx/w1XHLVY79Vbh/c=;
-  b=MG6BbsbE90G/QQcZ1QLBMFZ3PID6+iJer7qT0r3Lr0zo9HD0yBpreetY
-   0gIrENJmGJ7cQTi5W+Itz4ApFO5PvARBb1ffTDMqMREIs7w1jbtMlM+3r
-   /M7zmJhwXZzp+CAe3O8thvBKhQDEkclx8tuQIdwZWn/GJGt71i7l/lo3P
-   EVd0A8h8Ax3QxSpTLzl1dkGhDCsJOgIqP3ROMPe6i3vKIRcJpEUzQxFsw
-   1vKJrhf6AQiKicGol0zpqwQERwa/guCOL37/oWdEj6C/UA+1pm7+bdqTd
-   EfTuUhct6fy+775yyCAlchL2773GYqFPd1Jg+Xi5hs+lfUN7/E+GRcITj
-   w==;
-X-IronPort-AV: E=Sophos;i="6.00,191,1681196400"; 
-   d="asc'?scan'208";a="217254719"
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 25 May 2023 05:56:02 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.21; Thu, 25 May 2023 05:56:01 -0700
-Received: from wendy (10.10.115.15) by chn-vm-ex03.mchp-main.com
- (10.10.85.151) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.21 via Frontend
- Transport; Thu, 25 May 2023 05:55:59 -0700
-Date: Thu, 25 May 2023 13:55:37 +0100
-From: Conor Dooley <conor.dooley@microchip.com>
-To: Atish Patra <atishp@atishpatra.org>
-CC: Alexandre Ghiti <alexghiti@rivosinc.com>, Anup Patel
-	<anup@brainfault.org>, Song Shuai <suagrfillet@gmail.com>, <robh@kernel.org>,
-	Andrew Jones <ajones@ventanamicro.com>, <palmer@rivosinc.com>,
-	<jeeheng.sia@starfivetech.com>, <leyfoon.tan@starfivetech.com>,
-	<mason.huo@starfivetech.com>, Paul Walmsley <paul.walmsley@sifive.com>, Guo
- Ren <guoren@kernel.org>, <linux-riscv@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>, <regressions@lists.linux.dev>
-Subject: Re: Bug report: kernel paniced when system hibernates
-Message-ID: <20230525-geologist-cottage-a51fa889a3d0@wendy>
-References: <CAHVXubgse4Lw7ucg52FkQW4c=QrNo56BXsRZ_nkCHAAPxUXUig@mail.gmail.com>
- <CAHVXubj92O_dwGShOJgrYezqk2pA2NtFyhNFbAPyhn7=PztK6Q@mail.gmail.com>
- <20230517-preacher-primer-f41020b3376a@wendy>
- <CAHVXubhMLgb54_7zV2yFuGPoMKCkUXwozHbDvghc7kQqNLK-JA@mail.gmail.com>
- <CAAhSdy3tKAk1xjinwnSWan0ivdDapcLvSb+hGNynPFZMUsoB9A@mail.gmail.com>
- <20230518-mobilize-dipper-051dfbc41971@wendy>
- <CAHVXubhpkkC_1sYkHJvjuHB24YhmHJJ_ZvjRhzaqvygCvfbRnw@mail.gmail.com>
- <20230518-cauterize-game-636a6aac4871@wendy>
- <CAHVXubgsHKfNaRgvXT0A=7cnnCMrZMrpvxEGrGobcytuFCsLKQ@mail.gmail.com>
- <CAOnJCUJQdZZ3kT099Z6gcj+A4fP7ste3dC9QZ8G-2XH7x8DL7A@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 165BD101E4
+	for <regressions@lists.linux.dev>; Thu, 25 May 2023 14:04:52 +0000 (UTC)
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1ae85b71141so13922445ad.0
+        for <regressions@lists.linux.dev>; Thu, 25 May 2023 07:04:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1685023491; x=1687615491;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=5OTtpvBZsd1mzIar/P+7WCe42Wjpq9sEz4353rghUnk=;
+        b=og/EY73MWp6vFDXAgLGjJXne44Xe6KFU24j/h8OLEkZLZCSbUOdt8EH80nqlW0xV7j
+         hlYoGllMwTl94Cf3flS2MresG0DFpfkvSNkQPBMEd+JSA9i7kAm6awYrjsR3qh6sD0Py
+         XGMNDdWP3A+NE1nb7PGHts1FyTGheVSIvNdk/RqqTJ8dr84fRlAxEHHGvHS4bpwFIXJI
+         pkVkNaUBPUSh0AyBF8GyBDOSqRvXwg4i7jpX5Y2fcCxLz/1NN9QpOnRhboivUCW9y4T0
+         7H6X/v08qFmcVE0sa4pkd/QOFuMNgP26MOp+clFonTTKjv5y3E5C51w/GbdWtmgDlRwi
+         lkYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685023491; x=1687615491;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5OTtpvBZsd1mzIar/P+7WCe42Wjpq9sEz4353rghUnk=;
+        b=kguvO0TcJjy2tGYpC8CAxXZrMXMi5JMiojHgrlFfTkz+9t6Ew4SDVMmyoo+GqHVK0P
+         JsfQ2Dz1mu+mfmoGFd8JYl4eQiQUA4dn7NFG0nUIXKIbo/5Sq1fuoRkan34+b9A8f1rv
+         0v4Ic12drm8zTo5QEC1p6I7lYKyUmcLIDVuwIuAtpv1EiyB3BaQZcT3Xtr1xpsvA576I
+         hPkzRdM0ldbwR1mWBkV6fPvWLZwciDn5ICWipgxg+aWMtK5f8Drh+beEABPfJzPCUfsP
+         +4Kd2OHzFPsD0WRCJZ+CBKUQGjnrXTd7Ga10wjS+3sp1gdDzwhthaImoaIAm/dJkdxsW
+         0jdA==
+X-Gm-Message-State: AC+VfDyAQ4dqWRUAsYxuQo9weoXCIm1LvTtZRXhgKZhWVOPoUiK2sChv
+	13ks2UWA4yfHwXMQHtL7dII=
+X-Google-Smtp-Source: ACHHUZ5ph8WUg3toWhCGyBDAVOLPd9jm+Mr4SBQCkwQjrwZcjsUKsQv6aQKJWln09yU5hmCxQ4Q5WQ==
+X-Received: by 2002:a17:902:bc8a:b0:1ad:1c29:80ef with SMTP id bb10-20020a170902bc8a00b001ad1c2980efmr1575077plb.18.1685023491295;
+        Thu, 25 May 2023 07:04:51 -0700 (PDT)
+Received: from debian.me (subs03-180-214-233-28.three.co.id. [180.214.233.28])
+        by smtp.gmail.com with ESMTPSA id u4-20020a170902e80400b001a682a195basm1475018plg.28.2023.05.25.07.04.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 May 2023 07:04:50 -0700 (PDT)
+Received: by debian.me (Postfix, from userid 1000)
+	id F066D1068F8; Thu, 25 May 2023 21:04:45 +0700 (WIB)
+Date: Thu, 25 May 2023 21:04:45 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Regressions <regressions@lists.linux.dev>,
+	Linux Framebuffer <linux-fbdev@vger.kernel.org>,
+	DRI Development List <dri-devel@lists.freedesktop.org>,
+	Linux Nouveau/NVIDIA <nouveau@lists.freedesktop.org>,
+	Linux Stable <stable@vger.kernel.org>
+Cc: Daniel Vetter <daniel@ffwll.ch>, Helge Deller <deller@gmx.de>,
+	Antonino Daplas <adaplas@gmail.com>,
+	Ben Skeggs <bskeggs@redhat.com>, Karol Herbst <kherbst@redhat.com>,
+	Lyude Paul <lyude@redhat.com>, Felix Miata <mrmazda@earthlink.net>
+Subject: Re: Fwd: absent both plymouth, and video= on linu lines, vtty[1-6]
+ framebuffers produce vast raster right and bottom borders on the larger
+ resolution of two displays
+Message-ID: <ZG9q_bb1rDj79mgv@debian.me>
+References: <e8f93560-a2f6-8e9f-031a-88d333482a31@gmail.com>
+ <585f36f8-431a-e929-0a04-ffb65f02e9df@gmail.com>
+ <b34c7037-7f4b-e4bb-dac8-48bbbade327c@gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="EuBXBxH8HufsmTdu"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="tX6NsCAgxtfTaPFl"
 Content-Disposition: inline
-In-Reply-To: <CAOnJCUJQdZZ3kT099Z6gcj+A4fP7ste3dC9QZ8G-2XH7x8DL7A@mail.gmail.com>
+In-Reply-To: <b34c7037-7f4b-e4bb-dac8-48bbbade327c@gmail.com>
 
---EuBXBxH8HufsmTdu
-Content-Type: text/plain; charset=us-ascii
+
+--tX6NsCAgxtfTaPFl
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 24, 2023 at 04:53:59PM -0700, Atish Patra wrote:
+On Thu, May 25, 2023 at 06:37:05PM +0700, Bagas Sanjaya wrote:
+> Oops, again, I messed up the regzbot entry (reporter field still assigned
+> to me). Inconclusiving...
+>=20
+> #regzbot inconclusive: Wrong reporter assigned (from: doesn't take effect)
+>=20
+> Please ignore this thread as I will send a new one with proper regzbot
+> commands.
 
-> We can also just revert the commit
-> 3335068 ("riscv: Use PUD/P4D/PGD pages for the linear mapping")
-> until a proper solution is available.
+No need to resend this report as Thorsten noted that DRM subsystem already
+have gitlab tracker [1].
 
-I'm actually inclined to go the other day. If hibernation never works
-in a released kernel we can't regress it & since we have not settled on
-a fix for this yet we don't know whether the fix would then remove
-support for hibernation where it used to work.
+Sorry for inconvenience.
 
-> IIRC, Alex also suggested the same as there is no measured benefit
-> with this patch.
-> It is good to have 1GB huge page mappings but it can be delayed until
-> we have the fix
-> for the hibernation issue.
+[1]: https://lore.kernel.org/regressions/d4879ff1-b9ac-0373-ceb2-beaa645fba=
+23@leemhuis.info/
 
-IIRC it was the 1 GiB hugepages that Alex said were ~worthless.
+--=20
+An old man doll... just what I always wanted! - Clara
 
---EuBXBxH8HufsmTdu
+--tX6NsCAgxtfTaPFl
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZG9ayQAKCRB4tDGHoIJi
-0omaAQCH/7SukuDl3+/+zFpazVIYawnJQLDQEWojXquLnpT64wEAkbYHuYdzDL6j
-tQEJ/P7KA9+4KSfH/xw6FR5eL0MWowg=
-=00Gl
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZG9q+QAKCRD2uYlJVVFO
+o2BVAQDxdf+VgNKjUWWNEhoNwmXh+P+87BVSt4rVppMOM1QEUQD/ZeG6yqM0deuL
+YNpG/cKVM4KHln3Qnh18gmVJbXFlIgg=
+=O6hc
 -----END PGP SIGNATURE-----
 
---EuBXBxH8HufsmTdu--
+--tX6NsCAgxtfTaPFl--
