@@ -1,171 +1,131 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5AD51F95C
-	for <regressions@lists.linux.dev>; Thu, 25 May 2023 18:10:57 +0000 (UTC)
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34PFBTQ4021226;
-	Thu, 25 May 2023 18:10:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=k/r0fgBjSAJae8JY6gVMJ84uFagaJuMzHr7EblkGMp4=;
- b=jD6v+OtLZcXOW9wbp+1alveyseHuTlfVrg10JQqSVAw5fJAmu5L3kRJMzKOmH9q26mzT
- fm/6b7USpD//OWLCmT7zyfc6bvE7Dm8ZbNLAubpuFHPFj8vOUFDU0eSSyDslsittK9th
- NotVnmyG/7z/kVsNCHOTBGarSihElmLz2JozbmbHgicL7n0vL/oXMvMzoSZbmfpCYG+R
- tkHXlqCg/fWAtcbKUJfmrMfCu18ZpKxi1Efs4yys3Ux1cwrO5hhh+YwRG34q5wR5xNsx
- RDIrfvJzZWu6dhs/vUN/5NbFzB7zHTqk67RM8/N6V9NrvW3uBhQSnjFLN7ZQkTnYQIAb og== 
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3qt8tarn2w-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 25 May 2023 18:10:30 +0000
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 34PIARC1012425
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 25 May 2023 18:10:27 GMT
-Received: from [10.110.20.135] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.42; Thu, 25 May
- 2023 11:10:25 -0700
-Message-ID: <208f05b3-ed92-5b22-6200-8bb28d62fd77@quicinc.com>
-Date: Thu, 25 May 2023 11:10:24 -0700
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD88C79EE
+	for <regressions@lists.linux.dev>; Fri, 26 May 2023 07:43:30 +0000 (UTC)
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3078d1c8828so347994f8f.3
+        for <regressions@lists.linux.dev>; Fri, 26 May 2023 00:43:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1685087009; x=1687679009;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=twYef5JxzOYWdFtDJIvI+imxLb6P+iSjJpGmWBNbdSU=;
+        b=a+RCJZ6u48THGZkfG+L3RtSqWxnNYPQt2gfPnZaSyovQTyaCb64YYSYbdSHxETdEtN
+         DrVEfY9LWUW6mVr5kxVCNh7EpMy7ZGniztEXSv7N7NKpNDjLvfO73ktEy57r3SwMrAxS
+         lo5NP1CaFL/6nrNaV4YHPoAx94rcO3AZ1eYwBidgS4qYX3QWbvDWMJIojs5u79RswEvT
+         qUCqI7jf+6X3xO5HNW47Hsccz82wmdmiR8/e5qZ595VUfxnErnLKhoAg9my5WAJrjrgE
+         aWAoLR+dNKJsUY1yXTaQ2H2CcnehGkJzST//luoH3DPPvKeGmCz2rTCPYCVso9lNMFTW
+         lzWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685087009; x=1687679009;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=twYef5JxzOYWdFtDJIvI+imxLb6P+iSjJpGmWBNbdSU=;
+        b=FsTmVa6cD7YKuXV3KQ8/LlcjVHH94SLI8YayuzqQgQi1z7dFhhP+BkESkRIaMIc3w/
+         dwaixNcJf5n/3P+mhYxg3gVzGXRa2VhRIBzbAP2M8KqcrBjMcTo2koNacia2a214WCnj
+         Tof4efDAiune54X3UWKgbmGLqU6sjJ16WH9WJOKETWjtJWJmR0Hs0d9eI7GYUXFakV9S
+         wxSzBq3hRqhLXrIZ9sB0rq4qvT62CFqnNSLNEMuOqVTnv/vOGBi0hTrMsASqfW1nR5S8
+         U1U7Gz+8CFp31mMEH3D3g/Y2QVicIQR1KoyE7LOmtdr65Q9gR2VUf/TF163JlInuzsYs
+         kXpw==
+X-Gm-Message-State: AC+VfDyyA/sgtL8SU6IvQZK/iefwf0f3qfC7hGI0fpRz/gz7mRevixZS
+	8tWLmCV1Oln+taujFxLZNz7kuBhIDAVle4RNkHruHw7DMNDmRw==
+X-Google-Smtp-Source: ACHHUZ4F355jBozpMw3/OEJ8PW+sc/pObMm5c/87PQjFnU9AqE6jA1CUem6RiYdym4DwbLSP+XdFma7xjpqk5EiHJ4k=
+X-Received: by 2002:adf:ee0d:0:b0:309:3828:2bde with SMTP id
+ y13-20020adfee0d000000b0030938282bdemr653832wrn.60.1685087008551; Fri, 26 May
+ 2023 00:43:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [Freedreno] [PATCH] Revert "drm/msm/dp: Remove INIT_SETUP delay"
-Content-Language: en-US
-To: Kuogee Hsieh <quic_khsieh@quicinc.com>,
-        Leonard Lausen
-	<leonard@lausen.nl>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        "Bjorn
- Andersson" <andersson@kernel.org>
-CC: <freedreno@lists.freedesktop.org>,
-        Sankeerth Billakanti
-	<quic_sbillaka@quicinc.com>,
-        Bjorn Andersson <quic_bjorande@quicinc.com>,
-        <regressions@lists.linux.dev>, David Airlie <airlied@gmail.com>,
-        "Nikita
- Travkin" <nikita@trvn.ru>, <linux-kernel@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, Rob Clark <robdclark@gmail.com>,
-        "Daniel
- Vetter" <daniel@ffwll.ch>, <linux-arm-msm@vger.kernel.org>,
-        Stephen Boyd
-	<swboyd@chromium.org>, Sean Paul <sean@poorly.run>,
-        Johan Hovold
-	<johan+linaro@kernel.org>
-References: <e547edf4-1b48-5d12-1600-45f78e7cab49@quicinc.com>
- <1345a125-f745-4fe3-0f5e-bfe84225958d@quicinc.com>
- <b0cc40d5-6de1-91cc-e2cd-f47cc53551e4@quicinc.com>
- <ebbcd56ac883d3c3d3024d368fab63d26e02637a@lausen.nl>
- <20230508021536.txtamifw2vkfncnx@ripper>
- <3802269cd54ce105ef6dece03b1b9af575b4fa06@lausen.nl>
- <ad351c02-1c29-3601-53e8-f8cdeca2ac63@linaro.org>
- <49d175ec16e3f65a18265063e51092ee8d0d79c1@lausen.nl>
- <f2d1bb37-ea83-4d5d-6ef5-ae84c26d6ac1@quicinc.com>
- <b9c8243ed53c5c9d7c1b5711237f6130976ea99b@lausen.nl>
- <7deff127-4c6d-1f59-33a8-f44eea86bacd@quicinc.com>
-From: Abhinav Kumar <quic_abhinavk@quicinc.com>
-In-Reply-To: <7deff127-4c6d-1f59-33a8-f44eea86bacd@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: dWDv8Ky6LVDFNGnQw98blBLLg0kw7kTl
-X-Proofpoint-ORIG-GUID: dWDv8Ky6LVDFNGnQw98blBLLg0kw7kTl
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.176.26
- definitions=2023-05-25_10,2023-05-25_03,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- lowpriorityscore=0 malwarescore=0 priorityscore=1501 impostorscore=0
- adultscore=0 mlxscore=0 spamscore=0 phishscore=0 suspectscore=0
- bulkscore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2304280000 definitions=main-2305250151
+From: Fabio Coatti <fabio.coatti@gmail.com>
+Date: Fri, 26 May 2023 09:43:17 +0200
+Message-ID: <CADpTngX9LESCdHVu_2mQkNGena_Ng2CphWNwsRGSMxzDsTjU2A@mail.gmail.com>
+Subject: WARNING trace at kvm_nx_huge_page_recovery_worker on 6.3.4
+To: stable@vger.kernel.org, regressions@lists.linux.dev, kvm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
+Hi all,
+I'm using vanilla kernels on a gentoo-based laptop and since 6.3.2 I'm
+getting the kernel log  below when using kvm VM on my box.
+I know, kernel is tainted but avoiding to load nvidia driver could
+make things complicated on my side; if needed for debug I can try to
+avoid it.
 
+Not sure which other infos can be relevant in this context; if you
+need more details just let me know, happy to provide them.
 
-On 5/25/2023 10:57 AM, Kuogee Hsieh wrote:
-> 
-> On 5/24/2023 5:58 AM, Leonard Lausen wrote:
->>>>>>>> [  275.025497] [drm:dpu_encoder_phys_vid_wait_for_commit_done:488]
->>>>>>>> [dpu error]vblank timeout
->>>>>>>> [  275.025514] [drm:dpu_kms_wait_for_commit_done:510] [dpu 
->>>>>>>> error]wait
->>>>>>>> for commit done returned -110
->>>>>>>> [  275.064141] [drm:dpu_encoder_frame_done_timeout:2382] [dpu
->>>>>>>> error]enc33 frame done timeout
->>>>>> This is a different crash but the root-cause of both the issues is 
->>>>>> the
->>>>>> bridge hpd_enable/disable series.
->>>>>>
->>>>>> https://patchwork.freedesktop.org/patch/514414/
->>>> Yes, the new patch to fix this issue is here
->>>>
->>>> https://patchwork.freedesktop.org/patch/538601/?series=118148&rev=3
->>>>
->>>> Apologies if you were not CCed on this, if a next version is CCed,
->>>> will ask kuogee to cc you.
->>>>
->>>> Meanwhile, will be great if you can verify if it works for you and
->>>> provide Tested-by tags.
->>> Hi Leonard,
->>>
->>> I had  cc you with v5 patches.
->>>
->>> Would you please verify it.
->> Hi Kuogee,
->>
->> thank you. Verified the v6 patch fixes the regression when ported to
->> 6.3.3. One non-fatal issue remains: Suspending and resuming the system
->> while USB-C DP monitor is connected triggers an error, though the system
->> recovers within a second without the need to unplug the cable.
->>
->> [drm:drm_mode_config_helper_resume] *ERROR* Failed to resume (-107)
->>
->>
->> dmesg snippet related to the suspend below
->>
->>
->> [  197.845110] usb 2-1.4.4: reset SuperSpeed USB device number 12 
->> using xhci-hcd
->> [  198.235191] [drm:drm_mode_config_helper_resume] *ERROR* Failed to 
->> resume (-107)
-> 
-> Hi Leonard,
-> 
-> I did not see this problem at my setup (Kodiak) during suspend/resume.
-> 
-> Will investigate more on Trogdor device.
-> 
-> Thanks,
-> 
-
-Hi Leonard
-
-Feel free to open a bug for this and assign to me, we can check this and 
-ask more info if needed on that bug.
-
-Thanks
-
-Abhinav
-
-> 
->> [  198.528638] OOM killer enabled.
->> [  198.531866] Restarting tasks ...
->> [  198.531994] usb 1-1.4.4.1: USB disconnect, device number 27
->> [  198.532223] usb 1-1.4.3: USB disconnect, device number 23
->> [  198.532509] usb 1-1.4.2.1: USB disconnect, device number 29
->> [  198.534805] r8152-cfgselector 2-1.4.4.2: USB disconnect, device 
->> number 13
->> [  198.535444] done.
->> [  198.535536] usb 1-1.1: USB disconnect, device number 15
->> [  198.567811] random: crng reseeded on system resumption
->> [  198.583431] PM: suspend exit
+[Fri May 26 09:16:35 2023] ------------[ cut here ]------------
+[Fri May 26 09:16:35 2023] WARNING: CPU: 5 PID: 4684 at
+kvm_nx_huge_page_recovery_worker+0x38c/0x3d0 [kvm]
+[Fri May 26 09:16:35 2023] Modules linked in: vhost_net vhost
+vhost_iotlb tap tun tls rfcomm snd_hrtimer snd_seq xt_CHECKSUM
+algif_skcipher xt_MASQUERADE xt_conntrack ipt_REJECT nf_reject_ipv4
+ip6table_mangle ip6table_nat ip6table_filter ip6_tables iptable_mangle
+iptable_nat nf_nat iptable_filter ip_tables bpfilter bridge stp llc
+rmi_smbus rmi_core bnep squashfs sch_fq_codel nvidia_drm(POE)
+intel_rapl_msr vboxnetadp(OE) vboxnetflt(OE) nvidia_modeset(POE)
+mei_pxp mei_hdcp rtsx_pci_sdmmc vboxdrv(OE) mmc_core intel_rapl_common
+intel_pmc_core_pltdrv intel_pmc_core snd_ctl_led intel_tcc_cooling
+snd_hda_codec_realtek snd_hda_codec_generic x86_pkg_temp_thermal
+intel_powerclamp btusb btrtl snd_usb_audio btbcm btmtk kvm_intel
+btintel snd_hda_intel snd_intel_dspcfg snd_usbmidi_lib snd_hda_codec
+snd_rawmidi snd_hwdep bluetooth snd_hda_core snd_seq_device kvm
+snd_pcm thinkpad_acpi iwlmvm mousedev ledtrig_audio uvcvideo snd_timer
+ecdh_generic irqbypass crct10dif_pclmul crc32_pclmul polyval_clmulni
+snd think_lmi joydev mei_me ecc uvc
+[Fri May 26 09:16:35 2023]  polyval_generic rtsx_pci iwlwifi
+firmware_attributes_class psmouse wmi_bmof soundcore intel_pch_thermal
+mei platform_profile input_leds evdev nvidia(POE) coretemp hwmon
+akvcam(OE) videobuf2_vmalloc videobuf2_memops videobuf2_v4l2 videodev
+videobuf2_common mc loop nfsd auth_rpcgss nfs_acl efivarfs dmi_sysfs
+dm_zero dm_thin_pool dm_persistent_data dm_bio_prison dm_service_time
+dm_round_robin dm_queue_length dm_multipath dm_delay virtio_pci
+virtio_pci_legacy_dev virtio_pci_modern_dev virtio_blk virtio_console
+virtio_balloon vxlan ip6_udp_tunnel udp_tunnel macvlan virtio_net
+net_failover failover virtio_ring virtio fuse overlay nfs lockd grace
+sunrpc linear raid10 raid1 raid0 dm_raid raid456 async_raid6_recov
+async_memcpy async_pq async_xor async_tx md_mod dm_snapshot dm_bufio
+dm_crypt trusted asn1_encoder tpm rng_core dm_mirror dm_region_hash
+dm_log firewire_core crc_itu_t hid_apple usb_storage ehci_pci ehci_hcd
+sr_mod cdrom ahci libahci libata
+[Fri May 26 09:16:35 2023] CPU: 5 PID: 4684 Comm: kvm-nx-lpage-re
+Tainted: P     U     OE      6.3.4-cova #1
+[Fri May 26 09:16:35 2023] Hardware name: LENOVO
+20EQS58500/20EQS58500, BIOS N1EET98W (1.71 ) 12/06/2022
+[Fri May 26 09:16:35 2023] RIP:
+0010:kvm_nx_huge_page_recovery_worker+0x38c/0x3d0 [kvm]
+[Fri May 26 09:16:35 2023] Code: 48 8b 44 24 30 4c 39 e0 0f 85 1b fe
+ff ff 48 89 df e8 2e ab fb ff e9 23 fe ff ff 49 bc ff ff ff ff ff ff
+ff 7f e9 fb fc ff ff <0f> 0b e9 1b ff ff ff 48 8b 44 24 40 65 48 2b 04
+25 28 00 00 00 75
+[Fri May 26 09:16:35 2023] RSP: 0018:ffff8e1a4403fe68 EFLAGS: 00010246
+[Fri May 26 09:16:35 2023] RAX: 0000000000000000 RBX: ffff8e1a42bbd000
+RCX: 0000000000000000
+[Fri May 26 09:16:35 2023] RDX: 0000000000000000 RSI: 0000000000000000
+RDI: 0000000000000000
+[Fri May 26 09:16:35 2023] RBP: ffff8b4e9a56d930 R08: 0000000000000000
+R09: ffff8b4e9a56d8a0
+[Fri May 26 09:16:35 2023] R10: 0000000000000000 R11: 0000000000000001
+R12: ffff8e1a4403fe98
+[Fri May 26 09:16:35 2023] R13: 0000000000000001 R14: ffff8b4d9c432e80
+R15: 0000000000000010
+[Fri May 26 09:16:35 2023] FS:  0000000000000000(0000)
+GS:ffff8b5cdf740000(0000) knlGS:0000000000000000
+[Fri May 26 09:16:35 2023] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[Fri May 26 09:16:35 2023] CR2: 00007efeac53d000 CR3: 0000000978c2c003
+CR4: 00000000003726e0
+[Fri May 26 09:16:35 2023] Call Trace:
+[Fri May 26 09:16:35 2023]  <TASK>
+[Fri May 26 09:16:35 2023]  ?
+__pfx_kvm_nx_huge_page_recovery_worker+0x10/0x10 [kvm]
+[Fri May 26 09:16:35 2023]  kvm_vm_worker_thread+0x106/0x1c0 [kvm]
+[Fri May 26 09:16:35 2023]  ? __pfx_kvm_vm_worker_thread+0x10/0x10 [kvm]
+[Fri May 26 09:16:35 2023]  kthread+0xd9/0x100
+[Fri May 26 09:16:35 2023]  ? __pfx_kthread+0x10/0x10
+[Fri May 26 09:16:35 2023]  ret_from_fork+0x2c/0x50
+[Fri May 26 09:16:35 2023]  </TASK>
+[Fri May 26 09:16:35 2023] ---[ end trace 0000000000000000 ]---
+-- 
+Fabio
