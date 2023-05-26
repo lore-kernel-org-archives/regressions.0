@@ -1,71 +1,70 @@
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DD3323A4
-	for <regressions@lists.linux.dev>; Fri, 26 May 2023 08:34:47 +0000 (UTC)
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-25632c99eecso160846a91.2
-        for <regressions@lists.linux.dev>; Fri, 26 May 2023 01:34:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1685090087; x=1687682087;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=o1AB18/+VPofNdgVVfpkQbQ+ysDkEYSuV7ztvKqEjdA=;
-        b=B3WcL/au1RZpNmcuqrpLzIqE3imXF7YKBx4vb1bIjkiA+v4dsJ0t/DBRGpf3v+EFvR
-         uxl0TUfQ1QwkF138U6R7QPV+/bIBSBZqSJoP2oz7eDG2K8/zIU5ASeW6RfIjIZpT1lt/
-         QKoFxTlFuVFYj3cBP4Pk1WkN5pwH8KciEzT25Qwt4DRA3THQFb6dmLkvc7YVglc2qfK0
-         hqUWiwooSOSrfvGNj35yXwYQU+BzXoNMsvyPYsuF1wmSNZmMkOdmL+UTi+yF6O41TSQl
-         Ye0rlCEGdO+P7esifRlrLQisWwoZ0v+gnFCe5y5XL9suZtKW6mcaknHbDNCMFe+qBBP8
-         4P1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685090087; x=1687682087;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=o1AB18/+VPofNdgVVfpkQbQ+ysDkEYSuV7ztvKqEjdA=;
-        b=RIR0qUvCsDN1DTVV8WOXe9AzKUx66VwZ3WxglW8zwnkVnWYD2kQocYuPOWQyDxV9jU
-         W/AysQ8+EAhSrPawYA5HWa5fHbP9IAMCzVs9ASbY0fz4qQx4rihsEs3encwpO5UTPl4u
-         Q1ESA/ScOlfAqjuUDoijTX4NY1UOGgZSmjqfFGaloXmx+032jz+fu94YopWQyZCvcVPy
-         F51Uyi8ib7JLCHt16ambkTthpzB0RdtsCssM1qfKpz85hj1ZIDsQ8ruu0Pj7HQunLhr6
-         8FDfeGm0dlN26D+o5veTBtcV3/hejPuiDMXov3Malicmgga2nZKLnGi7kzrPaGufoDLu
-         0ZPg==
-X-Gm-Message-State: AC+VfDxNTADxhC/8GkfhcxJ6jTmaXq2JbdGKdD/+A+N6hegGK8T6Q2lN
-	0+6VFPKnakYr/AXMzwvybLg=
-X-Google-Smtp-Source: ACHHUZ6aqfXlmWrBKADGELzaGcFpJTazMOjtftfE1A8IxNlikRUWTcmBhY6iXiTHJKiQGh6Rp6mXEg==
-X-Received: by 2002:a17:90a:6fa1:b0:256:2b9e:e0b with SMTP id e30-20020a17090a6fa100b002562b9e0e0bmr1290023pjk.27.1685090087364;
-        Fri, 26 May 2023 01:34:47 -0700 (PDT)
-Received: from debian.me (subs02-180-214-232-28.three.co.id. [180.214.232.28])
-        by smtp.gmail.com with ESMTPSA id i17-20020a17090332d100b001ab0d815dbbsm2715151plr.23.2023.05.26.01.34.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 May 2023 01:34:46 -0700 (PDT)
-Received: by debian.me (Postfix, from userid 1000)
-	id 3523C106212; Fri, 26 May 2023 15:34:42 +0700 (WIB)
-Date: Fri, 26 May 2023 15:34:42 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Fabio Coatti <fabio.coatti@gmail.com>, stable@vger.kernel.org,
-	regressions@lists.linux.dev, kvm@vger.kernel.org
-Subject: Re: WARNING trace at kvm_nx_huge_page_recovery_worker on 6.3.4
-Message-ID: <ZHBvIpQoH_zjMSSW@debian.me>
-References: <CADpTngX9LESCdHVu_2mQkNGena_Ng2CphWNwsRGSMxzDsTjU2A@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5DFB171B1
+	for <regressions@lists.linux.dev>; Fri, 26 May 2023 12:22:55 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1q2WT0-0000gw-Dn; Fri, 26 May 2023 14:22:46 +0200
+Message-ID: <ec3a1e77-82bf-46a6-08c3-fb00a99b7ad7@leemhuis.info>
+Date: Fri, 26 May 2023 14:22:45 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CADpTngX9LESCdHVu_2mQkNGena_Ng2CphWNwsRGSMxzDsTjU2A@mail.gmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH v3 11/13] drm/fb-helper: Fix single-probe color-format
+ selection
+Content-Language: en-US, de-DE
+From: "Linux regression tracking #update (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+To: Linus Walleij <linus.walleij@linaro.org>,
+ Thomas Zimmermann <tzimmermann@suse.de>
+Cc: javierm@redhat.com, mairacanal@riseup.net,
+ dri-devel@lists.freedesktop.org, jose.exposito89@gmail.com,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+References: <20230102112927.26565-1-tzimmermann@suse.de>
+ <20230102112927.26565-12-tzimmermann@suse.de>
+ <CACRpkdZAqnWcq+fzAY0HjHN5=nDHMqb7g9mZNtLM9x4y40vvAw@mail.gmail.com>
+ <ce0b54a6-807c-4afc-279e-022fc9ecaa7e@leemhuis.info>
+In-Reply-To: <ce0b54a6-807c-4afc-279e-022fc9ecaa7e@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1685103775;ffc5c36c;
+X-HE-SMSGID: 1q2WT0-0000gw-Dn
 
-On Fri, May 26, 2023 at 09:43:17AM +0200, Fabio Coatti wrote:
-> Hi all,
-> I'm using vanilla kernels on a gentoo-based laptop and since 6.3.2 I'm
-> getting the kernel log  below when using kvm VM on my box.
-> I know, kernel is tainted but avoiding to load nvidia driver could
-> make things complicated on my side; if needed for debug I can try to
-> avoid it.
+[TLDR: This mail in primarily relevant for Linux regression tracking. A
+change or fix related to the regression discussed in this thread was
+posted or applied, but it did not use a Link: tag to point to the
+report, as Linus and the documentation call for. Things happen, no
+worries -- but now the regression tracking bot needs to be told manually
+about the fix. See link in footer if these mails annoy you.]
 
-Can you try uninstalling nvidia driver (should make kernel not tainted
-anymore) and reproduce this regression?
+On 14.05.23 14:10, Linux regression tracking #adding (Thorsten Leemhuis)
+wrote:
+> On 12.05.23 15:20, Linus Walleij wrote:
+>> Sorry for late regression detection but this patch regresses
+>> the Integrator AB IMPD-1 graphics, I bisected down to this
+>> patch.
+> 
+> #regzbot ^introduced 37c90d589dc
+> #regzbot title drm/fb-helper: downscaling apparently stopped to work
+> with pl110_impd1
+> #regzbot ignore-activity
 
--- 
-An old man doll... just what I always wanted! - Clara
+#regzbot monitor:
+https://lore.kernel.org/all/20230515092943.1401558-1-linus.walleij@linaro.org/
+#regzbot fix: drm/pl111: Fix FB depth on IMPD-1 framebuffer
+#regzbot ignore-activity
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+That page also explains what to do if mails like this annoy you.
+
