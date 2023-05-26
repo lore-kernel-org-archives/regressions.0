@@ -1,85 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-0201.mail-europe.com (mail-0201.mail-europe.com [51.77.79.158])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F125218B0D
-	for <regressions@lists.linux.dev>; Fri, 26 May 2023 18:41:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B14DFC433D2;
-	Fri, 26 May 2023 18:41:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1685126476;
-	bh=5b2JyJNLieTChhmtAE4raBp+An+8BDiNRs/oMlONZAw=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=IqUr9Rc44MRQ1oCw8P2bGY9GlQfOpSETdMDtKPYY7spdFzZ5YDatmg6BydqJkor+N
-	 35lWm2zBKjJ6G/Zs/Xe19C7XUm5twAF4yCKifnVbx37Fc4c9KQEE+SQS4kBkFYSD8E
-	 c21SzLXr8qIeU+W7KcZsoJOZQ36d7xnsQSkAr17ss35klGsT11APzBSFJ0GZUFZbd3
-	 2EwKGSyL3rvqKBkaWDSge6nA2j4414tAbC7OkUJnfKi2nwJCS/30vBSmgMQZZKz/9/
-	 4D93Ji6xr+GB6p4QXGqUrK9xHwkp3SjmO5uOzyZN70Wfek2/pJRmrIPsszi2Oqs986
-	 hnPLing7N9Zew==
-Date: Fri, 26 May 2023 20:41:12 +0200 (CEST)
-From: Jiri Kosina <jikos@kernel.org>
-To: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-cc: Linus Torvalds <torvalds@linux-foundation.org>, 
-    Linux regressions mailing list <regressions@lists.linux.dev>, 
-    Bagas Sanjaya <bagasdotme@gmail.com>, 
-    =?ISO-8859-15?Q?Filipe_La=EDns?= <lains@riseup.net>, 
-    Bastien Nocera <hadess@hadess.net>, 
-    "open list:HID CORE LAYER" <linux-input@vger.kernel.org>, 
-    LKML <linux-kernel@vger.kernel.org>, guy.b@bluewin.ch
-Subject: Re: [regression] Since kernel 6.3.1 logitech unify receiver not
- working properly
-In-Reply-To: <nycvar.YFH.7.76.2305251308471.29760@cbobk.fhfr.pm>
-Message-ID: <nycvar.YFH.7.76.2305262040330.29760@cbobk.fhfr.pm>
-References: <9b987585-0834-bb8c-3414-283c29f3f2ab@leemhuis.info> <bec024d5-4088-00ae-f7b5-7188868b1707@leemhuis.info> <b7717c43-74bf-b91d-d3ce-874493df602c@gmail.com> <CAO-hwJ+At1J_yUpX2q_dJekzZ-PoTDAvxmkTk_e4Yu0Z338bEA@mail.gmail.com>
- <55dda0bb-fe42-6dee-28ea-00121554d092@leemhuis.info> <CAHk-=whvhkSk6m8_AidhofgR9nq0Md+HbNad5r1RE69tZgbv6Q@mail.gmail.com> <nycvar.YFH.7.76.2305231422180.29760@cbobk.fhfr.pm> <CAO-hwJ+MTRu9KxqwQc7UYFBsa0kkrnYfwVB30KsLZnw=wfcOMg@mail.gmail.com>
- <nycvar.YFH.7.76.2305251308471.29760@cbobk.fhfr.pm>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE70D28C3E
+	for <regressions@lists.linux.dev>; Fri, 26 May 2023 19:17:59 +0000 (UTC)
+Date: Fri, 26 May 2023 19:17:26 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail; t=1685128663; x=1685387863;
+	bh=ouyMl9M9cSUH2UQgqLg6lIvNByY/RpMzp93S8ww1rHE=;
+	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
+	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
+	b=FxhNaYQpBAjre98qGOJ3mmZtroYCiKv8f3DO2T4iKe3MvTdlnT53Vd+Y6W5G4xvwo
+	 6taxXJBdxQsAm8NWopinu+v0IkMZu+Pd+q2ZyqS2FnN3gSaCinfIddWd/tIANJM6Z5
+	 Wc7F3LSKvYUb/hP6G45EOgeN/zFjPgz8BHI8hdhD3Rk/QTstyoiUyvnGYm5UBxj9zp
+	 qSLR/4Ef5Pmr+QxSpx4JFROApO5O3+5QvjySdpjqlCoDo7XiUDQ/Bwaa0IXWsLNkcQ
+	 xjPzmTS/uQwAY+/ll/osMETZgoty/h1f3b8/mqoFLW+YSdec8nGJvZ4sZVhPxyzNxU
+	 3HVWofPNcR39g==
+To: "stable@vger.kernel.org" <stable@vger.kernel.org>
+From: Sami Korkalainen <sami.korkalainen@proton.me>
+Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Subject: [REGRESSION][BISECTED] Boot stall from merge tag 'net-next-6.2'
+Message-ID: <GQUnKz2al3yke5mB2i1kp3SzNHjK8vi6KJEh7rnLrOQ24OrlljeCyeWveLW9pICEmB9Qc8PKdNt3w1t_g3-Uvxq1l8Wj67PpoMeWDoH8PKk=@proton.me>
+Feedback-ID: 45678890:user:proton
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 25 May 2023, Jiri Kosina wrote:
+Linux 6.2 and newer are (mostly) unbootable on my old HP 6730b laptop, the =
+6.1.30 works still fine.
+The weirdest thing is that newer kernels (like 6.3.4 and 6.4-rc3) may boot =
+ok on the first try, but when rebooting, the very same version doesn't boot=
+.
+      =20
+Some times, when trying to boot, I get this message repeated forever:
+ACPI Error: No handler or method for GPE [XX], disabling event (20221020/ev=
+gpe-839)
+On newer kernels, the date is 20230331 instead of 20221020. There is also s=
+ome other error, but I can't read it as it gets overwritten by the other AC=
+PI error, see image linked at the end.
 
-> > > > That bug is pre-existing (ie the problem was not introduced by that
-> > > > commit), but who knows if the retry makes things worse (ie if it then
-> > > > triggers on a retry, the response data will be the *previous* response).
-> > > >
-> > > > The whole "goto exit" games should be removed too, because we're in a
-> > > > for-loop, and instead of "goto exit" it should just do "break".
-> > > >
-> > > > IOW, something like this might be worth testing.
-> > > >
-> > > > That said, while I think the code is buggy, I doubt this is the actual
-> > > > cause of the problem people are reporting. But it would be lovely to
-> > > > hear if the attached patch makes any difference, and I think this is
-> > > > fixing a real - but unlikely - problem anyway.
-> > 
-> > FWIW, Linus, your patch is
-> > Reviewed-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-> > 
-> > Feel free to submit it to us or to apply it directly if you prefer as
-> > this is clearly a fix for a code path issue.
-> 
-> It would be nice to hear from the people who were able to reproduce the 
-> issue whether this makes any observable difference in behavior though. I 
-> don't currently think it would, as it fixes a potential NULL pointer 
-> dereference, which is not what has been reported.
-> 
-> Has anyone of the affected people tried to bisect the issue?
+And some times, the screen will just stay completely blank.
 
-Could anyone who is able to reproduce the issue please check whether 
-reverting
+I tried booting with acpi=3Doff, but it does not help.
+      =20
+I bisected and this is the first bad commit 7e68dd7d07a2
+"Merge tag 'net-next-6.2' of git://git.kernel.org/pub/scm/linux/kernel/git/=
+netdev/net-next"
+      =20
+As the later kernels had the seemingly random booting behaviour (mentioned =
+above), I retested the last good one 7c4a6309e27f by booting it several tim=
+es and it boots every time.
 
-	586e8fede7953b16 ("HID: logitech-hidpp: Retry commands when device is busy")
+I tried getting some boot logs, but the boot process does not go far enough=
+ to make any logs.
 
-has any observable effect?
+Kernel .config file: https://0x0.st/Hqt1.txt
+    =20
+Environment (outputs of a working Linux 6.1 build):
+Software (output of the ver_linux script): https://0x0.st/Hqte.txt
+Processor information (from /proc/cpuinfo): https://0x0.st/Hqt2.txt
+Module information (from /proc/modules): https://0x0.st/HqtL.txt
+/proc/ioports: https://0x0.st/Hqt9.txt
+/proc/iomem:   https://0x0.st/Hqtf.txt
+PCI information ('lspci -vvv' as root): https://0x0.st/HqtO.txt
+SCSI information (from /proc/scsi/scsi)
 
-Thanks,
+Attached devices:
+Host: scsi0 Channel: 00 Id: 00 Lun: 00
+Vendor: ATA      Model: KINGSTON SVP200S Rev: C4
+Type:   Direct-Access                    ANSI  SCSI revision: 05
+Host: scsi1 Channel: 00 Id: 00 Lun: 00
+Vendor: hp       Model: CDDVDW TS-L633M  Rev: 0301
+Type:   CD-ROM                           ANSI  SCSI revision: 05
+      =20
+Distribution: Arch Linux
+Boot manager: systemd-boot (UEFI)
 
--- 
-Jiri Kosina
-SUSE Labs
+git bisect log: https://0x0.st/Hqgx.txt
+ACPI Error (sorry for the dusty screen): https://0x0.st/HqEk.jpeg
 
+#regzbot ^introduced 7e68dd7d07a2
+
+Best regards
+Sami Korkalainen 
