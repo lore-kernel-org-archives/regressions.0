@@ -1,193 +1,71 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92B46A95C
-	for <regressions@lists.linux.dev>; Fri, 26 May 2023 08:09:47 +0000 (UTC)
-Authenticated-By: 
-X-SpamFilter-By: ArmorX SpamTrap 5.77 with qID 34Q89IPV0002638, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
-	by rtits2.realtek.com.tw (8.15.2/2.81/5.90) with ESMTPS id 34Q89IPV0002638
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=OK);
-	Fri, 26 May 2023 16:09:18 +0800
-Received: from RTEXMBS06.realtek.com.tw (172.21.6.99) by
- RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.32; Fri, 26 May 2023 16:09:30 +0800
-Received: from RTEXMBS01.realtek.com.tw (172.21.6.94) by
- RTEXMBS06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.34; Fri, 26 May 2023 16:09:29 +0800
-Received: from RTEXMBS01.realtek.com.tw ([fe80::4d7:e49a:674a:598]) by
- RTEXMBS01.realtek.com.tw ([fe80::4d7:e49a:674a:598%5]) with mapi id
- 15.01.2375.007; Fri, 26 May 2023 16:09:29 +0800
-From: Kailang <kailang@realtek.com>
-To: Takashi Iwai <tiwai@suse.de>
-CC: "Joseph C. Sible" <josephcsible@gmail.com>,
-        Bagas Sanjaya
-	<bagasdotme@gmail.com>,
-        "regressions@lists.linux.dev"
-	<regressions@lists.linux.dev>,
-        "perex@perex.cz" <perex@perex.cz>, "tiwai@suse.com" <tiwai@suse.com>,
-        "alsa-devel@alsa-project.org"
-	<alsa-devel@alsa-project.org>
-Subject: RE: Fwd: [Bug 217440] New: ALC236 audio disappears from HP 15z-fc000 on warm boot
-Thread-Topic: Fwd: [Bug 217440] New: ALC236 audio disappears from HP 15z-fc000
- on warm boot
-Thread-Index: AQHZhdSOD7kY6mXBDkGA3ryhp811r69Yu5SAgAASNACAAA22gIAA7n+AgAEJrYCABLe/YIAJNIWAgAIHAcD//4tyAIAB8UZw
-Date: Fri, 26 May 2023 08:09:29 +0000
-Message-ID: <1170325957764b4cbd7cd3639575f285@realtek.com>
-References: <bug-217440-225600@https.bugzilla.kernel.org/>
-	<CABpewhE4REgn9RJZduuEU6Z_ijXNeQWnrxO1tg70Gkw=F8qNYg@mail.gmail.com>
-	<ZGB0cVVI7OgaJU6t@debian.me>
-	<CABpewhGJE7-k52j8L2kJ2zKupgp3Ma+LdZazzzV4w1Bgihp7nw@mail.gmail.com>
-	<87cz338ix4.wl-tiwai@suse.de>
-	<CABpewhF01AK4cFPbwYVvKR9yWaO7o-ZE-2+MZjYSUF0BKUdYvw@mail.gmail.com>
-	<874jodlnmi.wl-tiwai@suse.de>	<415d4bc84aa74c74af913048f28b42a9@realtek.com>
-	<87fs7mdofi.wl-tiwai@suse.de>	<7da2fdfdae614b1c98deda6e11ca34eb@realtek.com>
- <87353kd8b9.wl-tiwai@suse.de>
-In-Reply-To: <87353kd8b9.wl-tiwai@suse.de>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-originating-ip: [172.22.102.106]
-x-kse-serverinfo: RTEXMBS06.realtek.com.tw, 9
-x-kse-antispam-interceptor-info: fallback
-x-kse-antivirus-interceptor-info: fallback
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DD3323A4
+	for <regressions@lists.linux.dev>; Fri, 26 May 2023 08:34:47 +0000 (UTC)
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-25632c99eecso160846a91.2
+        for <regressions@lists.linux.dev>; Fri, 26 May 2023 01:34:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1685090087; x=1687682087;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=o1AB18/+VPofNdgVVfpkQbQ+ysDkEYSuV7ztvKqEjdA=;
+        b=B3WcL/au1RZpNmcuqrpLzIqE3imXF7YKBx4vb1bIjkiA+v4dsJ0t/DBRGpf3v+EFvR
+         uxl0TUfQ1QwkF138U6R7QPV+/bIBSBZqSJoP2oz7eDG2K8/zIU5ASeW6RfIjIZpT1lt/
+         QKoFxTlFuVFYj3cBP4Pk1WkN5pwH8KciEzT25Qwt4DRA3THQFb6dmLkvc7YVglc2qfK0
+         hqUWiwooSOSrfvGNj35yXwYQU+BzXoNMsvyPYsuF1wmSNZmMkOdmL+UTi+yF6O41TSQl
+         Ye0rlCEGdO+P7esifRlrLQisWwoZ0v+gnFCe5y5XL9suZtKW6mcaknHbDNCMFe+qBBP8
+         4P1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685090087; x=1687682087;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=o1AB18/+VPofNdgVVfpkQbQ+ysDkEYSuV7ztvKqEjdA=;
+        b=RIR0qUvCsDN1DTVV8WOXe9AzKUx66VwZ3WxglW8zwnkVnWYD2kQocYuPOWQyDxV9jU
+         W/AysQ8+EAhSrPawYA5HWa5fHbP9IAMCzVs9ASbY0fz4qQx4rihsEs3encwpO5UTPl4u
+         Q1ESA/ScOlfAqjuUDoijTX4NY1UOGgZSmjqfFGaloXmx+032jz+fu94YopWQyZCvcVPy
+         F51Uyi8ib7JLCHt16ambkTthpzB0RdtsCssM1qfKpz85hj1ZIDsQ8ruu0Pj7HQunLhr6
+         8FDfeGm0dlN26D+o5veTBtcV3/hejPuiDMXov3Malicmgga2nZKLnGi7kzrPaGufoDLu
+         0ZPg==
+X-Gm-Message-State: AC+VfDxNTADxhC/8GkfhcxJ6jTmaXq2JbdGKdD/+A+N6hegGK8T6Q2lN
+	0+6VFPKnakYr/AXMzwvybLg=
+X-Google-Smtp-Source: ACHHUZ6aqfXlmWrBKADGELzaGcFpJTazMOjtftfE1A8IxNlikRUWTcmBhY6iXiTHJKiQGh6Rp6mXEg==
+X-Received: by 2002:a17:90a:6fa1:b0:256:2b9e:e0b with SMTP id e30-20020a17090a6fa100b002562b9e0e0bmr1290023pjk.27.1685090087364;
+        Fri, 26 May 2023 01:34:47 -0700 (PDT)
+Received: from debian.me (subs02-180-214-232-28.three.co.id. [180.214.232.28])
+        by smtp.gmail.com with ESMTPSA id i17-20020a17090332d100b001ab0d815dbbsm2715151plr.23.2023.05.26.01.34.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 May 2023 01:34:46 -0700 (PDT)
+Received: by debian.me (Postfix, from userid 1000)
+	id 3523C106212; Fri, 26 May 2023 15:34:42 +0700 (WIB)
+Date: Fri, 26 May 2023 15:34:42 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Fabio Coatti <fabio.coatti@gmail.com>, stable@vger.kernel.org,
+	regressions@lists.linux.dev, kvm@vger.kernel.org
+Subject: Re: WARNING trace at kvm_nx_huge_page_recovery_worker on 6.3.4
+Message-ID: <ZHBvIpQoH_zjMSSW@debian.me>
+References: <CADpTngX9LESCdHVu_2mQkNGena_Ng2CphWNwsRGSMxzDsTjU2A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-KSE-AntiSpam-Interceptor-Info: fallback
-X-KSE-ServerInfo: RTEXH36505.realtek.com.tw, 9
-X-KSE-AntiSpam-Interceptor-Info: fallback
-X-KSE-Antivirus-Interceptor-Info: fallback
-X-KSE-AntiSpam-Interceptor-Info: fallback
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CADpTngX9LESCdHVu_2mQkNGena_Ng2CphWNwsRGSMxzDsTjU2A@mail.gmail.com>
 
-Hi Takashi,
+On Fri, May 26, 2023 at 09:43:17AM +0200, Fabio Coatti wrote:
+> Hi all,
+> I'm using vanilla kernels on a gentoo-based laptop and since 6.3.2 I'm
+> getting the kernel log  below when using kvm VM on my box.
+> I know, kernel is tainted but avoiding to load nvidia driver could
+> make things complicated on my side; if needed for debug I can try to
+> avoid it.
 
-I test the ALC236 for do below line. It passed on reboot OS.
-=3D=3D> alc_update_coef_idx(codec, 0x46, 0, 3 << 12);  /* 3K pull low */
+Can you try uninstalling nvidia driver (should make kernel not tainted
+anymore) and reproduce this regression?
 
-I also test it without 3K pull low. It also passed on reboot OS.
-
-I think this machine was the special case for this issue.
-
-Hi Joseph,
-
-Could you test it with below model name?
-=3D=3D> alc-chrome-book
-
-BR
-Kailang.
-
-> -----Original Message-----
-> From: Takashi Iwai <tiwai@suse.de>
-> Sent: Thursday, May 25, 2023 6:17 PM
-> To: Kailang <kailang@realtek.com>
-> Cc: Joseph C. Sible <josephcsible@gmail.com>; Bagas Sanjaya
-> <bagasdotme@gmail.com>; regressions@lists.linux.dev; perex@perex.cz;
-> tiwai@suse.com; alsa-devel@alsa-project.org
-> Subject: Re: Fwd: [Bug 217440] New: ALC236 audio disappears from HP
-> 15z-fc000 on warm boot
->=20
->=20
-> External mail.
->=20
->=20
->=20
-> On Thu, 25 May 2023 11:21:38 +0200,
-> Kailang wrote:
-> >
-> >
-> >
-> > > -----Original Message-----
-> > > From: Takashi Iwai <tiwai@suse.de>
-> > > Sent: Wednesday, May 24, 2023 6:17 PM
-> > > To: Kailang <kailang@realtek.com>
-> > > Cc: Joseph C. Sible <josephcsible@gmail.com>; Bagas Sanjaya
-> > > <bagasdotme@gmail.com>; regressions@lists.linux.dev; perex@perex.cz;
-> > > tiwai@suse.com; alsa-devel@alsa-project.org
-> > > Subject: Re: Fwd: [Bug 217440] New: ALC236 audio disappears from HP
-> > > 15z-fc000 on warm boot
-> > >
-> > >
-> > > External mail.
-> > >
-> > >
-> > >
-> > > On Thu, 18 May 2023 07:44:23 +0200,
-> > > Kailang wrote:
-> > > >
-> > > > > -----Original Message-----
-> > > > > From: Takashi Iwai <tiwai@suse.de>
-> > > > > Sent: Monday, May 15, 2023 9:40 PM
-> > > > > To: Joseph C. Sible <josephcsible@gmail.com>
-> > > > > Cc: Bagas Sanjaya <bagasdotme@gmail.com>;
-> > > > > regressions@lists.linux.dev; Kailang <kailang@realtek.com>;
-> > > > > perex@perex.cz; tiwai@suse.com; alsa-devel@alsa-project.org
-> > > > > Subject: Re: Fwd: [Bug 217440] New: ALC236 audio disappears from
-> > > > > HP
-> > > > > 15z-fc000 on warm boot
-> > > > >
-> > > > >
-> > > > > External mail.
-> > > > >
-> > > > >
-> > > > >
-> > > > > On Sun, 14 May 2023 23:48:55 +0200, Joseph C. Sible wrote:
-> > > > > >
-> > > > > > On 5/14/23, Takashi Iwai wrote:
-> > > > > > > The patch changes two places (the change in
-> > > > > > > alc_shutup_pins() and alc256_shutup()), and I guess the latte=
-r is the
-> culprit.
-> > > > > > > Could you verify that only reverting the latter fixes the pro=
-blem?
-> > > > > >
-> > > > > > Yes, only reverting the latter fixes the problem. I just tried
-> > > > > > a kernel consisting of 6.3.2 plus the below change, and it work=
-s fine:
-> > > > > >
-> > > > > > --- a/sound/pci/hda/patch_realtek.c
-> > > > > > +++ b/sound/pci/hda/patch_realtek.c
-> > > > > > @@ -3638,8 +3638,7 @@ static void alc256_shutup(struct
-> > > > > > hda_codec
-> > > > > *codec)
-> > > > > >         /* If disable 3k pulldown control for alc257, the Mic
-> > > > > > detection will not work correctly
-> > > > > >          * when booting with headset plugged. So skip setting
-> > > > > > it for the codec alc257
-> > > > > >          */
-> > > > > > -       if (codec->core.vendor_id !=3D 0x10ec0236 &&
-> > > > > > -           codec->core.vendor_id !=3D 0x10ec0257)
-> > > > > > +       if (codec->core.vendor_id !=3D 0x10ec0257)
-> > > > > >                 alc_update_coef_idx(codec, 0x46, 0, 3 << 12);
-> > > > > >
-> > > > > >         if (!spec->no_shutup_pins)
-> > > > >
-> > > > > OK, thanks for confirmation.
-> > > > >
-> > > > > Kailang, could you check this issue?
-> > > >
-> > > > OK. I will take it a look for these days.
-> > >
-> > > Kailang, any chance to get this fixed?
-> > Sorry! My test machine didn't work. I couldn't have a machine to do thi=
-s test.
-> > But I find one ChromeBook with ALC236 today.
->=20
-> Thanks!
->=20
-> I already submitted a PR to Linus for 6.4-rc4, and the next PR will be li=
-kely in
-> two weeks, so we have a bit of time :)
->=20
->=20
-> Takashi
->=20
-> ------Please consider the environment before printing this e-mail.
+-- 
+An old man doll... just what I always wanted! - Clara
