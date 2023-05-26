@@ -1,89 +1,76 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+Received: from mail-oo1-f54.google.com (mail-oo1-f54.google.com [209.85.161.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D668918B1C
-	for <regressions@lists.linux.dev>; Fri, 26 May 2023 13:47:22 +0000 (UTC)
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-64d18d772bdso1153911b3a.3
-        for <regressions@lists.linux.dev>; Fri, 26 May 2023 06:47:22 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D03F2848B
+	for <regressions@lists.linux.dev>; Fri, 26 May 2023 14:59:15 +0000 (UTC)
+Received: by mail-oo1-f54.google.com with SMTP id 006d021491bc7-55554c33bf3so569802eaf.2
+        for <regressions@lists.linux.dev>; Fri, 26 May 2023 07:59:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1685108842; x=1687700842;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+        d=gmail.com; s=20221208; t=1685113155; x=1687705155;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=9TW6tTngWb25r/POiswswB/QyhpYIVptjKJqMAEVpQI=;
-        b=piyIs9X8Ll5ISV/iWmt8KPgg0B7Tqe8eQT1TjmOyW1U1spGfaEnx6RVNxr8WFlmvzY
-         iwfhG4jTstzaotQklI39xA3D8/fduc9M1sNCOuHpjeTayB1hoHDg038i4bKmc+w3QFTt
-         0gQNSXptjrhT13Ya9vBaOpOYvudq89gi3n1vM4Dk0/VHwri3sYCD/ebivD1mSnA2jLga
-         BlLh/iKtdJHCNtp3bRfyvJRhgGXmgu1GXBqdhOwcxqsPa05UUWtnoTuLp7n/EA395Kk7
-         oqwqMtBB0IGl7ZrPUOx8ImIimXddQEYZ9giEYlRpuF3kpu9GhoQa+RwMTubagLy4GMi8
-         6ADA==
+        bh=cHXQsRBB4P+jMA86kR8YTWRhF2qenOQye1YWW0o++mM=;
+        b=dbKW0dWsBI6hTbayeVlK1pBhSWE/+CpLxm6jRPmZ2lcfyZlXVGR/VQl8cChhHsTMXg
+         /maVUeIS8DO4pw5R2mgmRPbrZ1ieflOB3n5yoXek81ZnoRaFdBJVgrTmtQ0TfKsBZUzV
+         Fo+tYcCrteK5XAFNeiKAD4ZUW8iy/2Ylywn0h/Z9nfnIrPsEtag9PFsLNCJKm6xa6rxq
+         FcXSEFQTSDpRrY+N7Ywr5+OqIt3etH6oFYIJ8f1Xw1mlUnTv3gULBUFoepNktm3Yjfu+
+         8/e7Pd3sMDR/eb7JVMxmKBBzvjJbwoBPjVvkNfDBW9KRS1+vI+SNGbHwy9vikp+ZaQH7
+         HrmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685108842; x=1687700842;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=9TW6tTngWb25r/POiswswB/QyhpYIVptjKJqMAEVpQI=;
-        b=P+xudMZESwCkThWn9o0/RCYDO5TMij1rXHC5Lki0rO+sM+wklRtRiVRG1sdySv6YrV
-         /wEbKyNXaOz6Kmwe8A3FUSew63xhYqwib2l3y9aDquuXfVvXpG+eaAL2mXCgavPvWoIz
-         HC16zVdSUNfMgPbE1J7LBECy7xUbSzugMf55T2pEdplCKC5iKR/PRIf/89ACC34ORb9A
-         bvHe91bmrgVtr7+JfmGb3HEp2j2zSLyRFoJGwv14uEmpED1Wrv+UmsezNEh7hDbRswHG
-         H5rjP9+8gU+qkMQACeRnBfqeao5oIUWorgkKBDkHg2uk4n0juiHduGuC69BhHnktHtL4
-         7GfQ==
-X-Gm-Message-State: AC+VfDxBg6sbo1/7gcb7B0dIRGx+FKDZlObmcssDM74cTkFQfwSh/3Gv
-	d+xMxnv0/DakWXI8/Xr9WssXKqccDe0=
-X-Google-Smtp-Source: ACHHUZ4K0GD+iAjkaF75NrVdiUroHsbTjcoay2+CJ/EytE3C7jNawfKrN4fA5I5u3rphgfmJhBAOLA==
-X-Received: by 2002:a05:6a00:b93:b0:64b:205:dbf3 with SMTP id g19-20020a056a000b9300b0064b0205dbf3mr3785656pfj.34.1685108842119;
-        Fri, 26 May 2023 06:47:22 -0700 (PDT)
-Received: from [192.168.43.80] (subs32-116-206-28-61.three.co.id. [116.206.28.61])
-        by smtp.gmail.com with ESMTPSA id j1-20020aa78001000000b006437c0edf9csm2881304pfi.16.2023.05.26.06.47.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 26 May 2023 06:47:21 -0700 (PDT)
-Message-ID: <288db372-9797-540f-e8bd-794a23648573@gmail.com>
-Date: Fri, 26 May 2023 20:46:32 +0700
+        d=1e100.net; s=20221208; t=1685113155; x=1687705155;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=cHXQsRBB4P+jMA86kR8YTWRhF2qenOQye1YWW0o++mM=;
+        b=FMiatliS+9fDo145g3NWDNE9zEJo4tSdcKwVPJhOT7GRi6LyQzOFnoi7HKLUmOSWrl
+         jbLY7lrrSKQa0GvglA2WTO2E8qHjHRPdtA3FNsxVFIEC39Iyv3vyTudrLEMci4JZkC7q
+         hzaRhJvBV0mePnxGkTFPBYqvftiNwOLTN11cxyrmfevGluoREKicjb6U0lIfmwxSo6ZC
+         QbBJHGO3MvwJa2NNJCp55GnpNyIy6pWvHWYgEzj6LT7/+y9pAW7GjSSdBocXX6e1X7DR
+         apNfxGLniTnPSEpcrs9cDdfIbp6ii0QeilZYRu4d3TMeqAW3EgIPGtwPqdnI4XtnTkeH
+         SV8A==
+X-Gm-Message-State: AC+VfDwwDiK6JRp2klSJSYBHyBdCBt0H5FrMSoCd/vy0GOiCcWTSJVbg
+	dzALggLubNTpVfRn75xQsNaO0htD/EQFm1OIgQ0=
+X-Google-Smtp-Source: ACHHUZ5hFkRx+eYlzH26Y1mYbn6oJmGbtPXs318ZiuHvNg5sS1pgRLxzLBtfQHuHu0K2dUxPIvOpcZnOHWPbsVqr7GU=
+X-Received: by 2002:a05:6808:1151:b0:398:7db6:7ee3 with SMTP id
+ u17-20020a056808115100b003987db67ee3mr1523416oiu.19.1685113154864; Fri, 26
+ May 2023 07:59:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Content-Language: en-US
-To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>,
- DRI Development List <dri-devel@lists.freedesktop.org>,
- Linux ARM <linux-arm-kernel@lists.infradead.org>,
- Linux Samsung SoC Support <linux-samsung-soc@vger.kernel.org>
-Cc: Lee Jones <lee@kernel.org>, Daniel Thompson <daniel.thompson@linaro.org>,
- Jingoo Han <jingoohan1@gmail.com>,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Andrew <quark@disroot.org>, Mika Westerberg
- <mika.westerberg@linux.intel.com>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Geert Uytterhoeven <geert+renesas@glider.be>
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-Subject: Fwd: Does not work backlight on Chromebook XE303C12 with Kernel
- version 6.3.4
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <bug-217440-225600@https.bugzilla.kernel.org/> <CABpewhE4REgn9RJZduuEU6Z_ijXNeQWnrxO1tg70Gkw=F8qNYg@mail.gmail.com>
+ <ZGB0cVVI7OgaJU6t@debian.me> <CABpewhGJE7-k52j8L2kJ2zKupgp3Ma+LdZazzzV4w1Bgihp7nw@mail.gmail.com>
+ <87cz338ix4.wl-tiwai@suse.de> <CABpewhF01AK4cFPbwYVvKR9yWaO7o-ZE-2+MZjYSUF0BKUdYvw@mail.gmail.com>
+ <874jodlnmi.wl-tiwai@suse.de> <415d4bc84aa74c74af913048f28b42a9@realtek.com>
+ <87fs7mdofi.wl-tiwai@suse.de> <7da2fdfdae614b1c98deda6e11ca34eb@realtek.com>
+ <87353kd8b9.wl-tiwai@suse.de> <1170325957764b4cbd7cd3639575f285@realtek.com>
+In-Reply-To: <1170325957764b4cbd7cd3639575f285@realtek.com>
+From: "Joseph C. Sible" <josephcsible@gmail.com>
+Date: Fri, 26 May 2023 10:58:58 -0400
+Message-ID: <CABpewhGBakDSBLKZ1cr2=OMspuu3qyYwZrsXUggQ3vt8gsD88A@mail.gmail.com>
+Subject: Re: Fwd: [Bug 217440] New: ALC236 audio disappears from HP 15z-fc000
+ on warm boot
+To: Kailang <kailang@realtek.com>
+Cc: Takashi Iwai <tiwai@suse.de>, Bagas Sanjaya <bagasdotme@gmail.com>, 
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>, "perex@perex.cz" <perex@perex.cz>, 
+	"tiwai@suse.com" <tiwai@suse.com>, 
+	"alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Fri, May 26, 2023 at 4:09=E2=80=AFAM Kailang <kailang@realtek.com> wrote=
+:
+> Hi Joseph,
+>
+> Could you test it with below model name?
+> =3D=3D> alc-chrome-book
 
-I notice a regression report on Bugzilla [1]. Quoting from it:
+Yes, manually overriding the model name to "alc-chrome-book" makes it
+work properly even on an unmodified 6.3.4 kernel.
 
-> I did check it by flashlight. Even with all available backlights drivers compiled as modules it does not work. With Kernel version 5.15.106 backlight works fine.
-> Kernels for Chomebook uses dtb files that have some backlight config set (used gpio), like exynos5250-snow-common.dtsi and dmesg of 6.3.4 gives some gpio warnings. Maybe cause in it.
+Thanks,
 
-See bugzilla for the full thread and attached dmesg & kernel config.
-
-Anyway, I'm adding it to regzbot:
-
-#regzbot introduced: v5.15..v6.3 https://bugzilla.kernel.org/show_bug.cgi?id=217489
-#regzbot title: Chromebook XE303C12 backlight stopped working with gpio warnings
-
-Thanks.
-
-[1]: https://bugzilla.kernel.org/show_bug.cgi?id=217489
-
--- 
-An old man doll... just what I always wanted! - Clara
+Joseph C. Sible
