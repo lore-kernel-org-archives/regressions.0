@@ -1,79 +1,85 @@
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0689271F6
-	for <regressions@lists.linux.dev>; Fri, 26 May 2023 17:01:32 +0000 (UTC)
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-518d6f87a47so633330a12.3
-        for <regressions@lists.linux.dev>; Fri, 26 May 2023 10:01:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1685120492; x=1687712492;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=BGSsRadg8/k5YCYiOUDx3xTCmP75V2hSKqivxNmuHB4=;
-        b=aZqsNgc7a1OmO2JI7G8jku+ietUnfouKuJEoAN0tBmNqsAin9JBkSMFYL8S8gDKKHR
-         aNwJp8m7f6BCK7xhN7d5Rg56l3clIm8a4vAXJ21vFWq6ntVMWn4JuMkj+seOzlT3z0re
-         7TLJud0hRERbNC/6lX1JO+EPpwOIj22VokKAcYMFiNdb2rU1GlRTeeI9637dwFH9A2Hg
-         9IPit8NpcZ+qUDmhb3agCo4Ubf9hB8JwiJnK1HorAFoH6JUgTD/M2hGVsJCYo13LCRXV
-         xqq3/V0Cy5kQgGl23hEJ87cOuXXvbN7TdvWSEP62qm2L+f1N00ljfH6b5LZh9UeVraRh
-         Asww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685120492; x=1687712492;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=BGSsRadg8/k5YCYiOUDx3xTCmP75V2hSKqivxNmuHB4=;
-        b=BQOQ58/H2iGOcsnX9YAQWXWHiooXFDNHzqnu9PIzlFn1IR4z6FSIiNzxcexIk4cTzG
-         46DX5X2O28QJn010QD/QO8wTrR0mPUo4XoxoRoBHrdyxmDSw9sCqUrBazyCGimBuyFfl
-         0IUGYuoG08sSw5pQoPMbr3lpnBsdQqjbyA3z++qlLDPyi+vIFsKWDAtTWq18By/Kwf9K
-         2IzjQGNMIIpNQRnvq5eZ60qqmhr4/u5rJEMcyRNtpKFlTD8QqzRfET41sBOxDSlktT/j
-         4HifTi4PXEZ3uTHtPjMTHeyKLityeaS8EaVEQXg7kqqQJqbPzoZiugXj24BUUxBJj/vK
-         BPHw==
-X-Gm-Message-State: AC+VfDyicSj8sbLpZn039ncLYZnYdgOOsXhEIHUIUKF9czZboqrViq4R
-	9lCzWOVw76UXzt09nXDrpTkTLDZs1u4=
-X-Google-Smtp-Source: ACHHUZ6OQjvHvHGEb6V1v/dWoqRH+hN+hXO0RBWjxtohTutQ74AAidsJ/QXWTOFyJ1SL6/Pncd+hcSIVLGk=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a63:4b48:0:b0:530:638d:cf91 with SMTP id
- k8-20020a634b48000000b00530638dcf91mr25458pgl.4.1685120492215; Fri, 26 May
- 2023 10:01:32 -0700 (PDT)
-Date: Fri, 26 May 2023 10:01:30 -0700
-In-Reply-To: <CADpTngX9LESCdHVu_2mQkNGena_Ng2CphWNwsRGSMxzDsTjU2A@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F125218B0D
+	for <regressions@lists.linux.dev>; Fri, 26 May 2023 18:41:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B14DFC433D2;
+	Fri, 26 May 2023 18:41:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1685126476;
+	bh=5b2JyJNLieTChhmtAE4raBp+An+8BDiNRs/oMlONZAw=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=IqUr9Rc44MRQ1oCw8P2bGY9GlQfOpSETdMDtKPYY7spdFzZ5YDatmg6BydqJkor+N
+	 35lWm2zBKjJ6G/Zs/Xe19C7XUm5twAF4yCKifnVbx37Fc4c9KQEE+SQS4kBkFYSD8E
+	 c21SzLXr8qIeU+W7KcZsoJOZQ36d7xnsQSkAr17ss35klGsT11APzBSFJ0GZUFZbd3
+	 2EwKGSyL3rvqKBkaWDSge6nA2j4414tAbC7OkUJnfKi2nwJCS/30vBSmgMQZZKz/9/
+	 4D93Ji6xr+GB6p4QXGqUrK9xHwkp3SjmO5uOzyZN70Wfek2/pJRmrIPsszi2Oqs986
+	 hnPLing7N9Zew==
+Date: Fri, 26 May 2023 20:41:12 +0200 (CEST)
+From: Jiri Kosina <jikos@kernel.org>
+To: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+cc: Linus Torvalds <torvalds@linux-foundation.org>, 
+    Linux regressions mailing list <regressions@lists.linux.dev>, 
+    Bagas Sanjaya <bagasdotme@gmail.com>, 
+    =?ISO-8859-15?Q?Filipe_La=EDns?= <lains@riseup.net>, 
+    Bastien Nocera <hadess@hadess.net>, 
+    "open list:HID CORE LAYER" <linux-input@vger.kernel.org>, 
+    LKML <linux-kernel@vger.kernel.org>, guy.b@bluewin.ch
+Subject: Re: [regression] Since kernel 6.3.1 logitech unify receiver not
+ working properly
+In-Reply-To: <nycvar.YFH.7.76.2305251308471.29760@cbobk.fhfr.pm>
+Message-ID: <nycvar.YFH.7.76.2305262040330.29760@cbobk.fhfr.pm>
+References: <9b987585-0834-bb8c-3414-283c29f3f2ab@leemhuis.info> <bec024d5-4088-00ae-f7b5-7188868b1707@leemhuis.info> <b7717c43-74bf-b91d-d3ce-874493df602c@gmail.com> <CAO-hwJ+At1J_yUpX2q_dJekzZ-PoTDAvxmkTk_e4Yu0Z338bEA@mail.gmail.com>
+ <55dda0bb-fe42-6dee-28ea-00121554d092@leemhuis.info> <CAHk-=whvhkSk6m8_AidhofgR9nq0Md+HbNad5r1RE69tZgbv6Q@mail.gmail.com> <nycvar.YFH.7.76.2305231422180.29760@cbobk.fhfr.pm> <CAO-hwJ+MTRu9KxqwQc7UYFBsa0kkrnYfwVB30KsLZnw=wfcOMg@mail.gmail.com>
+ <nycvar.YFH.7.76.2305251308471.29760@cbobk.fhfr.pm>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-References: <CADpTngX9LESCdHVu_2mQkNGena_Ng2CphWNwsRGSMxzDsTjU2A@mail.gmail.com>
-Message-ID: <ZHDl6rXQ0UTWdk2O@google.com>
-Subject: Re: WARNING trace at kvm_nx_huge_page_recovery_worker on 6.3.4
-From: Sean Christopherson <seanjc@google.com>
-To: Fabio Coatti <fabio.coatti@gmail.com>
-Cc: stable@vger.kernel.org, regressions@lists.linux.dev, kvm@vger.kernel.org
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 
-On Fri, May 26, 2023, Fabio Coatti wrote:
-> Hi all,
-> I'm using vanilla kernels on a gentoo-based laptop and since 6.3.2
+On Thu, 25 May 2023, Jiri Kosina wrote:
 
-What was the last kernel you used that didn't trigger this WARN?
-
-> I'm getting the kernel log  below when using kvm VM on my box.
-
-Are you doing anything "interesting" when the WARN fires, or are you just running
-the VM and it random fires?  Either way, can you provide your QEMU command line?
-
-> I know, kernel is tainted but avoiding to load nvidia driver could make
-> things complicated on my side; if needed for debug I can try to avoid it.
-
-Nah, don't worry about that at this point.
-
-> Not sure which other infos can be relevant in this context; if you
-> need more details just let me know, happy to provide them.
+> > > > That bug is pre-existing (ie the problem was not introduced by that
+> > > > commit), but who knows if the retry makes things worse (ie if it then
+> > > > triggers on a retry, the response data will be the *previous* response).
+> > > >
+> > > > The whole "goto exit" games should be removed too, because we're in a
+> > > > for-loop, and instead of "goto exit" it should just do "break".
+> > > >
+> > > > IOW, something like this might be worth testing.
+> > > >
+> > > > That said, while I think the code is buggy, I doubt this is the actual
+> > > > cause of the problem people are reporting. But it would be lovely to
+> > > > hear if the attached patch makes any difference, and I think this is
+> > > > fixing a real - but unlikely - problem anyway.
+> > 
+> > FWIW, Linus, your patch is
+> > Reviewed-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+> > 
+> > Feel free to submit it to us or to apply it directly if you prefer as
+> > this is clearly a fix for a code path issue.
 > 
-> [Fri May 26 09:16:35 2023] ------------[ cut here ]------------
-> [Fri May 26 09:16:35 2023] WARNING: CPU: 5 PID: 4684 at
-> kvm_nx_huge_page_recovery_worker+0x38c/0x3d0 [kvm]
+> It would be nice to hear from the people who were able to reproduce the 
+> issue whether this makes any observable difference in behavior though. I 
+> don't currently think it would, as it fixes a potential NULL pointer 
+> dereference, which is not what has been reported.
+> 
+> Has anyone of the affected people tried to bisect the issue?
 
-Do you have the actual line number for the WARN?  There are a handful of sanity
-checks in kvm_recover_nx_huge_pages(), it would be helpful to pinpoint which one
-is firing.  My builds generate quite different code, and the code stream doesn't
-appear to be useful for reverse engineering the location.
+Could anyone who is able to reproduce the issue please check whether 
+reverting
+
+	586e8fede7953b16 ("HID: logitech-hidpp: Retry commands when device is busy")
+
+has any observable effect?
+
+Thanks,
+
+-- 
+Jiri Kosina
+SUSE Labs
+
