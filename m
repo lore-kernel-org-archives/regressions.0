@@ -1,56 +1,47 @@
-Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 430A9134C1
-	for <regressions@lists.linux.dev>; Sat, 27 May 2023 18:00:50 +0000 (UTC)
-Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-561c1436c75so28711327b3.1
-        for <regressions@lists.linux.dev>; Sat, 27 May 2023 11:00:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1685210448; x=1687802448;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vt+eQc1s6uNliAWjWvTTIC49OP6lTjf/+SrnhMuXg0Y=;
-        b=W0erXj+RPbnpcW7ElzKwBZltmDVaGYCicAuWq+OAyL0yswL83fU2bBCw+5eXBHMBTO
-         +RwSKHFTEFeuLuIjfb4kPw8/OQmqHEma3ioO+QoWzUxz7DmxBkaeQM6hKZCcpg+SeMmP
-         b1vPotZKQZwDq06In1Eml8jPsi1ziDMTFYK088eo3yKUr5xRTsS7UYmbucITaOMlcfu+
-         zCo3LLCc/F7jdmA8wT4E4r6s49UPyR0mncJIbWV9/6XWwkFlQS5PcTy0VOO9aAwAlu/H
-         nVj5/CC9mbJ/soa79kWzF0xTui7QLfPOpK9veEoQD6/Dv1Ofa49jffPiUcQkvFCC6aCq
-         Wm4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685210448; x=1687802448;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vt+eQc1s6uNliAWjWvTTIC49OP6lTjf/+SrnhMuXg0Y=;
-        b=HIWGIujF0oPRy16ATbml0ZwMnilKa/Op/oo2tFNMeV8aRO2B/kkZjxCcUrJLm1yEpr
-         YNJgUu3NPHApQYqUjgWXQCqp8F3lIuFEX3xQM3wkuhiNi2/B0KmD7ZyDIgP1CAw/xsuk
-         uOszHsEqIqdO3pcFprwRWant4F399JYiVKE90qLpemqJhGj3gNBQBI64B107HVYCly7e
-         AUp65FTp6pLGuV42FfuHQJLpZuLyD/GbV35JXzQhcnN+XxyNFspLf4Gm9Uw3POeqKhYe
-         Bzj1UwGfZlGzi6iHK57PYf5ua16qbolnQT7bMIgfNiuZmy/AeGHRMEDoRh73Tk59SU3M
-         ftpA==
-X-Gm-Message-State: AC+VfDziJAEf3ttEBPB+kLJTSa0+ZDfLVzZXgPL/u/LVTizizaaGbHZE
-	o9GfO6Y/i2yAsqWcltrx8gLr3QVwExdaCSYTk+w=
-X-Google-Smtp-Source: ACHHUZ4CI6Iz9ict/bPm1CdSa3dsaVILtmTA6GyHgcjg0M24lP/1VlXwPOekK3xFYJmtFCL/sPwqIxU7jqdCCLc9wpE=
-X-Received: by 2002:a81:84c3:0:b0:559:f0ef:aac0 with SMTP id
- u186-20020a8184c3000000b00559f0efaac0mr6477972ywf.30.1685210448356; Sat, 27
- May 2023 11:00:48 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4038113AC0
+	for <regressions@lists.linux.dev>; Sat, 27 May 2023 18:04:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2C76C4339E
+	for <regressions@lists.linux.dev>; Sat, 27 May 2023 18:04:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1685210646;
+	bh=+2DbhJhzR6mabBBjwgNw5rSlRJnUbBZQeef15wiBopk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=KnIH/6iU5kII/kEi9oJ2yNbjTux0io/0dOabQH7bxSWUDCQ/43I79+L/uQmWKzHFw
+	 B+Zy6nsl/biVr6mGuJRtUiUgEUvIObjF7s2wkHVepOOS7rmS7+tbaECaWe7EKAdas8
+	 2eNxkC0rvKI5FKvqK2Tk860u4csWFATn4t/IId3GFdpUkAiuvKg0eo4TFDr7gxt0C1
+	 OBWzC9l8wlXcwt5l2guw9ZNygNwUBLPx79smWL/KlOs5n92wbI26X96g51c1BgGk0m
+	 ua3zRGzTK7LAqNuT21GHZv9PWj4ywbsQO8BXEkmIcc8lk2E3edho7KG1Gm3u9saA2j
+	 jwRuCoemDa3PA==
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2af31dc49f9so19849321fa.0
+        for <regressions@lists.linux.dev>; Sat, 27 May 2023 11:04:06 -0700 (PDT)
+X-Gm-Message-State: AC+VfDxvS+kGaKfFvzZSZVqWV3xUWg13WFY20ztyh30HO6fs+yTmi+0o
+	o0KTEIESYlcHe1r22lFnhgFKJqyTU3FzuyC75Eg=
+X-Google-Smtp-Source: ACHHUZ62gtGyVvIL18p9bdIMl4rfAggAX1oGiuWv0zEoKosgsTxXBGc6Z9d2SNfEvQBXlLkSso7H31J6LCQDa8Uc8ro=
+X-Received: by 2002:a2e:9ed9:0:b0:2ac:7d3b:6312 with SMTP id
+ h25-20020a2e9ed9000000b002ac7d3b6312mr2273060ljk.22.1685210644828; Sat, 27
+ May 2023 11:04:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <efd6f2d4-547c-1378-1faa-53c044dbd297@gmail.com> <CAG8fp8SaHi0X-tZHnji_93wBADp1_=brjauWCVXuLaG7iP0p=A@mail.gmail.com>
-In-Reply-To: <CAG8fp8SaHi0X-tZHnji_93wBADp1_=brjauWCVXuLaG7iP0p=A@mail.gmail.com>
-From: Akihiro Suda <suda.kyoto@gmail.com>
-Date: Sun, 28 May 2023 03:00:37 +0900
-Message-ID: <CAG8fp8QXoEkndCzyaYZmg6+ZrszKOfh_YSi0o2_weV7y1_xYkQ@mail.gmail.com>
+References: <efd6f2d4-547c-1378-1faa-53c044dbd297@gmail.com>
+ <CAG8fp8SaHi0X-tZHnji_93wBADp1_=brjauWCVXuLaG7iP0p=A@mail.gmail.com> <CAG8fp8QXoEkndCzyaYZmg6+ZrszKOfh_YSi0o2_weV7y1_xYkQ@mail.gmail.com>
+In-Reply-To: <CAG8fp8QXoEkndCzyaYZmg6+ZrszKOfh_YSi0o2_weV7y1_xYkQ@mail.gmail.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Sat, 27 May 2023 20:03:53 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXGjkKK-oHm64Y9P-AbYQWd9jnEdsNucRbY_-7mgJ_4yAA@mail.gmail.com>
+Message-ID: <CAMj1kXGjkKK-oHm64Y9P-AbYQWd9jnEdsNucRbY_-7mgJ_4yAA@mail.gmail.com>
 Subject: Re: mix of ACPICA regression and EFISTUB regression (Was: kernel >=
  v6.2 no longer boots on Apple's Virtualization.framework (x86_64); likely to
  be related to ACPICA)
-To: Bagas Sanjaya <bagasdotme@gmail.com>, ardb@kernel.org, linux-efi@vger.kernel.org
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+To: Akihiro Suda <suda.kyoto@gmail.com>
+Cc: Bagas Sanjaya <bagasdotme@gmail.com>, linux-efi@vger.kernel.org, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
 	Linux Regressions <regressions@lists.linux.dev>, Linux x86 <x86@kernel.org>, 
 	Linux ACPI <linux-acpi@vger.kernel.org>, 
 	Linux ACPICA <acpica-devel@lists.linuxfoundation.org>, 
@@ -58,125 +49,26 @@ Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
 	Jianmin Lv <lvjianmin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
 	Linus Torvalds <torvalds@linux-foundation.org>, Robert Moore <robert.moore@intel.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-[Resending as a plain text email]
+On Sat, 27 May 2023 at 20:00, Akihiro Suda <suda.kyoto@gmail.com> wrote:
+>
+> [Resending as a plain text email]
+>
+> Turned out that this is a mixture of an ACPICA issue and an EFISTUB issue.
+>
+> Kernel v6.2 can boot by reverting the *both* of the following two commits:
+> - 5c62d5aab8752e5ee7bfbe75ed6060db1c787f98 "ACPICA: Events: Support
+> fixed PCIe wake event"
+> - e346bebbd36b1576a3335331fed61bb48c6d8823 "efi: libstub: Always
+> enable initrd command line loader and bump version"
+>
+> Kernel v6.3 can boot by just reverting e346bebb, as 5c62d5a has been
+> already reverted in 8e41e0a575664d26bb87e012c39435c4c3914ed9.
+> The situation is the same for v6.4-rc3 too.
+>
+> Note that in my test I let Virtualization.framework directly load
+> bzImage without GRUB (akin to `qemu-system-x86_64 -kernel bzImage`).
+> Apparently, reverting e346bebb is not necessary for loading bzImage via GRUB.
+>
 
-Turned out that this is a mixture of an ACPICA issue and an EFISTUB issue.
-
-Kernel v6.2 can boot by reverting the *both* of the following two commits:
-- 5c62d5aab8752e5ee7bfbe75ed6060db1c787f98 "ACPICA: Events: Support
-fixed PCIe wake event"
-- e346bebbd36b1576a3335331fed61bb48c6d8823 "efi: libstub: Always
-enable initrd command line loader and bump version"
-
-Kernel v6.3 can boot by just reverting e346bebb, as 5c62d5a has been
-already reverted in 8e41e0a575664d26bb87e012c39435c4c3914ed9.
-The situation is the same for v6.4-rc3 too.
-
-Note that in my test I let Virtualization.framework directly load
-bzImage without GRUB (akin to `qemu-system-x86_64 -kernel bzImage`).
-Apparently, reverting e346bebb is not necessary for loading bzImage via GRU=
-B.
-
-
-> Also, the reporter can't provide dmesg log (forget to attach serial conso=
-le?).
-
-Uploaded v6.1 dmesg in the bugzilla.
-v6.2 dmesg can't be provided, as it hangs before printing something in
-console=3Dhvc0.
-(IIUC, console=3DttyS0 (RS-232C) is not implemented in Virtualization.frame=
-work.)
-
-
-> 2023=E5=B9=B45=E6=9C=8825=E6=97=A5(=E6=9C=A8) 21:46 Bagas Sanjaya <bagasd=
-otme@gmail.com>:
->>
->> Hi,
->>
->> I notice a regression report on Bugzilla [1]. Quoting from it:
->>
->> > Linux kernel >=3D v6.2 no longer boots on Apple's Virtualization.frame=
-work (x86_64).
->> >
->> > It is reported that the issue is not reproducible on ARM64: https://gi=
-thub.com/lima-vm/lima/issues/1577#issuecomment-1561577694
->> >
->> >
->> > ## Reproduction
->> > - Checkout the kernel repo, and run `make defconfig bzImage`.
->> >
->> > - Create an initrd (see the attached `initrd-example.txt`)
->> >
->> > - Transfer the bzImage and initrd to an Intel Mac.
->> >
->> > - On Mac, download `RunningLinuxInAVirtualMachine.zip` from https://de=
-veloper.apple.com/documentation/virtualization/running_linux_in_a_virtual_m=
-achine , and build the `LinuxVirtualMachine` binary with Xcode.
->> >   Building this binary with Xcode requires logging in to Apple.
->> >   If you do not like logging in, a third party equivalent such as http=
-s://github.com/Code-Hex/vz/blob/v3.0.6/example/linux/main.go can be used.
->> >
->> > - Run `LinuxVirtualMachine /tmp/bzImage /tmp/initrd.img`.
->> >   v6.1 successfully boots into the busybox shell.
->> >   v6.2 just hangs before printing something in the console.
->> >
->> >
->> > ## Tested versions
->> > ```
->> > v6.1: OK
->> > ...
->> > v6.1.0-rc2-00002-g60f2096b59bc (included in v6.2-rc1): OK
->> > v6.1.0-rc2-00003-g5c62d5aab875 (included in v6.2-rc1): NG <-- This com=
-mit caused a regression
->> > ...
->> > v6.2-rc1: NG
->> > ...
->> > v6.2: NG
->> > ...
->> > v6.3.0-rc7-00181-g8e41e0a57566 (included in v6.3): NG     <-- Reverts =
-5c62d5aab875 but still NG
->> > ...
->> > v6.3: NG
->> > v6.4-rc3: NG
->> > ```
->> >
->> > Tested on MacBookPro 2020 (Intel(R) Core(TM) i7-1068NG7 CPU @ 2.30GHz)=
- running macOS 13.4.
->> >
->> >
->> > The issue seems a regression in [5c62d5aab8752e5ee7bfbe75ed6060db1c787=
-f98](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/com=
-mit/?id=3D5c62d5aab8752e5ee7bfbe75ed6060db1c787f98) "ACPICA: Events: Suppor=
-t fixed PCIe wake event".
->> >
->> > This commit was introduced in v6.2-rc1, and apparently reverted in v6.=
-3 ([8e41e0a575664d26bb87e012c39435c4c3914ed9](https://git.kernel.org/pub/sc=
-m/linux/kernel/git/torvalds/linux.git/commit/?id=3D8e41e0a575664d26bb87e012=
-c39435c4c3914ed9)).
->> > However, v6.3 and the latest v6.4-rc3 still don't boot.
->>
->> See bugzilla for the full thread.
->>
->> Interestingly, this regression still occurs despite the culprit is
->> reverted in 8e41e0a575664d ("Revert "ACPICA: Events: Support fixed
->> PCIe wake event""), so this (obviously) isn't wake-on-lan regression,
->> but rather early boot one.
->>
->> Also, the reporter can't provide dmesg log (forget to attach serial
->> console?).
->>
->> Anyway, I'm adding it to regzbot:
->>
->> #regzbot introduced: 5c62d5aab8752e https://bugzilla.kernel.org/show_bug=
-.cgi?id=3D217485
->> #regzbot title: Linux v6.2+ (x86_64) no longer boots on Apple's Virtuali=
-zation framework (ACPICA issue)
->>
->> Thanks.
->>
->> [1]: https://bugzilla.kernel.org/show_bug.cgi?id=3D217485
->>
->> --
->> An old man doll... just what I always wanted! - Clara
+Are you using OVMF? Which versions of qemu and OVMF are you using?
