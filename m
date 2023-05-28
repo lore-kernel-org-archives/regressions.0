@@ -1,39 +1,39 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2460137A
-	for <regressions@lists.linux.dev>; Sun, 28 May 2023 09:23:06 +0000 (UTC)
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-307d20548adso1307452f8f.0
-        for <regressions@lists.linux.dev>; Sun, 28 May 2023 02:23:06 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D48237E
+	for <regressions@lists.linux.dev>; Sun, 28 May 2023 10:54:50 +0000 (UTC)
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3094910b150so2232333f8f.0
+        for <regressions@lists.linux.dev>; Sun, 28 May 2023 03:54:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1685265785; x=1687857785;
+        d=gmail.com; s=20221208; t=1685271289; x=1687863289;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=v8E+r2XJKDAXZexSMw5ufFmLlUyvRAToLfB8UBiyX+0=;
-        b=aIGp92ryRkZGLiaEpa6el1yI0J4mMnFFG8s2p3dAvBLTAP82ELi8zAOWssGx01DWKv
-         e6GtVhOdQRcYnXWcsoeUoLxpdRBcxdPxoHcd9RY92TdBMZ+k1tMwMmxzkRmb0Xf5bCMK
-         guC1SicERfPUa3xtl4/Gm86Bvl32aUpI8wdS3ExtWvBp2snYAz3D+Z3fiVf9E3SJgLbZ
-         wlDB937xmYaXb/YagOp8rEJGwOA2R6ERuiCmO1acCmXwjwNeuF8j7LThxQV0zPCEoS92
-         RraoS9hJe2D/U7Hl8y2R+2FhGkslaLoGWoPP8ZADLcJx6T4hgb2SHpTXACs1J/SPLEji
-         6Fmg==
+        bh=YGeujGs5J2cfKGl9T3rp2xlqXzbl0eaOMQ0pNWGB5mk=;
+        b=ISxDVGKvBGGfHuGpuh0V/wi0tPvWaF1DKdCaiVjjPfBgq4m9lvCa2uKKz3EpeEH54T
+         6U2LVPQJD4/dNuaWxLcOabpL2MBTZujC33AsxH++bmqymsc/7fMcysBH/EA5LuXPSsch
+         Ax04xPlBnZEvEEtkwtglgKLqwSbbdk6GFxlZ+qr78M2Qa2hkV5bqBCJX4qmx4zI/8Hfv
+         3j/CPzguFC0HxfUfAT2BsFq5t8ZLtYAEToXwTww/+H9MKlp1pDNFb5Nvtuw3k3UoTPnl
+         ktLRHvPSRbf9UJJHaS7UpqBbB5xUDnKoanWSwDa29196Sl3KOqyFOk5fRYfgyig57M2z
+         v+WA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685265785; x=1687857785;
+        d=1e100.net; s=20221208; t=1685271289; x=1687863289;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=v8E+r2XJKDAXZexSMw5ufFmLlUyvRAToLfB8UBiyX+0=;
-        b=OJjqPqSZbdxsTubdfwZ/76ZIcpLrErX3p3y696gkKBPmsdgO67nuBVhZqNXFNROn1B
-         zFVDHDZKv5c7g37FNZoidx15piiBbjq/Xg1fcKh7LX/5zzddvu97qebb8EMyraZn7XYQ
-         7ojPteDr8sjGwwVfgLAVaaAGKuUOu4Dl6YcAKSTNUjWIIggk//L7DqN3xEeMWJJH7QV4
-         qHDN7Vfc4tfIQ3IqQLowQ/DlZSnuDD/1AmsumTzEq5zchlz5SojMAAGCE4iwSEaNaPu9
-         48mtmKRnZCkHVuNoP1tXbVNDU/lgNwXrgfWX4uCC8V/RjT0zVnfASiNjBRyp+l1tbOac
-         Rl6g==
-X-Gm-Message-State: AC+VfDwkC+zJDH2ya7C7tDRVIFU5NSxpzkiwmrbZOzNUEo73qalZAle+
-	KIUgkDPtEcu3ltngzfJvcA/Of81afRxYo+y2Y48=
-X-Google-Smtp-Source: ACHHUZ5O0jwMS9zNw85y81/3ILSVrj+GraKAxGyzI4F92v7xYacSBCYWOiwc6ZiDnbHKB22Lkruwc0jj8I/g5bsSIfA=
-X-Received: by 2002:adf:d089:0:b0:306:297b:927f with SMTP id
- y9-20020adfd089000000b00306297b927fmr5973224wrh.25.1685265784515; Sun, 28 May
- 2023 02:23:04 -0700 (PDT)
+        bh=YGeujGs5J2cfKGl9T3rp2xlqXzbl0eaOMQ0pNWGB5mk=;
+        b=QrdBYVr0XZ1iBvPf7XdCuVVLQOtEFueeNgKPMORnL43K+yBEeoeOUNS5l6mxhMOjwL
+         godbm0ghMIKf9ochVVYBgNqDGT6pcVAPbfM5FBTI3I4kOjJAOAsI961YWAerhyAMqSll
+         +l86JQw8J/+1xH7Ii1R5Gq3aCPINomemmol8vTv+871Dr721kcQZ7sdR5xbr8+jvjl1T
+         Fg4VqdMWKxo9LUCIcps3oDZU82nsxooqziFkDJOx/HF9vLZ+G0N9Jk/FQvDUec41BuRG
+         0io5EdzPRrqyUP9Cjofiyun6SR5s7Kxf6EaZESwoEFqO/tJOvm+xx/7hPjQsvCCwHgDf
+         /i0g==
+X-Gm-Message-State: AC+VfDxcZYdgk30u3P0G0raK+tWyvMOj9oBvFFbws+6VB6bcK4lO+CSm
+	1nRKXhpr2GmK8JxTxv4NGBwtSJyiSOoXlGQKATU=
+X-Google-Smtp-Source: ACHHUZ6Err6NzYZmeSHCTvaobNbsHmLziJ1mYQELmoDtZJDYfW9Cv58OYaizfb1VmP3fKvtyd7eUzeYsxoHNPkq2hU8=
+X-Received: by 2002:adf:e341:0:b0:30a:e369:5acb with SMTP id
+ n1-20020adfe341000000b0030ae3695acbmr4797580wrj.68.1685271288725; Sun, 28 May
+ 2023 03:54:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -44,8 +44,8 @@ References: <CADpTngX9LESCdHVu_2mQkNGena_Ng2CphWNwsRGSMxzDsTjU2A@mail.gmail.com>
  <ZHDl6rXQ0UTWdk2O@google.com>
 In-Reply-To: <ZHDl6rXQ0UTWdk2O@google.com>
 From: Fabio Coatti <fabio.coatti@gmail.com>
-Date: Sun, 28 May 2023 11:22:53 +0200
-Message-ID: <CADpTngWQUqOF6c-nSrUShCvmHeUu380973Dm0zVwTY62TS7wHA@mail.gmail.com>
+Date: Sun, 28 May 2023 12:54:37 +0200
+Message-ID: <CADpTngW6KU+VvRD2gwU8XbSedMEy8WTBiEWG=LnfaEZfCDXCLA@mail.gmail.com>
 Subject: Re: WARNING trace at kvm_nx_huge_page_recovery_worker on 6.3.4
 To: Sean Christopherson <seanjc@google.com>
 Cc: stable@vger.kernel.org, regressions@lists.linux.dev, kvm@vger.kernel.org
@@ -54,120 +54,93 @@ Content-Type: text/plain; charset="UTF-8"
 Il giorno ven 26 mag 2023 alle ore 19:01 Sean Christopherson
 <seanjc@google.com> ha scritto:
 
-> > I'm using vanilla kernels on a gentoo-based laptop and since 6.3.2
->
-> What was the last kernel you used that didn't trigger this WARN?
-
-6.3.1
-
->
-> > I'm getting the kernel log  below when using kvm VM on my box.
->
-> Are you doing anything "interesting" when the WARN fires, or are you just running
-> the VM and it random fires?  Either way, can you provide your QEMU command line?
-
-I'm not able to spot a specific action that triggers the dump. Now it
-happened when I was "simply" opening a new chrome page in the guest
-VM. I guess this can cause some work on mm side, but not really an
-"interesting" action, I'd say. Basically, I fired up the guest machine
-(ubuntu 22.04 very basic) on a newly rebooted host, connected a USB
-device (yubikey) and started chrome. No message just after starting
-chrome, only when I opened a new page.
-
-Anyway, this is the command line (libvirt managed VM)
-
-/usr/sbin/qemu-system-x86_64 -name guest=ubuntu-u2204-kvm,debug-threads=on -S
--object {"qom-type":"secret","id":"masterKey0","format":"raw","file":"/var/lib/libvirt/qemu/domain-1-ubuntu-u2204-kvm/master-key.aes"}
--blockdev {"driver":"file","filename":"/usr/share/edk2-ovmf/OVMF_CODE.secboot.fd","node-name":"libvirt-pflash0-storage","auto-read-only":true,"discard":"unmap"}
--blockdev {"node-name":"libvirt-pflash0-format","read-only":true,"driver":"raw","file":"libvirt-pflash0-storage"}
--blockdev {"driver":"file","filename":"/var/lib/libvirt/qemu/nvram/ubuntu-u2204-kvm_VARS.fd","node-name":"libvirt-pflash1-storage","auto-read-only":true,"discard":"unmap"}
--blockdev {"node-name":"libvirt-pflash1-format","read-only":false,"driver":"raw","file":"libvirt-pflash1-storage"}
--machine pc-q35-7.1,usb=off,vmport=off,smm=on,dump-guest-core=off,memory-backend=pc.ram,pflash0=libvirt-pflash0-format,pflash1=libvirt-pflash1-format,hpet=off,acpi=on
--accel kvm
--cpu host,migratable=on
--global driver=cfi.pflash01,property=secure,value=on
--m 16384
--object {"qom-type":"memory-backend-ram","id":"pc.ram","size":17179869184}
--overcommit mem-lock=off
--smp 4,sockets=4,cores=1,threads=1
--uuid 160141fc-ec2e-4d91-bc1c-3e597643bcfd
--no-user-config
--nodefaults
--chardev socket,id=charmonitor,fd=30,server=on,wait=off
--mon chardev=charmonitor,id=monitor,mode=control
--rtc base=utc,driftfix=slew
--global kvm-pit.lost_tick_policy=delay
--no-shutdown
--global ICH9-LPC.disable_s3=1
--global ICH9-LPC.disable_s4=1
--boot strict=on
--device {"driver":"pcie-root-port","port":16,"chassis":1,"id":"pci.1","bus":"pcie.0","multifunction":true,"addr":"0x2"}
--device {"driver":"pcie-root-port","port":17,"chassis":2,"id":"pci.2","bus":"pcie.0","addr":"0x2.0x1"}
--device {"driver":"pcie-root-port","port":18,"chassis":3,"id":"pci.3","bus":"pcie.0","addr":"0x2.0x2"}
--device {"driver":"pcie-root-port","port":19,"chassis":4,"id":"pci.4","bus":"pcie.0","addr":"0x2.0x3"}
--device {"driver":"pcie-root-port","port":20,"chassis":5,"id":"pci.5","bus":"pcie.0","addr":"0x2.0x4"}
--device {"driver":"pcie-root-port","port":21,"chassis":6,"id":"pci.6","bus":"pcie.0","addr":"0x2.0x5"}
--device {"driver":"pcie-root-port","port":22,"chassis":7,"id":"pci.7","bus":"pcie.0","addr":"0x2.0x6"}
--device {"driver":"pcie-root-port","port":23,"chassis":8,"id":"pci.8","bus":"pcie.0","addr":"0x2.0x7"}
--device {"driver":"pcie-root-port","port":24,"chassis":9,"id":"pci.9","bus":"pcie.0","multifunction":true,"addr":"0x3"}
--device {"driver":"pcie-root-port","port":25,"chassis":10,"id":"pci.10","bus":"pcie.0","addr":"0x3.0x1"}
--device {"driver":"pcie-root-port","port":26,"chassis":11,"id":"pci.11","bus":"pcie.0","addr":"0x3.0x2"}
--device {"driver":"pcie-root-port","port":27,"chassis":12,"id":"pci.12","bus":"pcie.0","addr":"0x3.0x3"}
--device {"driver":"pcie-root-port","port":28,"chassis":13,"id":"pci.13","bus":"pcie.0","addr":"0x3.0x4"}
--device {"driver":"pcie-root-port","port":29,"chassis":14,"id":"pci.14","bus":"pcie.0","addr":"0x3.0x5"}
--device {"driver":"qemu-xhci","p2":15,"p3":15,"id":"usb","bus":"pci.2","addr":"0x0"}
--device {"driver":"virtio-serial-pci","id":"virtio-serial0","bus":"pci.3","addr":"0x0"}
--blockdev {"driver":"file","filename":"/var/lib/libvirt/images/ubuntu22.04.qcow2","node-name":"libvirt-2-storage","auto-read-only":true,"discard":"unmap"}
--blockdev {"node-name":"libvirt-2-format","read-only":false,"discard":"unmap","driver":"qcow2","file":"libvirt-2-storage","backing":null}
--device {"driver":"virtio-blk-pci","bus":"pci.4","addr":"0x0","drive":"libvirt-2-format","id":"virtio-disk0","bootindex":1}
--device {"driver":"ide-cd","bus":"ide.0","id":"sata0-0-0"} -netdev
-{"type":"tap","fd":"32","vhost":true,"vhostfd":"34","id":"hostnet0"}
--device {"driver":"virtio-net-pci","netdev":"hostnet0","id":"net0","mac":"52:54:00:17:0a:44","bus":"pci.1","addr":"0x0"}
--chardev pty,id=charserial0 -device
-{"driver":"isa-serial","chardev":"charserial0","id":"serial0","index":0}
--chardev socket,id=charchannel0,fd=28,server=on,wait=off
--device {"driver":"virtserialport","bus":"virtio-serial0.0","nr":1,"chardev":"charchannel0","id":"channel0","name":"org.qemu.guest_agent.0"}
--chardev spicevmc,id=charchannel1,name=vdagent -device
-{"driver":"virtserialport","bus":"virtio-serial0.0","nr":2,"chardev":"charchannel1","id":"channel1","name":"com.redhat.spice.0"}
--device {"driver":"usb-tablet","id":"input0","bus":"usb.0","port":"1"}
--audiodev {"id":"audio1","driver":"spice"}
--spice port=0,disable-ticketing=on,image-compression=off,seamless-migration=on
--device {"driver":"virtio-vga","id":"video0","max_outputs":1,"bus":"pcie.0","addr":"0x1"}
--device {"driver":"ich9-intel-hda","id":"sound0","bus":"pcie.0","addr":"0x1b"}
--device {"driver":"hda-duplex","id":"sound0-codec0","bus":"sound0.0","cad":0,"audiodev":"audio1"}
--global ICH9-LPC.noreboot=off
--watchdog-action reset
--chardev spicevmc,id=charredir0,name=usbredir
--device {"driver":"usb-redir","chardev":"charredir0","id":"redir0","bus":"usb.0","port":"2"}
--chardev spicevmc,id=charredir1,name=usbredir
--device {"driver":"usb-redir","chardev":"charredir1","id":"redir1","bus":"usb.0","port":"3"}
--device {"driver":"virtio-balloon-pci","id":"balloon0","bus":"pci.5","addr":"0x0"}
--object {"qom-type":"rng-random","id":"objrng0","filename":"/dev/urandom"}
--device {"driver":"virtio-rng-pci","rng":"objrng0","id":"rng0","bus":"pci.6","addr":"0x0"}
--sandbox on,obsolete=deny,elevateprivileges=deny,spawn=deny,resourcecontrol=deny
--msg timestamp=on
-
-ps output (of course a different run from the first message report):
-     57176 ?        I<     0:00 [kvm]
-     57178 ?        S      0:00 [kvm-nx-lpage-recovery-57159]
-     57189 ?        S      0:00 [kvm-pit/57159]
-
-
-> > Not sure which other infos can be relevant in this context; if you
-> > need more details just let me know, happy to provide them.
-> >
-> > [Fri May 26 09:16:35 2023] ------------[ cut here ]------------
-> > [Fri May 26 09:16:35 2023] WARNING: CPU: 5 PID: 4684 at
-> > kvm_nx_huge_page_recovery_worker+0x38c/0x3d0 [kvm]
 >
 > Do you have the actual line number for the WARN?  There are a handful of sanity
 > checks in kvm_recover_nx_huge_pages(), it would be helpful to pinpoint which one
 > is firing.  My builds generate quite different code, and the code stream doesn't
 > appear to be useful for reverse engineering the location.
 
-That's the full message I get. Maybe I should recompile the host
-kernel with some debug active, any specific suggestion?
+Just got the following: arch/x86/kvm/mmu/mmu.c:7015 so seemingly around here:
 
+if (atomic_read(&kvm->nr_memslots_dirty_logging)) {
+slot = gfn_to_memslot(kvm, sp->gfn);
+WARN_ON_ONCE(!slot);
+}
+
+
+[Sun May 28 12:48:12 2023] ------------[ cut here ]------------
+[Sun May 28 12:48:12 2023] WARNING: CPU: 1 PID: 3911 at
+arch/x86/kvm/mmu/mmu.c:7015
+kvm_nx_huge_page_recovery_worker+0x38c/0x3d0 [kvm]
+[Sun May 28 12:48:12 2023] Modules linked in: vhost_net vhost
+vhost_iotlb tap tun rfcomm snd_hrtimer snd_seq xt_CHECKSUM
+xt_MASQUERADE xt_conntrack ipt_REJECT nf_reject_ipv4 ip6table_mangle
+ip6table_nat ip6table_filter ip6_tables iptable_mangle iptable_nat
+nf_nat iptable_filter ip_tables bpfilter bridge stp llc algif_skcipher
+bnep rmi_smbus rmi_core squashfs sch_fq_codel vboxnetadp(OE)
+nvidia_drm(POE) vboxnetflt(OE) rtsx_pci_sdmmc intel_rapl_msr
+nvidia_modeset(POE) mmc_core mei_pxp mei_hdcp vboxdrv(OE) snd_ctl_led
+intel_rapl_common snd_hda_codec_realtek intel_pmc_core_pltdrv
+snd_hda_codec_generic intel_pmc_core intel_tcc_cooling
+x86_pkg_temp_thermal intel_powerclamp btusb snd_hda_intel btrtl btbcm
+snd_intel_dspcfg btmtk snd_usb_audio kvm_intel btintel snd_usbmidi_lib
+snd_hda_codec snd_hwdep kvm snd_rawmidi iwlmvm snd_hda_core
+snd_seq_device bluetooth snd_pcm thinkpad_acpi irqbypass
+crct10dif_pclmul crc32_pclmul snd_timer mei_me ledtrig_audio
+ecdh_generic psmouse joydev think_lmi uvcvideo polyval_clmulni snd
+polyval_generic wmi_bmof
+[Sun May 28 12:48:12 2023]  firmware_attributes_class iwlwifi rtsx_pci
+uvc ecc mousedev soundcore mei intel_pch_thermal platform_profile
+evdev input_leds nvidia(POE) coretemp hwmon akvcam(OE)
+videobuf2_vmalloc videobuf2_memops videobuf2_v4l2 videodev
+videobuf2_common mc loop nfsd auth_rpcgss nfs_acl efivarfs dmi_sysfs
+dm_zero dm_thin_pool dm_persistent_data dm_bio_prison dm_service_time
+dm_round_robin dm_queue_length dm_multipath dm_delay virtio_pci
+virtio_pci_legacy_dev virtio_pci_modern_dev virtio_blk virtio_console
+virtio_balloon vxlan ip6_udp_tunnel udp_tunnel macvlan virtio_net
+net_failover failover virtio_ring virtio fuse overlay nfs lockd grace
+sunrpc linear raid10 raid1 raid0 dm_raid raid456 async_raid6_recov
+async_memcpy async_pq async_xor async_tx md_mod dm_snapshot dm_bufio
+dm_crypt trusted asn1_encoder tpm rng_core dm_mirror dm_region_hash
+dm_log firewire_core crc_itu_t hid_apple usb_storage ehci_pci ehci_hcd
+sr_mod cdrom ahci libahci libata
+[Sun May 28 12:48:12 2023] CPU: 1 PID: 3911 Comm: kvm-nx-lpage-re
+Tainted: P     U     OE      6.3.4-cova #2
+[Sun May 28 12:48:12 2023] Hardware name: LENOVO
+20EQS58500/20EQS58500, BIOS N1EET98W (1.71 ) 12/06/2022
+[Sun May 28 12:48:12 2023] RIP:
+0010:kvm_nx_huge_page_recovery_worker+0x38c/0x3d0 [kvm]
+[Sun May 28 12:48:12 2023] Code: 48 8b 44 24 30 4c 39 e0 0f 85 1b fe
+ff ff 48 89 df e8 2e ab fb ff e9 23 fe ff ff 49 bc ff ff ff ff ff ff
+ff 7f e9 fb fc ff ff <0f> 0b e9 1b ff ff ff 48 8b 44 24 40 65 48 2b 04
+25 28 00 00 00 75
+[Sun May 28 12:48:12 2023] RSP: 0018:ffff99b284f0be68 EFLAGS: 00010246
+[Sun May 28 12:48:12 2023] RAX: 0000000000000000 RBX: ffff99b284edd000
+RCX: 0000000000000000
+[Sun May 28 12:48:12 2023] RDX: 0000000000000000 RSI: 0000000000000000
+RDI: 0000000000000000
+[Sun May 28 12:48:12 2023] RBP: ffff9271397024e0 R08: 0000000000000000
+R09: ffff927139702450
+[Sun May 28 12:48:12 2023] R10: 0000000000000000 R11: 0000000000000001
+R12: ffff99b284f0be98
+[Sun May 28 12:48:12 2023] R13: 0000000000000000 R14: ffff9270991fcd80
+R15: 0000000000000003
+[Sun May 28 12:48:12 2023] FS:  0000000000000000(0000)
+GS:ffff927f9f640000(0000) knlGS:0000000000000000
+[Sun May 28 12:48:12 2023] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[Sun May 28 12:48:12 2023] CR2: 00007f0aacad3ae0 CR3: 000000088fc2c005
+CR4: 00000000003726e0
+[Sun May 28 12:48:12 2023] Call Trace:
+[Sun May 28 12:48:12 2023]  <TASK>
+[Sun May 28 12:48:12 2023]  ?
+__pfx_kvm_nx_huge_page_recovery_worker+0x10/0x10 [kvm]
+[Sun May 28 12:48:12 2023]  kvm_vm_worker_thread+0x106/0x1c0 [kvm]
+[Sun May 28 12:48:12 2023]  ? __pfx_kvm_vm_worker_thread+0x10/0x10 [kvm]
+[Sun May 28 12:48:12 2023]  kthread+0xd9/0x100
+[Sun May 28 12:48:12 2023]  ? __pfx_kthread+0x10/0x10
+[Sun May 28 12:48:12 2023]  ret_from_fork+0x2c/0x50
+[Sun May 28 12:48:12 2023]  </TASK>
+[Sun May 28 12:48:12 2023] ---[ end trace 0000000000000000 ]---
 
 
 -- 
