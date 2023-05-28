@@ -1,195 +1,173 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2056.outbound.protection.outlook.com [40.107.94.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24E93362
-	for <regressions@lists.linux.dev>; Sun, 28 May 2023 12:44:10 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MhUcuSOh5XYiQ4m5qaB+Y5klsFxkx7a3z97duU9HX+SERBd91M/FDWCEnMZyzT3KboNtZn5+nfcB6IV2fpz2f1awPOGnKqAG3aTADzPoocdtErc0QsD2NtTODb+mwZo34ObbnWbpM8x8JR9yYzbIvN38k0vTIbCAWeqbkcwxjYROFcJPBl05nJrrn7Yel6TMIRWSKIAatLyZQVn5EwJOy4lQ3T8IxwBjV4KuQX4M6okQyvaEKRttWsHp2S9d+iOZR2fhYuCcNQjOAs0TuQh2K146qLtcxXk1cuHqpkhWYHUUNTMdx0Mhc3dquZVNKXdV7nuIy8vhBSUJ3Gdx/niOag==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=P3ADXnT76gKJG+XW3nvG74bDwmaYj1pk4rChzsQGITk=;
- b=nSlq3LM+Y1F2QwvvOzrLg41vz+Uh6vxgWIRN/Up6x2yb3YCgwUYteiA3MV6HLzymeksKA/EZvCWVvDvuCMUC5x0nALk/sVgS327KMlY5BoW3IeSz2qo7AwX+tvTAz1E9SSgmQXOzNGeeJh8HeiEOgg8Z7fLm/12G3tgmetK1WeX8IYp08bAk70Hb5d2cvfJ0tQjrVHG5K33aHvvJID4rGTjLOrtzujh+2zavqj/i+ILcW/32JskeuocAiAllm0PtaVGiJhhwsEmQgrnvNMu0gD5R8hiZA6UgAUHXU6IKr5lSVgH9prY9iWNlElgXw8K7SR0nLGD5pyxrNl6ekZm8rA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=P3ADXnT76gKJG+XW3nvG74bDwmaYj1pk4rChzsQGITk=;
- b=Z5eiVoIyDMi3qcsX8piJWNPfDOwGApjY0tB0/ONJCkZWXN1XFaavWA9KmLnfN1LPCoZiAsFXbdWM36Q0YhtwaXXbDg61di3YG2cUQYGLnjNY/tfy5v2wlptWqMyHuTtdzvgefYOsALzSh7x4nS4mL+LD4U8bdgTlE6J6QYjg1TY=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by DS0PR12MB6558.namprd12.prod.outlook.com (2603:10b6:8:d2::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6433.21; Sun, 28 May
- 2023 12:44:08 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::a65c:3aa0:b759:8527]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::a65c:3aa0:b759:8527%5]) with mapi id 15.20.6433.022; Sun, 28 May 2023
- 12:44:08 +0000
-Message-ID: <ab12984e-be17-903d-ba0a-f9c85b8c544f@amd.com>
-Date: Sun, 28 May 2023 07:44:05 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.1
-Subject: Re: Regression from "ACPI: OSI: Remove Linux-Dell-Video _OSI string"?
- (was: Re: Bug#1036530: linux-signed-amd64: Hard lock up of system)
-To: Salvatore Bonaccorso <carnil@debian.org>,
- Nick Hastings <nicholaschastings@gmail.com>, 1036530@bugs.debian.org
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
- linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
- regressions@lists.linux.dev
-References: <168471337231.1913606.15905047692536779158.reportbug@xps>
- <ZG3mbc3zdR4KcUW/@eldamar.lan> <ZG6cY8xjfob4Bvcs@xps>
- <ZG98fQ+MD4O0nGGE@eldamar.lan>
- <168471337231.1913606.15905047692536779158.reportbug@xps>
- <ZG/8cxxTJ9ZzrVPQ@xps> <ZHCYRmD7YeIWoy2W@eldamar.lan>
- <168471337231.1913606.15905047692536779158.reportbug@xps>
- <ZHKrC4/G6ZyvRReI@xps> <ZHL5cCNUzVdleiag@eldamar.lan>
-Content-Language: en-US
-From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <ZHL5cCNUzVdleiag@eldamar.lan>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: DM6PR08CA0039.namprd08.prod.outlook.com
- (2603:10b6:5:1e0::13) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B8DE1384
+	for <regressions@lists.linux.dev>; Sun, 28 May 2023 12:44:40 +0000 (UTC)
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-64d41d8bc63so1946289b3a.0
+        for <regressions@lists.linux.dev>; Sun, 28 May 2023 05:44:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1685277880; x=1687869880;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=vdBiVqoVVm+jnimdyoFfVoBORYE0ntzEIfUVTH+f7xs=;
+        b=Ei0d4QReYR/7syQBnO9+F7e5uKr3pBg92jdwv/XpixwH59/CJYue10r0vBKlkRd+jO
+         G5NWzpkTpaQCbaNHmA8Y9anzHMB+x2iWndjU+xyF8jUmyYZ1VZx9++mC9E6dW3Z7Wush
+         HP3/0DnS078KONr193Ik3ujVUjXGDal87GlnOLy8SKyGKDLlqtclflEBFPWE7JiJjflR
+         3vn+lenXB3rhR1Lrse2WG16dZP45M9DVnMIx+xvtfteg0F+CBzIhKHuGrsj4zwAennYf
+         KUo98DbLJQ/WUNjOho9ND0B92ASnaU8iE2fkSDWZTGQU8+s7273nXkSvyYvejwTPHlIB
+         yItg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685277880; x=1687869880;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vdBiVqoVVm+jnimdyoFfVoBORYE0ntzEIfUVTH+f7xs=;
+        b=kYCsjVZqn4kybKOzTNmMNXVOSAQnAylRF5T7c7WA3YPd+c9BRAC68sHq7pPBsBTiNv
+         6umjVDLwg3Fhwuh7hNGWOcXBOj2iH1y0DGf5mOb9+Jr2hMCqv6KZ5Kp+pyFQzLJvABbf
+         34Ecl/HTirKurkCZmmMG3ri3eWUSu+i1rLvHc+OvffJjr8n1vIuFWy1zMlBY2KNWK9Dq
+         9a9OpA6CpMYI7Q35YCJgtt3Nv+RAIe96ApjeM0BFU9LEpZeFP/acZRDm837cigMrgHeG
+         0kUNxiCCwkTYXPDFN2glyCOr/NEe+2hLPBmpc8OhKWLQlR5e2ZetGVi3WV56ykIXL4pG
+         Gt9g==
+X-Gm-Message-State: AC+VfDwO7RNnH3P61G6ipaNQS1bW4RKPACtuoh3z0kmVc/uuObN4QLnN
+	5viEtLaGxQgGYwsWWLHYHPE=
+X-Google-Smtp-Source: ACHHUZ788sEwzqANJ/a40crm0YLJizUtTGq521AgVje/RRAmWETPweSJPj1+oEQ2nBIvEn2WUd9yCA==
+X-Received: by 2002:a05:6a20:7d9a:b0:10d:1abb:e31 with SMTP id v26-20020a056a207d9a00b0010d1abb0e31mr6594862pzj.50.1685277879531;
+        Sun, 28 May 2023 05:44:39 -0700 (PDT)
+Received: from debian.me (subs03-180-214-233-73.three.co.id. [180.214.233.73])
+        by smtp.gmail.com with ESMTPSA id s132-20020a63778a000000b00502fd70b0bdsm5514967pgc.52.2023.05.28.05.44.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 28 May 2023 05:44:39 -0700 (PDT)
+Received: by debian.me (Postfix, from userid 1000)
+	id 50BC81069B8; Sun, 28 May 2023 19:44:35 +0700 (WIB)
+Date: Sun, 28 May 2023 19:44:34 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Fabio Coatti <fabio.coatti@gmail.com>, stable@vger.kernel.org,
+	regressions@lists.linux.dev, kvm@vger.kernel.org
+Cc: Junaid Shahid <junaids@google.com>, Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: WARNING trace at kvm_nx_huge_page_recovery_worker on 6.3.4
+Message-ID: <ZHNMsmpo2LWjnw1A@debian.me>
+References: <CADpTngX9LESCdHVu_2mQkNGena_Ng2CphWNwsRGSMxzDsTjU2A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|DS0PR12MB6558:EE_
-X-MS-Office365-Filtering-Correlation-Id: 53fbc910-d1a8-448b-89ef-08db5f793a71
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	wUnGRGPRgsuUlCrVsPZgtZZxxc52o3/beYi+DxEtdFknAA/GA4XppxOyuWhSa7YIHU0SlgbacrnfZUX5ZYSmmfFxdp/jv6P9HLWoBAdxl/foAAJ8JIP6hR2U88vMjy2l4NWtHsK0eMfv+1oC/Ki/5JWoxKs2Kh3wyaaFAUq7sP0B2DLDLaYdC9E8uEc+JXR955rwhGvyQT/FA7GkAp+Gaj0ZwoY2LF23WZ1/+JOwyorxWVux84Z2SWcAMWDz2zqH/ALvkzUZlBABzTCr3qPSIHGmcGkocJYyYsBKXeINisLMo9vN/xy7iKU009r9GSkSO/duYyHg6omNP2GWtjsL1SqOQcz9BtXtLq6RxTtf9olld/YCHK0z4OKVCyRRtAnXPq92ekdghfub9BKa6vjapbE83u7919p1pdDEZqTkIeG47jmAvqClxPeR5bZB/7LCH8EfRwV12N3mGG5VlhbhRcGyTGpDYI0yGlzowHFhsSD+3+FZKWBmomYbFRvLTL5rlD6L9+mosbmnHTuh0895257WGn7t2yRgv4wHp9nIP6HmqQyL2OZ4u3awY+ZU/0gt65nM7+ypag2ypAiJ6MpvgSnZ9Wsecrc7hCcZ7uda5UhXGcZMagMhjTNpHDv9FXC+I9laLRsZhHmdZLJ2ne/I3w==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(39860400002)(366004)(346002)(396003)(136003)(376002)(451199021)(83380400001)(5660300002)(316002)(6666004)(66946007)(36756003)(66476007)(66556008)(4326008)(966005)(31696002)(8676002)(6486002)(41300700001)(38100700002)(8936002)(86362001)(44832011)(110136005)(54906003)(53546011)(2906002)(2616005)(6506007)(6512007)(186003)(31686004)(478600001)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?ZUc2R25lNm1STytqWHRrWHdta05ZS0k5Yk5yZDBDT1hTNklJN3loNzZEcG05?=
- =?utf-8?B?SVFEN1V1ZURDNHliU1BZWVVNWkwvK1I2Mi9Jd1MxYk9zeXRVaGt0dGJoQmI3?=
- =?utf-8?B?eWJsZXJpZWkzU21zRHFUNjZHOFEvc01VMDFYamtvSnB1UVhZbWNOS3F5UGhT?=
- =?utf-8?B?VTQzVnFXM1VLN2YvVldCY0xSTkZHeHE5MTJGSzVZUnNyc0kxclBiRHdZVGt2?=
- =?utf-8?B?Tk4vT3k5MXlKVEN1bG05aWltbmFhSnRoZyswZXhZYkVja1NUNGs2d3N1K281?=
- =?utf-8?B?UHZ5TXp5WkZiQ1hqTXpkalFjSVZ6dW56aktNTVRhSW5pZXF3LzAvRHBRYm5t?=
- =?utf-8?B?a21hNklFZFBhUk9rUDlwNUJHMk1aNlVqVUNHZ0xRN0xTOWc1dE5QeDFhRVJF?=
- =?utf-8?B?TTV3dmJlUW9kaXdEOUd2blN1dHE1NVQ3em5vVzNOTEI2UDNJYnp2Rjd0dnlq?=
- =?utf-8?B?OFpaNWJYMmNoSnhISklEQ0lFSGVRTldmTFpaRFQ4UUJ0Y0FhV3lhYkU4Slcr?=
- =?utf-8?B?aVVjZHhLNlJZalErVVdUU0I3Z3Bkb2s0NzlmYytmS2hTZ2lwWktWSVFObDBp?=
- =?utf-8?B?S2laekU2ZUZIOE9pSWtucTBVMy8zSEdDMlZ1TWJVZVNQd3d6ZHZlQVBKVFdp?=
- =?utf-8?B?dXc2eU91ZjlSSXhTRHNOMks4TXhtMGhGdC9PTG11VXZCVG1aMUJKV0ZZV2NQ?=
- =?utf-8?B?bjZKOXFoazdDVlhnTEttaTdCRW55Ri9hcGdzNk1GY0t0bHl1VFh3cy9GQVU5?=
- =?utf-8?B?S2NqVk1aTmUrdzlTVGpIVHJ1NjVZZGdycDhVZnk4emRnTzJ0NGpsNU9IRmpP?=
- =?utf-8?B?djF6MWZZbmw4amN0SXZkMnVWUFhlRlNGeVBPQ29LSGJabVNYeHBEMG9mR0pi?=
- =?utf-8?B?bEtkaitKbWhkQTZyMTJKYytLdmUvYmZVLzUzaGx4QUhza1k4c24yVXVYYkNV?=
- =?utf-8?B?Q0w3ZUxPWVROQ0lzOTFzdHpxTHZVMCtpQVdad1BnM3dYUVpnV3R3WkY5WGNO?=
- =?utf-8?B?YjlrRzlYN0w1SFEvanJaSFh2T3krVHpsY2hoYVc2VFpocGNUYU4rSXpxUCtC?=
- =?utf-8?B?bVpWemFFOG41S3JWa1JRZmp1bWdnYmhxK1NLQkFQRzJ6U3pncTFGVngwUGZR?=
- =?utf-8?B?WTdQSEtFQTZua00xNFM2WUVFTDBuZ1AvZ1Q3TndyWnBHN3ovYktkM0lPTHhD?=
- =?utf-8?B?S2U5SlBUbGdlbUplYmdJQ0tGazZMRWU2bjJsZHZCUlV1MGdXRFFNMVNvazhX?=
- =?utf-8?B?bXFQWWdPZnFOTDAwUWcrVUhkcWszam45RUovMEQyZGlkaVZuTVpLWlU2cmox?=
- =?utf-8?B?RzdWaFBCdG54WlNlRlY3N0FLcS9QZGJaV3dvSjQrMDFCWUtDOUw0SGQxOGxP?=
- =?utf-8?B?b24rOFFnWmFDeFkwcUhvN1BGYllqRDlaSG9ZRTAveWtxWVNtdlVhREhwZWwy?=
- =?utf-8?B?M1FMU29yT2RhNWlWMzFFOUdwZm5lYndGVzZXbU40bk4vekRKWEVnN1BLeCsz?=
- =?utf-8?B?M0doVC8yZHJETm9tcmtaSnJtbE1xcG1TeGNRT0szMjM4N3IwaGMzT21zM2lF?=
- =?utf-8?B?WWNEWklYT2NSNlFQc21BVldZZnZWVHpFYW5XaUdpZzRUOGRhejQ2d1JzUWc4?=
- =?utf-8?B?bkREUnpERFp0WEEvR1RNaFFRbzRhUUc2ZVp3MjdSLzZGYWduSXMydWpoeDd5?=
- =?utf-8?B?bm5DTXZIaUJsRlYrRjV3K1hUajROdjJ1ZjZYUmtGZmg0R1lOMWwvZDZ3cGtF?=
- =?utf-8?B?RHJCaHUyY3J6eTFDN0F0WHplVHhKQ3VWOE90eUFHZlBHYzFHMnNianA3WjJE?=
- =?utf-8?B?UTQ1dFpBbFJmelNSZVAvMm96YTBrWFNWRFZ0eFl1UWVueHdTTm02VnFBMlZQ?=
- =?utf-8?B?blRrZFNjZUt2UHkxS3IwUWQ4SnZHcFhBSEx3YURTWUNBZVhPMVo3ZlNUdVcv?=
- =?utf-8?B?TUdEejNrQXN4TGJXajZ4OWdMZmFHcWRweWwvTXdGcWpNT2FjcDAra1hhQjBX?=
- =?utf-8?B?bWlXaElMdVFWYjFpQUQ0TGRpQ21BZFlwb3RvejMwRDFrNWZRZXRCd0ZKRTNZ?=
- =?utf-8?B?ckx3K1UwakNyVnFUU0NId2h6d25vSXVvZWFmNEJRVVB2R08xT2taVXpyM2l4?=
- =?utf-8?B?emF0OTJHTjhUc3UyUExFTjFZUUtyeVFCcVg4UEgwOU43ODdQRlFoZmRKTkNP?=
- =?utf-8?B?MHc9PQ==?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 53fbc910-d1a8-448b-89ef-08db5f793a71
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 May 2023 12:44:08.0785
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: O0E5pb0ae37+dpGg6DVZ7vtRlc6mo8hqZOETrN6MMypwaMlNqYuS+zzQJqhbgM5jTR0Ndn37YzVUuskE6ZaJDQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB6558
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="FgXOz0BYZYXzwA2t"
+Content-Disposition: inline
+In-Reply-To: <CADpTngX9LESCdHVu_2mQkNGena_Ng2CphWNwsRGSMxzDsTjU2A@mail.gmail.com>
 
-On 5/28/23 01:49, Salvatore Bonaccorso wrote:
-> Hi Mario
-> 
-> Nick Hastings reported in Debian in https://bugs.debian.org/1036530
-> lockups from his system after updating from a 6.0 based version to
-> 6.1.y. >
-> #regzbot ^introduced 24867516f06d
-> 
-> he bisected the issue and tracked it down to:
-> 
-> On Sun, May 28, 2023 at 10:14:51AM +0900, Nick Hastings wrote:
->> Control: tags -1 - moreinfo
->>
->> Hi,
->>
->> I repeated the git bisect, and the bad commit seems to be:
->>
->> (git)-[v6.1-rc1~206^2~4^5~3|bisect] % git bisect bad
->> 24867516f06dabedef3be7eea0ef0846b91538bc is the first bad commit
->> commit 24867516f06dabedef3be7eea0ef0846b91538bc
->> Author: Mario Limonciello <mario.limonciello@amd.com>
->> Date:   Tue Aug 23 13:51:31 2022 -0500
->>
->>      ACPI: OSI: Remove Linux-Dell-Video _OSI string
->>      
->>      This string was introduced because drivers for NVIDIA hardware
->>      had bugs supporting RTD3 in the past.
->>      
->>      Before proprietary NVIDIA driver started to support RTD3, Ubuntu had
->>      had a mechanism for switching PRIME on and off, though it had required
->>      to logout/login to make the library switch happen.
->>      
->>      When the PRIME had been off, the mechanism had unloaded the NVIDIA
->>      driver and put the device into D3cold, but the GPU had never come back
->>      to D0 again which is why ODMs used the _OSI to expose an old _DSM
->>      method to switch the power on/off.
->>      
->>      That has been fixed by commit 5775b843a619 ("PCI: Restore config space
->>      on runtime resume despite being unbound"). so vendors shouldn't be
->>      using this string to modify ASL any more.
->>      
->>      Reviewed-by: Lyude Paul <lyude@redhat.com>
->>      Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
->>      Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->>
->>   drivers/acpi/osi.c | 9 ---------
->>   1 file changed, 9 deletions(-)
->>
->> This machine is a Dell with an nvidia chip so it looks like this really
->> could be the commit that that is causing the problems. The description
->> of the commit also seems (to my untrained eye) to be consistent with the
->> error reported on the console when the lockup occurs:
->>
->> [   58.729863] ACPI Error: Aborting method \_SB.PCI0.PGON due to previous error (AE_AML_LOOP_TIMEOUT) (20220331/psparse-529)
->> [   58.729904] ACPI Error: Aborting method \_SB.PCI0.PEG0.PG00._ON due to previous error (AE_AML_LOOP_TIMEOUT) (20220331/psparse-529)
->> [   60.083261] vfio-pci 0000:01:00.0 Unable to change power state from D3cold to D0, device inaccessible
->>
->> Hopefully this is enough information for experts to resolve this.
-> 
-> Does this ring some bell for you? Do you need any further information
-> from Nick?
-> 
-> Regards,
-> Salvatore
 
-Hi Salvatore,
+--FgXOz0BYZYXzwA2t
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Have Nick try using "pcie_port_pm=off" and see if it helps the issue.
+On Fri, May 26, 2023 at 09:43:17AM +0200, Fabio Coatti wrote:
+> Hi all,
+> I'm using vanilla kernels on a gentoo-based laptop and since 6.3.2 I'm
+> getting the kernel log  below when using kvm VM on my box.
+> I know, kernel is tainted but avoiding to load nvidia driver could
+> make things complicated on my side; if needed for debug I can try to
+> avoid it.
+>=20
+> Not sure which other infos can be relevant in this context; if you
+> need more details just let me know, happy to provide them.
+>=20
+> [Fri May 26 09:16:35 2023] ------------[ cut here ]------------
+> [Fri May 26 09:16:35 2023] WARNING: CPU: 5 PID: 4684 at
+> kvm_nx_huge_page_recovery_worker+0x38c/0x3d0 [kvm]
+> [Fri May 26 09:16:35 2023] Modules linked in: vhost_net vhost
+> vhost_iotlb tap tun tls rfcomm snd_hrtimer snd_seq xt_CHECKSUM
+> algif_skcipher xt_MASQUERADE xt_conntrack ipt_REJECT nf_reject_ipv4
+> ip6table_mangle ip6table_nat ip6table_filter ip6_tables iptable_mangle
+> iptable_nat nf_nat iptable_filter ip_tables bpfilter bridge stp llc
+> rmi_smbus rmi_core bnep squashfs sch_fq_codel nvidia_drm(POE)
+> intel_rapl_msr vboxnetadp(OE) vboxnetflt(OE) nvidia_modeset(POE)
+> mei_pxp mei_hdcp rtsx_pci_sdmmc vboxdrv(OE) mmc_core intel_rapl_common
+> intel_pmc_core_pltdrv intel_pmc_core snd_ctl_led intel_tcc_cooling
+> snd_hda_codec_realtek snd_hda_codec_generic x86_pkg_temp_thermal
+> intel_powerclamp btusb btrtl snd_usb_audio btbcm btmtk kvm_intel
+> btintel snd_hda_intel snd_intel_dspcfg snd_usbmidi_lib snd_hda_codec
+> snd_rawmidi snd_hwdep bluetooth snd_hda_core snd_seq_device kvm
+> snd_pcm thinkpad_acpi iwlmvm mousedev ledtrig_audio uvcvideo snd_timer
+> ecdh_generic irqbypass crct10dif_pclmul crc32_pclmul polyval_clmulni
+> snd think_lmi joydev mei_me ecc uvc
+> [Fri May 26 09:16:35 2023]  polyval_generic rtsx_pci iwlwifi
+> firmware_attributes_class psmouse wmi_bmof soundcore intel_pch_thermal
+> mei platform_profile input_leds evdev nvidia(POE) coretemp hwmon
+> akvcam(OE) videobuf2_vmalloc videobuf2_memops videobuf2_v4l2 videodev
+> videobuf2_common mc loop nfsd auth_rpcgss nfs_acl efivarfs dmi_sysfs
+> dm_zero dm_thin_pool dm_persistent_data dm_bio_prison dm_service_time
+> dm_round_robin dm_queue_length dm_multipath dm_delay virtio_pci
+> virtio_pci_legacy_dev virtio_pci_modern_dev virtio_blk virtio_console
+> virtio_balloon vxlan ip6_udp_tunnel udp_tunnel macvlan virtio_net
+> net_failover failover virtio_ring virtio fuse overlay nfs lockd grace
+> sunrpc linear raid10 raid1 raid0 dm_raid raid456 async_raid6_recov
+> async_memcpy async_pq async_xor async_tx md_mod dm_snapshot dm_bufio
+> dm_crypt trusted asn1_encoder tpm rng_core dm_mirror dm_region_hash
+> dm_log firewire_core crc_itu_t hid_apple usb_storage ehci_pci ehci_hcd
+> sr_mod cdrom ahci libahci libata
+> [Fri May 26 09:16:35 2023] CPU: 5 PID: 4684 Comm: kvm-nx-lpage-re
+> Tainted: P     U     OE      6.3.4-cova #1
+> [Fri May 26 09:16:35 2023] Hardware name: LENOVO
+> 20EQS58500/20EQS58500, BIOS N1EET98W (1.71 ) 12/06/2022
+> [Fri May 26 09:16:35 2023] RIP:
+> 0010:kvm_nx_huge_page_recovery_worker+0x38c/0x3d0 [kvm]
+> [Fri May 26 09:16:35 2023] Code: 48 8b 44 24 30 4c 39 e0 0f 85 1b fe
+> ff ff 48 89 df e8 2e ab fb ff e9 23 fe ff ff 49 bc ff ff ff ff ff ff
+> ff 7f e9 fb fc ff ff <0f> 0b e9 1b ff ff ff 48 8b 44 24 40 65 48 2b 04
+> 25 28 00 00 00 75
+> [Fri May 26 09:16:35 2023] RSP: 0018:ffff8e1a4403fe68 EFLAGS: 00010246
+> [Fri May 26 09:16:35 2023] RAX: 0000000000000000 RBX: ffff8e1a42bbd000
+> RCX: 0000000000000000
+> [Fri May 26 09:16:35 2023] RDX: 0000000000000000 RSI: 0000000000000000
+> RDI: 0000000000000000
+> [Fri May 26 09:16:35 2023] RBP: ffff8b4e9a56d930 R08: 0000000000000000
+> R09: ffff8b4e9a56d8a0
+> [Fri May 26 09:16:35 2023] R10: 0000000000000000 R11: 0000000000000001
+> R12: ffff8e1a4403fe98
+> [Fri May 26 09:16:35 2023] R13: 0000000000000001 R14: ffff8b4d9c432e80
+> R15: 0000000000000010
+> [Fri May 26 09:16:35 2023] FS:  0000000000000000(0000)
+> GS:ffff8b5cdf740000(0000) knlGS:0000000000000000
+> [Fri May 26 09:16:35 2023] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050=
+033
+> [Fri May 26 09:16:35 2023] CR2: 00007efeac53d000 CR3: 0000000978c2c003
+> CR4: 00000000003726e0
+> [Fri May 26 09:16:35 2023] Call Trace:
+> [Fri May 26 09:16:35 2023]  <TASK>
+> [Fri May 26 09:16:35 2023]  ?
+> __pfx_kvm_nx_huge_page_recovery_worker+0x10/0x10 [kvm]
+> [Fri May 26 09:16:35 2023]  kvm_vm_worker_thread+0x106/0x1c0 [kvm]
+> [Fri May 26 09:16:35 2023]  ? __pfx_kvm_vm_worker_thread+0x10/0x10 [kvm]
+> [Fri May 26 09:16:35 2023]  kthread+0xd9/0x100
+> [Fri May 26 09:16:35 2023]  ? __pfx_kthread+0x10/0x10
+> [Fri May 26 09:16:35 2023]  ret_from_fork+0x2c/0x50
+> [Fri May 26 09:16:35 2023]  </TASK>
+> [Fri May 26 09:16:35 2023] ---[ end trace 0000000000000000 ]---
 
-Does this happen in the latest 6.4 RC as well?
+Thanks for the regression report. I'm adding it to regzbot:
 
-I think we need to see a full dmesg and acpidump to better characterize it.
+#regzbot ^introduced: v6.3.1..v6.3.2
+#regzbot title: WARNING trace at kvm_nx_huge_page_recovery_worker when open=
+ing a new tab in Chrome
+
+Fabio, can you also check the mainline (on guest)?
+
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--FgXOz0BYZYXzwA2t
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZHNMrQAKCRD2uYlJVVFO
+oxP3AQCPFX9pu/XgcJVkfOdY7LEnE4zs39RKAHpy8/DSJOcC8QEAv4DhntaLH1yu
+TyYpM6RJKkjNjib0oEV1juumRo6l0gg=
+=BCZz
+-----END PGP SIGNATURE-----
+
+--FgXOz0BYZYXzwA2t--
