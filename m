@@ -1,212 +1,153 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21A62182B8
-	for <regressions@lists.linux.dev>; Sat, 27 May 2023 23:54:20 +0000 (UTC)
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1b02fcde49aso2797235ad.0
-        for <regressions@lists.linux.dev>; Sat, 27 May 2023 16:54:20 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C83D7C
+	for <regressions@lists.linux.dev>; Sun, 28 May 2023 07:02:52 +0000 (UTC)
+Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-565d354b59fso12977127b3.0
+        for <regressions@lists.linux.dev>; Sun, 28 May 2023 00:02:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1685231659; x=1687823659;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=+bcoTDy4yp9J7+AxB8A50sccmom8TCJEyod+GtDcYqI=;
-        b=OfiPKkzyMcY29P4qeg3SZd88YXMKJcCeH+Onv4iHR9U9ugMWpMKQHKQ8Ltt4rpkecv
-         MIU73ttV4zrYCH61vKkfkP0+xTNceeTwfYyKo8RVS/nN55YNAuONSk2DNGSGhM0IClxI
-         cRDKZpm9lD+3JTqEMjKJkitVzcUGZABlCxyQf+keHPva67Lj35IEOS+qvnyzl135FC3y
-         vzM9Sxk8dGDu/Rk88wgMo8Guv7Msfh1lCvBcap2RcXP/k6MdOyFnCSCzxERNB6/kZIuI
-         CSaZFw9y8/xQmeDIBb7WjgjeZg8h/OQIZAi+6fXfNuaKUxZc39yMKS4YWeGK6KMsk/qY
-         11Qg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685231659; x=1687823659;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20221208; t=1685257371; x=1687849371;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=+bcoTDy4yp9J7+AxB8A50sccmom8TCJEyod+GtDcYqI=;
-        b=R3pyCaCShyEUzL6oMp5CHwW0sWMMv7ZrV+n+wIScoAqOX9Cj4cdLWOOHrV12/QAsmp
-         TnT1fnfTlmW/uAZi2v12mFE7ExSIvNIGM4Iw2vuspep1OHDk8xBjuYfXiUR9o2suEnm8
-         d1oKpkh7CHIvmmkHJ24uh1DGXOkseTnBz6udVfHDoQ+XJZlHQ5siWqROCb6/PZ45aeKR
-         SJm9wHM5Neyd3FALq24BRiYiCw5VnOKJrFFa/OngQns7oboUm/zPYnkFaaSWbaw+pdwL
-         mgEaQ3MGn8lBGuQySR4mU3IIU/uJyvk3r/MQRSsFs/jbhwDH38Y2JBNwuXR+803h89La
-         EfWA==
-X-Gm-Message-State: AC+VfDxCmLkm8uYhY8h3FLRyG5ktBXtSCDBeZCrS6vpiSM58gECs7OB5
-	kvyCy2bXOqPu0x7+DjhtipI=
-X-Google-Smtp-Source: ACHHUZ7IxhnopHgeNlh4fZrlR+Nd1iv+ktb5MvtYRsG69i0oIwc612HFssIw6Za9EN1OwXqyfINeKg==
-X-Received: by 2002:a17:902:7b83:b0:1ae:50cc:455 with SMTP id w3-20020a1709027b8300b001ae50cc0455mr6214132pll.39.1685231659208;
-        Sat, 27 May 2023 16:54:19 -0700 (PDT)
-Received: from debian.me (subs28-116-206-12-59.three.co.id. [116.206.12.59])
-        by smtp.gmail.com with ESMTPSA id a4-20020a170902b58400b001ac7ab3e97csm5388556pls.260.2023.05.27.16.54.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 27 May 2023 16:54:18 -0700 (PDT)
-Received: by debian.me (Postfix, from userid 1000)
-	id 9FCDB106990; Sun, 28 May 2023 06:48:52 +0700 (WIB)
-Date: Sun, 28 May 2023 06:48:52 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: beld zhang <beldzhang@gmail.com>, stable@vger.kernel.org
-Cc: Linux USB <linux-usb@vger.kernel.org>,
-	Linux Regressions <regressions@lists.linux.dev>,
-	Takashi Iwai <tiwai@suse.de>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: 6.1.30: thunderbolt: Clear registers properly when auto clear
- isn't in use cause call trace after resume
-Message-ID: <ZHKW5NeabmfhgLbY@debian.me>
-References: <CAG7aomXv2KV9es2RiGwguesRnUTda-XzmeE42m0=GdpJ2qMOcg@mail.gmail.com>
+        bh=TRkqudkgMQ49oMc1gbKQdMb2w50Dkd1fBeJ/gvJ6yX8=;
+        b=qmMTFrt8uoytygO19Oob0VRjf+V9CWhsO4qE9F78KrSta+nabHhX11re+hazJIZlPX
+         TzJeNTBNwbB/qCGJaFc6B34OW2Khw8CWOyne6MGJy7DOi8STTwy4Lyel3LWUwAzb74sG
+         mEwxjcmeyArXXCEa77HqYNLRXy+MU5Amtw8TuAHLJ3I4JXpnqJRFwSYO3T7NhYQZ0N40
+         9AMiK7zVcPZZt8n1p8u/NL/fk5VKFoGWY/dtTIpExxZD/B6ygrOc2dipwboWZmXU/qmt
+         fmbXQGA0vg8g+l7EDAdUXj4eQYJZn5mY3WS03aAvA2h0h0SqU28km1LxCmAwMTqtuK32
+         Uglg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685257371; x=1687849371;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TRkqudkgMQ49oMc1gbKQdMb2w50Dkd1fBeJ/gvJ6yX8=;
+        b=AeCmM9MK++/OCOmlnOE4Bpce8UBoJ0rMtvUw2GG2F02pmvfQ2ejgZCxF+Vrl8b21K1
+         nDOwzjG4Dx13NPoPldAUAdHF+ipABJnUmUoPVL/eoISvjeLw/+EuTklurcEuFHxjMx/5
+         G5k6NNtd4JjkRkXg2qPfpIDVdNpK4jnSjyoInU71VdO1r+qB6WPIVI+1u1nR1tQhgVo7
+         dsY8GcFNzwIbn0cAzzyJM+Cz9D0q84+972wpziwF6IMMyB6jUMoyVPuJr8eV6Mesa4jJ
+         fkWe4n2HDy6d2iNrIp4SmnFM1Cjh0k06OrDGdyTwP4CkScxawngWa/HXj3R+JreBIu7e
+         8pCg==
+X-Gm-Message-State: AC+VfDwOoYA7JSG0nN0ArUmHu+Hgs0qhRV/2zqF5jZaU19eH34Qgkxrs
+	O5dvwxUKo4Eoryr3oa8ITzD369K1zFFXt1iBaFU=
+X-Google-Smtp-Source: ACHHUZ5QnHgzGna8A0ict5YGfhiUK1/FyXdi06p0MjmNBDyw5tltLHDzYhcCm1SX6aeGhqMyx+OQ3MmemowirLDgF2Y=
+X-Received: by 2002:a0d:cc0c:0:b0:55a:5870:3d47 with SMTP id
+ o12-20020a0dcc0c000000b0055a58703d47mr7603574ywd.26.1685257371475; Sun, 28
+ May 2023 00:02:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="yZlxuf7mDuFb9O/k"
-Content-Disposition: inline
-In-Reply-To: <CAG7aomXv2KV9es2RiGwguesRnUTda-XzmeE42m0=GdpJ2qMOcg@mail.gmail.com>
-
-
---yZlxuf7mDuFb9O/k
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+References: <efd6f2d4-547c-1378-1faa-53c044dbd297@gmail.com>
+ <CAG8fp8SaHi0X-tZHnji_93wBADp1_=brjauWCVXuLaG7iP0p=A@mail.gmail.com>
+ <CAG8fp8QXoEkndCzyaYZmg6+ZrszKOfh_YSi0o2_weV7y1_xYkQ@mail.gmail.com>
+ <CAMj1kXGjkKK-oHm64Y9P-AbYQWd9jnEdsNucRbY_-7mgJ_4yAA@mail.gmail.com>
+ <CAG8fp8ReYLaNYO9LYE1WeeSDg1pO1hz3f-8_WPZkLVWbzzyCvg@mail.gmail.com>
+ <CAMj1kXEGTJufrrcrqjjKqeR-FN+nLsbzx8xGgO+gPfc2YPsy2w@mail.gmail.com>
+ <CAHk-=whKJoDVuUNhf3U7gPXKu4EeZRv-iwwhL0prQ=U3n8PHiw@mail.gmail.com> <CAMj1kXHmRYkmJyfW5+B74dPyA1+yHvt9majpZ9Ut1p0i8zM+DA@mail.gmail.com>
+In-Reply-To: <CAMj1kXHmRYkmJyfW5+B74dPyA1+yHvt9majpZ9Ut1p0i8zM+DA@mail.gmail.com>
+From: Akihiro Suda <suda.kyoto@gmail.com>
+Date: Sun, 28 May 2023 16:02:40 +0900
+Message-ID: <CAG8fp8Teu4G9JuenQrqGndFt2Gy+V4YgJ=hN1xX7AD940YKf3A@mail.gmail.com>
+Subject: Re: mix of ACPICA regression and EFISTUB regression (Was: kernel >=
+ v6.2 no longer boots on Apple's Virtualization.framework (x86_64); likely to
+ be related to ACPICA)
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Bagas Sanjaya <bagasdotme@gmail.com>, 
+	linux-efi@vger.kernel.org, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	Linux Regressions <regressions@lists.linux.dev>, Linux x86 <x86@kernel.org>, 
+	Linux ACPI <linux-acpi@vger.kernel.org>, 
+	Linux ACPICA <acpica-devel@lists.linuxfoundation.org>, 
+	Linux Stable <stable@vger.kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Jianmin Lv <lvjianmin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
+	Robert Moore <robert.moore@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, May 27, 2023 at 04:15:51PM -0400, beld zhang wrote:
-> Upgrade to 6.1.30, got crash message after resume, but looks still
-> running normally
->=20
-> After revert
->     e16629c639d429e48c849808e59f1efcce886849
->     thunderbolt: Clear registers properly when auto clear isn't in use
-> This error was gone.
+> Fair enough. Or we could try bumping it from v1.1 to v2.0 (or v3.0 if
+> we make it a bit mask).
+>
+> Akihiro, would you mind checking if changing the major/minor to any of
+> these values results in the same problem?
 
-Can you check latest mainline to see if this regression still happens?
+Surprisingly, v2.0 and v3.0 boot, although v1.1, v2.1, v2.2, v3.1,
+etc. do not boot.
 
->=20
-> kernel config attached, system is Slackware 15.0 on XPS 9700
->=20
-> May 27 13:55:39 devel kernel: ------------[ cut here ]------------
-> May 27 13:55:39 devel kernel: thunderbolt 0000:07:00.0: interrupt for
-> TX ring 0 is already enabled
-> May 27 13:55:39 devel kernel: WARNING: CPU: 15 PID: 21394 at
-> drivers/thunderbolt/nhi.c:137 ring_interrupt_active+0x1ff/0x250
-> [thunderbolt]
-> May 27 13:55:39 devel kernel: Modules linked in: squashfs
-> nls_iso8859_1 nls_cp437 tun fuse 8021q garp mrp iptable_nat
-> xt_MASQUERADE nf_nat nf_conntrack nf_defrag_ipv4 ip_tables x_tables
-> efivarfs binfmt_misc snd_ctl_led snd_soc_sof_sdw
-> snd_soc_intel_hda_dsp_common snd_soc_intel_sof_maxim_common
-> snd_sof_probes snd_soc_rt715 snd_soc_rt711 snd_soc_rt1308_sdw
-> regmap_sdw snd_soc_dmic snd_sof_pci_intel_cnl snd_sof_intel_hda_common
-> snd_sof_pci soundwire_intel soundwire_generic_allocation
-> soundwire_cadence snd_sof_intel_hda snd_sof snd_sof_utils
-> snd_sof_xtensa_dsp snd_soc_acpi_intel_match snd_soc_acpi
-> snd_soc_hdac_hda soundwire_bus snd_hda_ext_core snd_hda_codec_hdmi
-> snd_soc_core coretemp snd_compress ac97_bus nouveau intel_tcc_cooling
-> snd_hda_intel x86_pkg_temp_thermal dell_smm_hwmon hid_multitouch
-> iwlmvm hwmon intel_powerclamp snd_intel_dspcfg mxm_wmi i915
-> i2c_designware_platform snd_intel_sdw_acpi rtsx_pci_sdmmc
-> drm_ttm_helper i2c_designware_core mac80211 drm_buddy i2c_algo_bit
-> dell_laptop snd_hda_codec
-> May 27 13:55:39 devel kernel:  ucsi_ccg dell_wmi mmc_core hid_generic
-> drm_display_helper ledtrig_audio sparse_keymap libarc4 snd_hwdep
-> intel_rapl_msr dell_smbios uvcvideo ttm snd_hda_core dell_wmi_sysman
-> kvm_intel videobuf2_vmalloc firmware_attributes_class
-> dell_wmi_descriptor wmi_bmof intel_wmi_thunderbolt dcdbas
-> processor_thermal_device_pci_legacy drm_kms_helper videobuf2_memops
-> iwlwifi intel_soc_dts_iosf kvm btusb r8153_ecm btrtl videobuf2_v4l2
-> snd_pcm syscopyarea processor_thermal_device irqbypass cdc_ether btbcm
-> evdev usbnet psmouse intel_lpss_pci btintel processor_thermal_rfim
-> snd_timer videobuf2_common crc32c_intel ucsi_acpi sysfillrect
-> ghash_clmulni_intel serio_raw cfg80211 efi_pstore r8152 typec_ucsi
-> bluetooth sysimgblt videodev processor_thermal_mbox intel_gtt
-> intel_lpss fb_sys_fops processor_thermal_rapl i2c_i801 roles snd
-> i2c_nvidia_gpu drm i2c_smbus ecdh_generic idma64 i2c_hid_acpi mii
-> usbhid thunderbolt mc soundcore rtsx_pci ecc agpgart i2c_ccgx_ucsi
-> rfkill intel_rapl_common mfd_core
-> May 27 13:55:39 devel kernel:  intel_pch_thermal i2c_hid typec video
-> button battery hid int3403_thermal int340x_thermal_zone
-> pinctrl_cannonlake pinctrl_intel wmi int3400_thermal intel_pmc_core
-> acpi_pad acpi_thermal_rel acpi_tad ac usb_storage
-> May 27 13:55:39 devel kernel: CPU: 15 PID: 21394 Comm: kworker/u32:15
-> Tainted: G        W          6.1.30-dell-2 #1
-> May 27 13:55:39 devel kernel: Hardware name: Dell Inc. XPS 17
-> 9700/0P1CHN, BIOS 1.11.1 11/18/2021
-> May 27 13:55:39 devel kernel: Workqueue: events_unbound async_run_entry_fn
-> May 27 13:55:39 devel kernel: RIP:
-> 0010:ring_interrupt_active+0x1ff/0x250 [thunderbolt]
-> May 27 13:55:39 devel kernel: Code: 24 04 e8 24 2b 3c e1 4c 8b 4c 24
-> 08 44 8b 44 24 04 48 c7 c7 50 c7 29 a0 48 8b 4c 24 10 48 8b 54 24 18
-> 48 89 c6 e8 71 34 e4 e0 <0f> 0b 45 84 ed 0f 85 09 ff ff ff 48 8b 43 08
-> f6 40 70 01 0f 85 38
-> May 27 13:55:39 devel kernel: RSP: 0018:ffffc90000517c48 EFLAGS: 00010082
-> May 27 13:55:39 devel kernel: RAX: 0000000000000000 RBX:
-> ffff888101dab800 RCX: 0000000000000000
-> May 27 13:55:39 devel kernel: RDX: 0000000000000004 RSI:
-> 0000000000000086 RDI: 00000000ffffffff
-> May 27 13:55:39 devel kernel: RBP: 0000000000000000 R08:
-> 80000000ffffe7b4 R09: 0000000082999bac
-> May 27 13:55:39 devel kernel: R10: ffffffffffffffff R11:
-> ffffffff82999ba1 R12: 0000000000001001
-> May 27 13:55:39 devel kernel: R13: 0000000000000001 R14:
-> 0000000000038200 R15: 0000000000000001
-> May 27 13:55:39 devel kernel: FS:  0000000000000000(0000)
-> GS:ffff88887d7c0000(0000) knlGS:0000000000000000
-> May 27 13:55:39 devel kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080=
-050033
-> May 27 13:55:39 devel kernel: CR2: 00007f745c010b00 CR3:
-> 000000000220a005 CR4: 00000000007706e0
-> May 27 13:55:39 devel kernel: PKRU: 55555554
-> May 27 13:55:39 devel kernel: Call Trace:
-> May 27 13:55:39 devel kernel:  <TASK>
-> May 27 13:55:39 devel kernel:  tb_ring_start+0x141/0x230 [thunderbolt]
-> May 27 13:55:39 devel kernel:  tb_ctl_start+0x1f/0x70 [thunderbolt]
-> May 27 13:55:39 devel kernel:  ? pci_pm_restore_noirq+0xc0/0xc0
-> May 27 13:55:39 devel kernel:  tb_domain_runtime_resume+0x15/0x30 [thunde=
-rbolt]
-> May 27 13:55:39 devel kernel:  __rpm_callback+0x41/0x110
-> May 27 13:55:39 devel kernel:  ? pci_pm_restore_noirq+0xc0/0xc0
-> May 27 13:55:39 devel kernel:  rpm_callback+0x59/0x70
-> May 27 13:55:39 devel kernel:  rpm_resume+0x4b3/0x7f0
-> May 27 13:55:39 devel kernel:  ? _raw_spin_unlock_irq+0x13/0x30
-> May 27 13:55:39 devel kernel:  ? __wait_for_common+0x171/0x1a0
-> May 27 13:55:39 devel kernel:  ? usleep_range_state+0x90/0x90
-> May 27 13:55:39 devel kernel:  ? preempt_count_add+0x68/0xa0
-> May 27 13:55:39 devel kernel:  __pm_runtime_resume+0x4a/0x80
-> May 27 13:55:39 devel kernel:  pci_pm_suspend+0x60/0x170
-> May 27 13:55:39 devel kernel:  ? pci_pm_freeze+0xb0/0xb0
-> May 27 13:55:39 devel kernel:  dpm_run_callback+0x3f/0x150
-> May 27 13:55:39 devel kernel:  ? _raw_spin_lock_irqsave+0x19/0x40
-> May 27 13:55:39 devel kernel:  __device_suspend+0x130/0x4d0
-> May 27 13:55:39 devel kernel:  async_suspend+0x1b/0x90
-> May 27 13:55:39 devel kernel:  async_run_entry_fn+0x1a/0xa0
-> May 27 13:55:39 devel kernel:  process_one_work+0x1bd/0x3c0
-> May 27 13:55:39 devel kernel:  worker_thread+0x4d/0x3c0
-> May 27 13:55:39 devel kernel:  ? process_one_work+0x3c0/0x3c0
-> May 27 13:55:39 devel kernel:  kthread+0xe5/0x110
-> May 27 13:55:39 devel kernel:  ? kthread_complete_and_exit+0x20/0x20
-> May 27 13:55:39 devel kernel:  ret_from_fork+0x1f/0x30
-> May 27 13:55:39 devel kernel:  </TASK>
-> May 27 13:55:39 devel kernel: ---[ end trace 0000000000000000 ]---
+Looks like Apple's vmlinuz loader only requires
+LINUX_EFISTUB_MINOR_VERSION to be 0x0
+and does not care about LINUX_EFISTUB_MAJOR_VERSION.
 
-Anyway, I'm adding it to regzbot (as stable-specific regression for now):
-
-#regzbot ^introduced: e16629c639d429
-#regzbot title: Properly clearing Thunderbolt registers when not autocleari=
-ng triggers ring_interrupt_active crash on resume
-
-Thanks.
-
---=20
-An old man doll... just what I always wanted! - Clara
-
---yZlxuf7mDuFb9O/k
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZHKW3gAKCRD2uYlJVVFO
-oxDwAQDQkyT+xtG9aUf8afzUgGTBm1z5UwdfsQyqWGaHJcRBSgEAyKreP2Z5SsOE
-2r7eroagLyoRxdm0reLA9MeBPKKPOQ8=
-=0zXc
------END PGP SIGNATURE-----
-
---yZlxuf7mDuFb9O/k--
+2023=E5=B9=B45=E6=9C=8828=E6=97=A5(=E6=97=A5) 6:48 Ard Biesheuvel <ardb@ker=
+nel.org>:
+>
+> On Sat, 27 May 2023 at 21:40, Linus Torvalds
+> <torvalds@linux-foundation.org> wrote:
+> >
+> > On Sat, May 27, 2023 at 11:42=E2=80=AFAM Ard Biesheuvel <ardb@kernel.or=
+g> wrote:
+> > >
+> > > Yes, that makes the most sense. If the existing virtual machine BIOS
+> > > has a hardcoded check that the EFI stub version is 1.0 even if it doe=
+s
+> > > not boot via EFI to begin with, I don't see how we can reasonably
+> > > treat this as a regression that needs fixing on the Linux side.
+> >
+> > Well, we consider firmware issues to be the same as any hardware
+> > issue. If firmware has a bug that requires us to do things certain
+> > ways, that's really no different from hardware that requires some
+> > insane init sequence.
+> >
+> > So why not just say that LINUX_EFISTUB_MINOR_VERSION should be 0, and
+> > just add the comment that versioning doesn't work?
+> >
+>
+> Fair enough. Or we could try bumping it from v1.1 to v2.0 (or v3.0 if
+> we make it a bit mask).
+>
+> Akihiro, would you mind checking if changing the major/minor to any of
+> these values results in the same problem?
+>
+> Unfortunately, the only data point we have is that a non-EFI
+> bootloader (which is unlikely to carry a PE/COFF loader) needs the
+> byte at that specific offset to be 0x0, and we really have no idea
+> why, or whether we could hit this in other ways (i.e., by changing the
+> PE/COFF header to comply with new MS requirements for secure boot,
+> which is another thing that is in progress)
+>
+> > I'm not sure why this was tied into always enabling the initrd command
+> > line loader.
+> >
+>
+> For x86, it doesn't actually make a difference, but on other
+> architectures, the command line initrd=3D loader could be disabled, but
+> that possibility was removed. The idea was that by bumping the version
+> to v1.1 at the same time, generic EFI loaders would be able to
+> identify this capability without arch specific conditionals in the
+> logic.
+>
+> Currently, GRUB and systemd-stub check this version field, but only
+> for v1.0 or higher. Upstream GRUB  switched to this generic version of
+> the EFI loader just this week, but does not actually use initrd=3D at
+> all for EFI boot (on any architecture).
+>
+> > Numbered version checks are a fundamentally broken and stupid concept
+> > anyway. Don't do them. Just leave it at zero, and maybe some day there
+> > is a sane model that actually has a bitfield of capabilities and
+> > requirements.
+> >
+>
+> Yeah, maybe you're right. Currently, only a single feature is tied to
+> LINUX_EFISTUB_MAJOR_VERSION=3D=3D1 (LoadFile2 support for initrd loading)=
+,
+> and this PE/COFF version field has no meaning to UEFI firmware itself,
+> so we could simply treat these fields as bit masks if we wanted to
+> (and setting the initrd command line loader bit for x86 would be
+> redundant anyway)
+>
+> But not being able to freely set such a bit because some rarely used
+> non-EFI BIOS implementation imposes requirements on the contents of
+> the EFI specific image header is rather disappointing.
