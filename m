@@ -1,105 +1,96 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ED2620EA
-	for <regressions@lists.linux.dev>; Mon, 29 May 2023 08:24:39 +0000 (UTC)
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1b039168ba0so9941765ad.3
-        for <regressions@lists.linux.dev>; Mon, 29 May 2023 01:24:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1685348679; x=1687940679;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=nvt0GJ2QNY+rFYHNBGjXKBYm5GhXHIFHMKlgbX9PLZk=;
-        b=R1NVU0pqq0Dlw2lqS4BrSYDie0cRmWwcq722khiiwhlJ1YNKNQ0F6ayuf6Jc25fxEV
-         REWSG+z/8WPD1DjCSlsculfyM8tkigqWD5Xj/GJgTPI/phXg37BIF2Hi+yX75SRZLHfH
-         iwMokATwsMXSgyps3tN4o2dssa+qY6qCZGwo8wmc+XSLWsrGV0IQmlfiDHLOZiP5RZ5v
-         lumbspD7eBzCD6D9G/IHfgfBHPwHtZyw4gl8zf/PJJ+X1RDJd5jkrS6S2s4/C7YW0QX3
-         gfLh/85bQ4+4Mj/MxQyGhAI3ac667ZIJMUpq4XfMCUES7qk5Ra1ZRe3TWU3wGHqBzDik
-         qKZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685348679; x=1687940679;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nvt0GJ2QNY+rFYHNBGjXKBYm5GhXHIFHMKlgbX9PLZk=;
-        b=F/bvV8OxD2tI12iSQ0MkTtrcId9NFOWyCw3X5tIk3vfb+45xRHmSWqZSMmntykYgjt
-         r/pYVQq2G0w1emMjdvkwr8C3RzxIotEsmozyRk8KC7px1rH3KbDZzzGh2LaZVO4WMYM7
-         0WZKp53ZWRO0TaALz06j37G0fS0BQ4p8IJDM9A8IHgyyaI4zMXLShNYcxqJGVOFjXjSl
-         SB2OcSHvOmK46Og0NNIxAcaRt4fovCNGv+FXkZCE3GlmdQpfB+Zftnlz7VAxav0VS6FM
-         MbxvXs7r24WByJ7x8wlOMwpmfjrSzx0ocgHLic6ikRb7vonaFxo/t2RMRwZILGIZcKyh
-         dIgw==
-X-Gm-Message-State: AC+VfDy0Z3RinLdTwvu4mR0TP2BTB3xHpXmEW+I5byqBaGnZt+J6LvAD
-	H9AdUiho9/XF94uQvkiKdBs=
-X-Google-Smtp-Source: ACHHUZ70mYW4u96RSo3Ry/YJBBDWbyHuvhnrjdHhLlQ0uGBtm0rqCM5LLQsGo//UKx+Iq7pYhSiRZg==
-X-Received: by 2002:a17:902:a610:b0:1b0:4b65:79db with SMTP id u16-20020a170902a61000b001b04b6579dbmr475567plq.63.1685348678850;
-        Mon, 29 May 2023 01:24:38 -0700 (PDT)
-Received: from debian.me (subs02-180-214-232-78.three.co.id. [180.214.232.78])
-        by smtp.gmail.com with ESMTPSA id jh19-20020a170903329300b001b012589c49sm5637750plb.78.2023.05.29.01.24.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 May 2023 01:24:38 -0700 (PDT)
-Received: by debian.me (Postfix, from userid 1000)
-	id BD8B6106A11; Mon, 29 May 2023 15:24:35 +0700 (WIB)
-Date: Mon, 29 May 2023 15:24:35 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Doru Iorgulescu <doru.iorgulescu1@gmail.com>,
-	Michael Ellerman <mpe@ellerman.id.au>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux PowerPC <linuxppc-dev@lists.ozlabs.org>,
-	Linux Memory Management List <linux-mm@kvack.org>,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B1956AB0
+	for <regressions@lists.linux.dev>; Mon, 29 May 2023 11:38:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1685360291; x=1716896291;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Xp6DOmsiV051RKXvtEe9tCC5u7UbWlALrAF8xAyV7dI=;
+  b=DjeQsLGiU5DKTwRvVR2EFLM48XUJyTqIpdoHMS8INTorCaJO22cVKd7w
+   HZ6GWQgDZd2uTBBn6jeEHhO1r2qAo5zgbrBfMcevfXv0MXna95+W8JPX2
+   qeZbHyE8yCUEjn1SHNdSUedmRvJOMR4wiTEb4bFsXUIWjBr3K/ca6gdsX
+   zWgNBOhVRVFJccwSrX0iWzy5KgYGdhsvRW73uIIuGgjiE5sPZI9HsJfZD
+   qTqCmHygofrukDO2cnSPlQ5bDvsu94ysrW9Z24I2WSAx/2xm6kE+VnY39
+   V0gTppsMPghUb4Wsz+7dswcXwOeIFN4mHi2xXDLtrhvlLj/YMK7z9+lAU
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10724"; a="354699070"
+X-IronPort-AV: E=Sophos;i="6.00,201,1681196400"; 
+   d="scan'208";a="354699070"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2023 04:38:10 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10724"; a="1036190570"
+X-IronPort-AV: E=Sophos;i="6.00,201,1681196400"; 
+   d="scan'208";a="1036190570"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga005.fm.intel.com with ESMTP; 29 May 2023 04:38:08 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+	id 4A5C3350; Mon, 29 May 2023 14:38:13 +0300 (EEST)
+Date: Mon, 29 May 2023 14:38:13 +0300
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: Mario Limonciello <mario.limonciello@amd.com>
+Cc: Bagas Sanjaya <bagasdotme@gmail.com>, beld zhang <beldzhang@gmail.com>,
+	stable@vger.kernel.org, Linux USB <linux-usb@vger.kernel.org>,
 	Linux Regressions <regressions@lists.linux.dev>,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	Zi Yan <ziy@nvidia.com>, Andrew Morton <akpm@linux-foundation.org>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Fabiano Rosas <farosas@linux.ibm.com>,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-	Disha Goel <disgoel@linux.vnet.ibm.com>
-Subject: Re: Fwd: ./include/linux/mmzone.h:1735:2: error: #error Allocator
- MAX_ORDER exceeds SECTION_SIZE (v6.4-rc3 build regression)
-Message-ID: <ZHRhQ92aXQCQa_yK@debian.me>
-References: <2a1cd5e6-01f7-66f9-1f9d-c655cc3f919b@gmail.com>
- <5d22e1e9-0307-3664-8b4a-99caaaaa4315@gmail.com>
- <87bki9ai11.fsf@mail.lhotse>
- <CA+39qUjP48n=EwqHzwdGkBE8SC-nTNZHZxEfG4r4hWC-5Bg4HA@mail.gmail.com>
+	Takashi Iwai <tiwai@suse.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: 6.1.30: thunderbolt: Clear registers properly when auto clear
+ isn't in use cause call trace after resume
+Message-ID: <20230529113813.GZ45886@black.fi.intel.com>
+References: <CAG7aomXv2KV9es2RiGwguesRnUTda-XzmeE42m0=GdpJ2qMOcg@mail.gmail.com>
+ <ZHKW5NeabmfhgLbY@debian.me>
+ <261a70b7-a425-faed-8cd5-7fbf807bdef7@amd.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="n0n99li26aKBWElc"
-Content-Disposition: inline
-In-Reply-To: <CA+39qUjP48n=EwqHzwdGkBE8SC-nTNZHZxEfG4r4hWC-5Bg4HA@mail.gmail.com>
-
-
---n0n99li26aKBWElc
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <261a70b7-a425-faed-8cd5-7fbf807bdef7@amd.com>
 
-On Wed, May 24, 2023 at 06:13:52PM +0300, Doru Iorgulescu wrote:
-> Awesome, thanks!
+On Sun, May 28, 2023 at 07:55:39AM -0500, Mario Limonciello wrote:
+> On 5/27/23 18:48, Bagas Sanjaya wrote:
+> > On Sat, May 27, 2023 at 04:15:51PM -0400, beld zhang wrote:
+> > > Upgrade to 6.1.30, got crash message after resume, but looks still
+> > > running normally
+> 
+> This is specific resuming from s2idle, doesn't happen at boot?
+> 
+> Does it happen with hot-plugging or hot-unplugging a TBT3 or USB4 dock too?
 
-tl;dr: see [1].
+Happens also when device is connected and do
 
-(Hey, looks like complimenting noise here.)
+  # rmmod thunderbolt
+  # modprobe thunderbolt
 
-[1]: https://lore.kernel.org/regressions/5df92692-296e-3956-24fa-2bd4393379=
-53@gmail.com/
+I think it is because nhi_mask_interrupt() does not mask interrupt on
+Intel now.
 
---=20
-An old man doll... just what I always wanted! - Clara
+Can you try the patch below? I'm unable to try myself because my test
+system has some booting issues at the moment.
 
---n0n99li26aKBWElc
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZHRhQwAKCRD2uYlJVVFO
-o+jyAQDEMW9U8RtyW3eLmz1vfYY5zX7zMISeoeMx9Ep+ODtNAgD/XvY+dmTzM2sW
-OCQZJxqHfzgzTV/+CFXMZ4UMTRIWagI=
-=vA0l
------END PGP SIGNATURE-----
-
---n0n99li26aKBWElc--
+diff --git a/drivers/thunderbolt/nhi.c b/drivers/thunderbolt/nhi.c
+index 4c9f2811d20d..a11650da40f9 100644
+--- a/drivers/thunderbolt/nhi.c
++++ b/drivers/thunderbolt/nhi.c
+@@ -60,9 +60,12 @@ static int ring_interrupt_index(const struct tb_ring *ring)
+ 
+ static void nhi_mask_interrupt(struct tb_nhi *nhi, int mask, int ring)
+ {
+-	if (nhi->quirks & QUIRK_AUTO_CLEAR_INT)
+-		return;
+-	iowrite32(mask, nhi->iobase + REG_RING_INTERRUPT_MASK_CLEAR_BASE + ring);
++	if (nhi->quirks & QUIRK_AUTO_CLEAR_INT) {
++		u32 val = ioread32(nhi->iobase + REG_RING_INTERRUPT_BASE + ring);
++		iowrite32(val & ~mask, nhi->iobase + REG_RING_INTERRUPT_BASE + ring);
++	} else {
++		iowrite32(mask, nhi->iobase + REG_RING_INTERRUPT_MASK_CLEAR_BASE + ring);
++	}
+ }
+ 
+ static void nhi_clear_interrupt(struct tb_nhi *nhi, int ring)
