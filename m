@@ -1,148 +1,133 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [202.36.163.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D2187C
-	for <regressions@lists.linux.dev>; Mon, 29 May 2023 02:21:17 +0000 (UTC)
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-64d3fdcadb8so2028727b3a.3
-        for <regressions@lists.linux.dev>; Sun, 28 May 2023 19:21:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1685326877; x=1687918877;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=TOEnxgrrxri26dldYxLmWoJUt5x//Zlg4TwdS9dGdoI=;
-        b=pOEp+2VwI45RYl7vSq4IkS5MFOcNXxZeWxAaVhZbey4KR7ZAazv/A91gDA/1FkaYr1
-         ImqWliZTLkHDRC1E8EB2pPccr5XOGP3E1ivfdUcz+NGrYjh6P39WVFrrbJpP/jkw7NMI
-         Rqr8SWp27qYp72gtOcAFMT+97oWHcpzHEn3TY6Xp7dQNa7dFK7NqzbIAC10x8Z2HPCSI
-         mo1abbWQwAoc1UQtfFNUPPn9a//wEKNUrLYqKJGBmoIiF5FnYf5q1JzTRgfxOUO7xn2D
-         feNRkqVFGyyeYhwepy+QwDqatCY3j8/V1fRpqi5dLMdMphHZiFilQP/SGqOivOCjoo6M
-         mZ4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685326877; x=1687918877;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TOEnxgrrxri26dldYxLmWoJUt5x//Zlg4TwdS9dGdoI=;
-        b=UBHfWAx+948CgTAcrnNsUBulMC501S1FhCOwa3GD3pMhnydEl8k9y23o1jCDAO863K
-         BW34oJ+2IvYVDJj+RGQmOhEftBi7Yfe8DsXjB4GmhN5EBzC5sEZfsl82ssuVYL4UeLh0
-         pDKAMXyUKvBqfLi4YECA2gPkqyIuQU7rq4B0eGGWBvKG1xcWncF7Kl4ePl913/etcNhh
-         Vq1pCgLtJZEHnf7rfspo76fifKyVCUBY6RdanAKJp7Ya8n0XqwodUILe1nvSHywnWwYN
-         WuL/rv9qY82KymY+OV9dIZ3tGGMKfQ+FcZqw7J/Ma+WWYoh93BSzcEMhu9pam9fkYKeq
-         m9Tw==
-X-Gm-Message-State: AC+VfDyKIHU9gCVSOVbnrjDS++boypXHvh0OgbmuP42Fj8C/qf7cy0a9
-	l02A1jlOcmjjAlcmsGFG0Eo=
-X-Google-Smtp-Source: ACHHUZ5Z0y7zoB17YloXZJuJ1Mepg6iFTuaulcJSfMLeMxnNe7a6TFBiFQ5W7hu7sHXCYbcYV6BEwA==
-X-Received: by 2002:a05:6a20:8e05:b0:10b:f63f:27f with SMTP id y5-20020a056a208e0500b0010bf63f027fmr8213369pzj.60.1685326876732;
-        Sun, 28 May 2023 19:21:16 -0700 (PDT)
-Received: from debian.me (subs28-116-206-12-34.three.co.id. [116.206.12.34])
-        by smtp.gmail.com with ESMTPSA id f12-20020aa78b0c000000b0063afb08afeesm3113669pfd.67.2023.05.28.19.21.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 28 May 2023 19:21:16 -0700 (PDT)
-Received: by debian.me (Postfix, from userid 1000)
-	id 48B7A106A0B; Mon, 29 May 2023 09:21:12 +0700 (WIB)
-Date: Mon, 29 May 2023 09:21:12 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: beld zhang <beldzhang@gmail.com>, stable@vger.kernel.org
-Cc: Linux Regressions <regressions@lists.linux.dev>,
-	Linux USB <linux-usb@vger.kernel.org>,
-	Linux Input Devices <linux-input@vger.kernel.org>
-Subject: Re: Fwd: 6.1.30: thunderbolt: Clear registers properly when auto
- clear isn't in use cause call trace after resume
-Message-ID: <ZHQMGN-LAJk6vHjH@debian.me>
-References: <CAG7aomXv2KV9es2RiGwguesRnUTda-XzmeE42m0=GdpJ2qMOcg@mail.gmail.com>
- <ZHKW5NeabmfhgLbY@debian.me>
- <261a70b7-a425-faed-8cd5-7fbf807bdef7@amd.com>
- <CAG7aomVVJyDpKjpZ=k=+9qKY5+13eFjcGPEWZ0T0+NTNfZWDfA@mail.gmail.com>
- <CAG7aomXP0JHmHytsv5cMsyHzee61BQnG3fc-Y+NLzum7H3DyHA@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C2E562D
+	for <regressions@lists.linux.dev>; Mon, 29 May 2023 02:44:25 +0000 (UTC)
+Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 626F02C0547;
+	Mon, 29 May 2023 14:37:57 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+	s=mail181024; t=1685327877;
+	bh=CvoTk+Xu1b14AHNypYvOaXT+5OcQdBAujFjRkMNhZ0M=;
+	h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+	b=D4H+AEl/X7ZSx3/xYxeHH3LU8Wm5bzEihGjKqWxBlgFLCAVqy64LYL0/bzPGlVwHP
+	 g2Abxirojcr2maFv4PJdgOaCaoiCyhGEuS936CyIdurOJ3v+L5OttL45fBChz3+v1H
+	 07v5vwEzp0Rf5Li/moe5Cym5oUzx0hEnbc4qbAURRBRNUkcSkTswRpLhJeMc1eEuBV
+	 ep5kyk8Pxirtz41/jPNi6ygfkZkTwITAP0z54oROjmsb7EsoimuZTo/fU/UCKZIj8w
+	 HKMHBmJ/HQuGsHrfBqWTzn4laNQB2CgoG8nSBvAwoZHlM+KeAKo7JOsuPf48eFrciD
+	 OSiHo2GTh8FMQ==
+Received: from svr-chch-ex2.atlnz.lc (Not Verified[2001:df5:b000:bc8::76]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
+	id <B647410050000>; Mon, 29 May 2023 14:37:57 +1200
+Received: from svr-chch-ex2.atlnz.lc (2001:df5:b000:bc8:f753:6de:11c0:a008) by
+ svr-chch-ex2.atlnz.lc (2001:df5:b000:bc8:f753:6de:11c0:a008) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.26; Mon, 29 May 2023 14:37:57 +1200
+Received: from svr-chch-ex2.atlnz.lc ([fe80::a9eb:c9b7:8b52:9567]) by
+ svr-chch-ex2.atlnz.lc ([fe80::a9eb:c9b7:8b52:9567%15]) with mapi id
+ 15.02.1118.026; Mon, 29 May 2023 14:37:57 +1200
+From: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+To: Bagas Sanjaya <bagasdotme@gmail.com>, Lino Sanfilippo
+	<l.sanfilippo@kunbus.com>, Jarkko Sakkinen <jarkko@kernel.org>, Sasha Levin
+	<sashal@kernel.org>, Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe
+	<jgg@ziepe.ca>
+CC: Linux Kernel Integrity <linux-integrity@vger.kernel.org>, "Linux Kernel
+ Mailing List" <linux-kernel@vger.kernel.org>, Linux Regressions
+	<regressions@lists.linux.dev>
+Subject: Re: New kernel warning after updating from LTS 5.15.110 to 5.15.112
+ (and 5.15.113)
+Thread-Topic: New kernel warning after updating from LTS 5.15.110 to 5.15.112
+ (and 5.15.113)
+Thread-Index: AQHZkb4dgnEVWoKsX0S/ux9OJoU4IK9vtwkAgAAJdgA=
+Date: Mon, 29 May 2023 02:37:56 +0000
+Message-ID: <6e470461-1a9b-ec51-bac5-f2beb1dc11c9@alliedtelesis.co.nz>
+References: <fe6f7aa0-56c2-3729-ce8c-0f2d943b33f4@alliedtelesis.co.nz>
+ <ZHQIFLWvrWUNMVxb@debian.me>
+In-Reply-To: <ZHQIFLWvrWUNMVxb@debian.me>
+Accept-Language: en-NZ, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-originating-ip: [10.33.22.30]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <A0F65EDD43D12A449AF8828D55AAEF22@atlnz.lc>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ifHpYZTFasUnVXV+"
-Content-Disposition: inline
-In-Reply-To: <CAG7aomXP0JHmHytsv5cMsyHzee61BQnG3fc-Y+NLzum7H3DyHA@mail.gmail.com>
+X-SEG-SpamProfiler-Analysis: v=2.3 cv=cLieTWWN c=1 sm=1 tr=0 a=Xf/6aR1Nyvzi7BryhOrcLQ==:117 a=xqWC_Br6kY4A:10 a=75chYTbOgJ0A:10 a=IkcTkHD0fZMA:10 a=P0xRbXHiH_UA:10 a=CSfSghpekuitt3WpJpAA:9 a=QEXdDO2ut3YA:10
+X-SEG-SpamProfiler-Score: 0
 
-
---ifHpYZTFasUnVXV+
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Sun, May 28, 2023 at 02:35:18PM -0400, beld zhang wrote:
-> ---------- Forwarded message ---------
-> From: beld zhang
-> Date: Sun, May 28, 2023 at 2:07=E2=80=AFPM
-> Subject: Re: 6.1.30: thunderbolt: Clear registers properly when auto
-> clear isn't in use cause call trace after resume
-> To: Mario Limonciello
->=20
-> On Sun, May 28, 2023 at 8:55=E2=80=AFAM Mario Limonciello
-> <mario.limonciello@amd.com> wrote:
-> >
-> > This is specific resuming from s2idle, doesn't happen at boot?
-> >
-> > Does it happen with hot-plugging or hot-unplugging a TBT3 or USB4 dock =
-too?
-> >
-> > In addition to checking mainline, can you please attach a full dmesg to
-> > somewhere ephemeral like a kernel bugzilla with thunderbolt.dyndbg=3D'+=
-p'
-> > on the kernel command line set?
-> >
->=20
-> 6.4-rc4:
->     *) test 1~4 was done with usb hub with ethernet plugged-in
->         model: UE330, usb 3.0 3-port hub & GIgabit Ether adapter
->         a rapoo wireless mouse in one of the ports
->     1) no crash at boot
->         until [169.099024]
->     2) no crash after plug an extra usb dock
->         from [297.004691]
->     3) no crash after remove it
->         from [373.273511]
->     4) crash after suspend/resume: 2 call-stacks
->         from [438.356253]
->     5) removed that hub(only ac-power left): NO crash after resume
->         from [551.820333]
->     6) plug in the hub(no mouse): NO crash after resume
->         from [1250.256607]
->     7) put on mouse: CRASH after resume
->         from [1311.400963]
->         mouse model: Rapoo Wireless Optical Mouse 1620
-
-Before suspend, is attaching your mouse not crashing your system?
-
->=20
-> sorry I have no idea how to fill a proper bug report at kernel
-> bugzilla, hope these shared links work.
-> btw I have no TB devices to test.
->=20
-> dmesg:
-> https://drive.google.com/file/d/1bUWnV7q2ziM4tdTzmuGiVuvEzaLcdfKm/view?us=
-p=3Dsharing
->=20
-> config:
-> https://drive.google.com/file/d/1It75_AV5tOzfkXXBAX5zAiZMoeJAe0Au/view?us=
-p=3Dsharing
-
-There is a functionality on Bugzilla to attach above files. Use it.
-
-Thanks.
-
---=20
-An old man doll... just what I always wanted! - Clara
-
---ifHpYZTFasUnVXV+
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZHQMFwAKCRD2uYlJVVFO
-o2oZAQD4WEj7xFwvWRg8a+js048BS/G5uxkfbUwn1PtqjsOoyQD/aVX6452ePcjQ
-9lz0zEcPxwgK7BmaRxhkbe7dSmzxAw0=
-=DphI
------END PGP SIGNATURE-----
-
---ifHpYZTFasUnVXV+--
+DQpPbiAyOS8wNS8yMyAxNDowNCwgQmFnYXMgU2FuamF5YSB3cm90ZToNCj4gT24gU3VuLCBNYXkg
+MjgsIDIwMjMgYXQgMTE6NDI6NTBQTSArMDAwMCwgQ2hyaXMgUGFja2hhbSB3cm90ZToNCj4+IEhp
+LA0KPj4NCj4+IFdlIGhhdmUgYW4gZW1iZWRkZWQgcHJvZHVjdCB3aXRoIGFuIEluZmluZW9uIFNM
+TTk2NzAgVFBNLiBBZnRlciB1cGRhdGluZw0KPj4gdG8gYSBuZXdlciBMVFMga2VybmVsIHZlcnNp
+b24gd2Ugc3RhcnRlZCBzZWVpbmcgdGhlIGZvbGxvd2luZyB3YXJuaW5nIGF0DQo+PiBib290Lg0K
+Pj4NCj4+IFvCoMKgwqAgNC43NDEwMjVdIC0tLS0tLS0tLS0tLVsgY3V0IGhlcmUgXS0tLS0tLS0t
+LS0tLQ0KPj4gW8KgwqDCoCA0Ljc0OTg5NF0gaXJxIDM4IGhhbmRsZXIgdGlzX2ludF9oYW5kbGVy
+KzB4MC8weDE1NCBlbmFibGVkIGludGVycnVwdHMNCj4+IFvCoMKgwqAgNC43NTY1NTVdIFdBUk5J
+Tkc6IENQVTogMCBQSUQ6IDAgYXQga2VybmVsL2lycS9oYW5kbGUuYzoxNTkNCj4+IF9faGFuZGxl
+X2lycV9ldmVudF9wZXJjcHUrMHhmNC8weDE4MA0KPj4gW8KgwqDCoCA0Ljc2NTU1N10gTW9kdWxl
+cyBsaW5rZWQgaW46DQo+PiBbwqDCoMKgIDQuNzY4NjI2XSBDUFU6IDAgUElEOiAwIENvbW06IHN3
+YXBwZXIvMCBOb3QgdGFpbnRlZCA1LjE1LjExMyAjMQ0KPj4gW8KgwqDCoCA0Ljc3NDc0N10gSGFy
+ZHdhcmUgbmFtZTogQWxsaWVkIFRlbGVzaXMgeDI1MC0xOFhTIChEVCkNCj4+IFvCoMKgwqAgNC43
+ODAwODBdIHBzdGF0ZTogNjAwMDAwMDUgKG5aQ3YgZGFpZiAtUEFOIC1VQU8gLVRDTyAtRElUIC1T
+U0JTDQo+PiBCVFlQRT0tLSkNCj4+IFvCoMKgwqAgNC43ODcwNzJdIHBjIDogX19oYW5kbGVfaXJx
+X2V2ZW50X3BlcmNwdSsweGY0LzB4MTgwDQo+PiBbwqDCoMKgIDQuNzkyMTQ2XSBsciA6IF9faGFu
+ZGxlX2lycV9ldmVudF9wZXJjcHUrMHhmNC8weDE4MA0KPj4gW8KgwqDCoCA0Ljc5NzIyMF0gc3Ag
+OiBmZmZmODAwMDA4MDAzZTQwDQo+PiBbwqDCoMKgIDQuODAwNTQ3XSB4Mjk6IGZmZmY4MDAwMDgw
+MDNlNDAgeDI4OiBmZmZmODAwMDA5Mzk1MWMwIHgyNzoNCj4+IGZmZmY4MDAwMDkwMmE5YjgNCj4+
+IFvCoMKgwqAgNC44MDc3MTZdIHgyNjogZmZmZjgwMDAwOGZlOGQyOCB4MjU6IGZmZmY4MDAwMDk0
+YTYyYmQgeDI0Og0KPj4gZmZmZjAwMDAwMWI5MjQwMA0KPj4gW8KgwqDCoCA0LjgxNDg4NV0geDIz
+OiAwMDAwMDAwMDAwMDAwMDI2IHgyMjogZmZmZjgwMDAwODAwM2VjNCB4MjE6DQo+PiAwMDAwMDAw
+MDAwMDAwMDAwDQo+PiBbwqDCoMKgIDQuODIyMDUzXSB4MjA6IDAwMDAwMDAwMDAwMDAwMDEgeDE5
+OiBmZmZmMDAwMDAyMzgxMjAwIHgxODoNCj4+IGZmZmZmZmZmZmZmZmZmZmYNCj4+IFvCoMKgwqAg
+NC44MjkyMjJdIHgxNzogZmZmZjgwMDA3Njk2MjAwMCB4MTY6IGZmZmY4MDAwMDgwMDAwMDAgeDE1
+Og0KPj4gZmZmZjgwMDA4ODAwM2I1Nw0KPj4gW8KgwqDCoCA0LjgzNjM5MF0geDE0OiAwMDAwMDAw
+MDAwMDAwMDAwIHgxMzogZmZmZjgwMDAwOTNhNTA3OCB4MTI6DQo+PiAwMDAwMDAwMDAwMDAwMzVk
+DQo+PiBbwqDCoMKgIDQuODQzNTU4XSB4MTE6IDAwMDAwMDAwMDAwMDAxMWYgeDEwOiBmZmZmODAw
+MDA5M2E1MDc4IHg5IDoNCj4+IGZmZmY4MDAwMDkzYTUwNzgNCj4+IFvCoMKgwqAgNC44NTA3Mjdd
+IHg4IDogMDAwMDAwMDBmZmZmZWZmZiB4NyA6IGZmZmY4MDAwMDkzZmQwNzggeDYgOg0KPj4gZmZm
+ZjgwMDAwOTNmZDA3OA0KPj4gW8KgwqDCoCA0Ljg1Nzg5NV0geDUgOiAwMDAwMDAwMDAwMDBiZmY0
+IHg0IDogMDAwMDAwMDAwMDAwMDAwMCB4MyA6DQo+PiAwMDAwMDAwMDAwMDAwMDAwDQo+PiBbwqDC
+oMKgIDQuODY1MDYyXSB4MiA6IDAwMDAwMDAwMDAwMDAwMDAgeDEgOiAwMDAwMDAwMDAwMDAwMDAw
+IHgwIDoNCj4+IGZmZmY4MDAwMDkzOTUxYzANCj4+IFvCoMKgwqAgNC44NzIyMzBdIENhbGwgdHJh
+Y2U6DQo+PiBbwqDCoMKgIDQuODc0Njg2XcKgIF9faGFuZGxlX2lycV9ldmVudF9wZXJjcHUrMHhm
+NC8weDE4MA0KPj4gW8KgwqDCoCA0Ljg3OTQxMV3CoCBoYW5kbGVfaXJxX2V2ZW50KzB4NjQvMHhl
+Yw0KPj4gW8KgwqDCoCA0Ljg4MzI2NF3CoCBoYW5kbGVfbGV2ZWxfaXJxKzB4YzAvMHgxYjANCj4+
+IFvCoMKgwqAgNC44ODcyMDJdwqAgZ2VuZXJpY19oYW5kbGVfaXJxKzB4MzAvMHg1MA0KPj4gW8Kg
+wqDCoCA0Ljg5MTIyOV3CoCBtdmVidV9ncGlvX2lycV9oYW5kbGVyKzB4MTFjLzB4MmEwDQo+PiBb
+wqDCoMKgIDQuODk1NzgwXcKgIGhhbmRsZV9kb21haW5faXJxKzB4NjAvMHg5MA0KPj4gW8KgwqDC
+oCA0Ljg5OTcyMF3CoCBnaWNfaGFuZGxlX2lycSsweDRjLzB4ZDANCj4+IFvCoMKgwqAgNC45MDMz
+OThdwqAgY2FsbF9vbl9pcnFfc3RhY2srMHgyMC8weDRjDQo+PiBbwqDCoMKgIDQuOTA3MzM4XcKg
+IGRvX2ludGVycnVwdF9oYW5kbGVyKzB4NTQvMHg2MA0KPj4gW8KgwqDCoCA0LjkxMTUzOF3CoCBl
+bDFfaW50ZXJydXB0KzB4MzAvMHg4MA0KPj4gW8KgwqDCoCA0LjkxNTEzMF3CoCBlbDFoXzY0X2ly
+cV9oYW5kbGVyKzB4MTgvMHgyNA0KPj4gW8KgwqDCoCA0LjkxOTI0NF3CoCBlbDFoXzY0X2lycSsw
+eDc4LzB4N2MNCj4+IFvCoMKgwqAgNC45MjI2NTldwqAgYXJjaF9jcHVfaWRsZSsweDE4LzB4MmMN
+Cj4+IFvCoMKgwqAgNC45MjYyNDldwqAgZG9faWRsZSsweGM0LzB4MTUwDQo+PiBbwqDCoMKgIDQu
+OTI5NDA0XcKgIGNwdV9zdGFydHVwX2VudHJ5KzB4MjgvMHg2MA0KPj4gW8KgwqDCoCA0LjkzMzM0
+M13CoCByZXN0X2luaXQrMHhlNC8weGY0DQo+PiBbwqDCoMKgIDQuOTM2NTg0XcKgIGFyY2hfY2Fs
+bF9yZXN0X2luaXQrMHgxMC8weDFjDQo+PiBbwqDCoMKgIDQuOTQwNjk5XcKgIHN0YXJ0X2tlcm5l
+bCsweDYwMC8weDY0MA0KPj4gW8KgwqDCoCA0Ljk0NDM3NV3CoCBfX3ByaW1hcnlfc3dpdGNoZWQr
+MHhiYy8weGM0DQo+PiBbwqDCoMKgIDQuOTQ4NDAyXSAtLS1bIGVuZCB0cmFjZSA5NDAxOTMwNDdi
+MzViMzExIF0tLS0NCj4+DQo+PiBJbml0aWFsbHkgSSBkaXNtaXNzZWQgdGhpcyBhcyBhIHdhcm5p
+bmcgdGhhdCB3b3VsZCBwcm9iYWJseSBiZSBjbGVhbmVkDQo+PiB1cCB3aGVuIHdlIGRpZCBtb3Jl
+IHdvcmsgb24gdGhlIFRQTSBzdXBwb3J0IGZvciBvdXIgcHJvZHVjdCBidXQgd2UgYWxzbw0KPj4g
+c2VlbSB0byBiZSBnZXR0aW5nIHNvbWUgbmV3IGkyYyBpc3N1ZXMgYW5kIHBvc3NpYmx5IGEga2Vy
+bmVsIHN0YWNrDQo+PiBjb3JydXB0aW9uIHRoYXQgd2UndmUgY29uZmxhdGVkIHdpdGggdGhpcyBU
+UE0gd2FybmluZy4NCj4gQ2FuIHlvdSByZXByb2R1Y2UgdGhpcyBpc3N1ZSBvbiBtYWlubGluZT8g
+Q2FuIHlvdSBhbHNvIGJpc2VjdCB0byBmaW5kDQo+IHRoZSBjdWxwcml0Pw0KDQpObyB0aGUgZXJy
+b3IgZG9lc24ndCBhcHBlYXIgb24gYSByZWNlbnQgbWFpbmxpbmUga2VybmVsLiBJIGRvIHN0aWxs
+IGdldA0KDQp0cG1fdGlzX3NwaSBzcGkxLjE6IDIuMCBUUE0gKGRldmljZS1pZCAweDFCLCByZXYt
+aWQgMjIpDQp0cG0gdHBtMDogW0Zpcm13YXJlIEJ1Z106IFRQTSBpbnRlcnJ1cHQgbm90IHdvcmtp
+bmcsIHBvbGxpbmcgaW5zdGVhZA0KdHBtIHRwbTA6IEEgVFBNIGVycm9yICgyNTYpIG9jY3VycmVk
+IGF0dGVtcHRpbmcgdGhlIHNlbGYgdGVzdA0KDQpidXQgSSB0aGluayBJIHdhcyBnZXR0aW5nIHRo
+YXQgb24gdjUuMTUuMTEwDQoNCj4NCj4gQW55d2F5LCBJJ20gYWRkaW5nIGl0IHRvIHJlZ3pib3Q6
+DQo+DQo+ICNyZWd6Ym90IF5pbnRyb2R1Y2VkOiB2NS4xNS4xMTAuLnY1LjE1LjExMg0KPiAjcmVn
+emJvdCB0aXRsZTogUG9zc2libGUgc3RhY2sgY29ycnVwdGlvbiBhbmQgaTJjIGlzc3VlcyBkdWUg
+dG8gaXJxIHdhcm5pbmcgb24gSW5pZmluZW9uIFNMTTk2NzAgVFBNDQo+DQo+IFRoYW5rcy4NCj4=
