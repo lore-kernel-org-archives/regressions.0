@@ -1,182 +1,105 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E341562D
-	for <regressions@lists.linux.dev>; Mon, 29 May 2023 03:51:28 +0000 (UTC)
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-64d577071a6so3412685b3a.1
-        for <regressions@lists.linux.dev>; Sun, 28 May 2023 20:51:28 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ED2620EA
+	for <regressions@lists.linux.dev>; Mon, 29 May 2023 08:24:39 +0000 (UTC)
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1b039168ba0so9941765ad.3
+        for <regressions@lists.linux.dev>; Mon, 29 May 2023 01:24:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1685332288; x=1687924288;
+        d=gmail.com; s=20221208; t=1685348679; x=1687940679;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=SWkO1L+ouf2ah8LI6jKTrWLnhiGc82nUY4Gt/CvuXVY=;
-        b=HSD1FX44jrvtXqFvvXC6dUBttrRYsdgQkKbG8SUDF6oF9DdTJKY4M5M8yAOqFCeti2
-         xnHYtz/5W3qForvRN+4Dk4V37+CiHhB6lrhyRW9dtAp2uKi5lLmLhHIOq/Tm2bEQDxCa
-         oLgqkwj5a+opXAjjGfy0UwYPcAT3Pwj5bc6BZKFnEp9Q31azjHX5qijKpF+g1L/KRquu
-         TBO+Wf7eYaZTyX7fzkHbfJZtj2i9UK7AiSZvN+dQ2kpDU5ecky3M/Wxhj1oloELfp6FW
-         2tWG8FoGsKeH7cJ8rrmId+UpwDf1k9hb3x2qb7yRhxhOjSDsB1Jc5PDyJwV5hjKifHkl
-         ezjA==
+        bh=nvt0GJ2QNY+rFYHNBGjXKBYm5GhXHIFHMKlgbX9PLZk=;
+        b=R1NVU0pqq0Dlw2lqS4BrSYDie0cRmWwcq722khiiwhlJ1YNKNQ0F6ayuf6Jc25fxEV
+         REWSG+z/8WPD1DjCSlsculfyM8tkigqWD5Xj/GJgTPI/phXg37BIF2Hi+yX75SRZLHfH
+         iwMokATwsMXSgyps3tN4o2dssa+qY6qCZGwo8wmc+XSLWsrGV0IQmlfiDHLOZiP5RZ5v
+         lumbspD7eBzCD6D9G/IHfgfBHPwHtZyw4gl8zf/PJJ+X1RDJd5jkrS6S2s4/C7YW0QX3
+         gfLh/85bQ4+4Mj/MxQyGhAI3ac667ZIJMUpq4XfMCUES7qk5Ra1ZRe3TWU3wGHqBzDik
+         qKZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685332288; x=1687924288;
+        d=1e100.net; s=20221208; t=1685348679; x=1687940679;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=SWkO1L+ouf2ah8LI6jKTrWLnhiGc82nUY4Gt/CvuXVY=;
-        b=CAj0bpiqdke2mQoqqVoiG63dhqGbqEjysQQKWSCc/ZyFlqNIEO+EhutudrmhWgq/8W
-         0xROZ3g7Np0wn0VwHRN/Z6YVT6t79n1wBpwwSCbhdpzRXRtOdyAM49RINTsrKRV+mGH6
-         IuFPG0/dBzGNsx1x1bnkao1RAbsreS/R8WY2Rh2ncU86t7PkpbeD35Qw8mokAeh5SiIM
-         +6C09HP6Mtz48/mWbqtB4M8M+0ZaR4phyXfIl/cSlDbFs4MuQ7nXIHpKzJKGIeuybD0A
-         vmDxSGgUKPnm8hDbVT66gmA8rMhBQo8LKmrf9JDdVaBkL8RQMpWRvxHKHWUU0zVlQfiS
-         hFUA==
-X-Gm-Message-State: AC+VfDwx0ewtMiu+NtbKaFZ3xxwrKlr3GZz6qE3mtnsIwwG9hTud4Fz8
-	+UGCp1/S/LDPIez/xjrspvE=
-X-Google-Smtp-Source: ACHHUZ5wL8TAQK0crfhurwCmme9flkSOyTBq+EFhHKLhu9rItwgzzI/Ai4IcRO11Q6hEgcJW8xFu0g==
-X-Received: by 2002:a05:6a21:33a8:b0:100:b137:3563 with SMTP id yy40-20020a056a2133a800b00100b1373563mr8141116pzb.32.1685332288315;
-        Sun, 28 May 2023 20:51:28 -0700 (PDT)
-Received: from localhost ([2405:6581:d4e0:1600:c494:2aca:bc01:6f7b])
-        by smtp.gmail.com with ESMTPSA id w123-20020a636281000000b00528b78ddbcesm6121959pgb.70.2023.05.28.20.51.27
+        bh=nvt0GJ2QNY+rFYHNBGjXKBYm5GhXHIFHMKlgbX9PLZk=;
+        b=F/bvV8OxD2tI12iSQ0MkTtrcId9NFOWyCw3X5tIk3vfb+45xRHmSWqZSMmntykYgjt
+         r/pYVQq2G0w1emMjdvkwr8C3RzxIotEsmozyRk8KC7px1rH3KbDZzzGh2LaZVO4WMYM7
+         0WZKp53ZWRO0TaALz06j37G0fS0BQ4p8IJDM9A8IHgyyaI4zMXLShNYcxqJGVOFjXjSl
+         SB2OcSHvOmK46Og0NNIxAcaRt4fovCNGv+FXkZCE3GlmdQpfB+Zftnlz7VAxav0VS6FM
+         MbxvXs7r24WByJ7x8wlOMwpmfjrSzx0ocgHLic6ikRb7vonaFxo/t2RMRwZILGIZcKyh
+         dIgw==
+X-Gm-Message-State: AC+VfDy0Z3RinLdTwvu4mR0TP2BTB3xHpXmEW+I5byqBaGnZt+J6LvAD
+	H9AdUiho9/XF94uQvkiKdBs=
+X-Google-Smtp-Source: ACHHUZ70mYW4u96RSo3Ry/YJBBDWbyHuvhnrjdHhLlQ0uGBtm0rqCM5LLQsGo//UKx+Iq7pYhSiRZg==
+X-Received: by 2002:a17:902:a610:b0:1b0:4b65:79db with SMTP id u16-20020a170902a61000b001b04b6579dbmr475567plq.63.1685348678850;
+        Mon, 29 May 2023 01:24:38 -0700 (PDT)
+Received: from debian.me (subs02-180-214-232-78.three.co.id. [180.214.232.78])
+        by smtp.gmail.com with ESMTPSA id jh19-20020a170903329300b001b012589c49sm5637750plb.78.2023.05.29.01.24.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 28 May 2023 20:51:27 -0700 (PDT)
-Date: Mon, 29 May 2023 12:51:25 +0900
-From: Nick Hastings <nicholaschastings@gmail.com>
-To: Mario Limonciello <mario.limonciello@amd.com>
-Cc: Salvatore Bonaccorso <carnil@debian.org>, 1036530@bugs.debian.org,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-Subject: Re: Regression from "ACPI: OSI: Remove Linux-Dell-Video _OSI
- string"? (was: Re: Bug#1036530: linux-signed-amd64: Hard lock up of system)
-Message-ID: <ZHQhPcKUF76Kplwm@xps>
-References: <ZG98fQ+MD4O0nGGE@eldamar.lan>
- <168471337231.1913606.15905047692536779158.reportbug@xps>
- <ZG/8cxxTJ9ZzrVPQ@xps>
- <ZHCYRmD7YeIWoy2W@eldamar.lan>
- <168471337231.1913606.15905047692536779158.reportbug@xps>
- <ZHKrC4/G6ZyvRReI@xps>
- <ZHL5cCNUzVdleiag@eldamar.lan>
- <ab12984e-be17-903d-ba0a-f9c85b8c544f@amd.com>
- <ZHP4IqxBUPuVRvRV@xps>
- <09e24386-de63-e9e9-9e7f-5d04bad62d83@amd.com>
+        Mon, 29 May 2023 01:24:38 -0700 (PDT)
+Received: by debian.me (Postfix, from userid 1000)
+	id BD8B6106A11; Mon, 29 May 2023 15:24:35 +0700 (WIB)
+Date: Mon, 29 May 2023 15:24:35 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Doru Iorgulescu <doru.iorgulescu1@gmail.com>,
+	Michael Ellerman <mpe@ellerman.id.au>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux PowerPC <linuxppc-dev@lists.ozlabs.org>,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	Linux Regressions <regressions@lists.linux.dev>,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	Zi Yan <ziy@nvidia.com>, Andrew Morton <akpm@linux-foundation.org>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Fabiano Rosas <farosas@linux.ibm.com>,
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+	Disha Goel <disgoel@linux.vnet.ibm.com>
+Subject: Re: Fwd: ./include/linux/mmzone.h:1735:2: error: #error Allocator
+ MAX_ORDER exceeds SECTION_SIZE (v6.4-rc3 build regression)
+Message-ID: <ZHRhQ92aXQCQa_yK@debian.me>
+References: <2a1cd5e6-01f7-66f9-1f9d-c655cc3f919b@gmail.com>
+ <5d22e1e9-0307-3664-8b4a-99caaaaa4315@gmail.com>
+ <87bki9ai11.fsf@mail.lhotse>
+ <CA+39qUjP48n=EwqHzwdGkBE8SC-nTNZHZxEfG4r4hWC-5Bg4HA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="n0n99li26aKBWElc"
 Content-Disposition: inline
-In-Reply-To: <09e24386-de63-e9e9-9e7f-5d04bad62d83@amd.com>
-
-* Mario Limonciello <mario.limonciello@amd.com> [230529 10:14]:
-> On 5/28/23 19:56, Nick Hastings wrote:
-> > Hi,
-> > 
-> > * Mario Limonciello <mario.limonciello@amd.com> [230528 21:44]:
-> > > On 5/28/23 01:49, Salvatore Bonaccorso wrote:
-> > > > Hi Mario
-> > > > 
-> > > > Nick Hastings reported in Debian in https://bugs.debian.org/1036530
-> > > > lockups from his system after updating from a 6.0 based version to
-> > > > 6.1.y. >
-> > > > #regzbot ^introduced 24867516f06d
-> > > > 
-> > > > he bisected the issue and tracked it down to:
-> > > > 
-> > > > On Sun, May 28, 2023 at 10:14:51AM +0900, Nick Hastings wrote:
-> > > > > Control: tags -1 - moreinfo
-> > > > > 
-> > > > > Hi,
-> > > > > 
-> > > > > I repeated the git bisect, and the bad commit seems to be:
-> > > > > 
-> > > > > (git)-[v6.1-rc1~206^2~4^5~3|bisect] % git bisect bad
-> > > > > 24867516f06dabedef3be7eea0ef0846b91538bc is the first bad commit
-> > > > > commit 24867516f06dabedef3be7eea0ef0846b91538bc
-> > > > > Author: Mario Limonciello <mario.limonciello@amd.com>
-> > > > > Date:   Tue Aug 23 13:51:31 2022 -0500
-> > > > > 
-> > > > >       ACPI: OSI: Remove Linux-Dell-Video _OSI string
-> > > > >       This string was introduced because drivers for NVIDIA hardware
-> > > > >       had bugs supporting RTD3 in the past.
-> > > > >       Before proprietary NVIDIA driver started to support RTD3, Ubuntu had
-> > > > >       had a mechanism for switching PRIME on and off, though it had required
-> > > > >       to logout/login to make the library switch happen.
-> > > > >       When the PRIME had been off, the mechanism had unloaded the NVIDIA
-> > > > >       driver and put the device into D3cold, but the GPU had never come back
-> > > > >       to D0 again which is why ODMs used the _OSI to expose an old _DSM
-> > > > >       method to switch the power on/off.
-> > > > >       That has been fixed by commit 5775b843a619 ("PCI: Restore config space
-> > > > >       on runtime resume despite being unbound"). so vendors shouldn't be
-> > > > >       using this string to modify ASL any more.
-> > > > >       Reviewed-by: Lyude Paul <lyude@redhat.com>
-> > > > >       Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> > > > >       Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > > > 
-> > > > >    drivers/acpi/osi.c | 9 ---------
-> > > > >    1 file changed, 9 deletions(-)
-> > > > > 
-> > > > > This machine is a Dell with an nvidia chip so it looks like this really
-> > > > > could be the commit that that is causing the problems. The description
-> > > > > of the commit also seems (to my untrained eye) to be consistent with the
-> > > > > error reported on the console when the lockup occurs:
-> > > > > 
-> > > > > [   58.729863] ACPI Error: Aborting method \_SB.PCI0.PGON due to previous error (AE_AML_LOOP_TIMEOUT) (20220331/psparse-529)
-> > > > > [   58.729904] ACPI Error: Aborting method \_SB.PCI0.PEG0.PG00._ON due to previous error (AE_AML_LOOP_TIMEOUT) (20220331/psparse-529)
-> > > > > [   60.083261] vfio-pci 0000:01:00.0 Unable to change power state from D3cold to D0, device inaccessible
-> > > > > 
-> > > > > Hopefully this is enough information for experts to resolve this.
-> > > > 
-> > > > Does this ring some bell for you? Do you need any further information
-> > > > from Nick?
-> > > > 
-> > > > Regards,
-> > > > Salvatore
-> > > 
-> > 
-> > > Have Nick try using "pcie_port_pm=off" and see if it helps the issue.
-> > 
-> > I booted into a 6.1 kernel with this option. It has been running without
-> > problems for 1.5 hours. Usually I would expect the lockup to have
-> > occurred by now.
-
-I let this run for 3 hours without issue.
-
-> > > Does this happen in the latest 6.4 RC as well?
-> > 
-> > I have compiled that kernel and will boot into it after running this one
-> > with the pcie_port_pm=off for another hour or so.
-
-I'm now running 6.4.0-rc4 without seeing the problem after 1 hour.
-
-I did however see two unrelated problems that I include here for
-completeness:
-1. iwlwifi module did not automatically load
-2. Xwayland used huge amount of CPU even though was not running any X
-programs. Recompiling my wayland compositor without XWayland support
-"fixed" this.
-
-> > > I think we need to see a full dmesg and acpidump to better
-> > > characterize it.
-> > 
-> > Please find attached. Let me know if there is anything else I can provide.
-> > 
-> > Regards,
-> > 
-> > Nick.
-> 
-> I don't see nouveau loading, are you explicitly preventing it from
-> loading?
-
-Yes nouveau is blacklisted.
-
-> Can I see the journal from a boot when it reproduced?
-
-Hmm not sure which n for "journalctl -b n" maps to which kernel (is that
-what you are requesting?). The commit hash doesn't not seem to be
-listed. I may have to boot into a bad kernel again.
-
-Regards,
-
-Ncik.
+In-Reply-To: <CA+39qUjP48n=EwqHzwdGkBE8SC-nTNZHZxEfG4r4hWC-5Bg4HA@mail.gmail.com>
 
 
+--n0n99li26aKBWElc
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, May 24, 2023 at 06:13:52PM +0300, Doru Iorgulescu wrote:
+> Awesome, thanks!
+
+tl;dr: see [1].
+
+(Hey, looks like complimenting noise here.)
+
+[1]: https://lore.kernel.org/regressions/5df92692-296e-3956-24fa-2bd4393379=
+53@gmail.com/
+
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--n0n99li26aKBWElc
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZHRhQwAKCRD2uYlJVVFO
+o+jyAQDEMW9U8RtyW3eLmz1vfYY5zX7zMISeoeMx9Ep+ODtNAgD/XvY+dmTzM2sW
+OCQZJxqHfzgzTV/+CFXMZ4UMTRIWagI=
+=vA0l
+-----END PGP SIGNATURE-----
+
+--n0n99li26aKBWElc--
