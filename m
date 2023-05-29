@@ -1,58 +1,58 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A85717C
-	for <regressions@lists.linux.dev>; Mon, 29 May 2023 02:04:08 +0000 (UTC)
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-64d3fbb8c1cso3226143b3a.3
-        for <regressions@lists.linux.dev>; Sun, 28 May 2023 19:04:08 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D2187C
+	for <regressions@lists.linux.dev>; Mon, 29 May 2023 02:21:17 +0000 (UTC)
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-64d3fdcadb8so2028727b3a.3
+        for <regressions@lists.linux.dev>; Sun, 28 May 2023 19:21:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1685325848; x=1687917848;
+        d=gmail.com; s=20221208; t=1685326877; x=1687918877;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=iLBoA+23K3jc86HPrf+FyXyak1JXjRm8IVB/JjKg/LY=;
-        b=K+fT8nvfFj5f10qcR4UuYyW15c7V0i0AqIcH4ZjI1+El2ri5JzgbZwlXgLbW/Ll787
-         +DosbUEprmLxm9+f39q4jRR1D8xkl3/aNR6K3M9qJgpn8t2RnjOTDX++JqiRIbHyDsDB
-         ukGg0SiqbDmsQmD59ZkkO59QZANiYC9HNt/EaDlLtlMUyqy1GsbuYjk+10WTm5U5lTh5
-         kY/9HmU3WZIFGPt4XyBOVk4ISJB5hqHYZFFLPvL/sGZ3AAT5/hMgODljcTBMBCc3HL39
-         HnvQ+oGaIUEimziiN+POB3xlAFrm05+3YE+cmjPtolRMdGFOXANzb4d12LSqNqjXZfkY
-         PPAg==
+        bh=TOEnxgrrxri26dldYxLmWoJUt5x//Zlg4TwdS9dGdoI=;
+        b=pOEp+2VwI45RYl7vSq4IkS5MFOcNXxZeWxAaVhZbey4KR7ZAazv/A91gDA/1FkaYr1
+         ImqWliZTLkHDRC1E8EB2pPccr5XOGP3E1ivfdUcz+NGrYjh6P39WVFrrbJpP/jkw7NMI
+         Rqr8SWp27qYp72gtOcAFMT+97oWHcpzHEn3TY6Xp7dQNa7dFK7NqzbIAC10x8Z2HPCSI
+         mo1abbWQwAoc1UQtfFNUPPn9a//wEKNUrLYqKJGBmoIiF5FnYf5q1JzTRgfxOUO7xn2D
+         feNRkqVFGyyeYhwepy+QwDqatCY3j8/V1fRpqi5dLMdMphHZiFilQP/SGqOivOCjoo6M
+         mZ4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685325848; x=1687917848;
+        d=1e100.net; s=20221208; t=1685326877; x=1687918877;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=iLBoA+23K3jc86HPrf+FyXyak1JXjRm8IVB/JjKg/LY=;
-        b=gwSa3KBwI9T7G1eGY7Yre2mWc8mVXQH34RjpuhGCK/z9n2l6hmQG0wcm0rqM/ktw1P
-         7BiKGOG2jPIS4Ki0ktkafhJmhFoUuTohtWsJblX+EXWo/tKMsXGsb1ahokhATUpDYj6H
-         zBpK7BOKWgo8OwCgshRkpTIBuFaw15kE9QQ6ndPYwAM9Iub0oP8+P+LV68fVA2dqG9Ti
-         mXUEaCv9NxctCy66G4C99a+QdASGDJ0GXuJ32SDOOwCjPgG9dD90khWcaTFwHPtXf5/a
-         2foJJo5FvLOhUYNz9e2sWYUQpvfjVB69INblUjCtUWSaKvPtVS9Z7jHp3seNhvHx0Sof
-         ULqg==
-X-Gm-Message-State: AC+VfDwq0jw7/UeFHFU1dsUrq1adiUVdIzKUnfMmVf8BxXVBq5cToqDd
-	0y1g76IEpF9C4XOi2or3iSk=
-X-Google-Smtp-Source: ACHHUZ7Uci2HCTNGFogEjdlH+G91Mpz9Qa/IPP21M2dVIqZJNCp8Y5WUCg5fVfszsD8uil/5WLGm8g==
-X-Received: by 2002:a05:6a00:1744:b0:636:f5f4:5308 with SMTP id j4-20020a056a00174400b00636f5f45308mr14700095pfc.7.1685325848004;
-        Sun, 28 May 2023 19:04:08 -0700 (PDT)
+        bh=TOEnxgrrxri26dldYxLmWoJUt5x//Zlg4TwdS9dGdoI=;
+        b=UBHfWAx+948CgTAcrnNsUBulMC501S1FhCOwa3GD3pMhnydEl8k9y23o1jCDAO863K
+         BW34oJ+2IvYVDJj+RGQmOhEftBi7Yfe8DsXjB4GmhN5EBzC5sEZfsl82ssuVYL4UeLh0
+         pDKAMXyUKvBqfLi4YECA2gPkqyIuQU7rq4B0eGGWBvKG1xcWncF7Kl4ePl913/etcNhh
+         Vq1pCgLtJZEHnf7rfspo76fifKyVCUBY6RdanAKJp7Ya8n0XqwodUILe1nvSHywnWwYN
+         WuL/rv9qY82KymY+OV9dIZ3tGGMKfQ+FcZqw7J/Ma+WWYoh93BSzcEMhu9pam9fkYKeq
+         m9Tw==
+X-Gm-Message-State: AC+VfDyKIHU9gCVSOVbnrjDS++boypXHvh0OgbmuP42Fj8C/qf7cy0a9
+	l02A1jlOcmjjAlcmsGFG0Eo=
+X-Google-Smtp-Source: ACHHUZ5Z0y7zoB17YloXZJuJ1Mepg6iFTuaulcJSfMLeMxnNe7a6TFBiFQ5W7hu7sHXCYbcYV6BEwA==
+X-Received: by 2002:a05:6a20:8e05:b0:10b:f63f:27f with SMTP id y5-20020a056a208e0500b0010bf63f027fmr8213369pzj.60.1685326876732;
+        Sun, 28 May 2023 19:21:16 -0700 (PDT)
 Received: from debian.me (subs28-116-206-12-34.three.co.id. [116.206.12.34])
-        by smtp.gmail.com with ESMTPSA id s12-20020a62e70c000000b0063ba9108c5csm5934409pfh.149.2023.05.28.19.04.07
+        by smtp.gmail.com with ESMTPSA id f12-20020aa78b0c000000b0063afb08afeesm3113669pfd.67.2023.05.28.19.21.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 28 May 2023 19:04:07 -0700 (PDT)
+        Sun, 28 May 2023 19:21:16 -0700 (PDT)
 Received: by debian.me (Postfix, from userid 1000)
-	id 8182F106A0B; Mon, 29 May 2023 09:04:04 +0700 (WIB)
-Date: Mon, 29 May 2023 09:04:04 +0700
+	id 48B7A106A0B; Mon, 29 May 2023 09:21:12 +0700 (WIB)
+Date: Mon, 29 May 2023 09:21:12 +0700
 From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Chris Packham <Chris.Packham@alliedtelesis.co.nz>,
-	Lino Sanfilippo <l.sanfilippo@kunbus.com>,
-	Jarkko Sakkinen <jarkko@kernel.org>,
-	Sasha Levin <sashal@kernel.org>, Peter Huewe <peterhuewe@gmx.de>,
-	Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Linux Kernel Integrity <linux-integrity@vger.kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Regressions <regressions@lists.linux.dev>
-Subject: Re: New kernel warning after updating from LTS 5.15.110 to 5.15.112
- (and 5.15.113)
-Message-ID: <ZHQIFLWvrWUNMVxb@debian.me>
-References: <fe6f7aa0-56c2-3729-ce8c-0f2d943b33f4@alliedtelesis.co.nz>
+To: beld zhang <beldzhang@gmail.com>, stable@vger.kernel.org
+Cc: Linux Regressions <regressions@lists.linux.dev>,
+	Linux USB <linux-usb@vger.kernel.org>,
+	Linux Input Devices <linux-input@vger.kernel.org>
+Subject: Re: Fwd: 6.1.30: thunderbolt: Clear registers properly when auto
+ clear isn't in use cause call trace after resume
+Message-ID: <ZHQMGN-LAJk6vHjH@debian.me>
+References: <CAG7aomXv2KV9es2RiGwguesRnUTda-XzmeE42m0=GdpJ2qMOcg@mail.gmail.com>
+ <ZHKW5NeabmfhgLbY@debian.me>
+ <261a70b7-a425-faed-8cd5-7fbf807bdef7@amd.com>
+ <CAG7aomVVJyDpKjpZ=k=+9qKY5+13eFjcGPEWZ0T0+NTNfZWDfA@mail.gmail.com>
+ <CAG7aomXP0JHmHytsv5cMsyHzee61BQnG3fc-Y+NLzum7H3DyHA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -60,122 +60,89 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ybxFYc807lJQs/+9"
+	protocol="application/pgp-signature"; boundary="ifHpYZTFasUnVXV+"
 Content-Disposition: inline
-In-Reply-To: <fe6f7aa0-56c2-3729-ce8c-0f2d943b33f4@alliedtelesis.co.nz>
+In-Reply-To: <CAG7aomXP0JHmHytsv5cMsyHzee61BQnG3fc-Y+NLzum7H3DyHA@mail.gmail.com>
 
 
---ybxFYc807lJQs/+9
+--ifHpYZTFasUnVXV+
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, May 28, 2023 at 11:42:50PM +0000, Chris Packham wrote:
-> Hi,
+On Sun, May 28, 2023 at 02:35:18PM -0400, beld zhang wrote:
+> ---------- Forwarded message ---------
+> From: beld zhang
+> Date: Sun, May 28, 2023 at 2:07=E2=80=AFPM
+> Subject: Re: 6.1.30: thunderbolt: Clear registers properly when auto
+> clear isn't in use cause call trace after resume
+> To: Mario Limonciello
 >=20
-> We have an embedded product with an Infineon SLM9670 TPM. After updating=
-=20
-> to a newer LTS kernel version we started seeing the following warning at=
-=20
-> boot.
+> On Sun, May 28, 2023 at 8:55=E2=80=AFAM Mario Limonciello
+> <mario.limonciello@amd.com> wrote:
+> >
+> > This is specific resuming from s2idle, doesn't happen at boot?
+> >
+> > Does it happen with hot-plugging or hot-unplugging a TBT3 or USB4 dock =
+too?
+> >
+> > In addition to checking mainline, can you please attach a full dmesg to
+> > somewhere ephemeral like a kernel bugzilla with thunderbolt.dyndbg=3D'+=
+p'
+> > on the kernel command line set?
+> >
 >=20
-> [=C2=A0=C2=A0=C2=A0 4.741025] ------------[ cut here ]------------
-> [=C2=A0=C2=A0=C2=A0 4.749894] irq 38 handler tis_int_handler+0x0/0x154 en=
-abled interrupts
-> [=C2=A0=C2=A0=C2=A0 4.756555] WARNING: CPU: 0 PID: 0 at kernel/irq/handle=
-=2Ec:159=20
-> __handle_irq_event_percpu+0xf4/0x180
-> [=C2=A0=C2=A0=C2=A0 4.765557] Modules linked in:
-> [=C2=A0=C2=A0=C2=A0 4.768626] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5=
-=2E15.113 #1
-> [=C2=A0=C2=A0=C2=A0 4.774747] Hardware name: Allied Telesis x250-18XS (DT)
-> [=C2=A0=C2=A0=C2=A0 4.780080] pstate: 60000005 (nZCv daif -PAN -UAO -TCO =
--DIT -SSBS=20
-> BTYPE=3D--)
-> [=C2=A0=C2=A0=C2=A0 4.787072] pc : __handle_irq_event_percpu+0xf4/0x180
-> [=C2=A0=C2=A0=C2=A0 4.792146] lr : __handle_irq_event_percpu+0xf4/0x180
-> [=C2=A0=C2=A0=C2=A0 4.797220] sp : ffff800008003e40
-> [=C2=A0=C2=A0=C2=A0 4.800547] x29: ffff800008003e40 x28: ffff8000093951c0=
- x27:=20
-> ffff80000902a9b8
-> [=C2=A0=C2=A0=C2=A0 4.807716] x26: ffff800008fe8d28 x25: ffff8000094a62bd=
- x24:=20
-> ffff000001b92400
-> [=C2=A0=C2=A0=C2=A0 4.814885] x23: 0000000000000026 x22: ffff800008003ec4=
- x21:=20
-> 0000000000000000
-> [=C2=A0=C2=A0=C2=A0 4.822053] x20: 0000000000000001 x19: ffff000002381200=
- x18:=20
-> ffffffffffffffff
-> [=C2=A0=C2=A0=C2=A0 4.829222] x17: ffff800076962000 x16: ffff800008000000=
- x15:=20
-> ffff800088003b57
-> [=C2=A0=C2=A0=C2=A0 4.836390] x14: 0000000000000000 x13: ffff8000093a5078=
- x12:=20
-> 000000000000035d
-> [=C2=A0=C2=A0=C2=A0 4.843558] x11: 000000000000011f x10: ffff8000093a5078=
- x9 :=20
-> ffff8000093a5078
-> [=C2=A0=C2=A0=C2=A0 4.850727] x8 : 00000000ffffefff x7 : ffff8000093fd078=
- x6 :=20
-> ffff8000093fd078
-> [=C2=A0=C2=A0=C2=A0 4.857895] x5 : 000000000000bff4 x4 : 0000000000000000=
- x3 :=20
-> 0000000000000000
-> [=C2=A0=C2=A0=C2=A0 4.865062] x2 : 0000000000000000 x1 : 0000000000000000=
- x0 :=20
-> ffff8000093951c0
-> [=C2=A0=C2=A0=C2=A0 4.872230] Call trace:
-> [=C2=A0=C2=A0=C2=A0 4.874686]=C2=A0 __handle_irq_event_percpu+0xf4/0x180
-> [=C2=A0=C2=A0=C2=A0 4.879411]=C2=A0 handle_irq_event+0x64/0xec
-> [=C2=A0=C2=A0=C2=A0 4.883264]=C2=A0 handle_level_irq+0xc0/0x1b0
-> [=C2=A0=C2=A0=C2=A0 4.887202]=C2=A0 generic_handle_irq+0x30/0x50
-> [=C2=A0=C2=A0=C2=A0 4.891229]=C2=A0 mvebu_gpio_irq_handler+0x11c/0x2a0
-> [=C2=A0=C2=A0=C2=A0 4.895780]=C2=A0 handle_domain_irq+0x60/0x90
-> [=C2=A0=C2=A0=C2=A0 4.899720]=C2=A0 gic_handle_irq+0x4c/0xd0
-> [=C2=A0=C2=A0=C2=A0 4.903398]=C2=A0 call_on_irq_stack+0x20/0x4c
-> [=C2=A0=C2=A0=C2=A0 4.907338]=C2=A0 do_interrupt_handler+0x54/0x60
-> [=C2=A0=C2=A0=C2=A0 4.911538]=C2=A0 el1_interrupt+0x30/0x80
-> [=C2=A0=C2=A0=C2=A0 4.915130]=C2=A0 el1h_64_irq_handler+0x18/0x24
-> [=C2=A0=C2=A0=C2=A0 4.919244]=C2=A0 el1h_64_irq+0x78/0x7c
-> [=C2=A0=C2=A0=C2=A0 4.922659]=C2=A0 arch_cpu_idle+0x18/0x2c
-> [=C2=A0=C2=A0=C2=A0 4.926249]=C2=A0 do_idle+0xc4/0x150
-> [=C2=A0=C2=A0=C2=A0 4.929404]=C2=A0 cpu_startup_entry+0x28/0x60
-> [=C2=A0=C2=A0=C2=A0 4.933343]=C2=A0 rest_init+0xe4/0xf4
-> [=C2=A0=C2=A0=C2=A0 4.936584]=C2=A0 arch_call_rest_init+0x10/0x1c
-> [=C2=A0=C2=A0=C2=A0 4.940699]=C2=A0 start_kernel+0x600/0x640
-> [=C2=A0=C2=A0=C2=A0 4.944375]=C2=A0 __primary_switched+0xbc/0xc4
-> [=C2=A0=C2=A0=C2=A0 4.948402] ---[ end trace 940193047b35b311 ]---
+> 6.4-rc4:
+>     *) test 1~4 was done with usb hub with ethernet plugged-in
+>         model: UE330, usb 3.0 3-port hub & GIgabit Ether adapter
+>         a rapoo wireless mouse in one of the ports
+>     1) no crash at boot
+>         until [169.099024]
+>     2) no crash after plug an extra usb dock
+>         from [297.004691]
+>     3) no crash after remove it
+>         from [373.273511]
+>     4) crash after suspend/resume: 2 call-stacks
+>         from [438.356253]
+>     5) removed that hub(only ac-power left): NO crash after resume
+>         from [551.820333]
+>     6) plug in the hub(no mouse): NO crash after resume
+>         from [1250.256607]
+>     7) put on mouse: CRASH after resume
+>         from [1311.400963]
+>         mouse model: Rapoo Wireless Optical Mouse 1620
+
+Before suspend, is attaching your mouse not crashing your system?
+
 >=20
-> Initially I dismissed this as a warning that would probably be cleaned=20
-> up when we did more work on the TPM support for our product but we also=
-=20
-> seem to be getting some new i2c issues and possibly a kernel stack=20
-> corruption that we've conflated with this TPM warning.
+> sorry I have no idea how to fill a proper bug report at kernel
+> bugzilla, hope these shared links work.
+> btw I have no TB devices to test.
+>=20
+> dmesg:
+> https://drive.google.com/file/d/1bUWnV7q2ziM4tdTzmuGiVuvEzaLcdfKm/view?us=
+p=3Dsharing
+>=20
+> config:
+> https://drive.google.com/file/d/1It75_AV5tOzfkXXBAX5zAiZMoeJAe0Au/view?us=
+p=3Dsharing
 
-Can you reproduce this issue on mainline? Can you also bisect to find
-the culprit?
-
-Anyway, I'm adding it to regzbot:
-
-#regzbot ^introduced: v5.15.110..v5.15.112
-#regzbot title: Possible stack corruption and i2c issues due to irq warning=
- on Inifineon SLM9670 TPM
+There is a functionality on Bugzilla to attach above files. Use it.
 
 Thanks.
 
 --=20
 An old man doll... just what I always wanted! - Clara
 
---ybxFYc807lJQs/+9
+--ifHpYZTFasUnVXV+
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZHQIDQAKCRD2uYlJVVFO
-o28IAP9l7fkmBaEnd7uOzDrnx7R2T/xBLWnlazaZb2bK81BjkwD9EvBXYgNA8Ikl
-z9GdErluz1LCaBlZBBqRshbT/6hKTQY=
-=eZ2H
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZHQMFwAKCRD2uYlJVVFO
+o2oZAQD4WEj7xFwvWRg8a+js048BS/G5uxkfbUwn1PtqjsOoyQD/aVX6452ePcjQ
+9lz0zEcPxwgK7BmaRxhkbe7dSmzxAw0=
+=DphI
 -----END PGP SIGNATURE-----
 
---ybxFYc807lJQs/+9--
+--ifHpYZTFasUnVXV+--
