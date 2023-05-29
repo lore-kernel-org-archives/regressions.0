@@ -1,109 +1,181 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D66537C
-	for <regressions@lists.linux.dev>; Mon, 29 May 2023 01:51:35 +0000 (UTC)
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-64d24136685so1897017b3a.1
-        for <regressions@lists.linux.dev>; Sun, 28 May 2023 18:51:35 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A85717C
+	for <regressions@lists.linux.dev>; Mon, 29 May 2023 02:04:08 +0000 (UTC)
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-64d3fbb8c1cso3226143b3a.3
+        for <regressions@lists.linux.dev>; Sun, 28 May 2023 19:04:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1685325095; x=1687917095;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gPRHttCC09H4/tUnTXoXcgLVvVhSGfEl39Ynz6A4OtM=;
-        b=V519c/gbuue/T92+R4H0pBg1sxGlRJprFhuCh0JHMw49sp4ZQriafpp+D5tGr4f8Bm
-         UFcuu9nCVKRk+Xs5HY5AxGTNhbHM0hWC8ejexIMWeRuQbfULB6xjiJW36P39rxz1boJV
-         SQAbGk0eu/T/sEk/Rxd9CeB5US7iRzRPX8eEA8AITlH1rGZHia6KQybulgmCVsx70rSq
-         L809pQS6ffm6BMEIm5dJY2RFFsjiJOR2GJdeYL+PyOm3WXW1S45PD4ejG9rRkO9OMHft
-         5h1dWqtzCzQ0najzmjyTyxdoGljDz/dDAj/p+C2cX7o0K/Ookogd9CcNKOQFv8sV/iJK
-         YNdA==
+        d=gmail.com; s=20221208; t=1685325848; x=1687917848;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=iLBoA+23K3jc86HPrf+FyXyak1JXjRm8IVB/JjKg/LY=;
+        b=K+fT8nvfFj5f10qcR4UuYyW15c7V0i0AqIcH4ZjI1+El2ri5JzgbZwlXgLbW/Ll787
+         +DosbUEprmLxm9+f39q4jRR1D8xkl3/aNR6K3M9qJgpn8t2RnjOTDX++JqiRIbHyDsDB
+         ukGg0SiqbDmsQmD59ZkkO59QZANiYC9HNt/EaDlLtlMUyqy1GsbuYjk+10WTm5U5lTh5
+         kY/9HmU3WZIFGPt4XyBOVk4ISJB5hqHYZFFLPvL/sGZ3AAT5/hMgODljcTBMBCc3HL39
+         HnvQ+oGaIUEimziiN+POB3xlAFrm05+3YE+cmjPtolRMdGFOXANzb4d12LSqNqjXZfkY
+         PPAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685325095; x=1687917095;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=gPRHttCC09H4/tUnTXoXcgLVvVhSGfEl39Ynz6A4OtM=;
-        b=MUcmJLGE9I5t/sl/tWGlTJZn6/it8SPtN6h5/z9wdd7lS0WxNHgKvhZXaQbojWRIkw
-         Oxcg4SQIYlI9tVX7ptMQ844xT7TbFUfegIivPcx9ZUzyZBHZ2kx+I1fh8OBgQJ7u80Bu
-         YkzE1VvCXlV+7D5YzB+AKA43yc2Fz7pQ4uRUvsActGfHFVkECDY2UCjumUCn6f2ONEbf
-         j0wFp1VeSjuhwejCKzYGq/37SdCJbCVW87EZ1DxTvhCK1snFN1/znPQBObvuTyGlEXeZ
-         gouatTKfXZGg+9ZnJMB2uvoU/6jdCA+yU52YUvzrEN+6Yod5A6Ov5NBFiD8SmqvrsGKt
-         xXRA==
-X-Gm-Message-State: AC+VfDxdivkfjjXk8xT/2HimdUSRTq11BGMGeuNr4LSPut49G6EusET9
-	6lUzUqLa0ZP37CVQrrU46Vw=
-X-Google-Smtp-Source: ACHHUZ5eg9u2gFQ/NpsWDKl0x6LFq4+4SZ/VN1BEeZ26O2vXPPAebeK2u1iGkJbCbKUybu4MaidBHA==
-X-Received: by 2002:a05:6a00:1742:b0:647:157b:cb61 with SMTP id j2-20020a056a00174200b00647157bcb61mr7382873pfc.7.1685325095172;
-        Sun, 28 May 2023 18:51:35 -0700 (PDT)
-Received: from [192.168.43.80] (subs28-116-206-12-34.three.co.id. [116.206.12.34])
-        by smtp.gmail.com with ESMTPSA id s22-20020aa78296000000b00627fafe49f9sm5661178pfm.106.2023.05.28.18.51.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 28 May 2023 18:51:34 -0700 (PDT)
-Message-ID: <6a10ec48-3940-cd8d-5e34-b9ade9f87b82@gmail.com>
-Date: Mon, 29 May 2023 08:50:51 +0700
+        d=1e100.net; s=20221208; t=1685325848; x=1687917848;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iLBoA+23K3jc86HPrf+FyXyak1JXjRm8IVB/JjKg/LY=;
+        b=gwSa3KBwI9T7G1eGY7Yre2mWc8mVXQH34RjpuhGCK/z9n2l6hmQG0wcm0rqM/ktw1P
+         7BiKGOG2jPIS4Ki0ktkafhJmhFoUuTohtWsJblX+EXWo/tKMsXGsb1ahokhATUpDYj6H
+         zBpK7BOKWgo8OwCgshRkpTIBuFaw15kE9QQ6ndPYwAM9Iub0oP8+P+LV68fVA2dqG9Ti
+         mXUEaCv9NxctCy66G4C99a+QdASGDJ0GXuJ32SDOOwCjPgG9dD90khWcaTFwHPtXf5/a
+         2foJJo5FvLOhUYNz9e2sWYUQpvfjVB69INblUjCtUWSaKvPtVS9Z7jHp3seNhvHx0Sof
+         ULqg==
+X-Gm-Message-State: AC+VfDwq0jw7/UeFHFU1dsUrq1adiUVdIzKUnfMmVf8BxXVBq5cToqDd
+	0y1g76IEpF9C4XOi2or3iSk=
+X-Google-Smtp-Source: ACHHUZ7Uci2HCTNGFogEjdlH+G91Mpz9Qa/IPP21M2dVIqZJNCp8Y5WUCg5fVfszsD8uil/5WLGm8g==
+X-Received: by 2002:a05:6a00:1744:b0:636:f5f4:5308 with SMTP id j4-20020a056a00174400b00636f5f45308mr14700095pfc.7.1685325848004;
+        Sun, 28 May 2023 19:04:08 -0700 (PDT)
+Received: from debian.me (subs28-116-206-12-34.three.co.id. [116.206.12.34])
+        by smtp.gmail.com with ESMTPSA id s12-20020a62e70c000000b0063ba9108c5csm5934409pfh.149.2023.05.28.19.04.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 28 May 2023 19:04:07 -0700 (PDT)
+Received: by debian.me (Postfix, from userid 1000)
+	id 8182F106A0B; Mon, 29 May 2023 09:04:04 +0700 (WIB)
+Date: Mon, 29 May 2023 09:04:04 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Chris Packham <Chris.Packham@alliedtelesis.co.nz>,
+	Lino Sanfilippo <l.sanfilippo@kunbus.com>,
+	Jarkko Sakkinen <jarkko@kernel.org>,
+	Sasha Levin <sashal@kernel.org>, Peter Huewe <peterhuewe@gmx.de>,
+	Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Linux Kernel Integrity <linux-integrity@vger.kernel.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Regressions <regressions@lists.linux.dev>
+Subject: Re: New kernel warning after updating from LTS 5.15.110 to 5.15.112
+ (and 5.15.113)
+Message-ID: <ZHQIFLWvrWUNMVxb@debian.me>
+References: <fe6f7aa0-56c2-3729-ce8c-0f2d943b33f4@alliedtelesis.co.nz>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Content-Language: en-US
-To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>, Linux x86 <x86@kernel.org>
-Cc: David Woodhouse <dwmw@amazon.co.uk>, Thomas Gleixner
- <tglx@linutronix.de>, "Peter Zijlstra (Intel)" <peterz@infradead.org>,
- Michael Kelley <mikelley@microsoft.com>,
- Oleksandr Natalenko <oleksandr@natalenko.name>, Helge Deller
- <deller@gmx.de>, "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
- Vincent Donnefort <vdonnefort@google.com>, Bert Karwatzki <spasswolf@web.de>
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-Subject: Fwd: kernel/cpu.c: linux misses the initialization of one CPU
- (off-by-one regression)
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ybxFYc807lJQs/+9"
+Content-Disposition: inline
+In-Reply-To: <fe6f7aa0-56c2-3729-ce8c-0f2d943b33f4@alliedtelesis.co.nz>
 
-Hi,
 
-I notice a regression report on Bugzilla [1]. Quoting from it:
+--ybxFYc807lJQs/+9
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Since commit 18415f33e2ac4ab382cbca8b5ff82a9036b5bd49 linux misses the initialization of 1 CPU when the CONFIG_NR_CPUS is equal to the actual number of CPUs in the system. One can work around the issue by increasing CONFIG_NR_CPUS or apply the following patch:
-> 
-> From aa5ef661936655f0d806fdbf2d28fc9513dd5c69 Mon Sep 17 00:00:00 2001
-> From: Bert Karwatzki <spasswolf@web.de>
-> Date: Sun, 28 May 2023 14:35:45 +0200
-> Subject: [PATCH] Fix CPU detection when CONFIG_NR_CPUS is equal to the actual
->  number of CPUs.
-> 
-> Signed-off-by: Bert Karwatzki <spasswolf@web.de>
-> ---
->  kernel/cpu.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/cpu.c b/kernel/cpu.c
-> index 005f863a3d2b..5e900b531827 100644
-> --- a/kernel/cpu.c
-> +++ b/kernel/cpu.c
-> @@ -1770,7 +1770,7 @@ static void __init cpuhp_bringup_mask(const struct cpumask *mask, unsigned int n
->  	for_each_cpu(cpu, mask) {
->  		struct cpuhp_cpu_state *st = per_cpu_ptr(&cpuhp_state, cpu);
->  
-> -		if (!--ncpus)
-> +		if (!ncpus--)
->  			break;
->  
->  		if (cpu_up(cpu, target) && can_rollback_cpu(st)) {
-> -- 
-> 2.40.1
+On Sun, May 28, 2023 at 11:42:50PM +0000, Chris Packham wrote:
+> Hi,
+>=20
+> We have an embedded product with an Infineon SLM9670 TPM. After updating=
+=20
+> to a newer LTS kernel version we started seeing the following warning at=
+=20
+> boot.
+>=20
+> [=C2=A0=C2=A0=C2=A0 4.741025] ------------[ cut here ]------------
+> [=C2=A0=C2=A0=C2=A0 4.749894] irq 38 handler tis_int_handler+0x0/0x154 en=
+abled interrupts
+> [=C2=A0=C2=A0=C2=A0 4.756555] WARNING: CPU: 0 PID: 0 at kernel/irq/handle=
+=2Ec:159=20
+> __handle_irq_event_percpu+0xf4/0x180
+> [=C2=A0=C2=A0=C2=A0 4.765557] Modules linked in:
+> [=C2=A0=C2=A0=C2=A0 4.768626] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5=
+=2E15.113 #1
+> [=C2=A0=C2=A0=C2=A0 4.774747] Hardware name: Allied Telesis x250-18XS (DT)
+> [=C2=A0=C2=A0=C2=A0 4.780080] pstate: 60000005 (nZCv daif -PAN -UAO -TCO =
+-DIT -SSBS=20
+> BTYPE=3D--)
+> [=C2=A0=C2=A0=C2=A0 4.787072] pc : __handle_irq_event_percpu+0xf4/0x180
+> [=C2=A0=C2=A0=C2=A0 4.792146] lr : __handle_irq_event_percpu+0xf4/0x180
+> [=C2=A0=C2=A0=C2=A0 4.797220] sp : ffff800008003e40
+> [=C2=A0=C2=A0=C2=A0 4.800547] x29: ffff800008003e40 x28: ffff8000093951c0=
+ x27:=20
+> ffff80000902a9b8
+> [=C2=A0=C2=A0=C2=A0 4.807716] x26: ffff800008fe8d28 x25: ffff8000094a62bd=
+ x24:=20
+> ffff000001b92400
+> [=C2=A0=C2=A0=C2=A0 4.814885] x23: 0000000000000026 x22: ffff800008003ec4=
+ x21:=20
+> 0000000000000000
+> [=C2=A0=C2=A0=C2=A0 4.822053] x20: 0000000000000001 x19: ffff000002381200=
+ x18:=20
+> ffffffffffffffff
+> [=C2=A0=C2=A0=C2=A0 4.829222] x17: ffff800076962000 x16: ffff800008000000=
+ x15:=20
+> ffff800088003b57
+> [=C2=A0=C2=A0=C2=A0 4.836390] x14: 0000000000000000 x13: ffff8000093a5078=
+ x12:=20
+> 000000000000035d
+> [=C2=A0=C2=A0=C2=A0 4.843558] x11: 000000000000011f x10: ffff8000093a5078=
+ x9 :=20
+> ffff8000093a5078
+> [=C2=A0=C2=A0=C2=A0 4.850727] x8 : 00000000ffffefff x7 : ffff8000093fd078=
+ x6 :=20
+> ffff8000093fd078
+> [=C2=A0=C2=A0=C2=A0 4.857895] x5 : 000000000000bff4 x4 : 0000000000000000=
+ x3 :=20
+> 0000000000000000
+> [=C2=A0=C2=A0=C2=A0 4.865062] x2 : 0000000000000000 x1 : 0000000000000000=
+ x0 :=20
+> ffff8000093951c0
+> [=C2=A0=C2=A0=C2=A0 4.872230] Call trace:
+> [=C2=A0=C2=A0=C2=A0 4.874686]=C2=A0 __handle_irq_event_percpu+0xf4/0x180
+> [=C2=A0=C2=A0=C2=A0 4.879411]=C2=A0 handle_irq_event+0x64/0xec
+> [=C2=A0=C2=A0=C2=A0 4.883264]=C2=A0 handle_level_irq+0xc0/0x1b0
+> [=C2=A0=C2=A0=C2=A0 4.887202]=C2=A0 generic_handle_irq+0x30/0x50
+> [=C2=A0=C2=A0=C2=A0 4.891229]=C2=A0 mvebu_gpio_irq_handler+0x11c/0x2a0
+> [=C2=A0=C2=A0=C2=A0 4.895780]=C2=A0 handle_domain_irq+0x60/0x90
+> [=C2=A0=C2=A0=C2=A0 4.899720]=C2=A0 gic_handle_irq+0x4c/0xd0
+> [=C2=A0=C2=A0=C2=A0 4.903398]=C2=A0 call_on_irq_stack+0x20/0x4c
+> [=C2=A0=C2=A0=C2=A0 4.907338]=C2=A0 do_interrupt_handler+0x54/0x60
+> [=C2=A0=C2=A0=C2=A0 4.911538]=C2=A0 el1_interrupt+0x30/0x80
+> [=C2=A0=C2=A0=C2=A0 4.915130]=C2=A0 el1h_64_irq_handler+0x18/0x24
+> [=C2=A0=C2=A0=C2=A0 4.919244]=C2=A0 el1h_64_irq+0x78/0x7c
+> [=C2=A0=C2=A0=C2=A0 4.922659]=C2=A0 arch_cpu_idle+0x18/0x2c
+> [=C2=A0=C2=A0=C2=A0 4.926249]=C2=A0 do_idle+0xc4/0x150
+> [=C2=A0=C2=A0=C2=A0 4.929404]=C2=A0 cpu_startup_entry+0x28/0x60
+> [=C2=A0=C2=A0=C2=A0 4.933343]=C2=A0 rest_init+0xe4/0xf4
+> [=C2=A0=C2=A0=C2=A0 4.936584]=C2=A0 arch_call_rest_init+0x10/0x1c
+> [=C2=A0=C2=A0=C2=A0 4.940699]=C2=A0 start_kernel+0x600/0x640
+> [=C2=A0=C2=A0=C2=A0 4.944375]=C2=A0 __primary_switched+0xbc/0xc4
+> [=C2=A0=C2=A0=C2=A0 4.948402] ---[ end trace 940193047b35b311 ]---
+>=20
+> Initially I dismissed this as a warning that would probably be cleaned=20
+> up when we did more work on the TPM support for our product but we also=
+=20
+> seem to be getting some new i2c issues and possibly a kernel stack=20
+> corruption that we've conflated with this TPM warning.
+
+Can you reproduce this issue on mainline? Can you also bisect to find
+the culprit?
 
 Anyway, I'm adding it to regzbot:
 
-#regzbot introduced: 18415f33e2ac4a https://bugzilla.kernel.org/show_bug.cgi?id=217498
-#regzbot title: Off-by-one CPU initalization when CONFIG_NR_CPUS equal to actual system CPU count
+#regzbot ^introduced: v5.15.110..v5.15.112
+#regzbot title: Possible stack corruption and i2c issues due to irq warning=
+ on Inifineon SLM9670 TPM
 
 Thanks.
 
-[1]: https://bugzilla.kernel.org/show_bug.cgi?id=217498
-
--- 
+--=20
 An old man doll... just what I always wanted! - Clara
+
+--ybxFYc807lJQs/+9
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZHQIDQAKCRD2uYlJVVFO
+o28IAP9l7fkmBaEnd7uOzDrnx7R2T/xBLWnlazaZb2bK81BjkwD9EvBXYgNA8Ikl
+z9GdErluz1LCaBlZBBqRshbT/6hKTQY=
+=eZ2H
+-----END PGP SIGNATURE-----
+
+--ybxFYc807lJQs/+9--
