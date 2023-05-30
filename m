@@ -1,58 +1,54 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2088.outbound.protection.outlook.com [40.107.223.88])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2060.outbound.protection.outlook.com [40.107.243.60])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D37621C08
-	for <regressions@lists.linux.dev>; Tue, 30 May 2023 04:00:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D309110FE
+	for <regressions@lists.linux.dev>; Tue, 30 May 2023 04:12:50 +0000 (UTC)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ABF3iGhe6SGZkoGBQvCyT/SPbON7V9kLmd1qNcl4i2Pboiaz0ECa67LFrybJXCOU53milay7wOqt5YmjBjwxcLIA+5SJFZqfJtvhl91uW1QPz+0RqT+L8r8oXLKWRkmcx+dlZN1dDJ8Uz0fB/XY0vdN1hLaCXVfjI5SuxlXu+BMC4cjGxMZ3DkNlW7dOQI7cp31Um2fUnMU3MajM07ptV/1tdzXqYkAfpCfL0QQrOBFVNOTo046igo2zUGioP3kZx4YaTlpn/4mztjjUN5zvXWpKkWhDHvULXgLTWFoXrPOnZoxiyVR8uDP4XonjKAv0s1vxyokHPyHKCHElFfDOOw==
+ b=l9Ma9vaKQOof82ut4dzq8HmiS7BPL+l2WrKTcWIAm7Ysj9bV3BARxi+lJW8OdCDBydxnGaFdrFrfU3wM1h8OakqkRCFxemtOxiqXf0sADZ/QFjGLTohmrzeTBCoTmfif0ICP8FtQF1JEh9I7TuJmOMGNVx+Vny9E0MGomi8R9VDK8T7TJCBcmZNHbw900TVIubOb5RLp9kr4PwG66BmcVK8NCK4p6Yg1OiiTXfw68YjKVbr4D0FdTsF9U7GwyefU/HquDwTjo/MwjkUkVU4vAprPJXP0DvpU6MxT6VlyiOp3D1SHiUCAHGL3JkzisNP4qMGYrarZ+rc+1CYQudTChg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Q5HiBBQ00meKzAWRSJc6c86d+StCxH6L9z3k9f2hV9o=;
- b=Plr72bvFPUxaK6b8oZUXVZVgsMgLl6FtblDPGAFAJLk5dcNTwUzDzKyS88OQhqjcmkz9SBHDcc3DxBRfwE7mf2drlkDjC6ibg4rtxTWYBVdRgfzsSUy/JpJNUvCW0tE61mOvbFiMLxu/r9un6cjgHLBfzgLH9iXT1A0uAsJeGlSIhALU1Sywj0zo2bVdEkmvHnr2MlEmQfb5XD1jLrP2M6/qowH/eVQl4WmoXpYyA3vPRszLPktWNmPyM6WwFhc5en94FjXb/kWCuOtirSNcgKl/4v8dgNnSzAzL0nMuH0RjRNCPdpCfX7+GXbnB0/psOREluVS59h0FMFLqxd1Wsw==
+ bh=CaONbUQvDR+cf5a9btgdaLYowa1jbnre8fv+e4JWGas=;
+ b=PwiMEQKnE5vHIameO5SxSNs1eRNwlSbdVDFNMXjufTvLYEH129osAF9wtM6drLOR/Axv0TKxJX6QcjpScCm8FP9ol4NvxKEVLSAWQXeRcnCFK+aLDdAGihOGYBSV0CK0Ec+uAB6cCdBtlxYOVVWUMBIyQb6d/PHTxoMD5B8myHG01sDg1MV652Xu5+i14WrHGsusWh/1x5zruz7zoMTWiP+yM44kTkJZDP0MyGoSuXE0k+qgU9MaTcA/ih7hn0511TwRWs4wkOw1HzDSkNs/5EJ8gIKyjJ0cO6YgpXRTOLCrjsXtACUYtajvtntemBtKjqc0NPLpkD4LsJ9KL66EJg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Q5HiBBQ00meKzAWRSJc6c86d+StCxH6L9z3k9f2hV9o=;
- b=YCRoDmbmlokNG6XE4NUBTlY++zD/Fm+Nv5dwLzKYZDBw3Bd2bWustt3PpoPAvVTlFwbXtcOSLkLS9lNZJfcwlAlfUckZV5S00I4y+dJK40GRU+jmRiSVX3rbnJWQBlzmtWn89gUBYycYzvsxTQKXLpF09n5KIv49ieCN0qBzWXA=
+ bh=CaONbUQvDR+cf5a9btgdaLYowa1jbnre8fv+e4JWGas=;
+ b=owIAnoDPMf3+aQrRFcW+W/2FgGe/xJa+HsYyuHTZ/vZ4ZTT+O+WeCCWVVw763EGDAGlsdoq3x/MjNcDHahi3QidoleOziNcrpRROPKnhCiYALUoC9QSorma3jwA6DhpHHpFiELNXuRZarehtPds9NwAvtcH6+IVdKjyNqf6RDYA=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
 Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by PH7PR12MB9068.namprd12.prod.outlook.com (2603:10b6:510:1f4::7) with
+ by DS0PR12MB8573.namprd12.prod.outlook.com (2603:10b6:8:162::15) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6433.21; Tue, 30 May
- 2023 04:00:12 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6433.22; Tue, 30 May
+ 2023 04:12:48 +0000
 Received: from MN0PR12MB6101.namprd12.prod.outlook.com
  ([fe80::a65c:3aa0:b759:8527]) by MN0PR12MB6101.namprd12.prod.outlook.com
  ([fe80::a65c:3aa0:b759:8527%5]) with mapi id 15.20.6433.022; Tue, 30 May 2023
- 04:00:12 +0000
-Message-ID: <8537d965-ddf4-7f45-6459-d5acf520376e@amd.com>
-Date: Mon, 29 May 2023 23:00:09 -0500
+ 04:12:48 +0000
+Message-ID: <e37b2f7f-d204-4204-ce72-e108975c2fe0@amd.com>
+Date: Mon, 29 May 2023 23:12:45 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.9.1
-Subject: Re: Regression from "ACPI: OSI: Remove Linux-Dell-Video _OSI string"?
- (was: Re: Bug#1036530: linux-signed-amd64: Hard lock up of system)
-To: Nick Hastings <nicholaschastings@gmail.com>
-Cc: Salvatore Bonaccorso <carnil@debian.org>, 1036530@bugs.debian.org,
- "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
- linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
- regressions@lists.linux.dev
-References: <168471337231.1913606.15905047692536779158.reportbug@xps>
- <ZG/8cxxTJ9ZzrVPQ@xps> <ZHCYRmD7YeIWoy2W@eldamar.lan>
- <168471337231.1913606.15905047692536779158.reportbug@xps>
- <ZHKrC4/G6ZyvRReI@xps> <ZHL5cCNUzVdleiag@eldamar.lan>
- <ab12984e-be17-903d-ba0a-f9c85b8c544f@amd.com> <ZHP4IqxBUPuVRvRV@xps>
- <09e24386-de63-e9e9-9e7f-5d04bad62d83@amd.com> <ZHQhPcKUF76Kplwm@xps>
- <ZHUt9xQKCwCflvVC@xps>
+Subject: Re: 6.1.30: thunderbolt: Clear registers properly when auto clear
+ isn't in use cause call trace after resume
 Content-Language: en-US
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Bagas Sanjaya <bagasdotme@gmail.com>, beld zhang <beldzhang@gmail.com>,
+ stable@vger.kernel.org, Linux USB <linux-usb@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>, Takashi Iwai
+ <tiwai@suse.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+References: <CAG7aomXv2KV9es2RiGwguesRnUTda-XzmeE42m0=GdpJ2qMOcg@mail.gmail.com>
+ <ZHKW5NeabmfhgLbY@debian.me> <261a70b7-a425-faed-8cd5-7fbf807bdef7@amd.com>
+ <20230529113813.GZ45886@black.fi.intel.com>
 From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <ZHUt9xQKCwCflvVC@xps>
+In-Reply-To: <20230529113813.GZ45886@black.fi.intel.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: DS0PR17CA0003.namprd17.prod.outlook.com
- (2603:10b6:8:191::17) To MN0PR12MB6101.namprd12.prod.outlook.com
+X-ClientProxiedBy: DM6PR08CA0032.namprd08.prod.outlook.com
+ (2603:10b6:5:80::45) To MN0PR12MB6101.namprd12.prod.outlook.com
  (2603:10b6:208:3cb::10)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
@@ -61,195 +57,112 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|PH7PR12MB9068:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0aa28f62-9b9f-4542-19fe-08db60c25ddd
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|DS0PR12MB8573:EE_
+X-MS-Office365-Filtering-Correlation-Id: 90904920-f074-4e76-e016-08db60c420b7
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	hHt7eGpvPziekSH1xR69Z74gIJd1TlA5q/dDk6N7CMxHh4qSOX7y4f7+QOaKvM8m+CCXzGEuTgfOfbZp1PYzXE//7veW3+RAzEa4KPuP6skey7ZPyPbxgXUlLW5higqJnJ8Kvtwn7ZV1yuAJGHKxo30J8ND53bH/ii8GKNVGt6Xwc/2yMyAhZAye74SAnlI/6xdoVenwYdai/5pC2rDViR8pZ06imNKIqgjRljIds+EiEzhcVIHCJCMy1c5CKusT/3AMwgXtYR2MVJoecGZvHSS3EmGKoRHlKuziA7i3lMr13u7plLFnaU8xwqprA9OA04niXf4AxrdGmBW0bMB+hDMJB6zcO9Y1xnLwv1ml+OAHGqNHAomL8mhOn/xLWO79SvFfhl7SlrVMw6+/MLYAnkDVd4LrZwiFX70fkR6FFTKmj6Xh57LO3pPRnPuweCE1xOTnQkVm6J10vC8ZMY9pdk9csp34pyDo8S+FIlrUPyBVYztlEb9POhcbmUMbPfbjJDapc5dqii8hdmUSS7YncIJ82rcHu9MJRNVIFWgHXpudNeJtwYZfg6bfGqv1Kr5/4TK/rnqMD+x/NEuNZngfsOw7oWGZSHUME5xlxk5EmkY2jEkM90zzLhNFcDpN7vTG+MyXhjsmMkjrnPipbVJfXw==
+	p3cM7fT1y/43vkMHQLQHAEMa1Tccq8hjfdCsfv3qJEPS9HgconF9nt7UwcCNVGEgY3zT+DiGOVTEpOSo+twCiW6SgyemiqdpZyjTZyIXYQ3ZiQu//lHnO+vf0377ezte9WPQJmV+Igkj/ouI+nlz0wB1R/HplipulslLZ3nAU5I24TwRtlCOryip4t7Zl3HuGgg8gKse6Gm0l3V5cDF0eh/WAbBDl26ao5GvZdXbv2uESVo1dMcr2HwOj8ol9hsEkj2XKcMbQyayvgVnb+RhS8ZR8KVPi8yNl7eR27+CeElIXQKgJ/UPMI3hQaXSrpC+8RlgqcY5HA27tDyshjTADLPjXYEbQBy9+cU2CtqXfEVrd2klIPGMk7fqS3cbyST/udTB4zF5UqoFIPsE0E+5I6EoPYfmQBiSG5G7rKlbZLqEtdXcGSd/LLzdQ5R8p9VYV+gXwBczfxS7SXHGrZxMxMhhMAoQAqcn+uXe4+08QXJO0h0JPEbfl+Ll/A80da0+MJUl6ZoNqMHvy71ikvcOeGg2SFSoRsGwPKCBqHB7M/g9vhTZ/3zoftoNp5HhNOQP+MYv6I0BswrL4zfZDfof72goxF2gnBsE4e1o75UEGMkrC3XUVzxUr5sSLo8jetdSKWxCekZNEiTBS5wJP0xnrw==
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(366004)(376002)(346002)(39860400002)(136003)(396003)(451199021)(41300700001)(2906002)(316002)(6666004)(6486002)(38100700002)(8936002)(8676002)(2616005)(86362001)(53546011)(31696002)(186003)(5660300002)(6512007)(44832011)(83380400001)(6506007)(966005)(36756003)(66556008)(66946007)(66476007)(478600001)(54906003)(31686004)(6916009)(4326008)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(39860400002)(366004)(136003)(346002)(396003)(376002)(451199021)(54906003)(478600001)(8676002)(44832011)(8936002)(5660300002)(36756003)(2906002)(31696002)(86362001)(6916009)(66556008)(4326008)(66476007)(66946007)(316002)(38100700002)(41300700001)(2616005)(186003)(53546011)(6506007)(6512007)(6486002)(6666004)(31686004)(83380400001)(43740500002)(45980500001);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?SDB0UWc3NDlJdHVWVkcvOTV4dm00aEYxcmpmMXNSYWtQcDhjblJablQyb3ll?=
- =?utf-8?B?STU0d2t6UHN4S3VGeGFBVHpHYlZwcGl2YldqVzMvR2tudG1sUC9xcnp2YXdL?=
- =?utf-8?B?Tnh0Ui9HUXFLdFFscEZ6T0E1TlFpaS9GR1NZdU5VdmpOcU5mK3BZS1JVQmdI?=
- =?utf-8?B?Y1pYUU0zQ2NFTWttRHgzc0RhNE1EeVZzanFpdUY5Qm1aNm1kclJDOHdrYU1z?=
- =?utf-8?B?T1FBaEs4b1VQUjlZVU9ON2xTNEJRYkFiRGpTc3paNlFYcEhFQm5GT2NONjhI?=
- =?utf-8?B?ZFRCdGcwQjU0d2JKS3FxUVJsYjFGYlhKSktuZ0NENzNhWlIvMzM3dFZRS20v?=
- =?utf-8?B?UHp2TFdQMmxvMDB1OEFxZFJPNUQrWHVTYnVrMTJMRWYvR1lOOFUzOHI5aFNi?=
- =?utf-8?B?WmZIZEhsellzNVVUY01tKzMvS0JWWDNIVzBpcXZVRGdMMHRnN0lVdnVoeEs0?=
- =?utf-8?B?UnhVRjkwSUxtSzJPbHVQNHRXUVVHUlNJc1p1ZTJ4KzhyQ2VqckI2Vmd6Qmp2?=
- =?utf-8?B?TFZkQ3ZEelhyNjRNbU5PRVlqZGNzbTJHaTc3eDZDTGExakVqNjhZcXNMNnpS?=
- =?utf-8?B?OFVTa1lPRVF4MTVBaWd2MDl3VzF6cGI0UU04RUx5R0E2MGNFU3h6a2R6K2tQ?=
- =?utf-8?B?dmhjdFZpNDZoWFlkalEvK016MGpHdkxiaFlKUml2Zzhjb3hHY1NoQVdGL2Jo?=
- =?utf-8?B?MUpiYXk5TU80akk3VEsrZ0hyVWVBcFpDblNlSmc5c3FvTzIwNEFPTFZsdjIy?=
- =?utf-8?B?QzFWcWw0T21ISG14ZE1XZG9rVnR2Q3ozWVc2ay96WUhZeFlHdGpyVUxMRzkv?=
- =?utf-8?B?L2I3bWNZbnRlbmdETGtkVCs2RTZSMThieDFwZldac01MbFBDaDJUZVM4c09K?=
- =?utf-8?B?VGNkanNUbUpmRjFxbzhvcUlYVXZEdm9TOGtJb2pmMXUvUEpaMnVSVW9BQVZo?=
- =?utf-8?B?aDFHYzk0djBGWFJaY3dZRlhHTW93a1phazk5eVdodmdSYVZjZGlRZUplZnZC?=
- =?utf-8?B?Y3ZiWlhWSlpHOFBUQnRsU2REZldpelpQMVBWZUJzL1lRSHY3WHpIWGNKa3Q0?=
- =?utf-8?B?N1U4dnFQSHkwcGZ2OW9uY2l6UVVZYVNiU1A0bnR4WmU4djNxRW5HU0xSRWFa?=
- =?utf-8?B?SG1nMTd5eG5uZ0grSVdQUjJHQzBvRXE0Ly9rQytYSHNBczI0QnJ5ZTd2MG5s?=
- =?utf-8?B?aVdpeDVNQnlzOTVockR3MmluNmlYRWpLZ0NGaERxWWYvU1FIbGpSZGthZHFn?=
- =?utf-8?B?cnRhM1RFQUx3ZER2OVo5cDZaa2g4VjFGZ1JOb1ZpRGlSY1pUbU1weWVWTjlr?=
- =?utf-8?B?cmtXdmtYM2NKQUE2ZHpLUUFhMHVScU1qYXYwbDk4TUplR0ZtbExRVW4rRnJq?=
- =?utf-8?B?TUZwRkFIUWJnZTY5NkxyN3hVY21NV1E3aTcyRzNjaWM4RENtK3cxOVptZXAy?=
- =?utf-8?B?YU9oYldQcE50Z2lyUWphMjBHTFJuQVkzTnJXVkNyenZUKzBMMEl0cVJYdmdD?=
- =?utf-8?B?S3VwbW10SjhBTHU0UUpuUWlYc2FEdnRkbTZqNW1uQkFneXZMdXdNNXQxeExT?=
- =?utf-8?B?MVB5dHJBcnpqbUFIK1NmdFpvV1paYkNTVW1lMVBzb1pNVmJPWjBiY1prNHZm?=
- =?utf-8?B?OGplK0JwZlJxTTA5bWlURXFrcy8xV0FXc0E2V0pOS0tiNUF0bjBrZXlOTGtE?=
- =?utf-8?B?UVNpR1E3N3RzeEwxYUZxcFltUEhiQkQxc3I3WFY0Ui9XaU0vditHVXUyQjMr?=
- =?utf-8?B?c2F0REh4YXU3MmJ3eGFBNjZDMWVDVDFWTEpSL0sveHV6ZmI5dmVJdWw4V2xl?=
- =?utf-8?B?R3pZalBnbmRuMmszN0JDYkMxciszeWN2bE8wd05GZ2JQeXJJQVNlRXd2RW1N?=
- =?utf-8?B?TXdSQm9LQmNoQ2h4YTNFQmpOWU5yL3FtbVpwUTdOUUpzczdYcjBnT2I3QzhO?=
- =?utf-8?B?bFcybTBOc29SWWZnS0tsYjloeU5KWEZ6Wnk3blJDMzlkTG1iSkRLUnJxT3I2?=
- =?utf-8?B?SHdMbmllQjgwWG85d1lRcmhsUW1VRy9va3Yvc3dsV1J4MkhCRmp1SjBaQ0E0?=
- =?utf-8?B?MWp6NFVOQlo4RzZBcTF4akpyUlRSejIrVXhGNGYrS1ltRXNWSzFWTEFyakxp?=
- =?utf-8?B?S25aK0c1eGdKNXdTRHVJV1lSTmsrdkl6c2RQNktBY1hkNTM5RUdHaThqY21s?=
- =?utf-8?B?cWc9PQ==?=
+	=?utf-8?B?cmhjWWN3TnY2bnl1SFNuM0I0VXVHMHQ3YS9kOXlMU0h2UTR4YzNySFAxR3k3?=
+ =?utf-8?B?eWFLQ2lteFFCdUZTaVl4a25wK1B4RHpKRXF4dm1vQXNhWnNpTm5VNmpPclMv?=
+ =?utf-8?B?T3JINnNqRGFuaDJEUUJzTFBZYm1PckpmWXkrK09UTXlraGRINVUwSGUyNGJu?=
+ =?utf-8?B?bkhHUXcwMCttRCt1Ry9KQ21YM0xpTkVabkp1SlNoVHdFK3pRSVI3eUgzb3cy?=
+ =?utf-8?B?dEEwREtKblJDbnJLR2dLalMrM2paWHd2TUxRMlUxZ3NBbldPNzdZMytoalhr?=
+ =?utf-8?B?bHRnUlZnTk5TMTJaZTVWVVhrNVhNU3Ria0x4TExYTVpySTBHUzhpOFFqQXU2?=
+ =?utf-8?B?WTBybkg4bWN2dTRmQ2Z6bDhDMHRSMDVIeGh5cHVQV2tlV1dtbndOTXIyMUll?=
+ =?utf-8?B?USs2SW1GMkUwU2tyVjZkRDVyOGdDbFROeXVqNHhscE5IMnB6Tk9RZTdmczA2?=
+ =?utf-8?B?NDROcUt2aE5SWG9URUJvMk1kNUJlZkJTYk1HZ0dkWXhqL2NSeC9RdHZnZWFV?=
+ =?utf-8?B?UFRxVHZxQnpRUFdmOFQxcjhRS3dKTVV4QllteUJybDJZbkovZ3FHelJyVmw4?=
+ =?utf-8?B?QVBMRG5kRGhaQ294SzNrMEQxZHNpbnVjR28vcFRxYXVhR3N4TVU4SkY5L1g1?=
+ =?utf-8?B?TVVnaTdmSVE2L2xWODdjOE9kaGtpM3JqMzZDcWJPOEFnYnFCN3lZMzNVV0VW?=
+ =?utf-8?B?WWhxNXAxdFlEOGRXYVBUeE1OMEY3NWJlZGdKT2xlTkhjSXlJdUVEWnhqUnJ2?=
+ =?utf-8?B?cm9EaEZyTHJVTHJGTFlFT3pWUDVOTHp5bmcyOHBicjJvcU1tNEZGN2l4NWRD?=
+ =?utf-8?B?RzhGS3U4TEtKL1RSSDRvWDN2cmdpeUMvbXpWNGUwM1ZHTWFlUGZTVjFXcGpE?=
+ =?utf-8?B?WFJLU1p3NDJYbWtRZTMyOTJpYzU3MmFLWUlkQ211TXh6VWtzRDY2YVVOUFlR?=
+ =?utf-8?B?cThwV2lrNWZ5TVJ5aitCN0VQUWZsK3JoOXo1d1BEQy91bWRHUEl5R212Sjhx?=
+ =?utf-8?B?Q29YSzlSbkpzdXNSTnNEdENwUWFUam5sNWUvcGZCa2EwMmI5YjltUmYzQTMw?=
+ =?utf-8?B?c2ZCVlFIQ2cxS0JPUWNtM1dHL0pQcXVkQlh6MXp2elhqWVZmZ2FIU0x6M3pC?=
+ =?utf-8?B?bStQZ3U2UnFhemx0YUVEWVJ1TzVZVTNiSEJDN0loSjA5d3FxaDhuZi92b0Rj?=
+ =?utf-8?B?Q2R5OW9qYWo4WEwwaEEvQlpGVDBYN21hOWpvYzA2M0xqV29ySWpqbnI2a3RY?=
+ =?utf-8?B?Ykp2UHVoTmxTazN4U05iNjBDK2dHTkVyZjFIM0NWUDF5SmlIWkVVVVk1WkpZ?=
+ =?utf-8?B?STBCNHJ4RDdPWXFBM3MxeW94Rkc5bWNPcmE5WTRGYkZ2cDZZK0tzZHl3REpH?=
+ =?utf-8?B?bFRxc2FrZjRwVnArMGVyVWZZWHJEWi9aemo0eFZnR2lTMUV3NWZ0V3pLYnFZ?=
+ =?utf-8?B?MDYwTTdYNElZb04vN2xWVkxHSVljRW94ZWNJQzVVQVRndHVxMUFBdllTd3Bk?=
+ =?utf-8?B?N1pDQmh0a1M1eU5QQm1CUHBBOVZYUXVoVm80NXhMMDBtUndUck1KdllsUVk5?=
+ =?utf-8?B?aHFmSEovaDMzNENHMmVvbWJYSXpBTk5jcEJhT1pRenc3NTVxZkRQbUhVMnJR?=
+ =?utf-8?B?NHpyRC9TcTZHUENWeXJOS3k3bTlUWkg5RTNqWnpYY2Y5VWx6VlVXWmdhb0Fr?=
+ =?utf-8?B?NUV6WlcvNDBxVXkyKythdlN5aEF1WDVmUHVRSzBwbWZrYkxnSFl0U0JvcXhy?=
+ =?utf-8?B?WENSb2c5OFR4a1YxN0lzcE5yOUgzbzlHUDBaQ09wZXpXOG1UK3hEVDR5ZEEy?=
+ =?utf-8?B?RWxVWnNROUhRbkJUVSs1VTVmQTFZaXNkSXR5Z2hBV3F1Y0NUZ0REY2VONzZu?=
+ =?utf-8?B?UGtnbG80OW1Ma212M3hFU0ZZayt2THUvVk9xZXlXRkZ6QmlBdklXdENRY05w?=
+ =?utf-8?B?ZTdqQ3RnUzAvb2diNHRBZTI5OXpYckFHVG5PSmtzVEFmTFAyQm0wdWlSVUIz?=
+ =?utf-8?B?bXJzZjdpOUkxTjRFVzJZR0JsRXNPQlUvNjEyWFFWY2pabFVDbUpvcmVkcEVO?=
+ =?utf-8?B?cjJXRUNKZjBNT3JDV2NYSFkzMEZnbkt3RGpiU3hFZzA1WHhRc1BENGxTVUFj?=
+ =?utf-8?B?ckpRQUZNZUVWWnl2YmhWME5HNGxpUEJEQnlKWisva2Mzc3I3NFBkL2U1K01M?=
+ =?utf-8?B?RXc9PQ==?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0aa28f62-9b9f-4542-19fe-08db60c25ddd
+X-MS-Exchange-CrossTenant-Network-Message-Id: 90904920-f074-4e76-e016-08db60c420b7
 X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 May 2023 04:00:11.9347
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 May 2023 04:12:48.3270
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: S/OJxf18MZERzEH/Rd3fIZqA80LpK7D67YABaEBzuvDq6I9MByv4j33/hPoDOnqvCSV/Biwsnhp0b7DZWPpUaw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB9068
+X-MS-Exchange-CrossTenant-UserPrincipalName: FcWz8PWl/GcdEPlFtTmk02KaGazRtyya21RMxp85edNwODHNsjvd35f8m5lkNh1Kv+8/r+XvuoHNEAhJQwjwFg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB8573
 
-On 5/29/23 18:01, Nick Hastings wrote:
-> Hi,
-> 
-> * Nick Hastings <nicholaschastings@gmail.com> [230529 12:51]:
->> * Mario Limonciello <mario.limonciello@amd.com> [230529 10:14]:
->>> On 5/28/23 19:56, Nick Hastings wrote:
->>>> Hi,
->>>>
->>>> * Mario Limonciello <mario.limonciello@amd.com> [230528 21:44]:
->>>>> On 5/28/23 01:49, Salvatore Bonaccorso wrote:
->>>>>> Hi Mario
->>>>>>
->>>>>> Nick Hastings reported in Debian in https://bugs.debian.org/1036530
->>>>>> lockups from his system after updating from a 6.0 based version to
->>>>>> 6.1.y. >
->>>>>> #regzbot ^introduced 24867516f06d
->>>>>>
->>>>>> he bisected the issue and tracked it down to:
->>>>>>
->>>>>> On Sun, May 28, 2023 at 10:14:51AM +0900, Nick Hastings wrote:
->>>>>>> Control: tags -1 - moreinfo
->>>>>>>
->>>>>>> Hi,
->>>>>>>
->>>>>>> I repeated the git bisect, and the bad commit seems to be:
->>>>>>>
->>>>>>> (git)-[v6.1-rc1~206^2~4^5~3|bisect] % git bisect bad
->>>>>>> 24867516f06dabedef3be7eea0ef0846b91538bc is the first bad commit
->>>>>>> commit 24867516f06dabedef3be7eea0ef0846b91538bc
->>>>>>> Author: Mario Limonciello <mario.limonciello@amd.com>
->>>>>>> Date:   Tue Aug 23 13:51:31 2022 -0500
->>>>>>>
->>>>>>>        ACPI: OSI: Remove Linux-Dell-Video _OSI string
->>>>>>>        This string was introduced because drivers for NVIDIA hardware
->>>>>>>        had bugs supporting RTD3 in the past.
->>>>>>>        Before proprietary NVIDIA driver started to support RTD3, Ubuntu had
->>>>>>>        had a mechanism for switching PRIME on and off, though it had required
->>>>>>>        to logout/login to make the library switch happen.
->>>>>>>        When the PRIME had been off, the mechanism had unloaded the NVIDIA
->>>>>>>        driver and put the device into D3cold, but the GPU had never come back
->>>>>>>        to D0 again which is why ODMs used the _OSI to expose an old _DSM
->>>>>>>        method to switch the power on/off.
->>>>>>>        That has been fixed by commit 5775b843a619 ("PCI: Restore config space
->>>>>>>        on runtime resume despite being unbound"). so vendors shouldn't be
->>>>>>>        using this string to modify ASL any more.
->>>>>>>        Reviewed-by: Lyude Paul <lyude@redhat.com>
->>>>>>>        Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
->>>>>>>        Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->>>>>>>
->>>>>>>     drivers/acpi/osi.c | 9 ---------
->>>>>>>     1 file changed, 9 deletions(-)
->>>>>>>
->>>>>>> This machine is a Dell with an nvidia chip so it looks like this really
->>>>>>> could be the commit that that is causing the problems. The description
->>>>>>> of the commit also seems (to my untrained eye) to be consistent with the
->>>>>>> error reported on the console when the lockup occurs:
->>>>>>>
->>>>>>> [   58.729863] ACPI Error: Aborting method \_SB.PCI0.PGON due to previous error (AE_AML_LOOP_TIMEOUT) (20220331/psparse-529)
->>>>>>> [   58.729904] ACPI Error: Aborting method \_SB.PCI0.PEG0.PG00._ON due to previous error (AE_AML_LOOP_TIMEOUT) (20220331/psparse-529)
->>>>>>> [   60.083261] vfio-pci 0000:01:00.0 Unable to change power state from D3cold to D0, device inaccessible
->>>>>>>
->>>>>>> Hopefully this is enough information for experts to resolve this.
->>>>>>
->>>>>> Does this ring some bell for you? Do you need any further information
->>>>>> from Nick?
->>>>>>
->>>>>> Regards,
->>>>>> Salvatore
->>>>>
->>>>
->>>>> Have Nick try using "pcie_port_pm=off" and see if it helps the issue.
->>>>
->>>> I booted into a 6.1 kernel with this option. It has been running without
->>>> problems for 1.5 hours. Usually I would expect the lockup to have
->>>> occurred by now.
+On 5/29/23 06:38, Mika Westerberg wrote:
+> On Sun, May 28, 2023 at 07:55:39AM -0500, Mario Limonciello wrote:
+>> On 5/27/23 18:48, Bagas Sanjaya wrote:
+>>> On Sat, May 27, 2023 at 04:15:51PM -0400, beld zhang wrote:
+>>>> Upgrade to 6.1.30, got crash message after resume, but looks still
+>>>> running normally
 >>
->> I let this run for 3 hours without issue.
+>> This is specific resuming from s2idle, doesn't happen at boot?
 >>
->>>>> Does this happen in the latest 6.4 RC as well?
->>>>
->>>> I have compiled that kernel and will boot into it after running this one
->>>> with the pcie_port_pm=off for another hour or so.
->>
->> I'm now running 6.4.0-rc4 without seeing the problem after 1 hour.
+>> Does it happen with hot-plugging or hot-unplugging a TBT3 or USB4 dock too?
 > 
-> I did eventually see a lockup of this kernel. On the console I saw:
+> Happens also when device is connected and do
 > 
-> [  151.035036] vfio-pci 0000:01:00.0 Unable to change power state from D3cold to D0, device inaccessible
+>    # rmmod thunderbolt
+>    # modprobe thunderbolt
 > 
-> I did not see the other two lines that were present in earlier lock ups >
->> I did however see two unrelated problems that I include here for
->> completeness:
->> 1. iwlwifi module did not automatically load
->> 2. Xwayland used huge amount of CPU even though was not running any X
->> programs. Recompiling my wayland compositor without XWayland support
->> "fixed" this.
->>
->>>>> I think we need to see a full dmesg and acpidump to better
->>>>> characterize it.
->>>>
->>>> Please find attached. Let me know if there is anything else I can provide.
->>>>
->>>> Regards,
->>>>
->>>> Nick.
->>>
->>> I don't see nouveau loading, are you explicitly preventing it from
->>> loading?
->>
->> Yes nouveau is blacklisted.
->>
->>> Can I see the journal from a boot when it reproduced?
->>
->> Hmm not sure which n for "journalctl -b n" maps to which kernel (is that
->> what you are requesting?). The commit hash doesn't not seem to be
->> listed. I may have to boot into a bad kernel again.
+> I think it is because nhi_mask_interrupt() does not mask interrupt on
+> Intel now.
 > 
-> Please find attached the output from a "journalctl --system -bN" for a
-> kernel that has this issue.
+> Can you try the patch below? I'm unable to try myself because my test
+> system has some booting issues at the moment.
 > 
-> Regards,
-> 
-> Nick.
+> diff --git a/drivers/thunderbolt/nhi.c b/drivers/thunderbolt/nhi.c
+> index 4c9f2811d20d..a11650da40f9 100644
+> --- a/drivers/thunderbolt/nhi.c
+> +++ b/drivers/thunderbolt/nhi.c
+> @@ -60,9 +60,12 @@ static int ring_interrupt_index(const struct tb_ring *ring)
+>   
+>   static void nhi_mask_interrupt(struct tb_nhi *nhi, int mask, int ring)
+>   {
+> -	if (nhi->quirks & QUIRK_AUTO_CLEAR_INT)
+> -		return;
+> -	iowrite32(mask, nhi->iobase + REG_RING_INTERRUPT_MASK_CLEAR_BASE + ring);
+> +	if (nhi->quirks & QUIRK_AUTO_CLEAR_INT) {
+> +		u32 val = ioread32(nhi->iobase + REG_RING_INTERRUPT_BASE + ring);
+> +		iowrite32(val & ~mask, nhi->iobase + REG_RING_INTERRUPT_BASE + ring);
+> +	} else {
+> +		iowrite32(mask, nhi->iobase + REG_RING_INTERRUPT_MASK_CLEAR_BASE + ring);
+> +	}
+>   }
+>   
+>   static void nhi_clear_interrupt(struct tb_nhi *nhi, int ring)
 
-In this log I see nouveau loaded, but I also don't see the failure 
-occurring.
+Mika, that looks good for the issue, thanks!
 
-As you're actually loading nouveau, can you please try nouveau.runpm=0 
-on the kernel command line?
+You can add:
+Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
 
-If that helps the issue; I strongly suggest you cross reference the 
-latest kernel to see if this bug still exists.
+When you submit it.
