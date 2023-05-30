@@ -1,45 +1,45 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 431A719931
-	for <regressions@lists.linux.dev>; Tue, 30 May 2023 12:41:40 +0000 (UTC)
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-64d57cd373fso3806030b3a.1
-        for <regressions@lists.linux.dev>; Tue, 30 May 2023 05:41:40 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2526F154B0
+	for <regressions@lists.linux.dev>; Tue, 30 May 2023 12:50:47 +0000 (UTC)
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1b01d912a76so25905425ad.2
+        for <regressions@lists.linux.dev>; Tue, 30 May 2023 05:50:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1685450500; x=1688042500;
-        h=content-transfer-encoding:subject:from:to:content-language
+        d=gmail.com; s=20221208; t=1685451046; x=1688043046;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
          :user-agent:mime-version:date:message-id:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=OcpB52c/UtNvFZJAngMvWnMhtf2U/fgcu67BgG5nIYU=;
-        b=ak2kwL1WfIK6rbLQVx8LyRPHqpOyh++Aw6IRctrHkgD6I/fgYEGZqRxTvhwMs+u2Bj
-         H4nHuhQc2x5QG2QWSdqcIw+4otST3+PPvEFMzd+QEvFyLO33r087r3dZZLS4UUepEKug
-         AecZDh/GLWGZEANN5Pk1veWI4Jam+RDSlWM8O6y3dIDvqg9vQsWgpz4vOsmJa2YYyTV4
-         q01pEGTX4Ei3y7kYLAYVB1/KgGTU402wbzh3oHMmuZa9pBxwS/aRbUEA1PIAVSmoa6B0
-         iXuzKGMYvve2mw9yxRmcP4d+gn1aYLEY8bMhMnt79Ix5gowczow5NBR3A49oSkPZ47nN
-         jrIw==
+        bh=42TjERYpl34ezVm6gTZ6MgxR9jYfte5EhPsCPBAMTK8=;
+        b=OdjPG1DSwHjTLkO4frX1ZQ9iHRRuMfJuphaUqBbNt/DbI1cEa2eOe3sXkQpEg3Lqfa
+         xT3KMZQHiL4WbaJHNUMnwJOVvbANilzfSAWdJfvegrzvElBB89TRQd/Ny42kxH7lwRvW
+         7XcJdBvsHZyXU80G7WTcS+HBEYsox3v68rE7/CF7YFG5SURtH4XhHC8fZLyGN1Qg1885
+         AKB/Fse2eNWjS+I1vDsDjoc9B9S4+pdNjUqEp8f1AVKGZwuRrovA9PZsVHewsKJ3jGj/
+         HJI9/4CTmKwVtCHxy1/NqgCWslJDcrjBZAO5zPIy6ZfdxeTlNuV90wGCyd6CMWAhVk+R
+         7rAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685450500; x=1688042500;
-        h=content-transfer-encoding:subject:from:to:content-language
+        d=1e100.net; s=20221208; t=1685451046; x=1688043046;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
          :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=OcpB52c/UtNvFZJAngMvWnMhtf2U/fgcu67BgG5nIYU=;
-        b=PdaHwLH8Uqc98AAoKXLuauMsgle+46D8FYssn8IwLw0rf5p1dc640+6U0OXVX3nOmr
-         PUQLGCihgG3W2rBklM3d+rvnNnqfF//WyDTKflflHnqHcQv4779QRJLJ8YmYmN6erBOA
-         HYmvQsTXn1y1Q2mDVlpqmpSJFP+zReeAmEX46oZF1yLhg/fnWtWVIQ2a7IQ0UTA3RoNY
-         ueCnWlIg4REot6Ir2pTov+YVRvJsvtCmPDohW1CcSEPbsNSP88oclHyoFSYhR0SgAvyZ
-         VgCTYyvmD24JxayPdyEE7C0LWDJw7U8x4KSVL6be0k9tJs2yMcTqoXILaAYeiFwczCp3
-         JvkA==
-X-Gm-Message-State: AC+VfDxsqr9GEECeuIeY3fqYHm9izUN0DkABv4iS+/PvWleBd8gEWMWZ
-	rUt0KGuZbcLnaMwhI9c6EUS4eDfYgV4=
-X-Google-Smtp-Source: ACHHUZ4hOUep/dS5YqlmauRgyXZ+kx76jLICMS8jSzjIekHzB6snZ7G64dbSii0o5Ple4ZrSIk2bYA==
-X-Received: by 2002:a17:903:1111:b0:1ac:820e:c34a with SMTP id n17-20020a170903111100b001ac820ec34amr11046997plh.0.1685450499604;
-        Tue, 30 May 2023 05:41:39 -0700 (PDT)
+        bh=42TjERYpl34ezVm6gTZ6MgxR9jYfte5EhPsCPBAMTK8=;
+        b=iKPmaY9h4waByECnLCmeGp/So9fl3fUMvOli6H+/b10dQPSmszHlPh+zPB3d/mg8HX
+         kYp9M96UeVuMfhZMo3zfEbX6wu5LVFwd2795d6ouLG1iwSNKcv6a2O6Lz0/vyKF9BXIR
+         b6iVV0P2vPGt5oW7LjtKLR0YmzYTO2ZvzeiOOBv/y7R1A2lsTSoVYUKC88XhpvO9KgiD
+         D5Z+tRbZmhXhwBkCUVyR6ajYZdgGENnl4A3Lgjn127aZuOoc7cwdGMd4kj5Tlh800c/9
+         qBsXDGwrUed+DCEiY+W1nvlo1kvI1uVEORFoBJy8+FbzD9Ze3aMNXmYEMgdEpx7S2mMf
+         ZRow==
+X-Gm-Message-State: AC+VfDwY0hkqyQQuGfr137fapWf1HLrM9qzLq3p5xTYkZ3LRfv82CV3n
+	h3j8k1bOJktyBwtK/3tZes8=
+X-Google-Smtp-Source: ACHHUZ48xTw2/AxpJYUFWYho6qBeQsi813yiiCGQz8Au8VSU5pflTs59kBiSuqjTi50nCTVoXF4NZw==
+X-Received: by 2002:a17:902:8504:b0:1a5:dfd:d167 with SMTP id bj4-20020a170902850400b001a50dfdd167mr2056892plb.8.1685451046491;
+        Tue, 30 May 2023 05:50:46 -0700 (PDT)
 Received: from [192.168.43.80] (subs02-180-214-232-12.three.co.id. [180.214.232.12])
-        by smtp.gmail.com with ESMTPSA id q3-20020a170902dac300b001b0499bee11sm3438873plx.240.2023.05.30.05.41.37
+        by smtp.gmail.com with ESMTPSA id ik29-20020a170902ab1d00b001b0218651a6sm7093717plb.178.2023.05.30.05.50.43
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 30 May 2023 05:41:39 -0700 (PDT)
-Message-ID: <cf4f50bf-99ca-f94f-f0cf-63081d531b4c@gmail.com>
-Date: Tue, 30 May 2023 19:41:36 +0700
+        Tue, 30 May 2023 05:50:45 -0700 (PDT)
+Message-ID: <dbb825e9-f92b-6c17-c1d7-b7e6cfb9b474@gmail.com>
+Date: Tue, 30 May 2023 19:50:41 +0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -51,23 +51,89 @@ User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
 Content-Language: en-US
 To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
  Linux Regressions <regressions@lists.linux.dev>,
- Thorsten Leemhuis <linux@leemhuis.info>,
- Linus Torvalds <torvalds@linux-foundation.org>
+ Linux ALSA Subsystem Development <alsa-devel@alsa-project.org>,
+ Linux USB <linux-usb@vger.kernel.org>
+Cc: Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 From: Bagas Sanjaya <bagasdotme@gmail.com>
-Subject: regzbot dashboard stalled (no regressions reported generated for
- v6.4-rc4)
+Subject: Fwd: Apple USB-C 3.5mm dongle cannot output 41000hz
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi,
 
-Regressions list on regzbot dashboard [1] seems stalled. It was
-last compiled on last Sunday (2023-05-28 06:18:57 (UTC)). Is regzbot
-not running, and why?
+I notice a regression report on Bugzilla [1]. Quoting from it:
+
+> Overview:
+> With an A2049 Apple USB-C to 3.5mm DAC dongle, I have the same issue as outlined in this link: ALSA won't detect 44100Hz as an available sample rate:
+> https://github.com/mikebrady/shairport-sync/issues/1504
+> 
+> 
+> Steps to Reproduce:
+> Play a 44.1Khz audio file.
+> 
+> 
+> Actual Results:
+> Pipewire reports that the output is locked to 48000hz, and ALSA reports that this is the only detected supported rate:
+> 
+> $ cat /proc/asound/card0/stream0
+> Playback:
+>   Status: Running
+>     Interface = 1
+>     Altset = 1
+>     Packet Size = 288
+>     Momentary freq = 48000 Hz (0x30.0000)
+>   Interface 1
+>     Altset 1
+>     Format: S24_3LE
+>     Channels: 2
+>     Endpoint: 0x02 (2 OUT) (SYNC)
+>     Rates: 48000 - 48000 (continuous)
+>     Bits: 0
+>     Channel map: FL FR
+>   Interface 1
+>     Altset 2
+>     Format: S16_LE
+>     Channels: 2
+>     Endpoint: 0x02 (2 OUT) (SYNC)
+>     Rates: 48000 - 48000 (continuous)
+>     Bits: 0
+>     Channel map: FL FR
+> 
+> 
+> Expected Result:
+> It should be switching between 44100-48000hz, the only two rates it supports.
+> 
+> 
+> Build Date and Hardware:
+> Running Arch Linux with kernel 6.3.4-arch1-1, alsa-lib 1.2.9-1.
+> AMD Ryzen 3600 on a MSI B450M Mortar Max motherboard
+> 
+> 
+> Additional Information:
+> It seems like a regression between Linux 4.x and 5.x, and halfway through the above thread the user "quantonian" added the device to the ALSA quirks table and has posted a patch:
+> 
+> https://github.com/mikebrady/shairport-sync/issues/1504#issuecomment-1193355701
+> 
+> Thanks if this can be fixed in the kernel. The dongle in question is US $9:
+> https://www.apple.com/shop/product/MU7E2AM/A/usb-c-to-35-mm-headphone-jack-adapter
+
+See bugzilla for the full thread.
+
+Unfortunately, the reporter said that he can only run kernel as
+old as 5.6, as older than that, he experiences unrelated GPU crashes,
+so he can't bisect this regression.
+
+Anyway, I'm adding it to regzbot:
+
+#regzbot introduced: v4.19..v5.10 https://bugzilla.kernel.org/show_bug.cgi?id=217501
+#regzbot title: 44100hz is mistaken as 48000hz on Apple Headphone Jack Adapter
+#regzbot link: https://github.com/mikebrady/shairport-sync/issues/1504
+#regzbot link: https://www.audiosciencereview.com/forum/index.php?threads/review-apple-vs-google-usb-c-headphone-adapters.5541/page-32
 
 Thanks.
 
-[1]: https://linux-regtracking.leemhuis.info/regzbot/mainline/
+[1]: https://bugzilla.kernel.org/show_bug.cgi?id=217501
 
 -- 
 An old man doll... just what I always wanted! - Clara
