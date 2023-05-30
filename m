@@ -1,114 +1,86 @@
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86E4612B65
-	for <regressions@lists.linux.dev>; Tue, 30 May 2023 08:03:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1685433830; x=1716969830;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=nT129KDi/UaqAt1IK05PNRCRhF4o7QGNyAqjx0oBA74=;
-  b=QuZSX8Pu3J4hctgDJwnASUSO+56di4Ze0S5nUomZp5eTZ3VoJrAds+xQ
-   5lgdJJ4C58k09smAc+tXarmG13t938Kzx/C91f+AvYuDcMQc8kGBSAlTG
-   97obsKOdJ8FeYlasKafw/C1ZAJotSyHc7VRLVon8/klIsrgkStJrEMX1d
-   rira/gBWdjuSuNNsw9gWJR+JkrUCWXOSLZ8MoquqiM31dRwydSA0qRBgr
-   b16hSqbwGI59cgEA377oHCouSkWw7r5XMmhuNmAaR7yjpEga9L3p5fRRm
-   p6X4Rg8OTxFFidkbv4esju+tE7mMTbi1miAIsuQT1YtspiiGbKfO7GhJA
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10725"; a="335196225"
-X-IronPort-AV: E=Sophos;i="6.00,203,1681196400"; 
-   d="scan'208";a="335196225"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2023 01:03:26 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10725"; a="706326247"
-X-IronPort-AV: E=Sophos;i="6.00,203,1681196400"; 
-   d="scan'208";a="706326247"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga002.jf.intel.com with ESMTP; 30 May 2023 01:03:23 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-	id 748CD53A; Tue, 30 May 2023 11:03:28 +0300 (EEST)
-Date: Tue, 30 May 2023 11:03:28 +0300
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: Mario Limonciello <mario.limonciello@amd.com>
-Cc: Bagas Sanjaya <bagasdotme@gmail.com>, beld zhang <beldzhang@gmail.com>,
-	stable@vger.kernel.org, Linux USB <linux-usb@vger.kernel.org>,
-	Linux Regressions <regressions@lists.linux.dev>,
-	Takashi Iwai <tiwai@suse.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: 6.1.30: thunderbolt: Clear registers properly when auto clear
- isn't in use cause call trace after resume
-Message-ID: <20230530080328.GD45886@black.fi.intel.com>
-References: <CAG7aomXv2KV9es2RiGwguesRnUTda-XzmeE42m0=GdpJ2qMOcg@mail.gmail.com>
- <ZHKW5NeabmfhgLbY@debian.me>
- <261a70b7-a425-faed-8cd5-7fbf807bdef7@amd.com>
- <20230529113813.GZ45886@black.fi.intel.com>
- <e37b2f7f-d204-4204-ce72-e108975c2fe0@amd.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5E274A0C
+	for <regressions@lists.linux.dev>; Tue, 30 May 2023 10:42:58 +0000 (UTC)
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-30ae95c4e75so2303788f8f.2
+        for <regressions@lists.linux.dev>; Tue, 30 May 2023 03:42:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1685443377; x=1688035377;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=EMngjdaC1cmXnO92t13ixHPmzh14q713TwRNHCOvkO4=;
+        b=n/tZIfLkvAmhBcu/GtiLcNnBZ80AeN4YOTzUd0gO/GDgxbTDIqvPPTQ4fUNWvBwEiW
+         VB7LXyEzBVbeqDhK/nDHSJnXsw8lcco+qlByuWGEH6vHR3Xjio+JBWK61BYhrweprOaM
+         BrZuB7aB3gOMu5vzTitg6hxx20UQLNIjG7pOHuXIxt8uRkeu002r6xWI+pZQNqySRyE/
+         2R3RQ5O08DcvL2kS/Faz0qoKHmCpDH2NpF7281gQbr7zupVdyopbLBvHZjz3D84X/q8n
+         JBvFfIAFr1QRjSGlyas0VSwul3/T6E32+A5D6WkJEpVD0hOY72FQQ8QAN6LH5gRz/K2b
+         Q5Og==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685443377; x=1688035377;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=EMngjdaC1cmXnO92t13ixHPmzh14q713TwRNHCOvkO4=;
+        b=BXkRcMmVYAZ64t/GPcM21FRYyHIoMFNJXNtJvWGrfSgFI0aQDL/qSnMVzCIAQG78oG
+         znC4Rij79stfCaGoP0sbVIbvWrw8OuyQ1ZhaWrUjwGJw4DRiSUpzqsBqcAtGHTdtUCRv
+         2JU3PPnYncJ+nqtfxccgHofBA89+k9rO/ZKySSXNk5J6OkDS/s6Dc4ExRYTQ7bNa2IQ8
+         PX/OCUtbVeI9nidpQafsovkKbQwsgoq1OG/C5Zv+YtEJwF40UWmP+Ztw5GLnQJYlGV74
+         J6tbJZYmxepi7717smtpL2TbTk5Ltp73bJPd6f5IFm/SKUSu2b2W/lMpbYgyfezHmB3j
+         rGKg==
+X-Gm-Message-State: AC+VfDzFHNhZTig6P4O5sdhIYZPxUWorO/XhrBpxl4Jb+U6PXt75tRTh
+	Zg1JKuwns5vRQEwZyrAaGxcNXHOlLZtzPJE+Yp8=
+X-Google-Smtp-Source: ACHHUZ5H1Ssx816UXvIgGlTH4ABSGNqs7PdJbj/3LYVn0/wuOcXrJa/wiTRuIumAjBJ7bKuZhbA7KedJHrMOG7hRbzM=
+X-Received: by 2002:a5d:42cd:0:b0:30a:ebe2:5e44 with SMTP id
+ t13-20020a5d42cd000000b0030aebe25e44mr1131518wrr.67.1685443376733; Tue, 30
+ May 2023 03:42:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <e37b2f7f-d204-4204-ce72-e108975c2fe0@amd.com>
+References: <CADpTngX9LESCdHVu_2mQkNGena_Ng2CphWNwsRGSMxzDsTjU2A@mail.gmail.com>
+ <ZHNMsmpo2LWjnw1A@debian.me>
+In-Reply-To: <ZHNMsmpo2LWjnw1A@debian.me>
+From: Fabio Coatti <fabio.coatti@gmail.com>
+Date: Tue, 30 May 2023 12:42:45 +0200
+Message-ID: <CADpTngWiXNh1wAFM_EYGm-Coa8nv61Tu=3TG+Z2dVCojp2K1yg@mail.gmail.com>
+Subject: Re: WARNING trace at kvm_nx_huge_page_recovery_worker on 6.3.4
+To: Bagas Sanjaya <bagasdotme@gmail.com>
+Cc: stable@vger.kernel.org, regressions@lists.linux.dev, kvm@vger.kernel.org, 
+	Junaid Shahid <junaids@google.com>, Paolo Bonzini <pbonzini@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, May 29, 2023 at 11:12:45PM -0500, Mario Limonciello wrote:
-> On 5/29/23 06:38, Mika Westerberg wrote:
-> > On Sun, May 28, 2023 at 07:55:39AM -0500, Mario Limonciello wrote:
-> > > On 5/27/23 18:48, Bagas Sanjaya wrote:
-> > > > On Sat, May 27, 2023 at 04:15:51PM -0400, beld zhang wrote:
-> > > > > Upgrade to 6.1.30, got crash message after resume, but looks still
-> > > > > running normally
-> > > 
-> > > This is specific resuming from s2idle, doesn't happen at boot?
-> > > 
-> > > Does it happen with hot-plugging or hot-unplugging a TBT3 or USB4 dock too?
-> > 
-> > Happens also when device is connected and do
-> > 
-> >    # rmmod thunderbolt
-> >    # modprobe thunderbolt
-> > 
-> > I think it is because nhi_mask_interrupt() does not mask interrupt on
-> > Intel now.
-> > 
-> > Can you try the patch below? I'm unable to try myself because my test
-> > system has some booting issues at the moment.
-> > 
-> > diff --git a/drivers/thunderbolt/nhi.c b/drivers/thunderbolt/nhi.c
-> > index 4c9f2811d20d..a11650da40f9 100644
-> > --- a/drivers/thunderbolt/nhi.c
-> > +++ b/drivers/thunderbolt/nhi.c
-> > @@ -60,9 +60,12 @@ static int ring_interrupt_index(const struct tb_ring *ring)
-> >   static void nhi_mask_interrupt(struct tb_nhi *nhi, int mask, int ring)
-> >   {
-> > -	if (nhi->quirks & QUIRK_AUTO_CLEAR_INT)
-> > -		return;
-> > -	iowrite32(mask, nhi->iobase + REG_RING_INTERRUPT_MASK_CLEAR_BASE + ring);
-> > +	if (nhi->quirks & QUIRK_AUTO_CLEAR_INT) {
-> > +		u32 val = ioread32(nhi->iobase + REG_RING_INTERRUPT_BASE + ring);
-> > +		iowrite32(val & ~mask, nhi->iobase + REG_RING_INTERRUPT_BASE + ring);
-> > +	} else {
-> > +		iowrite32(mask, nhi->iobase + REG_RING_INTERRUPT_MASK_CLEAR_BASE + ring);
-> > +	}
-> >   }
-> >   static void nhi_clear_interrupt(struct tb_nhi *nhi, int ring)
-> 
-> Mika, that looks good for the issue, thanks!
-> 
-> You can add:
-> Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
-> 
-> When you submit it.
+Il giorno dom 28 mag 2023 alle ore 14:44 Bagas Sanjaya
+<bagasdotme@gmail.com> ha scritto:
 
-Thanks, submitted formal patch now here:
+>
+> Thanks for the regression report. I'm adding it to regzbot:
+>
+> #regzbot ^introduced: v6.3.1..v6.3.2
+> #regzbot title: WARNING trace at kvm_nx_huge_page_recovery_worker when opening a new tab in Chrome
 
-https://lore.kernel.org/linux-usb/20230530075555.35239-1-mika.westerberg@linux.intel.com/
+Out of curiosity, I recompiled 6.3.4 after reverting the following
+commit mentioned in 6.3.2 changelog:
 
-beld zhang, can you try it and see if it works on your system? It should
-apply on top of thunderbolt.git/fixes [1]. Thanks!
+commit 2ec1fe292d6edb3bd112f900692d9ef292b1fa8b
+Author: Sean Christopherson <seanjc@google.com>
+Date:   Wed Apr 26 15:03:23 2023 -0700
+KVM: x86: Preserve TDP MMU roots until they are explicitly invalidated
+commit edbdb43fc96b11b3bfa531be306a1993d9fe89ec upstream.
 
-[1] git://git.kernel.org/pub/scm/linux/kernel/git/westeri/thunderbolt.git
+And the WARN message no longer appears on my host kernel logs, at
+least so far :)
+
+>
+> Fabio, can you also check the mainline (on guest)?
+
+Not sure to understand, you mean 6.4-rcX? I can do that, sure, but why
+on guest? The WARN appears on host logs, the one with 6.3.4 kernel.
+Guest is a standard ubuntu 22.04, currently with 5.19.0-42-generic
+(ubuntu) kernel
+
+
+-- 
+Fabio
