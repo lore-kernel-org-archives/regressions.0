@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6350B14A93
-	for <regressions@lists.linux.dev>; Wed, 31 May 2023 13:31:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1F4A14A97
+	for <regressions@lists.linux.dev>; Wed, 31 May 2023 13:33:22 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1q4LvU-0006pr-Nu; Wed, 31 May 2023 15:31:44 +0200
-Message-ID: <2826129b-0887-322b-c848-88517294645a@leemhuis.info>
-Date: Wed, 31 May 2023 15:31:44 +0200
+	id 1q4Lx2-0007HZ-RZ; Wed, 31 May 2023 15:33:20 +0200
+Message-ID: <cb093081-ef71-c556-fe2f-9ec30bbcfe80@leemhuis.info>
+Date: Wed, 31 May 2023 15:33:20 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,20 +16,22 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.10.0
-Subject: Re: Sometimes DVB broken with commit 6769a0b7ee0c3b
+Subject: Re: mlx5 driver is broken when pci_msix_can_alloc_dyn() is false with
+ v6.4-rc4
 Content-Language: en-US, de-DE
-To: Thomas Voegtle <tv@lio96.de>, linux-kernel@vger.kernel.org,
- Hyunwoo Kim <imv4bel@gmail.com>, Mauro Carvalho Chehab <mchehab@kernel.org>
-References: <da5382ad-09d6-20ac-0d53-611594b30861@lio96.de>
+To: Niklas Schnelle <schnelle@linux.ibm.com>, Shay Drory <shayd@nvidia.com>,
+ Saeed Mahameed <saeedm@nvidia.com>, Eli Cohen <elic@nvidia.com>,
+ netdev@vger.kernel.org
+References: <d6ada86741a440f99b5d6fedff532c8dbe86254f.camel@linux.ibm.com>
 From: "Linux regression tracking #adding (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
 Cc: Linux kernel regressions list <regressions@lists.linux.dev>
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <da5382ad-09d6-20ac-0d53-611594b30861@lio96.de>
+In-Reply-To: <d6ada86741a440f99b5d6fedff532c8dbe86254f.camel@linux.ibm.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1685539913;8532e552;
-X-HE-SMSGID: 1q4LvU-0006pr-Nu
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1685540003;ed6a9167;
+X-HE-SMSGID: 1q4Lx2-0007HZ-RZ
 
 [CCing the regression list, as it should be in the loop for regressions:
 https://docs.kernel.org/admin-guide/reporting-regressions.html]
@@ -39,25 +41,24 @@ regressions; the text you find below is based on a few templates
 paragraphs you might have encountered already in similar form.
 See link in footer if these mails annoy you.]
 
-On 30.05.23 13:12, Thomas Voegtle wrote:
+On 30.05.23 15:04, Niklas Schnelle wrote:
 > 
+> With v6.4-rc4 I'm getting a stream of RX and TX timeouts when trying to
+> use ConnectX-4 and ConnectX-6 VFs on s390. I've bisected this and found
+> the following commit to be broken:
 > 
-> I have the problem that sometimes my DVB card does not initialize
-> properly booting Linux 6.4-rc4.
-> This is not always, maybe in 3 out of 4 attempts.
-> When this happens somehow you don't see anything special in dmesg, but
-> the card just doesn't work.
-> 
-> Reverting this helps:
-> commit 6769a0b7ee0c3b31e1b22c3fadff2bfb642de23f
+> commit 1da438c0ae02396dc5018b63237492cb5908608d
+> Author: Shay Drory <shayd@nvidia.com>
+> Date:   Mon Apr 17 10:57:50 2023 +0300
 > [...]
 
 Thanks for the report. To be sure the issue doesn't fall through the
 cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
 tracking bot:
 
-#regzbot ^introduced 6769a0b7ee0c3b31e1b22c3fadff2bfb642d
-#regzbot title media: dvb-core: DVB card sometimes does not initialize
+#regzbot ^introduced 1da438c0ae02396dc5018b63237492cb5908608d
+#regzbot title net/mlx5: RX and TX timeouts with ConnectX-4 and
+ConnectX-6 VFs on s390
 #regzbot ignore-activity
 
 This isn't a regression? This issue or a fix for it are already
