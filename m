@@ -1,135 +1,108 @@
-Received: from mslow1.mail.gandi.net (mslow1.mail.gandi.net [217.70.178.240])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2448B1879
-	for <regressions@lists.linux.dev>; Wed, 31 May 2023 08:58:19 +0000 (UTC)
-Received: from relay9-d.mail.gandi.net (unknown [IPv6:2001:4b98:dc4:8::229])
-	by mslow1.mail.gandi.net (Postfix) with ESMTP id BB03DD5550
-	for <regressions@lists.linux.dev>; Wed, 31 May 2023 08:50:47 +0000 (UTC)
-X-GND-Sasl: hadess@hadess.net
-X-GND-Sasl: hadess@hadess.net
-X-GND-Sasl: hadess@hadess.net
-X-GND-Sasl: hadess@hadess.net
-X-GND-Sasl: hadess@hadess.net
-X-GND-Sasl: hadess@hadess.net
-X-GND-Sasl: hadess@hadess.net
-Received: by mail.gandi.net (Postfix) with ESMTPSA id C31C3FF803;
-	Wed, 31 May 2023 08:50:38 +0000 (UTC)
-Message-ID: <8308180826ba9a5478bf568396034b8dc7fb6e72.camel@hadess.net>
-Subject: Re: [BUG: 6.3 kernel] Logitech Trackball M575 misidentified
-From: Bastien Nocera <hadess@hadess.net>
-To: Linux regressions mailing list <regressions@lists.linux.dev>, Xose
-	Vazquez Perez <xose.vazquez@gmail.com>, linux-input@vger.kernel.org
-Cc: Filipe =?ISO-8859-1?Q?La=EDns?= <lains@riseup.net>, Jiri Kosina
- <jikos@kernel.org>, Benjamin Tissoires <benjamin.tissoires@redhat.com>,
- LKML <linux-kernel@vger.kernel.org>
-Date: Wed, 31 May 2023 10:50:38 +0200
-In-Reply-To: <8941c5f2-3861-da68-06ca-adc68a37e53b@leemhuis.info>
-References: <eeb19342-3499-a1fb-388f-d4670472b16c@gmail.com>
-	 <8941c5f2-3861-da68-06ca-adc68a37e53b@leemhuis.info>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.2 (3.48.2-1.fc38) 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEAADC8ED
+	for <regressions@lists.linux.dev>; Wed, 31 May 2023 11:48:54 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1q4KJw-0001sI-F9; Wed, 31 May 2023 13:48:52 +0200
+Message-ID: <a47b5d61-f512-22ca-ca75-5f7ec40c5af7@leemhuis.info>
+Date: Wed, 31 May 2023 13:48:51 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Re: [PATCH] media: usb: uvc: fill in description for unknown
+ pixelformats
+Content-Language: en-US, de-DE
+To: Hans Verkuil <hverkuil@xs4all.nl>,
+ Linux Media Mailing List <linux-media@vger.kernel.org>
+Cc: regressions@lists.linux.dev,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Hans de Goede <hdegoede@redhat.com>
+References: <4b1bc0d5-808b-816d-d7de-5baa8851e74f@xs4all.nl>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+In-Reply-To: <4b1bc0d5-808b-816d-d7de-5baa8851e74f@xs4all.nl>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1685533735;63399093;
+X-HE-SMSGID: 1q4KJw-0001sI-F9
 
-On Tue, 2023-05-16 at 14:33 +0200, Linux regression tracking (Thorsten
-Leemhuis) wrote:
-> [CCing a few people and the the regression list, as it should be in
-> the
-> loop for regressions:
-> https://docs.kernel.org/admin-guide/reporting-regressions.html]
->=20
-> On 11.05.23 23:22, Xose Vazquez Perez wrote:
-> >=20
-> > 6.3.2 kernel identifies "Logitech" "ERGO M575" as "Logitech"
-> > "(\xc9_O\x04)",
-> > 6.2.15 works fine.
-> >=20
-> >=20
-> > 6.2.15 boot log:
-> > input: Logitech ERGO M575 as
-> > /devices/pci0000:00/0000:00:1a.0/usb3/3-1/3-1.3/3-
-> > 1.3:1.2/0003:046D:C52B.0003/0003:046D:4096.0005/input/input15
-> > logitech-hidpp-device 0003:046D:4096.0005: input,hidraw1: USB HID
-> > v1.11
-> > Mouse [Logitech ERGO M575] on usb-0000:00:1a.0-1.3/input2:1
-> >=20
-> > 6.3.2 boot log:
-> > input: Logitech \xc9_O\x04 as
-> > /devices/pci0000:00/0000:00:1a.0/usb3/3-1/3-1.3/3-
-> > 1.3:1.2/0003:046D:C52B.0003/0003:046D:4096.0005/input/input15
-> > logitech-hidpp-device 0003:046D:4096.0005: input,hidraw2: USB HID
-> > v1.11
-> > Mouse [Logitech \xc9_O\x04] on usb-0000:00:1a.0-1.3/input2:1
->=20
-> I wonder if this if this is some related to this issue:
-> https://bugzilla.kernel.org/show_bug.cgi?id=3D217412
-> ("Since kernel 6.3.1 logitech unify receiver not working properly")
->=20
-> That one so far seems to be ignored by the developers. Your report
-> one
-> also didn't get any reply yet.
->=20
-> Could you maybe perform a bisection to get down to this?
->=20
-> Side note: there is also
-> https://bugzilla.kernel.org/show_bug.cgi?id=3D217330
-> ("Broken Logitech unifying battery names in hid-next tree")
+On 29.03.23 14:28, Hans Verkuil wrote:
+> If the fcc is 0 (indicating an unknown GUID format), then fill in the
+> description field in ENUM_FMT. Otherwise the V4L2 core will WARN.
 
-The device name problem is tracked in 217330, which I filed.
+What happened to this? It seems this fall through the cracks.
 
-A bisection would definitely help me if you have time, otherwise I'll
-get to it, but it's probably not going to be before a couple of weeks.
+BTW:
 
-You can also test this patch on top of the latest kernel tree:
-https://patchwork.kernel.org/project/linux-input/patch/20230531082428.21763=
--1-hadess@hadess.net/
-although I don't expect it to make a difference.
+> Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 
-Cheers
+Afaics it might be good to have these in here:
 
->=20
->=20
-> Anyway, for the rest of this mail:
->=20
-> [TLDR: I'm adding this report to the list of tracked Linux kernel
-> regressions; the text you find below is based on a few templates
-> paragraphs you might have encountered already in similar form.
-> See link in footer if these mails annoy you.]
->=20
-> Thanks for the report. To be sure the issue doesn't fall through the
-> cracks unnoticed, I'm adding it to regzbot, the Linux kernel
-> regression
-> tracking bot:
->=20
-> #regzbot ^introduced v6.2..v6.3
-> #regzbot title input: Logitech Trackball M575 misidentified
-> #regzbot ignore-activity
->=20
-> This isn't a regression? This issue or a fix for it are already
-> discussed somewhere else? It was fixed already? You want to clarify
-> when
-> the regression started to happen? Or point out I got the title or
-> something else totally wrong? Then just reply and tell me -- ideally
-> while also telling regzbot about it, as explained by the page listed
-> in
-> the footer of this mail.
->=20
-> Developers: When fixing the issue, remember to add 'Link:' tags
-> pointing
-> to the report (the parent of this mail). See page linked in footer
-> for
-> details.
->=20
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker'
-> hat)
-> --
-> Everything you wanna know about Linux kernel regression tracking:
-> https://linux-regtracking.leemhuis.info/about/#tldr
-> That page also explains what to do if mails like this annoy you.
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=217252
+Link: https://bugzilla.redhat.com/show_bug.cgi?id=2180107
 
+A comment in the former is what brought me here.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
+
+#regzbot ^backmonitor:
+https://lore.kernel.org/lkml/dc8e5276-ef88-648f-9f0d-10151ea62c90@leemhuis.info/
+#regzbot poke
+
+> Fixes: 50459f103edf ("media: uvcvideo: Remove format descriptions")
+> ---
+> diff --git a/drivers/media/usb/uvc/uvc_driver.c b/drivers/media/usb/uvc/uvc_driver.c
+> index 7aefa76a42b3..2f1ced1212cd 100644
+> --- a/drivers/media/usb/uvc/uvc_driver.c
+> +++ b/drivers/media/usb/uvc/uvc_driver.c
+> @@ -256,6 +256,9 @@ static int uvc_parse_format(struct uvc_device *dev,
+>  		} else {
+>  			dev_info(&streaming->intf->dev,
+>  				 "Unknown video format %pUl\n", &buffer[5]);
+> +			snprintf(format->name, sizeof(format->name), "%pUl\n",
+> +				 &buffer[5]);
+> +
+>  			format->fcc = 0;
+>  		}
+> 
+> diff --git a/drivers/media/usb/uvc/uvc_v4l2.c b/drivers/media/usb/uvc/uvc_v4l2.c
+> index 35453f81c1d9..fc6f9e7d8506 100644
+> --- a/drivers/media/usb/uvc/uvc_v4l2.c
+> +++ b/drivers/media/usb/uvc/uvc_v4l2.c
+> @@ -713,6 +713,10 @@ static int uvc_ioctl_enum_fmt(struct uvc_streaming *stream,
+>  	if (format->flags & UVC_FMT_FLAG_COMPRESSED)
+>  		fmt->flags |= V4L2_FMT_FLAG_COMPRESSED;
+>  	fmt->pixelformat = format->fcc;
+> +	if (format->name[0])
+> +		strscpy(fmt->description, format->name,
+> +			sizeof(fmt->description));
+> +
+>  	return 0;
+>  }
+> 
+> diff --git a/drivers/media/usb/uvc/uvcvideo.h b/drivers/media/usb/uvc/uvcvideo.h
+> index 9a596c8d894a..22656755a801 100644
+> --- a/drivers/media/usb/uvc/uvcvideo.h
+> +++ b/drivers/media/usb/uvc/uvcvideo.h
+> @@ -264,6 +264,8 @@ struct uvc_format {
+>  	u32 fcc;
+>  	u32 flags;
+> 
+> +	char name[32];
+> +
+>  	unsigned int nframes;
+>  	struct uvc_frame *frame;
+>  };
+> 
