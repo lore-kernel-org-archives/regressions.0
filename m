@@ -1,120 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41BB619E7C;
-	Wed, 31 May 2023 21:48:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88739C433EF;
-	Wed, 31 May 2023 21:48:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1685569715;
-	bh=md3hNAYKn0lyhGYaSSrqLUBDR6InA+O5aSwui2MwuTM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Rd9/VP+eQSrjMxHJv2xZCbdoPVfg16o9s/rZ2O61kNKk5ZmwG6wFz8iQnzzvuaFp4
-	 khRX2CptZYGEP0h9iHDXL8fqBuuZXreq+paJgoPx8mXokqpHcb9peQTnhIa2qCsSAY
-	 n/iQRwC22qUUlRW+8wfyZA+AwhMGznv1ij4Uuns7NxYoZ7mI8S4Dr7c17No6fVcno1
-	 TSFfA7STC8aYcyxsMVHsiwGiQRmhBzMmchf/4utX8m2APkxtO7gxV9+9msKIiWom1N
-	 F1d3e/1B3DlPdDCq8PKw5O56yg2IiLCp8t61Fl31tuQDmmj4nVwFBywkrQ5vaGUf86
-	 AJm86XZxCxHOQ==
-Date: Wed, 31 May 2023 14:48:34 -0700
-From: Saeed Mahameed <saeed@kernel.org>
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Niklas Schnelle <schnelle@linux.ibm.com>, Shay Drory <shayd@nvidia.com>,
-	chuck.lever@oracle.com, Saeed Mahameed <saeedm@nvidia.com>,
-	Eli Cohen <elic@nvidia.com>, netdev@vger.kernel.org
-Subject: Re: mlx5 driver is broken when pci_msix_can_alloc_dyn() is false
- with v6.4-rc4
-Message-ID: <ZHfAsm2Ogic+vM0d@x130>
-References: <d6ada86741a440f99b5d6fedff532c8dbe86254f.camel@linux.ibm.com>
- <cb093081-ef71-c556-fe2f-9ec30bbcfe80@leemhuis.info>
- <c2702c969f01f9dcf2d6b3d3326e804c3fee86c0.camel@linux.ibm.com>
- <ab31715a-0fe7-f881-be1a-2b69fde82f23@leemhuis.info>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DED00168A8
+	for <regressions@lists.linux.dev>; Wed, 31 May 2023 23:40:51 +0000 (UTC)
+Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-bacfc573647so198901276.1
+        for <regressions@lists.linux.dev>; Wed, 31 May 2023 16:40:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1685576450; x=1688168450;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=l9Ip848C4+PX4sdvUZ6qA+ntR4dfPFEEj72E1ynrboE=;
+        b=pmbEWlVHe2mnM0kY4kuCc8OnetP493gSGJbXzI0xxIWrd9LL1PS2D18wAYrEiMStCL
+         kSECDoiKsGntGM8Qe/H2nkvREyJNry15290+xo6UUF35/UPatbv6uJYbVG75Wk1ONQIB
+         AhH3qjpWVy+4GBZzEN8xgxZQj/Tkd9S/nyJOfXlCLlVtdAyGu1P4o2u717AiWZHW+c19
+         D9CZ3d2bRgmD/JPI/4xt4fIi70g3/Nf8LyKL9Sezm1/8Wh3MZW0c52CUJ3wOBk5cjZHV
+         36lw14neIoDR3GRB63G/ON1Kt5h0Y3kUvJYPlfYKlmBByDCkTwVXClzuw4iAC0VK+B4k
+         MDhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685576450; x=1688168450;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=l9Ip848C4+PX4sdvUZ6qA+ntR4dfPFEEj72E1ynrboE=;
+        b=fGRHa6zC29So5vBXoux0y/Sh8C4k24vQ6JyyxOO3qWREQOWTLK7Okl33a/YNRqC9qn
+         Bunt2AIHOW6jDhwkgl9hH1JpRzTPKODNpJjoVZxA5SfsRtAQ3CCyOov+2hN+T57xirrt
+         8Ns0tMwgSL/CrPw8k+uO/d3Xrj8oFhlZEBgPriOtdaY7JdsPthNz40czqsMM2mSn50QH
+         IOrxIV6XDoiVuBBjxQkuz8h3B5E5LpOeHRnGgIKIMSd5045dloYvmqen/dEv1csm55mV
+         0vgu4zSwda7efed9cJPqNQShQDm3Ceq2mLbsq50J2xh/tzBcm41oPIlJJAYESaqEqJun
+         DCDg==
+X-Gm-Message-State: AC+VfDzP8zVSCUMO30Hge7Ox3iGApb72PbNbaLe/UBzIzEa02jbHWrFC
+	URfoXR8Nzxv+SbtGkQ9N1jA=
+X-Google-Smtp-Source: ACHHUZ6hg+BzE3S+Lb8Ii8mZm+C3Ly8o+bGGFHw0M9DuMbORKjj6D6SrCydAYiE87Dhw9g1FQVOWtA==
+X-Received: by 2002:a25:be04:0:b0:bab:f4bb:9402 with SMTP id h4-20020a25be04000000b00babf4bb9402mr7628265ybk.46.1685576450666;
+        Wed, 31 May 2023 16:40:50 -0700 (PDT)
+Received: from localhost ([2405:6581:d4e0:1600:c494:2aca:bc01:6f7b])
+        by smtp.gmail.com with ESMTPSA id ja10-20020a170902efca00b001b0358848b0sm1957355plb.161.2023.05.31.16.40.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 31 May 2023 16:40:49 -0700 (PDT)
+Date: Thu, 1 Jun 2023 08:40:47 +0900
+From: Nick Hastings <nicholaschastings@gmail.com>
+To: Mario Limonciello <mario.limonciello@amd.com>
+Cc: Salvatore Bonaccorso <carnil@debian.org>, 1036530@bugs.debian.org,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org, regressions@lists.linux.dev
+Subject: Re: Regression from "ACPI: OSI: Remove Linux-Dell-Video _OSI
+ string"? (was: Re: Bug#1036530: linux-signed-amd64: Hard lock up of system)
+Message-ID: <ZHfa/wQlaVCeUC22@xps>
+References: <168471337231.1913606.15905047692536779158.reportbug@xps>
+ <ZHKrC4/G6ZyvRReI@xps>
+ <ZHL5cCNUzVdleiag@eldamar.lan>
+ <ab12984e-be17-903d-ba0a-f9c85b8c544f@amd.com>
+ <ZHP4IqxBUPuVRvRV@xps>
+ <09e24386-de63-e9e9-9e7f-5d04bad62d83@amd.com>
+ <ZHQhPcKUF76Kplwm@xps>
+ <ZHUt9xQKCwCflvVC@xps>
+ <8537d965-ddf4-7f45-6459-d5acf520376e@amd.com>
+ <ZHWfMBeAONerAJmd@xps>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ab31715a-0fe7-f881-be1a-2b69fde82f23@leemhuis.info>
+In-Reply-To: <ZHWfMBeAONerAJmd@xps>
 
-On 31 May 15:57, Linux regression tracking (Thorsten Leemhuis) wrote:
->
->
->On 31.05.23 15:43, Niklas Schnelle wrote:
->> On Wed, 2023-05-31 at 15:33 +0200, Linux regression tracking #adding
->> (Thorsten Leemhuis) wrote:
->>> [CCing the regression list, as it should be in the loop for regressions:
->>> https://docs.kernel.org/admin-guide/reporting-regressions.html]
->>>
->>> [TLDR: I'm adding this report to the list of tracked Linux kernel
->>> regressions; the text you find below is based on a few templates
->>> paragraphs you might have encountered already in similar form.
->>> See link in footer if these mails annoy you.]
->>>
->>> On 30.05.23 15:04, Niklas Schnelle wrote:
->>>>
->>>> With v6.4-rc4 I'm getting a stream of RX and TX timeouts when trying to
->>>> use ConnectX-4 and ConnectX-6 VFs on s390. I've bisected this and found
->>>> the following commit to be broken:
->>>>
->>>> commit 1da438c0ae02396dc5018b63237492cb5908608d
->>>> Author: Shay Drory <shayd@nvidia.com>
->>>> Date:   Mon Apr 17 10:57:50 2023 +0300
->>>> [...]
->>>
->>> Thanks for the report. To be sure the issue doesn't fall through the
->>> cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
->>> tracking bot:
->>>
->>> #regzbot ^introduced 1da438c0ae02396dc5018b63237492cb5908608d
->>> #regzbot title net/mlx5: RX and TX timeouts with ConnectX-4 and
->>> ConnectX-6 VFs on s390
->>> #regzbot ignore-activity
->>>
->>> This isn't a regression? This issue or a fix for it are already
->>> discussed somewhere else? It was fixed already? You want to clarify when
->>> the regression started to happen? Or point out I got the title or
->>> something else totally wrong? Then just reply and tell me -- ideally
->>> while also telling regzbot about it, as explained by the page listed in
->>> the footer of this mail.
->>>
->>> Developers: When fixing the issue, remember to add 'Link:' tags pointing
->>> to the report (the parent of this mail). See page linked in footer for
->>> details.
->>>
->>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
->>> --
->>> Everything you wanna know about Linux kernel regression tracking:
->>> https://linux-regtracking.leemhuis.info/about/#tldr
->>> That page also explains what to do if mails like this annoy you.
->>
->> Hi Thorsten,
->>
->> Thanks for tracking. I actually already sent a fix patch (and v2) for
->> this. Sadly I forgot to link to this mail. Let's see if I can get the
->> regzbot command right to update it. As for the humans the latest fix
->> patch is here:
->>
->> https://lore.kernel.org/netdev/20230531084856.2091666-1-schnelle@linux.ibm.com/
->>
+Hi,
 
-I picked up this patch to net-mlx5 tree, will post to net shortly.
+* Nick Hastings <nicholaschastings@gmail.com> [230530 16:01]:
+> 
+> * Mario Limonciello <mario.limonciello@amd.com> [230530 13:00]:
+<snip>
+> > As you're actually loading nouveau, can you please try nouveau.runpm=0 on
+> > the kernel command line?
+> 
+> I'm not intentionally loading it. This machine also has intel graphics
+> which is what I prefer. Checking my
+> /etc/modprobe.d/blacklist-nvidia-nouveau.conf
+> I see:
+> 
+> blacklist nvidia
+> blacklist nvidia-drm
+> blacklist nvidia-modeset
+> blacklist nvidia-uvm
+> blacklist ipmi_msghandler
+> blacklist ipmi_devintf
+> 
+> So I thought I had blacklisted it but it seems I did not. Since I do not
+> want to use it maybe it is better to check if the lock up occurs with
+> nouveau blacklisted. I will try that now.
 
-Thanks,
-Saeed.
+I blacklisted nouveau and booted into a 6.1 kernel:
+% uname -a
+Linux xps 6.1.0-9-amd64 #1 SMP PREEMPT_DYNAMIC Debian 6.1.27-1 (2023-05-08) x86_64 GNU/Linux
 
->> Thanks,
->> Niklas
->>
->> #regzbot fix: net/mlx5: Fix setting of irq->map.index for static IRQ case
->
->Looks right, many thx. Sorry, should have looked for that myself. Sadly
->regzbot doesn't yet search for existing post on lore with a matching
->subject, so for completeness let me point manually to it while at it:
->
->#regzbot monitor:
->https://lore.kernel.org/netdev/20230531084856.2091666-1-schnelle@linux.ibm.com/
->
->Ciao, Thorsten
->
+It has been running without problems for nearly two days now:
+% uptime
+ 08:34:48 up 1 day, 16:22,  2 users,  load average: 1.33, 1.26, 1.27
+
+Regards,
+
+Nick.
+
