@@ -1,127 +1,70 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2D5B1102
-	for <regressions@lists.linux.dev>; Wed, 31 May 2023 02:04:22 +0000 (UTC)
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-bad0f5d6a7dso10172390276.0
-        for <regressions@lists.linux.dev>; Tue, 30 May 2023 19:04:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1685498662; x=1688090662;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=oPl0xAXqZdbO8EtlrXhUJMISF8AeYDK8P/cmISui4pg=;
-        b=JvvW5QCObtQiz9h/evP/xIfXhzSlfwKhz08eNhiNC4h0IAQUECdkWGa9y1FBwjVk1G
-         nr1CqaC+qfbXFOS9OdQUOdJIwB+nsSySKCjJLrvGvg9s34ZfdnxBl0SGp0eudgdnz0RT
-         rJXHsSWH/Br6TTUaLSbYa5WoAS02LrJ47eik/kNaQDQ7X1rhLl36n2utUU5ABG9tnkrF
-         R0BVFaastWzrnVkID9KBBw2hVvGlG1p2rtouCemYaT+NtFhyiamUe8nmaIsEZE1oz+rs
-         QOBiJ/5D6IBprILDtd52Og6AfUCGfHLB85l56sGvc0j1raYQiOy4MSnM6K3TPm73lb7m
-         0uHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685498662; x=1688090662;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=oPl0xAXqZdbO8EtlrXhUJMISF8AeYDK8P/cmISui4pg=;
-        b=hdA78EPYwS/5eGf46x5LML/fX1mpbCdZNa5X8A4iCsks7AW6Uv0bDYE9HfbQ9J0xle
-         CqTyOZetMlPrdkrD8ItoAVj0YO7Li/7p9QEFWNEzZl2kH65ihlPx0L7u4WukTQ4qnc1A
-         0qWlGXqf/rCBpk05VtDIUHl233XUTyITJRcNGV2H6aUUDtEOtjCad83lM8a8uatCyOyw
-         tQKHvkRN7UpfxAAuRqYZ/NEPG+Pnt2U1ls3c+NXHHWwNM5GHtMzjS+JH+vf5pm6iNozi
-         HlF6s+jdJ1c9V78tbBzN8iv5o3DrFys6cdirnGMVzsb5RYzlinkLnst9vAamwmWjiOSM
-         VYCA==
-X-Gm-Message-State: AC+VfDwB/dX/RcPt/ccYBl9L4zX2kwCtKrLsXhjlh3oUFFgxcEVFEa+d
-	6bHcMcGavzEEEdhoZ02sO2UyOEEJCkU=
-X-Google-Smtp-Source: ACHHUZ7xMW17agGZrMwJlLjH/cZpm7MCbX6aTZYwGgZHZTC+cOEziKmXRj6cKcqzRhqQhXrbPH2PtlQ7I9Y=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a05:6902:543:b0:bab:cc56:76c2 with SMTP id
- z3-20020a056902054300b00babcc5676c2mr2508734ybs.8.1685498661884; Tue, 30 May
- 2023 19:04:21 -0700 (PDT)
-Date: Tue, 30 May 2023 19:04:20 -0700
-In-Reply-To: <ZHaikcUjbkq7yVbi@google.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C845079D7
+	for <regressions@lists.linux.dev>; Wed, 31 May 2023 08:43:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 548D3C433EF;
+	Wed, 31 May 2023 08:43:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1685522593;
+	bh=s4t+Z4bQTlyFJ05G5k3BJkFvhBy3z6GR9euUFM8vS+8=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=dmKSoM0FNyamDabmjd+4lt6NXDgd8/pkAFJcTaWxSfRgBp9CRN903J+Oqkt7M3ZaT
+	 NEBF48UN6cT6A6kMOSnYjUIciotz3JovgCsqv2N8F8cFRmkuhf3MU8A0/DQZ9r1WLB
+	 uRy69iYzC2hrGqX6WsQGtOi7kS/He+mo2o7pfEabX7jO7bDElxOnMRTmDicGMl/ZY/
+	 twX1TAF7IezoVYDCz2re4IAeFaYJMR+XgP92T6DPOzZwEj8DxixPiYBK7aLtUjZgeX
+	 2a5lFEGlUSUAVBnMmxr1/bTuf2XoZhvJ0Mc9txxnRiQ7Pzn9tirpEQvl8dWhlEllx0
+	 xnDBNn43qPRZg==
+Date: Wed, 31 May 2023 10:43:08 +0200 (CEST)
+From: Jiri Kosina <jikos@kernel.org>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+cc: Benjamin Tissoires <benjamin.tissoires@redhat.com>, 
+    Linus Torvalds <torvalds@linux-foundation.org>, 
+    Linux regressions mailing list <regressions@lists.linux.dev>, 
+    Bagas Sanjaya <bagasdotme@gmail.com>, 
+    =?ISO-8859-15?Q?Filipe_La=EDns?= <lains@riseup.net>, 
+    Bastien Nocera <hadess@hadess.net>, 
+    "open list:HID CORE LAYER" <linux-input@vger.kernel.org>, 
+    LKML <linux-kernel@vger.kernel.org>, guy.b@bluewin.ch
+Subject: Re: [regression] Since kernel 6.3.1 logitech unify receiver not
+ working properly
+In-Reply-To: <746720e5-318c-6d9e-2d5a-a6ebf6b4b0c6@leemhuis.info>
+Message-ID: <nycvar.YFH.7.76.2305311042150.29760@cbobk.fhfr.pm>
+References: <9b987585-0834-bb8c-3414-283c29f3f2ab@leemhuis.info> <bec024d5-4088-00ae-f7b5-7188868b1707@leemhuis.info> <b7717c43-74bf-b91d-d3ce-874493df602c@gmail.com> <CAO-hwJ+At1J_yUpX2q_dJekzZ-PoTDAvxmkTk_e4Yu0Z338bEA@mail.gmail.com>
+ <55dda0bb-fe42-6dee-28ea-00121554d092@leemhuis.info> <CAHk-=whvhkSk6m8_AidhofgR9nq0Md+HbNad5r1RE69tZgbv6Q@mail.gmail.com> <nycvar.YFH.7.76.2305231422180.29760@cbobk.fhfr.pm> <CAO-hwJ+MTRu9KxqwQc7UYFBsa0kkrnYfwVB30KsLZnw=wfcOMg@mail.gmail.com>
+ <nycvar.YFH.7.76.2305251308471.29760@cbobk.fhfr.pm> <nycvar.YFH.7.76.2305262040330.29760@cbobk.fhfr.pm> <746720e5-318c-6d9e-2d5a-a6ebf6b4b0c6@leemhuis.info>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-References: <CADpTngX9LESCdHVu_2mQkNGena_Ng2CphWNwsRGSMxzDsTjU2A@mail.gmail.com>
- <ZHNMsmpo2LWjnw1A@debian.me> <CADpTngWiXNh1wAFM_EYGm-Coa8nv61Tu=3TG+Z2dVCojp2K1yg@mail.gmail.com>
- <ZHY0WkNlui91Mxoj@google.com> <ZHaikcUjbkq7yVbi@google.com>
-Message-ID: <ZHarJCvD1KEkLVM+@google.com>
-Subject: Re: WARNING trace at kvm_nx_huge_page_recovery_worker on 6.3.4
-From: Sean Christopherson <seanjc@google.com>
-To: Fabio Coatti <fabio.coatti@gmail.com>
-Cc: Bagas Sanjaya <bagasdotme@gmail.com>, stable@vger.kernel.org, 
-	regressions@lists.linux.dev, kvm@vger.kernel.org, 
-	Junaid Shahid <junaids@google.com>, Paolo Bonzini <pbonzini@redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 
-On Tue, May 30, 2023, Sean Christopherson wrote:
-> On Tue, May 30, 2023, Sean Christopherson wrote:
-> > On Tue, May 30, 2023, Fabio Coatti wrote:
-> > > Il giorno dom 28 mag 2023 alle ore 14:44 Bagas Sanjaya
-> > > <bagasdotme@gmail.com> ha scritto:
-> > > > #regzbot ^introduced: v6.3.1..v6.3.2
-> > > > #regzbot title: WARNING trace at kvm_nx_huge_page_recovery_worker when opening a new tab in Chrome
-> > > 
-> > > Out of curiosity, I recompiled 6.3.4 after reverting the following
-> > > commit mentioned in 6.3.2 changelog:
-> > > 
-> > > commit 2ec1fe292d6edb3bd112f900692d9ef292b1fa8b
-> > > Author: Sean Christopherson <seanjc@google.com>
-> > > Date:   Wed Apr 26 15:03:23 2023 -0700
-> > > KVM: x86: Preserve TDP MMU roots until they are explicitly invalidated
-> > > commit edbdb43fc96b11b3bfa531be306a1993d9fe89ec upstream.
-> > > 
-> > > And the WARN message no longer appears on my host kernel logs, at
-> > > least so far :)
+On Sun, 28 May 2023, Thorsten Leemhuis wrote:
+
+> > who is able to reproduce the issue please check whether 
+> > reverting
 > > 
-> > Hmm, more than likely an NX shadow page is outliving a memslot update.  I'll take
-> > another look at those flows to see if I can spot a race or leak.
+> > 	586e8fede7953b16 ("HID: logitech-hidpp: Retry commands when device is busy")
+> > 
+> > has any observable effect?
 > 
-> I didn't spot anything, and I couldn't reproduce the WARN even when dropping the
-> dirty logging requirement and hacking KVM to periodically delete memslots.
+> See https://bugzilla.kernel.org/show_bug.cgi?id=217412#c26 and later –
+> it at least solved the problem for one user.
+> 
+> But it's all a mess (at least afaics). Earlier in that ticket some other
+> user said things work with 6.4-rc kernel, while for another confirmed
+> things are still broken. So maybe we deal with more than one problem. Or
+> testing went sideways for some of the users.
 
-Aha!  Apparently my brain was just waiting until I sat down for dinner to have
-its lightbulb moment.
+The patch that needs to be tested now by the affected users is here:
 
-The memslot lookup isn't factoring in whether the shadow page is for non-SMM versus
-SMM.  QEMU configures SMM to have memslots that do not exist in the non-SMM world,
-so if kvm_recover_nx_huge_pages() encounters an SMM shadow page, the memslot lookup
-can fail to find a memslot because it looks only in the set of non-SMM memslots.
+	https://patchwork.kernel.org/project/linux-input/patch/20230531082428.21763-1-hadess@hadess.net/
 
-Before commit 2ec1fe292d6e ("KVM: x86: Preserve TDP MMU roots until they are
-explicitly invalidated"), KVM would zap all SMM TDP MMU roots and thus all SMM TDP
-MMU shadow pages once all vCPUs exited SMM.  That made the window where this bug
-could be encountered quite tiny, as the NX recovery thread would have to kick in
-while at least one vCPU was in SMM.  QEMU VMs typically only use SMM during boot,
-and so the "bad" shadow pages were gone by the time the NX recovery thread ran.
-
-Now that KVM preserves TDP MMU roots until they are explicity invalidated (by a
-memslot deletion), the window to encounter the bug is effectively never closed
-because QEMU doesn't delete memslots after boot (except for a handful of special
-scenarios.
-
-Assuming I'm correct, this should fix the issue:
-
----
- arch/x86/kvm/mmu/mmu.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index d3812de54b02..d5c03f14cdc7 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -7011,7 +7011,10 @@ static void kvm_recover_nx_huge_pages(struct kvm *kvm)
- 		 */
- 		slot = NULL;
- 		if (atomic_read(&kvm->nr_memslots_dirty_logging)) {
--			slot = gfn_to_memslot(kvm, sp->gfn);
-+			struct kvm_memslots *slots;
-+
-+			slots = kvm_memslots_for_spte_role(kvm, sp->role);
-+			slot = __gfn_to_memslot(slots, sp->gfn);
- 			WARN_ON_ONCE(!slot);
- 		}
- 
-
-base-commit: 17f2d782f18c9a49943ea723d7628da1837c9204
 -- 
+Jiri Kosina
+SUSE Labs
+
