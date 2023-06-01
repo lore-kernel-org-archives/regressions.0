@@ -1,235 +1,135 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3986C4823B
-	for <regressions@lists.linux.dev>; Thu,  1 Jun 2023 18:10:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1685643040;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=r2dczyxnMSoVxG4Sl+UFzUV7DqIebX1V1UnCasZfupU=;
-	b=TwXEiuMumC/j3sqSSUxi2KbAZdiO7wuRBhLWf28g5YXEC95tKdNEq3tilYUfovpkk1x/wc
-	t54cgoTTvEQLwgjJMYyl8TTuBf+FgQKQBUQJ7/ublqb0qpKHBSPZDnKe3vlovH2nfu7efS
-	qhJoesa4CJDCXtq92WhnAoyT/D6ZlwM=
-Received: from mail-lj1-f199.google.com (mail-lj1-f199.google.com
- [209.85.208.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-493-qS1LIHNPOYaQJbHg_EK1cQ-1; Thu, 01 Jun 2023 14:10:39 -0400
-X-MC-Unique: qS1LIHNPOYaQJbHg_EK1cQ-1
-Received: by mail-lj1-f199.google.com with SMTP id 38308e7fff4ca-2b060345eeeso2054541fa.0
-        for <regressions@lists.linux.dev>; Thu, 01 Jun 2023 11:10:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685643038; x=1688235038;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=r2dczyxnMSoVxG4Sl+UFzUV7DqIebX1V1UnCasZfupU=;
-        b=Ahg6+FElGW5/eE5p6zsnpccbkJ1qGAmXxRhLUkcht/tMpkeo/DrDWSxL2PY37pr2Hp
-         6MZMfBn94DzSinV3F7Ut6liyNTAGH2USjOimDuUiGf3TF8AMYIeuOG+luVwdGJbJRTse
-         10gSfBisMdjX4TEwAbIfl/avkDL/DhFm/xUnjMYd1EeoWTpwO/sziKjzWxu4vYo1vH3H
-         zJ7TKGkHmamCwJ5BPHi1mpPDh5IZ/dMVqJyblyCIiddeVFNZwPADyu1yrwynn8E3UKnv
-         +GFKh4qRfiADvVD669tVQV9n2MCL4kD6xyP5ySMAtPOIozpVnKH4QgH4yFTnIAZtGysY
-         PNSA==
-X-Gm-Message-State: AC+VfDyS/4yTDgIn+rPdx7XLztnqxSsmWVSEqoMWwohlXXzqIugU2Kzm
-	LyYNtK6wGl5UnNhrntLdxOEyq6WuYvFdszLLdJD+DlfzBHXSEQHrJ72TO+BzkWkfY8el0NhBahR
-	tCKIZkNzKVavtmM4E9mRW4kEEzGVenkDMrjsWp48=
-X-Received: by 2002:a2e:a366:0:b0:2b1:a667:dbca with SMTP id i6-20020a2ea366000000b002b1a667dbcamr1176783ljn.2.1685643038244;
-        Thu, 01 Jun 2023 11:10:38 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ6E+8PmtBTtfhqIQ8CyQl+AFRssV7QB0a+miJocgIdab1bQ94244X3nJENHgaxC7ITFD42T8q+tHXuMeLLa7tQ=
-X-Received: by 2002:a2e:a366:0:b0:2b1:a667:dbca with SMTP id
- i6-20020a2ea366000000b002b1a667dbcamr1176762ljn.2.1685643037963; Thu, 01 Jun
- 2023 11:10:37 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 901AF23DF
+	for <regressions@lists.linux.dev>; Thu,  1 Jun 2023 19:21:30 +0000 (UTC)
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 351IWT64021738;
+	Thu, 1 Jun 2023 19:21:03 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=EFa/NmBtii/RjNtJcSA+b7nC2BASDp2x0P9xuuJoJ8c=;
+ b=C44go066ITZPRfVic9csx3exufeUwC/i4mS/KtGotJH0JgrM8bscHqZBrw/a8uN2yvi8
+ 8rcbcXjKzOc7LC56KhXJYy08BRlTmBGMAYIO3FIXWbAIjQhVSwjyizb5c0JiXnWfK8wv
+ Y8+iPi0Bw8wbV3wQI6r1WAzOH+QB4WZyl18rctUx+kIOAUsmzOnaTQezX/gZTXGWlFOe
+ Grx0s6J6bkUl33oLgSW8ekpe1yROqZEcHM9SH1imQFzvv5+ihBbB/PZ0LzEnp5rx8Ntn
+ 2woewvQtlczuf07jGStJzT5kpLeeS3RQbfqd4AQIpycous8peXHHAFyUm7T9Q6axTUj+ BA== 
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3qxnwv1xuu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 01 Jun 2023 19:21:03 +0000
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 351JL1UM007473
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 1 Jun 2023 19:21:01 GMT
+Received: from [10.110.26.45] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.42; Thu, 1 Jun 2023
+ 12:20:58 -0700
+Message-ID: <932ee149-c524-25e7-ee49-5ea1a7e6708c@quicinc.com>
+Date: Thu, 1 Jun 2023 12:20:56 -0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <168471337231.1913606.15905047692536779158.reportbug@xps>
- <ZHKrC4/G6ZyvRReI@xps> <ZHL5cCNUzVdleiag@eldamar.lan> <ab12984e-be17-903d-ba0a-f9c85b8c544f@amd.com>
- <ZHP4IqxBUPuVRvRV@xps> <09e24386-de63-e9e9-9e7f-5d04bad62d83@amd.com>
- <ZHQhPcKUF76Kplwm@xps> <ZHUt9xQKCwCflvVC@xps> <8537d965-ddf4-7f45-6459-d5acf520376e@amd.com>
- <ZHWfMBeAONerAJmd@xps> <ZHfa/wQlaVCeUC22@xps> <fe0ab1fa-6ed6-dc64-8165-8fc70669317b@amd.com>
- <CACO55tsuO1kQUFfPdPFUHm4WEQseCR2tQSDhFRzR+8wOECZCyA@mail.gmail.com>
- <MN0PR12MB61017541F5AC55485A490BCDE2499@MN0PR12MB6101.namprd12.prod.outlook.com>
- <CACO55tudULtvt_Hcdg+uqXeYkSAR_NZ1oD=R_KhuE_THSRe88g@mail.gmail.com> <MN0PR12MB6101DE067CF85E59AF187763E2499@MN0PR12MB6101.namprd12.prod.outlook.com>
-In-Reply-To: <MN0PR12MB6101DE067CF85E59AF187763E2499@MN0PR12MB6101.namprd12.prod.outlook.com>
-From: Karol Herbst <kherbst@redhat.com>
-Date: Thu, 1 Jun 2023 20:10:26 +0200
-Message-ID: <CACO55tuqAH5Zt+X9pjLFZ-RcFgxpgjpqmrAHPvm4=fb_DMBHyw@mail.gmail.com>
-Subject: Re: Regression from "ACPI: OSI: Remove Linux-Dell-Video _OSI string"?
- (was: Re: Bug#1036530: linux-signed-amd64: Hard lock up of system)
-To: "Limonciello, Mario" <Mario.Limonciello@amd.com>
-Cc: Nick Hastings <nicholaschastings@gmail.com>, Lyude Paul <lyude@redhat.com>, 
-	Lukas Wunner <lukas@wunner.de>, Salvatore Bonaccorso <carnil@debian.org>, 
-	"1036530@bugs.debian.org" <1036530@bugs.debian.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [Freedreno] [PATCH] Revert "drm/msm/dp: Remove INIT_SETUP delay"
+Content-Language: en-US
+To: Leonard Lausen <leonard@lausen.nl>,
+        Kuogee Hsieh
+	<quic_khsieh@quicinc.com>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Bjorn Andersson <andersson@kernel.org>
+CC: <freedreno@lists.freedesktop.org>,
+        Sankeerth Billakanti
+	<quic_sbillaka@quicinc.com>,
+        Bjorn Andersson <quic_bjorande@quicinc.com>,
+        <regressions@lists.linux.dev>, David Airlie <airlied@gmail.com>,
+        "Nikita
+ Travkin" <nikita@trvn.ru>, <linux-kernel@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, Rob Clark <robdclark@gmail.com>,
+        "Daniel
+ Vetter" <daniel@ffwll.ch>, <linux-arm-msm@vger.kernel.org>,
+        Stephen Boyd
+	<swboyd@chromium.org>, Sean Paul <sean@poorly.run>,
+        Johan Hovold
+	<johan+linaro@kernel.org>
+References: <e547edf4-1b48-5d12-1600-45f78e7cab49@quicinc.com>
+ <1345a125-f745-4fe3-0f5e-bfe84225958d@quicinc.com>
+ <b0cc40d5-6de1-91cc-e2cd-f47cc53551e4@quicinc.com>
+ <ebbcd56ac883d3c3d3024d368fab63d26e02637a@lausen.nl>
+ <20230508021536.txtamifw2vkfncnx@ripper>
+ <3802269cd54ce105ef6dece03b1b9af575b4fa06@lausen.nl>
+ <ad351c02-1c29-3601-53e8-f8cdeca2ac63@linaro.org>
+ <49d175ec16e3f65a18265063e51092ee8d0d79c1@lausen.nl>
+ <f2d1bb37-ea83-4d5d-6ef5-ae84c26d6ac1@quicinc.com>
+ <b9c8243ed53c5c9d7c1b5711237f6130976ea99b@lausen.nl>
+From: Abhinav Kumar <quic_abhinavk@quicinc.com>
+In-Reply-To: <b9c8243ed53c5c9d7c1b5711237f6130976ea99b@lausen.nl>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: NEEKnNQnkoXQnQdsGsQfqb3d1ckaav82
+X-Proofpoint-ORIG-GUID: NEEKnNQnkoXQnQdsGsQfqb3d1ckaav82
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.176.26
+ definitions=2023-06-01_08,2023-05-31_03,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 adultscore=0
+ priorityscore=1501 lowpriorityscore=0 phishscore=0 suspectscore=0
+ bulkscore=0 clxscore=1015 malwarescore=0 impostorscore=0 mlxscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2304280000 definitions=main-2306010167
 
-On Thu, Jun 1, 2023 at 7:21=E2=80=AFPM Limonciello, Mario
-<Mario.Limonciello@amd.com> wrote:
->
-> [AMD Official Use Only - General]
->
-> > -----Original Message-----
-> > From: Karol Herbst <kherbst@redhat.com>
-> > Sent: Thursday, June 1, 2023 12:19 PM
-> > To: Limonciello, Mario <Mario.Limonciello@amd.com>
-> > Cc: Nick Hastings <nicholaschastings@gmail.com>; Lyude Paul
-> > <lyude@redhat.com>; Lukas Wunner <lukas@wunner.de>; Salvatore
-> > Bonaccorso <carnil@debian.org>; 1036530@bugs.debian.org; Rafael J.
-> > Wysocki <rafael@kernel.org>; Len Brown <lenb@kernel.org>; linux-
-> > acpi@vger.kernel.org; linux-kernel@vger.kernel.org;
-> > regressions@lists.linux.dev
-> > Subject: Re: Regression from "ACPI: OSI: Remove Linux-Dell-Video _OSI
-> > string"? (was: Re: Bug#1036530: linux-signed-amd64: Hard lock up of sys=
-tem)
-> >
-> > On Thu, Jun 1, 2023 at 6:54=E2=80=AFPM Limonciello, Mario
-> > <Mario.Limonciello@amd.com> wrote:
-> > >
-> > > [AMD Official Use Only - General]
-> > >
-> > > > -----Original Message-----
-> > > > From: Karol Herbst <kherbst@redhat.com>
-> > > > Sent: Thursday, June 1, 2023 11:33 AM
-> > > > To: Limonciello, Mario <Mario.Limonciello@amd.com>
-> > > > Cc: Nick Hastings <nicholaschastings@gmail.com>; Lyude Paul
-> > > > <lyude@redhat.com>; Lukas Wunner <lukas@wunner.de>; Salvatore
-> > > > Bonaccorso <carnil@debian.org>; 1036530@bugs.debian.org; Rafael J.
-> > > > Wysocki <rafael@kernel.org>; Len Brown <lenb@kernel.org>; linux-
-> > > > acpi@vger.kernel.org; linux-kernel@vger.kernel.org;
-> > > > regressions@lists.linux.dev
-> > > > Subject: Re: Regression from "ACPI: OSI: Remove Linux-Dell-Video _O=
-SI
-> > > > string"? (was: Re: Bug#1036530: linux-signed-amd64: Hard lock up of
-> > system)
-> > > >
-> > > > On Thu, Jun 1, 2023 at 6:18=E2=80=AFPM Limonciello, Mario
-> > > > <mario.limonciello@amd.com> wrote:
-> > > > >
-> > > > > +Lyude, Lukas, Karol
-> > > > >
-> > > > > On 5/31/2023 6:40 PM, Nick Hastings wrote:
-> > > > > > Hi,
-> > > > > >
-> > > > > > * Nick Hastings <nicholaschastings@gmail.com> [230530 16:01]:
-> > > > > >> * Mario Limonciello <mario.limonciello@amd.com> [230530 13:00]=
-:
-> > > > > > <snip>
-> > > > > >>> As you're actually loading nouveau, can you please try
-> > > > nouveau.runpm=3D0 on
-> > > > > >>> the kernel command line?
-> > > > > >> I'm not intentionally loading it. This machine also has intel =
-graphics
-> > > > > >> which is what I prefer. Checking my
-> > > > > >> /etc/modprobe.d/blacklist-nvidia-nouveau.conf
-> > > > > >> I see:
-> > > > > >>
-> > > > > >> blacklist nvidia
-> > > > > >> blacklist nvidia-drm
-> > > > > >> blacklist nvidia-modeset
-> > > > > >> blacklist nvidia-uvm
-> > > > > >> blacklist ipmi_msghandler
-> > > > > >> blacklist ipmi_devintf
-> > > > > >>
-> > > > > >> So I thought I had blacklisted it but it seems I did not. Sinc=
-e I do not
-> > > > > >> want to use it maybe it is better to check if the lock up occu=
-rs with
-> > > > > >> nouveau blacklisted. I will try that now.
-> > > > > > I blacklisted nouveau and booted into a 6.1 kernel:
-> > > > > > % uname -a
-> > > > > > Linux xps 6.1.0-9-amd64 #1 SMP PREEMPT_DYNAMIC Debian 6.1.27-1
-> > > > (2023-05-08) x86_64 GNU/Linux
-> > > > > >
-> > > > > > It has been running without problems for nearly two days now:
-> > > > > > % uptime
-> > > > > >   08:34:48 up 1 day, 16:22,  2 users,  load average: 1.33, 1.26=
-, 1.27
-> > > > > >
-> > > > > > Regards,
-> > > > > >
-> > > > > > Nick.
-> > > > >
-> > > > > Thanks, that makes a lot more sense now.
-> > > > >
-> > > > > Nick, Can you please test if nouveau works with runtime PM in the
-> > > > > latest 6.4-rc?
-> > > > >
-> > > > > If it works in 6.4-rc, there are probably nouveau commits that ne=
-ed
-> > > > > to be backported to 6.1 LTS.
-> > > > >
-> > > > > If it's still broken in 6.4-rc, I believe you should file a bug:
-> > > > >
-> > > > > https://gitlab.freedesktop.org/drm/nouveau/
-> > > > >
-> > > > >
-> > > > > Lyude, Lukas, Karol
-> > > > >
-> > > > > This thread is in relation to this commit:
-> > > > >
-> > > > > 24867516f06d ("ACPI: OSI: Remove Linux-Dell-Video _OSI string")
-> > > > >
-> > > > > Nick has found that runtime PM is *not* working for nouveau.
-> > > > >
-> > > >
-> > > > keep in mind we have a list of PCIe controllers where we apply a
-> > > > workaround:
-> > > >
-> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
-/drivers
-> > > > /gpu/drm/nouveau/nouveau_drm.c?h=3Dv6.4-rc4#n682
-> > > >
-> > > > And I suspect there might be one or two more IDs we'll have to add
-> > > > there. Do we have any logs?
-> > >
-> > > There's some archived onto the distro bug.  Search this page for
-> > "journalctl.log.gz"
-> > > https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=3D1036530
-> > >
-> >
-> > interesting.. It seems to be the same controller used here. I wonder
-> > if the pci topology is different or if the workaround is applied at
-> > all.
->
-> I didn't see the message in the log about the workaround being applied
-> in that log, so I guess PCI topology difference is a likely suspect.
->
+Hi Leonard
 
-yeah, but I also couldn't see a log with the usual nouveau messages,
-so it's kinda weird.
+On 5/24/2023 5:58 AM, Leonard Lausen wrote:
+>>>>>>> [  275.025497] [drm:dpu_encoder_phys_vid_wait_for_commit_done:488]
+>>>>>>> [dpu error]vblank timeout
+>>>>>>> [  275.025514] [drm:dpu_kms_wait_for_commit_done:510] [dpu error]wait
+>>>>>>> for commit done returned -110
+>>>>>>> [  275.064141] [drm:dpu_encoder_frame_done_timeout:2382] [dpu
+>>>>>>> error]enc33 frame done timeout
+>>>>>
+>>>>> This is a different crash but the root-cause of both the issues is the
+>>>>> bridge hpd_enable/disable series.
+>>>>>
+>>>>> https://patchwork.freedesktop.org/patch/514414/
+>>>
+>>> Yes, the new patch to fix this issue is here
+>>>
+>>> https://patchwork.freedesktop.org/patch/538601/?series=118148&rev=3
+>>>
+>>> Apologies if you were not CCed on this, if a next version is CCed,
+>>> will ask kuogee to cc you.
+>>>
+>>> Meanwhile, will be great if you can verify if it works for you and
+>>> provide Tested-by tags.
+>>
+>> Hi Leonard,
+>>
+>> I had  cc you with v5 patches.
+>>
+>> Would you please verify it.
+> 
+> Hi Kuogee,
+> 
+> thank you. Verified the v6 patch fixes the regression when ported to
+> 6.3.3. One non-fatal issue remains: Suspending and resuming the system
+> while USB-C DP monitor is connected triggers an error, though the system
+> recovers within a second without the need to unplug the cable.
+> 
+> [drm:drm_mode_config_helper_resume] *ERROR* Failed to resume (-107)
+> 
 
-Anyway, the output of `lspci -tvnn` would help
-
-> >
-> > But yeah, I'd kinda love for somebody with better knowledge on all of
-> > this to figure out what exactly is going wrong, but everytime this
-> > gets investigated Intel says "our hardware has no bugs", the ACPI
-> > folks dig for months and find nothing and I end up figuring out some
-> > weirdo workaround I don't understand. And apparently also nobody is
-> > able to hand out docs explaining in detail how that runtime
-> > suspend/resume stuff is supposed to work.
-> >
-> > I have a Dell XPS 9560 where the added workaround in nouveau fixed the
-> > problem and I know it's fixed on a bunch of other systems. So if
-> > anybody is willing to publish docs and/or actually debug it with
-> > domain knowledge, please go ahead.
-> >
-> > > > And could anybody test if adding the
-> > > > controller in play here does resolve the problem?
-> > > >
-> > > > > If you recall we did 24867516f06d because 5775b843a619 was
-> > > > > supposed to have fixed it.
-> > > > >
-> > >
->
-
+We are not able to recreate this on sc7280 chromebooks , will need to 
+check on sc7180. This does not seem directly related to any of the 
+hotplug changes though so needs to be checked separately. So please feel 
+free to raise a gitlab bug for this and assign to me.
