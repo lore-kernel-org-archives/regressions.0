@@ -1,89 +1,88 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CA2E23404
-	for <regressions@lists.linux.dev>; Thu,  1 Jun 2023 11:29:30 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1q4gUa-0001Kx-7O; Thu, 01 Jun 2023 13:29:20 +0200
-Message-ID: <ea040d59-8760-32d3-ce5b-4120ed0efaa5@leemhuis.info>
-Date: Thu, 1 Jun 2023 13:29:19 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FEBDBA2F
+	for <regressions@lists.linux.dev>; Thu,  1 Jun 2023 12:26:49 +0000 (UTC)
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5147f4bbfdaso1226658a12.0
+        for <regressions@lists.linux.dev>; Thu, 01 Jun 2023 05:26:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1685622407; x=1688214407;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PJAjrSKk1Ndk8NS3+84Nyv09lcJ/qTEF//Jjgbbt0wY=;
+        b=LGLOY87tAQB5Ec3Y/8e9bnJnLtd/lGFTHfUqGHlZ1neCaUmqu9e4KFMZ1Q07UdBUiS
+         CdiBESxy9kRbLeq0zuqkHlalm6ndly4hQ8f4MQzhITWaxsDa6sOghru+QBRhIC7SPWq9
+         XayY6yOukqd5rQWFrGOCL45YmEWSNMjxMMW2w=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685622407; x=1688214407;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PJAjrSKk1Ndk8NS3+84Nyv09lcJ/qTEF//Jjgbbt0wY=;
+        b=T2xqiQd58HPSmZoyOd97ZWl+FfVI0YadErZ2Rh6UJVB7yTiWqUD7b2+x69vaXOVi5e
+         bLGmpJCEWLNtkxyskI9h8IOrGR0LLa6XC+b/zcazRkNtnW26vbW9gnyn2X/hpmFXbSss
+         NddxqP3CR6uhUntThuRtoafEiwhxaeYVp1n3LLd8XtYlhBUapvLh0XtovBFzTP4PpveP
+         wBfGwx9ZwpWUr3cOTSNC376H7fT4b8LMRli2pLFPcVwav3XK9xlgfK3gnWdUE8YJhVbT
+         8LTLZDSxE3ejzELmWKN86M9znLnP1pJZ9t2XvwmqoEXuSu9N0Ld4m3exagyRPqJrW61L
+         jWhw==
+X-Gm-Message-State: AC+VfDzmjGi66VIvoatJcYlUV7YJzjI8Mvwin0XprE0ytbqZBGn+2Lli
+	+qcI2X6ruIXfFLnM03kdwIcD5tEM+vhEDdqFNTmNUoMh
+X-Google-Smtp-Source: ACHHUZ4wQEAvFCb5GeLs3ruGDp29F49KD804e/s6fVevh+1S1ZqbqAifaW+SrGwnKuYucHMlDthcKQ==
+X-Received: by 2002:aa7:ce0c:0:b0:514:9422:37db with SMTP id d12-20020aa7ce0c000000b00514942237dbmr5573461edv.39.1685622407450;
+        Thu, 01 Jun 2023 05:26:47 -0700 (PDT)
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com. [209.85.218.46])
+        by smtp.gmail.com with ESMTPSA id h9-20020a50ed89000000b0050bca43ff55sm7047649edr.68.2023.06.01.05.26.46
+        for <regressions@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 01 Jun 2023 05:26:46 -0700 (PDT)
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-96f5685f902so101859566b.2
+        for <regressions@lists.linux.dev>; Thu, 01 Jun 2023 05:26:46 -0700 (PDT)
+X-Received: by 2002:a17:907:9412:b0:973:daa0:315 with SMTP id
+ dk18-20020a170907941200b00973daa00315mr8333457ejc.1.1685622406136; Thu, 01
+ Jun 2023 05:26:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Content-Language: en-US, de-DE
-To: Christian Brauner <brauner@kernel.org>,
- Mike Christie <michael.christie@oracle.com>,
- Linus Torvalds <torvalds@linux-foundation.org>
-Cc: oleg@redhat.com, nicolas.dichtel@6wind.com, axboe@kernel.dk,
- ebiederm@xmission.com, linux-kernel@vger.kernel.org,
- virtualization@lists.linux-foundation.org, mst@redhat.com,
- sgarzare@redhat.com, jasowang@redhat.com, stefanha@redhat.com,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- hch@infradead.org, konrad.wilk@oracle.com
 References: <20230519-vormittag-dschungel-83607e9d2255@brauner>
- <ab8c9f95-c9e9-de04-4e28-78163a32da80@leemhuis.info>
- <20230601-herzallerliebst-dschungel-4515db351a0c@brauner>
-From: Thorsten Leemhuis <linux@leemhuis.info>
-Subject: Re: [RFC PATCH 0/8] vhost_tasks: Use CLONE_THREAD/SIGHAND
+ <ab8c9f95-c9e9-de04-4e28-78163a32da80@leemhuis.info> <20230601-herzallerliebst-dschungel-4515db351a0c@brauner>
 In-Reply-To: <20230601-herzallerliebst-dschungel-4515db351a0c@brauner>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1685618971;1a96e82f;
-X-HE-SMSGID: 1q4gUa-0001Kx-7O
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Thu, 1 Jun 2023 08:26:29 -0400
+X-Gmail-Original-Message-ID: <CAHk-=wgQAgHh_rjiFaAO+Y_mRQvp4SJ7SQ7niVKj89hDmh8Q_A@mail.gmail.com>
+Message-ID: <CAHk-=wgQAgHh_rjiFaAO+Y_mRQvp4SJ7SQ7niVKj89hDmh8Q_A@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/8] vhost_tasks: Use CLONE_THREAD/SIGHAND
+To: Christian Brauner <brauner@kernel.org>
+Cc: Thorsten Leemhuis <linux@leemhuis.info>, Mike Christie <michael.christie@oracle.com>, oleg@redhat.com, 
+	nicolas.dichtel@6wind.com, axboe@kernel.dk, ebiederm@xmission.com, 
+	linux-kernel@vger.kernel.org, virtualization@lists.linux-foundation.org, 
+	mst@redhat.com, sgarzare@redhat.com, jasowang@redhat.com, stefanha@redhat.com, 
+	Linux kernel regressions list <regressions@lists.linux.dev>, hch@infradead.org, konrad.wilk@oracle.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 01.06.23 12:47, Christian Brauner wrote:
-> On Thu, Jun 01, 2023 at 09:58:38AM +0200, Thorsten Leemhuis wrote:
->> On 19.05.23 14:15, Christian Brauner wrote:
->>> On Thu, May 18, 2023 at 10:25:11AM +0200, Christian Brauner wrote:
->>>> On Wed, May 17, 2023 at 07:09:12PM -0500, Mike Christie wrote:
->>>>> This patch allows the vhost and vhost_task code to use CLONE_THREAD,
->>>>> CLONE_SIGHAND and CLONE_FILES. It's a RFC because I didn't do all the
->>>>> normal testing, haven't coverted vsock and vdpa, and I know you guys
->>>>> will not like the first patch. However, I think it better shows what
->>>>
->>>> Just to summarize the core idea behind my proposal is that no signal
->>>> handling changes are needed unless there's a bug in the current way
->>>> io_uring workers already work. All that should be needed is
->>>> s/PF_IO_WORKER/PF_USER_WORKER/ in signal.c.
->> [...]
->>>> So it feels like this should be achievable by adding a callback to
->>>> struct vhost_worker that get's called when vhost_worker() gets SIGKILL
->>>> and that all the users of vhost workers are forced to implement.
->>>>
->>>> Yes, it is more work but I think that's the right thing to do and not to
->>>> complicate our signal handling.
->>>>
->>>> Worst case if this can't be done fast enough we'll have to revert the
->>>> vhost parts. I think the user worker parts are mostly sane and are
->>>
->>> As mentioned, if we can't settle this cleanly before -rc4 we should
->>> revert the vhost parts unless Linus wants to have it earlier.
->>
->> Meanwhile -rc5 is just a few days away and there are still a lot of
->> discussions in the patch-set proposed to address the issues[1]. Which is
->> kinda great (albeit also why I haven't given it a spin yet), but on the
->> other hand makes we wonder:
-> 
-> You might've missed it in the thread but it seems everyone is currently
-> operating under the assumption that the preferred way is to fix this is
-> rather than revert. 
+On Thu, Jun 1, 2023 at 6:47=E2=80=AFAM Christian Brauner <brauner@kernel.or=
+g> wrote:
+>
+> @Mike, do you want to prepare an updated version of the temporary fix.
+> If @Linus prefers to just apply it directly he can just grab it from the
+> list rather than delaying it. Make sure to grab a Co-developed-by line
+> on this, @Mike.
 
-I saw that, but that was also a week ago already, so I slowly started to
-wonder if plans might have/should be changed. Anyway: if that's still
-the plan forward it's totally fine for me if it's fine for Linus. :-D
+Yeah, let's apply the known "fix the immediate regression" patch wrt
+vhost ps output and the freezer. That gets rid of the regression.
 
-BTW: I for now didn't sit down to test Mike's patches, as due to all the
-discussions I assumed new ones would be coming sooner or later anyway.
-If it's worth giving them a shot, please let me know.
+I think that we can - and should - then treat the questions about core
+dumping and execve as separate issues.
 
-> [...]
+vhost wouldn't have done execve since it's nonsensical and has never
+worked anyway since it always left the old mm ref behind, and
+similarly core dumping has never been an issue.
 
-Thx for the update!
+So on those things we don't have any "semantic" issues, we just need
+to make sure we don't do crazy things like hang uninterruptibly.
 
-Ciao, Thorsten
+            Linus
