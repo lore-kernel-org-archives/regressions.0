@@ -1,135 +1,72 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 901AF23DF
-	for <regressions@lists.linux.dev>; Thu,  1 Jun 2023 19:21:30 +0000 (UTC)
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 351IWT64021738;
-	Thu, 1 Jun 2023 19:21:03 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=EFa/NmBtii/RjNtJcSA+b7nC2BASDp2x0P9xuuJoJ8c=;
- b=C44go066ITZPRfVic9csx3exufeUwC/i4mS/KtGotJH0JgrM8bscHqZBrw/a8uN2yvi8
- 8rcbcXjKzOc7LC56KhXJYy08BRlTmBGMAYIO3FIXWbAIjQhVSwjyizb5c0JiXnWfK8wv
- Y8+iPi0Bw8wbV3wQI6r1WAzOH+QB4WZyl18rctUx+kIOAUsmzOnaTQezX/gZTXGWlFOe
- Grx0s6J6bkUl33oLgSW8ekpe1yROqZEcHM9SH1imQFzvv5+ihBbB/PZ0LzEnp5rx8Ntn
- 2woewvQtlczuf07jGStJzT5kpLeeS3RQbfqd4AQIpycous8peXHHAFyUm7T9Q6axTUj+ BA== 
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3qxnwv1xuu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 01 Jun 2023 19:21:03 +0000
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 351JL1UM007473
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 1 Jun 2023 19:21:01 GMT
-Received: from [10.110.26.45] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.42; Thu, 1 Jun 2023
- 12:20:58 -0700
-Message-ID: <932ee149-c524-25e7-ee49-5ea1a7e6708c@quicinc.com>
-Date: Thu, 1 Jun 2023 12:20:56 -0700
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2AB933DF
+	for <regressions@lists.linux.dev>; Thu,  1 Jun 2023 21:19:07 +0000 (UTC)
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-3f6d7abe9a4so13239825e9.2
+        for <regressions@lists.linux.dev>; Thu, 01 Jun 2023 14:19:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brixit-nl.20221208.gappssmtp.com; s=20221208; t=1685654346; x=1688246346;
+        h=content-transfer-encoding:subject:from:to:content-language
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=of/XrkXjYj+o/AeSmwOwIp8GlnWTvjMR5t2AdN/ZBRs=;
+        b=f4fU5sUN4379BHHJ5FIiRW3x0J29UE+nOp4gBGoFq5nPWGQu1up+enM0DTwadk/JvA
+         NfaWedqcxmaT7A1G3/zLjM9INVmZiesNI0C+Zz3Xuf4CH1EInUukVeEYL3I/tYvxwT/G
+         QxaZY7ItWUpJIAwsbElGiiXtqpYCZTjNe7Ud6s088uD08u61WBL/xbsNCZHJq3jZJyUI
+         5eNewKDYl8V8SIkBxLEduGNY9csiuWtKic/mYhnLelm7Ltk9YHFtIAhJt9cyHuvjdxix
+         YnuSmXWkCZdIn8H3iBKp8YCAYm4ABRC0gKw7OJxwfTHzn4EYThXLaGdwJ1JrhPTAoMDh
+         Gpnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685654346; x=1688246346;
+        h=content-transfer-encoding:subject:from:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=of/XrkXjYj+o/AeSmwOwIp8GlnWTvjMR5t2AdN/ZBRs=;
+        b=KixVh72AaHAjsSs3LvqSHIPzOsJv4twqGQD+mstal4kyJZdceyzFpgVT1o2ZVj0Swf
+         SkdMvM9gCLbs75JbhMyvkBEKgubqS+Kdx1PkbXVPk5niadAHdB5PUIQqsEVvUPrTsS+V
+         XkXlnbpoXk4vn8JrMoVz/cD6TrQZ7qX6Du5B7EBExBCh+ewD1v1fyqcDy83DYywaEdUB
+         1452B2864VWYYX+TKleHD23bTRAN5f3zd23cq/U0nGExkRYxldWljp+H/KdP5FkdUUe2
+         vcwXOxQj8DqD72Dt9zt8BF/UwxgdmqBOwPMSyd77xqOD/E4XYzHCz4oZRlCdHGt0RMNJ
+         BaaA==
+X-Gm-Message-State: AC+VfDy0ub9qeNoEw6hNkm9O6zIZ1kspUQRTz5ygFRY45Gwoa/FeDzwE
+	PPciDsmEu+IvH3NSUACwW4GwoqzAXzveyUZghVE=
+X-Google-Smtp-Source: ACHHUZ5GQ6DQe4pOcH7HZpe3BSlh9JLpN/xfx6XaRRZ7dknhrzPa+3roiiN6P3H3nrJzdCB88leFVg==
+X-Received: by 2002:a05:600c:224b:b0:3f5:ff24:27de with SMTP id a11-20020a05600c224b00b003f5ff2427demr399052wmm.32.1685654345915;
+        Thu, 01 Jun 2023 14:19:05 -0700 (PDT)
+Received: from ?IPV6:2a00:bba0:120c:9f00:7a8e:8795:650f:7c4e? (2a00-bba0-120c-9f00-7a8e-8795-650f-7c4e.static6.cust.trined.nl. [2a00:bba0:120c:9f00:7a8e:8795:650f:7c4e])
+        by smtp.gmail.com with ESMTPSA id f15-20020a7bcd0f000000b003f4272c2d0csm3440377wmj.36.2023.06.01.14.19.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 01 Jun 2023 14:19:05 -0700 (PDT)
+Message-ID: <f13c27fb-2afe-b94e-aad9-ed5ecc818183@brixit.nl>
+Date: Thu, 1 Jun 2023 23:19:04 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [Freedreno] [PATCH] Revert "drm/msm/dp: Remove INIT_SETUP delay"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.1
 Content-Language: en-US
-To: Leonard Lausen <leonard@lausen.nl>,
-        Kuogee Hsieh
-	<quic_khsieh@quicinc.com>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Bjorn Andersson <andersson@kernel.org>
-CC: <freedreno@lists.freedesktop.org>,
-        Sankeerth Billakanti
-	<quic_sbillaka@quicinc.com>,
-        Bjorn Andersson <quic_bjorande@quicinc.com>,
-        <regressions@lists.linux.dev>, David Airlie <airlied@gmail.com>,
-        "Nikita
- Travkin" <nikita@trvn.ru>, <linux-kernel@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, Rob Clark <robdclark@gmail.com>,
-        "Daniel
- Vetter" <daniel@ffwll.ch>, <linux-arm-msm@vger.kernel.org>,
-        Stephen Boyd
-	<swboyd@chromium.org>, Sean Paul <sean@poorly.run>,
-        Johan Hovold
-	<johan+linaro@kernel.org>
-References: <e547edf4-1b48-5d12-1600-45f78e7cab49@quicinc.com>
- <1345a125-f745-4fe3-0f5e-bfe84225958d@quicinc.com>
- <b0cc40d5-6de1-91cc-e2cd-f47cc53551e4@quicinc.com>
- <ebbcd56ac883d3c3d3024d368fab63d26e02637a@lausen.nl>
- <20230508021536.txtamifw2vkfncnx@ripper>
- <3802269cd54ce105ef6dece03b1b9af575b4fa06@lausen.nl>
- <ad351c02-1c29-3601-53e8-f8cdeca2ac63@linaro.org>
- <49d175ec16e3f65a18265063e51092ee8d0d79c1@lausen.nl>
- <f2d1bb37-ea83-4d5d-6ef5-ae84c26d6ac1@quicinc.com>
- <b9c8243ed53c5c9d7c1b5711237f6130976ea99b@lausen.nl>
-From: Abhinav Kumar <quic_abhinavk@quicinc.com>
-In-Reply-To: <b9c8243ed53c5c9d7c1b5711237f6130976ea99b@lausen.nl>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: NEEKnNQnkoXQnQdsGsQfqb3d1ckaav82
-X-Proofpoint-ORIG-GUID: NEEKnNQnkoXQnQdsGsQfqb3d1ckaav82
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.176.26
- definitions=2023-06-01_08,2023-05-31_03,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 adultscore=0
- priorityscore=1501 lowpriorityscore=0 phishscore=0 suspectscore=0
- bulkscore=0 clxscore=1015 malwarescore=0 impostorscore=0 mlxscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2304280000 definitions=main-2306010167
+To: regressions@lists.linux.dev, paul.kocialkowski@bootlin.com,
+ jernej.skrabec@gmail.com, sakari.ailus@linux.intel.com, mchehab@kernel.org,
+ linux-media@vger.kernel.org
+From: Martijn Braam <martijn@brixit.nl>
+Subject: [REGRESSION] breakage in sun6i-csi media api
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Leonard
+It seems like this commit:
 
-On 5/24/2023 5:58 AM, Leonard Lausen wrote:
->>>>>>> [  275.025497] [drm:dpu_encoder_phys_vid_wait_for_commit_done:488]
->>>>>>> [dpu error]vblank timeout
->>>>>>> [  275.025514] [drm:dpu_kms_wait_for_commit_done:510] [dpu error]wait
->>>>>>> for commit done returned -110
->>>>>>> [  275.064141] [drm:dpu_encoder_frame_done_timeout:2382] [dpu
->>>>>>> error]enc33 frame done timeout
->>>>>
->>>>> This is a different crash but the root-cause of both the issues is the
->>>>> bridge hpd_enable/disable series.
->>>>>
->>>>> https://patchwork.freedesktop.org/patch/514414/
->>>
->>> Yes, the new patch to fix this issue is here
->>>
->>> https://patchwork.freedesktop.org/patch/538601/?series=118148&rev=3
->>>
->>> Apologies if you were not CCed on this, if a next version is CCed,
->>> will ask kuogee to cc you.
->>>
->>> Meanwhile, will be great if you can verify if it works for you and
->>> provide Tested-by tags.
->>
->> Hi Leonard,
->>
->> I had  cc you with v5 patches.
->>
->> Would you please verify it.
-> 
-> Hi Kuogee,
-> 
-> thank you. Verified the v6 patch fixes the regression when ported to
-> 6.3.3. One non-fatal issue remains: Suspending and resuming the system
-> while USB-C DP monitor is connected triggers an error, though the system
-> recovers within a second without the need to unplug the cable.
-> 
-> [drm:drm_mode_config_helper_resume] *ERROR* Failed to resume (-107)
-> 
+media: sun6i-csi: Add bridge v4l2 subdev with port management
 
-We are not able to recreate this on sc7280 chromebooks , will need to 
-check on sc7180. This does not seem directly related to any of the 
-hotplug changes though so needs to be checked separately. So please feel 
-free to raise a gitlab bug for this and assign to me.
+Has changed the way the media pipeline on a64 devices, in my case the 
+PINE64 PinePhone works. Since this is an API towards userspace and 
+there's active applications that use it I think this counts as a regression.
+
+#regzbot introduced: 0d2b746b1bef73de62d2d311e594a7ffed4ca43
+
+Greetings,
+Martijn Braam
+
