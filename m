@@ -1,87 +1,140 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E71D12B68
-	for <regressions@lists.linux.dev>; Thu,  1 Jun 2023 10:18:13 +0000 (UTC)
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-30789a4c537so620244f8f.0
-        for <regressions@lists.linux.dev>; Thu, 01 Jun 2023 03:18:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=6wind.com; s=google; t=1685614691; x=1688206691;
-        h=content-transfer-encoding:in-reply-to:organization:from
-         :content-language:references:cc:to:subject:reply-to:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=6XkTQ3CoGch36kB7T1IroYG5r0BhmIO+8aTMljzxUEY=;
-        b=URvuUPMduCrUKpW+Ol39ok793SYOg+PBYxgwDTW9AyapjAXj7Jb2F8lUTjkdEAexXJ
-         u/DxrvJ6zz0EBt1+lSqHy/dfb1lRLWRop7968NKxMbXVdFykRANlQybHBIfH+gr7mIVJ
-         bE1Gkwvlk3eSLxRXCfhXcj1Z1VIXdLl5l6r3pP1q+4KakcntNIv84FhHGSu35z3X46sD
-         UKk9wuvex7cpvZ+0BP4P3Y0UU7ole6RvlWWeDzOVO2cPewbLoLdyWE0cDZ0jeKBQQphD
-         kxuEDR/pbICZB+TQFBVsG3eFXCE4BU7438dfgC0LLlChW+pfjPrfUmNzSwU/7V8EoCX1
-         8TnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685614691; x=1688206691;
-        h=content-transfer-encoding:in-reply-to:organization:from
-         :content-language:references:cc:to:subject:reply-to:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=6XkTQ3CoGch36kB7T1IroYG5r0BhmIO+8aTMljzxUEY=;
-        b=KOVFBSfIpLYAx7yfPMU0brLwymJukJE9m3TdcgM/lpqgsOERP1smnM8V4nosw3cfP0
-         05CxxtiQOP3V4EZAuIWUomhsrgEf1ADzTi/APqg7sm/N/LTidSulY1f/l1BVCF+7KwIw
-         AXNniDQhQS0G0DurQ+xScMLsW2ILjIpkkKcLX4iHZlYxLbSAX08P/D0czufAG/OClAUp
-         3mwUJKkBuKz0llfWxltgKkRy8drw50M9bD//y8P3ezQUUHw+0iBfA3zLGI9Z2ORtP8JE
-         bwbHSLGISBdFtRoYlRRvsRqSWg7IYZAxU2yFMOl4ZcWjDmIRmfRMI0loE8sm0bsphA7T
-         LufQ==
-X-Gm-Message-State: AC+VfDxNHICB0unzeO5NT2maH8TFQhZyDJK88Kvx3AZyH8qDI81BVgfF
-	KXRcdEWTEiY+8oHkP8XDwxVaig==
-X-Google-Smtp-Source: ACHHUZ6zWD2AjaNcc66+tXB2tbV5HvOXZIVxwveIS7GawEtSHtUuAbiPap7EgwcP1KYkdHehyB3moA==
-X-Received: by 2002:adf:ef8d:0:b0:2f4:6574:5a93 with SMTP id d13-20020adfef8d000000b002f465745a93mr1566253wro.4.1685614691384;
-        Thu, 01 Jun 2023 03:18:11 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:b41:c160:a1c1:aac9:326c:88d7? ([2a01:e0a:b41:c160:a1c1:aac9:326c:88d7])
-        by smtp.gmail.com with ESMTPSA id i14-20020adfe48e000000b0030ae499da59sm9735708wrm.111.2023.06.01.03.18.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 01 Jun 2023 03:18:10 -0700 (PDT)
-Message-ID: <1c464b6a-dd02-f846-5691-c29f567466c1@6wind.com>
-Date: Thu, 1 Jun 2023 12:18:09 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C17523402
+	for <regressions@lists.linux.dev>; Thu,  1 Jun 2023 10:47:25 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BD4AC433D2;
+	Thu,  1 Jun 2023 10:47:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1685616445;
+	bh=41eM8QuP5hVSTNUbOJRPYeeJz1S6tM92155sWldxvGI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FFMfJ9I9UJVVpM/e48PslhY1OAVu1m4Xh9fkMnnfAlVOkb5WYOc03pJXM7+F0mLir
+	 3uEAr5WNdddTdIISBtWxOfQa64M3DaHh5rXi2jTGpYmWkbztJn9nze6/kn9LmD7Lua
+	 JHK3zY2+Po46Syw7GpuJTu4H+5T3O3+sLHDEjl/nsOkWL2aJfIzIhCY5X6OFmZAM0Z
+	 ZM+GFsCnOYZn4S8JJsSBKK/UZv+XEb8sXUlc6Kd2al0/xsxPjaMTeEd1+rnSWSYR/0
+	 nC/pgUMw/6M1kqeh6MM9tDxzdF0PFOWKmxfwszRQsutuif4VUilZ/RaNtlSRKUtlSZ
+	 FjuFBT7LNBGPA==
+Date: Thu, 1 Jun 2023 12:47:19 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Thorsten Leemhuis <linux@leemhuis.info>,
+	Mike Christie <michael.christie@oracle.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Cc: oleg@redhat.com, nicolas.dichtel@6wind.com, axboe@kernel.dk,
+	ebiederm@xmission.com, linux-kernel@vger.kernel.org,
+	virtualization@lists.linux-foundation.org, mst@redhat.com,
+	sgarzare@redhat.com, jasowang@redhat.com, stefanha@redhat.com,
+	Linux kernel regressions list <regressions@lists.linux.dev>,
+	hch@infradead.org, konrad.wilk@oracle.com
+Subject: Re: [RFC PATCH 0/8] vhost_tasks: Use CLONE_THREAD/SIGHAND
+Message-ID: <20230601-herzallerliebst-dschungel-4515db351a0c@brauner>
+References: <20230519-vormittag-dschungel-83607e9d2255@brauner>
+ <ab8c9f95-c9e9-de04-4e28-78163a32da80@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Reply-To: nicolas.dichtel@6wind.com
-Subject: Re: [RFC PATCH 0/8] vhost_tasks: Use CLONE_THREAD/SIGHAND
-To: Thorsten Leemhuis <linux@leemhuis.info>,
- Christian Brauner <brauner@kernel.org>,
- Mike Christie <michael.christie@oracle.com>,
- Linus Torvalds <torvalds@linux-foundation.org>
-Cc: oleg@redhat.com, axboe@kernel.dk, ebiederm@xmission.com,
- linux-kernel@vger.kernel.org, virtualization@lists.linux-foundation.org,
- mst@redhat.com, sgarzare@redhat.com, jasowang@redhat.com,
- stefanha@redhat.com,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- hch@infradead.org, konrad.wilk@oracle.com
-References: <20230519-vormittag-dschungel-83607e9d2255@brauner>
- <ab8c9f95-c9e9-de04-4e28-78163a32da80@leemhuis.info>
-Content-Language: en-US
-From: Nicolas Dichtel <nicolas.dichtel@6wind.com>
-Organization: 6WIND
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 In-Reply-To: <ab8c9f95-c9e9-de04-4e28-78163a32da80@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
-Le 01/06/2023 à 09:58, Thorsten Leemhuis a écrit :
-[snip]
+On Thu, Jun 01, 2023 at 09:58:38AM +0200, Thorsten Leemhuis wrote:
+> On 19.05.23 14:15, Christian Brauner wrote:
+> > On Thu, May 18, 2023 at 10:25:11AM +0200, Christian Brauner wrote:
+> >> On Wed, May 17, 2023 at 07:09:12PM -0500, Mike Christie wrote:
+> >>> This patch allows the vhost and vhost_task code to use CLONE_THREAD,
+> >>> CLONE_SIGHAND and CLONE_FILES. It's a RFC because I didn't do all the
+> >>> normal testing, haven't coverted vsock and vdpa, and I know you guys
+> >>> will not like the first patch. However, I think it better shows what
+> >>
+> >> Just to summarize the core idea behind my proposal is that no signal
+> >> handling changes are needed unless there's a bug in the current way
+> >> io_uring workers already work. All that should be needed is
+> >> s/PF_IO_WORKER/PF_USER_WORKER/ in signal.c.
+> [...]
+> >> So it feels like this should be achievable by adding a callback to
+> >> struct vhost_worker that get's called when vhost_worker() gets SIGKILL
+> >> and that all the users of vhost workers are forced to implement.
+> >>
+> >> Yes, it is more work but I think that's the right thing to do and not to
+> >> complicate our signal handling.
+> >>
+> >> Worst case if this can't be done fast enough we'll have to revert the
+> >> vhost parts. I think the user worker parts are mostly sane and are
+> > 
+> > As mentioned, if we can't settle this cleanly before -rc4 we should
+> > revert the vhost parts unless Linus wants to have it earlier.
 > 
 > Meanwhile -rc5 is just a few days away and there are still a lot of
 > discussions in the patch-set proposed to address the issues[1]. Which is
 > kinda great (albeit also why I haven't given it a spin yet), but on the
 > other hand makes we wonder:
-> 
-> Is it maybe time to revert the vhost parts for 6.4 and try again next cycle?
-At least it's time to find a way to fix this issue :)
 
+You might've missed it in the thread but it seems everyone is currently
+operating under the assumption that the preferred way is to fix this is
+rather than revert. See the mail in [1]:
 
-Thank you,
-Nicolas
+"So I'd really like to finish this. Even if we end up with a hack or
+two in signal handling that we can hopefully fix up later by having
+vhost fix up some of its current assumptions."
+
+which is why no revert was send for -rc4. And there's a temporary fix we
+seem to have converged on.
+
+@Mike, do you want to prepare an updated version of the temporary fix.
+If @Linus prefers to just apply it directly he can just grab it from the
+list rather than delaying it. Make sure to grab a Co-developed-by line
+on this, @Mike.
+
+Just in case we misunderstood the intention, I also prepared a revert
+at the end of this mail that Linus can use.
+
+@Thorsten, you can test it if you want. The revert only reverts the
+vhost bits as the general agreement seems to be that user workers are
+otherwise the path forward.
+
+[1]: https://lore.kernel.org/lkml/CAHk-=wj4DS=2F5mW+K2P7cVqrsuGd3rKE_2k2BqnnPeeYhUCvg@mail.gmail.com
+
+---
+
+/* Summary */
+Switching vhost workers to user workers broke existing workflows because
+vhost workers started showing up in ps output breaking various scripts.
+The reason is that vhost user workers are currently spawned as separate
+processes and not as threads. Revert the patches converting vhost from
+kthreads to vhost workers until vhost is ready to support user workers
+created as actual threads.
+
+The following changes since commit 7877cb91f1081754a1487c144d85dc0d2e2e7fc4:
+
+  Linux 6.4-rc4 (2023-05-28 07:49:00 -0400)
+
+are available in the Git repository at:
+
+  git@gitolite.kernel.org:pub/scm/linux/kernel/git/brauner/linux tags/kernel/v6.4-rc4/vhost
+
+for you to fetch changes up to b20084b6bc90012a8ccce72ef1c0050d5fd42aa8:
+
+  Revert "vhost_task: Allow vhost layer to use copy_process" (2023-06-01 12:33:19 +0200)
+
+----------------------------------------------------------------
+kernel/v6.4-rc4/vhost
+
+----------------------------------------------------------------
+Christian Brauner (3):
+      Revert "vhost: use vhost_tasks for worker threads"
+      Revert "vhost: move worker thread fields to new struct"
+      Revert "vhost_task: Allow vhost layer to use copy_process"
+
+ MAINTAINERS                      |   1 -
+ drivers/vhost/Kconfig            |   5 --
+ drivers/vhost/vhost.c            | 124 ++++++++++++++++++++-------------------
+ drivers/vhost/vhost.h            |  11 +---
+ include/linux/sched/vhost_task.h |  23 --------
+ kernel/Makefile                  |   1 -
+ kernel/vhost_task.c              | 117 ------------------------------------
+ 7 files changed, 67 insertions(+), 215 deletions(-)
+ delete mode 100644 include/linux/sched/vhost_task.h
+ delete mode 100644 kernel/vhost_task.c
