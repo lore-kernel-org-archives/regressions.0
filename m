@@ -1,75 +1,139 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 366EABE7F
-	for <regressions@lists.linux.dev>; Thu,  1 Jun 2023 07:58:52 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1q4dCh-00013e-Hr; Thu, 01 Jun 2023 09:58:39 +0200
-Message-ID: <ab8c9f95-c9e9-de04-4e28-78163a32da80@leemhuis.info>
-Date: Thu, 1 Jun 2023 09:58:38 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABFDA5250
+	for <regressions@lists.linux.dev>; Thu,  1 Jun 2023 08:38:40 +0000 (UTC)
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-30aef0b8837so526743f8f.1
+        for <regressions@lists.linux.dev>; Thu, 01 Jun 2023 01:38:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1685608719; x=1688200719;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=RWj0okTmH1/Iwkq+XM29U+ErdzrXEOxYzcXAhUEQaJY=;
+        b=n7Skum7oCgWWlbn9Xt9Bum2UemlCyB+lov3V713Qv4hSHdaws4/CV5hL5FhY9KGtKm
+         kLl5jOfWtWSo3ayvQMvne8ejA1Qw1LPODhEdTUIHxtdDAZk+cxOnuzaF6TxHvQFQx7Lx
+         96pfzgpWACbCbppIOfiMl4gYRB4JWVIo9r2jf0jsjCApQ1nnuKAbMfQzEV1ebe0PzNVb
+         LlW8YcBUA47cTuYR5ebpQlBokje64LIDJnFI6A9bWs+1/DL1/Xf6lkAPfsbOE1CEo7Ej
+         M9Bqxtq/uxwMGPLPC6wqpKWXcTNs8HA9+aDL8t0iXSwLdTQPGhXPlGsFHJqVdPUM0rJg
+         017Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685608719; x=1688200719;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=RWj0okTmH1/Iwkq+XM29U+ErdzrXEOxYzcXAhUEQaJY=;
+        b=HBJV/OKX25vrrFTW5wZhVT3NPdyr12RDGfic2bT1H9nTGjaahencetkniMYrOc4Q35
+         eKBXj+FZczcDn5FyGYpJbDOJiEZ92RD5u4rwARSTBjLw+io40PBgWqW8AQIH81lc0VG9
+         z8Qsz3MsyIz391P6eoVKLGd2LuScG+Aytkeok/uO4MiGm+rtkH5GkWX0Edgf+FFcQqm+
+         F0jZzoiCKwy81OUlkVsYmx0XeIVBzo2NYO+MpYZeXwA62B4697WbrO3DWOamRJAbAAZ4
+         JZcuyLA/QqzJMwtiaoGF1CwSQe+HqtWHs9fueHgOWM0Kx/RkekU2dFR7DoQIiMhUMTMB
+         KV5g==
+X-Gm-Message-State: AC+VfDw8in2fm6rjtoAN31ik6sedBeggJZ9xuYu7Jx+w9GEJ7bb/ZR+D
+	hNr1a99UnTfhqo02AfHGfbVj8CEuURJyQhaWC4M=
+X-Google-Smtp-Source: ACHHUZ41KegIhPxEAmnPEMAsOlewS4E1I9wNIROgrmATHvZQwrnLbLtdlrb6bxnhtmB1X9cC2trI3jl6qXBTMrTak/k=
+X-Received: by 2002:adf:ed83:0:b0:309:507a:3f5b with SMTP id
+ c3-20020adfed83000000b00309507a3f5bmr1040562wro.8.1685608718320; Thu, 01 Jun
+ 2023 01:38:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Content-Language: en-US, de-DE
-To: Christian Brauner <brauner@kernel.org>,
- Mike Christie <michael.christie@oracle.com>,
- Linus Torvalds <torvalds@linux-foundation.org>
-Cc: oleg@redhat.com, nicolas.dichtel@6wind.com, axboe@kernel.dk,
- ebiederm@xmission.com, linux-kernel@vger.kernel.org,
- virtualization@lists.linux-foundation.org, mst@redhat.com,
- sgarzare@redhat.com, jasowang@redhat.com, stefanha@redhat.com,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- hch@infradead.org, konrad.wilk@oracle.com
-References: <20230519-vormittag-dschungel-83607e9d2255@brauner>
-From: Thorsten Leemhuis <linux@leemhuis.info>
-Subject: Re: [RFC PATCH 0/8] vhost_tasks: Use CLONE_THREAD/SIGHAND
-In-Reply-To: <20230519-vormittag-dschungel-83607e9d2255@brauner>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1685606333;b1554741;
-X-HE-SMSGID: 1q4dCh-00013e-Hr
+References: <CADpTngX9LESCdHVu_2mQkNGena_Ng2CphWNwsRGSMxzDsTjU2A@mail.gmail.com>
+ <ZHNMsmpo2LWjnw1A@debian.me> <CADpTngWiXNh1wAFM_EYGm-Coa8nv61Tu=3TG+Z2dVCojp2K1yg@mail.gmail.com>
+ <ZHY0WkNlui91Mxoj@google.com> <ZHaikcUjbkq7yVbi@google.com> <ZHarJCvD1KEkLVM+@google.com>
+In-Reply-To: <ZHarJCvD1KEkLVM+@google.com>
+From: Fabio Coatti <fabio.coatti@gmail.com>
+Date: Thu, 1 Jun 2023 10:38:26 +0200
+Message-ID: <CADpTngU+L_dECPRdPPM+DoRyVMwBLEowBmwg2cvKwu_BmTaoNw@mail.gmail.com>
+Subject: Re: WARNING trace at kvm_nx_huge_page_recovery_worker on 6.3.4
+To: Sean Christopherson <seanjc@google.com>
+Cc: Bagas Sanjaya <bagasdotme@gmail.com>, stable@vger.kernel.org, 
+	regressions@lists.linux.dev, kvm@vger.kernel.org, 
+	Junaid Shahid <junaids@google.com>, Paolo Bonzini <pbonzini@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On 19.05.23 14:15, Christian Brauner wrote:
-> On Thu, May 18, 2023 at 10:25:11AM +0200, Christian Brauner wrote:
->> On Wed, May 17, 2023 at 07:09:12PM -0500, Mike Christie wrote:
->>> This patch allows the vhost and vhost_task code to use CLONE_THREAD,
->>> CLONE_SIGHAND and CLONE_FILES. It's a RFC because I didn't do all the
->>> normal testing, haven't coverted vsock and vdpa, and I know you guys
->>> will not like the first patch. However, I think it better shows what
->>
->> Just to summarize the core idea behind my proposal is that no signal
->> handling changes are needed unless there's a bug in the current way
->> io_uring workers already work. All that should be needed is
->> s/PF_IO_WORKER/PF_USER_WORKER/ in signal.c.
-[...]
->> So it feels like this should be achievable by adding a callback to
->> struct vhost_worker that get's called when vhost_worker() gets SIGKILL
->> and that all the users of vhost workers are forced to implement.
->>
->> Yes, it is more work but I think that's the right thing to do and not to
->> complicate our signal handling.
->>
->> Worst case if this can't be done fast enough we'll have to revert the
->> vhost parts. I think the user worker parts are mostly sane and are
-> 
-> As mentioned, if we can't settle this cleanly before -rc4 we should
-> revert the vhost parts unless Linus wants to have it earlier.
+Il giorno mer 31 mag 2023 alle ore 04:04 Sean Christopherson
+<seanjc@google.com> ha scritto:
+>
+> On Tue, May 30, 2023, Sean Christopherson wrote:
+> > On Tue, May 30, 2023, Sean Christopherson wrote:
+> > > On Tue, May 30, 2023, Fabio Coatti wrote:
+> > > > Il giorno dom 28 mag 2023 alle ore 14:44 Bagas Sanjaya
+> > > > <bagasdotme@gmail.com> ha scritto:
+> > > > > #regzbot ^introduced: v6.3.1..v6.3.2
+> > > > > #regzbot title: WARNING trace at kvm_nx_huge_page_recovery_worker when opening a new tab in Chrome
+> > > >
+> > > > Out of curiosity, I recompiled 6.3.4 after reverting the following
+> > > > commit mentioned in 6.3.2 changelog:
+> > > >
+> > > > commit 2ec1fe292d6edb3bd112f900692d9ef292b1fa8b
+> > > > Author: Sean Christopherson <seanjc@google.com>
+> > > > Date:   Wed Apr 26 15:03:23 2023 -0700
+> > > > KVM: x86: Preserve TDP MMU roots until they are explicitly invalidated
+> > > > commit edbdb43fc96b11b3bfa531be306a1993d9fe89ec upstream.
+> > > >
+> > > > And the WARN message no longer appears on my host kernel logs, at
+> > > > least so far :)
+> > >
+> > > Hmm, more than likely an NX shadow page is outliving a memslot update.  I'll take
+> > > another look at those flows to see if I can spot a race or leak.
+> >
+> > I didn't spot anything, and I couldn't reproduce the WARN even when dropping the
+> > dirty logging requirement and hacking KVM to periodically delete memslots.
+>
+> Aha!  Apparently my brain was just waiting until I sat down for dinner to have
+> its lightbulb moment.
+>
+> The memslot lookup isn't factoring in whether the shadow page is for non-SMM versus
+> SMM.  QEMU configures SMM to have memslots that do not exist in the non-SMM world,
+> so if kvm_recover_nx_huge_pages() encounters an SMM shadow page, the memslot lookup
+> can fail to find a memslot because it looks only in the set of non-SMM memslots.
+>
+> Before commit 2ec1fe292d6e ("KVM: x86: Preserve TDP MMU roots until they are
+> explicitly invalidated"), KVM would zap all SMM TDP MMU roots and thus all SMM TDP
+> MMU shadow pages once all vCPUs exited SMM.  That made the window where this bug
+> could be encountered quite tiny, as the NX recovery thread would have to kick in
+> while at least one vCPU was in SMM.  QEMU VMs typically only use SMM during boot,
+> and so the "bad" shadow pages were gone by the time the NX recovery thread ran.
+>
+> Now that KVM preserves TDP MMU roots until they are explicity invalidated (by a
+> memslot deletion), the window to encounter the bug is effectively never closed
+> because QEMU doesn't delete memslots after boot (except for a handful of special
+> scenarios.
+>
+> Assuming I'm correct, this should fix the issue:
+>
+> ---
+>  arch/x86/kvm/mmu/mmu.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+> index d3812de54b02..d5c03f14cdc7 100644
+> --- a/arch/x86/kvm/mmu/mmu.c
+> +++ b/arch/x86/kvm/mmu/mmu.c
+> @@ -7011,7 +7011,10 @@ static void kvm_recover_nx_huge_pages(struct kvm *kvm)
+>                  */
+>                 slot = NULL;
+>                 if (atomic_read(&kvm->nr_memslots_dirty_logging)) {
+> -                       slot = gfn_to_memslot(kvm, sp->gfn);
+> +                       struct kvm_memslots *slots;
+> +
+> +                       slots = kvm_memslots_for_spte_role(kvm, sp->role);
+> +                       slot = __gfn_to_memslot(slots, sp->gfn);
+>                         WARN_ON_ONCE(!slot);
+>                 }
+>
+>
+> base-commit: 17f2d782f18c9a49943ea723d7628da1837c9204
 
-Meanwhile -rc5 is just a few days away and there are still a lot of
-discussions in the patch-set proposed to address the issues[1]. Which is
-kinda great (albeit also why I haven't given it a spin yet), but on the
-other hand makes we wonder:
+I applied this patch on the same kernel I was using for testing
+(6.3.4) and indeed I'm no longer able to see the WARN message, so I
+assume that you are indeed correct :) . Many thanks, it seems to be
+fixed at least on my machine!
 
-Is it maybe time to revert the vhost parts for 6.4 and try again next cycle?
 
-[1]
-https://lore.kernel.org/all/20230522025124.5863-1-michael.christie@oracle.com/
 
-Ciao, Thorsten "not sure if I'm asking because I'm affected, or because
-it's my duty as regression tracker" Leemhuis
+-- 
+Fabio
