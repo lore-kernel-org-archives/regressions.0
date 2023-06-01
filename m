@@ -1,139 +1,87 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABFDA5250
-	for <regressions@lists.linux.dev>; Thu,  1 Jun 2023 08:38:40 +0000 (UTC)
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-30aef0b8837so526743f8f.1
-        for <regressions@lists.linux.dev>; Thu, 01 Jun 2023 01:38:40 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E71D12B68
+	for <regressions@lists.linux.dev>; Thu,  1 Jun 2023 10:18:13 +0000 (UTC)
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-30789a4c537so620244f8f.0
+        for <regressions@lists.linux.dev>; Thu, 01 Jun 2023 03:18:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1685608719; x=1688200719;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=RWj0okTmH1/Iwkq+XM29U+ErdzrXEOxYzcXAhUEQaJY=;
-        b=n7Skum7oCgWWlbn9Xt9Bum2UemlCyB+lov3V713Qv4hSHdaws4/CV5hL5FhY9KGtKm
-         kLl5jOfWtWSo3ayvQMvne8ejA1Qw1LPODhEdTUIHxtdDAZk+cxOnuzaF6TxHvQFQx7Lx
-         96pfzgpWACbCbppIOfiMl4gYRB4JWVIo9r2jf0jsjCApQ1nnuKAbMfQzEV1ebe0PzNVb
-         LlW8YcBUA47cTuYR5ebpQlBokje64LIDJnFI6A9bWs+1/DL1/Xf6lkAPfsbOE1CEo7Ej
-         M9Bqxtq/uxwMGPLPC6wqpKWXcTNs8HA9+aDL8t0iXSwLdTQPGhXPlGsFHJqVdPUM0rJg
-         017Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685608719; x=1688200719;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=6wind.com; s=google; t=1685614691; x=1688206691;
+        h=content-transfer-encoding:in-reply-to:organization:from
+         :content-language:references:cc:to:subject:reply-to:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=RWj0okTmH1/Iwkq+XM29U+ErdzrXEOxYzcXAhUEQaJY=;
-        b=HBJV/OKX25vrrFTW5wZhVT3NPdyr12RDGfic2bT1H9nTGjaahencetkniMYrOc4Q35
-         eKBXj+FZczcDn5FyGYpJbDOJiEZ92RD5u4rwARSTBjLw+io40PBgWqW8AQIH81lc0VG9
-         z8Qsz3MsyIz391P6eoVKLGd2LuScG+Aytkeok/uO4MiGm+rtkH5GkWX0Edgf+FFcQqm+
-         F0jZzoiCKwy81OUlkVsYmx0XeIVBzo2NYO+MpYZeXwA62B4697WbrO3DWOamRJAbAAZ4
-         JZcuyLA/QqzJMwtiaoGF1CwSQe+HqtWHs9fueHgOWM0Kx/RkekU2dFR7DoQIiMhUMTMB
-         KV5g==
-X-Gm-Message-State: AC+VfDw8in2fm6rjtoAN31ik6sedBeggJZ9xuYu7Jx+w9GEJ7bb/ZR+D
-	hNr1a99UnTfhqo02AfHGfbVj8CEuURJyQhaWC4M=
-X-Google-Smtp-Source: ACHHUZ41KegIhPxEAmnPEMAsOlewS4E1I9wNIROgrmATHvZQwrnLbLtdlrb6bxnhtmB1X9cC2trI3jl6qXBTMrTak/k=
-X-Received: by 2002:adf:ed83:0:b0:309:507a:3f5b with SMTP id
- c3-20020adfed83000000b00309507a3f5bmr1040562wro.8.1685608718320; Thu, 01 Jun
- 2023 01:38:38 -0700 (PDT)
+        bh=6XkTQ3CoGch36kB7T1IroYG5r0BhmIO+8aTMljzxUEY=;
+        b=URvuUPMduCrUKpW+Ol39ok793SYOg+PBYxgwDTW9AyapjAXj7Jb2F8lUTjkdEAexXJ
+         u/DxrvJ6zz0EBt1+lSqHy/dfb1lRLWRop7968NKxMbXVdFykRANlQybHBIfH+gr7mIVJ
+         bE1Gkwvlk3eSLxRXCfhXcj1Z1VIXdLl5l6r3pP1q+4KakcntNIv84FhHGSu35z3X46sD
+         UKk9wuvex7cpvZ+0BP4P3Y0UU7ole6RvlWWeDzOVO2cPewbLoLdyWE0cDZ0jeKBQQphD
+         kxuEDR/pbICZB+TQFBVsG3eFXCE4BU7438dfgC0LLlChW+pfjPrfUmNzSwU/7V8EoCX1
+         8TnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685614691; x=1688206691;
+        h=content-transfer-encoding:in-reply-to:organization:from
+         :content-language:references:cc:to:subject:reply-to:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=6XkTQ3CoGch36kB7T1IroYG5r0BhmIO+8aTMljzxUEY=;
+        b=KOVFBSfIpLYAx7yfPMU0brLwymJukJE9m3TdcgM/lpqgsOERP1smnM8V4nosw3cfP0
+         05CxxtiQOP3V4EZAuIWUomhsrgEf1ADzTi/APqg7sm/N/LTidSulY1f/l1BVCF+7KwIw
+         AXNniDQhQS0G0DurQ+xScMLsW2ILjIpkkKcLX4iHZlYxLbSAX08P/D0czufAG/OClAUp
+         3mwUJKkBuKz0llfWxltgKkRy8drw50M9bD//y8P3ezQUUHw+0iBfA3zLGI9Z2ORtP8JE
+         bwbHSLGISBdFtRoYlRRvsRqSWg7IYZAxU2yFMOl4ZcWjDmIRmfRMI0loE8sm0bsphA7T
+         LufQ==
+X-Gm-Message-State: AC+VfDxNHICB0unzeO5NT2maH8TFQhZyDJK88Kvx3AZyH8qDI81BVgfF
+	KXRcdEWTEiY+8oHkP8XDwxVaig==
+X-Google-Smtp-Source: ACHHUZ6zWD2AjaNcc66+tXB2tbV5HvOXZIVxwveIS7GawEtSHtUuAbiPap7EgwcP1KYkdHehyB3moA==
+X-Received: by 2002:adf:ef8d:0:b0:2f4:6574:5a93 with SMTP id d13-20020adfef8d000000b002f465745a93mr1566253wro.4.1685614691384;
+        Thu, 01 Jun 2023 03:18:11 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:b41:c160:a1c1:aac9:326c:88d7? ([2a01:e0a:b41:c160:a1c1:aac9:326c:88d7])
+        by smtp.gmail.com with ESMTPSA id i14-20020adfe48e000000b0030ae499da59sm9735708wrm.111.2023.06.01.03.18.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 01 Jun 2023 03:18:10 -0700 (PDT)
+Message-ID: <1c464b6a-dd02-f846-5691-c29f567466c1@6wind.com>
+Date: Thu, 1 Jun 2023 12:18:09 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CADpTngX9LESCdHVu_2mQkNGena_Ng2CphWNwsRGSMxzDsTjU2A@mail.gmail.com>
- <ZHNMsmpo2LWjnw1A@debian.me> <CADpTngWiXNh1wAFM_EYGm-Coa8nv61Tu=3TG+Z2dVCojp2K1yg@mail.gmail.com>
- <ZHY0WkNlui91Mxoj@google.com> <ZHaikcUjbkq7yVbi@google.com> <ZHarJCvD1KEkLVM+@google.com>
-In-Reply-To: <ZHarJCvD1KEkLVM+@google.com>
-From: Fabio Coatti <fabio.coatti@gmail.com>
-Date: Thu, 1 Jun 2023 10:38:26 +0200
-Message-ID: <CADpTngU+L_dECPRdPPM+DoRyVMwBLEowBmwg2cvKwu_BmTaoNw@mail.gmail.com>
-Subject: Re: WARNING trace at kvm_nx_huge_page_recovery_worker on 6.3.4
-To: Sean Christopherson <seanjc@google.com>
-Cc: Bagas Sanjaya <bagasdotme@gmail.com>, stable@vger.kernel.org, 
-	regressions@lists.linux.dev, kvm@vger.kernel.org, 
-	Junaid Shahid <junaids@google.com>, Paolo Bonzini <pbonzini@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Reply-To: nicolas.dichtel@6wind.com
+Subject: Re: [RFC PATCH 0/8] vhost_tasks: Use CLONE_THREAD/SIGHAND
+To: Thorsten Leemhuis <linux@leemhuis.info>,
+ Christian Brauner <brauner@kernel.org>,
+ Mike Christie <michael.christie@oracle.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>
+Cc: oleg@redhat.com, axboe@kernel.dk, ebiederm@xmission.com,
+ linux-kernel@vger.kernel.org, virtualization@lists.linux-foundation.org,
+ mst@redhat.com, sgarzare@redhat.com, jasowang@redhat.com,
+ stefanha@redhat.com,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ hch@infradead.org, konrad.wilk@oracle.com
+References: <20230519-vormittag-dschungel-83607e9d2255@brauner>
+ <ab8c9f95-c9e9-de04-4e28-78163a32da80@leemhuis.info>
+Content-Language: en-US
+From: Nicolas Dichtel <nicolas.dichtel@6wind.com>
+Organization: 6WIND
+In-Reply-To: <ab8c9f95-c9e9-de04-4e28-78163a32da80@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Il giorno mer 31 mag 2023 alle ore 04:04 Sean Christopherson
-<seanjc@google.com> ha scritto:
->
-> On Tue, May 30, 2023, Sean Christopherson wrote:
-> > On Tue, May 30, 2023, Sean Christopherson wrote:
-> > > On Tue, May 30, 2023, Fabio Coatti wrote:
-> > > > Il giorno dom 28 mag 2023 alle ore 14:44 Bagas Sanjaya
-> > > > <bagasdotme@gmail.com> ha scritto:
-> > > > > #regzbot ^introduced: v6.3.1..v6.3.2
-> > > > > #regzbot title: WARNING trace at kvm_nx_huge_page_recovery_worker when opening a new tab in Chrome
-> > > >
-> > > > Out of curiosity, I recompiled 6.3.4 after reverting the following
-> > > > commit mentioned in 6.3.2 changelog:
-> > > >
-> > > > commit 2ec1fe292d6edb3bd112f900692d9ef292b1fa8b
-> > > > Author: Sean Christopherson <seanjc@google.com>
-> > > > Date:   Wed Apr 26 15:03:23 2023 -0700
-> > > > KVM: x86: Preserve TDP MMU roots until they are explicitly invalidated
-> > > > commit edbdb43fc96b11b3bfa531be306a1993d9fe89ec upstream.
-> > > >
-> > > > And the WARN message no longer appears on my host kernel logs, at
-> > > > least so far :)
-> > >
-> > > Hmm, more than likely an NX shadow page is outliving a memslot update.  I'll take
-> > > another look at those flows to see if I can spot a race or leak.
-> >
-> > I didn't spot anything, and I couldn't reproduce the WARN even when dropping the
-> > dirty logging requirement and hacking KVM to periodically delete memslots.
->
-> Aha!  Apparently my brain was just waiting until I sat down for dinner to have
-> its lightbulb moment.
->
-> The memslot lookup isn't factoring in whether the shadow page is for non-SMM versus
-> SMM.  QEMU configures SMM to have memslots that do not exist in the non-SMM world,
-> so if kvm_recover_nx_huge_pages() encounters an SMM shadow page, the memslot lookup
-> can fail to find a memslot because it looks only in the set of non-SMM memslots.
->
-> Before commit 2ec1fe292d6e ("KVM: x86: Preserve TDP MMU roots until they are
-> explicitly invalidated"), KVM would zap all SMM TDP MMU roots and thus all SMM TDP
-> MMU shadow pages once all vCPUs exited SMM.  That made the window where this bug
-> could be encountered quite tiny, as the NX recovery thread would have to kick in
-> while at least one vCPU was in SMM.  QEMU VMs typically only use SMM during boot,
-> and so the "bad" shadow pages were gone by the time the NX recovery thread ran.
->
-> Now that KVM preserves TDP MMU roots until they are explicity invalidated (by a
-> memslot deletion), the window to encounter the bug is effectively never closed
-> because QEMU doesn't delete memslots after boot (except for a handful of special
-> scenarios.
->
-> Assuming I'm correct, this should fix the issue:
->
-> ---
->  arch/x86/kvm/mmu/mmu.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-> index d3812de54b02..d5c03f14cdc7 100644
-> --- a/arch/x86/kvm/mmu/mmu.c
-> +++ b/arch/x86/kvm/mmu/mmu.c
-> @@ -7011,7 +7011,10 @@ static void kvm_recover_nx_huge_pages(struct kvm *kvm)
->                  */
->                 slot = NULL;
->                 if (atomic_read(&kvm->nr_memslots_dirty_logging)) {
-> -                       slot = gfn_to_memslot(kvm, sp->gfn);
-> +                       struct kvm_memslots *slots;
-> +
-> +                       slots = kvm_memslots_for_spte_role(kvm, sp->role);
-> +                       slot = __gfn_to_memslot(slots, sp->gfn);
->                         WARN_ON_ONCE(!slot);
->                 }
->
->
-> base-commit: 17f2d782f18c9a49943ea723d7628da1837c9204
-
-I applied this patch on the same kernel I was using for testing
-(6.3.4) and indeed I'm no longer able to see the WARN message, so I
-assume that you are indeed correct :) . Many thanks, it seems to be
-fixed at least on my machine!
+Le 01/06/2023 à 09:58, Thorsten Leemhuis a écrit :
+[snip]
+> 
+> Meanwhile -rc5 is just a few days away and there are still a lot of
+> discussions in the patch-set proposed to address the issues[1]. Which is
+> kinda great (albeit also why I haven't given it a spin yet), but on the
+> other hand makes we wonder:
+> 
+> Is it maybe time to revert the vhost parts for 6.4 and try again next cycle?
+At least it's time to find a way to fix this issue :)
 
 
-
--- 
-Fabio
+Thank you,
+Nicolas
