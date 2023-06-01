@@ -1,45 +1,44 @@
-Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96A171C07
-	for <regressions@lists.linux.dev>; Thu,  1 Jun 2023 02:07:27 +0000 (UTC)
-Received: by mail-il1-f182.google.com with SMTP id e9e14a558f8ab-33b204f0ca0so1257955ab.2
-        for <regressions@lists.linux.dev>; Wed, 31 May 2023 19:07:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1685585246; x=1688177246;
-        h=content-transfer-encoding:cc:subject:from:to:content-language
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3/M5h4harHoO86/1QKhzoJ2dsgkBAONv25mRd33XEaA=;
-        b=q/iVbjxtwl2EmFwc1MbssJIBEKiREUQtXVzVmwW47tNe3q+xWVx0875dHHi/daZTGR
-         9tEhvzb0hmNGMqIuGQyjTQtzJJIN1yuwP3nTd7o/Vlc8LBgUNA/xtOiX2KSnjiDcnSUG
-         lqRZyXCkLHSpzKyXxaJgfIml2q4csqBiHpYY0cBdX47LpMehOksRW4QlNGxI6eDIOmEP
-         XqtozDrK2XIrwxdcWkZH9c7XKehWAMJB1cPYliRUdWVwFBYLSagp9mGpwFZ+ivbjCKh1
-         Ylevmv40t45vddyzbfpT1V+B2OkBQlEqu291HKwSt1zJbToa51Ny4d+o2p5QlBAVetag
-         QdRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685585246; x=1688177246;
-        h=content-transfer-encoding:cc:subject:from:to:content-language
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=3/M5h4harHoO86/1QKhzoJ2dsgkBAONv25mRd33XEaA=;
-        b=IehsoeBhw+ipIwzzGlqN6T7MHFHejpIr2BELSFyBgs2JHhyvryYcY6tdIwDfNreH2J
-         dsD/8KbpAMXQCdzRuwiIhFcM9JAjL5Ivu49QhYR0mgyjAxLX4qpJJuOpnWB1QcM/k3lL
-         uyfZfn8i0+mUhkBzaJl1TeiwOarVMCyy538LlY5QwxeGGYyr1QIqmfUtMyi4WHmTo6ao
-         kR7XlZvoIBWDj8AN9cb0znlx+TyMF4a4njJOvoXSvQ9MGcDRY28uzHIWNODaSNk0C6OM
-         gQPOev8ZSNzEcfTs+CP//z64MFSTj0Q9ratoc2W7LQ/Kxp/wbdkWajkZAcQ2n63hztE6
-         RW1w==
-X-Gm-Message-State: AC+VfDyTk0VhPHJNl8LP950+tAHjfkFDbsKOkybZfgA2H6Ehcz2kZi65
-	u/UQDwUa+odETOHrN46yWTU=
-X-Google-Smtp-Source: ACHHUZ4rAxDLCqC6cBsT96Lft7pEoJHYbM16vXsm6msuGy2DgWo5yAvE403ZmDvihnLYyZvkZPvlww==
-X-Received: by 2002:a92:d410:0:b0:331:7203:b8b0 with SMTP id q16-20020a92d410000000b003317203b8b0mr4847083ilm.3.1685585246357;
-        Wed, 31 May 2023 19:07:26 -0700 (PDT)
-Received: from [192.168.43.80] (subs03-180-214-233-81.three.co.id. [180.214.233.81])
-        by smtp.gmail.com with ESMTPSA id i13-20020a633c4d000000b00513ec871c01sm1960407pgn.16.2023.05.31.19.07.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 31 May 2023 19:07:25 -0700 (PDT)
-Message-ID: <69dad53e-9363-c551-111a-d0051bb0265f@gmail.com>
-Date: Thu, 1 Jun 2023 09:07:20 +0700
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54E25539B
+	for <regressions@lists.linux.dev>; Thu,  1 Jun 2023 07:18:56 +0000 (UTC)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 46B7221993;
+	Thu,  1 Jun 2023 07:18:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1685603928; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=b2g1ofEXB91j5w+TmBR/NpzxVxTA77l1U/bYNGicMTA=;
+	b=BxglkISk9kFiV+b267g1AAOJkB0qFQsNYCZlPlM4gIj0R+vjYUimICThshulmeaNLbW/66
+	v8+1lkVAyyPYjaoiPUWD8Tn0TMcY0aA83/FA5n2CW5JQio9ufA8agrlG3DmQC5mRb0Wd4D
+	caoGItmMc0EOphm7Iv94mbidcBRuQu0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1685603928;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=b2g1ofEXB91j5w+TmBR/NpzxVxTA77l1U/bYNGicMTA=;
+	b=zaVg/KIi2m+Ya5ff6DCpwpJeUa88ST6uycVFZwjmjfAtz7pJUXwWCqYWggviOaWzxd0S3Y
+	CxqPbFF/+YNc5mBA==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 0763613441;
+	Thu,  1 Jun 2023 07:18:48 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+	by imap2.suse-dmz.suse.de with ESMTPSA
+	id lBkTAVhGeGQ/XwAAMHmgww
+	(envelope-from <vbabka@suse.cz>); Thu, 01 Jun 2023 07:18:48 +0000
+Message-ID: <38f847ed-69dc-d5da-5822-bd9da753fc30@suse.cz>
+Date: Thu, 1 Jun 2023 09:18:47 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -47,14 +46,13 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Content-Language: en-US
-To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Thunderbird/102.11.2
+Subject: Re: Fwd: Started to get "memfd_create() without MFD_EXEC nor
+ MFD_NOEXEC_SEAL"
+To: Bagas Sanjaya <bagasdotme@gmail.com>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
  Linux Regressions <regressions@lists.linux.dev>,
  Linux Memory Management List <linux-mm@kvack.org>
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-Subject: Fwd: Started to get "memfd_create() without MFD_EXEC nor
- MFD_NOEXEC_SEAL"
 Cc: Jeff Xu <jeffxu@google.com>, Daniel Verkamp <dverkamp@chromium.org>,
  Kees Cook <keescook@chromium.org>, David Herrmann <dh.herrmann@gmail.com>,
  Dmitry Torokhov <dmitry.torokhov@gmail.com>, Hugh Dickins
@@ -63,34 +61,43 @@ Cc: Jeff Xu <jeffxu@google.com>, Daniel Verkamp <dverkamp@chromium.org>,
  Shuah Khan <skhan@linuxfoundation.org>,
  Andrew Morton <akpm@linux-foundation.org>,
  Stuart Foster <smf-linux@virginmedia.com>
+References: <69dad53e-9363-c551-111a-d0051bb0265f@gmail.com>
+Content-Language: en-US
+From: Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <69dad53e-9363-c551-111a-d0051bb0265f@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi,
-
-I notice a regression report on Bugzilla [1]. Quoting from it:
-
-> Recent kernels seem to generate this:
+On 6/1/23 04:07, Bagas Sanjaya wrote:
+> Hi,
 > 
-> "memfd_create() without MFD_EXEC nor MFD_NOEXEC_SEAL, pid=3976 'Xorg'"
+> I notice a regression report on Bugzilla [1]. Quoting from it:
 > 
-> Is this a kernel problem or something to do with Xorg ?
+>> Recent kernels seem to generate this:
+>> 
+>> "memfd_create() without MFD_EXEC nor MFD_NOEXEC_SEAL, pid=3976 'Xorg'"
+>> 
+>> Is this a kernel problem or something to do with Xorg ?
+>> 
+>> Seen in Kernels 6.3.4 and 6.4.0-rc4.
+>> 
+>> Thanks
 > 
-> Seen in Kernels 6.3.4 and 6.4.0-rc4.
+> See Bugzilla for the full thread and attached logs (dmesg, xorg, bisection
+> log).
 > 
-> Thanks
+> Anyway, I'm adding it to regzbot:
+> 
+> #regzbot introduced: 105ff5339f498a https://bugzilla.kernel.org/show_bug.cgi?id=217508
+> #regzbot title: memfd_create() without MFD_EXEC nor MFD_NOEXEC_SEAL on Xorg
 
-See Bugzilla for the full thread and attached logs (dmesg, xorg, bisection
-log).
+Hm indeed it seems to have introduced 2 new flags and immediately warn if
+any process doesn't use them. Maybe it would make sense for some of the
+non-default values of vm.memfd_noexec, but it's too early to warn
+unconditionally everywhere, no?
 
-Anyway, I'm adding it to regzbot:
+> Thanks.
+> 
+> [1]: https://bugzilla.kernel.org/show_bug.cgi?id=217508
+> 
 
-#regzbot introduced: 105ff5339f498a https://bugzilla.kernel.org/show_bug.cgi?id=217508
-#regzbot title: memfd_create() without MFD_EXEC nor MFD_NOEXEC_SEAL on Xorg
-
-Thanks.
-
-[1]: https://bugzilla.kernel.org/show_bug.cgi?id=217508
-
--- 
-An old man doll... just what I always wanted! - Clara
