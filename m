@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D620111B8
-	for <regressions@lists.linux.dev>; Fri,  2 Jun 2023 13:41:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AB15D50C
+	for <regressions@lists.linux.dev>; Fri,  2 Jun 2023 13:55:46 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1q551o-0006Ct-LG; Fri, 02 Jun 2023 15:41:16 +0200
-Message-ID: <0625e839-65a5-2c79-681a-c43b502cb89f@leemhuis.info>
-Date: Fri, 2 Jun 2023 15:41:15 +0200
+	id 1q55Fn-00007i-GN; Fri, 02 Jun 2023 15:55:43 +0200
+Message-ID: <bb2df75d-05be-3f7b-693a-84be195dc2f1@leemhuis.info>
+Date: Fri, 2 Jun 2023 15:55:43 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,94 +16,101 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.10.0
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: [PATCH 01/13] Revert "ext4: remove ac->ac_found >
- sbi->s_mb_min_to_scan dead check in ext4_mb_check_limits"
+Subject: Re: system hang on start-up (mlx5?)
 Content-Language: en-US, de-DE
-To: Ojaswin Mujoo <ojaswin@linux.ibm.com>, linux-ext4@vger.kernel.org,
- Theodore Ts'o <tytso@mit.edu>
-Cc: Ritesh Harjani <riteshh@linux.ibm.com>, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org, Jan Kara <jack@suse.cz>,
- Kemeng Shi <shikemeng@huaweicloud.com>,
- Ritesh Harjani <ritesh.list@gmail.com>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <cover.1685009579.git.ojaswin@linux.ibm.com>
- <cd639a08cc9824c927591d9de14049f2461e1923.1685009579.git.ojaswin@linux.ibm.com>
-From: "Linux regression tracking #adding (Thorsten Leemhuis)"
+To: Chuck Lever III <chuck.lever@oracle.com>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: "elic@nvidia.com" <elic@nvidia.com>, "saeedm@nvidia.com"
+ <saeedm@nvidia.com>, Leon Romanovsky <leon@kernel.org>,
+ linux-rdma <linux-rdma@vger.kernel.org>,
+ "open list:NETWORKING [GENERAL]" <netdev@vger.kernel.org>
+References: <A1E5B427-897B-409E-B8E3-E417678E81F6@oracle.com>
+ <bf2594bb-94e0-5c89-88ad-935dee2ac95c@leemhuis.info>
+ <5b235e0f-cd4c-a453-d648-5a4e9080ac19@leemhuis.info>
+ <AAFDF38A-E59A-4D6A-8EC2-113861C8B5DB@oracle.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
-In-Reply-To: <cd639a08cc9824c927591d9de14049f2461e1923.1685009579.git.ojaswin@linux.ibm.com>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <AAFDF38A-E59A-4D6A-8EC2-113861C8B5DB@oracle.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1685713282;a945face;
-X-HE-SMSGID: 1q551o-0006Ct-LG
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1685714146;24810eef;
+X-HE-SMSGID: 1q55Fn-00007i-GN
 
-[CCing the regression list, as it should be in the loop for regressions:
-https://docs.kernel.org/admin-guide/reporting-regressions.html]
-
-[TLDR: I'm adding this report to the list of tracked Linux kernel
-regressions; the text you find below is based on a few templates
-paragraphs you might have encountered already in similar form.
-See link in footer if these mails annoy you.]
-
-On 25.05.23 13:32, Ojaswin Mujoo wrote:
-> This reverts commit 32c0869370194ae5ac9f9f501953ef693040f6a1.
+On 02.06.23 15:38, Chuck Lever III wrote:
 > 
-> The reverted commit was intended to remove a dead check however it was observed
-> that this check was actually being used to exit early instead of looping
-> sbi->s_mb_max_to_scan times when we are able to find a free extent bigger than
-> the goal extent. Due to this, a my performance tests (fsmark, parallel file
-> writes in a highly fragmented FS) were seeing a 2x-3x regression.
+>> On Jun 2, 2023, at 7:05 AM, Linux regression tracking #update (Thorsten Leemhuis) <regressions@leemhuis.info> wrote:
+>>
+>> [TLDR: This mail in primarily relevant for Linux regression tracking. A
+>> change or fix related to the regression discussed in this thread was
+>> posted or applied, but it did not use a Link: tag to point to the
+>> report, as Linus and the documentation call for.
 > 
-> Example, the default value of the following variables is:
-> 
-> sbi->s_mb_max_to_scan = 200
-> sbi->s_mb_min_to_scan = 10
-> 
-> In ext4_mb_check_limits() if we find an extent smaller than goal, then we return
-> early and try again. This loop will go on until we have processed
-> sbi->s_mb_max_to_scan(=200) number of free extents at which point we exit and
-> just use whatever we have even if it is smaller than goal extent.
-> 
-> Now, the regression comes when we find an extent bigger than goal. Earlier, in
-> this case we would loop only sbi->s_mb_min_to_scan(=10) times and then just use
-> the bigger extent. However with commit 32c08693 that check was removed and hence
-> we would loop sbi->s_mb_max_to_scan(=200) times even though we have a big enough
-> free extent to satisfy the request. The only time we would exit early would be
-> when the free extent is *exactly* the size of our goal, which is pretty uncommon
-> occurrence and so we would almost always end up looping 200 times.
-> 
-> Hence, revert the commit by adding the check back to fix the regression. Also
-> add a comment to outline this policy.
-> 
-> Signed-off-by: Ojaswin Mujoo <ojaswin@linux.ibm.com>
-> Reviewed-by: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
-> [...]
+> Linus recently stated he did not like Link: tags pointing to an
+> email thread on lore.
 
-Thanks for the report. To be sure the issue doesn't fall through the
-cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
-tracking bot:
+Afaik he strongly dislikes them when a Link: tag just points to the
+submission of the patch being applied; at the same time he *really
+wants* those links if they tell the backstory how a fix came into being,
+which definitely includes the report about the issue being fixed (side
+note: without those links regression tracking becomes so hard that it's
+basically no feasible).
 
-#regzbot ^introduced 32c0869370194ae5ac
-#regzbot title ext4: 2x-3x regression in performance tests
-#regzbot monitor:
-https://lore.kernel.org/all/ddcae9658e46880dfec2fb0aa61d01fb3353d202.1685449706.git.ojaswin@linux.ibm.com/
-#regzbot fix: Revert "ext4: remove ac->ac_found > sbi->s_mb_min_to_scan
-dead check in ext4_mb_check_limits"
-#regzbot ignore-activity
+If my knowledge is not up to date, please if you have a minute do me a
+favor and point me to Linus statement your refer to.
 
-This isn't a regression? This issue or a fix for it are already
-discussed somewhere else? It was fixed already? You want to clarify when
-the regression started to happen? Or point out I got the title or
-something else totally wrong? Then just reply and tell me -- ideally
-while also telling regzbot about it, as explained by the page listed in
-the footer of this mail.
+> Also, checkpatch.pl is now complaining about Closes: tags instead
+> of Link: tags. A bug was never opened for this issue.
 
-Developers: When fixing the issue, remember to add 'Link:' tags pointing
-to the report (the parent of this mail). See page linked in footer for
-details.
+That was a change by somebody else, but FWIW, just use Closes: (instead
+of Link:) with a link to the report on lore, that tag is not reserved
+for bugs.
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+/me will go and update his boilerplate text used above
+
+> I did check the regzbot docs on how to mark this issue closed,
+> but didn't find a ready answer. Thank you for following up.
+
+yw, but no worries, that's what I'm here for. :-D
+
+Ciao, Thorsten
+
+>> Things happen, no
+>> worries -- but now the regression tracking bot needs to be told manually
+>> about the fix. See link in footer if these mails annoy you.]
+>>
+>> On 08.05.23 14:29, Linux regression tracking #adding (Thorsten Leemhuis)
+>> wrote:
+>>> On 03.05.23 03:03, Chuck Lever III wrote:
+>>>>
+>>>> I have a Supermicro X10SRA-F/X10SRA-F with a ConnectX®-5 EN network
+>>>> interface card, 100GbE single-port QSFP28, PCIe3.0 x16, tall bracket;
+>>>> MCX515A-CCAT
+>>>>
+>>>> When booting a v6.3+ kernel, the boot process stops cold after a
+>>>> few seconds. The last message on the console is the MLX5 driver
+>>>> note about "PCIe slot advertised sufficient power (27W)".
+>>>>
+>>>> bisect reports that bbac70c74183 ("net/mlx5: Use newer affinity
+>>>> descriptor") is the first bad commit.
+>>>>
+>>>> I've trolled lore a couple of times and haven't found any discussion
+>>>> of this issue.
+>>>
+>>> #regzbot ^introduced bbac70c74183
+>>> #regzbot title system hang on start-up (irq or mlx5 problem?)
+>>> #regzbot ignore-activity
+>>
+>> #regzbot fix: 368591995d010e6
+>> #regzbot ignore-activity
+>>
+>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+>> --
+>> Everything you wanna know about Linux kernel regression tracking:
+>> https://linux-regtracking.leemhuis.info/about/#tldr
+>> That page also explains what to do if mails like this annoy you.
+> 
+> --
+> Chuck Lever
+> 
+> 
