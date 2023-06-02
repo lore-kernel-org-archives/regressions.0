@@ -1,36 +1,41 @@
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B629EC2E7
-	for <regressions@lists.linux.dev>; Fri,  2 Jun 2023 09:16:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED63717AA2
+	for <regressions@lists.linux.dev>; Fri,  2 Jun 2023 09:40:03 +0000 (UTC)
 X-GND-Sasl: paul.kocialkowski@bootlin.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1685697382;
+	t=1685698796;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ZDZ8A88qzqlmgNcCQxQm365P8tXVF2RjC5ggqad7VeA=;
-	b=EfwN2z4XhXav+1+cwPOySChJAksnAo1SZOMERHGEIarvo4Doje7OXbVisfEK8Ai4l/gJQC
-	dYw2JdgCFr9OhHzYRX0bft0q7X2d70JkPLCuZ9ABfbRmJAv3+yXgy19EiUiJAjUf6994Gy
-	lMw/LIEUIp3gr6xkh3XGeQra7zCtg4SLqGArzyOiEhd6rZUnwf5ArfElXPMrpSZL0SnlFj
-	ZriBRfyeagU1rB3Dfy0RwyXmeK3h4MMCTN9ifmH5/dZ2qN3FdRO2ptBw98/Cr5HEfaJPCx
-	p+AyDLEUE9D/Ca+uTQI6cmtWZLz4y5DgDY0jNE/83EVjN2gr9JOyNy2R5LZUTQ==
+	bh=+xQjtaZuaz5n0SUJQ/mKROD5Nif4cm44ovMyXwf2ZP4=;
+	b=D6c7Kvh8/dLHuyxNj2e0cG+hOAJKz5FOs4k4Db2PU1yYEn4yrIMNK2r3gNRYDTvcDrCknU
+	Oaa7vFWU20oOmsEJ92RYdsQzc7xIEz6QbIK+/zpTASNJJ3jEz0mC52oYK3NgPysoQR7bjs
+	phaZNRSBo6jd8Lzz2S6j1Mt18IWvtS8SGpCWyOzqbgK/HU1VpPhMop49wBIzhBWPcSJ5ep
+	01woXeeXH4CKHxypJZEdfKu6WJ1Sir+cjIkOd9l6CCLCaQ5zTisspO6GLYCAcFhCeV2H1r
+	JccnKrhU4UHTFQmYSv4LKxFod92Od2/bVxL5W0iWoHR3U1nMvU8KgyuwM/SzOg==
 X-GND-Sasl: paul.kocialkowski@bootlin.com
 X-GND-Sasl: paul.kocialkowski@bootlin.com
 X-GND-Sasl: paul.kocialkowski@bootlin.com
 X-GND-Sasl: paul.kocialkowski@bootlin.com
 X-GND-Sasl: paul.kocialkowski@bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id C10EA4000E;
-	Fri,  2 Jun 2023 09:16:21 +0000 (UTC)
-Date: Fri, 2 Jun 2023 11:16:21 +0200
+X-GND-Sasl: paul.kocialkowski@bootlin.com
+X-GND-Sasl: paul.kocialkowski@bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 9E9EC1C0007;
+	Fri,  2 Jun 2023 09:39:54 +0000 (UTC)
+Date: Fri, 2 Jun 2023 11:39:54 +0200
 From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 To: Martijn Braam <martijn@brixit.nl>
 Cc: regressions@lists.linux.dev, jernej.skrabec@gmail.com,
 	sakari.ailus@linux.intel.com, mchehab@kernel.org,
-	linux-media@vger.kernel.org
+	linux-media@vger.kernel.org, hverkuil@xs4all.nl,
+	laurent.pinchart@ideasonboard.com
 Subject: Re: [REGRESSION] breakage in sun6i-csi media api
-Message-ID: <ZHmzZUkcFK8Gq_JL@aptenodytes>
+Message-ID: <ZHm46or-MhTb457b@aptenodytes>
 References: <f13c27fb-2afe-b94e-aad9-ed5ecc818183@brixit.nl>
+ <ZHmzZUkcFK8Gq_JL@aptenodytes>
+ <e168d246-528d-b615-aa50-af8f17af4442@brixit.nl>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -38,68 +43,114 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="/xVHL15dNVBeKuec"
+	protocol="application/pgp-signature"; boundary="Z+0PdKDSAr0fMDwU"
 Content-Disposition: inline
-In-Reply-To: <f13c27fb-2afe-b94e-aad9-ed5ecc818183@brixit.nl>
+In-Reply-To: <e168d246-528d-b615-aa50-af8f17af4442@brixit.nl>
 
 
---/xVHL15dNVBeKuec
+--Z+0PdKDSAr0fMDwU
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi Martijn,
+Hi,
 
-On Thu 01 Jun 23, 23:19, Martijn Braam wrote:
-> It seems like this commit:
+(Re-adding folks from the original email, adding Laurent and Hans.)
+
+On Fri 02 Jun 23, 11:24, Martijn Braam wrote:
+> Hi Paul,
 >=20
-> media: sun6i-csi: Add bridge v4l2 subdev with port management
+> That's basically it yes. My software doesn't expect the bridge block,
+> because it wasn't there. The pipeline always worked "automatically".
 >=20
-> Has changed the way the media pipeline on a64 devices, in my case the PIN=
-E64
-> PinePhone works. Since this is an API towards userspace and there's active
-> applications that use it I think this counts as a regression.
+> This is the workaround that's been made now it run on newer kernels:
+> https://gitlab.com/postmarketOS/megapixels/-/merge_requests/31
+>=20
+> I'm pretty sure format propagation would fix this issue.
 
-Do you have more details on what changed specifically?
+Okay that's good to know.
 
-The commit added a bridge subdev in addition to the video node, which is
-generally a better description of the CSI hardware and also a necessity
-to support the ISP data flow.
+To be honest it's still not very clear to me if in-driver format propagatio=
+n is
+a "nice to have" feature or something that all media pipeline drivers are
+supposed to implement.
 
-Maybe your userspace application is not configuring the bridge media block =
-with
-the right format, which results in a mismatch?
+Anyway I feel like this is not really a regression but a result of the driv=
+er
+being converted to a newer API.
 
-Some work was started to achieve automatic format propagation, perhaps it
-would be enough to solve your issue.
+Also there's a V4L2_CAP_IO_MC flag which should indicate that the video dev=
+ice
+must be controlled via the media controller API instead of being
+video-device-centric, but I've seen comments asking not to set the flag even
+when MC is used so I'm a bit confused here. Perhaps the flag is only requir=
+ed
+when there is no automatic format propagation?
+
+If anyone has solid answers on these points I'd be happy to read some
+clarification (and act accordingly).
 
 Cheers,
 
 Paul
 
-> #regzbot introduced: 0d2b746b1bef73de62d2d311e594a7ffed4ca43
->=20
 > Greetings,
-> Martijn Braam
+> Martijn
+>=20
+> On 6/2/23 11:16, Paul Kocialkowski wrote:
+> > Hi Martijn,
+> >=20
+> > On Thu 01 Jun 23, 23:19, Martijn Braam wrote:
+> > > It seems like this commit:
+> > >=20
+> > > media: sun6i-csi: Add bridge v4l2 subdev with port management
+> > >=20
+> > > Has changed the way the media pipeline on a64 devices, in my case the=
+ PINE64
+> > > PinePhone works. Since this is an API towards userspace and there's a=
+ctive
+> > > applications that use it I think this counts as a regression.
+> > Do you have more details on what changed specifically?
+> >=20
+> > The commit added a bridge subdev in addition to the video node, which is
+> > generally a better description of the CSI hardware and also a necessity
+> > to support the ISP data flow.
+> >=20
+> > Maybe your userspace application is not configuring the bridge media bl=
+ock with
+> > the right format, which results in a mismatch?
+> >=20
+> > Some work was started to achieve automatic format propagation, perhaps =
+it
+> > would be enough to solve your issue.
+> >=20
+> > Cheers,
+> >=20
+> > Paul
+> >=20
+> > > #regzbot introduced: 0d2b746b1bef73de62d2d311e594a7ffed4ca43
+> > >=20
+> > > Greetings,
+> > > Martijn Braam
 
 --=20
 Paul Kocialkowski, Bootlin
 Embedded Linux and kernel engineering
 https://bootlin.com
 
---/xVHL15dNVBeKuec
+--Z+0PdKDSAr0fMDwU
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAmR5s2UACgkQ3cLmz3+f
-v9EPcAf+JBtBZe84LRoJz9yWU23a/bmOt82xy1iit1iEr0HX5IDfh6VADtUyLsuP
-W0tp3SYomGnCRO7Hb5VhFskMbHPaOLHCUhPmY06XQXzIQq8SsA8OA2pAjD89CoLC
-Yd61Jab/h70X5JA6LvV8BlxxM8gF++fnBjs1obmVRLF4cb96bys4Ah8gQcM8tsk5
-Eskvk7RcghYyQjkcUwgYEY0nsa+JrkydEtpUVBxFrRffMayLrWBoEdToiY0usbCu
-CBm/jP3XG7O/Nhc+8wC1bgUZEJgNmpPihVNohoLwA+NVyO5PItN02tlf+c6gZFlN
-uu4SaQrJbZHbLveaM3ZmM+/N8XQnTA==
-=7j7K
+iQEzBAEBCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAmR5uOoACgkQ3cLmz3+f
+v9F/egf/RPeds/kZq4b/dhPwh8VCo5XbMkBteLw/3hzoq39I2CC3BKfSzfWBRmWc
+T4/QgXWRhQjiGG3c0ODc0JxtO54g1m6y95ImYC4ZXMDDS1uJiixvj03LxqbQfFNv
+PPT0gENbOKbpqG9oxYDpq5RRAbB/GJlI05wi33X2du+rjxIxxP8kkeMa0Lie+C4D
++WimmueY/mBjUu9KBaDEfRtcM429eqagUxSJ2vgHustBmwwTM5ShqWicBXvR4Wwd
+dCIAb41Wv90mkRr79Nx777C4zhybVhqTgR3qbyXbhCJCYgQzkfHIHvijaL5+K678
+f6fw9fQto2DKbwTb9l6SgKS5dwDFHA==
+=NVjT
 -----END PGP SIGNATURE-----
 
---/xVHL15dNVBeKuec--
+--Z+0PdKDSAr0fMDwU--
