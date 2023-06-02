@@ -1,96 +1,93 @@
-Received: from devico.uberspace.de (devico.uberspace.de [185.26.156.185])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CE8B10E3
-	for <regressions@lists.linux.dev>; Fri,  2 Jun 2023 01:43:19 +0000 (UTC)
-Received: (qmail 10122 invoked by uid 990); 2 Jun 2023 01:36:36 -0000
-Authentication-Results: devico.uberspace.de;
-	auth=pass (plain)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F91910E3
+	for <regressions@lists.linux.dev>; Fri,  2 Jun 2023 02:15:35 +0000 (UTC)
+Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-53fe2275249so964276a12.2
+        for <regressions@lists.linux.dev>; Thu, 01 Jun 2023 19:15:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1685672134; x=1688264134;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=XApgtkN2jCC5pzmqScCzReitzogZdYBuknqg9aRwaW4=;
+        b=Je4uXOOXr5Iu0HBDznyQs/8vrgnYEJnSfl8pKC/3I4DEgRpOW8B/PjbPIyh81karbo
+         t4KZWp7KlYnpYiqjZWaVkKNgl0Cr1wVcuh6hkMcbntLLcRqT47+QXekhckdh9L4Iwj5+
+         ZnxGVipQ17ocROuiwwf5MpF6U3IGBBnm2Wg11G/B/cuOj0850EQQ2t1KVYF4IBZ0C+eN
+         qoeCMCa2AokgnJJmQzR0X7iPwVYIJVOkMzP3INhp52cmZ+bEfHQyQgYZX0oYYZcOfC28
+         mZUsbOFCORX1Uc2yziJ9blp6b6eMPNZnv34ay9kHCTF2GkGzju0RWznuDvOeN60sqEPv
+         X+jA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685672134; x=1688264134;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=XApgtkN2jCC5pzmqScCzReitzogZdYBuknqg9aRwaW4=;
+        b=AInRwfYkMXiYoAYCNHsSvikVk48yP2Rn6Sox8rFDNez7XZ/P+yRcb02jk5G4Io/MMP
+         3fjB2WK3rCURMJIUpu2ITZEyIyOHAmOVZSE9fBbH0ejk5pSGBlcWzu1ibrvaUzimGDCl
+         +WDM7IdsCkelINFI8cgGphqeZnxr0+vYW1ZHPzNksaRqjGdDUFMYeosq5OzpXhrixVGr
+         eAfIo042oaF4HNHPveyf8qDebYmvxZxi4eCyjhq/oIa6epGpyIDG1a8NCbnulKjWcNSQ
+         mLRint4pahwxA3iQtdKdFHbL8JNyye8YhMx0dErDgK2Tbzx6tNeyEB1A3SGZV0PeGlxA
+         xyrw==
+X-Gm-Message-State: AC+VfDwkDZsESmX7sBi8WSgwght23PloIdqH1worvJbObz8bdlqChXjf
+	pq2IJqi5J6cvHS3Uu+eM3nQ=
+X-Google-Smtp-Source: ACHHUZ4IbqD5NoHEPFTuiYkAqTB2hoX7awrX/5FQVh9gjb+2PG+UajTM2aTqq5bq/8zMTHZ19VR8SA==
+X-Received: by 2002:a17:90a:617:b0:258:9a26:38db with SMTP id j23-20020a17090a061700b002589a2638dbmr802342pjj.16.1685672134273;
+        Thu, 01 Jun 2023 19:15:34 -0700 (PDT)
+Received: from [192.168.43.80] (subs28-116-206-12-49.three.co.id. [116.206.12.49])
+        by smtp.gmail.com with ESMTPSA id 8-20020a17090a0c0800b00256a6ec8507sm2163004pjs.19.2023.06.01.19.15.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 01 Jun 2023 19:15:33 -0700 (PDT)
+Message-ID: <74b8e4c0-a557-b047-4507-c243c9aad216@gmail.com>
+Date: Fri, 2 Jun 2023 09:15:25 +0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Date: Fri, 02 Jun 2023 01:36:35 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-From: "Leonard Lausen" <leonard@lausen.nl>
-Message-ID: <f98dcffe4b1dc91edf692fbaa766a263910f2c5b@lausen.nl>
-TLS-Required: No
-Subject: Re: [Freedreno] [PATCH] Revert "drm/msm/dp: Remove INIT_SETUP delay"
-To: "Abhinav Kumar" <quic_abhinavk@quicinc.com>, "Kuogee Hsieh"
- <quic_khsieh@quicinc.com>, "Dmitry Baryshkov" <dmitry.baryshkov@linaro.org>,
- "Bjorn Andersson" <andersson@kernel.org>
-Cc: freedreno@lists.freedesktop.org, "Sankeerth Billakanti"
- <quic_sbillaka@quicinc.com>, "Bjorn Andersson" <quic_bjorande@quicinc.com>,
- regressions@lists.linux.dev, "David Airlie" <airlied@gmail.com>, "Nikita 
- Travkin" <nikita@trvn.ru>, linux-kernel@vger.kernel.org,
- dri-devel@lists.freedesktop.org, "Rob Clark" <robdclark@gmail.com>, "Daniel 
- Vetter" <daniel@ffwll.ch>, linux-arm-msm@vger.kernel.org, "Stephen Boyd"
- <swboyd@chromium.org>, "Sean Paul" <sean@poorly.run>, "Johan Hovold"
- <johan+linaro@kernel.org>
-In-Reply-To: <932ee149-c524-25e7-ee49-5ea1a7e6708c@quicinc.com>
-References: <932ee149-c524-25e7-ee49-5ea1a7e6708c@quicinc.com>
- <e547edf4-1b48-5d12-1600-45f78e7cab49@quicinc.com>
- <1345a125-f745-4fe3-0f5e-bfe84225958d@quicinc.com>
- <b0cc40d5-6de1-91cc-e2cd-f47cc53551e4@quicinc.com>
- <ebbcd56ac883d3c3d3024d368fab63d26e02637a@lausen.nl>
- <20230508021536.txtamifw2vkfncnx@ripper>
- <3802269cd54ce105ef6dece03b1b9af575b4fa06@lausen.nl>
- <ad351c02-1c29-3601-53e8-f8cdeca2ac63@linaro.org>
- <49d175ec16e3f65a18265063e51092ee8d0d79c1@lausen.nl>
- <f2d1bb37-ea83-4d5d-6ef5-ae84c26d6ac1@quicinc.com>
- <b9c8243ed53c5c9d7c1b5711237f6130976ea99b@lausen.nl>
-X-Rspamd-Bar: /
-X-Rspamd-Report: MIME_GOOD(-0.1) BAYES_HAM(-0.653806) SUSPICIOUS_RECIPS(1.5)
-X-Rspamd-Score: 0.746193
-Received: from unknown (HELO unkown) (::1)
-	by devico.uberspace.de (Haraka/3.0.1) with ESMTPSA; Fri, 02 Jun 2023 03:36:35 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-	d=lausen.nl; s=uberspace;
-	h=from;
-	bh=F1dvcx9M5aUHwpLVgbzf/l4rVtHAAaC7rv6RpWusZ5s=;
-	b=wFk1temRwaSxBD9VI5V46NvXc365LyX2Oy2QNyMIivszup70xaT/XGMZU9EImnz2BJ4OAZR/Ng
-	/+LZGTrJC+Vrm93lm6S9PM/qij10wuT53Ig7zCv+9c085Xm+9fxf5fDzKYr05woN1avArs2muKTc
-	+dQytvX5Q7DgjKbcJZtFQkQ7QseKeklh9Qlue7F9wQTLCHfdOqm4Y4qQk2cGlL34GzXda63ViAd5
-	8yfFe5zJjWkTACc5P7Avxr5evqcUzZuolE9tMP76oAtyEu8RCVAOQs47MP3uAUyhLqWJVkSid/h3
-	dnWDVjz4YUH9H878dg0emKksBhR3ZpSi4RQP1CPXanMBcAshgbjBxHGigY+PejnMoOGfw1jJrvqO
-	dubxnpOH3IyfpKlLY+F28N2lSoYyedtoSACiRy59GWHWiiOwkaO51SoFYwU5VM/dYG3RpEiFnoLP
-	n3YP+gMxFqv+UrRpHzz+QulynVDBaFiizMzwpoMiHSvlczC5AUI+aJhlhQyT4nlYf95/UGIs96Ih
-	/try9w4FMiDYKpELz9gP22UMwK5Xi9j27MK2yn3uKcs25g7GIy+87Wbb2b3sp9wwD5jTGq4urLRt
-	8TGdvJxgrlCuiZ9cNuJLk9V7KDF+aseLMe6kLuvoWQXSd/l1Ju+nlTIxaR7GLjuxqscmWxWZeyDe
-	s=
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: Fwd: Started to get "memfd_create() without MFD_EXEC nor
+ MFD_NOEXEC_SEAL"
+To: Kees Cook <keescook@chromium.org>, Vlastimil Babka <vbabka@suse.cz>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Linux Memory Management List <linux-mm@kvack.org>,
+ Jeff Xu <jeffxu@google.com>, Daniel Verkamp <dverkamp@chromium.org>,
+ David Herrmann <dh.herrmann@gmail.com>,
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>, Hugh Dickins
+ <hughd@google.com>, Jann Horn <jannh@google.com>,
+ Jorge Lucangeli Obes <jorgelo@chromium.org>,
+ Shuah Khan <skhan@linuxfoundation.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Stuart Foster <smf-linux@virginmedia.com>
+References: <69dad53e-9363-c551-111a-d0051bb0265f@gmail.com>
+ <38f847ed-69dc-d5da-5822-bd9da753fc30@suse.cz>
+ <202306010710.7F5C39B7A@keescook>
+Content-Language: en-US
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+In-Reply-To: <202306010710.7F5C39B7A@keescook>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Abhinav,
+On 6/1/23 21:12, Kees Cook wrote:
+>> Hm indeed it seems to have introduced 2 new flags and immediately warn if
+>> any process doesn't use them. Maybe it would make sense for some of the
+>> non-default values of vm.memfd_noexec, but it's too early to warn
+>> unconditionally everywhere, no?
+> 
+> This is pretty standard for getting new options like this noticed by
+> userspace -- there is no regression in _behavior_. It's just a reminder
+> to fix userspace code.
+> 
 
-June 1, 2023 at 3:20 PM, "Abhinav Kumar" <quic_abhinavk@quicinc.com> wrot=
-e:
-> >=20
->=20>  [drm:drm_mode_config_helper_resume] *ERROR* Failed to resume (-107=
-)
-> >=20
->=20
-> We are not able to recreate this on sc7280 chromebooks , will need to c=
-heck on sc7180. This does not seem directly related to any of the hotplug=
- changes though so needs to be checked separately. So please feel free to=
- raise a gitlab bug for this and assign to me.
+Telling regzbot:
 
-Thank you for checking with sc7280. I created https://gitlab.freedesktop.=
-org/drm/msm/-/issues/25 and CCed you. I've also verified that the error p=
-ersists with v6.4.0-rc4 + Kuogee's patch (just in case you may have teste=
-d on sc7280 with 6.4).
-=20
->=20>  https://patchwork.freedesktop.org/patch/538601/?series=3D118148&re=
-v=3D3
-> >  Apologies if you were not CCed on this, if a next version is CCed,
-> >  will ask kuogee to cc you.
-> >  Meanwhile, will be great if you can verify if it works for you and
-> >  provide Tested-by tags.
+#regzbot invalid: not a kernel regression, but userspace fix is needed
 
-I see Bjorn also tested the patch. As it fixes a serious USB-C DP regress=
-ion which broke USB-C DP completely on lazor for v6.3, can it be included=
- in upcoming 6.3.y release?
+Thanks.
 
-Thank you
-Leonard
+-- 
+An old man doll... just what I always wanted! - Clara
+
