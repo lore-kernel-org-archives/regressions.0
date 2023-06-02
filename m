@@ -1,45 +1,45 @@
-Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F91910E3
-	for <regressions@lists.linux.dev>; Fri,  2 Jun 2023 02:15:35 +0000 (UTC)
-Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-53fe2275249so964276a12.2
-        for <regressions@lists.linux.dev>; Thu, 01 Jun 2023 19:15:35 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD76A1363
+	for <regressions@lists.linux.dev>; Fri,  2 Jun 2023 02:28:12 +0000 (UTC)
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1b065154b79so22378565ad.1
+        for <regressions@lists.linux.dev>; Thu, 01 Jun 2023 19:28:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1685672134; x=1688264134;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=XApgtkN2jCC5pzmqScCzReitzogZdYBuknqg9aRwaW4=;
-        b=Je4uXOOXr5Iu0HBDznyQs/8vrgnYEJnSfl8pKC/3I4DEgRpOW8B/PjbPIyh81karbo
-         t4KZWp7KlYnpYiqjZWaVkKNgl0Cr1wVcuh6hkMcbntLLcRqT47+QXekhckdh9L4Iwj5+
-         ZnxGVipQ17ocROuiwwf5MpF6U3IGBBnm2Wg11G/B/cuOj0850EQQ2t1KVYF4IBZ0C+eN
-         qoeCMCa2AokgnJJmQzR0X7iPwVYIJVOkMzP3INhp52cmZ+bEfHQyQgYZX0oYYZcOfC28
-         mZUsbOFCORX1Uc2yziJ9blp6b6eMPNZnv34ay9kHCTF2GkGzju0RWznuDvOeN60sqEPv
-         X+jA==
+        d=gmail.com; s=20221208; t=1685672892; x=1688264892;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iH1ysj30mF85sJI8Hu+UweQ/IViEKpx4ySqfGsRzxAs=;
+        b=n9hmECaPd+ti6J6O3CLn/hnZa9po4lvtqeG9t7fTWbd6d+18sta9hEaL45qSB+zkh5
+         8ZA/GPZH2HTvbxXe0YEj8500pOBEml8Zp3HSPng4Oj7Pl59f6GLyb55gLV4ao6wzfqT3
+         tnMcUM2jZiArcSWQGP1seAeIOhtbmO7k1SHOl4kZm2AcTmBnjQMqWv4MqBFcBeEp/NkL
+         01ymX7ULoR8wtEItTDxzxIV1jrplntVc/AKf87k4fN2AOOMY+9tUWRzvyNWwIzejLCVy
+         jXpBwL287rwNs0q7Uog2OFXH9ZB8Ksd3mgLBjHPGE+p/d6oaRRnGQILxkKYZtg9/vJ9l
+         Rwwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685672134; x=1688264134;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XApgtkN2jCC5pzmqScCzReitzogZdYBuknqg9aRwaW4=;
-        b=AInRwfYkMXiYoAYCNHsSvikVk48yP2Rn6Sox8rFDNez7XZ/P+yRcb02jk5G4Io/MMP
-         3fjB2WK3rCURMJIUpu2ITZEyIyOHAmOVZSE9fBbH0ejk5pSGBlcWzu1ibrvaUzimGDCl
-         +WDM7IdsCkelINFI8cgGphqeZnxr0+vYW1ZHPzNksaRqjGdDUFMYeosq5OzpXhrixVGr
-         eAfIo042oaF4HNHPveyf8qDebYmvxZxi4eCyjhq/oIa6epGpyIDG1a8NCbnulKjWcNSQ
-         mLRint4pahwxA3iQtdKdFHbL8JNyye8YhMx0dErDgK2Tbzx6tNeyEB1A3SGZV0PeGlxA
-         xyrw==
-X-Gm-Message-State: AC+VfDwkDZsESmX7sBi8WSgwght23PloIdqH1worvJbObz8bdlqChXjf
-	pq2IJqi5J6cvHS3Uu+eM3nQ=
-X-Google-Smtp-Source: ACHHUZ4IbqD5NoHEPFTuiYkAqTB2hoX7awrX/5FQVh9gjb+2PG+UajTM2aTqq5bq/8zMTHZ19VR8SA==
-X-Received: by 2002:a17:90a:617:b0:258:9a26:38db with SMTP id j23-20020a17090a061700b002589a2638dbmr802342pjj.16.1685672134273;
-        Thu, 01 Jun 2023 19:15:34 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1685672892; x=1688264892;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=iH1ysj30mF85sJI8Hu+UweQ/IViEKpx4ySqfGsRzxAs=;
+        b=Erm87APpqW2LG3uxG4z6LyxY4PDNBh3srKwE4ORMF9DP0QojRKmQp2nrt3lj6vrytq
+         qUcZxHpuP+4h2VMEA8UL4ZtnOiAofj0VbYOpt+zmfH45o0cVQCs2NMes6N19BcHxltxn
+         krzL3kJrd0WSvJFXWXF01yBPK5gp/dx3WDyZaNCXLhpuX1tCa0nNiWcR5d/LRZABsxtt
+         yRz+7mnsfumlUtWBCMN9Fi905Ehg7Ohvj5Fpb+1XQp6V9lGLRKjYyG+8fvCqEjlP5aEP
+         zKbIzrwPim6W6P+3iJJzk1ObsvFSo8vsOP3BJqlqWrg9ZJ1gBb7pbVS5HDmwaYrplGnt
+         b3lg==
+X-Gm-Message-State: AC+VfDzUKbGOFSNgkEZV9xf5tqQnvkycGJk9hrunu9PAgfGfJIoorjoj
+	Lbykn7Qg0h+2OIvlfxIM3Yc=
+X-Google-Smtp-Source: ACHHUZ4e6+vRjrIpsaHlh4EAancrsEHwVNsQVko2QUD7knU+Nwo4iXkRehTnlgoYJZYQRmAB6kY9Vw==
+X-Received: by 2002:a17:902:d2c5:b0:1b1:76c2:2966 with SMTP id n5-20020a170902d2c500b001b176c22966mr850675plc.20.1685672891925;
+        Thu, 01 Jun 2023 19:28:11 -0700 (PDT)
 Received: from [192.168.43.80] (subs28-116-206-12-49.three.co.id. [116.206.12.49])
-        by smtp.gmail.com with ESMTPSA id 8-20020a17090a0c0800b00256a6ec8507sm2163004pjs.19.2023.06.01.19.15.30
+        by smtp.gmail.com with ESMTPSA id t21-20020a170902b21500b001ac45598b59sm76827plr.163.2023.06.01.19.28.09
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 01 Jun 2023 19:15:33 -0700 (PDT)
-Message-ID: <74b8e4c0-a557-b047-4507-c243c9aad216@gmail.com>
-Date: Fri, 2 Jun 2023 09:15:25 +0700
+        Thu, 01 Jun 2023 19:28:11 -0700 (PDT)
+Message-ID: <9f12c322-fb62-26f0-46d1-61936a419468@gmail.com>
+Date: Fri, 2 Jun 2023 09:27:48 +0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -48,46 +48,49 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.11.0
-Subject: Re: Fwd: Started to get "memfd_create() without MFD_EXEC nor
- MFD_NOEXEC_SEAL"
-To: Kees Cook <keescook@chromium.org>, Vlastimil Babka <vbabka@suse.cz>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>,
- Linux Memory Management List <linux-mm@kvack.org>,
- Jeff Xu <jeffxu@google.com>, Daniel Verkamp <dverkamp@chromium.org>,
- David Herrmann <dh.herrmann@gmail.com>,
- Dmitry Torokhov <dmitry.torokhov@gmail.com>, Hugh Dickins
- <hughd@google.com>, Jann Horn <jannh@google.com>,
- Jorge Lucangeli Obes <jorgelo@chromium.org>,
- Shuah Khan <skhan@linuxfoundation.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- Stuart Foster <smf-linux@virginmedia.com>
-References: <69dad53e-9363-c551-111a-d0051bb0265f@gmail.com>
- <38f847ed-69dc-d5da-5822-bd9da753fc30@suse.cz>
- <202306010710.7F5C39B7A@keescook>
 Content-Language: en-US
+To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Linux Kernel Network Developers <netdev@vger.kernel.org>,
+ Linux Real Time <linux-rt-users@vger.kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+ Paolo Abeni <pabeni@redhat.com>, SamW <proaudiomanuk@gmail.com>
 From: Bagas Sanjaya <bagasdotme@gmail.com>
-In-Reply-To: <202306010710.7F5C39B7A@keescook>
+Subject: Fwd: commit 6e98b09da931a00bf4e0477d0fa52748bf28fcce suspect causing
+ full system lockup
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 6/1/23 21:12, Kees Cook wrote:
->> Hm indeed it seems to have introduced 2 new flags and immediately warn if
->> any process doesn't use them. Maybe it would make sense for some of the
->> non-default values of vm.memfd_noexec, but it's too early to warn
->> unconditionally everywhere, no?
-> 
-> This is pretty standard for getting new options like this noticed by
-> userspace -- there is no regression in _behavior_. It's just a reminder
-> to fix userspace code.
-> 
+Hi,
 
-Telling regzbot:
+I notice a regression report on Bugzilla [1]. Quoting from it:
 
-#regzbot invalid: not a kernel regression, but userspace fix is needed
+> 6e98b09da931a00bf4e0477d0fa52748bf28fcce
+> OS slackware64-current fully upto date, on an AMD 990fx motherboard with a 
+> Realtek Semiconductor Co., Ltd. RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller (rev 09).
+> Linux-rt-devel-rc2-rt1 and linux-rt-devel-6.4-rc3-rt2 had same issue, previous linux-rt-devel-6.3.3-rt15 worked with no issue.
+> 
+> Hello I suspect this series of commits is causing the full system lock im having when using the r8169 driver with linux-rt-devel-6.4-rc3-rt2. With the driver enabled my system locks up with a few mins of booting and logging into desktop. I have to use power off button and reboot to older kernel. With the r8169 driver blacklisted the kernel works perfectly.
+> My syslog attachment shows the driver errors and after looking at commits I saw the above numbered as being the most likly cause.
+> A member of oftc linux-rt irc channel looked and gave the comment posted below.
+> "tell the driver maintainers they must not enable the irq in the napi poll function"
+> He said it looked like that could be causing the errors and then full system lockup.
+> please contact me if any further information is required.
+> 
+> My fix has been blacklist r8169 and use the r8168 driver from relatek with a patch to enable builfing with the 6.4 kernel.
+> Thank you for your time
+> SamW
+
+See Bugzilla for the full thread and attached syslog.
+
+Anyway, I'm adding it to regzbot:
+
+#regzbot introduced: 6e98b09da931a0 https://bugzilla.kernel.org/show_bug.cgi?id=217519
+#regzbot title: Networking pull for v6.4 causes full system lockup on RTL8111/8168/8411
 
 Thanks.
 
+[1]: https://bugzilla.kernel.org/show_bug.cgi?id=217519
+
 -- 
 An old man doll... just what I always wanted! - Clara
-
