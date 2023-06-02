@@ -1,125 +1,179 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B60BB48244
-	for <regressions@lists.linux.dev>; Thu,  1 Jun 2023 23:55:14 +0000 (UTC)
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1b021cddb74so8276545ad.0
-        for <regressions@lists.linux.dev>; Thu, 01 Jun 2023 16:55:14 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E0FC180
+	for <regressions@lists.linux.dev>; Fri,  2 Jun 2023 00:01:41 +0000 (UTC)
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1b011cffe7fso8485795ad.1
+        for <regressions@lists.linux.dev>; Thu, 01 Jun 2023 17:01:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1685663714; x=1688255714;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ihl8v58xxI+k8/qBpzTYZAfUmx+fnzwWgMHjRzgdYbE=;
-        b=kdR5H2X7d12BcILtHvrj70bvW2DgiE0sSf7f2e81MSKM4kNEklP4ZLPEKSqx8t2NvC
-         jI93bcl7vbjpdu/IBcQVCB0n/F5b8HzGpfYmAJ1DJyYvApuJ2WQVT61pckYGE2Q9yOXZ
-         Cr0BH1XstkTP6Q9izTuWDC8CM5cOb9l/DEFyTyPiPaUOrT1fgk+6OL4/svb1S9ADGqHF
-         4+VQBH63V95XUfYJb0fBLJd33YEyL/2NfydYTbjvCxVw95vhrX2RxjO5x9g8Sc/4Kcm2
-         RPVAKBUmkGy01BbcCV/V/2UeWrJrHC66XtB/amLVUc40f0uacj5LIj4/nm9rFLIZabGj
-         6P4w==
+        d=gmail.com; s=20221208; t=1685664100; x=1688256100;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=93AdyG83HyxVnXaMo7sA8WZyZkxYZ/RccX4TOVu/C4s=;
+        b=VV0r3rsC+gzwtZhbR6SRIxP1YPYMh+vFr7XPIKHPLYgkaOzVPSjxk3jmTVNMx3JuyZ
+         rsVBXKADShH2J/xdvbmHEQ4CB2fj9Soow/U8DnbcS3BBqBIwzh8JspOHPFUCknxF7kYR
+         RC9C+nYQgTVLUOBGfrB2PjLUCaPOSA184pINCYMY7Qo/3wzmoAVd2aiLvmqAolRIONqh
+         u1g19En54Ao1tyBydYgHq2W21O/wg3lzwyhAmB7XAe66nSPXQkvx3XIhRbm3wM5hxfcu
+         0kAio9s7taW6rnglYLpB93vPgYdWzh9QT5cQzZCS9mWVszrh5b4B4EgmB0i7I8cwkGL9
+         arxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685663714; x=1688255714;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ihl8v58xxI+k8/qBpzTYZAfUmx+fnzwWgMHjRzgdYbE=;
-        b=GeD6RIlRoeJYyBNC8lwffbMNgfTylbYo8rRc6VFyNwn+BbbZmCZQp5FYPNWGbCl9Of
-         y7xc1W0W+Om7vlQy+MqMA88T29KFTOLxlPnX+IUEVv6zu/P+iKx3vTBZCPITF5OhtMqS
-         1LWX8acLKajL/Q/aaOB/idCTwd+L64JOu2ebsNtj49LxmhReVYmJNEHuTFDLjYs9UcyS
-         +Y7y2mFVwMXZigboWkSo6s4Dai5FMtuvFJCQDOj+Ww2wgMAYlr7mzZIlI794LRYxk3X/
-         93zNA3Vl7L6Sls6P+0QFBDusbiCNOQRYqiMmU0P1pWZ5WGD3dlrj/19a+wNyhcbSg2pc
-         +jHQ==
-X-Gm-Message-State: AC+VfDz2HvhepHKtwptxE05KS7WZRbFS5lHLT9KmQCHnNpQThJuDyoWA
-	ybhBOzWDHerqkaYFsj/nJPU=
-X-Google-Smtp-Source: ACHHUZ6BrFhevm2B2jVnR9Sgoop6ktChkiYMnQv1G5hcbie6gxrt0IOjXJFz2O9mbYiIqyfEgfrCmw==
-X-Received: by 2002:a17:902:ecc1:b0:1ac:3605:97ec with SMTP id a1-20020a170902ecc100b001ac360597ecmr615508plh.62.1685663713896;
-        Thu, 01 Jun 2023 16:55:13 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1685664100; x=1688256100;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=93AdyG83HyxVnXaMo7sA8WZyZkxYZ/RccX4TOVu/C4s=;
+        b=iiSwUbx7K3QUVMEYxPF+mUifiu0pn+PIy0PszUk15mbr2RHCWSUh26xD8hGwQFQ5U0
+         sOFlf/6ai1csbWQTu8rPGPSJesnEYbUo35MiELPYeiO4kDudl1is9Z3IuM1dR+6IK0HR
+         1/eQoOWVyLJ/v+kBOI+y7rHb8ZPmMjOQfZM6MlzglzLxtO8erdxwNV77u4WxPXkh/cQM
+         cttbXkctjKRCzNyu2hfuADjc0KonTrt2rCeEtCc+UiNn6IP/pJHnm8b6zcPOaMrWTXJI
+         QYrUd9lQ3CLgYvOLK/yGDKbw2cM755YrjvRkWe/Ymn6LDPDL+BWMPqVi70t7QdZGqMa8
+         ZA+g==
+X-Gm-Message-State: AC+VfDx761xpjduYc1thxUWaolaDzsPB7u+COnl9bEJcPC5TwEmJKxRN
+	gzh6k3sT4P7l6buSO1PGIZc=
+X-Google-Smtp-Source: ACHHUZ5THhBGMCfAmSzS/ioq25KBw5L0O65vhmB+0J8a4/fpA8qair3Z0fIPhVFMX+By3qAv9ZgXLw==
+X-Received: by 2002:a17:902:e884:b0:1b0:7c3c:31f9 with SMTP id w4-20020a170902e88400b001b07c3c31f9mr840365plg.53.1685664100488;
+        Thu, 01 Jun 2023 17:01:40 -0700 (PDT)
 Received: from localhost ([2405:6581:d4e0:1600:c494:2aca:bc01:6f7b])
-        by smtp.gmail.com with ESMTPSA id e4-20020a17090301c400b001a6d4ffc760sm4054136plh.244.2023.06.01.16.55.13
+        by smtp.gmail.com with ESMTPSA id x11-20020a170902ea8b00b001ab1b7bae5asm4072981plb.184.2023.06.01.17.01.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 Jun 2023 16:55:13 -0700 (PDT)
-Date: Fri, 2 Jun 2023 08:55:11 +0900
+        Thu, 01 Jun 2023 17:01:40 -0700 (PDT)
+Date: Fri, 2 Jun 2023 09:01:38 +0900
 From: Nick Hastings <nicholaschastings@gmail.com>
-To: "Limonciello, Mario" <mario.limonciello@amd.com>
-Cc: Lyude Paul <lyude@redhat.com>, Lukas Wunner <lukas@wunner.de>,
-	kherbst@redhat.com, Salvatore Bonaccorso <carnil@debian.org>,
-	1036530@bugs.debian.org, "Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev
+To: Karol Herbst <kherbst@redhat.com>
+Cc: "Limonciello, Mario" <Mario.Limonciello@amd.com>,
+	Lyude Paul <lyude@redhat.com>, Lukas Wunner <lukas@wunner.de>,
+	Salvatore Bonaccorso <carnil@debian.org>,
+	"1036530@bugs.debian.org" <1036530@bugs.debian.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>,
+	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
 Subject: Re: Regression from "ACPI: OSI: Remove Linux-Dell-Video _OSI
  string"? (was: Re: Bug#1036530: linux-signed-amd64: Hard lock up of system)
-Message-ID: <ZHkv32h2F/AYmIqk@xps>
-References: <ZHL5cCNUzVdleiag@eldamar.lan>
- <ab12984e-be17-903d-ba0a-f9c85b8c544f@amd.com>
- <ZHP4IqxBUPuVRvRV@xps>
- <09e24386-de63-e9e9-9e7f-5d04bad62d83@amd.com>
- <ZHQhPcKUF76Kplwm@xps>
- <ZHUt9xQKCwCflvVC@xps>
+Message-ID: <ZHkxYo/a+/uInkLG@xps>
+References: <ZHUt9xQKCwCflvVC@xps>
  <8537d965-ddf4-7f45-6459-d5acf520376e@amd.com>
  <ZHWfMBeAONerAJmd@xps>
  <ZHfa/wQlaVCeUC22@xps>
  <fe0ab1fa-6ed6-dc64-8165-8fc70669317b@amd.com>
+ <CACO55tsuO1kQUFfPdPFUHm4WEQseCR2tQSDhFRzR+8wOECZCyA@mail.gmail.com>
+ <MN0PR12MB61017541F5AC55485A490BCDE2499@MN0PR12MB6101.namprd12.prod.outlook.com>
+ <CACO55tudULtvt_Hcdg+uqXeYkSAR_NZ1oD=R_KhuE_THSRe88g@mail.gmail.com>
+ <MN0PR12MB6101DE067CF85E59AF187763E2499@MN0PR12MB6101.namprd12.prod.outlook.com>
+ <CACO55tuqAH5Zt+X9pjLFZ-RcFgxpgjpqmrAHPvm4=fb_DMBHyw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <fe0ab1fa-6ed6-dc64-8165-8fc70669317b@amd.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACO55tuqAH5Zt+X9pjLFZ-RcFgxpgjpqmrAHPvm4=fb_DMBHyw@mail.gmail.com>
 
 Hi,
 
-* Limonciello, Mario <mario.limonciello@amd.com> [230602 01:18]:
-> +Lyude, Lukas, Karol
-> 
-> On 5/31/2023 6:40 PM, Nick Hastings wrote:
-> > 
-> > * Nick Hastings <nicholaschastings@gmail.com> [230530 16:01]:
-> > > * Mario Limonciello <mario.limonciello@amd.com> [230530 13:00]:
-> > <snip>
-> > > > As you're actually loading nouveau, can you please try nouveau.runpm=0 on
-> > > > the kernel command line?
-> > > I'm not intentionally loading it. This machine also has intel graphics
-> > > which is what I prefer. Checking my
-> > > /etc/modprobe.d/blacklist-nvidia-nouveau.conf
-> > > I see:
-> > > 
-> > > blacklist nvidia
-> > > blacklist nvidia-drm
-> > > blacklist nvidia-modeset
-> > > blacklist nvidia-uvm
-> > > blacklist ipmi_msghandler
-> > > blacklist ipmi_devintf
-> > > 
-> > > So I thought I had blacklisted it but it seems I did not. Since I do not
-> > > want to use it maybe it is better to check if the lock up occurs with
-> > > nouveau blacklisted. I will try that now.
-> > I blacklisted nouveau and booted into a 6.1 kernel:
-> > % uname -a
-> > Linux xps 6.1.0-9-amd64 #1 SMP PREEMPT_DYNAMIC Debian 6.1.27-1 (2023-05-08) x86_64 GNU/Linux
-> > 
-> > It has been running without problems for nearly two days now:
-> > % uptime
-> >   08:34:48 up 1 day, 16:22,  2 users,  load average: 1.33, 1.26, 1.27
-> > 
-> > Regards,
-> > 
-> > Nick.
-> 
-> Thanks, that makes a lot more sense now.
-> 
-> Nick, Can you please test if nouveau works with runtime PM in the
-> latest 6.4-rc?
+* Karol Herbst <kherbst@redhat.com> [230602 03:10]:
+> On Thu, Jun 1, 2023 at 7:21 PM Limonciello, Mario
+> <Mario.Limonciello@amd.com> wrote:
+> > > -----Original Message-----
+> > > From: Karol Herbst <kherbst@redhat.com>
+> > > Sent: Thursday, June 1, 2023 12:19 PM
+> > > To: Limonciello, Mario <Mario.Limonciello@amd.com>
+> > > Cc: Nick Hastings <nicholaschastings@gmail.com>; Lyude Paul
+> > > <lyude@redhat.com>; Lukas Wunner <lukas@wunner.de>; Salvatore
+> > > Bonaccorso <carnil@debian.org>; 1036530@bugs.debian.org; Rafael J.
+> > > Wysocki <rafael@kernel.org>; Len Brown <lenb@kernel.org>; linux-
+> > > acpi@vger.kernel.org; linux-kernel@vger.kernel.org;
+> > > regressions@lists.linux.dev
+> > > Subject: Re: Regression from "ACPI: OSI: Remove Linux-Dell-Video _OSI
+> > > string"? (was: Re: Bug#1036530: linux-signed-amd64: Hard lock up of system)
+> > >
+> > > On Thu, Jun 1, 2023 at 6:54 PM Limonciello, Mario
+> > > <Mario.Limonciello@amd.com> wrote:
+> > > >
+> > > > [AMD Official Use Only - General]
+> > > >
+> > > > > -----Original Message-----
+> > > > > From: Karol Herbst <kherbst@redhat.com>
+> > > > > Sent: Thursday, June 1, 2023 11:33 AM
+> > > > > To: Limonciello, Mario <Mario.Limonciello@amd.com>
+> > > > > Cc: Nick Hastings <nicholaschastings@gmail.com>; Lyude Paul
+> > > > > <lyude@redhat.com>; Lukas Wunner <lukas@wunner.de>; Salvatore
+> > > > > Bonaccorso <carnil@debian.org>; 1036530@bugs.debian.org; Rafael J.
+> > > > > Wysocki <rafael@kernel.org>; Len Brown <lenb@kernel.org>; linux-
+> > > > > acpi@vger.kernel.org; linux-kernel@vger.kernel.org;
+> > > > > regressions@lists.linux.dev
+> > > > > Subject: Re: Regression from "ACPI: OSI: Remove Linux-Dell-Video _OSI
+> > > > > string"? (was: Re: Bug#1036530: linux-signed-amd64: Hard lock up of
+> > > system)
+> > > > >
+> > > > > On Thu, Jun 1, 2023 at 6:18 PM Limonciello, Mario
+> > > > > >
+> > > > > > Lyude, Lukas, Karol
+> > > > > >
+> > > > > > This thread is in relation to this commit:
+> > > > > >
+> > > > > > 24867516f06d ("ACPI: OSI: Remove Linux-Dell-Video _OSI string")
+> > > > > >
+> > > > > > Nick has found that runtime PM is *not* working for nouveau.
+> > > > > >
+> > > > >
+> > > > > keep in mind we have a list of PCIe controllers where we apply a
+> > > > > workaround:
+> > > > >
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers
+> > > > > /gpu/drm/nouveau/nouveau_drm.c?h=v6.4-rc4#n682
+> > > > >
+> > > > > And I suspect there might be one or two more IDs we'll have to add
+> > > > > there. Do we have any logs?
+> > > >
+> > > > There's some archived onto the distro bug.  Search this page for
+> > > "journalctl.log.gz"
+> > > > https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1036530
+> > > >
+> > >
+> > > interesting.. It seems to be the same controller used here. I wonder
+> > > if the pci topology is different or if the workaround is applied at
+> > > all.
+> >
+> > I didn't see the message in the log about the workaround being applied
+> > in that log, so I guess PCI topology difference is a likely suspect.
+> >
+>
+> yeah, but I also couldn't see a log with the usual nouveau messages,
+> so it's kinda weird.
+>
+> Anyway, the output of `lspci -tvnn` would help
 
-I reported this twice already. I guess it was lost since for some
-reason emails in this thread are not being trimmed. I'll repeat here:
+% lspci -tvnn
+-[0000:00]-+-00.0  Intel Corporation Device [8086:3e20]
+           +-01.0-[01]----00.0  NVIDIA Corporation TU117M [GeForce GTX 1650 Mobile / Max-Q] [10de:1f91]
+           +-02.0  Intel Corporation CoffeeLake-H GT2 [UHD Graphics 630] [8086:3e9b]
+           +-04.0  Intel Corporation Xeon E3-1200 v5/E3-1500 v5/6th Gen Core Processor Thermal Subsystem [8086:1903]
+           +-08.0  Intel Corporation Xeon E3-1200 v5/v6 / E3-1500 v5 / 6th/7th/8th Gen Core Processor Gaussian Mixture Model [8086:1911]
+           +-12.0  Intel Corporation Cannon Lake PCH Thermal Controller [8086:a379]
+           +-14.0  Intel Corporation Cannon Lake PCH USB 3.1 xHCI Host Controller [8086:a36d]
+           +-14.2  Intel Corporation Cannon Lake PCH Shared SRAM [8086:a36f]
+           +-15.0  Intel Corporation Cannon Lake PCH Serial IO I2C Controller #0 [8086:a368]
+           +-15.1  Intel Corporation Cannon Lake PCH Serial IO I2C Controller #1 [8086:a369]
+           +-16.0  Intel Corporation Cannon Lake PCH HECI Controller [8086:a360]
+           +-17.0  Intel Corporation Cannon Lake Mobile PCH SATA AHCI Controller [8086:a353]
+           +-1b.0-[02-3a]----00.0-[03-3a]--+-00.0-[04]----00.0  Intel Corporation JHL6340 Thunderbolt 3 NHI (C step) [Alpine Ridge 2C 2016] [8086:15d9]
+           |                               +-01.0-[05-39]--
+           |                               \-02.0-[3a]----00.0  Intel Corporation JHL6340 Thunderbolt 3 USB 3.1 Controller (C step) [Alpine Ridge 2C 2016] [8086:15db]
+           +-1c.0-[3b]----00.0  Intel Corporation Wi-Fi 6 AX200 [8086:2723]
+           +-1c.4-[3c]----00.0  Realtek Semiconductor Co., Ltd. RTS525A PCI Express Card Reader [10ec:525a]
+           +-1d.0-[3d]----00.0  Samsung Electronics Co Ltd NVMe SSD Controller SM981/PM981/PM983 [144d:a808]
+           +-1f.0  Intel Corporation Cannon Lake LPC Controller [8086:a30e]
+           +-1f.3  Intel Corporation Cannon Lake PCH cAVS [8086:a348]
+           +-1f.4  Intel Corporation Cannon Lake PCH SMBus Controller [8086:a323]
+           \-1f.5  Intel Corporation Cannon Lake PCH SPI Controller
+           [8086:a324]
 
-I did eventually see a lockup of this kernel. On the console I saw:
-
-[  151.035036] vfio-pci 0000:01:00.0 Unable to change power state from D3cold to D0, device inaccessible
-
-I did not see the other two lines that were present in earlier lock ups.
 
 Regards,
 
