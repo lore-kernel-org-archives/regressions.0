@@ -1,124 +1,75 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 375C85687
-	for <regressions@lists.linux.dev>; Fri,  2 Jun 2023 10:04:02 +0000 (UTC)
-Received: from pendragon.ideasonboard.com (om126156168104.26.openmobile.ne.jp [126.156.168.104])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 31EC76E0;
-	Fri,  2 Jun 2023 12:03:30 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1685700212;
-	bh=oCe9V8TK9XeWJO+7wFaKHHZCEzj4y9AIBpuCCb1YwKU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=B20Y4baTrMd+AtwaSstNF6qPWOSKvb/GppFDOnLANj71Qtt3YQqMV4yRfjpAfdLNq
-	 2edYF+KQjkYTrI6W8ZKJfWC1NTPM4NOmQMbCbkYiYZIQSY7i/vxg3BbYRTXw36sVh0
-	 dxTRqvxOoCCU3s1P63P0S5ONzyax/EqZug+LRIkE=
-Date: Fri, 2 Jun 2023 13:03:52 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Cc: Martijn Braam <martijn@brixit.nl>, regressions@lists.linux.dev,
-	jernej.skrabec@gmail.com, sakari.ailus@linux.intel.com,
-	mchehab@kernel.org, linux-media@vger.kernel.org, hverkuil@xs4all.nl
-Subject: Re: [REGRESSION] breakage in sun6i-csi media api
-Message-ID: <20230602100352.GK19463@pendragon.ideasonboard.com>
-References: <f13c27fb-2afe-b94e-aad9-ed5ecc818183@brixit.nl>
- <ZHmzZUkcFK8Gq_JL@aptenodytes>
- <e168d246-528d-b615-aa50-af8f17af4442@brixit.nl>
- <ZHm46or-MhTb457b@aptenodytes>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCC5D111BB
+	for <regressions@lists.linux.dev>; Fri,  2 Jun 2023 11:05:56 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1q52bI-0004TD-P5; Fri, 02 Jun 2023 13:05:44 +0200
+Message-ID: <5b235e0f-cd4c-a453-d648-5a4e9080ac19@leemhuis.info>
+Date: Fri, 2 Jun 2023 13:05:44 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ZHm46or-MhTb457b@aptenodytes>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: system hang on start-up (mlx5?)
+From: "Linux regression tracking #update (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+To: Chuck Lever III <chuck.lever@oracle.com>,
+ "elic@nvidia.com" <elic@nvidia.com>
+Cc: "saeedm@nvidia.com" <saeedm@nvidia.com>, Leon Romanovsky
+ <leon@kernel.org>, linux-rdma <linux-rdma@vger.kernel.org>,
+ "open list:NETWORKING [GENERAL]" <netdev@vger.kernel.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+References: <A1E5B427-897B-409E-B8E3-E417678E81F6@oracle.com>
+ <bf2594bb-94e0-5c89-88ad-935dee2ac95c@leemhuis.info>
+Content-Language: en-US, de-DE
+In-Reply-To: <bf2594bb-94e0-5c89-88ad-935dee2ac95c@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1685703956;f8afda39;
+X-HE-SMSGID: 1q52bI-0004TD-P5
 
-Hi Paul,
+[TLDR: This mail in primarily relevant for Linux regression tracking. A
+change or fix related to the regression discussed in this thread was
+posted or applied, but it did not use a Link: tag to point to the
+report, as Linus and the documentation call for. Things happen, no
+worries -- but now the regression tracking bot needs to be told manually
+about the fix. See link in footer if these mails annoy you.]
 
-On Fri, Jun 02, 2023 at 11:39:54AM +0200, Paul Kocialkowski wrote:
-> Hi,
+On 08.05.23 14:29, Linux regression tracking #adding (Thorsten Leemhuis)
+wrote:
+> On 03.05.23 03:03, Chuck Lever III wrote:
+>>
+>> I have a Supermicro X10SRA-F/X10SRA-F with a ConnectX®-5 EN network
+>> interface card, 100GbE single-port QSFP28, PCIe3.0 x16, tall bracket;
+>> MCX515A-CCAT
+>>
+>> When booting a v6.3+ kernel, the boot process stops cold after a
+>> few seconds. The last message on the console is the MLX5 driver
+>> note about "PCIe slot advertised sufficient power (27W)".
+>>
+>> bisect reports that bbac70c74183 ("net/mlx5: Use newer affinity
+>> descriptor") is the first bad commit.
+>>
+>> I've trolled lore a couple of times and haven't found any discussion
+>> of this issue.
 > 
-> (Re-adding folks from the original email, adding Laurent and Hans.)
-> 
-> On Fri 02 Jun 23, 11:24, Martijn Braam wrote:
-> > Hi Paul,
-> > 
-> > That's basically it yes. My software doesn't expect the bridge block,
-> > because it wasn't there. The pipeline always worked "automatically".
-> > 
-> > This is the workaround that's been made now it run on newer kernels:
-> > https://gitlab.com/postmarketOS/megapixels/-/merge_requests/31
-> > 
-> > I'm pretty sure format propagation would fix this issue.
-> 
-> Okay that's good to know.
-> 
-> To be honest it's still not very clear to me if in-driver format propagation is
-> a "nice to have" feature or something that all media pipeline drivers are
-> supposed to implement.
+> #regzbot ^introduced bbac70c74183
+> #regzbot title system hang on start-up (irq or mlx5 problem?)
+> #regzbot ignore-activity
 
-For MC-based drivers, in-kernel propagation *inside* subdevs is
-mandatory, in-kernel propagration *between* subdevs is not allowed. The
-latter is the responsibility of userspace.
+#regzbot fix: 368591995d010e6
+#regzbot ignore-activity
 
-For traditional (I'd say legacy, but I know not everybody likes that
-term :-)) drivers that only expose video device nodes and do not expose
-subdev nodes to userspace, the driver is responsible for configuring the
-full pipeline internally based on the S_FMT call on the video nodes
-only. This isn't applicable to the sun6i-csi driver, as it exposes
-subdev nodes to userspace.
-
-> Anyway I feel like this is not really a regression but a result of the driver
-> being converted to a newer API.
-> 
-> Also there's a V4L2_CAP_IO_MC flag which should indicate that the video device
-> must be controlled via the media controller API instead of being
-> video-device-centric, but I've seen comments asking not to set the flag even
-> when MC is used so I'm a bit confused here.
-
-Would you have pointers to those comments ?
-
-> Perhaps the flag is only required when there is no automatic format
-> propagation?
-
-The flag is more or less required when you expose subdev nodes to
-userspace.
-
-> If anyone has solid answers on these points I'd be happy to read some
-> clarification (and act accordingly).
->
-> > On 6/2/23 11:16, Paul Kocialkowski wrote:
-> > > Hi Martijn,
-> > > 
-> > > On Thu 01 Jun 23, 23:19, Martijn Braam wrote:
-> > > > It seems like this commit:
-> > > > 
-> > > > media: sun6i-csi: Add bridge v4l2 subdev with port management
-> > > > 
-> > > > Has changed the way the media pipeline on a64 devices, in my case the PINE64
-> > > > PinePhone works. Since this is an API towards userspace and there's active
-> > > > applications that use it I think this counts as a regression.
-> > > Do you have more details on what changed specifically?
-> > > 
-> > > The commit added a bridge subdev in addition to the video node, which is
-> > > generally a better description of the CSI hardware and also a necessity
-> > > to support the ISP data flow.
-> > > 
-> > > Maybe your userspace application is not configuring the bridge media block with
-> > > the right format, which results in a mismatch?
-> > > 
-> > > Some work was started to achieve automatic format propagation, perhaps it
-> > > would be enough to solve your issue.
-> > > 
-> > > Cheers,
-> > > 
-> > > Paul
-> > > 
-> > > > #regzbot introduced: 0d2b746b1bef73de62d2d311e594a7ffed4ca43
-
--- 
-Regards,
-
-Laurent Pinchart
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+That page also explains what to do if mails like this annoy you.
