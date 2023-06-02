@@ -1,109 +1,125 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55A611B8FE
-	for <regressions@lists.linux.dev>; Fri,  2 Jun 2023 15:58:48 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1q57Aq-0000I3-Sx; Fri, 02 Jun 2023 17:58:44 +0200
-Message-ID: <2becd7c2-7aa1-41d9-117f-b118c4a6cb30@leemhuis.info>
-Date: Fri, 2 Jun 2023 17:58:43 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C72D1C758
+	for <regressions@lists.linux.dev>; Fri,  2 Jun 2023 16:12:53 +0000 (UTC)
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-651f2f38634so1699663b3a.0
+        for <regressions@lists.linux.dev>; Fri, 02 Jun 2023 09:12:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1685722373; x=1688314373;
+        h=content-transfer-encoding:author:mime-version:message-id:date
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=xhmHRyToIEmAAHnN/IwEZChyqNOsrqiKFOCxgESTvfk=;
+        b=QNqMgXaW84FsS8Ck/A01cCxyIWV84qC3tILHwN+hr/GzQjLA0wd4t3wXIVaxYnnxel
+         QsT4pQmmRs/82EGyBEjvl94cgJTi3sOXjQB2iLGWt1WQs1TBs9j4LwGPQXzSjhslTuvP
+         XQro5oj1YkzyXdWiiMjhuiDZXpvOAW/kQZZQMF40e/RV3z0hfv5SviuOyehzWw1v9ukb
+         7UhpStmtLpjLFSg0Qm8wyYbYAhRqsipubfh6crqw4nMyRS4VGrnugWgxzJJM7EvaWFm0
+         x2GSwpX8E/GVTQSbsWMMeE8g5CnvJ8IwbvzumguJQMI7Ut2qSuoWkWa27rtR5myWANlB
+         fWCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685722373; x=1688314373;
+        h=content-transfer-encoding:author:mime-version:message-id:date
+         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xhmHRyToIEmAAHnN/IwEZChyqNOsrqiKFOCxgESTvfk=;
+        b=RdOXuck9wd45rW5xxJHjteinOJ8RfiVUM6ChXBAt1jqwOst2ejzSif19Y/6ds11EfM
+         rNLM0Mugi+wjCTZBeDrmaiU0aRnLwpgiCaYMJGJ4Epq5E9mvQJVzmb9vhhIQaQvQNhf9
+         MBOGZuq5jouzB7NrFFBHiOMOZPAnot/laWskIdW+q3OVNPvOkMAmeXPo+nFEedldcEMP
+         6gE9CUdMY0GfGm7Z2vQ/gDmB64jnrjsZPuzX1mAPfymmGyFdZcLq1RJzHk9IbK7CI3cL
+         /m1Fz0+lcoSgIT6GAlHVTEYOeVZbwhlvxK38P9qm5APhnFVcvj9lpXV4NkbbVVfkR5aN
+         Xs1g==
+X-Gm-Message-State: AC+VfDznID59b3Gjm2vgKpRQev7x8OQOao7ct4c6nPY4iB5SLCFbhdiQ
+	pWBSS0Qg6VoPl+Mxa/A9WCLjBA==
+X-Google-Smtp-Source: ACHHUZ6oiEWSgd6EGNqsh+9/KWnn2XOtzx0RThiCm670UWl9NCNn/53nT/5blXc9/ZCXPcNFLV+mLg==
+X-Received: by 2002:a05:6a00:15c7:b0:646:6cc3:4a52 with SMTP id o7-20020a056a0015c700b006466cc34a52mr16570169pfu.3.1685722373382;
+        Fri, 02 Jun 2023 09:12:53 -0700 (PDT)
+Received: from localhost.localdomain ([49.207.50.231])
+        by smtp.gmail.com with ESMTPSA id 9-20020aa79149000000b00652a72b89d1sm1197014pfi.170.2023.06.02.09.12.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 02 Jun 2023 09:12:52 -0700 (PDT)
+From: Amit Pundir <amit.pundir@linaro.org>
+To: Mark Brown <broonie@kernel.org>,
+	Doug Anderson <dianders@chromium.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Andy Gross <agross@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Caleb Connolly <caleb.connolly@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: regressions <regressions@lists.linux.dev>,
+	linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+	dt <devicetree@vger.kernel.org>,
+	lkml <linux-kernel@vger.kernel.org>
+Subject: [PATCH] arm64: dts: qcom: sdm845-db845c: Move LVS regulator nodes up
+Date: Fri,  2 Jun 2023 21:42:46 +0530
+Message-Id: <20230602161246.1855448-1-amit.pundir@linaro.org>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: system hang on start-up (mlx5?)
-To: Jason Gunthorpe <jgg@ziepe.ca>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Chuck Lever III <chuck.lever@oracle.com>,
- "elic@nvidia.com" <elic@nvidia.com>, "saeedm@nvidia.com"
- <saeedm@nvidia.com>, Leon Romanovsky <leon@kernel.org>,
- linux-rdma <linux-rdma@vger.kernel.org>,
- "open list:NETWORKING [GENERAL]" <netdev@vger.kernel.org>
-References: <A1E5B427-897B-409E-B8E3-E417678E81F6@oracle.com>
- <bf2594bb-94e0-5c89-88ad-935dee2ac95c@leemhuis.info>
- <5b235e0f-cd4c-a453-d648-5a4e9080ac19@leemhuis.info>
- <AAFDF38A-E59A-4D6A-8EC2-113861C8B5DB@oracle.com>
- <bb2df75d-05be-3f7b-693a-84be195dc2f1@leemhuis.info>
- <ZHn8xALvQ/wKER1t@ziepe.ca>
-Content-Language: en-US, de-DE
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <ZHn8xALvQ/wKER1t@ziepe.ca>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1685721528;52d41c00;
-X-HE-SMSGID: 1q57Aq-0000I3-Sx
+Author: Amit Pundir <amit.pundir@linaro.org>
+Content-Transfer-Encoding: 8bit
 
-On 02.06.23 16:29, Jason Gunthorpe wrote:
-> On Fri, Jun 02, 2023 at 03:55:43PM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
->> On 02.06.23 15:38, Chuck Lever III wrote:
->>>
->>>> On Jun 2, 2023, at 7:05 AM, Linux regression tracking #update (Thorsten Leemhuis) <regressions@leemhuis.info> wrote:
->>>>
->>>> [TLDR: This mail in primarily relevant for Linux regression tracking. A
->>>> change or fix related to the regression discussed in this thread was
->>>> posted or applied, but it did not use a Link: tag to point to the
->>>> report, as Linus and the documentation call for.
->>>
->>> Linus recently stated he did not like Link: tags pointing to an
->>> email thread on lore.
->>
->> Afaik he strongly dislikes them when a Link: tag just points to the
->> submission of the patch being applied;
-> 
-> He has said that, but AFAICT enough maintainers disagree that we are
-> still adding Link tags to the submission as a glorified Change-Id
-> [...]
+Move lvs1 and lvs2 regulator nodes up in the rpmh-regulators
+list to workaround a boot regression uncovered by the upstream
+commit ad44ac082fdf ("regulator: qcom-rpmh: Revert "regulator:
+qcom-rpmh: Use PROBE_FORCE_SYNCHRONOUS"").
 
-Which is totally fine for me, I only want the links to the reports, too.
-And I for now don't even care if the latter are added using Closes: or
-Link:.
+Without this fix DB845c fail to boot at times because one of the
+lvs1 or lvs2 regulators fail to turn ON in time.
 
-> When done well these do provide information because the cover letter
-> should back link to all prior version of the series and you can then
-> capture the entire discussion, although manually.
+Link: https://lore.kernel.org/all/CAMi1Hd1avQDcDQf137m2auz2znov4XL8YGrLZsw5edb-NtRJRw@mail.gmail.com/
+Signed-off-by: Amit Pundir <amit.pundir@linaro.org>
+---
+ arch/arm64/boot/dts/qcom/sdm845-db845c.dts | 24 +++++++++++-----------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
-I kinda agree. OTOH I like even more when subsystem put the cover letter
-text in a merge commit, *if* the cover letter contains important details.
+diff --git a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
+index e14fe9bbb386..df2fde9063dc 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
++++ b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
+@@ -301,6 +301,18 @@ regulators-0 {
+ 		vdd-l26-supply = <&vreg_s3a_1p35>;
+ 		vin-lvs-1-2-supply = <&vreg_s4a_1p8>;
+ 
++		vreg_lvs1a_1p8: lvs1 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++			regulator-always-on;
++		};
++
++		vreg_lvs2a_1p8: lvs2 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++			regulator-always-on;
++		};
++
+ 		vreg_s3a_1p35: smps3 {
+ 			regulator-min-microvolt = <1352000>;
+ 			regulator-max-microvolt = <1352000>;
+@@ -381,18 +393,6 @@ vreg_l26a_1p2: ldo26 {
+ 			regulator-max-microvolt = <1200000>;
+ 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+ 		};
+-
+-		vreg_lvs1a_1p8: lvs1 {
+-			regulator-min-microvolt = <1800000>;
+-			regulator-max-microvolt = <1800000>;
+-			regulator-always-on;
+-		};
+-
+-		vreg_lvs2a_1p8: lvs2 {
+-			regulator-min-microvolt = <1800000>;
+-			regulator-max-microvolt = <1800000>;
+-			regulator-always-on;
+-		};
+ 	};
+ 
+ 	regulators-1 {
+-- 
+2.25.1
 
->> at the same time he *really wants* those links if they tell the
->> backstory how a fix came into being, which definitely includes the
->> report about the issue being fixed (side note: without those links
->> regression tracking becomes so hard that it's basically no
->> feasible).
-> 
-> Yes, but this started to get a bit redundant as we now have
-> 
->  Reported-by:  xx@syzkaller
-> 
-> Which does identify the original bug and all its places, and now
-> people are adding links to the syzkaller email too because checkpatch
-> is complaining.
-
-For syzkaller it's redundant, yes, but for some other CIs and manual
-reports it's useful and nothing new afaics (a lot of people just were
-not aware of it). And FWIW, it's a warning, not a error to indicate:
-there are situation when this can be ignored.
-
->>> Also, checkpatch.pl is now complaining about Closes: tags instead
->>> of Link: tags. A bug was never opened for this issue.
->>
->> That was a change by somebody else, but FWIW, just use Closes: (instead
->> of Link:) with a link to the report on lore, that tag is not reserved
->> for bugs.
->>
->> /me will go and update his boilerplate text used above
-> 
-> And now you say they should be closes not link?
-> 
-> Oy it makes my head hurt all these rules.
-
-In case you want the backstory (which I doubt :-D ), see here:
-
-https://lore.kernel.org/lkml/20230314-doc-checkpatch-closes-tag-v4-0-d26d1fa66f9f@tessares.net/
-
-Ciao, Thorsten
