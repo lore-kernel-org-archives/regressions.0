@@ -1,13 +1,45 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76648440D
-	for <regressions@lists.linux.dev>; Sun,  4 Jun 2023 09:53:38 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1q5kQR-000400-Pp; Sun, 04 Jun 2023 11:53:27 +0200
-Message-ID: <abf51606-b34b-0144-90a3-6d06cf4171b2@leemhuis.info>
-Date: Sun, 4 Jun 2023 11:53:27 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBF7B23A8
+	for <regressions@lists.linux.dev>; Sun,  4 Jun 2023 11:38:15 +0000 (UTC)
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-969f90d71d4so549818766b.3
+        for <regressions@lists.linux.dev>; Sun, 04 Jun 2023 04:38:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1685878694; x=1688470694;
+        h=content-transfer-encoding:cc:to:subject:from:content-language
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2rusAMMBSsBeXYA05kondalVZp5FCvnTK7F71ZNyoHA=;
+        b=Hx+hqVphtxbMNEM4q6MqwH6e5HM2MEZhOZsLz7RcZBQ1fTsrGHwlYhiVzKhx4GcQ5l
+         aGKT8ihhXJjnhkn7f7BNZEUpyP+ac5oaanUG+3aJWLSQ0akF+LnG6W84LffssMXa4awX
+         gXcw23gxi740htLd7MPcS+ke9QtDdLYBpyRXITdHrdRqFxbgAkxAVXlaOwmnO9LPkUr8
+         b7z/Uj9BAjcAf1mdw5tLla90XRMqO2DmPGIb4wd633YqhHQf7QC4P0AAEHZxK+axYihU
+         JVMTkO+ZJJVbWcIV+g3JMQ6CepjW80oT69k5KhDCgNvVOyTcrtt9HRVYDJ4FGSP+FSEO
+         N5yg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685878694; x=1688470694;
+        h=content-transfer-encoding:cc:to:subject:from:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=2rusAMMBSsBeXYA05kondalVZp5FCvnTK7F71ZNyoHA=;
+        b=gkMU2vpKOCSH7w2oScrjGMQFsJYk+Ub+Oy3BUgoWfZIlG3fl0zGmtHefrGEnSr/6af
+         vBR/y2HZIh6/kmWZGB0fVLZvgz2Ez2N4IiYmT2GZqXWaMm/o0IsAYLYT+d7RBOSAR2xp
+         RNBycsFJHdFkU/tVXBHoz8oN6MGKy9EOJqYDmJw5ThmKFIy8fAH1+ODUWDRzZz4e1K2H
+         teoREK9RNH/J2D7/pEUhlrst1S2bENXsLx+NpdnqrnBbJrJVuCVPx9rg7s7WKCSMe1eF
+         yMRJlWHdI7jfDLjtU89l+3ouHLVRXCCNeDsWoskSi4BVFMJDzEdAqixW6DDQoPdarM4S
+         UeSw==
+X-Gm-Message-State: AC+VfDxV1uhYsegN4JP41ZDZnj6oOPUWZdH/wF2VaZ9gZmww6UCiqRU5
+	+w+9biK+RwNko9XpbHp+cRXr1g==
+X-Google-Smtp-Source: ACHHUZ4jFxPvDAEztjDERKQ4kdD7IgyPuWYCoXh2O0zZkoZdRwdA1z1k/JdpolPkyx0uECm1fBTKbQ==
+X-Received: by 2002:a17:907:3f27:b0:94b:d57e:9d4b with SMTP id hq39-20020a1709073f2700b0094bd57e9d4bmr3848146ejc.2.1685878693835;
+        Sun, 04 Jun 2023 04:38:13 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.199.204])
+        by smtp.gmail.com with ESMTPSA id g7-20020a1709063b0700b0097073f1ed84sm2947090ejf.4.2023.06.04.04.38.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 04 Jun 2023 04:38:13 -0700 (PDT)
+Message-ID: <3abd3693-ad87-9abf-a762-337076638fcc@linaro.org>
+Date: Sun, 4 Jun 2023 13:38:10 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -15,70 +47,53 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: [PATCH rcu 11/20] srcu: Move grace-period fields from srcu_struct
- to srcu_usage
-Content-Language: en-US, de-DE
-To: Jon Hunter <jonathanh@nvidia.com>, "Paul E. McKenney"
- <paulmck@kernel.org>, rcu@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, kernel-team@meta.com, rostedt@goodmis.org,
- hch@lst.de, Sachin Sant <sachinp@linux.ibm.com>,
- "Zhang, Qiang1" <qiang1.zhang@intel.com>,
- "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <f1b6cd5f-f0b7-4748-abd5-0dcfef0ce126@paulmck-laptop>
- <20230330224726.662344-11-paulmck@kernel.org>
- <6549da46-dddc-67ac-73c4-966965addad7@nvidia.com>
-From: "Linux regression tracking #adding (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-In-Reply-To: <6549da46-dddc-67ac-73c4-966965addad7@nvidia.com>
+ Thunderbird/102.11.2
+Content-Language: en-US
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [REGRESSION][BISECT] perf/core: Remove pmu linear searching code
+To: Ravi Bangoria <ravi.bangoria@amd.com>,
+ "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Cc: mark.rutland@arm.com, jolsa@kernel.org, irogers@google.com, bp@alien8.de,
+ adrian.hunter@intel.com, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1685872418;1b1dae49;
-X-HE-SMSGID: 1q5kQR-000400-Pp
 
-[CCing the regression list, as it should be in the loop for regressions:
-https://docs.kernel.org/admin-guide/reporting-regressions.html]
+Hi,
 
-[TLDR: I'm adding this report to the list of tracked Linux kernel
-regressions; the text you find below is based on a few templates
-paragraphs you might have encountered already in similar form.
-See link in footer if these mails annoy you.]
+#regzbot introduced: 9551fbb64d09
 
-On 01.06.23 13:14, Jon Hunter wrote:
-> 
-> On 30/03/2023 23:47, Paul E. McKenney wrote:
->> This commit moves the ->srcu_gp_seq, ->srcu_gp_seq_needed,
->> ->srcu_gp_seq_needed_exp, ->srcu_gp_start, and ->srcu_last_gp_end fields
->> from the srcu_struct structure to the srcu_usage structure to reduce
->> the size of the former in order to improve cache locality.
->>
->> Suggested-by: Christoph Hellwig <hch@lst.de>
->> Tested-by: Sachin Sant <sachinp@linux.ibm.com>
->> Tested-by: "Zhang, Qiang1" <qiang1.zhang@intel.com>
->> Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> 
-> 
-> I have noticed a suspend regression on some of our Tegra boards recently
-> with v6.4-rc and interestingly bisect is pointing to this commit. I was
-> unable revert this on top of the latest mainline but if I checkout this
-> commit suspend fails and if I checkout the previous commit is passes.
+Bisect pointed to commit 9551fbb64d09 ("perf/core: Remove pmu linear
+searching code") as first one where all hardware events are gone from
+perf for ARMv7 Exynos5422 board.
 
-Thanks for the report. To be sure the issue doesn't fall through the
-cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
-tracking bot:
+Expected:
+perf list | grep "Hardware event"
+  branch-instructions OR branches                    [Hardware event]
+  branch-misses                                      [Hardware event]
+  bus-cycles                                         [Hardware event]
+  cache-misses                                       [Hardware event]
+  cache-references                                   [Hardware event]
+  cpu-cycles OR cycles                               [Hardware event]
+  instructions                                       [Hardware event]
 
-#regzbot ^introduced 95433f726301
-#regzbot title rcu: "spinlock bad magic" BUG when the SRCU notifier was
-ever used
-#regzbot monitor:
-https://lore.kernel.org/all/20230526073539.339203-1-wenst@chromium.org/
-#regzbot fix: notifier: Initialize new struct srcu_usage field
-#regzbot ignore-activity
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+Result:
+empty, no hardware events
+
+1. Arch ARM Linux
+2. exynos_defconfig
+3. Board:
+   - Odroid HC1
+     ARMv7, octa-core (Cortex-A7+A15), Exynos5422 SoC
+     Systemd: v239
+
+4. perf version 6.1.0
+
+
+Best regards,
+Krzysztof
