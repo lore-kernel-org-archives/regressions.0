@@ -1,89 +1,93 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D558194
-	for <regressions@lists.linux.dev>; Mon,  5 Jun 2023 07:10:29 +0000 (UTC)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8936DD75;
-	Mon,  5 Jun 2023 00:11:08 -0700 (PDT)
-Received: from FVFF77S0Q05N (unknown [10.57.24.244])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1C0223F793;
-	Mon,  5 Jun 2023 00:10:20 -0700 (PDT)
-Date: Mon, 5 Jun 2023 08:10:15 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Ravi Bangoria <ravi.bangoria@amd.com>,
-	"Peter Zijlstra (Intel)" <peterz@infradead.org>
-Cc: jolsa@kernel.org, irogers@google.com, bp@alien8.de,
-	adrian.hunter@intel.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: Re: [REGRESSION][BISECT] perf/core: Remove pmu linear searching code
-Message-ID: <ZH2KVyyC5oMr+Vk2@FVFF77S0Q05N>
-References: <3abd3693-ad87-9abf-a762-337076638fcc@linaro.org>
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14D5E194
+	for <regressions@lists.linux.dev>; Mon,  5 Jun 2023 07:20:36 +0000 (UTC)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id B82B11F8AB;
+	Mon,  5 Jun 2023 07:14:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1685949289; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6PNAzC4+lF/Nlwf1tBYjOxSIek3iH+12i0TgWraECWQ=;
+	b=u+meWo3JyCK/uZg2779nZH6YEZQvsGTzNo2jl0K20h11klgXJNO17VBH4KI4J9KhC3Oqnc
+	FdPU+vzHSwStreEH9jav1CNnQZpEIDI2JSiBaWjQowfMTEkDthaxeZK+b4oGcGgz6DMdRG
+	62+wkKoPJgQF5M2HcvP7p8kcupJg5cs=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1685949289;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6PNAzC4+lF/Nlwf1tBYjOxSIek3iH+12i0TgWraECWQ=;
+	b=IsVsqe2z0kcrx+VpG0MAL+77b8UNjmfxeNVEIVwXqkdijleynkiYZQsgbABE45K+ZkjfJ6
+	+QbDr6/NSF1XtEAw==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 8703A139C7;
+	Mon,  5 Jun 2023 07:14:49 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+	by imap2.suse-dmz.suse.de with ESMTPSA
+	id lz3nH2mLfWS6ZQAAMHmgww
+	(envelope-from <tiwai@suse.de>); Mon, 05 Jun 2023 07:14:49 +0000
+Date: Mon, 05 Jun 2023 09:14:49 +0200
+Message-ID: <873536js7q.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: "Joseph C. Sible" <josephcsible@gmail.com>
+Cc: Kailang <kailang@realtek.com>,
+	Bagas Sanjaya <bagasdotme@gmail.com>,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+	"perex@perex.cz" <perex@perex.cz>,
+	"tiwai@suse.com" <tiwai@suse.com>,
+	"alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
+Subject: Re: Fwd: [Bug 217440] New: ALC236 audio disappears from HP 15z-fc000 on warm boot
+In-Reply-To: <CABpewhGBakDSBLKZ1cr2=OMspuu3qyYwZrsXUggQ3vt8gsD88A@mail.gmail.com>
+References: <bug-217440-225600@https.bugzilla.kernel.org/>
+	<CABpewhE4REgn9RJZduuEU6Z_ijXNeQWnrxO1tg70Gkw=F8qNYg@mail.gmail.com>
+	<ZGB0cVVI7OgaJU6t@debian.me>
+	<CABpewhGJE7-k52j8L2kJ2zKupgp3Ma+LdZazzzV4w1Bgihp7nw@mail.gmail.com>
+	<87cz338ix4.wl-tiwai@suse.de>
+	<CABpewhF01AK4cFPbwYVvKR9yWaO7o-ZE-2+MZjYSUF0BKUdYvw@mail.gmail.com>
+	<874jodlnmi.wl-tiwai@suse.de>
+	<415d4bc84aa74c74af913048f28b42a9@realtek.com>
+	<87fs7mdofi.wl-tiwai@suse.de>
+	<7da2fdfdae614b1c98deda6e11ca34eb@realtek.com>
+	<87353kd8b9.wl-tiwai@suse.de>
+	<1170325957764b4cbd7cd3639575f285@realtek.com>
+	<CABpewhGBakDSBLKZ1cr2=OMspuu3qyYwZrsXUggQ3vt8gsD88A@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3abd3693-ad87-9abf-a762-337076638fcc@linaro.org>
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Sun, Jun 04, 2023 at 01:38:10PM +0200, Krzysztof Kozlowski wrote:
-> Hi,
+On Fri, 26 May 2023 16:58:58 +0200,
+Joseph C. Sible wrote:
 > 
-> #regzbot introduced: 9551fbb64d09
+> On Fri, May 26, 2023 at 4:09 AM Kailang <kailang@realtek.com> wrote:
+> > Hi Joseph,
+> >
+> > Could you test it with below model name?
+> > ==> alc-chrome-book
 > 
-> Bisect pointed to commit 9551fbb64d09 ("perf/core: Remove pmu linear
-> searching code") as first one where all hardware events are gone from
-> perf for ARMv7 Exynos5422 board.
+> Yes, manually overriding the model name to "alc-chrome-book" makes it
+> work properly even on an unmodified 6.3.4 kernel.
 
-I think that commit 9551fbb64d09 is just wrong.
+Kailang or Joseph, any of you can submit a fix patch?
+Or shall I cook the one, as it's a trivial change?
 
-The commit message asserts:
 
-  Searching for the right pmu by iterating over all pmus is no longer
-  required since all pmus now *must* be present in the 'pmu_idr' list.
-  So, remove linear searching code.
+thanks,
 
-... and while each PMU has *some* entry in the pmu_idr list, for its dynamic
-type, that means that events with other types (e.g. PERF_TYPE_HARDWARE or
-PERF_TYPE_RAW) will fail to find a PMU in the IDR whereas they'd previously
-have been accepted by a PMU during the subsequent iteration over all PMUs.
-
-So that iteration is still required.
-
-How does this work on x86? Do you have pseudo-PMUs for PERF_TYPE_HARDWARE and
-PERF_TYPE_RAW ?
-
-Thanks,
-Mark.
-
-> Expected:
-> perf list | grep "Hardware event"
->   branch-instructions OR branches                    [Hardware event]
->   branch-misses                                      [Hardware event]
->   bus-cycles                                         [Hardware event]
->   cache-misses                                       [Hardware event]
->   cache-references                                   [Hardware event]
->   cpu-cycles OR cycles                               [Hardware event]
->   instructions                                       [Hardware event]
-> 
-> 
-> Result:
-> empty, no hardware events
-> 
-> 1. Arch ARM Linux
-> 2. exynos_defconfig
-> 3. Board:
->    - Odroid HC1
->      ARMv7, octa-core (Cortex-A7+A15), Exynos5422 SoC
->      Systemd: v239
-> 
-> 4. perf version 6.1.0
-> 
-> 
-> Best regards,
-> Krzysztof
+Takashi
