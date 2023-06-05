@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BBE7F9E8
-	for <regressions@lists.linux.dev>; Mon,  5 Jun 2023 11:40:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8F90134BE
+	for <regressions@lists.linux.dev>; Mon,  5 Jun 2023 13:27:46 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1q68Zj-00066i-3a; Mon, 05 Jun 2023 13:40:39 +0200
-Message-ID: <0cb222dc-6eba-2edc-886b-1e9d75ef750c@leemhuis.info>
-Date: Mon, 5 Jun 2023 13:40:38 +0200
+	id 1q6AFM-0005EE-3W; Mon, 05 Jun 2023 15:27:44 +0200
+Message-ID: <57eeb4d5-01de-b443-be8e-50b08c132e95@leemhuis.info>
+Date: Mon, 5 Jun 2023 15:27:43 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,70 +16,56 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.10.0
-Subject: Re: [Bug 216646] having TRANSPARENT_HUGEPAGE enabled hangs some
- applications (supervisor read access in kernel mode)
 Content-Language: en-US, de-DE
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Mikhail Pletenv <mmp.dux@gmail.com>
-Cc: bugzilla-daemon@kernel.org, linux-mm@kvack.org,
- Andrew Morton <akpm@linux-foundation.org>, decedion@gmail.com,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- Matthew Wilcox <willy@infradead.org>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>,
+To: "Darrick J. Wong" <djwong@kernel.org>,
  Linux regressions mailing list <regressions@lists.linux.dev>
-References: <bug-216646-27@https.bugzilla.kernel.org/>
- <bug-216646-27-o4jKola2S5@https.bugzilla.kernel.org/>
- <20221121125400.334190a6d2791b0c9afbfea0@linux-foundation.org>
- <220fd094-7cf1-9d17-8380-98d5663dc5da@leemhuis.info>
- <Y4ouwhqSyDV7I+D9@casper.infradead.org>
- <Y4p0tbbbQ5JkyZs5@casper.infradead.org>
- <20221203014420.76281b930dbc64f51eda0f8b@gmail.com>
- <Y45Tp1Br2Em8e3Fr@casper.infradead.org>
- <20221206050845.6ba9351cef3295be4b923ea8@gmail.com>
- <69b81148-8e62-d697-e92b-c3b042214a09@leemhuis.info>
- <e9528025-afcc-bde0-dba4-24d2074ad52d@leemhuis.info>
- <edd93326-513b-71d4-82eb-aabdfa9e3c90@gmail.com>
- <7f90d893-c6ac-1fc9-3804-daa77b9f43fd@leemhuis.info>
- <dbf86aac-1afb-8439-ad05-92fb8f2698c5@leemhuis.info>
-In-Reply-To: <dbf86aac-1afb-8439-ad05-92fb8f2698c5@leemhuis.info>
+Cc: "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
+ shrikanth hegde <sshegde@linux.vnet.ibm.com>, dchinner@redhat.com,
+ linux-xfs@vger.kernel.org, Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+ ojaswin@linux.ibm.com
+References: <87zg88atiw.fsf@doe.com>
+ <33c9674c-8493-1b23-0efb-5c511892b68a@leemhuis.info>
+ <20230418045615.GC360889@frogsfrogsfrogs>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Subject: Re: xfs: system fails to boot up due to Internal error
+ xfs_trans_cancel
+In-Reply-To: <20230418045615.GC360889@frogsfrogsfrogs>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1685965243;8b3f7092;
-X-HE-SMSGID: 1q68Zj-00066i-3a
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1685971667;abed5150;
+X-HE-SMSGID: 1q6AFM-0005EE-3W
 
-On 17.04.23 13:12, Linux regression tracking (Thorsten Leemhuis) wrote:
-> On 14.03.23 11:17, Linux regression tracking (Thorsten Leemhuis) wrote:
->> On 24.02.23 19:08, Mikhail Pletenv wrote:
->>> I did some more testing on v6.1.12 and reproduced the issue. But i have
->>> new bit of information: since the last time i've seen this issue i've
->>> migrated most of my storage from XFS to BTRFS and i couldn't reproduce
->>> the issue again today until i switched the source volume in the test
->>> back to XFS. So it seems bug is either in the way that XFS talks to
->>> mm/folios or is just triggered by it.
->>>
->>> anyway, i attached a report from v6.1.2 (seems to be happening in the
->>> same place)
+/me waves friendly
+
+On 18.04.23 06:56, Darrick J. Wong wrote:
+> On Mon, Apr 17, 2023 at 01:16:53PM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
+>> Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
+>> for once, to make this easily accessible to everyone.
 >>
->> Hi Willy! I'd like to bring this back onto your radar, as this
->> regression is still unsolved afaics -- the patch you provided only
->> partially helped. Or was progress to fix this made in a different thread
->> and I just missed it?
+>> Has any progress been made to fix below regression? It doesn't look like
+>> it from here, hence I wondered if it fall through the cracks. Or is
+>> there some good reason why this is safe to ignore?
 > 
-> Willy, I know, I'm kinda annoying, but it's part of my job, hence please
-> allow me to ask:
-> 
-> Do you still have this regression on your todo list somewhere? The
-> problem is now known and bisected since November. I understand that this
-> is not something that can be fixed quickly, but at the same time it's
-> quite a while already.
-> 
-> Or has progress to fix this been made and I just it?
+> Still working on thinking up a reasonable strategy to reload the incore
+> iunlink list if we trip over this.  Online repair now knows how to do
+> this[1], but I haven't had time to figure out if this will work
+> generally.  [...]
 
-Hmm, no reply. Does nobody care anymore or was this resolved and I just
-missed it?
+I still have this issue on my list of tracked regressions, hence please
+allow me to ask: was there any progress to resolve this? Doesn't look
+like it, but from my point it's easy to miss something.
 
-Mikhail Pletnev: is the problem still happening with latest mainline? Or
-deid you stop caring after you migrated your storage to btrfs?
+BTW, in case this was not yet addressed: if you have a few seconds,
+could you please (just briefly!) explain why it seems to take quite a
+while to resolve this? A "not booting" regressions sounds like something
+that I'm pretty sure Linus normally wants to see addressed rather sooner
+than later. But that apparently is not the case here. I know that XFS
+devs normally take regressions seriously, hence I assume there are good
+reasons for it. But I'd like to roughly understand them (is this a
+extremely corner case issue others are unlike to run into or something
+like that?), as I don't want Linus on my back with questions like "why
+didn't you put more pressure on the XFS maintainers" or "you should have
+told me about this".
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
@@ -87,246 +73,312 @@ Everything you wanna know about Linux kernel regression tracking:
 https://linux-regtracking.leemhuis.info/about/#tldr
 If I did something stupid, please tell me, as explained on that page.
 
->>> On 2/24/23 13:21, Linux regression tracking (Thorsten Leemhuis) wrote:
->>>> On 16.12.22 06:23, Thorsten Leemhuis wrote:
->>>>> Hi, this is your Linux kernel regression tracker. Top-posting for once,
->>>>> to make this easily accessible to everyone.
->>>> /me again
->>>>
->>>>> Was some progress made to get this regression resolved? From here it
->>>>> looks kinda stalled, that's why I'm asking -- but maybe I just missed
->>>>> something.
->>>> Did anything happen to get this regression resolved? Doesn't look like
->>>> it, but maybe I missed some progress.
->>>>
->>>> Willy, Mikhail confirmed off-list to me that the problem still exists.
->>>> He also tried you patch and reported back. Is there something else you
->>>> need?
->>>>
->>>> Side note: I lost this out of sight during the festive season and should
->>>> have asked this earlier, but better late than never. :-D
->>>>
->>>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
->>>> -- 
->>>> Everything you wanna know about Linux kernel regression tracking:
->>>> https://linux-regtracking.leemhuis.info/about/#tldr
->>>> If I did something stupid, please tell me, as explained on that page.
->>>>
->>>> #regzbot poke
->>>>
->>>>> On 06.12.22 03:08, Mikhail Pletnev wrote:
->>>>>> On Mon, 5 Dec 2022 20:25:11 +0000
->>>>>> Matthew Wilcox <willy@infradead.org> wrote:
->>>>>>> Thanks!  I think this may be the problem ...
->>>>>>>
->>>>>> Hi Matthew, thanks for swift response, i've applied your last patch
->>>>>> and ran my stress test a couple of times. It's still constistently
->>>>>> crashing (albeit it seems in a different place):
->>>>>>
->>>>>> [ 1975.257126] ***BAD SIBLING*** index 912583 offset 4
->>>>>> [ 1975.257128] node ffff9fc817e01ff0 offset 51 parent
->>>>>> ffff9fc5c7a31ff0 shift 0 count 64 values 48 array ffff9fc521173e80
->>>>>> list ffff9fc817e02008 ffff9fc817e02008 marks 0 0 0
->>>>>> [ 1975.257133] BUG: kernel NULL pointer dereference, address:
->>>>>> 0000000000000036
->>>>>> [ 1975.257135] #PF: supervisor read access in kernel mode
->>>>>> [ 1975.257137] #PF: error_code(0x0000) - not-present page
->>>>>> [ 1975.257138] PGD 0 P4D 0
->>>>>> [ 1975.257139] Oops: 0000 [#1] PREEMPT SMP NOPTI
->>>>>> [ 1975.257141] CPU: 5 PID: 8303 Comm: deluge-gtk Not tainted
->>>>>> 5.17.0-rc4_ap_test-00163-g793917d997df-dirty #6
->>>>>> [ 1975.257144] Hardware name: Micro-Star International Co., Ltd.
->>>>>> MS-7C35/MEG X570 UNIFY (MS-7C35), BIOS A.C3 03/15/2022
->>>>>> [ 1975.257146] RIP: 0010:__filemap_get_folio
->>>>>> (/home/reinhardt/dev-apps/kernel/linux/./arch/x86/include/asm/atomic.h:29 /home/reinhardt/dev-apps/kernel/linux/./include/linux/atomic/atomic-arch-fallback.h:1158 /home/reinhardt/dev-apps/kernel/linux/./include/linux/atomic/atomic-arch-fallback.h:1183 /home/reinhardt/dev-apps/kernel/linux/./include/linux/atomic/atomic-instrumented.h:608 /home/reinhardt/dev-apps/kernel/linux/./include/linux/page_ref.h:238 /home/reinhardt/dev-apps/kernel/linux/./include/linux/page_ref.h:247 /home/reinhardt/dev-apps/kernel/linux/./include/linux/page_ref.h:280 /home/reinhardt/dev-apps/kernel/linux/./include/linux/page_ref.h:313 /home/reinhardt/dev-apps/kernel/linux/mm/filemap.c:1899 /home/reinhardt/dev-apps/kernel/linux/mm/filemap.c:1951)
->>>>>> [ 1975.257152] Code: 10 e8 56 fd 67 00 48 89 c3 48 3d 02 04 00 00 74
->>>>>> e2 48 3d 06 04 00 00 74 da 48 85 c0 0f 84 3e 02 00 00 a8 01 0f 85 40
->>>>>> 02 00 00 <8b> 40 34 85 c0 74 c2 8d 50 01 f0 0f b1 53 34 75 f2 48 8b
->>>>>> 54 24 28
->>>>>> All code
->>>>>> ========
->>>>>>     0:    10 e8                    adc    %ch,%al
->>>>>>     2:    56                       push   %rsi
->>>>>>     3:    fd                       std
->>>>>>     4:    67 00 48 89              add    %cl,-0x77(%eax)
->>>>>>     8:    c3                       ret
->>>>>>     9:    48 3d 02 04 00 00        cmp    $0x402,%rax
->>>>>>     f:    74 e2                    je     0xfffffffffffffff3
->>>>>>    11:    48 3d 06 04 00 00        cmp    $0x406,%rax
->>>>>>    17:    74 da                    je     0xfffffffffffffff3
->>>>>>    19:    48 85 c0                 test   %rax,%rax
->>>>>>    1c:    0f 84 3e 02 00 00        je     0x260
->>>>>>    22:    a8 01                    test   $0x1,%al
->>>>>>    24:    0f 85 40 02 00 00        jne    0x26a
->>>>>>    2a:*    8b 40 34                 mov    0x34(%rax),%eax       
->>>>>> <-- trapping instruction
->>>>>>    2d:    85 c0                    test   %eax,%eax
->>>>>>    2f:    74 c2                    je     0xfffffffffffffff3
->>>>>>    31:    8d 50 01                 lea    0x1(%rax),%edx
->>>>>>    34:    f0 0f b1 53 34           lock cmpxchg %edx,0x34(%rbx)
->>>>>>    39:    75 f2                    jne    0x2d
->>>>>>    3b:    48 8b 54 24 28           mov    0x28(%rsp),%rdx
->>>>>>
->>>>>> Code starting with the faulting instruction
->>>>>> ===========================================
->>>>>>     0:    8b 40 34                 mov    0x34(%rax),%eax
->>>>>>     3:    85 c0                    test   %eax,%eax
->>>>>>     5:    74 c2                    je     0xffffffffffffffc9
->>>>>>     7:    8d 50 01                 lea    0x1(%rax),%edx
->>>>>>     a:    f0 0f b1 53 34           lock cmpxchg %edx,0x34(%rbx)
->>>>>>     f:    75 f2                    jne    0x3
->>>>>>    11:    48 8b 54 24 28           mov    0x28(%rsp),%rdx
->>>>>> [ 1975.257154] RSP: 0000:ffffc2d744c37cb0 EFLAGS: 00010246
->>>>>> [ 1975.257155] RAX: 0000000000000002 RBX: 0000000000000002 RCX:
->>>>>> 0000000000000000
->>>>>> [ 1975.257156] RDX: 0000000000000000 RSI: ffffffffbb117459 RDI:
->>>>>> 00000000ffffffff
->>>>>> [ 1975.257157] RBP: 0000000000000000 R08: 00000000ffffdfff R09:
->>>>>> 00000000ffffdfff
->>>>>> [ 1975.257158] R10: ffffffffbb472dc0 R11: ffffffffbb472dc0 R12:
->>>>>> 0000000000000000
->>>>>> [ 1975.257159] R13: ffff9fc521173e78 R14: 00000000000decc7 R15:
->>>>>> fff000003fffffff
->>>>>> [ 1975.257160] FS:  00007fb2137fe6c0(0000) GS:ffff9fcb7eb40000(0000)
->>>>>> knlGS:0000000000000000
->>>>>> [ 1975.257161] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->>>>>> [ 1975.257162] CR2: 0000000000000036 CR3: 0000000164114000 CR4:
->>>>>> 0000000000750ee0
->>>>>> [ 1975.257163] PKRU: 55555554
->>>>>> [ 1975.257163] Call Trace:
->>>>>> [ 1975.257164]  <TASK>
->>>>>> [ 1975.257166] ? page_add_file_rmap
->>>>>> (/home/reinhardt/dev-apps/kernel/linux/./include/linux/page-flags.h:195 /home/reinhardt/dev-apps/kernel/linux/mm/internal.h:440 /home/reinhardt/dev-apps/kernel/linux/mm/rmap.c:1270)
->>>>>> [ 1975.257169] filemap_fault
->>>>>> (/home/reinhardt/dev-apps/kernel/linux/./include/linux/pagemap.h:531
->>>>>> /home/reinhardt/dev-apps/kernel/linux/mm/filemap.c:3107)
->>>>>> [ 1975.257172] __do_fault
->>>>>> (/home/reinhardt/dev-apps/kernel/linux/mm/memory.c:3852)
->>>>>> [ 1975.257174] __handle_mm_fault
->>>>>> (/home/reinhardt/dev-apps/kernel/linux/mm/memory.c:4169
->>>>>> /home/reinhardt/dev-apps/kernel/linux/mm/memory.c:4297
->>>>>> /home/reinhardt/dev-apps/kernel/linux/mm/memory.c:4555
->>>>>> /home/reinhardt/dev-apps/kernel/linux/mm/memory.c:4690)
->>>>>> [ 1975.257176] handle_mm_fault
->>>>>> (/home/reinhardt/dev-apps/kernel/linux/mm/memory.c:4788)
->>>>>> [ 1975.257178] do_user_addr_fault
->>>>>> (/home/reinhardt/dev-apps/kernel/linux/./include/linux/sched/signal.h:404 /home/reinhardt/dev-apps/kernel/linux/arch/x86/mm/fault.c:1399)
->>>>>> [ 1975.257181] exc_page_fault
->>>>>> (/home/reinhardt/dev-apps/kernel/linux/./arch/x86/include/asm/irqflags.h:40 /home/reinhardt/dev-apps/kernel/linux/./arch/x86/include/asm/irqflags.h:75 /home/reinhardt/dev-apps/kernel/linux/arch/x86/mm/fault.c:1492 /home/reinhardt/dev-apps/kernel/linux/arch/x86/mm/fault.c:1540)
->>>>>> [ 1975.257184] ? asm_exc_page_fault
->>>>>> (/home/reinhardt/dev-apps/kernel/linux/./arch/x86/include/asm/idtentry.h:568)
->>>>>> [ 1975.257186] asm_exc_page_fault
->>>>>> (/home/reinhardt/dev-apps/kernel/linux/./arch/x86/include/asm/idtentry.h:568)
->>>>>> [ 1975.257188] RIP: 0033:0x7fb265b88409
->>>>>> [ 1975.257189] Code: 66 66 2e 0f 1f 84 00 00 00 00 00 66 66 2e 0f 1f
->>>>>> 84 00 00 00 00 00 66 66 2e 0f 1f 84 00 00 00 00 00 48 89 f8 48 83 fa
->>>>>> 20 72 27 <c5> fe 6f 06 48 83 fa 40 0f 87 a9 00 00 00 c5 fe 6f 4c 16
->>>>>> e0 c5 fe
->>>>>> All code
->>>>>> ========
->>>>>>     0:    66 66 2e 0f 1f 84 00     data16 cs nopw 0x0(%rax,%rax,1)
->>>>>>     7:    00 00 00 00
->>>>>>     b:    66 66 2e 0f 1f 84 00     data16 cs nopw 0x0(%rax,%rax,1)
->>>>>>    12:    00 00 00 00
->>>>>>    16:    66 66 2e 0f 1f 84 00     data16 cs nopw 0x0(%rax,%rax,1)
->>>>>>    1d:    00 00 00 00
->>>>>>    21:    48 89 f8                 mov    %rdi,%rax
->>>>>>    24:    48 83 fa 20              cmp    $0x20,%rdx
->>>>>>    28:    72 27                    jb     0x51
->>>>>>    2a:*    c5 fe 6f 06              vmovdqu (%rsi),%ymm0        <--
->>>>>> trapping instruction
->>>>>>    2e:    48 83 fa 40              cmp    $0x40,%rdx
->>>>>>    32:    0f 87 a9 00 00 00        ja     0xe1
->>>>>>    38:    c5 fe 6f 4c 16 e0        vmovdqu -0x20(%rsi,%rdx,1),%ymm1
->>>>>>    3e:    c5                       .byte 0xc5
->>>>>>    3f:    fe                       .byte 0xfe
->>>>>>
->>>>>> Code starting with the faulting instruction
->>>>>> ===========================================
->>>>>>     0:    c5 fe 6f 06              vmovdqu (%rsi),%ymm0
->>>>>>     4:    48 83 fa 40              cmp    $0x40,%rdx
->>>>>>     8:    0f 87 a9 00 00 00        ja     0xb7
->>>>>>     e:    c5 fe 6f 4c 16 e0        vmovdqu -0x20(%rsi,%rdx,1),%ymm1
->>>>>>    14:    c5                       .byte 0xc5
->>>>>>    15:    fe                       .byte 0xfe
->>>>>> [ 1975.257190] RSP: 002b:00007fb2137fd908 EFLAGS: 00010202
->>>>>> [ 1975.257191] RAX: 00007fb204012a80 RBX: 0000000000000000 RCX:
->>>>>> 00007fb2137fda90
->>>>>> [ 1975.257192] RDX: 0000000000004000 RSI: 00007f9fddbb51c3 RDI:
->>>>>> 00007fb204012a80
->>>>>> [ 1975.257193] RBP: 00007fb2137fd928 R08: 00000000638ea1ab R09:
->>>>>> 0000000000000000
->>>>>> [ 1975.257193] R10: 0000000000000008 R11: 0000000000000246 R12:
->>>>>> 00007fb204000bb0
->>>>>> [ 1975.257194] R13: 00007fb21809a5a0 R14: 00000000decc71c3 R15:
->>>>>> 0000000000004000
->>>>>> [ 1975.257196]  </TASK>
->>>>>> [ 1975.257196] Modules linked in: overlay xt_addrtype amdgpu
->>>>>> drm_ttm_helper ttm gpu_sched drm_kms_helper iwlmvm backlight
->>>>>> syscopyarea mac80211 sysfillrect sysimgblt libarc4 fb_sys_fops
->>>>>> iwlwifi cfg80211 i2c_piix4 k10temp fuse configfs efivarfs
->>>>>> [ 1975.257207] CR2: 0000000000000036
->>>>>> [ 1975.257208] ---[ end trace 0000000000000000 ]---
->>>>>> [ 1975.257209] RIP: 0010:__filemap_get_folio
->>>>>> (/home/reinhardt/dev-apps/kernel/linux/./arch/x86/include/asm/atomic.h:29 /home/reinhardt/dev-apps/kernel/linux/./include/linux/atomic/atomic-arch-fallback.h:1158 /home/reinhardt/dev-apps/kernel/linux/./include/linux/atomic/atomic-arch-fallback.h:1183 /home/reinhardt/dev-apps/kernel/linux/./include/linux/atomic/atomic-instrumented.h:608 /home/reinhardt/dev-apps/kernel/linux/./include/linux/page_ref.h:238 /home/reinhardt/dev-apps/kernel/linux/./include/linux/page_ref.h:247 /home/reinhardt/dev-apps/kernel/linux/./include/linux/page_ref.h:280 /home/reinhardt/dev-apps/kernel/linux/./include/linux/page_ref.h:313 /home/reinhardt/dev-apps/kernel/linux/mm/filemap.c:1899 /home/reinhardt/dev-apps/kernel/linux/mm/filemap.c:1951)
->>>>>> [ 1975.257211] Code: 10 e8 56 fd 67 00 48 89 c3 48 3d 02 04 00 00 74
->>>>>> e2 48 3d 06 04 00 00 74 da 48 85 c0 0f 84 3e 02 00 00 a8 01 0f 85 40
->>>>>> 02 00 00 <8b> 40 34 85 c0 74 c2 8d 50 01 f0 0f b1 53 34 75 f2 48 8b
->>>>>> 54 24 28
->>>>>> All code
->>>>>> ========
->>>>>>     0:    10 e8                    adc    %ch,%al
->>>>>>     2:    56                       push   %rsi
->>>>>>     3:    fd                       std
->>>>>>     4:    67 00 48 89              add    %cl,-0x77(%eax)
->>>>>>     8:    c3                       ret
->>>>>>     9:    48 3d 02 04 00 00        cmp    $0x402,%rax
->>>>>>     f:    74 e2                    je     0xfffffffffffffff3
->>>>>>    11:    48 3d 06 04 00 00        cmp    $0x406,%rax
->>>>>>    17:    74 da                    je     0xfffffffffffffff3
->>>>>>    19:    48 85 c0                 test   %rax,%rax
->>>>>>    1c:    0f 84 3e 02 00 00        je     0x260
->>>>>>    22:    a8 01                    test   $0x1,%al
->>>>>>    24:    0f 85 40 02 00 00        jne    0x26a
->>>>>>    2a:*    8b 40 34                 mov    0x34(%rax),%eax       
->>>>>> <-- trapping instruction
->>>>>>    2d:    85 c0                    test   %eax,%eax
->>>>>>    2f:    74 c2                    je     0xfffffffffffffff3
->>>>>>    31:    8d 50 01                 lea    0x1(%rax),%edx
->>>>>>    34:    f0 0f b1 53 34           lock cmpxchg %edx,0x34(%rbx)
->>>>>>    39:    75 f2                    jne    0x2d
->>>>>>    3b:    48 8b 54 24 28           mov    0x28(%rsp),%rdx
->>>>>>
->>>>>> Code starting with the faulting instruction
->>>>>> ===========================================
->>>>>>     0:    8b 40 34                 mov    0x34(%rax),%eax
->>>>>>     3:    85 c0                    test   %eax,%eax
->>>>>>     5:    74 c2                    je     0xffffffffffffffc9
->>>>>>     7:    8d 50 01                 lea    0x1(%rax),%edx
->>>>>>     a:    f0 0f b1 53 34           lock cmpxchg %edx,0x34(%rbx)
->>>>>>     f:    75 f2                    jne    0x3
->>>>>>    11:    48 8b 54 24 28           mov    0x28(%rsp),%rdx
->>>>>> [ 1975.257212] RSP: 0000:ffffc2d744c37cb0 EFLAGS: 00010246
->>>>>> [ 1975.257213] RAX: 0000000000000002 RBX: 0000000000000002 RCX:
->>>>>> 0000000000000000
->>>>>> [ 1975.257214] RDX: 0000000000000000 RSI: ffffffffbb117459 RDI:
->>>>>> 00000000ffffffff
->>>>>> [ 1975.257215] RBP: 0000000000000000 R08: 00000000ffffdfff R09:
->>>>>> 00000000ffffdfff
->>>>>> [ 1975.257215] R10: ffffffffbb472dc0 R11: ffffffffbb472dc0 R12:
->>>>>> 0000000000000000
->>>>>> [ 1975.257216] R13: ffff9fc521173e78 R14: 00000000000decc7 R15:
->>>>>> fff000003fffffff
->>>>>> [ 1975.257217] FS:  00007fb2137fe6c0(0000) GS:ffff9fcb7eb40000(0000)
->>>>>> knlGS:0000000000000000
->>>>>> [ 1975.257218] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->>>>>> [ 1975.257219] CR2: 0000000000000036 CR3: 0000000164114000 CR4:
->>>>>> 0000000000750ee0
->>>>>> [ 1975.257220] PKRU: 55555554
->>>>>>
->>>>>> (full dmesg and my local changeset in attachments for your reference)
->>>>>>
->>>>> #regzbot poke
+#regzbot poke
+
+>> On 20.03.23 06:20, Ritesh Harjani (IBM) wrote:
+>>> "Darrick J. Wong" <djwong@kernel.org> writes:
+>>>
+>>>> On Sat, Mar 18, 2023 at 10:20:28PM +0530, Ritesh Harjani wrote:
+>>>>> "Darrick J. Wong" <djwong@kernel.org> writes:
 >>>>>
->>
->>
+>>>>>> On Wed, Mar 15, 2023 at 10:20:37PM -0700, Darrick J. Wong wrote:
+>>>>>>> On Thu, Mar 16, 2023 at 10:16:02AM +0530, Ritesh Harjani wrote:
+>>>>>>>> "Darrick J. Wong" <djwong@kernel.org> writes:
+>>>>>>>>
+>>>>>>>> Hi Darrick,
+>>>>>>>>
+>>>>>>>> Thanks for your analysis and quick help on this.
+>>>>>>>>
+>>>>>>>>>>
+>>>>>>>>>> Hi Darrick,
+>>>>>>>>>>
+>>>>>>>>>> Please find the information collected from the system. We added some
+>>>>>>>>>> debug logs and looks like it is exactly what is happening which you
+>>>>>>>>>> pointed out.
+>>>>>>>>>>
+>>>>>>>>>> We added a debug kernel patch to get more info from the system which
+>>>>>>>>>> you had requested [1]
+>>>>>>>>>>
+>>>>>>>>>> 1. We first breaked into emergency shell where root fs is first getting
+>>>>>>>>>> mounted on /sysroot as "ro" filesystem. Here are the logs.
+>>>>>>>>>>
+>>>>>>>>>> [  OK  ] Started File System Check on /dev/mapper/rhel_ltcden3--lp1-root.
+>>>>>>>>>>          Mounting /sysroot...
+>>>>>>>>>> [    7.203990] SGI XFS with ACLs, security attributes, quota, no debug enabled
+>>>>>>>>>> [    7.205835] XFS (dm-0): Mounting V5 Filesystem 7b801289-75a7-4d39-8cd3-24526e9e9da7
+>>>>>>>>>> [   ***] A start job is running for /sysroot (15s / 1min 35s)[   17.439377] XFS (dm-0): Starting recovery (logdev: internal)
+>>>>>>>>>> [  *** ] A start job is running for /sysroot (16s / 1min 35s)[   17.771158] xfs_log_mount_finish: Recovery needed is set
+>>>>>>>>>> [   17.771172] xlog_recover_iunlink_ag: ran xlog_recover_iunlink_bucket for agi:0, bucket:0
+>>>>>>>>>> [   17.771179] xlog_recover_iunlink_ag: ran xlog_recover_iunlink_bucket for agi:0, bucket:1
+>>>>>>>>>> [   17.771184] xlog_recover_iunlink_ag: ran xlog_recover_iunlink_bucket for agi:0, bucket:2
+>>>>>>>>>> [   17.771190] xlog_recover_iunlink_ag: ran xlog_recover_iunlink_bucket for agi:0, bucket:3
+>>>>>>>>>> [   17.771196] xlog_recover_iunlink_ag: ran xlog_recover_iunlink_bucket for agi:0, bucket:4
+>>>>>>>>>> [   17.771201] xlog_recover_iunlink_ag: ran xlog_recover_iunlink_bucket for agi:0, bucket:5
+>>>>>>>>>> [   17.801033] xlog_recover_iunlink_ag: ran xlog_recover_iunlink_bucket for agi:0, bucket:6
+>>>>>>>>>> [   17.801041] xlog_recover_iunlink_ag: ran xlog_recover_iunlink_bucket for agi:0, bucket:7
+>>>>>>>>>> [   17.801046] xlog_recover_iunlink_ag: ran xlog_recover_iunlink_bucket for agi:0, bucket:8
+>>>>>>>>>> [   17.801052] xlog_recover_iunlink_ag: ran xlog_recover_iunlink_bucket for agi:0, bucket:9
+>>>>>>>>>> [   17.801057] xlog_recover_iunlink_ag: ran xlog_recover_iunlink_bucket for agi:0, bucket:10
+>>>>>>>>>> [   17.801063] xlog_recover_iunlink_ag: ran xlog_recover_iunlink_bucket for agi:0, bucket:11
+>>>>>>>>>> [   17.801068] xlog_recover_iunlink_ag: ran xlog_recover_iunlink_bucket for agi:0, bucket:12
+>>>>>>>>>> [   17.801272] xlog_recover_iunlink_bucket: bucket: 13, agino: 3064909, ino: 3064909, iget ret: 0, previno:18446744073709551615, prev_agino:4294967295
+>>>>>>>>>>
+>>>>>>>>>> <previno, prev_agino> is just <-1 %ull and -1 %u> in above. That's why
+>>>>>>>>>> the huge value.
+>>>>>>>>>
+>>>>>>>>> Ok, so log recovery finds 3064909 and clears it...
+>>>>>>>>>
+>>>>>>>>>> [   17.801281] xlog_recover_iunlink_ag: ran xlog_recover_iunlink_bucket for agi:0, bucket:13
+>>>>>>>>>> [   17.801287] xlog_recover_iunlink_ag: ran xlog_recover_iunlink_bucket for agi:0, bucket:14
+>>>>>>>>>
+>>>>>>>>> <snip the rest of these...>
+>>>>>>>>>
+>>>>>>>>>> [   17.844910] xlog_recover_iunlink_ag: ran xlog_recover_iunlink_bucket for agi:3, bucket:62
+>>>>>>>>>> [   17.844916] xlog_recover_iunlink_ag: ran xlog_recover_iunlink_bucket for agi:3, bucket:63
+>>>>>>>>>> [   17.886079] XFS (dm-0): Ending recovery (logdev: internal)
+>>>>>>>>>> [  OK  ] Mounted /sysroot.
+>>>>>>>>>> [  OK  ] Reached target Initrd Root File System.
+>>>>>>>>>>
+>>>>>>>>>>
+>>>>>>>>>> 2. Then these are the logs from xfs_repair -n /dev/dm-0
+>>>>>>>>>> Here you will notice the same agi 3064909 in bucket 13 (from phase-2) which got also
+>>>>>>>>>> printed in above xlog_recover_iunlink_ag() function.
+>>>>>>>>>>
+>>>>>>>>>> switch_root:/# xfs_repair -n /dev/dm-0
+>>>>>>>>>> Phase 1 - find and verify superblock...
+>>>>>>>>>> Phase 2 - using internal log
+>>>>>>>>>>         - zero log...
+>>>>>>>>>>         - scan filesystem freespace and inode maps...
+>>>>>>>>>> agi unlinked bucket 13 is 3064909 in ag 0 (inode=3064909)
+>>>>>>>>>
+>>>>>>>>> ...yet here we find that 3064909 is still on the unlinked list?
+>>>>>>>>>
+>>>>>>>>> Just to confirm -- you ran xfs_repair -n after the successful recovery
+>>>>>>>>> above, right?
+>>>>>>>>>
+>>>>>>>> Yes, that's right.
+>>>>>>>>
+>>>>>>>>>>         - found root inode chunk
+>>>>>>>>>> Phase 3 - for each AG...
+>>>>>>>>>>         - scan (but don't clear) agi unlinked lists...
+>>>>>>>>>>         - process known inodes and perform inode discovery...
+>>>>>>>>>>         - agno = 0
+>>>>>>>>>>         - agno = 1
+>>>>>>>>>>         - agno = 2
+>>>>>>>>>>         - agno = 3
+>>>>>>>>>>         - process newly discovered inodes...
+>>>>>>>>>> Phase 4 - check for duplicate blocks...
+>>>>>>>>>>         - setting up duplicate extent list...
+>>>>>>>>>>         - check for inodes claiming duplicate blocks...
+>>>>>>>>>>         - agno = 0
+>>>>>>>>>>         - agno = 2
+>>>>>>>>>>         - agno = 1
+>>>>>>>>>>         - agno = 3
+>>>>>>>>>> No modify flag set, skipping phase 5
+>>>>>>>>>> Phase 6 - check inode connectivity...
+>>>>>>>>>>         - traversing filesystem ...
+>>>>>>>>>>         - traversal finished ...
+>>>>>>>>>>         - moving disconnected inodes to lost+found ...
+>>>>>>>>>> Phase 7 - verify link counts...
+>>>>>>>>>> would have reset inode 3064909 nlinks from 4294967291 to 2
+>>>>>>>>>
+>>>>>>>>> Oh now that's interesting.  Inode on unlinked list with grossly nonzero
+>>>>>>>>> (but probably underflowed) link count.  That might explain why iunlink
+>>>>>>>>> recovery ignores the inode.  Is inode 3064909 reachable via the
+>>>>>>>>> directory tree?
+>>>>>>>>>
+>>>>>>>>> Would you mind sending me a metadump to play with?  metadump -ago would
+>>>>>>>>> be best, if filenames/xattrnames aren't sensitive customer data.
+>>>>>>>>
+>>>>>>>> Sorry about the delay.
+>>>>>>>> I am checking for any permissions part internally.
+>>>>>>>> Meanwhile - I can help out if you would like me to try anything.
+>>>>>>>
+>>>>>>> Ok.  I'll try creating a filesystem with a weirdly high refcount
+>>>>>>> unlinked inode and I guess you can try it to see if you get the same
+>>>>>>> symptoms.  I've finished with my parent pointers work for the time
+>>>>>>> being, so I might have some time tomorrow (after I kick the tires on
+>>>>>>> SETFSUUID) to simulate this and see if I can adapt the AGI repair code
+>>>>>>> to deal with this.
+>>>>>>
+>>>>>> If you uncompress and mdrestore the attached file to a blockdev, mount
+>>>>>> it, and run some creat() exerciser, do you get the same symptoms?  I've
+>>>>>> figured out how to make online fsck deal with it. :)
+>>>>>>
+>>>>>> A possible solution for runtime would be to make it so that
+>>>>>> xfs_iunlink_lookup could iget the inode if it's not in cache at all.
+>>>>>>
+>>>>>
+>>>>> Hello Darrick,
+>>>>>
+>>>>> I did xfs_mdrestore the metadump you provided on a loop mounted
+>>>>> blockdev. I ran fsstress on the root dir of the mounted filesystem,
+>>>>> but I was unable to hit the issue.
+>>>>>
+>>>>> I tried the same with the original FS metadump as well and I am unable
+>>>>> to hit the issue while running fsstress on the filesystem.
+>>>>>
+>>>>> I am thinking of identifying which file unlink operation was in progress
+>>>>> when we see the issue during mounting. Maybe that will help in
+>>>>> recreating the issue.
+>>>>
+>>>> Yeah, creating a bunch of O_TMPFILE files will exercise the unlinked
+>>>> lists, possibly enough to trip over the affected agi bucket.  See
+>>>> t_open_tmpfiles.c in the fstests repo.
+>>>
+>>>
+>>> Hello Darrick,
+>>>
+>>> Yes, I am tripping over the issue very easily when I run t_open_tmpfiles
+>>> testcase for the metadump you shared. (Not hitting with the original dump
+>>> though. Will try to fetch more information on whay is that).
+>>>
+>>> Here is the call stack with your metadump when we try to run
+>>> t_open_tmpfiles test case.
+>>> Its the same warning message which we were hitting too in the original
+>>> case too.
+>>>
+>>> xfs_iunlink_lookup()
+>>> <...>
+>>>     /*
+>>> 	 * Inode not in memory or in RCU freeing limbo should not happen.
+>>> 	 * Warn about this and let the caller handle the failure.
+>>> 	 */
+>>> 	if (WARN_ON_ONCE(!ip || !ip->i_ino)) {
+>>> 		rcu_read_unlock();
+>>> 		return NULL;
+>>> 	}
+>>> <...>
+>>>
+>>> [43873.070585] xfs filesystem being mounted at /mnt1/scratch supports timestamps until 2038 (0x7fffffff)
+>>> root@ubuntu:~# [43905.483065] ------------[ cut here ]------------
+>>> [43905.485250] WARNING: CPU: 0 PID: 2379 at fs/xfs/xfs_inode.c:1839 xfs_iunlink_lookup+0x14c/0x1e0
+>>> [43905.488325] Modules linked in:
+>>> [43905.489594] CPU: 0 PID: 2379 Comm: t_open_tmpfiles Not tainted 6.3.0-rc2-xfstests-00051-gc1940a43e595 #57
+>>> [43905.492828] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.15.0-0-g2dd4b9b3f840-prebuilt.qemu.org 04/01/2014
+>>> [43905.496604] RIP: 0010:xfs_iunlink_lookup+0x14c/0x1e0
+>>> [43905.498341] Code: 0f 85 6e ff ff ff 48 c7 c2 a8 95 be 82 be 22 03 00 00 48 c7 c7 30 23 b7 82 c6 05 c8 71 84 01 01 e8 e9 d3 91 ff e9 6
+>>> [43905.504324] RSP: 0018:ffffc9000405fb98 EFLAGS: 00010246
+>>> [43905.506224] RAX: 0000000000000000 RBX: 0000000000001b43 RCX: 0000000000000000
+>>> [43905.508624] RDX: ffff8891f1edf488 RSI: ffff8891f1edf4c8 RDI: 0000000000001b43
+>>> [43905.511087] RBP: 0000000000001b43 R08: 0000000000000000 R09: ffff88931446ba80
+>>> [43905.514465] R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+>>> [43905.517947] R13: ffff889313f67840 R14: ffff8892c0155b00 R15: ffff8889dc9b2900
+>>> [43905.521519] FS:  00007ffff7fb2740(0000) GS:ffff889dc7600000(0000) knlGS:0000000000000000
+>>> [43905.525570] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>>> [43905.528402] CR2: 0000555555556060 CR3: 00000011b4790006 CR4: 0000000000170ef0
+>>> [43905.532008] Call Trace:
+>>> [43905.533399]  <TASK>
+>>> [43905.534473]  xfs_iunlink_insert_inode+0x7a/0x100
+>>> [43905.536663]  xfs_iunlink+0xa4/0x190
+>>> [43905.537962]  xfs_create_tmpfile+0x277/0x2e0
+>>> [43905.539654]  xfs_generic_create+0x100/0x350
+>>> [43905.541303]  xfs_vn_tmpfile+0x1f/0x40
+>>> [43905.542920]  vfs_tmpfile+0x10e/0x1b0
+>>> [43905.544307]  path_openat+0x157/0x200
+>>> [43905.545813]  do_filp_open+0xad/0x150
+>>> [43905.547213]  ? alloc_fd+0x12d/0x220
+>>> [43905.548646]  ? alloc_fd+0x12d/0x220
+>>> [43905.550014]  ? lock_release+0x7f/0x130
+>>> [43905.551435]  ? do_raw_spin_unlock+0x4f/0xa0
+>>> [43905.553045]  ? _raw_spin_unlock+0x2d/0x50
+>>> [43905.554554]  ? alloc_fd+0x12d/0x220
+>>> [43905.556264]  do_sys_openat2+0x9b/0x160
+>>> [43905.557680]  __x64_sys_openat+0x58/0xa0
+>>> [43905.559065]  do_syscall_64+0x3f/0x90
+>>> [43905.560589]  entry_SYSCALL_64_after_hwframe+0x72/0xdc
+>>> [43905.562377] RIP: 0033:0x7ffff7d0ca45
+>>> [43905.563970] Code: 75 53 89 f0 25 00 00 41 00 3d 00 00 41 00 74 45 80 3d a6 1b 0f 00 00 74 69 89 da 48 89 ee bf 9c ff ff ff b8 01 01 5
+>>> [43905.570038] RSP: 002b:00007fffffffe2c0 EFLAGS: 00000202 ORIG_RAX: 0000000000000101
+>>> [43905.572747] RAX: ffffffffffffffda RBX: 0000000000410002 RCX: 00007ffff7d0ca45
+>>> [43905.575246] RDX: 0000000000410002 RSI: 0000555555556057 RDI: 00000000ffffff9c
+>>> [43905.577782] RBP: 0000555555556057 R08: 000000000000ab7f R09: 00007ffff7fc1080
+>>> [43905.580315] R10: 00000000000001a4 R11: 0000000000000202 R12: 0000000000000000
+>>> [43905.582850] R13: 00007fffffffe4a0 R14: 0000555555557d68 R15: 00007ffff7ffd020
+>>> [43905.585438]  </TASK>
+>>> [43905.586528] irq event stamp: 14045
+>>> [43905.587828] hardirqs last  enabled at (14055): [<ffffffff8121bc02>] __up_console_sem+0x52/0x60
+>>> [43905.590861] hardirqs last disabled at (14066): [<ffffffff8121bbe7>] __up_console_sem+0x37/0x60
+>>> [43905.593856] softirqs last  enabled at (13920): [<ffffffff82231b5a>] __do_softirq+0x2ea/0x3e1
+>>> [43905.596813] softirqs last disabled at (13909): [<ffffffff8119573f>] irq_exit_rcu+0xdf/0x140
+>>> [43905.599766] ---[ end trace 0000000000000000 ]---
+>>> [43905.601450] XFS (loop7): Internal error xfs_trans_cancel at line 1097 of file fs/xfs/xfs_trans.c.  Caller xfs_create_tmpfile+0x1c6/00
+>>> [43905.606100] CPU: 0 PID: 2379 Comm: t_open_tmpfiles Tainted: G        W          6.3.0-rc2-xfstests-00051-gc1940a43e595 #57
+>>> [43905.609797] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.15.0-0-g2dd4b9b3f840-prebuilt.qemu.org 04/01/2014
+>>> [43905.614562] Call Trace:
+>>> [43905.616112]  <TASK>
+>>> [43905.617245]  dump_stack_lvl+0x66/0x80
+>>> [43905.619054]  xfs_trans_cancel+0x138/0x1f0
+>>> [43905.620898]  xfs_create_tmpfile+0x1c6/0x2e0
+>>> [43905.623140]  xfs_generic_create+0x100/0x350
+>>> [43905.625483]  xfs_vn_tmpfile+0x1f/0x40
+>>> [43905.627372]  vfs_tmpfile+0x10e/0x1b0
+>>> [43905.629413]  path_openat+0x157/0x200
+>>> [43905.631204]  do_filp_open+0xad/0x150
+>>> [43905.633050]  ? alloc_fd+0x12d/0x220
+>>> [43905.634844]  ? alloc_fd+0x12d/0x220
+>>> [43905.636602]  ? lock_release+0x7f/0x130
+>>> [43905.638479]  ? do_raw_spin_unlock+0x4f/0xa0
+>>> [43905.640726]  ? _raw_spin_unlock+0x2d/0x50
+>>> [43905.642916]  ? alloc_fd+0x12d/0x220
+>>> [43905.644375]  do_sys_openat2+0x9b/0x160
+>>> [43905.645763]  __x64_sys_openat+0x58/0xa0
+>>> [43905.647145]  do_syscall_64+0x3f/0x90
+>>> [43905.648685]  entry_SYSCALL_64_after_hwframe+0x72/0xdc
+>>> [43905.650430] RIP: 0033:0x7ffff7d0ca45
+>>> [43905.651731] Code: 75 53 89 f0 25 00 00 41 00 3d 00 00 41 00 74 45 80 3d a6 1b 0f 00 00 74 69 89 da 48 89 ee bf 9c ff ff ff b8 01 01 5
+>>> [43905.657637] RSP: 002b:00007fffffffe2c0 EFLAGS: 00000202 ORIG_RAX: 0000000000000101
+>>> [43905.660141] RAX: ffffffffffffffda RBX: 0000000000410002 RCX: 00007ffff7d0ca45
+>>> [43905.662525] RDX: 0000000000410002 RSI: 0000555555556057 RDI: 00000000ffffff9c
+>>> [43905.665086] RBP: 0000555555556057 R08: 000000000000ab7f R09: 00007ffff7fc1080
+>>> [43905.667455] R10: 00000000000001a4 R11: 0000000000000202 R12: 0000000000000000
+>>> [43905.669830] R13: 00007fffffffe4a0 R14: 0000555555557d68 R15: 00007ffff7ffd020
+>>> [43905.672193]  </TASK>
+>>> [43905.689666] XFS (loop7): Corruption of in-memory data (0x8) detected at xfs_trans_cancel+0x151/0x1f0 (fs/xfs/xfs_trans.c:1098).  Shu.
+>>> [43905.694215] XFS (loop7): Please unmount the filesystem and rectify the problem(s)
+>>>
+>>>
+>>> -ritesh
+>>>
+>>>
+>>>>
+>>>> --D
+>>>>
+>>>>> Although the xfs_repair -n does show a similar log of unlinked inode
+>>>>> with the metadump you provided.
+>>>>>
+>>>>> root@ubuntu:~# xfs_repair -n -o force_geometry /dev/loop7
+>>>>> Phase 1 - find and verify superblock...
+>>>>> Phase 2 - using internal log
+>>>>>         - zero log...
+>>>>>         - scan filesystem freespace and inode maps...
+>>>>> agi unlinked bucket 3 is 6979 in ag 0 (inode=6979)
+>>>>> agi unlinked bucket 4 is 6980 in ag 0 (inode=6980)
+>>>>>         - found root inode chunk
+>>>>> Phase 3 - for each AG...
+>>>>>         - scan (but don't clear) agi unlinked lists...
+>>>>>         - process known inodes and perform inode discovery...
+>>>>>         - agno = 0
+>>>>>         - process newly discovered inodes...
+>>>>> Phase 4 - check for duplicate blocks...
+>>>>>         - setting up duplicate extent list...
+>>>>>         - check for inodes claiming duplicate blocks...
+>>>>>         - agno = 0
+>>>>> No modify flag set, skipping phase 5
+>>>>> Phase 6 - check inode connectivity...
+>>>>>         - traversing filesystem ...
+>>>>>         - traversal finished ...
+>>>>>         - moving disconnected inodes to lost+found ...
+>>>>> disconnected inode 6979, would move to lost+found
+>>>>> disconnected inode 6980, would move to lost+found
+>>>>> Phase 7 - verify link counts...
+>>>>> would have reset inode 6979 nlinks from 5555 to 1
+>>>>> would have reset inode 6980 nlinks from 0 to 1
+>>>>> No modify flag set, skipping filesystem flush and exiting.
+>>>>>
+>>>>> Thanks again for the help. Once I have more info I will update the
+>>>>> thread!
+>>>>>
+>>>>> -ritesh
+> 
+> 
