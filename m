@@ -1,44 +1,28 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8514156DE
-	for <regressions@lists.linux.dev>; Mon,  5 Jun 2023 10:18:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5688EC433D2;
-	Mon,  5 Jun 2023 10:18:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1685960316;
-	bh=Hq8WndsreVnOiOjWNynVMw7xnDT/MtLrF7deKaysJyw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fQLZ2VOLsMuWSk++nBuN3rvjtATWL1sX0YGhAbM+V5HxQYe1amB08X1j9iqJxe7dr
-	 Y9pTagR5YP1J3TRQd+RTL3sfcoD64Tvi0yftaUlrEIzIuKHAhdcjWFl1xacDxw28w4
-	 auoGQnW9QZZzfQyrEiGgRKNRCpbpk/fy2mJ6y1dcQd0JD+UdIa2u2P3LsmTZMNZ5Kd
-	 QMF0fMMQiLnYF/i/MD1ytI/U0IgVOgU6VSbThlwv9Ag/30ezJZpu8L/qDUkHUj7MH9
-	 aBXAxCwBvotTh1AUffkttQmmAAmBRa8IHgPeGYQJDTPmDHj3esC37gMv0hoCsVGHfv
-	 uyp1cE8FRS6KA==
-Received: from johan by xi.lan with local (Exim 4.94.2)
-	(envelope-from <johan@kernel.org>)
-	id 1q67Ia-0005sI-Uo; Mon, 05 Jun 2023 12:18:53 +0200
-Date: Mon, 5 Jun 2023 12:18:52 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Rob Clark <robdclark@gmail.com>,
-	Abhinav Kumar <quic_abhinavk@quicinc.com>,
-	Sean Paul <sean@poorly.run>, David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Kuogee Hsieh <quic_khsieh@quicinc.com>,
-	Sankeerth Billakanti <quic_sbillaka@quicinc.com>,
-	Stephen Boyd <swboyd@chromium.org>, linux-arm-msm@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Vinod Polimera <quic_vpolimer@quicinc.com>,
-	regressions@lists.linux.dev
-Subject: Re: [PATCH] Revert "drm/msm/dp: set self refresh aware based on PSR
- support"
-Message-ID: <ZH22jMTq6fi8iBpe@hovoldconsulting.com>
-References: <20230523151646.28366-1-johan+linaro@kernel.org>
- <ZH2ys6dVeL02JLCU@hovoldconsulting.com>
- <CAA8EJprBNzw4o4m0sn2OoOqnwioQWNcTPcKoKGqxLWGc_8xjWA@mail.gmail.com>
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D029915494
+	for <regressions@lists.linux.dev>; Mon,  5 Jun 2023 10:27:15 +0000 (UTC)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B40AD152B;
+	Mon,  5 Jun 2023 03:28:00 -0700 (PDT)
+Received: from FVFF77S0Q05N (unknown [10.57.24.244])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 474AA3F793;
+	Mon,  5 Jun 2023 03:27:13 -0700 (PDT)
+Date: Mon, 5 Jun 2023 11:27:10 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Ravi Bangoria <ravi.bangoria@amd.com>, jolsa@kernel.org,
+	irogers@google.com, bp@alien8.de, adrian.hunter@intel.com,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	"linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Subject: Re: [REGRESSION][BISECT] perf/core: Remove pmu linear searching code
+Message-ID: <ZH24fi8MWALIV72Z@FVFF77S0Q05N>
+References: <3abd3693-ad87-9abf-a762-337076638fcc@linaro.org>
+ <ZH2KVyyC5oMr+Vk2@FVFF77S0Q05N>
+ <20230605092731.GZ4253@hirez.programming.kicks-ass.net>
+ <20230605101401.GL38236@hirez.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -47,29 +31,96 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAA8EJprBNzw4o4m0sn2OoOqnwioQWNcTPcKoKGqxLWGc_8xjWA@mail.gmail.com>
+In-Reply-To: <20230605101401.GL38236@hirez.programming.kicks-ass.net>
 
-On Mon, Jun 05, 2023 at 01:05:36PM +0300, Dmitry Baryshkov wrote:
-> On Mon, 5 Jun 2023 at 13:02, Johan Hovold <johan@kernel.org> wrote:
-
-> > Virtual terminals are still broken with 6.4-rc5 on the Lenovo ThinkPad
-> > X13s two weeks after I reported this, and there has been no indication
-> > of any progress in the other related thread:
-> >
-> >         https://lore.kernel.org/lkml/ZHYPHnWoDbXB-fqe@hovoldconsulting.com
-> >
-> > Seems like it is time to merge this revert to get this sorted.
-> >
-> > Rob, Abhinav, Dmitry, can either of you merge this one and get it into
-> > 6.4-rc6?
+On Mon, Jun 05, 2023 at 12:14:01PM +0200, Peter Zijlstra wrote:
+> On Mon, Jun 05, 2023 at 11:27:31AM +0200, Peter Zijlstra wrote:
 > 
-> Rob sent the pull request few hours ago, see
-> https://lore.kernel.org/dri-devel/CAF6AEGuHujkFjRa6ys36Uyh0KUr4Hd16u1EMqJo8tOZ3ifVubQ@mail.gmail.com/
+> > That said; given that this commit has been tagged twice now, I suppose I
+> > should go revert it and we'll try again after a more thorough audit.
+> 
+> I'll go queue this then...
+> 
+> ---
+> Subject: perf: Re-instate the linear PMU search
+> From: Peter Zijlstra <peterz@infradead.org>
+> Date: Mon Jun  5 11:42:39 CEST 2023
+> 
+> Full revert of commit 9551fbb64d09 ("perf/core: Remove pmu linear
+> searching code").
+> 
+> Some architectures (notably arm/arm64) still relied on the linear
+> search in order to find the PMU that consumes
+> PERF_TYPE_{HARDWARE,HW_CACHE,RAW}.
+> 
+> This will need a more thorought audit and clean.
+> 
+> Reported-by: Nathan Chancellor <nathan@kernel.org>
+> Reported-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 
-Ok, so you guys went with the module parameter hack. Whatever. As long
-as the regression is finally fixed.
+Acked-by: Mark Rutland <mark.rutland@arm.com>
 
-Next time, some visibility into your process would be appreciated to
-avoid unnecessary work.
+Thanks for sorting this out!
 
-Johan
+Mark.
+
+> ---
+>  kernel/events/core.c |   39 +++++++++++++++++++++++++--------------
+>  1 file changed, 25 insertions(+), 14 deletions(-)
+> 
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -11630,27 +11630,38 @@ static struct pmu *perf_init_event(struc
+>  	}
+>  
+>  again:
+> -	ret = -ENOENT;
+>  	rcu_read_lock();
+>  	pmu = idr_find(&pmu_idr, type);
+>  	rcu_read_unlock();
+> -	if (!pmu)
+> -		goto fail;
+> +	if (pmu) {
+> +		if (event->attr.type != type && type != PERF_TYPE_RAW &&
+> +		    !(pmu->capabilities & PERF_PMU_CAP_EXTENDED_HW_TYPE))
+> +			goto fail;
+> +
+> +		ret = perf_try_init_event(pmu, event);
+> +		if (ret == -ENOENT && event->attr.type != type && !extended_type) {
+> +			type = event->attr.type;
+> +			goto again;
+> +		}
+>  
+> -	if (event->attr.type != type && type != PERF_TYPE_RAW &&
+> -	    !(pmu->capabilities & PERF_PMU_CAP_EXTENDED_HW_TYPE))
+> -		goto fail;
+> -
+> -	ret = perf_try_init_event(pmu, event);
+> -	if (ret == -ENOENT && event->attr.type != type && !extended_type) {
+> -		type = event->attr.type;
+> -		goto again;
+> +		if (ret)
+> +			pmu = ERR_PTR(ret);
+> +
+> +		goto unlock;
+>  	}
+>  
+> +	list_for_each_entry_rcu(pmu, &pmus, entry, lockdep_is_held(&pmus_srcu)) {
+> +		ret = perf_try_init_event(pmu, event);
+> +		if (!ret)
+> +			goto unlock;
+> +
+> +		if (ret != -ENOENT) {
+> +			pmu = ERR_PTR(ret);
+> +			goto unlock;
+> +		}
+> +	}
+>  fail:
+> -	if (ret)
+> -		pmu = ERR_PTR(ret);
+> -
+> +	pmu = ERR_PTR(-ENOENT);
+>  unlock:
+>  	srcu_read_unlock(&pmus_srcu, idx);
+>  
