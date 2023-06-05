@@ -1,126 +1,112 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D029915494
-	for <regressions@lists.linux.dev>; Mon,  5 Jun 2023 10:27:15 +0000 (UTC)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B40AD152B;
-	Mon,  5 Jun 2023 03:28:00 -0700 (PDT)
-Received: from FVFF77S0Q05N (unknown [10.57.24.244])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 474AA3F793;
-	Mon,  5 Jun 2023 03:27:13 -0700 (PDT)
-Date: Mon, 5 Jun 2023 11:27:10 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Ravi Bangoria <ravi.bangoria@amd.com>, jolsa@kernel.org,
-	irogers@google.com, bp@alien8.de, adrian.hunter@intel.com,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	"linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: Re: [REGRESSION][BISECT] perf/core: Remove pmu linear searching code
-Message-ID: <ZH24fi8MWALIV72Z@FVFF77S0Q05N>
-References: <3abd3693-ad87-9abf-a762-337076638fcc@linaro.org>
- <ZH2KVyyC5oMr+Vk2@FVFF77S0Q05N>
- <20230605092731.GZ4253@hirez.programming.kicks-ass.net>
- <20230605101401.GL38236@hirez.programming.kicks-ass.net>
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BCC1154A4
+	for <regressions@lists.linux.dev>; Mon,  5 Jun 2023 10:28:19 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1q67Rf-00050B-2m; Mon, 05 Jun 2023 12:28:15 +0200
+Message-ID: <ebdd877d-f143-487c-04cd-606996eb6176@leemhuis.info>
+Date: Mon, 5 Jun 2023 12:28:14 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230605101401.GL38236@hirez.programming.kicks-ass.net>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: Fwd: nvsp_rndis_pkt_complete error status and net_ratelimit:
+ callbacks suppressed messages on 6.4.0rc4
+Content-Language: en-US, de-DE
+To: Michael Kelley <mikelley@microsoft.com>
+Cc: Haiyang Zhang <haiyangz@microsoft.com>, Paolo Abeni <pabeni@redhat.com>,
+ "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Linux BPF <bpf@vger.kernel.org>,
+ Linux on Hyper-V <linux-hyperv@vger.kernel.org>,
+ Linux Kernel Network Developers <netdev@vger.kernel.org>,
+ Bagas Sanjaya <bagasdotme@gmail.com>
+References: <15dd93af-fcd5-5b9a-a6ba-9781768dbae7@gmail.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <15dd93af-fcd5-5b9a-a6ba-9781768dbae7@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1685960900;12cfcd45;
+X-HE-SMSGID: 1q67Rf-00050B-2m
 
-On Mon, Jun 05, 2023 at 12:14:01PM +0200, Peter Zijlstra wrote:
-> On Mon, Jun 05, 2023 at 11:27:31AM +0200, Peter Zijlstra wrote:
-> 
-> > That said; given that this commit has been tagged twice now, I suppose I
-> > should go revert it and we'll try again after a more thorough audit.
-> 
-> I'll go queue this then...
-> 
-> ---
-> Subject: perf: Re-instate the linear PMU search
-> From: Peter Zijlstra <peterz@infradead.org>
-> Date: Mon Jun  5 11:42:39 CEST 2023
-> 
-> Full revert of commit 9551fbb64d09 ("perf/core: Remove pmu linear
-> searching code").
-> 
-> Some architectures (notably arm/arm64) still relied on the linear
-> search in order to find the PMU that consumes
-> PERF_TYPE_{HARDWARE,HW_CACHE,RAW}.
-> 
-> This will need a more thorought audit and clean.
-> 
-> Reported-by: Nathan Chancellor <nathan@kernel.org>
-> Reported-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Hi, Thorsten here, the Linux kernel's regression tracker.
 
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-
-Thanks for sorting this out!
-
-Mark.
-
-> ---
->  kernel/events/core.c |   39 +++++++++++++++++++++++++--------------
->  1 file changed, 25 insertions(+), 14 deletions(-)
+On 30.05.23 14:25, Bagas Sanjaya wrote:
 > 
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -11630,27 +11630,38 @@ static struct pmu *perf_init_event(struc
->  	}
->  
->  again:
-> -	ret = -ENOENT;
->  	rcu_read_lock();
->  	pmu = idr_find(&pmu_idr, type);
->  	rcu_read_unlock();
-> -	if (!pmu)
-> -		goto fail;
-> +	if (pmu) {
-> +		if (event->attr.type != type && type != PERF_TYPE_RAW &&
-> +		    !(pmu->capabilities & PERF_PMU_CAP_EXTENDED_HW_TYPE))
-> +			goto fail;
-> +
-> +		ret = perf_try_init_event(pmu, event);
-> +		if (ret == -ENOENT && event->attr.type != type && !extended_type) {
-> +			type = event->attr.type;
-> +			goto again;
-> +		}
->  
-> -	if (event->attr.type != type && type != PERF_TYPE_RAW &&
-> -	    !(pmu->capabilities & PERF_PMU_CAP_EXTENDED_HW_TYPE))
-> -		goto fail;
-> -
-> -	ret = perf_try_init_event(pmu, event);
-> -	if (ret == -ENOENT && event->attr.type != type && !extended_type) {
-> -		type = event->attr.type;
-> -		goto again;
-> +		if (ret)
-> +			pmu = ERR_PTR(ret);
-> +
-> +		goto unlock;
->  	}
->  
-> +	list_for_each_entry_rcu(pmu, &pmus, entry, lockdep_is_held(&pmus_srcu)) {
-> +		ret = perf_try_init_event(pmu, event);
-> +		if (!ret)
-> +			goto unlock;
-> +
-> +		if (ret != -ENOENT) {
-> +			pmu = ERR_PTR(ret);
-> +			goto unlock;
-> +		}
-> +	}
->  fail:
-> -	if (ret)
-> -		pmu = ERR_PTR(ret);
-> -
-> +	pmu = ERR_PTR(-ENOENT);
->  unlock:
->  	srcu_read_unlock(&pmus_srcu, idx);
->  
+> I notice a regression report on Bugzilla [1]. Quoting from it:
+
+Hmmm, nobody replied to this yet (or am I missing something?). Doesn't
+seems like it's something urgent, but nevertheless:
+
+Michael, Bagas didn't make it obvious at all, hence please allow me to
+ask: did you notice that this is a regression that is apparently caused
+by a commit of yours?
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
+
+#regzbot poke
+
+>> After building 6.4.0rc4 for my VM running on a Windows 10 Hyper-V host, I see the following 
+>>
+>> [  756.697753] net_ratelimit: 34 callbacks suppressed
+>> [  756.697806] hv_netvsc cd9dd876-2fa9-4764-baa7-b44482f85f9f eth0: nvsp_rndis_pkt_complete error status: 2
+>> (snipped repeated messages)
+>>
+>> *but*, I'm only able to reliably reproduce this if I am generating garbage on another terminal, e.g. sudo strings /dev/sda
+>>
+>>
+>> This doesn't appear to affect latency or bandwidth a huge amount, I ran an iperf3 test between the guest and the host while trying to cause these messages.
+>> Although you if you take 17-18 gigabit as the "base" speed, you can see it drop a bit to 16 gigabit while the errors happen and "catch up" when I stop spamming the console.
+>>
+>> [  5]  99.00-100.00 sec  1.89 GBytes  16.2 Gbits/sec
+>> [  5] 100.00-101.00 sec  1.91 GBytes  16.4 Gbits/sec
+>> [  5] 101.00-102.00 sec  1.91 GBytes  16.4 Gbits/sec
+>> [  5] 102.00-103.00 sec  1.91 GBytes  16.4 Gbits/sec
+>> [  5] 103.00-104.00 sec  1.92 GBytes  16.5 Gbits/sec
+>> [  5] 104.00-105.00 sec  1.94 GBytes  16.6 Gbits/sec
+>> [  5] 105.00-106.00 sec  1.89 GBytes  16.2 Gbits/sec
+>> [  5] 106.00-107.00 sec  1.90 GBytes  16.3 Gbits/sec
+>> [  5] 107.00-108.00 sec  2.23 GBytes  19.2 Gbits/sec
+>> [  5] 108.00-109.00 sec  2.57 GBytes  22.0 Gbits/sec
+>> [  5] 109.00-110.00 sec  2.66 GBytes  22.9 Gbits/sec
+>> [  5] 110.00-111.00 sec  2.64 GBytes  22.7 Gbits/sec
+>> [  5] 111.00-112.00 sec  2.65 GBytes  22.7 Gbits/sec
+>> [  5] 112.00-113.00 sec  2.65 GBytes  22.8 Gbits/sec
+>> [  5] 113.00-114.00 sec  2.65 GBytes  22.8 Gbits/sec
+>> [  5] 114.00-115.00 sec  2.65 GBytes  22.8 Gbits/sec
+>> [  5] 115.00-116.00 sec  2.66 GBytes  22.9 Gbits/sec
+>> [  5] 116.00-117.00 sec  2.63 GBytes  22.6 Gbits/sec
+>> [  5] 117.00-118.00 sec  2.69 GBytes  23.1 Gbits/sec
+>> [  5] 118.00-119.00 sec  2.66 GBytes  22.9 Gbits/sec
+>> [  5] 119.00-120.00 sec  2.67 GBytes  22.9 Gbits/sec
+>> [  5] 120.00-121.00 sec  2.66 GBytes  22.9 Gbits/sec
+>> [  5] 121.00-122.00 sec  2.49 GBytes  21.4 Gbits/sec
+>> [  5] 122.00-123.00 sec  2.15 GBytes  18.5 Gbits/sec
+>> [  5] 123.00-124.00 sec  2.16 GBytes  18.6 Gbits/sec
+>> [  5] 124.00-125.00 sec  2.16 GBytes  18.6 Gbits/sec
+>>
+> 
+> See bugzilla for the full thread.
+> 
+> Anyway, I'm adding it to regzbot:
+> 
+> #regzbot introduced: dca5161f9bd052 https://bugzilla.kernel.org/show_bug.cgi?id=217503
+> #regzbot title: net_ratelimit and nvsp_rndis_pkt_complete error due to SEND_RNDIS_PKT status check
+> 
+> Thanks.
+> 
+> [1]: https://bugzilla.kernel.org/show_bug.cgi?id=217503
+> 
