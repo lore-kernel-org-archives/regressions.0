@@ -1,135 +1,99 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27CB9168A1
-	for <regressions@lists.linux.dev>; Mon,  5 Jun 2023 10:14:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=b2pSoZ2MVUP/2fRl3RLOjQHQ8caqiz3LxI4BQNfXXW8=; b=p+GOH75Gz7cgdwRri2QfcUQqj4
-	4cOul7CanwFNKbNANL2U1MKV/ugc2zuCxoPZq7e5MRkcKvsPecTSPQK9Vd6vqHKHpswCX45l8ybay
-	p0Ib4N16+cqKnj0otiwB8PxWpINGyMrjCtiwXIOAr+I0AbbSe7amnThBgGw1h+0dC+BsLduTSnU3R
-	AaMjDUX4fxM/bQC+zJw4L/trRMRmy7Z3C/mz+yyLLgzWCA7x/5sF9N61DXp8DwvJ5QbjOtUixNtIF
-	jcAB6HPAXgNqJpjRZW2VPWkJuenRXBiEvfnc3DbqKR96Ffig3uhTuhb5FW0b8x7r8OKqZvNOtOwP3
-	vneD+wGg==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-	id 1q67Dt-003KYD-2n;
-	Mon, 05 Jun 2023 10:14:02 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 55C8D300188;
-	Mon,  5 Jun 2023 12:14:01 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 3A7D7244F040F; Mon,  5 Jun 2023 12:14:01 +0200 (CEST)
-Date: Mon, 5 Jun 2023 12:14:01 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Ravi Bangoria <ravi.bangoria@amd.com>, jolsa@kernel.org,
-	irogers@google.com, bp@alien8.de, adrian.hunter@intel.com,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	"linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: Re: [REGRESSION][BISECT] perf/core: Remove pmu linear searching code
-Message-ID: <20230605101401.GL38236@hirez.programming.kicks-ass.net>
-References: <3abd3693-ad87-9abf-a762-337076638fcc@linaro.org>
- <ZH2KVyyC5oMr+Vk2@FVFF77S0Q05N>
- <20230605092731.GZ4253@hirez.programming.kicks-ass.net>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C10D156DE
+	for <regressions@lists.linux.dev>; Mon,  5 Jun 2023 10:17:14 +0000 (UTC)
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-4f50470d77cso5674221e87.0
+        for <regressions@lists.linux.dev>; Mon, 05 Jun 2023 03:17:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1685960232; x=1688552232;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=TL8FrjBvLOB0J2ckzU5zDN3LDIwLONem+iih3uE7XWU=;
+        b=ebkFPWdYNLaMUho9qkYIBITcTiBJ2nApjX+DQB0ZJVhlPjub8qj1PnFJA57FRIbhTh
+         Z7Wg1ON57LiP5SF4kl0tH4W3es3l5CoZ/SNPFRmm189Z84uxrT68h0WxfQlGEyUT8Vc1
+         BDMYxXGo/IzdFNVayXgK5Yrn3yfwgDaxWCxsN/GLhtUDy/+FnO0F6gTrbOn5banDbteP
+         rFYM2TsS5omPUt3Rb9qjv/YrvC1YtrCWDZ8vB6cSf7hZE7RP2t62jTmTGCxCAYbOkZ18
+         uzVi3DTe5rusrudnAQqcVkLSNnZWUtKQlyZMQ1AeRYAxdqHHQjjY4RfCm6Fhn2ZmaOjf
+         H17w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685960232; x=1688552232;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=TL8FrjBvLOB0J2ckzU5zDN3LDIwLONem+iih3uE7XWU=;
+        b=BSP0S0u0Dry3Px1EEqZOQ0/uNMnibzTO+GZAN+JUtNj4Eg3drLxV/q+KCp0XVZObhX
+         N9YX7R95yRMqepQg3sFxVemn9auJjfn/QlMuzd0hhiku/GOEqZJMfa9Zn8oUV3eenPbk
+         +c4jKyuMdpvVJvJ4ReQXe4etY1dlQOP9O9FJU76nlTuqJJP4A5nQj2qH240UTyd9nR30
+         6/ySYDNbz4vRsK3wYhNhUsWgZWoiIe58xlgE0agesReiBUfSfI6+JlpjmEEyIdsl/84H
+         sx+cmYNEBE4MGjKc03z78+zi+GKHVuGHQHQQIMvfkaGNMiTRVsSUajQJ+IU96KQJXgpI
+         P9mg==
+X-Gm-Message-State: AC+VfDy6VafnaBaFNu1pMg8RcQ6kuFFSpP9qebUWO3KYhJCvS4/BCS2G
+	6mJTpdOpUwYyvDZ3/tUZxAb8gg==
+X-Google-Smtp-Source: ACHHUZ5f5CSb1CXsNeNN9VuNkuNB/1isot/4az07Iw1a4lCB2CL9zour0PLPocTC3rUSKLr/qvO9fg==
+X-Received: by 2002:a19:ac02:0:b0:4f3:b222:1eed with SMTP id g2-20020a19ac02000000b004f3b2221eedmr4624466lfc.2.1685960232283;
+        Mon, 05 Jun 2023 03:17:12 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.219.26])
+        by smtp.gmail.com with ESMTPSA id bm11-20020a0564020b0b00b00514b2717ec6sm3766757edb.28.2023.06.05.03.17.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 05 Jun 2023 03:17:11 -0700 (PDT)
+Message-ID: <f24981d8-e384-e02e-8257-4b03b37e6c0e@linaro.org>
+Date: Mon, 5 Jun 2023 12:17:09 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230605092731.GZ4253@hirez.programming.kicks-ass.net>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.2
+Subject: Re: [REGRESSION][BISECT] perf/core: Remove pmu linear searching code
+Content-Language: en-US
+To: Peter Zijlstra <peterz@infradead.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Ravi Bangoria <ravi.bangoria@amd.com>, jolsa@kernel.org,
+ irogers@google.com, bp@alien8.de, adrian.hunter@intel.com,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <3abd3693-ad87-9abf-a762-337076638fcc@linaro.org>
+ <ZH2KVyyC5oMr+Vk2@FVFF77S0Q05N>
+ <20230605092731.GZ4253@hirez.programming.kicks-ass.net>
+ <20230605101401.GL38236@hirez.programming.kicks-ass.net>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20230605101401.GL38236@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jun 05, 2023 at 11:27:31AM +0200, Peter Zijlstra wrote:
+On 05/06/2023 12:14, Peter Zijlstra wrote:
+> On Mon, Jun 05, 2023 at 11:27:31AM +0200, Peter Zijlstra wrote:
+> 
+>> That said; given that this commit has been tagged twice now, I suppose I
+>> should go revert it and we'll try again after a more thorough audit.
+> 
+> I'll go queue this then...
+> 
+> ---
+> Subject: perf: Re-instate the linear PMU search
+> From: Peter Zijlstra <peterz@infradead.org>
+> Date: Mon Jun  5 11:42:39 CEST 2023
+> 
+> Full revert of commit 9551fbb64d09 ("perf/core: Remove pmu linear
+> searching code").
+> 
+> Some architectures (notably arm/arm64) still relied on the linear
+> search in order to find the PMU that consumes
+> PERF_TYPE_{HARDWARE,HW_CACHE,RAW}.
+> 
+> This will need a more thorought audit and clean.
+> 
+> Reported-by: Nathan Chancellor <nathan@kernel.org>
+> Reported-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-> That said; given that this commit has been tagged twice now, I suppose I
-> should go revert it and we'll try again after a more thorough audit.
+Thanks.
 
-I'll go queue this then...
+Best regards,
+Krzysztof
 
----
-Subject: perf: Re-instate the linear PMU search
-From: Peter Zijlstra <peterz@infradead.org>
-Date: Mon Jun  5 11:42:39 CEST 2023
-
-Full revert of commit 9551fbb64d09 ("perf/core: Remove pmu linear
-searching code").
-
-Some architectures (notably arm/arm64) still relied on the linear
-search in order to find the PMU that consumes
-PERF_TYPE_{HARDWARE,HW_CACHE,RAW}.
-
-This will need a more thorought audit and clean.
-
-Reported-by: Nathan Chancellor <nathan@kernel.org>
-Reported-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
----
- kernel/events/core.c |   39 +++++++++++++++++++++++++--------------
- 1 file changed, 25 insertions(+), 14 deletions(-)
-
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -11630,27 +11630,38 @@ static struct pmu *perf_init_event(struc
- 	}
- 
- again:
--	ret = -ENOENT;
- 	rcu_read_lock();
- 	pmu = idr_find(&pmu_idr, type);
- 	rcu_read_unlock();
--	if (!pmu)
--		goto fail;
-+	if (pmu) {
-+		if (event->attr.type != type && type != PERF_TYPE_RAW &&
-+		    !(pmu->capabilities & PERF_PMU_CAP_EXTENDED_HW_TYPE))
-+			goto fail;
-+
-+		ret = perf_try_init_event(pmu, event);
-+		if (ret == -ENOENT && event->attr.type != type && !extended_type) {
-+			type = event->attr.type;
-+			goto again;
-+		}
- 
--	if (event->attr.type != type && type != PERF_TYPE_RAW &&
--	    !(pmu->capabilities & PERF_PMU_CAP_EXTENDED_HW_TYPE))
--		goto fail;
--
--	ret = perf_try_init_event(pmu, event);
--	if (ret == -ENOENT && event->attr.type != type && !extended_type) {
--		type = event->attr.type;
--		goto again;
-+		if (ret)
-+			pmu = ERR_PTR(ret);
-+
-+		goto unlock;
- 	}
- 
-+	list_for_each_entry_rcu(pmu, &pmus, entry, lockdep_is_held(&pmus_srcu)) {
-+		ret = perf_try_init_event(pmu, event);
-+		if (!ret)
-+			goto unlock;
-+
-+		if (ret != -ENOENT) {
-+			pmu = ERR_PTR(ret);
-+			goto unlock;
-+		}
-+	}
- fail:
--	if (ret)
--		pmu = ERR_PTR(ret);
--
-+	pmu = ERR_PTR(-ENOENT);
- unlock:
- 	srcu_read_unlock(&pmus_srcu, idx);
- 
