@@ -1,27 +1,42 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9984E134D6
-	for <regressions@lists.linux.dev>; Mon,  5 Jun 2023 09:54:34 +0000 (UTC)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 22949D75;
-	Mon,  5 Jun 2023 02:55:19 -0700 (PDT)
-Received: from FVFF77S0Q05N (unknown [10.57.24.244])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A0CD03F793;
-	Mon,  5 Jun 2023 02:54:31 -0700 (PDT)
-Date: Mon, 5 Jun 2023 10:54:26 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-To: Ravi Bangoria <ravi.bangoria@amd.com>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	"Peter Zijlstra (Intel)" <peterz@infradead.org>, jolsa@kernel.org,
-	irogers@google.com, bp@alien8.de, adrian.hunter@intel.com,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	"linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: Re: [REGRESSION][BISECT] perf/core: Remove pmu linear searching code
-Message-ID: <ZH2w0hIAEIpEXjk2@FVFF77S0Q05N>
-References: <3abd3693-ad87-9abf-a762-337076638fcc@linaro.org>
- <ZH2KVyyC5oMr+Vk2@FVFF77S0Q05N>
- <ecc69e40-f975-69e8-a372-6aafde66e0af@amd.com>
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF5925684
+	for <regressions@lists.linux.dev>; Mon,  5 Jun 2023 10:02:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32815C433EF;
+	Mon,  5 Jun 2023 10:02:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1685959330;
+	bh=5abGnYlpGeIkAbmWOgFaqsPnq9GUfYv18EA1sRFxf0o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ks5F/7ZsXGFzvQYZkRtnA2uNecgZ73F6IwjUmpD7XAD38sPGLyy7BBTrNpEva1D/z
+	 ggXUOAtJ5VJYMufV+7FEXksc92u6nFd6nANf1AWy53Ysh4q2DrerwLPml8KN3Ti94j
+	 ckF2yIETt4QXljbFoh4CRE0/bF2eMPgVHhH4fRePhHhmP4VJW17UBpOThf/8PDalcO
+	 lVa7FcCmpssWJQE07mdlWlFrRMzy1hICOKUbgKniepMEcl91r4WtBZi/TvBl6YNEy1
+	 b0HDFg1cJuMDXrJWrV8j1eOTk6m+SOT6zHkxwQlx0NrNsSHTP+sbYejxW85OUGIpgg
+	 EQzmGCEwlD94Q==
+Received: from johan by xi.lan with local (Exim 4.94.2)
+	(envelope-from <johan@kernel.org>)
+	id 1q672h-0005ky-7p; Mon, 05 Jun 2023 12:02:27 +0200
+Date: Mon, 5 Jun 2023 12:02:27 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Rob Clark <robdclark@gmail.com>,
+	Abhinav Kumar <quic_abhinavk@quicinc.com>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Sean Paul <sean@poorly.run>, David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Kuogee Hsieh <quic_khsieh@quicinc.com>,
+	Sankeerth Billakanti <quic_sbillaka@quicinc.com>,
+	Stephen Boyd <swboyd@chromium.org>, linux-arm-msm@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	Vinod Polimera <quic_vpolimer@quicinc.com>,
+	Johan Hovold <johan@kernel.org>, regressions@lists.linux.dev
+Subject: Re: [PATCH] Revert "drm/msm/dp: set self refresh aware based on PSR
+ support"
+Message-ID: <ZH2ys6dVeL02JLCU@hovoldconsulting.com>
+References: <20230523151646.28366-1-johan+linaro@kernel.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -30,56 +45,48 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ecc69e40-f975-69e8-a372-6aafde66e0af@amd.com>
+In-Reply-To: <20230523151646.28366-1-johan+linaro@kernel.org>
 
-On Mon, Jun 05, 2023 at 03:04:45PM +0530, Ravi Bangoria wrote:
-> On 05-Jun-23 12:40 PM, Mark Rutland wrote:
-> > On Sun, Jun 04, 2023 at 01:38:10PM +0200, Krzysztof Kozlowski wrote:
-> >> Hi,
-> >>
-> >> #regzbot introduced: 9551fbb64d09
-> >>
-> >> Bisect pointed to commit 9551fbb64d09 ("perf/core: Remove pmu linear
-> >> searching code") as first one where all hardware events are gone from
-> >> perf for ARMv7 Exynos5422 board.
-> > 
-> > I think that commit 9551fbb64d09 is just wrong.
-> > 
-> > The commit message asserts:
-> > 
-> >   Searching for the right pmu by iterating over all pmus is no longer
-> >   required since all pmus now *must* be present in the 'pmu_idr' list.
-> >   So, remove linear searching code.
-> > 
-> > ... and while each PMU has *some* entry in the pmu_idr list, for its dynamic
-> > type, that means that events with other types (e.g. PERF_TYPE_HARDWARE or
-> > PERF_TYPE_RAW) will fail to find a PMU in the IDR whereas they'd previously
-> > have been accepted by a PMU during the subsequent iteration over all PMUs.
+[ +CC: Thorsten and regzbot so they can help with tracking this
+regression ]
+
+#regzbot introduced: v6.3..v6.4-rc1
+
+On Tue, May 23, 2023 at 05:16:46PM +0200, Johan Hovold wrote:
+> This reverts commit 1844e680d56bb0c4e0489138f2b7ba2dc1c988e3.
 > 
-> Not sure I follow.
+> PSR support clearly is not ready for mainline and specifically breaks
+> virtual terminals which are no longer updated when PSR is enabled (e.g.
+> no keyboard input is echoed, no cursor blink).
 > 
-> PERF_TYPE_HARDWARE and PERF_TYPE_HW_CACHE are aliased to PERF_TYPE_RAW in
-> perf_init_event(). And PERF_TYPE_RAW should be present in pmu_idr if it
-> was registered using:
+> Disable PSR support for now by reverting commit 1844e680d56b
+> ("drm/msm/dp: set self refresh aware based on PSR support").
 > 
->   perf_pmu_register(pmu, "name", PERF_TYPE_RAW);
+> Cc: Vinod Polimera <quic_vpolimer@quicinc.com>
+> Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+> ---
+> 
+> Bjorn reported that PSR support broke virtual terminals two months ago, 
+> but this is still broken in 6.4-rc3:
+> 
+> 	https://lore.kernel.org/lkml/20230326162723.3lo6pnsfdwzsvbhj@ripper/
+> 
+> despite the following series that claimed to address this:
+> 
+> 	https://lore.kernel.org/lkml/1680271114-1534-1-git-send-email-quic_vpolimer@quicinc.com
+> 
+> Let's revert until this has been fixed properly.
 
-As I said, the PMUs get registered with a dynamic type, and there's no
-registration with PERF_TYPE_RAW. On arm/arm64 systems, *every* CPU PMU gets
-registered with:
+Virtual terminals are still broken with 6.4-rc5 on the Lenovo ThinkPad
+X13s two weeks after I reported this, and there has been no indication
+of any progress in the other related thread:
 
-	perf_pmu_register(pmu, name, -1);
+	https://lore.kernel.org/lkml/ZHYPHnWoDbXB-fqe@hovoldconsulting.com
 
-... and *none* are registered with:
+Seems like it is time to merge this revert to get this sorted.
 
-	perf_pmu_register(pmu, name, PERF_TYPE_RAW)
+Rob, Abhinav, Dmitry, can either of you merge this one and get it into
+6.4-rc6?
 
-... so those all get a dynamic IDR type, and nothing gets placed into the IDR
-for PERF_TYPE_RAW, etc. We rely on the linear search to find a PMU that can
-handle PERF_TYPE_RAW, etc.
-
-I appreciate that's not ideal, but it's how it has worked for almost a decade
-now, so we can't change the userspace-visible behaviour.
-
-Thanks,
-Mark.
+Johan
