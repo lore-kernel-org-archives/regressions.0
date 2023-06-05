@@ -1,220 +1,114 @@
-Received: from mail-oo1-f43.google.com (mail-oo1-f43.google.com [209.85.161.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84ABC1548E
-	for <regressions@lists.linux.dev>; Mon,  5 Jun 2023 14:11:35 +0000 (UTC)
-Received: by mail-oo1-f43.google.com with SMTP id 006d021491bc7-557ca32515eso3508060eaf.3
-        for <regressions@lists.linux.dev>; Mon, 05 Jun 2023 07:11:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1685974294; x=1688566294;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AkFk+WRaK8DJpCbECdgTGImYYiJ/3koxt3S/LYx6+NI=;
-        b=SXhwucOX38CrGifxFyNT20ngbnqojLTSIR9wnhtJzHP6d+m9lTtk9Gw3AHaq0V5yyH
-         TRQy8GBtK5iJ+CyyHFMmNXoax65xdnpHxXlwb5g5u1nRvzMYHZXBVJLIaV2jApATWVej
-         4dCdUKZJBp6Xr0wptg9RfoRfzmUdjDPjlf4VkC9sldY7iBWAi4EwgUNhqyHXzCz/UUAP
-         1XBgTL2aZ1J7mzmBcWvSmMWJCfsJebKqXNH5kcPmiHr6fhoGfJ2wqoev5BMCxNhV83wz
-         gR/g3hESbdDUXF8gW0r8HmjtOOvkFN+1z/f4YJ83qrAvNfaNKiQGzABiCnEeGpmfrfMc
-         LS0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685974294; x=1688566294;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AkFk+WRaK8DJpCbECdgTGImYYiJ/3koxt3S/LYx6+NI=;
-        b=jO8tdfv0+ws8ErLWC2N4etNMshXwKNmzdkX7GOtOhtSQSBk577Uu2pdYCZJpKLDqQg
-         LtRj62fJKtEX56NOTDJ4TRoknbiNOOE4bMWWbkGHhVC24PHXOd/VnHp2pt3joadvQukE
-         N+dqaneihsuVA6zq8a/TkieC+rg6Twqz/7ivJxHOMZTp3krtYaGVbaoX34Aq+Zm9KCiC
-         BL9GwzWpvChvztx5Iu3FKdRw0nx/RaY1WwRGUzPj4FyXcV0MxQfyvYSG0j83svRkBRkW
-         +6WQtIASFro6NgxQU0hoc+FLktqaVaJdamnDDiATrzTU/aTqpqKp1dBxHXZhpzuhrbrD
-         MQDw==
-X-Gm-Message-State: AC+VfDyAeHnZlZs7Bm7t57ed1zBd6wnghdN/iw8Bz/osVP/0/0HbCkwx
-	1uxfXF0MZUkRjAm3KFfnuacV57Unr0BBwcCcKCU=
-X-Google-Smtp-Source: ACHHUZ680CB8KjSWlMoL0v9AipVoZynv3S0bgcUM2Fp8Hq0bmrpPBfrv49GwoX/ubuRiXv+W47DzK8ZeRBFn4Ove42Y=
-X-Received: by 2002:a4a:d0a7:0:b0:558:cb7e:c52e with SMTP id
- t7-20020a4ad0a7000000b00558cb7ec52emr2271841oor.8.1685974294353; Mon, 05 Jun
- 2023 07:11:34 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA2A21DDCB
+	for <regressions@lists.linux.dev>; Mon,  5 Jun 2023 14:27:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1685975231;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VqvDjKPajBQJ0jhTbAvNmVVCOt81m2LxIym/sZ9cqd8=;
+	b=au7CoyDiI4YjEwJXDoqrb2uhbVB07ezEfcAqZuS6TeeLL022CXagAbmpihVhAqjkmUkHG1
+	B6muTqV9xqaEEe59JNP1rDYZWGIi8isY7XPnY6mCdBtCPcYJBl88fZWzhr0JP/1pt+2MnE
+	6/c5145hHY8lkDPCvZhKdZBMQii3L1o=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-390-O_8wkhTTOjSn0hsnxZkI9w-1; Mon, 05 Jun 2023 10:27:08 -0400
+X-MC-Unique: O_8wkhTTOjSn0hsnxZkI9w-1
+Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id EC0D48030CD;
+	Mon,  5 Jun 2023 14:27:05 +0000 (UTC)
+Received: from mail.corp.redhat.com (unknown [10.45.225.227])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 04BE84A927E;
+	Mon,  5 Jun 2023 14:27:03 +0000 (UTC)
+Date: Mon, 5 Jun 2023 16:27:01 +0200
+From: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Jiri Kosina <jikos@kernel.org>, Bastien Nocera <hadess@hadess.net>, 
+	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	"Peter F . Patel-Schneider" <pfpschneider@gmail.com>, Filipe =?utf-8?B?TGHDrW5z?= <lains@riseup.net>, 
+	Nestor Lopez Casado <nlopezcasad@logitech.com>, Mark Lord <mlord@pobox.com>
+Subject: Re: [PATCH] HID: logitech-hidpp: Handle timeout differently from busy
+Message-ID: <7ko33em3pqdaeghkt6wumzks6fz2lzztmqyhyzvv3kisjovmvr@mojlmkmrqlml>
+References: <20230531082428.21763-1-hadess@hadess.net>
+ <nycvar.YFH.7.76.2305311606160.29760@cbobk.fhfr.pm>
+ <nycvar.YFH.7.76.2306031440380.29760@cbobk.fhfr.pm>
+ <15bb2507-a145-7f1b-8e84-58aeb02484b9@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <46a7eb80-5f09-4f6a-4fd3-9550dafd497c@felixrichter.tech>
- <1efbf587-e7b5-74a3-89e4-ca70386bd191@leemhuis.info> <CADnq5_M-5SD6HDRVtFHPNF3q9XKz75PECdUxR-OaVpPe2Zw=EQ@mail.gmail.com>
- <8d23a70e-b132-9b25-917a-1f45918533cc@leemhuis.info> <0cac032a-0f65-5134-cde5-f535fc58c5ab@felixrichter.tech>
- <e7eed5ce-e7a0-e03e-f8c7-3582d9771a33@leemhuis.info> <e24373f9-4405-d7f7-dd54-d0bde111242c@felixrichter.tech>
-In-Reply-To: <e24373f9-4405-d7f7-dd54-d0bde111242c@felixrichter.tech>
-From: Alex Deucher <alexdeucher@gmail.com>
-Date: Mon, 5 Jun 2023 10:11:23 -0400
-Message-ID: <CADnq5_MCXgtxNB_WBfAw+ZSKNeczSYL7gZPkpqqJ859G=LYkgA@mail.gmail.com>
-Subject: Re: PROBLEM: AMD Ryzen 9 7950X iGPU - Blinking Issue
-To: Felix Richter <judge@felixrichter.tech>, "Mahfooz, Hamza" <Hamza.Mahfooz@amd.com>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>, amd-gfx@lists.freedesktop.org, 
-	dri-devel@lists.freedesktop.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Sat, Jun 3, 2023 at 10:52=E2=80=AFAM Felix Richter <judge@felixrichter.t=
-ech> wrote:
->
-> Hi Guys,
->
-> sorry for the silence from my side. I had a lot of things to take care
-> of after returning from vacation. Also I had to wait on the zfs modules
-> to be updated to support kernel 6.3 for further testing.
->
-> The bad news is that I am still experiencing issues. I have been able to
-> get a reproducible trigger for the buggy behavior. The moment I take a
-> screenshot or any other program like `wdisplays` accesses the screen
-> buffer the screen starts flickering. The only way to reset it is to
-> reboot the machine or log out of the desktop.
->
-> With this I did a bisection to figure out which commit is responsible
-> for this. I attached the logs to the mail. The short version is that I
-> identified commit 81d0bcf9900932633d270d5bc4a54ff599c6ebdb as the
-> culprit. Seems that there are side effects of having more flexible
-> buffer placement for the case of the internal GPU. To verify that this
-> actually is the cause of the issue I built the current archlinux kernel
-> with an extra patch to revert the commit:
-> https://github.com/ju6ge/linux/tree/v6.3.5-ju6ge. The result is that be
-> bug is fixed!
-
-+ Hamza
-
-This is a known issue.  You can workaround it by setting
-amdgpu.sg_display=3D0.  It should be issue should be fixed in:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?=
-id=3D08da182175db4c7f80850354849d95f2670e8cd9
-
-Alex
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <15bb2507-a145-7f1b-8e84-58aeb02484b9@leemhuis.info>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.10
 
 
-
->
-> Now if this is the desired long term fix I do not know =E2=80=A6
->
-> Kind regards,
-> Felix Richter
->
-> On 02.05.23 16:12, Linux regression tracking (Thorsten Leemhuis) wrote:
-> > On 02.05.23 15:48, Felix Richter wrote:
-> >> On 5/2/23 15:34, Linux regression tracking (Thorsten Leemhuis) wrote:
-> >>> On 02.05.23 15:13, Alex Deucher wrote:
-> >>>> On Tue, May 2, 2023 at 7:45=E2=80=AFAM Linux regression tracking (Th=
-orsten
-> >>>> Leemhuis)<regressions@leemhuis.info>  wrote:
-> >>>>
-> >>>>> On 30.04.23 13:44, Felix Richter wrote:
-> >>>>>> Hi,
-> >>>>>>
-> >>>>>> I am running into an issue with the integrated GPU of the Ryzen 9
-> >>>>>> 7950X. It seems to be a regression from kernel version 6.1 to 6.2.
-> >>>>>> The bug materializes in from of my monitor blinking, meaning it
-> >>>>>> turns full white shortly. This happens very often so that the
-> >>>>>> system becomes unpleasant to use.
-> >>>>>>
-> >>>>>> I am running the Archlinux Kernel:
-> >>>>>> The Issue happens on the bleeding edge kernel: 6.2.13
-> >>>>>> Switching back to the LTS kernel resolves the issue: 6.1.26
-> >>>>>>
-> >>>>>> I have two monitors attached to the system. One 42 inch 4k Display
-> >>>>>> and a 24 inch 1080p Display and am running sway as my desktop.
-> >>>>>>
-> >>>>>> Let me know if there is more information I could provide to help
-> >>>>>> narrow down the issue.
-> >>>>> Thanks for the report. To be sure the issue doesn't fall through th=
-e
-> >>>>> cracks unnoticed, I'm adding it to regzbot, the Linux kernel regres=
-sion
-> >>>>> tracking bot:
-> >>>>>
-> >>>>> #regzbot ^introduced v6.1..v6.2
-> >>>>> #regzbot title drm: amdgpu: system becomes unpleasant to use after
-> >>>>> monitor starts blinking and turns full white
-> >>>>> #regzbot ignore-activity
-> >>>>>
-> >>>>> This isn't a regression? This issue or a fix for it are already
-> >>>>> discussed somewhere else? It was fixed already? You want to clarify
-> >>>>> when
-> >>>>> the regression started to happen? Or point out I got the title or
-> >>>>> something else totally wrong? Then just reply and tell me -- ideall=
-y
-> >>>>> while also telling regzbot about it, as explained by the page liste=
-d in
-> >>>>> the footer of this mail.
-> >>>>>
-> >>>>> Developers: When fixing the issue, remember to add 'Link:' tags
-> >>>>> pointing
-> >>>>> to the report (the parent of this mail). See page linked in footer =
-for
-> >>>>> details.
-> >>>> This sounds exactly like the issue that was fixed in this patch whic=
-h
-> >>>> is already on it's way to Linus:
-> >>>> https://gitlab.freedesktop.org/agd5f/linux/-/commit/08da182175db4c7f=
-80850354849d95f2670e8cd9
-> >>> FWIW, you in the flood of emails likely missed that this is the same
-> >>> thread where you yesterday replied "If the module parameter didn't he=
-lp
-> >>> then perhaps you are seeing some other issue.  Can you bisect?". That=
-'s
-> >>> why I decided to add this to the tracking. Or am I missing something
-> >>> obvious here?
+On Jun 05 2023, Linux regression tracking (Thorsten Leemhuis) wrote:
+> 
+> On 03.06.23 14:41, Jiri Kosina wrote:
+> > On Wed, 31 May 2023, Jiri Kosina wrote:
+> > 
+> >>> If an attempt at contacting a receiver or a device fails because the
+> >>> receiver or device never responds, don't restart the communication, only
+> >>> restart it if the receiver or device answers that it's busy, as originally
+> >>> intended.
 > >>>
-> >>> /me looks around again and can't see anything, but that doesn't have =
-to
-> >>> mean anything...
+> >>> This was the behaviour on communication timeout before commit 586e8fede795
+> >>> ("HID: logitech-hidpp: Retry commands when device is busy").
 > >>>
-> >>> Felix, btw, this guide might help you with the bisection, even if it'=
-s
-> >>> just for kernel compilation:
+> >>> This fixes some overly long waits in a critical path on boot, when
+> >>> checking whether the device is connected by getting its HID++ version.
 > >>>
-> >>> https://docs.kernel.org/next/admin-guide/quickly-build-trimmed-linux.=
-html
-> >>>
-> >>> And to indirectly reply to your mail from yesterday[1]. You might wan=
-t
-> >>> to ignore the arch linux kernel git repo and just do a bisection betw=
-een
-> >>> 6.1 and the latest 6.2.y kernel using upstream repos; and if I were y=
-ou
-> >>> I'd also try 6.3 or even mainline before that, in case the issue was
-> >>> fixed already.
-> >>>
-> >>> [1]
-> >>> https://lore.kernel.org/all/04749ee4-0728-92fe-bcb0-a7320279eaac@feli=
-xrichter.tech/
-> >>>
-> >> Thanks for the pointers, I'll do a bisection on my desktop from 6.1 to
-> >> the newest commit.
-> > FWIW, I wonder what you actually mean with "newest commit" here: a
-> > bisection between 6.1 and mainline HEAD might be a waste of time, *if*
-> > this is something that only happens in 6.2.y (say due to a broken or
-> > incomplete backport)
-> >
-> >> That was the part I was mostly unsure about =E2=80=A6 where
-> >> to start from.
+> >>> Signed-off-by: Bastien Nocera <hadess@hadess.net>
+> >>> Suggested-by: Mark Lord <mlord@pobox.com>
+> >>> Fixes: 586e8fede795 ("HID: logitech-hidpp: Retry commands when device is busy")
+> >>> Link: https://bugzilla.kernel.org/show_bug.cgi?id=217412
+> > [...]  
 > >>
-> >> I was planning to use PKGBUILD scripts from arch to achieve the same
-> >> configuration as I would when installing
-> >> the package and just rewrite the script to use a local copy of the
-> >> source code instead of the repository.
-> >> That way I can just use the bisect command, rebuild the package and te=
-st
-> >> again.
-> > In my experience trying to deal with Linux distro's package managers
-> > creates more trouble than it's worth.
-> >
-> >> But I probably won't be able to finish it this week, since I am on
-> >> vacation starting tomorrow and will not have access to the computer in
-> >> question. I will be back next week, by that time the patch Alex is
-> >> talking about might
-> >> already be in mainline. So if that fixes it, I will notice and let you
-> >> know. If not I will do the bisection to figure out what the actual iss=
-ue
-> >> is.
-> > Enjoy your vacation!
-> >
-> > Ciao, Thorsten
+> >> I have applied this even before getting confirmation from the reporters in 
+> >> bugzilla, as it's the right thing to do anyway.
+> > 
+> > Unfortunately it doesn't seem to cure the reported issue (while reverting 
+> > 586e8fede79 does):
+> 
+> BTW, remind me again: was fixing this by reverting 586e8fede79 for now a
+> option? I guess it's not, but if I'm wrong I wonder if that might at
+> this point be the best way forward.
+
+Could be. I don't think we thought at simply reverting it because it is
+required for some new supoprted devices because they might differ
+slightly from what we currently supported.
+
+That being said, Bastien will be unavailable for at least a week AFAIU,
+so maybe we should revert that patch.
+
+> 
+> > https://bugzilla.kernel.org/show_bug.cgi?id=217523#c2
+> 
+> FWIW, another comment showed up there:
+> 
+> ```
+> > --- Comment #6 from vova7890 ---
+> > Same problem. I researched this some time ago. I noticed that if I add a small
+> > delay between commands to the dongle - everything goes fine. Repeated
+> > request(586e8fede7953b1695b5ccc6112eff9b052e79ac) made the situation more
+> > visible
+
+I don't think I ever had to add any delays between commands. The USB
+stack should be capable of forwarding the commands just fine. So unless
+the receiver is of a different hardware (but same VID/PID) that might
+expose a problem elsewhere (in the USB controller maybe???). Just a long
+shot, but maybe getting the config of the impacted users and what are
+the USB controllers/drivers they are using might gives us a better
+understanding.
+
+Cheers,
+Benjamin
+
