@@ -1,136 +1,220 @@
-Received: from BN3PR00CU001.outbound.protection.outlook.com (mail-eastus2azon11020025.outbound.protection.outlook.com [52.101.56.25])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f43.google.com (mail-oo1-f43.google.com [209.85.161.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A8221C777
-	for <regressions@lists.linux.dev>; Mon,  5 Jun 2023 14:08:09 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=aJI0BUW6vXxXxonYFw2nkZO2oPbXIUtaSmv91TSuujfhOjBiLsmT7nNUPlYH1TAL19LaAjMmwC9hIxBDXtTzKHooWk3N5SgSOLmxNyH+edr8D6hLZlEyeMNWtIg8WJe6UV40thXsxxKVYRrszPkPvqXciAlkP1b1na/OaSCgU1m8yuQcYicdqBc7jofl/wEug7LMfWOLmJVXUFi1gPjzkVRPim2k57Au6BV7BhsM9+MCdsA96GoctQQB4KGU/P7cZiy7Ne9UFJLfz6iqF8y+A6COWvxMWT4juRKuQH9oYtfX4B0ViWbDzs9SNR0S6NZsHsf4tINqb0knsFSrMPRjKA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=FUQWGSonvXODnAHx7KGUSRRFmL1aNGXFGJDU4Gm9k88=;
- b=bTBYogXQiRxygmjqbLO04dho5RGDXyptqrqbvbqTXdGwfjpW4SF0E1IklxCEF6crtn7GSKXPny+eWgWc92L/MDC8jUMojcxNEx8VXM1JZAssW0Ib7Iqj9ZQ1mgI4eaIFvpSP1RwBfpoMBPhRQv3ihoTIeSbw7cd1gOm3pcTKoQuWmiElv5wYkTvs6sVXy+DoWwyazcHGemQR1+y7s8/SKxG5p0r1qCaM9T9iJNuEbBiO27+JeZ4TN9Y0EOMezUx/MB3Gkva+4EEgvyaxjD2RlmpOQbc18s4M4d0f4Nv4OENf/IxsGiPWuGQTsZHSKW2QMnwMT+jEAvP8LHVI2OnJpw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FUQWGSonvXODnAHx7KGUSRRFmL1aNGXFGJDU4Gm9k88=;
- b=VdnHfoTYfyEWpOGHOAaJGwyLw1WcoYI0YAk7obxT9jXLPNA8pC0Qu39oqtVkQW5/dr/QOJRUcUJ0ukj3Y8lMm+Tzbnr3j4gFxXOqg5XfdMqLROWoHWKp0VmQZWDYfkEQjDsT+bouJtr768SmkwG1j5g0DXh2BJrZ5Ui6QgXC6Js=
-Received: from BYAPR21MB1688.namprd21.prod.outlook.com (2603:10b6:a02:bf::26)
- by DM4PR21MB3659.namprd21.prod.outlook.com (2603:10b6:8:ab::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6500.6; Mon, 5 Jun
- 2023 14:08:06 +0000
-Received: from BYAPR21MB1688.namprd21.prod.outlook.com
- ([fe80::7d5d:3139:cf68:64b]) by BYAPR21MB1688.namprd21.prod.outlook.com
- ([fe80::7d5d:3139:cf68:64b%3]) with mapi id 15.20.6500.004; Mon, 5 Jun 2023
- 14:08:06 +0000
-From: "Michael Kelley (LINUX)" <mikelley@microsoft.com>
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-CC: Haiyang Zhang <haiyangz@microsoft.com>, Paolo Abeni <pabeni@redhat.com>,
-	"David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux BPF
-	<bpf@vger.kernel.org>, Linux on Hyper-V <linux-hyperv@vger.kernel.org>, Linux
- Kernel Network Developers <netdev@vger.kernel.org>, Bagas Sanjaya
-	<bagasdotme@gmail.com>
-Subject: RE: Fwd: nvsp_rndis_pkt_complete error status and net_ratelimit:
- callbacks suppressed messages on 6.4.0rc4
-Thread-Topic: Fwd: nvsp_rndis_pkt_complete error status and net_ratelimit:
- callbacks suppressed messages on 6.4.0rc4
-Thread-Index: AQHZkvHeNWWbfmtPQ0KY8Y8df7j5gK98CvoAgAA9AMA=
-Date: Mon, 5 Jun 2023 14:08:06 +0000
-Message-ID:
- <BYAPR21MB16887C59D2B2C3ADDB61874BD74DA@BYAPR21MB1688.namprd21.prod.outlook.com>
-References: <15dd93af-fcd5-5b9a-a6ba-9781768dbae7@gmail.com>
- <ebdd877d-f143-487c-04cd-606996eb6176@leemhuis.info>
-In-Reply-To: <ebdd877d-f143-487c-04cd-606996eb6176@leemhuis.info>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=6bed9edf-c80b-44c8-b440-fbba4b01d160;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2023-06-05T14:06:33Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BYAPR21MB1688:EE_|DM4PR21MB3659:EE_
-x-ms-office365-filtering-correlation-id: 8be8b2eb-9ba3-4fa7-8a4c-08db65ce48c4
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- C8DFimjaosCje++kC/gpav/hT+h5w5J8t7ssiU5puv0xdOhEXsFHCQU+9myiGpRCtTlzumccmM82sCwKjgxncQ7/gel7+EtxR+yC5AK0HVWNsIoInalqidGjonLa5yEeV//X6KFWZsONcyypQHa4FyL/L7CqRO9vWmbvgfdRkxAOZ4V9eyr5LdgWBb5Rv1UaxWjx3viR+GnYErzv8i/GMWyTkz6CliXS3E8brtdU91kxeTC0qfFvy+iq8Pwjn3x7fyhbFRsvtOiQNh6Se4wX16C4XRRpjmodPxCrP3+FrDtR2RLTNG1lssV81N+ayjwvcOuUHIo3NnxB5aeRywBpF0v0HFEYUINbaGKmAQEXeT5kf9GIeVMVZHN/xPQGVzTxyL2SM78d6ASm/0urMDhK0/TrxlhmVSBWQJreUw0taCGKh9yexd+e+BJOoGOfH8ist2JISz4SsK7gFTSa/0X+Xl8xEP2b12QnX9n++i0I/yV8ebAV/uZglQNQy0MaDUAH/hViBXKdBdKt4Tj48zJ7DXotymhbJvBbkAV6AL8jmzYS05Wtc6MT/LFUptlKU06y2KwZ8SIHH6akBPJ570HkLL39A8lcCsp492aHGM/KtNkxjBBhMKjosrgFyGAEqSsBYHcBAIpYGrRZ8johd5rhXdBFjcW/L4OOZc4BS3YU02w=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR21MB1688.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(396003)(376002)(136003)(39860400002)(366004)(346002)(451199021)(52536014)(8676002)(8936002)(5660300002)(4744005)(2906002)(316002)(66446008)(76116006)(66476007)(66556008)(64756008)(66946007)(6916009)(4326008)(41300700001)(8990500004)(10290500003)(15650500001)(54906003)(7696005)(71200400001)(53546011)(6506007)(9686003)(26005)(186003)(83380400001)(122000001)(478600001)(82950400001)(82960400001)(38100700002)(55016003)(33656002)(38070700005)(86362001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?yS5UVX9Y56qACGAav8GYny0kiftZbklgXnzW46m28Hx4SFz9G050Ea6dr3zx?=
- =?us-ascii?Q?7fOZqpOSjP47HyKTu+SheU2gK3aUjX4/JduNvAXFTYmQJRQommU/SksC1GHg?=
- =?us-ascii?Q?YXc4XP3FuK0y0qBzHQcsiBmTkXOBKwgx47U2taJ6yRhsDrM6iq/AhGYDthJ2?=
- =?us-ascii?Q?VEZuETLdJ2g10yx52jZkY0SDwv0KDgtvLbZkOHrGnN+HIvhmpZgF4f2Dk656?=
- =?us-ascii?Q?yqm01bwRY6WT+XMyOAKY1mbCN+gcHccbqRLce3d6rXZF+kQCj48YQyzBuwda?=
- =?us-ascii?Q?toXn3DiOx6pr16vypOT3O8bWHn3zxNAPc43nrt2WiCce9JP85sQg/AKHTLCO?=
- =?us-ascii?Q?CSdPuWaIcmAf6aa5kMGyfYD+m4sU9bEMH7wQFJ7BXNAxt3nnEinVzffbckfS?=
- =?us-ascii?Q?vu39awiJ8J96N7xC4AayJc5xhzHW88DhG9MxrAw3qK9Vb1k7kdH9wcniDiFz?=
- =?us-ascii?Q?5MnIqOhMG9LURind5uXYdCWnCgU8K953ldqFvFYcm1vzY6OIAvg18RdxL4sz?=
- =?us-ascii?Q?ZYQKEEXaI+B5D9LpanNUhOJngEmqb5cICMs+KKIjbmE4hIq8xUkZ8s+ZeaGJ?=
- =?us-ascii?Q?mxrkxkPMwmb41hiGZ2QfRf7RC6IxqyzX+gUqMpn5miLCcGNZq2xQnQZEJHmM?=
- =?us-ascii?Q?qKeBNel6YHvS9KIuDO4nExiVw3jvKktANBedDlGuDw3PpCujGDqJxlJEyxJu?=
- =?us-ascii?Q?7M4HRa7XTsKQKSc/+PjTMZjcq3jrhy9WiDLZVppvyeF5VFTLSBXpGopPAfzp?=
- =?us-ascii?Q?TfM/ubcsb2urbPdAZQQ2FWI1zL9IFRvzdGcg5ZoQaHZ0tFq1xpshT51uQtU/?=
- =?us-ascii?Q?wcAXxGmTDFoeR2gZmDnhV6iyE+dkpIma90i5Q/WMNZDfh9Xf78ZXe6aPSlEQ?=
- =?us-ascii?Q?MsRuGKkEmuszNVhihAN+MgOejKFOwH3RI1gOwwO79Tq9o2gx4XnRM/QfTDFb?=
- =?us-ascii?Q?F16s8qLaGOwVUClA/k3uXXaLyWmsQp9aUTWnwnZrsdb3g52SaXjaNQ8FxRTe?=
- =?us-ascii?Q?mfVCiiFgowo5N0uSwfmUUgA0cUxhax1LN6wd/fF8QHs2uU0tuLgIlOITujPH?=
- =?us-ascii?Q?P+mGCyufW1CdRnr+wtPoV/saCBji3saLpLdnYpiBP24NiNBrPYBJOGI+BOCr?=
- =?us-ascii?Q?Kt/XbdQwf35HL6pti2X5DIe79AbSpRjDg55A7ijblUXERLpPk5u86utwSiHp?=
- =?us-ascii?Q?B+AlGa1YenNAzKKldyDvnxbtCrasfwkwq5L5yl9mk5u2mX9RJLWvGgAdA89f?=
- =?us-ascii?Q?nHvkz/3lXCgeKydWhXjxmAdT+BSgvgRLR1R4YjuIx8a3Bpz3XWMarjb2r/FY?=
- =?us-ascii?Q?xKBu+RE5gbzWZmHwB5MEkhgZtUDMp8nmP0oFXt/rkDi85rvSq6pX7DoOjyby?=
- =?us-ascii?Q?qNnWwns+PI5dPUoSZx4OsULza0sU/71hgIKIX6qAsCMfIfZgbNV33Xlkz87N?=
- =?us-ascii?Q?VJYbRDiIQ/m33UckqWm8o871VEbnPS9BGMu3KZGv44fwM6WDPj/XIVH9GYao?=
- =?us-ascii?Q?kBMTezYF1lVQChSu6zEvCCMHB2SgBabwD7bXGcdS0edJOFejtCXgxt0U+Eyf?=
- =?us-ascii?Q?svpz6hhZhdQPfLoeczaPowjJ0qk/Hmvg6pB5wq/vaIsf2rqxgmBirPPRoWM4?=
- =?us-ascii?Q?Eg=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84ABC1548E
+	for <regressions@lists.linux.dev>; Mon,  5 Jun 2023 14:11:35 +0000 (UTC)
+Received: by mail-oo1-f43.google.com with SMTP id 006d021491bc7-557ca32515eso3508060eaf.3
+        for <regressions@lists.linux.dev>; Mon, 05 Jun 2023 07:11:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1685974294; x=1688566294;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AkFk+WRaK8DJpCbECdgTGImYYiJ/3koxt3S/LYx6+NI=;
+        b=SXhwucOX38CrGifxFyNT20ngbnqojLTSIR9wnhtJzHP6d+m9lTtk9Gw3AHaq0V5yyH
+         TRQy8GBtK5iJ+CyyHFMmNXoax65xdnpHxXlwb5g5u1nRvzMYHZXBVJLIaV2jApATWVej
+         4dCdUKZJBp6Xr0wptg9RfoRfzmUdjDPjlf4VkC9sldY7iBWAi4EwgUNhqyHXzCz/UUAP
+         1XBgTL2aZ1J7mzmBcWvSmMWJCfsJebKqXNH5kcPmiHr6fhoGfJ2wqoev5BMCxNhV83wz
+         gR/g3hESbdDUXF8gW0r8HmjtOOvkFN+1z/f4YJ83qrAvNfaNKiQGzABiCnEeGpmfrfMc
+         LS0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685974294; x=1688566294;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=AkFk+WRaK8DJpCbECdgTGImYYiJ/3koxt3S/LYx6+NI=;
+        b=jO8tdfv0+ws8ErLWC2N4etNMshXwKNmzdkX7GOtOhtSQSBk577Uu2pdYCZJpKLDqQg
+         LtRj62fJKtEX56NOTDJ4TRoknbiNOOE4bMWWbkGHhVC24PHXOd/VnHp2pt3joadvQukE
+         N+dqaneihsuVA6zq8a/TkieC+rg6Twqz/7ivJxHOMZTp3krtYaGVbaoX34Aq+Zm9KCiC
+         BL9GwzWpvChvztx5Iu3FKdRw0nx/RaY1WwRGUzPj4FyXcV0MxQfyvYSG0j83svRkBRkW
+         +6WQtIASFro6NgxQU0hoc+FLktqaVaJdamnDDiATrzTU/aTqpqKp1dBxHXZhpzuhrbrD
+         MQDw==
+X-Gm-Message-State: AC+VfDyAeHnZlZs7Bm7t57ed1zBd6wnghdN/iw8Bz/osVP/0/0HbCkwx
+	1uxfXF0MZUkRjAm3KFfnuacV57Unr0BBwcCcKCU=
+X-Google-Smtp-Source: ACHHUZ680CB8KjSWlMoL0v9AipVoZynv3S0bgcUM2Fp8Hq0bmrpPBfrv49GwoX/ubuRiXv+W47DzK8ZeRBFn4Ove42Y=
+X-Received: by 2002:a4a:d0a7:0:b0:558:cb7e:c52e with SMTP id
+ t7-20020a4ad0a7000000b00558cb7ec52emr2271841oor.8.1685974294353; Mon, 05 Jun
+ 2023 07:11:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR21MB1688.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8be8b2eb-9ba3-4fa7-8a4c-08db65ce48c4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Jun 2023 14:08:06.1446
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ZxXKK4EQ65wC0gSpI5lkQG0u/MQBUQ7HdS+M3LQMxkQy08polvnaH4ZcKtc7YDny2WLDBiIPgoxv2zf8l6Sq3of7oaqV38RL1JZl+io1/oo=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR21MB3659
+References: <46a7eb80-5f09-4f6a-4fd3-9550dafd497c@felixrichter.tech>
+ <1efbf587-e7b5-74a3-89e4-ca70386bd191@leemhuis.info> <CADnq5_M-5SD6HDRVtFHPNF3q9XKz75PECdUxR-OaVpPe2Zw=EQ@mail.gmail.com>
+ <8d23a70e-b132-9b25-917a-1f45918533cc@leemhuis.info> <0cac032a-0f65-5134-cde5-f535fc58c5ab@felixrichter.tech>
+ <e7eed5ce-e7a0-e03e-f8c7-3582d9771a33@leemhuis.info> <e24373f9-4405-d7f7-dd54-d0bde111242c@felixrichter.tech>
+In-Reply-To: <e24373f9-4405-d7f7-dd54-d0bde111242c@felixrichter.tech>
+From: Alex Deucher <alexdeucher@gmail.com>
+Date: Mon, 5 Jun 2023 10:11:23 -0400
+Message-ID: <CADnq5_MCXgtxNB_WBfAw+ZSKNeczSYL7gZPkpqqJ859G=LYkgA@mail.gmail.com>
+Subject: Re: PROBLEM: AMD Ryzen 9 7950X iGPU - Blinking Issue
+To: Felix Richter <judge@felixrichter.tech>, "Mahfooz, Hamza" <Hamza.Mahfooz@amd.com>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>, amd-gfx@lists.freedesktop.org, 
+	dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Linux regression tracking (Thorsten Leemhuis) <regressions@leemhuis.i=
-nfo> Sent: Monday, June 5, 2023 3:28 AM
->=20
-> Hi, Thorsten here, the Linux kernel's regression tracker.
->=20
-> On 30.05.23 14:25, Bagas Sanjaya wrote:
+On Sat, Jun 3, 2023 at 10:52=E2=80=AFAM Felix Richter <judge@felixrichter.t=
+ech> wrote:
+>
+> Hi Guys,
+>
+> sorry for the silence from my side. I had a lot of things to take care
+> of after returning from vacation. Also I had to wait on the zfs modules
+> to be updated to support kernel 6.3 for further testing.
+>
+> The bad news is that I am still experiencing issues. I have been able to
+> get a reproducible trigger for the buggy behavior. The moment I take a
+> screenshot or any other program like `wdisplays` accesses the screen
+> buffer the screen starts flickering. The only way to reset it is to
+> reboot the machine or log out of the desktop.
+>
+> With this I did a bisection to figure out which commit is responsible
+> for this. I attached the logs to the mail. The short version is that I
+> identified commit 81d0bcf9900932633d270d5bc4a54ff599c6ebdb as the
+> culprit. Seems that there are side effects of having more flexible
+> buffer placement for the case of the internal GPU. To verify that this
+> actually is the cause of the issue I built the current archlinux kernel
+> with an extra patch to revert the commit:
+> https://github.com/ju6ge/linux/tree/v6.3.5-ju6ge. The result is that be
+> bug is fixed!
+
++ Hamza
+
+This is a known issue.  You can workaround it by setting
+amdgpu.sg_display=3D0.  It should be issue should be fixed in:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?=
+id=3D08da182175db4c7f80850354849d95f2670e8cd9
+
+Alex
+
+
+
+>
+> Now if this is the desired long term fix I do not know =E2=80=A6
+>
+> Kind regards,
+> Felix Richter
+>
+> On 02.05.23 16:12, Linux regression tracking (Thorsten Leemhuis) wrote:
+> > On 02.05.23 15:48, Felix Richter wrote:
+> >> On 5/2/23 15:34, Linux regression tracking (Thorsten Leemhuis) wrote:
+> >>> On 02.05.23 15:13, Alex Deucher wrote:
+> >>>> On Tue, May 2, 2023 at 7:45=E2=80=AFAM Linux regression tracking (Th=
+orsten
+> >>>> Leemhuis)<regressions@leemhuis.info>  wrote:
+> >>>>
+> >>>>> On 30.04.23 13:44, Felix Richter wrote:
+> >>>>>> Hi,
+> >>>>>>
+> >>>>>> I am running into an issue with the integrated GPU of the Ryzen 9
+> >>>>>> 7950X. It seems to be a regression from kernel version 6.1 to 6.2.
+> >>>>>> The bug materializes in from of my monitor blinking, meaning it
+> >>>>>> turns full white shortly. This happens very often so that the
+> >>>>>> system becomes unpleasant to use.
+> >>>>>>
+> >>>>>> I am running the Archlinux Kernel:
+> >>>>>> The Issue happens on the bleeding edge kernel: 6.2.13
+> >>>>>> Switching back to the LTS kernel resolves the issue: 6.1.26
+> >>>>>>
+> >>>>>> I have two monitors attached to the system. One 42 inch 4k Display
+> >>>>>> and a 24 inch 1080p Display and am running sway as my desktop.
+> >>>>>>
+> >>>>>> Let me know if there is more information I could provide to help
+> >>>>>> narrow down the issue.
+> >>>>> Thanks for the report. To be sure the issue doesn't fall through th=
+e
+> >>>>> cracks unnoticed, I'm adding it to regzbot, the Linux kernel regres=
+sion
+> >>>>> tracking bot:
+> >>>>>
+> >>>>> #regzbot ^introduced v6.1..v6.2
+> >>>>> #regzbot title drm: amdgpu: system becomes unpleasant to use after
+> >>>>> monitor starts blinking and turns full white
+> >>>>> #regzbot ignore-activity
+> >>>>>
+> >>>>> This isn't a regression? This issue or a fix for it are already
+> >>>>> discussed somewhere else? It was fixed already? You want to clarify
+> >>>>> when
+> >>>>> the regression started to happen? Or point out I got the title or
+> >>>>> something else totally wrong? Then just reply and tell me -- ideall=
+y
+> >>>>> while also telling regzbot about it, as explained by the page liste=
+d in
+> >>>>> the footer of this mail.
+> >>>>>
+> >>>>> Developers: When fixing the issue, remember to add 'Link:' tags
+> >>>>> pointing
+> >>>>> to the report (the parent of this mail). See page linked in footer =
+for
+> >>>>> details.
+> >>>> This sounds exactly like the issue that was fixed in this patch whic=
+h
+> >>>> is already on it's way to Linus:
+> >>>> https://gitlab.freedesktop.org/agd5f/linux/-/commit/08da182175db4c7f=
+80850354849d95f2670e8cd9
+> >>> FWIW, you in the flood of emails likely missed that this is the same
+> >>> thread where you yesterday replied "If the module parameter didn't he=
+lp
+> >>> then perhaps you are seeing some other issue.  Can you bisect?". That=
+'s
+> >>> why I decided to add this to the tracking. Or am I missing something
+> >>> obvious here?
+> >>>
+> >>> /me looks around again and can't see anything, but that doesn't have =
+to
+> >>> mean anything...
+> >>>
+> >>> Felix, btw, this guide might help you with the bisection, even if it'=
+s
+> >>> just for kernel compilation:
+> >>>
+> >>> https://docs.kernel.org/next/admin-guide/quickly-build-trimmed-linux.=
+html
+> >>>
+> >>> And to indirectly reply to your mail from yesterday[1]. You might wan=
+t
+> >>> to ignore the arch linux kernel git repo and just do a bisection betw=
+een
+> >>> 6.1 and the latest 6.2.y kernel using upstream repos; and if I were y=
+ou
+> >>> I'd also try 6.3 or even mainline before that, in case the issue was
+> >>> fixed already.
+> >>>
+> >>> [1]
+> >>> https://lore.kernel.org/all/04749ee4-0728-92fe-bcb0-a7320279eaac@feli=
+xrichter.tech/
+> >>>
+> >> Thanks for the pointers, I'll do a bisection on my desktop from 6.1 to
+> >> the newest commit.
+> > FWIW, I wonder what you actually mean with "newest commit" here: a
+> > bisection between 6.1 and mainline HEAD might be a waste of time, *if*
+> > this is something that only happens in 6.2.y (say due to a broken or
+> > incomplete backport)
 > >
-> > I notice a regression report on Bugzilla [1]. Quoting from it:
->=20
-> Hmmm, nobody replied to this yet (or am I missing something?). Doesn't
-> seems like it's something urgent, but nevertheless:
->=20
-> Michael, Bagas didn't make it obvious at all, hence please allow me to
-> ask: did you notice that this is a regression that is apparently caused
-> by a commit of yours?
->=20
-
-Thanks for flagging this directly to me.  I'll check on it.
-
-Michael
+> >> That was the part I was mostly unsure about =E2=80=A6 where
+> >> to start from.
+> >>
+> >> I was planning to use PKGBUILD scripts from arch to achieve the same
+> >> configuration as I would when installing
+> >> the package and just rewrite the script to use a local copy of the
+> >> source code instead of the repository.
+> >> That way I can just use the bisect command, rebuild the package and te=
+st
+> >> again.
+> > In my experience trying to deal with Linux distro's package managers
+> > creates more trouble than it's worth.
+> >
+> >> But I probably won't be able to finish it this week, since I am on
+> >> vacation starting tomorrow and will not have access to the computer in
+> >> question. I will be back next week, by that time the patch Alex is
+> >> talking about might
+> >> already be in mainline. So if that fixes it, I will notice and let you
+> >> know. If not I will do the bisection to figure out what the actual iss=
+ue
+> >> is.
+> > Enjoy your vacation!
+> >
+> > Ciao, Thorsten
