@@ -1,103 +1,86 @@
-Received: from mail-ot1-f43.google.com (mail-ot1-f43.google.com [209.85.210.43])
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53CFE37D
-	for <regressions@lists.linux.dev>; Mon,  5 Jun 2023 03:27:00 +0000 (UTC)
-Received: by mail-ot1-f43.google.com with SMTP id 46e09a7af769-6af7d6f6f41so3347612a34.1
-        for <regressions@lists.linux.dev>; Sun, 04 Jun 2023 20:26:59 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4385B631
+	for <regressions@lists.linux.dev>; Mon,  5 Jun 2023 06:16:56 +0000 (UTC)
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5149b63151aso6621145a12.3
+        for <regressions@lists.linux.dev>; Sun, 04 Jun 2023 23:16:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1685935619; x=1688527619;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=dwal0L6sGBe4Tija8w5m6MusCvofbkwy4bszwLInaTI=;
-        b=Ay7nte0rxPqj9fVhJgbG/FHztxxZIqkOp5rra/Xzf5a4e+rzgaZeC1H6XoyG5cMJhY
-         uSD9j0Zo+Aqgo2EV//XbEAAD65l9aF8ROz6MXpVpLPSpoJQe9nj0ZmltyJrzTG2K9XO7
-         Er/Dhv2lvSCCQhm8X9KosKAVSfYwu4MJeV2sv1JzpqTrRAri7mV9QJiJFeJSeQ3KE5hq
-         /pO+acfGUR3MerUgYQwFhS5GdEFhVGNimbr9AEzEGt4lAcUBw6B3+yb0Id0pH/uea4Jz
-         EZURzWFxE8XroknUyx9pqZOLIvApTVvVNMxvgc1GXg0T5HdVtVWhAyQMKEcZvqPwtSr4
-         ORxg==
+        d=linaro.org; s=google; t=1685945815; x=1688537815;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=nczuT/c/Qes0P/uVYp4yXHku3U28CK0is8MzDelgl2o=;
+        b=dGdsIERC+Xnwm5uOZbkItcC2LTDYZLiThyLnz4e1r4r2L/SV7h2o3tJe33fw0ZXNNy
+         Eri4L/eeSQ8SUW1wwlbohIXZIrf5EyFrwlzgRf+JEYQyGqyY4A0r0cCgBHIcG1aNXGCz
+         g3CyuLhHcZ3klJBYKPKiMaL5tY6s3Y08Jrk5NoggUwo3A+VL6JWDYCnPRtUGyVOJ8gWi
+         fANoFRMIicjwjTtgn5+1CiVI6o4LaEN4VWq3u43EfZrLC79Goy1WLxg3JZj9f5qi1WJI
+         lEEDgfORZrmxOK+35/iKC4zfKO/+yVjaPw9MMFYhK3xUeSU00mIg0UA5buHnx8LtOSct
+         6T3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685935619; x=1688527619;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dwal0L6sGBe4Tija8w5m6MusCvofbkwy4bszwLInaTI=;
-        b=d2Mgutv9mlJ444qWkwGgjPtirNG7xEWojKhp2J3eqKYwoADstX/v9qIOpt2RWghB1t
-         mJ4pR8XP39OsF0zUOY9NCNpg+Jum27q+FHzmCFceaiQqJHVVzMHJPAkPBJ6PhYH/X/hr
-         1zVLnduU5tFBosQXgPYTJKEjJKHdWy4RykAFcUfSvMnZcIemQvLzZyhq5neQeADUAZ1P
-         SzDSla1uKmUnWbF2kLr68cFs2RDXUSCrTw7Qs4XBd7CM2qL/wKbT9sob1fDznqCM5TCY
-         jc9yqmoAjQ1ULfE+yRxLWKy+mOTpnbN8txPHAnYuh/fRqGyiXwRZAGCInZGrGhIeka4O
-         vFeA==
-X-Gm-Message-State: AC+VfDw9ELVaTx7lyUKREYpHM2LkxV7SUgm3RG9iOofSnBCKPSrAlpDP
-	/GyLJhRHh/0HBtQb5QRsf6w=
-X-Google-Smtp-Source: ACHHUZ4W+cRsdWRORSzDYMPoa42K0S+ECjUK9kAXMfdNknMckwnftY5YdZavnMxICgOANNXm00QN2Q==
-X-Received: by 2002:a9d:7692:0:b0:6ab:bec:592f with SMTP id j18-20020a9d7692000000b006ab0bec592fmr8870075otl.17.1685935619041;
-        Sun, 04 Jun 2023 20:26:59 -0700 (PDT)
-Received: from debian.me (subs03-180-214-233-4.three.co.id. [180.214.233.4])
-        by smtp.gmail.com with ESMTPSA id s17-20020aa78291000000b006413e6e7578sm4230048pfm.5.2023.06.04.20.26.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 04 Jun 2023 20:26:58 -0700 (PDT)
-Received: by debian.me (Postfix, from userid 1000)
-	id CDB3A106291; Mon,  5 Jun 2023 10:26:55 +0700 (WIB)
-Date: Mon, 5 Jun 2023 10:26:55 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Ravi Bangoria <ravi.bangoria@amd.com>,
-	"Peter Zijlstra (Intel)" <peterz@infradead.org>
-Cc: mark.rutland@arm.com, jolsa@kernel.org, irogers@google.com,
-	bp@alien8.de, adrian.hunter@intel.com,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	"linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: Re: [REGRESSION][BISECT] perf/core: Remove pmu linear searching code
-Message-ID: <ZH1V_-WXejzDsKXh@debian.me>
-References: <3abd3693-ad87-9abf-a762-337076638fcc@linaro.org>
+        d=1e100.net; s=20221208; t=1685945815; x=1688537815;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=nczuT/c/Qes0P/uVYp4yXHku3U28CK0is8MzDelgl2o=;
+        b=a9CDBWpBMfz3bb4GyEh+ItY9m4t0prwW9OVYACbIqJAPIOAXCP8a42ND8Z4knE08+g
+         MS/AcbRIchajlEuL3cOq+Qoa0dkPcqM8Z7StFclSLXfJCEwim2h3llrA/5VVmx9p3Bvp
+         hNREPIgM/EVxkaX8T42uY4u6wfYnYt42amv6WfPmz5Wn6n6ZtE0rhhQ4TIrdKr0NFKU8
+         roYZDK5JhuNABS/1hyFFjqNm1Op9zdVqiToN1/qQ60TQTvuWscZDuF78obUG10VY5cnL
+         I9JQBQSLy/FrrbNoGBDu87Gdb7SOYbU3eDr617qKhGry931xFDxJYPtB2VosQOUOoROV
+         ApvA==
+X-Gm-Message-State: AC+VfDxXEAZvsncccspTCZUCsebalK7QRzEjR5vd5IGRwek8J1TkfGgD
+	zYGJzA/GVbgm1QB6mx0GQgNTkQ==
+X-Google-Smtp-Source: ACHHUZ6bBE8nliXwBKq7YwbjCHsuMRnaZLMDhc5vMfx5nKjs7e2D5jsjcmdxmbMWUlA6eMT8kBd5hw==
+X-Received: by 2002:a17:907:9815:b0:974:4f34:b043 with SMTP id ji21-20020a170907981500b009744f34b043mr5962530ejc.1.1685945815186;
+        Sun, 04 Jun 2023 23:16:55 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.219.26])
+        by smtp.gmail.com with ESMTPSA id lx5-20020a170906af0500b00965c6c63ea3sm3893187ejb.35.2023.06.04.23.16.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 04 Jun 2023 23:16:54 -0700 (PDT)
+Message-ID: <afa6aceb-3435-f146-ea1b-e205c1610858@linaro.org>
+Date: Mon, 5 Jun 2023 08:16:52 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="IrxVMi6lhpyOnVcO"
-Content-Disposition: inline
-In-Reply-To: <3abd3693-ad87-9abf-a762-337076638fcc@linaro.org>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.2
+Subject: Re: [REGRESSION][BISECT] perf/core: Remove pmu linear searching code
+To: Ravi Bangoria <ravi.bangoria@amd.com>
+Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>, mark.rutland@arm.com,
+ jolsa@kernel.org, irogers@google.com, bp@alien8.de, adrian.hunter@intel.com,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <3abd3693-ad87-9abf-a762-337076638fcc@linaro.org>
+ <512e8b06-3ef4-66ae-5ca3-5a863a10c51f@amd.com>
+Content-Language: en-US
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <512e8b06-3ef4-66ae-5ca3-5a863a10c51f@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+On 05/06/2023 04:59, Ravi Bangoria wrote:
+> On 04-Jun-23 5:08 PM, Krzysztof Kozlowski wrote:
+>> Hi,
+>>
+>> #regzbot introduced: 9551fbb64d09
+>>
+>> Bisect pointed to commit 9551fbb64d09 ("perf/core: Remove pmu linear
+>> searching code") as first one where all hardware events are gone from
+>> perf for ARMv7 Exynos5422 board.
+> 
+> Is this inside KVM guest? Does this help:
+> https://lore.kernel.org/all/20230525212723.3361524-1-oliver.upton@linux.dev
 
 
---IrxVMi6lhpyOnVcO
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+It's not a KVM guest. It's regular board as listed at the end of the mail.
 
-On Sun, Jun 04, 2023 at 01:38:10PM +0200, Krzysztof Kozlowski wrote:
-> Hi,
->=20
-> #regzbot introduced: 9551fbb64d09
->=20
-> Bisect pointed to commit 9551fbb64d09 ("perf/core: Remove pmu linear
-> searching code") as first one where all hardware events are gone from
-> perf for ARMv7 Exynos5422 board.
+Best regards,
+Krzysztof
 
-Fixing up regzbot entry title:
-
-#regzbot title: All Exynos5422 hardware events are gone from perf due to re=
-moving pmu linear searching code
-
-Thanks.
-
---=20
-An old man doll... just what I always wanted! - Clara
-
---IrxVMi6lhpyOnVcO
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZH1V/wAKCRD2uYlJVVFO
-o/RiAP9rzLBOEEPKnBvjwy3gCOa2Atg4tW8EaJSjiILhC9vE7wD8CWr+6XulOmFf
-vEyQi5u81HGW/Wdd3xItqgKg0kT8dAg=
-=gvFv
------END PGP SIGNATURE-----
-
---IrxVMi6lhpyOnVcO--
