@@ -1,145 +1,208 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2077.outbound.protection.outlook.com [40.107.237.77])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65FDC23C76
-	for <regressions@lists.linux.dev>; Tue,  6 Jun 2023 15:08:55 +0000 (UTC)
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-30e53cacc10so271923f8f.0
-        for <regressions@lists.linux.dev>; Tue, 06 Jun 2023 08:08:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1686064133; x=1688656133;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=LCkdSIE782UW59BfbCfIEABhddN9BVHapDENUEfuLKs=;
-        b=AKxG/JHXjl8Uum2r/2E16HuYg8ZElK/c4+2yYppEnfDMT09GcxQF8AZ1vmkqWBCeqW
-         L21vNgMT5QF3xoWCeWqRziuHsm/lPgieSk5KxeBranar6KckkxRluWiPkS6cOvuBxqWx
-         Tn3BatCuZGabO8bXzilosw1uY844TQ0dKjvpBtP6G7QZ1SY+Ouve+PgzF3CY73meZPLs
-         UabzWDGhAgW8ZPpVsVa8v4z5Bzm3EhPaMTnNrtdLdSWVjiCYxtALHMxUjfR3ApnTNt54
-         fW7LQgi57ac6v/EzISldg4aM/pQiNsIkMRmVeFz+nZCF6ae0VkmSvKLNaHdl5+Ro1AVa
-         YtyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686064133; x=1688656133;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=LCkdSIE782UW59BfbCfIEABhddN9BVHapDENUEfuLKs=;
-        b=jdA6O7FavlBHSUGCDXOWMeBO0mHlSKzWjoR3N18xLqOVm8ZX+sDWIC6aE++lZppMJ2
-         DDbB+/fIdY2sNYiJ9uW3humO5co0my4CIeUwBBMUogNIkA/ctlpuQR1s69kThmmHK49K
-         NcZsQhr3YVAj1QJHB+/UxuFb3fEcrqtrLVqQUS/T0kTTRYgKFKo/Cxyk0gLiwCUmxUF6
-         2bkrA36kZWUF+uXiT3u2Fdz8Z1LKGaZ5tz241UcXEb9+biLz5z/3Y30lIwjpvR4Ald0E
-         fj1pSZROwaTwdsCl4z49hnq3Rbc9eFsRsc5HnKSB42cc6SppSCqnuZgjaQqgKzi5P2oZ
-         sABg==
-X-Gm-Message-State: AC+VfDwRiApVNZcgVbHaMrmZckwaMSkoESBB/dc67X1q1U070aj+AxS5
-	n6wHvdsSw3mY6riUQ7vqHgLO1Q==
-X-Google-Smtp-Source: ACHHUZ4ACJeLA9AekLA7q5tCZJqT0l4e2TLo4lmzolw8VGOK9H3/K3o3paKZX40/czpobz8zzSd+Ww==
-X-Received: by 2002:adf:ea48:0:b0:2ce:d84d:388f with SMTP id j8-20020adfea48000000b002ced84d388fmr2325882wrn.40.1686064133172;
-        Tue, 06 Jun 2023 08:08:53 -0700 (PDT)
-Received: from ?IPV6:2a02:578:8593:1200:426c:bb31:d569:3738? ([2a02:578:8593:1200:426c:bb31:d569:3738])
-        by smtp.gmail.com with ESMTPSA id d8-20020adff848000000b0030ae849c70csm12902830wrq.37.2023.06.06.08.08.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 06 Jun 2023 08:08:52 -0700 (PDT)
-Message-ID: <88f7a06b-b044-9fdc-b3dc-4b374dbca332@tessares.net>
-Date: Tue, 6 Jun 2023 17:08:52 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E98A37B97
+	for <regressions@lists.linux.dev>; Tue,  6 Jun 2023 15:25:21 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=oPdXET9iyQ8MlJCthXaWRlvcEz/qrWS+b9yOLKJawG6Ribay1KUztIxtcMZ5Jm6lx0cfmtLYS4o+/7lNEwQEGUwiw7UVAXl4O936Z/itnDnY5LVIzNeUN/VuFsuU/4vPB55JL27DazY8muJXE5GTXxYPta7OL8rzxGtEvw2oHkvlJZX6BpfEDV1GqLS3VKKKr2MTfF1eK/TVV0z/eUserguJzpat9OxlV6qQirHapfdS2XBy39sjBT2wZskGZnLby7Fq8SjUbY2tjSdivIKWwS84mBvzJ5FyzWlWxDUenVLJ79mN2Hjf//DACjcqtnQTX8k94PctrHTgWavoviAmvA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Ip6D39rdQCR3C+2MyOU1IylSmcLr73cpoxkqvWCvPUs=;
+ b=eEnruEBjn7a+o2FSNOVWCKiSXX6j8kW3Gg9HesKngxxlCZu+9dQwApzh2SYFc5/Zs+IIkupBBPgq+hxhcy3+7Djc8ScSjFihBIXv5GxBb/mtHQ58GI795sz1/Qeo6WA0RJAPs38sWBBvGArX0q7VFi8urgns1zLabFe5Fpok+HfVOcwZycAS73jg+lI04L0GhKj+VIWRK5vWdISiVCsEsxZxdgKc/8XtKSKyaLLsWmR/Tg/aybb3JffQ8kqQGpdIAL60sgw3DOUdKqR0RZmzh4osVsm5CQSqsUVSRzWa8sKP7lGW9slvgaJOuM7SQy9wB9nRvFhlzKRxiu4tfyLIww==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Ip6D39rdQCR3C+2MyOU1IylSmcLr73cpoxkqvWCvPUs=;
+ b=fe24FTlhKmfYBqi8LetSwU/+hII6ez15/qO5ACPEu6BhVi31V0DyPbCXQZO2McotyPKKpKEA6t3fPL1LwgBfkTZTUmcItjZeGVC131zF85GYwRTaYQcTYXHDdgqnpXU8w9Ys6ISRLBz4FsAY+4VD0r5pqp+WfPndTXfZBgBqNI4=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+ by CO6PR12MB5492.namprd12.prod.outlook.com (2603:10b6:5:35d::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6455.33; Tue, 6 Jun
+ 2023 15:25:17 +0000
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::43b2:55d7:9958:390e]) by MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::43b2:55d7:9958:390e%5]) with mapi id 15.20.6455.030; Tue, 6 Jun 2023
+ 15:25:17 +0000
+Message-ID: <79bd270e-4a0d-b4be-992b-73c65d085624@amd.com>
+Date: Tue, 6 Jun 2023 10:25:13 -0500
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.2
+Subject: Re: amd_sfh driver causes kernel oops during boot
+To: Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Bagas Sanjaya <bagasdotme@gmail.com>, Malte Starostik
+ <malte@starostik.de>, basavaraj.natikar@amd.com,
+ linux-input@vger.kernel.org, linux@hexchain.org, stable@vger.kernel.org
+References: <ZG3ipauL9FTnQJiC@debian.me> <3250319.ancTxkQ2z5@zen>
+ <ZH6buB8TcMd5aT_1@debian.me>
+ <46d5acd2-5961-a496-4c1a-68e5c47021fb@leemhuis.info>
+ <aci7a4jnosozypn6sffsdoaezg4p42zgjy5dwnjyvnbav7chdm@wettfjwb4enw>
+Content-Language: en-US
+From: "Limonciello, Mario" <mario.limonciello@amd.com>
+In-Reply-To: <aci7a4jnosozypn6sffsdoaezg4p42zgjy5dwnjyvnbav7chdm@wettfjwb4enw>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: DS7PR06CA0001.namprd06.prod.outlook.com
+ (2603:10b6:8:2a::12) To MN0PR12MB6101.namprd12.prod.outlook.com
+ (2603:10b6:208:3cb::10)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: 9p: MPTCP tests regressions due to new 9p features in v6.4
-Content-Language: en-GB
-To: Eric Van Hensbergen <ericvh@kernel.org>
-Cc: MPTCP Upstream <mptcp@lists.linux.dev>, regressions@lists.linux.dev,
- v9fs@lists.linux.dev
-References: <855a232a-76d3-7e7b-b2b5-2ebc41bcadd6@tessares.net>
- <CAFkjPTnX0=-GK8sFzd4S+V2+cA8E-FAqYHNndZui2Sh_MvoHPw@mail.gmail.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <CAFkjPTnX0=-GK8sFzd4S+V2+cA8E-FAqYHNndZui2Sh_MvoHPw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-Hi Eric,
-
-On 06/06/2023 16:49, Eric Van Hensbergen wrote:
-> thanks for the detailed report - I=E2=80=99ll have a look.
-
-Thank you for the quick reply!
-
-No hurry, we can also revert these patches in our tree for the time being=
-=2E
-
-> Do you know off hand
-> what cache options for 9p are in use?
-
-Sorry, I'm not sure what to look at.
-
-In the VM, I see that this mount command is used:
-
-  /bin/mount -n -t 9p -o ro,version=3D9p2000.L,trans=3Dvirtio,access=3Dan=
-y \
-             virtme.guesttools /run/virtme/guesttools
-
-In virtme source, I can see these commands should be executed:
-
-  /bin/mount -n -t 9p -o ro,version=3D9p2000.L,trans=3Dvirtio,access=3Dan=
-y \
-             /dev/root /newroot/
-  mount -t 9p -o version=3D9p2000.L,trans=3Dvirtio,access=3Dany \
-        "virtme.initmount${tag:16}" "${!tag}"
-
-=46rom the VM, I can see:
-
-> # mount | grep 9p
-> /dev/root on / type 9p (ro,relatime,access=3Dany,trans=3Dvirtio)
-> virtme.guesttools on /run/virtme/guesttools type 9p (ro,relatime,access=
-=3Dany,trans=3Dvirtio)
-> virtme.initmount0 on /mptcp_net-next type 9p (rw,relatime,access=3Dany,=
-trans=3Dvirtio)
-
-And the VM is started using:
-
-> /usr/bin/qemu-system-x86_64 -fsdev local,id=3Dvirtfs1,path=3D/,security=
-_model=3Dnone,readonly=3Don,multidevs=3Dremap -device virtio-9p-pci,fsdev=
-=3Dvirtfs1,mount_tag=3D/dev/root -fsdev local,id=3Dvirtfs5,path=3D/opt/vi=
-rtme/virtme/guest,security_model=3Dnone,readonly=3Don,multidevs=3Dremap -=
-device virtio-9p-pci,fsdev=3Dvirtfs5,mount_tag=3Dvirtme.guesttools -fsdev=
- local,id=3Dvirtfs9,path=3D.,security_model=3Dnone,multidevs=3Dremap -dev=
-ice virtio-9p-pci,fsdev=3Dvirtfs9,mount_tag=3Dvirtme.initmount0 -machine =
-accel=3Dkvm:tcg -watchdog i6300esb -cpu host -parallel none -net none -ec=
-hr 1 -serial none -chardev stdio,id=3Dconsole,signal=3Doff,mux=3Don -seri=
-al chardev:console -mon chardev=3Dconsole -vga none -display none -m 2048=
-M -smp 2 -device virtio-net-pci,netdev=3Dn0 -netdev user,id=3Dn0 -kernel =
-=2Evirtme/build/arch/x86/boot/bzImage -append 'virtme_link_mods=3D.virtme=
-/build/.virtme_mods/lib/modules/0.0.0 virtme_initmount0=3D/mptcp_net-next=
- earlyprintk=3Dserial,ttyS0,115200 console=3DttyS0 psmouse.proto=3Dexps "=
-virtme_stty_con=3Drows 59 cols 132 iutf8" TERM=3Dxterm virtme.dhcp virtme=
-_chdir=3D/mptcp_net-next rootfstype=3D9p rootflags=3Dversion=3D9p2000.L,t=
-rans=3Dvirtio,access=3Dany raid=3Dnoautodetect ro mitigations=3Doff init=3D=
-/bin/sh -- -c "mount -t tmpfs run /run;mkdir -p /run/virtme/guesttools;/b=
-in/mount -n -t 9p -o ro,version=3D9p2000.L,trans=3Dvirtio,access=3Dany vi=
-rtme.guesttools /run/virtme/guesttools;exec /run/virtme/guesttools/virtme=
--init"'
-
-I don't see anything about the cache and nothing in the dmesg. If you
-think this info is in the dmesg, the logs are publicly available there:
-
-https://cirrus-ci.com/task/5569063884161024?logs=3Dtest#L5626
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|CO6PR12MB5492:EE_
+X-MS-Office365-Filtering-Correlation-Id: 74357832-a049-4747-0c5a-08db66a23b4a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	AsXsKMz0FK7NBwSiseIt/tCfjKLKY9RUtLETvAuB5QEaB3HFl/zeHuo3oO8nQQvKmpDYFWawBVWCLvO7I4+thI6l357vOZak9qF2d/NzgyUHGn4+3WtBJp7xrP2IkFflp8EZk6RnDwb6GwJAKML4xyYkrkbbrF6JQFerWI0xPykuZMCVCQl+ufjXVNuqnUd+AydKssnGwAs9D0Admt+HN8SQbkhXl2TZ90RmNfzeD4164SIQjsthVMhGNx2t+jym+roilWAkit+E7NDctEZo+ALExdFPbJFaGjqSGaaiJ6TAdaP9rnEa0BZuEbDMQThqCix4qNN9kSm9lbBh3Frs3IJkSOSBr0Z1YcqY6OJtuXvf6BatdHFz8flSyuWXJDwVlEJqjtxhviXRuo2AC+4FouLvsMswRl8X4S5bhQfE3SRhlasbT+VFlgXV9QBguK0nlKiiA5NeusAaNIvb9mTsxRqdsAqX8eikuqKe3z3eQiWki1t3im2obREkG3cdj69G3+vnHJQRZcc+n0lEE9AyqumT6lqs6j0YssYjqzInEv2RyR68O+3EW7AhnLOHfym2Ggl5b8BA6TuTf4Z/vp+Z4hWhXTvSHebppfhtrxBPVHFfvyybzZs4s0qQuBoy7AuT43f3HxjBv59piOPpJH02Rw==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(366004)(39860400002)(396003)(376002)(346002)(136003)(451199021)(6506007)(6512007)(26005)(53546011)(31686004)(83380400001)(31696002)(316002)(2906002)(36756003)(186003)(5660300002)(86362001)(8676002)(8936002)(2616005)(41300700001)(966005)(66946007)(66556008)(66476007)(6666004)(38100700002)(54906003)(4326008)(478600001)(110136005)(6486002)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?VGlqTDdVS3NpSGVYVWxWS0FIT2tmaHlQMGFjQ3hwNjZ4Mnc3NkdZVmozcldm?=
+ =?utf-8?B?QkEvL3hTODNkWjBPejVmWEQ3S2g2cnBOU0ZkZG9EUk00MDRyTk4wdEs1L2lV?=
+ =?utf-8?B?MGx2QUpjYldCdFlOamJIWmo3bjcwVndOUkVSWW5kNm1ERW9WbG01eGd4d1p4?=
+ =?utf-8?B?Si9WbE85M0hMQ0ozVmpYNm1aSWFTbXc2VHYvRWhjK0gzcUd2L1k0c2o3by9o?=
+ =?utf-8?B?WnJXK2xVTnJRL2NWVCthY3lyeGE0ME05dDhSWTVzUU1sOVNPdVZlQ1ZET01Y?=
+ =?utf-8?B?WWdVa2tkUjdMUk9aM1AyYU5LTGNLTHpRRkc2a0dsSE43NlpnaHdrczdvc2Vt?=
+ =?utf-8?B?NkIxQzFSUmZLbS9lbWFEMXFGMlRaZmRicWF5UjN2OGdBT1FuWU1lVXJ4UFNV?=
+ =?utf-8?B?Ujk1RVNGd1B4cXVWN2ZTNldRaUgvWHJkRVZmKzZkNmhFSnNGL0szZjBVbmo3?=
+ =?utf-8?B?Vnprd0JrK1FkTmNRdVVIbG5qYzRERDUyQ3doN3phUG8rL0o1YzlDa1I0OTFP?=
+ =?utf-8?B?cHVjWFp3SzF1aTJvcFRTZ2hnZHlkSys3TXdHY2tqL2RzSjJGc09hTTJVR2hU?=
+ =?utf-8?B?OFNrVVEyMXZRQytuV1FickdKbnQ5QkY4cEl4LzAzSnk1WHR6MmFvcGptcGt5?=
+ =?utf-8?B?VWJVUTMvSEUrQWpxNzZUQ0ppcGwzWlN6ZU1Wd29UTmlqelJvenBjZWlTM2tQ?=
+ =?utf-8?B?K09wQUd6REJ1dDFWUjkyVlMrU2RqamQxNnh2K1dSUW1YVnI2SjJwQ2Y5ZDZn?=
+ =?utf-8?B?ak5LbG9rZUhvTXNCcDZaOHBCdGN3VHNqZm9NcjNYam9yVjVjSDkyUUNOb3dZ?=
+ =?utf-8?B?SWZmdHVtU1o4b3ZzaFJsODFiTUpnaEpVdHNnMmZzZkhDWWMzVmZoNkF0YS96?=
+ =?utf-8?B?Uk1BVVBDYjE2MHc0M0dyM04zWnRTaUswT09ueFpadHNRalYvYVhQZHVqTS9V?=
+ =?utf-8?B?Ujk4V3VUYnIwYVJUTmI3dVA3d0VUT1RWc0VBaWh3ZlVUeUJyZ1NXVzR6LzRM?=
+ =?utf-8?B?NkN1NGoxdUNYY0p5SjNIYjNyeGk0R3RHRXZEbHBGUllmZlowWTlaUmhwdy94?=
+ =?utf-8?B?ZUJnUitQb2s5cVJyZTUwaHM3QnBTVGxadFFkL1N4R3dmN0E5dWhLS0RSYVpM?=
+ =?utf-8?B?d0M3WkwyMkhzbHpMTWhFMUxMQThwMFBhTXhadGtvT0w4bzRyVEtrK2J3UVdH?=
+ =?utf-8?B?MnlZSWFBUnBqYkpBRDc5SDBRclZnazBjRkNPNmdnTTBLQStReHZqbGJGRlFD?=
+ =?utf-8?B?YmdBcTIzbVNueTd5c0svQlVCd1FuU3paUHRPdzc0OG9heVhaODl6QWNjMGgw?=
+ =?utf-8?B?V3pUVzVOTlVoZU9qcWZYOGFkd1dYQVlDNERnVUNJUVRCTjVFNjJFRnFOU1p4?=
+ =?utf-8?B?L0NPdEhLOXJzVlN4ZS82b3ArSVNYQ3I0b3N6L1JrekFna2I4OGlOMXFQbUtJ?=
+ =?utf-8?B?QXVuSHNTMnR5T25Md3F1TmtqMU9Rb29qOWlLMU40cVZxZUVoQ0R2aU54N0dP?=
+ =?utf-8?B?QXM4eDMwbVVnaTBqZGNXbGtYT2x4QWcrTEQwSDFVcm5rM2xESjg1WWRVS01w?=
+ =?utf-8?B?QzdqU0VzZXQrK0MzajIrMlhuNUxLUTR5YkNPYWRPb0FxSWgyVWF2QlpSdlVa?=
+ =?utf-8?B?cjJBN1VEbEx1SFVQSU03cXlyZm1FUUhQRmpFNHBoSHRkc0pOLzQybForR3Js?=
+ =?utf-8?B?ay9sTTNIOVdjcmNRSER1UjV0SlB6R0JMK3ljQTVubGM5Z2UwZC80SFdkZUxI?=
+ =?utf-8?B?bW5sc1FHb3V4aFJqWWdxOVhjMEZzc1ZES2Q3MFRsSDNieURWck81aVdpeXpx?=
+ =?utf-8?B?eGNzMGtTcXJYUTRnUDF1VjJweWFJbTlmZm1PMHlIUVR1Y3c4b3hwVXFmMWh0?=
+ =?utf-8?B?d1Y4Q1RiNUZCUDA5UCtKOXJTVW1jS3RmU3lsTzJrd0M2VDJYTXVyTHR0cm5w?=
+ =?utf-8?B?dFJpTkl3VUsxa1hBaFBUYys4bzBXRXRzbDhJQVlFak84QWtFV1pqQ3NTY25m?=
+ =?utf-8?B?UFNqUVBjZ2tDYVIzNlIwT2htYW9uVURlazI2a0RYTHhod0FyUFJpcHR6RzBv?=
+ =?utf-8?B?TUJBQm1kdGYrYmV2VEFjZXh2YThYNCsxdGozQm4xZml0SktqWVNUc2lNN2Z6?=
+ =?utf-8?Q?1LmtLDsDX5s+XsD2KC0kYuJTR?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 74357832-a049-4747-0c5a-08db66a23b4a
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jun 2023 15:25:16.9492
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 5u/ByVXP1SGPqxKSWeTcU+EbRDXXq8flYYMrvryIUWT2YM59Gsbg5soCoc51FeA2/PnDu8KOW2J2k0KbIQiS5g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO6PR12MB5492
 
 
-> Since things are slower, my first
-> suspect is the don't cache qid.version =3D=3D 0 change.=C2=A0 That can =
-be
-> overridden with a mount option but perhaps we should invert the default=
+On 6/6/2023 3:08 AM, Benjamin Tissoires wrote:
+> On Jun 06 2023, Linux regression tracking (Thorsten Leemhuis) wrote:
+>> On 06.06.23 04:36, Bagas Sanjaya wrote:
+>>> On Mon, Jun 05, 2023 at 01:24:25PM +0200, Malte Starostik wrote:
+>>>> Hello,
+>>>>
+>>>> chiming in here as I'm experiencing what looks like the exact same issue, also
+>>>> on a Lenovo Z13 notebook, also on Arch:
+>>>> Oops during startup in task udev-worker followed by udev-worker blocking all
+>>>> attempts to suspend or cleanly shutdown/reboot the machine - in fact I first
+>>>> noticed because the machine surprised with repeatedly running out of battery
+>>>> after it had supposedly been in standby but couldn't. Only then I noticed the
+>>>> error on boot.
+>>>>
+>>>> bisect result:
+>>>> 904e28c6de083fa4834cdbd0026470ddc30676fc is the first bad commit
+>>>> commit 904e28c6de083fa4834cdbd0026470ddc30676fc
+>>>> Merge: a738688177dc 2f7f4efb9411
+>>>> Author: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+>>>> Date:   Wed Feb 22 10:44:31 2023 +0100
+>>>>
+>>>>      Merge branch 'for-6.3/hid-bpf' into for-linus
+>>> Hmm, seems like bad bisect (bisected to HID-BPF which IMO isn't related
+>>> to amd_sfh). Can you repeat the bisection?
+>> Well, amd_sfh afaics apparently interacts with HID (see trace earlier in
+>> the thread), so it's not that far away. But it's a merge commit, which
+>> is possible, but doesn't happen every day. So a recheck might really be
+>> a good idea.
+> Let's not rule out that there is a bad interaction between HID-BPF and
+> AMD SFH. HID-BPF is able to process any incoming HID event, whether it
+> comes from AND SFH, USB, BT, I2C or anything else.
+>
+> However, looking at the stack trace in the initial report[0], it seems
+> we are getting the oops/stack traces while we are still in amd_sfh:
+>
+> list_add corruption. next is NULL.
+> WARNING: CPU: 5 PID: 433 at lib/list_debug.c:25 __list_add_valid+0x57/0xa0
+> ...
+> RIP: 0010:__list_add_valid+0x57/0xa0
+> ...
+> Call Trace:
+>    <TASK>
+>    amd_sfh_get_report+0xba/0x110 [amd_sfh 78bf82e66cdb2ccf24cbe871a0835ef4eedddb17]
+> ...
+>
+> If HID-BPF were involved, we should see a call to hid_input_report() IMO.
+> Also AMD SFH calls hid_input_report() in a workqueue, so I would expect
+> a different stack trace.
+>
+> I have a suspicion on commit 7bcfdab3f0c6 ("HID: amd_sfh: if no sensors are enabled,
+> clean up") because the stack trace says that there is a bad list_add,
+> which could happen if the object is not correctly initialized.
+>
+> However, that commit was present in v6.2, so it might not be that one.
+>
+> Back to the merge commit: the hid-bpf tree was merged in the hid tree
+> while it took its branch during the v6.1 cycle. So that might be the
+> reason you get this as a result of bisection because the AMD SFH code in
+> the hid-bpf branch is the one from the v6.1 kernel, and when you merge
+> it to the v6.2+ branch, you get a different code for that driver.
+>
+> Cheers,
+> Benjamin
+>
+> [0] https://lore.kernel.org/regressions/f40e3897-76f1-2cd0-2d83-e48d87130eab@hexchain.org/#t
+If I'm not mistaken the Z13 doesn't actually have any
+sensors connected to SFH.  So I think the suspicion on
+7bcfdab3f0c6 and theory this is triggered by HID init makes
+a lot of sense.
 
-> as it is new behavior from a linux perspective.
+Can you try this patch?
 
-Can I easily change the default behaviour on the kernel side to try
-(without modifying the tools launching the mount commands)?
+diff --git a/drivers/hid/amd-sfh-hid/amd_sfh_client.c 
+b/drivers/hid/amd-sfh-hid/amd_sfh_client.c
+index d9b7b01900b5..fa693a5224c6 100644
+--- a/drivers/hid/amd-sfh-hid/amd_sfh_client.c
++++ b/drivers/hid/amd-sfh-hid/amd_sfh_client.c
+@@ -324,6 +324,7 @@ int amd_sfh_hid_client_init(struct amd_mp2_dev 
+*privdata)
+                         devm_kfree(dev, cl_data->report_descr[i]);
+                 }
+                 dev_warn(dev, "Failed to discover, sensors not enabled 
+is %d\n", cl_data->is_any_sensor_enabled);
++               cl_data->num_hid_devices = 0;
+                 return -EOPNOTSUPP;
+         }
+         schedule_delayed_work(&cl_data->work_buffer, 
+msecs_to_jiffies(AMD_SFH_IDLE_LOOP));
 
-Cheers,
-Matt
---=20
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
