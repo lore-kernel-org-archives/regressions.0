@@ -1,106 +1,231 @@
-Received: from mail-ot1-f41.google.com (mail-ot1-f41.google.com [209.85.210.41])
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFEBB361
-	for <regressions@lists.linux.dev>; Tue,  6 Jun 2023 02:39:56 +0000 (UTC)
-Received: by mail-ot1-f41.google.com with SMTP id 46e09a7af769-6b29a03ec42so29339a34.1
-        for <regressions@lists.linux.dev>; Mon, 05 Jun 2023 19:39:56 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 431CA361
+	for <regressions@lists.linux.dev>; Tue,  6 Jun 2023 02:46:19 +0000 (UTC)
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-6532671ccc7so4535489b3a.2
+        for <regressions@lists.linux.dev>; Mon, 05 Jun 2023 19:46:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686019195; x=1688611195;
+        d=fromorbit-com.20221208.gappssmtp.com; s=20221208; t=1686019579; x=1688611579;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=HudLhhQw0CyzPSOXSNYv2RJ0GRqjCLaZxmXAo7zTprI=;
-        b=m8tAff0s0ZmbO4sfii4uwinG6UKjvkQjWCvQPYnHsvEyZC83vYXZHJxL/+1OdEwAWu
-         v/1s7Ss5GMcGhVxpxywVDWC7PnlbU4mWycvfTuB5MZxdZbPCKQAcVTQ6E9V7lFSbJ2Mm
-         Dqm0aTufQ19wUhtT1PIpNyVjt2y+zkYypEJvgYoxE1uM/It018zYlANi17ufo525Hf+2
-         p/KuwDru1L8sSjkmCqu8/beEZDdnAsf2XMRz2d7aGcbMjoVn7SamZ1910s2/qUP5aeIg
-         pSC3MWakOSLfptilD0/aqrRn80/Oz+Wxdqs8RR3s7pa3Gf+KFobkA+Np44lmBU4t56+9
-         B27g==
+        bh=ZfxJ/Dm6xZF8lEbpNH1IMK7GCiiqLz2Js9LlY57dJLw=;
+        b=s9iWe4/+4AhVM+UOQ+5fjOqrx2Y4f88qk5QkYgFtZYas5WUt+ibJbD2p0yEJ1jiXFZ
+         DOsT4Q8wSp49pOJrh49I3vnvySGLMMWseBs7aGeQl/f6t6uk5wqQYhQvIcS0LydFzpFU
+         qetYhGnWpXCQG2qxDl+xl75oXO7q0GS7N/xXHIWOyWxcDq6xsdQvmAPNqGoi+/cHKenL
+         bxckIcDQ8fWakIJecmX5wo+n84UQb9nAC0tdlQiNUPIN//GPoqJzwR3TJXeOBv+5jGIK
+         1g6PIN8gtbct2CXGgrO99Bo5N06TfE+W6obRmJ6yibDyocL6XZ2h91XOVrjXTQfE3iRQ
+         LWPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686019195; x=1688611195;
+        d=1e100.net; s=20221208; t=1686019579; x=1688611579;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=HudLhhQw0CyzPSOXSNYv2RJ0GRqjCLaZxmXAo7zTprI=;
-        b=YUbZilgxTj/Q9391t3qfb0VAhQdGKrkgzB9ro0dF4Lpyb6ThANVTmuriW6ZWA+lM8w
-         Js/Fu/V7GMhBM524B56Rvc4He4wkSKJQz59fXH89o6yBr+cxZpJzC64fQXMNZV+uhDXL
-         QK276BldS4VcZgbXNXwf6UqQFsg6sBZwLuTn9LU901X3Or+bqlsZi1DTNMZd14DXGhFL
-         we/WO53PBGwucmIKQP058/HhvDujKpvIXZzx+KyZXQZc5cqvSDsNtVxSBT4mD29ICYOP
-         qjHBnciy4VcVyTEv4AS9sR71kdhwa3Z3T0qAfksq+VST9MoT1T+KMHbzMxMCOBz08F0a
-         kjYg==
-X-Gm-Message-State: AC+VfDx2W9JBFmj1Nd3YOBnLKl8G4j6dsZEW+ssd+KzssxGbM7obYuGu
-	VnO0kXO1ScsR4QlHnGc13Yk=
-X-Google-Smtp-Source: ACHHUZ4Ee5dxpgc/ZHDdlY8gkRF+ZkPCp3ACiuIXCw4d9/JGzqbuf/ENPB7DbeGGwbvsgvijC2NJHA==
-X-Received: by 2002:a05:6830:1682:b0:6af:887d:a517 with SMTP id k2-20020a056830168200b006af887da517mr780996otr.15.1686019195368;
-        Mon, 05 Jun 2023 19:39:55 -0700 (PDT)
-Received: from debian.me (subs32-116-206-28-36.three.co.id. [116.206.28.36])
-        by smtp.gmail.com with ESMTPSA id u4-20020aa78484000000b0064381853bfcsm5784370pfn.89.2023.06.05.19.39.54
+        bh=ZfxJ/Dm6xZF8lEbpNH1IMK7GCiiqLz2Js9LlY57dJLw=;
+        b=MtlZUwvRQQdVwmV5sT+NZPYvhquX7f6EGHiFjkhh1lhoei9g4jW3bsVCGLjJvD3luN
+         HksH95Ihf4sDIoEm3aAl2EO3sr7lHu/9IVToPvvwINAJq/gEBRC3s65qtd734v4CKxDf
+         Ag+xyZxGPLjZIDuzDMTvs6ocB4QirKeb0zTdakrT8dvOjuTGoQVXCr/swf0ScFPkp7bf
+         jBnK4flkh2GbGSDTqr18OmxExoU0BRZWv79dptevQryXI3xXfiwnoRIWMC3GObz6bEp9
+         0r1iXS3Ouv8SWPM459H0hGJ2da2d8iojeV1Z4glMXelDw5FtAPoPf7QGc8tmdVjubFfd
+         yEuw==
+X-Gm-Message-State: AC+VfDyMCmYHPh41P87hgKi4BSiwx019g0uYwshHYHOGSQSjBCMZumhe
+	JM5NkiGNU+nUyuhyQ3xqzH0Gaw==
+X-Google-Smtp-Source: ACHHUZ6euL9wS2JWl5g/Wv4lu7hwNurXvYRw5oOCfOsr6caBLBp1uE43xgAKIjTcissqecMo4p+aZQ==
+X-Received: by 2002:a05:6a00:2403:b0:652:7b99:df30 with SMTP id z3-20020a056a00240300b006527b99df30mr587673pfh.25.1686019579440;
+        Mon, 05 Jun 2023 19:46:19 -0700 (PDT)
+Received: from dread.disaster.area (pa49-179-79-151.pa.nsw.optusnet.com.au. [49.179.79.151])
+        by smtp.gmail.com with ESMTPSA id r3-20020a62e403000000b0064ff643f954sm5812483pfh.88.2023.06.05.19.46.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Jun 2023 19:39:54 -0700 (PDT)
-Received: by debian.me (Postfix, from userid 1000)
-	id 947721069FD; Tue,  6 Jun 2023 09:39:51 +0700 (WIB)
-Date: Tue, 6 Jun 2023 09:39:51 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Haochen Tong <linux@hexchain.org>, stable@vger.kernel.org,
-	"Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>
-Cc: regressions@lists.linux.dev, linux-input@vger.kernel.org,
-	Basavaraj Natikar <basavaraj.natikar@amd.com>
-Subject: Re: amd_sfh driver causes kernel oops during boot
-Message-ID: <ZH6cd6_8EUrRY0W0@debian.me>
-References: <f40e3897-76f1-2cd0-2d83-e48d87130eab@hexchain.org>
- <ZG2LXN2+Sa2PWJqz@debian.me>
- <ee2c30a5-3927-d892-2a66-00cd513c3899@hexchain.org>
- <ZG3ipauL9FTnQJiC@debian.me>
+        Mon, 05 Jun 2023 19:46:18 -0700 (PDT)
+Received: from dave by dread.disaster.area with local (Exim 4.96)
+	(envelope-from <david@fromorbit.com>)
+	id 1q6Mi7-008KNo-1Q;
+	Tue, 06 Jun 2023 12:46:15 +1000
+Date: Tue, 6 Jun 2023 12:46:15 +1000
+From: Dave Chinner <david@fromorbit.com>
+To: "Darrick J. Wong" <djwong@kernel.org>
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
+	Linux regressions mailing list <regressions@lists.linux.dev>,
+	"Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
+	shrikanth hegde <sshegde@linux.vnet.ibm.com>, dchinner@redhat.com,
+	linux-xfs@vger.kernel.org,
+	Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+	ojaswin@linux.ibm.com
+Subject: Re: xfs: system fails to boot up due to Internal error
+ xfs_trans_cancel
+Message-ID: <ZH6d938Hw/msm95A@dread.disaster.area>
+References: <87zg88atiw.fsf@doe.com>
+ <33c9674c-8493-1b23-0efb-5c511892b68a@leemhuis.info>
+ <20230418045615.GC360889@frogsfrogsfrogs>
+ <57eeb4d5-01de-b443-be8e-50b08c132e95@leemhuis.info>
+ <20230605215745.GC1325469@frogsfrogsfrogs>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="JF2M1o8gEDukYGMt"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZG3ipauL9FTnQJiC@debian.me>
+In-Reply-To: <20230605215745.GC1325469@frogsfrogsfrogs>
 
+On Mon, Jun 05, 2023 at 02:57:45PM -0700, Darrick J. Wong wrote:
+> On Mon, Jun 05, 2023 at 03:27:43PM +0200, Thorsten Leemhuis wrote:
+> > /me waves friendly
+> > 
+> > On 18.04.23 06:56, Darrick J. Wong wrote:
+> > > On Mon, Apr 17, 2023 at 01:16:53PM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
+> > >> Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
+> > >> for once, to make this easily accessible to everyone.
+> > >>
+> > >> Has any progress been made to fix below regression? It doesn't look like
+> > >> it from here, hence I wondered if it fall through the cracks. Or is
+> > >> there some good reason why this is safe to ignore?
+> > > 
+> > > Still working on thinking up a reasonable strategy to reload the incore
+> > > iunlink list if we trip over this.  Online repair now knows how to do
+> > > this[1], but I haven't had time to figure out if this will work
+> > > generally.  [...]
+> > 
+> > I still have this issue on my list of tracked regressions, hence please
+> > allow me to ask: was there any progress to resolve this? Doesn't look
+> > like it, but from my point it's easy to miss something.
+> 
+> Yeah -- Dave put "xfs: collect errors from inodegc for unlinked inode
+> recovery" in for-next yesterday, and I posted a draft of online repair
+> for the unlinked lists that corrects most of the other problems that we
+> found in the process of digging into this problem:
+> https://lore.kernel.org/linux-xfs/168506068642.3738067.3524976114588613479.stgit@frogsfrogsfrogs/T/#m861e4b1259d9b16b9970e46dfcfdae004a5dd634
+> 
+> But that's looking at things from the ground up, which isn't terribly
+> insightful as to what's going on, as you've noted. :)
+> 
+> > BTW, in case this was not yet addressed: if you have a few seconds,
+> > could you please (just briefly!) explain why it seems to take quite a
+> > while to resolve this? A "not booting" regressions sounds like something
+> > that I'm pretty sure Linus normally wants to see addressed rather sooner
+> > than later. But that apparently is not the case here. I know that XFS
+> > devs normally take regressions seriously, hence I assume there are good
+> > reasons for it. But I'd like to roughly understand them (is this a
+> > extremely corner case issue others are unlike to run into or something
+> > like that?), as I don't want Linus on my back with questions like "why
+> > didn't you put more pressure on the XFS maintainers" or "you should have
+> > told me about this".
+> 
+> First things first -- Ritesh reported problems wherein a freshly mounted
+> filesystem would fail soon after because of some issue or other with the
+> unlinked inode list.  He could reproduce this problem, but (AFAIK) he's
+> the only user who's actually reported this.  It's not like *everyone*
+> with XFS cannot boot anymore, it's just this system.  Given the sparsity
+> of any other reports with similar symptoms, I do not judge this to be
+> a hair-on-fire situation.
+> 
+> (Contrast this to the extent busy deadlock problem that Wengang Wang is
+> trying to solve, which (a) is hitting many customer systems and (b)
+> regularly.  Criteria like (a) make things like that a higher severity
+> problem IMHO.)
 
---JF2M1o8gEDukYGMt
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Contrast this to the regression from 6.3-rc1 that caused actual user
+data loss and filesystem corruption after 6.3 was released.
 
-On Wed, May 24, 2023 at 05:10:45PM +0700, Bagas Sanjaya wrote:
-> On Wed, May 24, 2023 at 02:10:31PM +0800, Haochen Tong wrote:
-> > > What last kernel version before this regression occurs? Do you mean
-> > > v6.2?
-> > >=20
-> >=20
-> > I was using 6.2.12 (Arch Linux distro kernel) before seeing this regres=
-sion.
->=20
-> Can you perform bisection to find the culprit that introduces the
-> regression? Since you're on Arch Linux, see its wiki article [1] for
-> instructions.
->=20
+https://bugzilla.redhat.com/show_bug.cgi?id=2208553
 
-Haochen, any news on this? Has the bisection been done and any result?
-Another reporter had concluded possibly bad bisect [1].
+That's so much more important than any problem seen in a test
+environment it's not funny.
 
-Thanks.
+We'd already fixed this regression that caused it in 6.4-rc1 - the
+original bug report (a livelock in data writeback) happened 2 days
+before 6.3 released. It took me 3 days from report to having a fix
+out for review (remember that timeframe).
 
-[1]: https://lore.kernel.org/regressions/3250319.ancTxkQ2z5@zen/
+At the time we didn't recognise the wider corruption risk the
+failure we found exposed us to, so we didn't push it to stable
+immediately. Hence when users started tripping over corruption and I
+triaged it down to misdirected data write from -somewhere-. Eric
+then found a reproducer and bisected to a range of XFS changes, and
+I then realised what the problem was....
 
---=20
-An old man doll... just what I always wanted! - Clara
+Stuff like this takes days of effort and multiple people to get to
+the bottom of, and -everything else- gets ignored while we work
+through the corruption problem.
 
---JF2M1o8gEDukYGMt
-Content-Type: application/pgp-signature; name="signature.asc"
+Thorsten, I'm betting that you didn't even know about this
+regression - it's been reported, tracked, triaged and fixed
+completely outside the scope and visibility of the "kernel
+regression tracker". Which clearly shows that we don't actually need
+some special kernel regression tracker infrastructure to do our jobs
+properly, nor do we need a nanny to make sure we actually are
+prioritising things correctly....
 
------BEGIN PGP SIGNATURE-----
+....
 
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZH6cdwAKCRD2uYlJVVFO
-o2rWAP98fX2zkHHntO95NM5SMK7DUevIhNi61RNbIWyXVV6w6gD/VxLe1LqAY1ON
-byv2GX1uOKQPIySD3rIZcgX/LKKduwQ=
-=thJx
------END PGP SIGNATURE-----
+> Dave's patch addresses #5 by plumbing error returns up the stack so that
+> frontend processes that push the background gc threads can receive
+> errors and throw them out to userspace.
 
---JF2M1o8gEDukYGMt--
+Right, the inodegc regression fix simply restored the previous
+status quo.  Nothing more, nothing less, exactly what we want
+regression fixes to do. But it took some time for me to get to
+because there were much higher priority events occurring....
+
+....
+
+> The problem with putting this in online repair is that Dave (AFAIK)
+> feels very strongly that every bug report needs to be triaged
+> immediately, and that takes priority over reviewing new code such as
+> online repair.
+
+My rationale is that we can ignore it once we know the scope of the
+issue, but until we know that information the risk of being
+unprepared for sudden escalation is rather high and that's even
+worse for stress and burnout levels.
+
+The fedora corruption bug I mention above is a canonical example of
+why triaging bug reports immediately is important - the original bug
+report was clearly somethign that needed to be fixed straight away,
+regardless of the fact we didn't know it could cause misdirected
+writes at the time.
+
+Once we got far enough into the fedora bug report triage, I simply
+pointed the distro at the commit for them to test, and they did
+everything else. Once confirmation that it fixed the problem came
+in, I sent it immediately to the stable kernel maintainers.
+
+IOWs, if I had not paid attention to the original bug report, it
+would have taken me several more days to find the problem and fix it
+(remember it took me ~3 days from report to fix originally).  Users
+would have been exposed to the corruption bug for much longer than
+they were, and that doesn't make a bad situation any better.
+
+And don't get me started on syzkaller and "security researchers"
+raising inappropriate CVEs....
+
+So, yeah, immediate triage is pretty much required at this point for
+all bug reports because the downstream impacts of ignoring them is
+only causing more stress and burnout risk for lots more people. The
+number of downstream people pulled into (and still dealing with the
+fallout of) that recent, completely unnecessary CVE fire drill was
+just ... crazy.
+
+We can choose to ignore triaged bug reports if they aren't important
+enough to deal with immediately (like this unlinked inode list
+issue), but we can make the decision (and justify it) based on the
+knowledge we have rather instead of claiming ignorance. We're
+supposed to be professional engineers, yes?
+
+> That's the right thing to do, but every time someone
+> sends in some automated fuzzer report, it slows down online repair
+> review.  This is why I'm burned out and cranky as hell about script
+> kiddies dumping zerodays on the list and doing no work to help us fix
+> the problems.
+
+Reality sucks, and I hate it too. We get handed all the shit
+sandwiches and everyone seems to expect that we will simply to eat
+them up without complaining. But it's not like we didn't expect it -
+upstream Linux development has always been a great big shit sandwich
+and it's not going to be changing any time soon....
+
+-Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
