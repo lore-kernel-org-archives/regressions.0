@@ -1,18 +1,13 @@
-Received: from mail.spahan.ch (homer.spahan.ch [88.198.59.12])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F2E2619915
-	for <regressions@lists.linux.dev>; Tue,  6 Jun 2023 17:58:46 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.spahan.ch (Postfix) with ESMTP id 3F08C1C1BE7;
-	Tue,  6 Jun 2023 19:49:43 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at spahan.ch
-Received: from mail.spahan.ch ([127.0.0.1])
-	by localhost (homer.spahan.ch [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id H1wnkWPBdAhr; Tue,  6 Jun 2023 19:49:42 +0200 (CEST)
-Received: from [IPV6:2a02:168:541e:57e1:b9ac:dc3e:41d5:c56c] (unknown [IPv6:2a02:168:541e:57e1:b9ac:dc3e:41d5:c56c])
-	by mail.spahan.ch (Postfix) with ESMTPSA id 4A7851C0506;
-	Tue,  6 Jun 2023 19:49:42 +0200 (CEST)
-Message-ID: <7d54dc04-6b0d-1dfd-333a-4d5497da6ce2@spahan.ch>
-Date: Tue, 6 Jun 2023 19:49:41 +0200
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFE6019915
+	for <regressions@lists.linux.dev>; Tue,  6 Jun 2023 18:18:32 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1q6bGG-00058y-Af; Tue, 06 Jun 2023 20:18:28 +0200
+Message-ID: <42b6e582-f642-7521-135a-449140984211@leemhuis.info>
+Date: Tue, 6 Jun 2023 20:18:27 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -20,24 +15,77 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.2
-Subject: Re: [PATCH] media: uvcvideo: Fix menu count handling for userspace XU
- mappings
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- linux-media@vger.kernel.org
-Cc: Ricardo Ribalda <ribalda@chromium.org>,
- "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>,
- regressions@lists.linux.dev
-References: <20230606170919.GJ25679@pendragon.ideasonboard.com>
- <20230606171150.12875-1-laurent.pinchart@ideasonboard.com>
-Content-Language: en-US, fr-FR, de-CH
-From: Poncho <poncho@spahan.ch>
-In-Reply-To: <20230606171150.12875-1-laurent.pinchart@ideasonboard.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+ Thunderbird/102.10.0
+Subject: Re: [PATCH] HID: logitech-hidpp: Handle timeout differently from busy
+Content-Language: en-US, de-DE
+To: Jiri Kosina <jikos@kernel.org>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Bastien Nocera <hadess@hadess.net>, linux-input@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+ "Peter F . Patel-Schneider" <pfpschneider@gmail.com>,
+ =?UTF-8?Q?Filipe_La=c3=adns?= <lains@riseup.net>,
+ Nestor Lopez Casado <nlopezcasad@logitech.com>, Mark Lord <mlord@pobox.com>
+References: <20230531082428.21763-1-hadess@hadess.net>
+ <nycvar.YFH.7.76.2305311606160.29760@cbobk.fhfr.pm>
+ <nycvar.YFH.7.76.2306031440380.29760@cbobk.fhfr.pm>
+ <15bb2507-a145-7f1b-8e84-58aeb02484b9@leemhuis.info>
+ <nycvar.YFH.7.76.2306061527080.29760@cbobk.fhfr.pm>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <nycvar.YFH.7.76.2306061527080.29760@cbobk.fhfr.pm>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1686075512;c8295519;
+X-HE-SMSGID: 1q6bGG-00058y-Af
 
-On 06.06.23 19:11, Laurent Pinchart wrote:
-> This is untested. Poncho, would you be able to test this patch to see if
-> it fixes your issue ?
 
-Yes, your patch on top of 6.3.6 does fix my issue.
+
+On 06.06.23 15:27, Jiri Kosina wrote:
+> On Mon, 5 Jun 2023, Linux regression tracking (Thorsten Leemhuis) wrote:
+> 
+>>>>> If an attempt at contacting a receiver or a device fails because the
+>>>>> receiver or device never responds, don't restart the communication, only
+>>>>> restart it if the receiver or device answers that it's busy, as originally
+>>>>> intended.
+>>>>>
+>>>>> This was the behaviour on communication timeout before commit 586e8fede795
+>>>>> ("HID: logitech-hidpp: Retry commands when device is busy").
+>>>>>
+>>>>> This fixes some overly long waits in a critical path on boot, when
+>>>>> checking whether the device is connected by getting its HID++ version.
+>>>>>
+>>>>> Signed-off-by: Bastien Nocera <hadess@hadess.net>
+>>>>> Suggested-by: Mark Lord <mlord@pobox.com>
+>>>>> Fixes: 586e8fede795 ("HID: logitech-hidpp: Retry commands when device is busy")
+>>>>> Link: https://bugzilla.kernel.org/show_bug.cgi?id=217412
+>>> [...]  
+>>>>
+>>>> I have applied this even before getting confirmation from the reporters in 
+>>>> bugzilla, as it's the right thing to do anyway.
+>>>
+>>> Unfortunately it doesn't seem to cure the reported issue (while reverting 
+>>> 586e8fede79 does):
+>>
+>> BTW, remind me again: was fixing this by reverting 586e8fede79 for now a
+>> option? I guess it's not, but if I'm wrong I wonder if that might at
+>> this point be the best way forward.
+> 
+> This should now all be fixed by
+> 
+>     https://git.kernel.org/linus/7c28afd5512e371773dbb2bf95a31ed5625651d9
+
+Jiri, Benjamin, many many thx for working on this.
+
+Hmmm. No CC: <stable... tag.
+
+Should we ask Greg to pick this up for 6.3 now, or better wait a few
+days? He currently already has 6199d23c91ce ("HID: logitech-hidpp:
+Handle timeout differently from busy") in his queue for the next 6.3.y
+release.
+
+Ciao, Thorsten
+
+P.S.: If the answer is along the lines of "let's backport this quickly",
+please consider directly CCing Greg.
