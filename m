@@ -1,43 +1,63 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B9E55660
-	for <regressions@lists.linux.dev>; Tue,  6 Jun 2023 08:08:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1686038901;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=C3WImzMMIy/+euBBzL0YKACBrtfSAIGcyz6zFj7th9k=;
-	b=RMLH/s1IZsFEcVIfSMUkFJ1BTk9qiTxNgEE3raGFEyrklyyU6O7NAx5lbhgToZR7Eey1zQ
-	t+sj/r5IE3+cQVAHK06nYI/Ow+/U6ltKhzStm7IA6QsFWE1JDU54clbdUAFunf9MkZix6S
-	+6CjnradaSj/zgqTv/XZ0E/BTNthv7w=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-614-T4oP3m_IPsmwOwMkgrf5bg-1; Tue, 06 Jun 2023 04:08:19 -0400
-X-MC-Unique: T4oP3m_IPsmwOwMkgrf5bg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id F2CE2101A52C;
-	Tue,  6 Jun 2023 08:08:18 +0000 (UTC)
-Received: from mail.corp.redhat.com (unknown [10.45.224.77])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 631992166B27;
-	Tue,  6 Jun 2023 08:08:16 +0000 (UTC)
-Date: Tue, 6 Jun 2023 10:08:13 +0200
-From: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Bagas Sanjaya <bagasdotme@gmail.com>, 
-	Malte Starostik <malte@starostik.de>, basavaraj.natikar@amd.com, linux-input@vger.kernel.org, 
-	linux@hexchain.org, stable@vger.kernel.org, 
-	Mario Limonciello <mario.limonciello@amd.com>
-Subject: Re: amd_sfh driver causes kernel oops during boot
-Message-ID: <aci7a4jnosozypn6sffsdoaezg4p42zgjy5dwnjyvnbav7chdm@wettfjwb4enw>
-References: <ZG3ipauL9FTnQJiC@debian.me>
- <3250319.ancTxkQ2z5@zen>
- <ZH6buB8TcMd5aT_1@debian.me>
- <46d5acd2-5961-a496-4c1a-68e5c47021fb@leemhuis.info>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4949E5660
+	for <regressions@lists.linux.dev>; Tue,  6 Jun 2023 08:17:07 +0000 (UTC)
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-51480d3e161so8385582a12.3
+        for <regressions@lists.linux.dev>; Tue, 06 Jun 2023 01:17:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1686039425; x=1688631425;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=lHNjN6gdZhaDtvOlF+R9QTxsWy2eKEXasQ4TauLL/WQ=;
+        b=AA1c/cIjOdVxZRb8bD6FV00DOkrXIJMht6993QQ6O8BDLNFzeuRTt+gZbkNet5esOM
+         oQbKvdrx1YPI1OZRBftEzGRWkPaJ2cmvA0F6MpCAmv6WIT4OutHINVnu71pn4oiYtmOd
+         MTE/FQO/pclaJYFHepSoZPy7lHZ5rAJss8Nk54s5ZexZU5yLBjdW4+7q2JpIwQRJACOS
+         gm2MJ8e9Ro+YUwwm3fRdMeQLzCrJ2F/wib0jjD8zO/TeI00NwnSk1PcF3DSE6DAltI3P
+         7fa6D2Ed/Z5hw3UxyIqauwfRYEqfnQu+8r/21fekrvmSod7cabIrpBJjM/pvUA187NOd
+         KZow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686039425; x=1688631425;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lHNjN6gdZhaDtvOlF+R9QTxsWy2eKEXasQ4TauLL/WQ=;
+        b=k8+pDiUDAcW2zRseLsZDWIj3HM6N/pRAH5Jv4V6//eGUs0hwj/I5RGHsJPaqhaGOmU
+         IZSPp+2E1MHTXHOKdK4/Ieso1qJGx1j1nQBv3x79Guzg8l0ck4pvZdv2m0uw4DzOGFA5
+         IQ4X+LyxtnMSsDFWT2JKBMQwNhH7uUPHV1t9+ppVoVo8YB4gmZCHpjj+b76uAuOhKs3X
+         4MH8OrvTNOylpd1rS83Z//cTvX4ZXidxzu5dh247U20rde6vlrIv5Zf43BBbXtrwgp9X
+         zdU3iWqf37Bfy+cmPAVXbzUDI5bHVACK5aPs1mrD+OFs12LyQnsXMzO7MX17K82Nhiwg
+         tkjQ==
+X-Gm-Message-State: AC+VfDyE15yQGsTDmzF7ayg114hbHsZf0xbUBcX2X4erefMGzt0K0jYv
+	5vaHVAILivL+kNovHC9FsLo=
+X-Google-Smtp-Source: ACHHUZ5eL3mm4hmVVfaiwbIw32h87AHqgPOFp3AOp6F3ehkMMkLPIVf2iZyojfUclmyEFPMd/ebSKg==
+X-Received: by 2002:a17:907:7248:b0:977:4b64:f5e8 with SMTP id ds8-20020a170907724800b009774b64f5e8mr2081348ejc.57.1686039425038;
+        Tue, 06 Jun 2023 01:17:05 -0700 (PDT)
+Received: from pc638.lan ([155.137.26.201])
+        by smtp.gmail.com with ESMTPSA id lz11-20020a170906fb0b00b00977da9d4ef9sm2269072ejb.18.2023.06.06.01.17.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 Jun 2023 01:17:04 -0700 (PDT)
+From: Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc638.lan>
+Date: Tue, 6 Jun 2023 10:17:02 +0200
+To: Vlastimil Babka <vbabka@suse.cz>, Lorenzo Stoakes <lstoakes@gmail.com>,
+	Michal Hocko <mhocko@suse.com>
+Cc: Lorenzo Stoakes <lstoakes@gmail.com>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Baoquan He <bhe@redhat.com>, Uladzislau Rezki <urezki@gmail.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	Bagas Sanjaya <bagasdotme@gmail.com>,
+	Linux btrfs <linux-btrfs@vger.kernel.org>,
+	Linux Regressions <regressions@lists.linux.dev>,
+	Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+	David Sterba <dsterba@suse.com>, a1bert@atlas.cz,
+	Forza <forza@tnonline.net>
+Subject: Re: [PATCH] mm/vmalloc: do not output a spurious warning when huge
+ vmalloc() fails
+Message-ID: <ZH7rfgeKzhmZzjA1@pc638.lan>
+References: <20230605201107.83298-1-lstoakes@gmail.com>
+ <cd47d6ac-69ce-0315-dd45-2cb9dce57f36@suse.cz>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -46,76 +66,82 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <46d5acd2-5961-a496-4c1a-68e5c47021fb@leemhuis.info>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.6
+In-Reply-To: <cd47d6ac-69ce-0315-dd45-2cb9dce57f36@suse.cz>
 
-
-On Jun 06 2023, Linux regression tracking (Thorsten Leemhuis) wrote:
+On Tue, Jun 06, 2023 at 09:13:24AM +0200, Vlastimil Babka wrote:
 > 
-> On 06.06.23 04:36, Bagas Sanjaya wrote:
-> > On Mon, Jun 05, 2023 at 01:24:25PM +0200, Malte Starostik wrote:
-> >> Hello,
-> >>
-> >> chiming in here as I'm experiencing what looks like the exact same issue, also 
-> >> on a Lenovo Z13 notebook, also on Arch:
-> >> Oops during startup in task udev-worker followed by udev-worker blocking all 
-> >> attempts to suspend or cleanly shutdown/reboot the machine - in fact I first 
-> >> noticed because the machine surprised with repeatedly running out of battery 
-> >> after it had supposedly been in standby but couldn't. Only then I noticed the 
-> >> error on boot.
-> >>
-> >> bisect result:
-> >> 904e28c6de083fa4834cdbd0026470ddc30676fc is the first bad commit
-> >> commit 904e28c6de083fa4834cdbd0026470ddc30676fc
-> >> Merge: a738688177dc 2f7f4efb9411
-> >> Author: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-> >> Date:   Wed Feb 22 10:44:31 2023 +0100
-> >>
-> >>     Merge branch 'for-6.3/hid-bpf' into for-linus
+> On 6/5/23 22:11, Lorenzo Stoakes wrote:
+> > In __vmalloc_area_node() we always warn_alloc() when an allocation
+> > performed by vm_area_alloc_pages() fails unless it was due to a pending
+> > fatal signal.
 > > 
-> > Hmm, seems like bad bisect (bisected to HID-BPF which IMO isn't related
-> > to amd_sfh). Can you repeat the bisection?
+> > However, huge page allocations instigated either by vmalloc_huge() or
+> > __vmalloc_node_range() (or a caller that invokes this like kvmalloc() or
+> > kvmalloc_node()) always falls back to order-0 allocations if the huge page
+> > allocation fails.
+> > 
+> > This renders the warning useless and noisy, especially as all callers
+> > appear to be aware that this may fallback. This has already resulted in at
+> > least one bug report from a user who was confused by this (see link).
+> > 
+> > Therefore, simply update the code to only output this warning for order-0
+> > pages when no fatal signal is pending.
+> > 
+> > Link: https://bugzilla.suse.com/show_bug.cgi?id=1211410
+> > Signed-off-by: Lorenzo Stoakes <lstoakes@gmail.com>
 > 
-> Well, amd_sfh afaics apparently interacts with HID (see trace earlier in
-> the thread), so it's not that far away. But it's a merge commit, which
-> is possible, but doesn't happen every day. So a recheck might really be
-> a good idea.
+> I think there are more reports of same thing from the btrfs context, that
+> appear to be a 6.3 regression
+> 
+> https://bugzilla.kernel.org/show_bug.cgi?id=217466
+> Link: https://lore.kernel.org/all/efa04d56-cd7f-6620-bca7-1df89f49bf4b@gmail.com/
+> 
+I had a look at that report. The btrfs complains due to the
+fact that a high-order page(1 << 9) can not be obtained. In the
+vmalloc code we do not fall to 0-order allocator if there is
+a request of getting a high-order.
 
-Let's not rule out that there is a bad interaction between HID-BPF and
-AMD SFH. HID-BPF is able to process any incoming HID event, whether it
-comes from AND SFH, USB, BT, I2C or anything else.
+I provided a patch to fallback if a high-order. A reproducer, after
+applying the patch, started to get oppses in another places.
 
-However, looking at the stack trace in the initial report[0], it seems
-we are getting the oops/stack traces while we are still in amd_sfh:
+IMO, we should fallback even for high-order requests. Because it is
+highly likely it can not be accomplished.
 
-list_add corruption. next is NULL.
-WARNING: CPU: 5 PID: 433 at lib/list_debug.c:25 __list_add_valid+0x57/0xa0
-...
-RIP: 0010:__list_add_valid+0x57/0xa0
-...
-Call Trace:
-  <TASK>
-  amd_sfh_get_report+0xba/0x110 [amd_sfh 78bf82e66cdb2ccf24cbe871a0835ef4eedddb17]
-...
+Any thoughts?
 
-If HID-BPF were involved, we should see a call to hid_input_report() IMO.
-Also AMD SFH calls hid_input_report() in a workqueue, so I would expect
-a different stack trace.
+<snip>
+diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+index 31ff782d368b..7a06452f7807 100644
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -2957,14 +2957,18 @@ vm_area_alloc_pages(gfp_t gfp, int nid,
+                        page = alloc_pages(alloc_gfp, order);
+                else
+                        page = alloc_pages_node(nid, alloc_gfp, order);
++
+                if (unlikely(!page)) {
+-                       if (!nofail)
+-                               break;
++                       if (nofail)
++                               alloc_gfp |= __GFP_NOFAIL;
 
-I have a suspicion on commit 7bcfdab3f0c6 ("HID: amd_sfh: if no sensors are enabled,
-clean up") because the stack trace says that there is a bad list_add,
-which could happen if the object is not correctly initialized.
+-                       /* fall back to the zero order allocations */
+-                       alloc_gfp |= __GFP_NOFAIL;
+-                       order = 0;
+-                       continue;
++                       /* Fall back to the zero order allocations. */
++                       if (order || nofail) {
++                               order = 0;
++                               continue;
++                       }
++
++                       break;
+                }
 
-However, that commit was present in v6.2, so it might not be that one.
+                /*
+<snip>
 
-Back to the merge commit: the hid-bpf tree was merged in the hid tree
-while it took its branch during the v6.1 cycle. So that might be the
-reason you get this as a result of bisection because the AMD SFH code in
-the hid-bpf branch is the one from the v6.1 kernel, and when you merge
-it to the v6.2+ branch, you get a different code for that driver.
 
-Cheers,
-Benjamin
 
-[0] https://lore.kernel.org/regressions/f40e3897-76f1-2cd0-2d83-e48d87130eab@hexchain.org/#t
-
+--
+Uladzislau Rezki
