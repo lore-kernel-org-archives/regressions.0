@@ -1,63 +1,55 @@
-Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B6167F
-	for <regressions@lists.linux.dev>; Tue,  6 Jun 2023 02:00:07 +0000 (UTC)
-Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-33b1da9a8acso26707265ab.3
-        for <regressions@lists.linux.dev>; Mon, 05 Jun 2023 19:00:07 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 474A1361
+	for <regressions@lists.linux.dev>; Tue,  6 Jun 2023 02:36:45 +0000 (UTC)
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-256a41d3e81so4769650a91.1
+        for <regressions@lists.linux.dev>; Mon, 05 Jun 2023 19:36:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686016807; x=1688608807;
+        d=gmail.com; s=20221208; t=1686019005; x=1688611005;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=buSjiCTAYMu1VMj/taG1SQiIiNFmwa/mLZSh9IabKTI=;
-        b=nZYeYOXbSndNmToj71NLbEkueeLvBTg+cxhX1LrbYWy7CI+k3mZ0DIK3GJCn6+RXMT
-         hrttjwRNVQG2+Xp75ydUzGrhc8unJ3vgmhKaANP0buce8i3LFV1wJVeIfVfsIXDPeqs/
-         7RKRpPWiWJYqn3+rWGfORNk0TJlBlg6HIW+ZgH5Rf3bUe5bwV0InfHcuyR1IjV8on1H9
-         oWAb7iIuzZskORs4ozoVBR0QyNAUvmdctAazG48EmpLdZvltZMZ8JZ4yLYdZyJlRU2+B
-         XZZ8ZFQ7MA9/+a7Xma660N9ScUMQcX4PbTWXeCsEnWX3LN2+jZTqeXtjXo6BaiW/eUsX
-         UxPQ==
+        bh=forzF7x9ap1s3sdBeXdIPn+wCjalJOzafD/pj6NI2Fw=;
+        b=kOMx0UElNi84z3O0qQZ2mHwe8w7eb7/owU5M5V5n0lu66ExmjY8u66ku+lSaux59Mq
+         wXP9OxaAFfdD5tPl544z6U+7FL+nWwHmE0jdYSI9JngVF3P4fqCGrJB//zE43cfLAhNt
+         e9WQJkxjuw+ip5g54xJLKNdzi7TtjD7zOu2p+73t7JcphCUTxB3rmRk9BNVj1KGcTnvy
+         60tYRexKPckhPU0gWkk91jw9yOQpQkDG3ItR+mvEdCcBdiiQLle4BLW5vKApXl6Qd0U1
+         gdruDyKsVvgNRPQiDsZoN8x/WXz/gpdLMaYtQMgvzMUkvKXmr1986FbOV02ysJmElWzz
+         skJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686016807; x=1688608807;
+        d=1e100.net; s=20221208; t=1686019005; x=1688611005;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=buSjiCTAYMu1VMj/taG1SQiIiNFmwa/mLZSh9IabKTI=;
-        b=MvQeRbGlQOYXarzAmZa8y9ZQZEl65ln4BVj7k+RSfgGrVCbYPaVJbKX5UFCIe9RY7U
-         GPUPZM1BAi4cuwDdLXe5Dr1zoR5DvAd5YD8CNnj4bMNmpMxFO8WVSIvx1pW73fjTjHDK
-         XjfsktnhYCWFcF62wiZebShmkwQg3PSm5jeIQ173OcPWV1syAoubsHh60yxZF/UaR1qp
-         d2VGrelvY8Xc6wY7YJX52034SnsA+Nv+BrzkM/El+XLS0nd05XxVALHxDFhCRbMa1X1G
-         SlFrHsnY23M9cQ8rMU5xlidMBpUrOR9PBbm4d5RGUUVfBzZOKCZwtxVcfVvnFZxcDmcI
-         eogA==
-X-Gm-Message-State: AC+VfDz5Wyrbinik+hxTRgwYBY3sFFP5ia8M7dCdwK6QhU1ZLOPoEvgH
-	XcSPZVvviykEoq21trwqgmI=
-X-Google-Smtp-Source: ACHHUZ6HpjBXN77Wl2V0CL0HXxBJE6gN8QW0/beR1dgCj3Q6GilLf8tVmlWavSvbQ/Gc2+SReQMirQ==
-X-Received: by 2002:a92:d350:0:b0:328:8770:b9c2 with SMTP id a16-20020a92d350000000b003288770b9c2mr1051226ilh.14.1686016806863;
-        Mon, 05 Jun 2023 19:00:06 -0700 (PDT)
+        bh=forzF7x9ap1s3sdBeXdIPn+wCjalJOzafD/pj6NI2Fw=;
+        b=fV2D3+T0bQQPug2+ez6et88vrcY+NN31O+aJMky6XS1P5igQb8Ley7GBYhn1TzxBZO
+         DwhB4WDYfXOw3epJPx7trx3e+KcFOCEMbgPAgNQzzUgDtY0QffkCRAhWpEI94YB0rNA5
+         JSMxd3nAUsw8rHbny9n7MxoTl/NlL5LL9NQjQTA4OhDX5TgPry0PKkKdWkm9Jk1AWA3H
+         4dNSruQaMn+0xrvhoIlWAWltjY5KfQwqovxHmHrTu05oYdXOv29e1G4rv4PkfQ/0v/GK
+         9Vcu7oFtrOjJl9GsvRZsUI3rnecHnsl+ynDgG05mC852eOoxYf1zv7sp99gGA7veCmbA
+         05cQ==
+X-Gm-Message-State: AC+VfDzh1WOoBa65OtP2VIvpYHlubPm6bqJ8TNGdupKwfJGeyJ4kW6Xq
+	45UO+/PulgXJ0sUhIl4KllU=
+X-Google-Smtp-Source: ACHHUZ4SZCnx+FzAyFclv7fZhrBmmdhun7a2MFnH6JMBAalLr543sknoipxj2SMTfTz/A8xx6IW17A==
+X-Received: by 2002:a17:90b:788:b0:256:544a:74c9 with SMTP id l8-20020a17090b078800b00256544a74c9mr535481pjz.25.1686019005262;
+        Mon, 05 Jun 2023 19:36:45 -0700 (PDT)
 Received: from debian.me (subs32-116-206-28-36.three.co.id. [116.206.28.36])
-        by smtp.gmail.com with ESMTPSA id a10-20020a62bd0a000000b0063b86aff031sm5749842pff.108.2023.06.05.19.00.05
+        by smtp.gmail.com with ESMTPSA id m6-20020a17090a34c600b00256471db12bsm6893567pjf.8.2023.06.05.19.36.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Jun 2023 19:00:06 -0700 (PDT)
+        Mon, 05 Jun 2023 19:36:44 -0700 (PDT)
 Received: by debian.me (Postfix, from userid 1000)
-	id ADE5A1069AF; Tue,  6 Jun 2023 09:00:02 +0700 (WIB)
-Date: Tue, 6 Jun 2023 09:00:02 +0700
+	id 101AB1069FD; Tue,  6 Jun 2023 09:36:40 +0700 (WIB)
+Date: Tue, 6 Jun 2023 09:36:40 +0700
 From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Chris Packham <Chris.Packham@alliedtelesis.co.nz>,
-	Lino Sanfilippo <l.sanfilippo@kunbus.com>,
-	Jarkko Sakkinen <jarkko@kernel.org>,
-	Sasha Levin <sashal@kernel.org>, Peter Huewe <peterhuewe@gmx.de>,
-	Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Linux Kernel Integrity <linux-integrity@vger.kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Regressions <regressions@lists.linux.dev>
-Subject: Re: New kernel warning after updating from LTS 5.15.110 to 5.15.112
- (and 5.15.113)
-Message-ID: <ZH6TIjXeXJVMvSKa@debian.me>
-References: <fe6f7aa0-56c2-3729-ce8c-0f2d943b33f4@alliedtelesis.co.nz>
- <ZHQIFLWvrWUNMVxb@debian.me>
- <6e470461-1a9b-ec51-bac5-f2beb1dc11c9@alliedtelesis.co.nz>
- <2b09d2ed-0852-bbc9-b792-aad92235c7fa@gmail.com>
- <03daca5c-e468-8889-4dc2-e625a664d571@alliedtelesis.co.nz>
- <ec5245bd-3103-f0c7-d3ef-85aabb4d4712@alliedtelesis.co.nz>
+To: Malte Starostik <malte@starostik.de>,
+	Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc: basavaraj.natikar@amd.com, linux-input@vger.kernel.org,
+	linux@hexchain.org, regressions@lists.linux.dev,
+	stable@vger.kernel.org
+Subject: Re: amd_sfh driver causes kernel oops during boot
+Message-ID: <ZH6buB8TcMd5aT_1@debian.me>
+References: <ZG3ipauL9FTnQJiC@debian.me>
+ <3250319.ancTxkQ2z5@zen>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -65,159 +57,78 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="1I+UJ79Ezq1Yhtal"
+	protocol="application/pgp-signature"; boundary="CUrTcfzVaW+dVdl5"
 Content-Disposition: inline
-In-Reply-To: <ec5245bd-3103-f0c7-d3ef-85aabb4d4712@alliedtelesis.co.nz>
+In-Reply-To: <3250319.ancTxkQ2z5@zen>
 
 
---1I+UJ79Ezq1Yhtal
+--CUrTcfzVaW+dVdl5
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 06, 2023 at 01:41:01AM +0000, Chris Packham wrote:
+On Mon, Jun 05, 2023 at 01:24:25PM +0200, Malte Starostik wrote:
+> Hello,
 >=20
-> On 2/06/23 16:19, Chris Packham wrote:
-> >
-> > On 2/06/23 16:10, Bagas Sanjaya wrote:
-> >> On 5/29/23 09:37, Chris Packham wrote:
-> >>> On 29/05/23 14:04, Bagas Sanjaya wrote:
-> >>>> On Sun, May 28, 2023 at 11:42:50PM +0000, Chris Packham wrote:
-> >>>>> Hi,
-> >>>>>
-> >>>>> We have an embedded product with an Infineon SLM9670 TPM. After=20
-> >>>>> updating
-> >>>>> to a newer LTS kernel version we started seeing the following=20
-> >>>>> warning at
-> >>>>> boot.
-> >>>>>
-> >>>>> [=C2=A0=C2=A0=C2=A0 4.741025] ------------[ cut here ]------------
-> >>>>> [=C2=A0=C2=A0=C2=A0 4.749894] irq 38 handler tis_int_handler+0x0/0x=
-154 enabled=20
-> >>>>> interrupts
-> >>>>> [=C2=A0=C2=A0=C2=A0 4.756555] WARNING: CPU: 0 PID: 0 at kernel/irq/=
-handle.c:159
-> >>>>> __handle_irq_event_percpu+0xf4/0x180
-> >>>>> [=C2=A0=C2=A0=C2=A0 4.765557] Modules linked in:
-> >>>>> [=C2=A0=C2=A0=C2=A0 4.768626] CPU: 0 PID: 0 Comm: swapper/0 Not tai=
-nted 5.15.113 #1
-> >>>>> [=C2=A0=C2=A0=C2=A0 4.774747] Hardware name: Allied Telesis x250-18=
-XS (DT)
-> >>>>> [=C2=A0=C2=A0=C2=A0 4.780080] pstate: 60000005 (nZCv daif -PAN -UAO=
- -TCO -DIT -SSBS
-> >>>>> BTYPE=3D--)
-> >>>>> [=C2=A0=C2=A0=C2=A0 4.787072] pc : __handle_irq_event_percpu+0xf4/0=
-x180
-> >>>>> [=C2=A0=C2=A0=C2=A0 4.792146] lr : __handle_irq_event_percpu+0xf4/0=
-x180
-> >>>>> [=C2=A0=C2=A0=C2=A0 4.797220] sp : ffff800008003e40
-> >>>>> [=C2=A0=C2=A0=C2=A0 4.800547] x29: ffff800008003e40 x28: ffff800009=
-3951c0 x27:
-> >>>>> ffff80000902a9b8
-> >>>>> [=C2=A0=C2=A0=C2=A0 4.807716] x26: ffff800008fe8d28 x25: ffff800009=
-4a62bd x24:
-> >>>>> ffff000001b92400
-> >>>>> [=C2=A0=C2=A0=C2=A0 4.814885] x23: 0000000000000026 x22: ffff800008=
-003ec4 x21:
-> >>>>> 0000000000000000
-> >>>>> [=C2=A0=C2=A0=C2=A0 4.822053] x20: 0000000000000001 x19: ffff000002=
-381200 x18:
-> >>>>> ffffffffffffffff
-> >>>>> [=C2=A0=C2=A0=C2=A0 4.829222] x17: ffff800076962000 x16: ffff800008=
-000000 x15:
-> >>>>> ffff800088003b57
-> >>>>> [=C2=A0=C2=A0=C2=A0 4.836390] x14: 0000000000000000 x13: ffff800009=
-3a5078 x12:
-> >>>>> 000000000000035d
-> >>>>> [=C2=A0=C2=A0=C2=A0 4.843558] x11: 000000000000011f x10: ffff800009=
-3a5078 x9 :
-> >>>>> ffff8000093a5078
-> >>>>> [=C2=A0=C2=A0=C2=A0 4.850727] x8 : 00000000ffffefff x7 : ffff800009=
-3fd078 x6 :
-> >>>>> ffff8000093fd078
-> >>>>> [=C2=A0=C2=A0=C2=A0 4.857895] x5 : 000000000000bff4 x4 : 0000000000=
-000000 x3 :
-> >>>>> 0000000000000000
-> >>>>> [=C2=A0=C2=A0=C2=A0 4.865062] x2 : 0000000000000000 x1 : 0000000000=
-000000 x0 :
-> >>>>> ffff8000093951c0
-> >>>>> [=C2=A0=C2=A0=C2=A0 4.872230] Call trace:
-> >>>>> [=C2=A0=C2=A0=C2=A0 4.874686]=C2=A0 __handle_irq_event_percpu+0xf4/=
-0x180
-> >>>>> [=C2=A0=C2=A0=C2=A0 4.879411]=C2=A0 handle_irq_event+0x64/0xec
-> >>>>> [=C2=A0=C2=A0=C2=A0 4.883264]=C2=A0 handle_level_irq+0xc0/0x1b0
-> >>>>> [=C2=A0=C2=A0=C2=A0 4.887202]=C2=A0 generic_handle_irq+0x30/0x50
-> >>>>> [=C2=A0=C2=A0=C2=A0 4.891229]=C2=A0 mvebu_gpio_irq_handler+0x11c/0x=
-2a0
-> >>>>> [=C2=A0=C2=A0=C2=A0 4.895780]=C2=A0 handle_domain_irq+0x60/0x90
-> >>>>> [=C2=A0=C2=A0=C2=A0 4.899720]=C2=A0 gic_handle_irq+0x4c/0xd0
-> >>>>> [=C2=A0=C2=A0=C2=A0 4.903398]=C2=A0 call_on_irq_stack+0x20/0x4c
-> >>>>> [=C2=A0=C2=A0=C2=A0 4.907338]=C2=A0 do_interrupt_handler+0x54/0x60
-> >>>>> [=C2=A0=C2=A0=C2=A0 4.911538]=C2=A0 el1_interrupt+0x30/0x80
-> >>>>> [=C2=A0=C2=A0=C2=A0 4.915130]=C2=A0 el1h_64_irq_handler+0x18/0x24
-> >>>>> [=C2=A0=C2=A0=C2=A0 4.919244]=C2=A0 el1h_64_irq+0x78/0x7c
-> >>>>> [=C2=A0=C2=A0=C2=A0 4.922659]=C2=A0 arch_cpu_idle+0x18/0x2c
-> >>>>> [=C2=A0=C2=A0=C2=A0 4.926249]=C2=A0 do_idle+0xc4/0x150
-> >>>>> [=C2=A0=C2=A0=C2=A0 4.929404]=C2=A0 cpu_startup_entry+0x28/0x60
-> >>>>> [=C2=A0=C2=A0=C2=A0 4.933343]=C2=A0 rest_init+0xe4/0xf4
-> >>>>> [=C2=A0=C2=A0=C2=A0 4.936584]=C2=A0 arch_call_rest_init+0x10/0x1c
-> >>>>> [=C2=A0=C2=A0=C2=A0 4.940699]=C2=A0 start_kernel+0x600/0x640
-> >>>>> [=C2=A0=C2=A0=C2=A0 4.944375]=C2=A0 __primary_switched+0xbc/0xc4
-> >>>>> [=C2=A0=C2=A0=C2=A0 4.948402] ---[ end trace 940193047b35b311 ]---
-> >>>>>
-> >>>>> Initially I dismissed this as a warning that would probably be=20
-> >>>>> cleaned
-> >>>>> up when we did more work on the TPM support for our product but we=
-=20
-> >>>>> also
-> >>>>> seem to be getting some new i2c issues and possibly a kernel stack
-> >>>>> corruption that we've conflated with this TPM warning.
-> >>>> Can you reproduce this issue on mainline? Can you also bisect to find
-> >>>> the culprit?
-> >>> No the error doesn't appear on a recent mainline kernel. I do still g=
-et
-> >>>
-> >>> tpm_tis_spi spi1.1: 2.0 TPM (device-id 0x1B, rev-id 22)
-> >>> tpm tpm0: [Firmware Bug]: TPM interrupt not working, polling instead
-> >>> tpm tpm0: A TPM error (256) occurred attempting the self test
-> >>>
-> >>> but I think I was getting that on v5.15.110
-> >>>
-> >> I repeat: Can you bisect between v5.15 and v5.15.112?
-> >
-> > It's definitely between v5.15.110 and v5.15.112.
-> >
-> > I'll do a proper bisect next week but I'm pretty sure it's related to=
-=20
-> > the "tpm, tpm_tis:" series. The problem can be worked around by=20
-> > removing the TPM interrupt from the device tree for the board.
+> chiming in here as I'm experiencing what looks like the exact same issue,=
+ also=20
+> on a Lenovo Z13 notebook, also on Arch:
+> Oops during startup in task udev-worker followed by udev-worker blocking =
+all=20
+> attempts to suspend or cleanly shutdown/reboot the machine - in fact I fi=
+rst=20
+> noticed because the machine surprised with repeatedly running out of batt=
+ery=20
+> after it had supposedly been in standby but couldn't. Only then I noticed=
+ the=20
+> error on boot.
 >=20
-> Bisecting between v5.15.110 and v5.15.112 points to
+> bisect result:
+> 904e28c6de083fa4834cdbd0026470ddc30676fc is the first bad commit
+> commit 904e28c6de083fa4834cdbd0026470ddc30676fc
+> Merge: a738688177dc 2f7f4efb9411
+> Author: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+> Date:   Wed Feb 22 10:44:31 2023 +0100
 >=20
-> 51162b05a44cb5d98fb0ae2519a860910a47fd4b is the first bad commit
+>     Merge branch 'for-6.3/hid-bpf' into for-linus
 
-Thanks for the bisection.
+Hmm, seems like bad bisect (bisected to HID-BPF which IMO isn't related
+to amd_sfh). Can you repeat the bisection?
 
-Lino, it looks like this regression is caused by (backported) commit of you=
-rs.
-Would you like to take a look on it?
+Anyway, tl;dr:
 
-Anyway, telling regzbot:
+> A: http://en.wikipedia.org/wiki/Top_post
+> Q: Were do I find info about this thing called top-posting?
+> A: Because it messes up the order in which people normally read text.
+> Q: Why is top-posting such a bad thing?
+> A: Top-posting.
+> Q: What is the most annoying thing in e-mail?
+>=20
+> A: No.
+> Q: Should I include quotations after my reply?
+>=20
+> http://daringfireball.net/2007/07/on_top
 
-#regzbot introduced: 51162b05a44cb5
+And telling regzbot:
+
+#regzbot introduced: 904e28c6de083f
+#regzbot title: HID-BPF feature causes amd_sfh kernel oops during boot and =
+suspend/reboot
+
+Thanks.
 
 --=20
 An old man doll... just what I always wanted! - Clara
 
---1I+UJ79Ezq1Yhtal
+--CUrTcfzVaW+dVdl5
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZH6THgAKCRD2uYlJVVFO
-o6M8AQC/AQl5Qg8MqMLvvmXd1ofCPvdrOv/MKTCm6CYi82fT0gD/fzETeBUkqb7c
-0tWduZktxuZReEFeucMiOOR4CsyBqAc=
-=GEY/
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZH6bswAKCRD2uYlJVVFO
+o2xDAP9An3ggMkqbJ3oROKgX0EvakxIZ71rfdE5jiwCJL0qbkQD/UOdP+fyrj4hL
+jjftmyl+chnthfoPbYDIWG8939UFqgc=
+=3GF2
 -----END PGP SIGNATURE-----
 
---1I+UJ79Ezq1Yhtal--
+--CUrTcfzVaW+dVdl5--
