@@ -1,63 +1,43 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5F111C29
-	for <regressions@lists.linux.dev>; Tue,  6 Jun 2023 07:41:02 +0000 (UTC)
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-30ae4ec1ac7so4523911f8f.2
-        for <regressions@lists.linux.dev>; Tue, 06 Jun 2023 00:41:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686037260; x=1688629260;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Q02VMVV6a5mqDYOgkecqdsRCWj1sQmCKyjrDOCTCTiA=;
-        b=Z8IPTJ6St8ijvSNbBViuSpCfeNj53xQBDuBOgwpJuU8+5bnHJZmHlEAZG6zOuZz/2u
-         03GtHPrAAyFBwSz+5AhUJkDlVBOU2AcYwczAYYXBvFZzxg+b7+Ln3NRSb4r20lw8QvEM
-         XtAjTioyZi6P1r/df3OYe/XGNbRB0MvbU9JGjceTRcL/w3acNKJtKUhQGg8n7J7RdoJx
-         MgSfeW/r0VNzl1W9ike6GjPVa61025sbq1/IuRB59hS9LErPI6nBK7MDjqllBOrMa8/2
-         hSGmFrDfLBMxOorsTsG2LYIvz996R6euVWwwdU29Aoc4ohdomK+1c1GEChkqMKhmGzOT
-         bUyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686037260; x=1688629260;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Q02VMVV6a5mqDYOgkecqdsRCWj1sQmCKyjrDOCTCTiA=;
-        b=KNg46Khfp0B21CMp0rkVNLmVurwX6594kC8Nwxp1y5wZgfH1RjlvYnhWrlHDra2HL1
-         nB8p2nWWVpajPFVwd0wy7/K4sai0rt1BrXaIPPvdGHaaDuX1Lp3fah51eOwPKZ1Rgnho
-         UWkCYaK+4qMG6wItUEWhUslrgcsvs76bKe6cX+Aq+iiaNaMKRQdHxlt0LfTJETpjmkM9
-         YgvrLIShYJ83E+UA6eFY35F6phCTlvzEHEUQt7hb7TKM1OIsbVbPvfrvySx0VhqDLxmt
-         tsCV6zRjn/f5wmyxsmB6e976S4euWGfhQjYx+RwcrIZWJwxHSdnfl8Xjttm9CPSW0Y+R
-         wKyA==
-X-Gm-Message-State: AC+VfDwpPIqbatPrV2+d5zPrMgH6w83JGf/Xu9iZehLIJsfw6SGXlD8i
-	OvVfAsVltffjx8gd9zt1gKY=
-X-Google-Smtp-Source: ACHHUZ6TLYFd4Dxobh0/0obSA2bWZtpVg2zb8zP5vwIxG/Okp2U6Rt65IWyqlcXtEQyNVSpO9vmOdA==
-X-Received: by 2002:a05:6000:1287:b0:30d:e113:2dd6 with SMTP id f7-20020a056000128700b0030de1132dd6mr1193262wrx.62.1686037260159;
-        Tue, 06 Jun 2023 00:41:00 -0700 (PDT)
-Received: from localhost ([2a00:23c5:dc8c:8701:1663:9a35:5a7b:1d76])
-        by smtp.gmail.com with ESMTPSA id z6-20020a1c4c06000000b003f42ceb3bf4sm13107348wmf.32.2023.06.06.00.40.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Jun 2023 00:40:59 -0700 (PDT)
-Date: Tue, 6 Jun 2023 08:40:58 +0100
-From: Lorenzo Stoakes <lstoakes@gmail.com>
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Baoquan He <bhe@redhat.com>, Uladzislau Rezki <urezki@gmail.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	Bagas Sanjaya <bagasdotme@gmail.com>,
-	Linux btrfs <linux-btrfs@vger.kernel.org>,
-	Linux Regressions <regressions@lists.linux.dev>,
-	Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-	David Sterba <dsterba@suse.com>, a1bert@atlas.cz,
-	Forza <forza@tnonline.net>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Song Liu <song@kernel.org>, Nicholas Piggin <npiggin@gmail.com>,
-	Matthew Wilcox <willy@infradead.org>
-Subject: Re: [PATCH] mm/vmalloc: do not output a spurious warning when huge
- vmalloc() fails
-Message-ID: <f6b42d95-09f1-48d6-8274-e6145febb31d@lucifer.local>
-References: <20230605201107.83298-1-lstoakes@gmail.com>
- <cd47d6ac-69ce-0315-dd45-2cb9dce57f36@suse.cz>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B9E55660
+	for <regressions@lists.linux.dev>; Tue,  6 Jun 2023 08:08:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1686038901;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=C3WImzMMIy/+euBBzL0YKACBrtfSAIGcyz6zFj7th9k=;
+	b=RMLH/s1IZsFEcVIfSMUkFJ1BTk9qiTxNgEE3raGFEyrklyyU6O7NAx5lbhgToZR7Eey1zQ
+	t+sj/r5IE3+cQVAHK06nYI/Ow+/U6ltKhzStm7IA6QsFWE1JDU54clbdUAFunf9MkZix6S
+	+6CjnradaSj/zgqTv/XZ0E/BTNthv7w=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-614-T4oP3m_IPsmwOwMkgrf5bg-1; Tue, 06 Jun 2023 04:08:19 -0400
+X-MC-Unique: T4oP3m_IPsmwOwMkgrf5bg-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id F2CE2101A52C;
+	Tue,  6 Jun 2023 08:08:18 +0000 (UTC)
+Received: from mail.corp.redhat.com (unknown [10.45.224.77])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 631992166B27;
+	Tue,  6 Jun 2023 08:08:16 +0000 (UTC)
+Date: Tue, 6 Jun 2023 10:08:13 +0200
+From: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Bagas Sanjaya <bagasdotme@gmail.com>, 
+	Malte Starostik <malte@starostik.de>, basavaraj.natikar@amd.com, linux-input@vger.kernel.org, 
+	linux@hexchain.org, stable@vger.kernel.org, 
+	Mario Limonciello <mario.limonciello@amd.com>
+Subject: Re: amd_sfh driver causes kernel oops during boot
+Message-ID: <aci7a4jnosozypn6sffsdoaezg4p42zgjy5dwnjyvnbav7chdm@wettfjwb4enw>
+References: <ZG3ipauL9FTnQJiC@debian.me>
+ <3250319.ancTxkQ2z5@zen>
+ <ZH6buB8TcMd5aT_1@debian.me>
+ <46d5acd2-5961-a496-4c1a-68e5c47021fb@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -66,92 +46,76 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cd47d6ac-69ce-0315-dd45-2cb9dce57f36@suse.cz>
+In-Reply-To: <46d5acd2-5961-a496-4c1a-68e5c47021fb@leemhuis.info>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.6
 
-On Tue, Jun 06, 2023 at 09:13:24AM +0200, Vlastimil Babka wrote:
->
-> On 6/5/23 22:11, Lorenzo Stoakes wrote:
-> > In __vmalloc_area_node() we always warn_alloc() when an allocation
-> > performed by vm_area_alloc_pages() fails unless it was due to a pending
-> > fatal signal.
-> >
-> > However, huge page allocations instigated either by vmalloc_huge() or
-> > __vmalloc_node_range() (or a caller that invokes this like kvmalloc() or
-> > kvmalloc_node()) always falls back to order-0 allocations if the huge page
-> > allocation fails.
-> >
-> > This renders the warning useless and noisy, especially as all callers
-> > appear to be aware that this may fallback. This has already resulted in at
-> > least one bug report from a user who was confused by this (see link).
-> >
-> > Therefore, simply update the code to only output this warning for order-0
-> > pages when no fatal signal is pending.
-> >
-> > Link: https://bugzilla.suse.com/show_bug.cgi?id=1211410
-> > Signed-off-by: Lorenzo Stoakes <lstoakes@gmail.com>
->
-> I think there are more reports of same thing from the btrfs context, that
-> appear to be a 6.3 regression
->
-> https://bugzilla.kernel.org/show_bug.cgi?id=217466
-> Link: https://lore.kernel.org/all/efa04d56-cd7f-6620-bca7-1df89f49bf4b@gmail.com/
->
-> If this indeed helps, it would make sense to Cc: stable here. Although I
-> don't see what caused the regression, the warning itself is not new, so is
-> it new source of order-9 attempts in vmalloc() or new reasons why order-9
-> pages would not be possible to allocate?
 
-Linus updated kvmalloc() to use huge vmalloc() allocations in 9becb6889130
-("kvmalloc: use vmalloc_huge for vmalloc allocations") and Song update
-alloc_large_system_hash() to as well in f2edd118d02d ("page_alloc: use
-vmalloc_huge for large system hash") both of which are ~1y old, however
-these would impact ~5.18, so it's weird to see reports citing 6.2 -> 6.3.
+On Jun 06 2023, Linux regression tracking (Thorsten Leemhuis) wrote:
+> 
+> On 06.06.23 04:36, Bagas Sanjaya wrote:
+> > On Mon, Jun 05, 2023 at 01:24:25PM +0200, Malte Starostik wrote:
+> >> Hello,
+> >>
+> >> chiming in here as I'm experiencing what looks like the exact same issue, also 
+> >> on a Lenovo Z13 notebook, also on Arch:
+> >> Oops during startup in task udev-worker followed by udev-worker blocking all 
+> >> attempts to suspend or cleanly shutdown/reboot the machine - in fact I first 
+> >> noticed because the machine surprised with repeatedly running out of battery 
+> >> after it had supposedly been in standby but couldn't. Only then I noticed the 
+> >> error on boot.
+> >>
+> >> bisect result:
+> >> 904e28c6de083fa4834cdbd0026470ddc30676fc is the first bad commit
+> >> commit 904e28c6de083fa4834cdbd0026470ddc30676fc
+> >> Merge: a738688177dc 2f7f4efb9411
+> >> Author: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+> >> Date:   Wed Feb 22 10:44:31 2023 +0100
+> >>
+> >>     Merge branch 'for-6.3/hid-bpf' into for-linus
+> > 
+> > Hmm, seems like bad bisect (bisected to HID-BPF which IMO isn't related
+> > to amd_sfh). Can you repeat the bisection?
+> 
+> Well, amd_sfh afaics apparently interacts with HID (see trace earlier in
+> the thread), so it's not that far away. But it's a merge commit, which
+> is possible, but doesn't happen every day. So a recheck might really be
+> a good idea.
 
-Will dig to see if something else changed that would increase the
-prevalence of this.
+Let's not rule out that there is a bad interaction between HID-BPF and
+AMD SFH. HID-BPF is able to process any incoming HID event, whether it
+comes from AND SFH, USB, BT, I2C or anything else.
 
-Also while we're here, ugh at us immediately splitting the non-compound
-(also ugh) huge page. Nicholas explains why in the patch that introduces it
-- 3b8000ae185c ("mm/vmalloc: huge vmalloc backing pages should be split
-rather than compound") - but it'd be nice if we could find a way to avoid
-this.
+However, looking at the stack trace in the initial report[0], it seems
+we are getting the oops/stack traces while we are still in amd_sfh:
 
-If only there were a data type (perhaps beginning with 'f') that abstracted
-the order of the page entirely and could be guaranteed to always be the one
-with which you manipulated ref count, etc... ;)
+list_add corruption. next is NULL.
+WARNING: CPU: 5 PID: 433 at lib/list_debug.c:25 __list_add_valid+0x57/0xa0
+...
+RIP: 0010:__list_add_valid+0x57/0xa0
+...
+Call Trace:
+  <TASK>
+  amd_sfh_get_report+0xba/0x110 [amd_sfh 78bf82e66cdb2ccf24cbe871a0835ef4eedddb17]
+...
 
->
-> > ---
-> >  mm/vmalloc.c | 17 +++++++++++++----
-> >  1 file changed, 13 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-> > index ab606a80f475..e563f40ad379 100644
-> > --- a/mm/vmalloc.c
-> > +++ b/mm/vmalloc.c
-> > @@ -3149,11 +3149,20 @@ static void *__vmalloc_area_node(struct vm_struct *area, gfp_t gfp_mask,
-> >  	 * allocation request, free them via vfree() if any.
-> >  	 */
-> >  	if (area->nr_pages != nr_small_pages) {
-> > -		/* vm_area_alloc_pages() can also fail due to a fatal signal */
-> > -		if (!fatal_signal_pending(current))
-> > +		/*
-> > +		 * vm_area_alloc_pages() can fail due to insufficient memory but
-> > +		 * also:-
-> > +		 *
-> > +		 * - a pending fatal signal
-> > +		 * - insufficient huge page-order pages
-> > +		 *
-> > +		 * Since we always retry allocations at order-0 in the huge page
-> > +		 * case a warning for either is spurious.
-> > +		 */
-> > +		if (!fatal_signal_pending(current) && page_order == 0)
-> >  			warn_alloc(gfp_mask, NULL,
-> > -				"vmalloc error: size %lu, page order %u, failed to allocate pages",
-> > -				area->nr_pages * PAGE_SIZE, page_order);
-> > +				"vmalloc error: size %lu, failed to allocate pages",
-> > +				area->nr_pages * PAGE_SIZE);
-> >  		goto fail;
-> >  	}
-> >
->
+If HID-BPF were involved, we should see a call to hid_input_report() IMO.
+Also AMD SFH calls hid_input_report() in a workqueue, so I would expect
+a different stack trace.
+
+I have a suspicion on commit 7bcfdab3f0c6 ("HID: amd_sfh: if no sensors are enabled,
+clean up") because the stack trace says that there is a bad list_add,
+which could happen if the object is not correctly initialized.
+
+However, that commit was present in v6.2, so it might not be that one.
+
+Back to the merge commit: the hid-bpf tree was merged in the hid tree
+while it took its branch during the v6.1 cycle. So that might be the
+reason you get this as a result of bisection because the AMD SFH code in
+the hid-bpf branch is the one from the v6.1 kernel, and when you merge
+it to the v6.2+ branch, you get a different code for that driver.
+
+Cheers,
+Benjamin
+
+[0] https://lore.kernel.org/regressions/f40e3897-76f1-2cd0-2d83-e48d87130eab@hexchain.org/#t
+
