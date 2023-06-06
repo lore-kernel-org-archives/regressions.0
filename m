@@ -1,44 +1,106 @@
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from mailout.blnma.de (mailout.blnma.de [116.203.12.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56B3A125AB;
-	Tue,  6 Jun 2023 09:24:45 +0000 (UTC)
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 64DA367373; Tue,  6 Jun 2023 11:24:35 +0200 (CEST)
-Date: Tue, 6 Jun 2023 11:24:35 +0200
-From: Christoph Hellwig <hch@lst.de>
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Robin Murphy <robin.murphy@arm.com>,
-	Jason Adriaanse <jason_a69@yahoo.co.uk>, hch@lst.de,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Bjorn Helgaas <helgaas@kernel.org>, baolu.lu@linux.intel.com,
-	iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: Re: [regression] Bug 217218 - Trying to boot Linux version 6-2.2
- kernel with Marvell SATA controller 88SE9235
-Message-ID: <20230606092435.GA31061@lst.de>
-References: <5f37b0b0-6cb5-b210-a894-d1e91976126e@arm.com> <2a699a99-545c-1324-e052-7d2f41fed1ae@yahoo.co.uk> <07ee0cf7-a5c2-f87a-d627-8dd8fb082345@arm.com> <9648f668-a3bc-3296-71d1-c91cd4c9980e@yahoo.co.uk> <1539e760-392f-a33e-436e-bbf043e79bfc@arm.com> <14f2b1ab-2c7c-fa4d-5854-3df08ac9feef@yahoo.co.uk> <1928df45-7b56-a8a4-21b5-22e5d8ef95eb@leemhuis.info> <9b602abc-37e9-f236-37ee-71bcf1b7ce66@arm.com> <211f3938-2f93-cad7-a92b-821d3ac45b9e@leemhuis.info> <c7da7095-7d68-c65b-daf8-7eee43b79d53@leemhuis.info>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6938294DC
+	for <regressions@lists.linux.dev>; Tue,  6 Jun 2023 09:53:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=starostik.de; s=dkim210803; h=Content-Type:Content-Transfer-Encoding:
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=pTeb9LbTMrna13GViWC3h4XpyHzIp37dyOLsWSuYVME=; t=1686045232; x=1686909232; 
+	b=WUcAdyFNPiZrlJCnv/guYdGBbb3c2G7DCneStEECYc4aq3HqF6ilVo+1dnSClpeCJPzS3WdsbtG
+	99o4xJAtudm+C+ir3MMFFMfwbiR7yCqxIqWOE5t6RYAHYagqxYn/ImZiBcaSuE09CEdAEZdIvZ06n
+	823CEU3l8urkimn6NLtMVKXA5J96+53tkd0Hz5EhT2muxaCc51iy+tqDBkyHzo9dfWbQW8sewSzVU
+	x5giTVG1uA5BgkCz0BEPQxeRD3oRG1WGe00227JKVoiE/rpg5vnWoKNojLtKU+wK4eJC4mAHt8Luu
+	fs/ZQfOrpIyG/Xm3os5psSq1Vyc9QiAdJlFA==;
+Received: from dovecot-0.dovecot.mail.svc.cluster.local ([10.244.6.208] helo=mail.blnma.de)
+	by mail.blnma.de with esmtp (Exim 4.96)
+	(envelope-from <malte@starostik.de>)
+	id 1q6TNs-000EMX-0d;
+	Tue, 06 Jun 2023 09:53:48 +0000
+Received: from zen.localnet ([62.214.179.90])
+	by mail.blnma.de with ESMTPSA
+	id PbH6LCoCf2TpSwAA399c4A
+	(envelope-from <malte@starostik.de>); Tue, 06 Jun 2023 09:53:46 +0000
+From: Malte Starostik <malte@starostik.de>
+To: Bagas Sanjaya <bagasdotme@gmail.com>,
+ Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ regressions@lists.linux.dev
+Cc: basavaraj.natikar@amd.com, linux-input@vger.kernel.org, linux@hexchain.org
+Subject: Re: amd_sfh driver causes kernel oops during boot
+Date: Tue, 06 Jun 2023 11:53:32 +0200
+Message-ID: <2784681.mvXUDI8C0e@zen>
+In-Reply-To: <46d5acd2-5961-a496-4c1a-68e5c47021fb@leemhuis.info>
+References:
+ <ZG3ipauL9FTnQJiC@debian.me> <ZH6buB8TcMd5aT_1@debian.me>
+ <46d5acd2-5961-a496-4c1a-68e5c47021fb@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c7da7095-7d68-c65b-daf8-7eee43b79d53@leemhuis.info>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-On Fri, Jun 02, 2023 at 03:07:19PM +0200, Thorsten Leemhuis wrote:
-> Christoph, could you do me a favor and...
+Am Dienstag, 6. Juni 2023, 08:56:16 CEST schrieb Linux regression tracking 
+(Thorsten Leemhuis):
+> On 06.06.23 04:36, Bagas Sanjaya wrote:
+> > On Mon, Jun 05, 2023 at 01:24:25PM +0200, Malte Starostik wrote:
+> >> chiming in here as I'm experiencing what looks like the exact same issue,
+> >> also on a Lenovo Z13 notebook, also on Arch:
 
-> ...submit that quirk, as Bjorn and Alex apparently didn't pick this up?
-> I could do so myself, but prefer to leave that to people that actually
-> known what they are doing -- and thus can also handle problems later, in
-> case any show up. And strictly speaking it apparently was you who caused
-> this regression with 78013eaadf6 ("x86: remove the IOMMU table
-> infrastructure").
+> >> bisect result:
+> >> 904e28c6de083fa4834cdbd0026470ddc30676fc is the first bad commit
+> >> commit 904e28c6de083fa4834cdbd0026470ddc30676fc
+> >> Merge: a738688177dc 2f7f4efb9411
+> >> Author: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+> >> Date:   Wed Feb 22 10:44:31 2023 +0100
+> >> 
+> >>     Merge branch 'for-6.3/hid-bpf' into for-linus
+> > 
+> > Hmm, seems like bad bisect (bisected to HID-BPF which IMO isn't related
+> > to amd_sfh). Can you repeat the bisection?
 
-Well, Robin posted it so I think he should also finish it up and get
-the credit.  Robin, can you send the quirk with a formal signoff?
+I'm digging further. That merge is what git bisect ended at, but admittedly my 
+git skills and especially with a large codebase aren't too advanced.
+While at 904e28c6de083fa4834cdbd0026470ddc30676fc, git show only shows the diff 
+for tools/testing/selftests/Makefile which can't really be the culprit. 
+However, git diff @~..@ has changes in drivers/hid/amd-sfh-hid/Kconfig (seems 
+innocuous, too), but also some changes to drivers/hid/hid-core.c. Nothing 
+obvious either, but at least it's not too far from the trace.
+
+> Well, amd_sfh afaics apparently interacts with HID (see trace earlier in
+> the thread), so it's not that far away. But it's a merge commit, which
+> is possible, but doesn't happen every day. So a recheck might really be
+> a good idea.
+
+I will recheck some more, the Oops only happens with roughly 30 % chance 
+during boot. When it doesn't, there seem to be no other issues until the next 
+boot either. I made sure to reboot a few times after each bisect step, will 
+look deeper into the area.
+
+> > Anyway, tl;dr:
+> >> A: http://en.wikipedia.org/wiki/Top_post
+> >> Q: Were do I find info about this thing called top-posting?
+> > 
+> > [...]
+> 
+> BTW, I'm not sure if this really is helpful. Teaching this to upcoming
+> kernel developers is definitely worth it, but I wonder if pushing this
+> on all reporters might do more harm than good. I also wonder if asking
+> them a bit more kindly might be wiser (e.g. instead of "Anyway, tl;dr:"
+> something like "BTW, please do not top-post:" or something like that maybe).
+
+Thanks, and I agree in general. However, my case was in fact even worse :-) 
+I'm totally aware of the badness of top-posting. It happened because I had a 
+draft of the reply. Set In-Reply-To from the link in the wev archive and 
+pasted the previous message from there. Couple days later, I just pasted the 
+result on top and disregarded the existing text.
+
+BR Malte
+
 
