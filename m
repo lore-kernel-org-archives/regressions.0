@@ -1,64 +1,23 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD4153D8A
-	for <regressions@lists.linux.dev>; Tue,  6 Jun 2023 08:40:47 +0000 (UTC)
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5149c51fd5bso8530167a12.0
-        for <regressions@lists.linux.dev>; Tue, 06 Jun 2023 01:40:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686040846; x=1688632846;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=cyJ5tDSZZP8etKKPv923PF92ppsCaio89dIjb2PYMe4=;
-        b=rBtWPmSdoicxYr9srl8qFvlifhG4ncOpiQ0k+oysrF2gKHOlEUJImacRwNQ8KLliw+
-         O2UE4hz78ZOqYrQNafFU7Cesy32D2iCONGiqqmC/kK9gTqqHrr+OI1xHhc9E0AHHGv9U
-         fBVmYY732dapdOHvfPXrlbLU6AD9w5uPIY19yJ1iYkJJtQkitigUv3GfvZ7apFoEsa74
-         X8TYvbVy7L7L7BVCtm2l4Oz0bt4xuQfqd9CbF5l5PlzHvToUmJcRxK4+t9nSKMW8TuZ7
-         /I+ANqkGyVYBR+uPj2IhlpX0tXAdJPFDEst1U4x2d0hoQiGmM2dW+ioy4Nbo8F2XCbM9
-         dOtw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686040846; x=1688632846;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cyJ5tDSZZP8etKKPv923PF92ppsCaio89dIjb2PYMe4=;
-        b=jz78tZIATrkOshB3AOrdZfGP+m+lwb96AWpjYAhcUvPiWRreC8xhSLf3y2ZE77Zs8C
-         410OMvXQlLNZ+ahykhLNw1J0Vqh2HtAudN693koK9c/Htdogx8+K8klHF2sAgKTLiB+f
-         t0sk6MbvnbyMJ7Mt7T4zhbj5/yg6Omj8lECQjKg/P2b/Lldz29YzxOmdVqMfVT3hFUir
-         y+oFvqF37a+Ke+OPZGbghZJZ1XSjQshD1so1zDXJ+pL8hyJunpqUzanLazgJW/ewzjqD
-         3E9DC5XPiPVjbIEgiO0dUwqQo2sWOdQQJHD/FfF0pOWgeDzoUocLjfl8H4vkw8inUlQk
-         KWRg==
-X-Gm-Message-State: AC+VfDzj/0f8J2e+3H/eOQGcSyLlS/BRemSjAqSy9AstjygLiyWmBMGl
-	8nP7rWLfEmil5JbXu7R8ojM=
-X-Google-Smtp-Source: ACHHUZ6pFnvGHkcMvgdY6pglmR751hr8lQG7zM/2O8y9sStd9w/m4NVvvDxsA5SPNqZM+PguT3Pnuw==
-X-Received: by 2002:a17:906:4fcb:b0:961:a67:28d with SMTP id i11-20020a1709064fcb00b009610a67028dmr2251830ejw.22.1686040845514;
-        Tue, 06 Jun 2023 01:40:45 -0700 (PDT)
-Received: from pc638.lan ([155.137.26.201])
-        by smtp.gmail.com with ESMTPSA id ca15-20020a170906a3cf00b00977c44188eesm4051149ejb.132.2023.06.06.01.40.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Jun 2023 01:40:45 -0700 (PDT)
-From: Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc638.lan>
-Date: Tue, 6 Jun 2023 10:40:43 +0200
-To: Lorenzo Stoakes <lstoakes@gmail.com>
-Cc: Uladzislau Rezki <urezki@gmail.com>, Vlastimil Babka <vbabka@suse.cz>,
-	Michal Hocko <mhocko@suse.com>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Baoquan He <bhe@redhat.com>, Christoph Hellwig <hch@infradead.org>,
-	Bagas Sanjaya <bagasdotme@gmail.com>,
-	Linux btrfs <linux-btrfs@vger.kernel.org>,
-	Linux Regressions <regressions@lists.linux.dev>,
-	Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-	David Sterba <dsterba@suse.com>, a1bert@atlas.cz,
-	Forza <forza@tnonline.net>
-Subject: Re: [PATCH] mm/vmalloc: do not output a spurious warning when huge
- vmalloc() fails
-Message-ID: <ZH7xCy9QBmMLg9SQ@pc638.lan>
-References: <20230605201107.83298-1-lstoakes@gmail.com>
- <cd47d6ac-69ce-0315-dd45-2cb9dce57f36@suse.cz>
- <ZH7rfgeKzhmZzjA1@pc638.lan>
- <5062a28d-3c49-4510-8e0f-32afb8436a87@lucifer.local>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56B3A125AB;
+	Tue,  6 Jun 2023 09:24:45 +0000 (UTC)
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 64DA367373; Tue,  6 Jun 2023 11:24:35 +0200 (CEST)
+Date: Tue, 6 Jun 2023 11:24:35 +0200
+From: Christoph Hellwig <hch@lst.de>
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Robin Murphy <robin.murphy@arm.com>,
+	Jason Adriaanse <jason_a69@yahoo.co.uk>, hch@lst.de,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Bjorn Helgaas <helgaas@kernel.org>, baolu.lu@linux.intel.com,
+	iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [regression] Bug 217218 - Trying to boot Linux version 6-2.2
+ kernel with Marvell SATA controller 88SE9235
+Message-ID: <20230606092435.GA31061@lst.de>
+References: <5f37b0b0-6cb5-b210-a894-d1e91976126e@arm.com> <2a699a99-545c-1324-e052-7d2f41fed1ae@yahoo.co.uk> <07ee0cf7-a5c2-f87a-d627-8dd8fb082345@arm.com> <9648f668-a3bc-3296-71d1-c91cd4c9980e@yahoo.co.uk> <1539e760-392f-a33e-436e-bbf043e79bfc@arm.com> <14f2b1ab-2c7c-fa4d-5854-3df08ac9feef@yahoo.co.uk> <1928df45-7b56-a8a4-21b5-22e5d8ef95eb@leemhuis.info> <9b602abc-37e9-f236-37ee-71bcf1b7ce66@arm.com> <211f3938-2f93-cad7-a92b-821d3ac45b9e@leemhuis.info> <c7da7095-7d68-c65b-daf8-7eee43b79d53@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -67,66 +26,19 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <5062a28d-3c49-4510-8e0f-32afb8436a87@lucifer.local>
+In-Reply-To: <c7da7095-7d68-c65b-daf8-7eee43b79d53@leemhuis.info>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-On Tue, Jun 06, 2023 at 09:24:33AM +0100, Lorenzo Stoakes wrote:
-> On Tue, Jun 06, 2023 at 10:17:02AM +0200, Uladzislau Rezki wrote:
-> > On Tue, Jun 06, 2023 at 09:13:24AM +0200, Vlastimil Babka wrote:
-> > >
-> > > On 6/5/23 22:11, Lorenzo Stoakes wrote:
-> > > > In __vmalloc_area_node() we always warn_alloc() when an allocation
-> > > > performed by vm_area_alloc_pages() fails unless it was due to a pending
-> > > > fatal signal.
-> > > >
-> > > > However, huge page allocations instigated either by vmalloc_huge() or
-> > > > __vmalloc_node_range() (or a caller that invokes this like kvmalloc() or
-> > > > kvmalloc_node()) always falls back to order-0 allocations if the huge page
-> > > > allocation fails.
-> > > >
-> > > > This renders the warning useless and noisy, especially as all callers
-> > > > appear to be aware that this may fallback. This has already resulted in at
-> > > > least one bug report from a user who was confused by this (see link).
-> > > >
-> > > > Therefore, simply update the code to only output this warning for order-0
-> > > > pages when no fatal signal is pending.
-> > > >
-> > > > Link: https://bugzilla.suse.com/show_bug.cgi?id=1211410
-> > > > Signed-off-by: Lorenzo Stoakes <lstoakes@gmail.com>
-> > >
-> > > I think there are more reports of same thing from the btrfs context, that
-> > > appear to be a 6.3 regression
-> > >
-> > > https://bugzilla.kernel.org/show_bug.cgi?id=217466
-> > > Link: https://lore.kernel.org/all/efa04d56-cd7f-6620-bca7-1df89f49bf4b@gmail.com/
-> > >
-> > I had a look at that report. The btrfs complains due to the
-> > fact that a high-order page(1 << 9) can not be obtained. In the
-> > vmalloc code we do not fall to 0-order allocator if there is
-> > a request of getting a high-order.
-> 
-> This isn't true, we _do_ fallback to order-0 (this is the basis of my patch), in
-> __vmalloc_node_range():-
-> 
-> 	/* Allocate physical pages and map them into vmalloc space. */
-> 	ret = __vmalloc_area_node(area, gfp_mask, prot, shift, node);
-> 	if (!ret)
-> 		goto fail;
-> 
-> ...
-> 
-> fail:
-> 	if (shift > PAGE_SHIFT) {
-> 		shift = PAGE_SHIFT;
-> 		align = real_align;
-> 		size = real_size;
-> 		goto again;
-> 	}
-> 
-> With the order being derived from shift, and __vmalloc_area_node() only being
-> called from __vmalloc_node_range().
-> 
-Correct. It is done on an upper-layer whereas i checked the vm_area_alloc_pages() function.
-But as you mentioned, the refactoring has to be done as it looks a bit messy. 
+On Fri, Jun 02, 2023 at 03:07:19PM +0200, Thorsten Leemhuis wrote:
+> Christoph, could you do me a favor and...
 
---
-Uladzislau Rezki
+> ...submit that quirk, as Bjorn and Alex apparently didn't pick this up?
+> I could do so myself, but prefer to leave that to people that actually
+> known what they are doing -- and thus can also handle problems later, in
+> case any show up. And strictly speaking it apparently was you who caused
+> this regression with 78013eaadf6 ("x86: remove the IOMMU table
+> infrastructure").
+
+Well, Robin posted it so I think he should also finish it up and get
+the credit.  Robin, can you send the quirk with a formal signoff?
+
