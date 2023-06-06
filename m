@@ -1,174 +1,90 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A2B8468F
-	for <regressions@lists.linux.dev>; Tue,  6 Jun 2023 11:23:38 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1q6Uml-0001ej-VO; Tue, 06 Jun 2023 13:23:36 +0200
-Message-ID: <0e702e19-cc93-77ac-bd1d-401b8883fc0b@leemhuis.info>
-Date: Tue, 6 Jun 2023 13:23:35 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8099D17AB4
+	for <regressions@lists.linux.dev>; Tue,  6 Jun 2023 13:27:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05D2DC433D2;
+	Tue,  6 Jun 2023 13:27:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1686058062;
+	bh=Y5tGaEDCfykOC2/4URAbvKrhGg4KX5KOyjmQhsNzC8c=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=YmljVAsfkKIDZ+t4UlyRN5aekGZdC9+HIxGCMfnrY3T6jWyNbpMQX3ux6EKNaGYvn
+	 75+djZcOEKYYfZumWK0oEoIpSa2rJeneqEljKnpLxgEEFJdfHWJeYOMHUCYqwrcx/u
+	 wjDQSfMhgElR1oV2W1QGokmVFvb2ActK1U7EH4Eajoa/pWPQUBwGOOZQiomPgsKpg8
+	 tv04eUOpm3HGgY3ak6l+MgRPj+kivJe/hSoKXkp5W/nmXojFpz1nT2AVWyo7RQnr7M
+	 mbfbB2A5tSpFZA8rhDRFL1GNTdYk7qGdAMLDHtxTJmBZ7LfQXRpci4wg+jXZiW+nFL
+	 dtJNHavJBMyUg==
+Date: Tue, 6 Jun 2023 15:27:37 +0200 (CEST)
+From: Jiri Kosina <jikos@kernel.org>
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+cc: Bastien Nocera <hadess@hadess.net>, linux-input@vger.kernel.org, 
+    linux-kernel@vger.kernel.org, 
+    Benjamin Tissoires <benjamin.tissoires@redhat.com>, 
+    "Peter F . Patel-Schneider" <pfpschneider@gmail.com>, 
+    =?ISO-8859-15?Q?Filipe_La=EDns?= <lains@riseup.net>, 
+    Nestor Lopez Casado <nlopezcasad@logitech.com>, 
+    Mark Lord <mlord@pobox.com>
+Subject: Re: [PATCH] HID: logitech-hidpp: Handle timeout differently from
+ busy
+In-Reply-To: <15bb2507-a145-7f1b-8e84-58aeb02484b9@leemhuis.info>
+Message-ID: <nycvar.YFH.7.76.2306061527080.29760@cbobk.fhfr.pm>
+References: <20230531082428.21763-1-hadess@hadess.net> <nycvar.YFH.7.76.2305311606160.29760@cbobk.fhfr.pm> <nycvar.YFH.7.76.2306031440380.29760@cbobk.fhfr.pm> <15bb2507-a145-7f1b-8e84-58aeb02484b9@leemhuis.info>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: xfs: system fails to boot up due to Internal error
- xfs_trans_cancel
-Content-Language: en-US, de-DE
-To: Dave Chinner <david@fromorbit.com>, "Darrick J. Wong" <djwong@kernel.org>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
- "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
- shrikanth hegde <sshegde@linux.vnet.ibm.com>, dchinner@redhat.com,
- linux-xfs@vger.kernel.org, Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
- ojaswin@linux.ibm.com
-References: <87zg88atiw.fsf@doe.com>
- <33c9674c-8493-1b23-0efb-5c511892b68a@leemhuis.info>
- <20230418045615.GC360889@frogsfrogsfrogs>
- <57eeb4d5-01de-b443-be8e-50b08c132e95@leemhuis.info>
- <20230605215745.GC1325469@frogsfrogsfrogs>
- <ZH6d938Hw/msm95A@dread.disaster.area>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <ZH6d938Hw/msm95A@dread.disaster.area>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1686050619;3b424c0d;
-X-HE-SMSGID: 1q6Uml-0001ej-VO
+Content-Type: text/plain; charset=US-ASCII
 
-On 06.06.23 04:46, Dave Chinner wrote:
-> On Mon, Jun 05, 2023 at 02:57:45PM -0700, Darrick J. Wong wrote:
->> On Mon, Jun 05, 2023 at 03:27:43PM +0200, Thorsten Leemhuis wrote:
->>> /me waves friendly
->>>
->>> On 18.04.23 06:56, Darrick J. Wong wrote:
->>>> On Mon, Apr 17, 2023 at 01:16:53PM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
->>>>> Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
->>>>> for once, to make this easily accessible to everyone.
->>>>>
->>>>> Has any progress been made to fix below regression? It doesn't look like
->>>>> it from here, hence I wondered if it fall through the cracks. Or is
->>>>> there some good reason why this is safe to ignore?
->>>>
->>>> Still working on thinking up a reasonable strategy to reload the incore
->>>> iunlink list if we trip over this.  Online repair now knows how to do
->>>> this[1], but I haven't had time to figure out if this will work
->>>> generally.  [...]
->>>
->>> I still have this issue on my list of tracked regressions, hence please
->>> allow me to ask: was there any progress to resolve this? Doesn't look
->>> like it, but from my point it's easy to miss something.
->>
->> Yeah
+On Mon, 5 Jun 2023, Linux regression tracking (Thorsten Leemhuis) wrote:
 
-BTW, many thx for your detailed answer.
-
->> -- Dave put "xfs: collect errors from inodegc for unlinked inode
->> recovery" in for-next yesterday, and I posted a draft of online repair
->> for the unlinked lists that corrects most of the other problems that we
->> found in the process of digging into this problem:
->> https://lore.kernel.org/linux-xfs/168506068642.3738067.3524976114588613479.stgit@frogsfrogsfrogs/T/#m861e4b1259d9b16b9970e46dfcfdae004a5dd634
->>
->> But that's looking at things from the ground up, which isn't terribly
->> insightful as to what's going on, as you've noted. :)
-
-Let me just mark this regression as resolved in the tracking then; this
-is, well, clearly not your typical every day regression and at the same
-time something your clearly work on resolving, hence not really worth
-tracking, as there are bigger fish to fry.
-
-#regzbot inconclusive: pretty special regression; fix for part of it now
-in -next, work ongoing to solve other parts (see discussion)
-
->>> BTW, in case this was not yet addressed: if you have a few seconds,
->>> could you please (just briefly!) explain why it seems to take quite a
->>> while to resolve this? A "not booting" regressions sounds like something
->>> that I'm pretty sure Linus normally wants to see addressed rather sooner
->>> than later. But that apparently is not the case here. I know that XFS
->>> devs normally take regressions seriously, hence I assume there are good
->>> reasons for it. But I'd like to roughly understand them (is this a
->>> extremely corner case issue others are unlike to run into or something
->>> like that?), as I don't want Linus on my back with questions like "why
->>> didn't you put more pressure on the XFS maintainers" or "you should have
->>> told me about this".
->>
->> First things first -- Ritesh reported problems wherein a freshly mounted
->> filesystem would fail soon after because of some issue or other with the
->> unlinked inode list.  He could reproduce this problem, but (AFAIK) he's
->> the only user who's actually reported this.  It's not like *everyone*
->> with XFS cannot boot anymore, it's just this system.  Given the sparsity
->> of any other reports with similar symptoms, I do not judge this to be
->> a hair-on-fire situation.
-
-Definitely; don't worry, I noticed that, otherwise I'd have made more
-noise early. :-D
-
->> (Contrast this to the extent busy deadlock problem that Wengang Wang is
->> trying to solve, which (a) is hitting many customer systems and (b)
->> regularly.  Criteria like (a) make things like that a higher severity
->> problem IMHO.)
+> >>> If an attempt at contacting a receiver or a device fails because the
+> >>> receiver or device never responds, don't restart the communication, only
+> >>> restart it if the receiver or device answers that it's busy, as originally
+> >>> intended.
+> >>>
+> >>> This was the behaviour on communication timeout before commit 586e8fede795
+> >>> ("HID: logitech-hidpp: Retry commands when device is busy").
+> >>>
+> >>> This fixes some overly long waits in a critical path on boot, when
+> >>> checking whether the device is connected by getting its HID++ version.
+> >>>
+> >>> Signed-off-by: Bastien Nocera <hadess@hadess.net>
+> >>> Suggested-by: Mark Lord <mlord@pobox.com>
+> >>> Fixes: 586e8fede795 ("HID: logitech-hidpp: Retry commands when device is busy")
+> >>> Link: https://bugzilla.kernel.org/show_bug.cgi?id=217412
+> > [...]  
+> >>
+> >> I have applied this even before getting confirmation from the reporters in 
+> >> bugzilla, as it's the right thing to do anyway.
+> > 
+> > Unfortunately it doesn't seem to cure the reported issue (while reverting 
+> > 586e8fede79 does):
 > 
-> Contrast this to the regression from 6.3-rc1 that caused actual user
-> data loss and filesystem corruption after 6.3 was released.
+> BTW, remind me again: was fixing this by reverting 586e8fede79 for now a
+> option? I guess it's not, but if I'm wrong I wonder if that might at
+> this point be the best way forward.
+
+This should now all be fixed by
+
+    https://git.kernel.org/linus/7c28afd5512e371773dbb2bf95a31ed5625651d9
+
+> > https://bugzilla.kernel.org/show_bug.cgi?id=217523#c2
 > 
-> https://bugzilla.redhat.com/show_bug.cgi?id=2208553
+> FWIW, another comment showed up there:
 > 
-> That's so much more important than any problem seen in a test
-> environment it's not funny.
+> ```
+> > --- Comment #6 from vova7890 ---
+> > Same problem. I researched this some time ago. I noticed that if I add a small
+> > delay between commands to the dongle - everything goes fine. Repeated
+> > request(586e8fede7953b1695b5ccc6112eff9b052e79ac) made the situation more
+> > visible
 > 
-> We'd already fixed this regression that caused it in 6.4-rc1 - the
-> original bug report (a livelock in data writeback) happened 2 days
-> before 6.3 released. It took me 3 days from report to having a fix
-> out for review (remember that timeframe).
-> 
-> At the time we didn't recognise the wider corruption risk the
-> failure we found exposed us to, so we didn't push it to stable
-> immediately. Hence when users started tripping over corruption and I
-> triaged it down to misdirected data write from -somewhere-. Eric
-> then found a reproducer and bisected to a range of XFS changes, and
-> I then realised what the problem was....
-> 
-> Stuff like this takes days of effort and multiple people to get to
-> the bottom of, and -everything else- gets ignored while we work
-> through the corruption problem.
 
-Yeah, and many other developers are good as this as well; that's why I
-don't even add some regressions to the tracking I notice. And I'm also
-well aware that I only notice some regressions once Linus mainlines a fix.
+-- 
+Jiri Kosina
+SUSE Labs
 
-But nevertheless my tracking helps in quite a few cases, as developers
-sometimes are humans and let things fall through the cracks. And there
-always have and still are developers and subsystems are not as good as
-XFS and don't handle regressions like Linus wants them to be handled. I
-also help reporters to reach the right developers and improve their bug
-reports (e.g. by telling them to bisect and things like that). Guess all
-that is why Linus and Greg apparently seem happy about my work.
-
-That being said: there still a lot of room for improvements, but it's a
-start.
-
-> Thorsten, I'm betting that you didn't even know about this
-> regression - 
-
-Then you lost your bet. ;) I can even prove that I saw the "[PATCH,
-STABLE 6.3.x] xfs: fix livelock in delayed allocation at ENOSPC" mail
-https://fosstodon.org/@kernellogger/110446215848501171
-
-But I'm pretty sure I was aware of it earlier already and decided to not
-interfere, as you clearly were working on it with the required priority
-(thx for that, btw).
-
-> it's been reported, tracked, triaged and fixed
-> completely outside the scope and visibility of the "kernel
-> regression tracker". Which clearly shows that we don't actually need
-> some special kernel regression tracker infrastructure to do our jobs
-> properly, nor do we need a nanny to make sure we actually are
-> prioritising things correctly....
-> ....
-
-I'm not getting into that discussion. Convince Linus and Greg that my
-work is not worth it at all; if it hear it from them I'll stop.
-
-Ciao, Thorsten
