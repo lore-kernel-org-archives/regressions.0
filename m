@@ -1,91 +1,110 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFE6019915
-	for <regressions@lists.linux.dev>; Tue,  6 Jun 2023 18:18:32 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1q6bGG-00058y-Af; Tue, 06 Jun 2023 20:18:28 +0200
-Message-ID: <42b6e582-f642-7521-135a-449140984211@leemhuis.info>
-Date: Tue, 6 Jun 2023 20:18:27 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB8A822E36
+	for <regressions@lists.linux.dev>; Tue,  6 Jun 2023 18:26:59 +0000 (UTC)
+Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-5ed99ebe076so63806226d6.2
+        for <regressions@lists.linux.dev>; Tue, 06 Jun 2023 11:26:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1686076018; x=1688668018;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=EgWp+MBxEt8xLJXziW77AWY9c6lqc/rcXlQ+WkMys1I=;
+        b=TFRaVkLcKLqFJPBQQ1ujtMNfkCzjmG3/6h7c3036WnXTH0IuSb0oXxXxiUEjKViAKQ
+         AvQy7CYkQSCTnyhpd/mYXwSUxMdCdBjbIOjalvMI8mTg2ylUC/sBTaIcfZzfVPbE+i7L
+         qslSw0agu6qTPH6NHQO6QLQ//i6VEZtn6dGlc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686076018; x=1688668018;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=EgWp+MBxEt8xLJXziW77AWY9c6lqc/rcXlQ+WkMys1I=;
+        b=WO2dn4SqM5Cfa8R8PohtHjohwKz/Jhm7T525a8lRxWEumeRvzszJ1QfFGyqM1mBTPs
+         Y9t7UOlYnlPypelzzCunE56pjoTXMLm36wBgIlgyknDhU1p2BYRye0x50GAHkyWE/kWO
+         71nQgNvlpLwY+71R1bhqyyZJDhGS4oqHs2gzT5EdkDaWWhn7+pAwbI2vST+4givoi516
+         +M92iuLxKdaX/boap/S8r/L71km64xCb0e1wmXUmN1lohLpSFUhU5ju3vqnQfukGrZBS
+         uZrQgyUYZFRmiPI+S2nRxvftzp5aqy7KN7TWnnyr4TPtPOLbx0xT2tVxPPLhzf6ofk1d
+         Fg3A==
+X-Gm-Message-State: AC+VfDxhMT8Yal0wXMj4xpJUc5/tMiYSXIixNKQiUfmj3nGIdGfKiE3k
+	THlEh5e1NkXiDMt+LpZcHchfQnSKw+hBy1gS/Z8=
+X-Google-Smtp-Source: ACHHUZ4LKDO2kddOrJYBmTrluYNk4s031zX6Qbnfh758BQrQQ7ZWwqYEaOmJv/Ec/6PR7S6VBNZe5A==
+X-Received: by 2002:a05:6214:5090:b0:62b:4590:78e4 with SMTP id kk16-20020a056214509000b0062b459078e4mr448030qvb.28.1686076018442;
+        Tue, 06 Jun 2023 11:26:58 -0700 (PDT)
+Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com. [209.85.219.54])
+        by smtp.gmail.com with ESMTPSA id v12-20020a0ccd8c000000b006261c80d76dsm5532237qvm.71.2023.06.06.11.26.57
+        for <regressions@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 06 Jun 2023 11:26:57 -0700 (PDT)
+Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-5ed99ebe076so63806006d6.2
+        for <regressions@lists.linux.dev>; Tue, 06 Jun 2023 11:26:57 -0700 (PDT)
+X-Received: by 2002:a05:6214:250d:b0:625:aa49:9abd with SMTP id
+ gf13-20020a056214250d00b00625aa499abdmr329934qvb.65.1686076017218; Tue, 06
+ Jun 2023 11:26:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH] HID: logitech-hidpp: Handle timeout differently from busy
-Content-Language: en-US, de-DE
-To: Jiri Kosina <jikos@kernel.org>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Bastien Nocera <hadess@hadess.net>, linux-input@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- Benjamin Tissoires <benjamin.tissoires@redhat.com>,
- "Peter F . Patel-Schneider" <pfpschneider@gmail.com>,
- =?UTF-8?Q?Filipe_La=c3=adns?= <lains@riseup.net>,
- Nestor Lopez Casado <nlopezcasad@logitech.com>, Mark Lord <mlord@pobox.com>
-References: <20230531082428.21763-1-hadess@hadess.net>
- <nycvar.YFH.7.76.2305311606160.29760@cbobk.fhfr.pm>
- <nycvar.YFH.7.76.2306031440380.29760@cbobk.fhfr.pm>
- <15bb2507-a145-7f1b-8e84-58aeb02484b9@leemhuis.info>
- <nycvar.YFH.7.76.2306061527080.29760@cbobk.fhfr.pm>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <nycvar.YFH.7.76.2306061527080.29760@cbobk.fhfr.pm>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1686075512;c8295519;
-X-HE-SMSGID: 1q6bGG-00058y-Af
+References: <20230606170919.GJ25679@pendragon.ideasonboard.com> <20230606171150.12875-1-laurent.pinchart@ideasonboard.com>
+In-Reply-To: <20230606171150.12875-1-laurent.pinchart@ideasonboard.com>
+From: Ricardo Ribalda <ribalda@chromium.org>
+Date: Tue, 6 Jun 2023 20:26:46 +0200
+X-Gmail-Original-Message-ID: <CANiDSCsQJB7bL2ObW2BssK4igEJ2ME3DU-RvsU4wkSoHbnTcfw@mail.gmail.com>
+Message-ID: <CANiDSCsQJB7bL2ObW2BssK4igEJ2ME3DU-RvsU4wkSoHbnTcfw@mail.gmail.com>
+Subject: Re: [PATCH] media: uvcvideo: Fix menu count handling for userspace XU mappings
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: linux-media@vger.kernel.org, Poncho <poncho@spahan.ch>, 
+	"Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>, regressions@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+
+Hi Laurent
+
+On Tue, 6 Jun 2023 at 19:11, Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+>
+> When commit 716c330433e3 ("media: uvcvideo: Use standard names for
+> menus") reworked the handling of menu controls, it inadvertently
+> replaced a GENMASK(n - 1, 0) with a BIT_MASK(n). The latter isn't
+> equivalent to the former, which broke adding XU mappings from userspace.
+> Fix it.
+
+Ups, that was wrong :), sorry about that
+
+Thanks for the quick fix.
+
+>
+> Reported-by: Poncho <poncho@spahan.ch>
+> Link: https://lore.kernel.org/linux-media/468a36ec-c3ac-cb47-e12f-5906239ae3cd@spahan.ch/
+> Fixes: 716c330433e3 ("media: uvcvideo: Use standard names for menus")
+> Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Reviewed-by: Ricardo Ribalda <ribalda@chromium.org>
+> ---
+> This is untested. Poncho, would you be able to test this patch to see if
+> it fixes your issue ?
+> ---
+>  drivers/media/usb/uvc/uvc_v4l2.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/media/usb/uvc/uvc_v4l2.c b/drivers/media/usb/uvc/uvc_v4l2.c
+> index 5ac2a424b13d..f4988f03640a 100644
+> --- a/drivers/media/usb/uvc/uvc_v4l2.c
+> +++ b/drivers/media/usb/uvc/uvc_v4l2.c
+> @@ -45,7 +45,7 @@ static int uvc_control_add_xu_mapping(struct uvc_video_chain *chain,
+>         map->menu_names = NULL;
+>         map->menu_mapping = NULL;
+>
+> -       map->menu_mask = BIT_MASK(xmap->menu_count);
+> +       map->menu_mask = GENMASK(xmap->menu_count - 1, 0);
+>
+>         size = xmap->menu_count * sizeof(*map->menu_mapping);
+>         map->menu_mapping = kzalloc(size, GFP_KERNEL);
+> --
+> Regards,
+>
+> Laurent Pinchart
+>
 
 
-
-On 06.06.23 15:27, Jiri Kosina wrote:
-> On Mon, 5 Jun 2023, Linux regression tracking (Thorsten Leemhuis) wrote:
-> 
->>>>> If an attempt at contacting a receiver or a device fails because the
->>>>> receiver or device never responds, don't restart the communication, only
->>>>> restart it if the receiver or device answers that it's busy, as originally
->>>>> intended.
->>>>>
->>>>> This was the behaviour on communication timeout before commit 586e8fede795
->>>>> ("HID: logitech-hidpp: Retry commands when device is busy").
->>>>>
->>>>> This fixes some overly long waits in a critical path on boot, when
->>>>> checking whether the device is connected by getting its HID++ version.
->>>>>
->>>>> Signed-off-by: Bastien Nocera <hadess@hadess.net>
->>>>> Suggested-by: Mark Lord <mlord@pobox.com>
->>>>> Fixes: 586e8fede795 ("HID: logitech-hidpp: Retry commands when device is busy")
->>>>> Link: https://bugzilla.kernel.org/show_bug.cgi?id=217412
->>> [...]  
->>>>
->>>> I have applied this even before getting confirmation from the reporters in 
->>>> bugzilla, as it's the right thing to do anyway.
->>>
->>> Unfortunately it doesn't seem to cure the reported issue (while reverting 
->>> 586e8fede79 does):
->>
->> BTW, remind me again: was fixing this by reverting 586e8fede79 for now a
->> option? I guess it's not, but if I'm wrong I wonder if that might at
->> this point be the best way forward.
-> 
-> This should now all be fixed by
-> 
->     https://git.kernel.org/linus/7c28afd5512e371773dbb2bf95a31ed5625651d9
-
-Jiri, Benjamin, many many thx for working on this.
-
-Hmmm. No CC: <stable... tag.
-
-Should we ask Greg to pick this up for 6.3 now, or better wait a few
-days? He currently already has 6199d23c91ce ("HID: logitech-hidpp:
-Handle timeout differently from busy") in his queue for the next 6.3.y
-release.
-
-Ciao, Thorsten
-
-P.S.: If the answer is along the lines of "let's backport this quickly",
-please consider directly CCing Greg.
+-- 
+Ricardo Ribalda
