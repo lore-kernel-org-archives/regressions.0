@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAE2B468F
-	for <regressions@lists.linux.dev>; Tue,  6 Jun 2023 10:40:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A2B8468F
+	for <regressions@lists.linux.dev>; Tue,  6 Jun 2023 11:23:38 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1q6U71-0001kW-84; Tue, 06 Jun 2023 12:40:27 +0200
-Message-ID: <5cae4b60-a303-5cf6-9d30-8a723d417467@leemhuis.info>
-Date: Tue, 6 Jun 2023 12:40:25 +0200
+	id 1q6Uml-0001ej-VO; Tue, 06 Jun 2023 13:23:36 +0200
+Message-ID: <0e702e19-cc93-77ac-bd1d-401b8883fc0b@leemhuis.info>
+Date: Tue, 6 Jun 2023 13:23:35 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,184 +16,159 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.10.0
-Subject: Re: Webcam LED control regression
+Subject: Re: xfs: system fails to boot up due to Internal error
+ xfs_trans_cancel
 Content-Language: en-US, de-DE
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-References: <468a36ec-c3ac-cb47-e12f-5906239ae3cd@spahan.ch>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Cc: linux-media@vger.kernel.org, Poncho <poncho@spahan.ch>,
- Mauro Carvalho Chehab <mchehab@kernel.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- LKML <linux-kernel@vger.kernel.org>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <468a36ec-c3ac-cb47-e12f-5906239ae3cd@spahan.ch>
+To: Dave Chinner <david@fromorbit.com>, "Darrick J. Wong" <djwong@kernel.org>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
+ "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
+ shrikanth hegde <sshegde@linux.vnet.ibm.com>, dchinner@redhat.com,
+ linux-xfs@vger.kernel.org, Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+ ojaswin@linux.ibm.com
+References: <87zg88atiw.fsf@doe.com>
+ <33c9674c-8493-1b23-0efb-5c511892b68a@leemhuis.info>
+ <20230418045615.GC360889@frogsfrogsfrogs>
+ <57eeb4d5-01de-b443-be8e-50b08c132e95@leemhuis.info>
+ <20230605215745.GC1325469@frogsfrogsfrogs>
+ <ZH6d938Hw/msm95A@dread.disaster.area>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <ZH6d938Hw/msm95A@dread.disaster.area>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1686048029;422d86d9;
-X-HE-SMSGID: 1q6U71-0001kW-84
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1686050619;3b424c0d;
+X-HE-SMSGID: 1q6Uml-0001ej-VO
 
-CCing a few people and lists that should be aware of this and might be
-able to help.
-
-On 05.06.23 18:39, Poncho wrote:
-> With kernel 6.3, the LED of my C922 Pro Stream Webcam is no longer
-> controllable.
-> 
-> With kernel 6.1 v4l2-ctl --all returns:
-> 
->> led1_mode 0x0a046d05 (menu)   : min=0 max=3 default=0 value=0 (Off)
->>     0: Off
->>     1: On
->>     2: Blink
->>     3: Auto
-> 
-> 
-> 
-> but with kernel 6.3 I get:
-> 
->> led1_mode 0x0a046d05 (menu)   : min=4 max=4 default=0 value=0
->>     4:
-
-Thanks for the report.
-
-FWIW, maybe one of those people that I CCed has an idea what's wrong. If
-none of them brings one to the table withing the next two or three days,
-you likely have to perform a bisection to find the change that broke
-thing for you.
-
-For the rest of this mail:
-
-[TLDR: I'm adding this report to the list of tracked Linux kernel
-regressions; the text you find below is based on a few templates
-paragraphs you might have encountered already in similar form.
-See link in footer if these mails annoy you.]
-
-> Full output bellow:
-> 
->> Driver Info:
->>     Driver name      : uvcvideo
->>     Card type        : C922 Pro Stream Webcam
->>     Bus info         : usb-0000:00:14.0-9
->>     Driver version   : 6.3.5
->>     Capabilities     : 0x84a00001
->>         Video Capture
->>         Metadata Capture
->>         Streaming
->>         Extended Pix Format
->>         Device Capabilities
->>     Device Caps      : 0x04200001
->>         Video Capture
->>         Streaming
->>         Extended Pix Format
->> Media Driver Info:
->>     Driver name      : uvcvideo
->>     Model            : C922 Pro Stream Webcam
->>     Serial           : 6E8DF1BF
->>     Bus info         : usb-0000:00:14.0-9
->>     Media version    : 6.3.5
->>     Hardware revision: 0x00000016 (22)
->>     Driver version   : 6.3.5
->> Interface Info:
->>     ID               : 0x03000002
->>     Type             : V4L Video
->> Entity Info:
->>     ID               : 0x00000001 (1)
->>     Name             : C922 Pro Stream Webcam
->>     Function         : V4L2 I/O
->>     Flags            : default
->>     Pad 0x01000007   : 0: Sink
->>       Link 0x0200001f: from remote pad 0x100000a of entity 'Processing
->> 3' (Video Pixel Formatter): Data, Enabled, Immutable
->> Priority: 2
->> Video input : 0 (Camera 1: ok)
->> Format Video Capture:
->>     Width/Height      : 160/90
->>     Pixel Format      : 'YUYV' (YUYV 4:2:2)
->>     Field             : None
->>     Bytes per Line    : 320
->>     Size Image        : 28800
->>     Colorspace        : sRGB
->>     Transfer Function : Rec. 709
->>     YCbCr/HSV Encoding: ITU-R 601
->>     Quantization      : Default (maps to Limited Range)
->>     Flags             : Crop Capability Video Capture:
->>     Bounds      : Left 0, Top 0, Width 160, Height 90
->>     Default     : Left 0, Top 0, Width 160, Height 90
->>     Pixel Aspect: 1/1
->> Selection Video Capture: crop_default, Left 0, Top 0, Width 160,
->> Height 90, Flags: Selection Video Capture: crop_bounds, Left 0, Top 0,
->> Width 160, Height 90, Flags: Streaming Parameters Video Capture:
->>     Capabilities     : timeperframe
->>     Frames per second: 30.000 (30/1)
->>     Read buffers     : 0
+On 06.06.23 04:46, Dave Chinner wrote:
+> On Mon, Jun 05, 2023 at 02:57:45PM -0700, Darrick J. Wong wrote:
+>> On Mon, Jun 05, 2023 at 03:27:43PM +0200, Thorsten Leemhuis wrote:
+>>> /me waves friendly
+>>>
+>>> On 18.04.23 06:56, Darrick J. Wong wrote:
+>>>> On Mon, Apr 17, 2023 at 01:16:53PM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
+>>>>> Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
+>>>>> for once, to make this easily accessible to everyone.
+>>>>>
+>>>>> Has any progress been made to fix below regression? It doesn't look like
+>>>>> it from here, hence I wondered if it fall through the cracks. Or is
+>>>>> there some good reason why this is safe to ignore?
+>>>>
+>>>> Still working on thinking up a reasonable strategy to reload the incore
+>>>> iunlink list if we trip over this.  Online repair now knows how to do
+>>>> this[1], but I haven't had time to figure out if this will work
+>>>> generally.  [...]
+>>>
+>>> I still have this issue on my list of tracked regressions, hence please
+>>> allow me to ask: was there any progress to resolve this? Doesn't look
+>>> like it, but from my point it's easy to miss something.
 >>
->> User Controls
+>> Yeah
+
+BTW, many thx for your detailed answer.
+
+>> -- Dave put "xfs: collect errors from inodegc for unlinked inode
+>> recovery" in for-next yesterday, and I posted a draft of online repair
+>> for the unlinked lists that corrects most of the other problems that we
+>> found in the process of digging into this problem:
+>> https://lore.kernel.org/linux-xfs/168506068642.3738067.3524976114588613479.stgit@frogsfrogsfrogs/T/#m861e4b1259d9b16b9970e46dfcfdae004a5dd634
 >>
->>                      brightness 0x00980900 (int)    : min=0 max=255
->> step=1 default=128 value=128
->>                        contrast 0x00980901 (int)    : min=0 max=255
->> step=1 default=128 value=128
->>                      saturation 0x00980902 (int)    : min=0 max=255
->> step=1 default=128 value=128
->>         white_balance_automatic 0x0098090c (bool)   : default=1 value=1
->>                            gain 0x00980913 (int)    : min=0 max=255
->> step=1 default=0 value=0
->>            power_line_frequency 0x00980918 (menu)   : min=0 max=2
->> default=2 value=2 (60 Hz)
->>                 0: Disabled
->>                 1: 50 Hz
->>                 2: 60 Hz
->>       white_balance_temperature 0x0098091a (int)    : min=2000
->> max=6500 step=1 default=4000 value=4000 flags=inactive
->>                       sharpness 0x0098091b (int)    : min=0 max=255
->> step=1 default=128 value=128
->>          backlight_compensation 0x0098091c (int)    : min=0 max=1
->> step=1 default=0 value=0
+>> But that's looking at things from the ground up, which isn't terribly
+>> insightful as to what's going on, as you've noted. :)
+
+Let me just mark this regression as resolved in the tracking then; this
+is, well, clearly not your typical every day regression and at the same
+time something your clearly work on resolving, hence not really worth
+tracking, as there are bigger fish to fry.
+
+#regzbot inconclusive: pretty special regression; fix for part of it now
+in -next, work ongoing to solve other parts (see discussion)
+
+>>> BTW, in case this was not yet addressed: if you have a few seconds,
+>>> could you please (just briefly!) explain why it seems to take quite a
+>>> while to resolve this? A "not booting" regressions sounds like something
+>>> that I'm pretty sure Linus normally wants to see addressed rather sooner
+>>> than later. But that apparently is not the case here. I know that XFS
+>>> devs normally take regressions seriously, hence I assume there are good
+>>> reasons for it. But I'd like to roughly understand them (is this a
+>>> extremely corner case issue others are unlike to run into or something
+>>> like that?), as I don't want Linus on my back with questions like "why
+>>> didn't you put more pressure on the XFS maintainers" or "you should have
+>>> told me about this".
 >>
->> Camera Controls
->>
->>                   auto_exposure 0x009a0901 (menu)   : min=0 max=3
->> default=3 value=3 (Aperture Priority Mode)
->>                 1: Manual Mode
->>                 3: Aperture Priority Mode
->>          exposure_time_absolute 0x009a0902 (int)    : min=3 max=2047
->> step=1 default=250 value=250 flags=inactive
->>      exposure_dynamic_framerate 0x009a0903 (bool)   : default=0 value=1
->>                    pan_absolute 0x009a0908 (int)    : min=-36000
->> max=36000 step=3600 default=0 value=0
->>                   tilt_absolute 0x009a0909 (int)    : min=-36000
->> max=36000 step=3600 default=0 value=0
->>                  focus_absolute 0x009a090a (int)    : min=0 max=250
->> step=5 default=0 value=0 flags=inactive
->>      focus_automatic_continuous 0x009a090c (bool)   : default=1 value=1
->>                   zoom_absolute 0x009a090d (int)    : min=100 max=500
->> step=1 default=100 value=100
->>                       led1_mode 0x0a046d05 (menu)   : min=4 max=4
->> default=0 value=0
->>                 4:                  led1_frequency 0x0a046d06 (int)   
->> : min=0 max=255 step=1 default=0 value=255
+>> First things first -- Ritesh reported problems wherein a freshly mounted
+>> filesystem would fail soon after because of some issue or other with the
+>> unlinked inode list.  He could reproduce this problem, but (AFAIK) he's
+>> the only user who's actually reported this.  It's not like *everyone*
+>> with XFS cannot boot anymore, it's just this system.  Given the sparsity
+>> of any other reports with similar symptoms, I do not judge this to be
+>> a hair-on-fire situation.
 
-To be sure the issue doesn't fall through the cracks unnoticed, I'm
-adding it to regzbot, the Linux kernel regression tracking bot:
+Definitely; don't worry, I noticed that, otherwise I'd have made more
+noise early. :-D
 
-#regzbot ^introduced v6.1..v6.3
-#regzbot title media: uvcvideo: Webcam LED control regression
-#regzbot ignore-activity
+>> (Contrast this to the extent busy deadlock problem that Wengang Wang is
+>> trying to solve, which (a) is hitting many customer systems and (b)
+>> regularly.  Criteria like (a) make things like that a higher severity
+>> problem IMHO.)
+> 
+> Contrast this to the regression from 6.3-rc1 that caused actual user
+> data loss and filesystem corruption after 6.3 was released.
+> 
+> https://bugzilla.redhat.com/show_bug.cgi?id=2208553
+> 
+> That's so much more important than any problem seen in a test
+> environment it's not funny.
+> 
+> We'd already fixed this regression that caused it in 6.4-rc1 - the
+> original bug report (a livelock in data writeback) happened 2 days
+> before 6.3 released. It took me 3 days from report to having a fix
+> out for review (remember that timeframe).
+> 
+> At the time we didn't recognise the wider corruption risk the
+> failure we found exposed us to, so we didn't push it to stable
+> immediately. Hence when users started tripping over corruption and I
+> triaged it down to misdirected data write from -somewhere-. Eric
+> then found a reproducer and bisected to a range of XFS changes, and
+> I then realised what the problem was....
+> 
+> Stuff like this takes days of effort and multiple people to get to
+> the bottom of, and -everything else- gets ignored while we work
+> through the corruption problem.
 
-This isn't a regression? This issue or a fix for it are already
-discussed somewhere else? It was fixed already? You want to clarify when
-the regression started to happen? Or point out I got the title or
-something else totally wrong? Then just reply and tell me -- ideally
-while also telling regzbot about it, as explained by the page listed in
-the footer of this mail.
+Yeah, and many other developers are good as this as well; that's why I
+don't even add some regressions to the tracking I notice. And I'm also
+well aware that I only notice some regressions once Linus mainlines a fix.
 
-Developers: When fixing the issue, remember to add 'Link:' tags pointing
-to the report (the parent of this mail). See page linked in footer for
-details.
+But nevertheless my tracking helps in quite a few cases, as developers
+sometimes are humans and let things fall through the cracks. And there
+always have and still are developers and subsystems are not as good as
+XFS and don't handle regressions like Linus wants them to be handled. I
+also help reporters to reach the right developers and improve their bug
+reports (e.g. by telling them to bisect and things like that). Guess all
+that is why Linus and Greg apparently seem happy about my work.
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+That being said: there still a lot of room for improvements, but it's a
+start.
+
+> Thorsten, I'm betting that you didn't even know about this
+> regression - 
+
+Then you lost your bet. ;) I can even prove that I saw the "[PATCH,
+STABLE 6.3.x] xfs: fix livelock in delayed allocation at ENOSPC" mail
+https://fosstodon.org/@kernellogger/110446215848501171
+
+But I'm pretty sure I was aware of it earlier already and decided to not
+interfere, as you clearly were working on it with the required priority
+(thx for that, btw).
+
+> it's been reported, tracked, triaged and fixed
+> completely outside the scope and visibility of the "kernel
+> regression tracker". Which clearly shows that we don't actually need
+> some special kernel regression tracker infrastructure to do our jobs
+> properly, nor do we need a nanny to make sure we actually are
+> prioritising things correctly....
+> ....
+
+I'm not getting into that discussion. Convince Linus and Greg that my
+work is not worth it at all; if it hear it from them I'll stop.
+
+Ciao, Thorsten
