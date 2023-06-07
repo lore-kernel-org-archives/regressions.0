@@ -1,53 +1,77 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 544E43922D
-	for <regressions@lists.linux.dev>; Wed,  7 Jun 2023 16:33:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04A08C433EF;
-	Wed,  7 Jun 2023 16:33:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1686155597;
-	bh=a4k7fLJjOiIms++hQYdyBnf+j4UhqPEACo0OX7DfeOA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=NmIPu18W+pJkM0lO/DC7pbDB5o3AvJWWhn2+GGnOFS93zJ18c3XkB9q0La/OU1HHU
-	 64ZPOaY4cKqjNkaqbl2xWud2dTMKVfc6XbJI4fQcNEcBD67RAqL2XV2Nool75/lPVn
-	 3D1NKKozdOdTi2so72/F347ROSGc+aYNS5kWPcd0=
-Date: Wed, 7 Jun 2023 09:33:16 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: Lorenzo Stoakes <lstoakes@gmail.com>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, Baoquan He <bhe@redhat.com>, Uladzislau Rezki
- <urezki@gmail.com>, Christoph Hellwig <hch@infradead.org>, Bagas Sanjaya
- <bagasdotme@gmail.com>, Linux btrfs <linux-btrfs@vger.kernel.org>, Linux
- Regressions <regressions@lists.linux.dev>, Chris Mason <clm@fb.com>, Josef
- Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
- a1bert@atlas.cz, Forza <forza@tnonline.net>, Linus Torvalds
- <torvalds@linux-foundation.org>, Song Liu <song@kernel.org>, Nicholas
- Piggin <npiggin@gmail.com>, Matthew Wilcox <willy@infradead.org>
-Subject: Re: [PATCH] mm/vmalloc: do not output a spurious warning when huge
- vmalloc() fails
-Message-Id: <20230607093316.cdf60df195915fa9d38067ea@linux-foundation.org>
-In-Reply-To: <2a6fa9d6-53b8-93cd-16c8-309ce2b8e3ac@suse.cz>
-References: <20230605201107.83298-1-lstoakes@gmail.com>
-	<cd47d6ac-69ce-0315-dd45-2cb9dce57f36@suse.cz>
-	<f6b42d95-09f1-48d6-8274-e6145febb31d@lucifer.local>
-	<2a6fa9d6-53b8-93cd-16c8-309ce2b8e3ac@suse.cz>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A1961772E
+	for <regressions@lists.linux.dev>; Wed,  7 Jun 2023 17:49:53 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 779ADC433EF;
+	Wed,  7 Jun 2023 17:49:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1686160193;
+	bh=kGX0qEd54Qgv90p2G878MpRZiHthXw2miPZqsUOHgn8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Vs0ohzxaCSiaUtAgZ8JCY0ss5FDs4L4CgEor0c0YhE63rsVVN+/nKcnXYTke39SMI
+	 WzMw3/SSi82jTXvDqiBMBI0EIy6sidbUkzo7Vpnq9k/EYkMjeaB8eG599pgpzcCKJK
+	 nJM3vKiQut6O7DoIYLWYaXpneAScvgKOv59N/rG4=
+Date: Wed, 7 Jun 2023 19:49:45 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Lino Sanfilippo <l.sanfilippo@kunbus.com>
+Cc: Bagas Sanjaya <bagasdotme@gmail.com>,
+	Chris Packham <Chris.Packham@alliedtelesis.co.nz>,
+	Jarkko Sakkinen <jarkko@kernel.org>,
+	Sasha Levin <sashal@kernel.org>, Peter Huewe <peterhuewe@gmx.de>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Linux Kernel Integrity <linux-integrity@vger.kernel.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Regressions <regressions@lists.linux.dev>,
+	stable@vger.kernel.org
+Subject: Re: New kernel warning after updating from LTS 5.15.110 to 5.15.112
+ (and 5.15.113)
+Message-ID: <2023060736-immodest-doormat-f957@gregkh>
+References: <fe6f7aa0-56c2-3729-ce8c-0f2d943b33f4@alliedtelesis.co.nz>
+ <ZHQIFLWvrWUNMVxb@debian.me>
+ <6e470461-1a9b-ec51-bac5-f2beb1dc11c9@alliedtelesis.co.nz>
+ <2b09d2ed-0852-bbc9-b792-aad92235c7fa@gmail.com>
+ <03daca5c-e468-8889-4dc2-e625a664d571@alliedtelesis.co.nz>
+ <ec5245bd-3103-f0c7-d3ef-85aabb4d4712@alliedtelesis.co.nz>
+ <ZH6TIjXeXJVMvSKa@debian.me>
+ <2023060606-unlatch-yiddish-a45f@gregkh>
+ <ac5b76af-87dc-b04d-6035-8eda8ba5ed12@kunbus.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ac5b76af-87dc-b04d-6035-8eda8ba5ed12@kunbus.com>
 
-On Wed, 7 Jun 2023 10:58:40 +0200 Vlastimil Babka <vbabka@suse.cz> wrote:
-
-> I would really suggest moving the fix to
-> mm-hotfixes instead of mm-unstable, and
+On Wed, Jun 07, 2023 at 05:47:57PM +0200, Lino Sanfilippo wrote:
 > 
-> Fixes: 80b1d8fdfad1 ("mm: vmalloc: correct use of __GFP_NOWARN mask in __vmalloc_area_node()")
-> Cc: <stable@vger.kernel.org>
+> Hi Greg,
+> 
+> On 06.06.23 08:45, Greg KH wrote:
+> >>
+> >> Lino, it looks like this regression is caused by (backported) commit of yours.
+> >> Would you like to take a look on it?
+> >>
+> >> Anyway, telling regzbot:
+> >>
+> >> #regzbot introduced: 51162b05a44cb5
+> > 
+> > There's some tpm backports to 5.15.y that were suspect and I'll look
+> > into reverting them and see if this was one of the ones that was on that
+> > list.  Give me a few days...
+> > 
+> 
+> Could you please consider to apply (mainline) commit 0c7e66e5fd69 ("tpm, tpm_tis: Request threaded
+> interrupt handler") to 5.15.y?
+> 
+> As Chris confirmed it fixes the regression caused by 51162b05a44cb5 ("tpm, tpm_tis: Claim locality
+> before writing interrupt registers").
+> 
+> Commit 0c7e66e5fd69 is also needed for 5.10.y, 6.1.y and 6.3.y.
 
-I've made those changes.
+Now queued up, thanks.
+
+greg k-h
