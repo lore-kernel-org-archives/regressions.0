@@ -1,172 +1,153 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2088.outbound.protection.outlook.com [40.107.21.88])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E05E334D9D
-	for <regressions@lists.linux.dev>; Wed,  7 Jun 2023 10:16:59 +0000 (UTC)
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-51458187be1so1179883a12.2
-        for <regressions@lists.linux.dev>; Wed, 07 Jun 2023 03:16:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1686133018; x=1688725018;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=bHtmIDD4uaTq4ABNxhYKW6qHDGlLDL1+HvFDCmmnPDM=;
-        b=aMzYf6YMdsw58k4/wDNtAfJLXXqxovmskhmugL855D5kSCqCJjdRY+o2q8WTho6dy7
-         r9INUS6z3glv3VuHQ+s872OmExPym88zOxwEvr66swh/5vYkAiY0wmzn9BsHFRaGXrzh
-         vb+DSlYUKFwAYBznX2p3t+gpnGYKxtQoakYYUy0FkUHDsJ6MCLoqTK2NgY5sMntJHOn+
-         TImv1OfDcFMGIvEkZ+iLp+bZy7I3Gz0WXSEbefn8Akij7Lhv6wat8MqIUfNGInASKTbj
-         4cyhJjHxqVwQfYg4mjvBWhkGuZI1dWIH/4f/E4JGdBy5nxV2T+Pi6k2mDkG1ws9foy5w
-         9Yqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686133018; x=1688725018;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bHtmIDD4uaTq4ABNxhYKW6qHDGlLDL1+HvFDCmmnPDM=;
-        b=Do0rgt5A1lurQidHiB4V3m88g0LiMt1nMTAH4Qo6yzk5ttjVQBMjLwlW3sfdlAurMe
-         R7Whv1J/kMj21r3H/8wtuO+WplBdFdcl9+g35TzM7iQSKMwuSuVRsJ10Slc5fz4TPkOQ
-         7839atSn9fpnlBS/RA5yUewVZbD6EzoEpam6tR8a9l4HPJatEcfQvFJZ/7Nlx0fhsDpD
-         QUEp8DEj8LF6Kc7Uk4cO1xf4hkzKYSBYCzTiM5SuEh5YxyxzS31oHkMNfPdFwNO2fFoO
-         4xJ5YdU+c3NA0Dkh/HLuOV0baXzf4WOQsR3WR5FPFPAKnzVYlrz8beEZ5fHdpu9nTw5n
-         hsZg==
-X-Gm-Message-State: AC+VfDzwvlgaEkMC0c2or1O42mUaQGmaH3WW39U5FGTrYS14PUjVq6el
-	MCbQpgV52geG/B/h59ioNghI8g==
-X-Google-Smtp-Source: ACHHUZ4lRRxrWth26CaqnLWO9ge6gORx93AXTbvI8KrjJTI8Zd7pTHxYuR04YqlYa5SlHY4O/9m+EA==
-X-Received: by 2002:aa7:d315:0:b0:510:82b4:844d with SMTP id p21-20020aa7d315000000b0051082b4844dmr3980381edq.2.1686133017905;
-        Wed, 07 Jun 2023 03:16:57 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.219.26])
-        by smtp.gmail.com with ESMTPSA id w15-20020a056402070f00b00514bb73b8casm6158198edx.57.2023.06.07.03.16.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 07 Jun 2023 03:16:57 -0700 (PDT)
-Message-ID: <55f07600-3fa5-f3c2-eb3e-e87a57244812@linaro.org>
-Date: Wed, 7 Jun 2023 12:16:55 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CFDF6139
+	for <regressions@lists.linux.dev>; Wed,  7 Jun 2023 15:01:44 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Y6DrzxAKQ0qozRz1T4TKnbrpVjJ/yCJDFuP4hLqoPI5W0cZAs1gWDkPn1nMLi17pfN1e4zVlbhJ+frOW5QL9fwgUre2MRRAUTshNia3ZuCYrMm/F3alpZqzV173jto4E2J7PpvS+CcJB9ZGm31V1Vjwnn1+BdWR9NOWxlreaS8/Hrx2yFRz4gpk/3ukjDaMY10klUnuJO7WrLehCYbT3SYHfzCdMrTDjfyoXu7wKUYvNh7C2MJaOcY7Kfpt6id+OiorIFpXALhhyC/CJ7in2F8ikd+e5ibURL/qxxcpArofwOZl6yjxYEvVQDOSDF6o3F/SaaBqyoH71keZDE0T0Mg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Q4xYOstrbq3AKOI6+1Dnxm06dgtvExOXAsD2Goeg+Uo=;
+ b=ZoFSpvsOGN5/KYXb5YT/+Z/xwf2z4yXUwWEf5aYdeHT7I8RtOCKGhnfmCnwdRK4MgvcgYnLqbSjkOvf2+CAG8sI3hlOM8mO4dYKgEnDMQG8HR6vKk5lU4un+b8OkcZ83POst5L1D7L6QdyKzBibvUbeLEUorbF7yr1XssLU0DelgbWNclrXb36QOan4gT8fAk99wM52S+0LHoJilBneS8R3wd+jddrLjQHchK4OfiZgn+db8LRq5eSiGZoGmP/pZn5IygfH002AehWUCIUmg27ha/AH5tlZhb5qvmR+2Ff3Gx9klLpl+Z3J2eL1f+byyBGsIqVmlJGECeui73xuBqg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=kunbus.com; dmarc=pass action=none header.from=kunbus.com;
+ dkim=pass header.d=kunbus.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kunbus.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Q4xYOstrbq3AKOI6+1Dnxm06dgtvExOXAsD2Goeg+Uo=;
+ b=EACtFb7Z52xhnx10s00fcHLiw5I9MDvcFBSg2n+HA+TYIIfVD5KkfsI7uN6S4QfarDYbOg9M47TYDAICSfClKkhx9q+H8/0dgc/84A07DDOHdOFLFekH+dOpFHv4QeaB/ayfaWMdUFyCVNJdeRv6EzZlctkl+lAYLe3jJ3pnELw=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=kunbus.com;
+Received: from VI1P193MB0413.EURP193.PROD.OUTLOOK.COM (2603:10a6:803:4e::14)
+ by PAXP193MB2379.EURP193.PROD.OUTLOOK.COM (2603:10a6:102:226::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6477.18; Wed, 7 Jun
+ 2023 15:01:39 +0000
+Received: from VI1P193MB0413.EURP193.PROD.OUTLOOK.COM
+ ([fe80::6727:e3fb:8fec:72a6]) by VI1P193MB0413.EURP193.PROD.OUTLOOK.COM
+ ([fe80::6727:e3fb:8fec:72a6%7]) with mapi id 15.20.6477.016; Wed, 7 Jun 2023
+ 15:01:39 +0000
+Message-ID: <1f8fae1e-5610-1ce1-6db6-a57f4152c9d7@kunbus.com>
+Date: Wed, 7 Jun 2023 17:01:37 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: New kernel warning after updating from LTS 5.15.110 to 5.15.112
+ (and 5.15.113)
+Content-Language: en-US
+To: Chris Packham <Chris.Packham@alliedtelesis.co.nz>,
+ Bagas Sanjaya <bagasdotme@gmail.com>, Jarkko Sakkinen <jarkko@kernel.org>,
+ Sasha Levin <sashal@kernel.org>, Peter Huewe <peterhuewe@gmx.de>,
+ Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Linux Kernel Integrity <linux-integrity@vger.kernel.org>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Lukas Wunner <lukas@wunner.de>,
+ Philipp Rosenberger <p.rosenberger@kunbus.com>
+References: <fe6f7aa0-56c2-3729-ce8c-0f2d943b33f4@alliedtelesis.co.nz>
+ <ZHQIFLWvrWUNMVxb@debian.me>
+ <6e470461-1a9b-ec51-bac5-f2beb1dc11c9@alliedtelesis.co.nz>
+ <2b09d2ed-0852-bbc9-b792-aad92235c7fa@gmail.com>
+ <03daca5c-e468-8889-4dc2-e625a664d571@alliedtelesis.co.nz>
+ <ec5245bd-3103-f0c7-d3ef-85aabb4d4712@alliedtelesis.co.nz>
+ <ZH6TIjXeXJVMvSKa@debian.me>
+ <f905141c-1f8e-aec8-470c-19d476e567a3@kunbus.com>
+ <68e7cee4-4136-3940-2007-55aa094ff790@alliedtelesis.co.nz>
+From: Lino Sanfilippo <l.sanfilippo@kunbus.com>
+In-Reply-To: <68e7cee4-4136-3940-2007-55aa094ff790@alliedtelesis.co.nz>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: FR0P281CA0166.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:b4::18) To VI1P193MB0413.EURP193.PROD.OUTLOOK.COM
+ (2603:10a6:803:4e::14)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.2
-Subject: Re: [PATCH] arm64: dts: qcom: sdm845-db845c: Move LVS regulator nodes
- up
-Content-Language: en-US
-To: Amit Pundir <amit.pundir@linaro.org>
-Cc: Doug Anderson <dianders@chromium.org>, Mark Brown <broonie@kernel.org>,
- Bjorn Andersson <andersson@kernel.org>, Andy Gross <agross@kernel.org>,
- Rob Herring <robh+dt@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Caleb Connolly <caleb.connolly@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, regressions
- <regressions@lists.linux.dev>, linux-arm-msm
- <linux-arm-msm@vger.kernel.org>, dt <devicetree@vger.kernel.org>,
- lkml <linux-kernel@vger.kernel.org>
-References: <20230602161246.1855448-1-amit.pundir@linaro.org>
- <CAD=FV=U9xwxC4+wDYFMSoLWaj8vaLH_jettZ=nxEZP+1tNk=oA@mail.gmail.com>
- <d0dfdfba-7a70-7d12-2c30-ad32b3f95bb8@linaro.org>
- <CAMi1Hd1Upo8zV4MPtdqHgEaMQ72yK0gZgf5Z4uOaqKqhw8Hndg@mail.gmail.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <CAMi1Hd1Upo8zV4MPtdqHgEaMQ72yK0gZgf5Z4uOaqKqhw8Hndg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: VI1P193MB0413:EE_|PAXP193MB2379:EE_
+X-MS-Office365-Filtering-Correlation-Id: dde23ef1-a0ae-466a-5319-08db676818ac
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	2WgWMeYMyEtoGwKe/QIR5XKUax0lNJHNb7LrPtF2WKZwIy6xzWRJbIIhyXlCCy3mCsnxaoz42EHATViGIyil5qQsyrtglrxUVhsKfrr3/fHmlg/Ke91OiliPv4hmGrvO4sHgodiSiFgtFMof4ebZ/FaWNNXsuaaRKRnbhRBpQ8KEX84YY73bm4HUd/2A7xqaw/AOQPO23uYPmA/vqfAAzBwKtV2rcuA/hQcNtzepXLUinyvjbwGh2nc91dP5caPMw/Xq+WOgNjnbeV9fo6nCQRuJisqqxCUc2qSBHz2YwZ9yvqh043H6LANuye4GT3mhaSKVTBDUQ1PmLgzBQYzh/CYEuMzSaDfzJCDoJkpIzwdWXmSxQDd92N44ZeJMcVT6/dy52gQ7lRxwAjHMvilb3OiNAbyZjuCW4fQG91khfHhASMHI/V7tblfIcZnZPyhW8gFWwOAyntv2zQZYY9upV7xTijROK4B5QFpEvC7iwnwxxg+Wy82jSfKKI5Pw0+72/t3nuL+fs6xUy5OT7qSFWZsKjA1kVk9fMa5z9vjJQysyJgcgcM9xrb161ftvCHTsyBgDXNtSV4Z2ZU9Wm/LiggMBZHOfS//q39KpE1QP/l0uEW4BD5Q/dnGW0MWNkpPpEI+c63WLcNpS+IMnc7wiPA==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1P193MB0413.EURP193.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230028)(4636009)(376002)(366004)(396003)(346002)(39840400004)(136003)(451199021)(66476007)(66946007)(2906002)(478600001)(4326008)(4744005)(8936002)(8676002)(31686004)(110136005)(41300700001)(316002)(54906003)(66556008)(7416002)(5660300002)(52116002)(6486002)(107886003)(6512007)(53546011)(6506007)(38100700002)(186003)(2616005)(83380400001)(36756003)(86362001)(31696002)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?dE5pb3VSYzNrN1ZZK3M0cExPWWJEeXE3RzlsZWNIRlRFckZwOWppVDB3Vktp?=
+ =?utf-8?B?dnFnYUkydTZ1dTE3bTVNeVdYV1BLakxmQjlKSFY5UVpaL0E4ZEdBL3dsREcy?=
+ =?utf-8?B?NnVlTEZHd2toTFZXblozTjh0VnNWNzRFK2J4YTRzbElOMG8zK3FvcXhWZ2NT?=
+ =?utf-8?B?T21UVkQzOU9HeTBaSFJDUmlFQ1l4a3ZKbUFtVWx2R0hZdTlNRVVnVDVlWS93?=
+ =?utf-8?B?ZzZkOUxlZ0M3VlVwTnhuY28yM0pockJUL3NvdzJDTU50ZTFtaXJjN245Q0tH?=
+ =?utf-8?B?a2FoRE42SEJKbG9wdy8zQzIxamJ4aFNjelN0SG52N2tITkVMZEYwcEFoak9N?=
+ =?utf-8?B?N29IYW5iQTI5UzYrWG9aQVRvUGVTbm9ESm5KSlg3aCtKSTNrSzFIb1hrTy9C?=
+ =?utf-8?B?WHlmZC9IcDRXWEh6VzlpYTlkRUhYU0VlQ1pqVkV0UUg3anM4WFA0azNjN0hG?=
+ =?utf-8?B?RVdzaHFudzRma2s4dkJLOFpyT3Bpa1ZVbEpkSCsxRjgvTm1weGZIUmpXaDl5?=
+ =?utf-8?B?d2JVQmRVbXBIU3IwbU9STkZ4K0lKdmgrSEppOXBnZFgrSFZKSVVFWUFLUWNj?=
+ =?utf-8?B?WmsvSWVkdmFSUjBVQ0NQb3gxLzByL3cvMzN3N0JoMHNFcjluRTNyZVV6Z205?=
+ =?utf-8?B?Zk44elN0dGhzTVVqRG1zSElnUXI0NERzK2VNYTFnMTRFaW9MRFlTOVh5cmpS?=
+ =?utf-8?B?c2x0b0RmV1pKQnUvaVVCRDRieUdMU1BKcnkrWWxnalp5b1llaXlnNUJIRGFM?=
+ =?utf-8?B?KytudHFtM3k4NUlNUFJINy9HRklPbmtta0lNVVhxTW9aZkdHbThZcGI4ZDAx?=
+ =?utf-8?B?YzdmZzFIV2s0S2dYZ0xuYVhBbzNTTmt6YjhZdTVMam5jSXd3WTlGY1pBS0JH?=
+ =?utf-8?B?WFdnN1M3QVVmM2wwbUQ0UWwydFBTdnJOQkR0ZHVYREJOUzFMeGZhQ29nV04v?=
+ =?utf-8?B?RWdTTGdVaHNHL3JmTkZwcW9KOEZFWFU1NlVJTlRrWjByQ2RNNUpFcytDMVVy?=
+ =?utf-8?B?c2t1QkVHVnpFa3greVdKMkhjRjFwL1dFQU8xVU5ENUoxeTZ3MUtuYWRoZ1Er?=
+ =?utf-8?B?R25vOU9hbWRoWXFWekUyZjNxUkVwZ2RPdW8wUm5zd0ZPRGFDK3l5WXdPRExv?=
+ =?utf-8?B?YlMrUlR6M1cwNEJ5REVKbDV0Y1lJblByR3E3SVVycHErQ29QOWRHV0tnYWtG?=
+ =?utf-8?B?T0o4OGNkVUZTQXM4ZHlVaTFRUjZISWlsODVpaTJSWU45bEEwc2dER0lFemxh?=
+ =?utf-8?B?ZDJLditiOC9pZTNpVzZZZmhLTG9xYlV0V3kwbEdzdmVwR2ZaYWtzYk9UQXBj?=
+ =?utf-8?B?N0RlWlUrNSs0RWZqb1hNTFlKcis5bmYreUlPeFBMWTdYMHR5YUhRNXExMWxl?=
+ =?utf-8?B?eTB6SjlsU0hBWENndWNUSjNaTEVLWklZZXFrZXlxUTBVY3k1UG5DYWIwOUl1?=
+ =?utf-8?B?ZGlydlRLZ2V2K2ZNby80TDhKQ3Y0Z3BYZlZvNGFqNVY3b1kwUmhIYWNOUzh3?=
+ =?utf-8?B?dmRST0FuNTRwa1VSeHY3V0h1TkJQMkJTdFd0czRXVGd4UVZlQW5uWmJtTGZm?=
+ =?utf-8?B?WHdldlFIS0crNDlLYnVFelhNQjZkdUh1cGJBamV6NmRkWWdoSDRFYndGZDlL?=
+ =?utf-8?B?R0J0MHBMdlJTU01qU1NSU3JLclArUnV5bUU4U0tWdnpkcEpNV3NraVV0aTdI?=
+ =?utf-8?B?MkxpVVJUL3RpUDY4OGN3OUp5LytONDlPcEJpdyt5SFBDOWRwdlBBZi9TN1JX?=
+ =?utf-8?B?Y1poZnpweU52d3Y3d1NYWWpUMnI3aGVHQkFTdkRRaWttV09ia1lCdVpNZzNz?=
+ =?utf-8?B?Y1RzeWYxZGJGZnBIb0RFQVU0WmlVd3R0VkNScEdPdEVITHBMS0UvMlpCTC9N?=
+ =?utf-8?B?MGVkandndE5uYlVEVDZjQlNvNExpVG9jR1Y2NDBkalVlTThoL21wbEcxYkcy?=
+ =?utf-8?B?N2JOOFZNb0xrMU5QVXBZM0Q1dVlJNSsrRkh4ZFpRNlRBKzJOWVcvc3VVUU42?=
+ =?utf-8?B?WklHdXBJLzh4SkZBTy90K3lwM2hGK3RYcWYzVHJYem5wYnN4N1hWb0FKTlRH?=
+ =?utf-8?B?UHBYZFFQZGpQa3F5SWtwR2ZYc0M2QjhhMHpBWDFzTFBKNjV6ODRrUStMUHRh?=
+ =?utf-8?B?QmhBbURseTl2WEZLS2dma25LK2wyd2lNa05laDdsWGRJS3pET0NDTjhJR3VM?=
+ =?utf-8?Q?2Q76LjkJI8hU79HAflknd/FSXrBfs3vh39O9XBx4zIfR?=
+X-OriginatorOrg: kunbus.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: dde23ef1-a0ae-466a-5319-08db676818ac
+X-MS-Exchange-CrossTenant-AuthSource: VI1P193MB0413.EURP193.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jun 2023 15:01:39.3324
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: aaa4d814-e659-4b0a-9698-1c671f11520b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: pxem4aLm5867qCt3qn0r4noQefttGLr5vPXOL3BlXMuqj/JR2pqBVxh1S/vFhqMQOd3iQvJNfuCXPcOyBIag7g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXP193MB2379
 
-On 07/06/2023 11:17, Amit Pundir wrote:
-> On Wed, 7 Jun 2023 at 13:19, Krzysztof Kozlowski
-> <krzysztof.kozlowski@linaro.org> wrote:
->>
->> On 07/06/2023 01:34, Doug Anderson wrote:
->>> Hi,
->>>
->>> On Fri, Jun 2, 2023 at 9:12 AM Amit Pundir <amit.pundir@linaro.org> wrote:
->>>>
->>>> Move lvs1 and lvs2 regulator nodes up in the rpmh-regulators
->>>> list to workaround a boot regression uncovered by the upstream
->>>> commit ad44ac082fdf ("regulator: qcom-rpmh: Revert "regulator:
->>>> qcom-rpmh: Use PROBE_FORCE_SYNCHRONOUS"").
->>>>
->>>> Without this fix DB845c fail to boot at times because one of the
->>>> lvs1 or lvs2 regulators fail to turn ON in time.
->>>>
->>>> Link: https://lore.kernel.org/all/CAMi1Hd1avQDcDQf137m2auz2znov4XL8YGrLZsw5edb-NtRJRw@mail.gmail.com/
->>>> Signed-off-by: Amit Pundir <amit.pundir@linaro.org>
->>>> ---
->>>>  arch/arm64/boot/dts/qcom/sdm845-db845c.dts | 24 +++++++++++-----------
->>>>  1 file changed, 12 insertions(+), 12 deletions(-)
->>>>
->>>> diff --git a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
->>>> index e14fe9bbb386..df2fde9063dc 100644
->>>> --- a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
->>>> +++ b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
->>>> @@ -301,6 +301,18 @@ regulators-0 {
->>>>                 vdd-l26-supply = <&vreg_s3a_1p35>;
->>>>                 vin-lvs-1-2-supply = <&vreg_s4a_1p8>;
->>>>
->>>> +               vreg_lvs1a_1p8: lvs1 {
->>>> +                       regulator-min-microvolt = <1800000>;
->>>> +                       regulator-max-microvolt = <1800000>;
->>>> +                       regulator-always-on;
->>>> +               };
->>>> +
->>>> +               vreg_lvs2a_1p8: lvs2 {
->>>> +                       regulator-min-microvolt = <1800000>;
->>>> +                       regulator-max-microvolt = <1800000>;
->>>> +                       regulator-always-on;
->>>> +               };
->>>> +
->>>>                 vreg_s3a_1p35: smps3 {
->>>>                         regulator-min-microvolt = <1352000>;
->>>>                         regulator-max-microvolt = <1352000>;
->>>> @@ -381,18 +393,6 @@ vreg_l26a_1p2: ldo26 {
->>>>                         regulator-max-microvolt = <1200000>;
->>>>                         regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
->>>>                 };
->>>> -
->>>> -               vreg_lvs1a_1p8: lvs1 {
->>>> -                       regulator-min-microvolt = <1800000>;
->>>> -                       regulator-max-microvolt = <1800000>;
->>>> -                       regulator-always-on;
->>>> -               };
->>>> -
->>>> -               vreg_lvs2a_1p8: lvs2 {
->>>> -                       regulator-min-microvolt = <1800000>;
->>>> -                       regulator-max-microvolt = <1800000>;
->>>> -                       regulator-always-on;
->>>> -               };
->>>
->>> This is a hack, but it at least feels less bad than reverting the
->>> async probe patch. I'll leave it to Bjorn to decide if he's OK with
->>> it. Personally, it feels like this would deserve a comment in the dts
->>> to document that these regulators need to be listed first.
->>>
->>> Ideally, we could still work towards a root cause. I added a few more
->>> ideas to help with root causing in reply to the original thread about
->>> this.
->>>
->>> https://lore.kernel.org/r/CAD=FV=UKyjRNZG-ED2meUAR9aXdco+AbUTHiKixTzjCkaJbjTg@mail.gmail.com/
->>
->> We do not shape DTS based on given OS behavior. AOSP needs this, BSD
->> needs that and Linux needs something else. Next time someone will move
->> these regulators down because on his system probing is from end of list,
->> not beginning and he has the same problem.
->>
->> No, really, are we going to reshuffle nodes because AOSP needs it?
+Hi Chris,
+
+On 07.06.23 05:23, Chris Packham wrote:
+
+
+>> Chris, could you test again with commit 0c7e66e5fd69 additionally applied and confirm that the warning is gone?
 > 
-> Hi, other than the fact that I reproduced it on AOSP, there is nothing
-> AOSP specific in this patch. I'm sure there may be another
-> platforms/OS (which load kernel modules from a ramdisk) that may trip
-> on this bug. But I can try reproducing it on an OS of your choice if
-> it helps.
+> Yes with 0c7e66e5fd69 cherry-picked on top the warning goes away. Adding
+> e644b2f498d2 doesn't seem to change anything (still reports that
+> interrupts aren't working) but that's the same as the latest mainline on
+> this hardware.
 
-I wrote earlier imaginary system where RPM driver loads the regulators
-from the end. It would require re-shuffling to previous order of the
-nodes. Feel free to change the RPM drivers to simulate it and you should
-see that your patch stops helping.
 
-The problem looks like in missing consumers, missing probe dependencies
-or something in the driver how it handles these.
+Thanks a lot for testing this!
 
-DTS should not be used for solving OS related problems.
+If interrupts do not even work with the latest mainline kernel something
+else must be wrong.
+
+But it is good to know that the cherry-pick fixes at least the regression.
+
 
 Best regards,
-Krzysztof
-
+Lino
