@@ -1,183 +1,86 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC775647
-	for <regressions@lists.linux.dev>; Wed,  7 Jun 2023 07:06:17 +0000 (UTC)
-Authenticated-By: 
-X-SpamFilter-By: ArmorX SpamTrap 5.77 with qID 35775e4vA029445, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
-	by rtits2.realtek.com.tw (8.15.2/2.81/5.90) with ESMTPS id 35775e4vA029445
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=OK);
-	Wed, 7 Jun 2023 15:05:40 +0800
-Received: from RTEXMBS05.realtek.com.tw (172.21.6.98) by
- RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.32; Wed, 7 Jun 2023 15:05:56 +0800
-Received: from RTEXMBS01.realtek.com.tw (172.21.6.94) by
- RTEXMBS05.realtek.com.tw (172.21.6.98) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.34; Wed, 7 Jun 2023 15:05:56 +0800
-Received: from RTEXMBS01.realtek.com.tw ([fe80::4d7:e49a:674a:598]) by
- RTEXMBS01.realtek.com.tw ([fe80::4d7:e49a:674a:598%5]) with mapi id
- 15.01.2375.007; Wed, 7 Jun 2023 15:05:56 +0800
-From: Kailang <kailang@realtek.com>
-To: "Joseph C. Sible" <josephcsible@gmail.com>
-CC: Takashi Iwai <tiwai@suse.de>, Bagas Sanjaya <bagasdotme@gmail.com>,
-        "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
-        "perex@perex.cz"
-	<perex@perex.cz>, "tiwai@suse.com" <tiwai@suse.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
-Subject: RE: Fwd: [Bug 217440] New: ALC236 audio disappears from HP 15z-fc000 on warm boot
-Thread-Topic: Fwd: [Bug 217440] New: ALC236 audio disappears from HP 15z-fc000
- on warm boot
-Thread-Index: AQHZhdSOD7kY6mXBDkGA3ryhp811r69Yu5SAgAASNACAAA22gIAA7n+AgAEJrYCABLe/YIAJNIWAgAIHAcD//4tyAIAB8UZw///vxgCADzWhgIABfgWAgACUPoCAAPnsAIAAmlKw
-Date: Wed, 7 Jun 2023 07:05:55 +0000
-Message-ID: <485f99149508488080d563144454040e@realtek.com>
-References: <bug-217440-225600@https.bugzilla.kernel.org/>
- <CABpewhE4REgn9RJZduuEU6Z_ijXNeQWnrxO1tg70Gkw=F8qNYg@mail.gmail.com>
- <ZGB0cVVI7OgaJU6t@debian.me>
- <CABpewhGJE7-k52j8L2kJ2zKupgp3Ma+LdZazzzV4w1Bgihp7nw@mail.gmail.com>
- <87cz338ix4.wl-tiwai@suse.de>
- <CABpewhF01AK4cFPbwYVvKR9yWaO7o-ZE-2+MZjYSUF0BKUdYvw@mail.gmail.com>
- <874jodlnmi.wl-tiwai@suse.de> <415d4bc84aa74c74af913048f28b42a9@realtek.com>
- <87fs7mdofi.wl-tiwai@suse.de> <7da2fdfdae614b1c98deda6e11ca34eb@realtek.com>
- <87353kd8b9.wl-tiwai@suse.de> <1170325957764b4cbd7cd3639575f285@realtek.com>
- <CABpewhGBakDSBLKZ1cr2=OMspuu3qyYwZrsXUggQ3vt8gsD88A@mail.gmail.com>
- <873536js7q.wl-tiwai@suse.de>
- <CABpewhE0NAC-Q=iqG2Ba=XhT7SXsWy18wQGYUaopzmKDfFxyPw@mail.gmail.com>
- <2c1fcbc00bb44d66a29ac1c1e4bec5ad@realtek.com>
- <CABpewhFthKG97dPiQC4JhGx9sapX9Yu5rWABQjpY95TSA+eawA@mail.gmail.com>
-In-Reply-To: <CABpewhFthKG97dPiQC4JhGx9sapX9Yu5rWABQjpY95TSA+eawA@mail.gmail.com>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach: yes
-X-MS-TNEF-Correlator:
-x-originating-ip: [172.22.102.106]
-x-kse-serverinfo: RTEXMBS05.realtek.com.tw, 9
-x-kse-antispam-interceptor-info: fallback
-x-kse-antivirus-interceptor-info: fallback
-Content-Type: multipart/mixed;
-	boundary="_003_485f99149508488080d563144454040erealtekcom_"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A497F6AAE
+	for <regressions@lists.linux.dev>; Wed,  7 Jun 2023 07:46:31 +0000 (UTC)
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5169f614977so398643a12.3
+        for <regressions@lists.linux.dev>; Wed, 07 Jun 2023 00:46:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1686123989; x=1688715989;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=aqsEzFqUgOVZQzpckmPA7QYky+nCMGAOocJxXSgiBwk=;
+        b=aVQBd/L+gFSHbciCPHrq2Jw+Vdc0fz+VuiYH0t5mtgbnZI+CylhNF1IjYCJF7K+fDk
+         jays2/s44/Bun2QJli+RcJFBc4xVh0K9d5v3xnRfstXG+bdxVGRbHBAWbu7W1CbIOcOX
+         8jGRt80BhzbAkkB4UZDICNmVGFQ+Y3CEAbmpNCQ3l2qPTp5HkJ99qerTDFs8UcPMCK1G
+         gIWzKvNkRGPmrP0BZhNiii/ZwHk5Hb16oBMFQNCOhzhU8DgSLrd094MkgAVMbfTF0gsx
+         CRpJDv1a7Z0om7jAXcHwsmK9DGvPzN2YR6iXlcD5babDT9RtLrTt7LcuBvAqNlqPzaF6
+         QyUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686123989; x=1688715989;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=aqsEzFqUgOVZQzpckmPA7QYky+nCMGAOocJxXSgiBwk=;
+        b=aRAy2xTqdyn91Zzf63dChlp7T1Z4fkFtEXQIC/t/VLDCRiulFjs7IEs6BBX5BO/TaK
+         /ZCIki6BmzWPs8kmFBr3W1rL9HCP0AWdiboeXkOg5/doVrqK6FnFAdZ8nAUlJ7aHr1Eq
+         bFRlWpczP6cC+HzhSM+KFym+M+/HPjGT2OwFO3uzxHINaUdePc7X913ZTCogEackzDVJ
+         nm1Sgg2LFVKx2xyUyw1bQmWsCq75lpr3Fmpdc7au8YzEpAK6p8+ctRN3HF22GkAcaPKw
+         5KeILhEYXtYJXcn6G4XizAzDO3VcFWmmV9cYsszI+Gx6p7pK5uYxNwD4owQAz7lPBmya
+         q82w==
+X-Gm-Message-State: AC+VfDwGSNAv3Ek4GjEmM+0VIesM4UzDvFUskGEEZ4XhKbCyuhsb2j3B
+	bL+r64AAW2e3OnJjYtpJ33n4TA==
+X-Google-Smtp-Source: ACHHUZ4kcZo5MjWf9lYD7Xmfamt0m6nLHk5TvmssVtzCrdVn0j5JqN0jhvh5zR8i+TWc79PPFEQtjQ==
+X-Received: by 2002:a17:907:9403:b0:96a:ff7f:692 with SMTP id dk3-20020a170907940300b0096aff7f0692mr4186582ejc.68.1686123989313;
+        Wed, 07 Jun 2023 00:46:29 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.219.26])
+        by smtp.gmail.com with ESMTPSA id i15-20020a170906a28f00b00968242f8c37sm6479031ejz.50.2023.06.07.00.46.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 07 Jun 2023 00:46:28 -0700 (PDT)
+Message-ID: <407ace5b-5c63-a6de-ff41-24d5cd1d4eb8@linaro.org>
+Date: Wed, 7 Jun 2023 09:46:27 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-KSE-AntiSpam-Interceptor-Info: fallback
-X-KSE-ServerInfo: RTEXH36505.realtek.com.tw, 9
-X-KSE-AntiSpam-Interceptor-Info: fallback
-X-KSE-Antivirus-Interceptor-Info: fallback
-X-KSE-AntiSpam-Interceptor-Info: fallback
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.2
+Subject: Re: [PATCH] arm64: dts: qcom: sdm845-db845c: Move LVS regulator nodes
+ up
+Content-Language: en-US
+To: Amit Pundir <amit.pundir@linaro.org>, Mark Brown <broonie@kernel.org>,
+ Doug Anderson <dianders@chromium.org>, Bjorn Andersson
+ <andersson@kernel.org>, Andy Gross <agross@kernel.org>,
+ Rob Herring <robh+dt@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Caleb Connolly <caleb.connolly@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: regressions <regressions@lists.linux.dev>,
+ linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+ dt <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>
+References: <20230602161246.1855448-1-amit.pundir@linaro.org>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20230602161246.1855448-1-amit.pundir@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
---_003_485f99149508488080d563144454040erealtekcom_
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+On 02/06/2023 18:12, Amit Pundir wrote:
+> Move lvs1 and lvs2 regulator nodes up in the rpmh-regulators
+> list to workaround a boot regression uncovered by the upstream
+> commit ad44ac082fdf ("regulator: qcom-rpmh: Revert "regulator:
+> qcom-rpmh: Use PROBE_FORCE_SYNCHRONOUS"").
+> 
+> Without this fix DB845c fail to boot at times because one of the
+> lvs1 or lvs2 regulators fail to turn ON in time.
 
-SGkgSm9zZXBoLA0KDQpQbGVhc2UgdHJ5IGF0dGFjaCBwYXRjaC4NClBsZWFzZSBwYXRjaCBmb2xs
-b3cgbnVtYmVyIHNlcXVlbmNlLg0KDQpUaGFua3MuDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdl
-LS0tLS0NCj4gRnJvbTogSm9zZXBoIEMuIFNpYmxlIDxqb3NlcGhjc2libGVAZ21haWwuY29tPg0K
-PiBTZW50OiBXZWRuZXNkYXksIEp1bmUgNywgMjAyMyAxOjQ3IFBNDQo+IFRvOiBLYWlsYW5nIDxr
-YWlsYW5nQHJlYWx0ZWsuY29tPg0KPiBDYzogVGFrYXNoaSBJd2FpIDx0aXdhaUBzdXNlLmRlPjsg
-QmFnYXMgU2FuamF5YSA8YmFnYXNkb3RtZUBnbWFpbC5jb20+Ow0KPiByZWdyZXNzaW9uc0BsaXN0
-cy5saW51eC5kZXY7IHBlcmV4QHBlcmV4LmN6OyB0aXdhaUBzdXNlLmNvbTsNCj4gYWxzYS1kZXZl
-bEBhbHNhLXByb2plY3Qub3JnDQo+IFN1YmplY3Q6IFJlOiBGd2Q6IFtCdWcgMjE3NDQwXSBOZXc6
-IEFMQzIzNiBhdWRpbyBkaXNhcHBlYXJzIGZyb20gSFANCj4gMTV6LWZjMDAwIG9uIHdhcm0gYm9v
-dA0KPiANCj4gDQo+IEV4dGVybmFsIG1haWwuDQo+IA0KPiANCj4gDQo+IE9uIFR1ZSwgSnVuIDYs
-IDIwMjMgYXQgMjo1NeKAr0FNIEthaWxhbmcgPGthaWxhbmdAcmVhbHRlay5jb20+IHdyb3RlOg0K
-PiA+DQo+ID4gQ291bGQgeW91IHJ1biBhdHRhY2ggdG8gZ2V0IGR1bXAgZm9yIG1lPw0KPiA+DQo+
-ID4gLi9hbHNhLWluZm8gLS1uby11cGxvYWQNCj4gDQo+IFRoZSByZXN1bHQgaXMgYXR0YWNoZWQu
-DQo+IA0KPiBUaGFua3MsDQo+IA0KPiBKb3NlcGggQy4gU2libGUNCj4gDQo+IC0tLS0tLVBsZWFz
-ZSBjb25zaWRlciB0aGUgZW52aXJvbm1lbnQgYmVmb3JlIHByaW50aW5nIHRoaXMgZS1tYWlsLg0K
+Why regulator would fail to turn on time? If it has ramp-up delay, add
+it to DT. Otherwise how is it possible? You have a consumer, right?
 
---_003_485f99149508488080d563144454040erealtekcom_
-Content-Type: application/octet-stream; name="0001-hp-alc236.patch"
-Content-Description: 0001-hp-alc236.patch
-Content-Disposition: attachment; filename="0001-hp-alc236.patch"; size=2261;
-	creation-date="Wed, 07 Jun 2023 06:48:45 GMT";
-	modification-date="Wed, 07 Jun 2023 06:59:12 GMT"
-Content-Transfer-Encoding: base64
+This is not the correct solution and it is hiding real issue.
 
-RnJvbSBiZDEzMzU3ODdhZDkyMDQ1MzJlYmMxNzIzMjA3NzcxNzhjNjNiZmVhIE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQpGcm9tOiBLYWlsYW5nIFlhbmcgPGthaWxhbmdAcmVhbHRlay5jb20+CkRh
-dGU6IFdlZCwgNyBKdW4gMjAyMyAxNDo0NjoyMCArMDgwMApTdWJqZWN0OiBbUEFUQ0hdIEFMU0E6
-IGhkYS9yZWFsdGVrIC0gYWRkIGNvbWJvIGphY2sgcmVzdGFydCBmb3IgSFAgbWFjaGluZQoKSFAg
-MHg4YjJmIHdpbGwgbG9zZSBoZWFkc2V0IE1JQy4KQWRkIGNvbWJvIGphY2sgcmVzdGFydCBwcm9j
-ZWR1cmUgd2lsbCBzb2x2ZSB0aGlzIGlzc3VlLgoKZGlmZiAtLWdpdCBhL3NvdW5kL3BjaS9oZGEv
-cGF0Y2hfcmVhbHRlay5jIGIvc291bmQvcGNpL2hkYS9wYXRjaF9yZWFsdGVrLmMKaW5kZXggN2Rj
-YzA0ZTE4NWU2Li41ZjVhYjc3ZTU0YzcgMTAwNjQ0Ci0tLSBhL3NvdW5kL3BjaS9oZGEvcGF0Y2hf
-cmVhbHRlay5jCisrKyBiL3NvdW5kL3BjaS9oZGEvcGF0Y2hfcmVhbHRlay5jCkBAIC02NDgzLDYg
-KzY0ODMsMTggQEAgc3RhdGljIHZvaWQgYWxjMjk1X2ZpeHVwX2Nocm9tZWJvb2soc3RydWN0IGhk
-YV9jb2RlYyAqY29kZWMsCiAJfQogfQogCitzdGF0aWMgdm9pZCBhbGMyMjVfYWxjMjU2X2ZpeHVw
-X2hlYWRzZXRfbWljKHN0cnVjdCBoZGFfY29kZWMgKmNvZGVjLAorCQkJCSAgICBjb25zdCBzdHJ1
-Y3QgaGRhX2ZpeHVwICpmaXgsIGludCBhY3Rpb24pCit7CisJc3RydWN0IGFsY19zcGVjICpzcGVj
-ID0gY29kZWMtPnNwZWM7CisKKwlzd2l0Y2ggKGFjdGlvbikgeworCWNhc2UgSERBX0ZJWFVQX0FD
-VF9JTklUOgorCQlhbGNfY29tYm9famFja19ocF9qZF9yZXN0YXJ0KGNvZGVjKTsKKwkJYnJlYWs7
-CisJfQorfQorCiBzdGF0aWMgdm9pZCBhbGNfZml4dXBfZGlzYWJsZV9taWNfdnJlZihzdHJ1Y3Qg
-aGRhX2NvZGVjICpjb2RlYywKIAkJCQkgIGNvbnN0IHN0cnVjdCBoZGFfZml4dXAgKmZpeCwgaW50
-IGFjdGlvbikKIHsKQEAgLTcyMDEsNiArNzIxMyw3IEBAIGVudW0gewogCUFMQzI4N19GSVhVUF9Z
-T0dBOV8xNElBUDdfQkFTU19TUEtfUElOLAogCUFMQzI5NV9GSVhVUF9ERUxMX0lOU1BJUk9OX1RP
-UF9TUEVBS0VSUywKIAlBTEMyMzZfRklYVVBfREVMTF9EVUFMX0NPREVDUywKKwlBTEMyNTZfRklY
-VVBfSEVBRFNFVF9NSUMsCiB9OwogCiAvKiBBIHNwZWNpYWwgZml4dXAgZm9yIExlbm92byBDOTQw
-IGFuZCBZb2dhIER1ZXQgNzsKQEAgLTkyMDUsNiArOTIxOCwxMCBAQCBzdGF0aWMgY29uc3Qgc3Ry
-dWN0IGhkYV9maXh1cCBhbGMyNjlfZml4dXBzW10gPSB7CiAJCS5jaGFpbmVkID0gdHJ1ZSwKIAkJ
-LmNoYWluX2lkID0gQUxDMjU1X0ZJWFVQX0RFTEwxX01JQ19OT19QUkVTRU5DRSwKIAl9LAorCVtB
-TEMyNTZfRklYVVBfSEVBRFNFVF9NSUNdID0geworCQkudHlwZSA9IEhEQV9GSVhVUF9QSU5TLAor
-CQkudi5mdW5jID0gYWxjMjI1X2FsYzI1Nl9maXh1cF9oZWFkc2V0X21pYywKKwl9LAogfTsKIAog
-c3RhdGljIGNvbnN0IHN0cnVjdCBzbmRfcGNpX3F1aXJrIGFsYzI2OV9maXh1cF90YmxbXSA9IHsK
-QEAgLTk0NzcsNiArOTQ5NCw3IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgc25kX3BjaV9xdWlyayBh
-bGMyNjlfZml4dXBfdGJsW10gPSB7CiAJU05EX1BDSV9RVUlSSygweDEwM2MsIDB4OGFiYiwgIkhQ
-IFpCb29rIEZpcmVmbHkgMTQgRzkiLCBBTEMyNDVfRklYVVBfQ1MzNUw0MV9TUElfMl9IUF9HUElP
-X0xFRCksCiAJU05EX1BDSV9RVUlSSygweDEwM2MsIDB4OGFkMSwgIkhQIEVsaXRlQm9vayA4NDAg
-MTQgaW5jaCBHOSBOb3RlYm9vayBQQyIsIEFMQzI0NV9GSVhVUF9DUzM1TDQxX1NQSV8yX0hQX0dQ
-SU9fTEVEKSwKIAlTTkRfUENJX1FVSVJLKDB4MTAzYywgMHg4YWQyLCAiSFAgRWxpdGVCb29rIDg2
-MCAxNiBpbmNoIEc5IE5vdGVib29rIFBDIiwgQUxDMjQ1X0ZJWFVQX0NTMzVMNDFfU1BJXzJfSFBf
-R1BJT19MRUQpLAorCVNORF9QQ0lfUVVJUksoMHgxMDNjLCAweDhiMmYsICJIUCAxNXotZmMwMDAi
-LCBBTEMyNTZfRklYVVBfSEVBRFNFVF9NSUMpLAogCVNORF9QQ0lfUVVJUksoMHgxMDNjLCAweDhi
-NDIsICJIUCIsIEFMQzI0NV9GSVhVUF9DUzM1TDQxX1NQSV8yX0hQX0dQSU9fTEVEKSwKIAlTTkRf
-UENJX1FVSVJLKDB4MTAzYywgMHg4YjQzLCAiSFAiLCBBTEMyNDVfRklYVVBfQ1MzNUw0MV9TUElf
-Ml9IUF9HUElPX0xFRCksCiAJU05EX1BDSV9RVUlSSygweDEwM2MsIDB4OGI0NCwgIkhQIiwgQUxD
-MjQ1X0ZJWFVQX0NTMzVMNDFfU1BJXzJfSFBfR1BJT19MRUQpLAo=
+Best regards,
+Krzysztof
 
---_003_485f99149508488080d563144454040erealtekcom_
-Content-Type: application/octet-stream;
-	name="0000-alc236-cancel-3kpullLow.patch"
-Content-Description: 0000-alc236-cancel-3kpullLow.patch
-Content-Disposition: attachment;
-	filename="0000-alc236-cancel-3kpullLow.patch"; size=1692;
-	creation-date="Wed, 07 Jun 2023 06:48:45 GMT";
-	modification-date="Wed, 07 Jun 2023 06:55:50 GMT"
-Content-Transfer-Encoding: base64
-
-RnJvbSBhNjcyMTU5YTNjZDJkOTBiMDVhOTU5OTFmMWFiMGNmMjRjMWNhMGI5IE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQpGcm9tOiBLYWlsYW5nIFlhbmcgPGthaWxhbmdAcmVhbHRlay5jb20+CkRh
-dGU6IFR1ZSwgNiBKdW4gMjAyMyAxNDo0NDo0MiArMDgwMApTdWJqZWN0OiBbUEFUQ0hdIEFMU0E6
-IGhkYS9yZWFsdGVrIC0gcmVtb3ZlIDNrIHB1bGwgbG93IHByb2NlZHVyZQoKVGhpcyB3YXMgdGhl
-IEFMQzI4MyBkZXBvcCBwcm9jZWR1cmUuCk1heWJlIHRoaXMgcHJvY2VkdXJlIHdhc24ndCBzdWl0
-YWJsZSB3aXRoIG5ldyBjb2RlYy4KU28sIGxldCByZW1vdmUgaXQuCgpTaWduZWQtb2ZmLWJ5OiBL
-YWlsYW5nIFlhbmcgPGthaWxhbmdAcmVhbHRlay5jb20+CmRpZmYgLS1naXQgYS9zb3VuZC9wY2kv
-aGRhL3BhdGNoX3JlYWx0ZWsuYyBiL3NvdW5kL3BjaS9oZGEvcGF0Y2hfcmVhbHRlay5jCmluZGV4
-IGYxMDc5MGFjZTVjMS4uN2RjYzA0ZTE4NWU2IDEwMDY0NAotLS0gYS9zb3VuZC9wY2kvaGRhL3Bh
-dGNoX3JlYWx0ZWsuYworKysgYi9zb3VuZC9wY2kvaGRhL3BhdGNoX3JlYWx0ZWsuYwpAQCAtMzYw
-MCw3ICszNjAwLDYgQEAgc3RhdGljIHZvaWQgYWxjMjU2X2luaXQoc3RydWN0IGhkYV9jb2RlYyAq
-Y29kZWMpCiAJaWYgKGhwX3Bpbl9zZW5zZSB8fCBzcGVjLT51bHRyYV9sb3dfcG93ZXIpCiAJCW1z
-bGVlcCgxMDApOwogCi0JYWxjX3VwZGF0ZV9jb2VmX2lkeChjb2RlYywgMHg0NiwgMyA8PCAxMiwg
-MCk7CiAJYWxjX3VwZGF0ZV9jb2VmZXhfaWR4KGNvZGVjLCAweDU3LCAweDA0LCAweDAwMDcsIDB4
-NCk7IC8qIEhpZ2h0IHBvd2VyICovCiAJYWxjX3VwZGF0ZV9jb2VmZXhfaWR4KGNvZGVjLCAweDUz
-LCAweDAyLCAweDgwMDAsIDEgPDwgMTUpOyAvKiBDbGVhciBiaXQgKi8KIAlhbGNfdXBkYXRlX2Nv
-ZWZleF9pZHgoY29kZWMsIDB4NTMsIDB4MDIsIDB4ODAwMCwgMCA8PCAxNSk7CkBAIC0zNjI3LDYg
-KzM2MjYsOCBAQCBzdGF0aWMgdm9pZCBhbGMyNTZfc2h1dHVwKHN0cnVjdCBoZGFfY29kZWMgKmNv
-ZGVjKQogCWlmIChocF9waW5fc2Vuc2UpCiAJCW1zbGVlcCgyKTsKIAorCWFsY191cGRhdGVfY29l
-ZmV4X2lkeChjb2RlYywgMHg1NywgMHgwNCwgMHgwMDA3LCAweDEpOyAvKiBMb3cgcG93ZXIgKi8K
-KwogCXNuZF9oZGFfY29kZWNfd3JpdGUoY29kZWMsIGhwX3BpbiwgMCwKIAkJCSAgICBBQ19WRVJC
-X1NFVF9BTVBfR0FJTl9NVVRFLCBBTVBfT1VUX01VVEUpOwogCkBAIC0zNjM4LDkgKzM2MzksNiBA
-QCBzdGF0aWMgdm9pZCBhbGMyNTZfc2h1dHVwKHN0cnVjdCBoZGFfY29kZWMgKmNvZGVjKQogCS8q
-IElmIGRpc2FibGUgM2sgcHVsbGRvd24gY29udHJvbCBmb3IgYWxjMjU3LCB0aGUgTWljIGRldGVj
-dGlvbiB3aWxsIG5vdCB3b3JrIGNvcnJlY3RseQogCSAqIHdoZW4gYm9vdGluZyB3aXRoIGhlYWRz
-ZXQgcGx1Z2dlZC4gU28gc2tpcCBzZXR0aW5nIGl0IGZvciB0aGUgY29kZWMgYWxjMjU3CiAJICov
-Ci0JaWYgKGNvZGVjLT5jb3JlLnZlbmRvcl9pZCAhPSAweDEwZWMwMjM2ICYmCi0JICAgIGNvZGVj
-LT5jb3JlLnZlbmRvcl9pZCAhPSAweDEwZWMwMjU3KQotCQlhbGNfdXBkYXRlX2NvZWZfaWR4KGNv
-ZGVjLCAweDQ2LCAwLCAzIDw8IDEyKTsKIAogCWlmICghc3BlYy0+bm9fc2h1dHVwX3BpbnMpCiAJ
-CXNuZF9oZGFfY29kZWNfd3JpdGUoY29kZWMsIGhwX3BpbiwgMCwK
-
---_003_485f99149508488080d563144454040erealtekcom_--
