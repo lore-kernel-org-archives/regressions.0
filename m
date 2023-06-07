@@ -1,77 +1,261 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f49.google.com (mail-oo1-f49.google.com [209.85.161.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A1961772E
-	for <regressions@lists.linux.dev>; Wed,  7 Jun 2023 17:49:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 779ADC433EF;
-	Wed,  7 Jun 2023 17:49:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1686160193;
-	bh=kGX0qEd54Qgv90p2G878MpRZiHthXw2miPZqsUOHgn8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Vs0ohzxaCSiaUtAgZ8JCY0ss5FDs4L4CgEor0c0YhE63rsVVN+/nKcnXYTke39SMI
-	 WzMw3/SSi82jTXvDqiBMBI0EIy6sidbUkzo7Vpnq9k/EYkMjeaB8eG599pgpzcCKJK
-	 nJM3vKiQut6O7DoIYLWYaXpneAScvgKOv59N/rG4=
-Date: Wed, 7 Jun 2023 19:49:45 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Lino Sanfilippo <l.sanfilippo@kunbus.com>
-Cc: Bagas Sanjaya <bagasdotme@gmail.com>,
-	Chris Packham <Chris.Packham@alliedtelesis.co.nz>,
-	Jarkko Sakkinen <jarkko@kernel.org>,
-	Sasha Levin <sashal@kernel.org>, Peter Huewe <peterhuewe@gmx.de>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Linux Kernel Integrity <linux-integrity@vger.kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Regressions <regressions@lists.linux.dev>,
-	stable@vger.kernel.org
-Subject: Re: New kernel warning after updating from LTS 5.15.110 to 5.15.112
- (and 5.15.113)
-Message-ID: <2023060736-immodest-doormat-f957@gregkh>
-References: <fe6f7aa0-56c2-3729-ce8c-0f2d943b33f4@alliedtelesis.co.nz>
- <ZHQIFLWvrWUNMVxb@debian.me>
- <6e470461-1a9b-ec51-bac5-f2beb1dc11c9@alliedtelesis.co.nz>
- <2b09d2ed-0852-bbc9-b792-aad92235c7fa@gmail.com>
- <03daca5c-e468-8889-4dc2-e625a664d571@alliedtelesis.co.nz>
- <ec5245bd-3103-f0c7-d3ef-85aabb4d4712@alliedtelesis.co.nz>
- <ZH6TIjXeXJVMvSKa@debian.me>
- <2023060606-unlatch-yiddish-a45f@gregkh>
- <ac5b76af-87dc-b04d-6035-8eda8ba5ed12@kunbus.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01F821772E
+	for <regressions@lists.linux.dev>; Wed,  7 Jun 2023 18:05:54 +0000 (UTC)
+Received: by mail-oo1-f49.google.com with SMTP id 006d021491bc7-558a7faa989so2609659eaf.1
+        for <regressions@lists.linux.dev>; Wed, 07 Jun 2023 11:05:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1686161154; x=1688753154;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=rrcUk3QXD5nFY+wcOPn8saiJBhZSNAUJ+BdDVGNC138=;
+        b=NLRCyNLDmaHkVdK4yHA5tcb2zzlmiY9NDfuZ7tyPI2g+uVgZwG3l6FH5LX4m4yokwy
+         nmuw6wWKIvJRDc3xDSEekccAdl6YH9Ze5O1jpu+Cqmhe3Ti2Dn84t5zpAc7DQrjeQvgV
+         DlMze3GpxVhlQD65cuhbW3T6sDP+22G8TSsHlZEVnml2kAcdpCXihy/rxCNhy0dbsD/Z
+         KM6HnP9yAd/80VqYIPTU8KXMBnq5WBQcnwUrj9N4JQzRjmjNYfUOklSh012dHbyra7mr
+         e57HT5qiND/zPSl+0lASBoF6rmyxAsXaAU2pr+DkpaFCkafQ0t+zA1RUplND/udCak4Y
+         ET6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686161154; x=1688753154;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rrcUk3QXD5nFY+wcOPn8saiJBhZSNAUJ+BdDVGNC138=;
+        b=lL/tIbzpoZ8qe7QjKTG6LTGREclQ6jwZ7PkoILaQvJgMVp8Xg2sQ0xYuFgatX5WxI+
+         xTFabGvGu01sGmcogW2fv9x6v1D+BPftB8TxvNgSzm4nCsyUM5UWkFhz0alm5/uVmmjd
+         BNYhIHOdD1IQyRIWJLom4eIjIO7Q6Hqb07Zby5dkYhKha4JzdZ566wEy2n1iiXuT4JZN
+         F4IFRNWTFP1rzvN09NjzKus13ftcEzcssq04JfKduhkP/GdaJtBPvbJ2BjjfvLfoe0mg
+         NUS6zorq+y4FbqGTOSYemJuEMay382sTpwB/fP7/00Ui8rvUMuiaoFGXQzoLEp4r06Bb
+         VZnQ==
+X-Gm-Message-State: AC+VfDxz5l9bsQgzNd1MpCECVHeWcJv84OpIoYDqllYhNPUOm8hxkDCq
+	W9mkOL5knjvs1ojU/WAGsRJViR+fvi+2JUIyXWnGQawUhdk=
+X-Google-Smtp-Source: ACHHUZ7TdRWEjprJMV3MT1zLscbuyK+HS5AVs7cUsAEHXT15VUdjl+aJOgCuufi/iZpOdxUYrBMfxqGPqWbHs8od9Xs=
+X-Received: by 2002:a4a:ea89:0:b0:558:a782:5209 with SMTP id
+ r9-20020a4aea89000000b00558a7825209mr3113447ooh.1.1686161153788; Wed, 07 Jun
+ 2023 11:05:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ac5b76af-87dc-b04d-6035-8eda8ba5ed12@kunbus.com>
+References: <46a7eb80-5f09-4f6a-4fd3-9550dafd497c@felixrichter.tech>
+ <1efbf587-e7b5-74a3-89e4-ca70386bd191@leemhuis.info> <CADnq5_M-5SD6HDRVtFHPNF3q9XKz75PECdUxR-OaVpPe2Zw=EQ@mail.gmail.com>
+ <8d23a70e-b132-9b25-917a-1f45918533cc@leemhuis.info> <0cac032a-0f65-5134-cde5-f535fc58c5ab@felixrichter.tech>
+ <e7eed5ce-e7a0-e03e-f8c7-3582d9771a33@leemhuis.info> <e24373f9-4405-d7f7-dd54-d0bde111242c@felixrichter.tech>
+ <CADnq5_MCXgtxNB_WBfAw+ZSKNeczSYL7gZPkpqqJ859G=LYkgA@mail.gmail.com> <076f493a-9e88-db37-f4a0-2a269e94d51e@felixrichter.tech>
+In-Reply-To: <076f493a-9e88-db37-f4a0-2a269e94d51e@felixrichter.tech>
+From: Alex Deucher <alexdeucher@gmail.com>
+Date: Wed, 7 Jun 2023 14:05:42 -0400
+Message-ID: <CADnq5_Ojz=dTO-ve0KxrLb+v0OouwbQdGTn4Fm8vwEjR2Ww-gw@mail.gmail.com>
+Subject: Re: PROBLEM: AMD Ryzen 9 7950X iGPU - Blinking Issue
+To: Felix Richter <judge@felixrichter.tech>
+Cc: "Mahfooz, Hamza" <Hamza.Mahfooz@amd.com>, 
+	Linux regressions mailing list <regressions@lists.linux.dev>, amd-gfx@lists.freedesktop.org, 
+	dri-devel@lists.freedesktop.org
+Content-Type: multipart/mixed; boundary="0000000000009b25b505fd8dfcf4"
 
-On Wed, Jun 07, 2023 at 05:47:57PM +0200, Lino Sanfilippo wrote:
-> 
-> Hi Greg,
-> 
-> On 06.06.23 08:45, Greg KH wrote:
-> >>
-> >> Lino, it looks like this regression is caused by (backported) commit of yours.
-> >> Would you like to take a look on it?
-> >>
-> >> Anyway, telling regzbot:
-> >>
-> >> #regzbot introduced: 51162b05a44cb5
-> > 
-> > There's some tpm backports to 5.15.y that were suspect and I'll look
-> > into reverting them and see if this was one of the ones that was on that
-> > list.  Give me a few days...
-> > 
-> 
-> Could you please consider to apply (mainline) commit 0c7e66e5fd69 ("tpm, tpm_tis: Request threaded
-> interrupt handler") to 5.15.y?
-> 
-> As Chris confirmed it fixes the regression caused by 51162b05a44cb5 ("tpm, tpm_tis: Claim locality
-> before writing interrupt registers").
-> 
-> Commit 0c7e66e5fd69 is also needed for 5.10.y, 6.1.y and 6.3.y.
+--0000000000009b25b505fd8dfcf4
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Now queued up, thanks.
+On Wed, Jun 7, 2023 at 4:42=E2=80=AFAM Felix Richter <judge@felixrichter.te=
+ch> wrote:
+>
+> Hi Guys,
+>
+> so I checked, the kernel I am running has this commit
+> (https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+> /commit/?id=3D08da182175db4c7f80850354849d95f2670e8cd9) applied already!
+>
+> https://github.com/ju6ge/linux/commit/917680e6056aa288cac288d3afd2745d372=
+beb61u
+>
+> And the bug of display flickering persists with or without the
+> amdgpu.sg_display=3D0 variable applied!
 
-greg k-h
+That is unexpected.  Setting sg_display=3D0 should be equivalent to
+reverting 81d0bcf9900932633d270d5bc4a54ff599c6ebdb.  Does the attached
+patch (with sg_display=3D0 set) make any difference?
+
+Alex
+
+
+>
+> Kind regards,
+> Felix Richter
+>
+>
+> On 6/5/23 16:11, Alex Deucher wrote:
+> > + Hamza
+> > This is a known issue.  You can workaround it by setting
+> > amdgpu.sg_display=3D0.  It should be issue should be fixed in:
+> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/comm=
+it/?id=3D08da182175db4c7f80850354849d95f2670e8cd9
+> >
+> > Alex
+> >
+> >
+> >
+> >> Now if this is the desired long term fix I do not know =E2=80=A6
+> >>
+> >> Kind regards,
+> >> Felix Richter
+> >>
+> >> On 02.05.23 16:12, Linux regression tracking (Thorsten Leemhuis) wrote=
+:
+> >>> On 02.05.23 15:48, Felix Richter wrote:
+> >>>> On 5/2/23 15:34, Linux regression tracking (Thorsten Leemhuis) wrote=
+:
+> >>>>> On 02.05.23 15:13, Alex Deucher wrote:
+> >>>>>> On Tue, May 2, 2023 at 7:45=E2=80=AFAM Linux regression tracking (=
+Thorsten
+> >>>>>> Leemhuis)<regressions@leemhuis.info>  wrote:
+> >>>>>>
+> >>>>>>> On 30.04.23 13:44, Felix Richter wrote:
+> >>>>>>>> Hi,
+> >>>>>>>>
+> >>>>>>>> I am running into an issue with the integrated GPU of the Ryzen =
+9
+> >>>>>>>> 7950X. It seems to be a regression from kernel version 6.1 to 6.=
+2.
+> >>>>>>>> The bug materializes in from of my monitor blinking, meaning it
+> >>>>>>>> turns full white shortly. This happens very often so that the
+> >>>>>>>> system becomes unpleasant to use.
+> >>>>>>>>
+> >>>>>>>> I am running the Archlinux Kernel:
+> >>>>>>>> The Issue happens on the bleeding edge kernel: 6.2.13
+> >>>>>>>> Switching back to the LTS kernel resolves the issue: 6.1.26
+> >>>>>>>>
+> >>>>>>>> I have two monitors attached to the system. One 42 inch 4k Displ=
+ay
+> >>>>>>>> and a 24 inch 1080p Display and am running sway as my desktop.
+> >>>>>>>>
+> >>>>>>>> Let me know if there is more information I could provide to help
+> >>>>>>>> narrow down the issue.
+> >>>>>>> Thanks for the report. To be sure the issue doesn't fall through =
+the
+> >>>>>>> cracks unnoticed, I'm adding it to regzbot, the Linux kernel regr=
+ession
+> >>>>>>> tracking bot:
+> >>>>>>>
+> >>>>>>> #regzbot ^introduced v6.1..v6.2
+> >>>>>>> #regzbot title drm: amdgpu: system becomes unpleasant to use afte=
+r
+> >>>>>>> monitor starts blinking and turns full white
+> >>>>>>> #regzbot ignore-activity
+> >>>>>>>
+> >>>>>>> This isn't a regression? This issue or a fix for it are already
+> >>>>>>> discussed somewhere else? It was fixed already? You want to clari=
+fy
+> >>>>>>> when
+> >>>>>>> the regression started to happen? Or point out I got the title or
+> >>>>>>> something else totally wrong? Then just reply and tell me -- idea=
+lly
+> >>>>>>> while also telling regzbot about it, as explained by the page lis=
+ted in
+> >>>>>>> the footer of this mail.
+> >>>>>>>
+> >>>>>>> Developers: When fixing the issue, remember to add 'Link:' tags
+> >>>>>>> pointing
+> >>>>>>> to the report (the parent of this mail). See page linked in foote=
+r for
+> >>>>>>> details.
+> >>>>>> This sounds exactly like the issue that was fixed in this patch wh=
+ich
+> >>>>>> is already on it's way to Linus:
+> >>>>>> https://gitlab.freedesktop.org/agd5f/linux/-/commit/08da182175db4c=
+7f80850354849d95f2670e8cd9
+> >>>>> FWIW, you in the flood of emails likely missed that this is the sam=
+e
+> >>>>> thread where you yesterday replied "If the module parameter didn't =
+help
+> >>>>> then perhaps you are seeing some other issue.  Can you bisect?". Th=
+at's
+> >>>>> why I decided to add this to the tracking. Or am I missing somethin=
+g
+> >>>>> obvious here?
+> >>>>>
+> >>>>> /me looks around again and can't see anything, but that doesn't hav=
+e to
+> >>>>> mean anything...
+> >>>>>
+> >>>>> Felix, btw, this guide might help you with the bisection, even if i=
+t's
+> >>>>> just for kernel compilation:
+> >>>>>
+> >>>>> https://docs.kernel.org/next/admin-guide/quickly-build-trimmed-linu=
+x.html
+> >>>>>
+> >>>>> And to indirectly reply to your mail from yesterday[1]. You might w=
+ant
+> >>>>> to ignore the arch linux kernel git repo and just do a bisection be=
+tween
+> >>>>> 6.1 and the latest 6.2.y kernel using upstream repos; and if I were=
+ you
+> >>>>> I'd also try 6.3 or even mainline before that, in case the issue wa=
+s
+> >>>>> fixed already.
+> >>>>>
+> >>>>> [1]
+> >>>>> https://lore.kernel.org/all/04749ee4-0728-92fe-bcb0-a7320279eaac@fe=
+lixrichter.tech/
+> >>>>>
+> >>>> Thanks for the pointers, I'll do a bisection on my desktop from 6.1 =
+to
+> >>>> the newest commit.
+> >>> FWIW, I wonder what you actually mean with "newest commit" here: a
+> >>> bisection between 6.1 and mainline HEAD might be a waste of time, *if=
+*
+> >>> this is something that only happens in 6.2.y (say due to a broken or
+> >>> incomplete backport)
+> >>>
+> >>>> That was the part I was mostly unsure about =E2=80=A6 where
+> >>>> to start from.
+> >>>>
+> >>>> I was planning to use PKGBUILD scripts from arch to achieve the same
+> >>>> configuration as I would when installing
+> >>>> the package and just rewrite the script to use a local copy of the
+> >>>> source code instead of the repository.
+> >>>> That way I can just use the bisect command, rebuild the package and =
+test
+> >>>> again.
+> >>> In my experience trying to deal with Linux distro's package managers
+> >>> creates more trouble than it's worth.
+> >>>
+> >>>> But I probably won't be able to finish it this week, since I am on
+> >>>> vacation starting tomorrow and will not have access to the computer =
+in
+> >>>> question. I will be back next week, by that time the patch Alex is
+> >>>> talking about might
+> >>>> already be in mainline. So if that fixes it, I will notice and let y=
+ou
+> >>>> know. If not I will do the bisection to figure out what the actual i=
+ssue
+> >>>> is.
+> >>> Enjoy your vacation!
+> >>>
+> >>> Ciao, Thorsten
+>
+
+--0000000000009b25b505fd8dfcf4
+Content-Type: text/x-patch; charset="US-ASCII"; name="sg_display_test.diff"
+Content-Disposition: attachment; filename="sg_display_test.diff"
+Content-Transfer-Encoding: base64
+Content-ID: <f_lim0srqt0>
+X-Attachment-Id: f_lim0srqt0
+
+ZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9hbWQvZGlzcGxheS9hbWRncHVfZG0vYW1kZ3B1
+X2RtLmMgYi9kcml2ZXJzL2dwdS9kcm0vYW1kL2Rpc3BsYXkvYW1kZ3B1X2RtL2FtZGdwdV9kbS5j
+CmluZGV4IGNjNjVjMzM0Y2I2NC4uMTk1YjRmZjdhMjg3IDEwMDY0NAotLS0gYS9kcml2ZXJzL2dw
+dS9kcm0vYW1kL2Rpc3BsYXkvYW1kZ3B1X2RtL2FtZGdwdV9kbS5jCisrKyBiL2RyaXZlcnMvZ3B1
+L2RybS9hbWQvZGlzcGxheS9hbWRncHVfZG0vYW1kZ3B1X2RtLmMKQEAgLTE2MzEsMTAgKzE2MzEs
+NyBAQCBzdGF0aWMgaW50IGFtZGdwdV9kbV9pbml0KHN0cnVjdCBhbWRncHVfZGV2aWNlICphZGV2
+KQogCQlicmVhazsKIAl9CiAJaWYgKGluaXRfZGF0YS5mbGFncy5ncHVfdm1fc3VwcG9ydCAmJgot
+CSAgICAoYW1kZ3B1X3NnX2Rpc3BsYXkgPT0gMCkpCi0JCWluaXRfZGF0YS5mbGFncy5ncHVfdm1f
+c3VwcG9ydCA9IGZhbHNlOwotCi0JaWYgKGluaXRfZGF0YS5mbGFncy5ncHVfdm1fc3VwcG9ydCkK
+KwkgICAgKGFtZGdwdV9zZ19kaXNwbGF5ICE9IDApKQogCQlhZGV2LT5tb2RlX2luZm8uZ3B1X3Zt
+X3N1cHBvcnQgPSB0cnVlOwogCiAJaWYgKGFtZGdwdV9kY19mZWF0dXJlX21hc2sgJiBEQ19GQkNf
+TUFTSykK
+--0000000000009b25b505fd8dfcf4--
