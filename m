@@ -1,20 +1,44 @@
-Received: from dijkstra.felixrichter.tech (dijkstra.felixrichter.tech [37.120.184.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A73496FB5
-	for <regressions@lists.linux.dev>; Wed,  7 Jun 2023 08:42:54 +0000 (UTC)
-Received: from [10.130.10.2] (unknown [10.130.10.2])
-	by dijkstra.felixrichter.tech (Postfix) with ESMTPSA id C817E1A0278;
-	Wed,  7 Jun 2023 10:42:57 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=felixrichter.tech;
-	s=20210926; t=1686127378;
-	bh=tkzVBRo6hHqTlGscwqWNeHiKp6sVlo4jv1fCou306CY=;
-	h=Date:To:Cc:References:From:Subject:In-Reply-To;
-	b=bRkwKeGnqKMxS2VYDd0PQZYM9HjDgCmWBo/R6RINn9hv0TBOpTYxESXh78+0oKKL1
-	 cKyF3U/5d8G/FWegZ885bw28AMnnqPHqKN3TcwtdiUU3IeCjTXPEA0hsRj5hX0OPRw
-	 w14+qdAONlBYscWKDwxoAAUUdKkbnIrxbRHwCN9A=
-Message-ID: <076f493a-9e88-db37-f4a0-2a269e94d51e@felixrichter.tech>
-Date: Wed, 7 Jun 2023 10:42:45 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE4046AB9
+	for <regressions@lists.linux.dev>; Wed,  7 Jun 2023 08:58:07 +0000 (UTC)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 9B3C6219E7;
+	Wed,  7 Jun 2023 08:58:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1686128280; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=f2EaHZNH3FVf98U2Zt49rp0xBgq+B5+gRBpoNjGI/kw=;
+	b=VKdKTyDupbI/lT3/qoqpMf+DdGGlz1rGgLq3Nlnk4iaAP60d6DKzXyM1r6fUjwzM6KhIU+
+	OyGBAcEbfwTACq5+36XAKTvYRj4MhmiKGWNnBdyRPQAhBxgbE9mUKQ3UcW3qEN6WdvcZya
+	WF0fro/SpAEXH4pQppafVq1S7t//+ag=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1686128280;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=f2EaHZNH3FVf98U2Zt49rp0xBgq+B5+gRBpoNjGI/kw=;
+	b=xJrVAWouxDAcaosc7FbGy5ksgBFOjM7UaakoJSDYAVjU6z6aaK843gk52hZL4x8ovEvFBu
+	GjkfBJNyHByc1OCA==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 4C4221346D;
+	Wed,  7 Jun 2023 08:58:00 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+	by imap2.suse-dmz.suse.de with ESMTPSA
+	id aODREZhGgGS3TgAAMHmgww
+	(envelope-from <vbabka@suse.cz>); Wed, 07 Jun 2023 08:58:00 +0000
+Message-ID: <2a6fa9d6-53b8-93cd-16c8-309ce2b8e3ac@suse.cz>
+Date: Wed, 7 Jun 2023 10:58:40 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -23,154 +47,121 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.11.2
-To: Alex Deucher <alexdeucher@gmail.com>,
- "Mahfooz, Hamza" <Hamza.Mahfooz@amd.com>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
- amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
-References: <46a7eb80-5f09-4f6a-4fd3-9550dafd497c@felixrichter.tech>
- <1efbf587-e7b5-74a3-89e4-ca70386bd191@leemhuis.info>
- <CADnq5_M-5SD6HDRVtFHPNF3q9XKz75PECdUxR-OaVpPe2Zw=EQ@mail.gmail.com>
- <8d23a70e-b132-9b25-917a-1f45918533cc@leemhuis.info>
- <0cac032a-0f65-5134-cde5-f535fc58c5ab@felixrichter.tech>
- <e7eed5ce-e7a0-e03e-f8c7-3582d9771a33@leemhuis.info>
- <e24373f9-4405-d7f7-dd54-d0bde111242c@felixrichter.tech>
- <CADnq5_MCXgtxNB_WBfAw+ZSKNeczSYL7gZPkpqqJ859G=LYkgA@mail.gmail.com>
+Subject: Re: [PATCH] mm/vmalloc: do not output a spurious warning when huge
+ vmalloc() fails
+To: Lorenzo Stoakes <lstoakes@gmail.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ Baoquan He <bhe@redhat.com>, Uladzislau Rezki <urezki@gmail.com>,
+ Christoph Hellwig <hch@infradead.org>, Bagas Sanjaya <bagasdotme@gmail.com>,
+ Linux btrfs <linux-btrfs@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>, Chris Mason <clm@fb.com>,
+ Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
+ a1bert@atlas.cz, Forza <forza@tnonline.net>,
+ Linus Torvalds <torvalds@linux-foundation.org>, Song Liu <song@kernel.org>,
+ Nicholas Piggin <npiggin@gmail.com>, Matthew Wilcox <willy@infradead.org>
+References: <20230605201107.83298-1-lstoakes@gmail.com>
+ <cd47d6ac-69ce-0315-dd45-2cb9dce57f36@suse.cz>
+ <f6b42d95-09f1-48d6-8274-e6145febb31d@lucifer.local>
 Content-Language: en-US
-From: Felix Richter <judge@felixrichter.tech>
-Subject: Re: PROBLEM: AMD Ryzen 9 7950X iGPU - Blinking Issue
-In-Reply-To: <CADnq5_MCXgtxNB_WBfAw+ZSKNeczSYL7gZPkpqqJ859G=LYkgA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-
-Hi Guys,
-
-so I checked, the kernel I am running has this commit 
-(https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-/commit/?id=08da182175db4c7f80850354849d95f2670e8cd9) applied already!
-
-https://github.com/ju6ge/linux/commit/917680e6056aa288cac288d3afd2745d372beb61u
-
-And the bug of display flickering persists with or without the 
-amdgpu.sg_display=0 variable applied!
-
-Kind regards,
-Felix Richter
+From: Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <f6b42d95-09f1-48d6-8274-e6145febb31d@lucifer.local>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
-On 6/5/23 16:11, Alex Deucher wrote:
-> + Hamza
-> This is a known issue.  You can workaround it by setting
-> amdgpu.sg_display=0.  It should be issue should be fixed in:
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=08da182175db4c7f80850354849d95f2670e8cd9
->
-> Alex
->
->
->
->> Now if this is the desired long term fix I do not know …
+On 6/6/23 09:40, Lorenzo Stoakes wrote:
+> On Tue, Jun 06, 2023 at 09:13:24AM +0200, Vlastimil Babka wrote:
 >>
->> Kind regards,
->> Felix Richter
+>> On 6/5/23 22:11, Lorenzo Stoakes wrote:
+>>> In __vmalloc_area_node() we always warn_alloc() when an allocation
+>>> performed by vm_area_alloc_pages() fails unless it was due to a pending
+>>> fatal signal.
+>>>
+>>> However, huge page allocations instigated either by vmalloc_huge() or
+>>> __vmalloc_node_range() (or a caller that invokes this like kvmalloc() or
+>>> kvmalloc_node()) always falls back to order-0 allocations if the huge page
+>>> allocation fails.
+>>>
+>>> This renders the warning useless and noisy, especially as all callers
+>>> appear to be aware that this may fallback. This has already resulted in at
+>>> least one bug report from a user who was confused by this (see link).
+>>>
+>>> Therefore, simply update the code to only output this warning for order-0
+>>> pages when no fatal signal is pending.
+>>>
+>>> Link: https://bugzilla.suse.com/show_bug.cgi?id=1211410
+>>> Signed-off-by: Lorenzo Stoakes <lstoakes@gmail.com>
 >>
->> On 02.05.23 16:12, Linux regression tracking (Thorsten Leemhuis) wrote:
->>> On 02.05.23 15:48, Felix Richter wrote:
->>>> On 5/2/23 15:34, Linux regression tracking (Thorsten Leemhuis) wrote:
->>>>> On 02.05.23 15:13, Alex Deucher wrote:
->>>>>> On Tue, May 2, 2023 at 7:45 AM Linux regression tracking (Thorsten
->>>>>> Leemhuis)<regressions@leemhuis.info>  wrote:
->>>>>>
->>>>>>> On 30.04.23 13:44, Felix Richter wrote:
->>>>>>>> Hi,
->>>>>>>>
->>>>>>>> I am running into an issue with the integrated GPU of the Ryzen 9
->>>>>>>> 7950X. It seems to be a regression from kernel version 6.1 to 6.2.
->>>>>>>> The bug materializes in from of my monitor blinking, meaning it
->>>>>>>> turns full white shortly. This happens very often so that the
->>>>>>>> system becomes unpleasant to use.
->>>>>>>>
->>>>>>>> I am running the Archlinux Kernel:
->>>>>>>> The Issue happens on the bleeding edge kernel: 6.2.13
->>>>>>>> Switching back to the LTS kernel resolves the issue: 6.1.26
->>>>>>>>
->>>>>>>> I have two monitors attached to the system. One 42 inch 4k Display
->>>>>>>> and a 24 inch 1080p Display and am running sway as my desktop.
->>>>>>>>
->>>>>>>> Let me know if there is more information I could provide to help
->>>>>>>> narrow down the issue.
->>>>>>> Thanks for the report. To be sure the issue doesn't fall through the
->>>>>>> cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
->>>>>>> tracking bot:
->>>>>>>
->>>>>>> #regzbot ^introduced v6.1..v6.2
->>>>>>> #regzbot title drm: amdgpu: system becomes unpleasant to use after
->>>>>>> monitor starts blinking and turns full white
->>>>>>> #regzbot ignore-activity
->>>>>>>
->>>>>>> This isn't a regression? This issue or a fix for it are already
->>>>>>> discussed somewhere else? It was fixed already? You want to clarify
->>>>>>> when
->>>>>>> the regression started to happen? Or point out I got the title or
->>>>>>> something else totally wrong? Then just reply and tell me -- ideally
->>>>>>> while also telling regzbot about it, as explained by the page listed in
->>>>>>> the footer of this mail.
->>>>>>>
->>>>>>> Developers: When fixing the issue, remember to add 'Link:' tags
->>>>>>> pointing
->>>>>>> to the report (the parent of this mail). See page linked in footer for
->>>>>>> details.
->>>>>> This sounds exactly like the issue that was fixed in this patch which
->>>>>> is already on it's way to Linus:
->>>>>> https://gitlab.freedesktop.org/agd5f/linux/-/commit/08da182175db4c7f80850354849d95f2670e8cd9
->>>>> FWIW, you in the flood of emails likely missed that this is the same
->>>>> thread where you yesterday replied "If the module parameter didn't help
->>>>> then perhaps you are seeing some other issue.  Can you bisect?". That's
->>>>> why I decided to add this to the tracking. Or am I missing something
->>>>> obvious here?
->>>>>
->>>>> /me looks around again and can't see anything, but that doesn't have to
->>>>> mean anything...
->>>>>
->>>>> Felix, btw, this guide might help you with the bisection, even if it's
->>>>> just for kernel compilation:
->>>>>
->>>>> https://docs.kernel.org/next/admin-guide/quickly-build-trimmed-linux.html
->>>>>
->>>>> And to indirectly reply to your mail from yesterday[1]. You might want
->>>>> to ignore the arch linux kernel git repo and just do a bisection between
->>>>> 6.1 and the latest 6.2.y kernel using upstream repos; and if I were you
->>>>> I'd also try 6.3 or even mainline before that, in case the issue was
->>>>> fixed already.
->>>>>
->>>>> [1]
->>>>> https://lore.kernel.org/all/04749ee4-0728-92fe-bcb0-a7320279eaac@felixrichter.tech/
->>>>>
->>>> Thanks for the pointers, I'll do a bisection on my desktop from 6.1 to
->>>> the newest commit.
->>> FWIW, I wonder what you actually mean with "newest commit" here: a
->>> bisection between 6.1 and mainline HEAD might be a waste of time, *if*
->>> this is something that only happens in 6.2.y (say due to a broken or
->>> incomplete backport)
->>>
->>>> That was the part I was mostly unsure about … where
->>>> to start from.
->>>>
->>>> I was planning to use PKGBUILD scripts from arch to achieve the same
->>>> configuration as I would when installing
->>>> the package and just rewrite the script to use a local copy of the
->>>> source code instead of the repository.
->>>> That way I can just use the bisect command, rebuild the package and test
->>>> again.
->>> In my experience trying to deal with Linux distro's package managers
->>> creates more trouble than it's worth.
->>>
->>>> But I probably won't be able to finish it this week, since I am on
->>>> vacation starting tomorrow and will not have access to the computer in
->>>> question. I will be back next week, by that time the patch Alex is
->>>> talking about might
->>>> already be in mainline. So if that fixes it, I will notice and let you
->>>> know. If not I will do the bisection to figure out what the actual issue
->>>> is.
->>> Enjoy your vacation!
->>>
->>> Ciao, Thorsten
+>> I think there are more reports of same thing from the btrfs context, that
+>> appear to be a 6.3 regression
+>>
+>> https://bugzilla.kernel.org/show_bug.cgi?id=217466
+>> Link: https://lore.kernel.org/all/efa04d56-cd7f-6620-bca7-1df89f49bf4b@gmail.com/
+>>
+>> If this indeed helps, it would make sense to Cc: stable here. Although I
+>> don't see what caused the regression, the warning itself is not new, so is
+>> it new source of order-9 attempts in vmalloc() or new reasons why order-9
+>> pages would not be possible to allocate?
+> 
+> Linus updated kvmalloc() to use huge vmalloc() allocations in 9becb6889130
+> ("kvmalloc: use vmalloc_huge for vmalloc allocations") and Song update
+> alloc_large_system_hash() to as well in f2edd118d02d ("page_alloc: use
+> vmalloc_huge for large system hash") both of which are ~1y old, however
+> these would impact ~5.18, so it's weird to see reports citing 6.2 -> 6.3.
+> 
+> Will dig to see if something else changed that would increase the
+> prevalence of this.
 
+I think I found the commit from 6.3 that effectively exposed this warning.
+As this is a tracked regression I would really suggest moving the fix to
+mm-hotfixes instead of mm-unstable, and
+
+Fixes: 80b1d8fdfad1 ("mm: vmalloc: correct use of __GFP_NOWARN mask in __vmalloc_area_node()")
+Cc: <stable@vger.kernel.org>
+
+> Also while we're here, ugh at us immediately splitting the non-compound
+> (also ugh) huge page. Nicholas explains why in the patch that introduces it
+> - 3b8000ae185c ("mm/vmalloc: huge vmalloc backing pages should be split
+> rather than compound") - but it'd be nice if we could find a way to avoid
+> this.
+> 
+> If only there were a data type (perhaps beginning with 'f') that abstracted
+> the order of the page entirely and could be guaranteed to always be the one
+> with which you manipulated ref count, etc... ;)
+> 
+>>
+>>> ---
+>>>  mm/vmalloc.c | 17 +++++++++++++----
+>>>  1 file changed, 13 insertions(+), 4 deletions(-)
+>>>
+>>> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+>>> index ab606a80f475..e563f40ad379 100644
+>>> --- a/mm/vmalloc.c
+>>> +++ b/mm/vmalloc.c
+>>> @@ -3149,11 +3149,20 @@ static void *__vmalloc_area_node(struct vm_struct *area, gfp_t gfp_mask,
+>>>  	 * allocation request, free them via vfree() if any.
+>>>  	 */
+>>>  	if (area->nr_pages != nr_small_pages) {
+>>> -		/* vm_area_alloc_pages() can also fail due to a fatal signal */
+>>> -		if (!fatal_signal_pending(current))
+>>> +		/*
+>>> +		 * vm_area_alloc_pages() can fail due to insufficient memory but
+>>> +		 * also:-
+>>> +		 *
+>>> +		 * - a pending fatal signal
+>>> +		 * - insufficient huge page-order pages
+>>> +		 *
+>>> +		 * Since we always retry allocations at order-0 in the huge page
+>>> +		 * case a warning for either is spurious.
+>>> +		 */
+>>> +		if (!fatal_signal_pending(current) && page_order == 0)
+>>>  			warn_alloc(gfp_mask, NULL,
+>>> -				"vmalloc error: size %lu, page order %u, failed to allocate pages",
+>>> -				area->nr_pages * PAGE_SIZE, page_order);
+>>> +				"vmalloc error: size %lu, failed to allocate pages",
+>>> +				area->nr_pages * PAGE_SIZE);
+>>>  		goto fail;
+>>>  	}
+>>>
+>>
