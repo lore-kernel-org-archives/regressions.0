@@ -1,168 +1,172 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 567FB7488
-	for <regressions@lists.linux.dev>; Wed,  7 Jun 2023 10:07:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1686132456;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EvYvWP/dmRw7dcP93qz9byoXzFOKtvhvKrmHdFETiw8=;
-	b=hFQt+zzV9g18wi7vRgxAXej8rHQgDFhUzY77vbvOPRLEz56WOrlDPRVfeo+UvIURXic66D
-	+taC+Cvz4IdSQM2kFmUcteJFtFSmAPi5jPL4h3O90OgPtwwAGp1KQbUabB4tRgtKgMrLQN
-	dsHFISDKaa7yJP5Kl5grHfQnTvJ3el0=
-Received: from mail-yb1-f198.google.com (mail-yb1-f198.google.com
- [209.85.219.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-654-BxImQf8cN-SQMQIIDcVrpQ-1; Wed, 07 Jun 2023 06:07:33 -0400
-X-MC-Unique: BxImQf8cN-SQMQIIDcVrpQ-1
-Received: by mail-yb1-f198.google.com with SMTP id 3f1490d57ef6-ba82ed6e450so10364578276.2
-        for <regressions@lists.linux.dev>; Wed, 07 Jun 2023 03:07:32 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E05E334D9D
+	for <regressions@lists.linux.dev>; Wed,  7 Jun 2023 10:16:59 +0000 (UTC)
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-51458187be1so1179883a12.2
+        for <regressions@lists.linux.dev>; Wed, 07 Jun 2023 03:16:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1686133018; x=1688725018;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=bHtmIDD4uaTq4ABNxhYKW6qHDGlLDL1+HvFDCmmnPDM=;
+        b=aMzYf6YMdsw58k4/wDNtAfJLXXqxovmskhmugL855D5kSCqCJjdRY+o2q8WTho6dy7
+         r9INUS6z3glv3VuHQ+s872OmExPym88zOxwEvr66swh/5vYkAiY0wmzn9BsHFRaGXrzh
+         vb+DSlYUKFwAYBznX2p3t+gpnGYKxtQoakYYUy0FkUHDsJ6MCLoqTK2NgY5sMntJHOn+
+         TImv1OfDcFMGIvEkZ+iLp+bZy7I3Gz0WXSEbefn8Akij7Lhv6wat8MqIUfNGInASKTbj
+         4cyhJjHxqVwQfYg4mjvBWhkGuZI1dWIH/4f/E4JGdBy5nxV2T+Pi6k2mDkG1ws9foy5w
+         9Yqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686132452; x=1688724452;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EvYvWP/dmRw7dcP93qz9byoXzFOKtvhvKrmHdFETiw8=;
-        b=RwlvV1/zIeRsqa0HUd7PsJ+lIrStkc+HQddwnfkzRpZO2qkg3ehx+aNyp+QpLs5rUa
-         OyoaS0vrD1ufZXFztJc2kPlYHLyk3ig94Qf75LelmOPROgzXbLPSjytETtHxCRhWUTOA
-         jo+ef/j594umkTNJTjlsWy/DOtPVQMoGR1M06RXGjyVB57ASmAPLpCt8bPEVJ276GJaY
-         hI0vb2+SKn30qUpL7PosGlQ2onfhnI3sA9lk+z8Kw7yPljgaYv0tkY0kRc8uO4bUNGVJ
-         U3nTyUj/rIPJCEV0vBBYtrT57K/Ju1nidi9HbSpCLXLG70J+AnKca7SfA27+zl9kOBNT
-         SRzQ==
-X-Gm-Message-State: AC+VfDwKDx2uvK4PWa81LBhsJ+Ojd2zYabOuz9xNFCopYc8yncdUNbZ9
-	OT1Z0Wglmstp3g5Yauxk2juI1a+qpXdfpAVO140F97gwvwwkJniFqjhjpTSEHGvBESg7ZtWzyq0
-	bY9qxRSOLDM7cDgNAWwGnl6V/jNzv4ABbzWjJ79Y=
-X-Received: by 2002:a25:b90e:0:b0:b9e:5055:ce7e with SMTP id x14-20020a25b90e000000b00b9e5055ce7emr5436819ybj.55.1686132452439;
-        Wed, 07 Jun 2023 03:07:32 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ5qr+y7gbTb42/JGVX0Drco0Mo+DgGu0Fu1MKsKD0cM9YVxkXtnAWRmjd4kaGRA2Sy+E6o6RFSwWPGuilreMio=
-X-Received: by 2002:a25:b90e:0:b0:b9e:5055:ce7e with SMTP id
- x14-20020a25b90e000000b00b9e5055ce7emr5436799ybj.55.1686132452198; Wed, 07
- Jun 2023 03:07:32 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1686133018; x=1688725018;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bHtmIDD4uaTq4ABNxhYKW6qHDGlLDL1+HvFDCmmnPDM=;
+        b=Do0rgt5A1lurQidHiB4V3m88g0LiMt1nMTAH4Qo6yzk5ttjVQBMjLwlW3sfdlAurMe
+         R7Whv1J/kMj21r3H/8wtuO+WplBdFdcl9+g35TzM7iQSKMwuSuVRsJ10Slc5fz4TPkOQ
+         7839atSn9fpnlBS/RA5yUewVZbD6EzoEpam6tR8a9l4HPJatEcfQvFJZ/7Nlx0fhsDpD
+         QUEp8DEj8LF6Kc7Uk4cO1xf4hkzKYSBYCzTiM5SuEh5YxyxzS31oHkMNfPdFwNO2fFoO
+         4xJ5YdU+c3NA0Dkh/HLuOV0baXzf4WOQsR3WR5FPFPAKnzVYlrz8beEZ5fHdpu9nTw5n
+         hsZg==
+X-Gm-Message-State: AC+VfDzwvlgaEkMC0c2or1O42mUaQGmaH3WW39U5FGTrYS14PUjVq6el
+	MCbQpgV52geG/B/h59ioNghI8g==
+X-Google-Smtp-Source: ACHHUZ4lRRxrWth26CaqnLWO9ge6gORx93AXTbvI8KrjJTI8Zd7pTHxYuR04YqlYa5SlHY4O/9m+EA==
+X-Received: by 2002:aa7:d315:0:b0:510:82b4:844d with SMTP id p21-20020aa7d315000000b0051082b4844dmr3980381edq.2.1686133017905;
+        Wed, 07 Jun 2023 03:16:57 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.219.26])
+        by smtp.gmail.com with ESMTPSA id w15-20020a056402070f00b00514bb73b8casm6158198edx.57.2023.06.07.03.16.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 07 Jun 2023 03:16:57 -0700 (PDT)
+Message-ID: <55f07600-3fa5-f3c2-eb3e-e87a57244812@linaro.org>
+Date: Wed, 7 Jun 2023 12:16:55 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230531082428.21763-1-hadess@hadess.net> <nycvar.YFH.7.76.2305311606160.29760@cbobk.fhfr.pm>
- <nycvar.YFH.7.76.2306031440380.29760@cbobk.fhfr.pm> <15bb2507-a145-7f1b-8e84-58aeb02484b9@leemhuis.info>
- <nycvar.YFH.7.76.2306061527080.29760@cbobk.fhfr.pm> <42b6e582-f642-7521-135a-449140984211@leemhuis.info>
- <CAO-hwJL3RcfOxQvhqDFTwgfY=oAJqR5rsHmO5qDVwNUEh3K58Q@mail.gmail.com> <2023060703-colony-shakily-3514@gregkh>
-In-Reply-To: <2023060703-colony-shakily-3514@gregkh>
-From: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Date: Wed, 7 Jun 2023 12:07:21 +0200
-Message-ID: <CAO-hwJJxZuXP=kgTxEc-F+OtcFsR59iGE3Vw3ptZs48+MotNtA@mail.gmail.com>
-Subject: Re: [PATCH] HID: logitech-hidpp: Handle timeout differently from busy
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>, Jiri Kosina <jikos@kernel.org>, 
-	Bastien Nocera <hadess@hadess.net>, linux-input@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	"Peter F . Patel-Schneider" <pfpschneider@gmail.com>, =?UTF-8?Q?Filipe_La=C3=ADns?= <lains@riseup.net>, 
-	Nestor Lopez Casado <nlopezcasad@logitech.com>, Mark Lord <mlord@pobox.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.2
+Subject: Re: [PATCH] arm64: dts: qcom: sdm845-db845c: Move LVS regulator nodes
+ up
+Content-Language: en-US
+To: Amit Pundir <amit.pundir@linaro.org>
+Cc: Doug Anderson <dianders@chromium.org>, Mark Brown <broonie@kernel.org>,
+ Bjorn Andersson <andersson@kernel.org>, Andy Gross <agross@kernel.org>,
+ Rob Herring <robh+dt@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Caleb Connolly <caleb.connolly@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, regressions
+ <regressions@lists.linux.dev>, linux-arm-msm
+ <linux-arm-msm@vger.kernel.org>, dt <devicetree@vger.kernel.org>,
+ lkml <linux-kernel@vger.kernel.org>
+References: <20230602161246.1855448-1-amit.pundir@linaro.org>
+ <CAD=FV=U9xwxC4+wDYFMSoLWaj8vaLH_jettZ=nxEZP+1tNk=oA@mail.gmail.com>
+ <d0dfdfba-7a70-7d12-2c30-ad32b3f95bb8@linaro.org>
+ <CAMi1Hd1Upo8zV4MPtdqHgEaMQ72yK0gZgf5Z4uOaqKqhw8Hndg@mail.gmail.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <CAMi1Hd1Upo8zV4MPtdqHgEaMQ72yK0gZgf5Z4uOaqKqhw8Hndg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jun 7, 2023 at 11:46=E2=80=AFAM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Tue, Jun 06, 2023 at 08:37:26PM +0200, Benjamin Tissoires wrote:
-> > On Tue, Jun 6, 2023 at 8:18=E2=80=AFPM Linux regression tracking (Thors=
-ten
-> > Leemhuis) <regressions@leemhuis.info> wrote:
-> > >
-> > >
-> > >
-> > > On 06.06.23 15:27, Jiri Kosina wrote:
-> > > > On Mon, 5 Jun 2023, Linux regression tracking (Thorsten Leemhuis) w=
-rote:
-> > > >
-> > > >>>>> If an attempt at contacting a receiver or a device fails becaus=
-e the
-> > > >>>>> receiver or device never responds, don't restart the communicat=
-ion, only
-> > > >>>>> restart it if the receiver or device answers that it's busy, as=
- originally
-> > > >>>>> intended.
-> > > >>>>>
-> > > >>>>> This was the behaviour on communication timeout before commit 5=
-86e8fede795
-> > > >>>>> ("HID: logitech-hidpp: Retry commands when device is busy").
-> > > >>>>>
-> > > >>>>> This fixes some overly long waits in a critical path on boot, w=
-hen
-> > > >>>>> checking whether the device is connected by getting its HID++ v=
-ersion.
-> > > >>>>>
-> > > >>>>> Signed-off-by: Bastien Nocera <hadess@hadess.net>
-> > > >>>>> Suggested-by: Mark Lord <mlord@pobox.com>
-> > > >>>>> Fixes: 586e8fede795 ("HID: logitech-hidpp: Retry commands when =
-device is busy")
-> > > >>>>> Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D217412
-> > > >>> [...]
-> > > >>>>
-> > > >>>> I have applied this even before getting confirmation from the re=
-porters in
-> > > >>>> bugzilla, as it's the right thing to do anyway.
-> > > >>>
-> > > >>> Unfortunately it doesn't seem to cure the reported issue (while r=
-everting
-> > > >>> 586e8fede79 does):
-> > > >>
-> > > >> BTW, remind me again: was fixing this by reverting 586e8fede79 for=
- now a
-> > > >> option? I guess it's not, but if I'm wrong I wonder if that might =
-at
-> > > >> this point be the best way forward.
-> > > >
-> > > > This should now all be fixed by
-> > > >
-> > > >     https://git.kernel.org/linus/7c28afd5512e371773dbb2bf95a31ed562=
-5651d9
-> > >
-> > > Jiri, Benjamin, many many thx for working on this.
-> > >
-> > > Hmmm. No CC: <stable... tag.
-> > >
-> > > Should we ask Greg to pick this up for 6.3 now, or better wait a few
-> > > days? He currently already has 6199d23c91ce ("HID: logitech-hidpp:
-> > > Handle timeout differently from busy") in his queue for the next 6.3.=
-y
-> > > release.
-> >
-> > Well, the Fixes: tag supposedly is enough to let the stable folks to
-> > pick it up.
->
-> No, not at all, please see:
->     https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.ht=
-ml
-> for how to do this properly.
->
-> (hint, we need a cc: stable@ in the signed-off-by area.)
->
-> We only pick up stuff with "Fixes:" semi-often, sometimes never,
-> depending on our workload.  Never rely on that.
+On 07/06/2023 11:17, Amit Pundir wrote:
+> On Wed, 7 Jun 2023 at 13:19, Krzysztof Kozlowski
+> <krzysztof.kozlowski@linaro.org> wrote:
+>>
+>> On 07/06/2023 01:34, Doug Anderson wrote:
+>>> Hi,
+>>>
+>>> On Fri, Jun 2, 2023 at 9:12 AM Amit Pundir <amit.pundir@linaro.org> wrote:
+>>>>
+>>>> Move lvs1 and lvs2 regulator nodes up in the rpmh-regulators
+>>>> list to workaround a boot regression uncovered by the upstream
+>>>> commit ad44ac082fdf ("regulator: qcom-rpmh: Revert "regulator:
+>>>> qcom-rpmh: Use PROBE_FORCE_SYNCHRONOUS"").
+>>>>
+>>>> Without this fix DB845c fail to boot at times because one of the
+>>>> lvs1 or lvs2 regulators fail to turn ON in time.
+>>>>
+>>>> Link: https://lore.kernel.org/all/CAMi1Hd1avQDcDQf137m2auz2znov4XL8YGrLZsw5edb-NtRJRw@mail.gmail.com/
+>>>> Signed-off-by: Amit Pundir <amit.pundir@linaro.org>
+>>>> ---
+>>>>  arch/arm64/boot/dts/qcom/sdm845-db845c.dts | 24 +++++++++++-----------
+>>>>  1 file changed, 12 insertions(+), 12 deletions(-)
+>>>>
+>>>> diff --git a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
+>>>> index e14fe9bbb386..df2fde9063dc 100644
+>>>> --- a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
+>>>> +++ b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
+>>>> @@ -301,6 +301,18 @@ regulators-0 {
+>>>>                 vdd-l26-supply = <&vreg_s3a_1p35>;
+>>>>                 vin-lvs-1-2-supply = <&vreg_s4a_1p8>;
+>>>>
+>>>> +               vreg_lvs1a_1p8: lvs1 {
+>>>> +                       regulator-min-microvolt = <1800000>;
+>>>> +                       regulator-max-microvolt = <1800000>;
+>>>> +                       regulator-always-on;
+>>>> +               };
+>>>> +
+>>>> +               vreg_lvs2a_1p8: lvs2 {
+>>>> +                       regulator-min-microvolt = <1800000>;
+>>>> +                       regulator-max-microvolt = <1800000>;
+>>>> +                       regulator-always-on;
+>>>> +               };
+>>>> +
+>>>>                 vreg_s3a_1p35: smps3 {
+>>>>                         regulator-min-microvolt = <1352000>;
+>>>>                         regulator-max-microvolt = <1352000>;
+>>>> @@ -381,18 +393,6 @@ vreg_l26a_1p2: ldo26 {
+>>>>                         regulator-max-microvolt = <1200000>;
+>>>>                         regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+>>>>                 };
+>>>> -
+>>>> -               vreg_lvs1a_1p8: lvs1 {
+>>>> -                       regulator-min-microvolt = <1800000>;
+>>>> -                       regulator-max-microvolt = <1800000>;
+>>>> -                       regulator-always-on;
+>>>> -               };
+>>>> -
+>>>> -               vreg_lvs2a_1p8: lvs2 {
+>>>> -                       regulator-min-microvolt = <1800000>;
+>>>> -                       regulator-max-microvolt = <1800000>;
+>>>> -                       regulator-always-on;
+>>>> -               };
+>>>
+>>> This is a hack, but it at least feels less bad than reverting the
+>>> async probe patch. I'll leave it to Bjorn to decide if he's OK with
+>>> it. Personally, it feels like this would deserve a comment in the dts
+>>> to document that these regulators need to be listed first.
+>>>
+>>> Ideally, we could still work towards a root cause. I added a few more
+>>> ideas to help with root causing in reply to the original thread about
+>>> this.
+>>>
+>>> https://lore.kernel.org/r/CAD=FV=UKyjRNZG-ED2meUAR9aXdco+AbUTHiKixTzjCkaJbjTg@mail.gmail.com/
+>>
+>> We do not shape DTS based on given OS behavior. AOSP needs this, BSD
+>> needs that and Linux needs something else. Next time someone will move
+>> these regulators down because on his system probing is from end of list,
+>> not beginning and he has the same problem.
+>>
+>> No, really, are we going to reshuffle nodes because AOSP needs it?
+> 
+> Hi, other than the fact that I reproduced it on AOSP, there is nothing
+> AOSP specific in this patch. I'm sure there may be another
+> platforms/OS (which load kernel modules from a ramdisk) that may trip
+> on this bug. But I can try reproducing it on an OS of your choice if
+> it helps.
 
-Oh right. Given that those patches eventually end up in stable sooner
-or later I made the shortcut in my head. Thanks for correcting that :)
+I wrote earlier imaginary system where RPM driver loads the regulators
+from the end. It would require re-shuffling to previous order of the
+nodes. Feel free to change the RPM drivers to simulate it and you should
+see that your patch stops helping.
 
->
-> It's been this way for 18+ years now, nothing new :)
->
-> > But you are right, let's Cc Greg for a quicker inclusion
-> > in the 6.3 tree.
-> >
-> > Greg, would you mind adding the commit above (7c28afd5512e37) onto the
-> > 6.3 stable queue? Thanks!
->
-> Now queued up, thanks.
+The problem looks like in missing consumers, missing probe dependencies
+or something in the driver how it handles these.
 
-Great thanks!
+DTS should not be used for solving OS related problems.
 
-Cheers,
-Benjamin
+Best regards,
+Krzysztof
 
