@@ -1,182 +1,125 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E18ED1DCD5
-	for <regressions@lists.linux.dev>; Thu,  8 Jun 2023 17:53:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E7CC19930
+	for <regressions@lists.linux.dev>; Thu,  8 Jun 2023 18:08:01 +0000 (UTC)
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 280AF2199E;
-	Thu,  8 Jun 2023 17:52:55 +0000 (UTC)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 5A8B41FD5F;
+	Thu,  8 Jun 2023 18:07:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1686246775; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1686247679; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=a+CZRWCtT+JtzNM6t0kOZY8HfGmvHn0sBUMaKydCgTQ=;
-	b=wFWxHYveLEliWWFkr6GGWcetd0YL6jYsXgSKerhMUdHpx6hHwEdagI/s13g6r4IRWNR4lA
-	Lui1rkX2fobb3WMlLuWnDfrDVXpjr4niQupeZCEV7K1KGIWV+LuK6Bt6WV5q3CHebm101Y
-	62/FOXaB0c1NDmT3Ivc6wO1QEjT0/Q8=
+	bh=KuVHWqF+Vmzlt+SUW4g6KuATrBuHpEsTJNICe6iwrHc=;
+	b=DzKX09a3MIGcFGy/bs4aXveZ1NRbWdFmwIJGNRB9beMcnjg3/3rQybTWLiKEEr28ctuSsN
+	ofr/NTBppLIfWVTmFNXZUx46CdJL0xK3Ddwm+KTSFVGpAx9e/RlIfnXRLns9g3ObZty3iL
+	f+CdUzcXf1FewvV7CQfhmUyhAGPfQQo=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1686246775;
+	s=susede2_ed25519; t=1686247679;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=a+CZRWCtT+JtzNM6t0kOZY8HfGmvHn0sBUMaKydCgTQ=;
-	b=w+okyK0CT2LSpGsHIbvIxDwjzj3XLrkOuPzMw8CrbbrT+sBxG4dK2FA0pibSrRUCU4b9IT
-	bld2XhEWRQZLGxAQ==
+	bh=KuVHWqF+Vmzlt+SUW4g6KuATrBuHpEsTJNICe6iwrHc=;
+	b=Gzs5/PuXubrvgfiZMpux40aW3clbzJ70xqZmpsjIQJjGKctEyd1ZInHwX45CvkQBIAO0YA
+	iK5xiXdJ0Q+vtKAw==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
 	(No client certificate requested)
-	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 01C7613480;
-	Thu,  8 Jun 2023 17:52:55 +0000 (UTC)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 4C8C6138E6;
+	Thu,  8 Jun 2023 18:07:59 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
 	by imap2.suse-dmz.suse.de with ESMTPSA
-	id 9a1kAHcVgmSbWgAAMHmgww
-	(envelope-from <jack@suse.cz>); Thu, 08 Jun 2023 17:52:55 +0000
+	id QcinEv8YgmSBYQAAMHmgww
+	(envelope-from <jack@suse.cz>); Thu, 08 Jun 2023 18:07:59 +0000
 Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 0DC1BA0749; Thu,  8 Jun 2023 19:52:54 +0200 (CEST)
-Date: Thu, 8 Jun 2023 19:52:54 +0200
+	id DD23BA0749; Thu,  8 Jun 2023 20:07:58 +0200 (CEST)
+Date: Thu, 8 Jun 2023 20:07:58 +0200
 From: Jan Kara <jack@suse.cz>
-To: Theodore Ts'o <tytso@mit.edu>
-Cc: Bagas Sanjaya <bagasdotme@gmail.com>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Regressions <regressions@lists.linux.dev>,
-	Linux ext4 Development <linux-ext4@vger.kernel.org>,
-	Nikolas Kraetzschmar <nikolas.kraetzschmar@sap.com>,
-	Linux Stable <stable@vger.kernel.org>, Jan Kara <jack@suse.cz>,
-	syzbot+6385d7d3065524c5ca6d@syzkaller.appspotmail.com,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: Fwd: Remounting ext4 filesystem from ro to rw fails when quotas
- are enabled
-Message-ID: <20230608175254.uacmrwz5i2cwrdmu@quack3>
-References: <653b3359-2005-21b1-039d-c55ca4cffdcc@gmail.com>
- <20230608044056.GA1418535@mit.edu>
+To: Shakeel Butt <shakeelb@google.com>
+Cc: Jan Kara <jack@suse.cz>, Andrew Morton <akpm@linux-foundation.org>,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org, mhocko@suse.cz,
+	vbabka@suse.cz, regressions@lists.linux.dev,
+	Yu Ma <yu.ma@intel.com>
+Subject: Re: [PATCH] mm: convert mm's rss stats into percpu_counter
+Message-ID: <20230608180758.z4z4ijdjgfe4mbx4@quack3>
+References: <20221024052841.3291983-1-shakeelb@google.com>
+ <20230608111408.s2minsenlcjow7q3@quack3>
+ <20230608173700.wafw5tyw52gwoicu@google.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230608044056.GA1418535@mit.edu>
+In-Reply-To: <20230608173700.wafw5tyw52gwoicu@google.com>
 
-On Thu 08-06-23 00:40:56, Theodore Ts'o wrote:
-> On Wed, Jun 07, 2023 at 12:51:26PM +0700, Bagas Sanjaya wrote:
-> > I notice a regression report on Bugzilla [1]. Quoting from it:
+On Thu 08-06-23 17:37:00, Shakeel Butt wrote:
+> On Thu, Jun 08, 2023 at 01:14:08PM +0200, Jan Kara wrote:
+> [...]
 > > 
-> > > Since commit a44be64, remounting a read-only ext4 filesystem to
-> > > become read-write fails when quotas are enabled. The mount syscall
-> > > returns -EROFS and outputs the following in dmesg:
+> > Somewhat late to the game but our performance testing grid has noticed this
+> > commit causes a performance regression on shell-heavy workloads. For
+> > example running 'make test' in git sources on our test machine with 192
+> > CPUs takes about 4% longer, system time is increased by about 9%:
+> > 
+> >                        before (9cd6ffa6025)  after (f1a7941243c1)
+> > Amean     User         471.12 *   0.30%*     481.77 *  -1.96%*
+> > Amean     System       244.47 *   0.90%*     269.13 *  -9.09%*
+> > Amean     Elapsed      709.22 *   0.45%*     742.27 *  -4.19%*
+> > Amean     CPU          100.00 (   0.20%)     101.00 *  -0.80%*
+> > 
+> > Essentially this workload spawns in sequence a lot of short-lived tasks and
+> > the task startup + teardown cost is what this patch increases. To
+> > demonstrate this more clearly, I've written trivial (and somewhat stupid)
+> > benchmark shell_bench.sh:
+> > 
+> > for (( i = 0; i < 20000; i++ )); do
+> > 	/bin/true
+> > done
+> > 
+> > And when run like:
+> > 
+> > numactl -C 1 ./shell_bench.sh
+> > 
+> > (I've forced physical CPU binding to avoid task migrating over the machine
+> > and cpu frequency scaling interfering which makes the numbers much more
+> > noisy) I get the following elapsed times:
+> > 
+> >          9cd6ffa6025    f1a7941243c1
+> > Avg      6.807429       7.631571
+> > Stddev   0.021797       0.016483
+> > 
+> > So some 12% regression in elapsed time. Just to be sure I've verified that
+> > per-cpu allocator patch [1] does not improve these numbers in any
+> > significant way.
+> > 
+> > Where do we go from here? I think in principle the problem could be fixed
+> > by being clever and when the task has only a single thread, we don't bother
+> > with allocating pcpu counter (and summing it at the end) and just account
+> > directly in mm_struct. When the second thread is spawned, we bite the
+> > bullet, allocate pcpu counter and start with more scalable accounting.
+> > These shortlived tasks in shell workloads or similar don't spawn any
+> > threads so this should fix the regression. But this is obviously easier
+> > said than done...
+> > 
 > 
-> Yeah, and I think all we can do is revert this commit:
-> 
->     ext4: don't clear SB_RDONLY when remounting r/w until quota is re-enabled
-> 
-> I think I saw some messages go by about this getting queued for the
-> stable kernel; if so, could it please be dropped?
+> Thanks Jan for the report. I wanted to improve the percpu allocation to
+> eliminate this regression as it was reported by intel test bot as well.
+> However your suggestion seems seems targetted and reasonable as well. At
+> the moment I am travelling, so not sure when I will get to this. Do you
+> want to take a stab at it or you want me to do it? Also how urgent and
+> sensitive this regression is for you?
 
-Yeah, for now I'd revert the fix. It needs more thought and it is not like
-it is fixing any serious vulnerability or so.
-
-> > > The problem can be traced back to the changes introduced in commit
-> > > a44be64. It appears that the issue arises because the SB_RDONLY
-> > > bit of the s_flags field is now only cleared after executing the
-> > > ext4_enable_quotas function. However, the vfs_setup_quota_inode
-> > > function, called by ext4_enable_quotas, checks whether this bit is
-> > > set (fs/quota/dquot.c:2331):
-> 
-> The problem that we're trying to solve is the malicious syzbot
-> reproducer is in one thread, twiddling the file system state from r/o
-> to rw and back.  In another thread, it's attempt to create files and
-> directories.   And occasionally, we're tripping this warning:
-> 
-> 	WARN_ON_ONCE(dquot_initialize_needed(inode));
-> 
-> That's because we're racing with the quota getting initialized, and
-> the moment we clear the SB_RDONLY bit the thread which is trying to
-> create a directory or file will proceed with the operation --- even
-> though the quota subsystem hasn't been initialized yet.  That's why
-> the patch attempted to move the clearing the SB_RDONLY bit ahead of
-> reiniitalization of the quota subsystem.
-> 
-> Since this is screwing up the ability to remount the file system rw,
-> we need to revert this commit, at which point, we'll be able to
-> trigger this warning again.
-> 
-> So how do we fix the warning?  Well, we could just drop the
-> WARN_ON_ONCE(); the downside is that when this race gets hit, the
-> quota operations to allocate the block and inode will silently become
-> a no-op, which means the quota will get out of sync with reality.
-
-Yes, the warning triggering is actually a good thing because it shows us we
-have a race where quota can get out of sync with real space usage.
-
-> Alternatively, we could add a call to the beginning to
-> ext4_xattr_block_Set():
-> 
-> 	if (dquot_initialize_needed(inode))
-> 		reutrn -EROFS;
-> 
-> ... on the theory that the only time we should hit this is when there
-> is a quota setup racing with inode creation, and it's better that we
-> just let the mkdir or open with O_CREAT fail than to succeed, and
-> allocate blocks before the quota subsystem has been initialized.  I'm
-> not sure how safe this would be on older quota setups (pre-ext4 quota
-> feature), since I suspect the race window is a quite a bit bigger if I
-> understand correctly how things worked with the legacy quota support.
-
-No, xattr code is just a messenger here. There is a fundamental problem
-that once we clear SB_RDONLY in superblock flags, anybody can come up with
-any operation modifying the filesystem but until we are finished with
-dquot_resume(), this operation can escape proper quota accounting.
-
-> The final really hacky thing I could imagine is to hack
-> dquot_initialize() to something like this:
-> 
-> int dquot_initialize(struct inode *inode)
-> {
-> 	ret = __dquot_initialize(inode, -1);
-> 	if (ret)
-> 		return ret;
-> 	if (dquot_initialize_needed(inode)) {
-> 		msleep(1000)
-> 		return __dquot_initialize(inode, -1);
-> 	}
-> 	return 0;
-> }
-> 
-> But I threw up a little in my mouth while writing it....
-> 
-> So I'm tempted to just remove the WARN_ON's, and just accept that if
-> superuser wants to twiddle the read/only state of a file system with
-> quota, at high rates, while something else is trying to create
-> files/directories, most of which will fail while the file system is
-> read-only, then the quota may gets out of sync, and... ¯\_(ツ)_/¯
-> 
-> Since this is only something that crazy people or malicious Syzbot
-> reproducers would try to do, I'm really having a hard time bringing
-> myself to care.  Especially since we have plenty of other places where
-> we aren't doing the dquot_initialize_needed() check, so the
-> opportunities for the quota to get out of sync already exist in other
-> code paths.
-> 
-> Jan, what do you think?
-
-Well, I think we should fix this properly. The problem is that currently
-changing read-only state is just flipping the flag but we need an
-intermediate state like "superblock is really RW but for userspace it is
-RO" so that we can prepare the filesystem for taking the writes - in fact
-we've already faced very similar problem with orphan replay but there we've
-worked around it by forbidding orphan replay on remount and playing a bit
-hacky games on mount.
-
-I think I can see a way to solve this problem. I'll send patches.
+It is not really urgent but eventually we'd like to get this fixed (like
+within couple of months). I have currently other stuff in progress so if
+you could get to it, it would be nice, otherwise I should be able to look
+into this in a week or two.
 
 								Honza
 -- 
