@@ -1,139 +1,104 @@
-Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29D321396
-	for <regressions@lists.linux.dev>; Thu,  8 Jun 2023 04:43:30 +0000 (UTC)
-Received: from cwcc.thunk.org (pool-173-48-82-39.bstnma.fios.verizon.net [173.48.82.39])
-	(authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 3584euUk006748
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 8 Jun 2023 00:40:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
-	t=1686199259; bh=PrkgoFChjjS/t6u7nUUd0Q1FegS/n9GQDkTMlzso8ts=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=WUEiQBUhZRUSLgSW0x2RfgsormeTtlzVD+EQpDXfT5Y/Lzc2XYFpkskpUkfDqSlJY
-	 7ZPipKOJ20PMDF1x8IMRURM5Rd9sjAS5v29ym1pH6IBxbWG8qJ4QEjqJG5YYaDUKR/
-	 ux8/P6p2b1Wo2yJblHp0SkLV4DOPxFunChWzUsjCWO7L6ZpMB5Q4HbTIMBNR9QVJtR
-	 xlE4Fy1yDXHIUT8h04Hm6ypp9f4f7rC1KUWVcEJHQz8kYnAtwwl0oYqbde8DzTnP6+
-	 tDupzFEWWFOv9c5b4zpUm+6Xmqp0XdgFXnRWcabtybrpUFDxNZsBJpjpa9ruTPQbvB
-	 8l6gghFuRk+hQ==
-Received: by cwcc.thunk.org (Postfix, from userid 15806)
-	id 73EA615C04C3; Thu,  8 Jun 2023 00:40:56 -0400 (EDT)
-Date: Thu, 8 Jun 2023 00:40:56 -0400
-From: "Theodore Ts'o" <tytso@mit.edu>
-To: Bagas Sanjaya <bagasdotme@gmail.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Regressions <regressions@lists.linux.dev>,
-        Linux ext4 Development <linux-ext4@vger.kernel.org>,
-        Nikolas Kraetzschmar <nikolas.kraetzschmar@sap.com>,
-        Linux Stable <stable@vger.kernel.org>, Jan Kara <jack@suse.cz>,
-        syzbot+6385d7d3065524c5ca6d@syzkaller.appspotmail.com,
-        syzkaller-bugs@googlegroups.com
-Subject: Re: Fwd: Remounting ext4 filesystem from ro to rw fails when quotas
- are enabled
-Message-ID: <20230608044056.GA1418535@mit.edu>
-References: <653b3359-2005-21b1-039d-c55ca4cffdcc@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3458F28F3
+	for <regressions@lists.linux.dev>; Thu,  8 Jun 2023 06:28:22 +0000 (UTC)
+Authenticated-By: 
+X-SpamFilter-By: ArmorX SpamTrap 5.77 with qID 3586RpNH2030814, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
+	by rtits2.realtek.com.tw (8.15.2/2.81/5.90) with ESMTPS id 3586RpNH2030814
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=OK);
+	Thu, 8 Jun 2023 14:27:51 +0800
+Received: from RTEXMBS06.realtek.com.tw (172.21.6.99) by
+ RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.32; Thu, 8 Jun 2023 14:28:07 +0800
+Received: from RTEXMBS01.realtek.com.tw (172.21.6.94) by
+ RTEXMBS06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.34; Thu, 8 Jun 2023 14:28:07 +0800
+Received: from RTEXMBS01.realtek.com.tw ([fe80::4d7:e49a:674a:598]) by
+ RTEXMBS01.realtek.com.tw ([fe80::4d7:e49a:674a:598%5]) with mapi id
+ 15.01.2375.007; Thu, 8 Jun 2023 14:28:07 +0800
+From: Kailang <kailang@realtek.com>
+To: "Joseph C. Sible" <josephcsible@gmail.com>
+CC: Takashi Iwai <tiwai@suse.de>, Bagas Sanjaya <bagasdotme@gmail.com>,
+        "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+        "perex@perex.cz"
+	<perex@perex.cz>, "tiwai@suse.com" <tiwai@suse.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
+Subject: RE: Fwd: [Bug 217440] New: ALC236 audio disappears from HP 15z-fc000 on warm boot
+Thread-Topic: Fwd: [Bug 217440] New: ALC236 audio disappears from HP 15z-fc000
+ on warm boot
+Thread-Index: AQHZhdSOD7kY6mXBDkGA3ryhp811r69Yu5SAgAASNACAAA22gIAA7n+AgAEJrYCABLe/YIAJNIWAgAIHAcD//4tyAIAB8UZw///vxgCADzWhgIABfgWAgACUPoCAAPnsAIAAmlKwgAA8s4CAAQ8boP//kIuAABWRMLA=
+Date: Thu, 8 Jun 2023 06:28:07 +0000
+Message-ID: <5a4cbd6c668940c2904f74e4c366dc3f@realtek.com>
+References: <bug-217440-225600@https.bugzilla.kernel.org/>
+ <CABpewhE4REgn9RJZduuEU6Z_ijXNeQWnrxO1tg70Gkw=F8qNYg@mail.gmail.com>
+ <ZGB0cVVI7OgaJU6t@debian.me>
+ <CABpewhGJE7-k52j8L2kJ2zKupgp3Ma+LdZazzzV4w1Bgihp7nw@mail.gmail.com>
+ <87cz338ix4.wl-tiwai@suse.de>
+ <CABpewhF01AK4cFPbwYVvKR9yWaO7o-ZE-2+MZjYSUF0BKUdYvw@mail.gmail.com>
+ <874jodlnmi.wl-tiwai@suse.de> <415d4bc84aa74c74af913048f28b42a9@realtek.com>
+ <87fs7mdofi.wl-tiwai@suse.de> <7da2fdfdae614b1c98deda6e11ca34eb@realtek.com>
+ <87353kd8b9.wl-tiwai@suse.de> <1170325957764b4cbd7cd3639575f285@realtek.com>
+ <CABpewhGBakDSBLKZ1cr2=OMspuu3qyYwZrsXUggQ3vt8gsD88A@mail.gmail.com>
+ <873536js7q.wl-tiwai@suse.de>
+ <CABpewhE0NAC-Q=iqG2Ba=XhT7SXsWy18wQGYUaopzmKDfFxyPw@mail.gmail.com>
+ <2c1fcbc00bb44d66a29ac1c1e4bec5ad@realtek.com>
+ <CABpewhFthKG97dPiQC4JhGx9sapX9Yu5rWABQjpY95TSA+eawA@mail.gmail.com>
+ <485f99149508488080d563144454040e@realtek.com>
+ <CABpewhGkvWtM+9J=mx3vw0QY=OBB5OYCxzX3nzVffvFS4QazPA@mail.gmail.com>
+ <2831c55638a5431ca9e37d9caf365ed2@realtek.com>
+ <CABpewhGiMJUpyBA6=D9_-YA6=5rjR2R0RHUZeg+cWcjtzuCoZQ@mail.gmail.com>
+In-Reply-To: <CABpewhGiMJUpyBA6=D9_-YA6=5rjR2R0RHUZeg+cWcjtzuCoZQ@mail.gmail.com>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-originating-ip: [172.22.102.106]
+x-kse-serverinfo: RTEXMBS06.realtek.com.tw, 9
+x-kse-antispam-interceptor-info: fallback
+x-kse-antivirus-interceptor-info: fallback
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <653b3359-2005-21b1-039d-c55ca4cffdcc@gmail.com>
+X-KSE-AntiSpam-Interceptor-Info: fallback
+X-KSE-ServerInfo: RTEXH36505.realtek.com.tw, 9
+X-KSE-AntiSpam-Interceptor-Info: fallback
+X-KSE-Antivirus-Interceptor-Info: fallback
+X-KSE-AntiSpam-Interceptor-Info: fallback
 
-On Wed, Jun 07, 2023 at 12:51:26PM +0700, Bagas Sanjaya wrote:
-> I notice a regression report on Bugzilla [1]. Quoting from it:
-> 
-> > Since commit a44be64, remounting a read-only ext4 filesystem to
-> > become read-write fails when quotas are enabled. The mount syscall
-> > returns -EROFS and outputs the following in dmesg:
-
-Yeah, and I think all we can do is revert this commit:
-
-    ext4: don't clear SB_RDONLY when remounting r/w until quota is re-enabled
-
-I think I saw some messages go by about this getting queued for the
-stable kernel; if so, could it please be dropped?
-
-> > 
-> > The problem can be traced back to the changes introduced in commit
-> > a44be64. It appears that the issue arises because the SB_RDONLY
-> > bit of the s_flags field is now only cleared after executing the
-> > ext4_enable_quotas function. However, the vfs_setup_quota_inode
-> > function, called by ext4_enable_quotas, checks whether this bit is
-> > set (fs/quota/dquot.c:2331):
-
-The problem that we're trying to solve is the malicious syzbot
-reproducer is in one thread, twiddling the file system state from r/o
-to rw and back.  In another thread, it's attempt to create files and
-directories.   And occasionally, we're tripping this warning:
-
-	WARN_ON_ONCE(dquot_initialize_needed(inode));
-
-That's because we're racing with the quota getting initialized, and
-the moment we clear the SB_RDONLY bit the thread which is trying to
-create a directory or file will proceed with the operation --- even
-though the quota subsystem hasn't been initialized yet.  That's why
-the patch attempted to move the clearing the SB_RDONLY bit ahead of
-reiniitalization of the quota subsystem.
-
-Since this is screwing up the ability to remount the file system rw,
-we need to revert this commit, at which point, we'll be able to
-trigger this warning again.
-
-So how do we fix the warning?  Well, we could just drop the
-WARN_ON_ONCE(); the downside is that when this race gets hit, the
-quota operations to allocate the block and inode will silently become
-a no-op, which means the quota will get out of sync with reality.
-
-Alternatively, we could add a call to the beginning to
-ext4_xattr_block_Set():
-
-	if (dquot_initialize_needed(inode))
-		reutrn -EROFS;
-
-... on the theory that the only time we should hit this is when there
-is a quota setup racing with inode creation, and it's better that we
-just let the mkdir or open with O_CREAT fail than to succeed, and
-allocate blocks before the quota subsystem has been initialized.  I'm
-not sure how safe this would be on older quota setups (pre-ext4 quota
-feature), since I suspect the race window is a quite a bit bigger if I
-understand correctly how things worked with the legacy quota support.
-
-The final really hacky thing I could imagine is to hack
-dquot_initialize() to something like this:
-
-int dquot_initialize(struct inode *inode)
-{
-	ret = __dquot_initialize(inode, -1);
-	if (ret)
-		return ret;
-	if (dquot_initialize_needed(inode)) {
-		msleep(1000)
-		return __dquot_initialize(inode, -1);
-	}
-	return 0;
-}
-
-But I threw up a little in my mouth while writing it....
-
-So I'm tempted to just remove the WARN_ON's, and just accept that if
-superuser wants to twiddle the read/only state of a file system with
-quota, at high rates, while something else is trying to create
-files/directories, most of which will fail while the file system is
-read-only, then the quota may gets out of sync, and... ¯\_(ツ)_/¯
-
-Since this is only something that crazy people or malicious Syzbot
-reproducers would try to do, I'm really having a hard time bringing
-myself to care.  Especially since we have plenty of other places where
-we aren't doing the dquot_initialize_needed() check, so the
-opportunities for the quota to get out of sync already exist in other
-code paths.
-
-Jan, what do you think?
-
-					- Ted
+SGkgVGFrYXNoaSwNCg0KRG8geW91IGtub3cgd2h5IHRoaXMgbWFjaGluZSBzaG93ICJpbnZhbGlk
+IEFGRyB0cmVlIiBhcyBiZWxvdz8NCg0KQ29kZWM6IFJlYWx0ZWsgQUxDMjM2DQpBZGRyZXNzOiAw
+DQpBRkcgRnVuY3Rpb24gSWQ6IDB4MSAodW5zb2wgMSkNClZlbmRvciBJZDogMHgxMGVjMDIzNg0K
+U3Vic3lzdGVtIElkOiAweDEwM2M4YjJmDQpSZXZpc2lvbiBJZDogMHgxMDAwMDINCk5vIE1vZGVt
+IEZ1bmN0aW9uIEdyb3VwIGZvdW5kDQpEZWZhdWx0IFBDTToNCiAgICByYXRlcyBbMHhlMDVdOiA4
+MDAwIDE2MDAwIDE3NjQwMCAxOTIwMDAgMzg0MDAwDQogICAgYml0cyBbMHgwXToNCiAgICBmb3Jt
+YXRzIFsweDVdOiBQQ00gQUMzDQpEZWZhdWx0IEFtcC1JbiBjYXBzOiBvZnM9MHgwNSwgbnN0ZXBz
+PTB4N2UsIHN0ZXBzaXplPTB4MDAsIG11dGU9MA0KRGVmYXVsdCBBbXAtT3V0IGNhcHM6IG9mcz0w
+eDA1LCBuc3RlcHM9MHg3ZSwgc3RlcHNpemU9MHgwMCwgbXV0ZT0wDQpTdGF0ZSBvZiBBRkcgbm9k
+ZSAweDAxOg0KICBQb3dlciBzdGF0ZXM6ICBEMCBEMiAobnVsbCkgKG51bGwpIChudWxsKSAobnVs
+bCkgKG51bGwpIChudWxsKSAobnVsbCkNCiAgUG93ZXI6IHNldHRpbmc9VU5LTk9XTiwgYWN0dWFs
+PUQwLCBDbG9jay1zdG9wLU9LLCBTZXR0aW5nLXJlc2V0DQpJbnZhbGlkIEFGRyBzdWJ0cmVlDQot
+LWVuZGNvbGxhcHNlLS0NCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBK
+b3NlcGggQy4gU2libGUgPGpvc2VwaGNzaWJsZUBnbWFpbC5jb20+DQo+IFNlbnQ6IFRodXJzZGF5
+LCBKdW5lIDgsIDIwMjMgMTI6MDggUE0NCj4gVG86IEthaWxhbmcgPGthaWxhbmdAcmVhbHRlay5j
+b20+DQo+IENjOiBUYWthc2hpIEl3YWkgPHRpd2FpQHN1c2UuZGU+OyBCYWdhcyBTYW5qYXlhIDxi
+YWdhc2RvdG1lQGdtYWlsLmNvbT47DQo+IHJlZ3Jlc3Npb25zQGxpc3RzLmxpbnV4LmRldjsgcGVy
+ZXhAcGVyZXguY3o7IHRpd2FpQHN1c2UuY29tOw0KPiBhbHNhLWRldmVsQGFsc2EtcHJvamVjdC5v
+cmcNCj4gU3ViamVjdDogUmU6IEZ3ZDogW0J1ZyAyMTc0NDBdIE5ldzogQUxDMjM2IGF1ZGlvIGRp
+c2FwcGVhcnMgZnJvbSBIUA0KPiAxNXotZmMwMDAgb24gd2FybSBib290DQo+IA0KPiANCj4gRXh0
+ZXJuYWwgbWFpbC4NCj4gDQo+IA0KPiANCj4gT24gV2VkLCBKdW4gNywgMjAyMyBhdCAxMDo0OOKA
+r1BNIEthaWxhbmcgPGthaWxhbmdAcmVhbHRlay5jb20+IHdyb3RlOg0KPiA+DQo+ID4gQ291bGQg
+eW91IGFsc28gdXNlIGFsc2EtaW5mby5zaCB0byBkdW1wIGNvZGVjIGluZm8/DQo+IA0KPiBEbyB5
+b3UgbWVhbiBydW5uaW5nIGl0IHRoZSBzYW1lIHdheSBhcyBiZWZvcmUsIGJ1dCB1bmRlciB0aGUg
+a2VybmVsIHdpdGgNCj4geW91ciB0d28gcGF0Y2hlcz8gQXNzdW1pbmcgc28sIHRoZSByZXN1bHQg
+aXMgYXR0YWNoZWQuDQo+IA0KPiBUaGFua3MsDQo+IA0KPiBKb3NlcGggQy4gU2libGUNCj4gDQo+
+IC0tLS0tLVBsZWFzZSBjb25zaWRlciB0aGUgZW52aXJvbm1lbnQgYmVmb3JlIHByaW50aW5nIHRo
+aXMgZS1tYWlsLg0K
