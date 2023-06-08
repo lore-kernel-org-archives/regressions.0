@@ -1,93 +1,184 @@
-Received: from mail-io1-f41.google.com (mail-io1-f41.google.com [209.85.166.41])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CEEF10973
-	for <regressions@lists.linux.dev>; Thu,  8 Jun 2023 17:44:24 +0000 (UTC)
-Received: by mail-io1-f41.google.com with SMTP id ca18e2360f4ac-77703f20aa9so43843939f.1
-        for <regressions@lists.linux.dev>; Thu, 08 Jun 2023 10:44:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1686246262; x=1688838262;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ioc3PMTHThn4DBw80/q6Z7SBMJ2IWtRiI0d7gZlh7mA=;
-        b=fhjjpFrYBaSCiNzx+CCbfycrWH7Q/2xWrhYMoQfydKCDMDkLHRjsNDBreC+z/uueiE
-         yVpq+0KkEJQzU9zA3tQB8+ojpnhQb6wXCkzyDekvGMplzbCY8x5eVWvedZSF0smKbz26
-         cxICGvPT/p6bs/Hcno6+D84SVIPadUwiQ+Mx0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686246262; x=1688838262;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ioc3PMTHThn4DBw80/q6Z7SBMJ2IWtRiI0d7gZlh7mA=;
-        b=KVFHg/Ec1DU1B7pboHhQtiSMTo+hv1eAprGkCQqINWFJ+pWMMbMeipv23JdJInWOU0
-         tdP6rzA0sGgDoD1QgVWOKd8UF8ydDaJQCwGYsUn5QTNACfY0pBDMYaLkp2/GQy2nay0D
-         5UP1lA3y76J/ovWZzg4KD5RBzVzj3kRd9tK1pGFcOneDWHCOg2L9cgRtz3qGpMzF/9XM
-         PlO6/2r2dSSBC5WvQcdK4rt+8RUr2Wm1Ov09xzbeMWrkFp3BBNFElMa+mdZetlP/kXvN
-         9RVNwduVUBNR543+pqpm0h+9CHmz7i7UlpWKtg+GiYcKP/lKbRI1Kh9LLgDTpjPggS7s
-         jMfw==
-X-Gm-Message-State: AC+VfDyVvNtRPxZT4Bpy14JdmBEb8fMoX+mPzg6BXiwf1LY/8aKCPSe6
-	C8gBlotNKNyN5KC2Q+inSPBJcpdnCoRo+SKh3kw=
-X-Google-Smtp-Source: ACHHUZ4+yv2gEkXmrnj/SLRL86LwFehLxq42jKBoI2jdIAoJ09Hi8q50hB4CiRaQRhXyjA4d9DLQrA==
-X-Received: by 2002:a05:6e02:544:b0:33d:5c7a:25b7 with SMTP id i4-20020a056e02054400b0033d5c7a25b7mr11079952ils.0.1686246262262;
-        Thu, 08 Jun 2023 10:44:22 -0700 (PDT)
-Received: from mail-il1-f174.google.com (mail-il1-f174.google.com. [209.85.166.174])
-        by smtp.gmail.com with ESMTPSA id u3-20020a02cb83000000b00408c8da83ffsm398644jap.127.2023.06.08.10.44.19
-        for <regressions@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 08 Jun 2023 10:44:20 -0700 (PDT)
-Received: by mail-il1-f174.google.com with SMTP id e9e14a558f8ab-33d928a268eso151655ab.0
-        for <regressions@lists.linux.dev>; Thu, 08 Jun 2023 10:44:19 -0700 (PDT)
-X-Received: by 2002:a05:6e02:1a0c:b0:328:3a25:4f2e with SMTP id
- s12-20020a056e021a0c00b003283a254f2emr153033ild.9.1686246258975; Thu, 08 Jun
- 2023 10:44:18 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E18ED1DCD5
+	for <regressions@lists.linux.dev>; Thu,  8 Jun 2023 17:53:02 +0000 (UTC)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 280AF2199E;
+	Thu,  8 Jun 2023 17:52:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1686246775; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=a+CZRWCtT+JtzNM6t0kOZY8HfGmvHn0sBUMaKydCgTQ=;
+	b=wFWxHYveLEliWWFkr6GGWcetd0YL6jYsXgSKerhMUdHpx6hHwEdagI/s13g6r4IRWNR4lA
+	Lui1rkX2fobb3WMlLuWnDfrDVXpjr4niQupeZCEV7K1KGIWV+LuK6Bt6WV5q3CHebm101Y
+	62/FOXaB0c1NDmT3Ivc6wO1QEjT0/Q8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1686246775;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=a+CZRWCtT+JtzNM6t0kOZY8HfGmvHn0sBUMaKydCgTQ=;
+	b=w+okyK0CT2LSpGsHIbvIxDwjzj3XLrkOuPzMw8CrbbrT+sBxG4dK2FA0pibSrRUCU4b9IT
+	bld2XhEWRQZLGxAQ==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 01C7613480;
+	Thu,  8 Jun 2023 17:52:55 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+	by imap2.suse-dmz.suse.de with ESMTPSA
+	id 9a1kAHcVgmSbWgAAMHmgww
+	(envelope-from <jack@suse.cz>); Thu, 08 Jun 2023 17:52:55 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 0DC1BA0749; Thu,  8 Jun 2023 19:52:54 +0200 (CEST)
+Date: Thu, 8 Jun 2023 19:52:54 +0200
+From: Jan Kara <jack@suse.cz>
+To: Theodore Ts'o <tytso@mit.edu>
+Cc: Bagas Sanjaya <bagasdotme@gmail.com>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Regressions <regressions@lists.linux.dev>,
+	Linux ext4 Development <linux-ext4@vger.kernel.org>,
+	Nikolas Kraetzschmar <nikolas.kraetzschmar@sap.com>,
+	Linux Stable <stable@vger.kernel.org>, Jan Kara <jack@suse.cz>,
+	syzbot+6385d7d3065524c5ca6d@syzkaller.appspotmail.com,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: Fwd: Remounting ext4 filesystem from ro to rw fails when quotas
+ are enabled
+Message-ID: <20230608175254.uacmrwz5i2cwrdmu@quack3>
+References: <653b3359-2005-21b1-039d-c55ca4cffdcc@gmail.com>
+ <20230608044056.GA1418535@mit.edu>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230602161246.1855448-1-amit.pundir@linaro.org>
- <CAD=FV=U9xwxC4+wDYFMSoLWaj8vaLH_jettZ=nxEZP+1tNk=oA@mail.gmail.com>
- <d0dfdfba-7a70-7d12-2c30-ad32b3f95bb8@linaro.org> <CAMi1Hd1Upo8zV4MPtdqHgEaMQ72yK0gZgf5Z4uOaqKqhw8Hndg@mail.gmail.com>
- <55f07600-3fa5-f3c2-eb3e-e87a57244812@linaro.org> <CAMi1Hd0qRrRw3_U7kqz-8BJnwJR1RqweajBWrZWWDGmtqVMDAQ@mail.gmail.com>
-In-Reply-To: <CAMi1Hd0qRrRw3_U7kqz-8BJnwJR1RqweajBWrZWWDGmtqVMDAQ@mail.gmail.com>
-From: Doug Anderson <dianders@chromium.org>
-Date: Thu, 8 Jun 2023 10:44:06 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=W+SMsr=TCJtbimq0U94gcoucMLSwA6adCKwn3y+qxLZA@mail.gmail.com>
-Message-ID: <CAD=FV=W+SMsr=TCJtbimq0U94gcoucMLSwA6adCKwn3y+qxLZA@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: qcom: sdm845-db845c: Move LVS regulator nodes up
-To: Amit Pundir <amit.pundir@linaro.org>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Mark Brown <broonie@kernel.org>, 
-	Bjorn Andersson <andersson@kernel.org>, Andy Gross <agross@kernel.org>, 
-	Rob Herring <robh+dt@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
-	Caleb Connolly <caleb.connolly@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	regressions <regressions@lists.linux.dev>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, 
-	dt <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230608044056.GA1418535@mit.edu>
 
-Hi,
+On Thu 08-06-23 00:40:56, Theodore Ts'o wrote:
+> On Wed, Jun 07, 2023 at 12:51:26PM +0700, Bagas Sanjaya wrote:
+> > I notice a regression report on Bugzilla [1]. Quoting from it:
+> > 
+> > > Since commit a44be64, remounting a read-only ext4 filesystem to
+> > > become read-write fails when quotas are enabled. The mount syscall
+> > > returns -EROFS and outputs the following in dmesg:
+> 
+> Yeah, and I think all we can do is revert this commit:
+> 
+>     ext4: don't clear SB_RDONLY when remounting r/w until quota is re-enabled
+> 
+> I think I saw some messages go by about this getting queued for the
+> stable kernel; if so, could it please be dropped?
 
-On Thu, Jun 8, 2023 at 10:27=E2=80=AFAM Amit Pundir <amit.pundir@linaro.org=
-> wrote:
->
-> On Wed, 7 Jun 2023 at 15:46, Krzysztof Kozlowski
-> <krzysztof.kozlowski@linaro.org> wrote:
-> >
-> >
-> > The problem looks like in missing consumers, missing probe dependencies
-> > or something in the driver how it handles these.
->
-> Missing consumers seem to be the case here, if I'm reading the
-> $debugfs/regulator/regulator_summary correctly(?)
-> https://www.irccloud.com/pastebin/raw/2jwn0EQw.
-> lvs1 and lvs2 sysfs entries in /sys/class/regulator/ do not list any
-> consumers explicitly either.
+Yeah, for now I'd revert the fix. It needs more thought and it is not like
+it is fixing any serious vulnerability or so.
 
-They are marked as always-on regulators, though. The lack of an
-explicit consumer in device tree shouldn't really matter. I don't
-think this is the source of your problem.
+> > > The problem can be traced back to the changes introduced in commit
+> > > a44be64. It appears that the issue arises because the SB_RDONLY
+> > > bit of the s_flags field is now only cleared after executing the
+> > > ext4_enable_quotas function. However, the vfs_setup_quota_inode
+> > > function, called by ext4_enable_quotas, checks whether this bit is
+> > > set (fs/quota/dquot.c:2331):
+> 
+> The problem that we're trying to solve is the malicious syzbot
+> reproducer is in one thread, twiddling the file system state from r/o
+> to rw and back.  In another thread, it's attempt to create files and
+> directories.   And occasionally, we're tripping this warning:
+> 
+> 	WARN_ON_ONCE(dquot_initialize_needed(inode));
+> 
+> That's because we're racing with the quota getting initialized, and
+> the moment we clear the SB_RDONLY bit the thread which is trying to
+> create a directory or file will proceed with the operation --- even
+> though the quota subsystem hasn't been initialized yet.  That's why
+> the patch attempted to move the clearing the SB_RDONLY bit ahead of
+> reiniitalization of the quota subsystem.
+> 
+> Since this is screwing up the ability to remount the file system rw,
+> we need to revert this commit, at which point, we'll be able to
+> trigger this warning again.
+> 
+> So how do we fix the warning?  Well, we could just drop the
+> WARN_ON_ONCE(); the downside is that when this race gets hit, the
+> quota operations to allocate the block and inode will silently become
+> a no-op, which means the quota will get out of sync with reality.
 
--Doug
+Yes, the warning triggering is actually a good thing because it shows us we
+have a race where quota can get out of sync with real space usage.
+
+> Alternatively, we could add a call to the beginning to
+> ext4_xattr_block_Set():
+> 
+> 	if (dquot_initialize_needed(inode))
+> 		reutrn -EROFS;
+> 
+> ... on the theory that the only time we should hit this is when there
+> is a quota setup racing with inode creation, and it's better that we
+> just let the mkdir or open with O_CREAT fail than to succeed, and
+> allocate blocks before the quota subsystem has been initialized.  I'm
+> not sure how safe this would be on older quota setups (pre-ext4 quota
+> feature), since I suspect the race window is a quite a bit bigger if I
+> understand correctly how things worked with the legacy quota support.
+
+No, xattr code is just a messenger here. There is a fundamental problem
+that once we clear SB_RDONLY in superblock flags, anybody can come up with
+any operation modifying the filesystem but until we are finished with
+dquot_resume(), this operation can escape proper quota accounting.
+
+> The final really hacky thing I could imagine is to hack
+> dquot_initialize() to something like this:
+> 
+> int dquot_initialize(struct inode *inode)
+> {
+> 	ret = __dquot_initialize(inode, -1);
+> 	if (ret)
+> 		return ret;
+> 	if (dquot_initialize_needed(inode)) {
+> 		msleep(1000)
+> 		return __dquot_initialize(inode, -1);
+> 	}
+> 	return 0;
+> }
+> 
+> But I threw up a little in my mouth while writing it....
+> 
+> So I'm tempted to just remove the WARN_ON's, and just accept that if
+> superuser wants to twiddle the read/only state of a file system with
+> quota, at high rates, while something else is trying to create
+> files/directories, most of which will fail while the file system is
+> read-only, then the quota may gets out of sync, and... ¯\_(ツ)_/¯
+> 
+> Since this is only something that crazy people or malicious Syzbot
+> reproducers would try to do, I'm really having a hard time bringing
+> myself to care.  Especially since we have plenty of other places where
+> we aren't doing the dquot_initialize_needed() check, so the
+> opportunities for the quota to get out of sync already exist in other
+> code paths.
+> 
+> Jan, what do you think?
+
+Well, I think we should fix this properly. The problem is that currently
+changing read-only state is just flipping the flag but we need an
+intermediate state like "superblock is really RW but for userspace it is
+RO" so that we can prepare the filesystem for taking the writes - in fact
+we've already faced very similar problem with orphan replay but there we've
+worked around it by forbidding orphan replay on remount and playing a bit
+hacky games on mount.
+
+I think I can see a way to solve this problem. I'll send patches.
+
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
