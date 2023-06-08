@@ -1,113 +1,93 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-io1-f41.google.com (mail-io1-f41.google.com [209.85.166.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3349E18011
-	for <regressions@lists.linux.dev>; Thu,  8 Jun 2023 17:37:02 +0000 (UTC)
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-256719f2381so782124a91.0
-        for <regressions@lists.linux.dev>; Thu, 08 Jun 2023 10:37:02 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CEEF10973
+	for <regressions@lists.linux.dev>; Thu,  8 Jun 2023 17:44:24 +0000 (UTC)
+Received: by mail-io1-f41.google.com with SMTP id ca18e2360f4ac-77703f20aa9so43843939f.1
+        for <regressions@lists.linux.dev>; Thu, 08 Jun 2023 10:44:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1686245822; x=1688837822;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=A5HMiXJj25/0cs+VQWx8wtIMazP9D7ttY2YMsSjDM3k=;
-        b=e/c15UQDeZn5gVYdCP1WTVUOnES+ksevPkbz0RqG+FbeFuOa1OmqHpbYb7HMmwiBRg
-         L01Vbb2O2AvFXQNR4FCyB+Z9OG6phe8RA0XyHjgmByAbCi+XN/GT+5GoOPENmUEqQ122
-         wLZw9SzLsBYt5PhJrdVvPfUKM1q/jzBTj0qfx05ZbA51cuJVlTrlAzxLvd3cXcCoostm
-         fRzqaAmJ0T5a6qVQ105CVZGLjDrGqZY/q2PRL0OUW+aI4txyNqqaD+yZKOHf//MKVbxZ
-         ARC/YEkAmMSg7PjqR6YxTFdSm6Z6wuz8A1ZipIaSzu5kP5otynNe2Uu40jpWpEI/v2TP
-         OiLA==
+        d=chromium.org; s=google; t=1686246262; x=1688838262;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ioc3PMTHThn4DBw80/q6Z7SBMJ2IWtRiI0d7gZlh7mA=;
+        b=fhjjpFrYBaSCiNzx+CCbfycrWH7Q/2xWrhYMoQfydKCDMDkLHRjsNDBreC+z/uueiE
+         yVpq+0KkEJQzU9zA3tQB8+ojpnhQb6wXCkzyDekvGMplzbCY8x5eVWvedZSF0smKbz26
+         cxICGvPT/p6bs/Hcno6+D84SVIPadUwiQ+Mx0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686245822; x=1688837822;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=A5HMiXJj25/0cs+VQWx8wtIMazP9D7ttY2YMsSjDM3k=;
-        b=S9bnx3NXgV3epYYxqUmISQYTtbe/Lnvh5SzEVCOobAZNIuYJ3JvXvVvQ3XeXVHg3zh
-         flqlPkbpC9e2MI0L/oR7Bj3Ci9uBS4aQbAxomXRdrItqb5N0w5WJ3Zizq1iclCzMSk8I
-         F1AbzaR/fofkIOA+0/RKX8sLfzINpCNTbAUWjdpvaRe25PwtbPWuLzQTG6jZmE59aWdp
-         pj3R5jHA2SsK0rOwpbeqGBEX5DYk/35irJafckiFI260o5cOt8agaoiqd0tefsGji6tr
-         Ie+vmwx0fEtjnGwuYXE4PlQweZeB9Xz9xIx6dYqep+znmhWOknYLe4q+/DpowRgML7cm
-         ii3g==
-X-Gm-Message-State: AC+VfDxrL3rQsnbGtxP/kcBJMV9/n8SEDtPEiFr1ACHVQ/G8rnAqBNNb
-	l+FFjk9tlEVRTcVlvAsqZ8Pl5pitEUsifg==
-X-Google-Smtp-Source: ACHHUZ74G/VJbIfySxv6uBggTimaPqijqNP4UNpTFxQCf/GcIiJkljU1WVA4BLSOA08kPiDEVcYA+854RqbX2Q==
-X-Received: from shakeelb.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:262e])
- (user=shakeelb job=sendgmr) by 2002:a17:90b:f95:b0:256:b9d1:4e34 with SMTP id
- ft21-20020a17090b0f9500b00256b9d14e34mr2339447pjb.5.1686245822177; Thu, 08
- Jun 2023 10:37:02 -0700 (PDT)
-Date: Thu, 8 Jun 2023 17:37:00 +0000
-In-Reply-To: <20230608111408.s2minsenlcjow7q3@quack3>
+        d=1e100.net; s=20221208; t=1686246262; x=1688838262;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ioc3PMTHThn4DBw80/q6Z7SBMJ2IWtRiI0d7gZlh7mA=;
+        b=KVFHg/Ec1DU1B7pboHhQtiSMTo+hv1eAprGkCQqINWFJ+pWMMbMeipv23JdJInWOU0
+         tdP6rzA0sGgDoD1QgVWOKd8UF8ydDaJQCwGYsUn5QTNACfY0pBDMYaLkp2/GQy2nay0D
+         5UP1lA3y76J/ovWZzg4KD5RBzVzj3kRd9tK1pGFcOneDWHCOg2L9cgRtz3qGpMzF/9XM
+         PlO6/2r2dSSBC5WvQcdK4rt+8RUr2Wm1Ov09xzbeMWrkFp3BBNFElMa+mdZetlP/kXvN
+         9RVNwduVUBNR543+pqpm0h+9CHmz7i7UlpWKtg+GiYcKP/lKbRI1Kh9LLgDTpjPggS7s
+         jMfw==
+X-Gm-Message-State: AC+VfDyVvNtRPxZT4Bpy14JdmBEb8fMoX+mPzg6BXiwf1LY/8aKCPSe6
+	C8gBlotNKNyN5KC2Q+inSPBJcpdnCoRo+SKh3kw=
+X-Google-Smtp-Source: ACHHUZ4+yv2gEkXmrnj/SLRL86LwFehLxq42jKBoI2jdIAoJ09Hi8q50hB4CiRaQRhXyjA4d9DLQrA==
+X-Received: by 2002:a05:6e02:544:b0:33d:5c7a:25b7 with SMTP id i4-20020a056e02054400b0033d5c7a25b7mr11079952ils.0.1686246262262;
+        Thu, 08 Jun 2023 10:44:22 -0700 (PDT)
+Received: from mail-il1-f174.google.com (mail-il1-f174.google.com. [209.85.166.174])
+        by smtp.gmail.com with ESMTPSA id u3-20020a02cb83000000b00408c8da83ffsm398644jap.127.2023.06.08.10.44.19
+        for <regressions@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 08 Jun 2023 10:44:20 -0700 (PDT)
+Received: by mail-il1-f174.google.com with SMTP id e9e14a558f8ab-33d928a268eso151655ab.0
+        for <regressions@lists.linux.dev>; Thu, 08 Jun 2023 10:44:19 -0700 (PDT)
+X-Received: by 2002:a05:6e02:1a0c:b0:328:3a25:4f2e with SMTP id
+ s12-20020a056e021a0c00b003283a254f2emr153033ild.9.1686246258975; Thu, 08 Jun
+ 2023 10:44:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-References: <20221024052841.3291983-1-shakeelb@google.com> <20230608111408.s2minsenlcjow7q3@quack3>
-Message-ID: <20230608173700.wafw5tyw52gwoicu@google.com>
-Subject: Re: [PATCH] mm: convert mm's rss stats into percpu_counter
-From: Shakeel Butt <shakeelb@google.com>
-To: Jan Kara <jack@suse.cz>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, mhocko@suse.cz, vbabka@suse.cz, 
-	regressions@lists.linux.dev, Yu Ma <yu.ma@intel.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+References: <20230602161246.1855448-1-amit.pundir@linaro.org>
+ <CAD=FV=U9xwxC4+wDYFMSoLWaj8vaLH_jettZ=nxEZP+1tNk=oA@mail.gmail.com>
+ <d0dfdfba-7a70-7d12-2c30-ad32b3f95bb8@linaro.org> <CAMi1Hd1Upo8zV4MPtdqHgEaMQ72yK0gZgf5Z4uOaqKqhw8Hndg@mail.gmail.com>
+ <55f07600-3fa5-f3c2-eb3e-e87a57244812@linaro.org> <CAMi1Hd0qRrRw3_U7kqz-8BJnwJR1RqweajBWrZWWDGmtqVMDAQ@mail.gmail.com>
+In-Reply-To: <CAMi1Hd0qRrRw3_U7kqz-8BJnwJR1RqweajBWrZWWDGmtqVMDAQ@mail.gmail.com>
+From: Doug Anderson <dianders@chromium.org>
+Date: Thu, 8 Jun 2023 10:44:06 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=W+SMsr=TCJtbimq0U94gcoucMLSwA6adCKwn3y+qxLZA@mail.gmail.com>
+Message-ID: <CAD=FV=W+SMsr=TCJtbimq0U94gcoucMLSwA6adCKwn3y+qxLZA@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: qcom: sdm845-db845c: Move LVS regulator nodes up
+To: Amit Pundir <amit.pundir@linaro.org>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Mark Brown <broonie@kernel.org>, 
+	Bjorn Andersson <andersson@kernel.org>, Andy Gross <agross@kernel.org>, 
+	Rob Herring <robh+dt@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+	Caleb Connolly <caleb.connolly@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	regressions <regressions@lists.linux.dev>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, 
+	dt <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 08, 2023 at 01:14:08PM +0200, Jan Kara wrote:
-[...]
-> 
-> Somewhat late to the game but our performance testing grid has noticed this
-> commit causes a performance regression on shell-heavy workloads. For
-> example running 'make test' in git sources on our test machine with 192
-> CPUs takes about 4% longer, system time is increased by about 9%:
-> 
->                        before (9cd6ffa6025)  after (f1a7941243c1)
-> Amean     User         471.12 *   0.30%*     481.77 *  -1.96%*
-> Amean     System       244.47 *   0.90%*     269.13 *  -9.09%*
-> Amean     Elapsed      709.22 *   0.45%*     742.27 *  -4.19%*
-> Amean     CPU          100.00 (   0.20%)     101.00 *  -0.80%*
-> 
-> Essentially this workload spawns in sequence a lot of short-lived tasks and
-> the task startup + teardown cost is what this patch increases. To
-> demonstrate this more clearly, I've written trivial (and somewhat stupid)
-> benchmark shell_bench.sh:
-> 
-> for (( i = 0; i < 20000; i++ )); do
-> 	/bin/true
-> done
-> 
-> And when run like:
-> 
-> numactl -C 1 ./shell_bench.sh
-> 
-> (I've forced physical CPU binding to avoid task migrating over the machine
-> and cpu frequency scaling interfering which makes the numbers much more
-> noisy) I get the following elapsed times:
-> 
->          9cd6ffa6025    f1a7941243c1
-> Avg      6.807429       7.631571
-> Stddev   0.021797       0.016483
-> 
-> So some 12% regression in elapsed time. Just to be sure I've verified that
-> per-cpu allocator patch [1] does not improve these numbers in any
-> significant way.
-> 
-> Where do we go from here? I think in principle the problem could be fixed
-> by being clever and when the task has only a single thread, we don't bother
-> with allocating pcpu counter (and summing it at the end) and just account
-> directly in mm_struct. When the second thread is spawned, we bite the
-> bullet, allocate pcpu counter and start with more scalable accounting.
-> These shortlived tasks in shell workloads or similar don't spawn any
-> threads so this should fix the regression. But this is obviously easier
-> said than done...
-> 
+Hi,
 
-Thanks Jan for the report. I wanted to improve the percpu allocation to
-eliminate this regression as it was reported by intel test bot as well.
-However your suggestion seems seems targetted and reasonable as well. At
-the moment I am travelling, so not sure when I will get to this. Do you
-want to take a stab at it or you want me to do it? Also how urgent and
-sensitive this regression is for you?
+On Thu, Jun 8, 2023 at 10:27=E2=80=AFAM Amit Pundir <amit.pundir@linaro.org=
+> wrote:
+>
+> On Wed, 7 Jun 2023 at 15:46, Krzysztof Kozlowski
+> <krzysztof.kozlowski@linaro.org> wrote:
+> >
+> >
+> > The problem looks like in missing consumers, missing probe dependencies
+> > or something in the driver how it handles these.
+>
+> Missing consumers seem to be the case here, if I'm reading the
+> $debugfs/regulator/regulator_summary correctly(?)
+> https://www.irccloud.com/pastebin/raw/2jwn0EQw.
+> lvs1 and lvs2 sysfs entries in /sys/class/regulator/ do not list any
+> consumers explicitly either.
 
-thanks,
-Shakeel
+They are marked as always-on regulators, though. The lack of an
+explicit consumer in device tree shouldn't really matter. I don't
+think this is the source of your problem.
 
+-Doug
