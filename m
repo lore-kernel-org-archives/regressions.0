@@ -1,51 +1,51 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E7CC19930
-	for <regressions@lists.linux.dev>; Thu,  8 Jun 2023 18:08:01 +0000 (UTC)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 5A8B41FD5F;
-	Thu,  8 Jun 2023 18:07:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1686247679; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KuVHWqF+Vmzlt+SUW4g6KuATrBuHpEsTJNICe6iwrHc=;
-	b=DzKX09a3MIGcFGy/bs4aXveZ1NRbWdFmwIJGNRB9beMcnjg3/3rQybTWLiKEEr28ctuSsN
-	ofr/NTBppLIfWVTmFNXZUx46CdJL0xK3Ddwm+KTSFVGpAx9e/RlIfnXRLns9g3ObZty3iL
-	f+CdUzcXf1FewvV7CQfhmUyhAGPfQQo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1686247679;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KuVHWqF+Vmzlt+SUW4g6KuATrBuHpEsTJNICe6iwrHc=;
-	b=Gzs5/PuXubrvgfiZMpux40aW3clbzJ70xqZmpsjIQJjGKctEyd1ZInHwX45CvkQBIAO0YA
-	iK5xiXdJ0Q+vtKAw==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 4C8C6138E6;
-	Thu,  8 Jun 2023 18:07:59 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-	by imap2.suse-dmz.suse.de with ESMTPSA
-	id QcinEv8YgmSBYQAAMHmgww
-	(envelope-from <jack@suse.cz>); Thu, 08 Jun 2023 18:07:59 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id DD23BA0749; Thu,  8 Jun 2023 20:07:58 +0200 (CEST)
-Date: Thu, 8 Jun 2023 20:07:58 +0200
-From: Jan Kara <jack@suse.cz>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C2E014ABB
+	for <regressions@lists.linux.dev>; Thu,  8 Jun 2023 19:10:21 +0000 (UTC)
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1b02d0942caso402735ad.1
+        for <regressions@lists.linux.dev>; Thu, 08 Jun 2023 12:10:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1686251420; x=1688843420;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=t7JDYeCj1Au9M2F7A6TgeeUVVVrQVhgPcLMJ9f44nT4=;
+        b=ObuUy7jq4yJMZeFETYqxhPRD+TYk2lfW++fICGVSpTyoFgSwzI8oSot9SuARscGqBM
+         gJ6yT9AOAmg0fobeDiW3RbJxtvsciXacKfGy8xjsuGVAV1Vu/2zVzltEjAILSuqZHPgr
+         OgVzmMwxwUPdnXBKHpbA/586q5uEN7fT3yjTTlTIQFUWG7jhSUslUud02q/t+isp/eur
+         5lDWdH0aSaYIWHVoDyynf4GABLH58sBMhhgmD6JL1tKZRDiA4rsyBpBZ/Frvgw9DaXSY
+         rgmyG3kUqW1gfqG1JXJJnjfl574QW2l0HmWxiWPg+Tpm3/Z4oOgeW0jOKhFBNwLMWcpH
+         ES2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686251420; x=1688843420;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=t7JDYeCj1Au9M2F7A6TgeeUVVVrQVhgPcLMJ9f44nT4=;
+        b=ftdeoPKyl2NatBzaSe19kIG2Szxc+UeNnAok6LnAqv2cD7qKDHpbp4zfq6Vt467kvF
+         /jNQZrde3U4PX8jUi0WCQwlM19FSjDhC6jQG/+V84FgjkvGucUm9M4U8uzdFCyzQR9bI
+         up+FIoTb/C7jW7RIONlUhYTwmVyK4wADnuGaXdxbtKd3l2nSSChLYhOtv/3H2xgvaPq2
+         95LkY9b1KtNWAp3otupSn5/ap5WehnjDDoaxF3ce/WlGtQzf6LwMAS6URaj5esuseU1/
+         AThhLA5aCJdXuf4lwOHGNo5QC/5GiDri87wLynzwfxZ6atQUW1la67CK7br6Khf3uOIT
+         kCbg==
+X-Gm-Message-State: AC+VfDzFEbEMbg2bf3ywLr9f57VF/8y0V1UsyFgqeBkM2cofz4H3r/nJ
+	a/UP5CEv58R6do8nrBOwKlS3bR6nsegH0A==
+X-Google-Smtp-Source: ACHHUZ5nR2KP9shcCg65TNHMHwD2feED6YAnUJLCRKW0B2VcKLwF5rQZJh1D7B9Bofg0fsquoq4UIQ==
+X-Received: by 2002:a17:902:7c82:b0:1a2:9ce6:6483 with SMTP id y2-20020a1709027c8200b001a29ce66483mr4006161pll.64.1686251420344;
+        Thu, 08 Jun 2023 12:10:20 -0700 (PDT)
+Received: from V92F7Y9K0C.corp.robot.car ([199.73.127.2])
+        by smtp.gmail.com with ESMTPSA id z16-20020a170903019000b001b03f89daffsm1781251plg.110.2023.06.08.12.10.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 Jun 2023 12:10:19 -0700 (PDT)
+Date: Thu, 8 Jun 2023 12:10:15 -0700
+From: Dennis Zhou <dennisszhou@gmail.com>
 To: Shakeel Butt <shakeelb@google.com>
 Cc: Jan Kara <jack@suse.cz>, Andrew Morton <akpm@linux-foundation.org>,
 	linux-mm@kvack.org, linux-kernel@vger.kernel.org, mhocko@suse.cz,
 	vbabka@suse.cz, regressions@lists.linux.dev,
 	Yu Ma <yu.ma@intel.com>
 Subject: Re: [PATCH] mm: convert mm's rss stats into percpu_counter
-Message-ID: <20230608180758.z4z4ijdjgfe4mbx4@quack3>
+Message-ID: <ZIInlxGIl8mS-iRk@V92F7Y9K0C.corp.robot.car>
 References: <20221024052841.3291983-1-shakeelb@google.com>
  <20230608111408.s2minsenlcjow7q3@quack3>
  <20230608173700.wafw5tyw52gwoicu@google.com>
@@ -59,7 +59,9 @@ Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <20230608173700.wafw5tyw52gwoicu@google.com>
 
-On Thu 08-06-23 17:37:00, Shakeel Butt wrote:
+Hi Shakeel and Jan,
+
+On Thu, Jun 08, 2023 at 05:37:00PM +0000, Shakeel Butt wrote:
 > On Thu, Jun 08, 2023 at 01:14:08PM +0200, Jan Kara wrote:
 > [...]
 > > 
@@ -115,13 +117,15 @@ On Thu 08-06-23 17:37:00, Shakeel Butt wrote:
 > the moment I am travelling, so not sure when I will get to this. Do you
 > want to take a stab at it or you want me to do it? Also how urgent and
 > sensitive this regression is for you?
+> 
+> thanks,
+> Shakeel
+> 
+> 
 
-It is not really urgent but eventually we'd like to get this fixed (like
-within couple of months). I have currently other stuff in progress so if
-you could get to it, it would be nice, otherwise I should be able to look
-into this in a week or two.
+I _think_ I could probably spin you a percpu_alloc_bulk() series in a
+couple days for percpu_counters. Let me try and find some time, unless
+you had something different in mind.
 
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Thanks,
+Dennis
