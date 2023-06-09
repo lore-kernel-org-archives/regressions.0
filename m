@@ -1,98 +1,157 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 126BDA35
-	for <regressions@lists.linux.dev>; Fri,  9 Jun 2023 03:04:51 +0000 (UTC)
-Authenticated-By: 
-X-SpamFilter-By: ArmorX SpamTrap 5.77 with qID 35934DhhC027865, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
-	by rtits2.realtek.com.tw (8.15.2/2.81/5.90) with ESMTPS id 35934DhhC027865
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=OK);
-	Fri, 9 Jun 2023 11:04:13 +0800
-Received: from RTEXDAG02.realtek.com.tw (172.21.6.101) by
- RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.32; Fri, 9 Jun 2023 11:04:29 +0800
-Received: from RTEXMBS01.realtek.com.tw (172.21.6.94) by
- RTEXDAG02.realtek.com.tw (172.21.6.101) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.7; Fri, 9 Jun 2023 11:04:29 +0800
-Received: from RTEXMBS01.realtek.com.tw ([fe80::4d7:e49a:674a:598]) by
- RTEXMBS01.realtek.com.tw ([fe80::4d7:e49a:674a:598%5]) with mapi id
- 15.01.2375.007; Fri, 9 Jun 2023 11:04:29 +0800
-From: Kailang <kailang@realtek.com>
-To: "Joseph C. Sible" <josephcsible@gmail.com>
-CC: Takashi Iwai <tiwai@suse.de>, Bagas Sanjaya <bagasdotme@gmail.com>,
-        "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
-        "perex@perex.cz"
-	<perex@perex.cz>, "tiwai@suse.com" <tiwai@suse.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
-Subject: RE: Fwd: [Bug 217440] New: ALC236 audio disappears from HP 15z-fc000 on warm boot
-Thread-Topic: Fwd: [Bug 217440] New: ALC236 audio disappears from HP 15z-fc000
- on warm boot
-Thread-Index: AQHZhdSOD7kY6mXBDkGA3ryhp811r69Yu5SAgAASNACAAA22gIAA7n+AgAEJrYCABLe/YIAJNIWAgAIHAcD//4tyAIAB8UZw///vxgCADzWhgIABfgWAgACUPoCAAPnsAIAAmlKwgAA8s4CAAQ8boP//kIuAABWnYVAAAIR9gAAqhW/A
-Date: Fri, 9 Jun 2023 03:04:29 +0000
-Message-ID: <009474f04d0b45c69a0e42e8622b7a86@realtek.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58FD7185A
+	for <regressions@lists.linux.dev>; Fri,  9 Jun 2023 06:56:04 +0000 (UTC)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 4A76B1FDF3;
+	Fri,  9 Jun 2023 06:56:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1686293762; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=K+voTG+8HCGZVrrWKLhT11DL0bY+scq1aluMs5AW/cU=;
+	b=WWs8t9ntutTm7OJgtRLzGjE+qzzFJCOInL4GCtOhvzjTUCKHQBnOA4vth31NzC+xxW6QLo
+	873MX2/lylbMhyPp+6DvFh4OmS1sX8IFD/vs+2AzQUxRH44pavobryjcvUhIoNYVLJiKhB
+	E83julRUO1DbcaxYPHc2AnQexvMkcUA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1686293762;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=K+voTG+8HCGZVrrWKLhT11DL0bY+scq1aluMs5AW/cU=;
+	b=M8J/S5xH8xUjR4DUKGGi6+V6vmVLHwWz1kqoODw+1czTxLxWKCxMfLnjbHwVnGZR/75LGu
+	6nOiOL1RjOybCjAA==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 1AF4D139C8;
+	Fri,  9 Jun 2023 06:56:02 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+	by imap2.suse-dmz.suse.de with ESMTPSA
+	id sCLLBQLNgmQdPQAAMHmgww
+	(envelope-from <tiwai@suse.de>); Fri, 09 Jun 2023 06:56:02 +0000
+Date: Fri, 09 Jun 2023 08:56:01 +0200
+Message-ID: <87h6rhcef2.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Kailang <kailang@realtek.com>
+Cc: "Joseph C. Sible" <josephcsible@gmail.com>,
+	Bagas Sanjaya <bagasdotme@gmail.com>,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+	"perex@perex.cz"
+	<perex@perex.cz>,
+	"tiwai@suse.com" <tiwai@suse.com>,
+	"alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
+Subject: Re: Fwd: [Bug 217440] New: ALC236 audio disappears from HP 15z-fc000 on warm boot
+In-Reply-To: <009474f04d0b45c69a0e42e8622b7a86@realtek.com>
 References: <bug-217440-225600@https.bugzilla.kernel.org/>
- <CABpewhE4REgn9RJZduuEU6Z_ijXNeQWnrxO1tg70Gkw=F8qNYg@mail.gmail.com>
- <ZGB0cVVI7OgaJU6t@debian.me>
- <CABpewhGJE7-k52j8L2kJ2zKupgp3Ma+LdZazzzV4w1Bgihp7nw@mail.gmail.com>
- <87cz338ix4.wl-tiwai@suse.de>
- <CABpewhF01AK4cFPbwYVvKR9yWaO7o-ZE-2+MZjYSUF0BKUdYvw@mail.gmail.com>
- <874jodlnmi.wl-tiwai@suse.de> <415d4bc84aa74c74af913048f28b42a9@realtek.com>
- <87fs7mdofi.wl-tiwai@suse.de> <7da2fdfdae614b1c98deda6e11ca34eb@realtek.com>
- <87353kd8b9.wl-tiwai@suse.de> <1170325957764b4cbd7cd3639575f285@realtek.com>
- <CABpewhGBakDSBLKZ1cr2=OMspuu3qyYwZrsXUggQ3vt8gsD88A@mail.gmail.com>
- <873536js7q.wl-tiwai@suse.de>
- <CABpewhE0NAC-Q=iqG2Ba=XhT7SXsWy18wQGYUaopzmKDfFxyPw@mail.gmail.com>
- <2c1fcbc00bb44d66a29ac1c1e4bec5ad@realtek.com>
- <CABpewhFthKG97dPiQC4JhGx9sapX9Yu5rWABQjpY95TSA+eawA@mail.gmail.com>
- <485f99149508488080d563144454040e@realtek.com>
- <CABpewhGkvWtM+9J=mx3vw0QY=OBB5OYCxzX3nzVffvFS4QazPA@mail.gmail.com>
- <2831c55638a5431ca9e37d9caf365ed2@realtek.com>
- <CABpewhGiMJUpyBA6=D9_-YA6=5rjR2R0RHUZeg+cWcjtzuCoZQ@mail.gmail.com>
- <3c27f0455d6e4bd1a68115bd25bf1a12@realtek.com>
- <CABpewhEptq0+W_71U__8iQ4+LNtYSUB9C+0bcS2Hw-5mnj9viQ@mail.gmail.com>
-In-Reply-To: <CABpewhEptq0+W_71U__8iQ4+LNtYSUB9C+0bcS2Hw-5mnj9viQ@mail.gmail.com>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-originating-ip: [172.22.102.106]
-x-kse-serverinfo: RTEXDAG02.realtek.com.tw, 9
-x-kse-antispam-interceptor-info: fallback
-x-kse-antivirus-interceptor-info: fallback
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	<CABpewhE4REgn9RJZduuEU6Z_ijXNeQWnrxO1tg70Gkw=F8qNYg@mail.gmail.com>
+	<ZGB0cVVI7OgaJU6t@debian.me>
+	<CABpewhGJE7-k52j8L2kJ2zKupgp3Ma+LdZazzzV4w1Bgihp7nw@mail.gmail.com>
+	<87cz338ix4.wl-tiwai@suse.de>
+	<CABpewhF01AK4cFPbwYVvKR9yWaO7o-ZE-2+MZjYSUF0BKUdYvw@mail.gmail.com>
+	<874jodlnmi.wl-tiwai@suse.de>
+	<415d4bc84aa74c74af913048f28b42a9@realtek.com>
+	<87fs7mdofi.wl-tiwai@suse.de>
+	<7da2fdfdae614b1c98deda6e11ca34eb@realtek.com>
+	<87353kd8b9.wl-tiwai@suse.de>
+	<1170325957764b4cbd7cd3639575f285@realtek.com>
+	<CABpewhGBakDSBLKZ1cr2=OMspuu3qyYwZrsXUggQ3vt8gsD88A@mail.gmail.com>
+	<873536js7q.wl-tiwai@suse.de>
+	<CABpewhE0NAC-Q=iqG2Ba=XhT7SXsWy18wQGYUaopzmKDfFxyPw@mail.gmail.com>
+	<2c1fcbc00bb44d66a29ac1c1e4bec5ad@realtek.com>
+	<CABpewhFthKG97dPiQC4JhGx9sapX9Yu5rWABQjpY95TSA+eawA@mail.gmail.com>
+	<485f99149508488080d563144454040e@realtek.com>
+	<CABpewhGkvWtM+9J=mx3vw0QY=OBB5OYCxzX3nzVffvFS4QazPA@mail.gmail.com>
+	<2831c55638a5431ca9e37d9caf365ed2@realtek.com>
+	<CABpewhGiMJUpyBA6=D9_-YA6=5rjR2R0RHUZeg+cWcjtzuCoZQ@mail.gmail.com>
+	<3c27f0455d6e4bd1a68115bd25bf1a12@realtek.com>
+	<CABpewhEptq0+W_71U__8iQ4+LNtYSUB9C+0bcS2Hw-5mnj9viQ@mail.gmail.com>
+	<009474f04d0b45c69a0e42e8622b7a86@realtek.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-X-KSE-AntiSpam-Interceptor-Info: fallback
-X-KSE-ServerInfo: RTEXH36505.realtek.com.tw, 9
-X-KSE-AntiSpam-Interceptor-Info: fallback
-X-KSE-Antivirus-Interceptor-Info: fallback
-X-KSE-AntiSpam-Interceptor-Info: fallback
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-SGkgVGFrYXNoaSwNCg0KQUxDMjM2IHdvcmtzIG5vcm1hbGx5Lg0KQnV0IGNvZGVjIHJlZ2lzdGVy
-IGNhbid0IHNob3cgaXQuIChpdCBzaG93cyAiSW52YWxpZCBBRkcgc3VidHJlZSIpDQpDb3VsZCB5
-b3Uga25vdyB3aHk/DQoNCkJSLA0KS2FpbGFuZw0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0t
-LQ0KPiBGcm9tOiBKb3NlcGggQy4gU2libGUgPGpvc2VwaGNzaWJsZUBnbWFpbC5jb20+DQo+IFNl
-bnQ6IFRodXJzZGF5LCBKdW5lIDgsIDIwMjMgMTA6NDMgUE0NCj4gVG86IEthaWxhbmcgPGthaWxh
-bmdAcmVhbHRlay5jb20+DQo+IENjOiBUYWthc2hpIEl3YWkgPHRpd2FpQHN1c2UuZGU+OyBCYWdh
-cyBTYW5qYXlhIDxiYWdhc2RvdG1lQGdtYWlsLmNvbT47DQo+IHJlZ3Jlc3Npb25zQGxpc3RzLmxp
-bnV4LmRldjsgcGVyZXhAcGVyZXguY3o7IHRpd2FpQHN1c2UuY29tOw0KPiBhbHNhLWRldmVsQGFs
-c2EtcHJvamVjdC5vcmcNCj4gU3ViamVjdDogUmU6IEZ3ZDogW0J1ZyAyMTc0NDBdIE5ldzogQUxD
-MjM2IGF1ZGlvIGRpc2FwcGVhcnMgZnJvbSBIUA0KPiAxNXotZmMwMDAgb24gd2FybSBib290DQo+
-IA0KPiANCj4gRXh0ZXJuYWwgbWFpbC4NCj4gDQo+IA0KPiANCj4gT24gVGh1LCBKdW4gOCwgMjAy
-MyBhdCAyOjMy4oCvQU0gS2FpbGFuZyA8a2FpbGFuZ0ByZWFsdGVrLmNvbT4gd3JvdGU6DQo+ID4N
-Cj4gPiBDb3VsZCB5b3UgdXNlIHlvdXIgcGF0Y2ggdG8gZHVtcCBjb2RlYyBpbmZvIGFnYWluPw0K
-PiA+IEkgd2FudCB0byBjaGVjayBpdCB3aWxsIGFsc28gc2hvdyAiaW52YWxpZCBBRkcgc3VidHJl
-ZSIuDQo+IA0KPiBPa2F5LCBoZXJlJ3MgdGhlIHNhbWUgY29tbWFuZCdzIG91dHB1dCBhZ2Fpbiwg
-dGhpcyB0aW1lIGZyb20gdW5kZXIgdGhlDQo+IGtlcm5lbCB3aXRoIG15IHBhdGNoIHRoYXQgZG9l
-cyBmaXggdGhlIHByb2JsZW0uIEl0IGRvZXMgYWxzbyBzaG93ICJpbnZhbGlkIEFGRw0KPiBzdWJ0
-cmVlIi4NCj4gDQo+IFRoYW5rcywNCj4gDQo+IEpvc2VwaCBDLiBTaWJsZQ0KPiANCj4gLS0tLS0t
-UGxlYXNlIGNvbnNpZGVyIHRoZSBlbnZpcm9ubWVudCBiZWZvcmUgcHJpbnRpbmcgdGhpcyBlLW1h
-aWwuDQo=
+On Fri, 09 Jun 2023 05:04:29 +0200,
+Kailang wrote:
+> 
+> Hi Takashi,
+> 
+> ALC236 works normally.
+> But codec register can't show it. (it shows "Invalid AFG subtree")
+> Could you know why?
+
+It's the call of snd_hda_get_subnodes(), i.e. snd_hdac_get_subnodes(),
+which simply reads the raw parameter value (uncached)
+AC_PAR_NODE_COUNT:
+
+int snd_hdac_get_sub_nodes(struct hdac_device *codec, hda_nid_t nid,
+                           hda_nid_t *start_id)
+{
+        unsigned int parm;
+
+        parm = snd_hdac_read_parm_uncached(codec, nid, AC_PAR_NODE_COUNT);
+        if (parm == -1) {
+                *start_id = 0;
+                return 0;
+        }
+        *start_id = (parm >> 16) & 0x7fff;
+        return (int)(parm & 0x7fff);
+}
+
+So it means the read of this parameter failed.
+
+I suppose this is under the power-save, and it might be some timing
+issue?  What if you disable the codec power saving?  The easiest way
+would be to pass
+  echo 0 > /sys/module/snd_hda_intel/parameters/power_save
+
+
+thanks,
+
+Takashi
+
+> 
+> BR,
+> Kailang
+> > -----Original Message-----
+> > From: Joseph C. Sible <josephcsible@gmail.com>
+> > Sent: Thursday, June 8, 2023 10:43 PM
+> > To: Kailang <kailang@realtek.com>
+> > Cc: Takashi Iwai <tiwai@suse.de>; Bagas Sanjaya <bagasdotme@gmail.com>;
+> > regressions@lists.linux.dev; perex@perex.cz; tiwai@suse.com;
+> > alsa-devel@alsa-project.org
+> > Subject: Re: Fwd: [Bug 217440] New: ALC236 audio disappears from HP
+> > 15z-fc000 on warm boot
+> > 
+> > 
+> > External mail.
+> > 
+> > 
+> > 
+> > On Thu, Jun 8, 2023 at 2:32 AM Kailang <kailang@realtek.com> wrote:
+> > >
+> > > Could you use your patch to dump codec info again?
+> > > I want to check it will also show "invalid AFG subtree".
+> > 
+> > Okay, here's the same command's output again, this time from under the
+> > kernel with my patch that does fix the problem. It does also show "invalid AFG
+> > subtree".
+> > 
+> > Thanks,
+> > 
+> > Joseph C. Sible
+> > 
+> > ------Please consider the environment before printing this e-mail.
