@@ -1,143 +1,98 @@
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E3D4168CE
-	for <regressions@lists.linux.dev>; Thu,  8 Jun 2023 19:36:46 +0000 (UTC)
-Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-3f9a81da5d7so296281cf.0
-        for <regressions@lists.linux.dev>; Thu, 08 Jun 2023 12:36:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1686253005; x=1688845005;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=x/9rcr4cOQBqXolDSETy4vJh+qHPOC8JUf2wSjIeiXI=;
-        b=r/CLk2x/MAiwtT34jx28j8dudj2ty3X7Z6AW/HNLRvlNgNmfiqkDQ0/NNutw4FHBXb
-         0GxcudHIGySJJKR07rp//Sz8EQ8ZFfhocTJk00ey3mc5OjDl2IZWod798Lpi2zvx7U1V
-         eeLJFrRsGd57HAlXrUnxfBEJ71W8PCIYWJAvxBTO4VOPK+cVTh/LUUkPCLYCD4Vjp8X6
-         JIMzSaDm7kpV42dMdfQEedA2k8yLvpDmj9vjD5yzKOYwPinSm/gwrlJWic3mfMndf033
-         sQHo8QrFG8aQwEaHW3hC8QOa+z/1temgzuPpED9PsDc4bQrb6wVCZrr40eFtB+46siaW
-         7ueA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686253005; x=1688845005;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=x/9rcr4cOQBqXolDSETy4vJh+qHPOC8JUf2wSjIeiXI=;
-        b=KhS94rRk3rULF4tmplGRJzXlBGp+zHXTXAXGTvjv7fztcLlx0cSQGAPyak1c601KBT
-         mQf1aWpR2iUiQSmlo9RD+9rrOm0+75hCmzaP6Bd4IuT1jU+cFXnYZM63r8IHLCqwN3n8
-         EMeOzEXdbqxtqhKNiLTOQFxSWttub0Flhkyb6LF5l5ldlhGis/mzaAoFZYV6bZGHdCAn
-         B+RRFD/TTbDYkNdpVw7pku3ySnXZHfDJWt40KMf++/76WWtOSwZSc3FMf24g+GygTDY0
-         0/W8njzRz0EC0GzVTiBCNWpToXPap2koTdmZiq1lmucexZ1A0al0nnniKjbClUjS/SII
-         ho+w==
-X-Gm-Message-State: AC+VfDyBwyWEmwMKIhB+b7ILS9OVB+2gixO1zTahJZI70rSXA8CF9NT4
-	agdCnaXF6l0vLVNsxlh5K1lMQkAE2SgVK+JbMzGAXg==
-X-Google-Smtp-Source: ACHHUZ4NMOg5fkuw5/WDThm2yIjlXlvQVqU1jaFR4IjPDZ+0uJvzlIRYOFqBOQTPtHistpqXx/ZVgwuR4r+QEAJARu8=
-X-Received: by 2002:ac8:5888:0:b0:3ef:2f55:2204 with SMTP id
- t8-20020ac85888000000b003ef2f552204mr330245qta.6.1686253004843; Thu, 08 Jun
- 2023 12:36:44 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 126BDA35
+	for <regressions@lists.linux.dev>; Fri,  9 Jun 2023 03:04:51 +0000 (UTC)
+Authenticated-By: 
+X-SpamFilter-By: ArmorX SpamTrap 5.77 with qID 35934DhhC027865, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
+	by rtits2.realtek.com.tw (8.15.2/2.81/5.90) with ESMTPS id 35934DhhC027865
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=OK);
+	Fri, 9 Jun 2023 11:04:13 +0800
+Received: from RTEXDAG02.realtek.com.tw (172.21.6.101) by
+ RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.32; Fri, 9 Jun 2023 11:04:29 +0800
+Received: from RTEXMBS01.realtek.com.tw (172.21.6.94) by
+ RTEXDAG02.realtek.com.tw (172.21.6.101) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.7; Fri, 9 Jun 2023 11:04:29 +0800
+Received: from RTEXMBS01.realtek.com.tw ([fe80::4d7:e49a:674a:598]) by
+ RTEXMBS01.realtek.com.tw ([fe80::4d7:e49a:674a:598%5]) with mapi id
+ 15.01.2375.007; Fri, 9 Jun 2023 11:04:29 +0800
+From: Kailang <kailang@realtek.com>
+To: "Joseph C. Sible" <josephcsible@gmail.com>
+CC: Takashi Iwai <tiwai@suse.de>, Bagas Sanjaya <bagasdotme@gmail.com>,
+        "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+        "perex@perex.cz"
+	<perex@perex.cz>, "tiwai@suse.com" <tiwai@suse.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
+Subject: RE: Fwd: [Bug 217440] New: ALC236 audio disappears from HP 15z-fc000 on warm boot
+Thread-Topic: Fwd: [Bug 217440] New: ALC236 audio disappears from HP 15z-fc000
+ on warm boot
+Thread-Index: AQHZhdSOD7kY6mXBDkGA3ryhp811r69Yu5SAgAASNACAAA22gIAA7n+AgAEJrYCABLe/YIAJNIWAgAIHAcD//4tyAIAB8UZw///vxgCADzWhgIABfgWAgACUPoCAAPnsAIAAmlKwgAA8s4CAAQ8boP//kIuAABWnYVAAAIR9gAAqhW/A
+Date: Fri, 9 Jun 2023 03:04:29 +0000
+Message-ID: <009474f04d0b45c69a0e42e8622b7a86@realtek.com>
+References: <bug-217440-225600@https.bugzilla.kernel.org/>
+ <CABpewhE4REgn9RJZduuEU6Z_ijXNeQWnrxO1tg70Gkw=F8qNYg@mail.gmail.com>
+ <ZGB0cVVI7OgaJU6t@debian.me>
+ <CABpewhGJE7-k52j8L2kJ2zKupgp3Ma+LdZazzzV4w1Bgihp7nw@mail.gmail.com>
+ <87cz338ix4.wl-tiwai@suse.de>
+ <CABpewhF01AK4cFPbwYVvKR9yWaO7o-ZE-2+MZjYSUF0BKUdYvw@mail.gmail.com>
+ <874jodlnmi.wl-tiwai@suse.de> <415d4bc84aa74c74af913048f28b42a9@realtek.com>
+ <87fs7mdofi.wl-tiwai@suse.de> <7da2fdfdae614b1c98deda6e11ca34eb@realtek.com>
+ <87353kd8b9.wl-tiwai@suse.de> <1170325957764b4cbd7cd3639575f285@realtek.com>
+ <CABpewhGBakDSBLKZ1cr2=OMspuu3qyYwZrsXUggQ3vt8gsD88A@mail.gmail.com>
+ <873536js7q.wl-tiwai@suse.de>
+ <CABpewhE0NAC-Q=iqG2Ba=XhT7SXsWy18wQGYUaopzmKDfFxyPw@mail.gmail.com>
+ <2c1fcbc00bb44d66a29ac1c1e4bec5ad@realtek.com>
+ <CABpewhFthKG97dPiQC4JhGx9sapX9Yu5rWABQjpY95TSA+eawA@mail.gmail.com>
+ <485f99149508488080d563144454040e@realtek.com>
+ <CABpewhGkvWtM+9J=mx3vw0QY=OBB5OYCxzX3nzVffvFS4QazPA@mail.gmail.com>
+ <2831c55638a5431ca9e37d9caf365ed2@realtek.com>
+ <CABpewhGiMJUpyBA6=D9_-YA6=5rjR2R0RHUZeg+cWcjtzuCoZQ@mail.gmail.com>
+ <3c27f0455d6e4bd1a68115bd25bf1a12@realtek.com>
+ <CABpewhEptq0+W_71U__8iQ4+LNtYSUB9C+0bcS2Hw-5mnj9viQ@mail.gmail.com>
+In-Reply-To: <CABpewhEptq0+W_71U__8iQ4+LNtYSUB9C+0bcS2Hw-5mnj9viQ@mail.gmail.com>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-originating-ip: [172.22.102.106]
+x-kse-serverinfo: RTEXDAG02.realtek.com.tw, 9
+x-kse-antispam-interceptor-info: fallback
+x-kse-antivirus-interceptor-info: fallback
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20221024052841.3291983-1-shakeelb@google.com> <20230608111408.s2minsenlcjow7q3@quack3>
- <20230608173700.wafw5tyw52gwoicu@google.com> <ZIInlxGIl8mS-iRk@V92F7Y9K0C.corp.robot.car>
-In-Reply-To: <ZIInlxGIl8mS-iRk@V92F7Y9K0C.corp.robot.car>
-From: Shakeel Butt <shakeelb@google.com>
-Date: Fri, 9 Jun 2023 00:36:33 +0500
-Message-ID: <CALvZod44XVAqL6zEDmHMdHzcgHaBnyFAb=MbJf7hbO+5G2TQxw@mail.gmail.com>
-Subject: Re: [PATCH] mm: convert mm's rss stats into percpu_counter
-To: Dennis Zhou <dennisszhou@gmail.com>
-Cc: Jan Kara <jack@suse.cz>, Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, mhocko@suse.cz, vbabka@suse.cz, 
-	regressions@lists.linux.dev, Yu Ma <yu.ma@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-KSE-AntiSpam-Interceptor-Info: fallback
+X-KSE-ServerInfo: RTEXH36505.realtek.com.tw, 9
+X-KSE-AntiSpam-Interceptor-Info: fallback
+X-KSE-Antivirus-Interceptor-Info: fallback
+X-KSE-AntiSpam-Interceptor-Info: fallback
 
-On Fri, Jun 9, 2023 at 12:10=E2=80=AFAM Dennis Zhou <dennisszhou@gmail.com>=
- wrote:
->
-> Hi Shakeel and Jan,
->
-> On Thu, Jun 08, 2023 at 05:37:00PM +0000, Shakeel Butt wrote:
-> > On Thu, Jun 08, 2023 at 01:14:08PM +0200, Jan Kara wrote:
-> > [...]
-> > >
-> > > Somewhat late to the game but our performance testing grid has notice=
-d this
-> > > commit causes a performance regression on shell-heavy workloads. For
-> > > example running 'make test' in git sources on our test machine with 1=
-92
-> > > CPUs takes about 4% longer, system time is increased by about 9%:
-> > >
-> > >                        before (9cd6ffa6025)  after (f1a7941243c1)
-> > > Amean     User         471.12 *   0.30%*     481.77 *  -1.96%*
-> > > Amean     System       244.47 *   0.90%*     269.13 *  -9.09%*
-> > > Amean     Elapsed      709.22 *   0.45%*     742.27 *  -4.19%*
-> > > Amean     CPU          100.00 (   0.20%)     101.00 *  -0.80%*
-> > >
-> > > Essentially this workload spawns in sequence a lot of short-lived tas=
-ks and
-> > > the task startup + teardown cost is what this patch increases. To
-> > > demonstrate this more clearly, I've written trivial (and somewhat stu=
-pid)
-> > > benchmark shell_bench.sh:
-> > >
-> > > for (( i =3D 0; i < 20000; i++ )); do
-> > >     /bin/true
-> > > done
-> > >
-> > > And when run like:
-> > >
-> > > numactl -C 1 ./shell_bench.sh
-> > >
-> > > (I've forced physical CPU binding to avoid task migrating over the ma=
-chine
-> > > and cpu frequency scaling interfering which makes the numbers much mo=
-re
-> > > noisy) I get the following elapsed times:
-> > >
-> > >          9cd6ffa6025    f1a7941243c1
-> > > Avg      6.807429       7.631571
-> > > Stddev   0.021797       0.016483
-> > >
-> > > So some 12% regression in elapsed time. Just to be sure I've verified=
- that
-> > > per-cpu allocator patch [1] does not improve these numbers in any
-> > > significant way.
-> > >
-> > > Where do we go from here? I think in principle the problem could be f=
-ixed
-> > > by being clever and when the task has only a single thread, we don't =
-bother
-> > > with allocating pcpu counter (and summing it at the end) and just acc=
-ount
-> > > directly in mm_struct. When the second thread is spawned, we bite the
-> > > bullet, allocate pcpu counter and start with more scalable accounting=
-.
-> > > These shortlived tasks in shell workloads or similar don't spawn any
-> > > threads so this should fix the regression. But this is obviously easi=
-er
-> > > said than done...
-> > >
-> >
-> > Thanks Jan for the report. I wanted to improve the percpu allocation to
-> > eliminate this regression as it was reported by intel test bot as well.
-> > However your suggestion seems seems targetted and reasonable as well. A=
-t
-> > the moment I am travelling, so not sure when I will get to this. Do you
-> > want to take a stab at it or you want me to do it? Also how urgent and
-> > sensitive this regression is for you?
-> >
-> > thanks,
-> > Shakeel
-> >
-> >
->
-> I _think_ I could probably spin you a percpu_alloc_bulk() series in a
-> couple days for percpu_counters. Let me try and find some time, unless
-> you had something different in mind.
->
-
-That would be awesome and thanks a lot.
+SGkgVGFrYXNoaSwNCg0KQUxDMjM2IHdvcmtzIG5vcm1hbGx5Lg0KQnV0IGNvZGVjIHJlZ2lzdGVy
+IGNhbid0IHNob3cgaXQuIChpdCBzaG93cyAiSW52YWxpZCBBRkcgc3VidHJlZSIpDQpDb3VsZCB5
+b3Uga25vdyB3aHk/DQoNCkJSLA0KS2FpbGFuZw0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0t
+LQ0KPiBGcm9tOiBKb3NlcGggQy4gU2libGUgPGpvc2VwaGNzaWJsZUBnbWFpbC5jb20+DQo+IFNl
+bnQ6IFRodXJzZGF5LCBKdW5lIDgsIDIwMjMgMTA6NDMgUE0NCj4gVG86IEthaWxhbmcgPGthaWxh
+bmdAcmVhbHRlay5jb20+DQo+IENjOiBUYWthc2hpIEl3YWkgPHRpd2FpQHN1c2UuZGU+OyBCYWdh
+cyBTYW5qYXlhIDxiYWdhc2RvdG1lQGdtYWlsLmNvbT47DQo+IHJlZ3Jlc3Npb25zQGxpc3RzLmxp
+bnV4LmRldjsgcGVyZXhAcGVyZXguY3o7IHRpd2FpQHN1c2UuY29tOw0KPiBhbHNhLWRldmVsQGFs
+c2EtcHJvamVjdC5vcmcNCj4gU3ViamVjdDogUmU6IEZ3ZDogW0J1ZyAyMTc0NDBdIE5ldzogQUxD
+MjM2IGF1ZGlvIGRpc2FwcGVhcnMgZnJvbSBIUA0KPiAxNXotZmMwMDAgb24gd2FybSBib290DQo+
+IA0KPiANCj4gRXh0ZXJuYWwgbWFpbC4NCj4gDQo+IA0KPiANCj4gT24gVGh1LCBKdW4gOCwgMjAy
+MyBhdCAyOjMy4oCvQU0gS2FpbGFuZyA8a2FpbGFuZ0ByZWFsdGVrLmNvbT4gd3JvdGU6DQo+ID4N
+Cj4gPiBDb3VsZCB5b3UgdXNlIHlvdXIgcGF0Y2ggdG8gZHVtcCBjb2RlYyBpbmZvIGFnYWluPw0K
+PiA+IEkgd2FudCB0byBjaGVjayBpdCB3aWxsIGFsc28gc2hvdyAiaW52YWxpZCBBRkcgc3VidHJl
+ZSIuDQo+IA0KPiBPa2F5LCBoZXJlJ3MgdGhlIHNhbWUgY29tbWFuZCdzIG91dHB1dCBhZ2Fpbiwg
+dGhpcyB0aW1lIGZyb20gdW5kZXIgdGhlDQo+IGtlcm5lbCB3aXRoIG15IHBhdGNoIHRoYXQgZG9l
+cyBmaXggdGhlIHByb2JsZW0uIEl0IGRvZXMgYWxzbyBzaG93ICJpbnZhbGlkIEFGRw0KPiBzdWJ0
+cmVlIi4NCj4gDQo+IFRoYW5rcywNCj4gDQo+IEpvc2VwaCBDLiBTaWJsZQ0KPiANCj4gLS0tLS0t
+UGxlYXNlIGNvbnNpZGVyIHRoZSBlbnZpcm9ubWVudCBiZWZvcmUgcHJpbnRpbmcgdGhpcyBlLW1h
+aWwuDQo=
