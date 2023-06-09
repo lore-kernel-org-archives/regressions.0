@@ -1,146 +1,110 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6318E64A
-	for <regressions@lists.linux.dev>; Fri,  9 Jun 2023 08:35:04 +0000 (UTC)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 5350421A02;
-	Fri,  9 Jun 2023 08:35:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1686299700; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RQhStachu2WTpI3rtYsXFGtCjbHfw3L4SL0PGfkOa8s=;
-	b=v38NkbrXWm81h7m06VKHT/7fvYYPQN5dxrT6zNg4sG9rz+2DSGzM2o+rm2AcDuUrXJTnKn
-	XQQSpYTmqUdHw4PaSdrqJxWngB1H4dXhuYtZQNBdaz/5/ehWyB5I/jka939D9Sz1GO4UsE
-	4BV40Yyigt/U7ElGkVIfH8dbPeJPxjQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1686299700;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RQhStachu2WTpI3rtYsXFGtCjbHfw3L4SL0PGfkOa8s=;
-	b=V3GrdoP2652mY9m8yZki+8TbaxNOXeJFFGjfFLJhjUMvCyg0kyr4abzdpteWw/coW0hK1o
-	C0ehpdhp8rj3kgCg==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 257A513A47;
-	Fri,  9 Jun 2023 08:35:00 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-	by imap2.suse-dmz.suse.de with ESMTPSA
-	id h38aCDTkgmRxYwAAMHmgww
-	(envelope-from <tiwai@suse.de>); Fri, 09 Jun 2023 08:35:00 +0000
-Date: Fri, 09 Jun 2023 10:34:59 +0200
-Message-ID: <874jnhc9u4.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: "Joseph C. Sible" <josephcsible@gmail.com>
-Cc: Kailang <kailang@realtek.com>,
-	Bagas Sanjaya <bagasdotme@gmail.com>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
-	"perex@perex.cz" <perex@perex.cz>,
-	"tiwai@suse.com" <tiwai@suse.com>,
-	"alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
-Subject: Re: Fwd: [Bug 217440] New: ALC236 audio disappears from HP 15z-fc000 on warm boot
-In-Reply-To: <878rctcavz.wl-tiwai@suse.de>
-References: <bug-217440-225600@https.bugzilla.kernel.org/>
-	<CABpewhE4REgn9RJZduuEU6Z_ijXNeQWnrxO1tg70Gkw=F8qNYg@mail.gmail.com>
-	<ZGB0cVVI7OgaJU6t@debian.me>
-	<CABpewhGJE7-k52j8L2kJ2zKupgp3Ma+LdZazzzV4w1Bgihp7nw@mail.gmail.com>
-	<87cz338ix4.wl-tiwai@suse.de>
-	<CABpewhF01AK4cFPbwYVvKR9yWaO7o-ZE-2+MZjYSUF0BKUdYvw@mail.gmail.com>
-	<874jodlnmi.wl-tiwai@suse.de>
-	<415d4bc84aa74c74af913048f28b42a9@realtek.com>
-	<87fs7mdofi.wl-tiwai@suse.de>
-	<7da2fdfdae614b1c98deda6e11ca34eb@realtek.com>
-	<87353kd8b9.wl-tiwai@suse.de>
-	<1170325957764b4cbd7cd3639575f285@realtek.com>
-	<CABpewhGBakDSBLKZ1cr2=OMspuu3qyYwZrsXUggQ3vt8gsD88A@mail.gmail.com>
-	<873536js7q.wl-tiwai@suse.de>
-	<CABpewhE0NAC-Q=iqG2Ba=XhT7SXsWy18wQGYUaopzmKDfFxyPw@mail.gmail.com>
-	<2c1fcbc00bb44d66a29ac1c1e4bec5ad@realtek.com>
-	<CABpewhFthKG97dPiQC4JhGx9sapX9Yu5rWABQjpY95TSA+eawA@mail.gmail.com>
-	<485f99149508488080d563144454040e@realtek.com>
-	<CABpewhGkvWtM+9J=mx3vw0QY=OBB5OYCxzX3nzVffvFS4QazPA@mail.gmail.com>
-	<2831c55638a5431ca9e37d9caf365ed2@realtek.com>
-	<CABpewhGiMJUpyBA6=D9_-YA6=5rjR2R0RHUZeg+cWcjtzuCoZQ@mail.gmail.com>
-	<3c27f0455d6e4bd1a68115bd25bf1a12@realtek.com>
-	<CABpewhEptq0+W_71U__8iQ4+LNtYSUB9C+0bcS2Hw-5mnj9viQ@mail.gmail.com>
-	<009474f04d0b45c69a0e42e8622b7a86@realtek.com>
-	<87h6rhcef2.wl-tiwai@suse.de>
-	<0990300d759846d890de9c92fcad9a9d@realtek.com>
-	<CABpewhERnOH1qkkJ5_JJUZkz1_8oxD9aR5VBs1vsURAG7Eu_Ew@mail.gmail.com>
-	<878rctcavz.wl-tiwai@suse.de>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A12B79E2
+	for <regressions@lists.linux.dev>; Fri,  9 Jun 2023 11:04:42 +0000 (UTC)
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1b01d912924so6783915ad.1
+        for <regressions@lists.linux.dev>; Fri, 09 Jun 2023 04:04:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1686308682; x=1688900682;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aEZPAeIV/OtWRVRtfhWloaaTiFQRpVuQ6c3hWe/ckak=;
+        b=YaA7FMxKN+7vfMRVRCcEnnj7qFuw1UrPnx42VMlRMLMiKtKScyF2LosWNEBAlz9G84
+         oN/JbLD1ts2NmctqUJM380hZjHyjBEPjKpVyTWBEIOHIV/86tkGDqM/XIPJaVxHhBMRk
+         +1T4+NpQ/PKA05JzfA4KDADEa7jKcgvYdJNUuOtH0SbUvtqqRVBIE8PZ8elR26asbV4M
+         uqK7Uyij+97rzlSYEvJhWDoNa4BoL+qRp/nTUCrEb8YZm0rBy3QlixtBs58DFj2kY214
+         hp1O9ZiRMZ4JWBwKtTFhe/VOyKOlyZDTXSFnP97NqMkcPkoDFq9rdjQ9lqiClv59wi53
+         ffqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686308682; x=1688900682;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=aEZPAeIV/OtWRVRtfhWloaaTiFQRpVuQ6c3hWe/ckak=;
+        b=h+cUidaYEwIZngJSdtTUw1jDrl/aMDVL1yxwCfFsG6tFseaqOLPzAmnQIFm6BZu4pL
+         J2AqRxTk56HFrMVsZuabVOIUj86pyeTfrCuhfPI1KeHscXB5gl3Hs3E6PYof5AjGziey
+         v4YiNvZ8WbIpSPlJrK/lkmPfhPC+cJPm9u4iDo7Np14dNrCzlkMv8LTNb/9AEoiJHxJ3
+         SC4iKPV/J5PyFzFbuumjIgMbadq2ZXm/F+RDvDCmie8qnt4HjoDiYRM/dgeTHowno2sV
+         y9gyj8/1TjgernWtkIBuDgU8wCGHK6k/OqDH/0KYTmrfmWSDlcKivCNq2QIflI0LT80p
+         l4ng==
+X-Gm-Message-State: AC+VfDzcVbMCIkXgVZWQ00QSx3ygRJlHjJP6YwMzl6xEB9mgoWyrKIsG
+	ehEW7ect9AYJoNKbDprW8UY=
+X-Google-Smtp-Source: ACHHUZ4PedxoYr1YVS117Tj0fzkFfE6nw0uZj3KY70eFDjoP9uhOO4uoh/QfIhve0hKdM1mR8BV7eA==
+X-Received: by 2002:a17:902:704a:b0:1b3:8862:2403 with SMTP id h10-20020a170902704a00b001b388622403mr709032plt.36.1686308681966;
+        Fri, 09 Jun 2023 04:04:41 -0700 (PDT)
+Received: from [192.168.43.80] (subs02-180-214-232-88.three.co.id. [180.214.232.88])
+        by smtp.gmail.com with ESMTPSA id p17-20020a170902ead100b001b06f7f5333sm3042080pld.1.2023.06.09.04.04.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 09 Jun 2023 04:04:41 -0700 (PDT)
+Message-ID: <2d1fdf6d-682c-a18d-2260-5c5ee7097f7d@gmail.com>
+Date: Fri, 9 Jun 2023 18:04:31 +0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.2
+Content-Language: en-US
+To: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <len.brown@intel.com>,
+ Pavel Machek <pavel@ucw.cz>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, Kees Cook <keescook@chromium.org>,
+ Tony Luck <tony.luck@intel.com>, "Guilherme G. Piccoli"
+ <gpiccoli@igalia.com>, Thorsten Leemhuis <linux@leemhuis.info>,
+ "James E.J. Bottomley" <jejb@linux.ibm.com>,
+ "Martin K. Petersen" <martin.petersen@oracle.com>,
+ Phillip Potter <phil@philpotter.co.uk>,
+ Joe Breuer <linux-kernel@jmbreuer.net>
+Cc: Linux Power Management <linux-pm@vger.kernel.org>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Hardening <linux-hardening@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Linux SCSI <linux-scsi@vger.kernel.org>
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+Subject: Fwd: Waking up from resume locks up on sr device
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On Fri, 09 Jun 2023 10:12:16 +0200,
-Takashi Iwai wrote:
-> 
-> On Fri, 09 Jun 2023 09:34:37 +0200,
-> Joseph C. Sible wrote:
-> > 
-> > On Fri, Jun 9, 2023 at 3:04 AM Kailang <kailang@realtek.com> wrote:
-> > >
-> > > echo 0 > /sys/module/snd_hda_intel/parameters/power_save
-> > >
-> > > Could you give it a try? Then got dump also.
-> > >
-> > > If it passed, please test my two patches also. Then get dump again.
-> > 
-> > I ran that command under the kernel with my patch and then got an
-> > alsa-info dump again, and it still said "Invalid AFG subtree". The
-> > full result is attached as alsa-info-1.txt.
-> > 
-> > I then added snd_hda_intel.power_save=0 to the kernel command line and
-> > tried under the kernel with your patches again. No change here either:
-> > still "Invalid AFG subtree", and upon a warm boot, it still breaks.
-> > Attached from this test are alsa-info-2.txt (cold boot) and
-> > alsa-info-3.txt (warm boot).
-> 
-> Thanks.  It's puzzling.
-> 
-> The power setting of AFG looks already unusual:
-> 
-> State of AFG node 0x01:
->   Power states:  D0 D2 (null) (null) (null) (null) (null) (null) (null)
->   Power: setting=UNKNOWN, actual=D0, Clock-stop-OK, Setting-reset
-> 
-> So apparently the codec isn't ready yet for accessing.
-> 
-> But, the fact that the codec got parsed (hence you see the parsed
-> results in dmesg) means that this subtree call could succeed at the
-> beginning.
-> 
-> When you load snd-hda-intel module with "model=,generic" option (the
-> command is intentional), does the codec content show up?
+Hi,
 
-Also, assuming it being some timing issue, adding the delay forcibly
-like below has any influence on the AFG error?
+I notice a regression report on Bugzilla [1]. Quoting from it:
 
+> I'm running LibreELEC.tv on an x86_64 machine that, following a (kernel) update, now locks up hard while trying to device_resume() => device_lock() on sr 2:0:0:0 (the only sr device in the system).
+> 
+> Through some digging of my own, I can pretty much isolate the fault in this device_lock() call:
+> https://elixir.bootlin.com/linux/v6.3.4/source/drivers/base/power/main.c#L919
+> 
+> I put an additional debug line exactly before the device_lock(dev) call, like this:
+> dev_info(dev, "device_lock() in device_resume()");
+> 
+> This is the last diagnostic I see, that device_lock() call never returns, ie line 920 in main.c is never reached (confirmed via TRACE_RESUME).
+> The device, in my case, is printed as sr 2:0:0:0.
+> 
+> Knowing this, as a workaround, booting with libata.force=3:disable (libata port 3 corresponds to the SATA channel that sr 2:0:0:0 is attached to) allows suspend/resume to work correctly (but the optical drive is not accessible, obviously).
+> 
+> When resume hangs, the kernel is not _completely_ locked, interestingly the machine responds to pings and I see the e1000e 'link up' message a couple seconds after the hanging sr2 device_lock().
+> Magic SysRq, however, does NOT work in that state; possibly because not enough of USB is resumed yet. Resuming devices seems to broadly follow a kind of breadth-first order; I see USB ports getting resumed closely before the lockup, but no USB (target) devices.
+> 
+> This is a regression, earlier kernels would work correctly on the exact same hardware. Since it's an 'embedded' type (LibreELEC.tv) install that overwrites its system parts completely on each update, I don't have a clear historical record of kernel versions. From the timeline and my memory, moving from 5.x to 6.x would make sense. Due to the nature of the system, it's somewhat inconvenient for me to try numerous kernel versions blindly for a bisection; I will try to test against some current 5.x soon, however.
+> 
+> I do have the hope that this information already might give someone with more background a strong idea about the issue.
+> 
+> Next, I will try to put debug_show_all_locks() before device_lock(), since I can't Alt+SysRq+d.
 
-Takashi
+See Bugzilla for the full thread.
 
---- a/sound/pci/hda/hda_proc.c
-+++ b/sound/pci/hda/hda_proc.c
-@@ -792,6 +792,7 @@ static void print_codec_info(struct snd_info_entry *entry,
- 	snd_iprintf(buffer, "State of AFG node 0x%02x:\n", fg);
- 	print_power_state(buffer, codec, fg);
- 
-+	msleep(100); // XXX
- 	nodes = snd_hda_get_sub_nodes(codec, fg, &nid);
- 	if (! nid || nodes < 0) {
- 		snd_iprintf(buffer, "Invalid AFG subtree\n");
+Anyway, I'm adding it to regzbot (with rough version range since the reporter
+only knows major kernel version numbers):
+
+#regzbot introduced: v5.0..v6.4-rc5 https://bugzilla.kernel.org/show_bug.cgi?id=217530
+#regzbot title: Waking up from resume locks up on SCSI CD/DVD drive
+
+Thanks.
+
+[1]: https://bugzilla.kernel.org/show_bug.cgi?id=217530
+
+-- 
+An old man doll... just what I always wanted! - Clara
