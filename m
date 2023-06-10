@@ -1,45 +1,45 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 008EA1FAE
-	for <regressions@lists.linux.dev>; Sat, 10 Jun 2023 10:15:30 +0000 (UTC)
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-51493ec65d8so4603250a12.2
-        for <regressions@lists.linux.dev>; Sat, 10 Jun 2023 03:15:30 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A873256A
+	for <regressions@lists.linux.dev>; Sat, 10 Jun 2023 13:27:11 +0000 (UTC)
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1b24eba185cso14360605ad.2
+        for <regressions@lists.linux.dev>; Sat, 10 Jun 2023 06:27:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1686392129; x=1688984129;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
+        d=gmail.com; s=20221208; t=1686403630; x=1688995630;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=ocEa74Vi89cO2z8zXldBEe8uWhsWcgE3EnruaUyyG6A=;
-        b=iSskDd85C+HHzGDa4RdZtW28HtNbYcY25JR/exMSVHFY8SBHJU5j5WgJDz02bLK/u/
-         /IdE5incZ3qS8hAKZFNeYNzykmJPPDQkzXts3wJBOt9GfXnljNUsLb2GQhnvk9CHT9ZQ
-         LzpTro3TjXqfg0Kx+cGH4VlFelA1xCXbS5Y/IQRSoyrgl9lpXTFDXxkAINmNt+OTy8mA
-         6UGYqOyIhk8b8XiTQl7DcaOIxg1LOrOEUC5CGJ6iSzdMDtKYVXCmaJ1r/LUbr8WMsP5M
-         n4EdFN4QwTASmn3grJdr8N8d285mZmJ7NA62Yy228+VIWYyVlq9emYztq/4aYu4t5iu8
-         4nwg==
+        bh=feLkklU8QQo6+CqnfmR65iwQdI4nch86pSzF7/Ejl1U=;
+        b=d+9Gb4VoEz660buLe8D3IQUStOHnr0qf5rzb4NuYvReJxjuEjo7JPU16c8GAL/RPSB
+         SzSt/zLU5MsWlHMDKcF9p73jL0uW2vDG2+ilx4s1dnRM7eyGtUWlZgIAG5B03Cz6WQBt
+         BnbQHXaR8tc7+uOG11ya7AR7INdnqsIlVSxAqwNnWKrX2Wc1oqR41ZamiAfSTDCxZMvt
+         m+LbdqEregcxUowQ52mjQCh0uzC96qBEf52jZWbsykBJ2UBBUqC3fD5YHAzJs4EcPVqO
+         8FpAkz4xntPNx76IMn+FjKx1LvANjko+a80Bph4QWBBZOke27nhJv1sJGjmn69KyYU72
+         ZCBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686392129; x=1688984129;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20221208; t=1686403630; x=1688995630;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ocEa74Vi89cO2z8zXldBEe8uWhsWcgE3EnruaUyyG6A=;
-        b=ZZOkJwCRdAGZ8pIeiEFYkVbhFvp6R4Lj6WsAzTmRF7DB96/aVp2PTrFH3wJy+f8sX6
-         MyzyzzGJgaJd+hS/wPDAv0XliPHAZX2lf8RQwtT5KUwCqlmmRVhdLL/RBM/jKk+fK3VG
-         c9SiGBS5B91kloH7nCMiqkXDZyWLTcoD+uC9dL5SEY7j4vvByHdcutVSqUEpBuSZGRJH
-         NYPVoCp/2S1cL3a1QQBf6iqLuY5Wf4LNvnYrl3YDDiCUj/1sk/k7G0V2lA+D/7WS9EbD
-         JCdaKL59IN2IcRQxu5idN9i432TMkqv47XN+ujYUPDdA8Y1pBcK2wBMy0jribSMeGJnY
-         2tkg==
-X-Gm-Message-State: AC+VfDxfQNG03U80s7CrBtcvyrQKFZ+KdgJjkYLx9BmKSwv/Hfl5p+7T
-	+0j/SlkcWRtlQVAypuQ9HCJnwg==
-X-Google-Smtp-Source: ACHHUZ66HNdTn1UvKSjw6g9AWCTfaohbUacL1urDb1l3SqjgCzYuLKbLr2rnfvNY7TZayL953coajw==
-X-Received: by 2002:a05:6402:455:b0:510:ddad:fae6 with SMTP id p21-20020a056402045500b00510ddadfae6mr1066249edw.3.1686392128860;
-        Sat, 10 Jun 2023 03:15:28 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.219.26])
-        by smtp.gmail.com with ESMTPSA id g16-20020aa7d1d0000000b0050bc4600d38sm2711556edp.79.2023.06.10.03.15.27
+        bh=feLkklU8QQo6+CqnfmR65iwQdI4nch86pSzF7/Ejl1U=;
+        b=Z6FtO3a+ZV5501gMa1qpinW8pwilB1L/jxE+mRjJy2u73SbrcB+VVgYkYfWtzvRZMM
+         JdJDQGWkWwuACiLJLgy7oUOo9FvOUbc9frPLrhKD0z4GR/uTA5TBm14oloCtugGhxhjI
+         jelWKJLw9VKqZUUg1HxLQCOWzpi8j0pDCaljsOACqDRIh+xZbKVcVjVpQDYd4lZMKaI9
+         S5gqqTRvNQAnyCLgaADAjIiJHZY3O3NRAtGWDUYjmdsD9Ciogv6XiDl+/6vkvbHdZ74l
+         SEtVRwYMGnkakXMLLDJWiPoeENbyOEGOZRl6dDiGZrFPnJOdx6DA9cNnic2g4gWJoSTA
+         fccA==
+X-Gm-Message-State: AC+VfDw984F9sJp8ox3mrWFsIQdbYSHGyChr8e2aISjg06mON6po/iGE
+	iXU4HC0z1z9cjsUDpdrAidU=
+X-Google-Smtp-Source: ACHHUZ6HWDnN7NK+GM1TTa2LKHZOI2WxhV2/acudKOcg0T+xt4IlT9Dkj6c33tsA7jPnRZNWXsxcBw==
+X-Received: by 2002:a17:903:1208:b0:1af:aafb:64c8 with SMTP id l8-20020a170903120800b001afaafb64c8mr2118223plh.21.1686403630429;
+        Sat, 10 Jun 2023 06:27:10 -0700 (PDT)
+Received: from [192.168.43.80] (subs09b-223-255-225-238.three.co.id. [223.255.225.238])
+        by smtp.gmail.com with ESMTPSA id y20-20020a170902b49400b001a980a23804sm5010765plr.4.2023.06.10.06.27.04
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 10 Jun 2023 03:15:28 -0700 (PDT)
-Message-ID: <86d8e252-975f-5d48-4567-0911d5ef9a44@linaro.org>
-Date: Sat, 10 Jun 2023 12:15:27 +0200
+        Sat, 10 Jun 2023 06:27:09 -0700 (PDT)
+Message-ID: <07d6e2e7-a50a-8cf4-5c5d-200551bd6687@gmail.com>
+Date: Sat, 10 Jun 2023 20:27:02 +0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -48,69 +48,50 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.11.2
-Subject: Re: Regression: NULL pointer dereference after NFS_V4_2_READ_PLUS
- (commit 7fd461c47)
-Content-Language: en-US
-To: Anna Schumaker <schumaker.anna@gmail.com>
-Cc: Trond Myklebust <trondmy@hammerspace.com>,
- Anna Schumaker <Anna.Schumaker@netapp.com>,
- linux-nfs <linux-nfs@vger.kernel.org>,
+Subject: Re: Fwd: Waking up from resume locks up on sr device
+To: Pavel Machek <pavel@ucw.cz>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <len.brown@intel.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Kees Cook <keescook@chromium.org>, Tony Luck <tony.luck@intel.com>,
+ "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+ Thorsten Leemhuis <linux@leemhuis.info>,
+ "James E.J. Bottomley" <jejb@linux.ibm.com>,
+ "Martin K. Petersen" <martin.petersen@oracle.com>,
+ Phillip Potter <phil@philpotter.co.uk>,
+ Joe Breuer <linux-kernel@jmbreuer.net>,
+ Linux Power Management <linux-pm@vger.kernel.org>,
  Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <f591b13c-4600-e2a4-8efa-aac6ad828dd1@linaro.org>
- <82526863-d07a-0a5d-2990-1555b1387f26@linaro.org>
- <2C5E9725-F152-4D2E-882E-CF92A35481BF@hammerspace.com>
- <7ba38377-7992-7f0f-d905-cceb42510f39@linaro.org>
- <51430925-8046-7066-84ed-2ff0db835347@linaro.org>
- <CAFX2Jf=5X3zyZEWQmD6Rg9jQAD7ccDbae5LQCwrAyPCVVoFumg@mail.gmail.com>
- <2add1769-1458-b185-bc78-6d573f61b6fc@linaro.org>
- <CAFX2JfnKy7juGQaDTzqosN9SF-zd+XrhSL9uh_Xg0GpJGDux-A@mail.gmail.com>
- <32530c36-91d0-d351-0689-aed6a0975a4b@linaro.org>
- <2f285607-cbf9-6abc-f436-edb6e9a3938b@linaro.org>
- <CAFX2Jfmz7QqZBEdzbPUhPs0yctnXVaVF68tX1c57YX=6ki=0TA@mail.gmail.com>
- <4fe39d77-eb7c-a578-aefa-45b76e2247c2@linaro.org>
- <CAFX2JfmdRMsHPTySiw4vm7BwJfRZj3s0V3_v7NJ+XwMxBBSo9A@mail.gmail.com>
- <a3683dd3-3f30-bb4c-539d-d1519de6e5bf@linaro.org>
- <CAFX2JfnS9GVc4NaxKhr9E4y10NNv6SPgcv1yoeHTfEw5NvZgMg@mail.gmail.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <CAFX2JfnS9GVc4NaxKhr9E4y10NNv6SPgcv1yoeHTfEw5NvZgMg@mail.gmail.com>
+ Linux Hardening <linux-hardening@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Linux SCSI <linux-scsi@vger.kernel.org>, bvanassche@acm.org,
+ Alan Stern <stern@rowland.harvard.edu>,
+ Dan Williams <dan.j.williams@intel.com>, Hannes Reinecke <hare@suse.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Martin Kepplinger <martin.kepplinger@puri.sm>
+References: <2d1fdf6d-682c-a18d-2260-5c5ee7097f7d@gmail.com>
+ <5513e29d-955a-f795-21d6-ec02a2e2e128@gmail.com>
+ <ZIQ6bkau3j6qGef8@duo.ucw.cz>
+Content-Language: en-US
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+In-Reply-To: <ZIQ6bkau3j6qGef8@duo.ucw.cz>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 06/03/2023 18:09, Anna Schumaker wrote:
-> Hi Krzysztof,
+On 6/10/23 15:55, Pavel Machek wrote:
+> Hi!
 > 
-> On Tue, Feb 14, 2023 at 6:02 AM Krzysztof Kozlowski
-> <krzysztof.kozlowski@linaro.org> wrote:
->>
->> On 12/02/2023 15:05, Anna Schumaker wrote:
->>>>> From ac2d6c501dbcdb306480edaee625b5496f1fb4f5 Mon Sep 17 00:00:00 2001
->>>>> From: Anna Schumaker <Anna.Schumaker@Netapp.com>
->>>>> Date: Fri, 10 Feb 2023 15:50:22 -0500
->>>>> Subject: [PATCH] NFSv4.2: Rework scratch handling for READ_PLUS
->>>>>
->>>>
->>>> Patch is corrupted - maybe mail program reformatted it when sending:
->>>>
->>>> Applying: NFSv4.2: Rework scratch handling for READ_PLUS
->>>> error: corrupt patch at line 12
->>>> Patch failed at 0001 NFSv4.2: Rework scratch handling for READ_PLUS
+> 
+>>> #regzbot introduced: v5.0..v6.4-rc5 https://bugzilla.kernel.org/show_bug.cgi?id=217530
+>>> #regzbot title: Waking up from resume locks up on SCSI CD/DVD drive
 >>>
->>> That's weird. I wasn't expecting gmail to reformat the patch but I
->>> guess it did. I've added it as an attachment so that shouldn't happen
->>> again.
+>> The reporter had found the culprit (via bisection), so:
 >>
->> Still null ptr (built on 420b2d4 with your patch):
+>> #regzbot introduced: a19a93e4c6a98c
+> Maybe cc the authors of that commit?
 > 
-> We're through the merge window and at rc1 now, so I can spend more
-> time scratching my head over your bug again. We've come up with a
-> patch (attached) that adds a bunch of printks to show us what the
-> kernel thinks is going on. Do you mind trying it out and letting us
-> know what gets printed out? You'll need to make sure
-> CONFIG_NFS_V4_2_READ_PLUS is enabled when compiling the kernel.
 
-The patch does not apply. I tried: v6.4-rc1, v6.4-rc5, next-20230609.
+Ah! I forgot to do that! Thanks anyway.
 
-Best regards,
-Krzysztof
+-- 
+An old man doll... just what I always wanted! - Clara
 
