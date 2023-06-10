@@ -1,129 +1,101 @@
-Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.134])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE89B408E0
-	for <regressions@lists.linux.dev>; Fri,  9 Jun 2023 21:29:50 +0000 (UTC)
-Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-bb2ffa1e235so2064570276.0
-        for <regressions@lists.linux.dev>; Fri, 09 Jun 2023 14:29:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1686346189; x=1688938189;
-        h=mime-version:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=oQDHQv5QQ7F49jvnNaX5O624EPUVQF/yKUfjfHQuFnc=;
-        b=LePNwit0ABp1ENxorce8Sa7Bd4LjKtNLwa/pG6o1QxykmRLbH0P/yLOw/MmeYRuxBU
-         q6Jrud4gYRsmAksqaqXcQmg5APEXk5xOkWEcVkUt+7+I+m9sjJ/lfi3LTs2oaDj9qGtq
-         FqAAM5W7r38V/bKGdhcIRGRwyQYNBQJrUKdVY+GeNDUQUcUrQqxa+0OHKBldHawIOPw7
-         5UVSaZlkQwYT5bOtcT9zG3ykVFoXtoJMwxzBJABVSh98ICXyKXC30TEVoan1/9xKPduX
-         MeEUqzMSUINxKI7NBNQ1qRWak6K2y3wGJJpJOugPT1YrBnuhxTy/dMD/BQ0o3MPkCm45
-         NNIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686346189; x=1688938189;
-        h=mime-version:message-id:subject:cc:to:from:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=oQDHQv5QQ7F49jvnNaX5O624EPUVQF/yKUfjfHQuFnc=;
-        b=DDnYyhP9j8LZxgeYYCU+I5oM5ei/eQQ45irIqYOPLl/bxcK8d7d4miiwdsttphfxui
-         fdYwE/5YUGi/JalhIbx4iV1Q+499CN6byZEAjkwlWc+XjuQafP8SvtU8bPNfr0POsz36
-         L2lAxqyb9SUtnXzhoiHaWr1xS4tU/Jb3wqmqLFDS1lm12OQQPA+lLYJo21tvMit/pEpm
-         iI3sME6OO3Ef73IYQDoMQ5WCmt3x2tO35spELIXDOZQuQsFNMO7GBchx7VJY7LdwctiV
-         Ng2lhSGAlHxDVHLd5SgX+8J1zov6zTJbzDbTL5IuDVK8nRZSXllutknVgEgMncomSHpp
-         xhZw==
-X-Gm-Message-State: AC+VfDyBUscsv/XlQRAROqNR3h1l5Ivd6A1hT/825cOmpMgqfkpvf1YK
-	Qi6XUbgTAXFicOBLAANhNWC08Q==
-X-Google-Smtp-Source: ACHHUZ6zVT6zy2xPQU6h6zNxSgG3a9+hAx3/LLoy1GtDkJTTgoju5XlmXUOBA28ACU3lez+R9dzHTA==
-X-Received: by 2002:a25:c78b:0:b0:ba8:f70:1eb9 with SMTP id w133-20020a25c78b000000b00ba80f701eb9mr2046657ybe.57.1686346189501;
-        Fri, 09 Jun 2023 14:29:49 -0700 (PDT)
-Received: from ripple.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
-        by smtp.gmail.com with ESMTPSA id f6-20020a5b0d46000000b00bc41075297fsm7249ybr.23.2023.06.09.14.29.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 Jun 2023 14:29:49 -0700 (PDT)
-Date: Fri, 9 Jun 2023 14:29:39 -0700 (PDT)
-From: Hugh Dickins <hughd@google.com>
-X-X-Sender: hugh@ripple.attlocal.net
-To: Gregory Greenman <gregory.greenman@intel.com>
-cc: Ariel Malamud <ariel.malamud@intel.com>, 
-    Johannes Berg <johannes.berg@intel.com>, linux-wireless@vger.kernel.org, 
-    linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-Subject: [PATCH] wifi: iwlwifi: mvm: spin_lock_bh() to fix lockdep
- regression
-Message-ID: <79ffcc22-9775-cb6d-3ffd-1a517c40beef@google.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8601E408C7
+	for <regressions@lists.linux.dev>; Sat, 10 Jun 2023 06:32:06 +0000 (UTC)
+Received: from mars.fo.jb.local ([188.174.1.218]) by mrelayeu.kundenserver.de
+ (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis) id
+ 1M8yso-1qBiAE0HBe-0067We for <regressions@lists.linux.dev>; Sat, 10 Jun 2023
+ 08:32:04 +0200
+Received: from localhost (unknown [127.0.0.1])
+	by mars.fo.jb.local (Postfix) with ESMTP id 6C5B817F700
+	for <regressions@lists.linux.dev>; Sat, 10 Jun 2023 06:32:03 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at jmbreuer.net
+Received: from mars.fo.jb.local ([127.0.0.1])
+	by localhost (mars.jmbreuer.net [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id 8fcF1aHMpcUE for <regressions@lists.linux.dev>;
+	Sat, 10 Jun 2023 08:31:56 +0200 (CEST)
+Received: from sol.fo.jb.local (sol.fo.jb.local [192.168.23.1])
+	by mars.fo.jb.local (Postfix) with ESMTP id A820F17F413
+	for <regressions@lists.linux.dev>; Sat, 10 Jun 2023 08:31:56 +0200 (CEST)
+Received: from [192.168.23.25] (mars.fo.jb.local [192.168.23.254])
+	by sol.fo.jb.local (Postfix) with ESMTPSA id 9E1E4604E111
+	for <regressions@lists.linux.dev>; Sat, 10 Jun 2023 08:31:56 +0200 (CEST)
+Message-ID: <7a3b3a7e-cf69-a60a-8790-59ca4393292b@jmbreuer.net>
+Date: Sat, 10 Jun 2023 08:31:56 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: Fwd: Waking up from resume locks up on sr device
+Content-Language: en-US
+References: <2d1fdf6d-682c-a18d-2260-5c5ee7097f7d@gmail.com>
+From: Joe Breuer <linux-kernel@jmbreuer.net>
+To: regressions@lists.linux.dev
+Organization: Joachim Breuer EDV
+In-Reply-To: <2d1fdf6d-682c-a18d-2260-5c5ee7097f7d@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:644lj9w8yjDJ3qsnsMQZe2job0fVZMjvxX+HIZqoqFHSrH5Y1Hl
+ 09PVRieIAJqDks+4LBZ2P8icfHku0CJtGV4g1I/EB836C6ZUozqNnferpE/imYSRXn65Ozs
+ I8aJQgm2NOZ9+qewNZZokOxqxcEDIjsgJYQF3S6/Ll98/qmVh7j6Hqf7xZ3m4LNFRZmzyah
+ oH0hFhG1a9JPGG/prbAvg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:jGnG79vVI+k=;rbeC1Gp8KcWkOXrXSq2De5OXhJw
+ dr9Sk8zRdDoFluyaiB5htb2rAjS4jAB06euRH0Iv+1gkscQ+N5hS0LyBd23s+PDXnSjkdKR5G
+ JG1aNggONz5f/KyjU1BMOcfL14AxcK9wVo3VjTmDB5oI5RAGsjdIprwgdOlm8u34iVu10DSSg
+ WEHTBHFlxREuboZuUKZyWstGN+tpIh2QKlWucwwNIl0DTolECsX03UYomn/8W7/kq/DFhEplO
+ 5N+K3uQf46YvVSMLFpWXLxpDzlCnUMa4Uq3juURBZGa60ceQL8cdBqsrHmP4MuqRT0k50K3f/
+ ECYaUb5ZCXrwNhhjPYyIvrHXbbTHBVFnXJmzgMCrdE4zsU/PMtmSrVMNz37Oy8tRc7QMXdXnO
+ oLWlGA6sOmHPhDZojXkRZZc8gudeOse9E39kCfDpWvjN5v1XH2iMXzezCRdSvDPxDIKqHKOLk
+ YcHJu2iHZO+hnB5PtkwOPuRwaJYlCAbrhh1RLnhUTR518d7mhWC9xKjqJOfm5uGIeS29z4l+N
+ xzliRTrczN9NSrJ9b+MX2MHfYhtsk40Bi74SVSfWLwz95rZAFgrvD9woF7fxmuOiKss5zFiFN
+ pkXVJ6m9c5vOsEtd/Y+evGvXZDcrcoSJcNTRl5VG5e/0XpxLicfJK33lVnUpt/N27yms2n0AK
+ ycmsE8TS8ywRGhzuHPgN+Q4qk6N5caXHHOD1MBaMqw==
 
-Lockdep on 6.4-rc on ThinkPad X1 Carbon 5th says
-=====================================================
-WARNING: SOFTIRQ-safe -> SOFTIRQ-unsafe lock order detected
-6.4.0-rc5 #1 Not tainted
------------------------------------------------------
-kworker/3:1/49 [HC0[0]:SC0[4]:HE1:SE0] is trying to acquire:
-ffff8881066fa368 (&mvm_sta->deflink.lq_sta.rs_drv.pers.lock){+.+.}-{2:2}, at: rs_drv_get_rate+0x46/0xe7
+#regzbot introduced: a19a93e4c6a98c9c0f2f5a6db76846f10d7d1f85
 
-and this task is already holding:
-ffff8881066f80a8 (&sta->rate_ctrl_lock){+.-.}-{2:2}, at: rate_control_get_rate+0xbd/0x126
-which would create a new lock dependency:
- (&sta->rate_ctrl_lock){+.-.}-{2:2} -> (&mvm_sta->deflink.lq_sta.rs_drv.pers.lock){+.+.}-{2:2}
+On 09.06.23 13:04, Bagas Sanjaya wrote:
+> Hi,
+> 
+> I notice a regression report on Bugzilla [1]. Quoting from it:
+> 
+>> I'm running LibreELEC.tv on an x86_64 machine that, following a (kernel) update, now locks up hard while trying to device_resume() => device_lock() on sr 2:0:0:0 (the only sr device in the system).
+>>
+>> Through some digging of my own, I can pretty much isolate the fault in this device_lock() call:
+>> https://elixir.bootlin.com/linux/v6.3.4/source/drivers/base/power/main.c#L919
+>>
+>> I put an additional debug line exactly before the device_lock(dev) call, like this:
+>> dev_info(dev, "device_lock() in device_resume()");
+>>
+>> This is the last diagnostic I see, that device_lock() call never returns, ie line 920 in main.c is never reached (confirmed via TRACE_RESUME).
+>> The device, in my case, is printed as sr 2:0:0:0.
+>>
+>> Knowing this, as a workaround, booting with libata.force=3:disable (libata port 3 corresponds to the SATA channel that sr 2:0:0:0 is attached to) allows suspend/resume to work correctly (but the optical drive is not accessible, obviously).
+>>
+>> When resume hangs, the kernel is not _completely_ locked, interestingly the machine responds to pings and I see the e1000e 'link up' message a couple seconds after the hanging sr2 device_lock().
+>> Magic SysRq, however, does NOT work in that state; possibly because not enough of USB is resumed yet. Resuming devices seems to broadly follow a kind of breadth-first order; I see USB ports getting resumed closely before the lockup, but no USB (target) devices.
+>>
+>> This is a regression, earlier kernels would work correctly on the exact same hardware. Since it's an 'embedded' type (LibreELEC.tv) install that overwrites its system parts completely on each update, I don't have a clear historical record of kernel versions. From the timeline and my memory, moving from 5.x to 6.x would make sense. Due to the nature of the system, it's somewhat inconvenient for me to try numerous kernel versions blindly for a bisection; I will try to test against some current 5.x soon, however.
+>>
+>> I do have the hope that this information already might give someone with more background a strong idea about the issue.
+>>
+>> Next, I will try to put debug_show_all_locks() before device_lock(), since I can't Alt+SysRq+d.
+> 
+> See Bugzilla for the full thread.
+> 
+> Anyway, I'm adding it to regzbot (with rough version range since the reporter
+> only knows major kernel version numbers):
+> 
+> #regzbot introduced: v5.0..v6.4-rc5 https://bugzilla.kernel.org/show_bug.cgi?id=217530
+> #regzbot title: Waking up from resume locks up on SCSI CD/DVD drive
+> 
+> Thanks.
+> 
+> [1]: https://bugzilla.kernel.org/show_bug.cgi?id=217530
+> 
 
-but this new dependency connects a SOFTIRQ-irq-safe lock:
- (&sta->rate_ctrl_lock){+.-.}-{2:2}
-etc. etc. etc.
-
-Changing the spin_lock() in rs_drv_get_rate() to spin_lock_bh() was not
-enough to pacify lockdep, but changing them all on pers.lock has worked.
-
-Fixes: a8938bc881d2 ("wifi: iwlwifi: mvm: Add locking to the rate read flow")
-Signed-off-by: Hugh Dickins <hughd@google.com>
----
-
- drivers/net/wireless/intel/iwlwifi/mvm/rs.c |   12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
-
---- 6.4-rc5/drivers/net/wireless/intel/iwlwifi/mvm/rs.c
-+++ linux/drivers/net/wireless/intel/iwlwifi/mvm/rs.c
-@@ -2692,7 +2692,7 @@ static void rs_drv_get_rate(void *mvm_r,
- 
- 	lq_sta = mvm_sta;
- 
--	spin_lock(&lq_sta->pers.lock);
-+	spin_lock_bh(&lq_sta->pers.lock);
- 	iwl_mvm_hwrate_to_tx_rate_v1(lq_sta->last_rate_n_flags,
- 				     info->band, &info->control.rates[0]);
- 	info->control.rates[0].count = 1;
-@@ -2707,7 +2707,7 @@ static void rs_drv_get_rate(void *mvm_r,
- 		iwl_mvm_hwrate_to_tx_rate_v1(last_ucode_rate, info->band,
- 					     &txrc->reported_rate);
- 	}
--	spin_unlock(&lq_sta->pers.lock);
-+	spin_unlock_bh(&lq_sta->pers.lock);
- }
- 
- static void *rs_drv_alloc_sta(void *mvm_rate, struct ieee80211_sta *sta,
-@@ -3264,11 +3264,11 @@ void iwl_mvm_rs_tx_status(struct iwl_mvm
- 	/* If it's locked we are in middle of init flow
- 	 * just wait for next tx status to update the lq_sta data
- 	 */
--	if (!spin_trylock(&mvmsta->deflink.lq_sta.rs_drv.pers.lock))
-+	if (!spin_trylock_bh(&mvmsta->deflink.lq_sta.rs_drv.pers.lock))
- 		return;
- 
- 	__iwl_mvm_rs_tx_status(mvm, sta, tid, info, ndp);
--	spin_unlock(&mvmsta->deflink.lq_sta.rs_drv.pers.lock);
-+	spin_unlock_bh(&mvmsta->deflink.lq_sta.rs_drv.pers.lock);
- }
- 
- #ifdef CONFIG_MAC80211_DEBUGFS
-@@ -4117,9 +4117,9 @@ void iwl_mvm_rs_rate_init(struct iwl_mvm
- 	} else {
- 		struct iwl_mvm_sta *mvmsta = iwl_mvm_sta_from_mac80211(sta);
- 
--		spin_lock(&mvmsta->deflink.lq_sta.rs_drv.pers.lock);
-+		spin_lock_bh(&mvmsta->deflink.lq_sta.rs_drv.pers.lock);
- 		rs_drv_rate_init(mvm, sta, band);
--		spin_unlock(&mvmsta->deflink.lq_sta.rs_drv.pers.lock);
-+		spin_unlock_bh(&mvmsta->deflink.lq_sta.rs_drv.pers.lock);
- 	}
- }
- 
