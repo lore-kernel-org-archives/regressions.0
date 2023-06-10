@@ -1,28 +1,45 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.134])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8601E408C7
-	for <regressions@lists.linux.dev>; Sat, 10 Jun 2023 06:32:06 +0000 (UTC)
-Received: from mars.fo.jb.local ([188.174.1.218]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis) id
- 1M8yso-1qBiAE0HBe-0067We for <regressions@lists.linux.dev>; Sat, 10 Jun 2023
- 08:32:04 +0200
-Received: from localhost (unknown [127.0.0.1])
-	by mars.fo.jb.local (Postfix) with ESMTP id 6C5B817F700
-	for <regressions@lists.linux.dev>; Sat, 10 Jun 2023 06:32:03 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at jmbreuer.net
-Received: from mars.fo.jb.local ([127.0.0.1])
-	by localhost (mars.jmbreuer.net [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id 8fcF1aHMpcUE for <regressions@lists.linux.dev>;
-	Sat, 10 Jun 2023 08:31:56 +0200 (CEST)
-Received: from sol.fo.jb.local (sol.fo.jb.local [192.168.23.1])
-	by mars.fo.jb.local (Postfix) with ESMTP id A820F17F413
-	for <regressions@lists.linux.dev>; Sat, 10 Jun 2023 08:31:56 +0200 (CEST)
-Received: from [192.168.23.25] (mars.fo.jb.local [192.168.23.254])
-	by sol.fo.jb.local (Postfix) with ESMTPSA id 9E1E4604E111
-	for <regressions@lists.linux.dev>; Sat, 10 Jun 2023 08:31:56 +0200 (CEST)
-Message-ID: <7a3b3a7e-cf69-a60a-8790-59ca4393292b@jmbreuer.net>
-Date: Sat, 10 Jun 2023 08:31:56 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D958408C7
+	for <regressions@lists.linux.dev>; Sat, 10 Jun 2023 06:38:54 +0000 (UTC)
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-256932cea7aso1039970a91.3
+        for <regressions@lists.linux.dev>; Fri, 09 Jun 2023 23:38:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1686379134; x=1688971134;
+        h=content-transfer-encoding:in-reply-to:references:cc:to:from
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=yGVhz1sAD6q2mvEjxF0pg4PBT4Cx0EoYk9cX0ojzw7k=;
+        b=rHJzw9HMsYn6a13iz3WbD0crMFkPlXc0e8Yb3nBTH/Ssm1T5sus7EQNukL9JfVVGS4
+         NhFFKST/ybZ2ELB4j6sU9HWzeGhDnkWYc6bApg66RF/nJ7p81ynn0Xj09jqfa2134tU0
+         /4Ljln+XrOsfWgJ1KF8UuRv49o+em+kJMeogJjkB1rfs4jiShcJAhSumot7jlyjxC7SG
+         yI6No0XFpSdVPrNoMNNjrWNtTw1qkJxxQ+wbecsZjI21H2np7W4N8Sv5fkRoirIqtvNN
+         M3nYQExXPHipcWnwKCRlLTPLQwZB3Idn1BV7NmThpnCNR6AsWJS6+aI790ro7O/iAVyC
+         1FZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686379134; x=1688971134;
+        h=content-transfer-encoding:in-reply-to:references:cc:to:from
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=yGVhz1sAD6q2mvEjxF0pg4PBT4Cx0EoYk9cX0ojzw7k=;
+        b=F2WYvNq9r0lNIEgM4/BHPEkalP06QrE99dgvRGzo41X5fEdhsKtSXUsdL06y2eqgOw
+         iYeRVVbR/1VF8TQpLvbGff9Gh1aQnQGkLu+tHnXSzlZDzqBxh31kAgxhW8StNqB502fw
+         5nNkAvyXW6sCOLSQpnTePGmggX1ADGtjZIygSu6GW/YZGlqHh+GWEwCyMxEi8Y/XwJFK
+         8sXzyT3h3wNrpRLELpugQA57QufNubnWtNBsJig28dhQ275FZ+ErmGHrhy7LtDqOTIlh
+         OWIPMx8txP7He0dxEFefa+7kyrZzjSHEAu4hRGTDDBZ4Geiera0TpUlqbmSzi6daf/0s
+         BPMg==
+X-Gm-Message-State: AC+VfDy9y2V+q/TT1r2b/HKm6BK2NVHUVSHTFj8CXsh9ozIcbGC5fst3
+	8oUT5e9c3pbfM8NNkzTqK24=
+X-Google-Smtp-Source: ACHHUZ6U8LuPYo6qTIzC6FmLnF/Ulx2KVvuwaayPVlE29Z3/R06/68EjE8sPxR6bbsBIv8SJ3NMpvA==
+X-Received: by 2002:a17:90a:9746:b0:255:b1d3:5220 with SMTP id i6-20020a17090a974600b00255b1d35220mr2753407pjw.20.1686379134369;
+        Fri, 09 Jun 2023 23:38:54 -0700 (PDT)
+Received: from [192.168.43.80] (subs28-116-206-12-58.three.co.id. [116.206.12.58])
+        by smtp.gmail.com with ESMTPSA id j24-20020a17090a589800b0023b3d80c76csm3841294pji.4.2023.06.09.23.38.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 09 Jun 2023 23:38:53 -0700 (PDT)
+Message-ID: <5513e29d-955a-f795-21d6-ec02a2e2e128@gmail.com>
+Date: Sat, 10 Jun 2023 13:38:48 +0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -30,36 +47,30 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
+ Thunderbird/102.11.2
 Subject: Re: Fwd: Waking up from resume locks up on sr device
 Content-Language: en-US
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <len.brown@intel.com>,
+ Pavel Machek <pavel@ucw.cz>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, Kees Cook <keescook@chromium.org>,
+ Tony Luck <tony.luck@intel.com>, "Guilherme G. Piccoli"
+ <gpiccoli@igalia.com>, Thorsten Leemhuis <linux@leemhuis.info>,
+ "James E.J. Bottomley" <jejb@linux.ibm.com>,
+ "Martin K. Petersen" <martin.petersen@oracle.com>,
+ Phillip Potter <phil@philpotter.co.uk>,
+ Joe Breuer <linux-kernel@jmbreuer.net>
+Cc: Linux Power Management <linux-pm@vger.kernel.org>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Hardening <linux-hardening@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Linux SCSI <linux-scsi@vger.kernel.org>
 References: <2d1fdf6d-682c-a18d-2260-5c5ee7097f7d@gmail.com>
-From: Joe Breuer <linux-kernel@jmbreuer.net>
-To: regressions@lists.linux.dev
-Organization: Joachim Breuer EDV
 In-Reply-To: <2d1fdf6d-682c-a18d-2260-5c5ee7097f7d@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:644lj9w8yjDJ3qsnsMQZe2job0fVZMjvxX+HIZqoqFHSrH5Y1Hl
- 09PVRieIAJqDks+4LBZ2P8icfHku0CJtGV4g1I/EB836C6ZUozqNnferpE/imYSRXn65Ozs
- I8aJQgm2NOZ9+qewNZZokOxqxcEDIjsgJYQF3S6/Ll98/qmVh7j6Hqf7xZ3m4LNFRZmzyah
- oH0hFhG1a9JPGG/prbAvg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:jGnG79vVI+k=;rbeC1Gp8KcWkOXrXSq2De5OXhJw
- dr9Sk8zRdDoFluyaiB5htb2rAjS4jAB06euRH0Iv+1gkscQ+N5hS0LyBd23s+PDXnSjkdKR5G
- JG1aNggONz5f/KyjU1BMOcfL14AxcK9wVo3VjTmDB5oI5RAGsjdIprwgdOlm8u34iVu10DSSg
- WEHTBHFlxREuboZuUKZyWstGN+tpIh2QKlWucwwNIl0DTolECsX03UYomn/8W7/kq/DFhEplO
- 5N+K3uQf46YvVSMLFpWXLxpDzlCnUMa4Uq3juURBZGa60ceQL8cdBqsrHmP4MuqRT0k50K3f/
- ECYaUb5ZCXrwNhhjPYyIvrHXbbTHBVFnXJmzgMCrdE4zsU/PMtmSrVMNz37Oy8tRc7QMXdXnO
- oLWlGA6sOmHPhDZojXkRZZc8gudeOse9E39kCfDpWvjN5v1XH2iMXzezCRdSvDPxDIKqHKOLk
- YcHJu2iHZO+hnB5PtkwOPuRwaJYlCAbrhh1RLnhUTR518d7mhWC9xKjqJOfm5uGIeS29z4l+N
- xzliRTrczN9NSrJ9b+MX2MHfYhtsk40Bi74SVSfWLwz95rZAFgrvD9woF7fxmuOiKss5zFiFN
- pkXVJ6m9c5vOsEtd/Y+evGvXZDcrcoSJcNTRl5VG5e/0XpxLicfJK33lVnUpt/N27yms2n0AK
- ycmsE8TS8ywRGhzuHPgN+Q4qk6N5caXHHOD1MBaMqw==
 
-#regzbot introduced: a19a93e4c6a98c9c0f2f5a6db76846f10d7d1f85
-
-On 09.06.23 13:04, Bagas Sanjaya wrote:
+On 6/9/23 18:04, Bagas Sanjaya wrote:
 > Hi,
 > 
 > I notice a regression report on Bugzilla [1]. Quoting from it:
@@ -94,8 +105,13 @@ On 09.06.23 13:04, Bagas Sanjaya wrote:
 > #regzbot introduced: v5.0..v6.4-rc5 https://bugzilla.kernel.org/show_bug.cgi?id=217530
 > #regzbot title: Waking up from resume locks up on SCSI CD/DVD drive
 > 
-> Thanks.
-> 
-> [1]: https://bugzilla.kernel.org/show_bug.cgi?id=217530
-> 
+
+The reporter had found the culprit (via bisection), so:
+
+#regzbot introduced: a19a93e4c6a98c
+
+Thanks.
+
+-- 
+An old man doll... just what I always wanted! - Clara
 
