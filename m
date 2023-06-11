@@ -1,98 +1,117 @@
-Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB17B10EA
-	for <regressions@lists.linux.dev>; Sun, 11 Jun 2023 02:27:54 +0000 (UTC)
-Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-52c30fa5271so1241443a12.0
-        for <regressions@lists.linux.dev>; Sat, 10 Jun 2023 19:27:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686450474; x=1689042474;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZZKyrk80GHGRjJOdJJel001FvO+j2KlRrTx+XA1IwaY=;
-        b=SShXsAlVmeCsuDtXoC4sUVjP18LPMX5YXeAyzaUykqPgqjdinAS9aVALm4NbO1tENU
-         Vp4dQgXCSDwH+qUoBfttSyBYTYTZPMWvUSAkKBWX8zlC6q3TmvR4q67zT5GFZgOgA973
-         WzAS0BkwQg77hZol7FWQfT2ebs7aA+3y4pRCwZumd1wInTQQohKXcvTnkPsVBvlfLr8x
-         71ovfgqOPS/0sWJvrXeLGzfzVYaxpToSe73LAIEkTIwP7dC+/DZuxPDPTMFgKKMed0y/
-         jpbWFAl40YRFaEvEIG9J58aJLwNf7M7QCo3Fpre208BwXo3PpYUE8jgsOklS+KKGVnew
-         RaHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686450474; x=1689042474;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=ZZKyrk80GHGRjJOdJJel001FvO+j2KlRrTx+XA1IwaY=;
-        b=aw+JS92+yKFezEMm8lm/l9TC4a355dvmrWj+ko7jAESH/GTGVsCN4fCbqYNxg6xtmF
-         15y6HqpEIVd1IJ9xn2ZUcG01NQJLOn09WWWe76dr/a2isvBF0LDh7Zrjm9DjqBUJnd9C
-         27Jh8lnYVAHotGjRlcTTgvUAivAl3GiT+gpJ0szZfxbbmewceT942nONhLd99thfGSRV
-         tmS3HVHHHtROOA/jo92BNIPj850Xw0RATbscQF7ePwawtUpcQuECo2U6+5smduRZiLY0
-         8FofBisT7GY8oGWijCnvBWn6jscCpiEfet386yMrQtm9Q1WZO2WQY1rx/pcrcaUSDQ3I
-         DBMg==
-X-Gm-Message-State: AC+VfDyqWrB5PUzHEYpCVJ3AoBZR51MSj4Zlql70tcD3SDvGaPNyafPw
-	LcZdMh28h1KeexATrdTnLSE=
-X-Google-Smtp-Source: ACHHUZ6HnAVMhp2lSn0I3LgkbxqGHsODoUKgxm2ScyRFWnbq0b/2evpKIWwkzHPOPOpKkT4UrbW10Q==
-X-Received: by 2002:a17:90b:3b90:b0:259:d0f2:3576 with SMTP id pc16-20020a17090b3b9000b00259d0f23576mr5008901pjb.19.1686450473758;
-        Sat, 10 Jun 2023 19:27:53 -0700 (PDT)
-Received: from [192.168.43.80] (subs03-180-214-233-75.three.co.id. [180.214.233.75])
-        by smtp.gmail.com with ESMTPSA id z7-20020a170902708700b001ae3b51269dsm5566976plk.262.2023.06.10.19.27.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 10 Jun 2023 19:27:53 -0700 (PDT)
-Message-ID: <17d7e7f8-ad8d-1696-32b7-3ff9fd4548c1@gmail.com>
-Date: Sun, 11 Jun 2023 09:27:45 +0700
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF6231389
+	for <regressions@lists.linux.dev>; Sun, 11 Jun 2023 07:36:35 +0000 (UTC)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 030E31F385;
+	Sun, 11 Jun 2023 07:36:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1686468988; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Mhk3FpehAIWeMu9Vn6DAyrYkgi/aQegP9LBt/OOmRTg=;
+	b=W8EQgiEgZjhW+8YtZYZ+v8JTImhwZbxLpFRhUINGiGYVBC8o9+t++zihACWQBpZQp3Gby0
+	M9IZm6qiB5TqSpHbNNctPnys29SdAvicJOO/tOohmqQD2s9YPYEHaz/vcZSoWEvEbX2swi
+	qO3gcTgUyo42R8N1AztdPGEgAq7WOqM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1686468988;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Mhk3FpehAIWeMu9Vn6DAyrYkgi/aQegP9LBt/OOmRTg=;
+	b=CGOgeAjZJywmfP9Q4Y7myJT9RViHF6xLAZbYxSA7Zk6Cs2Y1ALHUQP6g6DT11FiKOYli4b
+	Pp7mzA6wzxBiA7DA==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id C6B4113466;
+	Sun, 11 Jun 2023 07:36:27 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+	by imap2.suse-dmz.suse.de with ESMTPSA
+	id Nq6lL3t5hWThPQAAMHmgww
+	(envelope-from <tiwai@suse.de>); Sun, 11 Jun 2023 07:36:27 +0000
+Date: Sun, 11 Jun 2023 09:36:27 +0200
+Message-ID: <87wn0aa1s4.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: "Joseph C. Sible" <josephcsible@gmail.com>
+Cc: Kailang <kailang@realtek.com>,
+	Bagas Sanjaya <bagasdotme@gmail.com>,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+	"perex@perex.cz" <perex@perex.cz>,
+	"tiwai@suse.com" <tiwai@suse.com>,
+	"alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
+Subject: Re: Fwd: [Bug 217440] New: ALC236 audio disappears from HP 15z-fc000 on warm boot
+In-Reply-To: <CABpewhHDnvn4v+uCpsaLHB+biw-f59tdTiCyFkicHnewXHYDNg@mail.gmail.com>
+References: <bug-217440-225600@https.bugzilla.kernel.org/>
+	<CABpewhE4REgn9RJZduuEU6Z_ijXNeQWnrxO1tg70Gkw=F8qNYg@mail.gmail.com>
+	<ZGB0cVVI7OgaJU6t@debian.me>
+	<CABpewhGJE7-k52j8L2kJ2zKupgp3Ma+LdZazzzV4w1Bgihp7nw@mail.gmail.com>
+	<87cz338ix4.wl-tiwai@suse.de>
+	<CABpewhF01AK4cFPbwYVvKR9yWaO7o-ZE-2+MZjYSUF0BKUdYvw@mail.gmail.com>
+	<874jodlnmi.wl-tiwai@suse.de>
+	<415d4bc84aa74c74af913048f28b42a9@realtek.com>
+	<87fs7mdofi.wl-tiwai@suse.de>
+	<7da2fdfdae614b1c98deda6e11ca34eb@realtek.com>
+	<87353kd8b9.wl-tiwai@suse.de>
+	<1170325957764b4cbd7cd3639575f285@realtek.com>
+	<CABpewhGBakDSBLKZ1cr2=OMspuu3qyYwZrsXUggQ3vt8gsD88A@mail.gmail.com>
+	<873536js7q.wl-tiwai@suse.de>
+	<CABpewhE0NAC-Q=iqG2Ba=XhT7SXsWy18wQGYUaopzmKDfFxyPw@mail.gmail.com>
+	<2c1fcbc00bb44d66a29ac1c1e4bec5ad@realtek.com>
+	<CABpewhFthKG97dPiQC4JhGx9sapX9Yu5rWABQjpY95TSA+eawA@mail.gmail.com>
+	<485f99149508488080d563144454040e@realtek.com>
+	<CABpewhGkvWtM+9J=mx3vw0QY=OBB5OYCxzX3nzVffvFS4QazPA@mail.gmail.com>
+	<2831c55638a5431ca9e37d9caf365ed2@realtek.com>
+	<CABpewhGiMJUpyBA6=D9_-YA6=5rjR2R0RHUZeg+cWcjtzuCoZQ@mail.gmail.com>
+	<3c27f0455d6e4bd1a68115bd25bf1a12@realtek.com>
+	<CABpewhEptq0+W_71U__8iQ4+LNtYSUB9C+0bcS2Hw-5mnj9viQ@mail.gmail.com>
+	<009474f04d0b45c69a0e42e8622b7a86@realtek.com>
+	<87h6rhcef2.wl-tiwai@suse.de>
+	<0990300d759846d890de9c92fcad9a9d@realtek.com>
+	<CABpewhERnOH1qkkJ5_JJUZkz1_8oxD9aR5VBs1vsURAG7Eu_Ew@mail.gmail.com>
+	<878rctcavz.wl-tiwai@suse.de>
+	<874jnhc9u4.wl-tiwai@suse.de>
+	<CABpewhHG2+s8_6r6vChm2g5tD8ALW_SWJWubPRXWzTJB2aFR9g@mail.gmail.com>
+	<875y7vbxpg.wl-tiwai@suse.de>
+	<CABpewhHDnvn4v+uCpsaLHB+biw-f59tdTiCyFkicHnewXHYDNg@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.2
-Content-Language: en-US
-To: Theodore Ts'o <tytso@mit.edu>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>,
- Linux ext4 Development <linux-ext4@vger.kernel.org>
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-Subject: Fwd: ext4_check_descriptors: Block bitmap for group 0 overlaps block
- group descriptors
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi,
-
-I notice a regression report on Bugzilla [1]. Quoting from it:
-
-> Hi,
+On Sat, 10 Jun 2023 19:41:42 +0200,
+Joseph C. Sible wrote:
 > 
-> Fail to mount a filesystem in kernel 6.4.0
+> On Sat, Jun 10, 2023 at 3:09 AM Takashi Iwai <tiwai@suse.de> wrote:
+> >
+> > Thanks for quick testing.
+> >
+> > But, the patch to add a delay was meant to apply on top of the two
+> > patches from Kailang but only with power_save=0 option.  The model
+> > option changes the behavior completely and no Realtek codec driver is
+> > bound when the option is given in that way.
 > 
-> The Filesystem is clean. fsck -fp reports no errors
-> 
-> # uname -a
-> Linux medusa.dds.de 6.4.0-rc5 #2 SMP PREEMPT_DYNAMIC Wed Jun  7 08:11:59 CEST 2023 x86_64 GNU/Linux
-> # mount /dev/bigvg/lv_dat /mnt
-> mount: /mnt: mount(2) system call failed: Structure needs cleaning.
->        dmesg(1) may have more information after failed mount system call.
-> 
-> Under Kernel 6.3.4 everything works with this Filesystem
+> Ah, sorry for the misunderstanding. Attached are two new dumps taken
+> that way (with Kailang's patches and your patch but without my patch,
+> and with power_save=0 but without model=,generic), one from a cold
+> boot where the speakers worked and one from a warm boot where they
+> didn't.
 
-The reporter then pasted short dmesg snippet:
+Thanks for checking.  So the additional delay didn't help at all,
+i.e. it's no timing issue.  We need to figure out which verb actually
+breaks things.  Oh well.
 
-> [  104.501659] EXT4-fs (dm-9): ext4_check_descriptors: Block bitmap for group 0 overlaps block group descriptors
-> [  104.501664] EXT4-fs (dm-9): group descriptors corrupted!
-> 
 
-See Bugzilla for the full thread and attached dumpe2fs, lspci, and systeminfo.
-
-Anyway, I'm adding it to regzbot:
-
-#regzbot introduced: v6.3..v6.4 https://bugzilla.kernel.org/show_bug.cgi?id=217534
-#regzbot title: Block bitmap for group 0 overlaps block group descriptors, causing mount failure
-
-Thanks.
-
-[1]: https://bugzilla.kernel.org/show_bug.cgi?id=217534
-
--- 
-An old man doll... just what I always wanted! - Clara
+Takashi
