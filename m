@@ -1,22 +1,27 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from madras.collabora.co.uk (madras.collabora.co.uk [46.235.227.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 865211FA5
-	for <regressions@lists.linux.dev>; Mon, 12 Jun 2023 07:47:13 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BE8DC433D2;
-	Mon, 12 Jun 2023 07:47:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1686556033;
-	bh=Bb/YcFKCWhFFUGXzyVjPV7bd7HAxgWqNMfOSM1qRnNU=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D3EB18C29;
+	Mon, 12 Jun 2023 10:10:33 +0000 (UTC)
+Received: from [IPV6:2405:201:0:21ea:e49:10dd:40c0:e842] (unknown [IPv6:2405:201:0:21ea:e49:10dd:40c0:e842])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: shreeya)
+	by madras.collabora.co.uk (Postfix) with ESMTPSA id 40CF366058B2;
+	Mon, 12 Jun 2023 11:10:22 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1686564626;
+	bh=dNUyljDJjaR0rrWhWk1Fy1aQiXjj6NBuMzXL8HS0YwA=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=e+MMLxq7KK/f5Laf4xpE3/LRjXFAP50sgrgHxU74zrAZjA+jqSRpImqGK/9WvvSS2
-	 eZDnABULjKKVj/40x5vrmFkXziwBG+moLmgvJm8L6Dcd7+amxhLM6CpEWsyd1YvYgA
-	 EJ2DegOiLoYwqYhqR7qUD7oODTeOyR+dSuZflrjSPPVbKHFN311CAFhGIAbxSVFjuR
-	 aYDOFWmu1iiHGdaM2VUsRQrMXiZ43i67USRxURNXwRe7xW75+DUjE2PmhUFUe7E/nW
-	 oghWBqByfYb2vlF6LIwyCF5AcU4ZzPohl9WCK1HM/YhlXL7USPqA2M6ba1k+X4p4qG
-	 g3UtyW1YhqM5w==
-Message-ID: <433015f6-9ca6-e4ce-e070-a75378419564@kernel.org>
-Date: Mon, 12 Jun 2023 16:47:09 +0900
+	b=TPfwOimf6Q6c1SuHD1GaIfhHJlltr7QfxRCZGGd+HBfjslFtzwo0pd9SaVltxcT9r
+	 71VvIs8QF2ab39T+/5W8bFk+CGFxMhUednyKQ/Au1Qhah19RwP1PZhDkxebV121yHG
+	 uTb6KDJLdV9H+Hc6kmUXhOtp0lXqsB9yy2qLpDNUtGqXHbmN3a6HVE+Hrv0qhY5O5l
+	 ZRnJEAfCRkeJJmckqFRQR4K+13YA4GvKuuMqGkSa1RbDlQy3UMxXeoz0txXPI4KRoE
+	 rNYrymcuIW+vk8AdX2tUJeTAHAS99netW9HhLI/DbGmEpTmLwLw9h//HzrPfS7yVPT
+	 oMB7PnVqqRdjQ==
+Message-ID: <a037a08c-44c4-24e8-1cba-7e4e8b21ffaa@collabora.com>
+Date: Mon, 12 Jun 2023 15:40:18 +0530
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -24,141 +29,125 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: Fwd: Waking up from resume locks up on sr device
+ Thunderbird/102.9.0
+Subject: Re: [PATCH v4] Makefile.compiler: replace cc-ifversion with
+ compiler-specific macros
 Content-Language: en-US
-To: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc: Hannes Reinecke <hare@suse.de>, Bart Van Assche <bvanassche@acm.org>,
- Bagas Sanjaya <bagasdotme@gmail.com>, Pavel Machek <pavel@ucw.cz>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <len.brown@intel.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Kees Cook <keescook@chromium.org>, Tony Luck <tony.luck@intel.com>,
- "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
- Thorsten Leemhuis <linux@leemhuis.info>,
- "James E.J. Bottomley" <jejb@linux.ibm.com>,
- "Martin K. Petersen" <martin.petersen@oracle.com>,
- Phillip Potter <phil@philpotter.co.uk>,
- Joe Breuer <linux-kernel@jmbreuer.net>,
- Linux Power Management <linux-pm@vger.kernel.org>,
+To: Masahiro Yamada <masahiroy@kernel.org>
+Cc: Greg KH <gregkh@linuxfoundation.org>, Maksim Panchenko <maks@meta.com>,
+ =?UTF-8?Q?Ricardo_Ca=c3=b1uelo?= <ricardo.canuelo@collabora.com>,
+ Michal Marek <michal.lkml@markovi.net>,
  Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Hardening <linux-hardening@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>,
- Linux SCSI <linux-scsi@vger.kernel.org>,
- Alan Stern <stern@rowland.harvard.edu>,
- Dan Williams <dan.j.williams@intel.com>, Hannes Reinecke <hare@suse.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Martin Kepplinger <martin.kepplinger@puri.sm>
-References: <2d1fdf6d-682c-a18d-2260-5c5ee7097f7d@gmail.com>
- <5513e29d-955a-f795-21d6-ec02a2e2e128@gmail.com>
- <ZIQ6bkau3j6qGef8@duo.ucw.cz>
- <07d6e2e7-a50a-8cf4-5c5d-200551bd6687@gmail.com>
- <02e4f87a-80e8-dc5d-0d6e-46939f2c74ac@acm.org>
- <4005a768-9e45-0707-509d-98ce0d2769bd@kernel.org>
- <0505654c-e487-6b91-57cf-fa7996f5c738@suse.de>
- <6957a93c-b933-9b08-2f9f-901c4782cd40@kernel.org>
- <CAAd53p5CsAAX5G1J2WH5N5JT5dZB_BD2AW8WL-S=pHZtGXr1sw@mail.gmail.com>
-From: Damien Le Moal <dlemoal@kernel.org>
-Organization: Western Digital Research
-In-Reply-To: <CAAd53p5CsAAX5G1J2WH5N5JT5dZB_BD2AW8WL-S=pHZtGXr1sw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+ clang-built-linux <llvm@lists.linux.dev>, Bill Wendling <morbo@google.com>,
+ Nathan Chancellor <nathan@kernel.org>, regressions@lists.linux.dev,
+ "gustavo.padovan@collabora.com" <gustavo.padovan@collabora.com>,
+ Guillaume Charles Tucker <guillaume.tucker@collabora.com>,
+ denys.f@collabora.com, Nick Desaulniers <ndesaulniers@google.com>,
+ kernelci@lists.linux.dev, Collabora Kernel ML <kernel@collabora.com>
+References: <CAKwvOd=4hBcU4fAkddU0b-GOZc9FzTZoj3PFW6ZZrX0jS8x+bg@mail.gmail.com>
+ <17c91d37-7d9c-0df4-2438-2b30ca0b5777@collabora.com>
+ <CAKwvOdk4QO8x_bs64fFRCsMu__AjhXd4Ew2KfgzQOb9Q3FMqSA@mail.gmail.com>
+ <b5d0cf82-0e42-f6a1-c9f5-c145fdc4c622@collabora.com>
+ <CAKwvOdkFxu9hYSL_RCXadpR0dQd1+dZmAUVXdfFiLUfxg4D_Xw@mail.gmail.com>
+ <878rdlk9bi.fsf@rcn-XPS-13-9305.i-did-not-set--mail-host-address--so-tickle-me>
+ <CAKwvOd=8LVU+iANkFx18Wm1jg7gYiAXovAmo9t5ZZaVdMULn-Q@mail.gmail.com>
+ <875y8ok9b5.fsf@rcn-XPS-13-9305.i-did-not-set--mail-host-address--so-tickle-me>
+ <CAKwvOdmJJibt6sHSp91v2s7BxUWBC6xG7F7+3C6gUxNMzZ2xRA@mail.gmail.com>
+ <87353ok78h.fsf@rcn-XPS-13-9305.i-did-not-set--mail-host-address--so-tickle-me>
+ <2023052247-bobtail-factsheet-d104@gregkh>
+ <CAKwvOd=2zAV_mizvzLFdyHE_4OzBY5OVu6KLWuQPOMZK37vsmQ@mail.gmail.com>
+ <cff33e12-3d80-7e62-1993-55411ccabc01@collabora.com>
+ <CAKwvOd=F29-UkNO7FtUWpVV=POOZLb6QgD=mhLMWtRfkRSSi2A@mail.gmail.com>
+From: Shreeya Patel <shreeya.patel@collabora.com>
+In-Reply-To: <CAKwvOd=F29-UkNO7FtUWpVV=POOZLb6QgD=mhLMWtRfkRSSi2A@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 6/12/23 16:36, Kai-Heng Feng wrote:
-> On Mon, Jun 12, 2023 at 3:22 PM Damien Le Moal <dlemoal@kernel.org> wrote:
+Hi Masahiro,
+
+
+On 24/05/23 02:57, Nick Desaulniers wrote:
+> On Tue, May 23, 2023 at 3:27 AM Shreeya Patel
+> <shreeya.patel@collabora.com> wrote:
+>> Hi Nick and Masahiro,
 >>
->> On 6/12/23 15:09, Hannes Reinecke wrote:
->>> On 6/12/23 05:09, Damien Le Moal wrote:
->>>> On 6/11/23 00:03, Bart Van Assche wrote:
->>>>> On 6/10/23 06:27, Bagas Sanjaya wrote:
->>>>>> On 6/10/23 15:55, Pavel Machek wrote:
->>>>>>>>> #regzbot introduced: v5.0..v6.4-rc5 https://bugzilla.kernel.org/show_bug.cgi?id=217530
->>>>>>>>> #regzbot title: Waking up from resume locks up on SCSI CD/DVD drive
->>>>>>>>>
->>>>>>>> The reporter had found the culprit (via bisection), so:
->>>>>>>>
->>>>>>>> #regzbot introduced: a19a93e4c6a98c
->>>>>>> Maybe cc the authors of that commit?
+>> On 23/05/23 01:22, Nick Desaulniers wrote:
+>>> On Mon, May 22, 2023 at 9:52 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+>>>> On Mon, May 22, 2023 at 12:09:34PM +0200, Ricardo Cañuelo wrote:
+>>>>> On vie, may 19 2023 at 08:57:24, Nick Desaulniers <ndesaulniers@google.com> wrote:
+>>>>>> It could be; if the link order was changed, it's possible that this
+>>>>>> target may be hitting something along the lines of:
+>>>>>> https://isocpp.org/wiki/faq/ctors#static-init-order i.e. the "static
+>>>>>> initialization order fiasco"
 >>>>>>
->>>>>> Ah! I forgot to do that! Thanks anyway.
->>>>>
->>>>> Hi Damien,
->>>>>
->>>>> Why does the ATA code call scsi_rescan_device() before system resume has
->>>>> finished? Would ATA devices still work with the patch below applied?
->>>>
->>>> I do not know the PM code well at all, need to dig into it. But your patch
->>>> worries me as it seems it would prevent rescan of the device on a resume, which
->>>> can be an issue if the device has changed.
->>>>
->>>> I am not yet 100% clear on the root cause for this, but I think it comes from
->>>> the fact that ata_port_pm_resume() runs before the sci device resume is done, so
->>>> with scsi_dev->power.is_suspended still true. And ata_port_pm_resume() calls
->>>> ata_port_resume_async() which triggers EH (which will do reset + rescan)
->>>> asynchronously. So it looks like we have scsi device resume and libata EH for
->>>> rescan fighting each others for the scan mutex and device lock, leading to deadlock.
->>>>
->>>> Trying to recreate this issue now to confirm and debug further. But I suspect
->>>> the solution to this may be best implemented in libata, not in scsi.
->>>> This looks definitely related to this thread:
->>>>
->>>> https://lore.kernel.org/linux-scsi/7b553268-69d3-913a-f9de-28f8d45bdb1e@acm.org/
->>>>
->>>> Similaraly to your comment on that thread, having to look at
->>>> dev->power.is_suspended is not ideal I think. What we need is to have ata and
->>>> scsi pm resume be synchronized, but I am not yet 100% clear on the scsi layer side.
->>>>
->>> Which is my feeling, too.
->>> libata runs rescan as part of the device discovery, so really it will
->>> run after resume. And consequently resume really cannot wait for rescan
->>> to finish.
+>>>>>> I'm struggling to think of how this appears in C codebases, but I
+>>>>>> swear years ago I had a discussion with GKH (maybe?) about this. I
+>>>>>> think I was playing with converting Kbuild to use Ninja rather than
+>>>>>> Make; the resulting kernel image wouldn't boot because I had modified
+>>>>>> the order the object files were linked in.  If you were to randomly
+>>>>>> shuffle the object files in the kernel, I recall some hazard that may
+>>>>>> prevent boot.
+>>>>> I thought that was specifically a C++ problem? But then again, the
+>>>>> kernel docs explicitly say that the ordering of obj-y goals in kbuild is
+>>>>> significant in some instances [1]:
+>>>> Yes, it matters, you can not change it.  If you do, systems will break.
+>>>> It is the only way we have of properly ordering our init calls within
+>>>> the same "level".
+>>> Ah, right it was the initcall ordering. Thanks for the reminder.
 >>>
->>> What I would be looking at is to decouple resume from libata device
->>> rescan, and have resume to complete before libata EH runs.
->>
->> That is the case now, for the ata port at least, even though that is not super
->> explicit, and not reliable. See ata_port_pm_resume(): I think that the call to
->> EH in ata_port_pm_resume() -> ata_port_resume_async() -> ata_port_request_pm()
->> -> ata_port_schedule_eh() should instead use a sync resume, leading to a sync EH
->> call.
->>
->> That EH execution essentially does ata_eh_handle_port_resume(), which calls into
->> the adapter resume operation. That in itself does not do much beside some
->> registers accesses to wakeup the port. There should be no issues doing that
->> synchronously.
->>
->> The problem is that after that is done, ata EH calls ata_std_error_handler() ->
->> ata_do_eh() -> ata_eh_recover() -> ata_eh_revalidate_and_attach() ->
->> schedule_work(&(ap->scsi_rescan_task)). And the rescan work calls
->> scsi_rescan_device() (yet in another context than EH) which causes the problem
->> when the scsi disk device has not been resumed yet (dev->power_is_suspended
->> still true).
->>
->> So it really looks like the solution should be to have ata_scsi_dev_rescan()
->> wait for the scsi device to resume first, but not sure how to do that with the
->> pm API. Digging...
-> 
-> Probably use dpm_wait_for_children()? Right now it's an internal PM API.
-
-But I am not sure if there is a relationship between ata_device and its
-scsi_device (dev->sdev)... Need to clarify that.
-> 
-> Rafael,
-> What do you think?
-> 
-> Kai-Heng
-> 
->>
+>>> (There's a joke in there similar to the use of regexes to solve a
+>>> problem resulting in two new problems; initcalls have levels for
+>>> ordering, but we still have (unexpressed) dependencies between calls
+>>> of the same level; brittle!).
 >>>
->>> Cheers,
+>>> +Maksim, since that might be relevant info for the BOLT+Kernel work.
 >>>
->>> Hannes
+>>> Ricardo,
+>>> https://elinux.org/images/e/e8/2020_ELCE_initcalls_myjosserand.pdf
+>>> mentions that there's a kernel command line param `initcall_debug`.
+>>> Perhaps that can be used to see if
+>>> 5750121ae7382ebac8d47ce6d68012d6cd1d7926 somehow changed initcall
+>>> ordering, resulting in a config that cannot boot?
 >>
->> --
->> Damien Le Moal
->> Western Digital Research
+>> Here are the links to Lava jobs ran with initcall_debug added to the
+>> kernel command line.
 >>
+>> 1. Where regression happens (5750121ae7382ebac8d47ce6d68012d6cd1d7926)
+>> https://lava.collabora.dev/scheduler/job/10417706
+>> <https://lava.collabora.dev/scheduler/job/10417706>
+>>
+>> 2. With a revert of the commit 5750121ae7382ebac8d47ce6d68012d6cd1d7926
+>> https://lava.collabora.dev/scheduler/job/10418012
+>> <https://lava.collabora.dev/scheduler/job/10418012>
+> Thanks!
+>
+> Yeah, I can see a diff in the initcall ordering as a result of
+> commit 5750121ae738 ("kbuild: list sub-directories in ./Kbuild")
+>
+> https://gist.github.com/nickdesaulniers/c09db256e42ad06b90842a4bb85cc0f4
+>
+> Not just different orderings, but some initcalls seem unique to the
+> before vs. after, which is troubling. (example init_events and
+> init_fs_sysctls respectively)
+>
+> That isn't conclusive evidence that changes to initcall ordering are
+> to blame, but I suspect confirming that precisely to be very very time
+> consuming.
+>
+> Masahiro, what are your thoughts on reverting 5750121ae738? There are
+> conflicts in Kbuild and Makefile when reverting 5750121ae738 on
+> mainline.
 
--- 
-Damien Le Moal
-Western Digital Research
+I'm not sure if you followed the conversation but we are still seeing 
+this regression with the latest kernel builds and would like to know if 
+you plan to revert 5750121ae738?
 
+
+Thanks,
+Shreeya Patel
+
+>>
+>> Thanks,
+>> Shreeya Patel
+>>
+>
