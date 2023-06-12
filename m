@@ -1,124 +1,144 @@
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27D4E19E79
-	for <regressions@lists.linux.dev>; Mon, 12 Jun 2023 14:07:38 +0000 (UTC)
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-653436fcc1bso3565481b3a.2
-        for <regressions@lists.linux.dev>; Mon, 12 Jun 2023 07:07:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686578858; x=1689170858;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=B+7S35QW+acZtg4WWUpYFQktRq0VTaZ64Z9p3u7NETI=;
-        b=qSQK6e/WaMB/Xqatfc63tiEPAzFpdUezm2kefEGgJwx/0LiPniP7wob/B/ICrs1mcg
-         l4kKjwnwv1f/Uef9MAbTklNCB7Rj+x8r7ZRMogEg0iQ0JlENJjOqVKpFUcPqoPRxQhMw
-         n+uaMV+pRX3jo+mGEdIkfx1V18BN1A8hJkfMK3IB4n49ASr43nFsqOeqq/GyC1czPMxa
-         ulF4Y2T/iposudnh6/ovz6HlvzB1cKDXESTNHhbqADKwhiR+RI9VdEhxLV2SBMuw0Xui
-         MSOnpxwv2d8papuYkQXRwR6jNwL+6gQT+7q3m5QHOsGcD4YiHIy02WQ0A/F8lLkW0L0q
-         BxVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686578858; x=1689170858;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=B+7S35QW+acZtg4WWUpYFQktRq0VTaZ64Z9p3u7NETI=;
-        b=WTe5SUqfLpE6jzpOEd3XoEP9OoQTASKkEsvhkOn2yGn5Hn+BZjXS8T2mlo9gkqozPU
-         pB9aZj/TIQGCKgR+tMFgVbqsREfWEQ5Z2C0nuVFf7SLX6lLRi9WczfIGNfkuuv+SKkOd
-         Ml4uBNtw/LHODOJL9Ed1PJ+jdftt0fgI6gBbqL/A6o6lgkA8fJepLKAJwI6MEIDCrtRG
-         0d8vTv125AlBpKmfkAUImBbfr+YiaZWituLkTCSQX87y8PhXiDAgL2sXXqzKfSzuCRqR
-         zm98FWdD+n7xXvfQILrhNP3dbqJeFbP+QqXgTjA4SK8B+qmFVYv1FumnSPFh33kuQcb+
-         fZ/w==
-X-Gm-Message-State: AC+VfDxoCTwGE+5JhriMcXK7B90eVfIYP2E7twSvMViH80L8pX5KNxGV
-	ngMymDm/5LAfbwSZgSpQGuE=
-X-Google-Smtp-Source: ACHHUZ5upXhNnZ0xatFLuC9i6LDRa9OLgeV+Y3qmM3xfBGZkBs9NfQfUKOgKSXrmA8KEYZCpdp5BPw==
-X-Received: by 2002:a05:6a00:180e:b0:659:ae1c:c9e2 with SMTP id y14-20020a056a00180e00b00659ae1cc9e2mr11595513pfa.17.1686578858208;
-        Mon, 12 Jun 2023 07:07:38 -0700 (PDT)
-Received: from debian.me (subs02-180-214-232-21.three.co.id. [180.214.232.21])
-        by smtp.gmail.com with ESMTPSA id e15-20020aa7824f000000b0066355064acbsm6914328pfn.104.2023.06.12.07.07.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Jun 2023 07:07:37 -0700 (PDT)
-Received: by debian.me (Postfix, from userid 1000)
-	id 2ADC5106C19; Mon, 12 Jun 2023 21:07:34 +0700 (WIB)
-Date: Mon, 12 Jun 2023 21:07:33 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Sami Korkalainen <sami.korkalainen@proton.me>,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Linux Stable <stable@vger.kernel.org>,
-	Linux Regressions <regressions@lists.linux.dev>,
-	Linux Networking <netdev@vger.kernel.org>,
-	Linux ACPI <linux-acpi@vger.kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	"Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>
-Subject: Re: [REGRESSION][BISECTED] Boot stall from merge tag 'net-next-6.2'
-Message-ID: <ZIcmpcEsTLXFaO0f@debian.me>
-References: <GQUnKz2al3yke5mB2i1kp3SzNHjK8vi6KJEh7rnLrOQ24OrlljeCyeWveLW9pICEmB9Qc8PKdNt3w1t_g3-Uvxq1l8Wj67PpoMeWDoH8PKk=@proton.me>
- <ZHFaFosKY24-L7tQ@debian.me>
- <NVN-hJsvHwaHe6R-y6XIYJp0FV7sCavgMjobFnseULT1wjgkOFNXbGBGT5iVjCfbtU7dW5xy2hIDoq0ASeNaXhvSY-g2Df4aHWVIMQ2c3TQ=@proton.me>
+Received: from netrider.rowland.org (netrider.rowland.org [192.131.102.5])
+	by smtp.subspace.kernel.org (Postfix) with SMTP id 00C5D1B8E6
+	for <regressions@lists.linux.dev>; Mon, 12 Jun 2023 14:53:37 +0000 (UTC)
+Received: (qmail 394521 invoked by uid 1000); 12 Jun 2023 10:33:35 -0400
+Date: Mon, 12 Jun 2023 10:33:35 -0400
+From: Alan Stern <stern@rowland.harvard.edu>
+To: Damien Le Moal <dlemoal@kernel.org>
+Cc: Kai-Heng Feng <kai.heng.feng@canonical.com>,
+  Hannes Reinecke <hare@suse.de>, Bart Van Assche <bvanassche@acm.org>,
+  Bagas Sanjaya <bagasdotme@gmail.com>, Pavel Machek <pavel@ucw.cz>,
+  "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <len.brown@intel.com>,
+  Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+  Kees Cook <keescook@chromium.org>, Tony Luck <tony.luck@intel.com>,
+  "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+  Thorsten Leemhuis <linux@leemhuis.info>,
+  "James E.J. Bottomley" <jejb@linux.ibm.com>,
+  "Martin K. Petersen" <martin.petersen@oracle.com>,
+  Phillip Potter <phil@philpotter.co.uk>,
+  Joe Breuer <linux-kernel@jmbreuer.net>,
+  Linux Power Management <linux-pm@vger.kernel.org>,
+  Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+  Linux Hardening <linux-hardening@vger.kernel.org>,
+  Linux Regressions <regressions@lists.linux.dev>,
+  Linux SCSI <linux-scsi@vger.kernel.org>,
+  Dan Williams <dan.j.williams@intel.com>, Hannes Reinecke <hare@suse.com>,
+  Adrian Hunter <adrian.hunter@intel.com>,
+  Martin Kepplinger <martin.kepplinger@puri.sm>
+Subject: Re: Fwd: Waking up from resume locks up on sr device
+Message-ID: <1bc3eff1-6f86-4546-9360-19b6d0236bc4@rowland.harvard.edu>
+References: <2d1fdf6d-682c-a18d-2260-5c5ee7097f7d@gmail.com>
+ <5513e29d-955a-f795-21d6-ec02a2e2e128@gmail.com>
+ <ZIQ6bkau3j6qGef8@duo.ucw.cz>
+ <07d6e2e7-a50a-8cf4-5c5d-200551bd6687@gmail.com>
+ <02e4f87a-80e8-dc5d-0d6e-46939f2c74ac@acm.org>
+ <4005a768-9e45-0707-509d-98ce0d2769bd@kernel.org>
+ <0505654c-e487-6b91-57cf-fa7996f5c738@suse.de>
+ <6957a93c-b933-9b08-2f9f-901c4782cd40@kernel.org>
+ <CAAd53p5CsAAX5G1J2WH5N5JT5dZB_BD2AW8WL-S=pHZtGXr1sw@mail.gmail.com>
+ <433015f6-9ca6-e4ce-e070-a75378419564@kernel.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="tWIpDNZqlXgx17RH"
-Content-Disposition: inline
-In-Reply-To: <NVN-hJsvHwaHe6R-y6XIYJp0FV7sCavgMjobFnseULT1wjgkOFNXbGBGT5iVjCfbtU7dW5xy2hIDoq0ASeNaXhvSY-g2Df4aHWVIMQ2c3TQ=@proton.me>
-
-
---tWIpDNZqlXgx17RH
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <433015f6-9ca6-e4ce-e070-a75378419564@kernel.org>
 
-On Sat, May 27, 2023 at 04:07:56AM +0000, Sami Korkalainen wrote:
-> >Where is SCSI info?
->=20
-> Right there, under the text (It was so short, that I thought to put it in=
- the message. Maybe I should have put that also in pastebin for consistency=
- and clarity):
->=20
-> Attached devices:
-> Host: scsi0 Channel: 00 Id: 00 Lun: 00
-> Vendor: ATA      Model: KINGSTON SVP200S Rev: C4
-> Type:   Direct-Access                    ANSI  SCSI revision: 05
-> Host: scsi1 Channel: 00 Id: 00 Lun: 00
-> Vendor: hp       Model: CDDVDW TS-L633M  Rev: 0301
-> Type:   CD-ROM                           ANSI  SCSI revision: 05
->=20
-> >I think networking changes shouldn't cause this ACPI regression, right?
-> Yeah, beats me, but that's what I got by bisecting. My expertise ends abo=
-ut here.
+On Mon, Jun 12, 2023 at 04:47:09PM +0900, Damien Le Moal wrote:
+> On 6/12/23 16:36, Kai-Heng Feng wrote:
+> > On Mon, Jun 12, 2023 at 3:22 PM Damien Le Moal <dlemoal@kernel.org> wrote:
+> >>
+> >> On 6/12/23 15:09, Hannes Reinecke wrote:
+> >>> On 6/12/23 05:09, Damien Le Moal wrote:
+> >>>> On 6/11/23 00:03, Bart Van Assche wrote:
+> >>>>> On 6/10/23 06:27, Bagas Sanjaya wrote:
+> >>>>>> On 6/10/23 15:55, Pavel Machek wrote:
+> >>>>>>>>> #regzbot introduced: v5.0..v6.4-rc5 https://bugzilla.kernel.org/show_bug.cgi?id=217530
+> >>>>>>>>> #regzbot title: Waking up from resume locks up on SCSI CD/DVD drive
+> >>>>>>>>>
+> >>>>>>>> The reporter had found the culprit (via bisection), so:
+> >>>>>>>>
+> >>>>>>>> #regzbot introduced: a19a93e4c6a98c
+> >>>>>>> Maybe cc the authors of that commit?
+> >>>>>>
+> >>>>>> Ah! I forgot to do that! Thanks anyway.
+> >>>>>
+> >>>>> Hi Damien,
+> >>>>>
+> >>>>> Why does the ATA code call scsi_rescan_device() before system resume has
+> >>>>> finished? Would ATA devices still work with the patch below applied?
+> >>>>
+> >>>> I do not know the PM code well at all, need to dig into it. But your patch
+> >>>> worries me as it seems it would prevent rescan of the device on a resume, which
+> >>>> can be an issue if the device has changed.
+> >>>>
+> >>>> I am not yet 100% clear on the root cause for this, but I think it comes from
+> >>>> the fact that ata_port_pm_resume() runs before the sci device resume is done, so
+> >>>> with scsi_dev->power.is_suspended still true. And ata_port_pm_resume() calls
+> >>>> ata_port_resume_async() which triggers EH (which will do reset + rescan)
+> >>>> asynchronously. So it looks like we have scsi device resume and libata EH for
+> >>>> rescan fighting each others for the scan mutex and device lock, leading to deadlock.
+> >>>>
+> >>>> Trying to recreate this issue now to confirm and debug further. But I suspect
+> >>>> the solution to this may be best implemented in libata, not in scsi.
+> >>>> This looks definitely related to this thread:
+> >>>>
+> >>>> https://lore.kernel.org/linux-scsi/7b553268-69d3-913a-f9de-28f8d45bdb1e@acm.org/
+> >>>>
+> >>>> Similaraly to your comment on that thread, having to look at
+> >>>> dev->power.is_suspended is not ideal I think. What we need is to have ata and
+> >>>> scsi pm resume be synchronized, but I am not yet 100% clear on the scsi layer side.
+> >>>>
+> >>> Which is my feeling, too.
+> >>> libata runs rescan as part of the device discovery, so really it will
+> >>> run after resume. And consequently resume really cannot wait for rescan
+> >>> to finish.
+> >>>
+> >>> What I would be looking at is to decouple resume from libata device
+> >>> rescan, and have resume to complete before libata EH runs.
+> >>
+> >> That is the case now, for the ata port at least, even though that is not super
+> >> explicit, and not reliable. See ata_port_pm_resume(): I think that the call to
+> >> EH in ata_port_pm_resume() -> ata_port_resume_async() -> ata_port_request_pm()
+> >> -> ata_port_schedule_eh() should instead use a sync resume, leading to a sync EH
+> >> call.
+> >>
+> >> That EH execution essentially does ata_eh_handle_port_resume(), which calls into
+> >> the adapter resume operation. That in itself does not do much beside some
+> >> registers accesses to wakeup the port. There should be no issues doing that
+> >> synchronously.
+> >>
+> >> The problem is that after that is done, ata EH calls ata_std_error_handler() ->
+> >> ata_do_eh() -> ata_eh_recover() -> ata_eh_revalidate_and_attach() ->
+> >> schedule_work(&(ap->scsi_rescan_task)). And the rescan work calls
+> >> scsi_rescan_device() (yet in another context than EH) which causes the problem
+> >> when the scsi disk device has not been resumed yet (dev->power_is_suspended
+> >> still true).
+> >>
+> >> So it really looks like the solution should be to have ata_scsi_dev_rescan()
+> >> wait for the scsi device to resume first, but not sure how to do that with the
+> >> pm API. Digging...
+> > 
+> > Probably use dpm_wait_for_children()? Right now it's an internal PM API.
+> 
+> But I am not sure if there is a relationship between ata_device and its
+> scsi_device (dev->sdev)... Need to clarify that.
+> > 
+> > Rafael,
+> > What do you think?
 
-Hmm, no reply for a while.
+Look into the device_pm_wait_for_dev() API.  It's the appropriate thing 
+to use when you want to wait for another device to complete a system PM 
+transition.  (However, it's not appropriate for runtime PM.)
 
-Networking people: It looks like your v6.2 PR introduces unrelated
-ACPICA regression. Can you explain why?
+Of course, if there is a parent-child relationship between two devices 
+then waiting is never necessary.  The PM core guarantees that a parent 
+will always be at full power when a child changes its power state, 
+unless pm_suspend_ignore_children() has been called for the parent 
+device.
 
-ACPICA people: Can you figure out why do this regression happen?
-
-Sami: Can you try latest mainline and repeat bisection as confirmation?
-
-I'm considering to remove this from regression tracking if there is
-no replies in several more days.
-
-Thanks.
-
---=20
-An old man doll... just what I always wanted! - Clara
-
---tWIpDNZqlXgx17RH
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZIcmoQAKCRD2uYlJVVFO
-o0wKAQCcH1j4r5tTFN68Co51J4YMdY4PIF5cCpAk35SIIZX4IQEA07PBQBFcbwxR
-k4AfJYj4bdOcl372Mr+/9vr6aGcgFgc=
-=p0sj
------END PGP SIGNATURE-----
-
---tWIpDNZqlXgx17RH--
+Alan Stern
