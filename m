@@ -1,144 +1,115 @@
-Received: from netrider.rowland.org (netrider.rowland.org [192.131.102.5])
-	by smtp.subspace.kernel.org (Postfix) with SMTP id 00C5D1B8E6
-	for <regressions@lists.linux.dev>; Mon, 12 Jun 2023 14:53:37 +0000 (UTC)
-Received: (qmail 394521 invoked by uid 1000); 12 Jun 2023 10:33:35 -0400
-Date: Mon, 12 Jun 2023 10:33:35 -0400
-From: Alan Stern <stern@rowland.harvard.edu>
-To: Damien Le Moal <dlemoal@kernel.org>
-Cc: Kai-Heng Feng <kai.heng.feng@canonical.com>,
-  Hannes Reinecke <hare@suse.de>, Bart Van Assche <bvanassche@acm.org>,
-  Bagas Sanjaya <bagasdotme@gmail.com>, Pavel Machek <pavel@ucw.cz>,
-  "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <len.brown@intel.com>,
-  Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-  Kees Cook <keescook@chromium.org>, Tony Luck <tony.luck@intel.com>,
-  "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-  Thorsten Leemhuis <linux@leemhuis.info>,
-  "James E.J. Bottomley" <jejb@linux.ibm.com>,
-  "Martin K. Petersen" <martin.petersen@oracle.com>,
-  Phillip Potter <phil@philpotter.co.uk>,
-  Joe Breuer <linux-kernel@jmbreuer.net>,
-  Linux Power Management <linux-pm@vger.kernel.org>,
-  Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-  Linux Hardening <linux-hardening@vger.kernel.org>,
-  Linux Regressions <regressions@lists.linux.dev>,
-  Linux SCSI <linux-scsi@vger.kernel.org>,
-  Dan Williams <dan.j.williams@intel.com>, Hannes Reinecke <hare@suse.com>,
-  Adrian Hunter <adrian.hunter@intel.com>,
-  Martin Kepplinger <martin.kepplinger@puri.sm>
-Subject: Re: Fwd: Waking up from resume locks up on sr device
-Message-ID: <1bc3eff1-6f86-4546-9360-19b6d0236bc4@rowland.harvard.edu>
-References: <2d1fdf6d-682c-a18d-2260-5c5ee7097f7d@gmail.com>
- <5513e29d-955a-f795-21d6-ec02a2e2e128@gmail.com>
- <ZIQ6bkau3j6qGef8@duo.ucw.cz>
- <07d6e2e7-a50a-8cf4-5c5d-200551bd6687@gmail.com>
- <02e4f87a-80e8-dc5d-0d6e-46939f2c74ac@acm.org>
- <4005a768-9e45-0707-509d-98ce0d2769bd@kernel.org>
- <0505654c-e487-6b91-57cf-fa7996f5c738@suse.de>
- <6957a93c-b933-9b08-2f9f-901c4782cd40@kernel.org>
- <CAAd53p5CsAAX5G1J2WH5N5JT5dZB_BD2AW8WL-S=pHZtGXr1sw@mail.gmail.com>
- <433015f6-9ca6-e4ce-e070-a75378419564@kernel.org>
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E4681C755
+	for <regressions@lists.linux.dev>; Mon, 12 Jun 2023 15:10:14 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1q8jBG-0006SE-QN; Mon, 12 Jun 2023 17:10:06 +0200
+Message-ID: <8065316b-0a3a-e7d5-28de-cc9fc9210ce5@leemhuis.info>
+Date: Mon, 12 Jun 2023 17:10:06 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <433015f6-9ca6-e4ce-e070-a75378419564@kernel.org>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: Sometimes DVB broken with commit 6769a0b7ee0c3b
+Content-Language: en-US, de-DE
+To: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
+ Hyunwoo Kim <imv4bel@gmail.com>,
+ Linux Media Mailing List <linux-media@vger.kernel.org>,
+ Thomas Voegtle <tv@lio96.de>, linux-kernel@vger.kernel.org
+References: <da5382ad-09d6-20ac-0d53-611594b30861@lio96.de>
+ <439d143b-1de7-6365-cf64-f1b44fd6d1cf@leemhuis.info>
+ <20230605113727.69e7f309@sal.lan>
+ <88d8a7c3-0018-cc9a-13aa-e3262e20e4aa@leemhuis.info>
+ <20230605190046.63c98b3e@sal.lan>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <20230605190046.63c98b3e@sal.lan>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1686582614;c00de727;
+X-HE-SMSGID: 1q8jBG-0006SE-QN
 
-On Mon, Jun 12, 2023 at 04:47:09PM +0900, Damien Le Moal wrote:
-> On 6/12/23 16:36, Kai-Heng Feng wrote:
-> > On Mon, Jun 12, 2023 at 3:22 PM Damien Le Moal <dlemoal@kernel.org> wrote:
-> >>
-> >> On 6/12/23 15:09, Hannes Reinecke wrote:
-> >>> On 6/12/23 05:09, Damien Le Moal wrote:
-> >>>> On 6/11/23 00:03, Bart Van Assche wrote:
-> >>>>> On 6/10/23 06:27, Bagas Sanjaya wrote:
-> >>>>>> On 6/10/23 15:55, Pavel Machek wrote:
-> >>>>>>>>> #regzbot introduced: v5.0..v6.4-rc5 https://bugzilla.kernel.org/show_bug.cgi?id=217530
-> >>>>>>>>> #regzbot title: Waking up from resume locks up on SCSI CD/DVD drive
-> >>>>>>>>>
-> >>>>>>>> The reporter had found the culprit (via bisection), so:
-> >>>>>>>>
-> >>>>>>>> #regzbot introduced: a19a93e4c6a98c
-> >>>>>>> Maybe cc the authors of that commit?
-> >>>>>>
-> >>>>>> Ah! I forgot to do that! Thanks anyway.
-> >>>>>
-> >>>>> Hi Damien,
-> >>>>>
-> >>>>> Why does the ATA code call scsi_rescan_device() before system resume has
-> >>>>> finished? Would ATA devices still work with the patch below applied?
-> >>>>
-> >>>> I do not know the PM code well at all, need to dig into it. But your patch
-> >>>> worries me as it seems it would prevent rescan of the device on a resume, which
-> >>>> can be an issue if the device has changed.
-> >>>>
-> >>>> I am not yet 100% clear on the root cause for this, but I think it comes from
-> >>>> the fact that ata_port_pm_resume() runs before the sci device resume is done, so
-> >>>> with scsi_dev->power.is_suspended still true. And ata_port_pm_resume() calls
-> >>>> ata_port_resume_async() which triggers EH (which will do reset + rescan)
-> >>>> asynchronously. So it looks like we have scsi device resume and libata EH for
-> >>>> rescan fighting each others for the scan mutex and device lock, leading to deadlock.
-> >>>>
-> >>>> Trying to recreate this issue now to confirm and debug further. But I suspect
-> >>>> the solution to this may be best implemented in libata, not in scsi.
-> >>>> This looks definitely related to this thread:
-> >>>>
-> >>>> https://lore.kernel.org/linux-scsi/7b553268-69d3-913a-f9de-28f8d45bdb1e@acm.org/
-> >>>>
-> >>>> Similaraly to your comment on that thread, having to look at
-> >>>> dev->power.is_suspended is not ideal I think. What we need is to have ata and
-> >>>> scsi pm resume be synchronized, but I am not yet 100% clear on the scsi layer side.
-> >>>>
-> >>> Which is my feeling, too.
-> >>> libata runs rescan as part of the device discovery, so really it will
-> >>> run after resume. And consequently resume really cannot wait for rescan
-> >>> to finish.
-> >>>
-> >>> What I would be looking at is to decouple resume from libata device
-> >>> rescan, and have resume to complete before libata EH runs.
-> >>
-> >> That is the case now, for the ata port at least, even though that is not super
-> >> explicit, and not reliable. See ata_port_pm_resume(): I think that the call to
-> >> EH in ata_port_pm_resume() -> ata_port_resume_async() -> ata_port_request_pm()
-> >> -> ata_port_schedule_eh() should instead use a sync resume, leading to a sync EH
-> >> call.
-> >>
-> >> That EH execution essentially does ata_eh_handle_port_resume(), which calls into
-> >> the adapter resume operation. That in itself does not do much beside some
-> >> registers accesses to wakeup the port. There should be no issues doing that
-> >> synchronously.
-> >>
-> >> The problem is that after that is done, ata EH calls ata_std_error_handler() ->
-> >> ata_do_eh() -> ata_eh_recover() -> ata_eh_revalidate_and_attach() ->
-> >> schedule_work(&(ap->scsi_rescan_task)). And the rescan work calls
-> >> scsi_rescan_device() (yet in another context than EH) which causes the problem
-> >> when the scsi disk device has not been resumed yet (dev->power_is_suspended
-> >> still true).
-> >>
-> >> So it really looks like the solution should be to have ata_scsi_dev_rescan()
-> >> wait for the scsi device to resume first, but not sure how to do that with the
-> >> pm API. Digging...
-> > 
-> > Probably use dpm_wait_for_children()? Right now it's an internal PM API.
+On 05.06.23 20:00, Mauro Carvalho Chehab wrote:
+> Em Mon, 5 Jun 2023 12:44:43 +0200
+> Thorsten Leemhuis <regressions@leemhuis.info> escreveu:
+>> On 05.06.23 12:37, Mauro Carvalho Chehab wrote:
+>>> Em Mon, 5 Jun 2023 11:38:49 +0200
+>>> "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info> escreveu:
+>>>>
+>>>> On 30.05.23 13:12, Thomas Voegtle wrote:  
+>>>>>
+>>>>> I have the problem that sometimes my DVB card does not initialize
+>>>>> properly booting Linux 6.4-rc4.
+>>>>> This is not always, maybe in 3 out of 4 attempts.
+>>>>> When this happens somehow you don't see anything special in dmesg, but
+>>>>> the card just doesn't work.
+>>>>>
+>>>>> Reverting this helps:
+>>>>> commit 6769a0b7ee0c3b31e1b22c3fadff2bfb642de23f
+>>>>[...]
+>>>> Mauro: I wonder if this is something you or someone else has to look
+>>>> into, as Hyunwoo Kim posted a few times per months to Linux lists, but
+>>>> according  to a quick search on lore hasn't posted anything since ~two
+>>>> months now. :-/  
+>>>
+>>> Yeah, I was slow applying this one, as I was afraid of it to cause
+>>> troubles. The DVB frontend state machine is complex, and uses a
+>>> semaphore to update its state. There was some past attempts of
+>>> addressing some lifetime issues there that we ended needing to revert
+>>> or not being applied, as the fix caused more harm than good.
+>>> [...]  
+>>
+>> Thx for the update. That's unfortunate, but how it is sometimes. Which
+>> leads to a follow-up question: is reverting the culprit temporarily an
+>> option? Or did those old use-after-free problems became known to be a
+>> problem we can't live with anymore for another few months?
 > 
-> But I am not sure if there is a relationship between ata_device and its
-> scsi_device (dev->sdev)... Need to clarify that.
-> > 
-> > Rafael,
-> > What do you think?
+> Reverting the patch seems to be the way to proceed. Then, work on another
+> way to address UAF. 
+> 
+> I'm not aware of dvb users complaining about troubles due to UAF, although 
+> it seems that there's now a CVE for it. So, maybe someone complained against
+> a distro Kernel, which caused the CVE to be opened.
+> 
+> So, while it is nice to have the lifetime issues fixed, last time I checked,
+> the USB dvb-usb/dvb-usb-v2 have some logic that usually prevents it to cause 
+> real issues during device removal, and unbinding DVB PCIe devices is 
+> something that users don't do in practice.
 
-Look into the device_pm_wait_for_dev() API.  It's the appropriate thing 
-to use when you want to wait for another device to complete a system PM 
-transition.  (However, it's not appropriate for runtime PM.)
+Thx for the explanation and handling this. I noticed you posted a
+revert, but it misses a fixes tag for the reverted commit and a Link: or
+Closes: tag to the report. I think Linus would very much welcome at
+least one of the latter in a situation like this (see [1] and [2]). I
+would, too, as then regzbot would have noticed the patch posting. But
+whatever, no big deal, let me tell regzbot about the latest progress
+manually:
 
-Of course, if there is a parent-child relationship between two devices 
-then waiting is never necessary.  The PM core guarantees that a parent 
-will always be at full power when a child changes its power state, 
-unless pm_suspend_ignore_children() has been called for the parent 
-device.
+#regzbot monitor:
+https://lore.kernel.org/all/20230609082238.3671398-1-mchehab@kernel.org/
+#regzbot fix: Revert "media: dvb-core: Fix use-after-free on race
+condition at dvb_frontend"
 
-Alan Stern
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+
+[1] for details, see:
+https://lore.kernel.org/all/CAHk-=wjMmSZzMJ3Xnskdg4+GGz=5p5p+GSYyFBTh0f-DgvdBWg@mail.gmail.com/
+https://lore.kernel.org/all/CAHk-=wgs38ZrfPvy=nOwVkVzjpM3VFU1zobP37Fwd_h9iAD5JQ@mail.gmail.com/
+https://lore.kernel.org/all/CAHk-=wjxzafG-=J8oT30s7upn4RhBs6TX-uVFZ5rME+L5_DoJA@mail.gmail.com/
+
+[2] see Documentation/process/submitting-patches.rst
+(http://docs.kernel.org/process/submitting-patches.html) and
+Documentation/process/5.Posting.rst
+(https://docs.kernel.org/process/5.Posting.html)
+
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
