@@ -1,96 +1,94 @@
-Received: from striker.routify.me (unknown [64.94.212.133])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00BA7361
-	for <regressions@lists.linux.dev>; Tue, 13 Jun 2023 04:57:14 +0000 (UTC)
-Received: from glitch (unknown [IPv6:2602:24c:b8f:cd90::8eb3])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by striker.routify.me (Postfix) with ESMTPSA id B72ACE34;
-	Tue, 13 Jun 2023 04:48:27 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 striker.routify.me B72ACE34
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=seangreenslade.com;
-	s=striker-outgoing; t=1686631707;
-	bh=3SWM9HpbvhY+6JXsgZEbqdJ7uzmLqwt9dCy2pAjIAms=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=r9OFNliJWYsooYmf4esdOxSlSOzjzXXOFNdtBQRRqJXow8z+fd5nFSnzAtZaLG2f3
-	 9Cgl0yfTaGG7xNxflDfil9S/SaoKw7b7/Fo1HewXr0qImxl7IqXB/1OHpxh39ml6Z6
-	 eMg7swj9N5L67o5gIJS+O94x1U2oNyEZ3Wb9EiUE=
-Date: Mon, 12 Jun 2023 21:48:30 -0700
-From: Sean Greenslade <sean@seangreenslade.com>
-To: Bagas Sanjaya <bagasdotme@gmail.com>
-Cc: linux-ext4@vger.kernel.org, Ye Bin <yebin10@huawei.com>,
-	Theodore Ts'o <tytso@mit.edu>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Regressions <regressions@lists.linux.dev>
-Subject: Re: RO mount of ext4 filesystem causes writes
-Message-ID: <ZIf1HpUjmQWu0xXo@glitch>
-References: <ZIauBR7YiV3rVAHL@glitch>
- <ZIa5P1HqE62rmzqu@debian.me>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF13B2415C;
+	Tue, 13 Jun 2023 09:27:08 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1q90Is-0004W8-FQ; Tue, 13 Jun 2023 11:27:06 +0200
+Message-ID: <23d5f9d6-f0db-a9af-1291-e9d6ac3cd126@leemhuis.info>
+Date: Tue, 13 Jun 2023 11:27:05 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <ZIa5P1HqE62rmzqu@debian.me>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Re: [PATCH 6.3 136/286] media: dvb-core: Fix use-after-free on race
+ condition at dvb_frontend
+Content-Language: en-US, de-DE
+To: Stefan Lippers-Hollmann <s.l-h@gmx.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev,
+ Hyunwoo Kim <imv4bel@gmail.com>, Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Sasha Levin <sashal@kernel.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <20230607200922.978677727@linuxfoundation.org>
+ <20230607200927.531074599@linuxfoundation.org> <20230613053314.70839926@mir>
+ <20230613110006.7c660162@mir>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+In-Reply-To: <20230613110006.7c660162@mir>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1686648429;5ed6639a;
+X-HE-SMSGID: 1q90Is-0004W8-FQ
 
-On Mon, Jun 12, 2023 at 01:20:47PM +0700, Bagas Sanjaya wrote:
-> On Sun, Jun 11, 2023 at 10:32:53PM -0700, Sean Greenslade wrote:
-> > Hello, folks.
-> >=20
-> > I noticed a change in behavior of ext4 in recent kernels. I make use of
-> > several luks loopback images formatted as ext4 that I mount read-only
-> > most of the time. I use rsync to synchronize the backing images between
-> > machines. In the past, mouning the images as read-only would not touch
-> > the backing image contents at all, but recently this changed. Every
-> > mount, even ones that are RO from the start, will cause some small
-> > writes to the backing image and thus force rsync to scan the whole file.
-> >=20
-> > I confirmed that the issue is still present on v6.4.rc6, so I performed
-> > a bisect and landed on the following commit:
-> >=20
-> > > eee00237fa5ec8f704f7323b54e48cc34e2d9168 is the first bad commit
-> > > commit eee00237fa5ec8f704f7323b54e48cc34e2d9168
-> > > Author: Ye Bin <yebin10@huawei.com>
-> > > Date:   Tue Mar 7 14:17:02 2023 +0800
-> > >=20
-> > >     ext4: commit super block if fs record error when journal record w=
-ithout error
-> >=20
-> > That certainly looks like a likely cause of my issue, but I'm not
-> > familiar enough with the ext4 code to diagnose any further. Please let
-> > me know if you need any additional information, or if you would like me
-> > to test anything.
-> >=20
->=20
-> Can you show dmesg when regression happens?
->=20
-> Ye: It looks like this regression is caused by your commit. Would you like
-> to take a look on it?
->=20
-> Anyway, thanks for the bug report. I'm adding it to regzbot:
->=20
-> #regzbot ^introduced: eee00237fa5ec8
-> #regzbot title: commit super block writes even in read-only filesystems
+On 13.06.23 11:00, Stefan Lippers-Hollmann wrote:
+> On 2023-06-13, Stefan Lippers-Hollmann wrote:
+>> On 2023-06-07, Greg Kroah-Hartman wrote:
+>>> From: Hyunwoo Kim <imv4bel@gmail.com>
+>>>
+>>> [ Upstream commit 6769a0b7ee0c3b31e1b22c3fadff2bfb642de23f ]
+>>>
+>>> If the device node of dvb_frontend is open() and the device is
+>>> disconnected, many kinds of UAFs may occur when calling close()
+>>> on the device node.
+>>>
+>>> The root cause of this is that wake_up() for dvbdev->wait_queue
+>>> is implemented in the dvb_frontend_release() function, but
+>>> wait_event() is not implemented in the dvb_frontend_stop() function.
+>>>
+>>> So, implement wait_event() function in dvb_frontend_stop() and
+>>> add 'remove_mutex' which prevents race condition for 'fe->exit'.
+>>>
+>>> [mchehab: fix a couple of checkpatch warnings and some mistakes at the error handling logic]
+>>>
+>>> Link: https://lore.kernel.org/linux-media/20221117045925.14297-2-imv4bel@gmail.com
+>> [...]
+>>
+>> I'm noticing a regression relative to kernel v6.3.6 with this change
+>> as part of kernel v6.3.7 on my ivy-bridge system running
+>> Debian/unstable (amd64) with vdr 2.6.0-1.1[0] and two DVB cards
+>> TeVii S480 V2.1 (DVB-S2, dw2102) and an Xbox One Digital TV Tuner
+>> (DVB-T2, dvb_usb_dib0700). The systemd unit starting vdr just times
+>> out and hangs forever, with vdr never coming up and also preventing
+>> a clean system shutdown (hard reset required). Apart from the systemd
+>> unit timing out, there don't really appear to be any further issues
+>> logged.
+> [...]
+> 
+> I've now also tested v6.4-rc6-26-gfb054096aea0 and can reproduce
+> this regression there as well, with the same fix of reverting this
+> corresponding patch.
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=6769a0b7ee0c3b31e1b22c3fadff2bfb642de23f
 
-I did a fresh boot on the 6.4 rc6 kernel and did an RO mount and
-unmount. Here's the full dmesg output from that:
+Earlier report about problem due to 6769a0b7ee0c:
+https://lore.kernel.org/all/da5382ad-09d6-20ac-0d53-611594b30861@lio96.de/
 
-[   48.955896] loop0: detected capacity change from 0 to 4194304
-[   48.965526] Key type trusted registered
-[   48.973640] Key type encrypted registered
-[   49.032404] EXT4-fs (dm-0): mounted filesystem 4e824972-4523-407e-b0da-3=
-229a71b68d8 ro with ordered data mode. Quota mode: none.
-[   61.180755] EXT4-fs (dm-0): unmounting filesystem 4e824972-4523-407e-b0d=
-a-3229a71b68d8.
-[   61.236958] dm-0: detected capacity change from 4190208 to 0
+Proposed revert:
+https://lore.kernel.org/all/20230609082238.3671398-1-mchehab@kernel.org/
 
-Thanks,
+Mauro, now that the patch made it into a stable tree, could you help
+getting the revert quickly to Linus? Or shall we maybe ask him to pick
+it up straight from the list?
 
---Sean
-
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
