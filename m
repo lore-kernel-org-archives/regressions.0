@@ -1,45 +1,13 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A2F05676
-	for <regressions@lists.linux.dev>; Tue, 13 Jun 2023 12:34:12 +0000 (UTC)
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1b3be39e666so18770115ad.0
-        for <regressions@lists.linux.dev>; Tue, 13 Jun 2023 05:34:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686659651; x=1689251651;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=vP+Due+xcyqIxukkDpwNVEnKW4STGnTfS6nfAuPAL7A=;
-        b=K5Hgc5DtBQxj/Wa0tw+WCvTlqVB4Zy0xqsybX/soQJKUdE9XUxnmYc6jAEZDC+D+kv
-         rP6MZgMiUCBX/IqOG9YNzXPMcHTjAKYuJjHQYKxPtPgOkPR7jiuSZ8WqUHk4RDRllz+G
-         YVibJO86wbHDIIRgnoFO9ZCDNl/BiD6cGFmkrEvp/e2EucBN4xFWeMGjfAxjpAt6ICR2
-         McwlcwOvYlnz+TFHV4Ty6ENwA9pz/Xx9eNSyo8G8Lpy2ijrKm419JpdsqQzyIwjWG+Ck
-         aNKoFqxAviTzM0pq2z1Pp+zXK0Cn0RjMegVM4xnYBtSghWSRIE8Vu9aZS2DN/zCaXsbu
-         fEJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686659651; x=1689251651;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vP+Due+xcyqIxukkDpwNVEnKW4STGnTfS6nfAuPAL7A=;
-        b=ZqH71ao540TmeUY2BdUwyA7vjeozOvSE27zaQiRc5VwpuwOcucBGg+XoR5iZOlDcrP
-         g38tlY9bIqKAAQ+DNPfbnKyxCfumF4+IgtDiW4RlEgCkbaeax68y1la6gWKy/O9Z7ys1
-         mdG8+YZK7roKwKt41zk1uP9mU/rMshcelzkyCKUd7gJb3SbbyME30D9TK0Y9Fu4IhYkR
-         AQZSfSnqpnR5alJe3iDWuEpjYawzE2D6vdMSef0r+K3qVep7Kp20Up7Poe/IHd22Nvgn
-         spXuhKBSIbwRYH0bW6DJGuXCJGWiGOU+feNqZ8boFZ0t/l78PEprX0JH4CMmOilYJQza
-         NuaA==
-X-Gm-Message-State: AC+VfDwZvnn0iYAAqv2QktnQ4HhGrSFWuo19BbU6ZJ5fkriuPgWnzhwC
-	qBjgEFKOgLFT9kGd7QkPA2m5vwL5kDw=
-X-Google-Smtp-Source: ACHHUZ4v6H6sU9pazv21wT5eWDXGnYMmbYn0txyL9zLNvU8fNrhm6cJKV6BDUeH1nkQ86+nsg4sZPA==
-X-Received: by 2002:a17:902:ba83:b0:1ac:820e:c34a with SMTP id k3-20020a170902ba8300b001ac820ec34amr8613810pls.0.1686659651235;
-        Tue, 13 Jun 2023 05:34:11 -0700 (PDT)
-Received: from [192.168.0.103] ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id jn13-20020a170903050d00b001b1f991a4e2sm10192514plb.20.2023.06.13.05.33.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 13 Jun 2023 05:34:08 -0700 (PDT)
-Message-ID: <f5bcc9d5-2022-8c28-b84c-806e9c9d1d20@gmail.com>
-Date: Tue, 13 Jun 2023 19:33:40 +0700
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D591522B
+	for <regressions@lists.linux.dev>; Tue, 13 Jun 2023 13:18:26 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1q93xW-0002Up-OL; Tue, 13 Jun 2023 15:21:18 +0200
+Message-ID: <b3f6be3d-d540-53e4-d1d5-7994d8ec5c29@leemhuis.info>
+Date: Tue, 13 Jun 2023 15:21:18 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -47,67 +15,75 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: Fwd: w_scan hangs on 6.3.7 and does not react on kill -9
-To: Linux regressions mailing list <regressions@lists.linux.dev>,
- Mauro Carvalho Chehab <mchehab@kernel.org>,
- Lukasz Kalamlacki <kalamlacki@gmail.com>, Hyunwoo Kim <imv4bel@gmail.com>,
- Sasha Levin <sashal@kernel.org>, Stefan Lippers-Hollmann <s.l-h@gmx.de>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Media Mailing List <linux-media@vger.kernel.org>
-References: <67afa974-835a-77cc-d4bb-49cba0ff5bf5@gmail.com>
- <cc577237-7814-0bea-a152-8acdea844088@gmail.com>
- <98909a2f-cb55-b732-409c-ad14c802bf13@leemhuis.info>
-Content-Language: en-US
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-In-Reply-To: <98909a2f-cb55-b732-409c-ad14c802bf13@leemhuis.info>
+ Thunderbird/102.10.0
+Subject: Re: Regression that causes data csum mismatch
+Content-Language: en-US, de-DE
+To: Qu Wenruo <quwenruo.btrfs@gmx.com>,
+ "linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>
+References: <da414ecc-f329-48ec-94d2-67c94755effb@gmx.com>
+From: "Linux regression tracking #adding (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Cc: Linux kernel regressions list <regressions@lists.linux.dev>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <da414ecc-f329-48ec-94d2-67c94755effb@gmx.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1686662481;82599a8f;
+X-HE-SMSGID: 1q93xW-0002Up-OL
 
-On 6/13/23 18:59, Linux regression tracking (Thorsten Leemhuis) wrote:
+[CCing the regression list, as it should be in the loop for regressions:
+https://docs.kernel.org/admin-guide/reporting-regressions.html]
+
+[TLDR: I'm adding this report to the list of tracked Linux kernel
+regressions; the text you find below is based on a few templates
+paragraphs you might have encountered already in similar form.
+See link in footer if these mails annoy you.]
+
+On 13.06.23 08:26, Qu Wenruo wrote:
+> 
+> Recently I am testing scrub preparing for the incoming logical scrub.
+> 
+> But I noticed some rare and random test cases failure from scrub and
+> replace groups.
+> 
+> E.g. btrfs/072 has a chance of failure around 1/30.
+> 
+> Initially I thought it's my scrub patches screwing things up, but with
+> more digging, it turns out that it's real data corruption.
 > 
 > 
-> On 13.06.23 13:23, Bagas Sanjaya wrote:
->> On 6/12/23 20:52, Bagas Sanjaya wrote:
->>> Hi,
->>>
->>> I notice a regression report on Bugzilla [1]. Quoting from it:
->>>
->>>> w_scan tool on kernel 6.3.7 hangs so badly that it cannot be killed by kill -9 
->>>> I tried also w_scan_cpp 20230604 but it also fails I have 2040:8268 Hauppauge soloHD device as reported by lsusb. During reboot of the OS it prints a lot of kernel errors but it is after syslog is killed I guess and in syslog messages I do not see anything. On default Debian kernel 5.10.0-23 this problem does not exists.
->>>
->>>
->>> See Bugzilla for the full thread and attached dmesg and kernel config.
->>>
->>> Lukasz: On what hardware you have this regression? Also, it is really
->>> helpful if you can perform bisection (as outlined
->>> in Documentation/admin-guide/bug-bisect.html) to find the culprit,
->>> when developers can't figure it out by inspecting the code alone.
->>> Last but not least, please also try latest mainline (currently v6.4-rc6).
->>>
->>> Anyway, I'm adding it to regzbot:
->>>
->>> #regzbot introduced: v5.10..v6.3 https://bugzilla.kernel.org/show_bug.cgi?id=217540
->>> #regzbot title: w_scan zombie (unkillable) on kernel v6.3
->>
->> Another reporter on Bugzilla with similar regression as this one had
->> bisected the culprit, so:
->>
->> Hyunwoo Kim: It looks like this regression is caused by a backported
->> commit of yours. Would you like to take a look on it?
->>
->> #regzbot introduced: 8994830135b38b
+> After scrubbing found errors, btrfs check --check-data-csum also reports
+> csum mismatch.
 > 
-> TWIMC, revert for mainline already in preparation, for details see:
+> Furthermore this is profile independent, I have see all profiles hitting
+> such data corruption.
 > 
-> https://lore.kernel.org/all/23d5f9d6-f0db-a9af-1291-e9d6ac3cd126@leemhuis.info/
+> Currently trying to bisect, but 6.4-rc4 already shows the bug.
 > 
+> And I can reproduce the problem on both x86_64 and aarch64 (both 4K page
+> size)
 
-Hi Thorsten, thanks for additional discussion link. Telling regzbot:
+Thanks for the report. To be sure the issue doesn't fall through the
+cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
+tracking bot:
 
-#regzbot fix: Revert "media: dvb-core: Fix use-after-free on race condition at dvb_frontend"
-#regzbot monitor: https://lore.kernel.org/all/23d5f9d6-f0db-a9af-1291-e9d6ac3cd126@leemhuis.info/
+#regzbot ^introduced v6.3..v6.4-rc6
+#regzbot title btrfs: occasional data csum mismatch
+#regzbot ignore-activity
 
--- 
-An old man doll... just what I always wanted! - Clara
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply and tell me -- ideally
+while also telling regzbot about it, as explained by the page listed in
+the footer of this mail.
 
+Developers: When fixing the issue, remember to add 'Link:' tags pointing
+to the report (the parent of this mail). See page linked in footer for
+details.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+That page also explains what to do if mails like this annoy you.
