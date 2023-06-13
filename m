@@ -1,249 +1,74 @@
-Received: from madras.collabora.co.uk (madras.collabora.co.uk [46.235.227.172])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8020033E3
-	for <regressions@lists.linux.dev>; Tue, 13 Jun 2023 16:33:45 +0000 (UTC)
-Received: from [192.168.42.253] (mtl.collabora.ca [66.171.169.34])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: padovan)
-	by madras.collabora.co.uk (Postfix) with ESMTPSA id ED3706606F36;
-	Tue, 13 Jun 2023 17:33:42 +0100 (BST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1686674023;
-	bh=/ZEVjz1hYCwJ5zsXlAP45Cj+qMdy8tkEaEHIaqypX6Q=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=elvhDwaZLGdddtacM1DNDOJnqDERg+WtmQ/Zmd01y6ATnEYcDBkwIUD5pHs5KOXsB
-	 M/0IOicYZ+hNAxv01fWtlDGUtB/JafQPrTlJisN2a6DViaS6sGNxGsFRwtv7Fqablc
-	 rlhvIPW/XHL5hwFIzTqyUKAj37POjHI0/KR2yXRDeug6YeRjItDSmvme2V9hdzBijY
-	 TRPNZCd9CuhcZKnwkpKsWYxkHpMDLXfwIQUJFG07pzCxPQflctARHQbHUOBeIGfsGb
-	 W929U2i6qzlZOS/QgctitMjQVKwZp3rDmuEtecvpF1lELTCkDDl87bLWKcFvt9Nb9H
-	 McQuALgjEgfMQ==
-Message-ID: <084f5c29-8bc8-dd36-bb75-5ad3079f6b7a@collabora.com>
-Date: Tue, 13 Jun 2023 12:33:38 -0400
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 780C738CA4;
+	Tue, 13 Jun 2023 18:14:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC10CC433D9;
+	Tue, 13 Jun 2023 18:14:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1686680083;
+	bh=fjT4gpdjI8bzfc0kSPvWLMcKfBFEaXgHEzlFBmmWqkQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=YPBwCeRUs39kxlaLzdOB3U/bmTyHUsAgwUCs8NioF14TZY5ElTAYwBY3aLoc8t+wS
+	 e7bjbenC0hl1zrZBBwEJynjtkv3y8YHI3Y0EL41PdFbkLqqmFNzGbNGIRl/VZnFsYI
+	 CEwTLDbyKWuoN9nk3I/ejgmZ+2WowJN20sz99hVWF4I8TU1yLWxTHyDtznWvx7r7qp
+	 Vri8t/fEYXoWjE2p8JoArbh5O2YE0NPTL2eCwWxwE7P/vGrX8992LrfTUUX5KaU5v4
+	 52tJPG2/TK+wz8hZw12VOptpVSyRZhteeSItM9u2L0OhNiloXN3I+k9XVhutsfKh78
+	 0Uq9DJwQX5BaA==
+Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
+	id 64961BBEAD1; Tue, 13 Jun 2023 20:14:40 +0200 (CEST)
+From: Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@kernel.org>
+To: Kalle Valo <kvalo@kernel.org>, linux-wireless@vger.kernel.org
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ regressions@lists.linux.dev, Johannes Berg <johannes@sipsolutions.net>,
+ Jakub Kicinski <kuba@kernel.org>
+Subject: Re: Closing down the wireless trees for a summer break?
+In-Reply-To: <87y1kncuh4.fsf@kernel.org>
+References: <87y1kncuh4.fsf@kernel.org>
+X-Clacks-Overhead: GNU Terry Pratchett
+Date: Tue, 13 Jun 2023 20:14:40 +0200
+Message-ID: <871qifxm9b.fsf@toke.dk>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: installing dependencies for regzbot
-Content-Language: en-US
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: =?UTF-8?Q?Ricardo_Ca=c3=b1uelo_Navarro?= <ricardo.canuelo@collabora.com>,
- Guillaume Charles Tucker <guillaume.tucker@collabora.com>,
- Shreeya Patel <shreeya.patel@collabora.com>
-References: <38108ca4-eaea-98bd-882f-5fdd96516b6f@collabora.com>
- <15758064-8d46-9be7-1c32-e6e15bcb2443@leemhuis.info>
- <2ef89bf3-d1cc-7362-a07f-a47f29c24dcb@collabora.com>
- <983b10b9-ab90-99a4-d3a0-d6d9cd572739@leemhuis.info>
- <6e08beab-0229-e1f4-33c0-7ab072803a90@collabora.com>
- <04a2d855-be89-906b-dfc4-44dc263d485c@collabora.com>
- <547b3859-fbc7-a678-b4c1-91e1198acb90@leemhuis.info>
-From: Gustavo Padovan <gustavo.padovan@collabora.com>
-In-Reply-To: <547b3859-fbc7-a678-b4c1-91e1198acb90@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-Hi Thorsten,
+Kalle Valo <kvalo@kernel.org> writes:
 
-I finally had the time to move with the regression data export 
-discussion and placed a MR, as you may have been seen already:
-
-https://gitlab.com/knurd42/regzbot/-/merge_requests/4
-
-This would allows us to automate a good deal of manual tracking we need 
-to do.  Not urgent, but important to scale things up.
-
-I also want to ask you which conferences are you going this year? I 
-definitely want to meet you face to face and chat about it.
-
-One more question: is there history you can tell me about 0-day issues 
-being report into regzbot? We are evaluating looking at some 0-day 
-issues as well. I believe we have a similar situation that someone needs 
-to triage the issues otherwise it may create garbage that just add 
-burden to maintainers.
-
-Best regards,
-
-Gustavo
-
-Le 2023-05-02 à 08 h 04, Linux regression tracking (Thorsten Leemhuis) a 
-écrit :
-> On 29.04.23 14:16, Gustavo Padovan wrote:
->> Meet Shreeya (in CC). She is an engineer in our Kernel team and will be
->> working on validating and reporting regressions.
-> Hi Shreeya, nice to meet you! If you need help from my side, feel free
-> to reach out in private as well. Mailing list might usually be the
-> better, but sometimes doing things in private is better. :-D Especially
-> if there might be some misunderstanding or something like that.
+> Me and Johannes are planning to take a longer break from upstream this
+> summer. To keep things simple my suggestion is that we would official
+> close wireless and wireless-next trees from June 23rd to August 14th
+> (approximately).
 >
->> Thanks for the feedback you gave us on the mailing list. That will help
->> us shape the report format and process to match what you and the
->> community expect. She will follow up on this soon.
-> Okay!
+> During that time urgent fixes would need go directly to the net tree.
+> Patches can keep flowing to the wireless list but the the net
+> maintainers will follow the list and they'll just apply them to the
+> net tree directly.
 >
-> Ciao, Thorsten
+> The plan here is that -next patches would have to wait for
+> wireless-next to open. Luckily the merge window for v6.6 most likely
+> opens beginning of September[1] so after our break we would have few
+> weeks to get -next patches ready for v6.6.
 >
->> Le 20/04/2023 à 11:21, Gustavo Padovan a écrit :
->>> HI Thorsten,
->>>
->>> Lot of things going on here too. I am quite busy prior our company
->>> meetup in 2 weeks. The long delay doesn't mean I am not interested in
->>> this. I am still quite interested. Things will calm down in 3 weeks
->>> hopefully.
->>>
->>> My answers are inline.
->>>
->>> On 4/11/23 07:55, Thorsten Leemhuis wrote:
->>>> On 07.04.23 14:40, Gustavo Padovan wrote:
->>>>> Thanks for the reply! I am happy to start collaborating with you.
->>>> Me too! Just be warned, I'm currently kinda swamped already in work wrt
->>>> to regression tracking intels – the number of tracked attention that
->>>> need human attention from me seems to increase since a few months. :-/
->>>> That's why I likely will be sometimes a bit slow to respond. :-/
->>> Thanks a lot for you leadership and work there!
->>>
->>>>> Le 2023-04-03 à 07 h 44, Thorsten Leemhuis a écrit :
->>>>>> On 31.03.23 14:38, Gustavo Padovan wrote:
->>>>>>> We are interested in contributed to regzbot,
->>>>>> Ugh, on one hand that is nice to hear.
->>>>>>
->>>>>> On the other hand it's kinda scary for me and I want to hide under a
->>>>>> pillow, as I very well know: the code I wrote is crap. Thing is, I
->>>>>> have
->>>>>> no real background in programming. I just saw the need for such a tool
->>>>>> and started putting one together. Some of the things I did I already
->>>>>> knew were bad when I realized them. Then there are quite a few things
->>>>>> where I over time learned that I did something really stupid. And
->>>>>> there
->>>>>> is likely a ton of things where I don't know yet that I did something
->>>>>> stupid. :-/
->>>>>>
->>>>>> But well, that's how it is sometimes, as despite this regzbot
->>>>>> proved to
->>>>>> be useful.
->>>>> Exactly. It is very useful. Code can always be improved, but the
->>>>> delivered value of regzbot is very good already.
->>>> Nice to hear -- especially as I'm unhappy about a quite a few aspects of
->>>> regzbot myself, but haven't found proper time to improve things
->>>> recently. :-/ But if everything goes well the time situation should
->>>> improve now (is already did somewhat).
->>>>
->>>>> [...]
->>>>>> You want this one:
->>>>>> https://github.com/python-bugzilla/python-bugzilla
->>>>>> https://pypi.org/project/python-bugzilla/
->>>>> Thanks! It worked,
->>>> Great!
->>>>
->>>>>>> Beyond the setup issue, I am insterested in contributing support to
->>>>>>> export a list of all tracked regressions in a way we can consume the
->>>>>>> data to match with regressions found by KernelCI, so then we can
->>>>>>> filter
->>>>>>> out what still needs to be reported to regzbot. We are writing a
->>>>>>> little
->>>>>>> tracker. We can show it to you soon if you want.
->>>>>> Sounds great. Especially as I also have a "export" function on my
->>>>>> mental
->>>>>> to do list as well:  I want to enable the stable team to check for
->>>>>> tracked regressions before they backporting commits (never thought
->>>>>> about
->>>>>> how to actually do this, but I guess all they need is a list of
->>>>>> commits
->>>>>> which are known to have regressions and a link to the report or the
->>>>>> tracked entry in regzbot).
->>>>>>
->>>>>> Anyway: If the regzbot code gets to scary for you and you abandon your
->>>>>> plan, please let me know. I have quite a few cleanups I want to do
->>>>>> (while implementing a few missing features), but the problem is: this
->>>>>> cat herding that regression tracking itself is keeps me so busy,
->>>>>> that I
->>>>>> didn't any really time to work on regzbot in the past few months, as I
->>>>>> officially only work on regression tracking for 3 to 4 hours a day
->>>>>> (and
->>>>>> didn't find time to fix some bugs that plague me every day). But a few
->>>>>> things that kept me busy are finished now, so hopefully I find time to
->>>>>> work on the code again to make things less scary. And in case you give
->>>>>> up at some point I might write something myself for your use-case.
->>>>> regzbot is our current process to track regressions in the kernel. From
->>>>> my side, we don't want to abandon this task.
->>>>> Our goal is experiment with  integrating regressions found by KernelCI
->>>>> into such a process. Right now, we are not doing as much regression
->>>>> tracking as we would like in KernelCI because the manual work overhead
->>>>> is high.
->>>> Yeah, tell me about it. :-D
->>>>
->>>>> For that reason we started some experiments at:
->>>>>
->>>>> https://kernel.pages.collabora.com/kernelci-regressions-tracker/ -
->>>>> it is
->>>>> really experimental and we want to drop it (or reimplement it) soon
->>>>>
->>>>> code at
->>>>> https://gitlab.collabora.com/kernel/kernelci-regressions-tracker/
->>>> /me will take a look at it later
->>>>
->>>>> As the number of regressions reported by KernelCI (and the community)
->>>>> grows, we need to understand how to handle those flows in KernelCI. So
->>>>> right now we are asking a bunch of questions: eg How can I pull data
->>>>> from some regzbot interface to learn about existing regressions? How
->>>>> can
->>>>> we leverage the Regressions db schema from KCIDB to store regressions
->>>>> connected to test results, bisection reports, etc?
->>>> Sounds like lots of work ahead.
->>>>
->>>> While at it, please let me add something to your list. How do you plan
->>>> to detect things like "this is a regression that the CI found, but it's
->>>> more of a theoretical issue that is unlikely to happen in the wild and
->>>> thus likely will be ignored by kernel developers"? I'd prefer to not
->>>> have those in regzbot, as they distract from other issues -- both my
->>>> time when trying to stay on top of things and the attention of those
->>>> that look at the list of tracked issues.
->>> This is great input you are giving us and I think it part of the work
->>> to make KernelCI data as relevant as possible to kernel developers.
->>>
->>> For now our plan is to report to regzbot only after thoroughly manual
->>> validation by our team at Collabora, so we would be starting with a
->>> handful regressions being sent at first.
->>>
->>> As we do this, we learn more about what it takes to evaluate KernelCI
->>> regressions and track them and more options can come to the table.
->>>
->>>  From the top of my mind some things that we could do in the future are:
->>>
->>> * mark in regzbot that the source of the regression report is a CI
->>> system, then the data could be treated different (like filtered out)
->>> in the regzbot reports.
->>>
->>> * continuously engage with maintainer to review what tests are being
->>> run for their subsystem to make sure we are running only relevant
->>> stuff. Ideally the maintainers and developers should take care of
->>> which tests KernelCI runs, but we are not quite there yet.
->>>
->>>>> Hopefully, I'll have an MR for you soon.
->>>> /me will soon reply to the other mail with the MR that arrived in
->>>> between
->>> That is okay. I still need to debug further the issue I reported to
->>> you. I feel we are making progress in this discussion anyway. So that
->>> is good.
->>>
->>> Thanks again!
->>>
->>> Best Regards,
->>>
->>> Gustavo
->>>
+> And the v6.5 -next patches should be ready by Monday June 19th so that we
+> have enough time to get them into the tree before we close the trees.
+>
+> What do people think, would this work? This is the first time we are
+> doing this so we would like to hear any comments about this, both
+> negative and positive. You can also reply to me and Johannes privately,
+> if that's easier.
 
--- 
-Gustavo Padovan
-Kernel team Lead
+I think this sounds reasonable, and I applaud the effort to take some
+time off during the summer :)
 
-Collabora Ltd.
-Platinum Building, St John's Innovation Park
-Cambridge CB4 0DS, UK
-Registered in England & Wales, no. 5513718
+One question that comes to mind is how would this work for patchwork?
+Would we keep using the wireless patchwork instance for the patches
+going to -net in that period, or will there be some other process for
+this? I realise the setup we have for ath9k is a bit special in this
+regard with the ack-on-list+delegation, so I'm obviously mostly
+interested in what to do about that... :)
 
+-Toke
