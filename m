@@ -1,103 +1,66 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A227522B
-	for <regressions@lists.linux.dev>; Tue, 13 Jun 2023 14:08:04 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1q94gX-0003mL-Rb; Tue, 13 Jun 2023 16:07:49 +0200
-Message-ID: <172193eb-14cc-549e-2953-6749a3a4c502@leemhuis.info>
-Date: Tue, 13 Jun 2023 16:07:49 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 335C2522B;
+	Tue, 13 Jun 2023 14:22:52 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66085C433F0;
+	Tue, 13 Jun 2023 14:22:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1686666172;
+	bh=uaFeJzmCxlczQeNB4wjNR1p0Vrwz4zgph2jIve82GkA=;
+	h=From:To:Cc:Subject:Date:From;
+	b=ZuISURTvbhSW/SoXlALwokHgjZzX5GB4acwTW7pOvOm1WaVJ/yM9OPv3mQ1wQn1z7
+	 OGMI/SlP7+KxqnTJUzRHls3cnE0tKBjg57xnBXrTWTR2uuhy8K+/y6xTmxWs2LITc9
+	 +EzI1xlyUA4Zc5z3L3kU9LyU6r6EBk+iu1mjDa4o+kxiTL6/DgLS4PWjYzTfBbcmTn
+	 V1k30kU/KwJ8ZOeP6V5+tMiJmJ75luLSSMBrxr+oaCE4Mx0TJWfweH0RcfDZvjMDVE
+	 9Pm+KV5djfrgBR5SYq3ya90zL5dG93tkzvOExr0cVX+qbH2EkE6wJ6dK0G3LCNRg7L
+	 7h7sz1ezBqNUQ==
+From: Kalle Valo <kvalo@kernel.org>
+To: linux-wireless@vger.kernel.org
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+         regressions@lists.linux.dev,
+         Johannes Berg <johannes@sipsolutions.net>,
+         Jakub Kicinski <kuba@kernel.org>
+Subject: Closing down the wireless trees for a summer break?
+Date: Tue, 13 Jun 2023 17:22:47 +0300
+Message-ID: <87y1kncuh4.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: printk.time causes rare kernel boot hangs
-Content-Language: en-US, de-DE
-To: "Richard W.M. Jones" <rjones@redhat.com>, Aaron Thompson
- <dev@aaront.org>, Peter Zijlstra <peterz@infradead.org>
-Cc: linux-kernel@vger.kernel.org,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <20230613134105.GA10301@redhat.com>
-From: "Linux regression tracking #adding (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <20230613134105.GA10301@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1686665284;fc3b3c45;
-X-HE-SMSGID: 1q94gX-0003mL-Rb
+Content-Type: text/plain
 
-[CCing the regression list, as it should be in the loop for regressions:
-https://docs.kernel.org/admin-guide/reporting-regressions.html]
+Me and Johannes are planning to take a longer break from upstream this
+summer. To keep things simple my suggestion is that we would official
+close wireless and wireless-next trees from June 23rd to August 14th
+(approximately).
 
-[TLDR: I'm adding this report to the list of tracked Linux kernel
-regressions; the text you find below is based on a few templates
-paragraphs you might have encountered already in similar form.
-See link in footer if these mails annoy you.]
+During that time urgent fixes would need go directly to the net tree.
+Patches can keep flowing to the wireless list but the the net
+maintainers will follow the list and they'll just apply them to the
+net tree directly.
 
-On 13.06.23 15:41, Richard W.M. Jones wrote:
-> [Being tracked in this bug which contains much more detail:
-> https://gitlab.com/qemu-project/qemu/-/issues/1696 ]
-> 
-> Recent kernels hang rarely when booted on qemu.  Usually you need to
-> boot 100s or 1,000s of times to see the hang, compared to 292,612 [sic]
-> successful boots which I was able to do before the problematic commit.
-> 
-> A reproducer (you'll probably need to use Fedora) is:
-> 
->   $ while guestfish -a /dev/null -v run >& /tmp/log; do echo -n . ; done
-> 
-> You will need to leave it running for probably several hours, and
-> examine the /tmp/log file at the end.
-> 
-> I tracked this down to the following commit:
-> 
->   commit f31dcb152a3d0816e2f1deab4e64572336da197d
->   Author: Aaron Thompson <dev@aaront.org>
->   Date:   Thu Apr 13 17:50:12 2023 +0000
-> 
->     sched/clock: Fix local_clock() before sched_clock_init()
->     
->     Have local_clock() return sched_clock() if sched_clock_init() has not
->     yet run. sched_clock_cpu() has this check but it was not included in the
->     new noinstr implementation of local_clock().
-> 
->   (https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=f31dcb152a3d0816e2f1deab4e64572336da197d)
-> 
-> Reverting this commit fixes the problem.
-> 
-> I don't know _why_ this commit is wrong, but can we revert it as it
-> causes serious problems with libguestfs hanging randomly.
-> 
-> Or if there's anything you want me to try out then let me know,
-> because I can reproduce the problem locally quite easily.
+The plan here is that -next patches would have to wait for
+wireless-next to open. Luckily the merge window for v6.6 most likely
+opens beginning of September[1] so after our break we would have few
+weeks to get -next patches ready for v6.6.
 
-Thanks for the report. To be sure the issue doesn't fall through the
-cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
-tracking bot:
+And the v6.5 -next patches should be ready by Monday June 19th so that we
+have enough time to get them into the tree before we close the trees.
 
-#regzbot ^introduced f31dcb152a3d0816e2f1deab4e64572336da197d
-#regzbot title sched/clock: printk.time causes rare kernel boot hangs
-#regzbot ignore-activity
+What do people think, would this work? This is the first time we are
+doing this so we would like to hear any comments about this, both
+negative and positive. You can also reply to me and Johannes privately,
+if that's easier.
 
-This isn't a regression? This issue or a fix for it are already
-discussed somewhere else? It was fixed already? You want to clarify when
-the regression started to happen? Or point out I got the title or
-something else totally wrong? Then just reply and tell me -- ideally
-while also telling regzbot about it, as explained by the page listed in
-the footer of this mail.
+Kalle
 
-Developers: When fixing the issue, remember to add 'Link:' tags pointing
-to the report (the parent of this mail). See page linked in footer for
-details.
+[1] https://phb-crystal-ball.sipsolutions.net/
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+-- 
+https://patchwork.kernel.org/project/linux-wireless/list/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
