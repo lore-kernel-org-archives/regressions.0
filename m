@@ -1,64 +1,90 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7338723DB
-	for <regressions@lists.linux.dev>; Tue, 13 Jun 2023 16:24:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FF4CC433F0;
-	Tue, 13 Jun 2023 16:24:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1686673469;
-	bh=e0lGt4W4LRbgMJIkd2g8XPriuNT71YGvpwWLGzTcwB4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VTnr7CPRWfFhJ1WvvtGXqCDUKWVAxTfE22yZ6caZPpFCBynxFYMGX++KD5NVB7rFJ
-	 7tmp49cA/gINTGyNA9tg3qZuCs8Dn/3AmGz+RNc4a5wSD2CnyjmYDjXx5Rvn+TzcFy
-	 S4E78MZ3DV6SHHS8HbCYzAxO+oZVSHLAcMlPteKY=
-Date: Tue, 13 Jun 2023 18:24:21 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	linux-usb@vger.kernel.org, Stephan Bolten <stephan.bolten@gmx.net>,
-	stable@vger.kernel.org
-Subject: Re: [PATCH] usb: typec: ucsi: Fix command cancellation
-Message-ID: <2023061349-disobey-empathy-c1a9@gregkh>
-References: <20230606115802.79339-1-heikki.krogerus@linux.intel.com>
- <977dae31-7963-d3f5-7612-6f7761b03507@leemhuis.info>
- <2023061313-headed-stumble-cf30@gregkh>
- <49292fe0-db4a-0358-1949-f0ce1c876a73@leemhuis.info>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40A0B3C0AE
+	for <regressions@lists.linux.dev>; Tue, 13 Jun 2023 16:27:55 +0000 (UTC)
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-30af159b433so5509670f8f.3
+        for <regressions@lists.linux.dev>; Tue, 13 Jun 2023 09:27:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares.net; s=google; t=1686673674; x=1689265674;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=SXBTcxS6e+KLdzegbHLSQzJR4kJD9TFGPGdy9rLfOww=;
+        b=bdzHGgwU1+0zR84sjdpR37niIzDxRw80hIgBhfNsbRn4wQpanad4Zs4/orufYdE2La
+         kx+Lk7vEfclCAKcMU+KbvLQXR5quJ0d+GOVWA0Eg24kJhHIqcLYmt858037q8V38jmvH
+         XZvbnCTld08oHXfCG314bmIfRfDDWCwJNI3rDPVJOnpdio98haDQ320Jv62Yzcp0FqS3
+         PxaHDKodS5MqNJkGV3P9kSKbfjp6VoVNwqOWDOpvINXM35/98VGU1hMjEKtqNJjw0vxq
+         EQWqo+ssU+xyzG6PLbTSZEcNPowSQww3u5mUOIV1dwUmDCJ2OHA5nBNQt1CtuD0BaW4m
+         wGEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686673674; x=1689265674;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=SXBTcxS6e+KLdzegbHLSQzJR4kJD9TFGPGdy9rLfOww=;
+        b=VLqYnHpeTReSazZ/yFa8WufTu0e+D4YoNEvIZHS/4ic7Ccs0vh1zEwfo+jB1f9vAMX
+         jjhZhDJOWAGGm+f+2fG3ERd2QGnSH7Uro89oehl8WSF8O69WXv4ob/RVx3NqMCE8C4wU
+         LCFSvEND2YMmV4KjDhsaJ6OA0bj7FDBbVFTX8htwkpUsiGr/79kjkqY1GdyG6eGzj+c8
+         C9Fv9ndWN399UqBzVfCPEQ+YMUcy0XAWNWEmB12UQrxPsjyEtSaaQAEqM8CrU58FIEET
+         ytnY6lSt9SsaLGwhH8EIZzXexxsROonblkr5eNcHQ1sq7eeqRHyZq/W8j8hxg3omzJvS
+         y5Mg==
+X-Gm-Message-State: AC+VfDwgi7UYkqnOYVY1zihJ9xadVOLSm9UqpsMVK6JJTFVn4O41gwLG
+	dksVAHkG6UjHRvCStkKOuPL8qg==
+X-Google-Smtp-Source: ACHHUZ7KEU+pF7/2AwLYQomBHKSHtBQbvZr47rrILPIaALiOSOjRsad+FAhArauXJ6kCBE7t0A9RWQ==
+X-Received: by 2002:adf:f1cf:0:b0:30a:e87b:515b with SMTP id z15-20020adff1cf000000b0030ae87b515bmr8842213wro.20.1686673674187;
+        Tue, 13 Jun 2023 09:27:54 -0700 (PDT)
+Received: from ?IPV6:2a02:578:8593:1200:43dd:5a9a:f4d6:7cf7? ([2a02:578:8593:1200:43dd:5a9a:f4d6:7cf7])
+        by smtp.gmail.com with ESMTPSA id n5-20020a05600c294500b003f7ec896cefsm15013298wmd.8.2023.06.13.09.27.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 13 Jun 2023 09:27:53 -0700 (PDT)
+Message-ID: <0dd7af94-db5f-ab39-dc79-285de4bf0a11@tessares.net>
+Date: Tue, 13 Jun 2023 18:27:52 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <49292fe0-db4a-0358-1949-f0ce1c876a73@leemhuis.info>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: 9p: MPTCP tests regressions due to new 9p features in v6.4
+Content-Language: en-GB
+To: Eric Van Hensbergen <ericvh@kernel.org>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: evanhensbergen@icloud.com, MPTCP Upstream <mptcp@lists.linux.dev>,
+ v9fs@lists.linux.dev
+References: <855a232a-76d3-7e7b-b2b5-2ebc41bcadd6@tessares.net>
+ <CAFkjPTnX0=-GK8sFzd4S+V2+cA8E-FAqYHNndZui2Sh_MvoHPw@mail.gmail.com>
+ <88f7a06b-b044-9fdc-b3dc-4b374dbca332@tessares.net>
+ <3E1DD5A9-A8CB-4951-839A-6EF229CFA8EA@icloud.com>
+ <4830cc62-64fd-f74b-bbfc-b8e44e023513@leemhuis.info>
+ <CAFkjPTnAV6Rngwn6voCF332CX+eUyeJd7U0GcYn9BbkBqcTkHA@mail.gmail.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <CAFkjPTnAV6Rngwn6voCF332CX+eUyeJd7U0GcYn9BbkBqcTkHA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jun 13, 2023 at 05:36:50PM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
-> On 13.06.23 17:09, Greg Kroah-Hartman wrote:
-> > On Tue, Jun 13, 2023 at 04:51:58PM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
-> >> On 06.06.23 13:58, Heikki Krogerus wrote:
-> >>> The Cancel command was passed to the write callback as the
-> >>> offset instead of as the actual command which caused NULL
-> >>> pointer dereference.
-> >>>
-> >>> Reported-by: Stephan Bolten <stephan.bolten@gmx.net>
-> >>> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=217517
-> >>> Fixes: 094902bc6a3c ("usb: typec: ucsi: Always cancel the command if PPM reports BUSY condition")
-> >>> Cc: stable@vger.kernel.org
-> >>> Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> >>
-> >> Gentle reminder that this made no progress for a week now. Or was there
-> >> and I just missed it? Then apologies in advance.
-> > 
-> > This just landed in my usb-linus branch a few hours before you sent
-> > this, and will show up in linux-next tomorrow as:
-> > 	c4a8bfabefed ("usb: typec: ucsi: Fix command cancellation")
-> 
-> Ahh, great! Sorry, I check next in cases like this before sending mails,
-> but not the subsystem trees directly. :-/
+Hi Eric,
 
-I wouldn't expect you to look in subsystem trees, not a problem at all,
-thanks for the ping, you're doing great work here.
+On 13/06/2023 18:07, Eric Van Hensbergen wrote:
+> Understood, this on top of my 9p stack, but day job has been getting
+> in the way lately so I need to unstack there first.  Will do my best
+> to reproduce and understand as quickly as I can -- but given its a
+> performance regression it is likely going to be tricky to reproduce
+> and understand, so I'm not sure how confident I am that we'll be able
+> to close it out prior to the final -rc.
 
-greg k-h
+Thank you for your message, I understand, no issue.
+
+On our side with MPTCP, there is no hurry as there is a workaround: the
+revert of the series you sent for v6.4. So as long as it is tracked and
+fixed at some points, we are fine :)
+
+(but I don't know what's the impact for other people of course)
+
+Cheers,
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
