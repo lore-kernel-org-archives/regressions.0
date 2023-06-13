@@ -1,66 +1,147 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 335C2522B;
-	Tue, 13 Jun 2023 14:22:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66085C433F0;
-	Tue, 13 Jun 2023 14:22:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1686666172;
-	bh=uaFeJzmCxlczQeNB4wjNR1p0Vrwz4zgph2jIve82GkA=;
-	h=From:To:Cc:Subject:Date:From;
-	b=ZuISURTvbhSW/SoXlALwokHgjZzX5GB4acwTW7pOvOm1WaVJ/yM9OPv3mQ1wQn1z7
-	 OGMI/SlP7+KxqnTJUzRHls3cnE0tKBjg57xnBXrTWTR2uuhy8K+/y6xTmxWs2LITc9
-	 +EzI1xlyUA4Zc5z3L3kU9LyU6r6EBk+iu1mjDa4o+kxiTL6/DgLS4PWjYzTfBbcmTn
-	 V1k30kU/KwJ8ZOeP6V5+tMiJmJ75luLSSMBrxr+oaCE4Mx0TJWfweH0RcfDZvjMDVE
-	 9Pm+KV5djfrgBR5SYq3ya90zL5dG93tkzvOExr0cVX+qbH2EkE6wJ6dK0G3LCNRg7L
-	 7h7sz1ezBqNUQ==
-From: Kalle Valo <kvalo@kernel.org>
-To: linux-wireless@vger.kernel.org
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-         regressions@lists.linux.dev,
-         Johannes Berg <johannes@sipsolutions.net>,
-         Jakub Kicinski <kuba@kernel.org>
-Subject: Closing down the wireless trees for a summer break?
-Date: Tue, 13 Jun 2023 17:22:47 +0300
-Message-ID: <87y1kncuh4.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BA7A23DB;
+	Tue, 13 Jun 2023 14:56:57 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1q95S3-0004Xr-Qo; Tue, 13 Jun 2023 16:56:55 +0200
+Message-ID: <4830cc62-64fd-f74b-bbfc-b8e44e023513@leemhuis.info>
+Date: Tue, 13 Jun 2023 16:56:55 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: 9p: MPTCP tests regressions due to new 9p features in v6.4
+Content-Language: en-US, de-DE
+To: evanhensbergen@icloud.com, Matthieu Baerts <matthieu.baerts@tessares.net>
+Cc: Eric Van Hensbergen <ericvh@kernel.org>,
+ MPTCP Upstream <mptcp@lists.linux.dev>, regressions@lists.linux.dev,
+ v9fs@lists.linux.dev
+References: <855a232a-76d3-7e7b-b2b5-2ebc41bcadd6@tessares.net>
+ <CAFkjPTnX0=-GK8sFzd4S+V2+cA8E-FAqYHNndZui2Sh_MvoHPw@mail.gmail.com>
+ <88f7a06b-b044-9fdc-b3dc-4b374dbca332@tessares.net>
+ <3E1DD5A9-A8CB-4951-839A-6EF229CFA8EA@icloud.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <3E1DD5A9-A8CB-4951-839A-6EF229CFA8EA@icloud.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1686668219;1b3a960b;
+X-HE-SMSGID: 1q95S3-0004Xr-Qo
 
-Me and Johannes are planning to take a longer break from upstream this
-summer. To keep things simple my suggestion is that we would official
-close wireless and wireless-next trees from June 23rd to August 14th
-(approximately).
+On 06.06.23 20:47, evanhensbergen@icloud.com wrote:
+> Interesting - so looks like caches aren=E2=80=99t being used so curious=
+ that there is any impact at all from mostly cache-related patches!
+> Okay thanks, I=E2=80=99ll dig in and see what I can find.
 
-During that time urgent fixes would need go directly to the net tree.
-Patches can keep flowing to the wireless list but the the net
-maintainers will follow the list and they'll just apply them to the
-net tree directly.
+Gentle reminder that this apparently made no progress for a week now. Or
+was there progress and I just missed it? Then apologies in advance.
 
-The plan here is that -next patches would have to wait for
-wireless-next to open. Luckily the merge window for v6.6 most likely
-opens beginning of September[1] so after our break we would have few
-weeks to get -next patches ready for v6.6.
+I'm asking, as it afaics would be nice to have this resolved in mainline
+before the next -rc. That would be ideal to avoid last minute changes
+after the last rc.
 
-And the v6.5 -next patches should be ready by Monday June 19th so that we
-have enough time to get them into the tree before we close the trees.
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
 
-What do people think, would this work? This is the first time we are
-doing this so we would like to hear any comments about this, both
-negative and positive. You can also reply to me and Johannes privately,
-if that's easier.
+#regzbot poke
 
-Kalle
-
-[1] https://phb-crystal-ball.sipsolutions.net/
-
--- 
-https://patchwork.kernel.org/project/linux-wireless/list/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+>> On Jun 6, 2023, at 10:08 AM, Matthieu Baerts <matthieu.baerts@tessares=
+=2Enet> wrote:
+>>
+>> Hi Eric,
+>>
+>> On 06/06/2023 16:49, Eric Van Hensbergen wrote:
+>>> thanks for the detailed report - I=E2=80=99ll have a look.
+>>
+>> Thank you for the quick reply!
+>>
+>> No hurry, we can also revert these patches in our tree for the time be=
+ing.
+>>
+>>> Do you know off hand
+>>> what cache options for 9p are in use?
+>>
+>> Sorry, I'm not sure what to look at.
+>>
+>> In the VM, I see that this mount command is used:
+>>
+>>  /bin/mount -n -t 9p -o ro,version=3D9p2000.L,trans=3Dvirtio,access=3D=
+any \
+>>             virtme.guesttools /run/virtme/guesttools
+>>
+>> In virtme source, I can see these commands should be executed:
+>>
+>>  /bin/mount -n -t 9p -o ro,version=3D9p2000.L,trans=3Dvirtio,access=3D=
+any \
+>>             /dev/root /newroot/
+>>  mount -t 9p -o version=3D9p2000.L,trans=3Dvirtio,access=3Dany \
+>>        "virtme.initmount${tag:16}" "${!tag}"
+>>
+>> From the VM, I can see:
+>>
+>>> # mount | grep 9p
+>>> /dev/root on / type 9p (ro,relatime,access=3Dany,trans=3Dvirtio)
+>>> virtme.guesttools on /run/virtme/guesttools type 9p (ro,relatime,acce=
+ss=3Dany,trans=3Dvirtio)
+>>> virtme.initmount0 on /mptcp_net-next type 9p (rw,relatime,access=3Dan=
+y,trans=3Dvirtio)
+>>
+>> And the VM is started using:
+>>
+>>> /usr/bin/qemu-system-x86_64 -fsdev local,id=3Dvirtfs1,path=3D/,securi=
+ty_model=3Dnone,readonly=3Don,multidevs=3Dremap -device virtio-9p-pci,fsd=
+ev=3Dvirtfs1,mount_tag=3D/dev/root -fsdev local,id=3Dvirtfs5,path=3D/opt/=
+virtme/virtme/guest,security_model=3Dnone,readonly=3Don,multidevs=3Dremap=
+ -device virtio-9p-pci,fsdev=3Dvirtfs5,mount_tag=3Dvirtme.guesttools -fsd=
+ev local,id=3Dvirtfs9,path=3D.,security_model=3Dnone,multidevs=3Dremap -d=
+evice virtio-9p-pci,fsdev=3Dvirtfs9,mount_tag=3Dvirtme.initmount0 -machin=
+e accel=3Dkvm:tcg -watchdog i6300esb -cpu host -parallel none -net none -=
+echr 1 -serial none -chardev stdio,id=3Dconsole,signal=3Doff,mux=3Don -se=
+rial chardev:console -mon chardev=3Dconsole -vga none -display none -m 20=
+48M -smp 2 -device virtio-net-pci,netdev=3Dn0 -netdev user,id=3Dn0 -kerne=
+l .virtme/build/arch/x86/boot/bzImage -append 'virtme_link_mods=3D.virtme=
+/build/.virtme_mods/lib/modules/0.0.0 virtme_initmount0=3D/mptcp_net-next=
+ earlyprintk=3Dserial,ttyS0,115200 console=3DttyS0 psmouse.proto=3Dexps "=
+virtme_stty_con=3Drows 59 cols 132 iutf8" TERM=3Dxterm virtme.dhcp virtme=
+_chdir=3D/mptcp_net-next rootfstype=3D9p rootflags=3Dversion=3D9p2000.L,t=
+rans=3Dvirtio,access=3Dany raid=3Dnoautodetect ro mitigations=3Doff init=3D=
+/bin/sh -- -c "mount -t tmpfs run /run;mkdir -p /run/virtme/guesttools;/b=
+in/mount -n -t 9p -o ro,version=3D9p2000.L,trans=3Dvirtio,access=3Dany vi=
+rtme.guesttools /run/virtme/guesttools;exec /run/virtme/guesttools/virtme=
+-init"'
+>>
+>> I don't see anything about the cache and nothing in the dmesg. If you
+>> think this info is in the dmesg, the logs are publicly available there=
+:
+>>
+>> https://cirrus-ci.com/task/5569063884161024?logs=3Dtest#L5626
+>>
+>>
+>>> Since things are slower, my first
+>>> suspect is the don't cache qid.version =3D=3D 0 change.  That can be
+>>> overridden with a mount option but perhaps we should invert the defau=
+lt
+>>> as it is new behavior from a linux perspective.
+>>
+>> Can I easily change the default behaviour on the kernel side to try
+>> (without modifying the tools launching the mount commands)?
+>>
+>> Cheers,
+>> Matt
+>> --=20
+>> Tessares | Belgium | Hybrid Access Solutions
+>> www.tessares.net
+>>
+>=20
+>=20
+>=20
