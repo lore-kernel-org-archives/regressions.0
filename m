@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D591522B
-	for <regressions@lists.linux.dev>; Tue, 13 Jun 2023 13:18:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6991E522B
+	for <regressions@lists.linux.dev>; Tue, 13 Jun 2023 13:24:00 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1q93xW-0002Up-OL; Tue, 13 Jun 2023 15:21:18 +0200
-Message-ID: <b3f6be3d-d540-53e4-d1d5-7994d8ec5c29@leemhuis.info>
-Date: Tue, 13 Jun 2023 15:21:18 +0200
+	id 1q9401-00032v-61; Tue, 13 Jun 2023 15:23:53 +0200
+Message-ID: <8f00c62e-7e9b-4b5b-c1a3-2562117795e9@leemhuis.info>
+Date: Tue, 13 Jun 2023 15:23:52 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,20 +16,24 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.10.0
-Subject: Re: Regression that causes data csum mismatch
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Re: [PATCH] ASoC: tegra: Fix Master Volume Control
 Content-Language: en-US, de-DE
-To: Qu Wenruo <quwenruo.btrfs@gmx.com>,
- "linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>
-References: <da414ecc-f329-48ec-94d2-67c94755effb@gmx.com>
+To: Jon Hunter <jonathanh@nvidia.com>, Liam Girdwood <lgirdwood@gmail.com>,
+ Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>, Thierry Reding <thierry.reding@gmail.com>,
+ Sameer Pujar <spujar@nvidia.com>
+Cc: alsa-devel@alsa-project.org, linux-tegra@vger.kernel.org,
+ Oswald Buddenhagen <oswald.buddenhagen@gmx.de>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <20230613093453.13927-1-jonathanh@nvidia.com>
 From: "Linux regression tracking #adding (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
-Cc: Linux kernel regressions list <regressions@lists.linux.dev>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <da414ecc-f329-48ec-94d2-67c94755effb@gmx.com>
+In-Reply-To: <20230613093453.13927-1-jonathanh@nvidia.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1686662481;82599a8f;
-X-HE-SMSGID: 1q93xW-0002Up-OL
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1686662640;d6bed542;
+X-HE-SMSGID: 1q9401-00032v-61
 
 [CCing the regression list, as it should be in the loop for regressions:
 https://docs.kernel.org/admin-guide/reporting-regressions.html]
@@ -39,36 +43,24 @@ regressions; the text you find below is based on a few templates
 paragraphs you might have encountered already in similar form.
 See link in footer if these mails annoy you.]
 
-On 13.06.23 08:26, Qu Wenruo wrote:
+On 13.06.23 11:34, Jon Hunter wrote:
+> Commit 3ed2b549b39f ("ALSA: pcm: fix wait_time calculations") corrected
+> the PCM wait_time calculations and in doing so reduced the calculated
+> wait_time. This exposed an issue with the Tegra Master Volume Control
+> (MVC) device where the reduced wait_time caused the MVC to fail. For now
+> fix this by setting the default wait_time for Tegra to be 500ms.
 > 
-> Recently I am testing scrub preparing for the incoming logical scrub.
-> 
-> But I noticed some rare and random test cases failure from scrub and
-> replace groups.
-> 
-> E.g. btrfs/072 has a chance of failure around 1/30.
-> 
-> Initially I thought it's my scrub patches screwing things up, but with
-> more digging, it turns out that it's real data corruption.
-> 
-> 
-> After scrubbing found errors, btrfs check --check-data-csum also reports
-> csum mismatch.
-> 
-> Furthermore this is profile independent, I have see all profiles hitting
-> such data corruption.
-> 
-> Currently trying to bisect, but 6.4-rc4 already shows the bug.
-> 
-> And I can reproduce the problem on both x86_64 and aarch64 (both 4K page
-> size)
+> Fixes: 3ed2b549b39f ("ALSA: pcm: fix wait_time calculations")
+> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+> ---
+> [...]
 
 Thanks for the report. To be sure the issue doesn't fall through the
 cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
 tracking bot:
 
-#regzbot ^introduced v6.3..v6.4-rc6
-#regzbot title btrfs: occasional data csum mismatch
+#regzbot ^introduced 3ed2b549b39f
+#regzbot title ASoC: tegra: Master Volume Control broken
 #regzbot ignore-activity
 
 This isn't a regression? This issue or a fix for it are already
