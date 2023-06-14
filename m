@@ -1,66 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9179C2EC33
-	for <regressions@lists.linux.dev>; Wed, 14 Jun 2023 20:57:55 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8AD6AC433C0;
-	Wed, 14 Jun 2023 20:57:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1686776275;
-	bh=z8ZWQft7AssxeR6/feMvU6173/9CccnopUSVjMhA2QQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mU6hGO6lTmOkAkoLNQPzsW2QHp70Ftpd02pGjXzMS8NX40NT35kSsODWWNlhoj/KO
-	 YIJas8s2b/gwFa+40fWRRJZXcfgGzC364xcSBM/+q6pEaf3hBh/oOasWH6iA/cr12i
-	 Nhr8POPgfmX3+w6ZUhRCmBbBZdnYnPAVfDRLm7nQ=
-Date: Wed, 14 Jun 2023 22:57:52 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Robert Kolchmeyer <rkolchmeyer@google.com>
-Cc: stable@vger.kernel.org, regressions@lists.linux.dev, kafai@fb.com,
-	ast@kernel.org, sashal@kernel.org, paul@isovalent.com,
-	Meena Shanmugam <meenashanmugam@google.com>
-Subject: Re: BPF regression in 5.10.168 and 5.15.93 impacting Cilium
-Message-ID: <2023061453-guacamole-porous-8a0e@gregkh>
-References: <CAJc0_fwx6MQa+Uozk+PJB0qb3JP5=9_WcCjOb8qa34u=DVbDmQ@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4822B134A1
+	for <regressions@lists.linux.dev>; Wed, 14 Jun 2023 21:48:23 +0000 (UTC)
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-51873d9a75dso273897a12.1
+        for <regressions@lists.linux.dev>; Wed, 14 Jun 2023 14:48:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1686779301; x=1689371301;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=z4aA7epvssoPGg5rKcRh6aIf+fYOU5PxCzsadmXXnuA=;
+        b=qFzhXfcLqCB2MSCLrlFYYTIxeaK5Z94fsXhWGJoebSatJORl6vk8BDQ4siY2DXEgOt
+         o9o3qkvC9tcvTTreGFSz5R2gm6l8Zfme2nX9DuU05b1Nt2Updfx8hApStrSWgZ1YPs0R
+         LaLpYMLvTuEySyVGl0vjkvo4yUM8PEdVqPO/guESDel1KF3TbryqXQSqXO3nCmkV3x4r
+         U5Hiz257+vR7OszPDKgm3cA6EHxr5LVrecE+Zr9mzi2y2I7kSHOf3MEP+BXxHtvNizW1
+         oTJ3pW3Y1LYJYKt7m5jNqcj0Izsx5PWQ1SqL9M00CBEYN8iNsPLx7ompRdJ1TR3vi+Wt
+         JxGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686779301; x=1689371301;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=z4aA7epvssoPGg5rKcRh6aIf+fYOU5PxCzsadmXXnuA=;
+        b=eCZTwiELokwnKwlc+dw0MtzEhtF08fofOPqkGt9C8th086XJjZFyr0w37YgQQCin6S
+         yK1+8ME9b/HlN68wPLVBtCFdgjIWsGy6bxHXDnkve/VBz2UY5Faa6D5GU3S3xGOkPn83
+         TrDf/S215fg6APnBOVkNaJ5X5Lxpcgw3e/2h58XS/cbJkXejwf7jFmHRgecP9m83U7gx
+         AsAvwR77Fx4SjuJ9NND43hFMAON4naEYWEC8M8+foO6uS9ntcjZDHt0hBJHe82bqIOuy
+         nmvKMzGn1WAA5ZRyald9BS5j6llc9lbbWaDqLdyFPa41aDHC2yrzr8Mfhb+DhQSFPqHe
+         XGAQ==
+X-Gm-Message-State: AC+VfDwEkbUAszG1RCdUKNr8cb72V3OcGLRIke8nwsUVbBcNCc7YlnaS
+	dYlxhzSApf1207kQ/aL5Ue5pJwZUX8i13/3VGaM=
+X-Google-Smtp-Source: ACHHUZ4dAD8KrNsvAoAwgxrkO665PN2j4lts/r2C6YriF4GjM2RHOgVk1Vh7//pO//qNwmKoXWTTnQjHAOVuJKVpJiI=
+X-Received: by 2002:a05:6402:2683:b0:4ea:a9b0:a518 with SMTP id
+ w3-20020a056402268300b004eaa9b0a518mr3028443edd.17.1686779301148; Wed, 14 Jun
+ 2023 14:48:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJc0_fwx6MQa+Uozk+PJB0qb3JP5=9_WcCjOb8qa34u=DVbDmQ@mail.gmail.com>
+References: <CAJc0_fwx6MQa+Uozk+PJB0qb3JP5=9_WcCjOb8qa34u=DVbDmQ@mail.gmail.com>
+ <2023061453-guacamole-porous-8a0e@gregkh>
+In-Reply-To: <2023061453-guacamole-porous-8a0e@gregkh>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Wed, 14 Jun 2023 14:48:09 -0700
+Message-ID: <CAADnVQLuHTNPEuXpSUgkNHoK1-X8KxU=spdYWB2bMp6icS+j0g@mail.gmail.com>
+Subject: Re: BPF regression in 5.10.168 and 5.15.93 impacting Cilium
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Robert Kolchmeyer <rkolchmeyer@google.com>, stable <stable@vger.kernel.org>, 
+	regressions@lists.linux.dev, Martin KaFai Lau <kafai@fb.com>, 
+	Alexei Starovoitov <ast@kernel.org>, Sasha Levin <sashal@kernel.org>, Paul Chaignon <paul@isovalent.com>, 
+	Meena Shanmugam <meenashanmugam@google.com>, Daniel Borkmann <daniel@iogearbox.net>, 
+	bpf <bpf@vger.kernel.org>, Andrii Nakryiko <andrii@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 14, 2023 at 11:23:52AM -0700, Robert Kolchmeyer wrote:
-> Hi all,
-> 
-> I believe 5.10.168 and 5.15.93 introduced a regression that impacts
-> the Cilium project. Some information on the nature of the regression
-> is available at https://github.com/cilium/cilium/issues/25500. The
-> primary symptom seems to be the error `BPF program is too large.`
-> 
-> My colleague has found that reverting the following two commits:
-> 
-> 8de8c4a "bpf: Support <8-byte scalar spill and refill"
-> 9ff2beb "bpf: Fix incorrect state pruning for <8B spill/fill"
-> 
-> resolves the regression.
-> 
-> If we revert these in the stable tree, there may be a few changes that
-> depend on those that also need to be reverted, but I'm not sure yet.
-> 
-> Would it make sense to revert these changes (and any dependent ones)
-> in the 5.10 and 5.15 trees? If anyone has other ideas, I can help test
-> possible solutions.
+On Wed, Jun 14, 2023 at 1:57=E2=80=AFPM Greg KH <gregkh@linuxfoundation.org=
+> wrote:
+>
+> On Wed, Jun 14, 2023 at 11:23:52AM -0700, Robert Kolchmeyer wrote:
+> > Hi all,
+> >
+> > I believe 5.10.168 and 5.15.93 introduced a regression that impacts
+> > the Cilium project. Some information on the nature of the regression
+> > is available at https://github.com/cilium/cilium/issues/25500. The
+> > primary symptom seems to be the error `BPF program is too large.`
+> >
+> > My colleague has found that reverting the following two commits:
+> >
+> > 8de8c4a "bpf: Support <8-byte scalar spill and refill"
+> > 9ff2beb "bpf: Fix incorrect state pruning for <8B spill/fill"
+> >
+> > resolves the regression.
+> >
+> > If we revert these in the stable tree, there may be a few changes that
+> > depend on those that also need to be reverted, but I'm not sure yet.
+> >
+> > Would it make sense to revert these changes (and any dependent ones)
+> > in the 5.10 and 5.15 trees? If anyone has other ideas, I can help test
+> > possible solutions.
+>
+> Can you actually test if those reverts work properly for you and if
+> there are other dependencies involved?
+>
+> And is this issue also in 6.1.y and Linus's tree?  If not, why not, are
+> we just missing a commit?  We can't revert something from a stable
+> release if you are going to hit the same issue when moving to a new
+> release, right?
+>
+> thanks,
+>
+> greg k-h
 
-Can you actually test if those reverts work properly for you and if
-there are other dependencies involved?
+Before jumping to reverts..
+how is it fixed in 6.0+ kernels?
 
-And is this issue also in 6.1.y and Linus's tree?  If not, why not, are
-we just missing a commit?  We can't revert something from a stable
-release if you are going to hit the same issue when moving to a new
-release, right?
-
-thanks,
-
-greg k-h
+"BPF program is too large" can probably be worked around on the cilium side=
+.
+The kernel cannot guarantee that a particular program will
+always be verifiable. We find safety bugs in the verifier and often
+enough the fixes to such issues make the verifier work harder to prove
+the safety of the program.
+This is one of such cases. These two commits are necessary.
+Reverting them will prevent loading of valid programs.
+So reverts is a dangerous path.
+The best is to identify the other patches from 6.0+ and backport them.
+The second best path is to bump 1M limit to something higher to
+mitigate "more work by the verifier".
