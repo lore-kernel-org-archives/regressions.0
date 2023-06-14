@@ -1,129 +1,74 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 785E77F
-	for <regressions@lists.linux.dev>; Wed, 14 Jun 2023 18:18:54 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1q9V51-0002TJ-Ri; Wed, 14 Jun 2023 20:18:51 +0200
-Message-ID: <358c69ad-fa8a-7386-fe75-92369883ee48@leemhuis.info>
-Date: Wed, 14 Jun 2023 20:18:51 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5221E7F
+	for <regressions@lists.linux.dev>; Wed, 14 Jun 2023 18:24:07 +0000 (UTC)
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-514ad92d1e3so966a12.1
+        for <regressions@lists.linux.dev>; Wed, 14 Jun 2023 11:24:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1686767045; x=1689359045;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=0XMSBiDo8EnwlS/NxAuHXvKqJ7PWX8RjNfkfEfB1GdY=;
+        b=zSAU5lzePns89P3SFuo1OM+oKQae+GVi7WShgrffrr4QwuWw3wtuxluTYjVRhCvMqS
+         mPK/5yvUzJdmaX+Jh9Edli4Zfg9vJ79RWqjxZjRclscN1Jt9RB8/CeHUAYstl2+8xogj
+         pB3MQTzDMfog9gnFuqZL+RUHsM2njYC4twBWa+j1xRKy40Um6xdWBrg17NxHeeYUs7op
+         ksAVGb3zpxbYOOVZG32rAJSi1dc3jMcEQ0UxH4Am2Y66+NBtMovAC4BW8LZAPei5eluD
+         Ff8wAmQ8K1rymK1AI0/+49wKnpR3+lHgxejVictfJUc/XYn2iaa3muQP//5B7nyP7feT
+         jvwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686767045; x=1689359045;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=0XMSBiDo8EnwlS/NxAuHXvKqJ7PWX8RjNfkfEfB1GdY=;
+        b=L065arAxcWNc7hglOVPpBR0l5X9Zwkyn6AkrjFxMMiH0whXkGBgwrFq4JCCDhBZCui
+         QiS3Pt/xhuuhrUsf8n663qSZdaI4+u4y7aTtN5sEIzb8bUbz977bhvKvSDiMc95INcAN
+         cIXBzZP2TT59670/JJKIe3LtDuai6zHsz3j+cOQzl56uRMzrfFOWsk0pkxl9rrgRAt3r
+         JeajxR7WtLm/ZJPG5m0EjlQg7SlX1gFIEGC/ceItVjoCeqsJ18U/3vmd5GXtTiFuGXoF
+         12/3uNGQcu0RQ51CYRAu5IhiHIzCkQM9SnSG0krS5GS4QRCHx46m1MX85vll3c4WWSE7
+         UYGA==
+X-Gm-Message-State: AC+VfDzm5MXAJ8un4c+u/Qft8BxxdS2O3eskqECo8UHUkPwe0QmCoNFO
+	Sy8HO58PRwnCrTWLJCeDHtiHMIl0gA0UKtrWzX2O
+X-Google-Smtp-Source: ACHHUZ4FUPbfTsBArfrhGvB4xXY/W/lejL+aLFB3U1S+AVe+dvd/NAucJjEQf4WFTSz3BKgCgoYIR7gwXou+08id5y4=
+X-Received: by 2002:a50:a6d3:0:b0:51a:1ffd:10e with SMTP id
+ f19-20020a50a6d3000000b0051a1ffd010emr1064edc.3.1686767045189; Wed, 14 Jun
+ 2023 11:24:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH] arm64: dts: qcom: sdm845-db845c: Move LVS regulator nodes
- up
-Content-Language: en-US, de-DE
-To: Amit Pundir <amit.pundir@linaro.org>, Mark Brown <broonie@kernel.org>,
- Doug Anderson <dianders@chromium.org>, Bjorn Andersson
- <andersson@kernel.org>, Andy Gross <agross@kernel.org>,
- Rob Herring <robh+dt@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Caleb Connolly <caleb.connolly@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>
-Cc: regressions <regressions@lists.linux.dev>,
- linux-arm-msm <linux-arm-msm@vger.kernel.org>,
- dt <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>
-References: <20230602161246.1855448-1-amit.pundir@linaro.org>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <20230602161246.1855448-1-amit.pundir@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1686766734;563ab592;
-X-HE-SMSGID: 1q9V51-0002TJ-Ri
+From: Robert Kolchmeyer <rkolchmeyer@google.com>
+Date: Wed, 14 Jun 2023 11:23:52 -0700
+Message-ID: <CAJc0_fwx6MQa+Uozk+PJB0qb3JP5=9_WcCjOb8qa34u=DVbDmQ@mail.gmail.com>
+Subject: BPF regression in 5.10.168 and 5.15.93 impacting Cilium
+To: stable@vger.kernel.org
+Cc: regressions@lists.linux.dev, Greg KH <gregkh@linuxfoundation.org>, kafai@fb.com, 
+	ast@kernel.org, sashal@kernel.org, paul@isovalent.com, 
+	Meena Shanmugam <meenashanmugam@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On 02.06.23 18:12, Amit Pundir wrote:
-> Move lvs1 and lvs2 regulator nodes up in the rpmh-regulators
-> list to workaround a boot regression uncovered by the upstream
-> commit ad44ac082fdf ("regulator: qcom-rpmh: Revert "regulator:
-> qcom-rpmh: Use PROBE_FORCE_SYNCHRONOUS"").
-> 
-> Without this fix DB845c fail to boot at times because one of the
-> lvs1 or lvs2 regulators fail to turn ON in time.
+Hi all,
 
-/me waves friendly
+I believe 5.10.168 and 5.15.93 introduced a regression that impacts
+the Cilium project. Some information on the nature of the regression
+is available at https://github.com/cilium/cilium/issues/25500. The
+primary symptom seems to be the error `BPF program is too large.`
 
-FWIW, as it's not obvious: this...
+My colleague has found that reverting the following two commits:
 
-> Link: https://lore.kernel.org/all/CAMi1Hd1avQDcDQf137m2auz2znov4XL8YGrLZsw5edb-NtRJRw@mail.gmail.com/
+8de8c4a "bpf: Support <8-byte scalar spill and refill"
+9ff2beb "bpf: Fix incorrect state pruning for <8B spill/fill"
 
-...is a report about a regression. One that we could still solve before
-6.4 is out. One I'll likely will point Linus to, unless a fix comes into
-sight.
+resolves the regression.
 
-When I noticed the reluctant replies to this patch I earlier today asked
-in the thread with the report what the plan forward was:
-https://lore.kernel.org/all/CAD%3DFV%3DV-h4EUKHCM9UivsFHRsJPY5sAiwXV3a1hUX9DUMkkxdg@mail.gmail.com/
+If we revert these in the stable tree, there may be a few changes that
+depend on those that also need to be reverted, but I'm not sure yet.
 
-Dough there replied:
+Would it make sense to revert these changes (and any dependent ones)
+in the 5.10 and 5.15 trees? If anyone has other ideas, I can help test
+possible solutions.
 
-```
-Of the two proposals made (the revert vs. the reordering of the dts),
-the reordering of the dts seems better. It only affects the one buggy
-board (rather than preventing us to move to async probe for everyone)
-and it also has a chance of actually fixing something (changing the
-order that regulators probe in rpmh-regulator might legitimately work
-around the problem). That being said, just like the revert the dts
-reordering is still just papering over the problem and is fragile /
-not guaranteed to work forever.
-```
-
-Papering over obviously is not good, but has anyone a better idea to fix
-this? Or is "not fixing" for some reason an viable option here?
-
-Ciao, Thorsten
-
-> Signed-off-by: Amit Pundir <amit.pundir@linaro.org>
-> ---
->  arch/arm64/boot/dts/qcom/sdm845-db845c.dts | 24 +++++++++++-----------
->  1 file changed, 12 insertions(+), 12 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-> index e14fe9bbb386..df2fde9063dc 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-> +++ b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-> @@ -301,6 +301,18 @@ regulators-0 {
->  		vdd-l26-supply = <&vreg_s3a_1p35>;
->  		vin-lvs-1-2-supply = <&vreg_s4a_1p8>;
->  
-> +		vreg_lvs1a_1p8: lvs1 {
-> +			regulator-min-microvolt = <1800000>;
-> +			regulator-max-microvolt = <1800000>;
-> +			regulator-always-on;
-> +		};
-> +
-> +		vreg_lvs2a_1p8: lvs2 {
-> +			regulator-min-microvolt = <1800000>;
-> +			regulator-max-microvolt = <1800000>;
-> +			regulator-always-on;
-> +		};
-> +
->  		vreg_s3a_1p35: smps3 {
->  			regulator-min-microvolt = <1352000>;
->  			regulator-max-microvolt = <1352000>;
-> @@ -381,18 +393,6 @@ vreg_l26a_1p2: ldo26 {
->  			regulator-max-microvolt = <1200000>;
->  			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
->  		};
-> -
-> -		vreg_lvs1a_1p8: lvs1 {
-> -			regulator-min-microvolt = <1800000>;
-> -			regulator-max-microvolt = <1800000>;
-> -			regulator-always-on;
-> -		};
-> -
-> -		vreg_lvs2a_1p8: lvs2 {
-> -			regulator-min-microvolt = <1800000>;
-> -			regulator-max-microvolt = <1800000>;
-> -			regulator-always-on;
-> -		};
->  	};
->  
->  	regulators-1 {
+Thanks,
+-Robert
