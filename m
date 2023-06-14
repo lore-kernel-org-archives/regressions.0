@@ -1,118 +1,55 @@
-Received: from mail-oa1-f44.google.com (mail-oa1-f44.google.com [209.85.160.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA8D42CA7
-	for <regressions@lists.linux.dev>; Wed, 14 Jun 2023 19:08:50 +0000 (UTC)
-Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-1a5229df1f2so5175754fac.3
-        for <regressions@lists.linux.dev>; Wed, 14 Jun 2023 12:08:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1686769730; x=1689361730;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=ErPDVCSBpPJlYZGqC1SD/e+jlrE1qnWfALaiFCF/cEk=;
-        b=jmbi/A02sAgtAEjnexDwofutI7SYsNKZb9DJ0918C84hfbYX6Kv2CnynHp7r9XGnlN
-         Cp8ZWWLwUdRTJFukEXwkeDOBMoNk3CTaEhN7ljsU9elXqeq1Z3RUSKYBM6GZo/WiI8KT
-         oPOMyym6zWHkxmTB3MQ07oxWD7PeJrvq0kvWw8aGJL8XSPf+dk5f+gFT67il+bzXfAN2
-         6dyi2TlnIq0Le4Z+DiAPf+P/T4s3RoflN+csQzJAHSNigY1Vh+g2sdvQ9cTB2g73o86y
-         dEVSMHa3qXDAuMKstEcmSUZb/SA6tSztZN0LSg42YapskHGdFXw2quO5rHkKRaWjd8nV
-         v5JQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686769730; x=1689361730;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ErPDVCSBpPJlYZGqC1SD/e+jlrE1qnWfALaiFCF/cEk=;
-        b=RpLa3QkXZQtTWZne9RlLSjVpzOo1XoHLh2ZTY21I6pGPrMnvLqQD7KznJOeSYJksHK
-         BUXPz4zx5FviD8XWkWaI0Lc1ZiJH/1Jbi88sCjHdBdyM+VUM4f1LqscquYAO82vAl421
-         IpCHmXFurse34FNU+5JdFsn6EgA/JOMJFNPzo9+ilpZObDjLb0M312SFN9m7IwZh5c+g
-         g4jQLjnBUVe3UXMJ58psGfFcFazUcSMKtXsWaIRVdzaf7DUwWI3+bf1A/SVdekm1tGuY
-         VGf+nXFDbG1JJt/6soEcEjzWYhZLzNn6/LABiG4L5LMAXNzTD91RACyozBzAlBo0zt8c
-         LsoQ==
-X-Gm-Message-State: AC+VfDwwJsG0+3OOWCeXeAI8XnCK1FSIHAQEPulgXirbs4MR8487RMJR
-	wY41aytEejtoGtLbbMaT/klLDq87YXpydLPPHXSzTg==
-X-Google-Smtp-Source: ACHHUZ7Jlx1MnAmIR2pE8OVZOOzZ43InmF1UHvxki4FXW/lgM0L0ew4VCWjHbEtlNlYpJ3qLkwuOtXyLLHY4KD09mf4=
-X-Received: by 2002:a05:6870:8447:b0:19a:ce25:6d06 with SMTP id
- n7-20020a056870844700b0019ace256d06mr10445359oak.56.1686769729782; Wed, 14
- Jun 2023 12:08:49 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84AEE2EC16;
+	Wed, 14 Jun 2023 19:21:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A389DC433C0;
+	Wed, 14 Jun 2023 19:21:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1686770515;
+	bh=pWxo7CHRl3J5qYPfbEQrjT3qEyGFaT8teEK3o66lcUg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=dK0Dd7N/nvm9sa9sQ6YFqPCE0djK6abYGeOfqLaAE7OvmGz472hivmfCUPjdts4TH
+	 lWlT7vbAcHHsUMba1vj+8aUrfOxPIj68Q1yX2s7UvyUY5mCfQP7WS3UtfxCqlW8fVp
+	 C8v2z7HoXukO577ZJcuHlEaFxVfrq+Mo4O2xL5s+pHCFhnK0eWnPV3RWQnRF6kZon3
+	 viVaPiKK9VKLFz5Y5pyaArOm/Lqmy0MkToDVJeYvh4xAEImO9OHI3Sdz7LvsD0djg6
+	 ScEJyEIMlSNvmOehWIE4H3La7znDRQ1o9Vucgt7AyMCnEO1RGlOr9htW/N7lK6Q7D/
+	 EG2L3x/IxylAw==
+Date: Wed, 14 Jun 2023 12:21:53 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Kalle Valo <kvalo@kernel.org>
+Cc: Johannes Berg <johannes@sipsolutions.net>, Toke =?UTF-8?B?SMO4aWxhbmQt?=
+ =?UTF-8?B?SsO4cmdlbnNlbg==?= <toke@kernel.org>,
+ linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, regressions@lists.linux.dev
+Subject: Re: Closing down the wireless trees for a summer break?
+Message-ID: <20230614122153.640292b9@kernel.org>
+In-Reply-To: <87a5x2ccao.fsf@kernel.org>
+References: <87y1kncuh4.fsf@kernel.org>
+	<871qifxm9b.fsf@toke.dk>
+	<20230613112834.7df36e95@kernel.org>
+	<ba933d6e3d360298e400196371e37735aef3b1eb.camel@sipsolutions.net>
+	<20230613195136.6815df9b@kernel.org>
+	<c7c9418bcd5ac1035a007d336004eff48994dde7.camel@sipsolutions.net>
+	<87a5x2ccao.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230602161246.1855448-1-amit.pundir@linaro.org>
- <358c69ad-fa8a-7386-fe75-92369883ee48@leemhuis.info> <0f6c9dcb-b7f6-fff9-6bed-f4585ea8e487@linaro.org>
-In-Reply-To: <0f6c9dcb-b7f6-fff9-6bed-f4585ea8e487@linaro.org>
-From: Amit Pundir <amit.pundir@linaro.org>
-Date: Thu, 15 Jun 2023 00:38:13 +0530
-Message-ID: <CAMi1Hd3Cv1i06NhpY6Jqu7OvMpOdzTj6nTEMJNWLrMwMLsugZA@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: qcom: sdm845-db845c: Move LVS regulator nodes up
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>, Mark Brown <broonie@kernel.org>, 
-	Doug Anderson <dianders@chromium.org>, Bjorn Andersson <andersson@kernel.org>, 
-	Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
-	Konrad Dybcio <konrad.dybcio@linaro.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
-	Caleb Connolly <caleb.connolly@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	linux-arm-msm <linux-arm-msm@vger.kernel.org>, dt <devicetree@vger.kernel.org>, 
-	lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, 15 Jun 2023 at 00:17, Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
->
-> On 14/06/2023 20:18, Linux regression tracking (Thorsten Leemhuis) wrote:
-> > On 02.06.23 18:12, Amit Pundir wrote:
-> >> Move lvs1 and lvs2 regulator nodes up in the rpmh-regulators
-> >> list to workaround a boot regression uncovered by the upstream
-> >> commit ad44ac082fdf ("regulator: qcom-rpmh: Revert "regulator:
-> >> qcom-rpmh: Use PROBE_FORCE_SYNCHRONOUS"").
-> >>
-> >> Without this fix DB845c fail to boot at times because one of the
-> >> lvs1 or lvs2 regulators fail to turn ON in time.
-> >
-> > /me waves friendly
-> >
-> > FWIW, as it's not obvious: this...
-> >
-> >> Link: https://lore.kernel.org/all/CAMi1Hd1avQDcDQf137m2auz2znov4XL8YGrLZsw5edb-NtRJRw@mail.gmail.com/
-> >
-> > ...is a report about a regression. One that we could still solve before
-> > 6.4 is out. One I'll likely will point Linus to, unless a fix comes into
-> > sight.
-> >
-> > When I noticed the reluctant replies to this patch I earlier today asked
-> > in the thread with the report what the plan forward was:
-> > https://lore.kernel.org/all/CAD%3DFV%3DV-h4EUKHCM9UivsFHRsJPY5sAiwXV3a1hUX9DUMkkxdg@mail.gmail.com/
-> >
-> > Dough there replied:
-> >
-> > ```
-> > Of the two proposals made (the revert vs. the reordering of the dts),
-> > the reordering of the dts seems better. It only affects the one buggy
-> > board (rather than preventing us to move to async probe for everyone)
-> > and it also has a chance of actually fixing something (changing the
-> > order that regulators probe in rpmh-regulator might legitimately work
-> > around the problem). That being said, just like the revert the dts
-> > reordering is still just papering over the problem and is fragile /
-> > not guaranteed to work forever.
-> > ```
-> >
-> > Papering over obviously is not good, but has anyone a better idea to fix
-> > this? Or is "not fixing" for some reason an viable option here?
-> >
->
-> I understand there is a regression, although kernel is not mainline
-> (hash df7443a96851 is unknown) and the only solutions were papering the
-> problem. Reverting commit is a temporary workaround. Moving nodes in DTS
-> is not acceptable because it hides actual problem and only solves this
-> one particular observed problem, while actual issue is still there. It
-> would be nice to be able to reproduce it on real mainline with normal
-> operating system (not AOSP) - with ramdiks/without/whatever. So far no
-> one did it, right?
+On Wed, 14 Jun 2023 18:07:43 +0300 Kalle Valo wrote:
+> But do note that above is _only_ for -next patches. For patches going to
+> -rc releases we apply the patches directly to wireless, no other trees
+> are involved. My proposal was that net maintainers would take only fixes
+> for -rc releases, my guess from history is that it would be maximum of
+> 10-15 patches. And once me and Johannes are back we would sort out -next
+> patches before the merge window. But of course you guys can do whatever
+> you think is best :)
 
-No, I did not try non-AOSP system yet. I'll try it tomorrow, if that
-helps. With mainline hash.
-
-Regards,
-Amit Pundir
+Ah, good note, I would have guessed that fixes go via special trees,
+too. In that case it should indeed be easy. We'll just look out for
+maintainer acks on the list and ping people if in doubt.
