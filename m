@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87594369
-	for <regressions@lists.linux.dev>; Wed, 14 Jun 2023 08:53:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F1DE17E3
+	for <regressions@lists.linux.dev>; Wed, 14 Jun 2023 09:00:07 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1q9MFz-0003eN-0R; Wed, 14 Jun 2023 10:53:35 +0200
-Message-ID: <9d0ebb3a-3385-bfc3-13ce-41d54aaec4b4@leemhuis.info>
-Date: Wed, 14 Jun 2023 10:53:34 +0200
+	id 1q9MMH-00050m-OW; Wed, 14 Jun 2023 11:00:05 +0200
+Message-ID: <a50dd3e5-fa7f-0d28-697e-42f704eed17a@leemhuis.info>
+Date: Wed, 14 Jun 2023 11:00:05 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,56 +16,34 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.10.0
-Subject: Re: [REGRESSION] Asus X541UAK hangs on suspend and poweroff (v6.1.6
- onward)
+Subject: Re: [regression] Bug 217070 - ath11k: QCA6390: Regression on 6.2-rc1
 Content-Language: en-US, de-DE
-To: Bjorn Helgaas <helgaas@kernel.org>, Acid Bong <acidbong@tilde.cafe>
-Cc: bagasdotme@gmail.com, linux-acpi@vger.kernel.org, rafael@kernel.org,
- regressions@lists.linux.dev, stable@vger.kernel.org
-References: <20230609165505.GA1251392@bhelgaas>
 From: "Linux regression tracking #update (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <20230609165505.GA1251392@bhelgaas>
+To: Kalle Valo <kvalo@kernel.org>
+Cc: ath11k <ath11k@lists.infradead.org>,
+ "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+ netdev <netdev@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>, mani@kernel.org
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+References: <c7a7e21a-0eac-8e84-aa8e-59ba4116e6af@leemhuis.info>
+In-Reply-To: <c7a7e21a-0eac-8e84-aa8e-59ba4116e6af@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1686732818;60b1984a;
-X-HE-SMSGID: 1q9MFz-0003eN-0R
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1686733208;d2fe59b5;
+X-HE-SMSGID: 1q9MMH-00050m-OW
 
-On 09.06.23 18:55, Bjorn Helgaas wrote:
-> On Fri, Jun 09, 2023 at 02:09:17PM +0300, Acid Bong wrote:
->> Hi there, hello.
->>
->> About a week ago I returned to using Gajim, which, as I remember from
->> earlier, also seemed to be responsible for these hangings, and they got
->> more frequent (I haven't updated any software for the last 2 months). I
->> decided to move to the kernel version 6.1.1, which I earlier marked as
->> "good", and my laptop hung last evening during the shutdown. As always,
->> nothing in the logs.
->>
->> I tried to compile some versions from 5.15.y branch, but either I had a
->> bad luck, or the commits weren't properly compatible with GCC 12 yet,
->> but they (.48 and .78) emitted warnings, so I never used them (or I
->> broke the repo, who knows).
->>
->> Due to the fact that software does have impact on this behaviour, and
->> due to my health issues and potential conscription (cuz our army doesn't
->> care about health), which will cut me from my laptop for a long-long
->> time, I give up on bisecting. I'll just update all my software (there's
->> also a GCC upgrade in the repos) and hope for the best.
->>
->> Sorry for inconvenience and have a great day. Thank you very much.
+On 23.02.23 17:01, Linux regression tracking (Thorsten Leemhuis) wrote:
 > 
-> No inconvenience on our side; your help is invaluable, especially for
-> intermittent problems like this one.  They are really hard to find and
-> debug, and I'm sorry that we didn't get this one resolved.
+> I noticed a regression report in bugzilla.kernel.org. As many (most?)
+> kernel developer don't keep an eye on it, I decided to forward it by
+> mail. Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=217070 :
+> [...]
 
-+1
+Removing this from the tracking
 
-Then let me remove this from the regression tracking, too.
-
-#regzbot inconclusive: ignored, reporter for various real life reasons
-unfortunately will be unable to bisect/debug
+#regzbot inconclusive: reporter didn't react to inquiries
 #regzbot ignore-activity
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
@@ -73,3 +51,5 @@ Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 Everything you wanna know about Linux kernel regression tracking:
 https://linux-regtracking.leemhuis.info/about/#tldr
 That page also explains what to do if mails like this annoy you.
+
+
