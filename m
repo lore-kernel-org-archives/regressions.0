@@ -1,22 +1,13 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15B567F
-	for <regressions@lists.linux.dev>; Wed, 14 Jun 2023 07:35:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0210FC433C8;
-	Wed, 14 Jun 2023 07:35:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1686728154;
-	bh=p+2BxpWT2p5Lk9YnAikH75CUCpiETRc/GdwquTdNhw4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=nyVSWI4uclpR66yEPkbimtB1cFVzdiJFuUJ+0IgHGVmrmj8e3pTuSE39/qakcOehk
-	 Dqq/D6u0jxFi7knOBKbnVsrcGcI59dLFbXbWESzwyQk+S0PM+xQJhiYvufID26F8Zi
-	 gCuCYO3g0aELEmcuIHYmrDQNJG1LLNqkJyES8NQr/7qk+dCVFZpYtVL6a31x5+tsB8
-	 VRv87jHcAtfpt1JrWKLlJZhlWJGYncgTwtl2Tkpzkla+Z7uDkCqSmVm0DEUZBrPm96
-	 Xf2YiY8kHHc6v733gFO9x8RVe2QeIoAZx1dI/BSHXniTnFMKnAryrlpZbuaUKr4inE
-	 XwZtQ/iMws4fQ==
-Message-ID: <b0fdf454-b2f7-c273-66f5-efe42fbc2807@kernel.org>
-Date: Wed, 14 Jun 2023 16:35:50 +0900
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60C66369
+	for <regressions@lists.linux.dev>; Wed, 14 Jun 2023 08:38:05 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1q9M0t-0000Xr-Sh; Wed, 14 Jun 2023 10:37:59 +0200
+Message-ID: <2cf7bd0e-39b8-b1ac-5b60-2d67144d43ad@leemhuis.info>
+Date: Wed, 14 Jun 2023 10:37:59 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -24,150 +15,89 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: Fwd: Waking up from resume locks up on sr device
-Content-Language: en-US
-To: Hannes Reinecke <hare@suse.de>, Joe Breuer <linux-kernel@jmbreuer.net>,
- Bart Van Assche <bvanassche@acm.org>, Bagas Sanjaya <bagasdotme@gmail.com>,
- Pavel Machek <pavel@ucw.cz>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <len.brown@intel.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Kees Cook <keescook@chromium.org>, Tony Luck <tony.luck@intel.com>,
- "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
- Thorsten Leemhuis <linux@leemhuis.info>,
- "James E.J. Bottomley" <jejb@linux.ibm.com>,
- "Martin K. Petersen" <martin.petersen@oracle.com>,
- Phillip Potter <phil@philpotter.co.uk>,
- Linux Power Management <linux-pm@vger.kernel.org>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Hardening <linux-hardening@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>,
- Linux SCSI <linux-scsi@vger.kernel.org>,
- Alan Stern <stern@rowland.harvard.edu>,
- Dan Williams <dan.j.williams@intel.com>, Hannes Reinecke <hare@suse.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Martin Kepplinger <martin.kepplinger@puri.sm>,
- Kai-Heng Feng <kai.heng.feng@canonical.com>
-References: <2d1fdf6d-682c-a18d-2260-5c5ee7097f7d@gmail.com>
- <5513e29d-955a-f795-21d6-ec02a2e2e128@gmail.com>
- <ZIQ6bkau3j6qGef8@duo.ucw.cz>
- <07d6e2e7-a50a-8cf4-5c5d-200551bd6687@gmail.com>
- <02e4f87a-80e8-dc5d-0d6e-46939f2c74ac@acm.org>
- <b2cf6d96-a55a-d444-d22e-e9b3945ba43f@jmbreuer.net>
- <84f1c51c-86f9-04b3-0cd1-f685ebee7592@kernel.org>
- <37ed36f0-6f72-115c-85fb-62ef5ad72e76@suse.de>
-From: Damien Le Moal <dlemoal@kernel.org>
-Organization: Western Digital Research
-In-Reply-To: <37ed36f0-6f72-115c-85fb-62ef5ad72e76@suse.de>
+ Thunderbird/102.10.0
+Subject: Re: [PATCH] mm: convert mm's rss stats into percpu_counter
+Content-Language: en-US, de-DE
+To: Jan Kara <jack@suse.cz>, Shakeel Butt <shakeelb@google.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, mhocko@suse.cz, vbabka@suse.cz,
+ regressions@lists.linux.dev, Yu Ma <yu.ma@intel.com>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <20221024052841.3291983-1-shakeelb@google.com>
+ <20230608111408.s2minsenlcjow7q3@quack3>
+From: "Linux regression tracking #adding (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <20230608111408.s2minsenlcjow7q3@quack3>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1686731885;28a6b4c0;
+X-HE-SMSGID: 1q9M0t-0000Xr-Sh
 
-On 6/14/23 15:57, Hannes Reinecke wrote:
-> On 6/14/23 06:49, Damien Le Moal wrote:
->> On 6/11/23 18:05, Joe Breuer wrote:
->>> I'm the reporter of this issue.
->>>
->>> I just tried this patch against 6.3.4, and it completely fixes my
->>> suspend/resume issue.
->>>
->>> The optical drive stays usable after resume, even suspending/resuming
->>> during playback of CDDA content works flawlessly and playback resumes
->>> seamlessly after system resume.
->>>
->>> So, from my perspective: Good one!
+[CCing the regression list, as it should be in the loop for regressions:
+https://docs.kernel.org/admin-guide/reporting-regressions.html]
+
+[TLDR: I'm adding this report to the list of tracked Linux kernel
+regressions; the text you find below is based on a few templates
+paragraphs you might have encountered already in similar form.
+See link in footer if these mails annoy you.]
+
+On 08.06.23 13:14, Jan Kara wrote:
+> On Mon 24-10-22 05:28:41, Shakeel Butt wrote:
+>> Currently mm_struct maintains rss_stats which are updated on page fault
+>> and the unmapping codepaths. For page fault codepath the updates are
+>> cached per thread with the batch of TASK_RSS_EVENTS_THRESH which is 64.
+>> The reason for caching is performance for multithreaded applications
+>> otherwise the rss_stats updates may become hotspot for such
+>> applications.
 >>
->> In place of Bart's fix, could you please try this patch ?
+>> However this optimization comes with the cost of error margin in the rss
+>> stats. The rss_stats for applications with large number of threads can
+>> be very skewed. At worst the error margin is (nr_threads * 64) and we
+>> have a lot of applications with 100s of threads, so the error margin can
+>> be very high. Internally we had to reduce TASK_RSS_EVENTS_THRESH to 32.
 >>
->> diff --git a/drivers/ata/libata-eh.c b/drivers/ata/libata-eh.c
->> index b80e68000dd3..a81eb4f882ab 100644
->> --- a/drivers/ata/libata-eh.c
->> +++ b/drivers/ata/libata-eh.c
->> @@ -4006,9 +4006,32 @@ static void ata_eh_handle_port_resume(struct
->> ata_port *ap)
->>          /* tell ACPI that we're resuming */
->>          ata_acpi_on_resume(ap);
+>> Recently we started seeing the unbounded errors for rss_stats for
+>> specific applications which use TCP rx0cp. It seems like
+>> vm_insert_pages() codepath does not sync rss_stats at all.
 >>
->> -       /* update the flags */
->>          spin_lock_irqsave(ap->lock, flags);
->> +
->> +       /* Update the flags */
->>          ap->pflags &= ~(ATA_PFLAG_PM_PENDING | ATA_PFLAG_SUSPENDED);
->> +
->> +       /*
->> +        * Resuming the port will trigger a rescan of the ATA device(s)
->> +        * connected to it. Before scheduling the rescan, make sure that
->> +        * the associated scsi device(s) are fully resumed as well.
->> +        */
->> +       ata_for_each_link(link, ap, HOST_FIRST) {
->> +               ata_for_each_dev(dev, link, ENABLED) {
->> +                       struct scsi_device *sdev = dev->sdev;
->> +
->> +                       if (!sdev)
->> +                               continue;
->> +                       if (scsi_device_get(sdev))
->> +                               continue;
->> +
->> +                       spin_unlock_irqrestore(ap->lock, flags);
->> +                       device_pm_wait_for_dev(&ap->tdev,
->> +                                              &sdev->sdev_gendev);
->> +                       scsi_device_put(sdev);
->> +                       spin_lock_irqsave(ap->lock, flags);
->> +               }
->> +       }
->>          spin_unlock_irqrestore(ap->lock, flags);
->>   }
->>   #endif /* CONFIG_PM */
+>> This patch converts the rss_stats into percpu_counter to convert the
+>> error margin from (nr_threads * 64) to approximately (nr_cpus ^ 2).
+>> However this conversion enable us to get the accurate stats for
+>> situations where accuracy is more important than the cpu cost. Though
+>> this patch does not make such tradeoffs.
 >>
->> Thanks !
->>
-> Well; not sure if that'll work out.
-> The whole reason why we initial a rescan is that we need to check if the
-> ports are still connected, and whether the devices react.
-> So we can't iterate the ports here as this is the very thing which gets
-> checked during EH.
+>> Signed-off-by: Shakeel Butt <shakeelb@google.com>
+> 
+> Somewhat late to the game but our performance testing grid has noticed this
+> commit causes a performance regression on shell-heavy workloads. For
+> example running 'make test' in git sources on our test machine with 192
+> CPUs takes about 4% longer, system time is increased by about 9%:
 
-Hmmm... Right. So we need to move that loop into ata_scsi_dev_rescan(),
-which itself already loops over the port devices anyway.
+Thanks for the report.
 
-> We really should claim resume to be finished as soon as we can talk with
-> the HBA, and kick off EH asynchronously to let it finish the job after
-> resume has completed.
+I noticed this is nothing urgent. Nevertheless to be sure the issue
+doesn't fall through the cracks unnoticed, I'm adding it to regzbot, the
+Linux kernel regression tracking bot:
 
-That is what's done already:
+#regzbot ^introduced f1a7941243c
+#regzbot title mm: performance regression on shell-heavy workloads
+#regzbot backburner: not urgent according to reporter
+#regzbot ignore-activity
 
-static int ata_port_pm_resume(struct device *dev)
-{
-	ata_port_resume_async(to_ata_port(dev), PMSG_RESUME);
-	pm_runtime_disable(dev);
-	pm_runtime_set_active(dev);
-	pm_runtime_enable(dev);
-	return 0;
-}
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply and tell me -- ideally
+while also telling regzbot about it, as explained by the page listed in
+the footer of this mail.
 
-EH is kicked by ata_port_resume_async() -> ata_port_request_pm() and it
-is async. There is no synchronization in EH with the PM side though. We
-probably should have EH check that the port resume is done first, which
-can be done in ata_eh_handle_port_resume() since that is the first thing
-done when entering EH.
+Developers: When fixing the issue, remember to add 'Link:' tags pointing
+to the report (the parent of this mail). See page linked in footer for
+details.
 
-The problem remains though that we *must* wait for the scsi device
-resume to be done before calling scsi_rescan_device(), which is done
-asynchronously from EH, as a different work. So that one needs to wait
-for the scsi side resume to be done.
-
-I also thought of trigerring the rescan from the scsi side, but since
-the resume may be asynchronous, we could endup trigerring it with the
-ata side not yet resumed... That would only turn the problem around
-instead of solving it.
-
-Or... Why the heck scsi_rescan_device() is calling device_lock() ? This
-is the only place in scsi code I can see that takes this lock. I suspect
-this is to serialize either rescans, or serialize with resume, or both.
-For serializing rescans, we can use another lock. For serializing with
-PM, we should wait for PM transitions...
-Something is not right here.
-
--- 
-Damien Le Moal
-Western Digital Research
-
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+That page also explains what to do if mails like this annoy you.
