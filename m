@@ -1,55 +1,61 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F1DE17E3
-	for <regressions@lists.linux.dev>; Wed, 14 Jun 2023 09:00:07 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1q9MMH-00050m-OW; Wed, 14 Jun 2023 11:00:05 +0200
-Message-ID: <a50dd3e5-fa7f-0d28-697e-42f704eed17a@leemhuis.info>
-Date: Wed, 14 Jun 2023 11:00:05 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 324693D6C;
+	Wed, 14 Jun 2023 09:39:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16FAAC433C8;
+	Wed, 14 Jun 2023 09:39:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1686735545;
+	bh=3dwGe7NBdzXEbIELVlW6d1uX67nXdWAeWyq/2PZLMRU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=vySnYjmakgnaf6AEEztSRXrsR3h8XSRiPnxGet/fxNQPrrELN8Ig1s40OlktoLCcm
+	 sOt2QWc8Xmb0xLit2YUDQw+0neV/yqbbB0D8Kk897ARFpHoua6P7DviRmpg3mHMcsZ
+	 z7HUAMqyHFiEOWWq7CTcmDsplknix2T6ax52xWZA=
+Date: Wed, 14 Jun 2023 11:39:02 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Kalle Valo <kvalo@kernel.org>
+Cc: linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Jakub Kicinski <kuba@kernel.org>
+Subject: Re: Closing down the wireless trees for a summer break?
+Message-ID: <2023061447-sneezing-engraved-e7a1@gregkh>
+References: <87y1kncuh4.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [regression] Bug 217070 - ath11k: QCA6390: Regression on 6.2-rc1
-Content-Language: en-US, de-DE
-From: "Linux regression tracking #update (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-To: Kalle Valo <kvalo@kernel.org>
-Cc: ath11k <ath11k@lists.infradead.org>,
- "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
- netdev <netdev@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>, mani@kernel.org
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-References: <c7a7e21a-0eac-8e84-aa8e-59ba4116e6af@leemhuis.info>
-In-Reply-To: <c7a7e21a-0eac-8e84-aa8e-59ba4116e6af@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1686733208;d2fe59b5;
-X-HE-SMSGID: 1q9MMH-00050m-OW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87y1kncuh4.fsf@kernel.org>
 
-On 23.02.23 17:01, Linux regression tracking (Thorsten Leemhuis) wrote:
+On Tue, Jun 13, 2023 at 05:22:47PM +0300, Kalle Valo wrote:
+> Me and Johannes are planning to take a longer break from upstream this
+> summer. To keep things simple my suggestion is that we would official
+> close wireless and wireless-next trees from June 23rd to August 14th
+> (approximately).
 > 
-> I noticed a regression report in bugzilla.kernel.org. As many (most?)
-> kernel developer don't keep an eye on it, I decided to forward it by
-> mail. Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=217070 :
-> [...]
+> During that time urgent fixes would need go directly to the net tree.
+> Patches can keep flowing to the wireless list but the the net
+> maintainers will follow the list and they'll just apply them to the
+> net tree directly.
+> 
+> The plan here is that -next patches would have to wait for
+> wireless-next to open. Luckily the merge window for v6.6 most likely
+> opens beginning of September[1] so after our break we would have few
+> weeks to get -next patches ready for v6.6.
+> 
+> And the v6.5 -next patches should be ready by Monday June 19th so that we
+> have enough time to get them into the tree before we close the trees.
+> 
+> What do people think, would this work? This is the first time we are
+> doing this so we would like to hear any comments about this, both
+> negative and positive. You can also reply to me and Johannes privately,
+> if that's easier.
 
-Removing this from the tracking
+Sounds reasonable to me, have a nice vacation!
 
-#regzbot inconclusive: reporter didn't react to inquiries
-#regzbot ignore-activity
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
-
-
+greg k-h
