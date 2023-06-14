@@ -1,115 +1,72 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABB877F
-	for <regressions@lists.linux.dev>; Wed, 14 Jun 2023 01:15:29 +0000 (UTC)
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-651ffcc1d3dso4713306b3a.3
-        for <regressions@lists.linux.dev>; Tue, 13 Jun 2023 18:15:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686705329; x=1689297329;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0Qx8m0l5OukQyzZseritYmbm+wBilDwp6PVLNmtxjoI=;
-        b=H74dI4jAg+9W8MW9L/inWX8URAO7fqd24702FyhtGOpHb2DJljdLQZjw5evS087UsE
-         WNzJIJpTmAmFXj9l0mCNHNIervudP3x4Jr1JCv2vQQTdjwfiFagzaq25CsHbIVvk9MAM
-         qlGCX8Hu/933RwtSR/3LJYSFk9RVMzciR+8o7QETLBVLmepXtGwAofv/Hc3APSrdf0Oa
-         H/kjV7zykOQzTtOwfhktyXB0QvZTuRBhpiU9kvkQYbt42vyIrAqPyKSqhoowC7mIpqoH
-         MpQ+Zh+ExjUJOktFhEZMaBPSkchSH7elhUqCpslJRF8FqoPAhIrDNqHBj9vN7hS3TVKa
-         JeIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686705329; x=1689297329;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=0Qx8m0l5OukQyzZseritYmbm+wBilDwp6PVLNmtxjoI=;
-        b=g5U07knhyBV/A0EX4sTmF6BW+3+qa4hU3C00Nb9Wv8z5bvvzHmJ8/x7qJph9M/oaiB
-         ZHdQUP/cG4umAJ5jwlHDfN2XZ9z+bq8qzvkt8C+nkDEGBOMR9FmGn4E+SrGCDKgQqF4X
-         R/fBNX2iah1QGqVobkpBpPw7ShG9VPWG6a8nON49BLr2L4zc7jp5gTUT2t0s4SBH3Jwo
-         DoUZRKuwfl7NZGjL/emRlCgvx0eWIlZrMlTFjGQBjtz7bYPc4FItHa3fJ+pBFbpeZmcg
-         k0bgxThNuDdKzDmFzQWBQFfJ2KGBztZAGDsYQJ3+mfNH4o5DKA3ATk5cmwkrYNYk9nLO
-         GA0Q==
-X-Gm-Message-State: AC+VfDxBFnpUFPTtthIzSYzXK21UmQylzsowG7XQn4mrGMxfoN7yZP51
-	r8/AUidbflpbj7dJ5xSHeb0=
-X-Google-Smtp-Source: ACHHUZ5DBMu8zSisl8h2f9Kwp+pIiWwmyc4Hge5VKLHTWvYmyBg/a5P6Qgx96/xwdB8jnW9DzMukCw==
-X-Received: by 2002:a05:6a20:4426:b0:11a:efaa:eb3e with SMTP id ce38-20020a056a20442600b0011aefaaeb3emr362375pzb.33.1686705328722;
-        Tue, 13 Jun 2023 18:15:28 -0700 (PDT)
-Received: from [192.168.0.103] ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id a8-20020a170902b58800b001a988a71617sm10837354pls.192.2023.06.13.18.15.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 13 Jun 2023 18:15:28 -0700 (PDT)
-Message-ID: <2db51694-aa57-cbfd-096e-4925b76232b0@gmail.com>
-Date: Wed, 14 Jun 2023 08:15:24 +0700
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 099AD17E;
+	Wed, 14 Jun 2023 02:51:37 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0878AC433C0;
+	Wed, 14 Jun 2023 02:51:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1686711097;
+	bh=N3q6ixAinHSWilzVMCv++DW3xSimSHnyP2PRlOaULYE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=aHS8GGlVpVMza8fUd10dHWgjcsEcnhYF6mtda1PEif73/gG8DJjgjRD496BZG2+IQ
+	 yZb0yLikA3pccFbH6043Pq5QZcqOroZdRH/n0aPMe6tt6rd6svMoQlkxrdOQGMmm5p
+	 gPTCRZNFuEphlrZWYkI0t495rTPGdcZJ6IzKlD2J5Zsf62F+leEV0MUgVETVEw0vup
+	 sMwdFgG4EQYtmZ9JqLK5OUrSJZXnIspVyWrfW0tKAsYBWwuyMLC6UVSY84A9XKx8KM
+	 hmEOCqZIbZ55Y5QXW5euBztlUDZTHbx6k9Q1KnD2gow6ubRUlJEXvAxIGp7m80p1TK
+	 vqIb4LmfdSHew==
+Date: Tue, 13 Jun 2023 19:51:36 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Johannes Berg <johannes@sipsolutions.net>
+Cc: Toke =?UTF-8?B?SMO4aWxhbmQtSsO4cmdlbnNlbg==?=  <toke@kernel.org>, Kalle
+ Valo <kvalo@kernel.org>, linux-wireless@vger.kernel.org,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ regressions@lists.linux.dev
+Subject: Re: Closing down the wireless trees for a summer break?
+Message-ID: <20230613195136.6815df9b@kernel.org>
+In-Reply-To: <ba933d6e3d360298e400196371e37735aef3b1eb.camel@sipsolutions.net>
+References: <87y1kncuh4.fsf@kernel.org>
+	<871qifxm9b.fsf@toke.dk>
+	<20230613112834.7df36e95@kernel.org>
+	<ba933d6e3d360298e400196371e37735aef3b1eb.camel@sipsolutions.net>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Content-Language: en-US
-To: Kalle Valo <kvalo@kernel.org>, Thorsten Leemhuis <linux@leemhuis.info>,
- Garry Williams <gtwilliams@gmail.com>
-Cc: Linux Atheros 10K <ath10k@lists.infradead.org>,
- Linux Wireless <linux-wireless@vger.kernel.org>,
- Linux Kernel Network Developers <netdev@vger.kernel.org>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-Subject: Fwd: Dell XPS 13 ath10k_pci firmware crashed!
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Tue, 13 Jun 2023 22:00:35 +0200 Johannes Berg wrote:
+> On Tue, 2023-06-13 at 11:28 -0700, Jakub Kicinski wrote:
+> > On Tue, 13 Jun 2023 20:14:40 +0200 Toke H=C3=B8iland-J=C3=B8rgensen wro=
+te: =20
+> > > I think this sounds reasonable, and I applaud the effort to take some
+> > > time off during the summer :)
+> > >=20
+> > > One question that comes to mind is how would this work for patchwork?
+> > > Would we keep using the wireless patchwork instance for the patches
+> > > going to -net in that period, or will there be some other process for
+> > > this? I realise the setup we have for ath9k is a bit special in this
+> > > regard with the ack-on-list+delegation, so I'm obviously mostly
+> > > interested in what to do about that... :) =20
+> >=20
+> > Whatever's easiest :) It's probably a good idea for Kalle to write
+> > down all the local rules and customs and share those with us.
+>=20
+> While that's probably a good idea regardless, I'd think that patchwork
+> doesn't really matter that much - we'll have some catching up to do
+> anyway after the vacations, so looking through patchwork etc. would be
+> perfectly acceptable. Worst case we'd notice when a patch doesn't apply,
+> right? :)
 
-I notice a regression report on Bugzilla [1]. Quoting from it:
+Right, I meant it more in terms of patch flow. Is looking at which
+drivers have a tree specified in MAINTAINERS enough to know what
+should be applied directly?
 
-> Beginning with kernel 6.2.15-300.fc38.x86_64 and continuing through 6.3.7-200.fc38.x86_64, the wifi connection fails periodically with these log messages:
-> 
-> ath10k_pci 0000:02:00.0: firmware crashed! (guid 6c545da0-593c-4a0e-b5ad-3ef2b91cdebf)
-> ath10k_pci 0000:02:00.0: qca6174 hw3.2 target 0x05030000 chip_id 0x00340aff sub 1a56:143a
-> ath10k_pci 0000:02:00.0: kconfig debug 0 debugfs 1 tracing 0 dfs 0 testmode 0
-> ath10k_pci 0000:02:00.0: firmware ver WLAN.RM.4.4.1-00288- api 6 features wowlan,ignore-otp,mfp crc32 bf907c7c
-> ath10k_pci 0000:02:00.0: board_file api 2 bmi_id N/A crc32 d2863f91
-> ath10k_pci 0000:02:00.0: htt-ver 3.87 wmi-op 4 htt-op 3 cal otp max-sta 32 raw 0 hwcrypto 1
-> ath10k_pci 0000:02:00.0: failed to get memcpy hi address for firmware address 4: -16
-> ath10k_pci 0000:02:00.0: failed to read firmware dump area: -16
-> ath10k_pci 0000:02:00.0: Copy Engine register dump:
-> ath10k_pci 0000:02:00.0: [00]: 0x00034400  12  12   3   3
-> ath10k_pci 0000:02:00.0: [01]: 0x00034800  14  14 347 348
-> ath10k_pci 0000:02:00.0: [02]: 0x00034c00   8   2   0   1
-> ath10k_pci 0000:02:00.0: [03]: 0x00035000  16  15  16  14
-> ath10k_pci 0000:02:00.0: [04]: 0x00035400 2995 2987  22 214
-> ath10k_pci 0000:02:00.0: [05]: 0x00035800   0   0  64   0
-> ath10k_pci 0000:02:00.0: [06]: 0x00035c00   0   0  18  18
-> ath10k_pci 0000:02:00.0: [07]: 0x00036000   1   1   1   0
-> ath10k_pci 0000:02:00.0: could not request stats (-108)
-> ath10k_pci 0000:02:00.0: could not request peer stats info: -108
-> ath10k_pci 0000:02:00.0: failed to read hi_board_data address: -28
-> ieee80211 phy0: Hardware restart was requested
-> ath10k_pci 0000:02:00.0: could not request stats (-108)
-> ath10k_pci 0000:02:00.0: device successfully recovered
-> 
-> 
-> If I disconnect and reconnect using network manager, the connection is restored.  But this same failure recurs over and over after some few minutes to a few hours.
-> 
-> This is a regression.  The error was not reported with any previous kernel since 6.2.14-300.fc38.x86_64
+> Wrt. ath9k patches I guess "delegate in patchwork" won't work anymore,
+> but "resend to netdev" or something perhaps?
 
-See Bugzilla for the full thread.
-
-Unfortunately, the reporter can't bisect this regression (he only tries
-distribution kernels instead).
-
-Anyway, I'm adding it to regzbot (as mainline regression because v6.2.x
-has already EOL):
-
-#regzbot introduced: v6.2..v6.3 https://bugzilla.kernel.org/show_bug.cgi?id=217549
-#regzbot title: ath10k_pci firmware crashed on Dell XPS 13
-
-Thanks.
-
-[1]: https://bugzilla.kernel.org/show_bug.cgi?id=217549
-
--- 
-An old man doll... just what I always wanted! - Clara
+We can watch PW state and apply from linux-wireless, I reckon.
+That said I don't know how you use delegation :)
