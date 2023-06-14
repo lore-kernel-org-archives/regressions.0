@@ -1,338 +1,126 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43FFA134D5
-	for <regressions@lists.linux.dev>; Wed, 14 Jun 2023 22:20:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19F89C433C8;
-	Wed, 14 Jun 2023 22:20:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B545125A2
+	for <regressions@lists.linux.dev>; Wed, 14 Jun 2023 22:44:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5B01C433C0;
+	Wed, 14 Jun 2023 22:44:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1686781229;
-	bh=CGoJR5QoDuxF4+t0XkFfc0TIwwZpz6fsFiOmDOmAl2Y=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=WLB6oY9a0TdDJHrxcNQGkB2vQsMUq+nd4wPcjt9UWLkPTrRzisVe9w+uAX4CIGcdP
-	 U2++w0xdpNj3H104y1hCxMW/B8FSU+fWXmI3qLGL66KQdPntONNBGk+cXbDRdaSDV/
-	 E+OwARJ7W8hRwhvUTMvjrH6gT82Y2t22Pm4yFrQ4QGNgfLFmrssqZk/oxrKTcJZk/D
-	 4T0UOuAYVTRF/LKzo1PH/veQY4nMM5asETESBISIL1NuZOu/FBoiKgt6wGWONlNM1Z
-	 wiIA4SwTM6NIjMhPVXqlGiBlZcOhxjzp0e4RoD9bQIIdlbu34tSqubcq2gxUWPBDYp
-	 jG408iDQ3fj+w==
-Date: Wed, 14 Jun 2023 23:20:24 +0100
-From: Mauro Carvalho Chehab <mchehab@kernel.org>
-To: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>, Hyunwoo
- Kim <imv4bel@gmail.com>, Linux Media Mailing List
- <linux-media@vger.kernel.org>, Thomas Voegtle <tv@lio96.de>,
- linux-kernel@vger.kernel.org
-Subject: Re: Sometimes DVB broken with commit 6769a0b7ee0c3b
-Message-ID: <20230614232024.171130f8@sal.lan>
-In-Reply-To: <8065316b-0a3a-e7d5-28de-cc9fc9210ce5@leemhuis.info>
-References: <da5382ad-09d6-20ac-0d53-611594b30861@lio96.de>
-	<439d143b-1de7-6365-cf64-f1b44fd6d1cf@leemhuis.info>
-	<20230605113727.69e7f309@sal.lan>
-	<88d8a7c3-0018-cc9a-13aa-e3262e20e4aa@leemhuis.info>
-	<20230605190046.63c98b3e@sal.lan>
-	<8065316b-0a3a-e7d5-28de-cc9fc9210ce5@leemhuis.info>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.37; x86_64-redhat-linux-gnu)
+	s=k20201202; t=1686782685;
+	bh=lMvudJgKGP6G5z1D5G5ktPPOIHeYLAxIIf2pg1Bn6dA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Zk6bt6oVdjWME3wilTbcHVuIxYexd/ugfSoqlxQA+OKl7qFQrKmyiFMXVZXlSLBrh
+	 7Jry8e84dvXNqFZPIPlrmBuZoyCRj9Y6/+vzIlZqLjR2NWK/Ahana4A/5nbZpJ+xds
+	 c7GN7maBBDBmKOcMkmw2tuqPXW3rM46twikbRfrEt5C92i+eoeQbNcEOXPuJrwAEOe
+	 qPfWvLRNKp0EL4+S82/uGEoYOD+Fpg8jyck9vu6YebQG1WBdkb99Gz+xlMyb2XkkyC
+	 /EzMJ5NBWSplFJ1Wj39Ba6c4ldZQoyJUY+xKb3VF1YWmjkV9RicqPqmO8QnICaTDna
+	 dUKeQNi4BltJQ==
+Message-ID: <bf142e7d-178e-43a8-32e8-7e9e396eeee7@kernel.org>
+Date: Thu, 15 Jun 2023 07:44:39 +0900
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: Fwd: Waking up from resume locks up on sr device
+To: Bart Van Assche <bvanassche@acm.org>,
+ Alan Stern <stern@rowland.harvard.edu>
+Cc: Hannes Reinecke <hare@suse.de>, Joe Breuer <linux-kernel@jmbreuer.net>,
+ Bagas Sanjaya <bagasdotme@gmail.com>, Pavel Machek <pavel@ucw.cz>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <len.brown@intel.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Kees Cook <keescook@chromium.org>, Tony Luck <tony.luck@intel.com>,
+ "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+ Thorsten Leemhuis <linux@leemhuis.info>,
+ "James E.J. Bottomley" <jejb@linux.ibm.com>,
+ "Martin K. Petersen" <martin.petersen@oracle.com>,
+ Phillip Potter <phil@philpotter.co.uk>,
+ Linux Power Management <linux-pm@vger.kernel.org>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Hardening <linux-hardening@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Linux SCSI <linux-scsi@vger.kernel.org>,
+ Dan Williams <dan.j.williams@intel.com>, Hannes Reinecke <hare@suse.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Martin Kepplinger <martin.kepplinger@puri.sm>,
+ Kai-Heng Feng <kai.heng.feng@canonical.com>
+References: <2d1fdf6d-682c-a18d-2260-5c5ee7097f7d@gmail.com>
+ <5513e29d-955a-f795-21d6-ec02a2e2e128@gmail.com>
+ <ZIQ6bkau3j6qGef8@duo.ucw.cz>
+ <07d6e2e7-a50a-8cf4-5c5d-200551bd6687@gmail.com>
+ <02e4f87a-80e8-dc5d-0d6e-46939f2c74ac@acm.org>
+ <b2cf6d96-a55a-d444-d22e-e9b3945ba43f@jmbreuer.net>
+ <84f1c51c-86f9-04b3-0cd1-f685ebee7592@kernel.org>
+ <37ed36f0-6f72-115c-85fb-62ef5ad72e76@suse.de>
+ <b0fdf454-b2f7-c273-66f5-efe42fbc2807@kernel.org>
+ <859f0eda-4984-4489-9851-c9f6ec454a88@rowland.harvard.edu>
+ <3f85cb4a-8b14-623f-eb4e-40baab1ed888@acm.org>
+Content-Language: en-US
+From: Damien Le Moal <dlemoal@kernel.org>
+Organization: Western Digital Research
+In-Reply-To: <3f85cb4a-8b14-623f-eb4e-40baab1ed888@acm.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Em Mon, 12 Jun 2023 17:10:06 +0200
-"Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info> escreveu:
-
-> On 05.06.23 20:00, Mauro Carvalho Chehab wrote:
-> > Em Mon, 5 Jun 2023 12:44:43 +0200
-> > Thorsten Leemhuis <regressions@leemhuis.info> escreveu:  
-> >> On 05.06.23 12:37, Mauro Carvalho Chehab wrote:  
-> >>> Em Mon, 5 Jun 2023 11:38:49 +0200
-> >>> "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info> escreveu:  
-> >>>>
-> >>>> On 30.05.23 13:12, Thomas Voegtle wrote:    
-> >>>>>
-> >>>>> I have the problem that sometimes my DVB card does not initialize
-> >>>>> properly booting Linux 6.4-rc4.
-> >>>>> This is not always, maybe in 3 out of 4 attempts.
-> >>>>> When this happens somehow you don't see anything special in dmesg, but
-> >>>>> the card just doesn't work.
-> >>>>>
-> >>>>> Reverting this helps:
-> >>>>> commit 6769a0b7ee0c3b31e1b22c3fadff2bfb642de23f  
-> >>>>[...]
-> >>>> Mauro: I wonder if this is something you or someone else has to look
-> >>>> into, as Hyunwoo Kim posted a few times per months to Linux lists, but
-> >>>> according  to a quick search on lore hasn't posted anything since ~two
-> >>>> months now. :-/    
-> >>>
-> >>> Yeah, I was slow applying this one, as I was afraid of it to cause
-> >>> troubles. The DVB frontend state machine is complex, and uses a
-> >>> semaphore to update its state. There was some past attempts of
-> >>> addressing some lifetime issues there that we ended needing to revert
-> >>> or not being applied, as the fix caused more harm than good.
-> >>> [...]    
-> >>
-> >> Thx for the update. That's unfortunate, but how it is sometimes. Which
-> >> leads to a follow-up question: is reverting the culprit temporarily an
-> >> option? Or did those old use-after-free problems became known to be a
-> >> problem we can't live with anymore for another few months?  
-> > 
-> > Reverting the patch seems to be the way to proceed. Then, work on another
-> > way to address UAF. 
-> > 
-> > I'm not aware of dvb users complaining about troubles due to UAF, although 
-> > it seems that there's now a CVE for it. So, maybe someone complained against
-> > a distro Kernel, which caused the CVE to be opened.
-> > 
-> > So, while it is nice to have the lifetime issues fixed, last time I checked,
-> > the USB dvb-usb/dvb-usb-v2 have some logic that usually prevents it to cause 
-> > real issues during device removal, and unbinding DVB PCIe devices is 
-> > something that users don't do in practice.  
+On 6/15/23 03:04, Bart Van Assche wrote:
+> On 6/14/23 07:26, Alan Stern wrote:
+>> On Wed, Jun 14, 2023 at 04:35:50PM +0900, Damien Le Moal wrote:
+>>> Or... Why the heck scsi_rescan_device() is calling device_lock() ? This
+>>> is the only place in scsi code I can see that takes this lock. I suspect
+>>> this is to serialize either rescans, or serialize with resume, or both.
+>>> For serializing rescans, we can use another lock. For serializing with
+>>> PM, we should wait for PM transitions...
+>>> Something is not right here.
+>>
+>> Here's what commit e27829dc92e5 ("scsi: serialize ->rescan against
+>> ->remove", written by Christoph Hellwig) says:
+>>
+>>      Lock the device embedded in the scsi_device to protect against
+>>      concurrent calls to ->remove.
+>>
+>> That's the commit which added the device_lock() call.
 > 
-> Thx for the explanation and handling this. I noticed you posted a
-> revert, but it misses a fixes tag for the reverted commit and a Link: or
-> Closes: tag to the report. 
+> Even if scsi_rescan_device() would use another mechanism for 
+> serialization against sd_remove() and sr_remove(), we still need to 
+> solve the issue that the ATA code calls scsi_rescan_device() before 
+> resuming has finished. scsi_rescan_device() issues I/O. Issuing I/O to a 
+> device is not allowed before that device has been resumed.
 
-I added a Fixed and a link (see patch enclosed).
+I am not convinced of that: scsi suspend quiecse the queue, thus preventing IOs
+from the block layer, but not internale scsi ml commands, which is what
+scsi_rescan_device() issues.
 
-If everything merges fine on linux-next, I should be sending a PR
-upstream likely tomorrow.
+In any case, I am thinking that best (and quickest) fix for this issue for now
+is to have libata define a device link to make the scsi device a "parent" of the
+ata device (which is the ata link as of now). This way, PM operation ordering
+will ensure that the scsi device resume will be done before the ata device. What
+I really do not like about this though is that the suspend side would be done in
+the reverse order: ata first and then scsi, but we really want the reverse here
+to ensure that the request queue is quiesced before we suspend ata. That said,
+there is no such synchronization right now and so this is probably happening
+already without raising issues apparently.
 
-Regards,
-Mauro
+So ideally:
+1) Make the ata device the parent of the scsi device using a device link
+2) For suspend, the scsi device suspend will be done first, followed by the ata
+device, which is what we want.
+3) For resume, ata device will be first, followed by scsi device. The call to
+scsi_rescan_device() from libata being in a work task, asynchronous from the ata
+resume context, we need to synchronize that work to wait for the scsi device
+resume to complete. (but do we really given that we are going to issue internal
+commands only ?)
 
-[PATCH] Revert "media: dvb-core: Fix use-after-free on race condition at dvb_frontend"
+Alan, Rafael,
 
-As reported by Thomas Voegtle <tv@lio96.de>, sometimes a DVB card does
-not initialize properly booting Linux 6.4-rc4. This is not always, maybe
-in 3 out of 4 attempts.
-
-After double-checking, the root cause seems to be related to the
-UAF fix, which is causing a race issue:
-
-[   26.332149] tda10071 7-0005: found a 'NXP TDA10071' in cold state, will try to load a firmware
-[   26.340779] tda10071 7-0005: downloading firmware from file 'dvb-fe-tda10071.fw'
-[  989.277402] INFO: task vdr:743 blocked for more than 491 seconds.
-[  989.283504]       Not tainted 6.4.0-rc5-i5 #249
-[  989.288036] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-[  989.295860] task:vdr             state:D stack:0     pid:743   ppid:711    flags:0x00004002
-[  989.295865] Call Trace:
-[  989.295867]  <TASK>
-[  989.295869]  __schedule+0x2ea/0x12d0
-[  989.295877]  ? asm_sysvec_apic_timer_interrupt+0x16/0x20
-[  989.295881]  schedule+0x57/0xc0
-[  989.295884]  schedule_preempt_disabled+0xc/0x20
-[  989.295887]  __mutex_lock.isra.16+0x237/0x480
-[  989.295891]  ? dvb_get_property.isra.10+0x1bc/0xa50
-[  989.295898]  ? dvb_frontend_stop+0x36/0x180
-[  989.338777]  dvb_frontend_stop+0x36/0x180
-[  989.338781]  dvb_frontend_open+0x2f1/0x470
-[  989.338784]  dvb_device_open+0x81/0xf0
-[  989.338804]  ? exact_lock+0x20/0x20
-[  989.338808]  chrdev_open+0x7f/0x1c0
-[  989.338811]  ? generic_permission+0x1a2/0x230
-[  989.338813]  ? link_path_walk.part.63+0x340/0x380
-[  989.338815]  ? exact_lock+0x20/0x20
-[  989.338817]  do_dentry_open+0x18e/0x450
-[  989.374030]  path_openat+0xca5/0xe00
-[  989.374031]  ? terminate_walk+0xec/0x100
-[  989.374034]  ? path_lookupat+0x93/0x140
-[  989.374036]  do_filp_open+0xc0/0x140
-[  989.374038]  ? __call_rcu_common.constprop.91+0x92/0x240
-[  989.374041]  ? __check_object_size+0x147/0x260
-[  989.374043]  ? __check_object_size+0x147/0x260
-[  989.374045]  ? alloc_fd+0xbb/0x180
-[  989.374048]  ? do_sys_openat2+0x243/0x310
-[  989.374050]  do_sys_openat2+0x243/0x310
-[  989.374052]  do_sys_open+0x52/0x80
-[  989.374055]  do_syscall_64+0x5b/0x80
-[  989.421335]  ? __task_pid_nr_ns+0x92/0xa0
-[  989.421337]  ? syscall_exit_to_user_mode+0x20/0x40
-[  989.421339]  ? do_syscall_64+0x67/0x80
-[  989.421341]  ? syscall_exit_to_user_mode+0x20/0x40
-[  989.421343]  ? do_syscall_64+0x67/0x80
-[  989.421345]  entry_SYSCALL_64_after_hwframe+0x63/0xcd
-[  989.421348] RIP: 0033:0x7fe895d067e3
-[  989.421349] RSP: 002b:00007fff933c2ba0 EFLAGS: 00000293 ORIG_RAX: 0000000000000101
-[  989.421351] RAX: ffffffffffffffda RBX: 00007fff933c2c10 RCX: 00007fe895d067e3
-[  989.421352] RDX: 0000000000000802 RSI: 00005594acdce160 RDI: 00000000ffffff9c
-[  989.421353] RBP: 0000000000000802 R08: 0000000000000000 R09: 0000000000000000
-[  989.421353] R10: 0000000000000000 R11: 0000000000000293 R12: 0000000000000001
-[  989.421354] R13: 00007fff933c2ca0 R14: 00000000ffffffff R15: 00007fff933c2c90
-[  989.421355]  </TASK>
-
-This reverts commit 6769a0b7ee0c3b31e1b22c3fadff2bfb642de23f.
-
-Fixes: 6769a0b7ee0c ("media: dvb-core: Fix use-after-free on race condition at dvb_frontend")
-Link: https://lore.kernel.org/all/da5382ad-09d6-20ac-0d53-611594b30861@lio96.de/
-Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
-
-diff --git a/drivers/media/dvb-core/dvb_frontend.c b/drivers/media/dvb-core/dvb_frontend.c
-index bc6950a5740f..9293b058ab99 100644
---- a/drivers/media/dvb-core/dvb_frontend.c
-+++ b/drivers/media/dvb-core/dvb_frontend.c
-@@ -817,26 +817,15 @@ static void dvb_frontend_stop(struct dvb_frontend *fe)
- 
- 	dev_dbg(fe->dvb->device, "%s:\n", __func__);
- 
--	mutex_lock(&fe->remove_mutex);
--
- 	if (fe->exit != DVB_FE_DEVICE_REMOVED)
- 		fe->exit = DVB_FE_NORMAL_EXIT;
- 	mb();
- 
--	if (!fepriv->thread) {
--		mutex_unlock(&fe->remove_mutex);
-+	if (!fepriv->thread)
- 		return;
--	}
- 
- 	kthread_stop(fepriv->thread);
- 
--	mutex_unlock(&fe->remove_mutex);
--
--	if (fepriv->dvbdev->users < -1) {
--		wait_event(fepriv->dvbdev->wait_queue,
--			   fepriv->dvbdev->users == -1);
--	}
--
- 	sema_init(&fepriv->sem, 1);
- 	fepriv->state = FESTATE_IDLE;
- 
-@@ -2780,13 +2769,9 @@ static int dvb_frontend_open(struct inode *inode, struct file *file)
- 	struct dvb_adapter *adapter = fe->dvb;
- 	int ret;
- 
--	mutex_lock(&fe->remove_mutex);
--
- 	dev_dbg(fe->dvb->device, "%s:\n", __func__);
--	if (fe->exit == DVB_FE_DEVICE_REMOVED) {
--		ret = -ENODEV;
--		goto err_remove_mutex;
--	}
-+	if (fe->exit == DVB_FE_DEVICE_REMOVED)
-+		return -ENODEV;
- 
- 	if (adapter->mfe_shared == 2) {
- 		mutex_lock(&adapter->mfe_lock);
-@@ -2794,8 +2779,7 @@ static int dvb_frontend_open(struct inode *inode, struct file *file)
- 			if (adapter->mfe_dvbdev &&
- 			    !adapter->mfe_dvbdev->writers) {
- 				mutex_unlock(&adapter->mfe_lock);
--				ret = -EBUSY;
--				goto err_remove_mutex;
-+				return -EBUSY;
- 			}
- 			adapter->mfe_dvbdev = dvbdev;
- 		}
-@@ -2818,10 +2802,8 @@ static int dvb_frontend_open(struct inode *inode, struct file *file)
- 			while (mferetry-- && (mfedev->users != -1 ||
- 					      mfepriv->thread)) {
- 				if (msleep_interruptible(500)) {
--					if (signal_pending(current)) {
--						ret = -EINTR;
--						goto err_remove_mutex;
--					}
-+					if (signal_pending(current))
-+						return -EINTR;
- 				}
- 			}
- 
-@@ -2833,8 +2815,7 @@ static int dvb_frontend_open(struct inode *inode, struct file *file)
- 				if (mfedev->users != -1 ||
- 				    mfepriv->thread) {
- 					mutex_unlock(&adapter->mfe_lock);
--					ret = -EBUSY;
--					goto err_remove_mutex;
-+					return -EBUSY;
- 				}
- 				adapter->mfe_dvbdev = dvbdev;
- 			}
-@@ -2893,8 +2874,6 @@ static int dvb_frontend_open(struct inode *inode, struct file *file)
- 
- 	if (adapter->mfe_shared)
- 		mutex_unlock(&adapter->mfe_lock);
--
--	mutex_unlock(&fe->remove_mutex);
- 	return ret;
- 
- err3:
-@@ -2916,9 +2895,6 @@ static int dvb_frontend_open(struct inode *inode, struct file *file)
- err0:
- 	if (adapter->mfe_shared)
- 		mutex_unlock(&adapter->mfe_lock);
--
--err_remove_mutex:
--	mutex_unlock(&fe->remove_mutex);
- 	return ret;
- }
- 
-@@ -2929,8 +2905,6 @@ static int dvb_frontend_release(struct inode *inode, struct file *file)
- 	struct dvb_frontend_private *fepriv = fe->frontend_priv;
- 	int ret;
- 
--	mutex_lock(&fe->remove_mutex);
--
- 	dev_dbg(fe->dvb->device, "%s:\n", __func__);
- 
- 	if ((file->f_flags & O_ACCMODE) != O_RDONLY) {
-@@ -2952,18 +2926,10 @@ static int dvb_frontend_release(struct inode *inode, struct file *file)
- 		}
- 		mutex_unlock(&fe->dvb->mdev_lock);
- #endif
-+		if (fe->exit != DVB_FE_NO_EXIT)
-+			wake_up(&dvbdev->wait_queue);
- 		if (fe->ops.ts_bus_ctrl)
- 			fe->ops.ts_bus_ctrl(fe, 0);
--
--		if (fe->exit != DVB_FE_NO_EXIT) {
--			mutex_unlock(&fe->remove_mutex);
--			wake_up(&dvbdev->wait_queue);
--		} else {
--			mutex_unlock(&fe->remove_mutex);
--		}
--
--	} else {
--		mutex_unlock(&fe->remove_mutex);
- 	}
- 
- 	dvb_frontend_put(fe);
-@@ -3064,7 +3030,6 @@ int dvb_register_frontend(struct dvb_adapter *dvb,
- 	fepriv = fe->frontend_priv;
- 
- 	kref_init(&fe->refcount);
--	mutex_init(&fe->remove_mutex);
- 
- 	/*
- 	 * After initialization, there need to be two references: one
-diff --git a/include/media/dvb_frontend.h b/include/media/dvb_frontend.h
-index 367d5381217b..e7c44870f20d 100644
---- a/include/media/dvb_frontend.h
-+++ b/include/media/dvb_frontend.h
-@@ -686,10 +686,7 @@ struct dtv_frontend_properties {
-  * @id:			Frontend ID
-  * @exit:		Used to inform the DVB core that the frontend
-  *			thread should exit (usually, means that the hardware
-- *			got disconnected).
-- * @remove_mutex:	mutex that avoids a race condition between a callback
-- *			called when the hardware is disconnected and the
-- *			file_operations of dvb_frontend.
-+ *			got disconnected.
-  */
- 
- struct dvb_frontend {
-@@ -707,7 +704,6 @@ struct dvb_frontend {
- 	int (*callback)(void *adapter_priv, int component, int cmd, int arg);
- 	int id;
- 	unsigned int exit;
--	struct mutex remove_mutex;
- };
- 
- /**
+For the synchronization of step (3), if I understand the pm code correctly,
+using device_pm_wait_for_dev() would work only if async resume is on. This would
+be ineffective for the sync case. How can we best deal with this ?
 
 
-
+-- 
+Damien Le Moal
+Western Digital Research
 
