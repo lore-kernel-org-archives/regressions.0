@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60C66369
-	for <regressions@lists.linux.dev>; Wed, 14 Jun 2023 08:38:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87594369
+	for <regressions@lists.linux.dev>; Wed, 14 Jun 2023 08:53:38 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1q9M0t-0000Xr-Sh; Wed, 14 Jun 2023 10:37:59 +0200
-Message-ID: <2cf7bd0e-39b8-b1ac-5b60-2d67144d43ad@leemhuis.info>
-Date: Wed, 14 Jun 2023 10:37:59 +0200
+	id 1q9MFz-0003eN-0R; Wed, 14 Jun 2023 10:53:35 +0200
+Message-ID: <9d0ebb3a-3385-bfc3-13ce-41d54aaec4b4@leemhuis.info>
+Date: Wed, 14 Jun 2023 10:53:34 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,85 +16,57 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.10.0
-Subject: Re: [PATCH] mm: convert mm's rss stats into percpu_counter
+Subject: Re: [REGRESSION] Asus X541UAK hangs on suspend and poweroff (v6.1.6
+ onward)
 Content-Language: en-US, de-DE
-To: Jan Kara <jack@suse.cz>, Shakeel Butt <shakeelb@google.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, mhocko@suse.cz, vbabka@suse.cz,
- regressions@lists.linux.dev, Yu Ma <yu.ma@intel.com>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <20221024052841.3291983-1-shakeelb@google.com>
- <20230608111408.s2minsenlcjow7q3@quack3>
-From: "Linux regression tracking #adding (Thorsten Leemhuis)"
+To: Bjorn Helgaas <helgaas@kernel.org>, Acid Bong <acidbong@tilde.cafe>
+Cc: bagasdotme@gmail.com, linux-acpi@vger.kernel.org, rafael@kernel.org,
+ regressions@lists.linux.dev, stable@vger.kernel.org
+References: <20230609165505.GA1251392@bhelgaas>
+From: "Linux regression tracking #update (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <20230608111408.s2minsenlcjow7q3@quack3>
+In-Reply-To: <20230609165505.GA1251392@bhelgaas>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1686731885;28a6b4c0;
-X-HE-SMSGID: 1q9M0t-0000Xr-Sh
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1686732818;60b1984a;
+X-HE-SMSGID: 1q9MFz-0003eN-0R
 
-[CCing the regression list, as it should be in the loop for regressions:
-https://docs.kernel.org/admin-guide/reporting-regressions.html]
-
-[TLDR: I'm adding this report to the list of tracked Linux kernel
-regressions; the text you find below is based on a few templates
-paragraphs you might have encountered already in similar form.
-See link in footer if these mails annoy you.]
-
-On 08.06.23 13:14, Jan Kara wrote:
-> On Mon 24-10-22 05:28:41, Shakeel Butt wrote:
->> Currently mm_struct maintains rss_stats which are updated on page fault
->> and the unmapping codepaths. For page fault codepath the updates are
->> cached per thread with the batch of TASK_RSS_EVENTS_THRESH which is 64.
->> The reason for caching is performance for multithreaded applications
->> otherwise the rss_stats updates may become hotspot for such
->> applications.
+On 09.06.23 18:55, Bjorn Helgaas wrote:
+> On Fri, Jun 09, 2023 at 02:09:17PM +0300, Acid Bong wrote:
+>> Hi there, hello.
 >>
->> However this optimization comes with the cost of error margin in the rss
->> stats. The rss_stats for applications with large number of threads can
->> be very skewed. At worst the error margin is (nr_threads * 64) and we
->> have a lot of applications with 100s of threads, so the error margin can
->> be very high. Internally we had to reduce TASK_RSS_EVENTS_THRESH to 32.
+>> About a week ago I returned to using Gajim, which, as I remember from
+>> earlier, also seemed to be responsible for these hangings, and they got
+>> more frequent (I haven't updated any software for the last 2 months). I
+>> decided to move to the kernel version 6.1.1, which I earlier marked as
+>> "good", and my laptop hung last evening during the shutdown. As always,
+>> nothing in the logs.
 >>
->> Recently we started seeing the unbounded errors for rss_stats for
->> specific applications which use TCP rx0cp. It seems like
->> vm_insert_pages() codepath does not sync rss_stats at all.
+>> I tried to compile some versions from 5.15.y branch, but either I had a
+>> bad luck, or the commits weren't properly compatible with GCC 12 yet,
+>> but they (.48 and .78) emitted warnings, so I never used them (or I
+>> broke the repo, who knows).
 >>
->> This patch converts the rss_stats into percpu_counter to convert the
->> error margin from (nr_threads * 64) to approximately (nr_cpus ^ 2).
->> However this conversion enable us to get the accurate stats for
->> situations where accuracy is more important than the cpu cost. Though
->> this patch does not make such tradeoffs.
+>> Due to the fact that software does have impact on this behaviour, and
+>> due to my health issues and potential conscription (cuz our army doesn't
+>> care about health), which will cut me from my laptop for a long-long
+>> time, I give up on bisecting. I'll just update all my software (there's
+>> also a GCC upgrade in the repos) and hope for the best.
 >>
->> Signed-off-by: Shakeel Butt <shakeelb@google.com>
+>> Sorry for inconvenience and have a great day. Thank you very much.
 > 
-> Somewhat late to the game but our performance testing grid has noticed this
-> commit causes a performance regression on shell-heavy workloads. For
-> example running 'make test' in git sources on our test machine with 192
-> CPUs takes about 4% longer, system time is increased by about 9%:
+> No inconvenience on our side; your help is invaluable, especially for
+> intermittent problems like this one.  They are really hard to find and
+> debug, and I'm sorry that we didn't get this one resolved.
 
-Thanks for the report.
++1
 
-I noticed this is nothing urgent. Nevertheless to be sure the issue
-doesn't fall through the cracks unnoticed, I'm adding it to regzbot, the
-Linux kernel regression tracking bot:
+Then let me remove this from the regression tracking, too.
 
-#regzbot ^introduced f1a7941243c
-#regzbot title mm: performance regression on shell-heavy workloads
-#regzbot backburner: not urgent according to reporter
+#regzbot inconclusive: ignored, reporter for various real life reasons
+unfortunately will be unable to bisect/debug
 #regzbot ignore-activity
-
-This isn't a regression? This issue or a fix for it are already
-discussed somewhere else? It was fixed already? You want to clarify when
-the regression started to happen? Or point out I got the title or
-something else totally wrong? Then just reply and tell me -- ideally
-while also telling regzbot about it, as explained by the page listed in
-the footer of this mail.
-
-Developers: When fixing the issue, remember to add 'Link:' tags pointing
-to the report (the parent of this mail). See page linked in footer for
-details.
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
