@@ -1,206 +1,333 @@
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9BFA2E0CB
-	for <regressions@lists.linux.dev>; Thu, 15 Jun 2023 17:16:24 +0000 (UTC)
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-3f9df7eb837so30816531cf.2
-        for <regressions@lists.linux.dev>; Thu, 15 Jun 2023 10:16:24 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DA401EA97
+	for <regressions@lists.linux.dev>; Thu, 15 Jun 2023 17:27:19 +0000 (UTC)
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2b34e133f5aso28334511fa.3
+        for <regressions@lists.linux.dev>; Thu, 15 Jun 2023 10:27:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686849383; x=1689441383;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=WUd2exhAx/+wi7FfcZIbEVnkCCAxeJpzDyEMaj0jvN0=;
-        b=SCa9L9CuVUcFNRpcIDVH5q9PEZU8NBnvpEaY10cs+LGEHkqM693VAfkL6xrDayL9w8
-         wcpIbMYl/GVC9Iij/rdoPmxivqTVx6xMxmIXOwxjN2ds1M5ClcoIUJkDuu3DPZLNJ3+b
-         3/MuY0Ass7mVueRstLyx2NsDwxot00KPJMzgIc0+neWpIBYi/MhpR+7gU5Z51/qm5aMw
-         ioUgLQ7pbS9W3h0+sbUBt+xzKOwYo3FSIOqEf5iu5RK/JQehA1ubLBfF9VSRF4kGlc9U
-         Z42D808Re0XTdZ9IKgYSIoDsdCRrAH54hGDF3qgsXn1gNiWE935mbaGDe4TXppoMmQws
-         YfuA==
+        d=gmail.com; s=20221208; t=1686850038; x=1689442038;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+avTCV6NrJInGw+RAS8r8EI9G1Hf3tcg+dqnaNehIeQ=;
+        b=kZnETjsfzYF4Ckkc0ao5Rw5aSXu/tIbNComFQi2KhMy0oScv2MLTMNnu+fKL78Jv7i
+         z4stQd8VNa1cRsRqNCr+ogT34FJPbdJqHv4eRydLqNfRvYpFcW2miQNsFyf5YT4AysW/
+         fCMqds3U12ESLh4TEndf+fjrLYIUZrKUJGiIx6YCNfn3re73mTHyKpJVP32inM6L1P8H
+         Edi9+cu1FbeLv83HG7/8JackFs2NRYoA3v3b1TRjYThXTAVPlduRJS29FjGd1dHGCjg9
+         Sm9+1OfoTt3oB8FgYzM54nhKE8Z1lfJea0kf8atOSNQRH5hPh059aTCoFGZQR+BsFHi0
+         q6/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686849383; x=1689441383;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=WUd2exhAx/+wi7FfcZIbEVnkCCAxeJpzDyEMaj0jvN0=;
-        b=EufhVc7WfW+B5wqPQhZiAuyC11O7VXN09GtdQikKW5NH3CiSX/j3x+5uRYU1YF27Y4
-         cnncHSfcg/OZFQcoUxK9Rj8XbRAIf5qmh27TWKhjpYHI5qwZflVhF/hKkueHzgTmZJsn
-         4QaglvOwQQys7aF4WQ2IAYbp8AdKYpCzBBtLonwAhkZRtO86LSVqzN4PIlA4b0xoVMIo
-         JGzKlm88mukcO8uLpvnzY7SMBZLuX9+iax3/Qmsu98HxTQHFFHybbQFJ/WqhRkLFLzN9
-         pTeH0Y4wDYmkKfhSF19ftmKYwwFy/uAinF0mz4YLv8aJSnTMhB2oRYt9XZPlUpErSotA
-         2cSQ==
-X-Gm-Message-State: AC+VfDyKbS8SUGWfzbgOEfD01dohzEpUQuEzb051EenuDPOGOdSeMjtA
-	0IkR5D+ybcpNbxu+Qn1NgSjd7+evgRLUTHq93/k=
-X-Google-Smtp-Source: ACHHUZ5PoiXFEQy0EpxDut3ktRnO1ih1bSuBv033xlA+DBMLA7k58MXSaHm28MKX5GUa9D+3tjV6soMBGgEbeevBOCw=
-X-Received: by 2002:ac8:5a8b:0:b0:3f9:d1a3:8bd9 with SMTP id
- c11-20020ac85a8b000000b003f9d1a38bd9mr7212280qtc.9.1686849383060; Thu, 15 Jun
- 2023 10:16:23 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1686850038; x=1689442038;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+avTCV6NrJInGw+RAS8r8EI9G1Hf3tcg+dqnaNehIeQ=;
+        b=k5702ghfdbUXEAtZ1Kcdvy8JDRBegmeUZuuWwk9dc+YJqEHLCScho2Q+LEeohXGENX
+         8Tzs1F7tz1nyFQnK/fDORPXrKvB7jSxSion10GrhxFgVuScupQ/0F2MvZnpP1nl1uFCr
+         Yc5GHUpk6wu0mzM5gSPCstyPeEiuY8Lk8D3vZ+jIxvljXVjgKuVj5Oqzz36+jQYIdhhM
+         eTsio42+1+HGqCJj+HH8V+JLIQoNfo9gPfbU2BtejwVOuoQv8ofuKIx1r7JYqztinUfr
+         jY5U5BeRbeuD/ii3/Rq4tmpJRkiVTecbo5JlvJXzIGmVwypPskexfXwJCLf6g2rNFNy8
+         dJ/w==
+X-Gm-Message-State: AC+VfDytpMIOmN/71o3d9Qb+W/H0rcP6CHYDSEsU5NiqSNorF6xQx0/q
+	DvKMlHPtpncZGhLo88WLBzZatrQFQfu+TpgahBY=
+X-Google-Smtp-Source: ACHHUZ5RXWArE0r9/G9IEVd390+5OvCawDqUmBExB0D6IwAYIBNmsnq05B0PLiOCf7LYXsByrawM7uR33TL0lk/nlCM=
+X-Received: by 2002:a05:651c:104:b0:2b4:466d:deb5 with SMTP id
+ a4-20020a05651c010400b002b4466ddeb5mr61097ljb.43.1686850037505; Thu, 15 Jun
+ 2023 10:27:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <f591b13c-4600-e2a4-8efa-aac6ad828dd1@linaro.org>
- <2C5E9725-F152-4D2E-882E-CF92A35481BF@hammerspace.com> <7ba38377-7992-7f0f-d905-cceb42510f39@linaro.org>
- <51430925-8046-7066-84ed-2ff0db835347@linaro.org> <CAFX2Jf=5X3zyZEWQmD6Rg9jQAD7ccDbae5LQCwrAyPCVVoFumg@mail.gmail.com>
- <2add1769-1458-b185-bc78-6d573f61b6fc@linaro.org> <CAFX2JfnKy7juGQaDTzqosN9SF-zd+XrhSL9uh_Xg0GpJGDux-A@mail.gmail.com>
- <32530c36-91d0-d351-0689-aed6a0975a4b@linaro.org> <2f285607-cbf9-6abc-f436-edb6e9a3938b@linaro.org>
- <CAFX2Jfmz7QqZBEdzbPUhPs0yctnXVaVF68tX1c57YX=6ki=0TA@mail.gmail.com>
- <4fe39d77-eb7c-a578-aefa-45b76e2247c2@linaro.org> <CAFX2JfmdRMsHPTySiw4vm7BwJfRZj3s0V3_v7NJ+XwMxBBSo9A@mail.gmail.com>
- <a3683dd3-3f30-bb4c-539d-d1519de6e5bf@linaro.org> <CAFX2JfnS9GVc4NaxKhr9E4y10NNv6SPgcv1yoeHTfEw5NvZgMg@mail.gmail.com>
- <86d8e252-975f-5d48-4567-0911d5ef9a44@linaro.org> <CAFX2Jfn_DSs38WQYsRs2ifLi5w+T3BhZfSU2W80T6dK48_Bb5g@mail.gmail.com>
- <e8d31e48-df6a-fde4-4c6b-c4ccf1664ded@linaro.org> <c8d454b0-d355-f599-f720-b7e64374fb56@linaro.org>
- <CAFX2JfmvMZ7DzD9znWeOHXywgPbUKDS1irMjUerEuborjRBpcg@mail.gmail.com> <CAFX2JfnhOz+HiOd4vBwBK+5d19Kb8wfBNQhxRZHQoP8S2qiwFw@mail.gmail.com>
-In-Reply-To: <CAFX2JfnhOz+HiOd4vBwBK+5d19Kb8wfBNQhxRZHQoP8S2qiwFw@mail.gmail.com>
-From: Anna Schumaker <schumaker.anna@gmail.com>
-Date: Thu, 15 Jun 2023 13:16:07 -0400
-Message-ID: <CAFX2Jf=5WV=dY9J4-7tp5NB85fDOkwiv8rxQqHziqG+ED1cUJw@mail.gmail.com>
-Subject: Re: Regression: NULL pointer dereference after NFS_V4_2_READ_PLUS
- (commit 7fd461c47)
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Trond Myklebust <trondmy@hammerspace.com>, Anna Schumaker <Anna.Schumaker@netapp.com>, 
-	linux-nfs <linux-nfs@vger.kernel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Content-Type: multipart/mixed; boundary="000000000000448d9105fe2e3a42"
-
---000000000000448d9105fe2e3a42
+References: <20220727135834.294184-1-brian.gix@intel.com> <20220727135834.294184-3-brian.gix@intel.com>
+ <578e6d7afd676129decafba846a933f5@agner.ch>
+In-Reply-To: <578e6d7afd676129decafba846a933f5@agner.ch>
+From: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
+Date: Thu, 15 Jun 2023 10:27:04 -0700
+Message-ID: <CABBYNZJGKfwTQM8WAdUGXueTPnFyus1a65UO5mg2g4PXVuCnpA@mail.gmail.com>
+Subject: Re: [PATCH v4 2/4] Bluetooth: Rework le_scan_restart for hci_sync
+To: Stefan Agner <stefan@agner.ch>
+Cc: Brian Gix <brian.gix@intel.com>, linux-bluetooth@vger.kernel.org, 
+	marcel@holtmann.org, Regressions <regressions@lists.linux.dev>, 
+	=?UTF-8?B?SmFuIMSMZXJtw6Fr?= <sairon@sairon.cz>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 15, 2023 at 1:04=E2=80=AFPM Anna Schumaker <schumaker.anna@gmai=
-l.com> wrote:
+Hi Stefan,
+
+On Thu, Jun 15, 2023 at 5:06=E2=80=AFAM Stefan Agner <stefan@agner.ch> wrot=
+e:
 >
-> On Thu, Jun 15, 2023 at 9:01=E2=80=AFAM Anna Schumaker <schumaker.anna@gm=
-ail.com> wrote:
+> Hi Brian, hi all,
+>
+> We experienced quite some Bluetooth issues after moving from Linux 5.15
+> to 6.1 on Home Assistant OS, especially on Intel NUC type systems (which
+> is a popular choice in our community, so it might just be that). When
+> continuously scanning/listening for BLE packets, the packet flow
+> suddenly ends. Depending on which and how many devices (possibly also
+> other factors) within minutes or hours.
+>
+> Jan (in cc) was able to bisect the issue, and was able to pinpoint the
+> problem to this change.
+>
+> Meanwhile I was able to confirm, that reverting this single commit on
+> the latest 6.1.34 seems to resolve the issue.
+>
+> I've reviewed the change and surrounding code, and one thing I've
+> noticed is that the if statement to set cp.filter_dup in
+> hci_le_set_ext_scan_enable_sync and hci_le_set_scan_enable_sync are
+> different. Not sure if that needs to be the way it is, but my outside
+> gut feeling says hci_le_set_ext_scan_enable_sync should use "if (val &&
+> hci_dev_test_flag(hdev, HCI_MESH))" as well.
+>
+> However, that did not fix the problem (but maybe it is wrong
+> nonetheless?).
+>
+> Anyone has an idea what could be the problem here?
+
+Are there any logs of the problem? Does any HCI command fails or
+anything so that we can track down what could be wrong?
+
+> --
+> Stefan
+>
+> On 2022-07-27 15:58, Brian Gix wrote:
+> > le_scan_restart delayed work queue was running as a deprecated
+> > hci_request instead of on the newer thread-safe hci_sync mechanism.
 > >
-> > On Thu, Jun 15, 2023 at 4:55=E2=80=AFAM Krzysztof Kozlowski
-> > <krzysztof.kozlowski@linaro.org> wrote:
-> > >
-> > > On 15/06/2023 10:52, Krzysztof Kozlowski wrote:
-> > > > On 14/06/2023 22:55, Anna Schumaker wrote:
-> > > >>>>> Still null ptr (built on 420b2d4 with your patch):
-> > > >>>>
-> > > >>>> We're through the merge window and at rc1 now, so I can spend mo=
-re
-> > > >>>> time scratching my head over your bug again. We've come up with =
-a
-> > > >>>> patch (attached) that adds a bunch of printks to show us what th=
-e
-> > > >>>> kernel thinks is going on. Do you mind trying it out and letting=
- us
-> > > >>>> know what gets printed out? You'll need to make sure
-> > > >>>> CONFIG_NFS_V4_2_READ_PLUS is enabled when compiling the kernel.
-> > > >>>
-> > > >>> The patch does not apply. I tried: v6.4-rc1, v6.4-rc5, next-20230=
-609.
-> > > >>
-> > > >> Can you try the attached patch on top of my 3-patch series from th=
-e
-> > > >> other day, and let me know what gets printed out? It adds a bunch =
-of
-> > > >> printk()s at strategic points to print out what is going on with t=
-he
-> > > >> xdr scratch buffer since it's suddenly a bad memory address after
-> > > >> working for a bit on your machine.
-> > > >>
-> > > >
-> > > > Here you have entire log - attached (113 kB, I hope goes past maili=
-ng
-> > > > lists/spam filters).
-> > >
-> > > As expected this bounced from the mailing lists, but I hope you got i=
-t.
-> > > If not, let me know.
+> > Signed-off-by: Brian Gix <brian.gix@intel.com>
+> > ---
+> >  net/bluetooth/hci_request.c | 89 -------------------------------------
+> >  net/bluetooth/hci_sync.c    | 75 +++++++++++++++++++++++++++++++
+> >  2 files changed, 75 insertions(+), 89 deletions(-)
 > >
-> > I did still receive it. Thanks!
->
-> Can you swap out yesterday's patch with this patch? I've adjusted what
-> gets printed out, and added printk()s to xdr_copy_to_scratch().  I'm
-> starting to think that the xdr scratch buffer is fine, and that it's
-> the other pointer passed to memcpy() in that function that's the
-> problem, and the output from this patch will confirm for me.
-
-Oh, and can you add this one on top of the v2 patch as well?
-
-Thanks,
-Anna
-
->
-> Thanks,
-> Anna
->
+> > diff --git a/net/bluetooth/hci_request.c b/net/bluetooth/hci_request.c
+> > index 32fefaa0d3ca..114af7350363 100644
+> > --- a/net/bluetooth/hci_request.c
+> > +++ b/net/bluetooth/hci_request.c
+> > @@ -1975,92 +1975,6 @@ int hci_abort_conn(struct hci_conn *conn, u8 rea=
+son)
+> >       return 0;
+> >  }
 > >
-> > Anna
-> > >
-> > > Best regards,
-> > > Krzysztof
-> > >
+> > -static int le_scan_restart(struct hci_request *req, unsigned long opt)
+> > -{
+> > -     struct hci_dev *hdev =3D req->hdev;
+> > -
+> > -     /* If controller is not scanning we are done. */
+> > -     if (!hci_dev_test_flag(hdev, HCI_LE_SCAN))
+> > -             return 0;
+> > -
+> > -     if (hdev->scanning_paused) {
+> > -             bt_dev_dbg(hdev, "Scanning is paused for suspend");
+> > -             return 0;
+> > -     }
+> > -
+> > -     hci_req_add_le_scan_disable(req, false);
+> > -
+> > -     if (use_ext_scan(hdev)) {
+> > -             struct hci_cp_le_set_ext_scan_enable ext_enable_cp;
+> > -
+> > -             memset(&ext_enable_cp, 0, sizeof(ext_enable_cp));
+> > -             ext_enable_cp.enable =3D LE_SCAN_ENABLE;
+> > -             ext_enable_cp.filter_dup =3D LE_SCAN_FILTER_DUP_ENABLE;
+> > -
+> > -             hci_req_add(req, HCI_OP_LE_SET_EXT_SCAN_ENABLE,
+> > -                         sizeof(ext_enable_cp), &ext_enable_cp);
+> > -     } else {
+> > -             struct hci_cp_le_set_scan_enable cp;
+> > -
+> > -             memset(&cp, 0, sizeof(cp));
+> > -             cp.enable =3D LE_SCAN_ENABLE;
+> > -             cp.filter_dup =3D LE_SCAN_FILTER_DUP_ENABLE;
+> > -             hci_req_add(req, HCI_OP_LE_SET_SCAN_ENABLE, sizeof(cp), &=
+cp);
+> > -     }
+> > -
+> > -     return 0;
+> > -}
+> > -
+> > -static void le_scan_restart_work(struct work_struct *work)
+> > -{
+> > -     struct hci_dev *hdev =3D container_of(work, struct hci_dev,
+> > -                                         le_scan_restart.work);
+> > -     unsigned long timeout, duration, scan_start, now;
+> > -     u8 status;
+> > -
+> > -     bt_dev_dbg(hdev, "");
+> > -
+> > -     hci_req_sync(hdev, le_scan_restart, 0, HCI_CMD_TIMEOUT, &status);
+> > -     if (status) {
+> > -             bt_dev_err(hdev, "failed to restart LE scan: status %d",
+> > -                        status);
+> > -             return;
+> > -     }
+> > -
+> > -     hci_dev_lock(hdev);
+> > -
+> > -     if (!test_bit(HCI_QUIRK_STRICT_DUPLICATE_FILTER, &hdev->quirks) |=
+|
+> > -         !hdev->discovery.scan_start)
+> > -             goto unlock;
+> > -
+> > -     /* When the scan was started, hdev->le_scan_disable has been queu=
+ed
+> > -      * after duration from scan_start. During scan restart this job
+> > -      * has been canceled, and we need to queue it again after proper
+> > -      * timeout, to make sure that scan does not run indefinitely.
+> > -      */
+> > -     duration =3D hdev->discovery.scan_duration;
+> > -     scan_start =3D hdev->discovery.scan_start;
+> > -     now =3D jiffies;
+> > -     if (now - scan_start <=3D duration) {
+> > -             int elapsed;
+> > -
+> > -             if (now >=3D scan_start)
+> > -                     elapsed =3D now - scan_start;
+> > -             else
+> > -                     elapsed =3D ULONG_MAX - scan_start + now;
+> > -
+> > -             timeout =3D duration - elapsed;
+> > -     } else {
+> > -             timeout =3D 0;
+> > -     }
+> > -
+> > -     queue_delayed_work(hdev->req_workqueue,
+> > -                        &hdev->le_scan_disable, timeout);
+> > -
+> > -unlock:
+> > -     hci_dev_unlock(hdev);
+> > -}
+> > -
+> >  bool hci_req_stop_discovery(struct hci_request *req)
+> >  {
+> >       struct hci_dev *hdev =3D req->hdev;
+> > @@ -2158,7 +2072,6 @@ int hci_req_configure_datapath(struct hci_dev
+> > *hdev, struct bt_codec *codec)
+> >
+> >  void hci_request_setup(struct hci_dev *hdev)
+> >  {
+> > -     INIT_DELAYED_WORK(&hdev->le_scan_restart, le_scan_restart_work);
+> >       INIT_DELAYED_WORK(&hdev->adv_instance_expire, adv_timeout_expire)=
+;
+> >       INIT_DELAYED_WORK(&hdev->interleave_scan, interleave_scan_work);
+> >  }
+> > @@ -2167,8 +2080,6 @@ void hci_request_cancel_all(struct hci_dev *hdev)
+> >  {
+> >       __hci_cmd_sync_cancel(hdev, ENODEV);
+> >
+> > -     cancel_delayed_work_sync(&hdev->le_scan_restart);
+> > -
+> >       if (hdev->adv_instance_timeout) {
+> >               cancel_delayed_work_sync(&hdev->adv_instance_expire);
+> >               hdev->adv_instance_timeout =3D 0;
+> > diff --git a/net/bluetooth/hci_sync.c b/net/bluetooth/hci_sync.c
+> > index 7dae2ee1bb82..19d57ec0feb8 100644
+> > --- a/net/bluetooth/hci_sync.c
+> > +++ b/net/bluetooth/hci_sync.c
+> > @@ -392,6 +392,79 @@ static void le_scan_disable(struct work_struct *wo=
+rk)
+> >       hci_dev_unlock(hdev);
+> >  }
+> >
+> > +static int hci_le_set_scan_enable_sync(struct hci_dev *hdev, u8 val,
+> > +                                    u8 filter_dup);
+> > +static int hci_le_scan_restart_sync(struct hci_dev *hdev)
+> > +{
+> > +     /* If controller is not scanning we are done. */
+> > +     if (!hci_dev_test_flag(hdev, HCI_LE_SCAN))
+> > +             return 0;
+> > +
+> > +     if (hdev->scanning_paused) {
+> > +             bt_dev_dbg(hdev, "Scanning is paused for suspend");
+> > +             return 0;
+> > +     }
+> > +
+> > +     hci_le_set_scan_enable_sync(hdev, LE_SCAN_DISABLE, 0x00);
+> > +     return hci_le_set_scan_enable_sync(hdev, LE_SCAN_ENABLE,
+> > +                                        LE_SCAN_FILTER_DUP_ENABLE);
+> > +}
+> > +
+> > +static int le_scan_restart_sync(struct hci_dev *hdev, void *data)
+> > +{
+> > +     return hci_le_scan_restart_sync(hdev);
+> > +}
+> > +
+> > +static void le_scan_restart(struct work_struct *work)
+> > +{
+> > +     struct hci_dev *hdev =3D container_of(work, struct hci_dev,
+> > +                                         le_scan_restart.work);
+> > +     unsigned long timeout, duration, scan_start, now;
+> > +     int status;
+> > +
+> > +     bt_dev_dbg(hdev, "");
+> > +
+> > +     hci_dev_lock(hdev);
+> > +
+> > +     status =3D hci_cmd_sync_queue(hdev, le_scan_restart_sync, NULL, N=
+ULL);
+> > +     if (status) {
+> > +             bt_dev_err(hdev, "failed to restart LE scan: status %d",
+> > +                        status);
+> > +             goto unlock;
+> > +     }
+> > +
+> > +     if (!test_bit(HCI_QUIRK_STRICT_DUPLICATE_FILTER, &hdev->quirks) |=
+|
+> > +         !hdev->discovery.scan_start)
+> > +             goto unlock;
+> > +
+> > +     /* When the scan was started, hdev->le_scan_disable has been queu=
+ed
+> > +      * after duration from scan_start. During scan restart this job
+> > +      * has been canceled, and we need to queue it again after proper
+> > +      * timeout, to make sure that scan does not run indefinitely.
+> > +      */
+> > +     duration =3D hdev->discovery.scan_duration;
+> > +     scan_start =3D hdev->discovery.scan_start;
+> > +     now =3D jiffies;
+> > +     if (now - scan_start <=3D duration) {
+> > +             int elapsed;
+> > +
+> > +             if (now >=3D scan_start)
+> > +                     elapsed =3D now - scan_start;
+> > +             else
+> > +                     elapsed =3D ULONG_MAX - scan_start + now;
+> > +
+> > +             timeout =3D duration - elapsed;
+> > +     } else {
+> > +             timeout =3D 0;
+> > +     }
+> > +
+> > +     queue_delayed_work(hdev->req_workqueue,
+> > +                        &hdev->le_scan_disable, timeout);
+> > +
+> > +unlock:
+> > +     hci_dev_unlock(hdev);
+> > +}
+> > +
+> >  void hci_cmd_sync_init(struct hci_dev *hdev)
+> >  {
+> >       INIT_WORK(&hdev->cmd_sync_work, hci_cmd_sync_work);
+> > @@ -400,6 +473,7 @@ void hci_cmd_sync_init(struct hci_dev *hdev)
+> >
+> >       INIT_WORK(&hdev->cmd_sync_cancel_work, hci_cmd_sync_cancel_work);
+> >       INIT_DELAYED_WORK(&hdev->le_scan_disable, le_scan_disable);
+> > +     INIT_DELAYED_WORK(&hdev->le_scan_restart, le_scan_restart);
+> >  }
+> >
+> >  void hci_cmd_sync_clear(struct hci_dev *hdev)
+> > @@ -4488,6 +4562,7 @@ int hci_dev_close_sync(struct hci_dev *hdev)
+> >       cancel_delayed_work(&hdev->power_off);
+> >       cancel_delayed_work(&hdev->ncmd_timer);
+> >       cancel_delayed_work(&hdev->le_scan_disable);
+> > +     cancel_delayed_work(&hdev->le_scan_restart);
+> >
+> >       hci_request_cancel_all(hdev);
 
---000000000000448d9105fe2e3a42
-Content-Type: text/x-patch; charset="US-ASCII"; name="0001-NFS-Olga-s-prink-patch.patch"
-Content-Disposition: attachment; 
-	filename="0001-NFS-Olga-s-prink-patch.patch"
-Content-Transfer-Encoding: base64
-Content-ID: <f_lixejz4q0>
-X-Attachment-Id: f_lixejz4q0
 
-RnJvbSA4MjUyMTM4Mzc2YTJiYTNlNTM4MDdmYWZhYjljMzgyYjZhY2Y1MDNmIE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQpGcm9tOiBBbm5hIFNjaHVtYWtlciA8QW5uYS5TY2h1bWFrZXJATmV0YXBw
-LmNvbT4KRGF0ZTogVGh1LCAxNSBKdW4gMjAyMyAxMzoxMzo0NyAtMDQwMApTdWJqZWN0OiBbUEFU
-Q0hdIE5GUzogT2xnYSdzIHByaW5rKCkgcGF0Y2gKCkFkZHMgYSBoYW5kZnVsIG9mIHByaW50aygp
-IHN0YXRlbWVudHMgdG8gcHJpbnQgb3V0IHRoZSBzdGF0ZSBvZiB0aGUgeGRyCnN0cmVhbS4KLS0t
-CiBmcy9uZnMvbmZzNDJ4ZHIuYyB8IDUgKysrKysKIG5ldC9zdW5ycGMvY2xudC5jIHwgMSArCiBu
-ZXQvc3VucnBjL3hkci5jICB8IDIgKysKIDMgZmlsZXMgY2hhbmdlZCwgOCBpbnNlcnRpb25zKCsp
-CgpkaWZmIC0tZ2l0IGEvZnMvbmZzL25mczQyeGRyLmMgYi9mcy9uZnMvbmZzNDJ4ZHIuYwppbmRl
-eCA2YTRlYWRlMjQwMGIuLjIyNjI4MDU3ZDA4MCAxMDA2NDQKLS0tIGEvZnMvbmZzL25mczQyeGRy
-LmMKKysrIGIvZnMvbmZzL25mczQyeGRyLmMKQEAgLTM1Miw2ICszNTIsNyBAQCBzdGF0aWMgdm9p
-ZCBlbmNvZGVfcmVhZF9wbHVzKHN0cnVjdCB4ZHJfc3RyZWFtICp4ZHIsCiAJCQkgICAgIGNvbnN0
-IHN0cnVjdCBuZnNfcGdpb19hcmdzICphcmdzLAogCQkJICAgICBzdHJ1Y3QgY29tcG91bmRfaGRy
-ICpoZHIpCiB7CisJcHJpbnRrKCJBR0xPOiAlcyBzZXR0aW5nIHVwIGRlY29kZSBidWZmZXIgc2l6
-ZT0lZFxuIiwgX19mdW5jX18sIGRlY29kZV9yZWFkX3BsdXNfbWF4c3opOwogCWVuY29kZV9vcF9o
-ZHIoeGRyLCBPUF9SRUFEX1BMVVMsIGRlY29kZV9yZWFkX3BsdXNfbWF4c3osIGhkcik7CiAJZW5j
-b2RlX25mczRfc3RhdGVpZCh4ZHIsICZhcmdzLT5zdGF0ZWlkKTsKIAllbmNvZGVfdWludDY0KHhk
-ciwgYXJncy0+b2Zmc2V0KTsKQEAgLTEwNjUsNiArMTA2Niw3IEBAIHN0YXRpYyBpbnQgZGVjb2Rl
-X3JlYWRfcGx1c19zZWdtZW50KHN0cnVjdCB4ZHJfc3RyZWFtICp4ZHIsCiB7CiAJX19iZTMyICpw
-OwogCisJcHJpbnRrKCJBR0xPOiAlcyBzdGFydCBzZWc9JXBcbiIsIF9fZnVuY19fLCBzZWcpOwog
-CXAgPSB4ZHJfaW5saW5lX2RlY29kZSh4ZHIsIDQpOwogCWlmICghcCkKIAkJcmV0dXJuIC1FSU87
-CkBAIC0xMDg4LDYgKzEwOTAsNyBAQCBzdGF0aWMgaW50IGRlY29kZV9yZWFkX3BsdXNfc2VnbWVu
-dChzdHJ1Y3QgeGRyX3N0cmVhbSAqeGRyLAogCQl4ZHJfZGVjb2RlX2h5cGVyKHAsICZzZWctPmhv
-bGUubGVuZ3RoKTsKIAl9IGVsc2UKIAkJcmV0dXJuIC1FSU5WQUw7CisJcHJpbnRrKCJBR0xPOiAl
-cyBlbmQgc2VnPSVwIHhkci0+bndvcmRzPSVkXG4iLCBfX2Z1bmNfXywgc2VnLCB4ZHItPm53b3Jk
-cyk7CiAJcmV0dXJuIDA7CiB9CiAKQEAgLTExMzAsNiArMTEzMyw3IEBAIHN0YXRpYyBpbnQgZGVj
-b2RlX3JlYWRfcGx1cyhzdHJ1Y3QgeGRyX3N0cmVhbSAqeGRyLCBzdHJ1Y3QgbmZzX3BnaW9fcmVz
-ICpyZXMpCiAJaW50IHN0YXR1cywgaTsKIAlfX2JlMzIgKnA7CiAKKwlwcmludGsoIkFHTE86ICVz
-IFNUQVJUXG4iLCBfX2Z1bmNfXyk7CiAJc3RhdHVzID0gZGVjb2RlX29wX2hkcih4ZHIsIE9QX1JF
-QURfUExVUyk7CiAJaWYgKHN0YXR1cykKIAkJcmV0dXJuIHN0YXR1czsKQEAgLTExNjEsNiArMTE2
-NSw3IEBAIHN0YXRpYyBpbnQgZGVjb2RlX3JlYWRfcGx1cyhzdHJ1Y3QgeGRyX3N0cmVhbSAqeGRy
-LCBzdHJ1Y3QgbmZzX3BnaW9fcmVzICpyZXMpCiAKIG91dDoKIAlrZnJlZShzZWdzKTsKKwlwcmlu
-dGsoIkFHTE86ICVzIEVORFxuIiwgX19mdW5jX18pOwogCXJldHVybiBzdGF0dXM7CiB9CiAKZGlm
-ZiAtLWdpdCBhL25ldC9zdW5ycGMvY2xudC5jIGIvbmV0L3N1bnJwYy9jbG50LmMKaW5kZXggZDJl
-ZTU2NjM0MzA4Li40NDI2YTI1ZDAxNTIgMTAwNjQ0Ci0tLSBhL25ldC9zdW5ycGMvY2xudC5jCisr
-KyBiL25ldC9zdW5ycGMvY2xudC5jCkBAIC0xMzM3LDYgKzEzMzcsNyBAQCB2b2lkIHJwY19wcmVw
-YXJlX3JlcGx5X3BhZ2VzKHN0cnVjdCBycGNfcnFzdCAqcmVxLCBzdHJ1Y3QgcGFnZSAqKnBhZ2Vz
-LAogewogCWhkcnNpemUgKz0gUlBDX1JFUEhEUlNJWkUgKyByZXEtPnJxX2NyZWQtPmNyX2F1dGgt
-PmF1X3JhbGlnbjsKIAorCXByaW50aygiQUdMTzogJXMgaGRyc2l6ZSAlZCAoPDwyICVkKSBIRFJT
-SVpFICVkIGF1bGlnaCAlZFxuIiwgX19mdW5jX18sIGhkcnNpemUsIGhkcnNpemUgPDwgMiwgUlBD
-X1JFUEhEUlNJWkUsIHJlcS0+cnFfY3JlZC0+Y3JfYXV0aC0+YXVfcmFsaWduKTsKIAl4ZHJfaW5s
-aW5lX3BhZ2VzKCZyZXEtPnJxX3Jjdl9idWYsIGhkcnNpemUgPDwgMiwgcGFnZXMsIGJhc2UsIGxl
-bik7CiAJdHJhY2VfcnBjX3hkcl9yZXBseV9wYWdlcyhyZXEtPnJxX3Rhc2ssICZyZXEtPnJxX3Jj
-dl9idWYpOwogfQpkaWZmIC0tZ2l0IGEvbmV0L3N1bnJwYy94ZHIuYyBiL25ldC9zdW5ycGMveGRy
-LmMKaW5kZXggMzdjOGY3ZTUxOWRkLi43ZjYzNWY2MDFkZDQgMTAwNjQ0Ci0tLSBhL25ldC9zdW5y
-cGMveGRyLmMKKysrIGIvbmV0L3N1bnJwYy94ZHIuYwpAQCAtMTQyMiw2ICsxNDIyLDcgQEAgc3Rh
-dGljIF9fYmUzMiAqIF9feGRyX2lubGluZV9kZWNvZGUoc3RydWN0IHhkcl9zdHJlYW0gKnhkciwg
-c2l6ZV90IG5ieXRlcykKIAlfX2JlMzIgKnAgPSB4ZHItPnA7CiAJX19iZTMyICpxID0gcCArIG53
-b3JkczsKIAorCXByaW50aygiQUdMTzogJXMgbndvcmRzPSVkIHhkci0+bndvcmRzPSVkIHE9JXAg
-eGRyLT5lbmQ9JXAgcD0lcCAoJWQgJWQpXG4iLCBfX2Z1bmNfXywgbndvcmRzLCB4ZHItPm53b3Jk
-cywgcSwgeGRyLT5lbmQsIHAsIHEgPiB4ZHItPmVuZCwgcSA8IHApOwogCWlmICh1bmxpa2VseShu
-d29yZHMgPiB4ZHItPm53b3JkcyB8fCBxID4geGRyLT5lbmQgfHwgcSA8IHApKQogCQlyZXR1cm4g
-TlVMTDsKIAl4ZHItPnAgPSBxOwpAQCAtMTQzNSw2ICsxNDM2LDcgQEAgc3RhdGljIF9fYmUzMiAq
-eGRyX2NvcHlfdG9fc2NyYXRjaChzdHJ1Y3QgeGRyX3N0cmVhbSAqeGRyLCBzaXplX3QgbmJ5dGVz
-KQogCWNoYXIgKmNwZGVzdCA9IHhkci0+c2NyYXRjaC5pb3ZfYmFzZTsKIAlzaXplX3QgY3BsZW4g
-PSAoY2hhciAqKXhkci0+ZW5kIC0gKGNoYXIgKil4ZHItPnA7CiAKKwlwcmludGsoIkFHTE86ICVz
-IGhlcmVcbiIsIF9fZnVuY19fKTsKIAlpZiAobmJ5dGVzID4geGRyLT5zY3JhdGNoLmlvdl9sZW4p
-CiAJCWdvdG8gb3V0X292ZXJmbG93OwogCXAgPSBfX3hkcl9pbmxpbmVfZGVjb2RlKHhkciwgY3Bs
-ZW4pOwotLSAKMi40MS4wCgo=
---000000000000448d9105fe2e3a42--
+
+--=20
+Luiz Augusto von Dentz
