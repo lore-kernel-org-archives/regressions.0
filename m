@@ -1,110 +1,84 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+Received: from sasl.smtp.pobox.com (pb-sasl1.pobox.com [64.147.108.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D60DD20E0
+	for <regressions@lists.linux.dev>; Thu, 15 Jun 2023 11:27:25 +0000 (UTC)
+Received: from sasl.smtp.pobox.com (unknown [127.0.0.1])
+	by pb-sasl1.pobox.com (Postfix) with ESMTP id 6AA32AA013;
+	Thu, 15 Jun 2023 07:24:17 -0400 (EDT)
+	(envelope-from mlord@pobox.com)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=pobox.com; h=subject:to
+	:cc:references:from:message-id:date:mime-version:in-reply-to
+	:content-type:content-transfer-encoding; s=sasl; bh=R9REBIl2cJpk
+	vNtAOVV6nK22FQwV/7KTOjLjZ7mcB48=; b=tS3ATrgD8sVwNv2VFlvLuLwPJnm/
+	0cBHpbCJkX1iBUdvh06MVqEO0N1JHvHKds0p8PaXPkWlg8CjQOnxGuo1Zvqo+cfZ
+	LKUFdgiSvg0/pmZlH09g2hDKelNxaTFQcOqlwJddw8kVS6EqwXUXznlzWtDrjCSb
+	0SvjRzUzTaI6PLk=
+Received: from pb-sasl1.nyi.icgroup.com (unknown [127.0.0.1])
+	by pb-sasl1.pobox.com (Postfix) with ESMTP id 508E6AA011;
+	Thu, 15 Jun 2023 07:24:17 -0400 (EDT)
+	(envelope-from mlord@pobox.com)
+Received: from [10.0.0.9] (unknown [24.156.181.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C41D353B6
-	for <regressions@lists.linux.dev>; Thu, 15 Jun 2023 08:55:51 +0000 (UTC)
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-982a1b92d55so67801666b.0
-        for <regressions@lists.linux.dev>; Thu, 15 Jun 2023 01:55:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1686819350; x=1689411350;
-        h=content-transfer-encoding:in-reply-to:references:cc:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=lV7QLu3dQCxU7BpztxvUiYaqzC4koTpfwg/H3VXhuQw=;
-        b=F5LzRUtkbc+owwF0fBE5WC4VBb0fae9atAHmdJ5eiah/rOsQ4J6MyeumPDtP5L6o9X
-         qk7o3f9VO3uDYH5U8sufXvpuf/GZ3nUT2XFcAlMfXfyhl28LqkkQz75QYxccDaLqTngi
-         r3gyRKkekQB4Ksm74vDEQaEqhuaegeVW5XrN2Rvf/3jJGI6QGW5JhP9BtJpwtYmFGjaz
-         6GJi42drqAvF5RMsmV8k2qwYEM9EAEAtMDR6mPWHQpi7tMETWDxcOlRUNdHTHcyW9vG4
-         JEcQAVZKrAVCyBYjAZohcs2RdybcIzeV+Nv7dwYwcqIxY5tf5RaAV+yYVsVLqWuTxqPM
-         PqBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686819350; x=1689411350;
-        h=content-transfer-encoding:in-reply-to:references:cc:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lV7QLu3dQCxU7BpztxvUiYaqzC4koTpfwg/H3VXhuQw=;
-        b=Ys5+6TaUIlQ3WNdsAAcd1bZBk6JfuBbGwTypKRRaV36eFGXrO7E+MJjF+G4nySgMAX
-         Pts80mmhYnpAnUCfwKH+jOf8wPxyjAWbuydl29XFnvKsWSaQKgB1jZf+ixWLPELem9aJ
-         8+NMempqRdDkFWZZCuFugiEtKoSuH937vtXmqfc8FGV0A69hdXKEesL0pqnRVJ51g1F2
-         ymOX8pd/kS+w9oZRYVyI/JupDKegM5D8RZ1CJPVKxFvy4hMsLcQOhiQ4gRgk7Lg6fMiv
-         efiLbVsKUla4pGe1D58Rxa6mJB9P3EcQ+OhbKydFmeGiMjapLYQefSjvaql6z+YOol32
-         S9jw==
-X-Gm-Message-State: AC+VfDzBzQ0iRoZdwKFJmS6wlSgZOoX5DLko4vKWLMiGD5SEhHHin7/5
-	iC5GFj6vQdj2hqEGs3OUIbVBUQ==
-X-Google-Smtp-Source: ACHHUZ72V9SYWFf+LtAZvutrD0Tp0XqxJCIY+D2Td80wBJ9YF2VHhGposHwZvllf8xiTuwtTblssVw==
-X-Received: by 2002:a17:907:26ca:b0:974:1e0e:9bd4 with SMTP id bp10-20020a17090726ca00b009741e0e9bd4mr17990075ejc.16.1686819349690;
-        Thu, 15 Jun 2023 01:55:49 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.219.26])
-        by smtp.gmail.com with ESMTPSA id u3-20020a17090617c300b009788dfde0b2sm9157169eje.12.2023.06.15.01.55.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 15 Jun 2023 01:55:49 -0700 (PDT)
-Message-ID: <c8d454b0-d355-f599-f720-b7e64374fb56@linaro.org>
-Date: Thu, 15 Jun 2023 10:55:47 +0200
+	by pb-sasl1.pobox.com (Postfix) with ESMTPSA id 41322AA010;
+	Thu, 15 Jun 2023 07:24:16 -0400 (EDT)
+	(envelope-from mlord@pobox.com)
+Subject: Re: [PATCH] HID: logitech-hidpp: Handle timeout differently from busy
+To: Linux regressions mailing list <regressions@lists.linux.dev>,
+ Jiri Kosina <jikos@kernel.org>, Bastien Nocera <hadess@hadess.net>,
+ Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+ "Peter F . Patel-Schneider" <pfpschneider@gmail.com>,
+ =?UTF-8?Q?Filipe_La=c3=adns?= <lains@riseup.net>,
+ Nestor Lopez Casado <nlopezcasad@logitech.com>
+References: <20230531082428.21763-1-hadess@hadess.net>
+ <nycvar.YFH.7.76.2305311606160.29760@cbobk.fhfr.pm>
+ <nycvar.YFH.7.76.2306031440380.29760@cbobk.fhfr.pm>
+ <15bb2507-a145-7f1b-8e84-58aeb02484b9@leemhuis.info>
+ <nycvar.YFH.7.76.2306061527080.29760@cbobk.fhfr.pm>
+ <42b6e582-f642-7521-135a-449140984211@leemhuis.info>
+ <53903462-2552-b707-3831-cad3ef873b0d@leemhuis.info>
+From: Mark Lord <mlord@pobox.com>
+Message-ID: <aa0e3371-dad1-3296-18fb-1957b92aa4d1@pobox.com>
+Date: Thu, 15 Jun 2023 07:24:15 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.7.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: Regression: NULL pointer dereference after NFS_V4_2_READ_PLUS
- (commit 7fd461c47)
+In-Reply-To: <53903462-2552-b707-3831-cad3ef873b0d@leemhuis.info>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Anna Schumaker <schumaker.anna@gmail.com>
-Cc: Trond Myklebust <trondmy@hammerspace.com>,
- Anna Schumaker <Anna.Schumaker@netapp.com>,
- linux-nfs <linux-nfs@vger.kernel.org>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <f591b13c-4600-e2a4-8efa-aac6ad828dd1@linaro.org>
- <2C5E9725-F152-4D2E-882E-CF92A35481BF@hammerspace.com>
- <7ba38377-7992-7f0f-d905-cceb42510f39@linaro.org>
- <51430925-8046-7066-84ed-2ff0db835347@linaro.org>
- <CAFX2Jf=5X3zyZEWQmD6Rg9jQAD7ccDbae5LQCwrAyPCVVoFumg@mail.gmail.com>
- <2add1769-1458-b185-bc78-6d573f61b6fc@linaro.org>
- <CAFX2JfnKy7juGQaDTzqosN9SF-zd+XrhSL9uh_Xg0GpJGDux-A@mail.gmail.com>
- <32530c36-91d0-d351-0689-aed6a0975a4b@linaro.org>
- <2f285607-cbf9-6abc-f436-edb6e9a3938b@linaro.org>
- <CAFX2Jfmz7QqZBEdzbPUhPs0yctnXVaVF68tX1c57YX=6ki=0TA@mail.gmail.com>
- <4fe39d77-eb7c-a578-aefa-45b76e2247c2@linaro.org>
- <CAFX2JfmdRMsHPTySiw4vm7BwJfRZj3s0V3_v7NJ+XwMxBBSo9A@mail.gmail.com>
- <a3683dd3-3f30-bb4c-539d-d1519de6e5bf@linaro.org>
- <CAFX2JfnS9GVc4NaxKhr9E4y10NNv6SPgcv1yoeHTfEw5NvZgMg@mail.gmail.com>
- <86d8e252-975f-5d48-4567-0911d5ef9a44@linaro.org>
- <CAFX2Jfn_DSs38WQYsRs2ifLi5w+T3BhZfSU2W80T6dK48_Bb5g@mail.gmail.com>
- <e8d31e48-df6a-fde4-4c6b-c4ccf1664ded@linaro.org>
-In-Reply-To: <e8d31e48-df6a-fde4-4c6b-c4ccf1664ded@linaro.org>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-Pobox-Relay-ID:
+ 29ECEAB2-0B6F-11EE-A78A-8E2B5958DECB-82205200!pb-sasl1.pobox.com
 
-On 15/06/2023 10:52, Krzysztof Kozlowski wrote:
-> On 14/06/2023 22:55, Anna Schumaker wrote:
->>>>> Still null ptr (built on 420b2d4 with your patch):
->>>>
->>>> We're through the merge window and at rc1 now, so I can spend more
->>>> time scratching my head over your bug again. We've come up with a
->>>> patch (attached) that adds a bunch of printks to show us what the
->>>> kernel thinks is going on. Do you mind trying it out and letting us
->>>> know what gets printed out? You'll need to make sure
->>>> CONFIG_NFS_V4_2_READ_PLUS is enabled when compiling the kernel.
->>>
->>> The patch does not apply. I tried: v6.4-rc1, v6.4-rc5, next-20230609.
->>
->> Can you try the attached patch on top of my 3-patch series from the
->> other day, and let me know what gets printed out? It adds a bunch of
->> printk()s at strategic points to print out what is going on with the
->> xdr scratch buffer since it's suddenly a bad memory address after
->> working for a bit on your machine.
->>
+On 2023-06-15 03:24 AM, Linux regression tracking (Thorsten Leemhuis) wrote:
+>
+...
+> https://bugzilla.kernel.org/show_bug.cgi?id=217412
 > 
-> Here you have entire log - attached (113 kB, I hope goes past mailing
-> lists/spam filters).
+> --- Comment #47 from Mark Blakeney ---
+> @Juha, kernel 6.3.7 adds the 2 patches intended to fix this bug and the
+> startup delay is now gone. However, I have had 2 cases over the last 5
+> days in which I have been running 6.3.7 where my mouse fails to be
+> detected at all after startup. I have to pull the Logitech receiver
+> out/in to get the mouse working. Never seen this issue before so I
+> suspect the patches are not right.
+> ```
 
-As expected this bounced from the mailing lists, but I hope you got it.
-If not, let me know.
+I too have had that happen with recent kernels, but have not yet put
+a finger to a specific version or cause.
 
-Best regards,
-Krzysztof
+Just toggling the power button on the wireless mouse is enough for
+it to "re-appear".
 
+The 5.4.xx kernels never had this issue.  I went straight from those
+to the 6.3.xx ones, where it does happen sometimes, both with and without
+the recent "delay" fixes.
+-- 
+Mark Lord
