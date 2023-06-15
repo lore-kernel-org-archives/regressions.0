@@ -1,358 +1,122 @@
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60331EAD6
-	for <regressions@lists.linux.dev>; Thu, 15 Jun 2023 18:28:17 +0000 (UTC)
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2b1acd41ad2so32933041fa.3
-        for <regressions@lists.linux.dev>; Thu, 15 Jun 2023 11:28:17 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 332C429B4
+	for <regressions@lists.linux.dev>; Thu, 15 Jun 2023 18:36:00 +0000 (UTC)
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-3f7f7dfc037so16705e9.0
+        for <regressions@lists.linux.dev>; Thu, 15 Jun 2023 11:36:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686853695; x=1689445695;
+        d=google.com; s=20221208; t=1686854159; x=1689446159;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=FuEo+qN9UsmOC5gS6dz6Bus0OXg/D1nOA7fnGrCQFxU=;
-        b=e2AEkMFU5EMeu0PWF5LA4/JaA7BHaGXeH0g8jxR80RmRqD/z/Emzd8QlNEgMuoG2t+
-         RRmvO8buQNK07+GwqATRcJ92DiD6PMdCNryfdyLIDKDP4egffgHpKGMqrR7qtnL7FFhG
-         Nb3MwXdQHkHfXJUlNELTEfgmdI2fbALPCDg3PByJwxfHQob6TML0OcMKinE/Dx8CiT39
-         iIf+ZUL0ie7g1e9JXOFFLYZSKHOOPV5qXMjTc25VlqDsgtge/1X4W2AYyij5cDs9xbOF
-         GeN9t2NGZkaagTO4JBQj7oUVFBncOpX6Aw4bAYn26ivsZQThzPPNtoxjB7Cd8I0Pz77i
-         kM6Q==
+        bh=/omKCOwcp2EQQ6DXjBeRhC2FJTA991mg7uA9FudSf/A=;
+        b=7WdakyK4oshrb7I5mdAEawHE0gqSwfLUnysc+u81KTB9OE/I+XGjBLzBBp3ij1Rroi
+         p+5EBevPxH87tpo3p3ieW1oj0qbl3XssFNbWV8YRR1BVb1DePQYjtvaKoPZXBGi/AwCV
+         ykyKgG90f8VITucN+MA3Hre7wb28C1mpX2VXgUjdWwKmK4RsaEBv7adwXOV4dOUDZjNQ
+         g7XDBzFN9y+PwMvzc35xpRyystMw8iseLKE9SuXRwRhPgM+LTT2jq/oTyyz8f6P0mJiS
+         euovvm+o/bp6aOraSWwOXY4j20rWBPjWLMdzrVgGv2LUVLQylboa8sPwWcZr5/ktJiXg
+         dhTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686853695; x=1689445695;
+        d=1e100.net; s=20221208; t=1686854159; x=1689446159;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=FuEo+qN9UsmOC5gS6dz6Bus0OXg/D1nOA7fnGrCQFxU=;
-        b=cWFzj9g0NYenVPPSkANtkiQB3vMOV2duJ6iDXTGayXNPpJYkKgqFF6gtq4eYSRNel3
-         F3mB3XVgQtKIoGbrUnjtPsKVmZrSUsshtNuZNJFTqi91LzknmDzyXMK/52VVqXhS3bR5
-         X+3c+vwJyFrurZcNH+boK10LjQtoiemO8JWMT6m3yUmvkX1vn0+2BHLgAvVaHWFwTvfn
-         LTtz/dvTEz7cwNQtBstshM2B9DK25CGYnTb1rzOOCtL25fcGP50Sx/12S4di90XZi+ui
-         GP9h2Ev32zAagvsVS5rT6JSuX8i3X55LND84iZTVbD0bxqE59gFV9Ltsplg2oDqsx8K8
-         SS1w==
-X-Gm-Message-State: AC+VfDzBjqZ2QX+Zs2GodyXGIHyenuQOrCMeXep00yob0r7Ru52GSFZS
-	8i9AJeFoykQMwd1EQZROM1vFvNiILtoX+ydfxWM=
-X-Google-Smtp-Source: ACHHUZ6WIPwbohXw73rLDIib8t/IhYKMwXswMHLd0CbzOA1qi8zWI5W3mwWVALXFUQd1Bn0evzGqGjHydyaWbeFTqmQ=
-X-Received: by 2002:a2e:980a:0:b0:2b1:c111:6c29 with SMTP id
- a10-20020a2e980a000000b002b1c1116c29mr168284ljj.32.1686853694922; Thu, 15 Jun
- 2023 11:28:14 -0700 (PDT)
+        bh=/omKCOwcp2EQQ6DXjBeRhC2FJTA991mg7uA9FudSf/A=;
+        b=R2N50ecU4bV1yDH7NEzp0C563zeDiBHK3x85rNfFO7kHj51hn5bquekcHPHuJiGKWF
+         blsINizHGl3BkOR0xnWmKvtr0jmINDTQXbgeMJDTjNy3/8iWsKFYQw7hx9JD/NcBANL0
+         DLkSTl/j0C1yXO+2BFQzcHnCkpfH8YDkDkZvg9Je9PWk60DQBB/hjXbPC6ws/+PAFRGD
+         AkmiwwpyiHRqXQj2pSfTl2WOb3DtafrcuQri/x8p2jMj9enp559wx7NS8UPdH7B8GEks
+         vBqCslpx+CsnyZlig9zyO58l+3atdQwZeAUGhR1plQ9OJFIgQl288upMl9EyFPve6sg/
+         5DcA==
+X-Gm-Message-State: AC+VfDw33aPL3DtmfVeAVyLfW/EO4duBh8ROKqp45KAh27DSw80YjuOX
+	VQ3HZ9mHpO62ksrVZYkfimILyCCsmpCq9JUaXIpP
+X-Google-Smtp-Source: ACHHUZ79usijn1wldJc0UmWEzOBq8i+jS57yOqXyNMWUbtJum/djNxOiWYDRtdkAS1PE7qMfthc7LVkEy7WkdFS9y7M=
+X-Received: by 2002:a05:600c:4e52:b0:3f7:e4d8:2569 with SMTP id
+ e18-20020a05600c4e5200b003f7e4d82569mr224049wmq.5.1686854159080; Thu, 15 Jun
+ 2023 11:35:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20220727135834.294184-1-brian.gix@intel.com> <20220727135834.294184-3-brian.gix@intel.com>
- <578e6d7afd676129decafba846a933f5@agner.ch> <CABBYNZJGKfwTQM8WAdUGXueTPnFyus1a65UO5mg2g4PXVuCnpA@mail.gmail.com>
-In-Reply-To: <CABBYNZJGKfwTQM8WAdUGXueTPnFyus1a65UO5mg2g4PXVuCnpA@mail.gmail.com>
-From: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Date: Thu, 15 Jun 2023 11:28:02 -0700
-Message-ID: <CABBYNZLgG+zTsk-6ceqzLXXyVRnN6p-m8sFq9Ss7mveD0f9BsQ@mail.gmail.com>
-Subject: Re: [PATCH v4 2/4] Bluetooth: Rework le_scan_restart for hci_sync
-To: Stefan Agner <stefan@agner.ch>, Brian Gix <brian.gix@gmail.com>
-Cc: Brian Gix <brian.gix@intel.com>, linux-bluetooth@vger.kernel.org, 
-	marcel@holtmann.org, Regressions <regressions@lists.linux.dev>, 
-	=?UTF-8?B?SmFuIMSMZXJtw6Fr?= <sairon@sairon.cz>
+References: <CAJc0_fwx6MQa+Uozk+PJB0qb3JP5=9_WcCjOb8qa34u=DVbDmQ@mail.gmail.com>
+ <2023061453-guacamole-porous-8a0e@gregkh> <CAADnVQLuHTNPEuXpSUgkNHoK1-X8KxU=spdYWB2bMp6icS+j0g@mail.gmail.com>
+In-Reply-To: <CAADnVQLuHTNPEuXpSUgkNHoK1-X8KxU=spdYWB2bMp6icS+j0g@mail.gmail.com>
+From: Robert Kolchmeyer <rkolchmeyer@google.com>
+Date: Thu, 15 Jun 2023 11:35:46 -0700
+Message-ID: <CAJc0_fwKZS2=9DfaNSNF7-UBsXTEaopNFXdK3i57KcxUm5rOvA@mail.gmail.com>
+Subject: Re: BPF regression in 5.10.168 and 5.15.93 impacting Cilium
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Greg KH <gregkh@linuxfoundation.org>, stable <stable@vger.kernel.org>, 
+	regressions@lists.linux.dev, Martin KaFai Lau <kafai@fb.com>, 
+	Alexei Starovoitov <ast@kernel.org>, Sasha Levin <sashal@kernel.org>, Paul Chaignon <paul@isovalent.com>, 
+	Meena Shanmugam <meenashanmugam@google.com>, Daniel Borkmann <daniel@iogearbox.net>, 
+	bpf <bpf@vger.kernel.org>, Andrii Nakryiko <andrii@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-+Brian Gix
-
-On Thu, Jun 15, 2023 at 10:27=E2=80=AFAM Luiz Augusto von Dentz
-<luiz.dentz@gmail.com> wrote:
+On Wed, Jun 14, 2023 at 2:48=E2=80=AFPM Alexei Starovoitov
+<alexei.starovoitov@gmail.com> wrote:
 >
-> Hi Stefan,
+> On Wed, Jun 14, 2023 at 1:57=E2=80=AFPM Greg KH <gregkh@linuxfoundation.o=
+rg> wrote:
+> >
+> > On Wed, Jun 14, 2023 at 11:23:52AM -0700, Robert Kolchmeyer wrote:
+> > > Hi all,
+> > >
+> > > I believe 5.10.168 and 5.15.93 introduced a regression that impacts
+> > > the Cilium project. Some information on the nature of the regression
+> > > is available at https://github.com/cilium/cilium/issues/25500. The
+> > > primary symptom seems to be the error `BPF program is too large.`
+> > >
+> > > My colleague has found that reverting the following two commits:
+> > >
+> > > 8de8c4a "bpf: Support <8-byte scalar spill and refill"
+> > > 9ff2beb "bpf: Fix incorrect state pruning for <8B spill/fill"
+> > >
+> > > resolves the regression.
+> > >
+> > > If we revert these in the stable tree, there may be a few changes tha=
+t
+> > > depend on those that also need to be reverted, but I'm not sure yet.
+> > >
+> > > Would it make sense to revert these changes (and any dependent ones)
+> > > in the 5.10 and 5.15 trees? If anyone has other ideas, I can help tes=
+t
+> > > possible solutions.
+> >
+> > Can you actually test if those reverts work properly for you and if
+> > there are other dependencies involved?
+> >
+> > And is this issue also in 6.1.y and Linus's tree?  If not, why not, are
+> > we just missing a commit?  We can't revert something from a stable
+> > release if you are going to hit the same issue when moving to a new
+> > release, right?
+> >
+> > thanks,
+> >
+> > greg k-h
 >
-> On Thu, Jun 15, 2023 at 5:06=E2=80=AFAM Stefan Agner <stefan@agner.ch> wr=
-ote:
-> >
-> > Hi Brian, hi all,
-> >
-> > We experienced quite some Bluetooth issues after moving from Linux 5.15
-> > to 6.1 on Home Assistant OS, especially on Intel NUC type systems (whic=
-h
-> > is a popular choice in our community, so it might just be that). When
-> > continuously scanning/listening for BLE packets, the packet flow
-> > suddenly ends. Depending on which and how many devices (possibly also
-> > other factors) within minutes or hours.
-> >
-> > Jan (in cc) was able to bisect the issue, and was able to pinpoint the
-> > problem to this change.
-> >
-> > Meanwhile I was able to confirm, that reverting this single commit on
-> > the latest 6.1.34 seems to resolve the issue.
-> >
-> > I've reviewed the change and surrounding code, and one thing I've
-> > noticed is that the if statement to set cp.filter_dup in
-> > hci_le_set_ext_scan_enable_sync and hci_le_set_scan_enable_sync are
-> > different. Not sure if that needs to be the way it is, but my outside
-> > gut feeling says hci_le_set_ext_scan_enable_sync should use "if (val &&
-> > hci_dev_test_flag(hdev, HCI_MESH))" as well.
-> >
-> > However, that did not fix the problem (but maybe it is wrong
-> > nonetheless?).
-> >
-> > Anyone has an idea what could be the problem here?
+> Before jumping to reverts..
+> how is it fixed in 6.0+ kernels?
 >
-> Are there any logs of the problem? Does any HCI command fails or
-> anything so that we can track down what could be wrong?
+> "BPF program is too large" can probably be worked around on the cilium si=
+de.
+> The kernel cannot guarantee that a particular program will
+> always be verifiable. We find safety bugs in the verifier and often
+> enough the fixes to such issues make the verifier work harder to prove
+> the safety of the program.
+> This is one of such cases. These two commits are necessary.
+> Reverting them will prevent loading of valid programs.
+> So reverts is a dangerous path.
+> The best is to identify the other patches from 6.0+ and backport them.
+> The second best path is to bump 1M limit to something higher to
+> mitigate "more work by the verifier".
 
-@Brian Gix perhaps you have a better idea what is going wrong here?
+Thanks all for the pointers, this is super helpful.
 
-> > --
-> > Stefan
-> >
-> > On 2022-07-27 15:58, Brian Gix wrote:
-> > > le_scan_restart delayed work queue was running as a deprecated
-> > > hci_request instead of on the newer thread-safe hci_sync mechanism.
-> > >
-> > > Signed-off-by: Brian Gix <brian.gix@intel.com>
-> > > ---
-> > >  net/bluetooth/hci_request.c | 89 -----------------------------------=
---
-> > >  net/bluetooth/hci_sync.c    | 75 +++++++++++++++++++++++++++++++
-> > >  2 files changed, 75 insertions(+), 89 deletions(-)
-> > >
-> > > diff --git a/net/bluetooth/hci_request.c b/net/bluetooth/hci_request.=
-c
-> > > index 32fefaa0d3ca..114af7350363 100644
-> > > --- a/net/bluetooth/hci_request.c
-> > > +++ b/net/bluetooth/hci_request.c
-> > > @@ -1975,92 +1975,6 @@ int hci_abort_conn(struct hci_conn *conn, u8 r=
-eason)
-> > >       return 0;
-> > >  }
-> > >
-> > > -static int le_scan_restart(struct hci_request *req, unsigned long op=
-t)
-> > > -{
-> > > -     struct hci_dev *hdev =3D req->hdev;
-> > > -
-> > > -     /* If controller is not scanning we are done. */
-> > > -     if (!hci_dev_test_flag(hdev, HCI_LE_SCAN))
-> > > -             return 0;
-> > > -
-> > > -     if (hdev->scanning_paused) {
-> > > -             bt_dev_dbg(hdev, "Scanning is paused for suspend");
-> > > -             return 0;
-> > > -     }
-> > > -
-> > > -     hci_req_add_le_scan_disable(req, false);
-> > > -
-> > > -     if (use_ext_scan(hdev)) {
-> > > -             struct hci_cp_le_set_ext_scan_enable ext_enable_cp;
-> > > -
-> > > -             memset(&ext_enable_cp, 0, sizeof(ext_enable_cp));
-> > > -             ext_enable_cp.enable =3D LE_SCAN_ENABLE;
-> > > -             ext_enable_cp.filter_dup =3D LE_SCAN_FILTER_DUP_ENABLE;
-> > > -
-> > > -             hci_req_add(req, HCI_OP_LE_SET_EXT_SCAN_ENABLE,
-> > > -                         sizeof(ext_enable_cp), &ext_enable_cp);
-> > > -     } else {
-> > > -             struct hci_cp_le_set_scan_enable cp;
-> > > -
-> > > -             memset(&cp, 0, sizeof(cp));
-> > > -             cp.enable =3D LE_SCAN_ENABLE;
-> > > -             cp.filter_dup =3D LE_SCAN_FILTER_DUP_ENABLE;
-> > > -             hci_req_add(req, HCI_OP_LE_SET_SCAN_ENABLE, sizeof(cp),=
- &cp);
-> > > -     }
-> > > -
-> > > -     return 0;
-> > > -}
-> > > -
-> > > -static void le_scan_restart_work(struct work_struct *work)
-> > > -{
-> > > -     struct hci_dev *hdev =3D container_of(work, struct hci_dev,
-> > > -                                         le_scan_restart.work);
-> > > -     unsigned long timeout, duration, scan_start, now;
-> > > -     u8 status;
-> > > -
-> > > -     bt_dev_dbg(hdev, "");
-> > > -
-> > > -     hci_req_sync(hdev, le_scan_restart, 0, HCI_CMD_TIMEOUT, &status=
-);
-> > > -     if (status) {
-> > > -             bt_dev_err(hdev, "failed to restart LE scan: status %d"=
-,
-> > > -                        status);
-> > > -             return;
-> > > -     }
-> > > -
-> > > -     hci_dev_lock(hdev);
-> > > -
-> > > -     if (!test_bit(HCI_QUIRK_STRICT_DUPLICATE_FILTER, &hdev->quirks)=
- ||
-> > > -         !hdev->discovery.scan_start)
-> > > -             goto unlock;
-> > > -
-> > > -     /* When the scan was started, hdev->le_scan_disable has been qu=
-eued
-> > > -      * after duration from scan_start. During scan restart this job
-> > > -      * has been canceled, and we need to queue it again after prope=
-r
-> > > -      * timeout, to make sure that scan does not run indefinitely.
-> > > -      */
-> > > -     duration =3D hdev->discovery.scan_duration;
-> > > -     scan_start =3D hdev->discovery.scan_start;
-> > > -     now =3D jiffies;
-> > > -     if (now - scan_start <=3D duration) {
-> > > -             int elapsed;
-> > > -
-> > > -             if (now >=3D scan_start)
-> > > -                     elapsed =3D now - scan_start;
-> > > -             else
-> > > -                     elapsed =3D ULONG_MAX - scan_start + now;
-> > > -
-> > > -             timeout =3D duration - elapsed;
-> > > -     } else {
-> > > -             timeout =3D 0;
-> > > -     }
-> > > -
-> > > -     queue_delayed_work(hdev->req_workqueue,
-> > > -                        &hdev->le_scan_disable, timeout);
-> > > -
-> > > -unlock:
-> > > -     hci_dev_unlock(hdev);
-> > > -}
-> > > -
-> > >  bool hci_req_stop_discovery(struct hci_request *req)
-> > >  {
-> > >       struct hci_dev *hdev =3D req->hdev;
-> > > @@ -2158,7 +2072,6 @@ int hci_req_configure_datapath(struct hci_dev
-> > > *hdev, struct bt_codec *codec)
-> > >
-> > >  void hci_request_setup(struct hci_dev *hdev)
-> > >  {
-> > > -     INIT_DELAYED_WORK(&hdev->le_scan_restart, le_scan_restart_work)=
-;
-> > >       INIT_DELAYED_WORK(&hdev->adv_instance_expire, adv_timeout_expir=
-e);
-> > >       INIT_DELAYED_WORK(&hdev->interleave_scan, interleave_scan_work)=
-;
-> > >  }
-> > > @@ -2167,8 +2080,6 @@ void hci_request_cancel_all(struct hci_dev *hde=
-v)
-> > >  {
-> > >       __hci_cmd_sync_cancel(hdev, ENODEV);
-> > >
-> > > -     cancel_delayed_work_sync(&hdev->le_scan_restart);
-> > > -
-> > >       if (hdev->adv_instance_timeout) {
-> > >               cancel_delayed_work_sync(&hdev->adv_instance_expire);
-> > >               hdev->adv_instance_timeout =3D 0;
-> > > diff --git a/net/bluetooth/hci_sync.c b/net/bluetooth/hci_sync.c
-> > > index 7dae2ee1bb82..19d57ec0feb8 100644
-> > > --- a/net/bluetooth/hci_sync.c
-> > > +++ b/net/bluetooth/hci_sync.c
-> > > @@ -392,6 +392,79 @@ static void le_scan_disable(struct work_struct *=
-work)
-> > >       hci_dev_unlock(hdev);
-> > >  }
-> > >
-> > > +static int hci_le_set_scan_enable_sync(struct hci_dev *hdev, u8 val,
-> > > +                                    u8 filter_dup);
-> > > +static int hci_le_scan_restart_sync(struct hci_dev *hdev)
-> > > +{
-> > > +     /* If controller is not scanning we are done. */
-> > > +     if (!hci_dev_test_flag(hdev, HCI_LE_SCAN))
-> > > +             return 0;
-> > > +
-> > > +     if (hdev->scanning_paused) {
-> > > +             bt_dev_dbg(hdev, "Scanning is paused for suspend");
-> > > +             return 0;
-> > > +     }
-> > > +
-> > > +     hci_le_set_scan_enable_sync(hdev, LE_SCAN_DISABLE, 0x00);
-> > > +     return hci_le_set_scan_enable_sync(hdev, LE_SCAN_ENABLE,
-> > > +                                        LE_SCAN_FILTER_DUP_ENABLE);
-> > > +}
-> > > +
-> > > +static int le_scan_restart_sync(struct hci_dev *hdev, void *data)
-> > > +{
-> > > +     return hci_le_scan_restart_sync(hdev);
-> > > +}
-> > > +
-> > > +static void le_scan_restart(struct work_struct *work)
-> > > +{
-> > > +     struct hci_dev *hdev =3D container_of(work, struct hci_dev,
-> > > +                                         le_scan_restart.work);
-> > > +     unsigned long timeout, duration, scan_start, now;
-> > > +     int status;
-> > > +
-> > > +     bt_dev_dbg(hdev, "");
-> > > +
-> > > +     hci_dev_lock(hdev);
-> > > +
-> > > +     status =3D hci_cmd_sync_queue(hdev, le_scan_restart_sync, NULL,=
- NULL);
-> > > +     if (status) {
-> > > +             bt_dev_err(hdev, "failed to restart LE scan: status %d"=
-,
-> > > +                        status);
-> > > +             goto unlock;
-> > > +     }
-> > > +
-> > > +     if (!test_bit(HCI_QUIRK_STRICT_DUPLICATE_FILTER, &hdev->quirks)=
- ||
-> > > +         !hdev->discovery.scan_start)
-> > > +             goto unlock;
-> > > +
-> > > +     /* When the scan was started, hdev->le_scan_disable has been qu=
-eued
-> > > +      * after duration from scan_start. During scan restart this job
-> > > +      * has been canceled, and we need to queue it again after prope=
-r
-> > > +      * timeout, to make sure that scan does not run indefinitely.
-> > > +      */
-> > > +     duration =3D hdev->discovery.scan_duration;
-> > > +     scan_start =3D hdev->discovery.scan_start;
-> > > +     now =3D jiffies;
-> > > +     if (now - scan_start <=3D duration) {
-> > > +             int elapsed;
-> > > +
-> > > +             if (now >=3D scan_start)
-> > > +                     elapsed =3D now - scan_start;
-> > > +             else
-> > > +                     elapsed =3D ULONG_MAX - scan_start + now;
-> > > +
-> > > +             timeout =3D duration - elapsed;
-> > > +     } else {
-> > > +             timeout =3D 0;
-> > > +     }
-> > > +
-> > > +     queue_delayed_work(hdev->req_workqueue,
-> > > +                        &hdev->le_scan_disable, timeout);
-> > > +
-> > > +unlock:
-> > > +     hci_dev_unlock(hdev);
-> > > +}
-> > > +
-> > >  void hci_cmd_sync_init(struct hci_dev *hdev)
-> > >  {
-> > >       INIT_WORK(&hdev->cmd_sync_work, hci_cmd_sync_work);
-> > > @@ -400,6 +473,7 @@ void hci_cmd_sync_init(struct hci_dev *hdev)
-> > >
-> > >       INIT_WORK(&hdev->cmd_sync_cancel_work, hci_cmd_sync_cancel_work=
-);
-> > >       INIT_DELAYED_WORK(&hdev->le_scan_disable, le_scan_disable);
-> > > +     INIT_DELAYED_WORK(&hdev->le_scan_restart, le_scan_restart);
-> > >  }
-> > >
-> > >  void hci_cmd_sync_clear(struct hci_dev *hdev)
-> > > @@ -4488,6 +4562,7 @@ int hci_dev_close_sync(struct hci_dev *hdev)
-> > >       cancel_delayed_work(&hdev->power_off);
-> > >       cancel_delayed_work(&hdev->ncmd_timer);
-> > >       cancel_delayed_work(&hdev->le_scan_disable);
-> > > +     cancel_delayed_work(&hdev->le_scan_restart);
-> > >
-> > >       hci_request_cancel_all(hdev);
->
->
->
-> --
-> Luiz Augusto von Dentz
+I'm working on getting more details, and I'll post here when I have them.
 
-
-
---=20
-Luiz Augusto von Dentz
+-Robert
