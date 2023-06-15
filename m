@@ -1,120 +1,103 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A759AF515
-	for <regressions@lists.linux.dev>; Thu, 15 Jun 2023 20:06:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
- s=s31663417; t=1686859594; x=1687464394; i=georgmueller@gmx.net;
- bh=SF7krEugBcbEaty+ms7t8FwsytmGbU50M+05W/OeTBE=;
- h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
- b=qA0MsTm+jGrZa0eDpOEaQ5qIb4acTUPAzVBpRm9WzolE+XPtZhOKs2cgRs8rUXT8EwTULWc
- 6fbtIKZLRhVL3Xn28/QtVM+omdTsy7NQDSREvxlzdJXQUIfkouZNUWPjJI35Uppl14u6thyc9
- w4mJHh3V/UnO4M5XQpW8d/sXD/w3vUkQRZev7NwzRHrX1DUohzEGLRbB9E0DDwqeDNSTPgiRx
- gLQiGmJrL/24qDfWgV4RcY4ay6NrINXMTm+6Qvm3GUH+FW7s4ZI9LH7yBEPD1PPsasYSG0gVD
- j/4rssY2ZKhr/+9zTsurF2qHOw9YiIr8kGa1501nugt0UBTYiu+Q==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from nb-georg.home ([109.104.48.14]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MZktZ-1qery11niJ-00WpM1; Thu, 15
- Jun 2023 22:06:34 +0200
-From: =?UTF-8?q?Georg=20M=C3=BCller?= <georgmueller@gmx.net>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: =?UTF-8?q?Georg=20M=C3=BCller?= <georgmueller@gmx.net>,
-	regressions@lists.linux.dev,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] perf probe: read DWARF files from the correct CU
-Date: Thu, 15 Jun 2023 22:01:37 +0200
-Message-ID: <20230615200147.664346-3-georgmueller@gmx.net>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <5a00d5a5-7be7-ef8a-4044-9a16249fff25@gmx.net>
-References: 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33D95FBE6
+	for <regressions@lists.linux.dev>; Thu, 15 Jun 2023 20:09:05 +0000 (UTC)
+Received: by mail-il1-f170.google.com with SMTP id e9e14a558f8ab-340af1a98e2so8757285ab.2
+        for <regressions@lists.linux.dev>; Thu, 15 Jun 2023 13:09:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686859744; x=1689451744;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=aTfjaS0IPEiXuHhWcjsCm7WS5mqkvAN6gaYW2Bcvzz4=;
+        b=h+xq5Xp+3UTM6suN8+Qq+KZtW+bU2h+APHxtAHxpLNK4Tup1k4d5Rc+y3KOm9vyQ8u
+         eArBn+xGv54hcoPy4hCK4pJXfEQRuZn1j5GZCyrrQN+V+6+jxccLFKW2hCORtsNbK9eV
+         JHjK0v5mPjGr86qI2H1ehB/CZEDhTbCgrJaiRaFibKDS2sAzdptiZatPCB3zQ6AT9P/m
+         Vhc1enraB5xKPAOBTdTHFRcCs07gbVf2BcOTofbqSc4RNzQY8f0MREDVmyA0SbY65eA8
+         jmBjziOt+cWCJCPtwrsHthz+jFwu0oWwdvmM0Y4vVBpZRhAZBmwxOoV1eq6ydmnT/hr7
+         evBQ==
+X-Gm-Message-State: AC+VfDyb4HF6VSYqiey48O273vqNprm6SgE+JNjeLsPWT/ckNYIur09P
+	1Rh2pr7XCHn//PSO91aapQ==
+X-Google-Smtp-Source: ACHHUZ79LfJp9RkPNTpyZJ5OtyEoIgIYPICSHb+vRi8hTHwBhSpMqkvv/DethS+ipksLPiMZ71fxMQ==
+X-Received: by 2002:a92:d3c3:0:b0:340:6984:cc6f with SMTP id c3-20020a92d3c3000000b003406984cc6fmr478157ilh.3.1686859744059;
+        Thu, 15 Jun 2023 13:09:04 -0700 (PDT)
+Received: from robh_at_kernel.org ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id g24-20020a056638061800b004166c24e30dsm5685797jar.32.2023.06.15.13.09.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 Jun 2023 13:09:03 -0700 (PDT)
+Received: (nullmailer pid 1586553 invoked by uid 1000);
+	Thu, 15 Jun 2023 20:09:01 -0000
+Date: Thu, 15 Jun 2023 14:09:01 -0600
+From: Rob Herring <robh@kernel.org>
+To: Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>
+Cc: Thomas Zimmermann <tzimmermann@suse.de>, Linux regressions mailing list <regressions@lists.linux.dev>, Salvatore Bonaccorso <carnil@debian.org>, Cyril Brulebois <cyril@debamax.com>, linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, stable@vger.kernel.org
+Subject: Re: [PATCH 1/2] fbdev/offb: Update expected device name
+Message-ID: <20230615200901.GA1572644-robh@kernel.org>
+References: <20230412095509.2196162-1-cyril@debamax.com>
+ <20230412095509.2196162-2-cyril@debamax.com>
+ <ZDvrY7X9mpJ7WZ3z@eldamar.lan>
+ <11b342dc-1a46-d1be-5fdd-c6eee661e15a@leemhuis.info>
+ <fe3b90b0-b52f-9677-0245-a201975c3e0c@suse.de>
+ <20230615132107.GA9196@kitsune.suse.cz>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:qr7vePAVHWLbBcxjvp+SEeQGn7f3KAGrgNQCrHKaN0cRxabhpm0
- y2kIA+nrDbuHzg/PW3dnJvQPbGIZgQgMv3Pr1Sa3c70hSLMaVyWdEJ3eWULNtuOIndn4tS5
- h/gEPNdr75YLYKicEuwW7Cm5+sw1IFTxLDJ7u0MFmhh/7k+iDsTdQ//VsVxoi0S0Ku4jXBO
- 4/sOMZFF+0nZq85crWRjw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:QjZSc8JTKTA=;S5arEdPf+pvu6Wm9xZTj45kLxqT
- XIjUARnXit25nPRwDnkttjxXN8GGpSaD8QXcdImjtiROA++E14qlQVSDLQC7mk1fIZStz18vF
- 0U2PoYQq3LXIvfOPzFeLgoXesjC/XJWTyZkX2yabnHT627Z09bB5lHoq2ObVcAHuLN1zaRhbj
- Z3zQi/7cMgJVWvI/9EXQo6iWWm9ymbpMm012420w3PVjmC78lz71dc/iL0AdZ3dLR9R7vb2Sd
- TBfUiVxRqzKSlqCKyUMyPZ/vmDRpmdOKUSOtKV838kaFttgVk+M9kifqjwb3UsUWZcyPyvxTp
- QODCJ6m3U9RsVooI8NK8s6VVOcep+rdbQkc/LYS3HmbQpe6txupNPkW9Ujn33Y7nXoHFTV8su
- RaHhXCAKdl8XQUw+n08rhr7Ror5EDuyuU5PX7dlZWACtZO/U6BUbYdvibMxUyuqifJ96ZiGpL
- 2MsqZGXELthkXWjvtLU2ydL15PbLCxkO7g4TfEciyLPjVLVONf/dCj6gJqj9HDwjRTniyshjw
- aoIxt+HIOesAYwN/biU3X4jtYcfy23QzixdprME+LN5GFewJxtu6jOGDMHO+3qoSUoPNYAhm7
- d8vOeub71g1gTAVstfFFnt0QUWFSY5tzpRecQxRfBt68GGHjNN14dvdIOXjh5IG02qEdAYTEH
- fcgNsGmW0+LLrTYK6SfKKwvl4SyL3ZqWUTN59n6gAIPMPSIHCtKlbPsOBJtqv3dtrkTqKQ/S5
- J3+0D9tTX/iNAtBtrc1T3Vt4vhUhxn/NVtQ20rHZ4Rbv8t3gd2zIBppVlEuF8fAte7xPiXN/7
- hYNVoxtUOLlE2ywQe8/bRtHZKVaxlc0wQsEj+m+HlTLglxDe5Z4pFLVFSuhnfrqYhtnx5yIUT
- HzkzhOQVIXoUGJ9IE6DU/skarnzTkWJQHbNgTeqqzq+fznrHB04EMcj6wrL5W6G23k/N8ttyZ
- /rh/wA==
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230615132107.GA9196@kitsune.suse.cz>
 
-After switching from dwarf_decl_file() to die_get_decl_file(), it is not
-possible to add probes for certain functions of certain binaries:
+On Thu, Jun 15, 2023 at 03:21:07PM +0200, Michal Suchánek wrote:
+> Hello,
+> 
+> On Thu, Jun 15, 2023 at 03:06:28PM +0200, Thomas Zimmermann wrote:
+> > Hi
+> > 
+> > Am 15.06.23 um 15:03 schrieb Linux regression tracking (Thorsten Leemhuis):
+> > > On 16.04.23 14:34, Salvatore Bonaccorso wrote:
+> > > > 
+> > > > On Wed, Apr 12, 2023 at 11:55:08AM +0200, Cyril Brulebois wrote:
+> > > > > Since commit 241d2fb56a18 ("of: Make OF framebuffer device names unique"),
+> > > > > as spotted by Frédéric Bonnard, the historical "of-display" device is
+> > > > > gone: the updated logic creates "of-display.0" instead, then as many
+> > > > > "of-display.N" as required.
+> > > > > 
+> > > > > This means that offb no longer finds the expected device, which prevents
+> > > > > the Debian Installer from setting up its interface, at least on ppc64el.
+> > > > > 
+> > > > > It might be better to iterate on all possible nodes, but updating the
+> > > > > hardcoded device from "of-display" to "of-display.0" is confirmed to fix
+> > > > > the Debian Installer at the very least.
+> 
+> At the time this was proposed it was said that "of-display", is wrong,
+> and that "of-display.0" must be used for the first device instead, and
+> if something breaks an alias can be provided.
+> 
+> So how does one provide an alias so that offb can find "of-display.0" as
+> "of-display"?
 
- $ perf probe -x /usr/lib/systemd/systemd-logind match_unit_removed
- A function DIE doesn't have decl_line. Maybe broken DWARF?
- A function DIE doesn't have decl_line. Maybe broken DWARF?
- Probe point 'match_unit_removed' not found.
-    Error: Failed to add events.
+I'm not aware of any way. There isn't because device names and paths are 
+not considered ABI. There are mechanisms for getting stable class device 
+indices (e.g. i2c0, mmcblk0, fb0, fb1, etc.) though not implemented for 
+fbN (and please don't add it). 
 
-The problem is that die_get_decl_file() uses the wrong CU to search for
-the file. elfutils commit e1db5cdc9f has some good explanation for this:
+In any case, this should be an easy fix. Though if "linux,opened" or 
+"linux,boot-display" is not set, then you'd still get "of-display.0":
 
-    dwarf_decl_file uses dwarf_attr_integrate to get the DW_AT_decl_file
-    attribute. This means the attribute might come from a different DIE
-    in a different CU. If so, we need to use the CU associated with the
-    attribute, not the original DIE, to resolve the file name.
-
-This patch uses the same source of information as elfutils: use attribute
-DW_AT_decl_file and use this CU to search for the file.
-
-Fixes: dc9a5d2ccd5c ("perf probe: Fix to get declared file name from clang=
- DWARF5")
-Signed-off-by: Georg M=C3=BCller <georgmueller@gmx.net>
-Link: https://lore.kernel.org/r/5a00d5a5-7be7-ef8a-4044-9a16249fff25@gmx.n=
-et/
-=2D--
- tools/perf/util/dwarf-aux.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
-index b07414409771..137b3ed9897b 100644
-=2D-- a/tools/perf/util/dwarf-aux.c
-+++ b/tools/perf/util/dwarf-aux.c
-@@ -478,8 +478,10 @@ static const char *die_get_file_name(Dwarf_Die *dw_di=
-e, int idx)
- {
- 	Dwarf_Die cu_die;
- 	Dwarf_Files *files;
-+	Dwarf_Attribute attr_mem;
-
--	if (idx < 0 || !dwarf_diecu(dw_die, &cu_die, NULL, NULL) ||
-+	if (idx < 0 || !dwarf_attr_integrate(dw_die, DW_AT_decl_file, &attr_mem)=
- ||
-+	    !dwarf_cu_die(attr_mem.cu, &cu_die, NULL, NULL, NULL, NULL, NULL, NU=
-LL) ||
- 	    dwarf_getsrcfiles(&cu_die, &files, NULL) !=3D 0)
- 		return NULL;
-
-=2D-
-2.41.0
-
+diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+index 78ae84187449..e46482cef9c7 100644
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -553,7 +553,7 @@ static int __init of_platform_default_populate_init(void)
+                        if (!of_get_property(node, "linux,opened", NULL) ||
+                            !of_get_property(node, "linux,boot-display", NULL))
+                                continue;
+-                       dev = of_platform_device_create(node, "of-display.0", NULL);
++                       dev = of_platform_device_create(node, "of-display", NULL);
+                        of_node_put(node);
+                        if (WARN_ON(!dev))
+                                return -ENOMEM;
