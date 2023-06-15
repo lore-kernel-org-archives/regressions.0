@@ -1,130 +1,293 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from mail.kmu-office.ch (mail.kmu-office.ch [178.209.48.109])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5A0013AD6
-	for <regressions@lists.linux.dev>; Thu, 15 Jun 2023 12:04:14 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1q9lhx-0006fN-Ca; Thu, 15 Jun 2023 14:04:09 +0200
-Message-ID: <824b3be1-adad-7191-a670-dd6290b0f6c3@leemhuis.info>
-Date: Thu, 15 Jun 2023 14:04:08 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADDBA17FEC
+	for <regressions@lists.linux.dev>; Thu, 15 Jun 2023 12:14:48 +0000 (UTC)
+Received: from webmail.kmu-office.ch (unknown [IPv6:2a02:418:6a02::a3])
+	by mail.kmu-office.ch (Postfix) with ESMTPSA id DD5A05C937B;
+	Thu, 15 Jun 2023 14:06:04 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agner.ch; s=dkim;
+	t=1686830764;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=BuSOcacf6bipcG0yeVX/bAQE4aXDdf290GE8zEFgwto=;
+	b=kgVZENEAelhDiiUj9PQCLMUmsEc5WcUW/UL3QhwZP1+gii9CZhMJr1MVzmAHBnS7/3nKCd
+	A0BsUVejWFcgMMfN1CHPaqKEXPnaZxNE8THUtqwHJfBmpjUfvrxdDyvSAJdPeEpzyb03d6
+	rtZxmaBU+dRu5qvbjMLCeTT1/up/gO8=
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [6.4-rc6] Crash during a kexec operation
- (tpm_amd_is_rng_defective)
-Content-Language: en-US, de-DE
-To: Sachin Sant <sachinp@linux.ibm.com>,
- open list <linux-kernel@vger.kernel.org>
-Cc: jarkko@kernel.org, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <99B81401-DB46-49B9-B321-CF832B50CAC3@linux.ibm.com>
-From: "Linux regression tracking #adding (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <99B81401-DB46-49B9-B321-CF832B50CAC3@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8
+Date: Thu, 15 Jun 2023 14:06:04 +0200
+From: Stefan Agner <stefan@agner.ch>
+To: Brian Gix <brian.gix@intel.com>
+Cc: linux-bluetooth@vger.kernel.org, marcel@holtmann.org,
+ luiz.dentz@gmail.com, Regressions <regressions@lists.linux.dev>,
+ =?UTF-8?Q?Jan_=C4=8Cerm=C3=A1k?= <sairon@sairon.cz>
+Subject: Re: [PATCH v4 2/4] Bluetooth: Rework le_scan_restart for hci_sync
+In-Reply-To: <20220727135834.294184-3-brian.gix@intel.com>
+References: <20220727135834.294184-1-brian.gix@intel.com>
+ <20220727135834.294184-3-brian.gix@intel.com>
+Message-ID: <578e6d7afd676129decafba846a933f5@agner.ch>
+X-Sender: stefan@agner.ch
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1686830654;ea78fa58;
-X-HE-SMSGID: 1q9lhx-0006fN-Ca
 
-[CCing the regression list, as it should be in the loop for regressions:
-https://docs.kernel.org/admin-guide/reporting-regressions.html]
+Hi Brian, hi all,
 
-[TLDR: I'm adding this report to the list of tracked Linux kernel
-regressions; the text you find below is based on a few templates
-paragraphs you might have encountered already in similar form.
-See link in footer if these mails annoy you.]
+We experienced quite some Bluetooth issues after moving from Linux 5.15
+to 6.1 on Home Assistant OS, especially on Intel NUC type systems (which
+is a popular choice in our community, so it might just be that). When
+continuously scanning/listening for BLE packets, the packet flow
+suddenly ends. Depending on which and how many devices (possibly also
+other factors) within minutes or hours.
 
-On 14.06.23 17:12, Sachin Sant wrote:
-> Following crash is observed during a kexec operation on 
-> IBM Power10 server:
-> 
-> [ 34.381548] Kernel attempted to read user page (50) - exploit attempt? (uid: 0)
-> [ 34.381562] BUG: Kernel NULL pointer dereference on read at 0x00000050
-> [ 34.381565] Faulting instruction address: 0xc0000000009db1e4
-> [ 34.381569] Oops: Kernel access of bad area, sig: 11 [#1]
-> [ 34.381572] LE PAGE_SIZE=64K MMU=Radix SMP NR_CPUS=2048 NUMA pSeries
-> [ 34.381576] Modules linked in: dm_mod(E) nft_fib_inet(E) nft_fib_ipv4(E) nft_fib_ipv6(E) nft_fib(E) nft_reject_inet(E) nf_reject_ipv4(E) nf_reject_ipv6(E) nft_reject(E) nft_ct(E) nft_chain_nat(E) nf_nat(E) nf_conntrack(E) nf_defrag_ipv6(E) nf_defrag_ipv4(E) bonding(E) tls(E) rfkill(E) ip_set(E) sunrpc(E) nf_tables(E) nfnetlink(E) pseries_rng(E) aes_gcm_p10_crypto(E) drm(E) drm_panel_orientation_quirks(E) xfs(E) libcrc32c(E) sd_mod(E) sr_mod(E) t10_pi(E) crc64_rocksoft_generic(E) cdrom(E) crc64_rocksoft(E) crc64(E) sg(E) ibmvscsi(E) scsi_transport_srp(E) ibmveth(E) vmx_crypto(E) fuse(E)
-> [ 34.381613] CPU: 18 PID: 5918 Comm: kexec Kdump: loaded Tainted: G E 6.4.0-rc6-00037-gb6dad5178cea #3
-> [ 34.381618] Hardware name: IBM,9080-HEX POWER10 (raw) 0x800200 0xf000006 of:IBM,FW1030.20 (NH1030_058) hv:phyp pSeries
-> [ 34.381621] NIP: c0000000009db1e4 LR: c0000000009db928 CTR: c0000000009eab60
-> [ 34.381625] REGS: c00000009742f780 TRAP: 0300 Tainted: G E (6.4.0-rc6-00037-gb6dad5178cea)
-> [ 34.381628] MSR: 800000000280b033 <SF,VEC,VSX,EE,FP,ME,IR,DR,RI,LE> CR: 44488884 XER: 00000001
-> [ 34.381638] CFAR: c0000000009db19c DAR: 0000000000000050 DSISR: 40000000 IRQMASK: 0 
-> [ 34.381638] GPR00: c0000000009db928 c00000009742fa20 c0000000014a1500 c0000000081d0000 
-> [ 34.381638] GPR04: c00000000d842c50 c00000000d842c50 0000000000000025 fffffffffffe0000 
-> [ 34.381638] GPR08: 0000000000000000 0000000000000000 0000000000000009 c008000000785280 
-> [ 34.381638] GPR12: c0000000009eab60 c00000135fab7f00 0000000000000000 0000000000000000 
-> [ 34.381638] GPR16: 0000000000000000 0000000000000000 0000000000000000 0000000000000000 
-> [ 34.381638] GPR20: 0000000000000000 0000000000000000 0000000000000000 0000000000000000 
-> [ 34.381638] GPR24: 0000000000000000 0000000000000000 0000000000000000 c000000002e21e08 
-> [ 34.381638] GPR28: c00000000d842c48 c000000002a02208 c00000000321c0c0 c0000000081d0000 
-> [ 34.381674] NIP [c0000000009db1e4] tpm_amd_is_rng_defective+0x74/0x240
-> [ 34.381681] LR [c0000000009db928] tpm_chip_unregister+0x138/0x160
-> [ 34.381685] Call Trace:
-> [ 34.381686] [c00000009742faa0] [c0000000009db928] tpm_chip_unregister+0x138/0x160
-> [ 34.381690] [c00000009742fae0] [c0000000009eab94] tpm_ibmvtpm_remove+0x34/0x130
-> [ 34.381695] [c00000009742fb50] [c000000000115738] vio_bus_remove+0x58/0xd0
-> [ 34.381701] [c00000009742fb90] [c000000000a01ecc] device_shutdown+0x21c/0x39c
-> [ 34.381705] [c00000009742fc20] [c0000000001a2684] kernel_restart_prepare+0x54/0x70
-> [ 34.381710] [c00000009742fc40] [c000000000292c48] kernel_kexec+0xa8/0x100
-> [ 34.381714] [c00000009742fcb0] [c0000000001a2cd4] __do_sys_reboot+0x214/0x2c0
-> [ 34.381718] [c00000009742fe10] [c000000000034adc] system_call_exception+0x13c/0x340
-> [ 34.381723] [c00000009742fe50] [c00000000000d05c] system_call_vectored_common+0x15c/0x2ec
-> [ 34.381729] --- interrupt: 3000 at 0x7fff9c5459f0
-> [ 34.381732] NIP: 00007fff9c5459f0 LR: 0000000000000000 CTR: 0000000000000000
-> [ 34.381735] REGS: c00000009742fe80 TRAP: 3000 Tainted: G E (6.4.0-rc6-00037-gb6dad5178cea)
-> [ 34.381738] MSR: 800000000280f033 <SF,VEC,VSX,EE,PR,FP,ME,IR,DR,RI,LE> CR: 42422884 XER: 00000000
-> [ 34.381747] IRQMASK: 0 
-> [ 34.381747] GPR00: 0000000000000058 00007ffffad83d70 000000012fc47f00 fffffffffee1dead 
-> [ 34.381747] GPR04: 0000000028121969 0000000045584543 0000000000000000 0000000000000003 
-> [ 34.381747] GPR08: 0000000000100000 0000000000000000 0000000000000000 0000000000000000 
-> [ 34.381747] GPR12: 0000000000000000 00007fff9c7bb2c0 000000012fc3f598 0000000000000000 
-> [ 34.381747] GPR16: ffffffffffffffff 0000000000000000 000000012fc1fcc0 0000000000000000 
-> [ 34.381747] GPR20: 0000000000008913 0000000000008914 000000014b891020 0000000000000003 
-> [ 34.381747] GPR24: 0000000000000000 0000000000000001 0000000000000003 00007ffffad83ef0 
-> [ 34.381747] GPR28: 000000012fc19f10 00007fff9c6419c0 000000014b891080 000000014b891040 
-> [ 34.381781] NIP [00007fff9c5459f0] 0x7fff9c5459f0
-> [ 34.381784] LR [0000000000000000] 0x0
-> [ 34.381786] --- interrupt: 3000
-> [ 34.381788] Code: 5463063e 408201c8 38210080 4e800020 60000000 60000000 60000000 7c0802a6 fbe10078 7c7f1b78 f8010090 e9230728 <e9890050> 2c2c0000 41820020 7d8903a6 
-> [ 34.381800] ---[ end trace 0000000000000000 ]---
-> [ 34.384090] pstore: backend (nvram) writing error (-1)
-> 
-> Git bisect points to following patch
-> 
-> commit bd8621ca1510e6e802df9855bdc35a04a3cfa932
->     tpm: Add !tpm_amd_is_rng_defective() to the hwrng_unregister() call site
-> 
-> Reverting the commit allows a successful kexec operation.
+Jan (in cc) was able to bisect the issue, and was able to pinpoint the
+problem to this change.
 
-Thanks for the report. To be sure the issue doesn't fall through the
-cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
-tracking bot:
+Meanwhile I was able to confirm, that reverting this single commit on
+the latest 6.1.34 seems to resolve the issue.
 
-#regzbot ^introduced bd8621ca1510e6e802df9855bdc35a04a3cfa932
-#regzbot title tpm/ppc: crash during a kexec
-#regzbot ignore-activity
+I've reviewed the change and surrounding code, and one thing I've
+noticed is that the if statement to set cp.filter_dup in
+hci_le_set_ext_scan_enable_sync and hci_le_set_scan_enable_sync are
+different. Not sure if that needs to be the way it is, but my outside
+gut feeling says hci_le_set_ext_scan_enable_sync should use "if (val &&
+hci_dev_test_flag(hdev, HCI_MESH))" as well. 
 
-This isn't a regression? This issue or a fix for it are already
-discussed somewhere else? It was fixed already? You want to clarify when
-the regression started to happen? Or point out I got the title or
-something else totally wrong? Then just reply and tell me -- ideally
-while also telling regzbot about it, as explained by the page listed in
-the footer of this mail.
+However, that did not fix the problem (but maybe it is wrong
+nonetheless?).
 
-Developers: When fixing the issue, remember to add 'Link:' tags pointing
-to the report (the parent of this mail). See page linked in footer for
-details.
+Anyone has an idea what could be the problem here?
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+Stefan
+
+On 2022-07-27 15:58, Brian Gix wrote:
+> le_scan_restart delayed work queue was running as a deprecated
+> hci_request instead of on the newer thread-safe hci_sync mechanism.
+> 
+> Signed-off-by: Brian Gix <brian.gix@intel.com>
+> ---
+>  net/bluetooth/hci_request.c | 89 -------------------------------------
+>  net/bluetooth/hci_sync.c    | 75 +++++++++++++++++++++++++++++++
+>  2 files changed, 75 insertions(+), 89 deletions(-)
+> 
+> diff --git a/net/bluetooth/hci_request.c b/net/bluetooth/hci_request.c
+> index 32fefaa0d3ca..114af7350363 100644
+> --- a/net/bluetooth/hci_request.c
+> +++ b/net/bluetooth/hci_request.c
+> @@ -1975,92 +1975,6 @@ int hci_abort_conn(struct hci_conn *conn, u8 reason)
+>  	return 0;
+>  }
+>  
+> -static int le_scan_restart(struct hci_request *req, unsigned long opt)
+> -{
+> -	struct hci_dev *hdev = req->hdev;
+> -
+> -	/* If controller is not scanning we are done. */
+> -	if (!hci_dev_test_flag(hdev, HCI_LE_SCAN))
+> -		return 0;
+> -
+> -	if (hdev->scanning_paused) {
+> -		bt_dev_dbg(hdev, "Scanning is paused for suspend");
+> -		return 0;
+> -	}
+> -
+> -	hci_req_add_le_scan_disable(req, false);
+> -
+> -	if (use_ext_scan(hdev)) {
+> -		struct hci_cp_le_set_ext_scan_enable ext_enable_cp;
+> -
+> -		memset(&ext_enable_cp, 0, sizeof(ext_enable_cp));
+> -		ext_enable_cp.enable = LE_SCAN_ENABLE;
+> -		ext_enable_cp.filter_dup = LE_SCAN_FILTER_DUP_ENABLE;
+> -
+> -		hci_req_add(req, HCI_OP_LE_SET_EXT_SCAN_ENABLE,
+> -			    sizeof(ext_enable_cp), &ext_enable_cp);
+> -	} else {
+> -		struct hci_cp_le_set_scan_enable cp;
+> -
+> -		memset(&cp, 0, sizeof(cp));
+> -		cp.enable = LE_SCAN_ENABLE;
+> -		cp.filter_dup = LE_SCAN_FILTER_DUP_ENABLE;
+> -		hci_req_add(req, HCI_OP_LE_SET_SCAN_ENABLE, sizeof(cp), &cp);
+> -	}
+> -
+> -	return 0;
+> -}
+> -
+> -static void le_scan_restart_work(struct work_struct *work)
+> -{
+> -	struct hci_dev *hdev = container_of(work, struct hci_dev,
+> -					    le_scan_restart.work);
+> -	unsigned long timeout, duration, scan_start, now;
+> -	u8 status;
+> -
+> -	bt_dev_dbg(hdev, "");
+> -
+> -	hci_req_sync(hdev, le_scan_restart, 0, HCI_CMD_TIMEOUT, &status);
+> -	if (status) {
+> -		bt_dev_err(hdev, "failed to restart LE scan: status %d",
+> -			   status);
+> -		return;
+> -	}
+> -
+> -	hci_dev_lock(hdev);
+> -
+> -	if (!test_bit(HCI_QUIRK_STRICT_DUPLICATE_FILTER, &hdev->quirks) ||
+> -	    !hdev->discovery.scan_start)
+> -		goto unlock;
+> -
+> -	/* When the scan was started, hdev->le_scan_disable has been queued
+> -	 * after duration from scan_start. During scan restart this job
+> -	 * has been canceled, and we need to queue it again after proper
+> -	 * timeout, to make sure that scan does not run indefinitely.
+> -	 */
+> -	duration = hdev->discovery.scan_duration;
+> -	scan_start = hdev->discovery.scan_start;
+> -	now = jiffies;
+> -	if (now - scan_start <= duration) {
+> -		int elapsed;
+> -
+> -		if (now >= scan_start)
+> -			elapsed = now - scan_start;
+> -		else
+> -			elapsed = ULONG_MAX - scan_start + now;
+> -
+> -		timeout = duration - elapsed;
+> -	} else {
+> -		timeout = 0;
+> -	}
+> -
+> -	queue_delayed_work(hdev->req_workqueue,
+> -			   &hdev->le_scan_disable, timeout);
+> -
+> -unlock:
+> -	hci_dev_unlock(hdev);
+> -}
+> -
+>  bool hci_req_stop_discovery(struct hci_request *req)
+>  {
+>  	struct hci_dev *hdev = req->hdev;
+> @@ -2158,7 +2072,6 @@ int hci_req_configure_datapath(struct hci_dev
+> *hdev, struct bt_codec *codec)
+>  
+>  void hci_request_setup(struct hci_dev *hdev)
+>  {
+> -	INIT_DELAYED_WORK(&hdev->le_scan_restart, le_scan_restart_work);
+>  	INIT_DELAYED_WORK(&hdev->adv_instance_expire, adv_timeout_expire);
+>  	INIT_DELAYED_WORK(&hdev->interleave_scan, interleave_scan_work);
+>  }
+> @@ -2167,8 +2080,6 @@ void hci_request_cancel_all(struct hci_dev *hdev)
+>  {
+>  	__hci_cmd_sync_cancel(hdev, ENODEV);
+>  
+> -	cancel_delayed_work_sync(&hdev->le_scan_restart);
+> -
+>  	if (hdev->adv_instance_timeout) {
+>  		cancel_delayed_work_sync(&hdev->adv_instance_expire);
+>  		hdev->adv_instance_timeout = 0;
+> diff --git a/net/bluetooth/hci_sync.c b/net/bluetooth/hci_sync.c
+> index 7dae2ee1bb82..19d57ec0feb8 100644
+> --- a/net/bluetooth/hci_sync.c
+> +++ b/net/bluetooth/hci_sync.c
+> @@ -392,6 +392,79 @@ static void le_scan_disable(struct work_struct *work)
+>  	hci_dev_unlock(hdev);
+>  }
+>  
+> +static int hci_le_set_scan_enable_sync(struct hci_dev *hdev, u8 val,
+> +				       u8 filter_dup);
+> +static int hci_le_scan_restart_sync(struct hci_dev *hdev)
+> +{
+> +	/* If controller is not scanning we are done. */
+> +	if (!hci_dev_test_flag(hdev, HCI_LE_SCAN))
+> +		return 0;
+> +
+> +	if (hdev->scanning_paused) {
+> +		bt_dev_dbg(hdev, "Scanning is paused for suspend");
+> +		return 0;
+> +	}
+> +
+> +	hci_le_set_scan_enable_sync(hdev, LE_SCAN_DISABLE, 0x00);
+> +	return hci_le_set_scan_enable_sync(hdev, LE_SCAN_ENABLE,
+> +					   LE_SCAN_FILTER_DUP_ENABLE);
+> +}
+> +
+> +static int le_scan_restart_sync(struct hci_dev *hdev, void *data)
+> +{
+> +	return hci_le_scan_restart_sync(hdev);
+> +}
+> +
+> +static void le_scan_restart(struct work_struct *work)
+> +{
+> +	struct hci_dev *hdev = container_of(work, struct hci_dev,
+> +					    le_scan_restart.work);
+> +	unsigned long timeout, duration, scan_start, now;
+> +	int status;
+> +
+> +	bt_dev_dbg(hdev, "");
+> +
+> +	hci_dev_lock(hdev);
+> +
+> +	status = hci_cmd_sync_queue(hdev, le_scan_restart_sync, NULL, NULL);
+> +	if (status) {
+> +		bt_dev_err(hdev, "failed to restart LE scan: status %d",
+> +			   status);
+> +		goto unlock;
+> +	}
+> +
+> +	if (!test_bit(HCI_QUIRK_STRICT_DUPLICATE_FILTER, &hdev->quirks) ||
+> +	    !hdev->discovery.scan_start)
+> +		goto unlock;
+> +
+> +	/* When the scan was started, hdev->le_scan_disable has been queued
+> +	 * after duration from scan_start. During scan restart this job
+> +	 * has been canceled, and we need to queue it again after proper
+> +	 * timeout, to make sure that scan does not run indefinitely.
+> +	 */
+> +	duration = hdev->discovery.scan_duration;
+> +	scan_start = hdev->discovery.scan_start;
+> +	now = jiffies;
+> +	if (now - scan_start <= duration) {
+> +		int elapsed;
+> +
+> +		if (now >= scan_start)
+> +			elapsed = now - scan_start;
+> +		else
+> +			elapsed = ULONG_MAX - scan_start + now;
+> +
+> +		timeout = duration - elapsed;
+> +	} else {
+> +		timeout = 0;
+> +	}
+> +
+> +	queue_delayed_work(hdev->req_workqueue,
+> +			   &hdev->le_scan_disable, timeout);
+> +
+> +unlock:
+> +	hci_dev_unlock(hdev);
+> +}
+> +
+>  void hci_cmd_sync_init(struct hci_dev *hdev)
+>  {
+>  	INIT_WORK(&hdev->cmd_sync_work, hci_cmd_sync_work);
+> @@ -400,6 +473,7 @@ void hci_cmd_sync_init(struct hci_dev *hdev)
+>  
+>  	INIT_WORK(&hdev->cmd_sync_cancel_work, hci_cmd_sync_cancel_work);
+>  	INIT_DELAYED_WORK(&hdev->le_scan_disable, le_scan_disable);
+> +	INIT_DELAYED_WORK(&hdev->le_scan_restart, le_scan_restart);
+>  }
+>  
+>  void hci_cmd_sync_clear(struct hci_dev *hdev)
+> @@ -4488,6 +4562,7 @@ int hci_dev_close_sync(struct hci_dev *hdev)
+>  	cancel_delayed_work(&hdev->power_off);
+>  	cancel_delayed_work(&hdev->ncmd_timer);
+>  	cancel_delayed_work(&hdev->le_scan_disable);
+> +	cancel_delayed_work(&hdev->le_scan_restart);
+>  
+>  	hci_request_cancel_all(hdev);
