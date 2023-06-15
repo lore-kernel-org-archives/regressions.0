@@ -1,178 +1,192 @@
-Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
+Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A35F15AE1
-	for <regressions@lists.linux.dev>; Thu, 15 Jun 2023 16:16:16 +0000 (UTC)
-Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-62fe1e6dc65so16825506d6.0
-        for <regressions@lists.linux.dev>; Thu, 15 Jun 2023 09:16:16 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ADD6EAC0
+	for <regressions@lists.linux.dev>; Thu, 15 Jun 2023 17:04:47 +0000 (UTC)
+Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-7606e639083so51123685a.1
+        for <regressions@lists.linux.dev>; Thu, 15 Jun 2023 10:04:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1686845775; x=1689437775;
+        d=gmail.com; s=20221208; t=1686848686; x=1689440686;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=6yWsfiUJJCvl+Wv0FctXyQzF721u6gSJIygDxkbWkMk=;
-        b=E4KlQwbQ++CSrrIZdif35vuUr+DGSfR63orJ/lJntfMtLnLHuyAUocoz6tWuUWKpbe
-         Df7w2DZdy019+oLj8Snsp7hIGq/BjzIP9i6PsgWe4OliXMtYZ6oCSmCMeWDbSgKwe5wx
-         w5iSYk+aI2ecG+MiT1GzYOw4L9IElOLFLq704Aq9DGx3JFdc8I9dtrLXf8F0lZPh5/BP
-         pjDzPrQTfC1Ytgscjig9fe6bGkA13hbvNXrBGJQmOLkX0e06AKj4zVxtc/Ca+8u5Ybmw
-         qFMfXowsUp8pslXe7mvpcM5e7c+YU6+ZIC62a+zodr+tGKJg54eYT6aTStLzHLEFsBLr
-         Vj1A==
+        bh=YuL4/fFGHW1h2jnYUu/vaiCa88peR1HnERpktr610W4=;
+        b=Nj2pgtMAguiPPAYB9aIwbqk86tN2T/fEzv77mV1kMEoQ+LJRCgTaauGJD28rg1PD+5
+         KVzsNj/wWpLLewhxP1jueIU2g5IHY/MFTMhj83ibOyHuSqUoVw6f2SvtL0hHAaXMlnJf
+         XWPlD9ZcKhBVhug69UQOnjjcWOeNMQNm/HLJNC/Jfz3QvQ1e+rQjw46wOQYMCUOlfVoe
+         6PN2IY/gQaKe1E80eW3PH6gvEZS7KgfXDA3ndHP6iicfrOtBJT7vgmWdFuYz1Y6EEHL0
+         yCty+8C4HdFYP+hit345V80sOE584ePi8R3zZaPRj2bMFFBQ25VkDliUtShK7hI7hTSV
+         yjqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686845775; x=1689437775;
+        d=1e100.net; s=20221208; t=1686848686; x=1689440686;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=6yWsfiUJJCvl+Wv0FctXyQzF721u6gSJIygDxkbWkMk=;
-        b=ZAPs3dtKsYvBwmY7ZPTsaLdNMfnaw25Y4hV3VJxgRuPQGILcFXQcuIS+lums8mhjJw
-         bIfjo4cxQxs15NSTEDd5+k4LOGcgeybr/bSeZmZNJpQwDz9z5TyqG1xygNZMXpH1XrXy
-         DonjujvgHOlWz9J8eaZMwBfyzAqA/aC2TyeAMFZuX16jm9WIicvVPBVBLvwE5rIXiTKI
-         lMXBy0s7wjmNQ4H3nWopyP68uCcnRzVa8L/pN6KO3RJRSwV+Dn3ut41Nf1BxmODTkILc
-         HulVHTWFJoVBSQaZL8hEXDqa4yRDPyzlXx9um4XYm7mQqUs97SDTKXcdAa2bUaS9+qeX
-         I6Mw==
-X-Gm-Message-State: AC+VfDw1a/qvDuM+r2XXniCVCn0VWJKuKyvlPIXWenNUB21ORM7+3gyj
-	eUTAloMlf/le3XbdToKRBSwmd9ZnN8RySWcNiskrpw==
-X-Google-Smtp-Source: ACHHUZ5rkNC7B8YRnDNzfvuAiPiPsqY5+hNHIigtI5y5xhEvASIbbl1WVbYh/O9KrpkeHQGLHg+UO7kJGyjiOqqSTcA=
-X-Received: by 2002:ad4:5ba6:0:b0:626:1b8f:4940 with SMTP id
- 6-20020ad45ba6000000b006261b8f4940mr22082159qvq.23.1686845775002; Thu, 15 Jun
- 2023 09:16:15 -0700 (PDT)
+        bh=YuL4/fFGHW1h2jnYUu/vaiCa88peR1HnERpktr610W4=;
+        b=QhHOGEXGJwXYerPamsRkYxr9608HQwWfEXIk16OpmEOF4tj0+ie5bop8obLswB8pPo
+         IjUhHeFWPPVEu5sppv75cVLihAEpaOA+ugxTHY04mxbprR9PNll2lvSG50VKgJyCChmw
+         Mobd+vIYGO2LY7MH9AAzvMnlUDccdXs8tTWVaft+VoXnqvhkpXZdbcVB8UpMEKWm/cDP
+         bljfjAXLhwf9dTeocsizKcoUYl8wS6lsBWUDeSVCMzacy90zGIPhSKx3+Qi0vBGY0L+p
+         rB9gOSHSWn/ozMeIh64uSGpsCG+zhSVjqX5t2qWaCLfFTq1YED8egO7iZLKw3Ah4K2Au
+         k15g==
+X-Gm-Message-State: AC+VfDwlCL1kLflvN1oTno+Bmn82f2fjN8uye3yxuWClpo9uT0C8v9fe
+	uXfgH7qET965IbV/KbxpjbjGRHOCTgWegA9LwPs=
+X-Google-Smtp-Source: ACHHUZ5jXtu6CpND+Z61lZn26Pd/9N3XgPUxLWU5UhZAKdouwHUM5KHZ9rI+TY03USloK6ujTPzXwKDwFahB9Z4jSz4=
+X-Received: by 2002:a05:6214:1c0a:b0:62d:ddeb:3770 with SMTP id
+ u10-20020a0562141c0a00b0062dddeb3770mr5554057qvc.0.1686848685900; Thu, 15 Jun
+ 2023 10:04:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230602161246.1855448-1-amit.pundir@linaro.org>
- <358c69ad-fa8a-7386-fe75-92369883ee48@leemhuis.info> <0f6c9dcb-b7f6-fff9-6bed-f4585ea8e487@linaro.org>
- <CAMi1Hd3Cv1i06NhpY6Jqu7OvMpOdzTj6nTEMJNWLrMwMLsugZA@mail.gmail.com>
- <CAMi1Hd0=KV7k82ARadF45nqX+Cv6zPLCxfDvOyAPeXiFd8jpVA@mail.gmail.com>
- <0ec6c988-d678-c96c-a7a2-af38e6701404@linaro.org> <CAMi1Hd33_Ccxkf9C5_QBO3tvOZcGnYh+_CKcACUtoY2qAuOzRA@mail.gmail.com>
-In-Reply-To: <CAMi1Hd33_Ccxkf9C5_QBO3tvOZcGnYh+_CKcACUtoY2qAuOzRA@mail.gmail.com>
-From: Amit Pundir <amit.pundir@linaro.org>
-Date: Thu, 15 Jun 2023 21:45:38 +0530
-Message-ID: <CAMi1Hd1VGJzo2HRSwobPvuyV9w=VSsxD6GTpA21U68Gx4hhmKA@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: qcom: sdm845-db845c: Move LVS regulator nodes up
+References: <f591b13c-4600-e2a4-8efa-aac6ad828dd1@linaro.org>
+ <2C5E9725-F152-4D2E-882E-CF92A35481BF@hammerspace.com> <7ba38377-7992-7f0f-d905-cceb42510f39@linaro.org>
+ <51430925-8046-7066-84ed-2ff0db835347@linaro.org> <CAFX2Jf=5X3zyZEWQmD6Rg9jQAD7ccDbae5LQCwrAyPCVVoFumg@mail.gmail.com>
+ <2add1769-1458-b185-bc78-6d573f61b6fc@linaro.org> <CAFX2JfnKy7juGQaDTzqosN9SF-zd+XrhSL9uh_Xg0GpJGDux-A@mail.gmail.com>
+ <32530c36-91d0-d351-0689-aed6a0975a4b@linaro.org> <2f285607-cbf9-6abc-f436-edb6e9a3938b@linaro.org>
+ <CAFX2Jfmz7QqZBEdzbPUhPs0yctnXVaVF68tX1c57YX=6ki=0TA@mail.gmail.com>
+ <4fe39d77-eb7c-a578-aefa-45b76e2247c2@linaro.org> <CAFX2JfmdRMsHPTySiw4vm7BwJfRZj3s0V3_v7NJ+XwMxBBSo9A@mail.gmail.com>
+ <a3683dd3-3f30-bb4c-539d-d1519de6e5bf@linaro.org> <CAFX2JfnS9GVc4NaxKhr9E4y10NNv6SPgcv1yoeHTfEw5NvZgMg@mail.gmail.com>
+ <86d8e252-975f-5d48-4567-0911d5ef9a44@linaro.org> <CAFX2Jfn_DSs38WQYsRs2ifLi5w+T3BhZfSU2W80T6dK48_Bb5g@mail.gmail.com>
+ <e8d31e48-df6a-fde4-4c6b-c4ccf1664ded@linaro.org> <c8d454b0-d355-f599-f720-b7e64374fb56@linaro.org>
+ <CAFX2JfmvMZ7DzD9znWeOHXywgPbUKDS1irMjUerEuborjRBpcg@mail.gmail.com>
+In-Reply-To: <CAFX2JfmvMZ7DzD9znWeOHXywgPbUKDS1irMjUerEuborjRBpcg@mail.gmail.com>
+From: Anna Schumaker <schumaker.anna@gmail.com>
+Date: Thu, 15 Jun 2023 13:04:29 -0400
+Message-ID: <CAFX2JfnhOz+HiOd4vBwBK+5d19Kb8wfBNQhxRZHQoP8S2qiwFw@mail.gmail.com>
+Subject: Re: Regression: NULL pointer dereference after NFS_V4_2_READ_PLUS
+ (commit 7fd461c47)
 To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>, Mark Brown <broonie@kernel.org>, 
-	Doug Anderson <dianders@chromium.org>, Bjorn Andersson <andersson@kernel.org>, 
-	Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
-	Konrad Dybcio <konrad.dybcio@linaro.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
-	Caleb Connolly <caleb.connolly@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	linux-arm-msm <linux-arm-msm@vger.kernel.org>, dt <devicetree@vger.kernel.org>, 
-	lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Cc: Trond Myklebust <trondmy@hammerspace.com>, Anna Schumaker <Anna.Schumaker@netapp.com>, 
+	linux-nfs <linux-nfs@vger.kernel.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Content-Type: multipart/mixed; boundary="000000000000b6d55305fe2e10cf"
 
-On Thu, 15 Jun 2023 at 21:39, Amit Pundir <amit.pundir@linaro.org> wrote:
+--000000000000b6d55305fe2e10cf
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Jun 15, 2023 at 9:01=E2=80=AFAM Anna Schumaker <schumaker.anna@gmai=
+l.com> wrote:
 >
-> On Thu, 15 Jun 2023 at 20:33, Krzysztof Kozlowski
+> On Thu, Jun 15, 2023 at 4:55=E2=80=AFAM Krzysztof Kozlowski
 > <krzysztof.kozlowski@linaro.org> wrote:
 > >
-> > On 15/06/2023 15:47, Amit Pundir wrote:
-> > > On Thu, 15 Jun 2023 at 00:38, Amit Pundir <amit.pundir@linaro.org> wrote:
-> > >>
-> > >> On Thu, 15 Jun 2023 at 00:17, Krzysztof Kozlowski
-> > >> <krzysztof.kozlowski@linaro.org> wrote:
+> > On 15/06/2023 10:52, Krzysztof Kozlowski wrote:
+> > > On 14/06/2023 22:55, Anna Schumaker wrote:
+> > >>>>> Still null ptr (built on 420b2d4 with your patch):
+> > >>>>
+> > >>>> We're through the merge window and at rc1 now, so I can spend more
+> > >>>> time scratching my head over your bug again. We've come up with a
+> > >>>> patch (attached) that adds a bunch of printks to show us what the
+> > >>>> kernel thinks is going on. Do you mind trying it out and letting u=
+s
+> > >>>> know what gets printed out? You'll need to make sure
+> > >>>> CONFIG_NFS_V4_2_READ_PLUS is enabled when compiling the kernel.
 > > >>>
-> > >>> On 14/06/2023 20:18, Linux regression tracking (Thorsten Leemhuis) wrote:
-> > >>>> On 02.06.23 18:12, Amit Pundir wrote:
-> > >>>>> Move lvs1 and lvs2 regulator nodes up in the rpmh-regulators
-> > >>>>> list to workaround a boot regression uncovered by the upstream
-> > >>>>> commit ad44ac082fdf ("regulator: qcom-rpmh: Revert "regulator:
-> > >>>>> qcom-rpmh: Use PROBE_FORCE_SYNCHRONOUS"").
-> > >>>>>
-> > >>>>> Without this fix DB845c fail to boot at times because one of the
-> > >>>>> lvs1 or lvs2 regulators fail to turn ON in time.
-> > >>>>
-> > >>>> /me waves friendly
-> > >>>>
-> > >>>> FWIW, as it's not obvious: this...
-> > >>>>
-> > >>>>> Link: https://lore.kernel.org/all/CAMi1Hd1avQDcDQf137m2auz2znov4XL8YGrLZsw5edb-NtRJRw@mail.gmail.com/
-> > >>>>
-> > >>>> ...is a report about a regression. One that we could still solve before
-> > >>>> 6.4 is out. One I'll likely will point Linus to, unless a fix comes into
-> > >>>> sight.
-> > >>>>
-> > >>>> When I noticed the reluctant replies to this patch I earlier today asked
-> > >>>> in the thread with the report what the plan forward was:
-> > >>>> https://lore.kernel.org/all/CAD%3DFV%3DV-h4EUKHCM9UivsFHRsJPY5sAiwXV3a1hUX9DUMkkxdg@mail.gmail.com/
-> > >>>>
-> > >>>> Dough there replied:
-> > >>>>
-> > >>>> ```
-> > >>>> Of the two proposals made (the revert vs. the reordering of the dts),
-> > >>>> the reordering of the dts seems better. It only affects the one buggy
-> > >>>> board (rather than preventing us to move to async probe for everyone)
-> > >>>> and it also has a chance of actually fixing something (changing the
-> > >>>> order that regulators probe in rpmh-regulator might legitimately work
-> > >>>> around the problem). That being said, just like the revert the dts
-> > >>>> reordering is still just papering over the problem and is fragile /
-> > >>>> not guaranteed to work forever.
-> > >>>> ```
-> > >>>>
-> > >>>> Papering over obviously is not good, but has anyone a better idea to fix
-> > >>>> this? Or is "not fixing" for some reason an viable option here?
-> > >>>>
-> > >>>
-> > >>> I understand there is a regression, although kernel is not mainline
-> > >>> (hash df7443a96851 is unknown) and the only solutions were papering the
-> > >>> problem. Reverting commit is a temporary workaround. Moving nodes in DTS
-> > >>> is not acceptable because it hides actual problem and only solves this
-> > >>> one particular observed problem, while actual issue is still there. It
-> > >>> would be nice to be able to reproduce it on real mainline with normal
-> > >>> operating system (not AOSP) - with ramdiks/without/whatever. So far no
-> > >>> one did it, right?
+> > >>> The patch does not apply. I tried: v6.4-rc1, v6.4-rc5, next-2023060=
+9.
 > > >>
-> > >> No, I did not try non-AOSP system yet. I'll try it tomorrow, if that
-> > >> helps. With mainline hash.
+> > >> Can you try the attached patch on top of my 3-patch series from the
+> > >> other day, and let me know what gets printed out? It adds a bunch of
+> > >> printk()s at strategic points to print out what is going on with the
+> > >> xdr scratch buffer since it's suddenly a bad memory address after
+> > >> working for a bit on your machine.
+> > >>
 > > >
-> > > Hi, here is the crash report on db845c running vanilla v6.4-rc6 with a
-> > > debian build https://bugs.linaro.org/attachment.cgi?id=1142
-> > >
-> > > And fwiw here is the db845c crash log with AOSP running vanilla
-> > > v6.4-rc6 https://bugs.linaro.org/attachment.cgi?id=1141
-> > >
-> > > Regards,
-> > > Amit Pundir
-> > >
-> > > PS: rootfs in this bug report doesn't matter much because I'm loading
-> > > all the kernel modules from a ramdisk and in the case of a crash the
-> > > UFS doesn't probe anyway.
+> > > Here you have entire log - attached (113 kB, I hope goes past mailing
+> > > lists/spam filters).
 > >
-> > I just tried current next with defconfig (I could not find your config,
-> > neither here, nor in your previous mail thread nor in bugzilla). Also
-> > with REGULATOR_QCOM_RPMH as module.
-> >
-> > I tried also v6.4-rc6 - also defconfig with default and module
-> > REGULATOR_QCOM_RPMH.
-> >
-> > All the cases work on my RB3 - no warnings reported.
-> >
-> > If you do not use defconfig, then in all reports please mention the
-> > differences (the best) or at least attach it.
+> > As expected this bounced from the mailing lists, but I hope you got it.
+> > If not, let me know.
 >
-> Argh.. Sorry about that. Big mistake from my side. I did want to
-> upload my defconfig but forgot. Defconfig plays a key role because, as
-> I mentioned in one of my previous email, it is a timing/race bug and
-> if I do any much changes in my defconfig (i.e. enable ftrace for
-> example or as little as add printk in qcom_rpmh_regulator code) then I
-> can't reproduce this bug. So needless to say that I can't reproduce
-> this bug with default arm64 defconfig.
->
-> Please find my custom (but upstream) defconfig here
-> https://bugs.linaro.org/attachment.cgi?id=1143 and prebuilt binaries
-> here https://people.linaro.org/~amit.pundir/db845c-userdebug/rpmh_bug/.
-> "fastboot flash boot ./boot.img-6.4-rc6 reboot" and/or a few (<5)
-> reboots should be enough to trigger the crash.
->
-> I have downloaded the initrd from here
-> https://snapshots.linaro.org/96boards/dragonboard845c/linaro/debian/569/initrd.img-5.15.0-qcomlt-arm64
-> but edited ramdisk/init to run "load_module" function early in the
-> boot and ramdisk/conf/initramfs.conf has "MODULES=list" instead of
-> "MODULES=most", where all the kernel modules are listed at
-> /etc/initramfs-tools/modules.
+> I did still receive it. Thanks!
 
-Sorry it is ramdisk/conf/modules not ramdisk/etc/initramfs-tools/modules.
+Can you swap out yesterday's patch with this patch? I've adjusted what
+gets printed out, and added printk()s to xdr_copy_to_scratch().  I'm
+starting to think that the xdr scratch buffer is fine, and that it's
+the other pointer passed to memcpy() in that function that's the
+problem, and the output from this patch will confirm for me.
+
+Thanks,
+Anna
 
 >
-> Regards,
-> Amit Pundir
+> Anna
+> >
+> > Best regards,
+> > Krzysztof
+> >
+
+--000000000000b6d55305fe2e10cf
+Content-Type: text/x-patch; charset="US-ASCII"; 
+	name="v2-0001-NFS-Add-debugging-printk-s-to-trace-the-xdr-scrat.patch"
+Content-Disposition: attachment; 
+	filename="v2-0001-NFS-Add-debugging-printk-s-to-trace-the-xdr-scrat.patch"
+Content-Transfer-Encoding: base64
+Content-ID: <f_lixe2d0k0>
+X-Attachment-Id: f_lixe2d0k0
+
+RnJvbSBkNDFmNDMwNDAwN2QyOTU0Zjg1MTNmM2MzZDg0NTAyOGZlZmU3OWVjIE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiBBbm5hIFNjaHVtYWtlciA8QW5uYS5TY2h1bWFrZXJATmV0YXBw
+LmNvbT4KRGF0ZTogV2VkLCAxNCBKdW4gMjAyMyAxNjo0OTozNyAtMDQwMApTdWJqZWN0OiBbUkZD
+IHYyXSBORlM6IEFkZCBkZWJ1Z2dpbmcgcHJpbnRrKClzIHRvIHRyYWNlIHRoZSB4ZHItPnNjcmF0
+Y2gKIGJ1ZmZlcgoKSSdtIHRyeWluZyB0byBmaWd1cmUgb3V0IGF0IHdoYXQgcG9pbnQgdGhlIHhk
+ci0+c2NyYXRjaCBidWZmZXIgaXMKYWxsb2NhdGVkLCBmcmVlZCwgc2V0LCBhbmQgcmVzZXQgdG8g
+ZmlndXJlIG91dCB3aHkgUkVBRF9QTFVTIHN1ZGRlbmx5CnRoaW5rcyBpdCdzIGEgTlVMTCBwb2lu
+dGVyIHdpdGggbGVuZ3RoIDE2LgoKU2lnbmVkLW9mZi1ieTogQW5uYSBTY2h1bWFrZXIgPEFubmEu
+U2NodW1ha2VyQE5ldGFwcC5jb20+Ci0tLQogZnMvbmZzL25mczQyeGRyLmMgICAgICAgICAgfCAy
+ICsrCiBmcy9uZnMvcmVhZC5jICAgICAgICAgICAgICB8IDggKysrKysrKy0KIGluY2x1ZGUvbGlu
+dXgvc3VucnBjL3hkci5oIHwgMSArCiBuZXQvc3VucnBjL3hkci5jICAgICAgICAgICB8IDQgKysr
+KwogNCBmaWxlcyBjaGFuZ2VkLCAxNCBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pCgpkaWZm
+IC0tZ2l0IGEvZnMvbmZzL25mczQyeGRyLmMgYi9mcy9uZnMvbmZzNDJ4ZHIuYwppbmRleCAyMGFh
+NWU3NDY0OTcuLjZhNGVhZGUyNDAwYiAxMDA2NDQKLS0tIGEvZnMvbmZzL25mczQyeGRyLmMKKysr
+IGIvZnMvbmZzL25mczQyeGRyLmMKQEAgLTEzNTEsNiArMTM1MSw4IEBAIHN0YXRpYyBpbnQgbmZz
+NF94ZHJfZGVjX3JlYWRfcGx1cyhzdHJ1Y3QgcnBjX3Jxc3QgKnJxc3RwLAogCXN0cnVjdCBjb21w
+b3VuZF9oZHIgaGRyOwogCWludCBzdGF0dXM7CiAKKwlwcmludGsoS0VSTl9JTkZPICIlcyhoZHI9
+JXB4LCBzY3JhdGNoPSVweClcbiIsIF9fZnVuY19fLAorCQljb250YWluZXJfb2YocmVzLCBzdHJ1
+Y3QgbmZzX3BnaW9faGVhZGVyLCByZXMpLCByZXMtPnNjcmF0Y2gpOwogCXhkcl9zZXRfc2NyYXRj
+aF9idWZmZXIoeGRyLCByZXMtPnNjcmF0Y2gsIFJFQURfUExVU19TQ1JBVENIX1NJWkUpOwogCiAJ
+c3RhdHVzID0gZGVjb2RlX2NvbXBvdW5kX2hkcih4ZHIsICZoZHIpOwpkaWZmIC0tZ2l0IGEvZnMv
+bmZzL3JlYWQuYyBiL2ZzL25mcy9yZWFkLmMKaW5kZXggN2RjMjFhNDhlM2U3Li43YjkzMzE2YTUy
+ZGUgMTAwNjQ0Ci0tLSBhL2ZzL25mcy9yZWFkLmMKKysrIGIvZnMvbmZzL3JlYWQuYwpAQCAtNDcs
+OCArNDcsMTEgQEAgc3RhdGljIHN0cnVjdCBuZnNfcGdpb19oZWFkZXIgKm5mc19yZWFkaGRyX2Fs
+bG9jKHZvaWQpCiAKIHN0YXRpYyB2b2lkIG5mc19yZWFkaGRyX2ZyZWUoc3RydWN0IG5mc19wZ2lv
+X2hlYWRlciAqcmhkcikKIHsKLQlpZiAocmhkci0+cmVzLnNjcmF0Y2ggIT0gTlVMTCkKKwlpZiAo
+cmhkci0+cmVzLnNjcmF0Y2ggIT0gTlVMTCkgeworCQlwcmludGsoS0VSTl9JTkZPICIlcyhoZHI9
+JXB4LCBzY3JhdGNoPSVweClcbiIsCisJCQlfX2Z1bmNfXywgcmhkciwgcmhkci0+cmVzLnNjcmF0
+Y2gpOwogCQlrZnJlZShyaGRyLT5yZXMuc2NyYXRjaCk7CisJfQogCWttZW1fY2FjaGVfZnJlZShu
+ZnNfcmRhdGFfY2FjaGVwLCByaGRyKTsKIH0KIApAQCAtMTE0LDYgKzExNyw5IEBAIGJvb2wgbmZz
+X3JlYWRfYWxsb2Nfc2NyYXRjaChzdHJ1Y3QgbmZzX3BnaW9faGVhZGVyICpoZHIsIHNpemVfdCBz
+aXplKQogewogCVdBUk5fT04oaGRyLT5yZXMuc2NyYXRjaCAhPSBOVUxMKTsKIAloZHItPnJlcy5z
+Y3JhdGNoID0ga21hbGxvYyhzaXplLCBHRlBfS0VSTkVMKTsKKwlwcmludGsoS0VSTl9JTkZPICJc
+biIpOworCXByaW50ayhLRVJOX0lORk8gIiVzKGhkcj0lcHgsIHNpemU9JXpkKSA9ICVweFxuIiwK
+KwkJX19mdW5jX18sIGhkciwgc2l6ZSwgaGRyLT5yZXMuc2NyYXRjaCk7CiAJcmV0dXJuIGhkci0+
+cmVzLnNjcmF0Y2ggIT0gTlVMTDsKIH0KIEVYUE9SVF9TWU1CT0xfR1BMKG5mc19yZWFkX2FsbG9j
+X3NjcmF0Y2gpOwpkaWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51eC9zdW5ycGMveGRyLmggYi9pbmNs
+dWRlL2xpbnV4L3N1bnJwYy94ZHIuaAppbmRleCBkOTE3NjE4YTMwNTguLjFjOWE1NGU5ZWZhYyAx
+MDA2NDQKLS0tIGEvaW5jbHVkZS9saW51eC9zdW5ycGMveGRyLmgKKysrIGIvaW5jbHVkZS9saW51
+eC9zdW5ycGMveGRyLmgKQEAgLTI4Niw2ICsyODYsNyBAQCBleHRlcm4gdW5zaWduZWQgaW50IHhk
+cl9zdHJlYW1femVybyhzdHJ1Y3QgeGRyX3N0cmVhbSAqeGRyLCB1bnNpZ25lZCBpbnQgb2Zmc2V0
+LAogc3RhdGljIGlubGluZSB2b2lkCiB4ZHJfc2V0X3NjcmF0Y2hfYnVmZmVyKHN0cnVjdCB4ZHJf
+c3RyZWFtICp4ZHIsIHZvaWQgKmJ1Ziwgc2l6ZV90IGJ1ZmxlbikKIHsKKwlXQVJOX09OKGJ1ZiAh
+PSBOVUxMICYmIHhkci0+c2NyYXRjaC5pb3ZfYmFzZSAhPSBOVUxMKTsKIAl4ZHItPnNjcmF0Y2gu
+aW92X2Jhc2UgPSBidWY7CiAJeGRyLT5zY3JhdGNoLmlvdl9sZW4gPSBidWZsZW47CiB9CmRpZmYg
+LS1naXQgYS9uZXQvc3VucnBjL3hkci5jIGIvbmV0L3N1bnJwYy94ZHIuYwppbmRleCAzOTFiMzM2
+ZDk3ZGUuLjM3YzhmN2U1MTlkZCAxMDA2NDQKLS0tIGEvbmV0L3N1bnJwYy94ZHIuYworKysgYi9u
+ZXQvc3VucnBjL3hkci5jCkBAIC0xNDQwLDYgKzE0NDAsOCBAQCBzdGF0aWMgX19iZTMyICp4ZHJf
+Y29weV90b19zY3JhdGNoKHN0cnVjdCB4ZHJfc3RyZWFtICp4ZHIsIHNpemVfdCBuYnl0ZXMpCiAJ
+cCA9IF9feGRyX2lubGluZV9kZWNvZGUoeGRyLCBjcGxlbik7CiAJaWYgKHAgPT0gTlVMTCkKIAkJ
+cmV0dXJuIE5VTEw7CisJcHJpbnRrKEtFUk5fSU5GTyAiICAgICVzKCVkKTogbWVtY3B5KCVweCwg
+JXB4LCAlemQpXG4iLAorCQlfX2Z1bmNfXywgX19MSU5FX18sIGNwZGVzdCwgcCwgY3BsZW4pOwog
+CW1lbWNweShjcGRlc3QsIHAsIGNwbGVuKTsKIAlpZiAoIXhkcl9zZXRfbmV4dF9idWZmZXIoeGRy
+KSkKIAkJZ290byBvdXRfb3ZlcmZsb3c7CkBAIC0xNDQ4LDYgKzE0NTAsOCBAQCBzdGF0aWMgX19i
+ZTMyICp4ZHJfY29weV90b19zY3JhdGNoKHN0cnVjdCB4ZHJfc3RyZWFtICp4ZHIsIHNpemVfdCBu
+Ynl0ZXMpCiAJcCA9IF9feGRyX2lubGluZV9kZWNvZGUoeGRyLCBuYnl0ZXMpOwogCWlmIChwID09
+IE5VTEwpCiAJCXJldHVybiBOVUxMOworCXByaW50ayhLRVJOX0lORk8gIiAgICAlcyglZCk6IG1l
+bWNweSglcHgsICVweCwgJXpkKVxuIiwKKwkJX19mdW5jX18sIF9fTElORV9fLCBjcGRlc3QsIHAs
+IG5ieXRlcyk7CiAJbWVtY3B5KGNwZGVzdCwgcCwgbmJ5dGVzKTsKIAlyZXR1cm4geGRyLT5zY3Jh
+dGNoLmlvdl9iYXNlOwogb3V0X292ZXJmbG93OgotLSAKMi40MS4wCgo=
+--000000000000b6d55305fe2e10cf--
