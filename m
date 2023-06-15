@@ -1,103 +1,140 @@
-Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mslow1.mail.gandi.net (mslow1.mail.gandi.net [217.70.178.240])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33D95FBE6
-	for <regressions@lists.linux.dev>; Thu, 15 Jun 2023 20:09:05 +0000 (UTC)
-Received: by mail-il1-f170.google.com with SMTP id e9e14a558f8ab-340af1a98e2so8757285ab.2
-        for <regressions@lists.linux.dev>; Thu, 15 Jun 2023 13:09:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686859744; x=1689451744;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=aTfjaS0IPEiXuHhWcjsCm7WS5mqkvAN6gaYW2Bcvzz4=;
-        b=h+xq5Xp+3UTM6suN8+Qq+KZtW+bU2h+APHxtAHxpLNK4Tup1k4d5Rc+y3KOm9vyQ8u
-         eArBn+xGv54hcoPy4hCK4pJXfEQRuZn1j5GZCyrrQN+V+6+jxccLFKW2hCORtsNbK9eV
-         JHjK0v5mPjGr86qI2H1ehB/CZEDhTbCgrJaiRaFibKDS2sAzdptiZatPCB3zQ6AT9P/m
-         Vhc1enraB5xKPAOBTdTHFRcCs07gbVf2BcOTofbqSc4RNzQY8f0MREDVmyA0SbY65eA8
-         jmBjziOt+cWCJCPtwrsHthz+jFwu0oWwdvmM0Y4vVBpZRhAZBmwxOoV1eq6ydmnT/hr7
-         evBQ==
-X-Gm-Message-State: AC+VfDyb4HF6VSYqiey48O273vqNprm6SgE+JNjeLsPWT/ckNYIur09P
-	1Rh2pr7XCHn//PSO91aapQ==
-X-Google-Smtp-Source: ACHHUZ79LfJp9RkPNTpyZJ5OtyEoIgIYPICSHb+vRi8hTHwBhSpMqkvv/DethS+ipksLPiMZ71fxMQ==
-X-Received: by 2002:a92:d3c3:0:b0:340:6984:cc6f with SMTP id c3-20020a92d3c3000000b003406984cc6fmr478157ilh.3.1686859744059;
-        Thu, 15 Jun 2023 13:09:04 -0700 (PDT)
-Received: from robh_at_kernel.org ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id g24-20020a056638061800b004166c24e30dsm5685797jar.32.2023.06.15.13.09.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Jun 2023 13:09:03 -0700 (PDT)
-Received: (nullmailer pid 1586553 invoked by uid 1000);
-	Thu, 15 Jun 2023 20:09:01 -0000
-Date: Thu, 15 Jun 2023 14:09:01 -0600
-From: Rob Herring <robh@kernel.org>
-To: Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>
-Cc: Thomas Zimmermann <tzimmermann@suse.de>, Linux regressions mailing list <regressions@lists.linux.dev>, Salvatore Bonaccorso <carnil@debian.org>, Cyril Brulebois <cyril@debamax.com>, linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, stable@vger.kernel.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62D83156C0
+	for <regressions@lists.linux.dev>; Thu, 15 Jun 2023 21:31:22 +0000 (UTC)
+Received: from relay3-d.mail.gandi.net (unknown [217.70.183.195])
+	by mslow1.mail.gandi.net (Postfix) with ESMTP id AB210CECD5
+	for <regressions@lists.linux.dev>; Thu, 15 Jun 2023 21:19:34 +0000 (UTC)
+X-GND-Sasl: cyril@debamax.com
+X-GND-Sasl: cyril@debamax.com
+X-GND-Sasl: cyril@debamax.com
+X-GND-Sasl: cyril@debamax.com
+X-GND-Sasl: cyril@debamax.com
+X-GND-Sasl: cyril@debamax.com
+X-GND-Sasl: cyril@debamax.com
+X-GND-Sasl: cyril@debamax.com
+X-GND-Sasl: cyril@debamax.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 653F160009;
+	Thu, 15 Jun 2023 21:19:25 +0000 (UTC)
+Date: Thu, 15 Jun 2023 23:19:24 +0200
+From: Cyril Brulebois <cyril@debamax.com>
+To: Rob Herring <robh@kernel.org>
+Cc: Michal =?utf-8?B?U3VjaMOhbmVr?= <msuchanek@suse.de>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Linux regressions mailing list <regressions@lists.linux.dev>,
+	Salvatore Bonaccorso <carnil@debian.org>,
+	linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, stable@vger.kernel.org
 Subject: Re: [PATCH 1/2] fbdev/offb: Update expected device name
-Message-ID: <20230615200901.GA1572644-robh@kernel.org>
+Message-ID: <20230615211924.cf2qs52cfaf7m3f7@debamax.com>
+Organization: DEBAMAX
 References: <20230412095509.2196162-1-cyril@debamax.com>
  <20230412095509.2196162-2-cyril@debamax.com>
  <ZDvrY7X9mpJ7WZ3z@eldamar.lan>
  <11b342dc-1a46-d1be-5fdd-c6eee661e15a@leemhuis.info>
  <fe3b90b0-b52f-9677-0245-a201975c3e0c@suse.de>
  <20230615132107.GA9196@kitsune.suse.cz>
+ <20230615200901.GA1572644-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="zpftdcurb5ffwnvh"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230615132107.GA9196@kitsune.suse.cz>
+In-Reply-To: <20230615200901.GA1572644-robh@kernel.org>
 
-On Thu, Jun 15, 2023 at 03:21:07PM +0200, Michal Suchánek wrote:
-> Hello,
-> 
-> On Thu, Jun 15, 2023 at 03:06:28PM +0200, Thomas Zimmermann wrote:
-> > Hi
-> > 
-> > Am 15.06.23 um 15:03 schrieb Linux regression tracking (Thorsten Leemhuis):
-> > > On 16.04.23 14:34, Salvatore Bonaccorso wrote:
-> > > > 
-> > > > On Wed, Apr 12, 2023 at 11:55:08AM +0200, Cyril Brulebois wrote:
-> > > > > Since commit 241d2fb56a18 ("of: Make OF framebuffer device names unique"),
-> > > > > as spotted by Frédéric Bonnard, the historical "of-display" device is
-> > > > > gone: the updated logic creates "of-display.0" instead, then as many
-> > > > > "of-display.N" as required.
-> > > > > 
-> > > > > This means that offb no longer finds the expected device, which prevents
-> > > > > the Debian Installer from setting up its interface, at least on ppc64el.
-> > > > > 
-> > > > > It might be better to iterate on all possible nodes, but updating the
-> > > > > hardcoded device from "of-display" to "of-display.0" is confirmed to fix
-> > > > > the Debian Installer at the very least.
-> 
-> At the time this was proposed it was said that "of-display", is wrong,
-> and that "of-display.0" must be used for the first device instead, and
-> if something breaks an alias can be provided.
-> 
-> So how does one provide an alias so that offb can find "of-display.0" as
-> "of-display"?
 
-I'm not aware of any way. There isn't because device names and paths are 
-not considered ABI. There are mechanisms for getting stable class device 
-indices (e.g. i2c0, mmcblk0, fb0, fb1, etc.) though not implemented for 
-fbN (and please don't add it). 
+--zpftdcurb5ffwnvh
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-In any case, this should be an easy fix. Though if "linux,opened" or 
-"linux,boot-display" is not set, then you'd still get "of-display.0":
+Hi Rob,
 
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index 78ae84187449..e46482cef9c7 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -553,7 +553,7 @@ static int __init of_platform_default_populate_init(void)
-                        if (!of_get_property(node, "linux,opened", NULL) ||
-                            !of_get_property(node, "linux,boot-display", NULL))
-                                continue;
--                       dev = of_platform_device_create(node, "of-display.0", NULL);
-+                       dev = of_platform_device_create(node, "of-display", NULL);
-                        of_node_put(node);
-                        if (WARN_ON(!dev))
-                                return -ENOMEM;
+Rob Herring <robh@kernel.org> (2023-06-15):
+> On Thu, Jun 15, 2023 at 03:21:07PM +0200, Michal Such=C3=A1nek wrote:
+> > At the time this was proposed it was said that "of-display", is wrong,
+> > and that "of-display.0" must be used for the first device instead, and
+> > if something breaks an alias can be provided.
+> >=20
+> > So how does one provide an alias so that offb can find "of-display.0"
+> > as "of-display"?
+>=20
+> I'm not aware of any way. There isn't because device names and paths are=
+=20
+> not considered ABI. There are mechanisms for getting stable class device=
+=20
+> indices (e.g. i2c0, mmcblk0, fb0, fb1, etc.) though not implemented for=
+=20
+> fbN (and please don't add it).=20
+>=20
+> In any case, this should be an easy fix. Though if "linux,opened" or=20
+> "linux,boot-display" is not set, then you'd still get "of-display.0":
+>=20
+> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+> index 78ae84187449..e46482cef9c7 100644
+> --- a/drivers/of/platform.c
+> +++ b/drivers/of/platform.c
+> @@ -553,7 +553,7 @@ static int __init of_platform_default_populate_init(v=
+oid)
+>                         if (!of_get_property(node, "linux,opened", NULL) =
+||
+>                             !of_get_property(node, "linux,boot-display", =
+NULL))
+>                                 continue;
+> -                       dev =3D of_platform_device_create(node, "of-displ=
+ay.0", NULL);
+> +                       dev =3D of_platform_device_create(node, "of-displ=
+ay", NULL);
+>                         of_node_put(node);
+>                         if (WARN_ON(!dev))
+>                                 return -ENOMEM;
+
+I've just replaced my clueless workaround with this patch on top of the
+kernel found in Debian 12 (Bookworm), i.e. 6.1.27 at this point, and it
+indeed fixes the black screen problem in the installer's context.
+
+I didn't run a full installation to check whether this kernel is also fine
+after rebooting into the installed system, but as far as I understood for
+the original bug report[1], it wasn't affected in the first place.
+
+ 1. https://bugs.debian.org/1033058
+
+Will somebody else pick up the torch from here, and submit that for
+inclusion in master? Or should I re-submit the above patch on my own?
+
+I see my Debian colleagues have already pushed an updated v6.4-rc6 in
+experimental, so it should be rather easy to combine checking latest
+master with the distribution's packaging. Once that's done, I'm quite
+familiar with building an updated installer image on top of it=E2=80=A6
+
+
+Thanks,
+--=20
+Cyril Brulebois -- Debian Consultant @ DEBAMAX -- https://debamax.com/
+
+--zpftdcurb5ffwnvh
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEHoutkuoaze1Qayc7lZpsmSeGm2EFAmSLgE4ACgkQlZpsmSeG
+m2HGdxAAjx/OIUvMJXqRQbNU18DH4aIs8GtXVP74rC39FpYhMiT25ZtEpk2fwGaL
+VaCspAGK1CqN5usg4hD1x8mN7zhROE6gd9fwd5a+wxhDsCWyF3BdpwKrlVpGTjFz
+3hCukzRW42ERph5rC93ffpP8xCmwHBMOl8wEXhhHcMoC92LIQt2W8YxK5dK6CdHD
+pVNDjluHpsRoOKg8ljJG2PpqSyrYv1gVyNrA2fdmR7cfgxCdHdwqyG0YqXKP5gBM
+V642y/YhM1Ds0LuCVtvZi6eU+lqXhEQIr/PFN+2gfvS6q768utWAuvPHHONuF+gU
+bzee336Skny9W6B2mUngreLm/JwXBuroaSDEcH1r0fKCOztSs7ii21psBfDp+6ji
+fhZfLja0Dm3JMmKrL0T6cF/a5q+ZbStutmiZZu9nQ31xHTs6jky89ZDbN5kWIoXT
+ahYfEwy4br3uLu0ddrWSnBsEzZFCBsZjaMuWOnAP1iIADEkxyGeG1HyAmG2Bm6u/
+CjpoyKfzt/lSL0wdbJEhhJv5r/sGndmznMfcflveIlAtoqwGef13O2phfanXdS9u
+4PkBkzt3IdBKM7rocmH+eo8SNBmaVnjq5tfRgiLfp4HKvv4QRzBPSippVn53CjKX
+NlH9CNA9MVJL3YZzJ+f9W1JHG/hz1zugKsKJQMCJXpz7VJ6Y6cI=
+=6dGw
+-----END PGP SIGNATURE-----
+
+--zpftdcurb5ffwnvh--
