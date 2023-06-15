@@ -1,131 +1,102 @@
-Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C69E215AE9
-	for <regressions@lists.linux.dev>; Thu, 15 Jun 2023 13:47:39 +0000 (UTC)
-Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-62fec6068bbso8605336d6.2
-        for <regressions@lists.linux.dev>; Thu, 15 Jun 2023 06:47:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1686836858; x=1689428858;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=HlZJFQHGnnGtL9UMgugLsRODzWb3kDKPZVxr84A3G1U=;
-        b=lNWXFDzCR59VgJ5LNZpPBjWbbMoVrpWdSpFbIsODbhVv7+mFtpIr/PQw7VIabqJlPD
-         saQI0qmGe3TReDc1TlRpqcR4kiOxQtNqPv9CDsms4JRnWSuAtgFTx+grFiQ1gs8KKLPg
-         0h/DgmqrMInZfe/+UXFQSHCktjo7q1PoheThf2rKMvG9RmI+O1SoDhyj6r8EAqF/rrev
-         VTw10YDPpzkYISVW4MvqoDv4XFSt8LuJSq5YStzNj8eROq/R56ocLe/8fhfdgQaMHotq
-         4W2jvDQ60qXxq28pXPyMgnzllgufXTpZvCDn8rdLqKOq4vm2g4BaTunNxfHi1mn3KO2y
-         gEPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686836858; x=1689428858;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=HlZJFQHGnnGtL9UMgugLsRODzWb3kDKPZVxr84A3G1U=;
-        b=DdfQa2inEl107RxN+pv3ugTn0iu1qeLhT8JopIB8oUHW/uCwjpF/n4923kTaqfcT+H
-         vOK7idfCMypAWFc/w9+M5NZsF9YOoqcBy8+3dEu7LER+E/GdT7tNzQaYCzAxZatYb1Vd
-         wtbltbNj1PmjKqUCjp2Vw26O6RuxYHgsIB1SOYVcwsdDcYlLR+p3Bi1DUqLFqUWCHojo
-         o7rBo8SXDuTYGGOo0+5I+sHBSFHisz8w//vT7ctn1QNxm9Q1gBwzV+gb+sBvWC3tumcT
-         DYgXemYhcn7Uev9tWEuHNFuNxiHOOXzVPJ3RUEBsM55vXgPPNDrNphOAHPBeqhGbzXzS
-         2N4w==
-X-Gm-Message-State: AC+VfDycM7iCIEKg+KoodrSxoctUgweESVx9asD2V4z9NdXQSV9Lnz7S
-	H5jI3bvmYOX5B9z7OK+ozV4HQVrTC1W/jer/Zey/ZA==
-X-Google-Smtp-Source: ACHHUZ5L3ZNI4mtuSiaC2uTD2gKYjnuz0pHO5+/2rAu1ZpYEpHnOveGpH3JaKWLKXP+kxxIm8tsTcJtzy0kuRZKwMTM=
-X-Received: by 2002:ad4:5d63:0:b0:62f:edd7:3155 with SMTP id
- fn3-20020ad45d63000000b0062fedd73155mr3161258qvb.45.1686836858413; Thu, 15
- Jun 2023 06:47:38 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FBCE171A5
+	for <regressions@lists.linux.dev>; Thu, 15 Jun 2023 14:03:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+ s=s31663417; t=1686837760; x=1687442560; i=georgmueller@gmx.net;
+ bh=iXLy0cXrEehKxf0tsrC//fveq+MM53eyH3CeZgX6K2U=;
+ h=X-UI-Sender-Class:Date:Subject:From:To:Cc:References:In-Reply-To;
+ b=CUrdfbixMn0FIOS9spWIoqykq5cS35aDnMBoEhbUkrdq2wbedpaIQL0MxaRiQiyKFk1pjw8
+ NML6bLNpuVdovlxPH+76nvFeOtZywUVUe7jCi2oVWoPK91E4L2AnLgxAUQgIGckWQZIWv2FNX
+ tyRC7vRZcbajQC8DVIWxGyutKb8nLR2wfLiFpdUlX+82WwsqVVXD4MLVKhD1zfCPovcVOyydx
+ HAOEUWJZLW3guOdYPNy+7cr+8CDVhHGuenBvCCsEc30vdrHG4e5y8fDCHUVw3n0dsKqxW8A49
+ CWZM8QCPNOI8W6xIUXDaQXwBbHZ+N3iZ7xudIUATiBYTxrWCBp/w==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [10.54.0.101] ([93.206.1.113]) by mail.gmx.net (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1Mxm3K-1pv8Rl3Nq2-00zFzh; Thu, 15
+ Jun 2023 16:02:39 +0200
+Message-ID: <e42ada3c-f215-d5a5-f766-7f8aa1580667@gmx.net>
+Date: Thu, 15 Jun 2023 16:02:37 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230602161246.1855448-1-amit.pundir@linaro.org>
- <358c69ad-fa8a-7386-fe75-92369883ee48@leemhuis.info> <0f6c9dcb-b7f6-fff9-6bed-f4585ea8e487@linaro.org>
- <CAMi1Hd3Cv1i06NhpY6Jqu7OvMpOdzTj6nTEMJNWLrMwMLsugZA@mail.gmail.com>
-In-Reply-To: <CAMi1Hd3Cv1i06NhpY6Jqu7OvMpOdzTj6nTEMJNWLrMwMLsugZA@mail.gmail.com>
-From: Amit Pundir <amit.pundir@linaro.org>
-Date: Thu, 15 Jun 2023 19:17:02 +0530
-Message-ID: <CAMi1Hd0=KV7k82ARadF45nqX+Cv6zPLCxfDvOyAPeXiFd8jpVA@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: qcom: sdm845-db845c: Move LVS regulator nodes up
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>, Mark Brown <broonie@kernel.org>, 
-	Doug Anderson <dianders@chromium.org>, Bjorn Andersson <andersson@kernel.org>, 
-	Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
-	Konrad Dybcio <konrad.dybcio@linaro.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
-	Caleb Connolly <caleb.connolly@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	linux-arm-msm <linux-arm-msm@vger.kernel.org>, dt <devicetree@vger.kernel.org>, 
-	lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: [PATCH v2 3/3] tools/perf: Fix to get declared file name from
+ clang DWARF5
+Content-Language: en-US
+From: =?UTF-8?Q?Georg_M=c3=bcller?= <georgmueller@gmx.net>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Steven Rostedt <rostedt@goodmis.org>, regressions@lists.linux.dev
+References: <166731050151.2100653.8202870942871353491.stgit@devnote3>
+ <166731052936.2100653.13380621874859467731.stgit@devnote3>
+ <5a00d5a5-7be7-ef8a-4044-9a16249fff25@gmx.net>
+In-Reply-To: <5a00d5a5-7be7-ef8a-4044-9a16249fff25@gmx.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:ktJkoSPE4EnqpzreQkqA3phFUsKqBpjSGlVvltL7n8kMHIHNn7i
+ D7PV7JZ2oTpxSOjkbxJB8K28PhosPii+K/rz3gCxufy9X5dkkPC7pjLPAPhktXG0R/4/J7F
+ GXAAXiVC7bKIYqe/s75aEKkZ+7IlEBUNgmRBfhsr3KHCQpcWjv7vZ3RjcbUvYRFN2TgyUfh
+ NEMpjMlodlsfPWKrTaI8g==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:b3kHxBFFCTY=;a5HnLdNG4ub3LRU8oHkvMR+5cR/
+ 2k3s/H1JDMAiRfJR2tb+AWO74hyhYoMWEUApTLVeiF0qHZyro0DzJNvDViiY7uD/selPCkq/G
+ oIDRdWR2qvxo4Bt3kRyWA50mMztbC27VMKhbc9M4RDdezadlbMB7NhrAuikdftcRAXhN166R2
+ +xZp8kWY6ExxAz9arf3V270F/iqqS0JIqa1YUBzGNGGlQQDUEBWtV1jDhBf301esc2PGx1D0i
+ eGuANWdCNCT6hMFGAuxt8k+CwNBSfwTa2SjKyzK4ZjBfMvZrzHOHDv5Rd28ZRkYMRHgu2Fkdl
+ jH367TaL0kQStYUcTzwKUy3LtGcSF10FAm9kL/KtFQl1VRBcRB/GavHd1fNvxxd5ba/KP9SYF
+ i6AGbiarLpePi7Zi8vk1V5ZuI0mesomAWaL9oTQ/RldFqAWnnxbWx9Z64fgvLPIPVyMJX++n8
+ wPFOYy8oeGmQydlTkAEls5FKKYSq5yFHk6vii3374T97iHvFz6ODOMSqqCcYVDcyOGiKdImPV
+ /bKiz2inDg+Q7NDPyJ84ujt5FuUJiLZd0ucSK+XweJa+QeWUi2qUOm0NNei+YkUPyF+DKMwPw
+ JDUfinSWulLxAgFntxmbkIcSywAsw9shb7M5/EueasUacgI+aSqyuL7w5G1u8sXwvi0VHXY2R
+ BBmKecl9Lk+98CncYGTM+HwxzS0xY51YMuGaPb+pfVacl+rmq/YF8EoyZvHH64uJALQbwv3+c
+ pnqMOdknLFtIa7kUtrPPYKa6iRHvzEbKdzWWFuj0DAOr4PKYs6Zp0AVRhprVCFsE8GakkVnor
+ 3/PSYNG82dHCiWwB6Z+PV5uNVw54Nh6sle99VokidHKLEeMmMltL/tHAr47QA7i7zfCx/AMnn
+ SXS/cJmEZDh5Tee5ApTLt90gRqP5WkOaxl4fq39BBO/K/YMaA3rw24tRTNsO4mKUzFN9tXnk1
+ RUucXQ==
 
-On Thu, 15 Jun 2023 at 00:38, Amit Pundir <amit.pundir@linaro.org> wrote:
+Hi all,
+
+I have found a solution for this bug and will post a patch later today.
+
+Am 09.06.23 um 14:21 schrieb Georg M=C3=BCller:
 >
-> On Thu, 15 Jun 2023 at 00:17, Krzysztof Kozlowski
-> <krzysztof.kozlowski@linaro.org> wrote:
-> >
-> > On 14/06/2023 20:18, Linux regression tracking (Thorsten Leemhuis) wrote:
-> > > On 02.06.23 18:12, Amit Pundir wrote:
-> > >> Move lvs1 and lvs2 regulator nodes up in the rpmh-regulators
-> > >> list to workaround a boot regression uncovered by the upstream
-> > >> commit ad44ac082fdf ("regulator: qcom-rpmh: Revert "regulator:
-> > >> qcom-rpmh: Use PROBE_FORCE_SYNCHRONOUS"").
-> > >>
-> > >> Without this fix DB845c fail to boot at times because one of the
-> > >> lvs1 or lvs2 regulators fail to turn ON in time.
-> > >
-> > > /me waves friendly
-> > >
-> > > FWIW, as it's not obvious: this...
-> > >
-> > >> Link: https://lore.kernel.org/all/CAMi1Hd1avQDcDQf137m2auz2znov4XL8YGrLZsw5edb-NtRJRw@mail.gmail.com/
-> > >
-> > > ...is a report about a regression. One that we could still solve before
-> > > 6.4 is out. One I'll likely will point Linus to, unless a fix comes into
-> > > sight.
-> > >
-> > > When I noticed the reluctant replies to this patch I earlier today asked
-> > > in the thread with the report what the plan forward was:
-> > > https://lore.kernel.org/all/CAD%3DFV%3DV-h4EUKHCM9UivsFHRsJPY5sAiwXV3a1hUX9DUMkkxdg@mail.gmail.com/
-> > >
-> > > Dough there replied:
-> > >
-> > > ```
-> > > Of the two proposals made (the revert vs. the reordering of the dts),
-> > > the reordering of the dts seems better. It only affects the one buggy
-> > > board (rather than preventing us to move to async probe for everyone)
-> > > and it also has a chance of actually fixing something (changing the
-> > > order that regulators probe in rpmh-regulator might legitimately work
-> > > around the problem). That being said, just like the revert the dts
-> > > reordering is still just papering over the problem and is fragile /
-> > > not guaranteed to work forever.
-> > > ```
-> > >
-> > > Papering over obviously is not good, but has anyone a better idea to fix
-> > > this? Or is "not fixing" for some reason an viable option here?
-> > >
-> >
-> > I understand there is a regression, although kernel is not mainline
-> > (hash df7443a96851 is unknown) and the only solutions were papering the
-> > problem. Reverting commit is a temporary workaround. Moving nodes in DTS
-> > is not acceptable because it hides actual problem and only solves this
-> > one particular observed problem, while actual issue is still there. It
-> > would be nice to be able to reproduce it on real mainline with normal
-> > operating system (not AOSP) - with ramdiks/without/whatever. So far no
-> > one did it, right?
+> Am 01.11.22 um 14:48 schrieb Masami Hiramatsu (Google):
+>> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+>>
+>> Fix to get the declared file name even if it uses file index 0
+>> in DWARF5, using custom die_get_decl_file() function.
+>>
 >
-> No, I did not try non-AOSP system yet. I'll try it tomorrow, if that
-> helps. With mainline hash.
+> this patch breaks perf probe on fedora 38.
+>
 
-Hi, here is the crash report on db845c running vanilla v6.4-rc6 with a
-debian build https://bugs.linaro.org/attachment.cgi?id=1142
+The problem is that die_get_file_name() uses the wrong cu_die.
 
-And fwiw here is the db845c crash log with AOSP running vanilla
-v6.4-rc6 https://bugs.linaro.org/attachment.cgi?id=1141
+I was pointed to the solution by reading elfutils commit e1db5cdc9:
 
-Regards,
-Amit Pundir
+     dwarf_decl_file uses dwarf_attr_integrate to get the DW_AT_decl_file
+     attribute. This means the attribute might come from a different DIE
+     in a different CU. If so, we need to use the CU associated with the
+     attribute, not the original DIE, to resolve the file name.
 
-PS: rootfs in this bug report doesn't matter much because I'm loading
-all the kernel modules from a ramdisk and in the case of a crash the
-UFS doesn't probe anyway.
+The correct cu_die has to be obtained via
+
+     dwarf_attr_integrate(dw_die, DW_AT_decl_file, &attr_mem)
+
+and then cu_die from the cu from attr_mem (dwarf_cu_die(attr_mem.cu, &cu_d=
+ie, ...)
+to obtain it) has to be used.
+
+Best regards,
+Georg
