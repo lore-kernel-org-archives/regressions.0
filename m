@@ -1,65 +1,141 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 028983FEC;
-	Fri, 16 Jun 2023 06:13:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5238C433C0;
-	Fri, 16 Jun 2023 06:12:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1686895980;
-	bh=pKKs+ikvQgBhv6OujYCF/JO0CWWZMx7/sLxq/+FmgdQ=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-	b=vNRjrKr9yva3IsiQbnaBccQwUvpLA1Mgw8uGTj52RWGNiBcMHo5TPqwe/0GfYuVU7
-	 sODW+rKfd7imcYUfgnAmV7X5fokV9FGT4idRwxYuzezDCjETiZ8vsNjZD/2CNM7yIi
-	 XAp2tdoLzYlzESCvh81lxdN1g+UnXKZFD4JwZU8e7hKVrDE+7IUzcjhD7r1kp0wbJz
-	 C0IPCSJHRRzCg4znmH0DERGNv0MJyfbSoI8zMvtsVA6hgDTINYsPXtftO8MKe2fO5v
-	 zLRW8KfW067zj84LG93/RGiLAuEn/fVYKCjvjv/AdtJA3GE0UYAL36WIDNNRBWXIH1
-	 ZPNlsSGJGLJkA==
-From: Kalle Valo <kvalo@kernel.org>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Johannes Berg <johannes@sipsolutions.net>,  Toke =?utf-8?Q?H=C3=B8ilan?=
- =?utf-8?Q?d-J=C3=B8rgensen?= <toke@kernel.org>,
-  linux-wireless@vger.kernel.org,  netdev@vger.kernel.org,
-  linux-kernel@vger.kernel.org,  regressions@lists.linux.dev
-Subject: Re: Closing down the wireless trees for a summer break?
-References: <87y1kncuh4.fsf@kernel.org> <871qifxm9b.fsf@toke.dk>
-	<20230613112834.7df36e95@kernel.org>
-	<ba933d6e3d360298e400196371e37735aef3b1eb.camel@sipsolutions.net>
-	<20230613195136.6815df9b@kernel.org>
-	<c7c9418bcd5ac1035a007d336004eff48994dde7.camel@sipsolutions.net>
-	<87a5x2ccao.fsf@kernel.org> <20230614122153.640292b9@kernel.org>
-Date: Fri, 16 Jun 2023 09:12:55 +0300
-In-Reply-To: <20230614122153.640292b9@kernel.org> (Jakub Kicinski's message of
-	"Wed, 14 Jun 2023 12:21:53 -0700")
-Message-ID: <87h6r8aqag.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DB3263C4
+	for <regressions@lists.linux.dev>; Fri, 16 Jun 2023 07:46:00 +0000 (UTC)
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-4f849a0e371so439085e87.1
+        for <regressions@lists.linux.dev>; Fri, 16 Jun 2023 00:46:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1686901558; x=1689493558;
+        h=in-reply-to:references:message-id:subject:cc:to:from:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EU0qxCzPl20kJKOqOVSGY+gianqgCNGR85w4fJS8dg4=;
+        b=SBE/iYM4gopO1FtPL2J1JAyCWy8jhpYjMK9ORY5/b7SfWeUDekB7wAzikYTfmnqqNu
+         marqrD0/+uA95OE3t0XraKg1Sn30TlOQ6xxCKlwKnD2z9FNrzRfTjQmEa5WsXGdLEglc
+         MVw3CpftDEXWmndc1c0Cmn/SLMuTePww6X/wfeaidcPKVfhUdoY5Qm02SMhwyy5b5Z8U
+         TtuhAH1/Y0rLFRLOImHscfiuWS5c/5e6LIn2reaZmwFklJKgvHV7PrMC9PNL71WojEXi
+         MSttrBPgciQWOvFNHBfzES135vQZe48pGEyKpSY8ujn9TP4I2lvLbVJQleAQj8JDXdjB
+         EifQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686901558; x=1689493558;
+        h=in-reply-to:references:message-id:subject:cc:to:from:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=EU0qxCzPl20kJKOqOVSGY+gianqgCNGR85w4fJS8dg4=;
+        b=jSkr+brvfBs0LGeSJBLCwURp7bYGJjCfFHP6zbNe1ehBiYEzyxWXtRKFl50WOe9fyp
+         AKr/0KET+bvN07ReSSvSB3RkdDWW8JSer7IV2Kjbj++/LKDUJiih6bbccyKksopar/s9
+         TBx15qkXHWfh5GyVDmSMv9nO7OR1FvQOV80N33FN70XrfahcMZC/RlDppQRqwJmfzX8f
+         Cy7oGgJp/WbYgGP2zvDDpnhy0WaBnzPDMYZjr/f04jerK5niNw4zOnq0l8ZJo6KqJrPl
+         OkZXJ9Z4ea1wa1I4fsRj5xiyjHBVnkKLk+g6D+4tzQ8RRv14y+y36US1Iqkk2Uu583qU
+         qcJw==
+X-Gm-Message-State: AC+VfDwc2FynblFvMwjNV/65sYNAHEB8dpL6SCB4IpoKx6vFMP4b04to
+	3/6dVfHTXpL4A9GKz9TeeYtSkW+GKaQ=
+X-Google-Smtp-Source: ACHHUZ4JlwEt9VjsDLTTnFYd85ySoaH+5kHFYr3jQQ/GMigh263c6y/0Gm5Ft7nktkzB4VSfuDoPlQ==
+X-Received: by 2002:a19:e30e:0:b0:4f6:116d:6d26 with SMTP id a14-20020a19e30e000000b004f6116d6d26mr607146lfh.42.1686901558119;
+        Fri, 16 Jun 2023 00:45:58 -0700 (PDT)
+Received: from localhost (freebox.vlq16.iliad.fr. [213.36.7.13])
+        by smtp.gmail.com with ESMTPSA id u14-20020a7bcb0e000000b003f42314832fsm1425490wmj.18.2023.06.16.00.45.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 16 Jun 2023 00:45:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 16 Jun 2023 09:45:57 +0200
+From: "Nicolas Escande" <nico.escande@gmail.com>
+To: "Linux regressions mailing list" <regressions@lists.linux.dev>, "Bagas
+ Sanjaya" <bagasdotme@gmail.com>, <nbd@nbd.name>,
+ =?utf-8?q?Toke_H=C3=B8iland-J=C3=B8rgensen?= <toke@toke.dk>, "Kalle Valo"
+ <kvalo@kernel.org>, "Johannes Berg" <johannes.berg@intel.com>
+Cc: <linux-wireless@vger.kernel.org>
+Subject: Re: [regression] STP on 80211s is broken in 6.4-rc4
+Message-Id: <CTDWJJDKSYYD.XBG1CAZB3A5W@syracuse>
+X-Mailer: aerc 0.15.1
+References: <CT5GNZSK28AI.2K6M69OXM9RW5@syracuse>
+ <ZIQbs0wqdRh7c0Kx@debian.me>
+ <a9d02800-2cd6-a27b-7998-4c97cf2eb692@leemhuis.info>
+In-Reply-To: <a9d02800-2cd6-a27b-7998-4c97cf2eb692@leemhuis.info>
 
-Jakub Kicinski <kuba@kernel.org> writes:
-
-> On Wed, 14 Jun 2023 18:07:43 +0300 Kalle Valo wrote:
->> But do note that above is _only_ for -next patches. For patches going to
->> -rc releases we apply the patches directly to wireless, no other trees
->> are involved. My proposal was that net maintainers would take only fixes
->> for -rc releases, my guess from history is that it would be maximum of
->> 10-15 patches. And once me and Johannes are back we would sort out -next
->> patches before the merge window. But of course you guys can do whatever
->> you think is best :)
+On Thu Jun 15, 2023 at 2:54 PM CEST, Linux regression tracking (Thorsten Le=
+emhuis) wrote:
+> On 10.06.23 08:44, Bagas Sanjaya wrote:
+> > On Tue, Jun 06, 2023 at 12:55:57PM +0200, Nicolas Escande wrote:
+> >> Hello Felix,
+> >>
+> >> As user of the mesh part of mac80211 on multiple products at work let =
+me say
+> >> thank you for all the work you do on wifi, especially on 80211s, and e=
+specially
+> >> the recent improvements you made for mesh fast RX/TX & cross vendor AM=
+SDU compat
+> >>
+> >> We upgraded our kernel from an older (5.15) to a newer 6.4. The proble=
+m is STP=20
+> >> doesn't work anymore and alas we use it for now (for the better or wor=
+se).
+> >>
+> >> What I gathered so far from my setup:
+> >>  - we use ath9k & ath10k
+> >>  - in my case STP frames are received as regular packet and not as ams=
+du
+> >>  - the received packets have a wrong length of 44 in tcpdump
+> >>    (instead of 38 with our previous kernel)
+> >>  - llc_fixup_skb() tries to pull some 41 bytes out of a 35 bytes packe=
+t
+> >>    this makes llc_rcv() discard the frames & breaks STP
+> >>
+> >> >From bisecting the culprit seems to be 986e43b19ae9176093da35e0a844e6=
+5c8bf9ede7
+> >> (wifi: mac80211: fix receiving A-MSDU frames on mesh interfaces)
+> >>
+> >> I guess that your changes to handle both ampdu subframes & normal fram=
+es in the
+> >> same datapath ends up putting a wrong skb->len for STP (multicast) fra=
+mes ?
+> >> Honestly I don't understand enough of the 80211 internals & spec to pi=
+npoint the
+> >> exact problem.
+> >>
+> >> It seems this change was already in the 6.3 kernel so I guess someone =
+should
+> >> have seen it before (but I didn't find anything..) ? Maybe I missed so=
+mething...
+> >>
+> >> Anyway I'm happy to provide more info or try anything you throw at me.
+> >>
+> >=20
+> > Thanks for the regression report. I'm adding it to regzbot:
+> >=20
+> > (Felix: it looks like this regression is introcued by a commit authored=
+ by you.
+> > Would you like to take a look on it?)
+> >=20
+> > #regzbot ^introduced: 986e43b19ae917
 >
-> Ah, good note, I would have guessed that fixes go via special trees,
-> too. In that case it should indeed be easy. We'll just look out for
-> maintainer acks on the list and ping people if in doubt.
+> Hmmm, Felix did not reply. But let's ignore that for now.
 
-Sounds good. And do note that not all drivers have active maintainers,
-so you might have to take some patches without acks.
+I haven't seen mails from felix on the list for a few days, I'm guessing he=
+'s
+unavailable for now but I'll hapilly wait.
 
--- 
-https://patchwork.kernel.org/project/linux-wireless/list/
+>
+> Nicolas, I noticed there are a few patches in next that refer to the
+> culprit. Might be worth giving this series a try:
+>
+> https://lore.kernel.org/all/20230314095956.62085-1-nbd@nbd.name/
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+Well this series already landed in 6.4 and that is the version I did my ini=
+tial
+testing with. So no luck there.
+
+>
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> --
+> Everything you wanna know about Linux kernel regression tracking:
+> https://linux-regtracking.leemhuis.info/about/#tldr
+> If I did something stupid, please tell me, as explained on that page.
