@@ -1,154 +1,65 @@
-Received: from h5.fbrelay.privateemail.com (h5.fbrelay.privateemail.com [162.0.218.228])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 485A97C
-	for <regressions@lists.linux.dev>; Fri, 16 Jun 2023 05:38:01 +0000 (UTC)
-Received: from MTA-15-3.privateemail.com (unknown [198.54.122.141])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
-	(No client certificate requested)
-	by h5.fbrelay.privateemail.com (Postfix) with ESMTPSA id E8D166052D
-	for <regressions@lists.linux.dev>; Fri, 16 Jun 2023 05:25:50 +0000 (UTC)
-Received: from mta-15.privateemail.com (localhost [127.0.0.1])
-	by mta-15.privateemail.com (Postfix) with ESMTP id 5606218000B1;
-	Fri, 16 Jun 2023 01:25:43 -0400 (EDT)
-Received: from [192.168.2.177] (bras-base-toroon4332w-grc-19-174-93-80-116.dsl.bell.ca [174.93.80.116])
-	by mta-15.privateemail.com (Postfix) with ESMTPA id B4143180018C;
-	Fri, 16 Jun 2023 01:25:40 -0400 (EDT)
-Date: Fri, 16 Jun 2023 01:25:33 -0400
-From: Hamza Mahfooz <someguy@effective-light.com>
-Subject: KVM page-fault on Kernel 6.3.8
-To: kvm@vger.kernel.org
-Cc: regressions@lists.linux.dev, linux-kernel@vger.kernel.org
-Message-Id: <L2ZBWR.TERFR10NPZ281@effective-light.com>
-X-Mailer: geary/43.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 028983FEC;
+	Fri, 16 Jun 2023 06:13:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5238C433C0;
+	Fri, 16 Jun 2023 06:12:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1686895980;
+	bh=pKKs+ikvQgBhv6OujYCF/JO0CWWZMx7/sLxq/+FmgdQ=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+	b=vNRjrKr9yva3IsiQbnaBccQwUvpLA1Mgw8uGTj52RWGNiBcMHo5TPqwe/0GfYuVU7
+	 sODW+rKfd7imcYUfgnAmV7X5fokV9FGT4idRwxYuzezDCjETiZ8vsNjZD/2CNM7yIi
+	 XAp2tdoLzYlzESCvh81lxdN1g+UnXKZFD4JwZU8e7hKVrDE+7IUzcjhD7r1kp0wbJz
+	 C0IPCSJHRRzCg4znmH0DERGNv0MJyfbSoI8zMvtsVA6hgDTINYsPXtftO8MKe2fO5v
+	 zLRW8KfW067zj84LG93/RGiLAuEn/fVYKCjvjv/AdtJA3GE0UYAL36WIDNNRBWXIH1
+	 ZPNlsSGJGLJkA==
+From: Kalle Valo <kvalo@kernel.org>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Johannes Berg <johannes@sipsolutions.net>,  Toke =?utf-8?Q?H=C3=B8ilan?=
+ =?utf-8?Q?d-J=C3=B8rgensen?= <toke@kernel.org>,
+  linux-wireless@vger.kernel.org,  netdev@vger.kernel.org,
+  linux-kernel@vger.kernel.org,  regressions@lists.linux.dev
+Subject: Re: Closing down the wireless trees for a summer break?
+References: <87y1kncuh4.fsf@kernel.org> <871qifxm9b.fsf@toke.dk>
+	<20230613112834.7df36e95@kernel.org>
+	<ba933d6e3d360298e400196371e37735aef3b1eb.camel@sipsolutions.net>
+	<20230613195136.6815df9b@kernel.org>
+	<c7c9418bcd5ac1035a007d336004eff48994dde7.camel@sipsolutions.net>
+	<87a5x2ccao.fsf@kernel.org> <20230614122153.640292b9@kernel.org>
+Date: Fri, 16 Jun 2023 09:12:55 +0300
+In-Reply-To: <20230614122153.640292b9@kernel.org> (Jakub Kicinski's message of
+	"Wed, 14 Jun 2023 12:21:53 -0700")
+Message-ID: <87h6r8aqag.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-X-Virus-Scanned: ClamAV using ClamSMTP
+Content-Type: text/plain
 
-I am seeing the following page-fault on the latest stable kernel:
+Jakub Kicinski <kuba@kernel.org> writes:
 
-BUG: unable to handle page fault for address: ffffb4ff0cd20034
-#PF: supervisor read access in kernel mode
-#PF: error_code(0x0000) - not-present page
-PGD 10002a067 P4D 10002a067 PUD 0
-Oops: 0000 [#1] PREEMPT SMP NOPTI
-CPU: 7 PID: 2675 Comm: CPU 7/KVM Not tainted 6.3.8-arch1-1 #1 
-a1d299e746aebdb27c523dd3bd94aba6f54915c7
-Hardware name: ASUS System Product Name/ProArt X670E-CREATOR WIFI, BIOS 
-1303 04/27/2023
-RIP: 0010:try_grab_folio+0x14f/0x370
-Code: 83 f8 04 75 6f 44 89 ee 4c 89 e7 e8 6b bc 0b 00 84 c0 74 60 4c 8b 
-63 08 41 f6 c4 01 0f 85 b0 01 00 00 0f 1f 44 00 00 49 89 dc <41> 8b 44 
-24 34 85 c0 0f 88 f8 00 00 00 41 8b 44 24 34 85 c0 74 58
-RSP: 0018:ffff9fa98504b948 EFLAGS: 00010086
-RAX: 0000000000000002 RBX: fffff4ff0cd21480 RCX: 0000000000000000
-RDX: 0000000000000003 RSI: 0000000000000001 RDI: fffff4ff0cd21480
-RBP: 0000000000000000 R08: ffff8b2edb510980 R09: 00007f5624253000
-R10: 80000003348008e7 R11: 00007f5624253000 R12: ffffb4ff0cd20000
-R13: 0000000000000001 R14: 0000000000000003 R15: 0000000000000001
-FS: 00007f548a7fc6c0(0000) GS:ffff8b35f83c0000(0000) 
-knlGS:0000000000000000
-CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffffb4ff0cd20034 CR3: 0000000113e70000 CR4: 0000000000750ee0
-PKRU: 55555554
-Call Trace:
- <TASK>
- ? __die+0x23/0x70
- ? page_fault_oops+0x171/0x4e0
- ? exc_page_fault+0x172/0x180
- ? asm_exc_page_fault+0x26/0x30
- ? try_grab_folio+0x14f/0x370
- internal_get_user_pages_fast+0x883/0x1150
- __iov_iter_get_pages_alloc+0xdd/0x780
- ? kmem_cache_alloc+0x16f/0x330
- ? bio_associate_blkg_from_css+0xcd/0x340
- iov_iter_get_pages+0x1d/0x40
- bio_iov_iter_get_pages+0xa1/0x480
- __blkdev_direct_IO_async+0xc5/0x1b0
- blkdev_read_iter+0x127/0x1d0
- aio_read+0x132/0x210
- ? io_submit_one+0x46a/0x8b0
- io_submit_one+0x46a/0x8b0
- ? kvm_arch_vcpu_put+0x128/0x190 [kvm 
-711ceda1c40511ce22d1f99f4e9e574def76b25e]
- ? kvm_arch_vcpu_ioctl_run+0x579/0x1770 [kvm 
-711ceda1c40511ce22d1f99f4e9e574def76b25e]
- __x64_sys_io_submit+0xad/0x190
- do_syscall_64+0x5d/0x90
- ? __x64_sys_ioctl+0xac/0xd0
- ? syscall_exit_to_user_mode+0x1b/0x40
- ? do_syscall_64+0x6c/0x90
- ? syscall_exit_to_user_mode+0x1b/0x40
- ? do_syscall_64+0x6c/0x90
- ? syscall_exit_to_user_mode+0x1b/0x40
- ? do_syscall_64+0x6c/0x90
- ? syscall_exit_to_user_mode+0x1b/0x40
- ? do_syscall_64+0x6c/0x90
- ? do_syscall_64+0x6c/0x90
- entry_SYSCALL_64_after_hwframe+0x72/0xdc
-RIP: 0033:0x7f57ac0912ed
-Code: 5d c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 
-f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 
-f0 ff ff 73 01 c3 48 8b 0d 3b 7a 0d 00 f7 d8 64 89 01 48
-RSP: 002b:00007f5427ab97b8 EFLAGS: 00000246 ORIG_RAX: 00000000000000d1
-RAX: ffffffffffffffda RBX: 00007f548a7fc1d0 RCX: 00007f57ac0912ed
-RDX: 00007f5427ab9800 RSI: 0000000000000001 RDI: 00007f57a9d24000
-RBP: 00007f57a9d24000 R08: 0000000000000001 R09: 0000000000000001
-R10: 00007f54740044f0 R11: 0000000000000246 R12: 0000000000000001
-R13: 0000000000000004 R14: 00007f5427ab9800 R15: 000000000000000e
- </TASK>
-Modules linked in: hid_playstation led_class_multicolor ff_memless tun 
-snd_seq_dummy snd_hrtimer snd_seq xt_CHECKSUM xt_MASQUERADE 
-xt_conntrack ipt_REJECT nf_reject_ipv4 xt_tcpudp nft_compat 
-nft_chain_nat nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 
-nf_tables libcrc32c nfnetlink bridge stp llc vfat fat 
-snd_hda_codec_realtek snd_hda_codec_generic mt7921e snd_hda_codec_hdmi 
-mt7921_common snd_usb_audio intel_rapl_msr mt76_connac_lib 
-snd_hda_intel intel_rapl_common snd_intel_dspcfg mt76 snd_usbmidi_lib 
-btusb snd_intel_sdw_acpi edac_mce_amd snd_rawmidi btrtl snd_hda_codec 
-btbcm snd_seq_device btintel snd_hda_core kvm_amd mc snd_hwdep 
-eeepc_wmi btmtk snd_pcm asus_wmi kvm mac80211 bluetooth ledtrig_audio 
-atlantic snd_timer i8042 sparse_keymap libarc4 ecdh_generic rapl 
-platform_profile serio intel_wmi_thunderbolt i2c_piix4 wmi_bmof pcspkr 
-k10temp thunderbolt snd igc ucsi_acpi macsec soundcore cfg80211 
-typec_ucsi mousedev joydev typec roles rfkill gpio_amdpt acpi_cpufreq 
-gpio_generic mac_hid dm_multipath
- crypto_user fuse loop bpf_preload ip_tables x_tables ext4 
-crc32c_generic crc16 mbcache jbd2 dm_crypt cbc encrypted_keys trusted 
-asn1_encoder tee dm_mod hid_logitech_hidpp hid_logitech_dj usbhid 
-amdgpu crct10dif_pclmul crc32_pclmul crc32c_intel polyval_clmulni 
-polyval_generic i2c_algo_bit drm_ttm_helper gf128mul nvme 
-ghash_clmulni_intel ttm sha512_ssse3 drm_buddy aesni_intel gpu_sched 
-crypto_simd nvme_core drm_display_helper cryptd ccp xhci_pci cec 
-nvme_common xhci_pci_renesas video wmi vfio_pci vfio_pci_core irqbypass 
-vfio_iommu_type1 vfio iommufd
-CR2: ffffb4ff0cd20034
----[ end trace 0000000000000000 ]---
-RIP: 0010:try_grab_folio+0x14f/0x370
-Code: 83 f8 04 75 6f 44 89 ee 4c 89 e7 e8 6b bc 0b 00 84 c0 74 60 4c 8b 
-63 08 41 f6 c4 01 0f 85 b0 01 00 00 0f 1f 44 00 00 49 89 dc <41> 8b 44 
-24 34 85 c0 0f 88 f8 00 00 00 41 8b 44 24 34 85 c0 74 58
-RSP: 0018:ffff9fa98504b948 EFLAGS: 00010086
-RAX: 0000000000000002 RBX: fffff4ff0cd21480 RCX: 0000000000000000
-RDX: 0000000000000003 RSI: 0000000000000001 RDI: fffff4ff0cd21480
-RBP: 0000000000000000 R08: ffff8b2edb510980 R09: 00007f5624253000
-R10: 80000003348008e7 R11: 00007f5624253000 R12: ffffb4ff0cd20000
-R13: 0000000000000001 R14: 0000000000000003 R15: 0000000000000001
-FS: 00007f548a7fc6c0(0000) GS:ffff8b35f83c0000(0000) 
-knlGS:0000000000000000
-CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffffb4ff0cd20034 CR3: 0000000113e70000 CR4: 0000000000750ee0
-PKRU: 55555554
-note: CPU 7/KVM[2675] exited with irqs disabled
+> On Wed, 14 Jun 2023 18:07:43 +0300 Kalle Valo wrote:
+>> But do note that above is _only_ for -next patches. For patches going to
+>> -rc releases we apply the patches directly to wireless, no other trees
+>> are involved. My proposal was that net maintainers would take only fixes
+>> for -rc releases, my guess from history is that it would be maximum of
+>> 10-15 patches. And once me and Johannes are back we would sort out -next
+>> patches before the merge window. But of course you guys can do whatever
+>> you think is best :)
+>
+> Ah, good note, I would have guessed that fixes go via special trees,
+> too. In that case it should indeed be easy. We'll just look out for
+> maintainer acks on the list and ping people if in doubt.
 
-It seems to appear randomly, so bisecting it would probably be
-difficult. Also, as far as I can tell it seems to be a recent
-regression (i.e. it was introduced in one of the 6.3.y releases).
+Sounds good. And do note that not all drivers have active maintainers,
+so you might have to take some patches without acks.
 
+-- 
+https://patchwork.kernel.org/project/linux-wireless/list/
 
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
