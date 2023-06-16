@@ -1,284 +1,210 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65B08469E
-	for <regressions@lists.linux.dev>; Fri, 16 Jun 2023 12:43:39 +0000 (UTC)
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-666df200a12so223670b3a.0
-        for <regressions@lists.linux.dev>; Fri, 16 Jun 2023 05:43:39 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCE3B653
+	for <regressions@lists.linux.dev>; Fri, 16 Jun 2023 12:49:28 +0000 (UTC)
+Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-34078ce751dso2607085ab.0
+        for <regressions@lists.linux.dev>; Fri, 16 Jun 2023 05:49:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686919418; x=1689511418;
-        h=content-transfer-encoding:subject:to:from:cc:content-language
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=q91LMqsIB4qZ7S0jCEYhCeWPk3aMqz/NCsS9bfdEeVA=;
-        b=SnL5sxTgN52fC+Ff4/GlLsnlySBEOtb0JKvoAk5NliQsPea9A+kP/OzVx8/NCezJXE
-         Zu0X7eorrXaUPEimaveVmvGz4rqfDYR1wGqgX6GC5fir2K0BjbccGjO4VlUEqEqy25C6
-         yteuDf0Tfvkbkds+T/wV0DhG25d38/bFmsXe1ZCF+aIiT7FAS/hlxjuL9yjPBLjBYet/
-         GWMQrF5mCPpGT0HocTrzXhvPMfT+fR8ia6N51MuUZ0dD0UvSiU8B7MCd6tgxLCGIylhI
-         qhyofm8o7hrRbVeKE1R/ch7YV+3e2Tt51sLj4QHyu/siZxliA3j2PJaMK7lkkUdx5OW2
-         wz8w==
+        d=gmail.com; s=20221208; t=1686919767; x=1689511767;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=QnItvNM771AemuuivofKtG5KE98ERfScHn7bYJ0SFak=;
+        b=i8VlqaijiOFq9GHYRwu4qdqgpAdvB2kwh2/oq/rBIiNqzo4Pj2i/d9EGsXuKtuzBXz
+         FVr7tZKKZDN/BOQFY6g1D5zwvPrD6qPpuWqJ+HYa1l17OUVStj16qPdlTBIIMx6Nxict
+         tzCuI7cxICKJssW/7j2pM9aR6NX8ViosD2ssxOLo9RHE4o8qICQ/spczd3X9dUMV9Kp9
+         +WttRtYcwh92T4VNalBbdLWaFFslFiHtR1Lq5jpJM8blnKWOAWEU2hQ/YrrMWA2KqCFC
+         HIhv0tDiEHU/D7TUJbuluK/nJjNoYirDOTk/pPEisl40wnWTxQ/I6I4zLG03CPTVMvxu
+         8PDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686919418; x=1689511418;
-        h=content-transfer-encoding:subject:to:from:cc:content-language
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=q91LMqsIB4qZ7S0jCEYhCeWPk3aMqz/NCsS9bfdEeVA=;
-        b=jDXflsBL0jS6jy78bAM9OrIwlLVUJPTfbXBeFi/8vCefX/sXhgpTNxXu2NV2PTdK7U
-         kF/z/dPsDUUy5pYKu8abe17ErGifA14NBIogvF+sg1f6zpbyb/Lq2HPvKiNcvIHzn5z5
-         UU77dwSAy2FK2/3ZVcfsxGX1qbxoCcGfje4IC539toIDmctqWtymigCOmqKMiN3WE2l9
-         3FU1PGLuiccN+RAtaiSSoWJrqi89B7V0pfIUnjvtvjlZN4KSUTN0LNzJ2JjAhDjwTSax
-         V9XLbLNNtaobHNDfh5RZ4us9Ksb54P/VhJfvSVakWEX3w3ps8lD6YmUVF19riBLW70xG
-         WJFQ==
-X-Gm-Message-State: AC+VfDxAbMzHF2gyaGk0ycjM/j9oAtetGvTjjnAQxlfG+hRG9dbE6Cg1
-	+FLKdLl35obkIHp41T7qT3U=
-X-Google-Smtp-Source: ACHHUZ57UHsO8YY+elbXrosr7QOXUSA8JFKnQxpae1jI/U0kXI5msWQwNR926vSwgmW+bselvP6Caw==
-X-Received: by 2002:a17:90b:1803:b0:258:842e:e23b with SMTP id lw3-20020a17090b180300b00258842ee23bmr1402157pjb.34.1686919418426;
-        Fri, 16 Jun 2023 05:43:38 -0700 (PDT)
-Received: from [192.168.0.103] ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id i9-20020a17090a2ac900b002591f7ff90csm1378200pjg.43.2023.06.16.05.43.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 16 Jun 2023 05:43:38 -0700 (PDT)
-Message-ID: <8bfaee54-3117-65d3-d723-6408edf93961@gmail.com>
-Date: Fri, 16 Jun 2023 19:43:19 +0700
+        d=1e100.net; s=20221208; t=1686919768; x=1689511768;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QnItvNM771AemuuivofKtG5KE98ERfScHn7bYJ0SFak=;
+        b=eFEmRmA5kjdYpig56mAZsASz+J/167wby0BFYxoKpYzjDru0QiDOq6IctrN767ca6D
+         t4qzxFQEln4VVJRlGiCZEMCmvjzPCZJbB0N/sKfYGZUgRt8t67nwgjvN6+itmrfzqvPn
+         NPI6ybshVTlUBlgyG9OIfCcQqYiiCqXIRxRsx9qlxr2LWZ4hoW3cGeAG03Az+DfM/QeN
+         UddhSyanxHtw63HFtQrDidJQ4tZXiG8XqK+5BK5Enjr3xmYtJp+sc28wuhoCZW0HP1OF
+         y7xfBkB3cq1Y3eyM4gxA0v2Wt/mKs4K8PQjzU8YBlA+4LSgQx1UsDIXz8qqZwbYxt9T3
+         OU9A==
+X-Gm-Message-State: AC+VfDyAkw5ZLlVxo0JDbPBgzqNxpK3cN4Kym+Xg2nP232inI9g4J61w
+	PT0/x4+kTCfoOHcpGbMy2Ag=
+X-Google-Smtp-Source: ACHHUZ4YWSCL3tISSgyUIyvmgkonkY0mYQ7a9HflVuCeaud0B69gDuj1em1q5JfOfxmkeo+cyF9+bw==
+X-Received: by 2002:a92:dd0f:0:b0:335:56cb:a3a with SMTP id n15-20020a92dd0f000000b0033556cb0a3amr1976150ilm.16.1686919767509;
+        Fri, 16 Jun 2023 05:49:27 -0700 (PDT)
+Received: from debian.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id t191-20020a6381c8000000b0054fe07d2f3dsm3733465pgd.11.2023.06.16.05.49.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 Jun 2023 05:49:27 -0700 (PDT)
+Received: by debian.me (Postfix, from userid 1000)
+	id 0F4DF8222705; Fri, 16 Jun 2023 19:49:08 +0700 (WIB)
+Date: Fri, 16 Jun 2023 19:49:08 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Hamza Mahfooz <someguy@effective-light.com>, kvm@vger.kernel.org
+Cc: regressions@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: KVM page-fault on Kernel 6.3.8
+Message-ID: <ZIxaRLIfCQ6IK8S1@debian.me>
+References: <L2ZBWR.TERFR10NPZ281@effective-light.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Content-Language: en-US
-Cc: Linux Networking <netdev@vger.kernel.org>, Linux BPF
- <bpf@vger.kernel.org>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: "David S. Miller" <davem@davemloft.net>, David Ahern
- <dsahern@kernel.org>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Subject: Fwd: inet6_sock_destruct->inet_sock_destruct trigger Call Trace
-Content-Type: text/plain; charset=UTF-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="oIpjvbCDgnczD2qR"
+Content-Disposition: inline
+In-Reply-To: <L2ZBWR.TERFR10NPZ281@effective-light.com>
+
+
+--oIpjvbCDgnczD2qR
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
-
-I notice a regression report on Bugzilla [1]. Quoting from it:
-
-> When the IPv6 address or NIC configuration changes, the following kerne=
-l warnings may be triggered:
+On Fri, Jun 16, 2023 at 01:25:33AM -0400, Hamza Mahfooz wrote:
+> I am seeing the following page-fault on the latest stable kernel:
 >=20
-> Thu Jun 15 09:02:31 2023 daemon.info : 09[KNL] interface utun deleted
-> Thu Jun 15 09:02:31 2023 daemon.info : 13[KNL] interface utun deleted
-> Thu Jun 15 09:02:32 2023 daemon.notice procd: /etc/rc.d/S99zerotier: di=
-sabled in config
-> Thu Jun 15 09:02:33 2023 daemon.info procd: - init complete -
-> Thu Jun 15 09:02:45 2023 daemon.info : 09[KNL] interface utun deleted
-> Thu Jun 15 09:02:45 2023 daemon.info : 15[KNL] interface utun deleted
-> Thu Jun 15 09:02:48 2023 user.notice firewall: Reloading firewall due t=
-o ifup of lan6 (br-switch)
-> Thu Jun 15 09:02:51 2023 daemon.err uhttpd[2929]: cat: can't open '/tmp=
-/cpu.usage': No such file or directory
-> Thu Jun 15 09:03:03 2023 user.notice firewall: Reloading firewall due t=
-o ifup of wg (wg)
-> Thu Jun 15 09:03:03 2023 daemon.info : 13[KNL] interface tunh activated=
+> BUG: unable to handle page fault for address: ffffb4ff0cd20034
+> #PF: supervisor read access in kernel mode
+> #PF: error_code(0x0000) - not-present page
+> PGD 10002a067 P4D 10002a067 PUD 0
+> Oops: 0000 [#1] PREEMPT SMP NOPTI
+> CPU: 7 PID: 2675 Comm: CPU 7/KVM Not tainted 6.3.8-arch1-1 #1
+> a1d299e746aebdb27c523dd3bd94aba6f54915c7
+> Hardware name: ASUS System Product Name/ProArt X670E-CREATOR WIFI, BIOS 1=
+303
+> 04/27/2023
+> RIP: 0010:try_grab_folio+0x14f/0x370
+> Code: 83 f8 04 75 6f 44 89 ee 4c 89 e7 e8 6b bc 0b 00 84 c0 74 60 4c 8b 63
+> 08 41 f6 c4 01 0f 85 b0 01 00 00 0f 1f 44 00 00 49 89 dc <41> 8b 44 24 34=
+ 85
+> c0 0f 88 f8 00 00 00 41 8b 44 24 34 85 c0 74 58
+> RSP: 0018:ffff9fa98504b948 EFLAGS: 00010086
+> RAX: 0000000000000002 RBX: fffff4ff0cd21480 RCX: 0000000000000000
+> RDX: 0000000000000003 RSI: 0000000000000001 RDI: fffff4ff0cd21480
+> RBP: 0000000000000000 R08: ffff8b2edb510980 R09: 00007f5624253000
+> R10: 80000003348008e7 R11: 00007f5624253000 R12: ffffb4ff0cd20000
+> R13: 0000000000000001 R14: 0000000000000003 R15: 0000000000000001
+> FS: 00007f548a7fc6c0(0000) GS:ffff8b35f83c0000(0000) knlGS:00000000000000=
+00
+> CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: ffffb4ff0cd20034 CR3: 0000000113e70000 CR4: 0000000000750ee0
+> PKRU: 55555554
+> Call Trace:
+> <TASK>
+> ? __die+0x23/0x70
+> ? page_fault_oops+0x171/0x4e0
+> ? exc_page_fault+0x172/0x180
+> ? asm_exc_page_fault+0x26/0x30
+> ? try_grab_folio+0x14f/0x370
+> internal_get_user_pages_fast+0x883/0x1150
+> __iov_iter_get_pages_alloc+0xdd/0x780
+> ? kmem_cache_alloc+0x16f/0x330
+> ? bio_associate_blkg_from_css+0xcd/0x340
+> iov_iter_get_pages+0x1d/0x40
+> bio_iov_iter_get_pages+0xa1/0x480
+> __blkdev_direct_IO_async+0xc5/0x1b0
+> blkdev_read_iter+0x127/0x1d0
+> aio_read+0x132/0x210
+> ? io_submit_one+0x46a/0x8b0
+> io_submit_one+0x46a/0x8b0
+> ? kvm_arch_vcpu_put+0x128/0x190 [kvm
+> 711ceda1c40511ce22d1f99f4e9e574def76b25e]
+> ? kvm_arch_vcpu_ioctl_run+0x579/0x1770 [kvm
+> 711ceda1c40511ce22d1f99f4e9e574def76b25e]
+> __x64_sys_io_submit+0xad/0x190
+> do_syscall_64+0x5d/0x90
+> ? __x64_sys_ioctl+0xac/0xd0
+> ? syscall_exit_to_user_mode+0x1b/0x40
+> ? do_syscall_64+0x6c/0x90
+> ? syscall_exit_to_user_mode+0x1b/0x40
+> ? do_syscall_64+0x6c/0x90
+> ? syscall_exit_to_user_mode+0x1b/0x40
+> ? do_syscall_64+0x6c/0x90
+> ? syscall_exit_to_user_mode+0x1b/0x40
+> ? do_syscall_64+0x6c/0x90
+> ? do_syscall_64+0x6c/0x90
+> entry_SYSCALL_64_after_hwframe+0x72/0xdc
+> RIP: 0033:0x7f57ac0912ed
+> Code: 5d c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7
+> 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff=
+ ff
+> 73 01 c3 48 8b 0d 3b 7a 0d 00 f7 d8 64 89 01 48
+> RSP: 002b:00007f5427ab97b8 EFLAGS: 00000246 ORIG_RAX: 00000000000000d1
+> RAX: ffffffffffffffda RBX: 00007f548a7fc1d0 RCX: 00007f57ac0912ed
+> RDX: 00007f5427ab9800 RSI: 0000000000000001 RDI: 00007f57a9d24000
+> RBP: 00007f57a9d24000 R08: 0000000000000001 R09: 0000000000000001
+> R10: 00007f54740044f0 R11: 0000000000000246 R12: 0000000000000001
+> R13: 0000000000000004 R14: 00007f5427ab9800 R15: 000000000000000e
+> </TASK>
+> Modules linked in: hid_playstation led_class_multicolor ff_memless tun
+> snd_seq_dummy snd_hrtimer snd_seq xt_CHECKSUM xt_MASQUERADE xt_conntrack
+> ipt_REJECT nf_reject_ipv4 xt_tcpudp nft_compat nft_chain_nat nf_nat
+> nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 nf_tables libcrc32c nfnetlink
+> bridge stp llc vfat fat snd_hda_codec_realtek snd_hda_codec_generic mt792=
+1e
+> snd_hda_codec_hdmi mt7921_common snd_usb_audio intel_rapl_msr
+> mt76_connac_lib snd_hda_intel intel_rapl_common snd_intel_dspcfg mt76
+> snd_usbmidi_lib btusb snd_intel_sdw_acpi edac_mce_amd snd_rawmidi btrtl
+> snd_hda_codec btbcm snd_seq_device btintel snd_hda_core kvm_amd mc snd_hw=
+dep
+> eeepc_wmi btmtk snd_pcm asus_wmi kvm mac80211 bluetooth ledtrig_audio
+> atlantic snd_timer i8042 sparse_keymap libarc4 ecdh_generic rapl
+> platform_profile serio intel_wmi_thunderbolt i2c_piix4 wmi_bmof pcspkr
+> k10temp thunderbolt snd igc ucsi_acpi macsec soundcore cfg80211 typec_ucsi
+> mousedev joydev typec roles rfkill gpio_amdpt acpi_cpufreq gpio_generic
+> mac_hid dm_multipath
+> crypto_user fuse loop bpf_preload ip_tables x_tables ext4 crc32c_generic
+> crc16 mbcache jbd2 dm_crypt cbc encrypted_keys trusted asn1_encoder tee
+> dm_mod hid_logitech_hidpp hid_logitech_dj usbhid amdgpu crct10dif_pclmul
+> crc32_pclmul crc32c_intel polyval_clmulni polyval_generic i2c_algo_bit
+> drm_ttm_helper gf128mul nvme ghash_clmulni_intel ttm sha512_ssse3 drm_bud=
+dy
+> aesni_intel gpu_sched crypto_simd nvme_core drm_display_helper cryptd ccp
+> xhci_pci cec nvme_common xhci_pci_renesas video wmi vfio_pci vfio_pci_core
+> irqbypass vfio_iommu_type1 vfio iommufd
+> CR2: ffffb4ff0cd20034
+> ---[ end trace 0000000000000000 ]---
+> RIP: 0010:try_grab_folio+0x14f/0x370
+> Code: 83 f8 04 75 6f 44 89 ee 4c 89 e7 e8 6b bc 0b 00 84 c0 74 60 4c 8b 63
+> 08 41 f6 c4 01 0f 85 b0 01 00 00 0f 1f 44 00 00 49 89 dc <41> 8b 44 24 34=
+ 85
+> c0 0f 88 f8 00 00 00 41 8b 44 24 34 85 c0 74 58
+> RSP: 0018:ffff9fa98504b948 EFLAGS: 00010086
+> RAX: 0000000000000002 RBX: fffff4ff0cd21480 RCX: 0000000000000000
+> RDX: 0000000000000003 RSI: 0000000000000001 RDI: fffff4ff0cd21480
+> RBP: 0000000000000000 R08: ffff8b2edb510980 R09: 00007f5624253000
+> R10: 80000003348008e7 R11: 00007f5624253000 R12: ffffb4ff0cd20000
+> R13: 0000000000000001 R14: 0000000000000003 R15: 0000000000000001
+> FS: 00007f548a7fc6c0(0000) GS:ffff8b35f83c0000(0000) knlGS:00000000000000=
+00
+> CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: ffffb4ff0cd20034 CR3: 0000000113e70000 CR4: 0000000000750ee0
+> PKRU: 55555554
+> note: CPU 7/KVM[2675] exited with irqs disabled
+>=20
+> It seems to appear randomly, so bisecting it would probably be
+> difficult. Also, as far as I can tell it seems to be a recent
+> regression (i.e. it was introduced in one of the 6.3.y releases).
+>=20
+>=20
 
-> Thu Jun 15 09:03:03 2023 daemon.info : 16[KNL] fe80::5efe:c0a8:7df9 app=
-eared on tunh
-> Thu Jun 15 09:03:03 2023 daemon.info : 08[KNL] 10.10.13.1 appeared on t=
-unh
-> Thu Jun 15 09:03:03 2023 daemon.info : 13[KNL] interface utun deleted
-> Thu Jun 15 09:03:03 2023 daemon.info : 05[KNL] interface utun deleted
-> Thu Jun 15 09:03:04 2023 auth.err passwd: password for root changed by =
-root
-> Thu Jun 15 09:03:17 2023 daemon.err uhttpd[2929]: sh: /etc/init.d/tasks=
-: line 7: extra_command: not found
-> Thu Jun 15 09:03:17 2023 daemon.err uhttpd[2929]: sh: /etc/init.d/tasks=
-: line 8: extra_command: not found
-> Thu Jun 15 09:03:17 2023 daemon.err uhttpd[2929]: sh: /etc/init.d/tasks=
-: line 9: extra_command: not found
-> Thu Jun 15 09:03:17 2023 daemon.err uhttpd[2929]: sh: /etc/init.d/tasks=
-: line 10: extra_command: not found
-> Thu Jun 15 09:03:17 2023 daemon.err uhttpd[2929]: sh: /etc/init.d/tasks=
-: line 11: extra_command: not found
-> Thu Jun 15 09:03:23 2023 daemon.err uhttpd[2929]: sh: /etc/init.d/tasks=
-: line 7: extra_command: not found
-> Thu Jun 15 09:03:23 2023 daemon.err uhttpd[2929]: sh: /etc/init.d/tasks=
-: line 8: extra_command: not found
-> Thu Jun 15 09:03:23 2023 daemon.err uhttpd[2929]: sh: /etc/init.d/tasks=
-: line 9: extra_command: not found
-> Thu Jun 15 09:03:23 2023 daemon.err uhttpd[2929]: sh: /etc/init.d/tasks=
-: line 10: extra_command: not found
-> Thu Jun 15 09:03:23 2023 daemon.err uhttpd[2929]: sh: /etc/init.d/tasks=
-: line 11: extra_command: not found
-> Thu Jun 15 09:03:35 2023 daemon.err uhttpd[2929]: Error: The backup GPT=
- table is corrupt, but the primary appears OK, so that will be used.
-> Thu Jun 15 09:03:35 2023 daemon.err uhttpd[2929]: Warning: Not all of t=
-he space available to /dev/sda appears to be used, you can fix the GPT to=
- use all of the space (an extra 6111 blocks) or continue with the current=
- setting?
-> Thu Jun 15 09:03:59 2023 daemon.info acpid: starting up with netlink an=
-d the input layer
-> Thu Jun 15 09:03:59 2023 daemon.info acpid: 1 rule loaded
-> Thu Jun 15 09:03:59 2023 daemon.info acpid: waiting for events: event l=
-ogging is off
-> Thu Jun 15 09:11:16 2023 daemon.err uhttpd[2929]: getopt: unrecognized =
-option: no-validate
-> Thu Jun 15 10:06:07 2023 daemon.err uhttpd[2929]: getopt: unrecognized =
-option: no-validate
-> Thu Jun 15 10:09:27 2023 daemon.info : 09[KNL] interface utun deleted
-> Thu Jun 15 10:09:27 2023 daemon.info : 13[KNL] interface utun deleted
-> Thu Jun 15 10:09:28 2023 kern.warn kernel: [ 4071.437330] ------------[=
- cut here ]------------
-> Thu Jun 15 10:09:28 2023 kern.warn kernel: [ 4071.439948] WARNING: CPU:=
- 1 PID: 19 at inet_sock_destruct+0x190/0x1c0
-> Thu Jun 15 10:09:28 2023 kern.warn kernel: [ 4071.440967] Modules linke=
-d in: pppoe ppp_async l2tp_ppp i915 wireguard video sch_fq_pie pppox ppp_=
-mppe ppp_generic mt7921u mt7921s mt7921e mt7921_common mt7915e mt76x2u mt=
-76x2e mt76x2_common mt76x02_usb mt76x02_lib mt76_usb mt76_sdio mt76_conna=
-c_lib mt76 mac80211 libchacha20poly1305 ipt_REJECT curve25519_x86_64 chac=
-ha_x86_64 cfg80211 ax88179_178a zstd xt_time xt_tcpudp xt_tcpmss xt_strin=
-g xt_statistic xt_state xt_socket xt_recent xt_quota xt_policy xt_pkttype=
- xt_owner xt_nat xt_multiport xt_mark xt_mac xt_limit xt_length xt_iprang=
-e xt_hl xt_helper xt_hashlimit xt_esp xt_ecn xt_dscp xt_conntrack xt_conn=
-mark xt_connlimit xt_connbytes xt_comment xt_cgroup xt_bpf xt_addrtype xt=
-_TPROXY xt_TCPMSS xt_REDIRECT xt_MASQUERADE xt_LOG xt_IPMARK xt_HL xt_FLO=
-WOFFLOAD xt_DSCP xt_CT xt_CLASSIFY wmi via_velocity usbnet ums_usbat ums_=
-sddr55 ums_sddr09 ums_karma ums_jumpshot ums_isd200 ums_freecom ums_dataf=
-ab ums_cypress ums_alauda tulip ts_fsm ts_bm tcp_bbr slhc sch_pie sch_cak=
-e rtl8150 r8168 r8152 r8125
-> Thu Jun 15 10:09:28 2023 kern.warn kernel: [ 4071.441064]  poly1305_x86=
-_64 pcnet32 nf_tproxy_ipv6 nf_tproxy_ipv4 nf_socket_ipv6 nf_socket_ipv4 n=
-f_reject_ipv4 nf_nat_tftp nf_nat_snmp_basic nf_nat_sip nf_nat_pptp nf_nat=
-_irc nf_nat_h323 nf_nat_ftp nf_nat_amanda nf_log_syslog nf_flow_table nf_=
-conntrack_tftp nf_conntrack_snmp nf_conntrack_sip nf_conntrack_pptp nf_co=
-nntrack_netlink nf_conntrack_irc nf_conntrack_h323 nf_conntrack_ftp nf_co=
-nntrack_broadcast ts_kmp nf_conntrack_amanda nf_conncount mlx5_core mlx4_=
-en mlx4_core mdev macvlan lzo_rle lzo libcurve25519_generic libchacha kvm=
-_intel kvm ipvlan iptable_raw iptable_nat iptable_mangle iptable_filter i=
-pt_ah ipt_ECN ip_tables iommu_v2 igc iavf i40e forcedeth e1000e drm_displ=
-ay_helper drm_buddy crc_ccitt compat_xtables compat cls_flower br_netfilt=
-er bnx2x bnx2 alx act_vlan 8139too 8139cp ntfs3 cls_bpf act_bpf sch_tbf s=
-ch_ingress sch_htb sch_hfsc em_u32 cls_u32 cls_route cls_matchall cls_fw =
-cls_flow cls_basic act_skbedit act_mirred act_gact configs sg evdev i2c_d=
-ev cryptodev xt_set
-> Thu Jun 15 10:09:28 2023 kern.warn kernel: [ 4071.453861]  ip_set_list_=
-set ip_set_hash_netportnet ip_set_hash_netport ip_set_hash_netnet ip_set_=
-hash_netiface ip_set_hash_net ip_set_hash_mac ip_set_hash_ipportnet ip_se=
-t_hash_ipportip ip_set_hash_ipport ip_set_hash_ipmark ip_set_hash_ipmac i=
-p_set_hash_ip ip_set_bitmap_port ip_set_bitmap_ipmac ip_set_bitmap_ip ip_=
-set st ip6table_nat nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 ip6=
-t_NPT ip6table_mangle ip6table_filter ip6_tables ip6t_REJECT x_tables nf_=
-reject_ipv6 nfsv4 nfsd nfs bonding ip_gre gre ixgbe igbvf e1000 amd_xgbe =
-mdio_devres dummy sit mdio l2tp_netlink l2tp_core udp_tunnel ip6_udp_tunn=
-el ipcomp6 xfrm6_tunnel esp6 ah6 xfrm4_tunnel ipcomp esp4 ah4 ipip tunnel=
-6 tunnel4 ip_tunnel udp_diag tcp_diag raw_diag inet_diag rpcsec_gss_krb5 =
-auth_rpcgss veth tun nbd xfrm_user xfrm_ipcomp af_key xfrm_algo virtiofs =
-fuse lockd sunrpc grace hfs cifs oid_registry cifs_md4 cifs_arc4 asn1_dec=
-oder dns_resolver md_mod nls_utf8 nls_cp950 nls_cp936 ena shortcut_fe_ipv=
-6 shortcut_fe crypto_user
-> Thu Jun 15 10:09:28 2023 kern.warn kernel: [ 4071.462923]  algif_skciph=
-er algif_rng algif_hash algif_aead af_alg sha512_ssse3 sha512_generic sha=
-1_ssse3 sha1_generic seqiv jitterentropy_rng drbg md5 hmac echainiv des_g=
-eneric libdes deflate cts cmac authencesn authenc arc4 crypto_acompress n=
-ls_iso8859_1 nls_cp437 uas sdhci_pltfm xhci_plat_hcd fsl_mph_dr_of ehci_p=
-latform ehci_fsl igb vfat fat exfat btrfs zstd_decompress zstd_compress z=
-std_common xxhash xor raid6_pq lzo_decompress lzo_compress dm_mirror dm_r=
-egion_hash dm_log dm_crypt dm_mod dax button_hotplug mii libphy tpm cbc s=
-ha256_ssse3 sha256_generic libsha256 encrypted_keys trusted
-> Thu Jun 15 10:09:28 2023 kern.warn kernel: [ 4071.472554] CPU: 1 PID: 1=
-9 Comm: ksoftirqd/1 Not tainted 6.1.34 #0
-> Thu Jun 15 10:09:28 2023 kern.warn kernel: [ 4071.473025] Hardware name=
-: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.16.1-0-g3208b098f51a-pr=
-ebuilt.qemu.org 04/01/2014
-> Thu Jun 15 10:09:28 2023 kern.warn kernel: [ 4071.473731] RIP: 0010:ine=
-t_sock_destruct+0x190/0x1c0
-> Thu Jun 15 10:09:28 2023 kern.warn kernel: [ 4071.474204] Code: bc 24 4=
-0 01 00 00 e8 af 0d f0 ff 49 8b bc 24 88 00 00 00 e8 a2 0d f0 ff 5b 41 5c=
- 5d c3 4c 89 e7 e8 e5 7e ed ff e9 70 ff ff ff <0f> 0b eb c3 0f 0b 41 8b 8=
-4 24 54 01 00 00 85 c0 74 9d 0f 0b 41 8b
-> Thu Jun 15 10:09:28 2023 kern.warn kernel: [ 4071.475522] RSP: 0018:fff=
-fc900000afda8 EFLAGS: 00010206
-> Thu Jun 15 10:09:28 2023 kern.warn kernel: [ 4071.475947] RAX: 00000000=
-00000e00 RBX: ffff888015c9b040 RCX: 0000000000000007
-> Thu Jun 15 10:09:28 2023 kern.warn kernel: [ 4071.476450] RDX: 00000000=
-00000000 RSI: 0000000000000e00 RDI: ffff888015c9b040
-> Thu Jun 15 10:09:28 2023 kern.warn kernel: [ 4071.476966] RBP: ffffc900=
-000afdb8 R08: ffff88800aba5900 R09: 000000008020001a
-> Thu Jun 15 10:09:28 2023 kern.warn kernel: [ 4071.477588] R10: 00000000=
-40000000 R11: 0000000000000000 R12: ffff888015c9af80
-> Thu Jun 15 10:09:28 2023 kern.warn kernel: [ 4071.478326] R13: ffff8880=
-02931540 R14: ffffc900000afe28 R15: ffff88807dd253f8
-> Thu Jun 15 10:09:28 2023 kern.warn kernel: [ 4071.478872] FS:  00000000=
-00000000(0000) GS:ffff88807dd00000(0000) knlGS:0000000000000000
-> Thu Jun 15 10:09:28 2023 kern.warn kernel: [ 4071.479434] CS:  0010 DS:=
- 0000 ES: 0000 CR0: 0000000080050033
-> Thu Jun 15 10:09:28 2023 kern.warn kernel: [ 4071.479886] CR2: 00007f11=
-fc4cd0a0 CR3: 0000000021cbe004 CR4: 0000000000370ee0
-> Thu Jun 15 10:09:28 2023 kern.warn kernel: [ 4071.480533] Call Trace:
-> Thu Jun 15 10:09:28 2023 kern.warn kernel: [ 4071.480851]  <TASK>
-> Thu Jun 15 10:09:28 2023 kern.warn kernel: [ 4071.481169]  ? show_regs.=
-part.0+0x1e/0x20
-> Thu Jun 15 10:09:28 2023 kern.warn kernel: [ 4071.481631]  ? show_regs.=
-cold+0x8/0xd
-> Thu Jun 15 10:09:28 2023 kern.warn kernel: [ 4071.482248]  ? __warn+0x6=
-e/0xc0
-> Thu Jun 15 10:09:28 2023 kern.warn kernel: [ 4071.483300]  ? inet_sock_=
-destruct+0x190/0x1c0
-> Thu Jun 15 10:09:28 2023 kern.warn kernel: [ 4071.484240]  ? report_bug=
-+0xed/0x140
-> Thu Jun 15 10:09:28 2023 kern.warn kernel: [ 4071.484937]  ? handle_bug=
-+0x46/0x80
-> Thu Jun 15 10:09:28 2023 kern.warn kernel: [ 4071.485448]  ? exc_invali=
-d_op+0x19/0x70
-> Thu Jun 15 10:09:28 2023 kern.warn kernel: [ 4071.485963]  ? asm_exc_in=
-valid_op+0x1b/0x20
-> Thu Jun 15 10:09:28 2023 kern.warn kernel: [ 4071.486360]  ? inet_sock_=
-destruct+0x190/0x1c0
-> Thu Jun 15 10:09:28 2023 kern.warn kernel: [ 4071.486888]  inet6_sock_d=
-estruct+0x16/0x20
-> Thu Jun 15 10:09:28 2023 kern.warn kernel: [ 4071.487289]  __sk_destruc=
-t+0x23/0x180
-> Thu Jun 15 10:09:28 2023 kern.warn kernel: [ 4071.487638]  rcu_core+0x2=
-8f/0x690
-> Thu Jun 15 10:09:28 2023 kern.warn kernel: [ 4071.487964]  rcu_core_si+=
-0x9/0x10
-> Thu Jun 15 10:09:28 2023 kern.warn kernel: [ 4071.488285]  __do_softirq=
-+0xbd/0x1e8
-> Thu Jun 15 10:09:28 2023 kern.warn kernel: [ 4071.488973]  run_ksoftirq=
-d+0x24/0x40
-> Thu Jun 15 10:09:28 2023 kern.warn kernel: [ 4071.489370]  smpboot_thre=
-ad_fn+0xdb/0x1d0
-> Thu Jun 15 10:09:28 2023 kern.warn kernel: [ 4071.489826]  kthread+0xde=
-/0x110
-> Thu Jun 15 10:09:28 2023 kern.warn kernel: [ 4071.490572]  ? sort_range=
-+0x20/0x20
-> Thu Jun 15 10:09:28 2023 kern.warn kernel: [ 4071.491356]  ? kthread_co=
-mplete_and_exit+0x20/0x20
-> Thu Jun 15 10:09:28 2023 kern.warn kernel: [ 4071.491839]  ret_from_for=
-k+0x1f/0x30
-> Thu Jun 15 10:09:28 2023 kern.warn kernel: [ 4071.492195]  </TASK>
-> Thu Jun 15 10:09:28 2023 kern.warn kernel: [ 4071.492448] ---[ end trac=
-e 0000000000000000 ]---
+So v6.2.y looks fine (doesn't have this regression)?
 
-Later, the reporter revealed his setup:
-
-> This is an openwrt gateway device on x86_64 platform. I'm not sure the =
-exact version number that came up, it seems like 6.1.27 was not encounter=
-ed before. I have encountered it since kernel 6.1.32, but it is also from=
- this version that I have relatively large IPv6 udp traffic, conntrack -L=
-|grep -c udp shows that the number is between 600 - 2000.
-
-See Bugzilla for the full thread and attached log.
-
-Anyway, I'm adding it to regzbot:
-
-#regzbot introduced: v6.1.27..v6.1.32 https://bugzilla.kernel.org/show_bu=
-g.cgi?id=3D217555
-#regzbot title: kernel warning (oops) at inet_sock_destruct
-
-Thanks.
-
-[1]: https://bugzilla.kernel.org/show_bug.cgi?id=3D217555
 --=20
 An old man doll... just what I always wanted! - Clara
+
+--oIpjvbCDgnczD2qR
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZIxaQAAKCRD2uYlJVVFO
+o67AAP9yePNIS+oUnlF8iOF2+EFNoNvcuJBbzt95i76ScqSzogEAlnM1EHWq4bEJ
+KqGckZBKOfFQoDmAwiM0/1G9CIrt2Q4=
+=krTZ
+-----END PGP SIGNATURE-----
+
+--oIpjvbCDgnczD2qR--
