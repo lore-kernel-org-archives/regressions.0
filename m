@@ -1,50 +1,70 @@
-Received: from h5.fbrelay.privateemail.com (h5.fbrelay.privateemail.com [162.0.218.228])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3155E1117
-	for <regressions@lists.linux.dev>; Sat, 17 Jun 2023 19:27:53 +0000 (UTC)
-Received: from MTA-09-4.privateemail.com (unknown [198.54.122.141])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
-	(No client certificate requested)
-	by h5.fbrelay.privateemail.com (Postfix) with ESMTPSA id 59E9560486
-	for <regressions@lists.linux.dev>; Sat, 17 Jun 2023 19:27:45 +0000 (UTC)
-Received: from mta-09.privateemail.com (localhost [127.0.0.1])
-	by mta-09.privateemail.com (Postfix) with ESMTP id B926C18000AE;
-	Sat, 17 Jun 2023 15:27:36 -0400 (EDT)
-Received: from [192.168.2.177] (bras-base-toroon4332w-grc-19-174-93-80-116.dsl.bell.ca [174.93.80.116])
-	by mta-09.privateemail.com (Postfix) with ESMTPA id A3C4E18000AA;
-	Sat, 17 Jun 2023 15:27:32 -0400 (EDT)
-Date: Sat, 17 Jun 2023 15:27:25 -0400
-From: Hamza Mahfooz <someguy@effective-light.com>
-Subject: Re: KVM page-fault on Kernel 6.3.8
-To: Sean Christopherson <seanjc@google.com>
-Cc: kvm@vger.kernel.org, regressions@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Message-Id: <PPWEWR.10XLY20A3VQ43@effective-light.com>
-In-Reply-To: <ZIz3aPL3K6ZagyJ2@google.com>
-References: <L2ZBWR.TERFR10NPZ281@effective-light.com>
-	<ZIz3aPL3K6ZagyJ2@google.com>
-X-Mailer: geary/43.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE942EA1
+	for <regressions@lists.linux.dev>; Sun, 18 Jun 2023 08:49:49 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1qAo6P-00041p-5B; Sun, 18 Jun 2023 10:49:41 +0200
+Message-ID: <9e0f5378-63d8-add4-2b79-2173a4c98086@leemhuis.info>
+Date: Sun, 18 Jun 2023 10:49:40 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-X-Virus-Scanned: ClamAV using ClamSMTP
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Content-Language: en-US, de-DE
+From: Thorsten Leemhuis <linux@leemhuis.info>
+Cc: Linux kernel regressions list <regressions@lists.linux.dev>,
+ LKML <linux-kernel@vger.kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>,
+ Greg KH <gregkh@linuxfoundation.org>
+Subject: JFYI: patches in next that might be good to mainline rather sooner
+ than later?
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1687078189;aec6a2ff;
+X-HE-SMSGID: 1qAo6P-00041p-5B
 
+Hi Linus, hi Greg,
 
-On Fri, Jun 16 2023 at 04:59:36 PM -07:00:00, Sean Christopherson 
-<seanjc@google.com> wrote:
-> What makes you think this is KVM related?  I don't see anything KVM 
-> related in
+I got the impression that early stable releases with a huge number of
+patches (like 6.3.2 with ~690 changes) seems to cause a few regressions.
+As you know, those releases usually contain many backports of changes
+merged during the merge window for the following mainline release (e.g.
+6.4). That made me wonder:
 
-Well, it corresponds a QEMU crash.
+How many patches do we have in linux-next right now that better should
+be merged this cycle (e.g. ahead of the 6.4 release) instead of merging
+them in the merge window for 6.5 and backporting them shortly afterwards?
 
-> the splat.  The !PRESENT #PF is coming from aio_read(), not from KVM. 
->  The
-> ?kvm_arch_vcpu_put line is just mispeculation from the unwinder.
+To check I briefly set down and quickly hacked together a python
+script[1] that looks at linux-next for patches with tags like 'Cc:
+stable...' and 'Fixes: ', as all respectively some (or many?) of those
+will be backported. I made the script ignore a few things, like commits
+from the past eight days and commits that fix changes committed to
+mainline more that a year ago.
 
+I ran this a few minutes ago and it spilled out about 260 changes (about
+80 of them with a stable tag). I put the results into a table:
+https://docs.google.com/spreadsheets/d/1OnMrde1e7LBMPhOPJL0Sn9rd3W32mTGls_qGMoZS8z8/edit?usp=sharing
 
+And now I'm not really sure what to do with this data. :-/ :-D
+
+Some of those commits the script found to my untrained eyes look like
+something that might have been worth having in 6.4 -- especially those
+with a stable-tag. But not all of them. And I'm not suggesting to merge
+them. It was just a exercise to see if this might be useful.
+
+What do you think about this? Is this helpful somehow? Or can it be made
+more helpful with a few changes? Especially if someone would regularly
+run this?
+
+Ciao, Thorsten
+
+[1]
+https://gitlab.com/knurd42/kernel-scripts/-/blob/master/stats/next_stable_candidates.py
+(as any code likely will contain bugs)
