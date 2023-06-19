@@ -1,208 +1,129 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1AA51386
-	for <regressions@lists.linux.dev>; Sun, 18 Jun 2023 14:51:28 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:5054:ff:feb3:8f48] (helo=regzbot.fritz.box); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	id 1qAtkU-0001Hm-CR; Sun, 18 Jun 2023 16:51:26 +0200
-From: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>
-To: LKML <linux-kernel@vger.kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Linux regressions report  for mainline [2023-06-18]
-Date: Sun, 18 Jun 2023 14:51:25 +0000
-Message-Id: <168709975910.455445.13798099813754443067@leemhuis.info>
-X-Mailer: git-send-email 2.40.1
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E71E5173
+	for <regressions@lists.linux.dev>; Mon, 19 Jun 2023 00:24:40 +0000 (UTC)
+Received: by mail-ot1-f48.google.com with SMTP id 46e09a7af769-6b5853a140cso39290a34.2
+        for <regressions@lists.linux.dev>; Sun, 18 Jun 2023 17:24:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1687134280; x=1689726280;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KEmDS2p8yjBfYlfB/iT3dpocB29HdgNOixmRsTqFoPQ=;
+        b=n01n1B1tGlntSnuy4b1JwNT5ifgmjeITHLn0NlkjenDrw+PEQuhDsEKetwZmQAjRLf
+         uiC0DCHu4cfleoVBIoAylHp9h8acVV+VAYgFr3zdUk188yMvVFT1XJTdbvBLXtFsWLLj
+         lv2xHB2zoFSqwpcLNEZ55g1hOZ0Dn76eHzVDH0cg3oE93MpOEuaQQgO+somBdZixKe3s
+         j4dNkUe9I9hhg7l4Ft9pK3VYgU1cIkKvmQvKP6NBXBShvIa8gKB9qT6yK6HU7tYwv6vJ
+         STpWZ4ER0kaTXEH7Q68FjzC8gwy2ig7dggl3jZosVAib9tVkliSyPZxboWi+t/1lGIxw
+         jiyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687134280; x=1689726280;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=KEmDS2p8yjBfYlfB/iT3dpocB29HdgNOixmRsTqFoPQ=;
+        b=K/2NOLhNKo0xoUrEZOOTXCzBezCzeYbQbFDcxAlx9atTz4jtkl90sD8xH2T3vdzTVn
+         sxctxQ0DcWHmk0QGTPVZlcvJm0+7VHpJwkCI2nlXBK2ndzQyM7z9uFLEqJi2X8qY3DUv
+         K7dktVTLTuPluGybMhKRlQT+/b+lj1fr5o25d5QZe+cNjMc5Sp6AXEmmDdVBAvm2Irif
+         c5h7jjC65ZSIsDLTasZkSUVBTC2AtsrAZHhKfG6tr5RitiOTsM7BzVLXAYEXe898tcOF
+         lctShFrUVkOd5pED5eAZFfJjnX5yOjPgIrGJ0ZiYS/IM75ZZpfqlOAbGw7znCLwG/4gj
+         li5Q==
+X-Gm-Message-State: AC+VfDy6g/TlSfDUxdqCRbPG179D6GO5XTSZyRKcGo0uRZtdQ7eZQdx3
+	SGtBn7XQ3HLGB+cBPDBx4cE=
+X-Google-Smtp-Source: ACHHUZ5o2qY03OHoswZtTdeRjesgO49FTz2FBobZYESYSyBx3gRmEcK2lJYL5q5kz256+OENnWC8fA==
+X-Received: by 2002:a05:6358:cd1c:b0:12b:d79a:d433 with SMTP id gv28-20020a056358cd1c00b0012bd79ad433mr4383161rwb.11.1687134279460;
+        Sun, 18 Jun 2023 17:24:39 -0700 (PDT)
+Received: from [192.168.0.103] ([103.131.18.64])
+        by smtp.gmail.com with ESMTPSA id i25-20020aa787d9000000b0064f51ee5b90sm6335043pfo.62.2023.06.18.17.24.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 18 Jun 2023 17:24:39 -0700 (PDT)
+Message-ID: <a7f997fc-e7cc-cf67-3ac0-80ed30346511@gmail.com>
+Date: Mon, 19 Jun 2023 07:24:32 +0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1687099888;72848d7e;
-X-HE-SMSGID: 1qAtkU-0001Hm-CR
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Content-Language: en-US
+To: Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Hans Verkuil <hverkuil@xs4all.nl>, rouckat@quick.cz,
+ Thorsten Leemhuis <linux@leemhuis.info>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Linux Media <linux-media@vger.kernel.org>,
+ Linux Stable <stable@vger.kernel.org>
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+Subject: Fwd: in linux 6.3.7-200.fc38.x86_64 goes vlc in time to switch tv
+ channels to zombie-process
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Linus. Things look mostly normal on the regression front. But as we
-are nearing the final a few more words from my side than usual:
+Hi,
 
-* I already mentioned in an earlier mail that there is a series of mm
-reverts in next where my brain said "hmmm, Andrew merged those more than
-a week ago to mm-hotfixes-unstable and -rc7 is due today; I don't see a
-PR from him and wonder if these revert are something that better should
-be in rc7 to help preventing a rc8?" so I thought I mention it here so
-that you can take a look yourself if you got curious:
-https://lore.kernel.org/all/20230609081518.3039120-1-qi.zheng@linux.dev/
-(for the backstory see the two links in that mail)
+I notice a regression report on Bugzilla [1]. Quoting from it:
 
-* it's afaics nothing that will bother many people, but switching to
-asynchronous probe broke the Dragonboard 845c (SDM845). People are still
-discussing how to properly fix this:
-https://lore.kernel.org/all/CAMi1Hd1avQDcDQf137m2auz2znov4XL8YGrLZsw5edb-NtRJRw@mail.gmail.com/
-https://lore.kernel.org/lkml/fbe5138f-fe97-11ee-a14a-4bb447c0972a@linaro.org/
+> vmlinuz-6.3.7-200.fc38.x86_64  and vmlinuz-6.3.8-200.fc38.x86_64
+> 
+> in the switch tv channel to another vlc stay blocked and and the loading of firmware newer ending. power must be switch to off.
+> from dmesg:
+> 
+> dvb-tuner-si2141-a10-01.fw
+> dvb-demod-si2168-d60-01.fw 
+> firmware version: D 6.0.13
+> 
+> restart of dvb modules is impossible, They stay working. 
+> 
+> kernel 6.3.5-200.fc38.x86_64 works  OK. I don't how works kernel 6.3.6-200.fc38.x86_64
+> 
+> this same error is in vmlinuz-6.3.5-200.fc38.x86_64 and earliers but there is the occurence accesptable.
+> 
+> listing from 6.3.5 kernel:
+> 
+> [ 3378.026035] si2168 7-0064: firmware version: D 6.0.13
+> [ 3431.891579] si2168 7-0064: downloading firmware from file 'dvb-demod-si2168-d60-01.fw'
+> [ 3434.037278] usb 1-4: dvb_usb_v2: 2nd usb_bulk_msg() failed=-110
+> [ 3434.037289] si2168 7-0064: firmware download failed -110
+> [ 3436.085265] usb 1-4: dvb_usb_v2: usb_bulk_msg() failed=-110
+> 
+> lsmod |grep dvb
+> dvb_usb_dvbsky         32768  2
+> dvb_usb_v2             57344  1 dvb_usb_dvbsky
+> m88ds3103              49152  1 dvb_usb_dvbsky
+> dvb_core              192512  3 dvb_usb_v2,m88ds3103,dvb_usb_dvbsky
+> m
+> 
+> modprobe -r dvb_usb_dvbsky
+> modprobe: FATAL: Module dvb_usb_dvbsky is in use.
+> 
+> ?????? The problem in dvb_usb_dvbsky or firmware ?????   
+> 
+> The answer from https://bugzilla.rpmfusion.org was:
+> 
+> If it was working with previous kernel this is likely a kernel regression. 
+> please forward to the dvb sub-system maintainers.
+> 
+> this problen insist a long time (years), but not too horible
 
-* Currently looks a lot like a regression in 9p that causes MPTCP tests
-to be unstable won't be fixed within the next week or two:
-https://lore.kernel.org/regressions/855a232a-76d3-7e7b-b2b5-2ebc41bcadd6@tessares.net/
-https://lore.kernel.org/regressions/CAFkjPTnAV6Rngwn6voCF332CX%2BeUyeJd7U0GcYn9BbkBqcTkHA@mail.gmail.com/
+See Bugzilla for the full thread and attached dmesg and lsusb.
 
-* a tpm/ppc/kexec issue reported a few days ago is investigated:
-https://lore.kernel.org/lkml/99B81401-DB46-49B9-B321-CF832B50CAC3@linux.ibm.com/
+Thorsten: The reporter can't perform bisection for he has problem
+compiling his own vanilla kernel (see comment 8 on the Bugzilla
+ticket, albeit with translated make(1) output). Can you take a look on
+it?
 
-* for completeness: I expect you will get "tick/common: Align tick
-period during sched_timer setup" from the tip folks today.
-https://lore.kernel.org/all/20230615091830.RxMV2xf_@linutronix.de/
-https://lore.kernel.org/lkml/20230613134105.GA10301@redhat.com/
+Anyway, I'm adding it to regzbot (as stable-specific regression
+for now):
 
-Ciao, Thorsten
+#regzbot introduced: v6.3.5..v6.3.7 https://bugzilla.kernel.org/show_bug.cgi?id=217566
+#regzbot title: switching TV channel causes VLC and firmware loading hang
 
-P.S. Sorry, I didn't got around to send a regression report last week, I
-was on a short vacation and came back home one day later than expected.
+Thanks.
 
----
+[1]: https://bugzilla.kernel.org/show_bug.cgi?id=217566
 
-Hi, this is regzbot, the Linux kernel regression tracking bot.
-
-Currently I'm aware of 6 regressions in linux-mainline. Find the
-current status below and the latest on the web:
-
-https://linux-regtracking.leemhuis.info/regzbot/mainline/
-
-Bye bye, hope to see you soon for the next report.
-   Regzbot (on behalf of Thorsten Leemhuis)
-
-
-======================================================
-current cycle (v6.3.. aka v6.4-rc), culprit identified
-======================================================
-
-
-[ *NEW* ] mm: problems with the SRCU changeover (two reverts pending)
----------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/202305230837.db2c233f-yujie.liu@intel.com/
-https://lore.kernel.org/lkml/202305230837.db2c233f-yujie.liu@intel.com/
-
-By kernel test robot; 26 days ago; 33 activities, latest 0 days ago.
-Introduced in f95bdb700bc6 (v6.4-rc1)
-
-Fix incoming:
-* Revert "mm: vmscan: make global slab shrink lockless"
-  https://lore.kernel.org/lkml/d8e0e211-6e2c-6aba-9ffd-84833872f559@leemhuis.info/
-
-
-regulator: qcom-rpmh: Dragonboard 845c broken due to asynchronous probe
------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/CAMi1Hd1avQDcDQf137m2auz2znov4XL8YGrLZsw5edb-NtRJRw@mail.gmail.com/
-https://lore.kernel.org/lkml/CAMi1Hd1avQDcDQf137m2auz2znov4XL8YGrLZsw5edb-NtRJRw@mail.gmail.com/
-
-By Amit Pundir; 35 days ago; 48 activities, latest 1 days ago.
-Introduced in ad44ac082fd (v6.4-rc1)
-
-Recent activities from: Amit Pundir (9), Krzysztof Kozlowski (7), Doug
-  Anderson (7), Mark Brown (2), Linux regression tracking (Thorsten
-  Leemhuis) (1)
-
-One patch associated with this regression:
-* Re: [PATCH] regulator: qcom-rpmh: Revert "regulator: qcom-rpmh: Use PROBE_FORCE_SYNCHRONOUS"
-  https://lore.kernel.org/lkml/552345c5-b1e9-41f6-f275-b6eeeb51df25@linaro.org/
-  35 days ago, by Caleb Connolly
-
-Noteworthy links:
-* [PATCH] Revert "regulator: qcom-rpmh: Revert "regulator: qcom-rpmh: Use PROBE_FORCE_SYNCHRONOUS""
-  https://lore.kernel.org/lkml/20230515145323.1693044-1-amit.pundir@linaro.org/
-  33 days ago, by Amit Pundir; thread monitored.
-* [PATCH] arm64: dts: qcom: sdm845-db845c: Move LVS regulator nodes up
-  https://lore.kernel.org/lkml/20230602161246.1855448-1-amit.pundir@linaro.org/
-  15 days ago, by Amit Pundir; thread monitored.
-
-
-[ *NEW* ] sched/clock: printk.time causes rare kernel boot hangs
-----------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/20230613134105.GA10301@redhat.com/
-https://lore.kernel.org/lkml/20230613134105.GA10301@redhat.com/
-
-By Richard W.M. Jones; 5 days ago; 44 activities, latest 3 days ago.
-Introduced in f31dcb152a3d (v6.4-rc1)
-
-Fix incoming:
-* tick/common: Align tick period during sched_timer setup
-  https://lore.kernel.org/lkml/1413638e-9614-056e-cfc5-5f9c8bf8af00@leemhuis.info/
-
-
-[ *NEW* ] tpm/ppc: crash during a kexec
----------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/99B81401-DB46-49B9-B321-CF832B50CAC3@linux.ibm.com/
-https://lore.kernel.org/lkml/99B81401-DB46-49B9-B321-CF832B50CAC3@linux.ibm.com/
-
-By Sachin Sant; 3 days ago; 3 activities, latest 3 days ago.
-Introduced in bd8621ca1510 (v6.4-rc1)
-
-Recent activities from: Sachin Sant (2), Michael Ellerman (1)
-
-One patch associated with this regression:
-* Re: [6.4-rc6] Crash during a kexec operation (tpm_amd_is_rng_defective)
-  https://lore.kernel.org/lkml/87o7lhfmoh.fsf@mail.lhotse/
-  3 days ago, by Michael Ellerman
-
-
-[ *NEW* ] 9p: MPTCP tests regressions due to new 9p features in v6.4
---------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/855a232a-76d3-7e7b-b2b5-2ebc41bcadd6@tessares.net/
-https://lore.kernel.org/regressions/855a232a-76d3-7e7b-b2b5-2ebc41bcadd6@tessares.net/
-
-By Matthieu Baerts; 12 days ago; 5 activities, latest 4 days ago.
-Introduced in d9bc0d11e33b (v6.4-rc1)
-
-Recent activities from: Matthieu Baerts (3), Eric Van Hensbergen (1),
-  evanhensbergen@icloud.com (1)
-
-
-=======================================================
-on back burner, but with activity since the last report
-=======================================================
-
-
-[ *NEW* ] mm: performance regression on shell-heavy workloads
--------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/20230608111408.s2minsenlcjow7q3@quack3/
-https://lore.kernel.org/lkml/20230608111408.s2minsenlcjow7q3@quack3/
-
-By Jan Kara; 10 days ago; 6 activities, latest 9 days ago.
-Introduced in f1a7941243c (v6.2-rc1)
-
-Recent activities from: Shakeel Butt (2), Jan Kara (2), Dennis Zhou (1),
-  Yu Zhao (1)
-
-
-=============
-End of report
-=============
-
-All regressions marked '[ *NEW* ]' were added since the previous report,
-which can be found here:
-https://lore.kernel.org/r/168588069830.1422846.3733273600224627850@leemhuis.info
-
-Thanks for your attention, have a nice day!
-
-  Regzbot, your hard working Linux kernel regression tracking robot
-
-
-P.S.: Wanna know more about regzbot or how to use it to track regressions
-for your subsystem? Then check out the getting started guide or the
-reference documentation:
-
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
-
-The short version: if you see a regression report you want to see
-tracked, just send a reply to the report where you Cc
-regressions@lists.linux.dev with a line like this:
-
-#regzbot introduced: v5.13..v5.14-rc1
-
-If you want to fix a tracked regression, just do what is expected
-anyway: add a 'Link:' tag with the url to the report, e.g.:
-
-Link: https://lore.kernel.org/all/30th.anniversary.repost@klaava.Helsinki.FI/
+-- 
+An old man doll... just what I always wanted! - Clara
