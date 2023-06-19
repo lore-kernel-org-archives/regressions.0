@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6143C14A
-	for <regressions@lists.linux.dev>; Mon, 19 Jun 2023 12:19:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE6DDC2C5
+	for <regressions@lists.linux.dev>; Mon, 19 Jun 2023 12:49:06 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qBDrK-0006sT-29; Mon, 19 Jun 2023 14:19:50 +0200
-Message-ID: <97b81eab-8e09-2163-1b91-daecb8127a7c@leemhuis.info>
-Date: Mon, 19 Jun 2023 14:19:49 +0200
+	id 1qBEJX-0004Li-PH; Mon, 19 Jun 2023 14:48:59 +0200
+Message-ID: <e3af69f2-d3e5-8039-c6e5-5b00fe066cc0@leemhuis.info>
+Date: Mon, 19 Jun 2023 14:48:59 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,147 +16,87 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.10.0
+Subject: Re: MT7922 problem with "fix rx filter incorrect by drv/fw
+ inconsistent"
 Content-Language: en-US, de-DE
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- LKML <linux-kernel@vger.kernel.org>
-References: <9e0f5378-63d8-add4-2b79-2173a4c98086@leemhuis.info>
- <24edd13e-791a-bd05-0a44-dd5475c7e200@leemhuis.info>
- <2023061955-abdominal-refute-4b5a@gregkh>
-From: Thorsten Leemhuis <linux@leemhuis.info>
-Subject: Re: JFYI: patches in next that might be good to mainline rather
- sooner than later?
-In-Reply-To: <2023061955-abdominal-refute-4b5a@gregkh>
+To: Kalle Valo <kvalo@kernel.org>
+Cc: Andrey Rakhmatullin <wrar@wrar.name>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ linux-wireless@vger.kernel.org, Neil Chen <yn.chen@mediatek.com>,
+ Deren Wu <deren.wu@mediatek.com>, Lorenzo Bianconi <lorenzo@kernel.org>,
+ Felix Fietkau <nbd@nbd.name>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ netdev <netdev@vger.kernel.org>
+References: <ZGY4peApQnPAmDkY@durkon.wrar.name>
+ <ad948b42-74d3-b4f1-bbd6-449f71703083@leemhuis.info>
+ <ZGtsNO0VZQDWJG+A@durkon.wrar.name>
+ <cd7d298b-2b46-770e-ed54-7ae3f33b97ee@leemhuis.info>
+ <c647de2d-fbb5-4793-99b3-b800c95c04c2@leemhuis.info>
+ <87jzw8g8hk.fsf@kernel.org>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <87jzw8g8hk.fsf@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1687177192;b6b8f2af;
-X-HE-SMSGID: 1qBDrK-0006sT-29
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1687178946;12f71e4a;
+X-HE-SMSGID: 1qBEJX-0004Li-PH
 
-On 19.06.23 10:49, Greg KH wrote:
-> On Sun, Jun 18, 2023 at 03:40:15PM +0200, Thorsten Leemhuis wrote:
->> On 18.06.23 10:49, Thorsten Leemhuis wrote:
+On 12.06.23 14:39, Kalle Valo wrote:
+> Thorsten Leemhuis <regressions@leemhuis.info> writes:
+>> On 22.05.23 16:12, Thorsten Leemhuis wrote:
+>>> On 22.05.23 15:20, Andrey Rakhmatullin wrote:
+>>>> On Mon, May 22, 2023 at 03:00:30PM +0200, Linux regression tracking
+>>>> #adding (Thorsten Leemhuis) wrote:
+>>>>> On 18.05.23 16:39, Andrey Rakhmatullin wrote:
+>>>> I updated the firmware and now the problem doesn't happen.
+>>>> The firmware where the problem happens is
+>>>> mediatek/WIFI_RAM_CODE_MT7922_1.bin from the linux-firmware commit
+>>>> e2d11744ef (file size 826740, md5sum 8ff1bdc0f54f255bb2a1d6825781506b),
+>>>> the one where the problem doesn't happen is from the commit 6569484e6b
+>>>> (file size 827124, md5sum 14c08c8298b639ee52409b5e9711a083).
+>>> FWIW, just checked: that commit is from 2023-05-15, so quite recent.
 >>>
->>> I got the impression that early stable releases with a huge number of
->>> patches (like 6.3.2 with ~690 changes) seems to cause a few regressions.
->>> As you know, those releases usually contain many backports of changes
->>> merged during the merge window for the following mainline release (e.g.
->>> 6.4). That made me wonder:
+>>>> I haven't
+>>>> tried the version committed between these ones.
+>>>> Not sure if this should be reported to regzbot and if there are any
+>>>> further actions needed by the kernel maintainers.
 >>>
->>> How many patches do we have in linux-next right now that better should
->>> be merged this cycle (e.g. ahead of the 6.4 release) instead of merging
->>> them in the merge window for 6.5 and backporting them shortly afterwards?
+>>> Well, to quote the first sentence from
+>>> Documentation/driver-api/firmware/firmware-usage-guidelines.rst
 >>>
->>> To check I briefly set down and quickly hacked together a python
->>> script[1] that looks at linux-next for patches with tags like 'Cc:
->>> stable...' and 'Fixes: ', as all respectively some (or many?) of those
->>> will be backported. I made the script ignore a few things, like commits
->>> from the past eight days and commits that fix changes committed to
->>> mainline more that a year ago.
+>>> ```Users switching to a newer kernel should *not* have to install newer
+>>> firmware files to keep their hardware working.```
 >>>
->>> I ran this a few minutes ago and it spilled out about 260 changes (about
->>> 80 of them with a stable tag). I put the results into a table:
->>> https://docs.google.com/spreadsheets/d/1OnMrde1e7LBMPhOPJL0Sn9rd3W32mTGls_qGMoZS8z8/edit?usp=sharing
+>>> IOW: the problem you ran into should not happen. This afaics makes it a
+>>> regression that needs to be addressed -- at least if it's something that
+>>> is likely to hit others users as well. But I'd guess that's the case.
 >>
->> TWIMC, I just updated the data slightly, as I updated the script to also
->> look for commits that revert changes from the current mainline cycle.
->>
->> Did that while I was preparing this weeks regression report and noticed
->> a series of reverts[1] in next where my brain said "hmmm, Andrew merged
->> those more than a week ago to mm-hotfixes-unstable and -rc7 is due
->> today; I don't see a pr from him and wonder if these revert are
->> something that better should be in rc7 to help preventing a rc8?"
->>
->> [1] https://lore.kernel.org/all/20230609081518.3039120-1-qi.zheng@linux.dev/
->> noticed it via
->> https://lore.kernel.org/lkml/ZH6K0McWBeCjaf16@dread.disaster.area/
+>> Well, until now I didn't see any other report about a problem like this.
+>> Maybe things work better for others with that hardware – in that case it
+>> might be something not worth making a fuzz about. But I'll wait another
+>> week or two before I remove this from the tracking.
 > 
-> Having "only" 82 commits that cc: stable is a _HUGE_ decrease, so that's
-> great to see.  That's a very low % overall from the number of
-> non-cc-stable commits in the tree, so this feels good to me.
+> Yeah, this is bad. mt76 (or any other wireless driver) must not require
+> a new firmware whenever upgrading the kernel. Instead the old and new
+> firmware should coexist (for example have firmware-2.bin for the new
+> version and firmware.bin for the old version). Then mt76 should first
+> try loading the new firmware (eg. firmware-2.bin) and then try the old
+> one (eg. firmware.bin).
+> 
+> Should we revert commit c222f77fd4 or how to solve this?
 
-Yeah, from my point of view it also looks like things improved.
+I had hoped someone would rely with an opinion on this, but nobody did
+(and the reporter didn't reply to Lorenzo inquiry). So if you asked for
+mine:
 
-> Most of those are tiny stuff, dts fixes, fixes for minor
-> platforms/drivers, lockdep fixes, and other tiny things that maintainers
-> probably just don't think worthy of getting into -final now, as long as
-> they make it into the tree "eventually".  I know it's that way for some
-> of the commits in my trees that are tagged that way.
+Hmmm. Tricky. This was the only such report I noticed. Giving that and
+the risk that a revert might cause regressions on its own, I guess it
+might be better to leave everything as it is for now - and re-evaluate
+the situation in case more problems show up.
 
-Yup. But some seem to fix regressions. a0f19091d4f5, 6a87679626b5 and
-88d341716b83 for example looked suspicious to my untrained eyes during a
-brief look at the first 20 changes CCed stable. But developers and
-maintainers of course are in a way better position to decide how to
-handle those patches.
-
-BTW, some of those 20 changes and a off-list conversation about this
-thread reminded me of something related:
-
-Last year on the maintainers summit we discussed this "delayed stable
-backport" thingy that afaik works something like this:
-
-Cc: <stable@vger.kernel.org> # after 4 weeks
-
-Or is it more like this?
-
-Cc: <stable@vger.kernel.org> # 6.2 [after 4 weeks]
-
-I think the conclusion was to add this to the documentation, but that
-afaics never happened. If you tell me the format you or your scripts
-expect, I'd be willing to create a patch.
-
-> The "fixes-only" commits are a bit more interesting, we still have huge
-> swaths of subsystems that refuse to actually tag commits for stable, but
-> luckily developers know to at least put a "Fixes:" tag on their fixes,
-> which help us out in classifying where they should go.
-
-Various aspects contribute to this, but due to my regression tracking
-efforts two of them jumped to my mind here:
-
-* A clear statement from Linus wrt to the stable tags in changes that
-fix regressions would be good. E.g. something along the lines of "always
-add a CC: <stable@... tag when fixing a regression caused by change
-mainlined during the past year to ensure the fix reaches the users of
-stable trees quickly".
-
-  My recent changes to handling-regressions.rst[1] touched on that bit
-already and told developers to do so. But it did so without any clear
-precedent from Linus (as mentioned in the patch description). Hence it
-afaics would help a lot if Linus said something like that to make it
-"official".
-
-  [1] See eed892da9cd ("docs: handling-regressions: rework section about
-fixing procedures") in next. To quote: ```If a regression made it into a
-proper mainline release during the past twelve months, ensure to tag the
-fix with "Cc: stable@vger.kernel.org", as a "Fixes:" tag alone does not
-guarantee a backport. Please add the same tag, in case you know the
-culprit was backported to stable or longterm kernels.```
-
-
-* a (big?) part of the problem afaics is that many developers and
-maintainers seem to think that a "Fixes:" tag is enough to ensure a
-backport. You efforts educating them[2] at least from here look a bit
-like a endless game of whac-a-mole, as you sent such mails for quite a
-while already and it seems nothing much has changed. Sometimes I wonder
-if we should spam everyone in MAINTAINERS (and some of the regular
-developers as well?) with a short PSA trying to kill that myth. But I
-don't really like that idea myself. Maybe it would help if Linus
-mentions it two or three times in release announcements?
-
-  [2] for the unaware and the record, here are two recent ones:
-https://lore.kernel.org/all/2023060703-colony-shakily-3514@gregkh/
-https://lore.kernel.org/all/2023061137-algorithm-almanac-1337@gregkh/
-
-> The "reverts" look not so good to me, but it's hard to know if they are
-> followed up with a "real fix" afterward, which is common at times.
-
-Yup.
-
-> Anyway, thanks for doing this, looks pretty sane to me.
-
-Thx. Maybe with a bit of fine tuning this becomes more useful and
-something I can run regularly.
-
-We'll see.
-
-Ciao, Thorsten
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
