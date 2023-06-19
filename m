@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A021B1426E
-	for <regressions@lists.linux.dev>; Mon, 19 Jun 2023 16:33:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1191DD52A
+	for <regressions@lists.linux.dev>; Mon, 19 Jun 2023 17:09:26 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qBHoh-0003gl-87; Mon, 19 Jun 2023 18:33:23 +0200
-Message-ID: <fafb977c-954c-af1d-327d-539cdaaab8a8@leemhuis.info>
-Date: Mon, 19 Jun 2023 18:33:22 +0200
+	id 1qBINY-0000dt-Rk; Mon, 19 Jun 2023 19:09:24 +0200
+Message-ID: <bca4dcf5-15ac-8f48-3342-325bca764f9a@leemhuis.info>
+Date: Mon, 19 Jun 2023 19:09:24 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,116 +16,93 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.12.0
-To: Greg KH <gregkh@linuxfoundation.org>
-References: <9e0f5378-63d8-add4-2b79-2173a4c98086@leemhuis.info>
- <24edd13e-791a-bd05-0a44-dd5475c7e200@leemhuis.info>
- <2023061955-abdominal-refute-4b5a@gregkh>
- <97b81eab-8e09-2163-1b91-daecb8127a7c@leemhuis.info>
- <2023061936-eatable-grumbling-f3c1@gregkh>
+Subject: Re: stable-rc/linux-4.14.y bisection: baseline.login on
+ meson8b-odroidc1
 Content-Language: en-US, de-DE
-From: Thorsten Leemhuis <linux@leemhuis.info>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
- LKML <linux-kernel@vger.kernel.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-Subject: Re: JFYI: patches in next that might be good to mainline rather
- sooner than later?
-In-Reply-To: <2023061936-eatable-grumbling-f3c1@gregkh>
+To: =?UTF-8?Q?Ricardo_Ca=c3=b1uelo?= <ricardo.canuelo@collabora.com>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ stable@vger.kernel.org
+Cc: Greg KH <gregkh@linuxfoundation.org>
+References: <1fcff522-337a-c334-42a7-bc9b4f0daec4@collabora.com>
+ <585b00d1-5ad7-ecff-e905-71e370613dfb@leemhuis.info>
+ <4f77c914-562c-42ef-dfd0-43239398815d@collabora.com>
+ <a42f43e1-8586-a608-d073-3190af4eca94@leemhuis.info>
+ <1296be13-e15e-5478-452f-8ae8494563c0@leemhuis.info>
+ <87pm5ris6h.fsf@rcn-XPS-13-9305.i-did-not-set--mail-host-address--so-tickle-me>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <87pm5ris6h.fsf@rcn-XPS-13-9305.i-did-not-set--mail-host-address--so-tickle-me>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1687192405;3c8a5c67;
-X-HE-SMSGID: 1qBHoh-0003gl-87
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1687194567;7ea56174;
+X-HE-SMSGID: 1qBINY-0000dt-Rk
 
-On 19.06.23 15:58, Greg KH wrote:
-> On Mon, Jun 19, 2023 at 02:19:49PM +0200, Thorsten Leemhuis wrote:
->> Last year on the maintainers summit we discussed this "delayed stable
->> backport" thingy that afaik works something like this:
+On 19.06.23 13:53, Ricardo Cañuelo wrote:
+> On lun, jun 19 2023 at 11:36:02, "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info> wrote:
+>> BTW and JFYI (as you earlier said my docs helped you): the aspect "who
+>> is responsible to handle this regression: the regular maintainer or the
+>> stable team?" that came up earlier with this report lead me to sit down
+>> and write a text called "Why your Linux kernel bug report might be
+>> ignored or is fruitless" I published here:
 >>
->> Cc: <stable@vger.kernel.org> # after 4 weeks
->>
->> Or is it more like this?
->>
->> Cc: <stable@vger.kernel.org> # 6.2 [after 4 weeks]
->>
->> I think the conclusion was to add this to the documentation, but that
->> afaics never happened. If you tell me the format you or your scripts
->> expect, I'd be willing to create a patch.
+>> https://linux-regtracking.leemhuis.info/post/frequent-reasons-why-linux-kernel-bug-reports-are-ignored/
 > 
-> Either of them will work, as my "script" is me reviewing each patch :)
-> 
-> It's rare that I see this, [...]
+> This is fantastic
 
-I guess that partially because many people are not aware of this option. :-D
+Feels really good to hear this, as it was a lot of work that involved a
+lot of rewriting...
 
->>> The "fixes-only" commits are a bit more interesting, we still have huge
->>> swaths of subsystems that refuse to actually tag commits for stable, but
->>> luckily developers know to at least put a "Fixes:" tag on their fixes,
->>> which help us out in classifying where they should go.
+Nevertheless: let me know, if there is something where you think "this
+doesn't feel right", "this could be clearer", "I don't understand this",
+or something like that.
+
+> and a much needed document that should be mandatory
+> training for anyone reporting kernel regressions.
+
+Well, bugs in general I'd say.
+
+> IMO this kind of
+> documents should be located in a more prominent place
+
+Yeah, but where? I wondered if I should ask Jonathan if this is
+something for lwn.net, but something in me says it would be a odd fit.
+
+> Maybe with a bit of effort of us all we can improve the
+> situation so that bugs and regression reporting and tracking in the
+> kernel becomes a much more streamlined process.
+
+I'd really like to work more on that, but this regression tracking thing
+is a time sink. And regzbot still needs quite a few improvements as
+well. :-/
+
+Would help if I finally would figure out how to use "git clone" to
+create a clone or two of myself. ;)
+
+>>> That leads to the question: should we spend our time on it?
 >>
->> Various aspects contribute to this, but due to my regression tracking
->> efforts two of them jumped to my mind here:
->>
->> * A clear statement from Linus wrt to the stable tags in changes that
->> fix regressions would be good. E.g. something along the lines of "always
->> add a CC: <stable@... tag when fixing a regression caused by change
->> mainlined during the past year to ensure the fix reaches the users of
->> stable trees quickly".
+>> As expected there wasn't any progress (at least afaics).
+>> [...]
+>> Ricardo, how would do you and Kernelci folks feel about ignoring this?
 > 
-> Sounds good to me for you to say that!  It should happen, but remember
-> many maintainers still don't want to, or feel they need to, tag anything
-> for stable.  And that's fine, I can't tell people what to do and the
-> stable tree stuff was ALWAYS designed to never require maintainers to do
-> more work than they wanted to.
+> I can't speak on behalf of the KernelCI people, but this being something
+> that isn't failing in mainline and considering that the stable release
+> where it happened was very close to EOL puts this in the low-priority
+> category for me. Fixing bugs can become a quite expensive task in terms
+> of time, and I'm try to factor in the impact of the fix to make sure the
+> time spent fixing it is worth it.
+> In other words, making test results green just for the sake of
+> green-ness is not a sound reason to go after the failures. We're trying
+> to improve the kernel quality after all, so I'd rather focus on the
+> regressions that seem more important for the kernel integrity and for
+> the users.
 
-Yeah, I know and that's totally fine with me. The problem is that the
-tag is overloaded with two meanings ("I want to backport this" and "I'm
-willing to help with backporting in case of trouble"). Something along
-the lines of
+Well said. It's similar for regression tracking, hence let me remove it
+from the list of tracked issues
 
-Cc: <stable@vger.kernel.org> # notmyjob
+#regzbot inconclusive: seems nobody is motivated enough to work on
+resolving this issue found by KernelCI (see lists for details).
 
-could help for this case, so people can indicate "this really should be
-backported, but I won't help with that".
-
-> So while we can ask, we can never require.
-
-Well, we IMHO could require to tag them to ensure they are not missed
-and quickly picked up.
-
->> * a (big?) part of the problem afaics is that many developers and
->> maintainers seem to think that a "Fixes:" tag is enough to ensure a
->> backport. You efforts educating them[2] at least from here look a bit
->> like a endless game of whac-a-mole, as you sent such mails for quite a
->> while already and it seems nothing much has changed. Sometimes I wonder
->> if we should spam everyone in MAINTAINERS (and some of the regular
->> developers as well?) with a short PSA trying to kill that myth. But I
->> don't really like that idea myself. Maybe it would help if Linus
->> mentions it two or three times in release announcements?
->>
->>   [2] for the unaware and the record, here are two recent ones:
->> https://lore.kernel.org/all/2023060703-colony-shakily-3514@gregkh/
->> https://lore.kernel.org/all/2023061137-algorithm-almanac-1337@gregkh/
-> 
-> Given that the cc: stable predates the Fixes: tag by years, it's funny
-> that people don't realize this.
-> 
-> BUT it's the fixes tag that we have been using for those subsystems that
-> do NOT tag stuff for stable, so I guess when people saw patches flow in,
-> they just "assumed" that this was the normal process.
-
-Guess so.
-
-> So yes, I'll keep reminding people, and Sasha does a great job in
-> sweeping up the Fixes: only patches, it is never guaranteed that this
-> will get into a stable release.
-> 
-> Except for a yearly "here is how stable works" email like you say to all
-> MAINTAINERS, I don't know how it would be any more explicit than what we
-> have documented today.  Maybe I should do that yearly type of an email,
-> consider it a christmas card update or something :)
-
-How about "10 myths Linux developers believe about kernels development
-process; number 6 will astound you".
-
-/me runs and hides
-
-Ciao, Thorsten
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
