@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1191DD52A
-	for <regressions@lists.linux.dev>; Mon, 19 Jun 2023 17:09:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AE98C2C5
+	for <regressions@lists.linux.dev>; Mon, 19 Jun 2023 17:19:55 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qBINY-0000dt-Rk; Mon, 19 Jun 2023 19:09:24 +0200
-Message-ID: <bca4dcf5-15ac-8f48-3342-325bca764f9a@leemhuis.info>
-Date: Mon, 19 Jun 2023 19:09:24 +0200
+	id 1qBIXg-0002Jf-Dy; Mon, 19 Jun 2023 19:19:52 +0200
+Message-ID: <6d67384e-456c-13c7-cf92-33b20f3fa2d6@leemhuis.info>
+Date: Mon, 19 Jun 2023 19:19:51 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,93 +16,50 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.12.0
-Subject: Re: stable-rc/linux-4.14.y bisection: baseline.login on
- meson8b-odroidc1
+Subject: Re: Fwd: nvsp_rndis_pkt_complete error status and net_ratelimit:
+ callbacks suppressed messages on 6.4.0rc4
 Content-Language: en-US, de-DE
-To: =?UTF-8?Q?Ricardo_Ca=c3=b1uelo?= <ricardo.canuelo@collabora.com>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- stable@vger.kernel.org
-Cc: Greg KH <gregkh@linuxfoundation.org>
-References: <1fcff522-337a-c334-42a7-bc9b4f0daec4@collabora.com>
- <585b00d1-5ad7-ecff-e905-71e370613dfb@leemhuis.info>
- <4f77c914-562c-42ef-dfd0-43239398815d@collabora.com>
- <a42f43e1-8586-a608-d073-3190af4eca94@leemhuis.info>
- <1296be13-e15e-5478-452f-8ae8494563c0@leemhuis.info>
- <87pm5ris6h.fsf@rcn-XPS-13-9305.i-did-not-set--mail-host-address--so-tickle-me>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <87pm5ris6h.fsf@rcn-XPS-13-9305.i-did-not-set--mail-host-address--so-tickle-me>
+To: Bagas Sanjaya <bagasdotme@gmail.com>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Linux Kernel Network Developers <netdev@vger.kernel.org>,
+ Linux BPF <bpf@vger.kernel.org>,
+ Linux on Hyper-V <linux-hyperv@vger.kernel.org>
+Cc: Michael Kelley <mikelley@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Paolo Abeni <pabeni@redhat.com>,
+ "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>
+References: <15dd93af-fcd5-5b9a-a6ba-9781768dbae7@gmail.com>
+From: "Linux regression tracking #update (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <15dd93af-fcd5-5b9a-a6ba-9781768dbae7@gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1687194567;7ea56174;
-X-HE-SMSGID: 1qBINY-0000dt-Rk
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1687195195;5cedc1fa;
+X-HE-SMSGID: 1qBIXg-0002Jf-Dy
 
-On 19.06.23 13:53, Ricardo Cañuelo wrote:
-> On lun, jun 19 2023 at 11:36:02, "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info> wrote:
->> BTW and JFYI (as you earlier said my docs helped you): the aspect "who
->> is responsible to handle this regression: the regular maintainer or the
->> stable team?" that came up earlier with this report lead me to sit down
->> and write a text called "Why your Linux kernel bug report might be
->> ignored or is fruitless" I published here:
->>
->> https://linux-regtracking.leemhuis.info/post/frequent-reasons-why-linux-kernel-bug-reports-are-ignored/
+[TLDR: This mail in primarily relevant for Linux kernel regression
+tracking. See link in footer if these mails annoy you.]
+
+On 30.05.23 14:25, Bagas Sanjaya wrote:
 > 
-> This is fantastic
-
-Feels really good to hear this, as it was a lot of work that involved a
-lot of rewriting...
-
-Nevertheless: let me know, if there is something where you think "this
-doesn't feel right", "this could be clearer", "I don't understand this",
-or something like that.
-
-> and a much needed document that should be mandatory
-> training for anyone reporting kernel regressions.
-
-Well, bugs in general I'd say.
-
-> IMO this kind of
-> documents should be located in a more prominent place
-
-Yeah, but where? I wondered if I should ask Jonathan if this is
-something for lwn.net, but something in me says it would be a odd fit.
-
-> Maybe with a bit of effort of us all we can improve the
-> situation so that bugs and regression reporting and tracking in the
-> kernel becomes a much more streamlined process.
-
-I'd really like to work more on that, but this regression tracking thing
-is a time sink. And regzbot still needs quite a few improvements as
-well. :-/
-
-Would help if I finally would figure out how to use "git clone" to
-create a clone or two of myself. ;)
-
->>> That leads to the question: should we spend our time on it?
->>
->> As expected there wasn't any progress (at least afaics).
->> [...]
->> Ricardo, how would do you and Kernelci folks feel about ignoring this?
+> I notice a regression report on Bugzilla [1]. Quoting from it:
+> [...]
+> #regzbot introduced: dca5161f9bd052 https://bugzilla.kernel.org/show_bug.cgi?id=217503
+> #regzbot title: net_ratelimit and nvsp_rndis_pkt_complete error due to SEND_RNDIS_PKT status check
 > 
-> I can't speak on behalf of the KernelCI people, but this being something
-> that isn't failing in mainline and considering that the stable release
-> where it happened was very close to EOL puts this in the low-priority
-> category for me. Fixing bugs can become a quite expensive task in terms
-> of time, and I'm try to factor in the impact of the fix to make sure the
-> time spent fixing it is worth it.
-> In other words, making test results green just for the sake of
-> green-ness is not a sound reason to go after the failures. We're trying
-> to improve the kernel quality after all, so I'd rather focus on the
-> regressions that seem more important for the kernel integrity and for
-> the users.
+> Thanks.
+> 
+> [1]: https://bugzilla.kernel.org/show_bug.cgi?id=217503
 
-Well said. It's similar for regression tracking, hence let me remove it
-from the list of tracked issues
-
-#regzbot inconclusive: seems nobody is motivated enough to work on
-resolving this issue found by KernelCI (see lists for details).
+#regzbot resolve: turned out it's not a regression, see
+https://bugzilla.kernel.org/show_bug.cgi?id=217503#c10
+#regzbot ignore-activity
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
 Everything you wanna know about Linux kernel regression tracking:
 https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+That page also explains what to do if mails like this annoy you.
+
+#regzbot ignore-activity
