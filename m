@@ -1,102 +1,115 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE6DDC2C5
-	for <regressions@lists.linux.dev>; Mon, 19 Jun 2023 12:49:06 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qBEJX-0004Li-PH; Mon, 19 Jun 2023 14:48:59 +0200
-Message-ID: <e3af69f2-d3e5-8039-c6e5-5b00fe066cc0@leemhuis.info>
-Date: Mon, 19 Jun 2023 14:48:59 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 536B71118B
+	for <regressions@lists.linux.dev>; Mon, 19 Jun 2023 13:58:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F853C433C8;
+	Mon, 19 Jun 2023 13:58:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1687183122;
+	bh=CDEdPUNLuINNm5vT+mT//9EOuPnulyiEOGsPKwBeOAI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bfliLEv7dYcFbWHLpRyjO0wYoMYpE8yymjGa1Fvk7xQsemNjWhURCLibUCUn21c92
+	 JFYjE2aRGVwHYP0iigzLmG5mHciRY0YJJ91PbMwq6hbVJc+3DxyNSOWuJE4tiacK66
+	 5R+cS/bj+plpv69TYEUIAEHi1gt+Yg58je5vnwaY=
+Date: Mon, 19 Jun 2023 15:58:40 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Thorsten Leemhuis <linux@leemhuis.info>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+	Linux kernel regressions list <regressions@lists.linux.dev>,
+	LKML <linux-kernel@vger.kernel.org>
+Subject: Re: JFYI: patches in next that might be good to mainline rather
+ sooner than later?
+Message-ID: <2023061936-eatable-grumbling-f3c1@gregkh>
+References: <9e0f5378-63d8-add4-2b79-2173a4c98086@leemhuis.info>
+ <24edd13e-791a-bd05-0a44-dd5475c7e200@leemhuis.info>
+ <2023061955-abdominal-refute-4b5a@gregkh>
+ <97b81eab-8e09-2163-1b91-daecb8127a7c@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: MT7922 problem with "fix rx filter incorrect by drv/fw
- inconsistent"
-Content-Language: en-US, de-DE
-To: Kalle Valo <kvalo@kernel.org>
-Cc: Andrey Rakhmatullin <wrar@wrar.name>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- linux-wireless@vger.kernel.org, Neil Chen <yn.chen@mediatek.com>,
- Deren Wu <deren.wu@mediatek.com>, Lorenzo Bianconi <lorenzo@kernel.org>,
- Felix Fietkau <nbd@nbd.name>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- netdev <netdev@vger.kernel.org>
-References: <ZGY4peApQnPAmDkY@durkon.wrar.name>
- <ad948b42-74d3-b4f1-bbd6-449f71703083@leemhuis.info>
- <ZGtsNO0VZQDWJG+A@durkon.wrar.name>
- <cd7d298b-2b46-770e-ed54-7ae3f33b97ee@leemhuis.info>
- <c647de2d-fbb5-4793-99b3-b800c95c04c2@leemhuis.info>
- <87jzw8g8hk.fsf@kernel.org>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <87jzw8g8hk.fsf@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1687178946;12f71e4a;
-X-HE-SMSGID: 1qBEJX-0004Li-PH
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <97b81eab-8e09-2163-1b91-daecb8127a7c@leemhuis.info>
 
-On 12.06.23 14:39, Kalle Valo wrote:
-> Thorsten Leemhuis <regressions@leemhuis.info> writes:
->> On 22.05.23 16:12, Thorsten Leemhuis wrote:
->>> On 22.05.23 15:20, Andrey Rakhmatullin wrote:
->>>> On Mon, May 22, 2023 at 03:00:30PM +0200, Linux regression tracking
->>>> #adding (Thorsten Leemhuis) wrote:
->>>>> On 18.05.23 16:39, Andrey Rakhmatullin wrote:
->>>> I updated the firmware and now the problem doesn't happen.
->>>> The firmware where the problem happens is
->>>> mediatek/WIFI_RAM_CODE_MT7922_1.bin from the linux-firmware commit
->>>> e2d11744ef (file size 826740, md5sum 8ff1bdc0f54f255bb2a1d6825781506b),
->>>> the one where the problem doesn't happen is from the commit 6569484e6b
->>>> (file size 827124, md5sum 14c08c8298b639ee52409b5e9711a083).
->>> FWIW, just checked: that commit is from 2023-05-15, so quite recent.
->>>
->>>> I haven't
->>>> tried the version committed between these ones.
->>>> Not sure if this should be reported to regzbot and if there are any
->>>> further actions needed by the kernel maintainers.
->>>
->>> Well, to quote the first sentence from
->>> Documentation/driver-api/firmware/firmware-usage-guidelines.rst
->>>
->>> ```Users switching to a newer kernel should *not* have to install newer
->>> firmware files to keep their hardware working.```
->>>
->>> IOW: the problem you ran into should not happen. This afaics makes it a
->>> regression that needs to be addressed -- at least if it's something that
->>> is likely to hit others users as well. But I'd guess that's the case.
->>
->> Well, until now I didn't see any other report about a problem like this.
->> Maybe things work better for others with that hardware – in that case it
->> might be something not worth making a fuzz about. But I'll wait another
->> week or two before I remove this from the tracking.
+On Mon, Jun 19, 2023 at 02:19:49PM +0200, Thorsten Leemhuis wrote:
+> Last year on the maintainers summit we discussed this "delayed stable
+> backport" thingy that afaik works something like this:
 > 
-> Yeah, this is bad. mt76 (or any other wireless driver) must not require
-> a new firmware whenever upgrading the kernel. Instead the old and new
-> firmware should coexist (for example have firmware-2.bin for the new
-> version and firmware.bin for the old version). Then mt76 should first
-> try loading the new firmware (eg. firmware-2.bin) and then try the old
-> one (eg. firmware.bin).
+> Cc: <stable@vger.kernel.org> # after 4 weeks
 > 
-> Should we revert commit c222f77fd4 or how to solve this?
+> Or is it more like this?
+> 
+> Cc: <stable@vger.kernel.org> # 6.2 [after 4 weeks]
+> 
+> I think the conclusion was to add this to the documentation, but that
+> afaics never happened. If you tell me the format you or your scripts
+> expect, I'd be willing to create a patch.
 
-I had hoped someone would rely with an opinion on this, but nobody did
-(and the reporter didn't reply to Lorenzo inquiry). So if you asked for
-mine:
+Either of them will work, as my "script" is me reviewing each patch :)
 
-Hmmm. Tricky. This was the only such report I noticed. Giving that and
-the risk that a revert might cause regressions on its own, I guess it
-might be better to leave everything as it is for now - and re-evaluate
-the situation in case more problems show up.
+It's rare that I see this, I have been doing it for a few USB patches
+recently, but I don't mark them as I know to hold off on stable
+integration a bit, but I can't read the minds of other maintainers.
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+> > The "fixes-only" commits are a bit more interesting, we still have huge
+> > swaths of subsystems that refuse to actually tag commits for stable, but
+> > luckily developers know to at least put a "Fixes:" tag on their fixes,
+> > which help us out in classifying where they should go.
+> 
+> Various aspects contribute to this, but due to my regression tracking
+> efforts two of them jumped to my mind here:
+> 
+> * A clear statement from Linus wrt to the stable tags in changes that
+> fix regressions would be good. E.g. something along the lines of "always
+> add a CC: <stable@... tag when fixing a regression caused by change
+> mainlined during the past year to ensure the fix reaches the users of
+> stable trees quickly".
+
+Sounds good to me for you to say that!  It should happen, but remember
+many maintainers still don't want to, or feel they need to, tag anything
+for stable.  And that's fine, I can't tell people what to do and the
+stable tree stuff was ALWAYS designed to never require maintainers to do
+more work than they wanted to.
+
+Hence Sasha's great AUTOSEL work in digging out patches from those
+subsystems that do NOT mark anything for stable.
+
+So while we can ask, we can never require.
+
+> * a (big?) part of the problem afaics is that many developers and
+> maintainers seem to think that a "Fixes:" tag is enough to ensure a
+> backport. You efforts educating them[2] at least from here look a bit
+> like a endless game of whac-a-mole, as you sent such mails for quite a
+> while already and it seems nothing much has changed. Sometimes I wonder
+> if we should spam everyone in MAINTAINERS (and some of the regular
+> developers as well?) with a short PSA trying to kill that myth. But I
+> don't really like that idea myself. Maybe it would help if Linus
+> mentions it two or three times in release announcements?
+> 
+>   [2] for the unaware and the record, here are two recent ones:
+> https://lore.kernel.org/all/2023060703-colony-shakily-3514@gregkh/
+> https://lore.kernel.org/all/2023061137-algorithm-almanac-1337@gregkh/
+
+Given that the cc: stable predates the Fixes: tag by years, it's funny
+that people don't realize this.
+
+BUT it's the fixes tag that we have been using for those subsystems that
+do NOT tag stuff for stable, so I guess when people saw patches flow in,
+they just "assumed" that this was the normal process.
+
+So yes, I'll keep reminding people, and Sasha does a great job in
+sweeping up the Fixes: only patches, it is never guaranteed that this
+will get into a stable release.
+
+Except for a yearly "here is how stable works" email like you say to all
+MAINTAINERS, I don't know how it would be any more explicit than what we
+have documented today.  Maybe I should do that yearly type of an email,
+consider it a christmas card update or something :)
+
+thanks,
+
+greg k-h
