@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BFA414286
-	for <regressions@lists.linux.dev>; Tue, 20 Jun 2023 13:03:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C351C156D3
+	for <regressions@lists.linux.dev>; Tue, 20 Jun 2023 13:20:33 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qBaZ5-0001MI-KF; Tue, 20 Jun 2023 14:34:31 +0200
-Message-ID: <7e18f4f2-a05a-2738-426b-31482c58af35@leemhuis.info>
-Date: Tue, 20 Jun 2023 14:34:30 +0200
+	id 1qBbHb-00037T-Nz; Tue, 20 Jun 2023 15:20:31 +0200
+Message-ID: <1b3fd148-44d7-d476-e9e6-f9d8c8ec0ee6@leemhuis.info>
+Date: Tue, 20 Jun 2023 15:20:31 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,59 +16,110 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.12.0
-Subject: Re: [PATCH v3 1/3] wifi: rtw88: Move register access from
- rtw_bf_assoc() outside the RCU
+Subject: Re: amd_sfh driver causes kernel oops during boot
 Content-Language: en-US, de-DE
-From: "Linux regression tracking #update (Thorsten Leemhuis)"
+To: Malte Starostik <malte@starostik.de>,
+ Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ "Limonciello, Mario" <mario.limonciello@amd.com>
+Cc: Bagas Sanjaya <bagasdotme@gmail.com>, basavaraj.natikar@amd.com,
+ linux-input@vger.kernel.org, linux@hexchain.org, stable@vger.kernel.org
+References: <ZG3ipauL9FTnQJiC@debian.me>
+ <aci7a4jnosozypn6sffsdoaezg4p42zgjy5dwnjyvnbav7chdm@wettfjwb4enw>
+ <79bd270e-4a0d-b4be-992b-73c65d085624@amd.com> <5980752.YW5z2jdOID@zen>
+From: "Linux regression tracking (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
-To: Sascha Hauer <s.hauer@pengutronix.de>,
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: linux-wireless@vger.kernel.org, tony0620emma@gmail.com, kvalo@kernel.org,
- pkshih@realtek.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- Linux kernel regressions list <regressions@lists.linux.dev>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-References: <20230108211324.442823-1-martin.blumenstingl@googlemail.com>
- <20230108211324.442823-2-martin.blumenstingl@googlemail.com>
- <20230331125906.GF15436@pengutronix.de>
- <8ab36d80-8417-628f-9f51-e75eaf6b1a51@leemhuis.info>
-In-Reply-To: <8ab36d80-8417-628f-9f51-e75eaf6b1a51@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <5980752.YW5z2jdOID@zen>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1687266218;d6692153;
-X-HE-SMSGID: 1qBaZ5-0001MI-KF
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1687267233;63c23795;
+X-HE-SMSGID: 1qBbHb-00037T-Nz
 
-On 02.04.23 13:30, Linux regression tracking #adding (Thorsten Leemhuis)
-wrote:
-> On 31.03.23 14:59, Sascha Hauer wrote:
->> On Sun, Jan 08, 2023 at 10:13:22PM +0100, Martin Blumenstingl wrote:
->>> USB and (upcoming) SDIO support may sleep in the read/write handlers.
->>> Shrink the RCU critical section so it only cover the call to
->>> ieee80211_find_sta() and finding the ic_vht_cap/vht_cap based on the
->>> found station. This moves the chip's BFEE configuration outside the
->>> rcu_read_lock section and thus prevent "scheduling while atomic" or
->>> "Voluntary context switch within RCU read-side critical section!"
->>> warnings when accessing the registers using an SDIO card (which is
->>> where this issue has been spotted in the real world - but it also
->>> affects USB cards).
->>
->> Unfortunately this introduces a regression on my RTW8821CU chip. With
->> this it constantly looses connection to the AP and reconnects shortly
->> after:
+Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
+for once, to make this easily accessible to everyone.
+
+What happens to this? From here it looks like there was no progress to
+resolve the regression in the past two weeks, but maybe I just missed
+something.
+
+On 07.06.23 00:57, Malte Starostik wrote:
+> Am Dienstag, 6. Juni 2023, 17:25:13 CEST schrieb Limonciello, Mario:
+>> On 6/6/2023 3:08 AM, Benjamin Tissoires wrote:
+>>> On Jun 06 2023, Linux regression tracking (Thorsten Leemhuis) wrote:
+>>>>> On Mon, Jun 05, 2023 at 01:24:25PM +0200, Malte Starostik wrote:
+>>>>>> Hello,
+>>>>>>
+>>>>>> chiming in here as I'm experiencing what looks like the exact same
+>>>>>> issue, also on a Lenovo Z13 notebook, also on Arch:
+>>>>>> Oops during startup in task udev-worker followed by udev-worker
+>>>>>> blocking all attempts to suspend or cleanly shutdown/reboot the
+>>>>>> machine
 > 
-> #regzbot ^introduced c7eca79def44
-> #regzbot title net: wifi: rtw88: RTW8821CU constantly looses connection
-> to the AP and reconnects shortly after
-> #regzbot ignore-activity
-
-Forgot to resolve this in regzbot:
-
-#regzbot resolve: turn's out this wasn't a regression, see
-https://lore.kernel.org/lkml/20230403100043.GT19113@pengutronix.de/
-#regzbot ignore-activity
+>>> I have a suspicion on commit 7bcfdab3f0c6 ("HID: amd_sfh: if no sensors
+>>> are enabled, clean up") because the stack trace says that there is a bad
+>>> list_add, which could happen if the object is not correctly initialized.
+>>>
+>>> However, that commit was present in v6.2, so it might not be that one.
+>>>
+>> If I'm not mistaken the Z13 doesn't actually have any
+>> sensors connected to SFH.  So I think the suspicion on
+>> 7bcfdab3f0c6 and theory this is triggered by HID init makes
+>> a lot of sense.
+>>
+>> Can you try this patch?
+>>
+>> diff --git a/drivers/hid/amd-sfh-hid/amd_sfh_client.c
+>> b/drivers/hid/amd-sfh-hid/amd_sfh_client.c
+>> index d9b7b01900b5..fa693a5224c6 100644
+>> --- a/drivers/hid/amd-sfh-hid/amd_sfh_client.c
+>> +++ b/drivers/hid/amd-sfh-hid/amd_sfh_client.c
+>> @@ -324,6 +324,7 @@ int amd_sfh_hid_client_init(struct amd_mp2_dev
+>> *privdata)
+>>                          devm_kfree(dev, cl_data->report_descr[i]);
+>>                  }
+>>                  dev_warn(dev, "Failed to discover, sensors not enabled
+>> is %d\n", cl_data->is_any_sensor_enabled);
+>> +               cl_data->num_hid_devices = 0;
+>>                  return -EOPNOTSUPP;
+>>          }
+>>          schedule_delayed_work(&cl_data->work_buffer,
+>> msecs_to_jiffies(AMD_SFH_IDLE_LOOP));
+> 
+> I applied this to 9e87b63ed37e202c77aa17d4112da6ae0c7c097c now, which was the 
+> origin when I started the whole bisection. Clean rebuild, issue still 
+> persists.
+> 
+> Out of 50 boots, I got:
+> 
+> 25 clean
+> 22 Oops as posted by the OP
+> 1 same Oops, followed by a panic
+> 1 lockup [1]
+> 1 hanging with just a blank screen
+> 
+> Not sure whether the lockups are related, but [1] mentions modprobe and udev-
+> worker as well and all problems including the blank screen one appear roughly 
+> at the same time during boot. As this is before a graphics mode switch, I 
+> suspect the last mentioned case may be like [1] while the screen was blanked.
+> To support the timing correlation: the UVC error for the IR cam shown in the 
+> photo (normal boot noise) also appears right before the BUG in the non-lockup 
+> bad case.
+> 
+> I do see the dev_warn in dmesg, so the code path modified in your patch is 
+> indeed hit:
+> [   10.897521] pcie_mp2_amd 0000:63:00.7: Failed to discover, sensors not 
+> enabled is 1
+> [   10.897533] pcie_mp2_amd: probe of 0000:63:00.7 failed with error -95
+> 
+> BR Malte
+> 
+> [1] https://photos.app.goo.gl/2FAvQ7DqBsHEF6Bd8
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
 Everything you wanna know about Linux kernel regression tracking:
 https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+If I did something stupid, please tell me, as explained on that page.
+
+#regzbot poke
