@@ -1,138 +1,213 @@
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [85.220.165.71])
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2057.outbound.protection.outlook.com [40.107.212.57])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E840317AB5
-	for <regressions@lists.linux.dev>; Tue, 20 Jun 2023 19:27:55 +0000 (UTC)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1qBh16-0007iO-Ts; Tue, 20 Jun 2023 21:27:52 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1qBh13-008rwD-Jh; Tue, 20 Jun 2023 21:27:49 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1qBh12-00G0aA-Ph; Tue, 20 Jun 2023 21:27:48 +0200
-Date: Tue, 20 Jun 2023 21:27:48 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
-	Stefan Wahren <stefan.wahren@i2se.com>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Stefan Wahren <stefan.wahren@chargebyte.com>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sergey Organov <sorganov@gmail.com>,
-	NXP Linux Team <linux-imx@nxp.com>, linux-serial@vger.kernel.org,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	Fabio Estevam <festevam@gmail.com>,
-	Tomasz =?utf-8?Q?Mo=C5=84?= <tomasz.mon@camlingroup.com>,
-	Linux ARM <linux-arm-kernel@lists.infradead.org>
-Subject: Re: Regression: serial: imx: overrun errors on debug UART
-Message-ID: <20230620192748.ey4oah22resbblej@pengutronix.de>
-References: <cb16ddb7-f22f-d637-8670-bccc77add0af@i2se.com>
- <87mt3ynsa7.fsf@osv.gnss.ru>
- <d5009984-d2eb-0343-5bb4-df8a7f526121@i2se.com>
- <87sfcy8ncu.fsf@osv.gnss.ru>
- <534ac8db-ae8f-1ea3-9aa9-2105db7f7a52@i2se.com>
- <203ce87f-2898-eb10-2f8c-f237859d75e6@leemhuis.info>
- <87ttw2vnn0.fsf@osv.gnss.ru>
- <d1b6209d-a174-406a-cc81-86b391940c0c@i2se.com>
- <3853881c-976f-dadc-b64b-4ffd8cc88cf0@leemhuis.info>
- <2023062046-jersey-facecloth-7a5d@gregkh>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 733762AB55
+	for <regressions@lists.linux.dev>; Tue, 20 Jun 2023 20:03:06 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=RD/+q/o5TJYBUdC719i31SVb/0JdHFnfxwSccF57Wcj5ggrLY6h+b8JGgemAMBoRFWwp/aB+Ff7BZaUMJXP9sUESMSk6Ln7ngD6pUNxrllG9pqkrIf7rOmKOKox0tUMjA79hOsp3+NaIhyOwlJ12AE9nvwkEgVgsHC7aCRWdYfht5WtHTtVk5WJD/taFFYLKUhwzfxC86LX1OxFqbI3acG0lJA0tAmUWs141jJs8IS5NHWIzUU5VOqIBmphZmUE65dN7PUlFA7/qoclNGaXDSWnxi3kF6C13sd0LvYD4VutHd8k7Vyth8DjBq3T9zn5aseTcXjc0IoAnPKtMszeoJQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=p6oHWG/dIl240rT1dn7FX2/vA/z7UvThz/I56xU2ThM=;
+ b=gET/QErBGMgokexAaKOxOIu8INPVuAjD/Ve1W63LERRF1KP5Df4E1fMi7hxMtFLKNhLoraLNanb76D/8uydlIm8hfTVh8rQRnlErjS2WoanhA2zG1IHkSEIeWUdLobvoc07bH9YxWiPYPFFafwt0KPGzQ1C+oLr/e1XFRb3IxvPvu6paky0pAZicV/Kj2XeqrQo5b2xCxCvSi4ConPRcF79CxVfUCKzPjyhlXxGK4ahKJXsS5EE7v5Hz6utcjcldc3VjHP4F916gTLiN0nOh4QZl3SjQk/QDuj0ISwKJ9Qbwm+8qEhIZvxqMS2S9wDG/RK0nK+uP1+/CcDz35Ki0iQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=p6oHWG/dIl240rT1dn7FX2/vA/z7UvThz/I56xU2ThM=;
+ b=KSgEQZSFF3OVVNW6u3GnIdTK6ukk6OUX3dWsSh7pEbVmerSznfcVPoyczaJgqhpvJu398TFs98+sIL4SnYwaNQw6mt8xjPP8N+YIlI2S5pRbZd+hJmCtI/T41OUXPghfGuA0GxulqWN1VmrlaHpaQxNUI+GfMuMeUOyM9TeTckc=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+ by PH8PR12MB7448.namprd12.prod.outlook.com (2603:10b6:510:214::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6521.21; Tue, 20 Jun
+ 2023 20:03:03 +0000
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::dfcf:f53c:c778:6f70]) by MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::dfcf:f53c:c778:6f70%5]) with mapi id 15.20.6521.020; Tue, 20 Jun 2023
+ 20:03:03 +0000
+Message-ID: <602504a5-334d-92e8-2fd3-f7e8662b714e@amd.com>
+Date: Tue, 20 Jun 2023 15:03:00 -0500
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.2
+Subject: Re: amd_sfh driver causes kernel oops during boot
+Content-Language: en-US
+From: "Limonciello, Mario" <mario.limonciello@amd.com>
+To: Linux regressions mailing list <regressions@lists.linux.dev>,
+ Malte Starostik <malte@starostik.de>,
+ Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc: Bagas Sanjaya <bagasdotme@gmail.com>, basavaraj.natikar@amd.com,
+ linux-input@vger.kernel.org, linux@hexchain.org, stable@vger.kernel.org
+References: <ZG3ipauL9FTnQJiC@debian.me>
+ <aci7a4jnosozypn6sffsdoaezg4p42zgjy5dwnjyvnbav7chdm@wettfjwb4enw>
+ <79bd270e-4a0d-b4be-992b-73c65d085624@amd.com> <5980752.YW5z2jdOID@zen>
+ <1b3fd148-44d7-d476-e9e6-f9d8c8ec0ee6@leemhuis.info>
+ <f677a16e-1fa2-3f45-2b44-5acbf67aad3c@amd.com>
+In-Reply-To: <f677a16e-1fa2-3f45-2b44-5acbf67aad3c@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SN4PR0501CA0071.namprd05.prod.outlook.com
+ (2603:10b6:803:41::48) To MN0PR12MB6101.namprd12.prod.outlook.com
+ (2603:10b6:208:3cb::10)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="p7ndb543epv2snzz"
-Content-Disposition: inline
-In-Reply-To: <2023062046-jersey-facecloth-7a5d@gregkh>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: regressions@lists.linux.dev
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|PH8PR12MB7448:EE_
+X-MS-Office365-Filtering-Correlation-Id: 189d2577-f704-4b77-43c5-08db71c95ac6
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	rFGQ9dXCusIfAGUGcBVs0BAnwBI4YZmH9r4+J5+MWB0GKGLAF8jXQW1hu6yV4Tfj16f8xX5VKcm7VZMHKEsxemTAoFnmrjVI2AH6xxPXpiGcaaXpJbc2+Tdv5mwiwN/mbcJt/5MPO7eZZeNW/sxo5ouYaFFyzvoUr9GbsEGim0hKtZXxylMFYP0nOt0Y8RF7pDoWNHfHEXX7Vqy9NbDKi5lq1cjf8UYhjq/cGX7kHtNXt8Sq/vfS6YTk3TUfhW2BfM01f1ectIfJ8CEGjWoFYEQiuw9LqmQvoMaZiaYMXcUecuSFOCV51AyiGBgr8kR/R3yNLyxyO1yidix1lJrlptzKLuVb8lm/6G8ByxzTFI+9qNHszzlDYplAzc0SPH7Aa4Qy7TuUqMbjdUAWBqJ2Qpy0ISctDnw3kz9Y8OW9HNeAZAblpH9R5y6KaLbLGzfWyBBBPLoOaSudCRVH+C1kx1XgJWtrmLrBThQPb3GaJDUi7zONmCDI5SPGral6XD4lZs2fD4Cva1slCmnDE7hxoxSWqOcGJ4l8eLDbfnbImStqhRqdPe6mDmBqxLNH/RabXNJwhdwIxMiq5oIJ/Tz/bREzzE5A3D5zeAtrQJwGThOv7TnN2WgovgfW3UAMo7rutjbAETKQQt4Pvc/VqWhgPQ==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(376002)(39860400002)(366004)(346002)(136003)(396003)(451199021)(966005)(6486002)(6512007)(2616005)(110136005)(83380400001)(478600001)(6506007)(53546011)(26005)(186003)(2906002)(5660300002)(36756003)(38100700002)(316002)(4326008)(66946007)(31696002)(8676002)(41300700001)(8936002)(86362001)(66476007)(66556008)(31686004)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?cE4vbDVEdHhNTFIwZHNXbFRsQ2ZSeXU1SHY3NDBnNmFaWXZ0WjhiVWxZcWVT?=
+ =?utf-8?B?T2ROaEpSQmNTKzNxQTNydzdRL1VXWUtlN0t4Y09QTlZkR201dml1WStyZlAw?=
+ =?utf-8?B?bUV2cm0xRFQwQ3M0L0hjelR5N2dQdGZWSHhWZTlpSklrc1NGWXZ6OURJMDNB?=
+ =?utf-8?B?YjJvQnN6M2VDT1lGa29Mclo3Tkh0SnpkUDZRNFpBb2lRdnZ5S1FTVjVkRW9a?=
+ =?utf-8?B?NVJuSU1hMXNjQzZ4UldkV1lyVDJGYlljN2h1Sk9FVXVpdGViUytXOHY2Q29B?=
+ =?utf-8?B?YmtFQVByZTdaMmgxeHZUc25mclFHUTBHdWlydDRIR3NrbHN2T1RQL0docG9J?=
+ =?utf-8?B?QTRydFVidG0yVm1yUWVJM1hnNkc4QkVCNDVTeVdPdnFyUVI3emtmWmt3WkZ5?=
+ =?utf-8?B?K2x1K3hPZCtDSEhlbjlpOEluZUdxNkwzYzJTYUd3MmM0SUJYMGJ0ajViUE9s?=
+ =?utf-8?B?R2V5ZjVXWW5wMmhTeURYZmp5RURzbC9rNC8vUHVWQVNhcVJ0UURqK0FJZVhU?=
+ =?utf-8?B?NDg5dzFpVlVxZFZreW44elcwZHFMSTlhOWI0T3VaVHRMUmdCOUM3RGtWRmg3?=
+ =?utf-8?B?SWR6MmptZXFhL0pocXlnS3ZCUUJhWGZhdFZPdHlTbktHcG5OVElteVpvaFJn?=
+ =?utf-8?B?dXBZb2xvdi8xcUZVc1gyL1FBNGNFWmxHTDJqRDJOdTNzWHZMQ0JPSUdUV3VL?=
+ =?utf-8?B?QTVwazcvcjBsMGFHZXBmMVZZK2N1VTNzWE1xNyt2QzVUUERlenI5N3k0ZkI1?=
+ =?utf-8?B?Zlpyc3hOMnRpNHZqR25pcXdXTUd3RTdwNjcvM1JIcGZGa0d2cGJzZC9HWkNy?=
+ =?utf-8?B?VUhnMkdBM01zYThiSlgyVlAvenoxeTk5TXRYbi9GdCtjaHZDVUV6cG9LWE5v?=
+ =?utf-8?B?SnF1bGZ2bzFtOFZsYVN6TE4yTFFDbUFGL2lpREJrb2J0UmVEY0tlODM4TzBK?=
+ =?utf-8?B?TVplWkZwQVVCdmNFVXlXYVlSTXdhMGFMQzJvVkRZZnJmWURpRGJRS1RZNFZh?=
+ =?utf-8?B?Sko0Ky8yU0VWdHVoT0UxV1d3Zlcwa2xkQVJxbEkySFZzTW05YmNOditqMGVG?=
+ =?utf-8?B?VWVrTmZLZ1BpcWJEMml4MVJZK2JVSXlTUWtEOGpFOCszdXlhZ0JQZithNER2?=
+ =?utf-8?B?MXBQYjdNM1VUVmlDOU9Ga21BSlU3RVJBbEdYazJReTdja2RIYmluUDB0UjY3?=
+ =?utf-8?B?UTNEaWhYRjVpYmd0OWR5ZDhZTlErbGRYbDl2dmw5cit4TFZCS0NNM0kvME5q?=
+ =?utf-8?B?cnRnSVg0V0hHbUJML2M2V1N0NHVnYmJYMzV5ZE5SbnBLcDV4d0dJUm4zaTM5?=
+ =?utf-8?B?bU12Qi9QWEU2Rm1EK3V3WkJSZ1lydU1saWd3VnZhV2dNclRhalJ3REtpK2ZS?=
+ =?utf-8?B?dm9IUS8xbUN1VG01ZjAzY1dhUm5mUDQzZGVXS2NzbjVtMlFxMUpMZ09PQlNV?=
+ =?utf-8?B?SmZrUlRmcU14Ny9LYUxEa25Rb2V4NGxpQlp1UHNxSXBQZUpQbFUwMTBqZkla?=
+ =?utf-8?B?M1lraC9Hd0ozN0YrNzVRK0ZRRVZSMmFZY1Y3cytNK1BZSnNuNktkR1IvRlVP?=
+ =?utf-8?B?Z1d2aHczWC9BMmxKUFJVTmtiZmR5Y1RqUW9IUVdTTkZ4TFNKRXZZOFArblZD?=
+ =?utf-8?B?ODZ3cmNFWDYrVkJLZXpvd0t4RlZXNFFNRmx1bTRRUHplaDhxSitHQklqNmVm?=
+ =?utf-8?B?VEoxTUtCOHlXcDdTRnBjVis1S1RiNGsyZmxhcnV6RTV3RkhPaHZGSVR4QUxZ?=
+ =?utf-8?B?Y2I1UEp5V3JlQmJLbjhuY0hSVEhweEtzc0J3ZklYZFJYRkM5cS96Uko2aUVs?=
+ =?utf-8?B?MVVEOUlPeEFJc09jbGxGdFA5L1AvWThmR0JoY2o2cEFjVGdSYUgrYmg3VXIv?=
+ =?utf-8?B?TmFhZFhXRHB2QTNJQnM1YUV0Y2dlbG54V1lCVVdtNXRuWkxNRVRSd0tEeTYr?=
+ =?utf-8?B?OElqckVVTVJocGxPVUVqcUM2OVNwNUdPamFPSVE3eTBYQWYyeDZ3ak1pN1FY?=
+ =?utf-8?B?aERrRmFhM0VqTStma3l1QkJsdFdUL0lFaUhBWGZmaGtiaU5iQ0lLSXBuZEFu?=
+ =?utf-8?B?MGJXUElOQU01T2phWW0wN2V4eTEwSTlrUmJyWjdsbUxLTTJLdVluenFXNEds?=
+ =?utf-8?Q?L6H7OFGjXbnkUhgFR+hYEMdYu?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 189d2577-f704-4b77-43c5-08db71c95ac6
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jun 2023 20:03:02.9836
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: o420MGX5ys12Nn/i52kNTG8Tab29mTijqSVr1gCbEnsX2KuAnmFAn/t/qIK+oJZ0HRYv/EZmko5cCjZrWpt9zw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB7448
 
 
---p7ndb543epv2snzz
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 6/20/2023 1:50 PM, Limonciello, Mario wrote:
+>
+>>>>> I have a suspicion on commit 7bcfdab3f0c6 ("HID: amd_sfh: if no 
+>>>>> sensors
+>>>>> are enabled, clean up") because the stack trace says that there is 
+>>>>> a bad
+>>>>> list_add, which could happen if the object is not correctly 
+>>>>> initialized.
+>>>>>
+>>>>> However, that commit was present in v6.2, so it might not be that 
+>>>>> one.
+>>>>>
+>>>> If I'm not mistaken the Z13 doesn't actually have any
+>>>> sensors connected to SFH.  So I think the suspicion on
+>>>> 7bcfdab3f0c6 and theory this is triggered by HID init makes
+>>>> a lot of sense.
+>>>>
+>>>> Can you try this patch?
+>>>>
+>>>> diff --git a/drivers/hid/amd-sfh-hid/amd_sfh_client.c
+>>>> b/drivers/hid/amd-sfh-hid/amd_sfh_client.c
+>>>> index d9b7b01900b5..fa693a5224c6 100644
+>>>> --- a/drivers/hid/amd-sfh-hid/amd_sfh_client.c
+>>>> +++ b/drivers/hid/amd-sfh-hid/amd_sfh_client.c
+>>>> @@ -324,6 +324,7 @@ int amd_sfh_hid_client_init(struct amd_mp2_dev
+>>>> *privdata)
+>>>>                           devm_kfree(dev, cl_data->report_descr[i]);
+>>>>                   }
+>>>>                   dev_warn(dev, "Failed to discover, sensors not 
+>>>> enabled
+>>>> is %d\n", cl_data->is_any_sensor_enabled);
+>>>> +               cl_data->num_hid_devices = 0;
+>>>>                   return -EOPNOTSUPP;
+>>>>           }
+>>>> schedule_delayed_work(&cl_data->work_buffer,
+>>>> msecs_to_jiffies(AMD_SFH_IDLE_LOOP));
+>>> I applied this to 9e87b63ed37e202c77aa17d4112da6ae0c7c097c now, 
+>>> which was the
+>>> origin when I started the whole bisection. Clean rebuild, issue still
+>>> persists.
+>>>
+>>> Out of 50 boots, I got:
+>>>
+>>> 25 clean
+>>> 22 Oops as posted by the OP
+>>> 1 same Oops, followed by a panic
+>>> 1 lockup [1]
+>>> 1 hanging with just a blank screen
+>>>
+>>> Not sure whether the lockups are related, but [1] mentions modprobe 
+>>> and udev-
+>>> worker as well and all problems including the blank screen one 
+>>> appear roughly
+>>> at the same time during boot. As this is before a graphics mode 
+>>> switch, I
+>>> suspect the last mentioned case may be like [1] while the screen was 
+>>> blanked.
+>>> To support the timing correlation: the UVC error for the IR cam 
+>>> shown in the
+>>> photo (normal boot noise) also appears right before the BUG in the 
+>>> non-lockup
+>>> bad case.
+>>>
+>>> I do see the dev_warn in dmesg, so the code path modified in your 
+>>> patch is
+>>> indeed hit:
+>>> [   10.897521] pcie_mp2_amd 0000:63:00.7: Failed to discover, 
+>>> sensors not
+>>> enabled is 1
+>>> [   10.897533] pcie_mp2_amd: probe of 0000:63:00.7 failed with error 
+>>> -95
+>>>
+>>> BR Malte
+>>>
+>>> [1] https://photos.app.goo.gl/2FAvQ7DqBsHEF6Bd8
+>
+> Apologies; for some reason I never got that above reply in my inbox,
+> some server along the way might have deemed it spam.
+>
+> Anyways; I just double checked the Z13 I have on my hand.  I don't
+> have the PCI device for SFH (1022:164a) present on the system.
+>
+> Can you please double check you are on the latest BIOS?
+>
+> I'm on the latest release from LVFS, 0.1.57 according to fwupdmgr.
+>
+Hopefully the newer BIOS fixes it for you, but if it doesn't I did come
+up with another patch I've sent out that I guess could be another
+solution.
 
-Hello Greg,
+https://lore.kernel.org/linux-input/20230620200117.22261-1-mario.limonciello@amd.com/T/#u
 
-On Tue, Jun 20, 2023 at 04:59:18PM +0200, Greg Kroah-Hartman wrote:
-> On Tue, Jun 20, 2023 at 04:47:10PM +0200, Linux regression tracking (Thor=
-sten Leemhuis) wrote:
-> > On 24.05.23 15:07, Stefan Wahren wrote:
-> > >=20
-> > > Am 23.05.23 um 21:44 schrieb Sergey Organov:
-> > >> "Linux regression tracking (Thorsten Leemhuis)"
-> > >> <regressions@leemhuis.info> writes:
-> > >>
-> > >> Solving this would need to identify the cause of interrupts being
-> > >> disabled for prolonged times, and nobody volunteered to investigate =
-this
-> > >> further. One suspect, the Linux serial console, has been likely excl=
-uded
-> > >> already though, as not actually being in use for printk() output.
-> > >>
-> > >=20
-> > > I don't think that we can exclude the serial console as a whole, i ne=
-ver
-> > > made such a observation. But at least we can exclude kernel logging on
-> > > the debug UART.
-> >=20
-> > Stefan, just wondering: was this ever addressed upstream? I assume it's
-> > not, just wanted to be sure.
-> >=20
-> > I'm a bit unsure what to do with this and consider asking Greg for
-> > advice, as he applied the patch. On one hand it's *IMHO* clearly a
-> > regression (but for the record,  some people involved in the discussion
-> > claim it's not). OTOH the culprit was applied more than a year ago now,
-> > so reverting it might cause more trouble than it's worth at this point,
-> > as that could lead to regressions for other users.
->=20
-> I'll be glad to revert this, but for some reason I thought that someone
-> was working on a "real fix" here.  Stefan, is that not the case?
 
-Sergey Organov already said something similar, but not very explicit:
-With the current understanding reverting said commit is wrong. It is
-expected that the commit increases irq latency for imx-serial a bit for
-the benefit of less interrupts and so serves the overall system
-performance. That this poses a problem only means that on the reporter's
-machine there is already an issue that results in a longer period with
-disabled irqs. While reverting the imx-serial commit would (maybe) solve
-that, the actual problem is the other issue that disables preemption for
-a longer timespan.
-
-So TL;DR: Please don't revert the imx-serial patch.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---p7ndb543epv2snzz
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmSR/bMACgkQj4D7WH0S
-/k5YIwgAuQA48Ld7vFvNx3Y1GDSgESgTnPmvaZi1JR7BZ8ABuUwK862AXXl6v8oL
-fBAmnSy4V4s6xDmhZunaHbZND79F5CiVKi8p4iDtcGco1xp1YBuC+4J5TtwBapM1
-Jk1KCuUdn8fg/BMSosFX4PDbDfAU4vv8JgCZ+BoBBi4nJO6U8uE4xFg76KrksOQP
-UexDt0jDTUcUpb+/klifoa/Q+vTqUjy9T53tCuuaqEjtBOooIdtuaRdfk11oF4vF
-7LANlcuZXbxxMA+njP+RK+wc9x7751v6OuJa8Ahtnf7xCyZZXfeSq/FRGcjE0BMV
-3RnXcUlgK7tL+A1NRee7sHxATHIMuA==
-=xnrl
------END PGP SIGNATURE-----
-
---p7ndb543epv2snzz--
