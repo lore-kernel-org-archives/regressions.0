@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97599168A9
-	for <regressions@lists.linux.dev>; Tue, 20 Jun 2023 13:57:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4F35156F0
+	for <regressions@lists.linux.dev>; Tue, 20 Jun 2023 14:16:22 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qBbre-0003CE-4D; Tue, 20 Jun 2023 15:57:46 +0200
-Message-ID: <6872f437-03e9-32dd-b473-9a984df8915b@leemhuis.info>
-Date: Tue, 20 Jun 2023 15:57:45 +0200
+	id 1qBc9c-0006w4-Hj; Tue, 20 Jun 2023 16:16:20 +0200
+Message-ID: <19199830-33b6-2a4c-e08b-d1a76ce4c59b@leemhuis.info>
+Date: Tue, 20 Jun 2023 16:16:20 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,48 +16,62 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.12.0
-Subject: =?UTF-8?Q?Re=3a_=5bregression=5d_Bug=c2=a0216818_-_The_microphone_m?=
- =?UTF-8?Q?ute_led_not_working_after_linux_6?=
+Subject: Re: issues with cdc ncm host class driver
 Content-Language: en-US, de-DE
-From: "Linux regression tracking #update (Thorsten Leemhuis)"
+From: "Linux regression tracking (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
-To: Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
-Cc: sonic82003@gmail.com, plum <plumerlis@gmail.com>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- alsa-devel@alsa-project.org, LKML <linux-kernel@vger.kernel.org>
-References: <bf52f4c5-5cca-26d7-7fb2-ac8ecb5b24c5@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <bf52f4c5-5cca-26d7-7fb2-ac8ecb5b24c5@leemhuis.info>
+To: Oliver Neukum <oneukum@suse.com>,
+ "Purohit, Kaushal" <kaushal.purohit@ti.com>,
+ "stable@vger.kernel.org" <stable@vger.kernel.org>
+Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+References: <da37bb0d43de465185c10aad9924f265@ti.com>
+ <28ec4e65-647f-2567-fb7d-f656940d4e43@suse.com>
+ <da479ebf-b3fb-0a58-16be-07fe55d36621@leemhuis.info>
+In-Reply-To: <da479ebf-b3fb-0a58-16be-07fe55d36621@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1687269468;2cc23710;
-X-HE-SMSGID: 1qBbre-0003CE-4D
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1687270582;bd39fb3c;
+X-HE-SMSGID: 1qBc9c-0006w4-Hj
 
-[TLDR: This mail in primarily relevant for Linux kernel regression
-tracking. See link in footer if these mails annoy you.]
-
-On 19.12.22 10:17, Thorsten Leemhuis wrote:
-> Hi, this is your Linux kernel regression tracker speaking.
+On 04.04.23 12:33, Linux regression tracking (Thorsten Leemhuis) wrote:
+> Side note: there is now a bug tracking ticket for this issue, too:
+> https://bugzilla.kernel.org/show_bug.cgi?id=217290
 > 
-> I noticed a regression report in bugzilla.kernel.org. As many (most?)
-> kernel developer don't keep an eye on it, I decided to forward it by
-> mail. Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=216818 :
+> On 03.04.23 12:09, Oliver Neukum wrote:
+>> On 03.04.23 08:14, Purohit, Kaushal wrote:
+> 
+>>> Referring to patch with commit ID
+>>> (*e10dcb1b6ba714243ad5a35a11b91cc14103a9a9*).
+>>>
+>>> This is a spec violation for CDC NCM class driver. Driver clearly says
+>>> the significance of network capabilities. (snapshot below)
+>>>
+>>> However, with the mentioned patch these values are disrespected and
+>>> commands specific to these capabilities are sent from the host
+>>> regardless of device' capabilities to handle them.
+>>
+>> Right. So for your device, the correct behavior would be to do
+>> nothing, wouldn't it? The packets would be delivered and the host
+>> needs to filter and discard unrequested packets.
+> 
+> #regzbot ^introduced e10dcb1b6ba714243ad
+> https://bugzilla.kernel.org/show_bug.cgi?id=217290
+> #regzbot from: Purohit, Kaushal
+> #regzbot title net: cdc_ncm: spec violation for CDC NCM
+> #regzbot ignore-activity
 
-Not really sure if this issue was handled appropriately, but whatever,
-at this point it's likely not worth making fuzz about:
+Not sure what happen to this, my last inquiries were not answered, so it
+seems nobody cares anymore
 
-#regzbot inconclusive: likely unresolved (see thread and bugzilla for
-details; Jaroslav argued it's not a regression)
+#regzbot inconclusive: radio silence, ignoring
 #regzbot ignore-activity
-
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
 Everything you wanna know about Linux kernel regression tracking:
 https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
-
-
-
-
+If I did something stupid, please tell me, as explained on that page.
 
