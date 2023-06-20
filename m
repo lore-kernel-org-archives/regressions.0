@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AF1D10790
-	for <regressions@lists.linux.dev>; Tue, 20 Jun 2023 12:42:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BFA414286
+	for <regressions@lists.linux.dev>; Tue, 20 Jun 2023 13:03:38 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qBagI-000343-QS; Tue, 20 Jun 2023 14:41:58 +0200
-Message-ID: <2d7ed7bb-38ba-8840-6629-d210937b8513@leemhuis.info>
-Date: Tue, 20 Jun 2023 14:41:58 +0200
+	id 1qBaZ5-0001MI-KF; Tue, 20 Jun 2023 14:34:31 +0200
+Message-ID: <7e18f4f2-a05a-2738-426b-31482c58af35@leemhuis.info>
+Date: Tue, 20 Jun 2023 14:34:30 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,65 +16,55 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.12.0
-Subject: Re: New kernel warning after updating from LTS 5.15.110 to 5.15.112
- (and 5.15.113)
+Subject: Re: [PATCH v3 1/3] wifi: rtw88: Move register access from
+ rtw_bf_assoc() outside the RCU
 Content-Language: en-US, de-DE
-To: Greg KH <gregkh@linuxfoundation.org>,
- Lino Sanfilippo <l.sanfilippo@kunbus.com>
-Cc: Bagas Sanjaya <bagasdotme@gmail.com>,
- Chris Packham <Chris.Packham@alliedtelesis.co.nz>,
- Jarkko Sakkinen <jarkko@kernel.org>, Sasha Levin <sashal@kernel.org>,
- Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
- Linux Kernel Integrity <linux-integrity@vger.kernel.org>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>, stable@vger.kernel.org
-References: <fe6f7aa0-56c2-3729-ce8c-0f2d943b33f4@alliedtelesis.co.nz>
- <ZHQIFLWvrWUNMVxb@debian.me>
- <6e470461-1a9b-ec51-bac5-f2beb1dc11c9@alliedtelesis.co.nz>
- <2b09d2ed-0852-bbc9-b792-aad92235c7fa@gmail.com>
- <03daca5c-e468-8889-4dc2-e625a664d571@alliedtelesis.co.nz>
- <ec5245bd-3103-f0c7-d3ef-85aabb4d4712@alliedtelesis.co.nz>
- <ZH6TIjXeXJVMvSKa@debian.me> <2023060606-unlatch-yiddish-a45f@gregkh>
- <ac5b76af-87dc-b04d-6035-8eda8ba5ed12@kunbus.com>
- <2023060736-immodest-doormat-f957@gregkh>
 From: "Linux regression tracking #update (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <2023060736-immodest-doormat-f957@gregkh>
+To: Sascha Hauer <s.hauer@pengutronix.de>,
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: linux-wireless@vger.kernel.org, tony0620emma@gmail.com, kvalo@kernel.org,
+ pkshih@realtek.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+References: <20230108211324.442823-1-martin.blumenstingl@googlemail.com>
+ <20230108211324.442823-2-martin.blumenstingl@googlemail.com>
+ <20230331125906.GF15436@pengutronix.de>
+ <8ab36d80-8417-628f-9f51-e75eaf6b1a51@leemhuis.info>
+In-Reply-To: <8ab36d80-8417-628f-9f51-e75eaf6b1a51@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1687264925;5958fd8a;
-X-HE-SMSGID: 1qBagI-000343-QS
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1687266218;d6692153;
+X-HE-SMSGID: 1qBaZ5-0001MI-KF
 
-[TLDR: This mail in primarily relevant for Linux kernel regression
-tracking. See link in footer if these mails annoy you.]
-
-On 07.06.23 19:49, Greg KH wrote:
-> On Wed, Jun 07, 2023 at 05:47:57PM +0200, Lino Sanfilippo wrote:
->> On 06.06.23 08:45, Greg KH wrote:
->>>>
->>>> Lino, it looks like this regression is caused by (backported) commit of yours.
->>>> Would you like to take a look on it?
-
->>>> Anyway, telling regzbot:
->>>>
->>>> #regzbot introduced: 51162b05a44cb5
->>>
->>> There's some tpm backports to 5.15.y that were suspect and I'll look
->>> into reverting them and see if this was one of the ones that was on that
->>> list.  Give me a few days...
+On 02.04.23 13:30, Linux regression tracking #adding (Thorsten Leemhuis)
+wrote:
+> On 31.03.23 14:59, Sascha Hauer wrote:
+>> On Sun, Jan 08, 2023 at 10:13:22PM +0100, Martin Blumenstingl wrote:
+>>> USB and (upcoming) SDIO support may sleep in the read/write handlers.
+>>> Shrink the RCU critical section so it only cover the call to
+>>> ieee80211_find_sta() and finding the ic_vht_cap/vht_cap based on the
+>>> found station. This moves the chip's BFEE configuration outside the
+>>> rcu_read_lock section and thus prevent "scheduling while atomic" or
+>>> "Voluntary context switch within RCU read-side critical section!"
+>>> warnings when accessing the registers using an SDIO card (which is
+>>> where this issue has been spotted in the real world - but it also
+>>> affects USB cards).
 >>
->> Could you please consider to apply (mainline) commit 0c7e66e5fd69 ("tpm, tpm_tis: Request threaded
->> interrupt handler") to 5.15.y?
->>
->> As Chris confirmed it fixes the regression caused by 51162b05a44cb5 ("tpm, tpm_tis: Claim locality
->> before writing interrupt registers").
->>
->> Commit 0c7e66e5fd69 is also needed for 5.10.y, 6.1.y and 6.3.y.
+>> Unfortunately this introduces a regression on my RTW8821CU chip. With
+>> this it constantly looses connection to the AP and reconnects shortly
+>> after:
 > 
-> Now queued up, thanks.
+> #regzbot ^introduced c7eca79def44
+> #regzbot title net: wifi: rtw88: RTW8821CU constantly looses connection
+> to the AP and reconnects shortly after
+> #regzbot ignore-activity
 
-#regzbot fix: 0c7e66e5fd69
+Forgot to resolve this in regzbot:
+
+#regzbot resolve: turn's out this wasn't a regression, see
+https://lore.kernel.org/lkml/20230403100043.GT19113@pengutronix.de/
 #regzbot ignore-activity
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
