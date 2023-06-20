@@ -1,192 +1,136 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9B3E15AE;
-	Tue, 20 Jun 2023 04:19:38 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46C42C433CD;
-	Tue, 20 Jun 2023 04:19:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1687234778;
-	bh=NyGsLeW/FztEsf9dVsONe46AWBlbnmJSRV1nyDFVDmM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=SyYSgxyRvMQ8bpj+1tiIcMRWk9Q70jG/7TLqBfKKy3zECmTd3QV/+M7adHuWfbg5z
-	 HswzlZkElK3j8hqijaUg3Ant3XNG94VmIBvI7gEnLscldIiyESkU/2vW97lJfx6pW9
-	 SxSEI8ds3VW0pXcBTMlMC2jBZjnrZmPk+ONpMHyQCTyxE9PpzshdH+Y9yo0Knpkt9x
-	 +NlNo4ZmmOKQT4VUiAX6qfPMdu95kzDFiSRFMkvZlAytkmrkTpK1uxBNoyCiWllxUv
-	 E1N4G3G7CrmWVXbzHGP4rRuCm9CzTe/J4FboxWm9y+PwWvNDemNb8YVszXybGz+iwK
-	 ZP5I3S++JFuTw==
-Received: by mail-oo1-f51.google.com with SMTP id 006d021491bc7-55b21c3f359so2660717eaf.0;
-        Mon, 19 Jun 2023 21:19:38 -0700 (PDT)
-X-Gm-Message-State: AC+VfDzA1nk5Vj6tUZwoAfM1PJo1qrQd4epmieO5NMsrJKCIzALprxnH
-	z1RptUcevx+XJr1NgbIBKhdQc0cNtZWWME6O/kk=
-X-Google-Smtp-Source: ACHHUZ50dBIk80zRdS9T10z5yvKFkNOL2YvbT9WJB+0+jV9iiQvBtez20V9tVjAvd8EezQ0PGvBQj2XapoOMQguh5H0=
-X-Received: by 2002:a4a:c607:0:b0:558:b793:f10c with SMTP id
- l7-20020a4ac607000000b00558b793f10cmr5116789ooq.3.1687234777440; Mon, 19 Jun
- 2023 21:19:37 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13B031FA9
+	for <regressions@lists.linux.dev>; Tue, 20 Jun 2023 06:24:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de;
+ s=s31663417; t=1687242275; x=1687847075; i=deller@gmx.de;
+ bh=P4yET/ii6laUO0c0nA2w7JL4IyFthpA/vzXPBsUXChM=;
+ h=X-UI-Sender-Class:Date:To:Cc:References:From:Subject:In-Reply-To;
+ b=hEfNUGv4oZFo6i7NeRr66V8+HC0Z19w49eyJegnYHUaTis3VcK+QjCzm+nxZIARZybq5iz1
+ E2brAqU4PyV11XT8w/2ofjvNvlpPCS4FOh6ilx2VTUCYYYZbHNGkqulblBDBZfLxVRhFcTK7B
+ oIMUzsgLqTjDzFde63HcfJdgSahV4I4F2cDi82he1WBLKot5r3sgNB1GMQ25Dsm1wa0Hz3jZz
+ kg0v5NHrrU4wWOq0AXG7YQuLdN1rRb9rwI+Y7qc1x1Qp+bTCCguNJidtuRxxBkyDpY6nxxZWi
+ iseO8qo1qex/MTeK1HCZptluKskuwvN/FM2DGJCSpNA7LLTbc/OQ==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.20.60] ([94.134.157.8]) by mail.gmx.net (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MpUYu-1pkBv518uK-00ps7o; Tue, 20
+ Jun 2023 08:24:35 +0200
+Message-ID: <3d8c3a8c-68be-422a-c4ff-6d2e99c3f01b@gmx.de>
+Date: Tue, 20 Jun 2023 08:24:34 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAKwvOd=4hBcU4fAkddU0b-GOZc9FzTZoj3PFW6ZZrX0jS8x+bg@mail.gmail.com>
- <17c91d37-7d9c-0df4-2438-2b30ca0b5777@collabora.com> <CAKwvOdk4QO8x_bs64fFRCsMu__AjhXd4Ew2KfgzQOb9Q3FMqSA@mail.gmail.com>
- <b5d0cf82-0e42-f6a1-c9f5-c145fdc4c622@collabora.com> <CAKwvOdkFxu9hYSL_RCXadpR0dQd1+dZmAUVXdfFiLUfxg4D_Xw@mail.gmail.com>
- <878rdlk9bi.fsf@rcn-XPS-13-9305.i-did-not-set--mail-host-address--so-tickle-me>
- <CAKwvOd=8LVU+iANkFx18Wm1jg7gYiAXovAmo9t5ZZaVdMULn-Q@mail.gmail.com>
- <875y8ok9b5.fsf@rcn-XPS-13-9305.i-did-not-set--mail-host-address--so-tickle-me>
- <CAKwvOdmJJibt6sHSp91v2s7BxUWBC6xG7F7+3C6gUxNMzZ2xRA@mail.gmail.com>
- <87353ok78h.fsf@rcn-XPS-13-9305.i-did-not-set--mail-host-address--so-tickle-me>
- <2023052247-bobtail-factsheet-d104@gregkh> <CAKwvOd=2zAV_mizvzLFdyHE_4OzBY5OVu6KLWuQPOMZK37vsmQ@mail.gmail.com>
- <cff33e12-3d80-7e62-1993-55411ccabc01@collabora.com> <CAKwvOd=F29-UkNO7FtUWpVV=POOZLb6QgD=mhLMWtRfkRSSi2A@mail.gmail.com>
- <a037a08c-44c4-24e8-1cba-7e4e8b21ffaa@collabora.com>
-In-Reply-To: <a037a08c-44c4-24e8-1cba-7e4e8b21ffaa@collabora.com>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Tue, 20 Jun 2023 13:19:01 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAS8Y9syCiHMO2r75D6hgCSsDDvJ_=VMKpYqjondnbSZjw@mail.gmail.com>
-Message-ID: <CAK7LNAS8Y9syCiHMO2r75D6hgCSsDDvJ_=VMKpYqjondnbSZjw@mail.gmail.com>
-Subject: Re: [PATCH v4] Makefile.compiler: replace cc-ifversion with
- compiler-specific macros
-To: Shreeya Patel <shreeya.patel@collabora.com>
-Cc: Greg KH <gregkh@linuxfoundation.org>, Maksim Panchenko <maks@meta.com>, 
-	=?UTF-8?Q?Ricardo_Ca=C3=B1uelo?= <ricardo.canuelo@collabora.com>, 
-	Michal Marek <michal.lkml@markovi.net>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, clang-built-linux <llvm@lists.linux.dev>, 
-	Bill Wendling <morbo@google.com>, Nathan Chancellor <nathan@kernel.org>, regressions@lists.linux.dev, 
-	"gustavo.padovan@collabora.com" <gustavo.padovan@collabora.com>, 
-	Guillaume Charles Tucker <guillaume.tucker@collabora.com>, denys.f@collabora.com, 
-	Nick Desaulniers <ndesaulniers@google.com>, kernelci@lists.linux.dev, 
-	Collabora Kernel ML <kernel@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Content-Language: en-US
+To: Cyril Brulebois <cyril@debamax.com>, Rob Herring <robh@kernel.org>
+Cc: =?UTF-8?Q?Michal_Such=c3=a1nek?= <msuchanek@suse.de>,
+ Thomas Zimmermann <tzimmermann@suse.de>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ Salvatore Bonaccorso <carnil@debian.org>, linux-fbdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ stable@vger.kernel.org
+References: <20230412095509.2196162-1-cyril@debamax.com>
+ <20230412095509.2196162-2-cyril@debamax.com> <ZDvrY7X9mpJ7WZ3z@eldamar.lan>
+ <11b342dc-1a46-d1be-5fdd-c6eee661e15a@leemhuis.info>
+ <fe3b90b0-b52f-9677-0245-a201975c3e0c@suse.de>
+ <20230615132107.GA9196@kitsune.suse.cz>
+ <20230615200901.GA1572644-robh@kernel.org>
+ <20230615211924.cf2qs52cfaf7m3f7@debamax.com>
+From: Helge Deller <deller@gmx.de>
+Subject: Re: [PATCH 1/2] fbdev/offb: Update expected device name
+In-Reply-To: <20230615211924.cf2qs52cfaf7m3f7@debamax.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:/5EbFHqdTR5VZsqWRgQuO1B3pFhNypJeYz67/Gfk+zk8oU7VQHh
+ +VZIjwowX5PZ3z2zjHqKgFfyQGf8bdNU9PEU7PzE3mCVgiKu5kTkeUxVi7c1Bvp5pOoxEwF
+ 3BCkiWoE7TRt3R514QqSXbDTf0vyL2jyRzqdymHfNt2l8YdEAYAiOyQKzzEmymdGqa0m8mY
+ SNP16ZtzRxLCfHo3AYECg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:zbmZ87N98Vw=;mfvc1cgsO73dUvNLnQLh1n/hqru
+ ji2qD0q7adNzvSs2na/gU8PIC28GNHDnx4Gy+NZgMC8n5dQenxQz9nkoKM/2RQXMQTZDpbBN6
+ AIPFsSouYdTtry00NaNzIqPz4blCvHHsUA52OOkrk+OimQ4eZd0DebT9+e1fUUmdcRg8YtbHy
+ pF2S9PXcNKeQs+p/4wNGuUptSi+CE5+AG6dKYqVMJLJWiwF0yhf2EKqdceS7zl4YP2t9QPake
+ NNZpU9qann2QCr4BoAAyjCakXodNYUQmltm8jNbEYpjwY6HtuLBzI4QSLrfdUwHGqQwEkViRc
+ RpIKXO0ii+pBneR7zu5u7sGY95DotNxUGHbu5s/jbZgsIGFDWxPAJeD+aMi8qBw4QtbO/oTh7
+ 1zjS/l201UCQPN3ryMPiERbCgOHuAdDwUcnX4MPx0Rhu0UyTcNgk4gjZ+RyQIyjprFccFSE+b
+ v0pXLiAueJ1A1FsQVoQ3lUFcAFUqJrrvYrbCnsfWIsceoUMu1fC5xzkfXL2+MmrTNOH2L9CgO
+ PUs5Lw57XmZ1HKSN/lreKvucnVnBBJHW4EMhOgRVTZGczltM6hILr0AcH7seNBq7xW7p92Nqz
+ HWpgTnAQVPBC1cDpJS443BRaoG+RclTS9WVVxgR18kDJA74rlB0cR/aYAsY3aF6bE9a6J+cc4
+ 3viGZN6VgPBv+SPmNzd4oEEszvoLo3biHhvHAas9PK4Z6Z7s81Gz51lafN8c0TQPMEnY2XLuo
+ 3XLBro8r9GAaOJ3VpWnH57Z9pt6Lah2Jr44KNKIlm6HRF2UbcGepYwHgd43UoJQP3BrKyuo29
+ DrnEN6v4nnxAFStVj19KK4Jjd8r4cLWCjLJm/9/ByRlcuUMgm0yuFg35ioAC0+UqC2oRv41/e
+ 1tmR4rxD9hnrleliemSKb9itdhUSIOqA9tBp1PezLz/NDcatUgZHPcltOCD5mCJ9ULa2kugiU
+ PxYbSmWZbRu5W6tZibZAgSNNYDQ=
 
-On Mon, Jun 12, 2023 at 7:10=E2=80=AFPM Shreeya Patel
-<shreeya.patel@collabora.com> wrote:
+On 6/15/23 23:19, Cyril Brulebois wrote:
+> Hi Rob,
 >
-> Hi Masahiro,
+> Rob Herring <robh@kernel.org> (2023-06-15):
+>> On Thu, Jun 15, 2023 at 03:21:07PM +0200, Michal Such=C3=A1nek wrote:
+>>> At the time this was proposed it was said that "of-display", is wrong,
+>>> and that "of-display.0" must be used for the first device instead, and
+>>> if something breaks an alias can be provided.
+>>>
+>>> So how does one provide an alias so that offb can find "of-display.0"
+>>> as "of-display"?
+>>
+>> I'm not aware of any way. There isn't because device names and paths ar=
+e
+>> not considered ABI. There are mechanisms for getting stable class devic=
+e
+>> indices (e.g. i2c0, mmcblk0, fb0, fb1, etc.) though not implemented for
+>> fbN (and please don't add it).
+>>
+>> In any case, this should be an easy fix. Though if "linux,opened" or
+>> "linux,boot-display" is not set, then you'd still get "of-display.0":
+>>
+>> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+>> index 78ae84187449..e46482cef9c7 100644
+>> --- a/drivers/of/platform.c
+>> +++ b/drivers/of/platform.c
+>> @@ -553,7 +553,7 @@ static int __init of_platform_default_populate_init=
+(void)
+>>                          if (!of_get_property(node, "linux,opened", NUL=
+L) ||
+>>                              !of_get_property(node, "linux,boot-display=
+", NULL))
+>>                                  continue;
+>> -                       dev =3D of_platform_device_create(node, "of-dis=
+play.0", NULL);
+>> +                       dev =3D of_platform_device_create(node, "of-dis=
+play", NULL);
+>>                          of_node_put(node);
+>>                          if (WARN_ON(!dev))
+>>                                  return -ENOMEM;
+
+Michal, does that patch look correct?
+I don't have that hardware, but that way the boot-display gets named
+"of-display" while all others get "of-display.x"....
+
+> I've just replaced my clueless workaround with this patch on top of the
+> kernel found in Debian 12 (Bookworm), i.e. 6.1.27 at this point, and it
+> indeed fixes the black screen problem in the installer's context.
+
+... at least it fixes the issue.
+
+> I didn't run a full installation to check whether this kernel is also fi=
+ne
+> after rebooting into the installed system, but as far as I understood fo=
+r
+> the original bug report[1], it wasn't affected in the first place.
 >
+>   1. https://bugs.debian.org/1033058
 >
-> On 24/05/23 02:57, Nick Desaulniers wrote:
-> > On Tue, May 23, 2023 at 3:27=E2=80=AFAM Shreeya Patel
-> > <shreeya.patel@collabora.com> wrote:
-> >> Hi Nick and Masahiro,
-> >>
-> >> On 23/05/23 01:22, Nick Desaulniers wrote:
-> >>> On Mon, May 22, 2023 at 9:52=E2=80=AFAM Greg KH <gregkh@linuxfoundati=
-on.org> wrote:
-> >>>> On Mon, May 22, 2023 at 12:09:34PM +0200, Ricardo Ca=C3=B1uelo wrote=
-:
-> >>>>> On vie, may 19 2023 at 08:57:24, Nick Desaulniers <ndesaulniers@goo=
-gle.com> wrote:
-> >>>>>> It could be; if the link order was changed, it's possible that thi=
-s
-> >>>>>> target may be hitting something along the lines of:
-> >>>>>> https://isocpp.org/wiki/faq/ctors#static-init-order i.e. the "stat=
-ic
-> >>>>>> initialization order fiasco"
-> >>>>>>
-> >>>>>> I'm struggling to think of how this appears in C codebases, but I
-> >>>>>> swear years ago I had a discussion with GKH (maybe?) about this. I
-> >>>>>> think I was playing with converting Kbuild to use Ninja rather tha=
-n
-> >>>>>> Make; the resulting kernel image wouldn't boot because I had modif=
-ied
-> >>>>>> the order the object files were linked in.  If you were to randoml=
-y
-> >>>>>> shuffle the object files in the kernel, I recall some hazard that =
-may
-> >>>>>> prevent boot.
-> >>>>> I thought that was specifically a C++ problem? But then again, the
-> >>>>> kernel docs explicitly say that the ordering of obj-y goals in kbui=
-ld is
-> >>>>> significant in some instances [1]:
-> >>>> Yes, it matters, you can not change it.  If you do, systems will bre=
-ak.
-> >>>> It is the only way we have of properly ordering our init calls withi=
-n
-> >>>> the same "level".
-> >>> Ah, right it was the initcall ordering. Thanks for the reminder.
-> >>>
-> >>> (There's a joke in there similar to the use of regexes to solve a
-> >>> problem resulting in two new problems; initcalls have levels for
-> >>> ordering, but we still have (unexpressed) dependencies between calls
-> >>> of the same level; brittle!).
-> >>>
-> >>> +Maksim, since that might be relevant info for the BOLT+Kernel work.
-> >>>
-> >>> Ricardo,
-> >>> https://elinux.org/images/e/e8/2020_ELCE_initcalls_myjosserand.pdf
-> >>> mentions that there's a kernel command line param `initcall_debug`.
-> >>> Perhaps that can be used to see if
-> >>> 5750121ae7382ebac8d47ce6d68012d6cd1d7926 somehow changed initcall
-> >>> ordering, resulting in a config that cannot boot?
-> >>
-> >> Here are the links to Lava jobs ran with initcall_debug added to the
-> >> kernel command line.
-> >>
-> >> 1. Where regression happens (5750121ae7382ebac8d47ce6d68012d6cd1d7926)
-> >> https://lava.collabora.dev/scheduler/job/10417706
-> >> <https://lava.collabora.dev/scheduler/job/10417706>
-> >>
-> >> 2. With a revert of the commit 5750121ae7382ebac8d47ce6d68012d6cd1d792=
-6
-> >> https://lava.collabora.dev/scheduler/job/10418012
-> >> <https://lava.collabora.dev/scheduler/job/10418012>
-> > Thanks!
-> >
-> > Yeah, I can see a diff in the initcall ordering as a result of
-> > commit 5750121ae738 ("kbuild: list sub-directories in ./Kbuild")
-> >
-> > https://gist.github.com/nickdesaulniers/c09db256e42ad06b90842a4bb85cc0f=
-4
-> >
-> > Not just different orderings, but some initcalls seem unique to the
-> > before vs. after, which is troubling. (example init_events and
-> > init_fs_sysctls respectively)
-> >
-> > That isn't conclusive evidence that changes to initcall ordering are
-> > to blame, but I suspect confirming that precisely to be very very time
-> > consuming.
-> >
-> > Masahiro, what are your thoughts on reverting 5750121ae738? There are
-> > conflicts in Kbuild and Makefile when reverting 5750121ae738 on
-> > mainline.
->
-> I'm not sure if you followed the conversation but we are still seeing
-> this regression with the latest kernel builds and would like to know if
-> you plan to revert 5750121ae738?
+> Will somebody else pick up the torch from here, and submit that for
+> inclusion in master? Or should I re-submit the above patch on my own?
 
+It would be good to get some more feedback, but in general if you
+or Rob send me a patch I can include it in the fbdev git tree for futher
+testing (and if nobody else disagrees).
 
-Reverting 5750121ae738 does not solve the issue
-because the issue happens even before 5750121ae738.
-multi_v7_defconfig + debug.config + CONFIG_MODULES=3Dn
-fails to boot in the same way.
-
-The revert would hide the issue on a particular build setup.
-
-
-I submitted a patch to more pin-point the issue.
-Let's see how it goes.
-https://lore.kernel.org/lkml/ZJEni98knMMkU%2Fcl@buildd.core.avm.de/T/#t
-
-
-(BTW, the initcall order is unrelated)
-
-
-
-
-
->
->
-> Thanks,
-> Shreeya Patel
->
-> >>
-> >> Thanks,
-> >> Shreeya Patel
-> >>
-> >
-
---
-Best Regards
-Masahiro Yamada
+Helge
