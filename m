@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1E931FA1
-	for <regressions@lists.linux.dev>; Tue, 20 Jun 2023 12:38:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AF1D10790
+	for <regressions@lists.linux.dev>; Tue, 20 Jun 2023 12:42:05 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qBad3-0002Ja-8H; Tue, 20 Jun 2023 14:38:37 +0200
-Message-ID: <984f4eb8-2d47-45ad-184f-7f5637820101@leemhuis.info>
-Date: Tue, 20 Jun 2023 14:38:36 +0200
+	id 1qBagI-000343-QS; Tue, 20 Jun 2023 14:41:58 +0200
+Message-ID: <2d7ed7bb-38ba-8840-6629-d210937b8513@leemhuis.info>
+Date: Tue, 20 Jun 2023 14:41:58 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,44 +16,65 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.12.0
-Subject: Re: [REGRESSION][BISECT] perf/core: Remove pmu linear searching code
+Subject: Re: New kernel warning after updating from LTS 5.15.110 to 5.15.112
+ (and 5.15.113)
 Content-Language: en-US, de-DE
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Ravi Bangoria <ravi.bangoria@amd.com>,
- "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Cc: mark.rutland@arm.com, jolsa@kernel.org, irogers@google.com, bp@alien8.de,
- adrian.hunter@intel.com, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <3abd3693-ad87-9abf-a762-337076638fcc@linaro.org>
+To: Greg KH <gregkh@linuxfoundation.org>,
+ Lino Sanfilippo <l.sanfilippo@kunbus.com>
+Cc: Bagas Sanjaya <bagasdotme@gmail.com>,
+ Chris Packham <Chris.Packham@alliedtelesis.co.nz>,
+ Jarkko Sakkinen <jarkko@kernel.org>, Sasha Levin <sashal@kernel.org>,
+ Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
+ Linux Kernel Integrity <linux-integrity@vger.kernel.org>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>, stable@vger.kernel.org
+References: <fe6f7aa0-56c2-3729-ce8c-0f2d943b33f4@alliedtelesis.co.nz>
+ <ZHQIFLWvrWUNMVxb@debian.me>
+ <6e470461-1a9b-ec51-bac5-f2beb1dc11c9@alliedtelesis.co.nz>
+ <2b09d2ed-0852-bbc9-b792-aad92235c7fa@gmail.com>
+ <03daca5c-e468-8889-4dc2-e625a664d571@alliedtelesis.co.nz>
+ <ec5245bd-3103-f0c7-d3ef-85aabb4d4712@alliedtelesis.co.nz>
+ <ZH6TIjXeXJVMvSKa@debian.me> <2023060606-unlatch-yiddish-a45f@gregkh>
+ <ac5b76af-87dc-b04d-6035-8eda8ba5ed12@kunbus.com>
+ <2023060736-immodest-doormat-f957@gregkh>
 From: "Linux regression tracking #update (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <3abd3693-ad87-9abf-a762-337076638fcc@linaro.org>
+In-Reply-To: <2023060736-immodest-doormat-f957@gregkh>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1687264727;41d7dd69;
-X-HE-SMSGID: 1qBad3-0002Ja-8H
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1687264925;5958fd8a;
+X-HE-SMSGID: 1qBagI-000343-QS
 
-[TLDR: This mail in primarily relevant for Linux regression tracking. A
-change or fix related to the regression discussed in this thread was
-posted or applied, but it did not use a Closes: tag to point to the
-report, as Linus and the documentation call for. Things happen, no
-worries -- but now the regression tracking bot needs to be told manually
-about the fix. See link in footer if these mails annoy you.]
+[TLDR: This mail in primarily relevant for Linux kernel regression
+tracking. See link in footer if these mails annoy you.]
 
-On 04.06.23 13:38, Krzysztof Kozlowski wrote:
+On 07.06.23 19:49, Greg KH wrote:
+> On Wed, Jun 07, 2023 at 05:47:57PM +0200, Lino Sanfilippo wrote:
+>> On 06.06.23 08:45, Greg KH wrote:
+>>>>
+>>>> Lino, it looks like this regression is caused by (backported) commit of yours.
+>>>> Would you like to take a look on it?
+
+>>>> Anyway, telling regzbot:
+>>>>
+>>>> #regzbot introduced: 51162b05a44cb5
+>>>
+>>> There's some tpm backports to 5.15.y that were suspect and I'll look
+>>> into reverting them and see if this was one of the ones that was on that
+>>> list.  Give me a few days...
+>>
+>> Could you please consider to apply (mainline) commit 0c7e66e5fd69 ("tpm, tpm_tis: Request threaded
+>> interrupt handler") to 5.15.y?
+>>
+>> As Chris confirmed it fixes the regression caused by 51162b05a44cb5 ("tpm, tpm_tis: Claim locality
+>> before writing interrupt registers").
+>>
+>> Commit 0c7e66e5fd69 is also needed for 5.10.y, 6.1.y and 6.3.y.
 > 
-> #regzbot introduced: 9551fbb64d09
-> 
-> Bisect pointed to commit 9551fbb64d09 ("perf/core: Remove pmu linear
-> searching code") as first one where all hardware events are gone from
-> perf for ARMv7 Exynos5422 board.
+> Now queued up, thanks.
 
-#regzbot fix: 228020b490eda91
+#regzbot fix: 0c7e66e5fd69
 #regzbot ignore-activity
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
@@ -61,5 +82,3 @@ Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 Everything you wanna know about Linux kernel regression tracking:
 https://linux-regtracking.leemhuis.info/about/#tldr
 That page also explains what to do if mails like this annoy you.
-
-
