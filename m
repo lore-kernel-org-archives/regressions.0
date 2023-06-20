@@ -1,119 +1,133 @@
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64D7B154B4
-	for <regressions@lists.linux.dev>; Tue, 20 Jun 2023 15:34:20 +0000 (UTC)
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2b4725e9917so41325161fa.2
-        for <regressions@lists.linux.dev>; Tue, 20 Jun 2023 08:34:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1687275258; x=1689867258;
-        h=mime-version:user-agent:message-id:in-reply-to:date:references
-         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=G/KBk4MEJMYZgClXUS8ICwIAOz/V2ZoCxcaeujLubZ8=;
-        b=XEwC7+ND5zwQ2LAeNDFA9tSf473qVu4kRiNFkwTSZ78Z8fi7a1MitrGcUHVA7piiFJ
-         ZK0YdpO1D0qIWmJBUKd+C0TPiCIk1ZDxUqRUGt/ZSReinozj0faLE4L9lagNQKsaLE0h
-         9B47vMvqJ7KjpV8BLDdIX3Y+8Nc2KbqAqraX+1/EZyVvLqh7P8lt2z9v34HIr3+096Ft
-         fyAO9Nj3ZZxIRQaPIlL0WgOw17fxrBYoOLSxO/+nlrAxLbwniupaaPZujv2eMkhlNsVW
-         vzxBD+nRreoMR1SrH0YqON/VYhT4yFHXSpFxfaNLxdZnRNAsSf/SJj9J9/gNRlQ5f6Bj
-         b2hg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687275258; x=1689867258;
-        h=mime-version:user-agent:message-id:in-reply-to:date:references
-         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=G/KBk4MEJMYZgClXUS8ICwIAOz/V2ZoCxcaeujLubZ8=;
-        b=i1aPbo8CNUtIu3bN0AXIIOEOroTy6o2GBMq/6Qmk14jy1/kYHceS9q3cudflxJ3NIj
-         rx5q4zQE7iBcFcuq5heAHEOEGkz/kCLXO0+GutZCdJvF2zI4zev6u9PVbaEA1vmG/Mab
-         g9LLpWjnmORV1SNZuY32dZsdH0FzTgTROt7GKpkpk75NW011liSgYR96bHJVCbyHI52z
-         mulrQi4kUlgDAmXn8w6zpW/FTMo5uG2DvOzaD8qAP5NTm521fc85uvhQH2WevA0h4Rs0
-         ftXVR09bcKJtzPyxC0S1o879WjoXLW12ZGFZnZP47Zji0+f+xmHPU0o40UXxvNKfFO7i
-         IUmg==
-X-Gm-Message-State: AC+VfDwNc+UluqAUav7L+l2Q/rsHunNxQ5dXn/dMmV/pECi7heDE8G7Z
-	hsm/zhyCcGA02+p/IgXURco=
-X-Google-Smtp-Source: ACHHUZ7yts7ERKqH2CeYz0vMGC3lU/Ml5zeYPU3j2KIJz+Ew7NtmPYqSfUlZqMiOxe87w/iN5TICjw==
-X-Received: by 2002:a2e:9648:0:b0:2b5:7ecc:bb0d with SMTP id z8-20020a2e9648000000b002b57eccbb0dmr1506671ljh.47.1687275257882;
-        Tue, 20 Jun 2023 08:34:17 -0700 (PDT)
-Received: from osv.localdomain ([89.175.180.246])
-        by smtp.gmail.com with ESMTPSA id h9-20020a2e9009000000b002b326e7e76csm453125ljg.64.2023.06.20.08.34.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Jun 2023 08:34:17 -0700 (PDT)
-From: Sergey Organov <sorganov@gmail.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>,  Stefan
- Wahren <stefan.wahren@i2se.com>,  Uwe =?utf-8?Q?Kleine-K=C3=B6nig?=
- <u.kleine-koenig@pengutronix.de>,  Fabio Estevam <festevam@gmail.com>,
-  Ilpo =?utf-8?Q?J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,  Stefan
- Wahren
- <stefan.wahren@chargebyte.com>,  linux-serial@vger.kernel.org,  Sascha
- Hauer <s.hauer@pengutronix.de>,  NXP Linux Team <linux-imx@nxp.com>,
-  Pengutronix Kernel Team <kernel@pengutronix.de>,  Shawn Guo
- <shawnguo@kernel.org>,  Jiri Slaby <jirislaby@kernel.org>,  Tomasz
- =?utf-8?Q?Mo=C5=84?=
- <tomasz.mon@camlingroup.com>,  Linux ARM
- <linux-arm-kernel@lists.infradead.org>
-Subject: Re: Regression: serial: imx: overrun errors on debug UART
-References: <20230325151100.mskydt3hwbnspqp4@pengutronix.de>
-	<cb16ddb7-f22f-d637-8670-bccc77add0af@i2se.com>
-	<87mt3ynsa7.fsf@osv.gnss.ru>
-	<d5009984-d2eb-0343-5bb4-df8a7f526121@i2se.com>
-	<87sfcy8ncu.fsf@osv.gnss.ru>
-	<534ac8db-ae8f-1ea3-9aa9-2105db7f7a52@i2se.com>
-	<203ce87f-2898-eb10-2f8c-f237859d75e6@leemhuis.info>
-	<87ttw2vnn0.fsf@osv.gnss.ru>
-	<d1b6209d-a174-406a-cc81-86b391940c0c@i2se.com>
-	<3853881c-976f-dadc-b64b-4ffd8cc88cf0@leemhuis.info>
-	<2023062046-jersey-facecloth-7a5d@gregkh>
-Date: Tue, 20 Jun 2023 18:34:16 +0300
-In-Reply-To: <2023062046-jersey-facecloth-7a5d@gregkh> (Greg Kroah-Hartman's
-	message of "Tue, 20 Jun 2023 16:59:18 +0200")
-Message-ID: <87r0q6407b.fsf@osv.gnss.ru>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.1 (gnu/linux)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B349F1078E
+	for <regressions@lists.linux.dev>; Tue, 20 Jun 2023 15:55:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AFB9C433C8;
+	Tue, 20 Jun 2023 15:55:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1687276549;
+	bh=ZKPHxEnSu+t4Ow41QVyBNgZ7aWHN6jZsT83hXkppoig=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kkZSjN+RB5K4RrVgDbyYdR0uGWYdE+0CEqmZd3AFdHO0rOZyJYWI1w5rKZOqsMS+r
+	 jPfpBGLLGg6plRC5o8b0Y7C48hXJkXtXyHyggalNHYeIg9D/EHEDcovKPliZ3Y1L2W
+	 ozq9z7ert0fEM6zU4jhrBxC/ctp9GKrMMeLbebWTQZ6MmOt0spZm6bi1XWDhRMDODj
+	 vZi613LD4+xdZNlIowKvPWteH6STHkGnCylKpMPSreNNeOfqQkz3CW9eVVcVkwwfu9
+	 iPiyxT0mGWaPf5cHmcYZJJCRVv6FXasjpLhrBldgpEktQOHB7vDgZLCCNO5d2jsf0e
+	 BOBFZwzgh5DcA==
+Date: Tue, 20 Jun 2023 08:59:02 -0700
+From: Bjorn Andersson <andersson@kernel.org>
+To: Doug Anderson <dianders@chromium.org>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Linux regressions mailing list <regressions@lists.linux.dev>,
+	Amit Pundir <amit.pundir@linaro.org>,
+	Mark Brown <broonie@kernel.org>, Andy Gross <agross@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Caleb Connolly <caleb.connolly@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+	dt <devicetree@vger.kernel.org>,
+	lkml <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] arm64: dts: qcom: sdm845-db845c: Move LVS regulator
+ nodes up
+Message-ID: <20230620155902.clspxncyvpodixft@ripper>
+References: <20230602161246.1855448-1-amit.pundir@linaro.org>
+ <358c69ad-fa8a-7386-fe75-92369883ee48@leemhuis.info>
+ <0f6c9dcb-b7f6-fff9-6bed-f4585ea8e487@linaro.org>
+ <CAD=FV=Xt2KYGY15+f+nHxkzKnwhHzw1A7=o+5kgCDWvHDv0DNg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAD=FV=Xt2KYGY15+f+nHxkzKnwhHzw1A7=o+5kgCDWvHDv0DNg@mail.gmail.com>
 
-Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
+On Wed, Jun 14, 2023 at 12:44:15PM -0700, Doug Anderson wrote:
+> Hi,
+> 
+> On Wed, Jun 14, 2023 at 11:47 AM Krzysztof Kozlowski
+> <krzysztof.kozlowski@linaro.org> wrote:
+> >
+> > On 14/06/2023 20:18, Linux regression tracking (Thorsten Leemhuis) wrote:
+> > > On 02.06.23 18:12, Amit Pundir wrote:
+> > >> Move lvs1 and lvs2 regulator nodes up in the rpmh-regulators
+> > >> list to workaround a boot regression uncovered by the upstream
+> > >> commit ad44ac082fdf ("regulator: qcom-rpmh: Revert "regulator:
+> > >> qcom-rpmh: Use PROBE_FORCE_SYNCHRONOUS"").
+> > >>
+> > >> Without this fix DB845c fail to boot at times because one of the
+> > >> lvs1 or lvs2 regulators fail to turn ON in time.
+> > >
+> > > /me waves friendly
+> > >
+> > > FWIW, as it's not obvious: this...
+> > >
+> > >> Link: https://lore.kernel.org/all/CAMi1Hd1avQDcDQf137m2auz2znov4XL8YGrLZsw5edb-NtRJRw@mail.gmail.com/
+> > >
+> > > ...is a report about a regression. One that we could still solve before
+> > > 6.4 is out. One I'll likely will point Linus to, unless a fix comes into
+> > > sight.
+> > >
+> > > When I noticed the reluctant replies to this patch I earlier today asked
+> > > in the thread with the report what the plan forward was:
+> > > https://lore.kernel.org/all/CAD%3DFV%3DV-h4EUKHCM9UivsFHRsJPY5sAiwXV3a1hUX9DUMkkxdg@mail.gmail.com/
+> > >
+> > > Dough there replied:
+> > >
+> > > ```
+> > > Of the two proposals made (the revert vs. the reordering of the dts),
+> > > the reordering of the dts seems better. It only affects the one buggy
+> > > board (rather than preventing us to move to async probe for everyone)
+> > > and it also has a chance of actually fixing something (changing the
+> > > order that regulators probe in rpmh-regulator might legitimately work
+> > > around the problem). That being said, just like the revert the dts
+> > > reordering is still just papering over the problem and is fragile /
+> > > not guaranteed to work forever.
+> > > ```
+> > >
+> > > Papering over obviously is not good, but has anyone a better idea to fix
+> > > this? Or is "not fixing" for some reason an viable option here?
+> > >
+> >
+> > I understand there is a regression, although kernel is not mainline
+> > (hash df7443a96851 is unknown) and the only solutions were papering the
+> > problem. Reverting commit is a temporary workaround. Moving nodes in DTS
+> > is not acceptable because it hides actual problem and only solves this
+> > one particular observed problem, while actual issue is still there. It
+> > would be nice to be able to reproduce it on real mainline with normal
+> > operating system (not AOSP) - with ramdiks/without/whatever. So far no
+> > one did it, right?
+> 
+> The worry I have about the revert here is that it will never be able
+> to be undone and that doesn't seem great long term. I'm all for a
+> temporary revert to fix a problem while the root cause is understood,
+> but in this case I have a hard time believing that we'll make more
+> progress towards a root cause once the revert lands. All the
+> investigation we've done so far seems to indicate that the revert only
+> fixes the problem by luck...
+> 
+> I completely agree that moving the nodes in the DTS is a hack and just
+> hides the problem. However, it also at least limits the workaround to
+> the one board showing the problem and doesn't mean we're stuck with
+> synchronous probe for rpmh-regulator for all eternity because nobody
+> can understand this timing issue on db845c.
+> 
 
-> On Tue, Jun 20, 2023 at 04:47:10PM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
->> On 24.05.23 15:07, Stefan Wahren wrote:
->> > 
->> > Am 23.05.23 um 21:44 schrieb Sergey Organov:
->> >> "Linux regression tracking (Thorsten Leemhuis)"
->> >> <regressions@leemhuis.info> writes:
->> >>
->> >> Solving this would need to identify the cause of interrupts being
->> >> disabled for prolonged times, and nobody volunteered to investigate this
->> >> further. One suspect, the Linux serial console, has been likely excluded
->> >> already though, as not actually being in use for printk() output.
->> >>
->> > 
->> > I don't think that we can exclude the serial console as a whole, i never
->> > made such a observation. But at least we can exclude kernel logging on
->> > the debug UART.
->> 
->> Stefan, just wondering: was this ever addressed upstream? I assume it's
->> not, just wanted to be sure.
->> 
->> I'm a bit unsure what to do with this and consider asking Greg for
->> advice, as he applied the patch. On one hand it's *IMHO* clearly a
->> regression (but for the record,  some people involved in the discussion
->> claim it's not). OTOH the culprit was applied more than a year ago now,
->> so reverting it might cause more trouble than it's worth at this point,
->> as that could lead to regressions for other users.
->
-> I'll be glad to revert this, but for some reason I thought that someone
-> was working on a "real fix" here.  Stefan, is that not the case?
+I agree that we shouldn't hide this by reverting the regulator change.
 
-As far as I understand, the "real fix" is to be where interrupts are
-being disabled for prolonged times in given specific kernel build, and
-nobody is looking for that place.
 
-In other words, I'm one who thinks the commit in question is not a
-regression per se, so I'm not sure it should be reverted.
+And as has been stated a few times already, the symptom indicates that
+we have a misconfigured system.
 
-Thanks,
-Sergey Organov
+Before accepting a patch just shuffling the bricks, I'd like to see some
+more analysis of what happens wrt the rpmh right before the timeout.
+Perhaps the landing team can assist here?
+
+Regards,
+Bjorn
