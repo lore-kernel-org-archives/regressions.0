@@ -1,45 +1,13 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B22CE17730
-	for <regressions@lists.linux.dev>; Wed, 21 Jun 2023 13:27:37 +0000 (UTC)
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-519c0ad1223so7331575a12.0
-        for <regressions@lists.linux.dev>; Wed, 21 Jun 2023 06:27:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1687354055; x=1689946055;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=967DLvqkZucBWYuQQC7ZvvfSLYp3m3iK1g1tSsAsumo=;
-        b=b0O4xEb9ZgvBDfAGPENTwzAsvbIfPfAXPyywF1IvFaK7E4iAFAOsT2rVj59NMabncB
-         RYlmwz8b04PN+WED8HMqotadj13ih5Ho5ynizGWLKuMo3klYbYiIEwprcLLKmDi2jA7F
-         qZlO8XOO/CSBDsQeIni4i23JZIDiLXzH+kvPykMnj9g9p8NaGhUBUN2RL0LYRoHvQWi6
-         MtRaq3EgXDLB3cj+OWIYtHp2TGvwHxrgq/6TStVM3mfuY7Cd0Krb1G7OXkdLvCSel85k
-         NihN7lEvlw0uh3LJTly0wKnOWFudJ7N9hv07OJ+TnIeN4/0VWSoCbSC7OFqUSCu6Nh1E
-         hl/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687354055; x=1689946055;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=967DLvqkZucBWYuQQC7ZvvfSLYp3m3iK1g1tSsAsumo=;
-        b=cvfl1mzWUJOABLenSlWK11SqIEoltV+xRSYJc6KmJUlG094hIaUfnl9e0dE7toiaQ/
-         /yErfb9H5rUVlPYRNhJpiPbCfWNGVpZgly9qsD03AVqk38gI+4CgpF7xFWkKJ7n/KBnP
-         bvN3aeTQFKjrUOnX/YLH9/mUkUk+4KqyfJVrpVuSVQYhYuWNEHs1DLlMt8Hpp4QfGagN
-         d2XpXqGwmOy4/HLmFUJ4Abkx7W6U6sRIzyHtcjyd/mYxs5yklE9z5uBHcGVG/uEdwnfU
-         7eOsPrwKOIrre1+tDa5vcjT44W/+A0Pl1k9W3SFUbIe7W7cM+GTbuIuIwn/WMB3Bs9UE
-         J/zg==
-X-Gm-Message-State: AC+VfDysnCCy66eZ1Qjgb4xCMM13KNfw+juM+UauAuS1FS4BaAXlxrTB
-	q9IQTMj+RhOQiA2bX2R891RmAQ==
-X-Google-Smtp-Source: ACHHUZ79KyX8mAuWiGAGoUg3ClcvXNY78P0aSXypVeZrGzKCSfDscpmx6uPTblSOyPq98SOb0CnADQ==
-X-Received: by 2002:a05:6402:6d8:b0:514:9e2c:90c6 with SMTP id n24-20020a05640206d800b005149e2c90c6mr10332144edy.38.1687354055724;
-        Wed, 21 Jun 2023 06:27:35 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.219.26])
-        by smtp.gmail.com with ESMTPSA id w1-20020aa7da41000000b005163c11700csm2621598eds.74.2023.06.21.06.27.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 21 Jun 2023 06:27:35 -0700 (PDT)
-Message-ID: <dfcc114f-56f1-e4ab-7b36-f9a4ce3e8c8c@linaro.org>
-Date: Wed, 21 Jun 2023 15:27:33 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4238F156D0
+	for <regressions@lists.linux.dev>; Wed, 21 Jun 2023 13:42:25 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1qBy6B-000289-S1; Wed, 21 Jun 2023 15:42:15 +0200
+Message-ID: <f27d47e9-96c9-a711-1e46-a0201b13e47c@leemhuis.info>
+Date: Wed, 21 Jun 2023 15:42:13 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -48,99 +16,86 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.12.0
-Subject: Re: Regression: NULL pointer dereference after NFS_V4_2_READ_PLUS
- (commit 7fd461c47)
-Content-Language: en-US
-To: Anna Schumaker <schumaker.anna@gmail.com>
-Cc: Trond Myklebust <trondmy@hammerspace.com>,
- Anna Schumaker <Anna.Schumaker@netapp.com>,
- linux-nfs <linux-nfs@vger.kernel.org>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <f591b13c-4600-e2a4-8efa-aac6ad828dd1@linaro.org>
- <CAFX2Jfmz7QqZBEdzbPUhPs0yctnXVaVF68tX1c57YX=6ki=0TA@mail.gmail.com>
- <4fe39d77-eb7c-a578-aefa-45b76e2247c2@linaro.org>
- <CAFX2JfmdRMsHPTySiw4vm7BwJfRZj3s0V3_v7NJ+XwMxBBSo9A@mail.gmail.com>
- <a3683dd3-3f30-bb4c-539d-d1519de6e5bf@linaro.org>
- <CAFX2JfnS9GVc4NaxKhr9E4y10NNv6SPgcv1yoeHTfEw5NvZgMg@mail.gmail.com>
- <86d8e252-975f-5d48-4567-0911d5ef9a44@linaro.org>
- <CAFX2Jfn_DSs38WQYsRs2ifLi5w+T3BhZfSU2W80T6dK48_Bb5g@mail.gmail.com>
- <e8d31e48-df6a-fde4-4c6b-c4ccf1664ded@linaro.org>
- <c8d454b0-d355-f599-f720-b7e64374fb56@linaro.org>
- <CAFX2JfmvMZ7DzD9znWeOHXywgPbUKDS1irMjUerEuborjRBpcg@mail.gmail.com>
- <CAFX2JfnhOz+HiOd4vBwBK+5d19Kb8wfBNQhxRZHQoP8S2qiwFw@mail.gmail.com>
- <CAFX2Jf=5WV=dY9J4-7tp5NB85fDOkwiv8rxQqHziqG+ED1cUJw@mail.gmail.com>
- <CAFX2Jf=TxojviigtdQ=F_8FcHFFC4RNdfkoS=157jnXQCQSq5g@mail.gmail.com>
- <85851031-cf43-07d2-8ec7-b40c8c00be91@linaro.org>
- <CAFX2JfnH_rOFxn+uT4e1Eutea5En4_z26a-u_qCwOsnr5EowRw@mail.gmail.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <CAFX2JfnH_rOFxn+uT4e1Eutea5En4_z26a-u_qCwOsnr5EowRw@mail.gmail.com>
+Subject: Re: Regression: serial: imx: overrun errors on debug UART
+Content-Language: en-US, de-DE
+To: Stefan Wahren <stefan.wahren@i2se.com>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ Sergey Organov <sorganov@gmail.com>
+Cc: =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>,
+ =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Stefan Wahren <stefan.wahren@chargebyte.com>, linux-serial@vger.kernel.org,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Shawn Guo <shawnguo@kernel.org>, Jiri Slaby <jirislaby@kernel.org>,
+ =?UTF-8?Q?Tomasz_Mo=c5=84?= <tomasz.mon@camlingroup.com>,
+ Linux ARM <linux-arm-kernel@lists.infradead.org>
+References: <2c29454b-9369-4360-8eb4-c151f59460cb@i2se.com>
+ <d660e3cf-5686-d989-3b59-efe83ec9d590@linux.intel.com>
+ <CAOMZO5A+GujiQY-UT3Q-8o0AKujJb_4kY+5L4x1e07ovGfo31w@mail.gmail.com>
+ <9e22f237-f3ee-0415-9e6b-89a137769b8f@i2se.com>
+ <5d59dec6-9f6f-7b20-1221-f57c94b29cca@i2se.com>
+ <20230325151100.mskydt3hwbnspqp4@pengutronix.de>
+ <cb16ddb7-f22f-d637-8670-bccc77add0af@i2se.com> <87mt3ynsa7.fsf@osv.gnss.ru>
+ <d5009984-d2eb-0343-5bb4-df8a7f526121@i2se.com> <87sfcy8ncu.fsf@osv.gnss.ru>
+ <534ac8db-ae8f-1ea3-9aa9-2105db7f7a52@i2se.com>
+ <203ce87f-2898-eb10-2f8c-f237859d75e6@leemhuis.info>
+ <87ttw2vnn0.fsf@osv.gnss.ru> <d1b6209d-a174-406a-cc81-86b391940c0c@i2se.com>
+ <3853881c-976f-dadc-b64b-4ffd8cc88cf0@leemhuis.info>
+ <85d374a9-37c7-5980-3151-1ee32d35a550@i2se.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <85d374a9-37c7-5980-3151-1ee32d35a550@i2se.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1687354946;23077d7a;
+X-HE-SMSGID: 1qBy6B-000289-S1
 
-On 21/06/2023 14:49, Anna Schumaker wrote:
-> On Sat, Jun 17, 2023 at 6:09 AM Krzysztof Kozlowski
-> <krzysztof.kozlowski@linaro.org> wrote:
->>
->> On 15/06/2023 21:38, Anna Schumaker wrote:
->>> On Thu, Jun 15, 2023 at 1:16 PM Anna Schumaker <schumaker.anna@gmail.com> wrote:
->>>>
->>>> On Thu, Jun 15, 2023 at 1:04 PM Anna Schumaker <schumaker.anna@gmail.com> wrote:
->>>>>
->>>>> On Thu, Jun 15, 2023 at 9:01 AM Anna Schumaker <schumaker.anna@gmail.com> wrote:
->>>>>>
->>>>>> On Thu, Jun 15, 2023 at 4:55 AM Krzysztof Kozlowski
->>>>>> <krzysztof.kozlowski@linaro.org> wrote:
->>>>>>>
->>>>>>> On 15/06/2023 10:52, Krzysztof Kozlowski wrote:
->>>>>>>> On 14/06/2023 22:55, Anna Schumaker wrote:
->>>>>>>>>>>> Still null ptr (built on 420b2d4 with your patch):
->>>>>>>>>>>
->>>>>>>>>>> We're through the merge window and at rc1 now, so I can spend more
->>>>>>>>>>> time scratching my head over your bug again. We've come up with a
->>>>>>>>>>> patch (attached) that adds a bunch of printks to show us what the
->>>>>>>>>>> kernel thinks is going on. Do you mind trying it out and letting us
->>>>>>>>>>> know what gets printed out? You'll need to make sure
->>>>>>>>>>> CONFIG_NFS_V4_2_READ_PLUS is enabled when compiling the kernel.
->>>>>>>>>>
->>>>>>>>>> The patch does not apply. I tried: v6.4-rc1, v6.4-rc5, next-20230609.
->>>>>>>>>
->>>>>>>>> Can you try the attached patch on top of my 3-patch series from the
->>>>>>>>> other day, and let me know what gets printed out? It adds a bunch of
->>>>>>>>> printk()s at strategic points to print out what is going on with the
->>>>>>>>> xdr scratch buffer since it's suddenly a bad memory address after
->>>>>>>>> working for a bit on your machine.
->>>>>>>>>
->>>>>>>>
->>>>>>>> Here you have entire log - attached (113 kB, I hope goes past mailing
->>>>>>>> lists/spam filters).
->>>>>>>
->>>>>>> As expected this bounced from the mailing lists, but I hope you got it.
->>>>>>> If not, let me know.
->>>>>>
->>>>>> I did still receive it. Thanks!
->>>>>
->>>>> Can you swap out yesterday's patch with this patch? I've adjusted what
->>>>> gets printed out, and added printk()s to xdr_copy_to_scratch().  I'm
->>>>> starting to think that the xdr scratch buffer is fine, and that it's
->>>>> the other pointer passed to memcpy() in that function that's the
->>>>> problem, and the output from this patch will confirm for me.
->>>>
->>>> Oh, and can you add this one on top of the v2 patch as well?
+On 21.06.23 08:23, Stefan Wahren wrote:
+> Am 20.06.23 um 16:47 schrieb Linux regression tracking (Thorsten Leemhuis):
+>> On 24.05.23 15:07, Stefan Wahren wrote:
 >>>
->>> Sorry about the noise today. Can you use this patch instead of the two
->>> I attached earlier? I cleaned up the output and cut down on extra
->>> output..
+>>> Am 23.05.23 um 21:44 schrieb Sergey Organov:
+>>>> "Linux regression tracking (Thorsten Leemhuis)"
+>>>> <regressions@leemhuis.info> writes:
+>>>>
+>>>> Solving this would need to identify the cause of interrupts being
+>>>> disabled for prolonged times, and nobody volunteered to investigate
+>>>> this
+>>>> further. One suspect, the Linux serial console, has been likely
+>>>> excluded
+>>>> already though, as not actually being in use for printk() output.
 >>>
+>>> I don't think that we can exclude the serial console as a whole, i never
+>>> made such a observation. But at least we can exclude kernel logging on
+>>> the debug UART.
 >>
->> Here you have - attached.
+>> Stefan, just wondering: was this ever addressed upstream? I assume it's
+>> not, just wanted to be sure.
+>>
+>> I'm a bit unsure what to do with this and consider asking Greg for
+>> advice, as he applied the patch. On one hand it's *IMHO* clearly a
+>> regression (but for the record,  some people involved in the discussion
+>> claim it's not). OTOH the culprit was applied more than a year ago now,
+>> so reverting it might cause more trouble than it's worth at this point,
+>> as that could lead to regressions for other users.
 > 
-> This is good, thanks! I was finally able to figure out how to hit the
-> bug using a 32bit x86 VM, so hopefully the next thing you hear from me
-> is a patch fixing the bug!
+> thanks for tracking this issue, but in my opinion the discussion goes in
+> circles. So i don't see a point in reanimating this again.  [...]
 
-QEMU also has 32-bit ARM and x86...
+Yup. Sadly. I don't think Linus would agree with the "this is not a
+regression" claim from various people here. But well, due to your
+statement, Gregs mail from earlier today, and the fact that reverting
+the culprit at this point might lead to regression that would hit more
+people, I agree:
 
-Best regards,
-Krzysztof
+#regzbot inconclusive: unresolved, but stuck, and revert likely a bad
+option - and reporter is fine with not perusing this further
 
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
