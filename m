@@ -1,34 +1,45 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA2CC19BDA
-	for <regressions@lists.linux.dev>; Wed, 21 Jun 2023 17:57:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EED07C433C0
-	for <regressions@lists.linux.dev>; Wed, 21 Jun 2023 17:57:45 +0000 (UTC)
-Authentication-Results: smtp.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="oDTsIIwI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
-	t=1687370263;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Rl4SatZlYW3zfPB8EhfcgRbTfzI6pKWS4+j1IBQgrSM=;
-	b=oDTsIIwIyLRvCLBWHGbhCAQ0jWcHoHSdvBujlFDFYuJ6v+5xf2lo8LmmNSa6WcXBo+svnZ
-	oDttXneIJV1YhbJvmHpzXFCg2Q7f4MepbCwTHn3RDqSaUT6tNzpkM3xlAAaI1uQCUaD8Qh
-	UYajdLj7rLoIc3nykTeUFkMim1+MzVo=
-Received: 
-	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 8f597833 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO)
-	for <regressions@lists.linux.dev>;
-	Wed, 21 Jun 2023 17:57:42 +0000 (UTC)
-Received: by mail-vs1-f46.google.com with SMTP id ada2fe7eead31-440b54708f2so1483865137.0
-        for <regressions@lists.linux.dev>; Wed, 21 Jun 2023 10:57:42 -0700 (PDT)
-X-Gm-Message-State: AC+VfDyVpJcbETM1NEmBMY++2ezy+cGHGwb9Uk1KTvU9yXSfIwMrlaRa
-	FwWQl4uH/Jy2RQJDqR3HhICe37lIT/HB5tvLMxk=
-X-Google-Smtp-Source: ACHHUZ53lppsuJRUY2telQU1fgcbJ1amd7Gy3dfz3XBiZB9kGBmv82dqJ5lIE/ByYVNdHEJQPKWfMcJPdfqxchHEuyE=
-X-Received: by 2002:a05:6102:398:b0:440:a920:dcc4 with SMTP id
- m24-20020a056102039800b00440a920dcc4mr5969366vsq.22.1687370261715; Wed, 21
- Jun 2023 10:57:41 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4BB819E49
+	for <regressions@lists.linux.dev>; Wed, 21 Jun 2023 18:08:55 +0000 (UTC)
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-988a076a7d3so553661266b.3
+        for <regressions@lists.linux.dev>; Wed, 21 Jun 2023 11:08:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1687370933; x=1689962933;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=h4Ucd0qvaN4RbTaMub1cXvd79JxnZbAQ50t+Lut4dXs=;
+        b=F+9rPl8kM1cTRgwBD7y5l2+OIyTmPj+r4+80xkIxPVbZ85r+grot89w/imibqZVvHy
+         m1ktqIJeFLejg2Ju3ftAoNwKBy47y08A2Ty8WKYIot+/yqzniwYfw4UFUhvckBszvTfO
+         Ju3g8EjIJRbPtW+hfJY+lToEpueZdhJTc9zbc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687370933; x=1689962933;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=h4Ucd0qvaN4RbTaMub1cXvd79JxnZbAQ50t+Lut4dXs=;
+        b=WdhYqytAAgY9uXJiCgDlhCpYfUXYOz/gbFsrsZixt7MmM/GWU5icyDoNw5UKJzhcTs
+         QTGY+3BsDG9GpMUwKLQEUq3Lz9nsVkPBAZV8pJNX1NJKzTqay6k3g/bHf18RcsXF7vPt
+         IzxdwWgKCqM0ClAgfcGinldT6zZzgG/qaaCLQ6Jfck/vDNZy2EUxOlc6NmU8sWjYREPs
+         c63qKWJda3bmNx2gJe4Ye06f4FWAS/PFBu61D2Pre9TdwG1iD3g3zYA9N27ljm/6y4Ew
+         qFMcPT75NHzIK4Rs+vxHiXGCj0cEEmSrLeHHasIjYQTPVzI9zTx/4zRW4NmciHP6+WHr
+         MldQ==
+X-Gm-Message-State: AC+VfDyRpXg3ScEU7iag9baARKxBZRVnpgb4e0gmN2kwpcf6Rz4MXFTE
+	DPBOGPx6pKBN6nM4SoC7Dl/Oij9STljjm7fxl0WW47k7
+X-Google-Smtp-Source: ACHHUZ7MwWy+U+rf09ds26UIQKNJlTElzU9lswQ7vifJa2FT3z3WB+kV5EMmNIOthE+uKvMLjraI1Q==
+X-Received: by 2002:a17:907:2687:b0:987:4e89:577f with SMTP id bn7-20020a170907268700b009874e89577fmr12734532ejc.24.1687370933664;
+        Wed, 21 Jun 2023 11:08:53 -0700 (PDT)
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com. [209.85.208.49])
+        by smtp.gmail.com with ESMTPSA id dt16-20020a170906b79000b009829f31dd08sm3458794ejb.50.2023.06.21.11.08.52
+        for <regressions@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 21 Jun 2023 11:08:53 -0700 (PDT)
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-510d6b939bfso8338124a12.0
+        for <regressions@lists.linux.dev>; Wed, 21 Jun 2023 11:08:52 -0700 (PDT)
+X-Received: by 2002:aa7:c90f:0:b0:51a:50f2:4e7a with SMTP id
+ b15-20020aa7c90f000000b0051a50f24e7amr7543192edt.13.1687370932607; Wed, 21
+ Jun 2023 11:08:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -39,75 +50,31 @@ References: <GQUnKz2al3yke5mB2i1kp3SzNHjK8vi6KJEh7rnLrOQ24OrlljeCyeWveLW9pICEmB9
  <ZHFaFosKY24-L7tQ@debian.me> <NVN-hJsvHwaHe6R-y6XIYJp0FV7sCavgMjobFnseULT1wjgkOFNXbGBGT5iVjCfbtU7dW5xy2hIDoq0ASeNaXhvSY-g2Df4aHWVIMQ2c3TQ=@proton.me>
  <ZIcmpcEsTLXFaO0f@debian.me> <oEbkgJ-ImLxBDZDUTnIAGFWrRVnwBss3FOlalTpwrz83xWgESC9pcvNKiAVp9BzFgqZ0V-NIwzBZ7icKD8ynuIi_ZMtGt7URu3ftcSt16u4=@proton.me>
  <e2ca75ef-d779-4bad-84a5-a9f262dbe213@lunn.ch> <FNzHwp9-AyweVwIMndmih6VuBD0nsyRp3OM72bmOxpeYszF680jFPJjENIknT32FeaqfVBtVSQFw-5mgE3ZXeksVD8VCFbxwojxP3mSZ9DQ=@proton.me>
- <9517bb70-426c-0296-b426-f5b4f075f7c8@leemhuis.info>
-In-Reply-To: <9517bb70-426c-0296-b426-f5b4f075f7c8@leemhuis.info>
-From: "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date: Wed, 21 Jun 2023 19:57:30 +0200
-X-Gmail-Original-Message-ID: <CAHmME9p2ZLJUMq96vhkiSgvJkxP5BxE778MhY5Ou2WdxLVEJyg@mail.gmail.com>
-Message-ID: <CAHmME9p2ZLJUMq96vhkiSgvJkxP5BxE778MhY5Ou2WdxLVEJyg@mail.gmail.com>
+ <9517bb70-426c-0296-b426-f5b4f075f7c8@leemhuis.info> <CAHk-=wiK5oDqgt6=OHLiiAu4VmLy4qn8WQdhvFo+sm26r4UjHw@mail.gmail.com>
+In-Reply-To: <CAHk-=wiK5oDqgt6=OHLiiAu4VmLy4qn8WQdhvFo+sm26r4UjHw@mail.gmail.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Wed, 21 Jun 2023 11:08:36 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjGubMs+yoCS44bM1x4=CxDWvJeauquCcE5qLzNmToozw@mail.gmail.com>
+Message-ID: <CAHk-=wjGubMs+yoCS44bM1x4=CxDWvJeauquCcE5qLzNmToozw@mail.gmail.com>
 Subject: Re: [REGRESSION][BISECTED] Boot stall from merge tag 'net-next-6.2'
-To: regressions@leemhuis.info, Ard Biesheuvel <ardb@kernel.org>
-Cc: Andrew Lunn <andrew@lunn.ch>, Linus Torvalds <torvalds@linux-foundation.org>, 
-	Linux Stable <stable@vger.kernel.org>, Linux Regressions <regressions@lists.linux.dev>, 
-	Bagas Sanjaya <bagasdotme@gmail.com>, Sami Korkalainen <sami.korkalainen@proton.me>
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>, Andrew Lunn <andrew@lunn.ch>, 
+	Linux Stable <stable@vger.kernel.org>, Bagas Sanjaya <bagasdotme@gmail.com>, 
+	Sami Korkalainen <sami.korkalainen@proton.me>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-+Ard - any ideas here?
+On Wed, 21 Jun 2023 at 10:56, Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> I'll just revert it for now.
 
-On Wed, Jun 21, 2023 at 10:46=E2=80=AFAM Linux regression tracking (Thorste=
-n
-Leemhuis) <regressions@leemhuis.info> wrote:
->
-> [added Jason (who authored the culprit) to the list of recipients; moved
-> net people and list to BCC, guess they are not much interested in this
-> anymore then]
->
-> On 21.06.23 08:07, Sami Korkalainen wrote:
-> > I bisected again. It seems I made some mistake last time, as I got a
-> > different result this time. Maybe, because these problematic kernels ma=
-y
-> > boot fine sometimes, like I said before.
-> >
-> > Anyway, first bad commit (makes much more sense this time):
-> > e7b813b32a42a3a6281a4fd9ae7700a0257c1d50 efi: random: refresh
-> > non-volatile random seed when RNG is initialized
-> >
-> > I confirmed that this is the code causing the issue by commenting it
-> > out (see the patch file). Without this code, the latest mainline boots =
-fine.
->
-> Jason, in that case it seems this is something for you. For the initial
-> report, see here:
->
-> https://lore.kernel.org/all/GQUnKz2al3yke5mB2i1kp3SzNHjK8vi6KJEh7rnLrOQ24=
-OrlljeCyeWveLW9pICEmB9Qc8PKdNt3w1t_g3-Uvxq1l8Wj67PpoMeWDoH8PKk=3D@proton.me=
-/
->
-> Quoting a part of it:
->
-> ```
-> Linux 6.2 and newer are (mostly) unbootable on my old HP 6730b laptop,
-> the 6.1.30 works still fine.
-> The weirdest thing is that newer kernels (like 6.3.4 and 6.4-rc3) may
-> boot ok on the first try, but when rebooting, the very same version
-> doesn't boot.
->
-> Some times, when trying to boot, I get this message repeated forever:
-> ACPI Error: No handler or method for GPE [XX], disabling event
-> (20221020/evgpe-839)
-> On newer kernels, the date is 20230331 instead of 20221020. There is
-> also some other error, but I can't read it as it gets overwritten by the
-> other ACPI error, see image linked at the end.
->
-> And some times, the screen will just stay completely blank.
->
-> I tried booting with acpi=3Doff, but it does not help.
-> ```
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-> --
-> Everything you wanna know about Linux kernel regression tracking:
-> https://linux-regtracking.leemhuis.info/about/#tldr
-> If I did something stupid, please tell me, as explained on that page.
->
-> #regzbot introduced e7b813b32a42a3a6281a4fd9ae7700a0257c1d50
+Btw, Thorsten, is there a good way to refer to the regzbot entry in a
+commit message some way? I know about the email interface, but I'd
+love to just be able to link to the regression entry. Now I just
+linked to the report in this thread.
+
+Maybe you don't keep a long-term stable link around anywhere, and you
+just pick up on reverts directly, but I suspect it would be nice to be
+able to just link to any regression entry directly.
+
+            Linus
