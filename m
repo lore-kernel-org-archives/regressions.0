@@ -1,58 +1,82 @@
-Received: from rs225.mailgun.us (rs225.mailgun.us [209.61.151.225])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-0201.mail-europe.com (mail-0201.mail-europe.com [51.77.79.158])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9605815BE
-	for <regressions@lists.linux.dev>; Wed, 21 Jun 2023 02:46:42 +0000 (UTC)
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=hexchain.org;
- q=dns/txt; s=smtp; t=1687315601; x=1687322801; h=Content-Transfer-Encoding:
- Content-Type: In-Reply-To: From: From: References: Cc: To: To: Subject:
- Subject: MIME-Version: Date: Message-ID: Sender: Sender;
- bh=5stQnICSelnzp1yyIPPD1WlmY4XcWQOBfdxQvv1XFbw=;
- b=FFaVNFSZw4a9h0FWJ422Z1MD4yS/Z0mPKWy5NO4DU3aNWsf4YVdBUEHXlHnGBL7JSRt55QhnbJxzZzypMRIH/ScLh03E4Tj9kf1FfHFN0wi2Ygnjj0sWRZi8Pfg+v07xGpjktW2Gwy+L97o5Y5nowDEe0oir/1tod1aErwakCNu6UIfuz+0ZfQgZQBDThpeAmJ/rjgq3qYxewOs8yU9l7P3L23xLbslyo6p5lqxU+zq1LDc5i25W4QbeMGchlh2m4nxcG5gYQuiiXNDgfs3d0zAQbzoS6Ze68w53n9Nvg9MMcM9N0BYijpBfaiIm+Tj5mg+fdN7J1UD/lEQthb9U/w==
-X-Mailgun-Sending-Ip: 209.61.151.225
-X-Mailgun-Sid: WyIwZGQ5YyIsInJlZ3Jlc3Npb25zQGxpc3RzLmxpbnV4LmRldiIsIjE5MjUxOCJd
-Received: from [10.22.69.180] (122.11.166-8.unknown.starhub.net.sg [122.11.166.8]) by
- 0b3e52753156 with SMTP id 6492649145220fab9318d1b5; Wed, 21 Jun 2023 02:46:41
- GMT
-Sender: linux@hexchain.org
-Message-ID: <653274b4-7b69-8f3f-4214-e0be36f7102e@hexchain.org>
-Date: Wed, 21 Jun 2023 10:46:37 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12C168BEB
+	for <regressions@lists.linux.dev>; Wed, 21 Jun 2023 06:08:20 +0000 (UTC)
+Date: Wed, 21 Jun 2023 06:07:59 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail; t=1687327684; x=1687586884;
+	bh=ubPaVyZowGktzCcEYffuW++8GPJVzBrtENIQ7uYjie0=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=eSNWl+3DJpvQHCiraPqTyJlsxcW7+N/gjjYZYCKXlSRVDs3jbcR2adXUJ7jdnAqdp
+	 VQZVjHJIbCMJJVikX7dZ7H0x7gbQd4RfkZ3pHn0utr17fhULg63/+VDxU1C/Rz29xg
+	 h1DdG0TddsZVWnZL1rXKhreRwVmVRXz2lB6crP8LdvgnaojSUxn+xIfIrqzCGOhGPw
+	 p6PBmP6j0T4RGKP7stxbvyJqrJCwVlIzyOkauM9mdcos+SRtwCtWdNiVUDirPhwITp
+	 LPnieK7n4nYWZ2JbgdG7Prhj05nEKuyCoOqrS4xCCH5/DDmkNJzcoiTApvgRfVW/4/
+	 81QKQIKZoxd7A==
+To: Bagas Sanjaya <bagasdotme@gmail.com>
+From: Sami Korkalainen <sami.korkalainen@proton.me>
+Cc: Andrew Lunn <andrew@lunn.ch>, Linus Torvalds <torvalds@linux-foundation.org>, Linux Stable <stable@vger.kernel.org>, Linux Regressions <regressions@lists.linux.dev>, Linux Networking <netdev@vger.kernel.org>, Linux ACPI <linux-acpi@vger.kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>
+Subject: Re: [REGRESSION][BISECTED] Boot stall from merge tag 'net-next-6.2'
+Message-ID: <FNzHwp9-AyweVwIMndmih6VuBD0nsyRp3OM72bmOxpeYszF680jFPJjENIknT32FeaqfVBtVSQFw-5mgE3ZXeksVD8VCFbxwojxP3mSZ9DQ=@proton.me>
+In-Reply-To: <e2ca75ef-d779-4bad-84a5-a9f262dbe213@lunn.ch>
+References: <GQUnKz2al3yke5mB2i1kp3SzNHjK8vi6KJEh7rnLrOQ24OrlljeCyeWveLW9pICEmB9Qc8PKdNt3w1t_g3-Uvxq1l8Wj67PpoMeWDoH8PKk=@proton.me> <ZHFaFosKY24-L7tQ@debian.me> <NVN-hJsvHwaHe6R-y6XIYJp0FV7sCavgMjobFnseULT1wjgkOFNXbGBGT5iVjCfbtU7dW5xy2hIDoq0ASeNaXhvSY-g2Df4aHWVIMQ2c3TQ=@proton.me> <ZIcmpcEsTLXFaO0f@debian.me> <oEbkgJ-ImLxBDZDUTnIAGFWrRVnwBss3FOlalTpwrz83xWgESC9pcvNKiAVp9BzFgqZ0V-NIwzBZ7icKD8ynuIi_ZMtGt7URu3ftcSt16u4=@proton.me> <e2ca75ef-d779-4bad-84a5-a9f262dbe213@lunn.ch>
+Feedback-ID: 45678890:user:proton
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: amd_sfh driver causes kernel oops during boot
-To: Linux regressions mailing list <regressions@lists.linux.dev>,
- Malte Starostik <malte@starostik.de>,
- Benjamin Tissoires <benjamin.tissoires@redhat.com>,
- "Limonciello, Mario" <mario.limonciello@amd.com>
-Cc: Bagas Sanjaya <bagasdotme@gmail.com>, basavaraj.natikar@amd.com,
- linux-input@vger.kernel.org, linux@hexchain.org, stable@vger.kernel.org
-References: <ZG3ipauL9FTnQJiC@debian.me>
- <aci7a4jnosozypn6sffsdoaezg4p42zgjy5dwnjyvnbav7chdm@wettfjwb4enw>
- <79bd270e-4a0d-b4be-992b-73c65d085624@amd.com> <5980752.YW5z2jdOID@zen>
- <1b3fd148-44d7-d476-e9e6-f9d8c8ec0ee6@leemhuis.info>
-Content-Language: en-US
-From: Haochen Tong <linux@hexchain.org>
-In-Reply-To: <1b3fd148-44d7-d476-e9e6-f9d8c8ec0ee6@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed;
+ boundary="b1_xW5OBqT6eYXTEKbSnFLDvGSiisfLN9WDGQYH44fZg"
 
-On 6/20/23 21:20, Linux regression tracking (Thorsten Leemhuis) wrote:
-> Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
-> for once, to make this easily accessible to everyone.
-> 
-> What happens to this? From here it looks like there was no progress to
-> resolve the regression in the past two weeks, but maybe I just missed
-> something.
+This is a multi-part message in MIME format.
 
-Hi,
+--b1_xW5OBqT6eYXTEKbSnFLDvGSiisfLN9WDGQYH44fZg
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-I just looked at the journal again and this problem seemed to go away 
-after upgrading from 6.3.3 to 6.3.5. At that time the BIOS version was 
-still 1.27. Now, on 1.57, the device 1022:164a is indeed no longer 
-present anymore.
+I bisected again. It seems I made some mistake last time, as I got a differ=
+ent result this time. Maybe, because these problematic kernels may boot fin=
+e sometimes, like I said before.
+
+Anyway, first bad commit (makes much more sense this time):
+e7b813b32a42a3a6281a4fd9ae7700a0257c1d50
+efi: random: refresh non-volatile random seed when RNG is initialized
+
+I confirmed that this is the code causing the issue by commenting it out (s=
+ee the patch file). Without this code, the latest mainline boots fine.
+
+Terveisin
+Sami Korkalainen
+--b1_xW5OBqT6eYXTEKbSnFLDvGSiisfLN9WDGQYH44fZg
+Content-Type: text/x-patch; name=patch.diff
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename=patch.diff
+
+ZGlmZiAtLWdpdCBhL2RyaXZlcnMvZmlybXdhcmUvZWZpL2VmaS5jIGIvZHJpdmVycy9maXJtd2Fy
+ZS9lZmkvZWZpLmMKaW5kZXggYWJlZmY3ZGMwYjU4Li5jMzYyYzgwN2Y1ZDYgMTAwNjQ0Ci0tLSBh
+L2RyaXZlcnMvZmlybXdhcmUvZWZpL2VmaS5jCisrKyBiL2RyaXZlcnMvZmlybXdhcmUvZWZpL2Vm
+aS5jCkBAIC0zNjAsNyArMzYwLDcgQEAgc3RhdGljIHZvaWQgX19pbml0IGVmaV9kZWJ1Z2ZzX2lu
+aXQodm9pZCkKICNlbHNlCiBzdGF0aWMgaW5saW5lIHZvaWQgZWZpX2RlYnVnZnNfaW5pdCh2b2lk
+KSB7fQogI2VuZGlmCi0KKy8qCiBzdGF0aWMgdm9pZCByZWZyZXNoX252X3JuZ19zZWVkKHN0cnVj
+dCB3b3JrX3N0cnVjdCAqd29yaykKIHsKIAl1OCBzZWVkW0VGSV9SQU5ET01fU0VFRF9TSVpFXTsK
+QEAgLTM3OCw3ICszNzgsNyBAQCBzdGF0aWMgaW50IHJlZnJlc2hfbnZfcm5nX3NlZWRfbm90aWZp
+Y2F0aW9uKHN0cnVjdCBub3RpZmllcl9ibG9jayAqbmIsIHVuc2lnbmVkCiAJcmV0dXJuIE5PVElG
+WV9ET05FOwogfQogc3RhdGljIHN0cnVjdCBub3RpZmllcl9ibG9jayByZWZyZXNoX252X3JuZ19z
+ZWVkX25iID0geyAubm90aWZpZXJfY2FsbCA9IHJlZnJlc2hfbnZfcm5nX3NlZWRfbm90aWZpY2F0
+aW9uIH07Ci0KKyovCiAvKgogICogV2UgcmVnaXN0ZXIgdGhlIGVmaSBzdWJzeXN0ZW0gd2l0aCB0
+aGUgZmlybXdhcmUgc3Vic3lzdGVtIGFuZCB0aGUKICAqIGVmaXZhcnMgc3Vic3lzdGVtIHdpdGgg
+dGhlIGVmaSBzdWJzeXN0ZW0sIGlmIHRoZSBzeXN0ZW0gd2FzIGJvb3RlZCB3aXRoCkBAIC00NTAs
+MTAgKzQ1MCwxMCBAQCBzdGF0aWMgaW50IF9faW5pdCBlZmlzdWJzeXNfaW5pdCh2b2lkKQogCWlm
+IChlZmkuY29jb19zZWNyZXQgIT0gRUZJX0lOVkFMSURfVEFCTEVfQUREUikKIAkJcGxhdGZvcm1f
+ZGV2aWNlX3JlZ2lzdGVyX3NpbXBsZSgiZWZpX3NlY3JldCIsIDAsIE5VTEwsIDApOwogI2VuZGlm
+Ci0KKy8qCiAJaWYgKGVmaV9ydF9zZXJ2aWNlc19zdXBwb3J0ZWQoRUZJX1JUX1NVUFBPUlRFRF9T
+RVRfVkFSSUFCTEUpKQogCQlleGVjdXRlX3dpdGhfaW5pdGlhbGl6ZWRfcm5nKCZyZWZyZXNoX252
+X3JuZ19zZWVkX25iKTsKLQorKi8KIAlyZXR1cm4gMDsKIAogZXJyX3JlbW92ZV9ncm91cDoK
+
+--b1_xW5OBqT6eYXTEKbSnFLDvGSiisfLN9WDGQYH44fZg--
+
