@@ -1,18 +1,13 @@
-Received: from mail.spahan.ch (homer.spahan.ch [88.198.59.12])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD23F18C2E
-	for <regressions@lists.linux.dev>; Wed, 21 Jun 2023 15:34:17 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.spahan.ch (Postfix) with ESMTP id 8AE081C1F38;
-	Wed, 21 Jun 2023 17:26:41 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at spahan.ch
-Received: from mail.spahan.ch ([127.0.0.1])
-	by localhost (homer.spahan.ch [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id DgFgrJhyAhSF; Wed, 21 Jun 2023 17:26:40 +0200 (CEST)
-Received: from [IPV6:2a02:168:541e:57e1:b9ac:dc3e:41d5:c56c] (unknown [IPv6:2a02:168:541e:57e1:b9ac:dc3e:41d5:c56c])
-	by mail.spahan.ch (Postfix) with ESMTPSA id C4D261C1F37;
-	Wed, 21 Jun 2023 17:26:39 +0200 (CEST)
-Message-ID: <785fcf0b-3f63-a0da-3eea-f57124e99e15@spahan.ch>
-Date: Wed, 21 Jun 2023 17:26:39 +0200
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9EEC1953D
+	for <regressions@lists.linux.dev>; Wed, 21 Jun 2023 17:19:29 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1qC1UL-00010x-87; Wed, 21 Jun 2023 19:19:25 +0200
+Message-ID: <cfe89ae9-90a6-2b04-a1ee-20569dc42ab4@leemhuis.info>
+Date: Wed, 21 Jun 2023 19:19:24 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -21,57 +16,101 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.12.0
-Subject: Re: [PATCH] media: uvcvideo: Fix menu count handling for userspace XU
- mappings
-Content-Language: en-US, fr-FR, de-CH
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- linux-media@vger.kernel.org
-Cc: Ricardo Ribalda <ribalda@chromium.org>,
- "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>,
- regressions@lists.linux.dev
-References: <20230606170919.GJ25679@pendragon.ideasonboard.com>
- <20230606171150.12875-1-laurent.pinchart@ideasonboard.com>
-From: Poncho <poncho@spahan.ch>
-In-Reply-To: <20230606171150.12875-1-laurent.pinchart@ideasonboard.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] HID: logitech-hidpp: Handle timeout differently from busy
+Content-Language: en-US, de-DE
+To: Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Mark Lord <mlord@pobox.com>, Jiri Kosina <jikos@kernel.org>,
+ Bastien Nocera <hadess@hadess.net>, linux-input@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ "Peter F . Patel-Schneider" <pfpschneider@gmail.com>,
+ =?UTF-8?Q?Filipe_La=c3=adns?= <lains@riseup.net>,
+ Nestor Lopez Casado <nlopezcasad@logitech.com>
+References: <20230531082428.21763-1-hadess@hadess.net>
+ <nycvar.YFH.7.76.2305311606160.29760@cbobk.fhfr.pm>
+ <nycvar.YFH.7.76.2306031440380.29760@cbobk.fhfr.pm>
+ <15bb2507-a145-7f1b-8e84-58aeb02484b9@leemhuis.info>
+ <nycvar.YFH.7.76.2306061527080.29760@cbobk.fhfr.pm>
+ <42b6e582-f642-7521-135a-449140984211@leemhuis.info>
+ <53903462-2552-b707-3831-cad3ef873b0d@leemhuis.info>
+ <aa0e3371-dad1-3296-18fb-1957b92aa4d1@pobox.com>
+ <ed27ca39-3609-695c-9f04-65c0bad343c2@leemhuis.info>
+ <CAO-hwJLyA==_Wkyi-gTn-FOAAne2JKDfNMY2EaELoFDo5Qbe-A@mail.gmail.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <CAO-hwJLyA==_Wkyi-gTn-FOAAne2JKDfNMY2EaELoFDo5Qbe-A@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1687367969;21dec76b;
+X-HE-SMSGID: 1qC1UL-00010x-87
 
-Hi Laurent
 
-Friendly ping. I think this patch was forgotten.
 
-Best regards,
-Poncho
-
-On 06.06.23 19:11, Laurent Pinchart wrote:
-> When commit 716c330433e3 ("media: uvcvideo: Use standard names for
-> menus") reworked the handling of menu controls, it inadvertently
-> replaced a GENMASK(n - 1, 0) with a BIT_MASK(n). The latter isn't
-> equivalent to the former, which broke adding XU mappings from userspace.
-> Fix it.
+On 21.06.23 17:10, Benjamin Tissoires wrote:
+> On Wed, Jun 21, 2023 at 4:09 PM Linux regression tracking (Thorsten
+> Leemhuis) <regressions@leemhuis.info> wrote:
+>>
+>> On 15.06.23 13:24, Mark Lord wrote:
+>>> On 2023-06-15 03:24 AM, Linux regression tracking (Thorsten Leemhuis) wrote:
+>>> ...
+>>>> https://bugzilla.kernel.org/show_bug.cgi?id=217412
+>>>>
+>>>> --- Comment #47 from Mark Blakeney ---
+>>>> @Juha, kernel 6.3.7 adds the 2 patches intended to fix this bug and the
+>>>> startup delay is now gone. However, I have had 2 cases over the last 5
+>>>> days in which I have been running 6.3.7 where my mouse fails to be
+>>>> detected at all after startup. I have to pull the Logitech receiver
+>>>> out/in to get the mouse working. Never seen this issue before so I
+>>>> suspect the patches are not right.
+>>>> ```
+>>>
+>>> I too have had that happen with recent kernels,
+>>
+>> Ahh, good to know!
+>>
+>>> but have not yet put
+>>> a finger to a specific version or cause.
+>>>
+>>> Just toggling the power button on the wireless mouse is enough for
+>>> it to "re-appear".
+>>>
+>>> The 5.4.xx kernels never had this issue.  I went straight from those
+>>> to the 6.3.xx ones, where it does happen sometimes, both with and without
+>>> the recent "delay" fixes.
+>>
+>> From Mark Blakeney it sounded a lot like this is something that started
+>> with 6.3, but would be good to confirm. Which brings me to the reason
+>> why I write this mail:
+>>
+>> Is anyone still working on this? There was radio silence already for a
+>> week now. Okay, it's not really urgent, but I guess this should not fall
+>> through the cracks.
 > 
-> Reported-by: Poncho <poncho@spahan.ch>
-> Link: https://lore.kernel.org/linux-media/468a36ec-c3ac-cb47-e12f-5906239ae3cd@spahan.ch/
-> Fixes: 716c330433e3 ("media: uvcvideo: Use standard names for menus")
-> Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> ---
-> This is untested. Poncho, would you be able to test this patch to see if
-> it fixes your issue ?
-> ---
->   drivers/media/usb/uvc/uvc_v4l2.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/media/usb/uvc/uvc_v4l2.c b/drivers/media/usb/uvc/uvc_v4l2.c
-> index 5ac2a424b13d..f4988f03640a 100644
-> --- a/drivers/media/usb/uvc/uvc_v4l2.c
-> +++ b/drivers/media/usb/uvc/uvc_v4l2.c
-> @@ -45,7 +45,7 @@ static int uvc_control_add_xu_mapping(struct uvc_video_chain *chain,
->   	map->menu_names = NULL;
->   	map->menu_mapping = NULL;
->   
-> -	map->menu_mask = BIT_MASK(xmap->menu_count);
-> +	map->menu_mask = GENMASK(xmap->menu_count - 1, 0);
->   
->   	size = xmap->menu_count * sizeof(*map->menu_mapping);
->   	map->menu_mapping = kzalloc(size, GFP_KERNEL);
+> Sorry for the radio silence.
 
+No worries, we all have much to do. But I thought it was time for a
+quick status inquiry.
+
+> I worked on hidpp yesterday and submitted
+> a new patch for a problem that was overlooked in the previous fixes:
+> https://lore.kernel.org/linux-input/20230621-logitech-fixes-v1-1-32e70933c0b0@redhat.com/
+
+Great, many thx!
+
+> The loop was not properly initializing all its local states, meaning
+> that when we encountered a "please retry" from the device, we could
+> never do the actual retry and returned a different error than in the
+> 6.2 series.
+> 
+> Would anyone give it a shot?
+
+Might be worth mentioning it in the bugzilla ticket, as I sadly can't CC
+those people here. I'll do this for once (konstantin's bugbot will soon
+solve this problem...)
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
