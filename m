@@ -1,91 +1,148 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com [209.85.217.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C2408BF8
-	for <regressions@lists.linux.dev>; Wed, 21 Jun 2023 08:47:00 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qBtUO-0002iS-5L; Wed, 21 Jun 2023 10:46:56 +0200
-Message-ID: <9517bb70-426c-0296-b426-f5b4f075f7c8@leemhuis.info>
-Date: Wed, 21 Jun 2023 10:46:54 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A52371FC5
+	for <regressions@lists.linux.dev>; Wed, 21 Jun 2023 12:49:55 +0000 (UTC)
+Received: by mail-vs1-f43.google.com with SMTP id ada2fe7eead31-440af67aa78so1238728137.1
+        for <regressions@lists.linux.dev>; Wed, 21 Jun 2023 05:49:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1687351794; x=1689943794;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8PdIfEQE5qKLVmM+dbuAdzdn3w59OCD/u/aDJaWNRVY=;
+        b=oXT+JxL/7NBOvVrMWn+Xlf9j+mWJgDxO6CMZzQHe0vouHmGpEYx/slqSGR7MIKi+1X
+         7a5EJ94R0GKUnIrYbbxoVDdqRuaovmA6NEE4JMl2odCYKXIHssunN9af6Du4p4Q72GUf
+         gC+bdGSSp0EkjN5MG7Ulp0uxiUEWz96j9nH07ZAASJ90+v6FLY85vKYiO+nQDr1LYaDD
+         wQAm5hu4dJmCoB9ZeNCKF0s3RWcDRwuOrLRvGF2x5wZHoVvj3uH7DesXRTSCQGIMV8fx
+         FLYGQVBZhDQZs5695s0ax3jHufydoqL1BFiz13gd9b3DGt5e06JyTcnROQ3tYYu9aYGe
+         PifA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687351794; x=1689943794;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8PdIfEQE5qKLVmM+dbuAdzdn3w59OCD/u/aDJaWNRVY=;
+        b=YdO8+MZpDTXHv69g8nFSwybyOz27V3RKnw+Irpm+mD8CQ9zUh1/jMVRbsep+GsoDeg
+         hLGyon0xHOyAUYUge94/DE/IIwue1q1O5LwljZyPH1n6F7m8a15vHFG+p2V+KsoHSZWY
+         K3+6TN1JZ3DoT5jP7VO378Es5p+1H9TajJ8S336EorumKR4cv7PLcKtqxCIBzIK5jtrM
+         3J5FHhnuf8mnZoVxBoJTJk7QqEnj3vcKi6FHNusjl2YY5L6IMrbtkLS2AvSzA25yqVgL
+         hEaLQkWm9o/QkYxxEhlZan6TeM1ibcx39vYTE20QfjKWcU4TrHcjhkW15tm02dD1qu9r
+         daqg==
+X-Gm-Message-State: AC+VfDw5clh/ne90Xuh67kSUZL4cAp1pxLZiY4JKJPW3c8oZVS8YFJx9
+	2StLWI9J0kZWP4XJVun15u/6mBFaizzMqn4UZKLZ+ciQ
+X-Google-Smtp-Source: ACHHUZ40j3yDUpJMaBERCx7VHArb1cFDlbuTRAimB469povwCJ+py9bIr6qHbKLdzihsUJblvAeHzhy2GixZ3W0FG3A=
+X-Received: by 2002:a05:6102:41b:b0:440:9f9a:4bbb with SMTP id
+ d27-20020a056102041b00b004409f9a4bbbmr5517461vsq.20.1687351794168; Wed, 21
+ Jun 2023 05:49:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [REGRESSION][BISECTED] Boot stall from merge tag 'net-next-6.2'
-Content-Language: en-US, de-DE
-To: "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc: Andrew Lunn <andrew@lunn.ch>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Linux Stable <stable@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>,
- Bagas Sanjaya <bagasdotme@gmail.com>,
- Sami Korkalainen <sami.korkalainen@proton.me>
-References: <GQUnKz2al3yke5mB2i1kp3SzNHjK8vi6KJEh7rnLrOQ24OrlljeCyeWveLW9pICEmB9Qc8PKdNt3w1t_g3-Uvxq1l8Wj67PpoMeWDoH8PKk=@proton.me>
- <ZHFaFosKY24-L7tQ@debian.me>
- <NVN-hJsvHwaHe6R-y6XIYJp0FV7sCavgMjobFnseULT1wjgkOFNXbGBGT5iVjCfbtU7dW5xy2hIDoq0ASeNaXhvSY-g2Df4aHWVIMQ2c3TQ=@proton.me>
- <ZIcmpcEsTLXFaO0f@debian.me>
- <oEbkgJ-ImLxBDZDUTnIAGFWrRVnwBss3FOlalTpwrz83xWgESC9pcvNKiAVp9BzFgqZ0V-NIwzBZ7icKD8ynuIi_ZMtGt7URu3ftcSt16u4=@proton.me>
- <e2ca75ef-d779-4bad-84a5-a9f262dbe213@lunn.ch>
- <FNzHwp9-AyweVwIMndmih6VuBD0nsyRp3OM72bmOxpeYszF680jFPJjENIknT32FeaqfVBtVSQFw-5mgE3ZXeksVD8VCFbxwojxP3mSZ9DQ=@proton.me>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <FNzHwp9-AyweVwIMndmih6VuBD0nsyRp3OM72bmOxpeYszF680jFPJjENIknT32FeaqfVBtVSQFw-5mgE3ZXeksVD8VCFbxwojxP3mSZ9DQ=@proton.me>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1687337220;beb854b2;
-X-HE-SMSGID: 1qBtUO-0002iS-5L
+References: <f591b13c-4600-e2a4-8efa-aac6ad828dd1@linaro.org>
+ <32530c36-91d0-d351-0689-aed6a0975a4b@linaro.org> <2f285607-cbf9-6abc-f436-edb6e9a3938b@linaro.org>
+ <CAFX2Jfmz7QqZBEdzbPUhPs0yctnXVaVF68tX1c57YX=6ki=0TA@mail.gmail.com>
+ <4fe39d77-eb7c-a578-aefa-45b76e2247c2@linaro.org> <CAFX2JfmdRMsHPTySiw4vm7BwJfRZj3s0V3_v7NJ+XwMxBBSo9A@mail.gmail.com>
+ <a3683dd3-3f30-bb4c-539d-d1519de6e5bf@linaro.org> <CAFX2JfnS9GVc4NaxKhr9E4y10NNv6SPgcv1yoeHTfEw5NvZgMg@mail.gmail.com>
+ <86d8e252-975f-5d48-4567-0911d5ef9a44@linaro.org> <CAFX2Jfn_DSs38WQYsRs2ifLi5w+T3BhZfSU2W80T6dK48_Bb5g@mail.gmail.com>
+ <e8d31e48-df6a-fde4-4c6b-c4ccf1664ded@linaro.org> <c8d454b0-d355-f599-f720-b7e64374fb56@linaro.org>
+ <CAFX2JfmvMZ7DzD9znWeOHXywgPbUKDS1irMjUerEuborjRBpcg@mail.gmail.com>
+ <CAFX2JfnhOz+HiOd4vBwBK+5d19Kb8wfBNQhxRZHQoP8S2qiwFw@mail.gmail.com>
+ <CAFX2Jf=5WV=dY9J4-7tp5NB85fDOkwiv8rxQqHziqG+ED1cUJw@mail.gmail.com>
+ <CAFX2Jf=TxojviigtdQ=F_8FcHFFC4RNdfkoS=157jnXQCQSq5g@mail.gmail.com> <85851031-cf43-07d2-8ec7-b40c8c00be91@linaro.org>
+In-Reply-To: <85851031-cf43-07d2-8ec7-b40c8c00be91@linaro.org>
+From: Anna Schumaker <schumaker.anna@gmail.com>
+Date: Wed, 21 Jun 2023 08:49:38 -0400
+Message-ID: <CAFX2JfnH_rOFxn+uT4e1Eutea5En4_z26a-u_qCwOsnr5EowRw@mail.gmail.com>
+Subject: Re: Regression: NULL pointer dereference after NFS_V4_2_READ_PLUS
+ (commit 7fd461c47)
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Trond Myklebust <trondmy@hammerspace.com>, Anna Schumaker <Anna.Schumaker@netapp.com>, 
+	linux-nfs <linux-nfs@vger.kernel.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-[added Jason (who authored the culprit) to the list of recipients; moved
-net people and list to BCC, guess they are not much interested in this
-anymore then]
+On Sat, Jun 17, 2023 at 6:09=E2=80=AFAM Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
+>
+> On 15/06/2023 21:38, Anna Schumaker wrote:
+> > On Thu, Jun 15, 2023 at 1:16=E2=80=AFPM Anna Schumaker <schumaker.anna@=
+gmail.com> wrote:
+> >>
+> >> On Thu, Jun 15, 2023 at 1:04=E2=80=AFPM Anna Schumaker <schumaker.anna=
+@gmail.com> wrote:
+> >>>
+> >>> On Thu, Jun 15, 2023 at 9:01=E2=80=AFAM Anna Schumaker <schumaker.ann=
+a@gmail.com> wrote:
+> >>>>
+> >>>> On Thu, Jun 15, 2023 at 4:55=E2=80=AFAM Krzysztof Kozlowski
+> >>>> <krzysztof.kozlowski@linaro.org> wrote:
+> >>>>>
+> >>>>> On 15/06/2023 10:52, Krzysztof Kozlowski wrote:
+> >>>>>> On 14/06/2023 22:55, Anna Schumaker wrote:
+> >>>>>>>>>> Still null ptr (built on 420b2d4 with your patch):
+> >>>>>>>>>
+> >>>>>>>>> We're through the merge window and at rc1 now, so I can spend m=
+ore
+> >>>>>>>>> time scratching my head over your bug again. We've come up with=
+ a
+> >>>>>>>>> patch (attached) that adds a bunch of printks to show us what t=
+he
+> >>>>>>>>> kernel thinks is going on. Do you mind trying it out and lettin=
+g us
+> >>>>>>>>> know what gets printed out? You'll need to make sure
+> >>>>>>>>> CONFIG_NFS_V4_2_READ_PLUS is enabled when compiling the kernel.
+> >>>>>>>>
+> >>>>>>>> The patch does not apply. I tried: v6.4-rc1, v6.4-rc5, next-2023=
+0609.
+> >>>>>>>
+> >>>>>>> Can you try the attached patch on top of my 3-patch series from t=
+he
+> >>>>>>> other day, and let me know what gets printed out? It adds a bunch=
+ of
+> >>>>>>> printk()s at strategic points to print out what is going on with =
+the
+> >>>>>>> xdr scratch buffer since it's suddenly a bad memory address after
+> >>>>>>> working for a bit on your machine.
+> >>>>>>>
+> >>>>>>
+> >>>>>> Here you have entire log - attached (113 kB, I hope goes past mail=
+ing
+> >>>>>> lists/spam filters).
+> >>>>>
+> >>>>> As expected this bounced from the mailing lists, but I hope you got=
+ it.
+> >>>>> If not, let me know.
+> >>>>
+> >>>> I did still receive it. Thanks!
+> >>>
+> >>> Can you swap out yesterday's patch with this patch? I've adjusted wha=
+t
+> >>> gets printed out, and added printk()s to xdr_copy_to_scratch().  I'm
+> >>> starting to think that the xdr scratch buffer is fine, and that it's
+> >>> the other pointer passed to memcpy() in that function that's the
+> >>> problem, and the output from this patch will confirm for me.
+> >>
+> >> Oh, and can you add this one on top of the v2 patch as well?
+> >
+> > Sorry about the noise today. Can you use this patch instead of the two
+> > I attached earlier? I cleaned up the output and cut down on extra
+> > output..
+> >
+>
+> Here you have - attached.
 
-On 21.06.23 08:07, Sami Korkalainen wrote:
-> I bisected again. It seems I made some mistake last time, as I got a
-> different result this time. Maybe, because these problematic kernels may
-> boot fine sometimes, like I said before.
-> 
-> Anyway, first bad commit (makes much more sense this time): 
-> e7b813b32a42a3a6281a4fd9ae7700a0257c1d50 efi: random: refresh
-> non-volatile random seed when RNG is initialized
-> 
-> I confirmed that this is the code causing the issue by commenting it
-> out (see the patch file). Without this code, the latest mainline boots fine.
+This is good, thanks! I was finally able to figure out how to hit the
+bug using a 32bit x86 VM, so hopefully the next thing you hear from me
+is a patch fixing the bug!
 
-Jason, in that case it seems this is something for you. For the initial
-report, see here:
+Anna
 
-https://lore.kernel.org/all/GQUnKz2al3yke5mB2i1kp3SzNHjK8vi6KJEh7rnLrOQ24OrlljeCyeWveLW9pICEmB9Qc8PKdNt3w1t_g3-Uvxq1l8Wj67PpoMeWDoH8PKk=@proton.me/
-
-Quoting a part of it:
-
-```
-Linux 6.2 and newer are (mostly) unbootable on my old HP 6730b laptop,
-the 6.1.30 works still fine.
-The weirdest thing is that newer kernels (like 6.3.4 and 6.4-rc3) may
-boot ok on the first try, but when rebooting, the very same version
-doesn't boot.
-
-Some times, when trying to boot, I get this message repeated forever:
-ACPI Error: No handler or method for GPE [XX], disabling event
-(20221020/evgpe-839)
-On newer kernels, the date is 20230331 instead of 20221020. There is
-also some other error, but I can't read it as it gets overwritten by the
-other ACPI error, see image linked at the end.
-
-And some times, the screen will just stay completely blank.
-
-I tried booting with acpi=off, but it does not help.
-```
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
-
-#regzbot introduced e7b813b32a42a3a6281a4fd9ae7700a0257c1d50
+>
+>
+> Best regards,
+> Krzysztof
