@@ -1,82 +1,111 @@
-Received: from mail-0201.mail-europe.com (mail-0201.mail-europe.com [51.77.79.158])
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.134])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12C168BEB
-	for <regressions@lists.linux.dev>; Wed, 21 Jun 2023 06:08:20 +0000 (UTC)
-Date: Wed, 21 Jun 2023 06:07:59 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1687327684; x=1687586884;
-	bh=ubPaVyZowGktzCcEYffuW++8GPJVzBrtENIQ7uYjie0=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=eSNWl+3DJpvQHCiraPqTyJlsxcW7+N/gjjYZYCKXlSRVDs3jbcR2adXUJ7jdnAqdp
-	 VQZVjHJIbCMJJVikX7dZ7H0x7gbQd4RfkZ3pHn0utr17fhULg63/+VDxU1C/Rz29xg
-	 h1DdG0TddsZVWnZL1rXKhreRwVmVRXz2lB6crP8LdvgnaojSUxn+xIfIrqzCGOhGPw
-	 p6PBmP6j0T4RGKP7stxbvyJqrJCwVlIzyOkauM9mdcos+SRtwCtWdNiVUDirPhwITp
-	 LPnieK7n4nYWZ2JbgdG7Prhj05nEKuyCoOqrS4xCCH5/DDmkNJzcoiTApvgRfVW/4/
-	 81QKQIKZoxd7A==
-To: Bagas Sanjaya <bagasdotme@gmail.com>
-From: Sami Korkalainen <sami.korkalainen@proton.me>
-Cc: Andrew Lunn <andrew@lunn.ch>, Linus Torvalds <torvalds@linux-foundation.org>, Linux Stable <stable@vger.kernel.org>, Linux Regressions <regressions@lists.linux.dev>, Linux Networking <netdev@vger.kernel.org>, Linux ACPI <linux-acpi@vger.kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>
-Subject: Re: [REGRESSION][BISECTED] Boot stall from merge tag 'net-next-6.2'
-Message-ID: <FNzHwp9-AyweVwIMndmih6VuBD0nsyRp3OM72bmOxpeYszF680jFPJjENIknT32FeaqfVBtVSQFw-5mgE3ZXeksVD8VCFbxwojxP3mSZ9DQ=@proton.me>
-In-Reply-To: <e2ca75ef-d779-4bad-84a5-a9f262dbe213@lunn.ch>
-References: <GQUnKz2al3yke5mB2i1kp3SzNHjK8vi6KJEh7rnLrOQ24OrlljeCyeWveLW9pICEmB9Qc8PKdNt3w1t_g3-Uvxq1l8Wj67PpoMeWDoH8PKk=@proton.me> <ZHFaFosKY24-L7tQ@debian.me> <NVN-hJsvHwaHe6R-y6XIYJp0FV7sCavgMjobFnseULT1wjgkOFNXbGBGT5iVjCfbtU7dW5xy2hIDoq0ASeNaXhvSY-g2Df4aHWVIMQ2c3TQ=@proton.me> <ZIcmpcEsTLXFaO0f@debian.me> <oEbkgJ-ImLxBDZDUTnIAGFWrRVnwBss3FOlalTpwrz83xWgESC9pcvNKiAVp9BzFgqZ0V-NIwzBZ7icKD8ynuIi_ZMtGt7URu3ftcSt16u4=@proton.me> <e2ca75ef-d779-4bad-84a5-a9f262dbe213@lunn.ch>
-Feedback-ID: 45678890:user:proton
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A53C88834
+	for <regressions@lists.linux.dev>; Wed, 21 Jun 2023 06:24:04 +0000 (UTC)
+Received: from [192.168.1.141] ([37.4.248.63]) by mrelayeu.kundenserver.de
+ (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MacjC-1peBC32RsQ-00c8CR; Wed, 21 Jun 2023 08:23:41 +0200
+Message-ID: <85d374a9-37c7-5980-3151-1ee32d35a550@i2se.com>
+Date: Wed, 21 Jun 2023 08:23:37 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/mixed;
- boundary="b1_xW5OBqT6eYXTEKbSnFLDvGSiisfLN9WDGQYH44fZg"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: Regression: serial: imx: overrun errors on debug UART
+To: Linux regressions mailing list <regressions@lists.linux.dev>,
+ Sergey Organov <sorganov@gmail.com>
+Cc: =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>,
+ =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Stefan Wahren <stefan.wahren@chargebyte.com>, linux-serial@vger.kernel.org,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Shawn Guo <shawnguo@kernel.org>, Jiri Slaby <jirislaby@kernel.org>,
+ =?UTF-8?Q?Tomasz_Mo=c5=84?= <tomasz.mon@camlingroup.com>,
+ Linux ARM <linux-arm-kernel@lists.infradead.org>
+References: <2c29454b-9369-4360-8eb4-c151f59460cb@i2se.com>
+ <d660e3cf-5686-d989-3b59-efe83ec9d590@linux.intel.com>
+ <CAOMZO5A+GujiQY-UT3Q-8o0AKujJb_4kY+5L4x1e07ovGfo31w@mail.gmail.com>
+ <9e22f237-f3ee-0415-9e6b-89a137769b8f@i2se.com>
+ <5d59dec6-9f6f-7b20-1221-f57c94b29cca@i2se.com>
+ <20230325151100.mskydt3hwbnspqp4@pengutronix.de>
+ <cb16ddb7-f22f-d637-8670-bccc77add0af@i2se.com> <87mt3ynsa7.fsf@osv.gnss.ru>
+ <d5009984-d2eb-0343-5bb4-df8a7f526121@i2se.com> <87sfcy8ncu.fsf@osv.gnss.ru>
+ <534ac8db-ae8f-1ea3-9aa9-2105db7f7a52@i2se.com>
+ <203ce87f-2898-eb10-2f8c-f237859d75e6@leemhuis.info>
+ <87ttw2vnn0.fsf@osv.gnss.ru> <d1b6209d-a174-406a-cc81-86b391940c0c@i2se.com>
+ <3853881c-976f-dadc-b64b-4ffd8cc88cf0@leemhuis.info>
+Content-Language: en-US
+From: Stefan Wahren <stefan.wahren@i2se.com>
+In-Reply-To: <3853881c-976f-dadc-b64b-4ffd8cc88cf0@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:i6JjwkvxW/zbBPIQIrQuc/udIDRD7ls3eBSxT6F18PKPPIydutd
+ lhO0SZ8zyswwg9clYBgPkNr3NFG3zbTf+vpOO08xuSnZ4xx2gM6JlaMXXaN4GmfadtSydQh
+ puoyqcZd2jONSOf14Gtbt9x6e0E8IuD7BBRElYkTG4MXoyUPKeDNyVtvwApoXYZG/jvUWUT
+ X4q7ogtPZ2vP5nB8pS9OQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:s5fngwyW5Xc=;VqpgxXUTsZQEYsdtXNvH4ARVqEx
+ lbMHRL2w9Nn0F91TK5jGXY6bcKwzUbPwQk3psyzTNTKFAGdvbcGC9jRSrGew13q2nfaMiBYrM
+ 65zShde8//TvNIPkzW0qlKcjoqO+K8KU8lD9ZfaEGtKlt+1uhz63xmGdVpXnfCH4EDCI++C4n
+ qQCwl7PfIhoKRG61zdPoGP2omfBiwEOTe7SglQB3iYbO7QXyKCzF9BxHC7GFUBDuv8harda41
+ vQsEuz3l6itgBv9Nx1UfI6GwW0PA0161jFzQKQQ0HU1pFIjgbWtulw9QWhJkF/xJS+4rlUeGM
+ Q/Z2VrW7bVkfhabxAvG5+9vH4L0jChzafMEE77HvAu0lgVOdJCYXVUt2NJKZBH/Uxy71Axk2j
+ LFHiz9rgZz99zv5jhT3RXWCQZqAgBlvANQ+lZjW39smgh8SwLYssCj2aWnoa0l13/oqDGb+8+
+ 8UGcnZevyzPwgFcr1kR8gXt4i/1jACLY2WqYKbBOYH6vCXjiAXfvmchc+8zmASl9auzWIgTTJ
+ XQlnSlyEMGq9LoIC1uW3A+WD4hfcEXb7nG7VDZthDJ9JsN56h3DvnQPryVwHVmlfkfcezhd5k
+ HUZSG/+DJXWRi6ZwfxW4Tf9VjUasA8jr/oGDg9iNa2LUpexx253kI/757IYo3iHw0ABSgTjFk
+ MnWTyBkTsX+k+cbPVclpDsiYIE4LG71/CnyIExAyCw==
 
-This is a multi-part message in MIME format.
+Hi Thorsten,
 
---b1_xW5OBqT6eYXTEKbSnFLDvGSiisfLN9WDGQYH44fZg
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Am 20.06.23 um 16:47 schrieb Linux regression tracking (Thorsten Leemhuis):
+> On 24.05.23 15:07, Stefan Wahren wrote:
+>>
+>> Am 23.05.23 um 21:44 schrieb Sergey Organov:
+>>> "Linux regression tracking (Thorsten Leemhuis)"
+>>> <regressions@leemhuis.info> writes:
+>>>
+>>> Solving this would need to identify the cause of interrupts being
+>>> disabled for prolonged times, and nobody volunteered to investigate this
+>>> further. One suspect, the Linux serial console, has been likely excluded
+>>> already though, as not actually being in use for printk() output.
+>>>
+>>
+>> I don't think that we can exclude the serial console as a whole, i never
+>> made such a observation. But at least we can exclude kernel logging on
+>> the debug UART.
+> 
+> Stefan, just wondering: was this ever addressed upstream? I assume it's
+> not, just wanted to be sure.
+> 
+> I'm a bit unsure what to do with this and consider asking Greg for
+> advice, as he applied the patch. On one hand it's *IMHO* clearly a
+> regression (but for the record,  some people involved in the discussion
+> claim it's not). OTOH the culprit was applied more than a year ago now,
+> so reverting it might cause more trouble than it's worth at this point,
+> as that could lead to regressions for other users.
 
-I bisected again. It seems I made some mistake last time, as I got a differ=
-ent result this time. Maybe, because these problematic kernels may boot fin=
-e sometimes, like I said before.
+thanks for tracking this issue, but in my opinion the discussion goes in 
+circles. So i don't see a point in reanimating this again.
 
-Anyway, first bad commit (makes much more sense this time):
-e7b813b32a42a3a6281a4fd9ae7700a0257c1d50
-efi: random: refresh non-volatile random seed when RNG is initialized
+Articles like [1] suggests me this is a general issue.
 
-I confirmed that this is the code causing the issue by commenting it out (s=
-ee the patch file). Without this code, the latest mainline boots fine.
+Best regards
 
-Terveisin
-Sami Korkalainen
---b1_xW5OBqT6eYXTEKbSnFLDvGSiisfLN9WDGQYH44fZg
-Content-Type: text/x-patch; name=patch.diff
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename=patch.diff
+[1] - https://www.phoronix.com/news/Printk-Threaded-Atomic-v1
 
-ZGlmZiAtLWdpdCBhL2RyaXZlcnMvZmlybXdhcmUvZWZpL2VmaS5jIGIvZHJpdmVycy9maXJtd2Fy
-ZS9lZmkvZWZpLmMKaW5kZXggYWJlZmY3ZGMwYjU4Li5jMzYyYzgwN2Y1ZDYgMTAwNjQ0Ci0tLSBh
-L2RyaXZlcnMvZmlybXdhcmUvZWZpL2VmaS5jCisrKyBiL2RyaXZlcnMvZmlybXdhcmUvZWZpL2Vm
-aS5jCkBAIC0zNjAsNyArMzYwLDcgQEAgc3RhdGljIHZvaWQgX19pbml0IGVmaV9kZWJ1Z2ZzX2lu
-aXQodm9pZCkKICNlbHNlCiBzdGF0aWMgaW5saW5lIHZvaWQgZWZpX2RlYnVnZnNfaW5pdCh2b2lk
-KSB7fQogI2VuZGlmCi0KKy8qCiBzdGF0aWMgdm9pZCByZWZyZXNoX252X3JuZ19zZWVkKHN0cnVj
-dCB3b3JrX3N0cnVjdCAqd29yaykKIHsKIAl1OCBzZWVkW0VGSV9SQU5ET01fU0VFRF9TSVpFXTsK
-QEAgLTM3OCw3ICszNzgsNyBAQCBzdGF0aWMgaW50IHJlZnJlc2hfbnZfcm5nX3NlZWRfbm90aWZp
-Y2F0aW9uKHN0cnVjdCBub3RpZmllcl9ibG9jayAqbmIsIHVuc2lnbmVkCiAJcmV0dXJuIE5PVElG
-WV9ET05FOwogfQogc3RhdGljIHN0cnVjdCBub3RpZmllcl9ibG9jayByZWZyZXNoX252X3JuZ19z
-ZWVkX25iID0geyAubm90aWZpZXJfY2FsbCA9IHJlZnJlc2hfbnZfcm5nX3NlZWRfbm90aWZpY2F0
-aW9uIH07Ci0KKyovCiAvKgogICogV2UgcmVnaXN0ZXIgdGhlIGVmaSBzdWJzeXN0ZW0gd2l0aCB0
-aGUgZmlybXdhcmUgc3Vic3lzdGVtIGFuZCB0aGUKICAqIGVmaXZhcnMgc3Vic3lzdGVtIHdpdGgg
-dGhlIGVmaSBzdWJzeXN0ZW0sIGlmIHRoZSBzeXN0ZW0gd2FzIGJvb3RlZCB3aXRoCkBAIC00NTAs
-MTAgKzQ1MCwxMCBAQCBzdGF0aWMgaW50IF9faW5pdCBlZmlzdWJzeXNfaW5pdCh2b2lkKQogCWlm
-IChlZmkuY29jb19zZWNyZXQgIT0gRUZJX0lOVkFMSURfVEFCTEVfQUREUikKIAkJcGxhdGZvcm1f
-ZGV2aWNlX3JlZ2lzdGVyX3NpbXBsZSgiZWZpX3NlY3JldCIsIDAsIE5VTEwsIDApOwogI2VuZGlm
-Ci0KKy8qCiAJaWYgKGVmaV9ydF9zZXJ2aWNlc19zdXBwb3J0ZWQoRUZJX1JUX1NVUFBPUlRFRF9T
-RVRfVkFSSUFCTEUpKQogCQlleGVjdXRlX3dpdGhfaW5pdGlhbGl6ZWRfcm5nKCZyZWZyZXNoX252
-X3JuZ19zZWVkX25iKTsKLQorKi8KIAlyZXR1cm4gMDsKIAogZXJyX3JlbW92ZV9ncm91cDoK
-
---b1_xW5OBqT6eYXTEKbSnFLDvGSiisfLN9WDGQYH44fZg--
-
+> 
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> --
+> Everything you wanna know about Linux kernel regression tracking:
+> https://linux-regtracking.leemhuis.info/about/#tldr
+> If I did something stupid, please tell me, as explained on that page.
+> 
+> #regzbot poke
