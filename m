@@ -1,116 +1,90 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9EEC1953D
-	for <regressions@lists.linux.dev>; Wed, 21 Jun 2023 17:19:29 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qC1UL-00010x-87; Wed, 21 Jun 2023 19:19:25 +0200
-Message-ID: <cfe89ae9-90a6-2b04-a1ee-20569dc42ab4@leemhuis.info>
-Date: Wed, 21 Jun 2023 19:19:24 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B11519BDA
+	for <regressions@lists.linux.dev>; Wed, 21 Jun 2023 17:56:27 +0000 (UTC)
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2b46cad2fd9so65539931fa.1
+        for <regressions@lists.linux.dev>; Wed, 21 Jun 2023 10:56:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1687370185; x=1689962185;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=HJx3UsV77JuxwQCPSbmxcEQXpPRNKRvV07UCaJ+HfVc=;
+        b=Wu1t92qowZqWEvU6vL86VubsGqP7ZiAe/0yKh2Uo9hUyr1+KNt9u6pUnLcAKyY9sR3
+         ZWqTIWSpQrQGDvrvDmroUqarj53N10HlPjmpnyNFTM4KOXVZjfx0KI1A5gH8ViE7rkJX
+         aqd6C4KxMse+GkQ8ySISEvR5g1UzEvcnK79zE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687370185; x=1689962185;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=HJx3UsV77JuxwQCPSbmxcEQXpPRNKRvV07UCaJ+HfVc=;
+        b=DDZiiGdc9tUJ1B05ZFT4JCrYkDe0aateJ8nuvUlZT/kN4b0rwkjze5eCX76+GuiiBI
+         CYWKzYAU208/mgAQwERqG54NHvcKtWC9hItH1uQqT7UNDwMm7w7jaXqyK/uwYdiDqBzZ
+         hImYJpdmLvCuvAvbBZcPaR2xDCbpe/fHoYcs34IH7lLiYnkOvpG9ag9qZi8Mk1k6ERqL
+         HhNa1/k6/WTNmv65VPrfDWlLF+zNvXc4d12oFUV+Pt9CEav9XJyXrQxje45EiJn9+R7c
+         fHt6GH0rNTPcPajmzd8hfZg0WthkgVS74G6OtMtEhSEPkA2WSF7SPUydIAQAOWvC7RnM
+         U+eA==
+X-Gm-Message-State: AC+VfDyV2ZwnT4Rmead5wAIVLcH7336OzIg0S5nKDSIuMFXZ7q6HjpZ4
+	/BlYne14bK01ALIxC1ntmtzYCh39vtpkn/ZSDXiSuzhC
+X-Google-Smtp-Source: ACHHUZ40gvzos8Uv89Aol30BKNzhkpg4YxhjLk3vnmzqu6T4GnnHTSA8MTG22vueBsvjiwAimJk4og==
+X-Received: by 2002:a05:651c:1022:b0:2b4:636a:67f4 with SMTP id w2-20020a05651c102200b002b4636a67f4mr9243000ljm.20.1687370184948;
+        Wed, 21 Jun 2023 10:56:24 -0700 (PDT)
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com. [209.85.167.41])
+        by smtp.gmail.com with ESMTPSA id g22-20020a2e9cd6000000b002a8c1462ecbsm967695ljj.137.2023.06.21.10.56.23
+        for <regressions@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 21 Jun 2023 10:56:24 -0700 (PDT)
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-4f8777caaa1so4112253e87.3
+        for <regressions@lists.linux.dev>; Wed, 21 Jun 2023 10:56:23 -0700 (PDT)
+X-Received: by 2002:a19:f201:0:b0:4f7:42de:3a8f with SMTP id
+ q1-20020a19f201000000b004f742de3a8fmr9024880lfh.56.1687370183631; Wed, 21 Jun
+ 2023 10:56:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH] HID: logitech-hidpp: Handle timeout differently from busy
-Content-Language: en-US, de-DE
-To: Benjamin Tissoires <benjamin.tissoires@redhat.com>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Mark Lord <mlord@pobox.com>, Jiri Kosina <jikos@kernel.org>,
- Bastien Nocera <hadess@hadess.net>, linux-input@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- "Peter F . Patel-Schneider" <pfpschneider@gmail.com>,
- =?UTF-8?Q?Filipe_La=c3=adns?= <lains@riseup.net>,
- Nestor Lopez Casado <nlopezcasad@logitech.com>
-References: <20230531082428.21763-1-hadess@hadess.net>
- <nycvar.YFH.7.76.2305311606160.29760@cbobk.fhfr.pm>
- <nycvar.YFH.7.76.2306031440380.29760@cbobk.fhfr.pm>
- <15bb2507-a145-7f1b-8e84-58aeb02484b9@leemhuis.info>
- <nycvar.YFH.7.76.2306061527080.29760@cbobk.fhfr.pm>
- <42b6e582-f642-7521-135a-449140984211@leemhuis.info>
- <53903462-2552-b707-3831-cad3ef873b0d@leemhuis.info>
- <aa0e3371-dad1-3296-18fb-1957b92aa4d1@pobox.com>
- <ed27ca39-3609-695c-9f04-65c0bad343c2@leemhuis.info>
- <CAO-hwJLyA==_Wkyi-gTn-FOAAne2JKDfNMY2EaELoFDo5Qbe-A@mail.gmail.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <CAO-hwJLyA==_Wkyi-gTn-FOAAne2JKDfNMY2EaELoFDo5Qbe-A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1687367969;21dec76b;
-X-HE-SMSGID: 1qC1UL-00010x-87
+References: <GQUnKz2al3yke5mB2i1kp3SzNHjK8vi6KJEh7rnLrOQ24OrlljeCyeWveLW9pICEmB9Qc8PKdNt3w1t_g3-Uvxq1l8Wj67PpoMeWDoH8PKk=@proton.me>
+ <ZHFaFosKY24-L7tQ@debian.me> <NVN-hJsvHwaHe6R-y6XIYJp0FV7sCavgMjobFnseULT1wjgkOFNXbGBGT5iVjCfbtU7dW5xy2hIDoq0ASeNaXhvSY-g2Df4aHWVIMQ2c3TQ=@proton.me>
+ <ZIcmpcEsTLXFaO0f@debian.me> <oEbkgJ-ImLxBDZDUTnIAGFWrRVnwBss3FOlalTpwrz83xWgESC9pcvNKiAVp9BzFgqZ0V-NIwzBZ7icKD8ynuIi_ZMtGt7URu3ftcSt16u4=@proton.me>
+ <e2ca75ef-d779-4bad-84a5-a9f262dbe213@lunn.ch> <FNzHwp9-AyweVwIMndmih6VuBD0nsyRp3OM72bmOxpeYszF680jFPJjENIknT32FeaqfVBtVSQFw-5mgE3ZXeksVD8VCFbxwojxP3mSZ9DQ=@proton.me>
+ <9517bb70-426c-0296-b426-f5b4f075f7c8@leemhuis.info>
+In-Reply-To: <9517bb70-426c-0296-b426-f5b4f075f7c8@leemhuis.info>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Wed, 21 Jun 2023 10:56:06 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wiK5oDqgt6=OHLiiAu4VmLy4qn8WQdhvFo+sm26r4UjHw@mail.gmail.com>
+Message-ID: <CAHk-=wiK5oDqgt6=OHLiiAu4VmLy4qn8WQdhvFo+sm26r4UjHw@mail.gmail.com>
+Subject: Re: [REGRESSION][BISECTED] Boot stall from merge tag 'net-next-6.2'
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>, Andrew Lunn <andrew@lunn.ch>, 
+	Linux Stable <stable@vger.kernel.org>, Bagas Sanjaya <bagasdotme@gmail.com>, 
+	Sami Korkalainen <sami.korkalainen@proton.me>
+Content-Type: text/plain; charset="UTF-8"
 
+On Wed, 21 Jun 2023 at 01:46, Linux regression tracking (Thorsten
+Leemhuis) <regressions@leemhuis.info> wrote:
+>
+> Jason, in that case it seems this is something for you. For the initial
+> report, see here:
 
+I'll just revert it for now. Writing EFI variables has always been
+fraught with danger - more so than just reading them - and this one
+just looks horrible anyway.
 
-On 21.06.23 17:10, Benjamin Tissoires wrote:
-> On Wed, Jun 21, 2023 at 4:09 PM Linux regression tracking (Thorsten
-> Leemhuis) <regressions@leemhuis.info> wrote:
->>
->> On 15.06.23 13:24, Mark Lord wrote:
->>> On 2023-06-15 03:24 AM, Linux regression tracking (Thorsten Leemhuis) wrote:
->>> ...
->>>> https://bugzilla.kernel.org/show_bug.cgi?id=217412
->>>>
->>>> --- Comment #47 from Mark Blakeney ---
->>>> @Juha, kernel 6.3.7 adds the 2 patches intended to fix this bug and the
->>>> startup delay is now gone. However, I have had 2 cases over the last 5
->>>> days in which I have been running 6.3.7 where my mouse fails to be
->>>> detected at all after startup. I have to pull the Logitech receiver
->>>> out/in to get the mouse working. Never seen this issue before so I
->>>> suspect the patches are not right.
->>>> ```
->>>
->>> I too have had that happen with recent kernels,
->>
->> Ahh, good to know!
->>
->>> but have not yet put
->>> a finger to a specific version or cause.
->>>
->>> Just toggling the power button on the wireless mouse is enough for
->>> it to "re-appear".
->>>
->>> The 5.4.xx kernels never had this issue.  I went straight from those
->>> to the 6.3.xx ones, where it does happen sometimes, both with and without
->>> the recent "delay" fixes.
->>
->> From Mark Blakeney it sounded a lot like this is something that started
->> with 6.3, but would be good to confirm. Which brings me to the reason
->> why I write this mail:
->>
->> Is anyone still working on this? There was radio silence already for a
->> week now. Okay, it's not really urgent, but I guess this should not fall
->> through the cracks.
-> 
-> Sorry for the radio silence.
+Calling execute_with_initialized_rng() can end up having the callback
+done under a spinlock with interrupts disabled, which is probably why
+it then has that odd double indirection through a one-time work. And
+in no situation should we start writing to EFI variables during early
+subsystem initialization, I feel.
 
-No worries, we all have much to do. But I thought it was time for a
-quick status inquiry.
+It also probably shouldn't use the "set_variable" function at all, but
+the non-blocking one, and who knows if it should try to do some
+serialization with efi/vars.c.
 
-> I worked on hidpp yesterday and submitted
-> a new patch for a problem that was overlooked in the previous fixes:
-> https://lore.kernel.org/linux-input/20230621-logitech-fixes-v1-1-32e70933c0b0@redhat.com/
+I think it would be better off done in user space, but if we can't
+trust user space to do the right thing, at least do it much much
+later.
 
-Great, many thx!
-
-> The loop was not properly initializing all its local states, meaning
-> that when we encountered a "please retry" from the device, we could
-> never do the actual retry and returned a different error than in the
-> 6.2 series.
-> 
-> Would anyone give it a shot?
-
-Might be worth mentioning it in the bugzilla ticket, as I sadly can't CC
-those people here. I'll do this for once (konstantin's bugbot will soon
-solve this problem...)
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+               Linus
