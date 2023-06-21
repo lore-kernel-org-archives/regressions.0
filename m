@@ -1,33 +1,45 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 623AD2595
-	for <regressions@lists.linux.dev>; Wed, 21 Jun 2023 18:49:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95722C433CA
-	for <regressions@lists.linux.dev>; Wed, 21 Jun 2023 18:49:32 +0000 (UTC)
-Authentication-Results: smtp.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="eWzjBBnZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
-	t=1687373368;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZR62tl0M6BOshKrD0nf8mF7iZ5cr1fmRG4jE24AQIZU=;
-	b=eWzjBBnZXyfKOQHrJNCyhC3vxKBF2YY45r7fImrbeJVXpTZ9JCjHZWm+aRhShSshBJl+Tf
-	EhEgEEuWhucAaEtA0OcZnS3YHkj+r6r7ClTkbekIz7Mer9WmobmeDO7bbKPeb4V+vsPckD
-	GaDh3SmgQm+8VslgoYC3t8g7JgnDFds=
-Received: 
-	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id e6bc4923 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO)
-	for <regressions@lists.linux.dev>;
-	Wed, 21 Jun 2023 18:49:28 +0000 (UTC)
-Received: by mail-ua1-f43.google.com with SMTP id a1e0cc1a2514c-76d846a4b85so2279067241.1
-        for <regressions@lists.linux.dev>; Wed, 21 Jun 2023 11:49:28 -0700 (PDT)
-X-Gm-Message-State: AC+VfDxi8FOXalw0tLLotV9nfTSrf+z/K8Jt4/5rmPXIBLEXWg4nDq7B
-	LpT/aCET4HriiTfo4s/PRhVbLWUfTmbDHoAz8Jk=
-X-Google-Smtp-Source: ACHHUZ4IQJSCPvWCxmMLQOe7nbT0LiDhZ8XnSQo8Wq/dexoR3YH1/8bbg9nnYkL7RUXRS29D5PNqruRa3+2Y/NxcdgI=
-X-Received: by 2002:a67:edc9:0:b0:43b:2fa9:eb3a with SMTP id
- e9-20020a67edc9000000b0043b2fa9eb3amr6968951vsp.9.1687373367438; Wed, 21 Jun
- 2023 11:49:27 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AB641B90F
+	for <regressions@lists.linux.dev>; Wed, 21 Jun 2023 19:51:48 +0000 (UTC)
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-9887ebe16d0so552958966b.2
+        for <regressions@lists.linux.dev>; Wed, 21 Jun 2023 12:51:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1687377107; x=1689969107;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=MfThIXnm1cC9qXQRV1CY6U1OcxuFqEAFC2ABjaKFNAI=;
+        b=MbbG7drYmNXCj3A9IhR6yNxurZaP/pIafigCURw1KmcLwWww21MB04/4OGrS8fApZz
+         W+4joZQzrYlG8KNcwvY4XDVPMikD6LgrlmKgli6qA5fba/EzxKOZmXaKsYpFGoAXAWGG
+         lzZmroiCEhXJUDD7w/yEx4/CvnAN/tdljMims=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687377107; x=1689969107;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=MfThIXnm1cC9qXQRV1CY6U1OcxuFqEAFC2ABjaKFNAI=;
+        b=j/zRS3jGCwoTRKI1Dx5/baGDP4iIniXIhXadheoyeCiTwdPlAeOtz9zfCigrKnaDkH
+         yPatgtC6dTVOooOq9+JnWxp8Cvnpauki6EN6i7YKmAeeO/BfVXMdXJvXtM0AzK7M8eRe
+         8xr3qOReXA5oENTAGzc5ThsWcdr5H1k6ST/d3eXB8FrosbbqKn37kRXGVW13sS3mgFIm
+         2SJEWhE3gEWWH+tsuXhOilo3M4ipdjIR6JabeXt+lv9eswJyUvkIhMDv8Zm4tjQ589jY
+         NvVmrbN9rPPnyCs28ENZ1T4bPOqi5qmC1lLBT0pdwrh/6Ux6DHMDaBEqQS0zPDgbh5DU
+         YMcg==
+X-Gm-Message-State: AC+VfDx7C7l3nI/egPScYhTgqwpGsC5aDGDL8kFQJ4jkzC4OWFeKQjCb
+	hOTlXL6Uh1YDJhdEM1+LyZ+4e9VkPUxdRf4Ruh2LE8UG
+X-Google-Smtp-Source: ACHHUZ75bsGHxmBS9wJYiiXN1AKW17dcg6+WxM46A/VuVNT24PhqYSvlCFAy++VPjg/HfejD6TNwMg==
+X-Received: by 2002:a17:907:6d97:b0:988:6193:29d2 with SMTP id sb23-20020a1709076d9700b00988619329d2mr10777617ejc.13.1687377107053;
+        Wed, 21 Jun 2023 12:51:47 -0700 (PDT)
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com. [209.85.208.45])
+        by smtp.gmail.com with ESMTPSA id lu4-20020a170906fac400b009889c4bd8absm3559806ejb.216.2023.06.21.12.51.46
+        for <regressions@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 21 Jun 2023 12:51:46 -0700 (PDT)
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-51a3e6a952aso7537522a12.3
+        for <regressions@lists.linux.dev>; Wed, 21 Jun 2023 12:51:46 -0700 (PDT)
+X-Received: by 2002:a05:6402:111a:b0:514:a110:6bed with SMTP id
+ u26-20020a056402111a00b00514a1106bedmr10689946edv.27.1687377105968; Wed, 21
+ Jun 2023 12:51:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -38,29 +50,41 @@ References: <GQUnKz2al3yke5mB2i1kp3SzNHjK8vi6KJEh7rnLrOQ24OrlljeCyeWveLW9pICEmB9
  <ZHFaFosKY24-L7tQ@debian.me> <NVN-hJsvHwaHe6R-y6XIYJp0FV7sCavgMjobFnseULT1wjgkOFNXbGBGT5iVjCfbtU7dW5xy2hIDoq0ASeNaXhvSY-g2Df4aHWVIMQ2c3TQ=@proton.me>
  <ZIcmpcEsTLXFaO0f@debian.me> <oEbkgJ-ImLxBDZDUTnIAGFWrRVnwBss3FOlalTpwrz83xWgESC9pcvNKiAVp9BzFgqZ0V-NIwzBZ7icKD8ynuIi_ZMtGt7URu3ftcSt16u4=@proton.me>
  <e2ca75ef-d779-4bad-84a5-a9f262dbe213@lunn.ch> <FNzHwp9-AyweVwIMndmih6VuBD0nsyRp3OM72bmOxpeYszF680jFPJjENIknT32FeaqfVBtVSQFw-5mgE3ZXeksVD8VCFbxwojxP3mSZ9DQ=@proton.me>
- <9517bb70-426c-0296-b426-f5b4f075f7c8@leemhuis.info>
-In-Reply-To: <9517bb70-426c-0296-b426-f5b4f075f7c8@leemhuis.info>
-From: "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date: Wed, 21 Jun 2023 20:49:16 +0200
-X-Gmail-Original-Message-ID: <CAHmME9oh7kEUe-6NFk9=_8UxeD-SNbfMksYh3GaYdutXS01zOw@mail.gmail.com>
-Message-ID: <CAHmME9oh7kEUe-6NFk9=_8UxeD-SNbfMksYh3GaYdutXS01zOw@mail.gmail.com>
+ <9517bb70-426c-0296-b426-f5b4f075f7c8@leemhuis.info> <CAHmME9oh7kEUe-6NFk9=_8UxeD-SNbfMksYh3GaYdutXS01zOw@mail.gmail.com>
+In-Reply-To: <CAHmME9oh7kEUe-6NFk9=_8UxeD-SNbfMksYh3GaYdutXS01zOw@mail.gmail.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Wed, 21 Jun 2023 12:51:29 -0700
+X-Gmail-Original-Message-ID: <CAHk-=who5-p3QKFnio2nA9b4yf0qrV-KZ8bJa7m80ouJbvOfoA@mail.gmail.com>
+Message-ID: <CAHk-=who5-p3QKFnio2nA9b4yf0qrV-KZ8bJa7m80ouJbvOfoA@mail.gmail.com>
 Subject: Re: [REGRESSION][BISECTED] Boot stall from merge tag 'net-next-6.2'
-To: Sami Korkalainen <sami.korkalainen@proton.me>
-Cc: Andrew Lunn <andrew@lunn.ch>, Linus Torvalds <torvalds@linux-foundation.org>, 
+To: "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc: Sami Korkalainen <sami.korkalainen@proton.me>, Andrew Lunn <andrew@lunn.ch>, 
 	Linux Stable <stable@vger.kernel.org>, Linux Regressions <regressions@lists.linux.dev>, 
 	Bagas Sanjaya <bagasdotme@gmail.com>, Brad Spengler <spender@grsecurity.net>, regressions@leemhuis.info
 Content-Type: text/plain; charset="UTF-8"
 
-Hi Sami,
+On Wed, 21 Jun 2023 at 11:49, Jason A. Donenfeld <Jason@zx2c4.com> wrote:
+>
+> Would you try applying
+> https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/commit/?id=13bb06f8dd42071cb9a49f6e21099eea05d4b856
+> instead of the revert?
 
-Would you try applying
-https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/commit/?id=13bb06f8dd42071cb9a49f6e21099eea05d4b856
-instead of the revert?
+That commit just got merged into my tree, and it fixes a real bug, but
+it _shouldn't_ be what Sami sees.
 
-Spender (CC'd) suggested to me that possibly the reason for your first
-mis-bisect and possibly for the result you wound with has more to do
-with some non-determinism in the actual underlying bug that the above
-commit fixes. If applying 13bb06f8dd4207 fixes the issue, then Linus
-can then revert the revert he just committed.
+The bug it fixes was only introduced in this merge window.
 
-Jason
+So any boot failures seen in older kernels would only be because it
+was then backported to stable trees, but Sami mentions kernel versions
+that don't have those stable backports (eg the original questionable
+bisection that ended up on a bad commit 7e68dd7d07a2).
+
+Now, with non-repeatable boot failures, anything is possible, and Sami
+does mention 6.1.30 as good (implying that 6.1.31 might not be - and
+that is when the backport happened).
+
+So it's certainly worth checking out, but on the face of it, that
+bisection result doesn't really support the bug being due to
+e9523a0d81899 (which came *after* e7b813b32a42).
+
+                Linus
