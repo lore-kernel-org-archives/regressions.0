@@ -1,77 +1,150 @@
-Received: from mailout.blnma.de (mailout.blnma.de [116.203.12.22])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7611E1DDD5
-	for <regressions@lists.linux.dev>; Thu, 22 Jun 2023 00:01:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=starostik.de; s=dkim210803; h=Content-Type:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=uu+2SHhBiQ1uimHyfpXUI941L2mRtfYPG3HcNeup1dM=; t=1687392073; x=1688256073; 
-	b=GOcY6wgDzpTX/Xp+RJXniNU9yTUoirICq5Y12YNo4sU6rETpTYDonw/Evha7KFmRgoOxLWWYZgO
-	oZUpEhhT9TtCd29uQqES7kAVX5YhFLg6S8S/9ODQiyQO95wVcPR+GLS6eL6rzoHURnXUmCVJzkkh5
-	WAF1vTayGOszwETjf8DTzM0w5LVu/zExnzmVGQOLDg014RYDzbVgjtzZ5C+4GA6rTV+pwtMxJf8HO
-	zFbIHQIlYyRZ3mnOzBPKzU5LSUuI/JVRAJQvzHrSE48IGUADGcSubXBRDdxS5SdvCpok1rG6tN/cj
-	NGnJl6bbOBW55PB0ytGyqK/LbV6H0k6ix6aw==;
-Received: from dovecot-0.dovecot.mail.svc.cluster.local ([10.244.6.208] helo=mail.blnma.de)
-	by mail.blnma.de with esmtp (Exim 4.96)
-	(envelope-from <malte@starostik.de>)
-	id 1qC7SJ-00075k-1l;
-	Wed, 21 Jun 2023 23:41:43 +0000
-Received: from zen.localnet ([85.183.148.49])
-	by mail.blnma.de with ESMTPSA
-	id tNNfCLaKk2SEGgEA399c4A
-	(envelope-from <malte@starostik.de>); Wed, 21 Jun 2023 23:41:42 +0000
-From: Malte Starostik <malte@starostik.de>
-To: Linux regressions mailing list <regressions@lists.linux.dev>,
- Benjamin Tissoires <benjamin.tissoires@redhat.com>,
- "Limonciello, Mario" <mario.limonciello@amd.com>
-Cc: Bagas Sanjaya <bagasdotme@gmail.com>, basavaraj.natikar@amd.com,
- linux-input@vger.kernel.org, linux@hexchain.org, stable@vger.kernel.org
-Subject: Re: amd_sfh driver causes kernel oops during boot
-Date: Thu, 22 Jun 2023 01:41:41 +0200
-Message-ID: <2426092.W91McpcXCD@zen>
-In-Reply-To: <602504a5-334d-92e8-2fd3-f7e8662b714e@amd.com>
-References:
- <ZG3ipauL9FTnQJiC@debian.me> <f677a16e-1fa2-3f45-2b44-5acbf67aad3c@amd.com>
- <602504a5-334d-92e8-2fd3-f7e8662b714e@amd.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 139F61FB4
+	for <regressions@lists.linux.dev>; Thu, 22 Jun 2023 07:47:17 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1qCF2B-0007GM-LL; Thu, 22 Jun 2023 09:47:15 +0200
+Message-ID: <5240ce3f-37fa-2747-92ee-23d71619f3ef@leemhuis.info>
+Date: Thu, 22 Jun 2023 09:47:14 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: [PATCH] arm64: dts: qcom: sdm845-db845c: Move LVS regulator nodes
+ up
+Content-Language: en-US, de-DE
+To: Bjorn Andersson <andersson@kernel.org>,
+ Doug Anderson <dianders@chromium.org>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ Amit Pundir <amit.pundir@linaro.org>, Mark Brown <broonie@kernel.org>,
+ Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Caleb Connolly <caleb.connolly@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+ dt <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>
+References: <20230602161246.1855448-1-amit.pundir@linaro.org>
+ <358c69ad-fa8a-7386-fe75-92369883ee48@leemhuis.info>
+ <0f6c9dcb-b7f6-fff9-6bed-f4585ea8e487@linaro.org>
+ <CAD=FV=Xt2KYGY15+f+nHxkzKnwhHzw1A7=o+5kgCDWvHDv0DNg@mail.gmail.com>
+ <20230620155902.clspxncyvpodixft@ripper>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <20230620155902.clspxncyvpodixft@ripper>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1687420038;6ef2419a;
+X-HE-SMSGID: 1qCF2B-0007GM-LL
 
-Am Dienstag, 20. Juni 2023, 22:03:00 CEST schrieb Limonciello, Mario:
-> On 6/20/2023 1:50 PM, Limonciello, Mario wrote:
-> > Anyways; I just double checked the Z13 I have on my hand.  I don't
-> > have the PCI device for SFH (1022:164a) present on the system.
-> > 
-> > Can you please double check you are on the latest BIOS?
-> > 
-> > I'm on the latest release from LVFS, 0.1.57 according to fwupdmgr.
+Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
+for once, to make this easily accessible to everyone.
 
-I was on 0.1.27 while running the tests.
-At least when I saw the errors first, there was no update offered. Haven't re-
-checked until now.
+As Linus will likely release 6.4 on this or the following Sunday a quick
+status inquiry so I can brief him appropriately: is there any hope the
+regression this patch tried to fix will be resolved any time soon?
+Doesn't look like it from below message and this thread, but maybe I
+missed something.
 
-> Hopefully the newer BIOS fixes it for you, but if it doesn't I did come
-> up with another patch I've sent out that I guess could be another
-> solution.
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
 
-After updating to 0.1.57, it looks like I cannot reproduce the error anymore 
-either.
- 
-> https://lore.kernel.org/linux-input/20230620200117.22261-1-mario.limonciello
-> @amd.com/T/#u
+#regzbot poke
 
-I tested your patch before performing the firmware update. Still got the Oops 
-just like before.
-
-BR Malte
-
-
+On 20.06.23 17:59, Bjorn Andersson wrote:
+> On Wed, Jun 14, 2023 at 12:44:15PM -0700, Doug Anderson wrote:
+>> Hi,
+>>
+>> On Wed, Jun 14, 2023 at 11:47 AM Krzysztof Kozlowski
+>> <krzysztof.kozlowski@linaro.org> wrote:
+>>>
+>>> On 14/06/2023 20:18, Linux regression tracking (Thorsten Leemhuis) wrote:
+>>>> On 02.06.23 18:12, Amit Pundir wrote:
+>>>>> Move lvs1 and lvs2 regulator nodes up in the rpmh-regulators
+>>>>> list to workaround a boot regression uncovered by the upstream
+>>>>> commit ad44ac082fdf ("regulator: qcom-rpmh: Revert "regulator:
+>>>>> qcom-rpmh: Use PROBE_FORCE_SYNCHRONOUS"").
+>>>>>
+>>>>> Without this fix DB845c fail to boot at times because one of the
+>>>>> lvs1 or lvs2 regulators fail to turn ON in time.
+>>>>
+>>>> /me waves friendly
+>>>>
+>>>> FWIW, as it's not obvious: this...
+>>>>
+>>>>> Link: https://lore.kernel.org/all/CAMi1Hd1avQDcDQf137m2auz2znov4XL8YGrLZsw5edb-NtRJRw@mail.gmail.com/
+>>>>
+>>>> ...is a report about a regression. One that we could still solve before
+>>>> 6.4 is out. One I'll likely will point Linus to, unless a fix comes into
+>>>> sight.
+>>>>
+>>>> When I noticed the reluctant replies to this patch I earlier today asked
+>>>> in the thread with the report what the plan forward was:
+>>>> https://lore.kernel.org/all/CAD%3DFV%3DV-h4EUKHCM9UivsFHRsJPY5sAiwXV3a1hUX9DUMkkxdg@mail.gmail.com/
+>>>>
+>>>> Dough there replied:
+>>>>
+>>>> ```
+>>>> Of the two proposals made (the revert vs. the reordering of the dts),
+>>>> the reordering of the dts seems better. It only affects the one buggy
+>>>> board (rather than preventing us to move to async probe for everyone)
+>>>> and it also has a chance of actually fixing something (changing the
+>>>> order that regulators probe in rpmh-regulator might legitimately work
+>>>> around the problem). That being said, just like the revert the dts
+>>>> reordering is still just papering over the problem and is fragile /
+>>>> not guaranteed to work forever.
+>>>> ```
+>>>>
+>>>> Papering over obviously is not good, but has anyone a better idea to fix
+>>>> this? Or is "not fixing" for some reason an viable option here?
+>>>>
+>>>
+>>> I understand there is a regression, although kernel is not mainline
+>>> (hash df7443a96851 is unknown) and the only solutions were papering the
+>>> problem. Reverting commit is a temporary workaround. Moving nodes in DTS
+>>> is not acceptable because it hides actual problem and only solves this
+>>> one particular observed problem, while actual issue is still there. It
+>>> would be nice to be able to reproduce it on real mainline with normal
+>>> operating system (not AOSP) - with ramdiks/without/whatever. So far no
+>>> one did it, right?
+>>
+>> The worry I have about the revert here is that it will never be able
+>> to be undone and that doesn't seem great long term. I'm all for a
+>> temporary revert to fix a problem while the root cause is understood,
+>> but in this case I have a hard time believing that we'll make more
+>> progress towards a root cause once the revert lands. All the
+>> investigation we've done so far seems to indicate that the revert only
+>> fixes the problem by luck...
+>>
+>> I completely agree that moving the nodes in the DTS is a hack and just
+>> hides the problem. However, it also at least limits the workaround to
+>> the one board showing the problem and doesn't mean we're stuck with
+>> synchronous probe for rpmh-regulator for all eternity because nobody
+>> can understand this timing issue on db845c.
+>>
+> 
+> I agree that we shouldn't hide this by reverting the regulator change.
+> 
+> 
+> And as has been stated a few times already, the symptom indicates that
+> we have a misconfigured system.
+> 
+> Before accepting a patch just shuffling the bricks, I'd like to see some
+> more analysis of what happens wrt the rpmh right before the timeout.
+> Perhaps the landing team can assist here?
+> 
+> Regards,
+> Bjorn
+> 
+> 
