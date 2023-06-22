@@ -1,86 +1,69 @@
-Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CCE92FB2
-	for <regressions@lists.linux.dev>; Thu, 22 Jun 2023 11:48:47 +0000 (UTC)
-Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-62de3360ce8so61906026d6.3
-        for <regressions@lists.linux.dev>; Thu, 22 Jun 2023 04:48:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1687434526; x=1690026526;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HRNXXzDvxFGlDR0rIu/cnMH16Thw35CVdY0uuwW92MI=;
-        b=qD/hy4tmMxs4KxrxVDR2KlTRSdNI8BnPp+WNRuhvC2wnqO9iJtY9NqWHujJfB2U1y+
-         9SC6tlP/SR9qwKYSiXzbZ86FKWVPNpDFOuUxfq4Q38tcIaNp6Y3GZmvD0tjivNNrDo2X
-         VWNrVubn1O/XgCdvylp8VRvlWkMy2OfkygF1WuU2qS+K3SslL/HpFkkpq0YL3SdaIc4L
-         1ZpTkX8J1dy56Zq6/cl2ub6L8BJl/RcpcM+FUYm44P6dEOA186caxcxkzA0LqQZnS986
-         wJUlGewC5ScWT58/ZhGvXu5Is5CyeE9GSbjvKIDN8Bs0AGjjMnP4kB2CZl0JucuQ+CD9
-         JkNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687434526; x=1690026526;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HRNXXzDvxFGlDR0rIu/cnMH16Thw35CVdY0uuwW92MI=;
-        b=UPw86IXtSOfAplb9hNcjZPK7fYJNAHxEyjEZxkbe4wCxLtsgLIqke5dP+j99QbiDLN
-         50rjG096obfabvcILR2JulqSo3iF2JL1Al8HQqdV38gzSILHtjyLXpoViu6iX6ez3RGc
-         3214zoXYInbA4MVO7TfpVp80JjLhyH3FXOc34vSdJRg5CDXYVikFdPK5LG7zzd/rCo07
-         c4xJ5lYII5ZEbYT/v8NkGT8pEfZ9PQuqz8HOCXG3Undh6FheveWZ0Xk3Acdp8vvqoraK
-         pTUCrsKFYb+cHTkBy2sFPM/LbFml4FY9qfL8qIRfKUNuDgAl4HeJIP1nTDGK7Kuo7X4L
-         IFIw==
-X-Gm-Message-State: AC+VfDxHp11NRg7N084C0CGny9Kmk1lvYf0oG85tVEV/xEu9QBDQj7il
-	qn0eUtTFqXDW0zbS4TCnGiw4AoGecEHBuLZjns7oYOVPvp97UfJ+
-X-Google-Smtp-Source: ACHHUZ4/BsJLeju2PLbt5pAlNKs9HCs+L/a+aoGadZdc5126qFYXsWl4ZqqsKOGOHls+GZh/YouqzAYQs4MpSz2iIZM=
-X-Received: by 2002:a05:6214:27c6:b0:632:2101:c449 with SMTP id
- ge6-20020a05621427c600b006322101c449mr1727469qvb.25.1687434525929; Thu, 22
- Jun 2023 04:48:45 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 579BD1C760
+	for <regressions@lists.linux.dev>; Thu, 22 Jun 2023 12:36:42 +0000 (UTC)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Qn0H72pR1z4x04;
+	Thu, 22 Jun 2023 22:36:35 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
+	s=201909; t=1687437395;
+	bh=PhA5+kop2iXZ6Mkow9yrkX73kH99Wncs+I7Pmewke+g=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=l4o9EtEwCOKVVZ6TXRfOFGvPTfRkoPA3wyY41e9A8DYR0rGuUPr2d6wtexrZmHgXj
+	 xe98s/eMyThWo5gqr/ULMeair58Yw2eJKTGNtwGSOR6Ty/7hi8ZbIZtoNtShzsCzaY
+	 naWwgvS+U2l4a7Dt+Gc6VqgqN5TRWQql23qVDvCRmPAD+UcbEoouGfPYlTaXOrWVPf
+	 Cpa6caUI11a1bfzqi4vQUhpdZ0q6/jmtwebo7Xwj0kyTZ2MsyuuDCcQFLFvyX00xWh
+	 SD+0fyo1bROZcNgGS1HOarqHJ73qiMmDunOXi82ukPrcGg6tmCFkaC2rhm7lL2EPYD
+	 RtW29leyBGX6A==
+From: Michael Ellerman <mpe@ellerman.id.au>
+To: Linux regressions mailing list <regressions@lists.linux.dev>, Sachin
+ Sant <sachinp@linux.ibm.com>
+Cc: open list <linux-kernel@vger.kernel.org>, linuxppc-dev
+ <linuxppc-dev@lists.ozlabs.org>, jarkko@kernel.org,
+ mario.limonciello@amd.com, linux-integrity@vger.kernel.org
+Subject: Re: [6.4-rc6] Crash during a kexec operation
+ (tpm_amd_is_rng_defective)
+In-Reply-To: <675a8893-429d-05be-b647-089b249c814c@leemhuis.info>
+References: <99B81401-DB46-49B9-B321-CF832B50CAC3@linux.ibm.com>
+ <87o7lhfmoh.fsf@mail.lhotse>
+ <CA0088E4-2851-4AFF-94F8-2A07C5CDA8D8@linux.ibm.com>
+ <675a8893-429d-05be-b647-089b249c814c@leemhuis.info>
+Date: Thu, 22 Jun 2023 22:36:34 +1000
+Message-ID: <87o7l7oer1.fsf@mail.lhotse>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230602161246.1855448-1-amit.pundir@linaro.org>
- <358c69ad-fa8a-7386-fe75-92369883ee48@leemhuis.info> <0f6c9dcb-b7f6-fff9-6bed-f4585ea8e487@linaro.org>
- <CAD=FV=Xt2KYGY15+f+nHxkzKnwhHzw1A7=o+5kgCDWvHDv0DNg@mail.gmail.com>
- <20230620155902.clspxncyvpodixft@ripper> <5240ce3f-37fa-2747-92ee-23d71619f3ef@leemhuis.info>
-In-Reply-To: <5240ce3f-37fa-2747-92ee-23d71619f3ef@leemhuis.info>
-From: Amit Pundir <amit.pundir@linaro.org>
-Date: Thu, 22 Jun 2023 17:18:09 +0530
-Message-ID: <CAMi1Hd2zunc=WNUE7KT-423RXTiX6LrY2hcWQdV3Dp3o8RdJtg@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: qcom: sdm845-db845c: Move LVS regulator nodes up
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Bjorn Andersson <andersson@kernel.org>, Doug Anderson <dianders@chromium.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Mark Brown <broonie@kernel.org>, 
-	Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
-	Konrad Dybcio <konrad.dybcio@linaro.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
-	Caleb Connolly <caleb.connolly@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	linux-arm-msm <linux-arm-msm@vger.kernel.org>, dt <devicetree@vger.kernel.org>, 
-	lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, 22 Jun 2023 at 13:17, Linux regression tracking (Thorsten
-Leemhuis) <regressions@leemhuis.info> wrote:
->
+"Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>=
+ writes:
 > Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
 > for once, to make this easily accessible to everyone.
 >
 > As Linus will likely release 6.4 on this or the following Sunday a quick
-> status inquiry so I can brief him appropriately: is there any hope the
-> regression this patch tried to fix will be resolved any time soon?
+> question: is there any hope this regression might be fixed any time
+> soon?
 
-We are most likely to miss v6.4. I'm trying to reproduce the crash
-with tracing enabled, to share some more debug information.
+No.
 
-Regards,
-Amit Pundir
+I have added the author of the commit to Cc, maybe they can help?
 
-> Doesn't look like it from below message and this thread, but maybe I
-> missed something.
->
+The immediate question is, is it expected for chip->ops to be NULL in
+this path? Obviously on actual AMD systems that isn't the case,
+otherwise the code would crash there. But is the fact that chip->ops is
+NULL a bug in the ibmvtpm driver, or a possibility that has been
+overlooked by the checking code.
+
+cheers
+
 > Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 > --
 > Everything you wanna know about Linux kernel regression tracking:
@@ -89,106 +72,122 @@ Amit Pundir
 >
 > #regzbot poke
 >
-> On 20.06.23 17:59, Bjorn Andersson wrote:
-> > On Wed, Jun 14, 2023 at 12:44:15PM -0700, Doug Anderson wrote:
-> >> Hi,
-> >>
-> >> On Wed, Jun 14, 2023 at 11:47=E2=80=AFAM Krzysztof Kozlowski
-> >> <krzysztof.kozlowski@linaro.org> wrote:
-> >>>
-> >>> On 14/06/2023 20:18, Linux regression tracking (Thorsten Leemhuis) wr=
-ote:
-> >>>> On 02.06.23 18:12, Amit Pundir wrote:
-> >>>>> Move lvs1 and lvs2 regulator nodes up in the rpmh-regulators
-> >>>>> list to workaround a boot regression uncovered by the upstream
-> >>>>> commit ad44ac082fdf ("regulator: qcom-rpmh: Revert "regulator:
-> >>>>> qcom-rpmh: Use PROBE_FORCE_SYNCHRONOUS"").
-> >>>>>
-> >>>>> Without this fix DB845c fail to boot at times because one of the
-> >>>>> lvs1 or lvs2 regulators fail to turn ON in time.
-> >>>>
-> >>>> /me waves friendly
-> >>>>
-> >>>> FWIW, as it's not obvious: this...
-> >>>>
-> >>>>> Link: https://lore.kernel.org/all/CAMi1Hd1avQDcDQf137m2auz2znov4XL8=
-YGrLZsw5edb-NtRJRw@mail.gmail.com/
-> >>>>
-> >>>> ...is a report about a regression. One that we could still solve bef=
-ore
-> >>>> 6.4 is out. One I'll likely will point Linus to, unless a fix comes =
-into
-> >>>> sight.
-> >>>>
-> >>>> When I noticed the reluctant replies to this patch I earlier today a=
-sked
-> >>>> in the thread with the report what the plan forward was:
-> >>>> https://lore.kernel.org/all/CAD%3DFV%3DV-h4EUKHCM9UivsFHRsJPY5sAiwXV=
-3a1hUX9DUMkkxdg@mail.gmail.com/
-> >>>>
-> >>>> Dough there replied:
-> >>>>
-> >>>> ```
-> >>>> Of the two proposals made (the revert vs. the reordering of the dts)=
-,
-> >>>> the reordering of the dts seems better. It only affects the one bugg=
-y
-> >>>> board (rather than preventing us to move to async probe for everyone=
-)
-> >>>> and it also has a chance of actually fixing something (changing the
-> >>>> order that regulators probe in rpmh-regulator might legitimately wor=
-k
-> >>>> around the problem). That being said, just like the revert the dts
-> >>>> reordering is still just papering over the problem and is fragile /
-> >>>> not guaranteed to work forever.
-> >>>> ```
-> >>>>
-> >>>> Papering over obviously is not good, but has anyone a better idea to=
- fix
-> >>>> this? Or is "not fixing" for some reason an viable option here?
-> >>>>
-> >>>
-> >>> I understand there is a regression, although kernel is not mainline
-> >>> (hash df7443a96851 is unknown) and the only solutions were papering t=
-he
-> >>> problem. Reverting commit is a temporary workaround. Moving nodes in =
-DTS
-> >>> is not acceptable because it hides actual problem and only solves thi=
-s
-> >>> one particular observed problem, while actual issue is still there. I=
-t
-> >>> would be nice to be able to reproduce it on real mainline with normal
-> >>> operating system (not AOSP) - with ramdiks/without/whatever. So far n=
-o
-> >>> one did it, right?
-> >>
-> >> The worry I have about the revert here is that it will never be able
-> >> to be undone and that doesn't seem great long term. I'm all for a
-> >> temporary revert to fix a problem while the root cause is understood,
-> >> but in this case I have a hard time believing that we'll make more
-> >> progress towards a root cause once the revert lands. All the
-> >> investigation we've done so far seems to indicate that the revert only
-> >> fixes the problem by luck...
-> >>
-> >> I completely agree that moving the nodes in the DTS is a hack and just
-> >> hides the problem. However, it also at least limits the workaround to
-> >> the one board showing the problem and doesn't mean we're stuck with
-> >> synchronous probe for rpmh-regulator for all eternity because nobody
-> >> can understand this timing issue on db845c.
-> >>
-> >
-> > I agree that we shouldn't hide this by reverting the regulator change.
-> >
-> >
-> > And as has been stated a few times already, the symptom indicates that
-> > we have a misconfigured system.
-> >
-> > Before accepting a patch just shuffling the bricks, I'd like to see som=
-e
-> > more analysis of what happens wrt the rpmh right before the timeout.
-> > Perhaps the landing team can assist here?
-> >
-> > Regards,
-> > Bjorn
-> >
-> >
+> On 15.06.23 06:57, Sachin Sant wrote:
+>>=20
+>>>> [ 34.381788] Code: 5463063e 408201c8 38210080 4e800020 60000000 600000=
+00 60000000 7c0802a6 fbe10078 7c7f1b78 f8010090 e9230728 <e9890050> 2c2c000=
+0 41820020 7d8903a6=20
+>>>
+>>>  2c:   28 07 23 e9     ld      r9,1832(r3)
+>>>  30:   50 00 89 e9     ld      r12,80(r9)
+>>>
+>>> Where r3 is *chip.
+>>> r9 is NULL, and 80 =3D 0x50.
+>>>
+>>> Looks like a NULL chip->ops, which oopses in:
+>>>
+>>> static int tpm_request_locality(struct tpm_chip *chip)
+>>> {
+>>> int rc;
+>>>
+>>> if (!chip->ops->request_locality)
+>>>
+>>>
+>>> Can you test the patch below?
+>>>
+>>=20
+>> It proceeds further but then run into following crash
+>>=20
+>> [  103.269574] Kernel attempted to read user page (18) - exploit attempt=
+? (uid: 0)
+>> [  103.269589] BUG: Kernel NULL pointer dereference on read at 0x00000018
+>> [  103.269595] Faulting instruction address: 0xc0000000009dcf34
+>> [  103.269599] Oops: Kernel access of bad area, sig: 11 [#1]
+>> [  103.269602] LE PAGE_SIZE=3D64K MMU=3DRadix SMP NR_CPUS=3D2048 NUMA pS=
+eries
+>> [  103.269606] Modules linked in: dm_mod(E) nft_fib_inet(E) nft_fib_ipv4=
+(E) nft_fib_ipv6(E) nft_fib(E) nft_reject_inet(E) nf_reject_ipv4(E) nf_reje=
+ct_ipv6(E) nft_reject(E) nft_ct(E) nft_chain_nat(E) nf_nat(E) nf_conntrack(=
+E) nf_defrag_ipv6(E) nf_defrag_ipv4(E) bonding(E) tls(E) rfkill(E) ip_set(E=
+) sunrpc(E) nf_tables(E) nfnetlink(E) pseries_rng(E) aes_gcm_p10_crypto(E) =
+drm(E) drm_panel_orientation_quirks(E) xfs(E) libcrc32c(E) sd_mod(E) sr_mod=
+(E) t10_pi(E) crc64_rocksoft_generic(E) cdrom(E) crc64_rocksoft(E) crc64(E)=
+ sg(E) ibmvscsi(E) scsi_transport_srp(E) ibmveth(E) vmx_crypto(E) fuse(E)
+>> [  103.269644] CPU: 18 PID: 6872 Comm: kexec Kdump: loaded Tainted: G   =
+         E      6.4.0-rc6-dirty #8
+>> [  103.269649] Hardware name: IBM,9080-HEX POWER10 (raw) 0x800200 0xf000=
+006 of:IBM,FW1030.20 (NH1030_058) hv:phyp pSeries
+>> [  103.269653] NIP:  c0000000009dcf34 LR: c0000000009dd2bc CTR: c0000000=
+009eaa60
+>> [  103.269656] REGS: c0000000a113f510 TRAP: 0300   Tainted: G           =
+ E       (6.4.0-rc6-dirty)
+>> [  103.269660] MSR:  800000000280b033 <SF,VEC,VSX,EE,FP,ME,IR,DR,RI,LE> =
+ CR: 88484886  XER: 00000001
+>> [  103.269669] CFAR: c0000000009dd2b8 DAR: 0000000000000018 DSISR: 40000=
+000 IRQMASK: 0  [  103.269669] GPR00: c0000000009dd2bc c0000000a113f7b0 c00=
+00000014a1500 c000000090310000  [  103.269669] GPR04: c00000009f770000 0000=
+000000000016 0000060000007a01 0000000000000016  [  103.269669] GPR08: c0000=
+0009f770000 0000000000000000 0000000000000000 0000000000008000  [  103.2696=
+69] GPR12: c0000000009eaa60 c00000135fab7f00 0000000000000000 0000000000000=
+000  [  103.269669] GPR16: 0000000000000000 0000000000000000 00000000000000=
+00 0000000000000000  [  103.269669] GPR20: 0000000000000000 000000000000000=
+0 0000000000000000 0000000000000000  [  103.269669] GPR24: 0000000000000000=
+ 0000000000000016 c000000090310000 0000000000001000  [  103.269669] GPR28: =
+c00000009f770000 000000007a010000 c00000009f770000 c000000090310000  [  103=
+.269707] NIP [c0000000009dcf34] tpm_try_transmit+0x74/0x300
+>> [  103.269713] LR [c0000000009dd2bc] tpm_transmit+0xfc/0x190
+>> [  103.269717] Call Trace:
+>> [  103.269718] [c0000000a113f7b0] [c0000000a113f880] 0xc0000000a113f880 =
+(unreliable)
+>> [  103.269724] [c0000000a113f840] [c0000000009dd2bc] tpm_transmit+0xfc/0=
+x190
+>> [  103.269727] [c0000000a113f900] [c0000000009dd398] tpm_transmit_cmd+0x=
+48/0x110
+>> [  103.269731] [c0000000a113f980] [c0000000009df1b0] tpm2_get_tpm_pt+0x1=
+40/0x230
+>> [  103.269736] [c0000000a113fa20] [c0000000009db208] tpm_amd_is_rng_defe=
+ctive+0xb8/0x250
+>> [  103.269739] [c0000000a113faa0] [c0000000009db828] tpm_chip_unregister=
++0x138/0x160
+>> [  103.269743] [c0000000a113fae0] [c0000000009eaa94] tpm_ibmvtpm_remove+=
+0x34/0x130
+>> [  103.269748] [c0000000a113fb50] [c000000000115738] vio_bus_remove+0x58=
+/0xd0
+>> [  103.269754] [c0000000a113fb90] [c000000000a01dcc] device_shutdown+0x2=
+1c/0x39c
+>> [  103.269758] [c0000000a113fc20] [c0000000001a2684] kernel_restart_prep=
+are+0x54/0x70
+>> [  103.269762] [c0000000a113fc40] [c000000000292c48] kernel_kexec+0xa8/0=
+x100
+>> [  103.269766] [c0000000a113fcb0] [c0000000001a2cd4] __do_sys_reboot+0x2=
+14/0x2c0
+>> [  103.269770] [c0000000a113fe10] [c000000000034adc] system_call_excepti=
+on+0x13c/0x340
+>> [  103.269776] [c0000000a113fe50] [c00000000000d05c] system_call_vectore=
+d_common+0x15c/0x2ec
+>> [  103.269781] --- interrupt: 3000 at 0x7fff805459f0
+>> [  103.269784] NIP:  00007fff805459f0 LR: 0000000000000000 CTR: 00000000=
+00000000
+>> [  103.269786] REGS: c0000000a113fe80 TRAP: 3000   Tainted: G           =
+ E       (6.4.0-rc6-dirty)
+>> [  103.269790] MSR:  800000000280f033 <SF,VEC,VSX,EE,PR,FP,ME,IR,DR,RI,L=
+E>  CR: 42422884  XER: 00000000
+>> [  103.269799] IRQMASK: 0  [  103.269799] GPR00: 0000000000000058 00007f=
+ffc07a68c0 0000000110437f00 fffffffffee1dead  [  103.269799] GPR04: 0000000=
+028121969 0000000045584543 0000000000000000 0000000000000003  [  103.269799=
+] GPR08: 0000000000100000 0000000000000000 0000000000000000 000000000000000=
+0  [  103.269799] GPR12: 0000000000000000 00007fff8089b2c0 000000011042f598=
+ 0000000000000000  [  103.269799] GPR16: ffffffffffffffff 0000000000000000 =
+000000011040fcc0 0000000000000000  [  103.269799] GPR20: 0000000000008913 0=
+000000000008914 0000000149c61020 0000000000000003  [  103.269799] GPR24: 00=
+00000000000000 0000000000000001 0000000000000003 00007fffc07a6a40  [  103.2=
+69799] GPR28: 0000000110409f10 00007fff806419c0 0000000149c61080 0000000149=
+c61040  [  103.269833] NIP [00007fff805459f0] 0x7fff805459f0
+>> [  103.269836] LR [0000000000000000] 0x0
+>> [  103.269838] --- interrupt: 3000
+>> [  103.269839] Code: 83a40006 2c090000 41820208 7c0802a6 79250020 7c25d8=
+40 f80100a0 41810224 fbe10088 f8410018 7c7f1b78 e9230728 <e9890018> 7d8903a=
+6 4e800421 e8410018  [  103.269852] ---[ end trace 0000000000000000 ]=E2=80=
+=94
+>>=20
+>> - Sachin
