@@ -1,46 +1,138 @@
-Received: from mail-0201.mail-europe.com (mail-0201.mail-europe.com [51.77.79.158])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8586A1E536
-	for <regressions@lists.linux.dev>; Thu, 22 Jun 2023 19:26:11 +0000 (UTC)
-Date: Thu, 22 Jun 2023 19:25:47 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1687461955; x=1687721155;
-	bh=ADpE/ZbY89bRqLuQZe1Y0FFBNBNKvgk+vf0bMC0Wn5U=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=fgTe9BMrUuSI49LzamTSVm4joZyrnVY7aULSlcC642YASmFxn7/kSgm/2XT92PwP7
-	 pmPZt+l1sfIt9nBwX6Ea8yAj1bbCoNguwgVDXCWsp4UToWqFpgNFKv5OfMvFYGqeWD
-	 TOV0njoglJe5Sy/K5E8CGbjoYTzE4LtQWRJpFffpTQY84Q6/QRA2FxGRGX9UgpoNbf
-	 /CrnZvIhN6IEGr6CLKD8I6T25HjbOPty07aCUfb6DyxC4RV06ssb93SBSb+bvbQK8I
-	 rLxQSdZgEwwx8S32CiPRpLZdeqBdwmyS1YjL0hu/pgkr7eR2/egdVP3FpBDOeNJ7u0
-	 j0W5UT8U7fBjg==
-To: "Jason A. Donenfeld" <Jason@zx2c4.com>
-From: Sami Korkalainen <sami.korkalainen@proton.me>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Andrew Lunn <andrew@lunn.ch>, Linux Stable <stable@vger.kernel.org>, Linux Regressions <regressions@lists.linux.dev>, Bagas Sanjaya <bagasdotme@gmail.com>, Brad Spengler <spender@grsecurity.net>, regressions@leemhuis.info
-Subject: Re: [REGRESSION][BISECTED] Boot stall from merge tag 'net-next-6.2'
-Message-ID: <B3rdc87zERdKUeeqyxt7UtKahv6vsZAZrVM6V4oVSA_yJBbvZns9Vu4lhzAc5ysbZQLZAxnjHd05_Hv6xEetS4r_OuVdDFopYt9yUfJ8Xmk=@proton.me>
-In-Reply-To: <CAHmME9obXuj3qM8RkVqoKeU41--HqzMF-KEdNcepFWKCMAXCfQ@mail.gmail.com>
-References: <GQUnKz2al3yke5mB2i1kp3SzNHjK8vi6KJEh7rnLrOQ24OrlljeCyeWveLW9pICEmB9Qc8PKdNt3w1t_g3-Uvxq1l8Wj67PpoMeWDoH8PKk=@proton.me> <ZIcmpcEsTLXFaO0f@debian.me> <oEbkgJ-ImLxBDZDUTnIAGFWrRVnwBss3FOlalTpwrz83xWgESC9pcvNKiAVp9BzFgqZ0V-NIwzBZ7icKD8ynuIi_ZMtGt7URu3ftcSt16u4=@proton.me> <e2ca75ef-d779-4bad-84a5-a9f262dbe213@lunn.ch> <FNzHwp9-AyweVwIMndmih6VuBD0nsyRp3OM72bmOxpeYszF680jFPJjENIknT32FeaqfVBtVSQFw-5mgE3ZXeksVD8VCFbxwojxP3mSZ9DQ=@proton.me> <9517bb70-426c-0296-b426-f5b4f075f7c8@leemhuis.info> <CAHmME9oh7kEUe-6NFk9=_8UxeD-SNbfMksYh3GaYdutXS01zOw@mail.gmail.com> <CAHk-=who5-p3QKFnio2nA9b4yf0qrV-KZ8bJa7m80ouJbvOfoA@mail.gmail.com> <CAHmME9obXuj3qM8RkVqoKeU41--HqzMF-KEdNcepFWKCMAXCfQ@mail.gmail.com>
-Feedback-ID: 45678890:user:proton
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC2DE20690
+	for <regressions@lists.linux.dev>; Thu, 22 Jun 2023 22:05:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+ s=s31663417; t=1687471481; x=1688076281; i=georgmueller@gmx.net;
+ bh=Duee4IHsvqsOZrFYxTThyaj1WAdJHZ0zDPuyT5Olkbw=;
+ h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:In-Reply-To;
+ b=EKAcIDj3DALBZ6ughPPBIgctYVu3rqtN9xDZc5c39CQZ3Q6PlZv7diyWWKQn2qJhOe/zmvF
+ d4E5uu1q4og+iJ+7Uxj10fQCogczGmoAbul6oahYM4AAIG/qM1ONh93H3UKc1dWdwW/VhtD8B
+ k/HYgHKX55v3eGVLfRWV1LJJQAWrFfXaRRIqolkQ0nl1FH1+d9y16WKROvQ+C2RLVYf9T+X2O
+ gHxVhHIptb3YPpLFcSgF/55wgMQZvrOjOjydofnzq++n/DL3QhwgP7CQ5S15w5n6kVm8PPQs8
+ XaizzTgbxkgWouSc5c5k7UiXPeUyXycQGYR9/FoZSsS0WoLL1dFA==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.15.55] ([109.104.53.29]) by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1N8obG-1pyYFq3UZS-015n5L; Fri, 23
+ Jun 2023 00:04:40 +0200
+Message-ID: <ae2b7129-a651-1066-0400-d16998ca250d@gmx.net>
+Date: Fri, 23 Jun 2023 00:04:38 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: [PATCH] perf probe: read DWARF files from the correct CU
+Content-Language: en-US
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+ Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+ "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: regressions@lists.linux.dev, Arnaldo Carvalho de Melo <acme@redhat.com>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20230615200147.664346-3-georgmueller@gmx.net>
+From: =?UTF-8?Q?Georg_M=c3=bcller?= <georgmueller@gmx.net>
+In-Reply-To: <20230615200147.664346-3-georgmueller@gmx.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:CGzNQA5VKVg8/XNmIu8EvM5cgqaAQMV8CHz0wbKjkk2KM5vx08Z
+ gwpdv+WpRTMxgAXYJNWOsJgUPNgpn6rOzaXctEj7sEZCuus3yOuaN/zivjcRHB2RpB8F9/h
+ ZAtbHzfDv6MGtvs0Z4IPexWrE5+X18flr2+cY2g+6a2HaJqbqcnNoGwne3RW1dvHl3+c6Lo
+ tPX11XlrimG9eO7PXUyJA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:pt4aDP4iPyE=;k666ZWdw+6F94Sr4d3fbsbj/jee
+ WlfQHA5S9WU/ymkmaGWXMO4b+Xe4bh7+x61dgl3jPdD+L3oRmGZbRpRx68/+EjudNOGV5t7Hv
+ JaBvRrEoXL/HZcSVKl598ChkYwfUwa2H/PkDXVwVQHaCr8IEekLMrIh+5bJTxe18QcH0krenW
+ UNidUmFpOyivLfC5KSqsnjGJLheV6haiI1p7eYR/UjB/gFOufG1bJxUxe9tUJoDzmI1Oo6jZ1
+ FL6fN1+rcNRe3izOXP952WdwsJOqHtBlPOK45AFFk+dlFuBfudTa+1TVBAP4TOUoRWCIgoNCH
+ pmn2ful/Sqm3oWk72BOLWBLWiJkDvYQhDyAfusbWyY8Osrzl/y6HMND17t/gSWBZUrZp3R5NI
+ ubPJmLZlquKjoDvfKSaQIz53VSy64NkDNrZ/YNIFcqKpsXQWRkTybgwRAw2l/Rt/F8cfsTsDZ
+ Z2xOLXIs4I7MzI3h/+ak18GZ9iuQwBcXIqbwQCdnWGGC/8Ndi+BLZI2YGjRgYrDF5FQkydJ9j
+ nHzhkbyxroWFIR1NrxjX1guLbh8DVetFtoYzA1Ckvs4rVZ4QlyIaHcPTK159bO3qpVqZNBZ7T
+ T7zLgVVgk9AtgtnMBpl9BYd1CEqCGtN2Uo9m56kqsYOtmaxudwq0tzoAEFvkle9W8VxHGk46D
+ stwyYDXjQjpbUM3Qmd/JAD8oDt9j1OR2Xcl21wBkRcaVFXOKPWtDpSFWB3FHUBYPmBoHm582U
+ dMfSK8aJiiZUJI/iUpNzOLK9phq9ElWDkKUssDeIJkKSnbsklf1j4Q0JQZcH4bUUuvOktrXxq
+ JcTwnSAO4tzdVainsMt3KdlEnHXzWskoOkb7UuJvq1WsQFCLFgUwikEet1EoJhAnGs7+Ufii/
+ KxsW/KF3iz2Fwvool7n1JuE6RzApD0UcGsJ1hVk/SbSsPwZWunLfNFCyfxwia8IsI3oh2P0gg
+ X+SOg0i4uT/ZU/a2khkjbBqNsYE=
 
-> > Now, with non-repeatable boot failures, anything is possible, and Sami
-> > does mention 6.1.30 as good (implying that 6.1.31 might not be -=20
 
-6.1.34 is ok
+Hi,
 
-> Sami - awaiting your results.
+Am 15.06.23 um 22:01 schrieb Georg M=C3=BCller:
+> After switching from dwarf_decl_file() to die_get_decl_file(), it is not
+> possible to add probes for certain functions of certain binaries:
+>
+>   $ perf probe -x /usr/lib/systemd/systemd-logind match_unit_removed
+>   A function DIE doesn't have decl_line. Maybe broken DWARF?
+>   A function DIE doesn't have decl_line. Maybe broken DWARF?
+>   Probe point 'match_unit_removed' not found.
+>      Error: Failed to add events.
+>
+> The problem is that die_get_decl_file() uses the wrong CU to search for
+> the file. elfutils commit e1db5cdc9f has some good explanation for this:
+>
+>      dwarf_decl_file uses dwarf_attr_integrate to get the DW_AT_decl_fil=
+e
+>      attribute. This means the attribute might come from a different DIE
+>      in a different CU. If so, we need to use the CU associated with the
+>      attribute, not the original DIE, to resolve the file name.
+>
+> This patch uses the same source of information as elfutils: use attribut=
+e
+> DW_AT_decl_file and use this CU to search for the file.
+>
+> Fixes: dc9a5d2ccd5c ("perf probe: Fix to get declared file name from cla=
+ng DWARF5")
+> Signed-off-by: Georg M=C3=BCller <georgmueller@gmx.net>
+> Link: https://lore.kernel.org/r/5a00d5a5-7be7-ef8a-4044-9a16249fff25@gmx=
+.net/
+> ---
+>   tools/perf/util/dwarf-aux.c | 4 +++-
+>   1 file changed, 3 insertions(+), 1 deletion(-)
+>
+> diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
+> index b07414409771..137b3ed9897b 100644
+> --- a/tools/perf/util/dwarf-aux.c
+> +++ b/tools/perf/util/dwarf-aux.c
+> @@ -478,8 +478,10 @@ static const char *die_get_file_name(Dwarf_Die *dw_=
+die, int idx)
+>   {
+>   	Dwarf_Die cu_die;
+>   	Dwarf_Files *files;
+> +	Dwarf_Attribute attr_mem;
+>
+> -	if (idx < 0 || !dwarf_diecu(dw_die, &cu_die, NULL, NULL) ||
+> +	if (idx < 0 || !dwarf_attr_integrate(dw_die, DW_AT_decl_file, &attr_me=
+m) ||
+> +	    !dwarf_cu_die(attr_mem.cu, &cu_die, NULL, NULL, NULL, NULL, NULL, =
+NULL) ||
+>   	    dwarf_getsrcfiles(&cu_die, &files, NULL) !=3D 0)
+>   		return NULL;
+>
+> --
+> 2.41.0
+>
 
-I cherry-picked that commit 13bb06f8dd42071cb9a49f6e21099eea05d4b856
-on top of 6.4-rc7 and it does not fix the issue for me.
 
-=E2=80=94Sami
+Just a question regarding the patch:
+Should I also add a testcase to show the issue or is this enough? It can b=
+e
+reproduced quite simple with two .c files and one .h file, the same test a=
+s the
+one added in elfutils with commit e1db5cdc9f, compiled with the same three=
+ steps
+as in the comment of the shell script, but without "-flto":
+
+https://sourceware.org/git/?p=3Delfutils.git;a=3Dcommitdiff;h=3De1db5cdc9f=
+230f8de4df1a0f38dca69b283ee57a
+
+Best regards,
+Georg
