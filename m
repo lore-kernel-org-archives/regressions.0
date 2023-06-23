@@ -1,87 +1,90 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAD74100B8
-	for <regressions@lists.linux.dev>; Fri, 23 Jun 2023 17:29:54 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qCkbY-0005zi-IS; Fri, 23 Jun 2023 19:29:52 +0200
-Message-ID: <60c2f8c9-15b2-a3e5-2247-5adf4581e037@leemhuis.info>
-Date: Fri, 23 Jun 2023 19:29:50 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1C90100B8
+	for <regressions@lists.linux.dev>; Fri, 23 Jun 2023 17:30:18 +0000 (UTC)
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-4f96d680399so1169443e87.0
+        for <regressions@lists.linux.dev>; Fri, 23 Jun 2023 10:30:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1687541416; x=1690133416;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=z6gsFnCOPQqveW3Pgec1BIN9/v1H+43jT4xHFsyYNnc=;
+        b=BERNpO8qQGNhnCYAugF+kNw4MPYc9lKANuR4MRrypSPIOt8fvTrWA6XgyeUhw470Dl
+         REbojEDBAG30qa46nRWCUwdLM1RF7FVveUyzA7c+z56wN2HnEaQgvEzg1Uii5qLbPt3P
+         hw9PL5d6qBCkfRkzxcLRRz+fq/YQdnoSIi95Y=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687541416; x=1690133416;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=z6gsFnCOPQqveW3Pgec1BIN9/v1H+43jT4xHFsyYNnc=;
+        b=O9Xq/3N1C/qP8wsX7Dza7OCMiSafiDn6EUTHF6PJ96qJU8QBKVpte6F4wA+du4hmP7
+         QRwSbV3NLEBakfxpbYmDYgBcz0dqnrjnWerOcEs2KtaL7mDN6MmQGsyKePxPs/mh60bg
+         3Ao3ZrV6WwIbjRh/kAXLmvFJ8LxaA2ZdmlsaXG5eCFRsQZO6uuoR7jjuuW2x6nzQQSmw
+         /uQU9YPD/uSemRxTTzLe5CP0vBcjo4+9QNWyEpT6Tmw6pwXIM4qfGOR16iu7bLeDtgDt
+         5zkj9yTOL5zt9tSDCIbF/DEjm3FW8HYw6hQ6L1rabUD2vjfl+5vrQa7cOSvdVMkxqhPG
+         1nbg==
+X-Gm-Message-State: AC+VfDy3zwnvAzmpxGmU7A4+eG3rf1EPSFEsMU+ixLVL4Z148h6KO6M8
+	O/kZB2OS+QcDMP/KlJMb7w1OU317RSJEvqFCGBQNsnGA
+X-Google-Smtp-Source: ACHHUZ6y+fgUGJ1ix4ZgO+oawzPpdYPT7c8hVvE8vlqFM40A9q+t7FtXFeSnGo2rwpwEkwkF7NvGFg==
+X-Received: by 2002:ac2:5f86:0:b0:4f8:6577:f670 with SMTP id r6-20020ac25f86000000b004f86577f670mr13370077lfe.13.1687541415935;
+        Fri, 23 Jun 2023 10:30:15 -0700 (PDT)
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
+        by smtp.gmail.com with ESMTPSA id f6-20020ac251a6000000b004f768d70241sm1510550lfk.233.2023.06.23.10.30.15
+        for <regressions@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 23 Jun 2023 10:30:15 -0700 (PDT)
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2b466073e19so15112591fa.1
+        for <regressions@lists.linux.dev>; Fri, 23 Jun 2023 10:30:15 -0700 (PDT)
+X-Received: by 2002:a2e:99da:0:b0:2b5:98dc:ffc2 with SMTP id
+ l26-20020a2e99da000000b002b598dcffc2mr2530023ljj.52.1687541414839; Fri, 23
+ Jun 2023 10:30:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Content-Language: en-US, de-DE
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Subject: A quick small additional regressions report pre -rc8/final
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Linux kernel regressions list <regressions@lists.linux.dev>,
- LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1687541394;7423a839;
-X-HE-SMSGID: 1qCkbY-0005zi-IS
+References: <GQUnKz2al3yke5mB2i1kp3SzNHjK8vi6KJEh7rnLrOQ24OrlljeCyeWveLW9pICEmB9Qc8PKdNt3w1t_g3-Uvxq1l8Wj67PpoMeWDoH8PKk=@proton.me>
+ <ZHFaFosKY24-L7tQ@debian.me> <NVN-hJsvHwaHe6R-y6XIYJp0FV7sCavgMjobFnseULT1wjgkOFNXbGBGT5iVjCfbtU7dW5xy2hIDoq0ASeNaXhvSY-g2Df4aHWVIMQ2c3TQ=@proton.me>
+ <ZIcmpcEsTLXFaO0f@debian.me> <oEbkgJ-ImLxBDZDUTnIAGFWrRVnwBss3FOlalTpwrz83xWgESC9pcvNKiAVp9BzFgqZ0V-NIwzBZ7icKD8ynuIi_ZMtGt7URu3ftcSt16u4=@proton.me>
+ <e2ca75ef-d779-4bad-84a5-a9f262dbe213@lunn.ch> <FNzHwp9-AyweVwIMndmih6VuBD0nsyRp3OM72bmOxpeYszF680jFPJjENIknT32FeaqfVBtVSQFw-5mgE3ZXeksVD8VCFbxwojxP3mSZ9DQ=@proton.me>
+ <9517bb70-426c-0296-b426-f5b4f075f7c8@leemhuis.info> <CAHmME9p2ZLJUMq96vhkiSgvJkxP5BxE778MhY5Ou2WdxLVEJyg@mail.gmail.com>
+ <CAMj1kXHGkJsgArabs_mbzR3Y83s48qmf_aqb50k1LV1Hi5iNgA@mail.gmail.com>
+In-Reply-To: <CAMj1kXHGkJsgArabs_mbzR3Y83s48qmf_aqb50k1LV1Hi5iNgA@mail.gmail.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Fri, 23 Jun 2023 10:29:58 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wiiFHLSDe3JSSMm5EezpXXMFxYH=RwFLEbgsCKLjg4qqQ@mail.gmail.com>
+Message-ID: <CAHk-=wiiFHLSDe3JSSMm5EezpXXMFxYH=RwFLEbgsCKLjg4qqQ@mail.gmail.com>
+Subject: Re: [REGRESSION][BISECTED] Boot stall from merge tag 'net-next-6.2'
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>, regressions@leemhuis.info, 
+	Andrew Lunn <andrew@lunn.ch>, Linux Stable <stable@vger.kernel.org>, 
+	Linux Regressions <regressions@lists.linux.dev>, Bagas Sanjaya <bagasdotme@gmail.com>, 
+	Sami Korkalainen <sami.korkalainen@proton.me>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Linus, here is a quick manual report about regressions introduced
-this cycle that I'm aware of and are currently unresolved afaik:
+On Fri, 23 Jun 2023 at 06:55, Ard Biesheuvel <ardb@kernel.org> wrote:
+>
+> Setting the variable from user space is ultimately a better choice, I
+> think.
 
+Doing it from the kernel might still be an option, but I think it was
+a huge mistake to do it *early*.
 
- * kernel test robot noticed a -20.0% regression of
-vm-scalability.throughput post -rc7; Mike posted reverts akpm applied
-that landed in next recently:
+Early boot is fragile to begin with when not everything is set up, and
+*much* harder to debug.
 
-https://lore.kernel.org/lkml/202306211346.1e9ff03e-oliver.sang@intel.com/
-https://lore.kernel.org/lkml/20230621212403.174710-1-mike.kravetz@oracle.com/
+So not only are problems more likely to happen in the first place,
+when they do happen they are a lot harder to figure out.
 
+Maybe it would make more sense to write a new seed at kernel shutdown.
+Not only do y ou presumably have a ton more entropy at that point, but
+if things go sideways it's also less of a problem to have dead
+machine.
 
- * Swapnil Sapkal from AMD found another performance regression; from
-skimming the thread it seems a partial fix is in -next for some time
-already; part of the problem is also caused by df323337e50 "apparmor:
-Use a memory pool instead per-CPU caches" [v5.5-rc1]
+Of course, shutdown is another really hard to debug situation, so not
+optimal either.
 
-https://lore.kernel.org/lkml/09e0f469-a3f7-62ef-75a1-e64cec2dcfc5@amd.com/
-https://lore.kernel.org/lkml/20230515143536.114960-1-mathieu.desnoyers@efficios.com/
-https://lore.kernel.org/lkml/6c693e3b-b941-9acf-6821-179e7a7fe2b8@efficios.com/
-
-[this one is not tracked by regzbot, something went sideways, need to
-look closer]
-
-
- * Mario came up with a fix for the ppc/tpm kexec hang recently reported:
-
-https://lore.kernel.org/lkml/99B81401-DB46-49B9-B321-CF832B50CAC3@linux.ibm.com/
-https://lore.kernel.org/all/20230623030427.908-1-mario.limonciello@amd.com/
-
-
- * still no solution in sight for the "Dragonboard 845c broken due to
-asynchronous probe" regression
-
-https://lore.kernel.org/lkml/CAMi1Hd1avQDcDQf137m2auz2znov4XL8YGrLZsw5edb-NtRJRw@mail.gmail.com/
-https://lore.kernel.org/lkml/20230515145323.1693044-1-amit.pundir@linaro.org/
-https://lore.kernel.org/lkml/20230602161246.1855448-1-amit.pundir@linaro.org/
-
-
- * no progress wrt to the MPTCP tests regressions due to 9p changes
-
-https://lore.kernel.org/regressions/855a232a-76d3-7e7b-b2b5-2ebc41bcadd6@tessares.net/
-
-
- * brand new: transmit queue timeouts with r8169 due to 2ab19de62d6
-("r8169: remove ASPM restrictions now that ASPM is disabled during NAPI
-poll") [v6.4-rc1]
-
-https://lore.kernel.org/netdev/c3465166-f04d-fcf5-d284-57357abb3f99@freenet.de/
-
-
- * just noticed: patches for a "WiFi / LTE won't work at all on trogdor
-devices" regression might still be heading your way:
-
-https://lore.kernel.org/lkml/20230616081440.v2.1.Ie79b5f0ed45739695c9970df121e11d724909157@changeid/
-
-
-HTH, Ciao, Thorsten
+               Linus
