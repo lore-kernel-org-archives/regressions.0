@@ -1,136 +1,87 @@
-Received: from striker.routify.me (unknown [64.94.212.133])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F899A959
-	for <regressions@lists.linux.dev>; Fri, 23 Jun 2023 16:53:39 +0000 (UTC)
-Received: from glitch (unknown [IPv6:2602:24c:b8f:cd90::8eb3])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by striker.routify.me (Postfix) with ESMTPSA id C41DE2A78;
-	Fri, 23 Jun 2023 16:53:19 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 striker.routify.me C41DE2A78
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=seangreenslade.com;
-	s=striker-outgoing; t=1687539199;
-	bh=JdVIXA6SQTydrIZabMWKryrH42Nzq9Wv8AlAOPcXMpI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=doMNkoVcD4sJ0aPa6n9b2/uRXkwn+iIdsoTKuV5/D7p69MLf8Wq3w5V2qGh8+IKYr
-	 JzX5dyns29b6bhvodB3wMt91jn78Lyy/FLF/hNw79VHDW9d8P0nqzamDpvQA2WCxDN
-	 w2VhPmVOIQgZJ1RZIT2y3dZngryRgAkIsVOgK0Qw=
-Date: Fri, 23 Jun 2023 09:53:36 -0700
-From: Sean Greenslade <sean@seangreenslade.com>
-To: Theodore Ts'o <tytso@mit.edu>
-Cc: Bagas Sanjaya <bagasdotme@gmail.com>, linux-ext4@vger.kernel.org,
-	Ye Bin <yebin10@huawei.com>,
-	Thorsten Leemhuis <regressions@leemhuis.info>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Regressions <regressions@lists.linux.dev>
-Subject: Re: RO mount of ext4 filesystem causes writes
-Message-ID: <ZJXOEJkCbAb0nG_I@glitch>
-References: <ZIauBR7YiV3rVAHL@glitch>
- <ZIa5P1HqE62rmzqu@debian.me>
- <ZJTv+it2x/glkmpp@debian.me>
- <20230623044611.GD34229@mit.edu>
- <ZJU5HN3bmXR3FvzE@glitch>
- <20230623143411.GF34229@mit.edu>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAD74100B8
+	for <regressions@lists.linux.dev>; Fri, 23 Jun 2023 17:29:54 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1qCkbY-0005zi-IS; Fri, 23 Jun 2023 19:29:52 +0200
+Message-ID: <60c2f8c9-15b2-a3e5-2247-5adf4581e037@leemhuis.info>
+Date: Fri, 23 Jun 2023 19:29:50 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230623143411.GF34229@mit.edu>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Content-Language: en-US, de-DE
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Subject: A quick small additional regressions report pre -rc8/final
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Linux kernel regressions list <regressions@lists.linux.dev>,
+ LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1687541394;7423a839;
+X-HE-SMSGID: 1qCkbY-0005zi-IS
 
-On Fri, Jun 23, 2023 at 10:34:11AM -0400, Theodore Ts'o wrote:
-> Ah, yes, your initial report said "small writes", but it didn't
-> specify whether the issue was that writes were modifying the image, or
-> just simply touching the mtime field of the backing file.  I assume
-> these must be largish fs images, since it must have made the increased
-> rsync time noticeable?
+Hi Linus, here is a quick manual report about regressions introduced
+this cycle that I'm aware of and are currently unresolved afaik:
 
-Yeah, these are ~30 GB images on spinning drives, so it's the difference
-between near-instant and several minutes.
 
-> This appears to fix the problem for me, given the clarified
-> reproduction information.  Could you please try it on your end?
-> 
-> 	     		   	     	    - Ted
+ * kernel test robot noticed a -20.0% regression of
+vm-scalability.throughput post -rc7; Mike posted reverts akpm applied
+that landed in next recently:
 
-Yup, this patch does indeed solve the problem I'm seeing. Thanks!
+https://lore.kernel.org/lkml/202306211346.1e9ff03e-oliver.sang@intel.com/
+https://lore.kernel.org/lkml/20230621212403.174710-1-mike.kravetz@oracle.com/
 
---Sean
 
-> From 6bb438fa0aac4c08acd626d408cb6d4b745df7fd Mon Sep 17 00:00:00 2001
-> From: Theodore Ts'o <tytso@mit.edu>
-> Date: Fri, 23 Jun 2023 10:18:51 -0400
-> Subject: [PATCH] ext4: avoid updating the superblock on a r/o mount if not
->  needed
-> 
-> This was noticed by a user who noticied that the mtime of a file
-> backing a loopback device was getting bumped when the loopback device
-> is mounted read/only.  Note: This doesn't show up when doing a
-> loopback mount of a file directly, via "mount -o ro /tmp/foo.img
-> /mnt", since the loop device is set read-only when mount automatically
-> creates loop device.  However, this is noticeable for a LUKS loop
-> device like this:
-> 
-> % cryptsetup luksOpen /tmp/foo.img test
-> % mount -o ro /dev/loop0 /mnt ; umount /mnt
-> 
-> or, if LUKS is not in use, if the user manually creates the loop
-> device like this:
-> 
-> % losetup /dev/loop0 /tmp/foo.img
-> % mount -o ro /dev/loop0 /mnt ; umount /mnt
-> 
-> The modified mtime causes rsync to do a rolling checksum scan of the
-> file on the local and remote side, incrementally increasing the time
-> to rsync the not-modified-but-touched image file.
-> 
-> Fixes: eee00237fa5e ("ext4: commit super block if fs record error when journal record without error")
-> Cc: stable@kernel.org
-> Link: https://lore.kernel.org/r/ZIauBR7YiV3rVAHL@glitch
-> Reported-by: Sean Greenslade <sean@seangreenslade.com>
-> Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-> ---
->  fs/ext4/super.c | 12 ++++++++++--
->  1 file changed, 10 insertions(+), 2 deletions(-)
-> 
-> diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-> index b3819e70093e..c638b0db3b2b 100644
-> --- a/fs/ext4/super.c
-> +++ b/fs/ext4/super.c
-> @@ -5997,19 +5997,27 @@ static int ext4_load_journal(struct super_block *sb,
->  		err = jbd2_journal_wipe(journal, !really_read_only);
->  	if (!err) {
->  		char *save = kmalloc(EXT4_S_ERR_LEN, GFP_KERNEL);
-> +		__le16 orig_state;
-> +		bool changed = false;
->  
->  		if (save)
->  			memcpy(save, ((char *) es) +
->  			       EXT4_S_ERR_START, EXT4_S_ERR_LEN);
->  		err = jbd2_journal_load(journal);
-> -		if (save)
-> +		if (save && memcmp(((char *) es) + EXT4_S_ERR_START,
-> +				   save, EXT4_S_ERR_LEN)) {
->  			memcpy(((char *) es) + EXT4_S_ERR_START,
->  			       save, EXT4_S_ERR_LEN);
-> +			changed = true;
-> +		}
->  		kfree(save);
-> +		orig_state = es->s_state;
->  		es->s_state |= cpu_to_le16(EXT4_SB(sb)->s_mount_state &
->  					   EXT4_ERROR_FS);
-> +		if (orig_state != es->s_state)
-> +			changed = true;
->  		/* Write out restored error information to the superblock */
-> -		if (!bdev_read_only(sb->s_bdev)) {
-> +		if (changed && !really_read_only) {
->  			int err2;
->  			err2 = ext4_commit_super(sb);
->  			err = err ? : err2;
-> -- 
-> 2.31.0
+ * Swapnil Sapkal from AMD found another performance regression; from
+skimming the thread it seems a partial fix is in -next for some time
+already; part of the problem is also caused by df323337e50 "apparmor:
+Use a memory pool instead per-CPU caches" [v5.5-rc1]
+
+https://lore.kernel.org/lkml/09e0f469-a3f7-62ef-75a1-e64cec2dcfc5@amd.com/
+https://lore.kernel.org/lkml/20230515143536.114960-1-mathieu.desnoyers@efficios.com/
+https://lore.kernel.org/lkml/6c693e3b-b941-9acf-6821-179e7a7fe2b8@efficios.com/
+
+[this one is not tracked by regzbot, something went sideways, need to
+look closer]
+
+
+ * Mario came up with a fix for the ppc/tpm kexec hang recently reported:
+
+https://lore.kernel.org/lkml/99B81401-DB46-49B9-B321-CF832B50CAC3@linux.ibm.com/
+https://lore.kernel.org/all/20230623030427.908-1-mario.limonciello@amd.com/
+
+
+ * still no solution in sight for the "Dragonboard 845c broken due to
+asynchronous probe" regression
+
+https://lore.kernel.org/lkml/CAMi1Hd1avQDcDQf137m2auz2znov4XL8YGrLZsw5edb-NtRJRw@mail.gmail.com/
+https://lore.kernel.org/lkml/20230515145323.1693044-1-amit.pundir@linaro.org/
+https://lore.kernel.org/lkml/20230602161246.1855448-1-amit.pundir@linaro.org/
+
+
+ * no progress wrt to the MPTCP tests regressions due to 9p changes
+
+https://lore.kernel.org/regressions/855a232a-76d3-7e7b-b2b5-2ebc41bcadd6@tessares.net/
+
+
+ * brand new: transmit queue timeouts with r8169 due to 2ab19de62d6
+("r8169: remove ASPM restrictions now that ASPM is disabled during NAPI
+poll") [v6.4-rc1]
+
+https://lore.kernel.org/netdev/c3465166-f04d-fcf5-d284-57357abb3f99@freenet.de/
+
+
+ * just noticed: patches for a "WiFi / LTE won't work at all on trogdor
+devices" regression might still be heading your way:
+
+https://lore.kernel.org/lkml/20230616081440.v2.1.Ie79b5f0ed45739695c9970df121e11d724909157@changeid/
+
+
+HTH, Ciao, Thorsten
