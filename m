@@ -1,38 +1,29 @@
-Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8704E198
-	for <regressions@lists.linux.dev>; Fri, 23 Jun 2023 04:49:15 +0000 (UTC)
-Received: from cwcc.thunk.org (pool-173-48-111-196.bstnma.fios.verizon.net [173.48.111.196])
-	(authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 35N4kBao028696
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 23 Jun 2023 00:46:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
-	t=1687495576; bh=OEyKCoUungp0u3TZdsQ1kTkqvt2C/vIWCgVVJqjpu8M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=i4S4C4NoQoCxVg8tZZiZoUSZ0Dx8tEIDgAR61N4OW7H/tJCrmvxvqTtSLJUnTzhoh
-	 hiUahurRQtLKlqJJiyrIt0n/fSTHeOs+gkj9badQ71ADpxRzl4v0367juF0M3w8KDB
-	 mPd3DBXVw0C0ySkgJWBb/8dLZHVnY7aS5jw12BZ36IiEnLUW6Hv0erbvdoaOkE/uq5
-	 gKBV/ufV6fO4d3T5BMFrWGmBmnKW4zR6YZZ+lQBeNmvKJlwkypKogPmYo/ElxpWyv2
-	 CzkI173ev6S9xeSwiJ0gEqLUbkPHpKuWjfNRz29yZJLMOFhrnvtFIdk31bCb8TmiMf
-	 W4s7xPdHFfZ6A==
-Received: by cwcc.thunk.org (Postfix, from userid 15806)
-	id 6249015C027E; Fri, 23 Jun 2023 00:46:11 -0400 (EDT)
-Date: Fri, 23 Jun 2023 00:46:11 -0400
-From: "Theodore Ts'o" <tytso@mit.edu>
-To: Bagas Sanjaya <bagasdotme@gmail.com>
-Cc: Sean Greenslade <sean@seangreenslade.com>, linux-ext4@vger.kernel.org,
-        Ye Bin <yebin10@huawei.com>,
-        Thorsten Leemhuis <regressions@leemhuis.info>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Regressions <regressions@lists.linux.dev>
-Subject: Re: RO mount of ext4 filesystem causes writes
-Message-ID: <20230623044611.GD34229@mit.edu>
-References: <ZIauBR7YiV3rVAHL@glitch>
- <ZIa5P1HqE62rmzqu@debian.me>
- <ZJTv+it2x/glkmpp@debian.me>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53AF2A3B
+	for <regressions@lists.linux.dev>; Fri, 23 Jun 2023 06:08:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59347C433C9;
+	Fri, 23 Jun 2023 06:08:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1687500518;
+	bh=iEBo0nryUklKbwszNwaFOULRadSZTxMhgHNcODezBMU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=x8Vknzt0okM+8asd67EscMHeT04682pksCtlyF2tSNbUlnx+oXuvDIF9JUVF3YsQu
+	 NvcOX40u7NAeTmaRq1/aLKec3VHu7EXX7fbmwuCfvdEyVd/QtIssbHKZHGIfj4De++
+	 qe8u7RD1ZMgXTieEaksCDl+Fk+xk7dhrPGIG7y/Q=
+Date: Fri, 23 Jun 2023 08:08:35 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Mario Limonciello <mario.limonciello@amd.com>
+Cc: peterhuewe@gmx.de, jarkko@kernel.org, jgg@ziepe.ca,
+	linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Linux regressions mailing list <regressions@lists.linux.dev>,
+	"Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+	Sachin Sant <sachinp@linux.ibm.com>
+Subject: Re: [PATCH] tpm: Ensure that tpm chip has ops to check if it's
+ defective
+Message-ID: <2023062317-daytime-angles-3c5a@gregkh>
+References: <20230623030427.908-1-mario.limonciello@amd.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -41,76 +32,27 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZJTv+it2x/glkmpp@debian.me>
+In-Reply-To: <20230623030427.908-1-mario.limonciello@amd.com>
 
-On Fri, Jun 23, 2023 at 08:06:02AM +0700, Bagas Sanjaya wrote:
+On Thu, Jun 22, 2023 at 10:04:27PM -0500, Mario Limonciello wrote:
+> The ibmvtpm doesn't have `chip->ops` set, and so trying to check
+> if it's a defective AMD fTPM doesn't work.
 > 
-> No reply so far from the culprit author (Ye Bin) nor from Ted. Can
-> you help in this case?
+> Add an extra check to tpm_amd_is_rng_defective() to ensure the
+> TPM being checked has `chip->ops`.
+> 
+> Cc: Linux regressions mailing list <regressions@lists.linux.dev>
+> Reported-by: Aneesh Kumar K. V <aneesh.kumar@linux.ibm.com>
+> Reported-by: Sachin Sant <sachinp@linux.ibm.com>
+> Link: https://lore.kernel.org/lkml/99B81401-DB46-49B9-B321-CF832B50CAC3@linux.ibm.com/
+> Tested-by: Sachin Sant <sachinp@linux.ibm.com>
+> Fixes: bd8621ca1510 ("tpm: Add !tpm_amd_is_rng_defective() to the hwrng_unregister() call site")
+> Fixes: f1324bbc4011 ("tpm: disable hwrng for fTPM on some AMD designs")
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> ---
+>  drivers/char/tpm/tpm-chip.c | 3 +++
+>  1 file changed, 3 insertions(+)
 
-There's been no reply because I haven't been able to replicate it, and
-I didn't have the time do enough work to convince myself the report
-was bogus.  At this point, I have spent time trying to reproduce it,
-and I've had no luck.
+No cc: stable on that list above?
 
-So, unless you can give me a simple set of reproduction instructions,
-I'm going to have to treat this report is invalid.
-
-Regards,
-
-						- Ted
-
-Note: this test was done using kvm-xfstests which can be found
-https://github.com/tytso/xfstests-bld using the install-kconfig and
-the kbuild script that can also be found in this report.  So if you
-want to play along from home, feel free.  :-)
-
-
-root@kvm-xfstests:~# mkfs.ext4 /dev/vdc
-mke2fs 1.47.0 (5-Feb-2023)
-Discarding device blocks: done                            
-Creating filesystem with 1310720 4k blocks and 327680 inodes
-Filesystem UUID: fe434060-6731-4b40-a94a-3a8517df0660
-Superblock backups stored on blocks: 
-        32768, 98304, 163840, 229376, 294912, 819200, 884736
-
-Allocating group tables: done                            
-Writing inode tables: done                            
-Creating journal (16384 blocks): done
-Writing superblocks and filesystem accounting information: done 
-
-root@kvm-xfstests:~# md5sum /dev/vdc
-fd38f9f8476ad63a744d179846ee7e18  /dev/vdc
-root@kvm-xfstests:~# mount -o ro /dev/vdc /mnt
-[  472.893614] EXT4-fs (vdc): orphan cleanup on readonly fs
-[  472.894022] EXT4-fs (vdc): mounted filesystem fe434060-6731-4b40-a94a-3a8517df0660 ro with ordered data mode. Quota mode: none.
-root@kvm-xfstests:~# umount /mnt
-[  475.698053] EXT4-fs (vdc): unmounting filesystem fe434060-6731-4b40-a94a-3a8517df0660.
-root@kvm-xfstests:~# md5sum /dev/vdc
-fd38f9f8476ad63a744d179846ee7e18  /dev/vdc
-
-Hmm.... OK, let's try it with LUKS, even though that *really*
-shouldn't make a difference.  The cryptsetup lukeFormat and mkfs.ext4
-steps are skipped here.  Also, note that I had to manually edit the
-.config file to enable CONFIG_DM_CRYPT, since I dm_crypt is used by
-xfstests, so my install-kconfig script doesn't enable CONFIG_DM_CRYPT.
-
-
-root@kvm-xfstests:~# uname -a
-Linux kvm-xfstests 6.4.0-rc6-xfstests-lockdep #200 SMP PREEMPT_DYNAMIC Fri Jun 23 00:33:39 EDT 2023 x86_64 GNU/Linux
-
-root@kvm-xfstests:~# md5sum /dev/vdc
-28b75cc094e1e2a62ac25a730fc1dfee  /dev/vdc
-root@kvm-xfstests:~# cryptsetup luksOpen /dev/vdc test
-Enter passphrase for /dev/vdc: 
-root@kvm-xfstests:~# mount -o ro /dev/mapper/test /mnt
-[  812.073771] EXT4-fs (dm-0): orphan cleanup on readonly fs
-[  812.074306] EXT4-fs (dm-0): mounted filesystem ac3f76f1-da0a-426e-85b2-08526afb2224 ro with ordered data mode. Quota mode: none.
-root@kvm-xfstests:~# umount /mnt
-[  814.383016] EXT4-fs (dm-0): unmounting filesystem ac3f76f1-da0a-426e-85b2-08526afb2224.
-root@kvm-xfstests:~# cryptsetup luksClose /dev/mapper/test
-[  830.001992] dm-0: detected capacity change from 10452992 to 0
-root@kvm-xfstests:~# md5sum /dev/vdc
-28b75cc094e1e2a62ac25a730fc1dfee  /dev/vdc
-
-
+greg k-h
