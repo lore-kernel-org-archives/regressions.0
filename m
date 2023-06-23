@@ -1,142 +1,97 @@
-Received: from striker.routify.me (unknown [64.94.212.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D660A53
-	for <regressions@lists.linux.dev>; Fri, 23 Jun 2023 06:24:22 +0000 (UTC)
-Received: from glitch (unknown [IPv6:2602:24c:b8f:cd90::8eb3])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by striker.routify.me (Postfix) with ESMTPSA id 13E901639;
-	Fri, 23 Jun 2023 06:17:48 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 striker.routify.me 13E901639
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=seangreenslade.com;
-	s=striker-outgoing; t=1687501068;
-	bh=kHwByngXCATF1lkNwacD8znlC4DBUO39C7FS8gXGYfc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DvkvmBVjtHyZbpHrKSYzk2Uk7duZ637CkLxvQnqf5wX05Bqk6DN3lH7KXoseIlRJS
-	 vwX4RMX8EELSp2cgOF7gmhB41pE5RZZ2rsl7xDE1t9bw8ZdJUrlpOTshDAeB5EmStj
-	 I8a2F62A/pVO2Rhfk9lfSlnyf9i9Uqhp4foH8DPM=
-Date: Thu, 22 Jun 2023 23:18:04 -0700
-From: Sean Greenslade <sean@seangreenslade.com>
-To: Theodore Ts'o <tytso@mit.edu>
-Cc: Bagas Sanjaya <bagasdotme@gmail.com>, linux-ext4@vger.kernel.org,
-	Ye Bin <yebin10@huawei.com>,
-	Thorsten Leemhuis <regressions@leemhuis.info>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Regressions <regressions@lists.linux.dev>
-Subject: Re: RO mount of ext4 filesystem causes writes
-Message-ID: <ZJU5HN3bmXR3FvzE@glitch>
-References: <ZIauBR7YiV3rVAHL@glitch>
- <ZIa5P1HqE62rmzqu@debian.me>
- <ZJTv+it2x/glkmpp@debian.me>
- <20230623044611.GD34229@mit.edu>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D9142106
+	for <regressions@lists.linux.dev>; Fri, 23 Jun 2023 12:36:45 +0000 (UTC)
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1b5018cb4dcso3054415ad.2
+        for <regressions@lists.linux.dev>; Fri, 23 Jun 2023 05:36:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1687523805; x=1690115805;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fRFszYI+9Qw1I1IAdyHoXb57hiMrn2v6H8gZ9EF6v9U=;
+        b=L5R0/RAydkwltXsXehskQEBkNzFK4/MVvfMkBTioAsH8bRDuO3IsG058ILG/Fm3Y/G
+         q/d127dskB6hmxwbGWh72gS2E/dzane7nlYj+aDK8vEV6KJtLCHGE5s24WDq7f1/BDo0
+         EIGRIDHQz+aC+jDkbF/4t+wzL9pazKMWD/PqHjXsGbK7iX5Ug7fKqsmDnxuZkBVvHIFn
+         LvppyyltF194+L4JZb7xQ2O6NPZ4xxbASCq+5d5RjthX5JsMVWm5GJwpDh20+51pm3C9
+         AhS/RolaCcrYEbRterYhnk+hzAO0w1GzAgJh0YH+Ei4eisrgOEEFOVqQj+Ne1HjR+bv1
+         Gwtw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687523805; x=1690115805;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=fRFszYI+9Qw1I1IAdyHoXb57hiMrn2v6H8gZ9EF6v9U=;
+        b=Bvxz45ND0HfHVBUw/72DBZaYY5I+EEuA2OxGbTlI/WUTGY5FEO//5mZuHdlm7o5b1d
+         XUaentL2udY4PtxAG9+KNwJjSm7e8pqxKPassbaD11blYkmxZKiZQhtJly3nZCCvBbFl
+         CoiMFBUt+d83BnC4OlwcuABjSN6pySBRF2AazuBmTumj9gRYMyQImFU46HHQB81Iems8
+         mFuN5Ql3lSEXIw1BT3GY70DwWDsG8LuAPpXgVFn2YTVcqLvH60iRuCMKKGK8yI3ivmA1
+         mK3s8xhfKQU0jhwsPBw9Snt16URQf4Lt6yB6kYH3SCAlSckMdw7XSk9igrj7Tm1/zhQy
+         h6hg==
+X-Gm-Message-State: AC+VfDzQE4lVpuoL3AXol4GvvSOA33/rJ5MmYk0+Dd68kFd/u9OFScBL
+	oq6n8vewrmLVR9keNFHcHRw=
+X-Google-Smtp-Source: ACHHUZ5G3Xm07SkD9tSvZjIav/cQnBT+Rn3G8kuel8ZSZvnXQ5c9RcE/3DmDQVTFKqgtT1WcEiasPA==
+X-Received: by 2002:a17:902:bb96:b0:1ac:8837:de9 with SMTP id m22-20020a170902bb9600b001ac88370de9mr8065763pls.3.1687523804673;
+        Fri, 23 Jun 2023 05:36:44 -0700 (PDT)
+Received: from [192.168.0.103] ([103.131.18.64])
+        by smtp.gmail.com with ESMTPSA id c15-20020a170903234f00b001b694130c05sm5414045plh.1.2023.06.23.05.36.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 23 Jun 2023 05:36:44 -0700 (PDT)
+Message-ID: <5d4959b7-61da-8ab0-6bc6-21305d37c7aa@gmail.com>
+Date: Fri, 23 Jun 2023 19:36:21 +0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230623044611.GD34229@mit.edu>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Content-Language: en-US
+To: Andrew Morton <akpm@linux-foundation.org>,
+ Elmar Stellnberger <estellnb@elstel.org>,
+ Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Linux Memory Management <linux-mm@kvack.org>,
+ Linux Stable <stable@vger.kernel.org>
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+Subject: Fwd: kernel fault on hibernation: get_zeroed_page/swsusp_write
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jun 23, 2023 at 12:46:11AM -0400, Theodore Ts'o wrote:
-> On Fri, Jun 23, 2023 at 08:06:02AM +0700, Bagas Sanjaya wrote:
-> > 
-> > No reply so far from the culprit author (Ye Bin) nor from Ted. Can
-> > you help in this case?
-> 
-> There's been no reply because I haven't been able to replicate it, and
-> I didn't have the time do enough work to convince myself the report
-> was bogus.  At this point, I have spent time trying to reproduce it,
-> and I've had no luck.
-> 
-> So, unless you can give me a simple set of reproduction instructions,
-> I'm going to have to treat this report is invalid.
-> 
-> Regards,
-> 
-> 						- Ted
-> 
-> Note: this test was done using kvm-xfstests which can be found
-> https://github.com/tytso/xfstests-bld using the install-kconfig and
-> the kbuild script that can also be found in this report.  So if you
-> want to play along from home, feel free.  :-)
-> 
-> 
-> root@kvm-xfstests:~# mkfs.ext4 /dev/vdc
-> mke2fs 1.47.0 (5-Feb-2023)
-> Discarding device blocks: done                            
-> Creating filesystem with 1310720 4k blocks and 327680 inodes
-> Filesystem UUID: fe434060-6731-4b40-a94a-3a8517df0660
-> Superblock backups stored on blocks: 
->         32768, 98304, 163840, 229376, 294912, 819200, 884736
-> 
-> Allocating group tables: done                            
-> Writing inode tables: done                            
-> Creating journal (16384 blocks): done
-> Writing superblocks and filesystem accounting information: done 
-> 
-> root@kvm-xfstests:~# md5sum /dev/vdc
-> fd38f9f8476ad63a744d179846ee7e18  /dev/vdc
-> root@kvm-xfstests:~# mount -o ro /dev/vdc /mnt
-> [  472.893614] EXT4-fs (vdc): orphan cleanup on readonly fs
-> [  472.894022] EXT4-fs (vdc): mounted filesystem fe434060-6731-4b40-a94a-3a8517df0660 ro with ordered data mode. Quota mode: none.
-> root@kvm-xfstests:~# umount /mnt
-> [  475.698053] EXT4-fs (vdc): unmounting filesystem fe434060-6731-4b40-a94a-3a8517df0660.
-> root@kvm-xfstests:~# md5sum /dev/vdc
-> fd38f9f8476ad63a744d179846ee7e18  /dev/vdc
-> 
-> Hmm.... OK, let's try it with LUKS, even though that *really*
-> shouldn't make a difference.  The cryptsetup lukeFormat and mkfs.ext4
-> steps are skipped here.  Also, note that I had to manually edit the
-> .config file to enable CONFIG_DM_CRYPT, since I dm_crypt is used by
-> xfstests, so my install-kconfig script doesn't enable CONFIG_DM_CRYPT.
-> 
-> 
-> root@kvm-xfstests:~# uname -a
-> Linux kvm-xfstests 6.4.0-rc6-xfstests-lockdep #200 SMP PREEMPT_DYNAMIC Fri Jun 23 00:33:39 EDT 2023 x86_64 GNU/Linux
-> 
-> root@kvm-xfstests:~# md5sum /dev/vdc
-> 28b75cc094e1e2a62ac25a730fc1dfee  /dev/vdc
-> root@kvm-xfstests:~# cryptsetup luksOpen /dev/vdc test
-> Enter passphrase for /dev/vdc: 
-> root@kvm-xfstests:~# mount -o ro /dev/mapper/test /mnt
-> [  812.073771] EXT4-fs (dm-0): orphan cleanup on readonly fs
-> [  812.074306] EXT4-fs (dm-0): mounted filesystem ac3f76f1-da0a-426e-85b2-08526afb2224 ro with ordered data mode. Quota mode: none.
-> root@kvm-xfstests:~# umount /mnt
-> [  814.383016] EXT4-fs (dm-0): unmounting filesystem ac3f76f1-da0a-426e-85b2-08526afb2224.
-> root@kvm-xfstests:~# cryptsetup luksClose /dev/mapper/test
-> [  830.001992] dm-0: detected capacity change from 10452992 to 0
-> root@kvm-xfstests:~# md5sum /dev/vdc
-> 28b75cc094e1e2a62ac25a730fc1dfee  /dev/vdc
+Hi,
 
-Hi, Ted. Thanks for taking the time to look into this.
+I notice a regression report on Bugzilla [1]. Quoting from it:
 
-I perhaps should have been more explicit in my report. The issue is not
-that the image is any different after the mount; indeed, the md5sums are
-identical before and after on my machine as well. The issue is that
-something is issuing writes to the backing image, which bumps the mtime
-of the backing image. When handling the images with rsync, a difference
-in mtime causes the whole image to need to be read.
+> page allocation error using kernel 6.3.7-desktop-1.mga9 #1 SMP PREEMPT_DYNAMIC, from Fr 09 Jun 2023 22:57:31, Key ID b742fa8b80420f66; see the backtrace in the dmesg
+>> cat /proc/cpuinfo
+> siblings	: 4
+> core id		: 1
+> cpu cores	: 2
+> ...
+> type: regression, worked with the previous kernel, namely 6.3.6, Mo 05 Jun 2023 21:37:15, Key ID b742fa8b80420f66 before updating today
 
-See this flow:
+And then:
 
-$ stat image.block | grep Modify
-Modify: 2023-06-22 23:00:15.211379972 -0700
+> The first hibernation attempt resulted in the backtrace you can see in the dmesg above, my second hibernation attempt from a text console (vt03 or so) has worked without errors and the third one I tried to do from the GUI/X11 again; see the debug options I had turned on). On the third attempt something strange did happen. It seemed to write to disk as it should, the screen turned black but the power led and button still stayed alighted. Waking up by pressing the power button did not yield any effect, nor the SysRq keys (alas forgot to write 511 to >/proc/sys/kernel/sysrq). After a hard power reset it booted as if not hibernated. On the first hibernation attempt I could see lengthy and intermittent disk access. On the third attempt I had waited for some considerable time.
 
-# cryptsetup luksOpen image.block t2 && mount -o ro /dev/mapper/t2 /mnt/t2
-# umount /mnt/t2 && cryptsetup luksClose t2
+See Bugzilla for the full thread and attached infos (dmesg, journalctl,
+stack trace disassembly).
 
-$ stat image.block | grep Modify
-Modify: 2023-06-22 23:03:56.141139649 -0700
+Unfortunately, the reporter can't provide /proc/kcore output
+and haven't performed bisection yet (he can't build custom kernel).
 
+Anyway, I'm adding it to regzbot (as stable-specific regression) for now:
 
-The regression is the mtime bumping behavior, which doesn't happen prior
-to the eee00237 commit.
+#regzbot introduced: v6.3.6..v6.3.7 https://bugzilla.kernel.org/show_bug.cgi?id=217544
+#regzbot title: page allocation error (kernel fault on hibernation involving get_zeroed_page/swsusp_write)
+#regzbot link: https://bugs.mageia.org/show_bug.cgi?id=32044
 
-Thanks,
+Thanks.
 
---Sean
+[1]: https://bugzilla.kernel.org/show_bug.cgi?id=217544
 
+-- 
+An old man doll... just what I always wanted! - Clara
