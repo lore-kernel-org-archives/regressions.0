@@ -1,23 +1,45 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC2DE20690
-	for <regressions@lists.linux.dev>; Thu, 22 Jun 2023 22:05:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
- s=s31663417; t=1687471481; x=1688076281; i=georgmueller@gmx.net;
- bh=Duee4IHsvqsOZrFYxTThyaj1WAdJHZ0zDPuyT5Olkbw=;
- h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:In-Reply-To;
- b=EKAcIDj3DALBZ6ughPPBIgctYVu3rqtN9xDZc5c39CQZ3Q6PlZv7diyWWKQn2qJhOe/zmvF
- d4E5uu1q4og+iJ+7Uxj10fQCogczGmoAbul6oahYM4AAIG/qM1ONh93H3UKc1dWdwW/VhtD8B
- k/HYgHKX55v3eGVLfRWV1LJJQAWrFfXaRRIqolkQ0nl1FH1+d9y16WKROvQ+C2RLVYf9T+X2O
- gHxVhHIptb3YPpLFcSgF/55wgMQZvrOjOjydofnzq++n/DL3QhwgP7CQ5S15w5n6kVm8PPQs8
- XaizzTgbxkgWouSc5c5k7UiXPeUyXycQGYR9/FoZSsS0WoLL1dFA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.15.55] ([109.104.53.29]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1N8obG-1pyYFq3UZS-015n5L; Fri, 23
- Jun 2023 00:04:40 +0200
-Message-ID: <ae2b7129-a651-1066-0400-d16998ca250d@gmx.net>
-Date: Fri, 23 Jun 2023 00:04:38 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16F3A363
+	for <regressions@lists.linux.dev>; Fri, 23 Jun 2023 00:59:01 +0000 (UTC)
+Received: by mail-ot1-f49.google.com with SMTP id 46e09a7af769-6b58351327eso158008a34.1
+        for <regressions@lists.linux.dev>; Thu, 22 Jun 2023 17:59:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1687481941; x=1690073941;
+        h=content-transfer-encoding:subject:to:from:cc:content-language
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=e1hqlN2rkk9juOnusJjPLb68UnsZbLK0NrxyxUniwYY=;
+        b=ic8UB/LVDfZz5a3iqRDhNzdvSjLTVAmbvb7p/8soxaiR8WWU90I8PPBhPhNOOzy6Ir
+         SakFEGsqvGp0efHr5xMt/tKf4elxcskR94HDxop2cUYKHx4zUcYR5/P6GblPUAWB9wW1
+         O+1yo/y0nNqINFIXehbSNvIeio/CMUSUkkGAaOGhjVJOW29QTGdvxaVCir+HaTSiniu2
+         JVT0b7dctgmayH29UjCohZi+oFERR/KyEE9C3IenWlIaeA+PI3fLU7FPKPdnrasiMEBS
+         jGuIwRCZpZUtHm4jjCUGmC6JaO6TyRyq6OSc2xeGZqkbUk3E7UxhmmgvjeLmgGy5WNqc
+         omoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687481941; x=1690073941;
+        h=content-transfer-encoding:subject:to:from:cc:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=e1hqlN2rkk9juOnusJjPLb68UnsZbLK0NrxyxUniwYY=;
+        b=J5KN97VwBKf/Ebp55RRltv8eLquj5vLaxfUlssQNOKnBekZalo5FaFnYlsGiyECEoP
+         Owv83oKZagMmpPy3VhcyZaiwdw40ZfslgRtQLS4zgy6KIoo77IEHXW7rMuBhGyVDTvA6
+         PUfUJl3uujLOWlC4el+tRKZyxw/f+LXalMCUPeoPLfS8HJQYwyrnRj6E3gk4tQkdgY25
+         Sf1oxDXi2ZnMdXS+10GBAoGeYPCteKjfuPuVL5R3lhij6EL+tEJCY5HnlJGOMip89kv0
+         yz7Dap8pDFP1eoUEVUKWR8vuav1mdN7MfDYSzsUnFoR50iExm7Lz6FFZ9NSEAbB1UMxD
+         93UQ==
+X-Gm-Message-State: AC+VfDyStN9+ALp8q9WqcCsUnhtAXn4bhuCj1FqV/sSpTcMGa/jqbsjN
+	hamzDbBDC8rVETOL1vcgHw4=
+X-Google-Smtp-Source: ACHHUZ5fLkgFatdoPlABYG9MXbzy5NTUeg5b0lmG7cUz1fahVQV6eaFY+BeoqqvsiwQiKt3Ha5r5mQ==
+X-Received: by 2002:a05:6358:a19:b0:131:ce9c:9971 with SMTP id 25-20020a0563580a1900b00131ce9c9971mr5359795rwa.29.1687481940720;
+        Thu, 22 Jun 2023 17:59:00 -0700 (PDT)
+Received: from [192.168.0.103] ([103.131.18.64])
+        by smtp.gmail.com with ESMTPSA id a3-20020a62bd03000000b00669c99d05fasm4396470pff.150.2023.06.22.17.58.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 22 Jun 2023 17:58:59 -0700 (PDT)
+Message-ID: <01ac399d-f793-49d4-844b-72cd8e0034df@gmail.com>
+Date: Fri, 23 Jun 2023 07:58:51 +0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -26,113 +48,78 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.12.0
-Subject: Re: [PATCH] perf probe: read DWARF files from the correct CU
 Content-Language: en-US
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
- "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: regressions@lists.linux.dev, Arnaldo Carvalho de Melo <acme@redhat.com>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20230615200147.664346-3-georgmueller@gmx.net>
-From: =?UTF-8?Q?Georg_M=c3=bcller?= <georgmueller@gmx.net>
-In-Reply-To: <20230615200147.664346-3-georgmueller@gmx.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:CGzNQA5VKVg8/XNmIu8EvM5cgqaAQMV8CHz0wbKjkk2KM5vx08Z
- gwpdv+WpRTMxgAXYJNWOsJgUPNgpn6rOzaXctEj7sEZCuus3yOuaN/zivjcRHB2RpB8F9/h
- ZAtbHzfDv6MGtvs0Z4IPexWrE5+X18flr2+cY2g+6a2HaJqbqcnNoGwne3RW1dvHl3+c6Lo
- tPX11XlrimG9eO7PXUyJA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:pt4aDP4iPyE=;k666ZWdw+6F94Sr4d3fbsbj/jee
- WlfQHA5S9WU/ymkmaGWXMO4b+Xe4bh7+x61dgl3jPdD+L3oRmGZbRpRx68/+EjudNOGV5t7Hv
- JaBvRrEoXL/HZcSVKl598ChkYwfUwa2H/PkDXVwVQHaCr8IEekLMrIh+5bJTxe18QcH0krenW
- UNidUmFpOyivLfC5KSqsnjGJLheV6haiI1p7eYR/UjB/gFOufG1bJxUxe9tUJoDzmI1Oo6jZ1
- FL6fN1+rcNRe3izOXP952WdwsJOqHtBlPOK45AFFk+dlFuBfudTa+1TVBAP4TOUoRWCIgoNCH
- pmn2ful/Sqm3oWk72BOLWBLWiJkDvYQhDyAfusbWyY8Osrzl/y6HMND17t/gSWBZUrZp3R5NI
- ubPJmLZlquKjoDvfKSaQIz53VSy64NkDNrZ/YNIFcqKpsXQWRkTybgwRAw2l/Rt/F8cfsTsDZ
- Z2xOLXIs4I7MzI3h/+ak18GZ9iuQwBcXIqbwQCdnWGGC/8Ndi+BLZI2YGjRgYrDF5FQkydJ9j
- nHzhkbyxroWFIR1NrxjX1guLbh8DVetFtoYzA1Ckvs4rVZ4QlyIaHcPTK159bO3qpVqZNBZ7T
- T7zLgVVgk9AtgtnMBpl9BYd1CEqCGtN2Uo9m56kqsYOtmaxudwq0tzoAEFvkle9W8VxHGk46D
- stwyYDXjQjpbUM3Qmd/JAD8oDt9j1OR2Xcl21wBkRcaVFXOKPWtDpSFWB3FHUBYPmBoHm582U
- dMfSK8aJiiZUJI/iUpNzOLK9phq9ElWDkKUssDeIJkKSnbsklf1j4Q0JQZcH4bUUuvOktrXxq
- JcTwnSAO4tzdVainsMt3KdlEnHXzWskoOkb7UuJvq1WsQFCLFgUwikEet1EoJhAnGs7+Ufii/
- KxsW/KF3iz2Fwvool7n1JuE6RzApD0UcGsJ1hVk/SbSsPwZWunLfNFCyfxwia8IsI3oh2P0gg
- X+SOg0i4uT/ZU/a2khkjbBqNsYE=
-
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Linux Netfilter Development <netfilter-devel@vger.kernel.org>,
+ Netfilter Core Developers <coreteam@netfilter.org>,
+ Linux Networking <netdev@vger.kernel.org>,
+ Linux Power Management <linux-pm@vger.kernel.org>
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: "Steven Rostedt (Google)" <rostedt@goodmis.org>,
+ Pablo Neira Ayuso <pablo@netfilter.org>,
+ Jozsef Kadlecsik <kadlec@netfilter.org>, Florian Westphal <fw@strlen.de>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Lingutla Chandrasekhar <clingutla@codeaurora.org>,
+ Frederic Weisbecker <frederic@kernel.org>, "J. Avila" <elavila@google.com>,
+ Vivek Anand <vivekanand754@gmail.com>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, Thomas Renninger <trenn@suse.com>,
+ Shuah Khan <shuah@kernel.org>
+Subject: Fwd: High cpu usage caused by kernel process when upgraded to linux
+ 5.19.17 or later
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 Hi,
 
-Am 15.06.23 um 22:01 schrieb Georg M=C3=BCller:
-> After switching from dwarf_decl_file() to die_get_decl_file(), it is not
-> possible to add probes for certain functions of certain binaries:
->
->   $ perf probe -x /usr/lib/systemd/systemd-logind match_unit_removed
->   A function DIE doesn't have decl_line. Maybe broken DWARF?
->   A function DIE doesn't have decl_line. Maybe broken DWARF?
->   Probe point 'match_unit_removed' not found.
->      Error: Failed to add events.
->
-> The problem is that die_get_decl_file() uses the wrong CU to search for
-> the file. elfutils commit e1db5cdc9f has some good explanation for this:
->
->      dwarf_decl_file uses dwarf_attr_integrate to get the DW_AT_decl_fil=
-e
->      attribute. This means the attribute might come from a different DIE
->      in a different CU. If so, we need to use the CU associated with the
->      attribute, not the original DIE, to resolve the file name.
->
-> This patch uses the same source of information as elfutils: use attribut=
-e
-> DW_AT_decl_file and use this CU to search for the file.
->
-> Fixes: dc9a5d2ccd5c ("perf probe: Fix to get declared file name from cla=
-ng DWARF5")
-> Signed-off-by: Georg M=C3=BCller <georgmueller@gmx.net>
-> Link: https://lore.kernel.org/r/5a00d5a5-7be7-ef8a-4044-9a16249fff25@gmx=
-.net/
-> ---
->   tools/perf/util/dwarf-aux.c | 4 +++-
->   1 file changed, 3 insertions(+), 1 deletion(-)
->
-> diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
-> index b07414409771..137b3ed9897b 100644
-> --- a/tools/perf/util/dwarf-aux.c
-> +++ b/tools/perf/util/dwarf-aux.c
-> @@ -478,8 +478,10 @@ static const char *die_get_file_name(Dwarf_Die *dw_=
-die, int idx)
->   {
->   	Dwarf_Die cu_die;
->   	Dwarf_Files *files;
-> +	Dwarf_Attribute attr_mem;
->
-> -	if (idx < 0 || !dwarf_diecu(dw_die, &cu_die, NULL, NULL) ||
-> +	if (idx < 0 || !dwarf_attr_integrate(dw_die, DW_AT_decl_file, &attr_me=
-m) ||
-> +	    !dwarf_cu_die(attr_mem.cu, &cu_die, NULL, NULL, NULL, NULL, NULL, =
-NULL) ||
->   	    dwarf_getsrcfiles(&cu_die, &files, NULL) !=3D 0)
->   		return NULL;
->
-> --
-> 2.41.0
->
+I notice a regression report on Bugzilla [1]. Quoting from it:
 
+> kernel process "kworker/events_power_efficient" uses a lot of cpu power (100% on ESXI 6.7, ~30% on ESXI 7.0U3 or later) after upgrading from 5.17.3 to 5.19.17 or later.
+> 
+> dmesg log:
+> [ 2430.973102]  </TASK>
+> [ 2430.973131] Sending NMI from CPU 1 to CPUs 0:
+> [ 2430.973241] NMI backtrace for cpu 0
+> [ 2430.973247] CPU: 0 PID: 22 Comm: kworker/0:1 Not tainted 6.3.3 #1
+> [ 2430.973254] Hardware name: VMware, Inc. VMware Virtual Platform/440BX Desktop Reference Platform, BIOS 6.00 11/12/2020
+> [ 2430.973258] Workqueue: events_power_efficient htable_gc [xt_hashlimit]
+> [ 2430.973275] RIP: 0010:preempt_count_sub+0x2e/0xa0
+> [ 2430.973289] Code: 36 01 85 c9 75 1b 65 8b 15 a7 da f8 5e 89 d1 81 e1 ff ff ff 7f 39 f9 7c 16 81 ff fe 00 00 00 76 3b f7 df 65 01 3d 8a da f8 5e <c3> cc cc cc cc e8 98 aa 25 00 85 c0 74 f2 8b 15 da 71 ed 00 85 d2
+> [ 2430.973294] RSP: 0018:ffffb15ec00dbe58 EFLAGS: 00000297
+> [ 2430.973299] RAX: 0000000000000000 RBX: ffffb15ec12ad000 RCX: 0000000000000001
+> [ 2430.973302] RDX: 0000000080000001 RSI: ffffffffa1c3313b RDI: 00000000ffffffff
+> [ 2430.973306] RBP: dead000000000122 R08: 0000000000000010 R09: 0000746e65696369
+> [ 2430.973309] R10: 8080808080808080 R11: 0000000000000018 R12: 0000000000000000
+> [ 2430.973312] R13: 0000000000001e2b R14: ffffb15ec12ad048 R15: ffff91c279c26a05
+> [ 2430.973316] FS:  0000000000000000(0000) GS:ffff91c279c00000(0000) knlGS:0000000000000000
+> [ 2430.973320] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [ 2430.973324] CR2: 000055fc138890e0 CR3: 000000010810e002 CR4: 00000000001706f0
+> [ 2430.973374] Call Trace:
+> [ 2430.973388]  <TASK>
+> [ 2430.973390]  __local_bh_enable_ip+0x32/0x70
+> [ 2430.973413]  htable_selective_cleanup+0x95/0xc0 [xt_hashlimit]
+> [ 2430.973428]  htable_gc+0xf/0x30 [xt_hashlimit]
+> [ 2430.973440]  process_one_work+0x1d4/0x360
+> [ 2430.973459]  ? process_one_work+0x360/0x360
+> [ 2430.973467]  worker_thread+0x25/0x3b0
+> [ 2430.973476]  ? process_one_work+0x360/0x360
+> [ 2430.973483]  kthread+0xe1/0x110
+> [ 2430.973499]  ? kthread_complete_and_exit+0x20/0x20
+> [ 2430.973507]  ret_from_fork+0x1f/0x30
+> [ 2430.973526]  </TASK>
 
-Just a question regarding the patch:
-Should I also add a testcase to show the issue or is this enough? It can b=
-e
-reproduced quite simple with two .c files and one .h file, the same test a=
-s the
-one added in elfutils with commit e1db5cdc9f, compiled with the same three=
- steps
-as in the comment of the shell script, but without "-flto":
+See Bugzilla for the full thread and perf output.
 
-https://sourceware.org/git/?p=3Delfutils.git;a=3Dcommitdiff;h=3De1db5cdc9f=
-230f8de4df1a0f38dca69b283ee57a
+Anyway, I'm tracking it in regzbot so that it doesn't fall through
+cracks unnoticed:
 
-Best regards,
-Georg
+#regzbot introduced: v5.17.3..v5.19.17 https://bugzilla.kernel.org/show_bug.cgi?id=217586
+#regzbot title: kworker/events_power_efficient utilizes full CPU power after kernel upgrade
+
+Thanks.
+
+[1]: https://bugzilla.kernel.org/show_bug.cgi?id=217586
+
+-- 
+An old man doll... just what I always wanted! - Clara
