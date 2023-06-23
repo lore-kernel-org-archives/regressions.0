@@ -1,123 +1,116 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2088.outbound.protection.outlook.com [40.107.243.88])
+Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B144338C
-	for <regressions@lists.linux.dev>; Fri, 23 Jun 2023 03:04:46 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=URlWOCFOKJGhh0iBYc9EyvrHnl8qzn22GygMkUD6Dq92OLSOxkhDAV1lfybEshTf/q+rD2HJ5Q3uyqZAzT5VH/YgaKQQE3UUpDxKCiRo2qRHseMvI4xGu3AyOJzs2VbT6dOoIJVjmevh7eu6m0LTFwYpHMTkR9x5iFFc4hKS3U8J233Edh4mpzavxTM2oW0EGQT3oz4nxvYjkvPbMv0g/Ljz/bbWsC3W/jnN4/v4hGKE3C0gpb1xwzeSybvS626WttUq2zEBjCWbAF2vfQRnKZxHYJHlitR/MCJQOWuFrhx8Z4iSki17g4gzSl0pFG3ye6/jQZax70Hbqv2Es2jiZQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=bOlp0pICPmel750zJ2b+dD+6IxLi3WTjCA4eBV3OBGs=;
- b=MBooidQwaxnzLCknjtR89rNfzZe3pqMOBMyVla9iazM0eMxkzvSZxHrar42d3MH1kbgRDddMVZk4D/fmi9kxPzhI1cQWvlhf+uE/MXn8GHlkiiYgCVNBub6Jbu+krRcFlo1cxqI9p1uA1kM4Em9dj/baTtiwfc/nca7ankitR1lqHmMtxukoELtmnr9lAGukEfVzm0MPksYhCY91u7sDUKxhn5dbfV2GJHkIvAEgskK42tGFNJy1yhjcyn5PH8uB3wsC/9msPA63+l4TLJEbqyIn2LYyYXeVy1g2lmN/g4xfXfoD4/o0mdKL1VqKEKWpuVfJrEufMFx++ElhA86PLA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=gmx.de smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bOlp0pICPmel750zJ2b+dD+6IxLi3WTjCA4eBV3OBGs=;
- b=UiLbqBxZ1sCp3tYI4qcyltJqmfz/7gJwV0DYbNxsft1X5IVzba0KetiGPEGx4+DRFuwRl/RqI8JFaCQEO9rZZ8ia0/Pojf2DrGUS/YzRMM0lO5KSN2pdGbOdPecoO4K7BV4rAbd5UFKU5BBOvZ0ON8EF2dJBw0GE9W6hlb40hKY=
-Received: from CYZPR05CA0006.namprd05.prod.outlook.com (2603:10b6:930:89::10)
- by IA0PR12MB8277.namprd12.prod.outlook.com (2603:10b6:208:3de::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6521.24; Fri, 23 Jun
- 2023 03:04:43 +0000
-Received: from CY4PEPF0000E9D0.namprd03.prod.outlook.com
- (2603:10b6:930:89:cafe::88) by CYZPR05CA0006.outlook.office365.com
- (2603:10b6:930:89::10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6544.10 via Frontend
- Transport; Fri, 23 Jun 2023 03:04:43 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CY4PEPF0000E9D0.mail.protection.outlook.com (10.167.241.143) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.6521.20 via Frontend Transport; Fri, 23 Jun 2023 03:04:43 +0000
-Received: from SITE-L-T34-2.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Thu, 22 Jun
- 2023 22:04:42 -0500
-From: Mario Limonciello <mario.limonciello@amd.com>
-To: <peterhuewe@gmx.de>, <jarkko@kernel.org>, <jgg@ziepe.ca>
-CC: <linux-integrity@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Mario
- Limonciello" <mario.limonciello@amd.com>, Linux regressions mailing list
-	<regressions@lists.linux.dev>, "Aneesh Kumar K . V"
-	<aneesh.kumar@linux.ibm.com>, Sachin Sant <sachinp@linux.ibm.com>
-Subject: [PATCH] tpm: Ensure that tpm chip has ops to check if it's defective
-Date: Thu, 22 Jun 2023 22:04:27 -0500
-Message-ID: <20230623030427.908-1-mario.limonciello@amd.com>
-X-Mailer: git-send-email 2.34.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8704E198
+	for <regressions@lists.linux.dev>; Fri, 23 Jun 2023 04:49:15 +0000 (UTC)
+Received: from cwcc.thunk.org (pool-173-48-111-196.bstnma.fios.verizon.net [173.48.111.196])
+	(authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 35N4kBao028696
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 23 Jun 2023 00:46:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
+	t=1687495576; bh=OEyKCoUungp0u3TZdsQ1kTkqvt2C/vIWCgVVJqjpu8M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=i4S4C4NoQoCxVg8tZZiZoUSZ0Dx8tEIDgAR61N4OW7H/tJCrmvxvqTtSLJUnTzhoh
+	 hiUahurRQtLKlqJJiyrIt0n/fSTHeOs+gkj9badQ71ADpxRzl4v0367juF0M3w8KDB
+	 mPd3DBXVw0C0ySkgJWBb/8dLZHVnY7aS5jw12BZ36IiEnLUW6Hv0erbvdoaOkE/uq5
+	 gKBV/ufV6fO4d3T5BMFrWGmBmnKW4zR6YZZ+lQBeNmvKJlwkypKogPmYo/ElxpWyv2
+	 CzkI173ev6S9xeSwiJ0gEqLUbkPHpKuWjfNRz29yZJLMOFhrnvtFIdk31bCb8TmiMf
+	 W4s7xPdHFfZ6A==
+Received: by cwcc.thunk.org (Postfix, from userid 15806)
+	id 6249015C027E; Fri, 23 Jun 2023 00:46:11 -0400 (EDT)
+Date: Fri, 23 Jun 2023 00:46:11 -0400
+From: "Theodore Ts'o" <tytso@mit.edu>
+To: Bagas Sanjaya <bagasdotme@gmail.com>
+Cc: Sean Greenslade <sean@seangreenslade.com>, linux-ext4@vger.kernel.org,
+        Ye Bin <yebin10@huawei.com>,
+        Thorsten Leemhuis <regressions@leemhuis.info>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Regressions <regressions@lists.linux.dev>
+Subject: Re: RO mount of ext4 filesystem causes writes
+Message-ID: <20230623044611.GD34229@mit.edu>
+References: <ZIauBR7YiV3rVAHL@glitch>
+ <ZIa5P1HqE62rmzqu@debian.me>
+ <ZJTv+it2x/glkmpp@debian.me>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000E9D0:EE_|IA0PR12MB8277:EE_
-X-MS-Office365-Filtering-Correlation-Id: e19b7543-0c1e-4054-d5e8-08db73969819
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	6GxlCaZlDufG4/RsKlSWueZ8gH2j0MErZJdDQpJfDnRq2R/O6MBqkWODaBJjzAJMcFQALTsLaR6TTPRbXWKgwVIfBbuamsZyfJedaCFvHukJl8aiDNRRGbK1Z1XTAfST8p15gZyIY27qZWq/XPmt+JSCP54vBcVDN2Efut38UhblrW0YY0Ej+NeUdoH4oamfCW+SR5Dd1aXDd2SNNaBY/VwTXCYHsidXHI8ava7q9jWbitTtbeKYi41Rwje+qYa6NUuhupYqcmpe+74Qwsa0dNuxmlR3LrbylcgS3oXeCPttqK44W7n3MrEi2OnNAm38uG8jREeqar/OQJUzV6ClzMjLu3TQctWPOCPm9aycP+YEgaAsbDpbAgXAeNQNBNxsJpRb455Vq/guGNoL6BVBssTuc1w4mmlQcmaRCdTpcr4ofNCTZ1fNinwHmEkk15ZT1vo/9oB8Gk7HshEspbjO+RQ1aPx1xzyiNsPCWmz+CulqROgWXAxyslAObq9ThUZ/V9HFPVzcKyaUbwYD0wwDB8ttzQEViJrKoS/MzE9YdXoSGLVrxKqgi3QG28qsV4UXlfYwA104xUZa+u6O9j1dNYgufkOBBAhwah3u9H4ffyBdgMtd8VSICUIB47aNdsQOoQra3hvpTeM99jrt4+ppLYffrb0fGGqzpQpbGngh8E2+ElDYP5OIJbjBHTD1Gx5ulUUIZGUSa4dQ3C+IvynSnOrJXudJEijTGpUIf1wFD/qxtA6b6dZH/lW1dyvXjexcbJ+cDYPaQsOnvcQbvEK2+A==
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230028)(4636009)(396003)(346002)(376002)(39860400002)(136003)(451199021)(46966006)(36840700001)(40470700004)(40460700003)(36860700001)(44832011)(36756003)(8936002)(5660300002)(8676002)(356005)(81166007)(82740400003)(2906002)(478600001)(40480700001)(16526019)(186003)(7696005)(6666004)(110136005)(54906003)(86362001)(2616005)(82310400005)(26005)(70586007)(70206006)(1076003)(336012)(426003)(316002)(41300700001)(4326008)(47076005)(966005)(36900700001)(2101003);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jun 2023 03:04:43.5925
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: e19b7543-0c1e-4054-d5e8-08db73969819
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CY4PEPF0000E9D0.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8277
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZJTv+it2x/glkmpp@debian.me>
 
-The ibmvtpm doesn't have `chip->ops` set, and so trying to check
-if it's a defective AMD fTPM doesn't work.
+On Fri, Jun 23, 2023 at 08:06:02AM +0700, Bagas Sanjaya wrote:
+> 
+> No reply so far from the culprit author (Ye Bin) nor from Ted. Can
+> you help in this case?
 
-Add an extra check to tpm_amd_is_rng_defective() to ensure the
-TPM being checked has `chip->ops`.
+There's been no reply because I haven't been able to replicate it, and
+I didn't have the time do enough work to convince myself the report
+was bogus.  At this point, I have spent time trying to reproduce it,
+and I've had no luck.
 
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>
-Reported-by: Aneesh Kumar K. V <aneesh.kumar@linux.ibm.com>
-Reported-by: Sachin Sant <sachinp@linux.ibm.com>
-Link: https://lore.kernel.org/lkml/99B81401-DB46-49B9-B321-CF832B50CAC3@linux.ibm.com/
-Tested-by: Sachin Sant <sachinp@linux.ibm.com>
-Fixes: bd8621ca1510 ("tpm: Add !tpm_amd_is_rng_defective() to the hwrng_unregister() call site")
-Fixes: f1324bbc4011 ("tpm: disable hwrng for fTPM on some AMD designs")
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
----
- drivers/char/tpm/tpm-chip.c | 3 +++
- 1 file changed, 3 insertions(+)
+So, unless you can give me a simple set of reproduction instructions,
+I'm going to have to treat this report is invalid.
 
-diff --git a/drivers/char/tpm/tpm-chip.c b/drivers/char/tpm/tpm-chip.c
-index cd48033b804a..9ba433761e9a 100644
---- a/drivers/char/tpm/tpm-chip.c
-+++ b/drivers/char/tpm/tpm-chip.c
-@@ -524,6 +524,9 @@ static bool tpm_amd_is_rng_defective(struct tpm_chip *chip)
- 	u64 version;
- 	int ret;
- 
-+	if (!chip->ops)
-+		return false;
-+
- 	if (!(chip->flags & TPM_CHIP_FLAG_TPM2))
- 		return false;
- 
--- 
-2.34.1
+Regards,
+
+						- Ted
+
+Note: this test was done using kvm-xfstests which can be found
+https://github.com/tytso/xfstests-bld using the install-kconfig and
+the kbuild script that can also be found in this report.  So if you
+want to play along from home, feel free.  :-)
+
+
+root@kvm-xfstests:~# mkfs.ext4 /dev/vdc
+mke2fs 1.47.0 (5-Feb-2023)
+Discarding device blocks: done                            
+Creating filesystem with 1310720 4k blocks and 327680 inodes
+Filesystem UUID: fe434060-6731-4b40-a94a-3a8517df0660
+Superblock backups stored on blocks: 
+        32768, 98304, 163840, 229376, 294912, 819200, 884736
+
+Allocating group tables: done                            
+Writing inode tables: done                            
+Creating journal (16384 blocks): done
+Writing superblocks and filesystem accounting information: done 
+
+root@kvm-xfstests:~# md5sum /dev/vdc
+fd38f9f8476ad63a744d179846ee7e18  /dev/vdc
+root@kvm-xfstests:~# mount -o ro /dev/vdc /mnt
+[  472.893614] EXT4-fs (vdc): orphan cleanup on readonly fs
+[  472.894022] EXT4-fs (vdc): mounted filesystem fe434060-6731-4b40-a94a-3a8517df0660 ro with ordered data mode. Quota mode: none.
+root@kvm-xfstests:~# umount /mnt
+[  475.698053] EXT4-fs (vdc): unmounting filesystem fe434060-6731-4b40-a94a-3a8517df0660.
+root@kvm-xfstests:~# md5sum /dev/vdc
+fd38f9f8476ad63a744d179846ee7e18  /dev/vdc
+
+Hmm.... OK, let's try it with LUKS, even though that *really*
+shouldn't make a difference.  The cryptsetup lukeFormat and mkfs.ext4
+steps are skipped here.  Also, note that I had to manually edit the
+.config file to enable CONFIG_DM_CRYPT, since I dm_crypt is used by
+xfstests, so my install-kconfig script doesn't enable CONFIG_DM_CRYPT.
+
+
+root@kvm-xfstests:~# uname -a
+Linux kvm-xfstests 6.4.0-rc6-xfstests-lockdep #200 SMP PREEMPT_DYNAMIC Fri Jun 23 00:33:39 EDT 2023 x86_64 GNU/Linux
+
+root@kvm-xfstests:~# md5sum /dev/vdc
+28b75cc094e1e2a62ac25a730fc1dfee  /dev/vdc
+root@kvm-xfstests:~# cryptsetup luksOpen /dev/vdc test
+Enter passphrase for /dev/vdc: 
+root@kvm-xfstests:~# mount -o ro /dev/mapper/test /mnt
+[  812.073771] EXT4-fs (dm-0): orphan cleanup on readonly fs
+[  812.074306] EXT4-fs (dm-0): mounted filesystem ac3f76f1-da0a-426e-85b2-08526afb2224 ro with ordered data mode. Quota mode: none.
+root@kvm-xfstests:~# umount /mnt
+[  814.383016] EXT4-fs (dm-0): unmounting filesystem ac3f76f1-da0a-426e-85b2-08526afb2224.
+root@kvm-xfstests:~# cryptsetup luksClose /dev/mapper/test
+[  830.001992] dm-0: detected capacity change from 10452992 to 0
+root@kvm-xfstests:~# md5sum /dev/vdc
+28b75cc094e1e2a62ac25a730fc1dfee  /dev/vdc
+
 
