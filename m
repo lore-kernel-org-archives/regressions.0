@@ -1,29 +1,36 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from striker.routify.me (unknown [64.94.212.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53AF2A3B
-	for <regressions@lists.linux.dev>; Fri, 23 Jun 2023 06:08:38 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59347C433C9;
-	Fri, 23 Jun 2023 06:08:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1687500518;
-	bh=iEBo0nryUklKbwszNwaFOULRadSZTxMhgHNcODezBMU=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D660A53
+	for <regressions@lists.linux.dev>; Fri, 23 Jun 2023 06:24:22 +0000 (UTC)
+Received: from glitch (unknown [IPv6:2602:24c:b8f:cd90::8eb3])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by striker.routify.me (Postfix) with ESMTPSA id 13E901639;
+	Fri, 23 Jun 2023 06:17:48 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 striker.routify.me 13E901639
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=seangreenslade.com;
+	s=striker-outgoing; t=1687501068;
+	bh=kHwByngXCATF1lkNwacD8znlC4DBUO39C7FS8gXGYfc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=x8Vknzt0okM+8asd67EscMHeT04682pksCtlyF2tSNbUlnx+oXuvDIF9JUVF3YsQu
-	 NvcOX40u7NAeTmaRq1/aLKec3VHu7EXX7fbmwuCfvdEyVd/QtIssbHKZHGIfj4De++
-	 qe8u7RD1ZMgXTieEaksCDl+Fk+xk7dhrPGIG7y/Q=
-Date: Fri, 23 Jun 2023 08:08:35 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Mario Limonciello <mario.limonciello@amd.com>
-Cc: peterhuewe@gmx.de, jarkko@kernel.org, jgg@ziepe.ca,
-	linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Linux regressions mailing list <regressions@lists.linux.dev>,
-	"Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-	Sachin Sant <sachinp@linux.ibm.com>
-Subject: Re: [PATCH] tpm: Ensure that tpm chip has ops to check if it's
- defective
-Message-ID: <2023062317-daytime-angles-3c5a@gregkh>
-References: <20230623030427.908-1-mario.limonciello@amd.com>
+	b=DvkvmBVjtHyZbpHrKSYzk2Uk7duZ637CkLxvQnqf5wX05Bqk6DN3lH7KXoseIlRJS
+	 vwX4RMX8EELSp2cgOF7gmhB41pE5RZZ2rsl7xDE1t9bw8ZdJUrlpOTshDAeB5EmStj
+	 I8a2F62A/pVO2Rhfk9lfSlnyf9i9Uqhp4foH8DPM=
+Date: Thu, 22 Jun 2023 23:18:04 -0700
+From: Sean Greenslade <sean@seangreenslade.com>
+To: Theodore Ts'o <tytso@mit.edu>
+Cc: Bagas Sanjaya <bagasdotme@gmail.com>, linux-ext4@vger.kernel.org,
+	Ye Bin <yebin10@huawei.com>,
+	Thorsten Leemhuis <regressions@leemhuis.info>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Regressions <regressions@lists.linux.dev>
+Subject: Re: RO mount of ext4 filesystem causes writes
+Message-ID: <ZJU5HN3bmXR3FvzE@glitch>
+References: <ZIauBR7YiV3rVAHL@glitch>
+ <ZIa5P1HqE62rmzqu@debian.me>
+ <ZJTv+it2x/glkmpp@debian.me>
+ <20230623044611.GD34229@mit.edu>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -32,27 +39,104 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230623030427.908-1-mario.limonciello@amd.com>
+In-Reply-To: <20230623044611.GD34229@mit.edu>
 
-On Thu, Jun 22, 2023 at 10:04:27PM -0500, Mario Limonciello wrote:
-> The ibmvtpm doesn't have `chip->ops` set, and so trying to check
-> if it's a defective AMD fTPM doesn't work.
+On Fri, Jun 23, 2023 at 12:46:11AM -0400, Theodore Ts'o wrote:
+> On Fri, Jun 23, 2023 at 08:06:02AM +0700, Bagas Sanjaya wrote:
+> > 
+> > No reply so far from the culprit author (Ye Bin) nor from Ted. Can
+> > you help in this case?
 > 
-> Add an extra check to tpm_amd_is_rng_defective() to ensure the
-> TPM being checked has `chip->ops`.
+> There's been no reply because I haven't been able to replicate it, and
+> I didn't have the time do enough work to convince myself the report
+> was bogus.  At this point, I have spent time trying to reproduce it,
+> and I've had no luck.
 > 
-> Cc: Linux regressions mailing list <regressions@lists.linux.dev>
-> Reported-by: Aneesh Kumar K. V <aneesh.kumar@linux.ibm.com>
-> Reported-by: Sachin Sant <sachinp@linux.ibm.com>
-> Link: https://lore.kernel.org/lkml/99B81401-DB46-49B9-B321-CF832B50CAC3@linux.ibm.com/
-> Tested-by: Sachin Sant <sachinp@linux.ibm.com>
-> Fixes: bd8621ca1510 ("tpm: Add !tpm_amd_is_rng_defective() to the hwrng_unregister() call site")
-> Fixes: f1324bbc4011 ("tpm: disable hwrng for fTPM on some AMD designs")
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> ---
->  drivers/char/tpm/tpm-chip.c | 3 +++
->  1 file changed, 3 insertions(+)
+> So, unless you can give me a simple set of reproduction instructions,
+> I'm going to have to treat this report is invalid.
+> 
+> Regards,
+> 
+> 						- Ted
+> 
+> Note: this test was done using kvm-xfstests which can be found
+> https://github.com/tytso/xfstests-bld using the install-kconfig and
+> the kbuild script that can also be found in this report.  So if you
+> want to play along from home, feel free.  :-)
+> 
+> 
+> root@kvm-xfstests:~# mkfs.ext4 /dev/vdc
+> mke2fs 1.47.0 (5-Feb-2023)
+> Discarding device blocks: done                            
+> Creating filesystem with 1310720 4k blocks and 327680 inodes
+> Filesystem UUID: fe434060-6731-4b40-a94a-3a8517df0660
+> Superblock backups stored on blocks: 
+>         32768, 98304, 163840, 229376, 294912, 819200, 884736
+> 
+> Allocating group tables: done                            
+> Writing inode tables: done                            
+> Creating journal (16384 blocks): done
+> Writing superblocks and filesystem accounting information: done 
+> 
+> root@kvm-xfstests:~# md5sum /dev/vdc
+> fd38f9f8476ad63a744d179846ee7e18  /dev/vdc
+> root@kvm-xfstests:~# mount -o ro /dev/vdc /mnt
+> [  472.893614] EXT4-fs (vdc): orphan cleanup on readonly fs
+> [  472.894022] EXT4-fs (vdc): mounted filesystem fe434060-6731-4b40-a94a-3a8517df0660 ro with ordered data mode. Quota mode: none.
+> root@kvm-xfstests:~# umount /mnt
+> [  475.698053] EXT4-fs (vdc): unmounting filesystem fe434060-6731-4b40-a94a-3a8517df0660.
+> root@kvm-xfstests:~# md5sum /dev/vdc
+> fd38f9f8476ad63a744d179846ee7e18  /dev/vdc
+> 
+> Hmm.... OK, let's try it with LUKS, even though that *really*
+> shouldn't make a difference.  The cryptsetup lukeFormat and mkfs.ext4
+> steps are skipped here.  Also, note that I had to manually edit the
+> .config file to enable CONFIG_DM_CRYPT, since I dm_crypt is used by
+> xfstests, so my install-kconfig script doesn't enable CONFIG_DM_CRYPT.
+> 
+> 
+> root@kvm-xfstests:~# uname -a
+> Linux kvm-xfstests 6.4.0-rc6-xfstests-lockdep #200 SMP PREEMPT_DYNAMIC Fri Jun 23 00:33:39 EDT 2023 x86_64 GNU/Linux
+> 
+> root@kvm-xfstests:~# md5sum /dev/vdc
+> 28b75cc094e1e2a62ac25a730fc1dfee  /dev/vdc
+> root@kvm-xfstests:~# cryptsetup luksOpen /dev/vdc test
+> Enter passphrase for /dev/vdc: 
+> root@kvm-xfstests:~# mount -o ro /dev/mapper/test /mnt
+> [  812.073771] EXT4-fs (dm-0): orphan cleanup on readonly fs
+> [  812.074306] EXT4-fs (dm-0): mounted filesystem ac3f76f1-da0a-426e-85b2-08526afb2224 ro with ordered data mode. Quota mode: none.
+> root@kvm-xfstests:~# umount /mnt
+> [  814.383016] EXT4-fs (dm-0): unmounting filesystem ac3f76f1-da0a-426e-85b2-08526afb2224.
+> root@kvm-xfstests:~# cryptsetup luksClose /dev/mapper/test
+> [  830.001992] dm-0: detected capacity change from 10452992 to 0
+> root@kvm-xfstests:~# md5sum /dev/vdc
+> 28b75cc094e1e2a62ac25a730fc1dfee  /dev/vdc
 
-No cc: stable on that list above?
+Hi, Ted. Thanks for taking the time to look into this.
 
-greg k-h
+I perhaps should have been more explicit in my report. The issue is not
+that the image is any different after the mount; indeed, the md5sums are
+identical before and after on my machine as well. The issue is that
+something is issuing writes to the backing image, which bumps the mtime
+of the backing image. When handling the images with rsync, a difference
+in mtime causes the whole image to need to be read.
+
+See this flow:
+
+$ stat image.block | grep Modify
+Modify: 2023-06-22 23:00:15.211379972 -0700
+
+# cryptsetup luksOpen image.block t2 && mount -o ro /dev/mapper/t2 /mnt/t2
+# umount /mnt/t2 && cryptsetup luksClose t2
+
+$ stat image.block | grep Modify
+Modify: 2023-06-22 23:03:56.141139649 -0700
+
+
+The regression is the mtime bumping behavior, which doesn't happen prior
+to the eee00237 commit.
+
+Thanks,
+
+--Sean
+
