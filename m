@@ -1,249 +1,41 @@
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-0201.mail-europe.com (mail-0201.mail-europe.com [51.77.79.158])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A3E7100CA
-	for <regressions@lists.linux.dev>; Fri, 23 Jun 2023 18:00:00 +0000 (UTC)
-Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-4008d810c28so6028531cf.3
-        for <regressions@lists.linux.dev>; Fri, 23 Jun 2023 11:00:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1687543200; x=1690135200;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=NR3XgMRotW/m3BP5L8wvyTpmLFOPidYrOBArMrDIUuE=;
-        b=ZInovtcfIjAC5AmsoOrRnq9sIdFaPfJYJ3ViHjt0BrAxyCS+ZH48IzFA8hfba3xgd1
-         EOOA+Dd/urJqCr9SQ+qpunLjF9ifVo4G1GWShxcP6x6FXcVljLbXoa3cZyMu18ZUqIQ3
-         XzwITGgxpISNG3U/zxyQcy+NNtCN7Ns2ijiBEQkvSCxrQLyJQFj/lFpWRI+AlOv/YMKT
-         3PoVx8CCb5mvUwcsUaYsBLAWi2M6rQnrla5T2T4oMgA+DMveH7zQ48xDlGjVhNC3mxVZ
-         larXH7Xa0J05esPOMblLQPZtuCu7yDMds52eZRL5L8bbhnR6hreagcNB/vkC3x6B5fUO
-         YEpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687543200; x=1690135200;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=NR3XgMRotW/m3BP5L8wvyTpmLFOPidYrOBArMrDIUuE=;
-        b=kJRclzcPLPAvNTL1DPpOUivCOVDYThKSw72meb5qeS6SIYUKaBzUXbagi1Fq6yHRuW
-         sRwoeJMmqFnerma1mX37QJEy5XPz0VG0t7eB3/9DanY4EMMD4f3R7/KX9Oc2qmusQPK1
-         t+ipm6/bECk64wmeE2Sj8M3tDfc50VVS9+aqJZ7pf7Zal+fiF1+pR7SViGjggKz0op8a
-         wKT7J9jn9Y+QSKIExvmEWz1ZvixTWmR7AFIz3kDuGyKgpu/H27Z/DZx1o9zTM5e/xEdV
-         ybJMUkXfFvi7qiSmz1wAxs692uRQhPny8Filk7h3wiYPaH5VCBMjR0zWDD/wh+cwOKqE
-         7VLA==
-X-Gm-Message-State: AC+VfDzPX+FKSKTI5Am80uh9YPE00n1Fu1tjya6MnFXs9HQywdCg13uN
-	/tumgSwX7YQuelmHyUTZXYYjMbCW2qr1Qm+Dmdo=
-X-Google-Smtp-Source: ACHHUZ6pAhUSyAV5+Fc5LuKxFFGuZzhNTgoDstA8CLrpHcHcwUXTydnf4yaD3frUVaD9IcPBhuzlvk9VQtuscAkobAk=
-X-Received: by 2002:ac8:7f43:0:b0:3fd:eb04:344f with SMTP id
- g3-20020ac87f43000000b003fdeb04344fmr23929782qtk.54.1687543199819; Fri, 23
- Jun 2023 10:59:59 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EE32100CA
+	for <regressions@lists.linux.dev>; Fri, 23 Jun 2023 18:20:37 +0000 (UTC)
+Date: Fri, 23 Jun 2023 18:20:18 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail; t=1687544427; x=1687803627;
+	bh=sqyZYV43F6W278PBn+QNb6bfWovuTOxia6lpaVS6ZSE=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=F5WtJ0W6lyJQfjHub1jYVSMvVAO2KBh08wk48X7UEDK9qPvh+/yccIGrFy9k+0vE7
+	 Baw0Qfhds9o/I3WR/nRfYYAZID229+5vwc9myZHTwjA8dl11Vyd7tnumeUyXSkZMVY
+	 zL1V5tPmLJpRkMi+IecJtIROemHEQYGx09al+kvzFwZcvyGNS/tAOmUuOCVlV/8Cyi
+	 HiCMQiD36c4X2iTNaXBp2kLlcS/8d4fSwYTl/rJv4JrXmD2wEG0siG4HvZ1Oj9wZdW
+	 +jXzL1ZVnbOoogAha1u807/eQBNzL0x5DbN2ZLNj9Xi2QPuafMl+2MOxlGhm+Sa+b4
+	 bdu8bAQXsUMSQ==
+To: Ard Biesheuvel <ardb@kernel.org>
+From: Sami Korkalainen <sami.korkalainen@proton.me>
+Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>, regressions@leemhuis.info, Andrew Lunn <andrew@lunn.ch>, Linus Torvalds <torvalds@linux-foundation.org>, Linux Stable <stable@vger.kernel.org>, Linux Regressions <regressions@lists.linux.dev>, Bagas Sanjaya <bagasdotme@gmail.com>
+Subject: Re: [REGRESSION][BISECTED] Boot stall from merge tag 'net-next-6.2'
+Message-ID: <CzNbNfn7R2cqLMD6_jp11Dku0OoXYJhx2AMfk8JXeQVP2EGdt7tqeYD4HH0COhp2o_yj5kN6Ao7oObSelRi8yiz-5ltbQ2xtjBvplvgcZjo=@proton.me>
+In-Reply-To: <CAMj1kXHGkJsgArabs_mbzR3Y83s48qmf_aqb50k1LV1Hi5iNgA@mail.gmail.com>
+References: <GQUnKz2al3yke5mB2i1kp3SzNHjK8vi6KJEh7rnLrOQ24OrlljeCyeWveLW9pICEmB9Qc8PKdNt3w1t_g3-Uvxq1l8Wj67PpoMeWDoH8PKk=@proton.me> <ZHFaFosKY24-L7tQ@debian.me> <NVN-hJsvHwaHe6R-y6XIYJp0FV7sCavgMjobFnseULT1wjgkOFNXbGBGT5iVjCfbtU7dW5xy2hIDoq0ASeNaXhvSY-g2Df4aHWVIMQ2c3TQ=@proton.me> <ZIcmpcEsTLXFaO0f@debian.me> <oEbkgJ-ImLxBDZDUTnIAGFWrRVnwBss3FOlalTpwrz83xWgESC9pcvNKiAVp9BzFgqZ0V-NIwzBZ7icKD8ynuIi_ZMtGt7URu3ftcSt16u4=@proton.me> <e2ca75ef-d779-4bad-84a5-a9f262dbe213@lunn.ch> <FNzHwp9-AyweVwIMndmih6VuBD0nsyRp3OM72bmOxpeYszF680jFPJjENIknT32FeaqfVBtVSQFw-5mgE3ZXeksVD8VCFbxwojxP3mSZ9DQ=@proton.me> <9517bb70-426c-0296-b426-f5b4f075f7c8@leemhuis.info> <CAHmME9p2ZLJUMq96vhkiSgvJkxP5BxE778MhY5Ou2WdxLVEJyg@mail.gmail.com> <CAMj1kXHGkJsgArabs_mbzR3Y83s48qmf_aqb50k1LV1Hi5iNgA@mail.gmail.com>
+Feedback-ID: 45678890:user:proton
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <f591b13c-4600-e2a4-8efa-aac6ad828dd1@linaro.org>
- <CAFX2Jfmz7QqZBEdzbPUhPs0yctnXVaVF68tX1c57YX=6ki=0TA@mail.gmail.com>
- <4fe39d77-eb7c-a578-aefa-45b76e2247c2@linaro.org> <CAFX2JfmdRMsHPTySiw4vm7BwJfRZj3s0V3_v7NJ+XwMxBBSo9A@mail.gmail.com>
- <a3683dd3-3f30-bb4c-539d-d1519de6e5bf@linaro.org> <CAFX2JfnS9GVc4NaxKhr9E4y10NNv6SPgcv1yoeHTfEw5NvZgMg@mail.gmail.com>
- <86d8e252-975f-5d48-4567-0911d5ef9a44@linaro.org> <CAFX2Jfn_DSs38WQYsRs2ifLi5w+T3BhZfSU2W80T6dK48_Bb5g@mail.gmail.com>
- <e8d31e48-df6a-fde4-4c6b-c4ccf1664ded@linaro.org> <c8d454b0-d355-f599-f720-b7e64374fb56@linaro.org>
- <CAFX2JfmvMZ7DzD9znWeOHXywgPbUKDS1irMjUerEuborjRBpcg@mail.gmail.com>
- <CAFX2JfnhOz+HiOd4vBwBK+5d19Kb8wfBNQhxRZHQoP8S2qiwFw@mail.gmail.com>
- <CAFX2Jf=5WV=dY9J4-7tp5NB85fDOkwiv8rxQqHziqG+ED1cUJw@mail.gmail.com>
- <CAFX2Jf=TxojviigtdQ=F_8FcHFFC4RNdfkoS=157jnXQCQSq5g@mail.gmail.com>
- <85851031-cf43-07d2-8ec7-b40c8c00be91@linaro.org> <CAFX2JfnH_rOFxn+uT4e1Eutea5En4_z26a-u_qCwOsnr5EowRw@mail.gmail.com>
- <dfcc114f-56f1-e4ab-7b36-f9a4ce3e8c8c@linaro.org>
-In-Reply-To: <dfcc114f-56f1-e4ab-7b36-f9a4ce3e8c8c@linaro.org>
-From: Anna Schumaker <schumaker.anna@gmail.com>
-Date: Fri, 23 Jun 2023 13:59:43 -0400
-Message-ID: <CAFX2Jf=uaOC2oDceShnNNJdSeW-MNwh7N=Jh=S9zYjP_Ci-DuQ@mail.gmail.com>
-Subject: Re: Regression: NULL pointer dereference after NFS_V4_2_READ_PLUS
- (commit 7fd461c47)
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Trond Myklebust <trondmy@hammerspace.com>, Anna Schumaker <Anna.Schumaker@netapp.com>, 
-	linux-nfs <linux-nfs@vger.kernel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Content-Type: multipart/mixed; boundary="000000000000f823fb05fecfc466"
-
---000000000000f823fb05fecfc466
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-Hi Krzysztof,
+> However, the failure mode still strikes me as odd, and I'd be
+> interested in finding out whether booting with efi=3Dnoruntime makes a
+> difference at all, as that would prevent the SetVariable() all from
+> taking place, without affecting anything else.
 
-On Wed, Jun 21, 2023 at 9:27=E2=80=AFAM Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
->
-> On 21/06/2023 14:49, Anna Schumaker wrote:
-> > On Sat, Jun 17, 2023 at 6:09=E2=80=AFAM Krzysztof Kozlowski
-> > <krzysztof.kozlowski@linaro.org> wrote:
-> >>
-> >> On 15/06/2023 21:38, Anna Schumaker wrote:
-> >>> On Thu, Jun 15, 2023 at 1:16=E2=80=AFPM Anna Schumaker <schumaker.ann=
-a@gmail.com> wrote:
-> >>>>
-> >>>> On Thu, Jun 15, 2023 at 1:04=E2=80=AFPM Anna Schumaker <schumaker.an=
-na@gmail.com> wrote:
-> >>>>>
-> >>>>> On Thu, Jun 15, 2023 at 9:01=E2=80=AFAM Anna Schumaker <schumaker.a=
-nna@gmail.com> wrote:
-> >>>>>>
-> >>>>>> On Thu, Jun 15, 2023 at 4:55=E2=80=AFAM Krzysztof Kozlowski
-> >>>>>> <krzysztof.kozlowski@linaro.org> wrote:
-> >>>>>>>
-> >>>>>>> On 15/06/2023 10:52, Krzysztof Kozlowski wrote:
-> >>>>>>>> On 14/06/2023 22:55, Anna Schumaker wrote:
-> >>>>>>>>>>>> Still null ptr (built on 420b2d4 with your patch):
-> >>>>>>>>>>>
-> >>>>>>>>>>> We're through the merge window and at rc1 now, so I can spend=
- more
-> >>>>>>>>>>> time scratching my head over your bug again. We've come up wi=
-th a
-> >>>>>>>>>>> patch (attached) that adds a bunch of printks to show us what=
- the
-> >>>>>>>>>>> kernel thinks is going on. Do you mind trying it out and lett=
-ing us
-> >>>>>>>>>>> know what gets printed out? You'll need to make sure
-> >>>>>>>>>>> CONFIG_NFS_V4_2_READ_PLUS is enabled when compiling the kerne=
-l.
-> >>>>>>>>>>
-> >>>>>>>>>> The patch does not apply. I tried: v6.4-rc1, v6.4-rc5, next-20=
-230609.
-> >>>>>>>>>
-> >>>>>>>>> Can you try the attached patch on top of my 3-patch series from=
- the
-> >>>>>>>>> other day, and let me know what gets printed out? It adds a bun=
-ch of
-> >>>>>>>>> printk()s at strategic points to print out what is going on wit=
-h the
-> >>>>>>>>> xdr scratch buffer since it's suddenly a bad memory address aft=
-er
-> >>>>>>>>> working for a bit on your machine.
-> >>>>>>>>>
-> >>>>>>>>
-> >>>>>>>> Here you have entire log - attached (113 kB, I hope goes past ma=
-iling
-> >>>>>>>> lists/spam filters).
-> >>>>>>>
-> >>>>>>> As expected this bounced from the mailing lists, but I hope you g=
-ot it.
-> >>>>>>> If not, let me know.
-> >>>>>>
-> >>>>>> I did still receive it. Thanks!
-> >>>>>
-> >>>>> Can you swap out yesterday's patch with this patch? I've adjusted w=
-hat
-> >>>>> gets printed out, and added printk()s to xdr_copy_to_scratch().  I'=
-m
-> >>>>> starting to think that the xdr scratch buffer is fine, and that it'=
-s
-> >>>>> the other pointer passed to memcpy() in that function that's the
-> >>>>> problem, and the output from this patch will confirm for me.
-> >>>>
-> >>>> Oh, and can you add this one on top of the v2 patch as well?
-> >>>
-> >>> Sorry about the noise today. Can you use this patch instead of the tw=
-o
-> >>> I attached earlier? I cleaned up the output and cut down on extra
-> >>> output..
-> >>>
-> >>
-> >> Here you have - attached.
-> >
-> > This is good, thanks! I was finally able to figure out how to hit the
-> > bug using a 32bit x86 VM, so hopefully the next thing you hear from me
-> > is a patch fixing the bug!
-
-I'm really hopeful that the attached patch finally fixes the issue.
-Can you try it and let me know?
-
-Thanks,
-Anna
-
->
-> QEMU also has 32-bit ARM and x86...
->
-> Best regards,
-> Krzysztof
->
-
---000000000000f823fb05fecfc466
-Content-Type: text/x-patch; charset="US-ASCII"; 
-	name="0001-SUNRPC-kmap-the-xdr-pages-during-decode.patch"
-Content-Disposition: attachment; 
-	filename="0001-SUNRPC-kmap-the-xdr-pages-during-decode.patch"
-Content-Transfer-Encoding: base64
-Content-ID: <f_lj8vm1s50>
-X-Attachment-Id: f_lj8vm1s50
-
-RnJvbSA4OGJlNjIxZmM2ODdkODU4OTE2MzZlZDQ2OTVhYjk5M2UxZjJjYjNiIE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQpGcm9tOiBBbm5hIFNjaHVtYWtlciA8QW5uYS5TY2h1bWFrZXJATmV0YXBw
-LmNvbT4KRGF0ZTogRnJpLCAyMyBKdW4gMjAyMyAxMTo0MzoxNCAtMDQwMApTdWJqZWN0OiBbUEFU
-Q0hdIFNVTlJQQzoga21hcCgpIHRoZSB4ZHIgcGFnZXMgZHVyaW5nIGRlY29kZQoKSWYgdGhlIHBh
-Z2VzIGFyZSBpbiBISUdITUVNIHRoZW4gd2UgbmVlZCB0byBtYWtlIHN1cmUgdGhleSdyZSBtYXBw
-ZWQKYmVmb3JlIHRyeWluZyB0byByZWFkIGRhdGEgb2ZmIG9mIHRoZW0sIG90aGVyd2lzZSB3ZSBj
-b3VsZCBlbmQgdXAgd2l0aCBhCk5VTEwgcG9pbnRlciBkZXJlZmVyZW5jZS4KClJlcG9ydGVkLWJ5
-OiBLcnp5c3p0b2YgS296bG93c2tpIDxrcnp5c3p0b2Yua296bG93c2tpQGxpbmFyby5vcmc+ClNp
-Z25lZC1vZmYtYnk6IEFubmEgU2NodW1ha2VyIDxBbm5hLlNjaHVtYWtlckBOZXRhcHAuY29tPgot
-LS0KIGluY2x1ZGUvbGludXgvc3VucnBjL3hkci5oIHwgIDIgKysKIG5ldC9zdW5ycGMvY2xudC5j
-ICAgICAgICAgIHwgIDEgKwogbmV0L3N1bnJwYy94ZHIuYyAgICAgICAgICAgfCAyMCArKysrKysr
-KysrKysrKy0tLS0tLQogMyBmaWxlcyBjaGFuZ2VkLCAxNyBpbnNlcnRpb25zKCspLCA2IGRlbGV0
-aW9ucygtKQoKZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvc3VucnBjL3hkci5oIGIvaW5jbHVk
-ZS9saW51eC9zdW5ycGMveGRyLmgKaW5kZXggZDkxNzYxOGEzMDU4Li5mNTYyYWFiNDY4ZjUgMTAw
-NjQ0Ci0tLSBhL2luY2x1ZGUvbGludXgvc3VucnBjL3hkci5oCisrKyBiL2luY2x1ZGUvbGludXgv
-c3VucnBjL3hkci5oCkBAIC0yMjgsNiArMjI4LDcgQEAgc3RydWN0IHhkcl9zdHJlYW0gewogCXN0
-cnVjdCBrdmVjICppb3Y7CS8qIHBvaW50ZXIgdG8gdGhlIGN1cnJlbnQga3ZlYyAqLwogCXN0cnVj
-dCBrdmVjIHNjcmF0Y2g7CS8qIFNjcmF0Y2ggYnVmZmVyICovCiAJc3RydWN0IHBhZ2UgKipwYWdl
-X3B0cjsJLyogcG9pbnRlciB0byB0aGUgY3VycmVudCBwYWdlICovCisJdm9pZCAqcGFnZV9rYWRk
-cjsJLyoga21hcHBlZCBhZGRyZXNzIG9mIHRoZSBjdXJyZW50IHBhZ2UgKi8KIAl1bnNpZ25lZCBp
-bnQgbndvcmRzOwkvKiBSZW1haW5pbmcgZGVjb2RlIGJ1ZmZlciBsZW5ndGggKi8KIAogCXN0cnVj
-dCBycGNfcnFzdCAqcnFzdDsJLyogRm9yIGRlYnVnZ2luZyAqLwpAQCAtMjU0LDYgKzI1NSw3IEBA
-IGV4dGVybiB2b2lkIHhkcl90cnVuY2F0ZV9kZWNvZGUoc3RydWN0IHhkcl9zdHJlYW0gKnhkciwg
-c2l6ZV90IGxlbik7CiBleHRlcm4gaW50IHhkcl9yZXN0cmljdF9idWZsZW4oc3RydWN0IHhkcl9z
-dHJlYW0gKnhkciwgaW50IG5ld2J1Zmxlbik7CiBleHRlcm4gdm9pZCB4ZHJfd3JpdGVfcGFnZXMo
-c3RydWN0IHhkcl9zdHJlYW0gKnhkciwgc3RydWN0IHBhZ2UgKipwYWdlcywKIAkJdW5zaWduZWQg
-aW50IGJhc2UsIHVuc2lnbmVkIGludCBsZW4pOworZXh0ZXJuIHZvaWQgeGRyX3N0cmVhbV91bm1h
-cF9jdXJyZW50X3BhZ2Uoc3RydWN0IHhkcl9zdHJlYW0gKnhkcik7CiBleHRlcm4gdW5zaWduZWQg
-aW50IHhkcl9zdHJlYW1fcG9zKGNvbnN0IHN0cnVjdCB4ZHJfc3RyZWFtICp4ZHIpOwogZXh0ZXJu
-IHVuc2lnbmVkIGludCB4ZHJfcGFnZV9wb3MoY29uc3Qgc3RydWN0IHhkcl9zdHJlYW0gKnhkcik7
-CiBleHRlcm4gdm9pZCB4ZHJfaW5pdF9kZWNvZGUoc3RydWN0IHhkcl9zdHJlYW0gKnhkciwgc3Ry
-dWN0IHhkcl9idWYgKmJ1ZiwKZGlmZiAtLWdpdCBhL25ldC9zdW5ycGMvY2xudC5jIGIvbmV0L3N1
-bnJwYy9jbG50LmMKaW5kZXggZDJlZTU2NjM0MzA4Li4zYjdlNjc2ZDg5MzUgMTAwNjQ0Ci0tLSBh
-L25ldC9zdW5ycGMvY2xudC5jCisrKyBiL25ldC9zdW5ycGMvY2xudC5jCkBAIC0yNTkwLDYgKzI1
-OTAsNyBAQCBjYWxsX2RlY29kZShzdHJ1Y3QgcnBjX3Rhc2sgKnRhc2spCiAJY2FzZSAwOgogCQl0
-YXNrLT50a19hY3Rpb24gPSBycGNfZXhpdF90YXNrOwogCQl0YXNrLT50a19zdGF0dXMgPSBycGNh
-dXRoX3Vud3JhcF9yZXNwKHRhc2ssICZ4ZHIpOworCQl4ZHJfc3RyZWFtX3VubWFwX2N1cnJlbnRf
-cGFnZSgmeGRyKTsKIAkJcmV0dXJuOwogCWNhc2UgLUVBR0FJTjoKIAkJdGFzay0+dGtfc3RhdHVz
-ID0gMDsKZGlmZiAtLWdpdCBhL25ldC9zdW5ycGMveGRyLmMgYi9uZXQvc3VucnBjL3hkci5jCmlu
-ZGV4IDM5MWIzMzZkOTdkZS4uYjA3M2Y1MWU2MDE4IDEwMDY0NAotLS0gYS9uZXQvc3VucnBjL3hk
-ci5jCisrKyBiL25ldC9zdW5ycGMveGRyLmMKQEAgLTEzMDgsNiArMTMwOCwxNCBAQCBzdGF0aWMg
-dW5zaWduZWQgaW50IHhkcl9zZXRfdGFpbF9iYXNlKHN0cnVjdCB4ZHJfc3RyZWFtICp4ZHIsCiAJ
-cmV0dXJuIHhkcl9zZXRfaW92KHhkciwgYnVmLT50YWlsLCBiYXNlLCBsZW4pOwogfQogCit2b2lk
-IHhkcl9zdHJlYW1fdW5tYXBfY3VycmVudF9wYWdlKHN0cnVjdCB4ZHJfc3RyZWFtICp4ZHIpCit7
-CisJaWYgKHhkci0+cGFnZV9rYWRkcikgeworCQlrdW5tYXBfbG9jYWwoeGRyLT5wYWdlX2thZGRy
-KTsKKwkJeGRyLT5wYWdlX2thZGRyID0gTlVMTDsKKwl9Cit9CisKIHN0YXRpYyB1bnNpZ25lZCBp
-bnQgeGRyX3NldF9wYWdlX2Jhc2Uoc3RydWN0IHhkcl9zdHJlYW0gKnhkciwKIAkJCQkgICAgICB1
-bnNpZ25lZCBpbnQgYmFzZSwgdW5zaWduZWQgaW50IGxlbikKIHsKQEAgLTEzMTUsNyArMTMyMyw2
-IEBAIHN0YXRpYyB1bnNpZ25lZCBpbnQgeGRyX3NldF9wYWdlX2Jhc2Uoc3RydWN0IHhkcl9zdHJl
-YW0gKnhkciwKIAl1bnNpZ25lZCBpbnQgbWF4bGVuOwogCXVuc2lnbmVkIGludCBwZ29mZjsKIAl1
-bnNpZ25lZCBpbnQgcGdlbmQ7Ci0Jdm9pZCAqa2FkZHI7CiAKIAltYXhsZW4gPSB4ZHItPmJ1Zi0+
-cGFnZV9sZW47CiAJaWYgKGJhc2UgPj0gbWF4bGVuKQpAQCAtMTMzMCwxNSArMTMzNywxNSBAQCBz
-dGF0aWMgdW5zaWduZWQgaW50IHhkcl9zZXRfcGFnZV9iYXNlKHN0cnVjdCB4ZHJfc3RyZWFtICp4
-ZHIsCiAKIAlwZ25yID0gYmFzZSA+PiBQQUdFX1NISUZUOwogCXhkci0+cGFnZV9wdHIgPSAmeGRy
-LT5idWYtPnBhZ2VzW3BnbnJdOwotCWthZGRyID0gcGFnZV9hZGRyZXNzKCp4ZHItPnBhZ2VfcHRy
-KTsKKwl4ZHItPnBhZ2Vfa2FkZHIgPSBrbWFwX2xvY2FsX3BhZ2UoKnhkci0+cGFnZV9wdHIpOwog
-CiAJcGdvZmYgPSBiYXNlICYgflBBR0VfTUFTSzsKLQl4ZHItPnAgPSAoX19iZTMyKikoa2FkZHIg
-KyBwZ29mZik7CisJeGRyLT5wID0gKF9fYmUzMiopKHhkci0+cGFnZV9rYWRkciArIHBnb2ZmKTsK
-IAogCXBnZW5kID0gcGdvZmYgKyBsZW47CiAJaWYgKHBnZW5kID4gUEFHRV9TSVpFKQogCQlwZ2Vu
-ZCA9IFBBR0VfU0laRTsKLQl4ZHItPmVuZCA9IChfX2JlMzIqKShrYWRkciArIHBnZW5kKTsKKwl4
-ZHItPmVuZCA9IChfX2JlMzIqKSh4ZHItPnBhZ2Vfa2FkZHIgKyBwZ2VuZCk7CiAJeGRyLT5pb3Yg
-PSBOVUxMOwogCXJldHVybiBsZW47CiB9CkBAIC0xMzY2LDkgKzEzNzMsMTAgQEAgc3RhdGljIHZv
-aWQgeGRyX3NldF9uZXh0X3BhZ2Uoc3RydWN0IHhkcl9zdHJlYW0gKnhkcikKIAogc3RhdGljIGJv
-b2wgeGRyX3NldF9uZXh0X2J1ZmZlcihzdHJ1Y3QgeGRyX3N0cmVhbSAqeGRyKQogewotCWlmICh4
-ZHItPnBhZ2VfcHRyICE9IE5VTEwpCisJaWYgKHhkci0+cGFnZV9wdHIgIT0gTlVMTCkgeworCQl4
-ZHJfc3RyZWFtX3VubWFwX2N1cnJlbnRfcGFnZSh4ZHIpOwogCQl4ZHJfc2V0X25leHRfcGFnZSh4
-ZHIpOwotCWVsc2UgaWYgKHhkci0+aW92ID09IHhkci0+YnVmLT5oZWFkKQorCX0gZWxzZSBpZiAo
-eGRyLT5pb3YgPT0geGRyLT5idWYtPmhlYWQpCiAJCXhkcl9zZXRfcGFnZSh4ZHIsIDAsIHhkcl9z
-dHJlYW1fcmVtYWluaW5nKHhkcikpOwogCXJldHVybiB4ZHItPnAgIT0geGRyLT5lbmQ7CiB9Ci0t
-IAoyLjQxLjAKCg==
---000000000000f823fb05fecfc466--
+No boot stall with efi=3Dnoruntime. Tested on 6.3.9 and 6.4-rc7.
