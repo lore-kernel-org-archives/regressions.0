@@ -1,28 +1,45 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B54EAD30
-	for <regressions@lists.linux.dev>; Fri, 23 Jun 2023 18:39:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 169ACC433C9
-	for <regressions@lists.linux.dev>; Fri, 23 Jun 2023 18:39:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1687545551;
-	bh=3UowwxFSn70DlgDYyW0skic5HR5RMWOVAExiS2/BiBc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Sjsr3dWDt9+IkJJxBVqH6M7uc5J+1Wp3Ebb3g2r237NKfhmzLqn26tUuMzCFJ0oK3
-	 WALxpL7MdnoAVhKZLEDJrJxnqC0wmXeEGaEaTRuVkNfkoHHNR+7F7UyThS/mqIvzws
-	 WvKaGdCbatnZKhoShhDpe/Pd26o+UNBv/Swrntc8IAuRZ+oAR+XzHL4ktxoYAGNExl
-	 QtWrMLwMDFNYaPu83zQl6ZCyx7CrrNLF0pZDyr5xsnJVfWcIiss3p+isG4FqR+2PtV
-	 NLacNADTekkNB+gpH4Y/sZdI9cWNaKsupcRKgbrYkOSASi2RSmJMRmHwqI9n8/pQBv
-	 AEVHtk6mAsi6Q==
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2b47bfd4e45so16265421fa.0
-        for <regressions@lists.linux.dev>; Fri, 23 Jun 2023 11:39:11 -0700 (PDT)
-X-Gm-Message-State: AC+VfDx11xLty7WhGgmlYWs/qV2XAeKD8mdO9KkqQVZaD64yGya2kUFL
-	UKRKwQNNBetog7bblgUfw2u/YfLUWQ9K8/ZdtvU=
-X-Google-Smtp-Source: ACHHUZ4SR6zSznmoBTp36ac9MGQldmAXgPQHqZoG/f+maEMbFY6jZGzu6nSxJ3ZgdkpMMyE7MNmogB2EHwXOIi8ea/k=
-X-Received: by 2002:a19:5e42:0:b0:4f7:5e8b:2acf with SMTP id
- z2-20020a195e42000000b004f75e8b2acfmr13562679lfi.44.1687545549131; Fri, 23
- Jun 2023 11:39:09 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 612CEA93B
+	for <regressions@lists.linux.dev>; Fri, 23 Jun 2023 19:01:41 +0000 (UTC)
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-51cff235226so168146a12.0
+        for <regressions@lists.linux.dev>; Fri, 23 Jun 2023 12:01:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1687546899; x=1690138899;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=m6G2sMv4B2au2OlpHw9YOutXro+13UpPpl7VGbAiI6o=;
+        b=H1pwdE1MDp9wneWqtC/6GOU+4gyEqtvTodhu5Uanw4hSCppklI4iDtmFDu5IkzCFn4
+         HwUlKWOpKWeJc6VCyko6aBa7bWBHE3DtahiGbPwdnF3ixu1kb35J6bxuDO/K0pcOQz13
+         CEeilCJIiYOyWI8NNjn2iANhybatXa3fumxf0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687546899; x=1690138899;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=m6G2sMv4B2au2OlpHw9YOutXro+13UpPpl7VGbAiI6o=;
+        b=AKMqgQnxpxG0GD9GeWYq1OPPIQV3rKqGGpYxSfi/z5OtLoTkM85GQqMDJEVVr254JU
+         rI9PRx4BlhIvHVyrQWVd8a35JKirQyRE2kql4jX5qChchIlpCUD/v+2Fcjmt2hI/+4cJ
+         wvft5S/aoHortylh1JVwuaMgYfyE8HC25CecWYdFXE114p4iFFmmgrQK5vWHa7FyqVzx
+         qBRR5MxzKmC8AUb9v4Ey1/xWuESlZxs6INVdHU/2ttS/lRQKTIL9azcbZbgXZmTWssuU
+         +cU7M/R7QBXE3jy/3kJd+RsUT0d/i1CnSWQfrctRytw6WetNB/xs+CFJtkNEGd3lmv0I
+         +rbQ==
+X-Gm-Message-State: AC+VfDxsu1lQDl8LG5g5gEN2CtookO23dCcgXrFJdabgVnH04ALeyO6Y
+	1VyrToLCZCQbQeQyhTbU8jNkbbgjh78nSR86zbj0cya+
+X-Google-Smtp-Source: ACHHUZ6FCr7NSJlagslG5TTrjHv0BJwCkvgbbVdX0WTGb21PgYapUlfXbvwHNg3NcZhm3u5S2f7R1g==
+X-Received: by 2002:a05:6402:28f:b0:51b:df39:1f0d with SMTP id l15-20020a056402028f00b0051bdf391f0dmr7355191edv.20.1687546899138;
+        Fri, 23 Jun 2023 12:01:39 -0700 (PDT)
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com. [209.85.208.53])
+        by smtp.gmail.com with ESMTPSA id n21-20020a056402515500b005187d2ba7c1sm5469424edd.91.2023.06.23.12.01.37
+        for <regressions@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 23 Jun 2023 12:01:38 -0700 (PDT)
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-51a52a7d859so3746605a12.0
+        for <regressions@lists.linux.dev>; Fri, 23 Jun 2023 12:01:37 -0700 (PDT)
+X-Received: by 2002:aa7:d706:0:b0:51b:daa6:a215 with SMTP id
+ t6-20020aa7d706000000b0051bdaa6a215mr8076731edq.13.1687546897711; Fri, 23 Jun
+ 2023 12:01:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -34,22 +51,40 @@ References: <GQUnKz2al3yke5mB2i1kp3SzNHjK8vi6KJEh7rnLrOQ24OrlljeCyeWveLW9pICEmB9
  <ZIcmpcEsTLXFaO0f@debian.me> <oEbkgJ-ImLxBDZDUTnIAGFWrRVnwBss3FOlalTpwrz83xWgESC9pcvNKiAVp9BzFgqZ0V-NIwzBZ7icKD8ynuIi_ZMtGt7URu3ftcSt16u4=@proton.me>
  <e2ca75ef-d779-4bad-84a5-a9f262dbe213@lunn.ch> <FNzHwp9-AyweVwIMndmih6VuBD0nsyRp3OM72bmOxpeYszF680jFPJjENIknT32FeaqfVBtVSQFw-5mgE3ZXeksVD8VCFbxwojxP3mSZ9DQ=@proton.me>
  <9517bb70-426c-0296-b426-f5b4f075f7c8@leemhuis.info> <CAHmME9p2ZLJUMq96vhkiSgvJkxP5BxE778MhY5Ou2WdxLVEJyg@mail.gmail.com>
- <CAMj1kXHGkJsgArabs_mbzR3Y83s48qmf_aqb50k1LV1Hi5iNgA@mail.gmail.com> <CzNbNfn7R2cqLMD6_jp11Dku0OoXYJhx2AMfk8JXeQVP2EGdt7tqeYD4HH0COhp2o_yj5kN6Ao7oObSelRi8yiz-5ltbQ2xtjBvplvgcZjo=@proton.me>
-In-Reply-To: <CzNbNfn7R2cqLMD6_jp11Dku0OoXYJhx2AMfk8JXeQVP2EGdt7tqeYD4HH0COhp2o_yj5kN6Ao7oObSelRi8yiz-5ltbQ2xtjBvplvgcZjo=@proton.me>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Fri, 23 Jun 2023 20:38:58 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXGb+RfMQeOui8uzXBFRchfWhpnEsxOo84Y-LLBqk=z5Uw@mail.gmail.com>
-Message-ID: <CAMj1kXGb+RfMQeOui8uzXBFRchfWhpnEsxOo84Y-LLBqk=z5Uw@mail.gmail.com>
+ <CAMj1kXHGkJsgArabs_mbzR3Y83s48qmf_aqb50k1LV1Hi5iNgA@mail.gmail.com>
+ <CzNbNfn7R2cqLMD6_jp11Dku0OoXYJhx2AMfk8JXeQVP2EGdt7tqeYD4HH0COhp2o_yj5kN6Ao7oObSelRi8yiz-5ltbQ2xtjBvplvgcZjo=@proton.me>
+ <CAMj1kXGb+RfMQeOui8uzXBFRchfWhpnEsxOo84Y-LLBqk=z5Uw@mail.gmail.com>
+In-Reply-To: <CAMj1kXGb+RfMQeOui8uzXBFRchfWhpnEsxOo84Y-LLBqk=z5Uw@mail.gmail.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Fri, 23 Jun 2023 12:01:20 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgdH_UtN=PPrb6XV3GogHPMPVYnSgLLAL2d2pM2rru4RQ@mail.gmail.com>
+Message-ID: <CAHk-=wgdH_UtN=PPrb6XV3GogHPMPVYnSgLLAL2d2pM2rru4RQ@mail.gmail.com>
 Subject: Re: [REGRESSION][BISECTED] Boot stall from merge tag 'net-next-6.2'
-To: Sami Korkalainen <sami.korkalainen@proton.me>
-Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>, regressions@leemhuis.info, 
-	Andrew Lunn <andrew@lunn.ch>, Linus Torvalds <torvalds@linux-foundation.org>, 
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Sami Korkalainen <sami.korkalainen@proton.me>, "Jason A. Donenfeld" <Jason@zx2c4.com>, 
+	regressions@leemhuis.info, Andrew Lunn <andrew@lunn.ch>, 
 	Linux Stable <stable@vger.kernel.org>, Linux Regressions <regressions@lists.linux.dev>, 
 	Bagas Sanjaya <bagasdotme@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 
-On Fri, 23 Jun 2023 at 20:20, Sami Korkalainen
-<sami.korkalainen@proton.me> wrote:
+On Fri, 23 Jun 2023 at 11:39, Ard Biesheuvel <ardb@kernel.org> wrote:
 >
+> On Fri, 23 Jun 2023 at 20:20, Sami Korkalainen
+> <sami.korkalainen@proton.me> wrote:
+> >
+>
+> Please don't send me encrypted emails.
 
-Please don't send me encrypted emails.
+Heh. That must be protonmail doing some crazy stuff based on
+recipient. Here's Sami's email on the lists:
+
+   https://lore.kernel.org/all/CzNbNfn7R2cqLMD6_jp11Dku0OoXYJhx2AMfk8JXeQVP2EGdt7tqeYD4HH0COhp2o_yj5kN6Ao7oObSelRi8yiz-5ltbQ2xtjBvplvgcZjo=@proton.me/
+
+(and it's what I got too). No encryption anywhere, just the message ID
+from hell.
+
+So for some reason protonmail decided that *you* are special, and
+singled you out for their super sekrit encryption. Presumably because
+Sami has your pgp key.
+
+                  Linus
