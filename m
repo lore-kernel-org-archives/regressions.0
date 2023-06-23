@@ -1,45 +1,28 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FA55134C4
-	for <regressions@lists.linux.dev>; Fri, 23 Jun 2023 21:52:46 +0000 (UTC)
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-51d7d0dbec8so133901a12.2
-        for <regressions@lists.linux.dev>; Fri, 23 Jun 2023 14:52:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1687557164; x=1690149164;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=crikR62VHTobwaAaRBUscQ/y18KPE823gSw9fzpdAYI=;
-        b=hvYlpE3k1JZ4vv1b0ppc8Er5V1Ib2OHQJCxNdIzLazPaMVt8MjuPGba+9ag5LRx0M1
-         cc8vQBrT1DPCm935R9Ez2RIvaiJON02JUGU0U6boUW3jyLWveL47gwIsPwTFR5llvPyB
-         WhsIHYXeM6U3JNV3FB5nOkJ3W2FGDGahhPk3o=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687557164; x=1690149164;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=crikR62VHTobwaAaRBUscQ/y18KPE823gSw9fzpdAYI=;
-        b=PYNgINllIIL6pf/yrQqcQRPUlCul6oGM3JKd4FFWgjNxEpZZmsdOnlhkqbsoBrg/XK
-         y5KGfYEMAxgETscZEW/2PokLCiIjPSE495S4adZVJ1nwEURWHmkZJN7NZNTBjCUwK/hS
-         W2cEElhxvysk3U+3Wpf2opO8ORl9LNjXR18B7R2qAtxUeNodwU+ob8+Oljo6tm69qx4A
-         vrGiwdmcRIPdGG68mBy/W2sR9vKoeTgksR1AcuQdgnruw6gd2sq12jdwYspYEo3FXXiC
-         G1fzi9FsRdo27+aMU1o9a0Lst2kktCmTihxt4uTc8bzOov+9H5NzkSHuI1cvgSCBoBsV
-         hqOA==
-X-Gm-Message-State: AC+VfDzczrkPHAIXuqH9gVruzQsk6LmbcEXOpLRz6t/M3l5mvRtFpKy4
-	9v0SEH08+TZHE8AKaUF4BxBPCXsiwkM0egXZgjNUag==
-X-Google-Smtp-Source: ACHHUZ4gWW0S6rkR2HaP5rbtfJ+aZN/1LK4hbrzwHlh63P6JIHsa4B6WdIiHROoKqgOitmeEK+RRFw==
-X-Received: by 2002:a05:6402:456:b0:50b:c693:70af with SMTP id p22-20020a056402045600b0050bc69370afmr14883065edw.2.1687557163984;
-        Fri, 23 Jun 2023 14:52:43 -0700 (PDT)
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com. [209.85.208.41])
-        by smtp.gmail.com with ESMTPSA id f2-20020a056402004200b0051bde3e1e48sm3720104edu.96.2023.06.23.14.52.43
-        for <regressions@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 23 Jun 2023 14:52:43 -0700 (PDT)
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-51d7d0dbec8so133886a12.2
-        for <regressions@lists.linux.dev>; Fri, 23 Jun 2023 14:52:43 -0700 (PDT)
-X-Received: by 2002:aa7:c859:0:b0:50b:c085:1991 with SMTP id
- g25-20020aa7c859000000b0050bc0851991mr13780235edt.19.1687557162976; Fri, 23
- Jun 2023 14:52:42 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3272E23109
+	for <regressions@lists.linux.dev>; Fri, 23 Jun 2023 22:55:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85CF0C433C0
+	for <regressions@lists.linux.dev>; Fri, 23 Jun 2023 22:55:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1687560917;
+	bh=weOVIPX4hAWoUV6Jeu0W12QfWvVBdBF8o/HWsfEgReg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=u+wQ/8vmazD36SpKNw2YOm0hAbLZARjAvAe11jZe15SkEhf64ntz68tc2LRI39Zq+
+	 KS4Ke24qUP09whKQk0yI1dZXTQPri0fj+z97djQQCbX9UoByaWQel+aRN93/FMoVes
+	 NLJeCxEnCyMs2fMcrod34sjXB0rdl04wsa0BydGYbT+O37udslwVkxSwRokCkT0xfd
+	 apdzGFVBaCP8rWx2ZZoLjtVQljNP8dvZsgqnLG+w1vY+1X1YXMFfD0NS4gloqOL8o6
+	 3/myydGKKteVONl9o2ioPpB6E2pP2LBXZRzbEpuMga+KXYXKGAww92Jeohnxqtquby
+	 bt1Xjmco6xi0g==
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-4f86dbce369so1584826e87.0
+        for <regressions@lists.linux.dev>; Fri, 23 Jun 2023 15:55:17 -0700 (PDT)
+X-Gm-Message-State: AC+VfDwtjpARQrM2/tQ9DIOejEI37X382Rt224N29zxMzjoANT+C9p7v
+	zJ25RKaILpQYheS+Sw+FOBveMWz3u2h9JhuVmXY=
+X-Google-Smtp-Source: ACHHUZ5ZpkrLcguE5vC7mCL5z1dRy/+wsNHNNVIvve1lnIWpIW/ZhU+RN6svbHMRj1LHmEZ1oVSngzhhCk/sJHlU1YE=
+X-Received: by 2002:a05:6512:10ca:b0:4f9:6b64:9a36 with SMTP id
+ k10-20020a05651210ca00b004f96b649a36mr3826766lfg.62.1687560915498; Fri, 23
+ Jun 2023 15:55:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -52,39 +35,66 @@ References: <GQUnKz2al3yke5mB2i1kp3SzNHjK8vi6KJEh7rnLrOQ24OrlljeCyeWveLW9pICEmB9
  <e2ca75ef-d779-4bad-84a5-a9f262dbe213@lunn.ch> <FNzHwp9-AyweVwIMndmih6VuBD0nsyRp3OM72bmOxpeYszF680jFPJjENIknT32FeaqfVBtVSQFw-5mgE3ZXeksVD8VCFbxwojxP3mSZ9DQ=@proton.me>
  <9517bb70-426c-0296-b426-f5b4f075f7c8@leemhuis.info> <CAHmME9p2ZLJUMq96vhkiSgvJkxP5BxE778MhY5Ou2WdxLVEJyg@mail.gmail.com>
  <CAMj1kXHGkJsgArabs_mbzR3Y83s48qmf_aqb50k1LV1Hi5iNgA@mail.gmail.com>
- <CAHk-=wiiFHLSDe3JSSMm5EezpXXMFxYH=RwFLEbgsCKLjg4qqQ@mail.gmail.com> <CAHmME9oC6Kq5qeoSmY5CdDrbGnkcp9sy-9ESXdpRtM8x1_6Hwg@mail.gmail.com>
-In-Reply-To: <CAHmME9oC6Kq5qeoSmY5CdDrbGnkcp9sy-9ESXdpRtM8x1_6Hwg@mail.gmail.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Fri, 23 Jun 2023 14:52:25 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjKtHwJBeUiJL_1HFJKWja120w-6qaLx1FS5p9QE0PfSw@mail.gmail.com>
-Message-ID: <CAHk-=wjKtHwJBeUiJL_1HFJKWja120w-6qaLx1FS5p9QE0PfSw@mail.gmail.com>
+ <CAHk-=wiiFHLSDe3JSSMm5EezpXXMFxYH=RwFLEbgsCKLjg4qqQ@mail.gmail.com>
+ <CAHmME9oC6Kq5qeoSmY5CdDrbGnkcp9sy-9ESXdpRtM8x1_6Hwg@mail.gmail.com> <CAHk-=wjKtHwJBeUiJL_1HFJKWja120w-6qaLx1FS5p9QE0PfSw@mail.gmail.com>
+In-Reply-To: <CAHk-=wjKtHwJBeUiJL_1HFJKWja120w-6qaLx1FS5p9QE0PfSw@mail.gmail.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Sat, 24 Jun 2023 00:55:03 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXF7aO1FPXeBFeLBe1-7j5hUjiTAXu-xV6oKFN8dRY3qDQ@mail.gmail.com>
+Message-ID: <CAMj1kXF7aO1FPXeBFeLBe1-7j5hUjiTAXu-xV6oKFN8dRY3qDQ@mail.gmail.com>
 Subject: Re: [REGRESSION][BISECTED] Boot stall from merge tag 'net-next-6.2'
-To: "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc: Ard Biesheuvel <ardb@kernel.org>, regressions@leemhuis.info, 
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>, regressions@leemhuis.info, 
 	Andrew Lunn <andrew@lunn.ch>, Linux Stable <stable@vger.kernel.org>, 
 	Linux Regressions <regressions@lists.linux.dev>, Bagas Sanjaya <bagasdotme@gmail.com>, 
 	Sami Korkalainen <sami.korkalainen@proton.me>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 23 Jun 2023 at 13:31, Jason A. Donenfeld <Jason@zx2c4.com> wrote:
+On Fri, 23 Jun 2023 at 23:52, Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
 >
-> We always have to write when using so that we don't credit the same
-> seed twice, so it's gotta be used at a stage when SetVariable is
-> somewhat working.
+> On Fri, 23 Jun 2023 at 13:31, Jason A. Donenfeld <Jason@zx2c4.com> wrote:
+> >
+> > We always have to write when using so that we don't credit the same
+> > seed twice, so it's gotta be used at a stage when SetVariable is
+> > somewhat working.
+>
+> This code isn't even the code that "uses" the alleged entropy from
+> that EFI variable in the first place. That's the code in
+> efi_random_get_seed() in the EFI boot sequence, and appends it to the
+> bootup randomness buffers.
+>
+> And that code already seems to clear the EFI variable (or seems to
+> append to it).
+>
 
-This code isn't even the code that "uses" the alleged entropy from
-that EFI variable in the first place. That's the code in
-efi_random_get_seed() in the EFI boot sequence, and appends it to the
-bootup randomness buffers.
+It reads the variable twice (once to obtain the size and once to grab
+the data), and replaces it with a zero-length string, which causes the
+variable to disappear. (This is typically NOR flash with spare blocks
+managed by a fault tolerant write layer in software, and so really
+wiping the seed or overwriting it is not generally possible)
 
-And that code already seems to clear the EFI variable (or seems to
-append to it).
+Using SetVariable() from boot services to delete a variable is highly
+unlikely to regress older systems in a similar way.
 
-So this argument seems to be complete garbage - we absolutely do not
-have to write it, and your patch already just wrote it in the wrong
-place anyway.
+> So this argument seems to be complete garbage - we absolutely do not
+> have to write it, and your patch already just wrote it in the wrong
+> place anyway.
+>
+> Don't make excuses. That code caused boot failures, it was all done in
+> the wrong place, and at entirely the wrong time.
+>
 
-Don't make excuses. That code caused boot failures, it was all done in
-the wrong place, and at entirely the wrong time.
+With the revert applied, the kernel/EFI stub only consumes the
+variable and deletes it, but never creates it by itself, and so the
+code does nothing if the variable is never created in the first place.
 
-                  Linus
+If we leave it up to user space to create it, we won=C2=B4t need any policy
+or quirks handling in the kernel at all, which I=C2=B4d prefer. The only
+thing we should do is special case the variable's scope GUID in
+efivarfs so the file is not created world-readable like we do for
+other variables. (This predates my involvement but I think this was an
+oversight). Using efivarfs will also ensure that the 'storage
+paranoia' logic is used on x86. (This is something I failed to take
+into account when I reviewed Jason's patch)
