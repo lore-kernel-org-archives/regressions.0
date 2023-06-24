@@ -1,123 +1,125 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6977E378
-	for <regressions@lists.linux.dev>; Sat, 24 Jun 2023 01:13:48 +0000 (UTC)
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-6686708c986so1077058b3a.0
-        for <regressions@lists.linux.dev>; Fri, 23 Jun 2023 18:13:48 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A6EC378
+	for <regressions@lists.linux.dev>; Sat, 24 Jun 2023 01:34:45 +0000 (UTC)
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-6687446eaccso1044885b3a.3
+        for <regressions@lists.linux.dev>; Fri, 23 Jun 2023 18:34:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1687569227; x=1690161227;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=XPifuwGr7qotS1J4egDcigsPGqIRoWlg/6w0xflvqXc=;
-        b=os0PUm6FrKL+A1DoENP/u20TiGluWujR7+ihWm5WpvDPntOiaFqI+zagF77EPxUeFd
-         gr58N43P9mAq2znfThw1PfGQKEPSYSXsYzcEoKK9A5Du4HKGvzQScblJDy/iGqZAKuWT
-         a4wWxbqnCDJ7t06JAr5Z8X0hOH//fnXZWeq9NqYVRLpKrC6kx5piOAgW//ZY9LTxMEnL
-         jqOhCNst0AIt7XcCt8LzYtm++QMHG2HaCRrv86PEx6ef3m7DMWmPFU5054WCk+Mv5os1
-         kXSEIEH24AbdO3seGYjPXpcaT5TcOUwYnekVdahikCV0h8quKcRXl8JnajWrTwBJOX4a
-         9cMw==
+        d=gmail.com; s=20221208; t=1687570485; x=1690162485;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=NweAbjy52dJmvgrS5Se3FN0lnSLavmsB+nKxFGPGvW0=;
+        b=VSGfQTWVWsbp9D+RhlgroWtsItjwsd+PAsju+hPuWGHSmM2/N6JW/0cyml04B5fnDA
+         S6Oja8X71oM1CVdjhclXpm3mU3WwX/vzDHeHPqLfz5PFyuGHNzknB3hAjH89MEMfszI0
+         D7qh7o4mervwSD6aRKthAHFjjCLVmOG90BqJ9r4jfR91KjFoFLHUN4FPNi4/od9UnaAP
+         Fu5sq0g8N68zOOIGbpCp+pGjSvzyN7kt9GY5h52bNLOGoaAOZk2lbrB25Lzve2A9CmcD
+         lTosl3lLEdYxYlsRATwecnEOk19Eeu5zot2eFK45XTNHzPSdVRyu1GAszlfdQ2LQMVbM
+         O8Ng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687569227; x=1690161227;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XPifuwGr7qotS1J4egDcigsPGqIRoWlg/6w0xflvqXc=;
-        b=Q+10R8uw3GtDhXB50/lEIcqdeis5OqYwvJ56Jt5xC3zLM+lKWdMtMNKNqXAGftQo+E
-         1zZpBF7VWrRO2Kkbreo7OBY9cBCJzXi1mauCRFDpDZwepRKg0BxQwA02FnSMng9To4y0
-         8OIzqhIOdlu6p2QN1gIPWvKTeU7T91TheAUewq7ycWraDMghFIMwImK0TFCNsbSqfppq
-         miS2MamYwF1wAoJhjVJtwuv6hR/Et8euIAJ3UUg5tBNoGoBwhqmmZL8dXqOReptio9nv
-         +tBmxI5vJEEqAAkQ7ZgRIeTqyGpMqt+ssPB7RFFJzvaXLAQ+uvCB2ccMdfn5IiTmpaJT
-         xxPQ==
-X-Gm-Message-State: AC+VfDxZSF5QH8vf5E1NbHPExFlq7K0O5SfI0NnzMreGsA1zkMXCQ+zi
-	O0TqkweT6KQGB6X0mQnfi/c=
-X-Google-Smtp-Source: ACHHUZ606czjila05woldXKyuDA7Rq8dbV1i+0k6tpmn1h59UzY57EaMRyDQG9n05OaV37lSyFMttw==
-X-Received: by 2002:a05:6a20:12d1:b0:121:b440:2820 with SMTP id v17-20020a056a2012d100b00121b4402820mr19195240pzg.19.1687569227466;
-        Fri, 23 Jun 2023 18:13:47 -0700 (PDT)
-Received: from [192.168.0.103] ([103.131.18.64])
-        by smtp.gmail.com with ESMTPSA id j6-20020a655586000000b0054fe7736ac1sm195469pgs.76.2023.06.23.18.13.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 23 Jun 2023 18:13:47 -0700 (PDT)
-Message-ID: <0e85ca99-d1d6-097b-2e04-4cd6492098a1@gmail.com>
-Date: Sat, 24 Jun 2023 08:13:26 +0700
+        d=1e100.net; s=20221208; t=1687570485; x=1690162485;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NweAbjy52dJmvgrS5Se3FN0lnSLavmsB+nKxFGPGvW0=;
+        b=PIMIF0d9NxAm3ANhwqKBrWF4NvWs1MA5B00dTVAmovdWvgediBvErs5jzrncVotZp2
+         U/rHNuiNcQy/ouT01Ln6Ier2zOCzwK/kkCEv6gT9w+cgIffvtYoHsxDXaFDyB0lX+8z7
+         hR+hmhl4EpLG8zAMUk6LcFzTPknl78lFM1xCN1xObY78uG0iCH7EpLHj1h2uFj8fWEPl
+         ESBebJhLtgMipLSW2Kd9Je5uUM6DuiakvPyfQcGA3WCjtDsC+rQNsnyWMJbEgDRyUuEo
+         axnsDAgN88WvQfVek5V7oErCBIOK3VMQD3+acNW7IFvl01ABNBP8HNA3xyxyylLKbTcy
+         /9Rw==
+X-Gm-Message-State: AC+VfDyg3/XYXwvh4zDtI6gf/8TBpc1iH5+V05bqQdmaoD/3qUaWIKTv
+	ICk3Yv+lMjxE/vFpmC/x0Sg=
+X-Google-Smtp-Source: ACHHUZ4EaqFt6nWD83dMOJjUmyNBRz7LaE9yDDNtm67kqPMvxGc6jCP04lmsfP6QNI8sfJL/8U7eVw==
+X-Received: by 2002:a05:6a20:2588:b0:11d:2764:d9c1 with SMTP id k8-20020a056a20258800b0011d2764d9c1mr27851326pzd.51.1687570485339;
+        Fri, 23 Jun 2023 18:34:45 -0700 (PDT)
+Received: from debian.me ([103.131.18.64])
+        by smtp.gmail.com with ESMTPSA id 24-20020a631258000000b0054fe07d2f3dsm240316pgs.11.2023.06.23.18.34.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 Jun 2023 18:34:44 -0700 (PDT)
+Received: by debian.me (Postfix, from userid 1000)
+	id 467208BFA791; Sat, 24 Jun 2023 08:25:40 +0700 (WIB)
+Date: Sat, 24 Jun 2023 08:25:39 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Elmar Stellnberger <estellnb@elstel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Thorsten Leemhuis <regressions@leemhuis.info>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Regressions <regressions@lists.linux.dev>,
+	Linux Memory Management <linux-mm@kvack.org>,
+	Linux Stable <stable@vger.kernel.org>
+Subject: Re: Fwd: kernel fault on hibernation: get_zeroed_page/swsusp_write
+Message-ID: <ZJZGE4ZxJzrhRznA@debian.me>
+References: <5d4959b7-61da-8ab0-6bc6-21305d37c7aa@gmail.com>
+ <ZJXFgfldS6W_LCiI@mail.dotplex.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: Fwd: Dell XPS 13 ath10k_pci firmware crashed!
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Kalle Valo <kvalo@kernel.org>, Thorsten Leemhuis <linux@leemhuis.info>,
- Garry Williams <gtwilliams@gmail.com>
-Cc: Linux Atheros 10K <ath10k@lists.infradead.org>,
- Linux Wireless <linux-wireless@vger.kernel.org>,
- Linux Kernel Network Developers <netdev@vger.kernel.org>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>
-References: <2db51694-aa57-cbfd-096e-4925b76232b0@gmail.com>
-Content-Language: en-US
-In-Reply-To: <2db51694-aa57-cbfd-096e-4925b76232b0@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="r2ki5HdcOTzEK4x7"
+Content-Disposition: inline
+In-Reply-To: <ZJXFgfldS6W_LCiI@mail.dotplex.com>
 
-On 6/14/23 08:15, Bagas Sanjaya wrote:
-> Hi,
-> 
-> I notice a regression report on Bugzilla [1]. Quoting from it:
-> 
->> Beginning with kernel 6.2.15-300.fc38.x86_64 and continuing through 6.3.7-200.fc38.x86_64, the wifi connection fails periodically with these log messages:
->>
->> ath10k_pci 0000:02:00.0: firmware crashed! (guid 6c545da0-593c-4a0e-b5ad-3ef2b91cdebf)
->> ath10k_pci 0000:02:00.0: qca6174 hw3.2 target 0x05030000 chip_id 0x00340aff sub 1a56:143a
->> ath10k_pci 0000:02:00.0: kconfig debug 0 debugfs 1 tracing 0 dfs 0 testmode 0
->> ath10k_pci 0000:02:00.0: firmware ver WLAN.RM.4.4.1-00288- api 6 features wowlan,ignore-otp,mfp crc32 bf907c7c
->> ath10k_pci 0000:02:00.0: board_file api 2 bmi_id N/A crc32 d2863f91
->> ath10k_pci 0000:02:00.0: htt-ver 3.87 wmi-op 4 htt-op 3 cal otp max-sta 32 raw 0 hwcrypto 1
->> ath10k_pci 0000:02:00.0: failed to get memcpy hi address for firmware address 4: -16
->> ath10k_pci 0000:02:00.0: failed to read firmware dump area: -16
->> ath10k_pci 0000:02:00.0: Copy Engine register dump:
->> ath10k_pci 0000:02:00.0: [00]: 0x00034400  12  12   3   3
->> ath10k_pci 0000:02:00.0: [01]: 0x00034800  14  14 347 348
->> ath10k_pci 0000:02:00.0: [02]: 0x00034c00   8   2   0   1
->> ath10k_pci 0000:02:00.0: [03]: 0x00035000  16  15  16  14
->> ath10k_pci 0000:02:00.0: [04]: 0x00035400 2995 2987  22 214
->> ath10k_pci 0000:02:00.0: [05]: 0x00035800   0   0  64   0
->> ath10k_pci 0000:02:00.0: [06]: 0x00035c00   0   0  18  18
->> ath10k_pci 0000:02:00.0: [07]: 0x00036000   1   1   1   0
->> ath10k_pci 0000:02:00.0: could not request stats (-108)
->> ath10k_pci 0000:02:00.0: could not request peer stats info: -108
->> ath10k_pci 0000:02:00.0: failed to read hi_board_data address: -28
->> ieee80211 phy0: Hardware restart was requested
->> ath10k_pci 0000:02:00.0: could not request stats (-108)
->> ath10k_pci 0000:02:00.0: device successfully recovered
->>
->>
->> If I disconnect and reconnect using network manager, the connection is restored.  But this same failure recurs over and over after some few minutes to a few hours.
->>
->> This is a regression.  The error was not reported with any previous kernel since 6.2.14-300.fc38.x86_64
-> 
-> See Bugzilla for the full thread.
-> 
-> Unfortunately, the reporter can't bisect this regression (he only tries
-> distribution kernels instead).
-> 
-> Anyway, I'm adding it to regzbot (as mainline regression because v6.2.x
-> has already EOL):
-> 
-> #regzbot introduced: v6.2..v6.3 https://bugzilla.kernel.org/show_bug.cgi?id=217549
-> #regzbot title: ath10k_pci firmware crashed on Dell XPS 13
-> 
 
-It comes out that the regression is due to Fedora patches (see Bugzilla thread),
-thus:
+--r2ki5HdcOTzEK4x7
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-#regzbot invalid: regression caused by downstream patch
+On Fri, Jun 23, 2023 at 06:17:05PM +0200, Elmar Stellnberger wrote:
+> Hi all, Hi Bagas S.
+>=20
+> As the issue didn't reproduce the way I would have liked (did not
+> reproduce at all here, not even with the same kernel version; no
+> further comment) I have now uploaded the /proc/kcore and the kernel
+> binaries and symbol files I still had on disk at
+> https://upload.elstel.info (This may move to something like
+> upload.elstel.info/bugs/kernpagealloc in the future)
+>=20
+
+First, tl;dr:
+
+> A: http://en.wikipedia.org/wiki/Top_post
+> Q: Were do I find info about this thing called top-posting?
+> A: Because it messes up the order in which people normally read text.
+> Q: Why is top-posting such a bad thing?
+> A: Top-posting.
+> Q: What is the most annoying thing in e-mail?
+>=20
+> A: No.
+> Q: Should I include quotations after my reply?
+>=20
+> http://daringfireball.net/2007/07/on_top
+
+Can you attach [1] to your Bugzilla report? Also, any report on bisection?
+
+Also, you don't need to upload full kernel images instead; people can
+grab /proc/config.gz you uploaded on Bugzilla and then `make olddefconfig`
+=66rom it.
+
+Anyway, telling regzbot:
+
+#regzbot link: https://upload.elstel.info/kcore.xz
 
 Thanks.
 
--- 
+[1]: https://upload.elstel.info/kcore.xz
+
+--=20
 An old man doll... just what I always wanted! - Clara
 
+--r2ki5HdcOTzEK4x7
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZJZGCwAKCRD2uYlJVVFO
+o8DMAQC6zR1yWAa7UjG6IkGQnqbipk2vCuN918vTrru6uzJIMQEA3roDgr7VTrHm
+nimvRUDgB4IcrFpNlJFzdVpaRrSpDws=
+=DDa0
+-----END PGP SIGNATURE-----
+
+--r2ki5HdcOTzEK4x7--
