@@ -1,92 +1,76 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from bues.ch (bues.ch [80.190.117.144])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E15B8230F2
-	for <regressions@lists.linux.dev>; Sat, 24 Jun 2023 09:07:26 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qCzEi-0007xI-TW; Sat, 24 Jun 2023 11:07:16 +0200
-Message-ID: <7dd4f71e-afbd-2f0a-b6bb-8324916ab3d1@leemhuis.info>
-Date: Sat, 24 Jun 2023 11:07:14 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3006A3D9F
+	for <regressions@lists.linux.dev>; Sat, 24 Jun 2023 09:25:27 +0000 (UTC)
+Received: by bues.ch with esmtpsa (Exim 4.94.2)
+	(envelope-from <m@bues.ch>)
+	id 1qCyyj-000E9e-Oc; Sat, 24 Jun 2023 10:50:44 +0200
+Date: Sat, 24 Jun 2023 10:50:23 +0200
+From: Michael =?UTF-8?B?QsO8c2No?= <m@bues.ch>
+To: Bagas Sanjaya <bagasdotme@gmail.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux
+ Regressions <regressions@lists.linux.dev>, Linux Wireless
+ <linux-wireless@vger.kernel.org>, Linux Networking
+ <netdev@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, kernel test robot
+ <lkp@intel.com>, Simon Horman <simon.horman@corigine.com>, Larry Finger
+ <Larry.Finger@lwfinger.net>, Kalle Valo <kvalo@kernel.org>,
+ sardonimous@hotmail.com
+Subject: Re: After kernel 6.3.7 or 6.3.8 b43 driver fails
+Message-ID: <20230624105023.146d99e0@barney>
+In-Reply-To: <27829c69-515c-36a6-4beb-3210225f8936@gmail.com>
+References: <27829c69-515c-36a6-4beb-3210225f8936@gmail.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.37; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH] media: uvcvideo: Fix menu count handling for userspace XU
- mappings
-Content-Language: en-US, de-DE
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Poncho <poncho@spahan.ch>
-Cc: linux-media@vger.kernel.org, Ricardo Ribalda <ribalda@chromium.org>,
- regressions@lists.linux.dev
-References: <20230606170919.GJ25679@pendragon.ideasonboard.com>
- <20230606171150.12875-1-laurent.pinchart@ideasonboard.com>
- <785fcf0b-3f63-a0da-3eea-f57124e99e15@spahan.ch>
- <20230624002517.GF1669@pendragon.ideasonboard.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <20230624002517.GF1669@pendragon.ideasonboard.com>
+Content-Type: multipart/signed; boundary="Sig_/Z8OpuQ9cy1/jd8BhC4DCwVQ";
+ protocol="application/pgp-signature"; micalg=pgp-sha512
+
+--Sig_/Z8OpuQ9cy1/jd8BhC4DCwVQ
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1687597646;6576c8e0;
-X-HE-SMSGID: 1qCzEi-0007xI-TW
+Content-Transfer-Encoding: quoted-printable
 
-On 24.06.23 02:25, Laurent Pinchart wrote:
-> 
-> On Wed, Jun 21, 2023 at 05:26:39PM +0200, Poncho wrote:
->> Hi Laurent
->>
->> Friendly ping. I think this patch was forgotten.
-> Thanks for the reminder. I'll send a pull request for v6.6.
+On Sat, 24 Jun 2023 08:44:15 +0700
+Bagas Sanjaya <bagasdotme@gmail.com> wrote:
+> > I suspect change introduced when addressing a compiler warning
+> > cased the error.
+> >=20
+> > https://patchwork.kernel.org/project/linux-wireless/patch/2023051618344=
+2.536589-1-arnd%40kernel.org/
 
-Why 6.6? If this would be a feature I'd fully understand. But this
-afaics fixes a regression and thus should be handled as one, even if
-it's a regression from a earlier release. For details see this recent
-mail from Linus:
 
-https://lore.kernel.org/all/CAHk-=wis_qQy4oDNynNKi5b7Qhosmxtoj1jxo5wmB6SRUwQUBQ@mail.gmail.com/
+I doubt it.
+This patch affects the device initialization code. But the crash is in
+the transmit path.
+Can you please double check by manually reverting the patch?
 
-Side note: as it's a regression it would be good if this commit had a
-"CC: <stable..." tag as well.
+--=20
+Michael B=C3=BCsch
+https://bues.ch/
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+--Sig_/Z8OpuQ9cy1/jd8BhC4DCwVQ
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
->> On 06.06.23 19:11, Laurent Pinchart wrote:
->>> When commit 716c330433e3 ("media: uvcvideo: Use standard names for
->>> menus") reworked the handling of menu controls, it inadvertently
->>> replaced a GENMASK(n - 1, 0) with a BIT_MASK(n). The latter isn't
->>> equivalent to the former, which broke adding XU mappings from userspace.
->>> Fix it.
->>>
->>> Reported-by: Poncho <poncho@spahan.ch>
->>> Link: https://lore.kernel.org/linux-media/468a36ec-c3ac-cb47-e12f-5906239ae3cd@spahan.ch/
->>> Fixes: 716c330433e3 ("media: uvcvideo: Use standard names for menus")
->>> Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
->>> ---
->>> This is untested. Poncho, would you be able to test this patch to see if
->>> it fixes your issue ?
->>> ---
->>>   drivers/media/usb/uvc/uvc_v4l2.c | 2 +-
->>>   1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/media/usb/uvc/uvc_v4l2.c b/drivers/media/usb/uvc/uvc_v4l2.c
->>> index 5ac2a424b13d..f4988f03640a 100644
->>> --- a/drivers/media/usb/uvc/uvc_v4l2.c
->>> +++ b/drivers/media/usb/uvc/uvc_v4l2.c
->>> @@ -45,7 +45,7 @@ static int uvc_control_add_xu_mapping(struct uvc_video_chain *chain,
->>>   	map->menu_names = NULL;
->>>   	map->menu_mapping = NULL;
->>>   
->>> -	map->menu_mask = BIT_MASK(xmap->menu_count);
->>> +	map->menu_mask = GENMASK(xmap->menu_count - 1, 0);
->>>   
->>>   	size = xmap->menu_count * sizeof(*map->menu_mapping);
->>>   	map->menu_mapping = kzalloc(size, GFP_KERNEL);
-> 
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEEihRzkKVZOnT2ipsS9TK+HZCNiw4FAmSWrk8ACgkQ9TK+HZCN
+iw7o+g/+L1zZKck52gaqBWL0RCy/d0c3DsVDsSvj4Cx4Ueu03xpyJAPUhGrzZ5ul
+ZGNXu1p1GpfG81lMm/ONuUQgUo8WwXKvVQs8MJkmNAHX+cwzCZ3McyB1JQWrRhV6
+zJVcIXl+RmwRr+EtzH5UWuha0VnXj2ygYWmafGQg7BSK7NvzDOWwzqYj3iZdTHlT
+GbnFeM+lurbH9rbgSZsC9bXMvTxwABZREuzxzfakF3wATGUFuYoQyoq62/wey7gV
+jNkX9PiD/sciVWsLvEri7B+wPfXDQRbj5Og2D07peJ+wZmC1AaR+To5zbAaAEcVh
+jcM05dtnHIbFnoLq4CIrmJljNQHRzxsJjdhPflTcWkm+1fVJ2zucZQyWHs6rZ5ru
+FjcOjfeK6v9gs0vLF+zGjpuPhIHSJqeRjgPWsRRil4ZbYRbG5WThLvs5AOMwDBRV
+6+98COLGkrLqLrkc9iZCbONCW6RnDTdBuVNjaAOi+RVlwTCUM4CdO7APgAjdEd2S
+wbfNQ9j2M8ox+pt5byr8c3/xFQOmOG4XoDRYgPai+k7apnAYX1KN09lWo45dxMQp
+Zj9HKebrBj+C+v4AYrhDYp6v/wlNi/AZ7GDfI3cXxIvgWWNt3D7tQ21zT6jl9B1S
+OOKtUdc55au+byw60JSnN+qFm6za7beCoxuDuQRHLSbgMHQjeok=
+=LxCG
+-----END PGP SIGNATURE-----
+
+--Sig_/Z8OpuQ9cy1/jd8BhC4DCwVQ--
