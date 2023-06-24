@@ -1,89 +1,128 @@
-Received: from mail-oo1-f51.google.com (mail-oo1-f51.google.com [209.85.161.51])
+Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0959A378
-	for <regressions@lists.linux.dev>; Sat, 24 Jun 2023 01:36:28 +0000 (UTC)
-Received: by mail-oo1-f51.google.com with SMTP id 006d021491bc7-562f8262e0cso918016eaf.0
-        for <regressions@lists.linux.dev>; Fri, 23 Jun 2023 18:36:28 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 482EC378
+	for <regressions@lists.linux.dev>; Sat, 24 Jun 2023 01:44:34 +0000 (UTC)
+Received: by mail-oi1-f182.google.com with SMTP id 5614622812f47-39ecf031271so1051949b6e.1
+        for <regressions@lists.linux.dev>; Fri, 23 Jun 2023 18:44:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1687570588; x=1690162588;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20221208; t=1687571073; x=1690163073;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=jKCBfOTPVhnF+1+fSSQ1P9xOSE1WzuFvzo4ZfnObzWo=;
-        b=JwH5bPnKM1oVjQmyaDuUkk94Ncd+3xLJb0folnAyHh5y3KI8yeN+mmFI7IVw51XQwl
-         znEiutHtZVMlfTwT/NH/AbMt9ctIbnoeIXRd1WQ0UbFpABHXXQiGXzqAtMZ2FCIeV3Wr
-         xx/1MCb9TjKm0PBxSVD64eyC2fGGr8+GHsCIawF1gmgqsN8QlD7xvSShBi1qfBAfdJ6t
-         7xV1s5Sht0felt4Gyg75R07FokH5oVxB4MoAC6Rx5tOsIuLBcovcHaMP/mi8j+aOoVuZ
-         oTxn4liqUhK5Sl3i5YE6sY+ySrkEsAorON5TvtZ6V8cD2DoBTyGCQz+GutnZzd+SB0U7
-         B9Ww==
+        bh=fnVE3e7VprhRGPi15l7LQGONQqGj0Q6nNTdPJOtqQbo=;
+        b=kvzkcyhJbM0nREMhPOJRvwctQ6qdgX1pOw2/sxokIetkKFtZy2ZAszQvyaOUh4jY6e
+         0//L7Ycwar7QkIPWhGJzoWZmyoyJx+GCjc8FFLytjLBAwLKexAIBGe8s4krFs9kcgo4r
+         5eyPaAfi2hr318gydUSGc7vTlhiutWi66QjtMcdkLmG54oZajRNGl6A58jOkdksiizfI
+         gtIEc5OQA0/HLocl5PTK5uK9byccmoRQzJr0elUvnmEN/vfvcYiI8Zwa2le0wmbj+Qbw
+         rXCC+YFsTRLYRUZVINnrm9mkBalM+7LO3jidF7VXI6X59rdsg7JjYxpq00wE9pOBSQ7C
+         28ZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687570588; x=1690162588;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jKCBfOTPVhnF+1+fSSQ1P9xOSE1WzuFvzo4ZfnObzWo=;
-        b=IZ38S1r5dMSgv4NH06BSg7y21HPRC/JCboKW1KZl3tMvZJ0/LeR51mEEDzue316DlE
-         N6thsQmIlPyrY6/BdywqDL84bTxCQowuz/bC3snwficG2eYIA5c0RFOrwv08DSRoUc8u
-         oABI9lk13dJAWvddECLO4fUblyRmhJ9rnRw4DK1yX4KsHskyZsTTTxKgiLvBPJWhW4+/
-         YFuEXIQsd/3qe1oY6UhjGiYODe5QZ5iq2xnNNXCQ3ayQ76+wFkpyrAQ2fxfJtwz+6wMV
-         z79C9PPxo3ar9LkaRSKRabKb0RcIUWCNaV21ISuY8tLFqYJuLpDjR/LDQLQ0/cUWJWNA
-         U/wQ==
-X-Gm-Message-State: AC+VfDzysr5V9kYjkczqjGu18AP3sqWlf4FfKkGJ98SSc6rVvBPCJiP+
-	WX8kdYbrFbAmCXPncv4N0ly4aWKMViWtrHiOECo=
-X-Google-Smtp-Source: ACHHUZ6WaJdV94OE7t3etctyvj6GbYEmXVbiPZjay7wYjLCCzlD9gN2tO463/maChN3nAyhhbTz0MNS/MyVC1GWsHzA=
-X-Received: by 2002:a4a:d884:0:b0:558:c5b8:9575 with SMTP id
- b4-20020a4ad884000000b00558c5b89575mr17916153oov.1.1687570587771; Fri, 23 Jun
- 2023 18:36:27 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1687571073; x=1690163073;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=fnVE3e7VprhRGPi15l7LQGONQqGj0Q6nNTdPJOtqQbo=;
+        b=EBg9Pb8yOSupT8msj8PJTjwl0ojY7PO5JZhkgXEHh0ZgTO26/qPcJeaUDKGEcEmyCO
+         rn3tsjrP5nafHRsbvqqoozMDwRDbhCvFMmj2RoOsHgivdijsZFe8gwO8oygRfHvJdL2w
+         K9/HOvykRoFIW2cfo+8uaTbzXfdD0dChlxjA1UlD7NerMgelUnjZAnSo1cUF+To364s2
+         ku86akeDppgZ+gacMBRZqVZ7XMvsNBiHpkvYJN3mThevKoz03Q7hYcdvJDLKCRNPXtlk
+         XZi4OlLA8b9kE6Ve5UPzG/n9FBbY1DbHnI5pAVxPC6q54FqNIRPXARaMxJmfCSDGWvvn
+         aj+A==
+X-Gm-Message-State: AC+VfDznPH1CXS/8SVIgXjFuvS1JNHDmyUKlk8l8LjFrMunmieXiAA9W
+	GP7TYi9upoAZkFA/1D0bQcnnD4ly/NcMuQ==
+X-Google-Smtp-Source: ACHHUZ4pFCWhhOk7YUC51N0jfTbZ5Z66AN3uM1u47fjDBvIBVBp0WPXlFzFVVKVccAykpJVeNa1BNg==
+X-Received: by 2002:a05:6808:1827:b0:3a0:5993:be86 with SMTP id bh39-20020a056808182700b003a05993be86mr10093464oib.3.1687571073050;
+        Fri, 23 Jun 2023 18:44:33 -0700 (PDT)
+Received: from [192.168.0.103] ([103.131.18.64])
+        by smtp.gmail.com with ESMTPSA id t12-20020a170902b20c00b001a95f632340sm184560plr.46.2023.06.23.18.44.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 23 Jun 2023 18:44:32 -0700 (PDT)
+Message-ID: <27829c69-515c-36a6-4beb-3210225f8936@gmail.com>
+Date: Sat, 24 Jun 2023 08:44:15 +0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <bug-217440-225600@https.bugzilla.kernel.org/> <CABpewhE4REgn9RJZduuEU6Z_ijXNeQWnrxO1tg70Gkw=F8qNYg@mail.gmail.com>
- <ZGB0cVVI7OgaJU6t@debian.me> <CABpewhGJE7-k52j8L2kJ2zKupgp3Ma+LdZazzzV4w1Bgihp7nw@mail.gmail.com>
- <87cz338ix4.wl-tiwai@suse.de> <CABpewhF01AK4cFPbwYVvKR9yWaO7o-ZE-2+MZjYSUF0BKUdYvw@mail.gmail.com>
- <874jodlnmi.wl-tiwai@suse.de> <415d4bc84aa74c74af913048f28b42a9@realtek.com>
- <87fs7mdofi.wl-tiwai@suse.de> <7da2fdfdae614b1c98deda6e11ca34eb@realtek.com>
- <87353kd8b9.wl-tiwai@suse.de> <1170325957764b4cbd7cd3639575f285@realtek.com>
- <CABpewhGBakDSBLKZ1cr2=OMspuu3qyYwZrsXUggQ3vt8gsD88A@mail.gmail.com>
- <873536js7q.wl-tiwai@suse.de> <CABpewhE0NAC-Q=iqG2Ba=XhT7SXsWy18wQGYUaopzmKDfFxyPw@mail.gmail.com>
- <2c1fcbc00bb44d66a29ac1c1e4bec5ad@realtek.com> <CABpewhFthKG97dPiQC4JhGx9sapX9Yu5rWABQjpY95TSA+eawA@mail.gmail.com>
- <485f99149508488080d563144454040e@realtek.com> <CABpewhGkvWtM+9J=mx3vw0QY=OBB5OYCxzX3nzVffvFS4QazPA@mail.gmail.com>
- <2831c55638a5431ca9e37d9caf365ed2@realtek.com> <CABpewhGiMJUpyBA6=D9_-YA6=5rjR2R0RHUZeg+cWcjtzuCoZQ@mail.gmail.com>
- <3c27f0455d6e4bd1a68115bd25bf1a12@realtek.com> <CABpewhEptq0+W_71U__8iQ4+LNtYSUB9C+0bcS2Hw-5mnj9viQ@mail.gmail.com>
- <009474f04d0b45c69a0e42e8622b7a86@realtek.com> <87h6rhcef2.wl-tiwai@suse.de>
- <0990300d759846d890de9c92fcad9a9d@realtek.com> <CABpewhERnOH1qkkJ5_JJUZkz1_8oxD9aR5VBs1vsURAG7Eu_Ew@mail.gmail.com>
- <878rctcavz.wl-tiwai@suse.de> <874jnhc9u4.wl-tiwai@suse.de>
- <CABpewhHG2+s8_6r6vChm2g5tD8ALW_SWJWubPRXWzTJB2aFR9g@mail.gmail.com>
- <875y7vbxpg.wl-tiwai@suse.de> <CABpewhHDnvn4v+uCpsaLHB+biw-f59tdTiCyFkicHnewXHYDNg@mail.gmail.com>
- <87wn0aa1s4.wl-tiwai@suse.de>
-In-Reply-To: <87wn0aa1s4.wl-tiwai@suse.de>
-From: "Joseph C. Sible" <josephcsible@gmail.com>
-Date: Fri, 23 Jun 2023 21:36:11 -0400
-Message-ID: <CABpewhFg=7+JR6v=zhi0_Hm9+S64DLOHKeG2pS-W7z-vNpu_5Q@mail.gmail.com>
-Subject: Re: Fwd: [Bug 217440] New: ALC236 audio disappears from HP 15z-fc000
- on warm boot
-To: Takashi Iwai <tiwai@suse.de>
-Cc: Kailang <kailang@realtek.com>, Bagas Sanjaya <bagasdotme@gmail.com>, 
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>, "perex@perex.cz" <perex@perex.cz>, 
-	"tiwai@suse.com" <tiwai@suse.com>, 
-	"alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Content-Language: en-US
+To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Linux Wireless <linux-wireless@vger.kernel.org>,
+ Linux Networking <netdev@vger.kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, =?UTF-8?Q?Michael_B=c3=bcsch?=
+ <m@bues.ch>, kernel test robot <lkp@intel.com>,
+ Simon Horman <simon.horman@corigine.com>,
+ Larry Finger <Larry.Finger@lwfinger.net>, Kalle Valo <kvalo@kernel.org>,
+ sardonimous@hotmail.com
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+Subject: Fwd: After kernel 6.3.7 or 6.3.8 b43 driver fails
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sun, Jun 11, 2023 at 3:36=E2=80=AFAM Takashi Iwai <tiwai@suse.de> wrote:
->
-> Thanks for checking.  So the additional delay didn't help at all,
-> i.e. it's no timing issue.  We need to figure out which verb actually
-> breaks things.  Oh well.
+Hi,
 
-Was there something else specific you wanted me to try for this? If
-not, what do you think the next steps to get this fixed are? Do you
-think it might be good to just cook the partial revert I posted a
-while back after all?
+I notice a regression report on Bugzilla [1]. Quoting from it:
 
-Thanks,
+> After upgrading to linux 6.3.8-arch1-1 from 6.3.6-arch1-1, b43 broadcom wireless driver fails.  downgrading back to 6.3.6-arch1-1 resolves.
+> 
+> Jun 16 20:56:37 askasleikir kernel: Hardware name: Apple Inc. MacBookPro7,1/Mac-F222BEC8, BIOS MBP71.88Z.0039.B15.1702241313 02/24/17
+> Jun 16 20:56:37 askasleikir kernel: Workqueue: phy0 b43_tx_work [b43]
+> Jun 16 20:56:37 askasleikir kernel: RIP: 0010:__ieee80211_stop_queue+0xcc/0xe0 [mac80211]
+> Jun 16 20:56:37 askasleikir kernel: Code: 74 11 48 8b 78 08 0f b7 d6 89 e9 4c 89 e6 e8 5b eb 00 00 65 ff 0d 0c dd b5 3e 0f 85 55 ff ff ff e8 b9 f4 12 de e9 4b ff>
+> Jun 16 20:56:37 askasleikir kernel: RSP: 0000:ffffc36b0013bdb8 EFLAGS: 00010097
+> Jun 16 20:56:37 askasleikir kernel: RAX: 0000000000000001 RBX: 0000000000000002 RCX: 0000000000000000
+> Jun 16 20:56:37 askasleikir kernel: RDX: 0000000000000000 RSI: 0000000000000002 RDI: ffff9f85d1c108e0
+> Jun 16 20:56:37 askasleikir kernel: RBP: 0000000000000000 R08: 0000000000000000 R09: ffff9f85c0819674
+> Jun 16 20:56:37 askasleikir kernel: R10: 0000000000000005 R11: 0000000000000181 R12: ffff9f85d1c108e0
+> Jun 16 20:56:37 askasleikir kernel: R13: 0000000000000000 R14: ffff9f85d1c12238 R15: ffff9f85d1c12090
+> Jun 16 20:56:37 askasleikir kernel: FS: 0000000000000000(0000) GS:ffff9f85fbe00000(0000) knlGS:0000000000000000
+> Jun 16 20:56:37 askasleikir kernel: CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> Jun 16 20:56:37 askasleikir kernel: CR2: 000055b33bbd5d70 CR3: 0000000022620000 CR4: 00000000000406f0
+> Jun 16 20:56:37 askasleikir kernel: Call Trace:
+> Jun 16 20:56:37 askasleikir kernel: <TASK>
+> Jun 16 20:56:37 askasleikir kernel: ? __ieee80211_stop_queue+0xcc/0xe0 [mac80211 136d1d948548ad6cca697df0da0a13c0a2333310]
+> Jun 16 20:56:37 askasleikir kernel: ? __warn+0x81/0x130
+> Jun 16 20:56:37 askasleikir kernel: ? __ieee80211_stop_queue+0xcc/0xe0 [mac80211 136d1d948548ad6cca697df0da0a13c0a2333310]
+> Jun 16 20:56:37 askasleikir kernel: ? report_bug+0x171/0x1a0
+> Jun 16 20:56:37 askasleikir kernel: ? handle_bug+0x3c/0x80
+> Jun 16 20:56:37 askasleikir kernel: ? exc_invalid_op+0x17/0x70
+> Jun 16 20:56:37 askasleikir kernel: ? asm_exc_invalid_op+0x1a/0x20
+> Jun 16 20:56:37 askasleikir kernel: ? __ieee80211_stop_queue+0xcc/0xe0 [mac80211 136d1d948548ad6cca697df0da0a13c0a2333310]
+> Jun 16 20:56:37 askasleikir kernel: ieee80211_stop_queue+0x36/0x50 [mac80211 136d1d948548ad6cca697df0da0a13c0a2333310]
+> Jun 16 20:56:37 askasleikir kernel: b43_pio_tx+0x373/0x390 [b43 0f6039cbd530df6f28ebbb52898f2f67b84598dd]
+> Jun 16 20:56:37 askasleikir kernel: ? __schedule+0x44b/0x1400
+> Jun 16 20:56:37 askasleikir kernel: b43_tx_work+0x57/0x130 [b43 0f6039cbd530df6f28ebbb52898f2f67b84598dd]
+> Jun 16 20:56:37 askasleikir kernel: process_one_work+0x1c7/0x3d0
+> Jun 16 20:56:37 askasleikir kernel: worker_thread+0x51/0x390
+> Jun 16 20:56:37 askasleikir kernel: ? __pfx_worker_thread+0x10/0x10
+> Jun 16 20:56:37 askasleikir kernel: kthread+0xde/0x110
+> Jun 16 20:56:37 askasleikir kernel: ? __pfx_kthread+0x10/0x10
+> Jun 16 20:56:37 askasleikir kernel: ret_from_fork+0x2c/0x50
+> Jun 16 20:56:37 askasleikir kernel: </TASK>
+> Jun 16 20:56:37 askasleikir kernel: ---[ end trace 0000000000000000 ]---
+> 
+> I suspect change introduced when addressing a compiler warning cased the error.
+> 
+> https://patchwork.kernel.org/project/linux-wireless/patch/20230516183442.536589-1-arnd%40kernel.org/
+> 
+> The is arch linux and they referred me here.
 
-Joseph C. Sible
+See Bugzilla for the full thread.
+
+Unfortunately, the reporter can't perform bisection to confirm that
+backport of 212457ccbd60db triggers this regression.
+
+Anyway, I'm adding it to regzbot to be sure that it doesn't fall
+through cracks unnoticed:
+
+#regzbot introduced: 212457ccbd60db https://bugzilla.kernel.org/show_bug.cgi?id=217582
+#regzbot title: fixing incorrect __packed annotation for Clang causes b43 driver fail to start
+
+Thanks.
+
+-- 
+An old man doll... just what I always wanted! - Clara
