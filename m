@@ -1,89 +1,109 @@
-Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
+Received: from out4-smtp.messagingengine.com (out4-smtp.messagingengine.com [66.111.4.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6847A945A
-	for <regressions@lists.linux.dev>; Sat, 24 Jun 2023 19:39:55 +0000 (UTC)
-Received: from cwcc.thunk.org (pool-173-48-119-246.bstnma.fios.verizon.net [173.48.119.246])
-	(authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 35OJdO4o013225
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 24 Jun 2023 15:39:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
-	t=1687635569; bh=1YC4/ncstssRHOG8z3j8Cee2TMGjfDhXuHmQtvTDZVU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=SUGsHC/pyGCwMdsKREBdyz18U4bonF6NCQTcAYJdVrQ1uLyP2uaPeeh8yxYWKAM+C
-	 nm321uri1rRhUsrhuddodAip0/0ItgJYGH7gPN7W3O6BrQX+XjgV+6pxgIUG64OE2t
-	 qmPOwhVMYyIg6wYMRrDDKqGJR0PcAQIKcLtxoTM7BheePrRCVzY/PEqByY6ksDMQwU
-	 HTGA7LDTPulaJX4zt6SR5Kl2qX0Hxhh/iiuBBuoDPYLhuzzOr7kcfHR/gheO5egMcW
-	 9SbYDgbs5ZMpbMA/aBSVtybZUKQW+NGlzg78SfMcBn3Yc6P2jZ+992fN3f3bY+AUOs
-	 qO0ypJeJLl6kw==
-Received: by cwcc.thunk.org (Postfix, from userid 15806)
-	id 788DE15C027E; Sat, 24 Jun 2023 15:39:24 -0400 (EDT)
-Date: Sat, 24 Jun 2023 15:39:24 -0400
-From: "Theodore Ts'o" <tytso@mit.edu>
-To: Ritesh Harjani <ritesh.list@gmail.com>
-Cc: Sean Greenslade <sean@seangreenslade.com>,
-        Bagas Sanjaya <bagasdotme@gmail.com>, linux-ext4@vger.kernel.org,
-        Ye Bin <yebin10@huawei.com>,
-        Thorsten Leemhuis <regressions@leemhuis.info>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Regressions <regressions@lists.linux.dev>
-Subject: Re: RO mount of ext4 filesystem causes writes
-Message-ID: <20230624193924.GD8954@mit.edu>
-References: <20230623143411.GF34229@mit.edu>
- <87leganq82.fsf@doe.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D70F6AA8
+	for <regressions@lists.linux.dev>; Sat, 24 Jun 2023 21:32:57 +0000 (UTC)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+	by mailout.nyi.internal (Postfix) with ESMTP id 6AD2C5C0090;
+	Sat, 24 Jun 2023 17:32:56 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute6.internal (MEProxy); Sat, 24 Jun 2023 17:32:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:sender
+	:subject:subject:to:to; s=fm1; t=1687642376; x=1687728776; bh=Km
+	TzCmtgkDsMsUlkemd4GN1f65YFZGx/erXYr9/Gkuo=; b=X5qbVwWu+hZaXySzg5
+	7XHiKwVqb7U7JNYP5AH0hvx1Wyv8lALLs+8p6LuXmS4OdEfoG3FSh8IXyTtWHIFO
+	S6PpUl8fL9UnuOgqRhTKJHt9PgZumlR3nv4OUtyxZhk3PPgnQn3Dot9n9SjhNm9d
+	5mwLBCdtF3CB7RBP4l5yVsPvi2+dQ36FWnggZR6nqj5dHoFxaUY32CALLetzt4/1
+	ZTef9eztymqpzmnf6jS4k+BgxY6yiMa15WORbLysDWzCnaeSzjCLrp9SpaNwoogb
+	HJGFLwM0MEKIghMbFwiCPvvqMnWEzCRLZGZf49qEX4FeitlEmDhcNP5TYzt4jCiB
+	6Alg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:sender:subject
+	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+	:x-sasl-enc; s=fm2; t=1687642376; x=1687728776; bh=KmTzCmtgkDsMs
+	Ulkemd4GN1f65YFZGx/erXYr9/Gkuo=; b=mJr1TpXHXCAg0pYchom+rBjJBnpZ5
+	cx6KZ6Lat8B70vXeXNvgZcMw8aDyCXtKrhqt3qxbYd8KuRlf77foix76XGkpNk52
+	1zYFajXN3xjWq+uUYJwJP3ppvDm/VT9Tfo5NCD8uqIShOfJayefCIdW6a6sNH0Nv
+	UNTlDmy+iTtjLe5ldXaAMQhhavAaKZJg42RwageQKHW63B0gadPKRLhgYs2d9AgJ
+	mUhqH3VaTJWPSkWUmq7WeLOEpg/aJPJCXH3s1duHam/njtTx0MCdn8yKnsVZbHp4
+	W1LqtPmLL1SzDjF1QSsF3UuoePqRi1Pnu8s5GcozG9NhBHLEVYTsEkFFg==
+X-ME-Sender: <xms:B2GXZPDk5kWKhlr1lrM1WulZBwZct3pJybpZzjj6VpvtV62JNBc4IA>
+    <xme:B2GXZFg2Naryh6WdS15SENGfzRMmo5od2tcyXEfvcutSdPtb_xvPrqet1UFJS4MTW
+    PQaSenV0NUfZuDfDT0>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrgeegjedgudeiudcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdet
+    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
+    htthgvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedt
+    keetffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
+    grrhhnugesrghrnhgusgdruggv
+X-ME-Proxy: <xmx:B2GXZKmL-6f2MlU8M05vus6KcuIlN09GJp-mjyvGinUDSK7cBePQ3Q>
+    <xmx:B2GXZBy5QxgvUIF9ebRQKCNskqvKWbGpmYUOuq2aAM5v3omHAL0T5w>
+    <xmx:B2GXZES9OFehFvO4r4G377opQ-_ZgAYcLp5W-VUk94zF59z96UfapA>
+    <xmx:CGGXZHGwOH7jggq_SYPp5T418kQ52V2cMTtyDGqwE5Ko7Jpwd12rCg>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id C1263B60086; Sat, 24 Jun 2023 17:32:55 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-499-gf27bbf33e2-fm-20230619.001-gf27bbf33
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87leganq82.fsf@doe.com>
+Mime-Version: 1.0
+Message-Id: <b9428e48-f0f9-46f6-892c-4c8834c930c4@app.fastmail.com>
+In-Reply-To: <27829c69-515c-36a6-4beb-3210225f8936@gmail.com>
+References: <27829c69-515c-36a6-4beb-3210225f8936@gmail.com>
+Date: Sat, 24 Jun 2023 23:32:52 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Bagas Sanjaya" <bagasdotme@gmail.com>,
+ "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+ "Linux Regressions" <regressions@lists.linux.dev>,
+ "Linux Wireless" <linux-wireless@vger.kernel.org>,
+ Netdev <netdev@vger.kernel.org>
+Cc: =?UTF-8?Q?Michael_B=C3=BCsch?= <m@bues.ch>,
+ "kernel test robot" <lkp@intel.com>,
+ "Simon Horman" <simon.horman@corigine.com>,
+ "Larry Finger" <Larry.Finger@lwfinger.net>, "Kalle Valo" <kvalo@kernel.org>,
+ sardonimous@hotmail.com
+Subject: Re: Fwd: After kernel 6.3.7 or 6.3.8 b43 driver fails
+Content-Type: text/plain
 
-On Fri, Jun 23, 2023 at 09:08:37PM +0530, Ritesh Harjani wrote:
-> It seems in the original code what we were trying to do was to preseve
-> the error information area of superblock across journal load (which I am
-> not sure why though?)
-> 
-> In the new code we see if the journal load changed that area and if yes
-> we change that back to original log but we also marked changed = true. Why?
+On Sat, Jun 24, 2023, at 03:44, Bagas Sanjaya wrote:
+> I notice a regression report on Bugzilla [1]. Quoting from it:
+>
+>> After upgrading to linux 6.3.8-arch1-1 from 6.3.6-arch1-1, b43 broadcom wireless driver fails.  downgrading back to 6.3.6-arch1-1 resolves.
+>> 
+>> Jun 16 20:56:37 askasleikir kernel: Hardware name: Apple Inc. MacBookPro7,1/Mac-F222BEC8, BIOS MBP71.88Z.0039.B15.1702241313 02/24/17
+>> Jun 16 20:56:37 askasleikir kernel: Workqueue: phy0 b43_tx_work [b43]
+>> Jun 16 20:56:37 askasleikir kernel: RIP: 0010:__ieee80211_stop_queue+0xcc/0xe0 [mac80211]
 
-That's a good question; thanks for asking it.  The first part of this
-code was introduced by commit 1c13d5c08728 ("ext4: Save error
-information to the superblock for analysis") in 2010.  So that part of
-the code is not "new", but very, very, old. 
+FWIW, the report is missing a few lines at the top about
+which error condition is being hit.
 
-The basic idea here was that back then, when a file system error was
-detected, it was always written directly to the superblock, by passing
-the journal.  So that's why the original code saved the error
-information, replayed the journal and then restored it.
+>> Jun 16 20:56:37 askasleikir kernel: <TASK>
+>> Jun 16 20:56:37 askasleikir kernel: ? __ieee80211_stop_queue+0xcc/0xe0 [mac80211 136d1d948548ad6cca697df0da0a13c0a2333310]
+>> Jun 16 20:56:37 askasleikir kernel: ? __warn+0x81/0x130
+>> Jun 16 20:56:37 askasleikir kernel: ? __ieee80211_stop_queue+0xcc/0xe0 [mac80211 136d1d948548ad6cca697df0da0a13c0a2333310]
+>> Jun 16 20:56:37 askasleikir kernel: ? report_bug+0x171/0x1a0
+>> Jun 16 20:56:37 askasleikir kernel: ? handle_bug+0x3c/0x80
+>> Jun 16 20:56:37 askasleikir kernel: ? exc_invalid_op+0x17/0x70
+>> Jun 16 20:56:37 askasleikir kernel: ? asm_exc_invalid_op+0x1a/0x20
+>> Jun 16 20:56:37 askasleikir kernel: ? __ieee80211_stop_queue+0xcc/0xe0 [mac80211 136d1d948548ad6cca697df0da0a13c0a2333310]
+>> Jun 16 20:56:37 askasleikir kernel: ieee80211_stop_queue+0x36/0x50 [mac80211 136d1d948548ad6cca697df0da0a13c0a2333310]
 
-Of course, this changed with commit 2d01ddc86606 ("ext4: save error
-info to sb through journal if available") in 2020.  But the problem is
-"if available".  If the jbd2 layer has shut down, then we can't route
-the superblock error updates through the journal, at which point ext4
-will do a direct update of the superlbock.
+This indicates that a WARN_ON() was hit in __ieee80211_stop_queue(),
+and the only condition that could cause this is
 
-This was the rational behind commit eee00237fa5e ("ext4: commit super
-block if fs record error when journal record without error").
-Sometimes the error bit EXT4_ERROR_FS is set via a direct write to the
-superblock; but other times the error bit might be set via the
-journal.  In the former case, after we do a journal replay, the error
-bit will be cleared.  However, since the kernel never clears the
-EXT4_ERROR_FS bit, it's pretty easy for commit eee00237fa5e to handle
-things.
+        if (WARN_ON(queue >= hw->queues))
+                return;
 
-So what we need to for that first part of the code, introduced in
-commit 1c13d5c08728 and made invalid in commit 2d01ddc86606 is we need
-to add code to examine s_last_error_time.  If the version that was
-originally in the superblock is newer than the version found after the
-journal replay, then presumably an error happened but ext4 wasn't able
-to write the error information out through the journal, and we need to
-replace it after the the call to jbd2_journal_load().
+Maybe that helps figure out what went wrong. 
 
-Cheers,
-
-						- Ted
+        Arnd
