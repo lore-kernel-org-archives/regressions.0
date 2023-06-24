@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 514D01384
-	for <regressions@lists.linux.dev>; Sat, 24 Jun 2023 13:44:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C0A75394
+	for <regressions@lists.linux.dev>; Sat, 24 Jun 2023 14:00:35 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qD3Yf-00060A-0M; Sat, 24 Jun 2023 15:44:09 +0200
-Message-ID: <f78c38f6-9c8d-9c4c-75be-9d9b5fe5024b@leemhuis.info>
-Date: Sat, 24 Jun 2023 15:44:08 +0200
+	id 1qD3oU-0002F4-Q1; Sat, 24 Jun 2023 16:00:30 +0200
+Message-ID: <08ea34c8-7194-eafb-98f4-1e0b52ca7e81@leemhuis.info>
+Date: Sat, 24 Jun 2023 16:00:30 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,64 +16,75 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.12.0
-Subject: Re: Fwd: kernel fault on hibernation: get_zeroed_page/swsusp_write
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Re: After kernel 6.3.7 or 6.3.8 b43 driver fails
 Content-Language: en-US, de-DE
-To: Bagas Sanjaya <bagasdotme@gmail.com>,
- Elmar Stellnberger <estellnb@elstel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+To: Arnd Bergmann <arnd@arndb.de>, =?UTF-8?Q?Michael_B=c3=bcsch?=
+ <m@bues.ch>, Bagas Sanjaya <bagasdotme@gmail.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
  Linux Regressions <regressions@lists.linux.dev>,
- Linux Memory Management <linux-mm@kvack.org>,
- Linux Stable <stable@vger.kernel.org>
-References: <5d4959b7-61da-8ab0-6bc6-21305d37c7aa@gmail.com>
- <ZJXFgfldS6W_LCiI@mail.dotplex.com> <ZJZGE4ZxJzrhRznA@debian.me>
- <ZJbDqStCNfdpwObE@mail.dotplex.com>
- <c125ec63-f7ba-3fd6-c286-05854fa1a07a@gmail.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <c125ec63-f7ba-3fd6-c286-05854fa1a07a@gmail.com>
+ Linux Wireless <linux-wireless@vger.kernel.org>,
+ Netdev <netdev@vger.kernel.org>, kernel test robot <lkp@intel.com>,
+ Simon Horman <simon.horman@corigine.com>,
+ Larry Finger <Larry.Finger@lwfinger.net>, Kalle Valo <kvalo@kernel.org>,
+ sardonimous@hotmail.com
+References: <27829c69-515c-36a6-4beb-3210225f8936@gmail.com>
+ <20230624105023.146d99e0@barney>
+ <d33a248c-c7ac-43d3-b602-3c801d697922@app.fastmail.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+In-Reply-To: <d33a248c-c7ac-43d3-b602-3c801d697922@app.fastmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1687614252;523d7889;
-X-HE-SMSGID: 1qD3Yf-00060A-0M
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1687615235;7f9dd500;
+X-HE-SMSGID: 1qD3oU-0002F4-Q1
 
-On 24.06.23 14:15, Bagas Sanjaya wrote:
-> On 6/24/23 17:21, Elmar Stellnberger wrote:
->> Hi Bagas S., Hi all
+On 24.06.23 11:29, Arnd Bergmann wrote:
+> On Sat, Jun 24, 2023, at 10:50, Michael Büsch wrote:
+>> On Sat, 24 Jun 2023 08:44:15 +0700
+>> Bagas Sanjaya <bagasdotme@gmail.com> wrote:
+>>>> I suspect change introduced when addressing a compiler warning
+>>>> cased the error.
+>>>>
+>>>> https://patchwork.kernel.org/project/linux-wireless/patch/20230516183442.536589-1-arnd%40kernel.org/
 >>
->> concerns: Bug 217544 - kernel fault on hibernation: get_zeroed_page/swsusp_write 
->> https://bugzilla.kernel.org/show_bug.cgi?id=217544
->>
->>   Bisection does not make sense here, since I can not reproduce the
->> issue. Packing the kernel binaries and symbol files was meant to invoke
->> gdb directly on the kcore:
+>> I doubt it.
+>> This patch affects the device initialization code. But the crash is in
+>> the transmit path.
+>> Can you please double check by manually reverting the patch?
 > 
-> Thorsten: Should this be marked as invalid/inconclusive?
+> I'm travelling at the moment and can't easily check it, but I would
+> expect that my patch has no effect on the generated object code [...]
 
-Not as invalid, as there might be a real issue here; but it's hard to
-say, as among others it also quite possible that something else went
-wrong (compiler? hardware?). Someone would have to investigate. But
-given the fact that this happened with a stable kernel[1] and is
-impossible to reproduce, I suspect no developer will be motivated enough
-to do so. Then it's not worth tracking[2]:
+Michael, Arnd, thx for the replies. To you and everyone else that looked
+into this: sorry for the trouble this caused.
 
-#regzbot inconclusive: impossible to reproduce
+The reporter's guess was wrong, as the reporter meanwhile confirmed in
+the bugzilla ticket that the problem started to happen earlier.
 
-Elmar, that's nothing bad. In case this turns out to be something you
-can reproduce and bisect, just let us know and we'll add it back.
-
-[1] see the sections about stable kernels
-https://linux-regtracking.leemhuis.info/post/frequent-reasons-why-linux-kernel-bug-reports-are-ignored/
-
-[2] side note: due to limited resources I consider to stop tracking all
-non-bisected issues in general (expect those that started to happen in
-mainline since the last mainline release) – or put them in a special
-category that signals "those are collected here JFYI until they are
-bisected, as the regression tracker due to limited resources for now
-can't keep a close eye on these"
+Bagas, please be a bit more careful and don't blame a specific commit
+unless it's was found by bisection, a revert through a lucky guess, a
+statement from a developer, or something like that. In cases like this
+it would have been better to sent the developers of said commit a quick
+mail along the lines of "could you imagine that this change could lead
+to the problem the reporter described". But even that might be too much
+in a case like this, as too many of such false alarms and inquiries will
+make developers start hating or ignoring regression tracking in general
+or mails from you or me – and that is something that must be avoided, as
+without help from developers regression tracking becomes a lot harder or
+impossible.
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
 Everything you wanna know about Linux kernel regression tracking:
 https://linux-regtracking.leemhuis.info/about/#tldr
 If I did something stupid, please tell me, as explained on that page.
+
+P.S.: Updating regzbot status, while at it:
+
+#regzbot introduced: v6.1..v6.2
+
+
+
+
 
