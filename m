@@ -1,13 +1,45 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35E9D7F9
-	for <regressions@lists.linux.dev>; Sat, 24 Jun 2023 12:02:58 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qD1yh-0004QA-Ft; Sat, 24 Jun 2023 14:02:55 +0200
-Message-ID: <d34ed005-730a-a985-663f-48671ec15a94@leemhuis.info>
-Date: Sat, 24 Jun 2023 14:02:54 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADB997F9
+	for <regressions@lists.linux.dev>; Sat, 24 Jun 2023 12:16:04 +0000 (UTC)
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-6687446eaccso1396454b3a.3
+        for <regressions@lists.linux.dev>; Sat, 24 Jun 2023 05:16:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1687608964; x=1690200964;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Q5gqXPV4PTFmPbh9Zh+d+AFfgDSYPHvyuQvmSWXaCHM=;
+        b=GSlyV/6jSVuH94sgYqU5l2hZ/vFLVm17jC73az92Vrcd2d/BFlXXxFFxzf6Vp30FCx
+         tVRrSaAozJxD7ShYaUpUlNDY7siYc3h8j9GhCsVR6eCxllgrTEWB0U7uzwfTTYVI6W7x
+         AZbfqlbw9T8QYbUXWyw6VwUByWJZcodGY9vyeASiKn2e9Di8ypFNy1fgw4BBjstTdrzn
+         xCeqoyS/osXPg4iWIkkCAtppNK12CFynje23SverEgCXnwis39rppObDTejJyCXqTh1s
+         CmVAglsURQcjwkjzADdbhyt1JRDe0FI6ASOdtcXJ0akfAeNh/nzjQx8y2KlFhcvajhb+
+         TpYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687608964; x=1690200964;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Q5gqXPV4PTFmPbh9Zh+d+AFfgDSYPHvyuQvmSWXaCHM=;
+        b=WS81q5ILVb0WV6EK+mZ8pb37s1EkSQ2C7CFPOrVVhd3cXEwTcSTiI8adF/Ewazb21S
+         osZgOU+w3DEbLKxwQ+5TZmU2QZXJM3Tbpimn4gWQX5qz5pxfni1+otXvYG0F3TIMCn8Y
+         CZeAMVde+j5yLjFhDIVrLjDPWbEFayEFMidrGhNjPjBZd9raC17GugbhLA9lU/QWMxDD
+         IheC5XXg6kRZ8cV9Bez60tIUfgRPZWECSqfFb28jZw001hAw77SEQLXjssndlryRDfj/
+         NogXHsY2f2dSt/ZdpxcWh0/96QPl2uWTyPEgeR0aVQziT7BAOrxXjNqrbDt92wjAwjrs
+         fOUg==
+X-Gm-Message-State: AC+VfDy825rPphNplo6zv8zzMj9DznDxpEJajKGZiDPU6m28+D0M4hbg
+	MKVfUYAk9Ev42PMPK/FCQXk=
+X-Google-Smtp-Source: ACHHUZ5EpQ65SR/LaXzT/XybSAMzramJefXD9F0LO3L1KAkTP0j347Sr+AXCX1XFPm90SaCzHiVC4A==
+X-Received: by 2002:a05:6a00:1a53:b0:66a:6339:e8f6 with SMTP id h19-20020a056a001a5300b0066a6339e8f6mr8131229pfv.10.1687608963801;
+        Sat, 24 Jun 2023 05:16:03 -0700 (PDT)
+Received: from [192.168.0.103] ([103.131.18.64])
+        by smtp.gmail.com with ESMTPSA id p25-20020aa78619000000b0065418efa5ebsm991442pfn.155.2023.06.24.05.15.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 24 Jun 2023 05:16:03 -0700 (PDT)
+Message-ID: <c125ec63-f7ba-3fd6-c286-05854fa1a07a@gmail.com>
+Date: Sat, 24 Jun 2023 19:15:36 +0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,99 +48,45 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.12.0
-Subject: Re: [PATCH] media: uvcvideo: Fix menu count handling for userspace XU
- mappings
-Content-Language: en-US, de-DE
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Poncho <poncho@spahan.ch>, linux-media@vger.kernel.org,
- Ricardo Ribalda <ribalda@chromium.org>, regressions@lists.linux.dev
-References: <20230606170919.GJ25679@pendragon.ideasonboard.com>
- <20230606171150.12875-1-laurent.pinchart@ideasonboard.com>
- <785fcf0b-3f63-a0da-3eea-f57124e99e15@spahan.ch>
- <20230624002517.GF1669@pendragon.ideasonboard.com>
- <7dd4f71e-afbd-2f0a-b6bb-8324916ab3d1@leemhuis.info>
- <20230624104017.GH1669@pendragon.ideasonboard.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <20230624104017.GH1669@pendragon.ideasonboard.com>
+Subject: Re: Fwd: kernel fault on hibernation: get_zeroed_page/swsusp_write
+To: Elmar Stellnberger <estellnb@elstel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ Thorsten Leemhuis <regressions@leemhuis.info>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Linux Memory Management <linux-mm@kvack.org>,
+ Linux Stable <stable@vger.kernel.org>
+References: <5d4959b7-61da-8ab0-6bc6-21305d37c7aa@gmail.com>
+ <ZJXFgfldS6W_LCiI@mail.dotplex.com> <ZJZGE4ZxJzrhRznA@debian.me>
+ <ZJbDqStCNfdpwObE@mail.dotplex.com>
+Content-Language: en-US
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+In-Reply-To: <ZJbDqStCNfdpwObE@mail.dotplex.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1687608179;28488c8b;
-X-HE-SMSGID: 1qD1yh-0004QA-Ft
 
-On 24.06.23 12:40, Laurent Pinchart wrote:
-> On Sat, Jun 24, 2023 at 11:07:14AM +0200, Thorsten Leemhuis wrote:
->> On 24.06.23 02:25, Laurent Pinchart wrote:
->>> On Wed, Jun 21, 2023 at 05:26:39PM +0200, Poncho wrote:
->>>> Friendly ping. I think this patch was forgotten.
->>> Thanks for the reminder. I'll send a pull request for v6.6.
->>
->> Why 6.6? If this would be a feature I'd fully understand. But this
->> afaics fixes a regression and thus should be handled as one, even if
->> it's a regression from a earlier release. For details see this recent
->> mail from Linus:
->>
->> https://lore.kernel.org/all/CAHk-=wis_qQy4oDNynNKi5b7Qhosmxtoj1jxo5wmB6SRUwQUBQ@mail.gmail.com/
+On 6/24/23 17:21, Elmar Stellnberger wrote:
+> Hi Bagas S., Hi all
 > 
-> Linus has decided to not pull from the media tree for the next kernel
-> release due to a set of mishaps, see
-> https://lore.kernel.org/linux-media/CAHk-=wgzU8_dGn0Yg+DyX7ammTkDUCyEJ4C=NvnHRhxKWC7Wpw@mail.gmail.com/.
-
-Yeah, I remember.
-
-> Re-reading the mail, fixes should be fine
-
-Yup, he even pulled some fixes during this cycle.
-
-> even if the issue has been
-> there for several releases. I'll send send a pull request for v6.5.
-
-Great, thx!
-
->> Side note: as it's a regression it would be good if this commit had a
->> "CC: <stable..." tag as well.
-> I've already added that to my tree.
-
-Thx, too!
-
-Ciao, Thorsten
-
->> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
->> --
->> Everything you wanna know about Linux kernel regression tracking:
->> https://linux-regtracking.leemhuis.info/about/#tldr
->> If I did something stupid, please tell me, as explained on that page.
->>
->>>> On 06.06.23 19:11, Laurent Pinchart wrote:
->>>>> When commit 716c330433e3 ("media: uvcvideo: Use standard names for
->>>>> menus") reworked the handling of menu controls, it inadvertently
->>>>> replaced a GENMASK(n - 1, 0) with a BIT_MASK(n). The latter isn't
->>>>> equivalent to the former, which broke adding XU mappings from userspace.
->>>>> Fix it.
->>>>>
->>>>> Reported-by: Poncho <poncho@spahan.ch>
->>>>> Link: https://lore.kernel.org/linux-media/468a36ec-c3ac-cb47-e12f-5906239ae3cd@spahan.ch/
->>>>> Fixes: 716c330433e3 ("media: uvcvideo: Use standard names for menus")
->>>>> Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
->>>>> ---
->>>>> This is untested. Poncho, would you be able to test this patch to see if
->>>>> it fixes your issue ?
->>>>> ---
->>>>>   drivers/media/usb/uvc/uvc_v4l2.c | 2 +-
->>>>>   1 file changed, 1 insertion(+), 1 deletion(-)
->>>>>
->>>>> diff --git a/drivers/media/usb/uvc/uvc_v4l2.c b/drivers/media/usb/uvc/uvc_v4l2.c
->>>>> index 5ac2a424b13d..f4988f03640a 100644
->>>>> --- a/drivers/media/usb/uvc/uvc_v4l2.c
->>>>> +++ b/drivers/media/usb/uvc/uvc_v4l2.c
->>>>> @@ -45,7 +45,7 @@ static int uvc_control_add_xu_mapping(struct uvc_video_chain *chain,
->>>>>   	map->menu_names = NULL;
->>>>>   	map->menu_mapping = NULL;
->>>>>   
->>>>> -	map->menu_mask = BIT_MASK(xmap->menu_count);
->>>>> +	map->menu_mask = GENMASK(xmap->menu_count - 1, 0);
->>>>>   
->>>>>   	size = xmap->menu_count * sizeof(*map->menu_mapping);
->>>>>   	map->menu_mapping = kzalloc(size, GFP_KERNEL);
+> concerns: Bug 217544 - kernel fault on hibernation: get_zeroed_page/swsusp_write 
+> https://bugzilla.kernel.org/show_bug.cgi?id=217544
 > 
+>   Bisection does not make sense here, since I can not reproduce the
+> issue. Packing the kernel binaries and symbol files was meant to invoke
+> gdb directly on the kcore:
+>  
+
+Thorsten: Should this be marked as invalid/inconclusive?
+
+> Am Sat, Jun 24, 2023 at 08:25:39AM +0700 schrieb Bagas Sanjaya:
+>> On Fri, Jun 23, 2023 at 06:17:05PM +0200, Elmar Stellnberger wrote:
+>> Can you attach [1] to your Bugzilla report? Also, any report on bisection?
+> 
+> Pardon, what is [1]?
+> 
+
+Your kcore dump.
+
+-- 
+An old man doll... just what I always wanted! - Clara
+
