@@ -1,82 +1,123 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CCCC360
-	for <regressions@lists.linux.dev>; Sat, 24 Jun 2023 00:25:27 +0000 (UTC)
-Received: from pendragon.ideasonboard.com (213-243-189-158.bb.dnainternet.fi [213.243.189.158])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 904072C6;
-	Sat, 24 Jun 2023 02:24:41 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1687566281;
-	bh=NAEZURojuPsv/2J9Wg247kwpG3CyYh38piJa7xCkNmg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XkPtxP0RP+phM/cNYJ/8v7cBXG1dqRnfx5ZedBm2dCmRVPNCd1FTurytv2XCE06v5
-	 ztj8ww/wcxdHAm+ylJgV18b1KG0w36gGlj8P9KYY7Q6z0T5asiAof1T5/td/WiNWLF
-	 Y4Sdwr4nzIYA+z+GTBTCFeN9oGZ+xP2HWKb6mLSA=
-Date: Sat, 24 Jun 2023 03:25:17 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Poncho <poncho@spahan.ch>
-Cc: linux-media@vger.kernel.org, Ricardo Ribalda <ribalda@chromium.org>,
-	"Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>,
-	regressions@lists.linux.dev
-Subject: Re: [PATCH] media: uvcvideo: Fix menu count handling for userspace
- XU mappings
-Message-ID: <20230624002517.GF1669@pendragon.ideasonboard.com>
-References: <20230606170919.GJ25679@pendragon.ideasonboard.com>
- <20230606171150.12875-1-laurent.pinchart@ideasonboard.com>
- <785fcf0b-3f63-a0da-3eea-f57124e99e15@spahan.ch>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6977E378
+	for <regressions@lists.linux.dev>; Sat, 24 Jun 2023 01:13:48 +0000 (UTC)
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-6686708c986so1077058b3a.0
+        for <regressions@lists.linux.dev>; Fri, 23 Jun 2023 18:13:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1687569227; x=1690161227;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=XPifuwGr7qotS1J4egDcigsPGqIRoWlg/6w0xflvqXc=;
+        b=os0PUm6FrKL+A1DoENP/u20TiGluWujR7+ihWm5WpvDPntOiaFqI+zagF77EPxUeFd
+         gr58N43P9mAq2znfThw1PfGQKEPSYSXsYzcEoKK9A5Du4HKGvzQScblJDy/iGqZAKuWT
+         a4wWxbqnCDJ7t06JAr5Z8X0hOH//fnXZWeq9NqYVRLpKrC6kx5piOAgW//ZY9LTxMEnL
+         jqOhCNst0AIt7XcCt8LzYtm++QMHG2HaCRrv86PEx6ef3m7DMWmPFU5054WCk+Mv5os1
+         kXSEIEH24AbdO3seGYjPXpcaT5TcOUwYnekVdahikCV0h8quKcRXl8JnajWrTwBJOX4a
+         9cMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687569227; x=1690161227;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=XPifuwGr7qotS1J4egDcigsPGqIRoWlg/6w0xflvqXc=;
+        b=Q+10R8uw3GtDhXB50/lEIcqdeis5OqYwvJ56Jt5xC3zLM+lKWdMtMNKNqXAGftQo+E
+         1zZpBF7VWrRO2Kkbreo7OBY9cBCJzXi1mauCRFDpDZwepRKg0BxQwA02FnSMng9To4y0
+         8OIzqhIOdlu6p2QN1gIPWvKTeU7T91TheAUewq7ycWraDMghFIMwImK0TFCNsbSqfppq
+         miS2MamYwF1wAoJhjVJtwuv6hR/Et8euIAJ3UUg5tBNoGoBwhqmmZL8dXqOReptio9nv
+         +tBmxI5vJEEqAAkQ7ZgRIeTqyGpMqt+ssPB7RFFJzvaXLAQ+uvCB2ccMdfn5IiTmpaJT
+         xxPQ==
+X-Gm-Message-State: AC+VfDxZSF5QH8vf5E1NbHPExFlq7K0O5SfI0NnzMreGsA1zkMXCQ+zi
+	O0TqkweT6KQGB6X0mQnfi/c=
+X-Google-Smtp-Source: ACHHUZ606czjila05woldXKyuDA7Rq8dbV1i+0k6tpmn1h59UzY57EaMRyDQG9n05OaV37lSyFMttw==
+X-Received: by 2002:a05:6a20:12d1:b0:121:b440:2820 with SMTP id v17-20020a056a2012d100b00121b4402820mr19195240pzg.19.1687569227466;
+        Fri, 23 Jun 2023 18:13:47 -0700 (PDT)
+Received: from [192.168.0.103] ([103.131.18.64])
+        by smtp.gmail.com with ESMTPSA id j6-20020a655586000000b0054fe7736ac1sm195469pgs.76.2023.06.23.18.13.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 23 Jun 2023 18:13:47 -0700 (PDT)
+Message-ID: <0e85ca99-d1d6-097b-2e04-4cd6492098a1@gmail.com>
+Date: Sat, 24 Jun 2023 08:13:26 +0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <785fcf0b-3f63-a0da-3eea-f57124e99e15@spahan.ch>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: Fwd: Dell XPS 13 ath10k_pci firmware crashed!
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Kalle Valo <kvalo@kernel.org>, Thorsten Leemhuis <linux@leemhuis.info>,
+ Garry Williams <gtwilliams@gmail.com>
+Cc: Linux Atheros 10K <ath10k@lists.infradead.org>,
+ Linux Wireless <linux-wireless@vger.kernel.org>,
+ Linux Kernel Network Developers <netdev@vger.kernel.org>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>
+References: <2db51694-aa57-cbfd-096e-4925b76232b0@gmail.com>
+Content-Language: en-US
+In-Reply-To: <2db51694-aa57-cbfd-096e-4925b76232b0@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hello,
-
-On Wed, Jun 21, 2023 at 05:26:39PM +0200, Poncho wrote:
-> Hi Laurent
+On 6/14/23 08:15, Bagas Sanjaya wrote:
+> Hi,
 > 
-> Friendly ping. I think this patch was forgotten.
+> I notice a regression report on Bugzilla [1]. Quoting from it:
+> 
+>> Beginning with kernel 6.2.15-300.fc38.x86_64 and continuing through 6.3.7-200.fc38.x86_64, the wifi connection fails periodically with these log messages:
+>>
+>> ath10k_pci 0000:02:00.0: firmware crashed! (guid 6c545da0-593c-4a0e-b5ad-3ef2b91cdebf)
+>> ath10k_pci 0000:02:00.0: qca6174 hw3.2 target 0x05030000 chip_id 0x00340aff sub 1a56:143a
+>> ath10k_pci 0000:02:00.0: kconfig debug 0 debugfs 1 tracing 0 dfs 0 testmode 0
+>> ath10k_pci 0000:02:00.0: firmware ver WLAN.RM.4.4.1-00288- api 6 features wowlan,ignore-otp,mfp crc32 bf907c7c
+>> ath10k_pci 0000:02:00.0: board_file api 2 bmi_id N/A crc32 d2863f91
+>> ath10k_pci 0000:02:00.0: htt-ver 3.87 wmi-op 4 htt-op 3 cal otp max-sta 32 raw 0 hwcrypto 1
+>> ath10k_pci 0000:02:00.0: failed to get memcpy hi address for firmware address 4: -16
+>> ath10k_pci 0000:02:00.0: failed to read firmware dump area: -16
+>> ath10k_pci 0000:02:00.0: Copy Engine register dump:
+>> ath10k_pci 0000:02:00.0: [00]: 0x00034400  12  12   3   3
+>> ath10k_pci 0000:02:00.0: [01]: 0x00034800  14  14 347 348
+>> ath10k_pci 0000:02:00.0: [02]: 0x00034c00   8   2   0   1
+>> ath10k_pci 0000:02:00.0: [03]: 0x00035000  16  15  16  14
+>> ath10k_pci 0000:02:00.0: [04]: 0x00035400 2995 2987  22 214
+>> ath10k_pci 0000:02:00.0: [05]: 0x00035800   0   0  64   0
+>> ath10k_pci 0000:02:00.0: [06]: 0x00035c00   0   0  18  18
+>> ath10k_pci 0000:02:00.0: [07]: 0x00036000   1   1   1   0
+>> ath10k_pci 0000:02:00.0: could not request stats (-108)
+>> ath10k_pci 0000:02:00.0: could not request peer stats info: -108
+>> ath10k_pci 0000:02:00.0: failed to read hi_board_data address: -28
+>> ieee80211 phy0: Hardware restart was requested
+>> ath10k_pci 0000:02:00.0: could not request stats (-108)
+>> ath10k_pci 0000:02:00.0: device successfully recovered
+>>
+>>
+>> If I disconnect and reconnect using network manager, the connection is restored.  But this same failure recurs over and over after some few minutes to a few hours.
+>>
+>> This is a regression.  The error was not reported with any previous kernel since 6.2.14-300.fc38.x86_64
+> 
+> See Bugzilla for the full thread.
+> 
+> Unfortunately, the reporter can't bisect this regression (he only tries
+> distribution kernels instead).
+> 
+> Anyway, I'm adding it to regzbot (as mainline regression because v6.2.x
+> has already EOL):
+> 
+> #regzbot introduced: v6.2..v6.3 https://bugzilla.kernel.org/show_bug.cgi?id=217549
+> #regzbot title: ath10k_pci firmware crashed on Dell XPS 13
+> 
 
-Thanks for the reminder. I'll send a pull request for v6.6.
+It comes out that the regression is due to Fedora patches (see Bugzilla thread),
+thus:
 
-> On 06.06.23 19:11, Laurent Pinchart wrote:
-> > When commit 716c330433e3 ("media: uvcvideo: Use standard names for
-> > menus") reworked the handling of menu controls, it inadvertently
-> > replaced a GENMASK(n - 1, 0) with a BIT_MASK(n). The latter isn't
-> > equivalent to the former, which broke adding XU mappings from userspace.
-> > Fix it.
-> > 
-> > Reported-by: Poncho <poncho@spahan.ch>
-> > Link: https://lore.kernel.org/linux-media/468a36ec-c3ac-cb47-e12f-5906239ae3cd@spahan.ch/
-> > Fixes: 716c330433e3 ("media: uvcvideo: Use standard names for menus")
-> > Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > ---
-> > This is untested. Poncho, would you be able to test this patch to see if
-> > it fixes your issue ?
-> > ---
-> >   drivers/media/usb/uvc/uvc_v4l2.c | 2 +-
-> >   1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/media/usb/uvc/uvc_v4l2.c b/drivers/media/usb/uvc/uvc_v4l2.c
-> > index 5ac2a424b13d..f4988f03640a 100644
-> > --- a/drivers/media/usb/uvc/uvc_v4l2.c
-> > +++ b/drivers/media/usb/uvc/uvc_v4l2.c
-> > @@ -45,7 +45,7 @@ static int uvc_control_add_xu_mapping(struct uvc_video_chain *chain,
-> >   	map->menu_names = NULL;
-> >   	map->menu_mapping = NULL;
-> >   
-> > -	map->menu_mask = BIT_MASK(xmap->menu_count);
-> > +	map->menu_mask = GENMASK(xmap->menu_count - 1, 0);
-> >   
-> >   	size = xmap->menu_count * sizeof(*map->menu_mapping);
-> >   	map->menu_mapping = kzalloc(size, GFP_KERNEL);
+#regzbot invalid: regression caused by downstream patch
+
+Thanks.
 
 -- 
-Regards,
+An old man doll... just what I always wanted! - Clara
 
-Laurent Pinchart
