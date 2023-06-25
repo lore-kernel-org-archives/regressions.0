@@ -1,84 +1,76 @@
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
+Received: from ste-pvt-msa1.bahnhof.se (ste-pvt-msa1.bahnhof.se [213.80.101.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CBF663C5
-	for <regressions@lists.linux.dev>; Sun, 25 Jun 2023 15:36:39 +0000 (UTC)
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-207-G6fb6HvCMiuHnGnGBWezVQ-1; Sun, 25 Jun 2023 16:36:35 +0100
-X-MC-Unique: G6fb6HvCMiuHnGnGBWezVQ-1
-Received: from AcuMS.Aculab.com (10.202.163.6) by AcuMS.aculab.com
- (10.202.163.6) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Sun, 25 Jun
- 2023 16:36:34 +0100
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.048; Sun, 25 Jun 2023 16:36:34 +0100
-From: David Laight <David.Laight@ACULAB.COM>
-To: 'Linus Torvalds' <torvalds@linux-foundation.org>, Ard Biesheuvel
-	<ardb@kernel.org>
-CC: "Jason A. Donenfeld" <Jason@zx2c4.com>, "regressions@leemhuis.info"
-	<regressions@leemhuis.info>, Andrew Lunn <andrew@lunn.ch>, Linux Stable
-	<stable@vger.kernel.org>, Linux Regressions <regressions@lists.linux.dev>,
-	Bagas Sanjaya <bagasdotme@gmail.com>, Sami Korkalainen
-	<sami.korkalainen@proton.me>
-Subject: RE: [REGRESSION][BISECTED] Boot stall from merge tag 'net-next-6.2'
-Thread-Topic: [REGRESSION][BISECTED] Boot stall from merge tag 'net-next-6.2'
-Thread-Index: AQHZpib0NlwG7Q145EancEpql/aG6a+bqCJQ
-Date: Sun, 25 Jun 2023 15:36:34 +0000
-Message-ID: <be98e9a82acc4a099026eca1e22f5a80@AcuMS.aculab.com>
-References: <GQUnKz2al3yke5mB2i1kp3SzNHjK8vi6KJEh7rnLrOQ24OrlljeCyeWveLW9pICEmB9Qc8PKdNt3w1t_g3-Uvxq1l8Wj67PpoMeWDoH8PKk=@proton.me>
- <ZHFaFosKY24-L7tQ@debian.me>
- <NVN-hJsvHwaHe6R-y6XIYJp0FV7sCavgMjobFnseULT1wjgkOFNXbGBGT5iVjCfbtU7dW5xy2hIDoq0ASeNaXhvSY-g2Df4aHWVIMQ2c3TQ=@proton.me>
- <ZIcmpcEsTLXFaO0f@debian.me>
- <oEbkgJ-ImLxBDZDUTnIAGFWrRVnwBss3FOlalTpwrz83xWgESC9pcvNKiAVp9BzFgqZ0V-NIwzBZ7icKD8ynuIi_ZMtGt7URu3ftcSt16u4=@proton.me>
- <e2ca75ef-d779-4bad-84a5-a9f262dbe213@lunn.ch>
- <FNzHwp9-AyweVwIMndmih6VuBD0nsyRp3OM72bmOxpeYszF680jFPJjENIknT32FeaqfVBtVSQFw-5mgE3ZXeksVD8VCFbxwojxP3mSZ9DQ=@proton.me>
- <9517bb70-426c-0296-b426-f5b4f075f7c8@leemhuis.info>
- <CAHmME9p2ZLJUMq96vhkiSgvJkxP5BxE778MhY5Ou2WdxLVEJyg@mail.gmail.com>
- <CAMj1kXHGkJsgArabs_mbzR3Y83s48qmf_aqb50k1LV1Hi5iNgA@mail.gmail.com>
- <CAHk-=wiiFHLSDe3JSSMm5EezpXXMFxYH=RwFLEbgsCKLjg4qqQ@mail.gmail.com>
- <CAHmME9oC6Kq5qeoSmY5CdDrbGnkcp9sy-9ESXdpRtM8x1_6Hwg@mail.gmail.com>
- <CAHk-=wjKtHwJBeUiJL_1HFJKWja120w-6qaLx1FS5p9QE0PfSw@mail.gmail.com>
- <CAMj1kXF7aO1FPXeBFeLBe1-7j5hUjiTAXu-xV6oKFN8dRY3qDQ@mail.gmail.com>
- <CAHk-=whKF0S33EgXts++dpspdFAtkf_otRbV45x1Yt2+bDz0sQ@mail.gmail.com>
-In-Reply-To: <CAHk-=whKF0S33EgXts++dpspdFAtkf_otRbV45x1Yt2+bDz0sQ@mail.gmail.com>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C4B66AAD
+	for <regressions@lists.linux.dev>; Sun, 25 Jun 2023 15:46:01 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by ste-pvt-msa1.bahnhof.se (Postfix) with ESMTP id B6AE83F51A;
+	Sun, 25 Jun 2023 17:40:25 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at bahnhof.se
+X-Spam-Flag: NO
+X-Spam-Score: -1.91
+X-Spam-Level:
+X-Spam-Status: No, score=-1.91 tagged_above=-999 required=6.31
+	tests=[BAYES_00=-1.9, T_SCC_BODY_TEXT_LINE=-0.01]
+	autolearn=ham autolearn_force=no
+Received: from ste-pvt-msa1.bahnhof.se ([127.0.0.1])
+	by localhost (ste-pvt-msa1.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id lG22FXXqcO0I; Sun, 25 Jun 2023 17:40:25 +0200 (CEST)
+Received: 
+	by ste-pvt-msa1.bahnhof.se (Postfix) with ESMTPA id 33FEA3F3FA;
+	Sun, 25 Jun 2023 17:40:21 +0200 (CEST)
+Received: from [2a00:801:798:c6f9::21a0:d26f] (port=45518 helo=[10.218.58.85])
+	by tnonline.net with esmtpsa  (TLS1.3) tls TLS_AES_128_GCM_SHA256
+	(Exim 4.94.2)
+	(envelope-from <forza@tnonline.net>)
+	id 1qDRqd-0007SE-Iv; Sun, 25 Jun 2023 17:40:20 +0200
+Date: Sun, 25 Jun 2023 17:40:17 +0200 (GMT+02:00)
+From: Forza <forza@tnonline.net>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	Vlastimil Babka <vbabka@suse.cz>
+Cc: Lorenzo Stoakes <lstoakes@gmail.com>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, Baoquan He <bhe@redhat.com>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	Bagas Sanjaya <bagasdotme@gmail.com>,
+	Linux btrfs <linux-btrfs@vger.kernel.org>,
+	Linux Regressions <regressions@lists.linux.dev>,
+	Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+	David Sterba <dsterba@suse.com>, a1bert@atlas.cz,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Song Liu <song@kernel.org>, Nicholas Piggin <npiggin@gmail.com>,
+	Matthew Wilcox <willy@infradead.org>
+Message-ID: <11b893e.86425ef4.188f33688b8@tnonline.net>
+In-Reply-To: <20230607093316.cdf60df195915fa9d38067ea@linux-foundation.org>
+References: <20230605201107.83298-1-lstoakes@gmail.com> <cd47d6ac-69ce-0315-dd45-2cb9dce57f36@suse.cz> <f6b42d95-09f1-48d6-8274-e6145febb31d@lucifer.local> <2a6fa9d6-53b8-93cd-16c8-309ce2b8e3ac@suse.cz> <20230607093316.cdf60df195915fa9d38067ea@linux-foundation.org>
+Subject: Re: [PATCH] mm/vmalloc: do not output a spurious warning when huge
+ vmalloc() fails
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: R2Mail2
 
-RnJvbTogTGludXMgVG9ydmFsZHMNCj4gU2VudDogMjQgSnVuZSAyMDIzIDAwOjAzDQo+IA0KPiBP
-biBGcmksIDIzIEp1biAyMDIzIGF0IDE1OjU1LCBBcmQgQmllc2hldXZlbCA8YXJkYkBrZXJuZWwu
-b3JnPiB3cm90ZToNCj4gPg0KPiA+IFdpdGggdGhlIHJldmVydCBhcHBsaWVkLCB0aGUga2VybmVs
-L0VGSSBzdHViIG9ubHkgY29uc3VtZXMgdGhlDQo+ID4gdmFyaWFibGUgYW5kIGRlbGV0ZXMgaXQs
-IGJ1dCBuZXZlciBjcmVhdGVzIGl0IGJ5IGl0c2VsZiwgYW5kIHNvIHRoZQ0KPiA+IGNvZGUgZG9l
-cyBub3RoaW5nIGlmIHRoZSB2YXJpYWJsZSBpcyBuZXZlciBjcmVhdGVkIGluIHRoZSBmaXJzdCBw
-bGFjZS4NCj4gDQo+IFJpZ2h0Lg0KPiANCj4gQnV0IG15ICpwb2ludCogd2FzIHRoYXQgaWYgd2Ug
-d2FudCB0byBjcmVhdGUgaXQsIHdlIERBTU4gV0VMTCBETyBOT1QNCj4gV0FOVCBUTyBETyBTTyBB
-VCBCT09UIFRJTUUuDQo+IA0KPiBCb290IHRpbWUgaXMgYWJzb2x1dGVseSB0aGUgd29yc3QgcG9z
-c2libGUgdGltZSB0byBkbyBpdC4NCj4gDQo+IFdlJ2QgYmUgbXVjaCBiZXR0ZXIgb2ZmIGRvaW5n
-IHNvIGF0IHNodXRkb3duIHRpbWUsIHdoZW4gd2UgYXQgbGVhc3QNCj4gaGF2ZSAoYSkgbWF4aW1h
-bCBlbnRyb3B5IGFuZCAoYikgZmFpbHVyZXMgYXJlIGxlc3MgY3JpdGljYWwuDQoNCk9yIG1heWJl
-IGJldHRlciAtIGVzcGVjaWFsbHkgZm9yIGVtYmVkZGVkIHN5c3RlbXMgd2hpY2ggZG9uJ3QNCm9m
-dGVuIGdldCBzaHV0IGRvd24gcHJvcGVybHkgKG9yIGFueSB3aGVyZSBzb21lb25lIGNhbiBmb3Jj
-ZQ0KYSBzeXN0ZW0gY3Jhc2ggYW5kIHRoZW4gZ2V0IG5vIHNhdmVkIGVudHJvcHkpIC0gYWZ0ZXIg
-dGhlIHN5c3RlbQ0KaGFzIGJlZW4gcnVubmluZyBsb25nIGVub3VnaCB0byBnZXQgYSByZWFzb25h
-YmxlIGFtb3VudCBvZg0KZW50cm9weS4NCg0KQWxzbywgd2h5IGRlbGV0ZSB0aGUgZW50cm9weSBk
-dXJpbmcgYm9vdD8NCkNsZWFybHkgaXQgaXMgc3ViLW9wdGltYWwgdG8gdXNlIGl0IHR3aWNlLCBi
-dXQgdGhhdCBoYXMgdG8NCmJlIGJldHRlciB0aGF0IG5vdCB1c2luZyBhbnkgYXQgYWxsPw0KDQoJ
-RGF2aWQNCg0KLQ0KUmVnaXN0ZXJlZCBBZGRyZXNzIExha2VzaWRlLCBCcmFtbGV5IFJvYWQsIE1v
-dW50IEZhcm0sIE1pbHRvbiBLZXluZXMsIE1LMSAxUFQsIFVLDQpSZWdpc3RyYXRpb24gTm86IDEz
-OTczODYgKFdhbGVzKQ0K
+
+
+---- From: Andrew Morton <akpm@linux-foundation.org> -- Sent: 2023-06-07 - =
+18:33 ----
+
+> On Wed, 7 Jun 2023 10:58:40 +0200 Vlastimil Babka <vbabka@suse.cz> wrote:
+>=20
+>> I would really suggest moving the fix to
+>> mm-hotfixes instead of mm-unstable, and
+>>=20
+>> Fixes: 80b1d8fdfad1 ("mm: vmalloc: correct use of __GFP_NOWARN mask in _=
+_vmalloc_area_node()")
+>> Cc: <stable@vger.kernel.org>
+>=20
+> I've made those changes.
+
+Did the chabge go into 6.3 stable? I saw these issues with kernels 6.3.0-6 =
+3.7. I now updated to 6.3.9 and have had no more warnings since.=20
 
