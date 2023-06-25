@@ -1,114 +1,246 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A366EA4
-	for <regressions@lists.linux.dev>; Sun, 25 Jun 2023 09:42:53 +0000 (UTC)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id B64521F88D;
-	Sun, 25 Jun 2023 09:42:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1687686165; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gJV7F80ZGBMAAdMmjSrudziyDmHjY46hTf7y/51rXRU=;
-	b=N94IHrVqU8t0gzECZANv+WZtVTukaA/GJmlQ2r0eHmZ+winSHXi/iReJs8Og4WGz7M2Rvj
-	Js6jmvq4rUlDnO++JdQWu0QtkRO3o43TRaBKm6d179lYf3dq9rQqC6MDxcdONBsu2j7qSb
-	7c/xe0njAvj2wwHqZEAMoGzx85AUq08=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1687686165;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gJV7F80ZGBMAAdMmjSrudziyDmHjY46hTf7y/51rXRU=;
-	b=woZV0LDCglQGgqMM1InQX2tREfmSrN2LPpBt+e+66nS3Bil6FrWQKiN4Yz5h2CasehQTq5
-	6wg+F/UJ5/z8vWAg==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 811561331E;
-	Sun, 25 Jun 2023 09:42:45 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-	by imap2.suse-dmz.suse.de with ESMTPSA
-	id NZ14HhUMmGTSMAAAMHmgww
-	(envelope-from <tiwai@suse.de>); Sun, 25 Jun 2023 09:42:45 +0000
-Date: Sun, 25 Jun 2023 11:42:44 +0200
-Message-ID: <87leg7x4h7.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: "Joseph C. Sible" <josephcsible@gmail.com>
-Cc: Kailang <kailang@realtek.com>,
-	Bagas Sanjaya <bagasdotme@gmail.com>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
-	"perex@perex.cz" <perex@perex.cz>,
-	"tiwai@suse.com" <tiwai@suse.com>,
-	"alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
-Subject: Re: Fwd: [Bug 217440] New: ALC236 audio disappears from HP 15z-fc000 on warm boot
-In-Reply-To: <CABpewhFg=7+JR6v=zhi0_Hm9+S64DLOHKeG2pS-W7z-vNpu_5Q@mail.gmail.com>
-References: <bug-217440-225600@https.bugzilla.kernel.org/>
-	<CABpewhE4REgn9RJZduuEU6Z_ijXNeQWnrxO1tg70Gkw=F8qNYg@mail.gmail.com>
-	<ZGB0cVVI7OgaJU6t@debian.me>
-	<CABpewhGJE7-k52j8L2kJ2zKupgp3Ma+LdZazzzV4w1Bgihp7nw@mail.gmail.com>
-	<87cz338ix4.wl-tiwai@suse.de>
-	<CABpewhF01AK4cFPbwYVvKR9yWaO7o-ZE-2+MZjYSUF0BKUdYvw@mail.gmail.com>
-	<874jodlnmi.wl-tiwai@suse.de>
-	<415d4bc84aa74c74af913048f28b42a9@realtek.com>
-	<87fs7mdofi.wl-tiwai@suse.de>
-	<7da2fdfdae614b1c98deda6e11ca34eb@realtek.com>
-	<87353kd8b9.wl-tiwai@suse.de>
-	<1170325957764b4cbd7cd3639575f285@realtek.com>
-	<CABpewhGBakDSBLKZ1cr2=OMspuu3qyYwZrsXUggQ3vt8gsD88A@mail.gmail.com>
-	<873536js7q.wl-tiwai@suse.de>
-	<CABpewhE0NAC-Q=iqG2Ba=XhT7SXsWy18wQGYUaopzmKDfFxyPw@mail.gmail.com>
-	<2c1fcbc00bb44d66a29ac1c1e4bec5ad@realtek.com>
-	<CABpewhFthKG97dPiQC4JhGx9sapX9Yu5rWABQjpY95TSA+eawA@mail.gmail.com>
-	<485f99149508488080d563144454040e@realtek.com>
-	<CABpewhGkvWtM+9J=mx3vw0QY=OBB5OYCxzX3nzVffvFS4QazPA@mail.gmail.com>
-	<2831c55638a5431ca9e37d9caf365ed2@realtek.com>
-	<CABpewhGiMJUpyBA6=D9_-YA6=5rjR2R0RHUZeg+cWcjtzuCoZQ@mail.gmail.com>
-	<3c27f0455d6e4bd1a68115bd25bf1a12@realtek.com>
-	<CABpewhEptq0+W_71U__8iQ4+LNtYSUB9C+0bcS2Hw-5mnj9viQ@mail.gmail.com>
-	<009474f04d0b45c69a0e42e8622b7a86@realtek.com>
-	<87h6rhcef2.wl-tiwai@suse.de>
-	<0990300d759846d890de9c92fcad9a9d@realtek.com>
-	<CABpewhERnOH1qkkJ5_JJUZkz1_8oxD9aR5VBs1vsURAG7Eu_Ew@mail.gmail.com>
-	<878rctcavz.wl-tiwai@suse.de>
-	<874jnhc9u4.wl-tiwai@suse.de>
-	<CABpewhHG2+s8_6r6vChm2g5tD8ALW_SWJWubPRXWzTJB2aFR9g@mail.gmail.com>
-	<875y7vbxpg.wl-tiwai@suse.de>
-	<CABpewhHDnvn4v+uCpsaLHB+biw-f59tdTiCyFkicHnewXHYDNg@mail.gmail.com>
-	<87wn0aa1s4.wl-tiwai@suse.de>
-	<CABpewhFg=7+JR6v=zhi0_Hm9+S64DLOHKeG2pS-W7z-vNpu_5Q@mail.gmail.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 623136117
+	for <regressions@lists.linux.dev>; Sun, 25 Jun 2023 13:51:42 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:5054:ff:feb3:8f48] (helo=regzbot.fritz.box); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	id 1qDQ9O-0007dG-FW; Sun, 25 Jun 2023 15:51:34 +0200
+From: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>
+To: LKML <linux-kernel@vger.kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Linux regressions report  for mainline [2023-06-25]
+Date: Sun, 25 Jun 2023 13:51:33 +0000
+Message-Id: <168770105071.1044236.16811678381872089646@leemhuis.info>
+X-Mailer: git-send-email 2.40.1
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=UTF-8
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1687701102;0ac1239f;
+X-HE-SMSGID: 1qDQ9O-0007dG-FW
 
-On Sat, 24 Jun 2023 03:36:11 +0200,
-Joseph C. Sible wrote:
+Hi Linus, find below regzbot's report about the remaining regressions
+that were introduced this cycle. Not much has changed since my "quick &
+small additional regressions report pre -rc8/final", so I'm quoting it
+here:
+
+>  * kernel test robot noticed a -20.0% regression of
+> vm-scalability.throughput post -rc7;
+
+BTW, that was caused by 9425c591e06 ("page cache: fix
+page_cache_next/prev_miss off by one") [v6.4-rc7]
+
+> Mike posted reverts akpm applied
+> that landed in next recently:
 > 
-> On Sun, Jun 11, 2023 at 3:36 AM Takashi Iwai <tiwai@suse.de> wrote:
-> >
-> > Thanks for checking.  So the additional delay didn't help at all,
-> > i.e. it's no timing issue.  We need to figure out which verb actually
-> > breaks things.  Oh well.
+> https://lore.kernel.org/lkml/202306211346.1e9ff03e-oliver.sang@intel.com/
+> https://lore.kernel.org/lkml/20230621212403.174710-1-mike.kravetz@oracle.com/
+
+Akpm moved to those reverts from the mm-unstable to the mm-stable branch
+(not totally sure, but I think those are branch with changes for the
+next merge window):
+
+https://lore.kernel.org/all/20230624000036.57829C433CB@smtp.kernel.org/
+https://lore.kernel.org/all/20230624000035.3C79BC433C0@smtp.kernel.org/
+
+
+>  * Swapnil Sapkal from AMD found another performance regression; from
+> skimming the thread it seems a partial fix is in -next for some time
+> already; part of the problem is also caused by df323337e50 "apparmor:
+> Use a memory pool instead per-CPU caches" [v5.5-rc1]
 > 
-> Was there something else specific you wanted me to try for this? If
-> not, what do you think the next steps to get this fixed are? Do you
-> think it might be good to just cook the partial revert I posted a
-> while back after all?
+> https://lore.kernel.org/lkml/09e0f469-a3f7-62ef-75a1-e64cec2dcfc5@amd.com/
+> https://lore.kernel.org/lkml/20230515143536.114960-1-mathieu.desnoyers@efficios.com/
+> https://lore.kernel.org/lkml/6c693e3b-b941-9acf-6821-179e7a7fe2b8@efficios.com/
+> 
+> [this one is not tracked by regzbot, something went sideways, need to
+> look closer]
+> 
+> 
+>  * Mario came up with a fix for the ppc/tpm kexec hang recently reported:
+> 
+> https://lore.kernel.org/lkml/99B81401-DB46-49B9-B321-CF832B50CAC3@linux.ibm.com/
+> https://lore.kernel.org/all/20230623030427.908-1-mario.limonciello@amd.com/
+> 
+> 
+>  * still no solution in sight for the "Dragonboard 845c broken due to
+> asynchronous probe" regression
+> 
+> https://lore.kernel.org/lkml/CAMi1Hd1avQDcDQf137m2auz2znov4XL8YGrLZsw5edb-NtRJRw@mail.gmail.com/
+> https://lore.kernel.org/lkml/20230515145323.1693044-1-amit.pundir@linaro.org/
+> https://lore.kernel.org/lkml/20230602161246.1855448-1-amit.pundir@linaro.org/
+> 
+> 
+>  * no progress wrt to the MPTCP tests regressions due to 9p changes
+> 
+> https://lore.kernel.org/regressions/855a232a-76d3-7e7b-b2b5-2ebc41bcadd6@tessares.net/
+> 
+> 
+>  * brand new: transmit queue timeouts with r8169 due to 2ab19de62d6
+> ("r8169: remove ASPM restrictions now that ASPM is disabled during NAPI
+> poll") [v6.4-rc1]
+> 
+> https://lore.kernel.org/netdev/c3465166-f04d-fcf5-d284-57357abb3f99@freenet.de/
+> 
+> 
+>  * just noticed: patches for a "WiFi / LTE won't work at all on trogdor
+> devices" regression might still be heading your way:
+> 
+> https://lore.kernel.org/lkml/20230616081440.v2.1.Ie79b5f0ed45739695c9970df121e11d724909157@changeid/
 
-It's rather a call to Kailang, after all.
-I'm fine with any way as long as it avoids further regressions.
+Ciao, Thorsten
+
+---
+
+Hi, this is regzbot, the Linux kernel regression tracking bot.
+
+Currently I'm aware of 6 regressions in linux-mainline. Find the
+current status below and the latest on the web:
+
+https://linux-regtracking.leemhuis.info/regzbot/mainline/
+
+Bye bye, hope to see you soon for the next report.
+   Regzbot (on behalf of Thorsten Leemhuis)
 
 
-Takashi
+======================================================
+current cycle (v6.3.. aka v6.4-rc), culprit identified
+======================================================
+
+
+[ *NEW* ] transmit queue timeout on r8169
+-----------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/c3465166-f04d-fcf5-d284-57357abb3f99@freenet.de/
+https://lore.kernel.org/netdev/c3465166-f04d-fcf5-d284-57357abb3f99@freenet.de/
+
+By Tobias Klausmann; 3 days ago; 4 activities, latest 1 days ago.
+Introduced in 2ab19de62d67 (v6.4-rc1)
+
+Recent activities from: Tobias Klausmann (2), Thorsten Leemhuis (1),
+  Bagas Sanjaya (1)
+
+
+regulator: qcom-rpmh: Dragonboard 845c broken due to asynchronous probe
+-----------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/CAMi1Hd1avQDcDQf137m2auz2znov4XL8YGrLZsw5edb-NtRJRw@mail.gmail.com/
+https://lore.kernel.org/lkml/CAMi1Hd1avQDcDQf137m2auz2znov4XL8YGrLZsw5edb-NtRJRw@mail.gmail.com/
+
+By Amit Pundir; 42 days ago; 52 activities, latest 1 days ago.
+Introduced in ad44ac082fd (v6.4-rc1)
+
+Recent activities from: Amit Pundir (2), Thorsten Leemhuis (1), Bjorn
+  Andersson (1)
+
+One patch associated with this regression:
+* Re: [PATCH] regulator: qcom-rpmh: Revert "regulator: qcom-rpmh: Use PROBE_FORCE_SYNCHRONOUS"
+  https://lore.kernel.org/lkml/552345c5-b1e9-41f6-f275-b6eeeb51df25@linaro.org/
+  42 days ago, by Caleb Connolly
+
+Noteworthy links:
+* [PATCH] Revert "regulator: qcom-rpmh: Revert "regulator: qcom-rpmh: Use PROBE_FORCE_SYNCHRONOUS""
+  https://lore.kernel.org/lkml/20230515145323.1693044-1-amit.pundir@linaro.org/
+  40 days ago, by Amit Pundir; thread monitored.
+* [PATCH] arm64: dts: qcom: sdm845-db845c: Move LVS regulator nodes up
+  https://lore.kernel.org/lkml/20230602161246.1855448-1-amit.pundir@linaro.org/
+  22 days ago, by Amit Pundir; thread monitored.
+
+
+9p: MPTCP tests regressions due to new 9p features in v6.4
+----------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/855a232a-76d3-7e7b-b2b5-2ebc41bcadd6@tessares.net/
+https://lore.kernel.org/regressions/855a232a-76d3-7e7b-b2b5-2ebc41bcadd6@tessares.net/
+
+By Matthieu Baerts; 18 days ago; 6 activities, latest 1 days ago.
+Introduced in d9bc0d11e33b (v6.4-rc1)
+
+Recent activities from: Thorsten Leemhuis (1)
+
+
+tpm/ppc: crash during a kexec
+-----------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/99B81401-DB46-49B9-B321-CF832B50CAC3@linux.ibm.com/
+https://lore.kernel.org/lkml/99B81401-DB46-49B9-B321-CF832B50CAC3@linux.ibm.com/
+
+By Sachin Sant; 10 days ago; 10 activities, latest 1 days ago.
+Introduced in bd8621ca1510 (v6.4-rc1)
+
+Recent activities from: Limonciello, Mario (2), Thorsten Leemhuis (1),
+  Greg KH (1), Mario Limonciello (1), Sachin Sant (1), Michael
+  Ellerman (1)
+
+2 patch postings are associated with this regression, the latest is this:
+* Re: [6.4-rc6] Crash during a kexec operation (tpm_amd_is_rng_defective)
+  https://lore.kernel.org/lkml/3f5a37f1-70e0-3dcf-3bd3-acc8a04e53ee@amd.com/
+  2 days ago, by Limonciello, Mario
+
+Noteworthy links:
+* [PATCH] tpm: Ensure that tpm chip has ops to check if it's defective
+  https://lore.kernel.org/lkml/20230623030427.908-1-mario.limonciello@amd.com/
+  2 days ago, by Mario Limonciello; thread monitored.
+
+
+[ *NEW* ] mm/page cache: performance regression (2 reverts pending)
+-------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/202306211346.1e9ff03e-oliver.sang@intel.com/
+https://lore.kernel.org/lkml/202306211346.1e9ff03e-oliver.sang@intel.com/
+
+By kernel test robot; 4 days ago; 14 activities, latest 1 days ago.
+Introduced in 9425c591e06a (v6.4-rc7)
+
+Fix incoming:
+* Revert "page cache: fix page_cache_next/prev_miss off by one"
+  https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=master&id=555d5a30e7b3020e6c4137ce7da8cd028c67caea
+
+
+=======================================================
+on back burner, but with activity since the last report
+=======================================================
+
+
+mm: performance regression on shell-heavy workloads
+---------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/20230608111408.s2minsenlcjow7q3@quack3/
+https://lore.kernel.org/lkml/20230608111408.s2minsenlcjow7q3@quack3/
+
+By Jan Kara; 17 days ago; 7 activities, latest 6 days ago.
+Introduced in f1a7941243c (v6.2-rc1)
+
+Recent activities from: Michal Hocko (1)
+
+
+=============
+End of report
+=============
+
+All regressions marked '[ *NEW* ]' were added since the previous report,
+which can be found here:
+https://lore.kernel.org/r/168709975910.455445.13798099813754443067@leemhuis.info
+
+Thanks for your attention, have a nice day!
+
+  Regzbot, your hard working Linux kernel regression tracking robot
+
+
+P.S.: Wanna know more about regzbot or how to use it to track regressions
+for your subsystem? Then check out the getting started guide or the
+reference documentation:
+
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
+
+The short version: if you see a regression report you want to see
+tracked, just send a reply to the report where you Cc
+regressions@lists.linux.dev with a line like this:
+
+#regzbot introduced: v5.13..v5.14-rc1
+
+If you want to fix a tracked regression, just do what is expected
+anyway: add a 'Link:' tag with the url to the report, e.g.:
+
+Link: https://lore.kernel.org/all/30th.anniversary.repost@klaava.Helsinki.FI/
