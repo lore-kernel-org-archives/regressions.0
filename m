@@ -1,109 +1,141 @@
-Received: from out4-smtp.messagingengine.com (out4-smtp.messagingengine.com [66.111.4.28])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D70F6AA8
-	for <regressions@lists.linux.dev>; Sat, 24 Jun 2023 21:32:57 +0000 (UTC)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-	by mailout.nyi.internal (Postfix) with ESMTP id 6AD2C5C0090;
-	Sat, 24 Jun 2023 17:32:56 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute6.internal (MEProxy); Sat, 24 Jun 2023 17:32:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:sender
-	:subject:subject:to:to; s=fm1; t=1687642376; x=1687728776; bh=Km
-	TzCmtgkDsMsUlkemd4GN1f65YFZGx/erXYr9/Gkuo=; b=X5qbVwWu+hZaXySzg5
-	7XHiKwVqb7U7JNYP5AH0hvx1Wyv8lALLs+8p6LuXmS4OdEfoG3FSh8IXyTtWHIFO
-	S6PpUl8fL9UnuOgqRhTKJHt9PgZumlR3nv4OUtyxZhk3PPgnQn3Dot9n9SjhNm9d
-	5mwLBCdtF3CB7RBP4l5yVsPvi2+dQ36FWnggZR6nqj5dHoFxaUY32CALLetzt4/1
-	ZTef9eztymqpzmnf6jS4k+BgxY6yiMa15WORbLysDWzCnaeSzjCLrp9SpaNwoogb
-	HJGFLwM0MEKIghMbFwiCPvvqMnWEzCRLZGZf49qEX4FeitlEmDhcNP5TYzt4jCiB
-	6Alg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:sender:subject
-	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-	:x-sasl-enc; s=fm2; t=1687642376; x=1687728776; bh=KmTzCmtgkDsMs
-	Ulkemd4GN1f65YFZGx/erXYr9/Gkuo=; b=mJr1TpXHXCAg0pYchom+rBjJBnpZ5
-	cx6KZ6Lat8B70vXeXNvgZcMw8aDyCXtKrhqt3qxbYd8KuRlf77foix76XGkpNk52
-	1zYFajXN3xjWq+uUYJwJP3ppvDm/VT9Tfo5NCD8uqIShOfJayefCIdW6a6sNH0Nv
-	UNTlDmy+iTtjLe5ldXaAMQhhavAaKZJg42RwageQKHW63B0gadPKRLhgYs2d9AgJ
-	mUhqH3VaTJWPSkWUmq7WeLOEpg/aJPJCXH3s1duHam/njtTx0MCdn8yKnsVZbHp4
-	W1LqtPmLL1SzDjF1QSsF3UuoePqRi1Pnu8s5GcozG9NhBHLEVYTsEkFFg==
-X-ME-Sender: <xms:B2GXZPDk5kWKhlr1lrM1WulZBwZct3pJybpZzjj6VpvtV62JNBc4IA>
-    <xme:B2GXZFg2Naryh6WdS15SENGfzRMmo5od2tcyXEfvcutSdPtb_xvPrqet1UFJS4MTW
-    PQaSenV0NUfZuDfDT0>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrgeegjedgudeiudcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdet
-    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
-    htthgvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedt
-    keetffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
-    grrhhnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:B2GXZKmL-6f2MlU8M05vus6KcuIlN09GJp-mjyvGinUDSK7cBePQ3Q>
-    <xmx:B2GXZBy5QxgvUIF9ebRQKCNskqvKWbGpmYUOuq2aAM5v3omHAL0T5w>
-    <xmx:B2GXZES9OFehFvO4r4G377opQ-_ZgAYcLp5W-VUk94zF59z96UfapA>
-    <xmx:CGGXZHGwOH7jggq_SYPp5T418kQ52V2cMTtyDGqwE5Ko7Jpwd12rCg>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id C1263B60086; Sat, 24 Jun 2023 17:32:55 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-499-gf27bbf33e2-fm-20230619.001-gf27bbf33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FE337F
+	for <regressions@lists.linux.dev>; Sun, 25 Jun 2023 00:50:37 +0000 (UTC)
+Received: by mail-ot1-f47.google.com with SMTP id 46e09a7af769-6b720fe3431so1916021a34.3
+        for <regressions@lists.linux.dev>; Sat, 24 Jun 2023 17:50:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1687654237; x=1690246237;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=RoBt7ViXugDNobQEvteLWfGNF3/ejmcOo0ytmL+j7Lo=;
+        b=CV9mYJrOjxMDNoc4pACLVHmHzV5Vf4XcFxesrxGONmu0F/Exgc7Uwf70z2U+qLLFzN
+         IQV1F/HapuqVzWN+1Cie5CGxBrsL6UbomFP4WK9yoAHJ5GzuH4R5sSR+eE5NO23eBe1x
+         Q/0Iyej3IgkoxzmlMdbFjMtwM8yVnUWFMgcfCH9swCxNBGyJgpeA5iq7Fcm7kMOUlgj7
+         rpKAJHroO2cwuepgIzL9J3OEjFqq6hDPVvfV4RrCe2E1/k6h6tT4RNIPy8RNKNcidfFe
+         knva2e2hfHpOPQQ+ydVyoszqxU1eVLsSZDpyywLvLq3Z9aQuo9nfIy7hfXsKhckFcKLo
+         g6jA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687654237; x=1690246237;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=RoBt7ViXugDNobQEvteLWfGNF3/ejmcOo0ytmL+j7Lo=;
+        b=cyDrw/qUl4jeCpUX4Wyuh4wWvDVN1ZK95kvMHeV1k9UrJUHZ6Z/s4+z9b3VvnJu6Lz
+         KFOp+LcuVLWmi9vYxdrN2sKfxGWMzGS3z7cM29Iaz5bwenGLUm2tNoXW4FfUxdMoCkQA
+         23oo8u+lh8ZBXPTk7qEGaKqSHR56B6xSGcC24FyNybKGpHR/4Z9tbLycGfNINkU/JDw1
+         kerYBL5koo7FXF69N/Zb8yFawXC//UM3Pc1hqHS0h4b+8DngpajWfZpGGgvAulFsbhmq
+         WxUHvsxFWXW2LFaDLq4yzqXpeJw2iZp0U0AyUFvR9BXOBnu5s8rzv1l0wjIy6mM1IOph
+         wp3w==
+X-Gm-Message-State: AC+VfDw3t1fTGdOGxxVQc7Qf7ah6qy81Drkuac6S7J0cG4dFTcZOqZWT
+	QA0FKfE/xqWXK7SloXBJrY0=
+X-Google-Smtp-Source: ACHHUZ5aDGkPqr1iMLOS4jzoMKHV3eah2s5D5PgY6aWTHfai0icMMVhTiLC+UjA8MBhnpdFYxU6EKg==
+X-Received: by 2002:a05:6870:c396:b0:1aa:28c0:5577 with SMTP id g22-20020a056870c39600b001aa28c05577mr16517507oao.32.1687654236957;
+        Sat, 24 Jun 2023 17:50:36 -0700 (PDT)
+Received: from [192.168.0.103] ([103.131.18.64])
+        by smtp.gmail.com with ESMTPSA id d9-20020a63f249000000b0051eff0a70d7sm1730379pgk.94.2023.06.24.17.50.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 24 Jun 2023 17:50:36 -0700 (PDT)
+Message-ID: <a3bc5eb5-9639-8016-36ab-105abc8c0ca3@gmail.com>
+Date: Sun, 25 Jun 2023 07:50:25 +0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Message-Id: <b9428e48-f0f9-46f6-892c-4c8834c930c4@app.fastmail.com>
-In-Reply-To: <27829c69-515c-36a6-4beb-3210225f8936@gmail.com>
-References: <27829c69-515c-36a6-4beb-3210225f8936@gmail.com>
-Date: Sat, 24 Jun 2023 23:32:52 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Bagas Sanjaya" <bagasdotme@gmail.com>,
- "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
- "Linux Regressions" <regressions@lists.linux.dev>,
- "Linux Wireless" <linux-wireless@vger.kernel.org>,
- Netdev <netdev@vger.kernel.org>
-Cc: =?UTF-8?Q?Michael_B=C3=BCsch?= <m@bues.ch>,
- "kernel test robot" <lkp@intel.com>,
- "Simon Horman" <simon.horman@corigine.com>,
- "Larry Finger" <Larry.Finger@lwfinger.net>, "Kalle Valo" <kvalo@kernel.org>,
- sardonimous@hotmail.com
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
 Subject: Re: Fwd: After kernel 6.3.7 or 6.3.8 b43 driver fails
-Content-Type: text/plain
+To: "Sardonimous ." <sardonimous@hotmail.com>, Arnd Bergmann <arnd@arndb.de>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Linux Wireless <linux-wireless@vger.kernel.org>,
+ Netdev <netdev@vger.kernel.org>
+Cc: =?UTF-8?Q?Michael_B=c3=bcsch?= <m@bues.ch>,
+ kernel test robot <lkp@intel.com>, Simon Horman <simon.horman@corigine.com>,
+ Larry Finger <Larry.Finger@lwfinger.net>, Kalle Valo <kvalo@kernel.org>
+References: <27829c69-515c-36a6-4beb-3210225f8936@gmail.com>
+ <b9428e48-f0f9-46f6-892c-4c8834c930c4@app.fastmail.com>
+ <RO2P215MB193850DDADD38492BEC8CC2FA720A@RO2P215MB1938.LAMP215.PROD.OUTLOOK.COM>
+Content-Language: en-US
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+In-Reply-To: <RO2P215MB193850DDADD38492BEC8CC2FA720A@RO2P215MB1938.LAMP215.PROD.OUTLOOK.COM>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sat, Jun 24, 2023, at 03:44, Bagas Sanjaya wrote:
-> I notice a regression report on Bugzilla [1]. Quoting from it:
->
->> After upgrading to linux 6.3.8-arch1-1 from 6.3.6-arch1-1, b43 broadcom wireless driver fails.  downgrading back to 6.3.6-arch1-1 resolves.
->> 
->> Jun 16 20:56:37 askasleikir kernel: Hardware name: Apple Inc. MacBookPro7,1/Mac-F222BEC8, BIOS MBP71.88Z.0039.B15.1702241313 02/24/17
->> Jun 16 20:56:37 askasleikir kernel: Workqueue: phy0 b43_tx_work [b43]
->> Jun 16 20:56:37 askasleikir kernel: RIP: 0010:__ieee80211_stop_queue+0xcc/0xe0 [mac80211]
+On 6/25/23 04:47, Sardonimous . wrote:
+> A newer report with the missing top lines:
+> 
 
-FWIW, the report is missing a few lines at the top about
-which error condition is being hit.
+tl;dr:
 
->> Jun 16 20:56:37 askasleikir kernel: <TASK>
->> Jun 16 20:56:37 askasleikir kernel: ? __ieee80211_stop_queue+0xcc/0xe0 [mac80211 136d1d948548ad6cca697df0da0a13c0a2333310]
->> Jun 16 20:56:37 askasleikir kernel: ? __warn+0x81/0x130
->> Jun 16 20:56:37 askasleikir kernel: ? __ieee80211_stop_queue+0xcc/0xe0 [mac80211 136d1d948548ad6cca697df0da0a13c0a2333310]
->> Jun 16 20:56:37 askasleikir kernel: ? report_bug+0x171/0x1a0
->> Jun 16 20:56:37 askasleikir kernel: ? handle_bug+0x3c/0x80
->> Jun 16 20:56:37 askasleikir kernel: ? exc_invalid_op+0x17/0x70
->> Jun 16 20:56:37 askasleikir kernel: ? asm_exc_invalid_op+0x1a/0x20
->> Jun 16 20:56:37 askasleikir kernel: ? __ieee80211_stop_queue+0xcc/0xe0 [mac80211 136d1d948548ad6cca697df0da0a13c0a2333310]
->> Jun 16 20:56:37 askasleikir kernel: ieee80211_stop_queue+0x36/0x50 [mac80211 136d1d948548ad6cca697df0da0a13c0a2333310]
+> A: http://en.wikipedia.org/wiki/Top_post
+> Q: Were do I find info about this thing called top-posting?
+> A: Because it messes up the order in which people normally read text.
+> Q: Why is top-posting such a bad thing?
+> A: Top-posting.
+> Q: What is the most annoying thing in e-mail?
+> 
+> A: No.
+> Q: Should I include quotations after my reply?
+> 
+> http://daringfireball.net/2007/07/on_top
 
-This indicates that a WARN_ON() was hit in __ieee80211_stop_queue(),
-and the only condition that could cause this is
+Also, please send plain-text email: I don't see your dmesg on
+lore.kernel.org archive because you send HTML email instead.
 
-        if (WARN_ON(queue >= hw->queues))
-                return;
+But anyway, I'm pasting yours from Bugzilla thread instead
+(as Arnd requested):
 
-Maybe that helps figure out what went wrong. 
+```
+Jun 20 18:20:11 askasleikir kernel: ------------[ cut here ]------------
+Jun 20 18:20:11 askasleikir kernel: WARNING: CPU: 1 PID: 33 at net/mac80211/util.c:514 __ieee80211_stop_queue+0xcc/0xe0 [mac80211]
+Jun 20 18:20:11 askasleikir kernel: Modules linked in: ccm tun qrtr rpcrdma rdma_cm iw_cm ib_cm ib_core nls_utf8 cifs cifs_arc4 cifs_md4 dns_resolver fscache net>
+Jun 20 18:20:11 askasleikir kernel:  lockd grace crypto_user sunrpc fuse dm_mod loop bpf_preload ip_tables x_tables ext4 crc32c_generic crc16 mbcache jbd2 sr_mod>
+Jun 20 18:20:11 askasleikir kernel: CPU: 1 PID: 33 Comm: kworker/u4:2 Tainted: G        W          6.3.6-arch1-1 #1 a07497485287c74e7a472f42ded4b2ddcf7a6fd7
+Jun 20 18:20:11 askasleikir kernel: Hardware name: Apple Inc. MacBookPro7,1/Mac-F222BEC8, BIOS    MBP71.88Z.0039.B15.1702241313 02/24/17
+Jun 20 18:20:11 askasleikir kernel: Workqueue: phy0 b43_tx_work [b43]
+Jun 20 18:20:11 askasleikir kernel: RIP: 0010:__ieee80211_stop_queue+0xcc/0xe0 [mac80211]
+Jun 20 18:20:11 askasleikir kernel: Code: 74 11 48 8b 78 08 0f b7 d6 89 e9 4c 89 e6 e8 fb ea 00 00 65 ff 0d 2c 2d ac 3e 0f 85 55 ff ff ff e8 d9 44 69 c3 e9 4b ff>
+Jun 20 18:20:11 askasleikir kernel: RSP: 0018:ffffb3538013bdb8 EFLAGS: 00010097
+Jun 20 18:20:11 askasleikir kernel: RAX: 0000000000000001 RBX: 0000000000000002 RCX: 0000000000000000
+Jun 20 18:20:11 askasleikir kernel: RDX: 0000000000000000 RSI: 0000000000000002 RDI: ffff9e55cfa248e0
+Jun 20 18:20:11 askasleikir kernel: RBP: 0000000000000000 R08: 0000000000000000 R09: 000000008010000f
+Jun 20 18:20:11 askasleikir kernel: R10: 0000000000000005 R11: 0000000000000181 R12: ffff9e55cfa248e0
+Jun 20 18:20:11 askasleikir kernel: R13: 0000000000000000 R14: ffff9e55cfa26238 R15: ffff9e55cfa26090
+Jun 20 18:20:11 askasleikir kernel: FS:  0000000000000000(0000) GS:ffff9e55fbf00000(0000) knlGS:0000000000000000
+Jun 20 18:20:11 askasleikir kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+Jun 20 18:20:11 askasleikir kernel: CR2: 00007f37cce5d180 CR3: 0000000057620000 CR4: 00000000000406e0
+Jun 20 18:20:11 askasleikir kernel: Call Trace:
+Jun 20 18:20:11 askasleikir kernel:  <TASK>
+Jun 20 18:20:11 askasleikir kernel:  ? __ieee80211_stop_queue+0xcc/0xe0 [mac80211 01be121fb223b347160617528f5dda900e828bc2]
+Jun 20 18:20:11 askasleikir kernel:  ? __warn+0x81/0x130
+Jun 20 18:20:11 askasleikir kernel:  ? __ieee80211_stop_queue+0xcc/0xe0 [mac80211 01be121fb223b347160617528f5dda900e828bc2]
+Jun 20 18:20:11 askasleikir kernel:  ? report_bug+0x171/0x1a0
+Jun 20 18:20:11 askasleikir kernel:  ? handle_bug+0x3c/0x80
+Jun 20 18:20:11 askasleikir kernel:  ? exc_invalid_op+0x17/0x70
+Jun 20 18:20:11 askasleikir kernel:  ? asm_exc_invalid_op+0x1a/0x20
+Jun 20 18:20:11 askasleikir kernel:  ? __ieee80211_stop_queue+0xcc/0xe0 [mac80211 01be121fb223b347160617528f5dda900e828bc2]
+Jun 20 18:20:11 askasleikir kernel:  ? __slab_free+0xe0/0x310
+Jun 20 18:20:11 askasleikir kernel:  ieee80211_stop_queue+0x36/0x50 [mac80211 01be121fb223b347160617528f5dda900e828bc2]
+Jun 20 18:20:11 askasleikir kernel:  b43_pio_tx+0x373/0x390 [b43 3dc9b3f0fd98e2a659c64e057bd3b22d977e5228]
+Jun 20 18:20:11 askasleikir kernel:  b43_tx_work+0x57/0x130 [b43 3dc9b3f0fd98e2a659c64e057bd3b22d977e5228]
+Jun 20 18:20:11 askasleikir kernel:  process_one_work+0x1c7/0x3d0
+Jun 20 18:20:11 askasleikir kernel:  worker_thread+0x51/0x390
+Jun 20 18:20:11 askasleikir kernel:  ? __pfx_worker_thread+0x10/0x10
+Jun 20 18:20:11 askasleikir kernel:  kthread+0xde/0x110
+Jun 20 18:20:11 askasleikir kernel:  ? __pfx_kthread+0x10/0x10
+Jun 20 18:20:11 askasleikir kernel:  ret_from_fork+0x2c/0x50
+Jun 20 18:20:11 askasleikir kernel:  </TASK>
+Jun 20 18:20:11 askasleikir kernel: ---[ end trace 0000000000000000 ]---
+Jun 20 18:20:11 askasleikir kernel: ------------[ cut here ]------------
+```
 
-        Arnd
+Thanks.
+
+-- 
+An old man doll... just what I always wanted! - Clara
+
