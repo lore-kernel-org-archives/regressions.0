@@ -1,34 +1,47 @@
-Received: from ste-pvt-msa1.bahnhof.se (ste-pvt-msa1.bahnhof.se [213.80.101.70])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C4B66AAD
-	for <regressions@lists.linux.dev>; Sun, 25 Jun 2023 15:46:01 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by ste-pvt-msa1.bahnhof.se (Postfix) with ESMTP id B6AE83F51A;
-	Sun, 25 Jun 2023 17:40:25 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at bahnhof.se
-X-Spam-Flag: NO
-X-Spam-Score: -1.91
-X-Spam-Level:
-X-Spam-Status: No, score=-1.91 tagged_above=-999 required=6.31
-	tests=[BAYES_00=-1.9, T_SCC_BODY_TEXT_LINE=-0.01]
-	autolearn=ham autolearn_force=no
-Received: from ste-pvt-msa1.bahnhof.se ([127.0.0.1])
-	by localhost (ste-pvt-msa1.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id lG22FXXqcO0I; Sun, 25 Jun 2023 17:40:25 +0200 (CEST)
-Received: 
-	by ste-pvt-msa1.bahnhof.se (Postfix) with ESMTPA id 33FEA3F3FA;
-	Sun, 25 Jun 2023 17:40:21 +0200 (CEST)
-Received: from [2a00:801:798:c6f9::21a0:d26f] (port=45518 helo=[10.218.58.85])
-	by tnonline.net with esmtpsa  (TLS1.3) tls TLS_AES_128_GCM_SHA256
-	(Exim 4.94.2)
-	(envelope-from <forza@tnonline.net>)
-	id 1qDRqd-0007SE-Iv; Sun, 25 Jun 2023 17:40:20 +0200
-Date: Sun, 25 Jun 2023 17:40:17 +0200 (GMT+02:00)
-From: Forza <forza@tnonline.net>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Vlastimil Babka <vbabka@suse.cz>
-Cc: Lorenzo Stoakes <lstoakes@gmail.com>, linux-mm@kvack.org,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0D156AA1
+	for <regressions@lists.linux.dev>; Sun, 25 Jun 2023 15:59:50 +0000 (UTC)
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-313e1c27476so913173f8f.1
+        for <regressions@lists.linux.dev>; Sun, 25 Jun 2023 08:59:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1687708789; x=1690300789;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=gHlFiZs5tFIFJlBDQPU4DvtUwczU5PH/nPUQB8u9ynA=;
+        b=NBsJvYr5y6vAfQybS4O4IodHezeegPVCM5raoQdCvB7dcrK1BQAcOQvwjyWUYBrZ17
+         AUiE9S01t2WeoDVZkaLSdZFzSJRjl+r0rBQ8USOw0/UQZkBZ8Q0v04F45iJ3vCodobEM
+         FrIwejpF5rzxJEUp5trugER+zOLjsQS/ZEDdrgFjPXpdtzcD89oUWXcUwLREyz6aW7hI
+         WzqReUcp4OKSVbYN3BDTiPO5lakVCGCq3fcpX/wMIB13tIuoI7q8msYTOc+kgTfAMD7K
+         VW68atjGBC2c3mv8ABYPFEnZwVRHkMfTxpINat8f+thxSuH4tv+akpSAfrHcpeEhf7tE
+         xAiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687708789; x=1690300789;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gHlFiZs5tFIFJlBDQPU4DvtUwczU5PH/nPUQB8u9ynA=;
+        b=ULfzf1epGVpkz4/9WC9sK5eomLO43cH/t08Lz8uc2ckHZRPtSy7DjI7/LDzhhpIqMM
+         3qT+7wghq8ksufQBFxY+7JF3ovwyH3TPgK9O7A43bGvKa1NeKNLnXXNeB6ENZ27NPpPz
+         l9rd22dOlCJDjcQB5aguLxKjwc7HgUC0vNKxwnfFycK4V2V3HQeSj7qowIs2KhdCIRHc
+         xERcEjc3fg/oedQp5SNBvi6owdDW+vP9iGD2h3y9QGkqMPFsB57nSZis5joldauldAvv
+         PodKL2SYsTBTvJx4ypbBBbMOCt97O9RhnTuD2lQVeTwnWRzZBBG4K0W3giK5/mmqs4aw
+         jMsA==
+X-Gm-Message-State: AC+VfDwvpLkdUBH4mvYavim8m4C4kIoh7o815LyZnmKb6AbxC8mptX/U
+	LJmsGnZKahN3ZusFLlyL7Yc=
+X-Google-Smtp-Source: ACHHUZ5ATvmUoOCSXJ8ImWBo56+GVeVF8ADqex2ejrdSs3fcxjADfw315UCi5HrmFvgrUkSMwjbVuw==
+X-Received: by 2002:a5d:6dce:0:b0:30a:e63b:950 with SMTP id d14-20020a5d6dce000000b0030ae63b0950mr29180323wrz.31.1687708788471;
+        Sun, 25 Jun 2023 08:59:48 -0700 (PDT)
+Received: from localhost ([2a00:23c5:dc8c:8701:1663:9a35:5a7b:1d76])
+        by smtp.gmail.com with ESMTPSA id i13-20020a5d522d000000b003119633ecb5sm4891836wra.88.2023.06.25.08.59.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 25 Jun 2023 08:59:47 -0700 (PDT)
+Date: Sun, 25 Jun 2023 16:59:46 +0100
+From: Lorenzo Stoakes <lstoakes@gmail.com>
+To: Forza <forza@tnonline.net>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Vlastimil Babka <vbabka@suse.cz>, linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org, Baoquan He <bhe@redhat.com>,
 	Uladzislau Rezki <urezki@gmail.com>,
 	Christoph Hellwig <hch@infradead.org>,
@@ -40,11 +53,15 @@ Cc: Lorenzo Stoakes <lstoakes@gmail.com>, linux-mm@kvack.org,
 	Linus Torvalds <torvalds@linux-foundation.org>,
 	Song Liu <song@kernel.org>, Nicholas Piggin <npiggin@gmail.com>,
 	Matthew Wilcox <willy@infradead.org>
-Message-ID: <11b893e.86425ef4.188f33688b8@tnonline.net>
-In-Reply-To: <20230607093316.cdf60df195915fa9d38067ea@linux-foundation.org>
-References: <20230605201107.83298-1-lstoakes@gmail.com> <cd47d6ac-69ce-0315-dd45-2cb9dce57f36@suse.cz> <f6b42d95-09f1-48d6-8274-e6145febb31d@lucifer.local> <2a6fa9d6-53b8-93cd-16c8-309ce2b8e3ac@suse.cz> <20230607093316.cdf60df195915fa9d38067ea@linux-foundation.org>
 Subject: Re: [PATCH] mm/vmalloc: do not output a spurious warning when huge
  vmalloc() fails
+Message-ID: <e3ce1745-0a3e-4c9d-955e-2a0ce20422cf@lucifer.local>
+References: <20230605201107.83298-1-lstoakes@gmail.com>
+ <cd47d6ac-69ce-0315-dd45-2cb9dce57f36@suse.cz>
+ <f6b42d95-09f1-48d6-8274-e6145febb31d@lucifer.local>
+ <2a6fa9d6-53b8-93cd-16c8-309ce2b8e3ac@suse.cz>
+ <20230607093316.cdf60df195915fa9d38067ea@linux-foundation.org>
+ <11b893e.86425ef4.188f33688b8@tnonline.net>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -52,25 +69,26 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: R2Mail2
+Content-Disposition: inline
+In-Reply-To: <11b893e.86425ef4.188f33688b8@tnonline.net>
 
+On Sun, Jun 25, 2023 at 05:40:17PM +0200, Forza wrote:
+>
+>
+> ---- From: Andrew Morton <akpm@linux-foundation.org> -- Sent: 2023-06-07 - 18:33 ----
+>
+> > On Wed, 7 Jun 2023 10:58:40 +0200 Vlastimil Babka <vbabka@suse.cz> wrote:
+> >
+> >> I would really suggest moving the fix to
+> >> mm-hotfixes instead of mm-unstable, and
+> >>
+> >> Fixes: 80b1d8fdfad1 ("mm: vmalloc: correct use of __GFP_NOWARN mask in __vmalloc_area_node()")
+> >> Cc: <stable@vger.kernel.org>
+> >
+> > I've made those changes.
+>
+> Did the chabge go into 6.3 stable? I saw these issues with kernels 6.3.0-6 3.7. I now updated to 6.3.9 and have had no more warnings since.
 
+Yeah, got the notification from Greg's script that it landed in 6.3 stable.
 
----- From: Andrew Morton <akpm@linux-foundation.org> -- Sent: 2023-06-07 - =
-18:33 ----
-
-> On Wed, 7 Jun 2023 10:58:40 +0200 Vlastimil Babka <vbabka@suse.cz> wrote:
->=20
->> I would really suggest moving the fix to
->> mm-hotfixes instead of mm-unstable, and
->>=20
->> Fixes: 80b1d8fdfad1 ("mm: vmalloc: correct use of __GFP_NOWARN mask in _=
-_vmalloc_area_node()")
->> Cc: <stable@vger.kernel.org>
->=20
-> I've made those changes.
-
-Did the chabge go into 6.3 stable? I saw these issues with kernels 6.3.0-6 =
-3.7. I now updated to 6.3.9 and have had no more warnings since.=20
-
+>
