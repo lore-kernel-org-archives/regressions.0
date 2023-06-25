@@ -1,159 +1,114 @@
-Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 325FB36F
-	for <regressions@lists.linux.dev>; Sun, 25 Jun 2023 04:41:14 +0000 (UTC)
-Received: by mail-ot1-f48.google.com with SMTP id 46e09a7af769-6b5cf23b9fcso2085884a34.0
-        for <regressions@lists.linux.dev>; Sat, 24 Jun 2023 21:41:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1687668074; x=1690260074;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:from:user-agent:mime-version:date:message-id:sender
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=1B4lH9WeYTv33HNkRVZObp7asR+HnhMg6dQl8HhZ2qY=;
-        b=MMnqhoSXSLWLJfn5GfJIKP92DaK/FakNRAVS4oHMhcdVp319bbfgC72mCQ56ugPmpT
-         DS4FqwEX03Db/bCNvyQ0fswZ3OKXXUvET442ZZ5Hk+boT61bVEVxXdSMtpA0/wKcMnL+
-         oN/FeLQsYqWWnIP4I+YhZ1VghbAPnGirJMdONVrr/Gyi9ErJEAaej1iYCvnXQ6hiToR4
-         RBeIvnD0q0eaJYcaBxqn6GVPnFmzh9Y4w1T5pl5a1YLmkbV5D8ldUTQGVhNAnhbjKBav
-         YhWthSSeqS0nevcQTPhp77J2Ltsn/ZXuBi7S+ItSMQf3W4nTdcqJh94kexOZtAQmqIA6
-         I0bQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687668074; x=1690260074;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:from:user-agent:mime-version:date:message-id:sender
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1B4lH9WeYTv33HNkRVZObp7asR+HnhMg6dQl8HhZ2qY=;
-        b=N2mrrlxCoFhEP9XYyPwNatuYtRjTBBIo72aXz9U7ZYocGTqAclVaRd2mFvAJ86pcCK
-         a+Rbspq1+Al3l97RkqyzD0PBpOTsyVIqCFHWza/5iIJ6VvhRBbx3XdvJzAJSncvt1C68
-         a8VQJ7V0vI2xr+qDSa9z2x0WewA2C6MAOnpWMYiPI7ZS+OvlKRPDVExa2/UNK3fWlkjx
-         4XuwSyeK2oJ7/MRKdQwJQJaEMqJfHjpsnfJB/RVKkSeYV2MdTWuL7907P3SeEfRFsDiO
-         IP0RiL1R8y2UEzYkoJ2UXBRPSXumNRTlXz6HyRz4M8V+rhsxwOFk75tK5lO7cXaeu49N
-         yf/w==
-X-Gm-Message-State: AC+VfDxEbt+KAYgqdt4oA3LexjwMXCTFYeooXxzaFN65FSL4R7GKiqcf
-	e9tSaSFGXbrt2bFz7BjM67U=
-X-Google-Smtp-Source: ACHHUZ72rJJVSWVBVO8GaJv7atxqNw1z/wt95NIVyxtaWXaXjGuxoQ1OGxMVqFnFFBqjXnHbioxRhA==
-X-Received: by 2002:a05:6870:6295:b0:18e:2b7e:a846 with SMTP id s21-20020a056870629500b0018e2b7ea846mr16655070oan.50.1687668074012;
-        Sat, 24 Jun 2023 21:41:14 -0700 (PDT)
-Received: from [192.168.1.128] ([216.130.59.33])
-        by smtp.gmail.com with ESMTPSA id bd6-20020a056870d78600b001ad21a705a8sm1925228oab.49.2023.06.24.21.41.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 24 Jun 2023 21:41:13 -0700 (PDT)
-Sender: Larry Finger <larry.finger@gmail.com>
-Message-ID: <69b98eb4-2c4e-fe75-90b4-4b08505a595a@lwfinger.net>
-Date: Sat, 24 Jun 2023 23:41:11 -0500
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A366EA4
+	for <regressions@lists.linux.dev>; Sun, 25 Jun 2023 09:42:53 +0000 (UTC)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id B64521F88D;
+	Sun, 25 Jun 2023 09:42:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1687686165; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gJV7F80ZGBMAAdMmjSrudziyDmHjY46hTf7y/51rXRU=;
+	b=N94IHrVqU8t0gzECZANv+WZtVTukaA/GJmlQ2r0eHmZ+winSHXi/iReJs8Og4WGz7M2Rvj
+	Js6jmvq4rUlDnO++JdQWu0QtkRO3o43TRaBKm6d179lYf3dq9rQqC6MDxcdONBsu2j7qSb
+	7c/xe0njAvj2wwHqZEAMoGzx85AUq08=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1687686165;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gJV7F80ZGBMAAdMmjSrudziyDmHjY46hTf7y/51rXRU=;
+	b=woZV0LDCglQGgqMM1InQX2tREfmSrN2LPpBt+e+66nS3Bil6FrWQKiN4Yz5h2CasehQTq5
+	6wg+F/UJ5/z8vWAg==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 811561331E;
+	Sun, 25 Jun 2023 09:42:45 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+	by imap2.suse-dmz.suse.de with ESMTPSA
+	id NZ14HhUMmGTSMAAAMHmgww
+	(envelope-from <tiwai@suse.de>); Sun, 25 Jun 2023 09:42:45 +0000
+Date: Sun, 25 Jun 2023 11:42:44 +0200
+Message-ID: <87leg7x4h7.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: "Joseph C. Sible" <josephcsible@gmail.com>
+Cc: Kailang <kailang@realtek.com>,
+	Bagas Sanjaya <bagasdotme@gmail.com>,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+	"perex@perex.cz" <perex@perex.cz>,
+	"tiwai@suse.com" <tiwai@suse.com>,
+	"alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
+Subject: Re: Fwd: [Bug 217440] New: ALC236 audio disappears from HP 15z-fc000 on warm boot
+In-Reply-To: <CABpewhFg=7+JR6v=zhi0_Hm9+S64DLOHKeG2pS-W7z-vNpu_5Q@mail.gmail.com>
+References: <bug-217440-225600@https.bugzilla.kernel.org/>
+	<CABpewhE4REgn9RJZduuEU6Z_ijXNeQWnrxO1tg70Gkw=F8qNYg@mail.gmail.com>
+	<ZGB0cVVI7OgaJU6t@debian.me>
+	<CABpewhGJE7-k52j8L2kJ2zKupgp3Ma+LdZazzzV4w1Bgihp7nw@mail.gmail.com>
+	<87cz338ix4.wl-tiwai@suse.de>
+	<CABpewhF01AK4cFPbwYVvKR9yWaO7o-ZE-2+MZjYSUF0BKUdYvw@mail.gmail.com>
+	<874jodlnmi.wl-tiwai@suse.de>
+	<415d4bc84aa74c74af913048f28b42a9@realtek.com>
+	<87fs7mdofi.wl-tiwai@suse.de>
+	<7da2fdfdae614b1c98deda6e11ca34eb@realtek.com>
+	<87353kd8b9.wl-tiwai@suse.de>
+	<1170325957764b4cbd7cd3639575f285@realtek.com>
+	<CABpewhGBakDSBLKZ1cr2=OMspuu3qyYwZrsXUggQ3vt8gsD88A@mail.gmail.com>
+	<873536js7q.wl-tiwai@suse.de>
+	<CABpewhE0NAC-Q=iqG2Ba=XhT7SXsWy18wQGYUaopzmKDfFxyPw@mail.gmail.com>
+	<2c1fcbc00bb44d66a29ac1c1e4bec5ad@realtek.com>
+	<CABpewhFthKG97dPiQC4JhGx9sapX9Yu5rWABQjpY95TSA+eawA@mail.gmail.com>
+	<485f99149508488080d563144454040e@realtek.com>
+	<CABpewhGkvWtM+9J=mx3vw0QY=OBB5OYCxzX3nzVffvFS4QazPA@mail.gmail.com>
+	<2831c55638a5431ca9e37d9caf365ed2@realtek.com>
+	<CABpewhGiMJUpyBA6=D9_-YA6=5rjR2R0RHUZeg+cWcjtzuCoZQ@mail.gmail.com>
+	<3c27f0455d6e4bd1a68115bd25bf1a12@realtek.com>
+	<CABpewhEptq0+W_71U__8iQ4+LNtYSUB9C+0bcS2Hw-5mnj9viQ@mail.gmail.com>
+	<009474f04d0b45c69a0e42e8622b7a86@realtek.com>
+	<87h6rhcef2.wl-tiwai@suse.de>
+	<0990300d759846d890de9c92fcad9a9d@realtek.com>
+	<CABpewhERnOH1qkkJ5_JJUZkz1_8oxD9aR5VBs1vsURAG7Eu_Ew@mail.gmail.com>
+	<878rctcavz.wl-tiwai@suse.de>
+	<874jnhc9u4.wl-tiwai@suse.de>
+	<CABpewhHG2+s8_6r6vChm2g5tD8ALW_SWJWubPRXWzTJB2aFR9g@mail.gmail.com>
+	<875y7vbxpg.wl-tiwai@suse.de>
+	<CABpewhHDnvn4v+uCpsaLHB+biw-f59tdTiCyFkicHnewXHYDNg@mail.gmail.com>
+	<87wn0aa1s4.wl-tiwai@suse.de>
+	<CABpewhFg=7+JR6v=zhi0_Hm9+S64DLOHKeG2pS-W7z-vNpu_5Q@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-From: Larry Finger <Larry.Finger@lwfinger.net>
-Subject: Re: Fwd: After kernel 6.3.7 or 6.3.8 b43 driver fails
-To: Bagas Sanjaya <bagasdotme@gmail.com>,
- "Sardonimous ." <sardonimous@hotmail.com>, Arnd Bergmann <arnd@arndb.de>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>,
- Linux Wireless <linux-wireless@vger.kernel.org>,
- Netdev <netdev@vger.kernel.org>
-Cc: =?UTF-8?Q?Michael_B=c3=bcsch?= <m@bues.ch>,
- kernel test robot <lkp@intel.com>, Simon Horman <simon.horman@corigine.com>,
- Kalle Valo <kvalo@kernel.org>
-References: <27829c69-515c-36a6-4beb-3210225f8936@gmail.com>
- <b9428e48-f0f9-46f6-892c-4c8834c930c4@app.fastmail.com>
- <RO2P215MB193850DDADD38492BEC8CC2FA720A@RO2P215MB1938.LAMP215.PROD.OUTLOOK.COM>
- <a3bc5eb5-9639-8016-36ab-105abc8c0ca3@gmail.com>
-Content-Language: en-US
-In-Reply-To: <a3bc5eb5-9639-8016-36ab-105abc8c0ca3@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 6/24/23 19:50, Bagas Sanjaya wrote:
-> On 6/25/23 04:47, Sardonimous . wrote:
->> A newer report with the missing top lines:
->>
+On Sat, 24 Jun 2023 03:36:11 +0200,
+Joseph C. Sible wrote:
 > 
-> tl;dr:
+> On Sun, Jun 11, 2023 at 3:36 AM Takashi Iwai <tiwai@suse.de> wrote:
+> >
+> > Thanks for checking.  So the additional delay didn't help at all,
+> > i.e. it's no timing issue.  We need to figure out which verb actually
+> > breaks things.  Oh well.
 > 
->> A: http://en.wikipedia.org/wiki/Top_post
->> Q: Were do I find info about this thing called top-posting?
->> A: Because it messes up the order in which people normally read text.
->> Q: Why is top-posting such a bad thing?
->> A: Top-posting.
->> Q: What is the most annoying thing in e-mail?
->>
->> A: No.
->> Q: Should I include quotations after my reply?
->>
->> http://daringfireball.net/2007/07/on_top
-> 
-> Also, please send plain-text email: I don't see your dmesg on
-> lore.kernel.org archive because you send HTML email instead.
-> 
-> But anyway, I'm pasting yours from Bugzilla thread instead
-> (as Arnd requested):
-> 
-> ```
-> Jun 20 18:20:11 askasleikir kernel: ------------[ cut here ]------------
-> Jun 20 18:20:11 askasleikir kernel: WARNING: CPU: 1 PID: 33 at net/mac80211/util.c:514 __ieee80211_stop_queue+0xcc/0xe0 [mac80211]
-> Jun 20 18:20:11 askasleikir kernel: Modules linked in: ccm tun qrtr rpcrdma rdma_cm iw_cm ib_cm ib_core nls_utf8 cifs cifs_arc4 cifs_md4 dns_resolver fscache net>
-> Jun 20 18:20:11 askasleikir kernel:  lockd grace crypto_user sunrpc fuse dm_mod loop bpf_preload ip_tables x_tables ext4 crc32c_generic crc16 mbcache jbd2 sr_mod>
-> Jun 20 18:20:11 askasleikir kernel: CPU: 1 PID: 33 Comm: kworker/u4:2 Tainted: G        W          6.3.6-arch1-1 #1 a07497485287c74e7a472f42ded4b2ddcf7a6fd7
-> Jun 20 18:20:11 askasleikir kernel: Hardware name: Apple Inc. MacBookPro7,1/Mac-F222BEC8, BIOS    MBP71.88Z.0039.B15.1702241313 02/24/17
-> Jun 20 18:20:11 askasleikir kernel: Workqueue: phy0 b43_tx_work [b43]
-> Jun 20 18:20:11 askasleikir kernel: RIP: 0010:__ieee80211_stop_queue+0xcc/0xe0 [mac80211]
-> Jun 20 18:20:11 askasleikir kernel: Code: 74 11 48 8b 78 08 0f b7 d6 89 e9 4c 89 e6 e8 fb ea 00 00 65 ff 0d 2c 2d ac 3e 0f 85 55 ff ff ff e8 d9 44 69 c3 e9 4b ff>
-> Jun 20 18:20:11 askasleikir kernel: RSP: 0018:ffffb3538013bdb8 EFLAGS: 00010097
-> Jun 20 18:20:11 askasleikir kernel: RAX: 0000000000000001 RBX: 0000000000000002 RCX: 0000000000000000
-> Jun 20 18:20:11 askasleikir kernel: RDX: 0000000000000000 RSI: 0000000000000002 RDI: ffff9e55cfa248e0
-> Jun 20 18:20:11 askasleikir kernel: RBP: 0000000000000000 R08: 0000000000000000 R09: 000000008010000f
-> Jun 20 18:20:11 askasleikir kernel: R10: 0000000000000005 R11: 0000000000000181 R12: ffff9e55cfa248e0
-> Jun 20 18:20:11 askasleikir kernel: R13: 0000000000000000 R14: ffff9e55cfa26238 R15: ffff9e55cfa26090
-> Jun 20 18:20:11 askasleikir kernel: FS:  0000000000000000(0000) GS:ffff9e55fbf00000(0000) knlGS:0000000000000000
-> Jun 20 18:20:11 askasleikir kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> Jun 20 18:20:11 askasleikir kernel: CR2: 00007f37cce5d180 CR3: 0000000057620000 CR4: 00000000000406e0
-> Jun 20 18:20:11 askasleikir kernel: Call Trace:
-> Jun 20 18:20:11 askasleikir kernel:  <TASK>
-> Jun 20 18:20:11 askasleikir kernel:  ? __ieee80211_stop_queue+0xcc/0xe0 [mac80211 01be121fb223b347160617528f5dda900e828bc2]
-> Jun 20 18:20:11 askasleikir kernel:  ? __warn+0x81/0x130
-> Jun 20 18:20:11 askasleikir kernel:  ? __ieee80211_stop_queue+0xcc/0xe0 [mac80211 01be121fb223b347160617528f5dda900e828bc2]
-> Jun 20 18:20:11 askasleikir kernel:  ? report_bug+0x171/0x1a0
-> Jun 20 18:20:11 askasleikir kernel:  ? handle_bug+0x3c/0x80
-> Jun 20 18:20:11 askasleikir kernel:  ? exc_invalid_op+0x17/0x70
-> Jun 20 18:20:11 askasleikir kernel:  ? asm_exc_invalid_op+0x1a/0x20
-> Jun 20 18:20:11 askasleikir kernel:  ? __ieee80211_stop_queue+0xcc/0xe0 [mac80211 01be121fb223b347160617528f5dda900e828bc2]
-> Jun 20 18:20:11 askasleikir kernel:  ? __slab_free+0xe0/0x310
-> Jun 20 18:20:11 askasleikir kernel:  ieee80211_stop_queue+0x36/0x50 [mac80211 01be121fb223b347160617528f5dda900e828bc2]
-> Jun 20 18:20:11 askasleikir kernel:  b43_pio_tx+0x373/0x390 [b43 3dc9b3f0fd98e2a659c64e057bd3b22d977e5228]
-> Jun 20 18:20:11 askasleikir kernel:  b43_tx_work+0x57/0x130 [b43 3dc9b3f0fd98e2a659c64e057bd3b22d977e5228]
-> Jun 20 18:20:11 askasleikir kernel:  process_one_work+0x1c7/0x3d0
-> Jun 20 18:20:11 askasleikir kernel:  worker_thread+0x51/0x390
-> Jun 20 18:20:11 askasleikir kernel:  ? __pfx_worker_thread+0x10/0x10
-> Jun 20 18:20:11 askasleikir kernel:  kthread+0xde/0x110
-> Jun 20 18:20:11 askasleikir kernel:  ? __pfx_kthread+0x10/0x10
-> Jun 20 18:20:11 askasleikir kernel:  ret_from_fork+0x2c/0x50
-> Jun 20 18:20:11 askasleikir kernel:  </TASK>
-> Jun 20 18:20:11 askasleikir kernel: ---[ end trace 0000000000000000 ]---
-> Jun 20 18:20:11 askasleikir kernel: ------------[ cut here ]------------
+> Was there something else specific you wanted me to try for this? If
+> not, what do you think the next steps to get this fixed are? Do you
+> think it might be good to just cook the partial revert I posted a
+> while back after all?
 
-Sardonimous,
-
-The critical line is:
-> Jun 20 18:20:11 askasleikir kernel:  b43_pio_tx+0x373/0x390
-
-I certainly have not used PIO for a long time. I expect that your MacBook Pro 
-should do DMA on the b43. Apple makes wierd hardware, but not likely that wierd.
-
-Does dmesg offer any clues as to what is happening?
-
-If there is nothing shown in the log, you definitely need to do a proper 
-bisection from the mainline git tree to isolate the change that led to this failure.
+It's rather a call to Kailang, after all.
+I'm fine with any way as long as it avoids further regressions.
 
 
-
-ADDED WITH EDIT: I looked at the code and b43 will not be built for any hardware 
-without DMA, thus it appears that adding "b43.pio=1" is the only way to get PIO 
-mode. Please check the output of dmesg for PIO messages.
-
-Larry
+Takashi
