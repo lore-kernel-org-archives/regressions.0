@@ -1,246 +1,87 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 623136117
-	for <regressions@lists.linux.dev>; Sun, 25 Jun 2023 13:51:42 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:5054:ff:feb3:8f48] (helo=regzbot.fritz.box); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	id 1qDQ9O-0007dG-FW; Sun, 25 Jun 2023 15:51:34 +0200
-From: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>
-To: LKML <linux-kernel@vger.kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Linux regressions report  for mainline [2023-06-25]
-Date: Sun, 25 Jun 2023 13:51:33 +0000
-Message-Id: <168770105071.1044236.16811678381872089646@leemhuis.info>
-X-Mailer: git-send-email 2.40.1
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EDF620F4
+	for <regressions@lists.linux.dev>; Sun, 25 Jun 2023 14:40:34 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27665C433C0;
+	Sun, 25 Jun 2023 14:40:33 +0000 (UTC)
+Authentication-Results: smtp.kernel.org;
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="JZi3W7u0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
+	t=1687704030;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=W9bwUh3XZI0MEK9b1+FH1A6Siutg0zhBNWcDa+CeRtE=;
+	b=JZi3W7u0qo7z03jALCC+GJ5v1KJePmwLLMpenda/7UBFHp+upwiG+3CkGbhPytkh3pRQRI
+	l75ubZZWHVON7KrYWEYDLNzhrhr6ZLcg/LuQ7ku3/tOeHfV7kYJEn8KTeWMceGV2+yEvjk
+	P576kJnixk9yuR/PlzfRQjXWHvPRXlc=
+Received: 
+	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 788447a5 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+	Sun, 25 Jun 2023 14:40:28 +0000 (UTC)
+Date: Sun, 25 Jun 2023 16:40:26 +0200
+From: "Jason A. Donenfeld" <Jason@zx2c4.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Ard Biesheuvel <ardb@kernel.org>, regressions@leemhuis.info,
+	Andrew Lunn <andrew@lunn.ch>, Linux Stable <stable@vger.kernel.org>,
+	Linux Regressions <regressions@lists.linux.dev>,
+	Bagas Sanjaya <bagasdotme@gmail.com>,
+	Sami Korkalainen <sami.korkalainen@proton.me>
+Subject: Re: [REGRESSION][BISECTED] Boot stall from merge tag 'net-next-6.2'
+Message-ID: <ZJhR2sIaMdT1qf8v@zx2c4.com>
+References: <ZIcmpcEsTLXFaO0f@debian.me>
+ <oEbkgJ-ImLxBDZDUTnIAGFWrRVnwBss3FOlalTpwrz83xWgESC9pcvNKiAVp9BzFgqZ0V-NIwzBZ7icKD8ynuIi_ZMtGt7URu3ftcSt16u4=@proton.me>
+ <e2ca75ef-d779-4bad-84a5-a9f262dbe213@lunn.ch>
+ <FNzHwp9-AyweVwIMndmih6VuBD0nsyRp3OM72bmOxpeYszF680jFPJjENIknT32FeaqfVBtVSQFw-5mgE3ZXeksVD8VCFbxwojxP3mSZ9DQ=@proton.me>
+ <9517bb70-426c-0296-b426-f5b4f075f7c8@leemhuis.info>
+ <CAHmME9p2ZLJUMq96vhkiSgvJkxP5BxE778MhY5Ou2WdxLVEJyg@mail.gmail.com>
+ <CAMj1kXHGkJsgArabs_mbzR3Y83s48qmf_aqb50k1LV1Hi5iNgA@mail.gmail.com>
+ <CAHk-=wiiFHLSDe3JSSMm5EezpXXMFxYH=RwFLEbgsCKLjg4qqQ@mail.gmail.com>
+ <CAHmME9oC6Kq5qeoSmY5CdDrbGnkcp9sy-9ESXdpRtM8x1_6Hwg@mail.gmail.com>
+ <CAHk-=wjKtHwJBeUiJL_1HFJKWja120w-6qaLx1FS5p9QE0PfSw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1687701102;0ac1239f;
-X-HE-SMSGID: 1qDQ9O-0007dG-FW
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wjKtHwJBeUiJL_1HFJKWja120w-6qaLx1FS5p9QE0PfSw@mail.gmail.com>
 
-Hi Linus, find below regzbot's report about the remaining regressions
-that were introduced this cycle. Not much has changed since my "quick &
-small additional regressions report pre -rc8/final", so I'm quoting it
-here:
-
->  * kernel test robot noticed a -20.0% regression of
-> vm-scalability.throughput post -rc7;
-
-BTW, that was caused by 9425c591e06 ("page cache: fix
-page_cache_next/prev_miss off by one") [v6.4-rc7]
-
-> Mike posted reverts akpm applied
-> that landed in next recently:
+On Fri, Jun 23, 2023 at 02:52:25PM -0700, Linus Torvalds wrote:
+> On Fri, 23 Jun 2023 at 13:31, Jason A. Donenfeld <Jason@zx2c4.com> wrote:
+> >
+> > We always have to write when using so that we don't credit the same
+> > seed twice, so it's gotta be used at a stage when SetVariable is
+> > somewhat working.
 > 
-> https://lore.kernel.org/lkml/202306211346.1e9ff03e-oliver.sang@intel.com/
-> https://lore.kernel.org/lkml/20230621212403.174710-1-mike.kravetz@oracle.com/
-
-Akpm moved to those reverts from the mm-unstable to the mm-stable branch
-(not totally sure, but I think those are branch with changes for the
-next merge window):
-
-https://lore.kernel.org/all/20230624000036.57829C433CB@smtp.kernel.org/
-https://lore.kernel.org/all/20230624000035.3C79BC433C0@smtp.kernel.org/
-
-
->  * Swapnil Sapkal from AMD found another performance regression; from
-> skimming the thread it seems a partial fix is in -next for some time
-> already; part of the problem is also caused by df323337e50 "apparmor:
-> Use a memory pool instead per-CPU caches" [v5.5-rc1]
+> This code isn't even the code that "uses" the alleged entropy from
+> that EFI variable in the first place. That's the code in
+> efi_random_get_seed() in the EFI boot sequence, and appends it to the
+> bootup randomness buffers.
 > 
-> https://lore.kernel.org/lkml/09e0f469-a3f7-62ef-75a1-e64cec2dcfc5@amd.com/
-> https://lore.kernel.org/lkml/20230515143536.114960-1-mathieu.desnoyers@efficios.com/
-> https://lore.kernel.org/lkml/6c693e3b-b941-9acf-6821-179e7a7fe2b8@efficios.com/
+> And that code already seems to clear the EFI variable (or seems to
+> append to it).
+
+Oh, doh, yea, you're right. Sorry. My mistake.
+
+So indeed, we can probably get away with just delaying this until much
+later in boot, and doing this inside of a workqueue or similar, instead
+of in some special early boot context. Or maybe shutdown? Shutdown seems
+like it'd better handle potential firmware issues since hanging on
+shutdown is a lot better than hanging on boot. But it would be nice to
+keep this working during unclean shutdown, which maybe means doing it
+sometime after bootup is still better.
+
+> So this argument seems to be complete garbage - we absolutely do not
+> have to write it, and your patch already just wrote it in the wrong
+> place anyway.
 > 
-> [this one is not tracked by regzbot, something went sideways, need to
-> look closer]
-> 
-> 
->  * Mario came up with a fix for the ppc/tpm kexec hang recently reported:
-> 
-> https://lore.kernel.org/lkml/99B81401-DB46-49B9-B321-CF832B50CAC3@linux.ibm.com/
-> https://lore.kernel.org/all/20230623030427.908-1-mario.limonciello@amd.com/
-> 
-> 
->  * still no solution in sight for the "Dragonboard 845c broken due to
-> asynchronous probe" regression
-> 
-> https://lore.kernel.org/lkml/CAMi1Hd1avQDcDQf137m2auz2znov4XL8YGrLZsw5edb-NtRJRw@mail.gmail.com/
-> https://lore.kernel.org/lkml/20230515145323.1693044-1-amit.pundir@linaro.org/
-> https://lore.kernel.org/lkml/20230602161246.1855448-1-amit.pundir@linaro.org/
-> 
-> 
->  * no progress wrt to the MPTCP tests regressions due to 9p changes
-> 
-> https://lore.kernel.org/regressions/855a232a-76d3-7e7b-b2b5-2ebc41bcadd6@tessares.net/
-> 
-> 
->  * brand new: transmit queue timeouts with r8169 due to 2ab19de62d6
-> ("r8169: remove ASPM restrictions now that ASPM is disabled during NAPI
-> poll") [v6.4-rc1]
-> 
-> https://lore.kernel.org/netdev/c3465166-f04d-fcf5-d284-57357abb3f99@freenet.de/
-> 
-> 
->  * just noticed: patches for a "WiFi / LTE won't work at all on trogdor
-> devices" regression might still be heading your way:
-> 
-> https://lore.kernel.org/lkml/20230616081440.v2.1.Ie79b5f0ed45739695c9970df121e11d724909157@changeid/
+> Don't make excuses. That code caused boot failures, it was all done in
+> the wrong place, and at entirely the wrong time.
 
-Ciao, Thorsten
+Yes, my point was entirely wrong. I was mistaken. But it wasn't an
+*excuse*. I was just momentarily confused. No malice here, I promise.
 
----
-
-Hi, this is regzbot, the Linux kernel regression tracking bot.
-
-Currently I'm aware of 6 regressions in linux-mainline. Find the
-current status below and the latest on the web:
-
-https://linux-regtracking.leemhuis.info/regzbot/mainline/
-
-Bye bye, hope to see you soon for the next report.
-   Regzbot (on behalf of Thorsten Leemhuis)
-
-
-======================================================
-current cycle (v6.3.. aka v6.4-rc), culprit identified
-======================================================
-
-
-[ *NEW* ] transmit queue timeout on r8169
------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/c3465166-f04d-fcf5-d284-57357abb3f99@freenet.de/
-https://lore.kernel.org/netdev/c3465166-f04d-fcf5-d284-57357abb3f99@freenet.de/
-
-By Tobias Klausmann; 3 days ago; 4 activities, latest 1 days ago.
-Introduced in 2ab19de62d67 (v6.4-rc1)
-
-Recent activities from: Tobias Klausmann (2), Thorsten Leemhuis (1),
-  Bagas Sanjaya (1)
-
-
-regulator: qcom-rpmh: Dragonboard 845c broken due to asynchronous probe
------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/CAMi1Hd1avQDcDQf137m2auz2znov4XL8YGrLZsw5edb-NtRJRw@mail.gmail.com/
-https://lore.kernel.org/lkml/CAMi1Hd1avQDcDQf137m2auz2znov4XL8YGrLZsw5edb-NtRJRw@mail.gmail.com/
-
-By Amit Pundir; 42 days ago; 52 activities, latest 1 days ago.
-Introduced in ad44ac082fd (v6.4-rc1)
-
-Recent activities from: Amit Pundir (2), Thorsten Leemhuis (1), Bjorn
-  Andersson (1)
-
-One patch associated with this regression:
-* Re: [PATCH] regulator: qcom-rpmh: Revert "regulator: qcom-rpmh: Use PROBE_FORCE_SYNCHRONOUS"
-  https://lore.kernel.org/lkml/552345c5-b1e9-41f6-f275-b6eeeb51df25@linaro.org/
-  42 days ago, by Caleb Connolly
-
-Noteworthy links:
-* [PATCH] Revert "regulator: qcom-rpmh: Revert "regulator: qcom-rpmh: Use PROBE_FORCE_SYNCHRONOUS""
-  https://lore.kernel.org/lkml/20230515145323.1693044-1-amit.pundir@linaro.org/
-  40 days ago, by Amit Pundir; thread monitored.
-* [PATCH] arm64: dts: qcom: sdm845-db845c: Move LVS regulator nodes up
-  https://lore.kernel.org/lkml/20230602161246.1855448-1-amit.pundir@linaro.org/
-  22 days ago, by Amit Pundir; thread monitored.
-
-
-9p: MPTCP tests regressions due to new 9p features in v6.4
-----------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/855a232a-76d3-7e7b-b2b5-2ebc41bcadd6@tessares.net/
-https://lore.kernel.org/regressions/855a232a-76d3-7e7b-b2b5-2ebc41bcadd6@tessares.net/
-
-By Matthieu Baerts; 18 days ago; 6 activities, latest 1 days ago.
-Introduced in d9bc0d11e33b (v6.4-rc1)
-
-Recent activities from: Thorsten Leemhuis (1)
-
-
-tpm/ppc: crash during a kexec
------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/99B81401-DB46-49B9-B321-CF832B50CAC3@linux.ibm.com/
-https://lore.kernel.org/lkml/99B81401-DB46-49B9-B321-CF832B50CAC3@linux.ibm.com/
-
-By Sachin Sant; 10 days ago; 10 activities, latest 1 days ago.
-Introduced in bd8621ca1510 (v6.4-rc1)
-
-Recent activities from: Limonciello, Mario (2), Thorsten Leemhuis (1),
-  Greg KH (1), Mario Limonciello (1), Sachin Sant (1), Michael
-  Ellerman (1)
-
-2 patch postings are associated with this regression, the latest is this:
-* Re: [6.4-rc6] Crash during a kexec operation (tpm_amd_is_rng_defective)
-  https://lore.kernel.org/lkml/3f5a37f1-70e0-3dcf-3bd3-acc8a04e53ee@amd.com/
-  2 days ago, by Limonciello, Mario
-
-Noteworthy links:
-* [PATCH] tpm: Ensure that tpm chip has ops to check if it's defective
-  https://lore.kernel.org/lkml/20230623030427.908-1-mario.limonciello@amd.com/
-  2 days ago, by Mario Limonciello; thread monitored.
-
-
-[ *NEW* ] mm/page cache: performance regression (2 reverts pending)
--------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/202306211346.1e9ff03e-oliver.sang@intel.com/
-https://lore.kernel.org/lkml/202306211346.1e9ff03e-oliver.sang@intel.com/
-
-By kernel test robot; 4 days ago; 14 activities, latest 1 days ago.
-Introduced in 9425c591e06a (v6.4-rc7)
-
-Fix incoming:
-* Revert "page cache: fix page_cache_next/prev_miss off by one"
-  https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=master&id=555d5a30e7b3020e6c4137ce7da8cd028c67caea
-
-
-=======================================================
-on back burner, but with activity since the last report
-=======================================================
-
-
-mm: performance regression on shell-heavy workloads
----------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/20230608111408.s2minsenlcjow7q3@quack3/
-https://lore.kernel.org/lkml/20230608111408.s2minsenlcjow7q3@quack3/
-
-By Jan Kara; 17 days ago; 7 activities, latest 6 days ago.
-Introduced in f1a7941243c (v6.2-rc1)
-
-Recent activities from: Michal Hocko (1)
-
-
-=============
-End of report
-=============
-
-All regressions marked '[ *NEW* ]' were added since the previous report,
-which can be found here:
-https://lore.kernel.org/r/168709975910.455445.13798099813754443067@leemhuis.info
-
-Thanks for your attention, have a nice day!
-
-  Regzbot, your hard working Linux kernel regression tracking robot
-
-
-P.S.: Wanna know more about regzbot or how to use it to track regressions
-for your subsystem? Then check out the getting started guide or the
-reference documentation:
-
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
-
-The short version: if you see a regression report you want to see
-tracked, just send a reply to the report where you Cc
-regressions@lists.linux.dev with a line like this:
-
-#regzbot introduced: v5.13..v5.14-rc1
-
-If you want to fix a tracked regression, just do what is expected
-anyway: add a 'Link:' tag with the url to the report, e.g.:
-
-Link: https://lore.kernel.org/all/30th.anniversary.repost@klaava.Helsinki.FI/
+Jason
