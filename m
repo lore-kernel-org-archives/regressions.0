@@ -1,94 +1,202 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10olkn2058.outbound.protection.outlook.com [40.92.40.58])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0D156AA1
-	for <regressions@lists.linux.dev>; Sun, 25 Jun 2023 15:59:50 +0000 (UTC)
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-313e1c27476so913173f8f.1
-        for <regressions@lists.linux.dev>; Sun, 25 Jun 2023 08:59:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1687708789; x=1690300789;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=gHlFiZs5tFIFJlBDQPU4DvtUwczU5PH/nPUQB8u9ynA=;
-        b=NBsJvYr5y6vAfQybS4O4IodHezeegPVCM5raoQdCvB7dcrK1BQAcOQvwjyWUYBrZ17
-         AUiE9S01t2WeoDVZkaLSdZFzSJRjl+r0rBQ8USOw0/UQZkBZ8Q0v04F45iJ3vCodobEM
-         FrIwejpF5rzxJEUp5trugER+zOLjsQS/ZEDdrgFjPXpdtzcD89oUWXcUwLREyz6aW7hI
-         WzqReUcp4OKSVbYN3BDTiPO5lakVCGCq3fcpX/wMIB13tIuoI7q8msYTOc+kgTfAMD7K
-         VW68atjGBC2c3mv8ABYPFEnZwVRHkMfTxpINat8f+thxSuH4tv+akpSAfrHcpeEhf7tE
-         xAiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687708789; x=1690300789;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gHlFiZs5tFIFJlBDQPU4DvtUwczU5PH/nPUQB8u9ynA=;
-        b=ULfzf1epGVpkz4/9WC9sK5eomLO43cH/t08Lz8uc2ckHZRPtSy7DjI7/LDzhhpIqMM
-         3qT+7wghq8ksufQBFxY+7JF3ovwyH3TPgK9O7A43bGvKa1NeKNLnXXNeB6ENZ27NPpPz
-         l9rd22dOlCJDjcQB5aguLxKjwc7HgUC0vNKxwnfFycK4V2V3HQeSj7qowIs2KhdCIRHc
-         xERcEjc3fg/oedQp5SNBvi6owdDW+vP9iGD2h3y9QGkqMPFsB57nSZis5joldauldAvv
-         PodKL2SYsTBTvJx4ypbBBbMOCt97O9RhnTuD2lQVeTwnWRzZBBG4K0W3giK5/mmqs4aw
-         jMsA==
-X-Gm-Message-State: AC+VfDwvpLkdUBH4mvYavim8m4C4kIoh7o815LyZnmKb6AbxC8mptX/U
-	LJmsGnZKahN3ZusFLlyL7Yc=
-X-Google-Smtp-Source: ACHHUZ5ATvmUoOCSXJ8ImWBo56+GVeVF8ADqex2ejrdSs3fcxjADfw315UCi5HrmFvgrUkSMwjbVuw==
-X-Received: by 2002:a5d:6dce:0:b0:30a:e63b:950 with SMTP id d14-20020a5d6dce000000b0030ae63b0950mr29180323wrz.31.1687708788471;
-        Sun, 25 Jun 2023 08:59:48 -0700 (PDT)
-Received: from localhost ([2a00:23c5:dc8c:8701:1663:9a35:5a7b:1d76])
-        by smtp.gmail.com with ESMTPSA id i13-20020a5d522d000000b003119633ecb5sm4891836wra.88.2023.06.25.08.59.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 25 Jun 2023 08:59:47 -0700 (PDT)
-Date: Sun, 25 Jun 2023 16:59:46 +0100
-From: Lorenzo Stoakes <lstoakes@gmail.com>
-To: Forza <forza@tnonline.net>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Vlastimil Babka <vbabka@suse.cz>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, Baoquan He <bhe@redhat.com>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	Bagas Sanjaya <bagasdotme@gmail.com>,
-	Linux btrfs <linux-btrfs@vger.kernel.org>,
-	Linux Regressions <regressions@lists.linux.dev>,
-	Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-	David Sterba <dsterba@suse.com>, a1bert@atlas.cz,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Song Liu <song@kernel.org>, Nicholas Piggin <npiggin@gmail.com>,
-	Matthew Wilcox <willy@infradead.org>
-Subject: Re: [PATCH] mm/vmalloc: do not output a spurious warning when huge
- vmalloc() fails
-Message-ID: <e3ce1745-0a3e-4c9d-955e-2a0ce20422cf@lucifer.local>
-References: <20230605201107.83298-1-lstoakes@gmail.com>
- <cd47d6ac-69ce-0315-dd45-2cb9dce57f36@suse.cz>
- <f6b42d95-09f1-48d6-8274-e6145febb31d@lucifer.local>
- <2a6fa9d6-53b8-93cd-16c8-309ce2b8e3ac@suse.cz>
- <20230607093316.cdf60df195915fa9d38067ea@linux-foundation.org>
- <11b893e.86425ef4.188f33688b8@tnonline.net>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAB927C
+	for <regressions@lists.linux.dev>; Sun, 25 Jun 2023 16:58:16 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=g2D+KLYTKTDOQ9aryNLVfmFCr6FHiAS1KTH+shbPgIKo2AtLTNCYEqPS9Gr6aSoh97rR6sqsX1iXrVLYS8Dz+Zpw8A4CJ7Yq4+ugfuCvb8u9YdzZHMINbR6WnnOpBQCY1hLmkFhpVVcuWJ/Ib2uQfPW34BJWy4xNWvPGqcsMmimBfzNz+1tgEBoIu5wsN2TfMU78/RUTijhOniPqXVzo3PO843VNeg8hSoHei4daDFjoQ6UAmRYcTRPQ75LeV/LW8Kfa6AjoqEMVqUcMRGGMFImBzv7XhpKUf3kqO4OhyPSUgSwp5GHBEscE+KR0uDMxCfyqWIb5jhfKggP4vSnvqQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=0nwDQPRC+2nngHIh2pS/zTx59mCETITE4CXQdR2wofg=;
+ b=kNmZRat4JIrh6aF76Fw1ASpNybWMYOCcnHF8ML/fGD9hGOD1giOoMSJGPjHWUku/PR2myRqWlFcZcKUp06xUOv8aaBYJw10hjUd0htcAZVP4ks/q6bxWb1K/shKdOhwIzNnDSwvS7skHWZqwGsd2t7fIukvVANpj0+PzT0hOop+jTr0qdJosoa96VPXZPTqKdc/cn9easnM1pouzkV1XKlifyFOvaYauaYlV7fED7XbRBE12dXukuNQrupwL//tHfuxUNAYuxDTC2m87DCgLE4OeFMn+a6Nicp2OTFcIkjVIRWUve6mywGTPWY2a4p2XrMmvEV7weEAAK1tAV/lSDg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hotmail.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0nwDQPRC+2nngHIh2pS/zTx59mCETITE4CXQdR2wofg=;
+ b=e6ylI3aZzaBV5DoSiShnAXVXBG4Vn3GLp0umpMCgM5iXXB5z6z+mdtDPApF3LdCt8Za+5wbfmvzVmuQS6+rBo7Ks+virvpNDk4cxUdf/HYCumYz09koFqEPapYqrJYbrdyMjy7pQPmKmMJioQ4Oqa1cPH1V25g70Kd0dqRpi38CBkokq+Ar6gozPvhGem0sCja2vp2pq6/X48CPUodtEDwAsAEVDlfr3Dp80HdWhznDjGtXz9jE2sAa508eQhW1v896Zgvdpi/p6AQcOeVklfWFK6PSItMeMYoc0D9dfeFMwhwwHiVWZKA7mG015adHIClQLRDC/hX/v/OBAUMH48w==
+Received: from RO2P215MB1938.LAMP215.PROD.OUTLOOK.COM (2603:10d6:10:c9::8) by
+ SCZP215MB1933.LAMP215.PROD.OUTLOOK.COM (2603:10d6:300:f::8) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6521.26; Sun, 25 Jun 2023 16:58:12 +0000
+Received: from RO2P215MB1938.LAMP215.PROD.OUTLOOK.COM
+ ([fe80::6c3:80e7:184a:98bc]) by RO2P215MB1938.LAMP215.PROD.OUTLOOK.COM
+ ([fe80::6c3:80e7:184a:98bc%4]) with mapi id 15.20.6521.024; Sun, 25 Jun 2023
+ 16:58:12 +0000
+Message-ID:
+ <RO2P215MB193879B2D99DD0BAF59EFA92A721A@RO2P215MB1938.LAMP215.PROD.OUTLOOK.COM>
+Date: Sun, 25 Jun 2023 11:58:00 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: Fwd: After kernel 6.3.7 or 6.3.8 b43 driver fails
+To: Larry Finger <Larry.Finger@lwfinger.net>,
+ Bagas Sanjaya <bagasdotme@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Linux Wireless <linux-wireless@vger.kernel.org>,
+ Netdev <netdev@vger.kernel.org>
+Cc: =?UTF-8?Q?Michael_B=c3=bcsch?= <m@bues.ch>,
+ kernel test robot <lkp@intel.com>, Simon Horman <simon.horman@corigine.com>,
+ Kalle Valo <kvalo@kernel.org>
+References: <27829c69-515c-36a6-4beb-3210225f8936@gmail.com>
+ <b9428e48-f0f9-46f6-892c-4c8834c930c4@app.fastmail.com>
+ <RO2P215MB193850DDADD38492BEC8CC2FA720A@RO2P215MB1938.LAMP215.PROD.OUTLOOK.COM>
+ <a3bc5eb5-9639-8016-36ab-105abc8c0ca3@gmail.com>
+ <69b98eb4-2c4e-fe75-90b4-4b08505a595a@lwfinger.net>
+Content-Language: en-US
+From: Sardonimous <sardonimous@hotmail.com>
+In-Reply-To: <69b98eb4-2c4e-fe75-90b4-4b08505a595a@lwfinger.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-TMN:
+ [NJTORj29h07yBKb8RnkgmWSUAY1HfTb758cSw1jEW4jhDaeV+atnRb71+0bXqNtfIDDOuYaRlY4=]
+X-ClientProxiedBy: CH2PR07CA0013.namprd07.prod.outlook.com
+ (2603:10b6:610:20::26) To RO2P215MB1938.LAMP215.PROD.OUTLOOK.COM
+ (2603:10d6:10:c9::8)
+X-Microsoft-Original-Message-ID:
+ <8ed569e8-a51f-1b8b-83ff-f241f6fa0263@hotmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <11b893e.86425ef4.188f33688b8@tnonline.net>
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: RO2P215MB1938:EE_|SCZP215MB1933:EE_
+X-MS-Office365-Filtering-Correlation-Id: 111b26b9-c819-4048-0ee0-08db759d5bdb
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	siapfy8BqKSgnuhBtcKyXGJVgjO550bw9OWD3N0SIfXMESXz/IStl7sb4h2lj4uJt91V7U7oJJ+9aTbNlLGBLhNwflrafql/6YvUnpGE0ZomfgojLgNom3+UqzARz2lfRIgw2O7WAFgvFa8o7MGnHUojfNvRlorK4WeGt9LBCp0WNIhGZhbUJ8skSdnCoxNev9U8j0NIkJrcGBzQeZ0DOgd/cvINrsyOWvrwwBbzbfiOtD4VtS8hnxCbdFLTse4UboOy3ybEzNapMSqO0eV5aymLhIrbN/xC0PUTZmzScxRX+XTU2EX//ggIGxayFL5v1RrYKTSrroiEXj0LiwZdXMam4difHGIwO5j955YyLTbwtjkX7MyeIq7v4AoOsev63W7l2chiqot0Ow0AtRpdTdc8rYQ/ELVuT/C7ggIaPVQEuEKeOnfri3EKv01n0IayoULk0ZFgskwcnBSgN31xLGgV3pHt/K1QQSKxW9s3ctnco4oOppBTAGR978jUCdi9/OaEfiwp/p46b0Z3ZLjfSKSxMFC1eZyB6mrrwgEWO6PQse/KprcsX6vNhQ80XajT
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?ZXZreUpLSHVVVVdVcUpjZjludzJGMk1UR0VXZkN0dDlhWFp5cUhuRElTY3Va?=
+ =?utf-8?B?bGZkSXFuMEVsWS80TUNxUlA5OEVNcnYvUWJmd0wxTEhqMXJJMnRGRURnNUtW?=
+ =?utf-8?B?MmV0akxwaGt1VlRjMlVWaWVKeUx4b1lweUdUMEhyVUZvZ2hWY2VCV0NLRU1O?=
+ =?utf-8?B?WUhOUy9RMEp5ajZKY2pSc3JaWGV2ZGpSM2tCMVY1cHVNdDJVaWVmMjBuN3lD?=
+ =?utf-8?B?UjFWUlAzeDNHaVlmSDhNL2x0Tkc5MFdHRit1YjVvOTE1amVsK0hONFVYWEtp?=
+ =?utf-8?B?YmJJOExtWXo4T1hwdUxCdjI4NGJqc1lQK0JCRTJWcnRpM3JXbFRJUGtEQ2V2?=
+ =?utf-8?B?TzdrcWZDTHgrM1ovQm9KT0hRbS9vbTRjMTF4V3RmblZVbkhEbnF2ZktjMDJl?=
+ =?utf-8?B?MGRRaVF5clBSM1p2b1Qvcm5pSWJaeWNnak12Y1VMMHMzWGJoRFNwaERMdzhr?=
+ =?utf-8?B?aDZxWk50azJicGllRVAwMkRuOUV6T2ZONnR6NzJMYS9PR0RkU1BTTFNRZlhD?=
+ =?utf-8?B?SDhIQUV1WTdBRzdLUXlhSWpyZlZjS25tVkNBdThnWVQ0V0xwRzBodmtUN2hU?=
+ =?utf-8?B?MVNPRlJCUWlQNlNYV2JUYXdaUkZENVBWT3JnVldkNVprc3Y2MkM5V04vTUxt?=
+ =?utf-8?B?NTBTMW5DNzZRN0pSN0tjMWtSYWRIYldTU2ZwTjZyZ1hYd3crVE9RVzRJaXhP?=
+ =?utf-8?B?R3FubCtBNklpQlZNSzJ1YllaUGViZVJuMzA0am40bzE2cnFtYzAwcTRxV1ZV?=
+ =?utf-8?B?cVJFclY4UjY0U0M5RTlHVlBZN1N0UzdQcnZwYTlNL0JVOUtoY3pra1dvMitz?=
+ =?utf-8?B?N2ZUWE5JYVVvNU50YXlaYVlXVVVOTUQrcytDODVuaXB2L0Z1UkZHTXhJa0xI?=
+ =?utf-8?B?RGswM2FGeVJ2bFd0bWk4SkhJeU1QT2g3UE9CT2ZQQW1rdnFsUkxnNDhKdDdC?=
+ =?utf-8?B?V3Y3Ui8rU0dQTFREbEQ0eWxFczU1ZllNS3FmMStjdVY4dWt4RmNEb0VXbTVC?=
+ =?utf-8?B?MmRIakdvaDRwSW1NUkhQeGUyZ0JBdCswQ3QzMlZURUFvSjBlcjQzVmM2V0ZL?=
+ =?utf-8?B?L1J4Ti8wWXJPZnRSbERSZklHbWNwRG9NdXEwN1NOVnJ2bjYwTDlTUzJ6a3pS?=
+ =?utf-8?B?eEE5VTRWUVlEZHIxdG1zUk9jR3QrS1RoVGE1NHhzU1IySVdtUkwvNkFETVpU?=
+ =?utf-8?B?NUZGZGdkMldEaDdReHNwc2drTWtEMGRkdzFncEdwWFFSUWZqTVltRHZlZGNO?=
+ =?utf-8?B?djJtbTk4enQ2ZEFWSlNzVU5qMWtmQnY0eU5KVFBYRXdOL0cySjlaZGQ4Zko2?=
+ =?utf-8?B?WjNtVTVxcUh5eDFraG45ZWFhNUhLKzFNY2JUS1p3Y1dzbG5UWDE1MVBZTkRm?=
+ =?utf-8?B?N3FkMzh5WTV2YUowcUdDU0hxY1dibUFidXNZODU0SVNzMlVnSEVpUThOblhy?=
+ =?utf-8?B?Z2VqVkQ3OWh6d1kySHZDRzVKN1lyZWgwaitTUkdoeXhKQTNWSVNFTE1zTnRw?=
+ =?utf-8?B?T3J6aUFZck92M0R0OCtPdHRKRTRNdDB1RjVOc2YzWE5rMmJZRXljeWg1OURl?=
+ =?utf-8?B?WGhVNGRLT2FtZzlVdE5SRnF0cEczYUNXOTFUekNFWVRiNDh5TjZINUJ4WHU0?=
+ =?utf-8?B?MmlnZjJOQ2Y0eTUvY0d6L0ZIUnZ2VnVzSTdxLzJvTTVpQ0FoSWNLN3N6Q2pM?=
+ =?utf-8?B?QWxhaGp0WW82cm9JZUdXNlhRN1BZMGl1OXN3Mm1mOEdOR2s3VFhJU2tQSkg2?=
+ =?utf-8?Q?f2LtxgVHff6i8gkUqU=3D?=
+X-OriginatorOrg: sct-15-20-4755-11-msonline-outlook-7d2c5.templateTenant
+X-MS-Exchange-CrossTenant-Network-Message-Id: 111b26b9-c819-4048-0ee0-08db759d5bdb
+X-MS-Exchange-CrossTenant-AuthSource: RO2P215MB1938.LAMP215.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jun 2023 16:58:11.9739
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SCZP215MB1933
 
-On Sun, Jun 25, 2023 at 05:40:17PM +0200, Forza wrote:
->
->
-> ---- From: Andrew Morton <akpm@linux-foundation.org> -- Sent: 2023-06-07 - 18:33 ----
->
-> > On Wed, 7 Jun 2023 10:58:40 +0200 Vlastimil Babka <vbabka@suse.cz> wrote:
-> >
-> >> I would really suggest moving the fix to
-> >> mm-hotfixes instead of mm-unstable, and
-> >>
-> >> Fixes: 80b1d8fdfad1 ("mm: vmalloc: correct use of __GFP_NOWARN mask in __vmalloc_area_node()")
-> >> Cc: <stable@vger.kernel.org>
-> >
-> > I've made those changes.
->
-> Did the chabge go into 6.3 stable? I saw these issues with kernels 6.3.0-6 3.7. I now updated to 6.3.9 and have had no more warnings since.
+Hello Larry,
 
-Yeah, got the notification from Greg's script that it landed in 6.3 stable.
+On 6/24/23 23:41, Larry Finger wrote:
+>
+> Sardonimous,
+>
+> The critical line is:
+>> Jun 20 18:20:11 askasleikir kernel: b43_pio_tx+0x373/0x390
+>
+> I certainly have not used PIO for a long time. I expect that your 
+> MacBook Pro should do DMA on the b43. Apple makes wierd hardware, but 
+> not likely that wierd.
+
+I have been unable to get DMA to work in the past.  So I have been 
+configuring it with PIO=1 (/etc/modprobe,d/b43.conf):
+
+     options b43 pio=1 qos=0
 
 >
+> Does dmesg offer any clues as to what is happening?
+>
+If I try with, say:
+
+     options b43 pio=0 qos=0 verbose=3
+
+Then
+
+     rmmod b43
+     rmmod ssb
+     modprobe b43
+
+I see the following:
+
+     insmod /lib/modules/6.1.12-arch1-1/kernel/drivers/ssb/ssb.ko.zst
+     insmod 
+/lib/modules/6.1.12-arch1-1/kernel/drivers/net/wireless/broadcom/b43/b43.ko.zst 
+pio=0 qos=0 verbose=3
+
+...
+
+[Jun25 11:51] ssb: Found chip with id 0x4322, rev 0x01 and package 0x0A
+[  +0.096950] b43-pci-bridge 0000:02:00.0: Sonics Silicon Backplane 
+found on PCI device 0000:02:00.0
+[  +0.411653] b43-phy1: Broadcom 4322 WLAN found (core revision 16)
+[  +0.038206] b43-phy1: Found PHY: Analog 8, Type 4 (N), Revision 4
+[  +0.000032] b43-phy1: Found Radio: Manuf 0x17F, ID 0x2056, Revision 3, 
+Version 0
+[  +0.015660] Broadcom 43xx driver loaded [ Features: PNLS ]
+[  +0.520933] ieee80211 phy1: Selected rate control algorithm 'minstrel_ht'
+[  +0.726559] b43-phy1: Loading firmware version 784.2 (2012-08-15 21:35:19)
+[  +0.276596] b43-phy1 debug: Chip initialized
+[  +0.000562] b43-phy1 debug: 64-bit DMA initialized
+[  +0.000013] b43-phy1 debug: QoS disabled
+[  +0.023145] b43-phy1 debug: Wireless interface started
+[  +0.056159] b43-phy1 debug: Adding Interface type 2
+[  +0.086691] b43-phy1 debug: Removing Interface type 2
+[  +0.000105] b43-phy1 debug: Wireless interface stopped
+[  +0.099849] b43-phy1 ERROR: DMA RX reset timed out
+[  +0.065067] b43 ssb0:0: Timeout waiting for bitmask 01800000 on 
+register 0F90 to clear
+[  +0.204905] b43-phy1: Loading firmware version 784.2 (2012-08-15 21:35:19)
+[  +0.296681] b43-phy1 debug: Chip initialized
+[  +0.000555] b43-phy1 debug: 64-bit DMA initialized
+[  +0.000010] b43-phy1 debug: QoS disabled
+[  +0.027099] b43-phy1 debug: Wireless interface started
+[  +0.062503] b43-phy1 debug: Adding Interface type 2
+
+The wlan0 device never seems to work, no IP address is obtained, etc.
+
+> If there is nothing shown in the log, you definitely need to do a 
+> proper bisection from the mainline git tree to isolate the change that 
+> led to this failure.
+
+Still working on initial kernel build.
+
+> ADDED WITH EDIT: I looked at the code and b43 will not be built for 
+> any hardware without DMA, thus it appears that adding "b43.pio=1" is 
+> the only way to get PIO mode. Please check the output of dmesg for PIO 
+> messages.
+>
+> Larry
+
+Thanks & regards,
+
+Sardonimous
+
