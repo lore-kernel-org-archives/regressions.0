@@ -1,47 +1,46 @@
-Received: from mail-oa1-f43.google.com (mail-oa1-f43.google.com [209.85.160.43])
+Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DED1C7F
-	for <regressions@lists.linux.dev>; Sun, 25 Jun 2023 02:09:34 +0000 (UTC)
-Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-1acdfbe1c78so1997386fac.2
-        for <regressions@lists.linux.dev>; Sat, 24 Jun 2023 19:09:34 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 325FB36F
+	for <regressions@lists.linux.dev>; Sun, 25 Jun 2023 04:41:14 +0000 (UTC)
+Received: by mail-ot1-f48.google.com with SMTP id 46e09a7af769-6b5cf23b9fcso2085884a34.0
+        for <regressions@lists.linux.dev>; Sat, 24 Jun 2023 21:41:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1687658974; x=1690250974;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=Lh5vypz3YW53PE432QKm5pLDH+RzD6gJnuf3ycT8kBM=;
-        b=OFoGU0c7ug6GC3e3f97q8TNEXtZEU2tV0ovmaqfB1UVr5cadds7wn/sEj38xRQ9ZZt
-         uXfuK9BEJgASt7hE9y5pMnkaSJ5zEhlsmi1qU+sLV81VYq7TmDvR82vuWwQZKQSLi7u+
-         IQYfe/lmeVTKC0ocFMXORVgg98+mpvYaJ2mIPxsmTSBOM3YUhTvayJgRn/bOvV/c+W4c
-         6OLXAsojqH3WbcnEPXUEV9AE+6udDzDPuFE/AD0sCVg00Z//V1vGCFDpwbjiy2Q5NYNt
-         h/aNoRpbQTPgP0Bc5F4UJvtnIodDX517NDdfD9U7SssgUtWcMeMP0uY07pM8MrNAdp3u
-         B2kQ==
+        d=gmail.com; s=20221208; t=1687668074; x=1690260074;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:from:user-agent:mime-version:date:message-id:sender
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=1B4lH9WeYTv33HNkRVZObp7asR+HnhMg6dQl8HhZ2qY=;
+        b=MMnqhoSXSLWLJfn5GfJIKP92DaK/FakNRAVS4oHMhcdVp319bbfgC72mCQ56ugPmpT
+         DS4FqwEX03Db/bCNvyQ0fswZ3OKXXUvET442ZZ5Hk+boT61bVEVxXdSMtpA0/wKcMnL+
+         oN/FeLQsYqWWnIP4I+YhZ1VghbAPnGirJMdONVrr/Gyi9ErJEAaej1iYCvnXQ6hiToR4
+         RBeIvnD0q0eaJYcaBxqn6GVPnFmzh9Y4w1T5pl5a1YLmkbV5D8ldUTQGVhNAnhbjKBav
+         YhWthSSeqS0nevcQTPhp77J2Ltsn/ZXuBi7S+ItSMQf3W4nTdcqJh94kexOZtAQmqIA6
+         I0bQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687658974; x=1690250974;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Lh5vypz3YW53PE432QKm5pLDH+RzD6gJnuf3ycT8kBM=;
-        b=FpDxg2B1HilqB5Kg/RJ7mpzAKIz2ScVgWPDozcycnyBq1e3LSeclM6AnEgv3xYbQCC
-         Ltd2iMRah063i5VVxz7JaMhogOx6XDDmx/tYWPmM/C04zdBpujcMPkAZbxDkJ4Rhozl3
-         28Xrt/8geLDxYuRe6FqMmmzJaSHe3djw3CnVn5b8LBrKVLAP9DjlMBS5OEXVVplYFwxL
-         4y9Vb9nCDvkNy/abYgkMAg1NeyVAw48obTb0M6mi1k7fp+/Gt0en+B1YyP9/OY3lzCCl
-         uCeoZBYj2PZAihUGV6xQ1o5K1e3oos9EmjymQ5CPrLpfnvREkAGvVFWJHpkxD3PDlzdI
-         NZbQ==
-X-Gm-Message-State: AC+VfDy1utwxJzg2Dl0LSm1v0YWrSXrKZueMa4Ztr2iMrBXJ80AoYADm
-	lFn8zchhx3S0WQ9b10f7WiU=
-X-Google-Smtp-Source: ACHHUZ5cpncIv1MmRiaENYIsyx8Vg6TUbbCUoEFjdZHKq0Nba1YPmYrzkdKycLAKDiT+oMqM9j455Q==
-X-Received: by 2002:a05:6870:a54b:b0:19f:9495:95ff with SMTP id p11-20020a056870a54b00b0019f949595ffmr29262867oal.27.1687658973515;
-        Sat, 24 Jun 2023 19:09:33 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1687668074; x=1690260074;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:from:user-agent:mime-version:date:message-id:sender
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1B4lH9WeYTv33HNkRVZObp7asR+HnhMg6dQl8HhZ2qY=;
+        b=N2mrrlxCoFhEP9XYyPwNatuYtRjTBBIo72aXz9U7ZYocGTqAclVaRd2mFvAJ86pcCK
+         a+Rbspq1+Al3l97RkqyzD0PBpOTsyVIqCFHWza/5iIJ6VvhRBbx3XdvJzAJSncvt1C68
+         a8VQJ7V0vI2xr+qDSa9z2x0WewA2C6MAOnpWMYiPI7ZS+OvlKRPDVExa2/UNK3fWlkjx
+         4XuwSyeK2oJ7/MRKdQwJQJaEMqJfHjpsnfJB/RVKkSeYV2MdTWuL7907P3SeEfRFsDiO
+         IP0RiL1R8y2UEzYkoJ2UXBRPSXumNRTlXz6HyRz4M8V+rhsxwOFk75tK5lO7cXaeu49N
+         yf/w==
+X-Gm-Message-State: AC+VfDxEbt+KAYgqdt4oA3LexjwMXCTFYeooXxzaFN65FSL4R7GKiqcf
+	e9tSaSFGXbrt2bFz7BjM67U=
+X-Google-Smtp-Source: ACHHUZ72rJJVSWVBVO8GaJv7atxqNw1z/wt95NIVyxtaWXaXjGuxoQ1OGxMVqFnFFBqjXnHbioxRhA==
+X-Received: by 2002:a05:6870:6295:b0:18e:2b7e:a846 with SMTP id s21-20020a056870629500b0018e2b7ea846mr16655070oan.50.1687668074012;
+        Sat, 24 Jun 2023 21:41:14 -0700 (PDT)
 Received: from [192.168.1.128] ([216.130.59.33])
-        by smtp.gmail.com with ESMTPSA id u3-20020a056830118300b006b71d22be29sm1277248otq.18.2023.06.24.19.09.32
+        by smtp.gmail.com with ESMTPSA id bd6-20020a056870d78600b001ad21a705a8sm1925228oab.49.2023.06.24.21.41.12
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 24 Jun 2023 19:09:33 -0700 (PDT)
+        Sat, 24 Jun 2023 21:41:13 -0700 (PDT)
 Sender: Larry Finger <larry.finger@gmail.com>
-Message-ID: <7cd80eeb-baa9-37b7-fd8c-778f015177d4@lwfinger.net>
-Date: Sat, 24 Jun 2023 21:09:31 -0500
+Message-ID: <69b98eb4-2c4e-fe75-90b4-4b08505a595a@lwfinger.net>
+Date: Sat, 24 Jun 2023 23:41:11 -0500
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -50,6 +49,7 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.12.0
+From: Larry Finger <Larry.Finger@lwfinger.net>
 Subject: Re: Fwd: After kernel 6.3.7 or 6.3.8 b43 driver fails
 To: Bagas Sanjaya <bagasdotme@gmail.com>,
  "Sardonimous ." <sardonimous@hotmail.com>, Arnd Bergmann <arnd@arndb.de>,
@@ -65,7 +65,6 @@ References: <27829c69-515c-36a6-4beb-3210225f8936@gmail.com>
  <RO2P215MB193850DDADD38492BEC8CC2FA720A@RO2P215MB1938.LAMP215.PROD.OUTLOOK.COM>
  <a3bc5eb5-9639-8016-36ab-105abc8c0ca3@gmail.com>
 Content-Language: en-US
-From: Larry Finger <Larry.Finger@lwfinger.net>
 In-Reply-To: <a3bc5eb5-9639-8016-36ab-105abc8c0ca3@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
@@ -141,7 +140,7 @@ On 6/24/23 19:50, Bagas Sanjaya wrote:
 Sardonimous,
 
 The critical line is:
- > Jun 20 18:20:11 askasleikir kernel:  b43_pio_tx+0x373/0x390
+> Jun 20 18:20:11 askasleikir kernel:  b43_pio_tx+0x373/0x390
 
 I certainly have not used PIO for a long time. I expect that your MacBook Pro 
 should do DMA on the b43. Apple makes wierd hardware, but not likely that wierd.
@@ -151,9 +150,10 @@ Does dmesg offer any clues as to what is happening?
 If there is nothing shown in the log, you definitely need to do a proper 
 bisection from the mainline git tree to isolate the change that led to this failure.
 
+
+
+ADDED WITH EDIT: I looked at the code and b43 will not be built for any hardware 
+without DMA, thus it appears that adding "b43.pio=1" is the only way to get PIO 
+mode. Please check the output of dmesg for PIO messages.
+
 Larry
-
-
-Larry
-
-
