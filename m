@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4593E747B
-	for <regressions@lists.linux.dev>; Mon, 26 Jun 2023 11:41:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16320883B
+	for <regressions@lists.linux.dev>; Mon, 26 Jun 2023 12:10:09 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qDkaw-0005a3-1h; Mon, 26 Jun 2023 13:41:22 +0200
-Message-ID: <fa1fe0cc-4e87-78fb-fa89-3d0ac9d90bf3@leemhuis.info>
-Date: Mon, 26 Jun 2023 13:41:21 +0200
+	id 1qDl2c-00038b-IR; Mon, 26 Jun 2023 14:09:58 +0200
+Message-ID: <ed5f982e-c12c-b3a2-1108-62fba50bf9db@leemhuis.info>
+Date: Mon, 26 Jun 2023 14:09:57 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,65 +16,202 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.12.0
-Subject: Re: v4l2-async: regression due to endpoint matching
+Subject: Re: Regression from "ACPI: OSI: Remove Linux-Dell-Video _OSI string"?
+ (was: Re: Bug#1036530: linux-signed-amd64: Hard lock up of system)
 Content-Language: en-US, de-DE
-From: "Linux regression tracking #adding (Thorsten Leemhuis)"
+To: Nick Hastings <nicholaschastings@gmail.com>,
+ Karol Herbst <kherbst@redhat.com>
+Cc: Lyude Paul <lyude@redhat.com>, Lukas Wunner <lukas@wunner.de>,
+ Salvatore Bonaccorso <carnil@debian.org>,
+ "1036530@bugs.debian.org" <1036530@bugs.debian.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
+ "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ "Limonciello, Mario" <Mario.Limonciello@amd.com>
+References: <ZHUt9xQKCwCflvVC@xps>
+ <8537d965-ddf4-7f45-6459-d5acf520376e@amd.com> <ZHWfMBeAONerAJmd@xps>
+ <ZHfa/wQlaVCeUC22@xps> <fe0ab1fa-6ed6-dc64-8165-8fc70669317b@amd.com>
+ <CACO55tsuO1kQUFfPdPFUHm4WEQseCR2tQSDhFRzR+8wOECZCyA@mail.gmail.com>
+ <MN0PR12MB61017541F5AC55485A490BCDE2499@MN0PR12MB6101.namprd12.prod.outlook.com>
+ <CACO55tudULtvt_Hcdg+uqXeYkSAR_NZ1oD=R_KhuE_THSRe88g@mail.gmail.com>
+ <MN0PR12MB6101DE067CF85E59AF187763E2499@MN0PR12MB6101.namprd12.prod.outlook.com>
+ <CACO55tuqAH5Zt+X9pjLFZ-RcFgxpgjpqmrAHPvm4=fb_DMBHyw@mail.gmail.com>
+ <ZHkxYo/a+/uInkLG@xps>
+ <MN0PR12MB610181D29933EE4787DE9BC8E24EA@MN0PR12MB6101.namprd12.prod.outlook.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
-To: Alexander Stein <alexander.stein@ew.tq-group.com>,
- linux-media@vger.kernel.org,
- Linux kernel regressions list <regressions@lists.linux.dev>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-References: <8360125.31r3eYUQgx@steina-w>
- <aea6c4a7-5bb0-9395-8883-6b163c181995@leemhuis.info>
-In-Reply-To: <aea6c4a7-5bb0-9395-8883-6b163c181995@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <MN0PR12MB610181D29933EE4787DE9BC8E24EA@MN0PR12MB6101.namprd12.prod.outlook.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1687779684;29bbf5ea;
-X-HE-SMSGID: 1qDkaw-0005a3-1h
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1687781410;62270db3;
+X-HE-SMSGID: 1qDl2c-00038b-IR
 
-On 28.04.23 08:52, Linux regression tracking #adding (Thorsten Leemhuis)
-wrote:
-> [CCing the regression list, as it should be in the loop for regressions:
-> https://docs.kernel.org/admin-guide/reporting-regressions.html]
-> 
-> [TLDR: I'm adding this report to the list of tracked Linux kernel
-> regressions; the text you find below is based on a few templates
-> paragraphs you might have encountered already in similar form.
-> See link in footer if these mails annoy you.]
-> 
-> On 27.04.23 16:40, Alexander Stein wrote:
->>
->> I have a setup on my TQMa6x (imx6q-mba6a.dts) with a tc358743 attached to the 
->> MIPI CSI input.
->> I noticed that since commit 1f391df44607 ("media: v4l2-async: Use endpoints in 
->> __v4l2_async_nf_add_fwnode_remote()") the async subdevice probing does not 
->> work anymore. If I revert that, it is working again, even on next-20230425.
->> [...]
-> 
-> Thanks for the report. To be sure the issue doesn't fall through the
-> cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
-> tracking bot:
-> 
-> #regzbot ^introduced 1f391df44607
-> #regzbot title media: v4l2-async: async subdevice probing stopped
-> working on TQMa6x
-> #regzbot ignore-activity
+Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
+for once, to make this easily accessible to everyone.
 
-I'm removing this from the list of tracked regressions, because as I
-understand things a revert would cause a regressions itself; a quick fix
-sadly is not really possible and a proper one already WIP[1]. There
-hence is not much worth tracking this. Should happen in a ideal world,
-but that's how it is sometimes:
+Nick, what's the status/was there any progress? Did you do what Mario
+suggested and file a nouveau bug?
 
-#regzbot inconclusive: revert no option and a proper fix will take some time
-#regzbot ignore-activity
-
-[1] afaics it's this, but I might be wrong with
-https://lore.kernel.org/all/20230622114028.908825-1-sakari.ailus@linux.intel.com/
+I ask, as I still have this on my list of regressions and it seems there
+was no progress in three+ weeks now.
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
 Everything you wanna know about Linux kernel regression tracking:
 https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+If I did something stupid, please tell me, as explained on that page.
+
+#regzbot backburner: slow progress, likely just affects one machine
+#regzbot poke
+
+
+On 02.06.23 02:57, Limonciello, Mario wrote:
+> [AMD Official Use Only - General]
+> 
+>> -----Original Message-----
+>> From: Nick Hastings <nicholaschastings@gmail.com>
+>> Sent: Thursday, June 1, 2023 7:02 PM
+>> To: Karol Herbst <kherbst@redhat.com>
+>> Cc: Limonciello, Mario <Mario.Limonciello@amd.com>; Lyude Paul
+>> <lyude@redhat.com>; Lukas Wunner <lukas@wunner.de>; Salvatore
+>> Bonaccorso <carnil@debian.org>; 1036530@bugs.debian.org; Rafael J.
+>> Wysocki <rafael@kernel.org>; Len Brown <lenb@kernel.org>; linux-
+>> acpi@vger.kernel.org; linux-kernel@vger.kernel.org;
+>> regressions@lists.linux.dev
+>> Subject: Re: Regression from "ACPI: OSI: Remove Linux-Dell-Video _OSI
+>> string"? (was: Re: Bug#1036530: linux-signed-amd64: Hard lock up of system)
+>>
+>> Hi,
+>>
+>> * Karol Herbst <kherbst@redhat.com> [230602 03:10]:
+>>> On Thu, Jun 1, 2023 at 7:21 PM Limonciello, Mario
+>>> <Mario.Limonciello@amd.com> wrote:
+>>>>> -----Original Message-----
+>>>>> From: Karol Herbst <kherbst@redhat.com>
+>>>>> Sent: Thursday, June 1, 2023 12:19 PM
+>>>>> To: Limonciello, Mario <Mario.Limonciello@amd.com>
+>>>>> Cc: Nick Hastings <nicholaschastings@gmail.com>; Lyude Paul
+>>>>> <lyude@redhat.com>; Lukas Wunner <lukas@wunner.de>; Salvatore
+>>>>> Bonaccorso <carnil@debian.org>; 1036530@bugs.debian.org; Rafael J.
+>>>>> Wysocki <rafael@kernel.org>; Len Brown <lenb@kernel.org>; linux-
+>>>>> acpi@vger.kernel.org; linux-kernel@vger.kernel.org;
+>>>>> regressions@lists.linux.dev
+>>>>> Subject: Re: Regression from "ACPI: OSI: Remove Linux-Dell-Video _OSI
+>>>>> string"? (was: Re: Bug#1036530: linux-signed-amd64: Hard lock up of
+>> system)
+>>>>>
+>>>>> On Thu, Jun 1, 2023 at 6:54 PM Limonciello, Mario
+>>>>> <Mario.Limonciello@amd.com> wrote:
+>>>>>>
+>>>>>> [AMD Official Use Only - General]
+>>>>>>
+>>>>>>> -----Original Message-----
+>>>>>>> From: Karol Herbst <kherbst@redhat.com>
+>>>>>>> Sent: Thursday, June 1, 2023 11:33 AM
+>>>>>>> To: Limonciello, Mario <Mario.Limonciello@amd.com>
+>>>>>>> Cc: Nick Hastings <nicholaschastings@gmail.com>; Lyude Paul
+>>>>>>> <lyude@redhat.com>; Lukas Wunner <lukas@wunner.de>; Salvatore
+>>>>>>> Bonaccorso <carnil@debian.org>; 1036530@bugs.debian.org; Rafael
+>> J.
+>>>>>>> Wysocki <rafael@kernel.org>; Len Brown <lenb@kernel.org>; linux-
+>>>>>>> acpi@vger.kernel.org; linux-kernel@vger.kernel.org;
+>>>>>>> regressions@lists.linux.dev
+>>>>>>> Subject: Re: Regression from "ACPI: OSI: Remove Linux-Dell-Video
+>> _OSI
+>>>>>>> string"? (was: Re: Bug#1036530: linux-signed-amd64: Hard lock up of
+>>>>> system)
+>>>>>>>
+>>>>>>> On Thu, Jun 1, 2023 at 6:18 PM Limonciello, Mario
+>>>>>>>>
+>>>>>>>> Lyude, Lukas, Karol
+>>>>>>>>
+>>>>>>>> This thread is in relation to this commit:
+>>>>>>>>
+>>>>>>>> 24867516f06d ("ACPI: OSI: Remove Linux-Dell-Video _OSI string")
+>>>>>>>>
+>>>>>>>> Nick has found that runtime PM is *not* working for nouveau.
+>>>>>>>>
+>>>>>>>
+>>>>>>> keep in mind we have a list of PCIe controllers where we apply a
+>>>>>>> workaround:
+>>>>>>>
+>>>>>
+>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers
+>>>>>>> /gpu/drm/nouveau/nouveau_drm.c?h=v6.4-rc4#n682
+>>>>>>>
+>>>>>>> And I suspect there might be one or two more IDs we'll have to add
+>>>>>>> there. Do we have any logs?
+>>>>>>
+>>>>>> There's some archived onto the distro bug.  Search this page for
+>>>>> "journalctl.log.gz"
+>>>>>> https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1036530
+>>>>>>
+>>>>>
+>>>>> interesting.. It seems to be the same controller used here. I wonder
+>>>>> if the pci topology is different or if the workaround is applied at
+>>>>> all.
+>>>>
+>>>> I didn't see the message in the log about the workaround being applied
+>>>> in that log, so I guess PCI topology difference is a likely suspect.
+>>>>
+>>>
+>>> yeah, but I also couldn't see a log with the usual nouveau messages,
+>>> so it's kinda weird.
+>>>
+>>> Anyway, the output of `lspci -tvnn` would help
+>>
+>> % lspci -tvnn
+>> -[0000:00]-+-00.0  Intel Corporation Device [8086:3e20]
+>>            +-01.0-[01]----00.0  NVIDIA Corporation TU117M [GeForce GTX 1650
+>> Mobile / Max-Q] [10de:1f91]
+> 
+> So the bridge it's connected to is the same that the quirk *should have been* triggering.
+> 
+> May 29 15:02:42 xps kernel: pci 0000:00:01.0: [8086:1901] type 01 class 0x060400
+> 
+> Since the quirk isn't working and this is still a problem in 6.4-rc4 I suggest opening a
+> Nouveau drm bug to figure out why.
+> 
+>>            +-02.0  Intel Corporation CoffeeLake-H GT2 [UHD Graphics 630]
+>> [8086:3e9b]
+>>            +-04.0  Intel Corporation Xeon E3-1200 v5/E3-1500 v5/6th Gen Core
+>> Processor Thermal Subsystem [8086:1903]
+>>            +-08.0  Intel Corporation Xeon E3-1200 v5/v6 / E3-1500 v5 /
+>> 6th/7th/8th Gen Core Processor Gaussian Mixture Model [8086:1911]
+>>            +-12.0  Intel Corporation Cannon Lake PCH Thermal Controller
+>> [8086:a379]
+>>            +-14.0  Intel Corporation Cannon Lake PCH USB 3.1 xHCI Host Controller
+>> [8086:a36d]
+>>            +-14.2  Intel Corporation Cannon Lake PCH Shared SRAM [8086:a36f]
+>>            +-15.0  Intel Corporation Cannon Lake PCH Serial IO I2C Controller #0
+>> [8086:a368]
+>>            +-15.1  Intel Corporation Cannon Lake PCH Serial IO I2C Controller #1
+>> [8086:a369]
+>>            +-16.0  Intel Corporation Cannon Lake PCH HECI Controller [8086:a360]
+>>            +-17.0  Intel Corporation Cannon Lake Mobile PCH SATA AHCI Controller
+>> [8086:a353]
+>>            +-1b.0-[02-3a]----00.0-[03-3a]--+-00.0-[04]----00.0  Intel Corporation
+>> JHL6340 Thunderbolt 3 NHI (C step) [Alpine Ridge 2C 2016] [8086:15d9]
+>>            |                               +-01.0-[05-39]--
+>>            |                               \-02.0-[3a]----00.0  Intel Corporation JHL6340
+>> Thunderbolt 3 USB 3.1 Controller (C step) [Alpine Ridge 2C 2016]
+>> [8086:15db]
+>>            +-1c.0-[3b]----00.0  Intel Corporation Wi-Fi 6 AX200 [8086:2723]
+>>            +-1c.4-[3c]----00.0  Realtek Semiconductor Co., Ltd. RTS525A PCI
+>> Express Card Reader [10ec:525a]
+>>            +-1d.0-[3d]----00.0  Samsung Electronics Co Ltd NVMe SSD Controller
+>> SM981/PM981/PM983 [144d:a808]
+>>            +-1f.0  Intel Corporation Cannon Lake LPC Controller [8086:a30e]
+>>            +-1f.3  Intel Corporation Cannon Lake PCH cAVS [8086:a348]
+>>            +-1f.4  Intel Corporation Cannon Lake PCH SMBus Controller
+>> [8086:a323]
+>>            \-1f.5  Intel Corporation Cannon Lake PCH SPI Controller
+>>            [8086:a324]
+>>
+>>
+>> Regards,
+>>
+>> Nick.
+> 
