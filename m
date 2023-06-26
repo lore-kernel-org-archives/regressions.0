@@ -1,66 +1,115 @@
-Received: from buxtehude.debian.org (buxtehude.debian.org [209.87.16.39])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 678547F
-	for <regressions@lists.linux.dev>; Mon, 26 Jun 2023 12:57:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=bugs.debian.org; s=smtpauto.buxtehude; h=Date:Reply-To:References:
-	Message-ID:Subject:To:From:Content-Type:MIME-Version:
-	Content-Transfer-Encoding:Cc:Content-ID:Content-Description:In-Reply-To;
-	bh=ZWlf8O4JhKlaw+vvqfJy7Oi55+rNsyoLZz5oDDmNf/I=; b=a3atm8RrPxb6ETOz/Gi8uo8HFj
-	p6idUfh/W6F4WxYkCMklxBNTr1LlzNMpMmqKINfN6gzQvUxIg965/aTHSY/A747BmjJRpUa3WgC1v
-	axVeLdhU0MQAOKhRhcTSM8gGY51KugKI7DVF6XZ+qIee8fMVkrEjaioswEqwhqlVa2DBCNcvECpQB
-	T8rPNL1y+/wilx/ZZFciqyajVEziQdI2EldolYUPWf334/wLdANt1cXjGOXNeNnWPaG2xxRY3bHsI
-	HklufIE9SY1wJfj6kJC6vPyAK87+Dx7DhQCzkR9SqyveUaKPvKoenKLSxcnbtZxV4P8IGWHDQ14nE
-	fGtL7zzQ==;
-Received: from debbugs by buxtehude.debian.org with local (Exim 4.94.2)
-	(envelope-from <debbugs@buxtehude.debian.org>)
-	id 1qDlRr-007ul9-19
-	for regressions@lists.linux.dev; Mon, 26 Jun 2023 12:36:03 +0000
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D072A8F70
+	for <regressions@lists.linux.dev>; Mon, 26 Jun 2023 13:32:03 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1qDmJy-0003d0-5j; Mon, 26 Jun 2023 15:31:58 +0200
+Message-ID: <216ebf53-f56b-0723-7112-5604acac8d4c@leemhuis.info>
+Date: Mon, 26 Jun 2023 15:31:57 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mailer: MIME-tools 5.509 (Entity 5.509)
-Content-Type: text/plain; charset=utf-8
-X-Loop: owner@bugs.debian.org
-From: "Debian Bug Tracking System" <owner@bugs.debian.org>
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Bug#1036530: Info received (Regression from "ACPI: OSI: Remove
- Linux-Dell-Video _OSI string"? (was: Re: Bug#1036530: linux-signed-amd64:
- Hard lock up of system))
-Message-ID: <handler.1036530.B1036530.16877828091884631.ackinfo@bugs.debian.org>
-References: <ed5f982e-c12c-b3a2-1108-62fba50bf9db@leemhuis.info>
-X-Debian-PR-Message: ack-info 1036530
-X-Debian-PR-Package: src:linux
-X-Debian-PR-Keywords: upstream
-X-Debian-PR-Source: linux
-Reply-To: 1036530@bugs.debian.org
-Date: Mon, 26 Jun 2023 12:36:02 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: MT7922 problem with "fix rx filter incorrect by drv/fw
+ inconsistent"
+Content-Language: en-US, de-DE
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+To: Kalle Valo <kvalo@kernel.org>
+Cc: Andrey Rakhmatullin <wrar@wrar.name>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ linux-wireless@vger.kernel.org, Neil Chen <yn.chen@mediatek.com>,
+ Deren Wu <deren.wu@mediatek.com>, Lorenzo Bianconi <lorenzo@kernel.org>,
+ Felix Fietkau <nbd@nbd.name>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ netdev <netdev@vger.kernel.org>
+References: <ZGY4peApQnPAmDkY@durkon.wrar.name>
+ <ad948b42-74d3-b4f1-bbd6-449f71703083@leemhuis.info>
+ <ZGtsNO0VZQDWJG+A@durkon.wrar.name>
+ <cd7d298b-2b46-770e-ed54-7ae3f33b97ee@leemhuis.info>
+ <c647de2d-fbb5-4793-99b3-b800c95c04c2@leemhuis.info>
+ <87jzw8g8hk.fsf@kernel.org>
+ <e3af69f2-d3e5-8039-c6e5-5b00fe066cc0@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <e3af69f2-d3e5-8039-c6e5-5b00fe066cc0@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1687786323;4d4421b7;
+X-HE-SMSGID: 1qDmJy-0003d0-5j
 
-Thank you for the additional information you have supplied regarding
-this Bug report.
+Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
+for once, to make this easily accessible to everyone.
 
-This is an automatically generated reply to let you know your message
-has been received.
+FWIW, I'm dropping this from the list of tracked regressions now. This
+wasn't handled as it IMHO should be, but whatever, at this point it
+afaics is best to leave things as they are, unless more reports of this
+kind show up.
 
-Your message is being forwarded to the package maintainers and other
-interested parties for their attention; they will reply in due course.
+Thx everyone.
 
-Your message has been sent to the package maintainer(s):
- Debian Kernel Team <debian-kernel@lists.debian.org>
+#regzbot inconclusive: not fixed, but fixing likely would cause more
+trouble than it's worth, unless more people complain
 
-If you wish to submit further information on this problem, please
-send it to 1036530@bugs.debian.org.
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
 
-Please do not send mail to owner@bugs.debian.org unless you wish
-to report a problem with the Bug-tracking system.
+On 19.06.23 14:48, Thorsten Leemhuis wrote:
+> On 12.06.23 14:39, Kalle Valo wrote:
+>> Thorsten Leemhuis <regressions@leemhuis.info> writes:
+>>> On 22.05.23 16:12, Thorsten Leemhuis wrote:
+>>>> On 22.05.23 15:20, Andrey Rakhmatullin wrote:
+>>>>> On Mon, May 22, 2023 at 03:00:30PM +0200, Linux regression tracking
+>>>>> #adding (Thorsten Leemhuis) wrote:
+>>>>>> On 18.05.23 16:39, Andrey Rakhmatullin wrote:
+>>>>> I updated the firmware and now the problem doesn't happen.
+>>>>> The firmware where the problem happens is
+>>>>> mediatek/WIFI_RAM_CODE_MT7922_1.bin from the linux-firmware commit
+>>>>> e2d11744ef (file size 826740, md5sum 8ff1bdc0f54f255bb2a1d6825781506b),
+>>>>> the one where the problem doesn't happen is from the commit 6569484e6b
+>>>>> (file size 827124, md5sum 14c08c8298b639ee52409b5e9711a083).
+>>>> FWIW, just checked: that commit is from 2023-05-15, so quite recent.
+>>>>
+>>>>> I haven't
+>>>>> tried the version committed between these ones.
+>>>>> Not sure if this should be reported to regzbot and if there are any
+>>>>> further actions needed by the kernel maintainers.
+>>>>
+>>>> Well, to quote the first sentence from
+>>>> Documentation/driver-api/firmware/firmware-usage-guidelines.rst
+>>>>
+>>>> ```Users switching to a newer kernel should *not* have to install newer
+>>>> firmware files to keep their hardware working.```
+>>>>
+>>>> IOW: the problem you ran into should not happen. This afaics makes it a
+>>>> regression that needs to be addressed -- at least if it's something that
+>>>> is likely to hit others users as well. But I'd guess that's the case.
+>>>
+>>> Well, until now I didn't see any other report about a problem like this.
+>>> Maybe things work better for others with that hardware – in that case it
+>>> might be something not worth making a fuzz about. But I'll wait another
+>>> week or two before I remove this from the tracking.
+>>
+>> Yeah, this is bad. mt76 (or any other wireless driver) must not require
+>> a new firmware whenever upgrading the kernel. Instead the old and new
+>> firmware should coexist (for example have firmware-2.bin for the new
+>> version and firmware.bin for the old version). Then mt76 should first
+>> try loading the new firmware (eg. firmware-2.bin) and then try the old
+>> one (eg. firmware.bin).
+>>
+>> Should we revert commit c222f77fd4 or how to solve this?
 
---=20
-1036530: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=3D1036530
-Debian Bug Tracking System
-Contact owner@bugs.debian.org with problems
+> Hmmm. Tricky. This was the only such report I noticed. Giving that and
+> the risk that a revert might cause regressions on its own, I guess it
+> might be better to leave everything as it is for now - and re-evaluate
+> the situation in case more problems show up.
