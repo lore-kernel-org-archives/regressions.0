@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16320883B
-	for <regressions@lists.linux.dev>; Mon, 26 Jun 2023 12:10:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0844F8F40
+	for <regressions@lists.linux.dev>; Mon, 26 Jun 2023 12:23:53 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qDl2c-00038b-IR; Mon, 26 Jun 2023 14:09:58 +0200
-Message-ID: <ed5f982e-c12c-b3a2-1108-62fba50bf9db@leemhuis.info>
-Date: Mon, 26 Jun 2023 14:09:57 +0200
+	id 1qDlG3-0006Fs-1Z; Mon, 26 Jun 2023 14:23:51 +0200
+Message-ID: <25cf3947-1fe0-7280-09e2-3dc107b2c8e7@leemhuis.info>
+Date: Mon, 26 Jun 2023 14:23:50 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,46 +16,32 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.12.0
-Subject: Re: Regression from "ACPI: OSI: Remove Linux-Dell-Video _OSI string"?
- (was: Re: Bug#1036530: linux-signed-amd64: Hard lock up of system)
+Subject: Re: [REGRESSION] breakage in sun6i-csi media api
 Content-Language: en-US, de-DE
-To: Nick Hastings <nicholaschastings@gmail.com>,
- Karol Herbst <kherbst@redhat.com>
-Cc: Lyude Paul <lyude@redhat.com>, Lukas Wunner <lukas@wunner.de>,
- Salvatore Bonaccorso <carnil@debian.org>,
- "1036530@bugs.debian.org" <1036530@bugs.debian.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
- "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- "Limonciello, Mario" <Mario.Limonciello@amd.com>
-References: <ZHUt9xQKCwCflvVC@xps>
- <8537d965-ddf4-7f45-6459-d5acf520376e@amd.com> <ZHWfMBeAONerAJmd@xps>
- <ZHfa/wQlaVCeUC22@xps> <fe0ab1fa-6ed6-dc64-8165-8fc70669317b@amd.com>
- <CACO55tsuO1kQUFfPdPFUHm4WEQseCR2tQSDhFRzR+8wOECZCyA@mail.gmail.com>
- <MN0PR12MB61017541F5AC55485A490BCDE2499@MN0PR12MB6101.namprd12.prod.outlook.com>
- <CACO55tudULtvt_Hcdg+uqXeYkSAR_NZ1oD=R_KhuE_THSRe88g@mail.gmail.com>
- <MN0PR12MB6101DE067CF85E59AF187763E2499@MN0PR12MB6101.namprd12.prod.outlook.com>
- <CACO55tuqAH5Zt+X9pjLFZ-RcFgxpgjpqmrAHPvm4=fb_DMBHyw@mail.gmail.com>
- <ZHkxYo/a+/uInkLG@xps>
- <MN0PR12MB610181D29933EE4787DE9BC8E24EA@MN0PR12MB6101.namprd12.prod.outlook.com>
+To: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Cc: Martijn Braam <martijn@brixit.nl>, regressions@lists.linux.dev,
+ jernej.skrabec@gmail.com, sakari.ailus@linux.intel.com, mchehab@kernel.org,
+ linux-media@vger.kernel.org, hverkuil@xs4all.nl,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+References: <f13c27fb-2afe-b94e-aad9-ed5ecc818183@brixit.nl>
+ <ZHmzZUkcFK8Gq_JL@aptenodytes>
+ <e168d246-528d-b615-aa50-af8f17af4442@brixit.nl>
+ <ZHm46or-MhTb457b@aptenodytes>
+ <20230602100352.GK19463@pendragon.ideasonboard.com>
 From: "Linux regression tracking (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <MN0PR12MB610181D29933EE4787DE9BC8E24EA@MN0PR12MB6101.namprd12.prod.outlook.com>
+In-Reply-To: <20230602100352.GK19463@pendragon.ideasonboard.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1687781410;62270db3;
-X-HE-SMSGID: 1qDl2c-00038b-IR
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1687782234;d5668432;
+X-HE-SMSGID: 1qDlG3-0006Fs-1Z
 
 Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
 for once, to make this easily accessible to everyone.
 
-Nick, what's the status/was there any progress? Did you do what Mario
-suggested and file a nouveau bug?
-
-I ask, as I still have this on my list of regressions and it seems there
-was no progress in three+ weeks now.
+Paul, what happened to this? It looks like this fall through the cracks,
+but maybe I'm missing something, that's why I ask.
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
@@ -63,155 +49,83 @@ Everything you wanna know about Linux kernel regression tracking:
 https://linux-regtracking.leemhuis.info/about/#tldr
 If I did something stupid, please tell me, as explained on that page.
 
-#regzbot backburner: slow progress, likely just affects one machine
 #regzbot poke
 
-
-On 02.06.23 02:57, Limonciello, Mario wrote:
-> [AMD Official Use Only - General]
-> 
->> -----Original Message-----
->> From: Nick Hastings <nicholaschastings@gmail.com>
->> Sent: Thursday, June 1, 2023 7:02 PM
->> To: Karol Herbst <kherbst@redhat.com>
->> Cc: Limonciello, Mario <Mario.Limonciello@amd.com>; Lyude Paul
->> <lyude@redhat.com>; Lukas Wunner <lukas@wunner.de>; Salvatore
->> Bonaccorso <carnil@debian.org>; 1036530@bugs.debian.org; Rafael J.
->> Wysocki <rafael@kernel.org>; Len Brown <lenb@kernel.org>; linux-
->> acpi@vger.kernel.org; linux-kernel@vger.kernel.org;
->> regressions@lists.linux.dev
->> Subject: Re: Regression from "ACPI: OSI: Remove Linux-Dell-Video _OSI
->> string"? (was: Re: Bug#1036530: linux-signed-amd64: Hard lock up of system)
->>
->> Hi,
->>
->> * Karol Herbst <kherbst@redhat.com> [230602 03:10]:
->>> On Thu, Jun 1, 2023 at 7:21 PM Limonciello, Mario
->>> <Mario.Limonciello@amd.com> wrote:
->>>>> -----Original Message-----
->>>>> From: Karol Herbst <kherbst@redhat.com>
->>>>> Sent: Thursday, June 1, 2023 12:19 PM
->>>>> To: Limonciello, Mario <Mario.Limonciello@amd.com>
->>>>> Cc: Nick Hastings <nicholaschastings@gmail.com>; Lyude Paul
->>>>> <lyude@redhat.com>; Lukas Wunner <lukas@wunner.de>; Salvatore
->>>>> Bonaccorso <carnil@debian.org>; 1036530@bugs.debian.org; Rafael J.
->>>>> Wysocki <rafael@kernel.org>; Len Brown <lenb@kernel.org>; linux-
->>>>> acpi@vger.kernel.org; linux-kernel@vger.kernel.org;
->>>>> regressions@lists.linux.dev
->>>>> Subject: Re: Regression from "ACPI: OSI: Remove Linux-Dell-Video _OSI
->>>>> string"? (was: Re: Bug#1036530: linux-signed-amd64: Hard lock up of
->> system)
->>>>>
->>>>> On Thu, Jun 1, 2023 at 6:54 PM Limonciello, Mario
->>>>> <Mario.Limonciello@amd.com> wrote:
->>>>>>
->>>>>> [AMD Official Use Only - General]
->>>>>>
->>>>>>> -----Original Message-----
->>>>>>> From: Karol Herbst <kherbst@redhat.com>
->>>>>>> Sent: Thursday, June 1, 2023 11:33 AM
->>>>>>> To: Limonciello, Mario <Mario.Limonciello@amd.com>
->>>>>>> Cc: Nick Hastings <nicholaschastings@gmail.com>; Lyude Paul
->>>>>>> <lyude@redhat.com>; Lukas Wunner <lukas@wunner.de>; Salvatore
->>>>>>> Bonaccorso <carnil@debian.org>; 1036530@bugs.debian.org; Rafael
->> J.
->>>>>>> Wysocki <rafael@kernel.org>; Len Brown <lenb@kernel.org>; linux-
->>>>>>> acpi@vger.kernel.org; linux-kernel@vger.kernel.org;
->>>>>>> regressions@lists.linux.dev
->>>>>>> Subject: Re: Regression from "ACPI: OSI: Remove Linux-Dell-Video
->> _OSI
->>>>>>> string"? (was: Re: Bug#1036530: linux-signed-amd64: Hard lock up of
->>>>> system)
->>>>>>>
->>>>>>> On Thu, Jun 1, 2023 at 6:18 PM Limonciello, Mario
->>>>>>>>
->>>>>>>> Lyude, Lukas, Karol
->>>>>>>>
->>>>>>>> This thread is in relation to this commit:
->>>>>>>>
->>>>>>>> 24867516f06d ("ACPI: OSI: Remove Linux-Dell-Video _OSI string")
->>>>>>>>
->>>>>>>> Nick has found that runtime PM is *not* working for nouveau.
->>>>>>>>
->>>>>>>
->>>>>>> keep in mind we have a list of PCIe controllers where we apply a
->>>>>>> workaround:
->>>>>>>
->>>>>
->> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers
->>>>>>> /gpu/drm/nouveau/nouveau_drm.c?h=v6.4-rc4#n682
->>>>>>>
->>>>>>> And I suspect there might be one or two more IDs we'll have to add
->>>>>>> there. Do we have any logs?
->>>>>>
->>>>>> There's some archived onto the distro bug.  Search this page for
->>>>> "journalctl.log.gz"
->>>>>> https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1036530
->>>>>>
->>>>>
->>>>> interesting.. It seems to be the same controller used here. I wonder
->>>>> if the pci topology is different or if the workaround is applied at
->>>>> all.
->>>>
->>>> I didn't see the message in the log about the workaround being applied
->>>> in that log, so I guess PCI topology difference is a likely suspect.
->>>>
+On 02.06.23 12:03, Laurent Pinchart wrote:
+> On Fri, Jun 02, 2023 at 11:39:54AM +0200, Paul Kocialkowski wrote:
+>> (Re-adding folks from the original email, adding Laurent and Hans.)
+>> On Fri 02 Jun 23, 11:24, Martijn Braam wrote:
 >>>
->>> yeah, but I also couldn't see a log with the usual nouveau messages,
->>> so it's kinda weird.
+>>> That's basically it yes. My software doesn't expect the bridge block,
+>>> because it wasn't there. The pipeline always worked "automatically".
 >>>
->>> Anyway, the output of `lspci -tvnn` would help
+>>> This is the workaround that's been made now it run on newer kernels:
+>>> https://gitlab.com/postmarketOS/megapixels/-/merge_requests/31
+>>>
+>>> I'm pretty sure format propagation would fix this issue.
 >>
->> % lspci -tvnn
->> -[0000:00]-+-00.0  Intel Corporation Device [8086:3e20]
->>            +-01.0-[01]----00.0  NVIDIA Corporation TU117M [GeForce GTX 1650
->> Mobile / Max-Q] [10de:1f91]
-> 
-> So the bridge it's connected to is the same that the quirk *should have been* triggering.
-> 
-> May 29 15:02:42 xps kernel: pci 0000:00:01.0: [8086:1901] type 01 class 0x060400
-> 
-> Since the quirk isn't working and this is still a problem in 6.4-rc4 I suggest opening a
-> Nouveau drm bug to figure out why.
-> 
->>            +-02.0  Intel Corporation CoffeeLake-H GT2 [UHD Graphics 630]
->> [8086:3e9b]
->>            +-04.0  Intel Corporation Xeon E3-1200 v5/E3-1500 v5/6th Gen Core
->> Processor Thermal Subsystem [8086:1903]
->>            +-08.0  Intel Corporation Xeon E3-1200 v5/v6 / E3-1500 v5 /
->> 6th/7th/8th Gen Core Processor Gaussian Mixture Model [8086:1911]
->>            +-12.0  Intel Corporation Cannon Lake PCH Thermal Controller
->> [8086:a379]
->>            +-14.0  Intel Corporation Cannon Lake PCH USB 3.1 xHCI Host Controller
->> [8086:a36d]
->>            +-14.2  Intel Corporation Cannon Lake PCH Shared SRAM [8086:a36f]
->>            +-15.0  Intel Corporation Cannon Lake PCH Serial IO I2C Controller #0
->> [8086:a368]
->>            +-15.1  Intel Corporation Cannon Lake PCH Serial IO I2C Controller #1
->> [8086:a369]
->>            +-16.0  Intel Corporation Cannon Lake PCH HECI Controller [8086:a360]
->>            +-17.0  Intel Corporation Cannon Lake Mobile PCH SATA AHCI Controller
->> [8086:a353]
->>            +-1b.0-[02-3a]----00.0-[03-3a]--+-00.0-[04]----00.0  Intel Corporation
->> JHL6340 Thunderbolt 3 NHI (C step) [Alpine Ridge 2C 2016] [8086:15d9]
->>            |                               +-01.0-[05-39]--
->>            |                               \-02.0-[3a]----00.0  Intel Corporation JHL6340
->> Thunderbolt 3 USB 3.1 Controller (C step) [Alpine Ridge 2C 2016]
->> [8086:15db]
->>            +-1c.0-[3b]----00.0  Intel Corporation Wi-Fi 6 AX200 [8086:2723]
->>            +-1c.4-[3c]----00.0  Realtek Semiconductor Co., Ltd. RTS525A PCI
->> Express Card Reader [10ec:525a]
->>            +-1d.0-[3d]----00.0  Samsung Electronics Co Ltd NVMe SSD Controller
->> SM981/PM981/PM983 [144d:a808]
->>            +-1f.0  Intel Corporation Cannon Lake LPC Controller [8086:a30e]
->>            +-1f.3  Intel Corporation Cannon Lake PCH cAVS [8086:a348]
->>            +-1f.4  Intel Corporation Cannon Lake PCH SMBus Controller
->> [8086:a323]
->>            \-1f.5  Intel Corporation Cannon Lake PCH SPI Controller
->>            [8086:a324]
+>> Okay that's good to know.
 >>
+>> To be honest it's still not very clear to me if in-driver format propagation is
+>> a "nice to have" feature or something that all media pipeline drivers are
+>> supposed to implement.
+> 
+> For MC-based drivers, in-kernel propagation *inside* subdevs is
+> mandatory, in-kernel propagration *between* subdevs is not allowed. The
+> latter is the responsibility of userspace.
+> 
+> For traditional (I'd say legacy, but I know not everybody likes that
+> term :-)) drivers that only expose video device nodes and do not expose
+> subdev nodes to userspace, the driver is responsible for configuring the
+> full pipeline internally based on the S_FMT call on the video nodes
+> only. This isn't applicable to the sun6i-csi driver, as it exposes
+> subdev nodes to userspace.
+> 
+>> Anyway I feel like this is not really a regression but a result of the driver
+>> being converted to a newer API.
 >>
->> Regards,
+>> Also there's a V4L2_CAP_IO_MC flag which should indicate that the video device
+>> must be controlled via the media controller API instead of being
+>> video-device-centric, but I've seen comments asking not to set the flag even
+>> when MC is used so I'm a bit confused here.
+> 
+> Would you have pointers to those comments ?
+> 
+>> Perhaps the flag is only required when there is no automatic format
+>> propagation?
+> 
+> The flag is more or less required when you expose subdev nodes to
+> userspace.
+> 
+>> If anyone has solid answers on these points I'd be happy to read some
+>> clarification (and act accordingly).
 >>
->> Nick.
+>>> On 6/2/23 11:16, Paul Kocialkowski wrote:
+>>>> Hi Martijn,
+>>>>
+>>>> On Thu 01 Jun 23, 23:19, Martijn Braam wrote:
+>>>>> It seems like this commit:
+>>>>>
+>>>>> media: sun6i-csi: Add bridge v4l2 subdev with port management
+>>>>>
+>>>>> Has changed the way the media pipeline on a64 devices, in my case the PINE64
+>>>>> PinePhone works. Since this is an API towards userspace and there's active
+>>>>> applications that use it I think this counts as a regression.
+>>>> Do you have more details on what changed specifically?
+>>>>
+>>>> The commit added a bridge subdev in addition to the video node, which is
+>>>> generally a better description of the CSI hardware and also a necessity
+>>>> to support the ISP data flow.
+>>>>
+>>>> Maybe your userspace application is not configuring the bridge media block with
+>>>> the right format, which results in a mismatch?
+>>>>
+>>>> Some work was started to achieve automatic format propagation, perhaps it
+>>>> would be enough to solve your issue.
+>>>>
+>>>> Cheers,
+>>>>
+>>>> Paul
+>>>>
+>>>>> #regzbot introduced: 0d2b746b1bef73de62d2d311e594a7ffed4ca43
 > 
