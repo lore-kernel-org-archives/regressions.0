@@ -1,134 +1,151 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2040.outbound.protection.outlook.com [40.107.236.40])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D2EFC12D
-	for <regressions@lists.linux.dev>; Mon, 26 Jun 2023 15:39:33 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=c6XwKXwc+lIdz7dH/ali+tSKIU9Osgnz0QetL/nE9/gdAToJldkCV6O+OTfprUNLu4AqaAwrwpMq5ZYW8hmBN2f+WsI8XlL/M9LZTWN2hTeVyJWwGKwqEwWgD4ZQyMZCDWGrpe/EKbT6a+fGGyIkVCzm5/sN1gIjvyTIB0Vh5gZzDL7JcR0KrVhOWWdC1LZANhMb5cX5Mj472c3vBzRzAF41K85Dr5b/2LV4qjvX88KOK3vyHxDWwbKPYbeZ+TuE1Vpb2e17S95HSdl6xION87IAPTULmcE5/VApH7lw4XQ0Xz7Ex0MIhuVux4T0VbDvWldlKfskTY0Ykf9nT5N4Cw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=d20Rtd4mV4IYDhmxPoVg5yOPxH7R+wDGogjE7InLXr4=;
- b=PG934PoXGqDWTkiC2jiyTEXnqE2nzKbbSmYvojm3cRU74uc431I15J7UzGz8Bt541CSAJ1U+8VeRCPZYf1PWHo0Ohd36D+RE4wg68YOE1/ugwvI1RZWH6feVqYyltNL1Y+Gq2kYan7RFXjbDr9LCYTnnWnhocS6FhR6LoZU3RSzpeX/7OQ/1sNWg17iTcJRdrOSEZffXffjLOHkEncFkARgREVXOHXKYmwAq0J6vm7gCFbyks131L3pCKU/Xp/nRuOaSswoNkJ64VHJ9DPgl5YTT5nNBk/86qa6Vj9Sk8l0X0Yz+ZshsrZx74tDsw0HFnQjRrA5+C/0/0u3VIGvY8Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=d20Rtd4mV4IYDhmxPoVg5yOPxH7R+wDGogjE7InLXr4=;
- b=EqTtjVGg6fp8hx79tP+7HVcPT9pPfj17qcwdDVmnYAJBxfVOfB7wmKYyYU9s0VKJQ48dIJUTqlc81Ij1Pa3uU4WwLgYMFgUnzqBFLnfKUZFLDnmlETrHoF6NoZEhBSJjKFOm5LsE/F8EPRf9842xt+7TD0jtzCEf1+HXhBVSEk8DzZktaaIF+OTBLwsJ/XrU+1J4Wj5cjCmglbhfD8oDJ6uXPpTo0B5kxH/kuMn2Lf1QZ5N0oxvIO8cihk3sKy2/QbDJ5EcmafzrBu2JtjMz1lAQ/gcCisJmP/IlMRpUoXyiV7j3ZiDPbrdfZ92MOqR3lu1zThpJXRsu0Xiz0v40Yg==
-Received: from MW2PR12MB4667.namprd12.prod.outlook.com (2603:10b6:302:12::28)
- by DM4PR12MB6111.namprd12.prod.outlook.com (2603:10b6:8:ac::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6521.24; Mon, 26 Jun
- 2023 15:39:31 +0000
-Received: from MW2PR12MB4667.namprd12.prod.outlook.com
- ([fe80::92c6:4b21:586d:dabc]) by MW2PR12MB4667.namprd12.prod.outlook.com
- ([fe80::92c6:4b21:586d:dabc%4]) with mapi id 15.20.6521.024; Mon, 26 Jun 2023
- 15:39:31 +0000
-From: Chaitanya Kulkarni <chaitanyak@nvidia.com>
-To: Bagas Sanjaya <bagasdotme@gmail.com>, Clemens S. <cspringsguth@gmail.com>
-CC: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux
- Regressions <regressions@lists.linux.dev>, Linux NVMe
-	<linux-nvme@lists.infradead.org>, John Meneghini <jmeneghi@redhat.com>,
-	Chaitanya Kulkarni <chaitanyak@nvidia.com>, Sagi Grimberg <sagi@grimberg.me>,
-	Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>, Hannes
- Reinecke <hare@suse.de>, Martin Belanger <martin.belanger@dell.com>
-Subject: Re: Fwd: Need NVME QUIRK BOGUS for SAMSUNG MZ1WV480HCGL-000MV
- (Samsung SM-953 Datacenter SSD)
-Thread-Topic: Fwd: Need NVME QUIRK BOGUS for SAMSUNG MZ1WV480HCGL-000MV
- (Samsung SM-953 Datacenter SSD)
-Thread-Index: AQHZp8vEXCf0HN4D+UCKyqX/NpmNlK+dOTYA
-Date: Mon, 26 Jun 2023 15:39:30 +0000
-Message-ID: <8f4e6d32-55b3-9df5-de91-1afbcb30ce13@nvidia.com>
-References: <d18d2a08-9d24-0209-c2cf-baf60bbf5048@gmail.com>
-In-Reply-To: <d18d2a08-9d24-0209-c2cf-baf60bbf5048@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: MW2PR12MB4667:EE_|DM4PR12MB6111:EE_
-x-ms-office365-filtering-correlation-id: 5df7761f-64d4-4de3-76c7-08db765b88a4
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- vG1ehDKGLqG3DZk6raIAnASoA/SCMux0J+kb6FSrS6coNEfAbQ50ZmjHM/W89rdpD0BTW/JGtS+VxDlfJmitqiIDeqOMLuOdhUHKuHZDZYfsfWm9eCcyVErY+hwWCEs3txY8aDGQAqUyhGC/24xDLfO6UsZHMW6aVovXJhV9HzZ+SaLC0wL0hjZcMe30mEkOJaciu6tb2hCaENaANaK2wMv+J4Ll9XZuoszAG9Q3usGk+Cyi6ICoqAh0Kf9pYGC3YexlgOAUOqiKTtzRGRFbcZCUcH++WQZHTAIWLU3sXJt+2/MmYyn+0wupJD6icEHRKnD7cUdvsOKWTCBHT+acLLenH+gAv8CQRaoOC1guCNWcydygVy67cH4O5bOj/ZcyGarALC41Sg7UYONMIg4ePGVCZn/EogjvIYjfErqyrob6B77Oh1yF8sPsBzTAgmotY/ze+xMI0frYmlv7UnBdQFrPrhelIr7Z6jenlcXB4O8k4bCUpZsFmwO9LAFXe9ss2w+j8BkplmcylM6WfqwjGvHsNY3YFiMYqtbm1NC9KuqDuwF+psXb3pERYMuua16acfisC0Pra5Fw5p2Vtrn5NGIVhp646knFEvcV6YH3VgzqWPFa8z2CtBIPxe/SuNc2nD4WXC94ruNXO6+5X7e/otvfL9qZda6lgM3L8uL5hHdrJb02Hw2RL9kOdD0DSzpjx+8N8uEycgqUunm8PNB8KbuwtZzl/m67Es91+lQEPxg=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR12MB4667.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(39860400002)(366004)(376002)(136003)(346002)(396003)(451199021)(6512007)(31686004)(36756003)(5660300002)(7416002)(86362001)(8936002)(8676002)(41300700001)(64756008)(66556008)(66476007)(38070700005)(76116006)(91956017)(4326008)(38100700002)(122000001)(316002)(31696002)(66946007)(6506007)(53546011)(26005)(186003)(66446008)(2906002)(4744005)(71200400001)(2616005)(478600001)(45080400002)(6486002)(54906003)(110136005)(83380400001)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?SWtUaVB3S1luVHdkWUFVazc0UlVkV29oUnJrd0NsdWpZZ2tYSzdCTWNMWG1u?=
- =?utf-8?B?VW90K1JyS0djRGVpUnZmRlA0ZTNxcTZ5U3Rra0hvL2hWaElqZXdEZnlaTUtI?=
- =?utf-8?B?VVlieFVTOTdkUVBHSTdJa3JoekhiQlUybHBKWlFZWkxqN1ZNdUJIODJpaVd1?=
- =?utf-8?B?T2VJd1pPYi96SXo2cUhOeE9vUVhQaVA2NEtXNDRLUlJPNVpOdHhYaDVvdFJm?=
- =?utf-8?B?VklHa2ZUbDlIVlZlNUtEd05JbWM0VzU5YXZFR0IxandkWm1Fd1I0WXA5elVq?=
- =?utf-8?B?VFJESDNsc0ZMN003T2xSUTUzejdxWjJ3NE9UYUVoY29ZMEljUkwrWmp3OGxr?=
- =?utf-8?B?dnViUGwwZUxOVHNLdTVDalJQVFRMUnUzZGhNY3VuNkplcnR1T2NxNC9ZTU5n?=
- =?utf-8?B?Nkk1UG5idFRmWkx5Q2NBaDFnM1hCSGdqeWVVR1AzditFTzkwaWxKU2FqYXVx?=
- =?utf-8?B?a3E3dVpWemxDQ1pvdi9NRjFTZDc1dVo2a084R0k5Z1AyK2VtaldicGtlWk9Q?=
- =?utf-8?B?RHZka3h2cDZYYTNYTnRQL2NML2FXV3dJWjZxU3dyNlZRV0hiaHlxNS96ejM2?=
- =?utf-8?B?UGJpNkgwUW90MVZtdUU4QXJzenk5TW83VGpLVzJ3ZTNmZmVwbDZMU0twNlBZ?=
- =?utf-8?B?dDI1cTk0RTVjZERIdDEvSVlxTHJSYzdPS1QwRTBvOGpheTgyaWNhU3pyZ01B?=
- =?utf-8?B?eDB0U091aVViZURFdU52MjV2cjR4bncrWlVmL1hpTlZINmRWUkFRbEpLT0Vx?=
- =?utf-8?B?WUdpRTR3RUZQZ05Ic1g4ZzFuY2I3eFhIY1doN0dWM0dkMUNJZHdSNEtWVFdp?=
- =?utf-8?B?dXg2WFNwU3c0N1NVMkhmYWprTDdSUjVJOElYckc1U1FGZVl1UnZibkxVbjlu?=
- =?utf-8?B?MWpqQWNvOVJEN3hULzZ2bXF1Ung0a1Q0OWd0eDQ3TWl2a2loUTIzZEp2OFAz?=
- =?utf-8?B?TVptMGQ1bmRrSGhrMFhndk45cElLSTNOZWhHNlBWVjdFQ1haeE9VdW1CWm9h?=
- =?utf-8?B?U1JpQXF0YU54cmI5VnZaMk9LNmpmOCs5WllrNWFiSU9RaGhqVngybXFIVmpJ?=
- =?utf-8?B?LzNRU1M5YllnUmltOHJrZk80UndoTGc4NkJHeElBSkN0Z05VazEvaHVNWms0?=
- =?utf-8?B?ZjU2aVBHRGxCWmNmN0RGK1pnZVJUQ3FqbFk2czF4cmd2WG1xNkZNZEs1SEFZ?=
- =?utf-8?B?QmkxZVRnbzVPSmxnVVFuZVZ2TGJuRWxhbTdUeTg5SnVGckhuV2toYzNFUzBH?=
- =?utf-8?B?bEZaaS9CdXlPeHJxbDg0N3haSVcrM1RsK05BSTJ2S0JsSkhWckdEc1ozY0pv?=
- =?utf-8?B?ZFFkbWx1TEx3TDdsZXoza2QyVjN5YnhKSmFHYjgxL0lPTGZCQlhJbDBlVG9J?=
- =?utf-8?B?YmdGY3h4TVZpbmhobDhYUThMR0ZEcStaTmRhakhET2ZEWkt5am00Mm84VTlL?=
- =?utf-8?B?S2RlNm1vMEd1U3lueFI5U3NOQmw5UTNzU3N5bHg5Q2FTWXVXVnI0Z1ordkVE?=
- =?utf-8?B?NkVCWDNieWd3ZlhRY2ZNS1gwdVVDdWd3L0M4eXdTenFSM25EWDh2OEtoQjJu?=
- =?utf-8?B?dTR0OXR5U1dMSzM3N1dQWkg3WldUTUo2Y0htelo0UG9rSk52NHBPT2RLZzYr?=
- =?utf-8?B?cnJVSE1OVlBFMzBYTUJxY3lzNkExdWFLakNTVEd2YitGR0ZzN2lTVkp5VFVK?=
- =?utf-8?B?RUREN1JVc1Q4b0hzR1FPejRjOEJoN3NwcEVhVytxbXNORDVsQ3pFMDg5bGps?=
- =?utf-8?B?Zk1RT295aE5ySlNGZWJ3bEVVMTMrd2l5Ni8vaGJNVW1xSWI1SFF1ZmgxOEp2?=
- =?utf-8?B?THl2TnhWOXdkbDIxT21CcEJqMWx5dnFKN0djY3ZMZUpxMXlBcVFyNnVzS3Bl?=
- =?utf-8?B?d09FUDNqSWZwbGgwdDVMUlMvRldjV05ZYm1PaWxOejBsUTMwYzBnb0ZDZXl1?=
- =?utf-8?B?MElpZDd5TUlFODRpNGpFOUg3eStHNG1VR1dRaVNsVEpkSW4xWkRCVEV4cnN4?=
- =?utf-8?B?eEhrK0o3TjZsWERndkU2WDF4NGRKMGF5amlDU3hwb3lpdVNUMXJTUDZkQ0RF?=
- =?utf-8?B?M3N5TWlRUlkrSFE3V2FRTStSVXF1OUdGdFRQSW5OeWhaM1NvbXB5OW1uWndx?=
- =?utf-8?Q?faTlpNddUjLEWQshn94hbxIA0?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <7A6520D008628743BC41E28F2327FD96@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1390125CC;
+	Mon, 26 Jun 2023 17:39:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C5EDC433C0;
+	Mon, 26 Jun 2023 17:39:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1687801157;
+	bh=n7i2MROzDxuJQMcTkpAVKL37xysW5GaFaaz66hyM9Gw=;
+	h=Date:Subject:To:References:Cc:From:In-Reply-To:From;
+	b=GAr6fl3Devf5Pyw8f5SImxTg/SvrvQ4FaRQfxmFmSNbwInh3RPtMLKX20bTzfj5qy
+	 CcAFoOj2v8q56eBhXK01MlRp6kKGG5hiRJMnB3j9VxXkXZ+0p8VYCCXFm2HiE1aZiz
+	 7ZbJJn1KVZUjBZF9d0dmN+NSns+iG5diRmCzlNoMUjp3bvCekW9cbgxqTm55Ciuwri
+	 MStqAR3RHAsk1ih4x3pgT6YlmxcJqij8vnTdCLy0zC4Eznqht77AN+PWfX1tyjQG7x
+	 or3Q9iyInYctCryN3V1gDuy7Md66rPuR4Z4jVgVgB5tDNs2u/iAji/rNvqsc+bOJfE
+	 sUyrhluWTYJqQ==
+Message-ID: <8c7f9abd-4f84-7296-2788-1e130d6304a0@kernel.org>
+Date: Mon, 26 Jun 2023 19:39:11 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MW2PR12MB4667.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5df7761f-64d4-4de3-76c7-08db765b88a4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Jun 2023 15:39:30.9201
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Lc0a/+whK7dKB46As2fcqwnEULf6heMCtXLxhFlldkz3OG90pzGfdjCqqCEFOgRtoOcg3Ns4kWe2OrzqFHEZ2w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6111
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: [PATCH v2] af_unix: Call scm_recv() only after scm_set_cred().
+Content-Language: en-US
+To: Kuniyuki Iwashima <kuniyu@amazon.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+References: <20230622184351.91544-1-kuniyu@amazon.com>
+Cc: Christian Brauner <brauner@kernel.org>,
+ Alexander Mikhalitsyn <alexander@mihalicyn.com>,
+ Kuniyuki Iwashima <kuniyu@amazon.com>,
+ "Kuniyuki Iwashima\"" <kuni1840@gmail.com>, netdev@vger.kernel.org,
+ syzkaller <syzkaller@googlegroups.com>,
+ Oliver Smith <ollieparanoid@postmarketos.org>, regressions@lists.linux.dev
+From: Konrad Dybcio <konradybcio@kernel.org>
+In-Reply-To: <20230622184351.91544-1-kuniyu@amazon.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-T24gNi8yNS8yMDIzIDY6MTUgUE0sIEJhZ2FzIFNhbmpheWEgd3JvdGU6DQo+IEhpLA0KPiANCj4g
-SSBub3RpY2UgYSByZWdyZXNzaW9uIHJlcG9ydCBvbiBCdWd6aWxsYSBbMV0uIFF1b3RpbmcgZnJv
-bSBpdDoNCg0KWy4uLl0NCg0KPj4gT25seSBvbmUgZHJpdmUsIG91dCBvZiA2IGlzIHVzYWJsZS4N
-Cj4+DQo+PiBUaGVzZSBkcml2ZXMgYXJlIHJhdGhlciBjb21tb24gZGF0YWNlbnRlciBkcml2ZXMg
-KFNhbXN1bmcgU00tOTUzKS4NCj4+DQo+PiAgRnJvbSBhbm90aGVyIEJ1Zy1SZXBvcnQgKGh0dHBz
-Oi8vYnVnemlsbGEua2VybmVsLm9yZy9zaG93X2J1Zy5jZ2k/aWQ9MjE3Mzg0KToNCj4+DQo+PiBU
-byBmaXggaXQsIHBsZWFzZSBhZGQgdHdvIHN0cmluZ3MgaW4gcGNpLmMNCj4+DQo+PiB7IFBDSV9E
-RVZJQ0UoMHgxNDRkLCAweGE4MDIpLCAvKiBTQU1TVU5HIE1aMVdWNDgwSENHTC0wMDBNViAgKi8N
-Cj4+IC5kcml2ZXJfZGF0YSA9IE5WTUVfUVVJUktfQk9HVVNfTklELCB9LA0KPj4NCg0KUGxlYXNl
-IHNlbmQgYSBmb3JtYWwgcGF0Y2ggSSdsbCBiZSBoYXBweSB0byByZXZpZXcgaXQgLi4NCg0KLWNr
-DQoNCg0K
+
+
+On 22.06.2023 20:43, Kuniyuki Iwashima wrote:
+> syzkaller hit a WARN_ON_ONCE(!scm->pid) in scm_pidfd_recv().
+> 
+> In unix_stream_read_generic(), if there is no skb in the queue, we could
+> bail out the do-while loop without calling scm_set_cred():
+> 
+>   1. No skb in the queue
+>   2. sk is non-blocking
+>        or
+>      shutdown(sk, RCV_SHUTDOWN) is called concurrently
+>        or
+>      peer calls close()
+> 
+> If the socket is configured with SO_PASSCRED or SO_PASSPIDFD, scm_recv()
+> would populate cmsg with garbage.
+> 
+> Let's not call scm_recv() unless there is skb to receive.
+> 
+> WARNING: CPU: 1 PID: 3245 at include/net/scm.h:138 scm_pidfd_recv include/net/scm.h:138 [inline]
+> WARNING: CPU: 1 PID: 3245 at include/net/scm.h:138 scm_recv.constprop.0+0x754/0x850 include/net/scm.h:177
+> Modules linked in:
+> CPU: 1 PID: 3245 Comm: syz-executor.1 Not tainted 6.4.0-rc5-01219-gfa0e21fa4443 #2
+> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.16.0-0-gd239552ce722-prebuilt.qemu.org 04/01/2014
+> RIP: 0010:scm_pidfd_recv include/net/scm.h:138 [inline]
+> RIP: 0010:scm_recv.constprop.0+0x754/0x850 include/net/scm.h:177
+> Code: 67 fd e9 55 fd ff ff e8 4a 70 67 fd e9 7f fd ff ff e8 40 70 67 fd e9 3e fb ff ff e8 36 70 67 fd e9 02 fd ff ff e8 8c 3a 20 fd <0f> 0b e9 fe fb ff ff e8 50 70 67 fd e9 2e f9 ff ff e8 46 70 67 fd
+> RSP: 0018:ffffc90009af7660 EFLAGS: 00010216
+> RAX: 00000000000000a1 RBX: ffff888041e58a80 RCX: ffffc90003852000
+> RDX: 0000000000040000 RSI: ffffffff842675b4 RDI: 0000000000000007
+> RBP: ffffc90009af7810 R08: 0000000000000007 R09: 0000000000000013
+> R10: 00000000000000f8 R11: 0000000000000001 R12: ffffc90009af7db0
+> R13: 0000000000000000 R14: ffff888041e58a88 R15: 1ffff9200135eecc
+> FS:  00007f6b7113f640(0000) GS:ffff88806cf00000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 00007f6b7111de38 CR3: 0000000012a6e002 CR4: 0000000000770ee0
+> PKRU: 55555554
+> Call Trace:
+>  <TASK>
+>  unix_stream_read_generic+0x5fe/0x1f50 net/unix/af_unix.c:2830
+>  unix_stream_recvmsg+0x194/0x1c0 net/unix/af_unix.c:2880
+>  sock_recvmsg_nosec net/socket.c:1019 [inline]
+>  sock_recvmsg+0x188/0x1d0 net/socket.c:1040
+>  ____sys_recvmsg+0x210/0x610 net/socket.c:2712
+>  ___sys_recvmsg+0xff/0x190 net/socket.c:2754
+>  do_recvmmsg+0x25d/0x6c0 net/socket.c:2848
+>  __sys_recvmmsg net/socket.c:2927 [inline]
+>  __do_sys_recvmmsg net/socket.c:2950 [inline]
+>  __se_sys_recvmmsg net/socket.c:2943 [inline]
+>  __x64_sys_recvmmsg+0x224/0x290 net/socket.c:2943
+>  do_syscall_x64 arch/x86/entry/common.c:50 [inline]
+>  do_syscall_64+0x3f/0x90 arch/x86/entry/common.c:80
+>  entry_SYSCALL_64_after_hwframe+0x72/0xdc
+> RIP: 0033:0x7f6b71da2e5d
+> Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 73 9f 1b 00 f7 d8 64 89 01 48
+> RSP: 002b:00007f6b7113ecc8 EFLAGS: 00000246 ORIG_RAX: 000000000000012b
+> RAX: ffffffffffffffda RBX: 00000000004bc050 RCX: 00007f6b71da2e5d
+> RDX: 0000000000000007 RSI: 0000000020006600 RDI: 000000000000000b
+> RBP: 00000000004bc050 R08: 0000000000000000 R09: 0000000000000000
+> R10: 0000000000000120 R11: 0000000000000246 R12: 0000000000000000
+> R13: 000000000000006e R14: 00007f6b71e03530 R15: 0000000000000000
+>  </TASK>
+> 
+> Fixes: 5e2ff6704a27 ("scm: add SO_PASSPIDFD and SCM_PIDFD")
+> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+> Reported-by: syzkaller <syzkaller@googlegroups.com>
+> Signed-off-by: Kuniyuki Iwashima <kuniyu@amazon.com>
+> Reviewed-by: Alexander Mikhalitsyn <alexander@mihalicyn.com>
+> ---
+Hi, for $some_reason, this breaks reaching DE on the following setup:
+
+- postmarketOS (Alpine Linux w/ musl 1.2.4)
+- busybox 1.36.1
+- GNOME 44.1
+- networkmanager 1.42.6
+- openrc 0.47
+
+on at least 2 different Qualcomm boards.
+
+#regzbot introduced: 3f5f118bb657f94641ea383c7c1b8c09a5d46ea2
+
+Konrad
+> v2:
+>   * Target to net-next (v1 was marked as ChangesRequested maybe
+>     due to one of the blamed commits is not in net.git)
+> 
+>   * Update changelog to clarify skb is not in the queue
+> 
+> v1: https://lore.kernel.org/netdev/20230620000009.9675-1-kuniyu@amazon.com/
+> ---
+>  net/unix/af_unix.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/net/unix/af_unix.c b/net/unix/af_unix.c
+> index 73c61a010b01..f9d196439b49 100644
+> --- a/net/unix/af_unix.c
+> +++ b/net/unix/af_unix.c
+> @@ -2826,7 +2826,7 @@ static int unix_stream_read_generic(struct unix_stream_read_state *state,
+>  	} while (size);
+>  
+>  	mutex_unlock(&u->iolock);
+> -	if (state->msg)
+> +	if (state->msg && check_creds)
+>  		scm_recv(sock, state->msg, &scm, flags);
+>  	else
+>  		scm_destroy(&scm);
