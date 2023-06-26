@@ -1,13 +1,44 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2AC346A0
-	for <regressions@lists.linux.dev>; Mon, 26 Jun 2023 08:12:08 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qDhKQ-0003tL-C9; Mon, 26 Jun 2023 10:12:06 +0200
-Message-ID: <fea36fd0-e71f-bb09-f82d-18214d038439@leemhuis.info>
-Date: Mon, 26 Jun 2023 10:12:05 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B39451FA3
+	for <regressions@lists.linux.dev>; Mon, 26 Jun 2023 09:08:33 +0000 (UTC)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id B5FC5218A9;
+	Mon, 26 Jun 2023 09:08:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1687770511; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5Z3BwE/rMDL9sl3DkNyM9QjJJyC1nTbjXqZGpksBHdg=;
+	b=fIxurrjVGHc9FD+2RG8txljxmBG0FCedwfMRjrWFQF0XuNa6PvTHpuqyMejsKh3Jua2X3T
+	1teV9cakJLPxVhN44pJPXqiHReBUvn1frqAJYgTQ7bIEmJi6B8H7/wXCr+8D9ZTcBnxPNb
+	cVq2OKK1WJJ50SDOojjWGvaeeKsuRag=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1687770511;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5Z3BwE/rMDL9sl3DkNyM9QjJJyC1nTbjXqZGpksBHdg=;
+	b=ARm8Qvwb/bPr8l1xrJHBZ03gy8VE98uMY4fCjbzU92aP5nupTlX2lMJYqVCJwjLfhUHkBy
+	WctuSYBphMJVZkCA==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 6E1F513483;
+	Mon, 26 Jun 2023 09:08:31 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+	by imap2.suse-dmz.suse.de with ESMTPSA
+	id Qo0oGo9VmWTbZQAAMHmgww
+	(envelope-from <vbabka@suse.cz>); Mon, 26 Jun 2023 09:08:31 +0000
+Message-ID: <2126cc69-b779-565b-98c7-4fbb0bf9f557@suse.cz>
+Date: Mon, 26 Jun 2023 11:08:31 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,52 +47,54 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.12.0
-Subject: Re: Kernel oops with netfilter: nf_tables: incorrect error path
- handling with NFT_MSG_NEWRULE
-Content-Language: en-US, de-DE
-To: Matthias Maier <tamiko@43-1.org>, Pablo Neira Ayuso <pablo@netfilter.org>
-Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <87cz1j5tof.fsf@43-1.org>
-From: "Linux regression tracking #adding (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <87cz1j5tof.fsf@43-1.org>
+Subject: Re: [PATCH] mm/vmalloc: do not output a spurious warning when huge
+ vmalloc() fails
+To: Lorenzo Stoakes <lstoakes@gmail.com>, Forza <forza@tnonline.net>
+Cc: Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, Baoquan He <bhe@redhat.com>,
+ Uladzislau Rezki <urezki@gmail.com>, Christoph Hellwig <hch@infradead.org>,
+ Bagas Sanjaya <bagasdotme@gmail.com>,
+ Linux btrfs <linux-btrfs@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>, Chris Mason <clm@fb.com>,
+ Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
+ a1bert@atlas.cz, Linus Torvalds <torvalds@linux-foundation.org>,
+ Song Liu <song@kernel.org>, Nicholas Piggin <npiggin@gmail.com>,
+ Matthew Wilcox <willy@infradead.org>
+References: <20230605201107.83298-1-lstoakes@gmail.com>
+ <cd47d6ac-69ce-0315-dd45-2cb9dce57f36@suse.cz>
+ <f6b42d95-09f1-48d6-8274-e6145febb31d@lucifer.local>
+ <2a6fa9d6-53b8-93cd-16c8-309ce2b8e3ac@suse.cz>
+ <20230607093316.cdf60df195915fa9d38067ea@linux-foundation.org>
+ <11b893e.86425ef4.188f33688b8@tnonline.net>
+ <e3ce1745-0a3e-4c9d-955e-2a0ce20422cf@lucifer.local>
+Content-Language: en-US
+From: Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <e3ce1745-0a3e-4c9d-955e-2a0ce20422cf@lucifer.local>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1687767128;846c105f;
-X-HE-SMSGID: 1qDhKQ-0003tL-C9
 
-[CCing the regression list, as it should be in the loop for regressions:
-https://docs.kernel.org/admin-guide/reporting-regressions.html]
-
-[TLDR: I'm adding this report to the list of tracked Linux kernel
-regressions; the text you find below is based on a few templates
-paragraphs you might have encountered already in similar form.
-See link in footer if these mails annoy you.]
-
-On 25.06.23 19:38, Matthias Maier wrote:
+On 6/25/23 17:59, Lorenzo Stoakes wrote:
+> On Sun, Jun 25, 2023 at 05:40:17PM +0200, Forza wrote:
+>>
+>>
+>> ---- From: Andrew Morton <akpm@linux-foundation.org> -- Sent: 2023-06-07 - 18:33 ----
+>>
+>> > On Wed, 7 Jun 2023 10:58:40 +0200 Vlastimil Babka <vbabka@suse.cz> wrote:
+>> >
+>> >> I would really suggest moving the fix to
+>> >> mm-hotfixes instead of mm-unstable, and
+>> >>
+>> >> Fixes: 80b1d8fdfad1 ("mm: vmalloc: correct use of __GFP_NOWARN mask in __vmalloc_area_node()")
+>> >> Cc: <stable@vger.kernel.org>
+>> >
+>> > I've made those changes.
+>>
+>> Did the chabge go into 6.3 stable? I saw these issues with kernels 6.3.0-6 3.7. I now updated to 6.3.9 and have had no more warnings since.
 > 
->   commit 1240eb93f0616b21c675416516ff3d74798fdc97
->          aka bdace3b1a51887211d3e49417a18fdbd315a313b (linux-6.3.y)
->   netfilter: nf_tables: incorrect error path handling with NFT_MSG_NEWRULE
-> 
-> causes a kernel oops on my side when booting my machine; see attached.
+> Yeah, got the notification from Greg's script that it landed in 6.3 stable.
 
-Thanks for the report. I see that the solution is already in sight, but
-to ensure the issue doesn't fall through the cracks unnoticed, I'm
-adding it to regzbot, the Linux kernel regression tracking bot (using
-the commit ID the third patch Pablo mentioned, as the other two are
-already mainlined):
+It did, but was not yet released. 6.3.9 from Wed Jun 21 doesn't have it yet,
+so it's interesting the warnings are gone already.
 
-#regzbot ^introduced 26b5a5712eb8
-#regzbot title net: netfilter: kernel oops with netfilter:
-#regzbot fix: netfilter: nf_tables: unbind non-anonymous set if rule
-construction fails
-#regzbot ignore-activity
+>>
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
