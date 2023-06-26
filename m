@@ -1,101 +1,134 @@
-Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2040.outbound.protection.outlook.com [40.107.236.40])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E860BE57
-	for <regressions@lists.linux.dev>; Mon, 26 Jun 2023 15:21:29 +0000 (UTC)
-Received: by mail-ot1-f52.google.com with SMTP id 46e09a7af769-6b5d6a05b6dso2721351a34.0
-        for <regressions@lists.linux.dev>; Mon, 26 Jun 2023 08:21:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1687792888; x=1690384888;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=U7yKgaTyZsXh/LVlqDwX9ljmxURKTiccXbAlSGToiHo=;
-        b=Tjt5O7M7jioM8v1Toy2pI9OfzlJeKKDu+DWcLnjVGtnbDktNv+pDXB85tYgfkIi8Yf
-         clTgzs36PawH2B5mrkGWKfKzYPVKg1UAM3XCVpPHAgr4SFfsqRNQ2zbM7MDY98su4M3f
-         sQxMD43E7nFYe72FJpLoGHrymFRxI5Sv/oUcDgMsso8CK54UI+iFTX6lfwfQrLCeOAIe
-         +lYsMWsaHbWPSmZoVOT/+X3D96MNULl2sW8iOpFfLD/xZdLa3rICUtO+Ssbu+MLZJOce
-         BhlWpuyGIoLwPFbe/0wJ533GCiBsSvx6058d82i8TLEOQOGxfE5Yw2JMMOC3Zf/81Mcj
-         8Ccg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687792888; x=1690384888;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=U7yKgaTyZsXh/LVlqDwX9ljmxURKTiccXbAlSGToiHo=;
-        b=GewFrX67eWdMeiBpURbhpjF48plXf4md6bsPtRAk/ld1bfti23lSW6ngx6t5PTr9TC
-         Yot08/x8mMQonx0lMuuZgNFb0c5hKW8/8PjZjmAO+IbjH7dQc9Q196TpwNpc/p31C1eF
-         /0jXcgXiRjZM1rr/tUAE7bslpxAtbuGHRl0R9lxHfoKEVDyQoBA/6dOXn7sV+9Fujb1Z
-         IXfPZlTLjr1yAmASNNeOZJ+hxr1gvBncEiWZPqoC2JkOVVpPAupRZrPhHEvAAoD2NBl0
-         Q5ay7dkxHFsGUnRXf0ecSYY2mNejQQa2VJDosHf7axigHJe7FwqcMeu7AHdp71Ad3cmy
-         AGZQ==
-X-Gm-Message-State: AC+VfDw8MFS8JVioKaNeahEx0ZI15KrpbLBbfY+iuOXz41BX2FHxI6ni
-	9pmwDVCYGta88exOq6lT3yw=
-X-Google-Smtp-Source: ACHHUZ5wqv+0eYYAwSPD6a/T5HCMJ1GPot627Zd3ObnUIycb4X9Nq4NcidPVG6HtiBEAV0Du0HSGCA==
-X-Received: by 2002:a05:6830:1041:b0:6b7:1d92:3796 with SMTP id b1-20020a056830104100b006b71d923796mr9333165otp.22.1687792888297;
-        Mon, 26 Jun 2023 08:21:28 -0700 (PDT)
-Received: from [192.168.1.119] ([216.130.59.33])
-        by smtp.gmail.com with ESMTPSA id l15-20020a9d6a8f000000b006b58e0ef27esm407894otq.39.2023.06.26.08.21.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 Jun 2023 08:21:27 -0700 (PDT)
-Sender: Larry Finger <larry.finger@gmail.com>
-Message-ID: <6afa0ebc-1d3f-8cba-79dc-8ddfe13c296a@lwfinger.net>
-Date: Mon, 26 Jun 2023 10:21:26 -0500
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D2EFC12D
+	for <regressions@lists.linux.dev>; Mon, 26 Jun 2023 15:39:33 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=c6XwKXwc+lIdz7dH/ali+tSKIU9Osgnz0QetL/nE9/gdAToJldkCV6O+OTfprUNLu4AqaAwrwpMq5ZYW8hmBN2f+WsI8XlL/M9LZTWN2hTeVyJWwGKwqEwWgD4ZQyMZCDWGrpe/EKbT6a+fGGyIkVCzm5/sN1gIjvyTIB0Vh5gZzDL7JcR0KrVhOWWdC1LZANhMb5cX5Mj472c3vBzRzAF41K85Dr5b/2LV4qjvX88KOK3vyHxDWwbKPYbeZ+TuE1Vpb2e17S95HSdl6xION87IAPTULmcE5/VApH7lw4XQ0Xz7Ex0MIhuVux4T0VbDvWldlKfskTY0Ykf9nT5N4Cw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=d20Rtd4mV4IYDhmxPoVg5yOPxH7R+wDGogjE7InLXr4=;
+ b=PG934PoXGqDWTkiC2jiyTEXnqE2nzKbbSmYvojm3cRU74uc431I15J7UzGz8Bt541CSAJ1U+8VeRCPZYf1PWHo0Ohd36D+RE4wg68YOE1/ugwvI1RZWH6feVqYyltNL1Y+Gq2kYan7RFXjbDr9LCYTnnWnhocS6FhR6LoZU3RSzpeX/7OQ/1sNWg17iTcJRdrOSEZffXffjLOHkEncFkARgREVXOHXKYmwAq0J6vm7gCFbyks131L3pCKU/Xp/nRuOaSswoNkJ64VHJ9DPgl5YTT5nNBk/86qa6Vj9Sk8l0X0Yz+ZshsrZx74tDsw0HFnQjRrA5+C/0/0u3VIGvY8Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=d20Rtd4mV4IYDhmxPoVg5yOPxH7R+wDGogjE7InLXr4=;
+ b=EqTtjVGg6fp8hx79tP+7HVcPT9pPfj17qcwdDVmnYAJBxfVOfB7wmKYyYU9s0VKJQ48dIJUTqlc81Ij1Pa3uU4WwLgYMFgUnzqBFLnfKUZFLDnmlETrHoF6NoZEhBSJjKFOm5LsE/F8EPRf9842xt+7TD0jtzCEf1+HXhBVSEk8DzZktaaIF+OTBLwsJ/XrU+1J4Wj5cjCmglbhfD8oDJ6uXPpTo0B5kxH/kuMn2Lf1QZ5N0oxvIO8cihk3sKy2/QbDJ5EcmafzrBu2JtjMz1lAQ/gcCisJmP/IlMRpUoXyiV7j3ZiDPbrdfZ92MOqR3lu1zThpJXRsu0Xiz0v40Yg==
+Received: from MW2PR12MB4667.namprd12.prod.outlook.com (2603:10b6:302:12::28)
+ by DM4PR12MB6111.namprd12.prod.outlook.com (2603:10b6:8:ac::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6521.24; Mon, 26 Jun
+ 2023 15:39:31 +0000
+Received: from MW2PR12MB4667.namprd12.prod.outlook.com
+ ([fe80::92c6:4b21:586d:dabc]) by MW2PR12MB4667.namprd12.prod.outlook.com
+ ([fe80::92c6:4b21:586d:dabc%4]) with mapi id 15.20.6521.024; Mon, 26 Jun 2023
+ 15:39:31 +0000
+From: Chaitanya Kulkarni <chaitanyak@nvidia.com>
+To: Bagas Sanjaya <bagasdotme@gmail.com>, Clemens S. <cspringsguth@gmail.com>
+CC: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux
+ Regressions <regressions@lists.linux.dev>, Linux NVMe
+	<linux-nvme@lists.infradead.org>, John Meneghini <jmeneghi@redhat.com>,
+	Chaitanya Kulkarni <chaitanyak@nvidia.com>, Sagi Grimberg <sagi@grimberg.me>,
+	Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>, Hannes
+ Reinecke <hare@suse.de>, Martin Belanger <martin.belanger@dell.com>
+Subject: Re: Fwd: Need NVME QUIRK BOGUS for SAMSUNG MZ1WV480HCGL-000MV
+ (Samsung SM-953 Datacenter SSD)
+Thread-Topic: Fwd: Need NVME QUIRK BOGUS for SAMSUNG MZ1WV480HCGL-000MV
+ (Samsung SM-953 Datacenter SSD)
+Thread-Index: AQHZp8vEXCf0HN4D+UCKyqX/NpmNlK+dOTYA
+Date: Mon, 26 Jun 2023 15:39:30 +0000
+Message-ID: <8f4e6d32-55b3-9df5-de91-1afbcb30ce13@nvidia.com>
+References: <d18d2a08-9d24-0209-c2cf-baf60bbf5048@gmail.com>
+In-Reply-To: <d18d2a08-9d24-0209-c2cf-baf60bbf5048@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: MW2PR12MB4667:EE_|DM4PR12MB6111:EE_
+x-ms-office365-filtering-correlation-id: 5df7761f-64d4-4de3-76c7-08db765b88a4
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ vG1ehDKGLqG3DZk6raIAnASoA/SCMux0J+kb6FSrS6coNEfAbQ50ZmjHM/W89rdpD0BTW/JGtS+VxDlfJmitqiIDeqOMLuOdhUHKuHZDZYfsfWm9eCcyVErY+hwWCEs3txY8aDGQAqUyhGC/24xDLfO6UsZHMW6aVovXJhV9HzZ+SaLC0wL0hjZcMe30mEkOJaciu6tb2hCaENaANaK2wMv+J4Ll9XZuoszAG9Q3usGk+Cyi6ICoqAh0Kf9pYGC3YexlgOAUOqiKTtzRGRFbcZCUcH++WQZHTAIWLU3sXJt+2/MmYyn+0wupJD6icEHRKnD7cUdvsOKWTCBHT+acLLenH+gAv8CQRaoOC1guCNWcydygVy67cH4O5bOj/ZcyGarALC41Sg7UYONMIg4ePGVCZn/EogjvIYjfErqyrob6B77Oh1yF8sPsBzTAgmotY/ze+xMI0frYmlv7UnBdQFrPrhelIr7Z6jenlcXB4O8k4bCUpZsFmwO9LAFXe9ss2w+j8BkplmcylM6WfqwjGvHsNY3YFiMYqtbm1NC9KuqDuwF+psXb3pERYMuua16acfisC0Pra5Fw5p2Vtrn5NGIVhp646knFEvcV6YH3VgzqWPFa8z2CtBIPxe/SuNc2nD4WXC94ruNXO6+5X7e/otvfL9qZda6lgM3L8uL5hHdrJb02Hw2RL9kOdD0DSzpjx+8N8uEycgqUunm8PNB8KbuwtZzl/m67Es91+lQEPxg=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR12MB4667.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(39860400002)(366004)(376002)(136003)(346002)(396003)(451199021)(6512007)(31686004)(36756003)(5660300002)(7416002)(86362001)(8936002)(8676002)(41300700001)(64756008)(66556008)(66476007)(38070700005)(76116006)(91956017)(4326008)(38100700002)(122000001)(316002)(31696002)(66946007)(6506007)(53546011)(26005)(186003)(66446008)(2906002)(4744005)(71200400001)(2616005)(478600001)(45080400002)(6486002)(54906003)(110136005)(83380400001)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?SWtUaVB3S1luVHdkWUFVazc0UlVkV29oUnJrd0NsdWpZZ2tYSzdCTWNMWG1u?=
+ =?utf-8?B?VW90K1JyS0djRGVpUnZmRlA0ZTNxcTZ5U3Rra0hvL2hWaElqZXdEZnlaTUtI?=
+ =?utf-8?B?VVlieFVTOTdkUVBHSTdJa3JoekhiQlUybHBKWlFZWkxqN1ZNdUJIODJpaVd1?=
+ =?utf-8?B?T2VJd1pPYi96SXo2cUhOeE9vUVhQaVA2NEtXNDRLUlJPNVpOdHhYaDVvdFJm?=
+ =?utf-8?B?VklHa2ZUbDlIVlZlNUtEd05JbWM0VzU5YXZFR0IxandkWm1Fd1I0WXA5elVq?=
+ =?utf-8?B?VFJESDNsc0ZMN003T2xSUTUzejdxWjJ3NE9UYUVoY29ZMEljUkwrWmp3OGxr?=
+ =?utf-8?B?dnViUGwwZUxOVHNLdTVDalJQVFRMUnUzZGhNY3VuNkplcnR1T2NxNC9ZTU5n?=
+ =?utf-8?B?Nkk1UG5idFRmWkx5Q2NBaDFnM1hCSGdqeWVVR1AzditFTzkwaWxKU2FqYXVx?=
+ =?utf-8?B?a3E3dVpWemxDQ1pvdi9NRjFTZDc1dVo2a084R0k5Z1AyK2VtaldicGtlWk9Q?=
+ =?utf-8?B?RHZka3h2cDZYYTNYTnRQL2NML2FXV3dJWjZxU3dyNlZRV0hiaHlxNS96ejM2?=
+ =?utf-8?B?UGJpNkgwUW90MVZtdUU4QXJzenk5TW83VGpLVzJ3ZTNmZmVwbDZMU0twNlBZ?=
+ =?utf-8?B?dDI1cTk0RTVjZERIdDEvSVlxTHJSYzdPS1QwRTBvOGpheTgyaWNhU3pyZ01B?=
+ =?utf-8?B?eDB0U091aVViZURFdU52MjV2cjR4bncrWlVmL1hpTlZINmRWUkFRbEpLT0Vx?=
+ =?utf-8?B?WUdpRTR3RUZQZ05Ic1g4ZzFuY2I3eFhIY1doN0dWM0dkMUNJZHdSNEtWVFdp?=
+ =?utf-8?B?dXg2WFNwU3c0N1NVMkhmYWprTDdSUjVJOElYckc1U1FGZVl1UnZibkxVbjlu?=
+ =?utf-8?B?MWpqQWNvOVJEN3hULzZ2bXF1Ung0a1Q0OWd0eDQ3TWl2a2loUTIzZEp2OFAz?=
+ =?utf-8?B?TVptMGQ1bmRrSGhrMFhndk45cElLSTNOZWhHNlBWVjdFQ1haeE9VdW1CWm9h?=
+ =?utf-8?B?U1JpQXF0YU54cmI5VnZaMk9LNmpmOCs5WllrNWFiSU9RaGhqVngybXFIVmpJ?=
+ =?utf-8?B?LzNRU1M5YllnUmltOHJrZk80UndoTGc4NkJHeElBSkN0Z05VazEvaHVNWms0?=
+ =?utf-8?B?ZjU2aVBHRGxCWmNmN0RGK1pnZVJUQ3FqbFk2czF4cmd2WG1xNkZNZEs1SEFZ?=
+ =?utf-8?B?QmkxZVRnbzVPSmxnVVFuZVZ2TGJuRWxhbTdUeTg5SnVGckhuV2toYzNFUzBH?=
+ =?utf-8?B?bEZaaS9CdXlPeHJxbDg0N3haSVcrM1RsK05BSTJ2S0JsSkhWckdEc1ozY0pv?=
+ =?utf-8?B?ZFFkbWx1TEx3TDdsZXoza2QyVjN5YnhKSmFHYjgxL0lPTGZCQlhJbDBlVG9J?=
+ =?utf-8?B?YmdGY3h4TVZpbmhobDhYUThMR0ZEcStaTmRhakhET2ZEWkt5am00Mm84VTlL?=
+ =?utf-8?B?S2RlNm1vMEd1U3lueFI5U3NOQmw5UTNzU3N5bHg5Q2FTWXVXVnI0Z1ordkVE?=
+ =?utf-8?B?NkVCWDNieWd3ZlhRY2ZNS1gwdVVDdWd3L0M4eXdTenFSM25EWDh2OEtoQjJu?=
+ =?utf-8?B?dTR0OXR5U1dMSzM3N1dQWkg3WldUTUo2Y0htelo0UG9rSk52NHBPT2RLZzYr?=
+ =?utf-8?B?cnJVSE1OVlBFMzBYTUJxY3lzNkExdWFLakNTVEd2YitGR0ZzN2lTVkp5VFVK?=
+ =?utf-8?B?RUREN1JVc1Q4b0hzR1FPejRjOEJoN3NwcEVhVytxbXNORDVsQ3pFMDg5bGps?=
+ =?utf-8?B?Zk1RT295aE5ySlNGZWJ3bEVVMTMrd2l5Ni8vaGJNVW1xSWI1SFF1ZmgxOEp2?=
+ =?utf-8?B?THl2TnhWOXdkbDIxT21CcEJqMWx5dnFKN0djY3ZMZUpxMXlBcVFyNnVzS3Bl?=
+ =?utf-8?B?d09FUDNqSWZwbGgwdDVMUlMvRldjV05ZYm1PaWxOejBsUTMwYzBnb0ZDZXl1?=
+ =?utf-8?B?MElpZDd5TUlFODRpNGpFOUg3eStHNG1VR1dRaVNsVEpkSW4xWkRCVEV4cnN4?=
+ =?utf-8?B?eEhrK0o3TjZsWERndkU2WDF4NGRKMGF5amlDU3hwb3lpdVNUMXJTUDZkQ0RF?=
+ =?utf-8?B?M3N5TWlRUlkrSFE3V2FRTStSVXF1OUdGdFRQSW5OeWhaM1NvbXB5OW1uWndx?=
+ =?utf-8?Q?faTlpNddUjLEWQshn94hbxIA0?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <7A6520D008628743BC41E28F2327FD96@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: Fwd: After kernel 6.3.7 or 6.3.8 b43 driver fails
-Content-Language: en-US
-To: Sardonimous <sardonimous@hotmail.com>, Arnd Bergmann <arnd@arndb.de>,
- Bagas Sanjaya <bagasdotme@gmail.com>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>,
- Linux Wireless <linux-wireless@vger.kernel.org>,
- Netdev <netdev@vger.kernel.org>
-Cc: =?UTF-8?Q?Michael_B=c3=bcsch?= <m@bues.ch>,
- kernel test robot <lkp@intel.com>, Simon Horman <simon.horman@corigine.com>,
- Kalle Valo <kvalo@kernel.org>
-References: <27829c69-515c-36a6-4beb-3210225f8936@gmail.com>
- <b9428e48-f0f9-46f6-892c-4c8834c930c4@app.fastmail.com>
- <RO2P215MB193850DDADD38492BEC8CC2FA720A@RO2P215MB1938.LAMP215.PROD.OUTLOOK.COM>
- <a3bc5eb5-9639-8016-36ab-105abc8c0ca3@gmail.com>
- <69b98eb4-2c4e-fe75-90b4-4b08505a595a@lwfinger.net>
- <RO2P215MB193879B2D99DD0BAF59EFA92A721A@RO2P215MB1938.LAMP215.PROD.OUTLOOK.COM>
- <e0a08449-554a-4a28-ac50-7051866eb95e@app.fastmail.com>
- <da80b806-de3f-c7ea-0352-cd23e0f6dd65@lwfinger.net>
- <RO2P215MB1938BD13105900F3525E0FE7A721A@RO2P215MB1938.LAMP215.PROD.OUTLOOK.COM>
- <67faf4f4-f36c-3ff7-03b8-cd259e4a5548@lwfinger.net>
- <RO2P215MB1938BA68BBB683EC696F4BFAA726A@RO2P215MB1938.LAMP215.PROD.OUTLOOK.COM>
-From: Larry Finger <Larry.Finger@lwfinger.net>
-In-Reply-To: <RO2P215MB1938BA68BBB683EC696F4BFAA726A@RO2P215MB1938.LAMP215.PROD.OUTLOOK.COM>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MW2PR12MB4667.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5df7761f-64d4-4de3-76c7-08db765b88a4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Jun 2023 15:39:30.9201
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Lc0a/+whK7dKB46As2fcqwnEULf6heMCtXLxhFlldkz3OG90pzGfdjCqqCEFOgRtoOcg3Ns4kWe2OrzqFHEZ2w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6111
 
-On 6/26/23 07:44, Sardonimous wrote:
-> If I were to send you some test patches, could you create a kernel with them 
-> applied?
-> 
-> Doubtful.
-
-Sardonimous,
-
-OK, that essentially eliminates  getting DMA to work. The cost of a MacBookPro7 
-is too much for me to acquire one to debug that issue.
-
-On my PowerBook G4, I also got the failure to connect, thus I should be able to 
-fix that problem, but getting a new kernel with the fix onto your machine will 
-not be easy.
-
-Is it possible to ssh into your machine, or to use TeamViewer? Those questions 
-do not need an answer now, but think about them.
-
-Larry
-
-
-
+T24gNi8yNS8yMDIzIDY6MTUgUE0sIEJhZ2FzIFNhbmpheWEgd3JvdGU6DQo+IEhpLA0KPiANCj4g
+SSBub3RpY2UgYSByZWdyZXNzaW9uIHJlcG9ydCBvbiBCdWd6aWxsYSBbMV0uIFF1b3RpbmcgZnJv
+bSBpdDoNCg0KWy4uLl0NCg0KPj4gT25seSBvbmUgZHJpdmUsIG91dCBvZiA2IGlzIHVzYWJsZS4N
+Cj4+DQo+PiBUaGVzZSBkcml2ZXMgYXJlIHJhdGhlciBjb21tb24gZGF0YWNlbnRlciBkcml2ZXMg
+KFNhbXN1bmcgU00tOTUzKS4NCj4+DQo+PiAgRnJvbSBhbm90aGVyIEJ1Zy1SZXBvcnQgKGh0dHBz
+Oi8vYnVnemlsbGEua2VybmVsLm9yZy9zaG93X2J1Zy5jZ2k/aWQ9MjE3Mzg0KToNCj4+DQo+PiBU
+byBmaXggaXQsIHBsZWFzZSBhZGQgdHdvIHN0cmluZ3MgaW4gcGNpLmMNCj4+DQo+PiB7IFBDSV9E
+RVZJQ0UoMHgxNDRkLCAweGE4MDIpLCAvKiBTQU1TVU5HIE1aMVdWNDgwSENHTC0wMDBNViAgKi8N
+Cj4+IC5kcml2ZXJfZGF0YSA9IE5WTUVfUVVJUktfQk9HVVNfTklELCB9LA0KPj4NCg0KUGxlYXNl
+IHNlbmQgYSBmb3JtYWwgcGF0Y2ggSSdsbCBiZSBoYXBweSB0byByZXZpZXcgaXQgLi4NCg0KLWNr
+DQoNCg0K
