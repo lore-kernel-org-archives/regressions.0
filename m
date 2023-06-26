@@ -1,45 +1,13 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26228628
-	for <regressions@lists.linux.dev>; Mon, 26 Jun 2023 01:15:58 +0000 (UTC)
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-6686708c986so2783976b3a.0
-        for <regressions@lists.linux.dev>; Sun, 25 Jun 2023 18:15:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1687742158; x=1690334158;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vAxpc4mOo9pLKmGhYj5zSZwN0dqRAYuo83a1IAsjD2Y=;
-        b=p0Q3kJsEYL5vGgthdOtN0O6KoO3WWKMPix1c5lFCgtGJwmRcMUQSpaV04R6L+6Iw2f
-         +3dqh4LVkORjKa5jQmkJYkoD3zcfiQlkVfmQolr6M74mDz5DPC0BiTJ/b2xj1sKXYkUl
-         UeKneu1GETjjOoWq1s0+O/v+qrazB1lEnL7cLjD7xU2qgjahu5Z309w1cBAxUQu/1n8G
-         TkaF/PEkFVRu0D7rYR9ya9c8r/ClPvPiPqVj98psKpSTQUk1034HPbXD5uvXXUrc2vOr
-         gpHmd7jczaTdC3gRmAqM2LQJa74w1iVoxxIX+6NJ6DhGf0b3sPZV/kiQoJLrJ46+jI9w
-         pOdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687742158; x=1690334158;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=vAxpc4mOo9pLKmGhYj5zSZwN0dqRAYuo83a1IAsjD2Y=;
-        b=ASHC6mp4+KLecJU2wLOXJOzIKBAZHAWtHj5Ibn6pd7F9VuKBN0vav1VS/ijWg/Ng1n
-         lrVbmHb+KWx0UHSL3GpY/YnC+lrP6zeOAh9vNA1tfYQIFrEkTthlaMVLFBH4lv1VxzDu
-         hc+9H+wViFc5poRClFHiRnAbiS7rT2a0zfN3sQs9YUQEC43UFxgVxyLWNzoE3MDDuwwn
-         1ckSxbY0EUW98RnVewiNzrvaZ1V3P9dDMzTZVpKFhbRi2MNzMwkVBgf/6teS+E4poRNy
-         ZaaPAdaEMMjFT4CKphM0lBpZ1ZZ8zcjhCvzdIYkuUj9fWwu34uAQMzSvFnzEphS3NKU5
-         Joag==
-X-Gm-Message-State: AC+VfDydJbQ0tBXyUGSPb1NVWHRxV6rhyk+e955ZaE6CmCCMrmp4CyC/
-	oZm8uMY3XGOQ/JXh6CfAhvk=
-X-Google-Smtp-Source: ACHHUZ5zUic1RIuJE0aEuxFw7H3zDO/jZUsTfmvRWLtZp89kOAmqBYhH7FVYTdPRFmz8PrhXDFmctw==
-X-Received: by 2002:a05:6a21:3292:b0:126:561c:9ebc with SMTP id yt18-20020a056a21329200b00126561c9ebcmr7748180pzb.31.1687742158234;
-        Sun, 25 Jun 2023 18:15:58 -0700 (PDT)
-Received: from [192.168.0.103] ([103.131.18.64])
-        by smtp.gmail.com with ESMTPSA id j191-20020a6380c8000000b0053f5ff753e2sm2974759pgd.23.2023.06.25.18.15.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 25 Jun 2023 18:15:57 -0700 (PDT)
-Message-ID: <d18d2a08-9d24-0209-c2cf-baf60bbf5048@gmail.com>
-Date: Mon, 26 Jun 2023 08:15:49 +0700
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2AC346A0
+	for <regressions@lists.linux.dev>; Mon, 26 Jun 2023 08:12:08 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1qDhKQ-0003tL-C9; Mon, 26 Jun 2023 10:12:06 +0200
+Message-ID: <fea36fd0-e71f-bb09-f82d-18214d038439@leemhuis.info>
+Date: Mon, 26 Jun 2023 10:12:05 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -48,82 +16,52 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.12.0
-Content-Language: en-US
-To: Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>,
- Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
- "Clemens S." <cspringsguth@gmail.com>,
- Martin Belanger <martin.belanger@dell.com>,
- Chaitanya Kulkarni <kch@nvidia.com>, John Meneghini <jmeneghi@redhat.com>,
- Hannes Reinecke <hare@suse.de>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>,
- Linux NVMe <linux-nvme@lists.infradead.org>
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-Subject: Fwd: Need NVME QUIRK BOGUS for SAMSUNG MZ1WV480HCGL-000MV (Samsung
- SM-953 Datacenter SSD)
+Subject: Re: Kernel oops with netfilter: nf_tables: incorrect error path
+ handling with NFT_MSG_NEWRULE
+Content-Language: en-US, de-DE
+To: Matthias Maier <tamiko@43-1.org>, Pablo Neira Ayuso <pablo@netfilter.org>
+Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <87cz1j5tof.fsf@43-1.org>
+From: "Linux regression tracking #adding (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <87cz1j5tof.fsf@43-1.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1687767128;846c105f;
+X-HE-SMSGID: 1qDhKQ-0003tL-C9
 
-Hi,
+[CCing the regression list, as it should be in the loop for regressions:
+https://docs.kernel.org/admin-guide/reporting-regressions.html]
 
-I notice a regression report on Bugzilla [1]. Quoting from it:
+[TLDR: I'm adding this report to the list of tracked Linux kernel
+regressions; the text you find below is based on a few templates
+paragraphs you might have encountered already in similar form.
+See link in footer if these mails annoy you.]
 
-> Hello,
-> since upgrading one of my hosts to KErnel 6.2 i have a problem with 6 nvme disks (SAMSUNG MZ1WV480HCGL-000MV).
+On 25.06.23 19:38, Matthias Maier wrote:
 > 
-> This problem didn't occur with Kernel 5.15.
+>   commit 1240eb93f0616b21c675416516ff3d74798fdc97
+>          aka bdace3b1a51887211d3e49417a18fdbd315a313b (linux-6.3.y)
+>   netfilter: nf_tables: incorrect error path handling with NFT_MSG_NEWRULE
 > 
-> Here is log from dmesg | grep nvme:
-> 
-> nvme nvme0: pci function 0000:04:00.0                                                                                                                                                                                                                                                                                         
-> nvme nvme1: pci function 0000:05:00.0                                                                                                                                                                                                                                                                                         
-> nvme nvme2: pci function 0000:06:00.0                                                                                                                                                                                                                                                                                         
-> nvme nvme3: pci function 0000:07:00.0                                                                                                                                                                                                                                                                                         
-> nvme nvme4: pci function 0000:0a:00.0                                                                                                                                                                                                                                                                                         
-> nvme nvme5: pci function 0000:0b:00.0                                                                                                                                                                                                                                                                                         
-> nvme nvme0: 8/0/0 default/read/poll queues                                                                                                                                                                                                                                                                                    
-> nvme nvme1: 8/0/0 default/read/poll queues                                                                                                                                                                                                                                                                                    
-> nvme nvme2: 8/0/0 default/read/poll queues                                                                                                                                                                                                                                                                                    
-> nvme nvme3: 8/0/0 default/read/poll queues                                                                                                                                                                                                                                                                                    
-> nvme nvme4: 8/0/0 default/read/poll queues                                                                                                                                                                                                                                                                                    
-> nvme nvme5: 8/0/0 default/read/poll queues                                                                                                                                                                                                                                                                                    
-> nvme nvme1: globally duplicate IDs for nsid 1                                                                                                                                                                                                                                                                                 
-> nvme nvme1: VID:DID 144d:a802 model:SAMSUNG MZ1WV480HCGL-000MV firmware:BXU87M9Q                                                                                                                                                                                                                                              
-> nvme nvme2: globally duplicate IDs for nsid 1                                                                                                                                                                                                                                                                                 
-> nvme nvme2: VID:DID 144d:a802 model:SAMSUNG MZ1WV480HCGL-000MV firmware:BXU87M9Q                                                                                                                                                                                                                                              
-> nvme nvme4: globally duplicate IDs for nsid 1                                                                                                                                                                                                                                                                                 
-> nvme nvme3: globally duplicate IDs for nsid 1                                                                                                                                                                                                                                                                                 
-> nvme nvme4: VID:DID 144d:a802 model:SAMSUNG MZ1WV480HCGL-000MV firmware:BXU87M9Q                                                                                                                                                                                                                                              
-> nvme nvme3: VID:DID 144d:a802 model:SAMSUNG MZ1WV480HCGL-000MV firmware:BXU87M9Q                                                                                                                                                                                                                                              
-> nvme nvme5: globally duplicate IDs for nsid 1                                                                                                                                                                                                                                                                                 
-> nvme nvme5: VID:DID 144d:a802 model:SAMSUNG MZ1WV480HCGL-000MV firmware:BXU87M9Q                                                                                                                                                                                                                                              
-> nvme0n1: p1 p9                           
-> 
-> Only one drive, out of 6 is usable.
-> 
-> These drives are rather common datacenter drives (Samsung SM-953).
-> 
-> From another Bug-Report (https://bugzilla.kernel.org/show_bug.cgi?id=217384):
-> 
-> To fix it, please add two strings in pci.c
-> 
-> { PCI_DEVICE(0x144d, 0xa802), /* SAMSUNG MZ1WV480HCGL-000MV  */
-> .driver_data = NVME_QUIRK_BOGUS_NID, },
-> 
-> Thanks in advance.
+> causes a kernel oops on my side when booting my machine; see attached.
 
-See Bugzilla for the full thread.
+Thanks for the report. I see that the solution is already in sight, but
+to ensure the issue doesn't fall through the cracks unnoticed, I'm
+adding it to regzbot, the Linux kernel regression tracking bot (using
+the commit ID the third patch Pablo mentioned, as the other two are
+already mainlined):
 
-The reporter had a quirk (see above) that fixed this regression,
-nevertheless I'm adding it to regzbot to make sure it doesn't fall
-through cracks unnoticed:
+#regzbot ^introduced 26b5a5712eb8
+#regzbot title net: netfilter: kernel oops with netfilter:
+#regzbot fix: netfilter: nf_tables: unbind non-anonymous set if rule
+construction fails
+#regzbot ignore-activity
 
-#regzbot introduced: 86c2457a8e8112f https://bugzilla.kernel.org/show_bug.cgi?id=217593
-#regzbot title: NVME_QUIRK_BOGUS_NID is needed for SAMSUNG MZ1WV480HCGL-000MV
-
-Thanks.
-
-[1]: https://bugzilla.kernel.org/show_bug.cgi?id=217593
-
--- 
-An old man doll... just what I always wanted! - Clara
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+That page also explains what to do if mails like this annoy you.
