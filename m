@@ -1,129 +1,145 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2040.outbound.protection.outlook.com [40.107.236.40])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CB877E6;
-	Tue, 27 Jun 2023 20:42:18 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B04FC433C0;
-	Tue, 27 Jun 2023 20:42:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1687898538;
-	bh=PhVyf8xFwpbeIewpuSWqGQNiBjgdiaef4J8d/Uldirc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hiIXBrZFHUD1AQkBPzXo4bBRPp1BoPTi1wmF1L6aKE/RG4bfkyLVLRRoZcX0jyDaA
-	 eXBhzKBsrRBipUSGiN0cRd1DmtoGnb6n0TwLbFr3wc2Czyadbvt2wKY+AXI6+QwSE1
-	 Yo1YaRPuQUxkG5xWxj0GG04FV0LsIIJ6ThfQXYa4wYgzFh7/CqqFQVted268FmOfvq
-	 1wy7ai80CcYbk9/+yDCzYAV3503Enoj+4zLX0mRF6RbujmclJJ86k5Ji8bqqWwEsMK
-	 9kz/NGGR9thvXxAQAHs8zUV5ZVh52yrSgcsyL2CZ0hDq6Cz7o0sKG6Qme7Z6OukSf5
-	 EadtA/LNc2tCw==
-Date: Tue, 27 Jun 2023 22:42:12 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Kuniyuki Iwashima <kuniyu@amazon.com>
-Cc: alexander@mihalicyn.com, davem@davemloft.net, edumazet@google.com,
-	konradybcio@kernel.org, kuba@kernel.org, kuni1840@gmail.com,
-	netdev@vger.kernel.org, ollieparanoid@postmarketos.org,
-	pabeni@redhat.com, regressions@lists.linux.dev,
-	syzkaller@googlegroups.com
-Subject: Re: [PATCH v2] af_unix: Call scm_recv() only after scm_set_cred().
-Message-ID: <20230627-kommilitonen-fachzeitschrift-e8b6430917d0@brauner>
-References: <CAJqdLrouNF44h7La8YY7rGqo5aT6GjLr-GxWphaiQVthszk9Gg@mail.gmail.com>
- <20230626203320.78583-1-kuniyu@amazon.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A732846A8
+	for <regressions@lists.linux.dev>; Tue, 27 Jun 2023 21:57:26 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=IPaKnZUBSNoIv852byhQ1Ia66p7FpRxNvt9EzY+W/LPzkS4fb4opMh2Aysg/JCy62OwxXK4lSs63n40iKgD35NLtm7OvjTkjoHmedtS0dMEQeCAjOFzejgRvVVnlbgP5mCutyolTY0fghuwq7NEXE/SCd1/+ZTUsK13FmPkqK3JEpgGZOd46o4Qv10pwvihe8VQfYrl0ldyoQ/tMXnk/h4XgUSx3+v17iH3HxwRZ+aMc1+uD34FP9zGxIfv+vfWG1QhKSy8+dlauxBzsIAMcbJgQdU5hLZmjWhEvKChGpT+6SgqJ2oo66i7kHtyUL/dLed4bCy0ZLEmJGtwaXMzhJA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=fAy4MowT8RNtDikR8QLqmmJctRU2i1cCBne/KRcR5tU=;
+ b=di/7qvdzPXdAjkBbXjCWPmjlc7op4gPp26BDeOQbuZqTk8YnPOiIWkZPxebeN1O/Z8N+0GFEQYTDmMlPgwb9UC8yDH2n7KanSZ5lCcgEu+1T122tnFUHMMrPIwMb+HgJboNC/QGWoys5Z+ESS6Hf/GJHFDLpXLu2k52ecy4B4WFQU6l6jpIgn9HB2JeSrsQJgic9CFCbdKrLbOO9/fpwTZeUgLr9veI9Na/O8YwHwh2Jykmg4yvc9V8JbFW6hSZUxPnZYxd9yWbATiyil3qVAGl6RASReICb5cjsV6WbjIIY/WelTbBJaXZ2Dbepf96eiskDMgCQ91H5GCq0MF6LNA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fAy4MowT8RNtDikR8QLqmmJctRU2i1cCBne/KRcR5tU=;
+ b=GK7iey9AgWSGxYllfLDB64MOr792fLWy2KYk+ryB5Sisg299Gu7YlQkK06vKaEV/PvBHZNHTY0gI9hTMlC9JsCh97gdccw9xqlSDtt2nDUolbsO4NkhoNKHtmdlddNGge+hpbfGNTTTzRte4/cTFCqxXtQHQGwNO8djt1scXgo2wkyxFGh5ABOLLovmLgdDfJ3si3ZnGiySx8c9sX2EUWLAqsyNKPUhaXvk1ganh2bE3l1/MHGwx2Obn+hzf28iV1t7VwG5bSO1zqtUjlznm0gceljIIHnOC1OXn2cGKclkw09LrYDzZ8P2cLji4bZwnzoke5mftg7prB3qLegSjUw==
+Received: from MW2PR12MB4667.namprd12.prod.outlook.com (2603:10b6:302:12::28)
+ by PH7PR12MB7235.namprd12.prod.outlook.com (2603:10b6:510:206::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6521.24; Tue, 27 Jun
+ 2023 21:57:23 +0000
+Received: from MW2PR12MB4667.namprd12.prod.outlook.com
+ ([fe80::92c6:4b21:586d:dabc]) by MW2PR12MB4667.namprd12.prod.outlook.com
+ ([fe80::92c6:4b21:586d:dabc%4]) with mapi id 15.20.6521.024; Tue, 27 Jun 2023
+ 21:57:23 +0000
+From: Chaitanya Kulkarni <chaitanyak@nvidia.com>
+To: Keith Busch <kbusch@kernel.org>, Bagas Sanjaya <bagasdotme@gmail.com>
+CC: Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>, Sagi
+ Grimberg <sagi@grimberg.me>, Clemens S. <cspringsguth@gmail.com>, Martin
+ Belanger <martin.belanger@dell.com>, Chaitanya Kulkarni
+	<chaitanyak@nvidia.com>, John Meneghini <jmeneghi@redhat.com>, Hannes
+ Reinecke <hare@suse.de>, Linux Kernel Mailing List
+	<linux-kernel@vger.kernel.org>, Linux Regressions
+	<regressions@lists.linux.dev>, Linux NVMe <linux-nvme@lists.infradead.org>,
+	Pankaj Raghav <p.raghav@samsung.com>, Kanchan Joshi <joshi.k@samsung.com>
+Subject: Re: Fwd: Need NVME QUIRK BOGUS for SAMSUNG MZ1WV480HCGL-000MV
+ (Samsung SM-953 Datacenter SSD)
+Thread-Topic: Fwd: Need NVME QUIRK BOGUS for SAMSUNG MZ1WV480HCGL-000MV
+ (Samsung SM-953 Datacenter SSD)
+Thread-Index: AQHZp8vEXCf0HN4D+UCKyqX/NpmNlK+e1EQAgABg2IA=
+Date: Tue, 27 Jun 2023 21:57:23 +0000
+Message-ID: <9998fadc-181d-d475-9248-549750bbdf1c@nvidia.com>
+References: <d18d2a08-9d24-0209-c2cf-baf60bbf5048@gmail.com>
+ <ZJsKBkPqoWzYyngS@kbusch-mbp.dhcp.thefacebook.com>
+In-Reply-To: <ZJsKBkPqoWzYyngS@kbusch-mbp.dhcp.thefacebook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: MW2PR12MB4667:EE_|PH7PR12MB7235:EE_
+x-ms-office365-filtering-correlation-id: 0d81c4a9-6ec3-4397-34d1-08db77597d11
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ U8Aj+gS6gkwRM0Gz3cHityNlCm2q4THIY9EQXFLP9pmrRGNBjyFoGPGovKXVENOkkIhJ+60Hk6JBolE/Dn4QcORB5B3/r/m0WYFVXwTnFNMa/AwuotEl0Opf1LXN4Bfabuo9TgCCKFhc/RB7oIiLZzBMBrlbKdLvr0hufMBk5LBvurDMOT/qndvK/5rs1JlCk5qlxhW4PzDSIB45mXKdjpvtBNH9Ljfal8EEsTJBmnTHcgmQlmHyajKwfhMJk1M8IeV6p5WIw0CCPPTVhqjb2QtpIw8OPpvjT2SvKXbs/UdEZP97/CsG9thmx+16ORDwgwp8EsQwJmaWoV1sMS84gxCPYE6HdxBGWG9b1cgD4CaSg3AgBH5gWGE6iJqbxiUXU4L5xaMAUGt3yRXPHApxiXUjNAr3CNEs5GBBKWse2pYkVGc9QVZmHBoVCcEZMHwLHUm2qy9VmPO2IcPyplYZf4HzaXv/xuZLoxrnitV2w1AcYHTcqjZwjUKRf8Zpf19dW8h1wP/V9O6WBhuIbN4+pbPNL6Vd7/PeY5Q0DoAnj71PpaqhSnJQWWRMY+hoGHEW0HijTveMYxSWPQoxCMLprEPYqeqhv6Z1LqLT/ZD7Ts1mTI5JqFbcqWATIkIYEYBv8abvDInLRWcW8kklqX1qcjt5xsPBSSLHYeeyK+V9REyiNJDlctUdqt5SynHcUAtg0kNLPTirjUFovQijV/zJur/Bvnx2qNPqpfBR4SwlXDc=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR12MB4667.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(346002)(136003)(396003)(376002)(366004)(39860400002)(451199021)(5660300002)(7416002)(316002)(64756008)(66556008)(66476007)(66446008)(66946007)(41300700001)(8936002)(8676002)(4744005)(2906002)(66899021)(31686004)(38070700005)(36756003)(38100700002)(122000001)(86362001)(31696002)(6486002)(966005)(71200400001)(186003)(6506007)(53546011)(76116006)(91956017)(4326008)(478600001)(110136005)(6512007)(54906003)(2616005)(83380400001)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?TCs0L0d4a01SZnpjeXFvV2paR2dvQ25EOHU4VmNSTTFKblhJa2hRb0VqdkNo?=
+ =?utf-8?B?czFtNUt2d1phbjg5T3FMWmJXcXBLbCtvcUw3YXV4M1JDcXRONUNvNk1WMTc0?=
+ =?utf-8?B?OWtINzFyMXd3cnJxVitsT0lPNlhKQWI1N2R1L25HK1hpTzJsVjBNZGpLc2hk?=
+ =?utf-8?B?aTVTZmdvZHlHRTJFQ05yd0dmNFJvMTdiTXhGdFNZWUhuY24yOEhacTV0NS9I?=
+ =?utf-8?B?V0pOZTluZWRvMDg2N3JURjk0K0pudlgveXVJU1dTU1RaOGljSGhuT0VPTldU?=
+ =?utf-8?B?WnJLYUV0ZEl1a1BVMVdlN3hHMU9ySFRhWWxxbWxudWRYQXBTdzJEK0J3SEJr?=
+ =?utf-8?B?ME5ZZk53MjNDbHpPd2RRME11NFpKdkptU0dadU9LQ3p0R2o0YW1OeUxiOVU2?=
+ =?utf-8?B?TFBQQzMrTFRibGtObmVhSEdnM0lsNFdHN0pSdHljL1RZNTN5VkhnVHo4UnQ5?=
+ =?utf-8?B?MCtKNG9PTjkxK2ZCMlhEUGM4S2NDNlF4YmlQR0pVL1B0VHVUUnlxOFdnR00z?=
+ =?utf-8?B?K2FiZXhOd2w4WTZqd05vSDZMNDlsSGNEL1NzTmh4b2FXWXIyMHJsdEpINkRF?=
+ =?utf-8?B?ZFNoYTQzZDQyd2I1ampEZGQ2d3psRkZtZndnWllhN29hS1pnLzVadFdGTGFE?=
+ =?utf-8?B?T29VWHplcG9Yd3M0Yzg1NjdHWnV6QitBVXNPLzJiWDhOVzFkUjVlcEtGNTgz?=
+ =?utf-8?B?WjArTTFPbFJCZDk2TU5jb2Y5UCtRV05wcTRVTDVveDZmMWxBcDN0VHlNNis5?=
+ =?utf-8?B?WjhGVUcva3BGVENXak5vRWRsMExqcmRHeDdQWURVNlUrSytuWEFwZGVPOGxo?=
+ =?utf-8?B?cEJDNXRyeU9SamdnUFEzVUxnZURaMElBaTUwS0dYNVBGU3AyMTZETE8yazkw?=
+ =?utf-8?B?SnhZZ3lUQURnM2NBMDdLbVU3dFJ5YmZQa25FNktpbFUvTHVBUStxYVlxWXVt?=
+ =?utf-8?B?Z09LblFLbUpXdFVzYlBWTENLUlM5TjhnbXoyVG5YZHlJY0FhTktGUzA0MWUz?=
+ =?utf-8?B?SEorSXdkVTVVYk1rL2NlNWtZcUlOdEJPUHZ5SHdRd2xOYmtmdjUzVzVVYzM3?=
+ =?utf-8?B?dGhFVnM5dXhzT0JoL0tLbjhxekRHOHovbVlWbzZ4SlMybEp3bmxLM1Avb3hD?=
+ =?utf-8?B?NjBNOTUyTTJreWdqUnFkTHArM1hTKzB2YVlJMnI5dDA0WjY5Nks4Y0RGdTB3?=
+ =?utf-8?B?eTViaGJlNGZGVmkrWkRjT3NJYjU5cHRIc015dnFqT0FZMDB3dGFwNXFicXEz?=
+ =?utf-8?B?ZWFuV0h2cDdDZWp5Mk9aUGFYSloySmYzd1NnbDgwQzU1SEx5cWdzWEswSERP?=
+ =?utf-8?B?ZXBYazhFbGgwakFwUzU0QkpuUGZIV0VKTm5ia1JqVVJubisxR3BhUDZZMk55?=
+ =?utf-8?B?RHl4NytUN2NoVkVXUUkyanFQdnlyWUdWMVRLWG5pVEswdTJveEdvQnAwRzB1?=
+ =?utf-8?B?NEN3cFpvbEY0aExmZTZzdHAxa3EwTEd2YUxYWDhTYzhlSlR1WEZRM1JzTTdv?=
+ =?utf-8?B?VGgwdkVFZ094YWhRMjBXdVE2VXNPbElTMTlyM0ZjSDBZelpHQVUrdW9IQWJN?=
+ =?utf-8?B?aUx3NVU1VVFXMzc1WDMzV0JVTDBCOWtVMWJaR1NvYXZyZHp0WjQ0R3pISWk0?=
+ =?utf-8?B?a251RENYUzJTMUhLS1NnZmRvUU55Z3ZGNW1UT1lNQ3ZBWXY2WmdEQzFLVFJJ?=
+ =?utf-8?B?Y3lvcWh2T21adWFtZjlzaTJydExtWnBoSDZpSDZoV2tJdmFPVEU5aWpDMlZW?=
+ =?utf-8?B?WTlFYmJId2lvTGVSc2xqZDBLS1h2VWpTZ0xla0ltUVNMNW1PVEx0UFFhbHkv?=
+ =?utf-8?B?Yy9OajVZejJXdmJ6L1VLeFMvaVVkSzZ1c0RJZWtNY2tZb0JhcnBEeUtLSWc1?=
+ =?utf-8?B?Y05nK2xmMXZta3dKOUpMV2QvczdVOXZvM1B3TjhnNDRobmhoZGRkRXphLzFO?=
+ =?utf-8?B?QmtKV0lNSzRPMXBQK2RJVzRFRlE2OWR5WXhlbEhZa0dCZTBDdlVPWTNjcVhW?=
+ =?utf-8?B?WmFKSXZUNldpQWEwRi8rUy9OeE5jM3BzdGFvUGtiUTcvRmZWcFdwSEJwdEp2?=
+ =?utf-8?B?U3M0R2dPU2Q4NnZZQ2xwUFZUMkt2cEFaTmorUFJQWk9PZ0ZWUUNiZ1Q2bUw1?=
+ =?utf-8?B?cFAxWGZKRWg5c3lkQU9EUlozV2FTS2xMbnNLTFBqdUMvb09BVWZBcGY4T1hP?=
+ =?utf-8?Q?9/yS2p+RylU2T1xXrK/rs8xIMXwAX63dbJUWCHQ0ZwdC?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <E5D09B90BE15534CAF2C485FBB772099@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230626203320.78583-1-kuniyu@amazon.com>
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MW2PR12MB4667.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0d81c4a9-6ec3-4397-34d1-08db77597d11
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Jun 2023 21:57:23.6668
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: BWo35xvkRLnpqhmyRtNMLzmG9IW24Y87rMOOhCvt+SjJM/ykgs9Hzssw2amXWSVNh6Xl1+yv1hWJY5loFapHBQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB7235
 
-On Mon, Jun 26, 2023 at 01:33:20PM -0700, Kuniyuki Iwashima wrote:
-> From: Alexander Mikhalitsyn <alexander@mihalicyn.com>
-> Date: Mon, 26 Jun 2023 19:45:37 +0200
-> > On Mon, Jun 26, 2023 at 7:39 PM Konrad Dybcio <konradybcio@kernel.org> wrote:
-> > >
-> > >
-> > >
-> > > On 22.06.2023 20:43, Kuniyuki Iwashima wrote:
-> > > > syzkaller hit a WARN_ON_ONCE(!scm->pid) in scm_pidfd_recv().
-> > > >
-> > > > In unix_stream_read_generic(), if there is no skb in the queue, we could
-> > > > bail out the do-while loop without calling scm_set_cred():
-> > > >
-> > > >   1. No skb in the queue
-> > > >   2. sk is non-blocking
-> > > >        or
-> > > >      shutdown(sk, RCV_SHUTDOWN) is called concurrently
-> > > >        or
-> > > >      peer calls close()
-> > > >
-> > > > If the socket is configured with SO_PASSCRED or SO_PASSPIDFD, scm_recv()
-> > > > would populate cmsg with garbage.
-> > > >
-> > > > Let's not call scm_recv() unless there is skb to receive.
-> > > >
-> > > > WARNING: CPU: 1 PID: 3245 at include/net/scm.h:138 scm_pidfd_recv include/net/scm.h:138 [inline]
-> > > > WARNING: CPU: 1 PID: 3245 at include/net/scm.h:138 scm_recv.constprop.0+0x754/0x850 include/net/scm.h:177
-> > > > Modules linked in:
-> > > > CPU: 1 PID: 3245 Comm: syz-executor.1 Not tainted 6.4.0-rc5-01219-gfa0e21fa4443 #2
-> > > > Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.16.0-0-gd239552ce722-prebuilt.qemu.org 04/01/2014
-> > > > RIP: 0010:scm_pidfd_recv include/net/scm.h:138 [inline]
-> > > > RIP: 0010:scm_recv.constprop.0+0x754/0x850 include/net/scm.h:177
-> > > > Code: 67 fd e9 55 fd ff ff e8 4a 70 67 fd e9 7f fd ff ff e8 40 70 67 fd e9 3e fb ff ff e8 36 70 67 fd e9 02 fd ff ff e8 8c 3a 20 fd <0f> 0b e9 fe fb ff ff e8 50 70 67 fd e9 2e f9 ff ff e8 46 70 67 fd
-> > > > RSP: 0018:ffffc90009af7660 EFLAGS: 00010216
-> > > > RAX: 00000000000000a1 RBX: ffff888041e58a80 RCX: ffffc90003852000
-> > > > RDX: 0000000000040000 RSI: ffffffff842675b4 RDI: 0000000000000007
-> > > > RBP: ffffc90009af7810 R08: 0000000000000007 R09: 0000000000000013
-> > > > R10: 00000000000000f8 R11: 0000000000000001 R12: ffffc90009af7db0
-> > > > R13: 0000000000000000 R14: ffff888041e58a88 R15: 1ffff9200135eecc
-> > > > FS:  00007f6b7113f640(0000) GS:ffff88806cf00000(0000) knlGS:0000000000000000
-> > > > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > > > CR2: 00007f6b7111de38 CR3: 0000000012a6e002 CR4: 0000000000770ee0
-> > > > PKRU: 55555554
-> > > > Call Trace:
-> > > >  <TASK>
-> > > >  unix_stream_read_generic+0x5fe/0x1f50 net/unix/af_unix.c:2830
-> > > >  unix_stream_recvmsg+0x194/0x1c0 net/unix/af_unix.c:2880
-> > > >  sock_recvmsg_nosec net/socket.c:1019 [inline]
-> > > >  sock_recvmsg+0x188/0x1d0 net/socket.c:1040
-> > > >  ____sys_recvmsg+0x210/0x610 net/socket.c:2712
-> > > >  ___sys_recvmsg+0xff/0x190 net/socket.c:2754
-> > > >  do_recvmmsg+0x25d/0x6c0 net/socket.c:2848
-> > > >  __sys_recvmmsg net/socket.c:2927 [inline]
-> > > >  __do_sys_recvmmsg net/socket.c:2950 [inline]
-> > > >  __se_sys_recvmmsg net/socket.c:2943 [inline]
-> > > >  __x64_sys_recvmmsg+0x224/0x290 net/socket.c:2943
-> > > >  do_syscall_x64 arch/x86/entry/common.c:50 [inline]
-> > > >  do_syscall_64+0x3f/0x90 arch/x86/entry/common.c:80
-> > > >  entry_SYSCALL_64_after_hwframe+0x72/0xdc
-> > > > RIP: 0033:0x7f6b71da2e5d
-> > > > Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 73 9f 1b 00 f7 d8 64 89 01 48
-> > > > RSP: 002b:00007f6b7113ecc8 EFLAGS: 00000246 ORIG_RAX: 000000000000012b
-> > > > RAX: ffffffffffffffda RBX: 00000000004bc050 RCX: 00007f6b71da2e5d
-> > > > RDX: 0000000000000007 RSI: 0000000020006600 RDI: 000000000000000b
-> > > > RBP: 00000000004bc050 R08: 0000000000000000 R09: 0000000000000000
-> > > > R10: 0000000000000120 R11: 0000000000000246 R12: 0000000000000000
-> > > > R13: 000000000000006e R14: 00007f6b71e03530 R15: 0000000000000000
-> > > >  </TASK>
-> > > >
-> > > > Fixes: 5e2ff6704a27 ("scm: add SO_PASSPIDFD and SCM_PIDFD")
-> > > > Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-> > > > Reported-by: syzkaller <syzkaller@googlegroups.com>
-> > > > Signed-off-by: Kuniyuki Iwashima <kuniyu@amazon.com>
-> > > > Reviewed-by: Alexander Mikhalitsyn <alexander@mihalicyn.com>
-> > > > ---
-> > > Hi, for $some_reason, this breaks reaching DE on the following setup:
-> > >
-> > > - postmarketOS (Alpine Linux w/ musl 1.2.4)
-> > > - busybox 1.36.1
-> > > - GNOME 44.1
-> > > - networkmanager 1.42.6
-> > > - openrc 0.47
-> > >
-> > > on at least 2 different Qualcomm boards.
-> > >
-> > > #regzbot introduced: 3f5f118bb657f94641ea383c7c1b8c09a5d46ea2
-
-Sorry for the shameless "I told you so" but I mentioned that skipping
-unconditionally will cause regressions when reviewing that patch.
+T24gNi8yNy8yMyAwOToxMCwgS2VpdGggQnVzY2ggd3JvdGU6DQo+IE9uIE1vbiwgSnVuIDI2LCAy
+MDIzIGF0IDA4OjE1OjQ5QU0gKzA3MDAsIEJhZ2FzIFNhbmpheWEgd3JvdGU6DQo+PiBTZWUgQnVn
+emlsbGEgZm9yIHRoZSBmdWxsIHRocmVhZC4NCj4+DQo+PiBUaGUgcmVwb3J0ZXIgaGFkIGEgcXVp
+cmsgKHNlZSBhYm92ZSkgdGhhdCBmaXhlZCB0aGlzIHJlZ3Jlc3Npb24sDQo+PiBuZXZlcnRoZWxl
+c3MgSSdtIGFkZGluZyBpdCB0byByZWd6Ym90IHRvIG1ha2Ugc3VyZSBpdCBkb2Vzbid0IGZhbGwN
+Cj4+IHRocm91Z2ggY3JhY2tzIHVubm90aWNlZDoNCj4+DQo+PiAjcmVnemJvdCBpbnRyb2R1Y2Vk
+OiA4NmMyNDU3YThlODExMmYgaHR0cHM6Ly9idWd6aWxsYS5rZXJuZWwub3JnL3Nob3dfYnVnLmNn
+aT9pZD0yMTc1OTMNCj4+ICNyZWd6Ym90IHRpdGxlOiBOVk1FX1FVSVJLX0JPR1VTX05JRCBpcyBu
+ZWVkZWQgZm9yIFNBTVNVTkcgTVoxV1Y0ODBIQ0dMLTAwME1WDQo+IFRoZXNlIGJ1ZyByZXBvcnRz
+IHJlYWxseSBzaG91bGQgZ28gdG8gdGhlIHZlbmRvcnMgdGhhdCBjcmVhdGVkIHRoZQ0KPiBicm9r
+ZW4gZGV2aWNlIHdpdGggbm9uLXVuaXF1ZSAidW5pcXVlIiBmaWVsZHMuIEl0J3MgZWFzeSBlbm91
+Z2ggZm9yIG1lDQo+IHRvIHdyaXRlIHRoZSBxdWlyayBwYXRjaCwgYnV0IGl0J3Mgbm90IHRoZSBp
+ZGVhbCBzb2x1dGlvbiBhbmQgbWF5IGhhcm0NCj4gZGV2aWNlcy9maXJtd2FyZXMgd2l0aCB0aGUg
+c2FtZSBWSUQ6RElEIHRoYXQgZG9uJ3QgaGF2ZSB0aGlzIHByb2JsZW0uDQo+IE5vdCBiZWluZyB0
+aGUgdmVuZG9yLCBJJ20gbm90IGluIGEgcG9zdGl0aW9uIHRvIGtub3cgdGhhdCwgc28gQ0MnaW5n
+DQo+IHNvbWUgU2Ftc3VuZyBmb2xrcy4NCg0KSXQgaXMgZWFzeSBlbm91Z2ggdG8gc2VuZCBhIHBh
+dGNoIGFsc28gYnV0IEkgZG9uJ3QgaGF2ZSB0aGUgZGV2aWNlLi4NCmhvcGVmdWxseSBTYW1zdW5n
+IGZvbGtzIGNhbiBoZWxwIHJlc29sdmUgdGhpcyAuLg0KDQotY2sNCg0KDQo=
