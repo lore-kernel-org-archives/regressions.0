@@ -1,148 +1,96 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2093CA922
-	for <regressions@lists.linux.dev>; Tue, 27 Jun 2023 07:31:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=XQpa9c5hGVf8V5MZIB+d15K6Y/YiH5GoQw4fpAih31c=; b=KrtBPNpF+/+Tvnv2Z7JXUi4f/S
-	nZb2l3/seqDyn86tl2FfkGPi5EPd2K4TCsiUhgXLfa1O9f+TTU+cLhuR74Muo9mDVrhsXZAWmYx8l
-	VyVdZhRJYhA+3dbd4lrfj4lWkGpHr+gPXdQjB/csHH88IEv1EpdjmCizemHKD4PY5MEGQHo/pRjwL
-	igyxgnZXRGwnad91S1V0f+pKr+LYehCS9U319UfqfDStSJeIkz1AgvLxUluSzRGzYADOb76MRx3Su
-	lyXeV2eaNAyEvYBq8j0X3JkoaPXEIICJRsp+0383NqG35INqi7T6Aoxo6nIXOgq1Zt9p+nsO15H7p
-	YbR8by3g==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-	id 1qE39r-004ZqJ-2r;
-	Tue, 27 Jun 2023 07:30:40 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 33F733002D6;
-	Tue, 27 Jun 2023 09:30:35 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 14A37248044D4; Tue, 27 Jun 2023 09:30:35 +0200 (CEST)
-Date: Tue, 27 Jun 2023 09:30:35 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Bagas Sanjaya <bagasdotme@gmail.com>
-Cc: "Steven Rostedt (Google)" <rostedt@goodmis.org>,
-	Pablo Neira Ayuso <pablo@netfilter.org>,
-	Jozsef Kadlecsik <kadlec@netfilter.org>,
-	Florian Westphal <fw@strlen.de>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Lingutla Chandrasekhar <clingutla@codeaurora.org>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	"J. Avila" <elavila@google.com>,
-	Vivek Anand <vivekanand754@gmail.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Thomas Renninger <trenn@suse.com>, Shuah Khan <shuah@kernel.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Regressions <regressions@lists.linux.dev>,
-	Linux Netfilter Development <netfilter-devel@vger.kernel.org>,
-	Netfilter Core Developers <coreteam@netfilter.org>,
-	Linux Networking <netdev@vger.kernel.org>,
-	Linux Power Management <linux-pm@vger.kernel.org>, x86@kernel.org
-Subject: Re: Fwd: High cpu usage caused by kernel process when upgraded to
- linux 5.19.17 or later
-Message-ID: <20230627073035.GV4253@hirez.programming.kicks-ass.net>
-References: <01ac399d-f793-49d4-844b-72cd8e0034df@gmail.com>
- <ZJpJkL3dPXxgw6RK@debian.me>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FB71168A2
+	for <regressions@lists.linux.dev>; Tue, 27 Jun 2023 09:13:31 +0000 (UTC)
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 35R6e77u023276;
+	Tue, 27 Jun 2023 01:40:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1687848007;
+	bh=dsiKsE91lKf5OvXMNGW1FlYQ10GaUD20ITfSwXJcI/I=;
+	h=From:To:CC:Subject:Date:References:In-Reply-To;
+	b=wEY4p2oTCRdbS1631HmBQOYmClEwoLSu7m7WA1qf+e+Uf3tlZRbankbpGHyOc+cR/
+	 vNJ1QaB14EKj12UiMhXTnnePXAkZXpgq/QG/tq8vKkwaiDbhOHcJHpWbHpocS1YVge
+	 eTeRiM1MrEAXgbzeXJ3gZyLyoNSuxlDBYctn7umE=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 35R6e7bp001016
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 27 Jun 2023 01:40:07 -0500
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 27
+ Jun 2023 01:40:07 -0500
+Received: from DLEE114.ent.ti.com ([fe80::bdc7:eccc:cd13:af84]) by
+ DLEE114.ent.ti.com ([fe80::bdc7:eccc:cd13:af84%17]) with mapi id
+ 15.01.2507.023; Tue, 27 Jun 2023 01:40:07 -0500
+From: "Purohit, Kaushal" <kaushal.purohit@ti.com>
+To: Linux regressions mailing list <regressions@lists.linux.dev>,
+        "Oliver
+ Neukum" <oneukum@suse.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+CC: "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
+Subject: RE: [EXTERNAL] Re: issues with cdc ncm host class driver
+Thread-Topic: [EXTERNAL] Re: issues with cdc ncm host class driver
+Thread-Index: Adll85tYAc+Cq2MlRoaUYHp7CXh/XQASqSKAADMoCYAPKDRrAAFFkoXA
+Date: Tue, 27 Jun 2023 06:40:07 +0000
+Message-ID: <2f71b6a5cc39445aa8c7f3c3558dfd50@ti.com>
+References: <da37bb0d43de465185c10aad9924f265@ti.com>
+ <28ec4e65-647f-2567-fb7d-f656940d4e43@suse.com>
+ <da479ebf-b3fb-0a58-16be-07fe55d36621@leemhuis.info>
+ <19199830-33b6-2a4c-e08b-d1a76ce4c59b@leemhuis.info>
+In-Reply-To: <19199830-33b6-2a4c-e08b-d1a76ce4c59b@leemhuis.info>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-originating-ip: [172.24.145.23]
+x-exclaimer-md-config: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <ZJpJkL3dPXxgw6RK@debian.me>
 
-On Tue, Jun 27, 2023 at 09:29:36AM +0700, Bagas Sanjaya wrote:
-> On Fri, Jun 23, 2023 at 07:58:51AM +0700, Bagas Sanjaya wrote:
-> > Hi,
-> >=20
-> > I notice a regression report on Bugzilla [1]. Quoting from it:
-> >=20
-> > > kernel process "kworker/events_power_efficient" uses a lot of cpu pow=
-er (100% on ESXI 6.7, ~30% on ESXI 7.0U3 or later) after upgrading from 5.1=
-7.3 to 5.19.17 or later.
-> > >=20
-> > > dmesg log:
-> > > [ 2430.973102]  </TASK>
-> > > [ 2430.973131] Sending NMI from CPU 1 to CPUs 0:
-> > > [ 2430.973241] NMI backtrace for cpu 0
-> > > [ 2430.973247] CPU: 0 PID: 22 Comm: kworker/0:1 Not tainted 6.3.3 #1
-> > > [ 2430.973254] Hardware name: VMware, Inc. VMware Virtual Platform/44=
-0BX Desktop Reference Platform, BIOS 6.00 11/12/2020
-> > > [ 2430.973258] Workqueue: events_power_efficient htable_gc [xt_hashli=
-mit]
-> > > [ 2430.973275] RIP: 0010:preempt_count_sub+0x2e/0xa0
-> > > [ 2430.973289] Code: 36 01 85 c9 75 1b 65 8b 15 a7 da f8 5e 89 d1 81 =
-e1 ff ff ff 7f 39 f9 7c 16 81 ff fe 00 00 00 76 3b f7 df 65 01 3d 8a da f8 =
-5e <c3> cc cc cc cc e8 98 aa 25 00 85 c0 74 f2 8b 15 da 71 ed 00 85 d2
-> > > [ 2430.973294] RSP: 0018:ffffb15ec00dbe58 EFLAGS: 00000297
-> > > [ 2430.973299] RAX: 0000000000000000 RBX: ffffb15ec12ad000 RCX: 00000=
-00000000001
-> > > [ 2430.973302] RDX: 0000000080000001 RSI: ffffffffa1c3313b RDI: 00000=
-000ffffffff
-> > > [ 2430.973306] RBP: dead000000000122 R08: 0000000000000010 R09: 00007=
-46e65696369
-> > > [ 2430.973309] R10: 8080808080808080 R11: 0000000000000018 R12: 00000=
-00000000000
-> > > [ 2430.973312] R13: 0000000000001e2b R14: ffffb15ec12ad048 R15: ffff9=
-1c279c26a05
-> > > [ 2430.973316] FS:  0000000000000000(0000) GS:ffff91c279c00000(0000) =
-knlGS:0000000000000000
-> > > [ 2430.973320] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > > [ 2430.973324] CR2: 000055fc138890e0 CR3: 000000010810e002 CR4: 00000=
-000001706f0
-> > > [ 2430.973374] Call Trace:
-> > > [ 2430.973388]  <TASK>
-> > > [ 2430.973390]  __local_bh_enable_ip+0x32/0x70
-> > > [ 2430.973413]  htable_selective_cleanup+0x95/0xc0 [xt_hashlimit]
-> > > [ 2430.973428]  htable_gc+0xf/0x30 [xt_hashlimit]
-> > > [ 2430.973440]  process_one_work+0x1d4/0x360
-> > > [ 2430.973459]  ? process_one_work+0x360/0x360
-> > > [ 2430.973467]  worker_thread+0x25/0x3b0
-> > > [ 2430.973476]  ? process_one_work+0x360/0x360
-> > > [ 2430.973483]  kthread+0xe1/0x110
-> > > [ 2430.973499]  ? kthread_complete_and_exit+0x20/0x20
-> > > [ 2430.973507]  ret_from_fork+0x1f/0x30
-> > > [ 2430.973526]  </TASK>
-> >=20
-> > See Bugzilla for the full thread and perf output.
-> >=20
-> > Anyway, I'm tracking it in regzbot so that it doesn't fall through
-> > cracks unnoticed:
-> >=20
-> > #regzbot introduced: v5.17.3..v5.19.17 https://bugzilla.kernel.org/show=
-_bug.cgi?id=3D217586
-> > #regzbot title: kworker/events_power_efficient utilizes full CPU power =
-after kernel upgrade
-> >=20
->=20
-> The reporter had found the culprit (see Bugzilla for more information), t=
-hus
-> telling regzbot:
->=20
-> #regzbot introduced: 6ad0ad2bf8a67e
-> #regzbot title: retbleed reporting causes high cpu utilization due to kwo=
-rker/events_power_efficient
-> #regzbot link: https://lore.kernel.org/all/PH0PR05MB8448A203A909959FAC754=
-B7AAF439@PH0PR05MB8448.namprd05.prod.outlook.com/
-> #regzbot link: 6ad0ad2bf8a67e
-
-Is there a problem other than that IBRS is slow and slower still on
-shitty virt?
-
-Does booting with: "spectre_v2=3Dretpoline retbleed=3Doff" make it go away?
-
-I can't tell from this. Also, please don't use bugzilla.
+QXBvbG9naWVzIGZvciBsYXRlIHJlcGx5LCBJIHdhcyBzdHVjayB3aXRoIHNvbWV0aGluZy4NCg0K
+WWVzIGF0dGFjaGVkIHBhdGNoIHdhcyB3b3JraW5nIHdlbGwuIEkgZGlkIG5vdCBzZWUgc2V0IGZp
+bHRlciBwYXJhbXMgcmVxdWVzdCBhZnRlciBhcHBseWluZyB0aGlzIHBhdGNoLg0KDQpUaGFua3Ms
+DQpLYXVzaGFsDQoNCi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQpGcm9tOiBMaW51eCByZWdy
+ZXNzaW9uIHRyYWNraW5nIChUaG9yc3RlbiBMZWVtaHVpcykgPHJlZ3Jlc3Npb25zQGxlZW1odWlz
+LmluZm8+IA0KU2VudDogVHVlc2RheSwgSnVuZSAyMCwgMjAyMyA3OjQ2IFBNDQpUbzogT2xpdmVy
+IE5ldWt1bSA8b25ldWt1bUBzdXNlLmNvbT47IFB1cm9oaXQsIEthdXNoYWwgPGthdXNoYWwucHVy
+b2hpdEB0aS5jb20+OyBzdGFibGVAdmdlci5rZXJuZWwub3JnDQpDYzogcmVncmVzc2lvbnNAbGlz
+dHMubGludXguZGV2OyBsaW51eC11c2JAdmdlci5rZXJuZWwub3JnDQpTdWJqZWN0OiBbRVhURVJO
+QUxdIFJlOiBpc3N1ZXMgd2l0aCBjZGMgbmNtIGhvc3QgY2xhc3MgZHJpdmVyDQoNCk9uIDA0LjA0
+LjIzIDEyOjMzLCBMaW51eCByZWdyZXNzaW9uIHRyYWNraW5nIChUaG9yc3RlbiBMZWVtaHVpcykg
+d3JvdGU6DQo+IFNpZGUgbm90ZTogdGhlcmUgaXMgbm93IGEgYnVnIHRyYWNraW5nIHRpY2tldCBm
+b3IgdGhpcyBpc3N1ZSwgdG9vOg0KPiBodHRwczovL2J1Z3ppbGxhLmtlcm5lbC5vcmcvc2hvd19i
+dWcuY2dpP2lkPTIxNzI5MA0KPiANCj4gT24gMDMuMDQuMjMgMTI6MDksIE9saXZlciBOZXVrdW0g
+d3JvdGU6DQo+PiBPbiAwMy4wNC4yMyAwODoxNCwgUHVyb2hpdCwgS2F1c2hhbCB3cm90ZToNCj4g
+DQo+Pj4gUmVmZXJyaW5nIHRvIHBhdGNoIHdpdGggY29tbWl0IElEDQo+Pj4gKCplMTBkY2IxYjZi
+YTcxNDI0M2FkNWEzNWExMWI5MWNjMTQxMDNhOWE5KikuDQo+Pj4NCj4+PiBUaGlzIGlzIGEgc3Bl
+YyB2aW9sYXRpb24gZm9ywqBDREMgTkNNIGNsYXNzIGRyaXZlci4gRHJpdmVyIGNsZWFybHkgDQo+
+Pj4gc2F5cyB0aGUgc2lnbmlmaWNhbmNlIG9mIG5ldHdvcmsgY2FwYWJpbGl0aWVzLiAoc25hcHNo
+b3QgYmVsb3cpDQo+Pj4NCj4+PiBIb3dldmVyLCB3aXRoIHRoZSBtZW50aW9uZWQgcGF0Y2ggdGhl
+c2UgdmFsdWVzIGFyZSBkaXNyZXNwZWN0ZWQgYW5kIA0KPj4+IGNvbW1hbmRzIHNwZWNpZmljIHRv
+IHRoZXNlIGNhcGFiaWxpdGllcyBhcmUgc2VudCBmcm9tIHRoZSBob3N0IA0KPj4+IHJlZ2FyZGxl
+c3Mgb2YgZGV2aWNlJyBjYXBhYmlsaXRpZXMgdG8gaGFuZGxlIHRoZW0uDQo+Pg0KPj4gUmlnaHQu
+IFNvIGZvciB5b3VyIGRldmljZSwgdGhlIGNvcnJlY3QgYmVoYXZpb3Igd291bGQgYmUgdG8gZG8g
+DQo+PiBub3RoaW5nLCB3b3VsZG4ndCBpdD8gVGhlIHBhY2tldHMgd291bGQgYmUgZGVsaXZlcmVk
+IGFuZCB0aGUgaG9zdCANCj4+IG5lZWRzIHRvIGZpbHRlciBhbmQgZGlzY2FyZCB1bnJlcXVlc3Rl
+ZCBwYWNrZXRzLg0KPiANCj4gI3JlZ3pib3QgXmludHJvZHVjZWQgZTEwZGNiMWI2YmE3MTQyNDNh
+ZA0KPiBodHRwczovL2J1Z3ppbGxhLmtlcm5lbC5vcmcvc2hvd19idWcuY2dpP2lkPTIxNzI5MA0K
+PiAjcmVnemJvdCBmcm9tOiBQdXJvaGl0LCBLYXVzaGFsDQo+ICNyZWd6Ym90IHRpdGxlIG5ldDog
+Y2RjX25jbTogc3BlYyB2aW9sYXRpb24gZm9yIENEQyBOQ00gI3JlZ3pib3QgDQo+IGlnbm9yZS1h
+Y3Rpdml0eQ0KDQpOb3Qgc3VyZSB3aGF0IGhhcHBlbiB0byB0aGlzLCBteSBsYXN0IGlucXVpcmll
+cyB3ZXJlIG5vdCBhbnN3ZXJlZCwgc28gaXQgc2VlbXMgbm9ib2R5IGNhcmVzIGFueW1vcmUNCg0K
+I3JlZ3pib3QgaW5jb25jbHVzaXZlOiByYWRpbyBzaWxlbmNlLCBpZ25vcmluZyAjcmVnemJvdCBp
+Z25vcmUtYWN0aXZpdHkNCg0KQ2lhbywgVGhvcnN0ZW4gKHdlYXJpbmcgaGlzICd0aGUgTGludXgg
+a2VybmVsJ3MgcmVncmVzc2lvbiB0cmFja2VyJyBoYXQpDQotLQ0KRXZlcnl0aGluZyB5b3Ugd2Fu
+bmEga25vdyBhYm91dCBMaW51eCBrZXJuZWwgcmVncmVzc2lvbiB0cmFja2luZzoNCmh0dHBzOi8v
+bGludXgtcmVndHJhY2tpbmcubGVlbWh1aXMuaW5mby9hYm91dC8jdGxkcg0KSWYgSSBkaWQgc29t
+ZXRoaW5nIHN0dXBpZCwgcGxlYXNlIHRlbGwgbWUsIGFzIGV4cGxhaW5lZCBvbiB0aGF0IHBhZ2Uu
+DQoNCg==
