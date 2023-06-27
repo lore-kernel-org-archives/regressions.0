@@ -1,258 +1,131 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E56F15AC4
-	for <regressions@lists.linux.dev>; Mon, 26 Jun 2023 22:34:05 +0000 (UTC)
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-668711086f4so2503780b3a.1
-        for <regressions@lists.linux.dev>; Mon, 26 Jun 2023 15:34:05 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82238622
+	for <regressions@lists.linux.dev>; Tue, 27 Jun 2023 00:31:07 +0000 (UTC)
+Received: by mail-ot1-f52.google.com with SMTP id 46e09a7af769-6b5d7e60015so3594251a34.0
+        for <regressions@lists.linux.dev>; Mon, 26 Jun 2023 17:31:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1687818845; x=1690410845;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=JEICAU15slllX+Lkh6ej3nIM4496nJAdw6QRd6tNHGo=;
-        b=l/RLDoqfu4S8Rt97BtNa3P1/8vd58dc0IlfXF/ilJ5s1SBukM/ChUGtUPnGSMg5fKk
-         q9/n2SjQ1h+aAQVfJlSsSlXDAM9W4k+qr7UXi306JWt+l+owTqZXSsLZfc+kaqX1WHow
-         3UNbDmmvai8HCIDNNWMuZJ+1+5xw6fj4+RKHD6GkRWR4TxQgrXe4bA00uVGpkvhvieEe
-         vNt9q6VHOvAhX/hIS94gYA0+e7KdNuV+5Aj+uu9SnkcwTA5od1lWBoaFGX2i9IObtPJW
-         9o242GxvGYn5zvuh735hrlYRzAfGSBjHCgIYJPHD7Qvv5OTfADziq4vgKH3GSslTRSdj
-         U2hQ==
+        d=gmail.com; s=20221208; t=1687825866; x=1690417866;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=O/2c9YwwQFhf0X0LD7Wd4iGQMCYKRK/hqVyQ7BZ1+ok=;
+        b=q8mhZZdYPrHx1I3QLvplF2h9BxzqYZesS+LMX5o3xCNa2BrRmKGuk0gzEUXntLV366
+         D24KIkzO67C2Wb+RbX7NYZQbzbEjoKTEWGD0nJ+8UFVIjBP7YZgTO6PvjHnd3ejedoHP
+         bKVL3syv5a9hXjbDpCcSnhqBlB44YgNm/+8RO65bAbaYpZpRXe8g9ezxRZqDvkW4I98d
+         FrnuSfeiVGtmb7Tx1o6ACRV73r4qa5h5CMHXkgp5+OIVXQbmsjofJzquTTxHICf6YWFZ
+         eAMboNZNdMx6oVqDMt4Ing9al5z9YVwzMu3iEk8Lu0rLyO1gQ9CiCeiGwwlYge2r/VYd
+         VCCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687818845; x=1690410845;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JEICAU15slllX+Lkh6ej3nIM4496nJAdw6QRd6tNHGo=;
-        b=JklIjdwQI1l+N86doS/JskmL7IDQdWxlb5YGEDtebZGAiOtyzQivBEgwresoZMA0P9
-         vJv82gNCw4RfoaDMUzvfZCaaXu1ZV/d6Q21dL+jZ3j33fVarIEX1IDCeN8Ot+wHIEtbF
-         DwdfNRQY7SjW05viSrqdE5J4gU4nws4EfDaqxNgREpDnKBkCm4WfOLZwoUELHMQ5e5h+
-         nkhbmJSWqixvcL9/Gba7/gXBAJLBXZBRnLwP5HCEYa4sEZQuUt8zFWHAcfSH/S2gXVvW
-         jyvzM5pAno8q29zTvw6qo+qugO/LQdp4JnQpg82BmvSxr4Q6iGSR8EWduSmG60SBskae
-         HI0A==
-X-Gm-Message-State: AC+VfDz5xWiIrSrjffcUxI9gXX0h5sADTfXM/Nl6dhHQkWOQD1mmGHwn
-	pOf5SjwerSG2tmhBkrcpQ8ki1/+C8ORZptf1
-X-Google-Smtp-Source: ACHHUZ5wTCBCt3YlwbiIZnNvzwAYCQGBX/Fj3D6gZWBjMfMyGlH9MxvgVI4ceYhSzkErIi0OCvTcKQ==
-X-Received: by 2002:a05:6a20:a121:b0:126:23d:cd10 with SMTP id q33-20020a056a20a12100b00126023dcd10mr13607964pzk.21.1687818844824;
-        Mon, 26 Jun 2023 15:34:04 -0700 (PDT)
-Received: from localhost ([2405:6581:d4e0:1600:59cc:f1fc:e0e2:7431])
-        by smtp.gmail.com with ESMTPSA id bm2-20020a056a00320200b0063b675f01a5sm4451607pfb.11.2023.06.26.15.34.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Jun 2023 15:34:04 -0700 (PDT)
-Date: Tue, 27 Jun 2023 07:34:01 +0900
-From: Nick Hastings <nicholaschastings@gmail.com>
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>,
-	Lukas Wunner <lukas@wunner.de>,
-	Salvatore Bonaccorso <carnil@debian.org>,
-	"1036530@bugs.debian.org" <1036530@bugs.debian.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>,
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"Limonciello, Mario" <Mario.Limonciello@amd.com>
-Subject: Re: Regression from "ACPI: OSI: Remove Linux-Dell-Video _OSI
- string"? (was: Re: Bug#1036530: linux-signed-amd64: Hard lock up of system)
-Message-ID: <ZJoSWftrHO65wmxz@xps>
-References: <ZHfa/wQlaVCeUC22@xps>
- <fe0ab1fa-6ed6-dc64-8165-8fc70669317b@amd.com>
- <CACO55tsuO1kQUFfPdPFUHm4WEQseCR2tQSDhFRzR+8wOECZCyA@mail.gmail.com>
- <MN0PR12MB61017541F5AC55485A490BCDE2499@MN0PR12MB6101.namprd12.prod.outlook.com>
- <CACO55tudULtvt_Hcdg+uqXeYkSAR_NZ1oD=R_KhuE_THSRe88g@mail.gmail.com>
- <MN0PR12MB6101DE067CF85E59AF187763E2499@MN0PR12MB6101.namprd12.prod.outlook.com>
- <CACO55tuqAH5Zt+X9pjLFZ-RcFgxpgjpqmrAHPvm4=fb_DMBHyw@mail.gmail.com>
- <ZHkxYo/a+/uInkLG@xps>
- <MN0PR12MB610181D29933EE4787DE9BC8E24EA@MN0PR12MB6101.namprd12.prod.outlook.com>
- <ed5f982e-c12c-b3a2-1108-62fba50bf9db@leemhuis.info>
+        d=1e100.net; s=20221208; t=1687825866; x=1690417866;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=O/2c9YwwQFhf0X0LD7Wd4iGQMCYKRK/hqVyQ7BZ1+ok=;
+        b=kZG6Fzrj3L5GBVMUaHEX+6LR/jKEwn1Uxf6wEkDL3LzhrGJd54KsNTIaqeQDRm1OdA
+         rC5ReR/SNsP7hlQzpucsu/zLkVe24QUU/0OqtwpWs70Wfal0N7PiBjFQXKpFWAlchmk2
+         PzvM5WMbZCAjGdR5/svsGDcJn+/afAHlGRDG3qPvsZhFVORFNUldRlDNAKltvB0kunzE
+         dyUsVRQJbMa8dwFThFWnuOp5MlSsPPTzNlBUn0HfVgQMiKP2SwWuIae+APilF6fhX8Lb
+         pJB0/hEovFXeqs7CQNIUCeEm4sRh7RhFNfWBL4B1tiYOQOeM7iScex8ZA2AvQXJXFgYQ
+         STdQ==
+X-Gm-Message-State: AC+VfDwH2xFmLh+D0cn2DfSQdrEnW6To7adTwF3GHyFYKTGECFSLVl98
+	QNeXv7e/GZW2ADG2VgUhtoY=
+X-Google-Smtp-Source: ACHHUZ55w/s5bZkFY+aekRuMQHhZ6sW4heSKvm03Smaj5yPZV18Y21i2LabwstcZX3q+GaColKLSGw==
+X-Received: by 2002:a9d:4801:0:b0:6b7:38c0:7420 with SMTP id c1-20020a9d4801000000b006b738c07420mr8014064otf.9.1687825866336;
+        Mon, 26 Jun 2023 17:31:06 -0700 (PDT)
+Received: from [192.168.1.128] ([216.130.59.33])
+        by smtp.gmail.com with ESMTPSA id t6-20020a9d7486000000b006b735499817sm2722862otk.25.2023.06.26.17.31.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 26 Jun 2023 17:31:05 -0700 (PDT)
+Sender: Larry Finger <larry.finger@gmail.com>
+Message-ID: <02659cdf-753b-442d-f110-1f92619d55c7@lwfinger.net>
+Date: Mon, 26 Jun 2023 19:31:04 -0500
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: Fwd: After kernel 6.3.7 or 6.3.8 b43 driver fails
+Content-Language: en-US
+To: Sardonimous <sardonimous@hotmail.com>, Arnd Bergmann <arnd@arndb.de>,
+ Bagas Sanjaya <bagasdotme@gmail.com>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Linux Wireless <linux-wireless@vger.kernel.org>,
+ Netdev <netdev@vger.kernel.org>
+Cc: =?UTF-8?Q?Michael_B=c3=bcsch?= <m@bues.ch>,
+ kernel test robot <lkp@intel.com>, Simon Horman <simon.horman@corigine.com>,
+ Kalle Valo <kvalo@kernel.org>
+References: <27829c69-515c-36a6-4beb-3210225f8936@gmail.com>
+ <b9428e48-f0f9-46f6-892c-4c8834c930c4@app.fastmail.com>
+ <RO2P215MB193850DDADD38492BEC8CC2FA720A@RO2P215MB1938.LAMP215.PROD.OUTLOOK.COM>
+ <a3bc5eb5-9639-8016-36ab-105abc8c0ca3@gmail.com>
+ <69b98eb4-2c4e-fe75-90b4-4b08505a595a@lwfinger.net>
+ <RO2P215MB193879B2D99DD0BAF59EFA92A721A@RO2P215MB1938.LAMP215.PROD.OUTLOOK.COM>
+ <e0a08449-554a-4a28-ac50-7051866eb95e@app.fastmail.com>
+ <da80b806-de3f-c7ea-0352-cd23e0f6dd65@lwfinger.net>
+ <RO2P215MB1938BD13105900F3525E0FE7A721A@RO2P215MB1938.LAMP215.PROD.OUTLOOK.COM>
+ <67faf4f4-f36c-3ff7-03b8-cd259e4a5548@lwfinger.net>
+ <RO2P215MB1938BA68BBB683EC696F4BFAA726A@RO2P215MB1938.LAMP215.PROD.OUTLOOK.COM>
+ <6afa0ebc-1d3f-8cba-79dc-8ddfe13c296a@lwfinger.net>
+ <RO2P215MB193898F3008E0F390CCEBC87A726A@RO2P215MB1938.LAMP215.PROD.OUTLOOK.COM>
+From: Larry Finger <Larry.Finger@lwfinger.net>
+In-Reply-To: <RO2P215MB193898F3008E0F390CCEBC87A726A@RO2P215MB1938.LAMP215.PROD.OUTLOOK.COM>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ed5f982e-c12c-b3a2-1108-62fba50bf9db@leemhuis.info>
 
-Hi Thorsten,
-
-* Linux regression tracking (Thorsten Leemhuis) <regressions@leemhuis.info> [230626 21:09]:
-> Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
-> for once, to make this easily accessible to everyone.
+On 6/26/23 16:33, Sardonimous wrote:
 > 
-> Nick, what's the status/was there any progress? Did you do what Mario
-> suggested and file a nouveau bug?
-
-It was not apparent that the suggestion to open "a Nouveau drm bug" was
-addressed to me.
-
-> I ask, as I still have this on my list of regressions and it seems there
-> was no progress in three+ weeks now.
-
-I have not pursued this further since as far as I could tell I already
-provided all requested information and I don't actually use nouveau, so
-I blacklisted it.
-
-Regards,
-
-Nick.
-
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-> --
-> Everything you wanna know about Linux kernel regression tracking:
-> https://linux-regtracking.leemhuis.info/about/#tldr
-> If I did something stupid, please tell me, as explained on that page.
+> On 6/26/23 10:21 AM, Larry Finger wrote:
+>> On 6/26/23 07:44, Sardonimous wrote:
+>>> If I were to send you some test patches, could you create a kernel with them 
+>>> applied?
+>>>
+>>> Doubtful.
+>>
+>> Sardonimous,
+>>
+>> OK, that essentially eliminates  getting DMA to work. The cost of a 
+>> MacBookPro7 is too much for me to acquire one to debug that issue.
+>>
+>> On my PowerBook G4, I also got the failure to connect, thus I should be able 
+>> to fix that problem, but getting a new kernel with the fix onto your machine 
+>> will not be easy.
 > 
-> #regzbot backburner: slow progress, likely just affects one machine
-> #regzbot poke
+> It might be possible to follow the arch instructions for patching the kernel
 > 
+> https://wiki.archlinux.org/title/Kernel/Arch_build_system
 > 
-> On 02.06.23 02:57, Limonciello, Mario wrote:
-> > [AMD Official Use Only - General]
-> > 
-> >> -----Original Message-----
-> >> From: Nick Hastings <nicholaschastings@gmail.com>
-> >> Sent: Thursday, June 1, 2023 7:02 PM
-> >> To: Karol Herbst <kherbst@redhat.com>
-> >> Cc: Limonciello, Mario <Mario.Limonciello@amd.com>; Lyude Paul
-> >> <lyude@redhat.com>; Lukas Wunner <lukas@wunner.de>; Salvatore
-> >> Bonaccorso <carnil@debian.org>; 1036530@bugs.debian.org; Rafael J.
-> >> Wysocki <rafael@kernel.org>; Len Brown <lenb@kernel.org>; linux-
-> >> acpi@vger.kernel.org; linux-kernel@vger.kernel.org;
-> >> regressions@lists.linux.dev
-> >> Subject: Re: Regression from "ACPI: OSI: Remove Linux-Dell-Video _OSI
-> >> string"? (was: Re: Bug#1036530: linux-signed-amd64: Hard lock up of system)
-> >>
-> >> Hi,
-> >>
-> >> * Karol Herbst <kherbst@redhat.com> [230602 03:10]:
-> >>> On Thu, Jun 1, 2023 at 7:21 PM Limonciello, Mario
-> >>> <Mario.Limonciello@amd.com> wrote:
-> >>>>> -----Original Message-----
-> >>>>> From: Karol Herbst <kherbst@redhat.com>
-> >>>>> Sent: Thursday, June 1, 2023 12:19 PM
-> >>>>> To: Limonciello, Mario <Mario.Limonciello@amd.com>
-> >>>>> Cc: Nick Hastings <nicholaschastings@gmail.com>; Lyude Paul
-> >>>>> <lyude@redhat.com>; Lukas Wunner <lukas@wunner.de>; Salvatore
-> >>>>> Bonaccorso <carnil@debian.org>; 1036530@bugs.debian.org; Rafael J.
-> >>>>> Wysocki <rafael@kernel.org>; Len Brown <lenb@kernel.org>; linux-
-> >>>>> acpi@vger.kernel.org; linux-kernel@vger.kernel.org;
-> >>>>> regressions@lists.linux.dev
-> >>>>> Subject: Re: Regression from "ACPI: OSI: Remove Linux-Dell-Video _OSI
-> >>>>> string"? (was: Re: Bug#1036530: linux-signed-amd64: Hard lock up of
-> >> system)
-> >>>>>
-> >>>>> On Thu, Jun 1, 2023 at 6:54 PM Limonciello, Mario
-> >>>>> <Mario.Limonciello@amd.com> wrote:
-> >>>>>>
-> >>>>>> [AMD Official Use Only - General]
-> >>>>>>
-> >>>>>>> -----Original Message-----
-> >>>>>>> From: Karol Herbst <kherbst@redhat.com>
-> >>>>>>> Sent: Thursday, June 1, 2023 11:33 AM
-> >>>>>>> To: Limonciello, Mario <Mario.Limonciello@amd.com>
-> >>>>>>> Cc: Nick Hastings <nicholaschastings@gmail.com>; Lyude Paul
-> >>>>>>> <lyude@redhat.com>; Lukas Wunner <lukas@wunner.de>; Salvatore
-> >>>>>>> Bonaccorso <carnil@debian.org>; 1036530@bugs.debian.org; Rafael
-> >> J.
-> >>>>>>> Wysocki <rafael@kernel.org>; Len Brown <lenb@kernel.org>; linux-
-> >>>>>>> acpi@vger.kernel.org; linux-kernel@vger.kernel.org;
-> >>>>>>> regressions@lists.linux.dev
-> >>>>>>> Subject: Re: Regression from "ACPI: OSI: Remove Linux-Dell-Video
-> >> _OSI
-> >>>>>>> string"? (was: Re: Bug#1036530: linux-signed-amd64: Hard lock up of
-> >>>>> system)
-> >>>>>>>
-> >>>>>>> On Thu, Jun 1, 2023 at 6:18 PM Limonciello, Mario
-> >>>>>>>>
-> >>>>>>>> Lyude, Lukas, Karol
-> >>>>>>>>
-> >>>>>>>> This thread is in relation to this commit:
-> >>>>>>>>
-> >>>>>>>> 24867516f06d ("ACPI: OSI: Remove Linux-Dell-Video _OSI string")
-> >>>>>>>>
-> >>>>>>>> Nick has found that runtime PM is *not* working for nouveau.
-> >>>>>>>>
-> >>>>>>>
-> >>>>>>> keep in mind we have a list of PCIe controllers where we apply a
-> >>>>>>> workaround:
-> >>>>>>>
-> >>>>>
-> >> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers
-> >>>>>>> /gpu/drm/nouveau/nouveau_drm.c?h=v6.4-rc4#n682
-> >>>>>>>
-> >>>>>>> And I suspect there might be one or two more IDs we'll have to add
-> >>>>>>> there. Do we have any logs?
-> >>>>>>
-> >>>>>> There's some archived onto the distro bug.  Search this page for
-> >>>>> "journalctl.log.gz"
-> >>>>>> https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1036530
-> >>>>>>
-> >>>>>
-> >>>>> interesting.. It seems to be the same controller used here. I wonder
-> >>>>> if the pci topology is different or if the workaround is applied at
-> >>>>> all.
-> >>>>
-> >>>> I didn't see the message in the log about the workaround being applied
-> >>>> in that log, so I guess PCI topology difference is a likely suspect.
-> >>>>
-> >>>
-> >>> yeah, but I also couldn't see a log with the usual nouveau messages,
-> >>> so it's kinda weird.
-> >>>
-> >>> Anyway, the output of `lspci -tvnn` would help
-> >>
-> >> % lspci -tvnn
-> >> -[0000:00]-+-00.0  Intel Corporation Device [8086:3e20]
-> >>            +-01.0-[01]----00.0  NVIDIA Corporation TU117M [GeForce GTX 1650
-> >> Mobile / Max-Q] [10de:1f91]
-> > 
-> > So the bridge it's connected to is the same that the quirk *should have been* triggering.
-> > 
-> > May 29 15:02:42 xps kernel: pci 0000:00:01.0: [8086:1901] type 01 class 0x060400
-> > 
-> > Since the quirk isn't working and this is still a problem in 6.4-rc4 I suggest opening a
-> > Nouveau drm bug to figure out why.
-> > 
-> >>            +-02.0  Intel Corporation CoffeeLake-H GT2 [UHD Graphics 630]
-> >> [8086:3e9b]
-> >>            +-04.0  Intel Corporation Xeon E3-1200 v5/E3-1500 v5/6th Gen Core
-> >> Processor Thermal Subsystem [8086:1903]
-> >>            +-08.0  Intel Corporation Xeon E3-1200 v5/v6 / E3-1500 v5 /
-> >> 6th/7th/8th Gen Core Processor Gaussian Mixture Model [8086:1911]
-> >>            +-12.0  Intel Corporation Cannon Lake PCH Thermal Controller
-> >> [8086:a379]
-> >>            +-14.0  Intel Corporation Cannon Lake PCH USB 3.1 xHCI Host Controller
-> >> [8086:a36d]
-> >>            +-14.2  Intel Corporation Cannon Lake PCH Shared SRAM [8086:a36f]
-> >>            +-15.0  Intel Corporation Cannon Lake PCH Serial IO I2C Controller #0
-> >> [8086:a368]
-> >>            +-15.1  Intel Corporation Cannon Lake PCH Serial IO I2C Controller #1
-> >> [8086:a369]
-> >>            +-16.0  Intel Corporation Cannon Lake PCH HECI Controller [8086:a360]
-> >>            +-17.0  Intel Corporation Cannon Lake Mobile PCH SATA AHCI Controller
-> >> [8086:a353]
-> >>            +-1b.0-[02-3a]----00.0-[03-3a]--+-00.0-[04]----00.0  Intel Corporation
-> >> JHL6340 Thunderbolt 3 NHI (C step) [Alpine Ridge 2C 2016] [8086:15d9]
-> >>            |                               +-01.0-[05-39]--
-> >>            |                               \-02.0-[3a]----00.0  Intel Corporation JHL6340
-> >> Thunderbolt 3 USB 3.1 Controller (C step) [Alpine Ridge 2C 2016]
-> >> [8086:15db]
-> >>            +-1c.0-[3b]----00.0  Intel Corporation Wi-Fi 6 AX200 [8086:2723]
-> >>            +-1c.4-[3c]----00.0  Realtek Semiconductor Co., Ltd. RTS525A PCI
-> >> Express Card Reader [10ec:525a]
-> >>            +-1d.0-[3d]----00.0  Samsung Electronics Co Ltd NVMe SSD Controller
-> >> SM981/PM981/PM983 [144d:a808]
-> >>            +-1f.0  Intel Corporation Cannon Lake LPC Controller [8086:a30e]
-> >>            +-1f.3  Intel Corporation Cannon Lake PCH cAVS [8086:a348]
-> >>            +-1f.4  Intel Corporation Cannon Lake PCH SMBus Controller
-> >> [8086:a323]
-> >>            \-1f.5  Intel Corporation Cannon Lake PCH SPI Controller
-> >>            [8086:a324]
-> >>
-> >>
-> >> Regards,
-> >>
-> >> Nick.
-> > 
+> It takes about a day to rebuild the kernel following this procedure.
+> 
+>> Is it possible to ssh into your machine, or to use TeamViewer? Those questions 
+>> do not need an answer now, but think about them.
+> 
+> This is complicated by being in a CGNAT environment.  I usually do this via 
+> tailscale.  Will have to think about it.
+> 
+>> Larry
+> 
+> Should pio=1 qos=0 cause the problems that it does?  It if is no longer a 
+> supported configuration, perhaps it should fail more gracefully.
+
+Setting qos=0 will generate a harmless warning, but the network still works. 
+Using pio=1 should still be supported.
+
+I am bisecting the source. It will take a while as I still have 13 kernels to 
+build and my PowerBook G4 takes about 6 hours per build - it is a lot slower 
+than your computer. At this point, I know that kernel v6.1.0 works, and that 
+v6.2.0-rc4 fails.
+
+If you can find a 6.1 kernel, it should work for you. Once I know the fix, we 
+can explore having you patch and rebuild your 6.3.X kernel.
+
+Larry
+
+
 
