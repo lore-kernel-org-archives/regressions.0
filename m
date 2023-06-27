@@ -1,279 +1,148 @@
-Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E17436B
-	for <regressions@lists.linux.dev>; Tue, 27 Jun 2023 02:39:27 +0000 (UTC)
-Received: by mail-oi1-f171.google.com with SMTP id 5614622812f47-3a04e5baffcso3609799b6e.3
-        for <regressions@lists.linux.dev>; Mon, 26 Jun 2023 19:39:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1687833567; x=1690425567;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=v4yjUuUHEpCaP+ghkho/RPIBeQxQEP/tQ09KT6l5PAw=;
-        b=llFkqqBLOJPE30qgsOOXK6LrX5TQhvgV0cu+09iiQefhoI2aMleqIqB9tyUokr8k0b
-         ce3LknC5fDn70y3o5IgpA28ZQ2G3GDTFnoC2leg20krOOvDccvvCDnkNzoo0WaFwMivv
-         OwDyMpqf9tiZSrhTl7/0LnJ8kW128IFQx2YfKnWqJwCjv2mnem66UooScWNqM+dFYyAJ
-         2h/cGkJ/QqehUhzsYXS8UqMCIC8b4I5dlJpj8bok1sjRobq5Vn7M5h1TvZFGirKt2E2h
-         NB6w4+G8JRnrT/KFbYgTQRb1jhxTY4IUy6VVrIziUYHda/Sb0Dg+R4nawbLDnQtrJcfH
-         4Rug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687833567; x=1690425567;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=v4yjUuUHEpCaP+ghkho/RPIBeQxQEP/tQ09KT6l5PAw=;
-        b=Ruc4DUsFt8t69kAqz5upTctFCkoiRCYO9rWskxdKuZXngLX/67shFHt2KOh3vy1xOO
-         OUzwzcugpE7t9lz/hQSU/sqm+7ZPZrULQ8Gv3qHumOEUrA6jCAByW+yK4K6oSGWeDttg
-         wY97lbJiJv+QCrMUN3MIbcO1POf7i5rsS4z4PLuPgXQcRXpeyVQOxmq64fDIQvXGuZMj
-         Q+TD+NRI9bzAU9LTM2lsn+6m3N6qtUpVTKu4JsNs83JUsaDuyfaj2sYk5WcWia7dUtEW
-         cNRylkHBWUpG5WGuFRNr+ptj16jE7BHL3seABt1z3nxXTjEOVSq8Q0T/Pkpw9/5su01b
-         o/Sw==
-X-Gm-Message-State: AC+VfDy9qw6F9IwGMcJkuT5xxEeycnfk1Va+06pWv9C7ZwYL4eHI1Cp4
-	NW3ewMlFeyt+c6zZgbtxxKE=
-X-Google-Smtp-Source: ACHHUZ6tDy7pQnSxhb+myr30blaGiiHnpAGwDgTqzzW8pcEPwP4ijxQpdeCtDQT/TutbeqjoUM/E3g==
-X-Received: by 2002:aca:1a1a:0:b0:39a:531b:db6c with SMTP id a26-20020aca1a1a000000b0039a531bdb6cmr32888503oia.47.1687833566749;
-        Mon, 26 Jun 2023 19:39:26 -0700 (PDT)
-Received: from debian.me ([103.131.18.64])
-        by smtp.gmail.com with ESMTPSA id b19-20020a170902d89300b001b3ce619e2esm4837086plz.179.2023.06.26.19.39.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Jun 2023 19:39:26 -0700 (PDT)
-Received: by debian.me (Postfix, from userid 1000)
-	id CCB6F81BD58D; Tue, 27 Jun 2023 09:39:20 +0700 (WIB)
-Date: Tue, 27 Jun 2023 09:39:20 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: bugzilla-daemon@kernel.org, Linux SCSI <linux-scsi@vger.kernel.org>,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2093CA922
+	for <regressions@lists.linux.dev>; Tue, 27 Jun 2023 07:31:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=XQpa9c5hGVf8V5MZIB+d15K6Y/YiH5GoQw4fpAih31c=; b=KrtBPNpF+/+Tvnv2Z7JXUi4f/S
+	nZb2l3/seqDyn86tl2FfkGPi5EPd2K4TCsiUhgXLfa1O9f+TTU+cLhuR74Muo9mDVrhsXZAWmYx8l
+	VyVdZhRJYhA+3dbd4lrfj4lWkGpHr+gPXdQjB/csHH88IEv1EpdjmCizemHKD4PY5MEGQHo/pRjwL
+	igyxgnZXRGwnad91S1V0f+pKr+LYehCS9U319UfqfDStSJeIkz1AgvLxUluSzRGzYADOb76MRx3Su
+	lyXeV2eaNAyEvYBq8j0X3JkoaPXEIICJRsp+0383NqG35INqi7T6Aoxo6nIXOgq1Zt9p+nsO15H7p
+	YbR8by3g==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+	id 1qE39r-004ZqJ-2r;
+	Tue, 27 Jun 2023 07:30:40 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 33F733002D6;
+	Tue, 27 Jun 2023 09:30:35 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 14A37248044D4; Tue, 27 Jun 2023 09:30:35 +0200 (CEST)
+Date: Tue, 27 Jun 2023 09:30:35 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Bagas Sanjaya <bagasdotme@gmail.com>
+Cc: "Steven Rostedt (Google)" <rostedt@goodmis.org>,
+	Pablo Neira Ayuso <pablo@netfilter.org>,
+	Jozsef Kadlecsik <kadlec@netfilter.org>,
+	Florian Westphal <fw@strlen.de>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Lingutla Chandrasekhar <clingutla@codeaurora.org>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	"J. Avila" <elavila@google.com>,
+	Vivek Anand <vivekanand754@gmail.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Thomas Renninger <trenn@suse.com>, Shuah Khan <shuah@kernel.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
 	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Regressions <regressions@lists.linux.dev>
-Cc: Adaptec OEM Raid Solutions <aacraid@microsemi.com>,
-	"James E.J. Bottomley" <jejb@linux.ibm.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	pheidologeton@protonmail.com
-Subject: Re: [Bug 217599] New: Adaptec 71605z hangs with aacraid: Host
- adapter abort request after update to linux 6.4.0
-Message-ID: <ZJpL2GD+VntdUXZp@debian.me>
-References: <bug-217599-11613@https.bugzilla.kernel.org/>
+	Linux Regressions <regressions@lists.linux.dev>,
+	Linux Netfilter Development <netfilter-devel@vger.kernel.org>,
+	Netfilter Core Developers <coreteam@netfilter.org>,
+	Linux Networking <netdev@vger.kernel.org>,
+	Linux Power Management <linux-pm@vger.kernel.org>, x86@kernel.org
+Subject: Re: Fwd: High cpu usage caused by kernel process when upgraded to
+ linux 5.19.17 or later
+Message-ID: <20230627073035.GV4253@hirez.programming.kicks-ass.net>
+References: <01ac399d-f793-49d4-844b-72cd8e0034df@gmail.com>
+ <ZJpJkL3dPXxgw6RK@debian.me>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="UP4jKEPv6Asbr+1k"
-Content-Disposition: inline
-In-Reply-To: <bug-217599-11613@https.bugzilla.kernel.org/>
-
-
---UP4jKEPv6Asbr+1k
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <ZJpJkL3dPXxgw6RK@debian.me>
 
-[also Cc: aacraid and SCSI subsystem maintainers]
-
-On Mon, Jun 26, 2023 at 10:36:13PM +0000, bugzilla-daemon@kernel.org wrote:
-> https://bugzilla.kernel.org/show_bug.cgi?id=3D217599
+On Tue, Jun 27, 2023 at 09:29:36AM +0700, Bagas Sanjaya wrote:
+> On Fri, Jun 23, 2023 at 07:58:51AM +0700, Bagas Sanjaya wrote:
+> > Hi,
+> >=20
+> > I notice a regression report on Bugzilla [1]. Quoting from it:
+> >=20
+> > > kernel process "kworker/events_power_efficient" uses a lot of cpu pow=
+er (100% on ESXI 6.7, ~30% on ESXI 7.0U3 or later) after upgrading from 5.1=
+7.3 to 5.19.17 or later.
+> > >=20
+> > > dmesg log:
+> > > [ 2430.973102]  </TASK>
+> > > [ 2430.973131] Sending NMI from CPU 1 to CPUs 0:
+> > > [ 2430.973241] NMI backtrace for cpu 0
+> > > [ 2430.973247] CPU: 0 PID: 22 Comm: kworker/0:1 Not tainted 6.3.3 #1
+> > > [ 2430.973254] Hardware name: VMware, Inc. VMware Virtual Platform/44=
+0BX Desktop Reference Platform, BIOS 6.00 11/12/2020
+> > > [ 2430.973258] Workqueue: events_power_efficient htable_gc [xt_hashli=
+mit]
+> > > [ 2430.973275] RIP: 0010:preempt_count_sub+0x2e/0xa0
+> > > [ 2430.973289] Code: 36 01 85 c9 75 1b 65 8b 15 a7 da f8 5e 89 d1 81 =
+e1 ff ff ff 7f 39 f9 7c 16 81 ff fe 00 00 00 76 3b f7 df 65 01 3d 8a da f8 =
+5e <c3> cc cc cc cc e8 98 aa 25 00 85 c0 74 f2 8b 15 da 71 ed 00 85 d2
+> > > [ 2430.973294] RSP: 0018:ffffb15ec00dbe58 EFLAGS: 00000297
+> > > [ 2430.973299] RAX: 0000000000000000 RBX: ffffb15ec12ad000 RCX: 00000=
+00000000001
+> > > [ 2430.973302] RDX: 0000000080000001 RSI: ffffffffa1c3313b RDI: 00000=
+000ffffffff
+> > > [ 2430.973306] RBP: dead000000000122 R08: 0000000000000010 R09: 00007=
+46e65696369
+> > > [ 2430.973309] R10: 8080808080808080 R11: 0000000000000018 R12: 00000=
+00000000000
+> > > [ 2430.973312] R13: 0000000000001e2b R14: ffffb15ec12ad048 R15: ffff9=
+1c279c26a05
+> > > [ 2430.973316] FS:  0000000000000000(0000) GS:ffff91c279c00000(0000) =
+knlGS:0000000000000000
+> > > [ 2430.973320] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > > [ 2430.973324] CR2: 000055fc138890e0 CR3: 000000010810e002 CR4: 00000=
+000001706f0
+> > > [ 2430.973374] Call Trace:
+> > > [ 2430.973388]  <TASK>
+> > > [ 2430.973390]  __local_bh_enable_ip+0x32/0x70
+> > > [ 2430.973413]  htable_selective_cleanup+0x95/0xc0 [xt_hashlimit]
+> > > [ 2430.973428]  htable_gc+0xf/0x30 [xt_hashlimit]
+> > > [ 2430.973440]  process_one_work+0x1d4/0x360
+> > > [ 2430.973459]  ? process_one_work+0x360/0x360
+> > > [ 2430.973467]  worker_thread+0x25/0x3b0
+> > > [ 2430.973476]  ? process_one_work+0x360/0x360
+> > > [ 2430.973483]  kthread+0xe1/0x110
+> > > [ 2430.973499]  ? kthread_complete_and_exit+0x20/0x20
+> > > [ 2430.973507]  ret_from_fork+0x1f/0x30
+> > > [ 2430.973526]  </TASK>
+> >=20
+> > See Bugzilla for the full thread and perf output.
+> >=20
+> > Anyway, I'm tracking it in regzbot so that it doesn't fall through
+> > cracks unnoticed:
+> >=20
+> > #regzbot introduced: v5.17.3..v5.19.17 https://bugzilla.kernel.org/show=
+_bug.cgi?id=3D217586
+> > #regzbot title: kworker/events_power_efficient utilizes full CPU power =
+after kernel upgrade
+> >=20
 >=20
->             Bug ID: 217599
->            Summary: Adaptec 71605z hangs with aacraid: Host adapter abort
->                     request after update to linux 6.4.0
->            Product: SCSI Drivers
->            Version: 2.5
->           Hardware: All
->                 OS: Linux
->             Status: NEW
->           Severity: high
->           Priority: P3
->          Component: AACRAID
->           Assignee: scsi_drivers-aacraid@kernel-bugs.osdl.org
->           Reporter: pheidologeton@protonmail.com
->         Regression: No
+> The reporter had found the culprit (see Bugzilla for more information), t=
+hus
+> telling regzbot:
 >=20
-> The controller works fine for a few minutes. Then it hangs for a few tens=
- of
-> seconds to a few minutes, then also works normally for a while. This bug =
-is
-> present in the 6.4.0 kernel release (6.3.9 works without hanging)
-> The messages in dmesg are as follows
->=20
-> [  287.137901] aacraid: Host adapter abort request.
->                aacraid: Outstanding commands on (10,0,0,0):
-> [  287.137909] aacraid: Host adapter abort request.
->                aacraid: Outstanding commands on (10,0,0,0):
-> [  287.137912] aacraid: Host adapter abort request.
->                aacraid: Outstanding commands on (10,0,0,0):
-> [  287.137914] aacraid: Host adapter abort request.
->                aacraid: Outstanding commands on (10,0,0,0):
-> [  287.137916] aacraid: Host adapter abort request.
->                aacraid: Outstanding commands on (10,0,0,0):
-> [  287.137919] aacraid: Host adapter abort request.
->                aacraid: Outstanding commands on (10,0,0,0):
-> [  287.137921] aacraid: Host adapter abort request.
->                aacraid: Outstanding commands on (10,0,0,0):
-> [  287.137924] aacraid: Host adapter abort request.
->                aacraid: Outstanding commands on (10,0,0,0):
-> [  287.137926] aacraid: Host adapter abort request.
->                aacraid: Outstanding commands on (10,0,0,0):
-> [  287.137928] aacraid: Host adapter abort request.
->                aacraid: Outstanding commands on (10,0,0,0):
-> [  287.137930] aacraid: Host adapter abort request.
->                aacraid: Outstanding commands on (10,0,0,0):
-> [  287.137933] aacraid: Host adapter abort request.
->                aacraid: Outstanding commands on (10,0,0,0):
-> [  287.137934] aacraid: Host adapter abort request.
->                aacraid: Outstanding commands on (10,0,0,0):
-> [  287.137937] aacraid: Host adapter abort request.
->                aacraid: Outstanding commands on (10,0,0,0):
-> [  287.137939] aacraid: Host adapter abort request.
->                aacraid: Outstanding commands on (10,0,0,0):
-> [  287.137941] aacraid: Host adapter abort request.
->                aacraid: Outstanding commands on (10,0,0,0):
-> [  287.137943] aacraid: Host adapter abort request.
->                aacraid: Outstanding commands on (10,0,0,0):
-> [  287.137945] aacraid: Host adapter abort request.
->                aacraid: Outstanding commands on (10,0,0,0):
-> [  287.137947] aacraid: Host adapter abort request.
->                aacraid: Outstanding commands on (10,0,0,0):
-> [  287.137949] aacraid: Host adapter abort request.
->                aacraid: Outstanding commands on (10,0,0,0):
-> [  287.137951] aacraid: Host adapter abort request.
->                aacraid: Outstanding commands on (10,0,0,0):
-> [  287.137952] aacraid: Host adapter abort request.
->                aacraid: Outstanding commands on (10,0,0,0):
-> [  287.137954] aacraid: Host adapter abort request.
->                aacraid: Outstanding commands on (10,0,0,0):
-> [  287.137956] aacraid: Host adapter abort request.
->                aacraid: Outstanding commands on (10,0,0,0):
-> [  287.137958] aacraid: Host adapter abort request.
->                aacraid: Outstanding commands on (10,0,0,0):
-> [  287.137960] aacraid: Host adapter abort request.
->                aacraid: Outstanding commands on (10,0,0,0):
-> [  287.137962] aacraid: Host adapter abort request.
->                aacraid: Outstanding commands on (10,0,0,0):
-> [  287.137964] aacraid: Host adapter abort request.
->                aacraid: Outstanding commands on (10,0,0,0):
-> [  287.137966] aacraid: Host adapter abort request.
->                aacraid: Outstanding commands on (10,0,0,0):
-> [  287.137967] aacraid: Host adapter abort request.
->                aacraid: Outstanding commands on (10,0,0,0):
-> [  287.137969] aacraid: Host adapter abort request.
->                aacraid: Outstanding commands on (10,0,0,0):
-> [  287.137971] aacraid: Host adapter abort request.
->                aacraid: Outstanding commands on (10,0,0,0):
-> [  287.157697] aacraid: Host bus reset request. SCSI hang ?
-> [  287.157706] aacraid 0000:02:00.0: outstanding cmd: midlevel-0
-> [  287.157708] aacraid 0000:02:00.0: outstanding cmd: lowlevel-0
-> [  287.157709] aacraid 0000:02:00.0: outstanding cmd: error handler-0
-> [  287.157711] aacraid 0000:02:00.0: outstanding cmd: firmware-32
-> [  287.157712] aacraid 0000:02:00.0: outstanding cmd: kernel-0
-> [  287.167040] aacraid 0000:02:00.0: Controller reset type is 3
-> [  287.167042] aacraid 0000:02:00.0: Issuing IOP reset
-> [  321.029712] aacraid 0000:02:00.0: IOP reset succeeded
-> [  321.066201] numacb=3D512 ignored
-> [  321.066843] aacraid: Comm Interface type2 enabled
-> [  344.845370] aacraid 0000:02:00.0: Scheduling bus rescan
-> [  358.294342] sd 10:0:0:0: [sda] Very big device. Trying to use READ
-> CAPACITY(16).
-> [  442.109147] aacraid: Host adapter abort request.
->                aacraid: Outstanding commands on (10,0,0,0):
-> [  442.109155] aacraid: Host adapter abort request.
->                aacraid: Outstanding commands on (10,0,0,0):
-> [  442.109158] aacraid: Host adapter abort request.
->                aacraid: Outstanding commands on (10,0,0,0):
-> [  442.109160] aacraid: Host adapter abort request.
->                aacraid: Outstanding commands on (10,0,0,0):
-> [  442.109162] aacraid: Host adapter abort request.
->                aacraid: Outstanding commands on (10,0,0,0):
-> [  442.109164] aacraid: Host adapter abort request.
->                aacraid: Outstanding commands on (10,0,0,0):
-> [  442.109166] aacraid: Host adapter abort request.
->                aacraid: Outstanding commands on (10,0,0,0):
-> [  442.109168] aacraid: Host adapter abort request.
->                aacraid: Outstanding commands on (10,0,0,0):
-> [  442.109170] aacraid: Host adapter abort request.
->                aacraid: Outstanding commands on (10,0,0,0):
-> [  442.109172] aacraid: Host adapter abort request.
->                aacraid: Outstanding commands on (10,0,0,0):
-> [  442.109174] aacraid: Host adapter abort request.
->                aacraid: Outstanding commands on (10,0,0,0):
-> [  442.109176] aacraid: Host adapter abort request.
->                aacraid: Outstanding commands on (10,0,0,0):
-> [  442.109178] aacraid: Host adapter abort request.
->                aacraid: Outstanding commands on (10,0,0,0):
-> [  442.109179] aacraid: Host adapter abort request.
->                aacraid: Outstanding commands on (10,0,0,0):
-> [  442.109181] aacraid: Host adapter abort request.
->                aacraid: Outstanding commands on (10,0,0,0):
-> [  442.109183] aacraid: Host adapter abort request.
->                aacraid: Outstanding commands on (10,0,0,0):
-> [  442.109185] aacraid: Host adapter abort request.
->                aacraid: Outstanding commands on (10,0,0,0):
-> [  442.109187] aacraid: Host adapter abort request.
->                aacraid: Outstanding commands on (10,0,0,0):
-> [  442.109189] aacraid: Host adapter abort request.
->                aacraid: Outstanding commands on (10,0,0,0):
-> [  442.109191] aacraid: Host adapter abort request.
->                aacraid: Outstanding commands on (10,0,0,0):
-> [  442.109193] aacraid: Host adapter abort request.
->                aacraid: Outstanding commands on (10,0,0,0):
-> [  442.109194] aacraid: Host adapter abort request.
->                aacraid: Outstanding commands on (10,0,0,0):
-> [  442.109196] aacraid: Host adapter abort request.
->                aacraid: Outstanding commands on (10,0,0,0):
-> [  442.109198] aacraid: Host adapter abort request.
->                aacraid: Outstanding commands on (10,0,0,0):
-> [  442.109200] aacraid: Host adapter abort request.
->                aacraid: Outstanding commands on (10,0,0,0):
-> [  442.109201] aacraid: Host adapter abort request.
->                aacraid: Outstanding commands on (10,0,0,0):
-> [  442.109203] aacraid: Host adapter abort request.
->                aacraid: Outstanding commands on (10,0,0,0):
-> [  442.109205] aacraid: Host adapter abort request.
->                aacraid: Outstanding commands on (10,0,0,0):
-> [  442.109207] aacraid: Host adapter abort request.
->                aacraid: Outstanding commands on (10,0,0,0):
-> [  442.109208] aacraid: Host adapter abort request.
->                aacraid: Outstanding commands on (10,0,0,0):
-> [  442.109210] aacraid: Host adapter abort request.
->                aacraid: Outstanding commands on (10,0,0,0):
-> [  442.137144] aacraid: Host adapter abort request.
->                aacraid: Outstanding commands on (10,0,0,0):
-> [  442.154292] aacraid: Host bus reset request. SCSI hang ?
-> [  442.154302] aacraid 0000:02:00.0: outstanding cmd: midlevel-0
-> [  442.154305] aacraid 0000:02:00.0: outstanding cmd: lowlevel-0
-> [  442.154307] aacraid 0000:02:00.0: outstanding cmd: error handler-0
-> [  442.154308] aacraid 0000:02:00.0: outstanding cmd: firmware-32
-> [  442.154310] aacraid 0000:02:00.0: outstanding cmd: kernel-0
-> [  442.171131] aacraid 0000:02:00.0: Controller reset type is 3
-> [  442.171133] aacraid 0000:02:00.0: Issuing IOP reset
-> [  476.040983] aacraid 0000:02:00.0: IOP reset succeeded
-> [  476.078055] numacb=3D512 ignored
-> [  476.078606] aacraid: Comm Interface type2 enabled
-> [  494.747632] aacraid 0000:02:00.0: Scheduling bus rescan
-> [  507.896453] sd 10:0:0:0: [sda] Very big device. Trying to use READ
-> CAPACITY(16).
->=20
+> #regzbot introduced: 6ad0ad2bf8a67e
+> #regzbot title: retbleed reporting causes high cpu utilization due to kwo=
+rker/events_power_efficient
+> #regzbot link: https://lore.kernel.org/all/PH0PR05MB8448A203A909959FAC754=
+B7AAF439@PH0PR05MB8448.namprd05.prod.outlook.com/
+> #regzbot link: 6ad0ad2bf8a67e
 
-Thanks for automatically forwarding Bugzilla report. I'm adding it to
-regzbot to ensure it doesn't get fallen through cracks unnoticed:
+Is there a problem other than that IBRS is slow and slower still on
+shitty virt?
 
-#regzbot ^introduced: v6.3..v6.4
-#regzbot title: Adaptec 71605z hangs with aacraid: Host adapter abort reque=
-st after update
-#regzbot monitor: https://bugzilla.kernel.org/show_bug.cgi?id=3D217599
+Does booting with: "spectre_v2=3Dretpoline retbleed=3Doff" make it go away?
 
---=20
-An old man doll... just what I always wanted! - Clara
-
---UP4jKEPv6Asbr+1k
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZJpL2AAKCRD2uYlJVVFO
-o3h6AP0UHUgte+hmsV1B8lgpxfg0Z8WIM6rSRvF2JulKb/mETAEA4tgz+w3A4+3s
-KUec4pRjaCQC7oUHVyQHnQ/KPRrkkgI=
-=QwX3
------END PGP SIGNATURE-----
-
---UP4jKEPv6Asbr+1k--
+I can't tell from this. Also, please don't use bugzilla.
