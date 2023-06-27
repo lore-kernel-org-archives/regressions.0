@@ -1,131 +1,176 @@
-Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
+Received: from mail-oo1-f53.google.com (mail-oo1-f53.google.com [209.85.161.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82238622
-	for <regressions@lists.linux.dev>; Tue, 27 Jun 2023 00:31:07 +0000 (UTC)
-Received: by mail-ot1-f52.google.com with SMTP id 46e09a7af769-6b5d7e60015so3594251a34.0
-        for <regressions@lists.linux.dev>; Mon, 26 Jun 2023 17:31:07 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73E99A23
+	for <regressions@lists.linux.dev>; Tue, 27 Jun 2023 02:29:44 +0000 (UTC)
+Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-55e04a83465so2907284eaf.3
+        for <regressions@lists.linux.dev>; Mon, 26 Jun 2023 19:29:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1687825866; x=1690417866;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=O/2c9YwwQFhf0X0LD7Wd4iGQMCYKRK/hqVyQ7BZ1+ok=;
-        b=q8mhZZdYPrHx1I3QLvplF2h9BxzqYZesS+LMX5o3xCNa2BrRmKGuk0gzEUXntLV366
-         D24KIkzO67C2Wb+RbX7NYZQbzbEjoKTEWGD0nJ+8UFVIjBP7YZgTO6PvjHnd3ejedoHP
-         bKVL3syv5a9hXjbDpCcSnhqBlB44YgNm/+8RO65bAbaYpZpRXe8g9ezxRZqDvkW4I98d
-         FrnuSfeiVGtmb7Tx1o6ACRV73r4qa5h5CMHXkgp5+OIVXQbmsjofJzquTTxHICf6YWFZ
-         eAMboNZNdMx6oVqDMt4Ing9al5z9YVwzMu3iEk8Lu0rLyO1gQ9CiCeiGwwlYge2r/VYd
-         VCCg==
+        d=gmail.com; s=20221208; t=1687832983; x=1690424983;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=7s3J7mtj2DOT05cABKB4L4599zUF5rb8Gns79BnadUM=;
+        b=nJqHWenFI/MLjK7BeJH7sTGYYzoSNt10WsYID0G02bMhy1n68WLfT3ZyHqiNFtl9qi
+         GFOr/fTkJg2mcLBQjzczNBZ2i7V1H9NxykzsU8EZqXjlmziF2wGVCBhCyTXiE2vaBaiq
+         sTMNAJXUnmSkGXi110SD1WrOwYYbwX9ns7dLHkJmzCXdir4ExBg3qYcYZZ6otVksIzFz
+         uIPP+lHjhN/sFRS0la+atGEmSABIA+SqMEQ7XN3gFWeGob+nhb2fb2mUCN4LpiOCm6oG
+         1NRlpcEBzEFz3lP5OIAa1VrYuWnt1Nr1vc7cP7Il21y6PIF0LFpooEZ15CI/q1v6ONue
+         4NGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687825866; x=1690417866;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=O/2c9YwwQFhf0X0LD7Wd4iGQMCYKRK/hqVyQ7BZ1+ok=;
-        b=kZG6Fzrj3L5GBVMUaHEX+6LR/jKEwn1Uxf6wEkDL3LzhrGJd54KsNTIaqeQDRm1OdA
-         rC5ReR/SNsP7hlQzpucsu/zLkVe24QUU/0OqtwpWs70Wfal0N7PiBjFQXKpFWAlchmk2
-         PzvM5WMbZCAjGdR5/svsGDcJn+/afAHlGRDG3qPvsZhFVORFNUldRlDNAKltvB0kunzE
-         dyUsVRQJbMa8dwFThFWnuOp5MlSsPPTzNlBUn0HfVgQMiKP2SwWuIae+APilF6fhX8Lb
-         pJB0/hEovFXeqs7CQNIUCeEm4sRh7RhFNfWBL4B1tiYOQOeM7iScex8ZA2AvQXJXFgYQ
-         STdQ==
-X-Gm-Message-State: AC+VfDwH2xFmLh+D0cn2DfSQdrEnW6To7adTwF3GHyFYKTGECFSLVl98
-	QNeXv7e/GZW2ADG2VgUhtoY=
-X-Google-Smtp-Source: ACHHUZ55w/s5bZkFY+aekRuMQHhZ6sW4heSKvm03Smaj5yPZV18Y21i2LabwstcZX3q+GaColKLSGw==
-X-Received: by 2002:a9d:4801:0:b0:6b7:38c0:7420 with SMTP id c1-20020a9d4801000000b006b738c07420mr8014064otf.9.1687825866336;
-        Mon, 26 Jun 2023 17:31:06 -0700 (PDT)
-Received: from [192.168.1.128] ([216.130.59.33])
-        by smtp.gmail.com with ESMTPSA id t6-20020a9d7486000000b006b735499817sm2722862otk.25.2023.06.26.17.31.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 Jun 2023 17:31:05 -0700 (PDT)
-Sender: Larry Finger <larry.finger@gmail.com>
-Message-ID: <02659cdf-753b-442d-f110-1f92619d55c7@lwfinger.net>
-Date: Mon, 26 Jun 2023 19:31:04 -0500
+        d=1e100.net; s=20221208; t=1687832983; x=1690424983;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7s3J7mtj2DOT05cABKB4L4599zUF5rb8Gns79BnadUM=;
+        b=YOd+cx04FgYGTP/tDGhA0jluuDGdGhoq1peesKg2ImA+JEUAuJ1/XDPVtwlZX6n3MB
+         YHE1SBglcVG7lPq/LkQz1hI4zFY4i1NK8u+ZTQwL4BOY0XVCzuTblPlZo7MApzwku5y8
+         V9E7/OB5RREq1eyGlb8mDAXWR2eCKPFpu789h8Q033riMm41wVqMZL+wpzr77Wgx4xJ6
+         6pLfPbxMfTJm9CIbSeigGaYyRn6Gq1gzL8lmEbtuHv804ytfl/P0k/510FfbAG37PnP0
+         OO9WsygJ/g+ovoMysJ9+n4tbPGHcgUEsaIEEwUUGv3srCWvseEuu1GIkgaTi0j2miqhG
+         XH2w==
+X-Gm-Message-State: AC+VfDyEQPmFIzbksLHLwv3I67hktjEkV49B18aZEjXOMhlAPHSXT0Da
+	tfZ+Dl5mLEflhbcMfZpefi0=
+X-Google-Smtp-Source: ACHHUZ6IwQ9FELesSLU/UHwcmF0hCmBoDWfKnYld0eaSg231u/frP7cFaztMIwvdsHyGV/NyTGXk0w==
+X-Received: by 2002:a05:6359:62f:b0:127:d8c1:b829 with SMTP id eh47-20020a056359062f00b00127d8c1b829mr20826988rwb.27.1687832983046;
+        Mon, 26 Jun 2023 19:29:43 -0700 (PDT)
+Received: from debian.me ([103.131.18.64])
+        by smtp.gmail.com with ESMTPSA id q17-20020a62ae11000000b00679dc747738sm1759832pff.10.2023.06.26.19.29.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Jun 2023 19:29:42 -0700 (PDT)
+Received: by debian.me (Postfix, from userid 1000)
+	id 92C3781BD58D; Tue, 27 Jun 2023 09:29:37 +0700 (WIB)
+Date: Tue, 27 Jun 2023 09:29:36 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: "Steven Rostedt (Google)" <rostedt@goodmis.org>,
+	Pablo Neira Ayuso <pablo@netfilter.org>,
+	Jozsef Kadlecsik <kadlec@netfilter.org>,
+	Florian Westphal <fw@strlen.de>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Lingutla Chandrasekhar <clingutla@codeaurora.org>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	"J. Avila" <elavila@google.com>,
+	Vivek Anand <vivekanand754@gmail.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Thomas Renninger <trenn@suse.com>, Shuah Khan <shuah@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Regressions <regressions@lists.linux.dev>,
+	Linux Netfilter Development <netfilter-devel@vger.kernel.org>,
+	Netfilter Core Developers <coreteam@netfilter.org>,
+	Linux Networking <netdev@vger.kernel.org>,
+	Linux Power Management <linux-pm@vger.kernel.org>
+Subject: Re: Fwd: High cpu usage caused by kernel process when upgraded to
+ linux 5.19.17 or later
+Message-ID: <ZJpJkL3dPXxgw6RK@debian.me>
+References: <01ac399d-f793-49d4-844b-72cd8e0034df@gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: Fwd: After kernel 6.3.7 or 6.3.8 b43 driver fails
-Content-Language: en-US
-To: Sardonimous <sardonimous@hotmail.com>, Arnd Bergmann <arnd@arndb.de>,
- Bagas Sanjaya <bagasdotme@gmail.com>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>,
- Linux Wireless <linux-wireless@vger.kernel.org>,
- Netdev <netdev@vger.kernel.org>
-Cc: =?UTF-8?Q?Michael_B=c3=bcsch?= <m@bues.ch>,
- kernel test robot <lkp@intel.com>, Simon Horman <simon.horman@corigine.com>,
- Kalle Valo <kvalo@kernel.org>
-References: <27829c69-515c-36a6-4beb-3210225f8936@gmail.com>
- <b9428e48-f0f9-46f6-892c-4c8834c930c4@app.fastmail.com>
- <RO2P215MB193850DDADD38492BEC8CC2FA720A@RO2P215MB1938.LAMP215.PROD.OUTLOOK.COM>
- <a3bc5eb5-9639-8016-36ab-105abc8c0ca3@gmail.com>
- <69b98eb4-2c4e-fe75-90b4-4b08505a595a@lwfinger.net>
- <RO2P215MB193879B2D99DD0BAF59EFA92A721A@RO2P215MB1938.LAMP215.PROD.OUTLOOK.COM>
- <e0a08449-554a-4a28-ac50-7051866eb95e@app.fastmail.com>
- <da80b806-de3f-c7ea-0352-cd23e0f6dd65@lwfinger.net>
- <RO2P215MB1938BD13105900F3525E0FE7A721A@RO2P215MB1938.LAMP215.PROD.OUTLOOK.COM>
- <67faf4f4-f36c-3ff7-03b8-cd259e4a5548@lwfinger.net>
- <RO2P215MB1938BA68BBB683EC696F4BFAA726A@RO2P215MB1938.LAMP215.PROD.OUTLOOK.COM>
- <6afa0ebc-1d3f-8cba-79dc-8ddfe13c296a@lwfinger.net>
- <RO2P215MB193898F3008E0F390CCEBC87A726A@RO2P215MB1938.LAMP215.PROD.OUTLOOK.COM>
-From: Larry Finger <Larry.Finger@lwfinger.net>
-In-Reply-To: <RO2P215MB193898F3008E0F390CCEBC87A726A@RO2P215MB1938.LAMP215.PROD.OUTLOOK.COM>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-
-On 6/26/23 16:33, Sardonimous wrote:
-> 
-> On 6/26/23 10:21 AM, Larry Finger wrote:
->> On 6/26/23 07:44, Sardonimous wrote:
->>> If I were to send you some test patches, could you create a kernel with them 
->>> applied?
->>>
->>> Doubtful.
->>
->> Sardonimous,
->>
->> OK, that essentially eliminates  getting DMA to work. The cost of a 
->> MacBookPro7 is too much for me to acquire one to debug that issue.
->>
->> On my PowerBook G4, I also got the failure to connect, thus I should be able 
->> to fix that problem, but getting a new kernel with the fix onto your machine 
->> will not be easy.
-> 
-> It might be possible to follow the arch instructions for patching the kernel
-> 
-> https://wiki.archlinux.org/title/Kernel/Arch_build_system
-> 
-> It takes about a day to rebuild the kernel following this procedure.
-> 
->> Is it possible to ssh into your machine, or to use TeamViewer? Those questions 
->> do not need an answer now, but think about them.
-> 
-> This is complicated by being in a CGNAT environment.  I usually do this via 
-> tailscale.  Will have to think about it.
-> 
->> Larry
-> 
-> Should pio=1 qos=0 cause the problems that it does?  It if is no longer a 
-> supported configuration, perhaps it should fail more gracefully.
-
-Setting qos=0 will generate a harmless warning, but the network still works. 
-Using pio=1 should still be supported.
-
-I am bisecting the source. It will take a while as I still have 13 kernels to 
-build and my PowerBook G4 takes about 6 hours per build - it is a lot slower 
-than your computer. At this point, I know that kernel v6.1.0 works, and that 
-v6.2.0-rc4 fails.
-
-If you can find a 6.1 kernel, it should work for you. Once I know the fix, we 
-can explore having you patch and rebuild your 6.3.X kernel.
-
-Larry
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="90Q4kbwiz0bo494z"
+Content-Disposition: inline
+In-Reply-To: <01ac399d-f793-49d4-844b-72cd8e0034df@gmail.com>
 
 
+--90Q4kbwiz0bo494z
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Fri, Jun 23, 2023 at 07:58:51AM +0700, Bagas Sanjaya wrote:
+> Hi,
+>=20
+> I notice a regression report on Bugzilla [1]. Quoting from it:
+>=20
+> > kernel process "kworker/events_power_efficient" uses a lot of cpu power=
+ (100% on ESXI 6.7, ~30% on ESXI 7.0U3 or later) after upgrading from 5.17.=
+3 to 5.19.17 or later.
+> >=20
+> > dmesg log:
+> > [ 2430.973102]  </TASK>
+> > [ 2430.973131] Sending NMI from CPU 1 to CPUs 0:
+> > [ 2430.973241] NMI backtrace for cpu 0
+> > [ 2430.973247] CPU: 0 PID: 22 Comm: kworker/0:1 Not tainted 6.3.3 #1
+> > [ 2430.973254] Hardware name: VMware, Inc. VMware Virtual Platform/440B=
+X Desktop Reference Platform, BIOS 6.00 11/12/2020
+> > [ 2430.973258] Workqueue: events_power_efficient htable_gc [xt_hashlimi=
+t]
+> > [ 2430.973275] RIP: 0010:preempt_count_sub+0x2e/0xa0
+> > [ 2430.973289] Code: 36 01 85 c9 75 1b 65 8b 15 a7 da f8 5e 89 d1 81 e1=
+ ff ff ff 7f 39 f9 7c 16 81 ff fe 00 00 00 76 3b f7 df 65 01 3d 8a da f8 5e=
+ <c3> cc cc cc cc e8 98 aa 25 00 85 c0 74 f2 8b 15 da 71 ed 00 85 d2
+> > [ 2430.973294] RSP: 0018:ffffb15ec00dbe58 EFLAGS: 00000297
+> > [ 2430.973299] RAX: 0000000000000000 RBX: ffffb15ec12ad000 RCX: 0000000=
+000000001
+> > [ 2430.973302] RDX: 0000000080000001 RSI: ffffffffa1c3313b RDI: 0000000=
+0ffffffff
+> > [ 2430.973306] RBP: dead000000000122 R08: 0000000000000010 R09: 0000746=
+e65696369
+> > [ 2430.973309] R10: 8080808080808080 R11: 0000000000000018 R12: 0000000=
+000000000
+> > [ 2430.973312] R13: 0000000000001e2b R14: ffffb15ec12ad048 R15: ffff91c=
+279c26a05
+> > [ 2430.973316] FS:  0000000000000000(0000) GS:ffff91c279c00000(0000) kn=
+lGS:0000000000000000
+> > [ 2430.973320] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > [ 2430.973324] CR2: 000055fc138890e0 CR3: 000000010810e002 CR4: 0000000=
+0001706f0
+> > [ 2430.973374] Call Trace:
+> > [ 2430.973388]  <TASK>
+> > [ 2430.973390]  __local_bh_enable_ip+0x32/0x70
+> > [ 2430.973413]  htable_selective_cleanup+0x95/0xc0 [xt_hashlimit]
+> > [ 2430.973428]  htable_gc+0xf/0x30 [xt_hashlimit]
+> > [ 2430.973440]  process_one_work+0x1d4/0x360
+> > [ 2430.973459]  ? process_one_work+0x360/0x360
+> > [ 2430.973467]  worker_thread+0x25/0x3b0
+> > [ 2430.973476]  ? process_one_work+0x360/0x360
+> > [ 2430.973483]  kthread+0xe1/0x110
+> > [ 2430.973499]  ? kthread_complete_and_exit+0x20/0x20
+> > [ 2430.973507]  ret_from_fork+0x1f/0x30
+> > [ 2430.973526]  </TASK>
+>=20
+> See Bugzilla for the full thread and perf output.
+>=20
+> Anyway, I'm tracking it in regzbot so that it doesn't fall through
+> cracks unnoticed:
+>=20
+> #regzbot introduced: v5.17.3..v5.19.17 https://bugzilla.kernel.org/show_b=
+ug.cgi?id=3D217586
+> #regzbot title: kworker/events_power_efficient utilizes full CPU power af=
+ter kernel upgrade
+>=20
+
+The reporter had found the culprit (see Bugzilla for more information), thus
+telling regzbot:
+
+#regzbot introduced: 6ad0ad2bf8a67e
+#regzbot title: retbleed reporting causes high cpu utilization due to kwork=
+er/events_power_efficient
+#regzbot link: https://lore.kernel.org/all/PH0PR05MB8448A203A909959FAC754B7=
+AAF439@PH0PR05MB8448.namprd05.prod.outlook.com/
+#regzbot link: 6ad0ad2bf8a67e
+
+Thanks.
+
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--90Q4kbwiz0bo494z
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZJpJiwAKCRD2uYlJVVFO
+o1jRAP4q8brZctIPnGZqlJZqlJEMRnc4sRukxEX4ieIUH5Xn0QEA1g/dJoM/iQbR
+z2LBNutalMJVqVv8mRZOw176rScpTw0=
+=xdMq
+-----END PGP SIGNATURE-----
+
+--90Q4kbwiz0bo494z--
