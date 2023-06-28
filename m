@@ -1,45 +1,23 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.web.de (mout.web.de [212.227.17.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94ABCC2C6
-	for <regressions@lists.linux.dev>; Wed, 28 Jun 2023 14:06:33 +0000 (UTC)
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1b8303cd32aso11113975ad.2
-        for <regressions@lists.linux.dev>; Wed, 28 Jun 2023 07:06:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1687961193; x=1690553193;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=j3BkDK05241Wak+mm9YscMVNm89SWiJwn3V52UthfcY=;
-        b=ZOXHBpjyf+Vv9nCWYMngb0aLLIb04YHicJdy+dd7g/pI7h8Nuas58L+U96kQzDip+z
-         EixEkcSGm5ShYnfXRguksXVRezjciTromRJQsg/W2DdffJzx8ybw5KFjQx8RAwRRSA+f
-         Np5wDP+mf26mYMjHq4gFoF+zAU5SbA2WkADfDvjEqKSnV/vGY8jNnLYYG3wmKK4GeiF3
-         vR/NRJnDjWkHepVjzWdUPwGqVJ/bNFvgA1VJMfSocZnxtgoeFmdcQ5aABxVQdIEiTd9N
-         LshqRaTFd0bm051b/uljpTJD3MRSU0j31aEYHXM3jnU0Vyi6S4mg9/mluX7rKijT0dC5
-         SYDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687961193; x=1690553193;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=j3BkDK05241Wak+mm9YscMVNm89SWiJwn3V52UthfcY=;
-        b=Uun2Up9EABy9Tfw6dRS71Q0/PWjyOpTuWzvCMYKfi2Up+vDrJbh+w4ySXVqBu4sTrR
-         ROcFc7DAFjCbKhx8g3il7sR2mRhs/JTU4D6BGCpt1oU4UK25dKtTz9kbnL0PYlICYNNC
-         wb/toZiM0MiDXDcx+1tTmboaF5/nq4UV5vt0ChIJVsg6t168T5hYBKbYwUAFD3IV3ABE
-         mGbSojoCZeT7GdudiRDDFnszrgJ7CCh6Y9lSIQG9HsDmYELNix2tdEN0HGIkg6/Q5zML
-         cTQ626M16BNDNI8WZ6399Z/g26X7iyHAw3iq2Mcc/jtu/VBQ+Zd7WVWL2mhHhCcNZWXz
-         auDw==
-X-Gm-Message-State: AC+VfDzM1tQHK9UpPvWLR0qhbPslYKF4fbisf/swbV1dsJsicBd2sil9
-	kDU/t9qOU8m0YJM7LCn+Zoo=
-X-Google-Smtp-Source: ACHHUZ4G5B13ogdRQDNY1fe0TTeMCA5uMAxuIijkt1rxDchefc9P14S00VFh229EU8HzgmZlRHU61A==
-X-Received: by 2002:a17:903:41cf:b0:1a1:b3bb:cd5b with SMTP id u15-20020a17090341cf00b001a1b3bbcd5bmr13962320ple.62.1687961192736;
-        Wed, 28 Jun 2023 07:06:32 -0700 (PDT)
-Received: from [192.168.0.103] ([103.131.18.64])
-        by smtp.gmail.com with ESMTPSA id u8-20020a170902e80800b001b8025b32cesm5512359plg.131.2023.06.28.07.06.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 28 Jun 2023 07:06:32 -0700 (PDT)
-Message-ID: <4d9fb4a9-6c48-600c-f625-8ef66208090a@gmail.com>
-Date: Wed, 28 Jun 2023 21:06:22 +0700
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B665C2D9
+	for <regressions@lists.linux.dev>; Wed, 28 Jun 2023 14:57:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+ s=s29768273; t=1687964171; x=1688568971; i=markus.elfring@web.de;
+ bh=lVrEtp3IPToA2JjQfomOq/78WOmzGlRvhlt4KV8ZwWw=;
+ h=X-UI-Sender-Class:Date:To:Cc:References:Subject:From:In-Reply-To;
+ b=qSHH+F+Y/q2y/NGP4HWdV2ZobhNlK2l2zqDz9YjyoJBOwAVsBgjJQT/4NZNWZRy3nxUQs3K
+ fPUGIxeWgpG0U1VzRITq/VLllEtw/g8jyOyiANJIiqVjK3Zz/HK6CsaglYDLvMjwL0DL2e9A0
+ d50RAZw5iZ9r+xiZgmyDYzyRpaBr5V3b8ULa+B5qrJzOv+5B8gi5j/ozr/k+kOYJN9BUIrKxK
+ V7kmrJT5hMc5mujsIH7qS1nXER5JYdqj6j43YE66VhjOn5QmoYmRa/uIBOujlxDwsVd4D4ax7
+ NpCaeQ3MkY41aFVf5afY5SCA6knAhDx8Ski0UsqoEQk3CdlDv9vw==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.90.83]) by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1N7xaT-1q2Gy43aQl-014beM; Wed, 28
+ Jun 2023 16:48:15 +0200
+Message-ID: <66d4911b-150a-7c10-7a3a-c4d0019c18fc@web.de>
+Date: Wed, 28 Jun 2023 16:48:13 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -48,72 +26,52 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.12.0
-Content-Language: en-US
-To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
- Rick Edgecombe <rick.p.edgecombe@intel.com>, Borislav Petkov <bp@alien8.de>
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-Subject: Fwd: commit 9df9d2f0471b causes boot failure in pre-rc1 6.5 kernel
+To: =?UTF-8?Q?Georg_M=c3=bcller?= <georgmueller@gmx.net>,
+ linux-perf-users@vger.kernel.org, kernel-janitors@vger.kernel.org,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>,
+ Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, Masami Hiramatsu <mhiramat@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, regressions@lists.linux.dev
+References: <20230628084551.1860532-5-georgmueller@gmx.net>
+Subject: Re: [PATCH v3 1/2] perf probe: add test for regression introduced by
+ switch to die_get_decl_file
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20230628084551.1860532-5-georgmueller@gmx.net>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:hLxSikh9iuvu3XDUpSiPu8aHEn+1o4HTLLlN5JonJNiO0GHbZWY
+ 4qQDQNUkmUrLTeG+elaGab8HuOZ0G70OjVYY2pmmS6WIZ8xvHeSQV/HgNzRxVsfVnBKLtU4
+ 2BsZ40p3wlwAfyY/BO8UYpgwxQFdbQrcyB36TheVwLNO3nS8SdftXNkFhlv74zk9skq8ErU
+ DoaKWWNsxUCWUx7RwebcQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:diwD9OVMKoI=;QFnIC6nITHVtiycSxpv4tHSFI9p
+ xzL7MSOEDtJepHYRx52kxuJABQbjw5jcjgkOOBh2pKi3KbTghI/jOcWBBSISjU+tWWEiaZwT3
+ otctNawEs4EqvLLdEd9Y+qnF6F4j6SU4dLk1IXd+wku7XQz6lD1G6kBfJ80erAM5Y74n+qiTx
+ BU3x19rY8sfYDiUdPh+LB+RgenVGoKBCRuV2gKFl3vl+oNczd3HM4L5uEuT3m686W0WZ8Ais2
+ m1iKaWpzZ2PSQlSHqllKgPinUF63Kc7xtaH2QEsvnKFHRRNZhs2sOU3J9IMa7t2sXmdEwdAw+
+ OXV7SRnI0vsh1leUlZskgmDTsaFxpnOMJccVcUHYOiCyP27aQLCC3o1Ru+k3IXcNTLQ9zqYhH
+ I+cfTzb0vw0SF5sDd42vzel/0rDbJO0n0uyz72aXFpcMSVygfCaoXEH04oJx6woa4JYQuwo1Y
+ VsAPcQNPUsJhI/9xh8fcISEp6f3vC2D0R7rJg4FnjIK5PnP4ZESuaqJ3i5EKwTLMFGUjNEQ7f
+ 6ZLwoyWwU9VS72IlHdSLjn/lxTYmqhsv3MBlwWjLssANeaYWtgis3MJzIdFpmEWnGkqjqyV8D
+ 8xfyjcMROhJ71t6GNgdm/GrJgkRFn9Uz0Mf1/9ncpPDwPKSDLAoXf1b1TlAJqavvNoQ07aZgC
+ fGueRXLj1rXkoMrl+SdC7TvmMpqlIuwNdnGJapDCRv57Hol1Yc0/RZxRdAaqSZ9ecmMDBQse7
+ iA1YG43+eJHUGHFdT3V5pI5+4hgcnpyd9cSp881lTTqI6akbur0za5NbDlsuaM3nnNUx0oJOb
+ vwq3ofw/qTmArQaPk5iKkrYjRqI2FEzPzsmPzuHw644H67puds1F5tdP5Gc4vwXLJwkRqFQEo
+ OBiTwAxj6DSLTzdt2p0eO7vrcDCjFj4mhloCNjefIggQbxycCDd82qRlA63PsUZmYUxDp9ry+
+ W7RxvQ==
 
-Hi,
+> This patch adds a test to validate that perf probe works for binaries
+=E2=80=A6
 
-I notice a regression report on Bugzilla [1]. Quoting from it:
+Please choose imperative change suggestions.
 
-> Since yesterday my builds of the https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git no longer boot with a black screen immediately upon booting. Today I finished git bisecting the issue and arrived at the following:
-> 
-> 9df9d2f0471b4c4702670380b8d8a45b40b23a7d is the first bad commit
-> commit 9df9d2f0471b4c4702670380b8d8a45b40b23a7d
-> Author: Thomas Gleixner <tglx@linutronix.de>
-> Date:   Wed Jun 14 01:39:39 2023 +0200
-> 
->     init: Invoke arch_cpu_finalize_init() earlier
->     
->     X86 is reworking the boot process so that initializations which are not
->     required during early boot can be moved into the late boot process and out
->     of the fragile and restricted initial boot phase.
->     
->     arch_cpu_finalize_init() is the obvious place to do such initializations,
->     but arch_cpu_finalize_init() is invoked too late in start_kernel() e.g. for
->     initializing the FPU completely. fork_init() requires that the FPU is
->     initialized as the size of task_struct on X86 depends on the size of the
->     required FPU register buffer.
->     
->     Fortunately none of the init calls between calibrate_delay() and
->     arch_cpu_finalize_init() is relevant for the functionality of
->     arch_cpu_finalize_init().
->     
->     Invoke it right after calibrate_delay() where everything which is relevant
->     for arch_cpu_finalize_init() has been set up already.
->     
->     No functional change intended.
->     
->     Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
->     Reviewed-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
->     Link: https://lore.kernel.org/r/20230613224545.612182854@linutronix.de
-> 
->  init/main.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> Since it might be relevant, my CPU is Intel Core i5-12400 with UEFI from december 2022 and the compiler is gcc (Gentoo Hardened 13.1.1_p20230527 p3) 13.1.1 20230527. If additional information such as the kernel configuration is required, let me know.
+See also:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
+cumentation/process/submitting-patches.rst?h=3Dv6.4#n94
 
-See Bugzilla for the full thread.
-
-The reporter can't provide requested dmesg due to this is early
-boot failure, unfortunately.
-
-Nevertheless, this regression has already been taken care of on
-Bugzilla, but to ensure it is tracked and doesn't get fallen through
-cracks unnoticed, I'm adding it to regzbot:
-
-#regzbot introduced: 9df9d2f0471b https://bugzilla.kernel.org/show_bug.cgi?id=217602
-#regzbot title: early arch_cpu_finalize_init() cause immediate boot failure
-
-Thanks.
-
-[1]: https://bugzilla.kernel.org/show_bug.cgi?id=217602
-
--- 
-An old man doll... just what I always wanted! - Clara
+Regards,
+Markus
