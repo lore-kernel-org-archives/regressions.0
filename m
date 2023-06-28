@@ -1,21 +1,21 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C3DF7EA
-	for <regressions@lists.linux.dev>; Wed, 28 Jun 2023 08:48:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 373E77EA
+	for <regressions@lists.linux.dev>; Wed, 28 Jun 2023 08:49:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
- s=s31663417; t=1687942102; x=1688546902; i=georgmueller@gmx.net;
- bh=Orm7HM4Nr5qYAqgg1QHWxvyxXfs8yHOeAyhjTr7spYE=;
- h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
- b=BnqufKbG8+w5OdhYgfQ0/q5PB3NbHkYgg3ayIwvWqrzSmch9Aoqbpduyk7SSdPI5nw8Ho/C
- 15k2c2hgICztB1rTj1WVi/yeStN3STd2d0EGsNvwMFmp+c3n5RY+vbgTTLd6xFVp9YR7f+Klm
- 4cMcHU8bWfjEn+4P2GzLfiKZKSWMDeRKdvMCDcyTAuzfxFqnyz258HeOM1b0fZGGuycXb++R1
- 2dQcXyZ1xJ5DQwSINyGLcV0S+8Hwtt+ww4KMCTUx+P7+jXozMKza/bL+Q1mR1hu7IDVVCI+U4
- W7daR3pxdh+ZNPQxZNxVZAqwNY8ZRiboX0vgixea8Jk8dRi6BCGA==
+ s=s31663417; t=1687942157; x=1688546957; i=georgmueller@gmx.net;
+ bh=7EYxf2mbjFZfjlwtXaTopEVdIniSJTqMoHEmr5pnAAQ=;
+ h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
+ b=jbLHvXBonqIsNYqv0cmDGf/lc9iYbCb+tMrlV+CXWUXPsekXscsvvKbMjufE1ptSNfrYxR1
+ UyMXqBzcrvlrlb5o1IRC+BVc9tA0YsXhValMK+n64dPvKKMcw7SvuNQsb6rkzxI0YUziAQAQy
+ 1o9ws4uxeZ0gpB5a9se8wxayp/VS57iSM+m1Y2Pmks+pL2Nr8H5KObuc4UUMY8WlzpqAzRsD1
+ rqU+NlODhWyL2W2vJ6vsjy5t6GLogH7hjtOf50hmhuxA5nfB+43ecTycsMki+16j/J/UNnGTf
+ YuwpVXKc1d/vbskYnHyXG+0jczHi0tW7uhp+SsCT2K9im+M/fHrw==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from nb-georg.intra.allegro-packets.com ([79.246.84.17]) by
  mail.gmx.net (mrgmx004 [212.227.17.190]) with ESMTPSA (Nemesis) id
- 1MqJqD-1picGz352x-00nRta; Wed, 28 Jun 2023 10:48:22 +0200
+ 1Msq2E-1puR8P1nKq-00tBRZ; Wed, 28 Jun 2023 10:49:17 +0200
 From: =?UTF-8?q?Georg=20M=C3=BCller?= <georgmueller@gmx.net>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -31,11 +31,14 @@ Cc: =?UTF-8?q?Georg=20M=C3=BCller?= <georgmueller@gmx.net>,
 	regressions@lists.linux.dev,
 	Arnaldo Carvalho de Melo <acme@redhat.com>,
 	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 0/2] perf probe: fix regression introduced by switch to die_get_decl_file
-Date: Wed, 28 Jun 2023 10:45:48 +0200
-Message-ID: <20230628084551.1860532-3-georgmueller@gmx.net>
+	linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: [PATCH v3 2/2] perf probe: read DWARF files from the correct CU
+Date: Wed, 28 Jun 2023 10:45:51 +0200
+Message-ID: <20230628084551.1860532-6-georgmueller@gmx.net>
 X-Mailer: git-send-email 2.41.0
+In-Reply-To: <20230628084551.1860532-3-georgmueller@gmx.net>
+References: <20230628084551.1860532-3-georgmueller@gmx.net>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -44,56 +47,75 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:vdftrqNrwacXojoahUi/4AkpDQu3lw+Y/s2Z1IVvGt6KQvVynFS
- rtFavbm/c7AeXK9HdBH9bJidr9gvJCpKBvJ9mp8z82Lwi0ehQ0blojMTi7jYKa95TXwa+A1
- H9MU6E8uSGhXONhgEAg+mt1d7bXiF/5rUeOpBtpsS7BozblVmvjLm8/BRhtYWoHjdNRms4s
- wI3Abn5TfsodWD2OsKN1A==
+X-Provags-ID: V03:K1:Cb82SGcEsrL11zuH0JhYn8EPvv7SYgVIiYe39ozfB6jCOHBRCG3
+ tdBkdi7oMnRW+phUL09ePfExRcxv1JtDBLya3Woi1NpS/u2jFhx1jcsiuFRqmkSVLzmnqbe
+ bwyisMG9/BYJriHw3Mf4q8UuPv3OyvXg2esjKwIzlywis/rh3EhFh+Sh1s0HqD0zPm0yQOY
+ 7UNmWN3HPHoS4XPyv+9Cg==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:e1kA4nQkT8I=;VVYX0fnbzQkmQf1VF9YpEdGAw/Y
- deG7QHd3U8wl8KMJ7QFn8q45eUV2vzcYfw5CTlXBxM574c1FY5dzFjs1NIXoLMw2be9EGNEv0
- OlqGnQuXYzOr3MulmIuywb69sHbSSZ3vqP/MK4xoAK9qcUSee+nY5ZdSdjqUNHvFjKVdqVJqK
- 2FU5Tn7gSYuVcZOs6iIFD9FewDyrhUv0xZysQlQk0yLZ/tPU3lRHbPnC8ChhA7xqeYWgXNXhB
- hIAMDfOCJwBVKkMA2DkGCoZimjTpCyiOUlPwnEUiqDkpBciHpY9rbyZT3eOkXnBRKW3XgdOhN
- 5nVeKEGx6oI41J2kM/FQx+TKguw0R8VwInG5rUNPoS8lxp3i2ddeIzPOxYeJd8A+wxgJYWey8
- y8MQucB3hA2VHP5nQdmn2eLA8EIvtnN9F3R3NrrW81GSbH6CIy0ElsDX2VcUEAugNLU9Wg/bD
- AvimrSeX+EuOuzStgPoXmHD1CltAfj4UbHW/0j7XTSyjEL4Luii2oueDL5mLKTpc0VvKLXMxm
- LFl8cQppg2fs0AJZCnXbHh4WjIfq9qXkKfdqeR7MYGL1lQLGgd7G/mclSvyFOVEcLyQ1dU8Ka
- N50IomeSTVZYooqfr/pG7RLKzLdOLpUEtgq73zzcELHw5nw9t+sDkjTfjx514X2XB5ykXBWbe
- mhG4PshJagRHFUXnyjmNCNjKSmk9oAGYzcM/I2q1mkFMqrMCxhPkG1yWuxou3iWqPburpRYWf
- wB/oK7eW+QkS3CgBGdY9QSRcVb2+BPHR3QqfDifDpKPE+GMjyF446vNoQdv8C50FSrjnBZorP
- othd3Gm0gvbxUUwcZIyR5KON05WXnKyOzrU4HQjzabSJUmHoyytmMcgSEaL2+Lfbtbbdee3SI
- 2GqiAIJfh+0dYhMa27/vQuOmzyk3UVZ6Ig+4ZegYHO34ydM+UUjw6XyliSAw8Z/ZBdk8soNLk
- DBGqroYY7+qlhHFAjm7BfDfuMlg=
+UI-OutboundReport: notjunk:1;M01:P0:lcY/W0j30Co=;e7msvmEaR+Q9xqySdxbTx8k8St5
+ BOvJXLrzS5VRpHvvuT1aMLe4qblAsZeqsHSyXNQBnfDYnx+XknZJgVsr9ZFuGlFVSyu1RQaYY
+ NBzSp3SxlUwSjwUK0vyMaS1ENVzkesXBAw0iFkUHaz98HWRMgW+LqZF9k7dxLRONffu+AnaSr
+ LN9S3iPhOy+ByS2cV53aPdWF5AWly1iNIG7Ydm/VepxRdwLq9xqQ7GVgx3nx79xNYylws3t9m
+ 6BjaLY3geW3davNGhyUbWmRWtPqsfArZwuqv+ahKdLRrya39fZdq6XOqMdWZ94KlZdvWgdkOX
+ vgFqH23DqvhJlGRy6+S3TPGfOnqHgymMidK27BF2FaXriit2OGC2hfxhx9xHMUW7LPxh9Z695
+ d/1G/mB/i+x5ddSjSpXQBEr2SlsEy2PXBcGWhi5srm7c2296Aqm0Q7pR8HsorvA/Kz7ITBlr6
+ EGgE+5dC4k6Iay/2D0ZjPQuBRMaLojzmOskpnmoNhbueCxVxrvVro8jGniSzU3qGZUVyxZ6lL
+ Tk7nnqu8TR1RGMCnzjCVYQfX8N8SCdvnQGidZxuOSTVeZfzViIxyD4TCDoV0nWlUQb7tcvXd+
+ xyujVGIwReFJ6SkfX7SkRPxPxU0lxxEEaCVfKWlRX464ieccxO9PumWXC1tbEqfgWqP3nSqdu
+ s3hCrBXsdvn0BWdn8DOZWIabNqfKJXg+u5kTj5QsYgmI20d32LGTHKgKUiDhT9zbcpmgQBlj8
+ x2G6ossF6QZhOcZ/S9JJJOWl5ZQyd0lEBXs+8NRf7PYryP6SOroAcI7M0z1fQZhI9AGzzL4fb
+ CVEymTXwgKAoVyo9+I/kS3Ca05Hh8KfW1Z7MbfPL0Ah8ulKph89Lr2EVDnooztVUaXiyML4EN
+ o/sJviXjoALTHcR5cJw+O2RCP3bb1ydbH/bA8UWEklxJnFNBprYR36JR5sgAnw11NqaOKZ1S8
+ c6QLcpQW7nc6X+nUMvACIWYYPmg=
 
-When switching from dwarf_decl_file() to die_get_decl_file(), a regression
-was introduced when having a binary where the DWARF info is split to
-multiple CUs. It is not possible to add probes to certain functions.
+After switching from dwarf_decl_file() to die_get_decl_file(), it is not
+possible to add probes for certain functions:
 
-These patches introduce a testcase which shows the current regression
-and a fix for the issue
+ $ perf probe -x /usr/lib/systemd/systemd-logind match_unit_removed
+ A function DIE doesn't have decl_line. Maybe broken DWARF?
+ A function DIE doesn't have decl_line. Maybe broken DWARF?
+ Probe point 'match_unit_removed' not found.
+    Error: Failed to add events.
 
+The problem is that die_get_decl_file() uses the wrong CU to search for
+the file. elfutils commit e1db5cdc9f has some good explanation for this:
+
+    dwarf_decl_file uses dwarf_attr_integrate to get the DW_AT_decl_file
+    attribute. This means the attribute might come from a different DIE
+    in a different CU. If so, we need to use the CU associated with the
+    attribute, not the original DIE, to resolve the file name.
+
+This patch uses the same source of information as elfutils: use attribute
+DW_AT_decl_file and use this CU to search for the file.
+
+Fixes: dc9a5d2ccd5c ("perf probe: Fix to get declared file name from clang=
+ DWARF5")
 Signed-off-by: Georg M=C3=BCller <georgmueller@gmx.net>
 Link: https://lore.kernel.org/r/5a00d5a5-7be7-ef8a-4044-9a16249fff25@gmx.n=
 et/
-
+Cc: stable@vger.kernel.org
 =2D--
-Changes in v2:
- - Add testcase
+ tools/perf/util/dwarf-aux.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Changes in v3:
- - start new thread
- - add stable to cc
+diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
+index b07414409771..137b3ed9897b 100644
+=2D-- a/tools/perf/util/dwarf-aux.c
++++ b/tools/perf/util/dwarf-aux.c
+@@ -478,8 +478,10 @@ static const char *die_get_file_name(Dwarf_Die *dw_di=
+e, int idx)
+ {
+ 	Dwarf_Die cu_die;
+ 	Dwarf_Files *files;
++	Dwarf_Attribute attr_mem;
 
-Georg M=C3=BCller (2):
-  perf probe: add test for regression introduced by switch to
-    die_get_decl_file
-  perf probe: read DWARF files from the correct CU
-
- .../shell/test_uprobe_from_different_cu.sh    | 77 +++++++++++++++++++
- tools/perf/util/dwarf-aux.c                   |  4 +-
- 2 files changed, 80 insertions(+), 1 deletion(-)
- create mode 100755 tools/perf/tests/shell/test_uprobe_from_different_cu.s=
-h
+-	if (idx < 0 || !dwarf_diecu(dw_die, &cu_die, NULL, NULL) ||
++	if (idx < 0 || !dwarf_attr_integrate(dw_die, DW_AT_decl_file, &attr_mem)=
+ ||
++	    !dwarf_cu_die(attr_mem.cu, &cu_die, NULL, NULL, NULL, NULL, NULL, NU=
+LL) ||
+ 	    dwarf_getsrcfiles(&cu_die, &files, NULL) !=3D 0)
+ 		return NULL;
 
 =2D-
 2.41.0
