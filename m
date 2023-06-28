@@ -1,145 +1,120 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2040.outbound.protection.outlook.com [40.107.236.40])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A732846A8
-	for <regressions@lists.linux.dev>; Tue, 27 Jun 2023 21:57:26 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IPaKnZUBSNoIv852byhQ1Ia66p7FpRxNvt9EzY+W/LPzkS4fb4opMh2Aysg/JCy62OwxXK4lSs63n40iKgD35NLtm7OvjTkjoHmedtS0dMEQeCAjOFzejgRvVVnlbgP5mCutyolTY0fghuwq7NEXE/SCd1/+ZTUsK13FmPkqK3JEpgGZOd46o4Qv10pwvihe8VQfYrl0ldyoQ/tMXnk/h4XgUSx3+v17iH3HxwRZ+aMc1+uD34FP9zGxIfv+vfWG1QhKSy8+dlauxBzsIAMcbJgQdU5hLZmjWhEvKChGpT+6SgqJ2oo66i7kHtyUL/dLed4bCy0ZLEmJGtwaXMzhJA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=fAy4MowT8RNtDikR8QLqmmJctRU2i1cCBne/KRcR5tU=;
- b=di/7qvdzPXdAjkBbXjCWPmjlc7op4gPp26BDeOQbuZqTk8YnPOiIWkZPxebeN1O/Z8N+0GFEQYTDmMlPgwb9UC8yDH2n7KanSZ5lCcgEu+1T122tnFUHMMrPIwMb+HgJboNC/QGWoys5Z+ESS6Hf/GJHFDLpXLu2k52ecy4B4WFQU6l6jpIgn9HB2JeSrsQJgic9CFCbdKrLbOO9/fpwTZeUgLr9veI9Na/O8YwHwh2Jykmg4yvc9V8JbFW6hSZUxPnZYxd9yWbATiyil3qVAGl6RASReICb5cjsV6WbjIIY/WelTbBJaXZ2Dbepf96eiskDMgCQ91H5GCq0MF6LNA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fAy4MowT8RNtDikR8QLqmmJctRU2i1cCBne/KRcR5tU=;
- b=GK7iey9AgWSGxYllfLDB64MOr792fLWy2KYk+ryB5Sisg299Gu7YlQkK06vKaEV/PvBHZNHTY0gI9hTMlC9JsCh97gdccw9xqlSDtt2nDUolbsO4NkhoNKHtmdlddNGge+hpbfGNTTTzRte4/cTFCqxXtQHQGwNO8djt1scXgo2wkyxFGh5ABOLLovmLgdDfJ3si3ZnGiySx8c9sX2EUWLAqsyNKPUhaXvk1ganh2bE3l1/MHGwx2Obn+hzf28iV1t7VwG5bSO1zqtUjlznm0gceljIIHnOC1OXn2cGKclkw09LrYDzZ8P2cLji4bZwnzoke5mftg7prB3qLegSjUw==
-Received: from MW2PR12MB4667.namprd12.prod.outlook.com (2603:10b6:302:12::28)
- by PH7PR12MB7235.namprd12.prod.outlook.com (2603:10b6:510:206::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6521.24; Tue, 27 Jun
- 2023 21:57:23 +0000
-Received: from MW2PR12MB4667.namprd12.prod.outlook.com
- ([fe80::92c6:4b21:586d:dabc]) by MW2PR12MB4667.namprd12.prod.outlook.com
- ([fe80::92c6:4b21:586d:dabc%4]) with mapi id 15.20.6521.024; Tue, 27 Jun 2023
- 21:57:23 +0000
-From: Chaitanya Kulkarni <chaitanyak@nvidia.com>
-To: Keith Busch <kbusch@kernel.org>, Bagas Sanjaya <bagasdotme@gmail.com>
-CC: Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>, Sagi
- Grimberg <sagi@grimberg.me>, Clemens S. <cspringsguth@gmail.com>, Martin
- Belanger <martin.belanger@dell.com>, Chaitanya Kulkarni
-	<chaitanyak@nvidia.com>, John Meneghini <jmeneghi@redhat.com>, Hannes
- Reinecke <hare@suse.de>, Linux Kernel Mailing List
-	<linux-kernel@vger.kernel.org>, Linux Regressions
-	<regressions@lists.linux.dev>, Linux NVMe <linux-nvme@lists.infradead.org>,
-	Pankaj Raghav <p.raghav@samsung.com>, Kanchan Joshi <joshi.k@samsung.com>
-Subject: Re: Fwd: Need NVME QUIRK BOGUS for SAMSUNG MZ1WV480HCGL-000MV
- (Samsung SM-953 Datacenter SSD)
-Thread-Topic: Fwd: Need NVME QUIRK BOGUS for SAMSUNG MZ1WV480HCGL-000MV
- (Samsung SM-953 Datacenter SSD)
-Thread-Index: AQHZp8vEXCf0HN4D+UCKyqX/NpmNlK+e1EQAgABg2IA=
-Date: Tue, 27 Jun 2023 21:57:23 +0000
-Message-ID: <9998fadc-181d-d475-9248-549750bbdf1c@nvidia.com>
-References: <d18d2a08-9d24-0209-c2cf-baf60bbf5048@gmail.com>
- <ZJsKBkPqoWzYyngS@kbusch-mbp.dhcp.thefacebook.com>
-In-Reply-To: <ZJsKBkPqoWzYyngS@kbusch-mbp.dhcp.thefacebook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: MW2PR12MB4667:EE_|PH7PR12MB7235:EE_
-x-ms-office365-filtering-correlation-id: 0d81c4a9-6ec3-4397-34d1-08db77597d11
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- U8Aj+gS6gkwRM0Gz3cHityNlCm2q4THIY9EQXFLP9pmrRGNBjyFoGPGovKXVENOkkIhJ+60Hk6JBolE/Dn4QcORB5B3/r/m0WYFVXwTnFNMa/AwuotEl0Opf1LXN4Bfabuo9TgCCKFhc/RB7oIiLZzBMBrlbKdLvr0hufMBk5LBvurDMOT/qndvK/5rs1JlCk5qlxhW4PzDSIB45mXKdjpvtBNH9Ljfal8EEsTJBmnTHcgmQlmHyajKwfhMJk1M8IeV6p5WIw0CCPPTVhqjb2QtpIw8OPpvjT2SvKXbs/UdEZP97/CsG9thmx+16ORDwgwp8EsQwJmaWoV1sMS84gxCPYE6HdxBGWG9b1cgD4CaSg3AgBH5gWGE6iJqbxiUXU4L5xaMAUGt3yRXPHApxiXUjNAr3CNEs5GBBKWse2pYkVGc9QVZmHBoVCcEZMHwLHUm2qy9VmPO2IcPyplYZf4HzaXv/xuZLoxrnitV2w1AcYHTcqjZwjUKRf8Zpf19dW8h1wP/V9O6WBhuIbN4+pbPNL6Vd7/PeY5Q0DoAnj71PpaqhSnJQWWRMY+hoGHEW0HijTveMYxSWPQoxCMLprEPYqeqhv6Z1LqLT/ZD7Ts1mTI5JqFbcqWATIkIYEYBv8abvDInLRWcW8kklqX1qcjt5xsPBSSLHYeeyK+V9REyiNJDlctUdqt5SynHcUAtg0kNLPTirjUFovQijV/zJur/Bvnx2qNPqpfBR4SwlXDc=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR12MB4667.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(346002)(136003)(396003)(376002)(366004)(39860400002)(451199021)(5660300002)(7416002)(316002)(64756008)(66556008)(66476007)(66446008)(66946007)(41300700001)(8936002)(8676002)(4744005)(2906002)(66899021)(31686004)(38070700005)(36756003)(38100700002)(122000001)(86362001)(31696002)(6486002)(966005)(71200400001)(186003)(6506007)(53546011)(76116006)(91956017)(4326008)(478600001)(110136005)(6512007)(54906003)(2616005)(83380400001)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?TCs0L0d4a01SZnpjeXFvV2paR2dvQ25EOHU4VmNSTTFKblhJa2hRb0VqdkNo?=
- =?utf-8?B?czFtNUt2d1phbjg5T3FMWmJXcXBLbCtvcUw3YXV4M1JDcXRONUNvNk1WMTc0?=
- =?utf-8?B?OWtINzFyMXd3cnJxVitsT0lPNlhKQWI1N2R1L25HK1hpTzJsVjBNZGpLc2hk?=
- =?utf-8?B?aTVTZmdvZHlHRTJFQ05yd0dmNFJvMTdiTXhGdFNZWUhuY24yOEhacTV0NS9I?=
- =?utf-8?B?V0pOZTluZWRvMDg2N3JURjk0K0pudlgveXVJU1dTU1RaOGljSGhuT0VPTldU?=
- =?utf-8?B?WnJLYUV0ZEl1a1BVMVdlN3hHMU9ySFRhWWxxbWxudWRYQXBTdzJEK0J3SEJr?=
- =?utf-8?B?ME5ZZk53MjNDbHpPd2RRME11NFpKdkptU0dadU9LQ3p0R2o0YW1OeUxiOVU2?=
- =?utf-8?B?TFBQQzMrTFRibGtObmVhSEdnM0lsNFdHN0pSdHljL1RZNTN5VkhnVHo4UnQ5?=
- =?utf-8?B?MCtKNG9PTjkxK2ZCMlhEUGM4S2NDNlF4YmlQR0pVL1B0VHVUUnlxOFdnR00z?=
- =?utf-8?B?K2FiZXhOd2w4WTZqd05vSDZMNDlsSGNEL1NzTmh4b2FXWXIyMHJsdEpINkRF?=
- =?utf-8?B?ZFNoYTQzZDQyd2I1ampEZGQ2d3psRkZtZndnWllhN29hS1pnLzVadFdGTGFE?=
- =?utf-8?B?T29VWHplcG9Yd3M0Yzg1NjdHWnV6QitBVXNPLzJiWDhOVzFkUjVlcEtGNTgz?=
- =?utf-8?B?WjArTTFPbFJCZDk2TU5jb2Y5UCtRV05wcTRVTDVveDZmMWxBcDN0VHlNNis5?=
- =?utf-8?B?WjhGVUcva3BGVENXak5vRWRsMExqcmRHeDdQWURVNlUrSytuWEFwZGVPOGxo?=
- =?utf-8?B?cEJDNXRyeU9SamdnUFEzVUxnZURaMElBaTUwS0dYNVBGU3AyMTZETE8yazkw?=
- =?utf-8?B?SnhZZ3lUQURnM2NBMDdLbVU3dFJ5YmZQa25FNktpbFUvTHVBUStxYVlxWXVt?=
- =?utf-8?B?Z09LblFLbUpXdFVzYlBWTENLUlM5TjhnbXoyVG5YZHlJY0FhTktGUzA0MWUz?=
- =?utf-8?B?SEorSXdkVTVVYk1rL2NlNWtZcUlOdEJPUHZ5SHdRd2xOYmtmdjUzVzVVYzM3?=
- =?utf-8?B?dGhFVnM5dXhzT0JoL0tLbjhxekRHOHovbVlWbzZ4SlMybEp3bmxLM1Avb3hD?=
- =?utf-8?B?NjBNOTUyTTJreWdqUnFkTHArM1hTKzB2YVlJMnI5dDA0WjY5Nks4Y0RGdTB3?=
- =?utf-8?B?eTViaGJlNGZGVmkrWkRjT3NJYjU5cHRIc015dnFqT0FZMDB3dGFwNXFicXEz?=
- =?utf-8?B?ZWFuV0h2cDdDZWp5Mk9aUGFYSloySmYzd1NnbDgwQzU1SEx5cWdzWEswSERP?=
- =?utf-8?B?ZXBYazhFbGgwakFwUzU0QkpuUGZIV0VKTm5ia1JqVVJubisxR3BhUDZZMk55?=
- =?utf-8?B?RHl4NytUN2NoVkVXUUkyanFQdnlyWUdWMVRLWG5pVEswdTJveEdvQnAwRzB1?=
- =?utf-8?B?NEN3cFpvbEY0aExmZTZzdHAxa3EwTEd2YUxYWDhTYzhlSlR1WEZRM1JzTTdv?=
- =?utf-8?B?VGgwdkVFZ094YWhRMjBXdVE2VXNPbElTMTlyM0ZjSDBZelpHQVUrdW9IQWJN?=
- =?utf-8?B?aUx3NVU1VVFXMzc1WDMzV0JVTDBCOWtVMWJaR1NvYXZyZHp0WjQ0R3pISWk0?=
- =?utf-8?B?a251RENYUzJTMUhLS1NnZmRvUU55Z3ZGNW1UT1lNQ3ZBWXY2WmdEQzFLVFJJ?=
- =?utf-8?B?Y3lvcWh2T21adWFtZjlzaTJydExtWnBoSDZpSDZoV2tJdmFPVEU5aWpDMlZW?=
- =?utf-8?B?WTlFYmJId2lvTGVSc2xqZDBLS1h2VWpTZ0xla0ltUVNMNW1PVEx0UFFhbHkv?=
- =?utf-8?B?Yy9OajVZejJXdmJ6L1VLeFMvaVVkSzZ1c0RJZWtNY2tZb0JhcnBEeUtLSWc1?=
- =?utf-8?B?Y05nK2xmMXZta3dKOUpMV2QvczdVOXZvM1B3TjhnNDRobmhoZGRkRXphLzFO?=
- =?utf-8?B?QmtKV0lNSzRPMXBQK2RJVzRFRlE2OWR5WXhlbEhZa0dCZTBDdlVPWTNjcVhW?=
- =?utf-8?B?WmFKSXZUNldpQWEwRi8rUy9OeE5jM3BzdGFvUGtiUTcvRmZWcFdwSEJwdEp2?=
- =?utf-8?B?U3M0R2dPU2Q4NnZZQ2xwUFZUMkt2cEFaTmorUFJQWk9PZ0ZWUUNiZ1Q2bUw1?=
- =?utf-8?B?cFAxWGZKRWg5c3lkQU9EUlozV2FTS2xMbnNLTFBqdUMvb09BVWZBcGY4T1hP?=
- =?utf-8?Q?9/yS2p+RylU2T1xXrK/rs8xIMXwAX63dbJUWCHQ0ZwdC?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <E5D09B90BE15534CAF2C485FBB772099@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BC246FA5
+	for <regressions@lists.linux.dev>; Wed, 28 Jun 2023 08:26:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+ s=s31663417; t=1687940741; x=1688545541; i=georgmueller@gmx.net;
+ bh=98KXRWjP0kOEQZ8kuG25m3smr7Z8TVhKXrD0YboZOGQ=;
+ h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
+ b=hX0kUFBiLDtRX51ldhFiSrYF6QWnp+dLaADGVtwatP/L/5amPzBjG1/T2Sbry577AkIHZMi
+ NbuNd9/xDNyTNtfah1RnG8bXFHBRNHUnxqhsq/Y975qctmwmmCfxyFQRo4mXMrHOQuonSvvzG
+ rR+HGfN4hsnmmNeBN9pznKD1Dyi68xB6ocWcz02yW4L+9hAqQS2QdJ0juSTJSwKgIaaMBdiKu
+ 160/7YblYgRsE4T+lcSbxHEnNJ6sb5IL/8Dgbd1M9d7X6ISxujU6DwgsnDOkjaAaoNM+rVNSV
+ Uje3vuljz4tLAZ+cJlhE+lUc5IIVRPEMV6Rm/HOx0yLniD81c3UQ==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from nb-georg.intra.allegro-packets.com ([79.246.84.17]) by
+ mail.gmx.net (mrgmx104 [212.227.17.168]) with ESMTPSA (Nemesis) id
+ 1MuDbx-1pvEaH3v01-00uZni; Wed, 28 Jun 2023 10:25:41 +0200
+From: =?UTF-8?q?Georg=20M=C3=BCller?= <georgmueller@gmx.net>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: =?UTF-8?q?Georg=20M=C3=BCller?= <georgmueller@gmx.net>,
+	regressions@lists.linux.dev,
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 2/2] perf probe: read DWARF files from the correct CU
+Date: Wed, 28 Jun 2023 10:23:21 +0200
+Message-ID: <20230628082337.1857302-3-georgmueller@gmx.net>
+X-Mailer: git-send-email 2.41.0
+In-Reply-To: <20230628082337.1857302-1-georgmueller@gmx.net>
+References: <20230628082337.1857302-1-georgmueller@gmx.net>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MW2PR12MB4667.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0d81c4a9-6ec3-4397-34d1-08db77597d11
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Jun 2023 21:57:23.6668
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: BWo35xvkRLnpqhmyRtNMLzmG9IW24Y87rMOOhCvt+SjJM/ykgs9Hzssw2amXWSVNh6Xl1+yv1hWJY5loFapHBQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB7235
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:swNPtqTzzUzCv4pfzxsJG/x/5jAfwGu0ZfcztYEMdOjLgSxEXCe
+ QDrK2UkKJF0fe1Iab9TKFHdwex6PHzaJeyKPEgCrwzD5PLjX9oAIiLKYZwu3Nyq6G38bdPA
+ O2DsDeojLIosc6MnjvY7aVlo7RLt/1W1AJA4Lr5cut9euulcal22CcwM9tx+1KEG1kwQfdh
+ SZeqTROH1YpAQ5+zlXRUA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:nKs9a50mBPM=;dvQ75/Odc81iVL18grQnWrkOykC
+ 72eozC5BZbDnaqHaRpV8mh5yulUVHMZYildFlAL2BEWHi9V4V87/lE1XzhDQak+a7+0ehWi9Q
+ C3knHDfJ7jq1HxROv9iI282NANepGgQnyfjKIvwcfO+2lT9Tk2B+8+buI9bIbsEm2+nzREmiI
+ IOxWROcZ3MTE2LbZqGQ1npfKztueoD69NaR+gp6IdM78dF2/aj7DwEFn8cwuwGhskCRChCKD9
+ qAuu7EDk3DwNPHgarkAyZT+zaFVfGWcvjd0dbXJjd02VSc1e58/a0IrTDlqYGu7ql/WNDi3KW
+ 1WpwkVh5s+7nXj4phEQxJXYWbyNf/Glx2tM6lKUfs8mVpweMC13DZHXA28lHniohvWzKnLHEi
+ qCM+VVDcPzMF6flr8KshQvw7Klv8wc2loIGIJ0YGPn3FnIt3E3BSZ2T6G67a4cKKC3/tdy7PH
+ C642jyUzBrMQbYYvgDeVH/CpEBjE1eb0lKdF8+zibgpKnMQMJ4zsMDHHhmFEb6cmn0Ox3ua5h
+ 023ATy+hLGCxlrsYbAlouP5OARS9XOJSzmMnzYHO/7iEPRkcHs3WXIF2MC9LO5i62zgW46P8H
+ ZGFjPB8iawsdD/xO3DTXj+RUiGtUx0POjb/kxfsWVlRDAIopHPsRKraoTBOCierM1WDGQ4l6S
+ Yiwql10/Ccys2KenwJQPa4MTHcyYGZ6WL/r5MAAblY5Tx6YMzsdMjmuXtbXl7ywL+mqnmPB+w
+ dQXHy9Hm5Ghg4obqWXUPJ2rCiuXnanFtIe16OczjLHcKdYrWxmwQsgSa4DthuhPGhBcr8ijuo
+ azEsaKdEqVwnG7eLYDbHjiAX2xtrl2+Gw6NCG9iM7e+EiRoWJRK0pRL9wGvLkb5GvU2CqdeP/
+ epi2MXjS6CtScNVvV2hE+x2koHqRH5gg4QTv+gUyEBeNMlaZk0nL2gUK+RExetI7aLronGDW5
+ G59eCt9weOXLj5Bsp2jg+pjaeRY=
 
-T24gNi8yNy8yMyAwOToxMCwgS2VpdGggQnVzY2ggd3JvdGU6DQo+IE9uIE1vbiwgSnVuIDI2LCAy
-MDIzIGF0IDA4OjE1OjQ5QU0gKzA3MDAsIEJhZ2FzIFNhbmpheWEgd3JvdGU6DQo+PiBTZWUgQnVn
-emlsbGEgZm9yIHRoZSBmdWxsIHRocmVhZC4NCj4+DQo+PiBUaGUgcmVwb3J0ZXIgaGFkIGEgcXVp
-cmsgKHNlZSBhYm92ZSkgdGhhdCBmaXhlZCB0aGlzIHJlZ3Jlc3Npb24sDQo+PiBuZXZlcnRoZWxl
-c3MgSSdtIGFkZGluZyBpdCB0byByZWd6Ym90IHRvIG1ha2Ugc3VyZSBpdCBkb2Vzbid0IGZhbGwN
-Cj4+IHRocm91Z2ggY3JhY2tzIHVubm90aWNlZDoNCj4+DQo+PiAjcmVnemJvdCBpbnRyb2R1Y2Vk
-OiA4NmMyNDU3YThlODExMmYgaHR0cHM6Ly9idWd6aWxsYS5rZXJuZWwub3JnL3Nob3dfYnVnLmNn
-aT9pZD0yMTc1OTMNCj4+ICNyZWd6Ym90IHRpdGxlOiBOVk1FX1FVSVJLX0JPR1VTX05JRCBpcyBu
-ZWVkZWQgZm9yIFNBTVNVTkcgTVoxV1Y0ODBIQ0dMLTAwME1WDQo+IFRoZXNlIGJ1ZyByZXBvcnRz
-IHJlYWxseSBzaG91bGQgZ28gdG8gdGhlIHZlbmRvcnMgdGhhdCBjcmVhdGVkIHRoZQ0KPiBicm9r
-ZW4gZGV2aWNlIHdpdGggbm9uLXVuaXF1ZSAidW5pcXVlIiBmaWVsZHMuIEl0J3MgZWFzeSBlbm91
-Z2ggZm9yIG1lDQo+IHRvIHdyaXRlIHRoZSBxdWlyayBwYXRjaCwgYnV0IGl0J3Mgbm90IHRoZSBp
-ZGVhbCBzb2x1dGlvbiBhbmQgbWF5IGhhcm0NCj4gZGV2aWNlcy9maXJtd2FyZXMgd2l0aCB0aGUg
-c2FtZSBWSUQ6RElEIHRoYXQgZG9uJ3QgaGF2ZSB0aGlzIHByb2JsZW0uDQo+IE5vdCBiZWluZyB0
-aGUgdmVuZG9yLCBJJ20gbm90IGluIGEgcG9zdGl0aW9uIHRvIGtub3cgdGhhdCwgc28gQ0MnaW5n
-DQo+IHNvbWUgU2Ftc3VuZyBmb2xrcy4NCg0KSXQgaXMgZWFzeSBlbm91Z2ggdG8gc2VuZCBhIHBh
-dGNoIGFsc28gYnV0IEkgZG9uJ3QgaGF2ZSB0aGUgZGV2aWNlLi4NCmhvcGVmdWxseSBTYW1zdW5n
-IGZvbGtzIGNhbiBoZWxwIHJlc29sdmUgdGhpcyAuLg0KDQotY2sNCg0KDQo=
+After switching from dwarf_decl_file() to die_get_decl_file(), it is not
+possible to add probes for certain functions:
+
+ $ perf probe -x /usr/lib/systemd/systemd-logind match_unit_removed
+ A function DIE doesn't have decl_line. Maybe broken DWARF?
+ A function DIE doesn't have decl_line. Maybe broken DWARF?
+ Probe point 'match_unit_removed' not found.
+    Error: Failed to add events.
+
+The problem is that die_get_decl_file() uses the wrong CU to search for
+the file. elfutils commit e1db5cdc9f has some good explanation for this:
+
+    dwarf_decl_file uses dwarf_attr_integrate to get the DW_AT_decl_file
+    attribute. This means the attribute might come from a different DIE
+    in a different CU. If so, we need to use the CU associated with the
+    attribute, not the original DIE, to resolve the file name.
+
+This patch uses the same source of information as elfutils: use attribute
+DW_AT_decl_file and use this CU to search for the file.
+
+Fixes: dc9a5d2ccd5c ("perf probe: Fix to get declared file name from clang=
+ DWARF5")
+Signed-off-by: Georg M=C3=BCller <georgmueller@gmx.net>
+Link: https://lore.kernel.org/r/5a00d5a5-7be7-ef8a-4044-9a16249fff25@gmx.n=
+et/
+=2D--
+ tools/perf/util/dwarf-aux.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
+index b07414409771..137b3ed9897b 100644
+=2D-- a/tools/perf/util/dwarf-aux.c
++++ b/tools/perf/util/dwarf-aux.c
+@@ -478,8 +478,10 @@ static const char *die_get_file_name(Dwarf_Die *dw_di=
+e, int idx)
+ {
+ 	Dwarf_Die cu_die;
+ 	Dwarf_Files *files;
++	Dwarf_Attribute attr_mem;
+
+-	if (idx < 0 || !dwarf_diecu(dw_die, &cu_die, NULL, NULL) ||
++	if (idx < 0 || !dwarf_attr_integrate(dw_die, DW_AT_decl_file, &attr_mem)=
+ ||
++	    !dwarf_cu_die(attr_mem.cu, &cu_die, NULL, NULL, NULL, NULL, NULL, NU=
+LL) ||
+ 	    dwarf_getsrcfiles(&cu_die, &files, NULL) !=3D 0)
+ 		return NULL;
+
+=2D-
+2.41.0
+
