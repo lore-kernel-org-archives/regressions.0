@@ -1,132 +1,77 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 005728479
-	for <regressions@lists.linux.dev>; Thu, 29 Jun 2023 11:31:58 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qEpsK-00043U-Nd; Thu, 29 Jun 2023 13:31:48 +0200
-Message-ID: <3270268e-c926-01e6-65e1-02aa6abfd0db@leemhuis.info>
-Date: Thu, 29 Jun 2023 13:31:48 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CAD011C83
+	for <regressions@lists.linux.dev>; Thu, 29 Jun 2023 13:32:25 +0000 (UTC)
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-3fbc060a2caso3932055e9.3
+        for <regressions@lists.linux.dev>; Thu, 29 Jun 2023 06:32:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1688045543; x=1690637543;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=vCNFfEAbLHyMqZFM6llkFTJRY+kQekzRP0RrqaYUy78=;
+        b=HskV4C783dd9XjnLO3UPWQNHPOEgfdNsuYPbJAE7KjgNp8FtRl9zpGOg6Lsh8aUZmS
+         ftJgw15Hd2cnAwy6Gqo1x690oceBY+OoZ9OuP8RcBLnjmMcU3mzslAxeI8R1lsscUj/8
+         2lIQ/gf6nD4S6lMoq97jYGx0KMl2w9GoJ0+ONiS2X9WsmEC2liizlirxd5agDu7asJ3m
+         oQ79nmS/VM0UUmu2kFclu8oHLD0Gd6aWQryU3vAZWeAPx/k9rATpYABsusWzfelb2Kpi
+         Skq8P4m7DmZWUFg6qNxjmeZqsA2rH0xW0GvGITrZ/5V2ixqTwiddwuQQik0y9b/+YgZX
+         A4rA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688045543; x=1690637543;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vCNFfEAbLHyMqZFM6llkFTJRY+kQekzRP0RrqaYUy78=;
+        b=gvfKvh+3L9mhWBQMQKFqI+Bp7nNJcFabc++kZrz6qPphIeksNX1odib7R9lmAHga3n
+         Ovt6CoecH2CL+qrImpac23ckXPP2qe/RP/lnuz1HomnOXdYwXsd80OKvIDdczaM5eSZ2
+         LT83Ir9kqdNDGlUjP3kRWX9pwAufXEm3ViZu9ugWyiVMyvmgM57QMz26wZ159FmcrtLB
+         FSYs7zeYqy8AInoaN3cnl/LvcFo72Z5JhlhcVtw2mYhQxF1IGahh1pmVEpSSpu2GOnxf
+         rzJS+JL7u21UXIh2EuYjnHPB3xSHJQyBXxYUILHdPZq+RBxFlaXeUFw3FXgsoLDPxNvx
+         4Mcg==
+X-Gm-Message-State: AC+VfDw5l4GQZeliAzotXRWKECOb2JSHoCmuGWHCqrz6gzgnHEXO0wqH
+	gl59a9Bqv6kuCUGuir7K/h8=
+X-Google-Smtp-Source: ACHHUZ6nJLsWqU4SPC+H50CZgItQBxSSpPEPOrwQtTyPsyZwAstUdKLEPtJpZvNoI90rcQnh3WcdGQ==
+X-Received: by 2002:a1c:e90d:0:b0:3f8:fc2a:c7eb with SMTP id q13-20020a1ce90d000000b003f8fc2ac7ebmr27588599wmc.5.1688045542818;
+        Thu, 29 Jun 2023 06:32:22 -0700 (PDT)
+Received: from debian ([167.98.27.226])
+        by smtp.gmail.com with ESMTPSA id m9-20020adff389000000b00313f551b032sm10122946wro.53.2023.06.29.06.32.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Jun 2023 06:32:22 -0700 (PDT)
+Date: Thu, 29 Jun 2023 14:32:20 +0100
+From: "Sudip Mukherjee (Codethink)" <sudipm.mukherjee@gmail.com>
+To: Yu Kuai <yukuai3@huawei.com>, Song Liu <song@kernel.org>
+Cc: linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	regressions@lists.linux.dev
+Subject: mainline build failure due to 8295efbe68c0 ("md/raid1-10: factor out
+ a helper to submit normal write")
+Message-ID: <ZJ2H5FWuo9oDMgPm@debian>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: iwlwifi: AX201 misdetected as AX101
-Content-Language: en-US, de-DE
-To: =?UTF-8?Q?Barnab=c3=a1s_P=c5=91cze?= <pobrn@protonmail.com>,
- linux-wireless <linux-wireless@vger.kernel.org>,
- Gregory Greenman <gregory.greenman@intel.com>,
- Bagas Sanjaya <bagasdotme@gmail.com>
-References: <gAwMzXEPlQZUgbc6n3yYY2soROKl4-D_JfWwoHW8CMx-LDkDEeAlwcyjOMy767W3eEVxS-e7oEihVh1PNHT-_iznSKneJjW0vu0PN7aQ9K8=@protonmail.com>
- <FFsiCdZPcJ2FItvpkX6E-0LT-gc1m-7JdRKTZ0NB9s7AmhtFt09wmR8fItdeT5xaYybsKsC_cjXuh5i_V97rgq4fJgKOmBmKytjCwSKlnAU=@protonmail.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: Linux kernel regressions list <regressions@lists.linux.dev>
-In-Reply-To: <FFsiCdZPcJ2FItvpkX6E-0LT-gc1m-7JdRKTZ0NB9s7AmhtFt09wmR8fItdeT5xaYybsKsC_cjXuh5i_V97rgq4fJgKOmBmKytjCwSKlnAU=@protonmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1688038319;8ea08c29;
-X-HE-SMSGID: 1qEpsK-00043U-Nd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-[CCing the regression list, as it should be in the loop for regressions:
-https://docs.kernel.org/admin-guide/reporting-regressions.html]
+Hi All,
 
-On 27.06.23 23:55, Barnabás Pőcze wrote:
-> 
-> 2023. május 26., péntek 19:55 keltezéssel, Barnabás Pőcze <pobrn@protonmail.com> írta:
->>
->> I have an Acer Aspire A315-58 laptop[0], which, according to lspci has the following intel wireless chip:
->>
->>    Device:	00:14.3
->>     Class:	Network controller [0280]
->>    Vendor:	Intel Corporation [8086]
->>    Device:	Wi-Fi 6 AX201 [a0f0]
->>   SVendor:	Intel Corporation [8086]
->>   SDevice:	Wi-Fi 6 AX201 [0244]
->>       Rev:	20
->>    ProgIf:	00
->>    Driver:	iwlwifi
->>    Module:	iwlwifi
->>
->> However, in the kernel message buffer, the following message is written:
->>
->>   [    3.633490] iwlwifi 0000:00:14.3: Detected Intel(R) Wi-Fi 6 AX101, REV=0x351
-> [...]
-> 
-> For the record, I have done a git-bisect[1], and that turned up
-> 
->   d2ccc5c1526396aef5196e4dd2ec8538994e5072
->   wifi: iwlwifi: Update init sequence if tx diversity supported
-> 
-> as the first good commit[0].
-> 
-> Sadly, that patch (or even the series) does not appear to be easily backportable,
-> so it seems likely that current stable kernels won't be able to support this device.
+The latest mainline kernel branch fails to build x86_64, arm64 and arm allmodconfig
+with clang (version 16.0.1), and the error is:
 
-Thx for bisecting.
+In file included from drivers/md/raid1.c:52:
+drivers/md/raid1-10.c:119:25: error: casting from randomized structure pointer type 'struct block_device *' to 'struct md_rdev *'
+        struct md_rdev *rdev = (struct md_rdev *)bio->bi_bdev;
+                               ^
 
-Thing is: 6.3 will be EOL in about two or three weeks anyway. And Arch
-will likely switch to 6.4 (which works -- or did I get this wrong?)
-within a week or two. Makes be wonder if it's the best solution for
-everyone involved to not resolve this and move on.
+git bisect pointed to 8295efbe68c0 ("md/raid1-10: factor out a helper to submit normal write").
 
-Ciao, Thorsten
+Reverting the commit has fixed the build failure.
 
-> [0]: https://lore.kernel.org/all/20230413102635.c2121c8694a7.Ibee3dd8765ef4b7504660fa228a7c7eff78920af@changeid/
-> [1]:
->   git bisect start
->   # status: waiting for both good and bad commits
->   # new: [b6dad5178ceaf23f369c3711062ce1f2afc33644] Merge tag 'nios2_fix_v6.4' of git://git.kernel.org/pub/scm/linux/kernel/git/dinguyen/linux
->   git bisect new b6dad5178ceaf23f369c3711062ce1f2afc33644
->   # status: waiting for good commit(s), bad commit known
->   # old: [457391b0380335d5e9a5babdec90ac53928b23b4] Linux 6.3
->   git bisect old 457391b0380335d5e9a5babdec90ac53928b23b4
->   # new: [6e98b09da931a00bf4e0477d0fa52748bf28fcce] Merge tag 'net-next-6.4' of git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next
->   git bisect new 6e98b09da931a00bf4e0477d0fa52748bf28fcce
->   # old: [088e0c188513b58a0056a488cf5b7df094a8a48a] Merge tag 'platform-drivers-x86-v6.4-1' of git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86
->   git bisect old 088e0c188513b58a0056a488cf5b7df094a8a48a
->   # new: [ca288965801572fe41386560d4e6c5cc0e5cc56d] Merge tag 'wireless-next-2023-04-21' of git://git.kernel.org/pub/scm/linux/kernel/git/wireless/wireless-next
->   git bisect new ca288965801572fe41386560d4e6c5cc0e5cc56d
->   # old: [d56417ad1133fc41752bb9fe37da7ae3187395a4] net: phy: smsc: clear edpd_enable if interrupt mode is used
->   git bisect old d56417ad1133fc41752bb9fe37da7ae3187395a4
->   # old: [c54876cd5961ce0f8e74807f79a6739cd6b35ddf] net/sched: pass netlink extack to mqprio and taprio offload
->   git bisect old c54876cd5961ce0f8e74807f79a6739cd6b35ddf
->   # new: [3288ee5844b74cebb94ed15bc9b5b9d3223ae038] Merge ath-next from git://git.kernel.org/pub/scm/linux/kernel/git/kvalo/ath.git
->   git bisect new 3288ee5844b74cebb94ed15bc9b5b9d3223ae038
->   # new: [d0b6f86fdbefa62fd4ad2acd1aea6c45f9b518ba] wifi: mt76: mt7996: let non-bufferable MMPDUs use correct hw queue
->   git bisect new d0b6f86fdbefa62fd4ad2acd1aea6c45f9b518ba
->   # new: [a0e97ae3f3320a246a79db7372fc23a38556014e] wifi: rtw89: add ieee80211::remain_on_channel ops
->   git bisect new a0e97ae3f3320a246a79db7372fc23a38556014e
->   # new: [d00800a289c9349bb659a698cbd7bc04521dc927] wifi: mac80211: add flush_sta method
->   git bisect new d00800a289c9349bb659a698cbd7bc04521dc927
->   # old: [413be839bfca9a4f6b32b92807ecdc2c2c182d94] wifi: iwlwifi: add a validity check of queue_id in iwl_txq_reclaim
->   git bisect old 413be839bfca9a4f6b32b92807ecdc2c2c182d94
->   # old: [e305a408c5f9c8df06a58e09a23375fd257f081c] wifi: iwlwifi: mvm: move function sequence
->   git bisect old e305a408c5f9c8df06a58e09a23375fd257f081c
->   # new: [217f3c52f00d3419ecdd38a99a7eceecb11679b2] wifi: iwlwifi: mvm: don't set CHECKSUM_COMPLETE for unsupported protocols
->   git bisect new 217f3c52f00d3419ecdd38a99a7eceecb11679b2
->   # new: [5caa82529eabff044c5f3eb254f3a7ff00e9170d] wifi: iwlwifi: Update configurations for Bnj-a0 and specific rf devices
->   git bisect new 5caa82529eabff044c5f3eb254f3a7ff00e9170d
->   # new: [d2ccc5c1526396aef5196e4dd2ec8538994e5072] wifi: iwlwifi: Update init sequence if tx diversity supported
->   git bisect new d2ccc5c1526396aef5196e4dd2ec8538994e5072
->   # first new commit: [d2ccc5c1526396aef5196e4dd2ec8538994e5072] wifi: iwlwifi: Update init sequence if tx diversity supported
-> 
-> 
->>
->> I then noticed that firmwares 75-77 are available and that there were recent changes
->> to the iwlwifi module that increased IWL_22000_UCODE_API_MAX, so I gave it a go,
->> and built the kernel at ae8373a5add4ea39f032563cf12a02946d1e3546 and now firmware 77
->> is loaded, and that seems to work, at least I did not notice any issues so far.
->>
->> The full logs and other information about the laptop can be found here[0].
->>
->>
->> Regards,
->> Barnabás Pőcze
->>
->>
->> [0]: https://linux-hardware.org/?probe=43069955ee
+I will be happy to test any patch or provide any extra log if needed.
+
+#regzbot introduced: 8295efbe68c080047e98d9c0eb5cb933b238a8cb
+
+-- 
+Regards
+Sudip
