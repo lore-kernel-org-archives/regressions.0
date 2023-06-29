@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1287C33F5
-	for <regressions@lists.linux.dev>; Thu, 29 Jun 2023 16:50:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA7C213AC3
+	for <regressions@lists.linux.dev>; Thu, 29 Jun 2023 17:06:38 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qEuqR-0002Ke-10; Thu, 29 Jun 2023 18:50:11 +0200
-Message-ID: <0d3db91c-f071-009a-952a-bd109b16a352@leemhuis.info>
-Date: Thu, 29 Jun 2023 18:50:10 +0200
+	id 1qEv5m-0004tO-Fr; Thu, 29 Jun 2023 19:06:02 +0200
+Message-ID: <90150fe2-e07d-d991-5bab-0a931abda9a3@leemhuis.info>
+Date: Thu, 29 Jun 2023 19:06:00 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,84 +16,95 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.12.0
-Subject: Re: iwlwifi: AX201 misdetected as AX101
+Subject: Re: [PATCH v4 29/33] x86/mm: try VMA lock-based page fault handling
+ first
 Content-Language: en-US, de-DE
-To: =?UTF-8?Q?Barnab=c3=a1s_P=c5=91cze?= <pobrn@protonmail.com>,
- Gregory Greenman <gregory.greenman@intel.com>
-Cc: linux-wireless <linux-wireless@vger.kernel.org>,
- Bagas Sanjaya <bagasdotme@gmail.com>,
+To: Jiri Slaby <jirislaby@kernel.org>, Suren Baghdasaryan
+ <surenb@google.com>, akpm@linux-foundation.org
+Cc: michel@lespinasse.org, joelaf@google.com, songliubraving@fb.com,
+ mhocko@suse.com, leewalsh@google.com, david@redhat.com,
+ peterz@infradead.org, bigeasy@linutronix.de, peterx@redhat.com,
+ dhowells@redhat.com, linux-mm@kvack.org, edumazet@google.com,
+ jglisse@google.com, punit.agrawal@bytedance.com, will@kernel.org,
+ arjunroy@google.com, chriscli@google.com, dave@stgolabs.net,
+ minchan@google.com, x86@kernel.org, hughd@google.com, willy@infradead.org,
+ gurua@google.com, mingo@redhat.com, linux-arm-kernel@lists.infradead.org,
+ rientjes@google.com, axelrasmussen@google.com, kernel-team@android.com,
+ michalechner92@googlemail.com, soheil@google.com, paulmck@kernel.org,
+ jannh@google.com, liam.howlett@oracle.com, shakeelb@google.com,
+ luto@kernel.org, gthelen@google.com, ldufour@linux.ibm.com, vbabka@suse.cz,
+ posk@google.com, lstoakes@gmail.com, peterjung1337@gmail.com,
+ linuxppc-dev@lists.ozlabs.org, kent.overstreet@linux.dev,
+ linux-kernel@vger.kernel.org, hannes@cmpxchg.org, tatashin@google.com,
+ mgorman@techsingularity.net, rppt@kernel.org,
  Linux kernel regressions list <regressions@lists.linux.dev>
-References: <gAwMzXEPlQZUgbc6n3yYY2soROKl4-D_JfWwoHW8CMx-LDkDEeAlwcyjOMy767W3eEVxS-e7oEihVh1PNHT-_iznSKneJjW0vu0PN7aQ9K8=@protonmail.com>
- <FFsiCdZPcJ2FItvpkX6E-0LT-gc1m-7JdRKTZ0NB9s7AmhtFt09wmR8fItdeT5xaYybsKsC_cjXuh5i_V97rgq4fJgKOmBmKytjCwSKlnAU=@protonmail.com>
- <3270268e-c926-01e6-65e1-02aa6abfd0db@leemhuis.info>
- <BgFi95lMulZVgv9IMN9yIzwTaSjvUWnYbQo1U5KT9-G8Dsxuuv4ENVy9iTx8Z8YamXBVPX-K3PYgVBSwgjGY5qXoEsQNpaVXip595AQO584=@protonmail.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
+References: <20230227173632.3292573-1-surenb@google.com>
+ <20230227173632.3292573-30-surenb@google.com>
+ <dbdef34c-3a07-5951-e1ae-e9c6e3cdf51b@kernel.org>
+From: "Linux regression tracking #adding (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <BgFi95lMulZVgv9IMN9yIzwTaSjvUWnYbQo1U5KT9-G8Dsxuuv4ENVy9iTx8Z8YamXBVPX-K3PYgVBSwgjGY5qXoEsQNpaVXip595AQO584=@protonmail.com>
+In-Reply-To: <dbdef34c-3a07-5951-e1ae-e9c6e3cdf51b@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1688057416;c70aee21;
-X-HE-SMSGID: 1qEuqR-0002Ke-10
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1688058398;d6e5e06f;
+X-HE-SMSGID: 1qEv5m-0004tO-Fr
 
-On 29.06.23 17:28, Barnabás Pőcze wrote:
-> 2023. június 29., csütörtök 13:31 keltezéssel, Thorsten Leemhuis <regressions@leemhuis.info> írta:
->> On 27.06.23 23:55, Barnabás Pőcze wrote:
->>> 2023. május 26., péntek 19:55 keltezéssel, Barnabás Pőcze <pobrn@protonmail.com> írta:
->>>> I have an Acer Aspire A315-58 laptop[0], which, according to lspci has the following intel wireless chip:
->>>>
->>>>    Device:	00:14.3
->>>>     Class:	Network controller [0280]
->>>>    Vendor:	Intel Corporation [8086]
->>>>    Device:	Wi-Fi 6 AX201 [a0f0]
->>>>   SVendor:	Intel Corporation [8086]
->>>>   SDevice:	Wi-Fi 6 AX201 [0244]
->>>>       Rev:	20
->>>>    ProgIf:	00
->>>>    Driver:	iwlwifi
->>>>    Module:	iwlwifi
->>>>
->>>> However, in the kernel message buffer, the following message is written:
->>>>
->>>>   [    3.633490] iwlwifi 0000:00:14.3: Detected Intel(R) Wi-Fi 6 AX101, REV=0x351
+[CCing the regression list, as it should be in the loop for regressions:
+https://docs.kernel.org/admin-guide/reporting-regressions.html]
 
-Gregory who is CCed since the start of the thread might care to look
-into this. According to a quick search lspci is right, but this needs
-expects. Maybe it's just a cosmetic problem.
-
->>> [...]
->>> For the record, I have done a git-bisect[1], and that turned up
->>>   d2ccc5c1526396aef5196e4dd2ec8538994e5072
->>>
->>> as the first good commit[0].
->>>
->>> Sadly, that patch (or even the series) does not appear to be easily backportable,
->>> so it seems likely that current stable kernels won't be able to support this device.
->>
->> Thx for bisecting.
->>
->> Thing is: 6.3 will be EOL in about two or three weeks anyway. And Arch
->> will likely switch to 6.4 (which works -- or did I get this wrong?)
->> within a week or two. Makes be wonder if it's the best solution for
->> everyone involved to not resolve this and move on.
+On 29.06.23 16:40, Jiri Slaby wrote:
 > 
-> Yes, 6.4 seems to work.
+> On 27. 02. 23, 18:36, Suren Baghdasaryan wrote:
+>> Attempt VMA lock-based page fault handling first, and fall back to the
+>> existing mmap_lock-based handling if that fails.
+> [...]
+>> +    fault = handle_mm_fault(vma, address, flags |
+>> FAULT_FLAG_VMA_LOCK, regs);
+>> +    vma_end_read(vma);
+>> +
+>> +    if (!(fault & VM_FAULT_RETRY)) {
+>> +        count_vm_vma_lock_event(VMA_LOCK_SUCCESS);
+>> +        goto done;
+>> +    }
+>> +    count_vm_vma_lock_event(VMA_LOCK_RETRY);
+> 
+> This is apparently not strong enough as it causes go build failures like:
+> 
+> [  409s] strconv
+> [  409s] releasep: m=0x579e2000 m->p=0x5781c600 p->m=0x0 p->status=2
+> [  409s] fatal error: releasep: invalid p state
+> [  409s]
+> 
+> [  325s] hash/adler32
+> [  325s] hash/crc32
+> [  325s] cmd/internal/codesign
+> [  336s] fatal error: runtime: out of memory
+> 
+> There are many kinds of similar errors. It happens in 1-3 out of 20
+> builds only.
+> 
+> If I revert the commit on top of 6.4, they all dismiss. Any idea?
+> 
+> The downstream report:
+> https://bugzilla.suse.com/show_bug.cgi?id=1212775
+> [...]
 
-#regzbot inconclusive: unlikely to be fixed in 6.3 before EOL, but 6.4 works
+Thanks for the report. To be sure the issue doesn't fall through the
+cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
+tracking bot:
 
-> I mainly meant LTS releases.  Nonetheless, lspci
-> and iwlwifi still disagree on what device it actually is.
+#regzbot ^introduced 0bff0aaea03e2a3ed6bfa3021
+https://bugzilla.suse.com/show_bug.cgi?id=1212775
+#regzbot title mm: failures when building go in 1-3 out of 20 builds
+#regzbot ignore-activity
 
-Not sure if I properly understand this.
-
-Is this broken in 6.1.y as well, but working in earlier kernels? Then it
-needs a separate report.
-
-Or do you mean the disagreement? Maybe mentioning Gregory's name above
-will do the trick to make the Intel folks look into this.
+Developers: When fixing the issue, remember to add 'Link:' tags pointing
+to the report (the parent of this mail). See page linked in footer for
+details.
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
 Everything you wanna know about Linux kernel regression tracking:
 https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+That page also explains what to do if mails like this annoy you.
