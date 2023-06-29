@@ -1,85 +1,143 @@
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from omta034.useast.a.cloudfilter.net (omta034.useast.a.cloudfilter.net [44.202.169.33])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18E83290C
-	for <regressions@lists.linux.dev>; Thu, 29 Jun 2023 14:07:07 +0000 (UTC)
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-4f865f0e16cso1131433e87.3
-        for <regressions@lists.linux.dev>; Thu, 29 Jun 2023 07:07:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1688047626; x=1690639626;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OEYh2DRfk53je4DxOfap66hrkUZhOB02h/6gUlMbFXQ=;
-        b=SxW8aPh3FgVNSKH2CoC6ad9zu7IDSAbyBabHXVoiqLmcesAK9OTxBIRASK/tyhXgIS
-         h2nh5pkTSKxPDSIirIeWnovZRIoQDHAPtMRVg1mtV3QEjLP3ERfL3C0nTbqWF9LyuUx2
-         RSbBzS6F8EaldvUiXGxkVhkFFxjRseDArwWsbuMEscGWzlGMV+vvuEAdTdQf0N2CeVRF
-         HyIrjQPHyb25CSYZgD5bmfH7EaKpvn0o9tRvS2q7ZzNqPha/KcPm3TZv2bxJ3bm7QHNF
-         rf2ryzln5Oo4yzQc9E4wXaia5+wdTp0xGEQ89OBODPXOnHtXJQ/bM8egb0O1KYKXNXDn
-         S+Iw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688047626; x=1690639626;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OEYh2DRfk53je4DxOfap66hrkUZhOB02h/6gUlMbFXQ=;
-        b=ACeD6Hfdo7f+pkniS42qFHcH8jvPr+OwK0r6/WqNVCHcR87496cJ3+UrArNqUyvipf
-         DOTRv4Xnbjj149doBWVMGI5TzOky4XbfTTmwdXJMp7xNbzobtQi+aIMTsf53TOvWdPzn
-         wtTDcajXjAsxSPmNqedGIu+fuLDXt2KvUE6lMl7BHs2uyX+5ZFfD4Rzj4p7da574kCzX
-         zbHjoKHXCspNfph1PLTdBJ8fMZiGktFsdMMRHOjX7kpZswT5Rr89YRsDzjhjTFmTSq7i
-         V+0UbKOdG21sB0TpkGw99Km4sNRH8D5ZEASPQ3XXhGqTC8RlVQdJn3U0JrFQZ89trmis
-         QDug==
-X-Gm-Message-State: ABy/qLaPB1hqmnjg0WzH6IO5ycgXyLUH1GvpmUxIYO7ficXnxDM0mnny
-	xjvoHBaka5N+GbvMPfBbTSppVtyERCX6F1oItAA=
-X-Google-Smtp-Source: APBJJlGuXe9oTBIiTfmuhpdTfJ+BVZGUuj1yzHYCSkpMv5tJzrqDUg7bLo/dUXj75LHpnXbhfTNRHsjuJsRYiCnv1A0=
-X-Received: by 2002:a05:6512:2214:b0:4f9:556b:93c5 with SMTP id
- h20-20020a056512221400b004f9556b93c5mr48961lfu.40.1688047625527; Thu, 29 Jun
- 2023 07:07:05 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6A25290C
+	for <regressions@lists.linux.dev>; Thu, 29 Jun 2023 14:09:59 +0000 (UTC)
+Received: from eig-obgw-5008a.ext.cloudfilter.net ([10.0.29.246])
+	by cmsmtp with ESMTP
+	id ErUaqxfAzKBQaEsJrqDX7y; Thu, 29 Jun 2023 14:08:23 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id EsJqqNFpMW9zGEsJqqNom1; Thu, 29 Jun 2023 14:08:22 +0000
+X-Authority-Analysis: v=2.4 cv=To31ORbh c=1 sm=1 tr=0 ts=649d9056
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
+ a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19 a=IkcTkHD0fZMA:10 a=of4jigFt-DYA:10
+ a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8 a=_Wotqz80AAAA:8 a=DrW6eaa5WwPzkhE0AvAA:9
+ a=QEXdDO2ut3YA:10 a=AjGcO6oz07-iQ99wixmX:22 a=buJP51TR1BpY-zbLSsyS:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=cgcRBF5Td84A1IoYq3JdbJJRYrniVHnwRAUvLebZ7Cw=; b=FHcPgCH0lCnOhNeiq0O2/eB4s5
+	3olkLNN4icWU6HlH+/K/jY1Lj5wKh83K/Epu9SGSaFP9sAWzgphd3Thwu2UmXR1A7tdlSShiNQ5kF
+	7delqX0tO9a22WcejFbCB8j66Adie2mnd3nWUCH+2b7sIvC/k6NoStwW9Msg2QT0D94ttQ7P99kAz
+	uTjVRiCll565kyf5gur9EG8o4fMqXtjsCvvLak8rHOs9q2kthqjXAMriMO9i1e5xNxe1uXkRU+1r2
+	reADKKAiPYGwx8ZWmk30FqnZNMV9UGJC+k6ZB4eALtEQK7mMiz66RMoFEXYLUwgtHTVmmZEEWNCnp
+	3TLquwDg==;
+Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:37752 helo=[192.168.15.8])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1qEsJp-000r5F-2I;
+	Thu, 29 Jun 2023 09:08:21 -0500
+Message-ID: <c0db4c48-6090-5c72-b597-9d4146dbc26c@embeddedor.com>
+Date: Thu, 29 Jun 2023 08:09:12 -0600
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <ZJ2H5FWuo9oDMgPm@debian> <be9320b5-7613-be0f-ffcd-4b3041ea5836@huaweicloud.com>
-In-Reply-To: <be9320b5-7613-be0f-ffcd-4b3041ea5836@huaweicloud.com>
-From: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-Date: Thu, 29 Jun 2023 15:06:29 +0100
-Message-ID: <CADVatmNG=_v0yLwZrK0FcOGdOkz_W_36kurKKeDHWoxyGWx7Qw@mail.gmail.com>
-Subject: Re: mainline build failure due to 8295efbe68c0 ("md/raid1-10: factor
- out a helper to submit normal write")
-To: Yu Kuai <yukuai1@huaweicloud.com>
-Cc: Song Liu <song@kernel.org>, linux-raid@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Linus Torvalds <torvalds@linux-foundation.org>, 
-	regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: mainline build failure due to df8fc4e934c1 ("kbuild: Enable
+ -fstrict-flex-arrays=3")
+Content-Language: en-US
+To: "Sudip Mukherjee (Codethink)" <sudipm.mukherjee@gmail.com>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Kees Cook <keescook@chromium.org>
+Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Linus Torvalds <torvalds@linux-foundation.org>, regressions@lists.linux.dev
+References: <ZJ2M4yqnOCqqGWH0@debian>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <ZJ2M4yqnOCqqGWH0@debian>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - lists.linux.dev
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.162.21.192
+X-Source-L: No
+X-Exim-ID: 1qEsJp-000r5F-2I
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.8]) [187.162.21.192]:37752
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 1
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfAk8TD7vUpE3t+z7ZQdExwgItrObVgcwym97rhYiHWRJ/xCLxthE1woCGnSxQ6b4cJ2zHB9z8FMZTfE6nJ3lcCD2YAzMJTVzuOnjdL2Ss5d6F0Uo+ZRh
+ 5PaU7jL4hBtpCiHi9wlvqY9dS2+MqYbn1KyUDkp4QiYKOnGTIw5olesPRXWovnO9lpOirWZMkAIfcV1LqQ8qdaYjDpCjz3JmdyFZnHByqj0WOaa9l6RNxGPY
 
-Hi Kuai,
+Hi,
 
-On Thu, 29 Jun 2023 at 14:56, Yu Kuai <yukuai1@huaweicloud.com> wrote:
->
-> Hi,
->
-> =E5=9C=A8 2023/06/29 21:32, Sudip Mukherjee (Codethink) =E5=86=99=E9=81=
-=93:
-> > Hi All,
-> >
-> > The latest mainline kernel branch fails to build x86_64, arm64 and arm =
-allmodconfig
->
-> Thanks for the testing, which branch are you testing?
->
-> This problem is already fixed in latest mainline kernel:
->
-> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commi=
-t/?id=3Db5a99602b74bbfa655be509c615181dd95b0719e
+Thanks for the report. See my comments below.
 
-The link you gave is not "mainline kernel". Its linux-next.
+On 6/29/23 07:53, Sudip Mukherjee (Codethink) wrote:
+> Hi All,
+> 
+> The latest mainline kernel branch fails to build with clang (version 16.0.1), and the errors are like:
+> 
+> 
+> drivers/scsi/aacraid/commsup.c:1170:17: error: array index 1 is past the end of the array (that has type 'u8[1]' (aka 'unsigned char[1]'), cast to '__le32 *' (aka 'unsigned int *')) [-Werror,-Warray-bounds]
+>                                  (((__le32 *)aifcmd->data)[1] == cpu_to_le32(3));
+>                                              ^             ~
+> drivers/scsi/aacraid/aacraid.h:2621:2: note: array 'data' declared here
+>          u8 data[1];             /* Undefined length (from kernel viewpoint) */
+>          ^
+> drivers/scsi/aacraid/commsup.c:1290:20: error: array index 3 is past the end of the array (that has type 'u8[1]' (aka 'unsigned char[1]'), cast to '__le32 *' (aka 'unsigned int *')) [-Werror,-Warray-bounds]
+>                                    ((((__le32 *)aifcmd->data)[3]
 
-Linus still does not have the fix, so the mainline kernel branch fails.
+These are addressed by this patch:
+https://lore.kernel.org/linux-hardening/65907ee4083de62fbaadc5c2e6512e3828912d1b.1687974498.git.gustavoars@kernel.org/
+
+in this series (for which I'll send v2 shortly):
+https://lore.kernel.org/linux-hardening/62386518-4123-db1f-4656-6b4ea509f5b1@embeddedor.com/T/
 
 
---=20
-Regards
-Sudip
+> drivers/staging/ks7010/ks_wlan_net.c:1600:34: error: array index 16 is past the end of the array (that has type '__u8[0]' (aka 'unsigned char[0]')) [-Werror,-Warray-bounds]
+>                                  memcpy(&key->tx_mic_key[0], &enc->key[16], 8);
+>                                                               ^        ~~
+> ./include/linux/fortify-string.h:694:35: note: expanded from macro 'memcpy'
+>                  __struct_size(p), __struct_size(q),                     \
+>                                                  ^
+> ./include/linux/fortify-string.h:96:56: note: expanded from macro '__struct_size'
+> #define __struct_size(p)        __builtin_dynamic_object_size(p, 0)
+>                                                                ^
+> ./include/linux/fortify-string.h:638:27: note: expanded from macro '__fortify_memcpy_chk'
+>          const size_t __q_size = (q_size);                               \
+>                                   ^~~~~~
+> ./include/uapi/linux/wireless.h:838:2: note: array 'key' declared here
+>          __u8            key[0];
+>          ^
+
+and these are addressed by this patch:
+https://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git/commit/?h=for-next/kspp&id=40ca06d71d60677a8424798610c97a46e4140a21
+
+in this pull-request:
+https://lore.kernel.org/linux-hardening/ZJxZJDUDs1ry84Rc@work/
+
+Thanks
+--
+Gustavo
+
+> 
+> _______________________________________________________________________
+> 
+> 
+> git bisect pointed to df8fc4e934c1 ("kbuild: Enable -fstrict-flex-arrays=3").
+> 
+> Reverting the commit has fixed the build failure.
+> 
+> I will be happy to test any patch or provide any extra log if needed.
+> 
+> #regzbot introduced: df8fc4e934c12b906d08050d7779f292b9c5c6b5
+> 
+> 
