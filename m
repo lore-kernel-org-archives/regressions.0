@@ -1,141 +1,154 @@
-Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE02828F2
-	for <regressions@lists.linux.dev>; Thu, 29 Jun 2023 08:49:59 +0000 (UTC)
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20230629084952euoutp02c3ef68e6a430334665aed3a37c85dcf3~tFQ_pKGPB1358713587euoutp02p
-	for <regressions@lists.linux.dev>; Thu, 29 Jun 2023 08:49:52 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20230629084952euoutp02c3ef68e6a430334665aed3a37c85dcf3~tFQ_pKGPB1358713587euoutp02p
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1688028592;
-	bh=RCJMfhNOhoNuhYOW2LQFchciQR63q/vY6yCZF5AfVcU=;
-	h=Date:Subject:To:CC:From:In-Reply-To:References:From;
-	b=FmSjSyGEHso/yo6Uxq0rlRB7kJHu8J4zEe1cLRyovgrN6DdcF7NcdK3klfqwZBmR7
-	 mEUVVZpV3FoVaD8HDh+kHWv6TJCnVeRFEmfGn4oX7m2hSkx3e2IwQ0ARAbm0Hob3o5
-	 LHXDSeSjHnphvD31mKyZONkBI2QzkgcRU8TtFqsk=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-	20230629084951eucas1p2e1472437ce36e6e154e846bbb21ab6c1~tFQ_Edg9s0633506335eucas1p2n;
-	Thu, 29 Jun 2023 08:49:51 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-	eusmges3new.samsung.com (EUCPMTA) with SMTP id E5.39.37758.FA54D946; Thu, 29
-	Jun 2023 09:49:51 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-	20230629084951eucas1p215f9041ba59fdd1c9538f472edc541e7~tFQ9s9w9b0769007690eucas1p2K;
-	Thu, 29 Jun 2023 08:49:51 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-	eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20230629084951eusmtrp156abfc34d22bc1ceaef08aa98e5e94b6~tFQ9sUMQV1924919249eusmtrp1H;
-	Thu, 29 Jun 2023 08:49:51 +0000 (GMT)
-X-AuditID: cbfec7f5-7ffff7000002937e-5f-649d45afc034
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-	eusmgms2.samsung.com (EUCPMTA) with SMTP id 5D.68.14344.FA54D946; Thu, 29
-	Jun 2023 09:49:51 +0100 (BST)
-Received: from CAMSVWEXC02.scsc.local (unknown [106.1.227.72]) by
-	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20230629084951eusmtip23cfd8f2ec4ec9553393061e5f521c9fd~tFQ9bfIbx1475314753eusmtip2F;
-	Thu, 29 Jun 2023 08:49:51 +0000 (GMT)
-Received: from [192.168.8.190] (106.210.248.115) by CAMSVWEXC02.scsc.local
-	(2002:6a01:e348::6a01:e348) with Microsoft SMTP Server (TLS) id 15.0.1497.2;
-	Thu, 29 Jun 2023 09:49:46 +0100
-Message-ID: <1d1a37ff-ba69-88a2-f775-c6878e88046b@samsung.com>
-Date: Thu, 29 Jun 2023 10:49:46 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85B35D51C
+	for <regressions@lists.linux.dev>; Thu, 29 Jun 2023 11:29:20 +0000 (UTC)
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-6686a05bc66so397017b3a.1
+        for <regressions@lists.linux.dev>; Thu, 29 Jun 2023 04:29:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1688038160; x=1690630160;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZfFuThe/qoMIzWjTwGboo239F1nJd90UWgAoB6QoOsc=;
+        b=hGNohoohoand6sYmOE6Fyi221R8jV942yuGsQFCDjACZgO8QG+ccaRDHsCrEI9M3WO
+         irZQYSIDlhoKaajGW/85gVO8z28CAC3eBYJbB1IlM0fsKvPXiOMNCMyECXQu0MFK9IVT
+         Na8ZcqO1uCTTJPiKVCQbad8EqpE42YbLGKfj15SVvTn9RiAGRox7y58x8k7Sfv6qldXf
+         pKmTyKXy2SS0Zy7Bn0oYi62TX8cNqSLMOOkFpxgZask4TcwiVtl2cGFp/o4hl3evUtgG
+         2u7sZQm6sjWNWGfc+P/yK6/VQkfSazqD8ztd8ygfbpPoWz4pO/l1eIN3ZniLBL8qi2Fn
+         cZMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688038160; x=1690630160;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZfFuThe/qoMIzWjTwGboo239F1nJd90UWgAoB6QoOsc=;
+        b=LHnWmAHZTgdSaGdpbGQncbX5hQSrFHhJSawX0YrurHg1wT27LPdvqMIPjRqwljIDIJ
+         /O4DUxHcA0sd/0fEvoLnagdnqhz6CdFgFUhHnOEHUDCvZ6zgL3On7Zj7X8QR6ndDD37K
+         JHoK78LM42LXd3/ue6poTIuWOenV+ZeHHec3JKuIT3yE5F7Jb7bzergIpScyDmGvREDK
+         U560DTIaPPDPcHeyc6MeG9rQCPw1yfxnSNbKKV00a9lmWeD3h6STMx3NcgOLQ5EBuXI/
+         HUs7InugoRFlXvAQUXMfq0/VogdXLhvQUvxfkyN3f0CtMx1ZlEPGpCMP19e+SKbMZq2h
+         5RUg==
+X-Gm-Message-State: AC+VfDyQKuvkmWH0c/LWBF6Pf3kU3dmF/lklm90B8jdPuPpkMBGsLUNr
+	HflFnX+ucmHnYyyPVrE+Vog=
+X-Google-Smtp-Source: ACHHUZ4Xk/z/bHUiwLYrZYqWdxImDCmhy4j0eyvPIpQ8LIQkywIimLFSdtx8SVfbS8hUjsGaqR99XQ==
+X-Received: by 2002:a05:6a20:1609:b0:105:94e5:f5c5 with SMTP id l9-20020a056a20160900b0010594e5f5c5mr28539912pzj.56.1688038159515;
+        Thu, 29 Jun 2023 04:29:19 -0700 (PDT)
+Received: from debian.me ([103.131.18.64])
+        by smtp.gmail.com with ESMTPSA id v26-20020aa7809a000000b006589cf6d88bsm8566325pff.145.2023.06.29.04.29.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Jun 2023 04:29:18 -0700 (PDT)
+Received: by debian.me (Postfix, from userid 1000)
+	id 8F47D80F639E; Thu, 29 Jun 2023 18:29:15 +0700 (WIB)
+Date: Thu, 29 Jun 2023 18:29:15 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Martin Zaharinov <micron10@gmail.com>, netdev <netdev@vger.kernel.org>,
+	Eric Dumazet <edumazet@google.com>
+Cc: Linux Regressions <regressions@lists.linux.dev>
+Subject: Re: Bug Report with kernel 6.3.5
+Message-ID: <ZJ1rC8WieLkJLHFl@debian.me>
+References: <20F611B6-2C76-4BD3-852D-8828D27F88EC@gmail.com>
+ <ZHwkQcouxweYYhTX@debian.me>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
-	Thunderbird/102.11.0
-Subject: Re: Fwd: Need NVME QUIRK BOGUS for SAMSUNG MZ1WV480HCGL-000MV
- (Samsung SM-953 Datacenter SSD)
-To: Keith Busch <kbusch@kernel.org>, Bagas Sanjaya <bagasdotme@gmail.com>
-CC: Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>, "Sagi
- Grimberg" <sagi@grimberg.me>, Clemens S. <cspringsguth@gmail.com>, "Martin
- Belanger" <martin.belanger@dell.com>, Chaitanya Kulkarni <kch@nvidia.com>,
-	John Meneghini <jmeneghi@redhat.com>, Hannes Reinecke <hare@suse.de>, "Linux
- Kernel Mailing List" <linux-kernel@vger.kernel.org>, Linux Regressions
-	<regressions@lists.linux.dev>, Linux NVMe <linux-nvme@lists.infradead.org>,
-	Kanchan Joshi <joshi.k@samsung.com>, Javier Gonzalez
-	<javier.gonz@samsung.com>
-Content-Language: en-US
-From: Pankaj Raghav <p.raghav@samsung.com>
-In-Reply-To: <ZJsKBkPqoWzYyngS@kbusch-mbp.dhcp.thefacebook.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [106.210.248.115]
-X-ClientProxiedBy: CAMSVWEXC01.scsc.local (2002:6a01:e347::6a01:e347) To
-	CAMSVWEXC02.scsc.local (2002:6a01:e348::6a01:e348)
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrHKsWRmVeSWpSXmKPExsWy7djPc7rrXeemGJw8pWGx+m4/m8XURkaL
-	Nzt3sVvsWTSJyWLl6qNMFqsvrGeymHToGqPF06uzmCwu75rDZjF/2VN2i3OzlrBYbHzbwW6x
-	7vV7Fgdej0kzZzB77Jx1l93j/L2NLB6Xz5Z6bFrVyeaxeUm9x4vNMxk9dt9sYPPobX7H5vF+
-	31Wg+Olqj8+b5AJ4orhsUlJzMstSi/TtErgytn9bwlrwiKPi/JTTjA2M09m7GDk5JARMJFYt
-	PcDSxcjFISSwglHi+fSPUM4XRon1V6+wQTifGSW+7doA17Jg8TGoquWMEj0LpjHDVfX/ucUE
-	4exmlPi1eSozSAuvgJ3EraOfWEBsFgFViadvFrNDxAUlTs58AhYXFYiWaF12nw3EFhbIkNj/
-	6QJYr4iAp8Tu2SvB1jELzGKR2DRlMViCWUBc4taT+UDbODjYBLQkGjvBZnIK2EvMv3meCaJE
-	U6J1+292CFteYvvbOcwQLyhLXJjzmg3CrpU4tQXiaAmBe5wSf+7/hfrTReL8mk2MELawxKvj
-	W6DiMhKnJ/ewQNjVEk9v/GaGaG4Ben/nejaQgyQErCX6zuRA1DhK7N63kREizCdx460gxD18
-	EpO2TWeewKg6CykoZiH5bBaSF2YheWEBI8sqRvHU0uLc9NRi47zUcr3ixNzi0rx0veT83E2M
-	wCR4+t/xrzsYV7z6qHeIkYmD8RCjBAezkgjv7TezU4R4UxIrq1KL8uOLSnNSiw8xSnOwKInz
-	atueTBYSSE8sSc1OTS1ILYLJMnFwSjUwtfOp3p29WPV6X8yjvoAte6pcOJ/rBnqLbSm9tSlJ
-	77XuJm7nbVGnX9gY+x1LaDqznj26YUPF4jOPqp2+vg7abOkRrhM/aaZZv87f/bzuMxUWqCjf
-	7YqM/pOrwrZh94srNXOPL81bX20WvPrE6Yln8u9cN7getSbQhFH6XlngA83wHhXOzmoZhV/P
-	lVl2BCzh4U3cFCTAsOzR73uVJgt2WKuJZidklJ2+H3U76fJ2vYYML7656u4T+cp9d80Xl+PZ
-	cvfsZFGjpRrvTn/wst2Rt2mf1rScmXPfP8uZPk96krVFoCZj4nt7gQj7KX/ae1tvS99IOJL7
-	VftnfmWtuUdmT7vVz/JP75MWW1voGbkqsRRnJBpqMRcVJwIAuuMep/EDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprMKsWRmVeSWpSXmKPExsVy+t/xe7rrXeemGNz7xG2x+m4/m8XURkaL
-	Nzt3sVvsWTSJyWLl6qNMFqsvrGeymHToGqPF06uzmCwu75rDZjF/2VN2i3OzlrBYbHzbwW6x
-	7vV7Fgdej0kzZzB77Jx1l93j/L2NLB6Xz5Z6bFrVyeaxeUm9x4vNMxk9dt9sYPPobX7H5vF+
-	31Wg+Olqj8+b5AJ4ovRsivJLS1IVMvKLS2yVog0tjPQMLS30jEws9QyNzWOtjEyV9O1sUlJz
-	MstSi/TtEvQytn9bwlrwiKPi/JTTjA2M09m7GDk5JARMJBYsPsbSxcjFISSwlFFi+8H5UAkZ
-	iY1frrJC2MISf651sUEUfWSU+HPnGTOEs5tRYtnW/4wgVbwCdhK3jn5iAbFZBFQlnr5ZzA4R
-	F5Q4OfMJWFxUIFpi9ecLYFOFBTIk9n+6wAxiiwh4SuyevRLsDGaBWSwSm6YshtpwlFFi/6Nr
-	YB3MAuISt57MZ+pi5OBgE9CSaOwEW8ApYC8x/+Z5JogSTYnW7b/ZIWx5ie1v5zBDvKAscWHO
-	azYIu1bi899njBMYRWchuW8Wkg2zkIyahWTUAkaWVYwiqaXFuem5xUZ6xYm5xaV56XrJ+bmb
-	GIGpY9uxn1t2MK589VHvECMTB+MhRgkOZiUR3ttvZqcI8aYkVlalFuXHF5XmpBYfYjQFBtJE
-	ZinR5Hxg8soriTc0MzA1NDGzNDC1NDNWEuf1LOhIFBJITyxJzU5NLUgtgulj4uCUamAK+ZVQ
-	GyqnxrA/Z+GLuPr5Ft8ja+/qq1x0ZmGe2XN5n3HuxFSplbdlj0Z8UQk5sqZdke3t+2gj669F
-	uzqyuR2XLZmnEfCVr8b1ZLnCoXaOOzv5PV6+6q952hP/+2BOoOOdVymTXIqm1AWVS7+QK2n6
-	vT/hWMXRnjUPtb9ozOxfd0z/3qf+BPbHMw4kb15UuvXSzADrBZPENT/vaVlvFpV09kSn8Qwe
-	FzdxMeu7OlPjDk9t7dy+8OF51teaEyQz7Ven3Z1fU34zfzffyd/q0y1XlUuzKF235Zs8RWBF
-	YOvlO33OP1+r72tgVVfWCAw3Lklf1Ww64adG6bFdmR+nF688nXqYvT11p2Hkm5IkTkUlluKM
-	REMt5qLiRABw/OprpgMAAA==
-X-CMS-MailID: 20230629084951eucas1p215f9041ba59fdd1c9538f472edc541e7
-X-Msg-Generator: CA
-X-RootMTR: 20230627161055eucas1p18d097cbcc2215b292c65a5b3a0f0e6b5
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20230627161055eucas1p18d097cbcc2215b292c65a5b3a0f0e6b5
-References: <d18d2a08-9d24-0209-c2cf-baf60bbf5048@gmail.com>
-	<CGME20230627161055eucas1p18d097cbcc2215b292c65a5b3a0f0e6b5@eucas1p1.samsung.com>
-	<ZJsKBkPqoWzYyngS@kbusch-mbp.dhcp.thefacebook.com>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="TZC7wl6DVJTO11zM"
+Content-Disposition: inline
+In-Reply-To: <ZHwkQcouxweYYhTX@debian.me>
 
-Thanks for forwarding the report, Keith!
 
-On 2023-06-27 18:10, Keith Busch wrote:
-> On Mon, Jun 26, 2023 at 08:15:49AM +0700, Bagas Sanjaya wrote:
->> See Bugzilla for the full thread.
->>
->> The reporter had a quirk (see above) that fixed this regression,
->> nevertheless I'm adding it to regzbot to make sure it doesn't fall
->> through cracks unnoticed:
->>
->> #regzbot introduced: 86c2457a8e8112f https://bugzilla.kernel.org/show_bug.cgi?id=217593
->> #regzbot title: NVME_QUIRK_BOGUS_NID is needed for SAMSUNG MZ1WV480HCGL-000MV
-> 
-> These bug reports really should go to the vendors that created the
-> broken device with non-unique "unique" fields. It's easy enough for me
-> to write the quirk patch, but it's not the ideal solution and may harm
-> devices/firmwares with the same VID:DID that don't have this problem.
-> Not being the vendor, I'm not in a postition to know that, so CC'ing
-> some Samsung folks.
+--TZC7wl6DVJTO11zM
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I will forward this report internally. Usually the Datacenter SSDs firmware
-are created based on customer requirements, so please wait before applying these
-changes.
+On Sun, Jun 04, 2023 at 12:42:25PM +0700, Bagas Sanjaya wrote:
+> On Sun, Jun 04, 2023 at 07:51:36AM +0300, Martin Zaharinov wrote:
+> > Hi Team one bug report=20
+> >=20
+> > after upgrade from kernel 6.2.12 to 6.3.5=20
+> > After fell hour system get this error.
+> >=20
+> > If is possible to check.
+> >=20
+> >=20
+> > Jun  4 01:46:52  [12810.275218][  T587] INFO: task nginx:3977 blocked f=
+or more than 609 seconds.
+> > Jun  4 01:46:52  [12810.275350][  T587]       Tainted: G           O   =
+    6.3.5 #1
+> > Jun  4 01:46:52  [12810.275436][  T587] "echo 0 > /proc/sys/kernel/hung=
+_task_timeout_secs" disables this message.
+> > Jun  4 01:46:52  [12810.275527][  T587] task:nginx         state:D stac=
+k:0     pid:3977  ppid:1      flags:0x00000006
+> > Jun  4 01:46:52  [12810.275624][  T587] Call Trace:
+> > Jun  4 01:46:52  [12810.275707][  T587]  <TASK>
+> > Jun  4 01:46:52  [12810.275786][  T587]  __schedule+0x352/0x820
+> > Jun  4 01:46:52  [12810.275878][  T587]  schedule_preempt_disabled+0x61=
+/0xe0
+> > Jun  4 01:46:52  [12810.275963][  T587]  __mutex_lock.constprop.0+0x481=
+/0x7a0
+> > Jun  4 01:46:52  [12810.276049][  T587]  ? __lock_sock_fast+0x1a/0xc0
+> > Jun  4 01:46:52  [12810.276135][  T587]  ? lock_sock_nested+0x1a/0xc0
+> > Jun  4 01:46:52  [12810.276217][  T587]  ? inode_wait_for_writeback+0x7=
+7/0xd0
+> > Jun  4 01:46:52  [12810.276307][  T587]  eventpoll_release_file+0x41/0x=
+90
+> > Jun  4 01:46:52  [12810.276416][  T587]  __fput+0x1d9/0x240
+> > Jun  4 01:46:52  [12810.276517][  T587]  task_work_run+0x51/0x80
+> > Jun  4 01:46:52  [12810.276624][  T587]  exit_to_user_mode_prepare+0x12=
+3/0x130
+> > Jun  4 01:46:52  [12810.276732][  T587]  syscall_exit_to_user_mode+0x21=
+/0x110
+> > Jun  4 01:46:52  [12810.276847][  T587]  entry_SYSCALL_64_after_hwframe=
++0x46/0xb0
+> > Jun  4 01:46:52  [12810.276954][  T587] RIP: 0033:0x15037529155a
+> > Jun  4 01:46:52  [12810.277056][  T587] RSP: 002b:000015036bbb6400 EFLA=
+GS: 00000293 ORIG_RAX: 0000000000000003
+> > Jun  4 01:46:52  [12810.277185][  T587] RAX: 0000000000000000 RBX: 0000=
+15036bbb7420 RCX: 000015037529155a
+> > Jun  4 01:46:52  [12810.277311][  T587] RDX: 0000000000000000 RSI: 0000=
+000000000000 RDI: 0000000000000013
+> > Jun  4 01:46:52  [12810.277440][  T587] RBP: 00001503647343d0 R08: 1999=
+999999999999 R09: 0000000000000000
+> > Jun  4 01:46:52  [12810.277567][  T587] R10: 000015037531baa0 R11: 0000=
+000000000293 R12: 0000000000000ba5
+> > Jun  4 01:46:52  [12810.277693][  T587] R13: 0000150348731f48 R14: 0000=
+000000000000 R15: 000000001f5b06b0
+> > Jun  4 01:46:52  [12810.277820][  T587]  </TASK>
+> >=20
+>=20
+> Can you clearly describe this regression? And your nginx setup? And most
+> importantly, can you please bisect between v6.2 and v6.3 to find the
+> culprit? Can you also check the mainline?
+>=20
+> Anyway, thanks for the regression report. I'm adding it to regzbot:
+>=20
+> #regzbot ^introduced: v6.2.12..v6.3.5
+> #regzbot title: nginx blocked for more than 10 minutes on 6.3.5
+>=20
 
-Regards,
-Pankaj
+No reply from Martin (MIA), thus removing from regzbot tracking:
+
+#regzbot inconclusive: reporter MIA when being asked to provide regression =
+details
+
+Thanks.
+
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--TZC7wl6DVJTO11zM
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZJ1rBwAKCRD2uYlJVVFO
+o98vAQCfmPM0/FgOA6TnBKdHZKH7NpIqApgAM7RSqDd1ff7fYQEA2jh5tomQyWRj
+9PcS4byaAkXqO13KyoqSebAaELNx0Q8=
+=P9rd
+-----END PGP SIGNATURE-----
+
+--TZC7wl6DVJTO11zM--
