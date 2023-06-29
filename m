@@ -1,39 +1,13 @@
-Received: from omta034.useast.a.cloudfilter.net (omta034.useast.a.cloudfilter.net [44.202.169.33])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6A25290C
-	for <regressions@lists.linux.dev>; Thu, 29 Jun 2023 14:09:59 +0000 (UTC)
-Received: from eig-obgw-5008a.ext.cloudfilter.net ([10.0.29.246])
-	by cmsmtp with ESMTP
-	id ErUaqxfAzKBQaEsJrqDX7y; Thu, 29 Jun 2023 14:08:23 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id EsJqqNFpMW9zGEsJqqNom1; Thu, 29 Jun 2023 14:08:22 +0000
-X-Authority-Analysis: v=2.4 cv=To31ORbh c=1 sm=1 tr=0 ts=649d9056
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
- a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19 a=IkcTkHD0fZMA:10 a=of4jigFt-DYA:10
- a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8 a=_Wotqz80AAAA:8 a=DrW6eaa5WwPzkhE0AvAA:9
- a=QEXdDO2ut3YA:10 a=AjGcO6oz07-iQ99wixmX:22 a=buJP51TR1BpY-zbLSsyS:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=cgcRBF5Td84A1IoYq3JdbJJRYrniVHnwRAUvLebZ7Cw=; b=FHcPgCH0lCnOhNeiq0O2/eB4s5
-	3olkLNN4icWU6HlH+/K/jY1Lj5wKh83K/Epu9SGSaFP9sAWzgphd3Thwu2UmXR1A7tdlSShiNQ5kF
-	7delqX0tO9a22WcejFbCB8j66Adie2mnd3nWUCH+2b7sIvC/k6NoStwW9Msg2QT0D94ttQ7P99kAz
-	uTjVRiCll565kyf5gur9EG8o4fMqXtjsCvvLak8rHOs9q2kthqjXAMriMO9i1e5xNxe1uXkRU+1r2
-	reADKKAiPYGwx8ZWmk30FqnZNMV9UGJC+k6ZB4eALtEQK7mMiz66RMoFEXYLUwgtHTVmmZEEWNCnp
-	3TLquwDg==;
-Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:37752 helo=[192.168.15.8])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1qEsJp-000r5F-2I;
-	Thu, 29 Jun 2023 09:08:21 -0500
-Message-ID: <c0db4c48-6090-5c72-b597-9d4146dbc26c@embeddedor.com>
-Date: Thu, 29 Jun 2023 08:09:12 -0600
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A16EE290C
+	for <regressions@lists.linux.dev>; Thu, 29 Jun 2023 14:10:04 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1qEsLP-0000pI-R2; Thu, 29 Jun 2023 16:09:59 +0200
+Message-ID: <13abe42f-2f5f-cbaf-21b8-baa4516963aa@leemhuis.info>
+Date: Thu, 29 Jun 2023 16:09:59 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -41,103 +15,52 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: mainline build failure due to df8fc4e934c1 ("kbuild: Enable
- -fstrict-flex-arrays=3")
-Content-Language: en-US
-To: "Sudip Mukherjee (Codethink)" <sudipm.mukherjee@gmail.com>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Kees Cook <keescook@chromium.org>
-Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Thunderbird/102.12.0
+Subject: Re: mainline build failure due to 8295efbe68c0 ("md/raid1-10: factor
+ out a helper to submit normal write")
+Content-Language: en-US, de-DE
+To: Yu Kuai <yukuai1@huaweicloud.com>,
+ "Sudip Mukherjee (Codethink)" <sudipm.mukherjee@gmail.com>,
+ Song Liu <song@kernel.org>
+Cc: linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org,
  Linus Torvalds <torvalds@linux-foundation.org>, regressions@lists.linux.dev
-References: <ZJ2M4yqnOCqqGWH0@debian>
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <ZJ2M4yqnOCqqGWH0@debian>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - lists.linux.dev
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.21.192
-X-Source-L: No
-X-Exim-ID: 1qEsJp-000r5F-2I
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.8]) [187.162.21.192]:37752
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfAk8TD7vUpE3t+z7ZQdExwgItrObVgcwym97rhYiHWRJ/xCLxthE1woCGnSxQ6b4cJ2zHB9z8FMZTfE6nJ3lcCD2YAzMJTVzuOnjdL2Ss5d6F0Uo+ZRh
- 5PaU7jL4hBtpCiHi9wlvqY9dS2+MqYbn1KyUDkp4QiYKOnGTIw5olesPRXWovnO9lpOirWZMkAIfcV1LqQ8qdaYjDpCjz3JmdyFZnHByqj0WOaa9l6RNxGPY
+References: <ZJ2H5FWuo9oDMgPm@debian>
+ <be9320b5-7613-be0f-ffcd-4b3041ea5836@huaweicloud.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <be9320b5-7613-be0f-ffcd-4b3041ea5836@huaweicloud.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1688047804;47d8e544;
+X-HE-SMSGID: 1qEsLP-0000pI-R2
 
-Hi,
-
-Thanks for the report. See my comments below.
-
-On 6/29/23 07:53, Sudip Mukherjee (Codethink) wrote:
-> Hi All,
+On 29.06.23 15:56, Yu Kuai wrote:
 > 
-> The latest mainline kernel branch fails to build with clang (version 16.0.1), and the errors are like:
+> 在 2023/06/29 21:32, Sudip Mukherjee (Codethink) 写道:
+>> The latest mainline kernel branch fails to build x86_64, arm64 and arm
+>> allmodconfig
+
+Thx for the report.
+
+> Thanks for the testing, which branch are you testing?
 > 
-> 
-> drivers/scsi/aacraid/commsup.c:1170:17: error: array index 1 is past the end of the array (that has type 'u8[1]' (aka 'unsigned char[1]'), cast to '__le32 *' (aka 'unsigned int *')) [-Werror,-Warray-bounds]
->                                  (((__le32 *)aifcmd->data)[1] == cpu_to_le32(3));
->                                              ^             ~
-> drivers/scsi/aacraid/aacraid.h:2621:2: note: array 'data' declared here
->          u8 data[1];             /* Undefined length (from kernel viewpoint) */
->          ^
-> drivers/scsi/aacraid/commsup.c:1290:20: error: array index 3 is past the end of the array (that has type 'u8[1]' (aka 'unsigned char[1]'), cast to '__le32 *' (aka 'unsigned int *')) [-Werror,-Warray-bounds]
->                                    ((((__le32 *)aifcmd->data)[3]
+> This problem is already fixed in latest mainline kernel:
+> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=b5a99602b74bbfa655be509c615181dd95b0719e
 
-These are addressed by this patch:
-https://lore.kernel.org/linux-hardening/65907ee4083de62fbaadc5c2e6512e3828912d1b.1687974498.git.gustavoars@kernel.org/
+And thx for the reply. :-D
 
-in this series (for which I'll send v2 shortly):
-https://lore.kernel.org/linux-hardening/62386518-4123-db1f-4656-6b4ea509f5b1@embeddedor.com/T/
+FWIW, that fix afaics is still in -next and hasn't reached mainline yet.
+But I guess that will change within a few days.
 
+>> #regzbot introduced: 8295efbe68c080047e98d9c0eb5cb933b238a8cb
 
-> drivers/staging/ks7010/ks_wlan_net.c:1600:34: error: array index 16 is past the end of the array (that has type '__u8[0]' (aka 'unsigned char[0]')) [-Werror,-Warray-bounds]
->                                  memcpy(&key->tx_mic_key[0], &enc->key[16], 8);
->                                                               ^        ~~
-> ./include/linux/fortify-string.h:694:35: note: expanded from macro 'memcpy'
->                  __struct_size(p), __struct_size(q),                     \
->                                                  ^
-> ./include/linux/fortify-string.h:96:56: note: expanded from macro '__struct_size'
-> #define __struct_size(p)        __builtin_dynamic_object_size(p, 0)
->                                                                ^
-> ./include/linux/fortify-string.h:638:27: note: expanded from macro '__fortify_memcpy_chk'
->          const size_t __q_size = (q_size);                               \
->                                   ^~~~~~
-> ./include/uapi/linux/wireless.h:838:2: note: array 'key' declared here
->          __u8            key[0];
->          ^
+#regzbot fix: b5a99602b74bbfa6
+#regzbot dup-of: https://lore.kernel.org/all/ZJ2M4yqnOCqqGWH0@debian/
+#regzbot ignore-activity
 
-and these are addressed by this patch:
-https://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git/commit/?h=for-next/kspp&id=40ca06d71d60677a8424798610c97a46e4140a21
-
-in this pull-request:
-https://lore.kernel.org/linux-hardening/ZJxZJDUDs1ry84Rc@work/
-
-Thanks
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
-Gustavo
-
-> 
-> _______________________________________________________________________
-> 
-> 
-> git bisect pointed to df8fc4e934c1 ("kbuild: Enable -fstrict-flex-arrays=3").
-> 
-> Reverting the commit has fixed the build failure.
-> 
-> I will be happy to test any patch or provide any extra log if needed.
-> 
-> #regzbot introduced: df8fc4e934c12b906d08050d7779f292b9c5c6b5
-> 
-> 
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
