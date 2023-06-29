@@ -1,154 +1,132 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85B35D51C
-	for <regressions@lists.linux.dev>; Thu, 29 Jun 2023 11:29:20 +0000 (UTC)
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-6686a05bc66so397017b3a.1
-        for <regressions@lists.linux.dev>; Thu, 29 Jun 2023 04:29:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1688038160; x=1690630160;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZfFuThe/qoMIzWjTwGboo239F1nJd90UWgAoB6QoOsc=;
-        b=hGNohoohoand6sYmOE6Fyi221R8jV942yuGsQFCDjACZgO8QG+ccaRDHsCrEI9M3WO
-         irZQYSIDlhoKaajGW/85gVO8z28CAC3eBYJbB1IlM0fsKvPXiOMNCMyECXQu0MFK9IVT
-         Na8ZcqO1uCTTJPiKVCQbad8EqpE42YbLGKfj15SVvTn9RiAGRox7y58x8k7Sfv6qldXf
-         pKmTyKXy2SS0Zy7Bn0oYi62TX8cNqSLMOOkFpxgZask4TcwiVtl2cGFp/o4hl3evUtgG
-         2u7sZQm6sjWNWGfc+P/yK6/VQkfSazqD8ztd8ygfbpPoWz4pO/l1eIN3ZniLBL8qi2Fn
-         cZMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688038160; x=1690630160;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZfFuThe/qoMIzWjTwGboo239F1nJd90UWgAoB6QoOsc=;
-        b=LHnWmAHZTgdSaGdpbGQncbX5hQSrFHhJSawX0YrurHg1wT27LPdvqMIPjRqwljIDIJ
-         /O4DUxHcA0sd/0fEvoLnagdnqhz6CdFgFUhHnOEHUDCvZ6zgL3On7Zj7X8QR6ndDD37K
-         JHoK78LM42LXd3/ue6poTIuWOenV+ZeHHec3JKuIT3yE5F7Jb7bzergIpScyDmGvREDK
-         U560DTIaPPDPcHeyc6MeG9rQCPw1yfxnSNbKKV00a9lmWeD3h6STMx3NcgOLQ5EBuXI/
-         HUs7InugoRFlXvAQUXMfq0/VogdXLhvQUvxfkyN3f0CtMx1ZlEPGpCMP19e+SKbMZq2h
-         5RUg==
-X-Gm-Message-State: AC+VfDyQKuvkmWH0c/LWBF6Pf3kU3dmF/lklm90B8jdPuPpkMBGsLUNr
-	HflFnX+ucmHnYyyPVrE+Vog=
-X-Google-Smtp-Source: ACHHUZ4Xk/z/bHUiwLYrZYqWdxImDCmhy4j0eyvPIpQ8LIQkywIimLFSdtx8SVfbS8hUjsGaqR99XQ==
-X-Received: by 2002:a05:6a20:1609:b0:105:94e5:f5c5 with SMTP id l9-20020a056a20160900b0010594e5f5c5mr28539912pzj.56.1688038159515;
-        Thu, 29 Jun 2023 04:29:19 -0700 (PDT)
-Received: from debian.me ([103.131.18.64])
-        by smtp.gmail.com with ESMTPSA id v26-20020aa7809a000000b006589cf6d88bsm8566325pff.145.2023.06.29.04.29.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Jun 2023 04:29:18 -0700 (PDT)
-Received: by debian.me (Postfix, from userid 1000)
-	id 8F47D80F639E; Thu, 29 Jun 2023 18:29:15 +0700 (WIB)
-Date: Thu, 29 Jun 2023 18:29:15 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Martin Zaharinov <micron10@gmail.com>, netdev <netdev@vger.kernel.org>,
-	Eric Dumazet <edumazet@google.com>
-Cc: Linux Regressions <regressions@lists.linux.dev>
-Subject: Re: Bug Report with kernel 6.3.5
-Message-ID: <ZJ1rC8WieLkJLHFl@debian.me>
-References: <20F611B6-2C76-4BD3-852D-8828D27F88EC@gmail.com>
- <ZHwkQcouxweYYhTX@debian.me>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 005728479
+	for <regressions@lists.linux.dev>; Thu, 29 Jun 2023 11:31:58 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1qEpsK-00043U-Nd; Thu, 29 Jun 2023 13:31:48 +0200
+Message-ID: <3270268e-c926-01e6-65e1-02aa6abfd0db@leemhuis.info>
+Date: Thu, 29 Jun 2023 13:31:48 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="TZC7wl6DVJTO11zM"
-Content-Disposition: inline
-In-Reply-To: <ZHwkQcouxweYYhTX@debian.me>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: iwlwifi: AX201 misdetected as AX101
+Content-Language: en-US, de-DE
+To: =?UTF-8?Q?Barnab=c3=a1s_P=c5=91cze?= <pobrn@protonmail.com>,
+ linux-wireless <linux-wireless@vger.kernel.org>,
+ Gregory Greenman <gregory.greenman@intel.com>,
+ Bagas Sanjaya <bagasdotme@gmail.com>
+References: <gAwMzXEPlQZUgbc6n3yYY2soROKl4-D_JfWwoHW8CMx-LDkDEeAlwcyjOMy767W3eEVxS-e7oEihVh1PNHT-_iznSKneJjW0vu0PN7aQ9K8=@protonmail.com>
+ <FFsiCdZPcJ2FItvpkX6E-0LT-gc1m-7JdRKTZ0NB9s7AmhtFt09wmR8fItdeT5xaYybsKsC_cjXuh5i_V97rgq4fJgKOmBmKytjCwSKlnAU=@protonmail.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Linux kernel regressions list <regressions@lists.linux.dev>
+In-Reply-To: <FFsiCdZPcJ2FItvpkX6E-0LT-gc1m-7JdRKTZ0NB9s7AmhtFt09wmR8fItdeT5xaYybsKsC_cjXuh5i_V97rgq4fJgKOmBmKytjCwSKlnAU=@protonmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1688038319;8ea08c29;
+X-HE-SMSGID: 1qEpsK-00043U-Nd
 
+[CCing the regression list, as it should be in the loop for regressions:
+https://docs.kernel.org/admin-guide/reporting-regressions.html]
 
---TZC7wl6DVJTO11zM
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 27.06.23 23:55, Barnabás Pőcze wrote:
+> 
+> 2023. május 26., péntek 19:55 keltezéssel, Barnabás Pőcze <pobrn@protonmail.com> írta:
+>>
+>> I have an Acer Aspire A315-58 laptop[0], which, according to lspci has the following intel wireless chip:
+>>
+>>    Device:	00:14.3
+>>     Class:	Network controller [0280]
+>>    Vendor:	Intel Corporation [8086]
+>>    Device:	Wi-Fi 6 AX201 [a0f0]
+>>   SVendor:	Intel Corporation [8086]
+>>   SDevice:	Wi-Fi 6 AX201 [0244]
+>>       Rev:	20
+>>    ProgIf:	00
+>>    Driver:	iwlwifi
+>>    Module:	iwlwifi
+>>
+>> However, in the kernel message buffer, the following message is written:
+>>
+>>   [    3.633490] iwlwifi 0000:00:14.3: Detected Intel(R) Wi-Fi 6 AX101, REV=0x351
+> [...]
+> 
+> For the record, I have done a git-bisect[1], and that turned up
+> 
+>   d2ccc5c1526396aef5196e4dd2ec8538994e5072
+>   wifi: iwlwifi: Update init sequence if tx diversity supported
+> 
+> as the first good commit[0].
+> 
+> Sadly, that patch (or even the series) does not appear to be easily backportable,
+> so it seems likely that current stable kernels won't be able to support this device.
 
-On Sun, Jun 04, 2023 at 12:42:25PM +0700, Bagas Sanjaya wrote:
-> On Sun, Jun 04, 2023 at 07:51:36AM +0300, Martin Zaharinov wrote:
-> > Hi Team one bug report=20
-> >=20
-> > after upgrade from kernel 6.2.12 to 6.3.5=20
-> > After fell hour system get this error.
-> >=20
-> > If is possible to check.
-> >=20
-> >=20
-> > Jun  4 01:46:52  [12810.275218][  T587] INFO: task nginx:3977 blocked f=
-or more than 609 seconds.
-> > Jun  4 01:46:52  [12810.275350][  T587]       Tainted: G           O   =
-    6.3.5 #1
-> > Jun  4 01:46:52  [12810.275436][  T587] "echo 0 > /proc/sys/kernel/hung=
-_task_timeout_secs" disables this message.
-> > Jun  4 01:46:52  [12810.275527][  T587] task:nginx         state:D stac=
-k:0     pid:3977  ppid:1      flags:0x00000006
-> > Jun  4 01:46:52  [12810.275624][  T587] Call Trace:
-> > Jun  4 01:46:52  [12810.275707][  T587]  <TASK>
-> > Jun  4 01:46:52  [12810.275786][  T587]  __schedule+0x352/0x820
-> > Jun  4 01:46:52  [12810.275878][  T587]  schedule_preempt_disabled+0x61=
-/0xe0
-> > Jun  4 01:46:52  [12810.275963][  T587]  __mutex_lock.constprop.0+0x481=
-/0x7a0
-> > Jun  4 01:46:52  [12810.276049][  T587]  ? __lock_sock_fast+0x1a/0xc0
-> > Jun  4 01:46:52  [12810.276135][  T587]  ? lock_sock_nested+0x1a/0xc0
-> > Jun  4 01:46:52  [12810.276217][  T587]  ? inode_wait_for_writeback+0x7=
-7/0xd0
-> > Jun  4 01:46:52  [12810.276307][  T587]  eventpoll_release_file+0x41/0x=
-90
-> > Jun  4 01:46:52  [12810.276416][  T587]  __fput+0x1d9/0x240
-> > Jun  4 01:46:52  [12810.276517][  T587]  task_work_run+0x51/0x80
-> > Jun  4 01:46:52  [12810.276624][  T587]  exit_to_user_mode_prepare+0x12=
-3/0x130
-> > Jun  4 01:46:52  [12810.276732][  T587]  syscall_exit_to_user_mode+0x21=
-/0x110
-> > Jun  4 01:46:52  [12810.276847][  T587]  entry_SYSCALL_64_after_hwframe=
-+0x46/0xb0
-> > Jun  4 01:46:52  [12810.276954][  T587] RIP: 0033:0x15037529155a
-> > Jun  4 01:46:52  [12810.277056][  T587] RSP: 002b:000015036bbb6400 EFLA=
-GS: 00000293 ORIG_RAX: 0000000000000003
-> > Jun  4 01:46:52  [12810.277185][  T587] RAX: 0000000000000000 RBX: 0000=
-15036bbb7420 RCX: 000015037529155a
-> > Jun  4 01:46:52  [12810.277311][  T587] RDX: 0000000000000000 RSI: 0000=
-000000000000 RDI: 0000000000000013
-> > Jun  4 01:46:52  [12810.277440][  T587] RBP: 00001503647343d0 R08: 1999=
-999999999999 R09: 0000000000000000
-> > Jun  4 01:46:52  [12810.277567][  T587] R10: 000015037531baa0 R11: 0000=
-000000000293 R12: 0000000000000ba5
-> > Jun  4 01:46:52  [12810.277693][  T587] R13: 0000150348731f48 R14: 0000=
-000000000000 R15: 000000001f5b06b0
-> > Jun  4 01:46:52  [12810.277820][  T587]  </TASK>
-> >=20
->=20
-> Can you clearly describe this regression? And your nginx setup? And most
-> importantly, can you please bisect between v6.2 and v6.3 to find the
-> culprit? Can you also check the mainline?
->=20
-> Anyway, thanks for the regression report. I'm adding it to regzbot:
->=20
-> #regzbot ^introduced: v6.2.12..v6.3.5
-> #regzbot title: nginx blocked for more than 10 minutes on 6.3.5
->=20
+Thx for bisecting.
 
-No reply from Martin (MIA), thus removing from regzbot tracking:
+Thing is: 6.3 will be EOL in about two or three weeks anyway. And Arch
+will likely switch to 6.4 (which works -- or did I get this wrong?)
+within a week or two. Makes be wonder if it's the best solution for
+everyone involved to not resolve this and move on.
 
-#regzbot inconclusive: reporter MIA when being asked to provide regression =
-details
+Ciao, Thorsten
 
-Thanks.
-
---=20
-An old man doll... just what I always wanted! - Clara
-
---TZC7wl6DVJTO11zM
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZJ1rBwAKCRD2uYlJVVFO
-o98vAQCfmPM0/FgOA6TnBKdHZKH7NpIqApgAM7RSqDd1ff7fYQEA2jh5tomQyWRj
-9PcS4byaAkXqO13KyoqSebAaELNx0Q8=
-=P9rd
------END PGP SIGNATURE-----
-
---TZC7wl6DVJTO11zM--
+> [0]: https://lore.kernel.org/all/20230413102635.c2121c8694a7.Ibee3dd8765ef4b7504660fa228a7c7eff78920af@changeid/
+> [1]:
+>   git bisect start
+>   # status: waiting for both good and bad commits
+>   # new: [b6dad5178ceaf23f369c3711062ce1f2afc33644] Merge tag 'nios2_fix_v6.4' of git://git.kernel.org/pub/scm/linux/kernel/git/dinguyen/linux
+>   git bisect new b6dad5178ceaf23f369c3711062ce1f2afc33644
+>   # status: waiting for good commit(s), bad commit known
+>   # old: [457391b0380335d5e9a5babdec90ac53928b23b4] Linux 6.3
+>   git bisect old 457391b0380335d5e9a5babdec90ac53928b23b4
+>   # new: [6e98b09da931a00bf4e0477d0fa52748bf28fcce] Merge tag 'net-next-6.4' of git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next
+>   git bisect new 6e98b09da931a00bf4e0477d0fa52748bf28fcce
+>   # old: [088e0c188513b58a0056a488cf5b7df094a8a48a] Merge tag 'platform-drivers-x86-v6.4-1' of git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86
+>   git bisect old 088e0c188513b58a0056a488cf5b7df094a8a48a
+>   # new: [ca288965801572fe41386560d4e6c5cc0e5cc56d] Merge tag 'wireless-next-2023-04-21' of git://git.kernel.org/pub/scm/linux/kernel/git/wireless/wireless-next
+>   git bisect new ca288965801572fe41386560d4e6c5cc0e5cc56d
+>   # old: [d56417ad1133fc41752bb9fe37da7ae3187395a4] net: phy: smsc: clear edpd_enable if interrupt mode is used
+>   git bisect old d56417ad1133fc41752bb9fe37da7ae3187395a4
+>   # old: [c54876cd5961ce0f8e74807f79a6739cd6b35ddf] net/sched: pass netlink extack to mqprio and taprio offload
+>   git bisect old c54876cd5961ce0f8e74807f79a6739cd6b35ddf
+>   # new: [3288ee5844b74cebb94ed15bc9b5b9d3223ae038] Merge ath-next from git://git.kernel.org/pub/scm/linux/kernel/git/kvalo/ath.git
+>   git bisect new 3288ee5844b74cebb94ed15bc9b5b9d3223ae038
+>   # new: [d0b6f86fdbefa62fd4ad2acd1aea6c45f9b518ba] wifi: mt76: mt7996: let non-bufferable MMPDUs use correct hw queue
+>   git bisect new d0b6f86fdbefa62fd4ad2acd1aea6c45f9b518ba
+>   # new: [a0e97ae3f3320a246a79db7372fc23a38556014e] wifi: rtw89: add ieee80211::remain_on_channel ops
+>   git bisect new a0e97ae3f3320a246a79db7372fc23a38556014e
+>   # new: [d00800a289c9349bb659a698cbd7bc04521dc927] wifi: mac80211: add flush_sta method
+>   git bisect new d00800a289c9349bb659a698cbd7bc04521dc927
+>   # old: [413be839bfca9a4f6b32b92807ecdc2c2c182d94] wifi: iwlwifi: add a validity check of queue_id in iwl_txq_reclaim
+>   git bisect old 413be839bfca9a4f6b32b92807ecdc2c2c182d94
+>   # old: [e305a408c5f9c8df06a58e09a23375fd257f081c] wifi: iwlwifi: mvm: move function sequence
+>   git bisect old e305a408c5f9c8df06a58e09a23375fd257f081c
+>   # new: [217f3c52f00d3419ecdd38a99a7eceecb11679b2] wifi: iwlwifi: mvm: don't set CHECKSUM_COMPLETE for unsupported protocols
+>   git bisect new 217f3c52f00d3419ecdd38a99a7eceecb11679b2
+>   # new: [5caa82529eabff044c5f3eb254f3a7ff00e9170d] wifi: iwlwifi: Update configurations for Bnj-a0 and specific rf devices
+>   git bisect new 5caa82529eabff044c5f3eb254f3a7ff00e9170d
+>   # new: [d2ccc5c1526396aef5196e4dd2ec8538994e5072] wifi: iwlwifi: Update init sequence if tx diversity supported
+>   git bisect new d2ccc5c1526396aef5196e4dd2ec8538994e5072
+>   # first new commit: [d2ccc5c1526396aef5196e4dd2ec8538994e5072] wifi: iwlwifi: Update init sequence if tx diversity supported
+> 
+> 
+>>
+>> I then noticed that firmwares 75-77 are available and that there were recent changes
+>> to the iwlwifi module that increased IWL_22000_UCODE_API_MAX, so I gave it a go,
+>> and built the kernel at ae8373a5add4ea39f032563cf12a02946d1e3546 and now firmware 77
+>> is loaded, and that seems to work, at least I did not notice any issues so far.
+>>
+>> The full logs and other information about the laptop can be found here[0].
+>>
+>>
+>> Regards,
+>> Barnabás Pőcze
+>>
+>>
+>> [0]: https://linux-hardware.org/?probe=43069955ee
