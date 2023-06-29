@@ -1,99 +1,107 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1947A846B
-	for <regressions@lists.linux.dev>; Thu, 29 Jun 2023 20:41:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1688071313;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=Y1w2wveQj5ZjtvSYiiPZCbehKWVYDK8itGEibs3X60w=;
-	b=iQOGVpLszrR1Ogi2K4TJy/g3mPIKuoGdhzJq6s+5aFzeDEm5khigjHjqR/fAQX0OIw9tTJ
-	cKzyGJGU2MIA6tMXwPonV+nMKRqKF0YYl1oM1HUNOVqE+nO/4aqS7W6sGZPCiImMZEi9Zf
-	5rUrFcraygO4kKBXos14ccTrnpSI8tI=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-396-OIXoYfhEM3SMriDDhuPqcQ-1; Thu, 29 Jun 2023 16:41:51 -0400
-X-MC-Unique: OIXoYfhEM3SMriDDhuPqcQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 1DC6A803FDF;
-	Thu, 29 Jun 2023 20:41:51 +0000 (UTC)
-Received: from cantor.redhat.com (unknown [10.2.17.42])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id A1012C00049;
-	Thu, 29 Jun 2023 20:41:49 +0000 (UTC)
-From: Jerry Snitselaar <jsnitsel@redhat.com>
-To: linux-kernel@vger.kernel.org,
-	linux-integrity@vger.kernel.org
-Cc: Jarkko Sakkinen <jarkko@kernel.org>,
-	"Jason A. Donenfeld" <Jason@zx2c4.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Peter Huewe <peterhuewe@gmx.de>,
-	stable@vger.kernel.org,
-	Linux regressions mailing list <regressions@lists.linux.dev>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	"Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-	Sachin Sant <sachinp@linux.ibm.com>
-Subject: [PATCH] tpm: return false from tpm_amd_is_rng_defective on non-x86 platforms
-Date: Thu, 29 Jun 2023 13:41:47 -0700
-Message-Id: <20230629204147.1852823-1-jsnitsel@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B5F3FBF6
+	for <regressions@lists.linux.dev>; Thu, 29 Jun 2023 21:43:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5C92C433CC
+	for <regressions@lists.linux.dev>; Thu, 29 Jun 2023 21:43:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1688074982;
+	bh=VltSwcc04VIEITjXt/NoqelYoJMc18hddRllfhvqNbA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=SLKKhpEOdL+nNwBaXludEJn2g9r8oRQ2lGNm2Xnvg+zOsdB6Btsia7rfXMxgAKOSA
+	 mo0H4ha2UJOsuxiF90A1hbrik66VyO+DB1NNvlk88jcoML4fxY0brSyOQ8FgL4Kvf7
+	 fQfE2nfGnrStk1QB/T7s0dhEk51TIz2xqpIqn34/BClRGZukdtpydn81VXGhAl61qN
+	 UF5+QyKRd/pAKxAO9HpEl8d6AjdovTCFgEyStdOZpaYL1XrikHvRydH3strDSH+DsR
+	 MVxIfM/rXdNyuv9KHJlI6FehubILW1I29XJx38VdqdmDVSSAIZKRqpFaDMmn7YQTHq
+	 eK/DuLX/aXKDw==
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-4f875b267d9so1889092e87.1
+        for <regressions@lists.linux.dev>; Thu, 29 Jun 2023 14:43:02 -0700 (PDT)
+X-Gm-Message-State: ABy/qLZilpteqCLNM0AlUMPttkcLU4RJOj8j17+YqYJYkTlkjQR1kNGF
+	gZdLp92iO8fAiZ9ErsnnjKaEGJDbhyHjGh76lyw=
+X-Google-Smtp-Source: APBJJlHoBqBSBRb+rz+72XXT0uEXH9pMWvMlKJus56Oo+TViDZcMoPbB9Q11Dkbo3KDQLFxQ2zIJimZk4M/X7OHWVq8=
+X-Received: by 2002:a05:6512:2211:b0:4fb:8948:2b2b with SMTP id
+ h17-20020a056512221100b004fb89482b2bmr1124867lfu.48.1688074980708; Thu, 29
+ Jun 2023 14:43:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.8
+References: <87jzvm12q0.ffs@tglx>
+In-Reply-To: <87jzvm12q0.ffs@tglx>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Thu, 29 Jun 2023 23:42:49 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXG0GZ8K4kVux3zQ6TXGoeQ8bwHq7JXbx-YXFbLSbD-6Gg@mail.gmail.com>
+Message-ID: <CAMj1kXG0GZ8K4kVux3zQ6TXGoeQ8bwHq7JXbx-YXFbLSbD-6Gg@mail.gmail.com>
+Subject: Re: x86/efi: Make efi_set_virtual_address_map IBT safe
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: LKML <linux-kernel@vger.kernel.org>, 
+	=?UTF-8?B?TmlrbMSBdnMgS2/EvGVzxYZpa292cw==?= <pinkflames.linux@gmail.com>, 
+	linux-efi@vger.kernel.org, x86@kernel.org, regressions@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-tpm_amd_is_rng_defective is for dealing with an issue related to the
-AMD firmware TPM, so on non-x86 architectures just have it inline and
-return false.
+On Thu, 29 Jun 2023 at 21:35, Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> Nikl=C4=81vs reported a boot regression on an Alderlake machine and bisec=
+ted it
+> to commit 9df9d2f0471b ("init: Invoke arch_cpu_finalize_init() earlier").
+>
+> By moving the invocation of arch_cpu_finalize_init() further down he
+> identified that efi_enter_virtual_mode() is the function which causes
+> the boot hang.
+>
+> The main difference of the earlier invocation is that the boot CPU is
+> already fully initialized and mitigations and alternatives are applied.
+>
+> But the only really interesting change turned out to be IBT, which is
+> now enabled before efi_enter_virtual_mode(). "ibt=3Doff" on the kernel
+> command line cured the problem.
+>
+> Inspection of the involved calls in efi_enter_virtual_mode() unearthed th=
+at
+> efi_set_virtual_address_map() is the only place in the kernel which invok=
+es
+> an EFI call without the IBT safe wrapper. This went obviously unnoticed s=
+o
+> far as IBT was enabled later.
+>
+> Use arch_efi_call_virt() instead of efi_call() to cure that.
+>
+> Fixes: fe379fa4d199 ("x86/ibt: Disable IBT around firmware")
+> Fixes: 9df9d2f0471b ("init: Invoke arch_cpu_finalize_init() earlier")
+> Reported-by: Nikl=C4=81vs Ko=C4=BCes=C5=86ikovs <pinkflames.linux@gmail.c=
+om>
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D217602
 
-Cc: Jarkko Sakkinen <jarkko@kernel.org>
-Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Peter Huewe <peterhuewe@gmx.de>
-Cc: stable@vger.kernel.org
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Mario Limonciello <mario.limonciello@amd.com>
-Reported-by: Aneesh Kumar K. V <aneesh.kumar@linux.ibm.com>
-Reported-by: Sachin Sant <sachinp@linux.ibm.com>
-Closes: https://lore.kernel.org/lkml/99B81401-DB46-49B9-B321-CF832B50CAC3@linux.ibm.com/
-Fixes: f1324bbc4011 ("tpm: disable hwrng for fTPM on some AMD designs")
-Signed-off-by: Jerry Snitselaar <jsnitsel@redhat.com>
----
- drivers/char/tpm/tpm-chip.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
 
-diff --git a/drivers/char/tpm/tpm-chip.c b/drivers/char/tpm/tpm-chip.c
-index cd48033b804a..cf5499e51999 100644
---- a/drivers/char/tpm/tpm-chip.c
-+++ b/drivers/char/tpm/tpm-chip.c
-@@ -518,6 +518,7 @@ static int tpm_add_legacy_sysfs(struct tpm_chip *chip)
-  * 6.x.y.z series: 6.0.18.6 +
-  * 3.x.y.z series: 3.57.y.5 +
-  */
-+#ifdef CONFIG_X86
- static bool tpm_amd_is_rng_defective(struct tpm_chip *chip)
- {
- 	u32 val1, val2;
-@@ -566,6 +567,12 @@ static bool tpm_amd_is_rng_defective(struct tpm_chip *chip)
- 
- 	return true;
- }
-+#else
-+static inline bool tpm_amd_is_rng_defective(struct tpm_chip *chip)
-+{
-+	return false;
-+}
-+#endif /* CONFIG_X86 */
- 
- static int tpm_hwrng_read(struct hwrng *rng, void *data, size_t max, bool wait)
- {
--- 
-2.38.1
+I take it you'll send this straight to Linus?
 
+
+> ---
+> I put two fixes tags in as the IBT one missed that and the earlier
+> invocation unearthed it and made it observable.
+> ---
+>  arch/x86/platform/efi/efi_64.c |    6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>
+> --- a/arch/x86/platform/efi/efi_64.c
+> +++ b/arch/x86/platform/efi/efi_64.c
+> @@ -853,9 +853,9 @@ efi_set_virtual_address_map(unsigned lon
+>
+>         /* Disable interrupts around EFI calls: */
+>         local_irq_save(flags);
+> -       status =3D efi_call(efi.runtime->set_virtual_address_map,
+> -                         memory_map_size, descriptor_size,
+> -                         descriptor_version, virtual_map);
+> +       status =3D arch_efi_call_virt(efi.runtime, set_virtual_address_ma=
+p,
+> +                                   memory_map_size, descriptor_size,
+> +                                   descriptor_version, virtual_map);
+>         local_irq_restore(flags);
+>
+>         efi_fpu_end();
