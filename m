@@ -1,176 +1,132 @@
-Received: from mail-40131.protonmail.ch (mail-40131.protonmail.ch [185.70.40.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f46.google.com (mail-io1-f46.google.com [209.85.166.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B03B14AB3
-	for <regressions@lists.linux.dev>; Thu, 29 Jun 2023 20:03:23 +0000 (UTC)
-Date: Thu, 29 Jun 2023 20:03:00 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-	s=protonmail3; t=1688068994; x=1688328194;
-	bh=g4QWBEy1zgzBDhjQke9f5CW/d2l1TLARH4+S+S8WRzw=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=kh4aZXKgduzn64jbe2p5658SF+oZuYh8ZA9AVCVFv11XxkFLR4e2psL1TocBt7QT2
-	 EBPhdfBfhMt6hndtbrZOWyPOOfWMlWUJUo7DsfeSadvpvLkVP4+dSySOHxFbbTVoQC
-	 Zqc7Q5lWdV1ex19+C0OPo+Og994FBsrF6AUm+It0kQQR6Bgv9jIvMaGcIefPsCN43Q
-	 5l/9++DV5pzyE7FINYlXzOGcfzBDMhObtn3gk3eve8Tc8KfEgXEFzxjK7PI3WE4ZFA
-	 GqNME1J1Qkf24Udb+xnXPm3gNEfdX7180aM6KtgEsCMlN5fb6Y0HxlEXlD8UmsTzWp
-	 XFyF9TIoGpPVA==
-To: Greg KH <gregkh@linuxfoundation.org>
-From: =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>, Gregory Greenman <gregory.greenman@intel.com>, linux-wireless <linux-wireless@vger.kernel.org>, Bagas Sanjaya <bagasdotme@gmail.com>
-Subject: Re: iwlwifi: AX201 misdetected as AX101
-Message-ID: <adF9i7U7wq5cWC7pfnSajyc08F0bnYGoTw7RWvyvgA2M9gRCMIaZ_XXRUBdTCaSWM-MB_XUSWxXNsI_esArpQHqkG7BNnLgw2_O_B6yz6Ws=@protonmail.com>
-In-Reply-To: <2023062914-upcoming-turmoil-a443@gregkh>
-References: <gAwMzXEPlQZUgbc6n3yYY2soROKl4-D_JfWwoHW8CMx-LDkDEeAlwcyjOMy767W3eEVxS-e7oEihVh1PNHT-_iznSKneJjW0vu0PN7aQ9K8=@protonmail.com> <FFsiCdZPcJ2FItvpkX6E-0LT-gc1m-7JdRKTZ0NB9s7AmhtFt09wmR8fItdeT5xaYybsKsC_cjXuh5i_V97rgq4fJgKOmBmKytjCwSKlnAU=@protonmail.com> <3270268e-c926-01e6-65e1-02aa6abfd0db@leemhuis.info> <BgFi95lMulZVgv9IMN9yIzwTaSjvUWnYbQo1U5KT9-G8Dsxuuv4ENVy9iTx8Z8YamXBVPX-K3PYgVBSwgjGY5qXoEsQNpaVXip595AQO584=@protonmail.com> <0d3db91c-f071-009a-952a-bd109b16a352@leemhuis.info> <Up7ODaGLOvtHrl4bj_ev71C6sR5WLequE6TkRsH208_NGRQiZ-f8xdP25L7n9zTZD4bQPMH9aVbfagEh8lbzVlSQRc1mMQFvbIfKAlEU4uA=@protonmail.com> <2023062914-upcoming-turmoil-a443@gregkh>
-Feedback-ID: 20568564:user:proton
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C654A14AB3
+	for <regressions@lists.linux.dev>; Thu, 29 Jun 2023 20:05:44 +0000 (UTC)
+Received: by mail-io1-f46.google.com with SMTP id ca18e2360f4ac-77dcff76e35so17498839f.1
+        for <regressions@lists.linux.dev>; Thu, 29 Jun 2023 13:05:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20221208.gappssmtp.com; s=20221208; t=1688069143; x=1690661143;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=y4tq5eP75MWhv6841WPIqTGQTd0wmAvIyZR6YMM91cU=;
+        b=kt4y6BEf8FjwOMV3pk/CMHocQI2zxrK/0DPy8nfGhKmxrGsb65ZnyBk+RzELx7IxdD
+         04Ssa46bdvqfxULj03WxMa9fcLlxSY63jScz96ALYVx09vgtscokAI9SfKbVWv4H7PYj
+         gyiiqBnpaQCX4E9KDfK1xQyoOQdI0XQF7unrkr6IlDkz4WUDKDAbUL8X/oBFXev85tpn
+         aMDqQMNCAMTRTqS01YP3lvh4K737d+lAlgczZoU1zxUTUZmk8R5INS1HnSgkB6mHnQ/j
+         AvGcSR7A01zpQXCkY/TiqTwvZ4zJmhORcCgYf0//mnUBMXqCkfX9vfyV2HBbLpc/oTYL
+         scKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688069143; x=1690661143;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=y4tq5eP75MWhv6841WPIqTGQTd0wmAvIyZR6YMM91cU=;
+        b=Sw21ASuxR9kiaBZkO3IvWtkPmeSetk93pcs//0t4vSBPlihS7MN0/XoakJwB/bEj/N
+         IOMcoumB/TAgoVchFA/pni/7BVIdt87FoQfndpNldMLWZmTZIhVK80CiiM7q/U3JnOL6
+         uz+y19FG+GoSQs4jqvfOvaBikVBONW2bUCqOQ8oWWw/WL6qdacxrz9Ec036YldjJZDwX
+         emDwht/kggPdgE3migyJY+EFVO37MWt5HQN+7Z9n+7d+sz0BX6WEcVjN7gDo1UZrcdj4
+         oMJmjmN3Gl9tw3OTKzb5Rp4bQALkNKTFGlN5TVfVxVwsjugB818jyJQbah9w80+rZRrc
+         x8TQ==
+X-Gm-Message-State: AC+VfDyR+MKypVizUnPDkpwHKUzS9pmfDGmKxmLwm8ZMOcujnV6M6XFz
+	WOp6IfZ3ri6KAXXB6T6A81/tbw==
+X-Google-Smtp-Source: ACHHUZ7pGQ6LKbesXl3hlbRX1AckZ5mzpygexKjVW7CU51oKAJKLyAWwhk1jdwG4cE4v0XY9sALCiw==
+X-Received: by 2002:a05:6602:3e94:b0:783:5df5:950d with SMTP id el20-20020a0566023e9400b007835df5950dmr579213iob.1.1688069143431;
+        Thu, 29 Jun 2023 13:05:43 -0700 (PDT)
+Received: from [192.168.1.94] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id t5-20020a02cca5000000b0042aca9978c6sm2865041jap.0.2023.06.29.13.05.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 29 Jun 2023 13:05:42 -0700 (PDT)
+Message-ID: <d6130a0c-5d91-b0a3-f6a9-d1fa6edbba92@kernel.dk>
+Date: Thu, 29 Jun 2023 14:05:41 -0600
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: mainline build failure due to 8295efbe68c0 ("md/raid1-10: factor
+ out a helper to submit normal write")
+Content-Language: en-US
+To: Song Liu <song@kernel.org>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Yu Kuai <yukuai1@huaweicloud.com>,
+ "Sudip Mukherjee (Codethink)" <sudipm.mukherjee@gmail.com>,
+ linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Linus Torvalds <torvalds@linux-foundation.org>
+References: <ZJ2H5FWuo9oDMgPm@debian>
+ <be9320b5-7613-be0f-ffcd-4b3041ea5836@huaweicloud.com>
+ <13abe42f-2f5f-cbaf-21b8-baa4516963aa@leemhuis.info>
+ <CAPhsuW4Wf+PLDCZ7JpHzVT81ubj1Y6MCyLm-BWcVmB1jRqYEGg@mail.gmail.com>
+ <CAPhsuW7VK6O6RKQTAcAVk4XxUzNALUW5nKMnMFkm3pW+4F23yw@mail.gmail.com>
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <CAPhsuW7VK6O6RKQTAcAVk4XxUzNALUW5nKMnMFkm3pW+4F23yw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi
-
-
-2023. j=C3=BAnius 29., cs=C3=BCt=C3=B6rt=C3=B6k 20:46 keltez=C3=A9ssel, Gre=
-g KH <gregkh@linuxfoundation.org> =C3=ADrta:
-
-> On Thu, Jun 29, 2023 at 05:30:34PM +0000, Barnab=C3=A1s P=C5=91cze wrote:
-> > Hi
-> >
-> >
-> > 2023. j=C3=BAnius 29., cs=C3=BCt=C3=B6rt=C3=B6k 18:50 keltez=C3=A9ssel,=
- Linux regression tracking (Thorsten Leemhuis) <regressions@leemhuis.info> =
-=C3=ADrta:
-> >
-> > > On 29.06.23 17:28, Barnab=C3=A1s P=C5=91cze wrote:
-> > > > 2023. j=C3=BAnius 29., cs=C3=BCt=C3=B6rt=C3=B6k 13:31 keltez=C3=
-=A9ssel, Thorsten Leemhuis <regressions@leemhuis.info> =C3=ADrta:
-> > > >> On 27.06.23 23:55, Barnab=C3=A1s P=C5=91cze wrote:
-> > > >>> 2023. m=C3=A1jus 26., p=C3=A9ntek 19:55 keltez=C3=A9ssel, Barnab=
-=C3=A1s P=C5=91cze <pobrn@protonmail.com> =C3=ADrta:
-> > > >>>> I have an Acer Aspire A315-58 laptop[0], which, according to lsp=
-ci has the following intel wireless chip:
-> > > >>>>
-> > > >>>>    Device:=0900:14.3
-> > > >>>>     Class:=09Network controller [0280]
-> > > >>>>    Vendor:=09Intel Corporation [8086]
-> > > >>>>    Device:=09Wi-Fi 6 AX201 [a0f0]
-> > > >>>>   SVendor:=09Intel Corporation [8086]
-> > > >>>>   SDevice:=09Wi-Fi 6 AX201 [0244]
-> > > >>>>       Rev:=0920
-> > > >>>>    ProgIf:=0900
-> > > >>>>    Driver:=09iwlwifi
-> > > >>>>    Module:=09iwlwifi
-> > > >>>>
-> > > >>>> However, in the kernel message buffer, the following message is =
-written:
-> > > >>>>
-> > > >>>>   [    3.633490] iwlwifi 0000:00:14.3: Detected Intel(R) Wi-Fi 6=
- AX101, REV=3D0x351
-> > >
-> > > Gregory who is CCed since the start of the thread might care to look
-> > > into this. According to a quick search lspci is right, but this needs
-> > > expects. Maybe it's just a cosmetic problem.
-> > >
-> > > >>> [...]
-> > > >>> For the record, I have done a git-bisect[1], and that turned up
-> > > >>>   d2ccc5c1526396aef5196e4dd2ec8538994e5072
-> > > >>>
-> > > >>> as the first good commit[0].
-> > > >>>
-> > > >>> Sadly, that patch (or even the series) does not appear to be easi=
-ly backportable,
-> > > >>> so it seems likely that current stable kernels won't be able to s=
-upport this device.
-> > > >>
-> > > >> Thx for bisecting.
-> > > >>
-> > > >> Thing is: 6.3 will be EOL in about two or three weeks anyway. And =
-Arch
-> > > >> will likely switch to 6.4 (which works -- or did I get this wrong?=
-)
-> > > >> within a week or two. Makes be wonder if it's the best solution fo=
-r
-> > > >> everyone involved to not resolve this and move on.
-> > > >
-> > > > Yes, 6.4 seems to work.
-> > >
-> > > #regzbot inconclusive: unlikely to be fixed in 6.3 before EOL, but 6.=
-4 works
-> > >
-> > > > I mainly meant LTS releases.  Nonetheless, lspci
-> > > > and iwlwifi still disagree on what device it actually is.
-> > >
-> > > Not sure if I properly understand this.
-> > >
-> > > Is this broken in 6.1.y as well, but working in earlier kernels? Then=
- it
-> > > needs a separate report.
-> >
-> > There are two issues:
-> >
-> >  * lspci and iwlwifi disagreeing about the device (AX201 vs AX101), and
-> >  * the device not working until the aforementioned commit.
-> >
-> > This email was originally intended to be about the first one since the =
-device
-> > does work with 6.4.
-> >
-> > But out of curiosity I wanted to find the commit that made the device w=
-ork to
-> > see if maybe it could be easily backported to 6.3, 6.1, etc.
-> >
-> > In conclusion:
-> >
-> >         device does not work        device is misdetected
-> > 6.1          present                       present
-> > 6.3          present                       present
-> > 6.4           fixed                        present
-> >
-> > Since the commits that fixed it don't appear to be easily backportable,
-> > the only thing remains to be seen is why lspci and iwlwifi disagree abo=
-ut the
-> > name of the device. That issue is still present in 6.4.
->=20
-> This isn't a regression then, it's never worked, but now it works in
-> 6.4, so yeah!  And we don't generally backport new hardware enablement
-> to stable kernels unless it's a simple device id table update.
-
-I was hoping the change is just a couple lines of bug fixing, which I imagi=
-ne,
-would've been a good candidate for backporting. To be fair, the commit that=
- made
-it work is in fact a couple lines, but it has many dependencies...
+The late branch will go out some time next week.
 
 
->=20
-> As for naming, realize that iwlwifi and lspci get the names of the
-> device from different places, so perhaps those userspace databases just
-> are not in sync yet?
-> [...]
+On 6/29/23 9:56?AM, Song Liu wrote:
+> Oops, didn't really add Jens in the previous email.
+> 
+> Add Jens now.
+> 
+> On Thu, Jun 29, 2023 at 8:55?AM Song Liu <song@kernel.org> wrote:
+>>
+>> + Jens,
+>>
+>> On Thu, Jun 29, 2023 at 7:10?AM Linux regression tracking (Thorsten
+>> Leemhuis) <regressions@leemhuis.info> wrote:
+>>>
+>>> On 29.06.23 15:56, Yu Kuai wrote:
+>>>>
+>>>> ? 2023/06/29 21:32, Sudip Mukherjee (Codethink) ??:
+>>>>> The latest mainline kernel branch fails to build x86_64, arm64 and arm
+>>>>> allmodconfig
+>>>
+>>> Thx for the report.
+>>>
+>>>> Thanks for the testing, which branch are you testing?
+>>>>
+>>>> This problem is already fixed in latest mainline kernel:
+>>>> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=b5a99602b74bbfa655be509c615181dd95b0719e
+>>
+>> Hi Jens,
+>>
+>> The fix is in the for-6.5/block-late branch.
+>>
+>> https://git.kernel.org/pub/scm/linux/kernel/git/axboe/linux-block.git/commit/?h=for-6.5/block-late&id=b5a99602b74bbfa655be509c615181dd95b0719e
+>>
+>> Would you send a pull request with it? Or would you prefer
+>> some other solution for the issue?
+>>
+>> AFAICT, it will fix clang build with RANDSTRUCT.
+>>
+>> Thanks,
+>> Song
+>>
+>>>
+>>> And thx for the reply. :-D
+>>>
+>>> FWIW, that fix afaics is still in -next and hasn't reached mainline yet.
+>>> But I guess that will change within a few days.
+>>>
+>>>>> #regzbot introduced: 8295efbe68c080047e98d9c0eb5cb933b238a8cb
+>>>
+>>> #regzbot fix: b5a99602b74bbfa6
+>>> #regzbot dup-of: https://lore.kernel.org/all/ZJ2M4yqnOCqqGWH0@debian/
+>>> #regzbot ignore-activity
+>>>
+>>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+>>> --
+>>> Everything you wanna know about Linux kernel regression tracking:
+>>> https://linux-regtracking.leemhuis.info/about/#tldr
+>>> If I did something stupid, please tell me, as explained on that page.
 
-Yes, I am aware of that. Another thing I have realized is that I could just=
- open
-the laptop to see what's written on the chip to determine who is right. As =
-it turns
-out, I did not even have to do that because it says right on the back that
+-- 
+Jens Axboe
 
-  The Device Contains WLAN + Bluetooth Module
-  AX101NGW
-
-I really should've thought of this before. So if this label is to be believ=
-ed,
-then iwlwifi is right, and lspci is incorrect. So sorry everyone for this w=
-aste
-of time. For some reasons I really thought that iwlwifi was in the wrong.
-I submitted the info to the pci-ids project: https://pci-ids.ucw.cz/read/PC=
-/8086/a0f0
-
-
-Regards,
-Barnab=C3=A1s P=C5=91cze
