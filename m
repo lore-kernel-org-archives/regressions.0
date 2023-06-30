@@ -1,139 +1,100 @@
-Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53414A932
-	for <regressions@lists.linux.dev>; Fri, 30 Jun 2023 08:40:30 +0000 (UTC)
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20230630084028euoutp02dc5725fd94eee30366bd30c6f179932e~tYyDY_Akj2651626516euoutp02r
-	for <regressions@lists.linux.dev>; Fri, 30 Jun 2023 08:40:28 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20230630084028euoutp02dc5725fd94eee30366bd30c6f179932e~tYyDY_Akj2651626516euoutp02r
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1688114428;
-	bh=nf0M7Edq+VFotEM7gYvE+FLANmT2ox35VhKqjXzsPM4=;
-	h=Date:Subject:To:CC:From:In-Reply-To:References:From;
-	b=UXZWEHcn8Xijtkg1CAWNPic3BFjrEFZDnlsLmcdKbZ35gLg5aDnBt6HTmv4Lyt9dx
-	 q5iDHfCdbRON8z6KlJR4CzAOMPP5i10zt3ZYGR8s+42yzcgW1DiPBsiVBraCSh2ucC
-	 e8asE9sAZ3QfOp61CADsfJSa0we3EXPM0QWIGd+s=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-	20230630084027eucas1p211bd7ea42996b1917eded5fb7a104d24~tYyDAlCUR2909929099eucas1p2r;
-	Fri, 30 Jun 2023 08:40:27 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-	eusmges1new.samsung.com (EUCPMTA) with SMTP id 55.B4.42423.BF49E946; Fri, 30
-	Jun 2023 09:40:27 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-	20230630084027eucas1p1f1d2061f14bfc58bd4ea76c9fab5f30b~tYyCirSej1032710327eucas1p1z;
-	Fri, 30 Jun 2023 08:40:27 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-	eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20230630084027eusmtrp29c1f9f78edbcf29cf94925134b7ca894~tYyChhCWD0527805278eusmtrp2l;
-	Fri, 30 Jun 2023 08:40:27 +0000 (GMT)
-X-AuditID: cbfec7f2-a3bff7000002a5b7-00-649e94fb21a8
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-	eusmgms1.samsung.com (EUCPMTA) with SMTP id B9.5B.10549.AF49E946; Fri, 30
-	Jun 2023 09:40:27 +0100 (BST)
-Received: from CAMSVWEXC02.scsc.local (unknown [106.1.227.72]) by
-	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20230630084026eusmtip1f80abab786bf8b7e1513e03016fdc25d~tYyCT2yet1344713447eusmtip1a;
-	Fri, 30 Jun 2023 08:40:26 +0000 (GMT)
-Received: from [192.168.8.209] (106.210.248.231) by CAMSVWEXC02.scsc.local
-	(2002:6a01:e348::6a01:e348) with Microsoft SMTP Server (TLS) id 15.0.1497.2;
-	Fri, 30 Jun 2023 09:40:22 +0100
-Message-ID: <9b778d59-c8d5-b037-0eb7-34cee5f273cc@samsung.com>
-Date: Fri, 30 Jun 2023 10:40:21 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E5F91079C
+	for <regressions@lists.linux.dev>; Fri, 30 Jun 2023 10:07:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90BE5C433C0;
+	Fri, 30 Jun 2023 10:07:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1688119625;
+	bh=dRTq5GwVmzPLKyaKbw23kgA98h3wm06ktUQGye1ZKaY=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=fOtZKOvDVMoHj53Mx+Gy2LoFyyPmdIwT32O71yXb2Ehtqebk+gPyiRV5jGGGYA1fM
+	 vQBd/9NbGQVNmfCHFMxjVqzdd4+YKiLVOe2YDTuVToChdJa4HXCu2m9DsqTDouCRVy
+	 KwwiPbZYx/iOnVzdS0R8CNDFA+x1AbUpElvJhZBOYQzF3UKU7vpZIiZrBz11yx2ulK
+	 e9AA85m24IfeJO3WDJ1DXlEFCTOvZ2ZrUqRd8GxdH8DmYcedTRr1+Nuo+hyYRM06Ma
+	 JsCJxVVICp+CZDck9Xgcy+EQeeW0kz1eHEJoElv9WJQdqklenA15EtRRxV8T4HMPmb
+	 CW7GkzK+xY3sg==
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
-	Thunderbird/102.11.0
-Subject: Re: Fwd: Need NVME QUIRK BOGUS for SAMSUNG MZ1WV480HCGL-000MV
- (Samsung SM-953 Datacenter SSD)
-Content-Language: en-US
-To: Keith Busch <kbusch@kernel.org>, Clemens S. <cspringsguth@gmail.com>
-CC: Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>, "Sagi
- Grimberg" <sagi@grimberg.me>, Martin Belanger <martin.belanger@dell.com>,
-	Chaitanya Kulkarni <kch@nvidia.com>, John Meneghini <jmeneghi@redhat.com>,
-	Hannes Reinecke <hare@suse.de>, Linux Kernel Mailing List
-	<linux-kernel@vger.kernel.org>, Linux Regressions
-	<regressions@lists.linux.dev>, Linux NVMe <linux-nvme@lists.infradead.org>,
-	Kanchan Joshi <joshi.k@samsung.com>, Jinhwan Park <jh.i.park@samsung.com>,
-	Bagas Sanjaya <bagasdotme@gmail.com>, Javier Gonzalez
-	<javier.gonz@samsung.com>
-From: Pankaj Raghav <p.raghav@samsung.com>
-In-Reply-To: <ZJsKBkPqoWzYyngS@kbusch-mbp.dhcp.thefacebook.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [106.210.248.231]
-X-ClientProxiedBy: CAMSVWEXC01.scsc.local (2002:6a01:e347::6a01:e347) To
-	CAMSVWEXC02.scsc.local (2002:6a01:e348::6a01:e348)
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrNKsWRmVeSWpSXmKPExsWy7djP87q/p8xLMTh2QNli9d1+NoupjYwW
-	b3buYrfYs2gSk8XK1UeZLFZfWM9kMenQNUaLp1dnMVlc3jWHzWL+sqfsFudmLWGx2Pi2g91i
-	3ev3LA68HpNmzmD22DnrLrvH+XsbWTwuny312LSqk81j85J6jxebZzJ67L7ZwObR2/yOzeP9
-	vqtA8dPVHp83yQXwRHHZpKTmZJalFunbJXBlTHnwi63gC0dF86GprA2Ms9m7GDk5JARMJF4e
-	b2PuYuTiEBJYwSjRuGEhK4TzhVHi0OylUJnPjBIvW7qZYVqO9Z4AaxcSWM4o8eSkIoQNVLRp
-	nShEw25GibdnljOBJHgF7CSe/N/ICmKzCKhKPPz9nxkiLihxcuYTFhBbVCBaonXZfTYQW1gg
-	Q2L/pwtgNcwC4hK3nswHmyMi4CFx5H03O8gCZoH9LBJHzh0ESnBwsAloSTR2gh3EKWAvMf/m
-	eSaIXk2J1u2/2SFseYntb+cwg5RLCChLfHqeAPFLrcSpLbeYQEZKCNzjlPj2/zbUky4S71dd
-	YYOwhSVeHd8CDS8Zif87Ie6REKiWeHrjNzNEcwujRP/O9WwQC6wl+s7kQNQ4Suzet5ERIswn
-	ceOtIMQ5fBKTtk1nnsCoOgspJGYh+XgWkg9mIflgASPLKkbx1NLi3PTUYsO81HK94sTc4tK8
-	dL3k/NxNjMD0d/rf8U87GOe++qh3iJGJg/EQowQHs5II7+03s1OEeFMSK6tSi/Lji0pzUosP
-	MUpzsCiJ82rbnkwWEkhPLEnNTk0tSC2CyTJxcEo1MPFKbzyuckK5/GIr93G+ne+td22a+dBA
-	ZTdjHndZ/iTp+7JMtRa3ppUKS/yz311x4Uq71GzZmZ87rQ+ca5PfMXGqVccC5iDRlpn/xc/G
-	hnhufnzwruXav5fN3nPMmSVpPS+rZbn4/uSeTQ+3NctcPyWYevGP/c243UfPerRp/+LnT7mY
-	2BTw4CvTHd1bmhnJBfNnX4m9cu/pncUPddaImGl+9xCv5F95eLpJldbKYAElWY2vN9T0RPpC
-	bMI63qxepnm8tsdSoe5G5G6ZVPNS0bQtPiXiJ77ZHHd/E2txkDHGX6PGLctoY4hlu0OsUvue
-	VxuEg/7FiFwRD7ZOe/I0QySm4qPOpOVsZ7gqr3H7KrEUZyQaajEXFScCAOzB/nzuAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprIKsWRmVeSWpSXmKPExsVy+t/xu7q/p8xLMbi7hNFi9d1+NoupjYwW
-	b3buYrfYs2gSk8XK1UeZLFZfWM9kMenQNUaLp1dnMVlc3jWHzWL+sqfsFudmLWGx2Pi2g91i
-	3ev3LA68HpNmzmD22DnrLrvH+XsbWTwuny312LSqk81j85J6jxebZzJ67L7ZwObR2/yOzeP9
-	vqtA8dPVHp83yQXwROnZFOWXlqQqZOQXl9gqRRtaGOkZWlroGZlY6hkam8daGZkq6dvZpKTm
-	ZJalFunbJehlTHnwi63gC0dF86GprA2Ms9m7GDk5JARMJI71ngCyuTiEBJYySixruM0MkZCR
-	2PjlKiuELSzx51oXG4gtJPCRUWLFfAOIht2MEvsvHwVL8ArYSTz5vxGsgUVAVeLh7//MEHFB
-	iZMzn7CA2KIC0RKrP18AqxEWyJDY/+kCWA2zgLjErSfzmUBsEQEPiSPvu8EuYhbYzyJx5NxB
-	JohtR4G2PboG1M3BwSagJdHYCfYCp4C9xPyb55kgBmlKtG7/zQ5hy0tsfzuHGaRcQkBZ4tPz
-	BIhnaiU+/33GOIFRdBaS82YhOWMWkkmzkExawMiyilEktbQ4Nz232FCvODG3uDQvXS85P3cT
-	IzBtbDv2c/MOxnmvPuodYmTiYDzEKMHBrCTCe/vN7BQh3pTEyqrUovz4otKc1OJDjKbAMJrI
-	LCWanA9MXHkl8YZmBqaGJmaWBqaWZsZK4ryeBR2JQgLpiSWp2ampBalFMH1MHJxSDUwxWkv2
-	SGbsXrNP9cZT2TcZ0u6nIzeeSzZ+/qTUZ3rQpOMJ/n6bFu2cH3DKZ9FHCVse8SQ5+39CbtWr
-	16zb+PepvOtF5pQj9dKNvDqcxhb2VjJnk2Ye+P62PfH5VdPW0inKydscu37rn/C5xckqsWJG
-	b7uoiZoik2kYs9CvaRv3rzNn37nqpVzwiffLHfa8U39VKq7O/j3J5WTmFTb5e5Lcu49NnL5J
-	PMUzVj378cqJgRlZ3lbyGg68u4LS7k9nCmo6/V52Xd6sV3nrut45rNZKDP20qvag6pRp0Rv2
-	9NjEnjSbZlDBcGhS+hOJhMXPSvkMw2oias/s6ph6ie/oj4c1pzQuZkYJxSxetE+LY6YSS3FG
-	oqEWc1FxIgBbhSe7pAMAAA==
-X-CMS-MailID: 20230630084027eucas1p1f1d2061f14bfc58bd4ea76c9fab5f30b
-X-Msg-Generator: CA
-X-RootMTR: 20230627161055eucas1p18d097cbcc2215b292c65a5b3a0f0e6b5
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20230627161055eucas1p18d097cbcc2215b292c65a5b3a0f0e6b5
-References: <d18d2a08-9d24-0209-c2cf-baf60bbf5048@gmail.com>
-	<CGME20230627161055eucas1p18d097cbcc2215b292c65a5b3a0f0e6b5@eucas1p1.samsung.com>
-	<ZJsKBkPqoWzYyngS@kbusch-mbp.dhcp.thefacebook.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 30 Jun 2023 13:07:00 +0300
+Message-Id: <CTPWGNGECE0A.7MSU6S60YWDK@suppilovahvero>
+Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>, "Jason Gunthorpe"
+ <jgg@ziepe.ca>, "Peter Huewe" <peterhuewe@gmx.de>,
+ <stable@vger.kernel.org>, "Linux regressions mailing list"
+ <regressions@lists.linux.dev>, "Mario Limonciello"
+ <mario.limonciello@amd.com>, "Aneesh Kumar K . V"
+ <aneesh.kumar@linux.ibm.com>, "Sachin Sant" <sachinp@linux.ibm.com>
+Subject: Re: [PATCH] tpm: return false from tpm_amd_is_rng_defective on
+ non-x86 platforms
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+To: "Jerry Snitselaar" <jsnitsel@redhat.com>,
+ <linux-kernel@vger.kernel.org>, <linux-integrity@vger.kernel.org>
+X-Mailer: aerc 0.14.0
+References: <20230629204147.1852823-1-jsnitsel@redhat.com>
+In-Reply-To: <20230629204147.1852823-1-jsnitsel@redhat.com>
 
-On 2023-06-27 18:10, Keith Busch wrote:
-> On Mon, Jun 26, 2023 at 08:15:49AM +0700, Bagas Sanjaya wrote:
->> See Bugzilla for the full thread.
->>
->> The reporter had a quirk (see above) that fixed this regression,
->> nevertheless I'm adding it to regzbot to make sure it doesn't fall
->> through cracks unnoticed:
->>
->> #regzbot introduced: 86c2457a8e8112f https://bugzilla.kernel.org/show_bug.cgi?id=217593
->> #regzbot title: NVME_QUIRK_BOGUS_NID is needed for SAMSUNG MZ1WV480HCGL-000MV
-> 
-> These bug reports really should go to the vendors that created the
-> broken device with non-unique "unique" fields. It's easy enough for me
-> to write the quirk patch, but it's not the ideal solution and may harm
-> devices/firmwares with the same VID:DID that don't have this problem.
-> Not being the vendor, I'm not in a postition to know that, so CC'ing
-> some Samsung folks.
+On Thu Jun 29, 2023 at 11:41 PM EEST, Jerry Snitselaar wrote:
+> tpm_amd_is_rng_defective is for dealing with an issue related to the
+> AMD firmware TPM, so on non-x86 architectures just have it inline and
+> return false.
+>
+> Cc: Jarkko Sakkinen <jarkko@kernel.org>
+> Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>
+> Cc: Jason Gunthorpe <jgg@ziepe.ca>
+> Cc: Peter Huewe <peterhuewe@gmx.de>
+> Cc: stable@vger.kernel.org
+> Cc: Linux regressions mailing list <regressions@lists.linux.dev>
+> Cc: Mario Limonciello <mario.limonciello@amd.com>
+> Reported-by: Aneesh Kumar K. V <aneesh.kumar@linux.ibm.com>
+> Reported-by: Sachin Sant <sachinp@linux.ibm.com>
+> Closes: https://lore.kernel.org/lkml/99B81401-DB46-49B9-B321-CF832B50CAC3=
+@linux.ibm.com/
+> Fixes: f1324bbc4011 ("tpm: disable hwrng for fTPM on some AMD designs")
+> Signed-off-by: Jerry Snitselaar <jsnitsel@redhat.com>
+> ---
+>  drivers/char/tpm/tpm-chip.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+>
+> diff --git a/drivers/char/tpm/tpm-chip.c b/drivers/char/tpm/tpm-chip.c
+> index cd48033b804a..cf5499e51999 100644
+> --- a/drivers/char/tpm/tpm-chip.c
+> +++ b/drivers/char/tpm/tpm-chip.c
+> @@ -518,6 +518,7 @@ static int tpm_add_legacy_sysfs(struct tpm_chip *chip=
+)
+>   * 6.x.y.z series: 6.0.18.6 +
+>   * 3.x.y.z series: 3.57.y.5 +
+>   */
+> +#ifdef CONFIG_X86
+>  static bool tpm_amd_is_rng_defective(struct tpm_chip *chip)
+>  {
+>  	u32 val1, val2;
+> @@ -566,6 +567,12 @@ static bool tpm_amd_is_rng_defective(struct tpm_chip=
+ *chip)
+> =20
+>  	return true;
+>  }
+> +#else
+> +static inline bool tpm_amd_is_rng_defective(struct tpm_chip *chip)
+> +{
+> +	return false;
+> +}
+> +#endif /* CONFIG_X86 */
+> =20
+>  static int tpm_hwrng_read(struct hwrng *rng, void *data, size_t max, boo=
+l wait)
+>  {
+> --=20
+> 2.38.1
 
-I got a reply from our team internally. There is no plan on releasing
-a new firmware for this model and the related models with the same VID:DID
-pair. We can add a quirk.
+Sanity check, this was the right patch, right?
 
-@Clemens: Let me know if you want me to send the quirk as a proper patch.
+I'll apply it.
+
+BR, Jarkko
