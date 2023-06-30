@@ -1,129 +1,305 @@
-Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A306168CD
-	for <regressions@lists.linux.dev>; Fri, 30 Jun 2023 16:31:24 +0000 (UTC)
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20230630162145euoutp0128c92a5ed374b2588af6d9e5a6cd4e4b~tfE0Wo_6z3031630316euoutp01M
-	for <regressions@lists.linux.dev>; Fri, 30 Jun 2023 16:21:45 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20230630162145euoutp0128c92a5ed374b2588af6d9e5a6cd4e4b~tfE0Wo_6z3031630316euoutp01M
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1688142106;
-	bh=5mNRhFZGrM/jCIw1auytTkl+lvTLo8hxUrbhfaHevLM=;
-	h=Date:Subject:To:CC:From:In-Reply-To:References:From;
-	b=WmZttr7wGtqWyYhk+S75D0fybBDlq0NX5t+kwBbiSDLOYaqwCTisR0ogncNmIPukx
-	 XeNWo64wnBpNaiI9XacBol7OPDyJUl6poR0a8lOmp0T/RUhv3GpVWJxymO5/takMSm
-	 NKB4x74mkeC/fy8pGMS5AUGG2+5zoNRtXaNQv1pA=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-	20230630162145eucas1p275608589c79e149ae3d9753b8991ab74~tfE0FM4Fb1947419474eucas1p2g;
-	Fri, 30 Jun 2023 16:21:45 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-	eusmges3new.samsung.com (EUCPMTA) with SMTP id 79.1A.37758.9110F946; Fri, 30
-	Jun 2023 17:21:45 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-	20230630162144eucas1p1e053b0415f16cf1550df35f5098f5a1d~tfEzgk6pF2514325143eucas1p10;
-	Fri, 30 Jun 2023 16:21:44 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-	eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20230630162144eusmtrp287b545ca3fa80c1dc17375c345ad4201~tfEzf9r5e1899218992eusmtrp2X;
-	Fri, 30 Jun 2023 16:21:44 +0000 (GMT)
-X-AuditID: cbfec7f5-815ff7000002937e-50-649f01196283
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-	eusmgms2.samsung.com (EUCPMTA) with SMTP id 55.9D.14344.8110F946; Fri, 30
-	Jun 2023 17:21:44 +0100 (BST)
-Received: from CAMSVWEXC02.scsc.local (unknown [106.1.227.72]) by
-	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20230630162144eusmtip14150a2ea9d37ed049d87c7af0d70e41f~tfEzQ-LWT0240702407eusmtip1p;
-	Fri, 30 Jun 2023 16:21:44 +0000 (GMT)
-Received: from [192.168.8.209] (106.210.248.231) by CAMSVWEXC02.scsc.local
-	(2002:6a01:e348::6a01:e348) with Microsoft SMTP Server (TLS) id 15.0.1497.2;
-	Fri, 30 Jun 2023 17:21:40 +0100
-Message-ID: <50723e0c-370b-7e4f-338c-401998739fba@samsung.com>
-Date: Fri, 30 Jun 2023 18:21:40 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F8521774A
+	for <regressions@lists.linux.dev>; Fri, 30 Jun 2023 21:38:09 +0000 (UTC)
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-668711086f4so1509786b3a.1
+        for <regressions@lists.linux.dev>; Fri, 30 Jun 2023 14:38:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1688161088; x=1690753088;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=IWD7tfLxcvcTCa8P+h7hLCAFcbEomZRu0NTbnn5k0Rs=;
+        b=nqCwmwgC/xl+Rvgi5n74y7vUJu/LmSbgRZlAd1giKGyvxXCNO5SC4nfd8Bf/xCtgER
+         oyuUJEgnd/0RGiPyZM1OzHE2OlfDmamGhNdsrZ7uZeD0NXyJ3JPCyCu6uedzrUWHOrti
+         EjccwktjUSTKNCazAty/EWj4S0A4L41v1ju+pVeubqp9liaemHI+EouEj1S2gQBf4MAH
+         76J5vgQh5tZcO/bZRqytBKUxHMI2oOBDQ9jA/tw9jKSX5etEIsuhUkMpsfY89tC/Y/Ns
+         6urovKW8X+bdiLLC3sjOYdIEFuFp4Vk8Vg5awBMOvjggIE1a72iAhQKSB205zr8y4zq6
+         n0fQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688161088; x=1690753088;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=IWD7tfLxcvcTCa8P+h7hLCAFcbEomZRu0NTbnn5k0Rs=;
+        b=O7QJt5fPFr4J25ObxIIyYrMAsTjRMLorI5leMavDZtieWthc1K+X3WRmPhk4hbzniN
+         eSTK/UHQi1M6DACIzr5G/X4cbDDBiYHI3VMTEwKQb8bjbLpGvqb+i4SnuYSKi9UHxKCF
+         wZVy6V9TjiQ+5VcteWHDLIf0XI5YngzCwN2jtm5MN+0/zNs8662798kD3fIptnH7Kdw9
+         KAfplHiqzuC2jHnf/X7NEYKA+mYG1DnpV+RybLwTF3zTx7XPky0Nu/96N0rkMgFs5cO8
+         CHiK0+hMYTWkEEb1e2HjMImx35r1/RB/KIeAvN3Z8tdAu70A6Py8tqbJM7FMjH8x1v8C
+         3wjg==
+X-Gm-Message-State: AC+VfDzMN+1svo3QWRQTGiaRHvZZuC6l1qkY4xp7PnNH8OE+rQkP1ABr
+	L6yyLLOTqbr6X+Hr3WdIkPk=
+X-Google-Smtp-Source: ACHHUZ48NX7p8s/gZfqvgvFj+I+oUA/53DxpgNowsswPiN6nF2bpkzYTjoJ41oS5bNolItoZ+By+9Q==
+X-Received: by 2002:a05:6a00:3494:b0:666:6c01:2e9e with SMTP id cp20-20020a056a00349400b006666c012e9emr11025643pfb.15.1688161088486;
+        Fri, 30 Jun 2023 14:38:08 -0700 (PDT)
+Received: from localhost ([2405:6581:d4e0:1600:c494:2aca:bc01:6f7b])
+        by smtp.gmail.com with ESMTPSA id x187-20020a6363c4000000b005533b6cb3a6sm10879305pgb.16.2023.06.30.14.38.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 30 Jun 2023 14:38:07 -0700 (PDT)
+Date: Sat, 1 Jul 2023 06:38:05 +0900
+From: Nick Hastings <nicholaschastings@gmail.com>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
+	Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>,
+	Lukas Wunner <lukas@wunner.de>,
+	Salvatore Bonaccorso <carnil@debian.org>,
+	"1036530@bugs.debian.org" <1036530@bugs.debian.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>,
+	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"Limonciello, Mario" <Mario.Limonciello@amd.com>
+Subject: Re: Regression from "ACPI: OSI: Remove Linux-Dell-Video _OSI
+ string"? (was: Re: Bug#1036530: linux-signed-amd64: Hard lock up of system)
+Message-ID: <ZJ9LPZcgkDLscww+@xps>
+References: <CACO55tsuO1kQUFfPdPFUHm4WEQseCR2tQSDhFRzR+8wOECZCyA@mail.gmail.com>
+ <MN0PR12MB61017541F5AC55485A490BCDE2499@MN0PR12MB6101.namprd12.prod.outlook.com>
+ <CACO55tudULtvt_Hcdg+uqXeYkSAR_NZ1oD=R_KhuE_THSRe88g@mail.gmail.com>
+ <MN0PR12MB6101DE067CF85E59AF187763E2499@MN0PR12MB6101.namprd12.prod.outlook.com>
+ <CACO55tuqAH5Zt+X9pjLFZ-RcFgxpgjpqmrAHPvm4=fb_DMBHyw@mail.gmail.com>
+ <ZHkxYo/a+/uInkLG@xps>
+ <MN0PR12MB610181D29933EE4787DE9BC8E24EA@MN0PR12MB6101.namprd12.prod.outlook.com>
+ <ed5f982e-c12c-b3a2-1108-62fba50bf9db@leemhuis.info>
+ <ZJoSWftrHO65wmxz@xps>
+ <35e9ae66-76d0-5a17-31e6-7aa8de5bfadd@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
-	Thunderbird/102.11.0
-Subject: Re: Fwd: Need NVME QUIRK BOGUS for SAMSUNG MZ1WV480HCGL-000MV
- (Samsung SM-953 Datacenter SSD)
-To: Clemens Springsguth <cspringsguth@gmail.com>
-CC: Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>,
-	"Christoph Hellwig" <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>, Martin
-	Belanger <martin.belanger@dell.com>, Chaitanya Kulkarni <kch@nvidia.com>,
-	"John Meneghini" <jmeneghi@redhat.com>, Hannes Reinecke <hare@suse.de>,
-	"Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>, Linux
-	Regressions <regressions@lists.linux.dev>, Linux NVMe
-	<linux-nvme@lists.infradead.org>, Kanchan Joshi <joshi.k@samsung.com>,
-	Jinhwan Park <jh.i.park@samsung.com>, Bagas Sanjaya <bagasdotme@gmail.com>,
-	Javier Gonzalez <javier.gonz@samsung.com>
-Content-Language: en-US
-From: Pankaj Raghav <p.raghav@samsung.com>
-In-Reply-To: <CABfnBFoZ=gh2rkY_oYWzjkGcu8HPQ2FqnrnushH0DZFSi8cwOg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [106.210.248.231]
-X-ClientProxiedBy: CAMSVWEXC01.scsc.local (2002:6a01:e347::6a01:e347) To
-	CAMSVWEXC02.scsc.local (2002:6a01:e348::6a01:e348)
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrDKsWRmVeSWpSXmKPExsWy7djP87qSjPNTDOZMl7NYfbefzWJqI6PF
-	m5272C32LJrEZLFy9VEmi9UX1jNZTDp0jdHi6dVZTBaXd81hs5i/7Cm7xblZS1gsNr7tYLdY
-	9/o9iwOvx6SZM5g9ds66y+5x/t5GFo/LZ0s9Nq3qZPPYvKTe48XmmYweu282sHn0Nr9j83i/
-	7ypQ/HS1x+dNcgE8UVw2Kak5mWWpRfp2CVwZ8w7eYik4zlTx9tNelgbGX4xdjJwcEgImErce
-	X2XvYuTiEBJYwShx4u4pJgjnC6NEw6RdUJnPjBJvD3bCtdyY2cQGkVjOKDFx/ltmkARY1aED
-	shCJ3YwSG2ddZQNJ8ArYSWz71gtWxCKgKnFjxSGouKDEyZlPWEBsUYFoidZl98HiwgIZEvs/
-	XQCrFxEwkDj66CwjyFBmgScsEuf2bwBLMAuIS9x6Mh/oWA4ONgEticZOdpAwp0CgxMzpZ9gg
-	SjQlWrf/Zoew5SW2v53DDFIuIaAs8el5AsQztRKnttwCe1lC4B6nxM3pj1ghEi4Sj6a9ZoOw
-	hSVeHd/CDmHLSPzfCbIWxK6WeHrjNzNEcwujRP/O9WwQC6wl+s7kQNQ4Suzet5ERIswnceOt
-	IMQ5fBKTtk1nnsCoOgspJGYheWwWkg9mIflgASPLKkbx1NLi3PTUYuO81HK94sTc4tK8dL3k
-	/NxNjMAEePrf8a87GFe8+qh3iJGJg/EQowQHs5II7+03s1OEeFMSK6tSi/Lji0pzUosPMUpz
-	sCiJ82rbnkwWEkhPLEnNTk0tSC2CyTJxcEo1MMmkn9lwL/iLWiSfdKFizKFTusE9XdmnOi9M
-	m3n+3+7bnpOVnhvX5Ga3zg9qDOvWbm0tdWgwso3Zs77te7XVR7HCcIfSskLRaEerwNCKM7YC
-	wUy2mhv/8bD/ZMh+seHH8dknS3zTX1sfS8g94bXqQh/rNqvwmYcXfNn9+d/3RRkTdf2Z5n01
-	8T36fMLa2xsqiqO3TWep/PCNIab+yAJTkXY7ZUPGiRWP1vCrFx99ZHL8jv375d/kWB+a+VmG
-	xCVLhOgWbnGPXtiXHLrQV+7WP65k2V9eeRv3zfm2jfFF/uTYB5GL5K4VXZukk8R37FNf591T
-	zKICbyZ85a7yuqwmq8T9amdNheC79dz6kzbUK7EUZyQaajEXFScCAB9UIaDvAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprAKsWRmVeSWpSXmKPExsVy+t/xu7oSjPNTDJ60GFqsvtvPZjG1kdHi
-	zc5d7BZ7Fk1isli5+iiTxeoL65ksJh26xmjx9OosJovLu+awWcxf9pTd4tysJSwWG992sFus
-	e/2exYHXY9LMGcweO2fdZfc4f28ji8fls6Uem1Z1snlsXlLv8WLzTEaP3Tcb2Dx6m9+xebzf
-	dxUofrra4/MmuQCeKD2bovzSklSFjPziElulaEMLIz1DSws9IxNLPUNj81grI1MlfTublNSc
-	zLLUIn27BL2MeQdvsRQcZ6p4+2kvSwPjL8YuRk4OCQETiRszm9i6GDk4hASWMkpc4oUIy0hs
-	/HKVFcIWlvhzrQuohAuo5COjxLv2NewQzm5GieV7msEG8QrYSWz71ssMYrMIqErcWHGIDSIu
-	KHFy5hMWEFtUIFpi9ecLYFOFBTIk9n+6AFYvImAgcfTRWUaQocwCT1gkmid0s0JsOMgk8Xvp
-	HiaQKmYBcYlbT+YzgZzKJqAl0djJDhLmFAiUmDn9DBtEiaZE6/bf7BC2vMT2t3OYQcolBJQl
-	Pj1PgPimVuLz32eMExhFZyE5bxaSBbOQTJqFZNICRpZVjCKppcW56bnFRnrFibnFpXnpesn5
-	uZsYgUlj27GfW3Ywrnz1Ue8QIxMH4yFGCQ5mJRHe229mpwjxpiRWVqUW5ccXleakFh9iNAWG
-	0URmKdHkfGDayiuJNzQzMDU0MbM0MLU0M1YS5/Us6EgUEkhPLEnNTk0tSC2C6WPi4JRqYKrk
-	9Zrhddy1e8m/y9PMJgX927xy1ebXYqsnNN0KTJ9wunpvcZucTNe/OO2E7SWONWz9c/xkpGt6
-	OJgcHDdZJXp4/GUOK5KeEc7J03+JuUDNUCt88yUt/5/Cu54VupvkH3v8ceoLqYjfe86X8dRn
-	hf8Q9RRauuHa9w5t86IpJ/WZOzrcK+5W5c9/rpcf4VGSNfvTsean942lGCfcenu2Uk1h/qev
-	XceeTrquv5E1P+N1snPO4ZcXJC1Y2O8f/7ntpYauCBfLtBW5e6d1uFp+ZLkY84nBZluBaZva
-	HL/qhgufHnnpOsrczfkyXWz+QX3WTZPl2Y88NS354976ULfw6NPatEWBOppSt0slOfM6lViK
-	MxINtZiLihMBZ4upLqMDAAA=
-X-CMS-MailID: 20230630162144eucas1p1e053b0415f16cf1550df35f5098f5a1d
-X-Msg-Generator: CA
-X-RootMTR: 20230627161055eucas1p18d097cbcc2215b292c65a5b3a0f0e6b5
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20230627161055eucas1p18d097cbcc2215b292c65a5b3a0f0e6b5
-References: <d18d2a08-9d24-0209-c2cf-baf60bbf5048@gmail.com>
-	<CGME20230627161055eucas1p18d097cbcc2215b292c65a5b3a0f0e6b5@eucas1p1.samsung.com>
-	<ZJsKBkPqoWzYyngS@kbusch-mbp.dhcp.thefacebook.com>
-	<9b778d59-c8d5-b037-0eb7-34cee5f273cc@samsung.com>
-	<CABfnBFoZ=gh2rkY_oYWzjkGcu8HPQ2FqnrnushH0DZFSi8cwOg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <35e9ae66-76d0-5a17-31e6-7aa8de5bfadd@leemhuis.info>
 
-On 2023-06-30 17:18, Clemens Springsguth wrote:
-> Hi Pankaj,
-> 
-> i would be very very grateful if you would create and submit the quirk
-> as a proper patch.
-> 
+Hi,
 
-No problem. I will send something soon, but could you test it and
-give me a tested-by tag when I send the patch? I don't have that
-model at my disposal.
+* Thorsten Leemhuis <regressions@leemhuis.info> [230630 22:02]:
+> On 27.06.23 00:34, Nick Hastings wrote:
+> > * Linux regression tracking (Thorsten Leemhuis) <regressions@leemhuis.info> [230626 21:09]:
+> >> Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
+> >> for once, to make this easily accessible to everyone.
+> >>
+> >> Nick, what's the status/was there any progress? Did you do what Mario
+> >> suggested and file a nouveau bug?
+> > 
+> > It was not apparent that the suggestion to open "a Nouveau drm bug" was
+> > addressed to me.
+> 
+> I wish things were earlier for reporters, but from what I can see this
+> is the only way forward if you or some silent bystander cares.
+
+In principle I can open another bug report, but I don't know how or
+where to report "a Nouveau drm bug". Please keep in mind that I'm just
+an end user. I learnt to use git bisect specifically because of this
+bug. Prior to that, I hadn't compiled a kernel in about 15 years.
+
+> >> I ask, as I still have this on my list of regressions and it seems there
+> >> was no progress in three+ weeks now.
+> > 
+> > I have not pursued this further since as far as I could tell I already
+> > provided all requested information and I don't actually use nouveau, so
+> > I blacklisted it.
+> 
+> I doubt any developer cares enough to take a closer look[1] without a
+> proper nouveau bug and some help & prodding from someone affected. And
+> looks to me like reverting the culprit now might create even bigger
+> problems for users.
+
+If someone can point me to some docs about for reporting nouveau bugs I
+can look into it.
+
+> Hence I guess then this won't be fixed in the end. In a ideal world this
+> would not happen, but we don't live in one and all have just 24 hours in
+> a day. :-/
+
+This is a very common Dell XPS 15 7590 so I expect many people could
+experience this issue. Or maybe like me they only use the intel GPU.
+
+> Nevertheless: thx for your report your help through this thread.
+
+No problem. I am willing to try to do more, but right now I don't know
+how to do what has been suggested.
+
+Cheers,
+
+Nick.
+
+> [1] some points on the following page kinda explain this
+> https://linux-regtracking.leemhuis.info/post/frequent-reasons-why-linux-kernel-bug-reports-are-ignored/
+> 
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> --
+> Everything you wanna know about Linux kernel regression tracking:
+> https://linux-regtracking.leemhuis.info/about/#tldr
+> If I did something stupid, please tell me, as explained on that page.
+> 
+> #regzbot inconclusive: reporting deadlock (see thread for details)
+ > 
+> 
+> 
+> >> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> >> --
+> >> Everything you wanna know about Linux kernel regression tracking:
+> >> https://linux-regtracking.leemhuis.info/about/#tldr
+> >> If I did something stupid, please tell me, as explained on that page.
+> >>
+> >> #regzbot backburner: slow progress, likely just affects one machine
+> >> #regzbot poke
+> >>
+> >>
+> >> On 02.06.23 02:57, Limonciello, Mario wrote:
+> >>> [AMD Official Use Only - General]
+> >>>
+> >>>> -----Original Message-----
+> >>>> From: Nick Hastings <nicholaschastings@gmail.com>
+> >>>> Sent: Thursday, June 1, 2023 7:02 PM
+> >>>> To: Karol Herbst <kherbst@redhat.com>
+> >>>> Cc: Limonciello, Mario <Mario.Limonciello@amd.com>; Lyude Paul
+> >>>> <lyude@redhat.com>; Lukas Wunner <lukas@wunner.de>; Salvatore
+> >>>> Bonaccorso <carnil@debian.org>; 1036530@bugs.debian.org; Rafael J.
+> >>>> Wysocki <rafael@kernel.org>; Len Brown <lenb@kernel.org>; linux-
+> >>>> acpi@vger.kernel.org; linux-kernel@vger.kernel.org;
+> >>>> regressions@lists.linux.dev
+> >>>> Subject: Re: Regression from "ACPI: OSI: Remove Linux-Dell-Video _OSI
+> >>>> string"? (was: Re: Bug#1036530: linux-signed-amd64: Hard lock up of system)
+> >>>>
+> >>>> Hi,
+> >>>>
+> >>>> * Karol Herbst <kherbst@redhat.com> [230602 03:10]:
+> >>>>> On Thu, Jun 1, 2023 at 7:21 PM Limonciello, Mario
+> >>>>> <Mario.Limonciello@amd.com> wrote:
+> >>>>>>> -----Original Message-----
+> >>>>>>> From: Karol Herbst <kherbst@redhat.com>
+> >>>>>>> Sent: Thursday, June 1, 2023 12:19 PM
+> >>>>>>> To: Limonciello, Mario <Mario.Limonciello@amd.com>
+> >>>>>>> Cc: Nick Hastings <nicholaschastings@gmail.com>; Lyude Paul
+> >>>>>>> <lyude@redhat.com>; Lukas Wunner <lukas@wunner.de>; Salvatore
+> >>>>>>> Bonaccorso <carnil@debian.org>; 1036530@bugs.debian.org; Rafael J.
+> >>>>>>> Wysocki <rafael@kernel.org>; Len Brown <lenb@kernel.org>; linux-
+> >>>>>>> acpi@vger.kernel.org; linux-kernel@vger.kernel.org;
+> >>>>>>> regressions@lists.linux.dev
+> >>>>>>> Subject: Re: Regression from "ACPI: OSI: Remove Linux-Dell-Video _OSI
+> >>>>>>> string"? (was: Re: Bug#1036530: linux-signed-amd64: Hard lock up of
+> >>>> system)
+> >>>>>>>
+> >>>>>>> On Thu, Jun 1, 2023 at 6:54 PM Limonciello, Mario
+> >>>>>>> <Mario.Limonciello@amd.com> wrote:
+> >>>>>>>>
+> >>>>>>>> [AMD Official Use Only - General]
+> >>>>>>>>
+> >>>>>>>>> -----Original Message-----
+> >>>>>>>>> From: Karol Herbst <kherbst@redhat.com>
+> >>>>>>>>> Sent: Thursday, June 1, 2023 11:33 AM
+> >>>>>>>>> To: Limonciello, Mario <Mario.Limonciello@amd.com>
+> >>>>>>>>> Cc: Nick Hastings <nicholaschastings@gmail.com>; Lyude Paul
+> >>>>>>>>> <lyude@redhat.com>; Lukas Wunner <lukas@wunner.de>; Salvatore
+> >>>>>>>>> Bonaccorso <carnil@debian.org>; 1036530@bugs.debian.org; Rafael
+> >>>> J.
+> >>>>>>>>> Wysocki <rafael@kernel.org>; Len Brown <lenb@kernel.org>; linux-
+> >>>>>>>>> acpi@vger.kernel.org; linux-kernel@vger.kernel.org;
+> >>>>>>>>> regressions@lists.linux.dev
+> >>>>>>>>> Subject: Re: Regression from "ACPI: OSI: Remove Linux-Dell-Video
+> >>>> _OSI
+> >>>>>>>>> string"? (was: Re: Bug#1036530: linux-signed-amd64: Hard lock up of
+> >>>>>>> system)
+> >>>>>>>>>
+> >>>>>>>>> On Thu, Jun 1, 2023 at 6:18 PM Limonciello, Mario
+> >>>>>>>>>>
+> >>>>>>>>>> Lyude, Lukas, Karol
+> >>>>>>>>>>
+> >>>>>>>>>> This thread is in relation to this commit:
+> >>>>>>>>>>
+> >>>>>>>>>> 24867516f06d ("ACPI: OSI: Remove Linux-Dell-Video _OSI string")
+> >>>>>>>>>>
+> >>>>>>>>>> Nick has found that runtime PM is *not* working for nouveau.
+> >>>>>>>>>>
+> >>>>>>>>>
+> >>>>>>>>> keep in mind we have a list of PCIe controllers where we apply a
+> >>>>>>>>> workaround:
+> >>>>>>>>>
+> >>>>>>>
+> >>>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers
+> >>>>>>>>> /gpu/drm/nouveau/nouveau_drm.c?h=v6.4-rc4#n682
+> >>>>>>>>>
+> >>>>>>>>> And I suspect there might be one or two more IDs we'll have to add
+> >>>>>>>>> there. Do we have any logs?
+> >>>>>>>>
+> >>>>>>>> There's some archived onto the distro bug.  Search this page for
+> >>>>>>> "journalctl.log.gz"
+> >>>>>>>> https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1036530
+> >>>>>>>>
+> >>>>>>>
+> >>>>>>> interesting.. It seems to be the same controller used here. I wonder
+> >>>>>>> if the pci topology is different or if the workaround is applied at
+> >>>>>>> all.
+> >>>>>>
+> >>>>>> I didn't see the message in the log about the workaround being applied
+> >>>>>> in that log, so I guess PCI topology difference is a likely suspect.
+> >>>>>>
+> >>>>>
+> >>>>> yeah, but I also couldn't see a log with the usual nouveau messages,
+> >>>>> so it's kinda weird.
+> >>>>>
+> >>>>> Anyway, the output of `lspci -tvnn` would help
+> >>>>
+> >>>> % lspci -tvnn
+> >>>> -[0000:00]-+-00.0  Intel Corporation Device [8086:3e20]
+> >>>>            +-01.0-[01]----00.0  NVIDIA Corporation TU117M [GeForce GTX 1650
+> >>>> Mobile / Max-Q] [10de:1f91]
+> >>>
+> >>> So the bridge it's connected to is the same that the quirk *should have been* triggering.
+> >>>
+> >>> May 29 15:02:42 xps kernel: pci 0000:00:01.0: [8086:1901] type 01 class 0x060400
+> >>>
+> >>> Since the quirk isn't working and this is still a problem in 6.4-rc4 I suggest opening a
+> >>> Nouveau drm bug to figure out why.
+> >>>
+> >>>>            +-02.0  Intel Corporation CoffeeLake-H GT2 [UHD Graphics 630]
+> >>>> [8086:3e9b]
+> >>>>            +-04.0  Intel Corporation Xeon E3-1200 v5/E3-1500 v5/6th Gen Core
+> >>>> Processor Thermal Subsystem [8086:1903]
+> >>>>            +-08.0  Intel Corporation Xeon E3-1200 v5/v6 / E3-1500 v5 /
+> >>>> 6th/7th/8th Gen Core Processor Gaussian Mixture Model [8086:1911]
+> >>>>            +-12.0  Intel Corporation Cannon Lake PCH Thermal Controller
+> >>>> [8086:a379]
+> >>>>            +-14.0  Intel Corporation Cannon Lake PCH USB 3.1 xHCI Host Controller
+> >>>> [8086:a36d]
+> >>>>            +-14.2  Intel Corporation Cannon Lake PCH Shared SRAM [8086:a36f]
+> >>>>            +-15.0  Intel Corporation Cannon Lake PCH Serial IO I2C Controller #0
+> >>>> [8086:a368]
+> >>>>            +-15.1  Intel Corporation Cannon Lake PCH Serial IO I2C Controller #1
+> >>>> [8086:a369]
+> >>>>            +-16.0  Intel Corporation Cannon Lake PCH HECI Controller [8086:a360]
+> >>>>            +-17.0  Intel Corporation Cannon Lake Mobile PCH SATA AHCI Controller
+> >>>> [8086:a353]
+> >>>>            +-1b.0-[02-3a]----00.0-[03-3a]--+-00.0-[04]----00.0  Intel Corporation
+> >>>> JHL6340 Thunderbolt 3 NHI (C step) [Alpine Ridge 2C 2016] [8086:15d9]
+> >>>>            |                               +-01.0-[05-39]--
+> >>>>            |                               \-02.0-[3a]----00.0  Intel Corporation JHL6340
+> >>>> Thunderbolt 3 USB 3.1 Controller (C step) [Alpine Ridge 2C 2016]
+> >>>> [8086:15db]
+> >>>>            +-1c.0-[3b]----00.0  Intel Corporation Wi-Fi 6 AX200 [8086:2723]
+> >>>>            +-1c.4-[3c]----00.0  Realtek Semiconductor Co., Ltd. RTS525A PCI
+> >>>> Express Card Reader [10ec:525a]
+> >>>>            +-1d.0-[3d]----00.0  Samsung Electronics Co Ltd NVMe SSD Controller
+> >>>> SM981/PM981/PM983 [144d:a808]
+> >>>>            +-1f.0  Intel Corporation Cannon Lake LPC Controller [8086:a30e]
+> >>>>            +-1f.3  Intel Corporation Cannon Lake PCH cAVS [8086:a348]
+> >>>>            +-1f.4  Intel Corporation Cannon Lake PCH SMBus Controller
+> >>>> [8086:a323]
+> >>>>            \-1f.5  Intel Corporation Cannon Lake PCH SPI Controller
+> >>>>            [8086:a324]
+> >>>>
+> >>>>
+> >>>> Regards,
+> >>>>
+> >>>> Nick.
+> >>>
+> > 
+> > 
+> > 
 
