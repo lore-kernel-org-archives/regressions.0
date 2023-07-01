@@ -1,97 +1,157 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC1B8174F0
-	for <regressions@lists.linux.dev>; Fri, 30 Jun 2023 22:12:59 +0000 (UTC)
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1b7e66ff65fso17557065ad.0
-        for <regressions@lists.linux.dev>; Fri, 30 Jun 2023 15:12:59 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FB445CA1
+	for <regressions@lists.linux.dev>; Sat,  1 Jul 2023 12:27:18 +0000 (UTC)
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1b8303cd32aso21978515ad.2
+        for <regressions@lists.linux.dev>; Sat, 01 Jul 2023 05:27:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1688163179; x=1690755179;
+        d=gmail.com; s=20221208; t=1688214438; x=1690806438;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=thoT2jC0QZieB1tqlGcvhahvmZEljvo2S9CLE9NXiwk=;
-        b=bfn4PAMp/IiOCOx4AkyL59KnGpDp5CSKIgoZyWHUmB7fzTS8K5iygNy/7Arj5CVY4C
-         DX5t5jLXmXwHVc7gUkT1tLZilPbyYQ8QGcO8YyFmnL7vdt+tLODVpIXVJtjSebTtTpTx
-         qPm+nQutsUTCCSPRcVLl4/hVtfPedF54QYcnTRdeq/YXwYf0EVuUYR4foaoI1mGWyf6W
-         HuXPY3xXVEnr0rWMpDjgOIAljAw1GFY/vU7cURa/WsUSfcPC5rWSreUWfjqXkvpYvv+f
-         wfeyZ6dDasj6NU04fPa0adicbtZ7KfvAcuVBm5jF6UbGQdft4KFx2i+bSpILHovDn7xy
-         s2Ow==
+        bh=xfT+iCg7he7G1O8FrhG+GwexlTOWppSr6nVkF4iOKro=;
+        b=G+8kn0ys6ceNbz9BEowkPZHBHhy3YQYW9UgJEBQgXJC6OnYyVTAft19tO2uiwqBLNb
+         igEXQtaQo9igvggoezxqDdlCbfN3xCiJH9nJKCH6HXb4cJZG35wkADWnvMmtijFsh5Mh
+         7PIX4d87ZaiotIXY34HKEcka5H3sAIXbPLi0L6QXS1CIY0CoIAnKCMCmXTIdcEpSIdRq
+         xeQ/3hyQ4kKL6b2ZZIB0mgwzXBpFg4jpt+tndNR1V3Pf0W0MKQ/XAEw3mDBTsUnDlEKb
+         u8aKQjsRCTm+KCDZbEMAmlIGM2hS1mEsDUg0BOwzR1M3goETCdyvuREwC3OttU7qSt/p
+         UNsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688163179; x=1690755179;
+        d=1e100.net; s=20221208; t=1688214438; x=1690806438;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=thoT2jC0QZieB1tqlGcvhahvmZEljvo2S9CLE9NXiwk=;
-        b=R6/8xPcEHRL/Lv8vynIPzUBQLEjL/Xc2mj/DS+3EhzzVEBPpGHMBynKrb83Djidty0
-         J5KF8hS/DpH9iNAbhhOQAXmsxzg0IdkUIWdVY4noeGMPQKJBGHLGFaV3oumdeJBTrJjW
-         L909mE/LeeIOswPDbOfrOyTE0h7Pa3g7QXWOjrHdiZoI9GZm4WcebTPTQWeauqha+Pf6
-         HInewrq3b0EyktwjNfgW8TtIutztCJ+DUDy/M52MnZQoUNC4zwonW1z/kcuD87gkGW4W
-         As0+lh54BjPevO2vGBG9o0Z1quv/GDuYWbi2yCWAvVhdy4MmCGs7H07E8K3fFjFVooW7
-         kXOg==
-X-Gm-Message-State: ABy/qLaq3MKxNGYke4fmVR6j/3ySTl4OTs6exh8FB8kgUt+dWQM7dPrC
-	QhhPhB6TKOCaYkdptLSlLoY=
-X-Google-Smtp-Source: APBJJlFyldWzSp9PhFA7Agya7H/yUCrkXjkCzYAe0fV4ZlQpjDD4Y0yeYHlSjwVa7BRhU62OzHc1Kw==
-X-Received: by 2002:a17:902:7081:b0:1b8:3e15:40e8 with SMTP id z1-20020a170902708100b001b83e1540e8mr2824804plk.56.1688163178998;
-        Fri, 30 Jun 2023 15:12:58 -0700 (PDT)
-Received: from localhost ([2405:6581:d4e0:1600:c494:2aca:bc01:6f7b])
-        by smtp.gmail.com with ESMTPSA id 21-20020a170902e9d500b001b8649e52f8sm2496453plk.254.2023.06.30.15.12.58
+        bh=xfT+iCg7he7G1O8FrhG+GwexlTOWppSr6nVkF4iOKro=;
+        b=aQi2NeV2Bdc9U3q7LsV04OonYCrdnovoH95HrzCR9shhqMegSbLAIfMAM2hjm1+f+M
+         AW4J7ZJzU5i9n0tpq6yjuIOkHsu6N/BPqafg8WpjYAT0oDbmqDuTp7HnlLWadvJV5yzS
+         y5Zc366ffqAOQ5ATAuoFJwZyQqXvQ9YipZE3yk95xpqCa4r+DaGU7apW+F8ofRbb9p1x
+         wBVOLGNG1bgZ215+6d6nLmc+BBfxdL+EkP9yBAyaZp9UUGh36POaugz+2RhFtEeUxHp4
+         JYwYnID6kPLoaaIPBsX8cg3rkYaS8l7Y5tS1tQXNBXuIzp90SVkMYH5F1iYrOwahfmwz
+         r8RQ==
+X-Gm-Message-State: ABy/qLZ+3JLJTaOu6B3uiavYZ/F+rNrUiaBZOlJT552nKvhuZGxO7pSl
+	RW+5Kj0oCK/JrUOHYXtq4js=
+X-Google-Smtp-Source: APBJJlFl919QV7xve/1RnA+jhn7mf3eSZpbJiJOsrPA8uCkDVgz9/lm87vXf7Gm8cS+z538CbRXVYA==
+X-Received: by 2002:a17:903:1c5:b0:1b8:6a09:9cf9 with SMTP id e5-20020a17090301c500b001b86a099cf9mr6402798plh.26.1688214438297;
+        Sat, 01 Jul 2023 05:27:18 -0700 (PDT)
+Received: from debian.me ([103.131.18.64])
+        by smtp.gmail.com with ESMTPSA id u12-20020a170902e5cc00b001aae625e422sm10669704plf.37.2023.07.01.05.27.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Jun 2023 15:12:58 -0700 (PDT)
-Date: Sat, 1 Jul 2023 07:12:56 +0900
-From: Nick Hastings <nicholaschastings@gmail.com>
-To: "Limonciello, Mario" <mario.limonciello@amd.com>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
-	Linux regressions mailing list <regressions@lists.linux.dev>,
-	Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>,
-	Lukas Wunner <lukas@wunner.de>,
-	Salvatore Bonaccorso <carnil@debian.org>,
-	"1036530@bugs.debian.org" <1036530@bugs.debian.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>,
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: Regression from "ACPI: OSI: Remove Linux-Dell-Video _OSI
- string"? (was: Re: Bug#1036530: linux-signed-amd64: Hard lock up of system)
-Message-ID: <ZJ9TaCiYMiRAXm81@xps>
-References: <CACO55tudULtvt_Hcdg+uqXeYkSAR_NZ1oD=R_KhuE_THSRe88g@mail.gmail.com>
- <MN0PR12MB6101DE067CF85E59AF187763E2499@MN0PR12MB6101.namprd12.prod.outlook.com>
- <CACO55tuqAH5Zt+X9pjLFZ-RcFgxpgjpqmrAHPvm4=fb_DMBHyw@mail.gmail.com>
- <ZHkxYo/a+/uInkLG@xps>
- <MN0PR12MB610181D29933EE4787DE9BC8E24EA@MN0PR12MB6101.namprd12.prod.outlook.com>
- <ed5f982e-c12c-b3a2-1108-62fba50bf9db@leemhuis.info>
- <ZJoSWftrHO65wmxz@xps>
- <35e9ae66-76d0-5a17-31e6-7aa8de5bfadd@leemhuis.info>
- <ZJ9LPZcgkDLscww+@xps>
- <0bdbb7a3-b8fa-1afa-23cf-afde1cec3d25@amd.com>
+        Sat, 01 Jul 2023 05:27:17 -0700 (PDT)
+Received: by debian.me (Postfix, from userid 1000)
+	id 4CF3083BEC72; Sat,  1 Jul 2023 19:27:13 +0700 (WIB)
+Date: Sat, 1 Jul 2023 19:27:13 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Regressions <regressions@lists.linux.dev>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	Borislav Petkov <bp@alien8.de>
+Subject: Re: Fwd: commit 9df9d2f0471b causes boot failure in pre-rc1 6.5
+ kernel
+Message-ID: <ZKAboYIj6pAd9CMO@debian.me>
+References: <4d9fb4a9-6c48-600c-f625-8ef66208090a@gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="1Y2CUzrFU0UJ5NVe"
 Content-Disposition: inline
-In-Reply-To: <0bdbb7a3-b8fa-1afa-23cf-afde1cec3d25@amd.com>
+In-Reply-To: <4d9fb4a9-6c48-600c-f625-8ef66208090a@gmail.com>
 
-Hi,
 
-* Limonciello, Mario <mario.limonciello@amd.com> [230701 06:40]:
-> 
-> > > Nevertheless: thx for your report your help through this thread.
-> > 
-> > No problem. I am willing to try to do more, but right now I don't know
-> > how to do what has been suggested.
-> > 
-> 
-> Here is where to report Nouveau bugs:
-> 
-> https://gitlab.freedesktop.org/drm/nouveau/-/issues/
+--1Y2CUzrFU0UJ5NVe
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks.
+On Wed, Jun 28, 2023 at 09:06:22PM +0700, Bagas Sanjaya wrote:
+> Hi,
+>=20
+> I notice a regression report on Bugzilla [1]. Quoting from it:
+>=20
+> > Since yesterday my builds of the https://git.kernel.org/pub/scm/linux/k=
+ernel/git/torvalds/linux.git no longer boot with a black screen immediately=
+ upon booting. Today I finished git bisecting the issue and arrived at the =
+following:
+> >=20
+> > 9df9d2f0471b4c4702670380b8d8a45b40b23a7d is the first bad commit
+> > commit 9df9d2f0471b4c4702670380b8d8a45b40b23a7d
+> > Author: Thomas Gleixner <tglx@linutronix.de>
+> > Date:   Wed Jun 14 01:39:39 2023 +0200
+> >=20
+> >     init: Invoke arch_cpu_finalize_init() earlier
+> >    =20
+> >     X86 is reworking the boot process so that initializations which are=
+ not
+> >     required during early boot can be moved into the late boot process =
+and out
+> >     of the fragile and restricted initial boot phase.
+> >    =20
+> >     arch_cpu_finalize_init() is the obvious place to do such initializa=
+tions,
+> >     but arch_cpu_finalize_init() is invoked too late in start_kernel() =
+e.g. for
+> >     initializing the FPU completely. fork_init() requires that the FPU =
+is
+> >     initialized as the size of task_struct on X86 depends on the size o=
+f the
+> >     required FPU register buffer.
+> >    =20
+> >     Fortunately none of the init calls between calibrate_delay() and
+> >     arch_cpu_finalize_init() is relevant for the functionality of
+> >     arch_cpu_finalize_init().
+> >    =20
+> >     Invoke it right after calibrate_delay() where everything which is r=
+elevant
+> >     for arch_cpu_finalize_init() has been set up already.
+> >    =20
+> >     No functional change intended.
+> >    =20
+> >     Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> >     Reviewed-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
+> >     Link: https://lore.kernel.org/r/20230613224545.612182854@linutronix=
+=2Ede
+> >=20
+> >  init/main.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> >=20
+> > Since it might be relevant, my CPU is Intel Core i5-12400 with UEFI fro=
+m december 2022 and the compiler is gcc (Gentoo Hardened 13.1.1_p20230527 p=
+3) 13.1.1 20230527. If additional information such as the kernel configurat=
+ion is required, let me know.
+>=20
+> See Bugzilla for the full thread.
+>=20
+> The reporter can't provide requested dmesg due to this is early
+> boot failure, unfortunately.
+>=20
+> Nevertheless, this regression has already been taken care of on
+> Bugzilla, but to ensure it is tracked and doesn't get fallen through
+> cracks unnoticed, I'm adding it to regzbot:
+>=20
+> #regzbot introduced: 9df9d2f0471b https://bugzilla.kernel.org/show_bug.cg=
+i?id=3D217602
+> #regzbot title: early arch_cpu_finalize_init() cause immediate boot failu=
+re
+>=20
 
-Done: https://gitlab.freedesktop.org/drm/nouveau/-/issues/241
+#regzbot fix: 0303c9729afc40
 
-Cheers,
+--=20
+An old man doll... just what I always wanted! - Clara
 
-Nick.
+--1Y2CUzrFU0UJ5NVe
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZKAbmQAKCRD2uYlJVVFO
+o+rcAQDuovUL5Ax0sXesVsBWrU8ClRKMg+GF/SJpC0s0l5BY+AEA55qrJEQbGNL9
+az1c2oJS1pTEX/fmd9n0wtLXRFR40AU=
+=u45Q
+-----END PGP SIGNATURE-----
+
+--1Y2CUzrFU0UJ5NVe--
