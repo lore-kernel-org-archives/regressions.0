@@ -1,100 +1,85 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E44A0F9C6
-	for <regressions@lists.linux.dev>; Mon,  3 Jul 2023 13:25:49 +0000 (UTC)
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1b895a06484so5245645ad.1
-        for <regressions@lists.linux.dev>; Mon, 03 Jul 2023 06:25:49 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6AA4F9C6
+	for <regressions@lists.linux.dev>; Mon,  3 Jul 2023 13:26:36 +0000 (UTC)
+Received: by mail-ot1-f50.google.com with SMTP id 46e09a7af769-6b5d1498670so3506062a34.1
+        for <regressions@lists.linux.dev>; Mon, 03 Jul 2023 06:26:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1688390749; x=1690982749;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+        d=gmail.com; s=20221208; t=1688390796; x=1690982796;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Ga6xNVvtp+lNzVIC5GM49mPA6xqLDAki2KCiSYDekHg=;
-        b=ByElqpxaXLmLNtmWy2TYSJO/JUFTGZy2h49CLboWSt/xi11ecZfZ0ehCMNkPnbtmoT
-         WXfPqsIo0AqSit+UQaDRRb2wsE1jDsK7ggXZA0jvOsJXqDKt/amZ4wVhd7jU4b3LIDHz
-         vcnn6hrg+41HOaENnZtgt+OmMMJkmr+9KEm8y4q3T/3qmgQFVrKdPg5OcpOlktQECzeE
-         3QKrviG2Y6o81oyLc5pmwupobhwSvT7bP63ogRAzvzknIF8IW/B3/gRMciHy4gysaqVf
-         6NeADxjR+CglePxOO7t6ZZHhDT47VrVK33Q8tNl1V4P3vpPJ1/Ozd4RNiP584TD01Y5g
-         hhvw==
+        bh=vqn7IKTdo14CySBv00ohACcAfgAIiWSh1E9RKmDPgr4=;
+        b=Ek1UGhRgVlcOvIL06WHpGzgjgyHpvklDmtxMOactMDjhcaI4gwwV65eiGbrFnTuYMp
+         sx+StujcB87IZnmVr0obLNhPZ3QtF3Hnn6KRTiSfoUNG34iq6GMQjbrGeO8blA+j2tvf
+         h/kwO/mSVsgqvnw7MmKImnD9Pydwuvvhl5dLCVmInI1GKbEVxBZ0/2klnE3A77D9x7bU
+         WI8PiUsuUjVZhuHi476SolDhvelKrfeWzquDbo/oNuoRyDoPM28I7yNszphIDppKjqcD
+         nIvToQ+4GW88bXvZB5zKvNYfZ/SizZVOiU893uOtzX5iYcLUjFStPOA9WE2E32m0Xk2o
+         XXiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688390749; x=1690982749;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Ga6xNVvtp+lNzVIC5GM49mPA6xqLDAki2KCiSYDekHg=;
-        b=dbjQAqptUfSSUJNJY55OBPzugrC7PjzLGkSUlShBO60t9suD3G5oq+9M7JXnwoE2Ld
-         MQAsWf9bzgsTDg4bD8zZskpjp4y27LEhfaoDQU9/FF2e66HxBKxUkq6lWPEe4tit5GT8
-         Mows6qEhBjggJZsTWR0vmbCPJEMX/getZn7HrctLOz52jKAq1g8LlchgENz/a8LMsnUB
-         kTPqFoalsSXG2yyXL48JXagaPFV7VvwP+GADgSyHPVL203bqOA0azZ+Hz5a11A+Iz7SC
-         dVkBnwzWIxycjkZtduXps/syD6M0KTfevOb6mCck5wNGej81n0XqvC7TIpzS2alxTVeR
-         TIEQ==
-X-Gm-Message-State: ABy/qLa8IXdLndL72sV6O1XYtnfCNT41Z1xsbXJcDgDQ5SBkqZdYo/A8
-	g2sDt3UHvxY2iirET1neN8E=
-X-Google-Smtp-Source: APBJJlGJ2K9GY+2bcZXbHVRCdunLIb1dR6F7DBiszDdzV3UC3p3rDMFzkNgSX8R+ppFGaZyRzNTATA==
-X-Received: by 2002:a17:903:1c9:b0:1b8:76cb:3e50 with SMTP id e9-20020a17090301c900b001b876cb3e50mr6928046plh.47.1688390749077;
-        Mon, 03 Jul 2023 06:25:49 -0700 (PDT)
-Received: from [192.168.0.103] ([103.131.18.64])
-        by smtp.gmail.com with ESMTPSA id jl23-20020a170903135700b001aafa2e212esm15272064plb.52.2023.07.03.06.25.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Jul 2023 06:25:48 -0700 (PDT)
-Message-ID: <591e089a-6ccd-c5f3-4cd4-a332e2eae724@gmail.com>
-Date: Mon, 3 Jul 2023 20:25:35 +0700
+        d=1e100.net; s=20221208; t=1688390796; x=1690982796;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vqn7IKTdo14CySBv00ohACcAfgAIiWSh1E9RKmDPgr4=;
+        b=kEIL/u6BBFyToJ8n2tZ6pcqNfcFGv4Vzg/LBpJYoDw57IEh5KWLD899sWJRAysoGR0
+         vybbIs+UjlmrvR4tOpI5dAw+CuGDN3+JUnxi2CKfMvHhL2nsi4BuF/lxjumQsVIPHdSj
+         WLvEcL8nNcauTexkGTUxezPDteUSayI6Sl+xcZv4mUzfsF/8MUyxvIEKBdzPR+8CQxIg
+         e+EuTNpp/0d8DH2y5OYDF6+5IO2A5nv3oyb0mPo3eG3SM5ohnIJ8MK6cTQMfr9yHpAFu
+         cs+dk0OCK7VU7TgJJ6rjsOdCechlm6Lt1STSXv9l9ZN9EsUiVMGGUKUmkVgzKMoH1FSU
+         LD/g==
+X-Gm-Message-State: AC+VfDz/tTDns/0nX98Dx7pR2xdUGuzk2gSibo4CG0HzQMMtg1rv8RMJ
+	+takZ3goudNjezi2qsuEQQBA3k1BGLxpOvFQxfI=
+X-Google-Smtp-Source: ACHHUZ6uqGeljNO+21cjgetYX14NexS83zR1TTJuyVJ+ZqhjCxOYbav6ccfXjzVMlVGI0t01i24YsOMut9poxjZGFYM=
+X-Received: by 2002:a05:6808:199f:b0:3a1:e7ad:11a2 with SMTP id
+ bj31-20020a056808199f00b003a1e7ad11a2mr9346884oib.18.1688390795816; Mon, 03
+ Jul 2023 06:26:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Content-Language: en-US
-To: =?UTF-8?Q?Mateusz_Jo=c5=84czyk?= <mat.jonczyk@o2.pl>,
- Alexandre Belloni <alexandre.belloni@bootlin.com>,
- Carsten Hatger <xmb8dsv4@gmail.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>, x86@kernel.org
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-Subject: Fwd: Read from RTC broken upon resume from suspend on HP Pro x360 435
- G9 w/ AMD Ryzen 7 5825U
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <d18d2a08-9d24-0209-c2cf-baf60bbf5048@gmail.com>
+ <CGME20230627161055eucas1p18d097cbcc2215b292c65a5b3a0f0e6b5@eucas1p1.samsung.com>
+ <ZJsKBkPqoWzYyngS@kbusch-mbp.dhcp.thefacebook.com> <9b778d59-c8d5-b037-0eb7-34cee5f273cc@samsung.com>
+ <CABfnBFoZ=gh2rkY_oYWzjkGcu8HPQ2FqnrnushH0DZFSi8cwOg@mail.gmail.com> <50723e0c-370b-7e4f-338c-401998739fba@samsung.com>
+In-Reply-To: <50723e0c-370b-7e4f-338c-401998739fba@samsung.com>
+From: Clemens Springsguth <cspringsguth@gmail.com>
+Date: Mon, 3 Jul 2023 15:25:58 +0200
+Message-ID: <CABfnBFpZJ=kToimneFgs87i=yL37Z8_MJ5nL6NUpW9w6mFSyjw@mail.gmail.com>
+Subject: Re: Fwd: Need NVME QUIRK BOGUS for SAMSUNG MZ1WV480HCGL-000MV
+ (Samsung SM-953 Datacenter SSD)
+To: Pankaj Raghav <p.raghav@samsung.com>
+Cc: Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>, 
+	Sagi Grimberg <sagi@grimberg.me>, Martin Belanger <martin.belanger@dell.com>, 
+	Chaitanya Kulkarni <kch@nvidia.com>, John Meneghini <jmeneghi@redhat.com>, Hannes Reinecke <hare@suse.de>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	Linux Regressions <regressions@lists.linux.dev>, Linux NVMe <linux-nvme@lists.infradead.org>, 
+	Kanchan Joshi <joshi.k@samsung.com>, Jinhwan Park <jh.i.park@samsung.com>, 
+	Bagas Sanjaya <bagasdotme@gmail.com>, Javier Gonzalez <javier.gonz@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Fri, Jun 30, 2023 at 6:21=E2=80=AFPM Pankaj Raghav <p.raghav@samsung.com=
+> wrote:
+>
+> On 2023-06-30 17:18, Clemens Springsguth wrote:
+> > Hi Pankaj,
+> >
+> > i would be very very grateful if you would create and submit the quirk
+> > as a proper patch.
+> >
+>
+> No problem. I will send something soon, but could you test it and
+> give me a tested-by tag when I send the patch? I don't have that
+> model at my disposal.
+>
 
-I notice a regression report on Bugzilla [1]. Quoting from it:
+Hi Pankaj,
 
-> Dear all,
-> 
-> read access to the device's RTC fails upon resume from suspend with the following error message grabbed from the kernel ring buffer:
-> 
-> [409610.163139] Unable to read current time from RTC
-> 
-> The issue is rare and more likely to appear if the system has been in standby for more than 24hrs w/o interruption.
-> 
-> Same issue is reported to appear on HP Elite G9 devices, cf. https://bbs.archlinux.org/viewtopic.php?id=283620
-> 
-> The issue screws up the systems time resulting in erroneous dated log entries, failing authentication, ..., thus requiring a reboot.
-> 
-> Please see attached dmesg output (line 2069) for further information. 
-> 
-> AMD staff member suspected commit d2a632a8a11756197deb1341bbb09c09abaf20ce to cause a race condition, thus being responsible for the issue. They suggested to increase the delays introduced by latter commmit to 300us. Unfortunately this does not resolve the issue.
-> 
-> Any help would be appreciated.
+I am available for testing with pleasure.
 
-See Bugzilla for the full thread and attached dmesg.
-
-Mateusz: It looks like this regression is caused by a commit of yours.
-Would you like to take a look on it?
-
-Anyway, I'm adding it to regzbot:
-
-#regzbot introduced: d2a632a8a11756 https://bugzilla.kernel.org/show_bug.cgi?id=217626
-#regzbot title: reducing RTC_UIP polling period causes broken RTC on resume from suspend
-
-Thanks.
-
-[1]: https://bugzilla.kernel.org/show_bug.cgi?id=217626
-
--- 
-An old man doll... just what I always wanted! - Clara
+kind regards
+Clemens
