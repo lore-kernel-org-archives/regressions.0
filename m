@@ -1,85 +1,133 @@
-Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
+Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6AA4F9C6
-	for <regressions@lists.linux.dev>; Mon,  3 Jul 2023 13:26:36 +0000 (UTC)
-Received: by mail-ot1-f50.google.com with SMTP id 46e09a7af769-6b5d1498670so3506062a34.1
-        for <regressions@lists.linux.dev>; Mon, 03 Jul 2023 06:26:36 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A451F101CF
+	for <regressions@lists.linux.dev>; Mon,  3 Jul 2023 17:35:24 +0000 (UTC)
+Received: by mail-ot1-f53.google.com with SMTP id 46e09a7af769-6b74791c948so4067724a34.3
+        for <regressions@lists.linux.dev>; Mon, 03 Jul 2023 10:35:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1688390796; x=1690982796;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vqn7IKTdo14CySBv00ohACcAfgAIiWSh1E9RKmDPgr4=;
-        b=Ek1UGhRgVlcOvIL06WHpGzgjgyHpvklDmtxMOactMDjhcaI4gwwV65eiGbrFnTuYMp
-         sx+StujcB87IZnmVr0obLNhPZ3QtF3Hnn6KRTiSfoUNG34iq6GMQjbrGeO8blA+j2tvf
-         h/kwO/mSVsgqvnw7MmKImnD9Pydwuvvhl5dLCVmInI1GKbEVxBZ0/2klnE3A77D9x7bU
-         WI8PiUsuUjVZhuHi476SolDhvelKrfeWzquDbo/oNuoRyDoPM28I7yNszphIDppKjqcD
-         nIvToQ+4GW88bXvZB5zKvNYfZ/SizZVOiU893uOtzX5iYcLUjFStPOA9WE2E32m0Xk2o
-         XXiA==
+        d=gmail.com; s=20221208; t=1688405723; x=1690997723;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=0NL0ySbb2Xb/iRrjprrBD36mGMRGbHoN4gFIm7bPFVI=;
+        b=l/q+U9ng/s84zKLFLt/NEsWSK4cDVHoctXMiY7noTh3ya6AgR+A1BogdSFRHbzBikc
+         IgUgMYkCAeTP3bLu2mQWyZTtqWxLTsDnmDVSxCSBMN9CsisJyhNTnesQUywc2hx4lLd8
+         9dPMdOD9qkrA4soKVJJtrDmUQ1xX/7ceF3z3U2CcM8xggiZScfea4fP2814fIxFsWKzh
+         UrXBQ+XDh+bFyI4kdNJrzDezZ0w+MQ1q2gw5STIGmpEC5TgY6d9iNlT0nXKywmk3PEzc
+         6ZA7jbB4QizTylp8kclYcqvKm16ZaeHihFMAotzYW2Q+lt7jISZzquRhN3GAmXBot16K
+         9nww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688390796; x=1690982796;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vqn7IKTdo14CySBv00ohACcAfgAIiWSh1E9RKmDPgr4=;
-        b=kEIL/u6BBFyToJ8n2tZ6pcqNfcFGv4Vzg/LBpJYoDw57IEh5KWLD899sWJRAysoGR0
-         vybbIs+UjlmrvR4tOpI5dAw+CuGDN3+JUnxi2CKfMvHhL2nsi4BuF/lxjumQsVIPHdSj
-         WLvEcL8nNcauTexkGTUxezPDteUSayI6Sl+xcZv4mUzfsF/8MUyxvIEKBdzPR+8CQxIg
-         e+EuTNpp/0d8DH2y5OYDF6+5IO2A5nv3oyb0mPo3eG3SM5ohnIJ8MK6cTQMfr9yHpAFu
-         cs+dk0OCK7VU7TgJJ6rjsOdCechlm6Lt1STSXv9l9ZN9EsUiVMGGUKUmkVgzKMoH1FSU
-         LD/g==
-X-Gm-Message-State: AC+VfDz/tTDns/0nX98Dx7pR2xdUGuzk2gSibo4CG0HzQMMtg1rv8RMJ
-	+takZ3goudNjezi2qsuEQQBA3k1BGLxpOvFQxfI=
-X-Google-Smtp-Source: ACHHUZ6uqGeljNO+21cjgetYX14NexS83zR1TTJuyVJ+ZqhjCxOYbav6ccfXjzVMlVGI0t01i24YsOMut9poxjZGFYM=
-X-Received: by 2002:a05:6808:199f:b0:3a1:e7ad:11a2 with SMTP id
- bj31-20020a056808199f00b003a1e7ad11a2mr9346884oib.18.1688390795816; Mon, 03
- Jul 2023 06:26:35 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1688405723; x=1690997723;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=0NL0ySbb2Xb/iRrjprrBD36mGMRGbHoN4gFIm7bPFVI=;
+        b=NpOGNQE0FUA88WbeLAmhFpz1GswUVcixX1ds8HfLb6ZZQAknZzPQ4e/3LQ9zM1H3NA
+         qwR1KDzlxNej3zWZP39nnDmltZR/G5ZtxXQPTNjiFUcHBTMJyvSy/dj9Q+zChqXb8rT1
+         KQ6pVZiyvhLi0D8bI/AEqCW2ROHNZqsajp5cdaYwFQWhgfHJaBSEcWSgpnyUVERfZIDe
+         udAhQJpJuE4r3KuMPadPC0o/qINe46rfiH7iru4Js4UJqr77CpXmo7imz+8A+miF+yJl
+         9vtMOumKAFKukImzQc0spJTQZYy+VNICkpiYn0YfwVxP/gJJ2TSW6XFQG+2bslc0aHo4
+         lVPQ==
+X-Gm-Message-State: AC+VfDwhtOjI38xnUn9i1IVWsQjFuDslgQBArgw7TYOEWqGkAccypiZD
+	MAoHsOTXXsAYgotLmM4X0Ks=
+X-Google-Smtp-Source: ACHHUZ7oyJiF+8yO1ePhexm7fnkxb2DJ13EXS5+5fp/AffHM6v7o1c6Q1bnTRCVRr2PWByVMjWj/jQ==
+X-Received: by 2002:a05:6830:10c4:b0:6b8:8f8f:3f4c with SMTP id z4-20020a05683010c400b006b88f8f3f4cmr11485107oto.26.1688405723530;
+        Mon, 03 Jul 2023 10:35:23 -0700 (PDT)
+Received: from [192.168.1.119] ([216.130.59.33])
+        by smtp.gmail.com with ESMTPSA id z6-20020a9d7a46000000b006b8ad42654csm2974673otm.0.2023.07.03.10.35.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 03 Jul 2023 10:35:22 -0700 (PDT)
+Sender: Larry Finger <larry.finger@gmail.com>
+Message-ID: <89429625-5b5a-d0d3-ae82-0b7204262980@lwfinger.net>
+Date: Mon, 3 Jul 2023 12:35:21 -0500
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <d18d2a08-9d24-0209-c2cf-baf60bbf5048@gmail.com>
- <CGME20230627161055eucas1p18d097cbcc2215b292c65a5b3a0f0e6b5@eucas1p1.samsung.com>
- <ZJsKBkPqoWzYyngS@kbusch-mbp.dhcp.thefacebook.com> <9b778d59-c8d5-b037-0eb7-34cee5f273cc@samsung.com>
- <CABfnBFoZ=gh2rkY_oYWzjkGcu8HPQ2FqnrnushH0DZFSi8cwOg@mail.gmail.com> <50723e0c-370b-7e4f-338c-401998739fba@samsung.com>
-In-Reply-To: <50723e0c-370b-7e4f-338c-401998739fba@samsung.com>
-From: Clemens Springsguth <cspringsguth@gmail.com>
-Date: Mon, 3 Jul 2023 15:25:58 +0200
-Message-ID: <CABfnBFpZJ=kToimneFgs87i=yL37Z8_MJ5nL6NUpW9w6mFSyjw@mail.gmail.com>
-Subject: Re: Fwd: Need NVME QUIRK BOGUS for SAMSUNG MZ1WV480HCGL-000MV
- (Samsung SM-953 Datacenter SSD)
-To: Pankaj Raghav <p.raghav@samsung.com>
-Cc: Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>, 
-	Sagi Grimberg <sagi@grimberg.me>, Martin Belanger <martin.belanger@dell.com>, 
-	Chaitanya Kulkarni <kch@nvidia.com>, John Meneghini <jmeneghi@redhat.com>, Hannes Reinecke <hare@suse.de>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Linux Regressions <regressions@lists.linux.dev>, Linux NVMe <linux-nvme@lists.infradead.org>, 
-	Kanchan Joshi <joshi.k@samsung.com>, Jinhwan Park <jh.i.park@samsung.com>, 
-	Bagas Sanjaya <bagasdotme@gmail.com>, Javier Gonzalez <javier.gonz@samsung.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: Fwd: After kernel 6.3.7 or 6.3.8 b43 driver fails
+To: Sardonimous <sardonimous@hotmail.com>, Arnd Bergmann <arnd@arndb.de>,
+ Bagas Sanjaya <bagasdotme@gmail.com>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Linux Wireless <linux-wireless@vger.kernel.org>,
+ Netdev <netdev@vger.kernel.org>
+Cc: =?UTF-8?Q?Michael_B=c3=bcsch?= <m@bues.ch>,
+ kernel test robot <lkp@intel.com>, Simon Horman <simon.horman@corigine.com>,
+ Kalle Valo <kvalo@kernel.org>
+References: <27829c69-515c-36a6-4beb-3210225f8936@gmail.com>
+ <b9428e48-f0f9-46f6-892c-4c8834c930c4@app.fastmail.com>
+ <RO2P215MB193850DDADD38492BEC8CC2FA720A@RO2P215MB1938.LAMP215.PROD.OUTLOOK.COM>
+ <a3bc5eb5-9639-8016-36ab-105abc8c0ca3@gmail.com>
+ <69b98eb4-2c4e-fe75-90b4-4b08505a595a@lwfinger.net>
+ <RO2P215MB193879B2D99DD0BAF59EFA92A721A@RO2P215MB1938.LAMP215.PROD.OUTLOOK.COM>
+ <e0a08449-554a-4a28-ac50-7051866eb95e@app.fastmail.com>
+ <da80b806-de3f-c7ea-0352-cd23e0f6dd65@lwfinger.net>
+ <RO2P215MB1938BD13105900F3525E0FE7A721A@RO2P215MB1938.LAMP215.PROD.OUTLOOK.COM>
+ <67faf4f4-f36c-3ff7-03b8-cd259e4a5548@lwfinger.net>
+ <RO2P215MB1938BA68BBB683EC696F4BFAA726A@RO2P215MB1938.LAMP215.PROD.OUTLOOK.COM>
+ <6afa0ebc-1d3f-8cba-79dc-8ddfe13c296a@lwfinger.net>
+ <RO2P215MB193898F3008E0F390CCEBC87A726A@RO2P215MB1938.LAMP215.PROD.OUTLOOK.COM>
+Content-Language: en-US
+From: Larry Finger <Larry.Finger@lwfinger.net>
+In-Reply-To: <RO2P215MB193898F3008E0F390CCEBC87A726A@RO2P215MB1938.LAMP215.PROD.OUTLOOK.COM>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jun 30, 2023 at 6:21=E2=80=AFPM Pankaj Raghav <p.raghav@samsung.com=
-> wrote:
->
-> On 2023-06-30 17:18, Clemens Springsguth wrote:
-> > Hi Pankaj,
-> >
-> > i would be very very grateful if you would create and submit the quirk
-> > as a proper patch.
-> >
->
-> No problem. I will send something soon, but could you test it and
-> give me a tested-by tag when I send the patch? I don't have that
-> model at my disposal.
->
+On 6/26/23 16:33, Sardonimous wrote:
+> 
+> On 6/26/23 10:21 AM, Larry Finger wrote:
+>> On 6/26/23 07:44, Sardonimous wrote:
+>>> If I were to send you some test patches, could you create a kernel with them 
+>>> applied?
+>>>
+>>> Doubtful.
+>>
+>> Sardonimous,
+>>
+>> OK, that essentially eliminates  getting DMA to work. The cost of a 
+>> MacBookPro7 is too much for me to acquire one to debug that issue.
+>>
+>> On my PowerBook G4, I also got the failure to connect, thus I should be able 
+>> to fix that problem, but getting a new kernel with the fix onto your machine 
+>> will not be easy.
+> 
+> It might be possible to follow the arch instructions for patching the kernel
+> 
+> https://wiki.archlinux.org/title/Kernel/Arch_build_system
+> 
+> It takes about a day to rebuild the kernel following this procedure.
+> 
+>> Is it possible to ssh into your machine, or to use TeamViewer? Those questions 
+>> do not need an answer now, but think about them.
+> 
+> This is complicated by being in a CGNAT environment.  I usually do this via 
+> tailscale.  Will have to think about it.
+> 
+>> Larry
+> 
+> Should pio=1 qos=0 cause the problems that it does?  It if is no longer a 
+> supported configuration, perhaps it should fail more gracefully.
 
-Hi Pankaj,
+Sardonimous,
 
-I am available for testing with pleasure.
+Sorry that it took so long to get back to you.
 
-kind regards
-Clemens
+For my ppc32, there is no regression. It took a while to learn the pio=1 and 
+qos=0 are BOTH needed. That I do not understand, but with both set, the device 
+works with kernel 6.4 and all earlier kernels that I tried. Fortunately, I did 
+not need to do the entire bisection.
+
+I am working on eliminating the warning that appears with qos=0, but it does not 
+inhibit operations.
+
+@Bagas Sanjaya: Please mark this "regression" as invalid.
+
+Larry
+
+
