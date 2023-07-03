@@ -1,191 +1,78 @@
-Received: from ste-pvt-msa2.bahnhof.se (ste-pvt-msa2.bahnhof.se [213.80.101.71])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7D7D3212
-	for <regressions@lists.linux.dev>; Sun,  2 Jul 2023 23:28:28 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by ste-pvt-msa2.bahnhof.se (Postfix) with ESMTP id 1F9BC3F4EA;
-	Mon,  3 Jul 2023 01:28:21 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at bahnhof.se
-X-Spam-Flag: NO
-X-Spam-Score: -1.91
-X-Spam-Level:
-X-Spam-Status: No, score=-1.91 tagged_above=-999 required=6.31
-	tests=[BAYES_00=-1.9, T_SCC_BODY_TEXT_LINE=-0.01]
-	autolearn=ham autolearn_force=no
-Received: from ste-pvt-msa2.bahnhof.se ([127.0.0.1])
-	by localhost (ste-pvt-msa2.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id FD9DfBm3SItY; Mon,  3 Jul 2023 01:28:19 +0200 (CEST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA35C362;
+	Mon,  3 Jul 2023 01:29:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DCB0C433C8;
+	Mon,  3 Jul 2023 01:29:36 +0000 (UTC)
+Authentication-Results: smtp.kernel.org;
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="Y4+QzqLU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
+	t=1688347774;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4674ZbOxpPHoz+ti6WsYFPiu0IyaOts3jCS8wRMfDSY=;
+	b=Y4+QzqLUTiJeMalgj+I7Qo91Ha+PS4e9rDKO2uucMD4artd8I2tsWvB0NNZQlRu/PVMC3e
+	8bh5NrRfWN1PxNylMDVYDZKT0yy6nTDxUEcOS9jQf/7Fg95TyqIvSC5Ve2NEoo1Yh4RqmH
+	ddaBAhi+C2W0eJ4EbPsNpnPz/DqAS5c=
 Received: 
-	by ste-pvt-msa2.bahnhof.se (Postfix) with ESMTPA id D59743F358;
-	Mon,  3 Jul 2023 01:28:17 +0200 (CEST)
-Received: from [192.168.0.132] (port=50956)
-	by tnonline.net with esmtpsa  (TLS1.3) tls TLS_AES_128_GCM_SHA256
-	(Exim 4.96)
-	(envelope-from <forza@tnonline.net>)
-	id 1qG6UK-0005AA-2x;
-	Mon, 03 Jul 2023 01:28:17 +0200
-Date: Mon, 3 Jul 2023 01:28:16 +0200 (GMT+02:00)
-From: Forza <forza@tnonline.net>
-To: Uladzislau Rezki <urezki@gmail.com>,
-	Bagas Sanjaya <bagasdotme@gmail.com>
-Cc: Uladzislau Rezki <urezki@gmail.com>,
-	Bagas Sanjaya <bagasdotme@gmail.com>,
-	Linux btrfs <linux-btrfs@vger.kernel.org>,
+	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 5120d0e1 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+	Mon, 3 Jul 2023 01:29:34 +0000 (UTC)
+Date: Mon, 3 Jul 2023 03:29:30 +0200
+From: "Jason A. Donenfeld" <Jason@zx2c4.com>
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Bagas Sanjaya <bagasdotme@gmail.com>,
+	Eric DeVolder <eric.devolder@oracle.com>,
+	"Borislav Petkov (AMD)" <bp@alien8.de>,
+	David R <david@unsolicited.net>,
+	Boris Ostrovsky <boris.ovstrosky@oracle.com>,
+	Miguel Luis <miguel.luis@oracle.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Jay Vosburgh <j.vosburgh@gmail.com>,
+	Andy Gospodarek <andy@greyhouse.net>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
 	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Regressions <regressions@lists.linux.dev>,
-	Linux Stable <stable@vger.kernel.org>, Chris Mason <clm@fb.com>,
-	Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
-	a1bert@atlas.cz
-Message-ID: <cf07f03.70397026.18918ef7f95@tnonline.net>
-In-Reply-To: <ZHClGA9szxSqzDf8@pc636>
-References: <efa04d56-cd7f-6620-bca7-1df89f49bf4b@gmail.com> <fcf1d04.faed4a1a.18844d8e78f@tnonline.net> <ZGwcVTpQNBoJHBB+@debian.me> <ZGyVVQxnw6Tn7Xb8@pc636> <c9db92d.faed4a1c.1884c5550fb@tnonline.net> <20230524091357.GH32559@suse.cz> <ZHClGA9szxSqzDf8@pc636>
-Subject: Re: Fwd: vmalloc error: btrfs-delalloc btrfs_work_helper [btrfs] in
- kernel 6.3.x
+	Linux RCU <rcu@vger.kernel.org>,
+	Wireguard Mailing List <wireguard@lists.zx2c4.com>,
+	Linux Networking <netdev@vger.kernel.org>,
+	Linux ACPI <linux-acpi@vger.kernel.org>,
+	Manuel 'satmd' Leiner <manuel.leiner@gmx.de>
+Subject: Re: Fwd: RCU stalls with wireguard over bonding over igb on Linux
+ 6.3.0+
+Message-ID: <ZKIkevSrMJISHDig@zx2c4.com>
+References: <e5b76a4f-81ae-5b09-535f-114149be5069@gmail.com>
+ <79196679-fb65-e5ad-e836-2c43447cfacd@gmail.com>
+ <10f2a5ee-91e2-1241-9e3b-932c493e61b6@leemhuis.info>
+ <CAHmME9onMWdJVUerf86V0kpmNKByt+VC=SUfys+GFryGq1ziHQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: R2Mail2
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAHmME9onMWdJVUerf86V0kpmNKByt+VC=SUfys+GFryGq1ziHQ@mail.gmail.com>
 
+On Sun, Jul 02, 2023 at 03:46:38PM +0200, Jason A. Donenfeld wrote:
+> I've got an overdue patch that I still need to submit to netdev, which
+> I suspect might actually fix this.
+> 
+> Can you let me know if
+> https://git.zx2c4.com/wireguard-linux/patch/?id=54d5e4329efe0d1dba8b4a58720d29493926bed0
+> solves the problem?
 
+satmd, the original reporter, confirmed over on the Gentoo bug report -
+https://bugs.gentoo.org/909066 - that this patch fixes the issue.
 
----- From: Uladzislau Rezki <urezki@gmail.com> -- Sent: 2023-05-26 - 14:24 =
-----
+This patch has been sent into netdev and will presumably hit the various
+trees and stable in due time.
 
-> On Wed, May 24, 2023 at 11:13:57AM +0200, David Sterba wrote:
->> This looks like a different set of problems, though all of them seem to
->> start on the compression write path in btrfs.
->>=20
->> On Wed, May 24, 2023 at 07:57:19AM +0200, Forza wrote:
->> > [   8.641506] 8021q: adding VLAN 0 to HW filter on device enp4s0
->> > [   13.841691] wireguard: WireGuard 1.0.0 loaded. See www.wireguard.co=
-m for information.
->> > [   13.841705] wireguard: Copyright (C) 2015-2019 Jason A. Donenfeld <=
-Jason@zx2c4.com>. All Rights Reserved.
->> > [13917.280527] ------------[ cut here ]------------
->> > [13917.280753] default_enter_idle leaked IRQ state
->> > [13917.281004] WARNING: CPU: 3 PID: 0 at drivers/cpuidle/cpuidle.c:269=
- cpuidle_enter_state+0x3bb/0x430
->>=20
->>=20
-... Snip
->>=20
->> And again, so something is going wrong
->>=20
-> Indeed.
->=20
-> I suggest you run your kernel with CONFIG_KASAN=3Dy to see if there are
-> any use-after-free or out-of-bounds bugs.
->=20
-> --
-> Uladzislau Rezki
-
-
-Pardon the delay... I have enabled KASAN and UBSAN on this kernel. It produ=
-ced a lot of output and plenty of warnings for misalignment.=20
-
-The full dmesg is at https://paste.tnonline.net/files/aBoUMuTd5KBC_dmesg.ub=
-san.txt (approx 1.7MiB)
-
-The full kernel .conf is. at https://paste.tnonline.net/files/z1mX8TWFgZQ3_=
-kernel.conf-kasan-ubsan.txt
-
-A small exctract around what I think is the  default_enter_idle leaked IRQ =
-event. Is this helpful?
-
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
-Jul 03 00:33:57 git kernel: UBSAN: misaligned-access in net/ipv4/tcp_ipv4.c=
-:1848:13
-Jul 03 00:33:57 git kernel: member access within misaligned address 0000000=
-07604d82f for type 'const struct tcphdr'
-Jul 03 00:33:57 git kernel: which requires 4 byte alignment
-Jul 03 00:33:57 git kernel: CPU: 2 PID: 29 Comm: ksoftirqd/2 Not tainted 6.=
-3.10-ksan-ubsan #8
-Jul 03 00:33:57 git kernel: Hardware name: QEMU Standard PC (Q35 + ICH9, 20=
-09), BIOS 1.16.0-20220807_005459-localhost 04/01/2014
-Jul 03 00:33:57 git kernel: Call Trace:
-Jul 03 00:33:57 git kernel:  <TASK>
-Jul 03 00:33:57 git kernel:  dump_stack_lvl+0x86/0xd0
-Jul 03 00:33:57 git kernel:  ubsan_type_mismatch_common+0xdf/0x240
-Jul 03 00:33:57 git kernel:  __ubsan_handle_type_mismatch_v1+0x44/0x60
-Jul 03 00:33:57 git kernel:  tcp_add_backlog+0x1fac/0x3ab0
-Jul 03 00:33:57 git kernel:  ? sk_filter_trim_cap+0xcc/0xb60
-Jul 03 00:33:57 git kernel:  ? __pfx_tcp_add_backlog+0x10/0x10
-Jul 03 00:33:57 git kernel:  ? __pfx__raw_spin_lock+0x10/0x10
-Jul 03 00:33:57 git kernel:  tcp_v4_rcv+0x3583/0x4c40
-Jul 03 00:33:57 git kernel:  ? __pfx_tcp_v4_rcv+0x10/0x10
-Jul 03 00:33:57 git kernel:  ? __pfx__raw_spin_lock_irqsave+0x10/0x10
-Jul 03 00:33:57 git kernel:  ip_protocol_deliver_rcu+0x6c/0x480
-Jul 03 00:33:57 git kernel:  ip_local_deliver_finish+0x2ae/0x4d0
-Jul 03 00:33:57 git kernel:  ? __pfx_ip_local_deliver+0x10/0x10
-Jul 03 00:33:57 git kernel:  ? __pfx_ip_local_deliver+0x10/0x10
-Jul 03 00:33:57 git kernel:  ip_local_deliver+0x1ba/0x380
-Jul 03 00:33:57 git kernel:  ? __pfx_ip_local_deliver+0x10/0x10
-Jul 03 00:33:57 git kernel:  ? ipv4_dst_check+0x104/0x250
-Jul 03 00:33:57 git kernel:  ? __ubsan_handle_type_mismatch_v1+0x44/0x60
-Jul 03 00:33:57 git kernel:  ip_sublist_rcv_finish+0x172/0x380
-Jul 03 00:33:57 git kernel: ------------[ cut here ]------------
-Jul 03 00:33:57 git kernel:  ip_sublist_rcv+0x3cd/0x900
-Jul 03 00:33:57 git kernel: default_enter_idle leaked IRQ state
-Jul 03 00:33:57 git kernel:  ? __pfx_ip_sublist_rcv+0x10/0x10
-Jul 03 00:33:57 git kernel:  ? __ubsan_handle_type_mismatch_v1+0x44/0x60
-Jul 03 00:33:57 git kernel:  ? ip_rcv_core+0x972/0x1b20
-Jul 03 00:33:57 git kernel:  ip_list_rcv+0x318/0x750
-Jul 03 00:33:57 git kernel:  ? __pfx_ip_list_rcv+0x10/0x10
-Jul 03 00:33:57 git kernel:  ? __pfx_ip_list_rcv+0x10/0x10
-Jul 03 00:33:57 git kernel:  __netif_receive_skb_list_core+0x5ad/0x1170
-Jul 03 00:33:57 git kernel:  ? tcp_gro_receive+0x1f45/0x2990
-Jul 03 00:33:57 git kernel:  ? __pfx___netif_receive_skb_list_core+0x10/0x1=
-0
-Jul 03 00:33:57 git kernel:  ? kvm_clock_read+0x16/0x40
-Jul 03 00:33:57 git kernel:  ? ktime_get_with_offset+0xd0/0x1f0
-Jul 03 00:33:57 git kernel:  netif_receive_skb_list_internal+0x76f/0x1530
-Jul 03 00:33:57 git kernel:  ? __pfx_netif_receive_skb_list_internal+0x10/0=
-x10
-Jul 03 00:33:57 git kernel:  ? dev_gro_receive+0x67f/0x4900
-Jul 03 00:33:57 git kernel:  ? free_unref_page+0x2fd/0x680
-Jul 03 00:33:57 git kernel:  ? put_page+0x69/0x2b0
-Jul 03 00:33:57 git kernel:  ? __pfx_eth_type_trans+0x10/0x10
-Jul 03 00:33:57 git kernel:  napi_gro_receive+0x77b/0xdc0
-Jul 03 00:33:57 git kernel:  receive_buf+0x1001/0xac40
-Jul 03 00:33:57 git kernel:  ? _raw_spin_lock_irqsave+0xaa/0x180
-Jul 03 00:33:57 git kernel:  ? __pfx__raw_spin_lock_irqsave+0x10/0x10
-Jul 03 00:33:57 git kernel:  ? __pfx_receive_buf+0x10/0x10
-Jul 03 00:33:57 git kernel:  ? _raw_spin_unlock_irqrestore+0x40/0x80
-Jul 03 00:33:57 git kernel:  ? trace_hardirqs_on+0x2d/0xd0
-Jul 03 00:33:57 git kernel:  ? detach_buf_split+0x27e/0xa70
-Jul 03 00:33:57 git kernel:  ? virtqueue_get_buf_ctx_split+0x3c3/0x1400
-Jul 03 00:33:57 git kernel:  ? virtqueue_enable_cb_delayed+0x5d0/0x1180
-Jul 03 00:33:57 git kernel:  virtnet_poll+0x7c7/0x2030
-Jul 03 00:33:57 git kernel:  ? __pfx_virtnet_poll+0x10/0x10
-Jul 03 00:33:57 git kernel:  ? __pfx__raw_spin_lock+0x10/0x10
-Jul 03 00:33:57 git kernel:  ? __run_timers+0x43d/0xf70
-Jul 03 00:33:57 git kernel:  __napi_poll.constprop.0+0xd4/0x840
-Jul 03 00:33:57 git kernel:  net_rx_action+0x7a0/0x26e0
-Jul 03 00:33:57 git kernel:  ? __pfx_net_rx_action+0x10/0x10
-Jul 03 00:33:57 git kernel:  __do_softirq+0x277/0x95d
-Jul 03 00:33:57 git kernel:  ? __pfx___do_softirq+0x10/0x10
-Jul 03 00:33:57 git kernel:  ? __pfx_run_ksoftirqd+0x10/0x10
-Jul 03 00:33:57 git kernel:  ? __pfx_run_ksoftirqd+0x10/0x10
-Jul 03 00:33:57 git kernel:  run_ksoftirqd+0x2c/0x40
-Jul 03 00:33:57 git kernel:  smpboot_thread_fn+0x380/0xbc0
-Jul 03 00:33:57 git kernel:  ? __kthread_parkme+0xdc/0x280
-Jul 03 00:33:57 git kernel:  ? schedule+0x158/0x360
-Jul 03 00:33:57 git kernel:  ? __pfx_smpboot_thread_fn+0x10/0x10
-Jul 03 00:33:57 git kernel:  kthread+0x259/0x3d0
-Jul 03 00:33:57 git kernel:  ? __pfx_kthread+0x10/0x10
-Jul 03 00:33:57 git kernel:  ret_from_fork+0x2c/0x50
-Jul 03 00:33:57 git kernel:  </TASK>
-Jul 03 00:33:57 git kernel: =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-
+Jason
