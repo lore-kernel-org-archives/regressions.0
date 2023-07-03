@@ -1,123 +1,60 @@
-Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD54D362
-	for <regressions@lists.linux.dev>; Mon,  3 Jul 2023 01:34:08 +0000 (UTC)
-Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-7654e1d83e8so334899385a.1
-        for <regressions@lists.linux.dev>; Sun, 02 Jul 2023 18:34:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1688348047; x=1690940047;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=j+DQp1aToFjJn6ibYm/4PN8jG7y+qtLc+dd9jn1u2OI=;
-        b=E247jHIts6Coz6hmPu1O7nST/fEOvOmX8+WSIt8dvPOLEXWrHnbxR8/wZMD7eWOQfA
-         VWuEOxQiDxZX2TGM1v1cJTzENETOZ1RTwXjXhPbfHKBlDZERMQ0MzLWQBG2sf45cWvf5
-         TKh5cRMAl5Q29jZMz0JhPRozzhHoZodIsIBQ91yhE+QLdGmpjzDzt89AC7M/S72qzn2a
-         AVlnBgqkZNvWnvJSs9VW+FNOJHBQusF4u/9r8z7R5++3JVQb0cb5EZNZXAolt3W62II7
-         yhCabHg/iIHSZWmXZ+U6AnsKqOzUSbouWdcIm+VutWFROc2Cc1OuWBmxckNnX9zLZA1S
-         rJGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688348047; x=1690940047;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=j+DQp1aToFjJn6ibYm/4PN8jG7y+qtLc+dd9jn1u2OI=;
-        b=iMN9ZX0bSEoLmvCOdLkcQBzUrXipV9+mZCUN6Hf7WuAtay7SS7IIs+RBREmkeYcubL
-         LeY32L6jScZC5UOyV6hM9Up6s5+W4BbBXa/I75qZFS88bxTcRXEphNdOYWmljAL+tf8+
-         ogg2G2aCni0PVxi5x7Mhf2Z6dndwqSJ5z93KqlZkSu+9KxgSSdXpUo4mjjS1dfNlbh6N
-         gUM9l/cGhEw0ukrTNkqyOonVTcpbdEUJ7BkZRcumRbAkXbcS1qelnEE5BPh2m8PssFo0
-         XgFAe0To6L166f2KmlwDjSBVzqJhioYxaYA1rGQTD9Vvk/AaasY58UdFaPix2fNzYDxq
-         JbLQ==
-X-Gm-Message-State: ABy/qLYvi+dV9QohgudSrlEyRaikx9g9S2N4ZMetgPIt3jY2lrmEotHG
-	tiyLfwlfo14iuNZ/iXODwsE=
-X-Google-Smtp-Source: APBJJlH92Kk5anUzz/btdHsFS1h2wIq4UMijxUHmrjYT7HeyyIRo0qQnTuby7k7tSS0XXQYnB3Oa/Q==
-X-Received: by 2002:a05:620a:2547:b0:763:9f31:1588 with SMTP id s7-20020a05620a254700b007639f311588mr10579466qko.70.1688348047293;
-        Sun, 02 Jul 2023 18:34:07 -0700 (PDT)
-Received: from debian.me ([103.131.18.64])
-        by smtp.gmail.com with ESMTPSA id c184-20020a621cc1000000b0066875f17266sm3492941pfc.135.2023.07.02.18.34.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 02 Jul 2023 18:34:06 -0700 (PDT)
-Received: by debian.me (Postfix, from userid 1000)
-	id 73EA181BD580; Mon,  3 Jul 2023 08:34:02 +0700 (WIB)
-Date: Mon, 3 Jul 2023 08:34:01 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: "Jason A. Donenfeld" <Jason@zx2c4.com>,
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Eric DeVolder <eric.devolder@oracle.com>,
-	"Borislav Petkov (AMD)" <bp@alien8.de>,
-	David R <david@unsolicited.net>,
-	Boris Ostrovsky <boris.ovstrosky@oracle.com>,
-	Miguel Luis <miguel.luis@oracle.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Jay Vosburgh <j.vosburgh@gmail.com>,
-	Andy Gospodarek <andy@greyhouse.net>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux RCU <rcu@vger.kernel.org>,
-	Wireguard Mailing List <wireguard@lists.zx2c4.com>,
-	Linux Networking <netdev@vger.kernel.org>,
-	Linux ACPI <linux-acpi@vger.kernel.org>,
-	Manuel 'satmd' Leiner <manuel.leiner@gmx.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 200A1388
+	for <regressions@lists.linux.dev>; Mon,  3 Jul 2023 02:09:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C578C433C9;
+	Mon,  3 Jul 2023 02:09:46 +0000 (UTC)
+Authentication-Results: smtp.kernel.org;
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="Czm2HqFe"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
+	t=1688350184;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=YfUDgE9UpoZoJNvCaViUCsdMg1IKYAvnMr8MJkjQcM0=;
+	b=Czm2HqFeoBk+SThe11mNo+QExFBvOhp9c1Y+6IrJYGbjaqZgkTZAr864a6YBxJvJxVq+EG
+	v04RPX4280StOFi8YgP5/syHyxSWF9GTZmOpSxoilgNckXAd0sPO8GWx6ZNJiBrrblCU0E
+	zK6/2wqBhs8JByEokG98HYKk4jNkwHg=
+Received: 
+	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id b471508e (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+	Mon, 3 Jul 2023 02:09:44 +0000 (UTC)
+Date: Mon, 3 Jul 2023 04:09:42 +0200
+From: "Jason A. Donenfeld" <Jason@zx2c4.com>
+To: Bagas Sanjaya <bagasdotme@gmail.com>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>
 Subject: Re: Fwd: RCU stalls with wireguard over bonding over igb on Linux
  6.3.0+
-Message-ID: <ZKIlibX5wCgWlonq@debian.me>
+Message-ID: <ZKIt5vyc_HunicuZ@zx2c4.com>
 References: <e5b76a4f-81ae-5b09-535f-114149be5069@gmail.com>
  <79196679-fb65-e5ad-e836-2c43447cfacd@gmail.com>
  <10f2a5ee-91e2-1241-9e3b-932c493e61b6@leemhuis.info>
  <CAHmME9onMWdJVUerf86V0kpmNKByt+VC=SUfys+GFryGq1ziHQ@mail.gmail.com>
+ <ZKIlibX5wCgWlonq@debian.me>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="iSZj5c+AXivxuOj4"
-Content-Disposition: inline
-In-Reply-To: <CAHmME9onMWdJVUerf86V0kpmNKByt+VC=SUfys+GFryGq1ziHQ@mail.gmail.com>
-
-
---iSZj5c+AXivxuOj4
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <ZKIlibX5wCgWlonq@debian.me>
 
-On Sun, Jul 02, 2023 at 03:46:38PM +0200, Jason A. Donenfeld wrote:
-> I've got an overdue patch that I still need to submit to netdev, which
-> I suspect might actually fix this.
->=20
-> Can you let me know if
-> https://git.zx2c4.com/wireguard-linux/patch/?id=3D54d5e4329efe0d1dba8b4a5=
-8720d29493926bed0
-> solves the problem?
+On Mon, Jul 03, 2023 at 08:34:01AM +0700, Bagas Sanjaya wrote:
+> On Sun, Jul 02, 2023 at 03:46:38PM +0200, Jason A. Donenfeld wrote:
+> > I've got an overdue patch that I still need to submit to netdev, which
+> > I suspect might actually fix this.
+> > 
+> > Can you let me know if
+> > https://git.zx2c4.com/wireguard-linux/patch/?id=54d5e4329efe0d1dba8b4a58720d29493926bed0
+> > solves the problem?
+> 
+> The reporter on Bugzilla [1] said it fixed the regression, so telling
+> regzbot:
+> 
+> #regzbot fix: 54d5e4329efe0d
 
-The reporter on Bugzilla [1] said it fixed the regression, so telling
-regzbot:
-
-#regzbot fix: 54d5e4329efe0d
-
-Thanks.
-
-[1]: https://bugzilla.kernel.org/show_bug.cgi?id=3D217620#c6
-
---=20
-An old man doll... just what I always wanted! - Clara
-
---iSZj5c+AXivxuOj4
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZKIlfgAKCRD2uYlJVVFO
-o4VvAQC1HOL3pBDT4GLVcFv6vo9unyPwADyfbTt7FItp8GNDGwD/S1k8ndaOLk2I
-CQNHucPSMLNR09jmYdkOaFrGjSpluAQ=
-=tRvy
------END PGP SIGNATURE-----
-
---iSZj5c+AXivxuOj4--
+That's not correct. I tend to send patches to netdev@, not pulls, so the
+commit is going to be different. Just leave this alone for a bit and
+tidy things up once everything hits the main trees.
