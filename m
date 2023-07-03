@@ -1,89 +1,101 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1AC1259D
-	for <regressions@lists.linux.dev>; Mon,  3 Jul 2023 18:44:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0D2AC433C7;
-	Mon,  3 Jul 2023 18:44:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0F111094A;
+	Mon,  3 Jul 2023 18:57:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C649C433C8;
+	Mon,  3 Jul 2023 18:57:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1688409860;
-	bh=2uAqICqoHfr9JtNMBA+xJ3OMXBg414ERFpRhYQggwas=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Z7K9FathaHPI6/wxy5SOzbw+Mn3X/luBzM657rDx4HJNm/6VjummZyAFF/3sfzVYF
-	 LxMRVIqsVH39SZ+5khv50NT8+BLJktP3dug43pWtYN8QAKJhSueo7i4IHOa7osISsg
-	 6L983hQun2qcLOjWngQMIZXxjvWbVIiOoK+4uq0w=
-Date: Mon, 3 Jul 2023 20:44:17 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Suren Baghdasaryan <surenb@google.com>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
-	Bagas Sanjaya <bagasdotme@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jacob Young <jacobly.alt@gmail.com>,
-	Laurent Dufour <ldufour@linux.ibm.com>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Memory Management <linux-mm@kvack.org>,
-	Linux PowerPC <linuxppc-dev@lists.ozlabs.org>,
-	Linux ARM <linux-arm-kernel@lists.infradead.org>
-Subject: Re: Fwd: Memory corruption in multithreaded user space program while
- calling fork
-Message-ID: <2023070359-evasive-regroup-f3b8@gregkh>
-References: <facbfec3-837a-51ed-85fa-31021c17d6ef@gmail.com>
- <5c7455db-4ed8-b54f-e2d5-d2811908123d@leemhuis.info>
- <CAJuCfpH7BOBYGEG=op09bZrh1x3WA8HMcGBXXRhe6M5RJaen5A@mail.gmail.com>
- <CAJuCfpH7t7gCV2FkctzG2eWTUVTFZD7CtD14-WuHqBqOYBo1jA@mail.gmail.com>
+	s=korg; t=1688410650;
+	bh=1Bj4CpYcal7jxAqaT5biZgAyCAA7N2tO8+RTqooD9GM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=F7nj2AZAlLQhCtO5vbF6FtwkJ/OlZLSDRpqqJbhlOHM7t6MkPGrpYlJjIZxTTklJW
+	 If6AX+FgKwUtP8KubxDYcZiAj1dSSuJS0FySPJWYWCbSbhK/vqwZPi9RvixLPVw1ws
+	 76+tYWD61f7CgjXU7y72MGkhQTXuL6CXO9Ln9FgA=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: stable@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	patches@lists.linux.dev,
+	Philip Yang <Philip.Yang@amd.com>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Linux Regressions <regressions@lists.linux.dev>,
+	Mario Limonciello <mario.limonciello@amd.com>
+Subject: [PATCH 5.15 05/15] drm/amdgpu: Set vmbo destroy after pt bo is created
+Date: Mon,  3 Jul 2023 20:54:50 +0200
+Message-ID: <20230703184519.043464257@linuxfoundation.org>
+X-Mailer: git-send-email 2.41.0
+In-Reply-To: <20230703184518.896751186@linuxfoundation.org>
+References: <20230703184518.896751186@linuxfoundation.org>
+User-Agent: quilt/0.67
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJuCfpH7t7gCV2FkctzG2eWTUVTFZD7CtD14-WuHqBqOYBo1jA@mail.gmail.com>
 
-On Mon, Jul 03, 2023 at 11:27:19AM -0700, Suren Baghdasaryan wrote:
-> On Mon, Jul 3, 2023 at 11:08 AM Suren Baghdasaryan <surenb@google.com> wrote:
-> >
-> > On Mon, Jul 3, 2023 at 2:53 AM Linux regression tracking (Thorsten
-> > Leemhuis) <regressions@leemhuis.info> wrote:
-> > >
-> > > On 02.07.23 14:27, Bagas Sanjaya wrote:
-> > > > I notice a regression report on Bugzilla [1]. Quoting from it:
-> > > >
-> > > >> After upgrading to kernel version 6.4.0 from 6.3.9, I noticed frequent but random crashes in a user space program.  After a lot of reduction, I have come up with the following reproducer program:
-> > > > [...]
-> > > >> After tuning the various parameters for my computer, exit code 2, which indicates that memory corruption was detected, occurs approximately 99% of the time.  Exit code 1, which occurs approximately 1% of the time, means it ran out of statically-allocated memory before reproducing the issue, and increasing the memory usage any more only leads to diminishing returns.  There is also something like a 0.1% chance that it segfaults due to memory corruption elsewhere than in the statically-allocated buffer.
-> > > >>
-> > > >> With this reproducer in hand, I was able to perform the following bisection:
-> > > > [...]
-> > > >
-> > > > See Bugzilla for the full thread.
-> > >
-> > > Additional details from
-> > > https://bugzilla.kernel.org/show_bug.cgi?id=217624#c5 :
-> > >
-> > > ```
-> > > I can confirm that v6.4 with 0bff0aaea03e2a3ed6bfa302155cca8a432a1829
-> > > reverted no longer causes any memory corruption with either my
-> > > reproducer or the original program.
-> > > ```
-> > >
-> > > FWIW: 0bff0aaea03 ("x86/mm: try VMA lock-based page fault handling
-> > > first") [merged for v6.4-rc1, authored by Suren Baghdasaryan [already CCed]]
-> > >
-> > > That's the same commit that causes build problems with go:
-> > >
-> > > https://lore.kernel.org/all/dbdef34c-3a07-5951-e1ae-e9c6e3cdf51b@kernel.org/
-> >
-> > Thanks! I'll investigate this later today. After discussing with
-> > Andrew, we would like to disable CONFIG_PER_VMA_LOCK by default until
-> > the issue is fixed. I'll post a patch shortly.
-> 
-> Posted at: https://lore.kernel.org/all/20230703182150.2193578-1-surenb@google.com/
+From: Philip Yang <Philip.Yang@amd.com>
 
-As that change fixes something in 6.4, why not cc: stable on it as well?
+commit 9a3c6067bd2ee2ca2652fbb0679f422f3c9109f9 upstream.
 
-thanks,
+Under VRAM usage pression, map to GPU may fail to create pt bo and
+vmbo->shadow_list is not initialized, then ttm_bo_release calling
+amdgpu_bo_vm_destroy to access vmbo->shadow_list generates below
+dmesg and NULL pointer access backtrace:
 
-greg k-h
+Set vmbo destroy callback to amdgpu_bo_vm_destroy only after creating pt
+bo successfully, otherwise use default callback amdgpu_bo_destroy.
+
+amdgpu: amdgpu_vm_bo_update failed
+amdgpu: update_gpuvm_pte() failed
+amdgpu: Failed to map bo to gpuvm
+amdgpu 0000:43:00.0: amdgpu: Failed to map peer:0000:43:00.0 mem_domain:2
+BUG: kernel NULL pointer dereference, address:
+ RIP: 0010:amdgpu_bo_vm_destroy+0x4d/0x80 [amdgpu]
+ Call Trace:
+  <TASK>
+  ttm_bo_release+0x207/0x320 [amdttm]
+  amdttm_bo_init_reserved+0x1d6/0x210 [amdttm]
+  amdgpu_bo_create+0x1ba/0x520 [amdgpu]
+  amdgpu_bo_create_vm+0x3a/0x80 [amdgpu]
+  amdgpu_vm_pt_create+0xde/0x270 [amdgpu]
+  amdgpu_vm_ptes_update+0x63b/0x710 [amdgpu]
+  amdgpu_vm_update_range+0x2e7/0x6e0 [amdgpu]
+  amdgpu_vm_bo_update+0x2bd/0x600 [amdgpu]
+  update_gpuvm_pte+0x160/0x420 [amdgpu]
+  amdgpu_amdkfd_gpuvm_map_memory_to_gpu+0x313/0x1130 [amdgpu]
+  kfd_ioctl_map_memory_to_gpu+0x115/0x390 [amdgpu]
+  kfd_ioctl+0x24a/0x5b0 [amdgpu]
+
+Signed-off-by: Philip Yang <Philip.Yang@amd.com>
+Reviewed-by: Christian König <christian.koenig@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+[ This fixes a regression introduced by commit 1cc40dccad76 ("drm/amdgpu:
+  fix Null pointer dereference error in amdgpu_device_recover_vram") in
+  5.15.118. It's a hand modified cherry-pick because that commit that
+  introduced the regression touched nearby code and the context is now
+  incorrect. ]
+Cc: Linux Regressions <regressions@lists.linux.dev>
+Link: https://gitlab.freedesktop.org/drm/amd/-/issues/2650
+Fixes: 1cc40dccad76 ("drm/amdgpu: fix Null pointer dereference error in amdgpu_device_recover_vram")
+Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/gpu/drm/amd/amdgpu/amdgpu_object.c |    1 -
+ 1 file changed, 1 deletion(-)
+
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_object.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_object.c
+@@ -685,7 +685,6 @@ int amdgpu_bo_create_vm(struct amdgpu_de
+ 	 * num of amdgpu_vm_pt entries.
+ 	 */
+ 	BUG_ON(bp->bo_ptr_size < sizeof(struct amdgpu_bo_vm));
+-	bp->destroy = &amdgpu_bo_vm_destroy;
+ 	r = amdgpu_bo_create(adev, bp, &bo_ptr);
+ 	if (r)
+ 		return r;
+
+
