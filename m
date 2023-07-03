@@ -1,60 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from domac.alu.hr (domac.alu.unizg.hr [161.53.235.3])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 200A1388
-	for <regressions@lists.linux.dev>; Mon,  3 Jul 2023 02:09:47 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C578C433C9;
-	Mon,  3 Jul 2023 02:09:46 +0000 (UTC)
-Authentication-Results: smtp.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="Czm2HqFe"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
-	t=1688350184;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YfUDgE9UpoZoJNvCaViUCsdMg1IKYAvnMr8MJkjQcM0=;
-	b=Czm2HqFeoBk+SThe11mNo+QExFBvOhp9c1Y+6IrJYGbjaqZgkTZAr864a6YBxJvJxVq+EG
-	v04RPX4280StOFi8YgP5/syHyxSWF9GTZmOpSxoilgNckXAd0sPO8GWx6ZNJiBrrblCU0E
-	zK6/2wqBhs8JByEokG98HYKk4jNkwHg=
-Received: 
-	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id b471508e (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-	Mon, 3 Jul 2023 02:09:44 +0000 (UTC)
-Date: Mon, 3 Jul 2023 04:09:42 +0200
-From: "Jason A. Donenfeld" <Jason@zx2c4.com>
-To: Bagas Sanjaya <bagasdotme@gmail.com>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: Fwd: RCU stalls with wireguard over bonding over igb on Linux
- 6.3.0+
-Message-ID: <ZKIt5vyc_HunicuZ@zx2c4.com>
-References: <e5b76a4f-81ae-5b09-535f-114149be5069@gmail.com>
- <79196679-fb65-e5ad-e836-2c43447cfacd@gmail.com>
- <10f2a5ee-91e2-1241-9e3b-932c493e61b6@leemhuis.info>
- <CAHmME9onMWdJVUerf86V0kpmNKByt+VC=SUfys+GFryGq1ziHQ@mail.gmail.com>
- <ZKIlibX5wCgWlonq@debian.me>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEDEA625;
+	Mon,  3 Jul 2023 03:50:24 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by domac.alu.hr (Postfix) with ESMTP id 1AD0E6016E;
+	Mon,  3 Jul 2023 05:40:46 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
+	t=1688355646; bh=g9yXXDDfiKFGXYs35wZ62G1hHziQXBpu/IYLkrKqkDg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=O/UZeWoPbsLCMBDupTwBsAC2XHgCkemKAUlekJTTzTDsGIkiReU8l/c9twIbtzn6J
+	 9rkNxLQKk1eTNy8en+9mIFfOcmm24z4BCk0iAukECYGYgBhPlAlgc5hOgvVqb4d6qz
+	 jeQFG5CqM9guu/AxbfLHFW/qpF6YVt9+GKsBe7Cs73ph7o11e23kI/CTVHKga0Sc29
+	 HnV/M2/8isBE3AuGD3EE7+9N9Ss5tVR7BTw11y7/sOhlLzizSsRBwdASH1+Gw97GZS
+	 V8BrEygkutvgSk0xCPRX/Qe5FrJZ2tL48atFxpad4SL5zz6h0N/F3VycT4gIS5TF7E
+	 VZPWT1xaa8urw==
+X-Virus-Scanned: Debian amavisd-new at domac.alu.hr
+Received: from domac.alu.hr ([127.0.0.1])
+	by localhost (domac.alu.hr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id sSarGCCyqUfX; Mon,  3 Jul 2023 05:40:43 +0200 (CEST)
+Received: from [192.168.1.6] (unknown [94.250.191.183])
+	by domac.alu.hr (Postfix) with ESMTPSA id C3FC960161;
+	Mon,  3 Jul 2023 05:40:29 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
+	t=1688355643; bh=g9yXXDDfiKFGXYs35wZ62G1hHziQXBpu/IYLkrKqkDg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=pGyWXq8MBiAkxy88cpu9HnHmlxrDWx9q9bPyFEbzm/8m6xDVbsq/XfhJVF5DA73BH
+	 nxih1zM0HFu4D/uCLVzcPjwohOdjmAt5vuLAQxt1Ks1qJjveWeFHi+9+HBIgqzHK3W
+	 lHpfezaRI+Fajwp0SzEsu8ruBL1/bDUV5G8WOL1LREe5FT6u3/lBir2sDcpLym6tQF
+	 Qep99UPR/BJNQqn2Y1ofO8TLkFGRh/XS+8uCJelcyD4aUlgPKvKwOA8V8HVNoeNThY
+	 Yom4DAzrnlvmtaBK3fE3XWIaFZdafHz3HHNFBGuICWXh/qBrYjYpWSMeRgwzq+LwVR
+	 3AwFlPs303oEg==
+Message-ID: <d2144011-9825-7cc8-ae61-cfed27f78fa8@alu.unizg.hr>
+Date: Mon, 3 Jul 2023 05:40:29 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ZKIlibX5wCgWlonq@debian.me>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: [CRASH][BISECTED] 6.4.1 crash in boot
+To: Bagas Sanjaya <bagasdotme@gmail.com>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux LLVM <llvm@lists.linux.dev>
+Cc: linux-kbuild@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Nathan Chancellor <nathan@kernel.org>,
+ Nick Desaulniers <ndesaulniers@google.com>,
+ Guenter Roeck <linux@roeck-us.net>
+References: <9a8e34ad-8a8b-3830-4878-3c2c82e69dd9@alu.unizg.hr>
+ <ZKIoBVzrjZ+Ybxy9@debian.me>
+Content-Language: en-US
+From: Mirsad Goran Todorovac <mirsad.todorovac@alu.unizg.hr>
+In-Reply-To: <ZKIoBVzrjZ+Ybxy9@debian.me>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jul 03, 2023 at 08:34:01AM +0700, Bagas Sanjaya wrote:
-> On Sun, Jul 02, 2023 at 03:46:38PM +0200, Jason A. Donenfeld wrote:
-> > I've got an overdue patch that I still need to submit to netdev, which
-> > I suspect might actually fix this.
-> > 
-> > Can you let me know if
-> > https://git.zx2c4.com/wireguard-linux/patch/?id=54d5e4329efe0d1dba8b4a58720d29493926bed0
-> > solves the problem?
+On 7/3/23 03:44, Bagas Sanjaya wrote:
+> On Sun, Jul 02, 2023 at 06:36:12PM +0200, Mirsad Goran Todorovac wrote:
+>> Hi,
+>>
+>> After new git pull the kernel in Torvalds tree with default debug config
+>> failed to boot with error that occurs prior to mounting filesystems, so there
+>> is no log safe for the screenshot(s) here:
+>>
+>> [1] https://domac.alu.unizg.hr/~mtodorov/linux/crashes/2023-07-02/
+>>
+>> Bisect shows the first bad commit is 2d47c6956ab3 (v6.4-rc2-1-g2d47c6956ab3):
+>>
+>> # good: [98be618ad03010b1173fc3c35f6cbb4447ee2b07] Merge tag 'Smack-for-6.5' of https://github.com/cschaufler/smack-next
+>> git bisect good 98be618ad03010b1173fc3c35f6cbb4447ee2b07
+>> # bad: [f4a0659f823e5a828ea2f45b4849ea8e2dd2984c] drm/i2c: tda998x: Replace all non-returning strlcpy with strscpy
+>> git bisect bad f4a0659f823e5a828ea2f45b4849ea8e2dd2984c
+>> .
+>> .
+>> .
+>> # bad: [2d47c6956ab3c8b580a59d7704aab3e2a4882b6c] ubsan: Tighten UBSAN_BOUNDS on GCC
+>> git bisect bad 2d47c6956ab3c8b580a59d7704aab3e2a4882b6c
+>> # first bad commit: [2d47c6956ab3c8b580a59d7704aab3e2a4882b6c] ubsan: Tighten UBSAN_BOUNDS on GCC
+>>
+>> The architecture is Ubuntu 22.04 with lshw and config give in the attachment.
 > 
-> The reporter on Bugzilla [1] said it fixed the regression, so telling
-> regzbot:
-> 
-> #regzbot fix: 54d5e4329efe0d
+> Can you show early kernel log (something like dmesg)?
 
-That's not correct. I tend to send patches to netdev@, not pulls, so the
-commit is going to be different. Just leave this alone for a bit and
-tidy things up once everything hits the main trees.
+No, machine freezes after those screenfulls and I could only take a
+screenshot.
+  
+> Anyway, I'm adding it to regzbot:
+> 
+> #regzbot ^introduced: 2d47c6956ab3c8
+> #regzbot title: Linux kernel fails to boot due to UBSAN_BOUNDS tightening
+> 
+> Thanks.
+> 
