@@ -1,154 +1,85 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11olkn2032.outbound.protection.outlook.com [40.92.19.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1328B11C81
-	for <regressions@lists.linux.dev>; Mon,  3 Jul 2023 20:13:49 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EH91yi1MYg5AL0I6Va9a1DNdfai7pHQClvssF4386iFba3Hm0vmPbDH3IMDWt3PomhE99riEoikKFWf6Wla8MPm7DB0uNa6PrmkuKJQ8lxK678QcbtKdwSjfZhNYaP+V6VhZK8IVb3xDRBeg0nFsO2zRpnLofq2XPIb2XdeG9/FzbZH8lZS1aAcF7BJU4fyXWUZva1NboRuU/nkWlVlzqvgGiRweLZLVGQfjUsfiRA1HUOzA2icHJBhN4FW8gaaUmVVF3Ka7xLHO5UOTtNS44UmarzfPpKHVsQgQ7qLuHKaR2fFIERsQnYxTHbnBI8d2g7bGICOJWuNMNteJN2w1LA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=UJpCOCzz8X5hfUNpteUV4HEQGKIkFqNEb6daDwKyrNU=;
- b=ayvmYe3Q6V4eJYrAkFEifbYU9ZXVYIkj44ua4SpnKnrGhRdNL1n6tfmOsV79VfrmMk+QKocVKR70Qewm29QJWkk1XQPZZ0Dmu/9gRafusQ7acuh5tL6v9MKYf4REIjP1Iz61LvHdh4tDl4j8GOB/Aw5AndlidPsWO8g8Vv+c2r9iJQxsCH4Var2K+LMWoEnJMay6tlfgCtc5vjSlbhBDLmLHCXSvd2/sCmExbclrqx3qbm2S4iuJF/w6GN0QpZM7OVegH4gSWqYt7vCuiUDdhhTWkkiRPe/AQBGIbHRCqFQoLjKzjrf6uur5B4kySgsZhnRaFebkAyejpjW15u9uKg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hotmail.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UJpCOCzz8X5hfUNpteUV4HEQGKIkFqNEb6daDwKyrNU=;
- b=BxH6xmi+5KfCO0a1u4fyenEfm3b5N4e5h8/6NaxQ9j7nrzAeg5+NRGnp4TZrNtmnfh0dyCvCzCiNfZKcV98jSfsnG330e9Ohi+cbApSzZao0gboX2II28pwusBI3DrExBZqfSpRhNxVFvNxEp7XvEz1ZpDESqiDnwC+NyfC5tKKYVkdfac8MW8NfpkJSWE4KMOt4Dw1IOzyOsqo4BqM5cunzAlINBVTvLkkvFhNBV5r6q2qWR3574Sd74Cd8lq1/+0Lu2V51/tRP2NzAgCLjVsa6QiGhrZdclIkx2qkOh/FHwq7aV4J1dgn+6eTkNBi64wOUuv3toOQOEbhC5ACnIg==
-Received: from RO2P215MB1938.LAMP215.PROD.OUTLOOK.COM (2603:10d6:10:c9::8) by
- RO2P215MB2581.LAMP215.PROD.OUTLOOK.COM (2603:10d6:10:109::9) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6544.24; Mon, 3 Jul 2023 20:13:45 +0000
-Received: from RO2P215MB1938.LAMP215.PROD.OUTLOOK.COM
- ([fe80::6c3:80e7:184a:98bc]) by RO2P215MB1938.LAMP215.PROD.OUTLOOK.COM
- ([fe80::6c3:80e7:184a:98bc%4]) with mapi id 15.20.6544.024; Mon, 3 Jul 2023
- 20:13:45 +0000
-Message-ID:
- <RO2P215MB19383189863E11A1B242E02BA729A@RO2P215MB1938.LAMP215.PROD.OUTLOOK.COM>
-Date: Mon, 3 Jul 2023 15:13:38 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: Fwd: After kernel 6.3.7 or 6.3.8 b43 driver fails
-To: Larry Finger <Larry.Finger@lwfinger.net>, Arnd Bergmann <arnd@arndb.de>,
- Bagas Sanjaya <bagasdotme@gmail.com>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>,
- Linux Wireless <linux-wireless@vger.kernel.org>,
- Netdev <netdev@vger.kernel.org>
-Cc: =?UTF-8?Q?Michael_B=C3=BCsch?= <m@bues.ch>,
- kernel test robot <lkp@intel.com>, Simon Horman <simon.horman@corigine.com>,
- Kalle Valo <kvalo@kernel.org>
-References: <27829c69-515c-36a6-4beb-3210225f8936@gmail.com>
- <b9428e48-f0f9-46f6-892c-4c8834c930c4@app.fastmail.com>
- <RO2P215MB193850DDADD38492BEC8CC2FA720A@RO2P215MB1938.LAMP215.PROD.OUTLOOK.COM>
- <a3bc5eb5-9639-8016-36ab-105abc8c0ca3@gmail.com>
- <69b98eb4-2c4e-fe75-90b4-4b08505a595a@lwfinger.net>
- <RO2P215MB193879B2D99DD0BAF59EFA92A721A@RO2P215MB1938.LAMP215.PROD.OUTLOOK.COM>
- <e0a08449-554a-4a28-ac50-7051866eb95e@app.fastmail.com>
- <da80b806-de3f-c7ea-0352-cd23e0f6dd65@lwfinger.net>
- <RO2P215MB1938BD13105900F3525E0FE7A721A@RO2P215MB1938.LAMP215.PROD.OUTLOOK.COM>
- <67faf4f4-f36c-3ff7-03b8-cd259e4a5548@lwfinger.net>
- <RO2P215MB1938BA68BBB683EC696F4BFAA726A@RO2P215MB1938.LAMP215.PROD.OUTLOOK.COM>
- <6afa0ebc-1d3f-8cba-79dc-8ddfe13c296a@lwfinger.net>
- <RO2P215MB193898F3008E0F390CCEBC87A726A@RO2P215MB1938.LAMP215.PROD.OUTLOOK.COM>
- <89429625-5b5a-d0d3-ae82-0b7204262980@lwfinger.net>
-Content-Language: en-US
-From: Sardonimous <sardonimous@hotmail.com>
-In-Reply-To: <89429625-5b5a-d0d3-ae82-0b7204262980@lwfinger.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-TMN: [Yb/hbVDHc5YTJxrvphA5UDXemcqBem+KTQwwHJXKIW/eNM5OAPwCwdvYJ1QDNW8+]
-X-ClientProxiedBy: CH0PR03CA0397.namprd03.prod.outlook.com
- (2603:10b6:610:11b::30) To RO2P215MB1938.LAMP215.PROD.OUTLOOK.COM
- (2603:10d6:10:c9::8)
-X-Microsoft-Original-Message-ID:
- <840334db-8a70-8ded-5292-c8ef92e4eb4c@hotmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78A103C3C
+	for <regressions@lists.linux.dev>; Mon,  3 Jul 2023 23:09:29 +0000 (UTC)
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1b80b3431d2so24850205ad.1
+        for <regressions@lists.linux.dev>; Mon, 03 Jul 2023 16:09:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1688425769; x=1691017769;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=pCViWeoaoIqREKt5VQUB2Bo7LBAEFHy3aH/YsBHaAQs=;
+        b=dCdJNt2Xiw23cB9tFdmwx5uKIJ4qvUZvheuWdeuGCD43+kPE10UNTwc4n5mCkpY9/a
+         8+OzFkYA2wSAUk4FRuP3lsJZEGTFYbr+r4VWNdQlgUbYWiIzMf5ejNEAejGfIUxVxFJN
+         F8eekGEpb1gmebjrsQgqzwfzeeIkrSg3Gyx80=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688425769; x=1691017769;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pCViWeoaoIqREKt5VQUB2Bo7LBAEFHy3aH/YsBHaAQs=;
+        b=UwmbKdbN5+wphIW2I4ocA/J7iajqYU3FpULdNb4qfLYwdbsBstTTNVDsBaMlXPDEYs
+         VZNXvabJyY/mRzMYXMyoLvFx6ZnP+k0CqSgfFUJZjuZ8ickJsZ+EPhp/lLaHfeeF4JH2
+         VYa0JclNYY5L7WzJ9scx4ih0iLBapYjOme77pldJ2Vz1TE0OVAbGWvRI+OJA/RAlJxqq
+         gfT7zKUUj2BQ7PH7gMcBJPi20oi7Zl1AjKaZgLeExLKxkq/SObwnPQIrG5TTre2lUXiS
+         pmijiMOx9BjBhGR+f6tdeSiFVjHrfaQfDiVvQs8SU5FCI3QbEpR/UYrhzjTFSbIIfneM
+         uvuA==
+X-Gm-Message-State: ABy/qLYh8TWbPpTlwm2WobWV92fFyeSqfd6oMxZm1ZQsj0FRfd0Va35Y
+	zqAuWQnxDoVezwiU1RJJPbeRCQ==
+X-Google-Smtp-Source: APBJJlFh3LnVeIXMnt5LxB32yJcfVGC7UQ9seGjEUnsN/8mDc5cnwDrU21T2jUshyhoTuvYSsMA5qA==
+X-Received: by 2002:a17:903:2446:b0:1b8:1c4f:4f72 with SMTP id l6-20020a170903244600b001b81c4f4f72mr11153985pls.61.1688425768750;
+        Mon, 03 Jul 2023 16:09:28 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id j23-20020a170902759700b001b53953f306sm15768832pll.178.2023.07.03.16.09.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Jul 2023 16:09:28 -0700 (PDT)
+Date: Mon, 3 Jul 2023 16:09:27 -0700
+From: Kees Cook <keescook@chromium.org>
+To: Mirsad Goran Todorovac <mirsad.todorovac@alu.unizg.hr>
+Cc: Guenter Roeck <linux@roeck-us.net>,
+	Bagas Sanjaya <bagasdotme@gmail.com>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux LLVM <llvm@lists.linux.dev>, linux-kbuild@vger.kernel.org,
+	Linux Regressions <regressions@lists.linux.dev>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	linux-hardening@vger.kernel.org
+Subject: Re: [CRASH][BISECTED] 6.4.1 crash in boot
+Message-ID: <202307031606.3FD9D0D@keescook>
+References: <9a8e34ad-8a8b-3830-4878-3c2c82e69dd9@alu.unizg.hr>
+ <ZKIoBVzrjZ+Ybxy9@debian.me>
+ <202307022018.B26F5795@keescook>
+ <625e951e-9922-d15d-5520-e8cd5eba1995@roeck-us.net>
+ <4fa56264-f188-46f9-cc77-117b469b3328@roeck-us.net>
+ <2b1a4f49-ba18-0246-af09-4e4133814411@alu.unizg.hr>
+ <202307022230.6121D6896@keescook>
+ <ed3e4315-b149-2f9e-70d4-45d7f83b9922@alu.unizg.hr>
+ <202307031149.823F9A3@keescook>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: RO2P215MB1938:EE_|RO2P215MB2581:EE_
-X-MS-Office365-Filtering-Correlation-Id: f61c9050-69e6-40ff-337e-08db7c0200d1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	R1ZeQh1DYIzHlqyDj5k9VIl2KPjwaCXju5PTWJyCHsk3t/U8B90NQv/E7K9HUXPENFjE8SeMtTmg4NQF2GQapjnKlsoH2tcY+d1c97p4h9MDUAu2eq+N0UlbQD6f6+nrQBvTmXXxN8JRU0qPcE1Ge5UHjpIvXTJuC50gNAbZR8UwwtoF+H4OOoenJOPv0RShqzglnA8ihHfEGQUj2gXhYR+ueyonRv2O0Whivm+4zG7txsfVJiB9rTW/AqoJYc0nLvYq9FUyA7bzw46WvlpLX5T4O32YnWRtnSBXFmDBT0b5gvKkWF8gnjye7ONwL+99brzHWFNmTwSM/T7BDmu3zAcpk1M2KjTWE5uMgPTHAUOfOYGzRftGgmfi7Ek4PnMmwvpD9fmXEEVLPXu3vtsWpAnq1iLUBQyXv+pLPVMBVaDff+DQcAaCf80DCBlllTaHCAzvEjJGL1RclwUAiTSAOjWrCG3cLPZAImyOYVv1N0oiMrQnHGsAtWBHIKpAaWLpX+aztkCalzUTigUlsNzL0aaTXT0PGthOiXREevFG3GkaV40AqLk9OYvF9o5X+q9O
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?RHBnbXZJcnY4bDhzazN2YnlKTnUrTlhBOUdidVJxUzBSUGZYSWJFNnNSdDc5?=
- =?utf-8?B?VjlEZW01eXlwaUtyWmFUQUJCQUprRy9HUFFDRW10QS9uWTZsMDdGamF6NTJ1?=
- =?utf-8?B?eGpERmVGMkE0Vjl1eFVIV1ZZeGZWSGJlbzdLZUprWStXNDNxVTRZK082bE4w?=
- =?utf-8?B?ZUd4Zk9DQmJsSS93My80UEVYY25HZkQ3WlBGcnZveCtMWFA2YnNNYklhWlFO?=
- =?utf-8?B?L28zdVluL2tpRU5iRHdjMVQ0a0JuT0VpOTZOVk1pQVYzcGpOcFBzUnduMXB2?=
- =?utf-8?B?SUNHWGE1R2YwZ0FNaWlDd3R4VkVTTE5ISStzTHRwalFiTVkrREdBRFlNakhV?=
- =?utf-8?B?ajRlNldtUU9TQ3o1alJwL254M290U0RpeGJXeENReFBNck93NVdqSWpaMDF5?=
- =?utf-8?B?VDlSMWhNbW1UZFlZV3JSVStqUUJ1RjFsbmlFZURQdzFURCtET0VGZ3k0NDJD?=
- =?utf-8?B?RGFna284QWwra2RlQll2TVZNNURiZjQ1TWVQcUhwKzVsZXFpYUZ1ZTE4clE3?=
- =?utf-8?B?UzNRMUF2Wk5GUXlmSHdIaVBRQkdid1B1YUxrK2dqTlUwK3BrN3RJYkEzS2Zq?=
- =?utf-8?B?N3IvdUt0RXd1NzVHTWVvSGJSS2g4bkNvQlFvV1EzTUVSM09zR2JnSDFidVlE?=
- =?utf-8?B?S25YK3AzZHdLMmhxRm44M3BpcjUrb0ltL1FEMHJYMXlCOFkxdjJYNTYzQ1FN?=
- =?utf-8?B?Wkp6d0VjQUQ5QTNJbUZONmtpYzdaOGxVbS9DN3hBNlhjREJMcFcwdFFXOWow?=
- =?utf-8?B?VGlhMDM5MUpYdmJTT3RhdERaL1JESXhxbGZTNWNZL0xOOGdYVlQwV05lc3JC?=
- =?utf-8?B?amtveE8yMmVHSUdVY1NxN091S2xrUmRUbFRYdzAyTU1VdzJXWXhvR0kwYThn?=
- =?utf-8?B?QjlJTW03L1NHQ3hKZW5HOXJST0t2VXI5NTJVc205WXB0YTE2VncwdzZiU2Ni?=
- =?utf-8?B?VkpQOXNuWDB4bS8vNW1abWZkUmVQeWhhSU5kQW50clVRMEZJZWxSc2FMUFpQ?=
- =?utf-8?B?TnVhUUVrL2swUmVaMlIxdktvamo2Mk0xeFhNbzRmZ2ZkSURCVm5qU1RqcTRB?=
- =?utf-8?B?YkkxRHJNcDk2V0JGOVEyYnB3b000SEZmYWxibW4zZS9qU1o3Z2E4SGYrc3NP?=
- =?utf-8?B?Y29QaDFPYndVMGdIMmc1MEJsVG5rS3NrWmhUL2VRTTlUQ1pZalRyUHE5V0dB?=
- =?utf-8?B?ZzFjZXpPMkZraFpReCtNQk04SjlNeHdLTk14NXpMbGJ5RFVLQTlqdFlzVGhn?=
- =?utf-8?B?RG1adE1Ma0dyZk1RcktWVStCNmRnK3grYitlR2xBQXBGR3dlc1BxSm5VY0Ry?=
- =?utf-8?B?LzJEUGFGRjJadkpwbDg2eC9xRkR5eHFMbDdPRjkyMUZ4cndMcmdmTkZZc01G?=
- =?utf-8?B?Wm81T29xUDQ1YzZHbkN5ZDVuaXlvTCtvc2ZKZ3MxSjQ5c0QzT1h1M1RMRzBK?=
- =?utf-8?B?NG02VVNOUnd3STFZSnhpMU51M0M0UFQyUTR6U2JJRjVyM25LajE0YnkvODFh?=
- =?utf-8?B?THpkNWRpU2lEZnJFSW9yRVpINEt0Um5URndIY2RtQUI3WmdYUHdpS3dGR2xW?=
- =?utf-8?B?M011S0w5UFNMZzJVOVJmdFhVSWZWenp4ck8zRmpDbDNta2JSZk4rb1M1ZTlQ?=
- =?utf-8?B?NTI5YmZiS0w1N0lQRXAxbHlKbEV5ZSs5dTk2aktac2hYZmFLT0RaWlFGR1Zt?=
- =?utf-8?B?c2xCVU9SWjczcHczZ1RlNHU4dk13TXhZcW5jRGZhWXJOVXVIalo3QTJzeUVW?=
- =?utf-8?Q?0ze8jqGQjR07OzMOzQ=3D?=
-X-OriginatorOrg: sct-15-20-4755-11-msonline-outlook-7d2c5.templateTenant
-X-MS-Exchange-CrossTenant-Network-Message-Id: f61c9050-69e6-40ff-337e-08db7c0200d1
-X-MS-Exchange-CrossTenant-AuthSource: RO2P215MB1938.LAMP215.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jul 2023 20:13:45.4559
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: RO2P215MB2581
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202307031149.823F9A3@keescook>
 
+On Mon, Jul 03, 2023 at 12:03:23PM -0700, Kees Cook wrote:
+> Cool. xhci-hub is in your backtrace, and the above patch was made for
+> something very similar (though, again, I don't see why you're getting a
+> _crash_, it should _warn_ and continue normally). And, actually, also
+> include this patch:
+> https://lore.kernel.org/lkml/20230614181307.gonna.256-kees@kernel.org/
 
-On 7/3/23 12:35 PM, Larry Finger wrote:
-> Sorry that it took so long to get back to you.
->
-> For my ppc32, there is no regression. It took a while to learn the 
-> pio=1 and qos=0 are BOTH needed. That I do not understand, but with 
-> both set, the device works with kernel 6.4 and all earlier kernels 
-> that I tried. Fortunately, I did not need to do the entire bisection.
->
-> I am working on eliminating the warning that appears with qos=0, but 
-> it does not inhibit operations.
->
-> @Bagas Sanjaya: Please mark this "regression" as invalid.
->
-> Larry
->
-I appreciate the time you've spent on this.  I did try 6.4 again (6.4.1 
-actually) and wlan0 did eventually come active.  When I tried this 
-before, I probably got freaked by the number of WARNINGs when it wasn't 
-connecting, but perhaps it was failing for some other reason.  I didn't 
-realize they were only warnings.
+This is now in Linus's tree:
+09b69dd4378b ("usb: ch9: Replace 1-element array with flexible array")
 
-$ uptime
-  15:10:52 up 9 min,  3 users,  load average: 0.11, 0.92, 0.85
+Please also still try with the first patch I mentioned, which is very similar:
+https://lore.kernel.org/lkml/20230629190900.never.787-kees@kernel.org/
 
-$ journalctl --boot | grep "WARNING.*__ieee80211_stop_queue+0xcc/0xe0"  
-| wc -l
-111
+-Kees
 
-Regards.
-
+-- 
+Kees Cook
