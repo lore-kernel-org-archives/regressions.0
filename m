@@ -1,84 +1,116 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB63A4697
-	for <regressions@lists.linux.dev>; Tue,  4 Jul 2023 08:30:51 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qGbQr-0002q1-59; Tue, 04 Jul 2023 10:30:45 +0200
-Message-ID: <00d9ec8a-5a44-01ec-a51f-ac898152e22c@leemhuis.info>
-Date: Tue, 4 Jul 2023 10:30:44 +0200
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F043D468B
+	for <regressions@lists.linux.dev>; Tue,  4 Jul 2023 08:43:41 +0000 (UTC)
+X-SpamFilter-By: ArmorX SpamTrap 5.77 with qID 3648ce0vB023412, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
+	by rtits2.realtek.com.tw (8.15.2/2.81/5.90) with ESMTPS id 3648ce0vB023412
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+	Tue, 4 Jul 2023 16:38:40 +0800
+Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
+ RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.32; Tue, 4 Jul 2023 16:38:43 +0800
+Received: from RTEXMBS01.realtek.com.tw (172.21.6.94) by
+ RTEXMBS04.realtek.com.tw (172.21.6.97) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.7; Tue, 4 Jul 2023 16:38:43 +0800
+Received: from RTEXMBS01.realtek.com.tw ([fe80::9cb8:8d5:b6b3:213b]) by
+ RTEXMBS01.realtek.com.tw ([fe80::9cb8:8d5:b6b3:213b%5]) with mapi id
+ 15.01.2375.007; Tue, 4 Jul 2023 16:38:43 +0800
+From: Kailang <kailang@realtek.com>
+To: Takashi Iwai <tiwai@suse.de>, "Joseph C. Sible" <josephcsible@gmail.com>
+CC: Bagas Sanjaya <bagasdotme@gmail.com>,
+        "regressions@lists.linux.dev"
+	<regressions@lists.linux.dev>,
+        "perex@perex.cz" <perex@perex.cz>, "tiwai@suse.com" <tiwai@suse.com>,
+        "alsa-devel@alsa-project.org"
+	<alsa-devel@alsa-project.org>
+Subject: RE: Fwd: [Bug 217440] New: ALC236 audio disappears from HP 15z-fc000 on warm boot
+Thread-Topic: Fwd: [Bug 217440] New: ALC236 audio disappears from HP 15z-fc000
+ on warm boot
+Thread-Index: AQHZhdSOD7kY6mXBDkGA3ryhp811r69Yu5SAgAASNACAAA22gIAA7n+AgAEJrYCABLe/YIAJNIWAgAIHAcD//4tyAIAB8UZw///vxgCADzWhgIABfgWAgACUPoCAAPnsAIAAmlKwgAA8s4CAAQ8boP//kIuAABWnYVAAAIR9gAAqhW/A//+7roD//3k98IAAkYyAgAAKhQCAAAZZgIAAiY6AgADw04CAALC0AIAA6TqAgBQJp4CAAhpFAP/xaKKg
+Date: Tue, 4 Jul 2023 08:38:43 +0000
+Message-ID: <f4969213b5a14cc5a11befb4df861481@realtek.com>
+References: <bug-217440-225600@https.bugzilla.kernel.org/>
+	<CABpewhE4REgn9RJZduuEU6Z_ijXNeQWnrxO1tg70Gkw=F8qNYg@mail.gmail.com>
+	<ZGB0cVVI7OgaJU6t@debian.me>
+	<CABpewhGJE7-k52j8L2kJ2zKupgp3Ma+LdZazzzV4w1Bgihp7nw@mail.gmail.com>
+	<87cz338ix4.wl-tiwai@suse.de>
+	<CABpewhF01AK4cFPbwYVvKR9yWaO7o-ZE-2+MZjYSUF0BKUdYvw@mail.gmail.com>
+	<874jodlnmi.wl-tiwai@suse.de>	<415d4bc84aa74c74af913048f28b42a9@realtek.com>
+	<87fs7mdofi.wl-tiwai@suse.de>	<7da2fdfdae614b1c98deda6e11ca34eb@realtek.com>
+	<87353kd8b9.wl-tiwai@suse.de>	<1170325957764b4cbd7cd3639575f285@realtek.com>
+	<CABpewhGBakDSBLKZ1cr2=OMspuu3qyYwZrsXUggQ3vt8gsD88A@mail.gmail.com>
+	<873536js7q.wl-tiwai@suse.de>
+	<CABpewhE0NAC-Q=iqG2Ba=XhT7SXsWy18wQGYUaopzmKDfFxyPw@mail.gmail.com>
+	<2c1fcbc00bb44d66a29ac1c1e4bec5ad@realtek.com>
+	<CABpewhFthKG97dPiQC4JhGx9sapX9Yu5rWABQjpY95TSA+eawA@mail.gmail.com>
+	<485f99149508488080d563144454040e@realtek.com>
+	<CABpewhGkvWtM+9J=mx3vw0QY=OBB5OYCxzX3nzVffvFS4QazPA@mail.gmail.com>
+	<2831c55638a5431ca9e37d9caf365ed2@realtek.com>
+	<CABpewhGiMJUpyBA6=D9_-YA6=5rjR2R0RHUZeg+cWcjtzuCoZQ@mail.gmail.com>
+	<3c27f0455d6e4bd1a68115bd25bf1a12@realtek.com>
+	<CABpewhEptq0+W_71U__8iQ4+LNtYSUB9C+0bcS2Hw-5mnj9viQ@mail.gmail.com>
+	<009474f04d0b45c69a0e42e8622b7a86@realtek.com>	<87h6rhcef2.wl-tiwai@suse.de>
+	<0990300d759846d890de9c92fcad9a9d@realtek.com>
+	<CABpewhERnOH1qkkJ5_JJUZkz1_8oxD9aR5VBs1vsURAG7Eu_Ew@mail.gmail.com>
+	<878rctcavz.wl-tiwai@suse.de>	<874jnhc9u4.wl-tiwai@suse.de>
+	<CABpewhHG2+s8_6r6vChm2g5tD8ALW_SWJWubPRXWzTJB2aFR9g@mail.gmail.com>
+	<875y7vbxpg.wl-tiwai@suse.de>
+	<CABpewhHDnvn4v+uCpsaLHB+biw-f59tdTiCyFkicHnewXHYDNg@mail.gmail.com>
+	<87wn0aa1s4.wl-tiwai@suse.de>
+	<CABpewhFg=7+JR6v=zhi0_Hm9+S64DLOHKeG2pS-W7z-vNpu_5Q@mail.gmail.com>
+ <87leg7x4h7.wl-tiwai@suse.de>
+In-Reply-To: <87leg7x4h7.wl-tiwai@suse.de>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-originating-ip: [172.22.102.106]
+x-kse-serverinfo: RTEXMBS04.realtek.com.tw, 9
+x-kse-antispam-interceptor-info: fallback
+x-kse-antivirus-interceptor-info: fallback
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: Fwd: After kernel 6.3.7 or 6.3.8 b43 driver fails
-Content-Language: en-US, de-DE
-To: Sardonimous <sardonimous@hotmail.com>,
- Larry Finger <Larry.Finger@lwfinger.net>, Arnd Bergmann <arnd@arndb.de>,
- Bagas Sanjaya <bagasdotme@gmail.com>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>,
- Linux Wireless <linux-wireless@vger.kernel.org>,
- Netdev <netdev@vger.kernel.org>
-Cc: =?UTF-8?Q?Michael_B=c3=bcsch?= <m@bues.ch>,
- kernel test robot <lkp@intel.com>, Simon Horman <simon.horman@corigine.com>,
- Kalle Valo <kvalo@kernel.org>
-References: <27829c69-515c-36a6-4beb-3210225f8936@gmail.com>
- <b9428e48-f0f9-46f6-892c-4c8834c930c4@app.fastmail.com>
- <RO2P215MB193850DDADD38492BEC8CC2FA720A@RO2P215MB1938.LAMP215.PROD.OUTLOOK.COM>
- <a3bc5eb5-9639-8016-36ab-105abc8c0ca3@gmail.com>
- <69b98eb4-2c4e-fe75-90b4-4b08505a595a@lwfinger.net>
- <RO2P215MB193879B2D99DD0BAF59EFA92A721A@RO2P215MB1938.LAMP215.PROD.OUTLOOK.COM>
- <e0a08449-554a-4a28-ac50-7051866eb95e@app.fastmail.com>
- <da80b806-de3f-c7ea-0352-cd23e0f6dd65@lwfinger.net>
- <RO2P215MB1938BD13105900F3525E0FE7A721A@RO2P215MB1938.LAMP215.PROD.OUTLOOK.COM>
- <67faf4f4-f36c-3ff7-03b8-cd259e4a5548@lwfinger.net>
- <RO2P215MB1938BA68BBB683EC696F4BFAA726A@RO2P215MB1938.LAMP215.PROD.OUTLOOK.COM>
- <6afa0ebc-1d3f-8cba-79dc-8ddfe13c296a@lwfinger.net>
- <RO2P215MB193898F3008E0F390CCEBC87A726A@RO2P215MB1938.LAMP215.PROD.OUTLOOK.COM>
- <89429625-5b5a-d0d3-ae82-0b7204262980@lwfinger.net>
- <RO2P215MB19383189863E11A1B242E02BA729A@RO2P215MB1938.LAMP215.PROD.OUTLOOK.COM>
-From: "Linux regression tracking #update (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <RO2P215MB19383189863E11A1B242E02BA729A@RO2P215MB1938.LAMP215.PROD.OUTLOOK.COM>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1688459452;39845b4f;
-X-HE-SMSGID: 1qGbQr-0002q1-59
+X-KSE-AntiSpam-Interceptor-Info: fallback
+X-KSE-ServerInfo: RTEXH36505.realtek.com.tw, 9
+X-KSE-AntiSpam-Interceptor-Info: fallback
+X-KSE-Antivirus-Interceptor-Info: fallback
+X-KSE-AntiSpam-Interceptor-Info: fallback
 
-On 03.07.23 22:13, Sardonimous wrote:
-> On 7/3/23 12:35 PM, Larry Finger wrote:
->> Sorry that it took so long to get back to you.
->>
->> For my ppc32, there is no regression. It took a while to learn the
->> pio=1 and qos=0 are BOTH needed. That I do not understand, but with
->> both set, the device works with kernel 6.4 and all earlier kernels
->> that I tried. Fortunately, I did not need to do the entire bisection.
->>
->> I am working on eliminating the warning that appears with qos=0, but
->> it does not inhibit operations.
->>
->> @Bagas Sanjaya: Please mark this "regression" as invalid.
->>
->> Larry
->>
-> I appreciate the time you've spent on this. 
-
-Yeah, thx from my side, too.
-
-#regzbot invalid: wasn't a regression after all
-#regzbot ignore-activity
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
-
-
+DQpCZWxvdyB3YXMgdGhlIHJlbGF0aW9uIHBhdGNoZXMuDQpodHRwczovL2dpdC5rZXJuZWwub3Jn
+L3B1Yi9zY20vbGludXgva2VybmVsL2dpdC90aXdhaS9zb3VuZC5naXQvY29tbWl0Lz9pZD01YWVj
+OTg5MTMwOTVlZDNiNDQyNGVkNmM1ZmRlYjY5NjRlOTczNGRhDQpodHRwczovL2dpdC5rZXJuZWwu
+b3JnL3B1Yi9zY20vbGludXgva2VybmVsL2dpdC90aXdhaS9zb3VuZC5naXQvY29tbWl0Lz9pZD1m
+MzA3NDFjZGVkNjJmODdiYjRiMWNjNThiYzYyN2YwNzZhYmNhYmE4DQoNCkl0IHNob3dzIEFMQzIz
+NiBjb2RlYyBub3QgbmVlZCB0byBydW4gcHVsbCBsb3cgM2sgc2V0dGluZy4NCg0KSSB0cmFjZSB3
+aW5kb3dzIGNvZGUsIGZpbmQgaXQgYWRkIGRlbGF5IGZvciByZWFkIE1JQyBqYWNrIGRldGVjdGVk
+IGF0IGJvb3RpbmcgdGltZS4NCg0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZy
+b206IFRha2FzaGkgSXdhaSA8dGl3YWlAc3VzZS5kZT4NCj4gU2VudDogU3VuZGF5LCBKdW5lIDI1
+LCAyMDIzIDU6NDMgUE0NCj4gVG86IEpvc2VwaCBDLiBTaWJsZSA8am9zZXBoY3NpYmxlQGdtYWls
+LmNvbT4NCj4gQ2M6IEthaWxhbmcgPGthaWxhbmdAcmVhbHRlay5jb20+OyBCYWdhcyBTYW5qYXlh
+IDxiYWdhc2RvdG1lQGdtYWlsLmNvbT47DQo+IHJlZ3Jlc3Npb25zQGxpc3RzLmxpbnV4LmRldjsg
+cGVyZXhAcGVyZXguY3o7IHRpd2FpQHN1c2UuY29tOw0KPiBhbHNhLWRldmVsQGFsc2EtcHJvamVj
+dC5vcmcNCj4gU3ViamVjdDogUmU6IEZ3ZDogW0J1ZyAyMTc0NDBdIE5ldzogQUxDMjM2IGF1ZGlv
+IGRpc2FwcGVhcnMgZnJvbSBIUA0KPiAxNXotZmMwMDAgb24gd2FybSBib290DQo+IA0KPiANCj4g
+RXh0ZXJuYWwgbWFpbC4NCj4gDQo+IA0KPiANCj4gT24gU2F0LCAyNCBKdW4gMjAyMyAwMzozNjox
+MSArMDIwMCwNCj4gSm9zZXBoIEMuIFNpYmxlIHdyb3RlOg0KPiA+DQo+ID4gT24gU3VuLCBKdW4g
+MTEsIDIwMjMgYXQgMzozNuKAr0FNIFRha2FzaGkgSXdhaSA8dGl3YWlAc3VzZS5kZT4gd3JvdGU6
+DQo+ID4gPg0KPiA+ID4gVGhhbmtzIGZvciBjaGVja2luZy4gIFNvIHRoZSBhZGRpdGlvbmFsIGRl
+bGF5IGRpZG4ndCBoZWxwIGF0IGFsbCwNCj4gPiA+IGkuZS4gaXQncyBubyB0aW1pbmcgaXNzdWUu
+ICBXZSBuZWVkIHRvIGZpZ3VyZSBvdXQgd2hpY2ggdmVyYg0KPiA+ID4gYWN0dWFsbHkgYnJlYWtz
+IHRoaW5ncy4gIE9oIHdlbGwuDQo+ID4NCj4gPiBXYXMgdGhlcmUgc29tZXRoaW5nIGVsc2Ugc3Bl
+Y2lmaWMgeW91IHdhbnRlZCBtZSB0byB0cnkgZm9yIHRoaXM/IElmDQo+ID4gbm90LCB3aGF0IGRv
+IHlvdSB0aGluayB0aGUgbmV4dCBzdGVwcyB0byBnZXQgdGhpcyBmaXhlZCBhcmU/IERvIHlvdQ0K
+PiA+IHRoaW5rIGl0IG1pZ2h0IGJlIGdvb2QgdG8ganVzdCBjb29rIHRoZSBwYXJ0aWFsIHJldmVy
+dCBJIHBvc3RlZCBhDQo+ID4gd2hpbGUgYmFjayBhZnRlciBhbGw/DQo+IA0KPiBJdCdzIHJhdGhl
+ciBhIGNhbGwgdG8gS2FpbGFuZywgYWZ0ZXIgYWxsLg0KPiBJJ20gZmluZSB3aXRoIGFueSB3YXkg
+YXMgbG9uZyBhcyBpdCBhdm9pZHMgZnVydGhlciByZWdyZXNzaW9ucy4NCj4gDQo+IA0KPiBUYWth
+c2hpDQo+IA0KPiAtLS0tLS1QbGVhc2UgY29uc2lkZXIgdGhlIGVudmlyb25tZW50IGJlZm9yZSBw
+cmludGluZyB0aGlzIGUtbWFpbC4NCg==
