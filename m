@@ -1,157 +1,79 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 894E73FEC
-	for <regressions@lists.linux.dev>; Tue,  4 Jul 2023 08:45:53 +0000 (UTC)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id E36F92205A;
-	Tue,  4 Jul 2023 08:45:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1688460351; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38427539F
+	for <regressions@lists.linux.dev>; Tue,  4 Jul 2023 09:41:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1688463713;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=u+/1M9IITV295Htp9Oc2MVJuPU/3zRIiUJmFmSJnoFc=;
-	b=Rs2lBXkzfMcbbREZPNzL4jttuspe0ClzXfxKVwbsU4Biim4ZmW6ePj8aOPHu9RrWG6uKC8
-	Akf6350dM+FJ8VRTLjVVtbgGFHD3sHkMyr/RDJtFLqp5JN3/8ZlMJafbq/7HDtjymmFDa/
-	P2+LTa9v4noS6miWnlsqTyuWZXpYbeg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1688460351;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=u+/1M9IITV295Htp9Oc2MVJuPU/3zRIiUJmFmSJnoFc=;
-	b=TQ8RRbEDbxfyqElLN2cR+3XnrBVMOUZwqBBCZmG0SZhUd+3YZyrJqgcrZinY9Bsifobd9Q
-	x8ZHePHCvb74irDg==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	bh=zLSEosjlinrCxKCLRBdlkkdM07HJXUp3DKjWoDpchWo=;
+	b=cvidfH/iRjstAGw9GaV/9MTtzKMNYiO3hp8pPMoJy2PJJMYupLKrjXp5eTdqfNn/qZ6EAh
+	qawk+bY5Py0bxnE9u9Uk/UDK9OFlT3+LdbxBYMm8uU4K3hoH5n5erNvSlKjnyacIsKb3Ty
+	Fo1KBWPyC+xFXTtMIued/HhnQX6q8JU=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-447-UDuYkHNINm63hneICkQI6g-1; Tue, 04 Jul 2023 05:41:47 -0400
+X-MC-Unique: UDuYkHNINm63hneICkQI6g-1
+Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id AD0E1133F7;
-	Tue,  4 Jul 2023 08:45:51 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-	by imap2.suse-dmz.suse.de with ESMTPSA
-	id q3ycKD/co2RONwAAMHmgww
-	(envelope-from <tiwai@suse.de>); Tue, 04 Jul 2023 08:45:51 +0000
-Date: Tue, 04 Jul 2023 10:45:51 +0200
-Message-ID: <87cz182hfk.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Kailang <kailang@realtek.com>
-Cc: "Joseph C. Sible" <josephcsible@gmail.com>,
-	Bagas Sanjaya <bagasdotme@gmail.com>,
-	"regressions@lists.linux.dev"
-	<regressions@lists.linux.dev>,
-	"perex@perex.cz" <perex@perex.cz>,
-	"tiwai@suse.com" <tiwai@suse.com>,
-	"alsa-devel@alsa-project.org"
-	<alsa-devel@alsa-project.org>
-Subject: Re: Fwd: [Bug 217440] New: ALC236 audio disappears from HP 15z-fc000 on warm boot
-In-Reply-To: <f4969213b5a14cc5a11befb4df861481@realtek.com>
-References: <bug-217440-225600@https.bugzilla.kernel.org/>
-	<CABpewhE4REgn9RJZduuEU6Z_ijXNeQWnrxO1tg70Gkw=F8qNYg@mail.gmail.com>
-	<ZGB0cVVI7OgaJU6t@debian.me>
-	<CABpewhGJE7-k52j8L2kJ2zKupgp3Ma+LdZazzzV4w1Bgihp7nw@mail.gmail.com>
-	<87cz338ix4.wl-tiwai@suse.de>
-	<CABpewhF01AK4cFPbwYVvKR9yWaO7o-ZE-2+MZjYSUF0BKUdYvw@mail.gmail.com>
-	<874jodlnmi.wl-tiwai@suse.de>
-	<415d4bc84aa74c74af913048f28b42a9@realtek.com>
-	<87fs7mdofi.wl-tiwai@suse.de>
-	<7da2fdfdae614b1c98deda6e11ca34eb@realtek.com>
-	<87353kd8b9.wl-tiwai@suse.de>
-	<1170325957764b4cbd7cd3639575f285@realtek.com>
-	<CABpewhGBakDSBLKZ1cr2=OMspuu3qyYwZrsXUggQ3vt8gsD88A@mail.gmail.com>
-	<873536js7q.wl-tiwai@suse.de>
-	<CABpewhE0NAC-Q=iqG2Ba=XhT7SXsWy18wQGYUaopzmKDfFxyPw@mail.gmail.com>
-	<2c1fcbc00bb44d66a29ac1c1e4bec5ad@realtek.com>
-	<CABpewhFthKG97dPiQC4JhGx9sapX9Yu5rWABQjpY95TSA+eawA@mail.gmail.com>
-	<485f99149508488080d563144454040e@realtek.com>
-	<CABpewhGkvWtM+9J=mx3vw0QY=OBB5OYCxzX3nzVffvFS4QazPA@mail.gmail.com>
-	<2831c55638a5431ca9e37d9caf365ed2@realtek.com>
-	<CABpewhGiMJUpyBA6=D9_-YA6=5rjR2R0RHUZeg+cWcjtzuCoZQ@mail.gmail.com>
-	<3c27f0455d6e4bd1a68115bd25bf1a12@realtek.com>
-	<CABpewhEptq0+W_71U__8iQ4+LNtYSUB9C+0bcS2Hw-5mnj9viQ@mail.gmail.com>
-	<009474f04d0b45c69a0e42e8622b7a86@realtek.com>
-	<87h6rhcef2.wl-tiwai@suse.de>
-	<0990300d759846d890de9c92fcad9a9d@realtek.com>
-	<CABpewhERnOH1qkkJ5_JJUZkz1_8oxD9aR5VBs1vsURAG7Eu_Ew@mail.gmail.com>
-	<878rctcavz.wl-tiwai@suse.de>
-	<874jnhc9u4.wl-tiwai@suse.de>
-	<CABpewhHG2+s8_6r6vChm2g5tD8ALW_SWJWubPRXWzTJB2aFR9g@mail.gmail.com>
-	<875y7vbxpg.wl-tiwai@suse.de>
-	<CABpewhHDnvn4v+uCpsaLHB+biw-f59tdTiCyFkicHnewXHYDNg@mail.gmail.com>
-	<87wn0aa1s4.wl-tiwai@suse.de>
-	<CABpewhFg=7+JR6v=zhi0_Hm9+S64DLOHKeG2pS-W7z-vNpu_5Q@mail.gmail.com>
-	<87leg7x4h7.wl-tiwai@suse.de>
-	<f4969213b5a14cc5a11befb4df861481@realtek.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 6201C3814950;
+	Tue,  4 Jul 2023 09:41:47 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.195])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 81309492C13;
+	Tue,  4 Jul 2023 09:41:46 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+In-Reply-To: <ZKPgkgiddAl9qddT@gondor.apana.org.au>
+References: <ZKPgkgiddAl9qddT@gondor.apana.org.au> <CAAUqJDvFuvms55Td1c=XKv6epfRnnP78438nZQ-JKyuCptGBiQ@mail.gmail.com> <1357760.1688460637@warthog.procyon.org.uk>
+To: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: dhowells@redhat.com, Ondrej Mosnacek <omosnacek@gmail.com>,
+    Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+    Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
+    Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+    regressions@lists.linux.dev
+Subject: Re: Regression bisected to "crypto: af_alg: Convert af_alg_sendpage() to use MSG_SPLICE_PAGES"
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1361503.1688463705.1@warthog.procyon.org.uk>
+Date: Tue, 04 Jul 2023 10:41:45 +0100
+Message-ID: <1361504.1688463705@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.10
 
-On Tue, 04 Jul 2023 10:38:43 +0200,
-Kailang wrote:
-> 
-> 
-> Below was the relation patches.
-> https://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git/commit/?id=5aec98913095ed3b4424ed6c5fdeb6964e9734da
-> https://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git/commit/?id=f30741cded62f87bb4b1cc58bc627f076abcaba8
-> 
-> It shows ALC236 codec not need to run pull low 3k setting.
-> 
-> I trace windows code, find it add delay for read MIC jack detected at booting time.
+Herbert Xu <herbert@gondor.apana.org.au> wrote:
 
-I expected something like that ;)
-If you have a test patch, let us know.
+> All it's saying is that if you modify the data after sending it off
+> via splice then the data that will be on the wire is undefined.
 
+Er, no.  It can literally remove the page from the process's VM and paste it
+somewhere else - though in this case, that shouldn't happen.  However, the
+buffer passed to SPLICE_F_GIFT should also be page-aligned, which it might not
+be because they used calloc().
 
-thanks,
+There's no reason to use SPLICE_F_GIFT here.  vmsplice() still attaches the 
 
-Takashi
+> There is no reason why this should crash.
 
-> 
-> 
-> > -----Original Message-----
-> > From: Takashi Iwai <tiwai@suse.de>
-> > Sent: Sunday, June 25, 2023 5:43 PM
-> > To: Joseph C. Sible <josephcsible@gmail.com>
-> > Cc: Kailang <kailang@realtek.com>; Bagas Sanjaya <bagasdotme@gmail.com>;
-> > regressions@lists.linux.dev; perex@perex.cz; tiwai@suse.com;
-> > alsa-devel@alsa-project.org
-> > Subject: Re: Fwd: [Bug 217440] New: ALC236 audio disappears from HP
-> > 15z-fc000 on warm boot
-> > 
-> > 
-> > External mail.
-> > 
-> > 
-> > 
-> > On Sat, 24 Jun 2023 03:36:11 +0200,
-> > Joseph C. Sible wrote:
-> > >
-> > > On Sun, Jun 11, 2023 at 3:36 AM Takashi Iwai <tiwai@suse.de> wrote:
-> > > >
-> > > > Thanks for checking.  So the additional delay didn't help at all,
-> > > > i.e. it's no timing issue.  We need to figure out which verb
-> > > > actually breaks things.  Oh well.
-> > >
-> > > Was there something else specific you wanted me to try for this? If
-> > > not, what do you think the next steps to get this fixed are? Do you
-> > > think it might be good to just cook the partial revert I posted a
-> > > while back after all?
-> > 
-> > It's rather a call to Kailang, after all.
-> > I'm fine with any way as long as it avoids further regressions.
-> > 
-> > 
-> > Takashi
-> > 
-> > ------Please consider the environment before printing this e-mail.
+Agreed.  I'm still looking at it.  Interestingly, the output comes out the
+same, no matter whether vmsplice(), vmsplice() + SPLICE_F_GIFT or writev(), so
+it looks like the buffers get to 
+
+> If we can't fix this the patches should be reverted.
+
+I didn't change vmsplice() or the way pages are stored in the pipe.
+
+And, note, there are also a bunch of GUP changes that could have an effect.
+
+David
+
