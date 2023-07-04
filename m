@@ -1,85 +1,132 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78A103C3C
-	for <regressions@lists.linux.dev>; Mon,  3 Jul 2023 23:09:29 +0000 (UTC)
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1b80b3431d2so24850205ad.1
-        for <regressions@lists.linux.dev>; Mon, 03 Jul 2023 16:09:29 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99C811C3A
+	for <regressions@lists.linux.dev>; Tue,  4 Jul 2023 07:45:51 +0000 (UTC)
+Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-bd6d9d7da35so5909132276.0
+        for <regressions@lists.linux.dev>; Tue, 04 Jul 2023 00:45:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1688425769; x=1691017769;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=pCViWeoaoIqREKt5VQUB2Bo7LBAEFHy3aH/YsBHaAQs=;
-        b=dCdJNt2Xiw23cB9tFdmwx5uKIJ4qvUZvheuWdeuGCD43+kPE10UNTwc4n5mCkpY9/a
-         8+OzFkYA2wSAUk4FRuP3lsJZEGTFYbr+r4VWNdQlgUbYWiIzMf5ejNEAejGfIUxVxFJN
-         F8eekGEpb1gmebjrsQgqzwfzeeIkrSg3Gyx80=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688425769; x=1691017769;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=google.com; s=20221208; t=1688456750; x=1691048750;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=pCViWeoaoIqREKt5VQUB2Bo7LBAEFHy3aH/YsBHaAQs=;
-        b=UwmbKdbN5+wphIW2I4ocA/J7iajqYU3FpULdNb4qfLYwdbsBstTTNVDsBaMlXPDEYs
-         VZNXvabJyY/mRzMYXMyoLvFx6ZnP+k0CqSgfFUJZjuZ8ickJsZ+EPhp/lLaHfeeF4JH2
-         VYa0JclNYY5L7WzJ9scx4ih0iLBapYjOme77pldJ2Vz1TE0OVAbGWvRI+OJA/RAlJxqq
-         gfT7zKUUj2BQ7PH7gMcBJPi20oi7Zl1AjKaZgLeExLKxkq/SObwnPQIrG5TTre2lUXiS
-         pmijiMOx9BjBhGR+f6tdeSiFVjHrfaQfDiVvQs8SU5FCI3QbEpR/UYrhzjTFSbIIfneM
-         uvuA==
-X-Gm-Message-State: ABy/qLYh8TWbPpTlwm2WobWV92fFyeSqfd6oMxZm1ZQsj0FRfd0Va35Y
-	zqAuWQnxDoVezwiU1RJJPbeRCQ==
-X-Google-Smtp-Source: APBJJlFh3LnVeIXMnt5LxB32yJcfVGC7UQ9seGjEUnsN/8mDc5cnwDrU21T2jUshyhoTuvYSsMA5qA==
-X-Received: by 2002:a17:903:2446:b0:1b8:1c4f:4f72 with SMTP id l6-20020a170903244600b001b81c4f4f72mr11153985pls.61.1688425768750;
-        Mon, 03 Jul 2023 16:09:28 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id j23-20020a170902759700b001b53953f306sm15768832pll.178.2023.07.03.16.09.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Jul 2023 16:09:28 -0700 (PDT)
-Date: Mon, 3 Jul 2023 16:09:27 -0700
-From: Kees Cook <keescook@chromium.org>
-To: Mirsad Goran Todorovac <mirsad.todorovac@alu.unizg.hr>
-Cc: Guenter Roeck <linux@roeck-us.net>,
-	Bagas Sanjaya <bagasdotme@gmail.com>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux LLVM <llvm@lists.linux.dev>, linux-kbuild@vger.kernel.org,
-	Linux Regressions <regressions@lists.linux.dev>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	linux-hardening@vger.kernel.org
-Subject: Re: [CRASH][BISECTED] 6.4.1 crash in boot
-Message-ID: <202307031606.3FD9D0D@keescook>
-References: <9a8e34ad-8a8b-3830-4878-3c2c82e69dd9@alu.unizg.hr>
- <ZKIoBVzrjZ+Ybxy9@debian.me>
- <202307022018.B26F5795@keescook>
- <625e951e-9922-d15d-5520-e8cd5eba1995@roeck-us.net>
- <4fa56264-f188-46f9-cc77-117b469b3328@roeck-us.net>
- <2b1a4f49-ba18-0246-af09-4e4133814411@alu.unizg.hr>
- <202307022230.6121D6896@keescook>
- <ed3e4315-b149-2f9e-70d4-45d7f83b9922@alu.unizg.hr>
- <202307031149.823F9A3@keescook>
+        bh=o+F1CRRrDYFWMSeR7pdIM99Yud7CZpQYBqF7uVLNYcg=;
+        b=HPKJH25M1EtladfDNW1fzBqu0HKYUZT9duFKOwHMlqZbNtvot4sx/HWaKza4/APrSJ
+         fhZIxULQUlVHZc0qAPaU5XCEDfNtPpliGzZWEyY7TOC39x9m1hB0BBv02seqlOP6Dpb/
+         frDXuwpbMPhzkYA1BI9xA3Vy5sci7KmRZOYAWsoxREWH8ocXvI6umTvD50JcBHYTX/Cy
+         ta+anyV2RqlDMDwYUKQz0tUjPQxiSsYIkoumRrYNLQAfhkBEsCmX/4FA4HX813DsevZD
+         1pzjmqJzdfIjFQ+9fFVxBsSUm2sLwjtharaDDuc7tqdk684G/9ghQze/sFpqaa8Hct8m
+         b2vg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688456750; x=1691048750;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=o+F1CRRrDYFWMSeR7pdIM99Yud7CZpQYBqF7uVLNYcg=;
+        b=Dk4BUpjzzZRQYGaj2cANPLQIT9bWEGIrEsLztIf9DUub6BxTTDpgwII4GdGnp9FfNz
+         VtNLqoWb+917/6fZfy3te4H7L4UR3KG7CiHsFdWP6kqlQevYi8AykbA7s6muELcUhHu2
+         FYlAnIgDI+160T1sPvK0lmvIV1vTXV7Qg20/8x/IO0XCPqZPP1cG0MDV6c862dB+nQ8G
+         rsNKHLBFpryMVRhiefiqW4axt1zgRrS7c6OeMgAbUMV//iBfwi5QcGBGdWcOGgIn2WqT
+         Ztv76Cin1lj73JT/p54dXSQmo+nDMQyiZNDcf2EEca2EIwL657l6n8dFnAL59PUrcKWp
+         5PQA==
+X-Gm-Message-State: ABy/qLaCqYRwcRjyZ/iFEea8LIZAKCYU2QCirBNatQtPGmNGDs0sx7b6
+	3DoqCRvgmYihRfsOEOwlEGIFEzJKJLvyRXa/vi6rcg==
+X-Google-Smtp-Source: APBJJlFB3IV/8P2hDxGLg3/Osf2gTqSZWsYYoe3obpZM5g9tCWa6WsCTJCL9aS6pmt3nVrW4MoqplfvdJ/D8m2Uvt4s=
+X-Received: by 2002:a25:cc0c:0:b0:c4d:4f44:c50b with SMTP id
+ l12-20020a25cc0c000000b00c4d4f44c50bmr7195756ybf.21.1688456750288; Tue, 04
+ Jul 2023 00:45:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202307031149.823F9A3@keescook>
+References: <facbfec3-837a-51ed-85fa-31021c17d6ef@gmail.com>
+ <5c7455db-4ed8-b54f-e2d5-d2811908123d@leemhuis.info> <CAJuCfpH7BOBYGEG=op09bZrh1x3WA8HMcGBXXRhe6M5RJaen5A@mail.gmail.com>
+ <CAJuCfpH7t7gCV2FkctzG2eWTUVTFZD7CtD14-WuHqBqOYBo1jA@mail.gmail.com> <2023070359-evasive-regroup-f3b8@gregkh>
+In-Reply-To: <2023070359-evasive-regroup-f3b8@gregkh>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Tue, 4 Jul 2023 00:45:39 -0700
+Message-ID: <CAJuCfpF=XPpPYqp2Y1Vu-GUL=RBj4fyhXoXzjBY4EKtBnYE_eQ@mail.gmail.com>
+Subject: Re: Fwd: Memory corruption in multithreaded user space program while
+ calling fork
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>, Bagas Sanjaya <bagasdotme@gmail.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Jacob Young <jacobly.alt@gmail.com>, 
+	Laurent Dufour <ldufour@linux.ibm.com>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Memory Management <linux-mm@kvack.org>, 
+	Linux PowerPC <linuxppc-dev@lists.ozlabs.org>, 
+	Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jul 03, 2023 at 12:03:23PM -0700, Kees Cook wrote:
-> Cool. xhci-hub is in your backtrace, and the above patch was made for
-> something very similar (though, again, I don't see why you're getting a
-> _crash_, it should _warn_ and continue normally). And, actually, also
-> include this patch:
-> https://lore.kernel.org/lkml/20230614181307.gonna.256-kees@kernel.org/
+On Mon, Jul 3, 2023 at 11:44=E2=80=AFAM Greg KH <gregkh@linuxfoundation.org=
+> wrote:
+>
+> On Mon, Jul 03, 2023 at 11:27:19AM -0700, Suren Baghdasaryan wrote:
+> > On Mon, Jul 3, 2023 at 11:08=E2=80=AFAM Suren Baghdasaryan <surenb@goog=
+le.com> wrote:
+> > >
+> > > On Mon, Jul 3, 2023 at 2:53=E2=80=AFAM Linux regression tracking (Tho=
+rsten
+> > > Leemhuis) <regressions@leemhuis.info> wrote:
+> > > >
+> > > > On 02.07.23 14:27, Bagas Sanjaya wrote:
+> > > > > I notice a regression report on Bugzilla [1]. Quoting from it:
+> > > > >
+> > > > >> After upgrading to kernel version 6.4.0 from 6.3.9, I noticed fr=
+equent but random crashes in a user space program.  After a lot of reductio=
+n, I have come up with the following reproducer program:
+> > > > > [...]
+> > > > >> After tuning the various parameters for my computer, exit code 2=
+, which indicates that memory corruption was detected, occurs approximately=
+ 99% of the time.  Exit code 1, which occurs approximately 1% of the time, =
+means it ran out of statically-allocated memory before reproducing the issu=
+e, and increasing the memory usage any more only leads to diminishing retur=
+ns.  There is also something like a 0.1% chance that it segfaults due to me=
+mory corruption elsewhere than in the statically-allocated buffer.
+> > > > >>
+> > > > >> With this reproducer in hand, I was able to perform the followin=
+g bisection:
+> > > > > [...]
+> > > > >
+> > > > > See Bugzilla for the full thread.
+> > > >
+> > > > Additional details from
+> > > > https://bugzilla.kernel.org/show_bug.cgi?id=3D217624#c5 :
+> > > >
+> > > > ```
+> > > > I can confirm that v6.4 with 0bff0aaea03e2a3ed6bfa302155cca8a432a18=
+29
+> > > > reverted no longer causes any memory corruption with either my
+> > > > reproducer or the original program.
+> > > > ```
+> > > >
+> > > > FWIW: 0bff0aaea03 ("x86/mm: try VMA lock-based page fault handling
+> > > > first") [merged for v6.4-rc1, authored by Suren Baghdasaryan [alrea=
+dy CCed]]
+> > > >
+> > > > That's the same commit that causes build problems with go:
+> > > >
+> > > > https://lore.kernel.org/all/dbdef34c-3a07-5951-e1ae-e9c6e3cdf51b@ke=
+rnel.org/
+> > >
+> > > Thanks! I'll investigate this later today. After discussing with
+> > > Andrew, we would like to disable CONFIG_PER_VMA_LOCK by default until
+> > > the issue is fixed. I'll post a patch shortly.
+> >
+> > Posted at: https://lore.kernel.org/all/20230703182150.2193578-1-surenb@=
+google.com/
+>
+> As that change fixes something in 6.4, why not cc: stable on it as well?
 
-This is now in Linus's tree:
-09b69dd4378b ("usb: ch9: Replace 1-element array with flexible array")
+Sorry, I thought since per-VMA locks were introduced in 6.4 and this
+patch is fixing 6.4 I didn't need to send it to stable for older
+versions. Did I miss something?
+Thanks,
+Suren.
 
-Please also still try with the first patch I mentioned, which is very similar:
-https://lore.kernel.org/lkml/20230629190900.never.787-kees@kernel.org/
-
--Kees
-
--- 
-Kees Cook
+>
+> thanks,
+>
+> greg k-h
