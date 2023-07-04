@@ -1,232 +1,107 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 567C56FCE
-	for <regressions@lists.linux.dev>; Tue,  4 Jul 2023 17:42:30 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qGk2k-0005Om-Q3; Tue, 04 Jul 2023 19:42:26 +0200
-Message-ID: <f7ca15e8-2cf2-1372-e29a-d7f2a2cc09f1@leemhuis.info>
-Date: Tue, 4 Jul 2023 19:42:23 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E90579CC
+	for <regressions@lists.linux.dev>; Tue,  4 Jul 2023 20:23:06 +0000 (UTC)
+Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-5702415be17so66803617b3.2
+        for <regressions@lists.linux.dev>; Tue, 04 Jul 2023 13:23:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1688502185; x=1691094185;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9a6W0nI5dldeYBTATPhb2dlI8SAsLd6hrxr67cmhZ5Q=;
+        b=jDLrG9hng7j9RZclbFbYt97jBiLanCA13I7xQd6CkeRzUmalZDSbrdf2iqtWNylUD+
+         he7LFrNVAAX6/RsVaQATwUviDjceHMnTodzS8pJ56besYOvmt0sGvf+m9cp7F4zTWlXt
+         1Nn1uAaFkkZfVwf7W4qNBfyAxnoGb+K6dY8HXtuSq/IVryIoXxrHmTjbCF2HbLyMHC7t
+         4J2H/VpJMhQ8PJMc/WuW/F6iogspk3v0wJAJjiQgDB0mKQlhcKfx8F0JdjFAms9aqIHp
+         jhfxwMNkFV5nkmLM2Lw/6uzJq+1LbrOFfoT8WnNAa0btOX0BFG3bnIdsuXWXo/yFNbvj
+         gACw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688502185; x=1691094185;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9a6W0nI5dldeYBTATPhb2dlI8SAsLd6hrxr67cmhZ5Q=;
+        b=Q5guG4cUwCO+zjl1aOIGUJLopOhpZDw6BkBE+Zf15a0sxAFgMmujI7y1UPBGqTlMjm
+         brRsvzXiDSwe7+61Hmx38b+XvTLlraoFbUB/lny+KQh03xSEzo1msksKYM4PMd21rUGQ
+         c1v09W8wTQXL9z4oX1d20d+Xnb9XfJQV1ClgwjgkFtv8uuHpOyRbTaemSX+2ZzEm+ADn
+         cdgiOy3y6tOtKgLsjnJKlAMHmdBwsn2WkMdd1FQkTcz3Z3R4c/iXjDCGxTjTEq7PaHSI
+         GM7HHNMLHl/U43ZIuWTHCa1RcstcGj3Fw6mkkzryIXLfN2FJcp4h3Nzx/PEulsqzeOc8
+         5faQ==
+X-Gm-Message-State: ABy/qLZOI4u3udzAcuFEUw1x4tcE5rmLozEFtZ46Q9fCSd+1DWokQVXs
+	13ed9lqsFJHIFMetfzLJ6V/MJf764G52ShezApQuGA==
+X-Google-Smtp-Source: APBJJlFRxBYFIFi7jQMlJ9b0aiDIcQomVwZEpqQvAEHweseoYSsNoIUfOa0SIsLsBQ7oqNCMb6nS8RBbzB0YIz4DlUs=
+X-Received: by 2002:a81:8344:0:b0:56d:325c:442 with SMTP id
+ t65-20020a818344000000b0056d325c0442mr12799162ywf.31.1688502185180; Tue, 04
+ Jul 2023 13:23:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: r8169: transmit transmit queue timed out - v6.4 cycle
-Content-Language: en-US, de-DE
-To: Tobias Klausmann <tobias.klausmann@freenet.de>,
- Heiner Kallweit <hkallweit1@gmail.com>
-Cc: Realtek linux nic maintainers <nic_swsd@realtek.com>,
- netdev@vger.kernel.org,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <c3465166-f04d-fcf5-d284-57357abb3f99@freenet.de>
- <CAFSsGVtiXSK_0M_TQm_38LabiRX7E5vR26x=cKags4ZQBqfXPQ@mail.gmail.com>
- <e47bac0d-e802-65e1-b311-6acb26d5cf10@freenet.de>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-In-Reply-To: <e47bac0d-e802-65e1-b311-6acb26d5cf10@freenet.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1688492550;66476928;
-X-HE-SMSGID: 1qGk2k-0005Om-Q3
+References: <facbfec3-837a-51ed-85fa-31021c17d6ef@gmail.com>
+ <5c7455db-4ed8-b54f-e2d5-d2811908123d@leemhuis.info> <CAJuCfpH7BOBYGEG=op09bZrh1x3WA8HMcGBXXRhe6M5RJaen5A@mail.gmail.com>
+ <CAJuCfpH7t7gCV2FkctzG2eWTUVTFZD7CtD14-WuHqBqOYBo1jA@mail.gmail.com>
+ <2023070359-evasive-regroup-f3b8@gregkh> <CAJuCfpF=XPpPYqp2Y1Vu-GUL=RBj4fyhXoXzjBY4EKtBnYE_eQ@mail.gmail.com>
+ <2023070453-plod-swipe-cfbf@gregkh> <20230704091808.aa2ed3c11a5351d9bf217ac9@linux-foundation.org>
+In-Reply-To: <20230704091808.aa2ed3c11a5351d9bf217ac9@linux-foundation.org>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Tue, 4 Jul 2023 13:22:54 -0700
+Message-ID: <CAJuCfpE_WjRQoDT1XnvBghCH-kpqk+pfcBJGyDnK7DZLMVG5Mw@mail.gmail.com>
+Subject: Re: Fwd: Memory corruption in multithreaded user space program while
+ calling fork
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Greg KH <gregkh@linuxfoundation.org>, 
+	Linux regressions mailing list <regressions@lists.linux.dev>, Bagas Sanjaya <bagasdotme@gmail.com>, 
+	Jacob Young <jacobly.alt@gmail.com>, Laurent Dufour <ldufour@linux.ibm.com>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Memory Management <linux-mm@kvack.org>, 
+	Linux PowerPC <linuxppc-dev@lists.ozlabs.org>, 
+	Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-[CCing the regression list, as it should be in the loop for regressions:
-https://docs.kernel.org/admin-guide/reporting-regressions.html]
+On Tue, Jul 4, 2023 at 9:18=E2=80=AFAM Andrew Morton <akpm@linux-foundation=
+.org> wrote:
+>
+> On Tue, 4 Jul 2023 09:00:19 +0100 Greg KH <gregkh@linuxfoundation.org> wr=
+ote:
+>
+> > > > > > Thanks! I'll investigate this later today. After discussing wit=
+h
+> > > > > > Andrew, we would like to disable CONFIG_PER_VMA_LOCK by default=
+ until
+> > > > > > the issue is fixed. I'll post a patch shortly.
+> > > > >
+> > > > > Posted at: https://lore.kernel.org/all/20230703182150.2193578-1-s=
+urenb@google.com/
+> > > >
+> > > > As that change fixes something in 6.4, why not cc: stable on it as =
+well?
+> > >
+> > > Sorry, I thought since per-VMA locks were introduced in 6.4 and this
+> > > patch is fixing 6.4 I didn't need to send it to stable for older
+> > > versions. Did I miss something?
+> >
+> > 6.4.y is a stable kernel tree right now, so yes, it needs to be include=
+d
+> > there :)
+>
+> I'm in wait-a-few-days-mode on this.  To see if we have a backportable
+> fix rather than disabling the feature in -stable.
 
-Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
-for once, to make this easily accessible to everyone.
+Ok, I think we have a fix posted at [2]  and it's cleanly applies to
+6.4.y stable branch as well. However fork() performance might slightly
+regress, therefore disabling per-VMA locks by default for now seems to
+be preferable even with this fix (see discussion at
+https://lore.kernel.org/all/54cd9ffb-8f4b-003f-c2d6-3b6b0d2cb7d9@google.com=
+/).
+IOW, both [1] and [2] should be applied to 6.4.y stable. Both apply
+cleanly and I CC'ed stable on [2]. Greg, should I send [1] separately
+to stable@vger?
 
-Heiner, could you please give a status update? It looks like this
-regression made no progress in the past 11 days. Should this maybe be
-reverted for now if things take so long? Or am I missing something?
+[1] https://lore.kernel.org/all/20230703182150.2193578-1-surenb@google.com/
+[2] https://lore.kernel.org/all/20230704200656.2526715-1-surenb@google.com/
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
-
-#regzbot poke
-
-On 23.06.23 19:30, Tobias Klausmann wrote:
-> Hello,
-> 
-> ASPM is not available as per
-> 
-> "r8169 0000:03:00.0: can't disable ASPM; OS doesn't have ASPMcontrol",
-> the problem is triggered by "no-load" to ~100MBit/s load on a 1GBit/s
-> connection.
-> 
-> 
-> On 23.06.23 00:10, Heiner Kallweit wrote:
->> Same chip version works fine for me even with ASPM L1.2. So your board
->> may have  broken ASPM support. Any special load pattern that triggers
->> the issue?  Can you work around the issue by disabling ASPM sub-states
->> via sysfs attributes, starting with L1.2?
->>
->> Tobias Klausmann <tobias.klausmann@freenet.de> schrieb am Do., 22.
->> Juni 2023, 15:46:
->>
->>     Hello all,
->>
->>     introduced in the 6.4 cycle r8169 show transmit queue timeouts [1].
->>     Bisecting the problem brought me to the following commit:
->>
->>     2ab19de62d67e403105ba860971e5ff0d511ad15 is the first bad commit
->>     commit 2ab19de62d67e403105ba860971e5ff0d511ad15
->>     Author: Heiner Kallweit <hkallweit1@gmail.com>
->>     Date:   Mon Mar 6 22:28:06 2023 +0100
->>
->>          r8169: remove ASPM restrictions now that ASPM is disabled during
->>     NAPI poll
->>
->>          Now that  ASPM is disabled during NAPI poll, we can remove
->>     all ASPM
->>          restrictions. This allows for higher power savings if the
->> network
->>          isn't fully loaded.
->>
->>          Reviewed-by: Simon Horman <simon.horman@corigine.com>
->>          Tested-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
->>          Tested-by: Holger Hoffstätte <holger@applied-asynchrony.com>
->>          Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
->>          Signed-off-by: David S. Miller <davem@davemloft.net>
->>
->>       drivers/net/ethernet/realtek/r8169_main.c | 27
->>     +--------------------------
->>       1 file changed, 1 insertion(+), 26 deletions(-)
->>
->>
->>     With this commit reverted on top of v6.4-rc6, the timeouts are gone.
->>
->>     The NIC identifies as "03:00.0 Ethernet controller: Realtek
->>     Semiconductor Co., Ltd. RTL8111/8168/8411 PCI Express Gigabit
->>     Ethernet
->>     Controller (rev 15)"
->>
->>     Greetings,
->>
->>     Tobias Klausmann
->>
->>
->>     [1]:
->>
->>     [ 2070.918700] ------------[ cut here ]------------
->>     [ 2070.918708] NETDEV WATCHDOG: enp3s0 (r8169): transmit queue 0
->>     timed
->>     out 5317 ms
->>     [ 2070.918719] WARNING: CPU: 4 PID: 0 at net/sched/sch_generic.c:525
->>     dev_watchdog+0x1c9/0x1d0
->>     [ 2070.918726] Modules linked in: rfcomm(E) af_packet(E) cmac(E)
->>     algif_hash(E) algif_skcipher(E) af_alg(E) bnep(E) btusb(E) btrtl(E)
->>     uvcvideo(E) btbcm(E) uvc(E) btintel(E) videobuf2_vmalloc(E) btmtk(E)
->>     videobuf2_memops(E) rtsx_usb_sdmmc(E) videobuf2_v4l2(E) bluetooth(E)
->>     rtsx_usb_ms(E) mmc_core(E) ecdh_generic(E) memstick(E) ecc(E)
->>     videodev(E) videobuf2_common(E) mc(E) rtsx_usb(E) qrtr(E)
->>     nls_iso8859_1(E) nls_cp437(E) vfat(E) fat(E) joydev(E)
->>     snd_hda_codec_realtek(E) snd_hda_codec_generic(E) ledtrig_audio(E)
->>     snd_hda_codec_hdmi(E) ath10k_pci(E) ath10k_core(E) hid_multitouch(E)
->>     ath(E) snd_hda_intel(E) snd_intel_dspcfg(E) iTCO_wdt(E) ee1004(E)
->>     intel_rapl_msr(E) snd_intel_sdw_acpi(E) intel_pmc_bxt(E)
->>     snd_hda_codec(E) mac80211(E) iTCO_vendor_support(E) r8169(E)
->>     intel_rapl_common(E) snd_hda_core(E) intel_tcc_cooling(E) mei_hdcp(E)
->>     x86_pkg_temp_thermal(E) acer_wmi(E) intel_powerclamp(E) cfg80211(E)
->>     snd_hwdep(E) sparse_keymap(E) coretemp(E) snd_pcm(E) realtek(E)
->>     i2c_i801(E) wmi_bmof(E) intel_wmi_thunderbolt(E)
->>     [ 2070.918794]  snd_timer(E) rfkill(E) mdio_devres(E) libphy(E)
->>     libarc4(E) efi_pstore(E) snd(E) i2c_smbus(E) soundcore(E) mei_me(E)
->>     intel_lpss_pci(E) intel_lpss(E) mei(E) idma64(E) intel_pch_thermal(E)
->>     thermal(E) battery(E) ac(E) acpi_pad(E) tiny_power_button(E) fuse(E)
->>     configfs(E) dmi_sysfs(E) ip_tables(E) x_tables(E) hid_generic(E)
->>     usbhid(E) crct10dif_pclmul(E) nouveau(E) crc32_pclmul(E)
->>     crc32c_intel(E)
->>     i915(E) polyval_clmulni(E) drm_ttm_helper(E) polyval_generic(E)
->>     ghash_clmulni_intel(E) mxm_wmi(E) drm_buddy(E) sha512_ssse3(E)
->>     i2c_algo_bit(E) aesni_intel(E) drm_display_helper(E) crypto_simd(E)
->>     drm_kms_helper(E) syscopyarea(E) sysfillrect(E) cryptd(E)
->>     sysimgblt(E)
->>     cec(E) xhci_pci(E) ttm(E) xhci_hcd(E) usbcore(E) drm(E) usb_common(E)
->>     i2c_hid_acpi(E) i2c_hid(E) video(E) wmi(E) pinctrl_sunrisepoint(E)
->>     button(E) serio_raw(E) sg(E) dm_multipath(E) dm_mod(E)
->>     scsi_dh_rdac(E)
->>     scsi_dh_emc(E) scsi_dh_alua(E) msr(E) efivarfs(E)
->>     [ 2070.918862] CPU: 4 PID: 0 Comm: swapper/4 Tainted: G
->>     E      6.4.0-rc1-desktop-debug+ #51
->>     [ 2070.918864] Hardware name: Acer Aspire VN7-593G/Pluto_KLS, BIOS
->>     V1.11
->>     08/01/2018
->>     [ 2070.918866] RIP: 0010:dev_watchdog+0x1c9/0x1d0
->>     [ 2070.918869] Code: d5 eb 92 48 89 ef c6 05 5a 34 96 00 01 e8 2f
->>     d0 fb
->>     ff 45 89 f8 44 89 f1 48 89 ee 48 89 c2 48 c7 c7 58 5c f2 91 e8 07
->>     c6 83
->>     ff <0f> 0b e9 74 ff ff ff 41 55 41 54 55 53 48 8b 47 50 4c 8b 28
->> 48 85
->>     [ 2070.918872] RSP: 0018:ffffbcec00220eb8 EFLAGS: 00010286
->>     [ 2070.918875] RAX: 0000000000000000 RBX: ffff94f0104843dc RCX:
->>     000000000000083f
->>     [ 2070.918877] RDX: 0000000000000000 RSI: 00000000000000f6 RDI:
->>     000000000000003f
->>     [ 2070.918878] RBP: ffff94f010484000 R08: 0000000000000001 R09:
->>     0000000000000000
->>     [ 2070.918880] R10: ffff94f1b6aa0000 R11: ffff94f1b6aa0000 R12:
->>     ffff94f010484488
->>     [ 2070.918881] R13: ffff94f0031a0600 R14: 0000000000000000 R15:
->>     00000000000014c5
->>     [ 2070.918883] FS:  0000000000000000(0000) GS:ffff94f1b6d00000(0000)
->>     knlGS:0000000000000000
->>     [ 2070.918885] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->>     [ 2070.918887] CR2: 00007f8eea510000 CR3: 000000023322e005 CR4:
->>     00000000003706e0
->>     [ 2070.918889] Call Trace:
->>     [ 2070.918891]  <IRQ>
->>     [ 2070.918893]  ? mq_change_real_num_tx+0xe0/0xe0
->>     [ 2070.918897]  ? mq_change_real_num_tx+0xe0/0xe0
->>     [ 2070.918899]  call_timer_fn.isra.0+0x17/0x70
->>     [ 2070.918903]  __run_timers.part.0+0x1b2/0x200
->>     [ 2070.918907]  ? tick_sched_do_timer+0x80/0x80
->>     [ 2070.918910]  ? hw_breakpoint_pmu_read+0x10/0x10
->>     [ 2070.918913]  ? ktime_get+0x33/0xa0
->>     [ 2070.918915]  run_timer_softirq+0x21/0x50
->>     [ 2070.918918]  __do_softirq+0xb8/0x1ea
->>     [ 2070.918923]  irq_exit_rcu+0x75/0xa0
->>     [ 2070.918926]  sysvec_apic_timer_interrupt+0x66/0x80
->>     [ 2070.918929]  </IRQ>
->>     [ 2070.918930]  <TASK>
->>     [ 2070.918932]  asm_sysvec_apic_timer_interrupt+0x16/0x20
->>     [ 2070.918935] RIP: 0010:cpuidle_enter_state+0xa7/0x2a0
->>     [ 2070.918938] Code: 45 40 40 0f 84 9f 01 00 00 e8 65 00 6e ff e8
->>     10 f8
->>     ff ff 31 ff 49 89 c5 e8 66 64 6d ff 45 84 ff 0f 85 76 01 00 00 fb
->>     45 85
->>     f6 <0f> 88 be 00 00 00 49 63 ce 48 8b 04 24 48 6b d1 68 49 29 c5
->> 48 89
->>     [ 2070.918939] RSP: 0018:ffffbcec0012fe90 EFLAGS: 00000202
->>     [ 2070.918942] RAX: ffff94f1b6d25d80 RBX: 0000000000000008 RCX:
->>     0000000000000000
->>     [ 2070.918943] RDX: 000001e22c5f9004 RSI: fffffffdc849289f RDI:
->>     0000000000000000
->>     [ 2070.918945] RBP: ffff94f1b6d2fa00 R08: 0000000000000002 R09:
->>     000000002d959839
->>     [ 2070.918946] R10: ffff94f1b6d24904 R11: 00000000000018c7 R12:
->>     ffffffff92155720
->>     [ 2070.918948] R13: 000001e22c5f9004 R14: 0000000000000008 R15:
->>     0000000000000000
->>     [ 2070.918951]  cpuidle_enter+0x24/0x40
->>     [ 2070.918954]  do_idle+0x1c0/0x220
->>     [ 2070.918958]  cpu_startup_entry+0x14/0x20
->>     [ 2070.918960]  start_secondary+0x109/0x130
->>     [ 2070.918963]  secondary_startup_64_no_verify+0xf4/0xfb
->>     [ 2070.918966]  </TASK>
->>     [ 2070.918968] ---[ end trace 0000000000000000 ]---
->>     [ 2072.163726] pcieport 0000:00:1c.3: Data Link Layer Link Active not
->>     set in 1000 msec
->>     [ 2072.165868] r8169 0000:03:00.0 enp3s0: Can't reset secondary
->>     PCI bus,
->>     detach NIC
->>
+>
