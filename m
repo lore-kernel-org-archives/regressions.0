@@ -1,98 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DAF720E0
-	for <regressions@lists.linux.dev>; Tue,  4 Jul 2023 08:00:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E6B7C433C7;
-	Tue,  4 Jul 2023 08:00:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1688457621;
-	bh=vU2jOdZ5LLyWKgEHZBnAwSo71oT39lJC++2uk0MUGbk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XHp+Hs2JhHl1RFxbfZK/NaC++Nys7AA/C7FARVmMBKrYYsKSWOIXthZX1iXpeUyvH
-	 mgHmFrS0zclbCWqAYoKQ/ydbtN9SHJC3UQL4Gess9n1x4aEI+vjtv80YqkFMDU6VFp
-	 AqPAyovltrHCKeutz1bcCPNgSjyII3zCgoWE2F04=
-Date: Tue, 4 Jul 2023 09:00:19 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Suren Baghdasaryan <surenb@google.com>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
-	Bagas Sanjaya <bagasdotme@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jacob Young <jacobly.alt@gmail.com>,
-	Laurent Dufour <ldufour@linux.ibm.com>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Memory Management <linux-mm@kvack.org>,
-	Linux PowerPC <linuxppc-dev@lists.ozlabs.org>,
-	Linux ARM <linux-arm-kernel@lists.infradead.org>
-Subject: Re: Fwd: Memory corruption in multithreaded user space program while
- calling fork
-Message-ID: <2023070453-plod-swipe-cfbf@gregkh>
-References: <facbfec3-837a-51ed-85fa-31021c17d6ef@gmail.com>
- <5c7455db-4ed8-b54f-e2d5-d2811908123d@leemhuis.info>
- <CAJuCfpH7BOBYGEG=op09bZrh1x3WA8HMcGBXXRhe6M5RJaen5A@mail.gmail.com>
- <CAJuCfpH7t7gCV2FkctzG2eWTUVTFZD7CtD14-WuHqBqOYBo1jA@mail.gmail.com>
- <2023070359-evasive-regroup-f3b8@gregkh>
- <CAJuCfpF=XPpPYqp2Y1Vu-GUL=RBj4fyhXoXzjBY4EKtBnYE_eQ@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 476DE17DB
+	for <regressions@lists.linux.dev>; Tue,  4 Jul 2023 08:12:32 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1qGb8p-00077l-9R; Tue, 04 Jul 2023 10:12:07 +0200
+Message-ID: <a88973a0-2646-68cb-5536-532075222fef@leemhuis.info>
+Date: Tue, 4 Jul 2023 10:12:05 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJuCfpF=XPpPYqp2Y1Vu-GUL=RBj4fyhXoXzjBY4EKtBnYE_eQ@mail.gmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Re: [PATCH 1/1] mm: disable CONFIG_PER_VMA_LOCK by default until its
+ fixed
+Content-Language: en-US, de-DE
+To: Suren Baghdasaryan <surenb@google.com>, akpm@linux-foundation.org
+Cc: jirislaby@kernel.org, jacobly.alt@gmail.com,
+ holger@applied-asynchrony.com, michel@lespinasse.org, jglisse@google.com,
+ mhocko@suse.com, vbabka@suse.cz, hannes@cmpxchg.org,
+ mgorman@techsingularity.net, dave@stgolabs.net, willy@infradead.org,
+ liam.howlett@oracle.com, peterz@infradead.org, ldufour@linux.ibm.com,
+ paulmck@kernel.org, mingo@redhat.com, will@kernel.org, luto@kernel.org,
+ songliubraving@fb.com, peterx@redhat.com, david@redhat.com,
+ dhowells@redhat.com, hughd@google.com, bigeasy@linutronix.de,
+ kent.overstreet@linux.dev, punit.agrawal@bytedance.com, lstoakes@gmail.com,
+ peterjung1337@gmail.com, rientjes@google.com, chriscli@google.com,
+ axelrasmussen@google.com, joelaf@google.com, minchan@google.com,
+ rppt@kernel.org, jannh@google.com, shakeelb@google.com, tatashin@google.com,
+ edumazet@google.com, gthelen@google.com, linux-mm@kvack.org,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <20230703182150.2193578-1-surenb@google.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+In-Reply-To: <20230703182150.2193578-1-surenb@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1688458352;546331d0;
+X-HE-SMSGID: 1qGb8p-00077l-9R
 
-On Tue, Jul 04, 2023 at 12:45:39AM -0700, Suren Baghdasaryan wrote:
-> On Mon, Jul 3, 2023 at 11:44 AM Greg KH <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Mon, Jul 03, 2023 at 11:27:19AM -0700, Suren Baghdasaryan wrote:
-> > > On Mon, Jul 3, 2023 at 11:08 AM Suren Baghdasaryan <surenb@google.com> wrote:
-> > > >
-> > > > On Mon, Jul 3, 2023 at 2:53 AM Linux regression tracking (Thorsten
-> > > > Leemhuis) <regressions@leemhuis.info> wrote:
-> > > > >
-> > > > > On 02.07.23 14:27, Bagas Sanjaya wrote:
-> > > > > > I notice a regression report on Bugzilla [1]. Quoting from it:
-> > > > > >
-> > > > > >> After upgrading to kernel version 6.4.0 from 6.3.9, I noticed frequent but random crashes in a user space program.  After a lot of reduction, I have come up with the following reproducer program:
-> > > > > > [...]
-> > > > > >> After tuning the various parameters for my computer, exit code 2, which indicates that memory corruption was detected, occurs approximately 99% of the time.  Exit code 1, which occurs approximately 1% of the time, means it ran out of statically-allocated memory before reproducing the issue, and increasing the memory usage any more only leads to diminishing returns.  There is also something like a 0.1% chance that it segfaults due to memory corruption elsewhere than in the statically-allocated buffer.
-> > > > > >>
-> > > > > >> With this reproducer in hand, I was able to perform the following bisection:
-> > > > > > [...]
-> > > > > >
-> > > > > > See Bugzilla for the full thread.
-> > > > >
-> > > > > Additional details from
-> > > > > https://bugzilla.kernel.org/show_bug.cgi?id=217624#c5 :
-> > > > >
-> > > > > ```
-> > > > > I can confirm that v6.4 with 0bff0aaea03e2a3ed6bfa302155cca8a432a1829
-> > > > > reverted no longer causes any memory corruption with either my
-> > > > > reproducer or the original program.
-> > > > > ```
-> > > > >
-> > > > > FWIW: 0bff0aaea03 ("x86/mm: try VMA lock-based page fault handling
-> > > > > first") [merged for v6.4-rc1, authored by Suren Baghdasaryan [already CCed]]
-> > > > >
-> > > > > That's the same commit that causes build problems with go:
-> > > > >
-> > > > > https://lore.kernel.org/all/dbdef34c-3a07-5951-e1ae-e9c6e3cdf51b@kernel.org/
-> > > >
-> > > > Thanks! I'll investigate this later today. After discussing with
-> > > > Andrew, we would like to disable CONFIG_PER_VMA_LOCK by default until
-> > > > the issue is fixed. I'll post a patch shortly.
-> > >
-> > > Posted at: https://lore.kernel.org/all/20230703182150.2193578-1-surenb@google.com/
-> >
-> > As that change fixes something in 6.4, why not cc: stable on it as well?
+[CCing the regression list]
+
+On 03.07.23 20:21, Suren Baghdasaryan wrote:
+> A memory corruption was reported in [1] with bisection pointing to the
+> patch [2] enabling per-VMA locks for x86.
+> Disable per-VMA locks config to prevent this issue while the problem is
+> being investigated. This is expected to be a temporary measure.
+
+I have to wonder: is disabling by default sufficient here? Sure, it's a
+new feature, so once this change is merged and backported to 6.4.y it's
+not regression for anyone that will do the jump from older kernels to
+6.4.y and run oldconfig.
+
+But how about those that did the jump already or will do so before the
+fix is backported (it's possible that Arch Linux and openSUSE Tumblweed
+do this; and there is a certain chance that Fedora already has
+CONFIG_PER_VMA_LOCK enabled in their 6.4 configs, too)? This sounds to
+me like many of those will have CONFIG_PER_VMA_LOCK enabled in their
+configs now. And unless I'm missing something switching the default
+won't turn it off next time they run make oldconfig -- or will it? So
+for them the regression won't be fixed (unless they fiddle manually with
+their configuration, but they shouldn't do so to fix a regression).
+
+Or is my logic mistaken somewhere?
+
+> [1] https://bugzilla.kernel.org/show_bug.cgi?id=217624
+
+Side note: that should be a proper Link: or Closes: tag as described in
+Documentation/process/submitting-patches.rst or
+Documentation/process/5.Posting.rst -- and it should be close to the
+Reported-by: tag (checkpatch.pl should have mentioned that).
+
+E.g. like this:
+
+> [2] https://lore.kernel.org/all/20230227173632.3292573-30-surenb@google.com
 > 
-> Sorry, I thought since per-VMA locks were introduced in 6.4 and this
-> patch is fixing 6.4 I didn't need to send it to stable for older
-> versions. Did I miss something?
+> Reported-by: Jiri Slaby <jirislaby@kernel.org>
+Closes:
+https://lore.kernel.org/lkml/dbdef34c-3a07-5951-e1ae-e9c6e3cdf51b@kernel.org/
+> Reported-by: Jacob Young <jacobly.alt@gmail.com>
+Closes: https://bugzilla.kernel.org/show_bug.cgi?id=217624 [1]
+> Fixes: 0bff0aaea03e ("x86/mm: try VMA lock-based page fault handling first")
+> Signed-off-by: Suren Baghdasaryan <surenb@google.com>
 
-6.4.y is a stable kernel tree right now, so yes, it needs to be included
-there :)
+> [...]
 
+Ciao, Thorsten
