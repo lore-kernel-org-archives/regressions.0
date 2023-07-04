@@ -1,95 +1,136 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F85F1100;
-	Tue,  4 Jul 2023 21:36:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F1F9C433C7;
-	Tue,  4 Jul 2023 21:36:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1688506614;
-	bh=eKyZ9PkJ+ke344sHii+bCX3P4/oDphlbXbihKHuI0wc=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=KbyZEpz7LvuMZPUZ+VDakZRe1vQSYrRAkkHStQga6b9oeMtoBkNCgunC864yhA5lO
-	 NrrRbVrBbsrq2SCSESAQjQtGu9y56YMwKa5cleuC1UbKT4h68/vEl7/L54aBckiYb1
-	 Iy4TyoOW9Loq0nnh0NyFEPTe79+ee65BGcRGn9EGtaWpqGjxNUtmjUITBGrShJtVjE
-	 i0Qyjjx9XtP4sHAB/K5OHDYyczO0nQlDIziJLgcpRQXUmTWwVNqDqsnXSA7+5rZdtP
-	 lM8HgFiGDSkEsY3JVKafmZqkYGV3KDqLW52mbn8ypfUeIJJPvHj8T3TKvNxmc/SC4P
-	 NONZUDeTMYycA==
-Date: Tue, 04 Jul 2023 14:36:51 -0700
-From: Kees Cook <kees@kernel.org>
-To: Mirsad Todorovac <mirsad.todorovac@alu.unizg.hr>,
- Kees Cook <keescook@chromium.org>
-CC: Guenter Roeck <linux@roeck-us.net>, Bagas Sanjaya <bagasdotme@gmail.com>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux LLVM <llvm@lists.linux.dev>, linux-kbuild@vger.kernel.org,
- Linux Regressions <regressions@lists.linux.dev>,
- Nathan Chancellor <nathan@kernel.org>,
- Nick Desaulniers <ndesaulniers@google.com>, linux-hardening@vger.kernel.org
-Subject: Re: [CRASH][BISECTED] 6.4.1 crash in boot
-User-Agent: K-9 Mail for Android
-In-Reply-To: <fbf4103b-6471-1f06-34a8-4aa227f5e091@alu.unizg.hr>
-References: <9a8e34ad-8a8b-3830-4878-3c2c82e69dd9@alu.unizg.hr> <ZKIoBVzrjZ+Ybxy9@debian.me> <202307022018.B26F5795@keescook> <625e951e-9922-d15d-5520-e8cd5eba1995@roeck-us.net> <4fa56264-f188-46f9-cc77-117b469b3328@roeck-us.net> <2b1a4f49-ba18-0246-af09-4e4133814411@alu.unizg.hr> <202307022230.6121D6896@keescook> <ed3e4315-b149-2f9e-70d4-45d7f83b9922@alu.unizg.hr> <202307031149.823F9A3@keescook> <202307031606.3FD9D0D@keescook> <fbf4103b-6471-1f06-34a8-4aa227f5e091@alu.unizg.hr>
-Message-ID: <3CDD1188-7B2A-4D53-9B8F-C07BC39844E9@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1533E1110
+	for <regressions@lists.linux.dev>; Tue,  4 Jul 2023 22:05:00 +0000 (UTC)
+Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-c5c03379a76so1460788276.1
+        for <regressions@lists.linux.dev>; Tue, 04 Jul 2023 15:05:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1688508299; x=1691100299;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nswOflL+ad3Rf8OdqQYDYHaGrkZ9dAMLf54yrOYBn/c=;
+        b=uWDLDVCv+cij7Hgi1Dfyr9iYQ1IdZH68Kx0m/+1EN0oyYPmGjjkclXXBbFwVdPM2yH
+         AVHBn4wuVtu2DZ9INL0uK6cnZInJcl2+pwwUCKHPvEP/M8v7Out/g1itOkKVHPIxwihZ
+         xYI0wflgLgYZcwlVIYA07695rhSEHx0ncHS8v0w9o0or/zlXHzUtQM4S/DHuXuBqEjSX
+         1MHEVGC+Sfa6ZZOytGkLjCZFflKm35xQw8zHDl0gDWv8dlF8PW1s3MHLfAxrNMfR6uMU
+         Kay/b1fyx27XReXEAEcfb0D8ekyWpR8/l2wt4q2zbSSZqvlvA3J5k4wvwSnIgqYt4zFx
+         7glQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688508299; x=1691100299;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nswOflL+ad3Rf8OdqQYDYHaGrkZ9dAMLf54yrOYBn/c=;
+        b=SPcwBO922fFG/Ezamg7nJBOQy0nLlsRveGsolZSIkllMhHHWQO4Y+IzyO+3Y3/Nmlz
+         uiIafkhO3IQm+FaPiR1BwIhNWUMSei3zEU5FpSPr5TK/hTJArvz05jzov6xdRcbJcsur
+         q8XwBJdY6mDkQTRjySU0VSufdeJkpiYoh/FRMErDc5QTzncmZAMZjg55sru1qtt1lExv
+         QyKQkSS7/CFAppqcLIprBwZMsPmMEUa7Pyqns/9rpGT/tiHtR2bKUf7R4b5rZvTOQmZA
+         K3QUK7g1oveA9XQFKNHgDYeptECpvABQxt4pOicnMfrT5Vi1Qa9PsOG5A61yOJvvtZRH
+         kHBQ==
+X-Gm-Message-State: ABy/qLYpW/wOQ0qpjrpGmpQCl/H6hDBHg4/A76hTvpj2JIpyUO1NdRPf
+	gmXc4DFTPW6EIbrDfXQZrNXwhXHy6QvQPDUW2rkv5A==
+X-Google-Smtp-Source: APBJJlFn5VR+cnfVz1hYer80K/3NNixQJwpfU/KzY+2o39e/PwrqHafpMNiEhbiPGgr7TJ9T1M42aVv9KpISdV3ua7E=
+X-Received: by 2002:a25:ac20:0:b0:c42:97f9:cda6 with SMTP id
+ w32-20020a25ac20000000b00c4297f9cda6mr10984031ybi.29.1688508299539; Tue, 04
+ Jul 2023 15:04:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
+References: <facbfec3-837a-51ed-85fa-31021c17d6ef@gmail.com>
+ <5c7455db-4ed8-b54f-e2d5-d2811908123d@leemhuis.info> <CAJuCfpH7BOBYGEG=op09bZrh1x3WA8HMcGBXXRhe6M5RJaen5A@mail.gmail.com>
+ <CAJuCfpH7t7gCV2FkctzG2eWTUVTFZD7CtD14-WuHqBqOYBo1jA@mail.gmail.com>
+ <2023070359-evasive-regroup-f3b8@gregkh> <CAJuCfpF=XPpPYqp2Y1Vu-GUL=RBj4fyhXoXzjBY4EKtBnYE_eQ@mail.gmail.com>
+ <2023070453-plod-swipe-cfbf@gregkh> <20230704091808.aa2ed3c11a5351d9bf217ac9@linux-foundation.org>
+ <CAJuCfpE_WjRQoDT1XnvBghCH-kpqk+pfcBJGyDnK7DZLMVG5Mw@mail.gmail.com> <20230704142846.524daa14ff921ed7eb534594@linux-foundation.org>
+In-Reply-To: <20230704142846.524daa14ff921ed7eb534594@linux-foundation.org>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Tue, 4 Jul 2023 15:04:48 -0700
+Message-ID: <CAJuCfpFA3NudeyUyL65B3rnt-8sk1cnoh0uESYuS+LaDsGZu+g@mail.gmail.com>
+Subject: Re: Fwd: Memory corruption in multithreaded user space program while
+ calling fork
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Greg KH <gregkh@linuxfoundation.org>, 
+	Linux regressions mailing list <regressions@lists.linux.dev>, Bagas Sanjaya <bagasdotme@gmail.com>, 
+	Jacob Young <jacobly.alt@gmail.com>, Laurent Dufour <ldufour@linux.ibm.com>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Memory Management <linux-mm@kvack.org>, 
+	Linux PowerPC <linuxppc-dev@lists.ozlabs.org>, 
+	Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On July 4, 2023 10:20:11 AM PDT, Mirsad Todorovac <mirsad=2Etodorovac@alu=
-=2Eunizg=2Ehr> wrote:
->On 7/4/23 01:09, Kees Cook wrote:> On Mon, Jul 03, 2023 at 12:03:23PM -07=
-00, Kees Cook wrote:
->>> Cool=2E xhci-hub is in your backtrace, and the above patch was made fo=
-r
->>> something very similar (though, again, I don't see why you're getting =
-a
->>> _crash_, it should _warn_ and continue normally)=2E And, actually, als=
-o
->>> include this patch:
->>> https://lore=2Ekernel=2Eorg/lkml/20230614181307=2Egonna=2E256-kees@ker=
-nel=2Eorg/
->>=20
->> This is now in Linus's tree:
->> 09b69dd4378b ("usb: ch9: Replace 1-element array with flexible array")
->>=20
->> Please also still try with the first patch I mentioned, which is very s=
-imilar:
->> https://lore=2Ekernel=2Eorg/lkml/20230629190900=2Enever=2E787-kees@kern=
-el=2Eorg/
+On Tue, Jul 4, 2023 at 2:28=E2=80=AFPM Andrew Morton <akpm@linux-foundation=
+.org> wrote:
 >
->Hi,
+> On Tue, 4 Jul 2023 13:22:54 -0700 Suren Baghdasaryan <surenb@google.com> =
+wrote:
 >
->I have finally built w both patches (and recommended PSTORE settings were
->default already)=2E
+> > On Tue, Jul 4, 2023 at 9:18=E2=80=AFAM Andrew Morton <akpm@linux-founda=
+tion.org> wrote:
+> > >
+> > > On Tue, 4 Jul 2023 09:00:19 +0100 Greg KH <gregkh@linuxfoundation.org=
+> wrote:
+> > >
+> > > > > > > > Thanks! I'll investigate this later today. After discussing=
+ with
+> > > > > > > > Andrew, we would like to disable CONFIG_PER_VMA_LOCK by def=
+ault until
+> > > > > > > > the issue is fixed. I'll post a patch shortly.
+> > > > > > >
+> > > > > > > Posted at: https://lore.kernel.org/all/20230703182150.2193578=
+-1-surenb@google.com/
+> > > > > >
+> > > > > > As that change fixes something in 6.4, why not cc: stable on it=
+ as well?
+> > > > >
+> > > > > Sorry, I thought since per-VMA locks were introduced in 6.4 and t=
+his
+> > > > > patch is fixing 6.4 I didn't need to send it to stable for older
+> > > > > versions. Did I miss something?
+> > > >
+> > > > 6.4.y is a stable kernel tree right now, so yes, it needs to be inc=
+luded
+> > > > there :)
+> > >
+> > > I'm in wait-a-few-days-mode on this.  To see if we have a backportabl=
+e
+> > > fix rather than disabling the feature in -stable.
+> >
+> > Ok, I think we have a fix posted at [2]  and it's cleanly applies to
+> > 6.4.y stable branch as well. However fork() performance might slightly
+> > regress, therefore disabling per-VMA locks by default for now seems to
+> > be preferable even with this fix (see discussion at
+> > https://lore.kernel.org/all/54cd9ffb-8f4b-003f-c2d6-3b6b0d2cb7d9@google=
+.com/).
+> > IOW, both [1] and [2] should be applied to 6.4.y stable. Both apply
+> > cleanly and I CC'ed stable on [2]. Greg, should I send [1] separately
+> > to stable@vger?
+> >
+> > [1] https://lore.kernel.org/all/20230703182150.2193578-1-surenb@google.=
+com/
+>
+> This one isn't sufficient for .configs which already have
+> PER_VMA_LOCK=3Dy.  Using `depends on BROKEN' would be better.
+>
+> > [2] https://lore.kernel.org/all/20230704200656.2526715-1-surenb@google.=
+com/
+> >
+>
+> We're still awaiting tester input on this?
 
-Were you able to find the crashes saved by pstore?
+Yeah, and it seems to be negative... Anyway, I'll post a dependency on BROK=
+EN.
 
 >
->This second patch fixes the booting problem, but alas there is still a pr=
-oblem -
-
-Ah! That's great! They're is still an unexpected crash source, but the tri=
-gger is fixed=2E
-
->all Wayland and X11=2Eorg GUI applications fail to start, with errors lik=
-e this one:
+> I think a clean new fully-changelogged two-patch series would be the
+> best way to handle this.  Please ensure that the [0/2] intro clearly
+> explains what we're proposing here, and why.
 >
->Jul  4 19:09:07 defiant kernel: [   40=2E529719] invalid opcode: 0000 [#1=
-] PREEMPT SMP NOPTI
-
-Hmm, is CONFIG_UBSAN_TRAP set?
-
->Jul  4 19:09:07 defiant kernel: [   40=2E529726] RIP: 0010:alloc_pid+0x46=
-c/0x480
-
-Hmm, is this patch in your kernel?
-https://git=2Ekernel=2Eorg/linus/b69f0aeb068980af983d399deafc7477cec8bc04
-
-
---=20
-Kees Cook
+> Also, "might slightly regress" is a bit weak.  These things are
+> measurable, no?  Because a better solution would be to fix 6.4.x and
+> mainline and leave it at that.
+>
