@@ -1,26 +1,13 @@
-Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB4721872
-	for <regressions@lists.linux.dev>; Wed,  5 Jul 2023 07:32:06 +0000 (UTC)
-Received: from [127.0.0.1] (p578adb1c.dip0.t-ipconnect.de [87.138.219.28])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
-	(No client certificate requested)
-	(Authenticated sender: marex@denx.de)
-	by phobos.denx.de (Postfix) with ESMTPSA id 21F6885241;
-	Wed,  5 Jul 2023 09:31:58 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
-	s=phobos-20191101; t=1688542319;
-	bh=NsgHjHOtkMUFlzu/DAehFea6k3vOfcJfJ2pn8Oy6jmw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=iibcjsyndHS6YsbCOJG8wfHKBJxzFPkcWJAF4LH3pAmy1Ak+bOWkFoIifBlXaNA96
-	 QLD1WC8DFkvBo/t6KZHwV0IIC8HVP6Qq/sIdq6AToRy5gtwiYCq8X49drt2VVEWcIl
-	 +3Tbex9gba1cU3qJ7f8pi74tZlVsHFW6Vzh2RLiDcbIIfbxOpGziGo5D1OVUUydUMP
-	 srfKG7ikJ/loPcb1Buo152RyuDeIRLvyxVl6jdJdFs5v5uOO8zgrmq/IYAUJicY5tx
-	 v2WWiSoSzqQ5s0krgZ9tSFzqfZi9Sqj40tmvwHrVv4meFxnU+t4eAbXpyx67dT0OPb
-	 Vxsj2OCQet4OQ==
-Message-ID: <707c8123-f2be-a803-f4d7-5406c8f32a6b@denx.de>
-Date: Wed, 5 Jul 2023 09:31:57 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22DDC46B4
+	for <regressions@lists.linux.dev>; Wed,  5 Jul 2023 08:37:34 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1qGy0j-0007za-T3; Wed, 05 Jul 2023 10:37:17 +0200
+Message-ID: <7fee3284-b9ba-58f4-8118-fe0b99ae6bf7@leemhuis.info>
+Date: Wed, 5 Jul 2023 10:37:15 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -29,70 +16,93 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.12.0
-Subject: Re: [PATCH 2/2] drm/bridge: lt9611: Do not generate HFP/HBP/HSA and
- EOT packet
-Content-Language: en-US
-To: Jagan Teki <jagan@amarulasolutions.com>,
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Amit Pundir <amit.pundir@linaro.org>, dri-devel@lists.freedesktop.org,
- Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
- Andrzej Hajda <andrzej.hajda@intel.com>, Jonas Karlman <jonas@kwiboo.se>,
- Jernej Skrabec <jernej.skrabec@gmail.com>, Michael Walle <michael@walle.cc>,
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
- linux-arm-msm <linux-arm-msm@vger.kernel.org>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- freedreno <freedreno@lists.freedesktop.org>
-References: <20230403221233.500485-1-marex@denx.de>
- <20230403221233.500485-2-marex@denx.de>
- <CAMi1Hd0TD=2z_=bcDrht3H_wiLvAFcv8Z-U_r_KUOoeMc6UMjw@mail.gmail.com>
- <CAMty3ZBNFu=f-FS4YFN4wfmiTuk=48nna-vub1eMYwidDt+msg@mail.gmail.com>
- <CAA8EJppbdiUz5m+9EAPnFb916DaS_VKWd30c7_EPWjuid8rtqQ@mail.gmail.com>
- <CAMty3ZBQajyg0SNz+AjQzth_O_EmrZ9cUyfM--0ptJQ5F0MRfg@mail.gmail.com>
-From: Marek Vasut <marex@denx.de>
-In-Reply-To: <CAMty3ZBQajyg0SNz+AjQzth_O_EmrZ9cUyfM--0ptJQ5F0MRfg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
-X-Virus-Status: Clean
+Subject: Re: Linux-6.5 iwlwifi crash
+To: Jeff Chua <jeff.chua.linux@gmail.com>, lkml <linux-kernel@vger.kernel.org>
+Cc: Gregory Greenman <gregory.greenman@intel.com>,
+ Kalle Valo <kvalo@kernel.org>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>,
+ Linux Wireless <linux-wireless@vger.kernel.org>,
+ Linux Networking <netdev@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Bagas Sanjaya <bagasdotme@gmail.com>
+References: <20230429020951.082353595@lindbergh.monkeyblade.net>
+ <CAAJw_ZueYAHQtM++4259TXcxQ_btcRQKiX93u85WEs2b2p19wA@mail.gmail.com>
+ <ZE0kndhsXNBIb1g7@debian.me> <b9ab37d2-42bf-cc31-a2c0-a9b604e95530@gmail.com>
+ <CAAJw_Zug6VCS5ZqTWaFSr9sd85k=tyPm9DEE+mV=AKoECZM+sQ@mail.gmail.com>
+Content-Language: en-US, de-DE
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <CAAJw_Zug6VCS5ZqTWaFSr9sd85k=tyPm9DEE+mV=AKoECZM+sQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1688546255;e29a322d;
+X-HE-SMSGID: 1qGy0j-0007za-T3
 
-On 7/5/23 07:46, Jagan Teki wrote:
-> On Wed, Jul 5, 2023 at 11:09 AM Dmitry Baryshkov
-> <dmitry.baryshkov@linaro.org> wrote:
->>
->> [Adding freedreno@ to cc list]
->>
->> On Wed, 5 Jul 2023 at 08:31, Jagan Teki <jagan@amarulasolutions.com> wrote:
->>>
->>> Hi Amit,
->>>
->>> On Wed, Jul 5, 2023 at 10:15 AM Amit Pundir <amit.pundir@linaro.org> wrote:
->>>>
->>>> Hi Marek,
->>>>
->>>> On Wed, 5 Jul 2023 at 01:48, Marek Vasut <marex@denx.de> wrote:
->>>>>
->>>>> Do not generate the HS front and back porch gaps, the HSA gap and
->>>>> EOT packet, as these packets are not required. This makes the bridge
->>>>> work with Samsung DSIM on i.MX8MM and i.MX8MP.
->>>>
->>>> This patch broke display on Dragonboard 845c (SDM845) devboard running
->>>> AOSP. This is what I see
->>>> https://people.linaro.org/~amit.pundir/db845c-userdebug/v6.5-broken-display/PXL_20230704_150156326.jpg.
->>>> Reverting this patch fixes this regression for me.
->>>
->>> Might be msm dsi host require proper handling on these updated
->>> mode_flags? did they?
->>
->> The msm DSI host supports those flags. Also, I'd like to point out
->> that the patch didn't change the rest of the driver code. So even if
->> drm/msm ignored some of the flags, it should not have caused the
->> issue. Most likely the issue is on the lt9611 side. I's suspect that
->> additional programming is required to make it work with these flags.
+Hi! Thanks for your report.
+
+Side note: is there any relation to the thread[1] you posted this in?
+Doesn't look like it from here.
+
+Side note: discussing multiple unrelated issues in one thread increases
+the risk a lot that some or all of them are ignored:
+https://linux-regtracking.leemhuis.info/post/frequent-reasons-why-linux-kernel-bug-reports-are-ignored/
+
+[1] https://lore.kernel.org/all/ZE0kndhsXNBIb1g7@debian.me/
+
+On 05.07.23 09:24, Jeff Chua wrote:
+> Latest linux-6.4
+
+What do you mean by that? From later in the mail it sounds like you mean
+latest mainline -- is that correct?
+
+> after June 27 crash my whole linux notebook once
+> iwlwifi is loaded. Anyone seeing this?
+
+I haven't heard of any such problems, but that doesn't have to mean much.
+
+> Bisect? Or there's a patch for this?
 > 
-> True, But I'm not quite sure, most of these mode_flags were handled
-> more on the host. Maybe Marek can comment on this.
+> # modprobe iwlwifi
+> ... Whole system frozen!
+> 
+> 
+> Here's my system before the crash ...
+> 
+> # dmesg
+> cfg80211: Loading compiled-in X.509 certificates for regulatory database
+> Loaded X.509 cert 'sforshee: 00b28ddf47aef9cea7'
+> iwlwifi 0000:00:14.3: enabling device (0000 -> 0002)
+> iwlwifi 0000:00:14.3: api flags index 2 larger than supported by driver
+> thermal thermal_zone1: failed to read out thermal zone (-61)
+> iwlwifi 0000:00:14.3: Sorry - debug buffer is only 4096K while you
+> requested 65536K
+> 
+> # lspci
+> 00:14.3 Network controller: Intel Corporation Alder Lake-P PCH CNVi
+> WiFi (rev 01)
+> 
+> # linux git log
+> commit d528014517f2b0531862c02865b9d4c908019dc4 (HEAD -> master,
+> origin/master, origin/HEAD)
+> Author: Linus Torvalds <torvalds@linux-foundation.org>
+> Date:   Tue Jul 4 15:05:12 2023 -0700
+> 
+> # lsmodModule                  Size  Used by
+> iwlmvm                397312  0
+> mac80211              626688  1 iwlmvm
+> iwlwifi               307200  1 iwlmvm
+> cfg80211              413696  3 iwlmvm,iwlwifi,mac80211
+> 
+> 
+> Bisect?
 
-So, we have the same flags, but two different controllers produce 
-different DSI streams ? Do we have any way to analyze the stream 
-produced by each controller, to figure out which one is wrong and which 
-one is right ?
+If none of the others CCed comes up with an idea within the next few
+hours then yes please!
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
