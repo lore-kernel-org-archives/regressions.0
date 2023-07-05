@@ -1,236 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 491267F6;
-	Wed,  5 Jul 2023 02:10:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82D19C433C7;
-	Wed,  5 Jul 2023 02:10:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1688523001;
-	bh=0RXVtrB0FoWlqLqj3GuhEFh6R++jmGgbW8HINllGCLs=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=AWcU1MY/jciOkKbUW/JRZsw5KyS6LeKrA+n7+Rx00yg2dG+WiCeWWW9e1hc/71tfx
-	 mBPikkYNoPJk/rk8+lHymdIdntDzO+a+a2eO+WOHg8amuVOV1+226aserM+xWUWj5A
-	 DzcsBp65+mzNJZX9tMGMDYumDKtfPGvjTO/xVCXmruTaArK4Az02J4byAB9860OLVE
-	 6Jd8/TdJz9DLx6im/khwNm9XeyiwlZNT6oRIJM5cvMo8GReR36++l+4OJvL7eJ5NT2
-	 WFTffhL162vEGWKaOkVmvlwkDETQfGmM3bQjUNKckjTNPs+SB6+BiShMpAkr61J5OX
-	 PCO3MBPj7bpfg==
-Date: Tue, 04 Jul 2023 19:09:59 -0700
-From: Kees Cook <kees@kernel.org>
-To: Mirsad Todorovac <mirsad.todorovac@alu.unizg.hr>,
- Kees Cook <keescook@chromium.org>
-CC: Guenter Roeck <linux@roeck-us.net>, Bagas Sanjaya <bagasdotme@gmail.com>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux LLVM <llvm@lists.linux.dev>, linux-kbuild@vger.kernel.org,
- Linux Regressions <regressions@lists.linux.dev>,
- Nathan Chancellor <nathan@kernel.org>,
- Nick Desaulniers <ndesaulniers@google.com>, linux-hardening@vger.kernel.org
-Subject: Re: [CRASH][BISECTED] 6.4.1 crash in boot
-User-Agent: K-9 Mail for Android
-In-Reply-To: <19d0e63c-db47-8f02-2f79-0923f675898c@alu.unizg.hr>
-References: <9a8e34ad-8a8b-3830-4878-3c2c82e69dd9@alu.unizg.hr> <ZKIoBVzrjZ+Ybxy9@debian.me> <202307022018.B26F5795@keescook> <625e951e-9922-d15d-5520-e8cd5eba1995@roeck-us.net> <4fa56264-f188-46f9-cc77-117b469b3328@roeck-us.net> <2b1a4f49-ba18-0246-af09-4e4133814411@alu.unizg.hr> <202307022230.6121D6896@keescook> <ed3e4315-b149-2f9e-70d4-45d7f83b9922@alu.unizg.hr> <202307031149.823F9A3@keescook> <202307031606.3FD9D0D@keescook> <fbf4103b-6471-1f06-34a8-4aa227f5e091@alu.unizg.hr> <3CDD1188-7B2A-4D53-9B8F-C07BC39844E9@kernel.org> <19d0e63c-db47-8f02-2f79-0923f675898c@alu.unizg.hr>
-Message-ID: <DA3FEB08-DF39-406B-89CC-9076CFCF597A@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9FCCA28
+	for <regressions@lists.linux.dev>; Wed,  5 Jul 2023 04:45:38 +0000 (UTC)
+Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-5ed99ebe076so46331136d6.2
+        for <regressions@lists.linux.dev>; Tue, 04 Jul 2023 21:45:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1688532337; x=1691124337;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZvfvXAVyob3htxlBCjHDC3d0cF9EwxU5FiwqJrsNIFQ=;
+        b=h85RDU5faMJMQFRpL11aGFUvNF/ofs+2e1lUAoBYP8SLsCQG3po2qN0EcgfzDFwIBW
+         BzJNoYc7bPOIh3frqeehvRErPNng/ZJBR2F39EflnmYKKm6DTzb/3bJcr9hAhBhde9m0
+         zwEjKFR+OYjRIakJntOIQn1gpnPMeYhebdCLAlsSV1hbUwow1dZC0oJ0jFqPyyaVnVys
+         /XhUDt1TCqEjSEyTswOrSLWS9xN1FOQ1NJQ5gU2oY4dS3UbKAnZ2tXnDtRrX9DXHhJch
+         dHAfi/nlrITlGVNXKe0zxMCLQH6gJ4jzJBZZMFPtOQftUYfdDCv8RiuLOu1NQw5RfO9V
+         xrZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688532337; x=1691124337;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ZvfvXAVyob3htxlBCjHDC3d0cF9EwxU5FiwqJrsNIFQ=;
+        b=TjaIGa73RbFj9hy5hlWdHGVdwcCu6ZBpttTqCAeFBk47Xon+MzsQcapoz3xHSe+cM/
+         DhvKKQLDk1tw9dphYhxdTGGf+cMIFI10ThiENy/VSee6lNF91xBehfncchqlYdaEkiPg
+         WdfwmGlHfMP7PrB8rWaN0n/4B4gR1jHKj5h/dPYnxxfW8j6gGYFZ3SrfvqmTcY6Zn7bn
+         QUxHRAXBBul9JYVKJmhSz86pxAOeUT+bLDH3DsjXVubc1I6qm62FRE9Q/VBZqIxD7gpD
+         P2v/1cRJVvASgka2mdA0JnylXuf21FSsuqjk5Hk3cf0Os9xD/mcKCz4CW0DKc4vyZBc3
+         Wzyg==
+X-Gm-Message-State: ABy/qLa1KpDfiEWeYBLljSoFG8iPxqcEE3geLoSkguYM1KysDT+i91El
+	GI8DCQMDJUfO3o4ScP5BJavpkzh8T138ynbZUt9FuA==
+X-Google-Smtp-Source: APBJJlGJ2wHlfkfB3ZQ1QzikScAKQ6X408nThkn6EJ0gQwXU34hiTOLxSmGlh70SM1vVx/GFl+3ylm2hqxwKnXlu9vc=
+X-Received: by 2002:a05:6214:27c4:b0:635:df49:719c with SMTP id
+ ge4-20020a05621427c400b00635df49719cmr19427849qvb.22.1688532337691; Tue, 04
+ Jul 2023 21:45:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+References: <20230403221233.500485-1-marex@denx.de> <20230403221233.500485-2-marex@denx.de>
+In-Reply-To: <20230403221233.500485-2-marex@denx.de>
+From: Amit Pundir <amit.pundir@linaro.org>
+Date: Wed, 5 Jul 2023 10:15:01 +0530
+Message-ID: <CAMi1Hd0TD=2z_=bcDrht3H_wiLvAFcv8Z-U_r_KUOoeMc6UMjw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] drm/bridge: lt9611: Do not generate HFP/HBP/HSA and
+ EOT packet
+To: Marek Vasut <marex@denx.de>
+Cc: dri-devel@lists.freedesktop.org, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+	Andrzej Hajda <andrzej.hajda@intel.com>, Jonas Karlman <jonas@kwiboo.se>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Michael Walle <michael@walle.cc>, 
+	Jagan Teki <jagan@amarulasolutions.com>, 
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, 
+	Linux regressions mailing list <regressions@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
 
-On July 4, 2023 4:15:20 PM PDT, Mirsad Todorovac <mirsad=2Etodorovac@alu=2E=
-unizg=2Ehr> wrote:
->On 7/4/23 23:36, Kees Cook wrote:
->> On July 4, 2023 10:20:11 AM PDT, Mirsad Todorovac <mirsad=2Etodorovac@a=
-lu=2Eunizg=2Ehr> wrote:
->>> On 7/4/23 01:09, Kees Cook wrote:> On Mon, Jul 03, 2023 at 12:03:23PM =
--0700, Kees Cook wrote:
->>>>> Cool=2E xhci-hub is in your backtrace, and the above patch was made =
-for
->>>>> something very similar (though, again, I don't see why you're gettin=
-g a
->>>>> _crash_, it should _warn_ and continue normally)=2E And, actually, a=
-lso
->>>>> include this patch:
->>>>> https://lore=2Ekernel=2Eorg/lkml/20230614181307=2Egonna=2E256-kees@k=
-ernel=2Eorg/
->>>>=20
->>>> This is now in Linus's tree:
->>>> 09b69dd4378b ("usb: ch9: Replace 1-element array with flexible array"=
-)
->>>>=20
->>>> Please also still try with the first patch I mentioned, which is very=
- similar:
->>>> https://lore=2Ekernel=2Eorg/lkml/20230629190900=2Enever=2E787-kees@ke=
-rnel=2Eorg/
->>>=20
->>> Hi,
->>>=20
->>> I have finally built w both patches (and recommended PSTORE settings w=
-ere
->>> default already)=2E
->>=20
->> Were you able to find the crashes saved by pstore?
->
->No, only lktdm and invalid opcode crashes =2E=2E=2E
->
->P=2ES=2E
->
->Actually, I have recovered some pstore records=2E Please find them in the=
- attachment:
->
->>> This second patch fixes the booting problem, but alas there is still a=
- problem -
->>=20
->> Ah! That's great! They're is still an unexpected crash source, but the =
-trigger is fixed=2E
->
->Glad I could be of help=2E
->
->>> all Wayland and X11=2Eorg GUI applications fail to start, with errors =
-like this one:
->>>=20
->>> Jul  4 19:09:07 defiant kernel: [   40=2E529719] invalid opcode: 0000 =
-[#1] PREEMPT SMP NOPTI
->>=20
->> Hmm, is CONFIG_UBSAN_TRAP set?
->
->marvin@defiant:~/linux/kernel/linux_torvalds$ grep CONFIG_UBSAN_TRAP =2Ec=
-onfig
->CONFIG_UBSAN_TRAP=3Dy
+Hi Marek,
 
-Ah-ha! Turn that off please=2E With it off you will get much more useful r=
-eports from USBAN=2E
+On Wed, 5 Jul 2023 at 01:48, Marek Vasut <marex@denx.de> wrote:
+>
+> Do not generate the HS front and back porch gaps, the HSA gap and
+> EOT packet, as these packets are not required. This makes the bridge
+> work with Samsung DSIM on i.MX8MM and i.MX8MP.
 
->marvin@defiant:~/linux/kernel/linux_torvalds$
->
->>> Jul  4 19:09:07 defiant kernel: [   40=2E529726] RIP: 0010:alloc_pid+0=
-x46c/0x480
->>=20
->> Hmm, is this patch in your kernel?
->> https://git=2Ekernel=2Eorg/linus/b69f0aeb068980af983d399deafc7477cec8bc=
-04
->
->No, it wasn't=2E I had only these:
->
->marvin@defiant:~/linux/kernel/linux_torvalds$ more =2E=2E/kees-[12]=2Epat=
-ch
->::::::::::::::
->=2E=2E/kees-1=2Epatch
->::::::::::::::
->diff --git a/include/uapi/linux/usb/ch9=2Eh b/include/uapi/linux/usb/ch9=
-=2Eh
->index b17e3a21b15f=2E=2E82ec6af71a1d 100644
->--- a/include/uapi/linux/usb/ch9=2Eh
->+++ b/include/uapi/linux/usb/ch9=2Eh
->@@ -376,7 +376,10 @@ struct usb_string_descriptor {
-> 	__u8  bLength;
-> 	__u8  bDescriptorType;
-> -	__le16 wData[1];		/* UTF-16LE encoded */
->+	union {
->+		__le16 legacy_padding;
->+		__DECLARE_FLEX_ARRAY(__le16, wData);	/* UTF-16LE encoded */
->+	};
-> } __attribute__ ((packed));
->  /* note that "string" zero is special, it holds language codes that
->::::::::::::::
->=2E=2E/kees-2=2Epatch
->::::::::::::::
->diff --git a/include/uapi/linux/usb/ch9=2Eh b/include/uapi/linux/usb/ch9=
-=2Eh
->index b17e3a21b15f=2E=2E3ff98c7ba7e3 100644
->--- a/include/uapi/linux/usb/ch9=2Eh
->+++ b/include/uapi/linux/usb/ch9=2Eh
->@@ -981,7 +981,11 @@ struct usb_ssp_cap_descriptor {
-> #define USB_SSP_MIN_RX_LANE_COUNT		(0xf << 8)
-> #define USB_SSP_MIN_TX_LANE_COUNT		(0xf << 12)
-> 	__le16 wReserved;
->-	__le32 bmSublinkSpeedAttr[1]; /* list of sublink speed attrib entries *=
-/
->+	union {
->+		__le32 legacy_padding;
->+		/* list of sublink speed attrib entries */
->+		__DECLARE_FLEX_ARRAY(__le32, bmSublinkSpeedAttr);
->+	};
-> #define USB_SSP_SUBLINK_SPEED_SSID	(0xf)		/* sublink speed ID */
-> #define USB_SSP_SUBLINK_SPEED_LSE	(0x3 << 4)	/* Lanespeed exponent */
-> #define USB_SSP_SUBLINK_SPEED_LSE_BPS		0
->marvin@defiant:~/linux/kernel/linux_torvalds$
->
->---------------------------------------------------------
->
->Now it works=2E Succeeded boot and running of X apps with the new git pul=
-l
->torvalds tree and the kees-2=2Epatch=2E
+This patch broke display on Dragonboard 845c (SDM845) devboard running
+AOSP. This is what I see
+https://people.linaro.org/~amit.pundir/db845c-userdebug/v6.5-broken-display/PXL_20230704_150156326.jpg.
+Reverting this patch fixes this regression for me.
 
-Perfect! Okay, so it looks like all the issues are known and fixed=2E I'll=
- work with Greg to get the other ch9 patch landed=2E
+Regards,
+Amit Pundir
 
 >
->Praise God!
+> Signed-off-by: Marek Vasut <marex@denx.de>
+> ---
+> Cc: Andrzej Hajda <andrzej.hajda@intel.com>
+> Cc: Daniel Vetter <daniel@ffwll.ch>
+> Cc: David Airlie <airlied@gmail.com>
+> Cc: Jagan Teki <jagan@amarulasolutions.com>
+> Cc: Jernej Skrabec <jernej.skrabec@gmail.com>
+> Cc: Jonas Karlman <jonas@kwiboo.se>
+> Cc: Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+> Cc: Michael Walle <michael@walle.cc>
+> Cc: Neil Armstrong <neil.armstrong@linaro.org>
+> Cc: Robert Foss <rfoss@kernel.org>
+> Cc: dri-devel@lists.freedesktop.org
+> ---
+>  drivers/gpu/drm/bridge/lontium-lt9611.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 >
->This is the git log --oneline:
+> diff --git a/drivers/gpu/drm/bridge/lontium-lt9611.c b/drivers/gpu/drm/bridge/lontium-lt9611.c
+> index a25d21a7d5c19..151efe92711c4 100644
+> --- a/drivers/gpu/drm/bridge/lontium-lt9611.c
+> +++ b/drivers/gpu/drm/bridge/lontium-lt9611.c
+> @@ -774,7 +774,9 @@ static struct mipi_dsi_device *lt9611_attach_dsi(struct lt9611 *lt9611,
+>         dsi->lanes = 4;
+>         dsi->format = MIPI_DSI_FMT_RGB888;
+>         dsi->mode_flags = MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_VIDEO_SYNC_PULSE |
+> -                         MIPI_DSI_MODE_VIDEO_HSE;
+> +                         MIPI_DSI_MODE_VIDEO_HSE | MIPI_DSI_MODE_VIDEO_NO_HSA |
+> +                         MIPI_DSI_MODE_VIDEO_NO_HFP | MIPI_DSI_MODE_VIDEO_NO_HBP |
+> +                         MIPI_DSI_MODE_NO_EOT_PACKET;
 >
->d528014517f2 (HEAD, origin/master, origin/HEAD) Revert "=2Egitignore: ign=
-ore *=2Ecover and *=2Embx"
->04f2933d375e Merge tag 'core_guards_for_6=2E5_rc1' of git://git=2Ekernel=
-=2Eorg/pub/scm/linux/kernel/git/peterz/queue
->03275585cabd afs: Fix accidental truncation when storing data
->538140ca602b Merge tag 'ovl-update-6=2E5-2' of git://git=2Ekernel=2Eorg/p=
-ub/scm/linux/kernel/git/overlayfs/vfs
->94c76955e86a Merge tag 'gfs2-v6=2E4-rc5-fixes' of git://git=2Ekernel=2Eor=
-g/pub/scm/linux/kernel/git/gfs2/linux-gfs2
->ccf46d853183 Merge tag 'pm-6=2E5-rc1-2' of git://git=2Ekernel=2Eorg/pub/s=
-cm/linux/kernel/git/rafael/linux-pm
->b869e9f49964 Merge tag 'clk-for-linus' of git://git=2Ekernel=2Eorg/pub/sc=
-m/linux/kernel/git/clk/linux
->406fb9eb198a Merge tag 'firewire-6=2E5-rc1' of git://git=2Ekernel=2Eorg/p=
-ub/scm/linux/kernel/git/ieee1394/linux1394
->f1962207150c module: fix init_module_from_file() error handling
->40c565a429d7 Merge branches 'pm-cpufreq' and 'pm-cpuidle'
->f679e89acdd3 clk: tegra: Avoid calling an uninitialized function
+>         ret = devm_mipi_dsi_attach(dev, dsi);
+>         if (ret < 0) {
+> --
+> 2.39.2
 >
->So, the included patch is:
->
->marvin@defiant:~/linux/kernel/linux_torvalds$ git diff
->diff --git a/include/uapi/linux/usb/ch9=2Eh b/include/uapi/linux/usb/ch9=
-=2Eh
->index 82ec6af71a1d=2E=2E62d318377379 100644
->--- a/include/uapi/linux/usb/ch9=2Eh
->+++ b/include/uapi/linux/usb/ch9=2Eh
->@@ -984,7 +984,11 @@ struct usb_ssp_cap_descriptor {
-> #define USB_SSP_MIN_RX_LANE_COUNT              (0xf << 8)
-> #define USB_SSP_MIN_TX_LANE_COUNT              (0xf << 12)
->        __le16 wReserved;
->-       __le32 bmSublinkSpeedAttr[1]; /* list of sublink speed attrib ent=
-ries */
->+       union {
->+               __le32 legacy_padding;
->+               /* list of sublink speed attrib entries */
->+               __DECLARE_FLEX_ARRAY(__le32, bmSublinkSpeedAttr);
->+       };
-> #define USB_SSP_SUBLINK_SPEED_SSID     (0xf)           /* sublink speed =
-ID */
-> #define USB_SSP_SUBLINK_SPEED_LSE      (0x3 << 4)      /* Lanespeed expo=
-nent */
-> #define USB_SSP_SUBLINK_SPEED_LSE_BPS          0
->marvin@defiant:~/linux/kernel/linux_torvalds$
->
->This means vanilla torvalds tree + https://lore=2Ekernel=2Eorg/lkml/20230=
-629190900=2Enever=2E787-kees@kernel=2Eorg/
->works, but vanilla torvalds tree w/o patch still crashes=2E
-
-Great, thanks again for testing it all!
-
--Keed
-
->
->I am still rather new to the utilisation of the PSTORE subsystem=2E
->
->Best regards,
->Mirsad Todorovac
-
---=20
-Kees Cook
