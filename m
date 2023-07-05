@@ -1,159 +1,175 @@
-Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB8E5D30E
-	for <regressions@lists.linux.dev>; Wed,  5 Jul 2023 13:40:39 +0000 (UTC)
-Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-635e3ceb152so33522966d6.2
-        for <regressions@lists.linux.dev>; Wed, 05 Jul 2023 06:40:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1688564438; x=1691156438;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=OVl7S6svfqIntE0S0D0sZ/BLm4TgMTlV195W9gSGqjI=;
-        b=S/GzS4Yu/u1Ktj/ZQgqK8bBoepHz0jbR+VqbAnF0Hik8LCCrxyUQEvmBUQdXvHoKyj
-         7wPRdc1Gx/vD9F6EhxsQhdtoiDGmTTa4wI+/oTkU+mMcsW8cpHxtAc2rsXSZgGiH6b4z
-         FClKjjULBujaw8sKVsMYTfQs5HQlzzM+8a71Va/t9WncsybaI8kpOEvfyfwBnpIw11X6
-         fxvHMeqm0LxcdU714hBHIjJMWg8NLPhbGOSKlJ+vpt1hgSD13esnyD/TJqyL/M53oMNK
-         lPe/xfqZQzDLFGSPf3CeUZE4jenYiSzpsk69BJWwinBFQCxS69s6AvEAf6o5AcKc5ptM
-         UKUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688564438; x=1691156438;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=OVl7S6svfqIntE0S0D0sZ/BLm4TgMTlV195W9gSGqjI=;
-        b=Ivv68Z0yZuC8CzWqPr4EwWcJJ9mR4VAgfFBFiOzmxfl6LAHbbJQDND7V60nk7QvzLP
-         k9iMoXlcK4jyta4y935V0cj2JuiKxn/OWo6omVf1OHL0S6C/sXWVPoIwBs6QIGegN1tJ
-         BRkoF5f3CjPcw+OxD6+eKQHhd2FUZxBbD99dspEvgrr2elvZr+I7kV4NSbZpserlbbI4
-         ohmS6bQJeoaErPLaqF1W28gJmWY0aanxK1KnPTFPgoUvln9nLdmg+DOcBwcXBJUVJYTu
-         7S2qgwb9vP0qOfCI3XeCSGuycS5KsawBZnGslsuUPhwdx/xejBDF+7YYsQ+lbFhRNHVY
-         V69w==
-X-Gm-Message-State: ABy/qLa6VwZkjfuYidWH6uKY9yZFk3VZw4IHZRgdcZYtmRKJ5L/rzm75
-	a3xf/qFKa5toCKGmCx1kID25QwYxnR0eX7GaVFFWFw==
-X-Google-Smtp-Source: APBJJlFuWrcMdffrgiGAPowe14BbSPjQvY6jEOP1IVPswkR9U1SExJXl45gInbXylx8/bDqkstvmwPgsWSDcq8TTVbw=
-X-Received: by 2002:a05:6214:27cf:b0:634:7c34:6c96 with SMTP id
- ge15-20020a05621427cf00b006347c346c96mr15049376qvb.7.1688564438448; Wed, 05
- Jul 2023 06:40:38 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 128FE125A2
+	for <regressions@lists.linux.dev>; Wed,  5 Jul 2023 15:48:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73FF1C433C7;
+	Wed,  5 Jul 2023 15:48:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1688572087;
+	bh=YEltOy5kLCSnNjMIKORxERugiqEPl1lEeXw34YPJpCM=;
+	h=Date:To:From:Subject:From;
+	b=KWIbfSpcIdtG3cekK8cQZ4h4fgtiXVNh3xbr4CBAhOG1yYbFpmLaPl9esnqpkNgkj
+	 Oz1ARluwFwJla46hz0+/SF4PoSLL0DXTxhlIuydp1NDJpoBWJ4irQMYb6VXj8rlqr2
+	 XuCXHydbI/a9xyoqx5GSUUIPCOfFbAagTMes2ikQ=
+Date: Wed, 05 Jul 2023 08:48:06 -0700
+To: mm-commits@vger.kernel.org,willy@infradead.org,will@kernel.org,vbabka@suse.cz,stable@vger.kernel.org,songliubraving@fb.com,shakeelb@google.com,rppt@kernel.org,rientjes@google.com,regressions@lists.linux.dev,punit.agrawal@bytedance.com,peterz@infradead.org,peterx@redhat.com,paulmck@kernel.org,mingo@redhat.com,minchan@google.com,michel@lespinasse.org,mhocko@suse.com,mgorman@techsingularity.net,luto@kernel.org,lstoakes@gmail.com,Liam.Howlett@oracle.com,ldufour@linux.ibm.com,kent.overstreet@linux.dev,joelaf@google.com,jirislaby@kernel.org,jannh@google.com,jacobly.alt@gmail.com,hughd@google.com,holger@applied-asynchrony.com,hdegoede@redhat.com,hannes@cmpxchg.org,gthelen@google.com,gregkh@linuxfoundation.org,edumazet@google.com,dhowells@redhat.com,david@redhat.com,dave@stgolabs.net,chriscli@google.com,bigeasy@linutronix.de,bagasdotme@gmail.com,axelrasmussen@google.com,surenb@google.com,akpm@linux-foundation.org
+From: Andrew Morton <akpm@linux-foundation.org>
+Subject: + fork-lock-vmas-of-the-parent-process-when-forking.patch added to mm-hotfixes-unstable branch
+Message-Id: <20230705154807.73FF1C433C7@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-References: <20230612153201.554742-1-catalin.marinas@arm.com>
-In-Reply-To: <20230612153201.554742-1-catalin.marinas@arm.com>
-From: Amit Pundir <amit.pundir@linaro.org>
-Date: Wed, 5 Jul 2023 19:10:02 +0530
-Message-ID: <CAMi1Hd04mu6JojT3y6wyN2YeVkPR5R3qnkKJ8iR8if_YByCn4w@mail.gmail.com>
-Subject: Re: [PATCH v7 00/17] mm, dma, arm64: Reduce ARCH_KMALLOC_MINALIGN to 8
-To: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, Christoph Hellwig <hch@lst.de>, 
-	Robin Murphy <robin.murphy@arm.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Will Deacon <will@kernel.org>, 
-	Marc Zyngier <maz@kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>, 
-	Ard Biesheuvel <ardb@kernel.org>, Isaac Manjarres <isaacmanjarres@google.com>, 
-	Saravana Kannan <saravanak@google.com>, Alasdair Kergon <agk@redhat.com>, Daniel Vetter <daniel@ffwll.ch>, 
-	Joerg Roedel <joro@8bytes.org>, Mark Brown <broonie@kernel.org>, Mike Snitzer <snitzer@kernel.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Jonathan Cameron <jic23@kernel.org>, Vlastimil Babka <vbabka@suse.cz>, 
-	linux-mm@kvack.org, iommu@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, 
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-
-Hi Catalin,
-
-On Wed, 5 Jul 2023 at 18:17, Catalin Marinas <catalin.marinas@arm.com> wrote:
->
-> Hi,
->
-> That's v7 of the series reducing the kmalloc() minimum alignment on
-> arm64 to 8 (from 128). There's no new/different functionality, mostly
-> cosmetic changes and acks/tested-bys.
->
-> Andrew, if there are no further comments or objections to this version,
-> are you ok to take the series through the mm tree? The arm64 changes are
-> fairly small. Alternatively, I can push it into linux-next now to give
-> it some wider exposure and decide whether to upstream it when the
-> merging window opens. Thanks.
-
-This patch series broke Dragonboard 845c (SDM845) running AOSP.
-With this series I run into random oops at __kmem_cache_alloc_node().
-Here is one such boot log https://bugs.linaro.org/attachment.cgi?id=1146
-
-Reverting "arm64: Enable ARCH_WANT_KMALLOC_DMA_BOUNCE for arm64"
-fixes it for the time being.
-
-Regards,
-Amit Pundir
 
 
->
-> The updated patches are also available on this branch:
->
-> git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux devel/kmalloc-minalign
->
-> Changes since v6
-> (https://lore.kernel.org/r/20230531154836.1366225-1-catalin.marinas@arm.com):
->
-> - Moved ARCH_DMA_MINALIGN to include/linux/cache.h from slab.h (it
->   matches the asm/cache.h where most architectures defining this macro
->   place it).
->
-> - Single body for __kmalloc_minalign() with an #ifdef.
->
-> - Renamed the sg_dma_use_swiotlb() to sg_dma_is_swiotlb() (Robin's
->   suggestion).
->
-> - Added acks/tested-by.
->
-> Catalin Marinas (15):
->   mm/slab: Decouple ARCH_KMALLOC_MINALIGN from ARCH_DMA_MINALIGN
->   dma: Allow dma_get_cache_alignment() to be overridden by the arch code
->   mm/slab: Simplify create_kmalloc_cache() args and make it static
->   mm/slab: Limit kmalloc() minimum alignment to
->     dma_get_cache_alignment()
->   drivers/base: Use ARCH_DMA_MINALIGN instead of ARCH_KMALLOC_MINALIGN
->   drivers/gpu: Use ARCH_DMA_MINALIGN instead of ARCH_KMALLOC_MINALIGN
->   drivers/usb: Use ARCH_DMA_MINALIGN instead of ARCH_KMALLOC_MINALIGN
->   drivers/spi: Use ARCH_DMA_MINALIGN instead of ARCH_KMALLOC_MINALIGN
->   dm-crypt: Use ARCH_DMA_MINALIGN instead of ARCH_KMALLOC_MINALIGN
->   iio: core: Use ARCH_DMA_MINALIGN instead of ARCH_KMALLOC_MINALIGN
->   arm64: Allow kmalloc() caches aligned to the smaller cache_line_size()
->   dma-mapping: Force bouncing if the kmalloc() size is not
->     cache-line-aligned
->   iommu/dma: Force bouncing if the size is not cacheline-aligned
->   mm: slab: Reduce the kmalloc() minimum alignment if DMA bouncing
->     possible
->   arm64: Enable ARCH_WANT_KMALLOC_DMA_BOUNCE for arm64
->
-> Robin Murphy (2):
->   scatterlist: Add dedicated config for DMA flags
->   dma-mapping: Name SG DMA flag helpers consistently
->
->  arch/arm64/Kconfig             |  1 +
->  arch/arm64/include/asm/cache.h |  3 ++
->  arch/arm64/mm/init.c           |  7 +++-
->  drivers/base/devres.c          |  6 ++--
->  drivers/gpu/drm/drm_managed.c  |  6 ++--
->  drivers/iommu/Kconfig          |  1 +
->  drivers/iommu/dma-iommu.c      | 58 ++++++++++++++++++++++++--------
->  drivers/iommu/iommu.c          |  2 +-
->  drivers/md/dm-crypt.c          |  2 +-
->  drivers/pci/Kconfig            |  1 +
->  drivers/spi/spidev.c           |  2 +-
->  drivers/usb/core/buffer.c      |  8 ++---
->  include/linux/cache.h          |  6 ++++
->  include/linux/dma-map-ops.h    | 61 ++++++++++++++++++++++++++++++++++
->  include/linux/dma-mapping.h    |  5 ++-
->  include/linux/iio/iio.h        |  2 +-
->  include/linux/scatterlist.h    | 60 ++++++++++++++++++++++++++-------
->  include/linux/slab.h           | 14 +++++---
->  kernel/dma/Kconfig             |  7 ++++
->  kernel/dma/direct.c            |  2 +-
->  kernel/dma/direct.h            |  3 +-
->  mm/slab.c                      |  6 +---
->  mm/slab.h                      |  5 ++-
->  mm/slab_common.c               | 41 +++++++++++++++++------
->  24 files changed, 244 insertions(+), 65 deletions(-)
->
+The patch titled
+     Subject: fork: lock VMAs of the parent process when forking
+has been added to the -mm mm-hotfixes-unstable branch.  Its filename is
+     fork-lock-vmas-of-the-parent-process-when-forking.patch
+
+This patch will shortly appear at
+     https://git.kernel.org/pub/scm/linux/kernel/git/akpm/25-new.git/tree/patches/fork-lock-vmas-of-the-parent-process-when-forking.patch
+
+This patch will later appear in the mm-hotfixes-unstable branch at
+    git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm
+
+Before you just go and hit "reply", please:
+   a) Consider who else should be cc'ed
+   b) Prefer to cc a suitable mailing list as well
+   c) Ideally: find the original patch on the mailing list and do a
+      reply-to-all to that, adding suitable additional cc's
+
+*** Remember to use Documentation/process/submit-checklist.rst when testing your code ***
+
+The -mm tree is included into linux-next via the mm-everything
+branch at git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm
+and is updated there every 2-3 working days
+
+------------------------------------------------------
+From: Suren Baghdasaryan <surenb@google.com>
+Subject: fork: lock VMAs of the parent process when forking
+Date: Tue, 4 Jul 2023 23:37:10 -0700
+
+Patch series "Avoid memory corruption caused by per-VMA locks", v2.
+
+A memory corruption was reported in [1] with bisection pointing to the
+patch [2] enabling per-VMA locks for x86.  Based on the reproducer
+provided in [1] we suspect this is caused by the lack of VMA locking while
+forking a child process.
+
+Patch 1/2 in the series implements proper VMA locking during fork.  I
+tested the fix locally using the reproducer and was unable to reproduce
+the memory corruption problem.
+
+This fix can potentially regress some fork-heavy workloads.  Kernel build
+time did not show noticeable regression on a 56-core machine while a
+stress test mapping 10000 VMAs and forking 5000 times in a tight loop
+shows ~5% regression.  If such fork time regression is unacceptable,
+disabling CONFIG_PER_VMA_LOCK should restore its performance.  Further
+optimizations are possible if this regression proves to be problematic.
+
+Patch 2/2 disabled per-VMA locks until the fix is tested and verified.
+
+
+This patch (of 2):
+
+When forking a child process, parent write-protects an anonymous page and
+COW-shares it with the child being forked using copy_present_pte(). 
+Parent's TLB is flushed right before we drop the parent's mmap_lock in
+dup_mmap().  If we get a write-fault before that TLB flush in the parent,
+and we end up replacing that anonymous page in the parent process in
+do_wp_page() (because, COW-shared with the child), this might lead to some
+stale writable TLB entries targeting the wrong (old) page.  Similar issue
+happened in the past with userfaultfd (see flush_tlb_page() call inside
+do_wp_page()).
+
+Lock VMAs of the parent process when forking a child, which prevents
+concurrent page faults during fork operation and avoids this issue.  This
+fix can potentially regress some fork-heavy workloads.  Kernel build time
+did not show noticeable regression on a 56-core machine while a stress
+test mapping 10000 VMAs and forking 5000 times in a tight loop shows ~5%
+regression.  If such fork time regression is unacceptable, disabling
+CONFIG_PER_VMA_LOCK should restore its performance.  Further optimizations
+are possible if this regression proves to be problematic.
+
+Link: https://lkml.kernel.org/r/20230705063711.2670599-1-surenb@google.com
+Link: https://lkml.kernel.org/r/20230705063711.2670599-2-surenb@google.com
+Signed-off-by: Suren Baghdasaryan <surenb@google.com>
+Suggested-by: David Hildenbrand <david@redhat.com>
+Reported-by: Jiri Slaby <jirislaby@kernel.org>
+Closes: https://lore.kernel.org/all/dbdef34c-3a07-5951-e1ae-e9c6e3cdf51b@kernel.org/
+Reported-by: Holger Hoffstätte <holger@applied-asynchrony.com>
+Closes: https://lore.kernel.org/all/b198d649-f4bf-b971-31d0-e8433ec2a34c@applied-asynchrony.com/
+Reported-by: Jacob Young <jacobly.alt@gmail.com>
+Closes: https://bugzilla.kernel.org/show_bug.cgi?id=3D217624
+Fixes: 0bff0aaea03e ("x86/mm: try VMA lock-based page fault handling first")
+Acked-by: David Hildenbrand <david@redhat.com>
+Cc: Bagas Sanjaya <bagasdotme@gmail.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Laurent Dufour <ldufour@linux.ibm.com>
+Cc: <regressions@lists.linux.dev>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Axel Rasmussen <axelrasmussen@google.com>
+Cc: Chris Li <chriscli@google.com>
+Cc: David Howells <dhowells@redhat.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: David Rientjes <rientjes@google.com>
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: Greg Thelen <gthelen@google.com>
+Cc: Hans de Goede <hdegoede@redhat.com>
+Cc: Hugh Dickins <hughd@google.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Jann Horn <jannh@google.com>
+Cc: Joel Fernandes <joelaf@google.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: Liam R. Howlett <Liam.Howlett@oracle.com>
+Cc: Lorenzo Stoakes <lstoakes@gmail.com>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Mel Gorman <mgorman@techsingularity.net>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Michel Lespinasse <michel@lespinasse.org>
+Cc: Mike Rapoport (IBM) <rppt@kernel.org>
+Cc: Minchan Kim <minchan@google.com>
+Cc: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: Peter Xu <peterx@redhat.com>
+Cc: <peterz@infradead.org>
+Cc: Punit Agrawal <punit.agrawal@bytedance.com>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Shakeel Butt <shakeelb@google.com>
+Cc: Song Liu <songliubraving@fb.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Will Deacon <will@kernel.org>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+---
+
+ kernel/fork.c |    1 +
+ 1 file changed, 1 insertion(+)
+
+--- a/kernel/fork.c~fork-lock-vmas-of-the-parent-process-when-forking
++++ a/kernel/fork.c
+@@ -686,6 +686,7 @@ static __latent_entropy int dup_mmap(str
+ 	for_each_vma(old_vmi, mpnt) {
+ 		struct file *file;
+ 
++		vma_start_write(mpnt);
+ 		if (mpnt->vm_flags & VM_DONTCOPY) {
+ 			vm_stat_account(mm, mpnt->vm_flags, -vma_pages(mpnt));
+ 			continue;
+_
+
+Patches currently in -mm which might be from surenb@google.com are
+
+fork-lock-vmas-of-the-parent-process-when-forking.patch
+mm-disable-config_per_vma_lock-until-its-fixed.patch
+swap-remove-remnants-of-polling-from-read_swap_cache_async.patch
+mm-add-missing-vm_fault_result_trace-name-for-vm_fault_completed.patch
+mm-drop-per-vma-lock-when-returning-vm_fault_retry-or-vm_fault_completed.patch
+mm-change-folio_lock_or_retry-to-use-vm_fault-directly.patch
+mm-handle-swap-page-faults-under-per-vma-lock.patch
+mm-handle-userfaults-under-vma-lock.patch
+mm-disable-config_per_vma_lock-by-default-until-its-fixed.patch
+
