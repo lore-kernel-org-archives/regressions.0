@@ -1,158 +1,156 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f54.google.com (mail-oa1-f54.google.com [209.85.160.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C51B134BD
-	for <regressions@lists.linux.dev>; Wed,  5 Jul 2023 17:32:18 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBD1EC433C7;
-	Wed,  5 Jul 2023 17:32:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1688578337;
-	bh=U7zJ0xhMd7kzNcV93NGreQnwodK/3YzobQARyw32EKo=;
-	h=Date:To:From:Subject:From;
-	b=OjSJptM/2LoZwU9ZjXC0AVqT5iUwm2z5usW6Z4jIdp5CFZHdYww72EFOFIej8DtyV
-	 mPLMkiQyLU/mvUMB9mez+E1RCZrvxuYJI5c/LWBp2hmapv/WN331HezVkDkG9Ug3bt
-	 4L7/VDNsemLUAVNL8VP2UBTf6B+428RCVEBZUyCU=
-Date: Wed, 05 Jul 2023 10:32:17 -0700
-To: mm-commits@vger.kernel.org,willy@infradead.org,will@kernel.org,vbabka@suse.cz,stable@vger.kernel.org,songliubraving@fb.com,shakeelb@google.com,rppt@kernel.org,rientjes@google.com,regressions@lists.linux.dev,punit.agrawal@bytedance.com,peterz@infradead.org,peterx@redhat.com,paulmck@kernel.org,mingo@redhat.com,minchan@google.com,michel@lespinasse.org,mhocko@suse.com,mgorman@techsingularity.net,luto@kernel.org,lstoakes@gmail.com,Liam.Howlett@oracle.com,ldufour@linux.ibm.com,kent.overstreet@linux.dev,joelaf@google.com,jirislaby@kernel.org,jannh@google.com,jacobly.alt@gmail.com,hughd@google.com,holger@applied-asynchrony.com,hdegoede@redhat.com,hannes@cmpxchg.org,gthelen@google.com,gregkh@linuxfoundation.org,edumazet@google.com,dhowells@redhat.com,david@redhat.com,dave@stgolabs.net,chriscli@google.com,bigeasy@linutronix.de,bagasdotme@gmail.com,axelrasmussen@google.com,surenb@google.com,akpm@linux-foundation.org
-From: Andrew Morton <akpm@linux-foundation.org>
-Subject: [to-be-updated] fork-lock-vmas-of-the-parent-process-when-forking.patch removed from -mm tree
-Message-Id: <20230705173217.CBD1EC433C7@smtp.kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52D3A13AD1
+	for <regressions@lists.linux.dev>; Wed,  5 Jul 2023 18:11:41 +0000 (UTC)
+Received: by mail-oa1-f54.google.com with SMTP id 586e51a60fabf-1b0605d4d11so6072825fac.1
+        for <regressions@lists.linux.dev>; Wed, 05 Jul 2023 11:11:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1688580700; x=1691172700;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:from:user-agent:mime-version:date:message-id:sender
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=6Iq0v+9fymbgFhRihVMRoWwi6Rd8afLWBuIkpaTjTwk=;
+        b=GFJl2Y1meDyik/DDdV9VstIX7NW4pypN69n0NdG9/8m2vlmFNGHwDpffvGlOBAc9O4
+         I4CvfgPOLreiPrWVN37kcMlIuEP02Onz7qWVugbzvFvUkKu9NmcSGfiVkmGWMslio1+t
+         y8pXEH8izTUccegunhOy7/ojDAveGeAiJzX2uHlyWD94e+uAeJzqLX9B662bRvpYqePz
+         olO8zWzkP0lV3YhZEPnUMIuB2PR7JJeLX4t3QjciGdj44ZZQUrwS4ut//cy/G4RxhJ42
+         4VwC4ie8W4oesEqplyVvmLHOrt3+nN8fkSWyCXeRNXyQsNem1prsojojl6hV6B+snjUI
+         nLGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688580700; x=1691172700;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:from:user-agent:mime-version:date:message-id:sender
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6Iq0v+9fymbgFhRihVMRoWwi6Rd8afLWBuIkpaTjTwk=;
+        b=aGjpMOtkT3OomYzrO72xJRMtgEDtbr1RhwXWNMnRWvBs9i25NEcEKOJK/48LNXKXK9
+         h9qdSHL3t7YeTQARFupxBm2LcQp2+hpA7w1rUuEx8dLCQ0hnwEfl7DkrGlWfd+mopgQC
+         pyW2diJ5FLM/xhO0KgP55/hlCJD+O5vQArh2ZB90mVILts55SBG1MfxmfQtlWd+bkc+h
+         OCuDLz95LMzbghPZUxxhhHr3ggDnSkpEaAHsekXn5V/GQutswusxlGDkMkq9fioegNHe
+         YhK1/n0ZxFK3C1hmf29DjGpMZbiT/h3iu/ZkryWvnnUlj2x68Lmv/psl3MK5R16ZbXzR
+         /xPQ==
+X-Gm-Message-State: AC+VfDxGGw9vqdP+GgCyCpzodBIUoR0iJajMM/ZwCiFgwMrX+PIwkzST
+	Jap915NKprf6U90mIVyUWd0=
+X-Google-Smtp-Source: ACHHUZ4r0Tu+dbwv/dV1GkBH1dLLBFf5AqxfoMNu9YqQeQVRfy3cj1/CSsqUUvLiOpENO4BXj5IO+Q==
+X-Received: by 2002:a05:6870:3e04:b0:196:8dc3:4e16 with SMTP id lk4-20020a0568703e0400b001968dc34e16mr17033460oab.39.1688580700120;
+        Wed, 05 Jul 2023 11:11:40 -0700 (PDT)
+Received: from [192.168.1.128] ([216.130.59.33])
+        by smtp.gmail.com with ESMTPSA id oa24-20020a056870bc1800b001b075c1a6e5sm10139647oab.20.2023.07.05.11.11.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Jul 2023 11:11:39 -0700 (PDT)
+Sender: Larry Finger <larry.finger@gmail.com>
+Message-ID: <64b8732f-6319-9f10-b82a-b4a3dd8d4b8e@lwfinger.net>
+Date: Wed, 5 Jul 2023 13:11:38 -0500
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+From: Larry Finger <Larry.Finger@lwfinger.net>
+Subject: Re: Linux-6.5 iwlwifi crash
+To: Jeff Chua <jeff.chua.linux@gmail.com>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: lkml <linux-kernel@vger.kernel.org>,
+ Gregory Greenman <gregory.greenman@intel.com>, Kalle Valo
+ <kvalo@kernel.org>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>,
+ Linux Wireless <linux-wireless@vger.kernel.org>,
+ Linux Networking <netdev@vger.kernel.org>,
+ Bagas Sanjaya <bagasdotme@gmail.com>
+References: <20230429020951.082353595@lindbergh.monkeyblade.net>
+ <CAAJw_ZueYAHQtM++4259TXcxQ_btcRQKiX93u85WEs2b2p19wA@mail.gmail.com>
+ <ZE0kndhsXNBIb1g7@debian.me> <b9ab37d2-42bf-cc31-a2c0-a9b604e95530@gmail.com>
+ <CAAJw_Zug6VCS5ZqTWaFSr9sd85k=tyPm9DEE+mV=AKoECZM+sQ@mail.gmail.com>
+ <7fee3284-b9ba-58f4-8118-fe0b99ae6bf7@leemhuis.info>
+ <CAAJw_Zu=MPtGPARgCB2fteP+7F793YDFXE9RuzSH8EqYBS-OOw@mail.gmail.com>
+Content-Language: en-US
+In-Reply-To: <CAAJw_Zu=MPtGPARgCB2fteP+7F793YDFXE9RuzSH8EqYBS-OOw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+
+On 7/5/23 06:56, Jeff Chua wrote:
+> On Wed, Jul 5, 2023 at 4:37 PM Linux regression tracking (Thorsten
+> Leemhuis) <regressions@leemhuis.info> wrote:
+>>
+>> Hi! Thanks for your report.
+>>
+>> Side note: is there any relation to the thread[1] you posted this in?
+> 
+> Sorry, I was just posting to the same email list that I had reported
+> about a different wifi list earlier. No relation to this, but it's a
+> new wifi issue.
+> 
+>> Doesn't look like it from here.
+>>
+>> Side note: discussing multiple unrelated issues in one thread increases
+>> the risk a lot that some or all of them are ignored:
+>> https://linux-regtracking.leemhuis.info/post/frequent-reasons-why-linux-kernel-bug-reports-are-ignored/
+>>
+>> [1] https://lore.kernel.org/all/ZE0kndhsXNBIb1g7@debian.me/
+>>
+>> On 05.07.23 09:24, Jeff Chua wrote:
+>>> Latest linux-6.4
+>>
+>> What do you mean by that? From later in the mail it sounds like you mean
+>> latest mainline -- is that correct?
+> 
+> It's from linux git pull. It's 6.5-rc but I didn't write that way
+> becuase Linus's branch is still 6.4 ... that 6.5-rc0 or rc1 should
+> have more appropriate.
+> 
+>>> after June 27 crash my whole linux notebook once
+>>> iwlwifi is loaded. Anyone seeing this?
+>>
+>> I haven't heard of any such problems, but that doesn't have to mean much.
+> 
+>>> Bisect? Or there's a patch for this?
+>>>
+>>> # modprobe iwlwifi
+>>> ... Whole system frozen!
+>>>
+>>>
+>>> Here's my system before the crash ...
+>>>
+>>> # dmesg
+>>> cfg80211: Loading compiled-in X.509 certificates for regulatory database
+>>> Loaded X.509 cert 'sforshee: 00b28ddf47aef9cea7'
+>>> iwlwifi 0000:00:14.3: enabling device (0000 -> 0002)
+>>> iwlwifi 0000:00:14.3: api flags index 2 larger than supported by driver
+>>> thermal thermal_zone1: failed to read out thermal zone (-61)
+>>> iwlwifi 0000:00:14.3: Sorry - debug buffer is only 4096K while you
+>>> requested 65536K
+>>>
+>>> # lspci
+>>> 00:14.3 Network controller: Intel Corporation Alder Lake-P PCH CNVi
+>>> WiFi (rev 01)
+>>>
+>>> # linux git log
+>>> commit d528014517f2b0531862c02865b9d4c908019dc4 (HEAD -> master,
+>>> origin/master, origin/HEAD)
+>>> Author: Linus Torvalds <torvalds@linux-foundation.org>
+>>> Date:   Tue Jul 4 15:05:12 2023 -0700
+>>>
+>>> # lsmodModule                  Size  Used by
+>>> iwlmvm                397312  0
+>>> mac80211              626688  1 iwlmvm
+>>> iwlwifi               307200  1 iwlmvm
+>>> cfg80211              413696  3 iwlmvm,iwlwifi,mac80211
+
+Jeff,
+
+Fow what it is worth, my 6.4-git (6.5-rc0?) commit d528014517f2 (pulled today) 
+is working OK with iwlmvm. Lspci says my device is
+
+04:00.0 Network controller [0280]: Intel Corporation Wireless 7260 [8086:08b1] 
+(rev 73)
+
+I think you do need to do a bisection.
+
+Larry
 
 
-The quilt patch titled
-     Subject: fork: lock VMAs of the parent process when forking
-has been removed from the -mm tree.  Its filename was
-     fork-lock-vmas-of-the-parent-process-when-forking.patch
-
-This patch was dropped because an updated version will be merged
-
-------------------------------------------------------
-From: Suren Baghdasaryan <surenb@google.com>
-Subject: fork: lock VMAs of the parent process when forking
-Date: Tue, 4 Jul 2023 23:37:10 -0700
-
-Patch series "Avoid memory corruption caused by per-VMA locks", v2.
-
-A memory corruption was reported in [1] with bisection pointing to the
-patch [2] enabling per-VMA locks for x86.  Based on the reproducer
-provided in [1] we suspect this is caused by the lack of VMA locking while
-forking a child process.
-
-Patch 1/2 in the series implements proper VMA locking during fork.  I
-tested the fix locally using the reproducer and was unable to reproduce
-the memory corruption problem.
-
-This fix can potentially regress some fork-heavy workloads.  Kernel build
-time did not show noticeable regression on a 56-core machine while a
-stress test mapping 10000 VMAs and forking 5000 times in a tight loop
-shows ~5% regression.  If such fork time regression is unacceptable,
-disabling CONFIG_PER_VMA_LOCK should restore its performance.  Further
-optimizations are possible if this regression proves to be problematic.
-
-Patch 2/2 disabled per-VMA locks until the fix is tested and verified.
-
-
-This patch (of 2):
-
-When forking a child process, parent write-protects an anonymous page and
-COW-shares it with the child being forked using copy_present_pte(). 
-Parent's TLB is flushed right before we drop the parent's mmap_lock in
-dup_mmap().  If we get a write-fault before that TLB flush in the parent,
-and we end up replacing that anonymous page in the parent process in
-do_wp_page() (because, COW-shared with the child), this might lead to some
-stale writable TLB entries targeting the wrong (old) page.  Similar issue
-happened in the past with userfaultfd (see flush_tlb_page() call inside
-do_wp_page()).
-
-Lock VMAs of the parent process when forking a child, which prevents
-concurrent page faults during fork operation and avoids this issue.  This
-fix can potentially regress some fork-heavy workloads.  Kernel build time
-did not show noticeable regression on a 56-core machine while a stress
-test mapping 10000 VMAs and forking 5000 times in a tight loop shows ~5%
-regression.  If such fork time regression is unacceptable, disabling
-CONFIG_PER_VMA_LOCK should restore its performance.  Further optimizations
-are possible if this regression proves to be problematic.
-
-Link: https://lkml.kernel.org/r/20230705063711.2670599-1-surenb@google.com
-Link: https://lkml.kernel.org/r/20230705063711.2670599-2-surenb@google.com
-Signed-off-by: Suren Baghdasaryan <surenb@google.com>
-Suggested-by: David Hildenbrand <david@redhat.com>
-Reported-by: Jiri Slaby <jirislaby@kernel.org>
-Closes: https://lore.kernel.org/all/dbdef34c-3a07-5951-e1ae-e9c6e3cdf51b@kernel.org/
-Reported-by: Holger Hoffstätte <holger@applied-asynchrony.com>
-Closes: https://lore.kernel.org/all/b198d649-f4bf-b971-31d0-e8433ec2a34c@applied-asynchrony.com/
-Reported-by: Jacob Young <jacobly.alt@gmail.com>
-Closes: https://bugzilla.kernel.org/show_bug.cgi?id=3D217624
-Fixes: 0bff0aaea03e ("x86/mm: try VMA lock-based page fault handling first")
-Acked-by: David Hildenbrand <david@redhat.com>
-Cc: Bagas Sanjaya <bagasdotme@gmail.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Laurent Dufour <ldufour@linux.ibm.com>
-Cc: <regressions@lists.linux.dev>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Axel Rasmussen <axelrasmussen@google.com>
-Cc: Chris Li <chriscli@google.com>
-Cc: David Howells <dhowells@redhat.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Cc: David Rientjes <rientjes@google.com>
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: Greg Thelen <gthelen@google.com>
-Cc: Hans de Goede <hdegoede@redhat.com>
-Cc: Hugh Dickins <hughd@google.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Jann Horn <jannh@google.com>
-Cc: Joel Fernandes <joelaf@google.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: Liam R. Howlett <Liam.Howlett@oracle.com>
-Cc: Lorenzo Stoakes <lstoakes@gmail.com>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Mel Gorman <mgorman@techsingularity.net>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Michel Lespinasse <michel@lespinasse.org>
-Cc: Mike Rapoport (IBM) <rppt@kernel.org>
-Cc: Minchan Kim <minchan@google.com>
-Cc: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: Peter Xu <peterx@redhat.com>
-Cc: <peterz@infradead.org>
-Cc: Punit Agrawal <punit.agrawal@bytedance.com>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Shakeel Butt <shakeelb@google.com>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: Will Deacon <will@kernel.org>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
----
-
- kernel/fork.c |    1 +
- 1 file changed, 1 insertion(+)
-
---- a/kernel/fork.c~fork-lock-vmas-of-the-parent-process-when-forking
-+++ a/kernel/fork.c
-@@ -686,6 +686,7 @@ static __latent_entropy int dup_mmap(str
- 	for_each_vma(old_vmi, mpnt) {
- 		struct file *file;
- 
-+		vma_start_write(mpnt);
- 		if (mpnt->vm_flags & VM_DONTCOPY) {
- 			vm_stat_account(mm, mpnt->vm_flags, -vma_pages(mpnt));
- 			continue;
-_
-
-Patches currently in -mm which might be from surenb@google.com are
-
-fork-lock-vmas-of-the-parent-process-when-forking-v3.patch
-mm-disable-config_per_vma_lock-until-its-fixed.patch
-swap-remove-remnants-of-polling-from-read_swap_cache_async.patch
-mm-add-missing-vm_fault_result_trace-name-for-vm_fault_completed.patch
-mm-drop-per-vma-lock-when-returning-vm_fault_retry-or-vm_fault_completed.patch
-mm-change-folio_lock_or_retry-to-use-vm_fault-directly.patch
-mm-handle-swap-page-faults-under-per-vma-lock.patch
-mm-handle-userfaults-under-vma-lock.patch
 
