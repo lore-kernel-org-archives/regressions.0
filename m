@@ -1,147 +1,159 @@
-Received: from mail-vk1-f176.google.com (mail-vk1-f176.google.com [209.85.221.176])
+Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5B6F6FB3
-	for <regressions@lists.linux.dev>; Wed,  5 Jul 2023 11:57:00 +0000 (UTC)
-Received: by mail-vk1-f176.google.com with SMTP id 71dfb90a1353d-4715cbe0422so2045210e0c.3
-        for <regressions@lists.linux.dev>; Wed, 05 Jul 2023 04:57:00 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB8E5D30E
+	for <regressions@lists.linux.dev>; Wed,  5 Jul 2023 13:40:39 +0000 (UTC)
+Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-635e3ceb152so33522966d6.2
+        for <regressions@lists.linux.dev>; Wed, 05 Jul 2023 06:40:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1688558219; x=1691150219;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SYzFOXrpHjMbau6LdBUr//Enq3hi9M8IF1iSIElak94=;
-        b=g6COHjjX6H1jp8F3+hb7jSPsaJqivsIH24rJGOJVcEtbKhzNF5ISzY8ii3ouLDdwcP
-         YlKNvcDTJHCk49YdLyZcOxvHeeP1GYrPIXXrzQSzOqPCWEllvjfGlhZ1eK/7+j1hTBLW
-         eAOtb8dY6Lv70Z4+i6oaKkkTLheyO0o2pBUemkz9wq/RBZ6FSL/l7TjLLYcSnfId9ebn
-         yAHVH3t1kYwr/2R1FfLOO5ZNsKP4yonuPzzw5D6Dybr1CeP5QpPpY6m9zac/uLpWBq7W
-         lDihrjhQ8hF/Qd9ro0sv26veYR8HAuvbB9gk9I+3vX8BuZZmGA4464B3fwy2NXEIK4AU
-         PzCA==
+        d=linaro.org; s=google; t=1688564438; x=1691156438;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=OVl7S6svfqIntE0S0D0sZ/BLm4TgMTlV195W9gSGqjI=;
+        b=S/GzS4Yu/u1Ktj/ZQgqK8bBoepHz0jbR+VqbAnF0Hik8LCCrxyUQEvmBUQdXvHoKyj
+         7wPRdc1Gx/vD9F6EhxsQhdtoiDGmTTa4wI+/oTkU+mMcsW8cpHxtAc2rsXSZgGiH6b4z
+         FClKjjULBujaw8sKVsMYTfQs5HQlzzM+8a71Va/t9WncsybaI8kpOEvfyfwBnpIw11X6
+         fxvHMeqm0LxcdU714hBHIjJMWg8NLPhbGOSKlJ+vpt1hgSD13esnyD/TJqyL/M53oMNK
+         lPe/xfqZQzDLFGSPf3CeUZE4jenYiSzpsk69BJWwinBFQCxS69s6AvEAf6o5AcKc5ptM
+         UKUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688558219; x=1691150219;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SYzFOXrpHjMbau6LdBUr//Enq3hi9M8IF1iSIElak94=;
-        b=EClMTPTrfs1akLgkAvbh1/QH6ilG42C3nc4va8ObKGU91HdClBqxPKFwwdjn5VtpJP
-         50RaquW+R/1tQ3ODOdSkky+Q7dNdS4RkPqItef9P5k9n8mTrFq13omVz3dwUuDiWE/9k
-         MgMBsUjiPdf2nlS4I52Crb2EaHKjuZBcnjv+g+UnVvmOa7oQH36+toGe3jGjbo9ezwCi
-         aJAScerFNR5dWaAltsPTju125401wkg9Rr8uoiOpwIKzIdZ42adp7IhiNckENDBUL+UF
-         UPQTvTPSiizekfWFkARfl4g5WCzR4vtnbZT0WI+WxghzTURaQyKqnVanUhOrwljdW+7Y
-         G2UA==
-X-Gm-Message-State: ABy/qLaZz4zFPdrCjImWI14Cb4aQnhRq+FHNjmlCV3phO//FeSMaYEvY
-	/OkIPFYIqyGKR2QVU6Tt3LxMg0SML0bba95gzOPKFtKAOjvE1PRQ
-X-Google-Smtp-Source: APBJJlFFhOiBBRrEk3tyW0G/UO66q38pjXFSGKhoVHIsv25St86l3kpyWAQnFh8VA2c8QwfNLNINF3KnHnHTkCORxnE=
-X-Received: by 2002:a1f:4ec6:0:b0:47e:3f56:e91e with SMTP id
- c189-20020a1f4ec6000000b0047e3f56e91emr3134115vkb.15.1688558219280; Wed, 05
- Jul 2023 04:56:59 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1688564438; x=1691156438;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=OVl7S6svfqIntE0S0D0sZ/BLm4TgMTlV195W9gSGqjI=;
+        b=Ivv68Z0yZuC8CzWqPr4EwWcJJ9mR4VAgfFBFiOzmxfl6LAHbbJQDND7V60nk7QvzLP
+         k9iMoXlcK4jyta4y935V0cj2JuiKxn/OWo6omVf1OHL0S6C/sXWVPoIwBs6QIGegN1tJ
+         BRkoF5f3CjPcw+OxD6+eKQHhd2FUZxBbD99dspEvgrr2elvZr+I7kV4NSbZpserlbbI4
+         ohmS6bQJeoaErPLaqF1W28gJmWY0aanxK1KnPTFPgoUvln9nLdmg+DOcBwcXBJUVJYTu
+         7S2qgwb9vP0qOfCI3XeCSGuycS5KsawBZnGslsuUPhwdx/xejBDF+7YYsQ+lbFhRNHVY
+         V69w==
+X-Gm-Message-State: ABy/qLa6VwZkjfuYidWH6uKY9yZFk3VZw4IHZRgdcZYtmRKJ5L/rzm75
+	a3xf/qFKa5toCKGmCx1kID25QwYxnR0eX7GaVFFWFw==
+X-Google-Smtp-Source: APBJJlFuWrcMdffrgiGAPowe14BbSPjQvY6jEOP1IVPswkR9U1SExJXl45gInbXylx8/bDqkstvmwPgsWSDcq8TTVbw=
+X-Received: by 2002:a05:6214:27cf:b0:634:7c34:6c96 with SMTP id
+ ge15-20020a05621427cf00b006347c346c96mr15049376qvb.7.1688564438448; Wed, 05
+ Jul 2023 06:40:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230429020951.082353595@lindbergh.monkeyblade.net>
- <CAAJw_ZueYAHQtM++4259TXcxQ_btcRQKiX93u85WEs2b2p19wA@mail.gmail.com>
- <ZE0kndhsXNBIb1g7@debian.me> <b9ab37d2-42bf-cc31-a2c0-a9b604e95530@gmail.com>
- <CAAJw_Zug6VCS5ZqTWaFSr9sd85k=tyPm9DEE+mV=AKoECZM+sQ@mail.gmail.com> <7fee3284-b9ba-58f4-8118-fe0b99ae6bf7@leemhuis.info>
-In-Reply-To: <7fee3284-b9ba-58f4-8118-fe0b99ae6bf7@leemhuis.info>
-From: Jeff Chua <jeff.chua.linux@gmail.com>
-Date: Wed, 5 Jul 2023 19:56:48 +0800
-Message-ID: <CAAJw_Zu=MPtGPARgCB2fteP+7F793YDFXE9RuzSH8EqYBS-OOw@mail.gmail.com>
-Subject: Re: Linux-6.5 iwlwifi crash
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: lkml <linux-kernel@vger.kernel.org>, 
-	Gregory Greenman <gregory.greenman@intel.com>, Kalle Valo <kvalo@kernel.org>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Linux Wireless <linux-wireless@vger.kernel.org>, Linux Networking <netdev@vger.kernel.org>, 
-	Bagas Sanjaya <bagasdotme@gmail.com>
+References: <20230612153201.554742-1-catalin.marinas@arm.com>
+In-Reply-To: <20230612153201.554742-1-catalin.marinas@arm.com>
+From: Amit Pundir <amit.pundir@linaro.org>
+Date: Wed, 5 Jul 2023 19:10:02 +0530
+Message-ID: <CAMi1Hd04mu6JojT3y6wyN2YeVkPR5R3qnkKJ8iR8if_YByCn4w@mail.gmail.com>
+Subject: Re: [PATCH v7 00/17] mm, dma, arm64: Reduce ARCH_KMALLOC_MINALIGN to 8
+To: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	Linus Torvalds <torvalds@linux-foundation.org>, Christoph Hellwig <hch@lst.de>, 
+	Robin Murphy <robin.murphy@arm.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Will Deacon <will@kernel.org>, 
+	Marc Zyngier <maz@kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>, 
+	Ard Biesheuvel <ardb@kernel.org>, Isaac Manjarres <isaacmanjarres@google.com>, 
+	Saravana Kannan <saravanak@google.com>, Alasdair Kergon <agk@redhat.com>, Daniel Vetter <daniel@ffwll.ch>, 
+	Joerg Roedel <joro@8bytes.org>, Mark Brown <broonie@kernel.org>, Mike Snitzer <snitzer@kernel.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Jonathan Cameron <jic23@kernel.org>, Vlastimil Babka <vbabka@suse.cz>, 
+	linux-mm@kvack.org, iommu@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, 
+	Linux regressions mailing list <regressions@lists.linux.dev>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 5, 2023 at 4:37=E2=80=AFPM Linux regression tracking (Thorsten
-Leemhuis) <regressions@leemhuis.info> wrote:
+Hi Catalin,
+
+On Wed, 5 Jul 2023 at 18:17, Catalin Marinas <catalin.marinas@arm.com> wrote:
 >
-> Hi! Thanks for your report.
+> Hi,
 >
-> Side note: is there any relation to the thread[1] you posted this in?
-
-Sorry, I was just posting to the same email list that I had reported
-about a different wifi list earlier. No relation to this, but it's a
-new wifi issue.
-
-> Doesn't look like it from here.
+> That's v7 of the series reducing the kmalloc() minimum alignment on
+> arm64 to 8 (from 128). There's no new/different functionality, mostly
+> cosmetic changes and acks/tested-bys.
 >
-> Side note: discussing multiple unrelated issues in one thread increases
-> the risk a lot that some or all of them are ignored:
-> https://linux-regtracking.leemhuis.info/post/frequent-reasons-why-linux-k=
-ernel-bug-reports-are-ignored/
+> Andrew, if there are no further comments or objections to this version,
+> are you ok to take the series through the mm tree? The arm64 changes are
+> fairly small. Alternatively, I can push it into linux-next now to give
+> it some wider exposure and decide whether to upstream it when the
+> merging window opens. Thanks.
+
+This patch series broke Dragonboard 845c (SDM845) running AOSP.
+With this series I run into random oops at __kmem_cache_alloc_node().
+Here is one such boot log https://bugs.linaro.org/attachment.cgi?id=1146
+
+Reverting "arm64: Enable ARCH_WANT_KMALLOC_DMA_BOUNCE for arm64"
+fixes it for the time being.
+
+Regards,
+Amit Pundir
+
+
 >
-> [1] https://lore.kernel.org/all/ZE0kndhsXNBIb1g7@debian.me/
+> The updated patches are also available on this branch:
 >
-> On 05.07.23 09:24, Jeff Chua wrote:
-> > Latest linux-6.4
+> git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux devel/kmalloc-minalign
 >
-> What do you mean by that? From later in the mail it sounds like you mean
-> latest mainline -- is that correct?
-
-It's from linux git pull. It's 6.5-rc but I didn't write that way
-becuase Linus's branch is still 6.4 ... that 6.5-rc0 or rc1 should
-have more appropriate.
-
-> > after June 27 crash my whole linux notebook once
-> > iwlwifi is loaded. Anyone seeing this?
+> Changes since v6
+> (https://lore.kernel.org/r/20230531154836.1366225-1-catalin.marinas@arm.com):
 >
-> I haven't heard of any such problems, but that doesn't have to mean much.
-
-> > Bisect? Or there's a patch for this?
-> >
-> > # modprobe iwlwifi
-> > ... Whole system frozen!
-> >
-> >
-> > Here's my system before the crash ...
-> >
-> > # dmesg
-> > cfg80211: Loading compiled-in X.509 certificates for regulatory databas=
-e
-> > Loaded X.509 cert 'sforshee: 00b28ddf47aef9cea7'
-> > iwlwifi 0000:00:14.3: enabling device (0000 -> 0002)
-> > iwlwifi 0000:00:14.3: api flags index 2 larger than supported by driver
-> > thermal thermal_zone1: failed to read out thermal zone (-61)
-> > iwlwifi 0000:00:14.3: Sorry - debug buffer is only 4096K while you
-> > requested 65536K
-> >
-> > # lspci
-> > 00:14.3 Network controller: Intel Corporation Alder Lake-P PCH CNVi
-> > WiFi (rev 01)
-> >
-> > # linux git log
-> > commit d528014517f2b0531862c02865b9d4c908019dc4 (HEAD -> master,
-> > origin/master, origin/HEAD)
-> > Author: Linus Torvalds <torvalds@linux-foundation.org>
-> > Date:   Tue Jul 4 15:05:12 2023 -0700
-> >
-> > # lsmodModule                  Size  Used by
-> > iwlmvm                397312  0
-> > mac80211              626688  1 iwlmvm
-> > iwlwifi               307200  1 iwlmvm
-> > cfg80211              413696  3 iwlmvm,iwlwifi,mac80211
-> >
-> >
-> > Bisect?
+> - Moved ARCH_DMA_MINALIGN to include/linux/cache.h from slab.h (it
+>   matches the asm/cache.h where most architectures defining this macro
+>   place it).
 >
-> If none of the others CCed comes up with an idea within the next few
-> hours then yes please!
-
-I will wait for a day, then bisect.
-
-Thank you!
-
-
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-> --
-> Everything you wanna know about Linux kernel regression tracking:
-> https://linux-regtracking.leemhuis.info/about/#tldr
-> If I did something stupid, please tell me, as explained on that page.
+> - Single body for __kmalloc_minalign() with an #ifdef.
+>
+> - Renamed the sg_dma_use_swiotlb() to sg_dma_is_swiotlb() (Robin's
+>   suggestion).
+>
+> - Added acks/tested-by.
+>
+> Catalin Marinas (15):
+>   mm/slab: Decouple ARCH_KMALLOC_MINALIGN from ARCH_DMA_MINALIGN
+>   dma: Allow dma_get_cache_alignment() to be overridden by the arch code
+>   mm/slab: Simplify create_kmalloc_cache() args and make it static
+>   mm/slab: Limit kmalloc() minimum alignment to
+>     dma_get_cache_alignment()
+>   drivers/base: Use ARCH_DMA_MINALIGN instead of ARCH_KMALLOC_MINALIGN
+>   drivers/gpu: Use ARCH_DMA_MINALIGN instead of ARCH_KMALLOC_MINALIGN
+>   drivers/usb: Use ARCH_DMA_MINALIGN instead of ARCH_KMALLOC_MINALIGN
+>   drivers/spi: Use ARCH_DMA_MINALIGN instead of ARCH_KMALLOC_MINALIGN
+>   dm-crypt: Use ARCH_DMA_MINALIGN instead of ARCH_KMALLOC_MINALIGN
+>   iio: core: Use ARCH_DMA_MINALIGN instead of ARCH_KMALLOC_MINALIGN
+>   arm64: Allow kmalloc() caches aligned to the smaller cache_line_size()
+>   dma-mapping: Force bouncing if the kmalloc() size is not
+>     cache-line-aligned
+>   iommu/dma: Force bouncing if the size is not cacheline-aligned
+>   mm: slab: Reduce the kmalloc() minimum alignment if DMA bouncing
+>     possible
+>   arm64: Enable ARCH_WANT_KMALLOC_DMA_BOUNCE for arm64
+>
+> Robin Murphy (2):
+>   scatterlist: Add dedicated config for DMA flags
+>   dma-mapping: Name SG DMA flag helpers consistently
+>
+>  arch/arm64/Kconfig             |  1 +
+>  arch/arm64/include/asm/cache.h |  3 ++
+>  arch/arm64/mm/init.c           |  7 +++-
+>  drivers/base/devres.c          |  6 ++--
+>  drivers/gpu/drm/drm_managed.c  |  6 ++--
+>  drivers/iommu/Kconfig          |  1 +
+>  drivers/iommu/dma-iommu.c      | 58 ++++++++++++++++++++++++--------
+>  drivers/iommu/iommu.c          |  2 +-
+>  drivers/md/dm-crypt.c          |  2 +-
+>  drivers/pci/Kconfig            |  1 +
+>  drivers/spi/spidev.c           |  2 +-
+>  drivers/usb/core/buffer.c      |  8 ++---
+>  include/linux/cache.h          |  6 ++++
+>  include/linux/dma-map-ops.h    | 61 ++++++++++++++++++++++++++++++++++
+>  include/linux/dma-mapping.h    |  5 ++-
+>  include/linux/iio/iio.h        |  2 +-
+>  include/linux/scatterlist.h    | 60 ++++++++++++++++++++++++++-------
+>  include/linux/slab.h           | 14 +++++---
+>  kernel/dma/Kconfig             |  7 ++++
+>  kernel/dma/direct.c            |  2 +-
+>  kernel/dma/direct.h            |  3 +-
+>  mm/slab.c                      |  6 +---
+>  mm/slab.h                      |  5 ++-
+>  mm/slab_common.c               | 41 +++++++++++++++++------
+>  24 files changed, 244 insertions(+), 65 deletions(-)
+>
