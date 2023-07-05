@@ -1,88 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31D89137E
-	for <regressions@lists.linux.dev>; Wed,  5 Jul 2023 07:09:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57875C433C7;
-	Wed,  5 Jul 2023 07:09:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1688540940;
-	bh=KNHJu+0CLU4ZCQdLgEFri5D+Z9BwIrdluwuvuUeNttE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tKdIALsR0dMkHa9DJuKzvIPN6d8h9dFfEniOOt9bWgEKNcQIdf7any+sOkoPLEKea
-	 +95s2KQ452fHNF4mzK3LiP0iF8hrCJ186zokGs38t/pxGUAu4cT3Fhxu8f4UEm1j6P
-	 LCmtLDw3WijgFusqsM7zA87m4MVC7ID+D/hmFgPI=
-Date: Wed, 5 Jul 2023 08:08:58 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Suren Baghdasaryan <surenb@google.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Linux regressions mailing list <regressions@lists.linux.dev>,
-	Bagas Sanjaya <bagasdotme@gmail.com>,
-	Jacob Young <jacobly.alt@gmail.com>,
-	Laurent Dufour <ldufour@linux.ibm.com>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Memory Management <linux-mm@kvack.org>,
-	Linux PowerPC <linuxppc-dev@lists.ozlabs.org>,
-	Linux ARM <linux-arm-kernel@lists.infradead.org>
-Subject: Re: Fwd: Memory corruption in multithreaded user space program while
- calling fork
-Message-ID: <2023070509-undertow-pulverize-5adc@gregkh>
-References: <facbfec3-837a-51ed-85fa-31021c17d6ef@gmail.com>
- <5c7455db-4ed8-b54f-e2d5-d2811908123d@leemhuis.info>
- <CAJuCfpH7BOBYGEG=op09bZrh1x3WA8HMcGBXXRhe6M5RJaen5A@mail.gmail.com>
- <CAJuCfpH7t7gCV2FkctzG2eWTUVTFZD7CtD14-WuHqBqOYBo1jA@mail.gmail.com>
- <2023070359-evasive-regroup-f3b8@gregkh>
- <CAJuCfpF=XPpPYqp2Y1Vu-GUL=RBj4fyhXoXzjBY4EKtBnYE_eQ@mail.gmail.com>
- <2023070453-plod-swipe-cfbf@gregkh>
- <20230704091808.aa2ed3c11a5351d9bf217ac9@linux-foundation.org>
- <CAJuCfpE_WjRQoDT1XnvBghCH-kpqk+pfcBJGyDnK7DZLMVG5Mw@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 153C1137F
+	for <regressions@lists.linux.dev>; Wed,  5 Jul 2023 07:24:38 +0000 (UTC)
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-9926623e367so732485566b.0
+        for <regressions@lists.linux.dev>; Wed, 05 Jul 2023 00:24:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1688541877; x=1691133877;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=yBZ2V9YkgQb75fgLLwSDoK6jYDOYm9Ulfp2E4lReMu4=;
+        b=Ft35BGtfPjUdUryqBygCiZrglZi6RQf2Uq33+EgA0PHGC9flgpkea796/5npXeaU++
+         Fih8p0t82f+/DG0P3vVkiv8BOKDDFO8KYd3a223NUyrQRCyzPihenOF/qCb3hyDFpwOw
+         RjkFpPbNfnlrOaGNK75AbYq/jninFCMWeiwYLCAXZyZrJwmBv4NZxcg0AiUVVShaeR8S
+         8oaaOAKXVRP7xLGGvvS6kyRoZci1QMmuBHVtTvY+2Pj9aFdV/EQLboUzRBt06GCj4MDc
+         CgzOd9blKo7RLN5OYBur6/Q2WG0hSwUGI6S7zz+3G6o5ctC829YZJOBXasBINlzadVee
+         LB3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688541877; x=1691133877;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=yBZ2V9YkgQb75fgLLwSDoK6jYDOYm9Ulfp2E4lReMu4=;
+        b=BVqdyWZWgEbVJy2MrX4hFO5zjhckLqTZoNE3YPLGhT1bfWe0Ij+HrOcawoOVkpdznK
+         xTi09rqO2pjGaKsxtLFLPV/dmPeKnzLl4hnzC3KC2owpj8U5+R3QA2qyA8DIaGUxkEyO
+         otfUy7MG4NHy6A7Nas+qry04TQqV1tSXX1QkAdR0uyanWi57q5EmxT+ak8G/aHgTwnpg
+         gav2xVLzmdTz7u4usWSeqtKp+A4NSTeZJfoG4aVVghN9Nwfx2NCifdwhzFfWqaEODw5+
+         0j8mhvKOS1gOOTg6yZXjvU7aM9XzKvRO32f4csVqvuUnwn/SMa4T333oVUAsDC68xjo/
+         YMhg==
+X-Gm-Message-State: AC+VfDz5fmh0chb4A75/L+8FCHLYZC1pPIAGqJg7zNE6G2u/cACNRwAh
+	GKo+43F/jS8iIXsggCGE7Mrn1Ay26oFbcwMw+N4=
+X-Google-Smtp-Source: APBJJlEzktWAFzDyfTdF5aq95BVbZzgxZ4ow0qDGxVedpqTLBRPqSrErSM08kh3Ba8Fnen97931YBN7ZnQZfEtTq87k=
+X-Received: by 2002:a17:907:100c:b0:973:ca9c:3e43 with SMTP id
+ ox12-20020a170907100c00b00973ca9c3e43mr10435369ejb.45.1688541876875; Wed, 05
+ Jul 2023 00:24:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJuCfpE_WjRQoDT1XnvBghCH-kpqk+pfcBJGyDnK7DZLMVG5Mw@mail.gmail.com>
+References: <20230429020951.082353595@lindbergh.monkeyblade.net>
+ <CAAJw_ZueYAHQtM++4259TXcxQ_btcRQKiX93u85WEs2b2p19wA@mail.gmail.com>
+ <ZE0kndhsXNBIb1g7@debian.me> <b9ab37d2-42bf-cc31-a2c0-a9b604e95530@gmail.com>
+In-Reply-To: <b9ab37d2-42bf-cc31-a2c0-a9b604e95530@gmail.com>
+From: Jeff Chua <jeff.chua.linux@gmail.com>
+Date: Wed, 5 Jul 2023 15:24:23 +0800
+Message-ID: <CAAJw_Zug6VCS5ZqTWaFSr9sd85k=tyPm9DEE+mV=AKoECZM+sQ@mail.gmail.com>
+Subject: Linux-6.5 iwlwifi crash
+To: lkml <linux-kernel@vger.kernel.org>
+Cc: Gregory Greenman <gregory.greenman@intel.com>, Kalle Valo <kvalo@kernel.org>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Linux Wireless <linux-wireless@vger.kernel.org>, Linux Networking <netdev@vger.kernel.org>, 
+	Linux Regressions <regressions@lists.linux.dev>, Bagas Sanjaya <bagasdotme@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, Jul 04, 2023 at 01:22:54PM -0700, Suren Baghdasaryan wrote:
-> On Tue, Jul 4, 2023 at 9:18 AM Andrew Morton <akpm@linux-foundation.org> wrote:
-> >
-> > On Tue, 4 Jul 2023 09:00:19 +0100 Greg KH <gregkh@linuxfoundation.org> wrote:
-> >
-> > > > > > > Thanks! I'll investigate this later today. After discussing with
-> > > > > > > Andrew, we would like to disable CONFIG_PER_VMA_LOCK by default until
-> > > > > > > the issue is fixed. I'll post a patch shortly.
-> > > > > >
-> > > > > > Posted at: https://lore.kernel.org/all/20230703182150.2193578-1-surenb@google.com/
-> > > > >
-> > > > > As that change fixes something in 6.4, why not cc: stable on it as well?
-> > > >
-> > > > Sorry, I thought since per-VMA locks were introduced in 6.4 and this
-> > > > patch is fixing 6.4 I didn't need to send it to stable for older
-> > > > versions. Did I miss something?
-> > >
-> > > 6.4.y is a stable kernel tree right now, so yes, it needs to be included
-> > > there :)
-> >
-> > I'm in wait-a-few-days-mode on this.  To see if we have a backportable
-> > fix rather than disabling the feature in -stable.
-> 
-> Ok, I think we have a fix posted at [2]  and it's cleanly applies to
-> 6.4.y stable branch as well. However fork() performance might slightly
-> regress, therefore disabling per-VMA locks by default for now seems to
-> be preferable even with this fix (see discussion at
-> https://lore.kernel.org/all/54cd9ffb-8f4b-003f-c2d6-3b6b0d2cb7d9@google.com/).
-> IOW, both [1] and [2] should be applied to 6.4.y stable. Both apply
-> cleanly and I CC'ed stable on [2]. Greg, should I send [1] separately
-> to stable@vger?
+Latest linux-6.4 after June 27 crash my whole linux notebook once
+iwlwifi is loaded. Anyone seeing this?
 
-We can't do anything for stable until it lands in Linus's tree, so if
-you didn't happen to have the stable@ tag in the patch, just email us
-the git SHA1 and I can pick it up that way.
+Bisect? Or there's a patch for this?
 
-thanks,
+# modprobe iwlwifi
+... Whole system frozen!
 
-greg k-h
+
+Here's my system before the crash ...
+
+# dmesg
+cfg80211: Loading compiled-in X.509 certificates for regulatory database
+Loaded X.509 cert 'sforshee: 00b28ddf47aef9cea7'
+iwlwifi 0000:00:14.3: enabling device (0000 -> 0002)
+iwlwifi 0000:00:14.3: api flags index 2 larger than supported by driver
+thermal thermal_zone1: failed to read out thermal zone (-61)
+iwlwifi 0000:00:14.3: Sorry - debug buffer is only 4096K while you
+requested 65536K
+
+# lspci
+00:14.3 Network controller: Intel Corporation Alder Lake-P PCH CNVi
+WiFi (rev 01)
+
+# linux git log
+commit d528014517f2b0531862c02865b9d4c908019dc4 (HEAD -> master,
+origin/master, origin/HEAD)
+Author: Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue Jul 4 15:05:12 2023 -0700
+
+# lsmodModule                  Size  Used by
+iwlmvm                397312  0
+mac80211              626688  1 iwlmvm
+iwlwifi               307200  1 iwlmvm
+cfg80211              413696  3 iwlmvm,iwlwifi,mac80211
+
+
+Bisect?
+
+Thanks,
+Jeff.
