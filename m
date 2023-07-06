@@ -1,46 +1,45 @@
-Received: from mail-oa1-f54.google.com (mail-oa1-f54.google.com [209.85.160.54])
+Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52D3A13AD1
-	for <regressions@lists.linux.dev>; Wed,  5 Jul 2023 18:11:41 +0000 (UTC)
-Received: by mail-oa1-f54.google.com with SMTP id 586e51a60fabf-1b0605d4d11so6072825fac.1
-        for <regressions@lists.linux.dev>; Wed, 05 Jul 2023 11:11:41 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4605C7E9
+	for <regressions@lists.linux.dev>; Thu,  6 Jul 2023 03:08:29 +0000 (UTC)
+Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-55b1238a013so203989a12.3
+        for <regressions@lists.linux.dev>; Wed, 05 Jul 2023 20:08:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1688580700; x=1691172700;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:from:user-agent:mime-version:date:message-id:sender
+        d=gmail.com; s=20221208; t=1688612908; x=1691204908;
+        h=content-transfer-encoding:in-reply-to:references:cc:to:from
+         :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=6Iq0v+9fymbgFhRihVMRoWwi6Rd8afLWBuIkpaTjTwk=;
-        b=GFJl2Y1meDyik/DDdV9VstIX7NW4pypN69n0NdG9/8m2vlmFNGHwDpffvGlOBAc9O4
-         I4CvfgPOLreiPrWVN37kcMlIuEP02Onz7qWVugbzvFvUkKu9NmcSGfiVkmGWMslio1+t
-         y8pXEH8izTUccegunhOy7/ojDAveGeAiJzX2uHlyWD94e+uAeJzqLX9B662bRvpYqePz
-         olO8zWzkP0lV3YhZEPnUMIuB2PR7JJeLX4t3QjciGdj44ZZQUrwS4ut//cy/G4RxhJ42
-         4VwC4ie8W4oesEqplyVvmLHOrt3+nN8fkSWyCXeRNXyQsNem1prsojojl6hV6B+snjUI
-         nLGA==
+        bh=qkswXhgVYLum5NAuYw9zYKn7kb93ZCamEnpThtSqHNc=;
+        b=S3is4OStCcuBp9VXOE2UDwGY1EdZNPtDBNIShgNjO2ImugFGUKpwVRwPpSRa0+C6ee
+         lvANFsMxW1CNYqXS0/WWuK7Y5+aiH4ZURb5ItUIinZOMeL4QgqyRlPCF9GuoIHmiIscu
+         XPKcSvn6XDiu98lirHCA1rWuWmpdA07TLqsXU9tTYjunKKR6ArzdVNy+zjB584hwsTt3
+         GUfD99svNOngxdn/SYf+WHgvY5io9RbYmwKo5RXDnZN3M+DHCx1+Y8mDPXQhVzqLBqmM
+         5Fat7gJD0npAwHt3alPSauqFApN6RqU86demE4lm2grNV1dI8amc9YXEBSMlxM1koPSN
+         PZjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688580700; x=1691172700;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:from:user-agent:mime-version:date:message-id:sender
+        d=1e100.net; s=20221208; t=1688612908; x=1691204908;
+        h=content-transfer-encoding:in-reply-to:references:cc:to:from
+         :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6Iq0v+9fymbgFhRihVMRoWwi6Rd8afLWBuIkpaTjTwk=;
-        b=aGjpMOtkT3OomYzrO72xJRMtgEDtbr1RhwXWNMnRWvBs9i25NEcEKOJK/48LNXKXK9
-         h9qdSHL3t7YeTQARFupxBm2LcQp2+hpA7w1rUuEx8dLCQ0hnwEfl7DkrGlWfd+mopgQC
-         pyW2diJ5FLM/xhO0KgP55/hlCJD+O5vQArh2ZB90mVILts55SBG1MfxmfQtlWd+bkc+h
-         OCuDLz95LMzbghPZUxxhhHr3ggDnSkpEaAHsekXn5V/GQutswusxlGDkMkq9fioegNHe
-         YhK1/n0ZxFK3C1hmf29DjGpMZbiT/h3iu/ZkryWvnnUlj2x68Lmv/psl3MK5R16ZbXzR
-         /xPQ==
-X-Gm-Message-State: AC+VfDxGGw9vqdP+GgCyCpzodBIUoR0iJajMM/ZwCiFgwMrX+PIwkzST
-	Jap915NKprf6U90mIVyUWd0=
-X-Google-Smtp-Source: ACHHUZ4r0Tu+dbwv/dV1GkBH1dLLBFf5AqxfoMNu9YqQeQVRfy3cj1/CSsqUUvLiOpENO4BXj5IO+Q==
-X-Received: by 2002:a05:6870:3e04:b0:196:8dc3:4e16 with SMTP id lk4-20020a0568703e0400b001968dc34e16mr17033460oab.39.1688580700120;
-        Wed, 05 Jul 2023 11:11:40 -0700 (PDT)
-Received: from [192.168.1.128] ([216.130.59.33])
-        by smtp.gmail.com with ESMTPSA id oa24-20020a056870bc1800b001b075c1a6e5sm10139647oab.20.2023.07.05.11.11.39
+        bh=qkswXhgVYLum5NAuYw9zYKn7kb93ZCamEnpThtSqHNc=;
+        b=Ry+S6VoXrE+i234mC7ZAHw/h5iJcTf0mATebkOBbYPQWPU4+HBUn7FtU0cQVuLljrt
+         0ldf23n5Mjj6kXnI0BgNHuq0dT8HxVGbFtFmlEg3ob8k5/6APoTYnRiNvGIss0WBS5wF
+         2LUGo3y4Ete1EZmUMg1uk/5NV7s6GpwbVPZbTkXsOzKcBGNZp66IuBblduB8sNgb7XJ6
+         SCEkZg8+FJKVqJqhUyQO5zqH86ZENVT8hXKbCsvjyr0XmRGeRv2p8vhyvbicFAZgrPFh
+         4qlMsPRRhuEGb+6gCUq56Ix8kgC+C/4sjIkOW5+AVq+wEjdVYBzqVgQRxnnF1JpxzaO+
+         r42A==
+X-Gm-Message-State: ABy/qLbCeL5x2Gfxlbbz9i614AQ9fvcwx7rAs3yxif7uXcxI/5UEL2fO
+	eIlNPMk+HkGLUI95MY/P1zM=
+X-Google-Smtp-Source: APBJJlGylu/y1J6UmD5L0LCkDB3980SfnVTwY5UUOgqM0SRWc727bzWb5tomce3Ltd6cmX+TmhrHew==
+X-Received: by 2002:a05:6a20:13d9:b0:12d:d379:6e6c with SMTP id ho25-20020a056a2013d900b0012dd3796e6cmr681861pzc.11.1688612908443;
+        Wed, 05 Jul 2023 20:08:28 -0700 (PDT)
+Received: from [192.168.0.103] ([103.131.18.64])
+        by smtp.gmail.com with ESMTPSA id x23-20020aa793b7000000b00673e652985esm220170pff.44.2023.07.05.20.08.25
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Jul 2023 11:11:39 -0700 (PDT)
-Sender: Larry Finger <larry.finger@gmail.com>
-Message-ID: <64b8732f-6319-9f10-b82a-b4a3dd8d4b8e@lwfinger.net>
-Date: Wed, 5 Jul 2023 13:11:38 -0500
+        Wed, 05 Jul 2023 20:08:27 -0700 (PDT)
+Message-ID: <50f4c10d-260c-cb98-e7d2-124f5519fa68@gmail.com>
+Date: Thu, 6 Jul 2023 10:08:20 +0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -49,108 +48,60 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.12.0
-From: Larry Finger <Larry.Finger@lwfinger.net>
-Subject: Re: Linux-6.5 iwlwifi crash
-To: Jeff Chua <jeff.chua.linux@gmail.com>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: lkml <linux-kernel@vger.kernel.org>,
- Gregory Greenman <gregory.greenman@intel.com>, Kalle Valo
- <kvalo@kernel.org>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>,
- Linux Wireless <linux-wireless@vger.kernel.org>,
- Linux Networking <netdev@vger.kernel.org>,
- Bagas Sanjaya <bagasdotme@gmail.com>
-References: <20230429020951.082353595@lindbergh.monkeyblade.net>
- <CAAJw_ZueYAHQtM++4259TXcxQ_btcRQKiX93u85WEs2b2p19wA@mail.gmail.com>
- <ZE0kndhsXNBIb1g7@debian.me> <b9ab37d2-42bf-cc31-a2c0-a9b604e95530@gmail.com>
- <CAAJw_Zug6VCS5ZqTWaFSr9sd85k=tyPm9DEE+mV=AKoECZM+sQ@mail.gmail.com>
- <7fee3284-b9ba-58f4-8118-fe0b99ae6bf7@leemhuis.info>
- <CAAJw_Zu=MPtGPARgCB2fteP+7F793YDFXE9RuzSH8EqYBS-OOw@mail.gmail.com>
+Subject: Re: Fwd: 3 more broken Zaurii - SL-5600, A300, C700
 Content-Language: en-US
-In-Reply-To: <CAAJw_Zu=MPtGPARgCB2fteP+7F793YDFXE9RuzSH8EqYBS-OOw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Dave Jones <davej@redhat.com>, "David S. Miller" <davem@davemloft.net>,
+ Ross Maynard <bids.7405@bigpond.com>,
+ "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Linux Networking <netdev@vger.kernel.org>,
+ Linux USB <linux-usb@vger.kernel.org>
+References: <7ea9abd8-c35d-d329-f0d4-c8bd220cf691@gmail.com>
+In-Reply-To: <7ea9abd8-c35d-d329-f0d4-c8bd220cf691@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 7/5/23 06:56, Jeff Chua wrote:
-> On Wed, Jul 5, 2023 at 4:37 PM Linux regression tracking (Thorsten
-> Leemhuis) <regressions@leemhuis.info> wrote:
->>
->> Hi! Thanks for your report.
->>
->> Side note: is there any relation to the thread[1] you posted this in?
+On 7/5/23 09:09, Bagas Sanjaya wrote:
+> Hi,
 > 
-> Sorry, I was just posting to the same email list that I had reported
-> about a different wifi list earlier. No relation to this, but it's a
-> new wifi issue.
+> I notice a regression report on Bugzilla [1]. Quoting from it:
 > 
->> Doesn't look like it from here.
+>> The following patch broke support of 3 more Zaurus models: SL-5600, A300 and C700
 >>
->> Side note: discussing multiple unrelated issues in one thread increases
->> the risk a lot that some or all of them are ignored:
->> https://linux-regtracking.leemhuis.info/post/frequent-reasons-why-linux-kernel-bug-reports-are-ignored/
+>> [16adf5d07987d93675945f3cecf0e33706566005] usbnet: Remove over-broad module alias from zaurus
 >>
->> [1] https://lore.kernel.org/all/ZE0kndhsXNBIb1g7@debian.me/
->>
->> On 05.07.23 09:24, Jeff Chua wrote:
->>> Latest linux-6.4
->>
->> What do you mean by that? From later in the mail it sounds like you mean
->> latest mainline -- is that correct?
+>> dmesg and lsusb output attached.
 > 
-> It's from linux git pull. It's 6.5-rc but I didn't write that way
-> becuase Linus's branch is still 6.4 ... that 6.5-rc0 or rc1 should
-> have more appropriate.
+> Because the description above was vague, I asked the clarification.
+> The reporter replied:
 > 
->>> after June 27 crash my whole linux notebook once
->>> iwlwifi is loaded. Anyone seeing this?
+>> The problem is that networking to SL-5600 / A300 / C700 devices does not 
+>> work. I cannot ping the devices.
 >>
->> I haven't heard of any such problems, but that doesn't have to mean much.
+>> The error is occurring in zaurus.c. dmesg is missing the following line:
+>>
+>> zaurus 2-2:1.0 usb0: register 'zaurus' at usb-0000:00:1d.0-2, 
+>> pseudo-MDLM (BLAN) device, 2a:01:39:93:bc:1a
+>>
+>> A patch was created in 2022 to fix the same problem with the SL-6000:
+>>
+>> USB: zaurus: support another broken Zaurus - 
+>> [6605cc67ca18b9d583eb96e18a20f5f4e726103c]
+>>
+>> Could you please create another patch for the 3 devices: SL-5600 / A300 
+>> / C700?
 > 
->>> Bisect? Or there's a patch for this?
->>>
->>> # modprobe iwlwifi
->>> ... Whole system frozen!
->>>
->>>
->>> Here's my system before the crash ...
->>>
->>> # dmesg
->>> cfg80211: Loading compiled-in X.509 certificates for regulatory database
->>> Loaded X.509 cert 'sforshee: 00b28ddf47aef9cea7'
->>> iwlwifi 0000:00:14.3: enabling device (0000 -> 0002)
->>> iwlwifi 0000:00:14.3: api flags index 2 larger than supported by driver
->>> thermal thermal_zone1: failed to read out thermal zone (-61)
->>> iwlwifi 0000:00:14.3: Sorry - debug buffer is only 4096K while you
->>> requested 65536K
->>>
->>> # lspci
->>> 00:14.3 Network controller: Intel Corporation Alder Lake-P PCH CNVi
->>> WiFi (rev 01)
->>>
->>> # linux git log
->>> commit d528014517f2b0531862c02865b9d4c908019dc4 (HEAD -> master,
->>> origin/master, origin/HEAD)
->>> Author: Linus Torvalds <torvalds@linux-foundation.org>
->>> Date:   Tue Jul 4 15:05:12 2023 -0700
->>>
->>> # lsmodModule                  Size  Used by
->>> iwlmvm                397312  0
->>> mac80211              626688  1 iwlmvm
->>> iwlwifi               307200  1 iwlmvm
->>> cfg80211              413696  3 iwlmvm,iwlwifi,mac80211
+> See Bugzilla for the full thread and attached dmesg and lsusb.
+> 
+> Dave: The reporter asked to write the quirk for affected devices.
+> Would you like to create it?
+> 
 
-Jeff,
+Thorsten: Email to the culprit author (Dave) bounced. What can
+I do in this case? Should I start adding get_maintainer.pl output?
 
-Fow what it is worth, my 6.4-git (6.5-rc0?) commit d528014517f2 (pulled today) 
-is working OK with iwlmvm. Lspci says my device is
-
-04:00.0 Network controller [0280]: Intel Corporation Wireless 7260 [8086:08b1] 
-(rev 73)
-
-I think you do need to do a bisection.
-
-Larry
-
-
+-- 
+An old man doll... just what I always wanted! - Clara
 
