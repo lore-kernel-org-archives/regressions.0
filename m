@@ -1,124 +1,79 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from scorn.kernelslacker.org (scorn.kernelslacker.org [45.56.101.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CE6F33E2;
-	Thu,  6 Jul 2023 16:33:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4518EC433C7;
-	Thu,  6 Jul 2023 16:33:03 +0000 (UTC)
-Date: Thu, 6 Jul 2023 12:33:00 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Vivek Anand <vivekanand754@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra
- <peterz@infradead.org>, Bagas Sanjaya <bagasdotme@gmail.com>, Pablo Neira
- Ayuso <pablo@netfilter.org>, Jozsef Kadlecsik <kadlec@netfilter.org>,
- Florian Westphal <fw@strlen.de>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
- Abeni <pabeni@redhat.com>, Lingutla Chandrasekhar
- <clingutla@codeaurora.org>, Frederic Weisbecker <frederic@kernel.org>, "J.
- Avila" <elavila@google.com>, "Rafael J. Wysocki" <rafael@kernel.org>,
- Thomas Renninger <trenn@suse.com>, Shuah Khan <shuah@kernel.org>, Borislav
- Petkov <bp@alien8.de>, Josh Poimboeuf <jpoimboe@kernel.org>, Linux Kernel
- Mailing List <linux-kernel@vger.kernel.org>, Linux Regressions
- <regressions@lists.linux.dev>, Linux Netfilter Development
- <netfilter-devel@vger.kernel.org>, Netfilter Core Developers
- <coreteam@netfilter.org>, Linux Networking <netdev@vger.kernel.org>, Linux
- Power Management <linux-pm@vger.kernel.org>, x86@kernel.org
-Subject: Re: High cpu usage caused by kernel process when upgraded to linux
- 5.19.17 or later
-Message-ID: <20230706123300.55d6450b@gandalf.local.home>
-In-Reply-To: <CAJnqnX5dHiXe3smKhj6JT9+6FNdgrAR=5_Hm8BSRpVF3uARYUg@mail.gmail.com>
-References: <01ac399d-f793-49d4-844b-72cd8e0034df@gmail.com>
-	<ZJpJkL3dPXxgw6RK@debian.me>
-	<20230627073035.GV4253@hirez.programming.kicks-ass.net>
-	<99b64dfd-be4a-2248-5c42-8eb9197824e1@gmail.com>
-	<20230627101939.GZ4253@hirez.programming.kicks-ass.net>
-	<CAJnqnX5rYn65zVQ+SLN4m4ZzM_jOa_RjGhazWO=Fh8ZvdOCadg@mail.gmail.com>
-	<878rc22vxq.ffs@tglx>
-	<CAJnqnX5dHiXe3smKhj6JT9+6FNdgrAR=5_Hm8BSRpVF3uARYUg@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 452EABE46
+	for <regressions@lists.linux.dev>; Thu,  6 Jul 2023 17:14:32 +0000 (UTC)
+Received: from [2601:196:4600:6634:ae9e:17ff:feb7:72ca] (helo=wopr.kernelslacker.org)
+	by scorn.kernelslacker.org with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <davej@codemonkey.org.uk>)
+	id 1qHS2U-006KW9-Jc; Thu, 06 Jul 2023 12:41:06 -0400
+Received: by wopr.kernelslacker.org (Postfix, from userid 1026)
+	id A53C756016B; Thu,  6 Jul 2023 12:41:05 -0400 (EDT)
+Date: Thu, 6 Jul 2023 12:41:05 -0400
+From: Dave Jones <davej@codemonkey.org.uk>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Bagas Sanjaya <bagasdotme@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Ross Maynard <bids.7405@bigpond.com>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Regressions <regressions@lists.linux.dev>,
+	Linux Networking <netdev@vger.kernel.org>,
+	Linux USB <linux-usb@vger.kernel.org>,
+	Oliver Neukum <oneukum@suse.com>
+Subject: Re: Fwd: 3 more broken Zaurii - SL-5600, A300, C700
+Message-ID: <ZKbuoRBi50i8OZ9d@codemonkey.org.uk>
+Mail-Followup-To: Dave Jones <davej@codemonkey.org.uk>,
+	Thorsten Leemhuis <regressions@leemhuis.info>,
+	Bagas Sanjaya <bagasdotme@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Ross Maynard <bids.7405@bigpond.com>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Regressions <regressions@lists.linux.dev>,
+	Linux Networking <netdev@vger.kernel.org>,
+	Linux USB <linux-usb@vger.kernel.org>,
+	Oliver Neukum <oneukum@suse.com>
+References: <7ea9abd8-c35d-d329-f0d4-c8bd220cf691@gmail.com>
+ <50f4c10d-260c-cb98-e7d2-124f5519fa68@gmail.com>
+ <e1fdc435-089c-8ce7-d536-ce3780a4ba95@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e1fdc435-089c-8ce7-d536-ce3780a4ba95@leemhuis.info>
+X-Spam-Note: SpamAssassin invocation failed
 
-On Mon, 3 Jul 2023 18:23:25 +0530
-Vivek Anand <vivekanand754@gmail.com> wrote:
+On Thu, Jul 06, 2023 at 01:45:57PM +0200, Thorsten Leemhuis wrote:
+ > On 06.07.23 05:08, Bagas Sanjaya wrote:
+ > >>
+ > >> I notice a regression report on Bugzilla [1]. Quoting from it:
+ > >>
+ > >>> The following patch broke support of 3 more Zaurus models: SL-5600, A300 and C700
+ > >>>
+ > >>> [16adf5d07987d93675945f3cecf0e33706566005] usbnet: Remove over-broad module alias from zaurus
+ > 
+ > ...
+ > He sometimes shows up on Linux kernel lists, but I doubt he cares about
+ > that change after all these years. And I would not blame him at all.
 
-> Hi Thomas,
->=20
-> Further analyzing, I found that I did set
-> "CONFIG_NETFILTER_XT_MATCH_LIMIT=3Dm" in my kernel config earlier which w=
-as
-> causing high CPU consumption.
-> Setting it to "CONFIG_NETFILTER_XT_MATCH_LIMIT=3Dn" resolved the high CPU
-> issue.
->=20
-> Is there any suggestion regarding the use of this config
-> "CONFIG_NETFILTER_XT_MATCH_LIMIT" as I'm getting high CPU by setting it to
-> "m" ?
+That's about the size of it.  This is pretty near the bottom of my ever-shrinking
+list of kernel drivers I care about.
 
-That config enables the compiling of: net/netfilter/xt_limit.c
+ > Yes, we have the "no regressions" rule, but contributing a change to the
+ > kernel OTOH should not mean that you are responsible for all regressions
+ > it causes for your whole life. :-)
 
-The htable_gc that you reported is defined in: net/netfilter/xt_hashlimit.c
+That said, 12 years later, 16adf5d07987d93675945f3cecf0e33706566005
+is still the right thing to do. Adding actual matches for the devices
+rather than matching by class will prevent this getting loaded where it
+doesn't need to be.
 
-It has:
+If someone actually cares to get this working, cargo-culting Oliver's
+change to add the extra id is likely the way forward.
 
-static void htable_gc(struct work_struct *work)
-{
-        struct xt_hashlimit_htable *ht;
-
-        ht =3D container_of(work, struct xt_hashlimit_htable, gc_work.work);
-
-        htable_selective_cleanup(ht, false);
-
-        queue_delayed_work(system_power_efficient_wq,
-                           &ht->gc_work, msecs_to_jiffies(ht->cfg.gc_interv=
-al));
-}
-
-So it queues itself every ht->cfg.gc_interval msecs. That variable seems to
-come from some configuration of netfilter, and I think you can see these in:
-
- find /proc/sys/net -name 'gc_interval'
-
-Perhaps you have it set off to go too much?
-
--- Steve
-
-
->=20
-> Thanks,
-> Vivek
->=20
-> On Thu, Jun 29, 2023 at 7:48=E2=80=AFPM Thomas Gleixner <tglx@linutronix.=
-de> wrote:
->=20
-> > On Thu, Jun 29 2023 at 12:05, Vivek Anand wrote:
-> > > I've tried booting with "spectre_v2=3Dretpoline retbleed=3Doff".
-> > > This change didn't work. Still CPU is 100%
-> >
-> > This does not make sense.
-> >
-> > retbleed=3Doff has the same effect as CONFIG_X86_IBRS_ENTRY=3Dn.
-> >
-> > The only difference is that with CONFIG_X86_IBRS_ENTRY=3Dy and
-> > retbleed=3Doff there is one extra jump in the low level entry code
-> > (syscall, interrupts, exceptions) and one extra jump on the exit side.
-> >
-> > But those extra jumps are completely irrelevant for the kworker threads.
-> >
-> > Can you please provide dmesg and the content of the files in
-> >
-> >  /sys/devices/system/cpu/vulnerabilities/
-> >
-> > on a kernel booted with "spectre_v2=3Dretpoline retbleed=3Doff" ?
-> >
-> > Thanks,
-> >
-> >         tglx
-> >
+	Dave
 
