@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B48BC8824
-	for <regressions@lists.linux.dev>; Thu,  6 Jul 2023 10:54:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E25528C04
+	for <regressions@lists.linux.dev>; Thu,  6 Jul 2023 11:46:02 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qHMco-0005gy-HF; Thu, 06 Jul 2023 12:54:14 +0200
-Message-ID: <7336b8ea-64bd-d08d-1d85-bf942d5660e2@leemhuis.info>
-Date: Thu, 6 Jul 2023 12:54:13 +0200
+	id 1qHNQr-0005yC-LV; Thu, 06 Jul 2023 13:45:57 +0200
+Message-ID: <e1fdc435-089c-8ce7-d536-ce3780a4ba95@leemhuis.info>
+Date: Thu, 6 Jul 2023 13:45:57 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,59 +16,85 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.12.0
-Subject: Re: Fwd: vmalloc error: btrfs-delalloc btrfs_work_helper [btrfs] in
- kernel 6.3.x
-To: Forza <forza@tnonline.net>, Uladzislau Rezki <urezki@gmail.com>,
- Bagas Sanjaya <bagasdotme@gmail.com>
-Cc: Linux btrfs <linux-btrfs@vger.kernel.org>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>,
- Linux Stable <stable@vger.kernel.org>, Chris Mason <clm@fb.com>,
- Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
- a1bert@atlas.cz
-References: <efa04d56-cd7f-6620-bca7-1df89f49bf4b@gmail.com>
- <fcf1d04.faed4a1a.18844d8e78f@tnonline.net> <ZGwcVTpQNBoJHBB+@debian.me>
- <ZGyVVQxnw6Tn7Xb8@pc636> <c9db92d.faed4a1c.1884c5550fb@tnonline.net>
- <20230524091357.GH32559@suse.cz> <ZHClGA9szxSqzDf8@pc636>
- <cf07f03.70397026.18918ef7f95@tnonline.net>
- <2063d59.8f9f4a3a.1892a3ec50f@tnonline.net>
+Subject: Re: Fwd: 3 more broken Zaurii - SL-5600, A300, C700
 Content-Language: en-US, de-DE
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <2063d59.8f9f4a3a.1892a3ec50f@tnonline.net>
+To: Bagas Sanjaya <bagasdotme@gmail.com>,
+ "David S. Miller" <davem@davemloft.net>, Ross Maynard <bids.7405@bigpond.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Linux Networking <netdev@vger.kernel.org>,
+ Linux USB <linux-usb@vger.kernel.org>, Dave Jones <davej@codemonkey.org.uk>,
+ Oliver Neukum <oneukum@suse.com>
+References: <7ea9abd8-c35d-d329-f0d4-c8bd220cf691@gmail.com>
+ <50f4c10d-260c-cb98-e7d2-124f5519fa68@gmail.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <50f4c10d-260c-cb98-e7d2-124f5519fa68@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1688640862;567aa82e;
-X-HE-SMSGID: 1qHMco-0005gy-HF
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1688643963;cb78c0bd;
+X-HE-SMSGID: 1qHNQr-0005yC-LV
 
-On 06.07.23 10:08, Forza wrote:
->>> On Wed, May 24, 2023 at 11:13:57AM +0200, David Sterba wrote:
-> [...]
-> A small update.
+On 06.07.23 05:08, Bagas Sanjaya wrote:
+> On 7/5/23 09:09, Bagas Sanjaya wrote:
+>>
+>> I notice a regression report on Bugzilla [1]. Quoting from it:
+>>
+>>> The following patch broke support of 3 more Zaurus models: SL-5600, A300 and C700
+>>>
+>>> [16adf5d07987d93675945f3cecf0e33706566005] usbnet: Remove over-broad module alias from zaurus
 
-Thx for this.
+Side note: I wonder if the time spend on tracking and fighting
+regressions from v3.0 would better be spend elsewhere. But whatever,
+let's at least try.
 
-> I have been able test 6.2.16, all 6.3.x and 6.4.1 and they all show
-> the same issue.
+>>> dmesg and lsusb output attached.
+>>
+>> Because the description above was vague, I asked the clarification.
+>> The reporter replied:
+>>
+>>> The problem is that networking to SL-5600 / A300 / C700 devices does not 
+>>> work. I cannot ping the devices.
+>>>
+>>> The error is occurring in zaurus.c. dmesg is missing the following line:
+>>>
+>>> zaurus 2-2:1.0 usb0: register 'zaurus' at usb-0000:00:1d.0-2, 
+>>> pseudo-MDLM (BLAN) device, 2a:01:39:93:bc:1a
+>>>
+>>> A patch was created in 2022 to fix the same problem with the SL-6000:
+>>>
+>>> USB: zaurus: support another broken Zaurus - 
+>>> [6605cc67ca18b9d583eb96e18a20f5f4e726103c]
+>>>
+>>> Could you please create another patch for the 3 devices: SL-5600 / A300 
+>>> / C700?
+>>
+>> See Bugzilla for the full thread and attached dmesg and lsusb.
+>>
+>> Dave: The reporter asked to write the quirk for affected devices.
+>> Would you like to create it?
 > 
-> I am now trying 6.1.37 since two days and have not been able to
-> reproduce this issue on any of my virtual qemu/kvm machines. Perhaps
-> this information is helpful in finding the root cause?
+> Thorsten: Email to the culprit author (Dave) bounced.
 
-That means it's most likely a regression between v6.1..v6.2 (or
-v6.1..v6.2.16 if we are unlucky) somewhere (from earlier in the thread
-it sounds like it might not be Btrfs).
+He sometimes shows up on Linux kernel lists, but I doubt he cares about
+that change after all these years. And I would not blame him at all.
+Yes, we have the "no regressions" rule, but contributing a change to the
+kernel OTOH should not mean that you are responsible for all regressions
+it causes for your whole life. :-)
 
-Which makes we wonder: how long do you usually need to reproduce the
-issue? If it's not too long it might mean that a bisection is the best
-way forward, unless some developer sits down and looks closely at the
-logs. With a bit of luck some dev will do that; but if we are unlucky we
-likely will need a bisection.
+> What can
+> I do in this case? Should I start adding get_maintainer.pl output?
+
+Yeah, that's not much helpful here afaics, as most of those that would
+care are CCed already.
+
+I'm CCing Oliver, he sent the fix mentioned above for the SL-6000. Maybe
+he cares.
+
+If not I guess this won't be fixed, unless we find somebody else to care
+enough to submit a patch.
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
 Everything you wanna know about Linux kernel regression tracking:
 https://linux-regtracking.leemhuis.info/about/#tldr
 If I did something stupid, please tell me, as explained on that page.
-
