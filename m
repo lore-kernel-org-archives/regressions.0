@@ -1,208 +1,129 @@
-Received: from ste-pvt-msa1.bahnhof.se (ste-pvt-msa1.bahnhof.se [213.80.101.70])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B405D15B8
-	for <regressions@lists.linux.dev>; Thu,  6 Jul 2023 08:16:01 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by ste-pvt-msa1.bahnhof.se (Postfix) with ESMTP id 073213FA35;
-	Thu,  6 Jul 2023 10:08:28 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at bahnhof.se
-X-Spam-Flag: NO
-X-Spam-Score: -1.91
-X-Spam-Level:
-X-Spam-Status: No, score=-1.91 tagged_above=-999 required=6.31
-	tests=[BAYES_00=-1.9, T_SCC_BODY_TEXT_LINE=-0.01]
-	autolearn=ham autolearn_force=no
-Received: from ste-pvt-msa1.bahnhof.se ([127.0.0.1])
-	by localhost (ste-pvt-msa1.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id 5UPqS-fiHZfV; Thu,  6 Jul 2023 10:08:26 +0200 (CEST)
-Received: 
-	by ste-pvt-msa1.bahnhof.se (Postfix) with ESMTPA id 0ED163F399;
-	Thu,  6 Jul 2023 10:08:26 +0200 (CEST)
-Received: from [192.168.0.132] (port=45102)
-	by tnonline.net with esmtpsa  (TLS1.3) tls TLS_AES_128_GCM_SHA256
-	(Exim 4.96)
-	(envelope-from <forza@tnonline.net>)
-	id 1qHK2K-000Pgc-1b;
-	Thu, 06 Jul 2023 10:08:25 +0200
-Date: Thu, 6 Jul 2023 10:08:24 +0200 (GMT+02:00)
-From: Forza <forza@tnonline.net>
-To: Uladzislau Rezki <urezki@gmail.com>,
-	Bagas Sanjaya <bagasdotme@gmail.com>
-Cc: Uladzislau Rezki <urezki@gmail.com>,
-	Bagas Sanjaya <bagasdotme@gmail.com>,
-	Linux btrfs <linux-btrfs@vger.kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Regressions <regressions@lists.linux.dev>,
-	Linux Stable <stable@vger.kernel.org>, Chris Mason <clm@fb.com>,
-	Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
-	a1bert@atlas.cz
-Message-ID: <2063d59.8f9f4a3a.1892a3ec50f@tnonline.net>
-In-Reply-To: <cf07f03.70397026.18918ef7f95@tnonline.net>
-References: <efa04d56-cd7f-6620-bca7-1df89f49bf4b@gmail.com> <fcf1d04.faed4a1a.18844d8e78f@tnonline.net> <ZGwcVTpQNBoJHBB+@debian.me> <ZGyVVQxnw6Tn7Xb8@pc636> <c9db92d.faed4a1c.1884c5550fb@tnonline.net> <20230524091357.GH32559@suse.cz> <ZHClGA9szxSqzDf8@pc636> <cf07f03.70397026.18918ef7f95@tnonline.net>
-Subject: Re: Fwd: vmalloc error: btrfs-delalloc btrfs_work_helper [btrfs] in
- kernel 6.3.x
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 329606FC1
+	for <regressions@lists.linux.dev>; Thu,  6 Jul 2023 09:21:16 +0000 (UTC)
+Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-5704fce0f23so6084257b3.3
+        for <regressions@lists.linux.dev>; Thu, 06 Jul 2023 02:21:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1688635276; x=1691227276;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EQWzcD3kqn8nreTy0mrng4rT6iwYUcI+uurtyt3qorY=;
+        b=Y0sbKb2NnyAPxRj+0+x8JguFUZO5WFrhXwqakpgMdFRYBqlml9hkb6M3HfU0rOO33C
+         U4obMaT4BDTrA1rQyROiMNr1cJ817QwlpgVVVHCrOPXN41hFH45C4gC60zzTxz+GpSGC
+         cNYCIh3FMmSAlc2su56i7B0V6nAxzEfF0VSYfmJlY1CZJhnDfRZsp37E2nJquet2kxD4
+         cxRjEPJaOl3J+l/2bXoi+RpNgRvboAM3SCbRV1Q9mxfBJvco/y2GDppOeDyw/tFDnwZL
+         o31Ym9788Bde9XUO460KMf5i7dO84flldyPa+Jmc7r9DUe10TLIiHloxAxARO5KZWqRt
+         RoZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688635276; x=1691227276;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EQWzcD3kqn8nreTy0mrng4rT6iwYUcI+uurtyt3qorY=;
+        b=ENuaRKOH4E3mbg6KOA4jHGAwBd/5ruGdSjbgnjUbrcj5qRAIAvh8mb/LSdwKgr5csS
+         /lX7sx/lDAL767fGP5Fsk0oVgGX/fAI6ssNIver+yJcBFM1DAQW5Nx2B2b6Z+rf1lB2x
+         5QLn8bohgShZcCEklGgTHnM0sWOJy28UFSnmt94WUsAwTFKnKXlg9bsRTlEhaUusKyOC
+         RkJXPyZOwPab2/1INLUOMc5JFuvyiKnHEMCjpyoLGAj+tqvajeRouwibjXM9Ck50zZwo
+         ORBnMi9a+Ux2HJ181QoL2W2vlpM41/cmpXcIMpW3ToS7n6DqB3e1xiOu/0oXhXiVNVFx
+         6Pjw==
+X-Gm-Message-State: ABy/qLYpyUdv925FRQVwiF3Raj39QQzOvY2nnpktWifrOqeaRBOG7NxV
+	ObmBDF6nZc9c3uEjFqhAbO0+y47bIjmLJ1BdA2lIjg==
+X-Google-Smtp-Source: APBJJlH8WWeq5kYBpRj2qTCCg6+xWryUE16/8ZT11zqW50unDPyeXAusZhm9QvDKMY3hKC+f14TX/1RciBvLo4WLwd4=
+X-Received: by 2002:a0d:d409:0:b0:56d:1747:5bde with SMTP id
+ w9-20020a0dd409000000b0056d17475bdemr1266852ywd.32.1688635275824; Thu, 06 Jul
+ 2023 02:21:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+References: <20230403221233.500485-1-marex@denx.de> <20230403221233.500485-2-marex@denx.de>
+ <CAMi1Hd0TD=2z_=bcDrht3H_wiLvAFcv8Z-U_r_KUOoeMc6UMjw@mail.gmail.com>
+ <CAMty3ZBNFu=f-FS4YFN4wfmiTuk=48nna-vub1eMYwidDt+msg@mail.gmail.com> <CAA8EJppbdiUz5m+9EAPnFb916DaS_VKWd30c7_EPWjuid8rtqQ@mail.gmail.com>
+In-Reply-To: <CAA8EJppbdiUz5m+9EAPnFb916DaS_VKWd30c7_EPWjuid8rtqQ@mail.gmail.com>
+From: Amit Pundir <amit.pundir@linaro.org>
+Date: Thu, 6 Jul 2023 14:50:39 +0530
+Message-ID: <CAMi1Hd2G5PJmz4wpO1wbdqKd0FA8LBgvRDv2u5ZYAMb5s6Kt0A@mail.gmail.com>
+Subject: Re: [PATCH 2/2] drm/bridge: lt9611: Do not generate HFP/HBP/HSA and
+ EOT packet
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Jagan Teki <jagan@amarulasolutions.com>, Marek Vasut <marex@denx.de>, 
+	dri-devel@lists.freedesktop.org, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Robert Foss <rfoss@kernel.org>, Andrzej Hajda <andrzej.hajda@intel.com>, 
+	Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	Michael Walle <michael@walle.cc>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+	linux-arm-msm <linux-arm-msm@vger.kernel.org>, 
+	Linux regressions mailing list <regressions@lists.linux.dev>, freedreno <freedreno@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Mailer: R2Mail2
 
+On Wed, 5 Jul 2023 at 11:09, Dmitry Baryshkov
+<dmitry.baryshkov@linaro.org> wrote:
+>
+> [Adding freedreno@ to cc list]
+>
+> On Wed, 5 Jul 2023 at 08:31, Jagan Teki <jagan@amarulasolutions.com> wrot=
+e:
+> >
+> > Hi Amit,
+> >
+> > On Wed, Jul 5, 2023 at 10:15=E2=80=AFAM Amit Pundir <amit.pundir@linaro=
+.org> wrote:
+> > >
+> > > Hi Marek,
+> > >
+> > > On Wed, 5 Jul 2023 at 01:48, Marek Vasut <marex@denx.de> wrote:
+> > > >
+> > > > Do not generate the HS front and back porch gaps, the HSA gap and
+> > > > EOT packet, as these packets are not required. This makes the bridg=
+e
+> > > > work with Samsung DSIM on i.MX8MM and i.MX8MP.
+> > >
+> > > This patch broke display on Dragonboard 845c (SDM845) devboard runnin=
+g
+> > > AOSP. This is what I see
+> > > https://people.linaro.org/~amit.pundir/db845c-userdebug/v6.5-broken-d=
+isplay/PXL_20230704_150156326.jpg.
+> > > Reverting this patch fixes this regression for me.
+> >
+> > Might be msm dsi host require proper handling on these updated
+> > mode_flags? did they?
+>
+> The msm DSI host supports those flags. Also, I'd like to point out
+> that the patch didn't change the rest of the driver code. So even if
+> drm/msm ignored some of the flags, it should not have caused the
+> issue. Most likely the issue is on the lt9611 side. I's suspect that
+> additional programming is required to make it work with these flags.
 
+I spent some time today on smoke testing these flags (individually and
+in limited combination) on DB845c, to narrow down this breakage to one
+or more flag(s) triggering it. Here are my observations in limited
+testing done so far.
 
----- From: Forza <forza@tnonline.net> -- Sent: 2023-07-03 - 01:28 ----
+There is no regression with MIPI_DSI_MODE_NO_EOT_PACKET when enabled
+alone and system boots to UI as usual.
 
->=20
->=20
-> ---- From: Uladzislau Rezki <urezki@gmail.com> -- Sent: 2023-05-26 - 14:2=
-4 ----
->=20
->> On Wed, May 24, 2023 at 11:13:57AM +0200, David Sterba wrote:
->>> This looks like a different set of problems, though all of them seem to
->>> start on the compression write path in btrfs.
->>>=20
->>> On Wed, May 24, 2023 at 07:57:19AM +0200, Forza wrote:
->>> > [   8.641506] 8021q: adding VLAN 0 to HW filter on device enp4s0
->>> > [   13.841691] wireguard: WireGuard 1.0.0 loaded. See www.wireguard.c=
-om for information.
->>> > [   13.841705] wireguard: Copyright (C) 2015-2019 Jason A. Donenfeld =
-<Jason@zx2c4.com>. All Rights Reserved.
->>> > [13917.280527] ------------[ cut here ]------------
->>> > [13917.280753] default_enter_idle leaked IRQ state
->>> > [13917.281004] WARNING: CPU: 3 PID: 0 at drivers/cpuidle/cpuidle.c:26=
-9 cpuidle_enter_state+0x3bb/0x430
->>>=20
->>>=20
-> ... Snip
->>>=20
->>> And again, so something is going wrong
->>>=20
->> Indeed.
->>=20
->> I suggest you run your kernel with CONFIG_KASAN=3Dy to see if there are
->> any use-after-free or out-of-bounds bugs.
->>=20
->> --
->> Uladzislau Rezki
->=20
->=20
-> Pardon the delay... I have enabled KASAN and UBSAN on this kernel. It pro=
-duced a lot of output and plenty of warnings for misalignment.=20
->=20
-> The full dmesg is at https://paste.tnonline.net/files/aBoUMuTd5KBC_dmesg.=
-ubsan.txt (approx 1.7MiB)
->=20
-> The full kernel .conf is. at https://paste.tnonline.net/files/z1mX8TWFgZQ=
-3_kernel.conf-kasan-ubsan.txt
->=20
-> A small exctract around what I think is the  default_enter_idle leaked IR=
-Q event. Is this helpful?
->=20
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D
-> Jul 03 00:33:57 git kernel: UBSAN: misaligned-access in net/ipv4/tcp_ipv4=
-.c:1848:13
-> Jul 03 00:33:57 git kernel: member access within misaligned address 00000=
-0007604d82f for type 'const struct tcphdr'
-> Jul 03 00:33:57 git kernel: which requires 4 byte alignment
-> Jul 03 00:33:57 git kernel: CPU: 2 PID: 29 Comm: ksoftirqd/2 Not tainted =
-6.3.10-ksan-ubsan #8
-> Jul 03 00:33:57 git kernel: Hardware name: QEMU Standard PC (Q35 + ICH9, =
-2009), BIOS 1.16.0-20220807_005459-localhost 04/01/2014
-> Jul 03 00:33:57 git kernel: Call Trace:
-> Jul 03 00:33:57 git kernel:  <TASK>
-> Jul 03 00:33:57 git kernel:  dump_stack_lvl+0x86/0xd0
-> Jul 03 00:33:57 git kernel:  ubsan_type_mismatch_common+0xdf/0x240
-> Jul 03 00:33:57 git kernel:  __ubsan_handle_type_mismatch_v1+0x44/0x60
-> Jul 03 00:33:57 git kernel:  tcp_add_backlog+0x1fac/0x3ab0
-> Jul 03 00:33:57 git kernel:  ? sk_filter_trim_cap+0xcc/0xb60
-> Jul 03 00:33:57 git kernel:  ? __pfx_tcp_add_backlog+0x10/0x10
-> Jul 03 00:33:57 git kernel:  ? __pfx__raw_spin_lock+0x10/0x10
-> Jul 03 00:33:57 git kernel:  tcp_v4_rcv+0x3583/0x4c40
-> Jul 03 00:33:57 git kernel:  ? __pfx_tcp_v4_rcv+0x10/0x10
-> Jul 03 00:33:57 git kernel:  ? __pfx__raw_spin_lock_irqsave+0x10/0x10
-> Jul 03 00:33:57 git kernel:  ip_protocol_deliver_rcu+0x6c/0x480
-> Jul 03 00:33:57 git kernel:  ip_local_deliver_finish+0x2ae/0x4d0
-> Jul 03 00:33:57 git kernel:  ? __pfx_ip_local_deliver+0x10/0x10
-> Jul 03 00:33:57 git kernel:  ? __pfx_ip_local_deliver+0x10/0x10
-> Jul 03 00:33:57 git kernel:  ip_local_deliver+0x1ba/0x380
-> Jul 03 00:33:57 git kernel:  ? __pfx_ip_local_deliver+0x10/0x10
-> Jul 03 00:33:57 git kernel:  ? ipv4_dst_check+0x104/0x250
-> Jul 03 00:33:57 git kernel:  ? __ubsan_handle_type_mismatch_v1+0x44/0x60
-> Jul 03 00:33:57 git kernel:  ip_sublist_rcv_finish+0x172/0x380
-> Jul 03 00:33:57 git kernel: ------------[ cut here ]------------
-> Jul 03 00:33:57 git kernel:  ip_sublist_rcv+0x3cd/0x900
-> Jul 03 00:33:57 git kernel: default_enter_idle leaked IRQ state
-> Jul 03 00:33:57 git kernel:  ? __pfx_ip_sublist_rcv+0x10/0x10
-> Jul 03 00:33:57 git kernel:  ? __ubsan_handle_type_mismatch_v1+0x44/0x60
-> Jul 03 00:33:57 git kernel:  ? ip_rcv_core+0x972/0x1b20
-> Jul 03 00:33:57 git kernel:  ip_list_rcv+0x318/0x750
-> Jul 03 00:33:57 git kernel:  ? __pfx_ip_list_rcv+0x10/0x10
-> Jul 03 00:33:57 git kernel:  ? __pfx_ip_list_rcv+0x10/0x10
-> Jul 03 00:33:57 git kernel:  __netif_receive_skb_list_core+0x5ad/0x1170
-> Jul 03 00:33:57 git kernel:  ? tcp_gro_receive+0x1f45/0x2990
-> Jul 03 00:33:57 git kernel:  ? __pfx___netif_receive_skb_list_core+0x10/0=
-x10
-> Jul 03 00:33:57 git kernel:  ? kvm_clock_read+0x16/0x40
-> Jul 03 00:33:57 git kernel:  ? ktime_get_with_offset+0xd0/0x1f0
-> Jul 03 00:33:57 git kernel:  netif_receive_skb_list_internal+0x76f/0x1530
-> Jul 03 00:33:57 git kernel:  ? __pfx_netif_receive_skb_list_internal+0x10=
-/0x10
-> Jul 03 00:33:57 git kernel:  ? dev_gro_receive+0x67f/0x4900
-> Jul 03 00:33:57 git kernel:  ? free_unref_page+0x2fd/0x680
-> Jul 03 00:33:57 git kernel:  ? put_page+0x69/0x2b0
-> Jul 03 00:33:57 git kernel:  ? __pfx_eth_type_trans+0x10/0x10
-> Jul 03 00:33:57 git kernel:  napi_gro_receive+0x77b/0xdc0
-> Jul 03 00:33:57 git kernel:  receive_buf+0x1001/0xac40
-> Jul 03 00:33:57 git kernel:  ? _raw_spin_lock_irqsave+0xaa/0x180
-> Jul 03 00:33:57 git kernel:  ? __pfx__raw_spin_lock_irqsave+0x10/0x10
-> Jul 03 00:33:57 git kernel:  ? __pfx_receive_buf+0x10/0x10
-> Jul 03 00:33:57 git kernel:  ? _raw_spin_unlock_irqrestore+0x40/0x80
-> Jul 03 00:33:57 git kernel:  ? trace_hardirqs_on+0x2d/0xd0
-> Jul 03 00:33:57 git kernel:  ? detach_buf_split+0x27e/0xa70
-> Jul 03 00:33:57 git kernel:  ? virtqueue_get_buf_ctx_split+0x3c3/0x1400
-> Jul 03 00:33:57 git kernel:  ? virtqueue_enable_cb_delayed+0x5d0/0x1180
-> Jul 03 00:33:57 git kernel:  virtnet_poll+0x7c7/0x2030
-> Jul 03 00:33:57 git kernel:  ? __pfx_virtnet_poll+0x10/0x10
-> Jul 03 00:33:57 git kernel:  ? __pfx__raw_spin_lock+0x10/0x10
-> Jul 03 00:33:57 git kernel:  ? __run_timers+0x43d/0xf70
-> Jul 03 00:33:57 git kernel:  __napi_poll.constprop.0+0xd4/0x840
-> Jul 03 00:33:57 git kernel:  net_rx_action+0x7a0/0x26e0
-> Jul 03 00:33:57 git kernel:  ? __pfx_net_rx_action+0x10/0x10
-> Jul 03 00:33:57 git kernel:  __do_softirq+0x277/0x95d
-> Jul 03 00:33:57 git kernel:  ? __pfx___do_softirq+0x10/0x10
-> Jul 03 00:33:57 git kernel:  ? __pfx_run_ksoftirqd+0x10/0x10
-> Jul 03 00:33:57 git kernel:  ? __pfx_run_ksoftirqd+0x10/0x10
-> Jul 03 00:33:57 git kernel:  run_ksoftirqd+0x2c/0x40
-> Jul 03 00:33:57 git kernel:  smpboot_thread_fn+0x380/0xbc0
-> Jul 03 00:33:57 git kernel:  ? __kthread_parkme+0xdc/0x280
-> Jul 03 00:33:57 git kernel:  ? schedule+0x158/0x360
-> Jul 03 00:33:57 git kernel:  ? __pfx_smpboot_thread_fn+0x10/0x10
-> Jul 03 00:33:57 git kernel:  kthread+0x259/0x3d0
-> Jul 03 00:33:57 git kernel:  ? __pfx_kthread+0x10/0x10
-> Jul 03 00:33:57 git kernel:  ret_from_fork+0x2c/0x50
-> Jul 03 00:33:57 git kernel:  </TASK>
-> Jul 03 00:33:57 git kernel: =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->=20
+MIPI_DSI_MODE_VIDEO_NO_HFP always trigger the broken display as in the
+screenshot[1] shared earlier as well.
 
+Adding either of MIPI_DSI_MODE_VIDEO_NO_HSA and
+MIPI_DSI_MODE_VIDEO_NO_HBP always result in no display, unless paired
+with MIPI_DSI_MODE_VIDEO_NO_HFP and in that case we get the broken
+display as reported.
 
-A small update.
+In short other than MIPI_DSI_MODE_NO_EOT_PACKET flag, all other flags
+added in this commit break the display on DB845c one way or another.
 
-I have been able test 6.2.16, all 6.3.x and 6.4.1 and they all show the sam=
-e issue.
+Regards,
+Amit Pundir
+[1] https://people.linaro.org/~amit.pundir/db845c-userdebug/v6.5-broken-dis=
+play/PXL_20230704_150156326.jpg
 
-I am now trying 6.1.37 since two days and have not been able to reproduce t=
-his issue on any of my virtual qemu/kvm machines. Perhaps this information =
-is helpful in finding the root cause?
-
-~Forza=20
-
+>
+> --
+> With best wishes
+> Dmitry
