@@ -1,153 +1,148 @@
-Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7ACABA3A
-	for <regressions@lists.linux.dev>; Fri,  7 Jul 2023 13:43:12 +0000 (UTC)
-Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-6355e774d0aso12651706d6.1
-        for <regressions@lists.linux.dev>; Fri, 07 Jul 2023 06:43:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1688737391; x=1691329391;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=dzZkPG7RI0wAetYk691Ba8KUKNWl6F1qo7jNyyUdK70=;
-        b=p59HvEZUQAvjmAzFEUEIg3jouNj+3W3V4HWCRoTddqH1X5xky3rZjaSrMloOmkT1r5
-         l2l85R/Q8A0VNuX2IhonifMxEhUGtlLiVP8MoaC1fm/XTiNxKU4aKZ+tnUNompGJcZys
-         bkJ9tdbcBmNrWndDt5aTtrTcmNGWDrlKlHiqzfdhq1O8h57VDlpMqOHFytcSosFtmR9g
-         Kcnmh5JZUtiGXtCBg4IlGzjm6dLzN0OnTlVbCdVn7C1j7mmozqdLyiO41szzrD/U+fcV
-         4whLWWkMNZEt0WuF15IZjz9PRLtpp3Rsevg/WoQinG860O2X/BuAc21esYFGW030m0rq
-         yXgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688737391; x=1691329391;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=dzZkPG7RI0wAetYk691Ba8KUKNWl6F1qo7jNyyUdK70=;
-        b=IeN5wS4La6ZQwopNPG2UZ3hmEoWJlIF33n6YDGAlTGqeC3LioqQOhd4iQ5ppl8kIcl
-         ijUwy0QCmuQZuBYGb/7zYW2xI/kHJplf3GDc728h2BN0MyqjIJbNTOUQi1IaarMmjpNa
-         PVXZ6erHS/Zx0SkwIVNGM774UusOM5luWYfx8fMgaBfuZvjLeNaT1t/nHlgOtpllst2z
-         3cYGquyZTsll0THlYdrXXPvvaKlfgpXF9pwJQizRXpYe0dOAmd4kdqX9L0Ut9bg4ipLq
-         6tiARwjAGsWrWqZdimIz3bhO9SOso1vhm4GlDA7YZGWH7ZQ0SO+8X/8qf44mqH1SEtm6
-         ANbQ==
-X-Gm-Message-State: ABy/qLaz15lz+DSrWuDJZYypx5tNGiugQVvVmgO3PRA3Rsf6l59RirBY
-	bHWwqX/LXxbRy15dObc7XWkS8jxlVCkvOY1LfmKpIg==
-X-Google-Smtp-Source: APBJJlFpy8jDyr+KlmdxqCpqIx3uqmKGuxqPWsdaP5UQPNw0Sk1yW0BVcwfYgifZv/9oQcKxx9JRXU8ymUO0lbn+u0c=
-X-Received: by 2002:a0c:9e81:0:b0:635:e81d:e57d with SMTP id
- r1-20020a0c9e81000000b00635e81de57dmr4166916qvd.55.1688737391400; Fri, 07 Jul
- 2023 06:43:11 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 627421FA7
+	for <regressions@lists.linux.dev>; Fri,  7 Jul 2023 16:07:57 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1qHnzr-00059o-1C; Fri, 07 Jul 2023 18:07:51 +0200
+Message-ID: <5b9ec275-31b5-7b77-d00b-da128bea8bb3@leemhuis.info>
+Date: Fri, 7 Jul 2023 18:07:49 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230531090424.3187-1-johan+linaro@kernel.org>
- <20230531090424.3187-3-johan+linaro@kernel.org> <CAMi1Hd3fe=wk02WG8J7K5Ud1GcWkuKKKrxFjkNguxDkzNz2WVQ@mail.gmail.com>
- <ZKfyH4jRGlVlcLeY@hovoldconsulting.com>
-In-Reply-To: <ZKfyH4jRGlVlcLeY@hovoldconsulting.com>
-From: Amit Pundir <amit.pundir@linaro.org>
-Date: Fri, 7 Jul 2023 19:12:35 +0530
-Message-ID: <CAMi1Hd2CGQKbMPm6GXfSHgrdHsyngBQ_DBseF08=oEvGdizVcw@mail.gmail.com>
-Subject: Re: [PATCH RESEND 2/2] Bluetooth: fix use-bdaddr-property quirk
-To: Johan Hovold <johan@kernel.org>
-Cc: Johan Hovold <johan+linaro@kernel.org>, Marcel Holtmann <marcel@holtmann.org>, 
-	Johan Hedberg <johan.hedberg@gmail.com>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
-	Matthias Kaehlcke <mka@chromium.org>, linux-bluetooth@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: [PATCH] tpm: return false from tpm_amd_is_rng_defective on
+ non-x86 platforms
+Content-Language: en-US, de-DE
+To: Jerry Snitselaar <jsnitsel@redhat.com>,
+ Jarkko Sakkinen <jarkko@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
+ "Jason A. Donenfeld" <Jason@zx2c4.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+ Peter Huewe <peterhuewe@gmx.de>, stable@vger.kernel.org,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+ Sachin Sant <sachinp@linux.ibm.com>
+References: <20230629204147.1852823-1-jsnitsel@redhat.com>
+ <CTPWGNGECE0A.7MSU6S60YWDK@suppilovahvero>
+ <mbbb2mdlmkhnkgmw37glklmllzelolmdvmdgz5pziidromxsh5@gkflot73u6gd>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <mbbb2mdlmkhnkgmw37glklmllzelolmdvmdgz5pziidromxsh5@gkflot73u6gd>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1688746077;504eebd1;
+X-HE-SMSGID: 1qHnzr-00059o-1C
 
-On Fri, 7 Jul 2023 at 16:37, Johan Hovold <johan@kernel.org> wrote:
->
-> On Fri, Jul 07, 2023 at 03:11:11PM +0530, Amit Pundir wrote:
->
-> > On Wed, 31 May 2023 at 14:35, Johan Hovold <johan+linaro@kernel.org> wrote:
-> > >
-> > > Devices that lack persistent storage for the device address can indicate
-> > > this by setting the HCI_QUIRK_INVALID_BDADDR which causes the controller
-> > > to be marked as unconfigured until user space has set a valid address.
-> > >
-> > > The related HCI_QUIRK_USE_BDADDR_PROPERTY was later added to similarly
-> > > indicate that the device lacks a valid address but that one may be
-> > > specified in the devicetree.
-> > >
-> > > As is clear from commit 7a0e5b15ca45 ("Bluetooth: Add quirk for reading
-> > > BD_ADDR from fwnode property") that added and documented this quirk and
-> > > commits like de79a9df1692 ("Bluetooth: btqcomsmd: use
-> > > HCI_QUIRK_USE_BDADDR_PROPERTY"), the device address of controllers with
-> > > this flag should be treated as invalid until user space has had a chance
-> > > to configure the controller in case the devicetree property is missing.
-> > >
-> > > As it does not make sense to allow controllers with invalid addresses,
-> > > restore the original semantics, which also makes sure that the
-> > > implementation is consistent (e.g. get_missing_options() indicates that
-> > > the address must be set) and matches the documentation (including
-> > > comments in the code, such as, "In case any of them is set, the
-> > > controller has to start up as unconfigured.").
->
-> > This patch broke Bluetooth on Dragonboard 845c (SDM845) devboard.
-> > Reverting this patch fixes the BT breakage and I see the following
-> > messages in dmesg:
-> >
-> > Bluetooth: hci0: setting up wcn399x
-> > Bluetooth: hci0: QCA Product ID   :0x0000000a
-> > Bluetooth: hci0: QCA SOC Version  :0x40010214
-> > Bluetooth: hci0: QCA ROM Version  :0x00000201
-> > Bluetooth: hci0: QCA Patch Version:0x00000001
-> > Bluetooth: hci0: QCA controller version 0x02140201
-> > Bluetooth: hci0: QCA Downloading qca/crbtfw21.tlv
-> > Bluetooth: hci0: QCA Downloading qca/crnv21.bin
-> > Bluetooth: hci0: QCA setup on UART is completed
->
-> That's odd. You should still see the above messages also with this patch
-> applied, but you may now need to provide a valid device address before
-> being able to use device in case the bootloader has not provided one
-> (e.g. using btmgmt).
+Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
+for once, to make this easily accessible to everyone.
 
-Sorry for the confusion, I missed the part where I do see these
-messages when the kernel module is loaded but the direct firmware
-loading fails.
+So what's the way forward now? It sounded like Jarkko wanted to apply
+the patch from this thread days ago, but that didn't happen afaics. Then
+below message showed up, but Marios patch also wasn't applied.
 
-Bluetooth: hci0: setting up wcn399x
-Bluetooth: hci0: QCA Product ID   :0x0000000a
-Bluetooth: hci0: QCA SOC Version  :0x40010214
-Bluetooth: hci0: QCA ROM Version  :0x00000201
-Bluetooth: hci0: QCA Patch Version:0x00000001
-Bluetooth: hci0: QCA controller version 0x02140201
-Bluetooth: hci0: QCA Downloading qca/crbtfw21.tlv
-bluetooth hci0: Direct firmware load for qca/crbtfw21.tlv failed with error -2
-Bluetooth: hci0: QCA Failed to request file: qca/crbtfw21.tlv (-2)
-Bluetooth: hci0: QCA Failed to download patch (-2)
-Bluetooth: hci0: QCA preshutdown_cmd failed (-56)
+Is this intentional, or did something somewhere fall through the cracks?
 
-This happens in all the cases (working and non-working BT) because
-filesystem is not mounted by that time. I'm running AOSP and all the
-kernel modules get loaded from a ramdisk. But in the working case, the
-firmware loading kicks in again later in the boot process and BT gets
-initiazed..
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
 
-With this patch, after the first attempt to load the firmware fails,
-the firmware loading doesn't kick-in again. Also even if I keep the
-firmware in ramdisk then the direct firmware loading from ramdisk
-happens but BT still doesn't work
-https://bugs.linaro.org/attachment.cgi?id=1148.
+#regzbot poke
 
->
-> Are there any error messages in the log when running with this patch?
-
-I don't see any relevant error message in dmesg. I'll check if I can
-find a command line BT debug tool which I can use on AOSP for
-debugging. There used to be a few hci command line tools, when I
-looked into it a few years ago. Not sure if they are still around and
-useful.
-
-Regards,
-Amit Pundir
-
->
-> Does
->
->         btmgmt --index 0 public-addr <bdaddr>
->
-> work?
->
-> Johan
+On 05.07.23 19:04, Jerry Snitselaar wrote:
+> On Fri, Jun 30, 2023 at 01:07:00PM +0300, Jarkko Sakkinen wrote:
+>> On Thu Jun 29, 2023 at 11:41 PM EEST, Jerry Snitselaar wrote:
+>>> tpm_amd_is_rng_defective is for dealing with an issue related to the
+>>> AMD firmware TPM, so on non-x86 architectures just have it inline and
+>>> return false.
+>>>
+>>> Cc: Jarkko Sakkinen <jarkko@kernel.org>
+>>> Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>
+>>> Cc: Jason Gunthorpe <jgg@ziepe.ca>
+>>> Cc: Peter Huewe <peterhuewe@gmx.de>
+>>> Cc: stable@vger.kernel.org
+>>> Cc: Linux regressions mailing list <regressions@lists.linux.dev>
+>>> Cc: Mario Limonciello <mario.limonciello@amd.com>
+>>> Reported-by: Aneesh Kumar K. V <aneesh.kumar@linux.ibm.com>
+>>> Reported-by: Sachin Sant <sachinp@linux.ibm.com>
+>>> Closes: https://lore.kernel.org/lkml/99B81401-DB46-49B9-B321-CF832B50CAC3@linux.ibm.com/
+>>> Fixes: f1324bbc4011 ("tpm: disable hwrng for fTPM on some AMD designs")
+>>> Signed-off-by: Jerry Snitselaar <jsnitsel@redhat.com>
+>>> ---
+>>>  drivers/char/tpm/tpm-chip.c | 7 +++++++
+>>>  1 file changed, 7 insertions(+)
+>>>
+>>> diff --git a/drivers/char/tpm/tpm-chip.c b/drivers/char/tpm/tpm-chip.c
+>>> index cd48033b804a..cf5499e51999 100644
+>>> --- a/drivers/char/tpm/tpm-chip.c
+>>> +++ b/drivers/char/tpm/tpm-chip.c
+>>> @@ -518,6 +518,7 @@ static int tpm_add_legacy_sysfs(struct tpm_chip *chip)
+>>>   * 6.x.y.z series: 6.0.18.6 +
+>>>   * 3.x.y.z series: 3.57.y.5 +
+>>>   */
+>>> +#ifdef CONFIG_X86
+>>>  static bool tpm_amd_is_rng_defective(struct tpm_chip *chip)
+>>>  {
+>>>  	u32 val1, val2;
+>>> @@ -566,6 +567,12 @@ static bool tpm_amd_is_rng_defective(struct tpm_chip *chip)
+>>>  
+>>>  	return true;
+>>>  }
+>>> +#else
+>>> +static inline bool tpm_amd_is_rng_defective(struct tpm_chip *chip)
+>>> +{
+>>> +	return false;
+>>> +}
+>>> +#endif /* CONFIG_X86 */
+>>>  
+>>>  static int tpm_hwrng_read(struct hwrng *rng, void *data, size_t max, bool wait)
+>>>  {
+>>> -- 
+>>> 2.38.1
+>>
+>> Sanity check, this was the right patch, right?
+>>
+>> I'll apply it.
+>>
+>> BR, Jarkko
+> 
+> Sorry, I've been dealing with a family health issue the past week. It wasn't clear
+> to me why chip->ops was null when I first took a look, but I think I understand
+> now looking at it again this morning. The stack trace shows it in the device_shutdown() path:
+> 
+>     [ 34.381674] NIP [c0000000009db1e4] tpm_amd_is_rng_defective+0x74/0x240
+>     [ 34.381681] LR [c0000000009db928] tpm_chip_unregister+0x138/0x160
+>     [ 34.381685] Call Trace:
+>     [ 34.381686] [c00000009742faa0] [c0000000009db928] tpm_chip_unregister+0x138/0x160
+>     [ 34.381690] [c00000009742fae0] [c0000000009eab94] tpm_ibmvtpm_remove+0x34/0x130
+>     [ 34.381695] [c00000009742fb50] [c000000000115738] vio_bus_remove+0x58/0xd0
+>     [ 34.381701] [c00000009742fb90] [c000000000a01ecc] device_shutdown+0x21c/0x39c
+>     [ 34.381705] [c00000009742fc20] [c0000000001a2684] kernel_restart_prepare+0x54/0x70
+>     [ 34.381710] [c00000009742fc40] [c000000000292c48] kernel_kexec+0xa8/0x100
+>     [ 34.381714] [c00000009742fcb0] [c0000000001a2cd4] __do_sys_reboot+0x214/0x2c0
+>     [ 34.381718] [c00000009742fe10] [c000000000034adc] system_call_exception+0x13c/0x340
+>     [ 34.381723] [c00000009742fe50] [c00000000000d05c] system_call_vectored_common+0x15c/0x2ec
+> 
+> So I think what happened is:
+> 
+> device_shutdown -> dev->class->shutdown_pre (tpm_class_shutdown) // clears chip->ops
+>                 -> dev->bus->shutdown (vio_bus_shutdown) -> vio_bus_remove -> viodrv->remove (tpm_ibmvtpm_remove) -> tpm_chip_unregister -> tpm_amd_is_rng_defective -> oops!
+> 
+> 
+> I guess anything that gets called in the tpm_chip_unregister path
+> should be doing a check of chip->ops prior to using it. So I think
+> Mario's patch would still be a good thing to have.
+> 
+> Regards,
+> Jerry
+> 
+> 
+> 
