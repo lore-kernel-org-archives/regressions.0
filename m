@@ -1,32 +1,13 @@
-Received: from pio-pvt-msa2.bahnhof.se (pio-pvt-msa2.bahnhof.se [79.136.2.41])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CC6F63C9
-	for <regressions@lists.linux.dev>; Fri,  7 Jul 2023 10:19:07 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by pio-pvt-msa2.bahnhof.se (Postfix) with ESMTP id 6CE5F3F352;
-	Fri,  7 Jul 2023 12:13:15 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at bahnhof.se
-X-Spam-Flag: NO
-X-Spam-Score: -2.002
-X-Spam-Level:
-X-Spam-Status: No, score=-2.002 tagged_above=-999 required=6.31
-	tests=[BAYES_00=-1.9, NICE_REPLY_A=-0.093, T_SCC_BODY_TEXT_LINE=-0.01,
-	URIBL_BLOCKED=0.001] autolearn=ham autolearn_force=no
-Received: from pio-pvt-msa2.bahnhof.se ([127.0.0.1])
-	by localhost (pio-pvt-msa2.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id TlpjjCom1bRM; Fri,  7 Jul 2023 12:13:14 +0200 (CEST)
-Received: 
-	by pio-pvt-msa2.bahnhof.se (Postfix) with ESMTPA id 6F23B3F2C1;
-	Fri,  7 Jul 2023 12:13:13 +0200 (CEST)
-Received: from [192.168.0.122] (port=39158)
-	by tnonline.net with esmtpsa  (TLS1.3) tls TLS_AES_128_GCM_SHA256
-	(Exim 4.96)
-	(envelope-from <forza@tnonline.net>)
-	id 1qHiSd-000Ayi-34;
-	Fri, 07 Jul 2023 12:13:12 +0200
-Message-ID: <1d6d0b69-b243-d1a4-d538-d1be778a516a@tnonline.net>
-Date: Fri, 7 Jul 2023 12:13:11 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1CC2C128
+	for <regressions@lists.linux.dev>; Fri,  7 Jul 2023 10:55:33 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1qHj7N-00011c-O6; Fri, 07 Jul 2023 12:55:17 +0200
+Message-ID: <a4265090-d6b8-b185-a400-b09b27a347cc@leemhuis.info>
+Date: Fri, 7 Jul 2023 12:55:14 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -34,85 +15,102 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: Fwd: vmalloc error: btrfs-delalloc btrfs_work_helper [btrfs] in
- kernel 6.3.x
-Content-Language: sv-SE, en-GB
-To: Linux regressions mailing list <regressions@lists.linux.dev>,
- Uladzislau Rezki <urezki@gmail.com>, Bagas Sanjaya <bagasdotme@gmail.com>
-Cc: Linux btrfs <linux-btrfs@vger.kernel.org>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Stable <stable@vger.kernel.org>, Chris Mason <clm@fb.com>,
- Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
- a1bert@atlas.cz
-References: <efa04d56-cd7f-6620-bca7-1df89f49bf4b@gmail.com>
- <fcf1d04.faed4a1a.18844d8e78f@tnonline.net> <ZGwcVTpQNBoJHBB+@debian.me>
- <ZGyVVQxnw6Tn7Xb8@pc636> <c9db92d.faed4a1c.1884c5550fb@tnonline.net>
- <20230524091357.GH32559@suse.cz> <ZHClGA9szxSqzDf8@pc636>
- <cf07f03.70397026.18918ef7f95@tnonline.net>
- <2063d59.8f9f4a3a.1892a3ec50f@tnonline.net>
- <7336b8ea-64bd-d08d-1d85-bf942d5660e2@leemhuis.info>
-From: Forza <forza@tnonline.net>
-In-Reply-To: <7336b8ea-64bd-d08d-1d85-bf942d5660e2@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+ Thunderbird/102.12.0
+Subject: Re: [Regression][BISECTED] kernel boot hang after 19898ce9cf8a
+ ("wifi: iwlwifi: split 22000.c into multiple files")
+To: "Zhang, Rui" <rui.zhang@intel.com>,
+ "Greenman, Gregory" <gregory.greenman@intel.com>,
+ "Berg, Johannes" <johannes.berg@intel.com>
+Cc: "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+ "Baruch, Yaara" <yaara.baruch@intel.com>,
+ "Ben Ami, Golan" <golan.ben.ami@intel.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "Sisodiya, Mukesh" <mukesh.sisodiya@intel.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ Johannes Berg <johannes.berg@intel.com>, Kalle Valo <kvalo@kernel.org>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Paolo Abeni <pabeni@redhat.com>, netdev <netdev@vger.kernel.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ Jakub Kicinski <kuba@kernel.org>, Bagas Sanjaya <bagasdotme@gmail.com>
+References: <b533071f38804247f06da9e52a04f15cce7a3836.camel@intel.com>
+Content-Language: en-US, de-DE
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <b533071f38804247f06da9e52a04f15cce7a3836.camel@intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1688727333;4f019535;
+X-HE-SMSGID: 1qHj7N-00011c-O6
 
+[CCing the regression list, netdev, the net maintainers, and Linus;
+Johannes and Kalle as well, but just for the record, they afaik are
+unavailable]
 
+Hi, Thorsten here, the Linux kernel's regression tracker.
 
-On 2023-07-06 12:54, Linux regression tracking (Thorsten Leemhuis) wrote:
-> On 06.07.23 10:08, Forza wrote:
->>>> On Wed, May 24, 2023 at 11:13:57AM +0200, David Sterba wrote:
->> [...]
->> A small update.
+On 07.07.23 10:25, Zhang, Rui wrote:
 > 
-> Thx for this.
+> I run into a NULL pointer dereference and kernel boot hang after
+> switching to latest upstream kernel, and git bisect shows that below
+> commit is the first offending commit, and I have confirmed that commit
+> 19898ce9cf8a has the issue while 19898ce9cf8a~1 does not.
+
+FWIW, this is the fourth such report about this that I'm aware of.
+
+The first is this one (with two affected users afaics):
+https://bugzilla.kernel.org/show_bug.cgi?id=217622
+
+The second is this one:
+https://lore.kernel.org/all/CAAJw_Zug6VCS5ZqTWaFSr9sd85k%3DtyPm9DEE%2BmV%3DAKoECZM%2BsQ@mail.gmail.com/
+
+The third:
+https://lore.kernel.org/all/9274d9bd3d080a457649ff5addcc1726f08ef5b2.camel@xry111.site/
+
+And in the past few days two people from Fedora land talked to me on IRC
+with problems that in retrospective might be caused by this as well.
+
+This many reports about a problem at this stage of the cycle makes me
+suspect we'll see a lot more once -rc1 is out. That's why I raising the
+awareness of this. Sadly a simple revert of just this commit is not
+possible. :-/
+
+Ciao, Thorsten
+
+> commit 19898ce9cf8a33e0ac35cb4c7f68de297cc93cb2 (refs/bisect/bad)
+> Author:     Johannes Berg <johannes.berg@intel.com>
+> AuthorDate: Wed Jun 21 13:12:07 2023 +0300
+> Commit:     Johannes Berg <johannes.berg@intel.com>
+> CommitDate: Wed Jun 21 14:07:00 2023 +0200
 > 
->> I have been able test 6.2.16, all 6.3.x and 6.4.1 and they all show
->> the same issue.
->>
->> I am now trying 6.1.37 since two days and have not been able to
->> reproduce this issue on any of my virtual qemu/kvm machines. Perhaps
->> this information is helpful in finding the root cause?
+>     wifi: iwlwifi: split 22000.c into multiple files
+>     
+>     Split the configuration list in 22000.c into four new files,
+>     per new device family, so we don't have this huge unusable
+>     file. Yes, this duplicates a few small things, but that's
+>     still much better than what we have now.
+>     
+>     Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+>     Signed-off-by: Gregory Greenman <gregory.greenman@intel.com>
+>     Link:
+> https://lore.kernel.org/r/20230621130443.7543603b2ee7.Ia8dd54216d341ef1ddc0531f2c9aa30d30536a5d@changeid
+>     Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 > 
-> That means it's most likely a regression between v6.1..v6.2 (or
-> v6.1..v6.2.16 if we are unlucky) somewhere (from earlier in the thread
-> it sounds like it might not be Btrfs).
-
-Agreed, I do not think this specific bug (cpuidle /  default_enter_idle 
-leaked IRQ state) is Btrfs related. Some of the virtual machines I test 
-on do not use Btrfs.
+> I have some screenshots which show that RIP points to iwl_mem_free_skb,
+> I can create a kernel bugzilla and attach the screenshots there if
+> needed.
 > 
-> Which makes we wonder: how long do you usually need to reproduce the
-> issue? If it's not too long it might mean that a bisection is the best
-> way forward, unless some developer sits down and looks closely at the
-> logs. With a bit of luck some dev will do that; but if we are unlucky we
-> likely will need a bisection.
+> BTW, lspci output of the wifi device and git bisect log attached.
 > 
+> If any other information needed, please let me know.
 
-It has varied. Sometimes immediately upon boot, but can take several 
-hours or a day before showing up.
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+That page also explains what to do if mails like this annoy you.
 
+P.S.: for regzbot
 
-Also, I forgot to say I was basing my kernels on gentoo-kernels, which 
-has some patches against vanilla. Therefore I will I will compile a set 
-of vanilla kernels from 6.1.37 until 6.4.2 and run them in my testing 
-machines to see where the problem is happening.
-
-This is not a fast system, so it will likely take several days. But I 
-will keep you posted.
-
-Meanwhile, if you think of any specific kernel debug options, tracing, 
-etc, that I should enable, let me know
-
-Should we change the Subject line of this email thread?
-
-Thanks
-
-~Forza
-
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-> --
-> Everything you wanna know about Linux kernel regression tracking:
-> https://linux-regtracking.leemhuis.info/about/#tldr
-> If I did something stupid, please tell me, as explained on that page.
-> 
+#regzbot ^introduced 19898ce9cf8a
+#regzbot dup-of:
+https://lore.kernel.org/all/a5cdc7f8-b340-d372-2971-0d24b01de217@gmail.com/
