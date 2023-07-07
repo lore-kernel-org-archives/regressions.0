@@ -1,122 +1,88 @@
-Received: from mail-vk1-f176.google.com (mail-vk1-f176.google.com [209.85.221.176])
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF28A7F
-	for <regressions@lists.linux.dev>; Fri,  7 Jul 2023 01:56:46 +0000 (UTC)
-Received: by mail-vk1-f176.google.com with SMTP id 71dfb90a1353d-47e06acce3bso558717e0c.2
-        for <regressions@lists.linux.dev>; Thu, 06 Jul 2023 18:56:46 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11DFF1847
+	for <regressions@lists.linux.dev>; Fri,  7 Jul 2023 05:09:08 +0000 (UTC)
+Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-40373bc598dso12533201cf.1
+        for <regressions@lists.linux.dev>; Thu, 06 Jul 2023 22:09:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1688695005; x=1691287005;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9GVrjzhB6jW+MELZlDWpD9snVHwu3Y9sqKf3tzEuK44=;
-        b=MV5stPNyloZVMitcziY8nhPCnIFhSujoSKmNdhwOa9Sbgd/t9b084lK5I5hoyn8NCE
-         pcQWhClVACtndEfWmmSmTYjGytpHH6irOAJJWEEH8Ct/31r1bVFO7yK6enJEbmrV4ESb
-         fHhXBFpzlsBHqMCT8S5+wtoZCW7OcgZpDl5ZMsL/xp0IGcNGhuwjS6FggyS5HMrbkry2
-         j0abu4oYVXwvus7LZ2HxkYGvLT3tu3fGdkKQIGOxLqg93dHBA3QCPpO7wIDLKE24f9ro
-         BAXfIXfoaXMkVpPyUUIIUMukmO8zq7otmikj08S2KxKKeI7FOUfE0kAkpfYfiBcBTMLc
-         z9xA==
+        d=linaro.org; s=google; t=1688706548; x=1691298548;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=T5y/+CDvW4q4nPslYcY1qr6Pi0qBims4XmxOTDD9PnQ=;
+        b=jmAZ/s2rnrg58iaLEWp/D0jLfi84pEOPfMtjwV+XM4n35ALR+55gpg6wPtblbqsnHV
+         ZczdMxtpywYTugmBaFzxWyTIhBD8cd9vVQOo7lUxaJ2Tx3nvWa4XsWjvvt/1pXJKq7wZ
+         FvksSiy5tKxMxWk86f7zeqI5BUWS89/pBvwzh9w7FNPKYyOZKVrH0d7m5xHGU6K7s9jv
+         Ku73xa/+z2jKhNv+mMpsFppD+84S0Q+jd2n7ZDOEddAwzh0K35bagqCMxPItgotJ38c6
+         NK3p8KZnIWSQgC4rE7rhmvhYvDBDiWdV5mho9/kjajiPvgYuClbbedxPlnG1YUvIPObR
+         Mpcw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688695005; x=1691287005;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9GVrjzhB6jW+MELZlDWpD9snVHwu3Y9sqKf3tzEuK44=;
-        b=fu01DgO9voBsQVx/LpzCDst5EERcXZBPNWzZs043AqfCfWCnuiPW+dAttHfhO/jsHG
-         MaCRt+v5un0KVQKmcO9c+ZHYoDCdrTGYqZTx3Y4aZamCvWyo9aRzZaQDKhDs1GGYrIff
-         YzEzmBpoNYQUC/D2m1wiAVnYwAS504EEWrFi6yyEG4hwQejGU9MXxc/co7nIJm+THsMO
-         gm1gmhNHRYokfceqYg8cN/W77GbI+RKEMC26WdTPKLIcDCxsip8PEhCm//m5ebwPF2xr
-         V4W3tjZ5/yTalCEnBapF8VPdpoVlTPL/iT/9be5mk7zG0Veklx2nYX9MnDCFIfnLQ7ab
-         5m+A==
-X-Gm-Message-State: ABy/qLbUJ5rJY/Xt70YWDmKZRs7OmEeslMvBFMV02gCfdVvv9d9GPL3w
-	cwMTfTTOZatxEkz6j3T4Agzw+jZp2gcWMens31I=
-X-Google-Smtp-Source: APBJJlFvss+N6tGmF1lydqS+w3Igp/aaRoOnw3LWGedovndHvat2xXGT1r3PKtZxk667gqBXLMtlkzF4gK9mmbTFf7Y=
-X-Received: by 2002:a1f:bfc3:0:b0:463:12f:d38e with SMTP id
- p186-20020a1fbfc3000000b00463012fd38emr3215232vkf.1.1688695005294; Thu, 06
- Jul 2023 18:56:45 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1688706548; x=1691298548;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=T5y/+CDvW4q4nPslYcY1qr6Pi0qBims4XmxOTDD9PnQ=;
+        b=igvFgJiYhu833gxOAt1iVNI18Qsux0gz/llInAgZkCeMx2rPBxDWiYkQxv0MX9lARR
+         hdtbPbJZH9dZcNxkS1CHvm2UknQGp7Io5/OakcqeLM6Fx6lFEbj3DDT+1CJF3p6sleQ+
+         6dy0BkFrutgqyQK9J2p3FGlRWm6tV3IN1hioc6nek2xHNsp5luNPaFEeP3lMoyPfurPM
+         IObyWIm3HbA0n0dsDUoN2bSQtgFcp8AjEn8LeIIzpHVWQR4XiMKZdrFeIGCGSYD7QHft
+         gFVr4ou4wDKpWUEIJSMBR6QgYXY4Di+Oi2xtsX5AMtRRbwpV/TdhMETTEhc73zXRduaM
+         plug==
+X-Gm-Message-State: ABy/qLZmCNGVefm5SGjp3w1gMYgWj+iVF6ULwiGujG2vNH3tVXTEkC1B
+	dB5JLbQP9vVxqfiZINeJm6ykHF8VGSShBVbY5VtPfG1c+M/P8PDI
+X-Google-Smtp-Source: APBJJlF9DniBjLUxlR4EaKPZmHlVkNHy2BHSJ9i5UpfchxFNbdvHQG6nSwlT4BUa3GisoOc1ziTcbK3M7xtQx0kap34=
+X-Received: by 2002:a05:622a:1115:b0:402:9cff:4573 with SMTP id
+ e21-20020a05622a111500b004029cff4573mr5331660qty.39.1688706547765; Thu, 06
+ Jul 2023 22:09:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230429020951.082353595@lindbergh.monkeyblade.net>
- <CAAJw_ZueYAHQtM++4259TXcxQ_btcRQKiX93u85WEs2b2p19wA@mail.gmail.com>
- <ZE0kndhsXNBIb1g7@debian.me> <b9ab37d2-42bf-cc31-a2c0-a9b604e95530@gmail.com>
- <CAAJw_Zug6VCS5ZqTWaFSr9sd85k=tyPm9DEE+mV=AKoECZM+sQ@mail.gmail.com>
- <7fee3284-b9ba-58f4-8118-fe0b99ae6bf7@leemhuis.info> <CAAJw_Zu=MPtGPARgCB2fteP+7F793YDFXE9RuzSH8EqYBS-OOw@mail.gmail.com>
- <64b8732f-6319-9f10-b82a-b4a3dd8d4b8e@lwfinger.net>
-In-Reply-To: <64b8732f-6319-9f10-b82a-b4a3dd8d4b8e@lwfinger.net>
-From: Jeff Chua <jeff.chua.linux@gmail.com>
-Date: Fri, 7 Jul 2023 09:56:34 +0800
-Message-ID: <CAAJw_ZvZNQzrFyQizJnKe5PerqqAUOmPYd6cnjAcvs68xNdwSA@mail.gmail.com>
-Subject: Re: Linux-6.5 iwlwifi crash
-To: Larry Finger <Larry.Finger@lwfinger.net>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>, lkml <linux-kernel@vger.kernel.org>, 
-	Gregory Greenman <gregory.greenman@intel.com>, Kalle Valo <kvalo@kernel.org>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Linux Wireless <linux-wireless@vger.kernel.org>, Linux Networking <netdev@vger.kernel.org>, 
-	Bagas Sanjaya <bagasdotme@gmail.com>
+References: <20230602161246.1855448-1-amit.pundir@linaro.org>
+ <358c69ad-fa8a-7386-fe75-92369883ee48@leemhuis.info> <0f6c9dcb-b7f6-fff9-6bed-f4585ea8e487@linaro.org>
+ <CAD=FV=Xt2KYGY15+f+nHxkzKnwhHzw1A7=o+5kgCDWvHDv0DNg@mail.gmail.com>
+ <20230620155902.clspxncyvpodixft@ripper> <5240ce3f-37fa-2747-92ee-23d71619f3ef@leemhuis.info>
+ <CAMi1Hd2zunc=WNUE7KT-423RXTiX6LrY2hcWQdV3Dp3o8RdJtg@mail.gmail.com>
+In-Reply-To: <CAMi1Hd2zunc=WNUE7KT-423RXTiX6LrY2hcWQdV3Dp3o8RdJtg@mail.gmail.com>
+From: Amit Pundir <amit.pundir@linaro.org>
+Date: Fri, 7 Jul 2023 10:38:31 +0530
+Message-ID: <CAMi1Hd2L-j9GHQH+4O6j6m2+HGy5oEsdMv6Qyp4RaWZDNCj-Bw@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: qcom: sdm845-db845c: Move LVS regulator nodes up
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Bjorn Andersson <andersson@kernel.org>, Doug Anderson <dianders@chromium.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Mark Brown <broonie@kernel.org>, 
+	Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
+	Konrad Dybcio <konrad.dybcio@linaro.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+	Caleb Connolly <caleb.connolly@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	linux-arm-msm <linux-arm-msm@vger.kernel.org>, dt <devicetree@vger.kernel.org>, 
+	lkml <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jul 6, 2023 at 2:11=E2=80=AFAM Larry Finger <Larry.Finger@lwfinger.=
-net> wrote:
-
-> Fow what it is worth, my 6.4-git (6.5-rc0?) commit d528014517f2 (pulled t=
-oday)
-> is working OK with iwlmvm. Lspci says my device is
+On Thu, 22 Jun 2023 at 17:18, Amit Pundir <amit.pundir@linaro.org> wrote:
 >
-> 04:00.0 Network controller [0280]: Intel Corporation Wireless 7260 [8086:=
-08b1]
-> (rev 73)
+> On Thu, 22 Jun 2023 at 13:17, Linux regression tracking (Thorsten
+> Leemhuis) <regressions@leemhuis.info> wrote:
+> >
+> > Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
+> > for once, to make this easily accessible to everyone.
+> >
+> > As Linus will likely release 6.4 on this or the following Sunday a quick
+> > status inquiry so I can brief him appropriately: is there any hope the
+> > regression this patch tried to fix will be resolved any time soon?
 >
-> I think you do need to do a bisection.
-> Larry
+> We are most likely to miss v6.4. I'm trying to reproduce the crash
+> with tracing enabled, to share some more debug information.
 
-
-Larry,
-
-I did a bisect and here's what it came up with ... reverted the
-following and iwlwiifi worked again.
-
-
-19898ce9cf8a33e0ac35cb4c7f68de297cc93cb2 is the first bad commit
-commit 19898ce9cf8a33e0ac35cb4c7f68de297cc93cb2
-Author: Johannes Berg <johannes.berg@intel.com>
-Date:   Wed Jun 21 13:12:07 2023 +0300
-
-    wifi: iwlwifi: split 22000.c into multiple files
-
-    Split the configuration list in 22000.c into four new files,
-    per new device family, so we don't have this huge unusable
-    file. Yes, this duplicates a few small things, but that's
-    still much better than what we have now.
-
-    Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-    Signed-off-by: Gregory Greenman <gregory.greenman@intel.com>
-    Link: https://lore.kernel.org/r/20230621130443.7543603b2ee7.Ia8dd54216d=
-341ef1ddc0531f2c9aa30d30536a5d@changeid
-    Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-
- drivers/net/wireless/intel/iwlwifi/Makefile     |   1 +
- drivers/net/wireless/intel/iwlwifi/cfg/22000.c  | 939 +-------------------=
-----
- drivers/net/wireless/intel/iwlwifi/cfg/ax210.c  | 452 ++++++++++++
- drivers/net/wireless/intel/iwlwifi/cfg/bz.c     | 523 +++++++++++++
- drivers/net/wireless/intel/iwlwifi/cfg/sc.c     | 214 ++++++
- drivers/net/wireless/intel/iwlwifi/iwl-config.h |   2 +
- drivers/net/wireless/intel/iwlwifi/pcie/drv.c   |   3 +
- 7 files changed, 1206 insertions(+), 928 deletions(-)
- create mode 100644 drivers/net/wireless/intel/iwlwifi/cfg/ax210.c
- create mode 100644 drivers/net/wireless/intel/iwlwifi/cfg/bz.c
- create mode 100644 drivers/net/wireless/intel/iwlwifi/cfg/sc.c
-
-
-My best.,
-Jeff
+FWIW, I couldn't reproduce this bug on v6.5 merge window commit
+d528014517f2 (Revert ".gitignore: ignore *.cover and *.mbx")
+on 100+ boot tests last night.
+For the time being I'm keeping an eye on it and will trigger the boot
+tests occasionally in the v6.5 development cycle.
 
 >
+> Regards,
+> Amit Pundir
 >
