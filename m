@@ -1,13 +1,47 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF90563C9
-	for <regressions@lists.linux.dev>; Fri,  7 Jul 2023 08:43:43 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qHh3y-0006cd-MO; Fri, 07 Jul 2023 10:43:38 +0200
-Message-ID: <ff646259-8ce1-f1fe-4627-cdf99321dba8@leemhuis.info>
-Date: Fri, 7 Jul 2023 10:43:37 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 925357474
+	for <regressions@lists.linux.dev>; Fri,  7 Jul 2023 08:47:47 +0000 (UTC)
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-307d58b3efbso1543306f8f.0
+        for <regressions@lists.linux.dev>; Fri, 07 Jul 2023 01:47:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1688719665; x=1691311665;
+        h=content-transfer-encoding:in-reply-to:subject:organization
+         :references:cc:to:from:content-language:reply-to:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7eZbe/XyoM1kx0exxSQOZIhc5pgYclThKrh6yiXDKVs=;
+        b=JpxiyQZfXHpfnSz2OkQwyysBeqSToeUcE5I1dQey2GhYdB/qzxFuVHITg0q1QNr9uY
+         h1FNzGyVaUI7hgh6UANdjLxrQFDgLwVl9bwJFDLXFgJY3YkYclAVhHo645qFo/Uup5+h
+         jR8BuLUBohkPAMxbRsjY5+W+3MBsefXtVlnbMgEsRBRsdUCPucSxKbnYD05UgxCJuNQr
+         Wlq0EYi+Cv2rk3cvwwbPJdrsF0ZCueN2GyzkoLUdnohbBLbbj4hOGnWYiwZnwBGIdmw5
+         KebUqpMCtG3d7uEKL71+XaaNjjXMNH7JW3AsrEoag1aiCQG5QpG9qJMP1ik+k+7ffxZP
+         6RwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688719665; x=1691311665;
+        h=content-transfer-encoding:in-reply-to:subject:organization
+         :references:cc:to:from:content-language:reply-to:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=7eZbe/XyoM1kx0exxSQOZIhc5pgYclThKrh6yiXDKVs=;
+        b=RS3VYDlUZCM0GNS3XM1mCOJdNLmxxYQVv7CDoME9TFa282IhreAUDe3HguY6YcuWff
+         b8kYblWu4GnX3/TJXRofe3o92B2Hq6bQlkkWRIZw5p/e07LnwBNcmIoGWTMBvWwpcV6T
+         lgY4LZOYpH5dueSIlNt/X+wIzOJq+Uglr45i/aBzixjXIqE9Ql745NEBgRadQSK8bT+F
+         WgwMRYpBCgsUFUFcX7Z4kjXvP9MZvdTW6vKzrNJideZ0M174DngRPwNrGCVvMwY/Nzig
+         JGyqNr8nflF06Ftk+4DTE6AxxbJYL8cFqWpRCK997gUsnJj3bsQO1CWu0ANh/NjONbg3
+         lzsg==
+X-Gm-Message-State: ABy/qLbijiUrMZJWdoly0yjcmCoGvYuSsseOvlx5VVUSVu0km9pyi+q6
+	TqRi34B+5xT2r8zJKTfQLD/QsA==
+X-Google-Smtp-Source: APBJJlEtOj6EMYjuXm8EaEQe72h1l3M6Ieut1MxpZlsLXb7PRlZSOA4stAdW7sy0f6e/MoaRMHIIQA==
+X-Received: by 2002:adf:e0d0:0:b0:313:f463:9d40 with SMTP id m16-20020adfe0d0000000b00313f4639d40mr3544981wri.65.1688719665553;
+        Fri, 07 Jul 2023 01:47:45 -0700 (PDT)
+Received: from [192.168.27.65] (home.beaume.starnux.net. [82.66.176.246])
+        by smtp.gmail.com with ESMTPSA id i8-20020a5d5588000000b0030fa3567541sm3876641wrv.48.2023.07.07.01.47.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 07 Jul 2023 01:47:45 -0700 (PDT)
+Message-ID: <d28b0090-bd1e-6737-d92b-348dc6c30750@linaro.org>
+Date: Fri, 7 Jul 2023 10:47:43 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,111 +50,127 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.12.0
-Subject: Re: Linux-6.5 iwlwifi crash
-Content-Language: en-US, de-DE
-To: Jeff Chua <jeff.chua.linux@gmail.com>,
- Larry Finger <Larry.Finger@lwfinger.net>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
- lkml <linux-kernel@vger.kernel.org>,
- Gregory Greenman <gregory.greenman@intel.com>, Kalle Valo
- <kvalo@kernel.org>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>,
- Linux Wireless <linux-wireless@vger.kernel.org>,
- Linux Networking <netdev@vger.kernel.org>,
- Bagas Sanjaya <bagasdotme@gmail.com>, Johannes Berg <johannes.berg@intel.com>
-References: <20230429020951.082353595@lindbergh.monkeyblade.net>
- <CAAJw_ZueYAHQtM++4259TXcxQ_btcRQKiX93u85WEs2b2p19wA@mail.gmail.com>
- <ZE0kndhsXNBIb1g7@debian.me> <b9ab37d2-42bf-cc31-a2c0-a9b604e95530@gmail.com>
- <CAAJw_Zug6VCS5ZqTWaFSr9sd85k=tyPm9DEE+mV=AKoECZM+sQ@mail.gmail.com>
- <7fee3284-b9ba-58f4-8118-fe0b99ae6bf7@leemhuis.info>
- <CAAJw_Zu=MPtGPARgCB2fteP+7F793YDFXE9RuzSH8EqYBS-OOw@mail.gmail.com>
- <64b8732f-6319-9f10-b82a-b4a3dd8d4b8e@lwfinger.net>
- <CAAJw_ZvZNQzrFyQizJnKe5PerqqAUOmPYd6cnjAcvs68xNdwSA@mail.gmail.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <CAAJw_ZvZNQzrFyQizJnKe5PerqqAUOmPYd6cnjAcvs68xNdwSA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Reply-To: neil.armstrong@linaro.org
+Content-Language: en-US
+From: Neil Armstrong <neil.armstrong@linaro.org>
+To: Amit Pundir <amit.pundir@linaro.org>,
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+ Abhinav Kumar <quic_abhinavk@quicinc.com>
+Cc: Jagan Teki <jagan@amarulasolutions.com>, Marek Vasut <marex@denx.de>,
+ dri-devel@lists.freedesktop.org, Robert Foss <rfoss@kernel.org>,
+ Andrzej Hajda <andrzej.hajda@intel.com>, Jonas Karlman <jonas@kwiboo.se>,
+ Jernej Skrabec <jernej.skrabec@gmail.com>, Michael Walle <michael@walle.cc>,
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+ linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ freedreno <freedreno@lists.freedesktop.org>
+References: <20230403221233.500485-1-marex@denx.de>
+ <20230403221233.500485-2-marex@denx.de>
+ <CAMi1Hd0TD=2z_=bcDrht3H_wiLvAFcv8Z-U_r_KUOoeMc6UMjw@mail.gmail.com>
+ <CAMty3ZBNFu=f-FS4YFN4wfmiTuk=48nna-vub1eMYwidDt+msg@mail.gmail.com>
+ <CAA8EJppbdiUz5m+9EAPnFb916DaS_VKWd30c7_EPWjuid8rtqQ@mail.gmail.com>
+ <CAMi1Hd2G5PJmz4wpO1wbdqKd0FA8LBgvRDv2u5ZYAMb5s6Kt0A@mail.gmail.com>
+ <d5fb8106-b8f3-0acf-1267-d4d6d0860e25@linaro.org>
+Organization: Linaro Developer Services
+Subject: Re: [PATCH 2/2] drm/bridge: lt9611: Do not generate HFP/HBP/HSA and
+ EOT packet
+In-Reply-To: <d5fb8106-b8f3-0acf-1267-d4d6d0860e25@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1688719423;dcfe48ac;
-X-HE-SMSGID: 1qHh3y-0006cd-MO
 
-Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
-for once, to make this easily accessible to everyone.
-
-Jeff, thx for bisecting. Johannes afaik is unavailable for a while
-(CCing him nevertheless), hence:
-
-Gregory, could you please take a look at this? And maybe provide a few
-hints for Jeff how to generate more data that allows us to find the root
-of the problem?
-
-Jeff, btw, the iwlwifi bug reporting guide (
-https://wireless.wiki.kernel.org/en/users/drivers/iwlwifi/debugging
-) says to file a bugs in http://bugzilla.kernel.org/ Might be wise to do
-this in case Gregory is also unavailable, but instructed someone to keep
-an eye on things there.
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
-
-On 07.07.23 03:56, Jeff Chua wrote:
-> On Thu, Jul 6, 2023 at 2:11 AM Larry Finger <Larry.Finger@lwfinger.net> wrote:
+On 07/07/2023 09:18, Neil Armstrong wrote:
+> Hi,
 > 
->> Fow what it is worth, my 6.4-git (6.5-rc0?) commit d528014517f2 (pulled today)
->> is working OK with iwlmvm. Lspci says my device is
+> On 06/07/2023 11:20, Amit Pundir wrote:
+>> On Wed, 5 Jul 2023 at 11:09, Dmitry Baryshkov
+>> <dmitry.baryshkov@linaro.org> wrote:
+>>>
+>>> [Adding freedreno@ to cc list]
+>>>
+>>> On Wed, 5 Jul 2023 at 08:31, Jagan Teki <jagan@amarulasolutions.com> wrote:
+>>>>
+>>>> Hi Amit,
+>>>>
+>>>> On Wed, Jul 5, 2023 at 10:15 AM Amit Pundir <amit.pundir@linaro.org> wrote:
+>>>>>
+>>>>> Hi Marek,
+>>>>>
+>>>>> On Wed, 5 Jul 2023 at 01:48, Marek Vasut <marex@denx.de> wrote:
+>>>>>>
+>>>>>> Do not generate the HS front and back porch gaps, the HSA gap and
+>>>>>> EOT packet, as these packets are not required. This makes the bridge
+>>>>>> work with Samsung DSIM on i.MX8MM and i.MX8MP.
+>>>>>
+>>>>> This patch broke display on Dragonboard 845c (SDM845) devboard running
+>>>>> AOSP. This is what I see
+>>>>> https://people.linaro.org/~amit.pundir/db845c-userdebug/v6.5-broken-display/PXL_20230704_150156326.jpg.
+>>>>> Reverting this patch fixes this regression for me.
+>>>>
+>>>> Might be msm dsi host require proper handling on these updated
+>>>> mode_flags? did they?
+>>>
+>>> The msm DSI host supports those flags. Also, I'd like to point out
+>>> that the patch didn't change the rest of the driver code. So even if
+>>> drm/msm ignored some of the flags, it should not have caused the
+>>> issue. Most likely the issue is on the lt9611 side. I's suspect that
+>>> additional programming is required to make it work with these flags.
 >>
->> 04:00.0 Network controller [0280]: Intel Corporation Wireless 7260 [8086:08b1]
->> (rev 73)
+>> I spent some time today on smoke testing these flags (individually and
+>> in limited combination) on DB845c, to narrow down this breakage to one
+>> or more flag(s) triggering it. Here are my observations in limited
+>> testing done so far.
 >>
->> I think you do need to do a bisection.
->> Larry
+>> There is no regression with MIPI_DSI_MODE_NO_EOT_PACKET when enabled
+>> alone and system boots to UI as usual.
+>>
+>> MIPI_DSI_MODE_VIDEO_NO_HFP always trigger the broken display as in the
+>> screenshot[1] shared earlier as well.
+>>
+>> Adding either of MIPI_DSI_MODE_VIDEO_NO_HSA and
+>> MIPI_DSI_MODE_VIDEO_NO_HBP always result in no display, unless paired
+>> with MIPI_DSI_MODE_VIDEO_NO_HFP and in that case we get the broken
+>> display as reported.
+>>
+>> In short other than MIPI_DSI_MODE_NO_EOT_PACKET flag, all other flags
+>> added in this commit break the display on DB845c one way or another.
 > 
+> I think the investigation would be to understand why samsung-dsim requires
+> such flags and/or what are the difference in behavior between MSM DSI and samsung DSIM
+> for those flags ?
 > 
-> Larry,
+> If someone has access to the lt9611 datasheet, so it requires HSA/HFP/HBP to be
+> skipped ? and does MSM DSI and samsung DSIM skip them in the same way ?
+
+I think there's a mismatch, where on one side this flags sets the link in LP-11 while
+in HSA/HFP/HPB while on the other it completely removes those blanking packets.
+
+The name MIPI_DSI_MODE_VIDEO_NO_HBP suggests removal of HPB, not LP-11 while HPB.
+the registers used in both controllers are different:
+- samsung-dsim: DSIM_HBP_DISABLE_MODE
+- msm dsi: DSI_VID_CFG0_HBP_POWER_STOP
+
+The first one suggest removing the packet, while the second one suggests powering
+off the line while in the blanking packet period.
+
+@Abhinav, can you comment on that ?
+
+@Jagan, Andrezej So you have any documentation on what DSIM_xxx_DISABLE_MODE does ?
+
+@Dmitry, so you have access to the lt9611 datasheet to know what's needed here ?
+
+Neil
+
 > 
-> I did a bisect and here's what it came up with ... reverted the
-> following and iwlwiifi worked again.
-> 
-> 
-> 19898ce9cf8a33e0ac35cb4c7f68de297cc93cb2 is the first bad commit
-> commit 19898ce9cf8a33e0ac35cb4c7f68de297cc93cb2
-> Author: Johannes Berg <johannes.berg@intel.com>
-> Date:   Wed Jun 21 13:12:07 2023 +0300
-> 
->     wifi: iwlwifi: split 22000.c into multiple files
-> 
->     Split the configuration list in 22000.c into four new files,
->     per new device family, so we don't have this huge unusable
->     file. Yes, this duplicates a few small things, but that's
->     still much better than what we have now.
-> 
->     Signed-off-by: Johannes Berg <johannes.berg@intel.com>
->     Signed-off-by: Gregory Greenman <gregory.greenman@intel.com>
->     Link: https://lore.kernel.org/r/20230621130443.7543603b2ee7.Ia8dd54216d341ef1ddc0531f2c9aa30d30536a5d@changeid
->     Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-> 
->  drivers/net/wireless/intel/iwlwifi/Makefile     |   1 +
->  drivers/net/wireless/intel/iwlwifi/cfg/22000.c  | 939 +-----------------------
->  drivers/net/wireless/intel/iwlwifi/cfg/ax210.c  | 452 ++++++++++++
->  drivers/net/wireless/intel/iwlwifi/cfg/bz.c     | 523 +++++++++++++
->  drivers/net/wireless/intel/iwlwifi/cfg/sc.c     | 214 ++++++
->  drivers/net/wireless/intel/iwlwifi/iwl-config.h |   2 +
->  drivers/net/wireless/intel/iwlwifi/pcie/drv.c   |   3 +
->  7 files changed, 1206 insertions(+), 928 deletions(-)
->  create mode 100644 drivers/net/wireless/intel/iwlwifi/cfg/ax210.c
->  create mode 100644 drivers/net/wireless/intel/iwlwifi/cfg/bz.c
->  create mode 100644 drivers/net/wireless/intel/iwlwifi/cfg/sc.c
-> 
-> 
-> My best.,
-> Jeff
+> Neil
 > 
 >>
+>> Regards,
+>> Amit Pundir
+>> [1] https://people.linaro.org/~amit.pundir/db845c-userdebug/v6.5-broken-display/PXL_20230704_150156326.jpg
 >>
+>>>
+>>> -- 
+>>> With best wishes
+>>> Dmitry
 > 
-> 
+
