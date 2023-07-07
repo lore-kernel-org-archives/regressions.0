@@ -1,82 +1,153 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB1222F4D
-	for <regressions@lists.linux.dev>; Fri,  7 Jul 2023 12:52:33 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qHkwm-0006RT-L1; Fri, 07 Jul 2023 14:52:28 +0200
-Message-ID: <423a78fe-ac40-9983-ff44-90b1759fc0b5@leemhuis.info>
-Date: Fri, 7 Jul 2023 14:52:28 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7ACABA3A
+	for <regressions@lists.linux.dev>; Fri,  7 Jul 2023 13:43:12 +0000 (UTC)
+Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-6355e774d0aso12651706d6.1
+        for <regressions@lists.linux.dev>; Fri, 07 Jul 2023 06:43:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1688737391; x=1691329391;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=dzZkPG7RI0wAetYk691Ba8KUKNWl6F1qo7jNyyUdK70=;
+        b=p59HvEZUQAvjmAzFEUEIg3jouNj+3W3V4HWCRoTddqH1X5xky3rZjaSrMloOmkT1r5
+         l2l85R/Q8A0VNuX2IhonifMxEhUGtlLiVP8MoaC1fm/XTiNxKU4aKZ+tnUNompGJcZys
+         bkJ9tdbcBmNrWndDt5aTtrTcmNGWDrlKlHiqzfdhq1O8h57VDlpMqOHFytcSosFtmR9g
+         Kcnmh5JZUtiGXtCBg4IlGzjm6dLzN0OnTlVbCdVn7C1j7mmozqdLyiO41szzrD/U+fcV
+         4whLWWkMNZEt0WuF15IZjz9PRLtpp3Rsevg/WoQinG860O2X/BuAc21esYFGW030m0rq
+         yXgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688737391; x=1691329391;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=dzZkPG7RI0wAetYk691Ba8KUKNWl6F1qo7jNyyUdK70=;
+        b=IeN5wS4La6ZQwopNPG2UZ3hmEoWJlIF33n6YDGAlTGqeC3LioqQOhd4iQ5ppl8kIcl
+         ijUwy0QCmuQZuBYGb/7zYW2xI/kHJplf3GDc728h2BN0MyqjIJbNTOUQi1IaarMmjpNa
+         PVXZ6erHS/Zx0SkwIVNGM774UusOM5luWYfx8fMgaBfuZvjLeNaT1t/nHlgOtpllst2z
+         3cYGquyZTsll0THlYdrXXPvvaKlfgpXF9pwJQizRXpYe0dOAmd4kdqX9L0Ut9bg4ipLq
+         6tiARwjAGsWrWqZdimIz3bhO9SOso1vhm4GlDA7YZGWH7ZQ0SO+8X/8qf44mqH1SEtm6
+         ANbQ==
+X-Gm-Message-State: ABy/qLaz15lz+DSrWuDJZYypx5tNGiugQVvVmgO3PRA3Rsf6l59RirBY
+	bHWwqX/LXxbRy15dObc7XWkS8jxlVCkvOY1LfmKpIg==
+X-Google-Smtp-Source: APBJJlFpy8jDyr+KlmdxqCpqIx3uqmKGuxqPWsdaP5UQPNw0Sk1yW0BVcwfYgifZv/9oQcKxx9JRXU8ymUO0lbn+u0c=
+X-Received: by 2002:a0c:9e81:0:b0:635:e81d:e57d with SMTP id
+ r1-20020a0c9e81000000b00635e81de57dmr4166916qvd.55.1688737391400; Fri, 07 Jul
+ 2023 06:43:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: mainline build failure due to df8fc4e934c1 ("kbuild: Enable
- -fstrict-flex-arrays=3")
-Content-Language: en-US, de-DE
-To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
- "Sudip Mukherjee (Codethink)" <sudipm.mukherjee@gmail.com>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Kees Cook <keescook@chromium.org>
-Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
- Linus Torvalds <torvalds@linux-foundation.org>, regressions@lists.linux.dev
-References: <ZJ2M4yqnOCqqGWH0@debian>
- <c0db4c48-6090-5c72-b597-9d4146dbc26c@embeddedor.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <c0db4c48-6090-5c72-b597-9d4146dbc26c@embeddedor.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1688734353;9af5cdfa;
-X-HE-SMSGID: 1qHkwm-0006RT-L1
+References: <20230531090424.3187-1-johan+linaro@kernel.org>
+ <20230531090424.3187-3-johan+linaro@kernel.org> <CAMi1Hd3fe=wk02WG8J7K5Ud1GcWkuKKKrxFjkNguxDkzNz2WVQ@mail.gmail.com>
+ <ZKfyH4jRGlVlcLeY@hovoldconsulting.com>
+In-Reply-To: <ZKfyH4jRGlVlcLeY@hovoldconsulting.com>
+From: Amit Pundir <amit.pundir@linaro.org>
+Date: Fri, 7 Jul 2023 19:12:35 +0530
+Message-ID: <CAMi1Hd2CGQKbMPm6GXfSHgrdHsyngBQ_DBseF08=oEvGdizVcw@mail.gmail.com>
+Subject: Re: [PATCH RESEND 2/2] Bluetooth: fix use-bdaddr-property quirk
+To: Johan Hovold <johan@kernel.org>
+Cc: Johan Hovold <johan+linaro@kernel.org>, Marcel Holtmann <marcel@holtmann.org>, 
+	Johan Hedberg <johan.hedberg@gmail.com>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
+	Matthias Kaehlcke <mka@chromium.org>, linux-bluetooth@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Linux regressions mailing list <regressions@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
 
-On 29.06.23 16:09, Gustavo A. R. Silva wrote:
-> 
-> Thanks for the report. See my comments below.
+On Fri, 7 Jul 2023 at 16:37, Johan Hovold <johan@kernel.org> wrote:
+>
+> On Fri, Jul 07, 2023 at 03:11:11PM +0530, Amit Pundir wrote:
+>
+> > On Wed, 31 May 2023 at 14:35, Johan Hovold <johan+linaro@kernel.org> wrote:
+> > >
+> > > Devices that lack persistent storage for the device address can indicate
+> > > this by setting the HCI_QUIRK_INVALID_BDADDR which causes the controller
+> > > to be marked as unconfigured until user space has set a valid address.
+> > >
+> > > The related HCI_QUIRK_USE_BDADDR_PROPERTY was later added to similarly
+> > > indicate that the device lacks a valid address but that one may be
+> > > specified in the devicetree.
+> > >
+> > > As is clear from commit 7a0e5b15ca45 ("Bluetooth: Add quirk for reading
+> > > BD_ADDR from fwnode property") that added and documented this quirk and
+> > > commits like de79a9df1692 ("Bluetooth: btqcomsmd: use
+> > > HCI_QUIRK_USE_BDADDR_PROPERTY"), the device address of controllers with
+> > > this flag should be treated as invalid until user space has had a chance
+> > > to configure the controller in case the devicetree property is missing.
+> > >
+> > > As it does not make sense to allow controllers with invalid addresses,
+> > > restore the original semantics, which also makes sure that the
+> > > implementation is consistent (e.g. get_missing_options() indicates that
+> > > the address must be set) and matches the documentation (including
+> > > comments in the code, such as, "In case any of them is set, the
+> > > controller has to start up as unconfigured.").
+>
+> > This patch broke Bluetooth on Dragonboard 845c (SDM845) devboard.
+> > Reverting this patch fixes the BT breakage and I see the following
+> > messages in dmesg:
+> >
+> > Bluetooth: hci0: setting up wcn399x
+> > Bluetooth: hci0: QCA Product ID   :0x0000000a
+> > Bluetooth: hci0: QCA SOC Version  :0x40010214
+> > Bluetooth: hci0: QCA ROM Version  :0x00000201
+> > Bluetooth: hci0: QCA Patch Version:0x00000001
+> > Bluetooth: hci0: QCA controller version 0x02140201
+> > Bluetooth: hci0: QCA Downloading qca/crbtfw21.tlv
+> > Bluetooth: hci0: QCA Downloading qca/crnv21.bin
+> > Bluetooth: hci0: QCA setup on UART is completed
+>
+> That's odd. You should still see the above messages also with this patch
+> applied, but you may now need to provide a valid device address before
+> being able to use device in case the bootloader has not provided one
+> (e.g. using btmgmt).
 
-Thx for your reply.
+Sorry for the confusion, I missed the part where I do see these
+messages when the kernel module is loaded but the direct firmware
+loading fails.
 
-> On 6/29/23 07:53, Sudip Mukherjee (Codethink) wrote:
->>
->> The latest mainline kernel branch fails to build with clang (version
->> 16.0.1), and the errors are like:
->>
->> drivers/scsi/aacraid/commsup.c:1170:17: error: array index 1 is past
->> the end of the array (that has type 'u8[1]' (aka 'unsigned char[1]'),
->> cast to '__le32 *' (aka 'unsigned int *')) [-Werror,-Warray-bounds]
->>                                  (((__le32 *)aifcmd->data)[1] ==
->> cpu_to_le32(3));
->>                                              ^             ~
-> [...]
-> These are addressed by this patch:
-> https://lore.kernel.org/linux-hardening/65907ee4083de62fbaadc5c2e6512e3828912d1b.1687974498.git.gustavoars@kernel.org/
-> 
-> in this series (for which I'll send v2 shortly):
-> https://lore.kernel.org/linux-hardening/62386518-4123-db1f-4656-6b4ea509f5b1@embeddedor.com/T/
+Bluetooth: hci0: setting up wcn399x
+Bluetooth: hci0: QCA Product ID   :0x0000000a
+Bluetooth: hci0: QCA SOC Version  :0x40010214
+Bluetooth: hci0: QCA ROM Version  :0x00000201
+Bluetooth: hci0: QCA Patch Version:0x00000001
+Bluetooth: hci0: QCA controller version 0x02140201
+Bluetooth: hci0: QCA Downloading qca/crbtfw21.tlv
+bluetooth hci0: Direct firmware load for qca/crbtfw21.tlv failed with error -2
+Bluetooth: hci0: QCA Failed to request file: qca/crbtfw21.tlv (-2)
+Bluetooth: hci0: QCA Failed to download patch (-2)
+Bluetooth: hci0: QCA preshutdown_cmd failed (-56)
 
-Are those fixes still on track? Looks like there was not much progress
-since then, so I suspect this won't be fixed before -rc1? Or did miss
-something?
+This happens in all the cases (working and non-working BT) because
+filesystem is not mounted by that time. I'm running AOSP and all the
+kernel modules get loaded from a ramdisk. But in the working case, the
+firmware loading kicks in again later in the boot process and BT gets
+initiazed..
 
-Ciao, Thorsten
+With this patch, after the first attempt to load the firmware fails,
+the firmware loading doesn't kick-in again. Also even if I keep the
+firmware in ramdisk then the direct firmware loading from ramdisk
+happens but BT still doesn't work
+https://bugs.linaro.org/attachment.cgi?id=1148.
 
-> [...]
->>
->> git bisect pointed to df8fc4e934c1 ("kbuild: Enable
->> -fstrict-flex-arrays=3").
->>
->> Reverting the commit has fixed the build failure.
->>
->> I will be happy to test any patch or provide any extra log if needed.
->>
->> #regzbot introduced: df8fc4e934c12b906d08050d7779f292b9c5c6b5
->>
->>
-> 
-> 
+>
+> Are there any error messages in the log when running with this patch?
+
+I don't see any relevant error message in dmesg. I'll check if I can
+find a command line BT debug tool which I can use on AOSP for
+debugging. There used to be a few hci command line tools, when I
+looked into it a few years ago. Not sure if they are still around and
+useful.
+
+Regards,
+Amit Pundir
+
+>
+> Does
+>
+>         btmgmt --index 0 public-addr <bdaddr>
+>
+> work?
+>
+> Johan
