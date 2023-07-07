@@ -1,116 +1,100 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1CC2C128
-	for <regressions@lists.linux.dev>; Fri,  7 Jul 2023 10:55:33 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qHj7N-00011c-O6; Fri, 07 Jul 2023 12:55:17 +0200
-Message-ID: <a4265090-d6b8-b185-a400-b09b27a347cc@leemhuis.info>
-Date: Fri, 7 Jul 2023 12:55:14 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40F3AA954
+	for <regressions@lists.linux.dev>; Fri,  7 Jul 2023 11:07:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06FBAC433C8;
+	Fri,  7 Jul 2023 11:07:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1688728069;
+	bh=1kS8xpok5DlQK6AWLrgEr91mwJ7pD7DtontA3r8syII=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lTJqkkEgq8Rj3NoNl0+zfX54lw4TDNHWAQ5coqiDwPuUzELSPezr52JZcqyhRGMiK
+	 XLsVbxmDRzVNFhkA9S+WPlxnrIbpy8n9smVdqPN9cZBV0vCTZH+Z+04ckgRfyMbfWr
+	 VzkPKYJnlj6lUPSZbNBxCRdXJVck2CznML6ClLk/wumG2qW7hTTQpD036gWal1XM3d
+	 7E9t09LuOWeH5rFuC3aYgQRUYHu1oDCnCwH3wkQUlNcnyxLjYliOX5T5IhrFAdTby8
+	 anCz8yrZc87Y53SAip9zJnLQ86ha/I9B6IsWmwluk9mbcXi51ZX3Zieh35M+/tKt9L
+	 fwjhpFP8fRzTQ==
+Received: from johan by xi.lan with local (Exim 4.96)
+	(envelope-from <johan@kernel.org>)
+	id 1qHjJv-0005M8-0v;
+	Fri, 07 Jul 2023 13:08:15 +0200
+Date: Fri, 7 Jul 2023 13:08:15 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Amit Pundir <amit.pundir@linaro.org>
+Cc: Johan Hovold <johan+linaro@kernel.org>,
+	Marcel Holtmann <marcel@holtmann.org>,
+	Johan Hedberg <johan.hedberg@gmail.com>,
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+	Matthias Kaehlcke <mka@chromium.org>,
+	linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Re: [PATCH RESEND 2/2] Bluetooth: fix use-bdaddr-property quirk
+Message-ID: <ZKfyH4jRGlVlcLeY@hovoldconsulting.com>
+References: <20230531090424.3187-1-johan+linaro@kernel.org>
+ <20230531090424.3187-3-johan+linaro@kernel.org>
+ <CAMi1Hd3fe=wk02WG8J7K5Ud1GcWkuKKKrxFjkNguxDkzNz2WVQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [Regression][BISECTED] kernel boot hang after 19898ce9cf8a
- ("wifi: iwlwifi: split 22000.c into multiple files")
-To: "Zhang, Rui" <rui.zhang@intel.com>,
- "Greenman, Gregory" <gregory.greenman@intel.com>,
- "Berg, Johannes" <johannes.berg@intel.com>
-Cc: "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
- "Baruch, Yaara" <yaara.baruch@intel.com>,
- "Ben Ami, Golan" <golan.ben.ami@intel.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "Sisodiya, Mukesh" <mukesh.sisodiya@intel.com>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Johannes Berg <johannes.berg@intel.com>, Kalle Valo <kvalo@kernel.org>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Paolo Abeni <pabeni@redhat.com>, netdev <netdev@vger.kernel.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- Jakub Kicinski <kuba@kernel.org>, Bagas Sanjaya <bagasdotme@gmail.com>
-References: <b533071f38804247f06da9e52a04f15cce7a3836.camel@intel.com>
-Content-Language: en-US, de-DE
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <b533071f38804247f06da9e52a04f15cce7a3836.camel@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1688727333;4f019535;
-X-HE-SMSGID: 1qHj7N-00011c-O6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMi1Hd3fe=wk02WG8J7K5Ud1GcWkuKKKrxFjkNguxDkzNz2WVQ@mail.gmail.com>
 
-[CCing the regression list, netdev, the net maintainers, and Linus;
-Johannes and Kalle as well, but just for the record, they afaik are
-unavailable]
+On Fri, Jul 07, 2023 at 03:11:11PM +0530, Amit Pundir wrote:
 
-Hi, Thorsten here, the Linux kernel's regression tracker.
+> On Wed, 31 May 2023 at 14:35, Johan Hovold <johan+linaro@kernel.org> wrote:
+> >
+> > Devices that lack persistent storage for the device address can indicate
+> > this by setting the HCI_QUIRK_INVALID_BDADDR which causes the controller
+> > to be marked as unconfigured until user space has set a valid address.
+> >
+> > The related HCI_QUIRK_USE_BDADDR_PROPERTY was later added to similarly
+> > indicate that the device lacks a valid address but that one may be
+> > specified in the devicetree.
+> >
+> > As is clear from commit 7a0e5b15ca45 ("Bluetooth: Add quirk for reading
+> > BD_ADDR from fwnode property") that added and documented this quirk and
+> > commits like de79a9df1692 ("Bluetooth: btqcomsmd: use
+> > HCI_QUIRK_USE_BDADDR_PROPERTY"), the device address of controllers with
+> > this flag should be treated as invalid until user space has had a chance
+> > to configure the controller in case the devicetree property is missing.
+> >
+> > As it does not make sense to allow controllers with invalid addresses,
+> > restore the original semantics, which also makes sure that the
+> > implementation is consistent (e.g. get_missing_options() indicates that
+> > the address must be set) and matches the documentation (including
+> > comments in the code, such as, "In case any of them is set, the
+> > controller has to start up as unconfigured.").
 
-On 07.07.23 10:25, Zhang, Rui wrote:
+> This patch broke Bluetooth on Dragonboard 845c (SDM845) devboard.
+> Reverting this patch fixes the BT breakage and I see the following
+> messages in dmesg:
 > 
-> I run into a NULL pointer dereference and kernel boot hang after
-> switching to latest upstream kernel, and git bisect shows that below
-> commit is the first offending commit, and I have confirmed that commit
-> 19898ce9cf8a has the issue while 19898ce9cf8a~1 does not.
+> Bluetooth: hci0: setting up wcn399x
+> Bluetooth: hci0: QCA Product ID   :0x0000000a
+> Bluetooth: hci0: QCA SOC Version  :0x40010214
+> Bluetooth: hci0: QCA ROM Version  :0x00000201
+> Bluetooth: hci0: QCA Patch Version:0x00000001
+> Bluetooth: hci0: QCA controller version 0x02140201
+> Bluetooth: hci0: QCA Downloading qca/crbtfw21.tlv
+> Bluetooth: hci0: QCA Downloading qca/crnv21.bin
+> Bluetooth: hci0: QCA setup on UART is completed
 
-FWIW, this is the fourth such report about this that I'm aware of.
+That's odd. You should still see the above messages also with this patch
+applied, but you may now need to provide a valid device address before
+being able to use device in case the bootloader has not provided one
+(e.g. using btmgmt).
 
-The first is this one (with two affected users afaics):
-https://bugzilla.kernel.org/show_bug.cgi?id=217622
+Are there any error messages in the log when running with this patch?
 
-The second is this one:
-https://lore.kernel.org/all/CAAJw_Zug6VCS5ZqTWaFSr9sd85k%3DtyPm9DEE%2BmV%3DAKoECZM%2BsQ@mail.gmail.com/
+Does
 
-The third:
-https://lore.kernel.org/all/9274d9bd3d080a457649ff5addcc1726f08ef5b2.camel@xry111.site/
+	btmgmt --index 0 public-addr <bdaddr>
 
-And in the past few days two people from Fedora land talked to me on IRC
-with problems that in retrospective might be caused by this as well.
+work?
 
-This many reports about a problem at this stage of the cycle makes me
-suspect we'll see a lot more once -rc1 is out. That's why I raising the
-awareness of this. Sadly a simple revert of just this commit is not
-possible. :-/
-
-Ciao, Thorsten
-
-> commit 19898ce9cf8a33e0ac35cb4c7f68de297cc93cb2 (refs/bisect/bad)
-> Author:     Johannes Berg <johannes.berg@intel.com>
-> AuthorDate: Wed Jun 21 13:12:07 2023 +0300
-> Commit:     Johannes Berg <johannes.berg@intel.com>
-> CommitDate: Wed Jun 21 14:07:00 2023 +0200
-> 
->     wifi: iwlwifi: split 22000.c into multiple files
->     
->     Split the configuration list in 22000.c into four new files,
->     per new device family, so we don't have this huge unusable
->     file. Yes, this duplicates a few small things, but that's
->     still much better than what we have now.
->     
->     Signed-off-by: Johannes Berg <johannes.berg@intel.com>
->     Signed-off-by: Gregory Greenman <gregory.greenman@intel.com>
->     Link:
-> https://lore.kernel.org/r/20230621130443.7543603b2ee7.Ia8dd54216d341ef1ddc0531f2c9aa30d30536a5d@changeid
->     Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-> 
-> I have some screenshots which show that RIP points to iwl_mem_free_skb,
-> I can create a kernel bugzilla and attach the screenshots there if
-> needed.
-> 
-> BTW, lspci output of the wifi device and git bisect log attached.
-> 
-> If any other information needed, please let me know.
-
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
-
-P.S.: for regzbot
-
-#regzbot ^introduced 19898ce9cf8a
-#regzbot dup-of:
-https://lore.kernel.org/all/a5cdc7f8-b340-d372-2971-0d24b01de217@gmail.com/
+Johan
