@@ -1,100 +1,199 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from exhmta09.bpe.bigpond.com (exhmta09.bpe.bigpond.com [203.42.40.153])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40F3AA954
-	for <regressions@lists.linux.dev>; Fri,  7 Jul 2023 11:07:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06FBAC433C8;
-	Fri,  7 Jul 2023 11:07:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1688728069;
-	bh=1kS8xpok5DlQK6AWLrgEr91mwJ7pD7DtontA3r8syII=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lTJqkkEgq8Rj3NoNl0+zfX54lw4TDNHWAQ5coqiDwPuUzELSPezr52JZcqyhRGMiK
-	 XLsVbxmDRzVNFhkA9S+WPlxnrIbpy8n9smVdqPN9cZBV0vCTZH+Z+04ckgRfyMbfWr
-	 VzkPKYJnlj6lUPSZbNBxCRdXJVck2CznML6ClLk/wumG2qW7hTTQpD036gWal1XM3d
-	 7E9t09LuOWeH5rFuC3aYgQRUYHu1oDCnCwH3wkQUlNcnyxLjYliOX5T5IhrFAdTby8
-	 anCz8yrZc87Y53SAip9zJnLQ86ha/I9B6IsWmwluk9mbcXi51ZX3Zieh35M+/tKt9L
-	 fwjhpFP8fRzTQ==
-Received: from johan by xi.lan with local (Exim 4.96)
-	(envelope-from <johan@kernel.org>)
-	id 1qHjJv-0005M8-0v;
-	Fri, 07 Jul 2023 13:08:15 +0200
-Date: Fri, 7 Jul 2023 13:08:15 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Amit Pundir <amit.pundir@linaro.org>
-Cc: Johan Hovold <johan+linaro@kernel.org>,
-	Marcel Holtmann <marcel@holtmann.org>,
-	Johan Hedberg <johan.hedberg@gmail.com>,
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-	Matthias Kaehlcke <mka@chromium.org>,
-	linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: [PATCH RESEND 2/2] Bluetooth: fix use-bdaddr-property quirk
-Message-ID: <ZKfyH4jRGlVlcLeY@hovoldconsulting.com>
-References: <20230531090424.3187-1-johan+linaro@kernel.org>
- <20230531090424.3187-3-johan+linaro@kernel.org>
- <CAMi1Hd3fe=wk02WG8J7K5Ud1GcWkuKKKrxFjkNguxDkzNz2WVQ@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 977EB8C06
+	for <regressions@lists.linux.dev>; Fri,  7 Jul 2023 12:47:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=bigpond.com
+	; s=202303; h=Content-Type:MIME-Version:Date:Message-ID:From:To:Subject;
+	bh=vzhRXbz2UpgobFDiFaVPq9YFwfbsEXh4XG75B7YpJXc=; b=qTv3AgblbGiUrJdMGQ8MOG0c6b
+	EhUB3ISV1ZC4ytcVyJuawAcbHzlrbOBco+B9TwHa4XOAUS4ExfOAO3JC8lqXGkx9MgOxDxJ+G6H0i
+	teztreZRKnIvIUUx0Qo+7QTIHCDyxt7LbZUCrewfILxmZzJ9343bybxayeeD1dTpOjEqgen59OTrt
+	Z5BdzY3b/1apJ5KKP44EUDArYXr6FxftPCYHBzOXQCps5hajpSCY6kKPsLOgJrwqSy8gDIj3FtaPi
+	SJDNJqRyPp+RogcmYj2l1IIFBNfpA1uXe1Jg6HirCQHNdiwz3yN0YevAk25DHQ6e5wkgYeoyNjybe
+	5c9aJtsw==;
+Received: from exhprdcmr02
+	 by exhprdomr09 with esmtp
+	 (envelope-from <bids.7405@bigpond.com>)
+	 id 1qHkZK-0003Kj-1l
+	 for ;
+	Fri, 07 Jul 2023 22:28:14 +1000
+Received: from [101.191.138.223] (helo=[10.0.0.38])
+	 by exhprdcmr02 with esmtpa
+	(envelope-from <bids.7405@bigpond.com>)
+	id 1qHkZL-000H1k-2K;
+	Fri, 07 Jul 2023 22:28:14 +1000
+Subject: Re: Fwd: 3 more broken Zaurii - SL-5600, A300, C700
+To: Dave Jones <davej@codemonkey.org.uk>,
+ Thorsten Leemhuis <regressions@leemhuis.info>,
+ Bagas Sanjaya <bagasdotme@gmail.com>, "David S. Miller"
+ <davem@davemloft.net>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Linux Networking <netdev@vger.kernel.org>,
+ Linux USB <linux-usb@vger.kernel.org>, Oliver Neukum <oneukum@suse.com>
+References: <7ea9abd8-c35d-d329-f0d4-c8bd220cf691@gmail.com>
+ <50f4c10d-260c-cb98-e7d2-124f5519fa68@gmail.com>
+ <e1fdc435-089c-8ce7-d536-ce3780a4ba95@leemhuis.info>
+ <ZKbuoRBi50i8OZ9d@codemonkey.org.uk>
+From: Ross Maynard <bids.7405@bigpond.com>
+Message-ID: <62a9e058-c853-1fcd-5663-e2e001f881e9@bigpond.com>
+Date: Fri, 7 Jul 2023 22:28:11 +1000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMi1Hd3fe=wk02WG8J7K5Ud1GcWkuKKKrxFjkNguxDkzNz2WVQ@mail.gmail.com>
+In-Reply-To: <ZKbuoRBi50i8OZ9d@codemonkey.org.uk>
+Content-Type: multipart/mixed;
+ boundary="------------8628B942F2195D19390C676E"
+Content-Language: en-US
+X-tce-id: bids.7405@bigpond.com
+X-tce-ares-id: e{4a9eb6c6-2d9a-4e3c-8cca-a779deb79200}1
+X-tce-spam-action: no action
+X-tce-spam-score: 0.0
+X-Cm-Analysis: v=2.4 cv=Cvt5MF0D c=1 sm=1 tr=0 ts=64a804de a=I+ymoOSk5yzZBOYXmf4WnA==:117 a=I+ymoOSk5yzZBOYXmf4WnA==:17 a=ws7JD89P4LkA:10 a=r77TgQKjGQsHNAKrUKIA:9 a=gj2XTu5y7l5qDgVZD0wA:9 a=QEXdDO2ut3YA:10 a=TILydWMaAdQ53EHaNYoA:9 a=B2y7HmGcmWMA:10
+X-Cm-Envelope: MS4xfIoILScwK33rbupbBpEtbV4ZzqANKCuQY393vXbD0WiKc6WXcEatxhUr19gldVyCIEfV2DKcKRv2Z7ovSbONdF4nJBhsrNEgtMrgj2J1dXVInPA/Hpo7 Q57QrzVo5S4Nu+gvGM7E12lHSLJySTo4GYPCPEoucFsk3tuFV3a8iUq/bpOTsQPJUGF4cWeZV0jyNA==
 
-On Fri, Jul 07, 2023 at 03:11:11PM +0530, Amit Pundir wrote:
+This is a multi-part message in MIME format.
+--------------8628B942F2195D19390C676E
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-> On Wed, 31 May 2023 at 14:35, Johan Hovold <johan+linaro@kernel.org> wrote:
-> >
-> > Devices that lack persistent storage for the device address can indicate
-> > this by setting the HCI_QUIRK_INVALID_BDADDR which causes the controller
-> > to be marked as unconfigured until user space has set a valid address.
-> >
-> > The related HCI_QUIRK_USE_BDADDR_PROPERTY was later added to similarly
-> > indicate that the device lacks a valid address but that one may be
-> > specified in the devicetree.
-> >
-> > As is clear from commit 7a0e5b15ca45 ("Bluetooth: Add quirk for reading
-> > BD_ADDR from fwnode property") that added and documented this quirk and
-> > commits like de79a9df1692 ("Bluetooth: btqcomsmd: use
-> > HCI_QUIRK_USE_BDADDR_PROPERTY"), the device address of controllers with
-> > this flag should be treated as invalid until user space has had a chance
-> > to configure the controller in case the devicetree property is missing.
-> >
-> > As it does not make sense to allow controllers with invalid addresses,
-> > restore the original semantics, which also makes sure that the
-> > implementation is consistent (e.g. get_missing_options() indicates that
-> > the address must be set) and matches the documentation (including
-> > comments in the code, such as, "In case any of them is set, the
-> > controller has to start up as unconfigured.").
+Hi,
 
-> This patch broke Bluetooth on Dragonboard 845c (SDM845) devboard.
-> Reverting this patch fixes the BT breakage and I see the following
-> messages in dmesg:
-> 
-> Bluetooth: hci0: setting up wcn399x
-> Bluetooth: hci0: QCA Product ID   :0x0000000a
-> Bluetooth: hci0: QCA SOC Version  :0x40010214
-> Bluetooth: hci0: QCA ROM Version  :0x00000201
-> Bluetooth: hci0: QCA Patch Version:0x00000001
-> Bluetooth: hci0: QCA controller version 0x02140201
-> Bluetooth: hci0: QCA Downloading qca/crbtfw21.tlv
-> Bluetooth: hci0: QCA Downloading qca/crnv21.bin
-> Bluetooth: hci0: QCA setup on UART is completed
+I am not a kernel developer, but I think the attached patch would work.
 
-That's odd. You should still see the above messages also with this patch
-applied, but you may now need to provide a valid device address before
-being able to use device in case the bootloader has not provided one
-(e.g. using btmgmt).
+Ross
 
-Are there any error messages in the log when running with this patch?
+On 7/7/23 2:41 am, Dave Jones wrote:
+> On Thu, Jul 06, 2023 at 01:45:57PM +0200, Thorsten Leemhuis wrote:
+>   > On 06.07.23 05:08, Bagas Sanjaya wrote:
+>   > >>
+>   > >> I notice a regression report on Bugzilla [1]. Quoting from it:
+>   > >>
+>   > >>> The following patch broke support of 3 more Zaurus models: SL-5600, A300 and C700
+>   > >>>
+>   > >>> [16adf5d07987d93675945f3cecf0e33706566005] usbnet: Remove over-broad module alias from zaurus
+>   >
+>   > ...
+>   > He sometimes shows up on Linux kernel lists, but I doubt he cares about
+>   > that change after all these years. And I would not blame him at all.
+>
+> That's about the size of it.  This is pretty near the bottom of my ever-shrinking
+> list of kernel drivers I care about.
+>
+>   > Yes, we have the "no regressions" rule, but contributing a change to the
+>   > kernel OTOH should not mean that you are responsible for all regressions
+>   > it causes for your whole life. :-)
+>
+> That said, 12 years later, 16adf5d07987d93675945f3cecf0e33706566005
+> is still the right thing to do. Adding actual matches for the devices
+> rather than matching by class will prevent this getting loaded where it
+> doesn't need to be.
+>
+> If someone actually cares to get this working, cargo-culting Oliver's
+> change to add the extra id is likely the way forward.
+>
+> 	Dave
+>
 
-Does
+--------------8628B942F2195D19390C676E
+Content-Type: text/x-patch; charset=UTF-8;
+ name="3-zaurii-patch.patch"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename="3-zaurii-patch.patch"
 
-	btmgmt --index 0 public-addr <bdaddr>
+diff -urpN a/drivers/net/usb/cdc_ether.c b/drivers/net/usb/cdc_ether.c
+--- a/drivers/net/usb/cdc_ether.c	2023-07-07 17:48:27.991833366 +1000
++++ b/drivers/net/usb/cdc_ether.c	2023-07-07 21:53:11.556198087 +1000
+@@ -616,6 +616,13 @@ static const struct usb_device_id	produc
+ }, {
+ 	.match_flags	=   USB_DEVICE_ID_MATCH_INT_INFO
+ 			  | USB_DEVICE_ID_MATCH_DEVICE,
++    .idVendor		= 0x04DD,
++    .idProduct		= 0x8005,   /* A-300 */
++    ZAURUS_FAKE_INTERFACE,
++    .driver_info        = 0,
++}, {
++    .match_flags    =   USB_DEVICE_ID_MATCH_INT_INFO
++			  | USB_DEVICE_ID_MATCH_DEVICE,
+ 	.idVendor		= 0x04DD,
+ 	.idProduct		= 0x8006,	/* B-500/SL-5600 */
+ 	ZAURUS_MASTER_INTERFACE,
+@@ -623,12 +630,26 @@ static const struct usb_device_id	produc
+ }, {
+ 	.match_flags    =   USB_DEVICE_ID_MATCH_INT_INFO
+ 			  | USB_DEVICE_ID_MATCH_DEVICE,
++    .idVendor		= 0x04DD,
++    .idProduct		= 0x8006,   /* B-500/SL-5600 */
++    ZAURUS_FAKE_INTERFACE,
++    .driver_info        = 0,
++}, {
++    .match_flags    =   USB_DEVICE_ID_MATCH_INT_INFO
++			  | USB_DEVICE_ID_MATCH_DEVICE,
+ 	.idVendor		= 0x04DD,
+ 	.idProduct		= 0x8007,	/* C-700 */
+ 	ZAURUS_MASTER_INTERFACE,
+ 	.driver_info		= 0,
+ }, {
+ 	.match_flags    =   USB_DEVICE_ID_MATCH_INT_INFO
++			  | USB_DEVICE_ID_MATCH_DEVICE,
++    .idVendor		= 0x04DD,
++    .idProduct		= 0x8007,   /* C-700 */
++    ZAURUS_FAKE_INTERFACE,
++    .driver_info        = 0,
++}, {
++    .match_flags    =   USB_DEVICE_ID_MATCH_INT_INFO
+ 		 | USB_DEVICE_ID_MATCH_DEVICE,
+ 	.idVendor               = 0x04DD,
+ 	.idProduct              = 0x9031,	/* C-750 C-760 */
+Binary files a/drivers/net/usb/.cdc_ether.c.swp and b/drivers/net/usb/.cdc_ether.c.swp differ
+diff -urpN a/drivers/net/usb/zaurus.c b/drivers/net/usb/zaurus.c
+--- a/drivers/net/usb/zaurus.c	2023-07-07 17:48:28.043849110 +1000
++++ b/drivers/net/usb/zaurus.c	2023-07-07 22:06:49.267699853 +1000
+@@ -289,11 +289,25 @@ static const struct usb_device_id	produc
+ 	.match_flags	=   USB_DEVICE_ID_MATCH_INT_INFO
+ 			  | USB_DEVICE_ID_MATCH_DEVICE,
+ 	.idVendor		= 0x04DD,
++	.idProduct		= 0x8005,	/* A-300 */
++	ZAURUS_FAKE_INTERFACE,
++	.driver_info = (unsigned long) &bogus_mdlm_info,
++}, {
++	.match_flags    =   USB_DEVICE_ID_MATCH_INT_INFO
++			  | USB_DEVICE_ID_MATCH_DEVICE,
++	.idVendor		= 0x04DD,
+ 	.idProduct		= 0x8006,	/* B-500/SL-5600 */
+ 	ZAURUS_MASTER_INTERFACE,
+ 	.driver_info = ZAURUS_PXA_INFO,
+ }, {
+ 	.match_flags    =   USB_DEVICE_ID_MATCH_INT_INFO
++			  | USB_DEVICE_ID_MATCH_DEVICE,
++	.idVendor		= 0x04DD,
++	.idProduct		= 0x8006,	/* B-500/SL-5600 */
++	ZAURUS_FAKE_INTERFACE,
++	.driver_info = (unsigned long) &bogus_mdlm_info,
++}, {
++	.match_flags    =   USB_DEVICE_ID_MATCH_INT_INFO
+ 	          | USB_DEVICE_ID_MATCH_DEVICE,
+ 	.idVendor		= 0x04DD,
+ 	.idProduct		= 0x8007,	/* C-700 */
+@@ -301,6 +315,13 @@ static const struct usb_device_id	produc
+ 	.driver_info = ZAURUS_PXA_INFO,
+ }, {
+ 	.match_flags    =   USB_DEVICE_ID_MATCH_INT_INFO
++			  | USB_DEVICE_ID_MATCH_DEVICE,
++	.idVendor		= 0x04DD,
++	.idProduct		= 0x8007,	/* C-700 */
++	ZAURUS_FAKE_INTERFACE,
++	.driver_info = (unsigned long) &bogus_mdlm_info,
++}, {
++        .match_flags    =   USB_DEVICE_ID_MATCH_INT_INFO
+ 		 | USB_DEVICE_ID_MATCH_DEVICE,
+ 	.idVendor               = 0x04DD,
+ 	.idProduct              = 0x9031,	/* C-750 C-760 */
 
-work?
-
-Johan
+--------------8628B942F2195D19390C676E--
