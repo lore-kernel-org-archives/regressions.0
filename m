@@ -1,13 +1,39 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 627421FA7
-	for <regressions@lists.linux.dev>; Fri,  7 Jul 2023 16:07:57 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qHnzr-00059o-1C; Fri, 07 Jul 2023 18:07:51 +0200
-Message-ID: <5b9ec275-31b5-7b77-d00b-da128bea8bb3@leemhuis.info>
-Date: Fri, 7 Jul 2023 18:07:49 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57A311FA7
+	for <regressions@lists.linux.dev>; Fri,  7 Jul 2023 16:17:56 +0000 (UTC)
+Received: from eig-obgw-6006a.ext.cloudfilter.net ([10.0.30.182])
+	by cmsmtp with ESMTP
+	id Hnpcq0ANhQFHRHo83qvPRS; Fri, 07 Jul 2023 16:16:19 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id Ho82qB8NC86r5Ho83qFfxo; Fri, 07 Jul 2023 16:16:19 +0000
+X-Authority-Analysis: v=2.4 cv=LsmBd1Rc c=1 sm=1 tr=0 ts=64a83a53
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
+ a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
+ a=IkcTkHD0fZMA:10 a=ws7JD89P4LkA:10 a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8
+ a=hRA6dbrf6ar1ToGhP8sA:9 a=QEXdDO2ut3YA:10 a=AjGcO6oz07-iQ99wixmX:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=i0RIjplkv8YMTvjY+KkgMdjkmPutWbywcnCQfTBbR4Y=; b=oY0RcCTaOAZ4kucMLnrx0pgLTr
+	pMJjxOZkMhUDKUuYUSit3JPJnp5fLVHeOaE46TQ4SEySnUguxsQumkq88jLQCO/fnCAOVcomVGZIS
+	fWQFn6eLKCKI6xqWjOt8kG6ToJloTygEdY72dpksbLsWQBNfNsNBLgTMoE0g4hcq8H1G7T3lpnub1
+	tUDkv7WUa87oYqMNhOjnwRFmZiuHbHcRfqcFExf8Lmpbs53tY4BhDm5RJWNQgow9/+Ct4QmWOfX/v
+	D2nVN1Yu9YMNzcH5HHpUuSDrYDg/QBoLRfJSArnDNQBBISY9Gwt85dqx1/OQFtw4OP8kJwlcSUymO
+	WsvSo5mQ==;
+Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:58802 helo=[192.168.15.8])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1qHo82-002XfG-0s;
+	Fri, 07 Jul 2023 11:16:18 -0500
+Message-ID: <1fb40135-2a4c-5d54-c5a1-db36244128aa@embeddedor.com>
+Date: Fri, 7 Jul 2023 10:17:01 -0600
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -15,134 +41,55 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH] tpm: return false from tpm_amd_is_rng_defective on
- non-x86 platforms
-Content-Language: en-US, de-DE
-To: Jerry Snitselaar <jsnitsel@redhat.com>,
- Jarkko Sakkinen <jarkko@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
- "Jason A. Donenfeld" <Jason@zx2c4.com>, Jason Gunthorpe <jgg@ziepe.ca>,
- Peter Huewe <peterhuewe@gmx.de>, stable@vger.kernel.org,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- Mario Limonciello <mario.limonciello@amd.com>,
- "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
- Sachin Sant <sachinp@linux.ibm.com>
-References: <20230629204147.1852823-1-jsnitsel@redhat.com>
- <CTPWGNGECE0A.7MSU6S60YWDK@suppilovahvero>
- <mbbb2mdlmkhnkgmw37glklmllzelolmdvmdgz5pziidromxsh5@gkflot73u6gd>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <mbbb2mdlmkhnkgmw37glklmllzelolmdvmdgz5pziidromxsh5@gkflot73u6gd>
-Content-Type: text/plain; charset=UTF-8
+ Thunderbird/102.11.0
+Subject: Re: mainline build failure due to df8fc4e934c1 ("kbuild: Enable
+ -fstrict-flex-arrays=3")
+Content-Language: en-US
+To: Linux regressions mailing list <regressions@lists.linux.dev>,
+ "Sudip Mukherjee (Codethink)" <sudipm.mukherjee@gmail.com>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Kees Cook <keescook@chromium.org>
+Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Linus Torvalds <torvalds@linux-foundation.org>
+References: <ZJ2M4yqnOCqqGWH0@debian>
+ <c0db4c48-6090-5c72-b597-9d4146dbc26c@embeddedor.com>
+ <423a78fe-ac40-9983-ff44-90b1759fc0b5@leemhuis.info>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <423a78fe-ac40-9983-ff44-90b1759fc0b5@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1688746077;504eebd1;
-X-HE-SMSGID: 1qHnzr-00059o-1C
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - lists.linux.dev
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.162.21.192
+X-Source-L: No
+X-Exim-ID: 1qHo82-002XfG-0s
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.8]) [187.162.21.192]:58802
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 7
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfOT23Pt6dY9emsqQioVBwS1OrkZvYU1HGrOWWW/Ma7bn/IntnbMS29sfWqV1dSB6Sr+FBGVFVW0OXUMUwxjC2GaMJ2NSa+7YVlxi+13Bv4BP3jjxDBLp
+ x0Po/s+4yMquxKJn31jq++nJvi25FrNDF0t0MHcmOHWP867+KvjXbjb1PGdfsx1m2fnEpqRkNY+5PexUlP1a0wUHynQ1SX2SkuwsRbWTHEGhDtejsq1dh9Mq
 
-Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
-for once, to make this easily accessible to everyone.
 
-So what's the way forward now? It sounded like Jarkko wanted to apply
-the patch from this thread days ago, but that didn't happen afaics. Then
-below message showed up, but Marios patch also wasn't applied.
 
-Is this intentional, or did something somewhere fall through the cracks?
+On 7/7/23 06:52, Linux regression tracking (Thorsten Leemhuis) wrote:
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> Are those fixes still on track? Looks like there was not much progress
+> since then, so I suspect this won't be fixed before -rc1? Or did miss
+> something?
+
+The change is already in SCSI for them to send it to mainline when they
+see fit:
+https://git.kernel.org/pub/scm/linux/kernel/git/mkp/scsi.git/commit/?h=6.5/scsi-staging&id=47699a2b63caaa0de4841d4402627c2fdf3452a6
+
 --
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
-
-#regzbot poke
-
-On 05.07.23 19:04, Jerry Snitselaar wrote:
-> On Fri, Jun 30, 2023 at 01:07:00PM +0300, Jarkko Sakkinen wrote:
->> On Thu Jun 29, 2023 at 11:41 PM EEST, Jerry Snitselaar wrote:
->>> tpm_amd_is_rng_defective is for dealing with an issue related to the
->>> AMD firmware TPM, so on non-x86 architectures just have it inline and
->>> return false.
->>>
->>> Cc: Jarkko Sakkinen <jarkko@kernel.org>
->>> Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>
->>> Cc: Jason Gunthorpe <jgg@ziepe.ca>
->>> Cc: Peter Huewe <peterhuewe@gmx.de>
->>> Cc: stable@vger.kernel.org
->>> Cc: Linux regressions mailing list <regressions@lists.linux.dev>
->>> Cc: Mario Limonciello <mario.limonciello@amd.com>
->>> Reported-by: Aneesh Kumar K. V <aneesh.kumar@linux.ibm.com>
->>> Reported-by: Sachin Sant <sachinp@linux.ibm.com>
->>> Closes: https://lore.kernel.org/lkml/99B81401-DB46-49B9-B321-CF832B50CAC3@linux.ibm.com/
->>> Fixes: f1324bbc4011 ("tpm: disable hwrng for fTPM on some AMD designs")
->>> Signed-off-by: Jerry Snitselaar <jsnitsel@redhat.com>
->>> ---
->>>  drivers/char/tpm/tpm-chip.c | 7 +++++++
->>>  1 file changed, 7 insertions(+)
->>>
->>> diff --git a/drivers/char/tpm/tpm-chip.c b/drivers/char/tpm/tpm-chip.c
->>> index cd48033b804a..cf5499e51999 100644
->>> --- a/drivers/char/tpm/tpm-chip.c
->>> +++ b/drivers/char/tpm/tpm-chip.c
->>> @@ -518,6 +518,7 @@ static int tpm_add_legacy_sysfs(struct tpm_chip *chip)
->>>   * 6.x.y.z series: 6.0.18.6 +
->>>   * 3.x.y.z series: 3.57.y.5 +
->>>   */
->>> +#ifdef CONFIG_X86
->>>  static bool tpm_amd_is_rng_defective(struct tpm_chip *chip)
->>>  {
->>>  	u32 val1, val2;
->>> @@ -566,6 +567,12 @@ static bool tpm_amd_is_rng_defective(struct tpm_chip *chip)
->>>  
->>>  	return true;
->>>  }
->>> +#else
->>> +static inline bool tpm_amd_is_rng_defective(struct tpm_chip *chip)
->>> +{
->>> +	return false;
->>> +}
->>> +#endif /* CONFIG_X86 */
->>>  
->>>  static int tpm_hwrng_read(struct hwrng *rng, void *data, size_t max, bool wait)
->>>  {
->>> -- 
->>> 2.38.1
->>
->> Sanity check, this was the right patch, right?
->>
->> I'll apply it.
->>
->> BR, Jarkko
-> 
-> Sorry, I've been dealing with a family health issue the past week. It wasn't clear
-> to me why chip->ops was null when I first took a look, but I think I understand
-> now looking at it again this morning. The stack trace shows it in the device_shutdown() path:
-> 
->     [ 34.381674] NIP [c0000000009db1e4] tpm_amd_is_rng_defective+0x74/0x240
->     [ 34.381681] LR [c0000000009db928] tpm_chip_unregister+0x138/0x160
->     [ 34.381685] Call Trace:
->     [ 34.381686] [c00000009742faa0] [c0000000009db928] tpm_chip_unregister+0x138/0x160
->     [ 34.381690] [c00000009742fae0] [c0000000009eab94] tpm_ibmvtpm_remove+0x34/0x130
->     [ 34.381695] [c00000009742fb50] [c000000000115738] vio_bus_remove+0x58/0xd0
->     [ 34.381701] [c00000009742fb90] [c000000000a01ecc] device_shutdown+0x21c/0x39c
->     [ 34.381705] [c00000009742fc20] [c0000000001a2684] kernel_restart_prepare+0x54/0x70
->     [ 34.381710] [c00000009742fc40] [c000000000292c48] kernel_kexec+0xa8/0x100
->     [ 34.381714] [c00000009742fcb0] [c0000000001a2cd4] __do_sys_reboot+0x214/0x2c0
->     [ 34.381718] [c00000009742fe10] [c000000000034adc] system_call_exception+0x13c/0x340
->     [ 34.381723] [c00000009742fe50] [c00000000000d05c] system_call_vectored_common+0x15c/0x2ec
-> 
-> So I think what happened is:
-> 
-> device_shutdown -> dev->class->shutdown_pre (tpm_class_shutdown) // clears chip->ops
->                 -> dev->bus->shutdown (vio_bus_shutdown) -> vio_bus_remove -> viodrv->remove (tpm_ibmvtpm_remove) -> tpm_chip_unregister -> tpm_amd_is_rng_defective -> oops!
-> 
-> 
-> I guess anything that gets called in the tpm_chip_unregister path
-> should be doing a check of chip->ops prior to using it. So I think
-> Mario's patch would still be a good thing to have.
-> 
-> Regards,
-> Jerry
-> 
-> 
-> 
+Gustavo
