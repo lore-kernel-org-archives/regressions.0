@@ -1,110 +1,122 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from mail-vk1-f176.google.com (mail-vk1-f176.google.com [209.85.221.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81B2A7F
-	for <regressions@lists.linux.dev>; Fri,  7 Jul 2023 00:42:03 +0000 (UTC)
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1b8b64850b0so52945ad.1
-        for <regressions@lists.linux.dev>; Thu, 06 Jul 2023 17:42:03 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF28A7F
+	for <regressions@lists.linux.dev>; Fri,  7 Jul 2023 01:56:46 +0000 (UTC)
+Received: by mail-vk1-f176.google.com with SMTP id 71dfb90a1353d-47e06acce3bso558717e0c.2
+        for <regressions@lists.linux.dev>; Thu, 06 Jul 2023 18:56:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1688690523; x=1691282523;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=NCyACxMAwu61UikiAif4y4Wc/o7nUyK6gIA9C5b1z4E=;
-        b=hwNq4kHUFQI6x1rTaOwo96kkZ2B16Y4NVMhPNfED99XptiI2gLElqTNZSetDJhYL7j
-         se+vhpRsznvDKqPwEDTSBOev5w6P9KB+DoeSXRt5I3UeDaGQoTu3Tj7PuMSqi/AiMIyX
-         g70+8ctk9ibLGmC3cR8W63408Hmnp2wMf3Xf7GDow/Qk8VQNqHBAn4qVtelUOvpDUpRn
-         enwIm/67mROe6whUe+JdAtH0khSXiVNSE/xS8M9H25JvgLnoujm5Ryc/O1dYTvqn9vbe
-         IWWdCaurX+Pct+xHyJKyWQydO5offhVXv6sKm/DmEdgVceWs/eh6E5YV+SsJ5XDj9AW/
-         Eqfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688690523; x=1691282523;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20221208; t=1688695005; x=1691287005;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=NCyACxMAwu61UikiAif4y4Wc/o7nUyK6gIA9C5b1z4E=;
-        b=Pz/PDaxg+z3giaD4R2v2VzCYScCRPgkCGTCpPHfBRwQs1YqPYhARoobfTv3DwjKX08
-         Q7D8GW+lzmx3pFxxK88b3VO9TyWbC2dvcHQZXjPWx85jXQbtVCMTrAPHMqBFjMvm/hJj
-         Cev+mp5fQ4PA5QidNUgiKCSUHyEtHvhfb7S60e7xsoe4mbsjnlTV9XazX+doymwjfmE9
-         2jYfZH7ibcX4QVA3PfOOBbB0Yhr2MGaXTSWIVvYtZaC3korDl8B+Is4oMkMpNCXvjW3Q
-         Ccf8hi7lQzcFJvsATs10SeGdtjJvTs3NLscn/adbtNDfwi92MlDfpvWX5yIAvSWGSdtO
-         Lsxw==
-X-Gm-Message-State: ABy/qLaQ0Fj0YRncqTiX2teU3RKOHX7eyocKJMYdONjR9Y68Z8p5L7zE
-	EUP1+f+7OnJZ7gYPzqYDfvAhDA==
-X-Google-Smtp-Source: APBJJlH5srUuDgu+mX6fEyDEJnUWImMyBSSXnJ0UNtJRcpgynXXRTgag+BoqCLRFTXTJiNOWECKXmg==
-X-Received: by 2002:a17:902:db11:b0:1b8:ac40:35ed with SMTP id m17-20020a170902db1100b001b8ac4035edmr118524plx.24.1688690522629;
-        Thu, 06 Jul 2023 17:42:02 -0700 (PDT)
-Received: from google.com ([2620:15c:2d:3:634a:24d:a19f:a90f])
-        by smtp.gmail.com with ESMTPSA id i6-20020a170902c94600b001b80760fd04sm1966581pla.112.2023.07.06.17.42.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Jul 2023 17:42:02 -0700 (PDT)
-Date: Thu, 6 Jul 2023 17:41:57 -0700
-From: Isaac Manjarres <isaacmanjarres@google.com>
-To: Amit Pundir <amit.pundir@linaro.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Christoph Hellwig <hch@lst.de>, Robin Murphy <robin.murphy@arm.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Alasdair Kergon <agk@redhat.com>, Daniel Vetter <daniel@ffwll.ch>,
-	Joerg Roedel <joro@8bytes.org>, Mark Brown <broonie@kernel.org>,
-	Mike Snitzer <snitzer@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Vlastimil Babka <vbabka@suse.cz>, linux-mm@kvack.org,
-	iommu@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: [PATCH v7 00/17] mm, dma, arm64: Reduce ARCH_KMALLOC_MINALIGN to
- 8
-Message-ID: <ZKdfVSzbgOonR17A@google.com>
-References: <20230612153201.554742-1-catalin.marinas@arm.com>
- <CAMi1Hd04mu6JojT3y6wyN2YeVkPR5R3qnkKJ8iR8if_YByCn4w@mail.gmail.com>
+        bh=9GVrjzhB6jW+MELZlDWpD9snVHwu3Y9sqKf3tzEuK44=;
+        b=MV5stPNyloZVMitcziY8nhPCnIFhSujoSKmNdhwOa9Sbgd/t9b084lK5I5hoyn8NCE
+         pcQWhClVACtndEfWmmSmTYjGytpHH6irOAJJWEEH8Ct/31r1bVFO7yK6enJEbmrV4ESb
+         fHhXBFpzlsBHqMCT8S5+wtoZCW7OcgZpDl5ZMsL/xp0IGcNGhuwjS6FggyS5HMrbkry2
+         j0abu4oYVXwvus7LZ2HxkYGvLT3tu3fGdkKQIGOxLqg93dHBA3QCPpO7wIDLKE24f9ro
+         BAXfIXfoaXMkVpPyUUIIUMukmO8zq7otmikj08S2KxKKeI7FOUfE0kAkpfYfiBcBTMLc
+         z9xA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688695005; x=1691287005;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9GVrjzhB6jW+MELZlDWpD9snVHwu3Y9sqKf3tzEuK44=;
+        b=fu01DgO9voBsQVx/LpzCDst5EERcXZBPNWzZs043AqfCfWCnuiPW+dAttHfhO/jsHG
+         MaCRt+v5un0KVQKmcO9c+ZHYoDCdrTGYqZTx3Y4aZamCvWyo9aRzZaQDKhDs1GGYrIff
+         YzEzmBpoNYQUC/D2m1wiAVnYwAS504EEWrFi6yyEG4hwQejGU9MXxc/co7nIJm+THsMO
+         gm1gmhNHRYokfceqYg8cN/W77GbI+RKEMC26WdTPKLIcDCxsip8PEhCm//m5ebwPF2xr
+         V4W3tjZ5/yTalCEnBapF8VPdpoVlTPL/iT/9be5mk7zG0Veklx2nYX9MnDCFIfnLQ7ab
+         5m+A==
+X-Gm-Message-State: ABy/qLbUJ5rJY/Xt70YWDmKZRs7OmEeslMvBFMV02gCfdVvv9d9GPL3w
+	cwMTfTTOZatxEkz6j3T4Agzw+jZp2gcWMens31I=
+X-Google-Smtp-Source: APBJJlFvss+N6tGmF1lydqS+w3Igp/aaRoOnw3LWGedovndHvat2xXGT1r3PKtZxk667gqBXLMtlkzF4gK9mmbTFf7Y=
+X-Received: by 2002:a1f:bfc3:0:b0:463:12f:d38e with SMTP id
+ p186-20020a1fbfc3000000b00463012fd38emr3215232vkf.1.1688695005294; Thu, 06
+ Jul 2023 18:56:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMi1Hd04mu6JojT3y6wyN2YeVkPR5R3qnkKJ8iR8if_YByCn4w@mail.gmail.com>
+References: <20230429020951.082353595@lindbergh.monkeyblade.net>
+ <CAAJw_ZueYAHQtM++4259TXcxQ_btcRQKiX93u85WEs2b2p19wA@mail.gmail.com>
+ <ZE0kndhsXNBIb1g7@debian.me> <b9ab37d2-42bf-cc31-a2c0-a9b604e95530@gmail.com>
+ <CAAJw_Zug6VCS5ZqTWaFSr9sd85k=tyPm9DEE+mV=AKoECZM+sQ@mail.gmail.com>
+ <7fee3284-b9ba-58f4-8118-fe0b99ae6bf7@leemhuis.info> <CAAJw_Zu=MPtGPARgCB2fteP+7F793YDFXE9RuzSH8EqYBS-OOw@mail.gmail.com>
+ <64b8732f-6319-9f10-b82a-b4a3dd8d4b8e@lwfinger.net>
+In-Reply-To: <64b8732f-6319-9f10-b82a-b4a3dd8d4b8e@lwfinger.net>
+From: Jeff Chua <jeff.chua.linux@gmail.com>
+Date: Fri, 7 Jul 2023 09:56:34 +0800
+Message-ID: <CAAJw_ZvZNQzrFyQizJnKe5PerqqAUOmPYd6cnjAcvs68xNdwSA@mail.gmail.com>
+Subject: Re: Linux-6.5 iwlwifi crash
+To: Larry Finger <Larry.Finger@lwfinger.net>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>, lkml <linux-kernel@vger.kernel.org>, 
+	Gregory Greenman <gregory.greenman@intel.com>, Kalle Valo <kvalo@kernel.org>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Linux Wireless <linux-wireless@vger.kernel.org>, Linux Networking <netdev@vger.kernel.org>, 
+	Bagas Sanjaya <bagasdotme@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 05, 2023 at 07:10:02PM +0530, Amit Pundir wrote:
-> Hi Catalin,
-> 
-> On Wed, 5 Jul 2023 at 18:17, Catalin Marinas <catalin.marinas@arm.com> wrote:
-> >
-> > Hi,
-> >
-> > That's v7 of the series reducing the kmalloc() minimum alignment on
-> > arm64 to 8 (from 128). There's no new/different functionality, mostly
-> > cosmetic changes and acks/tested-bys.
-> >
-> > Andrew, if there are no further comments or objections to this version,
-> > are you ok to take the series through the mm tree? The arm64 changes are
-> > fairly small. Alternatively, I can push it into linux-next now to give
-> > it some wider exposure and decide whether to upstream it when the
-> > merging window opens. Thanks.
-> 
-> This patch series broke Dragonboard 845c (SDM845) running AOSP.
-> With this series I run into random oops at __kmem_cache_alloc_node().
-> Here is one such boot log https://bugs.linaro.org/attachment.cgi?id=1146
+On Thu, Jul 6, 2023 at 2:11=E2=80=AFAM Larry Finger <Larry.Finger@lwfinger.=
+net> wrote:
 
-Hey Amit,
+> Fow what it is worth, my 6.4-git (6.5-rc0?) commit d528014517f2 (pulled t=
+oday)
+> is working OK with iwlmvm. Lspci says my device is
+>
+> 04:00.0 Network controller [0280]: Intel Corporation Wireless 7260 [8086:=
+08b1]
+> (rev 73)
+>
+> I think you do need to do a bisection.
+> Larry
 
-From the log that you linked, this looks like there's corruption within
-the kmalloc slab caches. Can you please try enabling slub debug? That
-might give us more information about who is causing the corruption
-you're seeing here.
 
-To enable slub debug, you can add the following to your kernel config:
+Larry,
 
-CONFIG_SLUB_DEBUG=y
+I did a bisect and here's what it came up with ... reverted the
+following and iwlwiifi worked again.
 
-and CONFIG_SLUB_DEBUG_ON=y or add slub_debug to the kernel command line.
 
---Isaac
+19898ce9cf8a33e0ac35cb4c7f68de297cc93cb2 is the first bad commit
+commit 19898ce9cf8a33e0ac35cb4c7f68de297cc93cb2
+Author: Johannes Berg <johannes.berg@intel.com>
+Date:   Wed Jun 21 13:12:07 2023 +0300
+
+    wifi: iwlwifi: split 22000.c into multiple files
+
+    Split the configuration list in 22000.c into four new files,
+    per new device family, so we don't have this huge unusable
+    file. Yes, this duplicates a few small things, but that's
+    still much better than what we have now.
+
+    Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+    Signed-off-by: Gregory Greenman <gregory.greenman@intel.com>
+    Link: https://lore.kernel.org/r/20230621130443.7543603b2ee7.Ia8dd54216d=
+341ef1ddc0531f2c9aa30d30536a5d@changeid
+    Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+
+ drivers/net/wireless/intel/iwlwifi/Makefile     |   1 +
+ drivers/net/wireless/intel/iwlwifi/cfg/22000.c  | 939 +-------------------=
+----
+ drivers/net/wireless/intel/iwlwifi/cfg/ax210.c  | 452 ++++++++++++
+ drivers/net/wireless/intel/iwlwifi/cfg/bz.c     | 523 +++++++++++++
+ drivers/net/wireless/intel/iwlwifi/cfg/sc.c     | 214 ++++++
+ drivers/net/wireless/intel/iwlwifi/iwl-config.h |   2 +
+ drivers/net/wireless/intel/iwlwifi/pcie/drv.c   |   3 +
+ 7 files changed, 1206 insertions(+), 928 deletions(-)
+ create mode 100644 drivers/net/wireless/intel/iwlwifi/cfg/ax210.c
+ create mode 100644 drivers/net/wireless/intel/iwlwifi/cfg/bz.c
+ create mode 100644 drivers/net/wireless/intel/iwlwifi/cfg/sc.c
+
+
+My best.,
+Jeff
+
+>
+>
