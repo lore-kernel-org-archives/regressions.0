@@ -1,13 +1,47 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f46.google.com (mail-oa1-f46.google.com [209.85.160.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A26F663AD
-	for <regressions@lists.linux.dev>; Fri,  7 Jul 2023 16:31:38 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qHoMq-0000EY-1y; Fri, 07 Jul 2023 18:31:36 +0200
-Message-ID: <7493c624-431c-a67d-3cbd-10f29a8c33dd@leemhuis.info>
-Date: Fri, 7 Jul 2023 18:31:35 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F242D5381
+	for <regressions@lists.linux.dev>; Fri,  7 Jul 2023 18:07:49 +0000 (UTC)
+Received: by mail-oa1-f46.google.com with SMTP id 586e51a60fabf-1b0606bee45so2127919fac.3
+        for <regressions@lists.linux.dev>; Fri, 07 Jul 2023 11:07:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1688753268; x=1691345268;
+        h=in-reply-to:from:references:cc:to:content-language:subject
+         :user-agent:mime-version:date:message-id:sender:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=MNLF+fuq4TwaQ32ICM7m5ZBV/Z5mA1VvoEw8wI2AGyA=;
+        b=SqRz5j/2lsoKMcuriLUbAQ498kgk2U4b4mn+RiYqlCYGCZOfshyAZDDshjsBRX3KPb
+         N1cYVcM6TdijsWv5Z6F/2X4YNDzlVMPH4BkdH/px3uxUb8n7wH37QD41rfpr6VZ2Yx9/
+         J91ruoPGL7vmQY9Wvnh5EDcz1Kv75NA0235ags9TcWwBqMtjBtOjyFEQjjVPyocRW5ZO
+         uFUgVCPJAsCRfvsGF48hekjP7XtYZGHTFGuaZ/NRKeYMXwwvXp+WdiE9mvZGU1TB429n
+         vcYbwGWc6FCp1uYNLKqxL3bAs5zYLqoz6vNtcBaXYCO8eLAQkfuTtbIVQB79iAGmcb+Q
+         Ezvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688753268; x=1691345268;
+        h=in-reply-to:from:references:cc:to:content-language:subject
+         :user-agent:mime-version:date:message-id:sender:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=MNLF+fuq4TwaQ32ICM7m5ZBV/Z5mA1VvoEw8wI2AGyA=;
+        b=EM0/Og0qTVieOfWaN06nmUxrE2XnHKtUNEPXsh8rTBimbU+QQrTFOM559Gx8fQp3kk
+         mwETRRwAjLnMhMkT7u7cxN1X31j6FCpgey333TOeBY31xC5Bpb1DJZEW1JEhBj6HVc0p
+         cj7yHR7eskDiyVyAg3TW60wg11oLdps17FaVf2FUK8PJGGRRxacIz0N3bQ3JytshVm21
+         anj6b5dp/Zayqugay3Gkx+udjMfyr5kFaZN0Qz4+ECZWqgWYfFHGJY68q5tRK5cf9xsw
+         mzBlX2roZ7Ca2jdGNh6/euD5/H67kAhoUVpxYpZN4KguTKALS2uE5eELh6tWmh1hgu7Y
+         yq/g==
+X-Gm-Message-State: ABy/qLayXyvpAIf6yuGc7j207+s1qIwl84pCXSsrINXCYekeK7F0fKBV
+	2cURHJFn5jw59may6pP0n0Nj0Zi5tZE=
+X-Google-Smtp-Source: APBJJlEylm+KgLskpWfNy37k0fc95tNPJc/nhbkPj/QWCNzxSdVHOzh/vo3l2BXudUBAImvMQkq8+w==
+X-Received: by 2002:a05:6870:3912:b0:1a3:2447:7f4a with SMTP id b18-20020a056870391200b001a324477f4amr7987499oap.32.1688753268411;
+        Fri, 07 Jul 2023 11:07:48 -0700 (PDT)
+Received: from [192.168.1.205] ([216.130.59.33])
+        by smtp.gmail.com with ESMTPSA id dx26-20020a056870769a00b001a68feb9440sm2034955oab.9.2023.07.07.11.07.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 07 Jul 2023 11:07:47 -0700 (PDT)
+Sender: Larry Finger <larry.finger@gmail.com>
+Content-Type: multipart/mixed; boundary="------------C6f4cDILumD0bj2hMiJ0eR6O"
+Message-ID: <0068af47-e475-7e8d-e476-c374e90dff5f@lwfinger.net>
+Date: Fri, 7 Jul 2023 13:07:45 -0500
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,51 +50,137 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.12.0
-Subject: Re: mainline build failure due to df8fc4e934c1 ("kbuild: Enable
- -fstrict-flex-arrays=3")
-Content-Language: en-US, de-DE
-To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- "Sudip Mukherjee (Codethink)" <sudipm.mukherjee@gmail.com>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Kees Cook <keescook@chromium.org>
-Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
- Linus Torvalds <torvalds@linux-foundation.org>
-References: <ZJ2M4yqnOCqqGWH0@debian>
- <c0db4c48-6090-5c72-b597-9d4146dbc26c@embeddedor.com>
- <423a78fe-ac40-9983-ff44-90b1759fc0b5@leemhuis.info>
- <1fb40135-2a4c-5d54-c5a1-db36244128aa@embeddedor.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <1fb40135-2a4c-5d54-c5a1-db36244128aa@embeddedor.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1688747498;b014138e;
-X-HE-SMSGID: 1qHoMq-0000EY-1y
+Subject: Re: Linux-6.5 iwlwifi crash
+Content-Language: en-US
+To: Linux regressions mailing list <regressions@lists.linux.dev>,
+ Jeff Chua <jeff.chua.linux@gmail.com>
+Cc: lkml <linux-kernel@vger.kernel.org>,
+ Gregory Greenman <gregory.greenman@intel.com>, Kalle Valo
+ <kvalo@kernel.org>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>,
+ Linux Wireless <linux-wireless@vger.kernel.org>,
+ Linux Networking <netdev@vger.kernel.org>,
+ Bagas Sanjaya <bagasdotme@gmail.com>, Johannes Berg <johannes.berg@intel.com>
+References: <20230429020951.082353595@lindbergh.monkeyblade.net>
+ <CAAJw_ZueYAHQtM++4259TXcxQ_btcRQKiX93u85WEs2b2p19wA@mail.gmail.com>
+ <ZE0kndhsXNBIb1g7@debian.me> <b9ab37d2-42bf-cc31-a2c0-a9b604e95530@gmail.com>
+ <CAAJw_Zug6VCS5ZqTWaFSr9sd85k=tyPm9DEE+mV=AKoECZM+sQ@mail.gmail.com>
+ <7fee3284-b9ba-58f4-8118-fe0b99ae6bf7@leemhuis.info>
+ <CAAJw_Zu=MPtGPARgCB2fteP+7F793YDFXE9RuzSH8EqYBS-OOw@mail.gmail.com>
+ <64b8732f-6319-9f10-b82a-b4a3dd8d4b8e@lwfinger.net>
+ <CAAJw_ZvZNQzrFyQizJnKe5PerqqAUOmPYd6cnjAcvs68xNdwSA@mail.gmail.com>
+ <ff646259-8ce1-f1fe-4627-cdf99321dba8@leemhuis.info>
+From: Larry Finger <Larry.Finger@lwfinger.net>
+In-Reply-To: <ff646259-8ce1-f1fe-4627-cdf99321dba8@leemhuis.info>
 
-On 07.07.23 18:17, Gustavo A. R. Silva wrote:
-> On 7/7/23 06:52, Linux regression tracking (Thorsten Leemhuis) wrote:
+This is a multi-part message in MIME format.
+--------------C6f4cDILumD0bj2hMiJ0eR6O
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+
+On 7/7/23 03:43, Linux regression tracking (Thorsten Leemhuis) wrote:
+> Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
+> for once, to make this easily accessible to everyone.
 > 
->> Are those fixes still on track? Looks like there was not much progress
->> since then, so I suspect this won't be fixed before -rc1? Or did miss
->> something?
+> Jeff, thx for bisecting. Johannes afaik is unavailable for a while
+> (CCing him nevertheless), hence:
 > 
-> The change is already in SCSI for them to send it to mainline when they
-> see fit:
-> https://git.kernel.org/pub/scm/linux/kernel/git/mkp/scsi.git/commit/?h=6.5/scsi-staging&id=47699a2b63caaa0de4841d4402627c2fdf3452a6
+> Gregory, could you please take a look at this? And maybe provide a few
+> hints for Jeff how to generate more data that allows us to find the root
+> of the problem?
+> 
+> Jeff, btw, the iwlwifi bug reporting guide (
+> https://wireless.wiki.kernel.org/en/users/drivers/iwlwifi/debugging
+> ) says to file a bugs in http://bugzilla.kernel.org/ Might be wise to do
+> this in case Gregory is also unavailable, but instructed someone to keep
+> an eye on things there.
+> 
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> --
+> Everything you wanna know about Linux kernel regression tracking:
+> https://linux-regtracking.leemhuis.info/about/#tldr
+> If I did something stupid, please tell me, as explained on that page.
+> 
+> On 07.07.23 03:56, Jeff Chua wrote:
+>> On Thu, Jul 6, 2023 at 2:11 AM Larry Finger <Larry.Finger@lwfinger.net> wrote:
+>>
+>>> Fow what it is worth, my 6.4-git (6.5-rc0?) commit d528014517f2 (pulled today)
+>>> is working OK with iwlmvm. Lspci says my device is
+>>>
+>>> 04:00.0 Network controller [0280]: Intel Corporation Wireless 7260 [8086:08b1]
+>>> (rev 73)
+>>>
+>>> I think you do need to do a bisection.
+>>> Larry
+>>
+>>
+>> Larry,
+>>
+>> I did a bisect and here's what it came up with ... reverted the
+>> following and iwlwiifi worked again.
+>>
+>>
+>> 19898ce9cf8a33e0ac35cb4c7f68de297cc93cb2 is the first bad commit
+>> commit 19898ce9cf8a33e0ac35cb4c7f68de297cc93cb2
+>> Author: Johannes Berg <johannes.berg@intel.com>
+>> Date:   Wed Jun 21 13:12:07 2023 +0300
+>>
+>>      wifi: iwlwifi: split 22000.c into multiple files
+>>
+>>      Split the configuration list in 22000.c into four new files,
+>>      per new device family, so we don't have this huge unusable
+>>      file. Yes, this duplicates a few small things, but that's
+>>      still much better than what we have now.
+>>
+>>      Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+>>      Signed-off-by: Gregory Greenman <gregory.greenman@intel.com>
+>>      Link: https://lore.kernel.org/r/20230621130443.7543603b2ee7.Ia8dd54216d341ef1ddc0531f2c9aa30d30536a5d@changeid
+>>      Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 
-Ahh, great. I had checked -next before writing my mail, but somehow
-missed this one. Sorry. And thanks for your help.
+Jeff,
 
-This afaics was the last remaining issue of those reported in the
-initial mail of this thread, hence telling regzbot to mark this as
-resolved by that commit.
+I am certainly no expert on iwlwifi, but this change looks suspicious:
 
-#regzbot fix: scsi: aacraid: Avoid -Warray-bounds warning
+@@ -10,8 +10,7 @@
+  #include "fw/api/txq.h"
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+  /* Highest firmware API version supported */
+-#define IWL_22000_UCODE_API_MAX        81
+-#define IWL_22500_UCODE_API_MAX        77
++#define IWL_22000_UCODE_API_MAX        77
+
+  /* Lowest firmware API version supported */
+
+The parameter that was originally set to 81 is now set to 77.
+
+Please try the attached patch.
+
+Larry
+
+--------------C6f4cDILumD0bj2hMiJ0eR6O
+Content-Type: text/x-patch; charset=UTF-8; name="test_iwlwifi.patch"
+Content-Disposition: attachment; filename="test_iwlwifi.patch"
+Content-Transfer-Encoding: base64
+
+ZGlmZiAtLWdpdCBhL2RyaXZlcnMvbmV0L3dpcmVsZXNzL2Npc2NvL2Fpcm8uYyBiL2RyaXZl
+cnMvbmV0L3dpcmVsZXNzL2Npc2NvL2Fpcm8uYwppbmRleCBiZWVlMDlkZDk1OGMuLjRjYTZh
+MWJhNzhlOCAxMDA2NDQKLS0tIGEvZHJpdmVycy9uZXQvd2lyZWxlc3MvY2lzY28vYWlyby5j
+CisrKyBiL2RyaXZlcnMvbmV0L3dpcmVsZXNzL2Npc2NvL2Fpcm8uYwpAQCAtNjE1Niw3ICs2
+MTU2LDcgQEAgc3RhdGljIGludCBhaXJvX2dldF9yYXRlKHN0cnVjdCBuZXRfZGV2aWNlICpk
+ZXYsCiB7CiAJc3RydWN0IGl3X3BhcmFtICp2d3JxID0gJndycXUtPmJpdHJhdGU7CiAJc3Ry
+dWN0IGFpcm9faW5mbyAqbG9jYWwgPSBkZXYtPm1sX3ByaXY7Ci0JU3RhdHVzUmlkIHN0YXR1
+c19yaWQ7CQkvKiBDYXJkIHN0YXR1cyBpbmZvICovCisJU3RhdHVzUmlkIHN0YXR1c19yaWQg
+PSB7fTsJCS8qIENhcmQgc3RhdHVzIGluZm8gKi8KIAogCXJlYWRTdGF0dXNSaWQobG9jYWws
+ICZzdGF0dXNfcmlkLCAxKTsKIApkaWZmIC0tZ2l0IGEvZHJpdmVycy9uZXQvd2lyZWxlc3Mv
+aW50ZWwvaXdsd2lmaS9jZmcvMjIwMDAuYyBiL2RyaXZlcnMvbmV0L3dpcmVsZXNzL2ludGVs
+L2l3bHdpZmkvY2ZnLzIyMDAwLmMKaW5kZXggYWE0MzIwY2E0YzMwLi5kM2U3MGMzM2ZiY2Yg
+MTAwNjQ0Ci0tLSBhL2RyaXZlcnMvbmV0L3dpcmVsZXNzL2ludGVsL2l3bHdpZmkvY2ZnLzIy
+MDAwLmMKKysrIGIvZHJpdmVycy9uZXQvd2lyZWxlc3MvaW50ZWwvaXdsd2lmaS9jZmcvMjIw
+MDAuYwpAQCAtMTAsNyArMTAsNyBAQAogI2luY2x1ZGUgImZ3L2FwaS90eHEuaCIKIAogLyog
+SGlnaGVzdCBmaXJtd2FyZSBBUEkgdmVyc2lvbiBzdXBwb3J0ZWQgKi8KLSNkZWZpbmUgSVdM
+XzIyMDAwX1VDT0RFX0FQSV9NQVgJNzcKKyNkZWZpbmUgSVdMXzIyMDAwX1VDT0RFX0FQSV9N
+QVgJODEKIAogLyogTG93ZXN0IGZpcm13YXJlIEFQSSB2ZXJzaW9uIHN1cHBvcnRlZCAqLwog
+I2RlZmluZSBJV0xfMjIwMDBfVUNPREVfQVBJX01JTgk1MAo=
+
+--------------C6f4cDILumD0bj2hMiJ0eR6O--
