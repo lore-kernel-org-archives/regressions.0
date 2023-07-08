@@ -1,158 +1,103 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0C2A10977
-	for <regressions@lists.linux.dev>; Fri,  7 Jul 2023 21:54:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1688766854;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IR3UM/qERNeUL/EjPgvmk0ZZpn8WhkLUZx2wiiCSLjA=;
-	b=M5q0D31kxgBZ6keatYpFl78vK2heboCSQKjl/DmXC+AC0P773ss+5F5szZ9LywRCVZyUO6
-	amrIzZkcxC4gNL103pBdaGHT8p8X0La5gKuUcbyzViUNcI36Qrb+xbLGizuF2+hFfmffoF
-	t9kvaA3CDr7hipHUfeTkqCabcuu7z0s=
-Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
- [209.85.219.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-6-eeNfvWTrO_i3vOG8kpqZ9A-1; Fri, 07 Jul 2023 17:54:13 -0400
-X-MC-Unique: eeNfvWTrO_i3vOG8kpqZ9A-1
-Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-635e664d2f8so25071206d6.3
-        for <regressions@lists.linux.dev>; Fri, 07 Jul 2023 14:54:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688766853; x=1691358853;
-        h=mime-version:user-agent:content-transfer-encoding:organization
-         :references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=IR3UM/qERNeUL/EjPgvmk0ZZpn8WhkLUZx2wiiCSLjA=;
-        b=PDUcqoDqfcUcfHuFNynYh3gbgrhlAY1pqSXwcVL8tyGdp4yIXpjPnP0WVu94JXSi8p
-         5dW2QEQDzBjuRNBDnKrbQOg7/1FJK87Koq5yQI+SrjUY8vTG76FPmioy8m4uUJhP3U80
-         vK4OHlB5+1+uwmBC2YUxDIDTWvABVK0/nxAu2aIoI+DgEAIdfyHSaASKP9pffUYllFMf
-         MjsH2Hz+Zb9YJLBu9TXEjsTrHu8ZqOH2oIWSFwsdxwBpYto0dyLiQlDdu+JMjdYHaSHt
-         FmOcdxJw55gexX62oMrGAtDXwyl+FVfyiu1t40wyYD9eQvSzNs3lbhyY6X92vdNXQ8nz
-         onHQ==
-X-Gm-Message-State: ABy/qLbkaFz/+zw0WG+des8soIwb2i1jBXo4HF9sEHcC8WmPPYtbyYor
-	/kok7c7uAKklR18QjQsjR5WI2PyLP1GmqAOF+SINXKgUtYrnrf8lPZmlfh9sBBB9hVnwUcKcqXS
-	peyJcB8o1uYdLC7fPDOg/uyA=
-X-Received: by 2002:a0c:cc10:0:b0:636:439b:a6de with SMTP id r16-20020a0ccc10000000b00636439ba6demr5936528qvk.13.1688766852901;
-        Fri, 07 Jul 2023 14:54:12 -0700 (PDT)
-X-Google-Smtp-Source: APBJJlGy4rbv/6VC4l33AqtqHlOn3FLNo2hdcdd4j6YFakTEWNmLX49tDyvOehAct9nxQ75kSv1gPA==
-X-Received: by 2002:a0c:cc10:0:b0:636:439b:a6de with SMTP id r16-20020a0ccc10000000b00636439ba6demr5936517qvk.13.1688766852667;
-        Fri, 07 Jul 2023 14:54:12 -0700 (PDT)
-Received: from ?IPv6:2600:4040:5c62:8200:4d3e:bd5a:7e0a:133a? ([2600:4040:5c62:8200:4d3e:bd5a:7e0a:133a])
-        by smtp.gmail.com with ESMTPSA id x10-20020a0ce24a000000b0063659410b04sm2470697qvl.107.2023.07.07.14.54.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Jul 2023 14:54:12 -0700 (PDT)
-Message-ID: <79af2eab7409b75f5a2386fbd82c339111d6deab.camel@redhat.com>
-Subject: Re: Regression from "ACPI: OSI: Remove Linux-Dell-Video _OSI
- string"? (was: Re: Bug#1036530: linux-signed-amd64: Hard lock up of system)
-From: Lyude Paul <lyude@redhat.com>
-To: "Limonciello, Mario" <mario.limonciello@amd.com>, Nick Hastings
-	 <nicholaschastings@gmail.com>, Lukas Wunner <lukas@wunner.de>, 
-	kherbst@redhat.com
-Cc: Salvatore Bonaccorso <carnil@debian.org>, 1036530@bugs.debian.org, 
- "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
- linux-acpi@vger.kernel.org,  linux-kernel@vger.kernel.org,
- regressions@lists.linux.dev
-Date: Fri, 07 Jul 2023 17:54:11 -0400
-In-Reply-To: <fe0ab1fa-6ed6-dc64-8165-8fc70669317b@amd.com>
-References: <168471337231.1913606.15905047692536779158.reportbug@xps>
-	 <ZHKrC4/G6ZyvRReI@xps> <ZHL5cCNUzVdleiag@eldamar.lan>
-	 <ab12984e-be17-903d-ba0a-f9c85b8c544f@amd.com> <ZHP4IqxBUPuVRvRV@xps>
-	 <09e24386-de63-e9e9-9e7f-5d04bad62d83@amd.com> <ZHQhPcKUF76Kplwm@xps>
-	 <ZHUt9xQKCwCflvVC@xps> <8537d965-ddf4-7f45-6459-d5acf520376e@amd.com>
-	 <ZHWfMBeAONerAJmd@xps> <ZHfa/wQlaVCeUC22@xps>
-	 <fe0ab1fa-6ed6-dc64-8165-8fc70669317b@amd.com>
-Organization: Red Hat Inc.
-User-Agent: Evolution 3.48.3 (3.48.3-1.fc38)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE2131C13
+	for <regressions@lists.linux.dev>; Sat,  8 Jul 2023 11:35:42 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1qI6Dm-0004GA-MM; Sat, 08 Jul 2023 13:35:26 +0200
+Message-ID: <df1d7d39-56f3-699c-0d0f-fcc8774f182e@leemhuis.info>
+Date: Sat, 8 Jul 2023 13:35:25 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: Fwd: Memory corruption in multithreaded user space program while
+ calling fork
+Content-Language: en-US, de-DE
+To: Andrew Morton <akpm@linux-foundation.org>,
+ Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Suren Baghdasaryan <surenb@google.com>,
+ Bagas Sanjaya <bagasdotme@gmail.com>, Jacob Young <jacobly.alt@gmail.com>,
+ Laurent Dufour <ldufour@linux.ibm.com>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Memory Management <linux-mm@kvack.org>,
+ Linux PowerPC <linuxppc-dev@lists.ozlabs.org>,
+ Linux ARM <linux-arm-kernel@lists.infradead.org>,
+ Greg KH <gregkh@linuxfoundation.org>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+References: <facbfec3-837a-51ed-85fa-31021c17d6ef@gmail.com>
+ <5c7455db-4ed8-b54f-e2d5-d2811908123d@leemhuis.info>
+ <CAJuCfpH7BOBYGEG=op09bZrh1x3WA8HMcGBXXRhe6M5RJaen5A@mail.gmail.com>
+ <CAJuCfpH7t7gCV2FkctzG2eWTUVTFZD7CtD14-WuHqBqOYBo1jA@mail.gmail.com>
+ <2023070359-evasive-regroup-f3b8@gregkh>
+ <CAJuCfpF=XPpPYqp2Y1Vu-GUL=RBj4fyhXoXzjBY4EKtBnYE_eQ@mail.gmail.com>
+ <2023070453-plod-swipe-cfbf@gregkh>
+ <20230704091808.aa2ed3c11a5351d9bf217ac9@linux-foundation.org>
+ <CAJuCfpE_WjRQoDT1XnvBghCH-kpqk+pfcBJGyDnK7DZLMVG5Mw@mail.gmail.com>
+ <2023070509-undertow-pulverize-5adc@gregkh>
+ <7668c45a-70b1-dc2f-d0f5-c0e76ec17145@leemhuis.info>
+ <20230705084906.22eee41e6e72da588fce5a48@linux-foundation.org>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <20230705084906.22eee41e6e72da588fce5a48@linux-foundation.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1688816142;c5d777d2;
+X-HE-SMSGID: 1qI6Dm-0004GA-MM
 
-On Thu, 2023-06-01 at 11:18 -0500, Limonciello, Mario wrote:
-> +Lyude, Lukas, Karol
->=20
-> On 5/31/2023 6:40 PM, Nick Hastings wrote:
-> > Hi,
-> >=20
-> > * Nick Hastings <nicholaschastings@gmail.com> [230530 16:01]:
-> > > * Mario Limonciello <mario.limonciello@amd.com> [230530 13:00]:
-> > <snip>
-> > > > As you're actually loading nouveau, can you please try nouveau.runp=
-m=3D0 on
-> > > > the kernel command line?
-> > > I'm not intentionally loading it. This machine also has intel graphic=
-s
-> > > which is what I prefer. Checking my
-> > > /etc/modprobe.d/blacklist-nvidia-nouveau.conf
-> > > I see:
-> > >=20
-> > > blacklist nvidia
-> > > blacklist nvidia-drm
-> > > blacklist nvidia-modeset
-> > > blacklist nvidia-uvm
-> > > blacklist ipmi_msghandler
-> > > blacklist ipmi_devintf
-> > >=20
-> > > So I thought I had blacklisted it but it seems I did not. Since I do =
-not
-> > > want to use it maybe it is better to check if the lock up occurs with
-> > > nouveau blacklisted. I will try that now.
-> > I blacklisted nouveau and booted into a 6.1 kernel:
-> > % uname -a
-> > Linux xps 6.1.0-9-amd64 #1 SMP PREEMPT_DYNAMIC Debian 6.1.27-1 (2023-05=
--08) x86_64 GNU/Linux
-> >=20
-> > It has been running without problems for nearly two days now:
-> > % uptime
-> >   08:34:48 up 1 day, 16:22,  2 users,  load average: 1.33, 1.26, 1.27
-> >=20
-> > Regards,
-> >=20
-> > Nick.
->=20
-> Thanks, that makes a lot more sense now.
->=20
-> Nick, Can you please test if nouveau works with runtime PM in the
-> latest 6.4-rc?
->=20
-> If it works in 6.4-rc, there are probably nouveau commits that need
-> to be backported to 6.1 LTS.
->=20
-> If it's still broken in 6.4-rc, I believe you should file a bug:
->=20
-> https://gitlab.freedesktop.org/drm/nouveau/
->=20
->=20
-> Lyude, Lukas, Karol
->=20
-> This thread is in relation to this commit:
->=20
-> 24867516f06d ("ACPI: OSI: Remove Linux-Dell-Video _OSI string")
->=20
-> Nick has found that runtime PM is *not* working for nouveau.
->=20
-> If you recall we did 24867516f06d because 5775b843a619 was
-> supposed to have fixed it.
+[adding Linus to the list of recipients to ensure the fix makes it into
+-rc1 (and can finally be backported to -stable).
 
-Gotcha, I guess keep me updated since it seems like things -might- be worki=
-ng
-from what I gathered here? Happy to look further if they find that 6.4-rc i=
-s
-broken though
+Linus, here is the backstory, as I assume you haven't seen this yet:
 
->=20
+CONFIG_PER_VMA_LOCK (which defaults to Y; merged for v6.4-rc1 in
+0bff0aaea03 ("x86/mm: try VMA lock-based page fault handling first"))
+sometimes causes memory corruption reported here:
+https://lore.kernel.org/all/dbdef34c-3a07-5951-e1ae-e9c6e3cdf51b@kernel.org/
+https://bugzilla.kernel.org/show_bug.cgi?id=217624
 
---=20
-Cheers,
- Lyude Paul (she/her)
- Software Engineer at Red Hat
+The plan since early this week is to mark CONFIG_PER_VMA_LOCK as broken;
+latest patch that does this is this one afaics:
+https://lore.kernel.org/all/20230706011400.2949242-3-surenb@google.com/
 
+But that change or something similar hasn't reached you yet afaics;
+note, this is the second patch of a series with two patches]
+
+On 05.07.23 17:49, Andrew Morton wrote:
+> On Wed, 5 Jul 2023 10:51:57 +0200 "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info> wrote:
+> 
+>>>>> I'm in wait-a-few-days-mode on this.  To see if we have a backportable
+>>>>> fix rather than disabling the feature in -stable.
+>>
+>> Andrew, how long will you remain in "wait-a-few-days-mode"? Given what
+>> Greg said below and that we already had three reports I know of I'd
+>> prefer if we could fix this rather sooner than later in mainline --
+>> especially as Arch Linux and openSUSE Tumbleweed likely have switched to
+>> 6.4.y already or will do so soon.
+> 
+> I'll send today's 2-patch series to Linus today or tomorrow.
+
+That afaics did not happen until now. :-(
+
+This makes me regret that I did not CC Linus earlier. I always feel like
+a snitcher when I do that. But in retrospective it seems it would have
+been the right thing to do given the problem, as I suspect Linus would
+have quickly applied the patch or marked the feature as broken himself.
+
+So thx to this (and a handful of earlier, similar situations) I now
+fully made my peace with feeling like a snitcher (I always knew that
+it's kinda part of the position). When something in me says "Ick, this
+looks bad to my untrained eyes" I'll immediately CC Linus.
+
+Linus, if I take things to far just let me know. But I assume you get a
+lot of mails and won't mind a few more.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
