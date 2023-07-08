@@ -1,195 +1,107 @@
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D30BC79FA
-	for <regressions@lists.linux.dev>; Sat,  8 Jul 2023 15:53:30 +0000 (UTC)
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-4fba8f2197bso4746122e87.3
-        for <regressions@lists.linux.dev>; Sat, 08 Jul 2023 08:53:30 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21F361851
+	for <regressions@lists.linux.dev>; Sat,  8 Jul 2023 17:30:02 +0000 (UTC)
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2b701e41cd3so48821601fa.3
+        for <regressions@lists.linux.dev>; Sat, 08 Jul 2023 10:30:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1688831608; x=1691423608;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=1i4dVOYoOCE6fErhT+TFOHlRPq28nDs1UxaxtQ61A5U=;
-        b=dIaDGGjr0HMvZPMnT/iOgNtZe9/kKDOalCAWVptidowD/WgB2hTwaqC/XGdDCKd7AL
-         nzM0sGaluJiRP8QJ+a1SfAQJYbGvOdJYTDLEUiS+qzQ9xvayWwmhR6Ee/KS77eeE+ilB
-         wKUsjR6cuNabWqApOzjjeHJ0gWRnzwMJXFsM778jY7k+NF4jfxLzZpEbpQR+K+DcEORf
-         jFkZ3yl58T9e5vtGYLOAfRt7E0t2JgXpYhP8bbTva2/49Gucld7mMtGZki8Mr9ZncbVH
-         Nlz23E++ZmoUnb2xgUi7BkhTwzbYYiXE0JEvpkEKf8yynzQafe2qf3NFnhR9j3h0Dx7/
-         THsA==
+        d=linux-foundation.org; s=google; t=1688837400; x=1691429400;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=KYD6jlXBis0p+PBTKlv8qzvLQ1gqj2dZYI23tZfDs+4=;
+        b=CSzNPlU1kR8cYUJ1EXSM7fBhpOr+a+NxIBR3Iu+dCCykDC9mtI0vFLA+pRbeWKuX7Y
+         bFQMJI06XxkvFOsQBv9ts9wnUgVEqLuV691z36dpExwBo6SJ8ePRyqGAPLZvKSH+j3AW
+         pHAr8YbSYylnmLDnOcMAv/VN41v6ReVBkuY70=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688831608; x=1691423608;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1i4dVOYoOCE6fErhT+TFOHlRPq28nDs1UxaxtQ61A5U=;
-        b=B72hAZhe/pdy2j/skvZ7ZbuCr/5KjasKSRz+nxecSNLnUgA404MVyIC/34ffrU7eyE
-         9AMR2Ek6cOmWusikGhYLHo8zMGdLicTCgJKN+5GhSN4z3+bDQOAKxsUI0TCW3SYmfMdD
-         Y/eqmNcgPMQjP08WQl+2jaZstk4JHV9Aj2cVjwYiGPb8q/EXp46bqCf3nRbYC2m5RKhe
-         bZyoNe4c1AFrVM0pO7EDc/QKfjYCFVrH+cShurGT/gI8z3nyV3VSZz+O5/HlcqfARiFd
-         FcDIFZ2BI/+QPoSTuLrzYyTXYe/nZheJ/f2YU5n4IHDmJ1urYo4oa0ZmT00oe91glmoZ
-         RwUg==
-X-Gm-Message-State: ABy/qLaOC0oFhqUZRSlITSFltWGtcPMITxlESKzV328dkERczO5dnw02
-	gtpwGwVsv29fLEI67tRBGaPLvg==
-X-Google-Smtp-Source: APBJJlFN4zfqVFPE5XoskdieGcmbU1lnFBIbXZR4Mp+4IMZH+KMBNg6mMdjlMq24uJMuvfwjB4MK0A==
-X-Received: by 2002:a05:6512:32b7:b0:4f8:7897:55e6 with SMTP id q23-20020a05651232b700b004f8789755e6mr5349985lfe.45.1688831608430;
-        Sat, 08 Jul 2023 08:53:28 -0700 (PDT)
-Received: from ?IPV6:2001:14ba:a0db:1f00::8a5? (dzdqv0yyyyyyyyyyybcwt-3.rev.dnainternet.fi. [2001:14ba:a0db:1f00::8a5])
-        by smtp.gmail.com with ESMTPSA id r6-20020ac252a6000000b004fb8c31c8desm1045804lfm.208.2023.07.08.08.53.27
+        d=1e100.net; s=20221208; t=1688837400; x=1691429400;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KYD6jlXBis0p+PBTKlv8qzvLQ1gqj2dZYI23tZfDs+4=;
+        b=W1CasRGzcxL8vYvnVf35S+3HKWVhlLeF8vzqNaVUsRe5Wsl2xxFXg16NU9AuFL3qIg
+         SlRkmDt2ZfhwJwbc0ncqesQ9/ygO18e5Cz3KLogY/AATqto4kWGdH43+asHSHH8yLcgv
+         yR7fQufAm5ly7EUS8nwK/RuPLj3Q2sfMnP6TqXSTT2ztbwYLNByQAl8baHnvtZ5OTJ8o
+         p7IJSB5L1ImcapgHugPH4PxX9C2GkkldNH49GX4OoNmiTFsU84nyqLApyV9Ge/AUhCTv
+         8YmX4x721/fMbRLXa+4eMh9jAkvUjJrc0ZeJgyNAF0X1mp9fzNOG3YFgCxIeUXAsHC3j
+         E5uw==
+X-Gm-Message-State: ABy/qLbk2Z+8tDZ/IKqcCwPjlDlcpzdwxTo75v8lwpLc4MmpisHxenF1
+	TcASn86YqVacry52UkeFZdH/VlvVHo0awuFWkknFAw==
+X-Google-Smtp-Source: APBJJlF6SYBCH1pkvCFJqLUxmxHUyZyITjTnHMwxiLIuaXuLgZUARo0Nhu4mFTZhBJdwjHKW1c4Odw==
+X-Received: by 2002:a2e:99d2:0:b0:2b6:e0b0:ce04 with SMTP id l18-20020a2e99d2000000b002b6e0b0ce04mr5785292ljj.17.1688837400615;
+        Sat, 08 Jul 2023 10:30:00 -0700 (PDT)
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com. [209.85.208.41])
+        by smtp.gmail.com with ESMTPSA id r11-20020a17090638cb00b00992b510089asm3740070ejd.84.2023.07.08.10.29.59
+        for <regressions@lists.linux.dev>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 08 Jul 2023 08:53:27 -0700 (PDT)
-Message-ID: <4bc710b1-f361-c525-7692-1dc275ec9bb7@linaro.org>
-Date: Sat, 8 Jul 2023 18:53:27 +0300
+        Sat, 08 Jul 2023 10:29:59 -0700 (PDT)
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-51d7f4c1cfeso3885371a12.0
+        for <regressions@lists.linux.dev>; Sat, 08 Jul 2023 10:29:59 -0700 (PDT)
+X-Received: by 2002:aa7:cc8d:0:b0:51b:e4b4:8bb0 with SMTP id
+ p13-20020aa7cc8d000000b0051be4b48bb0mr5997528edt.2.1688837399295; Sat, 08 Jul
+ 2023 10:29:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH 2/2] drm/bridge: lt9611: Do not generate HFP/HBP/HSA and
- EOT packet
-Content-Language: en-GB
-To: Marek Vasut <marex@denx.de>, neil.armstrong@linaro.org,
- Amit Pundir <amit.pundir@linaro.org>,
- Abhinav Kumar <quic_abhinavk@quicinc.com>
-Cc: Jagan Teki <jagan@amarulasolutions.com>, dri-devel@lists.freedesktop.org,
- Robert Foss <rfoss@kernel.org>, Andrzej Hajda <andrzej.hajda@intel.com>,
- Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
- Michael Walle <michael@walle.cc>,
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
- linux-arm-msm <linux-arm-msm@vger.kernel.org>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- freedreno <freedreno@lists.freedesktop.org>
-References: <20230403221233.500485-1-marex@denx.de>
- <20230403221233.500485-2-marex@denx.de>
- <CAMi1Hd0TD=2z_=bcDrht3H_wiLvAFcv8Z-U_r_KUOoeMc6UMjw@mail.gmail.com>
- <CAMty3ZBNFu=f-FS4YFN4wfmiTuk=48nna-vub1eMYwidDt+msg@mail.gmail.com>
- <CAA8EJppbdiUz5m+9EAPnFb916DaS_VKWd30c7_EPWjuid8rtqQ@mail.gmail.com>
- <CAMi1Hd2G5PJmz4wpO1wbdqKd0FA8LBgvRDv2u5ZYAMb5s6Kt0A@mail.gmail.com>
- <d5fb8106-b8f3-0acf-1267-d4d6d0860e25@linaro.org>
- <d28b0090-bd1e-6737-d92b-348dc6c30750@linaro.org>
- <800f9e1a-cb66-5bf5-d225-ef338c1c1584@denx.de>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-In-Reply-To: <800f9e1a-cb66-5bf5-d225-ef338c1c1584@denx.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <facbfec3-837a-51ed-85fa-31021c17d6ef@gmail.com>
+ <5c7455db-4ed8-b54f-e2d5-d2811908123d@leemhuis.info> <CAJuCfpH7BOBYGEG=op09bZrh1x3WA8HMcGBXXRhe6M5RJaen5A@mail.gmail.com>
+ <CAJuCfpH7t7gCV2FkctzG2eWTUVTFZD7CtD14-WuHqBqOYBo1jA@mail.gmail.com>
+ <2023070359-evasive-regroup-f3b8@gregkh> <CAJuCfpF=XPpPYqp2Y1Vu-GUL=RBj4fyhXoXzjBY4EKtBnYE_eQ@mail.gmail.com>
+ <2023070453-plod-swipe-cfbf@gregkh> <20230704091808.aa2ed3c11a5351d9bf217ac9@linux-foundation.org>
+ <CAJuCfpE_WjRQoDT1XnvBghCH-kpqk+pfcBJGyDnK7DZLMVG5Mw@mail.gmail.com>
+ <2023070509-undertow-pulverize-5adc@gregkh> <7668c45a-70b1-dc2f-d0f5-c0e76ec17145@leemhuis.info>
+ <20230705084906.22eee41e6e72da588fce5a48@linux-foundation.org> <df1d7d39-56f3-699c-0d0f-fcc8774f182e@leemhuis.info>
+In-Reply-To: <df1d7d39-56f3-699c-0d0f-fcc8774f182e@leemhuis.info>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Sat, 8 Jul 2023 10:29:42 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whKd05V49AbZGF=inYmhU6H_yNvvw1grWyhQfQ=9+5-VQ@mail.gmail.com>
+Message-ID: <CAHk-=whKd05V49AbZGF=inYmhU6H_yNvvw1grWyhQfQ=9+5-VQ@mail.gmail.com>
+Subject: Re: Fwd: Memory corruption in multithreaded user space program while
+ calling fork
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Suren Baghdasaryan <surenb@google.com>, 
+	Bagas Sanjaya <bagasdotme@gmail.com>, Jacob Young <jacobly.alt@gmail.com>, 
+	Laurent Dufour <ldufour@linux.ibm.com>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Memory Management <linux-mm@kvack.org>, 
+	Linux PowerPC <linuxppc-dev@lists.ozlabs.org>, 
+	Linux ARM <linux-arm-kernel@lists.infradead.org>, Greg KH <gregkh@linuxfoundation.org>, 
+	Linux regressions mailing list <regressions@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
 
-On 08/07/2023 18:40, Marek Vasut wrote:
-> On 7/7/23 10:47, Neil Armstrong wrote:
->> On 07/07/2023 09:18, Neil Armstrong wrote:
->>> Hi,
->>>
->>> On 06/07/2023 11:20, Amit Pundir wrote:
->>>> On Wed, 5 Jul 2023 at 11:09, Dmitry Baryshkov
->>>> <dmitry.baryshkov@linaro.org> wrote:
->>>>>
->>>>> [Adding freedreno@ to cc list]
->>>>>
->>>>> On Wed, 5 Jul 2023 at 08:31, Jagan Teki 
->>>>> <jagan@amarulasolutions.com> wrote:
->>>>>>
->>>>>> Hi Amit,
->>>>>>
->>>>>> On Wed, Jul 5, 2023 at 10:15 AM Amit Pundir 
->>>>>> <amit.pundir@linaro.org> wrote:
->>>>>>>
->>>>>>> Hi Marek,
->>>>>>>
->>>>>>> On Wed, 5 Jul 2023 at 01:48, Marek Vasut <marex@denx.de> wrote:
->>>>>>>>
->>>>>>>> Do not generate the HS front and back porch gaps, the HSA gap and
->>>>>>>> EOT packet, as these packets are not required. This makes the 
->>>>>>>> bridge
->>>>>>>> work with Samsung DSIM on i.MX8MM and i.MX8MP.
->>>>>>>
->>>>>>> This patch broke display on Dragonboard 845c (SDM845) devboard 
->>>>>>> running
->>>>>>> AOSP. This is what I see
->>>>>>> https://people.linaro.org/~amit.pundir/db845c-userdebug/v6.5-broken-display/PXL_20230704_150156326.jpg.
->>>>>>> Reverting this patch fixes this regression for me.
->>>>>>
->>>>>> Might be msm dsi host require proper handling on these updated
->>>>>> mode_flags? did they?
->>>>>
->>>>> The msm DSI host supports those flags. Also, I'd like to point out
->>>>> that the patch didn't change the rest of the driver code. So even if
->>>>> drm/msm ignored some of the flags, it should not have caused the
->>>>> issue. Most likely the issue is on the lt9611 side. I's suspect that
->>>>> additional programming is required to make it work with these flags.
->>>>
->>>> I spent some time today on smoke testing these flags (individually and
->>>> in limited combination) on DB845c, to narrow down this breakage to one
->>>> or more flag(s) triggering it. Here are my observations in limited
->>>> testing done so far.
->>>>
->>>> There is no regression with MIPI_DSI_MODE_NO_EOT_PACKET when enabled
->>>> alone and system boots to UI as usual.
->>>>
->>>> MIPI_DSI_MODE_VIDEO_NO_HFP always trigger the broken display as in the
->>>> screenshot[1] shared earlier as well.
->>>>
->>>> Adding either of MIPI_DSI_MODE_VIDEO_NO_HSA and
->>>> MIPI_DSI_MODE_VIDEO_NO_HBP always result in no display, unless paired
->>>> with MIPI_DSI_MODE_VIDEO_NO_HFP and in that case we get the broken
->>>> display as reported.
->>>>
->>>> In short other than MIPI_DSI_MODE_NO_EOT_PACKET flag, all other flags
->>>> added in this commit break the display on DB845c one way or another.
->>>
->>> I think the investigation would be to understand why samsung-dsim 
->>> requires
->>> such flags and/or what are the difference in behavior between MSM DSI 
->>> and samsung DSIM
->>> for those flags ?
->>>
->>> If someone has access to the lt9611 datasheet, so it requires 
->>> HSA/HFP/HBP to be
->>> skipped ? and does MSM DSI and samsung DSIM skip them in the same way ?
-> 
-> I don't have the LT9611 datasheet, no.
+On Sat, 8 Jul 2023 at 04:35, Thorsten Leemhuis
+<regressions@leemhuis.info> wrote:
+>
+> The plan since early this week is to mark CONFIG_PER_VMA_LOCK as broken;
+> latest patch that does this is this one afaics:
 
-I also don't have an lt9611 datasheet, unfortunately. I was using the 
-existing third-party drivers as a source.
+Bah.
 
-> 
-> The MX8M DSI (samsung-dsim) skips the HSA/HFP/HBP completely (see 
-> i.MX8MP RM 13.6.2.7.2 RGB Interface , there is infographics on the 
-> following pages).
+Both marking it as broken and the pending fix seems excessive.
 
-Do you know, why did you have to disable HPB/HSA/HFP on your platform? 
-What was the result otherwise?
+Why isn't the trivial fix just to say "yes, fork() gets the mmap_lock
+for writing for a reason, and that reason is that it acts kind of like
+mprotect()".
 
-> 
->> I think there's a mismatch, where on one side this flags sets the link 
->> in LP-11 while
->> in HSA/HFP/HPB while on the other it completely removes those blanking 
->> packets.
->>
->> The name MIPI_DSI_MODE_VIDEO_NO_HBP suggests removal of HPB, not LP-11 
->> while HPB.
->> the registers used in both controllers are different:
->> - samsung-dsim: DSIM_HBP_DISABLE_MODE
->> - msm dsi: DSI_VID_CFG0_HBP_POWER_STOP
->>
->> The first one suggest removing the packet, while the second one 
->> suggests powering
->> off the line while in the blanking packet period.
->>
->> @Abhinav, can you comment on that ?
->>
->> @Jagan, Andrezej So you have any documentation on what 
->> DSIM_xxx_DISABLE_MODE does ?
-> 
-> See above, i.MX8M M/N/P uses the samsung-dsim block .
-> 
->> @Dmitry, so you have access to the lt9611 datasheet to know what's 
->> needed here ?
-> 
-> [...]
+And then just do what those functions do.
 
--- 
-With best wishes
-Dmitry
+IOW, why isn't the fix just to do
 
+  --- a/kernel/fork.c
+  +++ b/kernel/fork.c
+  @@ -686,6 +686,7 @@ static __latent_entropy int dup_mmap(struct mm_struct *mm,
+        for_each_vma(old_vmi, mpnt) {
+                struct file *file;
+
+  +             vma_start_write(mpnt);
+                if (mpnt->vm_flags & VM_DONTCOPY) {
+                        vm_stat_account(mm, mpnt->vm_flags, -vma_pages(mpnt));
+                        continue;
+
+and be done with this? Yes, we could move it down a bit more, ignoring
+the VM_DONTCOPY vma's, but they are so uncommon as to not matter, so
+who cares?
+
+              Linus
