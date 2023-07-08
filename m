@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F95753B5
-	for <regressions@lists.linux.dev>; Sat,  8 Jul 2023 14:01:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A129F53B5
+	for <regressions@lists.linux.dev>; Sat,  8 Jul 2023 14:08:32 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qI8Uj-00032Y-5B; Sat, 08 Jul 2023 16:01:05 +0200
-Message-ID: <ac2efb70-aa19-41d3-ac57-8aaaf39c620b@leemhuis.info>
-Date: Sat, 8 Jul 2023 16:01:04 +0200
+	id 1qI8bn-0003vw-7w; Sat, 08 Jul 2023 16:08:23 +0200
+Message-ID: <f4693953-3894-6dd9-e061-01626883a388@leemhuis.info>
+Date: Sat, 8 Jul 2023 16:08:22 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,60 +16,56 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.12.0
-Subject: Re: Regression: supported_interfaces filling enforcement
+Subject: Re: [PATCH 2/2] drm/bridge: lt9611: Do not generate HFP/HBP/HSA and
+ EOT packet
 Content-Language: en-US, de-DE
-To: Sergei Antonov <saproj@gmail.com>, netdev@vger.kernel.org,
- Vladimir Oltean <olteanv@gmail.com>, rmk+kernel@armlinux.org.uk
-References: <CABikg9wM0f5cjYY0EV_i3cMT2JcUT1bSe_kkiYk0wFwMrTo8=w@mail.gmail.com>
+To: Amit Pundir <amit.pundir@linaro.org>, Marek Vasut <marex@denx.de>
+Cc: dri-devel@lists.freedesktop.org,
+ Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
+ Andrzej Hajda <andrzej.hajda@intel.com>, Jonas Karlman <jonas@kwiboo.se>,
+ Jernej Skrabec <jernej.skrabec@gmail.com>, Michael Walle <michael@walle.cc>,
+ Jagan Teki <jagan@amarulasolutions.com>,
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+ linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+References: <20230403221233.500485-1-marex@denx.de>
+ <20230403221233.500485-2-marex@denx.de>
+ <CAMi1Hd0TD=2z_=bcDrht3H_wiLvAFcv8Z-U_r_KUOoeMc6UMjw@mail.gmail.com>
 From: "Linux regression tracking (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
-Cc: Linux kernel regressions list <regressions@lists.linux.dev>
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <CABikg9wM0f5cjYY0EV_i3cMT2JcUT1bSe_kkiYk0wFwMrTo8=w@mail.gmail.com>
+In-Reply-To: <CAMi1Hd0TD=2z_=bcDrht3H_wiLvAFcv8Z-U_r_KUOoeMc6UMjw@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1688824867;d19ec839;
-X-HE-SMSGID: 1qI8Uj-00032Y-5B
-
-[CCing the regression list, as it should be in the loop for regressions:
-https://docs.kernel.org/admin-guide/reporting-regressions.html]
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1688825312;2a200365;
+X-HE-SMSGID: 1qI8bn-0003vw-7w
 
 [TLDR: I'm adding this report to the list of tracked Linux kernel
 regressions; the text you find below is based on a few templates
 paragraphs you might have encountered already in similar form.
 See link in footer if these mails annoy you.]
 
-On 04.07.23 16:28, Sergei Antonov wrote:
-> Hello!
-> This commit seems to break the mv88e6060 dsa driver:
-> de5c9bf40c4582729f64f66d9cf4920d50beb897    "net: phylink: require
-> supported_interfaces to be filled"
+On 05.07.23 06:45, Amit Pundir wrote:
 > 
-> The driver does not fill 'supported_interfaces'. What is the proper
-> way to fix it? I managed to fix it by the following quick code.
-> Comments? Recommendations?
+> On Wed, 5 Jul 2023 at 01:48, Marek Vasut <marex@denx.de> wrote:
+>>
+>> Do not generate the HS front and back porch gaps, the HSA gap and
+>> EOT packet, as these packets are not required. This makes the bridge
+>> work with Samsung DSIM on i.MX8MM and i.MX8MP.
 > 
-> +static void mv88e6060_get_caps(struct dsa_switch *ds, int port,
-> +                              struct phylink_config *config)
-> +{
-> +       __set_bit(PHY_INTERFACE_MODE_INTERNAL, config->supported_interfaces);
-> +       __set_bit(PHY_INTERFACE_MODE_GMII, config->supported_interfaces);
-> +}
-> +
->  static const struct dsa_switch_ops mv88e6060_switch_ops = {
->         .get_tag_protocol = mv88e6060_get_tag_protocol,
->         .setup          = mv88e6060_setup,
->         .phy_read       = mv88e6060_phy_read,
->         .phy_write      = mv88e6060_phy_write,
-> +       .phylink_get_caps = mv88e6060_get_caps
->  };
+> This patch broke display on Dragonboard 845c (SDM845) devboard running
+> AOSP. This is what I see
+> https://people.linaro.org/~amit.pundir/db845c-userdebug/v6.5-broken-display/PXL_20230704_150156326.jpg.
+> Reverting this patch fixes this regression for me.
 
 Thanks for the report. To be sure the issue doesn't fall through the
 cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
 tracking bot:
 
-#regzbot ^introduced de5c9bf40c4582729f6
-#regzbot title net: phylink: mv88e6060 dsa driver broken
+#regzbot ^introduced 8ddce13ae69
+#regzbot title drm/bridge: lt9611: Dragonboard 845c (SDM845) devboard
+broken when running AOSP
 #regzbot ignore-activity
 
 This isn't a regression? This issue or a fix for it are already
