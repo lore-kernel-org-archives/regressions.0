@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3070946A5
-	for <regressions@lists.linux.dev>; Sat,  8 Jul 2023 13:37:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F95753B5
+	for <regressions@lists.linux.dev>; Sat,  8 Jul 2023 14:01:07 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qI87T-0008NX-R3; Sat, 08 Jul 2023 15:37:03 +0200
-Message-ID: <278dc66d-7cc8-2735-5cd0-c64dc139b10c@leemhuis.info>
-Date: Sat, 8 Jul 2023 15:37:03 +0200
+	id 1qI8Uj-00032Y-5B; Sat, 08 Jul 2023 16:01:05 +0200
+Message-ID: <ac2efb70-aa19-41d3-ac57-8aaaf39c620b@leemhuis.info>
+Date: Sat, 8 Jul 2023 16:01:04 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,77 +16,75 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.12.0
-Subject: Re: [PATCH v2 04/27] locking/atomic: make atomic*_{cmp,}xchg optional
+Subject: Re: Regression: supported_interfaces filling enforcement
 Content-Language: en-US, de-DE
-To: Guenter Roeck <linux@roeck-us.net>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- Mark Rutland <mark.rutland@arm.com>
-Cc: linux-kernel@vger.kernel.org, akiyks@gmail.com, boqun.feng@gmail.com,
- corbet@lwn.net, keescook@chromium.org, linux@armlinux.org.uk,
- linux-doc@vger.kernel.org, mchehab@kernel.org, paulmck@kernel.org,
- peterz@infradead.org, rdunlap@infradead.org, sstabellini@kernel.org,
- will@kernel.org, Arnd Bergmann <arnd@arndb.de>
-References: <20230605070124.3741859-1-mark.rutland@arm.com>
- <20230605070124.3741859-5-mark.rutland@arm.com>
- <32395f1f-19e4-41da-9f67-68c7d21cf9b2@roeck-us.net>
- <a94334d8-0a9a-1cbc-ebfe-1825abfb8307@leemhuis.info>
- <36c1ef3d-603b-574a-ad9d-796964a1410c@roeck-us.net>
+To: Sergei Antonov <saproj@gmail.com>, netdev@vger.kernel.org,
+ Vladimir Oltean <olteanv@gmail.com>, rmk+kernel@armlinux.org.uk
+References: <CABikg9wM0f5cjYY0EV_i3cMT2JcUT1bSe_kkiYk0wFwMrTo8=w@mail.gmail.com>
 From: "Linux regression tracking (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
+Cc: Linux kernel regressions list <regressions@lists.linux.dev>
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <36c1ef3d-603b-574a-ad9d-796964a1410c@roeck-us.net>
+In-Reply-To: <CABikg9wM0f5cjYY0EV_i3cMT2JcUT1bSe_kkiYk0wFwMrTo8=w@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1688823428;1a4e614f;
-X-HE-SMSGID: 1qI87T-0008NX-R3
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1688824867;d19ec839;
+X-HE-SMSGID: 1qI8Uj-00032Y-5B
 
-On 08.07.23 15:20, Guenter Roeck wrote:
-> On 7/8/23 06:07, Linux regression tracking (Thorsten Leemhuis) wrote:
->> On 27.06.23 19:07, Guenter Roeck wrote:
->>> On Mon, Jun 05, 2023 at 08:01:01AM +0100, Mark Rutland wrote:
->>>> Most architectures define the atomic/atomic64 xchg and cmpxchg
->>>> operations in terms of arch_xchg and arch_cmpxchg respectfully.
->>>>
->>>> Add fallbacks for these cases and remove the trivial cases from arch
->>>> code. On some architectures the existing definitions are kept as these
->>>> are used to build other arch_atomic*() operations.
->>>>
->>>> Signed-off-by: Mark Rutland <mark.rutland@arm.com>
->>> [...]
->>>
->>> This patch results in:
->>>
->>> ERROR: modpost: "__xchg_called_with_bad_pointer"
->>> [lib/atomic64_test.ko] undefined!
->>>
->>> when trying to build sparc64:allmodconfig.
->>
->> Guenter, please correct me if I'm wrong:
->>
->> This is fixed by Arnd's patch "sparc: mark __arch_xchg() as
->> __always_inline", but that afaics sadly hasn't even reached -next yet.
->> https://lore.kernel.org/all/20230628094938.2318171-1-arnd@kernel.org/
->>
->> Hence adding it to the tracking now that the end of the merge window is
->> near:
->>
->> #regzbot ^introduced d12157efc8e083c7
->> #regzbot title locking/atomic: build error on sparc64:allmodconfig
->> #regzbot ignore-activity
+[CCing the regression list, as it should be in the loop for regressions:
+https://docs.kernel.org/admin-guide/reporting-regressions.html]
+
+[TLDR: I'm adding this report to the list of tracked Linux kernel
+regressions; the text you find below is based on a few templates
+paragraphs you might have encountered already in similar form.
+See link in footer if these mails annoy you.]
+
+On 04.07.23 16:28, Sergei Antonov wrote:
+> Hello!
+> This commit seems to break the mv88e6060 dsa driver:
+> de5c9bf40c4582729f64f66d9cf4920d50beb897    "net: phylink: require
+> supported_interfaces to be filled"
 > 
-> Yes, this is correct.
+> The driver does not fill 'supported_interfaces'. What is the proper
+> way to fix it? I managed to fix it by the following quick code.
+> Comments? Recommendations?
+> 
+> +static void mv88e6060_get_caps(struct dsa_switch *ds, int port,
+> +                              struct phylink_config *config)
+> +{
+> +       __set_bit(PHY_INTERFACE_MODE_INTERNAL, config->supported_interfaces);
+> +       __set_bit(PHY_INTERFACE_MODE_GMII, config->supported_interfaces);
+> +}
+> +
+>  static const struct dsa_switch_ops mv88e6060_switch_ops = {
+>         .get_tag_protocol = mv88e6060_get_tag_protocol,
+>         .setup          = mv88e6060_setup,
+>         .phy_read       = mv88e6060_phy_read,
+>         .phy_write      = mv88e6060_phy_write,
+> +       .phylink_get_caps = mv88e6060_get_caps
+>  };
 
-Thx for confirming (and also for adding the other regression to the
-tracking). Let me use this opportunity to tell regzbot about the patch
-for this regression, which I forgot to do earlier (sorry!):
+Thanks for the report. To be sure the issue doesn't fall through the
+cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
+tracking bot:
 
-#regzbot monitor:
-https://lore.kernel.org/all/20230628094938.2318171-1-arnd@kernel.org/
+#regzbot ^introduced de5c9bf40c4582729f6
+#regzbot title net: phylink: mv88e6060 dsa driver broken
+#regzbot ignore-activity
 
-Also CCing Arnd, maybe the fix fell through the cracks on his side.
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply and tell me -- ideally
+while also telling regzbot about it, as explained by the page listed in
+the footer of this mail.
+
+Developers: When fixing the issue, remember to add 'Link:' tags pointing
+to the report (the parent of this mail). See page linked in footer for
+details.
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
 Everything you wanna know about Linux kernel regression tracking:
 https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+That page also explains what to do if mails like this annoy you.
