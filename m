@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A129F53B5
-	for <regressions@lists.linux.dev>; Sat,  8 Jul 2023 14:08:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AA0653B5
+	for <regressions@lists.linux.dev>; Sat,  8 Jul 2023 14:12:25 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qI8bn-0003vw-7w; Sat, 08 Jul 2023 16:08:23 +0200
-Message-ID: <f4693953-3894-6dd9-e061-01626883a388@leemhuis.info>
-Date: Sat, 8 Jul 2023 16:08:22 +0200
+	id 1qI8fe-0004R5-4r; Sat, 08 Jul 2023 16:12:22 +0200
+Message-ID: <cf6ef663-d947-ca54-a9c4-beeb105ff5bb@leemhuis.info>
+Date: Sat, 8 Jul 2023 16:12:21 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,56 +16,81 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.12.0
-Subject: Re: [PATCH 2/2] drm/bridge: lt9611: Do not generate HFP/HBP/HSA and
- EOT packet
+Subject: Re: [PATCH RESEND 2/2] Bluetooth: fix use-bdaddr-property quirk
 Content-Language: en-US, de-DE
-To: Amit Pundir <amit.pundir@linaro.org>, Marek Vasut <marex@denx.de>
-Cc: dri-devel@lists.freedesktop.org,
- Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
- Andrzej Hajda <andrzej.hajda@intel.com>, Jonas Karlman <jonas@kwiboo.se>,
- Jernej Skrabec <jernej.skrabec@gmail.com>, Michael Walle <michael@walle.cc>,
- Jagan Teki <jagan@amarulasolutions.com>,
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
- linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+To: Amit Pundir <amit.pundir@linaro.org>,
+ Johan Hovold <johan+linaro@kernel.org>
+Cc: Marcel Holtmann <marcel@holtmann.org>,
+ Johan Hedberg <johan.hedberg@gmail.com>,
+ Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+ Matthias Kaehlcke <mka@chromium.org>, linux-bluetooth@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
  Linux regressions mailing list <regressions@lists.linux.dev>
-References: <20230403221233.500485-1-marex@denx.de>
- <20230403221233.500485-2-marex@denx.de>
- <CAMi1Hd0TD=2z_=bcDrht3H_wiLvAFcv8Z-U_r_KUOoeMc6UMjw@mail.gmail.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
+References: <20230531090424.3187-1-johan+linaro@kernel.org>
+ <20230531090424.3187-3-johan+linaro@kernel.org>
+ <CAMi1Hd3fe=wk02WG8J7K5Ud1GcWkuKKKrxFjkNguxDkzNz2WVQ@mail.gmail.com>
+From: "Linux regression tracking #adding (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <CAMi1Hd0TD=2z_=bcDrht3H_wiLvAFcv8Z-U_r_KUOoeMc6UMjw@mail.gmail.com>
+In-Reply-To: <CAMi1Hd3fe=wk02WG8J7K5Ud1GcWkuKKKrxFjkNguxDkzNz2WVQ@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1688825312;2a200365;
-X-HE-SMSGID: 1qI8bn-0003vw-7w
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1688825546;00b1cc32;
+X-HE-SMSGID: 1qI8fe-0004R5-4r
 
 [TLDR: I'm adding this report to the list of tracked Linux kernel
 regressions; the text you find below is based on a few templates
 paragraphs you might have encountered already in similar form.
 See link in footer if these mails annoy you.]
 
-On 05.07.23 06:45, Amit Pundir wrote:
+On 07.07.23 11:41, Amit Pundir wrote:
+> Hi Johan,
 > 
-> On Wed, 5 Jul 2023 at 01:48, Marek Vasut <marex@denx.de> wrote:
+> On Wed, 31 May 2023 at 14:35, Johan Hovold <johan+linaro@kernel.org> wrote:
 >>
->> Do not generate the HS front and back porch gaps, the HSA gap and
->> EOT packet, as these packets are not required. This makes the bridge
->> work with Samsung DSIM on i.MX8MM and i.MX8MP.
+>> Devices that lack persistent storage for the device address can indicate
+>> this by setting the HCI_QUIRK_INVALID_BDADDR which causes the controller
+>> to be marked as unconfigured until user space has set a valid address.
+>>
+>> The related HCI_QUIRK_USE_BDADDR_PROPERTY was later added to similarly
+>> indicate that the device lacks a valid address but that one may be
+>> specified in the devicetree.
+>>
+>> As is clear from commit 7a0e5b15ca45 ("Bluetooth: Add quirk for reading
+>> BD_ADDR from fwnode property") that added and documented this quirk and
+>> commits like de79a9df1692 ("Bluetooth: btqcomsmd: use
+>> HCI_QUIRK_USE_BDADDR_PROPERTY"), the device address of controllers with
+>> this flag should be treated as invalid until user space has had a chance
+>> to configure the controller in case the devicetree property is missing.
+>>
+>> As it does not make sense to allow controllers with invalid addresses,
+>> restore the original semantics, which also makes sure that the
+>> implementation is consistent (e.g. get_missing_options() indicates that
+>> the address must be set) and matches the documentation (including
+>> comments in the code, such as, "In case any of them is set, the
+>> controller has to start up as unconfigured.").
+>>
 > 
-> This patch broke display on Dragonboard 845c (SDM845) devboard running
-> AOSP. This is what I see
-> https://people.linaro.org/~amit.pundir/db845c-userdebug/v6.5-broken-display/PXL_20230704_150156326.jpg.
-> Reverting this patch fixes this regression for me.
+> This patch broke Bluetooth on Dragonboard 845c (SDM845) devboard.
+> Reverting this patch fixes the BT breakage and I see the following
+> messages in dmesg:
+> 
+> Bluetooth: hci0: setting up wcn399x
+> Bluetooth: hci0: QCA Product ID   :0x0000000a
+> Bluetooth: hci0: QCA SOC Version  :0x40010214
+> Bluetooth: hci0: QCA ROM Version  :0x00000201
+> Bluetooth: hci0: QCA Patch Version:0x00000001
+> Bluetooth: hci0: QCA controller version 0x02140201
+> Bluetooth: hci0: QCA Downloading qca/crbtfw21.tlv
+> Bluetooth: hci0: QCA Downloading qca/crnv21.bin
+> Bluetooth: hci0: QCA setup on UART is completed
 
 Thanks for the report. To be sure the issue doesn't fall through the
 cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
 tracking bot:
 
-#regzbot ^introduced 8ddce13ae69
-#regzbot title drm/bridge: lt9611: Dragonboard 845c (SDM845) devboard
-broken when running AOSP
+#regzbot ^introduced 6945795bc81
+#regzbot title Bluetooth: Dragonboard 845c (SDM845) devboard broken
 #regzbot ignore-activity
 
 This isn't a regression? This issue or a fix for it are already
