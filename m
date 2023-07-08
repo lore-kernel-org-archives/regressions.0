@@ -1,153 +1,92 @@
-Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
+Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1F2480F
-	for <regressions@lists.linux.dev>; Sat,  8 Jul 2023 23:03:48 +0000 (UTC)
-Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-c581c758ad8so3732517276.1
-        for <regressions@lists.linux.dev>; Sat, 08 Jul 2023 16:03:48 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C9A480F
+	for <regressions@lists.linux.dev>; Sat,  8 Jul 2023 23:04:11 +0000 (UTC)
+Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-5776312eaddso39205687b3.3
+        for <regressions@lists.linux.dev>; Sat, 08 Jul 2023 16:04:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1688857427; x=1691449427;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gwBj92eIiUbEa/JYqaOxSr02NhzAqRIjjJvbmPFMSxo=;
-        b=q8wnNoLteM9JW+3RGd0GkHIMD3jU1gDl75C+fTaQWt5QAwCs7wlLOiouTZAdrQtK3i
-         a4IrwA/yeP6VXeQxGaWW0JAcdY/lMDOjJd9nMB0Y/fmz4TXWlll59y557Q3hYUceCeRe
-         w9gh7oweFP0r3kMXkm64YZ/B/ggFhCU2n3MzDKImFPTM2g4chapbtSKG9SW6Yhcu0TGK
-         pHtMSE7YGKer6zBijlY+FgA5y64a2UUMOIN6Q/iBXQEQiYp9tqAOEAJQMeLj8kxDQIsa
-         TStlZEZ4ZB19RRJuB0nJ5gv5cUn5jhSqlqKXDZuwiK75dUs2IsgXNeJsAGMXu2QCmD4T
-         QrJA==
+        d=google.com; s=20221208; t=1688857451; x=1691449451;
+        h=mime-version:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=O+qLESJCRFN7dcIsyw3NJtjwIsXtHYZLjT5v4tk5DvU=;
+        b=mgCi5qSaZ0QN848AO4FEdlrrUOrB86sH23LbXPcpsn4qyESlzAQawFfOF04UBU4Kgv
+         9/lqmDRKXg+cqWxZ2Jzz8dSkhhwyJvxS413AvX/bJBFnXjkhbSF26g90mSr+UkOXy8qt
+         Lg0ffkvvfGuyQCAHGQNyalDtsOWJwlyjwicSAZnEWb8DRbiUVaPqcJE1hmf3pb5JbHCV
+         F+aCGx7iX12vcDpSmC0d09+31EprSu+CfzDgy+pt2tM4zg6JDFCADKQwoJX7LmkAFVnW
+         HfnY7DNlbwjqy3xmZ1ahFCq1H6iUoXJC9PL/ZtQyNPupEGpCxTeiUlFqcf0amr0w6t44
+         ARKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688857427; x=1691449427;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gwBj92eIiUbEa/JYqaOxSr02NhzAqRIjjJvbmPFMSxo=;
-        b=LEXXGEyaNWF+XLgoQnHc2x4ANvIug9wLIURvS87GaqYpNPxszyOkHS991T66W+pXSA
-         YOhwg5plhq5rfo7rDv3UCR6uQIi9tdj1zp0qIYg95Uc8RWcb/FQ8fmuk21M5VOX5SXvR
-         dsc8U4Lx71KKl4lT4TJt16kud46gPRX42X9v5AEEnzx56DD1XWj+WSPDNOmvYqKkvhZ9
-         y0GDOB+b0qMpKYAfu+8qu7dMvrIw8lSG2AP1x4ogfqJw/IbGCbiBqAIiPU01LyHvmriJ
-         N/8xxmAaJx+e4pQ5DzuiS6wycwFQMTPmCzYbDjhS/zM8QXuS8NtLzh+rd8xNWsYKmD0v
-         HaZw==
-X-Gm-Message-State: ABy/qLYT8dr57M2i5Z1Hw3OE+GL3S9ewjcIghZd9HUmcNqdfKjdUZbQg
-	mfyP8s34u4CfaO37Fr+awOgBXPmrJZr6PBEFgYsfcw==
-X-Google-Smtp-Source: APBJJlH7KKflCD9n462UEhT/w6BrMfCGoogXc/HwcWmbTfPF29n1OnJ/9HqyJN4tlPo9OHEugHrnxKyQfd4IB9dP7Rw=
-X-Received: by 2002:a25:ad88:0:b0:c77:abc9:d577 with SMTP id
- z8-20020a25ad88000000b00c77abc9d577mr1345314ybi.52.1688857427141; Sat, 08 Jul
- 2023 16:03:47 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1688857451; x=1691449451;
+        h=mime-version:message-id:subject:cc:to:from:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=O+qLESJCRFN7dcIsyw3NJtjwIsXtHYZLjT5v4tk5DvU=;
+        b=jpVioZkKOtRL+MQ0yeyTggQK2/P4dvUcJsoY1EVBdCCnt5HnC/LGPBDWJ8jX/OmzEj
+         O40xdbNlR72wMXiT/bmyvxv0irmOyo7aCYt1sM7Fe7jGXS/cPQ5GfJzVTPQZxDUzbqDD
+         e1VcxV9xqnKBui2IJJYiNYo+2wwrooAHsl0MP9bRd79KXMa9IX2LaydF2vGBzFzTm+Kt
+         rZF8T7N7P0DYqWbpaKklbJWOL2ynv5b174mBePFFO5KXElax6cZUuwQXxHDt/MyALO7g
+         LWkBVWCBNrQeQrqdWASUudbf40YrNg0R6X0mDred8gRP8AOZC3+S7d6MFPV/hEfa3yfi
+         h96w==
+X-Gm-Message-State: ABy/qLYeraxjTx7HJpo8T/syDzlo9tFltAun9qC1lX/RjTg9XYNz9jHA
+	HNuMfQLvTTKJIvT69NU8FeHzWQ==
+X-Google-Smtp-Source: APBJJlHxsUrb2PsB8Vr/SdiFDl5l/hnimxuzYl85A5so5Ag/YE5k+SY0YoZnZodNyJi7fr5g0LxUxA==
+X-Received: by 2002:a81:4e87:0:b0:573:527b:747b with SMTP id c129-20020a814e87000000b00573527b747bmr8684830ywb.36.1688857450765;
+        Sat, 08 Jul 2023 16:04:10 -0700 (PDT)
+Received: from ripple.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
+        by smtp.gmail.com with ESMTPSA id d205-20020a8168d6000000b0056cd3e598d8sm2108255ywc.114.2023.07.08.16.04.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 08 Jul 2023 16:04:10 -0700 (PDT)
+Date: Sat, 8 Jul 2023 16:04:00 -0700 (PDT)
+From: Hugh Dickins <hughd@google.com>
+X-X-Sender: hugh@ripple.attlocal.net
+To: Linus Torvalds <torvalds@linux-foundation.org>
+cc: Suren Baghdasaryan <surenb@google.com>, akpm@linux-foundation.org, 
+    regressions@leemhuis.info, bagasdotme@gmail.com, jacobly.alt@gmail.com, 
+    willy@infradead.org, liam.howlett@oracle.com, david@redhat.com, 
+    peterx@redhat.com, ldufour@linux.ibm.com, linux-kernel@vger.kernel.org, 
+    linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org, 
+    linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org, 
+    regressions@lists.linux.dev, stable@vger.kernel.org
+Subject: [PATCH] mm: lock newly mapped VMA with corrected ordering
+Message-ID: <b5a5626-2684-899d-874b-801e7974b17@google.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230708191212.4147700-1-surenb@google.com> <20230708191212.4147700-3-surenb@google.com>
- <CAHk-=whhXFQj0Vwzh7bnjnLs=SSTsxyiY6jeb7ovOGnCes4aWg@mail.gmail.com>
- <CAJuCfpHuFc1P=Wo6Oy0T0u-H1B_JsbRgqhVJxY7D64ZY1zh7Cg@mail.gmail.com> <CAHk-=wi9NQdt3-yHRXExdnu-QpUfXsqiSujkSTg6AdGjabPs6g@mail.gmail.com>
-In-Reply-To: <CAHk-=wi9NQdt3-yHRXExdnu-QpUfXsqiSujkSTg6AdGjabPs6g@mail.gmail.com>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Sat, 8 Jul 2023 16:03:35 -0700
-Message-ID: <CAJuCfpGo9BtYmD+1tJikRS51sYx43QMYA10Wm8Bn5MRcuck0Dg@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] fork: lock VMAs of the parent process when forking
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: David Hildenbrand <david@redhat.com>, akpm@linux-foundation.org, regressions@leemhuis.info, 
-	bagasdotme@gmail.com, jacobly.alt@gmail.com, willy@infradead.org, 
-	liam.howlett@oracle.com, peterx@redhat.com, ldufour@linux.ibm.com, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, 
-	gregkh@linuxfoundation.org, regressions@lists.linux.dev, 
-	Jiri Slaby <jirislaby@kernel.org>, =?UTF-8?Q?Holger_Hoffst=C3=A4tte?= <holger@applied-asynchrony.com>, 
-	stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
 
-On Sat, Jul 8, 2023 at 3:54=E2=80=AFPM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> On Sat, 8 Jul 2023 at 15:36, Suren Baghdasaryan <surenb@google.com> wrote=
-:
-> >
-> > On Sat, Jul 8, 2023 at 2:18=E2=80=AFPM Linus Torvalds
-> > >
-> > > Again - maybe I messed up, but it really feels like the missing
-> > > vma_start_write() was more fundamental, and not some "TLB coherency"
-> > > issue.
-> >
-> > Sounds plausible. I'll try to use the reproducer to verify if that's
-> > indeed happening here.
->
-> I really don't think that's what people are reporting, I was just
-> trying to make up a completely different case that has nothing to do
-> with any TLB issues.
->
-> My real point was simply this one:
->
-> > It's likely there are multiple problematic
-> > scenarios due to this missing lock though.
->
-> Right. That's my issue. I felt your explanation was *too* targeted at
-> some TLB non-coherency thing, when I think the problem was actually a
-> much larger "page faults simply must not happen while we're copying
-> the page tables because data isn't coherent".
->
-> The anon_vma case was just meant as another random example of the
-> other kinds of things I suspect can go wrong, because we're simply not
-> able to do this whole "copy vma while it's being modified by page
-> faults".
->
-> Now, I agree that the PTE problem is real, and probable the main
-> thing, ie when we as part of fork() do this:
->
->         /*
->          * If it's a COW mapping, write protect it both
->          * in the parent and the child
->          */
->         if (is_cow_mapping(vm_flags) && pte_write(pte)) {
->                 ptep_set_wrprotect(src_mm, addr, src_pte);
->                 pte =3D pte_wrprotect(pte);
->         }
->
-> and the thing that can go wrong before the TLB flush happens is that -
-> because the TLB's haven't been flushed yet - some threads in the
-> parent happily continue to write to the page and didn't see the
-> wrprotect happening.
->
-> And then you get into the situation where *some* thread see the page
-> protections change (maybe they had a TLB flush event on that CPU for
-> random reasons), and they will take a page fault and do the COW thing
-> and create a new page.
->
-> And all the while *other* threads still see the old writeable TLB
-> state, and continue to write to the old page.
->
-> So now you have a page that gets its data copied *while* somebody is
-> still writing to it, and the end result is that some write easily gets
-> lost, and so when that new copy is installed, you see it as data
-> corruption.
->
-> And I agree completely that that is probably the thing that most
-> people actually saw and reacted to as corruption.
->
-> But the reason I didn't like the explanation was that I think this is
-> just one random example of the more fundamental issue of "we simply
-> must not take page faults while copying".
->
-> Your explanation made me think "stale TLB is the problem", and *that*
-> was what I objected to. The stale TLB was just one random sign of the
-> much larger problem.
->
-> It might even have been the most common symptom, but I think it was
-> just a *symptom*, not the *cause* of the problem.
->
-> And I must have been bad at explaining that, because David Hildenbrand
-> also reacted negatively to my change.
->
-> So I'll happily take a patch that adds more commentary about this, and
-> gives several examples of the things that go wrong.
+Lockdep is certainly right to complain about
+(&vma->vm_lock->lock){++++}-{3:3}, at: vma_start_write+0x2d/0x3f
+               but task is already holding lock:
+(&mapping->i_mmap_rwsem){+.+.}-{3:3}, at: mmap_region+0x4dc/0x6db
+Invert those to the usual ordering.
 
-How about adding your example to the original description as yet
-another scenario which is broken without this change? I guess having
-both issues described would not hurt.
+Fixes: 33313a747e81 ("mm: lock newly mapped VMA which can be modified after it becomes visible")
+Cc: stable@vger.kernel.org
+Signed-off-by: Hugh Dickins <hughd@google.com>
+---
+ mm/mmap.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
->
->                 Linus
+diff --git a/mm/mmap.c b/mm/mmap.c
+index 84c71431a527..3eda23c9ebe7 100644
+--- a/mm/mmap.c
++++ b/mm/mmap.c
+@@ -2809,11 +2809,11 @@ unsigned long mmap_region(struct file *file, unsigned long addr,
+ 	if (vma_iter_prealloc(&vmi))
+ 		goto close_and_free_vma;
+ 
++	/* Lock the VMA since it is modified after insertion into VMA tree */
++	vma_start_write(vma);
+ 	if (vma->vm_file)
+ 		i_mmap_lock_write(vma->vm_file->f_mapping);
+ 
+-	/* Lock the VMA since it is modified after insertion into VMA tree */
+-	vma_start_write(vma);
+ 	vma_iter_store(&vmi, vma);
+ 	mm->map_count++;
+ 	if (vma->vm_file) {
+-- 
+2.35.3
