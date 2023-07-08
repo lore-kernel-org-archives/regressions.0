@@ -1,98 +1,152 @@
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 272E28BF4
-	for <regressions@lists.linux.dev>; Sat,  8 Jul 2023 19:23:12 +0000 (UTC)
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2b6b98ac328so46360181fa.0
-        for <regressions@lists.linux.dev>; Sat, 08 Jul 2023 12:23:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1688844191; x=1691436191;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=joV2BdE7YOFZ22mdVaTCQPGn7sLlO9d89m2/O8Ni8nw=;
-        b=D3RX6rp3lCrrjPF+L3zCXesnJw5RyO+lgEbv0AAhuEyHVkjaQbhHCI3DJSL+JV1UdL
-         FT8zki389vPUBvZczSd6HJ3nLMNQELFbQV4ZWqlDXDk5sgK6AKcyc1251+rXw9DHWw9+
-         XZZ3PBzwHrnsMFfW4ooU7vEIixQouCLoustDw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688844191; x=1691436191;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=joV2BdE7YOFZ22mdVaTCQPGn7sLlO9d89m2/O8Ni8nw=;
-        b=MxAoAX7Fq/2oZgB5rt6cH0XS1PEMOVfokDWolCLgYxf341Fzo/dh1zJflxFr4Xe/E8
-         ze9VfRkt+BkPwXplZ9sm8FmqSCLewbbqQYFQe0O3wj2a/qOtPcaXzg5JbVpwnuWpUeZi
-         RsKxfucqifK8OG/7L9nYt3lpRD6Bp4YhwFpdtf60m+29DX9Hl5M54d39CzWEYEh7l9uE
-         rpfRvf7dStgL0QcvhPACOM+z8ZCmb+6ToqdpJJhkrBA/4wNToh40GUZNDPsEeW+jfWMG
-         L3mx8cFH6mcOtL8BopdWugdUlU57TuAPW2tMXIvZ8hxmPiOFbPYaKwwpIr4IvERQZPNZ
-         NAlg==
-X-Gm-Message-State: ABy/qLYz/vxEmwgbPAnIMhlDMoLA3E/FE973rnHmjBxF33uAH8HBvt11
-	j9B4UWcDIGGdX3CkeQzJ3ncyThEGL20Kts5oOyz2JQc0
-X-Google-Smtp-Source: APBJJlHvske0S3srav5s9/EX80aGH3yMpCyTIzuZcIfCNGsB0xnIKHIlb3oCvedVEhdevO38+ASmaw==
-X-Received: by 2002:a2e:9591:0:b0:2b4:7380:230 with SMTP id w17-20020a2e9591000000b002b473800230mr5865123ljh.13.1688844190771;
-        Sat, 08 Jul 2023 12:23:10 -0700 (PDT)
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com. [209.85.128.47])
-        by smtp.gmail.com with ESMTPSA id q4-20020a170906a08400b0099307520b8csm3833962ejy.29.2023.07.08.12.23.10
-        for <regressions@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 08 Jul 2023 12:23:10 -0700 (PDT)
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-3fbf1b82dc7so33673935e9.2
-        for <regressions@lists.linux.dev>; Sat, 08 Jul 2023 12:23:10 -0700 (PDT)
-X-Received: by 2002:a5d:684c:0:b0:314:4915:689 with SMTP id
- o12-20020a5d684c000000b0031449150689mr7611320wrw.34.1688844189725; Sat, 08
- Jul 2023 12:23:09 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86BF8A941
+	for <regressions@lists.linux.dev>; Sat,  8 Jul 2023 19:39:36 +0000 (UTC)
+Received: from [127.0.0.1] (p578adb1c.dip0.t-ipconnect.de [87.138.219.28])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
+	(No client certificate requested)
+	(Authenticated sender: marex@denx.de)
+	by phobos.denx.de (Postfix) with ESMTPSA id AC07286122;
+	Sat,  8 Jul 2023 21:39:32 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
+	s=phobos-20191101; t=1688845174;
+	bh=Trl/KhYRVBq9aC4UqVwB9rKgpSnYW7ajU9kLeLvrcrs=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=TzS08MJW/GOvFIA1Om8QvgUNIhKHbNTvaiR++wbFcFUNh23hPiBiwBDi9gnJY2KtV
+	 GTXPZG62e8Q3OFpX4kZVlq+ponVPEFhGunqvzLQUb+nR2BFZCMtwNLakM+MsRLuGoO
+	 csXP/qSY9BUkMsq5tVsmcboj2xSRiLUDRDdZy4fYGqLLEOQY3Y1C3kWIZhmOu6X3q6
+	 8R3HsJTj7JG6/bwtnif4Fxn5aMSz4/Ow1k5kpGugCD3PFabFF6EKnYEwYW5TU7KSR9
+	 vnyhIi6ilasfXmuiPfsnzTw1xHPx8S4devxw8XnOuNXOefyAxxSZssR/1YZvGE+mhA
+	 0X2ZzFeiPrOmA==
+Message-ID: <19f50ec2-f22d-100f-cc40-511b8b6153cf@denx.de>
+Date: Sat, 8 Jul 2023 21:39:32 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <facbfec3-837a-51ed-85fa-31021c17d6ef@gmail.com>
- <5c7455db-4ed8-b54f-e2d5-d2811908123d@leemhuis.info> <CAJuCfpH7BOBYGEG=op09bZrh1x3WA8HMcGBXXRhe6M5RJaen5A@mail.gmail.com>
- <CAJuCfpH7t7gCV2FkctzG2eWTUVTFZD7CtD14-WuHqBqOYBo1jA@mail.gmail.com>
- <2023070359-evasive-regroup-f3b8@gregkh> <CAJuCfpF=XPpPYqp2Y1Vu-GUL=RBj4fyhXoXzjBY4EKtBnYE_eQ@mail.gmail.com>
- <2023070453-plod-swipe-cfbf@gregkh> <20230704091808.aa2ed3c11a5351d9bf217ac9@linux-foundation.org>
- <CAJuCfpE_WjRQoDT1XnvBghCH-kpqk+pfcBJGyDnK7DZLMVG5Mw@mail.gmail.com>
- <2023070509-undertow-pulverize-5adc@gregkh> <7668c45a-70b1-dc2f-d0f5-c0e76ec17145@leemhuis.info>
- <20230705084906.22eee41e6e72da588fce5a48@linux-foundation.org>
- <df1d7d39-56f3-699c-0d0f-fcc8774f182e@leemhuis.info> <CAHk-=whKd05V49AbZGF=inYmhU6H_yNvvw1grWyhQfQ=9+5-VQ@mail.gmail.com>
- <20230708103936.4f6655cd0d8e8a0478509e25@linux-foundation.org>
- <CAHk-=wh498i3s+BgOF=pUOF=Qe_A0A16-mFcH2YGy+iZXvNChQ@mail.gmail.com>
- <CAJuCfpFLc1yoZm9uqRcmcwtFNGHYKyjxrc71tzXennpGB7QbYQ@mail.gmail.com>
- <CAHk-=wi-99-DyMOGywTbjRnRRC+XfpPm=r=pei4A=MEL0QDBXA@mail.gmail.com> <CAJuCfpHszCAc5hDdsxry+1xh3kz+=jsYdBCXKQez-Th9LESSZA@mail.gmail.com>
-In-Reply-To: <CAJuCfpHszCAc5hDdsxry+1xh3kz+=jsYdBCXKQez-Th9LESSZA@mail.gmail.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Sat, 8 Jul 2023 12:22:53 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wi=+qS+5v_7mVxKWUSOKaxzC2V8N7hyFVt1qTWGM_pmAQ@mail.gmail.com>
-Message-ID: <CAHk-=wi=+qS+5v_7mVxKWUSOKaxzC2V8N7hyFVt1qTWGM_pmAQ@mail.gmail.com>
-Subject: Re: Fwd: Memory corruption in multithreaded user space program while
- calling fork
-To: Suren Baghdasaryan <surenb@google.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	Thorsten Leemhuis <regressions@leemhuis.info>, Bagas Sanjaya <bagasdotme@gmail.com>, 
-	Jacob Young <jacobly.alt@gmail.com>, Laurent Dufour <ldufour@linux.ibm.com>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Memory Management <linux-mm@kvack.org>, 
-	Linux PowerPC <linuxppc-dev@lists.ozlabs.org>, 
-	Linux ARM <linux-arm-kernel@lists.infradead.org>, Greg KH <gregkh@linuxfoundation.org>, 
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: [PATCH 2/2] drm/bridge: lt9611: Do not generate HFP/HBP/HSA and
+ EOT packet
+Content-Language: en-US
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+ neil.armstrong@linaro.org, Amit Pundir <amit.pundir@linaro.org>,
+ Abhinav Kumar <quic_abhinavk@quicinc.com>
+Cc: Jagan Teki <jagan@amarulasolutions.com>, dri-devel@lists.freedesktop.org,
+ Robert Foss <rfoss@kernel.org>, Andrzej Hajda <andrzej.hajda@intel.com>,
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Michael Walle <michael@walle.cc>,
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+ linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ freedreno <freedreno@lists.freedesktop.org>
+References: <20230403221233.500485-1-marex@denx.de>
+ <20230403221233.500485-2-marex@denx.de>
+ <CAMi1Hd0TD=2z_=bcDrht3H_wiLvAFcv8Z-U_r_KUOoeMc6UMjw@mail.gmail.com>
+ <CAMty3ZBNFu=f-FS4YFN4wfmiTuk=48nna-vub1eMYwidDt+msg@mail.gmail.com>
+ <CAA8EJppbdiUz5m+9EAPnFb916DaS_VKWd30c7_EPWjuid8rtqQ@mail.gmail.com>
+ <CAMi1Hd2G5PJmz4wpO1wbdqKd0FA8LBgvRDv2u5ZYAMb5s6Kt0A@mail.gmail.com>
+ <d5fb8106-b8f3-0acf-1267-d4d6d0860e25@linaro.org>
+ <d28b0090-bd1e-6737-d92b-348dc6c30750@linaro.org>
+ <800f9e1a-cb66-5bf5-d225-ef338c1c1584@denx.de>
+ <4bc710b1-f361-c525-7692-1dc275ec9bb7@linaro.org>
+From: Marek Vasut <marex@denx.de>
+In-Reply-To: <4bc710b1-f361-c525-7692-1dc275ec9bb7@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
+X-Virus-Status: Clean
 
-On Sat, 8 Jul 2023 at 12:17, Suren Baghdasaryan <surenb@google.com> wrote:
->
-> Do you want me to disable per-VMA locks by default as well?
+On 7/8/23 17:53, Dmitry Baryshkov wrote:
+> On 08/07/2023 18:40, Marek Vasut wrote:
+>> On 7/7/23 10:47, Neil Armstrong wrote:
+>>> On 07/07/2023 09:18, Neil Armstrong wrote:
+>>>> Hi,
+>>>>
+>>>> On 06/07/2023 11:20, Amit Pundir wrote:
+>>>>> On Wed, 5 Jul 2023 at 11:09, Dmitry Baryshkov
+>>>>> <dmitry.baryshkov@linaro.org> wrote:
+>>>>>>
+>>>>>> [Adding freedreno@ to cc list]
+>>>>>>
+>>>>>> On Wed, 5 Jul 2023 at 08:31, Jagan Teki 
+>>>>>> <jagan@amarulasolutions.com> wrote:
+>>>>>>>
+>>>>>>> Hi Amit,
+>>>>>>>
+>>>>>>> On Wed, Jul 5, 2023 at 10:15 AM Amit Pundir 
+>>>>>>> <amit.pundir@linaro.org> wrote:
+>>>>>>>>
+>>>>>>>> Hi Marek,
+>>>>>>>>
+>>>>>>>> On Wed, 5 Jul 2023 at 01:48, Marek Vasut <marex@denx.de> wrote:
+>>>>>>>>>
+>>>>>>>>> Do not generate the HS front and back porch gaps, the HSA gap and
+>>>>>>>>> EOT packet, as these packets are not required. This makes the 
+>>>>>>>>> bridge
+>>>>>>>>> work with Samsung DSIM on i.MX8MM and i.MX8MP.
+>>>>>>>>
+>>>>>>>> This patch broke display on Dragonboard 845c (SDM845) devboard 
+>>>>>>>> running
+>>>>>>>> AOSP. This is what I see
+>>>>>>>> https://people.linaro.org/~amit.pundir/db845c-userdebug/v6.5-broken-display/PXL_20230704_150156326.jpg.
+>>>>>>>> Reverting this patch fixes this regression for me.
+>>>>>>>
+>>>>>>> Might be msm dsi host require proper handling on these updated
+>>>>>>> mode_flags? did they?
+>>>>>>
+>>>>>> The msm DSI host supports those flags. Also, I'd like to point out
+>>>>>> that the patch didn't change the rest of the driver code. So even if
+>>>>>> drm/msm ignored some of the flags, it should not have caused the
+>>>>>> issue. Most likely the issue is on the lt9611 side. I's suspect that
+>>>>>> additional programming is required to make it work with these flags.
+>>>>>
+>>>>> I spent some time today on smoke testing these flags (individually and
+>>>>> in limited combination) on DB845c, to narrow down this breakage to one
+>>>>> or more flag(s) triggering it. Here are my observations in limited
+>>>>> testing done so far.
+>>>>>
+>>>>> There is no regression with MIPI_DSI_MODE_NO_EOT_PACKET when enabled
+>>>>> alone and system boots to UI as usual.
+>>>>>
+>>>>> MIPI_DSI_MODE_VIDEO_NO_HFP always trigger the broken display as in the
+>>>>> screenshot[1] shared earlier as well.
+>>>>>
+>>>>> Adding either of MIPI_DSI_MODE_VIDEO_NO_HSA and
+>>>>> MIPI_DSI_MODE_VIDEO_NO_HBP always result in no display, unless paired
+>>>>> with MIPI_DSI_MODE_VIDEO_NO_HFP and in that case we get the broken
+>>>>> display as reported.
+>>>>>
+>>>>> In short other than MIPI_DSI_MODE_NO_EOT_PACKET flag, all other flags
+>>>>> added in this commit break the display on DB845c one way or another.
+>>>>
+>>>> I think the investigation would be to understand why samsung-dsim 
+>>>> requires
+>>>> such flags and/or what are the difference in behavior between MSM 
+>>>> DSI and samsung DSIM
+>>>> for those flags ?
+>>>>
+>>>> If someone has access to the lt9611 datasheet, so it requires 
+>>>> HSA/HFP/HBP to be
+>>>> skipped ? and does MSM DSI and samsung DSIM skip them in the same way ?
+>>
+>> I don't have the LT9611 datasheet, no.
+> 
+> I also don't have an lt9611 datasheet, unfortunately. I was using the 
+> existing third-party drivers as a source.
+> 
+>>
+>> The MX8M DSI (samsung-dsim) skips the HSA/HFP/HBP completely (see 
+>> i.MX8MP RM 13.6.2.7.2 RGB Interface , there is infographics on the 
+>> following pages).
+> 
+> Do you know, why did you have to disable HPB/HSA/HFP on your platform? 
+> What was the result otherwise?
 
-No. I seriously believe that if the per-vma locking is so broken that
-it needs to be disabled in a development kernel, we should just admit
-failure, and revert it all.
-
-And not in a "revert it for a later attempt" kind of way.
-
-So it would be a "revert it because it added insurmountable problems
-that we couldn't figure out" thing that implies *not* trying it again
-in that form at all, and much soul-searching before somebody decides
-that they have a more maintainable model for it all.
-
-If stable decides that the fixes are not back-portable, and the whole
-thing needs to be disabled for stable, that's one thing. But if we
-decide that in mainline, it's a "this was a failure" thing.
-
-           Linus
+No image on the HDMI monitor at all. This flags change has fixed the 
+problem for multiple other bridges too btw, not just the LT9611, but 
+also TI SN65DSI83 and ICN6211. The flags were likely not set in all 
+those bridge drivers because no DSI host implemented them so far.
