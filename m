@@ -1,103 +1,242 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from clamta04.bpe.bigpond.com (clamta04.bpe.bigpond.com [203.42.22.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE2131C13
-	for <regressions@lists.linux.dev>; Sat,  8 Jul 2023 11:35:42 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qI6Dm-0004GA-MM; Sat, 08 Jul 2023 13:35:26 +0200
-Message-ID: <df1d7d39-56f3-699c-0d0f-fcc8774f182e@leemhuis.info>
-Date: Sat, 8 Jul 2023 13:35:25 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 267681C13
+	for <regressions@lists.linux.dev>; Sat,  8 Jul 2023 12:18:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=bigpond.com
+	; s=202303; h=Content-Type:MIME-Version:Date:Message-ID:To:From:Subject;
+	bh=KN8MhbogqqPfZzXWzBOKTuoSCrY8y/cA4YjxC6ozIg0=; b=JasHz1iTcPBpEv5Vhl5QEY2XGI
+	3ZKrvr4au6i1HyCOy+wCmR53swbwcy0PpVe8K5YhbGT1jEGkue8Og+7k+bKmijNiI4rV6GthKucSS
+	CUl0HLb6Q+rfOPTvonKpYfPRZEWA7MQBjR5cdm4OJJrmWV+e6EVmgO3hEWFerjAXGsZK1G0o1T8MQ
+	Wu8psrUqtjcxd7g5rup4duN453Py82ppnHwwieNP4RhVXlleWTekhmieGHrJbWqLQN+YvyQ5PVLjD
+	U4JrvX5KJLk9Z9QI7dswOaUb1kGk0G7jIiWRxX0G6SSOIqvgcTefPUQLJ6w5YqU9jgW6CYun02X70
+	ITbjUYaA==;
+Received: from claprdcmr09
+	 by claprdomr04 with esmtp
+	 (envelope-from <bids.7405@bigpond.com>)
+	 id 1qI6sB-0000XG-1S
+	 for ;
+	Sat, 08 Jul 2023 22:17:11 +1000
+Received: from [101.191.138.223] (helo=[10.0.0.38])
+	 by claprdcmr09 with esmtpa
+	(envelope-from <bids.7405@bigpond.com>)
+	id 1qI6sC-000BnE-20;
+	Sat, 08 Jul 2023 22:17:11 +1000
+Subject: Re: Fwd: 3 more broken Zaurii - SL-5600, A300, C700
+From: Ross Maynard <bids.7405@bigpond.com>
+To: Dave Jones <davej@codemonkey.org.uk>,
+ Thorsten Leemhuis <regressions@leemhuis.info>,
+ Bagas Sanjaya <bagasdotme@gmail.com>, "David S. Miller"
+ <davem@davemloft.net>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Linux Networking <netdev@vger.kernel.org>,
+ Linux USB <linux-usb@vger.kernel.org>, Oliver Neukum <oneukum@suse.com>
+References: <7ea9abd8-c35d-d329-f0d4-c8bd220cf691@gmail.com>
+ <50f4c10d-260c-cb98-e7d2-124f5519fa68@gmail.com>
+ <e1fdc435-089c-8ce7-d536-ce3780a4ba95@leemhuis.info>
+ <ZKbuoRBi50i8OZ9d@codemonkey.org.uk>
+ <62a9e058-c853-1fcd-5663-e2e001f881e9@bigpond.com>
+Message-ID: <14fd48c8-3955-c933-ab6f-329e54da090f@bigpond.com>
+Date: Sat, 8 Jul 2023 22:17:07 +1000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: Fwd: Memory corruption in multithreaded user space program while
- calling fork
-Content-Language: en-US, de-DE
-To: Andrew Morton <akpm@linux-foundation.org>,
- Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Suren Baghdasaryan <surenb@google.com>,
- Bagas Sanjaya <bagasdotme@gmail.com>, Jacob Young <jacobly.alt@gmail.com>,
- Laurent Dufour <ldufour@linux.ibm.com>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Memory Management <linux-mm@kvack.org>,
- Linux PowerPC <linuxppc-dev@lists.ozlabs.org>,
- Linux ARM <linux-arm-kernel@lists.infradead.org>,
- Greg KH <gregkh@linuxfoundation.org>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-References: <facbfec3-837a-51ed-85fa-31021c17d6ef@gmail.com>
- <5c7455db-4ed8-b54f-e2d5-d2811908123d@leemhuis.info>
- <CAJuCfpH7BOBYGEG=op09bZrh1x3WA8HMcGBXXRhe6M5RJaen5A@mail.gmail.com>
- <CAJuCfpH7t7gCV2FkctzG2eWTUVTFZD7CtD14-WuHqBqOYBo1jA@mail.gmail.com>
- <2023070359-evasive-regroup-f3b8@gregkh>
- <CAJuCfpF=XPpPYqp2Y1Vu-GUL=RBj4fyhXoXzjBY4EKtBnYE_eQ@mail.gmail.com>
- <2023070453-plod-swipe-cfbf@gregkh>
- <20230704091808.aa2ed3c11a5351d9bf217ac9@linux-foundation.org>
- <CAJuCfpE_WjRQoDT1XnvBghCH-kpqk+pfcBJGyDnK7DZLMVG5Mw@mail.gmail.com>
- <2023070509-undertow-pulverize-5adc@gregkh>
- <7668c45a-70b1-dc2f-d0f5-c0e76ec17145@leemhuis.info>
- <20230705084906.22eee41e6e72da588fce5a48@linux-foundation.org>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <20230705084906.22eee41e6e72da588fce5a48@linux-foundation.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1688816142;c5d777d2;
-X-HE-SMSGID: 1qI6Dm-0004GA-MM
+In-Reply-To: <62a9e058-c853-1fcd-5663-e2e001f881e9@bigpond.com>
+Content-Type: multipart/mixed;
+ boundary="------------C1A5963CB6D1F125BFE1F795"
+Content-Language: en-US
+X-tce-id: bids.7405@bigpond.com
+X-tce-ares-id: e{89e004cc-fe21-4cc7-8a77-995180f13b8a}1
+X-tce-spam-action: no action
+X-tce-spam-score: 0.0
+X-Cm-Analysis: v=2.4 cv=Sp1WqtC0 c=1 sm=1 tr=0 ts=64a953c7 a=I+ymoOSk5yzZBOYXmf4WnA==:117 a=I+ymoOSk5yzZBOYXmf4WnA==:17 a=ws7JD89P4LkA:10 a=r77TgQKjGQsHNAKrUKIA:9 a=PhF-ru6i4W658Il2ksoA:9 a=QEXdDO2ut3YA:10 a=TILydWMaAdQ53EHaNYoA:9 a=B2y7HmGcmWMA:10
+X-Cm-Envelope: MS4xfEP+jWftDyT9rMny2iy5Mx7ZeuwancAs7J/BAKAxx03PgemRlo0FDVenJrwyvfKGGl4UNvgCCdwHAc/S+BnsMrRDiGYqeSyXvpAhkUZhRwpe4zr6MSRy ca038Doqsd1li7cOiI0oYMa5UGA324kfxipQzohn3hTTH7IUNWuEcj8VbNXWb5lZIXqtuX8Lzs+6Jw==
 
-[adding Linus to the list of recipients to ensure the fix makes it into
--rc1 (and can finally be backported to -stable).
+This is a multi-part message in MIME format.
+--------------C1A5963CB6D1F125BFE1F795
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Linus, here is the backstory, as I assume you haven't seen this yet:
+I applied my patch then recompiled the kernel, and the 3 devices can now 
+connect via USB:
 
-CONFIG_PER_VMA_LOCK (which defaults to Y; merged for v6.4-rc1 in
-0bff0aaea03 ("x86/mm: try VMA lock-based page fault handling first"))
-sometimes causes memory corruption reported here:
-https://lore.kernel.org/all/dbdef34c-3a07-5951-e1ae-e9c6e3cdf51b@kernel.org/
-https://bugzilla.kernel.org/show_bug.cgi?id=217624
+[  268.872485] usb 3-2: New USB device found, idVendor=04dd, 
+idProduct=8005, bcdDevice= 0.00
+[  268.872498] usb 3-2: New USB device strings: Mfr=1, Product=2, 
+SerialNumber=0
+[  268.872502] usb 3-2: Product: SL-A300
+[  268.872505] usb 3-2: Manufacturer: Sharp
+[  268.876526] zaurus 3-2:1.0 usb0: register 'zaurus' at 
+usb-0000:00:14.0-2, pseudo-MDLM (BLAN) device, fa:0f:0f:08:2b:59
 
-The plan since early this week is to mark CONFIG_PER_VMA_LOCK as broken;
-latest patch that does this is this one afaics:
-https://lore.kernel.org/all/20230706011400.2949242-3-surenb@google.com/
+[  595.541549] usb 3-2: New USB device found, idVendor=04dd, 
+idProduct=8006, bcdDevice= 0.00
+[  595.541562] usb 3-2: New USB device strings: Mfr=1, Product=2, 
+SerialNumber=0
+[  595.541566] usb 3-2: Product: SL-5600
+[  595.541569] usb 3-2: Manufacturer: Sharp
+[  595.545148] zaurus 3-2:1.0 usb0: register 'zaurus' at 
+usb-0000:00:14.0-2, pseudo-MDLM (BLAN) device, fa:0f:0f:08:2b:59
 
-But that change or something similar hasn't reached you yet afaics;
-note, this is the second patch of a series with two patches]
+[  446.954583] usb 3-2: New USB device found, idVendor=04dd, 
+idProduct=8007, bcdDevice= 0.00
+[  446.954596] usb 3-2: New USB device strings: Mfr=1, Product=2, 
+SerialNumber=0
+[  446.954600] usb 3-2: Product: SL-C700
+[  446.954603] usb 3-2: Manufacturer: Sharp
+[  446.957871] zaurus 3-2:1.0 usb0: register 'zaurus' at 
+usb-0000:00:14.0-2, pseudo-MDLM (BLAN) device, fa:0f:0f:08:2b:59
 
-On 05.07.23 17:49, Andrew Morton wrote:
-> On Wed, 5 Jul 2023 10:51:57 +0200 "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info> wrote:
-> 
->>>>> I'm in wait-a-few-days-mode on this.  To see if we have a backportable
->>>>> fix rather than disabling the feature in -stable.
+Could someone please submit the patch for me?
+
+Thanks.
+
+Ross
+
+On 7/7/23 10:28 pm, Ross Maynard wrote:
+> Hi,
+>
+> I am not a kernel developer, but I think the attached patch would work.
+>
+> Ross
+>
+> On 7/7/23 2:41 am, Dave Jones wrote:
+>> On Thu, Jul 06, 2023 at 01:45:57PM +0200, Thorsten Leemhuis wrote:
+>>   > On 06.07.23 05:08, Bagas Sanjaya wrote:
+>>   > >>
+>>   > >> I notice a regression report on Bugzilla [1]. Quoting from it:
+>>   > >>
+>>   > >>> The following patch broke support of 3 more Zaurus models: 
+>> SL-5600, A300 and C700
+>>   > >>>
+>>   > >>> [16adf5d07987d93675945f3cecf0e33706566005] usbnet: Remove 
+>> over-broad module alias from zaurus
+>>   >
+>>   > ...
+>>   > He sometimes shows up on Linux kernel lists, but I doubt he cares 
+>> about
+>>   > that change after all these years. And I would not blame him at all.
 >>
->> Andrew, how long will you remain in "wait-a-few-days-mode"? Given what
->> Greg said below and that we already had three reports I know of I'd
->> prefer if we could fix this rather sooner than later in mainline --
->> especially as Arch Linux and openSUSE Tumbleweed likely have switched to
->> 6.4.y already or will do so soon.
-> 
-> I'll send today's 2-patch series to Linus today or tomorrow.
+>> That's about the size of it.  This is pretty near the bottom of my 
+>> ever-shrinking
+>> list of kernel drivers I care about.
+>>
+>>   > Yes, we have the "no regressions" rule, but contributing a change 
+>> to the
+>>   > kernel OTOH should not mean that you are responsible for all 
+>> regressions
+>>   > it causes for your whole life. :-)
+>>
+>> That said, 12 years later, 16adf5d07987d93675945f3cecf0e33706566005
+>> is still the right thing to do. Adding actual matches for the devices
+>> rather than matching by class will prevent this getting loaded where it
+>> doesn't need to be.
+>>
+>> If someone actually cares to get this working, cargo-culting Oliver's
+>> change to add the extra id is likely the way forward.
+>>
+>>     Dave
+>>
 
-That afaics did not happen until now. :-(
+--------------C1A5963CB6D1F125BFE1F795
+Content-Type: text/x-patch; charset=UTF-8;
+ name="3-zaurii-patch.patch"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename="3-zaurii-patch.patch"
 
-This makes me regret that I did not CC Linus earlier. I always feel like
-a snitcher when I do that. But in retrospective it seems it would have
-been the right thing to do given the problem, as I suspect Linus would
-have quickly applied the patch or marked the feature as broken himself.
+diff -urpN a/drivers/net/usb/cdc_ether.c b/drivers/net/usb/cdc_ether.c
+--- a/drivers/net/usb/cdc_ether.c	2023-07-07 17:48:27.991833366 +1000
++++ b/drivers/net/usb/cdc_ether.c	2023-07-07 21:53:11.556198087 +1000
+@@ -616,6 +616,13 @@ static const struct usb_device_id	produc
+ }, {
+ 	.match_flags	=   USB_DEVICE_ID_MATCH_INT_INFO
+ 			  | USB_DEVICE_ID_MATCH_DEVICE,
++    .idVendor		= 0x04DD,
++    .idProduct		= 0x8005,   /* A-300 */
++    ZAURUS_FAKE_INTERFACE,
++    .driver_info        = 0,
++}, {
++    .match_flags    =   USB_DEVICE_ID_MATCH_INT_INFO
++			  | USB_DEVICE_ID_MATCH_DEVICE,
+ 	.idVendor		= 0x04DD,
+ 	.idProduct		= 0x8006,	/* B-500/SL-5600 */
+ 	ZAURUS_MASTER_INTERFACE,
+@@ -623,12 +630,26 @@ static const struct usb_device_id	produc
+ }, {
+ 	.match_flags    =   USB_DEVICE_ID_MATCH_INT_INFO
+ 			  | USB_DEVICE_ID_MATCH_DEVICE,
++    .idVendor		= 0x04DD,
++    .idProduct		= 0x8006,   /* B-500/SL-5600 */
++    ZAURUS_FAKE_INTERFACE,
++    .driver_info        = 0,
++}, {
++    .match_flags    =   USB_DEVICE_ID_MATCH_INT_INFO
++			  | USB_DEVICE_ID_MATCH_DEVICE,
+ 	.idVendor		= 0x04DD,
+ 	.idProduct		= 0x8007,	/* C-700 */
+ 	ZAURUS_MASTER_INTERFACE,
+ 	.driver_info		= 0,
+ }, {
+ 	.match_flags    =   USB_DEVICE_ID_MATCH_INT_INFO
++			  | USB_DEVICE_ID_MATCH_DEVICE,
++    .idVendor		= 0x04DD,
++    .idProduct		= 0x8007,   /* C-700 */
++    ZAURUS_FAKE_INTERFACE,
++    .driver_info        = 0,
++}, {
++    .match_flags    =   USB_DEVICE_ID_MATCH_INT_INFO
+ 		 | USB_DEVICE_ID_MATCH_DEVICE,
+ 	.idVendor               = 0x04DD,
+ 	.idProduct              = 0x9031,	/* C-750 C-760 */
+diff -urpN a/drivers/net/usb/zaurus.c b/drivers/net/usb/zaurus.c
+--- a/drivers/net/usb/zaurus.c	2023-07-07 17:48:28.043849110 +1000
++++ b/drivers/net/usb/zaurus.c	2023-07-07 22:06:49.267699853 +1000
+@@ -289,11 +289,25 @@ static const struct usb_device_id	produc
+ 	.match_flags	=   USB_DEVICE_ID_MATCH_INT_INFO
+ 			  | USB_DEVICE_ID_MATCH_DEVICE,
+ 	.idVendor		= 0x04DD,
++	.idProduct		= 0x8005,	/* A-300 */
++	ZAURUS_FAKE_INTERFACE,
++	.driver_info = (unsigned long) &bogus_mdlm_info,
++}, {
++	.match_flags    =   USB_DEVICE_ID_MATCH_INT_INFO
++			  | USB_DEVICE_ID_MATCH_DEVICE,
++	.idVendor		= 0x04DD,
+ 	.idProduct		= 0x8006,	/* B-500/SL-5600 */
+ 	ZAURUS_MASTER_INTERFACE,
+ 	.driver_info = ZAURUS_PXA_INFO,
+ }, {
+ 	.match_flags    =   USB_DEVICE_ID_MATCH_INT_INFO
++			  | USB_DEVICE_ID_MATCH_DEVICE,
++	.idVendor		= 0x04DD,
++	.idProduct		= 0x8006,	/* B-500/SL-5600 */
++	ZAURUS_FAKE_INTERFACE,
++	.driver_info = (unsigned long) &bogus_mdlm_info,
++}, {
++	.match_flags    =   USB_DEVICE_ID_MATCH_INT_INFO
+ 	          | USB_DEVICE_ID_MATCH_DEVICE,
+ 	.idVendor		= 0x04DD,
+ 	.idProduct		= 0x8007,	/* C-700 */
+@@ -301,6 +315,13 @@ static const struct usb_device_id	produc
+ 	.driver_info = ZAURUS_PXA_INFO,
+ }, {
+ 	.match_flags    =   USB_DEVICE_ID_MATCH_INT_INFO
++			  | USB_DEVICE_ID_MATCH_DEVICE,
++	.idVendor		= 0x04DD,
++	.idProduct		= 0x8007,	/* C-700 */
++	ZAURUS_FAKE_INTERFACE,
++	.driver_info = (unsigned long) &bogus_mdlm_info,
++}, {
++        .match_flags    =   USB_DEVICE_ID_MATCH_INT_INFO
+ 		 | USB_DEVICE_ID_MATCH_DEVICE,
+ 	.idVendor               = 0x04DD,
+ 	.idProduct              = 0x9031,	/* C-750 C-760 */
 
-So thx to this (and a handful of earlier, similar situations) I now
-fully made my peace with feeling like a snitcher (I always knew that
-it's kinda part of the position). When something in me says "Ick, this
-looks bad to my untrained eyes" I'll immediately CC Linus.
-
-Linus, if I take things to far just let me know. But I assume you get a
-lot of mails and won't mind a few more.
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+--------------C1A5963CB6D1F125BFE1F795--
