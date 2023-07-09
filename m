@@ -1,82 +1,61 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90DA7ECA;
-	Sun,  9 Jul 2023 03:27:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 836CCC433C7;
-	Sun,  9 Jul 2023 03:27:17 +0000 (UTC)
-Date: Sun, 9 Jul 2023 04:27:16 +0100
-From: Catalin Marinas <catalin.marinas@arm.com>
-To: Amit Pundir <amit.pundir@linaro.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Christoph Hellwig <hch@lst.de>, Robin Murphy <robin.murphy@arm.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Isaac Manjarres <isaacmanjarres@google.com>,
-	Saravana Kannan <saravanak@google.com>,
-	Alasdair Kergon <agk@redhat.com>, Daniel Vetter <daniel@ffwll.ch>,
-	Joerg Roedel <joro@8bytes.org>, Mark Brown <broonie@kernel.org>,
-	Mike Snitzer <snitzer@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Vlastimil Babka <vbabka@suse.cz>, linux-mm@kvack.org,
-	iommu@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: [PATCH v7 00/17] mm, dma, arm64: Reduce ARCH_KMALLOC_MINALIGN to
- 8
-Message-ID: <ZKopFDtT6g4n+Kma@arm.com>
-References: <20230612153201.554742-1-catalin.marinas@arm.com>
- <CAMi1Hd04mu6JojT3y6wyN2YeVkPR5R3qnkKJ8iR8if_YByCn4w@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CB65E543
+	for <regressions@lists.linux.dev>; Sun,  9 Jul 2023 04:36:41 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1qIM9x-0002mt-1c; Sun, 09 Jul 2023 06:36:33 +0200
+Message-ID: <ac957af4-f265-3ba0-0373-3a71d134a57e@leemhuis.info>
+Date: Sun, 9 Jul 2023 06:36:32 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMi1Hd04mu6JojT3y6wyN2YeVkPR5R3qnkKJ8iR8if_YByCn4w@mail.gmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: Fwd: 3 more broken Zaurii - SL-5600, A300, C700
+Content-Language: en-US, de-DE
+To: Andrew Lunn <andrew@lunn.ch>, Ross Maynard <bids.7405@bigpond.com>
+Cc: Dave Jones <davej@codemonkey.org.uk>, Bagas Sanjaya
+ <bagasdotme@gmail.com>, "David S. Miller" <davem@davemloft.net>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Linux Networking <netdev@vger.kernel.org>,
+ Linux USB <linux-usb@vger.kernel.org>, Oliver Neukum <oneukum@suse.com>
+References: <7ea9abd8-c35d-d329-f0d4-c8bd220cf691@gmail.com>
+ <50f4c10d-260c-cb98-e7d2-124f5519fa68@gmail.com>
+ <e1fdc435-089c-8ce7-d536-ce3780a4ba95@leemhuis.info>
+ <ZKbuoRBi50i8OZ9d@codemonkey.org.uk>
+ <62a9e058-c853-1fcd-5663-e2e001f881e9@bigpond.com>
+ <14fd48c8-3955-c933-ab6f-329e54da090f@bigpond.com>
+ <05a229e8-b0b6-4d29-8561-70d02f6dc31b@lunn.ch>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <05a229e8-b0b6-4d29-8561-70d02f6dc31b@lunn.ch>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1688877401;01271e21;
+X-HE-SMSGID: 1qIM9x-0002mt-1c
 
-Hi Amit,
-
-On Wed, Jul 05, 2023 at 07:10:02PM +0530, Amit Pundir wrote:
-> On Wed, 5 Jul 2023 at 18:17, Catalin Marinas <catalin.marinas@arm.com> wrote:
-> > That's v7 of the series reducing the kmalloc() minimum alignment on
-> > arm64 to 8 (from 128). There's no new/different functionality, mostly
-> > cosmetic changes and acks/tested-bys.
-> >
-> > Andrew, if there are no further comments or objections to this version,
-> > are you ok to take the series through the mm tree? The arm64 changes are
-> > fairly small. Alternatively, I can push it into linux-next now to give
-> > it some wider exposure and decide whether to upstream it when the
-> > merging window opens. Thanks.
+On 08.07.23 22:49, Andrew Lunn wrote:
+>> Could someone please submit the patch for me?
 > 
-> This patch series broke Dragonboard 845c (SDM845) running AOSP.
-> With this series I run into random oops at __kmem_cache_alloc_node().
-> Here is one such boot log https://bugs.linaro.org/attachment.cgi?id=1146
+> You are not far from it yourself.
 > 
-> Reverting "arm64: Enable ARCH_WANT_KMALLOC_DMA_BOUNCE for arm64"
-> fixes it for the time being.
+> I've not followed the history here. Did it never work, or has it
+> worked in the past, and then at some point broke?
+> 
+> If it never worked, this would be classed as new development, and so
+> the patch should be for net-next. If it did work, but at some point in
+> time it stopped working, then it is for net.
+> [...]
 
-I'm on holiday until the 24th, away from my computer and I don't have
-much time to dig into this. Are the DMA-capable devices on this platform
-non-coherent? We'd need to check whether the bouncing logic somehow
-overflows and corrupts adjacent memory. If the devices are coherent,
-maybe the DMA spills over the kmalloc() boundaries, now that we
-allocate buffers smaller than a cacheline even for DMA (no bouncing if
-the DMA is coherent). Also, are these devices behind an IOMMU?
+To chime in here: I most agree, but FWIW, it broke more than a decade
+ago in v3.0, so maybe this is better suited for net-next. But of course
+that up to the -net maintainers.
 
-Yet another possibility is a not fully transparent system level cache
-with a line size larger than what's reported by the CTR_EL0.CWG. If you
-boot the platform with "swiotlb=noforce", do you still see issues? Or
-there's no swiotlb buffer allocated anyway.
-
-In addition to what Isaac suggests on slab debugging, it may be worth
-enabling DMA debugging as well (I don't remember the config name).
-
--- 
-Catalin
+Ciao, Thorsten
