@@ -1,130 +1,105 @@
-Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com [209.85.167.179])
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F42A79E6
-	for <regressions@lists.linux.dev>; Sun,  9 Jul 2023 16:28:05 +0000 (UTC)
-Received: by mail-oi1-f179.google.com with SMTP id 5614622812f47-3a3efebcc24so1707799b6e.1
-        for <regressions@lists.linux.dev>; Sun, 09 Jul 2023 09:28:05 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67734FBF6
+	for <regressions@lists.linux.dev>; Sun,  9 Jul 2023 16:32:07 +0000 (UTC)
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-9926623e367so473322966b.0
+        for <regressions@lists.linux.dev>; Sun, 09 Jul 2023 09:32:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1688920084; x=1691512084;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=Mnp7Gx1O4lBi6RB6np/kLFboJ0ahJMfnsN6pSM7+9k4=;
-        b=C3Z8Rw5eHLgZLt/1ByF8+nxD3uvgzIOCbeyD6rfZNLgsRMPLgEexhGgcnFPbQyoWGj
-         74ImKO3YsvkZWRNVmzLcacKTxJV6nV7KsBeEtOC1BKWbHH86F1mJOGgbAV459dfl/FJu
-         XCevRxYtHvMp4XASirzqqS2qF7pTeDqdiTaLpj106T/gzelDXnvnkLOjmjBb6o//AOZH
-         tlEA7j0fgMYsdlLibdsah5rlxd+qVHwDj4I+hYcOXU8l58HHRk2O5InJCRhk6VpW8t43
-         gEgCi1VhGtk0YgXXtzYSioCp237OKLhuxeKxNP67W21scEUsDzxjr99/QQNo9lTTK5np
-         bG0g==
+        d=linux-foundation.org; s=google; t=1688920325; x=1691512325;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=t6q+aOy2r+flgQCJZwvu7LKyLs8yIYN/+XSC8dA1GdM=;
+        b=gAn+QFrFr5ulawjYCYTO7VmTQzHU5lgWSC5NEnzugmdYhNVwnmToW+MQ4reDvuq6l7
+         PzP2nnDKMv8tyPbAMBaFVMjpeYKtX/i/KRcWvIp4fd9RpwmjkD31sHkkt+5HXaKSjBzT
+         4EDltBMvryK/qN2k9UurMRUANtYKeMK9ETJQ8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688920084; x=1691512084;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20221208; t=1688920325; x=1691512325;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Mnp7Gx1O4lBi6RB6np/kLFboJ0ahJMfnsN6pSM7+9k4=;
-        b=O//tvs6RUSD4w65RDw5rMFaP7yvJH4phEbL2cPbj+Dq9JIULScAukxOehDvYVZo4rh
-         x9tTVj4RmyIQdk0J/B+s0o2lbyERi24HOE0vFFJZyDMv30p1kUtaolO5ky8wHwlFKfze
-         p/upEBsekqiSbvCCt8TEH5BJFIxf94IlN+oDYEPuFka+8FyG3QzjrdV1KkrVeT15/m+m
-         8tkXqu0nG2Iv8kcNviW/3NEilyouNnxDuDWfEqt6hlQNbUypGt+QWcKnJI2Cdy49PoHO
-         JXSZsNxr7k3WWw/F+2cm3X2UOqXtHcufRDWxhPSRm4akJZ+pMXqtC51uC443f46IMViX
-         TTmw==
-X-Gm-Message-State: ABy/qLbDgrecA+l9XQjTn9u4amemd6HdxeLOc/+IKM9PM0xn22yihwFr
-	wjFTkwarYITuk55t4SN/0nA=
-X-Google-Smtp-Source: APBJJlE60avBl+3E9vLwVQj9Z7ucwDB15X967F/kv0vGm7ovzn82ucw0rFV/AvNaXRSZZAkAskZtJQ==
-X-Received: by 2002:a05:6808:1a81:b0:3a3:6536:dd89 with SMTP id bm1-20020a0568081a8100b003a36536dd89mr9022353oib.49.1688920084438;
-        Sun, 09 Jul 2023 09:28:04 -0700 (PDT)
-Received: from [192.168.1.119] ([216.130.59.33])
-        by smtp.gmail.com with ESMTPSA id n5-20020aca2405000000b003a1f444307esm3367199oic.58.2023.07.09.09.28.03
+        bh=t6q+aOy2r+flgQCJZwvu7LKyLs8yIYN/+XSC8dA1GdM=;
+        b=bB0bcZ8Ft6KLEuYoxA6hVV/1olg66jvBPXgTHtSyyd0Yw1++46VX/I1xGNwn3Jn+UL
+         n8KIdj70jalXjw2xJ3qBU6G1/rA5M0ygYxGmB3soS8rerpJTHP0rRWe0fEUvj37J6rHs
+         P4fSX46SQ2vbqh7AdvNFE3t7k5eCPaDYSqigeNjcWQWbiGBks6wpoKjR33L+DtcMYyS1
+         FyZBqL/0LtdSe3s0k3f5S4RIkg87tLMxnP8zJ2k0mhXlF50lpaTGRdZ303Y5DZVSjgPF
+         f+yxCL6QRR/faiLUbaSVHN4tnGS7o39WlnGhqtNmqe2mp4Q40gMt2ZGgO64IcNQVGzPN
+         3vXw==
+X-Gm-Message-State: ABy/qLbuJqCGjr0Dk5an0Xl69Se2OjQzTtVoALRqBYgBW/yKyFaUJcwS
+	jKLk5OUuNmNy8lDpF05OtAWDrsE3VcJmEli3p6ohdc64
+X-Google-Smtp-Source: APBJJlFcCuR2xrrE43oyj09Q4DKYfHr1TnBfTUcsO2lRBrjJ3Lnxxgqnh0V1HYbKLyilyhst7tMlIg==
+X-Received: by 2002:a17:906:b41:b0:991:f6d0:9bc1 with SMTP id v1-20020a1709060b4100b00991f6d09bc1mr8639382ejg.66.1688920325289;
+        Sun, 09 Jul 2023 09:32:05 -0700 (PDT)
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com. [209.85.221.50])
+        by smtp.gmail.com with ESMTPSA id o22-20020a17090611d600b00991e2b5a27dsm4961102eja.37.2023.07.09.09.32.04
+        for <regressions@lists.linux.dev>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 09 Jul 2023 09:28:03 -0700 (PDT)
-Sender: Larry Finger <larry.finger@gmail.com>
-Message-ID: <b4063a55-be7c-8f3a-2529-e1211080d323@lwfinger.net>
-Date: Sun, 9 Jul 2023 11:28:02 -0500
+        Sun, 09 Jul 2023 09:32:04 -0700 (PDT)
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-314313f127fso3757107f8f.1
+        for <regressions@lists.linux.dev>; Sun, 09 Jul 2023 09:32:04 -0700 (PDT)
+X-Received: by 2002:a5d:54c2:0:b0:313:f22c:7549 with SMTP id
+ x2-20020a5d54c2000000b00313f22c7549mr8377726wrv.66.1688920324114; Sun, 09 Jul
+ 2023 09:32:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
+References: <b533071f38804247f06da9e52a04f15cce7a3836.camel@intel.com> <a4265090-d6b8-b185-a400-b09b27a347cc@leemhuis.info>
+In-Reply-To: <a4265090-d6b8-b185-a400-b09b27a347cc@leemhuis.info>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Sun, 9 Jul 2023 09:31:46 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wg23SdKRcn2W+BWWEfJ2Efp0sreJx9=iw0AsUPjW3qznw@mail.gmail.com>
+Message-ID: <CAHk-=wg23SdKRcn2W+BWWEfJ2Efp0sreJx9=iw0AsUPjW3qznw@mail.gmail.com>
 Subject: Re: [Regression][BISECTED] kernel boot hang after 19898ce9cf8a
  ("wifi: iwlwifi: split 22000.c into multiple files")
-To: "Zhang, Rui" <rui.zhang@intel.com>,
- "Greenman, Gregory" <gregory.greenman@intel.com>,
- "Berg, Johannes" <johannes.berg@intel.com>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Cc: "bagasdotme@gmail.com" <bagasdotme@gmail.com>,
- "davem@davemloft.net" <davem@davemloft.net>,
- "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
- "kvalo@kernel.org" <kvalo@kernel.org>, "Baruch, Yaara"
- <yaara.baruch@intel.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
- "Torvalds, Linus" <torvalds@linux-foundation.org>,
- "Ben Ami, Golan" <golan.ben.ami@intel.com>,
- "edumazet@google.com" <edumazet@google.com>,
- "Sisodiya, Mukesh" <mukesh.sisodiya@intel.com>,
- "kuba@kernel.org" <kuba@kernel.org>, "pabeni@redhat.com" <pabeni@redhat.com>
-References: <b533071f38804247f06da9e52a04f15cce7a3836.camel@intel.com>
- <a4265090-d6b8-b185-a400-b09b27a347cc@leemhuis.info>
- <c65d0837-5e64-bec7-9e56-04aa91148d05@leemhuis.info>
- <4153ce0aac6dc760a3a9c7204c5c9141b60839a4.camel@intel.com>
-Content-Language: en-US
-From: Larry Finger <Larry.Finger@lwfinger.net>
-In-Reply-To: <4153ce0aac6dc760a3a9c7204c5c9141b60839a4.camel@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: "Zhang, Rui" <rui.zhang@intel.com>, "Greenman, Gregory" <gregory.greenman@intel.com>, 
+	"Berg, Johannes" <johannes.berg@intel.com>, 
+	"linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, "Baruch, Yaara" <yaara.baruch@intel.com>, 
+	"Ben Ami, Golan" <golan.ben.ami@intel.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"Sisodiya, Mukesh" <mukesh.sisodiya@intel.com>, Kalle Valo <kvalo@kernel.org>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Paolo Abeni <pabeni@redhat.com>, netdev <netdev@vger.kernel.org>, 
+	Jakub Kicinski <kuba@kernel.org>, Bagas Sanjaya <bagasdotme@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On 7/9/23 08:27, Zhang, Rui wrote:
-> On Sat, 2023-07-08 at 16:17 +0200, Thorsten Leemhuis wrote:
->> On 07.07.23 12:55, Linux regression tracking (Thorsten Leemhuis)
->> wrote:
->>> On 07.07.23 10:25, Zhang, Rui wrote:
->>>>
->>>> I run into a NULL pointer dereference and kernel boot hang after
->>>> switching to latest upstream kernel, and git bisect shows that
->>>> below
->>>> commit is the first offending commit, and I have confirmed that
->>>> commit
->>>> 19898ce9cf8a has the issue while 19898ce9cf8a~1 does not.
->>>
->>> FWIW, this is the fourth such report about this that I'm aware of.
->>>
->>> The first is this one (with two affected users afaics):
->>> https://bugzilla.kernel.org/show_bug.cgi?id=217622
->>>
->>> The second is this one:
->>> https://lore.kernel.org/all/CAAJw_Zug6VCS5ZqTWaFSr9sd85k%3DtyPm9DEE%2BmV%3DAKoECZM%2BsQ@mail.gmail.com/
->>>
->>> The third:
->>> https://lore.kernel.org/all/9274d9bd3d080a457649ff5addcc1726f08ef5b2.camel@xry111.site/
->>>
->>> And in the past few days two people from Fedora land talked to me
->>> on IRC
->>> with problems that in retrospective might be caused by this as
->>> well.
->>
->> I got confirmation: one of those cases is also caused by 19898ce9cf8a
->> But I write for a different reason:
->>
->> Larry (now CCed) looked at the culprit and spotted something that
->> looked
->> suspicious to him; he posted a patch and looks for testers:
->> https://lore.kernel.org/all/0068af47-e475-7e8d-e476-c374e90dff5f@lwfinger.net/
-> 
-> I applied this patch but the problem still exists.
-> 
-> thanks,
-> rui
+On Fri, 7 Jul 2023 at 03:55, Linux regression tracking (Thorsten
+Leemhuis) <regressions@leemhuis.info> wrote:
+>
+> [CCing the regression list, netdev, the net maintainers, and Linus;
+> Johannes and Kalle as well, but just for the record, they afaik are
+> unavailable]
 
-Rui,
+So I will release rc1 with this issue, but remind me - if it hasn't
+had any traction next week and the radio silence continues, I'll just
+revert it all.
 
-I am not surprised that the patch did not help. I guess you will need to stay 
-with kernel 6.3.X until the Intel developers return from their summer break.
+From a quick look, "revert it all" ends up being
 
-Larry
+  fd006d60e833: "wifi: iwlwifi: remove support of A0 version of FM RF"
+  a701177bd4bc: "wifi: iwlwifi: cfg: clean up Bz module firmware lines"
+  f4daceae4087: "wifi: iwlwifi: pcie: add device id 51F1 for killer 1675"
+  399762de769c: "wifi: iwlwifi: bump FW API to 83 for AX/BZ/SC devices"
+  31aeae2446d5: "wifi: iwlwifi: cfg: remove trailing dash from FW_PRE constants"
+  ecf11f4e4950: "wifi: iwlwifi: also unify Ma device configurations"
+  bfed356b4fc4: "wifi: iwlwifi: also unify Sc device configurations"
+  3fd31289d5de: "wifi: iwlwifi: unify Bz/Gl device configurations"
+  e3597e28a2fa: "wifi: iwlwifi: pcie: also drop jacket from info macro"
+  0f21d7d56083: "wifi: iwlwifi: remove support for *nJ devices"
+  c648e926d021: "wifi: iwlwifi: don't load old firmware for 22000"
+  a7de384c9399: "wifi: iwlwifi: don't load old firmware for ax210"
+  a13707f7c845: "wifi: iwlwifi: don't load old firmware for Bz"
+  508b4a1baeb3: "wifi: iwlwifi: don't load old firmware for Sc"
+  5afe98b2e299: "wifi: iwlwifi: give Sc devices their own family"
+  19898ce9cf8a: "wifi: iwlwifi: split 22000.c into multiple files"
 
+since clearly nothing seems to be happening on this front, and summer
+vacations are only going to get worse.
 
+But we'll give it another week. In August huge chunks of Europe will
+go on vacation.
+
+                    Linus
