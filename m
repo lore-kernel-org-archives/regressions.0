@@ -1,141 +1,238 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC73D6FA9
-	for <regressions@lists.linux.dev>; Sun,  9 Jul 2023 14:09:47 +0000 (UTC)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 927B01F388;
-	Sun,  9 Jul 2023 14:09:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1688911780; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=iZVuBrUjNGZgSOciEPCq8iGsrYPzIcyxEO22KvmLoP4=;
-	b=OY/iiCXA6utQdS6/0GVopYRpIkhbEGV1S25uClmfFieKejp8IYjn/YC0CyK3RbgCy+14sq
-	IwBY4n8Lbf+NPe/onb0Bu3Lfp1Iesjn1hL54VVjV7NiSBx7lqCjLobWBWm+UdB3nPqsRXQ
-	VIlzZVoJ81gxB1kqd8+/u7Y09R277uU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1688911780;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=iZVuBrUjNGZgSOciEPCq8iGsrYPzIcyxEO22KvmLoP4=;
-	b=WQodrsOkD+42L/jh341FYzZ2D5fO+q42zD2DweBtN3XI16fioUPPEUWRKmgZp60CIQOO4R
-	zo/SESIg4D23aMAg==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 3BC3F13A63;
-	Sun,  9 Jul 2023 14:09:40 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-	by imap2.suse-dmz.suse.de with ESMTPSA
-	id rsdPC6S/qmRaeAAAMHmgww
-	(envelope-from <mkubecek@suse.cz>); Sun, 09 Jul 2023 14:09:40 +0000
-Date: Sun, 9 Jul 2023 17:09:29 +0300
-From: Michal Kubecek <mkubecek@suse.cz>
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Josh Poimboeuf <jpoimboe@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org
-Subject: Re: build failure after commit eb0481bbc4ce ("objtool: Fix
- reloc_hash size")
-Message-ID: <20230709140929.5sdcvyqquotkn752@carpenter>
-References: <20230628115825.ahqejf5y4hgxhyqj@lion.mk-sys.cz>
- <fb93d107-c834-1849-2b14-1dd33c4f9955@leemhuis.info>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E5685C96
+	for <regressions@lists.linux.dev>; Sun,  9 Jul 2023 16:01:03 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:5054:ff:feb3:8f48] (helo=regzbot.fritz.box); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	id 1qIWqL-0007uC-28; Sun, 09 Jul 2023 18:01:01 +0200
+From: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>
+To: LKML <linux-kernel@vger.kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Linux regressions report  for mainline [2023-07-09]
+Date: Sun,  9 Jul 2023 16:00:59 +0000
+Message-Id: <168891835223.2415011.16827771958379610758@leemhuis.info>
+X-Mailer: git-send-email 2.40.1
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="gccrtxyvc72qxztt"
-Content-Disposition: inline
-In-Reply-To: <fb93d107-c834-1849-2b14-1dd33c4f9955@leemhuis.info>
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1688918463;59144b44;
+X-HE-SMSGID: 1qIWqL-0007uC-28
 
 
---gccrtxyvc72qxztt
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi Linus. A quick regression report for mainline ahead of the -rc1 release:
 
-On Sat, Jul 08, 2023 at 03:40:50PM +0200, Linux regression tracking (Thorst=
-en Leemhuis) wrote:
-> On 28.06.23 13:58, Michal Kubecek wrote:
-> >=20
-> > this morning, mainline kernel builds started to fail on my desktop like
-> > this:
-> >=20
-> >   mike@lion:~/work/git/kernel-upstream> mkdir /srv/ram/kobj
-> >   mike@lion:~/work/git/kernel-upstream> make -j24 CC=3Dgcc-13 O=3D/srv/=
-ram/kobj defconfig >/dev/null
-> >   mike@lion:~/work/git/kernel-upstream> make -j24 CC=3Dgcc-13 O=3D/srv/=
-ram/kobj all >/dev/null
-> >   net/ipv4/netfilter/iptable_nat.o: warning: objtool: mmap fail reloc
-> >   net/netfilter/xt_mark.o: warning: objtool: mmap fail reloc
-> >   net/netfilter/xt_nat.o: warning: objtool: mmap fail reloc
-> >   net/netfilter/xt_LOG.o: warning: objtool: mmap fail reloc
-> >   net/netfilter/xt_MASQUERADE.o: warning: objtool: mmap fail reloc
-> >   net/netfilter/nf_log_syslog.o: warning: objtool: mmap fail reloc
-> >   net/netfilter/xt_addrtype.o: warning: objtool: mmap fail reloc
-> >   fs/efivarfs/efivarfs.o: warning: objtool: mmap fail reloc
-> >   drivers/thermal/intel/x86_pkg_temp_thermal.o: warning: objtool: mmap =
-fail reloc
-> >   vmlinux.o: warning: objtool: mmap fail reloc
-> >   incomplete ORC unwind tables in file: vmlinux
-> >   Failed to sort kernel tables
-> >   make[2]: *** [/home/mike/work/git/kernel-upstream/scripts/Makefile.vm=
-linux:35: vmlinux] Error 1
-> >   make[2]: *** Deleting file 'vmlinux'
-> >   make[1]: *** [/home/mike/work/git/kernel-upstream/Makefile:1256: vmli=
-nux] Error 2
-> >   make: *** [Makefile:226: __sub-make] Error 2
-> >=20
-> > I bisected the failure to commit
-> >=20
-> >   eb0481bbc4ce ("objtool: Fix reloc_hash size")
-> >=20
-> > I also tried gcc11 and building on a normal filesystem (rather than
-> > tmpfs) but the result is still the same. Different configurations (e.g.
-> > allmodconfig) only show more modules with "mmap fail reloc". The machine
-> > has 64 GB of RAM and both ulimit -m and ulimit -v show "unlimited".
-> > Anything idea what else I should try?
->=20
-> Michal, thx for the report. Please correct me if I'm wrong: this as of
-> now is unfixed, as your patch to fix is afaics wasn't merged yet (at
-> least I can't see it even in next, but I might be missing something).
+* No progress so far wrt the iwlwifi regression I mentioned on Friday[1]
+that I suspect quite a few people will run into. Sounds like someone who
+knows that code well with a bit of luck might be able to look into the
+issue in the next few days. Larry's quick shot at a patch did not help[2].
 
-Yes, the fix has not been merged yet and current master (commit
-1c7873e33645) still shows the issue.
+[1] https://lore.kernel.org/all/a4265090-d6b8-b185-a400-b09b27a347cc@leemhuis.info/
 
-Michal
+[2] https://lore.kernel.org/all/CAAJw_ZvBUpMMC886CDdsLFW6bUG69X78zVfre7gCfu=aTR1xGQ@mail.gmail.com/
+https://lore.kernel.org/all/4153ce0aac6dc760a3a9c7204c5c9141b60839a4.camel@intel.com/
 
-> Hence adding it to the regression tracking now that the end of the merge
-> window is near:
->=20
-> #regzbot ^introduced eb0481bbc4ce
-> #regzbot title objtool: build failure
-> #regzbot monitor:
-> https://lore.kernel.org/all/20230629102051.42E8360467@lion.mk-sys.cz/
-> #regzbot fix: objtool: initialize all of struct elf
-> #regzbot ignore-activity
 
---gccrtxyvc72qxztt
-Content-Type: application/pgp-signature; name="signature.asc"
+* A few fixes for build warnings or errors are available, but haven't
+reached you yet afaics (but it's easy to miss something here; maybe some
+of those are not needed anymore):
 
------BEGIN PGP SIGNATURE-----
+[PATCH] sparc: mark __arch_xchg() as __always_inline
+https://lore.kernel.org/lkml/20230628094938.2318171-1-arnd@kernel.org/
+Reported here:
+https://lore.kernel.org/all/c525adc9-6623-4660-8718-e0c9311563b8@roeck-us.net/
 
-iQEzBAABCAAdFiEEWN3j3bieVmp26mKO538sG/LRdpUFAmSqv5AACgkQ538sG/LR
-dpUKbwf/QvZBPsu5CwJH4ZxFcs3dtHV+F36lQJ8bqvB7DjbDOezjGhdrj/DI0tq3
-4Kx+rHz9emnrsGB8vl5OiBCceD7T55a4s7MA7fbaL2X2yU9dVbFhJydEK2FgX1el
-QBtvluzF3P6rQLYQyO6OmhznUHP6+HeDOHR6u+l82WY1pMRy+V3BIYtu9dr9dyyD
-lAy2lVPExc3U0HZp6/uVXlX/+8aMQCn1Zm3dQ1cUxfpZrEHbak+pHMUfASezu4hU
-vnI/PjuOBRtPLNlAPiQib2bSySxtrw1I+REnqKbu7dqihxaFoB8DtTyJjwWmT5E5
-dec/9y8al0u/ENPb7rK2HNBWE0zBXw==
-=iWOZ
------END PGP SIGNATURE-----
+[PATCH] objtool: initialize all of struct elf
+https://lore.kernel.org/all/20230629102051.42E8360467@lion.mk-sys.cz/
+Reported here:
+https://lore.kernel.org/lkml/20230628115825.ahqejf5y4hgxhyqj@lion.mk-sys.cz/
 
---gccrtxyvc72qxztt--
+[PATCH] scsi: aacraid: avoid -Warray-bounds warning
+https://lore.kernel.org/all/20230703114851.1194510-1-arnd@kernel.org/
+(in -next as 2ed218a4fa5)
+Reported here:
+https://lore.kernel.org/lkml/ZJ2M4yqnOCqqGWH0@debian/
+
+Ciao, Thorsten
+
+
+---
+
+Hi, this is regzbot, the Linux kernel regression tracking bot.
+
+Currently I'm aware of 9 regressions in linux-mainline. Find the
+current status below and the latest on the web:
+
+https://linux-regtracking.leemhuis.info/regzbot/mainline/
+
+Bye bye, hope to see you soon for the next report.
+   Regzbot (on behalf of Thorsten Leemhuis)
+
+
+========================================================
+current cycle (v6.4.. aka v6.4-post), culprit identified
+========================================================
+
+
+[ *NEW* ] objtool: build failure
+--------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/lore/20230628115825.ahqejf5y4hgxhyqj@lion.mk-sys.cz/
+https://lore.kernel.org/lkml/20230628115825.ahqejf5y4hgxhyqj@lion.mk-sys.cz/
+
+By Michal Kubecek; 11 days ago; 12 activities, latest 0 days ago.
+Introduced in eb0481bbc4ce
+
+Fix incoming:
+* objtool: initialize all of struct elf
+  https://lore.kernel.org/lkml/fb93d107-c834-1849-2b14-1dd33c4f9955@leemhuis.info/
+
+
+[ *NEW* ] sh4: Boot stall with qemu emulations
+----------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/lore/fbfea3ad-d327-4ad5-ac9c-648c7ca3fe1f@roeck-us.net/
+https://lore.kernel.org/lkml/fbfea3ad-d327-4ad5-ac9c-648c7ca3fe1f@roeck-us.net/
+
+By Guenter Roeck; 3 days ago; 27 activities, latest 0 days ago.
+Introduced in a8ac2961148e
+
+Recent activities from: Guenter Roeck (9), John Paul Adrian
+  Glaubitz (9), Sergey Shtylyov (5), Geert Uytterhoeven (4)
+
+One patch associated with this regression:
+* Re: [PATCH] sh: Avoid using IRQ0 on SH3 and SH4
+  https://lore.kernel.org/lkml/cd1caa5d-fbd8-c3fe-29e9-b848ddd5634c@omp.ru/
+  0 days ago, by Sergey Shtylyov
+
+Noteworthy links:
+* [PATCH] [RFT] sh: mach-r2d: Handle virq offset in cascaded IRL demux
+  https://lore.kernel.org/lkml/2c99d5df41c40691f6c407b7b6a040d406bc81ac.1688901306.git.geert%2Brenesas@glider.be/
+  0 days ago, by Geert Uytterhoeven; thread monitored.
+
+
+[ *NEW* ] drm/bridge: lt9611: Dragonboard 845c (SDM845) devboard broken when running AOSP
+-----------------------------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/lore/CAMi1Hd0TD=2z_=bcDrht3H_wiLvAFcv8Z-U_r_KUOoeMc6UMjw@mail.gmail.com/
+https://lore.kernel.org/dri-devel/CAMi1Hd0TD=2z_=bcDrht3H_wiLvAFcv8Z-U_r_KUOoeMc6UMjw@mail.gmail.com/
+
+By Amit Pundir; 4 days ago; 14 activities, latest 0 days ago.
+Introduced in 8ddce13ae69
+
+Recent activities from: Marek Vasut (4), Dmitry Baryshkov (3), Neil
+  Armstrong (2), Amit Pundir (2), Jagan Teki (2), Abhinav Kumar (1)
+
+
+[ *NEW* ] blk-mq: NFS workload leaves nfsd threads in D state
+-------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/lore/7A57C7AE-A51A-4254-888B-FE15CA21F9E9@oracle.com/
+https://lore.kernel.org/linux-block/7A57C7AE-A51A-4254-888B-FE15CA21F9E9@oracle.com/
+
+By Chuck Lever III; 0 days ago; 1 activities, latest 0 days ago.
+Introduced in 615939a2ae73
+
+Recent activities from: Chuck Lever III (1)
+
+
+[ *NEW* ] dma-iommu.c:693 __iommu_dma_unmap bug trace due to 22000.c split
+--------------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/bugzilla.kernel.org/217622/
+https://bugzilla.kernel.org/show_bug.cgi?id=217622
+https://lore.kernel.org/netdev/a5cdc7f8-b340-d372-2971-0d24b01de217@gmail.com/
+https://lore.kernel.org/lkml/b533071f38804247f06da9e52a04f15cce7a3836.camel@intel.com/
+
+By Niklāvs Koļesņikovs, Niklāvs Koļesņikovs, and Zhang, Rui; 7 days ago; 10 activities, latest 1 days ago.
+Introduced in 19898ce9cf8a
+
+Recent activities from: Niklāvs Koļesņikovs (5), The Linux kernel's
+  regression tracker (Thorsten Leemhuis) (2), Johnathon Weare (2),
+  Thorsten Leemhuis (1)
+
+
+[ *NEW* ] locking/atomic: build error on sparc64:allmodconfig
+-------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/lore/32395f1f-19e4-41da-9f67-68c7d21cf9b2@roeck-us.net/
+https://lore.kernel.org/lkml/32395f1f-19e4-41da-9f67-68c7d21cf9b2@roeck-us.net/
+
+By Guenter Roeck; 11 days ago; 9 activities, latest 1 days ago.
+Introduced in d12157efc8e0
+
+Recent activities from: Guenter Roeck (3), Mark Rutland (2), Linux
+  regression tracking (Thorsten Leemhuis) (1), Andi Shyti (1), Sam
+  Ravnborg (1), Arnd Bergmann (1)
+
+Noteworthy links:
+* [PATCH] sparc: mark __arch_xchg() as __always_inline
+  https://lore.kernel.org/lkml/20230628094938.2318171-1-arnd@kernel.org/
+  11 days ago, by Arnd Bergmann; thread monitored.
+
+
+[ *NEW* ] mainline build failure due to df8fc4e934c1 ("kbuild: Enable -fstrict-flex-arrays=3")
+----------------------------------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/lore/ZJ2M4yqnOCqqGWH0@debian/
+https://lore.kernel.org/lkml/ZJ2M4yqnOCqqGWH0@debian/
+
+By Sudip Mukherjee (Codethink); 10 days ago; 6 activities, latest 1 days ago.
+Introduced in df8fc4e934c1
+
+Fix incoming:
+* scsi: aacraid: Avoid -Warray-bounds warning
+  https://lore.kernel.org/lkml/7493c624-431c-a67d-3cbd-10f29a8c33dd@leemhuis.info/
+
+
+[ *NEW* ] Bluetooth: Dragonboard 845c (SDM845) devboard broken
+--------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/lore/CAMi1Hd3fe=wk02WG8J7K5Ud1GcWkuKKKrxFjkNguxDkzNz2WVQ@mail.gmail.com/
+https://lore.kernel.org/lkml/CAMi1Hd3fe=wk02WG8J7K5Ud1GcWkuKKKrxFjkNguxDkzNz2WVQ@mail.gmail.com/
+
+By Amit Pundir; 2 days ago; 3 activities, latest 2 days ago.
+Introduced in 6945795bc81
+
+Recent activities from: Amit Pundir (2), Johan Hovold (1)
+
+
+[ *NEW* ] net: phylink: mv88e6060 dsa driver broken
+---------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/lore/CABikg9wM0f5cjYY0EV_i3cMT2JcUT1bSe_kkiYk0wFwMrTo8=w@mail.gmail.com/
+https://lore.kernel.org/netdev/CABikg9wM0f5cjYY0EV_i3cMT2JcUT1bSe_kkiYk0wFwMrTo8=w@mail.gmail.com/
+
+By Sergei Antonov; 5 days ago; 1 activities, latest 5 days ago.
+Introduced in de5c9bf40c45
+
+Recent activities from: Sergei Antonov (1)
+
+
+=============
+End of report
+=============
+
+All regressions marked '[ *NEW* ]' were added since the previous report,
+which can be found here:
+https://lore.kernel.org/r/168770105071.1044236.16811678381872089646@leemhuis.info
+
+Thanks for your attention, have a nice day!
+
+  Regzbot, your hard working Linux kernel regression tracking robot
+
+
+P.S.: Wanna know more about regzbot or how to use it to track regressions
+for your subsystem? Then check out the getting started guide or the
+reference documentation:
+
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
+
+The short version: if you see a regression report you want to see
+tracked, just send a reply to the report where you Cc
+regressions@lists.linux.dev with a line like this:
+
+#regzbot introduced: v5.13..v5.14-rc1
+
+If you want to fix a tracked regression, just do what is expected
+anyway: add a 'Link:' tag with the url to the report, e.g.:
+
+Link: https://lore.kernel.org/all/30th.anniversary.repost@klaava.Helsinki.FI/
