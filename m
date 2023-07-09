@@ -1,112 +1,89 @@
-Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
+Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com [209.85.222.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60FC880F
-	for <regressions@lists.linux.dev>; Sat,  8 Jul 2023 23:23:09 +0000 (UTC)
-Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-5774098f16eso40189247b3.0
-        for <regressions@lists.linux.dev>; Sat, 08 Jul 2023 16:23:09 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 715232CA6
+	for <regressions@lists.linux.dev>; Sun,  9 Jul 2023 00:00:53 +0000 (UTC)
+Received: by mail-ua1-f53.google.com with SMTP id a1e0cc1a2514c-791b8525b59so1126169241.1
+        for <regressions@lists.linux.dev>; Sat, 08 Jul 2023 17:00:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1688858588; x=1691450588;
+        d=gmail.com; s=20221208; t=1688860852; x=1691452852;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=DJmd9FNoExrkZazabhisTEX13e3yTkQujDR9ImsW+As=;
-        b=KAr00s05g8LvJTb3B4MfRknnBcOsPzBA8MpmvEk9MyW2dsnWRJ+gR0zO8PseNnhyds
-         6Mt9nJsN6mDK1Dh0NvAnhRCWzYZxHAhlfLQy9RHgQ4LNeE/wsu1rS7QDkdsSrHxffmbG
-         LncoxcuQ5LD5OovH5vrPd/CfkojrHatihkBkTAqHapCmqs2qMs/IOwteAtH86tzhaWr+
-         E8r1XVvTEXmScKTJlgEBa93UC+N33QJ1k4AhSrsn7Uk/wL8h6+7Vf6PuBvhB/DZSWdgZ
-         jmFzygQ4Fr5KUeiYWIsHonmdkl7IWGEiCBU4SkTSiHEkZDV2rwxK3hTecpts0OknAuAS
-         gqGw==
+        bh=gCTYOFpZ33F5UhgemDclft92cknyKeyRtlgFADnqHWw=;
+        b=FGjGp/5lxuVEZkuZWmh5w2IVh5U1D+j17NreINRb8RWNJl0qmLm3RKcIy/p0KdxZUQ
+         zVeS6ihFXJPSYvG/5lcBr40wbBr+wUHx4ZgFizrxHCd3yV6KbnRutUErmq56ph/sYMXn
+         6YwZclgJLVsJXSKiTNlloO/fvNIXpFK4I5iRgeyNBHxMIpj6BJdPQGYPMDISR85huQjt
+         PQyQ4A8yWT01bFRrizqNVW5zg0FErnPp82vzEbE7L43ugKjLRzTgvdx+c9VfNWu/bWjy
+         r8qh9KsPnznq5i4sayiN9nOy90Xlm887qdZ3CafcFwmuMfIr1rj9pTvfqRgWzXSYEnSH
+         D1YQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688858588; x=1691450588;
+        d=1e100.net; s=20221208; t=1688860852; x=1691452852;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=DJmd9FNoExrkZazabhisTEX13e3yTkQujDR9ImsW+As=;
-        b=If1238yVd0lCXvmVKWpJ2ISSfR3TU/l3aYRjpGhvH4VjXf7eCw3zSJI387cKvX2+Mq
-         apvP6wCDm3O//tUPT06/EcK3pRbxtEQ6tePfLnQjzkLujdQSCRvHT/8xJUXGsRmK6869
-         /dkcE+3I8qBbNxp4eRtQaoGpgdK8079neEzybHPtCkxR6cSY5nd0uceidpa4gUjdyqZ0
-         hyW/vTeDKZBRogpoB7YPLDyFwuWSea4LAnZSJ/y+WC6X5sm85+9YZ9LsfbENbvV9pQdx
-         ygh07rqwujRJM+ozDP/ZoI0to21cNcJzY0FKHqY6rDgd9thYU5GWfad0EscxxFwTj7m6
-         RJag==
-X-Gm-Message-State: ABy/qLaf50MwzKl0szZrbCKa/0Kcq9FqMcJCMLS+8bQD74oQsYNsLOUj
-	fIStLIdFPrdeqcgjL3lnt9CYbrtFSlyF0mnS40WHvg==
-X-Google-Smtp-Source: APBJJlHs1/S5FDnBZdy+MijP9fwBR6OMu6G+Y9QcTJ4N/KwfTKOEXMXKD5Sjy19yPHubJ4iO8EvZDNmedrlxShdDCY0=
-X-Received: by 2002:a81:6d95:0:b0:56d:3f2:35a3 with SMTP id
- i143-20020a816d95000000b0056d03f235a3mr8095661ywc.44.1688858587953; Sat, 08
- Jul 2023 16:23:07 -0700 (PDT)
+        bh=gCTYOFpZ33F5UhgemDclft92cknyKeyRtlgFADnqHWw=;
+        b=AH/27itWIJxkte5nT4mPD96QhQh6PZdF2qx5qYLZVYu3Kn6dhfupF3bzEBwTk6GbIE
+         5MwjKhzWsdApIQr0KtEHVDMm6MLKqZNmHrikQlPmP9r7QplFF8ndOzOZ4jWrntYIM9cX
+         qEVEcPJpwrh6/FeVx9+ruNvzX5bzEOKANr5Gwe+1ygrlk/Z4v/AijgUxB8nhvxAeAiHI
+         C49adxHq/8iEzjr+/Clj6H9+SOCMHG7jHrJ293c3UfOV0o6PP8QMNQHyG7FVpLSu6v0U
+         08A/+4/4HWJnbInoRwxex8LvJNMf8up5g0meo13sOhSDv7OnmOK4d/NfdDOAGksKajFX
+         lDTQ==
+X-Gm-Message-State: ABy/qLZ3e8gz6PdgmbK1W8jBzx2etKvzMStTR0+ltRQ1AOOJGpHUJIEY
+	PSyUGOn61Jl6PVG6VHcgQLDDUxByVsLUpCpEkRc=
+X-Google-Smtp-Source: APBJJlHDtm11y7Gufvz4Gqec/NdH2pk7IDgpiKTKFnJaCaJR+CTIONi0xDNiCGcBLGGDfcIbBTwGJCuNj3yHuFr+fdg=
+X-Received: by 2002:a1f:d486:0:b0:453:b080:632d with SMTP id
+ l128-20020a1fd486000000b00453b080632dmr6263863vkg.0.1688860851887; Sat, 08
+ Jul 2023 17:00:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <b5a5626-2684-899d-874b-801e7974b17@google.com> <CAJuCfpGXC23r11-0jz+an01tO2BUOMpjJ93Dm3pc+EUQM=BXYg@mail.gmail.com>
-In-Reply-To: <CAJuCfpGXC23r11-0jz+an01tO2BUOMpjJ93Dm3pc+EUQM=BXYg@mail.gmail.com>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Sat, 8 Jul 2023 16:22:56 -0700
-Message-ID: <CAJuCfpEyOXYh+dhW5iUFsz_s4P_pka9cD3M6qc8dDit5JxH3mw@mail.gmail.com>
-Subject: Re: [PATCH] mm: lock newly mapped VMA with corrected ordering
-To: Hugh Dickins <hughd@google.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, akpm@linux-foundation.org, 
-	regressions@leemhuis.info, bagasdotme@gmail.com, jacobly.alt@gmail.com, 
-	willy@infradead.org, liam.howlett@oracle.com, david@redhat.com, 
-	peterx@redhat.com, ldufour@linux.ibm.com, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org, 
-	linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org, 
-	regressions@lists.linux.dev, stable@vger.kernel.org
+References: <20230429020951.082353595@lindbergh.monkeyblade.net>
+ <CAAJw_ZueYAHQtM++4259TXcxQ_btcRQKiX93u85WEs2b2p19wA@mail.gmail.com>
+ <ZE0kndhsXNBIb1g7@debian.me> <b9ab37d2-42bf-cc31-a2c0-a9b604e95530@gmail.com>
+ <CAAJw_Zug6VCS5ZqTWaFSr9sd85k=tyPm9DEE+mV=AKoECZM+sQ@mail.gmail.com>
+ <7fee3284-b9ba-58f4-8118-fe0b99ae6bf7@leemhuis.info> <CAAJw_Zu=MPtGPARgCB2fteP+7F793YDFXE9RuzSH8EqYBS-OOw@mail.gmail.com>
+ <64b8732f-6319-9f10-b82a-b4a3dd8d4b8e@lwfinger.net> <CAAJw_ZvZNQzrFyQizJnKe5PerqqAUOmPYd6cnjAcvs68xNdwSA@mail.gmail.com>
+ <ff646259-8ce1-f1fe-4627-cdf99321dba8@leemhuis.info> <0068af47-e475-7e8d-e476-c374e90dff5f@lwfinger.net>
+In-Reply-To: <0068af47-e475-7e8d-e476-c374e90dff5f@lwfinger.net>
+From: Jeff Chua <jeff.chua.linux@gmail.com>
+Date: Sun, 9 Jul 2023 08:00:40 +0800
+Message-ID: <CAAJw_ZvBUpMMC886CDdsLFW6bUG69X78zVfre7gCfu=aTR1xGQ@mail.gmail.com>
+Subject: Re: Linux-6.5 iwlwifi crash
+To: Larry Finger <Larry.Finger@lwfinger.net>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>, lkml <linux-kernel@vger.kernel.org>, 
+	Gregory Greenman <gregory.greenman@intel.com>, Kalle Valo <kvalo@kernel.org>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Linux Wireless <linux-wireless@vger.kernel.org>, Linux Networking <netdev@vger.kernel.org>, 
+	Bagas Sanjaya <bagasdotme@gmail.com>, Johannes Berg <johannes.berg@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, Jul 8, 2023 at 4:10=E2=80=AFPM Suren Baghdasaryan <surenb@google.co=
-m> wrote:
+On Sat, Jul 8, 2023 at 2:07=E2=80=AFAM Larry Finger <Larry.Finger@lwfinger.=
+net> wrote:
+> I am certainly no expert on iwlwifi, but this change looks suspicious:
 >
-> On Sat, Jul 8, 2023 at 4:04=E2=80=AFPM Hugh Dickins <hughd@google.com> wr=
-ote:
-> >
-> > Lockdep is certainly right to complain about
-> > (&vma->vm_lock->lock){++++}-{3:3}, at: vma_start_write+0x2d/0x3f
-> >                but task is already holding lock:
-> > (&mapping->i_mmap_rwsem){+.+.}-{3:3}, at: mmap_region+0x4dc/0x6db
-> > Invert those to the usual ordering.
+> @@ -10,8 +10,7 @@
+>   #include "fw/api/txq.h"
 >
-> Doh! Thanks Hugh!
-> I totally forgot to run this with lockdep enabled :(
-
-I verified both the lockdep warning and the fix. Thanks again, Hugh!
-
-Tested-by: Suren Baghdasaryan <surenb@google.com>
-
+>   /* Highest firmware API version supported */
+> -#define IWL_22000_UCODE_API_MAX        81
+> -#define IWL_22500_UCODE_API_MAX        77
+> +#define IWL_22000_UCODE_API_MAX        77
 >
-> >
-> > Fixes: 33313a747e81 ("mm: lock newly mapped VMA which can be modified a=
-fter it becomes visible")
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Hugh Dickins <hughd@google.com>
-> > ---
-> >  mm/mmap.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/mm/mmap.c b/mm/mmap.c
-> > index 84c71431a527..3eda23c9ebe7 100644
-> > --- a/mm/mmap.c
-> > +++ b/mm/mmap.c
-> > @@ -2809,11 +2809,11 @@ unsigned long mmap_region(struct file *file, un=
-signed long addr,
-> >         if (vma_iter_prealloc(&vmi))
-> >                 goto close_and_free_vma;
-> >
-> > +       /* Lock the VMA since it is modified after insertion into VMA t=
-ree */
-> > +       vma_start_write(vma);
-> >         if (vma->vm_file)
-> >                 i_mmap_lock_write(vma->vm_file->f_mapping);
-> >
-> > -       /* Lock the VMA since it is modified after insertion into VMA t=
-ree */
-> > -       vma_start_write(vma);
-> >         vma_iter_store(&vmi, vma);
-> >         mm->map_count++;
-> >         if (vma->vm_file) {
-> > --
-> > 2.35.3
+>   /* Lowest firmware API version supported */
+>
+> The parameter that was originally set to 81 is now set to 77.
+>
+> Please try the attached patch.
+>
+> Larry
+
+Larry, tried, but that didn't help.
+
+Thanks,
+Jeff.
