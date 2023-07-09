@@ -1,145 +1,225 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1448AEBE
-	for <regressions@lists.linux.dev>; Sun,  9 Jul 2023 06:58:44 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qIONV-0000AG-1e; Sun, 09 Jul 2023 08:58:41 +0200
-Message-ID: <27b669d4-8d8e-458b-d13e-5b635ac46dae@leemhuis.info>
-Date: Sun, 9 Jul 2023 08:58:40 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66AE63C1D
+	for <regressions@lists.linux.dev>; Sun,  9 Jul 2023 13:27:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1688909259; x=1720445259;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=B9gFB3//5g9ltIwzP7tcxiWttRXYuejy2lgx8xf9KpM=;
+  b=MvD/NKuMzQ7DEenQDdjHUlXF5DzYX5XS9W1vpf0ytN3DlZfdF9zsFcFV
+   1eWL8Y6dfP55H/2CEQjb0rgqb0avsLq2X+5z08d+XfQU7e8/MUGWhxnV0
+   dL+2zkHdCxeLXYXAAyUrwMqaAz2mdiUPXqJhO3yyquUlB4AbF8qLbYd4M
+   TKnrHvOSr07faoNAoK+GxR0oMTWclOmEawtBIOHEN833zI8CM2rRbX4pP
+   0TfF4UXJm9OXqkUwzRNhQtWsNKvHgqCwjvPna+mlkKbCqo5BBJ4Qw5zus
+   6TNt+xMWJT3B9sRb3UHRcZyAGBq63BCwxFNIRz+aXN1uP0mLj/N+CmJWe
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10766"; a="450527573"
+X-IronPort-AV: E=Sophos;i="6.01,192,1684825200"; 
+   d="scan'208";a="450527573"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2023 06:27:38 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10766"; a="865056141"
+X-IronPort-AV: E=Sophos;i="6.01,192,1684825200"; 
+   d="scan'208";a="865056141"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by fmsmga001.fm.intel.com with ESMTP; 09 Jul 2023 06:27:38 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.27; Sun, 9 Jul 2023 06:27:37 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.27 via Frontend Transport; Sun, 9 Jul 2023 06:27:37 -0700
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.171)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.27; Sun, 9 Jul 2023 06:27:37 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=WN6JKU5yD9wL/GO5SuPuVhtVhF8EcXiCGMmRk/ejvuVXEUpN2uqLPaZxlCKgDtF4rCDyHdJ0pn+hb9gp345TfHUyjqGOqoo0EtpPcIPiJ3qbqNJXjVjrfQNqT1N8RbUpRlaJZejABKn2lBmk2zuXejwknnZIA57kwW/NtE0XY/oJddjSdlmvrInCvEyomj3V4Fj6oz3FXBlJ4A9HSl5dp11XZj1/AEGlddLUTy/HG8KsyfkcTohi7TI3Vt/dzCDPNKMbmWjaOuFvKGl1yT4t3Wr6rsn5K0FEkfLW0JSrJHQ65iN+MfohkQPbFSZ7D9nz/gYYvciMr8W9pyVhOihf1w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=B9gFB3//5g9ltIwzP7tcxiWttRXYuejy2lgx8xf9KpM=;
+ b=IkA/XnOrSl+f1KLRLGtD+2asi2gYOpoUrirk+jVHUcFuc6yXCdxZSIhfKRegYfntPWWImHSdMszjkSME7jDIJ8oJqyzanJD/Qu2fTlZ1OPsiApt53YqylG1VoGNrY8wW7tp+tukXct92xldJGjZtfEkNaWDQ+N3wFXXpO16cVB3qmwvUqjSxYbq1dWQcv9dacK+npL/cC744WVir0F25fkuw4BtjusRlTL1e/Gn/gx0d0kf7XtwRNd/eZBrsMdttF6yYs7a8IEDhg+oGNRNnpDvxHKoHB5l484VqgJaErpofH8AWgb9qd1UNaLlq6c+WvmDL/llCdGkKzXMgE7fSog==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from SJ0PR11MB6622.namprd11.prod.outlook.com (2603:10b6:a03:478::6)
+ by PH8PR11MB7096.namprd11.prod.outlook.com (2603:10b6:510:214::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6565.17; Sun, 9 Jul
+ 2023 13:27:34 +0000
+Received: from SJ0PR11MB6622.namprd11.prod.outlook.com
+ ([fe80::9932:938f:1d21:93cb]) by SJ0PR11MB6622.namprd11.prod.outlook.com
+ ([fe80::9932:938f:1d21:93cb%4]) with mapi id 15.20.6565.026; Sun, 9 Jul 2023
+ 13:27:33 +0000
+From: "Zhang, Rui" <rui.zhang@intel.com>
+To: "Greenman, Gregory" <gregory.greenman@intel.com>, "Berg, Johannes"
+	<johannes.berg@intel.com>, "regressions@lists.linux.dev"
+	<regressions@lists.linux.dev>
+CC: "bagasdotme@gmail.com" <bagasdotme@gmail.com>, "davem@davemloft.net"
+	<davem@davemloft.net>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"kvalo@kernel.org" <kvalo@kernel.org>, "Baruch, Yaara"
+	<yaara.baruch@intel.com>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-wireless@vger.kernel.org"
+	<linux-wireless@vger.kernel.org>, "Torvalds, Linus"
+	<torvalds@linux-foundation.org>, "Ben Ami, Golan" <golan.ben.ami@intel.com>,
+	"edumazet@google.com" <edumazet@google.com>, "Sisodiya, Mukesh"
+	<mukesh.sisodiya@intel.com>, "Larry.Finger@lwfinger.net"
+	<Larry.Finger@lwfinger.net>, "kuba@kernel.org" <kuba@kernel.org>,
+	"pabeni@redhat.com" <pabeni@redhat.com>
+Subject: Re: [Regression][BISECTED] kernel boot hang after 19898ce9cf8a
+ ("wifi: iwlwifi: split 22000.c into multiple files")
+Thread-Topic: [Regression][BISECTED] kernel boot hang after 19898ce9cf8a
+ ("wifi: iwlwifi: split 22000.c into multiple files")
+Thread-Index: AQHZsKyQVsJac0DEX0yOQldskAnw0a+uIaoAgAHK8YCAAYRGAA==
+Date: Sun, 9 Jul 2023 13:27:33 +0000
+Message-ID: <4153ce0aac6dc760a3a9c7204c5c9141b60839a4.camel@intel.com>
+References: <b533071f38804247f06da9e52a04f15cce7a3836.camel@intel.com>
+	 <a4265090-d6b8-b185-a400-b09b27a347cc@leemhuis.info>
+	 <c65d0837-5e64-bec7-9e56-04aa91148d05@leemhuis.info>
+In-Reply-To: <c65d0837-5e64-bec7-9e56-04aa91148d05@leemhuis.info>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+user-agent: Evolution 3.44.4-0ubuntu1 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SJ0PR11MB6622:EE_|PH8PR11MB7096:EE_
+x-ms-office365-filtering-correlation-id: 2540b05a-916f-4507-0f7f-08db808040e8
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: FyjGziEJACTIVFROsPmGuLbvGqu0dJ1wLtIWFHCWHbtnO3pGOmNo5aLQUo3Ev7PwNuH2TlzMYMNXBo27B2qochRoQi2JjIW/JLc0U5qba2t+WYMWCed8dujaRfiVzHKhbinnpcvFiTmG2UloNz9WThOc0aVLcWuG/S0Jes+EzxuZCeq6znkvN6CVjZn85xn//YRL+o/2fk+ZtDyyg+OrPELFYmG27ZbypVdWTHszvljZl4q98FCBfnBxl6Db0DFUCCHnEzya35++qpMbo85jeRKlDKxFNLx4ncmm9vjXW9lKQL6k324kCgcO4L43MT8uxCHmEbHNRoiIg9jIIKS/Y200jDAWWlNVJsop/2ZnZ8O3z/ipWGqgrNeIXq0tv6OQg0VFjvo2reQPnJa7mYzCggcmAN3qjCrP9a1Uwp9+sIr8SbxsBXYSqeO/nz6ZsJs5IVw0JtEUJCUeBQbg4BEwhWWCpFeOoVaOyomrmNGSFTvaYwj5AYBV+EVEEoGXnYa5evHSCtCMkZrs1xn/nxzpoBJ+QO6+XUEsY76sAA6Jdcz/KYtliWXH+FKT5+8fK0gOCH6BcdZ8nn+xjuHjoXQMuiWQKU757pOZcEyVmRTjiLMsXkS9yRKP5NEdVSyXexsg2vBMO77fIt19/tEDzhh1Fg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR11MB6622.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(396003)(39860400002)(136003)(346002)(366004)(376002)(451199021)(478600001)(6486002)(186003)(82960400001)(66476007)(6512007)(26005)(966005)(53546011)(6506007)(86362001)(2616005)(71200400001)(316002)(83380400001)(38100700002)(54906003)(91956017)(64756008)(110136005)(4326008)(66556008)(76116006)(66446008)(66946007)(122000001)(7416002)(5660300002)(8676002)(38070700005)(8936002)(41300700001)(2906002)(36756003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?eFk1RExHdzF3ZnI2ektEOHZ1TXh3VFpFY24raHh6aFJZZWtlaDV6Rnhrb2lV?=
+ =?utf-8?B?L293aEk1TlgyU01Qc1RVa3JGNDNnSUdhRGtIVGtRY3E0djc3Y0NPL2tzOHlM?=
+ =?utf-8?B?SVhDeVlaK3VQN3ByL3puallZVlNCMlJRVUpoQWlEZ0c1YWJuNHp6MHlBSEhp?=
+ =?utf-8?B?UFZ1Q3UrQUpGWGRyRS9wQ1NVTzRvNnJRRnQ5dVgySDFrdENmcm1wM0ZhOXVa?=
+ =?utf-8?B?M3lLSWhRd0JoZGk0RkNGL3l6Ykc4TXF6UW1lT1A0TmxmclkwRTh2akc2N0p6?=
+ =?utf-8?B?bHVqbHg4cENWZUNUeDltcWR0RWtEK0hBbU0zNWhJZXJVN0cvL0Z2bTFUTzhB?=
+ =?utf-8?B?WU9KVVpXUEdsbk4zVlFPNHpQNnhZd3g1Y2hKTUlZOXJZYVRXNjJGUzVoWUtX?=
+ =?utf-8?B?N3NidE9JTHV5U0FRa0dyaUhuSE40QzA4YjF6Ly9tTDFMMmpnNkZmWGlYWnA4?=
+ =?utf-8?B?RG03a2lON0xicjJraHhLdzFUMjVTbXcwV1lDY0pza3hjejRva1BPTXAyTFM5?=
+ =?utf-8?B?akRuNEZXYzlxVnl5eFJoRE90RmMzUWhwOEtnY3lsNzdrRGtVT25BMU5hcldu?=
+ =?utf-8?B?ekxLYzlFR3VWMmNtT3B0YWhtY2doak12OGtwNlJwSzdPTnlwSTFFMWo4SW52?=
+ =?utf-8?B?b01KSVVsMm91QjNYclF6T2lrVXlHTDF2V3RyUUtKeEVzSzRzcU5hSmY0b2ZZ?=
+ =?utf-8?B?Y1lrZjZrbEEvbEZ6SWg0VDduSTNyRzRzOEtGdFlGTlRNa0dnMVJrZE9sUUlE?=
+ =?utf-8?B?dlBoZTlHejQyeFBiTGwwNjF1NG1vejJNZjE2SkdjVFFrWHlFL2YyQWY2ZkJ6?=
+ =?utf-8?B?aUlJVU93MTRHZlVaWWozeVNsL0dnVXV1Yk9sQ2hJbDlZQ1o3NDFPY2oyci9Z?=
+ =?utf-8?B?RWR2c25lYk9hM2NjTzhPcThLT1ZEdGxCUmF4WEc5RklrZHMrQTdDSHRQWEl3?=
+ =?utf-8?B?QTlSSHhjeVRITERNM25VZkZKNEFGSEQraXVJTi92SkVXN2lIbEttaVVXbytn?=
+ =?utf-8?B?a0ZRaHZ3a1VIVnJCNnJaSDZTWXhWdGNYTnphNGcwSXFOMmNFN1FSTWR2TkRF?=
+ =?utf-8?B?Y2RweXJpQ2FHbHNGN2NZWHowelZzc3JLcmVSSmkzR1dsbzVhSmFQWFF3VHFR?=
+ =?utf-8?B?TlNiSEtEOWV2L05DM1N5cGpRckx0aFVSQW9mVDdNbXh3ZEJZN3lNOTh4dTA3?=
+ =?utf-8?B?SnlIdXdYNmNZLzhJOEp1REdwOTNSNHgzL0dESGg2VDc3ekdKbXFFUi9TTGpl?=
+ =?utf-8?B?aE1BTU0rNXFuUmxSYjhGYTFuSzZWTUxuMko3Vi8rRlE4Rm5NU1FjcVZ2UXlR?=
+ =?utf-8?B?RUp4YjJsc0o3RWh4RGFjeXZTMmRkUXFMY2xqTy8rOE5KdEhWcSt0b3BjV0pj?=
+ =?utf-8?B?YUxVd3MvR2JUcGRMajlPRDNtUUxFZ2tsUXVWZDFjNWp4QTdwVlhKSUpreXI3?=
+ =?utf-8?B?c0Z0aXFxSVpVT1Z2SUxYVGlsWlN4Rm1ydlhUVVd4d0RFdE0yYVU0b2hMSVdp?=
+ =?utf-8?B?WEl3T1ZTakY5bjQvQ0xDYVZyL09BYk5KeU04azBlZE83TExwTEM3blpBdTVD?=
+ =?utf-8?B?Qk8waURrQmtIVGNDUVlaeHBuUXp6Z3YzQ0V5MThSRnlWVVp0Q2ZYc2JybmZX?=
+ =?utf-8?B?c3lpZTBoWW1EcnludHk3SmhxQ044WHpEVGdVSDJyaFYyMGFqQnBSajZsNEtL?=
+ =?utf-8?B?aUhHMzBKaXd4WmhiWnplWHpSNGlUV21RT2d2U3c3SWNOSmxUTkFHR0RIUzh3?=
+ =?utf-8?B?MW10MDBrNW9ldG4wdThTQkEyL1U4WTlGUXgrM1dndEJib0J6eTE0YUdOUmtT?=
+ =?utf-8?B?S3pYT0Y2OXBQckMra1pjYVlCYXZJakFrMlUxSmRYSXQ3YmkzN2R5Q1JXeENQ?=
+ =?utf-8?B?QllLdEM1WVB1b3ovMG5vRmFQSkpDby91Tm1OTDZSWDM3czl3SEdma1dJZmF4?=
+ =?utf-8?B?SStiRldMcU9aV2VYNUo0Wk02RmVNNEJyQmhTL3FGbmRjbkQ3TnJDVVRxczJX?=
+ =?utf-8?B?amdpeFRVQXFiZlpOc3lkWWtxRW1XVHlkdG1TL3ZnNXBZRDBZeUtlNVlIb2lS?=
+ =?utf-8?B?UmFGT3F6QkFJNnk5QS8xdDhIcmcyU2MyNGlGRHo1ZDZLQ1o0REYyUW44ZlVI?=
+ =?utf-8?Q?gQtNy5r05rRkLcczFHu79Th2b?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <B0744E920DBA684685DDC23B1A053F6B@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: NFS workload leaves nfsd threads in D state
-Content-Language: en-US, de-DE
-To: Chuck Lever III <chuck.lever@oracle.com>, Jens Axboe <axboe@kernel.dk>,
- Christoph Hellwig <hch@lst.de>
-Cc: "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
- Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
- Chuck Lever <cel@kernel.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <7A57C7AE-A51A-4254-888B-FE15CA21F9E9@oracle.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <7A57C7AE-A51A-4254-888B-FE15CA21F9E9@oracle.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1688885925;69f4c685;
-X-HE-SMSGID: 1qIONV-0000AG-1e
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SJ0PR11MB6622.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2540b05a-916f-4507-0f7f-08db808040e8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jul 2023 13:27:33.6028
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: e/GYuMm+6xc2B9msJy60YhpAfUvB0/9crjAjfDvh0+IbIn3XuK3r2+uWYwGPvZi/lf5Zvp6M+DTg1JqV6yHv6g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR11MB7096
+X-OriginatorOrg: intel.com
 
-[CCing the regression list, as it should be in the loop for regressions:
-https://docs.kernel.org/admin-guide/reporting-regressions.html]
-
-[TLDR: I'm adding this report to the list of tracked Linux kernel
-regressions; the text you find below is based on a few templates
-paragraphs you might have encountered already in similar form.
-See link in footer if these mails annoy you.]
-
-On 08.07.23 20:30, Chuck Lever III wrote:
-> 
-> I have a "standard" test of running the git regression suite with
-> many threads against an NFS mount. I found that with 6.5-rc, the
-> test stalled and several nfsd threads on the server were stuck
-> in D state.
-> 
-> I can reproduce this stall 100% with both an xfs and an ext4
-> export, so I bisected with both, and both bisects landed on the
-> same commit:
-> 
-> 615939a2ae734e3e68c816d6749d1f5f79c62ab7 is the first bad commit
-> commit 615939a2ae734e3e68c816d6749d1f5f79c62ab7
-> Author: Christoph Hellwig <hch@lst.de>
-> Date:   Fri May 19 06:40:48 2023 +0200
-> 
->     blk-mq: defer to the normal submission path for post-flush requests
-> 
->     Requests with the FUA bit on hardware without FUA support need a post
->     flush before returning to the caller, but they can still be sent using
->     the normal I/O path after initializing the flush-related fields and
->     end I/O handler.
-> 
->     Signed-off-by: Christoph Hellwig <hch@lst.de>
->     Reviewed-by: Bart Van Assche <bvanassche@acm.org>
->     Link: https://lore.kernel.org/r/20230519044050.107790-6-hch@lst.de
->     Signed-off-by: Jens Axboe <axboe@kernel.dk>
-> 
->  block/blk-flush.c | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
-> On system 1: the exports are on top of /dev/mapper and reside on
-> an "INTEL SSDSC2BA400G3" SATA device.
-> 
-> On system 2: the exports are on top of /dev/mapper and reside on
-> an "INTEL SSDSC2KB240G8" SATA device.
-> 
-> System 1 was where I discovered the stall. System 2 is where I ran
-> the bisects.
-> 
-> The call stacks vary a little. I've seen stalls in both the WRITE
-> and SETATTR paths. Here's a sample from system 1:
-> 
-> INFO: task nfsd:1237 blocked for more than 122 seconds.
->       Tainted: G        W          6.4.0-08699-g9e268189cb14 #1
-> "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-> task:nfsd            state:D stack:0     pid:1237  ppid:2      flags:0x00004000
-> Call Trace:
->  <TASK>
->  __schedule+0x78f/0x7db
->  schedule+0x93/0xc8
->  jbd2_log_wait_commit+0xb4/0xf4
->  ? __pfx_autoremove_wake_function+0x10/0x10
->  jbd2_complete_transaction+0x85/0x97
->  ext4_fc_commit+0x118/0x70a
->  ? _raw_spin_unlock+0x18/0x2e
->  ? __mark_inode_dirty+0x282/0x302
->  ext4_write_inode+0x94/0x121
->  ext4_nfs_commit_metadata+0x72/0x7d
->  commit_inode_metadata+0x1f/0x31 [nfsd]
->  commit_metadata+0x26/0x33 [nfsd]
->  nfsd_setattr+0x2f2/0x30e [nfsd]
->  nfsd_create_setattr+0x4e/0x87 [nfsd]
->  nfsd4_open+0x604/0x8fa [nfsd]
->  nfsd4_proc_compound+0x4a8/0x5e3 [nfsd]
->  ? nfs4svc_decode_compoundargs+0x291/0x2de [nfsd]
->  nfsd_dispatch+0xb3/0x164 [nfsd]
->  svc_process_common+0x3c7/0x53a [sunrpc]
->  ? __pfx_nfsd_dispatch+0x10/0x10 [nfsd]
->  svc_process+0xc6/0xe3 [sunrpc]
->  nfsd+0xf2/0x18c [nfsd]
->  ? __pfx_nfsd+0x10/0x10 [nfsd]
->  kthread+0x10d/0x115
->  ? __pfx_kthread+0x10/0x10
->  ret_from_fork+0x2c/0x50
->  </TASK>
-
-Thanks for the report. To be sure the issue doesn't fall through the
-cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
-tracking bot:
-
-#regzbot ^introduced 615939a2ae734e
-#regzbot title blk-mq: NFS workload leaves nfsd threads in D state
-#regzbot ignore-activity
-
-This isn't a regression? This issue or a fix for it are already
-discussed somewhere else? It was fixed already? You want to clarify when
-the regression started to happen? Or point out I got the title or
-something else totally wrong? Then just reply and tell me -- ideally
-while also telling regzbot about it, as explained by the page listed in
-the footer of this mail.
-
-Developers: When fixing the issue, remember to add 'Link:' tags pointing
-to the report (the parent of this mail). See page linked in footer for
-details.
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+T24gU2F0LCAyMDIzLTA3LTA4IGF0IDE2OjE3ICswMjAwLCBUaG9yc3RlbiBMZWVtaHVpcyB3cm90
+ZToNCj4gT24gMDcuMDcuMjMgMTI6NTUsIExpbnV4IHJlZ3Jlc3Npb24gdHJhY2tpbmcgKFRob3Jz
+dGVuIExlZW1odWlzKQ0KPiB3cm90ZToNCj4gPiBPbiAwNy4wNy4yMyAxMDoyNSwgWmhhbmcsIFJ1
+aSB3cm90ZToNCj4gPiA+IA0KPiA+ID4gSSBydW4gaW50byBhIE5VTEwgcG9pbnRlciBkZXJlZmVy
+ZW5jZSBhbmQga2VybmVsIGJvb3QgaGFuZyBhZnRlcg0KPiA+ID4gc3dpdGNoaW5nIHRvIGxhdGVz
+dCB1cHN0cmVhbSBrZXJuZWwsIGFuZCBnaXQgYmlzZWN0IHNob3dzIHRoYXQNCj4gPiA+IGJlbG93
+DQo+ID4gPiBjb21taXQgaXMgdGhlIGZpcnN0IG9mZmVuZGluZyBjb21taXQsIGFuZCBJIGhhdmUg
+Y29uZmlybWVkIHRoYXQNCj4gPiA+IGNvbW1pdA0KPiA+ID4gMTk4OThjZTljZjhhIGhhcyB0aGUg
+aXNzdWUgd2hpbGUgMTk4OThjZTljZjhhfjEgZG9lcyBub3QuDQo+ID4gDQo+ID4gRldJVywgdGhp
+cyBpcyB0aGUgZm91cnRoIHN1Y2ggcmVwb3J0IGFib3V0IHRoaXMgdGhhdCBJJ20gYXdhcmUgb2Yu
+DQo+ID4gDQo+ID4gVGhlIGZpcnN0IGlzIHRoaXMgb25lICh3aXRoIHR3byBhZmZlY3RlZCB1c2Vy
+cyBhZmFpY3MpOg0KPiA+IGh0dHBzOi8vYnVnemlsbGEua2VybmVsLm9yZy9zaG93X2J1Zy5jZ2k/
+aWQ9MjE3NjIyDQo+ID4gDQo+ID4gVGhlIHNlY29uZCBpcyB0aGlzIG9uZToNCj4gPiBodHRwczov
+L2xvcmUua2VybmVsLm9yZy9hbGwvQ0FBSndfWnVnNlZDUzVacVRXYUZTcjlzZDg1ayUzRHR5UG05
+REVFJTJCbVYlM0RBS29FQ1pNJTJCc1FAbWFpbC5nbWFpbC5jb20vDQo+ID4gDQo+ID4gVGhlIHRo
+aXJkOg0KPiA+IGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2FsbC85Mjc0ZDliZDNkMDgwYTQ1NzY0
+OWZmNWFkZGNjMTcyNmYwOGVmNWIyLmNhbWVsQHhyeTExMS5zaXRlLw0KPiA+IA0KPiA+IEFuZCBp
+biB0aGUgcGFzdCBmZXcgZGF5cyB0d28gcGVvcGxlIGZyb20gRmVkb3JhIGxhbmQgdGFsa2VkIHRv
+IG1lDQo+ID4gb24gSVJDDQo+ID4gd2l0aCBwcm9ibGVtcyB0aGF0IGluIHJldHJvc3BlY3RpdmUg
+bWlnaHQgYmUgY2F1c2VkIGJ5IHRoaXMgYXMNCj4gPiB3ZWxsLg0KPiANCj4gSSBnb3QgY29uZmly
+bWF0aW9uOiBvbmUgb2YgdGhvc2UgY2FzZXMgaXMgYWxzbyBjYXVzZWQgYnkgMTk4OThjZTljZjhh
+DQo+IEJ1dCBJIHdyaXRlIGZvciBhIGRpZmZlcmVudCByZWFzb246DQo+IA0KPiBMYXJyeSAobm93
+IENDZWQpIGxvb2tlZCBhdCB0aGUgY3VscHJpdCBhbmQgc3BvdHRlZCBzb21ldGhpbmcgdGhhdA0K
+PiBsb29rZWQNCj4gc3VzcGljaW91cyB0byBoaW07IGhlIHBvc3RlZCBhIHBhdGNoIGFuZCBsb29r
+cyBmb3IgdGVzdGVyczoNCj4gaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvYWxsLzAwNjhhZjQ3LWU0
+NzUtN2U4ZC1lNDc2LWMzNzRlOTBkZmY1ZkBsd2Zpbmdlci5uZXQvDQoNCkkgYXBwbGllZCB0aGlz
+IHBhdGNoIGJ1dCB0aGUgcHJvYmxlbSBzdGlsbCBleGlzdHMuDQoNCnRoYW5rcywNCnJ1aQ0KPiAN
+Cj4gQ2lhbywgVGhvcnN0ZW4NCj4gDQo+ID4gVGhpcyBtYW55IHJlcG9ydHMgYWJvdXQgYSBwcm9i
+bGVtIGF0IHRoaXMgc3RhZ2Ugb2YgdGhlIGN5Y2xlIG1ha2VzDQo+ID4gbWUNCj4gPiBzdXNwZWN0
+IHdlJ2xsIHNlZSBhIGxvdCBtb3JlIG9uY2UgLXJjMSBpcyBvdXQuIFRoYXQncyB3aHkgSSByYWlz
+aW5nDQo+ID4gdGhlDQo+ID4gYXdhcmVuZXNzIG9mIHRoaXMuIFNhZGx5IGEgc2ltcGxlIHJldmVy
+dCBvZiBqdXN0IHRoaXMgY29tbWl0IGlzIG5vdA0KPiA+IHBvc3NpYmxlLiA6LS8NCj4gPiANCj4g
+PiBDaWFvLCBUaG9yc3Rlbg0KPiA+IA0KPiA+ID4gY29tbWl0IDE5ODk4Y2U5Y2Y4YTMzZTBhYzM1
+Y2I0YzdmNjhkZTI5N2NjOTNjYjIgKHJlZnMvYmlzZWN0L2JhZCkNCj4gPiA+IEF1dGhvcjrCoMKg
+wqDCoCBKb2hhbm5lcyBCZXJnIDxqb2hhbm5lcy5iZXJnQGludGVsLmNvbT4NCj4gPiA+IEF1dGhv
+ckRhdGU6IFdlZCBKdW4gMjEgMTM6MTI6MDcgMjAyMyArMDMwMA0KPiA+ID4gQ29tbWl0OsKgwqDC
+oMKgIEpvaGFubmVzIEJlcmcgPGpvaGFubmVzLmJlcmdAaW50ZWwuY29tPg0KPiA+ID4gQ29tbWl0
+RGF0ZTogV2VkIEp1biAyMSAxNDowNzowMCAyMDIzICswMjAwDQo+ID4gPiANCj4gPiA+IMKgwqDC
+oCB3aWZpOiBpd2x3aWZpOiBzcGxpdCAyMjAwMC5jIGludG8gbXVsdGlwbGUgZmlsZXMNCj4gPiA+
+IMKgwqDCoCANCj4gPiA+IMKgwqDCoCBTcGxpdCB0aGUgY29uZmlndXJhdGlvbiBsaXN0IGluIDIy
+MDAwLmMgaW50byBmb3VyIG5ldyBmaWxlcywNCj4gPiA+IMKgwqDCoCBwZXIgbmV3IGRldmljZSBm
+YW1pbHksIHNvIHdlIGRvbid0IGhhdmUgdGhpcyBodWdlIHVudXNhYmxlDQo+ID4gPiDCoMKgwqAg
+ZmlsZS4gWWVzLCB0aGlzIGR1cGxpY2F0ZXMgYSBmZXcgc21hbGwgdGhpbmdzLCBidXQgdGhhdCdz
+DQo+ID4gPiDCoMKgwqAgc3RpbGwgbXVjaCBiZXR0ZXIgdGhhbiB3aGF0IHdlIGhhdmUgbm93Lg0K
+PiA+ID4gwqDCoMKgIA0KPiA+ID4gwqDCoMKgIFNpZ25lZC1vZmYtYnk6IEpvaGFubmVzIEJlcmcg
+PGpvaGFubmVzLmJlcmdAaW50ZWwuY29tPg0KPiA+ID4gwqDCoMKgIFNpZ25lZC1vZmYtYnk6IEdy
+ZWdvcnkgR3JlZW5tYW4gPGdyZWdvcnkuZ3JlZW5tYW5AaW50ZWwuY29tPg0KPiA+ID4gwqDCoMKg
+IExpbms6DQo+ID4gPiBodHRwczovL2xvcmUua2VybmVsLm9yZy9yLzIwMjMwNjIxMTMwNDQzLjc1
+NDM2MDNiMmVlNy5JYThkZDU0MjE2ZDM0MWVmMWRkYzA1MzFmMmM5YWEzMGQzMDUzNmE1ZEBjaGFu
+Z2VpZA0KPiA+ID4gwqDCoMKgIFNpZ25lZC1vZmYtYnk6IEpvaGFubmVzIEJlcmcgPGpvaGFubmVz
+LmJlcmdAaW50ZWwuY29tPg0KPiA+ID4gDQo+ID4gPiBJIGhhdmUgc29tZSBzY3JlZW5zaG90cyB3
+aGljaCBzaG93IHRoYXQgUklQIHBvaW50cyB0bw0KPiA+ID4gaXdsX21lbV9mcmVlX3NrYiwNCj4g
+PiA+IEkgY2FuIGNyZWF0ZSBhIGtlcm5lbCBidWd6aWxsYSBhbmQgYXR0YWNoIHRoZSBzY3JlZW5z
+aG90cyB0aGVyZQ0KPiA+ID4gaWYNCj4gPiA+IG5lZWRlZC4NCj4gPiA+IA0KPiA+ID4gQlRXLCBs
+c3BjaSBvdXRwdXQgb2YgdGhlIHdpZmkgZGV2aWNlIGFuZCBnaXQgYmlzZWN0IGxvZyBhdHRhY2hl
+ZC4NCj4gPiA+IA0KPiA+ID4gSWYgYW55IG90aGVyIGluZm9ybWF0aW9uIG5lZWRlZCwgcGxlYXNl
+IGxldCBtZSBrbm93Lg0KPiA+IA0KPiA+IC0tDQo+ID4gRXZlcnl0aGluZyB5b3Ugd2FubmEga25v
+dyBhYm91dCBMaW51eCBrZXJuZWwgcmVncmVzc2lvbiB0cmFja2luZzoNCj4gPiBodHRwczovL2xp
+bnV4LXJlZ3RyYWNraW5nLmxlZW1odWlzLmluZm8vYWJvdXQvI3RsZHINCj4gPiBUaGF0IHBhZ2Ug
+YWxzbyBleHBsYWlucyB3aGF0IHRvIGRvIGlmIG1haWxzIGxpa2UgdGhpcyBhbm5veSB5b3UuDQo+
+ID4gDQo+ID4gUC5TLjogZm9yIHJlZ3pib3QNCj4gPiANCj4gPiAjcmVnemJvdCBeaW50cm9kdWNl
+ZCAxOTg5OGNlOWNmOGENCj4gPiAjcmVnemJvdCBkdXAtb2Y6DQo+ID4gaHR0cHM6Ly9sb3JlLmtl
+cm5lbC5vcmcvYWxsL2E1Y2RjN2Y4LWIzNDAtZDM3Mi0yOTcxLTBkMjRiMDFkZTIxN0BnbWFpbC5j
+b20vDQoNCg==
