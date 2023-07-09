@@ -1,238 +1,130 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com [209.85.167.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E5685C96
-	for <regressions@lists.linux.dev>; Sun,  9 Jul 2023 16:01:03 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:5054:ff:feb3:8f48] (helo=regzbot.fritz.box); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	id 1qIWqL-0007uC-28; Sun, 09 Jul 2023 18:01:01 +0200
-From: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>
-To: LKML <linux-kernel@vger.kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Linux regressions report  for mainline [2023-07-09]
-Date: Sun,  9 Jul 2023 16:00:59 +0000
-Message-Id: <168891835223.2415011.16827771958379610758@leemhuis.info>
-X-Mailer: git-send-email 2.40.1
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F42A79E6
+	for <regressions@lists.linux.dev>; Sun,  9 Jul 2023 16:28:05 +0000 (UTC)
+Received: by mail-oi1-f179.google.com with SMTP id 5614622812f47-3a3efebcc24so1707799b6e.1
+        for <regressions@lists.linux.dev>; Sun, 09 Jul 2023 09:28:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1688920084; x=1691512084;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=Mnp7Gx1O4lBi6RB6np/kLFboJ0ahJMfnsN6pSM7+9k4=;
+        b=C3Z8Rw5eHLgZLt/1ByF8+nxD3uvgzIOCbeyD6rfZNLgsRMPLgEexhGgcnFPbQyoWGj
+         74ImKO3YsvkZWRNVmzLcacKTxJV6nV7KsBeEtOC1BKWbHH86F1mJOGgbAV459dfl/FJu
+         XCevRxYtHvMp4XASirzqqS2qF7pTeDqdiTaLpj106T/gzelDXnvnkLOjmjBb6o//AOZH
+         tlEA7j0fgMYsdlLibdsah5rlxd+qVHwDj4I+hYcOXU8l58HHRk2O5InJCRhk6VpW8t43
+         gEgCi1VhGtk0YgXXtzYSioCp237OKLhuxeKxNP67W21scEUsDzxjr99/QQNo9lTTK5np
+         bG0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688920084; x=1691512084;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Mnp7Gx1O4lBi6RB6np/kLFboJ0ahJMfnsN6pSM7+9k4=;
+        b=O//tvs6RUSD4w65RDw5rMFaP7yvJH4phEbL2cPbj+Dq9JIULScAukxOehDvYVZo4rh
+         x9tTVj4RmyIQdk0J/B+s0o2lbyERi24HOE0vFFJZyDMv30p1kUtaolO5ky8wHwlFKfze
+         p/upEBsekqiSbvCCt8TEH5BJFIxf94IlN+oDYEPuFka+8FyG3QzjrdV1KkrVeT15/m+m
+         8tkXqu0nG2Iv8kcNviW/3NEilyouNnxDuDWfEqt6hlQNbUypGt+QWcKnJI2Cdy49PoHO
+         JXSZsNxr7k3WWw/F+2cm3X2UOqXtHcufRDWxhPSRm4akJZ+pMXqtC51uC443f46IMViX
+         TTmw==
+X-Gm-Message-State: ABy/qLbDgrecA+l9XQjTn9u4amemd6HdxeLOc/+IKM9PM0xn22yihwFr
+	wjFTkwarYITuk55t4SN/0nA=
+X-Google-Smtp-Source: APBJJlE60avBl+3E9vLwVQj9Z7ucwDB15X967F/kv0vGm7ovzn82ucw0rFV/AvNaXRSZZAkAskZtJQ==
+X-Received: by 2002:a05:6808:1a81:b0:3a3:6536:dd89 with SMTP id bm1-20020a0568081a8100b003a36536dd89mr9022353oib.49.1688920084438;
+        Sun, 09 Jul 2023 09:28:04 -0700 (PDT)
+Received: from [192.168.1.119] ([216.130.59.33])
+        by smtp.gmail.com with ESMTPSA id n5-20020aca2405000000b003a1f444307esm3367199oic.58.2023.07.09.09.28.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 09 Jul 2023 09:28:03 -0700 (PDT)
+Sender: Larry Finger <larry.finger@gmail.com>
+Message-ID: <b4063a55-be7c-8f3a-2529-e1211080d323@lwfinger.net>
+Date: Sun, 9 Jul 2023 11:28:02 -0500
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1688918463;59144b44;
-X-HE-SMSGID: 1qIWqL-0007uC-28
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: [Regression][BISECTED] kernel boot hang after 19898ce9cf8a
+ ("wifi: iwlwifi: split 22000.c into multiple files")
+To: "Zhang, Rui" <rui.zhang@intel.com>,
+ "Greenman, Gregory" <gregory.greenman@intel.com>,
+ "Berg, Johannes" <johannes.berg@intel.com>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Cc: "bagasdotme@gmail.com" <bagasdotme@gmail.com>,
+ "davem@davemloft.net" <davem@davemloft.net>,
+ "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+ "kvalo@kernel.org" <kvalo@kernel.org>, "Baruch, Yaara"
+ <yaara.baruch@intel.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+ "Torvalds, Linus" <torvalds@linux-foundation.org>,
+ "Ben Ami, Golan" <golan.ben.ami@intel.com>,
+ "edumazet@google.com" <edumazet@google.com>,
+ "Sisodiya, Mukesh" <mukesh.sisodiya@intel.com>,
+ "kuba@kernel.org" <kuba@kernel.org>, "pabeni@redhat.com" <pabeni@redhat.com>
+References: <b533071f38804247f06da9e52a04f15cce7a3836.camel@intel.com>
+ <a4265090-d6b8-b185-a400-b09b27a347cc@leemhuis.info>
+ <c65d0837-5e64-bec7-9e56-04aa91148d05@leemhuis.info>
+ <4153ce0aac6dc760a3a9c7204c5c9141b60839a4.camel@intel.com>
+Content-Language: en-US
+From: Larry Finger <Larry.Finger@lwfinger.net>
+In-Reply-To: <4153ce0aac6dc760a3a9c7204c5c9141b60839a4.camel@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+
+On 7/9/23 08:27, Zhang, Rui wrote:
+> On Sat, 2023-07-08 at 16:17 +0200, Thorsten Leemhuis wrote:
+>> On 07.07.23 12:55, Linux regression tracking (Thorsten Leemhuis)
+>> wrote:
+>>> On 07.07.23 10:25, Zhang, Rui wrote:
+>>>>
+>>>> I run into a NULL pointer dereference and kernel boot hang after
+>>>> switching to latest upstream kernel, and git bisect shows that
+>>>> below
+>>>> commit is the first offending commit, and I have confirmed that
+>>>> commit
+>>>> 19898ce9cf8a has the issue while 19898ce9cf8a~1 does not.
+>>>
+>>> FWIW, this is the fourth such report about this that I'm aware of.
+>>>
+>>> The first is this one (with two affected users afaics):
+>>> https://bugzilla.kernel.org/show_bug.cgi?id=217622
+>>>
+>>> The second is this one:
+>>> https://lore.kernel.org/all/CAAJw_Zug6VCS5ZqTWaFSr9sd85k%3DtyPm9DEE%2BmV%3DAKoECZM%2BsQ@mail.gmail.com/
+>>>
+>>> The third:
+>>> https://lore.kernel.org/all/9274d9bd3d080a457649ff5addcc1726f08ef5b2.camel@xry111.site/
+>>>
+>>> And in the past few days two people from Fedora land talked to me
+>>> on IRC
+>>> with problems that in retrospective might be caused by this as
+>>> well.
+>>
+>> I got confirmation: one of those cases is also caused by 19898ce9cf8a
+>> But I write for a different reason:
+>>
+>> Larry (now CCed) looked at the culprit and spotted something that
+>> looked
+>> suspicious to him; he posted a patch and looks for testers:
+>> https://lore.kernel.org/all/0068af47-e475-7e8d-e476-c374e90dff5f@lwfinger.net/
+> 
+> I applied this patch but the problem still exists.
+> 
+> thanks,
+> rui
+
+Rui,
+
+I am not surprised that the patch did not help. I guess you will need to stay 
+with kernel 6.3.X until the Intel developers return from their summer break.
+
+Larry
 
 
-Hi Linus. A quick regression report for mainline ahead of the -rc1 release:
-
-* No progress so far wrt the iwlwifi regression I mentioned on Friday[1]
-that I suspect quite a few people will run into. Sounds like someone who
-knows that code well with a bit of luck might be able to look into the
-issue in the next few days. Larry's quick shot at a patch did not help[2].
-
-[1] https://lore.kernel.org/all/a4265090-d6b8-b185-a400-b09b27a347cc@leemhuis.info/
-
-[2] https://lore.kernel.org/all/CAAJw_ZvBUpMMC886CDdsLFW6bUG69X78zVfre7gCfu=aTR1xGQ@mail.gmail.com/
-https://lore.kernel.org/all/4153ce0aac6dc760a3a9c7204c5c9141b60839a4.camel@intel.com/
-
-
-* A few fixes for build warnings or errors are available, but haven't
-reached you yet afaics (but it's easy to miss something here; maybe some
-of those are not needed anymore):
-
-[PATCH] sparc: mark __arch_xchg() as __always_inline
-https://lore.kernel.org/lkml/20230628094938.2318171-1-arnd@kernel.org/
-Reported here:
-https://lore.kernel.org/all/c525adc9-6623-4660-8718-e0c9311563b8@roeck-us.net/
-
-[PATCH] objtool: initialize all of struct elf
-https://lore.kernel.org/all/20230629102051.42E8360467@lion.mk-sys.cz/
-Reported here:
-https://lore.kernel.org/lkml/20230628115825.ahqejf5y4hgxhyqj@lion.mk-sys.cz/
-
-[PATCH] scsi: aacraid: avoid -Warray-bounds warning
-https://lore.kernel.org/all/20230703114851.1194510-1-arnd@kernel.org/
-(in -next as 2ed218a4fa5)
-Reported here:
-https://lore.kernel.org/lkml/ZJ2M4yqnOCqqGWH0@debian/
-
-Ciao, Thorsten
-
-
----
-
-Hi, this is regzbot, the Linux kernel regression tracking bot.
-
-Currently I'm aware of 9 regressions in linux-mainline. Find the
-current status below and the latest on the web:
-
-https://linux-regtracking.leemhuis.info/regzbot/mainline/
-
-Bye bye, hope to see you soon for the next report.
-   Regzbot (on behalf of Thorsten Leemhuis)
-
-
-========================================================
-current cycle (v6.4.. aka v6.4-post), culprit identified
-========================================================
-
-
-[ *NEW* ] objtool: build failure
---------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/20230628115825.ahqejf5y4hgxhyqj@lion.mk-sys.cz/
-https://lore.kernel.org/lkml/20230628115825.ahqejf5y4hgxhyqj@lion.mk-sys.cz/
-
-By Michal Kubecek; 11 days ago; 12 activities, latest 0 days ago.
-Introduced in eb0481bbc4ce
-
-Fix incoming:
-* objtool: initialize all of struct elf
-  https://lore.kernel.org/lkml/fb93d107-c834-1849-2b14-1dd33c4f9955@leemhuis.info/
-
-
-[ *NEW* ] sh4: Boot stall with qemu emulations
-----------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/fbfea3ad-d327-4ad5-ac9c-648c7ca3fe1f@roeck-us.net/
-https://lore.kernel.org/lkml/fbfea3ad-d327-4ad5-ac9c-648c7ca3fe1f@roeck-us.net/
-
-By Guenter Roeck; 3 days ago; 27 activities, latest 0 days ago.
-Introduced in a8ac2961148e
-
-Recent activities from: Guenter Roeck (9), John Paul Adrian
-  Glaubitz (9), Sergey Shtylyov (5), Geert Uytterhoeven (4)
-
-One patch associated with this regression:
-* Re: [PATCH] sh: Avoid using IRQ0 on SH3 and SH4
-  https://lore.kernel.org/lkml/cd1caa5d-fbd8-c3fe-29e9-b848ddd5634c@omp.ru/
-  0 days ago, by Sergey Shtylyov
-
-Noteworthy links:
-* [PATCH] [RFT] sh: mach-r2d: Handle virq offset in cascaded IRL demux
-  https://lore.kernel.org/lkml/2c99d5df41c40691f6c407b7b6a040d406bc81ac.1688901306.git.geert%2Brenesas@glider.be/
-  0 days ago, by Geert Uytterhoeven; thread monitored.
-
-
-[ *NEW* ] drm/bridge: lt9611: Dragonboard 845c (SDM845) devboard broken when running AOSP
------------------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/CAMi1Hd0TD=2z_=bcDrht3H_wiLvAFcv8Z-U_r_KUOoeMc6UMjw@mail.gmail.com/
-https://lore.kernel.org/dri-devel/CAMi1Hd0TD=2z_=bcDrht3H_wiLvAFcv8Z-U_r_KUOoeMc6UMjw@mail.gmail.com/
-
-By Amit Pundir; 4 days ago; 14 activities, latest 0 days ago.
-Introduced in 8ddce13ae69
-
-Recent activities from: Marek Vasut (4), Dmitry Baryshkov (3), Neil
-  Armstrong (2), Amit Pundir (2), Jagan Teki (2), Abhinav Kumar (1)
-
-
-[ *NEW* ] blk-mq: NFS workload leaves nfsd threads in D state
--------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/7A57C7AE-A51A-4254-888B-FE15CA21F9E9@oracle.com/
-https://lore.kernel.org/linux-block/7A57C7AE-A51A-4254-888B-FE15CA21F9E9@oracle.com/
-
-By Chuck Lever III; 0 days ago; 1 activities, latest 0 days ago.
-Introduced in 615939a2ae73
-
-Recent activities from: Chuck Lever III (1)
-
-
-[ *NEW* ] dma-iommu.c:693 __iommu_dma_unmap bug trace due to 22000.c split
---------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/bugzilla.kernel.org/217622/
-https://bugzilla.kernel.org/show_bug.cgi?id=217622
-https://lore.kernel.org/netdev/a5cdc7f8-b340-d372-2971-0d24b01de217@gmail.com/
-https://lore.kernel.org/lkml/b533071f38804247f06da9e52a04f15cce7a3836.camel@intel.com/
-
-By Niklāvs Koļesņikovs, Niklāvs Koļesņikovs, and Zhang, Rui; 7 days ago; 10 activities, latest 1 days ago.
-Introduced in 19898ce9cf8a
-
-Recent activities from: Niklāvs Koļesņikovs (5), The Linux kernel's
-  regression tracker (Thorsten Leemhuis) (2), Johnathon Weare (2),
-  Thorsten Leemhuis (1)
-
-
-[ *NEW* ] locking/atomic: build error on sparc64:allmodconfig
--------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/32395f1f-19e4-41da-9f67-68c7d21cf9b2@roeck-us.net/
-https://lore.kernel.org/lkml/32395f1f-19e4-41da-9f67-68c7d21cf9b2@roeck-us.net/
-
-By Guenter Roeck; 11 days ago; 9 activities, latest 1 days ago.
-Introduced in d12157efc8e0
-
-Recent activities from: Guenter Roeck (3), Mark Rutland (2), Linux
-  regression tracking (Thorsten Leemhuis) (1), Andi Shyti (1), Sam
-  Ravnborg (1), Arnd Bergmann (1)
-
-Noteworthy links:
-* [PATCH] sparc: mark __arch_xchg() as __always_inline
-  https://lore.kernel.org/lkml/20230628094938.2318171-1-arnd@kernel.org/
-  11 days ago, by Arnd Bergmann; thread monitored.
-
-
-[ *NEW* ] mainline build failure due to df8fc4e934c1 ("kbuild: Enable -fstrict-flex-arrays=3")
-----------------------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/ZJ2M4yqnOCqqGWH0@debian/
-https://lore.kernel.org/lkml/ZJ2M4yqnOCqqGWH0@debian/
-
-By Sudip Mukherjee (Codethink); 10 days ago; 6 activities, latest 1 days ago.
-Introduced in df8fc4e934c1
-
-Fix incoming:
-* scsi: aacraid: Avoid -Warray-bounds warning
-  https://lore.kernel.org/lkml/7493c624-431c-a67d-3cbd-10f29a8c33dd@leemhuis.info/
-
-
-[ *NEW* ] Bluetooth: Dragonboard 845c (SDM845) devboard broken
---------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/CAMi1Hd3fe=wk02WG8J7K5Ud1GcWkuKKKrxFjkNguxDkzNz2WVQ@mail.gmail.com/
-https://lore.kernel.org/lkml/CAMi1Hd3fe=wk02WG8J7K5Ud1GcWkuKKKrxFjkNguxDkzNz2WVQ@mail.gmail.com/
-
-By Amit Pundir; 2 days ago; 3 activities, latest 2 days ago.
-Introduced in 6945795bc81
-
-Recent activities from: Amit Pundir (2), Johan Hovold (1)
-
-
-[ *NEW* ] net: phylink: mv88e6060 dsa driver broken
----------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/CABikg9wM0f5cjYY0EV_i3cMT2JcUT1bSe_kkiYk0wFwMrTo8=w@mail.gmail.com/
-https://lore.kernel.org/netdev/CABikg9wM0f5cjYY0EV_i3cMT2JcUT1bSe_kkiYk0wFwMrTo8=w@mail.gmail.com/
-
-By Sergei Antonov; 5 days ago; 1 activities, latest 5 days ago.
-Introduced in de5c9bf40c45
-
-Recent activities from: Sergei Antonov (1)
-
-
-=============
-End of report
-=============
-
-All regressions marked '[ *NEW* ]' were added since the previous report,
-which can be found here:
-https://lore.kernel.org/r/168770105071.1044236.16811678381872089646@leemhuis.info
-
-Thanks for your attention, have a nice day!
-
-  Regzbot, your hard working Linux kernel regression tracking robot
-
-
-P.S.: Wanna know more about regzbot or how to use it to track regressions
-for your subsystem? Then check out the getting started guide or the
-reference documentation:
-
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
-
-The short version: if you see a regression report you want to see
-tracked, just send a reply to the report where you Cc
-regressions@lists.linux.dev with a line like this:
-
-#regzbot introduced: v5.13..v5.14-rc1
-
-If you want to fix a tracked regression, just do what is expected
-anyway: add a 'Link:' tag with the url to the report, e.g.:
-
-Link: https://lore.kernel.org/all/30th.anniversary.repost@klaava.Helsinki.FI/
