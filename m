@@ -1,71 +1,104 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9F9E13AC3
-	for <regressions@lists.linux.dev>; Mon, 10 Jul 2023 17:09:17 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qIuNj-000676-Ls; Mon, 10 Jul 2023 19:09:03 +0200
-Message-ID: <c76eae67-b391-a39e-a907-988b8277a72b@leemhuis.info>
-Date: Mon, 10 Jul 2023 19:09:02 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4BCD107B4
+	for <regressions@lists.linux.dev>; Mon, 10 Jul 2023 17:16:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B4D9C433C7;
+	Mon, 10 Jul 2023 17:16:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1689009390;
+	bh=MqOW2M+FkW5a5sgAu73T5iHV7N8UuHF3eSn9x4ulp9o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MEaEjmNhYsi1socPRthS6VwOPYNayJ6S3042CdPxkBlblz4MxVSIchN9a4A9uIeSw
+	 xTpSvo8HbaF2QOMpzAmWXdqt9bSsLZAsI8eR06fY67EM1XCwK+76SHcm0z73V8MR7Q
+	 5TVQR0AEbcxZSwVaWxwIHcXA7ecQwmpwa8/N51C6J2hTe583ofrv2vH2IIqqVqbidm
+	 XtBpCteBl5EFeG1exU2FEIGqaBGGDf8z7YxTr5cG+k6yNkrKbsq7v3zFOjU4IJOeOf
+	 UwXmqiYdbbaWK4JUp2Jq8JVUzwJlZjULQDDIkFQwIMjzH1BSs26pQZQ4ocJrVi7oWS
+	 0FuQ8UfFW82Jw==
+Date: Mon, 10 Jul 2023 10:16:28 -0700
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Michal Kubecek <mkubecek@suse.cz>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
+	Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org
+Subject: Re: build failure after commit eb0481bbc4ce ("objtool: Fix
+ reloc_hash size")
+Message-ID: <20230710171628.vo4azoabe26kepij@treble>
+References: <20230628115825.ahqejf5y4hgxhyqj@lion.mk-sys.cz>
+ <fb93d107-c834-1849-2b14-1dd33c4f9955@leemhuis.info>
+ <20230709140929.5sdcvyqquotkn752@carpenter>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: 3 more broken Zaurii - SL-5600, A300, C700
-Content-Language: en-US, de-DE
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
- Andrew Lunn <andrew@lunn.ch>, Ross Maynard <bids.7405@bigpond.com>,
- Dave Jones <davej@codemonkey.org.uk>, Bagas Sanjaya <bagasdotme@gmail.com>,
- "David S. Miller" <davem@davemloft.net>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Networking <netdev@vger.kernel.org>,
- Linux USB <linux-usb@vger.kernel.org>, Oliver Neukum <oneukum@suse.com>
-References: <7ea9abd8-c35d-d329-f0d4-c8bd220cf691@gmail.com>
- <50f4c10d-260c-cb98-e7d2-124f5519fa68@gmail.com>
- <e1fdc435-089c-8ce7-d536-ce3780a4ba95@leemhuis.info>
- <ZKbuoRBi50i8OZ9d@codemonkey.org.uk>
- <62a9e058-c853-1fcd-5663-e2e001f881e9@bigpond.com>
- <14fd48c8-3955-c933-ab6f-329e54da090f@bigpond.com>
- <05a229e8-b0b6-4d29-8561-70d02f6dc31b@lunn.ch>
- <ac957af4-f265-3ba0-0373-3a71d134a57e@leemhuis.info>
- <20230710095519.5056c98b@kernel.org>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <20230710095519.5056c98b@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1689008957;4344e5cc;
-X-HE-SMSGID: 1qIuNj-000676-Ls
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20230709140929.5sdcvyqquotkn752@carpenter>
 
-On 10.07.23 18:55, Jakub Kicinski wrote:
-> On Sun, 9 Jul 2023 06:36:32 +0200 Linux regression tracking (Thorsten
-> Leemhuis) wrote:
->> To chime in here: I most agree, but FWIW, it broke more than a decade
->> ago in v3.0, so maybe this is better suited for net-next. But of course
->> that up to the -net maintainers.
+On Sun, Jul 09, 2023 at 05:09:29PM +0300, Michal Kubecek wrote:
+> On Sat, Jul 08, 2023 at 03:40:50PM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
+> > On 28.06.23 13:58, Michal Kubecek wrote:
+> > > 
+> > > this morning, mainline kernel builds started to fail on my desktop like
+> > > this:
+> > > 
+> > >   mike@lion:~/work/git/kernel-upstream> mkdir /srv/ram/kobj
+> > >   mike@lion:~/work/git/kernel-upstream> make -j24 CC=gcc-13 O=/srv/ram/kobj defconfig >/dev/null
+> > >   mike@lion:~/work/git/kernel-upstream> make -j24 CC=gcc-13 O=/srv/ram/kobj all >/dev/null
+> > >   net/ipv4/netfilter/iptable_nat.o: warning: objtool: mmap fail reloc
+> > >   net/netfilter/xt_mark.o: warning: objtool: mmap fail reloc
+> > >   net/netfilter/xt_nat.o: warning: objtool: mmap fail reloc
+> > >   net/netfilter/xt_LOG.o: warning: objtool: mmap fail reloc
+> > >   net/netfilter/xt_MASQUERADE.o: warning: objtool: mmap fail reloc
+> > >   net/netfilter/nf_log_syslog.o: warning: objtool: mmap fail reloc
+> > >   net/netfilter/xt_addrtype.o: warning: objtool: mmap fail reloc
+> > >   fs/efivarfs/efivarfs.o: warning: objtool: mmap fail reloc
+> > >   drivers/thermal/intel/x86_pkg_temp_thermal.o: warning: objtool: mmap fail reloc
+> > >   vmlinux.o: warning: objtool: mmap fail reloc
+> > >   incomplete ORC unwind tables in file: vmlinux
+> > >   Failed to sort kernel tables
+> > >   make[2]: *** [/home/mike/work/git/kernel-upstream/scripts/Makefile.vmlinux:35: vmlinux] Error 1
+> > >   make[2]: *** Deleting file 'vmlinux'
+> > >   make[1]: *** [/home/mike/work/git/kernel-upstream/Makefile:1256: vmlinux] Error 2
+> > >   make: *** [Makefile:226: __sub-make] Error 2
+> > > 
+> > > I bisected the failure to commit
+> > > 
+> > >   eb0481bbc4ce ("objtool: Fix reloc_hash size")
+> > > 
+> > > I also tried gcc11 and building on a normal filesystem (rather than
+> > > tmpfs) but the result is still the same. Different configurations (e.g.
+> > > allmodconfig) only show more modules with "mmap fail reloc". The machine
+> > > has 64 GB of RAM and both ulimit -m and ulimit -v show "unlimited".
+> > > Anything idea what else I should try?
+> > 
+> > Michal, thx for the report. Please correct me if I'm wrong: this as of
+> > now is unfixed, as your patch to fix is afaics wasn't merged yet (at
+> > least I can't see it even in next, but I might be missing something).
 > 
-> I'm surprised to see you suggest -next for a fix to a user reported bug.
-> IMO it's very firmly net material.
+> Yes, the fix has not been merged yet and current master (commit
+> 1c7873e33645) still shows the issue.
 
-Yes, yes, normally it would argue the other way around. :-D
+Should be fixed in the tip tree with the following patch:
 
-But Linus a few times in one way or another argued that time is a factor
-when it comes to regressions. Here for example:
+https://lkml.kernel.org/lkml/168897683429.404.6801969953192508868.tip-bot2@tip-bot2
 
-https://lore.kernel.org/all/CAHk-=wis_qQy4oDNynNKi5b7Qhosmxtoj1jxo5wmB6SRUwQUBQ@mail.gmail.com/
 
-But there are no "semantic changes that now mean that fixing the
-regression could cause a _new_ regression" here I guess. And what he was
-talking about there is quite different from this case as well (I vaguely
-remember a better example, but I can't find it; whatever).
+> 
+> Michal
+> 
+> > Hence adding it to the regression tracking now that the end of the merge
+> > window is near:
+> > 
+> > #regzbot ^introduced eb0481bbc4ce
+> > #regzbot title objtool: build failure
+> > #regzbot monitor:
+> > https://lore.kernel.org/all/20230629102051.42E8360467@lion.mk-sys.cz/
+> > #regzbot fix: objtool: initialize all of struct elf
+> > #regzbot ignore-activity
 
-In the end this is one of issue where I don't care much. :-D
 
-Ciao, Thorsten
+
+-- 
+Josh
