@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE0A71FB4
-	for <regressions@lists.linux.dev>; Mon, 10 Jul 2023 10:39:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 840E7DDAC
+	for <regressions@lists.linux.dev>; Mon, 10 Jul 2023 10:45:59 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qIoIc-0000vr-Cy; Mon, 10 Jul 2023 12:39:22 +0200
-Message-ID: <f04feee0-bb2c-b778-0603-2817c5b9bc40@leemhuis.info>
-Date: Mon, 10 Jul 2023 12:39:19 +0200
+	id 1qIoOz-0002Nq-Lb; Mon, 10 Jul 2023 12:45:57 +0200
+Message-ID: <ad9a9126-1055-76cf-77e8-1408d5a3cc19@leemhuis.info>
+Date: Mon, 10 Jul 2023 12:45:57 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,71 +16,63 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.12.0
-Subject: Re: [Regression][BISECTED] kernel boot hang after 19898ce9cf8a
- ("wifi: iwlwifi: split 22000.c into multiple files")
+Subject: Re: [PATCH v4 29/33] x86/mm: try VMA lock-based page fault handling
+ first
 Content-Language: en-US, de-DE
-To: "Zhang, Rui" <rui.zhang@intel.com>,
- "Torvalds, Linus" <torvalds@linux-foundation.org>,
- "johannes@sipsolutions.net" <johannes@sipsolutions.net>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Cc: "bagasdotme@gmail.com" <bagasdotme@gmail.com>,
- "davem@davemloft.net" <davem@davemloft.net>,
- "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
- "kvalo@kernel.org" <kvalo@kernel.org>, "Baruch, Yaara"
- <yaara.baruch@intel.com>, "Greenman, Gregory" <gregory.greenman@intel.com>,
- "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
- "Ben Ami, Golan" <golan.ben.ami@intel.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "edumazet@google.com" <edumazet@google.com>,
- "Sisodiya, Mukesh" <mukesh.sisodiya@intel.com>,
- "kuba@kernel.org" <kuba@kernel.org>, "pabeni@redhat.com"
- <pabeni@redhat.com>, Xi Ruoyao <xry111@xry111.site>
-References: <b533071f38804247f06da9e52a04f15cce7a3836.camel@intel.com>
- <a4265090-d6b8-b185-a400-b09b27a347cc@leemhuis.info>
- <CAHk-=wg23SdKRcn2W+BWWEfJ2Efp0sreJx9=iw0AsUPjW3qznw@mail.gmail.com>
- <446c25888d9316d0f15e6bcc6ecb100dda99324e.camel@sipsolutions.net>
- <e7d7945055802e5d3f1b42750716bc6a314ec97b.camel@intel.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
+From: "Linux regression tracking #update (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <e7d7945055802e5d3f1b42750716bc6a314ec97b.camel@intel.com>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+References: <20230227173632.3292573-1-surenb@google.com>
+ <20230227173632.3292573-30-surenb@google.com>
+ <dbdef34c-3a07-5951-e1ae-e9c6e3cdf51b@kernel.org>
+ <90150fe2-e07d-d991-5bab-0a931abda9a3@leemhuis.info>
+In-Reply-To: <90150fe2-e07d-d991-5bab-0a931abda9a3@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1688985567;90f7ca99;
-X-HE-SMSGID: 1qIoIc-0000vr-Cy
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1688985959;cfd4e357;
+X-HE-SMSGID: 1qIoOz-0002Nq-Lb
 
-[CCing one
-
-On 10.07.23 03:54, Zhang, Rui wrote:
-> On Sun, 2023-07-09 at 20:07 +0200, Johannes Berg wrote:
->> On Sun, 2023-07-09 at 09:31 -0700, Linus Torvalds wrote:
->>> On Fri, 7 Jul 2023 at 03:55, Linux regression tracking (Thorsten
->>> Leemhuis) <regressions@leemhuis.info> wrote:
->>>>
->>>> [CCing the regression list, netdev, the net maintainers, and
->>>> Linus;
->>>> Johannes and Kalle as well, but just for the record, they afaik
->>>> are
->>>> unavailable]
->>>
->>> So I will release rc1 with this issue, but remind me - if it hasn't
->>> had any traction next week and the radio silence continues, I'll
->>> just
->>> revert it all.
+On 29.06.23 19:06, Linux regression tracking #adding (Thorsten Leemhuis)
+wrote:
+> [CCing the regression list, as it should be in the loop for regressions:
+> https://docs.kernel.org/admin-guide/reporting-regressions.html]
+> 
+> On 29.06.23 16:40, Jiri Slaby wrote:
 >>
->> Sorry. I got back home a few hours ago (for few days anyway) and I
->> think
->> I already know what the issue is. 
+>> On 27. 02. 23, 18:36, Suren Baghdasaryan wrote:
+>>> Attempt VMA lock-based page fault handling first, and fall back to the
+>>> existing mmap_lock-based handling if that fails.
+>> [...]
+>>> +    fault = handle_mm_fault(vma, address, flags |
+>>> FAULT_FLAG_VMA_LOCK, regs);
+>>> +    vma_end_read(vma);
+>>> +
+>>> +    if (!(fault & VM_FAULT_RETRY)) {
+>>> +        count_vm_vma_lock_event(VMA_LOCK_SUCCESS);
+>>> +        goto done;
+>>> +    }
+>>> +    count_vm_vma_lock_event(VMA_LOCK_RETRY);
+>>
+>> This is apparently not strong enough as it causes go build failures like:
+>> 
+> Thanks for the report. To be sure the issue doesn't fall through the
+> cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
+> tracking bot:
+> 
+> #regzbot ^introduced 0bff0aaea03e2a3ed6bfa3021
+> https://bugzilla.suse.com/show_bug.cgi?id=1212775
+> #regzbot title mm: failures when building go in 1-3 out of 20 builds
+> #regzbot ignore-activity
 
-Many many thx for taking a look at this!
+#regzbot fix: fb49c455323ff8319a1
+#regzbot ignore-activity
 
-FWIW in case anyone wonders where that fix is, find it here:
-https://lore.kernel.org/all/20230709181323.12085-2-johannes@sipsolutions.net/
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+That page also explains what to do if mails like this annoy you.
 
-(or here: https://bugzilla.kernel.org/show_bug.cgi?id=217622#c9 )
 
-> I have tested Johannes' patch and it fixes the problem on my side.
-
-Ahh, great.
-
-Ciao, Thorsten
