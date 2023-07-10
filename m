@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03CAB5229
-	for <regressions@lists.linux.dev>; Mon, 10 Jul 2023 13:50:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 365B75229
+	for <regressions@lists.linux.dev>; Mon, 10 Jul 2023 13:56:10 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qIrGv-000548-Uw; Mon, 10 Jul 2023 15:49:50 +0200
-Message-ID: <090d1bcb-608b-1aa3-7a59-f2b09ff0061e@leemhuis.info>
-Date: Mon, 10 Jul 2023 15:49:49 +0200
+	id 1qIrN3-0006B0-8i; Mon, 10 Jul 2023 15:56:09 +0200
+Message-ID: <8265a711-30cc-cc1f-b29e-2181f575cffd@leemhuis.info>
+Date: Mon, 10 Jul 2023 15:56:08 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,96 +16,80 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.12.0
-Subject: Re: [PATCH v3 0/2] perf probe: fix regression introduced by switch to
- die_get_decl_file
+Subject: Re: [PATCH 1/2] tpm/tpm_tis: Disable interrupts for Framework Laptop
+ Intel 12th gen
 Content-Language: en-US, de-DE
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: =?UTF-8?Q?Georg_M=c3=bcller?= <georgmueller@gmx.net>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
- "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
- Arnaldo Carvalho de Melo <acme@redhat.com>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20230628084551.1860532-3-georgmueller@gmx.net>
- <1c85c4d6-7097-bc0a-d0ca-ebe234d63ece@leemhuis.info>
- <ZKwLKXL6rkoShDNc@kernel.org>
+To: Christian Hesse <mail@eworm.de>, linux-integrity@vger.kernel.org
+Cc: Lino Sanfilippo <l.sanfilippo@kunbus.com>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ Peter Huewe <peterhuewe@gmx.de>, stable@vger.kernel.org, roubro1991@gmail.com
+References: <c0ee4b7c-9d63-0bb3-c677-2be045deda43@leemhuis.info>
+ <20230710133836.4367-1-mail@eworm.de>
 From: "Linux regression tracking (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <ZKwLKXL6rkoShDNc@kernel.org>
+In-Reply-To: <20230710133836.4367-1-mail@eworm.de>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1688997001;1266eec5;
-X-HE-SMSGID: 1qIrGv-000548-Uw
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1688997371;5393962e;
+X-HE-SMSGID: 1qIrN3-0006B0-8i
 
-On 10.07.23 15:44, Arnaldo Carvalho de Melo wrote:
-> Em Mon, Jul 10, 2023 at 02:32:28PM +0200, Linux regression tracking (Thorsten Leemhuis) escreveu:
->> Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
->> for once, to make this easily accessible to everyone.
->>
->> Masami, Arnaldo, what's up here? Georg (who is not a regular
->> contributor) afaics found a regression in a commit you
->> authored/committed and even provided a patch-set to fix it (the first
->> one nearly four weeks ago, e.g. before the merge window started), but
->> hasn't received much support from your side to get this in. Could you
->> please look into this to get this cleared up? Or am I missing something
->> and progress to fix this has been made?
+Hi, Thorsten here, the Linux kernel's regression tracker. I'm not a
+proper reviewer for patches like this, but nevertheless two small things:
+
+On 10.07.23 15:38, Christian Hesse wrote:
+> This device suffer an irq storm, so add it in tpm_tis_dmi_table to
+> force polling.
+
+Thx for working on this!
+
+> https://bugs.archlinux.org/user/38129
+
+Not sure why this link might be helpful. Did you maybe mean to include
+another one? Like this one?
+
+https://community.frame.work/t/boot-and-shutdown-hangs-with-arch-linux-kernel-6-4-1-mainline-and-arch/33118
+
+> https://bugzilla.kernel.org/show_bug.cgi?id=217631
+>
+> Fixes: e644b2f498d297a928efcb7ff6f900c27f8b788e
+
+This should be:
+
+Fixes: e644b2f498d ("tpm, tpm_tis: Enable interrupt test")
+
+> Cc: stable@vger.kernel.org
+> Reported-by:  <roubro1991@gmail.com>
+
+The bugzilla link from above above should be here like this instead:
+
+Closes: https://bugzilla.kernel.org/show_bug.cgi?id=217631
+
+BTW, checkpatch.pl should have mentioned the two latter things.
+
+HTH, Ciao, Thorsten
+
+> Signed-off-by: Christian Hesse <mail@eworm.de>
+> ---
+>  drivers/char/tpm/tpm_tis.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 > 
-> I'm back from a 2 week vacation,
-
-Welcome back and hope you found some rest.
-
-> going thru the pile, probably fell thru
-> the cracks and Namyung, that processed patches while I was away didn't
-> notice it either.
-> 
-> I'm checking,
-
-Great, many thx! Ciao, Thorsten
-
->> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
->> --
->> Everything you wanna know about Linux kernel regression tracking:
->> https://linux-regtracking.leemhuis.info/about/#tldr
->> If I did something stupid, please tell me, as explained on that page.
->>
->>
->> On 28.06.23 10:45, Georg Müller wrote:
->>> When switching from dwarf_decl_file() to die_get_decl_file(), a regression
->>> was introduced when having a binary where the DWARF info is split to
->>> multiple CUs. It is not possible to add probes to certain functions.
->>>
->>> These patches introduce a testcase which shows the current regression
->>> and a fix for the issue
->>>
->>> Signed-off-by: Georg Müller <georgmueller@gmx.net>
->>> Link: https://lore.kernel.org/r/5a00d5a5-7be7-ef8a-4044-9a16249fff25@gmx.net/
->>>
->>> ---
->>> Changes in v2:
->>>  - Add testcase
->>>
->>> Changes in v3:
->>>  - start new thread
->>>  - add stable to cc
->>>
->>> Georg Müller (2):
->>>   perf probe: add test for regression introduced by switch to
->>>     die_get_decl_file
->>>   perf probe: read DWARF files from the correct CU
->>>
->>>  .../shell/test_uprobe_from_different_cu.sh    | 77 +++++++++++++++++++
->>>  tools/perf/util/dwarf-aux.c                   |  4 +-
->>>  2 files changed, 80 insertions(+), 1 deletion(-)
->>>  create mode 100755 tools/perf/tests/shell/test_uprobe_from_different_cu.sh
->>>
->>> --
->>> 2.41.0
->>>
->>>
->>>
-> 
+> diff --git a/drivers/char/tpm/tpm_tis.c b/drivers/char/tpm/tpm_tis.c
+> index 7db3593941ea..2979f8b9aaa0 100644
+> --- a/drivers/char/tpm/tpm_tis.c
+> +++ b/drivers/char/tpm/tpm_tis.c
+> @@ -114,6 +114,14 @@ static int tpm_tis_disable_irq(const struct dmi_system_id *d)
+>  }
+>  
+>  static const struct dmi_system_id tpm_tis_dmi_table[] = {
+> +	{
+> +		.callback = tpm_tis_disable_irq,
+> +		.ident = "Framework Laptop Intel 12th gen",
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Framework"),
+> +			DMI_MATCH(DMI_PRODUCT_VERSION, "A4"),
+> +		},
+> +	},
+>  	{
+>  		.callback = tpm_tis_disable_irq,
+>  		.ident = "ThinkPad T490s",
