@@ -1,90 +1,150 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26E42134A5
-	for <regressions@lists.linux.dev>; Mon, 10 Jul 2023 16:29:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48292C433C8;
-	Mon, 10 Jul 2023 16:29:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1689006565;
-	bh=gGS6Bp0zO0jZ5gm24xn8vWGiXBkCmkpxDeqSun0NkJU=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=EfJEVfrHcX8E2SmXehQdcrKOzStoMKH9MWG/Yx/YmGVvKPXRaq6+6oPW4DHY6Evjw
-	 1ww3H9BhgXgCnzvcQSLVwf0Jb6X5OXi5Dxlwsyuz3Z7oQivbFu7QvDjN78hu2H+Ohc
-	 R2IfADOWQdyLzIid6elw9nGK6BjhNtNb4Zps6GZSzdT4QovZ5kRnYOlIGA2FqW6A9Q
-	 R/MKYSpg47GTdASK+Grw4IHQDhRXf1dgOZVYklTcB2gpGR5szH6l5xxIMOfz8wl/xT
-	 4sHwypDZZRFc1hITW5NvMkh94OCYa8JcQp1U/SCEQ8OurMsnxv5zw7H+PSPTRnPImc
-	 EC1Sl2ohKdl+A==
-Message-ID: <48da39d3c5cc4be56965ff7515844a761217ffe7.camel@kernel.org>
-Subject: Re: [PATCH 1/2] tpm/tpm_tis: Disable interrupts for Framework
- Laptop Intel 12th gen
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: Christian Hesse <mail@eworm.de>, linux-integrity@vger.kernel.org
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>, Lino Sanfilippo
-	 <l.sanfilippo@kunbus.com>, Linux kernel regressions list
-	 <regressions@lists.linux.dev>, Peter Huewe <peterhuewe@gmx.de>, 
-	stable@vger.kernel.org, roubro1991@gmail.com
-Date: Mon, 10 Jul 2023 19:29:21 +0300
-In-Reply-To: <20230710133836.4367-1-mail@eworm.de>
-References: <c0ee4b7c-9d63-0bb3-c677-2be045deda43@leemhuis.info>
-	 <20230710133836.4367-1-mail@eworm.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.1-0ubuntu1 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 598BF125CA
+	for <regressions@lists.linux.dev>; Mon, 10 Jul 2023 16:50:29 +0000 (UTC)
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-3fc03aa6e04so27008695e9.2
+        for <regressions@lists.linux.dev>; Mon, 10 Jul 2023 09:50:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1689007827; x=1691599827;
+        h=in-reply-to:references:message-id:to:from:subject:cc:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MY+TyIudZCiZOFG2r90LBXniZOQ3ZD0PRf6V3zd0L3w=;
+        b=oegLEW/xnJMUooitotWowEO74EBik6GwF+HLHwDCrnMlR+j5+9jY2gMnvdZKoVdZGF
+         8djoLzQiXaBgDRoyHz1Jkb3ZqaAGT/QqmwynW4NLrVHYu2V/YXCX89S3Ir9fNRhcnGQf
+         3MvzREBAx1JVaMeEQfRhnEqmg9PnZYbvObUrnJ5Gd5FyYiI6WGDc9PAhKSsphOA0MtCz
+         y8TNYqCkC3EouWJyIAZx6ZGv7AyAnEd6SrZWnNAF6CeeulkQfzNS6oJMGeEXnm95s/2e
+         vwVJceOx+VFFJYFEC+FeG2ykGcVnxiGhKuEZpU7od3TEkD9aGxX0gWZvVR/Ftw7wv6QC
+         jD6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689007827; x=1691599827;
+        h=in-reply-to:references:message-id:to:from:subject:cc:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=MY+TyIudZCiZOFG2r90LBXniZOQ3ZD0PRf6V3zd0L3w=;
+        b=WQAD/2T0RsUIuAxsD7MAPvxB/rCgxZsG/97NtFX3oK1Sf/iQPuML7JM1EwBrbHxGaC
+         eNJh0pB+vLMw0fpNiGj2a3T1mrakuZKa+plvQFCNwpjt1kXbHYT5GpGrRkGnbSmzcwpI
+         aUi8EkEBrsKHuyvWbUMSmVABXh271M8PQjMa9YbTt4OUMp/QpwqltDjTxjkpuDAlEPEi
+         65yV8uzeoLZt4Bhgh7ZoMXd7mh1lr+oWRIP1kzYqr+vCgpg0F8td+gvpNiicEW3sGy6G
+         nhrGkb6VwwWfM6R7VhlAyfqDLyTxY3YxejPoQQ2GNtdUkwa+uJ7WA18icBX+fYveKL1t
+         tuQg==
+X-Gm-Message-State: ABy/qLbWB32JE7qcX9lbR+1u+PichjyNWwt+vQKNJT8IifK9ex1I5HFA
+	Iu6CITVHkEHqSLjGt4geVeJVDUrssR8=
+X-Google-Smtp-Source: APBJJlFvJ9ZgWVMBwCn8tDFQxqtyaoU25Y933RNpn39LVgvBeuom2J6oL4/Sy+hoLffrelj7Nl0yfw==
+X-Received: by 2002:a7b:c389:0:b0:3fc:9e:eead with SMTP id s9-20020a7bc389000000b003fc009eeeadmr8389566wmj.20.1689007827077;
+        Mon, 10 Jul 2023 09:50:27 -0700 (PDT)
+Received: from localhost (freebox.vlq16.iliad.fr. [213.36.7.13])
+        by smtp.gmail.com with ESMTPSA id n12-20020adfe78c000000b00314367cf43asm12191950wrm.106.2023.07.10.09.50.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Jul 2023 09:50:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 10 Jul 2023 18:50:26 +0200
+Cc: <linux-wireless@vger.kernel.org>
+Subject: Re: [regression] STP on 80211s is broken in 6.4-rc4
+From: "Nicolas Escande" <nico.escande@gmail.com>
+To: "Linux regressions mailing list" <regressions@lists.linux.dev>, "Bagas
+ Sanjaya" <bagasdotme@gmail.com>, <nbd@nbd.name>,
+ =?utf-8?q?Toke_H=C3=B8iland-J=C3=B8rgensen?= <toke@toke.dk>, "Kalle Valo"
+ <kvalo@kernel.org>, "Johannes Berg" <johannes.berg@intel.com>
+Message-Id: <CTYNAK10A6AJ.1I4W9V78VG1NB@syracuse>
+X-Mailer: aerc 0.15.1
+References: <CT5GNZSK28AI.2K6M69OXM9RW5@syracuse>
+ <ZIQbs0wqdRh7c0Kx@debian.me>
+ <a9d02800-2cd6-a27b-7998-4c97cf2eb692@leemhuis.info>
+ <CTDWJJDKSYYD.XBG1CAZB3A5W@syracuse>
+ <809500b6-4eec-7a5e-5930-00e7eeebcc5e@leemhuis.info>
+In-Reply-To: <809500b6-4eec-7a5e-5930-00e7eeebcc5e@leemhuis.info>
 
-On Mon, 2023-07-10 at 15:38 +0200, Christian Hesse wrote:
-> This device suffer an irq storm, so add it in tpm_tis_dmi_table to
-> force polling.
->=20
-> https://bugs.archlinux.org/user/38129
-> https://bugzilla.kernel.org/show_bug.cgi?id=3D217631
->=20
-> Fixes: e644b2f498d297a928efcb7ff6f900c27f8b788e
-> Cc: stable@vger.kernel.org
-> Reported-by:  <roubro1991@gmail.com>
-> Signed-off-by: Christian Hesse <mail@eworm.de>
-> ---
->  drivers/char/tpm/tpm_tis.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
->=20
-> diff --git a/drivers/char/tpm/tpm_tis.c b/drivers/char/tpm/tpm_tis.c
-> index 7db3593941ea..2979f8b9aaa0 100644
-> --- a/drivers/char/tpm/tpm_tis.c
-> +++ b/drivers/char/tpm/tpm_tis.c
-> @@ -114,6 +114,14 @@ static int tpm_tis_disable_irq(const struct dmi_syst=
-em_id *d)
->  }
-> =20
->  static const struct dmi_system_id tpm_tis_dmi_table[] =3D {
-> +	{
-> +		.callback =3D tpm_tis_disable_irq,
-> +		.ident =3D "Framework Laptop Intel 12th gen",
-> +		.matches =3D {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Framework"),
-> +			DMI_MATCH(DMI_PRODUCT_VERSION, "A4"),
-> +		},
-> +	},
->  	{
->  		.callback =3D tpm_tis_disable_irq,
->  		.ident =3D "ThinkPad T490s",
+On Mon Jul 10, 2023 at 1:32 PM CEST, Linux regression tracking (Thorsten Le=
+emhuis) wrote:
+> On 16.06.23 09:45, Nicolas Escande wrote:
+> > On Thu Jun 15, 2023 at 2:54 PM CEST, Linux regression tracking (Thorste=
+n Leemhuis) wrote:
+> >> On 10.06.23 08:44, Bagas Sanjaya wrote:
+> >>> On Tue, Jun 06, 2023 at 12:55:57PM +0200, Nicolas Escande wrote:
+> >>>>
+> >>>> As user of the mesh part of mac80211 on multiple products at work le=
+t me say
+> >>>> thank you for all the work you do on wifi, especially on 80211s, and=
+ especially
+> >>>> the recent improvements you made for mesh fast RX/TX & cross vendor =
+AMSDU compat
+> >>>>
+> >>>> We upgraded our kernel from an older (5.15) to a newer 6.4. The prob=
+lem is STP=20
+> >>>> doesn't work anymore and alas we use it for now (for the better or w=
+orse).
+> >>>>
+> >>>> What I gathered so far from my setup:
+> >>>>  - we use ath9k & ath10k
+> >>>>  - in my case STP frames are received as regular packet and not as a=
+msdu
+> >>>>  - the received packets have a wrong length of 44 in tcpdump
+> >>>>    (instead of 38 with our previous kernel)
+> >>>>  - llc_fixup_skb() tries to pull some 41 bytes out of a 35 bytes pac=
+ket
+> >>>>    this makes llc_rcv() discard the frames & breaks STP
+> >>>>
+> >>>> >From bisecting the culprit seems to be 986e43b19ae9176093da35e0a844=
+e65c8bf9ede7
+> >>>> (wifi: mac80211: fix receiving A-MSDU frames on mesh interfaces)
+> >>>>
+> >>>> I guess that your changes to handle both ampdu subframes & normal fr=
+ames in the
+> >>>> same datapath ends up putting a wrong skb->len for STP (multicast) f=
+rames ?
+> >>>> Honestly I don't understand enough of the 80211 internals & spec to =
+pinpoint the
+> >>>> exact problem.
+> >>>>
+> >>>> It seems this change was already in the 6.3 kernel so I guess someon=
+e should
+> >>>> have seen it before (but I didn't find anything..) ? Maybe I missed =
+something...
+> >>>>
+> >>>> Anyway I'm happy to provide more info or try anything you throw at m=
+e.
+> >> [...]
+> >> Hmmm, Felix did not reply. But let's ignore that for now.
+> >=20
+> > I haven't seen mails from felix on the list for a few days, I'm guessin=
+g he's
+> > unavailable for now but I'll hapilly wait.
+>
+> Still no progress. Hmmm. Are you still okay with that? I've seen no
+> other reports about this, so waiting is somewhat (albeit not completely)
+> fine for me if it is for you.
+I'm not so surprised no one else reported it, using STP on wifi (and 802.11=
+s) is
+not a really common thing to do, to be honest (and STP on wifi is unreliabl=
+e).
+Even though some openwrt guys do it for sure, I'm guessing their kernel ver=
+sion
+is lagging behind...
+>
+> But in any case it might be good if you could recheck 6.5-rc1.
+Testing on 6.5 as a whole won't be as easy for me as testing a single patch=
+ on
+top of 6.4. I'll do my best to try but from what I saw nothing got merged t=
+hat
+would even remotely help me on this issue.=20
 
-Hi, no other issues except fixes tag should be in both:
+I am not loosing hope that Felix or someone that understands this stuff bet=
+ter
+finds the time to look into this. I'm guessing it's the summer vacation eff=
+et.
 
-Fixes: e644b2f498d2 ("tpm, tpm_tis: Enable interrupt test")
-
-I.e.
-
-# $1 =3D commit ID
-function git-fixes {
-  git --no-pager log --format=3D'Fixes: %h ("%s")' --abbrev=3D12 -1 $1;
-}
-
-I'll update them, thank you.
-
-BR, Jarkko
+>
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> --
+> Everything you wanna know about Linux kernel regression tracking:
+> https://linux-regtracking.leemhuis.info/about/#tldr
+> If I did something stupid, please tell me, as explained on that page.
