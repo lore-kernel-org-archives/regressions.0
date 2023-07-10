@@ -1,58 +1,108 @@
-Received: from sipsolutions.net (s3.sipsolutions.net [144.76.43.62])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF0A83D76
-	for <regressions@lists.linux.dev>; Mon, 10 Jul 2023 15:02:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=sXd8fOLlAD3XJ6DIwb78DhwDpyb7fuPEHcC/aPSb/gc=;
-	t=1689001364; x=1690210964; b=BndTAzpfCFzcDCvvRVNJKMLo/Lxy3nV/MOrCc+7fj6/Uv79
-	yFOmB8gTzvmPIaNuRsMV8f65ofxK6TLpTMnkXTKosYOGFJA7s/gldkoVcho+Zfy5PQYOEtHnmhOjN
-	Ml4oz5/efpTiMUm3WrWxhhyBx0i6DTAd6g+FP4n4zfjwGs7XV0sNY+pE5CCfnh5cBshxNRrf7Rmf+
-	cCGdvBja6AX4ujIZutrrz3Shvau794xenbZ+oy0+GqaeeTEPVOMRw/CDYgHYUG6J3dPD3NtcxxBuz
-	w9U+UHaWKXAzTk5nTE0xj1jOaywdwhOlYPKwA9hluH21Pm61cZxQ/Vwi0r9WaxKw==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.96)
-	(envelope-from <johannes@sipsolutions.net>)
-	id 1qIsPR-00EgUu-0L;
-	Mon, 10 Jul 2023 17:02:41 +0200
-Message-ID: <047c7bdc8057175f2bb78981a5f1a1aa6b493153.camel@sipsolutions.net>
-Subject: Re: [regression] iwlwifi driver broken on Intel 3165 network card
-From: Johannes Berg <johannes@sipsolutions.net>
-To: Linux regressions mailing list <regressions@lists.linux.dev>, Aloka
- Dixit <quic_alokad@quicinc.com>, John Crispin <john@phrozen.org>
-Cc: Aditya Kumar Singh <quic_adisi@quicinc.com>, 
-	linux-wireless@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Date: Mon, 10 Jul 2023 17:02:40 +0200
-In-Reply-To: <6f8715af-95c2-8333-2b32-206a143ebb52@leemhuis.info>
-References: <6f8715af-95c2-8333-2b32-206a143ebb52@leemhuis.info>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAFBA12B86
+	for <regressions@lists.linux.dev>; Mon, 10 Jul 2023 15:58:56 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B242C433C7;
+	Mon, 10 Jul 2023 15:58:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1689004736;
+	bh=QUm9t1ezC/IIBjn6xwi8cf0YyRAsFcWX+N8CXwamai4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qErJf3rV0VSpOBIFaXedO/qXItU5H8PQsiFAaXjpq+rI9yjOk+4dSlOoV8gjGnOuL
+	 gVsk5LZxUzKimVySyZNlOkD4C28uhf8aVy7JT0F411kCaAYrln0AwBgiQ2w/uIxbBV
+	 ETAnqmD71bPt3/uC360q33UqtfVDEyF6ztR+0CmoLqEiUq7VMmqMqc7cun8p3TAZkI
+	 YCcmfB6g+dLatvmJjjxYJiihz124cK2wbhkFTw5MT6cspS4oBZicsA/GkfMgb+cRoW
+	 IN4n2n8m34M+Wh86LUDLbcKVmoTH0XrL+Pu07/zB20qtJAPB40RHgZnsUU8fEzZfJS
+	 tX5RdTFMze6DQ==
+Date: Mon, 10 Jul 2023 09:58:53 -0600
+From: Keith Busch <kbusch@kernel.org>
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Bagas Sanjaya <bagasdotme@gmail.com>, Jens Axboe <axboe@kernel.dk>,
+	Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
+	"Clemens S." <cspringsguth@gmail.com>,
+	Martin Belanger <martin.belanger@dell.com>,
+	Chaitanya Kulkarni <kch@nvidia.com>,
+	John Meneghini <jmeneghi@redhat.com>,
+	Hannes Reinecke <hare@suse.de>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux NVMe <linux-nvme@lists.infradead.org>,
+	Pankaj Raghav <p.raghav@samsung.com>,
+	Kanchan Joshi <joshi.k@samsung.com>
+Subject: Re: Fwd: Need NVME QUIRK BOGUS for SAMSUNG MZ1WV480HCGL-000MV
+ (Samsung SM-953 Datacenter SSD)
+Message-ID: <ZKwqvTMPVmhnkZjS@kbusch-mbp.dhcp.thefacebook.com>
+References: <d18d2a08-9d24-0209-c2cf-baf60bbf5048@gmail.com>
+ <ZJsKBkPqoWzYyngS@kbusch-mbp.dhcp.thefacebook.com>
+ <6f333133-2cc4-406a-d6c2-642ac6ccabca@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-malware-bazaar: not-scanned
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6f333133-2cc4-406a-d6c2-642ac6ccabca@leemhuis.info>
 
-On Mon, 2023-07-10 at 10:32 +0200, Linux regression tracking (Thorsten
-Leemhuis) wrote:
-> Hi, Thorsten here, the Linux kernel's regression tracker.
->=20
-> I noticed a regression report in bugzilla.kernel.org. As many (most?)
-> kernel developers don't keep an eye on it, I decided to forward it by mai=
-l.
->=20
-> Aloka Dixit, apparently it's cause by a change of yours: bd54f3c2907
-> ("wifi: mac80211: generate EMA beacons in AP mode") [v6.4-rc1]
->=20
+On Mon, Jul 10, 2023 at 10:52:52AM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
+> On 27.06.23 18:10, Keith Busch wrote:
+> > On Mon, Jun 26, 2023 at 08:15:49AM +0700, Bagas Sanjaya wrote:
+> >> See Bugzilla for the full thread.
+> >>
+> >> The reporter had a quirk (see above) that fixed this regression,
+> >> nevertheless I'm adding it to regzbot to make sure it doesn't fall
+> >> through cracks unnoticed:
+> >>
+> >> #regzbot introduced: 86c2457a8e8112f https://bugzilla.kernel.org/show_bug.cgi?id=217593
+> >> #regzbot title: NVME_QUIRK_BOGUS_NID is needed for SAMSUNG MZ1WV480HCGL-000MV
+> > 
+> > These bug reports really should go to the vendors that created the
+> > broken device with non-unique "unique" fields.
+> 
+> I understand that, but I think we need middlemen for that, as I or Bagas
+> don't have the contacts -- and it's IMHO also a bit much too ask us for
+> in general, as regression tracking is hard enough already. At least
+> unless this becomes something that happen regularly, then a list of
+> persons we could contact would be fine I guess. But we simply can't deal
+> with too many subsystem specific special cases.
 
-That bisect result seems unlikely to be correct. Those changes are in
-"how to get beacons" (in AP mode) which isn't even used in client mode
-here.
+I'm not asking the Linux regression trackers to fill that role, though.
+I'm asking people who experience these issues report it to their vendor
+directly because these device makers apparently have zero clue that
+their spec non-compliance is causing painful experiences for their
+customers and annoyance for maintainers. They keep pumping out more and
+more devices with the same breakage.
 
-johannes
+This particular vendor has been great at engaging with Linux, but that's
+not necessarily normal among all device makers, and I don't have
+contacts with the majority of the vendors we've had to quirk for this
+issue.
+
+We did complain to the NVMe spec workgroup that their complaince cert
+suite is not testing for this. There was a little initial interest in
+fixing that gap, but it fizzled out...
+
+> Another request came in today, even with a pseudo-patch:
+> https://bugzilla.kernel.org/show_bug.cgi?id=217649
+> 
+> To quote:
+> ```
+> As with numerous NVMe controllers these days, Samsung's
+> MZAL41T0HBLB-00BL2, which Lenovo builds into their 16ARP8 also suffers
+> from invalid IDs, breaking suspend and hibernate also on the latest
+> kernel 6.4.2.
+> 
+> The following change restores this functionality:
+> 
+> File: root/drivers/nvme/host/pci.c
+> Change:
+> 
+> -	{ PCI_DEVICE(0x144d, 0xa80b),   /* Samsung PM9B1 256G and 512G */
+> -		.driver_data = NVME_QUIRK_DISABLE_WRITE_ZEROES, },
+> 
+> +	{ PCI_DEVICE(0x144d, 0xa80b),   /* Samsung PM9B1 256G, 512G and 1TB */
+> +		.driver_data = NVME_QUIRK_BOGUS_NID |
+> +				NVME_QUIRK_DISABLE_WRITE_ZEROES, },
+
+Panjaj, okay with this one too?
