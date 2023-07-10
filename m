@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02A26C8F5
-	for <regressions@lists.linux.dev>; Mon, 10 Jul 2023 08:32:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1CDE320A
+	for <regressions@lists.linux.dev>; Mon, 10 Jul 2023 08:53:04 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qImJb-0007Yg-HW; Mon, 10 Jul 2023 10:32:15 +0200
-Message-ID: <6f8715af-95c2-8333-2b32-206a143ebb52@leemhuis.info>
-Date: Mon, 10 Jul 2023 10:32:14 +0200
+	id 1qImdY-0003UR-Rh; Mon, 10 Jul 2023 10:52:52 +0200
+Message-ID: <6f333133-2cc4-406a-d6c2-642ac6ccabca@leemhuis.info>
+Date: Mon, 10 Jul 2023 10:52:52 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,90 +16,78 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.12.0
+Subject: Re: Fwd: Need NVME QUIRK BOGUS for SAMSUNG MZ1WV480HCGL-000MV
+ (Samsung SM-953 Datacenter SSD)
 Content-Language: en-US, de-DE
+To: Keith Busch <kbusch@kernel.org>, Bagas Sanjaya <bagasdotme@gmail.com>
+Cc: Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
+ Sagi Grimberg <sagi@grimberg.me>, "Clemens S." <cspringsguth@gmail.com>,
+ Martin Belanger <martin.belanger@dell.com>,
+ Chaitanya Kulkarni <kch@nvidia.com>, John Meneghini <jmeneghi@redhat.com>,
+ Hannes Reinecke <hare@suse.de>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Linux NVMe <linux-nvme@lists.infradead.org>,
+ Pankaj Raghav <p.raghav@samsung.com>, Kanchan Joshi <joshi.k@samsung.com>
+References: <d18d2a08-9d24-0209-c2cf-baf60bbf5048@gmail.com>
+ <ZJsKBkPqoWzYyngS@kbusch-mbp.dhcp.thefacebook.com>
 From: "Linux regression tracking (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
-To: Aloka Dixit <quic_alokad@quicinc.com>, John Crispin <john@phrozen.org>
-Cc: Johannes Berg <johannes.berg@intel.com>,
- Aditya Kumar Singh <quic_adisi@quicinc.com>, linux-wireless@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: [regression] iwlwifi driver broken on Intel 3165 network card
+In-Reply-To: <ZJsKBkPqoWzYyngS@kbusch-mbp.dhcp.thefacebook.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1688977940;276a57a5;
-X-HE-SMSGID: 1qImJb-0007Yg-HW
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1688979185;9af37f03;
+X-HE-SMSGID: 1qImdY-0003UR-Rh
 
-Hi, Thorsten here, the Linux kernel's regression tracker.
-
-I noticed a regression report in bugzilla.kernel.org. As many (most?)
-kernel developers don't keep an eye on it, I decided to forward it by mail.
-
-Aloka Dixit, apparently it's cause by a change of yours: bd54f3c2907
-("wifi: mac80211: generate EMA beacons in AP mode") [v6.4-rc1]
-
-Note, you have to use bugzilla to reach the reporter, as I sadly[1] can
-not CCed them in mails like this.
-
-Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=217635 :
-
-> Distro: Arch Linux
-> Kernel version: 6.4.1.arch1-1
-> Happens on mainline kernel? : YES (linux-mainline 6.4-1)
-> Note: linux-mainline 6.4.1 is not available at time of this writing
+On 27.06.23 18:10, Keith Busch wrote:
+> On Mon, Jun 26, 2023 at 08:15:49AM +0700, Bagas Sanjaya wrote:
+>> See Bugzilla for the full thread.
+>>
+>> The reporter had a quirk (see above) that fixed this regression,
+>> nevertheless I'm adding it to regzbot to make sure it doesn't fall
+>> through cracks unnoticed:
+>>
+>> #regzbot introduced: 86c2457a8e8112f https://bugzilla.kernel.org/show_bug.cgi?id=217593
+>> #regzbot title: NVME_QUIRK_BOGUS_NID is needed for SAMSUNG MZ1WV480HCGL-000MV
 > 
-> Arch linux bug:
-> https://bugs.archlinux.org/task/78984
-> 
-> Summary:
-> No network access even after connecting to wifi. Websites don't load, ping doesn't work.
-> This didn't happen on kernel 6.3.x (specifically 6.3.9, the last 6.3 kernel provided by Arch).
-> 
-> Bug happens on both Arch-provided kernel and mainline kernel
-> 
-> Steps to reproduce:
-> 1) On fresh boot, connect to a wifi network
->    a) Make sure wifi password is not saved beforehand
-> 2) Ping a url with terminal, or open a website with browser
-> 3) Ping fails to work / website doesn't load
+> These bug reports really should go to the vendors that created the
+> broken device with non-unique "unique" fields.
 
-See the ticket for more details and the bisection result that came later.
+I understand that, but I think we need middlemen for that, as I or Bagas
+don't have the contacts -- and it's IMHO also a bit much too ask us for
+in general, as regression tracking is hard enough already. At least
+unless this becomes something that happen regularly, then a list of
+persons we could contact would be fine I guess. But we simply can't deal
+with too many subsystem specific special cases.
 
-Aditya Kumar Singh, FWIW, I hope you don't mind that I CCed you, but you
-already contributed a fix for the culprit, so it seemed the right thing
-to do in this case.
+> It's easy enough for me
+> to write the quirk patch, but it's not the ideal solution and may harm
+> devices/firmwares with the same VID:DID that don't have this problem.
+> Not being the vendor, I'm not in a postition to know that, so CC'ing
+> some Samsung folks.
 
-[TLDR for the rest of this mail: I'm adding this report to the list of
-tracked Linux kernel regressions; the text you find below is based on a
-few templates paragraphs you might have encountered already in similar
-form.]
+Another request came in today, even with a pseudo-patch:
+https://bugzilla.kernel.org/show_bug.cgi?id=217649
 
-BTW, let me use this mail to also add the report to the list of tracked
-regressions to ensure it's doesn't fall through the cracks:
+To quote:
+```
+As with numerous NVMe controllers these days, Samsung's
+MZAL41T0HBLB-00BL2, which Lenovo builds into their 16ARP8 also suffers
+from invalid IDs, breaking suspend and hibernate also on the latest
+kernel 6.4.2.
 
-#regzbot introduced: bd54f3c29077f2
-https://bugzilla.kernel.org/show_bug.cgi?id=217635
-#regzbot title: net: wireless: iwlwifi driver broken on Intel 3165
-network card
-#regzbot ignore-activity
+The following change restores this functionality:
 
-This isn't a regression? This issue or a fix for it are already
-discussed somewhere else? It was fixed already? You want to clarify when
-the regression started to happen? Or point out I got the title or
-something else totally wrong? Then just reply and tell me -- ideally
-while also telling regzbot about it, as explained by the page listed in
-the footer of this mail.
+File: root/drivers/nvme/host/pci.c
+Change:
 
-Developers: When fixing the issue, remember to add 'Link:' tags pointing
-to the report (e.g. the buzgzilla ticket and maybe this mail as well, if
-this thread sees some discussion). See page linked in footer for details.
+-	{ PCI_DEVICE(0x144d, 0xa80b),   /* Samsung PM9B1 256G and 512G */
+-		.driver_data = NVME_QUIRK_DISABLE_WRITE_ZEROES, },
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
++	{ PCI_DEVICE(0x144d, 0xa80b),   /* Samsung PM9B1 256G, 512G and 1TB */
++		.driver_data = NVME_QUIRK_BOGUS_NID |
++				NVME_QUIRK_DISABLE_WRITE_ZEROES, },
+```
 
-[1] because bugzilla.kernel.org tells users upon registration their
-"email address will never be displayed to logged out users"
+Ciao, Thorsten
