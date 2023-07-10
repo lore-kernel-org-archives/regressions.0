@@ -1,16 +1,16 @@
 Received: from mx.mylinuxtime.de (mx.mylinuxtime.de [195.201.174.144])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0D65101D7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 389B212B6B
 	for <regressions@lists.linux.dev>; Mon, 10 Jul 2023 14:29:26 +0000 (UTC)
 Received: from leda.eworm.de (unknown [194.36.25.21])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx.mylinuxtime.de (Postfix) with ESMTPSA id 9A0F3234AEA;
-	Mon, 10 Jul 2023 16:29:24 +0200 (CEST)
+	by mx.mylinuxtime.de (Postfix) with ESMTPSA id 266AB234AF1;
+	Mon, 10 Jul 2023 16:29:25 +0200 (CEST)
 Received: by leda.eworm.de (Postfix, from userid 1000)
-	id 3F2891831C3; Mon, 10 Jul 2023 16:29:24 +0200 (CEST)
+	id E2E4B1831C3; Mon, 10 Jul 2023 16:29:24 +0200 (CEST)
 From: Christian Hesse <mail@eworm.de>
 To: linux-integrity@vger.kernel.org
 Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
@@ -20,12 +20,13 @@ Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
 	Christian Hesse <mail@eworm.de>,
 	stable@vger.kernel.org,
 	roubro1991@gmail.com
-Subject: [PATCH v2 1/2] tpm/tpm_tis: Disable interrupts for Framework Laptop Intel 12th gen
-Date: Mon, 10 Jul 2023 16:28:43 +0200
-Message-ID: <20230710142916.18162-1-mail@eworm.de>
+Subject: [PATCH v2 2/2] tpm/tpm_tis: Disable interrupts for Framework Laptop Intel 13th gen
+Date: Mon, 10 Jul 2023 16:28:44 +0200
+Message-ID: <20230710142916.18162-2-mail@eworm.de>
 X-Mailer: git-send-email 2.41.0
-In-Reply-To: <20230710133836.4367-1-mail@eworm.de>
+In-Reply-To: <20230710142916.18162-1-mail@eworm.de>
 References: <20230710133836.4367-1-mail@eworm.de>
+ <20230710142916.18162-1-mail@eworm.de>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -48,19 +49,19 @@ Signed-off-by: Christian Hesse <mail@eworm.de>
  1 file changed, 8 insertions(+)
 
 diff --git a/drivers/char/tpm/tpm_tis.c b/drivers/char/tpm/tpm_tis.c
-index 7db3593941ea..2979f8b9aaa0 100644
+index 2979f8b9aaa0..a8bcd2134e6b 100644
 --- a/drivers/char/tpm/tpm_tis.c
 +++ b/drivers/char/tpm/tpm_tis.c
-@@ -114,6 +114,14 @@ static int tpm_tis_disable_irq(const struct dmi_system_id *d)
- }
- 
- static const struct dmi_system_id tpm_tis_dmi_table[] = {
+@@ -122,6 +122,14 @@ static const struct dmi_system_id tpm_tis_dmi_table[] = {
+ 			DMI_MATCH(DMI_PRODUCT_VERSION, "A4"),
+ 		},
+ 	},
 +	{
 +		.callback = tpm_tis_disable_irq,
-+		.ident = "Framework Laptop Intel 12th gen",
++		.ident = "Framework Laptop Intel 13th gen",
 +		.matches = {
 +			DMI_MATCH(DMI_SYS_VENDOR, "Framework"),
-+			DMI_MATCH(DMI_PRODUCT_VERSION, "A4"),
++			DMI_MATCH(DMI_PRODUCT_VERSION, "A6"),
 +		},
 +	},
  	{
