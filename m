@@ -1,59 +1,71 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx.mylinuxtime.de (mx.mylinuxtime.de [195.201.174.144])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AA6B125C7
-	for <regressions@lists.linux.dev>; Mon, 10 Jul 2023 14:10:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D60AC433C7;
-	Mon, 10 Jul 2023 14:10:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1688998223;
-	bh=CRGVL8YXgdtdfFq1hb0TSQUyjQAFF43yJebdRQR8W6c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=N8vzNM03DlcvkiKiyHqsfg4J14YwDx18DOdZ7hhY0VfumaAOKdNSQZSffoPA+ps7v
-	 qvFyj3pZtodHrLdndW24rSCTL+oW2UOCqk4Fle4b5tEQB22VHlWFXPfPj0KQl572iR
-	 QrU1x7nkxFRbmP38/Wzp0vaQFuWLzOqm2fVFRxxE=
-Date: Mon, 10 Jul 2023 16:10:20 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Christian Hesse <mail@eworm.de>
-Cc: linux-integrity@vger.kernel.org,
-	Thorsten Leemhuis <regressions@leemhuis.info>,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0D65101D7
+	for <regressions@lists.linux.dev>; Mon, 10 Jul 2023 14:29:26 +0000 (UTC)
+Received: from leda.eworm.de (unknown [194.36.25.21])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx.mylinuxtime.de (Postfix) with ESMTPSA id 9A0F3234AEA;
+	Mon, 10 Jul 2023 16:29:24 +0200 (CEST)
+Received: by leda.eworm.de (Postfix, from userid 1000)
+	id 3F2891831C3; Mon, 10 Jul 2023 16:29:24 +0200 (CEST)
+From: Christian Hesse <mail@eworm.de>
+To: linux-integrity@vger.kernel.org
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
 	Lino Sanfilippo <l.sanfilippo@kunbus.com>,
 	Linux kernel regressions list <regressions@lists.linux.dev>,
-	Peter Huewe <peterhuewe@gmx.de>, stable@vger.kernel.org,
+	Peter Huewe <peterhuewe@gmx.de>,
+	Christian Hesse <mail@eworm.de>,
+	stable@vger.kernel.org,
 	roubro1991@gmail.com
-Subject: Re: [PATCH 1/2] tpm/tpm_tis: Disable interrupts for Framework Laptop
- Intel 12th gen
-Message-ID: <2023071032-eliminate-outsmart-c32d@gregkh>
-References: <c0ee4b7c-9d63-0bb3-c677-2be045deda43@leemhuis.info>
- <20230710133836.4367-1-mail@eworm.de>
+Subject: [PATCH v2 1/2] tpm/tpm_tis: Disable interrupts for Framework Laptop Intel 12th gen
+Date: Mon, 10 Jul 2023 16:28:43 +0200
+Message-ID: <20230710142916.18162-1-mail@eworm.de>
+X-Mailer: git-send-email 2.41.0
+In-Reply-To: <20230710133836.4367-1-mail@eworm.de>
+References: <20230710133836.4367-1-mail@eworm.de>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230710133836.4367-1-mail@eworm.de>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jul 10, 2023 at 03:38:35PM +0200, Christian Hesse wrote:
-> This device suffer an irq storm, so add it in tpm_tis_dmi_table to
-> force polling.
-> 
-> https://bugs.archlinux.org/user/38129
-> https://bugzilla.kernel.org/show_bug.cgi?id=217631
+This device suffer an irq storm, so add it in tpm_tis_dmi_table to
+force polling.
 
-Add "Link:" tags?
-
-> 
-> Fixes: e644b2f498d297a928efcb7ff6f900c27f8b788e
-
-As per the kernel documentation, this should be:
-
+Link: https://community.frame.work/t/boot-and-shutdown-hangs-with-arch-linux-kernel-6-4-1-mainline-and-arch/33118
 Fixes: e644b2f498d2 ("tpm, tpm_tis: Enable interrupt test")
+Cc: stable@vger.kernel.org
+Reported-by: <roubro1991@gmail.com>
+Closes: https://bugzilla.kernel.org/show_bug.cgi?id=217631
+Signed-off-by: Christian Hesse <mail@eworm.de>
+---
+ drivers/char/tpm/tpm_tis.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-otherwise you're going to get some emails from the linux-next bot.
+diff --git a/drivers/char/tpm/tpm_tis.c b/drivers/char/tpm/tpm_tis.c
+index 7db3593941ea..2979f8b9aaa0 100644
+--- a/drivers/char/tpm/tpm_tis.c
++++ b/drivers/char/tpm/tpm_tis.c
+@@ -114,6 +114,14 @@ static int tpm_tis_disable_irq(const struct dmi_system_id *d)
+ }
+ 
+ static const struct dmi_system_id tpm_tis_dmi_table[] = {
++	{
++		.callback = tpm_tis_disable_irq,
++		.ident = "Framework Laptop Intel 12th gen",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Framework"),
++			DMI_MATCH(DMI_PRODUCT_VERSION, "A4"),
++		},
++	},
+ 	{
+ 		.callback = tpm_tis_disable_irq,
+ 		.ident = "ThinkPad T490s",
+-- 
+2.41.0
 
-thanks,
-
-greg k-h
