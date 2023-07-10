@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1CDE320A
-	for <regressions@lists.linux.dev>; Mon, 10 Jul 2023 08:53:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE0A71FB4
+	for <regressions@lists.linux.dev>; Mon, 10 Jul 2023 10:39:27 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qImdY-0003UR-Rh; Mon, 10 Jul 2023 10:52:52 +0200
-Message-ID: <6f333133-2cc4-406a-d6c2-642ac6ccabca@leemhuis.info>
-Date: Mon, 10 Jul 2023 10:52:52 +0200
+	id 1qIoIc-0000vr-Cy; Mon, 10 Jul 2023 12:39:22 +0200
+Message-ID: <f04feee0-bb2c-b778-0603-2817c5b9bc40@leemhuis.info>
+Date: Mon, 10 Jul 2023 12:39:19 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,78 +16,71 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.12.0
-Subject: Re: Fwd: Need NVME QUIRK BOGUS for SAMSUNG MZ1WV480HCGL-000MV
- (Samsung SM-953 Datacenter SSD)
+Subject: Re: [Regression][BISECTED] kernel boot hang after 19898ce9cf8a
+ ("wifi: iwlwifi: split 22000.c into multiple files")
 Content-Language: en-US, de-DE
-To: Keith Busch <kbusch@kernel.org>, Bagas Sanjaya <bagasdotme@gmail.com>
-Cc: Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
- Sagi Grimberg <sagi@grimberg.me>, "Clemens S." <cspringsguth@gmail.com>,
- Martin Belanger <martin.belanger@dell.com>,
- Chaitanya Kulkarni <kch@nvidia.com>, John Meneghini <jmeneghi@redhat.com>,
- Hannes Reinecke <hare@suse.de>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>,
- Linux NVMe <linux-nvme@lists.infradead.org>,
- Pankaj Raghav <p.raghav@samsung.com>, Kanchan Joshi <joshi.k@samsung.com>
-References: <d18d2a08-9d24-0209-c2cf-baf60bbf5048@gmail.com>
- <ZJsKBkPqoWzYyngS@kbusch-mbp.dhcp.thefacebook.com>
+To: "Zhang, Rui" <rui.zhang@intel.com>,
+ "Torvalds, Linus" <torvalds@linux-foundation.org>,
+ "johannes@sipsolutions.net" <johannes@sipsolutions.net>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Cc: "bagasdotme@gmail.com" <bagasdotme@gmail.com>,
+ "davem@davemloft.net" <davem@davemloft.net>,
+ "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+ "kvalo@kernel.org" <kvalo@kernel.org>, "Baruch, Yaara"
+ <yaara.baruch@intel.com>, "Greenman, Gregory" <gregory.greenman@intel.com>,
+ "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+ "Ben Ami, Golan" <golan.ben.ami@intel.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "edumazet@google.com" <edumazet@google.com>,
+ "Sisodiya, Mukesh" <mukesh.sisodiya@intel.com>,
+ "kuba@kernel.org" <kuba@kernel.org>, "pabeni@redhat.com"
+ <pabeni@redhat.com>, Xi Ruoyao <xry111@xry111.site>
+References: <b533071f38804247f06da9e52a04f15cce7a3836.camel@intel.com>
+ <a4265090-d6b8-b185-a400-b09b27a347cc@leemhuis.info>
+ <CAHk-=wg23SdKRcn2W+BWWEfJ2Efp0sreJx9=iw0AsUPjW3qznw@mail.gmail.com>
+ <446c25888d9316d0f15e6bcc6ecb100dda99324e.camel@sipsolutions.net>
+ <e7d7945055802e5d3f1b42750716bc6a314ec97b.camel@intel.com>
 From: "Linux regression tracking (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <ZJsKBkPqoWzYyngS@kbusch-mbp.dhcp.thefacebook.com>
+In-Reply-To: <e7d7945055802e5d3f1b42750716bc6a314ec97b.camel@intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1688979185;9af37f03;
-X-HE-SMSGID: 1qImdY-0003UR-Rh
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1688985567;90f7ca99;
+X-HE-SMSGID: 1qIoIc-0000vr-Cy
 
-On 27.06.23 18:10, Keith Busch wrote:
-> On Mon, Jun 26, 2023 at 08:15:49AM +0700, Bagas Sanjaya wrote:
->> See Bugzilla for the full thread.
+[CCing one
+
+On 10.07.23 03:54, Zhang, Rui wrote:
+> On Sun, 2023-07-09 at 20:07 +0200, Johannes Berg wrote:
+>> On Sun, 2023-07-09 at 09:31 -0700, Linus Torvalds wrote:
+>>> On Fri, 7 Jul 2023 at 03:55, Linux regression tracking (Thorsten
+>>> Leemhuis) <regressions@leemhuis.info> wrote:
+>>>>
+>>>> [CCing the regression list, netdev, the net maintainers, and
+>>>> Linus;
+>>>> Johannes and Kalle as well, but just for the record, they afaik
+>>>> are
+>>>> unavailable]
+>>>
+>>> So I will release rc1 with this issue, but remind me - if it hasn't
+>>> had any traction next week and the radio silence continues, I'll
+>>> just
+>>> revert it all.
 >>
->> The reporter had a quirk (see above) that fixed this regression,
->> nevertheless I'm adding it to regzbot to make sure it doesn't fall
->> through cracks unnoticed:
->>
->> #regzbot introduced: 86c2457a8e8112f https://bugzilla.kernel.org/show_bug.cgi?id=217593
->> #regzbot title: NVME_QUIRK_BOGUS_NID is needed for SAMSUNG MZ1WV480HCGL-000MV
-> 
-> These bug reports really should go to the vendors that created the
-> broken device with non-unique "unique" fields.
+>> Sorry. I got back home a few hours ago (for few days anyway) and I
+>> think
+>> I already know what the issue is. 
 
-I understand that, but I think we need middlemen for that, as I or Bagas
-don't have the contacts -- and it's IMHO also a bit much too ask us for
-in general, as regression tracking is hard enough already. At least
-unless this becomes something that happen regularly, then a list of
-persons we could contact would be fine I guess. But we simply can't deal
-with too many subsystem specific special cases.
+Many many thx for taking a look at this!
 
-> It's easy enough for me
-> to write the quirk patch, but it's not the ideal solution and may harm
-> devices/firmwares with the same VID:DID that don't have this problem.
-> Not being the vendor, I'm not in a postition to know that, so CC'ing
-> some Samsung folks.
+FWIW in case anyone wonders where that fix is, find it here:
+https://lore.kernel.org/all/20230709181323.12085-2-johannes@sipsolutions.net/
 
-Another request came in today, even with a pseudo-patch:
-https://bugzilla.kernel.org/show_bug.cgi?id=217649
+(or here: https://bugzilla.kernel.org/show_bug.cgi?id=217622#c9 )
 
-To quote:
-```
-As with numerous NVMe controllers these days, Samsung's
-MZAL41T0HBLB-00BL2, which Lenovo builds into their 16ARP8 also suffers
-from invalid IDs, breaking suspend and hibernate also on the latest
-kernel 6.4.2.
+> I have tested Johannes' patch and it fixes the problem on my side.
 
-The following change restores this functionality:
-
-File: root/drivers/nvme/host/pci.c
-Change:
-
--	{ PCI_DEVICE(0x144d, 0xa80b),   /* Samsung PM9B1 256G and 512G */
--		.driver_data = NVME_QUIRK_DISABLE_WRITE_ZEROES, },
-
-+	{ PCI_DEVICE(0x144d, 0xa80b),   /* Samsung PM9B1 256G, 512G and 1TB */
-+		.driver_data = NVME_QUIRK_BOGUS_NID |
-+				NVME_QUIRK_DISABLE_WRITE_ZEROES, },
-```
+Ahh, great.
 
 Ciao, Thorsten
