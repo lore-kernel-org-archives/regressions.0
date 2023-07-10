@@ -1,59 +1,74 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx.mylinuxtime.de (mx.mylinuxtime.de [195.201.174.144])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3922212B74
-	for <regressions@lists.linux.dev>; Mon, 10 Jul 2023 18:38:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3ACE2C433C7;
-	Mon, 10 Jul 2023 18:38:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1689014285;
-	bh=oDS27tMrJVOBiZY57a+Ie8tABqwg5aAwz9QA3VZd2U0=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=ru2Zb17q5QYtxC+JqO+OEMltt4uxzx5xdMQUW79j/15YksroEXdTBaBSGQpUFBNuD
-	 E6JTSOGUzIwNCWN7KDkLBwVUfcy9weJmES0ws49q8Yd2LLnC496c3HEyK/oLqhWnlJ
-	 6y6UYAvU3Fft1iEU/MvvYw2fU4Qbx6b+k/aJ8s/6DbNr5RyuvC7DhXu1h8p0wKSqUu
-	 UUyVoJBD6deIMTb8hg/gWt0caQsvAfJhHzx2gKGjCmZJgT3Djm8m1DFhLWxXOXV5Ls
-	 uwjl6xkDtPSLqQ/U09FE5kRfWHwn6xvhOFRX10ga9mt7ERoC1jXItAJoCnzV60lmMg
-	 Glki5J1aqPAKQ==
-Message-ID: <36a25631960bc178b318e319f1db0d4d275c910f.camel@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56AB8154A2
+	for <regressions@lists.linux.dev>; Mon, 10 Jul 2023 21:13:23 +0000 (UTC)
+Received: from leda.eworm.net (p200300cF2F39cf00f10e16ec5d0fdf61.dip0.t-ipconnect.de [IPv6:2003:cf:2f39:cf00:f10e:16ec:5d0f:df61])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx.mylinuxtime.de (Postfix) with ESMTPSA id A0052236438;
+	Mon, 10 Jul 2023 23:13:21 +0200 (CEST)
+Date: Mon, 10 Jul 2023 23:13:15 +0200
+From: Christian Hesse <list@eworm.de>
+To: linux-integrity@vger.kernel.org
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>, Lino Sanfilippo
+ <l.sanfilippo@kunbus.com>, Linux kernel regressions list
+ <regressions@lists.linux.dev>, Peter Huewe <peterhuewe@gmx.de>, Christian
+ Hesse <mail@eworm.de>, stable@vger.kernel.org, roubro1991@gmail.com
 Subject: Re: [PATCH v2 1/2] tpm/tpm_tis: Disable interrupts for Framework
  Laptop Intel 12th gen
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: Jason Gunthorpe <jgg@ziepe.ca>, Christian Hesse <mail@eworm.de>
-Cc: linux-integrity@vger.kernel.org, Thorsten Leemhuis
-	 <regressions@leemhuis.info>, Lino Sanfilippo <l.sanfilippo@kunbus.com>, 
-	Linux kernel regressions list
-	 <regressions@lists.linux.dev>, Peter Huewe <peterhuewe@gmx.de>, 
-	stable@vger.kernel.org, roubro1991@gmail.com
-Date: Mon, 10 Jul 2023 21:38:01 +0300
-In-Reply-To: <ZKxHfTkgKHYqhBz2@ziepe.ca>
+Message-ID: <20230710231315.4ef54679@leda.eworm.net>
+In-Reply-To: <20230710142916.18162-1-mail@eworm.de>
 References: <20230710133836.4367-1-mail@eworm.de>
-	 <20230710142916.18162-1-mail@eworm.de> <ZKxHfTkgKHYqhBz2@ziepe.ca>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.1-0ubuntu1 
+	<20230710142916.18162-1-mail@eworm.de>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
+X-Face: %O:rCSk<c"<MpJ:yn<>HSKf7^4uF|FD$9$I0}g$nbnS1{DYPvs#:,~e`).mzj\$P9]V!WCveE/XdbL,L!{)6v%x4<jA|JaB-SKm74~Wa1m;|\QFlOg>\Bt!b#{;dS&h"7l=ow'^({02!2%XOugod|u*mYBVm-OS:VpZ"ZrRA4[Q&zye,^j;ftj!Hxx\1@;LM)Pz)|B%1#sfF;s;,N?*K*^)
+Face: iVBORw0KGgoAAAANSUhEUgAAADAAAAAwBAMAAAClLOS0AAAAGFBMVEUZFRFENy6KVTKEd23CiGHeqofJvrX4+vdHgItOAAAACXBIWXMAAA3XAAAN1wFCKJt4AAACUklEQVQ4y2VUTZeqMAxNxXG2Io5uGd64L35unbF9ax0b3OLxgFs4PcLff0lBHeb1QIq5uelNCEJNq/TIFGyeC+iugH0WJr+B1MvzWASpuP4CYHOB0VfoDdddwA7OIFQIEHjXDiCtV5e9QX0WMu8AG0mB7g7WP4GqeqVdsi4vv/5kFBvaF/zD7zDquL4DxbrDGDyAsgNYOsJOYzth4Q9ZF6iLV+6TLAT1pi2kuvgAtZxSjoG8cL+8vIn251uoe1OOEWwbIPU04gHsmMsoxyyhYsD2FdIigF1yxaVbBuSOCAlCoX324I7wNMhrO1bhOLsRoA6DC6wQ5eQiSG5BiWQfM4gN+uItQTRDMaJUhVbGyKWCuaaUGSVFVKpl4PdoDn3yY8J+YxQxyhlHfoYOyPgyDcO+cSQK6Bvabjcy2nwRo3pxgA8jslnCuYw23ESOzHAPYwo4ITNQMaOO+RGPEGhSlPEZBh2jmBEjQ5cKbxmr0ruAe/WCriUxW76I8T3h7vqY5VR5wXLdERodg2rHEzdxxk5KpXTL4FwnarvndKM5/MWDY5CuBBdQ+3/0ivsUJHicuHd+Xh3jOdBL+FjSGq4SPCwco+orpWlERRTNo7BHCvbNXFVSIQMp+P5QsIL9upmr8kMTUOfxEHoanwzKRcNAe76WbjBwex/RkdHu48xT5YqP70DaMOhBcTHmAVDxLaBdle93oJy1QKFUh2GXT4am+YH/GGel1CeI98GdMXsytjCKIq/9cMrlgxFCROv+3/BU1fijNpcVD6DxE8VfLBaxUGr1D5usgDYdjwiPAAAAAElFTkSuQmCC
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/yMtA07nxK+tTOJ0lqGUBus_";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On Mon, 2023-07-10 at 15:01 -0300, Jason Gunthorpe wrote:
-> On Mon, Jul 10, 2023 at 04:28:43PM +0200, Christian Hesse wrote:
-> > This device suffer an irq storm, so add it in tpm_tis_dmi_table to
-> > force polling.
->=20
-> I can't help but feel like we are doing something wrong in the Linux
-> driver that we keep having IRQ problems.
->=20
-> Surely Windows uses the IRQ on these devices? How does it work
-> reliably there?
->=20
-> Jason
+--Sig_/yMtA07nxK+tTOJ0lqGUBus_
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-I'm about to send a PR to Linus with a pile of IRQ fixes for v6.4
-feature.
+Christian Hesse <mail@eworm.de> on Mon, 2023/07/10 16:28:
+> This device suffer an irq storm, so add it in tpm_tis_dmi_table to
+> force polling.
 
-BR, Jarkko
+Uh, looks like this is not quite right. The product version specifies the C=
+PU
+"level" across generations (for example "i5-1240P" vs. "i7-1260P" vs.
+"i7-1280P"). So I guess we should match on the product name instead...
 
+I will send an updated set of patches. Would be nice if anybody could verify
+this...
+--=20
+main(a){char*c=3D/*    Schoene Gruesse                         */"B?IJj;MEH"
+"CX:;",b;for(a/*    Best regards             my address:    */=3D0;b=3Dc[a+=
++];)
+putchar(b-1/(/*    Chris            cc -ox -xc - && ./x    */b/42*2-3)*42);}
+
+--Sig_/yMtA07nxK+tTOJ0lqGUBus_
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEXHmveYAHrRp+prOviUUh18yA9HYFAmSsdGsACgkQiUUh18yA
+9HazhggA3STCBFuVDjPPjfZAYLGu7vT+7qQ6qrAxwncznBOZLXI8zuNuiJuAJF/p
+OAWwIsdaU0wtYCkFiULdQMcSK7QEFC4gxujwGSbuHc1A0ru5SAXeMD5yxQNwpnQ6
+H9Fowzslz5tKTNwEjQ7MtPzdnZx3evM8NNgm+ZBfYNYb+LqC5olHhXUSkn/mHDHa
+nLq5BDjIqsUGsSoosJgoC8w1G1vLijq5QUG+opsXzYRPvumJ9iqX9lLD8RYldgvY
+dR5erWrJDkvyfFToYMjHD7/kKsnpyRztTC5qi849Rk41urJvFJ6wLakaLl9J2nYk
+rtIH8QiG/BKeIptIhOTvno3DTMD5BA==
+=Ksr1
+-----END PGP SIGNATURE-----
+
+--Sig_/yMtA07nxK+tTOJ0lqGUBus_--
