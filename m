@@ -1,75 +1,116 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF6982598
-	for <regressions@lists.linux.dev>; Tue, 11 Jul 2023 13:00:16 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qJCyT-0000Lw-6c; Tue, 11 Jul 2023 15:00:13 +0200
-Message-ID: <3739ab8f-b1f2-dbbf-dffe-0ea5808c1d95@leemhuis.info>
-Date: Tue, 11 Jul 2023 15:00:12 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6E2A182B6
+	for <regressions@lists.linux.dev>; Tue, 11 Jul 2023 13:20:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04486C433C8;
+	Tue, 11 Jul 2023 13:20:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1689081606;
+	bh=uOS4JfNufBFC0X+cPyi5FCg/wfbG6rddahqbtej+cxE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=jtIZOuwVUA6gRzzifFEtONSM8PLmeN4AmB5mo68yP9DT34i44Aa22wqsbGhjsCT8J
+	 ZPXjkFA8ZD6l9Km+x9yAaekLi//ruuOFKGDVdIbCKBweHTTwCYQvUSYjSc3Ze3SOfU
+	 JqrNdXZoBar9mDR5v8LW5NYZrIMK4nqAQgmlsM/Ruiv9/sPZQJW/jl7HSxT4CCgkfl
+	 JeeZjHd9IXp7UyoLjnpIeu7ROxLcYRuqFlc68iyXBPsxa0KrxpxjmjzxHg/i/FpUoN
+	 P9PhfeuvKLLlYn0K4D5Q7LdM3eYPjVmCOnq11N0tRkUYRuC/Apwp7IBG5MWp7eiPEa
+	 EzK+qIxMkDD6g==
+Date: Tue, 11 Jul 2023 22:20:00 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Georg =?UTF-8?B?TcO8bGxlcg==?= <georgmueller@gmx.net>, Peter Zijlstra
+ <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Mark Rutland
+ <mark.rutland@arm.com>, Alexander Shishkin
+ <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, Adrian
+ Hunter <adrian.hunter@intel.com>, "Masami Hiramatsu (Google)"
+ <mhiramat@kernel.org>, regressions@lists.linux.dev, Arnaldo Carvalho de
+ Melo <acme@redhat.com>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf probe: read DWARF files from the correct CU
+Message-Id: <20230711222000.d316cf7fd643cb4203ea1204@kernel.org>
+In-Reply-To: <ZK1RyVue7OMXzVl4@kernel.org>
+References: <5a00d5a5-7be7-ef8a-4044-9a16249fff25@gmx.net>
+	<20230615200147.664346-3-georgmueller@gmx.net>
+	<ZK1RyVue7OMXzVl4@kernel.org>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH v2 1/2] tpm/tpm_tis: Disable interrupts for Framework
- Laptop Intel 12th gen
-Content-Language: en-US, de-DE
-To: Grundik <ggrundik@gmail.com>, Jarkko Sakkinen <jarkko@kernel.org>,
- Christian Hesse <list@eworm.de>, linux-integrity@vger.kernel.org
-Cc: Lino Sanfilippo <l.sanfilippo@kunbus.com>,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- Peter Huewe <peterhuewe@gmx.de>, Christian Hesse <mail@eworm.de>,
- stable@vger.kernel.org, roubro1991@gmail.com,
- Linus Torvalds <torvalds@linux-foundation.org>
-References: <20230710133836.4367-1-mail@eworm.de>
- <20230710142916.18162-1-mail@eworm.de>
- <20230710231315.4ef54679@leda.eworm.net>
- <bd0587e16d55ef38277ab1f6169909ae7cde3542.camel@kernel.org>
- <bb5580e93d244400c3330d7091bf64868aa2053f.camel@gmail.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <bb5580e93d244400c3330d7091bf64868aa2053f.camel@gmail.com>
+Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1689080416;14776ef8;
-X-HE-SMSGID: 1qJCyT-0000Lw-6c
+Content-Transfer-Encoding: 8bit
 
-On 11.07.23 14:41, Grundik wrote:
-> On Tue, 2023-07-11 at 00:29 +0300, Jarkko Sakkinen wrote:
->> On Mon, 2023-07-10 at 23:13 +0200, Christian Hesse wrote:
->>
->>
->> OK, this good to hear! I've been late with my pull request (past rc1)
->> because of kind of conflicting timing with Finnish holiday season and
->> relocating my home office.
->>
->> I'll replace v2 patches with v3 and send the PR for rc2 after that.
->> So unluck turned into luck this time :-)
->>
->> Thank you for spotting this!
-> 
-> I want to say: this issue is NOT limited to Framework laptops.
-> 
-> For example this MSI gen12 i5-1240P laptop also suffers from same
-> problem:
->         Manufacturer: Micro-Star International Co., Ltd.
->         Product Name: Summit E13FlipEvo A12MT
->         Version: REV:1.0
->         SKU Number: 13P3.1
->         Family: Summit
-> 
-> So, probably just blacklisting affected models is not the best
-> solution...
+On Tue, 11 Jul 2023 09:57:45 -0300
+Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
 
-Hmmm. Jarkko, you earlier in the thread said: "I'm about to send a PR to
-Linus with a pile of IRQ fixes for v6.4 feature.". Could any of those
-potentially help Grundik or those with the Framework laptop? Is that
-worth testing?
+> Em Thu, Jun 15, 2023 at 10:01:37PM +0200, Georg Müller escreveu:
+> > After switching from dwarf_decl_file() to die_get_decl_file(), it is not
+> > possible to add probes for certain functions of certain binaries:
+> > 
+> >  $ perf probe -x /usr/lib/systemd/systemd-logind match_unit_removed
+> >  A function DIE doesn't have decl_line. Maybe broken DWARF?
+> >  A function DIE doesn't have decl_line. Maybe broken DWARF?
+> >  Probe point 'match_unit_removed' not found.
+> >     Error: Failed to add events.
+> > 
+> > The problem is that die_get_decl_file() uses the wrong CU to search for
+> > the file. elfutils commit e1db5cdc9f has some good explanation for this:
+> > 
+> >     dwarf_decl_file uses dwarf_attr_integrate to get the DW_AT_decl_file
+> >     attribute. This means the attribute might come from a different DIE
+> >     in a different CU. If so, we need to use the CU associated with the
+> >     attribute, not the original DIE, to resolve the file name.
+> > 
+> > This patch uses the same source of information as elfutils: use attribute
+> > DW_AT_decl_file and use this CU to search for the file.
+> 
+> Thanks, applied to the perf-tools branch, that will be submitted for
+> Linux v6.5.
 
-Ciao, Thorsten
+Thanks Arnaldo and Georg,
+
+It sounds perfect reason why that happened. I didn't expect the case that
+the attribute comes from another CU...
+
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+> 
+> - Arnaldo
+>  
+> > Fixes: dc9a5d2ccd5c ("perf probe: Fix to get declared file name from clang DWARF5")
+> > Signed-off-by: Georg Müller <georgmueller@gmx.net>
+> > Link: https://lore.kernel.org/r/5a00d5a5-7be7-ef8a-4044-9a16249fff25@gmx.net/
+> > ---
+> >  tools/perf/util/dwarf-aux.c | 4 +++-
+> >  1 file changed, 3 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
+> > index b07414409771..137b3ed9897b 100644
+> > --- a/tools/perf/util/dwarf-aux.c
+> > +++ b/tools/perf/util/dwarf-aux.c
+> > @@ -478,8 +478,10 @@ static const char *die_get_file_name(Dwarf_Die *dw_die, int idx)
+> >  {
+> >  	Dwarf_Die cu_die;
+> >  	Dwarf_Files *files;
+> > +	Dwarf_Attribute attr_mem;
+> > 
+> > -	if (idx < 0 || !dwarf_diecu(dw_die, &cu_die, NULL, NULL) ||
+> > +	if (idx < 0 || !dwarf_attr_integrate(dw_die, DW_AT_decl_file, &attr_mem) ||
+> > +	    !dwarf_cu_die(attr_mem.cu, &cu_die, NULL, NULL, NULL, NULL, NULL, NULL) ||
+> >  	    dwarf_getsrcfiles(&cu_die, &files, NULL) != 0)
+> >  		return NULL;
+> > 
+> > --
+> > 2.41.0
+> > 
+> 
+> -- 
+> 
+> - Arnaldo
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
