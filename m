@@ -1,77 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08BED37D
-	for <regressions@lists.linux.dev>; Tue, 11 Jul 2023 14:42:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54E15C433C8;
-	Tue, 11 Jul 2023 14:42:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1689086521;
-	bh=MdxCExtG1yS5jseJzhYZubJ18kck0OwZ+QV+A9naVKY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=c1PABcnU24Ywv+A1RIENK8p3TeyiKe/iVroyJMvpggIJp5J9YHPZFZb79dEBpNU2U
-	 kQ2P1OKeqvnPHJjT/HYtKNEGMGmCCJtycWVETjBGz37mf3hQtz0qUqZ3kQrHcX0yVk
-	 8QiasGvR3D+gxYtaAtlVbHp7ggPNKTSOxYE35350xQCoLcKTDT4vJawKuvWv/WaHOJ
-	 KkG+T+SKPXFwskQXV2MA1kXZrBKvWZtIoMtN7fr4xdJPINq9c2VgdoNof1Jud4IPLf
-	 OvgUp1kyTdqH3VRR6Vnf1WCoPJ0cB+xibQ2uLhqExOO9OV0NBuxfUaNZIqz8Y5EV6W
-	 Uj8GQTQWOo/5w==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-	id D1FC640516; Tue, 11 Jul 2023 11:41:58 -0300 (-03)
-Date: Tue, 11 Jul 2023 11:41:58 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Georg =?iso-8859-1?Q?M=FCller?= <georgmueller@gmx.net>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	regressions@lists.linux.dev,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf probe: read DWARF files from the correct CU
-Message-ID: <ZK1qNnmdYOWLiN4H@kernel.org>
-References: <5a00d5a5-7be7-ef8a-4044-9a16249fff25@gmx.net>
- <20230615200147.664346-3-georgmueller@gmx.net>
- <ZK1RyVue7OMXzVl4@kernel.org>
- <20230711222000.d316cf7fd643cb4203ea1204@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D59E1428A
+	for <regressions@lists.linux.dev>; Tue, 11 Jul 2023 14:48:49 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1qJEf2-0003Uo-GS; Tue, 11 Jul 2023 16:48:16 +0200
+Message-ID: <2c3ab284-fd11-d6c5-c03c-60d54ad227b5@leemhuis.info>
+Date: Tue, 11 Jul 2023 16:48:14 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230711222000.d316cf7fd643cb4203ea1204@kernel.org>
-X-Url: http://acmel.wordpress.com
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: [PATCH v2 12/32] mm/vmalloc: vmalloc_to_page() use
+ pte_offset_kernel()
+Content-Language: en-US, de-DE
+To: Mark Brown <broonie@kernel.org>, Hugh Dickins <hughd@google.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ Mike Kravetz <mike.kravetz@oracle.com>, Mike Rapoport <rppt@kernel.org>,
+ "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+ Matthew Wilcox <willy@infradead.org>, David Hildenbrand <david@redhat.com>,
+ Suren Baghdasaryan <surenb@google.com>, Qi Zheng
+ <zhengqi.arch@bytedance.com>, Yang Shi <shy828301@gmail.com>,
+ Mel Gorman <mgorman@techsingularity.net>, Peter Xu <peterx@redhat.com>,
+ Peter Zijlstra <peterz@infradead.org>, Will Deacon <will@kernel.org>,
+ Yu Zhao <yuzhao@google.com>, Alistair Popple <apopple@nvidia.com>,
+ Ralph Campbell <rcampbell@nvidia.com>, Ira Weiny <ira.weiny@intel.com>,
+ Steven Price <steven.price@arm.com>, SeongJae Park <sj@kernel.org>,
+ Lorenzo Stoakes <lstoakes@gmail.com>, Huang Ying <ying.huang@intel.com>,
+ Naoya Horiguchi <naoya.horiguchi@nec.com>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>, Zack Rusin
+ <zackr@vmware.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+ Axel Rasmussen <axelrasmussen@google.com>,
+ Anshuman Khandual <anshuman.khandual@arm.com>,
+ Pasha Tatashin <pasha.tatashin@soleen.com>, Miaohe Lin
+ <linmiaohe@huawei.com>, Minchan Kim <minchan@kernel.org>,
+ Christoph Hellwig <hch@infradead.org>, Song Liu <song@kernel.org>,
+ Thomas Hellstrom <thomas.hellstrom@linux.intel.com>,
+ Ryan Roberts <ryan.roberts@arm.com>, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, linux-arm-kernel@lists.infradead.org,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <c1c9a74a-bc5b-15ea-e5d2-8ec34bc921d@google.com>
+ <696386a-84f8-b33c-82e5-f865ed6eb39@google.com>
+ <42279f1f-7b82-40dc-8546-86171018729c@sirena.org.uk>
+From: "Linux regression tracking #adding (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <42279f1f-7b82-40dc-8546-86171018729c@sirena.org.uk>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1689086929;620ad894;
+X-HE-SMSGID: 1qJEf2-0003Uo-GS
 
-Em Tue, Jul 11, 2023 at 10:20:00PM +0900, Masami Hiramatsu escreveu:
-> On Tue, 11 Jul 2023 09:57:45 -0300 Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> > Em Thu, Jun 15, 2023 at 10:01:37PM +0200, Georg Müller escreveu:
-> > > The problem is that die_get_decl_file() uses the wrong CU to search for
-> > > the file. elfutils commit e1db5cdc9f has some good explanation for this:
-> > > 
-> > >     dwarf_decl_file uses dwarf_attr_integrate to get the DW_AT_decl_file
-> > >     attribute. This means the attribute might come from a different DIE
-> > >     in a different CU. If so, we need to use the CU associated with the
-> > >     attribute, not the original DIE, to resolve the file name.
-> > > 
-> > > This patch uses the same source of information as elfutils: use attribute
-> > > DW_AT_decl_file and use this CU to search for the file.
-> > 
-> > Thanks, applied to the perf-tools branch, that will be submitted for
-> > Linux v6.5.
- 
-> Thanks Arnaldo and Georg,
- 
-> It sounds perfect reason why that happened. I didn't expect the case that
-> the attribute comes from another CU...
- 
-> Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
- 
-Thanks, added it to the cset.
+[CCing the regression list, as it should be in the loop for regressions:
+https://docs.kernel.org/admin-guide/reporting-regressions.html]
 
-- Arnaldo
+[TLDR: I'm adding this report to the list of tracked Linux kernel
+regressions; the text you find below is based on a few templates
+paragraphs you might have encountered already in similar form.
+See link in footer if these mails annoy you.]
+
+On 10.07.23 16:42, Mark Brown wrote:
+> On Thu, Jun 08, 2023 at 06:21:41PM -0700, Hugh Dickins wrote:
+>> vmalloc_to_page() was using pte_offset_map() (followed by pte_unmap()),
+>> but it's intended for userspace page tables: prefer pte_offset_kernel().
+>>
+>> Signed-off-by: Hugh Dickins <hughd@google.com>
+>> Reviewed-by: Lorenzo Stoakes <lstoakes@gmail.com>
+> 
+> Currently Linus' tree is reliably failing to boot on pine64plus, an
+> arm64 SBC.  Most other boards seem fine, though I am seeing some
+> additional instability on Tritium which is another Allwinner platform,
+> I've not dug into that yet and Tritium is generally less stable.
+> 
+> We end up seeing NULL or otherwise bad pointer dereferences, the
+> [...]
+> # first bad commit: [0d1c81edc61e553ed7a5db18fb8074c8b78e1538] mm/vmalloc: vmalloc_to_page() use pte_offset_kernel()
+
+Thanks for the report. To be sure the issue doesn't fall through the
+cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
+tracking bot:
+
+#regzbot ^introduced 0d1c81edc61e553ed7a5db18fb8074c8
+#regzbot title mm/vmalloc: NULL or otherwise bad pointer dereferences on
+ARM64
+#regzbot ignore-activity
+
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply and tell me -- ideally
+while also telling regzbot about it, as explained by the page listed in
+the footer of this mail.
+
+Developers: When fixing the issue, remember to add 'Link:' tags pointing
+to the report (the parent of this mail). See page linked in footer for
+details.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+That page also explains what to do if mails like this annoy you.
