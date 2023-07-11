@@ -1,126 +1,169 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A44DE17FE0
-	for <regressions@lists.linux.dev>; Tue, 11 Jul 2023 09:39:16 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qJ9pw-00047e-HN; Tue, 11 Jul 2023 11:39:12 +0200
-Message-ID: <462e0e1e-98ea-0f3c-4aaa-8d44f0a8e664@leemhuis.info>
-Date: Tue, 11 Jul 2023 11:39:11 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87F212598
+	for <regressions@lists.linux.dev>; Tue, 11 Jul 2023 10:35:46 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 400C3C433C8;
+	Tue, 11 Jul 2023 10:35:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1689071746;
+	bh=RdirUcCE2pA/1z8207uTNCXjhMGAcU2jC5JA2KzMRoY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=b1nsnyWJfs1mcjVYHJe+HEUCi0LN15hY99BnaXhtfz0oB3h8EzQMDa9aeEPB4cHsG
+	 m0hzpx+fMmsE8WzKuxURAUSYoPOk1yyNeGjKmk6Oo1T+sxizOWkbUk2lnWZeZJq/OR
+	 t35F+euEtnNr2grYlFD6oJ2MJWvp/QNNOG1DuAJeBI5VAMb7y9WA/nlkd3eUTkr2Lb
+	 BRvBfq7P9mdE+wM/H6F8uotrR4TMskih7C1j7iuXPsrtoxNhX7cAuYqxh5Z1V2YE+p
+	 NfC0fI8jKAJTifgfTIIMFJicOPaZ5ZezvtKLTLYQgP5kZnonqVF+tNhSPdx4zGnzF9
+	 S3WTHtdee7iTg==
+Date: Tue, 11 Jul 2023 13:35:41 +0300
+From: Leon Romanovsky <leon@kernel.org>
+To: Suren Baghdasaryan <surenb@google.com>,
+	Laurent Dufour <ldufour@linux.ibm.com>,
+	Sachin Sant <sachinp@linux.ibm.com>,
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: michel@lespinasse.org, jglisse@google.com, mhocko@suse.com,
+	vbabka@suse.cz, hannes@cmpxchg.org, mgorman@techsingularity.net,
+	dave@stgolabs.net, willy@infradead.org, liam.howlett@oracle.com,
+	peterz@infradead.org, ldufour@linux.ibm.com, paulmck@kernel.org,
+	mingo@redhat.com, will@kernel.org, luto@kernel.org,
+	songliubraving@fb.com, peterx@redhat.com, david@redhat.com,
+	dhowells@redhat.com, hughd@google.com, bigeasy@linutronix.de,
+	kent.overstreet@linux.dev, punit.agrawal@bytedance.com,
+	lstoakes@gmail.com, peterjung1337@gmail.com, rientjes@google.com,
+	chriscli@google.com, axelrasmussen@google.com, joelaf@google.com,
+	minchan@google.com, rppt@kernel.org, jannh@google.com,
+	shakeelb@google.com, tatashin@google.com, edumazet@google.com,
+	gthelen@google.com, gurua@google.com, arjunroy@google.com,
+	soheil@google.com, leewalsh@google.com, posk@google.com,
+	michalechner92@googlemail.com, linux-mm@kvack.org,
+	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+	x86@kernel.org, linux-kernel@vger.kernel.org,
+	kernel-team@android.com, regressions@leemhuis.info,
+	Linux kernel regressions list <regressions@lists.linux.dev>,
+	maorg@nvidia.com, gal@nvidia.com, ranro@nvidia.com,
+	drort@nvidia.com, idok@nvidia.com, sergeyy@nvidia.com
+Subject: Re: [PATCH v4 00/33] Per-VMA locks
+Message-ID: <20230711103541.GA190975@unreal>
+References: <20230227173632.3292573-1-surenb@google.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: Fwd: Need NVME QUIRK BOGUS for SAMSUNG MZ1WV480HCGL-000MV
- (Samsung SM-953 Datacenter SSD)
-Content-Language: en-US, de-DE
-To: Pankaj Raghav <p.raghav@samsung.com>, Keith Busch <kbusch@kernel.org>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Bagas Sanjaya <bagasdotme@gmail.com>, Jens Axboe <axboe@kernel.dk>,
- Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
- "Clemens S." <cspringsguth@gmail.com>,
- Martin Belanger <martin.belanger@dell.com>,
- Chaitanya Kulkarni <kch@nvidia.com>, John Meneghini <jmeneghi@redhat.com>,
- Hannes Reinecke <hare@suse.de>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux NVMe <linux-nvme@lists.infradead.org>,
- Kanchan Joshi <joshi.k@samsung.com>,
- Javier Gonzalez <javier.gonz@samsung.com>, =?UTF-8?B?67CV7KeE7ZmY?=
- <jh.i.park@samsung.com>, Linus Torvalds <torvalds@linux-foundation.org>
-References: <d18d2a08-9d24-0209-c2cf-baf60bbf5048@gmail.com>
- <ZJsKBkPqoWzYyngS@kbusch-mbp.dhcp.thefacebook.com>
- <6f333133-2cc4-406a-d6c2-642ac6ccabca@leemhuis.info>
- <CGME20230710155902eucas1p2b464a29adc35e983c73b00d18ab5344c@eucas1p2.samsung.com>
- <ZKwqvTMPVmhnkZjS@kbusch-mbp.dhcp.thefacebook.com>
- <f0fdf86e-4293-8e07-835d-b5a866252068@samsung.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <f0fdf86e-4293-8e07-835d-b5a866252068@samsung.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1689068356;98643c54;
-X-HE-SMSGID: 1qJ9pw-00047e-HN
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20230227173632.3292573-1-surenb@google.com>
 
-[CCing Linus for the "whack a mole" aspect in the second half]
 
-On 11.07.23 08:54, Pankaj Raghav wrote:
->>> I understand that, but I think we need middlemen for that, as I or Bagas
->>> don't have the contacts -- and it's IMHO also a bit much too ask us for
->>> in general, as regression tracking is hard enough already. At least
->>> unless this becomes something that happen regularly, then a list of
->>> persons we could contact would be fine I guess. But we simply can't deal
->>> with too many subsystem specific special cases.
->>
->> I'm not asking the Linux regression trackers to fill that role, though.
+On Mon, Feb 27, 2023 at 09:35:59AM -0800, Suren Baghdasaryan wrote:
 
-Well, during our work we often encounter those bugs -- often from people
-that are no regular developers that already had a hard time
-understanding the issue and reporting it to us somehow. Asking those to...
+<...>
 
->> I'm asking people who experience these issues report it to their vendor
+> Laurent Dufour (1):
+>   powerc/mm: try VMA lock-based page fault handling first
 
-...find the right destination and format to report their Linux problems
-to the vendors is unlikely to fly I suspect. And I'm not sure if that is
-in our interest, as then it might take a lot longer to get those quirk
-entries into the kernel source.
+Hi,
 
-But whatever, the main reason why I write this mail is different:
+This series and specifically the commit above broke docker over PPC.
+It causes to docker service stuck while trying to activate. Revert of
+this commit allows us to use docker again.
 
->> directly because these device makers apparently have zero clue that
->> their spec non-compliance is causing painful experiences for their
->> customers and annoyance for maintainers. They keep pumping out more and
->> more devices with the same breakage.
->>
->> This particular vendor has been great at engaging with Linux, but that's
->> not necessarily normal among all device makers, and I don't have
->> contacts with the majority of the vendors we've had to quirk for this
->> issue.
->>
->> We did complain to the NVMe spec workgroup that their complaince cert
->> suite is not testing for this. There was a little initial interest in
->> fixing that gap, but it fizzled out...
+[user@ppc-135-3-200-205 ~]# sudo systemctl status docker
+=E2=97=8F docker.service - Docker Application Container Engine
+     Loaded: loaded (/usr/lib/systemd/system/docker.service; enabled; vendo=
+r preset: disabled)
+     Active: activating (start) since Mon 2023-06-26 14:47:07 IDT; 3h 50min=
+ ago
+TriggeredBy: =E2=97=8F docker.socket
+       Docs: https://docs.docker.com
+   Main PID: 276555 (dockerd)
+     Memory: 44.2M
+     CGroup: /system.slice/docker.service
+             =E2=94=94=E2=94=80 276555 /usr/bin/dockerd -H fd:// --containe=
+rd=3D/run/containerd/containerd.sock
 
-Preface: this is not my area of expertise, and maybe I should keep my
-mouth shut. But whatever.
+Jun 26 14:47:07 ppc-135-3-200-205 dockerd[276555]: time=3D"2023-06-26T14:47=
+:07.129383166+03:00" level=3Dinfo msg=3D"Graph migration to content-address=
+ability took 0.00 se>
+Jun 26 14:47:07 ppc-135-3-200-205 dockerd[276555]: time=3D"2023-06-26T14:47=
+:07.129666160+03:00" level=3Dwarning msg=3D"Your kernel does not support cg=
+roup cfs period"
+Jun 26 14:47:07 ppc-135-3-200-205 dockerd[276555]: time=3D"2023-06-26T14:47=
+:07.129684117+03:00" level=3Dwarning msg=3D"Your kernel does not support cg=
+roup cfs quotas"
+Jun 26 14:47:07 ppc-135-3-200-205 dockerd[276555]: time=3D"2023-06-26T14:47=
+:07.129697085+03:00" level=3Dwarning msg=3D"Your kernel does not support cg=
+roup rt period"
+Jun 26 14:47:07 ppc-135-3-200-205 dockerd[276555]: time=3D"2023-06-26T14:47=
+:07.129711513+03:00" level=3Dwarning msg=3D"Your kernel does not support cg=
+roup rt runtime"
+Jun 26 14:47:07 ppc-135-3-200-205 dockerd[276555]: time=3D"2023-06-26T14:47=
+:07.129720656+03:00" level=3Dwarning msg=3D"Unable to find blkio cgroup in =
+mounts"
+Jun 26 14:47:07 ppc-135-3-200-205 dockerd[276555]: time=3D"2023-06-26T14:47=
+:07.129805617+03:00" level=3Dwarning msg=3D"mountpoint for pids not found"
+Jun 26 14:47:07 ppc-135-3-200-205 dockerd[276555]: time=3D"2023-06-26T14:47=
+:07.130199070+03:00" level=3Dinfo msg=3D"Loading containers: start."
+Jun 26 14:47:07 ppc-135-3-200-205 dockerd[276555]: time=3D"2023-06-26T14:47=
+:07.132688568+03:00" level=3Dwarning msg=3D"Running modprobe bridge br_netf=
+ilter failed with me>
+Jun 26 14:47:07 ppc-135-3-200-205 dockerd[276555]: time=3D"2023-06-26T14:47=
+:07.271014050+03:00" level=3Dinfo msg=3D"Default bridge (docker0) is assign=
+ed with an IP addres>
 
-Well, that "They keep pumping out more and more devices with the same
-breakage" and the "new device" comment from Pankaj below bear the
-question: should we stop trying to play "whack a mole" with all those
-quirk entries and handle devices with duplicate ids just like Windows does?
+Python script which we used for bisect:
 
-That would "make things just work"(tm).
+import subprocess
+import time
+import sys
 
-And yes, I suspect there are good reasons why we went down the "quirk"
-route or why abandoning it might be hard. But maybe it's time to
-reconsider that path, as from my outside point of view things sound a
-lot like they are somewhat similar to the ACPI problems we dealt with
-~15 years ago: we learned that we have to deal with broken ACPI
-implementations and somehow use them in a way similar to how Windows
-uses them, as that's the OS the machine was designed for and tested with.
 
-Ciao, Thorsten
+def run_command(cmd):
+    print('running:', cmd)
 
->>> Another request came in today, even with a pseudo-patch:
->>> https://bugzilla.kernel.org/show_bug.cgi?id=217649
->>>
->>> To quote:
->>> ```
->>> As with numerous NVMe controllers these days, Samsung's
->>> MZAL41T0HBLB-00BL2, which Lenovo builds into their 16ARP8 also suffers
->>> from invalid IDs, breaking suspend and hibernate also on the latest
->>> kernel 6.4.2.
-> [...]
->> Panjaj, okay with this one too?
-> 
-> This looks a like a new device that might have a firmware update. I will ping
-> internally first.
-> 
-> As you mentioned, the recent addition of globally unique ID check
-> is breaking a lot of devices because of non-compliant firmware. I will try to create
-> some awareness about this issue internally as well.
+    p =3D subprocess.Popen(cmd, shell=3DTrue, stdout=3Dsubprocess.PIPE, std=
+err=3Dsubprocess.PIPE)
+
+    try:
+        stdout, stderr =3D p.communicate(timeout=3D30)
+
+    except subprocess.TimeoutExpired:
+        return True
+
+    print(stdout.decode())
+    print(stderr.decode())
+    print('rc:', p.returncode)
+
+    return False
+
+
+def main():
+    commands =3D [
+        'sudo systemctl stop docker',
+        'sudo systemctl status docker',
+        'sudo systemctl is-active docker',
+        'sudo systemctl start docker',
+        'sudo systemctl status docker',
+    ]
+
+    for i in range(1000):
+        title =3D f'Try no. {i + 1}'
+        print('*' * 50, title, '*' * 50)
+
+        for cmd in commands:
+            if run_command(cmd):
+                print(f'Reproduced on try no. {i + 1}!')
+                print(f'"{cmd}" is stuck!')
+
+                return 1
+
+            print('\n')
+        time.sleep(30)
+    return 0
+
+if __name__ =3D=3D '__main__':
+    sys.exit(main())
+
+Thanks
