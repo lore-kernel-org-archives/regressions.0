@@ -1,108 +1,72 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D59E1428A
-	for <regressions@lists.linux.dev>; Tue, 11 Jul 2023 14:48:49 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qJEf2-0003Uo-GS; Tue, 11 Jul 2023 16:48:16 +0200
-Message-ID: <2c3ab284-fd11-d6c5-c03c-60d54ad227b5@leemhuis.info>
-Date: Tue, 11 Jul 2023 16:48:14 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1885219BAB
+	for <regressions@lists.linux.dev>; Tue, 11 Jul 2023 15:33:24 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68CD4C433BA;
+	Tue, 11 Jul 2023 15:33:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1689089604;
+	bh=TwIX0LdPSn6QFf/+bhLDt4k9PZasqoFbG8wsVCBkykU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=uesnTDfxr9Mw1W6bKVehQQrXFnGc3Q/qnGXQFX0DlZK1Zroidz2QJzysCg/Iwctg8
+	 FJVqH884K6S86Pp27cjCNJSOPiTiKNWolPqbkgqTWez6fDCu2N+8XkQSDk6+/WE31r
+	 jPzqfi8+tead8uV/+TmpPgtITltRPfsTwjvdWXdwxKXrdeVFOctousDE9JRMxJHfnt
+	 S4NddV+ZRdBA9Z9f1mrtaIE62o/AFUPmcLW5QjVT4ik7cQUw8pMpOeHygy4sKv3L+L
+	 Mwih5cq6i47mvAZkfZ6/91OLzErbwUSKIxZ42iKSlfmD7921sU8cGLtLx8EtwJKYTq
+	 hpT+E0AHgDKoA==
+Date: Tue, 11 Jul 2023 09:33:21 -0600
+From: Keith Busch <kbusch@kernel.org>
+To: Christoph Hellwig <hch@lst.de>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
+	Pankaj Raghav <p.raghav@samsung.com>,
+	Bagas Sanjaya <bagasdotme@gmail.com>, Jens Axboe <axboe@kernel.dk>,
+	Sagi Grimberg <sagi@grimberg.me>,
+	"Clemens S." <cspringsguth@gmail.com>,
+	Martin Belanger <martin.belanger@dell.com>,
+	Chaitanya Kulkarni <kch@nvidia.com>,
+	John Meneghini <jmeneghi@redhat.com>,
+	Hannes Reinecke <hare@suse.de>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux NVMe <linux-nvme@lists.infradead.org>,
+	Kanchan Joshi <joshi.k@samsung.com>,
+	Javier Gonzalez <javier.gonz@samsung.com>,
+	=?utf-8?B?67CV7KeE7ZmY?= <jh.i.park@samsung.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: Fwd: Need NVME QUIRK BOGUS for SAMSUNG MZ1WV480HCGL-000MV
+ (Samsung SM-953 Datacenter SSD)
+Message-ID: <ZK12QT9C7avQOjxU@kbusch-mbp.dhcp.thefacebook.com>
+References: <d18d2a08-9d24-0209-c2cf-baf60bbf5048@gmail.com>
+ <ZJsKBkPqoWzYyngS@kbusch-mbp.dhcp.thefacebook.com>
+ <6f333133-2cc4-406a-d6c2-642ac6ccabca@leemhuis.info>
+ <CGME20230710155902eucas1p2b464a29adc35e983c73b00d18ab5344c@eucas1p2.samsung.com>
+ <ZKwqvTMPVmhnkZjS@kbusch-mbp.dhcp.thefacebook.com>
+ <f0fdf86e-4293-8e07-835d-b5a866252068@samsung.com>
+ <462e0e1e-98ea-0f3c-4aaa-8d44f0a8e664@leemhuis.info>
+ <20230711120609.GB27050@lst.de>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH v2 12/32] mm/vmalloc: vmalloc_to_page() use
- pte_offset_kernel()
-Content-Language: en-US, de-DE
-To: Mark Brown <broonie@kernel.org>, Hugh Dickins <hughd@google.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Mike Kravetz <mike.kravetz@oracle.com>, Mike Rapoport <rppt@kernel.org>,
- "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
- Matthew Wilcox <willy@infradead.org>, David Hildenbrand <david@redhat.com>,
- Suren Baghdasaryan <surenb@google.com>, Qi Zheng
- <zhengqi.arch@bytedance.com>, Yang Shi <shy828301@gmail.com>,
- Mel Gorman <mgorman@techsingularity.net>, Peter Xu <peterx@redhat.com>,
- Peter Zijlstra <peterz@infradead.org>, Will Deacon <will@kernel.org>,
- Yu Zhao <yuzhao@google.com>, Alistair Popple <apopple@nvidia.com>,
- Ralph Campbell <rcampbell@nvidia.com>, Ira Weiny <ira.weiny@intel.com>,
- Steven Price <steven.price@arm.com>, SeongJae Park <sj@kernel.org>,
- Lorenzo Stoakes <lstoakes@gmail.com>, Huang Ying <ying.huang@intel.com>,
- Naoya Horiguchi <naoya.horiguchi@nec.com>,
- Christophe Leroy <christophe.leroy@csgroup.eu>, Zack Rusin
- <zackr@vmware.com>, Jason Gunthorpe <jgg@ziepe.ca>,
- Axel Rasmussen <axelrasmussen@google.com>,
- Anshuman Khandual <anshuman.khandual@arm.com>,
- Pasha Tatashin <pasha.tatashin@soleen.com>, Miaohe Lin
- <linmiaohe@huawei.com>, Minchan Kim <minchan@kernel.org>,
- Christoph Hellwig <hch@infradead.org>, Song Liu <song@kernel.org>,
- Thomas Hellstrom <thomas.hellstrom@linux.intel.com>,
- Ryan Roberts <ryan.roberts@arm.com>, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, linux-arm-kernel@lists.infradead.org,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <c1c9a74a-bc5b-15ea-e5d2-8ec34bc921d@google.com>
- <696386a-84f8-b33c-82e5-f865ed6eb39@google.com>
- <42279f1f-7b82-40dc-8546-86171018729c@sirena.org.uk>
-From: "Linux regression tracking #adding (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <42279f1f-7b82-40dc-8546-86171018729c@sirena.org.uk>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1689086929;620ad894;
-X-HE-SMSGID: 1qJEf2-0003Uo-GS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230711120609.GB27050@lst.de>
 
-[CCing the regression list, as it should be in the loop for regressions:
-https://docs.kernel.org/admin-guide/reporting-regressions.html]
-
-[TLDR: I'm adding this report to the list of tracked Linux kernel
-regressions; the text you find below is based on a few templates
-paragraphs you might have encountered already in similar form.
-See link in footer if these mails annoy you.]
-
-On 10.07.23 16:42, Mark Brown wrote:
-> On Thu, Jun 08, 2023 at 06:21:41PM -0700, Hugh Dickins wrote:
->> vmalloc_to_page() was using pte_offset_map() (followed by pte_unmap()),
->> but it's intended for userspace page tables: prefer pte_offset_kernel().
->>
->> Signed-off-by: Hugh Dickins <hughd@google.com>
->> Reviewed-by: Lorenzo Stoakes <lstoakes@gmail.com>
+On Tue, Jul 11, 2023 at 02:06:09PM +0200, Christoph Hellwig wrote:
+> On Tue, Jul 11, 2023 at 11:39:11AM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
+> > Well, that "They keep pumping out more and more devices with the same
+> > breakage" and the "new device" comment from Pankaj below bear the
+> > question: should we stop trying to play "whack a mole" with all those
+> > quirk entries and handle devices with duplicate ids just like Windows does?
 > 
-> Currently Linus' tree is reliably failing to boot on pine64plus, an
-> arm64 SBC.  Most other boards seem fine, though I am seeing some
-> additional instability on Tritium which is another Allwinner platform,
-> I've not dug into that yet and Tritium is generally less stable.
-> 
-> We end up seeing NULL or otherwise bad pointer dereferences, the
-> [...]
-> # first bad commit: [0d1c81edc61e553ed7a5db18fb8074c8b78e1538] mm/vmalloc: vmalloc_to_page() use pte_offset_kernel()
+> As far as I can tell Windows completely ignores the IDs.  Which, looking
+> back, I'd love to be able to do as well, but they are already used
+> by udev for the /dev/disk/by-id/ links.   Those are usually not used
+> on desktop systems, as they use the file system labels and UUIDs, but
+> that doesn't work for non-file system uses.
 
-Thanks for the report. To be sure the issue doesn't fall through the
-cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
-tracking bot:
-
-#regzbot ^introduced 0d1c81edc61e553ed7a5db18fb8074c8
-#regzbot title mm/vmalloc: NULL or otherwise bad pointer dereferences on
-ARM64
-#regzbot ignore-activity
-
-This isn't a regression? This issue or a fix for it are already
-discussed somewhere else? It was fixed already? You want to clarify when
-the regression started to happen? Or point out I got the title or
-something else totally wrong? Then just reply and tell me -- ideally
-while also telling regzbot about it, as explained by the page listed in
-the footer of this mail.
-
-Developers: When fixing the issue, remember to add 'Link:' tags pointing
-to the report (the parent of this mail). See page linked in footer for
-details.
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+It's also an inescapable requirement for supporting multipath, and a
+number of the devices being quirked bizarrely also report CMIC/NMIC
+capabilities.
