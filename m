@@ -1,73 +1,102 @@
-Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 947C51FCF
-	for <regressions@lists.linux.dev>; Tue, 11 Jul 2023 20:43:33 +0000 (UTC)
-Received: by mail-ot1-f47.google.com with SMTP id 46e09a7af769-6b72329b63eso5420457a34.0
-        for <regressions@lists.linux.dev>; Tue, 11 Jul 2023 13:43:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1689108212; x=1691700212;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=LjUdrFfcJIMkJGNGdxZJPX7vh7QvoOKA+YjjfGd0IZ8=;
-        b=RYbbIOpTwNHNj8ZeTMcyXdIsmQTac3bFnM9TN91zjqc/1iXqGe1kB1+IvF4rAcPI6v
-         13uL1hBfR//0LG2EWnwZ7va1bOLhwKOAXq5ttO9UXkkUe/IhLXTy7Oo/kRMkwGGs4XxX
-         rH1tJJjvgom5VzijBkd4Gp9D7p9hr7DhdZbMM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689108212; x=1691700212;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LjUdrFfcJIMkJGNGdxZJPX7vh7QvoOKA+YjjfGd0IZ8=;
-        b=SROWww3QQGIv1BZ8EYkiTBqZyoz4vtnWmo5+s8kWF3OeoaYpbl5I/OriUWHcaIlcNp
-         dZK0TksNLaSgc/aaQIMBo8c5JRNmZ+OuuisxE+GcWrjVkdO7Wr3KbsTUJUi8zacmGj37
-         qdpic+CeFDwKh2ZDY5NTR7FMQxrXvgfWoR0H25gsMAgvnt+Ce1Lg8eiif3qx0+KCjBv0
-         oLomBiUQ0c4hy96FUsEn3BxodRjCS+Z69Rig+uVyP+u2v1MhxbsXgR9mN9AfPHMHWTdj
-         38Hk2VPg5C9c+v/HtOW2Rj40cBlYyAKkxLUH0vi2/H3PCw10KRUqN8T1c3nVEkrO3zNK
-         iqLA==
-X-Gm-Message-State: ABy/qLZJHO3Fw0W2ESHLpYXfs7MpKzP1L3nUbGMDgBqPyPjEmNsVc8sj
-	LzjttXexbG+92v3NRRN/ZSHHkw==
-X-Google-Smtp-Source: APBJJlFmr4987jlLXbzbogCv42AY5QKpJU0kjVY3vk1WjHNHiRZcqdtpvaIXNxQHbdNJhuwDqo+2pA==
-X-Received: by 2002:a9d:6497:0:b0:6b7:5430:706c with SMTP id g23-20020a9d6497000000b006b75430706cmr2357614otl.24.1689108212495;
-        Tue, 11 Jul 2023 13:43:32 -0700 (PDT)
-Received: from meerkat.local ([209.226.106.132])
-        by smtp.gmail.com with ESMTPSA id 83-20020a251656000000b00be8e8772025sm627518ybw.45.2023.07.11.13.43.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Jul 2023 13:43:32 -0700 (PDT)
-Date: Tue, 11 Jul 2023 16:43:23 -0400
-From: Konstantin Ryabitsev <konstantin@linuxfoundation.org>
-To: Thorsten Leemhuis <linux@leemhuis.info>
-Cc: "workflows@vger.kernel.org" <workflows@vger.kernel.org>, 
-	Linux kernel regressions list <regressions@lists.linux.dev>
-Subject: Re: Bugbot for all kernel bugs?
-Message-ID: <20230711-encore-hunchback-2d103b@meerkat>
-References: <8133fcf4-5ed6-204a-ceb1-ee4136e32fb4@leemhuis.info>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C68B21DDEE
+	for <regressions@lists.linux.dev>; Tue, 11 Jul 2023 21:50:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1A53C433C7;
+	Tue, 11 Jul 2023 21:50:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1689112219;
+	bh=0T0pjrWcDkDJyoK4+B3r5UxdOezTd8UsIOmWJM7998o=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=SlAC4z9aPTok8aMnJvGXJWw/qO6U+Qh6b1uxRBarfOPhmzFfWu/rCK/DcN5Zrr5Qd
+	 N0ixjQDkXktV7lIcE5tFM4BSMOG5rXpNxST0GXXxWpjUR3VL8IjWRRrnTTnOI81HZO
+	 HFc1IBuLfy3CIvLyTb0ae61TjsUB9OQi5A9EEPYUCrquot7qlQdPD/D7JaookJCDeW
+	 DDU7jXt9vUgv210WImRXB1KNJOLkBb7WgYhsZuWxptLIP/OEY3HpqnIZ7Qz76lj77+
+	 LMZs5G1Udn8gEyYuYdSHv1xz+DHuvi0Mb1lhp8/gZgoiu/0/cRESooiYplzWTICMJP
+	 iJy2D1nmBrvHg==
+Message-ID: <0f272843a33a1706dbcbb2d84b02e3951ee60cbb.camel@kernel.org>
+Subject: Re: [PATCH v2 1/2] tpm/tpm_tis: Disable interrupts for Framework
+ Laptop Intel 12th gen
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: Grundik <ggrundik@gmail.com>, Christian Hesse <list@eworm.de>, 
+	linux-integrity@vger.kernel.org, Lino Sanfilippo <LinoSanfilippo@gmx.de>
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>, Linux kernel regressions
+ list <regressions@lists.linux.dev>, Peter Huewe <peterhuewe@gmx.de>,
+ Christian Hesse <mail@eworm.de>,  stable@vger.kernel.org,
+ roubro1991@gmail.com, Linus Torvalds <torvalds@linux-foundation.org>
+Date: Wed, 12 Jul 2023 00:50:15 +0300
+In-Reply-To: <bb5580e93d244400c3330d7091bf64868aa2053f.camel@gmail.com>
+References: <20230710133836.4367-1-mail@eworm.de>
+	 <20230710142916.18162-1-mail@eworm.de>
+	 <20230710231315.4ef54679@leda.eworm.net>
+	 <bd0587e16d55ef38277ab1f6169909ae7cde3542.camel@kernel.org>
+	 <bb5580e93d244400c3330d7091bf64868aa2053f.camel@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.1-0ubuntu1 
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <8133fcf4-5ed6-204a-ceb1-ee4136e32fb4@leemhuis.info>
 
-On Mon, Jul 10, 2023 at 07:28:26PM +0200, Thorsten Leemhuis wrote:
-> Hi Konstantin. Is there any hope that bugbot will be usable for all
-> kernel bugs in bugzilla.kernel.org soon? It sounded some weeks ago like
-> that wasn't too far away, that's why I wonder if we might have arrived
-> at a point where this support could be enabled.
+On Tue, 2023-07-11 at 15:41 +0300, Grundik wrote:
+> On Tue, 2023-07-11 at 00:29 +0300, Jarkko Sakkinen wrote:
+> > On Mon, 2023-07-10 at 23:13 +0200, Christian Hesse wrote:
+> >=20
+> >=20
+> > OK, this good to hear! I've been late with my pull request (past rc1)
+> > because of kind of conflicting timing with Finnish holiday season and
+> > relocating my home office.
+> >=20
+> > I'll replace v2 patches with v3 and send the PR for rc2 after that.
+> > So unluck turned into luck this time :-)
+> >=20
+> > Thank you for spotting this!
+>=20
+> I want to say: this issue is NOT limited to Framework laptops.
+>=20
+> For example this MSI gen12 i5-1240P laptop also suffers from same
+> problem:
+>         Manufacturer: Micro-Star International Co., Ltd.
+>         Product Name: Summit E13FlipEvo A12MT
+>         Version: REV:1.0
+>         SKU Number: 13P3.1
+>         Family: Summit
+>=20
+> So, probably just blacklisting affected models is not the best
+> solution...
 
-I just need to add a wrapper that would make it more convenient to run as an
-actual service as opposed to in a screen session I've been using for testing
-purposes. Probably a day worth of effort, plus documentation.
+It will be supplemented with
 
-> Sorry for bothering you about this, but I'm getting a bit tired by all
-> that tedious man-in-the-middle between reporters and developers to let
-> one group know about things the other did...
+https://lore.kernel.org/linux-integrity/CTYXI8TL7C36.2SCWH82FAZWBO@suppilov=
+ahvero/T/#me895f1920ca6983f791b58a6fa0c157161a33849
 
-So, we can't easily do "enable for all the bugs" because the bot was written
-with the idea that it would be invoked per-component. Is there a bugzilla
-component (and a matching mailing list) that you have in mind for the bot?
+Together they should fairly sustainable framework.
 
--K
+Lino, can you add the same fixes tag as for this. It would probably
+ignore inline comments to keep the patch minimal since it is a
+critical fix. Just do the renames, remove inline comments and
+send v3.
+
+For tpm_tis_check_for_interrupt_storm(), you can could rename it
+simply as tpm_tis_update_unhandle_irqs() as that it what it does
+(my review did not include a suggestion for this).
+
+This way I think it should be fairly trivial to get a version that
+can be landed.
+
+To put short:
+1. Do the renames as suggested, they are good enough for me.
+2. Drop inline comments, their usefulness is somewhat questionable
+   and they increase the diff.
+3. Generally aim for minimal diff but I think this should be good
+   enough if you do steps 1 and 2.
+
+If you don't have the time at hand, I can carefully do these cleanups
+and apply the patch. If you have the time and motivation, go ahead
+and send v3.
+
+BR, Jarkko
