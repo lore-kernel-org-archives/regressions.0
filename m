@@ -1,116 +1,128 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6E2A182B6
-	for <regressions@lists.linux.dev>; Tue, 11 Jul 2023 13:20:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04486C433C8;
-	Tue, 11 Jul 2023 13:20:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1689081606;
-	bh=uOS4JfNufBFC0X+cPyi5FCg/wfbG6rddahqbtej+cxE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=jtIZOuwVUA6gRzzifFEtONSM8PLmeN4AmB5mo68yP9DT34i44Aa22wqsbGhjsCT8J
-	 ZPXjkFA8ZD6l9Km+x9yAaekLi//ruuOFKGDVdIbCKBweHTTwCYQvUSYjSc3Ze3SOfU
-	 JqrNdXZoBar9mDR5v8LW5NYZrIMK4nqAQgmlsM/Ruiv9/sPZQJW/jl7HSxT4CCgkfl
-	 JeeZjHd9IXp7UyoLjnpIeu7ROxLcYRuqFlc68iyXBPsxa0KrxpxjmjzxHg/i/FpUoN
-	 P9PhfeuvKLLlYn0K4D5Q7LdM3eYPjVmCOnq11N0tRkUYRuC/Apwp7IBG5MWp7eiPEa
-	 EzK+qIxMkDD6g==
-Date: Tue, 11 Jul 2023 22:20:00 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Georg =?UTF-8?B?TcO8bGxlcg==?= <georgmueller@gmx.net>, Peter Zijlstra
- <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Mark Rutland
- <mark.rutland@arm.com>, Alexander Shishkin
- <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, Adrian
- Hunter <adrian.hunter@intel.com>, "Masami Hiramatsu (Google)"
- <mhiramat@kernel.org>, regressions@lists.linux.dev, Arnaldo Carvalho de
- Melo <acme@redhat.com>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf probe: read DWARF files from the correct CU
-Message-Id: <20230711222000.d316cf7fd643cb4203ea1204@kernel.org>
-In-Reply-To: <ZK1RyVue7OMXzVl4@kernel.org>
-References: <5a00d5a5-7be7-ef8a-4044-9a16249fff25@gmx.net>
-	<20230615200147.664346-3-georgmueller@gmx.net>
-	<ZK1RyVue7OMXzVl4@kernel.org>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91EFD14AB5
+	for <regressions@lists.linux.dev>; Tue, 11 Jul 2023 13:41:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1689082874;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hvnb7JiwKvSnMAgyEjcswiUDuBLsnC0rp2JWm3dcW0o=;
+	b=bcKoMiXFAUoRRuHAj8uDYIFCDABelGMPoYv6OKrIdNqRfj3x0VmcaWdQoJwP148WanhnJW
+	rbfxxDnad2b1jw2giNNJaMOVEE9aifwb2fDa6fYO9pbwEWjUBGrGFATfZah8oBuJ4jjEcK
+	GSw6pZg/XnPupD9m8ANN0bx6Us232Jw=
+Received: from mail-yw1-f197.google.com (mail-yw1-f197.google.com
+ [209.85.128.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-249-tbAgRqH7NX6HYPShVo6Dsg-1; Tue, 11 Jul 2023 09:41:09 -0400
+X-MC-Unique: tbAgRqH7NX6HYPShVo6Dsg-1
+Received: by mail-yw1-f197.google.com with SMTP id 00721157ae682-57745160c1dso64653347b3.2
+        for <regressions@lists.linux.dev>; Tue, 11 Jul 2023 06:41:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689082862; x=1691674862;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hvnb7JiwKvSnMAgyEjcswiUDuBLsnC0rp2JWm3dcW0o=;
+        b=d7te0AieelWDtEr8LXuLwppxR547V452bmtq4v4eNJGFFWNnnKoZSkjvPTNgUbt+A8
+         qT+toSi1n2uFlB07Si+8N9G4FW+5TgyUr0w5zZB4ldhGKWKYa6FdB0qjvtglQFzZL8pp
+         rGJzlnjQ8O96PgHVtDbmwt6KVMTpDKviUlfV8jvMTqgoJoZe3ifnhonjCaYhcbB6z8mS
+         DU7wbTMnVX+1ASXczGZ840aE/zPNEtPhvXUZU7vwYFF9HfuklFU6FDFE/euwE8v4kUcZ
+         5ZDbHK/7B50/XfqWhOAA9QY4R10lXTuAoTnTzaJX9HHabwKjeF+ySPKatl1lhlboESl9
+         i/Hw==
+X-Gm-Message-State: ABy/qLYfVP4enAtxLtABgRQ5jRaGGCFztHmhd+ONQzNtzd61PbU6ZeZG
+	7CpNQR1Sc2Q2VvQkzpJydYwE5yW7uctNmkt4dQUQtvs1R8eBb+GuaO+HO5Z5HOsn97JiGos8pl6
+	Ses5iS4Gq06ulEgQ7J6Off0v3aiu8s8o6YtR/JFH00D09PdQ=
+X-Received: by 2002:a25:23d1:0:b0:c69:cf1f:ec0a with SMTP id j200-20020a2523d1000000b00c69cf1fec0amr13124362ybj.15.1689082862668;
+        Tue, 11 Jul 2023 06:41:02 -0700 (PDT)
+X-Google-Smtp-Source: APBJJlE4ZLOqIjO/yyFhHoIBVoAPEbGrTyKrYmJlC4AJrQfREkKw9AcsD5OXndLzLtud1cBfWt6TWIx1ymEODA6SenA=
+X-Received: by 2002:a25:23d1:0:b0:c69:cf1f:ec0a with SMTP id
+ j200-20020a2523d1000000b00c69cf1fec0amr13124347ybj.15.1689082862425; Tue, 11
+ Jul 2023 06:41:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+References: <20230621-logitech-fixes-v1-1-32e70933c0b0@redhat.com>
+ <2023062156-trespass-pandemic-7f4f@gregkh> <qbvmv3eexohswyagmllfh3xsxoftwa3wbmsdafmwak2bxlnlft@jz74dijlfxlz>
+ <31ce32e018a9fa410e9e1f3e5900621b16a56091.camel@hadess.net>
+ <CAO-hwJLFSUJaGK5DAOz30+YyC1hGgHnbeJbc5iQ47jxBcbRSCg@mail.gmail.com> <cfa28818-9eaf-0dc9-cb4a-1b3de318e627@leemhuis.info>
+In-Reply-To: <cfa28818-9eaf-0dc9-cb4a-1b3de318e627@leemhuis.info>
+From: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Date: Tue, 11 Jul 2023 15:40:51 +0200
+Message-ID: <CAO-hwJLc0wzv2a3JARkPDW+ZgbnvwggfRHcAJmWsKy_FMA13=g@mail.gmail.com>
+Subject: Re: [PATCH] HID: logitech-hidpp: rework one more time the retries attempts
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Bastien Nocera <hadess@hadess.net>, Greg KH <gregkh@linuxfoundation.org>, 
+	=?UTF-8?Q?Filipe_La=C3=ADns?= <lains@riseup.net>, 
+	Jiri Kosina <jikos@kernel.org>, linux-input@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 11 Jul 2023 09:57:45 -0300
-Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+On Tue, Jul 11, 2023 at 3:10=E2=80=AFPM Linux regression tracking (Thorsten
+Leemhuis) <regressions@leemhuis.info> wrote:
+>
+> On 26.06.23 16:02, Benjamin Tissoires wrote:
+> > On Sun, Jun 25, 2023 at 10:30=E2=80=AFAM Bastien Nocera <hadess@hadess.=
+net> wrote:
+> >> On Fri, 2023-06-23 at 10:37 +0200, Benjamin Tissoires wrote:
+> >>> On Jun 21 2023, Greg KH wrote:
+> >>>> On Wed, Jun 21, 2023 at 11:42:30AM +0200, Benjamin Tissoires wrote:
+> >>>>> Make the code looks less like Pascal.
+> >>>>>
+> >>>>> Extract the internal code inside a helper function, fix the
+> >>>>> initialization of the parameters used in the helper function
+> >>>>> (`hidpp->answer_available` was not reset and `*response` wasn't
+> >>>>> too),
+> >>>>> and use a `do {...} while();` loop.
+> >>>>>
+> >>>>> Fixes: 586e8fede795 ("HID: logitech-hidpp: Retry commands when
+> >>>>> device is busy")
+> >>>>> Cc: stable@vger.kernel.org
+> >>>>> Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+> >>>>> ---
+> >>>>> as requested by
+> >>>>> https://lore.kernel.org/all/CAHk-=3DwiMbF38KCNhPFiargenpSBoecSXTLQA=
+CKS2UMyo_Vu2ww@mail.gmail.com/
+> >>>>> This is a rewrite of that particular piece of code.
+> >>>>> ---
+> >>>>>  drivers/hid/hid-logitech-hidpp.c | 102 +++++++++++++++++++++++--
+> >>>>> --------------
+> >>>>>  1 file changed, 61 insertions(+), 41 deletions(-)
+> > [...]
+> >
+> > Some people on the Bz were able to reproduce with multiple reboots.
+> > But it's not as urgent as previously, and we were close to the 6.4
+> > final when I sent it. I'll make sure this goes into 6.5 and gets
+> > proper stable backports FWIW.
+>
+> Did that happen? Doesn't look like it from here, but maybe I'm missing
+> something. Where there maybe other changes to resolve the remaining
+> problems some users encounter sporadically since the urgent fixes went in=
+?
 
-> Em Thu, Jun 15, 2023 at 10:01:37PM +0200, Georg Müller escreveu:
-> > After switching from dwarf_decl_file() to die_get_decl_file(), it is not
-> > possible to add probes for certain functions of certain binaries:
-> > 
-> >  $ perf probe -x /usr/lib/systemd/systemd-logind match_unit_removed
-> >  A function DIE doesn't have decl_line. Maybe broken DWARF?
-> >  A function DIE doesn't have decl_line. Maybe broken DWARF?
-> >  Probe point 'match_unit_removed' not found.
-> >     Error: Failed to add events.
-> > 
-> > The problem is that die_get_decl_file() uses the wrong CU to search for
-> > the file. elfutils commit e1db5cdc9f has some good explanation for this:
-> > 
-> >     dwarf_decl_file uses dwarf_attr_integrate to get the DW_AT_decl_file
-> >     attribute. This means the attribute might come from a different DIE
-> >     in a different CU. If so, we need to use the CU associated with the
-> >     attribute, not the original DIE, to resolve the file name.
-> > 
-> > This patch uses the same source of information as elfutils: use attribute
-> > DW_AT_decl_file and use this CU to search for the file.
-> 
-> Thanks, applied to the perf-tools branch, that will be submitted for
-> Linux v6.5.
+No, there were no other changes that could have solved this. I guess
+the randomness of the problem makes it way harder to detect and to
+reproduce.
 
-Thanks Arnaldo and Georg,
+I'll send a v2 of that patch with the reviews today or tomorrow and we
+can probably get it through the current 6.5 cycle.
 
-It sounds perfect reason why that happened. I didn't expect the case that
-the attribute comes from another CU...
+Cheers,
+Benjamin
 
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+>
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> --
+> Everything you wanna know about Linux kernel regression tracking:
+> https://linux-regtracking.leemhuis.info/about/#tldr
+> If I did something stupid, please tell me, as explained on that page.
+>
 
-> 
-> - Arnaldo
->  
-> > Fixes: dc9a5d2ccd5c ("perf probe: Fix to get declared file name from clang DWARF5")
-> > Signed-off-by: Georg Müller <georgmueller@gmx.net>
-> > Link: https://lore.kernel.org/r/5a00d5a5-7be7-ef8a-4044-9a16249fff25@gmx.net/
-> > ---
-> >  tools/perf/util/dwarf-aux.c | 4 +++-
-> >  1 file changed, 3 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
-> > index b07414409771..137b3ed9897b 100644
-> > --- a/tools/perf/util/dwarf-aux.c
-> > +++ b/tools/perf/util/dwarf-aux.c
-> > @@ -478,8 +478,10 @@ static const char *die_get_file_name(Dwarf_Die *dw_die, int idx)
-> >  {
-> >  	Dwarf_Die cu_die;
-> >  	Dwarf_Files *files;
-> > +	Dwarf_Attribute attr_mem;
-> > 
-> > -	if (idx < 0 || !dwarf_diecu(dw_die, &cu_die, NULL, NULL) ||
-> > +	if (idx < 0 || !dwarf_attr_integrate(dw_die, DW_AT_decl_file, &attr_mem) ||
-> > +	    !dwarf_cu_die(attr_mem.cu, &cu_die, NULL, NULL, NULL, NULL, NULL, NULL) ||
-> >  	    dwarf_getsrcfiles(&cu_die, &files, NULL) != 0)
-> >  		return NULL;
-> > 
-> > --
-> > 2.41.0
-> > 
-> 
-> -- 
-> 
-> - Arnaldo
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
