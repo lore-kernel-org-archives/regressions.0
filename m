@@ -1,93 +1,73 @@
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E92C1E52C
-	for <regressions@lists.linux.dev>; Tue, 11 Jul 2023 19:44:16 +0000 (UTC)
-Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-4036bd4fff1so4251cf.0
-        for <regressions@lists.linux.dev>; Tue, 11 Jul 2023 12:44:16 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 947C51FCF
+	for <regressions@lists.linux.dev>; Tue, 11 Jul 2023 20:43:33 +0000 (UTC)
+Received: by mail-ot1-f47.google.com with SMTP id 46e09a7af769-6b72329b63eso5420457a34.0
+        for <regressions@lists.linux.dev>; Tue, 11 Jul 2023 13:43:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1689104655; x=1691696655;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RSEbbHdSy2/6yMNHt5Jl2Q8DKG5onoGGlP2gwab29zg=;
-        b=SeyA6AXpzijMHYXA7cjzccjTbzwZWoJYGstW61Xg9auwvLtgCrdRrgY1+rb4mj71zP
-         kAS2JOoSuGreMHzZKF2SAOd8m8inSHMQZgSh0jbn1xWhgbEas4OlDao6V2S+bsSTFY2z
-         uU6/VkjyeAF+R9FkqY3cTYdzrYNRhtU//Y/fgFb2hnacZ2I/Z5+XqSPPfv61v8zsEbwi
-         8XX2N0+8VH/AfGGcFQLJslO5U0WDrchRnXwftY3cdzAWsPVuXSca9UUDTROL7eyfo70L
-         tgvclsm/4/QPawY1PY0reLmxJ7efSbL/jmnI3m9zBBeGaMI/OXPA4hkzZTy8dDamPq9s
-         uxLg==
+        d=linuxfoundation.org; s=google; t=1689108212; x=1691700212;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=LjUdrFfcJIMkJGNGdxZJPX7vh7QvoOKA+YjjfGd0IZ8=;
+        b=RYbbIOpTwNHNj8ZeTMcyXdIsmQTac3bFnM9TN91zjqc/1iXqGe1kB1+IvF4rAcPI6v
+         13uL1hBfR//0LG2EWnwZ7va1bOLhwKOAXq5ttO9UXkkUe/IhLXTy7Oo/kRMkwGGs4XxX
+         rH1tJJjvgom5VzijBkd4Gp9D7p9hr7DhdZbMM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689104655; x=1691696655;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RSEbbHdSy2/6yMNHt5Jl2Q8DKG5onoGGlP2gwab29zg=;
-        b=c3/4/AEAvvm888vSTtFwAEXJyn8IgKE+S8t3tC6i0tMNGKwwMdKefixn98yh7KyLUJ
-         6PCJPV3zBWhwc/yhp75/ye9CMAXOyqF0UByu0IAlskM23tndfDVnsIqIKqBEbgjBIPEN
-         IxrXg808Nxf65DVUsPejRcvYCNHh4Q7pIOzHXfihJ5ftkYYBkuekcZm5ynGHZFORj9rS
-         vT8p85f4HmAqESoYYoLFudGDRKOXA/NUebtbwWmiomYzh/WUl67aKfT3Fh08S/758EBO
-         383M+uiyBM+ljSL6LLNj7GbcSwZqgDrLfsn60nF0vZUx4N/GQJWMqCthNiur3fX+vz00
-         83XQ==
-X-Gm-Message-State: ABy/qLbNEGeSvQHX+Z7qXV0w6X1lLjIWKCahIb99IUtEc50SrwFccFo5
-	6Tx8sFC5TTxMYV4qHRE4hC0eBkomwqvwUUcZhoay7A==
-X-Google-Smtp-Source: APBJJlEMGrJhIDMpPTyu7e5avzS4Ytu2jD6E5EuDUDLHHML24qva5gPcogEF3c06DP35r+OQbQLaaRAwWhkADKINe28=
-X-Received: by 2002:ac8:570d:0:b0:3f9:a770:7279 with SMTP id
- 13-20020ac8570d000000b003f9a7707279mr28180qtw.9.1689104654972; Tue, 11 Jul
- 2023 12:44:14 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1689108212; x=1691700212;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LjUdrFfcJIMkJGNGdxZJPX7vh7QvoOKA+YjjfGd0IZ8=;
+        b=SROWww3QQGIv1BZ8EYkiTBqZyoz4vtnWmo5+s8kWF3OeoaYpbl5I/OriUWHcaIlcNp
+         dZK0TksNLaSgc/aaQIMBo8c5JRNmZ+OuuisxE+GcWrjVkdO7Wr3KbsTUJUi8zacmGj37
+         qdpic+CeFDwKh2ZDY5NTR7FMQxrXvgfWoR0H25gsMAgvnt+Ce1Lg8eiif3qx0+KCjBv0
+         oLomBiUQ0c4hy96FUsEn3BxodRjCS+Z69Rig+uVyP+u2v1MhxbsXgR9mN9AfPHMHWTdj
+         38Hk2VPg5C9c+v/HtOW2Rj40cBlYyAKkxLUH0vi2/H3PCw10KRUqN8T1c3nVEkrO3zNK
+         iqLA==
+X-Gm-Message-State: ABy/qLZJHO3Fw0W2ESHLpYXfs7MpKzP1L3nUbGMDgBqPyPjEmNsVc8sj
+	LzjttXexbG+92v3NRRN/ZSHHkw==
+X-Google-Smtp-Source: APBJJlFmr4987jlLXbzbogCv42AY5QKpJU0kjVY3vk1WjHNHiRZcqdtpvaIXNxQHbdNJhuwDqo+2pA==
+X-Received: by 2002:a9d:6497:0:b0:6b7:5430:706c with SMTP id g23-20020a9d6497000000b006b75430706cmr2357614otl.24.1689108212495;
+        Tue, 11 Jul 2023 13:43:32 -0700 (PDT)
+Received: from meerkat.local ([209.226.106.132])
+        by smtp.gmail.com with ESMTPSA id 83-20020a251656000000b00be8e8772025sm627518ybw.45.2023.07.11.13.43.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Jul 2023 13:43:32 -0700 (PDT)
+Date: Tue, 11 Jul 2023 16:43:23 -0400
+From: Konstantin Ryabitsev <konstantin@linuxfoundation.org>
+To: Thorsten Leemhuis <linux@leemhuis.info>
+Cc: "workflows@vger.kernel.org" <workflows@vger.kernel.org>, 
+	Linux kernel regressions list <regressions@lists.linux.dev>
+Subject: Re: Bugbot for all kernel bugs?
+Message-ID: <20230711-encore-hunchback-2d103b@meerkat>
+References: <8133fcf4-5ed6-204a-ceb1-ee4136e32fb4@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230612153201.554742-1-catalin.marinas@arm.com>
- <CAMi1Hd04mu6JojT3y6wyN2YeVkPR5R3qnkKJ8iR8if_YByCn4w@mail.gmail.com>
- <ZKdfVSzbgOonR17A@google.com> <CAMi1Hd2f5GUnu_JGot=CqA9Vy4OD_V7FWYLOhNbJL1Pyd_EGMA@mail.gmail.com>
-In-Reply-To: <CAMi1Hd2f5GUnu_JGot=CqA9Vy4OD_V7FWYLOhNbJL1Pyd_EGMA@mail.gmail.com>
-From: Isaac Manjarres <isaacmanjarres@google.com>
-Date: Tue, 11 Jul 2023 12:44:03 -0700
-Message-ID: <CABfwK138ZbE5=J66esO-VG64tO+e9n1cRRBAE3wOKygJxd_xbw@mail.gmail.com>
-Subject: Re: [PATCH v7 00/17] mm, dma, arm64: Reduce ARCH_KMALLOC_MINALIGN to 8
-To: Amit Pundir <amit.pundir@linaro.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, Christoph Hellwig <hch@lst.de>, 
-	Robin Murphy <robin.murphy@arm.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Will Deacon <will@kernel.org>, 
-	Marc Zyngier <maz@kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>, 
-	Ard Biesheuvel <ardb@kernel.org>, Saravana Kannan <saravanak@google.com>, Alasdair Kergon <agk@redhat.com>, 
-	Daniel Vetter <daniel@ffwll.ch>, Joerg Roedel <joro@8bytes.org>, Mark Brown <broonie@kernel.org>, 
-	Mike Snitzer <snitzer@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Jonathan Cameron <jic23@kernel.org>, Vlastimil Babka <vbabka@suse.cz>, linux-mm@kvack.org, 
-	iommu@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	Linux regressions mailing list <regressions@lists.linux.dev>, John Stultz <jstultz@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <8133fcf4-5ed6-204a-ceb1-ee4136e32fb4@leemhuis.info>
 
-On Sat, Jul 8, 2023 at 6:03=E2=80=AFAM Amit Pundir <amit.pundir@linaro.org>=
- wrote:
-> Hi Issac, I can't reproduce this crash if I have slub_debug enabled
-> https://bugs.linaro.org/attachment.cgi?id=3D1149.
->
-> But I can still reproduce the crash, with the same build, if I just
-> remove the slub_debug bootarg
-> https://bugs.linaro.org/attachment.cgi?id=3D1150
->
+On Mon, Jul 10, 2023 at 07:28:26PM +0200, Thorsten Leemhuis wrote:
+> Hi Konstantin. Is there any hope that bugbot will be usable for all
+> kernel bugs in bugzilla.kernel.org soon? It sounded some weeks ago like
+> that wasn't too far away, that's why I wonder if we might have arrived
+> at a point where this support could be enabled.
 
-Hey Amit,
+I just need to add a wrapper that would make it more convenient to run as an
+actual service as opposed to in a screen session I've been using for testing
+purposes. Probably a day worth of effort, plus documentation.
 
-Thanks for trying this out. John Stultz and I tried this out as well, and w=
-e
-couldn't reproduce the issue with slub_debug enabled either.
+> Sorry for bothering you about this, but I'm getting a bit tired by all
+> that tedious man-in-the-middle between reporters and developers to let
+> one group know about things the other did...
 
-However, we were able to reproduce the issue you reported along with
-KASAN enabled, which also helped us catch an out-of-bounds access
-in the regmap-irq code. Once we fixed it, the memory corruption you
-reported was also fixed. I've sent the patch [1] for review. Can you please
-test it out and see if it works for you too?
+So, we can't easily do "enable for all the bugs" because the bot was written
+with the idea that it would be invoked per-component. Is there a bugzilla
+component (and a matching mailing list) that you have in mind for the bot?
 
-[1]: https://lore.kernel.org/all/20230711193059.2480971-1-isaacmanjarres@go=
-ogle.com/
-
-Thanks,
-Isaac
+-K
