@@ -1,208 +1,119 @@
-Received: from madras.collabora.co.uk (madras.collabora.co.uk [46.235.227.172])
+Received: from nbd.name (nbd.name [46.4.11.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2435F18AF8;
-	Tue, 11 Jul 2023 11:16:21 +0000 (UTC)
-Received: from [10.231.127.5] (91-133-79-89.stat.cablelink.at [91.133.79.89])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: shreeya)
-	by madras.collabora.co.uk (Postfix) with ESMTPSA id 8960A660700D;
-	Tue, 11 Jul 2023 12:16:19 +0100 (BST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1689074180;
-	bh=XXqx6jjzqVFPldsbdR5LC87NiCTrfy5oA1jjDLavIQE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ggY/vBPqfvEy5CTrXVgzmQ/UK1f9T8bC9cMAMRP1LSqSErFVdV/kK0GZ7S2CkK1UM
-	 +JYHmeTLRQ6Q0+kgV7vAoXhp2vYFmKAzEKHGd9SQuXIHKma52faWb9GHusNcOsgDh+
-	 Qegg6dFAUuKik9YxFSsBNFXA92r8HZYgRrrK1q2OW2RXLJ2O/2yynkhvrfzek6CaCe
-	 Ql5x1w2gt7z8eraccbT5ptKoKXezTyI9XfWFX2mnL6BYrWAM4V6jkHLd8VRoKwlnRm
-	 PlZ/aIL/e54fOIhCEPCCkUYyEGXiyFFBQdEuFk1mAmj+cfz9misy2L9eElNTAE9KOw
-	 qHoYHvZpVHAiQ==
-Message-ID: <2833d0db-f122-eccd-7393-1f0169dc0741@collabora.com>
-Date: Tue, 11 Jul 2023 16:46:14 +0530
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFE4E18AF8
+	for <regressions@lists.linux.dev>; Tue, 11 Jul 2023 11:22:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=nbd.name;
+	s=20160729; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=Dd+7wNioSMr7f6iy1H0hUOUn4CdjNtwL/S3FkoiVhz0=; b=hjhgaxNuJLhNikHs63JLRoWYLv
+	3YshzsRxup/o7RFKvdaUvX1t5weypZRxIgdChs40ecAQZnRZ4IhD2w5c70rs7RjhjPePfumIVObg1
+	f1FmupwlKahpobHSRwVfYSjwPL4XJExZCbDd2TGiP76k7JI56qWHLHsdOQS3WKtN7Nx8=;
+Received: from p4ff134dd.dip0.t-ipconnect.de ([79.241.52.221] helo=nf.local)
+	by ds12 with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.94.2)
+	(envelope-from <nbd@nbd.name>)
+	id 1qJBI7-00Gtjt-CV; Tue, 11 Jul 2023 13:12:23 +0200
+Message-ID: <4bb71d8a-daf1-5f60-daf0-44aa8afcfdc3@nbd.name>
+Date: Tue, 11 Jul 2023 13:12:22 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Subject: Re: [PATCH v4] Makefile.compiler: replace cc-ifversion with
- compiler-specific macros
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.13.0
+Subject: Re: [regression] STP on 80211s is broken in 6.4-rc4
 Content-Language: en-US
-To: Linux regressions mailing list <regressions@lists.linux.dev>,
- Masahiro Yamada <masahiroy@kernel.org>
-Cc: Greg KH <gregkh@linuxfoundation.org>, Maksim Panchenko <maks@meta.com>,
- =?UTF-8?Q?Ricardo_Ca=c3=b1uelo?= <ricardo.canuelo@collabora.com>,
- Michal Marek <michal.lkml@markovi.net>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- clang-built-linux <llvm@lists.linux.dev>, Bill Wendling <morbo@google.com>,
- Nathan Chancellor <nathan@kernel.org>,
- "gustavo.padovan@collabora.com" <gustavo.padovan@collabora.com>,
- Guillaume Charles Tucker <guillaume.tucker@collabora.com>,
- denys.f@collabora.com, Nick Desaulniers <ndesaulniers@google.com>,
- kernelci@lists.linux.dev, Collabora Kernel ML <kernel@collabora.com>
-References: <CAKwvOd=4hBcU4fAkddU0b-GOZc9FzTZoj3PFW6ZZrX0jS8x+bg@mail.gmail.com>
- <b5d0cf82-0e42-f6a1-c9f5-c145fdc4c622@collabora.com>
- <CAKwvOdkFxu9hYSL_RCXadpR0dQd1+dZmAUVXdfFiLUfxg4D_Xw@mail.gmail.com>
- <878rdlk9bi.fsf@rcn-XPS-13-9305.i-did-not-set--mail-host-address--so-tickle-me>
- <CAKwvOd=8LVU+iANkFx18Wm1jg7gYiAXovAmo9t5ZZaVdMULn-Q@mail.gmail.com>
- <875y8ok9b5.fsf@rcn-XPS-13-9305.i-did-not-set--mail-host-address--so-tickle-me>
- <CAKwvOdmJJibt6sHSp91v2s7BxUWBC6xG7F7+3C6gUxNMzZ2xRA@mail.gmail.com>
- <87353ok78h.fsf@rcn-XPS-13-9305.i-did-not-set--mail-host-address--so-tickle-me>
- <2023052247-bobtail-factsheet-d104@gregkh>
- <CAKwvOd=2zAV_mizvzLFdyHE_4OzBY5OVu6KLWuQPOMZK37vsmQ@mail.gmail.com>
- <cff33e12-3d80-7e62-1993-55411ccabc01@collabora.com>
- <CAKwvOd=F29-UkNO7FtUWpVV=POOZLb6QgD=mhLMWtRfkRSSi2A@mail.gmail.com>
- <a037a08c-44c4-24e8-1cba-7e4e8b21ffaa@collabora.com>
- <CAK7LNAS8Y9syCiHMO2r75D6hgCSsDDvJ_=VMKpYqjondnbSZjw@mail.gmail.com>
- <267b73d6-8c4b-40d9-542d-1910dffc3238@leemhuis.info>
-From: Shreeya Patel <shreeya.patel@collabora.com>
-In-Reply-To: <267b73d6-8c4b-40d9-542d-1910dffc3238@leemhuis.info>
+To: Nicolas Escande <nico.escande@gmail.com>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ Bagas Sanjaya <bagasdotme@gmail.com>, =?UTF-8?Q?Toke_H=c3=b8iland-J=c3=b8rg?=
+ =?UTF-8?Q?ensen?= <toke@toke.dk>, Kalle Valo <kvalo@kernel.org>,
+ Johannes Berg <johannes.berg@intel.com>
+Cc: linux-wireless@vger.kernel.org
+References: <CT5GNZSK28AI.2K6M69OXM9RW5@syracuse> <ZIQbs0wqdRh7c0Kx@debian.me>
+ <a9d02800-2cd6-a27b-7998-4c97cf2eb692@leemhuis.info>
+ <CTDWJJDKSYYD.XBG1CAZB3A5W@syracuse>
+ <809500b6-4eec-7a5e-5930-00e7eeebcc5e@leemhuis.info>
+ <CTYNAK10A6AJ.1I4W9V78VG1NB@syracuse>
+From: Felix Fietkau <nbd@nbd.name>
+In-Reply-To: <CTYNAK10A6AJ.1I4W9V78VG1NB@syracuse>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+
+On 10.07.23 18:50, Nicolas Escande wrote:
+> On Mon Jul 10, 2023 at 1:32 PM CEST, Linux regression tracking (Thorsten Leemhuis) wrote:
+>> On 16.06.23 09:45, Nicolas Escande wrote:
+>> > On Thu Jun 15, 2023 at 2:54 PM CEST, Linux regression tracking (Thorsten Leemhuis) wrote:
+>> >> On 10.06.23 08:44, Bagas Sanjaya wrote:
+>> >>> On Tue, Jun 06, 2023 at 12:55:57PM +0200, Nicolas Escande wrote:
+>> >>>>
+>> >>>> As user of the mesh part of mac80211 on multiple products at work let me say
+>> >>>> thank you for all the work you do on wifi, especially on 80211s, and especially
+>> >>>> the recent improvements you made for mesh fast RX/TX & cross vendor AMSDU compat
+>> >>>>
+>> >>>> We upgraded our kernel from an older (5.15) to a newer 6.4. The problem is STP 
+>> >>>> doesn't work anymore and alas we use it for now (for the better or worse).
+>> >>>>
+>> >>>> What I gathered so far from my setup:
+>> >>>>  - we use ath9k & ath10k
+>> >>>>  - in my case STP frames are received as regular packet and not as amsdu
+>> >>>>  - the received packets have a wrong length of 44 in tcpdump
+>> >>>>    (instead of 38 with our previous kernel)
+>> >>>>  - llc_fixup_skb() tries to pull some 41 bytes out of a 35 bytes packet
+>> >>>>    this makes llc_rcv() discard the frames & breaks STP
+>> >>>>
+>> >>>> >From bisecting the culprit seems to be 986e43b19ae9176093da35e0a844e65c8bf9ede7
+>> >>>> (wifi: mac80211: fix receiving A-MSDU frames on mesh interfaces)
+>> >>>>
+>> >>>> I guess that your changes to handle both ampdu subframes & normal frames in the
+>> >>>> same datapath ends up putting a wrong skb->len for STP (multicast) frames ?
+>> >>>> Honestly I don't understand enough of the 80211 internals & spec to pinpoint the
+>> >>>> exact problem.
+>> >>>>
+>> >>>> It seems this change was already in the 6.3 kernel so I guess someone should
+>> >>>> have seen it before (but I didn't find anything..) ? Maybe I missed something...
+>> >>>>
+>> >>>> Anyway I'm happy to provide more info or try anything you throw at me.
+>> >> [...]
+>> >> Hmmm, Felix did not reply. But let's ignore that for now.
+>> > 
+>> > I haven't seen mails from felix on the list for a few days, I'm guessing he's
+>> > unavailable for now but I'll hapilly wait.
+>>
+>> Still no progress. Hmmm. Are you still okay with that? I've seen no
+>> other reports about this, so waiting is somewhat (albeit not completely)
+>> fine for me if it is for you.
+> I'm not so surprised no one else reported it, using STP on wifi (and 802.11s) is
+> not a really common thing to do, to be honest (and STP on wifi is unreliable).
+> Even though some openwrt guys do it for sure, I'm guessing their kernel version
+> is lagging behind...
+>>
+>> But in any case it might be good if you could recheck 6.5-rc1.
+> Testing on 6.5 as a whole won't be as easy for me as testing a single patch on
+> top of 6.4. I'll do my best to try but from what I saw nothing got merged that
+> would even remotely help me on this issue.
+> 
+> I am not loosing hope that Felix or someone that understands this stuff better
+> finds the time to look into this. I'm guessing it's the summer vacation effet.
+
+Sorry for the delay. This should fix the regression, please test.
+I will submit it for 6.5 soon.
+---
+--- a/net/wireless/util.c
++++ b/net/wireless/util.c
+@@ -580,6 +580,8 @@ int ieee80211_strip_8023_mesh_hdr(struct
+  		hdrlen += ETH_ALEN + 2;
+  	else if (!pskb_may_pull(skb, hdrlen))
+  		return -EINVAL;
++	else
++		payload.eth.h_proto = htons(skb->len - hdrlen);
+
+  	mesh_addr = skb->data + sizeof(payload.eth) + ETH_ALEN;
+  	switch (payload.flags & MESH_FLAGS_AE) {
 
 
-On 10/07/23 17:39, Linux regression tracking (Thorsten Leemhuis) wrote:
-> Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
-> for once, to make this easily accessible to everyone.
->
-> Shreeya Patel, Masahiro Yamada: what's the status of this? Was any
-> progress made to address this? Or is this maybe (accidentally?) fixed
-> with 6.5-rc1?
-
-Hi Thorsten,
-
-I still see the regression happening so it doesn't seem to be fixed.
-https://linux.kernelci.org/test/case/id/64ac675a8aebf63753bb2a8c/
-
-Masahiro had submitted a fix for this issue here.
-
-https://lore.kernel.org/lkml/ZJEni98knMMkU%2Fcl@buildd.core.avm.de/T/#t
-
-But I don't see any movement there. Masahiro, are you planning to send a 
-v2 for it?
-
-
-Thanks,
-Shreeya Patel
-
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-> --
-> Everything you wanna know about Linux kernel regression tracking:
-> https://linux-regtracking.leemhuis.info/about/#tldr
-> If I did something stupid, please tell me, as explained on that page.
->
-> #regzbot poke
->
-> On 20.06.23 06:19, Masahiro Yamada wrote:
->> On Mon, Jun 12, 2023 at 7:10 PM Shreeya Patel
->> <shreeya.patel@collabora.com> wrote:
->>> On 24/05/23 02:57, Nick Desaulniers wrote:
->>>> On Tue, May 23, 2023 at 3:27 AM Shreeya Patel
->>>> <shreeya.patel@collabora.com> wrote:
->>>>> Hi Nick and Masahiro,
->>>>>
->>>>> On 23/05/23 01:22, Nick Desaulniers wrote:
->>>>>> On Mon, May 22, 2023 at 9:52 AM Greg KH <gregkh@linuxfoundation.org> wrote:
->>>>>>> On Mon, May 22, 2023 at 12:09:34PM +0200, Ricardo Cañuelo wrote:
->>>>>>>> On vie, may 19 2023 at 08:57:24, Nick Desaulniers <ndesaulniers@google.com> wrote:
->>>>>>>>> It could be; if the link order was changed, it's possible that this
->>>>>>>>> target may be hitting something along the lines of:
->>>>>>>>> https://isocpp.org/wiki/faq/ctors#static-init-order i.e. the "static
->>>>>>>>> initialization order fiasco"
->>>>>>>>>
->>>>>>>>> I'm struggling to think of how this appears in C codebases, but I
->>>>>>>>> swear years ago I had a discussion with GKH (maybe?) about this. I
->>>>>>>>> think I was playing with converting Kbuild to use Ninja rather than
->>>>>>>>> Make; the resulting kernel image wouldn't boot because I had modified
->>>>>>>>> the order the object files were linked in.  If you were to randomly
->>>>>>>>> shuffle the object files in the kernel, I recall some hazard that may
->>>>>>>>> prevent boot.
->>>>>>>> I thought that was specifically a C++ problem? But then again, the
->>>>>>>> kernel docs explicitly say that the ordering of obj-y goals in kbuild is
->>>>>>>> significant in some instances [1]:
->>>>>>> Yes, it matters, you can not change it.  If you do, systems will break.
->>>>>>> It is the only way we have of properly ordering our init calls within
->>>>>>> the same "level".
->>>>>> Ah, right it was the initcall ordering. Thanks for the reminder.
->>>>>>
->>>>>> (There's a joke in there similar to the use of regexes to solve a
->>>>>> problem resulting in two new problems; initcalls have levels for
->>>>>> ordering, but we still have (unexpressed) dependencies between calls
->>>>>> of the same level; brittle!).
->>>>>>
->>>>>> +Maksim, since that might be relevant info for the BOLT+Kernel work.
->>>>>>
->>>>>> Ricardo,
->>>>>> https://elinux.org/images/e/e8/2020_ELCE_initcalls_myjosserand.pdf
->>>>>> mentions that there's a kernel command line param `initcall_debug`.
->>>>>> Perhaps that can be used to see if
->>>>>> 5750121ae7382ebac8d47ce6d68012d6cd1d7926 somehow changed initcall
->>>>>> ordering, resulting in a config that cannot boot?
->>>>> Here are the links to Lava jobs ran with initcall_debug added to the
->>>>> kernel command line.
->>>>>
->>>>> 1. Where regression happens (5750121ae7382ebac8d47ce6d68012d6cd1d7926)
->>>>> https://lava.collabora.dev/scheduler/job/10417706
->>>>> <https://lava.collabora.dev/scheduler/job/10417706>
->>>>>
->>>>> 2. With a revert of the commit 5750121ae7382ebac8d47ce6d68012d6cd1d7926
->>>>> https://lava.collabora.dev/scheduler/job/10418012
->>>>> <https://lava.collabora.dev/scheduler/job/10418012>
->>>> Thanks!
->>>>
->>>> Yeah, I can see a diff in the initcall ordering as a result of
->>>> commit 5750121ae738 ("kbuild: list sub-directories in ./Kbuild")
->>>>
->>>> https://gist.github.com/nickdesaulniers/c09db256e42ad06b90842a4bb85cc0f4
->>>>
->>>> Not just different orderings, but some initcalls seem unique to the
->>>> before vs. after, which is troubling. (example init_events and
->>>> init_fs_sysctls respectively)
->>>>
->>>> That isn't conclusive evidence that changes to initcall ordering are
->>>> to blame, but I suspect confirming that precisely to be very very time
->>>> consuming.
->>>>
->>>> Masahiro, what are your thoughts on reverting 5750121ae738? There are
->>>> conflicts in Kbuild and Makefile when reverting 5750121ae738 on
->>>> mainline.
->>> I'm not sure if you followed the conversation but we are still seeing
->>> this regression with the latest kernel builds and would like to know if
->>> you plan to revert 5750121ae738?
->>
->> Reverting 5750121ae738 does not solve the issue
->> because the issue happens even before 5750121ae738.
->> multi_v7_defconfig + debug.config + CONFIG_MODULES=n
->> fails to boot in the same way.
->>
->> The revert would hide the issue on a particular build setup.
->>
->>
->> I submitted a patch to more pin-point the issue.
->> Let's see how it goes.
->> https://lore.kernel.org/lkml/ZJEni98knMMkU%2Fcl@buildd.core.avm.de/T/#t
->>
->>
->> (BTW, the initcall order is unrelated)
->>
->>
->>
->>
->>
->>>
->>> Thanks,
->>> Shreeya Patel
->>>
->>>>> Thanks,
->>>>> Shreeya Patel
->>>>>
->> --
->> Best Regards
->> Masahiro Yamada
->>
->>
