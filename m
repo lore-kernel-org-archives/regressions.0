@@ -1,93 +1,104 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CF10168C3
-	for <regressions@lists.linux.dev>; Tue, 11 Jul 2023 12:41:10 +0000 (UTC)
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3159d5e409dso1256113f8f.0
-        for <regressions@lists.linux.dev>; Tue, 11 Jul 2023 05:41:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1689079268; x=1691671268;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=t/3Y5eqgUDi7lnr0rk+hWsRfp5e3voV9c3ZLFxt0Inc=;
-        b=c7ka5wjnDDt+Qsm1M0tCumBT7q4VnoBU/CsY5j79PwKYyD0g31Tl6Mw6I6UJ4OHtxd
-         iEth1DprPLB6THVlX8GMLcacluvnaoJZlgq2l3wV1wdedTNDFSu8Af6HcG8fUoZvE+XH
-         3rXacNuOt9HJjfUrtLANBu858uBEO/34h5m86Hz7AbooJwmXmPVSBkHN+YHVs3C3UmUL
-         FiX3vG5S7pZt2YLf1kG0xFOPg6VyWjqs13KMoq0yxv72UncwUzSUe9tGTVbpC/G6ZAmK
-         YJfNvTmC8s4neip6dkvdyCOZCB9LalDtIv+5un3TJZk/4A+DIDkn16i8QVB5o+3po71k
-         /rNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689079268; x=1691671268;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=t/3Y5eqgUDi7lnr0rk+hWsRfp5e3voV9c3ZLFxt0Inc=;
-        b=BRk7xhiJi/6KgVny0yXPpyr9G2wVyxrzK2eU18thhoF4s35dRaRAzBSgqHOLYpDnRc
-         ILpk91CucKg+ALgQNmpdZ669Cwl5cy+uYdojz1cjf25T/6XpoU28blQ2J6t5NAM6GwO6
-         k0F/8eE8TpPQncoQKeTLvZS5ck76Pj6s0mTPUDNiazSlYirfB9/REP7kXMNC2SGjkbPf
-         OOXQ/LAWBmucBBEzOOEr6mpHAywdmjorp/+BhlNcsrsQBXL1iCp6Yv+FNdsBxoG7Xjt9
-         bOF1GJrvUuaalLDUJDLDcSp0xQXl2X3P6HS+IkpfgMv00nLSPQ+OioNY4KW0vfa441gM
-         SW6Q==
-X-Gm-Message-State: ABy/qLYB3MzZ8gHTAZhZ02CA/eYsAR7fq/qzjzyuZ9jo4VTMgX61QmIc
-	yr6Lp4zne60H9flL7tEPBA8=
-X-Google-Smtp-Source: APBJJlEi3QmwW3hwZSARaZwsURkuc1YZVSe0WBhWz6AyB6fPXT8oNYBGxh7NbHB6m6Pf32AJadzU2w==
-X-Received: by 2002:adf:ef89:0:b0:314:140a:e629 with SMTP id d9-20020adfef89000000b00314140ae629mr17326624wro.7.1689079268381;
-        Tue, 11 Jul 2023 05:41:08 -0700 (PDT)
-Received: from [192.168.1.23] ([176.232.61.170])
-        by smtp.gmail.com with ESMTPSA id b16-20020a5d5510000000b0031417b0d338sm2167257wrv.87.2023.07.11.05.41.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Jul 2023 05:41:07 -0700 (PDT)
-Message-ID: <bb5580e93d244400c3330d7091bf64868aa2053f.camel@gmail.com>
-Subject: Re: [PATCH v2 1/2] tpm/tpm_tis: Disable interrupts for Framework
- Laptop Intel 12th gen
-From: Grundik <ggrundik@gmail.com>
-To: Jarkko Sakkinen <jarkko@kernel.org>, Christian Hesse <list@eworm.de>, 
-	linux-integrity@vger.kernel.org
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>, Lino Sanfilippo
- <l.sanfilippo@kunbus.com>, Linux kernel regressions list
- <regressions@lists.linux.dev>, Peter Huewe <peterhuewe@gmx.de>, Christian
- Hesse <mail@eworm.de>, stable@vger.kernel.org, roubro1991@gmail.com, Linus
- Torvalds <torvalds@linux-foundation.org>
-Date: Tue, 11 Jul 2023 15:41:05 +0300
-In-Reply-To: <bd0587e16d55ef38277ab1f6169909ae7cde3542.camel@kernel.org>
-References: <20230710133836.4367-1-mail@eworm.de>
-	 <20230710142916.18162-1-mail@eworm.de>
-	 <20230710231315.4ef54679@leda.eworm.net>
-	 <bd0587e16d55ef38277ab1f6169909ae7cde3542.camel@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.3 (by Flathub.org) 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F0E318AF7
+	for <regressions@lists.linux.dev>; Tue, 11 Jul 2023 12:57:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E816FC433C8;
+	Tue, 11 Jul 2023 12:57:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1689080269;
+	bh=7oED2ssqzJahdIRFuzndkoETQuTxFWg0yCYG9eYOpIQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=TT2HG2cwmze98fWDZWbplLZohFFXhBNYgpZ5uYCDqx6BivasskTkS/cSOJlbvdF25
+	 N5aDuRDTVW+g1eNmtsGUSIbNxmJiJ21aaPzpnb4RqFmZPJs/T/ngRCiSZqafi8am46
+	 vflDGIjHi8QcUfghb+hdDMp+DVd+0p3D3OdpX0rTh+mO6bccblMB4RtGIvRe6QroOF
+	 WweIeMfezo4UoWD3ZEGFCqJypCrdNmSBo2SLrw7QV6ZPesPKD3/Md7xh7/KG0Zf7uW
+	 LjhE6l4R8kd5U44ubxF7VUingUmExEim7RA1hyY0aw+/un7d/jKeqDhqktX9kEqyIE
+	 V91AlNCW3l/cQ==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+	id DE8EA40516; Tue, 11 Jul 2023 09:57:45 -0300 (-03)
+Date: Tue, 11 Jul 2023 09:57:45 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Georg =?iso-8859-1?Q?M=FCller?= <georgmueller@gmx.net>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	regressions@lists.linux.dev,
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf probe: read DWARF files from the correct CU
+Message-ID: <ZK1RyVue7OMXzVl4@kernel.org>
+References: <5a00d5a5-7be7-ef8a-4044-9a16249fff25@gmx.net>
+ <20230615200147.664346-3-georgmueller@gmx.net>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230615200147.664346-3-georgmueller@gmx.net>
+X-Url: http://acmel.wordpress.com
 
-On Tue, 2023-07-11 at 00:29 +0300, Jarkko Sakkinen wrote:
-> On Mon, 2023-07-10 at 23:13 +0200, Christian Hesse wrote:
->=20
->=20
-> OK, this good to hear! I've been late with my pull request (past rc1)
-> because of kind of conflicting timing with Finnish holiday season and
-> relocating my home office.
->=20
-> I'll replace v2 patches with v3 and send the PR for rc2 after that.
-> So unluck turned into luck this time :-)
->=20
-> Thank you for spotting this!
+Em Thu, Jun 15, 2023 at 10:01:37PM +0200, Georg Müller escreveu:
+> After switching from dwarf_decl_file() to die_get_decl_file(), it is not
+> possible to add probes for certain functions of certain binaries:
+> 
+>  $ perf probe -x /usr/lib/systemd/systemd-logind match_unit_removed
+>  A function DIE doesn't have decl_line. Maybe broken DWARF?
+>  A function DIE doesn't have decl_line. Maybe broken DWARF?
+>  Probe point 'match_unit_removed' not found.
+>     Error: Failed to add events.
+> 
+> The problem is that die_get_decl_file() uses the wrong CU to search for
+> the file. elfutils commit e1db5cdc9f has some good explanation for this:
+> 
+>     dwarf_decl_file uses dwarf_attr_integrate to get the DW_AT_decl_file
+>     attribute. This means the attribute might come from a different DIE
+>     in a different CU. If so, we need to use the CU associated with the
+>     attribute, not the original DIE, to resolve the file name.
+> 
+> This patch uses the same source of information as elfutils: use attribute
+> DW_AT_decl_file and use this CU to search for the file.
 
-I want to say: this issue is NOT limited to Framework laptops.
+Thanks, applied to the perf-tools branch, that will be submitted for
+Linux v6.5.
 
-For example this MSI gen12 i5-1240P laptop also suffers from same
-problem:
-        Manufacturer: Micro-Star International Co., Ltd.
-        Product Name: Summit E13FlipEvo A12MT
-        Version: REV:1.0
-        SKU Number: 13P3.1
-        Family: Summit
+- Arnaldo
+ 
+> Fixes: dc9a5d2ccd5c ("perf probe: Fix to get declared file name from clang DWARF5")
+> Signed-off-by: Georg Müller <georgmueller@gmx.net>
+> Link: https://lore.kernel.org/r/5a00d5a5-7be7-ef8a-4044-9a16249fff25@gmx.net/
+> ---
+>  tools/perf/util/dwarf-aux.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
+> index b07414409771..137b3ed9897b 100644
+> --- a/tools/perf/util/dwarf-aux.c
+> +++ b/tools/perf/util/dwarf-aux.c
+> @@ -478,8 +478,10 @@ static const char *die_get_file_name(Dwarf_Die *dw_die, int idx)
+>  {
+>  	Dwarf_Die cu_die;
+>  	Dwarf_Files *files;
+> +	Dwarf_Attribute attr_mem;
+> 
+> -	if (idx < 0 || !dwarf_diecu(dw_die, &cu_die, NULL, NULL) ||
+> +	if (idx < 0 || !dwarf_attr_integrate(dw_die, DW_AT_decl_file, &attr_mem) ||
+> +	    !dwarf_cu_die(attr_mem.cu, &cu_die, NULL, NULL, NULL, NULL, NULL, NULL) ||
+>  	    dwarf_getsrcfiles(&cu_die, &files, NULL) != 0)
+>  		return NULL;
+> 
+> --
+> 2.41.0
+> 
 
-So, probably just blacklisting affected models is not the best
-solution...
+-- 
 
+- Arnaldo
