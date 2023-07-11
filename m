@@ -1,72 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1885219BAB
-	for <regressions@lists.linux.dev>; Tue, 11 Jul 2023 15:33:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68CD4C433BA;
-	Tue, 11 Jul 2023 15:33:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1689089604;
-	bh=TwIX0LdPSn6QFf/+bhLDt4k9PZasqoFbG8wsVCBkykU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uesnTDfxr9Mw1W6bKVehQQrXFnGc3Q/qnGXQFX0DlZK1Zroidz2QJzysCg/Iwctg8
-	 FJVqH884K6S86Pp27cjCNJSOPiTiKNWolPqbkgqTWez6fDCu2N+8XkQSDk6+/WE31r
-	 jPzqfi8+tead8uV/+TmpPgtITltRPfsTwjvdWXdwxKXrdeVFOctousDE9JRMxJHfnt
-	 S4NddV+ZRdBA9Z9f1mrtaIE62o/AFUPmcLW5QjVT4ik7cQUw8pMpOeHygy4sKv3L+L
-	 Mwih5cq6i47mvAZkfZ6/91OLzErbwUSKIxZ42iKSlfmD7921sU8cGLtLx8EtwJKYTq
-	 hpT+E0AHgDKoA==
-Date: Tue, 11 Jul 2023 09:33:21 -0600
-From: Keith Busch <kbusch@kernel.org>
-To: Christoph Hellwig <hch@lst.de>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
-	Pankaj Raghav <p.raghav@samsung.com>,
-	Bagas Sanjaya <bagasdotme@gmail.com>, Jens Axboe <axboe@kernel.dk>,
-	Sagi Grimberg <sagi@grimberg.me>,
-	"Clemens S." <cspringsguth@gmail.com>,
-	Martin Belanger <martin.belanger@dell.com>,
-	Chaitanya Kulkarni <kch@nvidia.com>,
-	John Meneghini <jmeneghi@redhat.com>,
-	Hannes Reinecke <hare@suse.de>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux NVMe <linux-nvme@lists.infradead.org>,
-	Kanchan Joshi <joshi.k@samsung.com>,
-	Javier Gonzalez <javier.gonz@samsung.com>,
-	=?utf-8?B?67CV7KeE7ZmY?= <jh.i.park@samsung.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: Fwd: Need NVME QUIRK BOGUS for SAMSUNG MZ1WV480HCGL-000MV
- (Samsung SM-953 Datacenter SSD)
-Message-ID: <ZK12QT9C7avQOjxU@kbusch-mbp.dhcp.thefacebook.com>
-References: <d18d2a08-9d24-0209-c2cf-baf60bbf5048@gmail.com>
- <ZJsKBkPqoWzYyngS@kbusch-mbp.dhcp.thefacebook.com>
- <6f333133-2cc4-406a-d6c2-642ac6ccabca@leemhuis.info>
- <CGME20230710155902eucas1p2b464a29adc35e983c73b00d18ab5344c@eucas1p2.samsung.com>
- <ZKwqvTMPVmhnkZjS@kbusch-mbp.dhcp.thefacebook.com>
- <f0fdf86e-4293-8e07-835d-b5a866252068@samsung.com>
- <462e0e1e-98ea-0f3c-4aaa-8d44f0a8e664@leemhuis.info>
- <20230711120609.GB27050@lst.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B19FCA5C
+	for <regressions@lists.linux.dev>; Tue, 11 Jul 2023 16:35:26 +0000 (UTC)
+Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-c6e4d4c59bcso6404234276.1
+        for <regressions@lists.linux.dev>; Tue, 11 Jul 2023 09:35:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1689093325; x=1691685325;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FK+/RLEKHvFTc2cBA37SaSmlotAdLXzjwYXHeGn0zbM=;
+        b=Oq97RDu63Pf3YYxwzUoBG++FTpq8HiaaoJPKVEmYNFA5g8JgogfB3eLvNmR6xJKwM0
+         /hjQ/PeaHoBMNE7ZSek0VnMIX5lh+HUKjnJ7awc53ycJUT/KukZ5ecjo7HLohFTHZdEJ
+         g0Uk9kvWyZqrV7aI8KhBqZP/HFeBKqdy9HjK11RPzJ1ZzaUnZjbw+76tV3zCFJLqNfTu
+         CuY1ByNMFO1pgxjYZumpMua10+h4rH0YB1NkyanJaoXI1Uq19cvCj9TRnvODki+yAo6R
+         CAxAeeZe/2z/QUk9HmibAGd7ZoC+ncWYkfILRUYA2pk99E5DFi+79e6TF4s36p55XMLh
+         OXtw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689093325; x=1691685325;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FK+/RLEKHvFTc2cBA37SaSmlotAdLXzjwYXHeGn0zbM=;
+        b=VypxfciAk9r6nikmSJy9o5rtidMO2Oq2TFgfAWHD533UuLGE3GXbYnbC0BmOCiv8SK
+         z2Ug9rVIv2bO7BxzBCVb12+53vPINZ/S/5iFA8RG5S6pyClaoILCqg7Uyhnx/TtrMUOk
+         QYpwF7qjARCAknFISEZuzHydbvvtmCAC1b5atgz99w4anzTVz6gmo24G8BKpCya4K118
+         +1Xojdkw0+ATiYannKgu9FLDqChgfceYOPJsJicWfLFR3Hlm8IiNmegzGnpPWfqQsqRa
+         G2mh6MdDeNQP3WmOltIhd4FE0jVkCDvYhzxsHAXBlMIpZeSy8vsUK5LVmX08HlEJNmbU
+         5UIQ==
+X-Gm-Message-State: ABy/qLYk4MxI5A34QGRq+apdf9aKR5Vle6232Trl6LG7bqcUvwTvA2OO
+	GzpptfK+N75ozor4mAmM0BrNTHPTZud2pIwWfsihaA==
+X-Google-Smtp-Source: APBJJlF8l0QV/lX8VvDE6yY9wAXanhWeF+yRLXHSEd2zoXjNKVmTOZy5uQO02NKxg9aQ90R6+AVbNyLvQyxhrGYEcdI=
+X-Received: by 2002:a25:f86:0:b0:bfe:c5cf:6e60 with SMTP id
+ 128-20020a250f86000000b00bfec5cf6e60mr12446560ybp.8.1689093324985; Tue, 11
+ Jul 2023 09:35:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230711120609.GB27050@lst.de>
+References: <20230227173632.3292573-1-surenb@google.com> <20230711103541.GA190975@unreal>
+ <53676850-539f-2813-d55d-a8bc0ec88092@suse.cz> <20230711110141.GN41919@unreal>
+ <20230711110945.GO41919@unreal>
+In-Reply-To: <20230711110945.GO41919@unreal>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Tue, 11 Jul 2023 09:35:13 -0700
+Message-ID: <CAJuCfpG-dwzT++ZLY-sT2jn_9AHFVZsTfwJu17MwbB4oYJ4M+g@mail.gmail.com>
+Subject: Re: [PATCH v4 00/33] Per-VMA locks
+To: Leon Romanovsky <leon@kernel.org>
+Cc: Vlastimil Babka <vbabka@suse.cz>, Laurent Dufour <ldufour@linux.ibm.com>, 
+	Sachin Sant <sachinp@linux.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, michel@lespinasse.org, 
+	jglisse@google.com, mhocko@suse.com, hannes@cmpxchg.org, 
+	mgorman@techsingularity.net, dave@stgolabs.net, willy@infradead.org, 
+	liam.howlett@oracle.com, peterz@infradead.org, paulmck@kernel.org, 
+	mingo@redhat.com, will@kernel.org, luto@kernel.org, songliubraving@fb.com, 
+	peterx@redhat.com, david@redhat.com, dhowells@redhat.com, hughd@google.com, 
+	bigeasy@linutronix.de, kent.overstreet@linux.dev, punit.agrawal@bytedance.com, 
+	lstoakes@gmail.com, peterjung1337@gmail.com, rientjes@google.com, 
+	chriscli@google.com, axelrasmussen@google.com, joelaf@google.com, 
+	minchan@google.com, rppt@kernel.org, jannh@google.com, shakeelb@google.com, 
+	tatashin@google.com, edumazet@google.com, gthelen@google.com, 
+	gurua@google.com, arjunroy@google.com, soheil@google.com, leewalsh@google.com, 
+	posk@google.com, michalechner92@googlemail.com, linux-mm@kvack.org, 
+	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, 
+	x86@kernel.org, linux-kernel@vger.kernel.org, kernel-team@android.com, 
+	regressions@leemhuis.info, 
+	Linux kernel regressions list <regressions@lists.linux.dev>, maorg@nvidia.com, gal@nvidia.com, 
+	ranro@nvidia.com, drort@nvidia.com, idok@nvidia.com, sergeyy@nvidia.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jul 11, 2023 at 02:06:09PM +0200, Christoph Hellwig wrote:
-> On Tue, Jul 11, 2023 at 11:39:11AM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
-> > Well, that "They keep pumping out more and more devices with the same
-> > breakage" and the "new device" comment from Pankaj below bear the
-> > question: should we stop trying to play "whack a mole" with all those
-> > quirk entries and handle devices with duplicate ids just like Windows does?
-> 
-> As far as I can tell Windows completely ignores the IDs.  Which, looking
-> back, I'd love to be able to do as well, but they are already used
-> by udev for the /dev/disk/by-id/ links.   Those are usually not used
-> on desktop systems, as they use the file system labels and UUIDs, but
-> that doesn't work for non-file system uses.
+On Tue, Jul 11, 2023 at 4:09=E2=80=AFAM Leon Romanovsky <leon@kernel.org> w=
+rote:
+>
+> On Tue, Jul 11, 2023 at 02:01:41PM +0300, Leon Romanovsky wrote:
+> > On Tue, Jul 11, 2023 at 12:39:34PM +0200, Vlastimil Babka wrote:
+> > > On 7/11/23 12:35, Leon Romanovsky wrote:
+> > > >
+> > > > On Mon, Feb 27, 2023 at 09:35:59AM -0800, Suren Baghdasaryan wrote:
+> > > >
+> > > > <...>
+> > > >
+> > > >> Laurent Dufour (1):
+> > > >>   powerc/mm: try VMA lock-based page fault handling first
+> > > >
+> > > > Hi,
+> > > >
+> > > > This series and specifically the commit above broke docker over PPC=
+.
+> > > > It causes to docker service stuck while trying to activate. Revert =
+of
+> > > > this commit allows us to use docker again.
+> > >
+> > > Hi,
+> > >
+> > > there have been follow-up fixes, that are part of 6.4.3 stable (also
+> > > 6.5-rc1) Does that version work for you?
+> >
+> > I'll recheck it again on clean system, but for the record:
+> > 1. We are running 6.5-rc1 kernels.
+> > 2. PPC doesn't compile for us on -rc1 without this fix.
+> > https://lore.kernel.org/all/20230629124500.1.I55e2f4e7903d686c4484cb23c=
+033c6a9e1a9d4c4@changeid/
+>
+> Ohh, I see it in -rc1, let's recheck.
 
-It's also an inescapable requirement for supporting multipath, and a
-number of the devices being quirked bizarrely also report CMIC/NMIC
-capabilities.
+Hi Leon,
+Please let us know how it goes.
+
+>
+> > 3. I didn't see anything relevant -rc1 with "git log arch/powerpc/mm/fa=
+ult.c".
+
+The fixes Vlastimil was referring to are not in the fault.c, they are
+in the main mm and fork code. More specifically, check for these
+patches to exist in the branch you are testing:
+
+mm: lock newly mapped VMA with corrected ordering
+fork: lock VMAs of the parent process when forking
+mm: lock newly mapped VMA which can be modified after it becomes visible
+mm: lock a vma before stack expansion
+
+Thanks,
+Suren.
+
+> >
+> > Do you have in mind anything specific to check?
+> >
+> > Thanks
+> >
+>
+> --
+> To unsubscribe from this group and stop receiving emails from it, send an=
+ email to kernel-team+unsubscribe@android.com.
+>
