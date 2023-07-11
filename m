@@ -1,106 +1,77 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFB9A37D
-	for <regressions@lists.linux.dev>; Tue, 11 Jul 2023 14:39:56 +0000 (UTC)
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3159adb7cb5so516582f8f.0
-        for <regressions@lists.linux.dev>; Tue, 11 Jul 2023 07:39:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689086395; x=1691678395;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=WTZZyWSh5B06JRMOZ2wOYOUO2V2w0QiKG05HA/MJRFw=;
-        b=Y/LnUKw+Bo8cYFuwzR2YCtSpATvaZQyUHiAJUlIl3jEjtEKvqzku4q5Tb34Gcxpp5t
-         hD/1K8tjaMsAIzzJuMJ51AUp5Vd9dElW4dS/XTBemImI6Fzo4QXu5FrFnWkz5KVSaHge
-         G3QBb3MHKxo7lK9YgG4VF4IAV1dKwliLf3kyH2DEPJGFy02jbqRFmbEBcm1NCFAZNZfR
-         orjGe8Ne8NNb0CnJQr6qZkd+ielz8G361NCcU6YW1SfSEj7vrxpVvzCJBLZkevAGTiGs
-         FWaJ/tU3r1gna24yFwyAlFnGhaVwDv7TDjTm3Wxv7b+BskXNOyNOJo0N6p1OsChmFm+x
-         EroA==
-X-Gm-Message-State: ABy/qLZSL+T6D8kE5oMVi8JkLTugn1gQ/KFcJI9+vrmaQL2faT2eOSdW
-	/l5RHvCxZ13YtJ9cJ8xwgGY=
-X-Google-Smtp-Source: APBJJlGgdl8aDs0Ugo2WnDF7rxcBgbTYzXT7t367gYQci8IYgQGthLUOCpXloU8NyYb+4GuXvz5/lw==
-X-Received: by 2002:a5d:4c85:0:b0:314:1d7f:9e9 with SMTP id z5-20020a5d4c85000000b003141d7f09e9mr15798184wrs.0.1689086394648;
-        Tue, 11 Jul 2023 07:39:54 -0700 (PDT)
-Received: from [192.168.64.192] (bzq-219-42-90.isdn.bezeqint.net. [62.219.42.90])
-        by smtp.gmail.com with ESMTPSA id o6-20020a5d4a86000000b0030e5bd253aasm2413031wrq.39.2023.07.11.07.39.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Jul 2023 07:39:54 -0700 (PDT)
-Message-ID: <9e91ba36-0a4f-4613-e45c-7919205d8704@grimberg.me>
-Date: Tue, 11 Jul 2023 17:39:51 +0300
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08BED37D
+	for <regressions@lists.linux.dev>; Tue, 11 Jul 2023 14:42:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54E15C433C8;
+	Tue, 11 Jul 2023 14:42:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1689086521;
+	bh=MdxCExtG1yS5jseJzhYZubJ18kck0OwZ+QV+A9naVKY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=c1PABcnU24Ywv+A1RIENK8p3TeyiKe/iVroyJMvpggIJp5J9YHPZFZb79dEBpNU2U
+	 kQ2P1OKeqvnPHJjT/HYtKNEGMGmCCJtycWVETjBGz37mf3hQtz0qUqZ3kQrHcX0yVk
+	 8QiasGvR3D+gxYtaAtlVbHp7ggPNKTSOxYE35350xQCoLcKTDT4vJawKuvWv/WaHOJ
+	 KkG+T+SKPXFwskQXV2MA1kXZrBKvWZtIoMtN7fr4xdJPINq9c2VgdoNof1Jud4IPLf
+	 OvgUp1kyTdqH3VRR6Vnf1WCoPJ0cB+xibQ2uLhqExOO9OV0NBuxfUaNZIqz8Y5EV6W
+	 Uj8GQTQWOo/5w==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+	id D1FC640516; Tue, 11 Jul 2023 11:41:58 -0300 (-03)
+Date: Tue, 11 Jul 2023 11:41:58 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Georg =?iso-8859-1?Q?M=FCller?= <georgmueller@gmx.net>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	regressions@lists.linux.dev,
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf probe: read DWARF files from the correct CU
+Message-ID: <ZK1qNnmdYOWLiN4H@kernel.org>
+References: <5a00d5a5-7be7-ef8a-4044-9a16249fff25@gmx.net>
+ <20230615200147.664346-3-georgmueller@gmx.net>
+ <ZK1RyVue7OMXzVl4@kernel.org>
+ <20230711222000.d316cf7fd643cb4203ea1204@kernel.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: Fwd: Need NVME QUIRK BOGUS for SAMSUNG MZ1WV480HCGL-000MV
- (Samsung SM-953 Datacenter SSD)
-Content-Language: en-US
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Christoph Hellwig <hch@lst.de>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- Pankaj Raghav <p.raghav@samsung.com>, Keith Busch <kbusch@kernel.org>,
- Bagas Sanjaya <bagasdotme@gmail.com>, Jens Axboe <axboe@kernel.dk>,
- "Clemens S." <cspringsguth@gmail.com>,
- Martin Belanger <martin.belanger@dell.com>,
- Chaitanya Kulkarni <kch@nvidia.com>, John Meneghini <jmeneghi@redhat.com>,
- Hannes Reinecke <hare@suse.de>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux NVMe <linux-nvme@lists.infradead.org>,
- Kanchan Joshi <joshi.k@samsung.com>,
- Javier Gonzalez <javier.gonz@samsung.com>, =?UTF-8?B?67CV7KeE7ZmY?=
- <jh.i.park@samsung.com>, Linus Torvalds <torvalds@linux-foundation.org>
-References: <d18d2a08-9d24-0209-c2cf-baf60bbf5048@gmail.com>
- <ZJsKBkPqoWzYyngS@kbusch-mbp.dhcp.thefacebook.com>
- <6f333133-2cc4-406a-d6c2-642ac6ccabca@leemhuis.info>
- <CGME20230710155902eucas1p2b464a29adc35e983c73b00d18ab5344c@eucas1p2.samsung.com>
- <ZKwqvTMPVmhnkZjS@kbusch-mbp.dhcp.thefacebook.com>
- <f0fdf86e-4293-8e07-835d-b5a866252068@samsung.com>
- <462e0e1e-98ea-0f3c-4aaa-8d44f0a8e664@leemhuis.info>
- <20230711120609.GB27050@lst.de>
- <23017407-83eb-8fb0-5d91-2c7c4ae02544@grimberg.me>
- <2023071135-opt-choosing-51dd@gregkh>
-From: Sagi Grimberg <sagi@grimberg.me>
-In-Reply-To: <2023071135-opt-choosing-51dd@gregkh>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230711222000.d316cf7fd643cb4203ea1204@kernel.org>
+X-Url: http://acmel.wordpress.com
 
+Em Tue, Jul 11, 2023 at 10:20:00PM +0900, Masami Hiramatsu escreveu:
+> On Tue, 11 Jul 2023 09:57:45 -0300 Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> > Em Thu, Jun 15, 2023 at 10:01:37PM +0200, Georg Müller escreveu:
+> > > The problem is that die_get_decl_file() uses the wrong CU to search for
+> > > the file. elfutils commit e1db5cdc9f has some good explanation for this:
+> > > 
+> > >     dwarf_decl_file uses dwarf_attr_integrate to get the DW_AT_decl_file
+> > >     attribute. This means the attribute might come from a different DIE
+> > >     in a different CU. If so, we need to use the CU associated with the
+> > >     attribute, not the original DIE, to resolve the file name.
+> > > 
+> > > This patch uses the same source of information as elfutils: use attribute
+> > > DW_AT_decl_file and use this CU to search for the file.
+> > 
+> > Thanks, applied to the perf-tools branch, that will be submitted for
+> > Linux v6.5.
+ 
+> Thanks Arnaldo and Georg,
+ 
+> It sounds perfect reason why that happened. I didn't expect the case that
+> the attribute comes from another CU...
+ 
+> Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+ 
+Thanks, added it to the cset.
 
->>>> Well, that "They keep pumping out more and more devices with the same
->>>> breakage" and the "new device" comment from Pankaj below bear the
->>>> question: should we stop trying to play "whack a mole" with all those
->>>> quirk entries and handle devices with duplicate ids just like Windows does?
->>>
->>> As far as I can tell Windows completely ignores the IDs.  Which, looking
->>> back, I'd love to be able to do as well, but they are already used
->>> by udev for the /dev/disk/by-id/ links.   Those are usually not used
->>> on desktop systems, as they use the file system labels and UUIDs, but
->>> that doesn't work for non-file system uses.
->>>
->>> And all this has been working really well with the good old enterprise
->>> SSDs, it's just that the cheap consumer devices keep fucking it up.
->>>
->>> If we'd take it away now we'd break existing users, which puts us between
->>> a rock and a hard place.
->>
->> Maybe the compromise would be to add a modparam that tells the driver
->> to ignore it altogether (like allow_bogus_identifiers) that would
->> default to false. Then people can just workaround the problem instead
->> of having the back-and-fourth with the vendor?
->>
-> 
-> Module parameters do not work on a per-device basis, sorry.  This isn't
-> the 1990's anymore, please do not attempt to add new ones :)
-
-Don't get me wrong, I don't like adding this. But the source of this
-is that there are simply too many breakages of non-compliant consumer
-drives out there that maybe a compromise would be "globally relax
-compliance check in this specific area" as a workaround.
-
-Right now each time this issue is seen in the wild, the only
-resolution is either the vendor fixing it, or the driver adds
-a quirk, which is positive and exactly what we want. But more
-and more users complain, and there is no immediate workaround.
+- Arnaldo
