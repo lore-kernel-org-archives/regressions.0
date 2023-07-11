@@ -1,73 +1,106 @@
-Received: from bedivere.hansenpartnership.com (bedivere.hansenpartnership.com [96.44.175.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DEEF14AB5
-	for <regressions@lists.linux.dev>; Tue, 11 Jul 2023 14:18:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-	d=hansenpartnership.com; s=20151216; t=1689085127;
-	bh=e18NHVmYetnGq8YqkdNUELt5bY/GInm2niFBi9elCNI=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
-	b=HP04nBhBg1T7mrSzrnXH1M68xlu51VjuM+Nvr3qcxOkFXfDrin/JgsJHTz56YQA7N
-	 xzpVdTRFDdcoGXHABdFg6uhJC55xGdQvmBl65y/RUd1/rsWg42U1nHdVrEs28XhTdO
-	 KGr7CNt+NrKMBzeirjk4S+3lAUwP+Ra9PyBraugI=
-Received: from localhost (localhost [127.0.0.1])
-	by bedivere.hansenpartnership.com (Postfix) with ESMTP id D18D912861B5;
-	Tue, 11 Jul 2023 10:18:47 -0400 (EDT)
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
- by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavis, port 10024)
- with ESMTP id pWlZLUf5LftT; Tue, 11 Jul 2023 10:18:47 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-	d=hansenpartnership.com; s=20151216; t=1689085127;
-	bh=e18NHVmYetnGq8YqkdNUELt5bY/GInm2niFBi9elCNI=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
-	b=HP04nBhBg1T7mrSzrnXH1M68xlu51VjuM+Nvr3qcxOkFXfDrin/JgsJHTz56YQA7N
-	 xzpVdTRFDdcoGXHABdFg6uhJC55xGdQvmBl65y/RUd1/rsWg42U1nHdVrEs28XhTdO
-	 KGr7CNt+NrKMBzeirjk4S+3lAUwP+Ra9PyBraugI=
-Received: from [IPv6:2601:5c4:4302:c21::a774] (unknown [IPv6:2601:5c4:4302:c21::a774])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 8203D1286195;
-	Tue, 11 Jul 2023 10:18:46 -0400 (EDT)
-Message-ID: <a8d0a627bbce5a82a874977fa4bcc3adf9d3aa2c.camel@HansenPartnership.com>
-Subject: Re: [PATCH v2 1/2] tpm/tpm_tis: Disable interrupts for Framework
- Laptop Intel 12th gen
-From: James Bottomley <James.Bottomley@HansenPartnership.com>
-To: Jason Gunthorpe <jgg@ziepe.ca>, Christian Hesse <mail@eworm.de>
-Cc: linux-integrity@vger.kernel.org, Thorsten Leemhuis
-	 <regressions@leemhuis.info>, Lino Sanfilippo <l.sanfilippo@kunbus.com>, 
-	Linux kernel regressions list
-	 <regressions@lists.linux.dev>, Peter Huewe <peterhuewe@gmx.de>, 
-	stable@vger.kernel.org, roubro1991@gmail.com
-Date: Tue, 11 Jul 2023 10:18:44 -0400
-In-Reply-To: <ZKxHfTkgKHYqhBz2@ziepe.ca>
-References: <20230710133836.4367-1-mail@eworm.de>
-	 <20230710142916.18162-1-mail@eworm.de> <ZKxHfTkgKHYqhBz2@ziepe.ca>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.42.4 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFB9A37D
+	for <regressions@lists.linux.dev>; Tue, 11 Jul 2023 14:39:56 +0000 (UTC)
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3159adb7cb5so516582f8f.0
+        for <regressions@lists.linux.dev>; Tue, 11 Jul 2023 07:39:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689086395; x=1691678395;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=WTZZyWSh5B06JRMOZ2wOYOUO2V2w0QiKG05HA/MJRFw=;
+        b=Y/LnUKw+Bo8cYFuwzR2YCtSpATvaZQyUHiAJUlIl3jEjtEKvqzku4q5Tb34Gcxpp5t
+         hD/1K8tjaMsAIzzJuMJ51AUp5Vd9dElW4dS/XTBemImI6Fzo4QXu5FrFnWkz5KVSaHge
+         G3QBb3MHKxo7lK9YgG4VF4IAV1dKwliLf3kyH2DEPJGFy02jbqRFmbEBcm1NCFAZNZfR
+         orjGe8Ne8NNb0CnJQr6qZkd+ielz8G361NCcU6YW1SfSEj7vrxpVvzCJBLZkevAGTiGs
+         FWaJ/tU3r1gna24yFwyAlFnGhaVwDv7TDjTm3Wxv7b+BskXNOyNOJo0N6p1OsChmFm+x
+         EroA==
+X-Gm-Message-State: ABy/qLZSL+T6D8kE5oMVi8JkLTugn1gQ/KFcJI9+vrmaQL2faT2eOSdW
+	/l5RHvCxZ13YtJ9cJ8xwgGY=
+X-Google-Smtp-Source: APBJJlGgdl8aDs0Ugo2WnDF7rxcBgbTYzXT7t367gYQci8IYgQGthLUOCpXloU8NyYb+4GuXvz5/lw==
+X-Received: by 2002:a5d:4c85:0:b0:314:1d7f:9e9 with SMTP id z5-20020a5d4c85000000b003141d7f09e9mr15798184wrs.0.1689086394648;
+        Tue, 11 Jul 2023 07:39:54 -0700 (PDT)
+Received: from [192.168.64.192] (bzq-219-42-90.isdn.bezeqint.net. [62.219.42.90])
+        by smtp.gmail.com with ESMTPSA id o6-20020a5d4a86000000b0030e5bd253aasm2413031wrq.39.2023.07.11.07.39.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Jul 2023 07:39:54 -0700 (PDT)
+Message-ID: <9e91ba36-0a4f-4613-e45c-7919205d8704@grimberg.me>
+Date: Tue, 11 Jul 2023 17:39:51 +0300
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: Fwd: Need NVME QUIRK BOGUS for SAMSUNG MZ1WV480HCGL-000MV
+ (Samsung SM-953 Datacenter SSD)
+Content-Language: en-US
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Christoph Hellwig <hch@lst.de>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ Pankaj Raghav <p.raghav@samsung.com>, Keith Busch <kbusch@kernel.org>,
+ Bagas Sanjaya <bagasdotme@gmail.com>, Jens Axboe <axboe@kernel.dk>,
+ "Clemens S." <cspringsguth@gmail.com>,
+ Martin Belanger <martin.belanger@dell.com>,
+ Chaitanya Kulkarni <kch@nvidia.com>, John Meneghini <jmeneghi@redhat.com>,
+ Hannes Reinecke <hare@suse.de>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux NVMe <linux-nvme@lists.infradead.org>,
+ Kanchan Joshi <joshi.k@samsung.com>,
+ Javier Gonzalez <javier.gonz@samsung.com>, =?UTF-8?B?67CV7KeE7ZmY?=
+ <jh.i.park@samsung.com>, Linus Torvalds <torvalds@linux-foundation.org>
+References: <d18d2a08-9d24-0209-c2cf-baf60bbf5048@gmail.com>
+ <ZJsKBkPqoWzYyngS@kbusch-mbp.dhcp.thefacebook.com>
+ <6f333133-2cc4-406a-d6c2-642ac6ccabca@leemhuis.info>
+ <CGME20230710155902eucas1p2b464a29adc35e983c73b00d18ab5344c@eucas1p2.samsung.com>
+ <ZKwqvTMPVmhnkZjS@kbusch-mbp.dhcp.thefacebook.com>
+ <f0fdf86e-4293-8e07-835d-b5a866252068@samsung.com>
+ <462e0e1e-98ea-0f3c-4aaa-8d44f0a8e664@leemhuis.info>
+ <20230711120609.GB27050@lst.de>
+ <23017407-83eb-8fb0-5d91-2c7c4ae02544@grimberg.me>
+ <2023071135-opt-choosing-51dd@gregkh>
+From: Sagi Grimberg <sagi@grimberg.me>
+In-Reply-To: <2023071135-opt-choosing-51dd@gregkh>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On Mon, 2023-07-10 at 15:01 -0300, Jason Gunthorpe wrote:
-> On Mon, Jul 10, 2023 at 04:28:43PM +0200, Christian Hesse wrote:
-> > This device suffer an irq storm, so add it in tpm_tis_dmi_table to
-> > force polling.
+
+>>>> Well, that "They keep pumping out more and more devices with the same
+>>>> breakage" and the "new device" comment from Pankaj below bear the
+>>>> question: should we stop trying to play "whack a mole" with all those
+>>>> quirk entries and handle devices with duplicate ids just like Windows does?
+>>>
+>>> As far as I can tell Windows completely ignores the IDs.  Which, looking
+>>> back, I'd love to be able to do as well, but they are already used
+>>> by udev for the /dev/disk/by-id/ links.   Those are usually not used
+>>> on desktop systems, as they use the file system labels and UUIDs, but
+>>> that doesn't work for non-file system uses.
+>>>
+>>> And all this has been working really well with the good old enterprise
+>>> SSDs, it's just that the cheap consumer devices keep fucking it up.
+>>>
+>>> If we'd take it away now we'd break existing users, which puts us between
+>>> a rock and a hard place.
+>>
+>> Maybe the compromise would be to add a modparam that tells the driver
+>> to ignore it altogether (like allow_bogus_identifiers) that would
+>> default to false. Then people can just workaround the problem instead
+>> of having the back-and-fourth with the vendor?
+>>
 > 
-> I can't help but feel like we are doing something wrong in the Linux
-> driver that we keep having IRQ problems.
-> 
-> Surely Windows uses the IRQ on these devices? How does it work
-> reliably there?
+> Module parameters do not work on a per-device basis, sorry.  This isn't
+> the 1990's anymore, please do not attempt to add new ones :)
 
-I've had some friends in the MS Linux team ask around to find out if
-anyone in the windows group is willing to divulge a little on this.  My
-suspicion is that if interrupts are enabled at all on Windows TIS, it's
-via a whitelist.
+Don't get me wrong, I don't like adding this. But the source of this
+is that there are simply too many breakages of non-compliant consumer
+drives out there that maybe a compromise would be "globally relax
+compliance check in this specific area" as a workaround.
 
-James
-
+Right now each time this issue is seen in the wild, the only
+resolution is either the vendor fixing it, or the driver adds
+a quirk, which is positive and exactly what we want. But more
+and more users complain, and there is no immediate workaround.
