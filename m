@@ -1,138 +1,139 @@
-Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B19FCA5C
-	for <regressions@lists.linux.dev>; Tue, 11 Jul 2023 16:35:26 +0000 (UTC)
-Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-c6e4d4c59bcso6404234276.1
-        for <regressions@lists.linux.dev>; Tue, 11 Jul 2023 09:35:26 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77537443D
+	for <regressions@lists.linux.dev>; Tue, 11 Jul 2023 16:47:25 +0000 (UTC)
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-51d95aed33aso7257393a12.3
+        for <regressions@lists.linux.dev>; Tue, 11 Jul 2023 09:47:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1689093325; x=1691685325;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FK+/RLEKHvFTc2cBA37SaSmlotAdLXzjwYXHeGn0zbM=;
-        b=Oq97RDu63Pf3YYxwzUoBG++FTpq8HiaaoJPKVEmYNFA5g8JgogfB3eLvNmR6xJKwM0
-         /hjQ/PeaHoBMNE7ZSek0VnMIX5lh+HUKjnJ7awc53ycJUT/KukZ5ecjo7HLohFTHZdEJ
-         g0Uk9kvWyZqrV7aI8KhBqZP/HFeBKqdy9HjK11RPzJ1ZzaUnZjbw+76tV3zCFJLqNfTu
-         CuY1ByNMFO1pgxjYZumpMua10+h4rH0YB1NkyanJaoXI1Uq19cvCj9TRnvODki+yAo6R
-         CAxAeeZe/2z/QUk9HmibAGd7ZoC+ncWYkfILRUYA2pk99E5DFi+79e6TF4s36p55XMLh
-         OXtw==
+        d=linux-foundation.org; s=google; t=1689094043; x=1691686043;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=U2CJtNA/0mITyVD5x12gejKNioPrhHv1tiOXdLtkt0Q=;
+        b=ObrABwSFDtsB2XhWl21K2EkSbkTsHpx4WVVBaD9YL0kdqdrWPHsvinDUIErZN0YtuZ
+         nOPUTpzks5d+m4SZBPhAkanFfxTmaGJT3pGakD405Ib75srXi8ZAK8/bwECEFHAEhfrc
+         dwREnb0+4nZk7z9M2GGNeNFDZ+OvgL+S74G2E=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689093325; x=1691685325;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FK+/RLEKHvFTc2cBA37SaSmlotAdLXzjwYXHeGn0zbM=;
-        b=VypxfciAk9r6nikmSJy9o5rtidMO2Oq2TFgfAWHD533UuLGE3GXbYnbC0BmOCiv8SK
-         z2Ug9rVIv2bO7BxzBCVb12+53vPINZ/S/5iFA8RG5S6pyClaoILCqg7Uyhnx/TtrMUOk
-         QYpwF7qjARCAknFISEZuzHydbvvtmCAC1b5atgz99w4anzTVz6gmo24G8BKpCya4K118
-         +1Xojdkw0+ATiYannKgu9FLDqChgfceYOPJsJicWfLFR3Hlm8IiNmegzGnpPWfqQsqRa
-         G2mh6MdDeNQP3WmOltIhd4FE0jVkCDvYhzxsHAXBlMIpZeSy8vsUK5LVmX08HlEJNmbU
-         5UIQ==
-X-Gm-Message-State: ABy/qLYk4MxI5A34QGRq+apdf9aKR5Vle6232Trl6LG7bqcUvwTvA2OO
-	GzpptfK+N75ozor4mAmM0BrNTHPTZud2pIwWfsihaA==
-X-Google-Smtp-Source: APBJJlF8l0QV/lX8VvDE6yY9wAXanhWeF+yRLXHSEd2zoXjNKVmTOZy5uQO02NKxg9aQ90R6+AVbNyLvQyxhrGYEcdI=
-X-Received: by 2002:a25:f86:0:b0:bfe:c5cf:6e60 with SMTP id
- 128-20020a250f86000000b00bfec5cf6e60mr12446560ybp.8.1689093324985; Tue, 11
- Jul 2023 09:35:24 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1689094043; x=1691686043;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=U2CJtNA/0mITyVD5x12gejKNioPrhHv1tiOXdLtkt0Q=;
+        b=DrO6EF2a2mYwrJQZvCm/FLKgZ5udxh01/RNigRqsctE4wWjLkOX9iPbRJ5mstfkFt0
+         H/5OvhLlmGBBX5sPg1TSCgPW47FWTzp8D1YVv6cAiOIc+9qYCDL0GM3vnNHWpfI8iN2w
+         zKPBrJ2oy2V2IwO4Kb8SWIft1tCWyZP4N9W3Scym9H6gj72TGpsXzipWIESouy9I7Dsy
+         o8ip6TPlSyuY1k3nZkz512ByrAY1h+mJTGwUSymwymr7mbbbwi9G3pUgrjmo+bxh8DJ5
+         u1ScPNutdIpROXMYoR8E2ExRsRDUQmJtXLVFDuR27NOB25BNH53RWMXa58ysv9EGGTD9
+         rOdg==
+X-Gm-Message-State: ABy/qLaBBaXZvm0eqrSzecUhCqnx5NZG0CjbgkCW4P3o6h51W2jZN+JL
+	9nlJTZA9RpTgKNrrfMEWXMBVvXX6Qartu4e8/pajyW0b
+X-Google-Smtp-Source: APBJJlG7w4dfX5XFeYDNXO5ZEWutQUXT+BGQm6F9/iiFTwVeOi4ERDNF3RwCR5uQAu6NQEjLv5be1w==
+X-Received: by 2002:a05:6402:5158:b0:51e:34a1:8bf7 with SMTP id n24-20020a056402515800b0051e34a18bf7mr13609798edd.39.1689094043374;
+        Tue, 11 Jul 2023 09:47:23 -0700 (PDT)
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com. [209.85.208.53])
+        by smtp.gmail.com with ESMTPSA id h14-20020aa7de0e000000b0051e0cb4692esm1478498edv.17.2023.07.11.09.47.23
+        for <regressions@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Jul 2023 09:47:23 -0700 (PDT)
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-51e48e1f6d1so4594479a12.1
+        for <regressions@lists.linux.dev>; Tue, 11 Jul 2023 09:47:23 -0700 (PDT)
+X-Received: by 2002:aa7:d052:0:b0:51e:2a57:1d93 with SMTP id
+ n18-20020aa7d052000000b0051e2a571d93mr13616464edo.16.1689094037813; Tue, 11
+ Jul 2023 09:47:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230227173632.3292573-1-surenb@google.com> <20230711103541.GA190975@unreal>
- <53676850-539f-2813-d55d-a8bc0ec88092@suse.cz> <20230711110141.GN41919@unreal>
- <20230711110945.GO41919@unreal>
-In-Reply-To: <20230711110945.GO41919@unreal>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Tue, 11 Jul 2023 09:35:13 -0700
-Message-ID: <CAJuCfpG-dwzT++ZLY-sT2jn_9AHFVZsTfwJu17MwbB4oYJ4M+g@mail.gmail.com>
-Subject: Re: [PATCH v4 00/33] Per-VMA locks
-To: Leon Romanovsky <leon@kernel.org>
-Cc: Vlastimil Babka <vbabka@suse.cz>, Laurent Dufour <ldufour@linux.ibm.com>, 
-	Sachin Sant <sachinp@linux.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, michel@lespinasse.org, 
-	jglisse@google.com, mhocko@suse.com, hannes@cmpxchg.org, 
-	mgorman@techsingularity.net, dave@stgolabs.net, willy@infradead.org, 
-	liam.howlett@oracle.com, peterz@infradead.org, paulmck@kernel.org, 
-	mingo@redhat.com, will@kernel.org, luto@kernel.org, songliubraving@fb.com, 
-	peterx@redhat.com, david@redhat.com, dhowells@redhat.com, hughd@google.com, 
-	bigeasy@linutronix.de, kent.overstreet@linux.dev, punit.agrawal@bytedance.com, 
-	lstoakes@gmail.com, peterjung1337@gmail.com, rientjes@google.com, 
-	chriscli@google.com, axelrasmussen@google.com, joelaf@google.com, 
-	minchan@google.com, rppt@kernel.org, jannh@google.com, shakeelb@google.com, 
-	tatashin@google.com, edumazet@google.com, gthelen@google.com, 
-	gurua@google.com, arjunroy@google.com, soheil@google.com, leewalsh@google.com, 
-	posk@google.com, michalechner92@googlemail.com, linux-mm@kvack.org, 
-	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, 
-	x86@kernel.org, linux-kernel@vger.kernel.org, kernel-team@android.com, 
-	regressions@leemhuis.info, 
-	Linux kernel regressions list <regressions@lists.linux.dev>, maorg@nvidia.com, gal@nvidia.com, 
-	ranro@nvidia.com, drort@nvidia.com, idok@nvidia.com, sergeyy@nvidia.com
+References: <d18d2a08-9d24-0209-c2cf-baf60bbf5048@gmail.com>
+ <ZJsKBkPqoWzYyngS@kbusch-mbp.dhcp.thefacebook.com> <6f333133-2cc4-406a-d6c2-642ac6ccabca@leemhuis.info>
+ <CGME20230710155902eucas1p2b464a29adc35e983c73b00d18ab5344c@eucas1p2.samsung.com>
+ <ZKwqvTMPVmhnkZjS@kbusch-mbp.dhcp.thefacebook.com> <f0fdf86e-4293-8e07-835d-b5a866252068@samsung.com>
+ <462e0e1e-98ea-0f3c-4aaa-8d44f0a8e664@leemhuis.info> <20230711120609.GB27050@lst.de>
+In-Reply-To: <20230711120609.GB27050@lst.de>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Tue, 11 Jul 2023 09:47:00 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whXh9sgLo24RO02JjfD0m3HE5NADRPWoEd+dW6bruFhVA@mail.gmail.com>
+Message-ID: <CAHk-=whXh9sgLo24RO02JjfD0m3HE5NADRPWoEd+dW6bruFhVA@mail.gmail.com>
+Subject: Re: Fwd: Need NVME QUIRK BOGUS for SAMSUNG MZ1WV480HCGL-000MV
+ (Samsung SM-953 Datacenter SSD)
+To: Christoph Hellwig <hch@lst.de>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>, Pankaj Raghav <p.raghav@samsung.com>, 
+	Keith Busch <kbusch@kernel.org>, Bagas Sanjaya <bagasdotme@gmail.com>, Jens Axboe <axboe@kernel.dk>, 
+	Sagi Grimberg <sagi@grimberg.me>, "Clemens S." <cspringsguth@gmail.com>, 
+	Martin Belanger <martin.belanger@dell.com>, Chaitanya Kulkarni <kch@nvidia.com>, 
+	John Meneghini <jmeneghi@redhat.com>, Hannes Reinecke <hare@suse.de>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux NVMe <linux-nvme@lists.infradead.org>, 
+	Kanchan Joshi <joshi.k@samsung.com>, Javier Gonzalez <javier.gonz@samsung.com>, 
+	=?UTF-8?B?67CV7KeE7ZmY?= <jh.i.park@samsung.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jul 11, 2023 at 4:09=E2=80=AFAM Leon Romanovsky <leon@kernel.org> w=
-rote:
+On Tue, 11 Jul 2023 at 05:06, Christoph Hellwig <hch@lst.de> wrote:
 >
-> On Tue, Jul 11, 2023 at 02:01:41PM +0300, Leon Romanovsky wrote:
-> > On Tue, Jul 11, 2023 at 12:39:34PM +0200, Vlastimil Babka wrote:
-> > > On 7/11/23 12:35, Leon Romanovsky wrote:
-> > > >
-> > > > On Mon, Feb 27, 2023 at 09:35:59AM -0800, Suren Baghdasaryan wrote:
-> > > >
-> > > > <...>
-> > > >
-> > > >> Laurent Dufour (1):
-> > > >>   powerc/mm: try VMA lock-based page fault handling first
-> > > >
-> > > > Hi,
-> > > >
-> > > > This series and specifically the commit above broke docker over PPC=
-.
-> > > > It causes to docker service stuck while trying to activate. Revert =
-of
-> > > > this commit allows us to use docker again.
-> > >
-> > > Hi,
-> > >
-> > > there have been follow-up fixes, that are part of 6.4.3 stable (also
-> > > 6.5-rc1) Does that version work for you?
-> >
-> > I'll recheck it again on clean system, but for the record:
-> > 1. We are running 6.5-rc1 kernels.
-> > 2. PPC doesn't compile for us on -rc1 without this fix.
-> > https://lore.kernel.org/all/20230629124500.1.I55e2f4e7903d686c4484cb23c=
-033c6a9e1a9d4c4@changeid/
->
-> Ohh, I see it in -rc1, let's recheck.
+> As far as I can tell Windows completely ignores the IDs.  Which, looking
+> back, I'd love to be able to do as well, but they are already used
+> by udev for the /dev/disk/by-id/ links.   Those are usually not used
+> on desktop systems, as they use the file system labels and UUIDs, but
+> that doesn't work for non-file system uses.
 
-Hi Leon,
-Please let us know how it goes.
+The thing is, the nvme code seems to actively do completely stuipid
+things in this area.
 
->
-> > 3. I didn't see anything relevant -rc1 with "git log arch/powerpc/mm/fa=
-ult.c".
+> And all this has been working really well with the good old enterprise
+> SSDs, it's just that the cheap consumer devices keep f*cking it up.
 
-The fixes Vlastimil was referring to are not in the fault.c, they are
-in the main mm and fork code. More specifically, check for these
-patches to exist in the branch you are testing:
+Christoph, deal with reality, not with what you think things should look like.
 
-mm: lock newly mapped VMA with corrected ordering
-fork: lock VMAs of the parent process when forking
-mm: lock newly mapped VMA which can be modified after it becomes visible
-mm: lock a vma before stack expansion
+Anybody who expected unique ID's is frankly completely incompetent.
+People should have *known* not to do this.
 
-Thanks,
-Suren.
+ "Those Who Do Not Learn History Are Doomed To Repeat It"
+          - Santayana
 
-> >
-> > Do you have in mind anything specific to check?
-> >
-> > Thanks
-> >
->
-> --
-> To unsubscribe from this group and stop receiving emails from it, send an=
- email to kernel-team+unsubscribe@android.com.
->
+and we have NEVER EVER seen devices with reliably unique IDs. Really.
+We've had these uuid's before (ask Greg about USB devices one day, and
+that was *recent*).
+
+We've always known that vendors will fill in a fixed value, and
+somebody still decided to make this a correctness issue?
+
+Christoph, don't blame vendors. Somebody did indeed f*ck up.  But it was you.
+
+> If we'd take it away now we'd break existing users, which puts us between
+> a rock and a hard place.
+
+Well, here's a suggestion: stop making it worse.
+
+For example, we have this completely unacceptable garbage:
+
+        ret = nvme_global_check_duplicate_ids(ctrl->subsys, &info->ids);
+        if (ret) {
+                dev_err(ctrl->device,
+                        "globally duplicate IDs for nsid %d\n", info->nsid);
+                nvme_print_device_info(ctrl);
+                return ret;
+        }
+
+iow, the code even checks for and *notices* that there are duplicate
+IDs, and what does it do? It then errors out.
+
+Then expecting people TO WAIT FOR A NEW KERNEL VERSION when you
+noticed something wrong? What an absolute crock.
+
+So stop blaming anybody else.
+
+I think the code should *default* to "unreliable uuid", and then if
+you're sure it's actually ok, then you use it. Then some rare
+enterprise user with multipathing  - who is going to be very very
+careful about which device to use anyway - can use the "approved
+list".
+
+Or "Oh, I noticed a non-unique UUID, let me generate one for you based
+on physical location".
+
+But this "my disk doesn't work in v6.0 and later because some clown
+added a duplicate check that shouldn't be there" is not a good thing
+to then try to make excuses for.
+
+            Linus
