@@ -1,89 +1,166 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 099CB18C04
-	for <regressions@lists.linux.dev>; Tue, 11 Jul 2023 12:14:58 +0000 (UTC)
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-3facc7a4e8aso11997025e9.0
-        for <regressions@lists.linux.dev>; Tue, 11 Jul 2023 05:14:58 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0337A18C04
+	for <regressions@lists.linux.dev>; Tue, 11 Jul 2023 12:15:25 +0000 (UTC)
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-313f1085ac2so5417056f8f.1
+        for <regressions@lists.linux.dev>; Tue, 11 Jul 2023 05:15:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1689077724; x=1691669724;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kmfhD0bL2a3VTTfFjo8AmouR1aIrAVqJrRswxaSovFE=;
+        b=ny/gD12/xVNygR/wRKnt7q0ZNOPb5a8t/vNELSa1+8xdnQD06ifVMpF8FQr4OwYTMn
+         Etl68Eaoa7UDycIAepzLepiytyh0Q9Kp8QwpOLZY5of45eXf9D7LWLSarzQrPeAmfuyq
+         CAOGr+AWiLjH3808iBvTKPHOvo7pEW8q9pHSl4VHerxG9rAvZjaoaHq0A6yzvai70hsv
+         rPJBobdPSZjwIh16Ky0QTq4AaXhVucLtv7u6EGYJoIgqIdKJ1QNRdQjgE3lan2uPEbPt
+         fMAcf0rzAxhblLK805XIk+W3gFtC+Y1FGsqtu5thIUbLZrAkKEWTyRvLEu8hVIvDoYFD
+         G61A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689077697; x=1689682497;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=BrZ8yh4nFHBxX4BgGqt9YuV6OVfsRrdwyKxh5AGLUOY=;
-        b=GaWgFCP9mun6t8MWpEx88Gs4DQTWW2eUAADVgg6b49ZIebMNheeNCA4FZPEP6HPLHs
-         HD0M1iR9fhZbsDrP8af9pmu4N3/b0WM5t/NjKYd1QnSFC652wSU8iPaKmYN1ty9LLe3w
-         vpGlSowTcbOQqN6vAynwMPr6euSFmOjO4h9cmErstLhdKOz1QoNGh1f/g2FMO/LnXnXs
-         QtaOqTb8xzoQf+bAWPgseVMQ88fhu8yNCRcDehWzbMf73FMDnYmVz/QMPHaqPi+ceRT1
-         2mpesOeAH7tXGuwC64ri0ivw4f1924zwwPbxeqaWQzIjbqbJOlSaSv1NoligrMQSQK1I
-         3OGw==
-X-Gm-Message-State: ABy/qLaOUlqOntAUKh5TZRx5j5FPTA9B4XQcxkJLFDysI/e8pBgP9oU2
-	u/vwJu5ntLJP6NHV0fekweg=
-X-Google-Smtp-Source: APBJJlFTz6sRrKHYL8i9OSKnEs6VzdhcuUcl03pmVYw312kGUe2L1rfBbXc0ltDJz2GHqbM8BxUQag==
-X-Received: by 2002:a05:600c:4709:b0:3f6:8a3:8e59 with SMTP id v9-20020a05600c470900b003f608a38e59mr16114725wmo.1.1689077696814;
-        Tue, 11 Jul 2023 05:14:56 -0700 (PDT)
-Received: from [192.168.64.192] (bzq-219-42-90.isdn.bezeqint.net. [62.219.42.90])
-        by smtp.gmail.com with ESMTPSA id o14-20020a5d684e000000b003145559a691sm2115991wrw.41.2023.07.11.05.14.55
+        d=1e100.net; s=20221208; t=1689077724; x=1691669724;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=kmfhD0bL2a3VTTfFjo8AmouR1aIrAVqJrRswxaSovFE=;
+        b=huTv9HZhsU8wfduigFtDni4Jinq4IvrvgMMPsOYeVFs+vNNCxsFjlCOTBzb9gzvmD4
+         Xpt3pyPu7SLqmMDdRjRdUQFy9BjYKrDkcpoVNWzlvXJ29ds4fMvQ4kHNF+J11RZZhWGp
+         oBnW659kdWaPcOYozftcJSC9T8QDdCsxlZ8hcxfJSHddGPmLN+/Wd5auU8EbX/f6Zx+H
+         txJU5LtNAPm949+4JQCAjlPtWvE1tFE4GD0HoLc8PFA3dt7QLm9b2VrXEdnVjYeu5pyY
+         txfhWyU/wwMRqIPY5Lm2n4vzlzgFXQgvxw069lrmGr5zdZxpwn0pKGsMFLBGexewntqO
+         xO+w==
+X-Gm-Message-State: ABy/qLZep/GJhhBQ7ktny9uPVKjroiThl+CTrtXuBzt9GAk2orhgaOdQ
+	UC1ShqEfgcROW+aYdFgOUUw=
+X-Google-Smtp-Source: APBJJlEJ0xZiLKTgaMcBvbZfZN270CRivCCPpRWL9yPZui2z5r5TRt7LThL4TiW3mZT8WUrHlinUzQ==
+X-Received: by 2002:adf:f8c3:0:b0:314:30ed:9b55 with SMTP id f3-20020adff8c3000000b0031430ed9b55mr10371811wrq.15.1689077723715;
+        Tue, 11 Jul 2023 05:15:23 -0700 (PDT)
+Received: from localhost (freebox.vlq16.iliad.fr. [213.36.7.13])
+        by smtp.gmail.com with ESMTPSA id h2-20020adffa82000000b003140f47224csm2122505wrr.15.2023.07.11.05.15.23
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Jul 2023 05:14:56 -0700 (PDT)
-Message-ID: <23017407-83eb-8fb0-5d91-2c7c4ae02544@grimberg.me>
-Date: Tue, 11 Jul 2023 15:14:54 +0300
+        Tue, 11 Jul 2023 05:15:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: Fwd: Need NVME QUIRK BOGUS for SAMSUNG MZ1WV480HCGL-000MV
- (Samsung SM-953 Datacenter SSD)
-Content-Language: en-US
-To: Christoph Hellwig <hch@lst.de>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Pankaj Raghav <p.raghav@samsung.com>, Keith Busch <kbusch@kernel.org>,
- Bagas Sanjaya <bagasdotme@gmail.com>, Jens Axboe <axboe@kernel.dk>,
- "Clemens S." <cspringsguth@gmail.com>,
- Martin Belanger <martin.belanger@dell.com>,
- Chaitanya Kulkarni <kch@nvidia.com>, John Meneghini <jmeneghi@redhat.com>,
- Hannes Reinecke <hare@suse.de>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux NVMe <linux-nvme@lists.infradead.org>,
- Kanchan Joshi <joshi.k@samsung.com>,
- Javier Gonzalez <javier.gonz@samsung.com>, =?UTF-8?B?67CV7KeE7ZmY?=
- <jh.i.park@samsung.com>, Linus Torvalds <torvalds@linux-foundation.org>
-References: <d18d2a08-9d24-0209-c2cf-baf60bbf5048@gmail.com>
- <ZJsKBkPqoWzYyngS@kbusch-mbp.dhcp.thefacebook.com>
- <6f333133-2cc4-406a-d6c2-642ac6ccabca@leemhuis.info>
- <CGME20230710155902eucas1p2b464a29adc35e983c73b00d18ab5344c@eucas1p2.samsung.com>
- <ZKwqvTMPVmhnkZjS@kbusch-mbp.dhcp.thefacebook.com>
- <f0fdf86e-4293-8e07-835d-b5a866252068@samsung.com>
- <462e0e1e-98ea-0f3c-4aaa-8d44f0a8e664@leemhuis.info>
- <20230711120609.GB27050@lst.de>
-From: Sagi Grimberg <sagi@grimberg.me>
-In-Reply-To: <20230711120609.GB27050@lst.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 11 Jul 2023 14:15:22 +0200
+Message-Id: <CTZC2XSCQF47.3QPNI1G4AXJLX@syracuse>
+Cc: <linux-wireless@vger.kernel.org>
+Subject: Re: [regression] STP on 80211s is broken in 6.4-rc4
+From: "Nicolas Escande" <nico.escande@gmail.com>
+To: "Felix Fietkau" <nbd@nbd.name>, "Linux regressions mailing list"
+ <regressions@lists.linux.dev>, "Bagas Sanjaya" <bagasdotme@gmail.com>,
+ =?utf-8?q?Toke_H=C3=B8iland-J=C3=B8rgensen?= <toke@toke.dk>, "Kalle Valo"
+ <kvalo@kernel.org>, "Johannes Berg" <johannes.berg@intel.com>
+X-Mailer: aerc 0.15.1
+References: <CT5GNZSK28AI.2K6M69OXM9RW5@syracuse>
+ <ZIQbs0wqdRh7c0Kx@debian.me>
+ <a9d02800-2cd6-a27b-7998-4c97cf2eb692@leemhuis.info>
+ <CTDWJJDKSYYD.XBG1CAZB3A5W@syracuse>
+ <809500b6-4eec-7a5e-5930-00e7eeebcc5e@leemhuis.info>
+ <CTYNAK10A6AJ.1I4W9V78VG1NB@syracuse>
+ <4bb71d8a-daf1-5f60-daf0-44aa8afcfdc3@nbd.name>
+In-Reply-To: <4bb71d8a-daf1-5f60-daf0-44aa8afcfdc3@nbd.name>
 
+On Tue Jul 11, 2023 at 1:12 PM CEST, Felix Fietkau wrote:
+> On 10.07.23 18:50, Nicolas Escande wrote:
+> > On Mon Jul 10, 2023 at 1:32 PM CEST, Linux regression tracking (Thorste=
+n Leemhuis) wrote:
+> >> On 16.06.23 09:45, Nicolas Escande wrote:
+> >> > On Thu Jun 15, 2023 at 2:54 PM CEST, Linux regression tracking (Thor=
+sten Leemhuis) wrote:
+> >> >> On 10.06.23 08:44, Bagas Sanjaya wrote:
+> >> >>> On Tue, Jun 06, 2023 at 12:55:57PM +0200, Nicolas Escande wrote:
+> >> >>>>
+> >> >>>> As user of the mesh part of mac80211 on multiple products at work=
+ let me say
+> >> >>>> thank you for all the work you do on wifi, especially on 80211s, =
+and especially
+> >> >>>> the recent improvements you made for mesh fast RX/TX & cross vend=
+or AMSDU compat
+> >> >>>>
+> >> >>>> We upgraded our kernel from an older (5.15) to a newer 6.4. The p=
+roblem is STP=20
+> >> >>>> doesn't work anymore and alas we use it for now (for the better o=
+r worse).
+> >> >>>>
+> >> >>>> What I gathered so far from my setup:
+> >> >>>>  - we use ath9k & ath10k
+> >> >>>>  - in my case STP frames are received as regular packet and not a=
+s amsdu
+> >> >>>>  - the received packets have a wrong length of 44 in tcpdump
+> >> >>>>    (instead of 38 with our previous kernel)
+> >> >>>>  - llc_fixup_skb() tries to pull some 41 bytes out of a 35 bytes =
+packet
+> >> >>>>    this makes llc_rcv() discard the frames & breaks STP
+> >> >>>>
+> >> >>>> >From bisecting the culprit seems to be 986e43b19ae9176093da35e0a=
+844e65c8bf9ede7
+> >> >>>> (wifi: mac80211: fix receiving A-MSDU frames on mesh interfaces)
+> >> >>>>
+> >> >>>> I guess that your changes to handle both ampdu subframes & normal=
+ frames in the
+> >> >>>> same datapath ends up putting a wrong skb->len for STP (multicast=
+) frames ?
+> >> >>>> Honestly I don't understand enough of the 80211 internals & spec =
+to pinpoint the
+> >> >>>> exact problem.
+> >> >>>>
+> >> >>>> It seems this change was already in the 6.3 kernel so I guess som=
+eone should
+> >> >>>> have seen it before (but I didn't find anything..) ? Maybe I miss=
+ed something...
+> >> >>>>
+> >> >>>> Anyway I'm happy to provide more info or try anything you throw a=
+t me.
+> >> >> [...]
+> >> >> Hmmm, Felix did not reply. But let's ignore that for now.
+> >> >=20
+> >> > I haven't seen mails from felix on the list for a few days, I'm gues=
+sing he's
+> >> > unavailable for now but I'll hapilly wait.
+> >>
+> >> Still no progress. Hmmm. Are you still okay with that? I've seen no
+> >> other reports about this, so waiting is somewhat (albeit not completel=
+y)
+> >> fine for me if it is for you.
+> > I'm not so surprised no one else reported it, using STP on wifi (and 80=
+2.11s) is
+> > not a really common thing to do, to be honest (and STP on wifi is unrel=
+iable).
+> > Even though some openwrt guys do it for sure, I'm guessing their kernel=
+ version
+> > is lagging behind...
+> >>
+> >> But in any case it might be good if you could recheck 6.5-rc1.
+> > Testing on 6.5 as a whole won't be as easy for me as testing a single p=
+atch on
+> > top of 6.4. I'll do my best to try but from what I saw nothing got merg=
+ed that
+> > would even remotely help me on this issue.
+> >=20
+> > I am not loosing hope that Felix or someone that understands this stuff=
+ better
+> > finds the time to look into this. I'm guessing it's the summer vacation=
+ effet.
+>
+> Sorry for the delay. This should fix the regression, please test.
+> I will submit it for 6.5 soon.
+> ---
+> --- a/net/wireless/util.c
+> +++ b/net/wireless/util.c
+> @@ -580,6 +580,8 @@ int ieee80211_strip_8023_mesh_hdr(struct
+>   		hdrlen +=3D ETH_ALEN + 2;
+>   	else if (!pskb_may_pull(skb, hdrlen))
+>   		return -EINVAL;
+> +	else
+> +		payload.eth.h_proto =3D htons(skb->len - hdrlen);
+>
+>   	mesh_addr =3D skb->data + sizeof(payload.eth) + ETH_ALEN;
+>   	switch (payload.flags & MESH_FLAGS_AE) {
 
->> Well, that "They keep pumping out more and more devices with the same
->> breakage" and the "new device" comment from Pankaj below bear the
->> question: should we stop trying to play "whack a mole" with all those
->> quirk entries and handle devices with duplicate ids just like Windows does?
-> 
-> As far as I can tell Windows completely ignores the IDs.  Which, looking
-> back, I'd love to be able to do as well, but they are already used
-> by udev for the /dev/disk/by-id/ links.   Those are usually not used
-> on desktop systems, as they use the file system labels and UUIDs, but
-> that doesn't work for non-file system uses.
-> 
-> And all this has been working really well with the good old enterprise
-> SSDs, it's just that the cheap consumer devices keep fucking it up.
-> 
-> If we'd take it away now we'd break existing users, which puts us between
-> a rock and a hard place.
-
-Maybe the compromise would be to add a modparam that tells the driver
-to ignore it altogether (like allow_bogus_identifiers) that would
-default to false. Then people can just workaround the problem instead
-of having the back-and-fourth with the vendor?
+Great, that does the trick for me
+Thanks Felix
