@@ -1,79 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EC4F1E504
-	for <regressions@lists.linux.dev>; Tue, 11 Jul 2023 17:21:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16E61C433C8;
-	Tue, 11 Jul 2023 17:21:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1689096068;
-	bh=D9NhEWLQ+8T9pjVANP9yzpBRkQDSj1Txy7/I4fmLuC0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QLFN6GiFIF2oAhds3PLA6zV44YXggdZxwAeEVlcqsKqWBHuPqaV5HW9K/0Dkuz8gE
-	 0HUN1+ZGbbcWIsLs+2jrzjZ8QjkUM8BtbdDEfRlHRwQ8fPmkuMUW27GnQ5X5AVuqmN
-	 zmAg0Jf3+YhzrlVe8MMNe9QKFgdkEHb/umFJohA8s1w1ccSCqNPigVitG9PhIumFvW
-	 UbVDZGoGByXpwryx/EvfRJI4WoDov13LYhLvXqmPhzC+mTlyJCAPICiei7qFF5xLb7
-	 7n7iTgz7BD249Yj1Jg+TsSMYYznL+67fzI2qiSD6+ZGB6O/dD3tVu3mX4huGmIK+lQ
-	 HpunQ6cFV9eFQ==
-Date: Tue, 11 Jul 2023 11:21:04 -0600
-From: Keith Busch <kbusch@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Christoph Hellwig <hch@lst.de>,
-	Linux regressions mailing list <regressions@lists.linux.dev>,
-	Pankaj Raghav <p.raghav@samsung.com>,
-	Bagas Sanjaya <bagasdotme@gmail.com>, Jens Axboe <axboe@kernel.dk>,
-	Sagi Grimberg <sagi@grimberg.me>,
-	"Clemens S." <cspringsguth@gmail.com>,
-	Martin Belanger <martin.belanger@dell.com>,
-	Chaitanya Kulkarni <kch@nvidia.com>,
-	John Meneghini <jmeneghi@redhat.com>,
-	Hannes Reinecke <hare@suse.de>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux NVMe <linux-nvme@lists.infradead.org>,
-	Kanchan Joshi <joshi.k@samsung.com>,
-	Javier Gonzalez <javier.gonz@samsung.com>,
-	=?utf-8?B?67CV7KeE7ZmY?= <jh.i.park@samsung.com>
-Subject: Re: Fwd: Need NVME QUIRK BOGUS for SAMSUNG MZ1WV480HCGL-000MV
- (Samsung SM-953 Datacenter SSD)
-Message-ID: <ZK2PgNizcMLW+S/V@kbusch-mbp.dhcp.thefacebook.com>
-References: <d18d2a08-9d24-0209-c2cf-baf60bbf5048@gmail.com>
- <ZJsKBkPqoWzYyngS@kbusch-mbp.dhcp.thefacebook.com>
- <6f333133-2cc4-406a-d6c2-642ac6ccabca@leemhuis.info>
- <CGME20230710155902eucas1p2b464a29adc35e983c73b00d18ab5344c@eucas1p2.samsung.com>
- <ZKwqvTMPVmhnkZjS@kbusch-mbp.dhcp.thefacebook.com>
- <f0fdf86e-4293-8e07-835d-b5a866252068@samsung.com>
- <462e0e1e-98ea-0f3c-4aaa-8d44f0a8e664@leemhuis.info>
- <20230711120609.GB27050@lst.de>
- <CAHk-=whXh9sgLo24RO02JjfD0m3HE5NADRPWoEd+dW6bruFhVA@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E92C1E52C
+	for <regressions@lists.linux.dev>; Tue, 11 Jul 2023 19:44:16 +0000 (UTC)
+Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-4036bd4fff1so4251cf.0
+        for <regressions@lists.linux.dev>; Tue, 11 Jul 2023 12:44:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1689104655; x=1691696655;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RSEbbHdSy2/6yMNHt5Jl2Q8DKG5onoGGlP2gwab29zg=;
+        b=SeyA6AXpzijMHYXA7cjzccjTbzwZWoJYGstW61Xg9auwvLtgCrdRrgY1+rb4mj71zP
+         kAS2JOoSuGreMHzZKF2SAOd8m8inSHMQZgSh0jbn1xWhgbEas4OlDao6V2S+bsSTFY2z
+         uU6/VkjyeAF+R9FkqY3cTYdzrYNRhtU//Y/fgFb2hnacZ2I/Z5+XqSPPfv61v8zsEbwi
+         8XX2N0+8VH/AfGGcFQLJslO5U0WDrchRnXwftY3cdzAWsPVuXSca9UUDTROL7eyfo70L
+         tgvclsm/4/QPawY1PY0reLmxJ7efSbL/jmnI3m9zBBeGaMI/OXPA4hkzZTy8dDamPq9s
+         uxLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689104655; x=1691696655;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=RSEbbHdSy2/6yMNHt5Jl2Q8DKG5onoGGlP2gwab29zg=;
+        b=c3/4/AEAvvm888vSTtFwAEXJyn8IgKE+S8t3tC6i0tMNGKwwMdKefixn98yh7KyLUJ
+         6PCJPV3zBWhwc/yhp75/ye9CMAXOyqF0UByu0IAlskM23tndfDVnsIqIKqBEbgjBIPEN
+         IxrXg808Nxf65DVUsPejRcvYCNHh4Q7pIOzHXfihJ5ftkYYBkuekcZm5ynGHZFORj9rS
+         vT8p85f4HmAqESoYYoLFudGDRKOXA/NUebtbwWmiomYzh/WUl67aKfT3Fh08S/758EBO
+         383M+uiyBM+ljSL6LLNj7GbcSwZqgDrLfsn60nF0vZUx4N/GQJWMqCthNiur3fX+vz00
+         83XQ==
+X-Gm-Message-State: ABy/qLbNEGeSvQHX+Z7qXV0w6X1lLjIWKCahIb99IUtEc50SrwFccFo5
+	6Tx8sFC5TTxMYV4qHRE4hC0eBkomwqvwUUcZhoay7A==
+X-Google-Smtp-Source: APBJJlEMGrJhIDMpPTyu7e5avzS4Ytu2jD6E5EuDUDLHHML24qva5gPcogEF3c06DP35r+OQbQLaaRAwWhkADKINe28=
+X-Received: by 2002:ac8:570d:0:b0:3f9:a770:7279 with SMTP id
+ 13-20020ac8570d000000b003f9a7707279mr28180qtw.9.1689104654972; Tue, 11 Jul
+ 2023 12:44:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=whXh9sgLo24RO02JjfD0m3HE5NADRPWoEd+dW6bruFhVA@mail.gmail.com>
+References: <20230612153201.554742-1-catalin.marinas@arm.com>
+ <CAMi1Hd04mu6JojT3y6wyN2YeVkPR5R3qnkKJ8iR8if_YByCn4w@mail.gmail.com>
+ <ZKdfVSzbgOonR17A@google.com> <CAMi1Hd2f5GUnu_JGot=CqA9Vy4OD_V7FWYLOhNbJL1Pyd_EGMA@mail.gmail.com>
+In-Reply-To: <CAMi1Hd2f5GUnu_JGot=CqA9Vy4OD_V7FWYLOhNbJL1Pyd_EGMA@mail.gmail.com>
+From: Isaac Manjarres <isaacmanjarres@google.com>
+Date: Tue, 11 Jul 2023 12:44:03 -0700
+Message-ID: <CABfwK138ZbE5=J66esO-VG64tO+e9n1cRRBAE3wOKygJxd_xbw@mail.gmail.com>
+Subject: Re: [PATCH v7 00/17] mm, dma, arm64: Reduce ARCH_KMALLOC_MINALIGN to 8
+To: Amit Pundir <amit.pundir@linaro.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Linus Torvalds <torvalds@linux-foundation.org>, Christoph Hellwig <hch@lst.de>, 
+	Robin Murphy <robin.murphy@arm.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Will Deacon <will@kernel.org>, 
+	Marc Zyngier <maz@kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>, 
+	Ard Biesheuvel <ardb@kernel.org>, Saravana Kannan <saravanak@google.com>, Alasdair Kergon <agk@redhat.com>, 
+	Daniel Vetter <daniel@ffwll.ch>, Joerg Roedel <joro@8bytes.org>, Mark Brown <broonie@kernel.org>, 
+	Mike Snitzer <snitzer@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Jonathan Cameron <jic23@kernel.org>, Vlastimil Babka <vbabka@suse.cz>, linux-mm@kvack.org, 
+	iommu@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+	Linux regressions mailing list <regressions@lists.linux.dev>, John Stultz <jstultz@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jul 11, 2023 at 09:47:00AM -0700, Linus Torvalds wrote:
-> On Tue, 11 Jul 2023 at 05:06, Christoph Hellwig <hch@lst.de> wrote:
-> For example, we have this completely unacceptable garbage:
-> 
->         ret = nvme_global_check_duplicate_ids(ctrl->subsys, &info->ids);
->         if (ret) {
->                 dev_err(ctrl->device,
->                         "globally duplicate IDs for nsid %d\n", info->nsid);
->                 nvme_print_device_info(ctrl);
->                 return ret;
->         }
-> 
-> iow, the code even checks for and *notices* that there are duplicate
-> IDs, and what does it do? It then errors out.
+On Sat, Jul 8, 2023 at 6:03=E2=80=AFAM Amit Pundir <amit.pundir@linaro.org>=
+ wrote:
+> Hi Issac, I can't reproduce this crash if I have slub_debug enabled
+> https://bugs.linaro.org/attachment.cgi?id=3D1149.
+>
+> But I can still reproduce the crash, with the same build, if I just
+> remove the slub_debug bootarg
+> https://bugs.linaro.org/attachment.cgi?id=3D1150
+>
 
-This check came from a recent half-baked spec feature called "Dispersed
-Namespaces" that caused breakage and data corruption when used in Linux.
-Rather than attempt to support that mostly vendor specific feature, the
-driver attempted to fence that off as unmaintainable. This check wasn't
-aimed at enforcing "correctness", but it certainly found a lot of that
-as collatoral damage. Let's see if we can find a better way to detect
-the difference with a sane fallback as you suggest.
+Hey Amit,
+
+Thanks for trying this out. John Stultz and I tried this out as well, and w=
+e
+couldn't reproduce the issue with slub_debug enabled either.
+
+However, we were able to reproduce the issue you reported along with
+KASAN enabled, which also helped us catch an out-of-bounds access
+in the regmap-irq code. Once we fixed it, the memory corruption you
+reported was also fixed. I've sent the patch [1] for review. Can you please
+test it out and see if it works for you too?
+
+[1]: https://lore.kernel.org/all/20230711193059.2480971-1-isaacmanjarres@go=
+ogle.com/
+
+Thanks,
+Isaac
