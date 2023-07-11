@@ -1,64 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95BBF168CE
-	for <regressions@lists.linux.dev>; Tue, 11 Jul 2023 06:57:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 440CBC433C8;
-	Tue, 11 Jul 2023 06:57:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1689058626;
-	bh=E7aOphHfxIvPiM7w+nvQL4QDcpx4xw+fA9HR0KeNyPM=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-	b=WPqcmstoqnpoSua2xZYMl8b/Foa3vObKoL/CfIEEGmdcjP41UxX8YjSUGden4yoa1
-	 OuRcJDjjSw+OVzeef0RSM+OQevEEfQh7nZkMqdh5QryzRfEuA9tsADGad1qgLNb85r
-	 h2iKYhakcg93jeHbTh5KDuhWnpv8wMjaBJjgPm0BrEuM0V3XCKhCNbirIffDf8HKAS
-	 ngmp+PADfCp/0hCKBJ9wEOeLqSPoV04XR6W6Hk5NgZ7bYNINvoogurVXLFBk7N3m0t
-	 ++g5BEc+Nid+wSpUr147Y1YWBvhVfZIU7HLHOws9jiSrZBcp+zg+q1IObiEavc3nPk
-	 iU21U0XNChTRA==
-From: Kalle Valo <kvalo@kernel.org>
-To: "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>
-Cc: Bagas Sanjaya <bagasdotme@gmail.com>,  Manikanta Pubbisetty
- <quic_mpubbise@quicinc.com>,  Johannes Berg <johannes@sipsolutions.net>,
-  Jakub Kicinski <kuba@kernel.org>,  Linux regressions mailing list
- <regressions@lists.linux.dev>,  Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>,  Linux Atheros 11K
- <ath11k@lists.infradead.org>
-Subject: Re: Fwd: ath11k: QCN9074: ce desc not available for wmi command
-References: <1326a6e4-758d-3344-d90c-8a126748b034@gmail.com>
-	<6a0c3aa0-86a8-8c06-81df-2d7085946cf5@leemhuis.info>
-Date: Tue, 11 Jul 2023 09:57:02 +0300
-In-Reply-To: <6a0c3aa0-86a8-8c06-81df-2d7085946cf5@leemhuis.info> (Linux
-	regression tracking's message of "Mon, 26 Jun 2023 14:49:32 +0200")
-Message-ID: <87o7kj7x6p.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A44DE17FE0
+	for <regressions@lists.linux.dev>; Tue, 11 Jul 2023 09:39:16 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1qJ9pw-00047e-HN; Tue, 11 Jul 2023 11:39:12 +0200
+Message-ID: <462e0e1e-98ea-0f3c-4aaa-8d44f0a8e664@leemhuis.info>
+Date: Tue, 11 Jul 2023 11:39:11 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: Fwd: Need NVME QUIRK BOGUS for SAMSUNG MZ1WV480HCGL-000MV
+ (Samsung SM-953 Datacenter SSD)
+Content-Language: en-US, de-DE
+To: Pankaj Raghav <p.raghav@samsung.com>, Keith Busch <kbusch@kernel.org>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Bagas Sanjaya <bagasdotme@gmail.com>, Jens Axboe <axboe@kernel.dk>,
+ Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
+ "Clemens S." <cspringsguth@gmail.com>,
+ Martin Belanger <martin.belanger@dell.com>,
+ Chaitanya Kulkarni <kch@nvidia.com>, John Meneghini <jmeneghi@redhat.com>,
+ Hannes Reinecke <hare@suse.de>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux NVMe <linux-nvme@lists.infradead.org>,
+ Kanchan Joshi <joshi.k@samsung.com>,
+ Javier Gonzalez <javier.gonz@samsung.com>, =?UTF-8?B?67CV7KeE7ZmY?=
+ <jh.i.park@samsung.com>, Linus Torvalds <torvalds@linux-foundation.org>
+References: <d18d2a08-9d24-0209-c2cf-baf60bbf5048@gmail.com>
+ <ZJsKBkPqoWzYyngS@kbusch-mbp.dhcp.thefacebook.com>
+ <6f333133-2cc4-406a-d6c2-642ac6ccabca@leemhuis.info>
+ <CGME20230710155902eucas1p2b464a29adc35e983c73b00d18ab5344c@eucas1p2.samsung.com>
+ <ZKwqvTMPVmhnkZjS@kbusch-mbp.dhcp.thefacebook.com>
+ <f0fdf86e-4293-8e07-835d-b5a866252068@samsung.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <f0fdf86e-4293-8e07-835d-b5a866252068@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1689068356;98643c54;
+X-HE-SMSGID: 1qJ9pw-00047e-HN
 
-"Linux regression tracking (Thorsten Leemhuis)"
-<regressions@leemhuis.info> writes:
+[CCing Linus for the "whack a mole" aspect in the second half]
 
-> Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
-> for once, to make this easily accessible to everyone.
->
-> Hmmm, there afaics was no real progress and not even a single reply from
-> a developer (neither here or in bugzilla) since the issue was reported
-> ~10 days ago. :-/
->
-> Manikanta, did you maybe just miss that this is caused by change of
-> yours (and thus is something you should look into)?
+On 11.07.23 08:54, Pankaj Raghav wrote:
+>>> I understand that, but I think we need middlemen for that, as I or Bagas
+>>> don't have the contacts -- and it's IMHO also a bit much too ask us for
+>>> in general, as regression tracking is hard enough already. At least
+>>> unless this becomes something that happen regularly, then a list of
+>>> persons we could contact would be fine I guess. But we simply can't deal
+>>> with too many subsystem specific special cases.
+>>
+>> I'm not asking the Linux regression trackers to fill that role, though.
 
-No reply from Manikanta so I think I'll just revert the commit. I have
-assigned bug #217536 to me now.
+Well, during our work we often encounter those bugs -- often from people
+that are no regular developers that already had a hard time
+understanding the issue and reporting it to us somehow. Asking those to...
 
-The wireless trees are closed for July but my plan is that I submit the
-revert directly to net tree.
+>> I'm asking people who experience these issues report it to their vendor
 
--- 
-https://patchwork.kernel.org/project/linux-wireless/list/
+...find the right destination and format to report their Linux problems
+to the vendors is unlikely to fly I suspect. And I'm not sure if that is
+in our interest, as then it might take a lot longer to get those quirk
+entries into the kernel source.
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+But whatever, the main reason why I write this mail is different:
+
+>> directly because these device makers apparently have zero clue that
+>> their spec non-compliance is causing painful experiences for their
+>> customers and annoyance for maintainers. They keep pumping out more and
+>> more devices with the same breakage.
+>>
+>> This particular vendor has been great at engaging with Linux, but that's
+>> not necessarily normal among all device makers, and I don't have
+>> contacts with the majority of the vendors we've had to quirk for this
+>> issue.
+>>
+>> We did complain to the NVMe spec workgroup that their complaince cert
+>> suite is not testing for this. There was a little initial interest in
+>> fixing that gap, but it fizzled out...
+
+Preface: this is not my area of expertise, and maybe I should keep my
+mouth shut. But whatever.
+
+Well, that "They keep pumping out more and more devices with the same
+breakage" and the "new device" comment from Pankaj below bear the
+question: should we stop trying to play "whack a mole" with all those
+quirk entries and handle devices with duplicate ids just like Windows does?
+
+That would "make things just work"(tm).
+
+And yes, I suspect there are good reasons why we went down the "quirk"
+route or why abandoning it might be hard. But maybe it's time to
+reconsider that path, as from my outside point of view things sound a
+lot like they are somewhat similar to the ACPI problems we dealt with
+~15 years ago: we learned that we have to deal with broken ACPI
+implementations and somehow use them in a way similar to how Windows
+uses them, as that's the OS the machine was designed for and tested with.
+
+Ciao, Thorsten
+
+>>> Another request came in today, even with a pseudo-patch:
+>>> https://bugzilla.kernel.org/show_bug.cgi?id=217649
+>>>
+>>> To quote:
+>>> ```
+>>> As with numerous NVMe controllers these days, Samsung's
+>>> MZAL41T0HBLB-00BL2, which Lenovo builds into their 16ARP8 also suffers
+>>> from invalid IDs, breaking suspend and hibernate also on the latest
+>>> kernel 6.4.2.
+> [...]
+>> Panjaj, okay with this one too?
+> 
+> This looks a like a new device that might have a firmware update. I will ping
+> internally first.
+> 
+> As you mentioned, the recent addition of globally unique ID check
+> is breaking a lot of devices because of non-compliant firmware. I will try to create
+> some awareness about this issue internally as well.
