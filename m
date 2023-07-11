@@ -1,95 +1,86 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6105114AB5
-	for <regressions@lists.linux.dev>; Tue, 11 Jul 2023 13:56:11 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qJDqV-0002HE-4j; Tue, 11 Jul 2023 15:56:03 +0200
-Message-ID: <2f53de7c-e9db-6bf5-6e9e-65edadd4d754@leemhuis.info>
-Date: Tue, 11 Jul 2023 15:56:02 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53E6914AB5
+	for <regressions@lists.linux.dev>; Tue, 11 Jul 2023 14:12:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3ED1CC433C7;
+	Tue, 11 Jul 2023 14:12:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1689084729;
+	bh=NRBCd7EYg1Ttg7Sd52hrW/FKaUnozUqBArGH46pm5Hs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dv3ZPcOrttwlRQ7ym+XMaMprZg4jGyXAIcnMCZRSQeRCMr+rPOx+AR2x6FEX+gXnQ
+	 JsZ9nzbfIpxOMv7EyoXY5LJgHFl8NMwBFdr6qI/rnUm22VqNc+CWNgEThskgCZR0JZ
+	 9XOm7XCRs+H/vlnlGMQ5Vg0k9wAffpQtZ8WSlAYw=
+Date: Tue, 11 Jul 2023 16:12:06 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Sagi Grimberg <sagi@grimberg.me>
+Cc: Christoph Hellwig <hch@lst.de>,
+	Linux regressions mailing list <regressions@lists.linux.dev>,
+	Pankaj Raghav <p.raghav@samsung.com>,
+	Keith Busch <kbusch@kernel.org>,
+	Bagas Sanjaya <bagasdotme@gmail.com>, Jens Axboe <axboe@kernel.dk>,
+	"Clemens S." <cspringsguth@gmail.com>,
+	Martin Belanger <martin.belanger@dell.com>,
+	Chaitanya Kulkarni <kch@nvidia.com>,
+	John Meneghini <jmeneghi@redhat.com>,
+	Hannes Reinecke <hare@suse.de>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux NVMe <linux-nvme@lists.infradead.org>,
+	Kanchan Joshi <joshi.k@samsung.com>,
+	Javier Gonzalez <javier.gonz@samsung.com>,
+	=?utf-8?B?67CV7KeE7ZmY?= <jh.i.park@samsung.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: Fwd: Need NVME QUIRK BOGUS for SAMSUNG MZ1WV480HCGL-000MV
+ (Samsung SM-953 Datacenter SSD)
+Message-ID: <2023071135-opt-choosing-51dd@gregkh>
+References: <d18d2a08-9d24-0209-c2cf-baf60bbf5048@gmail.com>
+ <ZJsKBkPqoWzYyngS@kbusch-mbp.dhcp.thefacebook.com>
+ <6f333133-2cc4-406a-d6c2-642ac6ccabca@leemhuis.info>
+ <CGME20230710155902eucas1p2b464a29adc35e983c73b00d18ab5344c@eucas1p2.samsung.com>
+ <ZKwqvTMPVmhnkZjS@kbusch-mbp.dhcp.thefacebook.com>
+ <f0fdf86e-4293-8e07-835d-b5a866252068@samsung.com>
+ <462e0e1e-98ea-0f3c-4aaa-8d44f0a8e664@leemhuis.info>
+ <20230711120609.GB27050@lst.de>
+ <23017407-83eb-8fb0-5d91-2c7c4ae02544@grimberg.me>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH] HID: logitech-hidpp: rework one more time the retries
- attempts
-Content-Language: en-US, de-DE
-To: Benjamin Tissoires <benjamin.tissoires@redhat.com>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Bastien Nocera <hadess@hadess.net>, Greg KH <gregkh@linuxfoundation.org>,
- =?UTF-8?Q?Filipe_La=c3=adns?= <lains@riseup.net>,
- Jiri Kosina <jikos@kernel.org>, linux-input@vger.kernel.org,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org
-References: <20230621-logitech-fixes-v1-1-32e70933c0b0@redhat.com>
- <2023062156-trespass-pandemic-7f4f@gregkh>
- <qbvmv3eexohswyagmllfh3xsxoftwa3wbmsdafmwak2bxlnlft@jz74dijlfxlz>
- <31ce32e018a9fa410e9e1f3e5900621b16a56091.camel@hadess.net>
- <CAO-hwJLFSUJaGK5DAOz30+YyC1hGgHnbeJbc5iQ47jxBcbRSCg@mail.gmail.com>
- <cfa28818-9eaf-0dc9-cb4a-1b3de318e627@leemhuis.info>
- <CAO-hwJLc0wzv2a3JARkPDW+ZgbnvwggfRHcAJmWsKy_FMA13=g@mail.gmail.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <CAO-hwJLc0wzv2a3JARkPDW+ZgbnvwggfRHcAJmWsKy_FMA13=g@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1689083771;75fa5fd3;
-X-HE-SMSGID: 1qJDqV-0002HE-4j
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <23017407-83eb-8fb0-5d91-2c7c4ae02544@grimberg.me>
 
-
-
-On 11.07.23 15:40, Benjamin Tissoires wrote:
-> On Tue, Jul 11, 2023 at 3:10 PM Linux regression tracking (Thorsten
-> Leemhuis) <regressions@leemhuis.info> wrote:
->>
->> On 26.06.23 16:02, Benjamin Tissoires wrote:
->>> On Sun, Jun 25, 2023 at 10:30 AM Bastien Nocera <hadess@hadess.net> wrote:
->>>> On Fri, 2023-06-23 at 10:37 +0200, Benjamin Tissoires wrote:
->>>>> On Jun 21 2023, Greg KH wrote:
->>>>>> On Wed, Jun 21, 2023 at 11:42:30AM +0200, Benjamin Tissoires wrote:
->>>>>>> Make the code looks less like Pascal.
->>>>>>>
->>>>>>> Extract the internal code inside a helper function, fix the
->>>>>>> initialization of the parameters used in the helper function
->>>>>>> (`hidpp->answer_available` was not reset and `*response` wasn't
->>>>>>> too),
->>>>>>> and use a `do {...} while();` loop.
->>>>>>>
->>>>>>> Fixes: 586e8fede795 ("HID: logitech-hidpp: Retry commands when
->>>>>>> device is busy")
->>>>>>> Cc: stable@vger.kernel.org
->>>>>>> Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
->>>>>>> ---
->>>>>>> as requested by
->>>>>>> https://lore.kernel.org/all/CAHk-=wiMbF38KCNhPFiargenpSBoecSXTLQACKS2UMyo_Vu2ww@mail.gmail.com/
->>>>>>> This is a rewrite of that particular piece of code.
->>>>>>> ---
->>>>>>>  drivers/hid/hid-logitech-hidpp.c | 102 +++++++++++++++++++++++--
->>>>>>> --------------
->>>>>>>  1 file changed, 61 insertions(+), 41 deletions(-)
->>> [...]
->>>
->>> Some people on the Bz were able to reproduce with multiple reboots.
->>> But it's not as urgent as previously, and we were close to the 6.4
->>> final when I sent it. I'll make sure this goes into 6.5 and gets
->>> proper stable backports FWIW.
->>
->> Did that happen? Doesn't look like it from here, but maybe I'm missing
->> something. Where there maybe other changes to resolve the remaining
->> problems some users encounter sporadically since the urgent fixes went in?
+On Tue, Jul 11, 2023 at 03:14:54PM +0300, Sagi Grimberg wrote:
 > 
-> No, there were no other changes that could have solved this. I guess
-> the randomness of the problem makes it way harder to detect and to
-> reproduce.
+> > > Well, that "They keep pumping out more and more devices with the same
+> > > breakage" and the "new device" comment from Pankaj below bear the
+> > > question: should we stop trying to play "whack a mole" with all those
+> > > quirk entries and handle devices with duplicate ids just like Windows does?
+> > 
+> > As far as I can tell Windows completely ignores the IDs.  Which, looking
+> > back, I'd love to be able to do as well, but they are already used
+> > by udev for the /dev/disk/by-id/ links.   Those are usually not used
+> > on desktop systems, as they use the file system labels and UUIDs, but
+> > that doesn't work for non-file system uses.
+> > 
+> > And all this has been working really well with the good old enterprise
+> > SSDs, it's just that the cheap consumer devices keep fucking it up.
+> > 
+> > If we'd take it away now we'd break existing users, which puts us between
+> > a rock and a hard place.
 > 
-> I'll send a v2 of that patch with the reviews today or tomorrow and we
-> can probably get it through the current 6.5 cycle.
+> Maybe the compromise would be to add a modparam that tells the driver
+> to ignore it altogether (like allow_bogus_identifiers) that would
+> default to false. Then people can just workaround the problem instead
+> of having the back-and-fourth with the vendor?
+> 
 
-Great, many thx!
+Module parameters do not work on a per-device basis, sorry.  This isn't
+the 1990's anymore, please do not attempt to add new ones :)
 
-Ciao, Thorsten
+thanks,
+
+greg k-h
