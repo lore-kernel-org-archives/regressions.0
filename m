@@ -1,45 +1,45 @@
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1984E14F99
-	for <regressions@lists.linux.dev>; Wed, 12 Jul 2023 16:48:48 +0000 (UTC)
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-4fa48b5dc2eso11577026e87.1
-        for <regressions@lists.linux.dev>; Wed, 12 Jul 2023 09:48:48 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D19D114F95
+	for <regressions@lists.linux.dev>; Wed, 12 Jul 2023 16:52:12 +0000 (UTC)
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2b6f943383eso117145191fa.2
+        for <regressions@lists.linux.dev>; Wed, 12 Jul 2023 09:52:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1689180527; x=1691772527;
+        d=linux-foundation.org; s=google; t=1689180730; x=1691772730;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=oMWZAChJYV60SmdxsBdiqmGcST+PLRNcYlCxSrWksj0=;
-        b=gB4jVVbrbetwHrk7VCC2mz3twdKV2Z0lEZ8MH1gjnM8UgO6ctbIBbxe+5nk5D66yHA
-         ODH92rB8R2pxgtOfPqPVij/ibJa3/lI9C04nktlADUgnCRaWg196YguXL7GqxSkNwiaD
-         pI8rQYDa5NWIv7DFfB+kRdzAO2bEeVCSP5Ebg=
+        bh=oAuCX7b/d1hbHKp+310Sb1Zp5QGgY2qfzYziff3Pm1c=;
+        b=U5ONKyp89d8LjT1vJe3usI67MT+9QxOmfVCOnV8Qu1V72IlaDhrnb03Zsqn440Rr4M
+         B2fBHx4diBfDXv+wMUC7thn/86QRjglRTgYGshZRHvXSfInKy4w8SLCg8k7tPgXo0aOw
+         FTpHc/9OLYlhJB4h56Lq2MX4SsudXF3Dy0Ws4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689180527; x=1691772527;
+        d=1e100.net; s=20221208; t=1689180730; x=1691772730;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=oMWZAChJYV60SmdxsBdiqmGcST+PLRNcYlCxSrWksj0=;
-        b=Ct+XQEjVic0OdAuC6j6Nxz/7DeMy/jzFkX/+w13cW70Oc9DK8w/7w7SJKr/sUQmUJb
-         p5TwnItU9HEBIALZhMcU8OYtOGU6xIH0HN6y1vq8JRN7+j53//W0hDrOwakx/avZnfUX
-         EMFktRSQmLVPiuZAjTMg+1JAIY5EnmJnFoauYFRcl/6bdN/QAqLwvms24f+cA1sqOLWr
-         59VPgVfLkVxZEyjVw0z5A1RRkFF4m1Ry6/zgMsOJXiaC57UPGihH3nciwatoP/ze86ql
-         g8k+bQ6DAYINHFa91Hd+oybnnqECufEs4PmiQVFtiZWf05sgMZTa69Kj+bkheGQJorMK
-         jaUg==
-X-Gm-Message-State: ABy/qLaBKu927KovWG2j3nTxgCKWad/GV8udPPmAQYwhm/3aO7YyB/ZG
-	x6+EQ1VlZ4PZG2DmajRl3CS/CnVeFntvbMl67dYocRNt
-X-Google-Smtp-Source: APBJJlE/djhahHNPAbNByH5EsPnZcJD0oMJHk0QW7eU63srBbd/Skw+1yVQQ5x81qcxTC1ZtupmEsw==
-X-Received: by 2002:a05:6512:220e:b0:4fb:c0d8:10ec with SMTP id h14-20020a056512220e00b004fbc0d810ecmr19850992lfu.1.1689180526729;
-        Wed, 12 Jul 2023 09:48:46 -0700 (PDT)
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com. [209.85.167.44])
-        by smtp.gmail.com with ESMTPSA id d16-20020ac25ed0000000b004fb88c1ab18sm782404lfq.182.2023.07.12.09.48.45
+        bh=oAuCX7b/d1hbHKp+310Sb1Zp5QGgY2qfzYziff3Pm1c=;
+        b=NnTGNcSXvGiTD7yMRaE87hKPOrEucGcE69uv8lBo0B+vHbWdoX4hwPz+NW6dz5EOsV
+         5Ozh6Q0vNdmp+OVXxMlcKfHr6ul1xPtMRinaITjjoH6e5BZ6wX33/WSKDhY6ehFegDE3
+         /7mY0iD3D3ZmJEIC4CsfdY7KjW1cCx+kl0/AEKr0QckMl5GEQ9prBDFf1zjBixk2MuY8
+         0jwRSghyO+gnNvTi08NPSBRGG0FB9Incvq8Rf7PaeDZb0164lehAkuiT/bjf5qg1WvyV
+         VN+LBeaZ2z8RQExqCIwYys4GxIQ3goGX+GDFy/l+QTcPl1W7nNfVNYbD7bBu6VspFO+O
+         nakA==
+X-Gm-Message-State: ABy/qLbX3MHKTn2xOdmR1eq0jaqqHsT3T61n9aGRvoHguWtOVM6EhEOw
+	Se5GtmSF/F9eUyuQAidEGix/Q+1/Z/ehTSF+Kq0JgNsw
+X-Google-Smtp-Source: APBJJlE7tpnHd3dC+tdtlwcUim+m5S5LB3QghzsLENfOgEBmdqR/HQPhVspKQI3ZvT11L55szs3XUw==
+X-Received: by 2002:a2e:b041:0:b0:2b5:8a21:5627 with SMTP id d1-20020a2eb041000000b002b58a215627mr17300611ljl.51.1689180730442;
+        Wed, 12 Jul 2023 09:52:10 -0700 (PDT)
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com. [209.85.167.51])
+        by smtp.gmail.com with ESMTPSA id r8-20020a2eb608000000b002b69a4904adsm1051066ljn.20.2023.07.12.09.52.09
         for <regressions@lists.linux.dev>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Jul 2023 09:48:46 -0700 (PDT)
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-4fa48b5dc2eso11576989e87.1
-        for <regressions@lists.linux.dev>; Wed, 12 Jul 2023 09:48:45 -0700 (PDT)
-X-Received: by 2002:ac2:5f01:0:b0:4fa:6d62:9219 with SMTP id
- 1-20020ac25f01000000b004fa6d629219mr14025309lfq.62.1689180525640; Wed, 12 Jul
- 2023 09:48:45 -0700 (PDT)
+        Wed, 12 Jul 2023 09:52:09 -0700 (PDT)
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-4fb94b1423eso11058969e87.1
+        for <regressions@lists.linux.dev>; Wed, 12 Jul 2023 09:52:09 -0700 (PDT)
+X-Received: by 2002:a05:6512:3090:b0:4f8:4512:c844 with SMTP id
+ z16-20020a056512309000b004f84512c844mr19547117lfd.48.1689180728994; Wed, 12
+ Jul 2023 09:52:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -51,88 +51,51 @@ References: <d18d2a08-9d24-0209-c2cf-baf60bbf5048@gmail.com>
  <CGME20230710155902eucas1p2b464a29adc35e983c73b00d18ab5344c@eucas1p2.samsung.com>
  <ZKwqvTMPVmhnkZjS@kbusch-mbp.dhcp.thefacebook.com> <f0fdf86e-4293-8e07-835d-b5a866252068@samsung.com>
  <462e0e1e-98ea-0f3c-4aaa-8d44f0a8e664@leemhuis.info> <20230711120609.GB27050@lst.de>
- <CAHk-=whXh9sgLo24RO02JjfD0m3HE5NADRPWoEd+dW6bruFhVA@mail.gmail.com>
- <ZK2PgNizcMLW+S/V@kbusch-mbp.dhcp.thefacebook.com> <f0e8de7b-655c-9932-16d4-105decff9a6c@grimberg.me>
-In-Reply-To: <f0e8de7b-655c-9932-16d4-105decff9a6c@grimberg.me>
+ <CAHk-=whXh9sgLo24RO02JjfD0m3HE5NADRPWoEd+dW6bruFhVA@mail.gmail.com> <20230712164546.GA31434@lst.de>
+In-Reply-To: <20230712164546.GA31434@lst.de>
 From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Wed, 12 Jul 2023 09:48:29 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whhGcG5vuzWMOpy0fE6MYD6V_H7aWLU1wf=RSJV8y=9FA@mail.gmail.com>
-Message-ID: <CAHk-=whhGcG5vuzWMOpy0fE6MYD6V_H7aWLU1wf=RSJV8y=9FA@mail.gmail.com>
+Date: Wed, 12 Jul 2023 09:51:52 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whA9rmvNfo=8iKmtimayiA2Aus4XvPwcDrA53G2rfGP0w@mail.gmail.com>
+Message-ID: <CAHk-=whA9rmvNfo=8iKmtimayiA2Aus4XvPwcDrA53G2rfGP0w@mail.gmail.com>
 Subject: Re: Fwd: Need NVME QUIRK BOGUS for SAMSUNG MZ1WV480HCGL-000MV
  (Samsung SM-953 Datacenter SSD)
-To: Sagi Grimberg <sagi@grimberg.me>
-Cc: Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>, 
-	Linux regressions mailing list <regressions@lists.linux.dev>, Pankaj Raghav <p.raghav@samsung.com>, 
-	Bagas Sanjaya <bagasdotme@gmail.com>, Jens Axboe <axboe@kernel.dk>, 
-	"Clemens S." <cspringsguth@gmail.com>, Martin Belanger <martin.belanger@dell.com>, 
-	Chaitanya Kulkarni <kch@nvidia.com>, John Meneghini <jmeneghi@redhat.com>, Hannes Reinecke <hare@suse.de>, 
+To: Christoph Hellwig <hch@lst.de>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>, Pankaj Raghav <p.raghav@samsung.com>, 
+	Keith Busch <kbusch@kernel.org>, Bagas Sanjaya <bagasdotme@gmail.com>, Jens Axboe <axboe@kernel.dk>, 
+	Sagi Grimberg <sagi@grimberg.me>, "Clemens S." <cspringsguth@gmail.com>, 
+	Martin Belanger <martin.belanger@dell.com>, Chaitanya Kulkarni <kch@nvidia.com>, 
+	John Meneghini <jmeneghi@redhat.com>, Hannes Reinecke <hare@suse.de>, 
 	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux NVMe <linux-nvme@lists.infradead.org>, 
 	Kanchan Joshi <joshi.k@samsung.com>, Javier Gonzalez <javier.gonz@samsung.com>, 
 	=?UTF-8?B?67CV7KeE7ZmY?= <jh.i.park@samsung.com>
 Content-Type: text/plain; charset="UTF-8"
 
-On Wed, 12 Jul 2023 at 00:38, Sagi Grimberg <sagi@grimberg.me> wrote:
+On Wed, 12 Jul 2023 at 09:45, Christoph Hellwig <hch@lst.de> wrote:
 >
-> Perhaps we could fallback to what we do in wwid_show()?
+> On Tue, Jul 11, 2023 at 09:47:00AM -0700, Linus Torvalds wrote:
 >
-> "nvme.%04x-%*phN-%*phN-%08x\n", subsys->vendor_id, serial_len,
-> subsys->serial, model_len, subsys->model, head->ns_id)
+> > and we have NEVER EVER seen devices with reliably unique IDs. Really.
+>
+> Sorry, but that's bullshit.
 
-That's not going to be any more unique.
+Christoph, you are *literally* involved in a discussion where this is the case.
 
-Yes, there is *slightly* more hope that a simpler "serial number"
-might be different between devices, but honestly, when I told
-Christoph to learn from history and not assume UUID's are unique for
-hardware, that "history" is literally decades of serial numbers.
+What you call "bullshit" is what everybody else here calls REALITY.
 
-Why do you think things like dm/md generate the UUID and literally
-write it to disk? It's because those unique serial numbers have never
-ever existed.
+The fact that *some* devices have serial numbers in no way implies
+that all of them do.
 
-And absolutely NONE OF THIS IS NEW. This is not a nvme issue. SCSI
-disks allegedly has a VPD page 0x80 with a serial number. Not only
-won't many devices report that VPD in the first place, even if they do
-there's no guarantee that it's actually unique.
+And if you think that they all do, you are the problem. Literally in this case.
 
-And USB devices are *supposed* to have unique device serial numbers
-("iSerial"). I think it's literally been in the spec since day#1. And
-some even do. Quite a lot absolutely do NOT.
+So you had better really internalize this "there are no reliable
+serial numbers in general". Because it's simply a FACT.
 
-It's just fundamentally cheaper for hardware manufacturers that do
-mass manufacturing to do completely identical pieces of hardware.
-Serial numbers and UUID's are _fundamentally_ hard and expensive at
-some level.
+> Well, let's try something like this (co-developed with Sagi) that
+> allows it for non-multipath PCIe devices, which covers the quirks
+> we've added so far, but also add a big fat warning, because we know
+> people rely on the /dev/disk/by-id/ links.  Probably not on these
+> devices, but who knows.
 
-If you sell overpriced garbage to enterprise users, then a serial
-number or UUID will most definitely be part of the package. Because
-that is _literally_ what "Enterprise hardware" means: "Overpriced
-garbage with a provenance and somebody else to blame".
+Looks sane to me.
 
-But if you sell to the mass market, and aren't going for people who
-pay extra for provenance, a serial number or a UUID is pure overhead.
-
-Sometimes it's easy enough to do, and people do it.
-
-But if you *rely* on it, *you* are the problem. Not the vendor that
-was churning out a million devices for real users, and that was
-spending all the effort on just making it work.
-
-Basically, I think all of these things are purely for fabrics and the
-nvme target side.
-
-Expecting serial numbers from a PCIe device is pure fantasy.
-
-And, more importantly, it's stupid and wrong. Exactly because we've
-been here before. Don't repeat mistakes from the past.
-
-By all means _report_ things like serial numbers. They can be very
-useful for tracking. But never *ever* rely on them for basic
-functionality. People absolutely will have two identical devices from
-the same batch, and unless there is some actual hardware compliance
-verification, they will not have unique serial numbers.
-
-In many cases, the best you can hope for is that the duplicate ones
-are *obviously* duplicate (ie "all zeroes" and similar). But you
-shouldn't expect or depend on even that to be the case.
-
-             Linus
+          Linus
