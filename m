@@ -1,151 +1,101 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE525200DF
-	for <regressions@lists.linux.dev>; Wed, 12 Jul 2023 17:00:39 +0000 (UTC)
-Received: from pendragon.ideasonboard.com (unknown [188.20.72.2])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id E62E457E;
-	Wed, 12 Jul 2023 18:59:41 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1689181182;
-	bh=Y1r/4TiSDf+6U9SrmJu6na0NV39GqEwxTTWqZcVNBdk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LmPPXEzq8nN7LcCbUwN8Pr3ruLSFhqUO4lDbYyaFdvFuBKleARc2wrxWgcFZCeYkT
-	 mjmanCS6++0DhsRVZNqsBnGBl+AKujPoHbhbzri7FgWk8CL+Ebe+tmOBMbNJxbo1Ot
-	 Jph1AIJqsD7dwOtnjuxIud/2e9+2EA3UbtRFc9zQ=
-Date: Wed, 12 Jul 2023 20:00:32 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Cc: Martijn Braam <martijn@brixit.nl>, regressions@lists.linux.dev,
-	jernej.skrabec@gmail.com, sakari.ailus@linux.intel.com,
-	mchehab@kernel.org, linux-media@vger.kernel.org, hverkuil@xs4all.nl
-Subject: Re: [REGRESSION] breakage in sun6i-csi media api
-Message-ID: <20230712170032.GA30092@pendragon.ideasonboard.com>
-References: <f13c27fb-2afe-b94e-aad9-ed5ecc818183@brixit.nl>
- <ZHmzZUkcFK8Gq_JL@aptenodytes>
- <e168d246-528d-b615-aa50-af8f17af4442@brixit.nl>
- <ZHm46or-MhTb457b@aptenodytes>
- <20230602100352.GK19463@pendragon.ideasonboard.com>
- <ZK6-2RaE01_RgtYU@aptenodytes>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF61220F95
+	for <regressions@lists.linux.dev>; Wed, 12 Jul 2023 17:34:25 +0000 (UTC)
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-991fe70f21bso903571366b.3
+        for <regressions@lists.linux.dev>; Wed, 12 Jul 2023 10:34:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1689183263; x=1691775263;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=KC5NZX32e9wpP9t7OccUoxNgiPdVaAw53ZnY1DABzIo=;
+        b=KJxUhEXVmviSKcdeI5emPEDV2aIFoyXu8hY8jI90gY5yOOStavHHjnYtw6jWoHU42G
+         6EWqaao1s8cjDP6S1CH7SxiJrVwq/Fs5bcpIf6STIQ2ryh0cJe+YLoaPl9N/HxGYK+dI
+         t8FqCE98pVD3tI1z6oE73yKjswRO6fgcHGaaI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689183263; x=1691775263;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KC5NZX32e9wpP9t7OccUoxNgiPdVaAw53ZnY1DABzIo=;
+        b=kgUO5gBcPKiTyiTLBp3qACeQt6xesKzZsM19V2+2qM/tzoCxC+pRW36EvRHi2C/7xK
+         r5/p9jPK4viCxwvVp1B0NuUq8ZrN3A1tDIpJJXT2kz10JJ1VehciH32KBOOLg/FBPJNM
+         +AxnGU99wx1QfLGQvSCR4TLrlsy4bIuEXHW3vuiJkVm1jpxLoydkmHR94rLuhUKcMRiQ
+         35Zj95GH4FnZS2CfJY/UgihinwEwibcnVkJzP+w2QnAyYEmb2p16DXC7FTrhl3yldBxO
+         8WDxh6cCvaQbbjQ8ThGUP+I0OT48tlDQAP4OUXMdqnhpLfsAu2Awcxd+bd0u46brmObG
+         WNgA==
+X-Gm-Message-State: ABy/qLavLgDA91xACzqsS+qtftVY5r2JWZLIB3ONxZbHMJYWIWS5SFPn
+	BwQuwBEqrVHxXFSH7/H182818aPk2B6Sz2towCuTSyxM
+X-Google-Smtp-Source: APBJJlGzlvcThd59DMQfKnSTEtKDnNHemrgqZvOjAFKpxQ+GbWcyKVKX4Hmsud9vN/hbUqKM/ZPINA==
+X-Received: by 2002:a17:906:7785:b0:991:b2a2:e424 with SMTP id s5-20020a170906778500b00991b2a2e424mr23075296ejm.76.1689183263668;
+        Wed, 12 Jul 2023 10:34:23 -0700 (PDT)
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com. [209.85.208.44])
+        by smtp.gmail.com with ESMTPSA id d8-20020a170906370800b009929ab17be0sm2775443ejc.162.2023.07.12.10.34.23
+        for <regressions@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Jul 2023 10:34:23 -0700 (PDT)
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-51dec0b6fecso9196924a12.1
+        for <regressions@lists.linux.dev>; Wed, 12 Jul 2023 10:34:23 -0700 (PDT)
+X-Received: by 2002:aa7:dc0d:0:b0:50b:c693:70af with SMTP id
+ b13-20020aa7dc0d000000b0050bc69370afmr19367439edu.2.1689183262818; Wed, 12
+ Jul 2023 10:34:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ZK6-2RaE01_RgtYU@aptenodytes>
+References: <ZJsKBkPqoWzYyngS@kbusch-mbp.dhcp.thefacebook.com>
+ <6f333133-2cc4-406a-d6c2-642ac6ccabca@leemhuis.info> <CGME20230710155902eucas1p2b464a29adc35e983c73b00d18ab5344c@eucas1p2.samsung.com>
+ <ZKwqvTMPVmhnkZjS@kbusch-mbp.dhcp.thefacebook.com> <f0fdf86e-4293-8e07-835d-b5a866252068@samsung.com>
+ <462e0e1e-98ea-0f3c-4aaa-8d44f0a8e664@leemhuis.info> <20230711120609.GB27050@lst.de>
+ <CAHk-=whXh9sgLo24RO02JjfD0m3HE5NADRPWoEd+dW6bruFhVA@mail.gmail.com>
+ <20230712164546.GA31434@lst.de> <CAHk-=whA9rmvNfo=8iKmtimayiA2Aus4XvPwcDrA53G2rfGP0w@mail.gmail.com>
+ <20230712165721.GA31965@lst.de>
+In-Reply-To: <20230712165721.GA31965@lst.de>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Wed, 12 Jul 2023 10:34:05 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgzetYEqj7phbJBE_ZshFq0=k3zWouJ8XyFyERgDX5sZg@mail.gmail.com>
+Message-ID: <CAHk-=wgzetYEqj7phbJBE_ZshFq0=k3zWouJ8XyFyERgDX5sZg@mail.gmail.com>
+Subject: Re: Fwd: Need NVME QUIRK BOGUS for SAMSUNG MZ1WV480HCGL-000MV
+ (Samsung SM-953 Datacenter SSD)
+To: Christoph Hellwig <hch@lst.de>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>, Pankaj Raghav <p.raghav@samsung.com>, 
+	Keith Busch <kbusch@kernel.org>, Bagas Sanjaya <bagasdotme@gmail.com>, Jens Axboe <axboe@kernel.dk>, 
+	Sagi Grimberg <sagi@grimberg.me>, "Clemens S." <cspringsguth@gmail.com>, 
+	Martin Belanger <martin.belanger@dell.com>, Chaitanya Kulkarni <kch@nvidia.com>, 
+	John Meneghini <jmeneghi@redhat.com>, Hannes Reinecke <hare@suse.de>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux NVMe <linux-nvme@lists.infradead.org>, 
+	Kanchan Joshi <joshi.k@samsung.com>, Javier Gonzalez <javier.gonz@samsung.com>, 
+	=?UTF-8?B?67CV7KeE7ZmY?= <jh.i.park@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Jul 12, 2023 at 04:55:21PM +0200, Paul Kocialkowski wrote:
-> On Fri 02 Jun 23, 13:03, Laurent Pinchart wrote:
-> > On Fri, Jun 02, 2023 at 11:39:54AM +0200, Paul Kocialkowski wrote:
-> > > Hi,
-> > > 
-> > > (Re-adding folks from the original email, adding Laurent and Hans.)
-> > > 
-> > > On Fri 02 Jun 23, 11:24, Martijn Braam wrote:
-> > > > Hi Paul,
-> > > > 
-> > > > That's basically it yes. My software doesn't expect the bridge block,
-> > > > because it wasn't there. The pipeline always worked "automatically".
-> > > > 
-> > > > This is the workaround that's been made now it run on newer kernels:
-> > > > https://gitlab.com/postmarketOS/megapixels/-/merge_requests/31
-> > > > 
-> > > > I'm pretty sure format propagation would fix this issue.
-> > > 
-> > > Okay that's good to know.
-> > > 
-> > > To be honest it's still not very clear to me if in-driver format propagation is
-> > > a "nice to have" feature or something that all media pipeline drivers are
-> > > supposed to implement.
-> > 
-> > For MC-based drivers, in-kernel propagation *inside* subdevs is
-> > mandatory, in-kernel propagration *between* subdevs is not allowed. The
-> > latter is the responsibility of userspace.
-> 
-> Right, makes good sense.
-> 
-> > For traditional (I'd say legacy, but I know not everybody likes that
-> > term :-)) drivers that only expose video device nodes and do not expose
-> > subdev nodes to userspace, the driver is responsible for configuring the
-> > full pipeline internally based on the S_FMT call on the video nodes
-> > only. This isn't applicable to the sun6i-csi driver, as it exposes
-> > subdev nodes to userspace.
-> > 
-> > > Anyway I feel like this is not really a regression but a result of the driver
-> > > being converted to a newer API.
-> > > 
-> > > Also there's a V4L2_CAP_IO_MC flag which should indicate that the video device
-> > > must be controlled via the media controller API instead of being
-> > > video-device-centric, but I've seen comments asking not to set the flag even
-> > > when MC is used so I'm a bit confused here.
-> > 
-> > Would you have pointers to those comments ?
-> 
-> I was thinking of a reply from Hans on the Tegra driver series:
-> https://patchwork.kernel.org/project/linux-media/patch/20230309144320.2937553-4-luca.ceresoli@bootlin.com/#25285456
-> 
-> From what I understand there's some bridge entity that needs to be explicitly
-> configured to match the sensor's format via MC, yet the reply says that the
-> driver "doesn't use the media controller for anything at the moment" and
-> should not be converted to become a proper MC-driven device.
-> 
-> Well maybe there was a misunderstanding on my side, or Hans', or both.
+On Wed, 12 Jul 2023 at 09:57, Christoph Hellwig <hch@lst.de> wrote:
+>
+> On Wed, Jul 12, 2023 at 09:51:52AM -0700, Linus Torvalds wrote:
+> > Christoph, you are *literally* involved in a discussion where this is the case.
+>
+> Yes.  But that's not never ever.  Enterprise storage devices have been
+> pretty very good at it, because it is part of the purchase specs.
 
-It makes sense not to set the flag in some cases. For instance, the
-uvcvideo driver creates an MC device to expose the camera's internal
-topology to userspace, but doesn't create subdevs as the UVC protocol
-doesn't allow fine-grained configuration of formats between entities. In
-the sun6i-csi case, I don't think this is applicable, the device should
-be configured directly at the subdev level by userspace as you can't
-know in advance what will be connected to its inputs.
+Your basic logic is lacking.
 
-For what it's worth, the same reasoning should apply to the tegra
-driver, and I think it should set V4L2_CAP_IO_MC.
+"Humans are animals" and "Some animals have four legs" are both
+undeniabvly true.
 
-> > > Perhaps the flag is only required when there is no automatic format
-> > > propagation?
-> > 
-> > The flag is more or less required when you expose subdev nodes to
-> > userspace.
-> 
-> Thanks for the clarifications :)
-> 
-> > > If anyone has solid answers on these points I'd be happy to read some
-> > > clarification (and act accordingly).
-> > >
-> > > > On 6/2/23 11:16, Paul Kocialkowski wrote:
-> > > > > Hi Martijn,
-> > > > > 
-> > > > > On Thu 01 Jun 23, 23:19, Martijn Braam wrote:
-> > > > > > It seems like this commit:
-> > > > > > 
-> > > > > > media: sun6i-csi: Add bridge v4l2 subdev with port management
-> > > > > > 
-> > > > > > Has changed the way the media pipeline on a64 devices, in my case the PINE64
-> > > > > > PinePhone works. Since this is an API towards userspace and there's active
-> > > > > > applications that use it I think this counts as a regression.
-> > > > > Do you have more details on what changed specifically?
-> > > > > 
-> > > > > The commit added a bridge subdev in addition to the video node, which is
-> > > > > generally a better description of the CSI hardware and also a necessity
-> > > > > to support the ISP data flow.
-> > > > > 
-> > > > > Maybe your userspace application is not configuring the bridge media block with
-> > > > > the right format, which results in a mismatch?
-> > > > > 
-> > > > > Some work was started to achieve automatic format propagation, perhaps it
-> > > > > would be enough to solve your issue.
-> > > > > 
-> > > > > Cheers,
-> > > > > 
-> > > > > Paul
-> > > > > 
-> > > > > > #regzbot introduced: 0d2b746b1bef73de62d2d311e594a7ffed4ca43
+That still does *not* mean "Humans have four legs".
 
--- 
-Regards,
+And yet hat is *literally* the kind of nonsense you are spouting.
 
-Laurent Pinchart
+I very much say that "some devices will not have UUID's".
+
+That's a *FACT*.
+
+You then say "Some devices have UUID's, so all devices must have UUIDs".
+
+That's *STUPID*.
+
+Can you really not tell the difference?
+
+           Linus
