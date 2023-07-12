@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CA1433F9
-	for <regressions@lists.linux.dev>; Wed, 12 Jul 2023 09:59:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D287441F;
+	Wed, 12 Jul 2023 10:34:57 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qJWd4-0002Ed-4Y; Wed, 12 Jul 2023 11:59:26 +0200
-Message-ID: <c71e376e-4e44-a1b3-6feb-2ed1ba7d325b@leemhuis.info>
-Date: Wed, 12 Jul 2023 11:59:25 +0200
+	id 1qJXBM-0007gb-IQ; Wed, 12 Jul 2023 12:34:52 +0200
+Message-ID: <55bffc21-5f19-765f-9dbc-1b565c880426@leemhuis.info>
+Date: Wed, 12 Jul 2023 12:34:51 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,54 +16,61 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.12.0
-Subject: Re: [regression] iwlwifi driver broken on Intel 3165 network card
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Re: [PATCH v3] KVM: arm64: Use BTI for nvhe
 Content-Language: en-US, de-DE
-To: Johannes Berg <johannes@sipsolutions.net>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- Aloka Dixit <quic_alokad@quicinc.com>, John Crispin <john@phrozen.org>
-Cc: Aditya Kumar Singh <quic_adisi@quicinc.com>,
- linux-wireless@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-References: <6f8715af-95c2-8333-2b32-206a143ebb52@leemhuis.info>
- <047c7bdc8057175f2bb78981a5f1a1aa6b493153.camel@sipsolutions.net>
+To: Sudeep Holla <sudeep.holla@arm.com>, Mostafa Saleh <smostafa@google.com>
+Cc: maz@kernel.org, oliver.upton@linux.dev,
+ linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+ linux-kernel@vger.kernel.org, tabba@google.com, qperret@google.com,
+ will@kernel.org, catalin.marinas@arm.com, yuzenghui@huawei.com,
+ suzuki.poulose@arm.com, james.morse@arm.com, bgardon@google.com,
+ gshan@redhat.com, Linux kernel regressions list <regressions@lists.linux.dev>
+References: <20230530150845.2856828-1-smostafa@google.com>
+ <20230704134136.a5znw4jupt5yp5kg@bogus>
 From: "Linux regression tracking (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <047c7bdc8057175f2bb78981a5f1a1aa6b493153.camel@sipsolutions.net>
+In-Reply-To: <20230704134136.a5znw4jupt5yp5kg@bogus>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1689155969;35066a2d;
-X-HE-SMSGID: 1qJWd4-0002Ed-4Y
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1689158097;0ab62b7e;
+X-HE-SMSGID: 1qJXBM-0007gb-IQ
 
-On 10.07.23 17:02, Johannes Berg wrote:
-> On Mon, 2023-07-10 at 10:32 +0200, Linux regression tracking (Thorsten
-> Leemhuis) wrote:
->> Hi, Thorsten here, the Linux kernel's regression tracker.
->>
->> I noticed a regression report in bugzilla.kernel.org. As many (most?)
->> kernel developers don't keep an eye on it, I decided to forward it by mail.
->>
->> Aloka Dixit, apparently it's cause by a change of yours: bd54f3c2907
->> ("wifi: mac80211: generate EMA beacons in AP mode") [v6.4-rc1]
->>
+[CCing the regression list, as it should be in the loop for regressions:
+https://docs.kernel.org/admin-guide/reporting-regressions.html]
+
+[TLDR: I'm adding this report to the list of tracked Linux kernel
+regressions; the text you find below is based on a few templates
+paragraphs you might have encountered already in similar form.
+See link in footer if these mails annoy you.]
+
+On 04.07.23 15:41, Sudeep Holla wrote:
+> On Tue, May 30, 2023 at 03:08:45PM +0000, Mostafa Saleh wrote:
+>> CONFIG_ARM64_BTI_KERNEL compiles the kernel to support ARMv8.5-BTI.
+>> However, the nvhe code doesn't make use of it as it doesn't map any
+>> pages with Guarded Page(GP) bit.
+> [...]
+> I was chasing a bug in linux-next yesterday with protected nVHE(pKVM) and
+> cpuidle enabled. The system fails to boot. I just bisected the issue to this
+> patch and also saw this patch landed in the linus tree yesterday/today.
+> Not sure if this is something to do with the fact that pKVM skips to
+> __kvm_handle_stub_hvc in __host_hvc.
 > 
-> That bisect result seems unlikely to be correct. Those changes are in
-> "how to get beacons" (in AP mode) which isn't even used in client mode
-> here.
+> Let me know if you want be to try something.
 
-You where right, the second bisect resulted in a different outcome.
-Currently looks like 5fc3f6c90cc ("r8169: consolidate disabling ASPM
-before EPHY access") [v6.4-rc1] is the culprit; this is somewhat odd as
-well, but confirmed partially, as blacklisting r8169 apparently fixes
-the issue. I nevertheless asked the reporter to recheck by reverting
-that commit. Once that happened I'll notify the author of 5fc3f6c90cc.
+Thanks for the report. Seems the fix is slow to progress. Hence to be
+sure the issue doesn't fall through the cracks unnoticed, I'm adding it
+to regzbot, the Linux kernel regression tracking bot:
 
-Thx again and sorry for the noise.
-
-BTW, in case anyone wants details, see:
-https://bugzilla.kernel.org/show_bug.cgi?id=217635
+#regzbot ^introduced b53d4a272349
+#regzbot title KVM: arm64: boot failures due to missing bti instructions
+#regzbot monitor:
+https://lore.kernel.org/all/20230706152240.685684-1-smostafa@google.com/
+#regzbot fix: KVM: arm64: Add missing BTI instructions
+#regzbot ignore-activity
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
 Everything you wanna know about Linux kernel regression tracking:
 https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+That page also explains what to do if mails like this annoy you.
