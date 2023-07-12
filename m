@@ -1,33 +1,13 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDAA120F2
-	for <regressions@lists.linux.dev>; Wed, 12 Jul 2023 07:38:45 +0000 (UTC)
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3159adb7cb5so732896f8f.0
-        for <regressions@lists.linux.dev>; Wed, 12 Jul 2023 00:38:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689147524; x=1691739524;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=oChKme24SZPOA92hTi9VYNZ4RCh0CFOD0OdnxXjwR/I=;
-        b=gfcJM3i4u3M4bvJcPSdjubVQ1VOB7lsMlmIXvrQkMEZPzulQurUppbOp5mJz/Bj9C/
-         I/I5HFuWjwCnr8fYEdhgxOdY4r+YZ09EZi2wa2UFinh2WC+fD6BJQ9wsQwqaj1gcndmD
-         yeFeBREMlYCbHzCkPPBnKH/I3Oj++agSFaxhiz+N0PB0FAikSEdLZ0U8nr0Czs3iopfw
-         /C8SB8L5NBhAuwaaOSHEOdlNQ4vdYqeHDBZQJ+sqJT/+CR3dbTpoAy3CjDmAf4+IFV7D
-         gnKLtyMvF9EBfOUtEbzZAEu+vowjwVGGcvlda/Wr2D6NIRGr0PpyPBO6Uyqt/57AvfNf
-         Q9fg==
-X-Gm-Message-State: ABy/qLYiIx0vnXJ31l7oWY01Rh9wYpBe6JM8k0Vyxvq9KhfionnhMfnx
-	+tu8KnYkqXfmBkHrHEmzVuE=
-X-Google-Smtp-Source: APBJJlFGYYhdLQYp1qY5RENlDfGjtleaBJ34hizcHHIjbEHqYhTrPpcNzYFzCgPsLN4VJw3meqaKNA==
-X-Received: by 2002:a5d:4c85:0:b0:314:1d7f:9e9 with SMTP id z5-20020a5d4c85000000b003141d7f09e9mr17797032wrs.0.1689147523663;
-        Wed, 12 Jul 2023 00:38:43 -0700 (PDT)
-Received: from [192.168.64.192] (bzq-219-42-90.isdn.bezeqint.net. [62.219.42.90])
-        by smtp.gmail.com with ESMTPSA id f17-20020adffcd1000000b003140fff4f75sm4260000wrs.17.2023.07.12.00.38.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Jul 2023 00:38:43 -0700 (PDT)
-Message-ID: <f0e8de7b-655c-9932-16d4-105decff9a6c@grimberg.me>
-Date: Wed, 12 Jul 2023 10:38:40 +0300
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CA1433F9
+	for <regressions@lists.linux.dev>; Wed, 12 Jul 2023 09:59:28 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1qJWd4-0002Ed-4Y; Wed, 12 Jul 2023 11:59:26 +0200
+Message-ID: <c71e376e-4e44-a1b3-6feb-2ed1ba7d325b@leemhuis.info>
+Date: Wed, 12 Jul 2023 11:59:25 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -36,61 +16,54 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.12.0
-Subject: Re: Fwd: Need NVME QUIRK BOGUS for SAMSUNG MZ1WV480HCGL-000MV
- (Samsung SM-953 Datacenter SSD)
-Content-Language: en-US
-To: Keith Busch <kbusch@kernel.org>,
- Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Christoph Hellwig <hch@lst.de>,
+Subject: Re: [regression] iwlwifi driver broken on Intel 3165 network card
+Content-Language: en-US, de-DE
+To: Johannes Berg <johannes@sipsolutions.net>,
  Linux regressions mailing list <regressions@lists.linux.dev>,
- Pankaj Raghav <p.raghav@samsung.com>, Bagas Sanjaya <bagasdotme@gmail.com>,
- Jens Axboe <axboe@kernel.dk>, "Clemens S." <cspringsguth@gmail.com>,
- Martin Belanger <martin.belanger@dell.com>,
- Chaitanya Kulkarni <kch@nvidia.com>, John Meneghini <jmeneghi@redhat.com>,
- Hannes Reinecke <hare@suse.de>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux NVMe <linux-nvme@lists.infradead.org>,
- Kanchan Joshi <joshi.k@samsung.com>,
- Javier Gonzalez <javier.gonz@samsung.com>, =?UTF-8?B?67CV7KeE7ZmY?=
- <jh.i.park@samsung.com>
-References: <d18d2a08-9d24-0209-c2cf-baf60bbf5048@gmail.com>
- <ZJsKBkPqoWzYyngS@kbusch-mbp.dhcp.thefacebook.com>
- <6f333133-2cc4-406a-d6c2-642ac6ccabca@leemhuis.info>
- <CGME20230710155902eucas1p2b464a29adc35e983c73b00d18ab5344c@eucas1p2.samsung.com>
- <ZKwqvTMPVmhnkZjS@kbusch-mbp.dhcp.thefacebook.com>
- <f0fdf86e-4293-8e07-835d-b5a866252068@samsung.com>
- <462e0e1e-98ea-0f3c-4aaa-8d44f0a8e664@leemhuis.info>
- <20230711120609.GB27050@lst.de>
- <CAHk-=whXh9sgLo24RO02JjfD0m3HE5NADRPWoEd+dW6bruFhVA@mail.gmail.com>
- <ZK2PgNizcMLW+S/V@kbusch-mbp.dhcp.thefacebook.com>
-From: Sagi Grimberg <sagi@grimberg.me>
-In-Reply-To: <ZK2PgNizcMLW+S/V@kbusch-mbp.dhcp.thefacebook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+ Aloka Dixit <quic_alokad@quicinc.com>, John Crispin <john@phrozen.org>
+Cc: Aditya Kumar Singh <quic_adisi@quicinc.com>,
+ linux-wireless@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+References: <6f8715af-95c2-8333-2b32-206a143ebb52@leemhuis.info>
+ <047c7bdc8057175f2bb78981a5f1a1aa6b493153.camel@sipsolutions.net>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <047c7bdc8057175f2bb78981a5f1a1aa6b493153.camel@sipsolutions.net>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1689155969;35066a2d;
+X-HE-SMSGID: 1qJWd4-0002Ed-4Y
 
-
->> For example, we have this completely unacceptable garbage:
+On 10.07.23 17:02, Johannes Berg wrote:
+> On Mon, 2023-07-10 at 10:32 +0200, Linux regression tracking (Thorsten
+> Leemhuis) wrote:
+>> Hi, Thorsten here, the Linux kernel's regression tracker.
 >>
->>          ret = nvme_global_check_duplicate_ids(ctrl->subsys, &info->ids);
->>          if (ret) {
->>                  dev_err(ctrl->device,
->>                          "globally duplicate IDs for nsid %d\n", info->nsid);
->>                  nvme_print_device_info(ctrl);
->>                  return ret;
->>          }
+>> I noticed a regression report in bugzilla.kernel.org. As many (most?)
+>> kernel developers don't keep an eye on it, I decided to forward it by mail.
 >>
->> iow, the code even checks for and *notices* that there are duplicate
->> IDs, and what does it do? It then errors out.
+>> Aloka Dixit, apparently it's cause by a change of yours: bd54f3c2907
+>> ("wifi: mac80211: generate EMA beacons in AP mode") [v6.4-rc1]
+>>
 > 
-> This check came from a recent half-baked spec feature called "Dispersed
-> Namespaces" that caused breakage and data corruption when used in Linux.
-> Rather than attempt to support that mostly vendor specific feature, the
-> driver attempted to fence that off as unmaintainable. This check wasn't
-> aimed at enforcing "correctness", but it certainly found a lot of that
-> as collatoral damage. Let's see if we can find a better way to detect
-> the difference with a sane fallback as you suggest.
+> That bisect result seems unlikely to be correct. Those changes are in
+> "how to get beacons" (in AP mode) which isn't even used in client mode
+> here.
 
-Perhaps we could fallback to what we do in wwid_show()?
+You where right, the second bisect resulted in a different outcome.
+Currently looks like 5fc3f6c90cc ("r8169: consolidate disabling ASPM
+before EPHY access") [v6.4-rc1] is the culprit; this is somewhat odd as
+well, but confirmed partially, as blacklisting r8169 apparently fixes
+the issue. I nevertheless asked the reporter to recheck by reverting
+that commit. Once that happened I'll notify the author of 5fc3f6c90cc.
 
-"nvme.%04x-%*phN-%*phN-%08x\n", subsys->vendor_id, serial_len,
-subsys->serial, model_len, subsys->model, head->ns_id)
+Thx again and sorry for the noise.
+
+BTW, in case anyone wants details, see:
+https://bugzilla.kernel.org/show_bug.cgi?id=217635
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
