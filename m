@@ -1,105 +1,90 @@
-Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx.mylinuxtime.de (mx.mylinuxtime.de [195.201.174.144])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A356C644
-	for <regressions@lists.linux.dev>; Wed, 12 Jul 2023 04:57:48 +0000 (UTC)
-Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-635e107642fso1502766d6.1
-        for <regressions@lists.linux.dev>; Tue, 11 Jul 2023 21:57:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1689137867; x=1691729867;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3/72ZD6lhNsHXkYgqxH4KbAvAYqyJgWt7UVI6+Yu3os=;
-        b=SQv+ATSncXbdJ6CvQSuGkwVtXrkdkvN0VsEkwN0f2meVzjcZVDVHotkWnUdRi1+JJ8
-         152n9o/c6wKcedfIOWNhscb9a+NIhJJpjGH28gY1CMfMwCBajew9Ou3XGIwTmJVXO+oU
-         1d8rLzj6cok8WjK5gE3Z7Ob2u/5A/Oiqm0ChvZYbS9BbNZ6rMJCxqKaHSOQQ3JTNMYqX
-         iy3e4ExpJhPEoTW7pKsKCA4zgz7UdaHCKC4ymnJ3mk8l2y3O0B0vazDOCjWVX4GtNDiB
-         62Ucoslh+dMNa7rPfdqhLW4dvXqw0YBCfeLdl0Kbe4bh48EFkt4fmOcLMaAiZkg9r//N
-         twCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689137867; x=1691729867;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3/72ZD6lhNsHXkYgqxH4KbAvAYqyJgWt7UVI6+Yu3os=;
-        b=jilv776M9daQ58z2tfKCUaPhnr9XZyXqf+6l3fFxf29d0y8g4qGRLztlVIaLAcM206
-         KUr54jFhptsBorI1Qciprq+iOQWRjMrWQkDpDw/2PTOE0FnMK8p3VC3NZoTrahua2tjV
-         bljFabC3fdBxvDbDNhXWp9vYlofCUH2JmG7mOOlSo36vBJjrgzvUXx+clED/IorlD1J4
-         T2qo9J+yV7/n1fEQ7r6FIr8CuDIsrRKbEo4HlhmUWghPbAH02mruI4quGocts5w8216p
-         /HGP6aPP8kjhYOSSHpfW+b4/NPgvby7CWKL/0bhUZDEdcNCaxHgaHSUBJytEMMXzeN/r
-         lJJA==
-X-Gm-Message-State: ABy/qLYqafimfpEeCL8p3S9RCrSEIIUhxP3uRKYMKO8P71nl06Ifyco6
-	sPe8Bi9hE9m9Ieuql19jlks+K/RQD0IykZbHkwOY9A==
-X-Google-Smtp-Source: APBJJlH5QzNFAkMi3vMlbJrWM0d6J/fLTqgYF+JAXqPrfBkfUF3EumCUn0rNxoOz7ZOPCK+yLnf1MHjzwmvzO+WlP0A=
-X-Received: by 2002:a05:6214:ca2:b0:637:9da3:9193 with SMTP id
- s2-20020a0562140ca200b006379da39193mr1219123qvs.4.1689137867393; Tue, 11 Jul
- 2023 21:57:47 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD63B635
+	for <regressions@lists.linux.dev>; Wed, 12 Jul 2023 06:49:02 +0000 (UTC)
+Received: from leda.eworm.net (unknown [194.36.25.21])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx.mylinuxtime.de (Postfix) with ESMTPSA id BF48E23D399;
+	Wed, 12 Jul 2023 08:48:54 +0200 (CEST)
+Date: Wed, 12 Jul 2023 08:48:50 +0200
+From: Christian Hesse <list@eworm.de>
+To: Jarkko Sakkinen <jarkko@kernel.org>
+Cc: linux-integrity@vger.kernel.org, Thorsten Leemhuis
+ <regressions@leemhuis.info>, Lino Sanfilippo <l.sanfilippo@kunbus.com>,
+ Linux kernel regressions list <regressions@lists.linux.dev>, Peter Huewe
+ <peterhuewe@gmx.de>, Christian Hesse <mail@eworm.de>,
+ stable@vger.kernel.org, roubro1991@gmail.com, Linus Torvalds
+ <torvalds@linux-foundation.org>
+Subject: Re: [PATCH v2 1/2] tpm/tpm_tis: Disable interrupts for Framework
+ Laptop Intel 12th gen
+Message-ID: <20230712084850.1e12ca3f@leda.eworm.net>
+In-Reply-To: <31d20085105784a02b60f11d46f2c7fec4d3aa0a.camel@kernel.org>
+References: <20230710133836.4367-1-mail@eworm.de>
+	<20230710142916.18162-1-mail@eworm.de>
+	<20230710231315.4ef54679@leda.eworm.net>
+	<bd0587e16d55ef38277ab1f6169909ae7cde3542.camel@kernel.org>
+	<31d20085105784a02b60f11d46f2c7fec4d3aa0a.camel@kernel.org>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
+X-Face: %O:rCSk<c"<MpJ:yn<>HSKf7^4uF|FD$9$I0}g$nbnS1{DYPvs#:,~e`).mzj\$P9]V!WCveE/XdbL,L!{)6v%x4<jA|JaB-SKm74~Wa1m;|\QFlOg>\Bt!b#{;dS&h"7l=ow'^({02!2%XOugod|u*mYBVm-OS:VpZ"ZrRA4[Q&zye,^j;ftj!Hxx\1@;LM)Pz)|B%1#sfF;s;,N?*K*^)
+Face: iVBORw0KGgoAAAANSUhEUgAAADAAAAAwBAMAAAClLOS0AAAAGFBMVEUZFRFENy6KVTKEd23CiGHeqofJvrX4+vdHgItOAAAACXBIWXMAAA3XAAAN1wFCKJt4AAACUklEQVQ4y2VUTZeqMAxNxXG2Io5uGd64L35unbF9ax0b3OLxgFs4PcLff0lBHeb1QIq5uelNCEJNq/TIFGyeC+iugH0WJr+B1MvzWASpuP4CYHOB0VfoDdddwA7OIFQIEHjXDiCtV5e9QX0WMu8AG0mB7g7WP4GqeqVdsi4vv/5kFBvaF/zD7zDquL4DxbrDGDyAsgNYOsJOYzth4Q9ZF6iLV+6TLAT1pi2kuvgAtZxSjoG8cL+8vIn251uoe1OOEWwbIPU04gHsmMsoxyyhYsD2FdIigF1yxaVbBuSOCAlCoX324I7wNMhrO1bhOLsRoA6DC6wQ5eQiSG5BiWQfM4gN+uItQTRDMaJUhVbGyKWCuaaUGSVFVKpl4PdoDn3yY8J+YxQxyhlHfoYOyPgyDcO+cSQK6Bvabjcy2nwRo3pxgA8jslnCuYw23ESOzHAPYwo4ITNQMaOO+RGPEGhSlPEZBh2jmBEjQ5cKbxmr0ruAe/WCriUxW76I8T3h7vqY5VR5wXLdERodg2rHEzdxxk5KpXTL4FwnarvndKM5/MWDY5CuBBdQ+3/0ivsUJHicuHd+Xh3jOdBL+FjSGq4SPCwco+orpWlERRTNo7BHCvbNXFVSIQMp+P5QsIL9upmr8kMTUOfxEHoanwzKRcNAe76WbjBwex/RkdHu48xT5YqP70DaMOhBcTHmAVDxLaBdle93oJy1QKFUh2GXT4am+YH/GGel1CeI98GdMXsytjCKIq/9cMrlgxFCROv+3/BU1fijNpcVD6DxE8VfLBaxUGr1D5usgDYdjwiPAAAAAElFTkSuQmCC
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230612153201.554742-1-catalin.marinas@arm.com>
- <CAMi1Hd04mu6JojT3y6wyN2YeVkPR5R3qnkKJ8iR8if_YByCn4w@mail.gmail.com>
- <ZKdfVSzbgOonR17A@google.com> <CAMi1Hd2f5GUnu_JGot=CqA9Vy4OD_V7FWYLOhNbJL1Pyd_EGMA@mail.gmail.com>
- <CABfwK138ZbE5=J66esO-VG64tO+e9n1cRRBAE3wOKygJxd_xbw@mail.gmail.com>
-In-Reply-To: <CABfwK138ZbE5=J66esO-VG64tO+e9n1cRRBAE3wOKygJxd_xbw@mail.gmail.com>
-From: Amit Pundir <amit.pundir@linaro.org>
-Date: Wed, 12 Jul 2023 10:27:11 +0530
-Message-ID: <CAMi1Hd3KgZGJTae=fyq4HD3FTuNxNJAnmfyds12JFXenxUtXrw@mail.gmail.com>
-Subject: Re: [PATCH v7 00/17] mm, dma, arm64: Reduce ARCH_KMALLOC_MINALIGN to 8
-To: Isaac Manjarres <isaacmanjarres@google.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, Christoph Hellwig <hch@lst.de>, 
-	Robin Murphy <robin.murphy@arm.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Will Deacon <will@kernel.org>, 
-	Marc Zyngier <maz@kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>, 
-	Ard Biesheuvel <ardb@kernel.org>, Saravana Kannan <saravanak@google.com>, Alasdair Kergon <agk@redhat.com>, 
-	Daniel Vetter <daniel@ffwll.ch>, Joerg Roedel <joro@8bytes.org>, Mark Brown <broonie@kernel.org>, 
-	Mike Snitzer <snitzer@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Jonathan Cameron <jic23@kernel.org>, Vlastimil Babka <vbabka@suse.cz>, linux-mm@kvack.org, 
-	iommu@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	Linux regressions mailing list <regressions@lists.linux.dev>, John Stultz <jstultz@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/yQI_sn/JO1S3ejmlYu+D=W5";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
+
+--Sig_/yQI_sn/JO1S3ejmlYu+D=W5
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 12 Jul 2023 at 01:14, Isaac Manjarres <isaacmanjarres@google.com> w=
-rote:
->
-> On Sat, Jul 8, 2023 at 6:03=E2=80=AFAM Amit Pundir <amit.pundir@linaro.or=
-g> wrote:
-> > Hi Issac, I can't reproduce this crash if I have slub_debug enabled
-> > https://bugs.linaro.org/attachment.cgi?id=3D1149.
-> >
-> > But I can still reproduce the crash, with the same build, if I just
-> > remove the slub_debug bootarg
-> > https://bugs.linaro.org/attachment.cgi?id=3D1150
-> >
->
-> Hey Amit,
->
-> Thanks for trying this out. John Stultz and I tried this out as well, and=
- we
-> couldn't reproduce the issue with slub_debug enabled either.
->
-> However, we were able to reproduce the issue you reported along with
-> KASAN enabled, which also helped us catch an out-of-bounds access
-> in the regmap-irq code. Once we fixed it, the memory corruption you
-> reported was also fixed. I've sent the patch [1] for review. Can you plea=
-se
-> test it out and see if it works for you too?
+Jarkko Sakkinen <jarkko@kernel.org> on Tue, 2023/07/11 00:51:
+> On Tue, 2023-07-11 at 00:29 +0300, Jarkko Sakkinen wrote:
+> > OK, this good to hear! I've been late with my pull request (past rc1)
+> > because of kind of conflicting timing with Finnish holiday season and
+> > relocating my home office.
+> >=20
+> > I'll replace v2 patches with v3 and send the PR for rc2 after that.
+> > So unluck turned into luck this time :-)
+> >=20
+> > Thank you for spotting this! =20
+>=20
+> Please, sanity check before I send the PR for rc2:
+>=20
+> https://git.kernel.org/pub/scm/linux/kernel/git/jarkko/linux-tpmdd.git/
 
-It does fix the v6.5-rc1 boot regression I reported above on
-Dragonboard 845c running AOSP. Thank you.
+Looks good and works as expected on Framework Laptop 12th Gen, verified by =
+me
+and someone in the linked bugzilla ticket. I do not have Framework Laptop
+13th Gen available for testing.
 
-Regards,
-Amit Pundir
+Looks like there are general workarounds by disabling interrupts after a
+number of unhandled IRQs. Will this still go in?
+--=20
+main(a){char*c=3D/*    Schoene Gruesse                         */"B?IJj;MEH"
+"CX:;",b;for(a/*    Best regards             my address:    */=3D0;b=3Dc[a+=
++];)
+putchar(b-1/(/*    Chris            cc -ox -xc - && ./x    */b/42*2-3)*42);}
 
->
-> [1]: https://lore.kernel.org/all/20230711193059.2480971-1-isaacmanjarres@=
-google.com/
->
-> Thanks,
-> Isaac
+--Sig_/yQI_sn/JO1S3ejmlYu+D=W5
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEXHmveYAHrRp+prOviUUh18yA9HYFAmSuTNIACgkQiUUh18yA
+9HYg+QgAwzieNysWbqPhs/vDDbC2UQSFn9f7GXd/kHbjTSNbH3RMsJCwzB1W9kIl
+cjxizF1ljdu1YUfq/GgLn1GpOhqCOPbYDSmnCiPHI25I4h25djJwBxTHOwjYmYdR
+JvnSC8h3VczNcJLjswKX2lzl+nkNGclkszYF/RaTwX+Rj4sTRx56XbXsAxGYgQPN
+HMabdUlm34Tb9uOXETAl4k1nE1sS/iQDpgLnES9HOZPSvusjZ5oiKiwGypT/FFxe
+//Zu3u0fCFevFFHokDswB4keGaAh/skbZkpJhmGPMo80Pq8rayO5A7wou9yVLhO6
+KmVSNyN/dJiRaa0JxdnUxQI0Xq576w==
+=tP9E
+-----END PGP SIGNATURE-----
+
+--Sig_/yQI_sn/JO1S3ejmlYu+D=W5--
