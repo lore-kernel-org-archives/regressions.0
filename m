@@ -1,101 +1,206 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF61220F95
-	for <regressions@lists.linux.dev>; Wed, 12 Jul 2023 17:34:25 +0000 (UTC)
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-991fe70f21bso903571366b.3
-        for <regressions@lists.linux.dev>; Wed, 12 Jul 2023 10:34:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1689183263; x=1691775263;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=KC5NZX32e9wpP9t7OccUoxNgiPdVaAw53ZnY1DABzIo=;
-        b=KJxUhEXVmviSKcdeI5emPEDV2aIFoyXu8hY8jI90gY5yOOStavHHjnYtw6jWoHU42G
-         6EWqaao1s8cjDP6S1CH7SxiJrVwq/Fs5bcpIf6STIQ2ryh0cJe+YLoaPl9N/HxGYK+dI
-         t8FqCE98pVD3tI1z6oE73yKjswRO6fgcHGaaI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689183263; x=1691775263;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=KC5NZX32e9wpP9t7OccUoxNgiPdVaAw53ZnY1DABzIo=;
-        b=kgUO5gBcPKiTyiTLBp3qACeQt6xesKzZsM19V2+2qM/tzoCxC+pRW36EvRHi2C/7xK
-         r5/p9jPK4viCxwvVp1B0NuUq8ZrN3A1tDIpJJXT2kz10JJ1VehciH32KBOOLg/FBPJNM
-         +AxnGU99wx1QfLGQvSCR4TLrlsy4bIuEXHW3vuiJkVm1jpxLoydkmHR94rLuhUKcMRiQ
-         35Zj95GH4FnZS2CfJY/UgihinwEwibcnVkJzP+w2QnAyYEmb2p16DXC7FTrhl3yldBxO
-         8WDxh6cCvaQbbjQ8ThGUP+I0OT48tlDQAP4OUXMdqnhpLfsAu2Awcxd+bd0u46brmObG
-         WNgA==
-X-Gm-Message-State: ABy/qLavLgDA91xACzqsS+qtftVY5r2JWZLIB3ONxZbHMJYWIWS5SFPn
-	BwQuwBEqrVHxXFSH7/H182818aPk2B6Sz2towCuTSyxM
-X-Google-Smtp-Source: APBJJlGzlvcThd59DMQfKnSTEtKDnNHemrgqZvOjAFKpxQ+GbWcyKVKX4Hmsud9vN/hbUqKM/ZPINA==
-X-Received: by 2002:a17:906:7785:b0:991:b2a2:e424 with SMTP id s5-20020a170906778500b00991b2a2e424mr23075296ejm.76.1689183263668;
-        Wed, 12 Jul 2023 10:34:23 -0700 (PDT)
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com. [209.85.208.44])
-        by smtp.gmail.com with ESMTPSA id d8-20020a170906370800b009929ab17be0sm2775443ejc.162.2023.07.12.10.34.23
-        for <regressions@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Jul 2023 10:34:23 -0700 (PDT)
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-51dec0b6fecso9196924a12.1
-        for <regressions@lists.linux.dev>; Wed, 12 Jul 2023 10:34:23 -0700 (PDT)
-X-Received: by 2002:aa7:dc0d:0:b0:50b:c693:70af with SMTP id
- b13-20020aa7dc0d000000b0050bc69370afmr19367439edu.2.1689183262818; Wed, 12
- Jul 2023 10:34:22 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2CD020F94
+	for <regressions@lists.linux.dev>; Wed, 12 Jul 2023 17:41:17 +0000 (UTC)
+Received: from [127.0.0.1] (p578adb1c.dip0.t-ipconnect.de [87.138.219.28])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
+	(No client certificate requested)
+	(Authenticated sender: marex@denx.de)
+	by phobos.denx.de (Postfix) with ESMTPSA id DDAFC86B58;
+	Wed, 12 Jul 2023 19:41:08 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
+	s=phobos-20191101; t=1689183670;
+	bh=Fp7N3sRZ5ZZmDH2BLoJqfemPcNUZIJugo+MlROK92bI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Uq18a/yFaOczmeV5zZFlgJ4fjjkfIRbjlf8KFSi+JpLdC1nq7jPr9602ABRQaddvI
+	 uk/0NkNrfR7uOWANzEihuYFfaQW7lTrodu4AUhIWktGeUN8yOf07X3B24bVcIPBx3H
+	 PwUUKDnZtutxe+GXLQjqrGnku+6dUIpFSD/zryAnemXh4IGOh5rJoOm/ch/HuLB4+T
+	 /yVsdFaMIiMCeOa8QcUESB1Jz0uSv165L8Xfwv2Yy+f0dYxSssCuwXPRuc6BNpw11v
+	 /b47GGRbLqHJ0AVtkt7I3YZZcw5xuWsQrk0EU9ix+OrEfkKjqbyK7JQAqjojUGTlfy
+	 XEckFi/345/mw==
+Message-ID: <961b4747-c9f1-a31c-c33c-475b4803f832@denx.de>
+Date: Wed, 12 Jul 2023 19:41:08 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <ZJsKBkPqoWzYyngS@kbusch-mbp.dhcp.thefacebook.com>
- <6f333133-2cc4-406a-d6c2-642ac6ccabca@leemhuis.info> <CGME20230710155902eucas1p2b464a29adc35e983c73b00d18ab5344c@eucas1p2.samsung.com>
- <ZKwqvTMPVmhnkZjS@kbusch-mbp.dhcp.thefacebook.com> <f0fdf86e-4293-8e07-835d-b5a866252068@samsung.com>
- <462e0e1e-98ea-0f3c-4aaa-8d44f0a8e664@leemhuis.info> <20230711120609.GB27050@lst.de>
- <CAHk-=whXh9sgLo24RO02JjfD0m3HE5NADRPWoEd+dW6bruFhVA@mail.gmail.com>
- <20230712164546.GA31434@lst.de> <CAHk-=whA9rmvNfo=8iKmtimayiA2Aus4XvPwcDrA53G2rfGP0w@mail.gmail.com>
- <20230712165721.GA31965@lst.de>
-In-Reply-To: <20230712165721.GA31965@lst.de>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Wed, 12 Jul 2023 10:34:05 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgzetYEqj7phbJBE_ZshFq0=k3zWouJ8XyFyERgDX5sZg@mail.gmail.com>
-Message-ID: <CAHk-=wgzetYEqj7phbJBE_ZshFq0=k3zWouJ8XyFyERgDX5sZg@mail.gmail.com>
-Subject: Re: Fwd: Need NVME QUIRK BOGUS for SAMSUNG MZ1WV480HCGL-000MV
- (Samsung SM-953 Datacenter SSD)
-To: Christoph Hellwig <hch@lst.de>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>, Pankaj Raghav <p.raghav@samsung.com>, 
-	Keith Busch <kbusch@kernel.org>, Bagas Sanjaya <bagasdotme@gmail.com>, Jens Axboe <axboe@kernel.dk>, 
-	Sagi Grimberg <sagi@grimberg.me>, "Clemens S." <cspringsguth@gmail.com>, 
-	Martin Belanger <martin.belanger@dell.com>, Chaitanya Kulkarni <kch@nvidia.com>, 
-	John Meneghini <jmeneghi@redhat.com>, Hannes Reinecke <hare@suse.de>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux NVMe <linux-nvme@lists.infradead.org>, 
-	Kanchan Joshi <joshi.k@samsung.com>, Javier Gonzalez <javier.gonz@samsung.com>, 
-	=?UTF-8?B?67CV7KeE7ZmY?= <jh.i.park@samsung.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH 2/2] drm/bridge: lt9611: Do not generate HFP/HBP/HSA and
+ EOT packet
+Content-Language: en-US
+To: Abhinav Kumar <quic_abhinavk@quicinc.com>, neil.armstrong@linaro.org,
+ Amit Pundir <amit.pundir@linaro.org>,
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Jagan Teki <jagan@amarulasolutions.com>, dri-devel@lists.freedesktop.org,
+ Robert Foss <rfoss@kernel.org>, Andrzej Hajda <andrzej.hajda@intel.com>,
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Michael Walle <michael@walle.cc>,
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+ linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ freedreno <freedreno@lists.freedesktop.org>
+References: <20230403221233.500485-1-marex@denx.de>
+ <20230403221233.500485-2-marex@denx.de>
+ <CAMi1Hd0TD=2z_=bcDrht3H_wiLvAFcv8Z-U_r_KUOoeMc6UMjw@mail.gmail.com>
+ <CAMty3ZBNFu=f-FS4YFN4wfmiTuk=48nna-vub1eMYwidDt+msg@mail.gmail.com>
+ <CAA8EJppbdiUz5m+9EAPnFb916DaS_VKWd30c7_EPWjuid8rtqQ@mail.gmail.com>
+ <CAMi1Hd2G5PJmz4wpO1wbdqKd0FA8LBgvRDv2u5ZYAMb5s6Kt0A@mail.gmail.com>
+ <d5fb8106-b8f3-0acf-1267-d4d6d0860e25@linaro.org>
+ <d28b0090-bd1e-6737-d92b-348dc6c30750@linaro.org>
+ <4396d197-f16f-92bd-727c-eb8c78016198@quicinc.com>
+From: Marek Vasut <marex@denx.de>
+In-Reply-To: <4396d197-f16f-92bd-727c-eb8c78016198@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
+X-Virus-Status: Clean
 
-On Wed, 12 Jul 2023 at 09:57, Christoph Hellwig <hch@lst.de> wrote:
->
-> On Wed, Jul 12, 2023 at 09:51:52AM -0700, Linus Torvalds wrote:
-> > Christoph, you are *literally* involved in a discussion where this is the case.
->
-> Yes.  But that's not never ever.  Enterprise storage devices have been
-> pretty very good at it, because it is part of the purchase specs.
+On 7/9/23 03:03, Abhinav Kumar wrote:
+> 
+> 
+> On 7/7/2023 1:47 AM, Neil Armstrong wrote:
+>> On 07/07/2023 09:18, Neil Armstrong wrote:
+>>> Hi,
+>>>
+>>> On 06/07/2023 11:20, Amit Pundir wrote:
+>>>> On Wed, 5 Jul 2023 at 11:09, Dmitry Baryshkov
+>>>> <dmitry.baryshkov@linaro.org> wrote:
+>>>>>
+>>>>> [Adding freedreno@ to cc list]
+>>>>>
+>>>>> On Wed, 5 Jul 2023 at 08:31, Jagan Teki 
+>>>>> <jagan@amarulasolutions.com> wrote:
+>>>>>>
+>>>>>> Hi Amit,
+>>>>>>
+>>>>>> On Wed, Jul 5, 2023 at 10:15 AM Amit Pundir 
+>>>>>> <amit.pundir@linaro.org> wrote:
+>>>>>>>
+>>>>>>> Hi Marek,
+>>>>>>>
+>>>>>>> On Wed, 5 Jul 2023 at 01:48, Marek Vasut <marex@denx.de> wrote:
+>>>>>>>>
+>>>>>>>> Do not generate the HS front and back porch gaps, the HSA gap and
+>>>>>>>> EOT packet, as these packets are not required. This makes the 
+>>>>>>>> bridge
+>>>>>>>> work with Samsung DSIM on i.MX8MM and i.MX8MP.
+>>>>>>>
+>>>>>>> This patch broke display on Dragonboard 845c (SDM845) devboard 
+>>>>>>> running
+>>>>>>> AOSP. This is what I see
+>>>>>>> https://people.linaro.org/~amit.pundir/db845c-userdebug/v6.5-broken-display/PXL_20230704_150156326.jpg.
+>>>>>>> Reverting this patch fixes this regression for me.
+>>>>>>
+>>>>>> Might be msm dsi host require proper handling on these updated
+>>>>>> mode_flags? did they?
+>>>>>
+>>>>> The msm DSI host supports those flags. Also, I'd like to point out
+>>>>> that the patch didn't change the rest of the driver code. So even if
+>>>>> drm/msm ignored some of the flags, it should not have caused the
+>>>>> issue. Most likely the issue is on the lt9611 side. I's suspect that
+>>>>> additional programming is required to make it work with these flags.
+>>>>
+>>>> I spent some time today on smoke testing these flags (individually and
+>>>> in limited combination) on DB845c, to narrow down this breakage to one
+>>>> or more flag(s) triggering it. Here are my observations in limited
+>>>> testing done so far.
+>>>>
+>>>> There is no regression with MIPI_DSI_MODE_NO_EOT_PACKET when enabled
+>>>> alone and system boots to UI as usual.
+>>>>
+>>>> MIPI_DSI_MODE_VIDEO_NO_HFP always trigger the broken display as in the
+>>>> screenshot[1] shared earlier as well.
+>>>>
+>>>> Adding either of MIPI_DSI_MODE_VIDEO_NO_HSA and
+>>>> MIPI_DSI_MODE_VIDEO_NO_HBP always result in no display, unless paired
+>>>> with MIPI_DSI_MODE_VIDEO_NO_HFP and in that case we get the broken
+>>>> display as reported.
+>>>>
+>>>> In short other than MIPI_DSI_MODE_NO_EOT_PACKET flag, all other flags
+>>>> added in this commit break the display on DB845c one way or another.
+>>>
+>>> I think the investigation would be to understand why samsung-dsim 
+>>> requires
+>>> such flags and/or what are the difference in behavior between MSM DSI 
+>>> and samsung DSIM
+>>> for those flags ?
+>>>
+>>> If someone has access to the lt9611 datasheet, so it requires 
+>>> HSA/HFP/HBP to be
+>>> skipped ? and does MSM DSI and samsung DSIM skip them in the same way ?
+>>
+>> I think there's a mismatch, where on one side this flags sets the link 
+>> in LP-11 while
+>> in HSA/HFP/HPB while on the other it completely removes those blanking 
+>> packets.
+>>
+>> The name MIPI_DSI_MODE_VIDEO_NO_HBP suggests removal of HPB, not LP-11 
+>> while HPB.
+>> the registers used in both controllers are different:
+>> - samsung-dsim: DSIM_HBP_DISABLE_MODE
+>> - msm dsi: DSI_VID_CFG0_HBP_POWER_STOP
+>>
+>> The first one suggest removing the packet, while the second one 
+>> suggests powering
+>> off the line while in the blanking packet period.
+>>
+>> @Abhinav, can you comment on that ?
+>>
+> 
+> I dont get what it means by completely removes blanking packets in DSIM.
 
-Your basic logic is lacking.
+MIPI_DSI_MODE_VIDEO_NO_HFP means the HBP period is just skipped by DSIM.
 
-"Humans are animals" and "Some animals have four legs" are both
-undeniabvly true.
+Maybe there is a need for new set of flags which differentiate between 
+HBP skipped (i.e. NO HBP) and HBP LP11 ?
 
-That still does *not* mean "Humans have four legs".
+> It should be replacing those periods with LP11 too.
+> 
+> The traffic mode being used on this bridge is 
+> MIPI_DSI_MODE_VIDEO_SYNC_PULSE which is "Non-Burst Mode with Sync Pulses".
+> 
+> As per this traffic mode in the DSI spec,
+> 
+> "Normally, periods shown as HSA (Horizontal Sync Active), HBP 
+> (Horizontal Back Porch) and HFP (Horizontal Front Porch) are filled by 
+> Blanking Packets, with lengths (including packet overhead)  calculated 
+> to match the period specified by the peripheral’s data sheet. 
+> Alternatively, if there is sufficient time to transition from HS to LP 
+> mode and back again, a timed interval in LP mode may substitute for a 
+> Blanking Packet, thus saving power. During HSA, HBP and HFP periods, the 
+> bus should stay in the LP-11 state."
+> 
+> So we can either send the blanking packets or transition to LP state and 
+> those 3 flags are controlling exactly that during those periods for MSM 
+> driver.
+> 
+> If you stop sending the blanking packets, you need to replace that gap 
+> with LP.
 
-And yet hat is *literally* the kind of nonsense you are spouting.
+I don't think that's what MIPI_DSI_MODE_VIDEO_NO_HBP means, the way I 
+understand MIPI_DSI_MODE_VIDEO_NO_HBP is that it skips the HBP 
+completely. So if you want HBP, then do not set 
+MIPI_DSI_MODE_VIDEO_NO_HBP . And if you want LP11 during HBP, that is I 
+think up to the controller (or maybe another new flag?).
 
-I very much say that "some devices will not have UUID's".
+> One reason I can think of why this could break with MSM is perhaps we do 
+> not have sufficient time in those periods for the LP-HS transition like 
+> the spec has written.
+> 
+> 1) What is the resolution which is getting broken on db845c with this? I 
+> would like to know the full drm_display_mode for it to see how much time 
+> we have in those periods. Is any resolution working or all are broken.
+> 
+> 2) I also do not completely get the last line of the DSI spec on this 
+> traffic mode. Is it suggesting that we *must* use only LP11 for those 
+> periods in this traffic mode? I need to check little more on that. 
+> Because if thats the case the change is doing just that and we need to 
+> investigate the MSM failure little more. If not and its indeed optional 
+> to save power like the DSI spec says, then its weird why DSIM should be 
+> blank without that too.
 
-That's a *FACT*.
-
-You then say "Some devices have UUID's, so all devices must have UUIDs".
-
-That's *STUPID*.
-
-Can you really not tell the difference?
-
-           Linus
+[...]
