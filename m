@@ -1,111 +1,105 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8EDA1DDEE
-	for <regressions@lists.linux.dev>; Tue, 11 Jul 2023 22:07:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1689113271;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=22o7sJ4qMvAv+MYHGzcaJXVzraK0uhlI2bEFW2/yXhs=;
-	b=VodwKH6/+2aoWDO3GDvSwSgecYrFN0hhoTjNW/n6W8zz0uOoxMerM63rNI4Z5+aAwql3eD
-	Pp8nmpLxBRuFvPe+73w0Os+sZdvQFVsy4YyN1AkH6WFzTOcwFpPtLkx6KzXUA5cF11wiTQ
-	D7i1ZgpH27HpKgjetyza333co3GO4rY=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-323-XMfvtaptNeqoL_2kfIKVVA-1; Tue, 11 Jul 2023 18:07:48 -0400
-X-MC-Unique: XMfvtaptNeqoL_2kfIKVVA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 53BDF185A791;
-	Tue, 11 Jul 2023 22:07:47 +0000 (UTC)
-Received: from [10.22.16.29] (unknown [10.22.16.29])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 8BF1A40C6CD0;
-	Tue, 11 Jul 2023 20:13:46 +0000 (UTC)
-Message-ID: <87b925cb-6393-ca9b-6549-b3ba85ad54fc@redhat.com>
-Date: Tue, 11 Jul 2023 18:07:46 -0400
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A356C644
+	for <regressions@lists.linux.dev>; Wed, 12 Jul 2023 04:57:48 +0000 (UTC)
+Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-635e107642fso1502766d6.1
+        for <regressions@lists.linux.dev>; Tue, 11 Jul 2023 21:57:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1689137867; x=1691729867;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3/72ZD6lhNsHXkYgqxH4KbAvAYqyJgWt7UVI6+Yu3os=;
+        b=SQv+ATSncXbdJ6CvQSuGkwVtXrkdkvN0VsEkwN0f2meVzjcZVDVHotkWnUdRi1+JJ8
+         152n9o/c6wKcedfIOWNhscb9a+NIhJJpjGH28gY1CMfMwCBajew9Ou3XGIwTmJVXO+oU
+         1d8rLzj6cok8WjK5gE3Z7Ob2u/5A/Oiqm0ChvZYbS9BbNZ6rMJCxqKaHSOQQ3JTNMYqX
+         iy3e4ExpJhPEoTW7pKsKCA4zgz7UdaHCKC4ymnJ3mk8l2y3O0B0vazDOCjWVX4GtNDiB
+         62Ucoslh+dMNa7rPfdqhLW4dvXqw0YBCfeLdl0Kbe4bh48EFkt4fmOcLMaAiZkg9r//N
+         twCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689137867; x=1691729867;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3/72ZD6lhNsHXkYgqxH4KbAvAYqyJgWt7UVI6+Yu3os=;
+        b=jilv776M9daQ58z2tfKCUaPhnr9XZyXqf+6l3fFxf29d0y8g4qGRLztlVIaLAcM206
+         KUr54jFhptsBorI1Qciprq+iOQWRjMrWQkDpDw/2PTOE0FnMK8p3VC3NZoTrahua2tjV
+         bljFabC3fdBxvDbDNhXWp9vYlofCUH2JmG7mOOlSo36vBJjrgzvUXx+clED/IorlD1J4
+         T2qo9J+yV7/n1fEQ7r6FIr8CuDIsrRKbEo4HlhmUWghPbAH02mruI4quGocts5w8216p
+         /HGP6aPP8kjhYOSSHpfW+b4/NPgvby7CWKL/0bhUZDEdcNCaxHgaHSUBJytEMMXzeN/r
+         lJJA==
+X-Gm-Message-State: ABy/qLYqafimfpEeCL8p3S9RCrSEIIUhxP3uRKYMKO8P71nl06Ifyco6
+	sPe8Bi9hE9m9Ieuql19jlks+K/RQD0IykZbHkwOY9A==
+X-Google-Smtp-Source: APBJJlH5QzNFAkMi3vMlbJrWM0d6J/fLTqgYF+JAXqPrfBkfUF3EumCUn0rNxoOz7ZOPCK+yLnf1MHjzwmvzO+WlP0A=
+X-Received: by 2002:a05:6214:ca2:b0:637:9da3:9193 with SMTP id
+ s2-20020a0562140ca200b006379da39193mr1219123qvs.4.1689137867393; Tue, 11 Jul
+ 2023 21:57:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: Fwd: Need NVME QUIRK BOGUS for SAMSUNG MZ1WV480HCGL-000MV
- (Samsung SM-953 Datacenter SSD)
-Content-Language: en-US
-To: Keith Busch <kbusch@kernel.org>,
- Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Christoph Hellwig <hch@lst.de>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- Pankaj Raghav <p.raghav@samsung.com>, Bagas Sanjaya <bagasdotme@gmail.com>,
- Jens Axboe <axboe@kernel.dk>, Sagi Grimberg <sagi@grimberg.me>,
- "Clemens S." <cspringsguth@gmail.com>,
- Martin Belanger <martin.belanger@dell.com>,
- Chaitanya Kulkarni <kch@nvidia.com>, Hannes Reinecke <hare@suse.de>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux NVMe <linux-nvme@lists.infradead.org>,
- Kanchan Joshi <joshi.k@samsung.com>,
- Javier Gonzalez <javier.gonz@samsung.com>, =?UTF-8?B?67CV7KeE7ZmY?=
- <jh.i.park@samsung.com>
-References: <d18d2a08-9d24-0209-c2cf-baf60bbf5048@gmail.com>
- <ZJsKBkPqoWzYyngS@kbusch-mbp.dhcp.thefacebook.com>
- <6f333133-2cc4-406a-d6c2-642ac6ccabca@leemhuis.info>
- <CGME20230710155902eucas1p2b464a29adc35e983c73b00d18ab5344c@eucas1p2.samsung.com>
- <ZKwqvTMPVmhnkZjS@kbusch-mbp.dhcp.thefacebook.com>
- <f0fdf86e-4293-8e07-835d-b5a866252068@samsung.com>
- <462e0e1e-98ea-0f3c-4aaa-8d44f0a8e664@leemhuis.info>
- <20230711120609.GB27050@lst.de>
- <CAHk-=whXh9sgLo24RO02JjfD0m3HE5NADRPWoEd+dW6bruFhVA@mail.gmail.com>
- <ZK2PgNizcMLW+S/V@kbusch-mbp.dhcp.thefacebook.com>
-From: John Meneghini <jmeneghi@redhat.com>
-Organization: RHEL Core Storge Team
-In-Reply-To: <ZK2PgNizcMLW+S/V@kbusch-mbp.dhcp.thefacebook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.2
+References: <20230612153201.554742-1-catalin.marinas@arm.com>
+ <CAMi1Hd04mu6JojT3y6wyN2YeVkPR5R3qnkKJ8iR8if_YByCn4w@mail.gmail.com>
+ <ZKdfVSzbgOonR17A@google.com> <CAMi1Hd2f5GUnu_JGot=CqA9Vy4OD_V7FWYLOhNbJL1Pyd_EGMA@mail.gmail.com>
+ <CABfwK138ZbE5=J66esO-VG64tO+e9n1cRRBAE3wOKygJxd_xbw@mail.gmail.com>
+In-Reply-To: <CABfwK138ZbE5=J66esO-VG64tO+e9n1cRRBAE3wOKygJxd_xbw@mail.gmail.com>
+From: Amit Pundir <amit.pundir@linaro.org>
+Date: Wed, 12 Jul 2023 10:27:11 +0530
+Message-ID: <CAMi1Hd3KgZGJTae=fyq4HD3FTuNxNJAnmfyds12JFXenxUtXrw@mail.gmail.com>
+Subject: Re: [PATCH v7 00/17] mm, dma, arm64: Reduce ARCH_KMALLOC_MINALIGN to 8
+To: Isaac Manjarres <isaacmanjarres@google.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Linus Torvalds <torvalds@linux-foundation.org>, Christoph Hellwig <hch@lst.de>, 
+	Robin Murphy <robin.murphy@arm.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Will Deacon <will@kernel.org>, 
+	Marc Zyngier <maz@kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>, 
+	Ard Biesheuvel <ardb@kernel.org>, Saravana Kannan <saravanak@google.com>, Alasdair Kergon <agk@redhat.com>, 
+	Daniel Vetter <daniel@ffwll.ch>, Joerg Roedel <joro@8bytes.org>, Mark Brown <broonie@kernel.org>, 
+	Mike Snitzer <snitzer@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Jonathan Cameron <jic23@kernel.org>, Vlastimil Babka <vbabka@suse.cz>, linux-mm@kvack.org, 
+	iommu@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+	Linux regressions mailing list <regressions@lists.linux.dev>, John Stultz <jstultz@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Yes, this is what I thought.  This is all the result of the duplicate NID check added to deal with TP4034 Dispersed Namespaces.
+On Wed, 12 Jul 2023 at 01:14, Isaac Manjarres <isaacmanjarres@google.com> w=
+rote:
+>
+> On Sat, Jul 8, 2023 at 6:03=E2=80=AFAM Amit Pundir <amit.pundir@linaro.or=
+g> wrote:
+> > Hi Issac, I can't reproduce this crash if I have slub_debug enabled
+> > https://bugs.linaro.org/attachment.cgi?id=3D1149.
+> >
+> > But I can still reproduce the crash, with the same build, if I just
+> > remove the slub_debug bootarg
+> > https://bugs.linaro.org/attachment.cgi?id=3D1150
+> >
+>
+> Hey Amit,
+>
+> Thanks for trying this out. John Stultz and I tried this out as well, and=
+ we
+> couldn't reproduce the issue with slub_debug enabled either.
+>
+> However, we were able to reproduce the issue you reported along with
+> KASAN enabled, which also helped us catch an out-of-bounds access
+> in the regmap-irq code. Once we fixed it, the memory corruption you
+> reported was also fixed. I've sent the patch [1] for review. Can you plea=
+se
+> test it out and see if it works for you too?
 
-One suggestion I have would be to limit this check to nvme-of subsystems only. These are the only devices I am aware of out 
-there which support TP4034.  Moreover, all nvme-of devices report a valid NID.  It's required with NVMe Over Fabrics. The PCIe 
-devices, I expect, don't care. You don't really need a valid NID with a private namespace - which is what most PCIe devices are.
+It does fix the v6.5-rc1 boot regression I reported above on
+Dragonboard 845c running AOSP. Thank you.
 
-I'll wager that if you change nvme_global_check_duplicate_ids() to check only nvme-of subsystems, and simply continue with PCIe 
-subsystems, 90% of these nvme quirks can be removed.
+Regards,
+Amit Pundir
 
-John Meneghini
-Senior Principal Platform Storage Engineer
-RHEL SST - Platform Storage Group
-jmeneghi@redhat.com
-
-On 7/11/23 13:21, Keith Busch wrote:
-> On Tue, Jul 11, 2023 at 09:47:00AM -0700, Linus Torvalds wrote:
->> On Tue, 11 Jul 2023 at 05:06, Christoph Hellwig <hch@lst.de> wrote:
->> For example, we have this completely unacceptable garbage:
->>
->>          ret = nvme_global_check_duplicate_ids(ctrl->subsys, &info->ids);
->>          if (ret) {
->>                  dev_err(ctrl->device,
->>                          "globally duplicate IDs for nsid %d\n", info->nsid);
->>                  nvme_print_device_info(ctrl);
->>                  return ret;
->>          }
->>
->> iow, the code even checks for and *notices* that there are duplicate
->> IDs, and what does it do? It then errors out.
-> 
-> This check came from a recent half-baked spec feature called "Dispersed
-> Namespaces" that caused breakage and data corruption when used in Linux.
-> Rather than attempt to support that mostly vendor specific feature, the
-> driver attempted to fence that off as unmaintainable. This check wasn't
-> aimed at enforcing "correctness", but it certainly found a lot of that
-> as collatoral damage. Let's see if we can find a better way to detect
-> the difference with a sane fallback as you suggest.
-> 
-
+>
+> [1]: https://lore.kernel.org/all/20230711193059.2480971-1-isaacmanjarres@=
+google.com/
+>
+> Thanks,
+> Isaac
