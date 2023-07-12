@@ -1,95 +1,151 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75725200DF
-	for <regressions@lists.linux.dev>; Wed, 12 Jul 2023 17:00:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1689181211;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=V34PBFVRSyPmXY6TnLemmwcb7RItdmjHqC9gKS1fTBo=;
-	b=ImrScq87XqUGoRkeYux4zrfRcNTiHlbW04a++6u6V7TFlSUDMApQVMGQjVvIdjHIFIIJO1
-	FgJSjTp97E/ph/kPH+qB6iTN7dqLfnr3Uk0U5xUh6StWkjtV6/CCakiV6ZEVrYJDq/eZtn
-	NhjjdygbZYTUBbhSOgTKIFmVO1dN4w4=
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
- [209.85.222.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-428-xSU1n97rMkS0KBd7TGVhJQ-1; Wed, 12 Jul 2023 13:00:08 -0400
-X-MC-Unique: xSU1n97rMkS0KBd7TGVhJQ-1
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-765986c0521so690101785a.3
-        for <regressions@lists.linux.dev>; Wed, 12 Jul 2023 10:00:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689181208; x=1691773208;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=V34PBFVRSyPmXY6TnLemmwcb7RItdmjHqC9gKS1fTBo=;
-        b=POehFo/Q5tMgL8zM7JsM8k4RZpDVWmLiwsHRL+jyi/QD+Goyg8q4j1p5zkWh5J9v5P
-         l234I8RziYrWxl8ty6JDvGRWjCwouRAG500GbJMLiwphpurlx0D/STg2RO3BoWfwuyiG
-         QUwj//FG9Bo+zrMjzDlYbqkL5tG29U9zYHclFRbFYKoNzVdK2bfvTUIwrkG/dXxf53Zb
-         P23Wv6NnMdL9Xr9wUlredfPFmrh5XDXnxdHj8d4xO5ekxLH8jYF4Cx8hFZrAPTe4h4v2
-         fhxGs8Z+9QINMsMr3C9kFb8eAWEssdc63zoB0qo4oGHUnFCwUXTWxve/cAkRXAmjgpXD
-         zjlw==
-X-Gm-Message-State: ABy/qLb6V9jj3dMAFotF8Qye5/i0xmCmOZffn9XIB0HmHbB+Z+2sq2+1
-	puqAOhGy4n9TjvLu4WPJKfG4XoCtWz7AXHGgfU7KbvZSahHLzUBCToQ3X6sQHWWhBep52rvddVY
-	4maFup5WMcn9O4kAtSjf2dzo=
-X-Received: by 2002:a05:620a:318f:b0:765:4418:cac7 with SMTP id bi15-20020a05620a318f00b007654418cac7mr18968022qkb.73.1689181208071;
-        Wed, 12 Jul 2023 10:00:08 -0700 (PDT)
-X-Google-Smtp-Source: APBJJlGfbsBm1Dqr0aQLF1S4fgHLvR9TbsCSLLXCvHTFTZHyd5eS5VdOP6vDZI4492sbHtDleRsIrg==
-X-Received: by 2002:a05:620a:318f:b0:765:4418:cac7 with SMTP id bi15-20020a05620a318f00b007654418cac7mr18967998qkb.73.1689181207795;
-        Wed, 12 Jul 2023 10:00:07 -0700 (PDT)
-Received: from localhost (ip98-179-76-75.ph.ph.cox.net. [98.179.76.75])
-        by smtp.gmail.com with ESMTPSA id w18-20020a0cb552000000b0063004b5482csm2342328qvd.92.2023.07.12.10.00.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Jul 2023 10:00:07 -0700 (PDT)
-Date: Wed, 12 Jul 2023 10:00:05 -0700
-From: Jerry Snitselaar <jsnitsel@redhat.com>
-To: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Christian Hesse <mail@eworm.de>, linux-integrity@vger.kernel.org, 
-	Thorsten Leemhuis <regressions@leemhuis.info>, Lino Sanfilippo <l.sanfilippo@kunbus.com>, 
-	Linux kernel regressions list <regressions@lists.linux.dev>, Peter Huewe <peterhuewe@gmx.de>, stable@vger.kernel.org, 
-	roubro1991@gmail.com
-Subject: Re: [PATCH v2 1/2] tpm/tpm_tis: Disable interrupts for Framework
- Laptop Intel 12th gen
-Message-ID: <qvt4ndqc23ftspjtpljyv45yfhtxi6oomjios2nuk34bs7n5fi@2ye4znwhgn4a>
-References: <20230710133836.4367-1-mail@eworm.de>
- <20230710142916.18162-1-mail@eworm.de>
- <ZKxHfTkgKHYqhBz2@ziepe.ca>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE525200DF
+	for <regressions@lists.linux.dev>; Wed, 12 Jul 2023 17:00:39 +0000 (UTC)
+Received: from pendragon.ideasonboard.com (unknown [188.20.72.2])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id E62E457E;
+	Wed, 12 Jul 2023 18:59:41 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1689181182;
+	bh=Y1r/4TiSDf+6U9SrmJu6na0NV39GqEwxTTWqZcVNBdk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LmPPXEzq8nN7LcCbUwN8Pr3ruLSFhqUO4lDbYyaFdvFuBKleARc2wrxWgcFZCeYkT
+	 mjmanCS6++0DhsRVZNqsBnGBl+AKujPoHbhbzri7FgWk8CL+Ebe+tmOBMbNJxbo1Ot
+	 Jph1AIJqsD7dwOtnjuxIud/2e9+2EA3UbtRFc9zQ=
+Date: Wed, 12 Jul 2023 20:00:32 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Cc: Martijn Braam <martijn@brixit.nl>, regressions@lists.linux.dev,
+	jernej.skrabec@gmail.com, sakari.ailus@linux.intel.com,
+	mchehab@kernel.org, linux-media@vger.kernel.org, hverkuil@xs4all.nl
+Subject: Re: [REGRESSION] breakage in sun6i-csi media api
+Message-ID: <20230712170032.GA30092@pendragon.ideasonboard.com>
+References: <f13c27fb-2afe-b94e-aad9-ed5ecc818183@brixit.nl>
+ <ZHmzZUkcFK8Gq_JL@aptenodytes>
+ <e168d246-528d-b615-aa50-af8f17af4442@brixit.nl>
+ <ZHm46or-MhTb457b@aptenodytes>
+ <20230602100352.GK19463@pendragon.ideasonboard.com>
+ <ZK6-2RaE01_RgtYU@aptenodytes>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <ZKxHfTkgKHYqhBz2@ziepe.ca>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+In-Reply-To: <ZK6-2RaE01_RgtYU@aptenodytes>
 
-On Mon, Jul 10, 2023 at 03:01:33PM -0300, Jason Gunthorpe wrote:
-> On Mon, Jul 10, 2023 at 04:28:43PM +0200, Christian Hesse wrote:
-> > This device suffer an irq storm, so add it in tpm_tis_dmi_table to
-> > force polling.
+On Wed, Jul 12, 2023 at 04:55:21PM +0200, Paul Kocialkowski wrote:
+> On Fri 02 Jun 23, 13:03, Laurent Pinchart wrote:
+> > On Fri, Jun 02, 2023 at 11:39:54AM +0200, Paul Kocialkowski wrote:
+> > > Hi,
+> > > 
+> > > (Re-adding folks from the original email, adding Laurent and Hans.)
+> > > 
+> > > On Fri 02 Jun 23, 11:24, Martijn Braam wrote:
+> > > > Hi Paul,
+> > > > 
+> > > > That's basically it yes. My software doesn't expect the bridge block,
+> > > > because it wasn't there. The pipeline always worked "automatically".
+> > > > 
+> > > > This is the workaround that's been made now it run on newer kernels:
+> > > > https://gitlab.com/postmarketOS/megapixels/-/merge_requests/31
+> > > > 
+> > > > I'm pretty sure format propagation would fix this issue.
+> > > 
+> > > Okay that's good to know.
+> > > 
+> > > To be honest it's still not very clear to me if in-driver format propagation is
+> > > a "nice to have" feature or something that all media pipeline drivers are
+> > > supposed to implement.
+> > 
+> > For MC-based drivers, in-kernel propagation *inside* subdevs is
+> > mandatory, in-kernel propagration *between* subdevs is not allowed. The
+> > latter is the responsibility of userspace.
 > 
-> I can't help but feel like we are doing something wrong in the Linux
-> driver that we keep having IRQ problems.
+> Right, makes good sense.
 > 
-> Surely Windows uses the IRQ on these devices? How does it work
-> reliably there?
+> > For traditional (I'd say legacy, but I know not everybody likes that
+> > term :-)) drivers that only expose video device nodes and do not expose
+> > subdev nodes to userspace, the driver is responsible for configuring the
+> > full pipeline internally based on the S_FMT call on the video nodes
+> > only. This isn't applicable to the sun6i-csi driver, as it exposes
+> > subdev nodes to userspace.
+> > 
+> > > Anyway I feel like this is not really a regression but a result of the driver
+> > > being converted to a newer API.
+> > > 
+> > > Also there's a V4L2_CAP_IO_MC flag which should indicate that the video device
+> > > must be controlled via the media controller API instead of being
+> > > video-device-centric, but I've seen comments asking not to set the flag even
+> > > when MC is used so I'm a bit confused here.
+> > 
+> > Would you have pointers to those comments ?
 > 
-> Jason
+> I was thinking of a reply from Hans on the Tegra driver series:
+> https://patchwork.kernel.org/project/linux-media/patch/20230309144320.2937553-4-luca.ceresoli@bootlin.com/#25285456
+> 
+> From what I understand there's some bridge entity that needs to be explicitly
+> configured to match the sensor's format via MC, yet the reply says that the
+> driver "doesn't use the media controller for anything at the moment" and
+> should not be converted to become a proper MC-driven device.
+> 
+> Well maybe there was a misunderstanding on my side, or Hans', or both.
 
-I worry about it as well, especially as more vendors get added to the
-list. On the other hand it seems like every 6-12 months I am
-interacting with vendors that repeatedly forget to have reserved
-memory regions added to IVRS and DMAR tables for devices that need
-them. So I guess it is possible for the problem to be on their end as
-well. For at least one case that someone looked at back in May, it
-looked like he could see the issue looking at a schematic for the
-system.
+It makes sense not to set the flag in some cases. For instance, the
+uvcvideo driver creates an MC device to expose the camera's internal
+topology to userspace, but doesn't create subdevs as the UVC protocol
+doesn't allow fine-grained configuration of formats between entities. In
+the sun6i-csi case, I don't think this is applicable, the device should
+be configured directly at the subdev level by userspace as you can't
+know in advance what will be connected to its inputs.
 
+For what it's worth, the same reasoning should apply to the tegra
+driver, and I think it should set V4L2_CAP_IO_MC.
+
+> > > Perhaps the flag is only required when there is no automatic format
+> > > propagation?
+> > 
+> > The flag is more or less required when you expose subdev nodes to
+> > userspace.
+> 
+> Thanks for the clarifications :)
+> 
+> > > If anyone has solid answers on these points I'd be happy to read some
+> > > clarification (and act accordingly).
+> > >
+> > > > On 6/2/23 11:16, Paul Kocialkowski wrote:
+> > > > > Hi Martijn,
+> > > > > 
+> > > > > On Thu 01 Jun 23, 23:19, Martijn Braam wrote:
+> > > > > > It seems like this commit:
+> > > > > > 
+> > > > > > media: sun6i-csi: Add bridge v4l2 subdev with port management
+> > > > > > 
+> > > > > > Has changed the way the media pipeline on a64 devices, in my case the PINE64
+> > > > > > PinePhone works. Since this is an API towards userspace and there's active
+> > > > > > applications that use it I think this counts as a regression.
+> > > > > Do you have more details on what changed specifically?
+> > > > > 
+> > > > > The commit added a bridge subdev in addition to the video node, which is
+> > > > > generally a better description of the CSI hardware and also a necessity
+> > > > > to support the ISP data flow.
+> > > > > 
+> > > > > Maybe your userspace application is not configuring the bridge media block with
+> > > > > the right format, which results in a mismatch?
+> > > > > 
+> > > > > Some work was started to achieve automatic format propagation, perhaps it
+> > > > > would be enough to solve your issue.
+> > > > > 
+> > > > > Cheers,
+> > > > > 
+> > > > > Paul
+> > > > > 
+> > > > > > #regzbot introduced: 0d2b746b1bef73de62d2d311e594a7ffed4ca43
+
+-- 
 Regards,
-Jerry
 
+Laurent Pinchart
