@@ -1,195 +1,129 @@
-Received: from mslow1.mail.gandi.net (mslow1.mail.gandi.net [217.70.178.240])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C22982AB4C
-	for <regressions@lists.linux.dev>; Wed, 12 Jul 2023 15:00:39 +0000 (UTC)
-Received: from relay4-d.mail.gandi.net (unknown [217.70.183.196])
-	by mslow1.mail.gandi.net (Postfix) with ESMTP id C4247D8B05
-	for <regressions@lists.linux.dev>; Wed, 12 Jul 2023 14:55:31 +0000 (UTC)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 60426E0011;
-	Wed, 12 Jul 2023 14:55:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1689173724;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Qv7G18wPTYSMMVzVnTFvwLn5zt8E4vfiqbuvfIGct0Q=;
-	b=JmOWtnUSOjQYeQ8pJbFvm6vEq40CKgSt8bL1AC9O+lET7aStLz6B7fqoC0qCO7F0oER4yU
-	xiP7XrwRfXoXdVVKWbrmH1OB+xfVeSJQKSkEpPUlR9FyRYjWCwBdR15weac8a3HxiXKkZE
-	emzNMPT6HFRvQc72QR91HUTi2xoCsrysSxm6TQhOWBQvCspElrYoxoI3hsPXA1q2NDSntF
-	V7MohKZ31YECyx+6kQZ1lRzq9M0jF4JapD5Vncno6mq4+LZwPIXWoD46z8N2ftLAfdL7pX
-	oE9K3aHbJoK8ST3xnie+EdJusTa0anKxUzAYntRuq1UHMmczO68vt9VeXpMsEg==
-Date: Wed, 12 Jul 2023 16:55:21 +0200
-From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Martijn Braam <martijn@brixit.nl>, regressions@lists.linux.dev,
-	jernej.skrabec@gmail.com, sakari.ailus@linux.intel.com,
-	mchehab@kernel.org, linux-media@vger.kernel.org, hverkuil@xs4all.nl
-Subject: Re: [REGRESSION] breakage in sun6i-csi media api
-Message-ID: <ZK6-2RaE01_RgtYU@aptenodytes>
-References: <f13c27fb-2afe-b94e-aad9-ed5ecc818183@brixit.nl>
- <ZHmzZUkcFK8Gq_JL@aptenodytes>
- <e168d246-528d-b615-aa50-af8f17af4442@brixit.nl>
- <ZHm46or-MhTb457b@aptenodytes>
- <20230602100352.GK19463@pendragon.ideasonboard.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0B611FCF
+	for <regressions@lists.linux.dev>; Wed, 12 Jul 2023 16:46:01 +0000 (UTC)
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id D73F868AFE; Wed, 12 Jul 2023 18:45:47 +0200 (CEST)
+Date: Wed, 12 Jul 2023 18:45:46 +0200
+From: Christoph Hellwig <hch@lst.de>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Christoph Hellwig <hch@lst.de>,
+	Linux regressions mailing list <regressions@lists.linux.dev>,
+	Pankaj Raghav <p.raghav@samsung.com>,
+	Keith Busch <kbusch@kernel.org>,
+	Bagas Sanjaya <bagasdotme@gmail.com>, Jens Axboe <axboe@kernel.dk>,
+	Sagi Grimberg <sagi@grimberg.me>,
+	"Clemens S." <cspringsguth@gmail.com>,
+	Martin Belanger <martin.belanger@dell.com>,
+	Chaitanya Kulkarni <kch@nvidia.com>,
+	John Meneghini <jmeneghi@redhat.com>,
+	Hannes Reinecke <hare@suse.de>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux NVMe <linux-nvme@lists.infradead.org>,
+	Kanchan Joshi <joshi.k@samsung.com>,
+	Javier Gonzalez <javier.gonz@samsung.com>,
+	=?utf-8?B?67CV7KeE7ZmY?= <jh.i.park@samsung.com>
+Subject: Re: Fwd: Need NVME QUIRK BOGUS for SAMSUNG MZ1WV480HCGL-000MV
+ (Samsung SM-953 Datacenter SSD)
+Message-ID: <20230712164546.GA31434@lst.de>
+References: <d18d2a08-9d24-0209-c2cf-baf60bbf5048@gmail.com> <ZJsKBkPqoWzYyngS@kbusch-mbp.dhcp.thefacebook.com> <6f333133-2cc4-406a-d6c2-642ac6ccabca@leemhuis.info> <CGME20230710155902eucas1p2b464a29adc35e983c73b00d18ab5344c@eucas1p2.samsung.com> <ZKwqvTMPVmhnkZjS@kbusch-mbp.dhcp.thefacebook.com> <f0fdf86e-4293-8e07-835d-b5a866252068@samsung.com> <462e0e1e-98ea-0f3c-4aaa-8d44f0a8e664@leemhuis.info> <20230711120609.GB27050@lst.de> <CAHk-=whXh9sgLo24RO02JjfD0m3HE5NADRPWoEd+dW6bruFhVA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="6+rsyM2hUFI47juJ"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230602100352.GK19463@pendragon.ideasonboard.com>
-X-GND-Sasl: paul.kocialkowski@bootlin.com
+In-Reply-To: <CAHk-=whXh9sgLo24RO02JjfD0m3HE5NADRPWoEd+dW6bruFhVA@mail.gmail.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
+On Tue, Jul 11, 2023 at 09:47:00AM -0700, Linus Torvalds wrote:
+> Anybody who expected unique ID's is frankly completely incompetent.
+> People should have *known* not to do this.
 
---6+rsyM2hUFI47juJ
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Except that storage software really does rely on them.  Not your
+laptop (or mine) but all kinds of data center software.  Where these
+IDs have worked fine for decades.  It just turns out nvme has the
+misfortune of trying to deal with both that and cheap consumer crap.
 
-Hi,
+> and we have NEVER EVER seen devices with reliably unique IDs. Really.
 
-On Fri 02 Jun 23, 13:03, Laurent Pinchart wrote:
-> Hi Paul,
->=20
-> On Fri, Jun 02, 2023 at 11:39:54AM +0200, Paul Kocialkowski wrote:
-> > Hi,
-> >=20
-> > (Re-adding folks from the original email, adding Laurent and Hans.)
-> >=20
-> > On Fri 02 Jun 23, 11:24, Martijn Braam wrote:
-> > > Hi Paul,
-> > >=20
-> > > That's basically it yes. My software doesn't expect the bridge block,
-> > > because it wasn't there. The pipeline always worked "automatically".
-> > >=20
-> > > This is the workaround that's been made now it run on newer kernels:
-> > > https://gitlab.com/postmarketOS/megapixels/-/merge_requests/31
-> > >=20
-> > > I'm pretty sure format propagation would fix this issue.
-> >=20
-> > Okay that's good to know.
-> >=20
-> > To be honest it's still not very clear to me if in-driver format propag=
-ation is
-> > a "nice to have" feature or something that all media pipeline drivers a=
-re
-> > supposed to implement.
->=20
-> For MC-based drivers, in-kernel propagation *inside* subdevs is
-> mandatory, in-kernel propagration *between* subdevs is not allowed. The
-> latter is the responsibility of userspace.
+Sorry, but that's bullshit. 
 
-Right, makes good sense.
+> iow, the code even checks for and *notices* that there are duplicate
+> IDs, and what does it do? It then errors out.
 
-> For traditional (I'd say legacy, but I know not everybody likes that
-> term :-)) drivers that only expose video device nodes and do not expose
-> subdev nodes to userspace, the driver is responsible for configuring the
-> full pipeline internally based on the S_FMT call on the video nodes
-> only. This isn't applicable to the sun6i-csi driver, as it exposes
-> subdev nodes to userspace.
->=20
-> > Anyway I feel like this is not really a regression but a result of the =
-driver
-> > being converted to a newer API.
-> >=20
-> > Also there's a V4L2_CAP_IO_MC flag which should indicate that the video=
- device
-> > must be controlled via the media controller API instead of being
-> > video-device-centric, but I've seen comments asking not to set the flag=
- even
-> > when MC is used so I'm a bit confused here.
->=20
-> Would you have pointers to those comments ?
+Yes.  Because we have applications which will lose data if they
+suddently get the wrong device.  
 
-I was thinking of a reply from Hans on the Tegra driver series:
-https://patchwork.kernel.org/project/linux-media/patch/20230309144320.29375=
-53-4-luca.ceresoli@bootlin.com/#25285456
+> I think the code should *default* to "unreliable uuid", and then if
+> you're sure it's actually ok, then you use it. Then some rare
+> enterprise user with multipathing  - who is going to be very very
+> careful about which device to use anyway - can use the "approved
+> list".
 
-=46rom what I understand there's some bridge entity that needs to be explic=
-itly
-configured to match the sensor's format via MC, yet the reply says that the
-driver "doesn't use the media controller for anything at the moment" and
-should not be converted to become a proper MC-driven device.
+That doesn't scale either.
 
-Well maybe there was a misunderstanding on my side, or Hans', or both.
+> Or "Oh, I noticed a non-unique UUID, let me generate one for you based
+> on physical location".
+> 
+> But this "my disk doesn't work in v6.0 and later because some clown
+> added a duplicate check that shouldn't be there" is not a good thing
+> to then try to make excuses for.
 
-> > Perhaps the flag is only required when there is no automatic format
-> > propagation?
->=20
-> The flag is more or less required when you expose subdev nodes to
-> userspace.
+Well, let's try something like this (co-developed with Sagi) that
+allows it for non-multipath PCIe devices, hich covers the quirks
+we've added so far, but also add a big fat warning, because we know
+people rely on the /dev/disk/by-id/ links.  Probably not on these
+devices, but who knows.
 
-Thanks for the clarifications :)
-
-Cheers,
-
-Paul
-
-> > If anyone has solid answers on these points I'd be happy to read some
-> > clarification (and act accordingly).
-> >
-> > > On 6/2/23 11:16, Paul Kocialkowski wrote:
-> > > > Hi Martijn,
-> > > >=20
-> > > > On Thu 01 Jun 23, 23:19, Martijn Braam wrote:
-> > > > > It seems like this commit:
-> > > > >=20
-> > > > > media: sun6i-csi: Add bridge v4l2 subdev with port management
-> > > > >=20
-> > > > > Has changed the way the media pipeline on a64 devices, in my case=
- the PINE64
-> > > > > PinePhone works. Since this is an API towards userspace and there=
-'s active
-> > > > > applications that use it I think this counts as a regression.
-> > > > Do you have more details on what changed specifically?
-> > > >=20
-> > > > The commit added a bridge subdev in addition to the video node, whi=
-ch is
-> > > > generally a better description of the CSI hardware and also a neces=
-sity
-> > > > to support the ISP data flow.
-> > > >=20
-> > > > Maybe your userspace application is not configuring the bridge medi=
-a block with
-> > > > the right format, which results in a mismatch?
-> > > >=20
-> > > > Some work was started to achieve automatic format propagation, perh=
-aps it
-> > > > would be enough to solve your issue.
-> > > >=20
-> > > > Cheers,
-> > > >=20
-> > > > Paul
-> > > >=20
-> > > > > #regzbot introduced: 0d2b746b1bef73de62d2d311e594a7ffed4ca43
->=20
-> --=20
-> Regards,
->=20
-> Laurent Pinchart
-
---=20
-Paul Kocialkowski, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
-
---6+rsyM2hUFI47juJ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAmSuvtkACgkQ3cLmz3+f
-v9EM/wf/eZWu2yYUjCVilDx5OCeqcKJQsDsPE/GfY54QgjEOyWvHw4DvmyPahxtN
-ab96BXQBI62wlNlbVtOvMTWtMtF11P9Cq+SkTO43VD2AAlNsIcZtM+GYOrcxh6pp
-E3sceo38Bflj6rjgxcTTzNMBqbKxIEXWocFmwk0eJYkSNwpcTkboDbB58nkqeI/X
-sBEa6sRBAH2K9HdQdqv11Uqdzpn/Bv/88TnNc8QPG2cno/3cBfQwxHZCc4bQ+kxx
-cNNvHzHDyK/pAwCCgFnMAPEjfW9XtZ/ba+Gf18pMDR+fULPeZaUc5gbTNXAGX6TX
-NrCiQcMKaaPbcKBQhN9MtiXuMGUApg==
-=QsFP
------END PGP SIGNATURE-----
-
---6+rsyM2hUFI47juJ--
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index 47d7ba2827ff29..37b6fa74666204 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -3431,10 +3431,40 @@ static int nvme_init_ns_head(struct nvme_ns *ns, struct nvme_ns_info *info)
+ 
+ 	ret = nvme_global_check_duplicate_ids(ctrl->subsys, &info->ids);
+ 	if (ret) {
+-		dev_err(ctrl->device,
+-			"globally duplicate IDs for nsid %d\n", info->nsid);
++		/*
++		 * We've found two different namespaces on two different
++		 * subsystems that report the same ID.  This is pretty nasty
++		 * for anything that actually requires unique device
++		 * identification.  In the kernel we need this for multipathing,
++		 * and in user space the /dev/disk/by-id/ links rely on it.
++		 *
++		 * If the device also claims to be multi-path capable back off
++		 * here now and refuse the probe the second device as this is a
++		 * recipe for data corruption.  If not this is probably a
++		 * cheap consumer device if on the PCIe bus, so let the user
++		 * proceed and use the shiny toy, but warn that with changing
++		 * probing order (which due to our async probing could just be
++		 * device taking longer to startup) the other device could show
++		 * up at any time.
++		 */
+ 		nvme_print_device_info(ctrl);
+-		return ret;
++		if ((ns->ctrl->ops->flags & NVME_F_FABRICS) || /* !PCIe */
++		    ((ns->ctrl->subsys->cmic & NVME_CTRL_CMIC_MULTI_CTRL) &&
++		     info->is_shared)) {
++			dev_err(ctrl->device,
++				"ignoring nsid %d because of duplicate IDs\n",
++				info->nsid);
++			return ret;
++		}
++
++		dev_err(ctrl->device,
++			"clearing duplicate IDs for nsid %d\n", info->nsid);
++		dev_err(ctrl->device,
++			"use of /dev/disk/by-id/ may cause data corruption\n");
++		memset(&info->ids.nguid, 0, sizeof(info->ids.nguid));
++		memset(&info->ids.uuid, 0, sizeof(info->ids.uuid));
++		memset(&info->ids.eui64, 0, sizeof(info->ids.eui64));
++		ctrl->quirks |= NVME_QUIRK_BOGUS_NID;
+ 	}
+ 
+ 	mutex_lock(&ctrl->subsys->lock);
