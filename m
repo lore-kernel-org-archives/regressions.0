@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7E89200D7;
-	Wed, 12 Jul 2023 11:16:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B81163FFE
+	for <regressions@lists.linux.dev>; Wed, 12 Jul 2023 11:24:23 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qJXpH-0007kw-5Z; Wed, 12 Jul 2023 13:16:07 +0200
-Message-ID: <278bc9c5-632b-b068-fd3d-56da46ceb306@leemhuis.info>
-Date: Wed, 12 Jul 2023 13:16:04 +0200
+	id 1qJXxE-000195-FJ; Wed, 12 Jul 2023 13:24:20 +0200
+Message-ID: <b30258b7-ee09-e502-1a08-809ec0bfcf12@leemhuis.info>
+Date: Wed, 12 Jul 2023 13:24:19 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,82 +16,95 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.12.0
-Subject: Re: [PATCH v3] KVM: arm64: Use BTI for nvhe
+Subject: [regression] r8169 ASPM changes broke iwlwifi driver for Intel 3165
 Content-Language: en-US, de-DE
-To: Marc Zyngier <maz@kernel.org>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, Mostafa Saleh <smostafa@google.com>,
- oliver.upton@linux.dev, linux-arm-kernel@lists.infradead.org,
- kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org, tabba@google.com,
- qperret@google.com, will@kernel.org, catalin.marinas@arm.com,
- yuzenghui@huawei.com, suzuki.poulose@arm.com, james.morse@arm.com,
- bgardon@google.com, gshan@redhat.com
-References: <20230530150845.2856828-1-smostafa@google.com>
- <20230704134136.a5znw4jupt5yp5kg@bogus>
- <55bffc21-5f19-765f-9dbc-1b565c880426@leemhuis.info>
- <864jm9wgsn.wl-maz@kernel.org>
- <4da09faa-acb8-7262-b9ae-6cb327cff206@leemhuis.info>
- <861qhdwfzm.wl-maz@kernel.org>
 From: "Linux regression tracking (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <861qhdwfzm.wl-maz@kernel.org>
+To: Heiner Kallweit <hkallweit1@gmail.com>
+Cc: linux-wireless@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ Realtek linux nic maintainers <nic_swsd@realtek.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ netdev <netdev@vger.kernel.org>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+References: <6f8715af-95c2-8333-2b32-206a143ebb52@leemhuis.info>
+In-Reply-To: <6f8715af-95c2-8333-2b32-206a143ebb52@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1689160570;369897ec;
-X-HE-SMSGID: 1qJXpH-0007kw-5Z
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1689161063;f6ef6d18;
+X-HE-SMSGID: 1qJXxE-000195-FJ
 
+[adding maintainers for r8169 to the list of recipients while dropping
+the iwlwifi folks (the latter are already aware about the bad bisection)]
 
-
-On 12.07.23 13:01, Marc Zyngier wrote:
-> On Wed, 12 Jul 2023 11:52:39 +0100,
-> "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info> wrote:
->>
->> On 12.07.23 12:44, Marc Zyngier wrote:
->>> On Wed, 12 Jul 2023 11:34:51 +0100,
->>> "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info> wrote:
->>>>
->>>> [CCing the regression list, as it should be in the loop for regressions:
->>>> https://docs.kernel.org/admin-guide/reporting-regressions.html]
->>>>
->>>> [TLDR: I'm adding this report to the list of tracked Linux kernel
->>>> regressions; the text you find below is based on a few templates
->>>> paragraphs you might have encountered already in similar form.
->>>> See link in footer if these mails annoy you.]
->>>>
->>>> On 04.07.23 15:41, Sudeep Holla wrote:
->>>>> On Tue, May 30, 2023 at 03:08:45PM +0000, Mostafa Saleh wrote:
->>>>>> CONFIG_ARM64_BTI_KERNEL compiles the kernel to support ARMv8.5-BTI.
->>>>>> However, the nvhe code doesn't make use of it as it doesn't map any
->>>>>> pages with Guarded Page(GP) bit.
->>>>> [...]
->>>>> I was chasing a bug in linux-next yesterday with protected nVHE(pKVM) and
->>>>> cpuidle enabled. The system fails to boot. I just bisected the issue to this
->>>>> patch and also saw this patch landed in the linus tree yesterday/today.
->>>>> Not sure if this is something to do with the fact that pKVM skips to
->>>>> __kvm_handle_stub_hvc in __host_hvc.
->>>>>
->>>>> Let me know if you want be to try something.
->>>>
->>>> Thanks for the report. Seems the fix is slow to progress.
->>>
->>> It's not. See [1].
->>>
->>> [1] https://lore.kernel.org/r/20230706152240.685684-1-smostafa@google.com
->>
->> I'm aware of that fix, as one of the regzbot commands in the mail your
->> quoted pointed to that mail. But unless I'm missing something that fix
->> is now nearly a week old and not yet in -next. That from my point of
->> view makes it "slow to progress" and trackworthy.
+On 10.07.23 10:32, Linux regression tracking (Thorsten Leemhuis) wrote:
+> Hi, Thorsten here, the Linux kernel's regression tracker.
 > 
-> Shoving stuff in -next early is not a guarantee of the fix being
-> correct. Oddly enough, some of us value taking the time it takes to
-> make sure the fix is correct and addresses the *full* issue, not only
-> the reported corner case.
+> I noticed a regression report in bugzilla.kernel.org. As many (most?)
+> kernel developers don't keep an eye on it, I decided to forward it by mail.
+> 
+> Aloka Dixit, apparently it's cause by a change of yours: bd54f3c2907
+> ("wifi: mac80211: generate EMA beacons in AP mode") [v6.4-rc1]
 
-All that is totally fine with me. Sorry, we got off on the wrong foot,
-because I didn't choose my words carefully. Apologies. All I wanted to
-express was: "I saw a bug report and a fix for it; I wouldn't have added
-this to the tracking if that fix was already heading towards mainline".
+Heiner, this turned out to be a bad bisection. The reporter ran another
+one and this time even verified the results by reverting the fix ontop
+of v6.4. Turns out the issue is caused by 5fc3f6c90cc ("r8169:
+consolidate disabling ASPM before EPHY access") you contributed.
 
-Ciao, Thorsten
+Blacklisting r8169 fixes the issue, too. For details see:
+https://bugzilla.kernel.org/show_bug.cgi?id=217635
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
+
+> Note, you have to use bugzilla to reach the reporter, as I sadly[1] can
+> not CCed them in mails like this.
+> 
+> Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=217635 :
+> 
+>> Distro: Arch Linux
+>> Kernel version: 6.4.1.arch1-1
+>> Happens on mainline kernel? : YES (linux-mainline 6.4-1)
+>> Note: linux-mainline 6.4.1 is not available at time of this writing
+>>
+>> Arch linux bug:
+>> https://bugs.archlinux.org/task/78984
+>>
+>> Summary:
+>> No network access even after connecting to wifi. Websites don't load, ping doesn't work.
+>> This didn't happen on kernel 6.3.x (specifically 6.3.9, the last 6.3 kernel provided by Arch).
+>>
+>> Bug happens on both Arch-provided kernel and mainline kernel
+>>
+>> Steps to reproduce:
+>> 1) On fresh boot, connect to a wifi network
+>>    a) Make sure wifi password is not saved beforehand
+>> 2) Ping a url with terminal, or open a website with browser
+>> 3) Ping fails to work / website doesn't load
+> 
+> See the ticket for more details and the bisection result that came later.
+> 
+> Aditya Kumar Singh, FWIW, I hope you don't mind that I CCed you, but you
+> already contributed a fix for the culprit, so it seemed the right thing
+> to do in this case.
+> 
+> [TLDR for the rest of this mail: I'm adding this report to the list of
+> tracked Linux kernel regressions; the text you find below is based on a
+> few templates paragraphs you might have encountered already in similar
+> form.]
+> 
+> BTW, let me use this mail to also add the report to the list of tracked
+> regressions to ensure it's doesn't fall through the cracks:
+> 
+> #regzbot introduced: bd54f3c29077f2
+> https://bugzilla.kernel.org/show_bug.cgi?id=217635
+> #regzbot title: net: wireless: iwlwifi driver broken on Intel 3165
+> network card
+> #regzbot ignore-activity
+
+#regzbot introduced: 5fc3f6c90cca19e
