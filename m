@@ -1,104 +1,183 @@
-Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 012AD63A0
-	for <regressions@lists.linux.dev>; Thu, 13 Jul 2023 08:03:57 +0000 (UTC)
-Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-c581c758ad8so385098276.1
-        for <regressions@lists.linux.dev>; Thu, 13 Jul 2023 01:03:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1689235437; x=1691827437;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=bNc2pUv/smaIGLoP8Kp1HP8/RcjfUJ9VWG1zvqf1FRk=;
-        b=QdNGjNEI4hzaUyyE7vA5jRRLDwnHf/GBv2mvnGl9QudbJavTc5uLYF02AL2EE4BzOY
-         STJJ2WGhIp2Fj8EMNEvxDDHfng6gZdIXBdrrHsjH2AXUahTVjn0HAkJXLW3iGC75PBLu
-         CCabxflcCi9dpDpQe/n8cMzpdtO050gJRBQ2Uz9t/RweW6YMIvHKiM4KncWLJJXBamIx
-         M/8b/KV1EDS6ycM+QiKEdGAAOtbCrPD8dSxBsUfI1VmwNrpIfgomMXGr6fHRwxUZWOCP
-         szf0JVZch8WuZdHHJoeCnFQe0ouytx44u4mdl/kmN2fiKqmfpynMk1nY3QJl5+lvbfNl
-         I6RA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689235437; x=1691827437;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=bNc2pUv/smaIGLoP8Kp1HP8/RcjfUJ9VWG1zvqf1FRk=;
-        b=P3YAZj8c7iT+vVoKZBt35WAE45TGibUjk6f+mHOo3xO19Zcznh1Xh2ulUbXprrTO3P
-         ck22Dgo/mrGviqTqE9X/9k5kxfl7O1X73GD+Nx6nB1AmQCfvT/VcXSqqATPGC7lK5nZI
-         XcoHhxBRpy1Bn5Zy01TdChtDWG5dFmAQ/9eiQ/DD8ErtcNayijXRUPXqXEi+aOzNoa4a
-         jflv7Ije4hrdUKAl1sPl/vKtv20w7OGttYBl7opGu5FTEkDHGRRqmgKV+NZOxdF3pI+T
-         +1dCUUXcJ1eqd6tQepX9OrJMSRfzk9t7Pl4N8+DvKbAdtQara8s4EQk6IO3Eh2zGO+Xk
-         eAVg==
-X-Gm-Message-State: ABy/qLbHMSbYL4G4uac/LGsrBTy5zad/Fb2XQePCZsZVDObBQvI1K3PE
-	K95F6kL12ayI6+JF6Wcb2Idbax15UgAL1r7H4eB9K6yvUlc=
-X-Google-Smtp-Source: APBJJlEs/BW2S7clrV46fvJmu+3eBnO23VlcwbByQILp+Uk/fVxad+/5Pb3wy3N9QjZoKwP16JnEceQCL1lv6YjGNYs=
-X-Received: by 2002:a5b:7c6:0:b0:bcb:523e:addf with SMTP id
- t6-20020a5b07c6000000b00bcb523eaddfmr622445ybq.65.1689235436627; Thu, 13 Jul
- 2023 01:03:56 -0700 (PDT)
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5026979D4
+	for <regressions@lists.linux.dev>; Thu, 13 Jul 2023 08:29:14 +0000 (UTC)
+X-SpamFilter-By: ArmorX SpamTrap 5.77 with qID 36D8PGoN4001443, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
+	by rtits2.realtek.com.tw (8.15.2/2.81/5.90) with ESMTPS id 36D8PGoN4001443
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+	Thu, 13 Jul 2023 16:25:16 +0800
+Received: from RTEXMBS03.realtek.com.tw (172.21.6.96) by
+ RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.17; Thu, 13 Jul 2023 16:25:23 +0800
+Received: from RTEXMBS01.realtek.com.tw (172.21.6.94) by
+ RTEXMBS03.realtek.com.tw (172.21.6.96) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.7; Thu, 13 Jul 2023 16:25:23 +0800
+Received: from RTEXMBS01.realtek.com.tw ([fe80::9cb8:8d5:b6b3:213b]) by
+ RTEXMBS01.realtek.com.tw ([fe80::9cb8:8d5:b6b3:213b%5]) with mapi id
+ 15.01.2375.007; Thu, 13 Jul 2023 16:25:23 +0800
+From: Kailang <kailang@realtek.com>
+To: Takashi Iwai <tiwai@suse.de>
+CC: "Joseph C. Sible" <josephcsible@gmail.com>,
+        Bagas Sanjaya
+	<bagasdotme@gmail.com>,
+        "regressions@lists.linux.dev"
+	<regressions@lists.linux.dev>,
+        "perex@perex.cz" <perex@perex.cz>, "tiwai@suse.com" <tiwai@suse.com>,
+        "alsa-devel@alsa-project.org"
+	<alsa-devel@alsa-project.org>
+Subject: RE: Fwd: [Bug 217440] New: ALC236 audio disappears from HP 15z-fc000 on warm boot
+Thread-Topic: Fwd: [Bug 217440] New: ALC236 audio disappears from HP 15z-fc000
+ on warm boot
+Thread-Index: AQHZhdSOD7kY6mXBDkGA3ryhp811r69Yu5SAgAASNACAAA22gIAA7n+AgAEJrYCABLe/YIAJNIWAgAIHAcD//4tyAIAB8UZw///vxgCADzWhgIABfgWAgACUPoCAAPnsAIAAmlKwgAA8s4CAAQ8boP//kIuAABWnYVAAAIR9gAAqhW/A//+7roD//3k98IAAkYyAgAAKhQCAAAZZgIAAiY6AgADw04CAALC0AIAA6TqAgBQJp4CAAhpFAP/xaKKggBysdYD/8VrnoA==
+Date: Thu, 13 Jul 2023 08:25:22 +0000
+Message-ID: <4678992299664babac4403d9978e7ba7@realtek.com>
+References: <bug-217440-225600@https.bugzilla.kernel.org/>
+	<CABpewhE4REgn9RJZduuEU6Z_ijXNeQWnrxO1tg70Gkw=F8qNYg@mail.gmail.com>
+	<ZGB0cVVI7OgaJU6t@debian.me>
+	<CABpewhGJE7-k52j8L2kJ2zKupgp3Ma+LdZazzzV4w1Bgihp7nw@mail.gmail.com>
+	<87cz338ix4.wl-tiwai@suse.de>
+	<CABpewhF01AK4cFPbwYVvKR9yWaO7o-ZE-2+MZjYSUF0BKUdYvw@mail.gmail.com>
+	<874jodlnmi.wl-tiwai@suse.de>	<415d4bc84aa74c74af913048f28b42a9@realtek.com>
+	<87fs7mdofi.wl-tiwai@suse.de>	<7da2fdfdae614b1c98deda6e11ca34eb@realtek.com>
+	<87353kd8b9.wl-tiwai@suse.de>	<1170325957764b4cbd7cd3639575f285@realtek.com>
+	<CABpewhGBakDSBLKZ1cr2=OMspuu3qyYwZrsXUggQ3vt8gsD88A@mail.gmail.com>
+	<873536js7q.wl-tiwai@suse.de>
+	<CABpewhE0NAC-Q=iqG2Ba=XhT7SXsWy18wQGYUaopzmKDfFxyPw@mail.gmail.com>
+	<2c1fcbc00bb44d66a29ac1c1e4bec5ad@realtek.com>
+	<CABpewhFthKG97dPiQC4JhGx9sapX9Yu5rWABQjpY95TSA+eawA@mail.gmail.com>
+	<485f99149508488080d563144454040e@realtek.com>
+	<CABpewhGkvWtM+9J=mx3vw0QY=OBB5OYCxzX3nzVffvFS4QazPA@mail.gmail.com>
+	<2831c55638a5431ca9e37d9caf365ed2@realtek.com>
+	<CABpewhGiMJUpyBA6=D9_-YA6=5rjR2R0RHUZeg+cWcjtzuCoZQ@mail.gmail.com>
+	<3c27f0455d6e4bd1a68115bd25bf1a12@realtek.com>
+	<CABpewhEptq0+W_71U__8iQ4+LNtYSUB9C+0bcS2Hw-5mnj9viQ@mail.gmail.com>
+	<009474f04d0b45c69a0e42e8622b7a86@realtek.com>	<87h6rhcef2.wl-tiwai@suse.de>
+	<0990300d759846d890de9c92fcad9a9d@realtek.com>
+	<CABpewhERnOH1qkkJ5_JJUZkz1_8oxD9aR5VBs1vsURAG7Eu_Ew@mail.gmail.com>
+	<878rctcavz.wl-tiwai@suse.de>	<874jnhc9u4.wl-tiwai@suse.de>
+	<CABpewhHG2+s8_6r6vChm2g5tD8ALW_SWJWubPRXWzTJB2aFR9g@mail.gmail.com>
+	<875y7vbxpg.wl-tiwai@suse.de>
+	<CABpewhHDnvn4v+uCpsaLHB+biw-f59tdTiCyFkicHnewXHYDNg@mail.gmail.com>
+	<87wn0aa1s4.wl-tiwai@suse.de>
+	<CABpewhFg=7+JR6v=zhi0_Hm9+S64DLOHKeG2pS-W7z-vNpu_5Q@mail.gmail.com>
+	<87leg7x4h7.wl-tiwai@suse.de>	<f4969213b5a14cc5a11befb4df861481@realtek.com>
+ <87cz182hfk.wl-tiwai@suse.de>
+In-Reply-To: <87cz182hfk.wl-tiwai@suse.de>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach: yes
+X-MS-TNEF-Correlator:
+x-originating-ip: [172.22.102.106]
+x-kse-serverinfo: RTEXMBS03.realtek.com.tw, 9
+x-kse-antispam-interceptor-info: fallback
+x-kse-antivirus-interceptor-info: fallback
+Content-Type: multipart/mixed;
+	boundary="_002_4678992299664babac4403d9978e7ba7realtekcom_"
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: =?UTF-8?B?T25kcmVqIE1vc27DocSNZWs=?= <omosnacek@gmail.com>
-Date: Thu, 13 Jul 2023 10:03:45 +0200
-Message-ID: <CAAUqJDuRkHE8fPgZJGaKjUjd3QfGwzfumuJBmStPqBhubxyk_A@mail.gmail.com>
-Subject: Another regression in the af_alg series (s390x-specific)
-To: Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
-Cc: David Howells <dhowells@redhat.com>, Herbert Xu <herbert@gondor.apana.org.au>, 
-	Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org, regressions@lists.linux.dev, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-KSE-AntiSpam-Interceptor-Info: fallback
 
-Hi,
+--_002_4678992299664babac4403d9978e7ba7realtekcom_
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 
-It turns out that beneath the first bug [1] there was another one
-hiding. It seems to happen only on the s390x architecture when running
-the following libkcapi [2] reproducer:
+SGkgSm9zZXBoLA0KDQpDb3VsZCB5b3UgdGVzdCBhdHRhY2ggcGF0Y2g/DQoNCkJSLA0KS2FpbGFu
+Zw0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFRha2FzaGkgSXdhaSA8
+dGl3YWlAc3VzZS5kZT4NCj4gU2VudDogVHVlc2RheSwgSnVseSA0LCAyMDIzIDQ6NDYgUE0NCj4g
+VG86IEthaWxhbmcgPGthaWxhbmdAcmVhbHRlay5jb20+DQo+IENjOiBKb3NlcGggQy4gU2libGUg
+PGpvc2VwaGNzaWJsZUBnbWFpbC5jb20+OyBCYWdhcyBTYW5qYXlhDQo+IDxiYWdhc2RvdG1lQGdt
+YWlsLmNvbT47IHJlZ3Jlc3Npb25zQGxpc3RzLmxpbnV4LmRldjsgcGVyZXhAcGVyZXguY3o7DQo+
+IHRpd2FpQHN1c2UuY29tOyBhbHNhLWRldmVsQGFsc2EtcHJvamVjdC5vcmcNCj4gU3ViamVjdDog
+UmU6IEZ3ZDogW0J1ZyAyMTc0NDBdIE5ldzogQUxDMjM2IGF1ZGlvIGRpc2FwcGVhcnMgZnJvbSBI
+UA0KPiAxNXotZmMwMDAgb24gd2FybSBib290DQo+IA0KPiANCj4gRXh0ZXJuYWwgbWFpbC4NCj4g
+DQo+IA0KPiANCj4gT24gVHVlLCAwNCBKdWwgMjAyMyAxMDozODo0MyArMDIwMCwNCj4gS2FpbGFu
+ZyB3cm90ZToNCj4gPg0KPiA+DQo+ID4gQmVsb3cgd2FzIHRoZSByZWxhdGlvbiBwYXRjaGVzLg0K
+PiA+IGh0dHBzOi8vZ2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51eC9rZXJuZWwvZ2l0L3Rpd2Fp
+L3NvdW5kLmdpdC9jb21taXQNCj4gPiAvP2lkPTVhZWM5ODkxMzA5NWVkM2I0NDI0ZWQ2YzVmZGVi
+Njk2NGU5NzM0ZGENCj4gPiBodHRwczovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20vbGludXgva2Vy
+bmVsL2dpdC90aXdhaS9zb3VuZC5naXQvY29tbWl0DQo+ID4gLz9pZD1mMzA3NDFjZGVkNjJmODdi
+YjRiMWNjNThiYzYyN2YwNzZhYmNhYmE4DQo+ID4NCj4gPiBJdCBzaG93cyBBTEMyMzYgY29kZWMg
+bm90IG5lZWQgdG8gcnVuIHB1bGwgbG93IDNrIHNldHRpbmcuDQo+ID4NCj4gPiBJIHRyYWNlIHdp
+bmRvd3MgY29kZSwgZmluZCBpdCBhZGQgZGVsYXkgZm9yIHJlYWQgTUlDIGphY2sgZGV0ZWN0ZWQg
+YXQgYm9vdGluZw0KPiB0aW1lLg0KPiANCj4gSSBleHBlY3RlZCBzb21ldGhpbmcgbGlrZSB0aGF0
+IDspDQo+IElmIHlvdSBoYXZlIGEgdGVzdCBwYXRjaCwgbGV0IHVzIGtub3cuDQo+IA0KPiANCj4g
+dGhhbmtzLA0KPiANCj4gVGFrYXNoaQ0KPiANCj4gPg0KPiA+DQo+ID4gPiAtLS0tLU9yaWdpbmFs
+IE1lc3NhZ2UtLS0tLQ0KPiA+ID4gRnJvbTogVGFrYXNoaSBJd2FpIDx0aXdhaUBzdXNlLmRlPg0K
+PiA+ID4gU2VudDogU3VuZGF5LCBKdW5lIDI1LCAyMDIzIDU6NDMgUE0NCj4gPiA+IFRvOiBKb3Nl
+cGggQy4gU2libGUgPGpvc2VwaGNzaWJsZUBnbWFpbC5jb20+DQo+ID4gPiBDYzogS2FpbGFuZyA8
+a2FpbGFuZ0ByZWFsdGVrLmNvbT47IEJhZ2FzIFNhbmpheWENCj4gPiA+IDxiYWdhc2RvdG1lQGdt
+YWlsLmNvbT47IHJlZ3Jlc3Npb25zQGxpc3RzLmxpbnV4LmRldjsgcGVyZXhAcGVyZXguY3o7DQo+
+ID4gPiB0aXdhaUBzdXNlLmNvbTsgYWxzYS1kZXZlbEBhbHNhLXByb2plY3Qub3JnDQo+ID4gPiBT
+dWJqZWN0OiBSZTogRndkOiBbQnVnIDIxNzQ0MF0gTmV3OiBBTEMyMzYgYXVkaW8gZGlzYXBwZWFy
+cyBmcm9tIEhQDQo+ID4gPiAxNXotZmMwMDAgb24gd2FybSBib290DQo+ID4gPg0KPiA+ID4NCj4g
+PiA+IEV4dGVybmFsIG1haWwuDQo+ID4gPg0KPiA+ID4NCj4gPiA+DQo+ID4gPiBPbiBTYXQsIDI0
+IEp1biAyMDIzIDAzOjM2OjExICswMjAwLA0KPiA+ID4gSm9zZXBoIEMuIFNpYmxlIHdyb3RlOg0K
+PiA+ID4gPg0KPiA+ID4gPiBPbiBTdW4sIEp1biAxMSwgMjAyMyBhdCAzOjM24oCvQU0gVGFrYXNo
+aSBJd2FpIDx0aXdhaUBzdXNlLmRlPiB3cm90ZToNCj4gPiA+ID4gPg0KPiA+ID4gPiA+IFRoYW5r
+cyBmb3IgY2hlY2tpbmcuICBTbyB0aGUgYWRkaXRpb25hbCBkZWxheSBkaWRuJ3QgaGVscCBhdA0K
+PiA+ID4gPiA+IGFsbCwgaS5lLiBpdCdzIG5vIHRpbWluZyBpc3N1ZS4gIFdlIG5lZWQgdG8gZmln
+dXJlIG91dCB3aGljaA0KPiA+ID4gPiA+IHZlcmIgYWN0dWFsbHkgYnJlYWtzIHRoaW5ncy4gIE9o
+IHdlbGwuDQo+ID4gPiA+DQo+ID4gPiA+IFdhcyB0aGVyZSBzb21ldGhpbmcgZWxzZSBzcGVjaWZp
+YyB5b3Ugd2FudGVkIG1lIHRvIHRyeSBmb3IgdGhpcz8NCj4gPiA+ID4gSWYgbm90LCB3aGF0IGRv
+IHlvdSB0aGluayB0aGUgbmV4dCBzdGVwcyB0byBnZXQgdGhpcyBmaXhlZCBhcmU/IERvDQo+ID4g
+PiA+IHlvdSB0aGluayBpdCBtaWdodCBiZSBnb29kIHRvIGp1c3QgY29vayB0aGUgcGFydGlhbCBy
+ZXZlcnQgSQ0KPiA+ID4gPiBwb3N0ZWQgYSB3aGlsZSBiYWNrIGFmdGVyIGFsbD8NCj4gPiA+DQo+
+ID4gPiBJdCdzIHJhdGhlciBhIGNhbGwgdG8gS2FpbGFuZywgYWZ0ZXIgYWxsLg0KPiA+ID4gSSdt
+IGZpbmUgd2l0aCBhbnkgd2F5IGFzIGxvbmcgYXMgaXQgYXZvaWRzIGZ1cnRoZXIgcmVncmVzc2lv
+bnMuDQo+ID4gPg0KPiA+ID4NCj4gPiA+IFRha2FzaGkNCj4gPiA+DQo+ID4gPiAtLS0tLS1QbGVh
+c2UgY29uc2lkZXIgdGhlIGVudmlyb25tZW50IGJlZm9yZSBwcmludGluZyB0aGlzIGUtbWFpbC4N
+Cg==
 
-kcapi -x 2 -s -c "gcm(aes)" -i 0d92aa861746b324f20ee6b7 \
-    -k f4a6a5e5f2066f6dd9ec6fc5169c29043560ef595c9e81e76f42d29212cc581c \
-    -a "" -t 5f24c68cbe6f32c29652442bf5d483ad -q ""
+--_002_4678992299664babac4403d9978e7ba7realtekcom_
+Content-Type: application/octet-stream; name="0000-HP-reboot-issue.patch"
+Content-Description: 0000-HP-reboot-issue.patch
+Content-Disposition: attachment; filename="0000-HP-reboot-issue.patch";
+	size=2077; creation-date="Thu, 13 Jul 2023 07:59:21 GMT";
+	modification-date="Thu, 13 Jul 2023 08:22:48 GMT"
+Content-Transfer-Encoding: base64
 
-Frequently (but not always) it triggers an oops like this one:
+RnJvbSBjOGViMjIzMGUxYTllMTk3YjIyZGU2OTMxOGViMTY3OGRhNmU3YjA0IE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiBLYWlsYW5nIFlhbmcgPGthaWxhbmdAcmVhbHRlay5jb20+CkRh
+dGU6IFRodSwgMTMgSnVsIDIwMjMgMTU6NTc6MTMgKzA4MDAKU3ViamVjdDogW1BBVENIXSBBTFNB
+OiBoZGEvcmVhbHRlayAtIHJlbW92ZSAzayBwdWxsIGxvdyBwcm9jZWR1cmUKClRoaXMgd2FzIHRo
+ZSBBTEMyODMgZGVwb3AgcHJvY2VkdXJlLgpNYXliZSB0aGlzIHByb2NlZHVyZSB3YXNuJ3Qgc3Vp
+dGFibGUgd2l0aCBuZXcgY29kZWMuClNvLCBsZXQgdXMgcmVtb3ZlIGl0LiBCdXQgSFAgMTV6LWZj
+MDAwIG11c3QgZG8gM2sgcHVsbCBsb3cuIElmIGl0IHJlYm9vdCB3aXRoIHBsdWdnZWQgaGVhZHNl
+dCwKaXQgd2lsbCBoYXZlIGVycm9ycyBzaG93IGRvbid0IGZpbmQgY29kZWMgZXJyb3IgbWVzc2Fn
+ZXMuIFJ1biAzayBwdWxsIGxvdyB3aWxsIHNvbHZlIGlzc3Vlcy4KU28sIGxldCBBTUQgY2hpcHNl
+dCB3aWxsIHJ1biB0aGlzIGZvciB3b3JrYXJyb3VuZC4KClNpZ25lZC1vZmYtYnk6IEthaWxhbmcg
+WWFuZyA8a2FpbGFuZ0ByZWFsdGVrLmNvbT4KCmRpZmYgLS1naXQgYS9zb3VuZC9wY2kvaGRhL3Bh
+dGNoX3JlYWx0ZWsuYyBiL3NvdW5kL3BjaS9oZGEvcGF0Y2hfcmVhbHRlay5jCmluZGV4IGUyZjhi
+NjA4ZGU4Mi4uYWZiNGQ4MjQ3NWI0IDEwMDY0NAotLS0gYS9zb3VuZC9wY2kvaGRhL3BhdGNoX3Jl
+YWx0ZWsuYworKysgYi9zb3VuZC9wY2kvaGRhL3BhdGNoX3JlYWx0ZWsuYwpAQCAtMTIyLDYgKzEy
+Miw3IEBAIHN0cnVjdCBhbGNfc3BlYyB7CiAJdW5zaWduZWQgaW50IHVsdHJhX2xvd19wb3dlcjox
+OwogCXVuc2lnbmVkIGludCBoYXNfaHNfa2V5OjE7CiAJdW5zaWduZWQgaW50IG5vX2ludGVybmFs
+X21pY19waW46MTsKKwl1bnNpZ25lZCBpbnQgZW5fM2twdWxsX2xvdzoxOwogCiAJLyogZm9yIFBM
+TCBmaXggKi8KIAloZGFfbmlkX3QgcGxsX25pZDsKQEAgLTM2MjIsNiArMzYyMyw3IEBAIHN0YXRp
+YyB2b2lkIGFsYzI1Nl9zaHV0dXAoc3RydWN0IGhkYV9jb2RlYyAqY29kZWMpCiAJaWYgKCFocF9w
+aW4pCiAJCWhwX3BpbiA9IDB4MjE7CiAKKwlhbGNfdXBkYXRlX2NvZWZleF9pZHgoY29kZWMsIDB4
+NTcsIDB4MDQsIDB4MDAwNywgMHgxKTsgLyogTG93IHBvd2VyICovCiAJaHBfcGluX3NlbnNlID0g
+c25kX2hkYV9qYWNrX2RldGVjdChjb2RlYywgaHBfcGluKTsKIAogCWlmIChocF9waW5fc2Vuc2Up
+CkBAIC0zNjM4LDggKzM2NDAsNyBAQCBzdGF0aWMgdm9pZCBhbGMyNTZfc2h1dHVwKHN0cnVjdCBo
+ZGFfY29kZWMgKmNvZGVjKQogCS8qIElmIGRpc2FibGUgM2sgcHVsbGRvd24gY29udHJvbCBmb3Ig
+YWxjMjU3LCB0aGUgTWljIGRldGVjdGlvbiB3aWxsIG5vdCB3b3JrIGNvcnJlY3RseQogCSAqIHdo
+ZW4gYm9vdGluZyB3aXRoIGhlYWRzZXQgcGx1Z2dlZC4gU28gc2tpcCBzZXR0aW5nIGl0IGZvciB0
+aGUgY29kZWMgYWxjMjU3CiAJICovCi0JaWYgKGNvZGVjLT5jb3JlLnZlbmRvcl9pZCAhPSAweDEw
+ZWMwMjM2ICYmCi0JICAgIGNvZGVjLT5jb3JlLnZlbmRvcl9pZCAhPSAweDEwZWMwMjU3KQorCWlm
+IChzcGVjLT5lbl8za3B1bGxfbG93KQogCQlhbGNfdXBkYXRlX2NvZWZfaWR4KGNvZGVjLCAweDQ2
+LCAwLCAzIDw8IDEyKTsKIAogCWlmICghc3BlYy0+bm9fc2h1dHVwX3BpbnMpCkBAIC0xMDY4Miw2
+ICsxMDY4Myw4IEBAIHN0YXRpYyBpbnQgcGF0Y2hfYWxjMjY5KHN0cnVjdCBoZGFfY29kZWMgKmNv
+ZGVjKQogCQlzcGVjLT5zaHV0dXAgPSBhbGMyNTZfc2h1dHVwOwogCQlzcGVjLT5pbml0X2hvb2sg
+PSBhbGMyNTZfaW5pdDsKIAkJc3BlYy0+Z2VuLm1peGVyX25pZCA9IDA7IC8qIEFMQzI1NiBkb2Vz
+IG5vdCBoYXZlIGFueSBsb29wYmFjayBtaXhlciBwYXRoICovCisJCWlmIChjb2RlYy0+YnVzLT5w
+Y2ktPnZlbmRvciA9PSBQQ0lfVkVORE9SX0lEX0FNRCkKKwkJCXNwZWMtPmVuXzNrcHVsbF9sb3cg
+PSB0cnVlOwogCQlicmVhazsKIAljYXNlIDB4MTBlYzAyNTc6CiAJCXNwZWMtPmNvZGVjX3Zhcmlh
+bnQgPSBBTEMyNjlfVFlQRV9BTEMyNTc7Cg==
 
-[ 3986.766763] Unable to handle kernel pointer dereference in virtual
-kernel address space
-[ 3986.766774] Failing address: 0000000a00000000 TEID: 0000000a00000803
-[ 3986.766776] Fault in home space mode while using kernel ASCE.
-[ 3986.766778] AS:00000000a43a0007 R3:0000000000000024
-[ 3986.766825] Oops: 003b ilc:2 [#1] SMP
-<snip>
-[ 3986.766877] CPU: 0 PID: 271064 Comm: kcapi Tainted: G        W
-    6.5.0-rc1 #1
-[ 3986.767070] Hardware name: IBM 8561 LT1 400 (z/VM 7.2.0)
-<snip>
-[ 3986.767151] Call Trace:
-[ 3986.767153]  [<000003ff7fc3d47e>] gcm_walk_start+0x16/0x28 [aes_s390]
-[ 3986.767160]  [<00000000a2a342f2>] crypto_aead_decrypt+0x9a/0xb8
-[ 3986.767166]  [<00000000a2a60888>] aead_recvmsg+0x478/0x698
-[ 3986.767169]  [<00000000a2e519a0>] sock_recvmsg+0x70/0xb0
-[ 3986.767175]  [<00000000a2e51a56>] sock_read_iter+0x76/0xa0
-[ 3986.767177]  [<00000000a273e066>] vfs_read+0x26e/0x2a8
-[ 3986.767182]  [<00000000a273e8c4>] ksys_read+0xbc/0x100
-[ 3986.767184]  [<00000000a311d808>] __do_syscall+0x1d0/0x1f8
-[ 3986.767189]  [<00000000a312ff30>] system_call+0x70/0x98
-[ 3986.767193] Last Breaking-Event-Address:
-[ 3986.767193]  [<000003ff7fc3e6b4>] gcm_aes_crypt+0x104/0xa68 [aes_s390]
-[ 3986.767198] Kernel panic - not syncing: Fatal exception: panic_on_oops
-
-This time the regression was bisected to:
-
-commit c1abe6f570aff4b6d396dc551e60570d2f50bd79
-Author: David Howells <dhowells@redhat.com>
-Date:   Tue Jun 6 14:08:52 2023 +0100
-
-   crypto: af_alg: Use extract_iter_to_sg() to create scatterlists
-
-I can't see what the problem is with the commit, so I'm reporting here
-hoping that David or someone else can pick it up from here.
-
-Cheers,
-Ondrej
-
-[1] https://lore.kernel.org/linux-crypto/CAAUqJDvFuvms55Td1c=XKv6epfRnnP78438nZQ-JKyuCptGBiQ@mail.gmail.com/T/
-[2] https://github.com/smuellerDD/libkcapi/
+--_002_4678992299664babac4403d9978e7ba7realtekcom_--
