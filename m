@@ -1,226 +1,96 @@
-Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79E773224
-	for <regressions@lists.linux.dev>; Thu, 13 Jul 2023 18:37:33 +0000 (UTC)
-Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-577ddda6ab1so14827097b3.0
-        for <regressions@lists.linux.dev>; Thu, 13 Jul 2023 11:37:33 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30C041F929
+	for <regressions@lists.linux.dev>; Thu, 13 Jul 2023 19:46:29 +0000 (UTC)
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-314313f127fso1250130f8f.1
+        for <regressions@lists.linux.dev>; Thu, 13 Jul 2023 12:46:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google; t=1689273452; x=1691865452;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20221208; t=1689277588; x=1691869588;
+        h=content-transfer-encoding:subject:content-language:cc:to:from
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=855BqfEppezUio2GynGNklnjmLkHV7KjfetEfSzHlrQ=;
-        b=lMx48Fub46V5otdZym3NvCf+EJ9Fj+dbnSPI4e3xLy4+6qlqewZpDjIqnOQ1751Nn8
-         d3XL9r7T/tgP3ufe0QYXLRIWNxLXGDRAxeZGpPaEOD8KExjyKkzJEbKJ4wdK+dsINy67
-         1ts9zVOdqWh6ryCVhvLzw9SSVovR3+tH0eDcs=
+        bh=H8FVQt/Ihh7+ze4XBJytPBV8sTM5BLWS3tnCLrJQRSI=;
+        b=AGsf9wbC6Dhr49zJIx+Bh5Usq0SzvCNiO4it55aCHAoeo6BGRmEqSuBtc8JaMbwK2d
+         WczTDslgsh1jOqXf/TaO+JXL9y1RNQTCPvgJh0lq26g0CA6mdNNPIBCiwrm4sKNqh2CZ
+         Zbe4rfsPSdu0Nx8WJLlHdQHJGdD1H/maEI9ECXiUpaHOodWehsp9S+rAtzeRN6jc86ym
+         yJdVyB8QisEC0MXBBqigWlYr202uLNolmBIJWrF2Zysigccok7n3CkJcFJkzs3Nk3Af+
+         QFSsMLSA9S5tyxIu8U54JutYmUvEoLeFUKUdGrIRYDR3GI2PvAPmy/AXcEmJmRkY22z5
+         AEng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689273452; x=1691865452;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=855BqfEppezUio2GynGNklnjmLkHV7KjfetEfSzHlrQ=;
-        b=UoJmvoDevP+VD+sfisGHfe9zYWF7kHif+3Li0uVo1/Maf7TKz4yaOm5u/O0Ea8uYQt
-         vj4HkuGTAqIsvDi2xnk8+i7ChmMqb3Fy+0zoE9a5s6Oox7ufMVeOxtOeTYNn5aOkoEmp
-         d3JmK4e4MfwuahZ0ZHqJgA392fWvTKr+5FydZaaltB5gF8bGUQwZ0UbMbdGmL4yE3Qvs
-         4x8hxFnAAIwKND3GRcCMcQGRty5gOF0bikBG8l3614/DjCi8V4h/Gy8Ng7vjtWP4ioJz
-         f/wQfBFPaNWqcSJOZjQAPYSxQtl+IQ9V6Zs+O5EwTcrPLsPM4qqt6iMnwQczIaV7gDK4
-         7JJQ==
-X-Gm-Message-State: ABy/qLaP36JRbsHvfTszq2470hOBaK5quCXObYmXPDMt+ttE09qLX9m2
-	2FPrCR40oczhqgKtDGDWuw4nfrQMhVJcy9IM3IY3jw==
-X-Google-Smtp-Source: APBJJlGuoB5EoXqCREcG0nqtm2A2HHGahl7ZTjfFoM7qApsG87TbwZjaUGeSnEFBgI+M1gJEOoU/JOknwBtv9eTaIPA=
-X-Received: by 2002:a81:6983:0:b0:56d:2e66:4a3f with SMTP id
- e125-20020a816983000000b0056d2e664a3fmr693950ywc.0.1689273452238; Thu, 13 Jul
- 2023 11:37:32 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1689277588; x=1691869588;
+        h=content-transfer-encoding:subject:content-language:cc:to:from
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=H8FVQt/Ihh7+ze4XBJytPBV8sTM5BLWS3tnCLrJQRSI=;
+        b=B69vMMaA4M6y6YfM1BJKkZAX+aVKvxdYg9Pkjk0mUK093r1SUgw65RjgZsTM6WtbCW
+         AleAAZG9T1cHA1iZs7oVJWFYHEr/aeCOZEbIwZuP54jHmAacV68xsydRybFDA95beX8d
+         Ib46sAtsEri5ehWAsWK9zjJtjsA8r2k59TzuxFNpZW1jPzxy1UjkxOiglAOdhugFLKKv
+         Uj+x8Xgl23coe+dQtlJmhnVOiCJcS8Urk5f+ed2O05hoN95yKr0RSpQBhSkM8ePj9zjK
+         TVR2TZJhJw8XV6lWZrprcZhScVKb+p+iGc6O5/dT/7U/xAJ5XerISqb6vOSMpB3S+Ei0
+         X+bQ==
+X-Gm-Message-State: ABy/qLbpgkxeloq97ilGUE9jqYYcIV3PE3vhvMZxxZ+fD7cW5JoXLrWw
+	rAnieBfTg7DewBiQYbpTHucl7/E17tI=
+X-Google-Smtp-Source: APBJJlF7s5wJZq2w8NDMoLnVK/1Jl1PIB9KcEDAO1lMCdTS+QP1jQuAs/R3bMvfH1QdpaQS9kkxyFQ==
+X-Received: by 2002:a5d:4090:0:b0:314:16db:537d with SMTP id o16-20020a5d4090000000b0031416db537dmr2220776wrp.2.1689277587868;
+        Thu, 13 Jul 2023 12:46:27 -0700 (PDT)
+Received: from ?IPV6:2a01:c23:b8ac:4400:ad12:96b1:cbda:7fe2? (dynamic-2a01-0c23-b8ac-4400-ad12-96b1-cbda-7fe2.c23.pool.telefonica.de. [2a01:c23:b8ac:4400:ad12:96b1:cbda:7fe2])
+        by smtp.googlemail.com with ESMTPSA id l18-20020a5d6752000000b0031434cebcd8sm8742148wrw.33.2023.07.13.12.46.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 13 Jul 2023 12:46:27 -0700 (PDT)
+Message-ID: <82ea9e63-d8c8-0b86-cd88-913cc249fa9a@gmail.com>
+Date: Thu, 13 Jul 2023 21:46:22 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230403221233.500485-1-marex@denx.de> <20230403221233.500485-2-marex@denx.de>
- <CAMi1Hd0TD=2z_=bcDrht3H_wiLvAFcv8Z-U_r_KUOoeMc6UMjw@mail.gmail.com>
- <CAMty3ZBNFu=f-FS4YFN4wfmiTuk=48nna-vub1eMYwidDt+msg@mail.gmail.com>
- <CAA8EJppbdiUz5m+9EAPnFb916DaS_VKWd30c7_EPWjuid8rtqQ@mail.gmail.com>
- <CAMi1Hd2G5PJmz4wpO1wbdqKd0FA8LBgvRDv2u5ZYAMb5s6Kt0A@mail.gmail.com>
- <d5fb8106-b8f3-0acf-1267-d4d6d0860e25@linaro.org> <d28b0090-bd1e-6737-d92b-348dc6c30750@linaro.org>
- <4396d197-f16f-92bd-727c-eb8c78016198@quicinc.com> <961b4747-c9f1-a31c-c33c-475b4803f832@denx.de>
- <64c3352f-c2aa-5260-c6ff-4a607ce219a2@quicinc.com>
-In-Reply-To: <64c3352f-c2aa-5260-c6ff-4a607ce219a2@quicinc.com>
-From: Jagan Teki <jagan@amarulasolutions.com>
-Date: Fri, 14 Jul 2023 00:07:20 +0530
-Message-ID: <CAMty3ZBZD9WPM=soGYrMmmPVq6U3+WJ40DOzzU=o9oPi02-5xQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] drm/bridge: lt9611: Do not generate HFP/HBP/HSA and
- EOT packet
-To: Abhinav Kumar <quic_abhinavk@quicinc.com>, Marek Vasut <marex@denx.de>
-Cc: neil.armstrong@linaro.org, Amit Pundir <amit.pundir@linaro.org>, 
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, dri-devel@lists.freedesktop.org, 
-	Robert Foss <rfoss@kernel.org>, Andrzej Hajda <andrzej.hajda@intel.com>, 
-	Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
-	Michael Walle <michael@walle.cc>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
-	linux-arm-msm <linux-arm-msm@vger.kernel.org>, 
-	Linux regressions mailing list <regressions@lists.linux.dev>, freedreno <freedreno@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+From: Heiner Kallweit <hkallweit1@gmail.com>
+To: Jakub Kicinski <kuba@kernel.org>, David Miller <davem@davemloft.net>,
+ Realtek linux nic maintainers <nic_swsd@realtek.com>,
+ Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>
+Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ joey.joey586@gmail.com
+Content-Language: en-US
+Subject: [PATCH net] r8169: fix ASPM-related problem for chip version 42 and
+ 43
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jul 13, 2023 at 11:39=E2=80=AFPM Abhinav Kumar
-<quic_abhinavk@quicinc.com> wrote:
->
->
->
-> On 7/12/2023 10:41 AM, Marek Vasut wrote:
-> > On 7/9/23 03:03, Abhinav Kumar wrote:
-> >>
-> >>
-> >> On 7/7/2023 1:47 AM, Neil Armstrong wrote:
-> >>> On 07/07/2023 09:18, Neil Armstrong wrote:
-> >>>> Hi,
-> >>>>
-> >>>> On 06/07/2023 11:20, Amit Pundir wrote:
-> >>>>> On Wed, 5 Jul 2023 at 11:09, Dmitry Baryshkov
-> >>>>> <dmitry.baryshkov@linaro.org> wrote:
-> >>>>>>
-> >>>>>> [Adding freedreno@ to cc list]
-> >>>>>>
-> >>>>>> On Wed, 5 Jul 2023 at 08:31, Jagan Teki
-> >>>>>> <jagan@amarulasolutions.com> wrote:
-> >>>>>>>
-> >>>>>>> Hi Amit,
-> >>>>>>>
-> >>>>>>> On Wed, Jul 5, 2023 at 10:15=E2=80=AFAM Amit Pundir
-> >>>>>>> <amit.pundir@linaro.org> wrote:
-> >>>>>>>>
-> >>>>>>>> Hi Marek,
-> >>>>>>>>
-> >>>>>>>> On Wed, 5 Jul 2023 at 01:48, Marek Vasut <marex@denx.de> wrote:
-> >>>>>>>>>
-> >>>>>>>>> Do not generate the HS front and back porch gaps, the HSA gap a=
-nd
-> >>>>>>>>> EOT packet, as these packets are not required. This makes the
-> >>>>>>>>> bridge
-> >>>>>>>>> work with Samsung DSIM on i.MX8MM and i.MX8MP.
-> >>>>>>>>
-> >>>>>>>> This patch broke display on Dragonboard 845c (SDM845) devboard
-> >>>>>>>> running
-> >>>>>>>> AOSP. This is what I see
-> >>>>>>>> https://people.linaro.org/~amit.pundir/db845c-userdebug/v6.5-bro=
-ken-display/PXL_20230704_150156326.jpg.
-> >>>>>>>> Reverting this patch fixes this regression for me.
-> >>>>>>>
-> >>>>>>> Might be msm dsi host require proper handling on these updated
-> >>>>>>> mode_flags? did they?
-> >>>>>>
-> >>>>>> The msm DSI host supports those flags. Also, I'd like to point out
-> >>>>>> that the patch didn't change the rest of the driver code. So even =
-if
-> >>>>>> drm/msm ignored some of the flags, it should not have caused the
-> >>>>>> issue. Most likely the issue is on the lt9611 side. I's suspect th=
-at
-> >>>>>> additional programming is required to make it work with these flag=
-s.
-> >>>>>
-> >>>>> I spent some time today on smoke testing these flags (individually =
-and
-> >>>>> in limited combination) on DB845c, to narrow down this breakage to =
-one
-> >>>>> or more flag(s) triggering it. Here are my observations in limited
-> >>>>> testing done so far.
-> >>>>>
-> >>>>> There is no regression with MIPI_DSI_MODE_NO_EOT_PACKET when enable=
-d
-> >>>>> alone and system boots to UI as usual.
-> >>>>>
-> >>>>> MIPI_DSI_MODE_VIDEO_NO_HFP always trigger the broken display as in =
-the
-> >>>>> screenshot[1] shared earlier as well.
-> >>>>>
-> >>>>> Adding either of MIPI_DSI_MODE_VIDEO_NO_HSA and
-> >>>>> MIPI_DSI_MODE_VIDEO_NO_HBP always result in no display, unless pair=
-ed
-> >>>>> with MIPI_DSI_MODE_VIDEO_NO_HFP and in that case we get the broken
-> >>>>> display as reported.
-> >>>>>
-> >>>>> In short other than MIPI_DSI_MODE_NO_EOT_PACKET flag, all other fla=
-gs
-> >>>>> added in this commit break the display on DB845c one way or another=
-.
-> >>>>
-> >>>> I think the investigation would be to understand why samsung-dsim
-> >>>> requires
-> >>>> such flags and/or what are the difference in behavior between MSM
-> >>>> DSI and samsung DSIM
-> >>>> for those flags ?
-> >>>>
-> >>>> If someone has access to the lt9611 datasheet, so it requires
-> >>>> HSA/HFP/HBP to be
-> >>>> skipped ? and does MSM DSI and samsung DSIM skip them in the same wa=
-y ?
-> >>>
-> >>> I think there's a mismatch, where on one side this flags sets the
-> >>> link in LP-11 while
-> >>> in HSA/HFP/HPB while on the other it completely removes those
-> >>> blanking packets.
-> >>>
-> >>> The name MIPI_DSI_MODE_VIDEO_NO_HBP suggests removal of HPB, not
-> >>> LP-11 while HPB.
-> >>> the registers used in both controllers are different:
-> >>> - samsung-dsim: DSIM_HBP_DISABLE_MODE
-> >>> - msm dsi: DSI_VID_CFG0_HBP_POWER_STOP
-> >>>
-> >>> The first one suggest removing the packet, while the second one
-> >>> suggests powering
-> >>> off the line while in the blanking packet period.
-> >>>
-> >>> @Abhinav, can you comment on that ?
-> >>>
-> >>
-> >> I dont get what it means by completely removes blanking packets in DSI=
-M.
-> >
-> > MIPI_DSI_MODE_VIDEO_NO_HFP means the HBP period is just skipped by DSIM=
-.
-> >
-> > Maybe there is a need for new set of flags which differentiate between
-> > HBP skipped (i.e. NO HBP) and HBP LP11 ?
-> >
->
-> No, the section of the MIPI DSI spec I posted below clearly states there
-> are two options:
->
-> 1) send blanking packets during those periods
-> 2) transition to LP11 during those periods
->
-> There is no 3rd option in the spec of not doing both like what you are
-> suggesting. So DSIM should also be only transitioning to LP11 during
-> those periods if its not sending the blanking packets with those flags se=
-t.
->
-> So, there is no need for any new set of flags to differentiate.
->
-> The flags and their interpretation is correct in MSM driver. I cannot
-> comment on what exactly DSIM does with those flags.
+Referenced commit missed that for chip versions 42 and 43 ASPM
+remained disabled in the respective rtl_hw_start_...() routines.
+This resulted in problems as described in [0].
+Therefore re-instantiate the previous logic.
 
-As many of them know all these flags are generic across controllers
-I'm trying to add these flag notations from DSIM controller and how
-they handle the driver.
+[0] https://bugzilla.kernel.org/show_bug.cgi?id=217635
 
-HBP/HFP/HSA mode bits in i.MX8M Mini/Nano/Plus Processor Reference
-Manuals specify a naming conversion as 'disable mode bit' due to its
-bit definition,  0 =3D Enable and 1 =3D Disable.
+Fixes: 5fc3f6c90cca ("r8169: consolidate disabling ASPM before EPHY access")
+Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+---
+ drivers/net/ethernet/realtek/r8169_main.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-Example HBP (HbpDisableMode)- Specifies HBP disable mode. If this bit
-set, DSI master ignores HBP area in Video mode.
- 0 =3D Enables
- 1 =3D Disables
-
- if (dsi->mode_flags & MIPI_DSI_MODE_VIDEO_NO_HFP)
-           reg |=3D DSIM_HFP_DISABLE_MODE;
- if (dsi->mode_flags & MIPI_DSI_MODE_VIDEO_NO_HBP)
-           reg |=3D DSIM_HBP_DISABLE_MODE;
- if (dsi->mode_flags & MIPI_DSI_MODE_VIDEO_NO_HSA)
-            reg |=3D DSIM_HSA_DISABLE_MODE;
-
-I'm hoping this will give some information.
-
-Thanks,
-Jagan.
+diff --git a/drivers/net/ethernet/realtek/r8169_main.c b/drivers/net/ethernet/realtek/r8169_main.c
+index 9445f04f8..2b3aa6b45 100644
+--- a/drivers/net/ethernet/realtek/r8169_main.c
++++ b/drivers/net/ethernet/realtek/r8169_main.c
+@@ -2747,6 +2747,13 @@ static void rtl_hw_aspm_clkreq_enable(struct rtl8169_private *tp, bool enable)
+ 		return;
+ 
+ 	if (enable) {
++		/* On these chip versions ASPM can even harm
++		 * bus communication of other PCI devices.
++		 */
++		if (tp->mac_version == RTL_GIGA_MAC_VER_42 ||
++		    tp->mac_version == RTL_GIGA_MAC_VER_43)
++			return;
++
+ 		rtl_mod_config5(tp, 0, ASPM_en);
+ 		rtl_mod_config2(tp, 0, ClkReqEn);
+ 
+-- 
+2.41.0
