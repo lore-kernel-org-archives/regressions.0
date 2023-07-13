@@ -1,80 +1,60 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DF2B101E8;
-	Thu, 13 Jul 2023 11:22:31 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qJuOr-0002vb-Vr; Thu, 13 Jul 2023 13:22:22 +0200
-Message-ID: <b013c216-2298-05b4-58bc-fd69e13de05e@leemhuis.info>
-Date: Thu, 13 Jul 2023 13:22:21 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADBC2125A0
+	for <regressions@lists.linux.dev>; Thu, 13 Jul 2023 11:42:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
+	Resent-Cc:Resent-Message-ID; bh=fIgDmYcoJkd7PIFdP4hS9xlcqxhxEOoDJGq8m/+LNS4=;
+	t=1689248533; x=1690458133; b=xl5e+NNzGjhC3dWiGyuwKzLHhnhd0EYYys9d4ThUGs28Oaq
+	4ow+krNtQM0GKxrqevR582+pMSpCgarFnN3g5TTayRTa99jnUEq3YSgew9gl+/cJcxcdc5sHauskP
+	2bWln2PJcmLnBvMdVNVY3Rs8MzEeFt3ac+5zEgVjgPCGIo6u71jcHcxklgh9UIUCXJmfkndD5nN2I
+	NfywwMqCcFun/pxP3YRbhzUd8FsRf7JKowou2Q8U7QvP3AQyJ5xXrTdeg6fTx9bEsucbqhQPH+hOl
+	LsmhHccm2M0UTx6WyojNgx6q4RhngQlUbhifa6aI6yDzODcBuwiikS123pnSAxcg==;
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.96)
+	(envelope-from <johannes@sipsolutions.net>)
+	id 1qJu8p-001Df9-0b;
+	Thu, 13 Jul 2023 13:05:47 +0200
+Message-ID: <d1f9ca04bb055dc07f2a7f9f07f774e08913cf00.camel@sipsolutions.net>
+Subject: Re: Closing down the wireless trees for a summer break?
+From: Johannes Berg <johannes@sipsolutions.net>
+To: Kalle Valo <kvalo@kernel.org>, Andy Shevchenko
+ <andriy.shevchenko@intel.com>
+Cc: linux-wireless@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, regressions@lists.linux.dev, Jakub Kicinski
+	 <kuba@kernel.org>
+Date: Thu, 13 Jul 2023 13:05:45 +0200
+In-Reply-To: <87wmz43xy4.fsf@kernel.org>
+References: <87y1kncuh4.fsf@kernel.org>
+	 <ZK7Yzd0VvblA3ONU@smile.fi.intel.com> <87wmz43xy4.fsf@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: mmap on 9p broken in 6.4
-Content-Language: en-US, de-DE
-To: Robert Schwebel <r.schwebel@pengutronix.de>,
- Eric Van Hensbergen <ericvh@kernel.org>
-Cc: Latchesar Ionkov <lucho@ionkov.net>,
- Dominique Martinet <asmadeus@codewreck.org>,
- Christian Schoenebeck <linux_oss@crudebyte.com>, v9fs@lists.linux.dev,
- kernel@pengutronix.de,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <ZK25XZ+GpR3KHIB/@pengutronix.de>
-From: "Linux regression tracking #adding (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <ZK25XZ+GpR3KHIB/@pengutronix.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1689247352;6852b903;
-X-HE-SMSGID: 1qJuOr-0002vb-Vr
+X-malware-bazaar: not-scanned
 
-[CCing the regression list, as it should be in the loop for regressions:
-https://docs.kernel.org/admin-guide/reporting-regressions.html]
+On Thu, 2023-07-13 at 13:30 +0300, Kalle Valo wrote:
+> Andy Shevchenko <andriy.shevchenko@intel.com> writes:
+>=20
+> > On Tue, Jun 13, 2023 at 05:22:47PM +0300, Kalle Valo wrote:
+> >=20
+> > ...
+> >=20
+> > > [1] https://phb-crystal-ball.sipsolutions.net/
+> >=20
+> > How could one use the shut down site?
+>=20
+> What do you mean? At least from Finland it Works for me:
 
-[TLDR: I'm adding this report to the list of tracked Linux kernel
-regressions; the text you find below is based on a few templates
-paragraphs you might have encountered already in similar form.
-See link in footer if these mails annoy you.]
+That did in fact not work yesterday for some time as I was doing some
+maintenance :)
 
-On 11.07.23 22:19, Robert Schwebel wrote:
-> 
-> TL;DR: mmap() seems to be broken on 9pfs on Linux 6.4. setting
-> "rootflags=ignoreqv" fixes it as well, but it feels like a regression.
-> [...]
-> I could track down the breakage to
-> 
->   1543b4c5071c54d76aad7a7a26a6e43082269b0c
-> [...]
-
-Thanks for the report. To be sure the issue doesn't fall through the
-cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
-tracking bot:
-
-#regzbot ^introduced 1543b4c5071c54d76aad7a7a26a6e43082269b
-#regzbot title 9p: mmap() seems to be broken with qemu as server
-#regzbot ignore-activity
-
-This isn't a regression? This issue or a fix for it are already
-discussed somewhere else? It was fixed already? You want to clarify when
-the regression started to happen? Or point out I got the title or
-something else totally wrong? Then just reply and tell me -- ideally
-while also telling regzbot about it, as explained by the page listed in
-the footer of this mail.
-
-Developers: When fixing the issue, remember to add 'Link:' tags pointing
-to the report (the parent of this mail). See page linked in footer for
-details.
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
-
+johannes
