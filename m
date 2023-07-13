@@ -1,120 +1,104 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ABB9366
-	for <regressions@lists.linux.dev>; Thu, 13 Jul 2023 07:09:50 +0000 (UTC)
-From: Kurt Kanzenbach <kurt@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1689231716;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5UV3imXyDD0W84+FU8YElLYZ6EsUx+p1o+3y73ukcm4=;
-	b=kOB+CGM8Sbdtx1GLTVBQuNkhKer6anHTGFeXtvhBHfu5kzLG/erIYwPHyf83KHJgTCC+7Q
-	EoXY3XF5EHMEi8jvyof0dy2uBxediGD+ndXC4mmlzPcoIy+8FkZ7cQwKu6du5YrcLioKWP
-	zsEujZzLT3KdVpzsMA2MnRR1rZlyUhYPP+aUixCkA4iJiW6V4EW7oc6upV92XzV0ZSxneV
-	ElwcXgY3calwht98mDwmdAfEVg1aVksbqd692yAt3A0jIfpDm12r79vboor4whA7nFWtQD
-	u9qZY4bTtEk+jn84pm85ofpuuoQVwamuV+VqxnGQdCEBJkj3YXLNUdNaorPq/g==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1689231716;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5UV3imXyDD0W84+FU8YElLYZ6EsUx+p1o+3y73ukcm4=;
-	b=AGwkjfmJNeLtDaiKaH/+smRHmU+Llvlat9EEGsOtFJdzVLn8sfJYbOAbwoNWZIfcQd2VdD
-	ar84srMRIRfHt+Ag==
-To: Heiner Kallweit <hkallweit1@gmail.com>, Tobias Klausmann
- <tobias.klausmann@freenet.de>, Linux regressions mailing list
- <regressions@lists.linux.dev>
-Cc: Realtek linux nic maintainers <nic_swsd@realtek.com>,
- netdev@vger.kernel.org
-Subject: Re: r8169: transmit transmit queue timed out - v6.4 cycle
-In-Reply-To: <842ae1f6-e3fe-f4d1-8d4f-f19627a52665@gmail.com>
-References: <c3465166-f04d-fcf5-d284-57357abb3f99@freenet.de>
- <CAFSsGVtiXSK_0M_TQm_38LabiRX7E5vR26x=cKags4ZQBqfXPQ@mail.gmail.com>
- <e47bac0d-e802-65e1-b311-6acb26d5cf10@freenet.de>
- <f7ca15e8-2cf2-1372-e29a-d7f2a2cc09f1@leemhuis.info>
- <CAFSsGVuDLnW_7iwSUNebx8Lku3CGZhcym3uXfMFnotA=OYJJjQ@mail.gmail.com>
- <A69A7D66-A73A-4C4D-913B-8C2D4CF03CE2@freenet.de>
- <842ae1f6-e3fe-f4d1-8d4f-f19627a52665@gmail.com>
-Date: Thu, 13 Jul 2023 09:01:55 +0200
-Message-ID: <87a5w0cn18.fsf@kurt>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 012AD63A0
+	for <regressions@lists.linux.dev>; Thu, 13 Jul 2023 08:03:57 +0000 (UTC)
+Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-c581c758ad8so385098276.1
+        for <regressions@lists.linux.dev>; Thu, 13 Jul 2023 01:03:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1689235437; x=1691827437;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=bNc2pUv/smaIGLoP8Kp1HP8/RcjfUJ9VWG1zvqf1FRk=;
+        b=QdNGjNEI4hzaUyyE7vA5jRRLDwnHf/GBv2mvnGl9QudbJavTc5uLYF02AL2EE4BzOY
+         STJJ2WGhIp2Fj8EMNEvxDDHfng6gZdIXBdrrHsjH2AXUahTVjn0HAkJXLW3iGC75PBLu
+         CCabxflcCi9dpDpQe/n8cMzpdtO050gJRBQ2Uz9t/RweW6YMIvHKiM4KncWLJJXBamIx
+         M/8b/KV1EDS6ycM+QiKEdGAAOtbCrPD8dSxBsUfI1VmwNrpIfgomMXGr6fHRwxUZWOCP
+         szf0JVZch8WuZdHHJoeCnFQe0ouytx44u4mdl/kmN2fiKqmfpynMk1nY3QJl5+lvbfNl
+         I6RA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689235437; x=1691827437;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=bNc2pUv/smaIGLoP8Kp1HP8/RcjfUJ9VWG1zvqf1FRk=;
+        b=P3YAZj8c7iT+vVoKZBt35WAE45TGibUjk6f+mHOo3xO19Zcznh1Xh2ulUbXprrTO3P
+         ck22Dgo/mrGviqTqE9X/9k5kxfl7O1X73GD+Nx6nB1AmQCfvT/VcXSqqATPGC7lK5nZI
+         XcoHhxBRpy1Bn5Zy01TdChtDWG5dFmAQ/9eiQ/DD8ErtcNayijXRUPXqXEi+aOzNoa4a
+         jflv7Ije4hrdUKAl1sPl/vKtv20w7OGttYBl7opGu5FTEkDHGRRqmgKV+NZOxdF3pI+T
+         +1dCUUXcJ1eqd6tQepX9OrJMSRfzk9t7Pl4N8+DvKbAdtQara8s4EQk6IO3Eh2zGO+Xk
+         eAVg==
+X-Gm-Message-State: ABy/qLbHMSbYL4G4uac/LGsrBTy5zad/Fb2XQePCZsZVDObBQvI1K3PE
+	K95F6kL12ayI6+JF6Wcb2Idbax15UgAL1r7H4eB9K6yvUlc=
+X-Google-Smtp-Source: APBJJlEs/BW2S7clrV46fvJmu+3eBnO23VlcwbByQILp+Uk/fVxad+/5Pb3wy3N9QjZoKwP16JnEceQCL1lv6YjGNYs=
+X-Received: by 2002:a5b:7c6:0:b0:bcb:523e:addf with SMTP id
+ t6-20020a5b07c6000000b00bcb523eaddfmr622445ybq.65.1689235436627; Thu, 13 Jul
+ 2023 01:03:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha512; protocol="application/pgp-signature"
+From: =?UTF-8?B?T25kcmVqIE1vc27DocSNZWs=?= <omosnacek@gmail.com>
+Date: Thu, 13 Jul 2023 10:03:45 +0200
+Message-ID: <CAAUqJDuRkHE8fPgZJGaKjUjd3QfGwzfumuJBmStPqBhubxyk_A@mail.gmail.com>
+Subject: Another regression in the af_alg series (s390x-specific)
+To: Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
+Cc: David Howells <dhowells@redhat.com>, Herbert Xu <herbert@gondor.apana.org.au>, 
+	Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org, regressions@lists.linux.dev, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Hi,
 
-Hello Heiner,
+It turns out that beneath the first bug [1] there was another one
+hiding. It seems to happen only on the s390x architecture when running
+the following libkcapi [2] reproducer:
 
-On Mon Jul 10 2023, Heiner Kallweit wrote:
-> On 05.07.2023 00:25, Tobias Klausmann wrote:
->> Hi, top posting as well, as im on vacation, too. The system does not
->> allow disabling ASPM, it is a very constrained notebook BIOS, thus
->> the suggestion is nit feasible. All in all the sugesstion seems not
->> favorable for me, as it is unknown how many systems are broken the
->> same way. Having a workaround adviced as default seems oretty wrong
->> to me.
->>=20
->
-> To get a better understanding of the affected system:
-> Could you please provide a full dmesg log and the lspci -vv output?
+kcapi -x 2 -s -c "gcm(aes)" -i 0d92aa861746b324f20ee6b7 \
+    -k f4a6a5e5f2066f6dd9ec6fc5169c29043560ef595c9e81e76f42d29212cc581c \
+    -a "" -t 5f24c68cbe6f32c29652442bf5d483ad -q ""
 
-I'm having the same problem as described by Tobias on a desktop
-machine. v6.3 works; v6.4 results in transmit queue timeouts
-occasionally. Reverting 2ab19de62d67 ("r8169: remove ASPM restrictions
-now that ASPM is disabled during NAPI poll") "solves" the issue.
+Frequently (but not always) it triggers an oops like this one:
 
-From=20dmesg:
+[ 3986.766763] Unable to handle kernel pointer dereference in virtual
+kernel address space
+[ 3986.766774] Failing address: 0000000a00000000 TEID: 0000000a00000803
+[ 3986.766776] Fault in home space mode while using kernel ASCE.
+[ 3986.766778] AS:00000000a43a0007 R3:0000000000000024
+[ 3986.766825] Oops: 003b ilc:2 [#1] SMP
+<snip>
+[ 3986.766877] CPU: 0 PID: 271064 Comm: kcapi Tainted: G        W
+    6.5.0-rc1 #1
+[ 3986.767070] Hardware name: IBM 8561 LT1 400 (z/VM 7.2.0)
+<snip>
+[ 3986.767151] Call Trace:
+[ 3986.767153]  [<000003ff7fc3d47e>] gcm_walk_start+0x16/0x28 [aes_s390]
+[ 3986.767160]  [<00000000a2a342f2>] crypto_aead_decrypt+0x9a/0xb8
+[ 3986.767166]  [<00000000a2a60888>] aead_recvmsg+0x478/0x698
+[ 3986.767169]  [<00000000a2e519a0>] sock_recvmsg+0x70/0xb0
+[ 3986.767175]  [<00000000a2e51a56>] sock_read_iter+0x76/0xa0
+[ 3986.767177]  [<00000000a273e066>] vfs_read+0x26e/0x2a8
+[ 3986.767182]  [<00000000a273e8c4>] ksys_read+0xbc/0x100
+[ 3986.767184]  [<00000000a311d808>] __do_syscall+0x1d0/0x1f8
+[ 3986.767189]  [<00000000a312ff30>] system_call+0x70/0x98
+[ 3986.767193] Last Breaking-Event-Address:
+[ 3986.767193]  [<000003ff7fc3e6b4>] gcm_aes_crypt+0x104/0xa68 [aes_s390]
+[ 3986.767198] Kernel panic - not syncing: Fatal exception: panic_on_oops
 
-|~ % dmesg | grep -i ASPM
-|[    0.152746] ACPI FADT declares the system doesn't support PCIe ASPM, so=
- disable it
-|[    0.905100] acpi PNP0A08:00: _OSC: OS supports [ExtendedConfig ASPM Clo=
-ckPM Segments MSI HPX-Type3]
-|[    0.906508] acpi PNP0A08:00: FADT indicates ASPM is unsupported, using =
-BIOS configuration
-|[    1.156585] pci 10000:e1:00.0: can't override BIOS ASPM; OS doesn't hav=
-e ASPM control
-|[    1.300059] r8169 0000:03:00.0: can't disable ASPM; OS doesn't have ASP=
-M control
+This time the regression was bisected to:
 
-In addition, with commit 2ab19de62d67 in kernel regular messages like
-this show up:
+commit c1abe6f570aff4b6d396dc551e60570d2f50bd79
+Author: David Howells <dhowells@redhat.com>
+Date:   Tue Jun 6 14:08:52 2023 +0100
 
-|[ 7487.214593] pcieport 0000:00:1c.2: AER: Corrected error received: 0000:=
-03:00.0
+   crypto: af_alg: Use extract_iter_to_sg() to create scatterlists
 
-I'm happy to test any patches or provide more info if needed.
+I can't see what the problem is with the commit, so I'm reporting here
+hoping that David or someone else can pick it up from here.
 
-Thanks,
-Kurt
+Cheers,
+Ondrej
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQJHBAEBCgAxFiEEvLm/ssjDfdPf21mSwZPR8qpGc4IFAmSvoWMTHGt1cnRAbGlu
-dXRyb25peC5kZQAKCRDBk9HyqkZzgpzUD/9Q6ni9gjwQ+JusCWY7kmtW0I0Qp+6C
-zow+xfJTRg6r1yQHQaIttoBttp291sJlQlmqcdtPIOSE2OQgUephmMyakCxIylKT
-nARVGSXBov+arV71QNE1qZF5ypPJtS4Jsag2jdfApcGLRXk0mke3LZlzWjJSvJ3U
-fnB7IxtCtLYswdRoTOBV3sgkZTeJdY/Y663wNGVLG7YzdyNPIiHDCdTaGO31HNpR
-YF0mnQ6+lgkZgN8ag9cdn089hS2eV8qP+1EQhESfo8iC9VWMH/yEflC1Q8478M+2
-gZasLmWQSDq4Pg+k9MgZ5T1XZ+WtUjvomMD7x588mvFMEs+b8YJiNpqkGh+0NAp4
-36NXLuZySLH6cNNt5j109MiFD8AC0okwNVe2TARDod9x7P30XvHqiO8IanCR/gOP
-1I5YBWR428DdFDsm6C5ZAwj1ftRvrnVuAc+dPc+1Assb/LYNIWQvXLHIK9HueHDZ
-eD+bjCJT+IKjno8VIBeyccFU1U40AxqceOCfs7DVAf0xyy2tukjKPYv1pM+pIewX
-rHgo/A5wad+2XYYfG9p5gYRnVrGDW1wIp0Sg3qHSbSuwyWg/XJkdrDoLYHvgnUnp
-JCJZsHXQ+wM82eQQqXzoXFGl2vp05ZjKLO0whEqF76W3qMuayE0P5jsjPEreKwmg
-uy3KyGuixsZRgg==
-=x6s2
------END PGP SIGNATURE-----
---=-=-=--
+[1] https://lore.kernel.org/linux-crypto/CAAUqJDvFuvms55Td1c=XKv6epfRnnP78438nZQ-JKyuCptGBiQ@mail.gmail.com/T/
+[2] https://github.com/smuellerDD/libkcapi/
