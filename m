@@ -1,52 +1,71 @@
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 538EF1078D
-	for <regressions@lists.linux.dev>; Thu, 13 Jul 2023 11:44:20 +0000 (UTC)
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id E91E668AA6; Thu, 13 Jul 2023 13:44:12 +0200 (CEST)
-Date: Thu, 13 Jul 2023 13:44:12 +0200
-From: Christoph Hellwig <hch@lst.de>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Christoph Hellwig <hch@lst.de>,
-	Linux regressions mailing list <regressions@lists.linux.dev>,
-	Pankaj Raghav <p.raghav@samsung.com>,
-	Keith Busch <kbusch@kernel.org>,
-	Bagas Sanjaya <bagasdotme@gmail.com>, Jens Axboe <axboe@kernel.dk>,
-	Sagi Grimberg <sagi@grimberg.me>,
-	"Clemens S." <cspringsguth@gmail.com>,
-	Martin Belanger <martin.belanger@dell.com>,
-	Chaitanya Kulkarni <kch@nvidia.com>,
-	John Meneghini <jmeneghi@redhat.com>,
-	Hannes Reinecke <hare@suse.de>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux NVMe <linux-nvme@lists.infradead.org>,
-	Kanchan Joshi <joshi.k@samsung.com>,
-	Javier Gonzalez <javier.gonz@samsung.com>,
-	=?utf-8?B?67CV7KeE7ZmY?= <jh.i.park@samsung.com>
-Subject: Re: Fwd: Need NVME QUIRK BOGUS for SAMSUNG MZ1WV480HCGL-000MV
- (Samsung SM-953 Datacenter SSD)
-Message-ID: <20230713114412.GA23427@lst.de>
-References: <CGME20230710155902eucas1p2b464a29adc35e983c73b00d18ab5344c@eucas1p2.samsung.com> <ZKwqvTMPVmhnkZjS@kbusch-mbp.dhcp.thefacebook.com> <f0fdf86e-4293-8e07-835d-b5a866252068@samsung.com> <462e0e1e-98ea-0f3c-4aaa-8d44f0a8e664@leemhuis.info> <20230711120609.GB27050@lst.de> <CAHk-=whXh9sgLo24RO02JjfD0m3HE5NADRPWoEd+dW6bruFhVA@mail.gmail.com> <20230712164546.GA31434@lst.de> <CAHk-=whA9rmvNfo=8iKmtimayiA2Aus4XvPwcDrA53G2rfGP0w@mail.gmail.com> <20230712165721.GA31965@lst.de> <CAHk-=wgzetYEqj7phbJBE_ZshFq0=k3zWouJ8XyFyERgDX5sZg@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC6D2125A0
+	for <regressions@lists.linux.dev>; Thu, 13 Jul 2023 11:46:00 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1qJuli-0007Xd-JC; Thu, 13 Jul 2023 13:45:58 +0200
+Message-ID: <10064cba-f0fe-fbc6-0c3a-97be48360a05@leemhuis.info>
+Date: Thu, 13 Jul 2023 13:45:58 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wgzetYEqj7phbJBE_ZshFq0=k3zWouJ8XyFyERgDX5sZg@mail.gmail.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: Bugbot for all kernel bugs?
+Content-Language: en-US, de-DE
+To: Konstantin Ryabitsev <konstantin@linuxfoundation.org>
+Cc: "workflows@vger.kernel.org" <workflows@vger.kernel.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <8133fcf4-5ed6-204a-ceb1-ee4136e32fb4@leemhuis.info>
+ <20230711-encore-hunchback-2d103b@meerkat>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <20230711-encore-hunchback-2d103b@meerkat>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1689248760;1b426e91;
+X-HE-SMSGID: 1qJuli-0007Xd-JC
 
-On Wed, Jul 12, 2023 at 10:34:05AM -0700, Linus Torvalds wrote:
-> That's a *FACT*.
+On 11.07.23 22:43, Konstantin Ryabitsev wrote:
+> On Mon, Jul 10, 2023 at 07:28:26PM +0200, Thorsten Leemhuis wrote:
+>> Hi Konstantin. Is there any hope that bugbot will be usable for all
+>> kernel bugs in bugzilla.kernel.org soon? It sounded some weeks ago like
+>> that wasn't too far away, that's why I wonder if we might have arrived
+>> at a point where this support could be enabled.
 > 
-> You then say "Some devices have UUID's, so all devices must have UUIDs".
+> I just need to add a wrapper that would make it more convenient to run as an
+> actual service as opposed to in a screen session I've been using for testing
+> purposes. Probably a day worth of effort, plus documentation.
+>
+>> Sorry for bothering you about this, but I'm getting a bit tired by all
+>> that tedious man-in-the-middle between reporters and developers to let
+>> one group know about things the other did...
+> 
+> So, we can't easily do "enable for all the bugs" because the bot was written
+> with the idea that it would be invoked per-component. Is there a bugzilla
+> component (and a matching mailing list) that you have in mind for the bot?
 
-Please stop putting words in my mouth.  Maybe instead of shouting it
-would help to actually read the text?
+Ugh. :-/ Well, as you can see from a quick search like
+https://lore.kernel.org/all/?q=%28nq%3A%22noticed+a+regression+report+in+bugzilla.kernel.org%22+f%3Aleemhuis%29+OR+%28nq%3A%22I+notice+a+regression+report+on+Bugzilla%22+f%3Asanjaya%29
+we have to deal will bug reports for many different components. So it
+would be great if it could be enabled for all products/components, except:
 
-You said we've never seen devices with reliably IDs, which simply isn't
-true.  And that doesn't mean I'm saying all devices have reliably IDs,
-which somehow you're not trying to make me say.
+* all components from the product categories "Alternate Trees",
+"Backports project", "Documentation", "kernel.org", and "Tools"
+
+* "Bug Tracker", "klibc/kinit", "module-init-tools", and "Spam" from the
+product category "Other"
+
+There might be a few more that are obsolete hidden in the other products
+categories (like "PS3" in "Platform Specific/Hardware" or "lguest" in
+"Virtualization")
+
+Did I say "Ugh" already? Ohh, seems I did. :-/
+
+So how do you suggest to move forward
+
+Ciao, Thorsten
