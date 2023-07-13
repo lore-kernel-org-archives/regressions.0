@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC6D2125A0
-	for <regressions@lists.linux.dev>; Thu, 13 Jul 2023 11:46:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C9D0F9E5
+	for <regressions@lists.linux.dev>; Thu, 13 Jul 2023 12:37:11 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qJuli-0007Xd-JC; Thu, 13 Jul 2023 13:45:58 +0200
-Message-ID: <10064cba-f0fe-fbc6-0c3a-97be48360a05@leemhuis.info>
-Date: Thu, 13 Jul 2023 13:45:58 +0200
+	id 1qJvZ6-0006Dr-U9; Thu, 13 Jul 2023 14:37:00 +0200
+Message-ID: <425eba3b-0138-81d1-f615-97fc24b2d51d@leemhuis.info>
+Date: Thu, 13 Jul 2023 14:37:00 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,56 +16,69 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.13.0
-Subject: Re: Bugbot for all kernel bugs?
+Subject: Re: Performance Regression due to ASPM disable patch
 Content-Language: en-US, de-DE
-To: Konstantin Ryabitsev <konstantin@linuxfoundation.org>
-Cc: "workflows@vger.kernel.org" <workflows@vger.kernel.org>,
+To: Anuj Gupta <anuj20.g@samsung.com>, hkallweit1@gmail.com,
+ davem@davemloft.net
+Cc: holger@applied-asynchrony.com, kai.heng.feng@canonical.com,
+ simon.horman@corigine.com, nic_swsd@realtek.com, netdev@vger.kernel.org,
+ linux-nvme@lists.infradead.org,
  Linux kernel regressions list <regressions@lists.linux.dev>
-References: <8133fcf4-5ed6-204a-ceb1-ee4136e32fb4@leemhuis.info>
- <20230711-encore-hunchback-2d103b@meerkat>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <20230711-encore-hunchback-2d103b@meerkat>
+References: <CGME20230712155834epcas5p1140d90c8a0a181930956622728c4dd89@epcas5p1.samsung.com>
+ <20230712155052.GA946@green245>
+From: "Linux regression tracking #adding (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <20230712155052.GA946@green245>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1689248760;1b426e91;
-X-HE-SMSGID: 1qJuli-0007Xd-JC
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1689251832;40a56bf9;
+X-HE-SMSGID: 1qJvZ6-0006Dr-U9
 
-On 11.07.23 22:43, Konstantin Ryabitsev wrote:
-> On Mon, Jul 10, 2023 at 07:28:26PM +0200, Thorsten Leemhuis wrote:
->> Hi Konstantin. Is there any hope that bugbot will be usable for all
->> kernel bugs in bugzilla.kernel.org soon? It sounded some weeks ago like
->> that wasn't too far away, that's why I wonder if we might have arrived
->> at a point where this support could be enabled.
+[CCing the regression list, as it should be in the loop for regressions:
+https://docs.kernel.org/admin-guide/reporting-regressions.html]
+
+[TLDR: I'm adding this report to the list of tracked Linux kernel
+regressions; the text you find below is based on a few templates
+paragraphs you might have encountered already in similar form.
+See link in footer if these mails annoy you.]
+
+On 12.07.23 17:55, Anuj Gupta wrote:
 > 
-> I just need to add a wrapper that would make it more convenient to run as an
-> actual service as opposed to in a screen session I've been using for testing
-> purposes. Probably a day worth of effort, plus documentation.
->
->> Sorry for bothering you about this, but I'm getting a bit tired by all
->> that tedious man-in-the-middle between reporters and developers to let
->> one group know about things the other did...
+> I see a performance regression for read/write workloads on our NVMe over
+> fabrics using TCP as transport setup.
+> IOPS drop by 23% for 4k-randread [1] and by 18% for 4k-randwrite [2].
 > 
-> So, we can't easily do "enable for all the bugs" because the bot was written
-> with the idea that it would be invoked per-component. Is there a bugzilla
-> component (and a matching mailing list) that you have in mind for the bot?
+> I bisected and found that the commit
+> e1ed3e4d91112027b90c7ee61479141b3f948e6a ("r8169: disable ASPM during
+> NAPI poll") is the trigger.
+> When I revert this commit, the performance drop goes away.
+> 
+> The target machine uses a realtek ethernet controller
+> [...]
 
-Ugh. :-/ Well, as you can see from a quick search like
-https://lore.kernel.org/all/?q=%28nq%3A%22noticed+a+regression+report+in+bugzilla.kernel.org%22+f%3Aleemhuis%29+OR+%28nq%3A%22I+notice+a+regression+report+on+Bugzilla%22+f%3Asanjaya%29
-we have to deal will bug reports for many different components. So it
-would be great if it could be enabled for all products/components, except:
+Thanks for the report. To be sure the issue doesn't fall through the
+cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
+tracking bot:
 
-* all components from the product categories "Alternate Trees",
-"Backports project", "Documentation", "kernel.org", and "Tools"
+#regzbot ^introduced e1ed3e4d91112027b90c7ee61479141b3f94
+#regzbot title net: r8169: performance regression for read/write
+workloads on our NVMe over fabrics
+#regzbot ignore-activity
 
-* "Bug Tracker", "klibc/kinit", "module-init-tools", and "Spam" from the
-product category "Other"
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply and tell me -- ideally
+while also telling regzbot about it, as explained by the page listed in
+the footer of this mail.
 
-There might be a few more that are obsolete hidden in the other products
-categories (like "PS3" in "Platform Specific/Hardware" or "lguest" in
-"Virtualization")
+Developers: When fixing the issue, remember to add 'Link:' tags pointing
+to the report (the parent of this mail). See page linked in footer for
+details.
 
-Did I say "Ugh" already? Ohh, seems I did. :-/
-
-So how do you suggest to move forward
-
-Ciao, Thorsten
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+That page also explains what to do if mails like this annoy you.
