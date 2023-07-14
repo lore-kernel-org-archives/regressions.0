@@ -1,123 +1,152 @@
-Received: from mailgw.gate-on.net (auth.Gate-On.Net [210.197.74.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A48BA6AA4
-	for <regressions@lists.linux.dev>; Fri, 14 Jul 2023 05:40:03 +0000 (UTC)
-Received: from vega.pgw.jp (unknown [49.135.109.134])
-	by mailgw.gate-on.net (Postfix) with ESMTP id 95F0080165;
-	Fri, 14 Jul 2023 14:32:49 +0900 (JST)
-Received: from localhost (vega.pgw.jp [10.5.0.30])
-	by vega.pgw.jp (Postfix) with SMTP
-	id 8B1E5A53D; Fri, 14 Jul 2023 14:32:46 +0900 (JST)
-From: <kkabe@vega.pgw.jp>
-Content-Type: text/plain; charset=ISO-2022-JP
-To: regressions@lists.linux.dev
-Cc: bagasdotme@gmail.com, alexander.deucher@amd.com,
-	christian.koenig@amd.com, Xinhui.Pan@amd.com, tglx@linutronix.de,
-	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-	hpa@zytor.com, linux-kernel@vger.kernel.org,
-	amd-gfx@lists.freedesktop.org
-Cc: rostedt@goodmis.org, kkabe@vega.pgw.jp
-Subject: Re: radeon.ko/i586: BUG: kernel NULL pointer dereference, address:00000004
-In-Reply-To: Your message of "Fri, 14 Jul 2023 05:44:07 +0200".
-	<55a3bbb1-5b3c-f454-b529-8ee9944cc67c@leemhuis.info>
-X-Mailer: mnews [version 1.22PL5] 2002-11-27(Wed)
-Date: Fri, 14 Jul 2023 14:32:46 +0900
-Message-ID: <230714143246.M0123552@vega.pgw.jp>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5CCB4C8C
+	for <regressions@lists.linux.dev>; Fri, 14 Jul 2023 05:58:51 +0000 (UTC)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 0629D22132;
+	Fri, 14 Jul 2023 05:58:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1689314330; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Gu0FFJ+R4gobXXT6CHnm0hg9iiaJzUc3BBW1Fq5ptXU=;
+	b=0IHJHvUenq+o6mL8jmP9Yesrk5AwmykOqBSoNnb5VlWHeeX3/uZlMIFjf02CfkU6t8MfuZ
+	RSKa0p1GJYCgEdHQgQhw4A5zssreTZqy5MLOde7ECBA4VpDbIPkHBUk3eRLhUeSl8Bj6g4
+	96xOSb0P8AAelUpBt/J9/sjm9ILZpEs=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1689314330;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Gu0FFJ+R4gobXXT6CHnm0hg9iiaJzUc3BBW1Fq5ptXU=;
+	b=4iJK7mxrI55wWKz6WYwdhnUmDIrcSgxJx5pnfNuw2z97fyh4tvW16JT2GgVQPFkuQgv04/
+	UgaZyGrZp9b4ckBA==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id C79BF13A15;
+	Fri, 14 Jul 2023 05:58:49 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+	by imap2.suse-dmz.suse.de with ESMTPSA
+	id F4rULxnksGRfDgAAMHmgww
+	(envelope-from <tiwai@suse.de>); Fri, 14 Jul 2023 05:58:49 +0000
+Date: Fri, 14 Jul 2023 07:58:49 +0200
+Message-ID: <878rbjdofa.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Kailang <kailang@realtek.com>
+Cc: "Joseph C. Sible" <josephcsible@gmail.com>,
+	Bagas Sanjaya <bagasdotme@gmail.com>,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+	"perex@perex.cz"
+	<perex@perex.cz>,
+	"tiwai@suse.com" <tiwai@suse.com>,
+	"alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
+Subject: Re: Fwd: [Bug 217440] New: ALC236 audio disappears from HP 15z-fc000 on warm boot
+In-Reply-To: <1f83caa215ad4374aec8859c70044b00@realtek.com>
+References: <bug-217440-225600@https.bugzilla.kernel.org/>
+	<CABpewhE4REgn9RJZduuEU6Z_ijXNeQWnrxO1tg70Gkw=F8qNYg@mail.gmail.com>
+	<ZGB0cVVI7OgaJU6t@debian.me>
+	<CABpewhGJE7-k52j8L2kJ2zKupgp3Ma+LdZazzzV4w1Bgihp7nw@mail.gmail.com>
+	<87cz338ix4.wl-tiwai@suse.de>
+	<CABpewhF01AK4cFPbwYVvKR9yWaO7o-ZE-2+MZjYSUF0BKUdYvw@mail.gmail.com>
+	<874jodlnmi.wl-tiwai@suse.de>
+	<415d4bc84aa74c74af913048f28b42a9@realtek.com>
+	<87fs7mdofi.wl-tiwai@suse.de>
+	<7da2fdfdae614b1c98deda6e11ca34eb@realtek.com>
+	<87353kd8b9.wl-tiwai@suse.de>
+	<1170325957764b4cbd7cd3639575f285@realtek.com>
+	<CABpewhGBakDSBLKZ1cr2=OMspuu3qyYwZrsXUggQ3vt8gsD88A@mail.gmail.com>
+	<873536js7q.wl-tiwai@suse.de>
+	<CABpewhE0NAC-Q=iqG2Ba=XhT7SXsWy18wQGYUaopzmKDfFxyPw@mail.gmail.com>
+	<2c1fcbc00bb44d66a29ac1c1e4bec5ad@realtek.com>
+	<CABpewhFthKG97dPiQC4JhGx9sapX9Yu5rWABQjpY95TSA+eawA@mail.gmail.com>
+	<485f99149508488080d563144454040e@realtek.com>
+	<CABpewhGkvWtM+9J=mx3vw0QY=OBB5OYCxzX3nzVffvFS4QazPA@mail.gmail.com>
+	<2831c55638a5431ca9e37d9caf365ed2@realtek.com>
+	<CABpewhGiMJUpyBA6=D9_-YA6=5rjR2R0RHUZeg+cWcjtzuCoZQ@mail.gmail.com>
+	<3c27f0455d6e4bd1a68115bd25bf1a12@realtek.com>
+	<CABpewhEptq0+W_71U__8iQ4+LNtYSUB9C+0bcS2Hw-5mnj9viQ@mail.gmail.com>
+	<009474f04d0b45c69a0e42e8622b7a86@realtek.com>
+	<87h6rhcef2.wl-tiwai@suse.de>
+	<0990300d759846d890de9c92fcad9a9d@realtek.com>
+	<CABpewhERnOH1qkkJ5_JJUZkz1_8oxD9aR5VBs1vsURAG7Eu_Ew@mail.gmail.com>
+	<878rctcavz.wl-tiwai@suse.de>
+	<874jnhc9u4.wl-tiwai@suse.de>
+	<CABpewhHG2+s8_6r6vChm2g5tD8ALW_SWJWubPRXWzTJB2aFR9g@mail.gmail.com>
+	<875y7vbxpg.wl-tiwai@suse.de>
+	<CABpewhHDnvn4v+uCpsaLHB+biw-f59tdTiCyFkicHnewXHYDNg@mail.gmail.com>
+	<87wn0aa1s4.wl-tiwai@suse.de>
+	<CABpewhFg=7+JR6v=zhi0_Hm9+S64DLOHKeG2pS-W7z-vNpu_5Q@mail.gmail.com>
+	<87leg7x4h7.wl-tiwai@suse.de>
+	<f4969213b5a14cc5a11befb4df861481@realtek.com>
+	<87cz182hfk.wl-tiwai@suse.de>
+	<4678992299664babac4403d9978e7ba7@realtek.com>
+	<CABpewhGkw2rg_NN7Rd8E_p+AN9MC0A1CjgnrhBvMnSKq0gz31w@mail.gmail.com>
+	<1f83caa215ad4374aec8859c70044b00@realtek.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Thanks you all for getting attention to the report: 
+On Fri, 14 Jul 2023 04:46:25 +0200,
+Kailang wrote:
+> 
+> Hi Takashi,
+> 
+> Could you agree this workaround?
 
-regressions@leemhuis.info sed in <55a3bbb1-5b3c-f454-b529-8ee9944cc67c@leemhuis.info>
+Yes, looks fine.  I applied it now.
 
->> On 14.07.23 05:12, Steven Rostedt wrote:
->> > On Fri, 14 Jul 2023 09:50:17 +0700
->> > Bagas Sanjaya <bagasdotme@gmail.com> wrote:
->> > 
->> >> I notice a regression report on Bugzilla [1]. Quoting from it:
->> >>
->> >>
->> >> See Bugzilla for the full thread and attached patches that fixes
->> >> this regression.
->> >>
->> >> Later, when bisecting, the reporter got better kernel trace:
->> >>
->> >>> [  469.825305] BUG: kernel NULL pointer dereference, address: 00000004
->> >>> [  469.830502] #PF: supervisor read access in kernel mode
->> >>> [  469.830502] #PF: error_code(0x0000) - not-present page
->> >>> [  469.830502] *pde = 00000000
->> >>> [  469.830502] Oops: 0000 [#1] PREEMPT SMP
->> >>> [  469.830502] CPU: 0 PID: 365 Comm: systemd-udevd Not tainted 5.14.0-221.el9.v1.i586 #1
->> > 
->> > This is a 5.14 kernel right?
->> 
->> And a vendor kernel that from the sound of the version number might be
->> heavily patched. But apparently the reporter later bisected this on a
->> newer kernel (Bagas, would have been good if this had been mentioned in
->> your earlier mail):
->> 
->> https://bugzilla.kernel.org/show_bug.cgi?id=217669#c5
->> ```
->> I succeeded to bisect down the regressing commit found in kernel-5.18.0-rc2:
->> 
->> b39181f7c690 (refs/bisect/bad) ftrace: Add FTRACE_MCOUNT_MAX_OFFSET to
->> avoid adding weak function
->> 
->> This at a glance does not relate to drm/kms code.
->> 
->> The attached patch effectively reverts the commit for 32bit.
->> This fixed the problem on kernel-5.18.0, but not enough for kernel-6.4.3 ```
->> 
->> That being said: That commit is not in 5.18, as Steve noticed:
->> 
->> >> #regzbot introduced: b39181f7c6907d https://bugzilla.kernel.org/show_bug.cgi?id=217669
->> >> #regzbot title: FTRACE_MCOUNT_MAX_OFFSET causes kernel NULL pointer dereference and virtual console (tty1) freeze
->> > That commit was added in 5.19.
->> > 
->> > So I'm confused about why it's mentioned. Was it backported?
->> 
->> Taketo Kabe, could you please help to clean this confusion up? Did you
->> mean 5.19 in https://bugzilla.kernel.org/show_bug.cgi?id=217669#c5 ? And
->> BTW: did you really use a vanilla kernel for your bisection?
+Thanks!
 
+Takashi
 
-Reporter Me:
-I bisected using freedesktop.org kernel tree, which git commit ID is
-in sync with kernel.org
-but version number in ./Makefile could be slighty behind. 
-
-Patch in
-https://bugzilla.kernel.org/show_bug.cgi?id=217669#c4
-fixed the problem in freedesktop.org kernel 5.18.0-rc2 .
-This may explain that in kernel.org tree, the said commit is in kernel-5.19.
-
-
->> TWIMC, there is also
->> https://bugzilla.kernel.org/show_bug.cgi?id=217669#c6 :
->> ```
->> Attached patch sort of fixes the problem; it does not panic and
->> KMS console works, but printk is triggered 4 times on radeon.ko load and
->> when VGA connector is plugged in.
->> 
->> I am sort of at loss now; I need advice from people which knows better.
->> 
->>  --- ./drivers/gpu/drm/drm_internal.h.rd	2023-06-25 21:35:27.506967450 +0900
->>  +++ ./drivers/gpu/drm/drm_internal.h.rd	2023-06-25 21:36:34.758055363 +0900
->>  @@ -99,6 +99,10 @@ u64 drm_vblank_count(struct drm_device *
->>   /* drm_vblank_work.c */
->>   static inline void drm_vblank_flush_worker(struct drm_vblank_crtc *vblank)
->>   {
->>  +	if (!vblank->worker) {
->>  +		printk(KERN_WARNING "%s: vblank->worker NULL? returning\n", __func__);
->>  +		return;
->>  +	}
->>   	kthread_flush_worker(vblank->worker);
->>   }
->> ```
->> 
->> Ciao, Thorsten
->> 
+> 
+> BR,
+> Kailang
+> 
+> > -----Original Message-----
+> > From: Joseph C. Sible <josephcsible@gmail.com>
+> > Sent: Friday, July 14, 2023 9:11 AM
+> > To: Kailang <kailang@realtek.com>
+> > Cc: Takashi Iwai <tiwai@suse.de>; Bagas Sanjaya <bagasdotme@gmail.com>;
+> > regressions@lists.linux.dev; perex@perex.cz; tiwai@suse.com;
+> > alsa-devel@alsa-project.org
+> > Subject: Re: Fwd: [Bug 217440] New: ALC236 audio disappears from HP
+> > 15z-fc000 on warm boot
+> > 
+> > 
+> > External mail.
+> > 
+> > 
+> > 
+> > On Thu, Jul 13, 2023 at 4:25 AM Kailang <kailang@realtek.com> wrote:
+> > >
+> > > Hi Joseph,
+> > >
+> > > Could you test attach patch?
+> > >
+> > > BR,
+> > > Kailang
+> > 
+> > I applied that patch on top of kernel 6.4.3 and tested it, and yes, it does fix the
+> > problem.
+> > 
+> > Thanks,
+> > 
+> > Joseph C. Sible
+> > 
+> > ------Please consider the environment before printing this e-mail.
+> 
