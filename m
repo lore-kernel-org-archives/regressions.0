@@ -1,77 +1,181 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C36763CE
-	for <regressions@lists.linux.dev>; Fri, 14 Jul 2023 06:58:45 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qKClG-0007kD-7z; Fri, 14 Jul 2023 08:58:42 +0200
-Message-ID: <6b2513b0-f57c-73ff-5181-489ba43a01e3@leemhuis.info>
-Date: Fri, 14 Jul 2023 08:58:41 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9FF7746C
+	for <regressions@lists.linux.dev>; Fri, 14 Jul 2023 07:16:08 +0000 (UTC)
+From: Kurt Kanzenbach <kurt@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1689318961;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hUAHTRd8c3CSu7cXSAALH6Qn7qntx8W9EcrdN/wA98k=;
+	b=Z/RajePAIPnSQVa3vCjcBglOC723Hu3WgzrC1OzDPXNdulC8MuK0kQixHhtjivaCu9/J9U
+	tV7LrcH8Zl2zoP8nNiALtE/FS1c7XvKod3Q1del8xHoEpIBn8lDXgXRfxn3AePE8YSSR5Z
+	9B0E/7x+vfgbBTbHxuJhCYsHzn9XhvfLqNZD4AT5rzjZcISqrQDd4pAlbGX+vUFNoHsIqC
+	U96YB97nrPemcSmgwOr71O1WVMdnkWA8uq6vknEIADGmpd0d81SOQH0MXfWdfeUEr0UEMI
+	NMUYaSm3LmrayDI0zsPR1OQL+wiujna/khn7mbObMVGogS3tiu3ic1X0Fj+XgQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1689318961;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hUAHTRd8c3CSu7cXSAALH6Qn7qntx8W9EcrdN/wA98k=;
+	b=94hq5OtFYpb2h/PEpEyrRp7gNwWtlKKobqJUtT15kKg+Wbc1fupFhLs4TpezGIeiuKJhE/
+	xJDfSyajddaAfhDw==
+To: Heiner Kallweit <hkallweit1@gmail.com>, Tobias Klausmann
+ <tobias.klausmann@freenet.de>, Linux regressions mailing list
+ <regressions@lists.linux.dev>
+Cc: Realtek linux nic maintainers <nic_swsd@realtek.com>,
+ netdev@vger.kernel.org
+Subject: Re: r8169: transmit transmit queue timed out - v6.4 cycle
+In-Reply-To: <04dc4bbb-6bfd-4074-6d32-007dc8d213e5@gmail.com>
+References: <c3465166-f04d-fcf5-d284-57357abb3f99@freenet.de>
+ <CAFSsGVtiXSK_0M_TQm_38LabiRX7E5vR26x=cKags4ZQBqfXPQ@mail.gmail.com>
+ <e47bac0d-e802-65e1-b311-6acb26d5cf10@freenet.de>
+ <f7ca15e8-2cf2-1372-e29a-d7f2a2cc09f1@leemhuis.info>
+ <CAFSsGVuDLnW_7iwSUNebx8Lku3CGZhcym3uXfMFnotA=OYJJjQ@mail.gmail.com>
+ <A69A7D66-A73A-4C4D-913B-8C2D4CF03CE2@freenet.de>
+ <842ae1f6-e3fe-f4d1-8d4f-f19627a52665@gmail.com> <87a5w0cn18.fsf@kurt>
+ <04dc4bbb-6bfd-4074-6d32-007dc8d213e5@gmail.com>
+Date: Fri, 14 Jul 2023 09:16:00 +0200
+Message-ID: <87wmz3ezf3.fsf@kurt>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH net] r8169: fix ASPM-related problem for chip version 42
- and 43
-Content-Language: en-US, de-DE
-To: Heiner Kallweit <hkallweit1@gmail.com>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- Jakub Kicinski <kuba@kernel.org>, David Miller <davem@davemloft.net>,
- Realtek linux nic maintainers <nic_swsd@realtek.com>,
- Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>
-Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
- joey.joey586@gmail.com, Greg KH <gregkh@linuxfoundation.org>
-References: <82ea9e63-d8c8-0b86-cd88-913cc249fa9a@gmail.com>
- <d644f048-970c-71fe-a556-a2c80444dae2@leemhuis.info>
- <17c638ca-5343-75e0-7f52-abf86026f75d@gmail.com>
- <fff3067d-5a7f-b328-ef65-fa68138f8b0f@leemhuis.info>
- <a42f129b-d64b-2d86-0758-143e99a534a0@gmail.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <a42f129b-d64b-2d86-0758-143e99a534a0@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1689317925;433581c2;
-X-HE-SMSGID: 1qKClG-0007kD-7z
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha512; protocol="application/pgp-signature"
 
-[ccing greg]
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-On 14.07.23 08:34, Heiner Kallweit wrote:
-> On 14.07.2023 08:30, Linux regression tracking (Thorsten Leemhuis) wrote:
->> On 14.07.23 07:34, Heiner Kallweit wrote:
->>> On 14.07.2023 05:31, Linux regression tracking (Thorsten Leemhuis) wrote:
->>>> On 13.07.23 21:46, Heiner Kallweit wrote:
+On Thu Jul 13 2023, Heiner Kallweit wrote:
+> On 13.07.2023 09:01, Kurt Kanzenbach wrote:
+>> Hello Heiner,
+>>=20
+>> On Mon Jul 10 2023, Heiner Kallweit wrote:
+>>> On 05.07.2023 00:25, Tobias Klausmann wrote:
+>>>> Hi, top posting as well, as im on vacation, too. The system does not
+>>>> allow disabling ASPM, it is a very constrained notebook BIOS, thus
+>>>> the suggestion is nit feasible. All in all the sugesstion seems not
+>>>> favorable for me, as it is unknown how many systems are broken the
+>>>> same way. Having a workaround adviced as default seems oretty wrong
+>>>> to me.
+>>>>
 >>>
->>>>> Fixes: 5fc3f6c90cca ("r8169: consolidate disabling ASPM before EPHY access")
->>>>  Closes: https://bugzilla.kernel.org/show_bug.cgi?id=217635 # [0]
->>>> A "Cc: stable@vger.kernel.org" would be nice, too, to get this fixed in
->>>> 6.4, where this surfaced (reminder: no, a Fixes: tag is not enough to
->>>> ensure the backport there).
->>> That's different in the net subsystem. The net (vs. net-next) annotation
->>> ensures the backport.
->>
->> Huh, how does that work? I thought "net" currently means "for 6.5" while
->> "net-next" implies 6.6?
-> 
-> https://www.kernel.org/doc/Documentation/networking/netdev-FAQ.txt
-> 
-> See question:
-> I see a network patch and I think it should be backported to stable.
-> Should I request it via "stable@vger.kernel.org" like the references in
-> the kernel's Documentation/process/stable-kernel-rules.rst file say?
+>>> To get a better understanding of the affected system:
+>>> Could you please provide a full dmesg log and the lspci -vv output?
+>>=20
+>> I'm having the same problem as described by Tobias on a desktop
+>> machine. v6.3 works; v6.4 results in transmit queue timeouts
+>> occasionally. Reverting 2ab19de62d67 ("r8169: remove ASPM restrictions
+>> now that ASPM is disabled during NAPI poll") "solves" the issue.
+>>=20
+>> From dmesg:
+>>=20
+>> |~ % dmesg | grep -i ASPM
+>> |[    0.152746] ACPI FADT declares the system doesn't support PCIe ASPM,=
+ so disable it
+>> |[    0.905100] acpi PNP0A08:00: _OSC: OS supports [ExtendedConfig ASPM =
+ClockPM Segments MSI HPX-Type3]
+>> |[    0.906508] acpi PNP0A08:00: FADT indicates ASPM is unsupported, usi=
+ng BIOS configuration
+>> |[    1.156585] pci 10000:e1:00.0: can't override BIOS ASPM; OS doesn't =
+have ASPM control
+>> |[    1.300059] r8169 0000:03:00.0: can't disable ASPM; OS doesn't have =
+ASPM control
+>>=20
+>> In addition, with commit 2ab19de62d67 in kernel regular messages like
+>> this show up:
+>>=20
+>> |[ 7487.214593] pcieport 0000:00:1c.2: AER: Corrected error received: 00=
+00:03:00.0
+>>=20
+>> I'm happy to test any patches or provide more info if needed.
+>>=20
+> Thanks for the report. It's interesting that the issue seems to occur onl=
+y on systems
+> where BIOS doesn't allow OS to control ASPM. Maybe this results in the PC=
+I subsystem
+> not properly initializing something.
+> Kurt/Klaus: Could you please boot with cmd line parameter pcie_aspm=3Dfor=
+ce and see
+> whether this changes something?
+> This parameter lets Linux ignore the BIOS setting. You should see a messa=
+ge
+> "PCIe ASPM is forcibly enabled" in the dmesg log with this parameter.
 
-Ahh, thx. Hmm, the patchworks queue mentioned a bit higher (
-http://patchwork.ozlabs.org/bundle/davem/stable/?state=* ) seems to be
-mostly unused since Oct 2020. Is there a newer one?
+Seems like this does not help. There are still PCIe errors:
 
-Also a "git log --oneline --no-merges v6.0.. --grep 'stable@vger'
-drivers/net/ net/  | wc -l" returns "196", but I assume all those where
-mistakes?
+|~ # dmesg | grep -i ASPM
+|[    0.000000] Command line: BOOT_IMAGE=3D/vmlinuz-6.4.2-gentoo-kurtOS roo=
+t=3D/dev/nvme0n1p3 ro kvm-intel.nested=3D1 vga=3D794 pcie_aspm=3Dforce
+|[    0.044016] Kernel command line: BOOT_IMAGE=3D/vmlinuz-6.4.2-gentoo-kur=
+tOS root=3D/dev/nvme0n1p3 ro kvm-intel.nested=3D1 vga=3D794 pcie_aspm=3Dfor=
+ce
+|[    0.044048] PCIe ASPM is forcibly enabled
+|[    0.153011] ACPI FADT declares the system doesn't support PCIe ASPM, so=
+ disable it
+|[    0.916341] acpi PNP0A08:00: _OSC: OS supports [ExtendedConfig ASPM Clo=
+ckPM Segments MSI HPX-Type3]
+|[    0.917719] acpi PNP0A08:00: FADT indicates ASPM is unsupported, using =
+BIOS configuration
+|~ # dmesg | grep -i r8169
+|[    1.337417] r8169 0000:03:00.0 eth0: RTL8168h/8111h, 6c:3c:8c:2c:bd:de,=
+ XID 541, IRQ 164
+|[    1.337422] r8169 0000:03:00.0 eth0: jumbo features [frames: 9194 bytes=
+, tx checksumming: ko]
+|[    2.833876] r8169 0000:03:00.0 enp3s0: renamed from eth0
+|[   20.886564] Generic FE-GE Realtek PHY r8169-0-300:00: attached PHY driv=
+er (mii_bus:phy_addr=3Dr8169-0-300:00, irq=3DMAC)
+|[   21.168373] r8169 0000:03:00.0 enp3s0: Link is Down
+|[   24.006543] r8169 0000:03:00.0 enp3s0: Link is Up - 1Gbps/Full - flow c=
+ontrol off
+|~ # dmesg | tail
+|[   20.886564] Generic FE-GE Realtek PHY r8169-0-300:00: attached PHY driv=
+er (mii_bus:phy_addr=3Dr8169-0-300:00, irq=3DMAC)
+|[   21.168373] r8169 0000:03:00.0 enp3s0: Link is Down
+|[   24.006543] r8169 0000:03:00.0 enp3s0: Link is Up - 1Gbps/Full - flow c=
+ontrol off
+|[   24.006568] IPv6: ADDRCONF(NETDEV_CHANGE): enp3s0: link becomes ready
+|[   24.567803] ACPI Warning: \_SB.PC00.PEG1.PEGP._DSM: Argument #4 type mi=
+smatch - Found [Buffer], ACPI requires [Package] (20230331/nsarguments-61)
+|[   41.563396] pcieport 0000:00:1c.2: AER: Corrected error received: 0000:=
+03:00.0
+|[   47.065441] pcieport 0000:00:1c.2: AER: Multiple Corrected error receiv=
+ed: 0000:03:00.0
+|[   54.264285] pcieport 0000:00:1c.2: AER: Corrected error received: 0000:=
+03:00.0
+|[   54.424210] pcieport 0000:00:1c.2: AER: Corrected error received: 0000:=
+03:00.0
+|[   55.443439] pcieport 0000:00:1c.2: AER: Corrected error received: 0000:=
+03:00.0
 
-Ciao, Thorsten
+Thanks,
+Kurt
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQJHBAEBCgAxFiEEvLm/ssjDfdPf21mSwZPR8qpGc4IFAmSw9jATHGt1cnRAbGlu
+dXRyb25peC5kZQAKCRDBk9HyqkZzguq+D/9WZWeb8/Ob9zj1Cf8VcxJrYKOH8nu+
+LOmTElsTh3sflkXpyQSPWixgEbNxdSducxQUbQPaRKU+WCVXEzQwQunasIqaItZc
+GX/rJWsdESkQQdohPJUQGDf+6K+6dS+mw105pbXIIjN6TSrxINqlh7wXlmP3lY9l
+WQHu8BAeikiRyjpHbEYdkV5mKRCNUiTW5NxCnb3v/opIXrROz+QeNzqMiQoP5i7Y
+DTjeSrU45SmT7BeYic/ebDZXs/eLscasgD5Ax/mqeD3DSf2oz3MbcAglNJSWTM9b
+rhZYQ0KH27UfOuEmEJRveAgkkj1oYTM18qmcqKcPRjE4IwSY46uRTqOpc/LKbHEF
+/+ltfOKu3HQCXwsUf6JsGz0fp7NN+/jTondn6aPDpamMhN/toM71OMvIfh+KVzHH
+gIPObVdkT/i29efJEkhyq171MBNPO88Nf0Xh8e+A27nAkpndhJf0ZmEcEfjpbi5O
+sYYN6qVq1gjHscYaoPmKh+XlwLmP6NZxpT90IeI1o0AkN+tFxWl3ywPQWlbs8r9Z
+n7h+RPyC9UAdMfcQJ+rozDK0KGhz9OghOq1Zrh+AJQo6ryrIcenl8fPLqjOPfk98
+5uMpPN6ShgfCgwXmUO/NSKEXHKUb/Dp7yhaLafAT5HNN/P51JSUcldKfzenJXUfo
+ddqoQyoIaZgz2g==
+=7uwp
+-----END PGP SIGNATURE-----
+--=-=-=--
