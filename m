@@ -1,96 +1,93 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+Received: from mail-oo1-f51.google.com (mail-oo1-f51.google.com [209.85.161.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30C041F929
-	for <regressions@lists.linux.dev>; Thu, 13 Jul 2023 19:46:29 +0000 (UTC)
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-314313f127fso1250130f8f.1
-        for <regressions@lists.linux.dev>; Thu, 13 Jul 2023 12:46:29 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3FEB36D
+	for <regressions@lists.linux.dev>; Fri, 14 Jul 2023 01:11:18 +0000 (UTC)
+Received: by mail-oo1-f51.google.com with SMTP id 006d021491bc7-5658573b1faso956376eaf.1
+        for <regressions@lists.linux.dev>; Thu, 13 Jul 2023 18:11:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1689277588; x=1691869588;
-        h=content-transfer-encoding:subject:content-language:cc:to:from
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+        d=gmail.com; s=20221208; t=1689297078; x=1691889078;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=H8FVQt/Ihh7+ze4XBJytPBV8sTM5BLWS3tnCLrJQRSI=;
-        b=AGsf9wbC6Dhr49zJIx+Bh5Usq0SzvCNiO4it55aCHAoeo6BGRmEqSuBtc8JaMbwK2d
-         WczTDslgsh1jOqXf/TaO+JXL9y1RNQTCPvgJh0lq26g0CA6mdNNPIBCiwrm4sKNqh2CZ
-         Zbe4rfsPSdu0Nx8WJLlHdQHJGdD1H/maEI9ECXiUpaHOodWehsp9S+rAtzeRN6jc86ym
-         yJdVyB8QisEC0MXBBqigWlYr202uLNolmBIJWrF2Zysigccok7n3CkJcFJkzs3Nk3Af+
-         QFSsMLSA9S5tyxIu8U54JutYmUvEoLeFUKUdGrIRYDR3GI2PvAPmy/AXcEmJmRkY22z5
-         AEng==
+        bh=vVZF0lyzCXqHpUsnSyYlva0CCdL7KSzBN7isdIit9dE=;
+        b=JT+9h/Vphc82wfdrbnF8/7FTOGAFa9AGaOXCM8HDgCj/YDmbujF4w6IdTLj1EhVal3
+         2J4fr57FZ/thIVxQRKAShbwC1vym5rcorHTIAKV18027IKUBEyIs/eU0EQ1drxMwRV/v
+         YYpVcp1cqmStSvgbMs0CyNwEEjPRoLoq3+NAMPPoKoi88eNJ4uHQPUitwFHFUPr2zR9T
+         Suto8IJrpL3lR57o7dXOGauWQsmyUvK93d7+2TFPvbnyBAZuc7OhZ5zHpZmOFlixlaLo
+         DSXJqspIh5DCVv0GwYuN6ZsmMdAJelXC+3aRfp/LguqY+8T+Q5BM3dkrjWVgYGrcMLWO
+         UTyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689277588; x=1691869588;
-        h=content-transfer-encoding:subject:content-language:cc:to:from
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=H8FVQt/Ihh7+ze4XBJytPBV8sTM5BLWS3tnCLrJQRSI=;
-        b=B69vMMaA4M6y6YfM1BJKkZAX+aVKvxdYg9Pkjk0mUK093r1SUgw65RjgZsTM6WtbCW
-         AleAAZG9T1cHA1iZs7oVJWFYHEr/aeCOZEbIwZuP54jHmAacV68xsydRybFDA95beX8d
-         Ib46sAtsEri5ehWAsWK9zjJtjsA8r2k59TzuxFNpZW1jPzxy1UjkxOiglAOdhugFLKKv
-         Uj+x8Xgl23coe+dQtlJmhnVOiCJcS8Urk5f+ed2O05hoN95yKr0RSpQBhSkM8ePj9zjK
-         TVR2TZJhJw8XV6lWZrprcZhScVKb+p+iGc6O5/dT/7U/xAJ5XerISqb6vOSMpB3S+Ei0
-         X+bQ==
-X-Gm-Message-State: ABy/qLbpgkxeloq97ilGUE9jqYYcIV3PE3vhvMZxxZ+fD7cW5JoXLrWw
-	rAnieBfTg7DewBiQYbpTHucl7/E17tI=
-X-Google-Smtp-Source: APBJJlF7s5wJZq2w8NDMoLnVK/1Jl1PIB9KcEDAO1lMCdTS+QP1jQuAs/R3bMvfH1QdpaQS9kkxyFQ==
-X-Received: by 2002:a5d:4090:0:b0:314:16db:537d with SMTP id o16-20020a5d4090000000b0031416db537dmr2220776wrp.2.1689277587868;
-        Thu, 13 Jul 2023 12:46:27 -0700 (PDT)
-Received: from ?IPV6:2a01:c23:b8ac:4400:ad12:96b1:cbda:7fe2? (dynamic-2a01-0c23-b8ac-4400-ad12-96b1-cbda-7fe2.c23.pool.telefonica.de. [2a01:c23:b8ac:4400:ad12:96b1:cbda:7fe2])
-        by smtp.googlemail.com with ESMTPSA id l18-20020a5d6752000000b0031434cebcd8sm8742148wrw.33.2023.07.13.12.46.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 13 Jul 2023 12:46:27 -0700 (PDT)
-Message-ID: <82ea9e63-d8c8-0b86-cd88-913cc249fa9a@gmail.com>
-Date: Thu, 13 Jul 2023 21:46:22 +0200
+        d=1e100.net; s=20221208; t=1689297078; x=1691889078;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vVZF0lyzCXqHpUsnSyYlva0CCdL7KSzBN7isdIit9dE=;
+        b=ag8epXTE/3zJ6dC1Lhuged+2NQpKKesI/XQUn5Q/IB9blJqPzxA7E5gak9po6QcvC3
+         Dl3YdfJYClcPf+3Rc9Xk+ARmrmzh/Tk+34y53jXqCbrhSBOhbZdyG13htRb8W+X7oWoa
+         Uf1qnx0atszZRdoJ79l/gCxuLKtGKf0QY+Iz9elbnLEGxLxbw5JZWTG6kMHzV+seafT6
+         tWVVR6aBb2HpCQjImnUCeTQaj+gqM0XGTG2OM/X43oXKFRP2rTzEbdheOwrwyn5OJexV
+         pj5UoAfcf7Mcnm+GZQ/7wJKVZKtshTUGxXO8d4tsebFMLztdZmXTg2AUTzI0deDSmIdv
+         jojw==
+X-Gm-Message-State: ABy/qLZLQjzOi3xVduIbGJmWG5Uhn0upO6KQOMQBqnBVJRFqcUtCYVFd
+	SgSWdqeKoTowi6B8ZJNY8da2JvfLAuTdfS5CMXY=
+X-Google-Smtp-Source: APBJJlHCeMPvax2/IM2CPaptdMCJKdeNhQXTNEzeRrQkOyaLpYqEqfq/zelFt/qAGlHFghK/RIAxLFS2p1gAG9NdYig=
+X-Received: by 2002:a4a:3450:0:b0:566:f5bb:7d40 with SMTP id
+ n16-20020a4a3450000000b00566f5bb7d40mr2919868oof.6.1689297077806; Thu, 13 Jul
+ 2023 18:11:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-From: Heiner Kallweit <hkallweit1@gmail.com>
-To: Jakub Kicinski <kuba@kernel.org>, David Miller <davem@davemloft.net>,
- Realtek linux nic maintainers <nic_swsd@realtek.com>,
- Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>
-Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- joey.joey586@gmail.com
-Content-Language: en-US
-Subject: [PATCH net] r8169: fix ASPM-related problem for chip version 42 and
- 43
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <bug-217440-225600@https.bugzilla.kernel.org/> <CABpewhE4REgn9RJZduuEU6Z_ijXNeQWnrxO1tg70Gkw=F8qNYg@mail.gmail.com>
+ <ZGB0cVVI7OgaJU6t@debian.me> <CABpewhGJE7-k52j8L2kJ2zKupgp3Ma+LdZazzzV4w1Bgihp7nw@mail.gmail.com>
+ <87cz338ix4.wl-tiwai@suse.de> <CABpewhF01AK4cFPbwYVvKR9yWaO7o-ZE-2+MZjYSUF0BKUdYvw@mail.gmail.com>
+ <874jodlnmi.wl-tiwai@suse.de> <415d4bc84aa74c74af913048f28b42a9@realtek.com>
+ <87fs7mdofi.wl-tiwai@suse.de> <7da2fdfdae614b1c98deda6e11ca34eb@realtek.com>
+ <87353kd8b9.wl-tiwai@suse.de> <1170325957764b4cbd7cd3639575f285@realtek.com>
+ <CABpewhGBakDSBLKZ1cr2=OMspuu3qyYwZrsXUggQ3vt8gsD88A@mail.gmail.com>
+ <873536js7q.wl-tiwai@suse.de> <CABpewhE0NAC-Q=iqG2Ba=XhT7SXsWy18wQGYUaopzmKDfFxyPw@mail.gmail.com>
+ <2c1fcbc00bb44d66a29ac1c1e4bec5ad@realtek.com> <CABpewhFthKG97dPiQC4JhGx9sapX9Yu5rWABQjpY95TSA+eawA@mail.gmail.com>
+ <485f99149508488080d563144454040e@realtek.com> <CABpewhGkvWtM+9J=mx3vw0QY=OBB5OYCxzX3nzVffvFS4QazPA@mail.gmail.com>
+ <2831c55638a5431ca9e37d9caf365ed2@realtek.com> <CABpewhGiMJUpyBA6=D9_-YA6=5rjR2R0RHUZeg+cWcjtzuCoZQ@mail.gmail.com>
+ <3c27f0455d6e4bd1a68115bd25bf1a12@realtek.com> <CABpewhEptq0+W_71U__8iQ4+LNtYSUB9C+0bcS2Hw-5mnj9viQ@mail.gmail.com>
+ <009474f04d0b45c69a0e42e8622b7a86@realtek.com> <87h6rhcef2.wl-tiwai@suse.de>
+ <0990300d759846d890de9c92fcad9a9d@realtek.com> <CABpewhERnOH1qkkJ5_JJUZkz1_8oxD9aR5VBs1vsURAG7Eu_Ew@mail.gmail.com>
+ <878rctcavz.wl-tiwai@suse.de> <874jnhc9u4.wl-tiwai@suse.de>
+ <CABpewhHG2+s8_6r6vChm2g5tD8ALW_SWJWubPRXWzTJB2aFR9g@mail.gmail.com>
+ <875y7vbxpg.wl-tiwai@suse.de> <CABpewhHDnvn4v+uCpsaLHB+biw-f59tdTiCyFkicHnewXHYDNg@mail.gmail.com>
+ <87wn0aa1s4.wl-tiwai@suse.de> <CABpewhFg=7+JR6v=zhi0_Hm9+S64DLOHKeG2pS-W7z-vNpu_5Q@mail.gmail.com>
+ <87leg7x4h7.wl-tiwai@suse.de> <f4969213b5a14cc5a11befb4df861481@realtek.com>
+ <87cz182hfk.wl-tiwai@suse.de> <4678992299664babac4403d9978e7ba7@realtek.com>
+In-Reply-To: <4678992299664babac4403d9978e7ba7@realtek.com>
+From: "Joseph C. Sible" <josephcsible@gmail.com>
+Date: Thu, 13 Jul 2023 21:11:00 -0400
+Message-ID: <CABpewhGkw2rg_NN7Rd8E_p+AN9MC0A1CjgnrhBvMnSKq0gz31w@mail.gmail.com>
+Subject: Re: Fwd: [Bug 217440] New: ALC236 audio disappears from HP 15z-fc000
+ on warm boot
+To: Kailang <kailang@realtek.com>
+Cc: Takashi Iwai <tiwai@suse.de>, Bagas Sanjaya <bagasdotme@gmail.com>, 
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>, "perex@perex.cz" <perex@perex.cz>, 
+	"tiwai@suse.com" <tiwai@suse.com>, 
+	"alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Referenced commit missed that for chip versions 42 and 43 ASPM
-remained disabled in the respective rtl_hw_start_...() routines.
-This resulted in problems as described in [0].
-Therefore re-instantiate the previous logic.
+On Thu, Jul 13, 2023 at 4:25=E2=80=AFAM Kailang <kailang@realtek.com> wrote=
+:
+>
+> Hi Joseph,
+>
+> Could you test attach patch?
+>
+> BR,
+> Kailang
 
-[0] https://bugzilla.kernel.org/show_bug.cgi?id=217635
+I applied that patch on top of kernel 6.4.3 and tested it, and yes, it
+does fix the problem.
 
-Fixes: 5fc3f6c90cca ("r8169: consolidate disabling ASPM before EPHY access")
-Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
----
- drivers/net/ethernet/realtek/r8169_main.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+Thanks,
 
-diff --git a/drivers/net/ethernet/realtek/r8169_main.c b/drivers/net/ethernet/realtek/r8169_main.c
-index 9445f04f8..2b3aa6b45 100644
---- a/drivers/net/ethernet/realtek/r8169_main.c
-+++ b/drivers/net/ethernet/realtek/r8169_main.c
-@@ -2747,6 +2747,13 @@ static void rtl_hw_aspm_clkreq_enable(struct rtl8169_private *tp, bool enable)
- 		return;
- 
- 	if (enable) {
-+		/* On these chip versions ASPM can even harm
-+		 * bus communication of other PCI devices.
-+		 */
-+		if (tp->mac_version == RTL_GIGA_MAC_VER_42 ||
-+		    tp->mac_version == RTL_GIGA_MAC_VER_43)
-+			return;
-+
- 		rtl_mod_config5(tp, 0, ASPM_en);
- 		rtl_mod_config2(tp, 0, ClkReqEn);
- 
--- 
-2.41.0
+Joseph C. Sible
