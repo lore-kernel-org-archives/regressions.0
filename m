@@ -1,164 +1,97 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59CC779E1
-	for <regressions@lists.linux.dev>; Fri, 14 Jul 2023 08:09:50 +0000 (UTC)
-From: Kurt Kanzenbach <kurt@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1689322189;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2joIjfhAmAJar1Quice1djLjK4m7sRAWwvV+OwS5g1U=;
-	b=Ji4jqUM3fluLLf3Sr7Ppp9H7we4IEwZS+kSJAoX8OPLIIBZn/IHHx5H/iPTFV7OZ6t606X
-	mlt2Djgs7mtaDpQyygpSrFZZwRYx3dLJyq165uXB/e78+gySIxDpMpuSaXOt8Ly2I03fXu
-	HApqtToo/7Hr5tuzDnjo/oTNT7Ad1LJmHCGVmBDe4pf+Gxfx5SVtNHO2JI6CPwo8nraJX7
-	+0yia3XW3tuAWgurLBh0lydFf9rzNUMiPFAyhSn/Q5j3tgSaQywtzhzHevxKU9/ygW/rbf
-	z1nVfhe47gcoR9VRghwvu+IB6KtFCqnAFPKREUejup3aRFoPRgxJJnEzs9WqMw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1689322189;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2joIjfhAmAJar1Quice1djLjK4m7sRAWwvV+OwS5g1U=;
-	b=qJCImvb3VsIz3IaR99r36QO3EycL16tXg7xMyfOeI4gU9ngiX4VK6cyYmJykc+u1vIqquG
-	4Zoppquk2lCO6DBg==
-To: Heiner Kallweit <hkallweit1@gmail.com>, Tobias Klausmann
- <tobias.klausmann@freenet.de>, Linux regressions mailing list
- <regressions@lists.linux.dev>
-Cc: Realtek linux nic maintainers <nic_swsd@realtek.com>,
- netdev@vger.kernel.org
-Subject: Re: r8169: transmit transmit queue timed out - v6.4 cycle
-In-Reply-To: <ce802481-87c3-1bb8-2ee4-fc3cd73d889a@gmail.com>
-References: <c3465166-f04d-fcf5-d284-57357abb3f99@freenet.de>
- <CAFSsGVtiXSK_0M_TQm_38LabiRX7E5vR26x=cKags4ZQBqfXPQ@mail.gmail.com>
- <e47bac0d-e802-65e1-b311-6acb26d5cf10@freenet.de>
- <f7ca15e8-2cf2-1372-e29a-d7f2a2cc09f1@leemhuis.info>
- <CAFSsGVuDLnW_7iwSUNebx8Lku3CGZhcym3uXfMFnotA=OYJJjQ@mail.gmail.com>
- <A69A7D66-A73A-4C4D-913B-8C2D4CF03CE2@freenet.de>
- <842ae1f6-e3fe-f4d1-8d4f-f19627a52665@gmail.com> <87a5w0cn18.fsf@kurt>
- <04dc4bbb-6bfd-4074-6d32-007dc8d213e5@gmail.com> <87wmz3ezf3.fsf@kurt>
- <ce802481-87c3-1bb8-2ee4-fc3cd73d889a@gmail.com>
-Date: Fri, 14 Jul 2023 10:09:47 +0200
-Message-ID: <87ttu6gbhw.fsf@kurt>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC7AB79F0
+	for <regressions@lists.linux.dev>; Fri, 14 Jul 2023 08:16:39 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1qKDyd-00067h-KK; Fri, 14 Jul 2023 10:16:35 +0200
+Message-ID: <ee7172c0-b5f1-c5e2-55d8-2b712ceb6ea6@leemhuis.info>
+Date: Fri, 14 Jul 2023 10:16:35 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha512; protocol="application/pgp-signature"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH net] r8169: fix ASPM-related problem for chip version 42
+ and 43
+Content-Language: en-US, de-DE
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+To: Heiner Kallweit <hkallweit1@gmail.com>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ Jakub Kicinski <kuba@kernel.org>, David Miller <davem@davemloft.net>,
+ Realtek linux nic maintainers <nic_swsd@realtek.com>,
+ Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>
+Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+ joey.joey586@gmail.com, Greg KH <gregkh@linuxfoundation.org>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+References: <82ea9e63-d8c8-0b86-cd88-913cc249fa9a@gmail.com>
+ <d644f048-970c-71fe-a556-a2c80444dae2@leemhuis.info>
+ <17c638ca-5343-75e0-7f52-abf86026f75d@gmail.com>
+ <fff3067d-5a7f-b328-ef65-fa68138f8b0f@leemhuis.info>
+ <a42f129b-d64b-2d86-0758-143e99a534a0@gmail.com>
+ <6b2513b0-f57c-73ff-5181-489ba43a01e3@leemhuis.info>
+In-Reply-To: <6b2513b0-f57c-73ff-5181-489ba43a01e3@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1689322599;71b537ec;
+X-HE-SMSGID: 1qKDyd-00067h-KK
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+[Short version: sorry for the noise, a stale file sent us sideways.]
 
-On Fri Jul 14 2023, Heiner Kallweit wrote:
->>> Thanks for the report. It's interesting that the issue seems to occur o=
-nly on systems
->>> where BIOS doesn't allow OS to control ASPM. Maybe this results in the =
-PCI subsystem
->>> not properly initializing something.
->>> Kurt/Klaus: Could you please boot with cmd line parameter pcie_aspm=3Df=
-orce and see
->>> whether this changes something?
->>> This parameter lets Linux ignore the BIOS setting. You should see a mes=
-sage
->>> "PCIe ASPM is forcibly enabled" in the dmesg log with this parameter.
->>=20
->> Seems like this does not help. There are still PCIe errors:
->>=20
->> |~ # dmesg | grep -i ASPM
->> |[    0.000000] Command line: BOOT_IMAGE=3D/vmlinuz-6.4.2-gentoo-kurtOS =
-root=3D/dev/nvme0n1p3 ro kvm-intel.nested=3D1 vga=3D794 pcie_aspm=3Dforce
->> |[    0.044016] Kernel command line: BOOT_IMAGE=3D/vmlinuz-6.4.2-gentoo-=
-kurtOS root=3D/dev/nvme0n1p3 ro kvm-intel.nested=3D1 vga=3D794 pcie_aspm=3D=
-force
->> |[    0.044048] PCIe ASPM is forcibly enabled
->> |[    0.153011] ACPI FADT declares the system doesn't support PCIe ASPM,=
- so disable it
->> |[    0.916341] acpi PNP0A08:00: _OSC: OS supports [ExtendedConfig ASPM =
-ClockPM Segments MSI HPX-Type3]
->> |[    0.917719] acpi PNP0A08:00: FADT indicates ASPM is unsupported, usi=
-ng BIOS configuration
->> |~ # dmesg | grep -i r8169
->> |[    1.337417] r8169 0000:03:00.0 eth0: RTL8168h/8111h, 6c:3c:8c:2c:bd:=
-de, XID 541, IRQ 164
->> |[    1.337422] r8169 0000:03:00.0 eth0: jumbo features [frames: 9194 by=
-tes, tx checksumming: ko]
->> |[    2.833876] r8169 0000:03:00.0 enp3s0: renamed from eth0
->> |[   20.886564] Generic FE-GE Realtek PHY r8169-0-300:00: attached PHY d=
-river (mii_bus:phy_addr=3Dr8169-0-300:00, irq=3DMAC)
->> |[   21.168373] r8169 0000:03:00.0 enp3s0: Link is Down
->> |[   24.006543] r8169 0000:03:00.0 enp3s0: Link is Up - 1Gbps/Full - flo=
-w control off
->> |~ # dmesg | tail
->> |[   20.886564] Generic FE-GE Realtek PHY r8169-0-300:00: attached PHY d=
-river (mii_bus:phy_addr=3Dr8169-0-300:00, irq=3DMAC)
->> |[   21.168373] r8169 0000:03:00.0 enp3s0: Link is Down
->> |[   24.006543] r8169 0000:03:00.0 enp3s0: Link is Up - 1Gbps/Full - flo=
-w control off
->> |[   24.006568] IPv6: ADDRCONF(NETDEV_CHANGE): enp3s0: link becomes ready
->> |[   24.567803] ACPI Warning: \_SB.PC00.PEG1.PEGP._DSM: Argument #4 type=
- mismatch - Found [Buffer], ACPI requires [Package] (20230331/nsarguments-6=
-1)
->> |[   41.563396] pcieport 0000:00:1c.2: AER: Corrected error received: 00=
-00:03:00.0
->> |[   47.065441] pcieport 0000:00:1c.2: AER: Multiple Corrected error rec=
-eived: 0000:03:00.0
->> |[   54.264285] pcieport 0000:00:1c.2: AER: Corrected error received: 00=
-00:03:00.0
->> |[   54.424210] pcieport 0000:00:1c.2: AER: Corrected error received: 00=
-00:03:00.0
->> |[   55.443439] pcieport 0000:00:1c.2: AER: Corrected error received: 00=
-00:03:00.0
->>=20
->
-> But no tx timeout (yet)?
+On 14.07.23 08:58, Linux regression tracking (Thorsten Leemhuis) wrote:
+> [ccing greg]
+> 
+> On 14.07.23 08:34, Heiner Kallweit wrote:
+>> On 14.07.2023 08:30, Linux regression tracking (Thorsten Leemhuis) wrote:
+>>> On 14.07.23 07:34, Heiner Kallweit wrote:
+>>>> On 14.07.2023 05:31, Linux regression tracking (Thorsten Leemhuis) wrote:
+>>>>> On 13.07.23 21:46, Heiner Kallweit wrote:
+>>>>
+>>>>>> Fixes: 5fc3f6c90cca ("r8169: consolidate disabling ASPM before EPHY access")
+>>>>>  Closes: https://bugzilla.kernel.org/show_bug.cgi?id=217635 # [0]
+>>>>> A "Cc: stable@vger.kernel.org" would be nice, too, to get this fixed in
+>>>>> 6.4, where this surfaced (reminder: no, a Fixes: tag is not enough to
+>>>>> ensure the backport there).
+>>>> That's different in the net subsystem. The net (vs. net-next) annotation
+>>>> ensures the backport.
+>>>
+>>> Huh, how does that work? I thought "net" currently means "for 6.5" while
+>>> "net-next" implies 6.6?
+>>
+>> https://www.kernel.org/doc/Documentation/networking/netdev-FAQ.txt
 
-No, not yet. It doesn't trigger immediately.
+I just learned on social media that's a stale file that doesn't exist
+anymore in mainline (I'll talk to Konstantin, maybe he can remove it to
+avoid similar problems in the future). That document was converted to
+rst and later...
 
-> Now that ASPM is forced, could you please disable ASPM L1.2?
-> -> /sys/class/net/enp3s0/device/link/l1_2_aspm
-> That's what we did until 6.3 for RTL8168h on systems where
-> OS can control ASPM.
+>> See question:
+>> I see a network patch and I think it should be backported to stable.
+>> Should I request it via "stable@vger.kernel.org" like the references in
+>> the kernel's Documentation/process/stable-kernel-rules.rst file say?
 
-OK. Disabled ASPM L1.2. PCIe error messages stopped, but the NIC ran
-into tx timeout:
+...this section was actually removed in dbbe7c962c3 ("docs: networking:
+drop special stable handling") [v5.12-rc3]; later that document moved here:
 
-|[Fri Jul 14 09:54:00 2023] ------------[ cut here ]------------
-|[Fri Jul 14 09:54:00 2023] NETDEV WATCHDOG: enp3s0 (r8169): transmit queue=
- 0 timed out 9200 ms
-|[Fri Jul 14 09:54:00 2023] WARNING: CPU: 5 PID: 0 at net/sched/sch_generic=
-.c:525 dev_watchdog+0x176/0x1ea
-|[...]
-|[Fri Jul 14 09:54:03 2023] pcieport 0000:00:1c.2: Data Link Layer Link Act=
-ive not set in 1000 msec
-|[Fri Jul 14 09:54:03 2023] r8169 0000:03:00.0 enp3s0: Can't reset secondar=
-y PCI bus, detach NIC
+https://www.kernel.org/doc/html/latest/process/maintainer-netdev.html
 
-Thanks,
-Kurt
+To quote:
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+```
 
------BEGIN PGP SIGNATURE-----
+1.5.7. Stable tree
 
-iQJHBAEBCgAxFiEEvLm/ssjDfdPf21mSwZPR8qpGc4IFAmSxAssTHGt1cnRAbGlu
-dXRyb25peC5kZQAKCRDBk9HyqkZzgq/pD/49KUJ6HGZJUCghT7V563Lg6yGyCQaz
-D9dGgC7Alkq1Z3MUxrJpOW0s1UbzygvjVAOo0D+wzjxcYTraevHF01ExWgPL0l3/
-828pKaI1UUXqcVidBHvpOqg9PByM2y8pjB59AxbPqGE7b7uWcuowKQVJQMKk0B1D
-PrAaoxO9fsxwkQbJWDaGTJTr/sLoODwPBzoWq6ZfoGFF02dOozy4kwA7OlXOZyks
-Q7OhLW/McbgNojM4fNjOCzn6AuW/MboJkscIVMGBy8FHUWyaFZzXM3DtJ/j5EQ3n
-52u5dmdhXLnd5AUenHjbnOP4AX4VH2ZQI2McYWTRiZE18J8nSeSxwqb0tLr0U2AK
-tbMDhX8mf77uky6ah0afRh4tCyXemb8sYOG8biHTT/TMzKkhCZ5HZyPlSFqishji
-MPHLtm04QOUKVPn2Cs3uQdOU/I75f1QltVaOH1BOQmvZbVcrhLaTyNdxUXm3lHFi
-Nn4ydoPnAjm7kzKBzoQLGrzWh7sq/oB54dUzs/K9KepF4B25gz554EB4/Fi86flr
-rOMjeS5bwYGFyr4kFv9wQobhjRIQORVm+g5T6eZHgMYGp/sSMZ+l5RgUIlk9JNS/
-TSFDc14BV2L6ab+IhaSwMnikjjgCia3vOVIcWdx7RzAO3DSFIzEz1wmiaR5UYkyG
-icOy41YXhtsRow==
-=XRPB
------END PGP SIGNATURE-----
---=-=-=--
+While it used to be the case that netdev submissions were not supposed
+to carry explicit CC: stable@vger.kernel.org tags that is no longer the
+case today. Please follow the standard stable rules in
+Documentation/process/stable-kernel-rules.rst, and make sure you include
+appropriate Fixes tags!
+```
+
+That clears things up. Ciao, Thorsten
