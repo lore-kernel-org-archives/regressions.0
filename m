@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54BC5ECF
-	for <regressions@lists.linux.dev>; Fri, 14 Jul 2023 03:32:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A6211C28
+	for <regressions@lists.linux.dev>; Fri, 14 Jul 2023 03:44:20 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qK9X6-0004gn-Nf; Fri, 14 Jul 2023 05:31:52 +0200
-Message-ID: <d644f048-970c-71fe-a556-a2c80444dae2@leemhuis.info>
-Date: Fri, 14 Jul 2023 05:31:52 +0200
+	id 1qK9iy-00066l-8O; Fri, 14 Jul 2023 05:44:08 +0200
+Message-ID: <55a3bbb1-5b3c-f454-b529-8ee9944cc67c@leemhuis.info>
+Date: Fri, 14 Jul 2023 05:44:07 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,50 +16,101 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.13.0
-Subject: Re: [PATCH net] r8169: fix ASPM-related problem for chip version 42
- and 43
-To: Heiner Kallweit <hkallweit1@gmail.com>, Jakub Kicinski <kuba@kernel.org>,
- David Miller <davem@davemloft.net>,
- Realtek linux nic maintainers <nic_swsd@realtek.com>,
- Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>
-Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- joey.joey586@gmail.com
-References: <82ea9e63-d8c8-0b86-cd88-913cc249fa9a@gmail.com>
+Subject: Re: radeon.ko/i586: BUG: kernel NULL pointer dereference, address:
+ 00000004
 Content-Language: en-US, de-DE
+To: Bagas Sanjaya <bagasdotme@gmail.com>, Taketo Kabe <kkabe@vega.pgw.jp>
+Cc: Alex Deucher <alexander.deucher@amd.com>,
+ =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+ "Pan, Xinhui" <Xinhui.Pan@amd.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Linux AMDGPU <amd-gfx@lists.freedesktop.org>,
+ Steven Rostedt <rostedt@goodmis.org>
+References: <5f8d4aa5-3b23-8965-57e3-a28bd9aa8e87@gmail.com>
+ <20230713231250.35488431@rorschach.local.home>
 From: "Linux regression tracking (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <82ea9e63-d8c8-0b86-cd88-913cc249fa9a@gmail.com>
+In-Reply-To: <20230713231250.35488431@rorschach.local.home>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1689305521;ee7c8a24;
-X-HE-SMSGID: 1qK9X6-0004gn-Nf
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1689306260;507d3786;
+X-HE-SMSGID: 1qK9iy-00066l-8O
 
-On 13.07.23 21:46, Heiner Kallweit wrote:
-> Referenced commit missed that for chip versions 42 and 43 ASPM
+On 14.07.23 05:12, Steven Rostedt wrote:
+> On Fri, 14 Jul 2023 09:50:17 +0700
+> Bagas Sanjaya <bagasdotme@gmail.com> wrote:
+> 
+>> I notice a regression report on Bugzilla [1]. Quoting from it:
+>>
+>>
+>> See Bugzilla for the full thread and attached patches that fixes
+>> this regression.
+>>
+>> Later, when bisecting, the reporter got better kernel trace:
+>>
+>>> [  469.825305] BUG: kernel NULL pointer dereference, address: 00000004
+>>> [  469.830502] #PF: supervisor read access in kernel mode
+>>> [  469.830502] #PF: error_code(0x0000) - not-present page
+>>> [  469.830502] *pde = 00000000
+>>> [  469.830502] Oops: 0000 [#1] PREEMPT SMP
+>>> [  469.830502] CPU: 0 PID: 365 Comm: systemd-udevd Not tainted 5.14.0-221.el9.v1.i586 #1
+> 
+> This is a 5.14 kernel right?
 
-Thanks again for taking care of this.
+And a vendor kernel that from the sound of the version number might be
+heavily patched. But apparently the reporter later bisected this on a
+newer kernel (Bagas, would have been good if this had been mentioned in
+your earlier mail):
 
-> [0] https://bugzilla.kernel.org/show_bug.cgi?id=217635
+https://bugzilla.kernel.org/show_bug.cgi?id=217669#c5
+```
+I succeeded to bisect down the regressing commit found in kernel-5.18.0-rc2:
 
-That line should be a proper Link: or Closes: tag, as explained by
-Documentation/process/submitting-patches.rst
-(http://docs.kernel.org/process/submitting-patches.html) and
-Documentation/process/5.Posting.rst
-(https://docs.kernel.org/process/5.Posting.html) and thus be in the
-signed-off-by area, for example like this (without the space upfront):
+b39181f7c690 (refs/bisect/bad) ftrace: Add FTRACE_MCOUNT_MAX_OFFSET to
+avoid adding weak function
 
-> Fixes: 5fc3f6c90cca ("r8169: consolidate disabling ASPM before EPHY access")
- Closes: https://bugzilla.kernel.org/show_bug.cgi?id=217635 # [0]
+This at a glance does not relate to drm/kms code.
 
-A "Cc: stable@vger.kernel.org" would be nice, too, to get this fixed in
-6.4, where this surfaced (reminder: no, a Fixes: tag is not enough to
-ensure the backport there).
+The attached patch effectively reverts the commit for 32bit.
+This fixed the problem on kernel-5.18.0, but not enough for kernel-6.4.3 ```
 
-> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
-> […]
+That being said: That commit is not in 5.18, as Steve noticed:
 
-#regzbot ^backmonitor: https://bugzilla.kernel.org/show_bug.cgi?id=217635
+>> #regzbot introduced: b39181f7c6907d https://bugzilla.kernel.org/show_bug.cgi?id=217669
+>> #regzbot title: FTRACE_MCOUNT_MAX_OFFSET causes kernel NULL pointer dereference and virtual console (tty1) freeze
+> That commit was added in 5.19.
+> 
+> So I'm confused about why it's mentioned. Was it backported?
+
+Taketo Kabe, could you please help to clean this confusion up? Did you
+mean 5.19 in https://bugzilla.kernel.org/show_bug.cgi?id=217669#c5 ? And
+BTW: did you really use a vanilla kernel for your bisection?
+
+TWIMC, there is also
+https://bugzilla.kernel.org/show_bug.cgi?id=217669#c6 :
+```
+Attached patch sort of fixes the problem; it does not panic and
+KMS console works, but printk is triggered 4 times on radeon.ko load and
+when VGA connector is plugged in.
+
+I am sort of at loss now; I need advice from people which knows better.
+
+ --- ./drivers/gpu/drm/drm_internal.h.rd	2023-06-25 21:35:27.506967450 +0900
+ +++ ./drivers/gpu/drm/drm_internal.h.rd	2023-06-25 21:36:34.758055363 +0900
+ @@ -99,6 +99,10 @@ u64 drm_vblank_count(struct drm_device *
+  /* drm_vblank_work.c */
+  static inline void drm_vblank_flush_worker(struct drm_vblank_crtc *vblank)
+  {
+ +	if (!vblank->worker) {
+ +		printk(KERN_WARNING "%s: vblank->worker NULL? returning\n", __func__);
+ +		return;
+ +	}
+  	kthread_flush_worker(vblank->worker);
+  }
+```
 
 Ciao, Thorsten
