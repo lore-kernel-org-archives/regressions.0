@@ -1,152 +1,285 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5CCB4C8C
-	for <regressions@lists.linux.dev>; Fri, 14 Jul 2023 05:58:51 +0000 (UTC)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 0629D22132;
-	Fri, 14 Jul 2023 05:58:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1689314330; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Gu0FFJ+R4gobXXT6CHnm0hg9iiaJzUc3BBW1Fq5ptXU=;
-	b=0IHJHvUenq+o6mL8jmP9Yesrk5AwmykOqBSoNnb5VlWHeeX3/uZlMIFjf02CfkU6t8MfuZ
-	RSKa0p1GJYCgEdHQgQhw4A5zssreTZqy5MLOde7ECBA4VpDbIPkHBUk3eRLhUeSl8Bj6g4
-	96xOSb0P8AAelUpBt/J9/sjm9ILZpEs=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1689314330;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Gu0FFJ+R4gobXXT6CHnm0hg9iiaJzUc3BBW1Fq5ptXU=;
-	b=4iJK7mxrI55wWKz6WYwdhnUmDIrcSgxJx5pnfNuw2z97fyh4tvW16JT2GgVQPFkuQgv04/
-	UgaZyGrZp9b4ckBA==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id C79BF13A15;
-	Fri, 14 Jul 2023 05:58:49 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-	by imap2.suse-dmz.suse.de with ESMTPSA
-	id F4rULxnksGRfDgAAMHmgww
-	(envelope-from <tiwai@suse.de>); Fri, 14 Jul 2023 05:58:49 +0000
-Date: Fri, 14 Jul 2023 07:58:49 +0200
-Message-ID: <878rbjdofa.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Kailang <kailang@realtek.com>
-Cc: "Joseph C. Sible" <josephcsible@gmail.com>,
-	Bagas Sanjaya <bagasdotme@gmail.com>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
-	"perex@perex.cz"
-	<perex@perex.cz>,
-	"tiwai@suse.com" <tiwai@suse.com>,
-	"alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
-Subject: Re: Fwd: [Bug 217440] New: ALC236 audio disappears from HP 15z-fc000 on warm boot
-In-Reply-To: <1f83caa215ad4374aec8859c70044b00@realtek.com>
-References: <bug-217440-225600@https.bugzilla.kernel.org/>
-	<CABpewhE4REgn9RJZduuEU6Z_ijXNeQWnrxO1tg70Gkw=F8qNYg@mail.gmail.com>
-	<ZGB0cVVI7OgaJU6t@debian.me>
-	<CABpewhGJE7-k52j8L2kJ2zKupgp3Ma+LdZazzzV4w1Bgihp7nw@mail.gmail.com>
-	<87cz338ix4.wl-tiwai@suse.de>
-	<CABpewhF01AK4cFPbwYVvKR9yWaO7o-ZE-2+MZjYSUF0BKUdYvw@mail.gmail.com>
-	<874jodlnmi.wl-tiwai@suse.de>
-	<415d4bc84aa74c74af913048f28b42a9@realtek.com>
-	<87fs7mdofi.wl-tiwai@suse.de>
-	<7da2fdfdae614b1c98deda6e11ca34eb@realtek.com>
-	<87353kd8b9.wl-tiwai@suse.de>
-	<1170325957764b4cbd7cd3639575f285@realtek.com>
-	<CABpewhGBakDSBLKZ1cr2=OMspuu3qyYwZrsXUggQ3vt8gsD88A@mail.gmail.com>
-	<873536js7q.wl-tiwai@suse.de>
-	<CABpewhE0NAC-Q=iqG2Ba=XhT7SXsWy18wQGYUaopzmKDfFxyPw@mail.gmail.com>
-	<2c1fcbc00bb44d66a29ac1c1e4bec5ad@realtek.com>
-	<CABpewhFthKG97dPiQC4JhGx9sapX9Yu5rWABQjpY95TSA+eawA@mail.gmail.com>
-	<485f99149508488080d563144454040e@realtek.com>
-	<CABpewhGkvWtM+9J=mx3vw0QY=OBB5OYCxzX3nzVffvFS4QazPA@mail.gmail.com>
-	<2831c55638a5431ca9e37d9caf365ed2@realtek.com>
-	<CABpewhGiMJUpyBA6=D9_-YA6=5rjR2R0RHUZeg+cWcjtzuCoZQ@mail.gmail.com>
-	<3c27f0455d6e4bd1a68115bd25bf1a12@realtek.com>
-	<CABpewhEptq0+W_71U__8iQ4+LNtYSUB9C+0bcS2Hw-5mnj9viQ@mail.gmail.com>
-	<009474f04d0b45c69a0e42e8622b7a86@realtek.com>
-	<87h6rhcef2.wl-tiwai@suse.de>
-	<0990300d759846d890de9c92fcad9a9d@realtek.com>
-	<CABpewhERnOH1qkkJ5_JJUZkz1_8oxD9aR5VBs1vsURAG7Eu_Ew@mail.gmail.com>
-	<878rctcavz.wl-tiwai@suse.de>
-	<874jnhc9u4.wl-tiwai@suse.de>
-	<CABpewhHG2+s8_6r6vChm2g5tD8ALW_SWJWubPRXWzTJB2aFR9g@mail.gmail.com>
-	<875y7vbxpg.wl-tiwai@suse.de>
-	<CABpewhHDnvn4v+uCpsaLHB+biw-f59tdTiCyFkicHnewXHYDNg@mail.gmail.com>
-	<87wn0aa1s4.wl-tiwai@suse.de>
-	<CABpewhFg=7+JR6v=zhi0_Hm9+S64DLOHKeG2pS-W7z-vNpu_5Q@mail.gmail.com>
-	<87leg7x4h7.wl-tiwai@suse.de>
-	<f4969213b5a14cc5a11befb4df861481@realtek.com>
-	<87cz182hfk.wl-tiwai@suse.de>
-	<4678992299664babac4403d9978e7ba7@realtek.com>
-	<CABpewhGkw2rg_NN7Rd8E_p+AN9MC0A1CjgnrhBvMnSKq0gz31w@mail.gmail.com>
-	<1f83caa215ad4374aec8859c70044b00@realtek.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B9166AD9
+	for <regressions@lists.linux.dev>; Fri, 14 Jul 2023 06:12:13 +0000 (UTC)
+Received: by mail-qv1-f50.google.com with SMTP id 6a1803df08f44-635dd1b52a2so9172246d6.3
+        for <regressions@lists.linux.dev>; Thu, 13 Jul 2023 23:12:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1689315133; x=1691907133;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SRqTBl5JhQTiapQcRXa38hkUp/hD1lCIjrFgP5cYksU=;
+        b=Rfn8m76h0qdmxD/ZWijupGUymoP84NahzjwUYJ5JmvbxXkEYcPr0OSZJy+ImKbLYb+
+         uN3czWOoEM9y5L1oozLn3jXScDNdH++Vs0t+FGAJiZa0MZjDqdWMfHBgtg13zjk6+RXT
+         0IxOXD0GN64Il144SnVlUCnfDC+fbkw79Sxx69Q/M84vZYwAMqNlQKivaMBmQ2qZNfyZ
+         3hxAH8B7REKlmUCdHV9mBRp4ODlJwhJ4hd8i2OLmYSc7diEaDxhKF6gRbcVX3T+kV8ag
+         nvd8dQkipIeuJ29HLVjXRH4C5Pc3mEup+cIpeayWnrbP1VyuOGs8fcED+aZwCS6iQIeS
+         8ZPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689315133; x=1691907133;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SRqTBl5JhQTiapQcRXa38hkUp/hD1lCIjrFgP5cYksU=;
+        b=ImUPA4jinKqxmi3wfxe1i/STbEQMD/FU7ONPIbEXGa5EeP0M+J0PfDZEZfJjkCMQsY
+         znTpk7VxkrjtxIdtE3sGOvO2S8Cu21L4d8Z5cHysFALANFL21TLJ8e2p7Y+gtEqztd+v
+         1p9FzWyNkUHSp9E1HUJI5hTn5aN+NNERB2PexYeps5JrgZu6Vf2sZKQA7GdjMhrPtXFX
+         eDfQvW1NCggaWlI6WznZ7g1f5a2+IrY+0rTJIK/FEcfgKiY5+wgx2pgWo9zVrcC99HZT
+         6u/YSo8YjQa7ot3M8Qm3e/HaGE65DROJThoYB79l43jL0gHwqf9zDwDxjdZfZEYZX4y2
+         3AJg==
+X-Gm-Message-State: ABy/qLZoZlw5fwfatwD05CLrHG4GKyyoYOR5rARGG1dQ6cLnT6p0gHDS
+	10g11SujKEaYOAE8Ht1dekR2s5dQvshQJ3beVkvcqA==
+X-Google-Smtp-Source: APBJJlFX1995rdCoH1EE9R5JYpdqvETsVGTAowEV8dXNb+hgYQMGySM+dpxPE2ya68DJWIdL2rlx2rhDOd/u38nuYDA=
+X-Received: by 2002:a0c:9c42:0:b0:629:58a7:9aab with SMTP id
+ w2-20020a0c9c42000000b0062958a79aabmr3112637qve.32.1689315132704; Thu, 13 Jul
+ 2023 23:12:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+References: <20230403221233.500485-1-marex@denx.de> <20230403221233.500485-2-marex@denx.de>
+ <CAMi1Hd0TD=2z_=bcDrht3H_wiLvAFcv8Z-U_r_KUOoeMc6UMjw@mail.gmail.com>
+ <CAMty3ZBNFu=f-FS4YFN4wfmiTuk=48nna-vub1eMYwidDt+msg@mail.gmail.com>
+ <CAA8EJppbdiUz5m+9EAPnFb916DaS_VKWd30c7_EPWjuid8rtqQ@mail.gmail.com>
+ <CAMi1Hd2G5PJmz4wpO1wbdqKd0FA8LBgvRDv2u5ZYAMb5s6Kt0A@mail.gmail.com>
+ <d5fb8106-b8f3-0acf-1267-d4d6d0860e25@linaro.org> <d28b0090-bd1e-6737-d92b-348dc6c30750@linaro.org>
+ <4396d197-f16f-92bd-727c-eb8c78016198@quicinc.com> <961b4747-c9f1-a31c-c33c-475b4803f832@denx.de>
+ <64c3352f-c2aa-5260-c6ff-4a607ce219a2@quicinc.com> <f768950b-0406-1f03-86a5-50d5794bb060@denx.de>
+In-Reply-To: <f768950b-0406-1f03-86a5-50d5794bb060@denx.de>
+From: Amit Pundir <amit.pundir@linaro.org>
+Date: Fri, 14 Jul 2023 11:41:36 +0530
+Message-ID: <CAMi1Hd0LUk__=mz8_+ZTwh=E9wm+abX_4D4XmEO1Jb8uDnPu3A@mail.gmail.com>
+Subject: Re: [PATCH 2/2] drm/bridge: lt9611: Do not generate HFP/HBP/HSA and
+ EOT packet
+To: Marek Vasut <marex@denx.de>
+Cc: Abhinav Kumar <quic_abhinavk@quicinc.com>, neil.armstrong@linaro.org, 
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Jagan Teki <jagan@amarulasolutions.com>, 
+	dri-devel@lists.freedesktop.org, Robert Foss <rfoss@kernel.org>, 
+	Andrzej Hajda <andrzej.hajda@intel.com>, Jonas Karlman <jonas@kwiboo.se>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Michael Walle <michael@walle.cc>, 
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+	linux-arm-msm <linux-arm-msm@vger.kernel.org>, 
+	Linux regressions mailing list <regressions@lists.linux.dev>, freedreno <freedreno@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 14 Jul 2023 04:46:25 +0200,
-Kailang wrote:
-> 
-> Hi Takashi,
-> 
-> Could you agree this workaround?
+On Thu, 13 Jul 2023 at 23:58, Marek Vasut <marex@denx.de> wrote:
+>
+> On 7/13/23 20:09, Abhinav Kumar wrote:
+> >
+> >
+> > On 7/12/2023 10:41 AM, Marek Vasut wrote:
+> >> On 7/9/23 03:03, Abhinav Kumar wrote:
+> >>>
+> >>>
+> >>> On 7/7/2023 1:47 AM, Neil Armstrong wrote:
+> >>>> On 07/07/2023 09:18, Neil Armstrong wrote:
+> >>>>> Hi,
+> >>>>>
+> >>>>> On 06/07/2023 11:20, Amit Pundir wrote:
+> >>>>>> On Wed, 5 Jul 2023 at 11:09, Dmitry Baryshkov
+> >>>>>> <dmitry.baryshkov@linaro.org> wrote:
+> >>>>>>>
+> >>>>>>> [Adding freedreno@ to cc list]
+> >>>>>>>
+> >>>>>>> On Wed, 5 Jul 2023 at 08:31, Jagan Teki
+> >>>>>>> <jagan@amarulasolutions.com> wrote:
+> >>>>>>>>
+> >>>>>>>> Hi Amit,
+> >>>>>>>>
+> >>>>>>>> On Wed, Jul 5, 2023 at 10:15=E2=80=AFAM Amit Pundir
+> >>>>>>>> <amit.pundir@linaro.org> wrote:
+> >>>>>>>>>
+> >>>>>>>>> Hi Marek,
+> >>>>>>>>>
+> >>>>>>>>> On Wed, 5 Jul 2023 at 01:48, Marek Vasut <marex@denx.de> wrote:
+> >>>>>>>>>>
+> >>>>>>>>>> Do not generate the HS front and back porch gaps, the HSA gap =
+and
+> >>>>>>>>>> EOT packet, as these packets are not required. This makes the
+> >>>>>>>>>> bridge
+> >>>>>>>>>> work with Samsung DSIM on i.MX8MM and i.MX8MP.
+> >>>>>>>>>
+> >>>>>>>>> This patch broke display on Dragonboard 845c (SDM845) devboard
+> >>>>>>>>> running
+> >>>>>>>>> AOSP. This is what I see
+> >>>>>>>>> https://people.linaro.org/~amit.pundir/db845c-userdebug/v6.5-br=
+oken-display/PXL_20230704_150156326.jpg.
+> >>>>>>>>> Reverting this patch fixes this regression for me.
+> >>>>>>>>
+> >>>>>>>> Might be msm dsi host require proper handling on these updated
+> >>>>>>>> mode_flags? did they?
+> >>>>>>>
+> >>>>>>> The msm DSI host supports those flags. Also, I'd like to point ou=
+t
+> >>>>>>> that the patch didn't change the rest of the driver code. So even=
+ if
+> >>>>>>> drm/msm ignored some of the flags, it should not have caused the
+> >>>>>>> issue. Most likely the issue is on the lt9611 side. I's suspect t=
+hat
+> >>>>>>> additional programming is required to make it work with these fla=
+gs.
+> >>>>>>
+> >>>>>> I spent some time today on smoke testing these flags (individually
+> >>>>>> and
+> >>>>>> in limited combination) on DB845c, to narrow down this breakage to
+> >>>>>> one
+> >>>>>> or more flag(s) triggering it. Here are my observations in limited
+> >>>>>> testing done so far.
+> >>>>>>
+> >>>>>> There is no regression with MIPI_DSI_MODE_NO_EOT_PACKET when enabl=
+ed
+> >>>>>> alone and system boots to UI as usual.
+> >>>>>>
+> >>>>>> MIPI_DSI_MODE_VIDEO_NO_HFP always trigger the broken display as in
+> >>>>>> the
+> >>>>>> screenshot[1] shared earlier as well.
+> >>>>>>
+> >>>>>> Adding either of MIPI_DSI_MODE_VIDEO_NO_HSA and
+> >>>>>> MIPI_DSI_MODE_VIDEO_NO_HBP always result in no display, unless pai=
+red
+> >>>>>> with MIPI_DSI_MODE_VIDEO_NO_HFP and in that case we get the broken
+> >>>>>> display as reported.
+> >>>>>>
+> >>>>>> In short other than MIPI_DSI_MODE_NO_EOT_PACKET flag, all other fl=
+ags
+> >>>>>> added in this commit break the display on DB845c one way or anothe=
+r.
+> >>>>>
+> >>>>> I think the investigation would be to understand why samsung-dsim
+> >>>>> requires
+> >>>>> such flags and/or what are the difference in behavior between MSM
+> >>>>> DSI and samsung DSIM
+> >>>>> for those flags ?
+> >>>>>
+> >>>>> If someone has access to the lt9611 datasheet, so it requires
+> >>>>> HSA/HFP/HBP to be
+> >>>>> skipped ? and does MSM DSI and samsung DSIM skip them in the same
+> >>>>> way ?
+> >>>>
+> >>>> I think there's a mismatch, where on one side this flags sets the
+> >>>> link in LP-11 while
+> >>>> in HSA/HFP/HPB while on the other it completely removes those
+> >>>> blanking packets.
+> >>>>
+> >>>> The name MIPI_DSI_MODE_VIDEO_NO_HBP suggests removal of HPB, not
+> >>>> LP-11 while HPB.
+> >>>> the registers used in both controllers are different:
+> >>>> - samsung-dsim: DSIM_HBP_DISABLE_MODE
+> >>>> - msm dsi: DSI_VID_CFG0_HBP_POWER_STOP
+> >>>>
+> >>>> The first one suggest removing the packet, while the second one
+> >>>> suggests powering
+> >>>> off the line while in the blanking packet period.
+> >>>>
+> >>>> @Abhinav, can you comment on that ?
+> >>>>
+> >>>
+> >>> I dont get what it means by completely removes blanking packets in DS=
+IM.
+> >>
+> >> MIPI_DSI_MODE_VIDEO_NO_HFP means the HBP period is just skipped by DSI=
+M.
+> >>
+> >> Maybe there is a need for new set of flags which differentiate between
+> >> HBP skipped (i.e. NO HBP) and HBP LP11 ?
+> >>
+> >
+> > No, the section of the MIPI DSI spec I posted below clearly states ther=
+e
+> > are two options:
+> >
+> > 1) send blanking packets during those periods
+> > 2) transition to LP11 during those periods
+> >
+> > There is no 3rd option in the spec of not doing both like what you are
+> > suggesting. So DSIM should also be only transitioning to LP11 during
+> > those periods if its not sending the blanking packets with those flags =
+set.
+> >
+> > So, there is no need for any new set of flags to differentiate.
+> >
+> > The flags and their interpretation is correct in MSM driver. I cannot
+> > comment on what exactly DSIM does with those flags.
+>
+> How do you explain the comment in include/drm/drm_mipi_dsi.h:
+>
+> 128 /* disable hback-porch area */
+> 129 #define MIPI_DSI_MODE_VIDEO_NO_HBP      BIT(6)
+>
+> Esp. the "disable" part. That to me reads as "don't send HBP packet".
+>
+> Where do you see that quote above in the DSI spec (which chapter and
+> which version do you read) ?
+>
+> >>> It should be replacing those periods with LP11 too.
+> >>>
+> >>> The traffic mode being used on this bridge is
+> >>> MIPI_DSI_MODE_VIDEO_SYNC_PULSE which is "Non-Burst Mode with Sync
+> >>> Pulses".
+> >>>
+> >>> As per this traffic mode in the DSI spec,
+> >>>
+> >>> "Normally, periods shown as HSA (Horizontal Sync Active), HBP
+> >>> (Horizontal Back Porch) and HFP (Horizontal Front Porch) are filled
+> >>> by Blanking Packets, with lengths (including packet overhead)
+> >>> calculated to match the period specified by the peripheral=E2=80=99s =
+data
+> >>> sheet. Alternatively, if there is sufficient time to transition from
+> >>> HS to LP mode and back again, a timed interval in LP mode may
+> >>> substitute for a Blanking Packet, thus saving power. During HSA, HBP
+> >>> and HFP periods, the bus should stay in the LP-11 state."
+> >>>
+> >>> So we can either send the blanking packets or transition to LP state
+> >>> and those 3 flags are controlling exactly that during those periods
+> >>> for MSM driver.
+> >>>
+> >>> If you stop sending the blanking packets, you need to replace that
+> >>> gap with LP.
+> >>
+> >> I don't think that's what MIPI_DSI_MODE_VIDEO_NO_HBP means, the way I
+> >> understand MIPI_DSI_MODE_VIDEO_NO_HBP is that it skips the HBP
+> >> completely. So if you want HBP, then do not set
+> >> MIPI_DSI_MODE_VIDEO_NO_HBP . And if you want LP11 during HBP, that is
+> >> I think up to the controller (or maybe another new flag?).
+> >>
+> >
+> > No, there is no need of another new flag. There are only two options as
+> > per the spec.
+> >
+> > In fact, as per my checking with more folks, requiring LP11 during thos=
+e
+> > periods is something very rare.
+> >
+> > Because usually horizontal period is usually a very short period, most
+> > of the time we do not use the LP11 option and send the blanking packets
+> > instead.
+> >
+> > So its something very unusual for DSIM.
+> >
+> > That being said, I still think my previous question is important.
+> >
+> > 1) What is the difference between the resolution you are trying Vs what
+> > Amit is trying?
+> >
+> > 2) Are you both using just standard HDMI monitors?
+>
+> What is a "standard HDMI monitor" ?
+> I use DELL U2713HM .
 
-Yes, looks fine.  I applied it now.
+I see this breakage on portable HDMI monitors Viewsonic TD1655 [1] and
+Cocopar Z173FH7F [2], both running at 1920x1080 resolution.
 
-Thanks!
+Regards,
+Amit Pundir
+[1] https://www.amazon.in/ViewSonic-TD1655-Portable-Touchscreen-Frameless/d=
+p/B08778F756
+[2] https://www.amazon.com/Portable-Monitor-FreeSync-Speaker-Nintendo/dp/B0=
+7ZLXCVPN
 
-Takashi
-
-> 
-> BR,
-> Kailang
-> 
-> > -----Original Message-----
-> > From: Joseph C. Sible <josephcsible@gmail.com>
-> > Sent: Friday, July 14, 2023 9:11 AM
-> > To: Kailang <kailang@realtek.com>
-> > Cc: Takashi Iwai <tiwai@suse.de>; Bagas Sanjaya <bagasdotme@gmail.com>;
-> > regressions@lists.linux.dev; perex@perex.cz; tiwai@suse.com;
-> > alsa-devel@alsa-project.org
-> > Subject: Re: Fwd: [Bug 217440] New: ALC236 audio disappears from HP
-> > 15z-fc000 on warm boot
-> > 
-> > 
-> > External mail.
-> > 
-> > 
-> > 
-> > On Thu, Jul 13, 2023 at 4:25 AM Kailang <kailang@realtek.com> wrote:
-> > >
-> > > Hi Joseph,
-> > >
-> > > Could you test attach patch?
-> > >
-> > > BR,
-> > > Kailang
-> > 
-> > I applied that patch on top of kernel 6.4.3 and tested it, and yes, it does fix the
-> > problem.
-> > 
-> > Thanks,
-> > 
-> > Joseph C. Sible
-> > 
-> > ------Please consider the environment before printing this e-mail.
-> 
+>
+> [...]
