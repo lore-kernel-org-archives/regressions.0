@@ -1,104 +1,185 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ADC297EB
-	for <regressions@lists.linux.dev>; Fri, 14 Jul 2023 02:46:46 +0000 (UTC)
-Authenticated-By: 
-X-SpamFilter-By: ArmorX SpamTrap 5.77 with qID 36E2kJvC5023866, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
-	by rtits2.realtek.com.tw (8.15.2/2.81/5.90) with ESMTPS id 36E2kJvC5023866
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-	Fri, 14 Jul 2023 10:46:19 +0800
-Received: from RTEXMBS01.realtek.com.tw (172.21.6.94) by
- RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.32; Fri, 14 Jul 2023 10:46:25 +0800
-Received: from RTEXMBS01.realtek.com.tw (172.21.6.94) by
- RTEXMBS01.realtek.com.tw (172.21.6.94) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.7; Fri, 14 Jul 2023 10:46:25 +0800
-Received: from RTEXMBS01.realtek.com.tw ([fe80::9cb8:8d5:b6b3:213b]) by
- RTEXMBS01.realtek.com.tw ([fe80::9cb8:8d5:b6b3:213b%5]) with mapi id
- 15.01.2375.007; Fri, 14 Jul 2023 10:46:25 +0800
-From: Kailang <kailang@realtek.com>
-To: "Joseph C. Sible" <josephcsible@gmail.com>
-CC: Takashi Iwai <tiwai@suse.de>, Bagas Sanjaya <bagasdotme@gmail.com>,
-        "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
-        "perex@perex.cz"
-	<perex@perex.cz>, "tiwai@suse.com" <tiwai@suse.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
-Subject: RE: Fwd: [Bug 217440] New: ALC236 audio disappears from HP 15z-fc000 on warm boot
-Thread-Topic: Fwd: [Bug 217440] New: ALC236 audio disappears from HP 15z-fc000
- on warm boot
-Thread-Index: AQHZhdSOD7kY6mXBDkGA3ryhp811r69Yu5SAgAASNACAAA22gIAA7n+AgAEJrYCABLe/YIAJNIWAgAIHAcD//4tyAIAB8UZw///vxgCADzWhgIABfgWAgACUPoCAAPnsAIAAmlKwgAA8s4CAAQ8boP//kIuAABWnYVAAAIR9gAAqhW/A//+7roD//3k98IAAkYyAgAAKhQCAAAZZgIAAiY6AgADw04CAALC0AIAA6TqAgBQJp4CAAhpFAP/xaKKggBysdYD/8VrnoAO7qooA//9fxNA=
-Date: Fri, 14 Jul 2023 02:46:25 +0000
-Message-ID: <1f83caa215ad4374aec8859c70044b00@realtek.com>
-References: <bug-217440-225600@https.bugzilla.kernel.org/>
- <CABpewhE4REgn9RJZduuEU6Z_ijXNeQWnrxO1tg70Gkw=F8qNYg@mail.gmail.com>
- <ZGB0cVVI7OgaJU6t@debian.me>
- <CABpewhGJE7-k52j8L2kJ2zKupgp3Ma+LdZazzzV4w1Bgihp7nw@mail.gmail.com>
- <87cz338ix4.wl-tiwai@suse.de>
- <CABpewhF01AK4cFPbwYVvKR9yWaO7o-ZE-2+MZjYSUF0BKUdYvw@mail.gmail.com>
- <874jodlnmi.wl-tiwai@suse.de> <415d4bc84aa74c74af913048f28b42a9@realtek.com>
- <87fs7mdofi.wl-tiwai@suse.de> <7da2fdfdae614b1c98deda6e11ca34eb@realtek.com>
- <87353kd8b9.wl-tiwai@suse.de> <1170325957764b4cbd7cd3639575f285@realtek.com>
- <CABpewhGBakDSBLKZ1cr2=OMspuu3qyYwZrsXUggQ3vt8gsD88A@mail.gmail.com>
- <873536js7q.wl-tiwai@suse.de>
- <CABpewhE0NAC-Q=iqG2Ba=XhT7SXsWy18wQGYUaopzmKDfFxyPw@mail.gmail.com>
- <2c1fcbc00bb44d66a29ac1c1e4bec5ad@realtek.com>
- <CABpewhFthKG97dPiQC4JhGx9sapX9Yu5rWABQjpY95TSA+eawA@mail.gmail.com>
- <485f99149508488080d563144454040e@realtek.com>
- <CABpewhGkvWtM+9J=mx3vw0QY=OBB5OYCxzX3nzVffvFS4QazPA@mail.gmail.com>
- <2831c55638a5431ca9e37d9caf365ed2@realtek.com>
- <CABpewhGiMJUpyBA6=D9_-YA6=5rjR2R0RHUZeg+cWcjtzuCoZQ@mail.gmail.com>
- <3c27f0455d6e4bd1a68115bd25bf1a12@realtek.com>
- <CABpewhEptq0+W_71U__8iQ4+LNtYSUB9C+0bcS2Hw-5mnj9viQ@mail.gmail.com>
- <009474f04d0b45c69a0e42e8622b7a86@realtek.com> <87h6rhcef2.wl-tiwai@suse.de>
- <0990300d759846d890de9c92fcad9a9d@realtek.com>
- <CABpewhERnOH1qkkJ5_JJUZkz1_8oxD9aR5VBs1vsURAG7Eu_Ew@mail.gmail.com>
- <878rctcavz.wl-tiwai@suse.de> <874jnhc9u4.wl-tiwai@suse.de>
- <CABpewhHG2+s8_6r6vChm2g5tD8ALW_SWJWubPRXWzTJB2aFR9g@mail.gmail.com>
- <875y7vbxpg.wl-tiwai@suse.de>
- <CABpewhHDnvn4v+uCpsaLHB+biw-f59tdTiCyFkicHnewXHYDNg@mail.gmail.com>
- <87wn0aa1s4.wl-tiwai@suse.de>
- <CABpewhFg=7+JR6v=zhi0_Hm9+S64DLOHKeG2pS-W7z-vNpu_5Q@mail.gmail.com>
- <87leg7x4h7.wl-tiwai@suse.de> <f4969213b5a14cc5a11befb4df861481@realtek.com>
- <87cz182hfk.wl-tiwai@suse.de> <4678992299664babac4403d9978e7ba7@realtek.com>
- <CABpewhGkw2rg_NN7Rd8E_p+AN9MC0A1CjgnrhBvMnSKq0gz31w@mail.gmail.com>
-In-Reply-To: <CABpewhGkw2rg_NN7Rd8E_p+AN9MC0A1CjgnrhBvMnSKq0gz31w@mail.gmail.com>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-originating-ip: [172.22.102.106]
-x-kse-serverinfo: RTEXMBS01.realtek.com.tw, 9
-x-kse-antispam-interceptor-info: fallback
-x-kse-antivirus-interceptor-info: fallback
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99AA97EB
+	for <regressions@lists.linux.dev>; Fri, 14 Jul 2023 02:50:27 +0000 (UTC)
+Received: by mail-oi1-f174.google.com with SMTP id 5614622812f47-3a37909a64eso1129233b6e.1
+        for <regressions@lists.linux.dev>; Thu, 13 Jul 2023 19:50:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1689303026; x=1691895026;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=q8KYuBNBmqF7O05nU0pVGS+9JnK+Wjw17IsXeywtKyw=;
+        b=jEgL1nz7BCPl8R4u3awGnlx9KA6+ZGibUso7cKsktFfdBgFIVvV4w9qmO1aeCgaRPV
+         KFgpgVpQsjhXZDsTZvkDdv+LeBVvnxfdQaFPVyQIyvqajCcuSZHzdXDaCPYSz0XdjWTh
+         tEo1G8I/injKIpENFF5NUkUvHZxk62eksWxl7T4LKh6uCWEHsj/Ql86lG6VvguA+dckI
+         cM8Nywsq2jnbPdIWMfqWRSsDdDqk60vLYJd+XPNKLxLQKqZ7uFUaRVvZBAFbKOt3caIh
+         eqpgOnSiPGT6ICrVixWan/pNmpRBvwqpf6A1dSS2BXrhNvBjdHW2ZiouONQriCjmYd0P
+         GNdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689303026; x=1691895026;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=q8KYuBNBmqF7O05nU0pVGS+9JnK+Wjw17IsXeywtKyw=;
+        b=eSbfTzu7Swn/y3PNdvmfc089uAiYaRBpQW4pjFOPX2ynP64eBJmwYp1Hg7vt7M9XG/
+         EIgUTlltR0pqnM2cQ9gm/dlSQkiUVk/C37eREs0ZhiGrP9sPk+tRGASbKeTUq/UNsvIV
+         Gojlvn/zWvQPNmcEmB3DKqG8kk6BQyCRYjmSmp04u0wg2AzLDbpro0HYTKLhAjF9Fb6m
+         SulEdmZHEC9ql8pNn4Gr5oVb6ea9USzTzlz89c0SPgydbTxh94J5caP59PMzOHxxEF3c
+         vj9XBBcPFUnMN/7tOnJgpnhWi+XYtEp3Zb7RgQigyJiNsR4/VNrCzoTCvQT2Sb5frfps
+         9ZJw==
+X-Gm-Message-State: ABy/qLafIPtfApOJ5ehMAwMi7Kv/xFjgQ9Hq+mtuBxaVGfgC3huarcvI
+	6wnUUKA5afXG4gj96jq825U=
+X-Google-Smtp-Source: APBJJlHM/e3i/b9guT2ouZHo1z8oDIw1dFJSc+sbXT5EgtuOSpR5Cj1KZUQLDMFs/Il4Oy5ofI4lKQ==
+X-Received: by 2002:a05:6358:908:b0:135:6793:62bf with SMTP id r8-20020a056358090800b00135679362bfmr3363270rwi.11.1689303026141;
+        Thu, 13 Jul 2023 19:50:26 -0700 (PDT)
+Received: from [192.168.0.104] ([103.131.18.64])
+        by smtp.gmail.com with ESMTPSA id n21-20020aa78a55000000b0067acbc74977sm6224159pfa.96.2023.07.13.19.50.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 13 Jul 2023 19:50:25 -0700 (PDT)
+Message-ID: <5f8d4aa5-3b23-8965-57e3-a28bd9aa8e87@gmail.com>
+Date: Fri, 14 Jul 2023 09:50:17 +0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-KSE-AntiSpam-Interceptor-Info: fallback
-X-KSE-ServerInfo: RTEXH36505.realtek.com.tw, 9
-X-KSE-AntiSpam-Interceptor-Info: fallback
-X-KSE-Antivirus-Interceptor-Info: fallback
-X-KSE-AntiSpam-Interceptor-Info: fallback
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Content-Language: en-US
+To: Alex Deucher <alexander.deucher@amd.com>,
+ =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+ "Pan, Xinhui" <Xinhui.Pan@amd.com>, Taketo Kabe <kkabe@vega.pgw.jp>,
+ "Steven Rostedt (Google)" <rostedt@goodmis.org>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H. Peter Anvin" <hpa@zytor.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Linux AMDGPU <amd-gfx@lists.freedesktop.org>
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+Subject: Fwd: radeon.ko/i586: BUG: kernel NULL pointer dereference, address:
+ 00000004
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-SGkgVGFrYXNoaSwNCg0KQ291bGQgeW91IGFncmVlIHRoaXMgd29ya2Fyb3VuZD8NCg0KQlIsDQpL
-YWlsYW5nDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogSm9zZXBoIEMu
-IFNpYmxlIDxqb3NlcGhjc2libGVAZ21haWwuY29tPg0KPiBTZW50OiBGcmlkYXksIEp1bHkgMTQs
-IDIwMjMgOToxMSBBTQ0KPiBUbzogS2FpbGFuZyA8a2FpbGFuZ0ByZWFsdGVrLmNvbT4NCj4gQ2M6
-IFRha2FzaGkgSXdhaSA8dGl3YWlAc3VzZS5kZT47IEJhZ2FzIFNhbmpheWEgPGJhZ2FzZG90bWVA
-Z21haWwuY29tPjsNCj4gcmVncmVzc2lvbnNAbGlzdHMubGludXguZGV2OyBwZXJleEBwZXJleC5j
-ejsgdGl3YWlAc3VzZS5jb207DQo+IGFsc2EtZGV2ZWxAYWxzYS1wcm9qZWN0Lm9yZw0KPiBTdWJq
-ZWN0OiBSZTogRndkOiBbQnVnIDIxNzQ0MF0gTmV3OiBBTEMyMzYgYXVkaW8gZGlzYXBwZWFycyBm
-cm9tIEhQDQo+IDE1ei1mYzAwMCBvbiB3YXJtIGJvb3QNCj4gDQo+IA0KPiBFeHRlcm5hbCBtYWls
-Lg0KPiANCj4gDQo+IA0KPiBPbiBUaHUsIEp1bCAxMywgMjAyMyBhdCA0OjI14oCvQU0gS2FpbGFu
-ZyA8a2FpbGFuZ0ByZWFsdGVrLmNvbT4gd3JvdGU6DQo+ID4NCj4gPiBIaSBKb3NlcGgsDQo+ID4N
-Cj4gPiBDb3VsZCB5b3UgdGVzdCBhdHRhY2ggcGF0Y2g/DQo+ID4NCj4gPiBCUiwNCj4gPiBLYWls
-YW5nDQo+IA0KPiBJIGFwcGxpZWQgdGhhdCBwYXRjaCBvbiB0b3Agb2Yga2VybmVsIDYuNC4zIGFu
-ZCB0ZXN0ZWQgaXQsIGFuZCB5ZXMsIGl0IGRvZXMgZml4IHRoZQ0KPiBwcm9ibGVtLg0KPiANCj4g
-VGhhbmtzLA0KPiANCj4gSm9zZXBoIEMuIFNpYmxlDQo+IA0KPiAtLS0tLS1QbGVhc2UgY29uc2lk
-ZXIgdGhlIGVudmlyb25tZW50IGJlZm9yZSBwcmludGluZyB0aGlzIGUtbWFpbC4NCg0K
+Hi,
+
+I notice a regression report on Bugzilla [1]. Quoting from it:
+
+> Origin report: https://gitlab.freedesktop.org/drm/amd/-/issues/2615
+> 
+> Compile with CONFIG_DRM_RADEON=m on 32bit,
+> kernel panics on radeon.ko load.
+> 
+> On slow machine, there is 70 second window between
+> login: prompt on raw VGA tty1 and
+> radeon.ko KMS console load.
+> 
+> When logging in on tty1 during this window, kernel panics.
+> (Fast machine loads KMS console before login: prompt, so the problem is masked)
+> 
+> [  466.298267] [drm] radeon kernel modesetting enabled.
+> [  466.371716] radeon 0000:01:00.0: vgaarb: deactivate vga console
+> [  466.476920] Console: switching to colour dummy device 80x25
+> [  466.661163] [drm] initializing kernel modesetting (RV280 0x1002:0x5960 0x148C:0x2094 0x01).
+> [  466.672175] [drm] Forcing AGP to PCI mode
+> [  466.848372] [drm] Generation 2 PCI interface, using max accessible memory
+> [  466.859389] radeon 0000:01:00.0: VRAM: 128M 0x00000000C0000000 - 0x00000000C7FFFFFF (128M used)
+> [  466.869191] radeon 0000:01:00.0: GTT: 512M 0x00000000A0000000 - 0x00000000BFFFFFFF
+> [  467.022337] [drm] Detected VRAM RAM=128M, BAR=128M
+> [  467.041498] [drm] RAM width 64bits DDR
+> [  467.153587] workqueue: Failed to create a rescuer kthread for wq "ttm": -EINTR
+> [  467.154126] [drm:radeon_ttm_init [radeon]] *ERROR* failed initializing buffer object driver(-12).
+> [  467.176714] radeon 0000:01:00.0: Fatal error during GPU init
+> [  467.361714] [drm] radeon: finishing device.
+> [  467.431560] [drm] radeon: cp finalized
+> [  467.495402] radeon: probe of 0000:01:00.0 failed with error -12
+
+See Bugzilla for the full thread and attached patches that fixes
+this regression.
+
+Later, when bisecting, the reporter got better kernel trace:
+
+> [  469.825305] BUG: kernel NULL pointer dereference, address: 00000004
+> [  469.830502] #PF: supervisor read access in kernel mode
+> [  469.830502] #PF: error_code(0x0000) - not-present page
+> [  469.830502] *pde = 00000000
+> [  469.830502] Oops: 0000 [#1] PREEMPT SMP
+> [  469.830502] CPU: 0 PID: 365 Comm: systemd-udevd Not tainted 5.14.0-221.el9.v1.i586 #1
+> [  469.830502] Hardware name: System Manufacturer System Name/ALADDIN5, BIOS 0626 07/15/95
+> [  469.830502] EIP: _raw_spin_lock_irqsave+0x1f/0x40
+> [  469.830502] Code: cc cc cc cc cc cc cc 3e cc cc cc 3e 55 89 c1 89 55 89 c1 89 5b fa 64 ff 5b fa 64 ff c2 31 d2 be c2 31 d2 be 89 d0 3e 0f 89 d0 <3e> 0f 89 d8 5b 5e 89 d8 5b 5e 26 00 90 89 26 00 90 89 b7 15 75 ff
+> [  469.830502] EAX: 00000000 EBX: 00000246 ECX: 00000004 EDX: 00000000
+> [  469.830502] ESI: 00000001 EDI: c3e71c40 EBP: c3e71c34 ESP: c3e71c2c
+> [  469.830502] DS: 007b ES: 007b FS: 00d8 GS: 0033 SS: 0068 EFLAGS: 00010046
+> [  469.830502] CR0: 80050033 CR2: 00000004 CR3: 057fa000 CR4: 00000010
+> [  469.830502] Call Trace:
+> [  469.830502]  kthread_flush_worker+0x52/0xa0
+> [  469.830502]  ? kthread_should_park+0x40/0x40
+> [  469.830502]  drm_crtc_vblank_off+0x1d7/0x230 [drm]
+> [  469.830502]  radeon_crtc_dpms+0x197/0x1b0 [radeon]
+> [  469.830502]  radeon_crtc_disable+0x16/0xa0 [radeon]
+> [  469.830502]  __drm_helper_disable_unused_functions+0x74/0xc0 [drm_kms_helper]
+> [  469.830502]  drm_helper_disable_unused_functions+0x3c/0x50 [drm_kms_helper]
+> [  469.830502]  radeon_fbdev_init+0xb0/0x130 [radeon]
+> [  469.830502]  radeon_modeset_init+0x25d/0x320 [radeon]
+> [  469.830502]  radeon_driver_load_kms+0xc4/0x240 [radeon]
+> [  469.830502]  drm_dev_register+0xb4/0x1a0 [drm]
+> [  469.830502]  radeon_pci_probe+0xc0/0x100 [radeon]
+> [  469.830502]  pci_device_probe+0xbc/0x150
+> [  469.830502]  really_probe+0xb7/0x350
+> [  469.830502]  __driver_probe_device+0x109/0x1e0
+> [  469.830502]  driver_probe_device+0x1f/0x90
+> [  469.830502]  __driver_attach+0x8a/0x1b0
+> [  469.830502]  ? __device_attach_driver+0x100/0x100
+> [  469.830502]  bus_for_each_dev+0x58/0x90
+> [  469.830502]  driver_attach+0x19/0x20
+> [  469.830502]  ? __device_attach_driver+0x100/0x100
+> [  469.830502]  bus_add_driver+0x12f/0x1d0
+> [  469.830502]  driver_register+0x79/0xd0
+> [  469.830502]  ? 0xf7dde000
+> [  469.830502]  __pci_register_driver+0x52/0x60
+> [  469.830502]  radeon_module_init+0x5c/0x1000 [radeon]
+> [  469.830502]  do_one_initcall+0x3e/0x1c0
+> [  469.830502]  ? __vunmap+0x20b/0x2a0
+> [  469.830502]  ? __vunmap+0x20b/0x2a0
+> [  469.830502]  ? kmem_cache_alloc_trace+0x38/0x440
+> [  469.830502]  do_init_module+0x52/0x260
+> [  469.830502]  load_module+0x930/0x9b0
+> [  469.830502]  __ia32_sys_init_module+0x15d/0x180
+> [  469.830502]  do_int80_syscall_32+0x2e/0x80
+> [  469.830502]  entry_INT80_32+0xf0/0xf0
+> [  469.830502] EIP: 0xb79e7e4e
+> [  469.830502] Code: 0f 83 d6 06 00 00 c3 66 90 66 90 90 57 56 53 8b 7c 24 20 8b 74 24 1c 8b 54 24 18 8b 4c 24 14 8b 5c 24 10 b8 80 00 00 00 cd 80 <5b> 5e 5f 3d 01 f0 ff ff 0f 83 a4 06 00 00 c3 66 90 90 53 8b 54 24
+> [  469.830502] EAX: ffffffda EBX: b5526010 ECX: 0020d79c EDX: b7c26274
+> [  469.830502] ESI: b7c20295 EDI: b7c2ddd8 EBP: 018af7c0 ESP: bfd2f810
+> [  469.830502] DS: 007b ES: 007b FS: 0000 GS: 0033 SS: 007b EFLAGS: 00000292
+> [  469.830502] Modules linked in: nft_fib_inet nft_fib_ipv4 nft_fib_ipv6 nft_fib radeon(+) nft_reject_inet nf_reject_ipv4 nf_reject_ipv6 nft_reject nft_ct nft_chain_nat nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 gpu_sched drm_buddy i2c_algo_bit drm_display_helper cec drm_ttm_helper ppdev ttm rfkill ip_set nf_tables libcrc32c nfnetlink drm_kms_helper pcspkr syscopyarea e100 sysfillrect parport_pc sysimgblt mii fb_sys_fops parport qrtr drm fuse ext4 mbcache jbd2 sd_mod t10_pi sr_mod crc64_rocksoft_generic cdrom crc64_rocksoft crc64 sg ata_generic pata_ali libata serio_raw
+> [  469.830502] CR2: 0000000000000004
+> [  469.830502] ---[ end trace 30555bd5ee4bee23 ]---
+> [  469.830502] EIP: _raw_spin_lock_irqsave+0x1f/0x40
+> [  469.830502] Code: cc cc cc cc cc cc cc 3e cc cc cc 3e 55 89 c1 89 55 89 c1 89 5b fa 64 ff 5b fa 64 ff c2 31 d2 be c2 31 d2 be 89 d0 3e 0f 89 d0 <3e> 0f 89 d8 5b 5e 89 d8 5b 5e 26 00 90 89 26 00 90 89 b7 15 75 ff
+> [  469.830502] EAX: 00000000 EBX: 00000246 ECX: 00000004 EDX: 00000000
+> [  469.830502] ESI: 00000001 EDI: c3e71c40 EBP: c3e71c34 ESP: c3e71c2c
+> [  469.830502] DS: 007b ES: 007b FS: 00d8 GS: 0033 SS: 0068 EFLAGS: 00010046
+> [  469.830502] CR0: 80050033 CR2: 00000004 CR3: 057fa000 CR4: 00000010
+> [  469.830502] Kernel panic - not syncing: Fatal exception
+> [  469.830502] Kernel Offset: disabled
+> [  469.830502] ---[ end Kernel panic - not syncing: Fatal exception ]---
+
+Anyway, I'm adding it to regzbot to ensure it doesn't fall through cracks
+unnoticed:
+
+#regzbot introduced: b39181f7c6907d https://bugzilla.kernel.org/show_bug.cgi?id=217669
+#regzbot title: FTRACE_MCOUNT_MAX_OFFSET causes kernel NULL pointer dereference and virtual console (tty1) freeze
+#regzbot link: https://gitlab.freedesktop.org/drm/amd/-/issues/2615
+
+Thanks.
+
+[1]: https://bugzilla.kernel.org/show_bug.cgi?id=217669
+
+-- 
+An old man doll... just what I always wanted! - Clara
