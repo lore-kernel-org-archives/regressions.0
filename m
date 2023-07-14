@@ -1,59 +1,35 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 148477472
-	for <regressions@lists.linux.dev>; Fri, 14 Jul 2023 07:42:09 +0000 (UTC)
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-3fbab0d0b88so17501375e9.0
-        for <regressions@lists.linux.dev>; Fri, 14 Jul 2023 00:42:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1689320528; x=1691912528;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=sK84lncacaMhcQDL5MpNeLZp7wLw2TM8CahhFQIxHMI=;
-        b=D6sq3fUQxqF8xeGkKEtstHfLaCzlmT942fMLl8ARYIMxltX14K9HfohIYTOTP9cjb8
-         ZaEBpLCRYQ9kcMF9aVMvym2Ek9IOVU2ORg9Yw1l3W1gCk++uRiQ3SFkhSA5LZ1I6flp5
-         v9Yz7uSJF5jSgp663mzKrDVNRXGVjRiAGDEk7HBuhxqPcT6eSqcMPxXFoU114HpwMee/
-         9XtKsxndJXx8/1SxyGffoZZ9qEPGqRRNluSwxSMmsk19Z2iOZf02aEaC3S/QcOz+EgCv
-         ESBD6+BYkWuqt6ecVh3OSQZ8XmATsPOfh95/jB3m+IoG6aNbLUo7hzyzk+ujiA1OMfj2
-         8IsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689320528; x=1691912528;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=sK84lncacaMhcQDL5MpNeLZp7wLw2TM8CahhFQIxHMI=;
-        b=Ghh0P/jw6REg4QCzegpTiAvoWiTXIysEt41rz5LvI2yQ32zFS+fJvgQovz3cNYH/AK
-         qPeAzkNzpYDaSGIoilLetWYlltNYi6+Ep/nt1+e6N8VsV0JSc/14UXSPwqQDBx1UEAmY
-         IXse4sB7SNZGwm/Iwqj+QRqIM4RWlvi7254QiTVC8dyZsAcHUrZzAiEkhllVm3lDYJYI
-         6mA7VMt4kwhBPUSa27JCda11HBFiIAuWRMFtCkOat+daohTPKmqfq/LAHPibmCyTtxjK
-         gyjpVESIwPG0QjbEFTSco1QYSv2m5lTvh22c4az1Xag0p/RHT97CbMQdf1M+k32DbRHn
-         zN5w==
-X-Gm-Message-State: ABy/qLYNefVJAa/iRriBf86kNN7kVHVeQXLOWPynBeoARLRApzeWmFtM
-	/ExNyw7QcW7cVue71fDKYmo=
-X-Google-Smtp-Source: APBJJlFVxNDaPg7oUZR3R3FpXPNBsTyHhE0a6FrFucXT8U4X8TfbUf9aurfYwayGq8GOC1yrTW3R0w==
-X-Received: by 2002:a05:600c:b54:b0:3f7:e7a2:25f6 with SMTP id k20-20020a05600c0b5400b003f7e7a225f6mr1590080wmr.17.1689320527603;
-        Fri, 14 Jul 2023 00:42:07 -0700 (PDT)
-Received: from ?IPV6:2a01:c22:72e8:a200:dbe:b466:eccf:67d7? (dynamic-2a01-0c22-72e8-a200-0dbe-b466-eccf-67d7.c22.pool.telefonica.de. [2a01:c22:72e8:a200:dbe:b466:eccf:67d7])
-        by smtp.googlemail.com with ESMTPSA id c8-20020a7bc848000000b003fc06169ab3sm773566wml.20.2023.07.14.00.42.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 14 Jul 2023 00:42:07 -0700 (PDT)
-Message-ID: <ce802481-87c3-1bb8-2ee4-fc3cd73d889a@gmail.com>
-Date: Fri, 14 Jul 2023 09:42:04 +0200
-Precedence: bulk
-X-Mailing-List: regressions@lists.linux.dev
-List-Id: <regressions.lists.linux.dev>
-List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
-List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: r8169: transmit transmit queue timed out - v6.4 cycle
-To: Kurt Kanzenbach <kurt@linutronix.de>,
- Tobias Klausmann <tobias.klausmann@freenet.de>,
- Linux regressions mailing list <regressions@lists.linux.dev>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59CC779E1
+	for <regressions@lists.linux.dev>; Fri, 14 Jul 2023 08:09:50 +0000 (UTC)
+From: Kurt Kanzenbach <kurt@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1689322189;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2joIjfhAmAJar1Quice1djLjK4m7sRAWwvV+OwS5g1U=;
+	b=Ji4jqUM3fluLLf3Sr7Ppp9H7we4IEwZS+kSJAoX8OPLIIBZn/IHHx5H/iPTFV7OZ6t606X
+	mlt2Djgs7mtaDpQyygpSrFZZwRYx3dLJyq165uXB/e78+gySIxDpMpuSaXOt8Ly2I03fXu
+	HApqtToo/7Hr5tuzDnjo/oTNT7Ad1LJmHCGVmBDe4pf+Gxfx5SVtNHO2JI6CPwo8nraJX7
+	+0yia3XW3tuAWgurLBh0lydFf9rzNUMiPFAyhSn/Q5j3tgSaQywtzhzHevxKU9/ygW/rbf
+	z1nVfhe47gcoR9VRghwvu+IB6KtFCqnAFPKREUejup3aRFoPRgxJJnEzs9WqMw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1689322189;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2joIjfhAmAJar1Quice1djLjK4m7sRAWwvV+OwS5g1U=;
+	b=qJCImvb3VsIz3IaR99r36QO3EycL16tXg7xMyfOeI4gU9ngiX4VK6cyYmJykc+u1vIqquG
+	4Zoppquk2lCO6DBg==
+To: Heiner Kallweit <hkallweit1@gmail.com>, Tobias Klausmann
+ <tobias.klausmann@freenet.de>, Linux regressions mailing list
+ <regressions@lists.linux.dev>
 Cc: Realtek linux nic maintainers <nic_swsd@realtek.com>,
  netdev@vger.kernel.org
+Subject: Re: r8169: transmit transmit queue timed out - v6.4 cycle
+In-Reply-To: <ce802481-87c3-1bb8-2ee4-fc3cd73d889a@gmail.com>
 References: <c3465166-f04d-fcf5-d284-57357abb3f99@freenet.de>
  <CAFSsGVtiXSK_0M_TQm_38LabiRX7E5vR26x=cKags4ZQBqfXPQ@mail.gmail.com>
  <e47bac0d-e802-65e1-b311-6acb26d5cf10@freenet.de>
@@ -62,94 +38,127 @@ References: <c3465166-f04d-fcf5-d284-57357abb3f99@freenet.de>
  <A69A7D66-A73A-4C4D-913B-8C2D4CF03CE2@freenet.de>
  <842ae1f6-e3fe-f4d1-8d4f-f19627a52665@gmail.com> <87a5w0cn18.fsf@kurt>
  <04dc4bbb-6bfd-4074-6d32-007dc8d213e5@gmail.com> <87wmz3ezf3.fsf@kurt>
-Content-Language: en-US
-From: Heiner Kallweit <hkallweit1@gmail.com>
-In-Reply-To: <87wmz3ezf3.fsf@kurt>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+ <ce802481-87c3-1bb8-2ee4-fc3cd73d889a@gmail.com>
+Date: Fri, 14 Jul 2023 10:09:47 +0200
+Message-ID: <87ttu6gbhw.fsf@kurt>
+Precedence: bulk
+X-Mailing-List: regressions@lists.linux.dev
+List-Id: <regressions.lists.linux.dev>
+List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
+List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha512; protocol="application/pgp-signature"
 
-On 14.07.2023 09:16, Kurt Kanzenbach wrote:
-> On Thu Jul 13 2023, Heiner Kallweit wrote:
->> On 13.07.2023 09:01, Kurt Kanzenbach wrote:
->>> Hello Heiner,
->>>
->>> On Mon Jul 10 2023, Heiner Kallweit wrote:
->>>> On 05.07.2023 00:25, Tobias Klausmann wrote:
->>>>> Hi, top posting as well, as im on vacation, too. The system does not
->>>>> allow disabling ASPM, it is a very constrained notebook BIOS, thus
->>>>> the suggestion is nit feasible. All in all the sugesstion seems not
->>>>> favorable for me, as it is unknown how many systems are broken the
->>>>> same way. Having a workaround adviced as default seems oretty wrong
->>>>> to me.
->>>>>
->>>>
->>>> To get a better understanding of the affected system:
->>>> Could you please provide a full dmesg log and the lspci -vv output?
->>>
->>> I'm having the same problem as described by Tobias on a desktop
->>> machine. v6.3 works; v6.4 results in transmit queue timeouts
->>> occasionally. Reverting 2ab19de62d67 ("r8169: remove ASPM restrictions
->>> now that ASPM is disabled during NAPI poll") "solves" the issue.
->>>
->>> From dmesg:
->>>
->>> |~ % dmesg | grep -i ASPM
->>> |[    0.152746] ACPI FADT declares the system doesn't support PCIe ASPM, so disable it
->>> |[    0.905100] acpi PNP0A08:00: _OSC: OS supports [ExtendedConfig ASPM ClockPM Segments MSI HPX-Type3]
->>> |[    0.906508] acpi PNP0A08:00: FADT indicates ASPM is unsupported, using BIOS configuration
->>> |[    1.156585] pci 10000:e1:00.0: can't override BIOS ASPM; OS doesn't have ASPM control
->>> |[    1.300059] r8169 0000:03:00.0: can't disable ASPM; OS doesn't have ASPM control
->>>
->>> In addition, with commit 2ab19de62d67 in kernel regular messages like
->>> this show up:
->>>
->>> |[ 7487.214593] pcieport 0000:00:1c.2: AER: Corrected error received: 0000:03:00.0
->>>
->>> I'm happy to test any patches or provide more info if needed.
->>>
->> Thanks for the report. It's interesting that the issue seems to occur only on systems
->> where BIOS doesn't allow OS to control ASPM. Maybe this results in the PCI subsystem
->> not properly initializing something.
->> Kurt/Klaus: Could you please boot with cmd line parameter pcie_aspm=force and see
->> whether this changes something?
->> This parameter lets Linux ignore the BIOS setting. You should see a message
->> "PCIe ASPM is forcibly enabled" in the dmesg log with this parameter.
-> 
-> Seems like this does not help. There are still PCIe errors:
-> 
-> |~ # dmesg | grep -i ASPM
-> |[    0.000000] Command line: BOOT_IMAGE=/vmlinuz-6.4.2-gentoo-kurtOS root=/dev/nvme0n1p3 ro kvm-intel.nested=1 vga=794 pcie_aspm=force
-> |[    0.044016] Kernel command line: BOOT_IMAGE=/vmlinuz-6.4.2-gentoo-kurtOS root=/dev/nvme0n1p3 ro kvm-intel.nested=1 vga=794 pcie_aspm=force
-> |[    0.044048] PCIe ASPM is forcibly enabled
-> |[    0.153011] ACPI FADT declares the system doesn't support PCIe ASPM, so disable it
-> |[    0.916341] acpi PNP0A08:00: _OSC: OS supports [ExtendedConfig ASPM ClockPM Segments MSI HPX-Type3]
-> |[    0.917719] acpi PNP0A08:00: FADT indicates ASPM is unsupported, using BIOS configuration
-> |~ # dmesg | grep -i r8169
-> |[    1.337417] r8169 0000:03:00.0 eth0: RTL8168h/8111h, 6c:3c:8c:2c:bd:de, XID 541, IRQ 164
-> |[    1.337422] r8169 0000:03:00.0 eth0: jumbo features [frames: 9194 bytes, tx checksumming: ko]
-> |[    2.833876] r8169 0000:03:00.0 enp3s0: renamed from eth0
-> |[   20.886564] Generic FE-GE Realtek PHY r8169-0-300:00: attached PHY driver (mii_bus:phy_addr=r8169-0-300:00, irq=MAC)
-> |[   21.168373] r8169 0000:03:00.0 enp3s0: Link is Down
-> |[   24.006543] r8169 0000:03:00.0 enp3s0: Link is Up - 1Gbps/Full - flow control off
-> |~ # dmesg | tail
-> |[   20.886564] Generic FE-GE Realtek PHY r8169-0-300:00: attached PHY driver (mii_bus:phy_addr=r8169-0-300:00, irq=MAC)
-> |[   21.168373] r8169 0000:03:00.0 enp3s0: Link is Down
-> |[   24.006543] r8169 0000:03:00.0 enp3s0: Link is Up - 1Gbps/Full - flow control off
-> |[   24.006568] IPv6: ADDRCONF(NETDEV_CHANGE): enp3s0: link becomes ready
-> |[   24.567803] ACPI Warning: \_SB.PC00.PEG1.PEGP._DSM: Argument #4 type mismatch - Found [Buffer], ACPI requires [Package] (20230331/nsarguments-61)
-> |[   41.563396] pcieport 0000:00:1c.2: AER: Corrected error received: 0000:03:00.0
-> |[   47.065441] pcieport 0000:00:1c.2: AER: Multiple Corrected error received: 0000:03:00.0
-> |[   54.264285] pcieport 0000:00:1c.2: AER: Corrected error received: 0000:03:00.0
-> |[   54.424210] pcieport 0000:00:1c.2: AER: Corrected error received: 0000:03:00.0
-> |[   55.443439] pcieport 0000:00:1c.2: AER: Corrected error received: 0000:03:00.0
-> 
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-But no tx timeout (yet)?
-Now that ASPM is forced, could you please disable ASPM L1.2?
--> /sys/class/net/enp3s0/device/link/l1_2_aspm
-That's what we did until 6.3 for RTL8168h on systems where
-OS can control ASPM.
+On Fri Jul 14 2023, Heiner Kallweit wrote:
+>>> Thanks for the report. It's interesting that the issue seems to occur o=
+nly on systems
+>>> where BIOS doesn't allow OS to control ASPM. Maybe this results in the =
+PCI subsystem
+>>> not properly initializing something.
+>>> Kurt/Klaus: Could you please boot with cmd line parameter pcie_aspm=3Df=
+orce and see
+>>> whether this changes something?
+>>> This parameter lets Linux ignore the BIOS setting. You should see a mes=
+sage
+>>> "PCIe ASPM is forcibly enabled" in the dmesg log with this parameter.
+>>=20
+>> Seems like this does not help. There are still PCIe errors:
+>>=20
+>> |~ # dmesg | grep -i ASPM
+>> |[    0.000000] Command line: BOOT_IMAGE=3D/vmlinuz-6.4.2-gentoo-kurtOS =
+root=3D/dev/nvme0n1p3 ro kvm-intel.nested=3D1 vga=3D794 pcie_aspm=3Dforce
+>> |[    0.044016] Kernel command line: BOOT_IMAGE=3D/vmlinuz-6.4.2-gentoo-=
+kurtOS root=3D/dev/nvme0n1p3 ro kvm-intel.nested=3D1 vga=3D794 pcie_aspm=3D=
+force
+>> |[    0.044048] PCIe ASPM is forcibly enabled
+>> |[    0.153011] ACPI FADT declares the system doesn't support PCIe ASPM,=
+ so disable it
+>> |[    0.916341] acpi PNP0A08:00: _OSC: OS supports [ExtendedConfig ASPM =
+ClockPM Segments MSI HPX-Type3]
+>> |[    0.917719] acpi PNP0A08:00: FADT indicates ASPM is unsupported, usi=
+ng BIOS configuration
+>> |~ # dmesg | grep -i r8169
+>> |[    1.337417] r8169 0000:03:00.0 eth0: RTL8168h/8111h, 6c:3c:8c:2c:bd:=
+de, XID 541, IRQ 164
+>> |[    1.337422] r8169 0000:03:00.0 eth0: jumbo features [frames: 9194 by=
+tes, tx checksumming: ko]
+>> |[    2.833876] r8169 0000:03:00.0 enp3s0: renamed from eth0
+>> |[   20.886564] Generic FE-GE Realtek PHY r8169-0-300:00: attached PHY d=
+river (mii_bus:phy_addr=3Dr8169-0-300:00, irq=3DMAC)
+>> |[   21.168373] r8169 0000:03:00.0 enp3s0: Link is Down
+>> |[   24.006543] r8169 0000:03:00.0 enp3s0: Link is Up - 1Gbps/Full - flo=
+w control off
+>> |~ # dmesg | tail
+>> |[   20.886564] Generic FE-GE Realtek PHY r8169-0-300:00: attached PHY d=
+river (mii_bus:phy_addr=3Dr8169-0-300:00, irq=3DMAC)
+>> |[   21.168373] r8169 0000:03:00.0 enp3s0: Link is Down
+>> |[   24.006543] r8169 0000:03:00.0 enp3s0: Link is Up - 1Gbps/Full - flo=
+w control off
+>> |[   24.006568] IPv6: ADDRCONF(NETDEV_CHANGE): enp3s0: link becomes ready
+>> |[   24.567803] ACPI Warning: \_SB.PC00.PEG1.PEGP._DSM: Argument #4 type=
+ mismatch - Found [Buffer], ACPI requires [Package] (20230331/nsarguments-6=
+1)
+>> |[   41.563396] pcieport 0000:00:1c.2: AER: Corrected error received: 00=
+00:03:00.0
+>> |[   47.065441] pcieport 0000:00:1c.2: AER: Multiple Corrected error rec=
+eived: 0000:03:00.0
+>> |[   54.264285] pcieport 0000:00:1c.2: AER: Corrected error received: 00=
+00:03:00.0
+>> |[   54.424210] pcieport 0000:00:1c.2: AER: Corrected error received: 00=
+00:03:00.0
+>> |[   55.443439] pcieport 0000:00:1c.2: AER: Corrected error received: 00=
+00:03:00.0
+>>=20
+>
+> But no tx timeout (yet)?
 
-> Thanks,
-> Kurt
+No, not yet. It doesn't trigger immediately.
 
+> Now that ASPM is forced, could you please disable ASPM L1.2?
+> -> /sys/class/net/enp3s0/device/link/l1_2_aspm
+> That's what we did until 6.3 for RTL8168h on systems where
+> OS can control ASPM.
+
+OK. Disabled ASPM L1.2. PCIe error messages stopped, but the NIC ran
+into tx timeout:
+
+|[Fri Jul 14 09:54:00 2023] ------------[ cut here ]------------
+|[Fri Jul 14 09:54:00 2023] NETDEV WATCHDOG: enp3s0 (r8169): transmit queue=
+ 0 timed out 9200 ms
+|[Fri Jul 14 09:54:00 2023] WARNING: CPU: 5 PID: 0 at net/sched/sch_generic=
+.c:525 dev_watchdog+0x176/0x1ea
+|[...]
+|[Fri Jul 14 09:54:03 2023] pcieport 0000:00:1c.2: Data Link Layer Link Act=
+ive not set in 1000 msec
+|[Fri Jul 14 09:54:03 2023] r8169 0000:03:00.0 enp3s0: Can't reset secondar=
+y PCI bus, detach NIC
+
+Thanks,
+Kurt
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQJHBAEBCgAxFiEEvLm/ssjDfdPf21mSwZPR8qpGc4IFAmSxAssTHGt1cnRAbGlu
+dXRyb25peC5kZQAKCRDBk9HyqkZzgq/pD/49KUJ6HGZJUCghT7V563Lg6yGyCQaz
+D9dGgC7Alkq1Z3MUxrJpOW0s1UbzygvjVAOo0D+wzjxcYTraevHF01ExWgPL0l3/
+828pKaI1UUXqcVidBHvpOqg9PByM2y8pjB59AxbPqGE7b7uWcuowKQVJQMKk0B1D
+PrAaoxO9fsxwkQbJWDaGTJTr/sLoODwPBzoWq6ZfoGFF02dOozy4kwA7OlXOZyks
+Q7OhLW/McbgNojM4fNjOCzn6AuW/MboJkscIVMGBy8FHUWyaFZzXM3DtJ/j5EQ3n
+52u5dmdhXLnd5AUenHjbnOP4AX4VH2ZQI2McYWTRiZE18J8nSeSxwqb0tLr0U2AK
+tbMDhX8mf77uky6ah0afRh4tCyXemb8sYOG8biHTT/TMzKkhCZ5HZyPlSFqishji
+MPHLtm04QOUKVPn2Cs3uQdOU/I75f1QltVaOH1BOQmvZbVcrhLaTyNdxUXm3lHFi
+Nn4ydoPnAjm7kzKBzoQLGrzWh7sq/oB54dUzs/K9KepF4B25gz554EB4/Fi86flr
+rOMjeS5bwYGFyr4kFv9wQobhjRIQORVm+g5T6eZHgMYGp/sSMZ+l5RgUIlk9JNS/
+TSFDc14BV2L6ab+IhaSwMnikjjgCia3vOVIcWdx7RzAO3DSFIzEz1wmiaR5UYkyG
+icOy41YXhtsRow==
+=XRPB
+-----END PGP SIGNATURE-----
+--=-=-=--
