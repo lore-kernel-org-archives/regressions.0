@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC7AB79F0
-	for <regressions@lists.linux.dev>; Fri, 14 Jul 2023 08:16:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 894CF6FC8
+	for <regressions@lists.linux.dev>; Fri, 14 Jul 2023 11:04:22 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qKDyd-00067h-KK; Fri, 14 Jul 2023 10:16:35 +0200
-Message-ID: <ee7172c0-b5f1-c5e2-55d8-2b712ceb6ea6@leemhuis.info>
-Date: Fri, 14 Jul 2023 10:16:35 +0200
+	id 1qKGav-000446-TI; Fri, 14 Jul 2023 13:04:17 +0200
+Message-ID: <c7461674-6be8-9438-55fa-ae6b4d56d3b5@leemhuis.info>
+Date: Fri, 14 Jul 2023 13:04:16 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,82 +16,65 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.13.0
-Subject: Re: [PATCH net] r8169: fix ASPM-related problem for chip version 42
- and 43
+Subject: Re: [PATCH] arm64: dts: qcom: sdm845-db845c: Move LVS regulator nodes
+ up
 Content-Language: en-US, de-DE
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-To: Heiner Kallweit <hkallweit1@gmail.com>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- Jakub Kicinski <kuba@kernel.org>, David Miller <davem@davemloft.net>,
- Realtek linux nic maintainers <nic_swsd@realtek.com>,
- Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>
-Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
- joey.joey586@gmail.com, Greg KH <gregkh@linuxfoundation.org>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>,
+To: Amit Pundir <amit.pundir@linaro.org>,
  Linux regressions mailing list <regressions@lists.linux.dev>
-References: <82ea9e63-d8c8-0b86-cd88-913cc249fa9a@gmail.com>
- <d644f048-970c-71fe-a556-a2c80444dae2@leemhuis.info>
- <17c638ca-5343-75e0-7f52-abf86026f75d@gmail.com>
- <fff3067d-5a7f-b328-ef65-fa68138f8b0f@leemhuis.info>
- <a42f129b-d64b-2d86-0758-143e99a534a0@gmail.com>
- <6b2513b0-f57c-73ff-5181-489ba43a01e3@leemhuis.info>
-In-Reply-To: <6b2513b0-f57c-73ff-5181-489ba43a01e3@leemhuis.info>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+ Doug Anderson <dianders@chromium.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Mark Brown <broonie@kernel.org>, Andy Gross <agross@kernel.org>,
+ Rob Herring <robh+dt@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Caleb Connolly <caleb.connolly@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+ dt <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>
+References: <20230602161246.1855448-1-amit.pundir@linaro.org>
+ <358c69ad-fa8a-7386-fe75-92369883ee48@leemhuis.info>
+ <0f6c9dcb-b7f6-fff9-6bed-f4585ea8e487@linaro.org>
+ <CAD=FV=Xt2KYGY15+f+nHxkzKnwhHzw1A7=o+5kgCDWvHDv0DNg@mail.gmail.com>
+ <20230620155902.clspxncyvpodixft@ripper>
+ <5240ce3f-37fa-2747-92ee-23d71619f3ef@leemhuis.info>
+ <CAMi1Hd2zunc=WNUE7KT-423RXTiX6LrY2hcWQdV3Dp3o8RdJtg@mail.gmail.com>
+ <CAMi1Hd2L-j9GHQH+4O6j6m2+HGy5oEsdMv6Qyp4RaWZDNCj-Bw@mail.gmail.com>
+From: "Linux regression tracking #update (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <CAMi1Hd2L-j9GHQH+4O6j6m2+HGy5oEsdMv6Qyp4RaWZDNCj-Bw@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1689322599;71b537ec;
-X-HE-SMSGID: 1qKDyd-00067h-KK
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1689332662;477d014a;
+X-HE-SMSGID: 1qKGav-000446-TI
 
-[Short version: sorry for the noise, a stale file sent us sideways.]
-
-On 14.07.23 08:58, Linux regression tracking (Thorsten Leemhuis) wrote:
-> [ccing greg]
-> 
-> On 14.07.23 08:34, Heiner Kallweit wrote:
->> On 14.07.2023 08:30, Linux regression tracking (Thorsten Leemhuis) wrote:
->>> On 14.07.23 07:34, Heiner Kallweit wrote:
->>>> On 14.07.2023 05:31, Linux regression tracking (Thorsten Leemhuis) wrote:
->>>>> On 13.07.23 21:46, Heiner Kallweit wrote:
->>>>
->>>>>> Fixes: 5fc3f6c90cca ("r8169: consolidate disabling ASPM before EPHY access")
->>>>>  Closes: https://bugzilla.kernel.org/show_bug.cgi?id=217635 # [0]
->>>>> A "Cc: stable@vger.kernel.org" would be nice, too, to get this fixed in
->>>>> 6.4, where this surfaced (reminder: no, a Fixes: tag is not enough to
->>>>> ensure the backport there).
->>>> That's different in the net subsystem. The net (vs. net-next) annotation
->>>> ensures the backport.
+On 07.07.23 07:08, Amit Pundir wrote:
+> On Thu, 22 Jun 2023 at 17:18, Amit Pundir <amit.pundir@linaro.org> wrote:
+>> On Thu, 22 Jun 2023 at 13:17, Linux regression tracking (Thorsten
+>> Leemhuis) <regressions@leemhuis.info> wrote:
 >>>
->>> Huh, how does that work? I thought "net" currently means "for 6.5" while
->>> "net-next" implies 6.6?
+>>> As Linus will likely release 6.4 on this or the following Sunday a quick
+>>> status inquiry so I can brief him appropriately: is there any hope the
+>>> regression this patch tried to fix will be resolved any time soon?
 >>
->> https://www.kernel.org/doc/Documentation/networking/netdev-FAQ.txt
+>> We are most likely to miss v6.4. I'm trying to reproduce the crash
+>> with tracing enabled, to share some more debug information.
+> 
+> FWIW, I couldn't reproduce this bug on v6.5 merge window commit
+> d528014517f2 (Revert ".gitignore: ignore *.cover and *.mbx")
+> on 100+ boot tests last night.
+> For the time being I'm keeping an eye on it and will trigger the boot
+> tests occasionally in the v6.5 development cycle.
 
-I just learned on social media that's a stale file that doesn't exist
-anymore in mainline (I'll talk to Konstantin, maybe he can remove it to
-avoid similar problems in the future). That document was converted to
-rst and later...
+No update since then, so I assume this remains fixed. I'll thus remove
+this from the tracking; please holler if you think it might make sense
+to continue tracking this.
 
->> See question:
->> I see a network patch and I think it should be backported to stable.
->> Should I request it via "stable@vger.kernel.org" like the references in
->> the kernel's Documentation/process/stable-kernel-rules.rst file say?
+#regzbot resolved: apparently solved with during the 6.5 merge window
+#regzbot ignore-activity
 
-...this section was actually removed in dbbe7c962c3 ("docs: networking:
-drop special stable handling") [v5.12-rc3]; later that document moved here:
-
-https://www.kernel.org/doc/html/latest/process/maintainer-netdev.html
-
-To quote:
-
-```
-
-1.5.7. Stable tree
-
-While it used to be the case that netdev submissions were not supposed
-to carry explicit CC: stable@vger.kernel.org tags that is no longer the
-case today. Please follow the standard stable rules in
-Documentation/process/stable-kernel-rules.rst, and make sure you include
-appropriate Fixes tags!
-```
-
-That clears things up. Ciao, Thorsten
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+That page also explains what to do if mails like this annoy you.
