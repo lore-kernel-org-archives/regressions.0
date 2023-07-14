@@ -1,45 +1,45 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5CC320F4
-	for <regressions@lists.linux.dev>; Fri, 14 Jul 2023 05:34:13 +0000 (UTC)
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-3fbc12181b6so14677985e9.2
-        for <regressions@lists.linux.dev>; Thu, 13 Jul 2023 22:34:13 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A1D54C8C
+	for <regressions@lists.linux.dev>; Fri, 14 Jul 2023 05:39:44 +0000 (UTC)
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-3fb4146e8ceso13844215e9.0
+        for <regressions@lists.linux.dev>; Thu, 13 Jul 2023 22:39:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1689312851; x=1691904851;
-        h=content-transfer-encoding:in-reply-to:subject:from:content-language
-         :references:cc:to:user-agent:mime-version:date:message-id:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lCJcQQRjJzkT1ggDM5s4p8DYt7wLE79ib2sV+EARwLY=;
-        b=Yg0n+zzIT9qKZsIaCu07rsyJZPVX3RXyzsypkYyLI5Y7FPy5KLds7h0b784wYy4ssm
-         j0OMiCuqteuJaWTyv5pNNFsnP1D2n/KcqhrSQsi9xPYJ3BEH6XcGcN5RSxuXhiNNK9sV
-         sZXtohccDQksVTk0FIJGygoT45UXVskHt27kuXCGWOdTNubA9rM3mVBRATkZCfA3KN/N
-         2YmWdZWCvvkQhi9OZh2mmu6wtjiHVEi0g8ZYDNiZOEHA/tRdSnVhYzpAhf9Vff/NtP7i
-         StFiYhyjbca4XKrcZuMvYQEPWxwGHEQGnhb/c1OTksY5zvLYt2ku2TlSw7HYgXMelD9v
-         /Zag==
+        d=gmail.com; s=20221208; t=1689313183; x=1691905183;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PghXL2nj0bR1AkbvTWEvPVUujehAvZqC6bXTuYKarO4=;
+        b=sRtAqt/uPpzCDQx7F84Puxwm7bEoL4jC60zuSC4QHJkoM5Tm/htAgFpM+YZ4utVKl8
+         dC+DgmPWfmGZBug6sPsgqRV1RCX3j9zbVnTZTJtnCD8vTKeZhJ7A2uaEC1VLvRF2ZuOh
+         EYIIFx/V4rCvGrDaPt1V09DInCondQU96gutLUmE8akVyJRHefhqsPqVuohBoM32AyWo
+         AjSvOsXDEKoB30J2+thaUvMlSCt38AEV8CCneVGcuSskS4noFIS4xrhO0qkzofQef8xi
+         COVX5lm6rMelLzB+fXGWVHtOWkF+SIKJ4AA3+UqPgoDKiXR9wr/5AYVvFIBufJcKCODb
+         Rj6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689312851; x=1691904851;
-        h=content-transfer-encoding:in-reply-to:subject:from:content-language
-         :references:cc:to:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lCJcQQRjJzkT1ggDM5s4p8DYt7wLE79ib2sV+EARwLY=;
-        b=SVyhAlWPZxNmhM2CcaId9fEAPCktUC4DJSWwReP/CKKNMdrGUWDqyu3JT18AEeSADp
-         9QRAIK1i+ttYJGEngwlVjchqWn7tsC/t8n9CztVliNIEu6MA4SRcdQVW29tZkiq9FZBX
-         4EV+H5hPkndf8Tx4z81V92y7dKA3fQhS4sEDPkuq+FvBYEDqNkfKchum5TgDF+mP0hAy
-         N0LCpQsKz062XnyEnqpbOI4sTLBXUZgA/9OZihUQ3gGAjNbRKWZ2tv6IxVZ/4CUyGlPW
-         bEhXgIiikaPv4Wmkm62hIbxInxbe+ba+VZ5zdtuC5R//MBeZ+QhRmcXEghwxGirWKc8g
-         ygwg==
-X-Gm-Message-State: ABy/qLY4i31rqyWwi6XWFDoZNVB0UJuiK4OZMI2fEh32EbTkMKpKYc74
-	gyj7GuqQJRanWI7a5GuwJM6YpLZaa0w=
-X-Google-Smtp-Source: APBJJlGsqZ5ACxOSK/aLTKCHCudeIIZansK4LMnxtb1cffEIF4w9jCqg+lDOtEoDopbqAw6yfUAaog==
-X-Received: by 2002:a5d:6792:0:b0:316:efb9:ffd with SMTP id v18-20020a5d6792000000b00316efb90ffdmr417754wru.1.1689312851242;
-        Thu, 13 Jul 2023 22:34:11 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1689313183; x=1691905183;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=PghXL2nj0bR1AkbvTWEvPVUujehAvZqC6bXTuYKarO4=;
+        b=LWGS9sHKj8Ua0ageLGKXNrugyR4EVIn4dbhtESsIIfWOVIKhzT8pf0rHwWzxGkATkP
+         ZA7yMEqtYAT2ci4rzTXa8z0Z6LSWd0wCaGsSybI51ZshABQ9ZFAq4UBkBk2Az4ep85iV
+         b8yDE1owPPThAuFyO4TmaKiT9GLx32pvZ3ilDNQCjKNwxGvgsy7QJJQ/3bW1gfoXM2lG
+         Y0gBISA1u/GnyQIJzFB9juXohWgdjtncnsf2PURRKyrAzmP3+QnqZshA4XxJp6NveYwO
+         zgCR5Qd8yWrmZkPjwuBd0KwQxEhPiNdrOgJnqfoTZm0bl875IDwowH12gtYE1E1U9W3Q
+         JbBw==
+X-Gm-Message-State: ABy/qLbMPbuc22KAA6AvttdqheXvmXzIEORgbfNtd5fSD5BQJ9UfbVZN
+	J1ID/WDPuPjiGOTGcFCEehQ=
+X-Google-Smtp-Source: APBJJlH42Qc3jaAjtoQ2irlB5opLg8u1XsnD9QuF1c/D3fNThKvjdg7+k2oJUCEMitJob2vpU1Z4qQ==
+X-Received: by 2002:a7b:c5c5:0:b0:3fa:7478:64be with SMTP id n5-20020a7bc5c5000000b003fa747864bemr2900437wmk.1.1689313182676;
+        Thu, 13 Jul 2023 22:39:42 -0700 (PDT)
 Received: from ?IPV6:2a01:c22:72e8:a200:99ec:cf51:6f55:b3af? (dynamic-2a01-0c22-72e8-a200-99ec-cf51-6f55-b3af.c22.pool.telefonica.de. [2a01:c22:72e8:a200:99ec:cf51:6f55:b3af])
-        by smtp.googlemail.com with ESMTPSA id cr13-20020a05600004ed00b003143ba62cf4sm9876224wrb.86.2023.07.13.22.34.10
+        by smtp.googlemail.com with ESMTPSA id f14-20020a5d58ee000000b003143c532431sm9836618wrd.27.2023.07.13.22.39.41
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 13 Jul 2023 22:34:10 -0700 (PDT)
-Message-ID: <17c638ca-5343-75e0-7f52-abf86026f75d@gmail.com>
-Date: Fri, 14 Jul 2023 07:34:07 +0200
+        Thu, 13 Jul 2023 22:39:42 -0700 (PDT)
+Message-ID: <f605d9cd-220d-5fa2-142e-746afa9e1665@gmail.com>
+Date: Fri, 14 Jul 2023 07:39:36 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -48,54 +48,51 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
  Thunderbird/102.13.0
-To: Linux regressions mailing list <regressions@lists.linux.dev>,
- Jakub Kicinski <kuba@kernel.org>, David Miller <davem@davemloft.net>,
+Content-Language: en-US
+To: Jakub Kicinski <kuba@kernel.org>, David Miller <davem@davemloft.net>,
  Realtek linux nic maintainers <nic_swsd@realtek.com>,
  Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>
-Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, joey.joey586@gmail.com
-References: <82ea9e63-d8c8-0b86-cd88-913cc249fa9a@gmail.com>
- <d644f048-970c-71fe-a556-a2c80444dae2@leemhuis.info>
-Content-Language: en-US
+Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ joey.joey586@gmail.com
 From: Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [PATCH net] r8169: fix ASPM-related problem for chip version 42
+Subject: [PATCH net v2] r8169: fix ASPM-related problem for chip version 42
  and 43
-In-Reply-To: <d644f048-970c-71fe-a556-a2c80444dae2@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 14.07.2023 05:31, Linux regression tracking (Thorsten Leemhuis) wrote:
-> On 13.07.23 21:46, Heiner Kallweit wrote:
->> Referenced commit missed that for chip versions 42 and 43 ASPM
-> 
-> Thanks again for taking care of this.
-> 
->> [0] https://bugzilla.kernel.org/show_bug.cgi?id=217635
-> 
-> That line should be a proper Link: or Closes: tag, as explained by
-> Documentation/process/submitting-patches.rst
+Referenced commit missed that for chip versions 42 and 43 ASPM
+remained disabled in the respective rtl_hw_start_...() routines.
+This resulted in problems as described in the referenced bug
+ticket. Therefore re-instantiate the previous logic.
 
-OK
+Fixes: 5fc3f6c90cca ("r8169: consolidate disabling ASPM before EPHY access")
+Closes: https://bugzilla.kernel.org/show_bug.cgi?id=217635
+Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+---
+v2:
+- add Closes tag
+---
+ drivers/net/ethernet/realtek/r8169_main.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-> (http://docs.kernel.org/process/submitting-patches.html) and
-> Documentation/process/5.Posting.rst
-> (https://docs.kernel.org/process/5.Posting.html) and thus be in the
-> signed-off-by area, for example like this (without the space upfront):
-> 
->> Fixes: 5fc3f6c90cca ("r8169: consolidate disabling ASPM before EPHY access")
->  Closes: https://bugzilla.kernel.org/show_bug.cgi?id=217635 # [0]
-> 
-> A "Cc: stable@vger.kernel.org" would be nice, too, to get this fixed in
-> 6.4, where this surfaced (reminder: no, a Fixes: tag is not enough to
-> ensure the backport there).
-> 
-
-That's different in the net subsystem. The net (vs. net-next) annotation
-ensures the backport.
-
->> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
->> […]
-> 
-> #regzbot ^backmonitor: https://bugzilla.kernel.org/show_bug.cgi?id=217635
-> 
-> Ciao, Thorsten
-
+diff --git a/drivers/net/ethernet/realtek/r8169_main.c b/drivers/net/ethernet/realtek/r8169_main.c
+index 9445f04f8..2b3aa6b45 100644
+--- a/drivers/net/ethernet/realtek/r8169_main.c
++++ b/drivers/net/ethernet/realtek/r8169_main.c
+@@ -2747,6 +2747,13 @@ static void rtl_hw_aspm_clkreq_enable(struct rtl8169_private *tp, bool enable)
+ 		return;
+ 
+ 	if (enable) {
++		/* On these chip versions ASPM can even harm
++		 * bus communication of other PCI devices.
++		 */
++		if (tp->mac_version == RTL_GIGA_MAC_VER_42 ||
++		    tp->mac_version == RTL_GIGA_MAC_VER_43)
++			return;
++
+ 		rtl_mod_config5(tp, 0, ASPM_en);
+ 		rtl_mod_config2(tp, 0, ClkReqEn);
+ 
+-- 
+2.41.0
