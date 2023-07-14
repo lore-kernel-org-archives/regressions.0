@@ -1,35 +1,59 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9FF7746C
-	for <regressions@lists.linux.dev>; Fri, 14 Jul 2023 07:16:08 +0000 (UTC)
-From: Kurt Kanzenbach <kurt@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1689318961;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hUAHTRd8c3CSu7cXSAALH6Qn7qntx8W9EcrdN/wA98k=;
-	b=Z/RajePAIPnSQVa3vCjcBglOC723Hu3WgzrC1OzDPXNdulC8MuK0kQixHhtjivaCu9/J9U
-	tV7LrcH8Zl2zoP8nNiALtE/FS1c7XvKod3Q1del8xHoEpIBn8lDXgXRfxn3AePE8YSSR5Z
-	9B0E/7x+vfgbBTbHxuJhCYsHzn9XhvfLqNZD4AT5rzjZcISqrQDd4pAlbGX+vUFNoHsIqC
-	U96YB97nrPemcSmgwOr71O1WVMdnkWA8uq6vknEIADGmpd0d81SOQH0MXfWdfeUEr0UEMI
-	NMUYaSm3LmrayDI0zsPR1OQL+wiujna/khn7mbObMVGogS3tiu3ic1X0Fj+XgQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1689318961;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hUAHTRd8c3CSu7cXSAALH6Qn7qntx8W9EcrdN/wA98k=;
-	b=94hq5OtFYpb2h/PEpEyrRp7gNwWtlKKobqJUtT15kKg+Wbc1fupFhLs4TpezGIeiuKJhE/
-	xJDfSyajddaAfhDw==
-To: Heiner Kallweit <hkallweit1@gmail.com>, Tobias Klausmann
- <tobias.klausmann@freenet.de>, Linux regressions mailing list
- <regressions@lists.linux.dev>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 148477472
+	for <regressions@lists.linux.dev>; Fri, 14 Jul 2023 07:42:09 +0000 (UTC)
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-3fbab0d0b88so17501375e9.0
+        for <regressions@lists.linux.dev>; Fri, 14 Jul 2023 00:42:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1689320528; x=1691912528;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=sK84lncacaMhcQDL5MpNeLZp7wLw2TM8CahhFQIxHMI=;
+        b=D6sq3fUQxqF8xeGkKEtstHfLaCzlmT942fMLl8ARYIMxltX14K9HfohIYTOTP9cjb8
+         ZaEBpLCRYQ9kcMF9aVMvym2Ek9IOVU2ORg9Yw1l3W1gCk++uRiQ3SFkhSA5LZ1I6flp5
+         v9Yz7uSJF5jSgp663mzKrDVNRXGVjRiAGDEk7HBuhxqPcT6eSqcMPxXFoU114HpwMee/
+         9XtKsxndJXx8/1SxyGffoZZ9qEPGqRRNluSwxSMmsk19Z2iOZf02aEaC3S/QcOz+EgCv
+         ESBD6+BYkWuqt6ecVh3OSQZ8XmATsPOfh95/jB3m+IoG6aNbLUo7hzyzk+ujiA1OMfj2
+         8IsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689320528; x=1691912528;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=sK84lncacaMhcQDL5MpNeLZp7wLw2TM8CahhFQIxHMI=;
+        b=Ghh0P/jw6REg4QCzegpTiAvoWiTXIysEt41rz5LvI2yQ32zFS+fJvgQovz3cNYH/AK
+         qPeAzkNzpYDaSGIoilLetWYlltNYi6+Ep/nt1+e6N8VsV0JSc/14UXSPwqQDBx1UEAmY
+         IXse4sB7SNZGwm/Iwqj+QRqIM4RWlvi7254QiTVC8dyZsAcHUrZzAiEkhllVm3lDYJYI
+         6mA7VMt4kwhBPUSa27JCda11HBFiIAuWRMFtCkOat+daohTPKmqfq/LAHPibmCyTtxjK
+         gyjpVESIwPG0QjbEFTSco1QYSv2m5lTvh22c4az1Xag0p/RHT97CbMQdf1M+k32DbRHn
+         zN5w==
+X-Gm-Message-State: ABy/qLYNefVJAa/iRriBf86kNN7kVHVeQXLOWPynBeoARLRApzeWmFtM
+	/ExNyw7QcW7cVue71fDKYmo=
+X-Google-Smtp-Source: APBJJlFVxNDaPg7oUZR3R3FpXPNBsTyHhE0a6FrFucXT8U4X8TfbUf9aurfYwayGq8GOC1yrTW3R0w==
+X-Received: by 2002:a05:600c:b54:b0:3f7:e7a2:25f6 with SMTP id k20-20020a05600c0b5400b003f7e7a225f6mr1590080wmr.17.1689320527603;
+        Fri, 14 Jul 2023 00:42:07 -0700 (PDT)
+Received: from ?IPV6:2a01:c22:72e8:a200:dbe:b466:eccf:67d7? (dynamic-2a01-0c22-72e8-a200-0dbe-b466-eccf-67d7.c22.pool.telefonica.de. [2a01:c22:72e8:a200:dbe:b466:eccf:67d7])
+        by smtp.googlemail.com with ESMTPSA id c8-20020a7bc848000000b003fc06169ab3sm773566wml.20.2023.07.14.00.42.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 14 Jul 2023 00:42:07 -0700 (PDT)
+Message-ID: <ce802481-87c3-1bb8-2ee4-fc3cd73d889a@gmail.com>
+Date: Fri, 14 Jul 2023 09:42:04 +0200
+Precedence: bulk
+X-Mailing-List: regressions@lists.linux.dev
+List-Id: <regressions.lists.linux.dev>
+List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
+List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: r8169: transmit transmit queue timed out - v6.4 cycle
+To: Kurt Kanzenbach <kurt@linutronix.de>,
+ Tobias Klausmann <tobias.klausmann@freenet.de>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
 Cc: Realtek linux nic maintainers <nic_swsd@realtek.com>,
  netdev@vger.kernel.org
-Subject: Re: r8169: transmit transmit queue timed out - v6.4 cycle
-In-Reply-To: <04dc4bbb-6bfd-4074-6d32-007dc8d213e5@gmail.com>
 References: <c3465166-f04d-fcf5-d284-57357abb3f99@freenet.de>
  <CAFSsGVtiXSK_0M_TQm_38LabiRX7E5vR26x=cKags4ZQBqfXPQ@mail.gmail.com>
  <e47bac0d-e802-65e1-b311-6acb26d5cf10@freenet.de>
@@ -37,145 +61,95 @@ References: <c3465166-f04d-fcf5-d284-57357abb3f99@freenet.de>
  <CAFSsGVuDLnW_7iwSUNebx8Lku3CGZhcym3uXfMFnotA=OYJJjQ@mail.gmail.com>
  <A69A7D66-A73A-4C4D-913B-8C2D4CF03CE2@freenet.de>
  <842ae1f6-e3fe-f4d1-8d4f-f19627a52665@gmail.com> <87a5w0cn18.fsf@kurt>
- <04dc4bbb-6bfd-4074-6d32-007dc8d213e5@gmail.com>
-Date: Fri, 14 Jul 2023 09:16:00 +0200
-Message-ID: <87wmz3ezf3.fsf@kurt>
-Precedence: bulk
-X-Mailing-List: regressions@lists.linux.dev
-List-Id: <regressions.lists.linux.dev>
-List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
-List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha512; protocol="application/pgp-signature"
+ <04dc4bbb-6bfd-4074-6d32-007dc8d213e5@gmail.com> <87wmz3ezf3.fsf@kurt>
+Content-Language: en-US
+From: Heiner Kallweit <hkallweit1@gmail.com>
+In-Reply-To: <87wmz3ezf3.fsf@kurt>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-
-On Thu Jul 13 2023, Heiner Kallweit wrote:
-> On 13.07.2023 09:01, Kurt Kanzenbach wrote:
->> Hello Heiner,
->>=20
->> On Mon Jul 10 2023, Heiner Kallweit wrote:
->>> On 05.07.2023 00:25, Tobias Klausmann wrote:
->>>> Hi, top posting as well, as im on vacation, too. The system does not
->>>> allow disabling ASPM, it is a very constrained notebook BIOS, thus
->>>> the suggestion is nit feasible. All in all the sugesstion seems not
->>>> favorable for me, as it is unknown how many systems are broken the
->>>> same way. Having a workaround adviced as default seems oretty wrong
->>>> to me.
->>>>
+On 14.07.2023 09:16, Kurt Kanzenbach wrote:
+> On Thu Jul 13 2023, Heiner Kallweit wrote:
+>> On 13.07.2023 09:01, Kurt Kanzenbach wrote:
+>>> Hello Heiner,
 >>>
->>> To get a better understanding of the affected system:
->>> Could you please provide a full dmesg log and the lspci -vv output?
->>=20
->> I'm having the same problem as described by Tobias on a desktop
->> machine. v6.3 works; v6.4 results in transmit queue timeouts
->> occasionally. Reverting 2ab19de62d67 ("r8169: remove ASPM restrictions
->> now that ASPM is disabled during NAPI poll") "solves" the issue.
->>=20
->> From dmesg:
->>=20
->> |~ % dmesg | grep -i ASPM
->> |[    0.152746] ACPI FADT declares the system doesn't support PCIe ASPM,=
- so disable it
->> |[    0.905100] acpi PNP0A08:00: _OSC: OS supports [ExtendedConfig ASPM =
-ClockPM Segments MSI HPX-Type3]
->> |[    0.906508] acpi PNP0A08:00: FADT indicates ASPM is unsupported, usi=
-ng BIOS configuration
->> |[    1.156585] pci 10000:e1:00.0: can't override BIOS ASPM; OS doesn't =
-have ASPM control
->> |[    1.300059] r8169 0000:03:00.0: can't disable ASPM; OS doesn't have =
-ASPM control
->>=20
->> In addition, with commit 2ab19de62d67 in kernel regular messages like
->> this show up:
->>=20
->> |[ 7487.214593] pcieport 0000:00:1c.2: AER: Corrected error received: 00=
-00:03:00.0
->>=20
->> I'm happy to test any patches or provide more info if needed.
->>=20
-> Thanks for the report. It's interesting that the issue seems to occur onl=
-y on systems
-> where BIOS doesn't allow OS to control ASPM. Maybe this results in the PC=
-I subsystem
-> not properly initializing something.
-> Kurt/Klaus: Could you please boot with cmd line parameter pcie_aspm=3Dfor=
-ce and see
-> whether this changes something?
-> This parameter lets Linux ignore the BIOS setting. You should see a messa=
-ge
-> "PCIe ASPM is forcibly enabled" in the dmesg log with this parameter.
+>>> On Mon Jul 10 2023, Heiner Kallweit wrote:
+>>>> On 05.07.2023 00:25, Tobias Klausmann wrote:
+>>>>> Hi, top posting as well, as im on vacation, too. The system does not
+>>>>> allow disabling ASPM, it is a very constrained notebook BIOS, thus
+>>>>> the suggestion is nit feasible. All in all the sugesstion seems not
+>>>>> favorable for me, as it is unknown how many systems are broken the
+>>>>> same way. Having a workaround adviced as default seems oretty wrong
+>>>>> to me.
+>>>>>
+>>>>
+>>>> To get a better understanding of the affected system:
+>>>> Could you please provide a full dmesg log and the lspci -vv output?
+>>>
+>>> I'm having the same problem as described by Tobias on a desktop
+>>> machine. v6.3 works; v6.4 results in transmit queue timeouts
+>>> occasionally. Reverting 2ab19de62d67 ("r8169: remove ASPM restrictions
+>>> now that ASPM is disabled during NAPI poll") "solves" the issue.
+>>>
+>>> From dmesg:
+>>>
+>>> |~ % dmesg | grep -i ASPM
+>>> |[    0.152746] ACPI FADT declares the system doesn't support PCIe ASPM, so disable it
+>>> |[    0.905100] acpi PNP0A08:00: _OSC: OS supports [ExtendedConfig ASPM ClockPM Segments MSI HPX-Type3]
+>>> |[    0.906508] acpi PNP0A08:00: FADT indicates ASPM is unsupported, using BIOS configuration
+>>> |[    1.156585] pci 10000:e1:00.0: can't override BIOS ASPM; OS doesn't have ASPM control
+>>> |[    1.300059] r8169 0000:03:00.0: can't disable ASPM; OS doesn't have ASPM control
+>>>
+>>> In addition, with commit 2ab19de62d67 in kernel regular messages like
+>>> this show up:
+>>>
+>>> |[ 7487.214593] pcieport 0000:00:1c.2: AER: Corrected error received: 0000:03:00.0
+>>>
+>>> I'm happy to test any patches or provide more info if needed.
+>>>
+>> Thanks for the report. It's interesting that the issue seems to occur only on systems
+>> where BIOS doesn't allow OS to control ASPM. Maybe this results in the PCI subsystem
+>> not properly initializing something.
+>> Kurt/Klaus: Could you please boot with cmd line parameter pcie_aspm=force and see
+>> whether this changes something?
+>> This parameter lets Linux ignore the BIOS setting. You should see a message
+>> "PCIe ASPM is forcibly enabled" in the dmesg log with this parameter.
+> 
+> Seems like this does not help. There are still PCIe errors:
+> 
+> |~ # dmesg | grep -i ASPM
+> |[    0.000000] Command line: BOOT_IMAGE=/vmlinuz-6.4.2-gentoo-kurtOS root=/dev/nvme0n1p3 ro kvm-intel.nested=1 vga=794 pcie_aspm=force
+> |[    0.044016] Kernel command line: BOOT_IMAGE=/vmlinuz-6.4.2-gentoo-kurtOS root=/dev/nvme0n1p3 ro kvm-intel.nested=1 vga=794 pcie_aspm=force
+> |[    0.044048] PCIe ASPM is forcibly enabled
+> |[    0.153011] ACPI FADT declares the system doesn't support PCIe ASPM, so disable it
+> |[    0.916341] acpi PNP0A08:00: _OSC: OS supports [ExtendedConfig ASPM ClockPM Segments MSI HPX-Type3]
+> |[    0.917719] acpi PNP0A08:00: FADT indicates ASPM is unsupported, using BIOS configuration
+> |~ # dmesg | grep -i r8169
+> |[    1.337417] r8169 0000:03:00.0 eth0: RTL8168h/8111h, 6c:3c:8c:2c:bd:de, XID 541, IRQ 164
+> |[    1.337422] r8169 0000:03:00.0 eth0: jumbo features [frames: 9194 bytes, tx checksumming: ko]
+> |[    2.833876] r8169 0000:03:00.0 enp3s0: renamed from eth0
+> |[   20.886564] Generic FE-GE Realtek PHY r8169-0-300:00: attached PHY driver (mii_bus:phy_addr=r8169-0-300:00, irq=MAC)
+> |[   21.168373] r8169 0000:03:00.0 enp3s0: Link is Down
+> |[   24.006543] r8169 0000:03:00.0 enp3s0: Link is Up - 1Gbps/Full - flow control off
+> |~ # dmesg | tail
+> |[   20.886564] Generic FE-GE Realtek PHY r8169-0-300:00: attached PHY driver (mii_bus:phy_addr=r8169-0-300:00, irq=MAC)
+> |[   21.168373] r8169 0000:03:00.0 enp3s0: Link is Down
+> |[   24.006543] r8169 0000:03:00.0 enp3s0: Link is Up - 1Gbps/Full - flow control off
+> |[   24.006568] IPv6: ADDRCONF(NETDEV_CHANGE): enp3s0: link becomes ready
+> |[   24.567803] ACPI Warning: \_SB.PC00.PEG1.PEGP._DSM: Argument #4 type mismatch - Found [Buffer], ACPI requires [Package] (20230331/nsarguments-61)
+> |[   41.563396] pcieport 0000:00:1c.2: AER: Corrected error received: 0000:03:00.0
+> |[   47.065441] pcieport 0000:00:1c.2: AER: Multiple Corrected error received: 0000:03:00.0
+> |[   54.264285] pcieport 0000:00:1c.2: AER: Corrected error received: 0000:03:00.0
+> |[   54.424210] pcieport 0000:00:1c.2: AER: Corrected error received: 0000:03:00.0
+> |[   55.443439] pcieport 0000:00:1c.2: AER: Corrected error received: 0000:03:00.0
+> 
 
-Seems like this does not help. There are still PCIe errors:
+But no tx timeout (yet)?
+Now that ASPM is forced, could you please disable ASPM L1.2?
+-> /sys/class/net/enp3s0/device/link/l1_2_aspm
+That's what we did until 6.3 for RTL8168h on systems where
+OS can control ASPM.
 
-|~ # dmesg | grep -i ASPM
-|[    0.000000] Command line: BOOT_IMAGE=3D/vmlinuz-6.4.2-gentoo-kurtOS roo=
-t=3D/dev/nvme0n1p3 ro kvm-intel.nested=3D1 vga=3D794 pcie_aspm=3Dforce
-|[    0.044016] Kernel command line: BOOT_IMAGE=3D/vmlinuz-6.4.2-gentoo-kur=
-tOS root=3D/dev/nvme0n1p3 ro kvm-intel.nested=3D1 vga=3D794 pcie_aspm=3Dfor=
-ce
-|[    0.044048] PCIe ASPM is forcibly enabled
-|[    0.153011] ACPI FADT declares the system doesn't support PCIe ASPM, so=
- disable it
-|[    0.916341] acpi PNP0A08:00: _OSC: OS supports [ExtendedConfig ASPM Clo=
-ckPM Segments MSI HPX-Type3]
-|[    0.917719] acpi PNP0A08:00: FADT indicates ASPM is unsupported, using =
-BIOS configuration
-|~ # dmesg | grep -i r8169
-|[    1.337417] r8169 0000:03:00.0 eth0: RTL8168h/8111h, 6c:3c:8c:2c:bd:de,=
- XID 541, IRQ 164
-|[    1.337422] r8169 0000:03:00.0 eth0: jumbo features [frames: 9194 bytes=
-, tx checksumming: ko]
-|[    2.833876] r8169 0000:03:00.0 enp3s0: renamed from eth0
-|[   20.886564] Generic FE-GE Realtek PHY r8169-0-300:00: attached PHY driv=
-er (mii_bus:phy_addr=3Dr8169-0-300:00, irq=3DMAC)
-|[   21.168373] r8169 0000:03:00.0 enp3s0: Link is Down
-|[   24.006543] r8169 0000:03:00.0 enp3s0: Link is Up - 1Gbps/Full - flow c=
-ontrol off
-|~ # dmesg | tail
-|[   20.886564] Generic FE-GE Realtek PHY r8169-0-300:00: attached PHY driv=
-er (mii_bus:phy_addr=3Dr8169-0-300:00, irq=3DMAC)
-|[   21.168373] r8169 0000:03:00.0 enp3s0: Link is Down
-|[   24.006543] r8169 0000:03:00.0 enp3s0: Link is Up - 1Gbps/Full - flow c=
-ontrol off
-|[   24.006568] IPv6: ADDRCONF(NETDEV_CHANGE): enp3s0: link becomes ready
-|[   24.567803] ACPI Warning: \_SB.PC00.PEG1.PEGP._DSM: Argument #4 type mi=
-smatch - Found [Buffer], ACPI requires [Package] (20230331/nsarguments-61)
-|[   41.563396] pcieport 0000:00:1c.2: AER: Corrected error received: 0000:=
-03:00.0
-|[   47.065441] pcieport 0000:00:1c.2: AER: Multiple Corrected error receiv=
-ed: 0000:03:00.0
-|[   54.264285] pcieport 0000:00:1c.2: AER: Corrected error received: 0000:=
-03:00.0
-|[   54.424210] pcieport 0000:00:1c.2: AER: Corrected error received: 0000:=
-03:00.0
-|[   55.443439] pcieport 0000:00:1c.2: AER: Corrected error received: 0000:=
-03:00.0
+> Thanks,
+> Kurt
 
-Thanks,
-Kurt
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQJHBAEBCgAxFiEEvLm/ssjDfdPf21mSwZPR8qpGc4IFAmSw9jATHGt1cnRAbGlu
-dXRyb25peC5kZQAKCRDBk9HyqkZzguq+D/9WZWeb8/Ob9zj1Cf8VcxJrYKOH8nu+
-LOmTElsTh3sflkXpyQSPWixgEbNxdSducxQUbQPaRKU+WCVXEzQwQunasIqaItZc
-GX/rJWsdESkQQdohPJUQGDf+6K+6dS+mw105pbXIIjN6TSrxINqlh7wXlmP3lY9l
-WQHu8BAeikiRyjpHbEYdkV5mKRCNUiTW5NxCnb3v/opIXrROz+QeNzqMiQoP5i7Y
-DTjeSrU45SmT7BeYic/ebDZXs/eLscasgD5Ax/mqeD3DSf2oz3MbcAglNJSWTM9b
-rhZYQ0KH27UfOuEmEJRveAgkkj1oYTM18qmcqKcPRjE4IwSY46uRTqOpc/LKbHEF
-/+ltfOKu3HQCXwsUf6JsGz0fp7NN+/jTondn6aPDpamMhN/toM71OMvIfh+KVzHH
-gIPObVdkT/i29efJEkhyq171MBNPO88Nf0Xh8e+A27nAkpndhJf0ZmEcEfjpbi5O
-sYYN6qVq1gjHscYaoPmKh+XlwLmP6NZxpT90IeI1o0AkN+tFxWl3ywPQWlbs8r9Z
-n7h+RPyC9UAdMfcQJ+rozDK0KGhz9OghOq1Zrh+AJQo6ryrIcenl8fPLqjOPfk98
-5uMpPN6ShgfCgwXmUO/NSKEXHKUb/Dp7yhaLafAT5HNN/P51JSUcldKfzenJXUfo
-ddqoQyoIaZgz2g==
-=7uwp
------END PGP SIGNATURE-----
---=-=-=--
