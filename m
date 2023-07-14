@@ -1,98 +1,123 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailgw.gate-on.net (auth.Gate-On.Net [210.197.74.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A1D54C8C
-	for <regressions@lists.linux.dev>; Fri, 14 Jul 2023 05:39:44 +0000 (UTC)
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-3fb4146e8ceso13844215e9.0
-        for <regressions@lists.linux.dev>; Thu, 13 Jul 2023 22:39:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1689313183; x=1691905183;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PghXL2nj0bR1AkbvTWEvPVUujehAvZqC6bXTuYKarO4=;
-        b=sRtAqt/uPpzCDQx7F84Puxwm7bEoL4jC60zuSC4QHJkoM5Tm/htAgFpM+YZ4utVKl8
-         dC+DgmPWfmGZBug6sPsgqRV1RCX3j9zbVnTZTJtnCD8vTKeZhJ7A2uaEC1VLvRF2ZuOh
-         EYIIFx/V4rCvGrDaPt1V09DInCondQU96gutLUmE8akVyJRHefhqsPqVuohBoM32AyWo
-         AjSvOsXDEKoB30J2+thaUvMlSCt38AEV8CCneVGcuSskS4noFIS4xrhO0qkzofQef8xi
-         COVX5lm6rMelLzB+fXGWVHtOWkF+SIKJ4AA3+UqPgoDKiXR9wr/5AYVvFIBufJcKCODb
-         Rj6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689313183; x=1691905183;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=PghXL2nj0bR1AkbvTWEvPVUujehAvZqC6bXTuYKarO4=;
-        b=LWGS9sHKj8Ua0ageLGKXNrugyR4EVIn4dbhtESsIIfWOVIKhzT8pf0rHwWzxGkATkP
-         ZA7yMEqtYAT2ci4rzTXa8z0Z6LSWd0wCaGsSybI51ZshABQ9ZFAq4UBkBk2Az4ep85iV
-         b8yDE1owPPThAuFyO4TmaKiT9GLx32pvZ3ilDNQCjKNwxGvgsy7QJJQ/3bW1gfoXM2lG
-         Y0gBISA1u/GnyQIJzFB9juXohWgdjtncnsf2PURRKyrAzmP3+QnqZshA4XxJp6NveYwO
-         zgCR5Qd8yWrmZkPjwuBd0KwQxEhPiNdrOgJnqfoTZm0bl875IDwowH12gtYE1E1U9W3Q
-         JbBw==
-X-Gm-Message-State: ABy/qLbMPbuc22KAA6AvttdqheXvmXzIEORgbfNtd5fSD5BQJ9UfbVZN
-	J1ID/WDPuPjiGOTGcFCEehQ=
-X-Google-Smtp-Source: APBJJlH42Qc3jaAjtoQ2irlB5opLg8u1XsnD9QuF1c/D3fNThKvjdg7+k2oJUCEMitJob2vpU1Z4qQ==
-X-Received: by 2002:a7b:c5c5:0:b0:3fa:7478:64be with SMTP id n5-20020a7bc5c5000000b003fa747864bemr2900437wmk.1.1689313182676;
-        Thu, 13 Jul 2023 22:39:42 -0700 (PDT)
-Received: from ?IPV6:2a01:c22:72e8:a200:99ec:cf51:6f55:b3af? (dynamic-2a01-0c22-72e8-a200-99ec-cf51-6f55-b3af.c22.pool.telefonica.de. [2a01:c22:72e8:a200:99ec:cf51:6f55:b3af])
-        by smtp.googlemail.com with ESMTPSA id f14-20020a5d58ee000000b003143c532431sm9836618wrd.27.2023.07.13.22.39.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 13 Jul 2023 22:39:42 -0700 (PDT)
-Message-ID: <f605d9cd-220d-5fa2-142e-746afa9e1665@gmail.com>
-Date: Fri, 14 Jul 2023 07:39:36 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A48BA6AA4
+	for <regressions@lists.linux.dev>; Fri, 14 Jul 2023 05:40:03 +0000 (UTC)
+Received: from vega.pgw.jp (unknown [49.135.109.134])
+	by mailgw.gate-on.net (Postfix) with ESMTP id 95F0080165;
+	Fri, 14 Jul 2023 14:32:49 +0900 (JST)
+Received: from localhost (vega.pgw.jp [10.5.0.30])
+	by vega.pgw.jp (Postfix) with SMTP
+	id 8B1E5A53D; Fri, 14 Jul 2023 14:32:46 +0900 (JST)
+From: <kkabe@vega.pgw.jp>
+Content-Type: text/plain; charset=ISO-2022-JP
+To: regressions@lists.linux.dev
+Cc: bagasdotme@gmail.com, alexander.deucher@amd.com,
+	christian.koenig@amd.com, Xinhui.Pan@amd.com, tglx@linutronix.de,
+	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+	hpa@zytor.com, linux-kernel@vger.kernel.org,
+	amd-gfx@lists.freedesktop.org
+Cc: rostedt@goodmis.org, kkabe@vega.pgw.jp
+Subject: Re: radeon.ko/i586: BUG: kernel NULL pointer dereference, address:00000004
+In-Reply-To: Your message of "Fri, 14 Jul 2023 05:44:07 +0200".
+	<55a3bbb1-5b3c-f454-b529-8ee9944cc67c@leemhuis.info>
+X-Mailer: mnews [version 1.22PL5] 2002-11-27(Wed)
+Date: Fri, 14 Jul 2023 14:32:46 +0900
+Message-ID: <230714143246.M0123552@vega.pgw.jp>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Content-Language: en-US
-To: Jakub Kicinski <kuba@kernel.org>, David Miller <davem@davemloft.net>,
- Realtek linux nic maintainers <nic_swsd@realtek.com>,
- Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>
-Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- joey.joey586@gmail.com
-From: Heiner Kallweit <hkallweit1@gmail.com>
-Subject: [PATCH net v2] r8169: fix ASPM-related problem for chip version 42
- and 43
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-Referenced commit missed that for chip versions 42 and 43 ASPM
-remained disabled in the respective rtl_hw_start_...() routines.
-This resulted in problems as described in the referenced bug
-ticket. Therefore re-instantiate the previous logic.
+Thanks you all for getting attention to the report: 
 
-Fixes: 5fc3f6c90cca ("r8169: consolidate disabling ASPM before EPHY access")
-Closes: https://bugzilla.kernel.org/show_bug.cgi?id=217635
-Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
----
-v2:
-- add Closes tag
----
- drivers/net/ethernet/realtek/r8169_main.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+regressions@leemhuis.info sed in <55a3bbb1-5b3c-f454-b529-8ee9944cc67c@leemhuis.info>
 
-diff --git a/drivers/net/ethernet/realtek/r8169_main.c b/drivers/net/ethernet/realtek/r8169_main.c
-index 9445f04f8..2b3aa6b45 100644
---- a/drivers/net/ethernet/realtek/r8169_main.c
-+++ b/drivers/net/ethernet/realtek/r8169_main.c
-@@ -2747,6 +2747,13 @@ static void rtl_hw_aspm_clkreq_enable(struct rtl8169_private *tp, bool enable)
- 		return;
- 
- 	if (enable) {
-+		/* On these chip versions ASPM can even harm
-+		 * bus communication of other PCI devices.
-+		 */
-+		if (tp->mac_version == RTL_GIGA_MAC_VER_42 ||
-+		    tp->mac_version == RTL_GIGA_MAC_VER_43)
-+			return;
-+
- 		rtl_mod_config5(tp, 0, ASPM_en);
- 		rtl_mod_config2(tp, 0, ClkReqEn);
- 
--- 
-2.41.0
+>> On 14.07.23 05:12, Steven Rostedt wrote:
+>> > On Fri, 14 Jul 2023 09:50:17 +0700
+>> > Bagas Sanjaya <bagasdotme@gmail.com> wrote:
+>> > 
+>> >> I notice a regression report on Bugzilla [1]. Quoting from it:
+>> >>
+>> >>
+>> >> See Bugzilla for the full thread and attached patches that fixes
+>> >> this regression.
+>> >>
+>> >> Later, when bisecting, the reporter got better kernel trace:
+>> >>
+>> >>> [  469.825305] BUG: kernel NULL pointer dereference, address: 00000004
+>> >>> [  469.830502] #PF: supervisor read access in kernel mode
+>> >>> [  469.830502] #PF: error_code(0x0000) - not-present page
+>> >>> [  469.830502] *pde = 00000000
+>> >>> [  469.830502] Oops: 0000 [#1] PREEMPT SMP
+>> >>> [  469.830502] CPU: 0 PID: 365 Comm: systemd-udevd Not tainted 5.14.0-221.el9.v1.i586 #1
+>> > 
+>> > This is a 5.14 kernel right?
+>> 
+>> And a vendor kernel that from the sound of the version number might be
+>> heavily patched. But apparently the reporter later bisected this on a
+>> newer kernel (Bagas, would have been good if this had been mentioned in
+>> your earlier mail):
+>> 
+>> https://bugzilla.kernel.org/show_bug.cgi?id=217669#c5
+>> ```
+>> I succeeded to bisect down the regressing commit found in kernel-5.18.0-rc2:
+>> 
+>> b39181f7c690 (refs/bisect/bad) ftrace: Add FTRACE_MCOUNT_MAX_OFFSET to
+>> avoid adding weak function
+>> 
+>> This at a glance does not relate to drm/kms code.
+>> 
+>> The attached patch effectively reverts the commit for 32bit.
+>> This fixed the problem on kernel-5.18.0, but not enough for kernel-6.4.3 ```
+>> 
+>> That being said: That commit is not in 5.18, as Steve noticed:
+>> 
+>> >> #regzbot introduced: b39181f7c6907d https://bugzilla.kernel.org/show_bug.cgi?id=217669
+>> >> #regzbot title: FTRACE_MCOUNT_MAX_OFFSET causes kernel NULL pointer dereference and virtual console (tty1) freeze
+>> > That commit was added in 5.19.
+>> > 
+>> > So I'm confused about why it's mentioned. Was it backported?
+>> 
+>> Taketo Kabe, could you please help to clean this confusion up? Did you
+>> mean 5.19 in https://bugzilla.kernel.org/show_bug.cgi?id=217669#c5 ? And
+>> BTW: did you really use a vanilla kernel for your bisection?
+
+
+Reporter Me:
+I bisected using freedesktop.org kernel tree, which git commit ID is
+in sync with kernel.org
+but version number in ./Makefile could be slighty behind. 
+
+Patch in
+https://bugzilla.kernel.org/show_bug.cgi?id=217669#c4
+fixed the problem in freedesktop.org kernel 5.18.0-rc2 .
+This may explain that in kernel.org tree, the said commit is in kernel-5.19.
+
+
+>> TWIMC, there is also
+>> https://bugzilla.kernel.org/show_bug.cgi?id=217669#c6 :
+>> ```
+>> Attached patch sort of fixes the problem; it does not panic and
+>> KMS console works, but printk is triggered 4 times on radeon.ko load and
+>> when VGA connector is plugged in.
+>> 
+>> I am sort of at loss now; I need advice from people which knows better.
+>> 
+>>  --- ./drivers/gpu/drm/drm_internal.h.rd	2023-06-25 21:35:27.506967450 +0900
+>>  +++ ./drivers/gpu/drm/drm_internal.h.rd	2023-06-25 21:36:34.758055363 +0900
+>>  @@ -99,6 +99,10 @@ u64 drm_vblank_count(struct drm_device *
+>>   /* drm_vblank_work.c */
+>>   static inline void drm_vblank_flush_worker(struct drm_vblank_crtc *vblank)
+>>   {
+>>  +	if (!vblank->worker) {
+>>  +		printk(KERN_WARNING "%s: vblank->worker NULL? returning\n", __func__);
+>>  +		return;
+>>  +	}
+>>   	kthread_flush_worker(vblank->worker);
+>>   }
+>> ```
+>> 
+>> Ciao, Thorsten
+>> 
