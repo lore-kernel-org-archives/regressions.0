@@ -1,45 +1,45 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E9277F6
-	for <regressions@lists.linux.dev>; Sat, 15 Jul 2023 10:56:27 +0000 (UTC)
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-666e6ecb52dso1815844b3a.2
-        for <regressions@lists.linux.dev>; Sat, 15 Jul 2023 03:56:27 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D09E21861
+	for <regressions@lists.linux.dev>; Sat, 15 Jul 2023 11:03:12 +0000 (UTC)
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1b8b2886364so16980215ad.0
+        for <regressions@lists.linux.dev>; Sat, 15 Jul 2023 04:03:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1689418587; x=1692010587;
+        d=gmail.com; s=20221208; t=1689418992; x=1692010992;
         h=content-transfer-encoding:subject:from:cc:to:content-language
          :user-agent:mime-version:date:message-id:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ZERGPzw5TZLiZLEYlC5ABDoHNPFEd4U3QPZl/a2G3cU=;
-        b=aiu0XVxZD6ByP16P8lg4JKH7/qKR+UkZBlpoXGfmezQ7plwJyCZXb2OgYwF4SprvGy
-         wCyYi0VdzubWp2PDhl6cE4i3if1SmsOGjWqC1jTioEtu/NR6dvNpYmsgXEkGhm9CKDYn
-         fwed1zjwHcxpzJoagUXDN7x+4YcdHf5sycQjdMkgn/PMy/2IVLOBWQWLQvVPMU9II7Lf
-         AHZ4zjU7on6HuQ3WqP7w4xzQBSucZJdnHok8Bzr+axCGubh7PaY3NvFIfCtuscXUGMRv
-         9wRavQd5wFBVP6E7ezEYVldbdbepV+s5MOFNtGBYXH3ozfRVf9Oqa6xgTreka5vt0wXF
-         YUMg==
+        bh=24wxBr9RJX3pgI/ht36f2xCi5Ssby9GZkRBl17Qpdd4=;
+        b=KbTMjOO08/oKB7Q+ynBDiQsvYeXJnc6a+SMiW0p1tRA+hPacBKwm/PyF1tdCWrDrON
+         MiQZpz2nuZrlWtmSD85bMWXiHpupkwB4w3kDxiTPbVRtQGGO/vXUGi2bi5URxe98f9kU
+         vgX9Ep6lDx/uhpJ7NaJO/vuPKX8AharQxvdVLX2/H6mveHKGIvd1Lp9QLcKhbOG2suf0
+         wi2ShFNFT9OylP7kJPuWvYqcevrJrWOsjgRdmB6hhEaYzgB9tvbrcrWxGQapXKZrQKMq
+         6eIv6eRnKmRCICyz5W4Tt+uPIuqJ0FckPOggh3CiMXRwi09ILjU5shueDysIc410nE9o
+         bqjA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689418587; x=1692010587;
+        d=1e100.net; s=20221208; t=1689418992; x=1692010992;
         h=content-transfer-encoding:subject:from:cc:to:content-language
          :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=ZERGPzw5TZLiZLEYlC5ABDoHNPFEd4U3QPZl/a2G3cU=;
-        b=T6PjEkl5OS5WHwbU7zMCJOu3wWOVwgfI0CUKYmxWJ4DBd0+rVqeJw76E/5dJg7wtCq
-         y7rUSA+a5r9Nn5PfPGYsBUf8VgKC/xvjZZZwk4oM4empBsEJ5GlRboZfot2rFOg54436
-         1lEXp0Ay3suTJ5AeLh65TE3IpWhHADSnWqNpAH+EuuEGgrL6rIpX7Xndb39M6jFZ0v76
-         uIzDrk+/3m7+gPfJ7g2pvaiGBZOZ6IaqC9t+T/zaoKAsVM5/EdkziLIpAs0mpiPM9fpg
-         nkRM6g8L2qHDWPb9XxvNyE+NPdT8wZIuFrSInFXSpji61DXcZeaUPyMxso4rxM/2w1NA
-         GhCw==
-X-Gm-Message-State: ABy/qLYtUYlT5x1bxB+GDu5YL7CxMzkfWOKLGoQLyn38FD7HNttfptel
-	Cz/nj2UrCsiodLMQGLT0JTk=
-X-Google-Smtp-Source: APBJJlGOj8jl6PdCasGb35nlcC959eyVAjJa1/5upVEezCQMd7k/PX89IwG7inbwwmhtZGyUjoKl9Q==
-X-Received: by 2002:a05:6a20:3d5:b0:128:fce6:dd8b with SMTP id 21-20020a056a2003d500b00128fce6dd8bmr4130662pzu.39.1689418586644;
-        Sat, 15 Jul 2023 03:56:26 -0700 (PDT)
+        bh=24wxBr9RJX3pgI/ht36f2xCi5Ssby9GZkRBl17Qpdd4=;
+        b=SN0pgwQxxnLmxoaarrh8WPtgxuLArwnSu6LcfZv6B4DDyr8va3M8FfiYw3oCrXkeLI
+         gVEkSLOUoDnbDWpGtrw3/DSA945Br3gXtCOVQjNCydk4R4ZwIlFsIrAyRbG23qMfyqgN
+         0m71HsVESMilONU7Z5CxHFpJLXVM1j60oHNL9o2MDjPIWZBC+KHN47YdLuGBhJIJCjxB
+         9eAPwrPXmWRNWLGp4KXik8qUoUCDgVgT1vbBNK3j+CeScnjoCMwoa5ao3xsr6kCmQmSV
+         bSt3ngSDW+stBew1qjS5BmEVo91OI3FTJGNqBd5CRRRgf9OR3mCtpioUet+4Vvujvu24
+         eDGQ==
+X-Gm-Message-State: ABy/qLaH0rU/5rqVpZfdHZPT7iRw9YsG/We24hno6NZOOMm5HxgmAyfL
+	rG8uLRyoKPxwWxNKEAP/gsY=
+X-Google-Smtp-Source: APBJJlHnqrTPEPJ1628fEi4wMsVBH9Uvsg4Su67fpENCC/jmlluIs/KOBhLoD6++FAZB4xTlp6K04g==
+X-Received: by 2002:a17:902:ee45:b0:1b8:5fb4:1c85 with SMTP id 5-20020a170902ee4500b001b85fb41c85mr5518120plo.16.1689418991928;
+        Sat, 15 Jul 2023 04:03:11 -0700 (PDT)
 Received: from [192.168.0.104] ([103.131.18.64])
-        by smtp.gmail.com with ESMTPSA id j10-20020a170902da8a00b001b895336435sm9264398plx.21.2023.07.15.03.56.24
+        by smtp.gmail.com with ESMTPSA id p16-20020a170902b09000b001b8422f1000sm9249357plr.201.2023.07.15.04.03.08
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 15 Jul 2023 03:56:26 -0700 (PDT)
-Message-ID: <3ee79b53-5c1b-1542-ceea-e51141e3ab74@gmail.com>
-Date: Sat, 15 Jul 2023 17:56:19 +0700
+        Sat, 15 Jul 2023 04:03:11 -0700 (PDT)
+Message-ID: <bfee63a3-16ee-0061-94c0-9c9af5318634@gmail.com>
+Date: Sat, 15 Jul 2023 18:03:06 +0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -49,78 +49,53 @@ MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.13.0
 Content-Language: en-US
-To: Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
- Iyer <cydiaimpactor2003@gmail.com>
+To: Alexander Stein <alexander.stein@ew.tq-group.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Sasha Levin <sashal@kernel.org>,
+ Tomasz Rostanski <tomasz.rostanski@thalesgroup.com>
 Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
  Linux Regressions <regressions@lists.linux.dev>,
- Linux ALSA Development <alsa-devel@alsa-project.org>
+ Linux Stable <stable@vger.kernel.org>, Linux USB
+ <linux-usb@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 From: Bagas Sanjaya <bagasdotme@gmail.com>
-Subject: Fwd: 6.4 and higher causes audio distortion
+Subject: Fwd: dwc3: regression in USB DWC3 driver in kernel 5.15 branch
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi,
 
-I notice a regression report on Bugzilla [1]. Quoting from it:
+I notice a stable-specific regression on Bugzilla [1]. Quoting from it:
 
-> I have a Lenovo ThinkPad X1 Yoga Gen 7 running Arch Linux. Linux 6.4 and higher, cause audio distortion. Sometimes, this occurs to the point that nearly nothing is discernible. This carries over to wired headphones. The issue occurs on the entire mainline 6.4.x kernel series and also the 6.4.3 stable and 6.5 RC1 kernel, which are the latest at the time of writing. The issue occurs on both the Arch distributed kernels, and the mainline kernels.
+> The backport commit to 5.15 branch:
+> 9d4f84a15f9c9727bc07f59d9dafc89e65aadb34 "arm64: dts: imx8mp: Add snps,gfladj-refclk-lpm-sel quirk to USB nodes"  (from upstream commit 5c3d5ecf48ab06c709c012bf1e8f0c91e1fcd7ad)
+> switched from "snps,dis-u2-freeclk-exists-quirk" to "snps,gfladj-refclk-lpm-sel-quirk".
 > 
-> Linux kernels 6.3.x are not affected and neither is the 6.1 LTS kernel series which is what I am temporarily using. On Windows 10/11 too, the audio works as it should. This indicates that my hardware is not at fault. Bluetooth audio is not impacted from my testing, either.
+> The problem is that the gfladj-refclk-lpm-sel-quirk quirk is not implemented / backported to 5.15 branch.
 > 
-> The distortion doesn't start immediately. It either occurs automatically after a random amount of time, or when I increase/decrease the volume, or when I skip forward/backward to a section. In order to stop the distortion, I have to either increase/decrease the volume until it stops, or skip forward/backward until it stops, or restart Pipewire via systemd, however it starts again due to one of the aforementioned reasons.
+> This commit should be either reverted, or the commit introducing gfladj-refclk-lpm-sel-quirk needs to be merged to 5.15 kernel branch.
 > 
-> At the time of this report, I am running Pipewire 0.3.74 and Wireplumber 0.4.14. This also doesn't seem like a Pipewire/Wireplumber issue, since these same versions work fine on the 6.1 LTS kernels without causing any audio distortion.
+> As a result of this patch, on Gateworks Venice GW7400 revB board the USB 3.x devices which are connected to the USB Type C port does not enumerate and the following errors are generated:
 > 
-> I wrote about this on the Arch Linux forums, too, and seems like at least two other people are facing this issue. Here's the forum post: https://bbs.archlinux.org/viewtopic.php?id=287068
+> [   14.906302] xhci-hcd xhci-hcd.0.auto: Timeout while waiting for setup device command
+> [   15.122383] usb 2-1: device not accepting address 2, error -62
+> [   25.282195] xhci-hcd xhci-hcd.0.auto: Abort failed to stop command ring: -110
+> [   25.297408] xhci-hcd xhci-hcd.0.auto: xHCI host controller not responding, assume dead
+> [   25.305345] xhci-hcd xhci-hcd.0.auto: HC died; cleaning up
+> [   25.311058] xhci-hcd xhci-hcd.0.auto: Timeout while waiting for stop endpoint command
+> [   25.334361] usb usb2-port1: couldn't allocate usb_device
 > 
-> Furthermore, I filed a bug report on the Arch Linux Bug Reporter, where they suggested that the issue is a kernel regression and should be reported upstream, here. Here's the bug report that I filed on the Arch Linux Bug Reporter for anyone interested: https://bugs.archlinux.org/task/79081?project=1&pagenum=10
-> 
-> I have attached the dmesg outputs of the mainline 6.5 RC1 kernel.
-> 
-> Here's some audio related hardware information from my device:
-> 
-> inxi -A
-> 
-> Audio:
-> Device-1: Intel Alder Lake PCH-P High Definition Audio
-> driver: sof-audio-pci-intel-tgl
-> API: ALSA v: k6.5.0-rc1-1-mainline status: kernel-api
-> 
-> 
-> pactl info
-> 
-> Server String: /run/user/1000/pulse/native
-> Library Protocol Version: 35
-> Server Protocol Version: 35
-> Is Local: yes
-> Client Index: 138
-> Tile Size: 65472
-> User Name: tux
-> Host Name: NSA-Terminal-4
-> Server Name: PulseAudio (on PipeWire 0.3.74)
-> Server Version: 15.0.0
-> Default Sample Specification: float32le 2ch 48000Hz
-> Default Channel Map: front-left,front-right
-> Default Sink: alsa_output.pci-0000_00_1f.3-platform-skl_hda_dsp_generic.HiFi__hw_sofhdadsp__sink
-> Default Source: alsa_input.pci-0000_00_1f.3-platform-skl_hda_dsp_generic.HiFi__hw_sofhdadsp_6__source
-> Cookie: f9dc:5e7a
-> 
-> 
-> I can't figure out why this is happening. Kindly ask for any more information that is necessary. Thank you.
+> When the commit is reverted the USB 3.x drives works fine.
 
-See Bugzilla for the full thread and attached dmesg.
+See Bugzilla for the full thread and attach dmesgs.
 
-Anyway, I'm adding it to regzbot so that it doesn't fall through
-cracks unnoticed:
+Anyway, I'm adding it to regzbot:
 
-#regzbot introduced: v6.3..v6.4 https://bugzilla.kernel.org/show_bug.cgi?id=217673
-#regzbot title: PipeWire + Wireplumber audio distortion on Lenovo ThinkPad X1 Yoga Gen 7
-#regzbot link: https://bbs.archlinux.org/viewtopic.php?id=287068
-#regzbot link: https://bugs.archlinux.org/task/79081?project=1&pagenum=10
+#regzbot introduced: 9d4f84a15f9c97 https://bugzilla.kernel.org/show_bug.cgi?id=217670
+#regzbot title: regression in USB DWC3 driver due to missing gfladj-refclk-lpm-sel-quirk quirk
 
 Thanks.
 
-[1]: https://bugzilla.kernel.org/show_bug.cgi?id=217673
+[1]: https://bugzilla.kernel.org/show_bug.cgi?id=217670
 
 -- 
 An old man doll... just what I always wanted! - Clara
