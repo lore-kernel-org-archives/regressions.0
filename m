@@ -1,168 +1,224 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A03928F5
-	for <regressions@lists.linux.dev>; Sun, 16 Jul 2023 11:44:58 +0000 (UTC)
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-666eef03ebdso2287846b3a.1
-        for <regressions@lists.linux.dev>; Sun, 16 Jul 2023 04:44:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1689507898; x=1692099898;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UW0Gb0fhe8KUAoH9z0fOHvs5nZuEEb7L+CPOMHFXQWA=;
-        b=irD1uJ3MFytLmjvRmq8Yl9WjAlyqjv1PYh9U2Jga5+2zclCqDvzEU4EV7397PzfnJd
-         AwQggkMPsYHhRdhK/uhDy6Y7Cloweegu34afTCFBtS1fWsTnZBTnSFuU/qDAaf6xERBm
-         Pc0joGj8Pj9guWnSGFCB7QUM1TsN5iy6himHOcsGIm2IZ2kMOd4GLVrw7WhXYzC6MaPB
-         16Vqyv5R3Y2aUq9PiCg1tynvKpgCGbbEzyYBUCE/glqQkejAQB/Jau845OjWbLbYxQc+
-         TmRHm8ZJNN+YqQntBpdPsDf541E8suumaahIZ6xC2hS5sttdRzKsbzPRGsoYOoU7qs95
-         S77w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689507898; x=1692099898;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=UW0Gb0fhe8KUAoH9z0fOHvs5nZuEEb7L+CPOMHFXQWA=;
-        b=PgxtwkGQgu3sQvbl6mswIUlmHUrIAJITgnQZ52GdMNBYS4+BlTn5GLvSjXbd9AAX37
-         svkZlQI8+NEMs1+wzYCHyfxJeIiO2rE0uSffZAQxY2wWZ1U6hUvArd4laWKe6sVAgANM
-         Eu1UplhWgUbCHgyk57CSDwcD88huthhTlytB0XZU4/NztliA4LeNUoJoYCEi0aZoI+6R
-         WUfy1JTDY7ZH69kLwa041C2/QNu2Ht24aCy4SXppkkxKVa+y09PbKeP4k6C5fzyLQT85
-         bRIGr9BXZGD9r0+sTxgTuWbnELGWDFOU4zQhp7ypdPeAPiBDHjDdUfhaAr4J0B43FiAr
-         +M9Q==
-X-Gm-Message-State: ABy/qLa7iVYqnKTCBr6s56xGLR1ZP3WZsLf4861CskuLPfCWh4VZXzce
-	ucIbMyO2gAgsIsmIQ2YZvps=
-X-Google-Smtp-Source: APBJJlENaURlprzIJM/AWxrCdrM0RnZHU+VlpQ7Ay5WfVSfljEoACMDN/5bW6NiEKcB2hFoQgwU8Sw==
-X-Received: by 2002:a05:6a00:23c2:b0:680:fa5f:4ed6 with SMTP id g2-20020a056a0023c200b00680fa5f4ed6mr11156582pfc.27.1689507898117;
-        Sun, 16 Jul 2023 04:44:58 -0700 (PDT)
-Received: from [192.168.0.104] ([103.131.18.64])
-        by smtp.gmail.com with ESMTPSA id 2-20020aa79242000000b0067777e960d9sm9988284pfp.155.2023.07.16.04.44.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 16 Jul 2023 04:44:57 -0700 (PDT)
-Message-ID: <12caddea-9432-6285-f46b-2ba0ae426c38@gmail.com>
-Date: Sun, 16 Jul 2023 18:44:43 +0700
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8CEC1FB7
+	for <regressions@lists.linux.dev>; Sun, 16 Jul 2023 14:32:35 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:5054:ff:feb3:8f48] (helo=regzbot.fritz.box); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	id 1qL2nT-0004yV-Tq; Sun, 16 Jul 2023 16:32:28 +0200
+From: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>
+To: LKML <linux-kernel@vger.kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Linux regressions report  for mainline [2023-07-16]
+Date: Sun, 16 Jul 2023 14:32:27 +0000
+Message-Id: <168951788956.3088691.6549033530966986041@leemhuis.info>
+X-Mailer: git-send-email 2.40.1
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Content-Language: en-US
-To: Jani Nikula <jani.nikula@linux.intel.com>,
- Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
- Rodrigo Vivi <rodrigo.vivi@intel.com>,
- Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- Maik Broemme <mbroemme@libmpq.org>, Johannes <johannesnitschke@yahoo.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>,
- Linux Intel GPU <intel-gfx@lists.freedesktop.org>,
- Linux DRI Development <dri-devel@lists.freedesktop.org>,
- Linux Framebuffer <linux-fbdev@vger.kernel.org>,
- Linux Stable <stable@vger.kernel.org>
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-Subject: =?UTF-8?Q?Fwd=3a_Framebuffer-Display_issue=2e_=28Intel=c2=ae_Iris?=
- =?UTF-8?B?wq4gWGUp?=
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1689517955;aa6a5593;
+X-HE-SMSGID: 1qL2nT-0004yV-Tq
 
-Hi,
+Hi Linus. Nothing much to report from by side; there are a few
+regressions I'm aware off, but everything currently is business as usual.
 
-I notice a regression report on Bugzilla [1]. Quoting from it:
+The iwlwifi issue I mentioned last week was fixed (thx again Johannes).
+Kees picked up and sent you one compile fix in todays pull. Maybe you
+also might still get this one for build failure from the tip folks:
+https://lore.kernel.org/all/20230629102051.42E8360467@lion.mk-sys.cz/
 
-> Hello I have been having problems for some time now with displaying any linux distribution with the new kernal. The only thing that can fix it are older kernals.
-> 
-> I can't describe it very well, so I'm attaching some pictures, but it's like whenever anything happens on the screen, it pushes the upper left half up from the bottom. But it only goes to a certain extent, after that it just shakes around and jumps back a bit. Also, for example, the firefox icon is not where it is displayed, but where it should be (I tried it with touch).
-> 
-> I think it has something to do with the framebuffer, because an usb stick with just the arch iso show the same issue in the tty.
-> 
-> The hardware is a Huawei Matebook E 2022.
-> Cpu: Intel® Core™ i5-1130G7
-> Graphics: Intel® Iris® Xe
-> 
-> Example under Manjaro that worked was with the 
-> linux-lqx-6.1.0.lqx2-1-x86_64.pkg.tar.zst kernal
-> 22-Dec-2022 14:44           154507169
-> from https://repo.blacksky3.com/x86_64/linux-lqx/old/
-> 
-> Kernals above that Version dosent work, Example with 6.1.1-lqx1-linux-lqx:
-> `
-> $inxi -F
-> System:
-> Host: Johannes Kernel: 6.1.1-lqx1-linux-lqx arch: x86_64 bits: 64
-> Desktop: GNOME v: 43.5 Distro: Manjaro Linux
-> Machine:
-> Type: Detachable System: HUAWEI product: DRC-WXX v: M1010
-> serial:
-> Mobo: HUAWEI model: DRC-WXX-PCB v: M1010 serial:
-> UEFI: HUAWEI v: 1.30 date: 06/29/2022
-> Battery:
-> ID-1: BAT1 charge: 27.8 Wh (66.0%) condition: 42.1/42.1 Wh (100.0%)
-> volts: 11.9 min: 11.5
-> CPU:
-> Info: quad core model: 11th Gen Intel Core i5-1130G7 bits: 64 type: MT MCP
-> cache: L2: 5 MiB
-> Speed (MHz): avg: 1395 min/max: 400/1801 cores: 1: 897 2: 1046 3: 962
-> 4: 1801 5: 1801 6: 1801 7: 1801 8: 1052
-> Graphics:
-> Device-1: Intel Tiger Lake-UP4 GT2 [Iris Xe Graphics] driver: i915 v: kernel
-> Display: wayland server: X.org v: 1.21.1.8 with: Xwayland v: 23.1.1
-> compositor: gnome-shell driver: gpu: i915 resolution: 2560x1600~60Hz
-> API: OpenGL v: 4.6 Mesa 23.0.3 renderer: Mesa Intel Xe Graphics (TGL GT2)
-> Audio:
-> Device-1: Intel driver: N/A
-> Device-2: Intel Tiger Lake-LP Smart Sound Audio
-> driver: sof-audio-pci-intel-tgl
-> API: ALSA v: k6.1.1-lqx1-linux-lqx status: kernel-api
-> Server-1: PulseAudio v: 16.1 status: active
-> Network:
-> Device-1: Intel Wi-Fi 6 AX201 driver: iwlwifi
-> IF: wlp0s20f3 state: up mac: f4:b3:01:b7:c6:6d
-> Bluetooth:
-> Device-1: Intel AX201 Bluetooth driver: btusb type: USB
-> Report: rfkill ID: hci0 state: up address: see --recommends
-> Drives:
-> Local Storage: total: 476.94 GiB used: 9.65 GiB (2.0%)
-> ID-1: /dev/nvme0n1 model: PCIe-8 SSD 512GB size: 476.94 GiB
-> Partition:
-> ID-1: / size: 468.09 GiB used: 9.65 GiB (2.1%) fs: ext4 dev: /dev/nvme0n1p2
-> ID-2: /boot/efi size: 299.4 MiB used: 288 KiB (0.1%) fs: vfat
-> dev: /dev/nvme0n1p1
-> Swap:
-> Alert: No swap data was found.
-> Sensors:
-> System Temperatures: cpu: 35.0 C mobo: N/A
-> Fan Speeds (RPM): N/A
-> Info:
-> Processes: 241 Uptime: 0m Memory: available: 15.42 GiB used: 1.18 GiB (7.6%)
-> Shell: Zsh inxi: 3.3.27
-> 
-> `
-> 
-> Distros I testet:
-> Ubuntu 20.04.2 results in Blackscreen/poweroff
-> Fedora 38 (Bug as I mentiond)
-> Manjaro (Bug as I mentiond)
-> It all works fine when you start from grub2 in Rescue mode.
-> 
-> That all is very new to me, so I am sorry if I did something wrong. 
-> I mean, I reported that bug first at the wrong place.. Anyway
-> 
-> Best regreds Johannes
+Problem was reported here:
+https://lore.kernel.org/lkml/20230628115825.ahqejf5y4hgxhyqj@lion.mk-sys.cz/
 
-See Bugzilla for the full thread and attached pictures that demonstrate
-this regression.
+Ciao, Thorsten
 
-Anyway, I'm adding it to regzbot:
+---
 
-#regzbot introduced: v6.1..v6.4 https://bugzilla.kernel.org/show_bug.cgi?id=217666
-#regzbot title: screen shakes on Intel® Iris® Xe
+Hi, this is regzbot, the Linux kernel regression tracking bot.
 
-(also Cc'ing stable list because it also occurs on v6.1.y, but not in
-v6.1 mainline).
+Currently I'm aware of 10 regressions in linux-mainline. Find the
+current status below and the latest on the web:
 
-Thanks.
+https://linux-regtracking.leemhuis.info/regzbot/mainline/
 
--- 
-An old man doll... just what I always wanted! - Clara
+Bye bye, hope to see you soon for the next report.
+   Regzbot (on behalf of Thorsten Leemhuis)
+
+
+======================================================
+current cycle (v6.4.. aka v6.5-rc), culprit identified
+======================================================
+
+
+[ *NEW* ] CONFIG_EFI_PGT_DUMP regression due to allowing failing pte_offset_map[_lock]()
+----------------------------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/lore/CABXGCsN3JqXckWO=V7p=FhPU1tK03RE1w9UE6xL5Y86SMk209w@mail.gmail.com/
+https://lore.kernel.org/lkml/CABXGCsN3JqXckWO=V7p=FhPU1tK03RE1w9UE6xL5Y86SMk209w@mail.gmail.com/
+
+By Mikhail Gavrilov; 1 days ago; 5 activities, latest 0 days ago.
+Introduced in 0d940a9b270b (v6.5-rc1)
+
+Recent activities from: Bagas Sanjaya (2), Mikhail Gavrilov (2), Hugh
+  Dickins (1)
+
+
+locking/atomic: build error on sparc64:allmodconfig
+---------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/lore/32395f1f-19e4-41da-9f67-68c7d21cf9b2@roeck-us.net/
+https://lore.kernel.org/lkml/32395f1f-19e4-41da-9f67-68c7d21cf9b2@roeck-us.net/
+
+By Guenter Roeck; 18 days ago; 15 activities, latest 0 days ago.
+Introduced in d12157efc8e0 (v6.5-rc1)
+
+Fix incoming:
+* sparc: mark __arch_xchg() as __always_inline
+  https://lore.kernel.org/lkml/cdd40a39-28ba-3c75-b9d0-b62904cb48a3@leemhuis.info/
+
+
+drm/bridge: lt9611: Dragonboard 845c (SDM845) devboard broken when running AOSP
+-------------------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/lore/CAMi1Hd0TD=2z_=bcDrht3H_wiLvAFcv8Z-U_r_KUOoeMc6UMjw@mail.gmail.com/
+https://lore.kernel.org/dri-devel/CAMi1Hd0TD=2z_=bcDrht3H_wiLvAFcv8Z-U_r_KUOoeMc6UMjw@mail.gmail.com/
+
+By Amit Pundir; 11 days ago; 20 activities, latest 2 days ago.
+Introduced in 8ddce13ae69 (v6.5-rc1)
+
+Recent activities from: Abhinav Kumar (2), Marek Vasut (2), Amit
+  Pundir (1), Jagan Teki (1)
+
+
+[ *NEW* ] kernel pointer dereference regression due to extract_iter_to_sg()
+---------------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/lore/CAAUqJDuRkHE8fPgZJGaKjUjd3QfGwzfumuJBmStPqBhubxyk_A@mail.gmail.com/
+https://lore.kernel.org/lkml/CAAUqJDuRkHE8fPgZJGaKjUjd3QfGwzfumuJBmStPqBhubxyk_A@mail.gmail.com/
+
+By Ondrej Mosnáček; 3 days ago; 2 activities, latest 2 days ago.
+Introduced in c1abe6f570af (v6.5-rc1)
+
+Recent activities from: Bagas Sanjaya (1), Ondrej Mosnáček (1)
+
+
+net: phylink: mv88e6060 dsa driver broken
+-----------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/lore/CABikg9wM0f5cjYY0EV_i3cMT2JcUT1bSe_kkiYk0wFwMrTo8=w@mail.gmail.com/
+https://lore.kernel.org/netdev/CABikg9wM0f5cjYY0EV_i3cMT2JcUT1bSe_kkiYk0wFwMrTo8=w@mail.gmail.com/
+
+By Sergei Antonov; 12 days ago; 8 activities, latest 2 days ago.
+Introduced in de5c9bf40c45 (v6.5-rc1)
+
+Recent activities from: Vladimir Oltean (3), Sergei Antonov (2), Russell
+  King (Oracle) (1), Andrew Lunn (1)
+
+
+[ *NEW* ] KVM: arm64: boot failures due to missing bti instructions
+-------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/lore/20230704134136.a5znw4jupt5yp5kg@bogus/
+https://lore.kernel.org/lkml/20230704134136.a5znw4jupt5yp5kg@bogus/
+
+By Sudeep Holla; 12 days ago; 18 activities, latest 3 days ago.
+Introduced in b53d4a272349 (v6.5-rc1)
+
+Fix incoming:
+* KVM: arm64: Add missing BTI instructions
+  https://lore.kernel.org/lkml/55bffc21-5f19-765f-9dbc-1b565c880426@leemhuis.info/
+
+
+blk-mq: NFS workload leaves nfsd threads in D state
+---------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/lore/7A57C7AE-A51A-4254-888B-FE15CA21F9E9@oracle.com/
+https://lore.kernel.org/linux-block/7A57C7AE-A51A-4254-888B-FE15CA21F9E9@oracle.com/
+
+By Chuck Lever III; 7 days ago; 11 activities, latest 4 days ago.
+Introduced in 615939a2ae73 (v6.5-rc1)
+
+Recent activities from: Chuck Lever III (4), Christoph Hellwig (4),
+  Chengming Zhou (2)
+
+2 patch postings are associated with this regression, the latest is this:
+* Re: NFS workload leaves nfsd threads in D state
+  https://lore.kernel.org/linux-block/20230711120137.GA27050@lst.de/
+  5 days ago, by Christoph Hellwig
+
+
+objtool: build failure
+----------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/lore/20230628115825.ahqejf5y4hgxhyqj@lion.mk-sys.cz/
+https://lore.kernel.org/lkml/20230628115825.ahqejf5y4hgxhyqj@lion.mk-sys.cz/
+
+By Michal Kubecek; 18 days ago; 15 activities, latest 4 days ago.
+Introduced in eb0481bbc4ce (v6.5-rc1)
+
+Fix incoming:
+* objtool: initialize all of struct elf
+  https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=master&id=9f71fbcde2820f2af4658313e808cf1e579190a4
+
+
+Bluetooth: Dragonboard 845c (SDM845) devboard broken
+----------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/lore/CAMi1Hd3fe=wk02WG8J7K5Ud1GcWkuKKKrxFjkNguxDkzNz2WVQ@mail.gmail.com/
+https://lore.kernel.org/lkml/CAMi1Hd3fe=wk02WG8J7K5Ud1GcWkuKKKrxFjkNguxDkzNz2WVQ@mail.gmail.com/
+
+By Amit Pundir; 9 days ago; 5 activities, latest 6 days ago.
+Introduced in 6945795bc81 (v6.5-rc1)
+
+Recent activities from: Amit Pundir (1), Johan Hovold (1)
+
+
+===================================================
+current cycle (v6.4.. aka v6.5-rc), unknown culprit
+===================================================
+
+
+[ *NEW* ] mm/vmalloc: NULL or otherwise bad pointer dereferences on ARM64
+-------------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/lore/42279f1f-7b82-40dc-8546-86171018729c@sirena.org.uk/
+https://lore.kernel.org/lkml/42279f1f-7b82-40dc-8546-86171018729c@sirena.org.uk/
+
+By Mark Brown; 5 days ago; 8 activities, latest 4 days ago.
+Introduced in v6.4..v6.5-rc1
+
+Recent activities from: Mark Brown (5), Hugh Dickins (2), Lorenzo
+  Stoakes (1)
+
+One patch associated with this regression:
+* Re: [PATCH v2 12/32] mm/vmalloc: vmalloc_to_page() use pte_offset_kernel()
+  https://lore.kernel.org/lkml/b479b946-f052-eb75-295d-6fa7c2d8ce8e@google.com/
+  4 days ago, by Hugh Dickins
+
+
+=============
+End of report
+=============
+
+All regressions marked '[ *NEW* ]' were added since the previous report,
+which can be found here:
+https://lore.kernel.org/r/168891835223.2415011.16827771958379610758@leemhuis.info
+
+Thanks for your attention, have a nice day!
+
+  Regzbot, your hard working Linux kernel regression tracking robot
+
+
+P.S.: Wanna know more about regzbot or how to use it to track regressions
+for your subsystem? Then check out the getting started guide or the
+reference documentation:
+
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
+
+The short version: if you see a regression report you want to see
+tracked, just send a reply to the report where you Cc
+regressions@lists.linux.dev with a line like this:
+
+#regzbot introduced: v5.13..v5.14-rc1
+
+If you want to fix a tracked regression, just do what is expected
+anyway: add a 'Link:' tag with the url to the report, e.g.:
+
+Link: https://lore.kernel.org/all/30th.anniversary.repost@klaava.Helsinki.FI/
