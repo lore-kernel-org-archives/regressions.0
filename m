@@ -1,224 +1,72 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8CEC1FB7
-	for <regressions@lists.linux.dev>; Sun, 16 Jul 2023 14:32:35 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:5054:ff:feb3:8f48] (helo=regzbot.fritz.box); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	id 1qL2nT-0004yV-Tq; Sun, 16 Jul 2023 16:32:28 +0200
-From: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>
-To: LKML <linux-kernel@vger.kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Linux regressions report  for mainline [2023-07-16]
-Date: Sun, 16 Jul 2023 14:32:27 +0000
-Message-Id: <168951788956.3088691.6549033530966986041@leemhuis.info>
-X-Mailer: git-send-email 2.40.1
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD9AD63D1
+	for <regressions@lists.linux.dev>; Sun, 16 Jul 2023 14:59:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBA81C433C7;
+	Sun, 16 Jul 2023 14:59:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1689519559;
+	bh=BcbGvIMw7IzFmFTJrFkd9Hfe38MZzNMEsk3MFlGVA74=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QcNz99QuVZYxxcw2U2cGSpcGjD43YIx+H5GX6BO7uJ21wLImuVdfTxhCVP01TpHl7
+	 KUmqbjUFBlnTAstJIFBF8eFWEdvwCgQ3AxvUVklqLxD8hqBDuTG0xdkfEU8dQvhSMA
+	 kROvTdrVCGB5LCsch8I48YqKtsLl1xDO25EYQBGw=
+Date: Sun, 16 Jul 2023 16:58:58 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Bagas Sanjaya <bagasdotme@gmail.com>
+Cc: Alexander Stein <alexander.stein@ew.tq-group.com>,
+	Sasha Levin <sashal@kernel.org>,
+	Tomasz Rostanski <tomasz.rostanski@thalesgroup.com>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Regressions <regressions@lists.linux.dev>,
+	Linux Stable <stable@vger.kernel.org>,
+	Linux USB <linux-usb@vger.kernel.org>,
+	Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: Re: Fwd: dwc3: regression in USB DWC3 driver in kernel 5.15 branch
+Message-ID: <2023071638-extrovert-batting-1f93@gregkh>
+References: <bfee63a3-16ee-0061-94c0-9c9af5318634@gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1689517955;aa6a5593;
-X-HE-SMSGID: 1qL2nT-0004yV-Tq
-
-Hi Linus. Nothing much to report from by side; there are a few
-regressions I'm aware off, but everything currently is business as usual.
-
-The iwlwifi issue I mentioned last week was fixed (thx again Johannes).
-Kees picked up and sent you one compile fix in todays pull. Maybe you
-also might still get this one for build failure from the tip folks:
-https://lore.kernel.org/all/20230629102051.42E8360467@lion.mk-sys.cz/
-
-Problem was reported here:
-https://lore.kernel.org/lkml/20230628115825.ahqejf5y4hgxhyqj@lion.mk-sys.cz/
-
-Ciao, Thorsten
-
----
-
-Hi, this is regzbot, the Linux kernel regression tracking bot.
-
-Currently I'm aware of 10 regressions in linux-mainline. Find the
-current status below and the latest on the web:
-
-https://linux-regtracking.leemhuis.info/regzbot/mainline/
-
-Bye bye, hope to see you soon for the next report.
-   Regzbot (on behalf of Thorsten Leemhuis)
-
-
-======================================================
-current cycle (v6.4.. aka v6.5-rc), culprit identified
-======================================================
-
-
-[ *NEW* ] CONFIG_EFI_PGT_DUMP regression due to allowing failing pte_offset_map[_lock]()
-----------------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/CABXGCsN3JqXckWO=V7p=FhPU1tK03RE1w9UE6xL5Y86SMk209w@mail.gmail.com/
-https://lore.kernel.org/lkml/CABXGCsN3JqXckWO=V7p=FhPU1tK03RE1w9UE6xL5Y86SMk209w@mail.gmail.com/
-
-By Mikhail Gavrilov; 1 days ago; 5 activities, latest 0 days ago.
-Introduced in 0d940a9b270b (v6.5-rc1)
-
-Recent activities from: Bagas Sanjaya (2), Mikhail Gavrilov (2), Hugh
-  Dickins (1)
-
-
-locking/atomic: build error on sparc64:allmodconfig
----------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/32395f1f-19e4-41da-9f67-68c7d21cf9b2@roeck-us.net/
-https://lore.kernel.org/lkml/32395f1f-19e4-41da-9f67-68c7d21cf9b2@roeck-us.net/
-
-By Guenter Roeck; 18 days ago; 15 activities, latest 0 days ago.
-Introduced in d12157efc8e0 (v6.5-rc1)
-
-Fix incoming:
-* sparc: mark __arch_xchg() as __always_inline
-  https://lore.kernel.org/lkml/cdd40a39-28ba-3c75-b9d0-b62904cb48a3@leemhuis.info/
-
-
-drm/bridge: lt9611: Dragonboard 845c (SDM845) devboard broken when running AOSP
--------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/CAMi1Hd0TD=2z_=bcDrht3H_wiLvAFcv8Z-U_r_KUOoeMc6UMjw@mail.gmail.com/
-https://lore.kernel.org/dri-devel/CAMi1Hd0TD=2z_=bcDrht3H_wiLvAFcv8Z-U_r_KUOoeMc6UMjw@mail.gmail.com/
-
-By Amit Pundir; 11 days ago; 20 activities, latest 2 days ago.
-Introduced in 8ddce13ae69 (v6.5-rc1)
-
-Recent activities from: Abhinav Kumar (2), Marek Vasut (2), Amit
-  Pundir (1), Jagan Teki (1)
-
-
-[ *NEW* ] kernel pointer dereference regression due to extract_iter_to_sg()
----------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/CAAUqJDuRkHE8fPgZJGaKjUjd3QfGwzfumuJBmStPqBhubxyk_A@mail.gmail.com/
-https://lore.kernel.org/lkml/CAAUqJDuRkHE8fPgZJGaKjUjd3QfGwzfumuJBmStPqBhubxyk_A@mail.gmail.com/
-
-By Ondrej Mosnáček; 3 days ago; 2 activities, latest 2 days ago.
-Introduced in c1abe6f570af (v6.5-rc1)
-
-Recent activities from: Bagas Sanjaya (1), Ondrej Mosnáček (1)
-
-
-net: phylink: mv88e6060 dsa driver broken
------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/CABikg9wM0f5cjYY0EV_i3cMT2JcUT1bSe_kkiYk0wFwMrTo8=w@mail.gmail.com/
-https://lore.kernel.org/netdev/CABikg9wM0f5cjYY0EV_i3cMT2JcUT1bSe_kkiYk0wFwMrTo8=w@mail.gmail.com/
-
-By Sergei Antonov; 12 days ago; 8 activities, latest 2 days ago.
-Introduced in de5c9bf40c45 (v6.5-rc1)
-
-Recent activities from: Vladimir Oltean (3), Sergei Antonov (2), Russell
-  King (Oracle) (1), Andrew Lunn (1)
-
-
-[ *NEW* ] KVM: arm64: boot failures due to missing bti instructions
--------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/20230704134136.a5znw4jupt5yp5kg@bogus/
-https://lore.kernel.org/lkml/20230704134136.a5znw4jupt5yp5kg@bogus/
-
-By Sudeep Holla; 12 days ago; 18 activities, latest 3 days ago.
-Introduced in b53d4a272349 (v6.5-rc1)
-
-Fix incoming:
-* KVM: arm64: Add missing BTI instructions
-  https://lore.kernel.org/lkml/55bffc21-5f19-765f-9dbc-1b565c880426@leemhuis.info/
-
-
-blk-mq: NFS workload leaves nfsd threads in D state
----------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/7A57C7AE-A51A-4254-888B-FE15CA21F9E9@oracle.com/
-https://lore.kernel.org/linux-block/7A57C7AE-A51A-4254-888B-FE15CA21F9E9@oracle.com/
-
-By Chuck Lever III; 7 days ago; 11 activities, latest 4 days ago.
-Introduced in 615939a2ae73 (v6.5-rc1)
-
-Recent activities from: Chuck Lever III (4), Christoph Hellwig (4),
-  Chengming Zhou (2)
-
-2 patch postings are associated with this regression, the latest is this:
-* Re: NFS workload leaves nfsd threads in D state
-  https://lore.kernel.org/linux-block/20230711120137.GA27050@lst.de/
-  5 days ago, by Christoph Hellwig
-
-
-objtool: build failure
-----------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/20230628115825.ahqejf5y4hgxhyqj@lion.mk-sys.cz/
-https://lore.kernel.org/lkml/20230628115825.ahqejf5y4hgxhyqj@lion.mk-sys.cz/
-
-By Michal Kubecek; 18 days ago; 15 activities, latest 4 days ago.
-Introduced in eb0481bbc4ce (v6.5-rc1)
-
-Fix incoming:
-* objtool: initialize all of struct elf
-  https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=master&id=9f71fbcde2820f2af4658313e808cf1e579190a4
-
-
-Bluetooth: Dragonboard 845c (SDM845) devboard broken
-----------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/CAMi1Hd3fe=wk02WG8J7K5Ud1GcWkuKKKrxFjkNguxDkzNz2WVQ@mail.gmail.com/
-https://lore.kernel.org/lkml/CAMi1Hd3fe=wk02WG8J7K5Ud1GcWkuKKKrxFjkNguxDkzNz2WVQ@mail.gmail.com/
-
-By Amit Pundir; 9 days ago; 5 activities, latest 6 days ago.
-Introduced in 6945795bc81 (v6.5-rc1)
-
-Recent activities from: Amit Pundir (1), Johan Hovold (1)
-
-
-===================================================
-current cycle (v6.4.. aka v6.5-rc), unknown culprit
-===================================================
-
-
-[ *NEW* ] mm/vmalloc: NULL or otherwise bad pointer dereferences on ARM64
--------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/42279f1f-7b82-40dc-8546-86171018729c@sirena.org.uk/
-https://lore.kernel.org/lkml/42279f1f-7b82-40dc-8546-86171018729c@sirena.org.uk/
-
-By Mark Brown; 5 days ago; 8 activities, latest 4 days ago.
-Introduced in v6.4..v6.5-rc1
-
-Recent activities from: Mark Brown (5), Hugh Dickins (2), Lorenzo
-  Stoakes (1)
-
-One patch associated with this regression:
-* Re: [PATCH v2 12/32] mm/vmalloc: vmalloc_to_page() use pte_offset_kernel()
-  https://lore.kernel.org/lkml/b479b946-f052-eb75-295d-6fa7c2d8ce8e@google.com/
-  4 days ago, by Hugh Dickins
-
-
-=============
-End of report
-=============
-
-All regressions marked '[ *NEW* ]' were added since the previous report,
-which can be found here:
-https://lore.kernel.org/r/168891835223.2415011.16827771958379610758@leemhuis.info
-
-Thanks for your attention, have a nice day!
-
-  Regzbot, your hard working Linux kernel regression tracking robot
-
-
-P.S.: Wanna know more about regzbot or how to use it to track regressions
-for your subsystem? Then check out the getting started guide or the
-reference documentation:
-
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
-
-The short version: if you see a regression report you want to see
-tracked, just send a reply to the report where you Cc
-regressions@lists.linux.dev with a line like this:
-
-#regzbot introduced: v5.13..v5.14-rc1
-
-If you want to fix a tracked regression, just do what is expected
-anyway: add a 'Link:' tag with the url to the report, e.g.:
-
-Link: https://lore.kernel.org/all/30th.anniversary.repost@klaava.Helsinki.FI/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <bfee63a3-16ee-0061-94c0-9c9af5318634@gmail.com>
+
+On Sat, Jul 15, 2023 at 06:03:06PM +0700, Bagas Sanjaya wrote:
+> Hi,
+> 
+> I notice a stable-specific regression on Bugzilla [1]. Quoting from it:
+> 
+> > The backport commit to 5.15 branch:
+> > 9d4f84a15f9c9727bc07f59d9dafc89e65aadb34 "arm64: dts: imx8mp: Add snps,gfladj-refclk-lpm-sel quirk to USB nodes"  (from upstream commit 5c3d5ecf48ab06c709c012bf1e8f0c91e1fcd7ad)
+> > switched from "snps,dis-u2-freeclk-exists-quirk" to "snps,gfladj-refclk-lpm-sel-quirk".
+> > 
+> > The problem is that the gfladj-refclk-lpm-sel-quirk quirk is not implemented / backported to 5.15 branch.
+> > 
+> > This commit should be either reverted, or the commit introducing gfladj-refclk-lpm-sel-quirk needs to be merged to 5.15 kernel branch.
+> > 
+> > As a result of this patch, on Gateworks Venice GW7400 revB board the USB 3.x devices which are connected to the USB Type C port does not enumerate and the following errors are generated:
+> > 
+> > [   14.906302] xhci-hcd xhci-hcd.0.auto: Timeout while waiting for setup device command
+> > [   15.122383] usb 2-1: device not accepting address 2, error -62
+> > [   25.282195] xhci-hcd xhci-hcd.0.auto: Abort failed to stop command ring: -110
+> > [   25.297408] xhci-hcd xhci-hcd.0.auto: xHCI host controller not responding, assume dead
+> > [   25.305345] xhci-hcd xhci-hcd.0.auto: HC died; cleaning up
+> > [   25.311058] xhci-hcd xhci-hcd.0.auto: Timeout while waiting for stop endpoint command
+> > [   25.334361] usb usb2-port1: couldn't allocate usb_device
+> > 
+> > When the commit is reverted the USB 3.x drives works fine.
+> 
+> See Bugzilla for the full thread and attach dmesgs.
+> 
+> Anyway, I'm adding it to regzbot:
+> 
+> #regzbot introduced: 9d4f84a15f9c97 https://bugzilla.kernel.org/show_bug.cgi?id=217670
+> #regzbot title: regression in USB DWC3 driver due to missing gfladj-refclk-lpm-sel-quirk quirk
+
+This isn't helpful as I don't know what commit eactly this missing
+quirk is :(
