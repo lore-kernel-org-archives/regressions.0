@@ -1,117 +1,68 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 711AD8F7D
-	for <regressions@lists.linux.dev>; Mon, 17 Jul 2023 14:02:30 +0000 (UTC)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 2D363218F8;
-	Mon, 17 Jul 2023 13:53:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1689602024; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NGhBJDzK/BM5omhjtk3XcApjj6iCqwWj80Nq511FRfU=;
-	b=j6+qAp97kIaAGQsttxpdrwu3ZJ39DYBPXdkxVXGAbJvQxZlDIvouAicJ0RXcm3EF+W6uXi
-	eCSn+RLmYx06Xc50yJSMbreOfzcXN3VM8ZI0gTlnIFrfGMiX7Vf3IKpImVUO4af6jiLcux
-	A+8LO4/0x2RcIy0/JeEeDnkv/3J6KfM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1689602024;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NGhBJDzK/BM5omhjtk3XcApjj6iCqwWj80Nq511FRfU=;
-	b=hLy0WTYyo0GTK85US7wgooIs0L1s1HNxXLN6pkogTg9FgDNeGZdTjwi3lQOqBfmlEcWakj
-	Ui+IIMCp0Rf4tFDw==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 9DA17138F8;
-	Mon, 17 Jul 2023 13:53:43 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-	by imap2.suse-dmz.suse.de with ESMTPSA
-	id pM++JOdHtWQ+WwAAMHmgww
-	(envelope-from <vbabka@suse.cz>); Mon, 17 Jul 2023 13:53:43 +0000
-Message-ID: <fe395b67-6cf8-7351-872c-a01c898a3798@suse.cz>
-Date: Mon, 17 Jul 2023 15:53:43 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27F42253A0
+	for <regressions@lists.linux.dev>; Mon, 17 Jul 2023 14:37:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A82DC433C7;
+	Mon, 17 Jul 2023 14:37:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1689604669;
+	bh=2r0sll+s0IDy8bTc7YEbr58iDiN4CqkfNKcW4JXgjNo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Q36eFDp2S55Uz3SGh9XpDRKshan0KQuW4SsGfDkGUd3gdtRMaGjBGClRcWqJedQLW
+	 94YlB3S2VU7KqhljCOksy9V/PP+vbfVVDavv1H4nxsWs1Kng77cxegWwkf288YJGuD
+	 BQit2h1PmgEgP/M6u3OhPMNkUmXnIIG3WLuviGJM=
+Date: Mon, 17 Jul 2023 16:37:46 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
+	Jakub Kicinski <kuba@kernel.org>, corbet@lwn.net,
+	workflows@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH docs] docs: maintainer: document expectations of small
+ time maintainers
+Message-ID: <2023071759-visible-identify-e5d7@gregkh>
+References: <20230713223432.1501133-1-kuba@kernel.org>
+ <6f1014cd-f8c5-f935-dcc7-4f5a6b85e473@kernel.org>
+ <20230714101028.337fb39a@kernel.org>
+ <bb8c6476-283c-3bc6-710b-5a8602ccd40e@leemhuis.info>
+ <895ed8ae-e93f-b296-330e-356cda698de2@kernel.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: Fwd: mm/page_alloc.c:4453 with cfg80211_wiphy_work [cfg80211]
-Content-Language: en-US
-To: Matthew Wilcox <willy@infradead.org>, Bagas Sanjaya <bagasdotme@gmail.com>
-Cc: Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>,
- David Rientjes <rientjes@google.com>, Joonsoo Kim <iamjoonsoo.kim@lge.com>,
- Roman Gushchin <roman.gushchin@linux.dev>,
- Hyeonggon Yoo <42.hyeyoo@gmail.com>, Rudi Heitbaum <rudi@heitbaum.com>,
- Johannes Berg <johannes@sipsolutions.net>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
- Michael Ellerman <mpe@ellerman.id.au>,
- Andrew Morton <akpm@linux-foundation.org>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>,
- Linux Memory Management List <linux-mm@kvack.org>,
- Linux Networking <netdev@vger.kernel.org>,
- Linux Wireless <linux-wireless@vger.kernel.org>
-References: <51e53417-cfad-542c-54ee-0fb9e26c4a38@gmail.com>
- <ZLPUXlR30DjNaWqO@casper.infradead.org>
-From: Vlastimil Babka <vbabka@suse.cz>
-In-Reply-To: <ZLPUXlR30DjNaWqO@casper.infradead.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <895ed8ae-e93f-b296-330e-356cda698de2@kernel.org>
 
-On 7/16/23 13:28, Matthew Wilcox wrote:
-> On Sun, Jul 16, 2023 at 06:10:44PM +0700, Bagas Sanjaya wrote:
->> Hi,
->> 
->> I notice a regression report on Bugzilla [1]. Quoting from it:
+On Mon, Jul 17, 2023 at 09:49:09AM +0200, Krzysztof Kozlowski wrote:
+> On 15/07/2023 12:31, Linux regression tracking (Thorsten Leemhuis) wrote:
+> > [CCing other people in the thread]
+> > How about something like this:
+> > 
+> > ```
+> > Bug reports
+> > -----------
+> > 
+> > Maintainers must ensure severe problems in their code reported to them
+> > are resolved in a timely manner: security vulnerabilities, regressions,
+> > compilation errors, data loss, kernel crashes, and bugs of similar scope.
+> > 
+> > Maintainers furthermore should respond to reports about other kind of
+> > bugs as well, if the report is of reasonable quality or indicates a
+> > problem that might be severe -- especially if they have *Supported*
+> > status of the codebase in the MAINTAINERS file.
 > 
-> Maybe you could try doing some work on this bug before just spamming
-> people with it?
-> 
->         if (WARN_ON_ONCE_GFP(order > MAX_ORDER, gfp))
->                 return NULL;
-> 
-> This is the page allocator telling the caller that they've asked for an
-> unreasonably large allocation.
-> 
-> Now, this bug is actually interesting to the MM because the caller
-> called kmalloc() with a ridiculous size.  Arguable kmalloc should
-> protect callers from themselves (alloc_pages() is more low level
-> and can presume its users know what they're doing).
-> 
-> Vlastimil, what do you think?  Something like ...
+> I like mentioning the "Supported" part. We should be a bit more
+> understanding to all folks who are not paid to do this.
 
-Hmm should be more robust to check size > KMALLOC_MAX_SIZE before even doing
-get_order(size). Ultimately it checks the same limit.
-But I'm unsure about just returning NULL. I think warn_on_once might be
-useful even there - in case a bug is introduced/exposed, even a
-inexperienced user will be easily able to report sufficient information wich
-a WARN and its stacktrace, even if the callsite's alloc check doesn't
-provide it in an obvious way?
+And, we should not be as understanding for companies who do NOT allow
+their developers to do this on company time, so pointing out the
+difference here is good, as most of the time it goes unnoticed as to
+just how little companies allow their maintainers to do their work.
 
-> +++ b/mm/slab_common.c
-> @@ -1119,6 +1119,8 @@ static void *__kmalloc_large_node(size_t size, gfp_t flags, int node)
->         void *ptr = NULL;
->         unsigned int order = get_order(size);
-> 
-> +       if (order > MAX_ORDER)
-> +               return NULL;
->         if (unlikely(flags & GFP_SLAB_BUG_MASK))
->                 flags = kmalloc_fix_flags(flags);
-> 
-> 
-> 
+thanks,
 
+greg k-h
