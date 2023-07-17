@@ -1,68 +1,67 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF4975257;
-	Mon, 17 Jul 2023 07:10:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 5EBB5C433C9;
-	Mon, 17 Jul 2023 07:10:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3DA35CB8
+	for <regressions@lists.linux.dev>; Mon, 17 Jul 2023 07:49:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6E2DC433C9;
+	Mon, 17 Jul 2023 07:49:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1689577820;
-	bh=ArYIPRQW1LKUm/pgfdXi7BhvBgA/OJLHSmaMb23ci84=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=FDe/uHsA0B/oldYklXRbfsiXmWEQnfcWUtusDio8clwtGWSbezQdZ0KYO/3LSUyOM
-	 h3lscZuyp/oqgO7qPN01lzfTL4GCyy9h5WPUoln5pa9rOfoxRtjlr6kaExTwPLtoU6
-	 QjnmUu9DDbVPknuiyJMJEZ65CCUCQ0fx9CCy6ICEU6E7MBH6Q5RHwAQ5/eTl8qZnlz
-	 itnspxvlsucMFMUFXrKEEcvT+2gs8SMwomPrM/Qb+cvz/K1ocVjayYhaW61hb0awNJ
-	 wE1jBtay5W+JKkAyWT9ULsDXjlyf8MHL7Px+osvKgwUqTaQ3iDKeiVPp41Efi8n1fR
-	 I6eEhzWojsfxQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 45E2CE270F6;
-	Mon, 17 Jul 2023 07:10:20 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1689580155;
+	bh=waKWJVOAVBelCCI1mB4poaxnZoLxRarS05iTbEu+fGg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ETvDL7REf0/QLPjSciqioJlqT1+t33+n0MsHYt3ZS5nlqHjalFVSULyueWDSepJDZ
+	 a46DVAA3dKgwxAjvszYB+hLxtPJD1X/rgMNPtfuf5hdqn2jsiKrzSrJfDhNHwRSJg6
+	 V0Uh9d0cJBX0uREL+nV3SHHXKD/coZHG4MNLn11h9ZkEKXvFzKsjo+zSsKHvYkdH3v
+	 fHlC6qyQk6G2/u5DWApyL3KQk622YrhFo0WZP/Mibs0WahAhiJlvWHs+726a2EyFVz
+	 3ura9Lcwiw7xZvHtGYlm8Xcl0CQ3PuZi0qM9x//tPcN/a7n49IXmpXwBaKsRgV32Qe
+	 xgne2JMBU4bAQ==
+Message-ID: <895ed8ae-e93f-b296-330e-356cda698de2@kernel.org>
+Date: Mon, 17 Jul 2023 09:49:09 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net v2] r8169: fix ASPM-related problem for chip version 42
- and 43
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <168957782028.7157.9470541301376951008.git-patchwork-notify@kernel.org>
-Date: Mon, 17 Jul 2023 07:10:20 +0000
-References: <f605d9cd-220d-5fa2-142e-746afa9e1665@gmail.com>
-In-Reply-To: <f605d9cd-220d-5fa2-142e-746afa9e1665@gmail.com>
-To: Heiner Kallweit <hkallweit1@gmail.com>
-Cc: kuba@kernel.org, davem@davemloft.net, nic_swsd@realtek.com,
- edumazet@google.com, pabeni@redhat.com, netdev@vger.kernel.org,
- regressions@lists.linux.dev, joey.joey586@gmail.com
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH docs] docs: maintainer: document expectations of small
+ time maintainers
+Content-Language: en-US
+To: Linux regressions mailing list <regressions@lists.linux.dev>,
+ Jakub Kicinski <kuba@kernel.org>
+Cc: corbet@lwn.net, workflows@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
+ Mark Brown <broonie@kernel.org>
+References: <20230713223432.1501133-1-kuba@kernel.org>
+ <6f1014cd-f8c5-f935-dcc7-4f5a6b85e473@kernel.org>
+ <20230714101028.337fb39a@kernel.org>
+ <bb8c6476-283c-3bc6-710b-5a8602ccd40e@leemhuis.info>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+In-Reply-To: <bb8c6476-283c-3bc6-710b-5a8602ccd40e@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hello:
-
-This patch was applied to netdev/net.git (main)
-by David S. Miller <davem@davemloft.net>:
-
-On Fri, 14 Jul 2023 07:39:36 +0200 you wrote:
-> Referenced commit missed that for chip versions 42 and 43 ASPM
-> remained disabled in the respective rtl_hw_start_...() routines.
-> This resulted in problems as described in the referenced bug
-> ticket. Therefore re-instantiate the previous logic.
+On 15/07/2023 12:31, Linux regression tracking (Thorsten Leemhuis) wrote:
+> [CCing other people in the thread]
+> How about something like this:
 > 
-> Fixes: 5fc3f6c90cca ("r8169: consolidate disabling ASPM before EPHY access")
-> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=217635
-> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+> ```
+> Bug reports
+> -----------
 > 
-> [...]
+> Maintainers must ensure severe problems in their code reported to them
+> are resolved in a timely manner: security vulnerabilities, regressions,
+> compilation errors, data loss, kernel crashes, and bugs of similar scope.
+> 
+> Maintainers furthermore should respond to reports about other kind of
+> bugs as well, if the report is of reasonable quality or indicates a
+> problem that might be severe -- especially if they have *Supported*
+> status of the codebase in the MAINTAINERS file.
 
-Here is the summary with links:
-  - [net,v2] r8169: fix ASPM-related problem for chip version 42 and 43
-    https://git.kernel.org/netdev/net/c/162d626f3013
+I like mentioning the "Supported" part. We should be a bit more
+understanding to all folks who are not paid to do this.
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+Best regards,
+Krzysztof
 
