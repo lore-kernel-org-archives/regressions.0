@@ -1,144 +1,68 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB8B7A4E
-	for <regressions@lists.linux.dev>; Sun, 16 Jul 2023 22:56:49 +0000 (UTC)
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-	by smtp-out2.suse.de (Postfix) with ESMTP id C20351FD80;
-	Sun, 16 Jul 2023 22:56:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1689548201; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ys6h1vzSSIaVlocCSqGhavDDv/6uvxE6L3vdhd2vrHU=;
-	b=PWntyDKakwSLMFInmJ+7M0/XbQdZfYmju+55r0dP1mW0uLHtGVPTK+PrdNDEYQJEB7uXUP
-	CUhJC/5KngSu3bg2WkciXAsOjrekWDBEa5v38iEoPt5+NBSKF8UpamYmzSXQIwu3VDeJhk
-	Ob6qLEWZ9TiorznFmaNAIIREnrg1kxI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1689548201;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ys6h1vzSSIaVlocCSqGhavDDv/6uvxE6L3vdhd2vrHU=;
-	b=tVHZ8DnJNgYMPlWL9jq6IDcqJQXb7D85Av55qDaaOCq4k1fVOIT0v382BqaDqget93lIoV
-	DHRRktctJYkWukBA==
-Received: from lion.mk-sys.cz (unknown [10.100.225.114])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by relay2.suse.de (Postfix) with ESMTPS id A38EA2C142;
-	Sun, 16 Jul 2023 22:56:41 +0000 (UTC)
-Received: by lion.mk-sys.cz (Postfix, from userid 1000)
-	id 68C9B604DF; Mon, 17 Jul 2023 00:56:41 +0200 (CEST)
-Date: Mon, 17 Jul 2023 00:56:41 +0200
-From: Michal Kubecek <mkubecek@suse.cz>
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
-	Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org
-Subject: Re: build failure after commit eb0481bbc4ce ("objtool: Fix
- reloc_hash size")
-Message-ID: <20230716225641.un3p3wvtpqldgy6f@lion.mk-sys.cz>
-References: <20230628115825.ahqejf5y4hgxhyqj@lion.mk-sys.cz>
- <fb93d107-c834-1849-2b14-1dd33c4f9955@leemhuis.info>
- <20230709140929.5sdcvyqquotkn752@carpenter>
- <20230710171628.vo4azoabe26kepij@treble>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF4975257;
+	Mon, 17 Jul 2023 07:10:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 5EBB5C433C9;
+	Mon, 17 Jul 2023 07:10:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1689577820;
+	bh=ArYIPRQW1LKUm/pgfdXi7BhvBgA/OJLHSmaMb23ci84=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=FDe/uHsA0B/oldYklXRbfsiXmWEQnfcWUtusDio8clwtGWSbezQdZ0KYO/3LSUyOM
+	 h3lscZuyp/oqgO7qPN01lzfTL4GCyy9h5WPUoln5pa9rOfoxRtjlr6kaExTwPLtoU6
+	 QjnmUu9DDbVPknuiyJMJEZ65CCUCQ0fx9CCy6ICEU6E7MBH6Q5RHwAQ5/eTl8qZnlz
+	 itnspxvlsucMFMUFXrKEEcvT+2gs8SMwomPrM/Qb+cvz/K1ocVjayYhaW61hb0awNJ
+	 wE1jBtay5W+JKkAyWT9ULsDXjlyf8MHL7Px+osvKgwUqTaQ3iDKeiVPp41Efi8n1fR
+	 I6eEhzWojsfxQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 45E2CE270F6;
+	Mon, 17 Jul 2023 07:10:20 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="75t4gryvpwcuroiv"
-Content-Disposition: inline
-In-Reply-To: <20230710171628.vo4azoabe26kepij@treble>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net v2] r8169: fix ASPM-related problem for chip version 42
+ and 43
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <168957782028.7157.9470541301376951008.git-patchwork-notify@kernel.org>
+Date: Mon, 17 Jul 2023 07:10:20 +0000
+References: <f605d9cd-220d-5fa2-142e-746afa9e1665@gmail.com>
+In-Reply-To: <f605d9cd-220d-5fa2-142e-746afa9e1665@gmail.com>
+To: Heiner Kallweit <hkallweit1@gmail.com>
+Cc: kuba@kernel.org, davem@davemloft.net, nic_swsd@realtek.com,
+ edumazet@google.com, pabeni@redhat.com, netdev@vger.kernel.org,
+ regressions@lists.linux.dev, joey.joey586@gmail.com
+
+Hello:
+
+This patch was applied to netdev/net.git (main)
+by David S. Miller <davem@davemloft.net>:
+
+On Fri, 14 Jul 2023 07:39:36 +0200 you wrote:
+> Referenced commit missed that for chip versions 42 and 43 ASPM
+> remained disabled in the respective rtl_hw_start_...() routines.
+> This resulted in problems as described in the referenced bug
+> ticket. Therefore re-instantiate the previous logic.
+> 
+> Fixes: 5fc3f6c90cca ("r8169: consolidate disabling ASPM before EPHY access")
+> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=217635
+> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+> 
+> [...]
+
+Here is the summary with links:
+  - [net,v2] r8169: fix ASPM-related problem for chip version 42 and 43
+    https://git.kernel.org/netdev/net/c/162d626f3013
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
 
---75t4gryvpwcuroiv
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Jul 10, 2023 at 10:16:28AM -0700, Josh Poimboeuf wrote:
-> On Sun, Jul 09, 2023 at 05:09:29PM +0300, Michal Kubecek wrote:
-> > On Sat, Jul 08, 2023 at 03:40:50PM +0200, Linux regression tracking (Th=
-orsten Leemhuis) wrote:
-> > > On 28.06.23 13:58, Michal Kubecek wrote:
-> > > >=20
-> > > > this morning, mainline kernel builds started to fail on my desktop =
-like
-> > > > this:
-> > > >=20
-> > > >   mike@lion:~/work/git/kernel-upstream> mkdir /srv/ram/kobj
-> > > >   mike@lion:~/work/git/kernel-upstream> make -j24 CC=3Dgcc-13 O=3D/=
-srv/ram/kobj defconfig >/dev/null
-> > > >   mike@lion:~/work/git/kernel-upstream> make -j24 CC=3Dgcc-13 O=3D/=
-srv/ram/kobj all >/dev/null
-> > > >   net/ipv4/netfilter/iptable_nat.o: warning: objtool: mmap fail rel=
-oc
-> > > >   net/netfilter/xt_mark.o: warning: objtool: mmap fail reloc
-> > > >   net/netfilter/xt_nat.o: warning: objtool: mmap fail reloc
-> > > >   net/netfilter/xt_LOG.o: warning: objtool: mmap fail reloc
-> > > >   net/netfilter/xt_MASQUERADE.o: warning: objtool: mmap fail reloc
-> > > >   net/netfilter/nf_log_syslog.o: warning: objtool: mmap fail reloc
-> > > >   net/netfilter/xt_addrtype.o: warning: objtool: mmap fail reloc
-> > > >   fs/efivarfs/efivarfs.o: warning: objtool: mmap fail reloc
-> > > >   drivers/thermal/intel/x86_pkg_temp_thermal.o: warning: objtool: m=
-map fail reloc
-> > > >   vmlinux.o: warning: objtool: mmap fail reloc
-> > > >   incomplete ORC unwind tables in file: vmlinux
-> > > >   Failed to sort kernel tables
-> > > >   make[2]: *** [/home/mike/work/git/kernel-upstream/scripts/Makefil=
-e.vmlinux:35: vmlinux] Error 1
-> > > >   make[2]: *** Deleting file 'vmlinux'
-> > > >   make[1]: *** [/home/mike/work/git/kernel-upstream/Makefile:1256: =
-vmlinux] Error 2
-> > > >   make: *** [Makefile:226: __sub-make] Error 2
-> > > >=20
-> > > > I bisected the failure to commit
-> > > >=20
-> > > >   eb0481bbc4ce ("objtool: Fix reloc_hash size")
-> > > >=20
-> > > > I also tried gcc11 and building on a normal filesystem (rather than
-> > > > tmpfs) but the result is still the same. Different configurations (=
-e.g.
-> > > > allmodconfig) only show more modules with "mmap fail reloc". The ma=
-chine
-> > > > has 64 GB of RAM and both ulimit -m and ulimit -v show "unlimited".
-> > > > Anything idea what else I should try?
-> > >=20
-> > > Michal, thx for the report. Please correct me if I'm wrong: this as of
-> > > now is unfixed, as your patch to fix is afaics wasn't merged yet (at
-> > > least I can't see it even in next, but I might be missing something).
-> >=20
-> > Yes, the fix has not been merged yet and current master (commit
-> > 1c7873e33645) still shows the issue.
->=20
-> Should be fixed in the tip tree with the following patch:
->=20
-> https://lkml.kernel.org/lkml/168897683429.404.6801969953192508868.tip-bot=
-2@tip-bot2
-
-The fix reached mainline now as
-
-  9f71fbcde282 ("objtool: initialize all of struct elf")
-
-and is present in 6.5-rc2 so that it no longer exhibits the issue.
-
-Michal
-
---75t4gryvpwcuroiv
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEWN3j3bieVmp26mKO538sG/LRdpUFAmS0daUACgkQ538sG/LR
-dpVH1QgAu3oi5xk/rao2uXTc8HkpITK4aYMlv5bZSQxgS6fJn2pAtlItDmY/Pijf
-lths1Gf2+xgFSEWCilYiGRsSxR9y5AN1yoRNKnxKghOuRpIHHjZWGy86CNlMcJOn
-vmgzW+HlelHrZQ22STQPDFDsRrUM4/nCehfDWSPnu/vAUHczZstHovpXPqTF4cpF
-fwFCRhUeW9zQUNSGuOtqpEFJHsKgDswekXVhHrHNGrqBKb00TdcvftYnREX8Eus6
-TwxM+HZcpqB3q9DROMoVfRv2Dm8LinXfCLRbp8EUx1RiBNLfy0YuoKojBH/TJOYM
-TPigoGMbNaqBl+Y63I+1OWe8KtgGfg==
-=ZHsS
------END PGP SIGNATURE-----
-
---75t4gryvpwcuroiv--
