@@ -1,119 +1,224 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6569117CE
-	for <regressions@lists.linux.dev>; Tue, 18 Jul 2023 03:32:11 +0000 (UTC)
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-666eec46206so5327631b3a.3
-        for <regressions@lists.linux.dev>; Mon, 17 Jul 2023 20:32:11 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F130AD55
+	for <regressions@lists.linux.dev>; Tue, 18 Jul 2023 08:02:31 +0000 (UTC)
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1b89e10d356so33211065ad.3
+        for <regressions@lists.linux.dev>; Tue, 18 Jul 2023 01:02:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1689651130; x=1692243130;
+        d=heitbaum.com; s=google; t=1689667351; x=1692259351;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=qsCgfp2s3CRfk6nv+x0Mk0r1Oznh1MYu4hj6PzpztDM=;
-        b=ZEPFLg7rh5L4b7krkym5Ya+3jpyqEqMmL/f2boSjPTpbBG26VM+k7464Jo5583X0SD
-         a1Hw0wjSHGPNytPVL9TwTmmRBuq54jqOx6viOG/XyfQinG8Bjmw5k9NRMeQwdVcqYJuw
-         +Lm5xtcuXeY9RnnUpmW1s1zhsxPisZtikjU9KUPopAYpCiR82uGhq4dgb81vUAKKYm5x
-         rDIpRedktdlIfSkhJkVC7cTqJoWL1XbBorpIdJ9NtHJXVyiU17Nn/QlU9ya6Ad6aEYVA
-         Rx4Fffm3aba7pO1PPklVrsRr1dy1uTyApY745rTX/ZTXC7zxlXgsm+ya1+HKpNg50sMF
-         bhTA==
+        bh=fnwKc/o3ISHm8NcR21OLJ9uDUCnyHyDdo8J6H/w7iTw=;
+        b=YDBzoZ2QJljNIlYmSvS0QS08AyWmQkA8eWYBsjFyGKN2ULcH2tKZpx2j3CTyz5zKJ1
+         itg3Haejzl9W/y1o8RiUcUBiZwDyI8F4M0avo9WLTpITRc+UcnRqZCEnYxvW4wgL6D8Y
+         Z2Gz1B74iO4ilDDZM6OZhcD/m62y4/h25ry3U=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689651130; x=1692243130;
+        d=1e100.net; s=20221208; t=1689667351; x=1692259351;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=qsCgfp2s3CRfk6nv+x0Mk0r1Oznh1MYu4hj6PzpztDM=;
-        b=JxvImv8yj6lPnZ3Jl+1FAyt+VKp3IR9IrC8YP1/+ZTEHd2XsfwDOS8uUUIGzbMgyY0
-         QTt4YlSYXHdQ9PIGT2Tqo3JXiaQ75AFAcnXbVuOCA3Hu8KktyL82kkGGQTkrsbv6JFm+
-         7Xpzabg29K8tDaxbjKNxe5z7IUbA1yH3ux9uZZlKB7E6VcUR/hFGYFMQTBYerhLClBdM
-         MGR+K9vPi5fcZuiJK0K+M7+0KLnVug5JYQD0ovat1sjDI7A5yIi4InZeuzSCPaDCmNX+
-         9MGXp4qZmKKpFXUxbi3OVvLUNK6Q1Boimlx55fmGP6aZheq/Jjf/Qv1F1E6woMM//X7J
-         wmkA==
-X-Gm-Message-State: ABy/qLZKfor41DETbs8mvlRgx8IvBO0ifyZzgtsZKDfazny/RKBl7pAf
-	suzw2AqBd/tSO4CyaCMhuSw=
-X-Google-Smtp-Source: APBJJlFAwDoW4yADO2Pjd04stMQf1iujcnSKviiNjIZ3895AEfrruDatfQyAiKeDtImLL7XYcqiTtg==
-X-Received: by 2002:a05:6a21:7883:b0:133:215e:746d with SMTP id bf3-20020a056a21788300b00133215e746dmr17816681pzc.41.1689651130509;
-        Mon, 17 Jul 2023 20:32:10 -0700 (PDT)
-Received: from debian.me ([103.131.18.64])
-        by smtp.gmail.com with ESMTPSA id j14-20020a170902758e00b001b9be2e2b3esm584344pll.277.2023.07.17.20.32.09
+        bh=fnwKc/o3ISHm8NcR21OLJ9uDUCnyHyDdo8J6H/w7iTw=;
+        b=H0aIMgrKXk0EoKIy5D2XpNdbZreMIIgtxNxL9ar2gSjxsBqCzGUd0047Eme5TetFOd
+         w5D64rpbcDwqLO4yP5AVULopIn9HxSglcj5Td2Bjp8q5U/9Bgb5uMHODqswRbhddKlDx
+         GHwAqxHSZmuFc1851tEI9/0CG1iyiCnRhMzjodSnXoT78eyOBXhfy9+C7A9GqqRd/sr1
+         vGzUnqohpFYM+E4f6YNp/cArwyC02paZf0EpJAU3TPS5BQRYFEjXi1WPmih7IFDxQttI
+         MXTBm8v0XZE3ibySRQjUAslk5Jr69fn+50aTLOSzD60BYLow2fPcSzAVgvVgF18pAP4C
+         iWDg==
+X-Gm-Message-State: ABy/qLZKFpHJSf3ZJcsx6LIvaT7doj/Zgs1rPzyjMF0ji2ZY2APjjEuD
+	EkRJEiVLeXCZ3uJU1JSK3ZccaA==
+X-Google-Smtp-Source: APBJJlEe7fB6yHcAj9JWOSeLLAJphdyZKwKLmfC2xgNTv4YvfT8lwCODnKRipFxioXejYwrlNBunGA==
+X-Received: by 2002:a17:902:e743:b0:1b2:5d5b:e871 with SMTP id p3-20020a170902e74300b001b25d5be871mr1425468plf.59.1689667350665;
+        Tue, 18 Jul 2023 01:02:30 -0700 (PDT)
+Received: from 503599e9be06 ([122.199.31.3])
+        by smtp.gmail.com with ESMTPSA id y6-20020a17090322c600b001b53953f306sm1173206plg.178.2023.07.18.01.02.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Jul 2023 20:32:10 -0700 (PDT)
-Received: by debian.me (Postfix, from userid 1000)
-	id 5ED5E834F19C; Tue, 18 Jul 2023 10:32:05 +0700 (WIB)
-Date: Tue, 18 Jul 2023 10:32:05 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Randy Dunlap <rdunlap@infradead.org>,
-	Stephen Rothwell <sfr@canb.auug.org.au>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Helge Deller <deller@gmx.de>,
-	Javier Martinez Canillas <javierm@redhat.com>,
-	linux-fbdev@vger.kernel.org,
-	Linux PowerPC <linuxppc-dev@lists.ozlabs.org>,
-	Linux Regressions <regressions@lists.linux.dev>
-Subject: Re: linux-next: Tree for Jul 13 (drivers/video/fbdev/ps3fb.c)
-Message-ID: <ZLYHtVuS7AElXcCb@debian.me>
-References: <20230713123710.5d7d81e4@canb.auug.org.au>
- <ccc63065-2976-88ef-1211-731330bf2866@infradead.org>
+        Tue, 18 Jul 2023 01:02:29 -0700 (PDT)
+Date: Tue, 18 Jul 2023 08:02:22 +0000
+From: Rudi Heitbaum <rudi@heitbaum.com>
+To: "Peer, Ilan" <ilan.peer@intel.com>
+Cc: Bagas Sanjaya <bagasdotme@gmail.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Regressions <regressions@lists.linux.dev>,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	Linux Networking <netdev@vger.kernel.org>,
+	Linux Wireless <linux-wireless@vger.kernel.org>
+Subject: Re: mm/page_alloc.c:4453 with cfg80211_wiphy_work [cfg80211]
+Message-ID: <ZLZHDm3mcxaLdvRH@503599e9be06>
+References: <51e53417-cfad-542c-54ee-0fb9e26c4a38@gmail.com>
+ <DM4PR11MB6043088A4A65CBF124F5D518E93BA@DM4PR11MB6043.namprd11.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ccc63065-2976-88ef-1211-731330bf2866@infradead.org>
+In-Reply-To: <DM4PR11MB6043088A4A65CBF124F5D518E93BA@DM4PR11MB6043.namprd11.prod.outlook.com>
 
-On Thu, Jul 13, 2023 at 09:11:10AM -0700, Randy Dunlap wrote:
+> From 5a6fcc4b2a91608917697f8446ec3e10b2ce9178 Mon Sep 17 00:00:00 2001
+> From: Ilan Peer <ilan.peer@intel.com>
+> Date: Tue, 18 Jul 2023 00:33:04 +0300
+> Subject: [PATCH] wifi: cfg80211: Fix return value in scan logic
 > 
+> As cfg80211_parse_colocated_ap() is not expected to return a negative
+> value return 0 and not a negative value if cfg80211_calc_short_ssid()
+> fails.
 > 
-> On 7/12/23 19:37, Stephen Rothwell wrote:
-> > Hi all,
+> This bug was introduced in commit c8cb5b854b40f
+> ('nl80211/cfg80211: support 6 GHz scanning').
+> 
+> Signed-off-by: Ilan Peer <ilan.peer@intel.com>
+> ---
+> net/wireless/scan.c | 2 +-
+> 1 file changed, 1 insertion(+), 1 deletion(-)
+>
+>diff --git a/net/wireless/scan.c b/net/wireless/scan.c
+>index 8bf00caf5d29..0cf1ce7b6934 100644
+>--- a/net/wireless/scan.c
+>+++ b/net/wireless/scan.c
+>@@ -657,7 +657,7 @@ static int cfg80211_parse_colocated_ap(const struct cfg80211_bss_ies *ies,
+> 
+> 	ret = cfg80211_calc_short_ssid(ies, &ssid_elem, &s_ssid_tmp);
+> 	if (ret)
+>-		return ret;
+>+		return 0;
+> 
+> 	for_each_element_id(elem, WLAN_EID_REDUCED_NEIGHBOR_REPORT,
+> 			    ies->data, ies->len) {
+>-- 
+>2.25.1
+
+Hi Ilan, 
+
+I can confirm that this fixes the error in my dmesg.
+
+Regards
+Rudi
+
+Tested-by: Rudi Heitbaum <rudi@heitbaum.com>
+
+On Mon, Jul 17, 2023 at 01:41:43PM +0000, Peer, Ilan wrote:
+> Hi Sanjaya,
+> 
+> Can you please check if the attached patch fixes your issue?
+> 
+> Thanks in advance,
+> 
+> Ilan.
+> 
+> > -----Original Message-----
+> > From: Bagas Sanjaya <bagasdotme@gmail.com>
+> > Sent: Sunday, July 16, 2023 14:11
+> > To: Rudi Heitbaum <rudi@heitbaum.com>; Johannes Berg
+> > <johannes@sipsolutions.net>; David S. Miller <davem@davemloft.net>; Eric
+> > Dumazet <edumazet@google.com>; Jakub Kicinski <kuba@kernel.org>;
+> > Paolo Abeni <pabeni@redhat.com>; Kirill A. Shutemov
+> > <kirill.shutemov@linux.intel.com>; Michael Ellerman
+> > <mpe@ellerman.id.au>; Andrew Morton <akpm@linux-foundation.org>
+> > Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>; Linux
+> > Regressions <regressions@lists.linux.dev>; Linux Memory Management List
+> > <linux-mm@kvack.org>; Linux Networking <netdev@vger.kernel.org>; Linux
+> > Wireless <linux-wireless@vger.kernel.org>
+> > Subject: Fwd: mm/page_alloc.c:4453 with cfg80211_wiphy_work [cfg80211]
 > > 
-> > Changes since 20230712:
+> > Hi,
 > > 
-> 
-> on ppc64:
-> 
-> In file included from ../include/linux/device.h:15,
->                  from ../arch/powerpc/include/asm/io.h:22,
->                  from ../include/linux/io.h:13,
->                  from ../include/linux/irq.h:20,
->                  from ../arch/powerpc/include/asm/hardirq.h:6,
->                  from ../include/linux/hardirq.h:11,
->                  from ../include/linux/interrupt.h:11,
->                  from ../drivers/video/fbdev/ps3fb.c:25:
-> ../drivers/video/fbdev/ps3fb.c: In function 'ps3fb_probe':
-> ../drivers/video/fbdev/ps3fb.c:1172:40: error: 'struct fb_info' has no member named 'dev'
->  1172 |                  dev_driver_string(info->dev), dev_name(info->dev),
->       |                                        ^~
-> ../include/linux/dev_printk.h:110:37: note: in definition of macro 'dev_printk_index_wrap'
->   110 |                 _p_func(dev, fmt, ##__VA_ARGS__);                       \
->       |                                     ^~~~~~~~~~~
-> ../drivers/video/fbdev/ps3fb.c:1171:9: note: in expansion of macro 'dev_info'
->  1171 |         dev_info(info->device, "%s %s, using %u KiB of video memory\n",
->       |         ^~~~~~~~
-> ../drivers/video/fbdev/ps3fb.c:1172:61: error: 'struct fb_info' has no member named 'dev'
->  1172 |                  dev_driver_string(info->dev), dev_name(info->dev),
->       |                                                             ^~
-> ../include/linux/dev_printk.h:110:37: note: in definition of macro 'dev_printk_index_wrap'
->   110 |                 _p_func(dev, fmt, ##__VA_ARGS__);                       \
->       |                                     ^~~~~~~~~~~
-> ../drivers/video/fbdev/ps3fb.c:1171:9: note: in expansion of macro 'dev_info'
->  1171 |         dev_info(info->device, "%s %s, using %u KiB of video memory\n",
->       |         ^~~~~~~~
-> 
-> 
+> > I notice a regression report on Bugzilla [1]. Quoting from it:
+> > 
+> > > Linux version 6.5.0-rc1+ - up to
+> > > 831fe284d8275987596b7d640518dddba5735f61
+> > >
+> > > [    7.312665] ------------[ cut here ]------------
+> > > [    7.312671] WARNING: CPU: 8 PID: 659 at mm/page_alloc.c:4453
+> > __alloc_pages+0x329/0x340
+> > > [    7.312683] Modules linked in: exfat ntfs3 bnep btusb btrtl btbcm btintel
+> > btmtk bluetooth ecdh_generic ecc iwlmvm mac80211 libarc4
+> > snd_hda_codec_hdmi iwlwifi snd_hda_codec_realtek
+> > snd_hda_codec_generic ledtrig_audio cfg80211 snd_hda_intel
+> > snd_hda_codec snd_hwdep intel_rapl_msr x86_pkg_temp_thermal
+> > intel_powerclamp snd_hda_core tpm_tis intel_rapl_common
+> > snd_intel_dspcfg tpm_tis_core idma64 rfkill tpm_crb tpm rng_core
+> > pkcs8_key_parser fuse dmi_sysfs
+> > > [    7.312725] CPU: 8 PID: 659 Comm: kworker/8:2 Not tainted 6.5.0-rc1 #1
+> > > [    7.312729] Hardware name: Intel(R) Client Systems
+> > NUC12WSKi7/NUC12WSBi7, BIOS WSADL357.0087.2023.0306.1931 03/06/2023
+> > > [    7.312731] Workqueue: events cfg80211_wiphy_work [cfg80211]
+> > > [    7.312785] RIP: 0010:__alloc_pages+0x329/0x340
+> > > [    7.312791] Code: a8 44 89 e6 89 df c6 45 c8 00 4c 89 6d b0 41 89 de e8 0b ef
+> > ff ff 49 89 c7 e9 90 fe ff ff 80 e3 3f eb c0 c6 05 69 49 f7 09 01 <0f> 0b eb 98 e8
+> > 1e ec 6d 01 66 66 2e 0f 1f 84 00 00 00 00 00 0f 1f
+> > > [    7.312794] RSP: 0018:ffffad8e80defbf8 EFLAGS: 00010246
+> > > [    7.312798] RAX: 0000000000000000 RBX: 0000000000040dc0 RCX:
+> > 0000000000000000
+> > > [    7.312800] RDX: 0000000000000000 RSI: 0000000000000000 RDI:
+> > 0000000000040dc0
+> > > [    7.312802] RBP: ffffad8e80defc50 R08: 0000000000000005 R09:
+> > 0000000000000018
+> > > [    7.312804] R10: ffff938899d4a800 R11: ffff938891a9c800 R12:
+> > 0000000000000034
+> > > [    7.312806] R13: 0000000000000000 R14: ffffffffc02b150d R15:
+> > fffffffffffffc90
+> > > [    7.312808] FS:  0000000000000000(0000) GS:ffff938fb6600000(0000)
+> > knlGS:0000000000000000
+> > > [    7.312811] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > > [    7.312813] CR2: 00007f540c94b710 CR3: 000000059502c000 CR4:
+> > 0000000000f50ea0
+> > > [    7.312815] PKRU: 55555554
+> > > [    7.312817] Call Trace:
+> > > [    7.312819]  <TASK>
+> > > [    7.312822]  ? show_regs+0x69/0x80
+> > > [    7.312827]  ? __warn+0x89/0x140
+> > > [    7.312833]  ? __alloc_pages+0x329/0x340
+> > > [    7.312837]  ? report_bug+0x15d/0x180
+> > > [    7.312843]  ? handle_bug+0x42/0x80
+> > > [    7.312848]  ? exc_invalid_op+0x1c/0x70
+> > > [    7.312852]  ? asm_exc_invalid_op+0x1f/0x30
+> > > [    7.312857]  ? cfg80211_scan_6ghz+0x12d/0xcb0 [cfg80211]
+> > > [    7.312911]  ? __alloc_pages+0x329/0x340
+> > > [    7.312916]  ? cfg80211_scan_6ghz+0x12d/0xcb0 [cfg80211]
+> > > [    7.312968]  __kmalloc_large_node+0x7e/0x170
+> > > [    7.312973]  __kmalloc+0xb9/0x120
+> > > [    7.312976]  cfg80211_scan_6ghz+0x12d/0xcb0 [cfg80211]
+> > > [    7.313028]  ? sched_clock_noinstr+0xd/0x20
+> > > [    7.313034]  ? sched_clock_cpu+0x14/0x190
+> > > [    7.313040]  ? raw_spin_rq_lock_nested+0x12/0x20
+> > > [    7.313046]  ___cfg80211_scan_done+0x1e0/0x250 [cfg80211]
+> > > [    7.313099]  __cfg80211_scan_done+0x23/0x30 [cfg80211]
+> > > [    7.313153]  cfg80211_wiphy_work+0xae/0xd0 [cfg80211]
+> > > [    7.313201]  process_one_work+0x1f1/0x3e0
+> > > [    7.313204]  worker_thread+0x51/0x3f0
+> > > [    7.313207]  ? _raw_spin_unlock_irqrestore+0x26/0x30
+> > > [    7.313212]  ? __pfx_worker_thread+0x10/0x10
+> > > [    7.313217]  kthread+0xdb/0x110
+> > > [    7.313222]  ? __pfx_kthread+0x10/0x10
+> > > [    7.313226]  ret_from_fork+0x3e/0x60
+> > > [    7.313229]  ? __pfx_kthread+0x10/0x10
+> > > [    7.313233]  ret_from_fork_asm+0x1b/0x30
+> > > [    7.313237]  </TASK>
+> > > [    7.313239] ---[ end trace 0000000000000000 ]---
+> > 
+> > See Bugzilla for the full thread.
+> > 
+> > Anyway, I'm adding it to regzbot to make sure it doesn't fall through cracks
+> > unnoticed:
+> > 
+> > #regzbot introduced: v6.5-rc1..831fe284d82759
+> > https://bugzilla.kernel.org/show_bug.cgi?id=217675
+> > 
+> > Thanks.
+> > 
+> > [1]: https://bugzilla.kernel.org/show_bug.cgi?id=217675
+> > 
+> > --
+> > An old man doll... just what I always wanted! - Clara
 
-Hmm, there is no response from Thomas yet. I guess we should go with
-reverting bdb616479eff419, right? Regardless, I'm adding this build regression
-to regzbot so that parties involved are aware of it:
 
-#regzbot ^introduced: bdb616479eff419
-#regzbot title: build regression in PS3 framebuffer
-
-Thanks.
-
--- 
-An old man doll... just what I always wanted! - Clara
