@@ -1,137 +1,119 @@
-Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44C2FEDE
-	for <regressions@lists.linux.dev>; Tue, 18 Jul 2023 00:51:38 +0000 (UTC)
-Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-3a38953c928so3632294b6e.1
-        for <regressions@lists.linux.dev>; Mon, 17 Jul 2023 17:51:37 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6569117CE
+	for <regressions@lists.linux.dev>; Tue, 18 Jul 2023 03:32:11 +0000 (UTC)
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-666eec46206so5327631b3a.3
+        for <regressions@lists.linux.dev>; Mon, 17 Jul 2023 20:32:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1689641497; x=1692233497;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lz+8CarDNbfuh8OfKKezu1WG0K0jECzwZysn86ImSis=;
-        b=EZApaMs4gPJVrUIaeSPlMHa2Ubxx+ljVSgRceCanZxrxGNNKcrHVRdwxqf+J/i93eS
-         bCVCmkZGoBTZIrpNuD7CYzc3Vd6qp+GujdSJoHFaZnudn11SQ22BfE3l/Rgd9in/Dlgq
-         OxKFNtL93tIqLR/181oyic7HVL4EIEmsi6FsT2n1n8790US2gL6QHJke2g5bj7niI1YT
-         47JlDZF/+b7YI7ApdN9OgTGyXQvEfGFHlRZ79pUoaS5fSUOdlnYK3KZN6KlM4PNB5G4D
-         pZHZKTjVpoljidyzHjHOC6/wblYRuPi6qW6/WvfnrnEAP5HeSi57xsmv8NeKpRv+0OqW
-         WVlw==
+        d=gmail.com; s=20221208; t=1689651130; x=1692243130;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=qsCgfp2s3CRfk6nv+x0Mk0r1Oznh1MYu4hj6PzpztDM=;
+        b=ZEPFLg7rh5L4b7krkym5Ya+3jpyqEqMmL/f2boSjPTpbBG26VM+k7464Jo5583X0SD
+         a1Hw0wjSHGPNytPVL9TwTmmRBuq54jqOx6viOG/XyfQinG8Bjmw5k9NRMeQwdVcqYJuw
+         +Lm5xtcuXeY9RnnUpmW1s1zhsxPisZtikjU9KUPopAYpCiR82uGhq4dgb81vUAKKYm5x
+         rDIpRedktdlIfSkhJkVC7cTqJoWL1XbBorpIdJ9NtHJXVyiU17Nn/QlU9ya6Ad6aEYVA
+         Rx4Fffm3aba7pO1PPklVrsRr1dy1uTyApY745rTX/ZTXC7zxlXgsm+ya1+HKpNg50sMF
+         bhTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689641497; x=1692233497;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=lz+8CarDNbfuh8OfKKezu1WG0K0jECzwZysn86ImSis=;
-        b=cSp841Z5G7L9AOQ30h8LrE/AIiUgv7tzfmZIVU2KDr2KH98NREQJ8dmK4naLBWuRGl
-         xXCymzBWIKzJfcj91Q7z+w1gDqDjk0wV+w3kDVp9aQHw8Z9Dd9Uu0u+Mp4qKaH8dbhfr
-         nFWhr0baP+wl6zY6vUb10BObSq395y6CbSkxLDjZeYZwMVMiQoK2U6kInkOn6jkqxyCM
-         8Gnm6CtismQFENHfLI8lHU8hDLZeQTt5LVKkcvB5kBkvXtXXp90TFsSmcBcW15Gh10EL
-         M1Gda18bNLrSm2v5rk0GP51lQDotO2k1Y/sMQNmeBm1MX7IAgU8Da0RUFNa/olnGr1BV
-         5A5A==
-X-Gm-Message-State: ABy/qLaIhBw5zyTs/Xs0NE8lQbBJf97tpzNU2oSifqJznRc43HTqW0vn
-	MriiAfei2vCX1/Le+TRuW10=
-X-Google-Smtp-Source: APBJJlGeBHqkRxL+zWXusQBpUdihf6v3b11hnUADferAFcbDtzk1JOfTMdtHdDSOktc+ANmDRfwJnQ==
-X-Received: by 2002:a05:6358:6f97:b0:133:a8e:6feb with SMTP id s23-20020a0563586f9700b001330a8e6febmr9453004rwn.12.1689641496991;
-        Mon, 17 Jul 2023 17:51:36 -0700 (PDT)
-Received: from [192.168.0.104] ([103.131.18.64])
-        by smtp.gmail.com with ESMTPSA id j7-20020a62e907000000b00673e652985esm53912pfh.44.2023.07.17.17.51.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Jul 2023 17:51:36 -0700 (PDT)
-Message-ID: <e79edb0f-de89-5041-186f-987d30e0187c@gmail.com>
-Date: Tue, 18 Jul 2023 07:51:24 +0700
+        d=1e100.net; s=20221208; t=1689651130; x=1692243130;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qsCgfp2s3CRfk6nv+x0Mk0r1Oznh1MYu4hj6PzpztDM=;
+        b=JxvImv8yj6lPnZ3Jl+1FAyt+VKp3IR9IrC8YP1/+ZTEHd2XsfwDOS8uUUIGzbMgyY0
+         QTt4YlSYXHdQ9PIGT2Tqo3JXiaQ75AFAcnXbVuOCA3Hu8KktyL82kkGGQTkrsbv6JFm+
+         7Xpzabg29K8tDaxbjKNxe5z7IUbA1yH3ux9uZZlKB7E6VcUR/hFGYFMQTBYerhLClBdM
+         MGR+K9vPi5fcZuiJK0K+M7+0KLnVug5JYQD0ovat1sjDI7A5yIi4InZeuzSCPaDCmNX+
+         9MGXp4qZmKKpFXUxbi3OVvLUNK6Q1Boimlx55fmGP6aZheq/Jjf/Qv1F1E6woMM//X7J
+         wmkA==
+X-Gm-Message-State: ABy/qLZKfor41DETbs8mvlRgx8IvBO0ifyZzgtsZKDfazny/RKBl7pAf
+	suzw2AqBd/tSO4CyaCMhuSw=
+X-Google-Smtp-Source: APBJJlFAwDoW4yADO2Pjd04stMQf1iujcnSKviiNjIZ3895AEfrruDatfQyAiKeDtImLL7XYcqiTtg==
+X-Received: by 2002:a05:6a21:7883:b0:133:215e:746d with SMTP id bf3-20020a056a21788300b00133215e746dmr17816681pzc.41.1689651130509;
+        Mon, 17 Jul 2023 20:32:10 -0700 (PDT)
+Received: from debian.me ([103.131.18.64])
+        by smtp.gmail.com with ESMTPSA id j14-20020a170902758e00b001b9be2e2b3esm584344pll.277.2023.07.17.20.32.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Jul 2023 20:32:10 -0700 (PDT)
+Received: by debian.me (Postfix, from userid 1000)
+	id 5ED5E834F19C; Tue, 18 Jul 2023 10:32:05 +0700 (WIB)
+Date: Tue, 18 Jul 2023 10:32:05 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Randy Dunlap <rdunlap@infradead.org>,
+	Stephen Rothwell <sfr@canb.auug.org.au>,
+	Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Helge Deller <deller@gmx.de>,
+	Javier Martinez Canillas <javierm@redhat.com>,
+	linux-fbdev@vger.kernel.org,
+	Linux PowerPC <linuxppc-dev@lists.ozlabs.org>,
+	Linux Regressions <regressions@lists.linux.dev>
+Subject: Re: linux-next: Tree for Jul 13 (drivers/video/fbdev/ps3fb.c)
+Message-ID: <ZLYHtVuS7AElXcCb@debian.me>
+References: <20230713123710.5d7d81e4@canb.auug.org.au>
+ <ccc63065-2976-88ef-1211-731330bf2866@infradead.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Content-Language: en-US
-To: Andrzej Kacprowski <andrzej.kacprowski@linux.intel.com>,
- Krystian Pradzynski <krystian.pradzynski@linux.intel.com>,
- Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>,
- Jacek Lawrynowicz <jacek.lawrynowicz@linux.intel.com>,
- Oded Gabbay <ogabbay@kernel.org>,
- Jesse Brandeburg <jesse.brandeburg@intel.com>,
- Tony Nguyen <anthony.l.nguyen@intel.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>,
- hq.dev+kernel@msdfc.xyz
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>,
- Linux DRI Development <dri-devel@lists.freedesktop.org>,
- Linux Networking <netdev@vger.kernel.org>,
- Linux Intel Ethernet Drivers <intel-wired-lan@lists.osuosl.org>
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-Subject: Fwd: Unexplainable packet drop starting at v6.4
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <ccc63065-2976-88ef-1211-731330bf2866@infradead.org>
 
-Hi,
+On Thu, Jul 13, 2023 at 09:11:10AM -0700, Randy Dunlap wrote:
+> 
+> 
+> On 7/12/23 19:37, Stephen Rothwell wrote:
+> > Hi all,
+> > 
+> > Changes since 20230712:
+> > 
+> 
+> on ppc64:
+> 
+> In file included from ../include/linux/device.h:15,
+>                  from ../arch/powerpc/include/asm/io.h:22,
+>                  from ../include/linux/io.h:13,
+>                  from ../include/linux/irq.h:20,
+>                  from ../arch/powerpc/include/asm/hardirq.h:6,
+>                  from ../include/linux/hardirq.h:11,
+>                  from ../include/linux/interrupt.h:11,
+>                  from ../drivers/video/fbdev/ps3fb.c:25:
+> ../drivers/video/fbdev/ps3fb.c: In function 'ps3fb_probe':
+> ../drivers/video/fbdev/ps3fb.c:1172:40: error: 'struct fb_info' has no member named 'dev'
+>  1172 |                  dev_driver_string(info->dev), dev_name(info->dev),
+>       |                                        ^~
+> ../include/linux/dev_printk.h:110:37: note: in definition of macro 'dev_printk_index_wrap'
+>   110 |                 _p_func(dev, fmt, ##__VA_ARGS__);                       \
+>       |                                     ^~~~~~~~~~~
+> ../drivers/video/fbdev/ps3fb.c:1171:9: note: in expansion of macro 'dev_info'
+>  1171 |         dev_info(info->device, "%s %s, using %u KiB of video memory\n",
+>       |         ^~~~~~~~
+> ../drivers/video/fbdev/ps3fb.c:1172:61: error: 'struct fb_info' has no member named 'dev'
+>  1172 |                  dev_driver_string(info->dev), dev_name(info->dev),
+>       |                                                             ^~
+> ../include/linux/dev_printk.h:110:37: note: in definition of macro 'dev_printk_index_wrap'
+>   110 |                 _p_func(dev, fmt, ##__VA_ARGS__);                       \
+>       |                                     ^~~~~~~~~~~
+> ../drivers/video/fbdev/ps3fb.c:1171:9: note: in expansion of macro 'dev_info'
+>  1171 |         dev_info(info->device, "%s %s, using %u KiB of video memory\n",
+>       |         ^~~~~~~~
+> 
+> 
 
-I notice a regression report on Bugzilla [1]. Quoting from it:
+Hmm, there is no response from Thomas yet. I guess we should go with
+reverting bdb616479eff419, right? Regardless, I'm adding this build regression
+to regzbot so that parties involved are aware of it:
 
-> Hi,
-> 
-> After I updated to 6.4 through Archlinux kernel update, suddenly I noticed random packet losses on my routers like nodes. I have these networking relevant config on my nodes
-> 
-> 1. Using archlinux
-> 2. Network config through systemd-networkd
-> 3. Using bird2 for BGP routing, but not relevant to this bug.
-> 4. Using nftables for traffic control, but seems not relevant to this bug. 
-> 5. Not using fail2ban like dymanic filtering tools, at least at L3/L4 level
-> 
-> After I ruled out systemd-networkd, nftables related issues. I tracked down issues to kernel.
-> 
-> Here's the tcpdump I'm seeing on one side of my node ""
-> 
-> ```
-> sudo tcpdump -i fios_wan port 38851
-> tcpdump: verbose output suppressed, use -v[v]... for full protocol decode
-> listening on fios_wan, link-type EN10MB (Ethernet), snapshot length 262144 bytes
-> 10:33:06.073236 IP [BOS1_NODE].38851 > [REDACTED_PUBLIC_IPv4_1].38851: UDP, length 148
-> 10:33:11.406607 IP [BOS1_NODE].38851 > [REDACTED_PUBLIC_IPv4_1].38851: UDP, length 148
-> 10:33:16.739969 IP [BOS1_NODE].38851 > [REDACTED_PUBLIC_IPv4_1].38851: UDP, length 148
-> 10:33:21.859856 IP [BOS1_NODE].38851 > [REDACTED_PUBLIC_IPv4_1].38851: UDP, length 148
-> 10:33:27.193176 IP [BOS1_NODE].38851 > [REDACTED_PUBLIC_IPv4_1].38851: UDP, length 148
-> 5 packets captured
-> 5 packets received by filter
-> 0 packets dropped by kernel
-> ```
-> 
-> But on the other side "[REDACTED_PUBLIC_IPv4_1]", tcpdump is replying packets in this wireguard stream. So packet is lost somewhere in the link.
-> 
-> From the otherside, I can do "mtr" to "[BOS1_NODE]"'s public IP and found the moment the link got lost is right at "[BOS1_NODE]", that means "[BOS1_NODE]"'s networking stack completely drop the inbound packets from specific ip addresses.
-> 
-> Some more digging
-> 
-> 1. This situation began after booting in different delays. Sometimes can trigger after 30 seconds after booting, and sometimes will be after 18 hours or more.
-> 2. It can envolve into worse case that when I do "ip neigh show", the ipv4 ARP table and ipv6 neighbor discovery start to appear as "invalid", meaning the internet is completely loss.
-> 3. When this happened to wan facing interface, it seems OK with lan facing interfaces. WAN interface was using Intel X710-T4L using i40e and lan side was using virtio
-> 4. I tried to bisect in between 6.3 and 6.4, and the first bad commit it reports was "a3efabee5878b8d7b1863debb78cb7129d07a346". But this is not relevant to networking at all, maybe it's the wrong commit to look at. At the meantime, because I haven't found a reproducible way of 100% trigger the issue, it may be the case during bisect some "good" commits are actually bad. 
-> 5. I also tried to look at "dmesg", nothing interesting pop up. But I'll make it available upon request.
-> 
-> This is my first bug reports. Sorry for any confusion it may lead to and thanks for reading.
-
-See Bugzilla for the full thread.
-
-Thorsten: The reporter had a bad bisect (some bad commits were marked as good
-instead), hence SoB chain for culprit (unrelated) ipvu commit is in To:
-list. I also asked the reporter (also in To:) to provide dmesg and request
-rerunning bisection, but he doesn't currently have a reliable reproducer.
-Is it the best I can do?
-
-Anyway, I'm adding this regression to be tracked in regzbot:
-
-#regzbot introduced: a3efabee5878b8 https://bugzilla.kernel.org/show_bug.cgi?id=217678
-#regzbot title: packet drop on Intel X710-T4L due to ipvu boot fix
+#regzbot ^introduced: bdb616479eff419
+#regzbot title: build regression in PS3 framebuffer
 
 Thanks.
-
-[1]: https://bugzilla.kernel.org/show_bug.cgi?id=217678
 
 -- 
 An old man doll... just what I always wanted! - Clara
