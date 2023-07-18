@@ -1,93 +1,74 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F6AAC8D8
-	for <regressions@lists.linux.dev>; Tue, 18 Jul 2023 10:07:07 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qLhbX-0002Vt-7x; Tue, 18 Jul 2023 12:06:51 +0200
-Message-ID: <f5e6258b-ba76-001b-4942-588f4cbb0aa7@leemhuis.info>
-Date: Tue, 18 Jul 2023 12:06:50 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79243A945
+	for <regressions@lists.linux.dev>; Tue, 18 Jul 2023 11:07:57 +0000 (UTC)
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2b701e41cd3so85553801fa.3
+        for <regressions@lists.linux.dev>; Tue, 18 Jul 2023 04:07:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1689678475; x=1692270475;
+        h=content-transfer-encoding:content-language:cc:to:subject:from
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bhj3PiKMKBo2rj4GQa0g6ssdckgN6WqVltudoi3R9Dw=;
+        b=GWQ34gLkK245it+cwSvu3Ac8nmFBe2xgCQaHMcS8RiAuRql1eerVgVcGo6a4vYwA4e
+         +ZNXy8BgEU9hlTqinfpGscLovv5L0IEzg8hvMqh3Gix4GveJZzotAQFIZ/f+Z5F/SB6D
+         7qdvCYd3F5ZMTJSxFP5rB8X3y/debR7h0SzqfIDRUp/fI8owYhSJUlKiPs33/kNXK8Nb
+         MLc4xlaYyhMvkofWSDFA/EayKCwFmwGH/XoMDOiBGfbmC+crmgVGnYORes6b6hDMlxHc
+         lGQswj3h9Aiz2qqiKghC3thNMQ1rkHL26Qh5R1TQxyH0dyfr/mps+8+OFUlPmbDBkXef
+         X+NQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689678475; x=1692270475;
+        h=content-transfer-encoding:content-language:cc:to:subject:from
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=bhj3PiKMKBo2rj4GQa0g6ssdckgN6WqVltudoi3R9Dw=;
+        b=e7lyV+HXiQb2sgj/2oP5rkp3NK19zKulL5XGozal+UGSIQ0BvPUxAkf/sbkWa7nLyt
+         dgw8E/rM74YS+DLyawxnDuo2eNucGuvIoM/Zko1OOA6NaDEJMc3vWwxNrd1ebldTfb6p
+         8DB7/SnlVOjLg3kcQbN2CC+0KpLOkq7TtBXZQ82rKu1pxVCLEZ1M8Kp5pg2U5+/FKrzR
+         wNIBMFbaSldj4Wrt2mjoFa3i0O8OzGXd2MhZHJQvCA04biQLDtliv00OrkJz4YK29XBM
+         RWekDYs7uP4msMOJItwEpz8T+fbetZOJwR12kqdXJS+uR2wBr68eUbKny8Jr1k49L468
+         Prpw==
+X-Gm-Message-State: ABy/qLbPTFAzHGW/7btVAlMEigsDlgGbOjBw8jdwifQU4oR+CgohV80s
+	RPZhjQxT51ffIcUA8AILL9g=
+X-Google-Smtp-Source: APBJJlHSqwCqJQ7z2SS7mSIwUB16zJ2uJQ7aX7yFGLbJCoUQQB21Vh2OhQEO/byaSPyN3TUsuDDWdw==
+X-Received: by 2002:a2e:b019:0:b0:2b9:20fe:4bcc with SMTP id y25-20020a2eb019000000b002b920fe4bccmr6508949ljk.21.1689678474893;
+        Tue, 18 Jul 2023 04:07:54 -0700 (PDT)
+Received: from ?IPV6:2a01:c22:7315:d100:15fd:b3ca:86:923? (dynamic-2a01-0c22-7315-d100-15fd-b3ca-0086-0923.c22.pool.telefonica.de. [2a01:c22:7315:d100:15fd:b3ca:86:923])
+        by smtp.googlemail.com with ESMTPSA id h5-20020a50ed85000000b00521a7864e13sm964956edr.90.2023.07.18.04.07.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 Jul 2023 04:07:54 -0700 (PDT)
+Message-ID: <ddadceae-19c9-81b8-47b5-a4ff85e2563a@gmail.com>
+Date: Tue, 18 Jul 2023 13:07:53 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
  Thunderbird/102.13.0
-Subject: Re: linux-next: Tree for Jul 13 (drivers/video/fbdev/ps3fb.c)
-Content-Language: en-US, de-DE
-To: Bagas Sanjaya <bagasdotme@gmail.com>, Randy Dunlap
- <rdunlap@infradead.org>, Thomas Zimmermann <tzimmermann@suse.de>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Helge Deller <deller@gmx.de>, Javier Martinez Canillas <javierm@redhat.com>,
- linux-fbdev@vger.kernel.org, Linux PowerPC <linuxppc-dev@lists.ozlabs.org>,
- Linux Regressions <regressions@lists.linux.dev>,
- Stephen Rothwell <sfr@canb.auug.org.au>,
- Linux Next Mailing List <linux-next@vger.kernel.org>
-References: <20230713123710.5d7d81e4@canb.auug.org.au>
- <ccc63065-2976-88ef-1211-731330bf2866@infradead.org>
- <ZLYHtVuS7AElXcCb@debian.me>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <ZLYHtVuS7AElXcCb@debian.me>
+From: Heiner Kallweit <hkallweit1@gmail.com>
+Subject: [PATCH net 0/2] r8169: revert two changes that caused regressions
+To: Jakub Kicinski <kuba@kernel.org>, David Miller <davem@davemloft.net>,
+ Realtek linux nic maintainers <nic_swsd@realtek.com>,
+ Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>
+Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1689674828;51d8169f;
-X-HE-SMSGID: 1qLhbX-0002Vt-7x
 
-On 18.07.23 05:32, Bagas Sanjaya wrote:
-> On Thu, Jul 13, 2023 at 09:11:10AM -0700, Randy Dunlap wrote:
->> On 7/12/23 19:37, Stephen Rothwell wrote:
->>> Changes since 20230712:
->>
->> on ppc64:
->>
->> In file included from ../include/linux/device.h:15,
->>                  from ../arch/powerpc/include/asm/io.h:22,
->>                  from ../include/linux/io.h:13,
->>                  from ../include/linux/irq.h:20,
->>                  from ../arch/powerpc/include/asm/hardirq.h:6,
->>                  from ../include/linux/hardirq.h:11,
->>                  from ../include/linux/interrupt.h:11,
->>                  from ../drivers/video/fbdev/ps3fb.c:25:
->> ../drivers/video/fbdev/ps3fb.c: In function 'ps3fb_probe':
->> ../drivers/video/fbdev/ps3fb.c:1172:40: error: 'struct fb_info' has no member named 'dev'
->>  1172 |                  dev_driver_string(info->dev), dev_name(info->dev),
->>       |                                        ^~
->> ../include/linux/dev_printk.h:110:37: note: in definition of macro 'dev_printk_index_wrap'
->>   110 |                 _p_func(dev, fmt, ##__VA_ARGS__);                       \
->>       |                                     ^~~~~~~~~~~
->> ../drivers/video/fbdev/ps3fb.c:1171:9: note: in expansion of macro 'dev_info'
->>  1171 |         dev_info(info->device, "%s %s, using %u KiB of video memory\n",
->>       |         ^~~~~~~~
->> ../drivers/video/fbdev/ps3fb.c:1172:61: error: 'struct fb_info' has no member named 'dev'
->>  1172 |                  dev_driver_string(info->dev), dev_name(info->dev),
->>       |                                                             ^~
->> ../include/linux/dev_printk.h:110:37: note: in definition of macro 'dev_printk_index_wrap'
->>   110 |                 _p_func(dev, fmt, ##__VA_ARGS__);                       \
->>       |                                     ^~~~~~~~~~~
->> ../drivers/video/fbdev/ps3fb.c:1171:9: note: in expansion of macro 'dev_info'
->>  1171 |         dev_info(info->device, "%s %s, using %u KiB of video memory\n",
->>       |         ^~~~~~~~
-> 
-> Hmm, there is no response from Thomas yet. I guess we should go with
-> reverting bdb616479eff419, right?
+This reverts two changes that caused regressions.
 
-I'm missing something here:
+Heiner Kallweit (2):
+  r8169: revert 2ab19de62d67 ("r8169: remove ASPM restrictions now that
+    ASPM is disabled during NAPI poll")
+  Revert "r8169: disable ASPM during NAPI poll"
 
-* What makes you think this is caused by bdb616479eff419? I didn't see
-anything in the thread that claims this, but I might be missing something
-* related: if I understand Randy right, this is only happening in -next;
-so why is bdb616479eff419 the culprit, which is also in mainline since
-End of June?
+ drivers/net/ethernet/realtek/r8169_main.c | 38 ++++++++++++++++-------
+ 1 file changed, 27 insertions(+), 11 deletions(-)
 
-And asking for a revert already is a bit jumping the gun; sure, it would
-be good to get this fixed, but remember: developers have a lot on their
-plate and thus sometimes are forced to set priorities; they also
-sometimes go on vacation or are afk for other reasons; and sometimes
-they just miss a mail or two. These are just a few reasons why there
-might be good reasons why Thomas didn't look into this yet, hence please
-first ask really kindly before asking for a revert.
+-- 
+2.41.0
 
-Ciao, Thorsten
