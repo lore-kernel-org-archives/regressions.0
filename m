@@ -1,70 +1,137 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12462253CA
-	for <regressions@lists.linux.dev>; Mon, 17 Jul 2023 15:36:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28395C433C8;
-	Mon, 17 Jul 2023 15:36:25 +0000 (UTC)
-Date: Mon, 17 Jul 2023 11:36:23 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: <kkabe@vega.pgw.jp>
-Cc: regressions@lists.linux.dev, bagasdotme@gmail.com,
- alexander.deucher@amd.com, christian.koenig@amd.com, Xinhui.Pan@amd.com,
- tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, hpa@zytor.com, linux-kernel@vger.kernel.org,
- amd-gfx@lists.freedesktop.org
-Subject: Re: radeon.ko/i586: BUG: kernel NULL pointer dereference,
- address:00000004
-Message-ID: <20230717113623.41878887@gandalf.local.home>
-In-Reply-To: <230714143404.M0123570@vega.pgw.jp>
-References: <55a3bbb1-5b3c-f454-b529-8ee9944cc67c@leemhuis.info>
-	<230714143404.M0123570@vega.pgw.jp>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44C2FEDE
+	for <regressions@lists.linux.dev>; Tue, 18 Jul 2023 00:51:38 +0000 (UTC)
+Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-3a38953c928so3632294b6e.1
+        for <regressions@lists.linux.dev>; Mon, 17 Jul 2023 17:51:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1689641497; x=1692233497;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lz+8CarDNbfuh8OfKKezu1WG0K0jECzwZysn86ImSis=;
+        b=EZApaMs4gPJVrUIaeSPlMHa2Ubxx+ljVSgRceCanZxrxGNNKcrHVRdwxqf+J/i93eS
+         bCVCmkZGoBTZIrpNuD7CYzc3Vd6qp+GujdSJoHFaZnudn11SQ22BfE3l/Rgd9in/Dlgq
+         OxKFNtL93tIqLR/181oyic7HVL4EIEmsi6FsT2n1n8790US2gL6QHJke2g5bj7niI1YT
+         47JlDZF/+b7YI7ApdN9OgTGyXQvEfGFHlRZ79pUoaS5fSUOdlnYK3KZN6KlM4PNB5G4D
+         pZHZKTjVpoljidyzHjHOC6/wblYRuPi6qW6/WvfnrnEAP5HeSi57xsmv8NeKpRv+0OqW
+         WVlw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689641497; x=1692233497;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=lz+8CarDNbfuh8OfKKezu1WG0K0jECzwZysn86ImSis=;
+        b=cSp841Z5G7L9AOQ30h8LrE/AIiUgv7tzfmZIVU2KDr2KH98NREQJ8dmK4naLBWuRGl
+         xXCymzBWIKzJfcj91Q7z+w1gDqDjk0wV+w3kDVp9aQHw8Z9Dd9Uu0u+Mp4qKaH8dbhfr
+         nFWhr0baP+wl6zY6vUb10BObSq395y6CbSkxLDjZeYZwMVMiQoK2U6kInkOn6jkqxyCM
+         8Gnm6CtismQFENHfLI8lHU8hDLZeQTt5LVKkcvB5kBkvXtXXp90TFsSmcBcW15Gh10EL
+         M1Gda18bNLrSm2v5rk0GP51lQDotO2k1Y/sMQNmeBm1MX7IAgU8Da0RUFNa/olnGr1BV
+         5A5A==
+X-Gm-Message-State: ABy/qLaIhBw5zyTs/Xs0NE8lQbBJf97tpzNU2oSifqJznRc43HTqW0vn
+	MriiAfei2vCX1/Le+TRuW10=
+X-Google-Smtp-Source: APBJJlGeBHqkRxL+zWXusQBpUdihf6v3b11hnUADferAFcbDtzk1JOfTMdtHdDSOktc+ANmDRfwJnQ==
+X-Received: by 2002:a05:6358:6f97:b0:133:a8e:6feb with SMTP id s23-20020a0563586f9700b001330a8e6febmr9453004rwn.12.1689641496991;
+        Mon, 17 Jul 2023 17:51:36 -0700 (PDT)
+Received: from [192.168.0.104] ([103.131.18.64])
+        by smtp.gmail.com with ESMTPSA id j7-20020a62e907000000b00673e652985esm53912pfh.44.2023.07.17.17.51.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 17 Jul 2023 17:51:36 -0700 (PDT)
+Message-ID: <e79edb0f-de89-5041-186f-987d30e0187c@gmail.com>
+Date: Tue, 18 Jul 2023 07:51:24 +0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Content-Language: en-US
+To: Andrzej Kacprowski <andrzej.kacprowski@linux.intel.com>,
+ Krystian Pradzynski <krystian.pradzynski@linux.intel.com>,
+ Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>,
+ Jacek Lawrynowicz <jacek.lawrynowicz@linux.intel.com>,
+ Oded Gabbay <ogabbay@kernel.org>,
+ Jesse Brandeburg <jesse.brandeburg@intel.com>,
+ Tony Nguyen <anthony.l.nguyen@intel.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>,
+ hq.dev+kernel@msdfc.xyz
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Linux DRI Development <dri-devel@lists.freedesktop.org>,
+ Linux Networking <netdev@vger.kernel.org>,
+ Linux Intel Ethernet Drivers <intel-wired-lan@lists.osuosl.org>
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+Subject: Fwd: Unexplainable packet drop starting at v6.4
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On Fri, 14 Jul 2023 14:34:04 +0900
-<kkabe@vega.pgw.jp> wrote:
+Hi,
 
-> Patch in
-> https://bugzilla.kernel.org/show_bug.cgi?id=217669#c4
-> fixed the problem in freedesktop.org kernel 5.18.0-rc2 .
-> This may explain that in kernel.org tree, the said commit is in kernel-5.19.
+I notice a regression report on Bugzilla [1]. Quoting from it:
 
-You mean the patch that adds:
+> Hi,
+> 
+> After I updated to 6.4 through Archlinux kernel update, suddenly I noticed random packet losses on my routers like nodes. I have these networking relevant config on my nodes
+> 
+> 1. Using archlinux
+> 2. Network config through systemd-networkd
+> 3. Using bird2 for BGP routing, but not relevant to this bug.
+> 4. Using nftables for traffic control, but seems not relevant to this bug. 
+> 5. Not using fail2ban like dymanic filtering tools, at least at L3/L4 level
+> 
+> After I ruled out systemd-networkd, nftables related issues. I tracked down issues to kernel.
+> 
+> Here's the tcpdump I'm seeing on one side of my node ""
+> 
+> ```
+> sudo tcpdump -i fios_wan port 38851
+> tcpdump: verbose output suppressed, use -v[v]... for full protocol decode
+> listening on fios_wan, link-type EN10MB (Ethernet), snapshot length 262144 bytes
+> 10:33:06.073236 IP [BOS1_NODE].38851 > [REDACTED_PUBLIC_IPv4_1].38851: UDP, length 148
+> 10:33:11.406607 IP [BOS1_NODE].38851 > [REDACTED_PUBLIC_IPv4_1].38851: UDP, length 148
+> 10:33:16.739969 IP [BOS1_NODE].38851 > [REDACTED_PUBLIC_IPv4_1].38851: UDP, length 148
+> 10:33:21.859856 IP [BOS1_NODE].38851 > [REDACTED_PUBLIC_IPv4_1].38851: UDP, length 148
+> 10:33:27.193176 IP [BOS1_NODE].38851 > [REDACTED_PUBLIC_IPv4_1].38851: UDP, length 148
+> 5 packets captured
+> 5 packets received by filter
+> 0 packets dropped by kernel
+> ```
+> 
+> But on the other side "[REDACTED_PUBLIC_IPv4_1]", tcpdump is replying packets in this wireguard stream. So packet is lost somewhere in the link.
+> 
+> From the otherside, I can do "mtr" to "[BOS1_NODE]"'s public IP and found the moment the link got lost is right at "[BOS1_NODE]", that means "[BOS1_NODE]"'s networking stack completely drop the inbound packets from specific ip addresses.
+> 
+> Some more digging
+> 
+> 1. This situation began after booting in different delays. Sometimes can trigger after 30 seconds after booting, and sometimes will be after 18 hours or more.
+> 2. It can envolve into worse case that when I do "ip neigh show", the ipv4 ARP table and ipv6 neighbor discovery start to appear as "invalid", meaning the internet is completely loss.
+> 3. When this happened to wan facing interface, it seems OK with lan facing interfaces. WAN interface was using Intel X710-T4L using i40e and lan side was using virtio
+> 4. I tried to bisect in between 6.3 and 6.4, and the first bad commit it reports was "a3efabee5878b8d7b1863debb78cb7129d07a346". But this is not relevant to networking at all, maybe it's the wrong commit to look at. At the meantime, because I haven't found a reproducible way of 100% trigger the issue, it may be the case during bisect some "good" commits are actually bad. 
+> 5. I also tried to look at "dmesg", nothing interesting pop up. But I'll make it available upon request.
+> 
+> This is my first bug reports. Sorry for any confusion it may lead to and thanks for reading.
 
-	#if defined(FTRACE_MCOUNT_MAX_OFFSET) && (FTRACE_MCOUNT_MAX_OFFSET)
+See Bugzilla for the full thread.
 
-?
+Thorsten: The reporter had a bad bisect (some bad commits were marked as good
+instead), hence SoB chain for culprit (unrelated) ipvu commit is in To:
+list. I also asked the reporter (also in To:) to provide dmesg and request
+rerunning bisection, but he doesn't currently have a reliable reproducer.
+Is it the best I can do?
 
-Nothing should be setting FTRACE_MCOUNT_MAX_OFFSET to anything but non
-zero. But doing a grep, I now see:
+Anyway, I'm adding this regression to be tracked in regzbot:
 
-# define FTRACE_MCOUNT_MAX_OFFSET ENDBR_INSN_SIZE
+#regzbot introduced: a3efabee5878b8 https://bugzilla.kernel.org/show_bug.cgi?id=217678
+#regzbot title: packet drop on Intel X710-T4L due to ipvu boot fix
 
-Where it breaks that assumption if ENDBR_INSN_SIZE == 0 :-p
- (and that's my code!)
+Thanks.
 
-OK, does this fix it? (I haven't tested nor compiled this)
+[1]: https://bugzilla.kernel.org/show_bug.cgi?id=217678
 
--- Steve
-
-diff --git a/arch/x86/include/asm/ftrace.h b/arch/x86/include/asm/ftrace.h
-index 897cf02c20b1..801f4414da3e 100644
---- a/arch/x86/include/asm/ftrace.h
-+++ b/arch/x86/include/asm/ftrace.h
-@@ -13,7 +13,7 @@
- #ifdef CONFIG_HAVE_FENTRY
- # include <asm/ibt.h>
- /* Add offset for endbr64 if IBT enabled */
--# define FTRACE_MCOUNT_MAX_OFFSET	ENDBR_INSN_SIZE
-+# define FTRACE_MCOUNT_MAX_OFFSET	(ENDBR_INSN_SIZE + MCOUNT_INSN_SIZE)
- #endif
- 
- #ifdef CONFIG_DYNAMIC_FTRACE
+-- 
+An old man doll... just what I always wanted! - Clara
