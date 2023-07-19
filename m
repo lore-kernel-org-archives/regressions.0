@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31F8A14266
-	for <regressions@lists.linux.dev>; Wed, 19 Jul 2023 13:01:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CE1A125AD;
+	Wed, 19 Jul 2023 14:17:52 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qM6nT-00079S-1s; Wed, 19 Jul 2023 15:00:51 +0200
-Message-ID: <6bcdeee4-5348-c08e-701e-47bc138be74f@leemhuis.info>
-Date: Wed, 19 Jul 2023 15:00:50 +0200
+	id 1qM7zx-0001xr-1o; Wed, 19 Jul 2023 16:17:49 +0200
+Message-ID: <2f873530-9c72-af23-0290-a2100df9ba56@leemhuis.info>
+Date: Wed, 19 Jul 2023 16:17:46 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,71 +16,69 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.13.0
-Subject: Re: Fwd: Unexplainable packet drop starting at v6.4
+Subject: Re: [PATCH 0/3] fs/9p: fix mmap regression
+To: Eric Van Hensbergen <ericvh@kernel.org>,
+ Latchesar Ionkov <lucho@ionkov.net>,
+ Dominique Martinet <asmadeus@codewreck.org>,
+ Christian Schoenebeck <linux_oss@crudebyte.com>
+Cc: v9fs@lists.linux.dev, linux-kernel@vger.kernel.org,
+ kernel@pengutronix.de, Robert Schwebel <r.schwebel@pengutronix.de>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <20230716-fixes-overly-restrictive-mmap-v1-0-0683b283b932@kernel.org>
 Content-Language: en-US, de-DE
-To: Bagas Sanjaya <bagasdotme@gmail.com>,
- Andrzej Kacprowski <andrzej.kacprowski@linux.intel.com>,
- Krystian Pradzynski <krystian.pradzynski@linux.intel.com>,
- Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>,
- Jacek Lawrynowicz <jacek.lawrynowicz@linux.intel.com>,
- Oded Gabbay <ogabbay@kernel.org>,
- Jesse Brandeburg <jesse.brandeburg@intel.com>,
- Tony Nguyen <anthony.l.nguyen@intel.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- hq.dev+kernel@msdfc.xyz
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>,
- Linux DRI Development <dri-devel@lists.freedesktop.org>,
- Linux Networking <netdev@vger.kernel.org>,
- Linux Intel Ethernet Drivers <intel-wired-lan@lists.osuosl.org>
-References: <e79edb0f-de89-5041-186f-987d30e0187c@gmail.com>
- <444d8158-cc58-761d-a878-91e5d4d28b71@leemhuis.info>
- <4759e7d4-5a8c-8acb-1775-e049b9b06cc1@gmail.com>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <4759e7d4-5a8c-8acb-1775-e049b9b06cc1@gmail.com>
+In-Reply-To: <20230716-fixes-overly-restrictive-mmap-v1-0-0683b283b932@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1689771664;8038cc90;
-X-HE-SMSGID: 1qM6nT-00079S-1s
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1689776272;3309b74c;
+X-HE-SMSGID: 1qM7zx-0001xr-1o
 
-On 19.07.23 14:30, Bagas Sanjaya wrote:
-> On 7/19/23 18:49, Thorsten Leemhuis wrote:
->> On 18.07.23 02:51, Bagas Sanjaya wrote:
->>> I notice a regression report on Bugzilla [1]. Quoting from it:
->>>
->>>> After I updated to 6.4 through Archlinux kernel update, suddenly I noticed random packet losses on my routers like nodes. I have these networking relevant config on my nodes
->>>>
->>>> 1. Using archlinux
->>>> 2. Network config through systemd-networkd
->>>> 3. Using bird2 for BGP routing, but not relevant to this bug.
->>>> 4. Using nftables for traffic control, but seems not relevant to this bug. 
->>>> 5. Not using fail2ban like dymanic filtering tools, at least at L3/L4 level
->>>>
->>>> After I ruled out systemd-networkd, nftables related issues. I tracked down issues to kernel.
->>> [...]
->>> See Bugzilla for the full thread.
->>>
->>> Thorsten: The reporter had a bad bisect (some bad commits were marked as good
->>> instead), hence SoB chain for culprit (unrelated) ipvu commit is in To:
->>> list. I also asked the reporter (also in To:) to provide dmesg and request
->>> rerunning bisection, but he doesn't currently have a reliable reproducer.
->>> Is it the best I can do?
->>
->> When a bisection apparently went sideways it's best to not bother the
->> culprit's developers with it, they most likely will just be annoyed by
->> it (and then they might become annoyed by regression tracking, which we
->> need to avoid).
+On 17.07.23 18:28, Eric Van Hensbergen wrote:
+> This series attempts to fix a reported exception with mmap
+> on newer kernels. 
+> 
+> -- original regression report --
+> 
+> TL;DR: mmap() seems to be broken on 9pfs on Linux 6.4. setting
+> "rootflags=ignoreqv" fixes it as well, but it feels like a regression.
 >
-> I mean don't Cc: the culprit author in that case?
+> [...]
+> 
+> I could track down the breakage to
+> 
+>   1543b4c5071c54d76aad7a7a26a6e43082269b0c
+> 
+> My test setup has, in addition to the patch above, the following patches also
+> reverted on top of a vanilla 6.4 kernel:
+> 
+>   4eb3117888a923f6b9b1ad2dd093641c49a63ae5
+>   21e26d5e54ab7cfe6b488fd27d4d70956d07e03b
+> 
+> as 1543b cannot be reverted without those; however, the effect only goes away
+> when I also revert 1543b. The kernel has no other patches applied, only these
+> three reverts.
+> 
+> -- end bug report --
+> 
+> Reported-by: Robert Schwebel <r.schwebel@pengutronix.de>
 
-Yes. If a bisection lands on a commit that seems like a pretty unlikely
-culprit for the problem at hand (which even the reporter admitted in the
-report), then ask the reporter to verify the result (e.g. ideally by
-trying to revert it ontop of latest mainline; checking the parent commit
-again sometimes can do the trick as well)  before involving the people
-that authored and handled said change. Otherwise you just raise a false
-alarm and then people will be annoyed by our work or if we are unlucky
-start to ignore us -- and we need to prevent that.
+This tag afaics should be in some or all of the commits -- together with
+a Link: or Closes: tag to the report
+(https://lore.kernel.org/v9fs/ZK25XZ%2BGpR3KHIB%2F@pengutronix.de/ ).
 
-Ciao, Thorsten
+'Fixes:' tags would seem appropriate here as well. And to get this fixed
+in Linux 6.4.y. a "Cc: <stable..." would be great as well.
+
+See Documentation/handling-regressions.rst (
+https://docs.kernel.org/process/handling-regressions.html ) and the
+links to Documentation/process/submitting-patches.rst or
+Documentation/process/5.Posting.rst for details.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
+
+#regzbot ^backmonitor:
+https://lore.kernel.org/v9fs/ZK25XZ%2BGpR3KHIB%2F@pengutronix.de/
