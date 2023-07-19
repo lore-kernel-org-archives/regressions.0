@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CE1A125AD;
-	Wed, 19 Jul 2023 14:17:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4126C11C93
+	for <regressions@lists.linux.dev>; Wed, 19 Jul 2023 16:19:08 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qM7zx-0001xr-1o; Wed, 19 Jul 2023 16:17:49 +0200
-Message-ID: <2f873530-9c72-af23-0290-a2100df9ba56@leemhuis.info>
-Date: Wed, 19 Jul 2023 16:17:46 +0200
+	id 1qM9tK-0006rN-P5; Wed, 19 Jul 2023 18:19:06 +0200
+Message-ID: <03985866-102a-2a58-cd54-f8db3bedfebc@leemhuis.info>
+Date: Wed, 19 Jul 2023 18:19:04 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,69 +16,65 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.13.0
-Subject: Re: [PATCH 0/3] fs/9p: fix mmap regression
-To: Eric Van Hensbergen <ericvh@kernel.org>,
- Latchesar Ionkov <lucho@ionkov.net>,
- Dominique Martinet <asmadeus@codewreck.org>,
- Christian Schoenebeck <linux_oss@crudebyte.com>
-Cc: v9fs@lists.linux.dev, linux-kernel@vger.kernel.org,
- kernel@pengutronix.de, Robert Schwebel <r.schwebel@pengutronix.de>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <20230716-fixes-overly-restrictive-mmap-v1-0-0683b283b932@kernel.org>
+Subject: Re: Kernel Crash Dump (kdump) broken with 6.5
 Content-Language: en-US, de-DE
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <20230716-fixes-overly-restrictive-mmap-v1-0-0683b283b932@kernel.org>
+To: Sachin Sant <sachinp@linux.ibm.com>,
+ linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+ Nicholas Piggin <npiggin@gmail.com>
+Cc: Sourabh Jain <sourabhjain@linux.ibm.com>,
+ Hari Bathini <hbathini@linux.ibm.com>,
+ Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <AB3C7C5C-86FD-4D86-9330-000CB9728F48@linux.ibm.com>
+From: "Linux regression tracking #adding (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <AB3C7C5C-86FD-4D86-9330-000CB9728F48@linux.ibm.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1689776272;3309b74c;
-X-HE-SMSGID: 1qM7zx-0001xr-1o
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1689783549;43a11470;
+X-HE-SMSGID: 1qM9tK-0006rN-P5
 
-On 17.07.23 18:28, Eric Van Hensbergen wrote:
-> This series attempts to fix a reported exception with mmap
-> on newer kernels. 
-> 
-> -- original regression report --
-> 
-> TL;DR: mmap() seems to be broken on 9pfs on Linux 6.4. setting
-> "rootflags=ignoreqv" fixes it as well, but it feels like a regression.
->
+[CCing the regression list, as it should be in the loop for regressions:
+https://docs.kernel.org/admin-guide/reporting-regressions.html]
+
+[TLDR: I'm adding this report to the list of tracked Linux kernel
+regressions; the text you find below is based on a few templates
+paragraphs you might have encountered already in similar form.
+See link in footer if these mails annoy you.]
+
+On 17.07.23 16:45, Sachin Sant wrote:
+> Kdump seems to be broken with 6.5 for ppc64le.
 > [...]
 > 
-> I could track down the breakage to
+> 6.4 was good. Git bisect points to following patch
 > 
->   1543b4c5071c54d76aad7a7a26a6e43082269b0c
+> commit 606787fed7268feb256957872586370b56af697a
+>     powerpc/64s: Remove support for ELFv1 little endian userspace
 > 
-> My test setup has, in addition to the patch above, the following patches also
-> reverted on top of a vanilla 6.4 kernel:
-> 
->   4eb3117888a923f6b9b1ad2dd093641c49a63ae5
->   21e26d5e54ab7cfe6b488fd27d4d70956d07e03b
-> 
-> as 1543b cannot be reverted without those; however, the effect only goes away
-> when I also revert 1543b. The kernel has no other patches applied, only these
-> three reverts.
-> 
-> -- end bug report --
-> 
-> Reported-by: Robert Schwebel <r.schwebel@pengutronix.de>
+> Reverting this patch allows a successful capture of vmcore.
 
-This tag afaics should be in some or all of the commits -- together with
-a Link: or Closes: tag to the report
-(https://lore.kernel.org/v9fs/ZK25XZ%2BGpR3KHIB%2F@pengutronix.de/ ).
+Thanks for the report. To be sure the issue doesn't fall through the
+cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
+tracking bot:
 
-'Fixes:' tags would seem appropriate here as well. And to get this fixed
-in Linux 6.4.y. a "Cc: <stable..." would be great as well.
+#regzbot ^introduced 606787fed7268feb256957872586370b56af69
+#regzbot title powerpc/64s: Crash Dump (kdump) broken with 6.5
+#regzbot ignore-activity
 
-See Documentation/handling-regressions.rst (
-https://docs.kernel.org/process/handling-regressions.html ) and the
-links to Documentation/process/submitting-patches.rst or
-Documentation/process/5.Posting.rst for details.
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply and tell me -- ideally
+while also telling regzbot about it, as explained by the page listed in
+the footer of this mail.
+
+Developers: When fixing the issue, remember to add 'Link:' tags pointing
+to the report (the parent of this mail). See page linked in footer for
+details.
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
 Everything you wanna know about Linux kernel regression tracking:
 https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
-
-#regzbot ^backmonitor:
-https://lore.kernel.org/v9fs/ZK25XZ%2BGpR3KHIB%2F@pengutronix.de/
+That page also explains what to do if mails like this annoy you.
