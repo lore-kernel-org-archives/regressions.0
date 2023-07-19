@@ -1,147 +1,158 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 588C6101C2
-	for <regressions@lists.linux.dev>; Tue, 18 Jul 2023 16:15:18 +0000 (UTC)
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-66f5faba829so4293257b3a.3
-        for <regressions@lists.linux.dev>; Tue, 18 Jul 2023 09:15:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1689696917; x=1692288917;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Na1N69oGSFxdRjjEQS9A1nDY6v0D8diedcdZ35e5WcM=;
-        b=nMRD3rJUi6U8jz3ZNN70bMZlnHnFExyIvu7PL2U08n7xmhZRD2Uxp3TBUHEKvJ022I
-         D/NCip+bMpmnWyYN8xP1yAXupduOJLvtz/Rl2MRIPpcwJlFurHpiqewlg8Y0pgDZorti
-         jFNtGE0OVDY/DYOa+x7p5AsNCcWDkDlwKiAGygPI3HqOX+2pRknd0W+olS7ugFUTUGqG
-         ARLUmIld50DGpS/GhxTLk4RRzN90t90GmEA+4aU8rIpS08lsWow1AZkqAj3iXUE0HaPU
-         8EALiVUtGerXVNeBwsPPBeY1afnVqipHBuYQEUc3rOcmy7Exbo2m5cbrjJN5FAMX7FhV
-         /xvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689696917; x=1692288917;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Na1N69oGSFxdRjjEQS9A1nDY6v0D8diedcdZ35e5WcM=;
-        b=KVK+Ar17sTyEvn2+7DVvCrJ7XTvLGfbIu/teK+w31jHcuEeA2tDwWfPf+QtXWY/Y29
-         G5oFICRvxtSuzOAjG/l/CMD/0iankWjb9iy90YeofC/grKEIvfv+xOXUC9HhXdBP4yCO
-         3Gxa4AGCBOZ5648aSHTWx30L77NMkSWK926052w68Qai84z9du+MgAJt8FExJkHw1Rtd
-         lwlVbGK0b4gvp8YjkjskhRC77ehIzZAmb61pfOdU7fwDjeg9vSCl1BfPf8/V+8Txg2Vx
-         nsReFRhYJ6B1W49nKJXXvcxrp5RR5jvUiXHJdgYKOj1V+fb71rYd3U6+qkEeJMIWWGIt
-         5eWg==
-X-Gm-Message-State: ABy/qLYk3xyHfit8cMoCzQFfmBbhterJDlPpciF2tAvqf3o1pb1+KN+C
-	iOiX+nlcX+9Fk8iL2l8ltPw=
-X-Google-Smtp-Source: APBJJlGDZgvnQDrQyjvF2Kc+/Eo1CpJR0XBffNwdVBMhPEbrYP8yTMy9F+vHwnEHtA4wvSI4YnvWtA==
-X-Received: by 2002:a17:903:50b:b0:1b7:c166:f197 with SMTP id jn11-20020a170903050b00b001b7c166f197mr2151693plb.29.1689696917397;
-        Tue, 18 Jul 2023 09:15:17 -0700 (PDT)
-Received: from ?IPV6:2601:1c2:980:9ec0::2764? ([2601:1c2:980:9ec0::2764])
-        by smtp.gmail.com with ESMTPSA id iw10-20020a170903044a00b001b9be3b94d3sm2069605plb.140.2023.07.18.09.15.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Jul 2023 09:15:17 -0700 (PDT)
-Message-ID: <d9616a67-23e8-118f-dc0a-7ed4afd4bffd@gmail.com>
-Date: Tue, 18 Jul 2023 09:15:16 -0700
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90007179
+	for <regressions@lists.linux.dev>; Wed, 19 Jul 2023 06:46:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1689749170; x=1721285170;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=3HWSZPLfe63jyruIzncyGrTB6B69Z8qKP4a90FW8cBw=;
+  b=PjBPMqdSK9xUPFQ0WwyeGYZfuzxOfiAKa+9Ra1t83cAVgFetKf1Zapkj
+   KLFd778Pl3MkCRfJXEOfhbeAn+Go4FrJDE4yjtKUbg/K9QT03tTysSte0
+   GWtq1dEhlt6pQiRcYVz5l1lpmqU2akeDDTKP07bo1CZhUDuqFo7Fa0Itf
+   maIJtc38q9014IFNmMEIyD/I975tvO2uyTXTeGSm4bvvYiaRgytozOPBZ
+   9AXzSYDGXJ5oBx1eiReiywQu42OMB5L2pXpvDDbaX1K7Pr4N4g5lQVoei
+   1AuwoTnTgeCZNj2k/wFogQC8sQNB4QvG8FVyk3VAU1OHtCrNxbfuO5+0c
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10775"; a="351255991"
+X-IronPort-AV: E=Sophos;i="6.01,216,1684825200"; 
+   d="scan'208";a="351255991"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2023 23:46:05 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10775"; a="727198267"
+X-IronPort-AV: E=Sophos;i="6.01,216,1684825200"; 
+   d="scan'208";a="727198267"
+Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
+  by fmsmga007.fm.intel.com with ESMTP; 18 Jul 2023 23:46:04 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.27; Tue, 18 Jul 2023 23:46:04 -0700
+Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.27 via Frontend Transport; Tue, 18 Jul 2023 23:46:04 -0700
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (104.47.73.174)
+ by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.27; Tue, 18 Jul 2023 23:46:04 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ioWSmCgrzkkjlf8MWrqh3GCohHpaJvJPySCr27FpHU/JRbZn2ffJkSqtsXMcapxw4AYJ3N4LGV02sZb7a/wnV1/dz1Xt7QhVw5LKd76HKFaQK6WV12LYqpf9O/9k193jx3txqERCWPP8S8YjpY6Hn46+Slpx7PXvbwfSs0UX0qAD6pDrKL6rYtmpGW7s+hDvJEeHZHRGpmKsC04Ye6Ymf5u+SGOpJHuYaNG2jNn47BLEbitq9m02MJNlUkR3Nd7VTXoQxnzkiioBk3lSDPKLz9rgcaZlUS7JXWZ1Z2V38WpRKsqzbKwWKL7m4OdhUc51ZpakyzOYPhnyyy8rNaNvzg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=3HWSZPLfe63jyruIzncyGrTB6B69Z8qKP4a90FW8cBw=;
+ b=VXqnYxt+OlAajPxPEoS3csYrzVFaP06JT67YtR/ITPPaPo+ALy6Bk0g7VwGAfAAKh0C1+jEB1vbnbvjaPlBTGIUBfXInBc9Q40gzBvNlEMEXSZrNmXapnxEkOKjlMtXsnWDjKUHRFWjc1XkHLMFosW4glMfSPtATStpRHwoZvwEfuZDKYknBpBD3mgKz8NrdzFtz76BEzZiEFdHF57U0z4UPDYBXamYDBnse6QAtcgb6NINZcoGyXx4FpWxs3Fvd5v8mNEvHkogFOdCQldpar4OeirAjE4QOktJvMEEZ+cfR3VOgU8YTWAseWbORoccfUaUaflDUiNIWTh/5rAE0Bg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from DM4PR11MB6043.namprd11.prod.outlook.com (2603:10b6:8:62::8) by
+ MN6PR11MB8218.namprd11.prod.outlook.com (2603:10b6:208:47c::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6588.31; Wed, 19 Jul
+ 2023 06:45:56 +0000
+Received: from DM4PR11MB6043.namprd11.prod.outlook.com
+ ([fe80::e1a8:582d:1efc:dffc]) by DM4PR11MB6043.namprd11.prod.outlook.com
+ ([fe80::e1a8:582d:1efc:dffc%4]) with mapi id 15.20.6588.031; Wed, 19 Jul 2023
+ 06:45:56 +0000
+From: "Peer, Ilan" <ilan.peer@intel.com>
+To: Rudi Heitbaum <rudi@heitbaum.com>
+CC: Bagas Sanjaya <bagasdotme@gmail.com>, Johannes Berg
+	<johannes@sipsolutions.net>, "David S. Miller" <davem@davemloft.net>, "Eric
+ Dumazet" <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
+	<pabeni@redhat.com>, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	Michael Ellerman <mpe@ellerman.id.au>, Andrew Morton
+	<akpm@linux-foundation.org>, Linux Kernel Mailing List
+	<linux-kernel@vger.kernel.org>, Linux Regressions
+	<regressions@lists.linux.dev>, Linux Memory Management List
+	<linux-mm@kvack.org>, Linux Networking <netdev@vger.kernel.org>, "Linux
+ Wireless" <linux-wireless@vger.kernel.org>
+Subject: RE: mm/page_alloc.c:4453 with cfg80211_wiphy_work [cfg80211]
+Thread-Topic: mm/page_alloc.c:4453 with cfg80211_wiphy_work [cfg80211]
+Thread-Index: AQHZt9Y8Drzo+t4D60uEaI2mUoJeL6+9+JZAgAE0GgCAAXycwA==
+Date: Wed, 19 Jul 2023 06:45:56 +0000
+Message-ID: <DM4PR11MB604304FC3551BCD9AB13EBBDE939A@DM4PR11MB6043.namprd11.prod.outlook.com>
+References: <51e53417-cfad-542c-54ee-0fb9e26c4a38@gmail.com>
+ <DM4PR11MB6043088A4A65CBF124F5D518E93BA@DM4PR11MB6043.namprd11.prod.outlook.com>
+ <ZLZHDm3mcxaLdvRH@503599e9be06>
+In-Reply-To: <ZLZHDm3mcxaLdvRH@503599e9be06>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: DM4PR11MB6043:EE_|MN6PR11MB8218:EE_
+x-ms-office365-filtering-correlation-id: 4436cff0-14be-48ad-664a-08db8823cdd5
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 8nPIZ1yOtbaIbdQySiXhxbv86fwelcELPfMpfzSROlOHj1ZzKWaaa2GQD7i9KaWANcsfabKwJe+1Wqg1y4fuQWaFO93OGyU/C6l/WFTT9jRbeq/SWJDJRPGMEfRJ7tvVpMieY9RjTD5vQGVvKP37OmgU4Oc2nRxXEx5ukZJQoYEwsSNOJFz6EhqrOWhOehuawTXvkA0TIMmg9/AAtO+aPEpLWUNBTJRmcuu7cgd53OfmLvS/S+hscEjxg0+3M9kz4P18O+/AWKLteOJoLCsW3ilnHUg1flgZjnOfnUfI3glw8CO1tSR8j6y147JbBaVFcdagReOQL5WRuU8uCb29UOKRSmMYCcK/HvLtI8wgyE3d+E8l/0heGSR5y+IOulHFDNwPl//kpJKCBPFGw27k/7u8sa7/mk6dZuexii+9709vf+L8Z6G9qx2vvYElb/TJ4f4oVr3qo8miHRKmhIi6O7mLYBYirTNX+iZsYJv+cLLIX0zfw3JHCDkKqm7aXG631HztnsmbJMW11xCyOqCkuHEfaXjVw82hMdhPgVQjuJttb/Si6H3Z9EiPkIZ70nGyCrORArnAHNK4xjDLq72X5Y8XoqCdmoHcnPAYxwDEdUZfJzOqr8gzDfZ0m+El8BhM
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR11MB6043.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(396003)(366004)(136003)(39860400002)(346002)(376002)(451199021)(71200400001)(9686003)(478600001)(54906003)(7696005)(6506007)(186003)(26005)(2906002)(76116006)(8936002)(64756008)(5660300002)(6916009)(66946007)(4326008)(41300700001)(7416002)(66446008)(316002)(8676002)(52536014)(66556008)(82960400001)(38100700002)(122000001)(38070700005)(86362001)(558084003)(83380400001)(55016003)(33656002)(66476007);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?K6/p0Z2YgDVzxwwjciGS3yi8TPGzOA4nOVoyxauI2h0C1dog360MuHo9Wqo4?=
+ =?us-ascii?Q?BYG7woo13d5etGxVO0FCf1+54MLFjwkbXBWeBH2wJeifY9jXdimvcxzvP7pX?=
+ =?us-ascii?Q?dNnTtKt6dU1X2Lbt1Nd97Majqryalya+3ilGwPFEttp9obyVjGRcxraQcA3C?=
+ =?us-ascii?Q?jrdGLv1b20nDWsrdci1wNVwCL2LwbNbN49pFlNJ07VSSTtY+u0hMjbv2cmiG?=
+ =?us-ascii?Q?RQ0Cw2QVa7SoizOdsk/wMsYiFlhzib0PaFuul3mY5NC+yHLkMwNiij8IeUBk?=
+ =?us-ascii?Q?WTvcjNPf0H3iwy1DKyf0ti/BXqWY5O+4F+kP+sPo3tdNqbc8sGVOUFFIRf+s?=
+ =?us-ascii?Q?jYiZ5Zal5TMH91D+6G7S7gL2Kp1ZBdISgGB6Fv1m8nXzZIUPVqumkBWVtAb8?=
+ =?us-ascii?Q?0cLCSZPpwcJxD3wjQLsEBUsJRdraTl5Y8mDz9LgFgQQOTS0ZOrc406RLZVdb?=
+ =?us-ascii?Q?l8TIO87uUjeoTIHFrvKRp0sbON6MjxFB8yTfiJ+SsIFVbLppqbqulZuAzgse?=
+ =?us-ascii?Q?70xfOW0LMKYYluX4jIfqvTPIPXbQebUXzTqB5fD67EXarJDQdqXVGhMM5WRg?=
+ =?us-ascii?Q?clWxYUxvt+DTvsMwdQv20pwywqeDpJjd/528eNNqDRUrjT3fC5uoIxUxPXJO?=
+ =?us-ascii?Q?qc+gcg6x4sUcSrFeaB5o6Ys5YycUFzwFK4Cvb7iMr+9qDuhQVQZuA658yiD8?=
+ =?us-ascii?Q?EPJEVnHf4awEoyWYfBz5sire4pol8oMQnJjI5YCQNe3gdg8SQwK88SfUxcOZ?=
+ =?us-ascii?Q?FegyaLvz8w/15n+OlJwZU9g0PD41ekdbW0zj/qW9I1bXKD3moOXkQBq76Hv4?=
+ =?us-ascii?Q?AO8U2VQ3AqOAW9WrG0Km3Yr8YpFxq3dpgmgcTasfdfxs82PpRBUDqmk6VzHt?=
+ =?us-ascii?Q?6vm+nH+0N+XhX104cmFRmvwIZmpZtTKaSWGYpIofnUYdCT2yYvio2ZIMFgvT?=
+ =?us-ascii?Q?dwLPYE2wmZWuO5OdH8Kc+5fM5qwFSOz4QjGQ8doDq3B0vs5v0PUq5DUYEHU/?=
+ =?us-ascii?Q?Q/TDkaiQmbu0Z6G/DMJpYw+B89aSsCl9tFU3lYMIeBZuOkv9GVaj33BKUef7?=
+ =?us-ascii?Q?RgDu3NspCB/kTCG77KVvso3WG0SioffqZ8GZ9txY4iosqkGIlBT+kfYOQq5I?=
+ =?us-ascii?Q?rJFQVHxDxL1axv5E2njqJD8rX41NnyOOwFDGVWYg4Itl3qkHF4Ivzl0HQR4W?=
+ =?us-ascii?Q?ydDw3AZtFupD3XYAsqeyILm9X1xjyOwmbQ2rTeHl4jrWqRzPG9qK7dxbdsSw?=
+ =?us-ascii?Q?GqrVSerVNeGw+rlI2e8uTY6zooqmKIXGttas/SOA8dG7oU3tUHXeLapA8uBQ?=
+ =?us-ascii?Q?NhGtuNZfNnw3Ni7RfREH5GiX27tL3Ir+lf4Qakz/q/tAHqzUYj/7IbVSR0Cj?=
+ =?us-ascii?Q?KTV6zv2RpuabxyDyJLJa3gwFuEN8NPV1C9yrlCQEWodTdC1HSV+zCVceS5zI?=
+ =?us-ascii?Q?knhcoOu6P/TIPu0ADD+Hso6it31JB9DoHdQWSPmkAhbZmVTymgC2tc2R3hr9?=
+ =?us-ascii?Q?Df+KnO6U/AHyo7veiQNRrooxI2uA5mJG3lNAmdzOKE8ZjmpXt+Xw0JsGROng?=
+ =?us-ascii?Q?DXQZgh+6Q4NkIbdtWAU=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: linux-next: Tree for Jul 13 (drivers/video/fbdev/ps3fb.c)
-Content-Language: en-US
-To: Michael Ellerman <mpe@ellerman.id.au>,
- Bagas Sanjaya <bagasdotme@gmail.com>, Randy Dunlap <rdunlap@infradead.org>,
- Stephen Rothwell <sfr@canb.auug.org.au>,
- Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Thomas Zimmermann <tzimmermann@suse.de>, Helge Deller <deller@gmx.de>,
- Javier Martinez Canillas <javierm@redhat.com>, linux-fbdev@vger.kernel.org,
- Linux PowerPC <linuxppc-dev@lists.ozlabs.org>,
- Linux Regressions <regressions@lists.linux.dev>,
- Geoff Levand <geoff@infradead.org>
-References: <20230713123710.5d7d81e4@canb.auug.org.au>
- <ccc63065-2976-88ef-1211-731330bf2866@infradead.org>
- <ZLYHtVuS7AElXcCb@debian.me> <874jm1jv9m.fsf@mail.lhotse>
-From: Randy Dunlap <rd.dunlab@gmail.com>
-In-Reply-To: <874jm1jv9m.fsf@mail.lhotse>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR11MB6043.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4436cff0-14be-48ad-664a-08db8823cdd5
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Jul 2023 06:45:56.1502
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: hjDCpoT1v3qahUdEZBnu/QGy08ipTsSE+NW02BC7jyP52wEgoktQd/IcyXqk1JmSr4nIx+r46y+bplWfACXSSw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN6PR11MB8218
+X-OriginatorOrg: intel.com
 
-On 7/18/23 04:48, Michael Ellerman wrote:
-> Bagas Sanjaya <bagasdotme@gmail.com> writes:
->> On Thu, Jul 13, 2023 at 09:11:10AM -0700, Randy Dunlap wrote:
->>> on ppc64:
->>>
->>> In file included from ../include/linux/device.h:15,
->>>                  from ../arch/powerpc/include/asm/io.h:22,
->>>                  from ../include/linux/io.h:13,
->>>                  from ../include/linux/irq.h:20,
->>>                  from ../arch/powerpc/include/asm/hardirq.h:6,
->>>                  from ../include/linux/hardirq.h:11,
->>>                  from ../include/linux/interrupt.h:11,
->>>                  from ../drivers/video/fbdev/ps3fb.c:25:
->>> ../drivers/video/fbdev/ps3fb.c: In function 'ps3fb_probe':
->>> ../drivers/video/fbdev/ps3fb.c:1172:40: error: 'struct fb_info' has no member named 'dev'
->>>  1172 |                  dev_driver_string(info->dev), dev_name(info->dev),
->>>       |                                        ^~
->>> ../include/linux/dev_printk.h:110:37: note: in definition of macro 'dev_printk_index_wrap'
->>>   110 |                 _p_func(dev, fmt, ##__VA_ARGS__);                       \
->>>       |                                     ^~~~~~~~~~~
->>> ../drivers/video/fbdev/ps3fb.c:1171:9: note: in expansion of macro 'dev_info'
->>>  1171 |         dev_info(info->device, "%s %s, using %u KiB of video memory\n",
->>>       |         ^~~~~~~~
->>> ../drivers/video/fbdev/ps3fb.c:1172:61: error: 'struct fb_info' has no member named 'dev'
->>>  1172 |                  dev_driver_string(info->dev), dev_name(info->dev),
->>>       |                                                             ^~
->>> ../include/linux/dev_printk.h:110:37: note: in definition of macro 'dev_printk_index_wrap'
->>>   110 |                 _p_func(dev, fmt, ##__VA_ARGS__);                       \
->>>       |                                     ^~~~~~~~~~~
->>> ../drivers/video/fbdev/ps3fb.c:1171:9: note: in expansion of macro 'dev_info'
->>>  1171 |         dev_info(info->device, "%s %s, using %u KiB of video memory\n",
->>>       |         ^~~~~~~~
->>>
->>>
->>
->> Hmm, there is no response from Thomas yet. I guess we should go with
->> reverting bdb616479eff419, right? Regardless, I'm adding this build regression
->> to regzbot so that parties involved are aware of it:
->>
->> #regzbot ^introduced: bdb616479eff419
->> #regzbot title: build regression in PS3 framebuffer
-> 
-> Does regzbot track issues in linux-next?
-> 
-> They're not really regressions because they're not in a release yet.
-> 
-> Anyway I don't see where bdb616479eff419 comes from.
-> 
-> The issue was introduced by:
-> 
->   701d2054fa31 fbdev: Make support for userspace interfaces configurable
-> 
-> The driver seems to only use info->dev in that one dev_info() line,
-> which seems purely cosmetic, so I think it could just be removed, eg:
-> 
-> diff --git a/drivers/video/fbdev/ps3fb.c b/drivers/video/fbdev/ps3fb.c
-> index d4abcf8aff75..a304a39d712b 100644
-> --- a/drivers/video/fbdev/ps3fb.c
-> +++ b/drivers/video/fbdev/ps3fb.c
-> @@ -1168,8 +1168,7 @@ static int ps3fb_probe(struct ps3_system_bus_device *dev)
->  
->  	ps3_system_bus_set_drvdata(dev, info);
->  
-> -	dev_info(info->device, "%s %s, using %u KiB of video memory\n",
-> -		 dev_driver_string(info->dev), dev_name(info->dev),
-> +	dev_info(info->device, "using %u KiB of video memory\n",
->  		 info->fix.smem_len >> 10);
->  
->  	task = kthread_run(ps3fbd, info, DEVICE_NAME);
+Hi,
 
+> Hi Ilan,
+>=20
+> I can confirm that this fixes the error in my dmesg.
+>=20
+> Regards
+> Rudi
+>=20
 
-Tested-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
+Thanks for the update. I'll push a patch to the wireless mailing list.
 
-Thanks.
+Regards,
 
--- 
-~Randy
+Ilan.
