@@ -1,67 +1,63 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CE7D20FE;
-	Thu, 20 Jul 2023 04:20:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 79489C433C8;
-	Thu, 20 Jul 2023 04:20:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E25881BE66
+	for <regressions@lists.linux.dev>; Thu, 20 Jul 2023 20:21:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 227DFC433C8;
+	Thu, 20 Jul 2023 20:21:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1689826821;
-	bh=klxwWjqJHJeqwFDN62FMv3knTJ+VzqfyWcqEIxnjsEw=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=NK5/gdWiDX3oolaWinZ31qWcpN+N6G9afdEoeTRA+g2HuYqohRdJX9nDXkWcrRFkc
-	 FUnlkSSlGCY+lolAmZZTqViDD5L3r0BIl7SKXoDWfh35Wz48aisRy0DADVS+6wsVGi
-	 2tI1yze9bY5sZqUGhRTR2vQXQ5Fec8IkhduiLJcy+ytAmGTgFHDSuG2SUpofDyr3sk
-	 FCgsWyHOO2AIndlUrZapI3vEaGp9M0bqhRpMFLv1NiY9DMaxvHr72RVgzKgXEfElTz
-	 O18fxJpGutC9KUVXJPAwMTTm/xE8ax1smDB5Ix1DhGSNUuq2Sdag+rhZGP1JEeLRAG
-	 dUBnmk+MpYVDg==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 5AC17E21EFE;
-	Thu, 20 Jul 2023 04:20:21 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1689884473;
+	bh=dmhjCBaGiwYim4fPl8sE7+2zbi+1rP0uV56nlbTaoqk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=kk1TmLNUwQKDcMXi9FOXz6oIJrwXlWn8imhGgXjgMqzCv5/ZJ0vguuQgH1logJjur
+	 lVNBdCsk2z6PS9EJOl4WizpIbipsjiMzAb6eVBlmhVGqhly2mZQ0oM6a3VBcW4elXZ
+	 zoVYcfzjynySATR1BNV2XI4WhNVWCBGdD0ibcOjMzrmKTn/rB/3kepI8AzIOehX4jE
+	 ip8MydcfWJB6ybpuy0Lnjeaa/XsCo3waSsWi1iZ7E9ccuI7zJ1PlQF7jRrQw+2Af2Q
+	 CZUCZt8dnB4pGN9K/Ia7SOPakoIuxK+pi3KfhvPK7CJMYoI5aBi+DKj644kGjlL4wC
+	 fdl+TtYsnlU7Q==
+Date: Thu, 20 Jul 2023 15:21:10 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Woody Suwalski <terraluna977@gmail.com>
+Cc: imammedo@redhat.com, bhelgaas@google.com,
+	LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: Re: Kernel 6.5-rc2: system crash on suspend bisected
+Message-ID: <20230720202110.GA544761@bhelgaas>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net 0/2] r8169: revert two changes that caused regressions
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <168982682136.14645.17168208094713450395.git-patchwork-notify@kernel.org>
-Date: Thu, 20 Jul 2023 04:20:21 +0000
-References: <ddadceae-19c9-81b8-47b5-a4ff85e2563a@gmail.com>
-In-Reply-To: <ddadceae-19c9-81b8-47b5-a4ff85e2563a@gmail.com>
-To: Heiner Kallweit <hkallweit1@gmail.com>
-Cc: kuba@kernel.org, davem@davemloft.net, nic_swsd@realtek.com,
- edumazet@google.com, pabeni@redhat.com, netdev@vger.kernel.org,
- regressions@lists.linux.dev
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <11fc981c-af49-ce64-6b43-3e282728bd1a@gmail.com>
 
-Hello:
+[+cc regressions list]
 
-This series was applied to netdev/net.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
-
-On Tue, 18 Jul 2023 13:07:53 +0200 you wrote:
-> This reverts two changes that caused regressions.
+On Wed, Jul 19, 2023 at 11:36:51PM -0400, Woody Suwalski wrote:
+> Laptop shows a kernel crash trace after a first suspend to ram, on a second
+> attempt to suspend it becomes frozen solid. This is 100% repeatable with a
+> 6.5-rc2 kernel, not happening with a 6.4 kernel - see the attached dmesg
+> output.
 > 
-> Heiner Kallweit (2):
->   r8169: revert 2ab19de62d67 ("r8169: remove ASPM restrictions now that
->     ASPM is disabled during NAPI poll")
->   Revert "r8169: disable ASPM during NAPI poll"
+> I have bisected the kernel uilds and it points to :
+> [40613da52b13fb21c5566f10b287e0ca8c12c4e9] PCI: acpiphp: Reassign resources
+> on bridge if necessary
 > 
-> [...]
+> Reversing this patch seems to fix the kernel crash problem on my laptop.
 
-Here is the summary with links:
-  - [net,1/2] r8169: revert 2ab19de62d67 ("r8169: remove ASPM restrictions now that ASPM is disabled during NAPI poll")
-    https://git.kernel.org/netdev/net/c/cf2ffdea0839
-  - [net,2/2] Revert "r8169: disable ASPM during NAPI poll"
-    https://git.kernel.org/netdev/net/c/e31a9fedc7d8
+Thank you very much for all your work debugging, bisecting, and
+reporting this!  This is incredibly helpful.
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+Original report, including complete dmesg logs for both v6.4 and
+v6.5-rc2:
+https://lore.kernel.org/r/11fc981c-af49-ce64-6b43-3e282728bd1a@gmail.com
 
+I queued up a revert of 40613da52b13 ("PCI: acpiphp: Reassign
+resources on bridge if necessary") (on my for-linus branch for v6.5).
 
+It looks like a NULL pointer dereference; hopefully the fix is obvious
+and I can drop the revert and replace it with the fix.
+
+Bjorn
