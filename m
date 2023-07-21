@@ -1,28 +1,28 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6381B7F
-	for <regressions@lists.linux.dev>; Fri, 21 Jul 2023 03:30:44 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AD20C433C8
-	for <regressions@lists.linux.dev>; Fri, 21 Jul 2023 03:30:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B525E7F
+	for <regressions@lists.linux.dev>; Fri, 21 Jul 2023 04:05:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D106C433C7
+	for <regressions@lists.linux.dev>; Fri, 21 Jul 2023 04:05:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1689910244;
-	bh=P3Y0G8/zzL+Nhngt7XtAvkZnhEiGjeTZy9ZP98jV8+c=;
+	s=k20201202; t=1689912331;
+	bh=kSPOSurbW8NbsVtMojaioWWzEDIww44TVaaIl98iVC4=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=TaKDXTTI0MEadIT8proVhhnPM/KEjCQ9oUz0S5kAB/Lnlw2hpfi+3PwCV15q9zXB9
-	 JeYB1j01UxMrZi4l/2+x29bBaMCmKIPJqnToeUKjYKa7IQnoWob8FkhgKRc0VK4x6h
-	 xXY2hltxIS+KstWggXPV+oEobwJYpakq0MiHYIb0ApnlC3Q9lq5mlbPPEOACInsw3L
-	 DuKedrqfIvxer1OvzGfbCYf1eGtP949HQNnlLJ6mSUkeV2MVxqVgjl6zLuKg4qCur4
-	 4e+SOwI85PcpmBrLXcF/jehA84NS/EPPRi/vWj8e66QFOsVwROWyDXAwranCht09Wn
-	 2lI3BVbnE/0PQ==
-Received: by mail-oo1-f51.google.com with SMTP id 006d021491bc7-5658573b1faso968047eaf.1
-        for <regressions@lists.linux.dev>; Thu, 20 Jul 2023 20:30:44 -0700 (PDT)
-X-Gm-Message-State: ABy/qLZqu8OdJZhVKrzLEdx/lfI5QyYuojBlNg+UZDUa1eLE89B7Bwjk
-	e1jojofCA1/uiEsfGwf1ze3CIzV80pdM/YxN9NM=
-X-Google-Smtp-Source: APBJJlEbukEvjQ2n/VPRmQTsiDSn1rOtzwNlK20fmI6AD+8Ik06WmpFrbwE3agD/3iKtnFrfOfMCDsb7Ni807E5NnxQ=
-X-Received: by 2002:a4a:344a:0:b0:566:efc9:1464 with SMTP id
- n10-20020a4a344a000000b00566efc91464mr767853oof.0.1689910243449; Thu, 20 Jul
- 2023 20:30:43 -0700 (PDT)
+	b=LRj7Z6aXaS4HgZ0bLOgQb65LqgC/9wSgKPtOFLlLoI+xUkAJueYmPbVM9fFBNEH6U
+	 tVezbMKPHgUpQ3Atc0SK51nRy6S5IPH7w/G/x7fZ123dpXjaoq4BM476ARoGnkPC7V
+	 XCdQCQrX0mH/ETGlNG6/sP5D+cyr4qA8jrWgMoMb11qHVUVg8vRvUwPLjzR3p+asj3
+	 vbpKU7tJgARaxNK+zU5cjd/4w0rmED052F5c014GLSd/DUOJsgWkBiaaj6vNKnL6Ix
+	 nz7gd+7u7nvtAMmg5MJNfbgwcdy8KP2C1vJQX8amrVXgZsPSMJbx6IxEazvZ6SZvj/
+	 UytlP9x5zlJ4g==
+Received: by mail-ot1-f51.google.com with SMTP id 46e09a7af769-6b9d68a7abaso1249942a34.3
+        for <regressions@lists.linux.dev>; Thu, 20 Jul 2023 21:05:31 -0700 (PDT)
+X-Gm-Message-State: ABy/qLYBd471sk/vKoy+nqM8fZ2xzorP0OVAr+HBU3Ex7IYN3/MHKmY5
+	IsDrS3PyLQjd9nq3VXRnXHoI2EVcJWP3FQHI9ys=
+X-Google-Smtp-Source: APBJJlFPBf8pC2X5XxVXk5qUJ6GVmzWV+g9JGQS25fqtJWVtLnHQrESRHbunQBNrvS9I15O3eU7GKwJeivLIuPV0OwU=
+X-Received: by 2002:a05:6870:2183:b0:1b3:eec8:fa94 with SMTP id
+ l3-20020a056870218300b001b3eec8fa94mr883553oae.7.1689912330393; Thu, 20 Jul
+ 2023 21:05:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -32,9 +32,9 @@ MIME-Version: 1.0
 References: <e7292802-e517-6469-6fbd-a4d30887c99b@gmail.com>
 In-Reply-To: <e7292802-e517-6469-6fbd-a4d30887c99b@gmail.com>
 From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Fri, 21 Jul 2023 12:30:07 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATehP+0Woq6yVkB_NdvsmCLX3g04j-h22T9qy-GbWQ3_w@mail.gmail.com>
-Message-ID: <CAK7LNATehP+0Woq6yVkB_NdvsmCLX3g04j-h22T9qy-GbWQ3_w@mail.gmail.com>
+Date: Fri, 21 Jul 2023 13:04:54 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATs65gj-uECfwKLT++08MyWtC39RGHgTqzNNXR66dxenQ@mail.gmail.com>
+Message-ID: <CAK7LNATs65gj-uECfwKLT++08MyWtC39RGHgTqzNNXR66dxenQ@mail.gmail.com>
 Subject: Re: 6.4.4 breaks module-free builds of Debian kernel packages
 To: Bagas Sanjaya <bagasdotme@gmail.com>
 Cc: Josh Triplett <josh@joshtriplett.org>, Nicolas Schier <nicolas@fjasle.eu>, 
@@ -75,53 +75,25 @@ status 2
 > >
 > > 6.3.13 contained the same error, but I "fixed" that by moving to 6.4.3.=
   But alas, 6.4.4 now has the same issue.
-> >
-> > I worked around the issue by changing "exit 1" to "exit 0" in the main =
-Makefile (at "modules module_install", per the attached patch), but I don't=
- know if this is a true fix or something that simply happens to work for my=
- particular configuration.
->
-> See Bugzilla for the full thread and attached patch that ignores the erro=
-r.
->
-> Josh: It looks like this regression is caused by a commit of yours
-> (and also 1240dabe8d58b4). Would you like to take a look on it?
->
-> Anyway, I'm adding this regression to be tracked by regzbot:
->
-> #regzbot introduced: 4243afdb932677 https://bugzilla.kernel.org/show_bug.=
-cgi?id=3D217689
-> #regzbot title: always doing modules_install breaks CONFIG_MODULES=3Dn bu=
-ilds
->
-> Thanks.
->
-> [1]: https://bugzilla.kernel.org/show_bug.cgi?id=3D217689
->
-> --
-> An old man doll... just what I always wanted! - Clara
 
 
 
+I sent a back-port request.
+https://lore.kernel.org/stable/CAK7LNAQNwjRYQDCD3=3DVoddnFmhxruzGpyppHr+2ZF=
+3SgqDme-w@mail.gmail.com/T/#u
 
-The following commit must be back-ported.
+Hopefully, 6.4.x will be fixed in the next release.
 
 
 
-commit 8ae071fc216a25f4f797f33c56857f4dd6b4408e
-Author: Masahiro Yamada <masahiroy@kernel.org>
-Date:   Thu Jun 15 20:17:43 2023 +0900
-
-    kbuild: make modules_install copy modules.builtin(.modinfo)
+The 6.3.x series is EOL.
+So, we cannot fix it.
 
 
 
 
 
 
-
-
-
---=20
+--
 Best Regards
 Masahiro Yamada
