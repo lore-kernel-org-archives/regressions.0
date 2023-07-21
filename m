@@ -1,89 +1,57 @@
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DBB31BE6D
-	for <regressions@lists.linux.dev>; Fri, 21 Jul 2023 10:26:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1689935196; x=1721471196;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=3la85cW8/KmPX/dcr+1vrlAz048TD7nuQ3LGUmKvcgY=;
-  b=ZqED2il0rh6aIsK5MAtmGoZ37YXYd6KYVru0lLaXPzM4eHBgd9wkqQBb
-   HeiaGz4YGLHqKrl6FqldHolMG5nsxiWuv9XfNbn35ruKUuiAC3DZKqKOs
-   ivq7HPaeYLo/VAptL9C4YuLLZaMB5j0vephKOaUZuOsHLsK6ciZ6SpMlD
-   9TfJbG6mROGEUjPwjnW91qgYzEEsuEtf8PX5Z7Vx1BnItoGlnTiDMQ8q2
-   gjVT5sskTmYguS/eK0icF97qjk3SbODix1On3v6p3h8fza+9/pDll66my
-   EDY/qWjvss5t3yuBavCz1mVvyFoBbmmdAjQUCNm9thx5Nxi12zB7oipWT
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10777"; a="369664220"
-X-IronPort-AV: E=Sophos;i="6.01,220,1684825200"; 
-   d="scan'208";a="369664220"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2023 03:26:35 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10777"; a="971398246"
-X-IronPort-AV: E=Sophos;i="6.01,220,1684825200"; 
-   d="scan'208";a="971398246"
-Received: from eliteleevi.tm.intel.com ([10.237.54.20])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2023 03:26:33 -0700
-Date: Fri, 21 Jul 2023 13:23:07 +0300 (EEST)
-From: Kai Vehmanen <kai.vehmanen@linux.intel.com>
-X-X-Sender: kvehmane@eliteleevi.tm.intel.com
-To: Racinglee <cydiaimpactor2003@gmail.com>
-cc: Bagas Sanjaya <bagasdotme@gmail.com>, Jaroslav Kysela <perex@perex.cz>, 
-    Takashi Iwai <tiwai@suse.com>, 
-    Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-    Linux Regressions <regressions@lists.linux.dev>, 
-    Linux ALSA Development <alsa-devel@alsa-project.org>
-Subject: Re: 6.4 and higher causes audio distortion
-In-Reply-To: <CAL4Djy3KeD51LtT0bT2aRe9S_uwMiAfa-X=V2SfdnYt-MYp5ng@mail.gmail.com>
-Message-ID: <alpine.DEB.2.22.394.2307211322100.3532114@eliteleevi.tm.intel.com>
-References: <3ee79b53-5c1b-1542-ceea-e51141e3ab74@gmail.com> <CAL4Djy3KeD51LtT0bT2aRe9S_uwMiAfa-X=V2SfdnYt-MYp5ng@mail.gmail.com>
-User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7 02160 Espoo
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E79093D78;
+	Fri, 21 Jul 2023 11:10:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32F86C433CA;
+	Fri, 21 Jul 2023 11:10:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1689937805;
+	bh=doH7QBRGiTSMgWAl8lnHKFFkVmk48+gAH6oH3iUKSSk=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+	b=TeAAwkPYEkdHeLK0jHxq6rhHVazN/1TU7+62HrOkZfmqnl2lsKp3jBdYSSSx3x6Uh
+	 m15wh0fBK+D8y/YNmxsYmZbhKqahbucNApMvstvBdluZ1jjMWp3xqUeOWKIgMVPmHn
+	 /VuGq9YznORGspLjh+kXxyfS4zeYzoKVtb1T9v+EMRd8I2SJaIjLsOOItDHDp9Cyov
+	 wYV0qE0CJlIdZ8XcBcTBG8nm4qUcKUew8YQR8u4OhZVhYtwIvL0eJ9oMTZrVXaEyEP
+	 IgzxkYYIZv+2ogIMyEQdmY0HIQJr2qb68R+SiKTahVIeZdt05ZiiBl8mp33tp2Ti/M
+	 bLI+aH7ty9Iag==
+From: Kalle Valo <kvalo@kernel.org>
+To: linux-wireless@vger.kernel.org
+Cc: netdev@vger.kernel.org,  linux-kernel@vger.kernel.org,
+  regressions@lists.linux.dev,  Johannes Berg <johannes@sipsolutions.net>,
+  Jakub Kicinski <kuba@kernel.org>
+Subject: Re: Closing down the wireless trees for a summer break?
+References: <87y1kncuh4.fsf@kernel.org>
+Date: Fri, 21 Jul 2023 14:10:02 +0300
+In-Reply-To: <87y1kncuh4.fsf@kernel.org> (Kalle Valo's message of "Tue, 13 Jun
+	2023 17:22:47 +0300")
+Message-ID: <87sf9h1px1.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="-318106570-2107917860-1689934996=:3532114"
+Content-Type: text/plain
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Kalle Valo <kvalo@kernel.org> writes:
 
----318106570-2107917860-1689934996=:3532114
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+> Me and Johannes are planning to take a longer break from upstream this
+> summer. To keep things simple my suggestion is that we would official
+> close wireless and wireless-next trees from June 23rd to August 14th
+> (approximately).
+>
+> During that time urgent fixes would need go directly to the net tree.
+> Patches can keep flowing to the wireless list but the the net
+> maintainers will follow the list and they'll just apply them to the
+> net tree directly.
 
-Hi,
+A change of plans, I'm actually back already now and have opened both
+wireless and wireless-next trees. I will go back offline at some point
+but hopefully Johannes will be back by then.
 
+-- 
+https://patchwork.kernel.org/project/linux-wireless/list/
 
-On Wed, 19 Jul 2023, Racinglee wrote:
-
-> On Sat, Jul 15, 2023 at 3:56 AM Bagas Sanjaya <bagasdotme@gmail.com> wrote:
-> > I notice a regression report on Bugzilla [1]. Quoting from it:
-> >
-> > > I have a Lenovo ThinkPad X1 Yoga Gen 7 running Arch Linux. Linux 6.4 
-> > > and higher, cause audio distortion. Sometimes, this occurs to the 
-> > > point that nearly nothing is discernible. This carries over to wired 
-> > > headphones. The issue occurs on the entire mainline 6.4.x kernel 
-> > > series and also the 6.4.3 stable and 6.5 RC1 kernel, which are the 
-> > > latest at the time of writing. The issue occurs on both the Arch 
-> > > distributed kernels, and the mainline kernels.
-[...]
-> Updating regzbot after newer findings and determinations about the
-> possible culprit commit
-> 
-> #regzbot title: 6.4 and higher causes audio distortion
-> 
-> #regzbot introduced: v6.4-rc1..1bf83fa6654c
-> https://bugzilla.kernel.org/show_bug.cgi?id=217673#c5
-> 
-
-thank you, filed a bug to SOF based on the bisect results:
-https://github.com/thesofproject/linux/issues/4482
-
-Br, Kai
----318106570-2107917860-1689934996=:3532114--
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
