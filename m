@@ -1,91 +1,89 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0826164B
-	for <regressions@lists.linux.dev>; Fri, 21 Jul 2023 06:44:45 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qMjM0-0000FE-Vr; Fri, 21 Jul 2023 08:11:05 +0200
-Message-ID: <421602e6-0fe0-34c4-12bb-d805f2a282f4@leemhuis.info>
-Date: Fri, 21 Jul 2023 08:11:02 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DBB31BE6D
+	for <regressions@lists.linux.dev>; Fri, 21 Jul 2023 10:26:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1689935196; x=1721471196;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=3la85cW8/KmPX/dcr+1vrlAz048TD7nuQ3LGUmKvcgY=;
+  b=ZqED2il0rh6aIsK5MAtmGoZ37YXYd6KYVru0lLaXPzM4eHBgd9wkqQBb
+   HeiaGz4YGLHqKrl6FqldHolMG5nsxiWuv9XfNbn35ruKUuiAC3DZKqKOs
+   ivq7HPaeYLo/VAptL9C4YuLLZaMB5j0vephKOaUZuOsHLsK6ciZ6SpMlD
+   9TfJbG6mROGEUjPwjnW91qgYzEEsuEtf8PX5Z7Vx1BnItoGlnTiDMQ8q2
+   gjVT5sskTmYguS/eK0icF97qjk3SbODix1On3v6p3h8fza+9/pDll66my
+   EDY/qWjvss5t3yuBavCz1mVvyFoBbmmdAjQUCNm9thx5Nxi12zB7oipWT
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10777"; a="369664220"
+X-IronPort-AV: E=Sophos;i="6.01,220,1684825200"; 
+   d="scan'208";a="369664220"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2023 03:26:35 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10777"; a="971398246"
+X-IronPort-AV: E=Sophos;i="6.01,220,1684825200"; 
+   d="scan'208";a="971398246"
+Received: from eliteleevi.tm.intel.com ([10.237.54.20])
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2023 03:26:33 -0700
+Date: Fri, 21 Jul 2023 13:23:07 +0300 (EEST)
+From: Kai Vehmanen <kai.vehmanen@linux.intel.com>
+X-X-Sender: kvehmane@eliteleevi.tm.intel.com
+To: Racinglee <cydiaimpactor2003@gmail.com>
+cc: Bagas Sanjaya <bagasdotme@gmail.com>, Jaroslav Kysela <perex@perex.cz>, 
+    Takashi Iwai <tiwai@suse.com>, 
+    Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+    Linux Regressions <regressions@lists.linux.dev>, 
+    Linux ALSA Development <alsa-devel@alsa-project.org>
+Subject: Re: 6.4 and higher causes audio distortion
+In-Reply-To: <CAL4Djy3KeD51LtT0bT2aRe9S_uwMiAfa-X=V2SfdnYt-MYp5ng@mail.gmail.com>
+Message-ID: <alpine.DEB.2.22.394.2307211322100.3532114@eliteleevi.tm.intel.com>
+References: <3ee79b53-5c1b-1542-ceea-e51141e3ab74@gmail.com> <CAL4Djy3KeD51LtT0bT2aRe9S_uwMiAfa-X=V2SfdnYt-MYp5ng@mail.gmail.com>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7 02160 Espoo
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: Fwd: 6.4.4 breaks module-free builds of Debian kernel packages
-Content-Language: en-US, de-DE
-To: Randy Dunlap <rdunlap@infradead.org>, Bagas Sanjaya
- <bagasdotme@gmail.com>, Josh Triplett <josh@joshtriplett.org>,
- Nicolas Schier <nicolas@fjasle.eu>, Masahiro Yamada <masahiroy@kernel.org>,
- Sasha Levin <sashal@kernel.org>,
- Brian Lindholm <brian_lindholm@users.sourceforge.net>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>,
- Linux Stable <stable@vger.kernel.org>,
- Linux Kernel Build System <linux-kbuild@vger.kernel.org>
-References: <e7292802-e517-6469-6fbd-a4d30887c99b@gmail.com>
- <63a46a4e-53d4-6d18-7f6e-fee1c9890c79@infradead.org>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <63a46a4e-53d4-6d18-7f6e-fee1c9890c79@infradead.org>
+Content-Type: multipart/mixed; boundary="-318106570-2107917860-1689934996=:3532114"
+
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+---318106570-2107917860-1689934996=:3532114
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1689921886;11e9b569;
-X-HE-SMSGID: 1qMjM0-0000FE-Vr
+Content-Transfer-Encoding: 8BIT
 
-On 21.07.23 06:13, Randy Dunlap wrote:
-> On 7/20/23 20:18, Bagas Sanjaya wrote:
->>
->>> I'm on AMD64 with Debian testing (trixie), where I build my own kernels (with CONFIG_MODULES unset) using "make bindeb-pkg". The build proceeds through 99% of the process, but fails here:
->>>
-> [...]
->>>
->>> 6.3.13 contained the same error, but I "fixed" that by moving to 6.4.3.  But alas, 6.4.4 now has the same issue.
->>>
->>> I worked around the issue by changing "exit 1" to "exit 0" in the main Makefile (at "modules module_install", per the attached patch), but I don't know if this is a true fix or something that simply happens to work for my particular configuration.
->>
->> See Bugzilla for the full thread and attached patch that ignores the error.
->>
->> Josh: It looks like this regression is caused by a commit of yours
->> (and also 1240dabe8d58b4). Would you like to take a look on it?
->>
->> Anyway, I'm adding this regression to be tracked by regzbot:
->>
->> #regzbot introduced: 4243afdb932677 https://bugzilla.kernel.org/show_bug.cgi?id=217689
->> #regzbot title: always doing modules_install breaks CONFIG_MODULES=n builds
+Hi,
 
-Masahiro Yamada: thx for taking care of this and Greg for picking the
-fix up.
 
-BTW, Bagas, this apparently is a regression that only affected stable.
-In that case please tell rezbot about the stable commit-id of the
-change, as otherwise it will consider the problem a regression in
-mainline (and there it's was never a problem or already solved [didn't
-look]).
+On Wed, 19 Jul 2023, Racinglee wrote:
 
-Let me fix this up and tell regzbot about the incoming fix while at it:
-
-#regzbot introduced: 6061ac50f1e04
-#regzbot fix: kbuild: make modules_install copy modules.builtin(.modinfo)
-
->> [1]: https://bugzilla.kernel.org/show_bug.cgi?id=217689
+> On Sat, Jul 15, 2023 at 3:56 AM Bagas Sanjaya <bagasdotme@gmail.com> wrote:
+> > I notice a regression report on Bugzilla [1]. Quoting from it:
+> >
+> > > I have a Lenovo ThinkPad X1 Yoga Gen 7 running Arch Linux. Linux 6.4 
+> > > and higher, cause audio distortion. Sometimes, this occurs to the 
+> > > point that nearly nothing is discernible. This carries over to wired 
+> > > headphones. The issue occurs on the entire mainline 6.4.x kernel 
+> > > series and also the 6.4.3 stable and 6.5 RC1 kernel, which are the 
+> > > latest at the time of writing. The issue occurs on both the Arch 
+> > > distributed kernels, and the mainline kernels.
+[...]
+> Updating regzbot after newer findings and determinations about the
+> possible culprit commit
 > 
-> Do you also take care of marking the bugzilla entries as completed/fixed/solved
-> etc.?
+> #regzbot title: 6.4 and higher causes audio distortion
+> 
+> #regzbot introduced: v6.4-rc1..1bf83fa6654c
+> https://bugzilla.kernel.org/show_bug.cgi?id=217673#c5
+> 
 
-I don't known if Bagas does, but I do not and have no plans to do so.
+thank you, filed a bug to SOF based on the bisect results:
+https://github.com/thesofproject/linux/issues/4482
 
-I consider my work on looking at bugzilla for regressions a courtesy I
-perform in the interest of the "no regressions" rule, as some or many of
-those report otherwise will be ignored. And that's bad for our reputation.
-
-But that is where my courtesy stops. Those that think having a bugzilla
-around should take care of maintaining the state. Bugbot might soon
-solve part of the problem. But I guess it won't handle this case.
-
-Ciao, Thorsten
+Br, Kai
+---318106570-2107917860-1689934996=:3532114--
