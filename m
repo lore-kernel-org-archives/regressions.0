@@ -1,99 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B525E7F
-	for <regressions@lists.linux.dev>; Fri, 21 Jul 2023 04:05:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D106C433C7
-	for <regressions@lists.linux.dev>; Fri, 21 Jul 2023 04:05:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1689912331;
-	bh=kSPOSurbW8NbsVtMojaioWWzEDIww44TVaaIl98iVC4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=LRj7Z6aXaS4HgZ0bLOgQb65LqgC/9wSgKPtOFLlLoI+xUkAJueYmPbVM9fFBNEH6U
-	 tVezbMKPHgUpQ3Atc0SK51nRy6S5IPH7w/G/x7fZ123dpXjaoq4BM476ARoGnkPC7V
-	 XCdQCQrX0mH/ETGlNG6/sP5D+cyr4qA8jrWgMoMb11qHVUVg8vRvUwPLjzR3p+asj3
-	 vbpKU7tJgARaxNK+zU5cjd/4w0rmED052F5c014GLSd/DUOJsgWkBiaaj6vNKnL6Ix
-	 nz7gd+7u7nvtAMmg5MJNfbgwcdy8KP2C1vJQX8amrVXgZsPSMJbx6IxEazvZ6SZvj/
-	 UytlP9x5zlJ4g==
-Received: by mail-ot1-f51.google.com with SMTP id 46e09a7af769-6b9d68a7abaso1249942a34.3
-        for <regressions@lists.linux.dev>; Thu, 20 Jul 2023 21:05:31 -0700 (PDT)
-X-Gm-Message-State: ABy/qLYBd471sk/vKoy+nqM8fZ2xzorP0OVAr+HBU3Ex7IYN3/MHKmY5
-	IsDrS3PyLQjd9nq3VXRnXHoI2EVcJWP3FQHI9ys=
-X-Google-Smtp-Source: APBJJlFPBf8pC2X5XxVXk5qUJ6GVmzWV+g9JGQS25fqtJWVtLnHQrESRHbunQBNrvS9I15O3eU7GKwJeivLIuPV0OwU=
-X-Received: by 2002:a05:6870:2183:b0:1b3:eec8:fa94 with SMTP id
- l3-20020a056870218300b001b3eec8fa94mr883553oae.7.1689912330393; Thu, 20 Jul
- 2023 21:05:30 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCE577F
+	for <regressions@lists.linux.dev>; Fri, 21 Jul 2023 04:13:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+	bh=2F/PvH5rU8feN3Ho3myXK2A3ABweq+g65TCLK6TYKDE=; b=mhFljn3OHXTptF+4QQrQhkLabL
+	J1AEPolOQJ/AFHluiQ24FPJSbQdHQGeNS1+fTOkLpkMM/f7ulFigcCt0kJ3GBsBsFfSTH4AKWjp3r
+	XknHz+R0WZJHXf/mUaEi55TC+7Y2jR08Ny28I4lgbLCqbDkYPmmgbl/ylrqkGTooAemvgpMqBKR8H
+	Mf9WFmluoUTxDXNSxt9lJJoRvOMAU9Zpwg9mwCrcqmumHxyeb5x6vc86MMUvGLKYHohGZFfYYZRKY
+	7kd9U5/WdHAD4dIrACt9k/Gvp7VeiFt4fefu4jTWx4QxT+CtH4eq6fs07MKbZLbXBiUP3Bhnvhxyw
+	iCucOs2g==;
+Received: from c-71-59-149-187.hsd1.or.comcast.net ([71.59.149.187] helo=[10.0.0.152])
+	by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+	id 1qMhW8-00CnxD-0o;
+	Fri, 21 Jul 2023 04:13:24 +0000
+Message-ID: <63a46a4e-53d4-6d18-7f6e-fee1c9890c79@infradead.org>
+Date: Thu, 20 Jul 2023 21:13:21 -0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: Fwd: 6.4.4 breaks module-free builds of Debian kernel packages
+Content-Language: en-US
+To: Bagas Sanjaya <bagasdotme@gmail.com>,
+ Josh Triplett <josh@joshtriplett.org>, Nicolas Schier <nicolas@fjasle.eu>,
+ Masahiro Yamada <masahiroy@kernel.org>, Sasha Levin <sashal@kernel.org>,
+ Brian Lindholm <brian_lindholm@users.sourceforge.net>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Linux Stable <stable@vger.kernel.org>,
+ Linux Kernel Build System <linux-kbuild@vger.kernel.org>
 References: <e7292802-e517-6469-6fbd-a4d30887c99b@gmail.com>
+From: Randy Dunlap <rdunlap@infradead.org>
 In-Reply-To: <e7292802-e517-6469-6fbd-a4d30887c99b@gmail.com>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Fri, 21 Jul 2023 13:04:54 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATs65gj-uECfwKLT++08MyWtC39RGHgTqzNNXR66dxenQ@mail.gmail.com>
-Message-ID: <CAK7LNATs65gj-uECfwKLT++08MyWtC39RGHgTqzNNXR66dxenQ@mail.gmail.com>
-Subject: Re: 6.4.4 breaks module-free builds of Debian kernel packages
-To: Bagas Sanjaya <bagasdotme@gmail.com>
-Cc: Josh Triplett <josh@joshtriplett.org>, Nicolas Schier <nicolas@fjasle.eu>, 
-	Sasha Levin <sashal@kernel.org>, Brian Lindholm <brian_lindholm@users.sourceforge.net>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Linux Regressions <regressions@lists.linux.dev>, Linux Stable <stable@vger.kernel.org>, 
-	Linux Kernel Build System <linux-kbuild@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jul 21, 2023 at 12:19=E2=80=AFPM Bagas Sanjaya <bagasdotme@gmail.co=
-m> wrote:
->
+Hi Bagas,
+
+On 7/20/23 20:18, Bagas Sanjaya wrote:
 > Hi,
->
+> 
 > I notice a regression report on Bugzilla [1]. Quoting from it:
->
-> > I'm on AMD64 with Debian testing (trixie), where I build my own kernels=
- (with CONFIG_MODULES unset) using "make bindeb-pkg". The build proceeds th=
-rough 99% of the process, but fails here:
-> >
-> > Kernel: arch/x86/boot/bzImage is ready  (#2)
-> > make -f ./Makefile ARCH=3Dx86     KERNELRELEASE=3D6.4.4-i5 intdeb-pkg
-> > sh ./scripts/package/builddeb
-> > ***
-> > *** The present kernel configuration has modules disabled.
-> > *** To use the module feature, please run "make menuconfig" etc.
-> > *** to enable CONFIG_MODULES.
-> > ***
-> > make[5]: *** [Makefile:1969: modules_install] Error 1
-> > make[4]: *** [scripts/Makefile.package:150: intdeb-pkg] Error 2
-> > make[3]: *** [Makefile:1657: intdeb-pkg] Error 2
-> > make[2]: *** [debian/rules:16: binary-arch] Error 2
-> > dpkg-buildpackage: error: debian/rules binary subprocess returned exit =
-status 2
-> > make[1]: *** [scripts/Makefile.package:139: bindeb-pkg] Error 2
-> > make: *** [Makefile:1657: bindeb-pkg] Error 2
-> >
-> > 6.3.13 contained the same error, but I "fixed" that by moving to 6.4.3.=
-  But alas, 6.4.4 now has the same issue.
+> 
+>> I'm on AMD64 with Debian testing (trixie), where I build my own kernels (with CONFIG_MODULES unset) using "make bindeb-pkg". The build proceeds through 99% of the process, but fails here:
+>>
+>> Kernel: arch/x86/boot/bzImage is ready  (#2)
+>> make -f ./Makefile ARCH=x86     KERNELRELEASE=6.4.4-i5 intdeb-pkg
+>> sh ./scripts/package/builddeb
+>> ***
+>> *** The present kernel configuration has modules disabled.
+>> *** To use the module feature, please run "make menuconfig" etc.
+>> *** to enable CONFIG_MODULES.
+>> ***
+>> make[5]: *** [Makefile:1969: modules_install] Error 1
+>> make[4]: *** [scripts/Makefile.package:150: intdeb-pkg] Error 2
+>> make[3]: *** [Makefile:1657: intdeb-pkg] Error 2
+>> make[2]: *** [debian/rules:16: binary-arch] Error 2
+>> dpkg-buildpackage: error: debian/rules binary subprocess returned exit status 2
+>> make[1]: *** [scripts/Makefile.package:139: bindeb-pkg] Error 2
+>> make: *** [Makefile:1657: bindeb-pkg] Error 2
+>>
+>> 6.3.13 contained the same error, but I "fixed" that by moving to 6.4.3.  But alas, 6.4.4 now has the same issue.
+>>
+>> I worked around the issue by changing "exit 1" to "exit 0" in the main Makefile (at "modules module_install", per the attached patch), but I don't know if this is a true fix or something that simply happens to work for my particular configuration.
+> 
+> See Bugzilla for the full thread and attached patch that ignores the error.
+> 
+> Josh: It looks like this regression is caused by a commit of yours
+> (and also 1240dabe8d58b4). Would you like to take a look on it?
+> 
+> Anyway, I'm adding this regression to be tracked by regzbot:
+> 
+> #regzbot introduced: 4243afdb932677 https://bugzilla.kernel.org/show_bug.cgi?id=217689
+> #regzbot title: always doing modules_install breaks CONFIG_MODULES=n builds
+> 
+> Thanks.
+> 
+> [1]: https://bugzilla.kernel.org/show_bug.cgi?id=217689
 
 
+Do you also take care of marking the bugzilla entries as completed/fixed/solved
+etc.?
 
-I sent a back-port request.
-https://lore.kernel.org/stable/CAK7LNAQNwjRYQDCD3=3DVoddnFmhxruzGpyppHr+2ZF=
-3SgqDme-w@mail.gmail.com/T/#u
-
-Hopefully, 6.4.x will be fixed in the next release.
-
-
-
-The 6.3.x series is EOL.
-So, we cannot fix it.
-
-
-
-
-
-
---
-Best Regards
-Masahiro Yamada
+thanks.
+-- 
+~Randy
