@@ -1,23 +1,23 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACBAF15C8
-	for <regressions@lists.linux.dev>; Sun, 23 Jul 2023 14:09:37 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC49AC433C7;
-	Sun, 23 Jul 2023 14:09:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5122815C8
+	for <regressions@lists.linux.dev>; Sun, 23 Jul 2023 14:09:43 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7AD6FC433C7;
+	Sun, 23 Jul 2023 14:09:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1690121377;
-	bh=vfCFndXhqCuvaEcT0jrNpwXN1vPmqcY1BURFX2EFAPM=;
+	s=korg; t=1690121382;
+	bh=PHrVoV1fr4yI9L7eib07KWKKHQlhb1SabdkudOkoo6w=;
 	h=Subject:To:Cc:From:Date:From;
-	b=As0wrDSBcEDg955Pusm5iOgVKy5stvwDN0TmlgNtX+8pRbMLa+KhatCkmXdRmqZAE
-	 GbMD2YpFpTTCbvBbNTbfQPT6LczRbPaWjhqdURiyj4RidOWGXgkBCnKx6ZU8Yg1x1p
-	 MiwdyN0BJRuQ6vvy7lDkufEoW68GHCKhqmAwFBjU=
-Subject: Patch "perf probe: Add test for regression introduced by switch to die_get_decl_file()" has been added to the 4.14-stable tree
+	b=EhvE3Wt/N8/USubyxL7Tvy82OujWigxzrpGUqS9rP+Q4Ni3clGCG6fOkhjwUC1SyS
+	 bwNVGrZ+XwD0bxmnwEuPqz0hEB8IId0pMvuSj/8f01KofGIZRV1SkF/MjTzp+TH9Tz
+	 wJdyd+uY12EWi2pMHlVI8g5TctbEw4p0GMCh2oDI=
+Subject: Patch "perf probe: Add test for regression introduced by switch to die_get_decl_file()" has been added to the 4.19-stable tree
 To: acme@redhat.com,adrian.hunter@intel.com,alexander.shishkin@linux.intel.com,georgmueller@gmx.net,gregkh@linuxfoundation.org,irogers@google.com,jolsa@kernel.org,mark.rutland@arm.com,mhiramat@kernel.org,mingo@redhat.com,namhyung@kernel.org,peterz@infradead.org,regressions@lists.linux.dev
 Cc: <stable-commits@vger.kernel.org>
 From: <gregkh@linuxfoundation.org>
-Date: Sun, 23 Jul 2023 16:09:23 +0200
-Message-ID: <2023072323-relax-promenade-d456@gregkh>
+Date: Sun, 23 Jul 2023 16:09:37 +0200
+Message-ID: <2023072337-percent-charting-762d@gregkh>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -34,12 +34,12 @@ This is a note to let you know that I've just added the patch titled
 
     perf probe: Add test for regression introduced by switch to die_get_decl_file()
 
-to the 4.14-stable tree which can be found at:
+to the 4.19-stable tree which can be found at:
     http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
 
 The filename of the patch is:
      perf-probe-add-test-for-regression-introduced-by-switch-to-die_get_decl_file.patch
-and it can be found in the queue-4.14 subdirectory.
+and it can be found in the queue-4.19 subdirectory.
 
 If you, or anyone else, feels it should not be added to the stable tree,
 please let <stable@vger.kernel.org> know about it.
@@ -164,4 +164,4 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 Patches currently in stable-queue which might be from georgmueller@gmx.net are
 
-queue-4.14/perf-probe-add-test-for-regression-introduced-by-switch-to-die_get_decl_file.patch
+queue-4.19/perf-probe-add-test-for-regression-introduced-by-switch-to-die_get_decl_file.patch
