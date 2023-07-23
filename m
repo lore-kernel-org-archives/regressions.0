@@ -1,45 +1,13 @@
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BA787E4;
-	Sun, 23 Jul 2023 02:03:10 +0000 (UTC)
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-668711086f4so2061906b3a.1;
-        Sat, 22 Jul 2023 19:03:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1690077790; x=1690682590;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eg6TbyeOVcQsY9Q8Ckx4fXoTDSkrQFOQaolkev87oCg=;
-        b=HcXcQ5nDr9I47fFsVtJ9AdboECTu8+ij46DkwZYqdSK3Xu/XVL7BgQ6jwIcOtENl3V
-         uy0dh4QSZKmo6QmuT5oLISmW4F5b5eTvDnEr4OoAD7aSsjMKkuPaFVpdHnGSLw4ds0Qa
-         Z71gF38sgVm0qtYl3v30RAPcd7Up5VwRaYLSHeqvEW53otBzJf8rofWxVRvdDpEqUxqy
-         aKy01wNb7M8sJeiL001UhB4OjTYpw/Xn3gET00jnPBIrpOjbxO8pbcooyWK9Ilq5/Ln3
-         G+G9tFhm0ogSIdqUTdJDsP2Z2Q/MJ0kdDwUkhHu2VeZe/YsEZ9L6ng8HUyH6wK3qDfuA
-         b6TA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690077790; x=1690682590;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=eg6TbyeOVcQsY9Q8Ckx4fXoTDSkrQFOQaolkev87oCg=;
-        b=Leudvv+WJeL1Zl2HnlDCu2IFR0vd7BvDcVgswM/P6G8SZCwaiy3AgX+eLEE9qNj6nf
-         B2bgJnw6//au8SkSxwKW3demdYeYTvRmDoOcRqvynO8MRVc0rDkT/2Y5mp9fez47P0Kd
-         ekSSDZAo+HD5AZQKHyivTXFnoFjnhpAN+sdDqltTViDdohzQgVoIKHR/dzaOtr3CDrdt
-         XOjQRzbjBzYBlPbdUvvjo39gIkakvmc8Q4Md4x7tOYGJR/iBWtZp+SwpRsWfov2Y5n5C
-         +U56ay+guLmViRkx78iy9KiC8kZ6kHop2Kn1b3tTIW1Uvy6LjO/r4ZZwQXvBb4ntJPjH
-         jBvA==
-X-Gm-Message-State: ABy/qLZf51+LCf58LsX3QksO7kS+rYWBFmANa+qH7IyKD4Y7uskw1t1P
-	ghhgT/1v7eiHihEa5h6Ac5A=
-X-Google-Smtp-Source: APBJJlGnc1N/Fmf+WcuRP0kVxZ9IoI6ZEidxjh5Pxa5hR3B6RiMbbtYo5KPj5HwB5oAjC+X9qXBtgA==
-X-Received: by 2002:a05:6a21:999f:b0:12b:40d3:aeb1 with SMTP id ve31-20020a056a21999f00b0012b40d3aeb1mr9860694pzb.25.1690077790204;
-        Sat, 22 Jul 2023 19:03:10 -0700 (PDT)
-Received: from [192.168.0.104] ([103.131.18.64])
-        by smtp.gmail.com with ESMTPSA id y8-20020a62b508000000b00663b712bfbdsm5145424pfe.57.2023.07.22.19.03.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 22 Jul 2023 19:03:09 -0700 (PDT)
-Message-ID: <871f22f4-c456-db15-3466-085971bd1221@gmail.com>
-Date: Sun, 23 Jul 2023 09:03:03 +0700
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EEFE7C;
+	Sun, 23 Jul 2023 09:17:55 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1qNVDo-0007XV-5T; Sun, 23 Jul 2023 11:17:48 +0200
+Message-ID: <9b5838ea-91ef-a758-2d32-481ee3b4345e@leemhuis.info>
+Date: Sun, 23 Jul 2023 11:17:47 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -48,43 +16,64 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.13.0
-Content-Language: en-US
-To: Huacai Chen <chenhuacai@loongson.cn>, Bjorn Helgaas
- <bhelgaas@google.com>, jiaxun.yang@flygoat.com,
- Aurelien Jarno <aurel32@debian.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>,
- Linux PCI <linux-pci@vger.kernel.org>,
- Linux Loongarch <loongarch@lists.linux.dev>
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-Subject: Fwd: PCI: Loongson: 8b3517f88ff2 breaks PCIe on some system
+Content-Language: en-US, de-DE
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, Igor Mammedov <imammedo@redhat.com>,
+ Bjorn Helgaas <bhelgaas@google.com>, "Michael S. Tsirkin" <mst@redhat.com>,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <20230721160528.800311148@linuxfoundation.org>
+ <20230721160536.293573004@linuxfoundation.org>
+From: Thorsten Leemhuis <linux@leemhuis.info>
+Subject: Re: [PATCH 6.4 172/292] PCI: acpiphp: Reassign resources on bridge if
+ necessary
+In-Reply-To: <20230721160536.293573004@linuxfoundation.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1690103876;6a299dc8;
+X-HE-SMSGID: 1qNVDo-0007XV-5T
 
-Hi,
-
-I notice a regression report on Bugzilla [1]. Quoting from it:
-
-> After 8b3517f88ff2 ("PCI: loongson: Prevent LS7A MRRS increases") backported to stable, we have received multiple regression reports including one from Debian build farm[1] that some systems failed to initialize some PCIe devices.
+On 21.07.23 18:04, Greg Kroah-Hartman wrote:
+> From: Igor Mammedov <imammedo@redhat.com>
 > 
-> I was able to reproduce on one of my Loongson-3A4000+7A system. It seems like the root cause is firmware on those systems didn't set MRRS properly but 8b3517f88ff2 ("PCI: loongson: Prevent LS7A MRRS increases") assumed firmware's maximum MRRS is always valid.
+> commit 40613da52b13fb21c5566f10b287e0ca8c12c4e9 upstream.
 > 
-> [1]: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1035587
+> When using ACPI PCI hotplug, hotplugging a device with large BARs may fail
+> if bridge windows programmed by firmware are not large enough.
+> 
+> Reproducer:
+>   $ qemu-kvm -monitor stdio -M q35  -m 4G \
+>       -global ICH9-LPC.acpi-pci-hotplug-with-bridge-support=on \
+>       -device id=rp1,pcie-root-port,bus=pcie.0,chassis=4 \
+>       disk_image
+> 
+>  wait till linux guest boots, then hotplug device:
+>    (qemu) device_add qxl,bus=rp1
+> 
+> [...]
 
-See Bugzilla for the full thread.
+Greg, just so you know, that patch (which is also queued for 6.1 and
+5.15) is known to cause a regression in 6.5-rc. To quote
+https://lore.kernel.org/all/11fc981c-af49-ce64-6b43-3e282728bd1a@gmail.com/
 
-The linked Debian BTS entry have debugging details on this regression
-(boot log, cpuinfo, and lspci).
+```
+Laptop shows a kernel crash trace after a first suspend to ram, on a
+second attempt to suspend it becomes frozen solid. This is 100%
+repeatable with a 6.5-rc2 kernel, not happening with a 6.4 kernel - see
+the attached dmesg output.
 
-Anyway, I'm adding this regression to regzbot:
+I have bisected the kernel uilds and it points to :
+[40613da52b13fb21c5566f10b287e0ca8c12c4e9] PCI: acpiphp: Reassign
+resources on bridge if necessary
 
-#regzbot introduced: 8b3517f88ff298 https://bugzilla.kernel.org/show_bug.cgi?id=217680
-#regzbot title: LS7A MRRS quirk fails to initialize PCIe devices
-#regzbot link: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1035587
+Reversing this patch seems to fix the kernel crash problem on my laptop.
+```
 
-Thanks.
+Ciao, Thorsten
 
-[1]: https://bugzilla.kernel.org/show_bug.cgi?id=217680
-
--- 
-An old man doll... just what I always wanted! - Clara
+P.S.: I only noticed this by chance and yet again wonder how to handle
+these situations better. I guess exporting the list of regressions
+regzbot tracks in some simple format might be a start; then the stable
+scripts could simply look up commit ids there when a patch is queued and
+warn if they find it (which won't help in caes the regression is
+reported after the patch is queued :-/ ).
