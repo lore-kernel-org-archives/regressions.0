@@ -1,81 +1,67 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A94397F;
-	Sun, 23 Jul 2023 11:08:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90142C433C8;
-	Sun, 23 Jul 2023 11:08:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1690110512;
-	bh=MY3+XIRfy4ch9ILW/sZpzfS0/HM9qWO4gOnXMp7ifi8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bTHjlHq/Y5vDLrX1gTya8fksxEE2o2E5CNmHtzErjFJRm2b7phRNejTnvrtYCLUHW
-	 XGfVyPa7v+9AjDAF+UC/qSQapKFSwuCuTCE+hy2q/07TlcPZy7NqiqKJRHHVfbQLva
-	 A319u/06KQ0aaNEUSFb5GATtHH+NQR+e71Pxr47Q=
-Date: Sun, 23 Jul 2023 13:08:29 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev,
-	Igor Mammedov <imammedo@redhat.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH 6.4 172/292] PCI: acpiphp: Reassign resources on bridge
- if necessary
-Message-ID: <2023072315-lubricate-given-0afa@gregkh>
-References: <20230721160528.800311148@linuxfoundation.org>
- <20230721160536.293573004@linuxfoundation.org>
- <9b5838ea-91ef-a758-2d32-481ee3b4345e@leemhuis.info>
- <67104736-e96f-559d-350d-0d1845d39a5a@leemhuis.info>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9146C7F;
+	Sun, 23 Jul 2023 11:13:11 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1qNX1N-0006H6-2e; Sun, 23 Jul 2023 13:13:05 +0200
+Message-ID: <d8471890-feb8-8953-a97d-5fc6b1f22d65@leemhuis.info>
+Date: Sun, 23 Jul 2023 13:13:04 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <67104736-e96f-559d-350d-0d1845d39a5a@leemhuis.info>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: Fwd: PCI: Loongson: 8b3517f88ff2 breaks PCIe on some system
+Content-Language: en-US, de-DE
+To: Bagas Sanjaya <bagasdotme@gmail.com>, Huacai Chen
+ <chenhuacai@loongson.cn>, Bjorn Helgaas <bhelgaas@google.com>,
+ jiaxun.yang@flygoat.com, Aurelien Jarno <aurel32@debian.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Linux PCI <linux-pci@vger.kernel.org>,
+ Linux Loongarch <loongarch@lists.linux.dev>
+References: <871f22f4-c456-db15-3466-085971bd1221@gmail.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <871f22f4-c456-db15-3466-085971bd1221@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1690110791;00b7bf19;
+X-HE-SMSGID: 1qNX1N-0006H6-2e
 
-On Sun, Jul 23, 2023 at 11:25:29AM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
-> On 23.07.23 11:17, Thorsten Leemhuis wrote:
-> > On 21.07.23 18:04, Greg Kroah-Hartman wrote:
-> >> From: Igor Mammedov <imammedo@redhat.com>
-> >>
-> >> commit 40613da52b13fb21c5566f10b287e0ca8c12c4e9 upstream.
-> >>
-> >> When using ACPI PCI hotplug, hotplugging a device with large BARs may fail
-> >> if bridge windows programmed by firmware are not large enough.
-> >>
-> >> [...]
-> > 
-> > Greg, just so you know, that patch (which is also queued for 6.1 and
-> > 5.15) is known to cause a regression in 6.5-rc. To quote
-> > https://lore.kernel.org/all/11fc981c-af49-ce64-6b43-3e282728bd1a@gmail.com/
-> > 
-> > ```
-> > Laptop shows a kernel crash trace after a first suspend to ram, on a
-> > second attempt to suspend it becomes frozen solid. This is 100%
-> > repeatable with a 6.5-rc2 kernel, not happening with a 6.4 kernel - see
-> > the attached dmesg output.
-> > 
-> > I have bisected the kernel uilds and it points to :
-> > [40613da52b13fb21c5566f10b287e0ca8c12c4e9] PCI: acpiphp: Reassign
-> > resources on bridge if necessary
-> > 
-> > Reversing this patch seems to fix the kernel crash problem on my laptop.
-> > ```
+On 23.07.23 04:03, Bagas Sanjaya wrote:
 > 
-> Forgot to mention the reply from Bjorn:
+> I notice a regression report on Bugzilla [1]. Quoting from it:
 > 
-> ```
-> I queued up a revert of 40613da52b13 ("PCI: acpiphp: Reassign
-> resources on bridge if necessary") (on my for-linus branch for v6.5).
+>> After 8b3517f88ff2 ("PCI: loongson: Prevent LS7A MRRS increases") backported to stable, we have received multiple regression reports including one from Debian build farm[1] that some systems failed to initialize some PCIe devices.
+>>
+>> I was able to reproduce on one of my Loongson-3A4000+7A system. It seems like the root cause is firmware on those systems didn't set MRRS properly but 8b3517f88ff2 ("PCI: loongson: Prevent LS7A MRRS increases") assumed firmware's maximum MRRS is always valid.
+>>
+>> [1]: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1035587
 > 
-> It looks like a NULL pointer dereference; hopefully the fix is obvious
-> and I can drop the revert and replace it with the fix.
-> ```
+> See Bugzilla for the full thread.
+> 
+> The linked Debian BTS entry have debugging details on this regression
+> (boot log, cpuinfo, and lspci).
+> 
+> Anyway, I'm adding this regression to regzbot:
+> 
+> #regzbot introduced: 8b3517f88ff298 https://bugzilla.kernel.org/show_bug.cgi?id=217680
+> #regzbot title: LS7A MRRS quirk fails to initialize PCIe devices
+> #regzbot link: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1035587
 
-Thanks, I've dropped this from the stable queues now.
+FWIW & TWIMC, a fix for this is in the works already afaics:
 
-greg k-h
+#regzbot monitor:
+https://lore.kernel.org/all/20230718133259.2867432-1-jiaxun.yang@flygoat.com/
+#regzbot fix: pci: loongson: Workaround MIPS firmware MRRS settings
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
