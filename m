@@ -1,102 +1,119 @@
-Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
+Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6C8D1869
-	for <regressions@lists.linux.dev>; Sun, 23 Jul 2023 21:17:58 +0000 (UTC)
-Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-d124309864dso37359276.3
-        for <regressions@lists.linux.dev>; Sun, 23 Jul 2023 14:17:58 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8416C184F
+	for <regressions@lists.linux.dev>; Mon, 24 Jul 2023 07:55:48 +0000 (UTC)
+Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-637aaaf27f1so7035356d6.0
+        for <regressions@lists.linux.dev>; Mon, 24 Jul 2023 00:55:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1690147077; x=1690751877;
-        h=mime-version:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=ClyfQRII0KmHt/9r+i0dJc4DTXIAKS+yHZIsBKwm8b0=;
-        b=j4Iv6UMTgCAZpk+GOIgvsm5SoPDEVKa3yHiChXovsJAjaTsKLJwsd6ihUoZgOjn+Ei
-         Vz0OupFPWW5drRE02+02C4o/WHFDB0+U866ETV6R0Yczyow+OkhWAWipQTgPKGWtvXxf
-         1v4TkIjz34NedtuvYZz1EE6ltvXutCWxKUx30amy68jnkyL0qJceNKs0XL1SBjDispzB
-         aPYZb7nWmTAmehxMKTA3ln7V6SO3HTCTyAuS3MQdS92h+Pvm4YL8FbFUfMH4KeXvxmMA
-         hXJmpRFEU0oLsSpUWkNSVXWjtEh6IQwoKU7dfhEDFz169mbC82/XQVjKgiic5ZgNfG9l
-         ab3A==
+        d=gmail.com; s=20221208; t=1690185347; x=1690790147;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oO2PaBPMPgNdhD2v5D/LrK8XAtymTxzQa6+Wp6imTI0=;
+        b=dBX304bKzvJ9AbsxqXvs2MvHEftCsEVgOLvRiWccFE9hxumIuUv3a7y0npVz41zJ5Q
+         vMyydB6vwQUzPDH37sUSD5adC12ZaotinoKEquGG94sx/rmG+Uu2yvUJ3Sk2T24v2vfZ
+         04cmNo9WVO1gbm6BNotp/Fre5Tsi38zqujwUIm4Y9SeKQ5vb9YEap0LOhxHc9SLrTCwz
+         2pkla2U0k2eAFRWZKA7BenbngpkDjnaUg0oisd4E5S2zF7oxFQ1yMuFhQT/qUkqifd0C
+         sfkk5mRUYV/Dt8AMwEfFR+7pxPWe98L3He0DJoG3VpJP7k/mj3G/qp6g0vd3P7t9p5G3
+         wQVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690147077; x=1690751877;
-        h=mime-version:message-id:subject:cc:to:from:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ClyfQRII0KmHt/9r+i0dJc4DTXIAKS+yHZIsBKwm8b0=;
-        b=OggkXuxyhCwaZ92CwgNI8VQAIDM3vSjf+mCN9EiNC7gmFUcYBmg+Gs2SF1VFlVmN/U
-         ML0wHchTrpL0HH2n+9qZaXnmFFB7gCXxgdrjC2vaU7UK+X3xGvqTn2U27zctdh1dN0Pp
-         hb0dN+hNaXXS3vFMG9wV4o1jCcVRdIbsRrAMyJ7fwMai1HjPKloMeGN9BYIRX0Usql3I
-         SlvQaum7fDwcSHS5uX3op7Z/LsEf+ItyOQl3Q41o/HMeZcX8SR+JQhrtChwASdKs7U0y
-         1ZAffqbSXwQ8Vgh5VpTGZO23bCxS11PHqdUdUCzjApW9BJWqCukZDbEpkcClXiwo9BzH
-         dRxg==
-X-Gm-Message-State: ABy/qLZGt+xkgMGN2ilgszd7nkNbBsKgLEOyg5K7qyGzXXOC54XQ1zxS
-	PYI5Q255b0l7JjA3YaowmIsiXA==
-X-Google-Smtp-Source: APBJJlHahDDGpI2cgHome4itZU+LQz7FHUyWtt38KqofgJTDGg3Tf49kES+F1V1vdSJSSh1GFcGSJw==
-X-Received: by 2002:a81:6a45:0:b0:577:3c17:5b2c with SMTP id f66-20020a816a45000000b005773c175b2cmr4330199ywc.27.1690147077357;
-        Sun, 23 Jul 2023 14:17:57 -0700 (PDT)
-Received: from ripple.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
-        by smtp.gmail.com with ESMTPSA id b185-20020a0dd9c2000000b005707b90331dsm2411955ywe.10.2023.07.23.14.17.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Jul 2023 14:17:56 -0700 (PDT)
-Date: Sun, 23 Jul 2023 14:17:55 -0700 (PDT)
-From: Hugh Dickins <hughd@google.com>
-X-X-Sender: hugh@ripple.attlocal.net
-To: Andrew Morton <akpm@linux-foundation.org>
-cc: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>, 
-    Bagas Sanjaya <bagasdotme@gmail.com>, 
-    Laura Abbott <labbott@fedoraproject.org>, x86@kernel.org, 
-    linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, 
-    linux-mm@kvack.org, regressions@lists.linux.dev
-Subject: [PATCH mm-hotfixes] mm/pagewalk: fix EFI_PGT_DUMP of espfix area
-Message-ID: <22bca736-4cab-9ee5-6a52-73a3b2bbe865@google.com>
+        d=1e100.net; s=20221208; t=1690185347; x=1690790147;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=oO2PaBPMPgNdhD2v5D/LrK8XAtymTxzQa6+Wp6imTI0=;
+        b=cEeAFHu53rQqjmpqNiuFIh5QIi6t8GzMPssj5AReAE+PrLDiM2ynHraFiYbZFBbcUC
+         aPpuDd3TLidR9EvGvdXneNQ78dOWwL/kxHiziYR0bvQHsmyLNDWnf24Bt9l+CHfCHn+D
+         91LXVTmAP4PQVE1TL0wPY5+sCd4nVv2tuhGW1riyBS8JaLlPfHW+vy0IHcNIYHjo9+tN
+         /Ok5vEsAfDSjV9VBBi7/YSAu+HsqlocN50grxRgnC89I6gAwsqrpKtHZfK+uyw4+m/AT
+         Ljvfvv8YyCivLmkwN1XGoZ13yFpLJuIFGG04uLi+LlRTq9vzOoxvoQLsHZRyl74UUi8/
+         A+8Q==
+X-Gm-Message-State: ABy/qLZtxrlYW9LNisFIGZB1ZrtAhhNbdIf7GBuDhnoKMhi3440X80Si
+	iIOs+Qhu4Av6Zc3AgjktCuHwim7T7YKcHzf5y5Q=
+X-Google-Smtp-Source: APBJJlF0OMaRw0Uv5+eIczYDG7NDZAVZ8OLqa4zVIlCOMUglxe2CPmAkW6SJI5zy0MMxy5WMRy6SW5i1HIl5Lwga8u4=
+X-Received: by 2002:a05:6214:f03:b0:636:dae2:dc4 with SMTP id
+ gw3-20020a0562140f0300b00636dae20dc4mr11643747qvb.5.1690185346993; Mon, 24
+ Jul 2023 00:55:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <22bca736-4cab-9ee5-6a52-73a3b2bbe865@google.com>
+In-Reply-To: <22bca736-4cab-9ee5-6a52-73a3b2bbe865@google.com>
+From: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Date: Mon, 24 Jul 2023 12:55:36 +0500
+Message-ID: <CABXGCsPe+gjOy3WiVYHsnLX+jiQkizE2g+wF4t3yS2emgCMNYQ@mail.gmail.com>
+Subject: Re: [PATCH mm-hotfixes] mm/pagewalk: fix EFI_PGT_DUMP of espfix area
+To: Hugh Dickins <hughd@google.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Bagas Sanjaya <bagasdotme@gmail.com>, 
+	Laura Abbott <labbott@fedoraproject.org>, x86@kernel.org, linux-efi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, regressions@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Booting x86_64 with CONFIG_EFI_PGT_DUMP=y shows messages of the form
-"mm/pgtable-generic.c:53: bad pmd (____ptrval____)(8000000100077061)".
+On Mon, Jul 24, 2023 at 2:17=E2=80=AFAM Hugh Dickins <hughd@google.com> wro=
+te:
+>
+> Booting x86_64 with CONFIG_EFI_PGT_DUMP=3Dy shows messages of the form
+> "mm/pgtable-generic.c:53: bad pmd (____ptrval____)(8000000100077061)".
+>
+> EFI_PGT_DUMP dumps all of efi_mm, including the espfix area, which is
+> set up with pmd entries which fit the pmd_bad() check: so 0d940a9b270b
+> warns and clears those entries, which would ruin running Win16 binaries.
+>
+> The failing pte_offset_map() stopped such a kernel from even booting,
+> until a few commits later be872f83bf57 changed the pagewalk to tolerate
+> that: but it needs to be even more careful, to not spoil those entries.
+>
+> I might have preferred to change init_espfix_ap() not to use "bad" pmd
+> entries; or to leave them out of the efi_mm dump.  But there is great
+> value in staying away from there, and a pagewalk check of address
+> against TASK_SIZE may protect from other such aberrations too.
+>
+> Reported-by: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+> Closes: https://lore.kernel.org/linux-mm/CABXGCsN3JqXckWO=3DV7p=3DFhPU1tK=
+03RE1w9UE6xL5Y86SMk209w@mail.gmail.com/
+> Fixes: 0d940a9b270b ("mm/pgtable: allow pte_offset_map[_lock]() to fail")
+> Fixes: be872f83bf57 ("mm/pagewalk: walk_pte_range() allow for pte_offset_=
+map()")
+> Signed-off-by: Hugh Dickins <hughd@google.com>
+> ---
+>  mm/pagewalk.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+>
+> diff --git a/mm/pagewalk.c b/mm/pagewalk.c
+> index 64437105fe0d..2022333805d3 100644
+> --- a/mm/pagewalk.c
+> +++ b/mm/pagewalk.c
+> @@ -48,8 +48,11 @@ static int walk_pte_range(pmd_t *pmd, unsigned long ad=
+dr, unsigned long end,
+>         if (walk->no_vma) {
+>                 /*
+>                  * pte_offset_map() might apply user-specific validation.
+> +                * Indeed, on x86_64 the pmd entries set up by init_espfi=
+x_ap()
+> +                * fit its pmd_bad() check (_PAGE_NX set and _PAGE_RW cle=
+ar),
+> +                * and CONFIG_EFI_PGT_DUMP efi_mm goes so far as to walk =
+them.
+>                  */
+> -               if (walk->mm =3D=3D &init_mm)
+> +               if (walk->mm =3D=3D &init_mm || addr >=3D TASK_SIZE)
+>                         pte =3D pte_offset_kernel(pmd, addr);
+>                 else
+>                         pte =3D pte_offset_map(pmd, addr);
+> --
+> 2.35.3
+>
 
-EFI_PGT_DUMP dumps all of efi_mm, including the espfix area, which is
-set up with pmd entries which fit the pmd_bad() check: so 0d940a9b270b
-warns and clears those entries, which would ruin running Win16 binaries.
+Thanks,
+I confirm with this patch "bad pmd" went from kernel logs on all my machine=
+s.
+Tested-by: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
 
-The failing pte_offset_map() stopped such a kernel from even booting,
-until a few commits later be872f83bf57 changed the pagewalk to tolerate
-that: but it needs to be even more careful, to not spoil those entries.
-
-I might have preferred to change init_espfix_ap() not to use "bad" pmd
-entries; or to leave them out of the efi_mm dump.  But there is great
-value in staying away from there, and a pagewalk check of address
-against TASK_SIZE may protect from other such aberrations too.
-
-Reported-by: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Closes: https://lore.kernel.org/linux-mm/CABXGCsN3JqXckWO=V7p=FhPU1tK03RE1w9UE6xL5Y86SMk209w@mail.gmail.com/
-Fixes: 0d940a9b270b ("mm/pgtable: allow pte_offset_map[_lock]() to fail")
-Fixes: be872f83bf57 ("mm/pagewalk: walk_pte_range() allow for pte_offset_map()")
-Signed-off-by: Hugh Dickins <hughd@google.com>
----
- mm/pagewalk.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/mm/pagewalk.c b/mm/pagewalk.c
-index 64437105fe0d..2022333805d3 100644
---- a/mm/pagewalk.c
-+++ b/mm/pagewalk.c
-@@ -48,8 +48,11 @@ static int walk_pte_range(pmd_t *pmd, unsigned long addr, unsigned long end,
- 	if (walk->no_vma) {
- 		/*
- 		 * pte_offset_map() might apply user-specific validation.
-+		 * Indeed, on x86_64 the pmd entries set up by init_espfix_ap()
-+		 * fit its pmd_bad() check (_PAGE_NX set and _PAGE_RW clear),
-+		 * and CONFIG_EFI_PGT_DUMP efi_mm goes so far as to walk them.
- 		 */
--		if (walk->mm == &init_mm)
-+		if (walk->mm == &init_mm || addr >= TASK_SIZE)
- 			pte = pte_offset_kernel(pmd, addr);
- 		else
- 			pte = pte_offset_map(pmd, addr);
--- 
-2.35.3
-
+--=20
+Best Regards,
+Mike Gavrilov.
