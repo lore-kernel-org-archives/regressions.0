@@ -1,107 +1,155 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FDCC1ED4D
-	for <regressions@lists.linux.dev>; Tue, 25 Jul 2023 11:35:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=RbJRV8Wf5saGhMX+P3VQMMs1ukU5TwjpBHioDN2UWdA=; b=akmC2Rz31mrSkTLeVUbzi+fzJK
-	NHYkk9tPfP5DEu7ry0qHYv2JKDxkoyYdXeXPdc0EKXb/wybvIVCYu9JcDami0rgvUbYXhv8uStNRJ
-	YY6f0j1CWbT+Cy2Zy1KcyCOo5p3Hk5opnoRjFoZ7Ugj+1BCzidEF46vKCib+V6bKnUgjUqnsD2Fr1
-	jUKMX5g7xBGBQhILoDRNLZMZ45ldZx2ZPrsU1EC5kahy2peV25l/IYl30g9fxVX4qAIDawtP73XUI
-	j/K3ihYiObT/PqXDaJqJeqSqMZEOSW6ED7uyme4nsCZaXv/eumHD3pellzNRy/DtIlyGnUeHJE3D3
-	KA7pMIdg==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:50228)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1qOGAy-0001yG-28;
-	Tue, 25 Jul 2023 12:26:00 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1qOGAy-0001mu-D4; Tue, 25 Jul 2023 12:26:00 +0100
-Date: Tue, 25 Jul 2023 12:26:00 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Vladimir Oltean <olteanv@gmail.com>, Sergei Antonov <saproj@gmail.com>,
-	netdev@vger.kernel.org
-Subject: Re: Regression: supported_interfaces filling enforcement
-Message-ID: <ZL+xSJh4pJArnaLU@shell.armlinux.org.uk>
-References: <CABikg9wM0f5cjYY0EV_i3cMT2JcUT1bSe_kkiYk0wFwMrTo8=w@mail.gmail.com>
- <20230710123556.gufuowtkre652fdp@skbuf>
- <ZLATb/obklRDT3KW@shell.armlinux.org.uk>
- <9e584314-cb54-1dd4-1686-572973777580@leemhuis.info>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 895C61ED4F;
+	Tue, 25 Jul 2023 11:47:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3F36C433C8;
+	Tue, 25 Jul 2023 11:47:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1690285637;
+	bh=SP7FcrL/n/JbIPYcqAj06Y4gPl8RVIcWqAmrAHKcOK0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=zTznM0bdz9TWQlI09pajhGsYvhfDCo7vVLt9l6enzVhRkiH+5gnF9ZUO8B7iVa8Tt
+	 ZvNqLCL8PgiubSVBYNA1TTbkWwOQfFAkXdzklu5n2l1lKdb1WXE3v4K4FtwOWjCic5
+	 oBNOZCSLFmVEH0Hh7efFwe1v/jjRCHEZS/9pVBcQ=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: stable@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	patches@lists.linux.dev,
+	=?UTF-8?q?Georg=20M=C3=BCller?= <georgmueller@gmx.net>,
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Ian Rogers <irogers@google.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	regressions@lists.linux.dev,
+	Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 5.4 276/313] perf probe: Add test for regression introduced by switch to die_get_decl_file()
+Date: Tue, 25 Jul 2023 12:47:09 +0200
+Message-ID: <20230725104533.013613502@linuxfoundation.org>
+X-Mailer: git-send-email 2.41.0
+In-Reply-To: <20230725104521.167250627@linuxfoundation.org>
+References: <20230725104521.167250627@linuxfoundation.org>
+User-Agent: quilt/0.67
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9e584314-cb54-1dd4-1686-572973777580@leemhuis.info>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jul 25, 2023 at 12:58:31PM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
-> [CCing the regression list, as it should be in the loop for regressions:
-> https://docs.kernel.org/admin-guide/reporting-regressions.html]
-> 
-> On 13.07.23 17:08, Russell King (Oracle) wrote:
-> > On Mon, Jul 10, 2023 at 03:35:56PM +0300, Vladimir Oltean wrote:
-> >> On Tue, Jul 04, 2023 at 05:28:47PM +0300, Sergei Antonov wrote:
-> >>> This commit seems to break the mv88e6060 dsa driver:
-> >>> de5c9bf40c4582729f64f66d9cf4920d50beb897    "net: phylink: require
-> >>> supported_interfaces to be filled"
-> >>>
-> >>> The driver does not fill 'supported_interfaces'. What is the proper
-> >>> way to fix it? I managed to fix it by the following quick code.
-> >>> Comments? Recommendations?
-> >>
-> >> Ok, it seems that commit de5c9bf40c45 ("net: phylink: require
-> >> supported_interfaces to be filled") was based on a miscalculation.
-> > 
-> > Yes, it seems so. I'm not great with dealing with legacy stuff - which
-> > is something I've stated time and time again when drivers fall behind
-> > with phylink development. There's only so much that I can hold in my
-> > head, and I can't runtime test the legacy stuff.
-> > 
-> > I suspect two other DSA drivers are also broken by this:
-> > 
-> > drivers/net/dsa/dsa_loop.c
-> > drivers/net/dsa/realtek/rtl8366rb.c
-> > 
-> > based upon:
-> > 
-> > $ grep -lr dsa_switch_ops drivers/net/dsa | xargs grep -L '\.phylink_get_caps.*=' | xargs grep -L '\.adjust_link'
-> 
-> What happened to this regression? From here it looks like things
-> stalled, but I might have missed something, hence allow me to ask:
-> 
-> Is this still happening? Is anyone still working on fixing this?
+From: Georg Müller <georgmueller@gmx.net>
 
-I think the discussion got side-tracked into whether mv88e6060 should
-be merged into mv88e6xxx, and then just petered out with no further
-patch(es) - plus I was on holiday so obviously wasn't paying much
-attention.
+commit 56cbeacf143530576905623ac72ae0964f3293a6 upstream.
 
-I suppose the sane thing to do would be to fix all drivers in one
-go - maybe something like this:
+This patch adds a test to validate that 'perf probe' works for binaries
+where DWARF info is split into multiple CUs
 
--	if (ds->ops->phylink_get_caps)
-+	if (ds->ops->phylink_get_caps) {
- 		ds->ops->phylink_get_caps(ds, dp->index, &dp->pl_config);
-+	} else {
-+		/* For legacy drivers */
-+		__set_bit(PHY_INTERFACE_MODE_INTERNAL,
-+			  &dp->pl_config.supported_interfaces);
-+		__set_bit(PHY_INTERFACE_MODE_GMII,
-+			  &dp->pl_config.supported_interfaces);
-+	}
+Signed-off-by: Georg Müller <georgmueller@gmx.net>
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Ian Rogers <irogers@google.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: regressions@lists.linux.dev
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20230628084551.1860532-5-georgmueller@gmx.net
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ tools/perf/tests/shell/test_uprobe_from_different_cu.sh |   77 ++++++++++++++++
+ 1 file changed, 77 insertions(+)
+ create mode 100755 tools/perf/tests/shell/test_uprobe_from_different_cu.sh
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+--- /dev/null
++++ b/tools/perf/tests/shell/test_uprobe_from_different_cu.sh
+@@ -0,0 +1,77 @@
++#!/bin/bash
++# test perf probe of function from different CU
++# SPDX-License-Identifier: GPL-2.0
++
++set -e
++
++temp_dir=$(mktemp -d /tmp/perf-uprobe-different-cu-sh.XXXXXXXXXX)
++
++cleanup()
++{
++	trap - EXIT TERM INT
++	if [[ "${temp_dir}" =~ ^/tmp/perf-uprobe-different-cu-sh.*$ ]]; then
++		echo "--- Cleaning up ---"
++		perf probe -x ${temp_dir}/testfile -d foo
++		rm -f "${temp_dir}/"*
++		rmdir "${temp_dir}"
++	fi
++}
++
++trap_cleanup()
++{
++        cleanup
++        exit 1
++}
++
++trap trap_cleanup EXIT TERM INT
++
++cat > ${temp_dir}/testfile-foo.h << EOF
++struct t
++{
++  int *p;
++  int c;
++};
++
++extern int foo (int i, struct t *t);
++EOF
++
++cat > ${temp_dir}/testfile-foo.c << EOF
++#include "testfile-foo.h"
++
++int
++foo (int i, struct t *t)
++{
++  int j, res = 0;
++  for (j = 0; j < i && j < t->c; j++)
++    res += t->p[j];
++
++  return res;
++}
++EOF
++
++cat > ${temp_dir}/testfile-main.c << EOF
++#include "testfile-foo.h"
++
++static struct t g;
++
++int
++main (int argc, char **argv)
++{
++  int i;
++  int j[argc];
++  g.c = argc;
++  g.p = j;
++  for (i = 0; i < argc; i++)
++    j[i] = (int) argv[i][0];
++  return foo (3, &g);
++}
++EOF
++
++gcc -g -Og -flto -c ${temp_dir}/testfile-foo.c -o ${temp_dir}/testfile-foo.o
++gcc -g -Og -c ${temp_dir}/testfile-main.c -o ${temp_dir}/testfile-main.o
++gcc -g -Og -o ${temp_dir}/testfile ${temp_dir}/testfile-foo.o ${temp_dir}/testfile-main.o
++
++perf probe -x ${temp_dir}/testfile --funcs foo
++perf probe -x ${temp_dir}/testfile foo
++
++cleanup
+
+
