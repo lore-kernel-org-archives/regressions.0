@@ -1,112 +1,74 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E6A1BA47
-	for <regressions@lists.linux.dev>; Tue, 25 Jul 2023 09:18:13 +0000 (UTC)
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 36P89KDW020373;
-	Tue, 25 Jul 2023 09:17:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=EtaXHcheHiL150xLPJfR+EAbk5fAJAvdft9o7hOW2yY=;
- b=ciDDADRbWoRWglcC0RkraVtgpHH8DB0HM1NPNAvQ4DZ7/KsdVAUg7q0oyB6aqCXzOECK
- q0KnTwLJ64EMLFOJ+tzBxrwKP2jElNavUOTbo9vt8qO0P72pckxQVRilQWULHU5yLPkG
- CS5AlSC+wR7D7225tQUDqknIym+n/M9XY5QLyRW4dIlXOqCcF/gwAIfBgrNc6LnPnyNq
- MvbL2hW+zLisAJaCwg6IqoXJrFcEUdn+iszWFy+eeX9HNThJWDCP8u/pGiE5zZpHJYCU
- P6LWBfK2WFIo/MeJXrsSOAOmvoP4A/3S+JywsZX7yjPxjGM4FLdGj+e3B1hucVwuvlCx Rw== 
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3s1y6m1ct4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 25 Jul 2023 09:17:54 +0000
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 36P9Hrtu025701
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 25 Jul 2023 09:17:53 GMT
-Received: from [10.204.118.225] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.30; Tue, 25 Jul
- 2023 02:17:16 -0700
-Message-ID: <16885654-09f0-c139-cc9b-c6c4d666932e@quicinc.com>
-Date: Tue, 25 Jul 2023 14:47:14 +0530
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15960156DD
+	for <regressions@lists.linux.dev>; Tue, 25 Jul 2023 09:41:37 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1qOEXo-0005QE-OR; Tue, 25 Jul 2023 11:41:28 +0200
+Message-ID: <b4a0011e-95fc-dc3c-8201-cc6f64bd7671@leemhuis.info>
+Date: Tue, 25 Jul 2023 11:41:28 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: Fwd: ath11k: QCN9074: ce desc not available for wmi command
-To: Linux regressions mailing list <regressions@lists.linux.dev>,
-        "Bagas
- Sanjaya" <bagasdotme@gmail.com>,
-        Kalle Valo <quic_kvalo@quicinc.com>,
-        "Johannes Berg" <johannes@sipsolutions.net>,
-        Jakub Kicinski <kuba@kernel.org>
-CC: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Linux Atheros
- 11K" <ath11k@lists.infradead.org>
-References: <1326a6e4-758d-3344-d90c-8a126748b034@gmail.com>
- <6a0c3aa0-86a8-8c06-81df-2d7085946cf5@leemhuis.info>
-Content-Language: en-US
-From: Manikanta Pubbisetty <quic_mpubbise@quicinc.com>
-In-Reply-To: <6a0c3aa0-86a8-8c06-81df-2d7085946cf5@leemhuis.info>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH RESEND 2/2] Bluetooth: fix use-bdaddr-property quirk
+Content-Language: en-US, de-DE
+To: Amit Pundir <amit.pundir@linaro.org>, Johan Hovold <johan@kernel.org>
+Cc: Johan Hovold <johan+linaro@kernel.org>,
+ Marcel Holtmann <marcel@holtmann.org>,
+ Johan Hedberg <johan.hedberg@gmail.com>,
+ Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+ Matthias Kaehlcke <mka@chromium.org>, linux-bluetooth@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+References: <20230531090424.3187-1-johan+linaro@kernel.org>
+ <20230531090424.3187-3-johan+linaro@kernel.org>
+ <CAMi1Hd3fe=wk02WG8J7K5Ud1GcWkuKKKrxFjkNguxDkzNz2WVQ@mail.gmail.com>
+ <ZKfyH4jRGlVlcLeY@hovoldconsulting.com>
+ <CAMi1Hd2CGQKbMPm6GXfSHgrdHsyngBQ_DBseF08=oEvGdizVcw@mail.gmail.com>
+ <ZKvvN53dM5vbAFGi@hovoldconsulting.com>
+ <CAMi1Hd3-iiNYfSyrvXpsjEFQ+_PzR_WJPoDEbcnAvH+Q1O_Pmw@mail.gmail.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <CAMi1Hd3-iiNYfSyrvXpsjEFQ+_PzR_WJPoDEbcnAvH+Q1O_Pmw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: i5r0EHj-DCqgOd8XKG_jdGWBaU8g-B9U
-X-Proofpoint-ORIG-GUID: i5r0EHj-DCqgOd8XKG_jdGWBaU8g-B9U
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-07-25_04,2023-07-24_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 clxscore=1011
- mlxlogscore=654 bulkscore=0 adultscore=0 spamscore=0 lowpriorityscore=0
- suspectscore=0 phishscore=0 malwarescore=0 impostorscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2306200000 definitions=main-2307250080
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1690278098;0654c310;
+X-HE-SMSGID: 1qOEXo-0005QE-OR
 
-On 6/26/2023 6:19 PM, Linux regression tracking (Thorsten Leemhuis) wrote:
-> Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
-> for once, to make this easily accessible to everyone.
-> 
-> Hmmm, there afaics was no real progress and not even a single reply from
-> a developer (neither here or in bugzilla) since the issue was reported
-> ~10 days ago. :-/
-> 
-> Manikanta, did you maybe just miss that this is caused by change of
-> yours (and thus is something you should look into)?
-> 
+On 10.07.23 14:22, Amit Pundir wrote:
+> On Mon, 10 Jul 2023 at 17:14, Johan Hovold <johan@kernel.org> wrote:
+>> On Fri, Jul 07, 2023 at 07:12:35PM +0530, Amit Pundir wrote:
+>>> On Fri, 7 Jul 2023 at 16:37, Johan Hovold <johan@kernel.org> wrote:
+>>>> Are there any error messages in the log when running with this patch?
+>>> I don't see any relevant error message in dmesg. I'll check if I can
+>>> find a command line BT debug tool which I can use on AOSP for
+>>> debugging. There used to be a few hci command line tools, when I
+>>> looked into it a few years ago. Not sure if they are still around and
+>>> useful.
+>> Yeah, I'm not sure how you set the device address with the Android
+>> stack, but there must be some way as there are other bluetooth
+>> controllers out there which similarly need a valid address before they
+>> can be used.
+> I'll look if I can reuse/simplify "btmgmt public-addr" command on
+> Android or find an equivalent tool to do that.
 
-Extremely sorry for having this missed due to incorrect mail filters on 
-my machine. I have looked the logs attached to the buganizer.
+Please correct me if I'm wrong: the avove to me sounds like you are
+happy with this approach, even if this is kind of a regression; but
+likely one that is rare and thus not worth making a fuzz about. In that
+case I'll remove it from the regression tracking:
 
-The issue from the logs looks like it is happening during the boot.
-Generally, issues like these "ce desc not available for wmi command" 
-occur when there is no room in the copy engine pipe for driver to 
-enqueue the command to the firmware and in many cases these would have 
-happen when firmware is reaping the ring slowly.
+#regzbot resolve: minor issue, workaround found
+#regzbot ignore-activity
 
-It is puzzling to know that thread NAPI is causing this and reverting 
-this got the issue fixed. NAPI generally acts on the RX rings and has 
-nothing to do with the TX.
-
-Hi Sanjay,
-
-This issue is seen just with the kernel upgrade alone? Or firmware has 
-also been upgraded?
-
-Meanwhile, I'll try to repro the issue on my local setup and try to root 
-cause the problem. Pls let me know the firmware version that has been 
-used for testing.
-
-Although I'm okay reverting the threaded NAPI patch for now, in the long 
-run we want that back as threaded NAPI brings significant improvement on 
-the throughput front.
-
-Thanks,
-Manikanta
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
