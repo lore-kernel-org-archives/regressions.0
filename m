@@ -1,90 +1,155 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95B3415AD5
-	for <regressions@lists.linux.dev>; Tue, 25 Jul 2023 09:58:00 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qOEni-0000Af-Ig; Tue, 25 Jul 2023 11:57:54 +0200
-Message-ID: <5ce5b89e-3ea7-318a-1234-279ec92ffb8b@leemhuis.info>
-Date: Tue, 25 Jul 2023 11:57:53 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7877A1D301;
+	Tue, 25 Jul 2023 10:48:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69798C433C9;
+	Tue, 25 Jul 2023 10:48:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1690282110;
+	bh=SP7FcrL/n/JbIPYcqAj06Y4gPl8RVIcWqAmrAHKcOK0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=t9ddt2GhO7uiW17oFDdwrv/vUtAhESGYtmNPNV4G1mmaM8/DmHVH+a60/A98IuG0n
+	 T3D2n2BFAG3bvxnokNh4AUaaqHOy7DTHbexcBZadc8UUCraPJmMxymUQpxH69QcC2L
+	 UCQ5LqvW1cIzFRx0SjvODBmEAlHysEhUz56PjPt4=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: stable@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	patches@lists.linux.dev,
+	=?UTF-8?q?Georg=20M=C3=BCller?= <georgmueller@gmx.net>,
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Ian Rogers <irogers@google.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	regressions@lists.linux.dev,
+	Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 6.4 012/227] perf probe: Add test for regression introduced by switch to die_get_decl_file()
+Date: Tue, 25 Jul 2023 12:42:59 +0200
+Message-ID: <20230725104515.288406864@linuxfoundation.org>
+X-Mailer: git-send-email 2.41.0
+In-Reply-To: <20230725104514.821564989@linuxfoundation.org>
+References: <20230725104514.821564989@linuxfoundation.org>
+User-Agent: quilt/0.67
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: NFS workload leaves nfsd threads in D state
-Content-Language: en-US, de-DE
-To: Chuck Lever III <chuck.lever@oracle.com>,
- Chengming Zhou <chengming.zhou@linux.dev>
-Cc: Christoph Hellwig <hch@lst.de>,
- "ross.lagerwall@citrix.com" <ross.lagerwall@citrix.com>,
- Jens Axboe <axboe@kernel.dk>,
- "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
- Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
- Chuck Lever <cel@kernel.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <7A57C7AE-A51A-4254-888B-FE15CA21F9E9@oracle.com>
- <20230710075634.GA30120@lst.de>
- <3F16A14B-F854-41CC-A3CA-87C7946FC277@oracle.com>
- <F610D6B3-876F-4E5D-A3C4-A30F1B81D9B5@oracle.com>
- <20230710172839.GA7190@lst.de>
- <0F9A70B1-C6AE-4A8B-8A4B-8DC9ADED73AB@oracle.com>
- <20230711120137.GA27050@lst.de>
- <82cb9937-bd11-64a9-2520-bf3cf81ec720@linux.dev>
- <92CC9151-0309-41E9-920E-A549E2A73BE4@oracle.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-In-Reply-To: <92CC9151-0309-41E9-920E-A549E2A73BE4@oracle.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1690279080;cb83f393;
-X-HE-SMSGID: 1qOEni-0000Af-Ig
+Content-Transfer-Encoding: 8bit
 
-On 12.07.23 15:29, Chuck Lever III wrote:
->> On Jul 12, 2023, at 7:34 AM, Chengming Zhou <chengming.zhou@linux.dev> wrote:
->> On 2023/7/11 20:01, Christoph Hellwig wrote:
->>> On Mon, Jul 10, 2023 at 05:40:42PM +0000, Chuck Lever III wrote:
->>>>> blk_rq_init_flush(rq);
->>>>> - rq->flush.seq |= REQ_FSEQ_POSTFLUSH;
->>>>> + rq->flush.seq |= REQ_FSEQ_PREFLUSH;
->>>>> spin_lock_irq(&fq->mq_flush_lock);
->>>>> list_move_tail(&rq->flush.list, &fq->flush_data_in_flight);
->>>>> spin_unlock_irq(&fq->mq_flush_lock);
->>>>
->>>> Thanks for the quick response. No change.
->>> I'm a bit lost and still can't reprodce.  Below is a patch with the
->>> only behavior differences I can find.  It has two "#if 1" blocks,
->>> which I'll need to bisect to to find out which made it work (if any,
->>> but I hope so).
->>
->> I tried today to reproduce, but can't unfortunately.
->>
->> Could you please also try the fix patch [1] from Ross Lagerwall that fixes
->> IO hung problem of plug recursive flush?
->>
->> (Since the main difference is that post-flush requests now can go into plug.)
->>
->> [1] https://lore.kernel.org/all/20230711160434.248868-1-ross.lagerwall@citrix.com/
-> 
-> Thanks for the suggestion. No change, unfortunately.
+From: Georg Müller <georgmueller@gmx.net>
 
-Chuck, what's the status here? This thread looks stalled, that's why I
-wonder.
+commit 56cbeacf143530576905623ac72ae0964f3293a6 upstream.
 
-FWIW, I noticed a commit with a Fixes: tag for your culprit in next (see
-28b24123747098 ("blk-flush: fix rq->flush.seq for post-flush
-requests")). But unless I missed something you are not CCed, so I guess
-that's a different issue?
+This patch adds a test to validate that 'perf probe' works for binaries
+where DWARF info is split into multiple CUs
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+Signed-off-by: Georg Müller <georgmueller@gmx.net>
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Ian Rogers <irogers@google.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: regressions@lists.linux.dev
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20230628084551.1860532-5-georgmueller@gmx.net
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ tools/perf/tests/shell/test_uprobe_from_different_cu.sh |   77 ++++++++++++++++
+ 1 file changed, 77 insertions(+)
+ create mode 100755 tools/perf/tests/shell/test_uprobe_from_different_cu.sh
 
-#regzbot poke
+--- /dev/null
++++ b/tools/perf/tests/shell/test_uprobe_from_different_cu.sh
+@@ -0,0 +1,77 @@
++#!/bin/bash
++# test perf probe of function from different CU
++# SPDX-License-Identifier: GPL-2.0
++
++set -e
++
++temp_dir=$(mktemp -d /tmp/perf-uprobe-different-cu-sh.XXXXXXXXXX)
++
++cleanup()
++{
++	trap - EXIT TERM INT
++	if [[ "${temp_dir}" =~ ^/tmp/perf-uprobe-different-cu-sh.*$ ]]; then
++		echo "--- Cleaning up ---"
++		perf probe -x ${temp_dir}/testfile -d foo
++		rm -f "${temp_dir}/"*
++		rmdir "${temp_dir}"
++	fi
++}
++
++trap_cleanup()
++{
++        cleanup
++        exit 1
++}
++
++trap trap_cleanup EXIT TERM INT
++
++cat > ${temp_dir}/testfile-foo.h << EOF
++struct t
++{
++  int *p;
++  int c;
++};
++
++extern int foo (int i, struct t *t);
++EOF
++
++cat > ${temp_dir}/testfile-foo.c << EOF
++#include "testfile-foo.h"
++
++int
++foo (int i, struct t *t)
++{
++  int j, res = 0;
++  for (j = 0; j < i && j < t->c; j++)
++    res += t->p[j];
++
++  return res;
++}
++EOF
++
++cat > ${temp_dir}/testfile-main.c << EOF
++#include "testfile-foo.h"
++
++static struct t g;
++
++int
++main (int argc, char **argv)
++{
++  int i;
++  int j[argc];
++  g.c = argc;
++  g.p = j;
++  for (i = 0; i < argc; i++)
++    j[i] = (int) argv[i][0];
++  return foo (3, &g);
++}
++EOF
++
++gcc -g -Og -flto -c ${temp_dir}/testfile-foo.c -o ${temp_dir}/testfile-foo.o
++gcc -g -Og -c ${temp_dir}/testfile-main.c -o ${temp_dir}/testfile-main.o
++gcc -g -Og -o ${temp_dir}/testfile ${temp_dir}/testfile-foo.o ${temp_dir}/testfile-main.o
++
++perf probe -x ${temp_dir}/testfile --funcs foo
++perf probe -x ${temp_dir}/testfile foo
++
++cleanup
+
+
