@@ -1,79 +1,155 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E81C915AFC
-	for <regressions@lists.linux.dev>; Tue, 25 Jul 2023 10:58:33 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qOFkN-00045L-Mr; Tue, 25 Jul 2023 12:58:31 +0200
-Message-ID: <9e584314-cb54-1dd4-1686-572973777580@leemhuis.info>
-Date: Tue, 25 Jul 2023 12:58:31 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A320815AC5;
+	Tue, 25 Jul 2023 11:00:12 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE65FC433C7;
+	Tue, 25 Jul 2023 11:00:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1690282812;
+	bh=SP7FcrL/n/JbIPYcqAj06Y4gPl8RVIcWqAmrAHKcOK0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=w3qoMft5IT7BrDDWbHS8aQTvWZOpjSuWW5atzYgr5cgfUnQkcOh8duFCGMBwbZ7Ok
+	 v7psvp0Ae62snwYKITIgSbDvHxXnEpRf94X/W5IV0gVg/ydIa0WLpCD/3OLYlTq9zQ
+	 /kpZZSueyZ4EI2lOth9cuU4V6FOqwPNm/74Iaa2Y=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: stable@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	patches@lists.linux.dev,
+	=?UTF-8?q?Georg=20M=C3=BCller?= <georgmueller@gmx.net>,
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Ian Rogers <irogers@google.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	regressions@lists.linux.dev,
+	Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 6.1 008/183] perf probe: Add test for regression introduced by switch to die_get_decl_file()
+Date: Tue, 25 Jul 2023 12:43:56 +0200
+Message-ID: <20230725104508.113776913@linuxfoundation.org>
+X-Mailer: git-send-email 2.41.0
+In-Reply-To: <20230725104507.756981058@linuxfoundation.org>
+References: <20230725104507.756981058@linuxfoundation.org>
+User-Agent: quilt/0.67
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: Regression: supported_interfaces filling enforcement
-Content-Language: en-US, de-DE
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>,
- Vladimir Oltean <olteanv@gmail.com>
-Cc: Sergei Antonov <saproj@gmail.com>, netdev@vger.kernel.org,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <CABikg9wM0f5cjYY0EV_i3cMT2JcUT1bSe_kkiYk0wFwMrTo8=w@mail.gmail.com>
- <20230710123556.gufuowtkre652fdp@skbuf>
- <ZLATb/obklRDT3KW@shell.armlinux.org.uk>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-In-Reply-To: <ZLATb/obklRDT3KW@shell.armlinux.org.uk>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1690282714;ecb51426;
-X-HE-SMSGID: 1qOFkN-00045L-Mr
+Content-Transfer-Encoding: 8bit
 
-[CCing the regression list, as it should be in the loop for regressions:
-https://docs.kernel.org/admin-guide/reporting-regressions.html]
+From: Georg Müller <georgmueller@gmx.net>
 
-On 13.07.23 17:08, Russell King (Oracle) wrote:
-> On Mon, Jul 10, 2023 at 03:35:56PM +0300, Vladimir Oltean wrote:
->> On Tue, Jul 04, 2023 at 05:28:47PM +0300, Sergei Antonov wrote:
->>> This commit seems to break the mv88e6060 dsa driver:
->>> de5c9bf40c4582729f64f66d9cf4920d50beb897    "net: phylink: require
->>> supported_interfaces to be filled"
->>>
->>> The driver does not fill 'supported_interfaces'. What is the proper
->>> way to fix it? I managed to fix it by the following quick code.
->>> Comments? Recommendations?
->>
->> Ok, it seems that commit de5c9bf40c45 ("net: phylink: require
->> supported_interfaces to be filled") was based on a miscalculation.
-> 
-> Yes, it seems so. I'm not great with dealing with legacy stuff - which
-> is something I've stated time and time again when drivers fall behind
-> with phylink development. There's only so much that I can hold in my
-> head, and I can't runtime test the legacy stuff.
-> 
-> I suspect two other DSA drivers are also broken by this:
-> 
-> drivers/net/dsa/dsa_loop.c
-> drivers/net/dsa/realtek/rtl8366rb.c
-> 
-> based upon:
-> 
-> $ grep -lr dsa_switch_ops drivers/net/dsa | xargs grep -L '\.phylink_get_caps.*=' | xargs grep -L '\.adjust_link'
+commit 56cbeacf143530576905623ac72ae0964f3293a6 upstream.
 
-What happened to this regression? From here it looks like things
-stalled, but I might have missed something, hence allow me to ask:
+This patch adds a test to validate that 'perf probe' works for binaries
+where DWARF info is split into multiple CUs
 
-Is this still happening? Is anyone still working on fixing this?
+Signed-off-by: Georg Müller <georgmueller@gmx.net>
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Ian Rogers <irogers@google.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: regressions@lists.linux.dev
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20230628084551.1860532-5-georgmueller@gmx.net
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ tools/perf/tests/shell/test_uprobe_from_different_cu.sh |   77 ++++++++++++++++
+ 1 file changed, 77 insertions(+)
+ create mode 100755 tools/perf/tests/shell/test_uprobe_from_different_cu.sh
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+--- /dev/null
++++ b/tools/perf/tests/shell/test_uprobe_from_different_cu.sh
+@@ -0,0 +1,77 @@
++#!/bin/bash
++# test perf probe of function from different CU
++# SPDX-License-Identifier: GPL-2.0
++
++set -e
++
++temp_dir=$(mktemp -d /tmp/perf-uprobe-different-cu-sh.XXXXXXXXXX)
++
++cleanup()
++{
++	trap - EXIT TERM INT
++	if [[ "${temp_dir}" =~ ^/tmp/perf-uprobe-different-cu-sh.*$ ]]; then
++		echo "--- Cleaning up ---"
++		perf probe -x ${temp_dir}/testfile -d foo
++		rm -f "${temp_dir}/"*
++		rmdir "${temp_dir}"
++	fi
++}
++
++trap_cleanup()
++{
++        cleanup
++        exit 1
++}
++
++trap trap_cleanup EXIT TERM INT
++
++cat > ${temp_dir}/testfile-foo.h << EOF
++struct t
++{
++  int *p;
++  int c;
++};
++
++extern int foo (int i, struct t *t);
++EOF
++
++cat > ${temp_dir}/testfile-foo.c << EOF
++#include "testfile-foo.h"
++
++int
++foo (int i, struct t *t)
++{
++  int j, res = 0;
++  for (j = 0; j < i && j < t->c; j++)
++    res += t->p[j];
++
++  return res;
++}
++EOF
++
++cat > ${temp_dir}/testfile-main.c << EOF
++#include "testfile-foo.h"
++
++static struct t g;
++
++int
++main (int argc, char **argv)
++{
++  int i;
++  int j[argc];
++  g.c = argc;
++  g.p = j;
++  for (i = 0; i < argc; i++)
++    j[i] = (int) argv[i][0];
++  return foo (3, &g);
++}
++EOF
++
++gcc -g -Og -flto -c ${temp_dir}/testfile-foo.c -o ${temp_dir}/testfile-foo.o
++gcc -g -Og -c ${temp_dir}/testfile-main.c -o ${temp_dir}/testfile-main.o
++gcc -g -Og -o ${temp_dir}/testfile ${temp_dir}/testfile-foo.o ${temp_dir}/testfile-main.o
++
++perf probe -x ${temp_dir}/testfile --funcs foo
++perf probe -x ${temp_dir}/testfile foo
++
++cleanup
 
-#regzbot poke
+
