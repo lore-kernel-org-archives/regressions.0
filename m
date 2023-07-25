@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EB35200AF
-	for <regressions@lists.linux.dev>; Tue, 25 Jul 2023 13:34:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEDCC1F196
+	for <regressions@lists.linux.dev>; Tue, 25 Jul 2023 13:43:31 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qOIBR-000258-7S; Tue, 25 Jul 2023 15:34:37 +0200
-Message-ID: <da198f52-f699-00f6-cd77-366adc4bbdc9@leemhuis.info>
-Date: Tue, 25 Jul 2023 15:34:36 +0200
+	id 1qOIK0-0003xR-4j; Tue, 25 Jul 2023 15:43:28 +0200
+Message-ID: <2d2d2225-3a64-2255-92c8-3237402e3f3d@leemhuis.info>
+Date: Tue, 25 Jul 2023 15:43:27 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,61 +16,49 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.13.0
-Subject: Re: NFS workload leaves nfsd threads in D state
+Subject: Re: Performance Regression due to ASPM disable patch
 Content-Language: en-US, de-DE
-To: Chuck Lever III <chuck.lever@oracle.com>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Chengming Zhou <chengming.zhou@linux.dev>, Christoph Hellwig
- <hch@lst.de>, "ross.lagerwall@citrix.com" <ross.lagerwall@citrix.com>,
- Jens Axboe <axboe@kernel.dk>,
- "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
- Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
- Chuck Lever <cel@kernel.org>
-References: <7A57C7AE-A51A-4254-888B-FE15CA21F9E9@oracle.com>
- <20230710075634.GA30120@lst.de>
- <3F16A14B-F854-41CC-A3CA-87C7946FC277@oracle.com>
- <F610D6B3-876F-4E5D-A3C4-A30F1B81D9B5@oracle.com>
- <20230710172839.GA7190@lst.de>
- <0F9A70B1-C6AE-4A8B-8A4B-8DC9ADED73AB@oracle.com>
- <20230711120137.GA27050@lst.de>
- <82cb9937-bd11-64a9-2520-bf3cf81ec720@linux.dev>
- <92CC9151-0309-41E9-920E-A549E2A73BE4@oracle.com>
- <5ce5b89e-3ea7-318a-1234-279ec92ffb8b@leemhuis.info>
- <73D6DC23-297A-4802-9925-1C94BB14FFF8@oracle.com>
 From: "Linux regression tracking #update (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <73D6DC23-297A-4802-9925-1C94BB14FFF8@oracle.com>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+Cc: nic_swsd@realtek.com, netdev@vger.kernel.org,
+ linux-nvme@lists.infradead.org
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+References: <CGME20230712155834epcas5p1140d90c8a0a181930956622728c4dd89@epcas5p1.samsung.com>
+ <20230712155052.GA946@green245>
+ <425eba3b-0138-81d1-f615-97fc24b2d51d@leemhuis.info>
+In-Reply-To: <425eba3b-0138-81d1-f615-97fc24b2d51d@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1690292080;0dc3329c;
-X-HE-SMSGID: 1qOIBR-000258-7S
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1690292612;bb3e5ec3;
+X-HE-SMSGID: 1qOIK0-0003xR-4j
 
-On 25.07.23 15:21, Chuck Lever III wrote:
->> On Jul 25, 2023, at 5:57 AM, Linux regression tracking (Thorsten Leemhuis) <regressions@leemhuis.info> wrote:
+[TLDR: This mail in primarily relevant for Linux kernel regression
+tracking. See link in footer if these mails annoy you.]
+
+On 13.07.23 14:37, Linux regression tracking #adding (Thorsten Leemhuis)
+wrote:
+
+> On 12.07.23 17:55, Anuj Gupta wrote:
 >>
->> On 12.07.23 15:29, Chuck Lever III wrote:
->>>> On Jul 12, 2023, at 7:34 AM, Chengming Zhou <chengming.zhou@linux.dev> wrote:
->>>> On 2023/7/11 20:01, Christoph Hellwig wrote:
->>>>> On Mon, Jul 10, 2023 at 05:40:42PM +0000, Chuck Lever III wrote:
->>
->> Chuck, what's the status here? This thread looks stalled, that's why I
->> wonder.
->>
->> FWIW, I noticed a commit with a Fixes: tag for your culprit in next (see
->> 28b24123747098 ("blk-flush: fix rq->flush.seq for post-flush
->> requests")). But unless I missed something you are not CCed, so I guess
->> that's a different issue?
+>> I see a performance regression for read/write workloads on our NVMe over
+>> fabrics using TCP as transport setup.
+>> IOPS drop by 23% for 4k-randread [1] and by 18% for 4k-randwrite [2].
 > 
-> This issue was fixed in 6.5-rc2 by commit
-> 
-> 9f87fc4d72f5 ("block: queue data commands from the flush state machine at the head")
+> #regzbot ^introduced e1ed3e4d91112027b90c7ee61479141b3f94
+> #regzbot title net: r8169: performance regression for read/write
+> workloads on our NVMe over fabrics
+> #regzbot ignore-activity
 
-Ahh, many thx for the update, it lacked a proper Link:/Closes: tag and
-mentioned another culprit, so I had missed that!
+The fix did not properly link to the report (it only linked to a reply
+in the thread), hence regzbot missed it:
 
-#regzbot fix: 9f87fc4d72f5
+#regzbot fix: e31a9fedc7d8d8
 #regzbot ignore-activity
+
+/me meanwhile wonders if it'S worth teaching regzbot how to handle these
+cases
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
