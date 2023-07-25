@@ -1,67 +1,101 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com [209.85.167.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEDCC1F196
-	for <regressions@lists.linux.dev>; Tue, 25 Jul 2023 13:43:31 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qOIK0-0003xR-4j; Tue, 25 Jul 2023 15:43:28 +0200
-Message-ID: <2d2d2225-3a64-2255-92c8-3237402e3f3d@leemhuis.info>
-Date: Tue, 25 Jul 2023 15:43:27 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FE8E1F92E
+	for <regressions@lists.linux.dev>; Tue, 25 Jul 2023 14:25:26 +0000 (UTC)
+Received: by mail-oi1-f173.google.com with SMTP id 5614622812f47-3a3790a0a48so4098950b6e.1
+        for <regressions@lists.linux.dev>; Tue, 25 Jul 2023 07:25:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1690295126; x=1690899926;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=lbw+hF4eA8HmUSTieTWam1bAFkdmueOZYbqrfQtPVik=;
+        b=Zyo9RIYLh1RqD1BppQI/5pZK3I4cnjCpNVNt//x1iVkGuP/r9mpVxDO8Tp/dmAOpbq
+         al/heVGeb4ARmh9OzHr/LpmzYYKcZIv+Cc045K8mEyAzhUJHZ1FY53WdNM+IcIaYroLb
+         oWWxujsZEoSUKGLUth8fvuLZB932TmKQzcEi0h+cAWeTXfzaLYchtOCVbq+K2dfoClBI
+         OtcGZpevEPx5KL3C3s1sw8eJ9JerMXnfuydSMQkkoNT4WbEGDRRdar0cVxAQ358p/0vq
+         1pkyrWZHGaPkKmJtQISt6cRccXnHIBHfy68wqi/bjy8Twjamuh5OP0iFLo/WkTExyo88
+         75+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690295126; x=1690899926;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=lbw+hF4eA8HmUSTieTWam1bAFkdmueOZYbqrfQtPVik=;
+        b=ChZMRbSibH0WJbXKnInjjcumGAGK80q2nu2rjhE6R2osmumRKPzxXZV+buAjguOnEE
+         GZgEa2NFslTUN/lCVrpypmttD6/hY0ma8CjWn8bIa9sGcVrTw4/t+U5z0DCgv/2IHUzi
+         KfbjErNqY+cFGOQlczrdEjJRNIvVG2W7Y3pFUAmblRlnhCMjvmZO6bkoWubPyNaVJdEU
+         xSsqcboFte6rSR3+ns7v7f4Lu8eIQ4hP1jQQmNbNFbw2ne1jxWq9SES3ckf5mdlodK+U
+         TjdALte5j+Bf3YoVRUxE3OAX1AgmHoU3QG65uNkLgZhwSymiaU49Rrtcr6/O/EL8xBKN
+         M3BA==
+X-Gm-Message-State: ABy/qLZyxkLWNrvXYen9g5me4dGMz/wMqK3Yud2TE/OUS/GGT4z63nRi
+	HzYwbvzCqLcTEZ165NeBuhgn4Fg9WQFnhuuiaqXxCTvi9PjLhTGag7g=
+X-Google-Smtp-Source: APBJJlFEEkg5rB18aIvSK8+Pxuko5XW13yL6Ux9oRT9OYqxPj5EenfOymivScqddM+vlji3mHG8ULRQSA3pklcl+aFg=
+X-Received: by 2002:a05:6808:301f:b0:3a3:7acc:7dc7 with SMTP id
+ ay31-20020a056808301f00b003a37acc7dc7mr15192641oib.12.1690295125987; Tue, 25
+ Jul 2023 07:25:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: Performance Regression due to ASPM disable patch
-Content-Language: en-US, de-DE
-From: "Linux regression tracking #update (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-Cc: nic_swsd@realtek.com, netdev@vger.kernel.org,
- linux-nvme@lists.infradead.org
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-References: <CGME20230712155834epcas5p1140d90c8a0a181930956622728c4dd89@epcas5p1.samsung.com>
- <20230712155052.GA946@green245>
- <425eba3b-0138-81d1-f615-97fc24b2d51d@leemhuis.info>
-In-Reply-To: <425eba3b-0138-81d1-f615-97fc24b2d51d@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1690292612;bb3e5ec3;
-X-HE-SMSGID: 1qOIK0-0003xR-4j
+References: <20230531090424.3187-1-johan+linaro@kernel.org>
+ <20230531090424.3187-3-johan+linaro@kernel.org> <CAMi1Hd3fe=wk02WG8J7K5Ud1GcWkuKKKrxFjkNguxDkzNz2WVQ@mail.gmail.com>
+ <ZKfyH4jRGlVlcLeY@hovoldconsulting.com> <CAMi1Hd2CGQKbMPm6GXfSHgrdHsyngBQ_DBseF08=oEvGdizVcw@mail.gmail.com>
+ <ZKvvN53dM5vbAFGi@hovoldconsulting.com> <CAMi1Hd3-iiNYfSyrvXpsjEFQ+_PzR_WJPoDEbcnAvH+Q1O_Pmw@mail.gmail.com>
+ <b4a0011e-95fc-dc3c-8201-cc6f64bd7671@leemhuis.info>
+In-Reply-To: <b4a0011e-95fc-dc3c-8201-cc6f64bd7671@leemhuis.info>
+From: Amit Pundir <amit.pundir@linaro.org>
+Date: Tue, 25 Jul 2023 19:54:49 +0530
+Message-ID: <CAMi1Hd1fZVsNZ2_MQDcbXWTjP6veUhQLsD2QTQY+fxmhZ4WRxQ@mail.gmail.com>
+Subject: Re: [PATCH RESEND 2/2] Bluetooth: fix use-bdaddr-property quirk
+To: Linux regressions mailing list <regressions@lists.linux.dev>, Stephan Gerhold <stephan@gerhold.net>
+Cc: Johan Hovold <johan@kernel.org>, Johan Hovold <johan+linaro@kernel.org>, 
+	Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>, 
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>, Matthias Kaehlcke <mka@chromium.org>, linux-bluetooth@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-[TLDR: This mail in primarily relevant for Linux kernel regression
-tracking. See link in footer if these mails annoy you.]
+On Tue, 25 Jul 2023 at 15:11, Linux regression tracking (Thorsten
+Leemhuis) <regressions@leemhuis.info> wrote:
+>
+> On 10.07.23 14:22, Amit Pundir wrote:
+> > On Mon, 10 Jul 2023 at 17:14, Johan Hovold <johan@kernel.org> wrote:
+> >> On Fri, Jul 07, 2023 at 07:12:35PM +0530, Amit Pundir wrote:
+> >>> On Fri, 7 Jul 2023 at 16:37, Johan Hovold <johan@kernel.org> wrote:
+> >>>> Are there any error messages in the log when running with this patch?
+> >>> I don't see any relevant error message in dmesg. I'll check if I can
+> >>> find a command line BT debug tool which I can use on AOSP for
+> >>> debugging. There used to be a few hci command line tools, when I
+> >>> looked into it a few years ago. Not sure if they are still around and
+> >>> useful.
+> >> Yeah, I'm not sure how you set the device address with the Android
+> >> stack, but there must be some way as there are other bluetooth
+> >> controllers out there which similarly need a valid address before they
+> >> can be used.
+> > I'll look if I can reuse/simplify "btmgmt public-addr" command on
+> > Android or find an equivalent tool to do that.
+>
+> Please correct me if I'm wrong: the avove to me sounds like you are
+> happy with this approach, even if this is kind of a regression; but
+> likely one that is rare and thus not worth making a fuzz about. In that
+> case I'll remove it from the regression tracking:
 
-On 13.07.23 14:37, Linux regression tracking #adding (Thorsten Leemhuis)
-wrote:
+Hi. Thanks to Stephan, this had been taken care of from the userspace
+https://android.googlesource.com/device/linaro/dragonboard/+/f70f12a826af
 
-> On 12.07.23 17:55, Anuj Gupta wrote:
->>
->> I see a performance regression for read/write workloads on our NVMe over
->> fabrics using TCP as transport setup.
->> IOPS drop by 23% for 4k-randread [1] and by 18% for 4k-randwrite [2].
-> 
-> #regzbot ^introduced e1ed3e4d91112027b90c7ee61479141b3f94
-> #regzbot title net: r8169: performance regression for read/write
-> workloads on our NVMe over fabrics
+So please remove it from the kernel regression tracking.
+
+Regards,
+Amit Pundir
+
+>
+> #regzbot resolve: minor issue, workaround found
 > #regzbot ignore-activity
-
-The fix did not properly link to the report (it only linked to a reply
-in the thread), hence regzbot missed it:
-
-#regzbot fix: e31a9fedc7d8d8
-#regzbot ignore-activity
-
-/me meanwhile wonders if it'S worth teaching regzbot how to handle these
-cases
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+>
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> --
+> Everything you wanna know about Linux kernel regression tracking:
+> https://linux-regtracking.leemhuis.info/about/#tldr
+> If I did something stupid, please tell me, as explained on that page.
