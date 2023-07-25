@@ -1,13 +1,45 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48C7863BE
-	for <regressions@lists.linux.dev>; Mon, 24 Jul 2023 09:38:35 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qNs1C-0005Vz-5L; Mon, 24 Jul 2023 11:38:18 +0200
-Message-ID: <d452d228-9d62-1511-5d87-dc9bd84d0cda@leemhuis.info>
-Date: Mon, 24 Jul 2023 11:38:17 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBC59EA0
+	for <regressions@lists.linux.dev>; Tue, 25 Jul 2023 00:00:53 +0000 (UTC)
+Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-3a3790a0a48so3683439b6e.1
+        for <regressions@lists.linux.dev>; Mon, 24 Jul 2023 17:00:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1690243252; x=1690848052;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/WOzXYCn1+7xPbIOwobza0NrL0Zs8lbOw99BO/5o3zM=;
+        b=KVq0Tw3a2zJLCFcVcNC2Z4bBSnqV70bHamHgXDIgDthhxomKgjuObTS1Gw4IpuReKn
+         lIwFDxCv3QNCIxoM4JaAOzzPILbYsVpczodgEdqzH29iyK01iP5rxckgGA8h7uuRbw+9
+         M2Cocrec8sXG6ZF6oTT1GpYQpLW5t+UPdfzyC7nVsvq+0t02MLKtOAHuLBtETVsRWvOb
+         H0gNAYOqwG+ZTiZesNV0KVxbEcVFqKwHO4M1mmeRvZpKbAgzaXziGZaqB4AEuNp+A2Nk
+         pV357GxoWNtJf35LDWlT6eczEEtbZrL5NsijpUJPrbyCWk3KX9ifWPZjjBsgCRn6j0EJ
+         /niA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690243252; x=1690848052;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=/WOzXYCn1+7xPbIOwobza0NrL0Zs8lbOw99BO/5o3zM=;
+        b=SQSCOb9W0sXvN8414BBREGc89RrSgxmlJpfsdVNXkOJLfXuIcureylmUXE76nzhofR
+         30bz/m4TMzjjf99JjCLeiXEtl32wLDyp3a2s6ib1ZnaUg6Ugduihk49BaNCG830WwQBe
+         KKNz6P/556lxjF5nW/Gq2M58MpKPxIJfkiPZcfw+6H457nf1w1j6KZDbmCn6mTow0ANp
+         my/8ZLR4pdMed2Wm7m1tuIHrC53UvxMX1B3NtJfJ0TlvkYbwkYYIrfqhrBw6BYMT7hDI
+         +nWF1KZeP8NreCCxoa+0eixbMn/6YYuuI7Or5iNFjKi7Rtypm8C3RF5IW77nCLFbe4wP
+         grhw==
+X-Gm-Message-State: ABy/qLZbZCNbI8w3lkTO8kKdlmkMecQMIzHLQ5X1jS1eZYBVI3DGPNBo
+	CHISc3fg03/QRR3tta/+kxY=
+X-Google-Smtp-Source: APBJJlG6H3RZJ9aETzUQ7uF2B6MJ9YNE/LiDWvnOpOP9zP/cT/QTvEaNVN533DBtJXAlzzDKP+h4oQ==
+X-Received: by 2002:a05:6808:10c7:b0:3a1:eccc:26da with SMTP id s7-20020a05680810c700b003a1eccc26damr15126212ois.25.1690243252376;
+        Mon, 24 Jul 2023 17:00:52 -0700 (PDT)
+Received: from [192.168.0.104] ([103.131.18.64])
+        by smtp.gmail.com with ESMTPSA id bb11-20020a170902bc8b00b001b03b7f8adfsm9481776plb.246.2023.07.24.17.00.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Jul 2023 17:00:52 -0700 (PDT)
+Message-ID: <42bc8e02-5ee0-f1c8-610e-e16391e54ee2@gmail.com>
+Date: Tue, 25 Jul 2023 07:00:21 +0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,79 +48,49 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.13.0
-Subject: Re: [PATCH v8 1/4] fs/proc/kcore: avoid bounce buffer for ktext data
-Content-Language: en-US, de-DE
-To: Jiri Olsa <olsajiri@gmail.com>, Lorenzo Stoakes <lstoakes@gmail.com>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
- Baoquan He <bhe@redhat.com>, Uladzislau Rezki <urezki@gmail.com>,
- Matthew Wilcox <willy@infradead.org>, David Hildenbrand <david@redhat.com>,
- Liu Shixin <liushixin2@huawei.com>, Jens Axboe <axboe@kernel.dk>,
- Alexander Viro <viro@zeniv.linux.org.uk>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <cover.1679566220.git.lstoakes@gmail.com>
- <fd39b0bfa7edc76d360def7d034baaee71d90158.1679566220.git.lstoakes@gmail.com>
- <ZHc2fm+9daF6cgCE@krava>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-In-Reply-To: <ZHc2fm+9daF6cgCE@krava>
+Content-Language: en-US
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+ Henrik Rydberg <rydberg@bitmath.org>,
+ Verot <verot.wrongdoer713@simplelogin.com>
+Cc: Linux Input Devices <linux-input@vger.kernel.org>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Linux Stable <stable@vger.kernel.org>
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+Subject: Fwd: Kernel 6.4.4 breaks Elan Touchpad 1206
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1690191516;46589af5;
-X-HE-SMSGID: 1qNs1C-0005Vz-5L
 
-[CCing the regression list, as it should be in the loop for regressions:
-https://docs.kernel.org/admin-guide/reporting-regressions.html]
+Hi,
 
-[TLDR: I'm adding this report to the list of tracked Linux kernel
-regressions; the text you find below is based on a few templates
-paragraphs you might have encountered already in similar form.
-See link in footer if these mails annoy you.]
+I notice a regression report on Bugzilla [1]. Quoting from it:
 
-On 31.05.23 13:58, Jiri Olsa wrote:
-> On Thu, Mar 23, 2023 at 10:15:16AM +0000, Lorenzo Stoakes wrote:
->> Commit df04abfd181a ("fs/proc/kcore.c: Add bounce buffer for ktext data")
->> introduced the use of a bounce buffer to retrieve kernel text data for
->> /proc/kcore in order to avoid failures arising from hardened user copies
->> enabled by CONFIG_HARDENED_USERCOPY in check_kernel_text_object().
->> [...]
->> Signed-off-by: Lorenzo Stoakes <lstoakes@gmail.com>
->> Reviewed-by: David Hildenbrand <david@redhat.com>
+> Description:
+> When booting into Linux 6.4.4, system no longer recognizes touchpad input (confirmed with xinput). On the lts release, 6.1.39, the input is still recognized.
 > 
-> sorry for late feedback, but looks like this one breaks reading
-> /proc/kcore with objdump for me:
+> Additional info:
+> * package version(s): Linux 6.4.4, 6.1.39
+> * Device: ELAN1206:00 04F3:30F1 Touchpad
 > 
->   # cat /proc/kallsyms | grep ksys_read
->   ffffffff8150ebc0 T ksys_read
->   # objdump -d  --start-address=0xffffffff8150ebc0 --stop-address=0xffffffff8150ebd0 /proc/kcore 
+> Steps to reproduce:
+> - Install 6.4.4 with Elan Touchpad 1206
+> - Reboot
 > 
->   /proc/kcore:     file format elf64-x86-64
-> 
->   objdump: Reading section load1 failed because: Bad address
-> 
-> reverting this makes it work again
+> The issue might be related to bisected commit id: 7b63a88bb62ba2ddf5fcd956be85fe46624628b9
+> This is the only recent commit related to Elantech drivers I've noticed that may have broken the input.
 
-Thanks for the report. To be sure the issue doesn't fall through the
-cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
-tracking bot:
+See Bugzilla for the full thread:
 
-#regzbot ^introduced 2e1c017077
-#regzbot title mm / fs/proc/kcore: reading /proc/kcore with objdump broke
-#regzbot ignore-activity
+To the reporter (Verot): Can you attach dmesg and lspci output?
 
-This isn't a regression? This issue or a fix for it are already
-discussed somewhere else? It was fixed already? You want to clarify when
-the regression started to happen? Or point out I got the title or
-something else totally wrong? Then just reply and tell me -- ideally
-while also telling regzbot about it, as explained by the page listed in
-the footer of this mail.
+Anyway, I'm adding this regression to be tracked by regzbot:
 
-Developers: When fixing the issue, remember to add 'Link:' tags pointing
-to the report (the parent of this mail). See page linked in footer for
-details.
+#regzbot introduced: 7b63a88bb62ba2 https://bugzilla.kernel.org/show_bug.cgi?id=217701
+#regzbot title: OOB protocol access fix breaks Elan Touchpad 1206
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+Thanks.
+
+[1]: https://bugzilla.kernel.org/show_bug.cgi?id=217701
+
+-- 
+An old man doll... just what I always wanted! - Clara
