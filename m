@@ -1,17 +1,17 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A320815AC5;
-	Tue, 25 Jul 2023 11:00:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE65FC433C7;
-	Tue, 25 Jul 2023 11:00:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C0031D301;
+	Tue, 25 Jul 2023 11:08:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6FCDC433C7;
+	Tue, 25 Jul 2023 11:08:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1690282812;
+	s=korg; t=1690283300;
 	bh=SP7FcrL/n/JbIPYcqAj06Y4gPl8RVIcWqAmrAHKcOK0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=w3qoMft5IT7BrDDWbHS8aQTvWZOpjSuWW5atzYgr5cgfUnQkcOh8duFCGMBwbZ7Ok
-	 v7psvp0Ae62snwYKITIgSbDvHxXnEpRf94X/W5IV0gVg/ydIa0WLpCD/3OLYlTq9zQ
-	 /kpZZSueyZ4EI2lOth9cuU4V6FOqwPNm/74Iaa2Y=
+	b=ziffk8eSnj70mBYU/LCWvfRfENstpNg0MzUvqwzO+2O0DujaGhYJNu56ZCP4Cg9J0
+	 r3eWxqXxIAwcTshJTyOczTpb5hViNK0tLbg6r6tb08ssJ2rVyICgdg3stXdYrWaEqD
+	 SCbQf3BXiFeayuNug5cPtaas5NyBUQ5c9iAz2Dd8=
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To: stable@vger.kernel.org
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -28,12 +28,12 @@ Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Peter Zijlstra <peterz@infradead.org>,
 	regressions@lists.linux.dev,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 6.1 008/183] perf probe: Add test for regression introduced by switch to die_get_decl_file()
-Date: Tue, 25 Jul 2023 12:43:56 +0200
-Message-ID: <20230725104508.113776913@linuxfoundation.org>
+Subject: [PATCH 5.15 05/78] perf probe: Add test for regression introduced by switch to die_get_decl_file()
+Date: Tue, 25 Jul 2023 12:45:56 +0200
+Message-ID: <20230725104451.513695648@linuxfoundation.org>
 X-Mailer: git-send-email 2.41.0
-In-Reply-To: <20230725104507.756981058@linuxfoundation.org>
-References: <20230725104507.756981058@linuxfoundation.org>
+In-Reply-To: <20230725104451.275227789@linuxfoundation.org>
+References: <20230725104451.275227789@linuxfoundation.org>
 User-Agent: quilt/0.67
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
