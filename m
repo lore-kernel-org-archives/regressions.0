@@ -1,48 +1,91 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 570AE1DA20
-	for <regressions@lists.linux.dev>; Wed, 26 Jul 2023 14:54:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=3k28+zvPVrQmllp4Y1yDLUbb9Odau4PMyGcZXH9Q2X0=; b=J1IA4J8sAda/QvW3cxq0oyestk
-	jSlACYqE9Ya3NsypgUKmoh4kr5NL0B/RZt96Dc+0vx18U9paJ7brvNDvczndFWdf3CFkz9TbGu08P
-	GiE37cN9ZjhvFhHOnIpcRlp0qUg6c3/M5b6WIITLuSh/6PwTEG+UJAUBpJPI3N2qlMlHmzPPZq2oS
-	xRhlRGRBt7AAdmcdqmgpKI/yqegcLbJUX49daFtTje6IQZ6DGyqqcmzJX0OecJNu22ODemfuhw2Ga
-	n7hjETchULoXb9gyAe5xAJQx2wygg6GqcAJFDrynw3Sn0xZLY6mFFfEnwXaDZLWTy3DQXil0Evt2T
-	hxsrzRSQ==;
-Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1qOfuc-006aFm-5k; Wed, 26 Jul 2023 14:54:50 +0000
-Date: Wed, 26 Jul 2023 15:54:50 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Linux-MM <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: two reports about NULL pointer dereferences in mm subsystem
- since 5.18(?) with qbittorrent on XFS
-Message-ID: <ZMEzuqTOdT1EDApa@casper.infradead.org>
-References: <2e453cab-9049-98e5-1d96-2305fbb751ee@leemhuis.info>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ABE41DA5F
+	for <regressions@lists.linux.dev>; Wed, 26 Jul 2023 15:38:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1690385919;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vowpWuHV+0GHYhLidQCz/tJr8CGvlY+3r6OngHZa8oI=;
+	b=QxYgq1+oefepqPq72ESJHvuyAWBHBPxj+ibauwm9klZqXZj6r6BJz/bnoj0MRwOOzUXC3t
+	+oE20nVD4fbFsgoGWLLcFGC4SNBuc68KEiH20zTixi29KUDftuwGn8vipRjH+JGMsyjtfH
+	PZ2/ia7Yzgt7uPqPn5G9aG2VHhMvi6s=
+Received: from mimecast-mx02.redhat.com (66.187.233.73 [66.187.233.73]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-562-PQeal5gdMN-WA7t_owBKyw-1; Wed, 26 Jul 2023 11:38:35 -0400
+X-MC-Unique: PQeal5gdMN-WA7t_owBKyw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5AD912800E88;
+	Wed, 26 Jul 2023 15:38:34 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.131])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 5FE16145414B;
+	Wed, 26 Jul 2023 15:38:33 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+In-Reply-To: <CAAUqJDuRkHE8fPgZJGaKjUjd3QfGwzfumuJBmStPqBhubxyk_A@mail.gmail.com>
+References: <CAAUqJDuRkHE8fPgZJGaKjUjd3QfGwzfumuJBmStPqBhubxyk_A@mail.gmail.com>
+To: =?UTF-8?B?T25kcmVqIE1vc27DocSNZWs=?= <omosnacek@gmail.com>
+Cc: dhowells@redhat.com,
+    Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+    Herbert Xu <herbert@gondor.apana.org.au>,
+    Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
+    regressions@lists.linux.dev,
+    Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: Another regression in the af_alg series (s390x-specific)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2e453cab-9049-98e5-1d96-2305fbb751ee@leemhuis.info>
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <15124.1690385912.1@warthog.procyon.org.uk>
+Date: Wed, 26 Jul 2023 16:38:32 +0100
+Message-ID: <15125.1690385912@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.7
 
-On Wed, Jul 26, 2023 at 02:43:24PM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
-> Hi everyone! There are two regression reports with somewhat similar
-> symptoms in bugzilla.kernel.org that seem to not get the attention they
-> IMHO deserve.
+Well, I can reproduce it fairly easily.  It seems to be:
 
-I'm sorry you think this regression hasn't received the attention that
-it deserves.  I've spent weeks thinking about this problem and trying to
-track it down, with no success so far.
+	static inline void scatterwalk_start(struct scatter_walk *walk,
+					     struct scatterlist *sg)
+	{
+		walk->sg = sg;
+		walk->offset = sg->offset;  <----
+	}
 
-I'm not used to being matrix managed.  Perhaps you can schedule a 1:1
-with my actual boss who pays me money.
+Presumably sg is rubbish.
+
+Dump of assembler code for function gcm_walk_start:
+   0x0000000000000038 <+0>:     jgnop   0x38 <gcm_walk_start>
+   0x000000000000003e <+6>:     xc      8(64,%r2),8(%r2)
+   0x0000000000000044 <+12>:    st      %r4,32(%r2)
+   0x0000000000000048 <+16>:    stg     %r3,0(%r2)
+   0x000000000000004e <+22>:    l       %r1,8(%r3)
+   0x0000000000000052 <+26>:    st      %r1,8(%r2)
+   0x0000000000000056 <+30>:    jg      0x56 <gcm_walk_start+30>
+
+I'm don't know much about s390x assembly, but I'm guessing %r2 has "walk" and
+%r3 has "sg".
+
+AS:0000000116d50007 R3:0000000000000024 
+Fault in home space mode while using kernel ASCE.
+Failing address: 0026070200000000 TEID: 0026070200000803
+Unable to handle kernel pointer dereference in virtual kernel address space
+
+Krnl GPRS: 000000000000000c 0000038000000310 00000380002a7938 0026070200000000
+           0000000000000000 0000000115593cb4 0000000000000000 0000000000000010
+           0000000100000000 000000017e984690 000000000000000c 0000000000000000
+           000003ffaf12cf98 0000000000000000 000003ff7fc536ba 00000380002a77e0
+
+I'm not sure what to make of the 0026070200000000.
+
+David
+
