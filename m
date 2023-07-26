@@ -1,13 +1,45 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3744DCA4D
-	for <regressions@lists.linux.dev>; Wed, 26 Jul 2023 11:02:51 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qOcI2-0002aO-AM; Wed, 26 Jul 2023 13:02:46 +0200
-Message-ID: <cbc3f335-fc6a-f45a-4a08-f31bda1efd88@leemhuis.info>
-Date: Wed, 26 Jul 2023 13:02:45 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 185E1CA4C
+	for <regressions@lists.linux.dev>; Wed, 26 Jul 2023 11:54:36 +0000 (UTC)
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-26814f65d7fso1680670a91.0
+        for <regressions@lists.linux.dev>; Wed, 26 Jul 2023 04:54:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1690372476; x=1690977276;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=m3sJ40vm4HVuBOgvDIQqcETVwurPntBCvBEW/UzOG68=;
+        b=fVVXMVVr2mosVrZK/ef/2LBwtvU4Z2mN3Pj0I+ErlQcbQ94cvjcbxCtEK7OXFKmwnz
+         YpGqD+nBQUvDpCMAYhI61X4iGIZwmTGqr8Q+TYS9weaGgv6L2MIMZxmhf0VCGFUt70Xd
+         6r1NqQL57+lWcoX2jiZNnaxGefdwBBJ7TDBWCdaDie49DpnXaZ5J3w7qLBz+0oLyrkhU
+         NNY9MeBA4JXQ+7oGzAYJgIElpibjflVY4bw04y+any7Tvy4hkjEONdnJPuSSG8b6iG+Y
+         2GsLzxkMRmGVhtz82z7iTuhuqgSZDaFUi2i/EdkmEYI2gggl8Jc05kLJh9oeU7ig0fR4
+         M8eA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690372476; x=1690977276;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=m3sJ40vm4HVuBOgvDIQqcETVwurPntBCvBEW/UzOG68=;
+        b=Hey1dRsIrO5gKETpFER8/cyzGVLgUGjjtwPbMZnvixbOgn/yCG5F9YTVhn9LqxPWPv
+         1K5q/nriPpgCGlff/m+yanNQfmuiPrOHhpMV+wRZqCmoN3baTyB4d0UmdZsqePzcF2++
+         I8FCJoGh1k2LlQgAjyzbCEyeedDJcEuZWj7VBZxlB06Fe/VA/biY6EkHvP42uMcQaeGQ
+         vEoCp2GzFoxxmJmQaCfLm+UaVK8aga6k4IdzQYOhfjk7wf1NLboIYi1KAZikbM89Ot1g
+         7db+kTuRgy9zzl4vLqoh6N6jCXpkhoGsvn3VnmAMHyotIROcEZ2DKIzlK3O75PKf0SAb
+         q7xQ==
+X-Gm-Message-State: ABy/qLaxFjx6ODRQDkF5V6j9aX01HTuEfHfoe4qiGnkFrW6sAnOlWcu2
+	WghgZ46MVa5k/K3h+KpvYAyaYSCtDpqz5w==
+X-Google-Smtp-Source: APBJJlEfKeTbrN5xCinj7hKGyEStwDBvPTNHNw1SAr8Dh6GIJ0TYjHnJ7SoRt625abJ7D1UH1mfD8g==
+X-Received: by 2002:a17:90a:ba82:b0:268:1def:221c with SMTP id t2-20020a17090aba8200b002681def221cmr1344342pjr.45.1690372476032;
+        Wed, 26 Jul 2023 04:54:36 -0700 (PDT)
+Received: from [192.168.1.121] ([65.129.150.161])
+        by smtp.gmail.com with ESMTPSA id g14-20020a17090a290e00b002680f0f2886sm1211956pjd.12.2023.07.26.04.54.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 Jul 2023 04:54:35 -0700 (PDT)
+Message-ID: <0e272abe-292d-d58f-cf80-55868e793abc@gmail.com>
+Date: Wed, 26 Jul 2023 05:54:34 -0600
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,46 +48,209 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.13.0
-Subject: Re: Another regression in the af_alg series (s390x-specific)
-Content-Language: en-US, de-DE
-To: David Howells <dhowells@redhat.com>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>, Paolo Abeni
- <pabeni@redhat.com>, netdev@vger.kernel.org,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- =?UTF-8?B?T25kcmVqIE1vc27DocSNZWs=?= <omosnacek@gmail.com>,
- Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
-References: <31ddce1d-6014-bf9f-95da-97deb3240606@leemhuis.info>
- <CAAUqJDuRkHE8fPgZJGaKjUjd3QfGwzfumuJBmStPqBhubxyk_A@mail.gmail.com>
- <20079.1690368182@warthog.procyon.org.uk>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <20079.1690368182@warthog.procyon.org.uk>
-Content-Type: text/plain; charset=UTF-8
+Content-Language: en-US
+To: stable@vger.kernel.org
+Cc: regressions@lists.linux.dev
+From: TW <dalzot@gmail.com>
+Subject: Scsi_bus_resume+0x0/0x90 returns -5 when resuming from s3 sleep
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1690369372;0889d675;
-X-HE-SMSGID: 1qOcI2-0002aO-AM
 
-On 26.07.23 12:43, David Howells wrote:
-> "Linux regression tracking (Thorsten Leemhuis)" wrote:
-> 
->> What's the status wrt to this regression (caused by c1abe6f570af from
->> David)? It looks like there never was a real reply and the regression
->> still is unresolved. But maybe I missed something, which can easily
->> happen in my position.
-> 
-> I was on holiday when the regression was posted.
+I have been having issues with the 6.x series of kernels resuming from 
+suspend with one of my drives. Far as I can tell it has trouble with the 
+cache on the drive when coming out of s3 sleep. Tried a few different 
+distros (Manjaro, OpenMandriva Rome, EndeavourOS) all that give the same 
+error message. It appears to work fine on the 5.15 kernel just fine however.
 
-Welcome back. And, no worries, I was just wondering what was up here.
 
->  This week I've been working
-> through various things raised during the last couple of weeks whilst fighting
-> an intermittent apparent bug on my desktop kernel somewhere in ext4, the mm
-> subsys, md or dm-crypt.
+This is the error or errors that I have been getting and assume has been 
+holding up the system from resuming from suspend.
+Jul 20 04:13:41 rageworks kernel: ata10.00: device reported invalid CHS 
+sector 0
+Jul 20 04:13:41 rageworks kernel: sd 9:0:0:0: [sdc] Start/Stop Unit 
+failed: Result: hostbyte=DID_OK driverbyte=DRIVER_OK
+Jul 20 04:13:41 rageworks kernel: sd 9:0:0:0: [sdc] Sense Key : Illegal 
+Request [current]
+Jul 20 04:13:41 rageworks kernel: sd 9:0:0:0: [sdc] Add. Sense: 
+Unaligned write command
+Jul 20 04:13:41 rageworks kernel: sd 9:0:0:0: PM: dpm_run_callback(): 
+scsi_bus_resume+0x0/0x90 returns -5
+Jul 20 04:13:41 rageworks kernel: sd 9:0:0:0: PM: failed to resume 
+async: error -5
 
-Good luck with that!
+The full suspend log.
+Jul 20 04:12:50 rageworks systemd-logind[869]: The system will suspend now!
+Jul 20 04:12:50 rageworks ModemManager[902]: <info> 
+[sleep-monitor-systemd] system is about to suspend
+Jul 20 04:12:50 rageworks NetworkManager[894]: <info> [1689847970.4923] 
+manager: sleep: sleep requested (sleeping: no enabled: yes)
+Jul 20 04:12:50 rageworks NetworkManager[894]: <info> [1689847970.4924] 
+manager: NetworkManager state is now ASLEEP
+Jul 20 04:12:50 rageworks NetworkManager[894]: <info> [1689847970.4926] 
+device (enp9s0): state change: activated -> deactivating (reason 
+'sleeping', sys-iface-state: 'managed')
+Jul 20 04:12:50 rageworks dbus-daemon[866]: [system] Activating via 
+systemd: service name='org.freedesktop.nm_dispatcher' 
+unit='dbus-org.freedesktop.nm-dispatcher.service' requested by ':1.6' 
+(uid=0 pid=894 comm="/usr/bin/NetworkManager --no-daemon")
+Jul 20 04:12:50 rageworks systemd[1]: Starting Network Manager Script 
+Dispatcher Service...
+Jul 20 04:12:50 rageworks dbus-daemon[866]: [system] Successfully 
+activated service 'org.freedesktop.nm_dispatcher'
+Jul 20 04:12:50 rageworks systemd[1]: Started Network Manager Script 
+Dispatcher Service.
+Jul 20 04:12:50 rageworks NetworkManager[894]: <info> [1689847970.6544] 
+device (enp9s0): state change: deactivating -> disconnected (reason 
+'sleeping', sys-iface-state: 'managed')
+Jul 20 04:12:50 rageworks avahi-daemon[864]: Withdrawing address record 
+for fe80::881:c55d:1583:20f5 on enp9s0.
+Jul 20 04:12:50 rageworks avahi-daemon[864]: Leaving mDNS multicast 
+group on interface enp9s0.IPv6 with address fe80::881:c55d:1583:20f5.
+Jul 20 04:12:50 rageworks avahi-daemon[864]: Interface enp9s0.IPv6 no 
+longer relevant for mDNS.
+Jul 20 04:12:50 rageworks NetworkManager[894]: <info> [1689847970.6726] 
+dhcp4 (enp9s0): canceled DHCP transaction
+Jul 20 04:12:50 rageworks NetworkManager[894]: <info> [1689847970.6726] 
+dhcp4 (enp9s0): activation: beginning transaction (timeout in 45 seconds)
+Jul 20 04:12:50 rageworks NetworkManager[894]: <info> [1689847970.6727] 
+dhcp4 (enp9s0): state changed no lease
+Jul 20 04:12:50 rageworks avahi-daemon[864]: Withdrawing address record 
+for 192.168.1.3 on enp9s0.
+Jul 20 04:12:50 rageworks avahi-daemon[864]: Leaving mDNS multicast 
+group on interface enp9s0.IPv4 with address 192.168.1.3.
+Jul 20 04:12:50 rageworks avahi-daemon[864]: Interface enp9s0.IPv4 no 
+longer relevant for mDNS.
+Jul 20 04:12:50 rageworks NetworkManager[894]: <info> [1689847970.7576] 
+device (enp9s0): state change: disconnected -> unmanaged (reason 
+'sleeping', sys-iface-state: 'managed')
+Jul 20 04:12:50 rageworks kernel: r8169 0000:09:00.0 enp9s0: Link is Down
+Jul 20 04:12:50 rageworks systemd[1]: Reached target Sleep.
+Jul 20 04:12:50 rageworks systemd[1]: Starting NVIDIA system suspend 
+actions...
+Jul 20 04:12:50 rageworks suspend[2051]: nvidia-suspend.service
+Jul 20 04:12:50 rageworks logger[2051]: <13>Jul 20 04:12:50 suspend: 
+nvidia-suspend.service
+Jul 20 04:12:51 rageworks systemd[1]: nvidia-suspend.service: 
+Deactivated successfully.
+Jul 20 04:12:51 rageworks systemd[1]: Finished NVIDIA system suspend 
+actions.
+Jul 20 04:12:51 rageworks systemd[1]: Starting System Suspend...
+Jul 20 04:12:51 rageworks systemd-sleep[2059]: Entering sleep state 
+'suspend'...
+Jul 20 04:12:51 rageworks kernel: PM: suspend entry (deep)
+Jul 20 04:13:41 rageworks kernel: Filesystems sync: 0.284 seconds
+Jul 20 04:13:41 rageworks kernel: Freezing user space processes
+Jul 20 04:13:41 rageworks kernel: Freezing user space processes 
+completed (elapsed 0.001 seconds)
+Jul 20 04:13:41 rageworks kernel: OOM killer disabled.
+Jul 20 04:13:41 rageworks kernel: Freezing remaining freezable tasks
+Jul 20 04:13:41 rageworks kernel: Freezing remaining freezable tasks 
+completed (elapsed 0.001 seconds)
+Jul 20 04:13:41 rageworks kernel: printk: Suspending console(s) (use 
+no_console_suspend to debug)
+Jul 20 04:13:41 rageworks kernel: serial 00:05: disabled
+Jul 20 04:13:41 rageworks kernel: sd 0:0:0:0: [sda] Synchronizing SCSI cache
+Jul 20 04:13:41 rageworks kernel: sd 1:0:0:0: [sdb] Synchronizing SCSI cache
+Jul 20 04:13:41 rageworks kernel: sd 9:0:0:0: [sdc] Synchronizing SCSI cache
+Jul 20 04:13:41 rageworks kernel: sd 1:0:0:0: [sdb] Stopping disk
+Jul 20 04:13:41 rageworks kernel: sd 9:0:0:0: [sdc] Stopping disk
+Jul 20 04:13:41 rageworks kernel: sd 0:0:0:0: [sda] Stopping disk
+Jul 20 04:13:41 rageworks kernel: ACPI: PM: Preparing to enter system 
+sleep state S3
+Jul 20 04:13:41 rageworks kernel: ACPI: PM: Saving platform NVS memory
+Jul 20 04:13:41 rageworks kernel: Disabling non-boot CPUs ...
+Jul 20 04:13:41 rageworks kernel: smpboot: CPU 1 is now offline
+Jul 20 04:13:41 rageworks kernel: smpboot: CPU 2 is now offline
+Jul 20 04:13:41 rageworks kernel: smpboot: CPU 3 is now offline
+Jul 20 04:13:41 rageworks kernel: ACPI: PM: Low-level resume complete
+Jul 20 04:13:41 rageworks kernel: ACPI: PM: Restoring platform NVS memory
+Jul 20 04:13:41 rageworks kernel: Enabling non-boot CPUs ...
+Jul 20 04:13:41 rageworks kernel: x86: Booting SMP configuration:
+Jul 20 04:13:41 rageworks kernel: smpboot: Booting Node 0 Processor 1 
+APIC 0x1
+Jul 20 04:13:41 rageworks kernel: microcode: CPU1: patch_level=0x08101016
+Jul 20 04:13:41 rageworks kernel: CPU1 is up
+Jul 20 04:13:41 rageworks kernel: smpboot: Booting Node 0 Processor 2 
+APIC 0x2
+Jul 20 04:13:41 rageworks kernel: microcode: CPU2: patch_level=0x08101016
+Jul 20 04:13:41 rageworks kernel: CPU2 is up
+Jul 20 04:13:41 rageworks kernel: smpboot: Booting Node 0 Processor 3 
+APIC 0x3
+Jul 20 04:13:41 rageworks kernel: microcode: CPU3: patch_level=0x08101016
+Jul 20 04:13:41 rageworks kernel: CPU3 is up
+Jul 20 04:13:41 rageworks kernel: ACPI: PM: Waking up from system sleep 
+state S3
+Jul 20 04:13:41 rageworks kernel: xhci_hcd 0000:02:00.0: xHC error in 
+resume, USBSTS 0x401, Reinit
+Jul 20 04:13:41 rageworks kernel: usb usb1: root hub lost power or was reset
+Jul 20 04:13:41 rageworks kernel: usb usb2: root hub lost power or was reset
+Jul 20 04:13:41 rageworks kernel: serial 00:05: activated
+Jul 20 04:13:41 rageworks kernel: sd 0:0:0:0: [sda] Starting disk
+Jul 20 04:13:41 rageworks kernel: sd 1:0:0:0: [sdb] Starting disk
+Jul 20 04:13:41 rageworks kernel: sd 9:0:0:0: [sdc] Starting disk
+Jul 20 04:13:41 rageworks kernel: ata5: SATA link down (SStatus 0 
+SControl 330)
+Jul 20 04:13:41 rageworks kernel: ata9: SATA link down (SStatus 0 
+SControl 300)
+Jul 20 04:13:41 rageworks kernel: ata6: SATA link down (SStatus 0 
+SControl 330)
+Jul 20 04:13:41 rageworks kernel: usb 1-7: reset full-speed USB device 
+number 2 using xhci_hcd
+Jul 20 04:13:41 rageworks kernel: usb 1-10: reset full-speed USB device 
+number 4 using xhci_hcd
+Jul 20 04:13:41 rageworks kernel: usb 1-8: reset full-speed USB device 
+number 3 using xhci_hcd
+Jul 20 04:13:41 rageworks kernel: ata2: found unknown device (class 0)
+Jul 20 04:13:41 rageworks kernel: ata1: found unknown device (class 0)
+Jul 20 04:13:41 rageworks kernel: ata10: found unknown device (class 0)
+Jul 20 04:13:41 rageworks kernel: ata2: SATA link up 6.0 Gbps (SStatus 
+133 SControl 300)
+Jul 20 04:13:41 rageworks kernel: ata2.00: configured for UDMA/133
+Jul 20 04:13:41 rageworks kernel: ata1: SATA link up 6.0 Gbps (SStatus 
+133 SControl 300)
+Jul 20 04:13:41 rageworks kernel: ata1.00: configured for UDMA/133
+Jul 20 04:13:41 rageworks kernel: ata10: SATA link up 6.0 Gbps (SStatus 
+133 SControl 300)
+Jul 20 04:13:41 rageworks kernel: ata10.00: configured for UDMA/133
+Jul 20 04:13:41 rageworks kernel: ata10: SATA link up 6.0 Gbps (SStatus 
+133 SControl 300)
+Jul 20 04:13:41 rageworks kernel: ata10.00: configured for UDMA/133
+Jul 20 04:13:41 rageworks kernel: ata10.00: device reported invalid CHS 
+sector 0
+Jul 20 04:13:41 rageworks kernel: sd 9:0:0:0: [sdc] Start/Stop Unit 
+failed: Result: hostbyte=DID_OK driverbyte=DRIVER_OK
+Jul 20 04:13:41 rageworks kernel: sd 9:0:0:0: [sdc] Sense Key : Illegal 
+Request [current]
+Jul 20 04:13:41 rageworks kernel: sd 9:0:0:0: [sdc] Add. Sense: 
+Unaligned write command
+Jul 20 04:13:41 rageworks kernel: sd 9:0:0:0: PM: dpm_run_callback(): 
+scsi_bus_resume+0x0/0x90 returns -5
+Jul 20 04:13:41 rageworks kernel: sd 9:0:0:0: PM: failed to resume 
+async: error -5
+Jul 20 04:13:41 rageworks kernel: OOM killer enabled.
+Jul 20 04:13:41 rageworks kernel: Restarting tasks ... done.
+Jul 20 04:13:41 rageworks kernel: random: crng reseeded on system resumption
+Jul 20 04:13:41 rageworks kernel: PM: suspend exit
+Jul 20 04:13:41 rageworks rtkit-daemon[1349]: The canary thread is 
+apparently starving. Taking action.
+Jul 20 04:13:41 rageworks systemd-sleep[2059]: System returned from 
+sleep state.
+Jul 20 04:13:41 rageworks rtkit-daemon[1349]: Demoting known real-time 
+threads.
+Jul 20 04:13:41 rageworks systemd[1]: NetworkManager-dispatcher.service: 
+Deactivated successfully.
+Jul 20 04:13:41 rageworks rtkit-daemon[1349]: Successfully demoted 
+thread 1597 of process 1342.
+Jul 20 04:13:41 rageworks rtkit-daemon[1349]: Successfully demoted 
+thread 1342 of process 1342.
+Jul 20 04:13:41 rageworks rtkit-daemon[1349]: Demoted 2 threads.
+Jul 20 04:13:42 rageworks systemd[1]: systemd-suspend.service: 
+Deactivated successfully.
+Jul 20 04:13:42 rageworks systemd[1]: Finished System Suspend.
+Jul 20 04:13:42 rageworks systemd[1]: Stopped target Sleep.
+Jul 20 04:13:42 rageworks systemd[1]: Reached target Suspend.
+Jul 20 04:13:42 rageworks systemd[1]: Stopped target Suspend.
+Jul 20 04:13:42 rageworks systemd-logind[869]: Operation 'sleep' finished.
 
-> I'll get round to it, but I'll I don't have s390x h/w immediately to hand.
 
-thx! Ciao, Thorsten
+Thanks
