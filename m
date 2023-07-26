@@ -1,65 +1,48 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5FCF21D3A;
-	Wed, 26 Jul 2023 14:07:43 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qOfAz-0000Xw-Qr; Wed, 26 Jul 2023 16:07:41 +0200
-Message-ID: <44198ebe-76bc-b4b5-9426-0a65463b4a99@leemhuis.info>
-Date: Wed, 26 Jul 2023 16:07:41 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 570AE1DA20
+	for <regressions@lists.linux.dev>; Wed, 26 Jul 2023 14:54:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=3k28+zvPVrQmllp4Y1yDLUbb9Odau4PMyGcZXH9Q2X0=; b=J1IA4J8sAda/QvW3cxq0oyestk
+	jSlACYqE9Ya3NsypgUKmoh4kr5NL0B/RZt96Dc+0vx18U9paJ7brvNDvczndFWdf3CFkz9TbGu08P
+	GiE37cN9ZjhvFhHOnIpcRlp0qUg6c3/M5b6WIITLuSh/6PwTEG+UJAUBpJPI3N2qlMlHmzPPZq2oS
+	xRhlRGRBt7AAdmcdqmgpKI/yqegcLbJUX49daFtTje6IQZ6DGyqqcmzJX0OecJNu22ODemfuhw2Ga
+	n7hjETchULoXb9gyAe5xAJQx2wygg6GqcAJFDrynw3Sn0xZLY6mFFfEnwXaDZLWTy3DQXil0Evt2T
+	hxsrzRSQ==;
+Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+	id 1qOfuc-006aFm-5k; Wed, 26 Jul 2023 14:54:50 +0000
+Date: Wed, 26 Jul 2023 15:54:50 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Linux-MM <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: two reports about NULL pointer dereferences in mm subsystem
+ since 5.18(?) with qbittorrent on XFS
+Message-ID: <ZMEzuqTOdT1EDApa@casper.infradead.org>
+References: <2e453cab-9049-98e5-1d96-2305fbb751ee@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: mmap on 9p broken in 6.4
-Content-Language: en-US, de-DE
-From: "Linux regression tracking #update (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-Cc: v9fs@lists.linux.dev
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-References: <ZK25XZ+GpR3KHIB/@pengutronix.de>
- <b013c216-2298-05b4-58bc-fd69e13de05e@leemhuis.info>
-In-Reply-To: <b013c216-2298-05b4-58bc-fd69e13de05e@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1690380463;752510c9;
-X-HE-SMSGID: 1qOfAz-0000Xw-Qr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2e453cab-9049-98e5-1d96-2305fbb751ee@leemhuis.info>
 
-[TLDR: This mail in primarily relevant for Linux kernel regression
-tracking. See link in footer if these mails annoy you.]
+On Wed, Jul 26, 2023 at 02:43:24PM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
+> Hi everyone! There are two regression reports with somewhat similar
+> symptoms in bugzilla.kernel.org that seem to not get the attention they
+> IMHO deserve.
 
-On 13.07.23 13:22, Linux regression tracking #adding (Thorsten Leemhuis)
-wrote:
+I'm sorry you think this regression hasn't received the attention that
+it deserves.  I've spent weeks thinking about this problem and trying to
+track it down, with no success so far.
 
-> On 11.07.23 22:19, Robert Schwebel wrote:
->>
->> TL;DR: mmap() seems to be broken on 9pfs on Linux 6.4. setting
->> "rootflags=ignoreqv" fixes it as well, but it feels like a regression.
->> [...]
->> I could track down the breakage to
->>
->>   1543b4c5071c54d76aad7a7a26a6e43082269b0c
->> [...]
-> 
-> Thanks for the report. To be sure the issue doesn't fall through the
-> cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
-> tracking bot:
-> 
-> #regzbot ^introduced 1543b4c5071c54d76aad7a7a26a6e43082269b
-> #regzbot title 9p: mmap() seems to be broken with qemu as server
-> #regzbot ignore-activity
-
-#regzbot fix: fs/9p: remove unnecessary invalidate_inode_pages2
-#regzbot ignore-activity
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+I'm not used to being matrix managed.  Perhaps you can schedule a 1:1
+with my actual boss who pays me money.
