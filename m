@@ -1,137 +1,127 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37D444CE68
-	for <regressions@lists.linux.dev>; Wed, 26 Jul 2023 20:26:12 +0000 (UTC)
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 36QJDju9014729;
-	Wed, 26 Jul 2023 19:20:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : references : date : in-reply-to : message-id : mime-version :
- content-type; s=pp1; bh=ULMQmjsjYc30tFAsSDGfTwUEtxmLnFVMNahNtH53+Lk=;
- b=F96ixHS6BPhHO4lQmmVer/GPurx42EFg/eR5AJcqCAK+0qFzk3Itx99mpxslZLORuT/3
- MUD5gvajYpcxyKT62eBg8llT7XWTZE3hjDDUwZrG6SMcmP+qtLsDBSI4LjjwhvmNNOoO
- GYRlNfiUm5gMPmPxTfjq1ow8FHI4zZmcewcpmMJv5xERuql7faRSpxjOX1l0JW0b6yu3
- wSdkwPZKjblhpageWE9ZHGpPi0PcLiLUjhLs4M+Ro6MY5QSjfOGZnUV3J+RmJm2YkYOy
- MZXhlXaCOvx7h/z5Ja76aWYz/vtdY57Oea+l/VKCjW2MCCSvPqI+nq4k+Mcpdi98lDif 5A== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3s39f9r5wb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 26 Jul 2023 19:20:24 +0000
-Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 36QJEVpk016128;
-	Wed, 26 Jul 2023 19:20:23 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3s39f9r5vx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 26 Jul 2023 19:20:23 +0000
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 36QINM3g002181;
-	Wed, 26 Jul 2023 19:20:22 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3s0unjq0bj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 26 Jul 2023 19:20:22 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 36QJKLCm18285264
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 26 Jul 2023 19:20:21 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 027DB20040;
-	Wed, 26 Jul 2023 19:20:21 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A7BB820043;
-	Wed, 26 Jul 2023 19:20:20 +0000 (GMT)
-Received: from tuxmaker.linux.ibm.com (unknown [9.152.85.9])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Wed, 26 Jul 2023 19:20:20 +0000 (GMT)
-From: Sven Schnelle <svens@linux.ibm.com>
-To: David Howells <dhowells@redhat.com>
-Cc: Ondrej =?utf-8?B?TW9zbsOhxI1law==?= <omosnacek@gmail.com>,
-        Linux Crypto
- Mailing List
- <linux-crypto@vger.kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
-        regressions@lists.linux.dev,
-        Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>,
-        Harald Freudenberger
- <freude@linux.vnet.ibm.com>
-Subject: Re: Another regression in the af_alg series (s390x-specific)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C00011BF08
+	for <regressions@lists.linux.dev>; Wed, 26 Jul 2023 21:53:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1690408406;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IYYNLALC24HXACra46BapqSwKx6bYQvG9NeNwuOaFoA=;
+	b=C9+uZo9JnZo00eC+K2XureZa/PCrUW9cvNvI4dXZLcGs3pHcg0S4Ss90T8iZv1oBwFeFIT
+	6dLgTU2ll8XLdrvDQvpbXXNz61Qnxs14WyzP8eYFVLV14thVRJFT4kUCGW7cUGk1vXwIq2
+	rAs9lfmJEGSecO2mXphKH3FYn8ex9Ng=
+Received: from mimecast-mx02.redhat.com (66.187.233.73 [66.187.233.73]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-593-BPv7HgEGMKuBxzs7DOfL6Q-1; Wed, 26 Jul 2023 17:53:22 -0400
+X-MC-Unique: BPv7HgEGMKuBxzs7DOfL6Q-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E9FF71C0754A;
+	Wed, 26 Jul 2023 21:53:21 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.131])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 0FC262166B25;
+	Wed, 26 Jul 2023 21:53:19 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+In-Reply-To: <CAAUqJDuRkHE8fPgZJGaKjUjd3QfGwzfumuJBmStPqBhubxyk_A@mail.gmail.com>
 References: <CAAUqJDuRkHE8fPgZJGaKjUjd3QfGwzfumuJBmStPqBhubxyk_A@mail.gmail.com>
-	<15125.1690385912@warthog.procyon.org.uk>
-Date: Wed, 26 Jul 2023 21:20:20 +0200
-In-Reply-To: <15125.1690385912@warthog.procyon.org.uk> (David Howells's
-	message of "Wed, 26 Jul 2023 16:38:32 +0100")
-Message-ID: <yt9dsf9abhu3.fsf@linux.ibm.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.0.50 (gnu/linux)
+To: =?us-ascii?Q?=3D=3FUTF-8=3FB=3FT25kcmVqIE1vc27DocSNZWs=3D=3F=3D?= <omosnacek@gmail.com>,
+    Herbert Xu <herbert@gondor.apana.org.au>
+Cc: dhowells@redhat.com, Paolo Abeni <pabeni@redhat.com>,
+    Sven Schnelle <svens@linux.ibm.com>,
+    Harald Freudenberger <freude@linux.vnet.ibm.com>,
+    Bagas Sanjaya <bagasdotme@gmail.com>, linux-crypto@vger.kernel.org,
+    linux-s390@vger.kernel.org, netdev@vger.kernel.org,
+    regressions@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: [PATCH] crypto: Fix missing initialisation affecting gcm-aes-s390
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: CXFDiluuVty54R36xuRWSL3pcgzLR6cH
-X-Proofpoint-ORIG-GUID: nw-JBIwxoc_g9VInTnoRyxFLBqafpeHa
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-07-26_08,2023-07-26_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=790
- lowpriorityscore=0 bulkscore=0 spamscore=0 malwarescore=0 adultscore=0
- mlxscore=0 suspectscore=0 priorityscore=1501 clxscore=1011 impostorscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2306200000 definitions=main-2307260171
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 26 Jul 2023 22:53:19 +0100
+Message-ID: <97730.1690408399@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.6
 
-David Howells <dhowells@redhat.com> writes:
+=20=20=20=20
+Fix af_alg_alloc_areq() to initialise areq->first_rsgl.sgl.sgt.sgl to point
+to the scatterlist array in areq->first_rsgl.sgl.sgl.
 
-> Well, I can reproduce it fairly easily.  It seems to be:
->
-> 	static inline void scatterwalk_start(struct scatter_walk *walk,
-> 					     struct scatterlist *sg)
-> 	{
-> 		walk->sg = sg;
-> 		walk->offset = sg->offset;  <----
-> 	}
->
-> Presumably sg is rubbish.
->
-> Dump of assembler code for function gcm_walk_start:
->    0x0000000000000038 <+0>:     jgnop   0x38 <gcm_walk_start>
->    0x000000000000003e <+6>:     xc      8(64,%r2),8(%r2)
->    0x0000000000000044 <+12>:    st      %r4,32(%r2)
->    0x0000000000000048 <+16>:    stg     %r3,0(%r2)
->    0x000000000000004e <+22>:    l       %r1,8(%r3)
->    0x0000000000000052 <+26>:    st      %r1,8(%r2)
->    0x0000000000000056 <+30>:    jg      0x56 <gcm_walk_start+30>
->
-> I'm don't know much about s390x assembly, but I'm guessing %r2 has "walk" and
-> %r3 has "sg".
+Without this, the gcm-aes-s390 driver will oops when it tries to do
+gcm_walk_start() on req->dst because req->dst is set to the value of
+areq->first_rsgl.sgl.sgl by _aead_recvmsg() calling
+aead_request_set_crypt().
 
-Correct. I looked into this today, and it happens with c1abe6f570af
-("crypto: af_alg: Use extract_iter_to_sg() to create scatterlists"),
-but not with the commit before. It also only happens with
-arch/s390/crypto/aes_s390.c, but not with a generic aes implementation.
-I also see the s390 aes driver returning EBADMSG even when it's not
-crashing the kernel, so i wonder wether it's another problem in some
-error path.
+The problem comes if an empty ciphertext is passed: the loop in
+af_alg_get_rsgl() just passes straight out and doesn't set areq->first_rsgl
+up.
 
-I tried to understand the patch mentioned above, but i never worked with
-the crypto API in recent years, so that would require some learning on
-my side. Adding Harald, maybe he has some more insight.
+This isn't a problem on x86_64 using gcmaes_crypt_by_sg() because, as far
+as I can tell, that ignores req->dst and only uses req->src[*].
 
-> AS:0000000116d50007 R3:0000000000000024 
-> Fault in home space mode while using kernel ASCE.
-> Failing address: 0026070200000000 TEID: 0026070200000803
-> Unable to handle kernel pointer dereference in virtual kernel address space
->
-> Krnl GPRS: 000000000000000c 0000038000000310 00000380002a7938 0026070200000000
->            0000000000000000 0000000115593cb4 0000000000000000 0000000000000010
->            0000000100000000 000000017e984690 000000000000000c 0000000000000000
->            000003ffaf12cf98 0000000000000000 000003ff7fc536ba 00000380002a77e0
->
-> I'm not sure what to make of the 0026070200000000.
+[*] Is this a bug in aesni-intel_glue.c?
 
-Well, propbably just an arbitry value loaded from corrupted memory.
+The s390x oops looks something like:
+
+ Unable to handle kernel pointer dereference in virtual kernel address space
+ Failing address: 0000000a00000000 TEID: 0000000a00000803
+ Fault in home space mode while using kernel ASCE.
+ AS:00000000a43a0007 R3:0000000000000024
+ Oops: 003b ilc:2 [#1] SMP
+ ...
+ Call Trace:
+  [<000003ff7fc3d47e>] gcm_walk_start+0x16/0x28 [aes_s390]
+  [<00000000a2a342f2>] crypto_aead_decrypt+0x9a/0xb8
+  [<00000000a2a60888>] aead_recvmsg+0x478/0x698
+  [<00000000a2e519a0>] sock_recvmsg+0x70/0xb0
+  [<00000000a2e51a56>] sock_read_iter+0x76/0xa0
+  [<00000000a273e066>] vfs_read+0x26e/0x2a8
+  [<00000000a273e8c4>] ksys_read+0xbc/0x100
+  [<00000000a311d808>] __do_syscall+0x1d0/0x1f8
+  [<00000000a312ff30>] system_call+0x70/0x98
+ Last Breaking-Event-Address:
+  [<000003ff7fc3e6b4>] gcm_aes_crypt+0x104/0xa68 [aes_s390]
+
+Fixes: c1abe6f570af ("crypto: af_alg: Use extract_iter_to_sg() to create sc=
+atterlists")
+Reported-by: Ondrej Mosn=C3=A1=C4=8Dek <omosnacek@gmail.com>
+Link: https://lore.kernel.org/r/CAAUqJDuRkHE8fPgZJGaKjUjd3QfGwzfumuJBmStPqB=
+hubxyk_A@mail.gmail.com/
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: Herbert Xu <herbert@gondor.apana.org.au>
+cc: Sven Schnelle <svens@linux.ibm.com>
+cc: Harald Freudenberger <freude@linux.vnet.ibm.com>
+cc: "David S. Miller" <davem@davemloft.net>
+cc: Paolo Abeni <pabeni@redhat.com>
+cc: linux-crypto@vger.kernel.org
+cc: linux-s390@vger.kernel.org
+cc: regressions@lists.linux.dev
+---
+ crypto/af_alg.c |    1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/crypto/af_alg.c b/crypto/af_alg.c
+index 06b15b9f661c..9ee8575d3b1a 100644
+--- a/crypto/af_alg.c
++++ b/crypto/af_alg.c
+@@ -1192,6 +1192,7 @@ struct af_alg_async_req *af_alg_alloc_areq(struct soc=
+k *sk,
+=20
+ 	areq->areqlen =3D areqlen;
+ 	areq->sk =3D sk;
++	areq->first_rsgl.sgl.sgt.sgl =3D areq->first_rsgl.sgl.sgl;
+ 	areq->last_rsgl =3D NULL;
+ 	INIT_LIST_HEAD(&areq->rsgl_list);
+ 	areq->tsgl =3D NULL;
+
