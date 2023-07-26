@@ -1,45 +1,13 @@
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 185E1CA4C
-	for <regressions@lists.linux.dev>; Wed, 26 Jul 2023 11:54:36 +0000 (UTC)
-Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-26814f65d7fso1680670a91.0
-        for <regressions@lists.linux.dev>; Wed, 26 Jul 2023 04:54:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1690372476; x=1690977276;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=m3sJ40vm4HVuBOgvDIQqcETVwurPntBCvBEW/UzOG68=;
-        b=fVVXMVVr2mosVrZK/ef/2LBwtvU4Z2mN3Pj0I+ErlQcbQ94cvjcbxCtEK7OXFKmwnz
-         YpGqD+nBQUvDpCMAYhI61X4iGIZwmTGqr8Q+TYS9weaGgv6L2MIMZxmhf0VCGFUt70Xd
-         6r1NqQL57+lWcoX2jiZNnaxGefdwBBJ7TDBWCdaDie49DpnXaZ5J3w7qLBz+0oLyrkhU
-         NNY9MeBA4JXQ+7oGzAYJgIElpibjflVY4bw04y+any7Tvy4hkjEONdnJPuSSG8b6iG+Y
-         2GsLzxkMRmGVhtz82z7iTuhuqgSZDaFUi2i/EdkmEYI2gggl8Jc05kLJh9oeU7ig0fR4
-         M8eA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690372476; x=1690977276;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=m3sJ40vm4HVuBOgvDIQqcETVwurPntBCvBEW/UzOG68=;
-        b=Hey1dRsIrO5gKETpFER8/cyzGVLgUGjjtwPbMZnvixbOgn/yCG5F9YTVhn9LqxPWPv
-         1K5q/nriPpgCGlff/m+yanNQfmuiPrOHhpMV+wRZqCmoN3baTyB4d0UmdZsqePzcF2++
-         I8FCJoGh1k2LlQgAjyzbCEyeedDJcEuZWj7VBZxlB06Fe/VA/biY6EkHvP42uMcQaeGQ
-         vEoCp2GzFoxxmJmQaCfLm+UaVK8aga6k4IdzQYOhfjk7wf1NLboIYi1KAZikbM89Ot1g
-         7db+kTuRgy9zzl4vLqoh6N6jCXpkhoGsvn3VnmAMHyotIROcEZ2DKIzlK3O75PKf0SAb
-         q7xQ==
-X-Gm-Message-State: ABy/qLaxFjx6ODRQDkF5V6j9aX01HTuEfHfoe4qiGnkFrW6sAnOlWcu2
-	WghgZ46MVa5k/K3h+KpvYAyaYSCtDpqz5w==
-X-Google-Smtp-Source: APBJJlEfKeTbrN5xCinj7hKGyEStwDBvPTNHNw1SAr8Dh6GIJ0TYjHnJ7SoRt625abJ7D1UH1mfD8g==
-X-Received: by 2002:a17:90a:ba82:b0:268:1def:221c with SMTP id t2-20020a17090aba8200b002681def221cmr1344342pjr.45.1690372476032;
-        Wed, 26 Jul 2023 04:54:36 -0700 (PDT)
-Received: from [192.168.1.121] ([65.129.150.161])
-        by smtp.gmail.com with ESMTPSA id g14-20020a17090a290e00b002680f0f2886sm1211956pjd.12.2023.07.26.04.54.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Jul 2023 04:54:35 -0700 (PDT)
-Message-ID: <0e272abe-292d-d58f-cf80-55868e793abc@gmail.com>
-Date: Wed, 26 Jul 2023 05:54:34 -0600
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EF64AD41
+	for <regressions@lists.linux.dev>; Wed, 26 Jul 2023 12:43:28 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1qOdrS-0004i9-B8; Wed, 26 Jul 2023 14:43:26 +0200
+Message-ID: <2e453cab-9049-98e5-1d96-2305fbb751ee@leemhuis.info>
+Date: Wed, 26 Jul 2023 14:43:24 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -48,209 +16,122 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.13.0
-Content-Language: en-US
-To: stable@vger.kernel.org
-Cc: regressions@lists.linux.dev
-From: TW <dalzot@gmail.com>
-Subject: Scsi_bus_resume+0x0/0x90 returns -5 when resuming from s3 sleep
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Language: en-US, de-DE
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: two reports about NULL pointer dereferences in mm subsystem since
+ 5.18(?) with qbittorrent on XFS
+To: Andrew Morton <akpm@linux-foundation.org>,
+ Matthew Wilcox <willy@infradead.org>
+Cc: Linux kernel regressions list <regressions@lists.linux.dev>,
+ Linus Torvalds <torvalds@linux-foundation.org>, Linux-MM
+ <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1690375409;710a131e;
+X-HE-SMSGID: 1qOdrS-0004i9-B8
 
-I have been having issues with the 6.x series of kernels resuming from 
-suspend with one of my drives. Far as I can tell it has trouble with the 
-cache on the drive when coming out of s3 sleep. Tried a few different 
-distros (Manjaro, OpenMandriva Rome, EndeavourOS) all that give the same 
-error message. It appears to work fine on the 5.15 kernel just fine however.
+Hi everyone! There are two regression reports with somewhat similar
+symptoms in bugzilla.kernel.org that seem to not get the attention they
+IMHO deserve. Both reports describe oopses due to a NULL pointer
+dereference that seems to happen in the mm subsystem when using
+qbittorrent on XFS. It seems quite a few users of that combination run
+into problems.
 
+One report initially received replies from Akpm and Willy, but at some
+point the regression apparently fell through the cracks (I prodded a few
+times, but was ignored). The other never got a reply from a mm developer
+afaics. I hope to revive things with this mail to finally get them on
+track and resolved.
 
-This is the error or errors that I have been getting and assume has been 
-holding up the system from resuming from suspend.
-Jul 20 04:13:41 rageworks kernel: ata10.00: device reported invalid CHS 
-sector 0
-Jul 20 04:13:41 rageworks kernel: sd 9:0:0:0: [sdc] Start/Stop Unit 
-failed: Result: hostbyte=DID_OK driverbyte=DRIVER_OK
-Jul 20 04:13:41 rageworks kernel: sd 9:0:0:0: [sdc] Sense Key : Illegal 
-Request [current]
-Jul 20 04:13:41 rageworks kernel: sd 9:0:0:0: [sdc] Add. Sense: 
-Unaligned write command
-Jul 20 04:13:41 rageworks kernel: sd 9:0:0:0: PM: dpm_run_callback(): 
-scsi_bus_resume+0x0/0x90 returns -5
-Jul 20 04:13:41 rageworks kernel: sd 9:0:0:0: PM: failed to resume 
-async: error -5
-
-The full suspend log.
-Jul 20 04:12:50 rageworks systemd-logind[869]: The system will suspend now!
-Jul 20 04:12:50 rageworks ModemManager[902]: <info> 
-[sleep-monitor-systemd] system is about to suspend
-Jul 20 04:12:50 rageworks NetworkManager[894]: <info> [1689847970.4923] 
-manager: sleep: sleep requested (sleeping: no enabled: yes)
-Jul 20 04:12:50 rageworks NetworkManager[894]: <info> [1689847970.4924] 
-manager: NetworkManager state is now ASLEEP
-Jul 20 04:12:50 rageworks NetworkManager[894]: <info> [1689847970.4926] 
-device (enp9s0): state change: activated -> deactivating (reason 
-'sleeping', sys-iface-state: 'managed')
-Jul 20 04:12:50 rageworks dbus-daemon[866]: [system] Activating via 
-systemd: service name='org.freedesktop.nm_dispatcher' 
-unit='dbus-org.freedesktop.nm-dispatcher.service' requested by ':1.6' 
-(uid=0 pid=894 comm="/usr/bin/NetworkManager --no-daemon")
-Jul 20 04:12:50 rageworks systemd[1]: Starting Network Manager Script 
-Dispatcher Service...
-Jul 20 04:12:50 rageworks dbus-daemon[866]: [system] Successfully 
-activated service 'org.freedesktop.nm_dispatcher'
-Jul 20 04:12:50 rageworks systemd[1]: Started Network Manager Script 
-Dispatcher Service.
-Jul 20 04:12:50 rageworks NetworkManager[894]: <info> [1689847970.6544] 
-device (enp9s0): state change: deactivating -> disconnected (reason 
-'sleeping', sys-iface-state: 'managed')
-Jul 20 04:12:50 rageworks avahi-daemon[864]: Withdrawing address record 
-for fe80::881:c55d:1583:20f5 on enp9s0.
-Jul 20 04:12:50 rageworks avahi-daemon[864]: Leaving mDNS multicast 
-group on interface enp9s0.IPv6 with address fe80::881:c55d:1583:20f5.
-Jul 20 04:12:50 rageworks avahi-daemon[864]: Interface enp9s0.IPv6 no 
-longer relevant for mDNS.
-Jul 20 04:12:50 rageworks NetworkManager[894]: <info> [1689847970.6726] 
-dhcp4 (enp9s0): canceled DHCP transaction
-Jul 20 04:12:50 rageworks NetworkManager[894]: <info> [1689847970.6726] 
-dhcp4 (enp9s0): activation: beginning transaction (timeout in 45 seconds)
-Jul 20 04:12:50 rageworks NetworkManager[894]: <info> [1689847970.6727] 
-dhcp4 (enp9s0): state changed no lease
-Jul 20 04:12:50 rageworks avahi-daemon[864]: Withdrawing address record 
-for 192.168.1.3 on enp9s0.
-Jul 20 04:12:50 rageworks avahi-daemon[864]: Leaving mDNS multicast 
-group on interface enp9s0.IPv4 with address 192.168.1.3.
-Jul 20 04:12:50 rageworks avahi-daemon[864]: Interface enp9s0.IPv4 no 
-longer relevant for mDNS.
-Jul 20 04:12:50 rageworks NetworkManager[894]: <info> [1689847970.7576] 
-device (enp9s0): state change: disconnected -> unmanaged (reason 
-'sleeping', sys-iface-state: 'managed')
-Jul 20 04:12:50 rageworks kernel: r8169 0000:09:00.0 enp9s0: Link is Down
-Jul 20 04:12:50 rageworks systemd[1]: Reached target Sleep.
-Jul 20 04:12:50 rageworks systemd[1]: Starting NVIDIA system suspend 
-actions...
-Jul 20 04:12:50 rageworks suspend[2051]: nvidia-suspend.service
-Jul 20 04:12:50 rageworks logger[2051]: <13>Jul 20 04:12:50 suspend: 
-nvidia-suspend.service
-Jul 20 04:12:51 rageworks systemd[1]: nvidia-suspend.service: 
-Deactivated successfully.
-Jul 20 04:12:51 rageworks systemd[1]: Finished NVIDIA system suspend 
-actions.
-Jul 20 04:12:51 rageworks systemd[1]: Starting System Suspend...
-Jul 20 04:12:51 rageworks systemd-sleep[2059]: Entering sleep state 
-'suspend'...
-Jul 20 04:12:51 rageworks kernel: PM: suspend entry (deep)
-Jul 20 04:13:41 rageworks kernel: Filesystems sync: 0.284 seconds
-Jul 20 04:13:41 rageworks kernel: Freezing user space processes
-Jul 20 04:13:41 rageworks kernel: Freezing user space processes 
-completed (elapsed 0.001 seconds)
-Jul 20 04:13:41 rageworks kernel: OOM killer disabled.
-Jul 20 04:13:41 rageworks kernel: Freezing remaining freezable tasks
-Jul 20 04:13:41 rageworks kernel: Freezing remaining freezable tasks 
-completed (elapsed 0.001 seconds)
-Jul 20 04:13:41 rageworks kernel: printk: Suspending console(s) (use 
-no_console_suspend to debug)
-Jul 20 04:13:41 rageworks kernel: serial 00:05: disabled
-Jul 20 04:13:41 rageworks kernel: sd 0:0:0:0: [sda] Synchronizing SCSI cache
-Jul 20 04:13:41 rageworks kernel: sd 1:0:0:0: [sdb] Synchronizing SCSI cache
-Jul 20 04:13:41 rageworks kernel: sd 9:0:0:0: [sdc] Synchronizing SCSI cache
-Jul 20 04:13:41 rageworks kernel: sd 1:0:0:0: [sdb] Stopping disk
-Jul 20 04:13:41 rageworks kernel: sd 9:0:0:0: [sdc] Stopping disk
-Jul 20 04:13:41 rageworks kernel: sd 0:0:0:0: [sda] Stopping disk
-Jul 20 04:13:41 rageworks kernel: ACPI: PM: Preparing to enter system 
-sleep state S3
-Jul 20 04:13:41 rageworks kernel: ACPI: PM: Saving platform NVS memory
-Jul 20 04:13:41 rageworks kernel: Disabling non-boot CPUs ...
-Jul 20 04:13:41 rageworks kernel: smpboot: CPU 1 is now offline
-Jul 20 04:13:41 rageworks kernel: smpboot: CPU 2 is now offline
-Jul 20 04:13:41 rageworks kernel: smpboot: CPU 3 is now offline
-Jul 20 04:13:41 rageworks kernel: ACPI: PM: Low-level resume complete
-Jul 20 04:13:41 rageworks kernel: ACPI: PM: Restoring platform NVS memory
-Jul 20 04:13:41 rageworks kernel: Enabling non-boot CPUs ...
-Jul 20 04:13:41 rageworks kernel: x86: Booting SMP configuration:
-Jul 20 04:13:41 rageworks kernel: smpboot: Booting Node 0 Processor 1 
-APIC 0x1
-Jul 20 04:13:41 rageworks kernel: microcode: CPU1: patch_level=0x08101016
-Jul 20 04:13:41 rageworks kernel: CPU1 is up
-Jul 20 04:13:41 rageworks kernel: smpboot: Booting Node 0 Processor 2 
-APIC 0x2
-Jul 20 04:13:41 rageworks kernel: microcode: CPU2: patch_level=0x08101016
-Jul 20 04:13:41 rageworks kernel: CPU2 is up
-Jul 20 04:13:41 rageworks kernel: smpboot: Booting Node 0 Processor 3 
-APIC 0x3
-Jul 20 04:13:41 rageworks kernel: microcode: CPU3: patch_level=0x08101016
-Jul 20 04:13:41 rageworks kernel: CPU3 is up
-Jul 20 04:13:41 rageworks kernel: ACPI: PM: Waking up from system sleep 
-state S3
-Jul 20 04:13:41 rageworks kernel: xhci_hcd 0000:02:00.0: xHC error in 
-resume, USBSTS 0x401, Reinit
-Jul 20 04:13:41 rageworks kernel: usb usb1: root hub lost power or was reset
-Jul 20 04:13:41 rageworks kernel: usb usb2: root hub lost power or was reset
-Jul 20 04:13:41 rageworks kernel: serial 00:05: activated
-Jul 20 04:13:41 rageworks kernel: sd 0:0:0:0: [sda] Starting disk
-Jul 20 04:13:41 rageworks kernel: sd 1:0:0:0: [sdb] Starting disk
-Jul 20 04:13:41 rageworks kernel: sd 9:0:0:0: [sdc] Starting disk
-Jul 20 04:13:41 rageworks kernel: ata5: SATA link down (SStatus 0 
-SControl 330)
-Jul 20 04:13:41 rageworks kernel: ata9: SATA link down (SStatus 0 
-SControl 300)
-Jul 20 04:13:41 rageworks kernel: ata6: SATA link down (SStatus 0 
-SControl 330)
-Jul 20 04:13:41 rageworks kernel: usb 1-7: reset full-speed USB device 
-number 2 using xhci_hcd
-Jul 20 04:13:41 rageworks kernel: usb 1-10: reset full-speed USB device 
-number 4 using xhci_hcd
-Jul 20 04:13:41 rageworks kernel: usb 1-8: reset full-speed USB device 
-number 3 using xhci_hcd
-Jul 20 04:13:41 rageworks kernel: ata2: found unknown device (class 0)
-Jul 20 04:13:41 rageworks kernel: ata1: found unknown device (class 0)
-Jul 20 04:13:41 rageworks kernel: ata10: found unknown device (class 0)
-Jul 20 04:13:41 rageworks kernel: ata2: SATA link up 6.0 Gbps (SStatus 
-133 SControl 300)
-Jul 20 04:13:41 rageworks kernel: ata2.00: configured for UDMA/133
-Jul 20 04:13:41 rageworks kernel: ata1: SATA link up 6.0 Gbps (SStatus 
-133 SControl 300)
-Jul 20 04:13:41 rageworks kernel: ata1.00: configured for UDMA/133
-Jul 20 04:13:41 rageworks kernel: ata10: SATA link up 6.0 Gbps (SStatus 
-133 SControl 300)
-Jul 20 04:13:41 rageworks kernel: ata10.00: configured for UDMA/133
-Jul 20 04:13:41 rageworks kernel: ata10: SATA link up 6.0 Gbps (SStatus 
-133 SControl 300)
-Jul 20 04:13:41 rageworks kernel: ata10.00: configured for UDMA/133
-Jul 20 04:13:41 rageworks kernel: ata10.00: device reported invalid CHS 
-sector 0
-Jul 20 04:13:41 rageworks kernel: sd 9:0:0:0: [sdc] Start/Stop Unit 
-failed: Result: hostbyte=DID_OK driverbyte=DRIVER_OK
-Jul 20 04:13:41 rageworks kernel: sd 9:0:0:0: [sdc] Sense Key : Illegal 
-Request [current]
-Jul 20 04:13:41 rageworks kernel: sd 9:0:0:0: [sdc] Add. Sense: 
-Unaligned write command
-Jul 20 04:13:41 rageworks kernel: sd 9:0:0:0: PM: dpm_run_callback(): 
-scsi_bus_resume+0x0/0x90 returns -5
-Jul 20 04:13:41 rageworks kernel: sd 9:0:0:0: PM: failed to resume 
-async: error -5
-Jul 20 04:13:41 rageworks kernel: OOM killer enabled.
-Jul 20 04:13:41 rageworks kernel: Restarting tasks ... done.
-Jul 20 04:13:41 rageworks kernel: random: crng reseeded on system resumption
-Jul 20 04:13:41 rageworks kernel: PM: suspend exit
-Jul 20 04:13:41 rageworks rtkit-daemon[1349]: The canary thread is 
-apparently starving. Taking action.
-Jul 20 04:13:41 rageworks systemd-sleep[2059]: System returned from 
-sleep state.
-Jul 20 04:13:41 rageworks rtkit-daemon[1349]: Demoting known real-time 
-threads.
-Jul 20 04:13:41 rageworks systemd[1]: NetworkManager-dispatcher.service: 
-Deactivated successfully.
-Jul 20 04:13:41 rageworks rtkit-daemon[1349]: Successfully demoted 
-thread 1597 of process 1342.
-Jul 20 04:13:41 rageworks rtkit-daemon[1349]: Successfully demoted 
-thread 1342 of process 1342.
-Jul 20 04:13:41 rageworks rtkit-daemon[1349]: Demoted 2 threads.
-Jul 20 04:13:42 rageworks systemd[1]: systemd-suspend.service: 
-Deactivated successfully.
-Jul 20 04:13:42 rageworks systemd[1]: Finished System Suspend.
-Jul 20 04:13:42 rageworks systemd[1]: Stopped target Sleep.
-Jul 20 04:13:42 rageworks systemd[1]: Reached target Suspend.
-Jul 20 04:13:42 rageworks systemd[1]: Stopped target Suspend.
-Jul 20 04:13:42 rageworks systemd-logind[869]: Operation 'sleep' finished.
+What follows is a *very rough* overview about the two reports which
+might be caused by the same or different bugs in the code. Both
+descriptions will leave out lots of details on purpose, as it can easily
+happen that I understood something wrong; sorry, this can happen in my
+position, so handle the following with care.
 
 
-Thanks
+The older of the two reports is
+https://bugzilla.kernel.org/show_bug.cgi?id=216646 (from November last
+year); the report already mentioned that disabling THP avoids the oopses
+due to a NULL pointer dereference. The problems was actually bisected to
+793917d997d ("mm/readahead: Add large folio readahead") [v5.18-rc1] at
+one point (https://bugzilla.kernel.org/show_bug.cgi?id=216646#c6 ). The
+reporter was able to avoid the problem by switching from XFS to Btrfs
+(https://bugzilla.kernel.org/show_bug.cgi?id=216646#c18 ). Someone else
+not that long ago in the ticket reported that 66dabbb65d6 ("mm: return
+an ERR_PTR from __filemap_get_folio") [v6.4-rc1] is a partial fix (side
+note: I wonder if we should backport that to 6.1.y). The problem is also
+discussed in https://github.com/arvidn/libtorrent/issues/6952, as it
+seems quite a few other users of libtorrent based software encountered
+it. I recently asked in that ticket to test if 6.5-rc is still affected,
+but got no reply so far.
+
+
+The other report is https://bugzilla.kernel.org/show_bug.cgi?id=217441;
+the reporter never managed a bisection. Disabling THP apparently does
+not help for tha reporter, so it might be something totally different. I
+recently asked if the problems is still happening with recent kernels.
+Two users confirmed it does, it just takes a lot longer to trigger (if
+that is due to 66dabbb65d6 or not is not known). One of those users
+tested with linux-next and provided this:
+
+> Jul 20 19:03:24 smoon7.bkoty.ru kernel: BUG: kernel NULL pointer dereference, address: 0000000000000096
+> Jul 20 19:03:24 smoon7.bkoty.ru kernel: #PF: supervisor read access in kernel mode
+> Jul 20 19:03:24 smoon7.bkoty.ru kernel: #PF: error_code(0x0000) - not-present page
+> Jul 20 19:03:24 smoon7.bkoty.ru kernel: PGD 0 P4D 0
+> Jul 20 19:03:24 smoon7.bkoty.ru kernel: Oops: 0000 [#1] PREEMPT SMP NOPTI
+> Jul 20 19:03:24 smoon7.bkoty.ru kernel: CPU: 4 PID: 305164 Comm: qbittorrent-nox Tainted: G     U             6.5.0-rc2-next-20230718-1-next-git-03113-gaeba456828b4 #1 8d98cf92e1199e734fba1ef76a33030687665b92
+> Jul 20 19:03:24 smoon7.bkoty.ru kernel: Hardware name: Gigabyte Technology Co., Ltd. H470M DS3H/H470M DS3H, BIOS F4b 06/22/2020
+> Jul 20 19:03:24 smoon7.bkoty.ru kernel: RIP: 0010:filemap_get_entry+0x8a/0x130
+> Jul 20 19:03:24 smoon7.bkoty.ru kernel: Code: 24 18 03 00 00 00 48 89 e7 e8 32 54 a6 00 48 89 c3 48 3d 02 04 00 00 74 e4 48 3d 06 04 00 00 74 dc 48 85 c0 74 4f a8 01 75 4b <8b> 40 34 85 c0 74 cc 8d 50 01 f0 0f b1 53 34 75 f2 48 8b 54 24 18
+> Jul 20 19:03:24 smoon7.bkoty.ru kernel: RSP: 0000:ffffb7d6c4e1bc70 EFLAGS: 00010246
+> Jul 20 19:03:24 smoon7.bkoty.ru kernel: RAX: 0000000000000062 RBX: 0000000000000062 RCX: 0000000000000002
+> Jul 20 19:03:24 smoon7.bkoty.ru kernel: RDX: 000000000000001c RSI: ffff996fdd57c490 RDI: ffffb7d6c4e1bc70
+> Jul 20 19:03:24 smoon7.bkoty.ru kernel: RBP: 0000000000000000 R08: ffffffffffffffc0 R09: 0000000000000000
+> Jul 20 19:03:24 smoon7.bkoty.ru kernel: R10: ffff99695e549d50 R11: ffff99695e549d0c R12: ffff99699ffe2fc0
+> Jul 20 19:03:24 smoon7.bkoty.ru kernel: R13: 000000000001eb9d R14: 0000000000000000 R15: ffff9969a06cfef8
+> Jul 20 19:03:24 smoon7.bkoty.ru kernel: FS:  00007f9077fff6c0(0000) GS:ffff9970de300000(0000) knlGS:0000000000000000
+> Jul 20 19:03:24 smoon7.bkoty.ru kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> Jul 20 19:03:24 smoon7.bkoty.ru kernel: CR2: 0000000000000096 CR3: 0000000344754004 CR4: 00000000003706e0
+> Jul 20 19:03:24 smoon7.bkoty.ru kernel: Call Trace:
+> Jul 20 19:03:24 smoon7.bkoty.ru kernel:  <TASK>
+> Jul 20 19:03:24 smoon7.bkoty.ru kernel:  ? __die+0x23/0x70
+> Jul 20 19:03:24 smoon7.bkoty.ru kernel:  ? page_fault_oops+0x171/0x4e0
+> Jul 20 19:03:24 smoon7.bkoty.ru kernel:  ? psi_group_change+0x213/0x3c0
+> Jul 20 19:03:24 smoon7.bkoty.ru kernel:  ? exc_page_fault+0x7f/0x180
+> Jul 20 19:03:24 smoon7.bkoty.ru kernel:  ? asm_exc_page_fault+0x26/0x30
+> Jul 20 19:03:24 smoon7.bkoty.ru kernel:  ? filemap_get_entry+0x8a/0x130
+> Jul 20 19:03:24 smoon7.bkoty.ru kernel:  __filemap_get_folio+0x2b/0x230
+> Jul 20 19:03:24 smoon7.bkoty.ru kernel:  filemap_fault+0x6b/0x9f0
+> Jul 20 19:03:24 smoon7.bkoty.ru kernel:  ? filemap_map_pages+0x2dc/0x560
+> Jul 20 19:03:24 smoon7.bkoty.ru kernel:  __do_fault+0x30/0x130
+> Jul 20 19:03:24 smoon7.bkoty.ru kernel:  do_fault+0x26c/0x430
+> Jul 20 19:03:24 smoon7.bkoty.ru kernel:  __handle_mm_fault+0x73f/0xbb0
+> Jul 20 19:03:24 smoon7.bkoty.ru kernel:  handle_mm_fault+0x17f/0x360
+> Jul 20 19:03:24 smoon7.bkoty.ru kernel:  do_user_addr_fault+0x1e6/0x640
+> Jul 20 19:03:24 smoon7.bkoty.ru kernel:  exc_page_fault+0x7f/0x180
+> Jul 20 19:03:24 smoon7.bkoty.ru kernel:  asm_exc_page_fault+0x26/0x30
+> Jul 20 19:03:24 smoon7.bkoty.ru kernel: RIP: 0033:0x7f909336cb0d
+> Jul 20 19:03:24 smoon7.bkoty.ru kernel: Code: 00 00 00 00 00 66 66 2e 0f 1f 84 00 00 00 00 00 66 66 2e 0f 1f 84 00 00 00 00 00 66 90 f3 0f 1e fa 48 89 f8 48 83 fa 20 72 23 <c5> fe 6f 06 48 83 fa 40 0f 87 a5 00 00 00 c5 fe 6f 4c 16 e0 c5 fe
+> Jul 20 19:03:24 smoon7.bkoty.ru kernel: RSP: 002b:00007f9077ffd298 EFLAGS: 00010202
+> Jul 20 19:03:24 smoon7.bkoty.ru kernel: RAX: 00007f9050012770 RBX: 00007f9077ffe300 RCX: 00007f9077ffd4c0
+> Jul 20 19:03:24 smoon7.bkoty.ru kernel: RDX: 0000000000004000 RSI: 00007f77e759d10f RDI: 00007f9050012770
+> Jul 20 19:03:24 smoon7.bkoty.ru kernel: RBP: 0000000000000000 R08: 0000000000000007 R09: 0000000000000000
+> Jul 20 19:03:24 smoon7.bkoty.ru kernel: R10: 0000000000000008 R11: 0000000000000246 R12: 0000000000000000
+> Jul 20 19:03:24 smoon7.bkoty.ru kernel: R13: 00007f9050000bf0 R14: 0000000000000007 R15: 000000001eb9d10f
+> [...]
+
+But we apparently have at least two people that still care about this
+problem. Could anyone maybe help them somewhat so we can with a bit of
+luck maybe finally get down to the actually cause and fix it?
+
+
+That's it from my side. Really hope this will get things moving again.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
