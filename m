@@ -1,127 +1,82 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from abi149hd125.arn1.oracleemaildelivery.com (abi149hd125.arn1.oracleemaildelivery.com [129.149.84.125])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C00011BF08
-	for <regressions@lists.linux.dev>; Wed, 26 Jul 2023 21:53:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1690408406;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IYYNLALC24HXACra46BapqSwKx6bYQvG9NeNwuOaFoA=;
-	b=C9+uZo9JnZo00eC+K2XureZa/PCrUW9cvNvI4dXZLcGs3pHcg0S4Ss90T8iZv1oBwFeFIT
-	6dLgTU2ll8XLdrvDQvpbXXNz61Qnxs14WyzP8eYFVLV14thVRJFT4kUCGW7cUGk1vXwIq2
-	rAs9lfmJEGSecO2mXphKH3FYn8ex9Ng=
-Received: from mimecast-mx02.redhat.com (66.187.233.73 [66.187.233.73]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-593-BPv7HgEGMKuBxzs7DOfL6Q-1; Wed, 26 Jul 2023 17:53:22 -0400
-X-MC-Unique: BPv7HgEGMKuBxzs7DOfL6Q-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E9FF71C0754A;
-	Wed, 26 Jul 2023 21:53:21 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.131])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 0FC262166B25;
-	Wed, 26 Jul 2023 21:53:19 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <CAAUqJDuRkHE8fPgZJGaKjUjd3QfGwzfumuJBmStPqBhubxyk_A@mail.gmail.com>
-References: <CAAUqJDuRkHE8fPgZJGaKjUjd3QfGwzfumuJBmStPqBhubxyk_A@mail.gmail.com>
-To: =?us-ascii?Q?=3D=3FUTF-8=3FB=3FT25kcmVqIE1vc27DocSNZWs=3D=3F=3D?= <omosnacek@gmail.com>,
-    Herbert Xu <herbert@gondor.apana.org.au>
-Cc: dhowells@redhat.com, Paolo Abeni <pabeni@redhat.com>,
-    Sven Schnelle <svens@linux.ibm.com>,
-    Harald Freudenberger <freude@linux.vnet.ibm.com>,
-    Bagas Sanjaya <bagasdotme@gmail.com>, linux-crypto@vger.kernel.org,
-    linux-s390@vger.kernel.org, netdev@vger.kernel.org,
-    regressions@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: [PATCH] crypto: Fix missing initialisation affecting gcm-aes-s390
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A624E1BEE4
+	for <regressions@lists.linux.dev>; Wed, 26 Jul 2023 22:59:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=oci-arn1-20220924;
+ d=augustwikerfors.se;
+ h=Date:To:From:Subject:Message-Id:MIME-Version:Sender;
+ bh=P5XOpKDXF2I6R3nLKrm49oZh2FlsW7OS7CKRX6CPNiQ=;
+ b=moHN+0yB5775OaTCkulEdw/A3GeYahNG1NiLULevqihOeasZ+stZJh3Hf41RcNGWRQyY8ywfk8Hi
+   YvNLXf+XTPLEbrtn70UZphcmvq07+nG/7UzWbPHyk87N/Z4HPVJDHJrJRIlC3SA/wTRuLz8bo4T9
+   tGKBR2nI2yQ467s+B9GvXQP9B2qe9STSIrke07PnZxjyy7nOU76C4SKjwpRTGS+p1RlpDGl8lRdk
+   DDZzib4PDJluL/W48vOYez1cm2vUvjNUMpnjOBoB8uhe2gAQJcN6mdLU7CzNE0yNjzcDb4uYUPYX
+   pfT5iVVi5p4o8KJHEnjh6G95j2VUgZ56hbQZXQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=prod-arn-20211201;
+ d=arn1.rp.oracleemaildelivery.com;
+ h=Date:To:From:Subject:Message-Id:MIME-Version:Sender;
+ bh=P5XOpKDXF2I6R3nLKrm49oZh2FlsW7OS7CKRX6CPNiQ=;
+ b=XfYf2OgHATJ5LFxRpvQhyMP7wWriesITIvVNzqmqP8EF8muwEpA0sV6lI6a1RUYmlmyHWlrDerED
+   vlhwBcq5yXvFuzWeLUdH/KDCrn3qe7f4MKQVKZgmyrV9tVgPRkeHUzZx13ty9pnwRPq/8snig6kV
+   vPTXDace4Wf17+0RCmAD1MY+lp9LyO8zm4eXtHswyR3kiyIv0kbPNPrPG8wBLhuPACHowmAF1/NK
+   43a/CgmVP/q3mwOdDKov8iF1PteHllX1UTCVCZizWNEasibweohDCLuB5T0yRAmimzwDluz3rmEF
+   JDQec5kS9DC9e6LKddPa8pOU/xew7SFne2PX0Q==
+Received: by omta-ad1-fd1-401-eu-stockholm-1.omtaad1.vcndparn.oraclevcn.com
+ (Oracle Communications Messaging Server 8.1.0.1.20230629 64bit (built Jun 29
+ 2023))
+ with ESMTPS id <0RYF00GIIEA606A0@omta-ad1-fd1-401-eu-stockholm-1.omtaad1.vcndparn.oraclevcn.com>
+ for regressions@lists.linux.dev; Wed, 26 Jul 2023 22:54:06 +0000 (GMT)
+Message-id: <596b9c4a-fb83-a8ab-3a44-6052d83fa546@augustwikerfors.se>
+Date: Thu, 27 Jul 2023 00:54:03 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 26 Jul 2023 22:53:19 +0100
-Message-ID: <97730.1690408399@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.6
+MIME-version: 1.0
+From: August Wikerfors <git@augustwikerfors.se>
+Subject: [REGRESSION] IRQ override revert breaks keyboard on Lenovo Yoga 7
+ 14ARB7
+To: Mario Limonciello <mario.limonciello@amd.com>,
+ "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+ "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+ regressions@lists.linux.dev
+Content-language: en-US
+Content-type: text/plain; charset=UTF-8; format=flowed
+Content-transfer-encoding: 7bit
+Reporting-Meta:
+ AAGnM6W8OrXL2D+FP6EMe5jLrw6d5HFTLzCAq4llZKfL8+RGXIV+2M5ejmHh35jV
+ XcXIenFX1c2j/twuJhfPogW02hiG3OymSz8S9rYSctj64ZFr0OAwEbRJMpzfpg36
+ DiBex5Iu1t/6mxI7SaoUDbIB/dMitn1+LSQdi8mrDDSYCMQoK0HWAYCtHcxrV8hL
+ XImyfNmnB6X7/iYXIrCqrd+ErzHzH7xsCY0/jE/Xydg4iA0IHshzFbDOGO5op2ku
+ r0lYmyuGI54HV/dYnMTAD08MRrs+CIiYcF7vHbdTtNzqfeZyZQjHZJwZzavUpaSP
+ B/71vaZDtUWhVoL46JqAOcbgbl8bB/4QP04hLc9+NFGdr5wOCxaMs2RK1dfGsc+Z
+ R2CDJ/2mTZ35oQtQmkJZ/117dlYWjVXBwBzm15r5D3w4uKO5RKELTPg74Xf8/Vo4 /mkQ1Z0=
 
-=20=20=20=20
-Fix af_alg_alloc_areq() to initialise areq->first_rsgl.sgl.sgt.sgl to point
-to the scatterlist array in areq->first_rsgl.sgl.sgl.
+Hi,
 
-Without this, the gcm-aes-s390 driver will oops when it tries to do
-gcm_walk_start() on req->dst because req->dst is set to the value of
-areq->first_rsgl.sgl.sgl by _aead_recvmsg() calling
-aead_request_set_crypt().
+Since v6.5-rc1 the keyboard on this laptop no longer works. This problem
+also existed before v6.0-rc1 commit 9946e39fe8d0 ("ACPI: resource: skip
+IRQ override on AMD Zen platforms"), so I suspected the cause to be
+a9c4a912b7dc ("ACPI: resource: Remove "Zen" specific match and quirks")
+which reverted that commit. Reverting a9c4a912b7dc confirmed this theory.
 
-The problem comes if an empty ciphertext is passed: the loop in
-af_alg_get_rsgl() just passes straight out and doesn't set areq->first_rsgl
-up.
+#regzbot introduced: a9c4a912b7dc
 
-This isn't a problem on x86_64 using gcmaes_crypt_by_sg() because, as far
-as I can tell, that ignores req->dst and only uses req->src[*].
+My specs are:
+Laptop model: Lenovo Yoga 7 14ARB7
+BIOS: K5CN40WWT66 (latest beta from [1])
+CPU: AMD Ryzen 5 6600U
+Kernel config: [2]
+Distribution: Arch Linux
 
-[*] Is this a bug in aesni-intel_glue.c?
+The issue has been confirmed by at least one other user with this
+laptop: [3]
 
-The s390x oops looks something like:
+[1] https://forums.lenovo.com/t5/Lenovo-Yoga-Series-Laptops/Yoga-7-14ARB7-keyboard-lag-when-on-certain-websites-or-when-Vantage-is-opened/m-p/5174991?page=28#5974742
+[2] https://gitlab.archlinux.org/archlinux/packaging/packages/linux/-/raw/d4a56a1e994201b6c607199922aa22e4337b56c9/config
+[3] https://github.com/tomsom/yoga-linux/issues/47
 
- Unable to handle kernel pointer dereference in virtual kernel address space
- Failing address: 0000000a00000000 TEID: 0000000a00000803
- Fault in home space mode while using kernel ASCE.
- AS:00000000a43a0007 R3:0000000000000024
- Oops: 003b ilc:2 [#1] SMP
- ...
- Call Trace:
-  [<000003ff7fc3d47e>] gcm_walk_start+0x16/0x28 [aes_s390]
-  [<00000000a2a342f2>] crypto_aead_decrypt+0x9a/0xb8
-  [<00000000a2a60888>] aead_recvmsg+0x478/0x698
-  [<00000000a2e519a0>] sock_recvmsg+0x70/0xb0
-  [<00000000a2e51a56>] sock_read_iter+0x76/0xa0
-  [<00000000a273e066>] vfs_read+0x26e/0x2a8
-  [<00000000a273e8c4>] ksys_read+0xbc/0x100
-  [<00000000a311d808>] __do_syscall+0x1d0/0x1f8
-  [<00000000a312ff30>] system_call+0x70/0x98
- Last Breaking-Event-Address:
-  [<000003ff7fc3e6b4>] gcm_aes_crypt+0x104/0xa68 [aes_s390]
-
-Fixes: c1abe6f570af ("crypto: af_alg: Use extract_iter_to_sg() to create sc=
-atterlists")
-Reported-by: Ondrej Mosn=C3=A1=C4=8Dek <omosnacek@gmail.com>
-Link: https://lore.kernel.org/r/CAAUqJDuRkHE8fPgZJGaKjUjd3QfGwzfumuJBmStPqB=
-hubxyk_A@mail.gmail.com/
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Herbert Xu <herbert@gondor.apana.org.au>
-cc: Sven Schnelle <svens@linux.ibm.com>
-cc: Harald Freudenberger <freude@linux.vnet.ibm.com>
-cc: "David S. Miller" <davem@davemloft.net>
-cc: Paolo Abeni <pabeni@redhat.com>
-cc: linux-crypto@vger.kernel.org
-cc: linux-s390@vger.kernel.org
-cc: regressions@lists.linux.dev
----
- crypto/af_alg.c |    1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/crypto/af_alg.c b/crypto/af_alg.c
-index 06b15b9f661c..9ee8575d3b1a 100644
---- a/crypto/af_alg.c
-+++ b/crypto/af_alg.c
-@@ -1192,6 +1192,7 @@ struct af_alg_async_req *af_alg_alloc_areq(struct soc=
-k *sk,
-=20
- 	areq->areqlen =3D areqlen;
- 	areq->sk =3D sk;
-+	areq->first_rsgl.sgl.sgt.sgl =3D areq->first_rsgl.sgl.sgl;
- 	areq->last_rsgl =3D NULL;
- 	INIT_LIST_HEAD(&areq->rsgl_list);
- 	areq->tsgl =3D NULL;
-
+Regards,
+August Wikerfors
