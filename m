@@ -1,106 +1,69 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39019BE71
-	for <regressions@lists.linux.dev>; Wed, 26 Jul 2023 10:15:59 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qObYg-0002RF-VA; Wed, 26 Jul 2023 12:15:55 +0200
-Message-ID: <31ddce1d-6014-bf9f-95da-97deb3240606@leemhuis.info>
-Date: Wed, 26 Jul 2023 12:15:54 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BAC7CA44
+	for <regressions@lists.linux.dev>; Wed, 26 Jul 2023 10:43:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1690368188;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=h2bZ6fkGnjjiUXO0kDMBnPkuhQcio8YOy+L/LeFNu98=;
+	b=gdcfP9Sp53D/dO1xJ8aI3nVomSPacy7Q1Q3B7wxx6jocQMRzRvloxF6qlBWyHPgLLmZDMd
+	xWFktEClqiI+4bIyFDrhWC13pIOU1EFPN+YcT5CXEn1z/6uMrVJnEGpbbSpBfNekGm/Qzf
+	D/OhAegGR2ovjEQqNUMB7Xd/O6jZCo0=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-376-KcvHA5d_Ni-_yRXPlaRE9g-1; Wed, 26 Jul 2023 06:43:05 -0400
+X-MC-Unique: KcvHA5d_Ni-_yRXPlaRE9g-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E937388D7FA;
+	Wed, 26 Jul 2023 10:43:04 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.158])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 856E2C2C85C;
+	Wed, 26 Jul 2023 10:43:03 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+In-Reply-To: <31ddce1d-6014-bf9f-95da-97deb3240606@leemhuis.info>
+References: <31ddce1d-6014-bf9f-95da-97deb3240606@leemhuis.info> <CAAUqJDuRkHE8fPgZJGaKjUjd3QfGwzfumuJBmStPqBhubxyk_A@mail.gmail.com>
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: dhowells@redhat.com, Herbert Xu <herbert@gondor.apana.org.au>,
+    Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
+    Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+    =?UTF-8?B?T25kcmVqIE1vc27DocSNZWs=?= <omosnacek@gmail.com>,
+    Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
+Subject: Re: Another regression in the af_alg series (s390x-specific)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: Another regression in the af_alg series (s390x-specific)
-Content-Language: en-US, de-DE
-To: David Howells <dhowells@redhat.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>, Paolo Abeni
- <pabeni@redhat.com>, netdev@vger.kernel.org, regressions@lists.linux.dev,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- =?UTF-8?B?T25kcmVqIE1vc27DocSNZWs=?= <omosnacek@gmail.com>,
- Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
-References: <CAAUqJDuRkHE8fPgZJGaKjUjd3QfGwzfumuJBmStPqBhubxyk_A@mail.gmail.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-In-Reply-To: <CAAUqJDuRkHE8fPgZJGaKjUjd3QfGwzfumuJBmStPqBhubxyk_A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1690366560;9b398ddf;
-X-HE-SMSGID: 1qObYg-0002RF-VA
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <20078.1690368182.1@warthog.procyon.org.uk>
+Date: Wed, 26 Jul 2023 11:43:02 +0100
+Message-ID: <20079.1690368182@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.8
 
-Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
-for once, to make this easily accessible to everyone.
+"Linux regression tracking (Thorsten Leemhuis)" wrote:
 
-What's the status wrt to this regression (caused by c1abe6f570af from
-David)? It looks like there never was a real reply and the regression
-still is unresolved. But maybe I missed something, which can easily
-happen in my position.
+> What's the status wrt to this regression (caused by c1abe6f570af from
+> David)? It looks like there never was a real reply and the regression
+> still is unresolved. But maybe I missed something, which can easily
+> happen in my position.
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+I was on holiday when the regression was posted.  This week I've been working
+through various things raised during the last couple of weeks whilst fighting
+an intermittent apparent bug on my desktop kernel somewhere in ext4, the mm
+subsys, md or dm-crypt.
 
-#regzbot poke
+I'll get round to it, but I'll I don't have s390x h/w immediately to hand.
 
-On 13.07.23 10:03, Ondrej Mosnáček wrote:
-> Hi,
-> 
-> It turns out that beneath the first bug [1] there was another one
-> hiding. It seems to happen only on the s390x architecture when running
-> the following libkcapi [2] reproducer:
-> 
-> kcapi -x 2 -s -c "gcm(aes)" -i 0d92aa861746b324f20ee6b7 \
->     -k f4a6a5e5f2066f6dd9ec6fc5169c29043560ef595c9e81e76f42d29212cc581c \
->     -a "" -t 5f24c68cbe6f32c29652442bf5d483ad -q ""
-> 
-> Frequently (but not always) it triggers an oops like this one:
-> 
-> [ 3986.766763] Unable to handle kernel pointer dereference in virtual
-> kernel address space
-> [ 3986.766774] Failing address: 0000000a00000000 TEID: 0000000a00000803
-> [ 3986.766776] Fault in home space mode while using kernel ASCE.
-> [ 3986.766778] AS:00000000a43a0007 R3:0000000000000024
-> [ 3986.766825] Oops: 003b ilc:2 [#1] SMP
-> <snip>
-> [ 3986.766877] CPU: 0 PID: 271064 Comm: kcapi Tainted: G        W
->     6.5.0-rc1 #1
-> [ 3986.767070] Hardware name: IBM 8561 LT1 400 (z/VM 7.2.0)
-> <snip>
-> [ 3986.767151] Call Trace:
-> [ 3986.767153]  [<000003ff7fc3d47e>] gcm_walk_start+0x16/0x28 [aes_s390]
-> [ 3986.767160]  [<00000000a2a342f2>] crypto_aead_decrypt+0x9a/0xb8
-> [ 3986.767166]  [<00000000a2a60888>] aead_recvmsg+0x478/0x698
-> [ 3986.767169]  [<00000000a2e519a0>] sock_recvmsg+0x70/0xb0
-> [ 3986.767175]  [<00000000a2e51a56>] sock_read_iter+0x76/0xa0
-> [ 3986.767177]  [<00000000a273e066>] vfs_read+0x26e/0x2a8
-> [ 3986.767182]  [<00000000a273e8c4>] ksys_read+0xbc/0x100
-> [ 3986.767184]  [<00000000a311d808>] __do_syscall+0x1d0/0x1f8
-> [ 3986.767189]  [<00000000a312ff30>] system_call+0x70/0x98
-> [ 3986.767193] Last Breaking-Event-Address:
-> [ 3986.767193]  [<000003ff7fc3e6b4>] gcm_aes_crypt+0x104/0xa68 [aes_s390]
-> [ 3986.767198] Kernel panic - not syncing: Fatal exception: panic_on_oops
-> 
-> This time the regression was bisected to:
-> 
-> commit c1abe6f570aff4b6d396dc551e60570d2f50bd79
-> Author: David Howells <dhowells@redhat.com>
-> Date:   Tue Jun 6 14:08:52 2023 +0100
-> 
->    crypto: af_alg: Use extract_iter_to_sg() to create scatterlists
-> 
-> I can't see what the problem is with the commit, so I'm reporting here
-> hoping that David or someone else can pick it up from here.
-> 
-> Cheers,
-> Ondrej
-> 
-> [1] https://lore.kernel.org/linux-crypto/CAAUqJDvFuvms55Td1c=XKv6epfRnnP78438nZQ-JKyuCptGBiQ@mail.gmail.com/T/
-> [2] https://github.com/smuellerDD/libkcapi/
+David
+
