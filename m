@@ -1,160 +1,150 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2055.outbound.protection.outlook.com [40.107.223.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EB02BE5C
-	for <regressions@lists.linux.dev>; Wed, 26 Jul 2023 23:39:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D37AC433C7;
-	Wed, 26 Jul 2023 23:39:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1690414752;
-	bh=sfunVsnMWERN48DM0YzJqq7VJ8IHu3t3TGXl+mBD1wM=;
-	h=Date:From:Subject:To:Cc:References:In-Reply-To:From;
-	b=j3eWnpvnLpyUHYMc55EEsguhJtFbhkMkfU+UlBjNCDhKQdDpUoGBP6udEtVyH0U/s
-	 Y0ZXRmzgd+5KoJ8OUGvkU3xC0VCZQnuqhyeQPCq63mts5nujLkbUwd4YdAUhnYPQtj
-	 Q7gZA6/Ecr8tDF3zQmrQUQOof1oJBWfvhGdhQliyH9g8OvRDWA5MS/FFbFJupqK7TT
-	 k7KZsdw9kD1de/L3s1cyfHu+MPTGhW+sD+VKns9qhzKHOWj1hD/i6eR12k1W6T/vBN
-	 y3m3cbSEh8NlOyOZveS1i6dD2ImHR2KAy3rR6aNT1Rv2ldYY5i3o281NONTBUVoz6R
-	 pMVFNxzNUEGlg==
-Message-ID: <c70caa9e-164c-fee5-8f85-67f6d02373ab@kernel.org>
-Date: Thu, 27 Jul 2023 08:39:10 +0900
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A911399
+	for <regressions@lists.linux.dev>; Thu, 27 Jul 2023 02:56:33 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PZDXqF0GCzYnbtxuE30+9z/f0wjLltlhCETLD6FZqPpezIwshSY90aF4/5p+acGQkE6u1ak0t7JUHDXdSgHJN96KR2pa+vO+fvjrUgac9vLvJXNTcGlOhwW3eY2R36/UeIJ5p64ZtpLdrW5W4rjPFY+bVG5LNkJpDuwrPVWnqxjRoI2hj+QDqZi42cqEsyuK7xN0VZLhlqedjRx1RA0dGZo7b/a1k3OMBhQCBIG7QGqK6AcqZVqAqYezErlYjnV4P14sgsaWf4aqH0i5LIlhDO45wEnlEgz1YwhKUbAWQ8EnKX2AQ9NEY7lLweW5vc590XC+45IQP7VmnjLXPMoXHw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=KR1SczWhlotauKjBWSbFE6xx/Lfj5pymw9COYwoTka8=;
+ b=GOD5f+IPLlGTmE7gUcgn1t45QMiQ5pYQn0GWFbuAOgTNlGhiyMk5Is+KvDqHEX+0hCCIN5sXyDuTmlVqiukPGtBBe5D7UwykdolGwiVBd4A3l+Mu3rcAu/B2qRusmr484rwAqRbfFdo56zgoXacvC3E7E0YgQEN/q4yISbDclx6v2oLqDNZMhoaLebl7xnu4+bdvlQ2lEnztOxssqFfV0s3kX7b8BVjxzclSh7ro1a2AVpFiGGm5SxnAMfd0W8iR5QDn03fs2qjHmkKyQGrkHbHKjSoZ2tzBFr5vK1aHJd3qyrUgInqsXltjSw3BwMtNagA/Z3AJt35maB+ZyFkBPQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KR1SczWhlotauKjBWSbFE6xx/Lfj5pymw9COYwoTka8=;
+ b=1loB9kvMPuoQe5owRisCiLiGpymtzOs71Y3nF0HQEJd2nFPzlrncJrdEJSJHnTwVFyTw8dg/W/u6i24nUidvdzeXWSJPVmuMeoKOQUUnlIzO3gtDK7nMH5V6yp+04va4vAi4hLuwKyJEBXEzHCImmPFHOIibnHEvbjVx3M6TiR0=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+ by SJ0PR12MB6942.namprd12.prod.outlook.com (2603:10b6:a03:449::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6609.33; Thu, 27 Jul
+ 2023 02:56:31 +0000
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::36f9:ffa7:c770:d146]) by MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::36f9:ffa7:c770:d146%7]) with mapi id 15.20.6631.026; Thu, 27 Jul 2023
+ 02:56:31 +0000
+Message-ID: <d3179d08-d513-a7e4-9ddb-416e50578957@amd.com>
+Date: Wed, 26 Jul 2023 21:56:28 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: [REGRESSION] IRQ override revert breaks keyboard on Lenovo Yoga 7
+ 14ARB7
+Content-Language: en-US
+To: August Wikerfors <git@augustwikerfors.se>,
+ "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+ "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+ regressions@lists.linux.dev
+References: <596b9c4a-fb83-a8ab-3a44-6052d83fa546@augustwikerfors.se>
+From: Mario Limonciello <mario.limonciello@amd.com>
+In-Reply-To: <596b9c4a-fb83-a8ab-3a44-6052d83fa546@augustwikerfors.se>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: DM6PR01CA0021.prod.exchangelabs.com (2603:10b6:5:296::26)
+ To MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-From: Damien Le Moal <dlemoal@kernel.org>
-Subject: Re: Scsi_bus_resume+0x0/0x90 returns -5 when resuming from s3 sleep
-To: Thorsten Leemhuis <regressions@leemhuis.info>, TW <dalzot@gmail.com>
-Cc: regressions@lists.linux.dev, Mario Limonciello
- <mario.limonciello@amd.com>, Bart Van Assche <bvanassche@acm.org>,
- LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org
-References: <0e272abe-292d-d58f-cf80-55868e793abc@gmail.com>
- <6b66dd9a-8bd5-2882-9168-8e6e0848c454@leemhuis.info>
-Content-Language: en-US
-Organization: Western Digital Research
-In-Reply-To: <6b66dd9a-8bd5-2882-9168-8e6e0848c454@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|SJ0PR12MB6942:EE_
+X-MS-Office365-Filtering-Correlation-Id: f224569b-7c0a-4ee0-6fdd-08db8e4d147b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	4qxkHUqTKb07r3voe07eOavrvcn6Me8co4UbnRgQWA/W2n+yZtgivd0bNPqDeXvC1SqTLDwboygT7YnHs/6xs+3EZ+6nA1efQJmqS2in4t9fdARAJyPQ5BJhO1ptafJ+ZH7KChdm0CuvtPBgtEXomUUvfQBkoLThSs29WC1x32Af77mF6lkGtvIwZJKoyZjj7G+eQCfkvy6ODnQIe/qeCP5kpQ7eOUoHkBCe5FaqzA2jV5YyNsTsOsoZ1nCaXrQG7oK3ZWt9K6sj4RKM7As/l0HXmL4AAoM2SS78Javodswg5seCDPcHc714bPJR8Dh6nINPOjYh6dxQ/RCV6O/ptnZEoKjh5Tn9RIavCwbmfLSJo3SBlA2uoMdrlivqkrMOs5StEMSQYWANLJJeyeTAx7t3hslsOxwwoxX8ABbgQUhMwTP/2lzBFktTMZoZg3VcvzZexyPSQvpfuwqqhYyZILnIUI5iVtnVxwgmnzyE/39go8yZJMsZ+YRgsjIKjWY9BghG4N+rSPfI5SnC7Ejl6+Fa4af7qJ2BKcAYi5zI0VHs3+5WMW/pjNdec2g4ihvdyI4tVw6fMj/+HMCymDDM29RX4f+FHY/dNAEhzfmaYl733ggPhwuPVVDIYa/6dtc+b6AjDvlcRFadGlwgo2wopg==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(346002)(39860400002)(136003)(366004)(396003)(376002)(451199021)(31686004)(8676002)(8936002)(44832011)(5660300002)(41300700001)(316002)(4326008)(2906002)(66946007)(66556008)(66476007)(966005)(53546011)(186003)(6486002)(6512007)(478600001)(110136005)(6506007)(86362001)(31696002)(66574015)(36756003)(83380400001)(6666004)(38100700002)(2616005)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?Skl1cTd5VS9YL1pOS3BHZ3VEdmdHUDc3empyWmNIVVF3OEt4WitUT1RVbGNL?=
+ =?utf-8?B?L0JheEh0RldUMFltMlExZjVSblIvL3EzbzVXQkpKY2xqcXF4NG1RU3JnUkg2?=
+ =?utf-8?B?cmszLzk2N0tGWXRRYkJ3R2d3MGlzclZxU2FZRmx1OU1zdmVNYll6TklnNGI1?=
+ =?utf-8?B?V0FGdk0wcWRhbEhKdXFvS1ByR2c2MGJzL0hDVTBQZi9zbGhlL3huVFRpaTQv?=
+ =?utf-8?B?cGFSeTJLbGVpNk5kKzhUR3Z6TmJMS28wY3Z6dWR4T09LcEc3Z1h4b0thdlZD?=
+ =?utf-8?B?K1UyVUk4YTFtVDFrQlBxRjhCWEZaYjRoY1p4U203VkhSdUFydnNtM1RRZHhT?=
+ =?utf-8?B?elFmQWlxWk9wOE9WTXBWeWNjakhBVys5WmNud3dwS3NVWExrYjEwbWlGRnNQ?=
+ =?utf-8?B?anoyNFN6RDJiN2lCM3MzKzY4b1B1R25sRE1kMklaUzMyRUpiZHF4UEJWMnBP?=
+ =?utf-8?B?MWptd0VYMTdldDlCdENtS3dLYjBsblB4d3BHVTJPdW1IcFhvcEgrN3RvQVlq?=
+ =?utf-8?B?SjZGdEt4MDI5MzdiV292TVlVVFVkdlVXNlVaVVExYXlVQ3U3a1BaQnYzR0di?=
+ =?utf-8?B?TG1qSnlraE1zdHJNa21nUjd2a2NDclNWdXFFdE1jNWYwRVRIU204N2htVWZP?=
+ =?utf-8?B?TDJnZ2ZPUUprVTV5MmxxZ085eHJHNWdCYW90bmJwWlg0Y2hmOVNKQmF3d3c5?=
+ =?utf-8?B?QUhCckp4M2QzT3pIaHRiemhnS3NSellKZ3ZySFRiZFYvMGFwWUI1MkN2dlNv?=
+ =?utf-8?B?dWwySjR0dDF1L0o2TjZoTlk0Yk9uN3BmdURLSm9aVEsvNTJ1S3VQVjN6bGdY?=
+ =?utf-8?B?NlZjYzI4OTNYRjY5cGhNOUNtWnRpSk5EaUwyNWs3aE9nVTlHbWJ5d1RMRmZo?=
+ =?utf-8?B?YS80dERxSkRrWFRiaHdHb05YcDQ2THNKSEdUcHBadk5aaXVHdlY1ditBVDFn?=
+ =?utf-8?B?UEdEWGhoWDRac09pR052Tm01eks5VXFxV24zSGVyUVBRYmJNR3MwTUE1Ym8y?=
+ =?utf-8?B?cjYydEVUdE5wcW9tTVJOSzUzRE1JMEVpbll3STRIa3pjL3RpbDAvQnJEamd1?=
+ =?utf-8?B?b1l6VzMwZytoTGZ2TE05VjhEY3FBQ2loTTlxTTZpYXBjYnI1cWpZU0hhS0JG?=
+ =?utf-8?B?dEl5cVZrVnlKekw3cTN6bWdzTTFxK0JYVkN0V3Bnb2hxb1NSZk4vUjVvbHNu?=
+ =?utf-8?B?WVBqT3ZTbkhhc0U2b2ZyUGJ4bHk5cWppV0daNXRDRWtPVFQrYlNKR0FzQUlx?=
+ =?utf-8?B?VVZ3NnJBVmc3ckMzcGhxUThKaHJEejFWWHpuS1RPZHpQVWhGeDBJT0Nsc1dz?=
+ =?utf-8?B?V2V6WW1pODAydnhpVU9qTGprMVNBdXNvYTBRb1VaQjh0ZXpLSzVkcmJjVmZW?=
+ =?utf-8?B?YWJidU53cXl4V2FkTE9BeHpMcG91MUtnU1BLcEhpUEVsdzdnUllEcEI4ZFdy?=
+ =?utf-8?B?TmpXeEYwSHJRdUNjbjdmOEVNS2lyU245Mk82aWd6UXpyVzZmQVVaeW5oYjA2?=
+ =?utf-8?B?Z2xvbjZpNUIxZ3hKN2xycTJTSGtkbmVBWFlwdGdjMmhBQVFrS3AvSFZMRnZs?=
+ =?utf-8?B?eDJRcWhvdkxtVDA4QWRtTnhEZUZqYWx3NmpLVjB5dmdQYlhtbWtTbXQ1ZmFu?=
+ =?utf-8?B?UTd0WjIvN1IwbUpjYlUzRVBZeSs3RG5XK0FHbVU4MytVdGUrcmlMcU1UK3FI?=
+ =?utf-8?B?MVRSU3NXa1g4MUdUd1Z6SzBPSzNPQm5TSGhreWRFZzlCRThac0dmaE1VNVJO?=
+ =?utf-8?B?L3R6V29YL1dRWFBUUnA4M1E0RWFYQkdvVWg1YkZYKzB3SmpQTmo1VDZuMFpF?=
+ =?utf-8?B?Rm5BQnU1b1RmUmVUZXZtQ1QveTR0YmdROXRsK3J2YjlpNFNUWElGNHpYOXZ6?=
+ =?utf-8?B?d3hmbjdPSVhEY05uYmdDWSs2R0lYM0dLYVh4RkdYUmNXbmE3Mmd5aFpLWGdN?=
+ =?utf-8?B?QmFRMDI3eUxOWUJ2aUd2dGtmNzZzem9JMFE1MytIY25xQ0FxVW5yK0s3WDV0?=
+ =?utf-8?B?Q1FMTXk2b3ZScXUyblg5bGNKSVJ2NFNzcHNjY21WS2g1dnVwL0VTWHpSYXBr?=
+ =?utf-8?B?RC9DRmt2RVdTeUptSFpkK2gvNVV5a0RaeHhKUFRibEpXTXVuVG9VMzloU0tZ?=
+ =?utf-8?B?bnozb1pEajV6aytiZjZjYlBRdDYvWEFRWTZId3F3cjMwRnI3UnVKUmpoTSts?=
+ =?utf-8?B?RXc9PQ==?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f224569b-7c0a-4ee0-6fdd-08db8e4d147b
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jul 2023 02:56:31.1871
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: K1wpZC3H8E2QllOtMPb6bAM0Xyt7c97tNPNCsUMLNGDeGD4SiP/hcGum09c0qvqrGVKY4YuuWoyMBQM9kP2IpA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB6942
 
-On 7/26/23 22:47, Thorsten Leemhuis wrote:
-> Hi, Thorsten here, the Linux kernel's regression tracker.
+On 7/26/23 17:54, August Wikerfors wrote:
+> Hi,
 > 
-> On 26.07.23 13:54, TW wrote:
->> I have been having issues with the 6.x series of kernels resuming from
->> suspend with one of my drives. Far as I can tell it has trouble with the
->> cache on the drive when coming out of s3 sleep. Tried a few different
->> distros (Manjaro, OpenMandriva Rome, EndeavourOS) all that give the same
->> error message. It appears to work fine on the 5.15 kernel just fine
->> however.
->>
->> This is the error or errors that I have been getting and assume has been
->> holding up the system from resuming from suspend.
->>
->> Jul 20 04:13:41 rageworks kernel: ata10.00: device reported invalid CHS sector 0
->> Jul 20 04:13:41 rageworks kernel: sd 9:0:0:0: [sdc] Start/Stop Unit failed: Result: hostbyte=DID_OK driverbyte=DRIVER_OK
->> Jul 20 04:13:41 rageworks kernel: sd 9:0:0:0: [sdc] Sense Key : Illegal Request [current]
->> Jul 20 04:13:41 rageworks kernel: sd 9:0:0:0: [sdc] Add. Sense: Unaligned write command
-
-This sense is garbage. This issue was reported already, but it is hard
-to deal with as it seems to be due to drives/adapters not correctly
-reporting status bits. So for now, let's ignore this sense codes.
-
-The start/stop unit failure is weird. On another case, I am suspecting
-that this command is causing a delay on resume, but not an error like this.
-
->> Jul 20 04:13:41 rageworks kernel: sd 9:0:0:0: PM: dpm_run_callback(): scsi_bus_resume+0x0/0x90 returns -5
->> Jul 20 04:13:41 rageworks kernel: sd 9:0:0:0: PM: failed to resume async: error -5 
+> Since v6.5-rc1 the keyboard on this laptop no longer works. This problem
+> also existed before v6.0-rc1 commit 9946e39fe8d0 ("ACPI: resource: skip
+> IRQ override on AMD Zen platforms"), so I suspected the cause to be
+> a9c4a912b7dc ("ACPI: resource: Remove "Zen" specific match and quirks")
+> which reverted that commit. Reverting a9c4a912b7dc confirmed this theory.
 > 
-> Thx for your report. I CCed a few people, with a bit of luck they have
-> an idea. But I doubt it. If no one replies you likely will need a
-> bisection to find the root of the problem. But before going down that
-> route you want to check if latest mainline kernel (vanilla!) works better.
+> #regzbot introduced: a9c4a912b7dc
 > 
-> FWIW, this is not my area of expertise, so the following might be a
-> misleading comment, but the problem looks somewhat similar to this one
-> that iirc was never solved:
-> https://bugzilla.kernel.org/show_bug.cgi?id=216087
+> My specs are:
+> Laptop model: Lenovo Yoga 7 14ARB7
+> BIOS: K5CN40WWT66 (latest beta from [1])
+> CPU: AMD Ryzen 5 6600U
+> Kernel config: [2]
+> Distribution: Arch Linux
 > 
->> Jul 20 04:12:51 rageworks systemd[1]: nvidia-suspend.service: Deactivated successfully.
->> Jul 20 04:12:51 rageworks systemd[1]: Finished NVIDIA system suspend actions.
->> Jul 20 04:12:51 rageworks systemd[1]: Starting System Suspend... 
+> The issue has been confirmed by at least one other user with this
+> laptop: [3]
 > 
-> That sounds like you are using out-of tree drivers which can cause all
-> sorts of issues. Please recheck if the problem happens without those as
-> well and do not use them in all further tests to debug the issue.
+> [1] 
+> https://forums.lenovo.com/t5/Lenovo-Yoga-Series-Laptops/Yoga-7-14ARB7-keyboard-lag-when-on-certain-websites-or-when-Vantage-is-opened/m-p/5174991?page=28#5974742
+> [2] 
+> https://gitlab.archlinux.org/archlinux/packaging/packages/linux/-/raw/d4a56a1e994201b6c607199922aa22e4337b56c9/config
+> [3] https://github.com/tomsom/yoga-linux/issues/47
+> 
+> Regards,
+> August Wikerfors
 
-Yes. Please retest with the latest 6.5-rc3.
-
-And can you try this patch to see if it solves your issue ?
-
-commit 29e81d11812ee924d19425343ec69acd34af9d35
-Author: Damien Le Moal <dlemoal@kernel.org>
-Date:   Mon Jul 24 13:23:14 2023 +0900
-
-    ata,scsi: do not issue START STOP UNIT on resume
-
-    Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
-
-diff --git a/drivers/ata/libata-scsi.c b/drivers/ata/libata-scsi.c
-index 370d18aca71e..6184c7bcc16c 100644
---- a/drivers/ata/libata-scsi.c
-+++ b/drivers/ata/libata-scsi.c
-@@ -1100,7 +1100,13 @@ int ata_scsi_dev_config(struct scsi_device *sdev, struct
-ata_device *dev)
- 		}
- 	} else {
- 		sdev->sector_size = ata_id_logical_sector_size(dev->id);
-+		/*
-+		 * Stop the drive on suspend but do not issue START STOP UNIT
-+		 * on resume as this is not necessary: the port is reset on
-+		 * resume, which wakes up the drive.
-+		 */
- 		sdev->manage_start_stop = 1;
-+		sdev->no_start_on_resume = 1;
- 	}
-
- 	/*
-diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
-index 68b12afa0721..b8584fe3123e 100644
---- a/drivers/scsi/sd.c
-+++ b/drivers/scsi/sd.c
-@@ -3876,7 +3876,7 @@ static int sd_suspend_runtime(struct device *dev)
- static int sd_resume(struct device *dev)
- {
- 	struct scsi_disk *sdkp = dev_get_drvdata(dev);
--	int ret;
-+	int ret = 0;
-
- 	if (!sdkp)	/* E.g.: runtime resume at the start of sd_probe() */
- 		return 0;
-@@ -3885,7 +3885,8 @@ static int sd_resume(struct device *dev)
- 		return 0;
-
- 	sd_printk(KERN_NOTICE, sdkp, "Starting disk\n");
--	ret = sd_start_stop_device(sdkp, 1);
-+	if (!sdkp->device->no_start_on_resume)
-+		ret = sd_start_stop_device(sdkp, 1);
- 	if (!ret)
- 		opal_unlock_from_suspend(sdkp->opal_dev);
- 	return ret;
-diff --git a/include/scsi/scsi_device.h b/include/scsi/scsi_device.h
-index 75b2235b99e2..b9230b6add04 100644
---- a/include/scsi/scsi_device.h
-+++ b/include/scsi/scsi_device.h
-@@ -194,6 +194,7 @@ struct scsi_device {
- 	unsigned no_start_on_add:1;	/* do not issue start on add */
- 	unsigned allow_restart:1; /* issue START_UNIT in error handler */
- 	unsigned manage_start_stop:1;	/* Let HLD (sd) manage start/stop */
-+	unsigned no_start_on_resume:1; /* Do not issue START_STOP_UNIT on resume */
- 	unsigned start_stop_pwr_cond:1;	/* Set power cond. in START_STOP_UNIT */
- 	unsigned no_uld_attach:1; /* disable connecting to upper level drivers */
- 	unsigned select_no_atn:1;
-
-
--- 
-Damien Le Moal
-Western Digital Research
-
+This is unfortunate.  Before we go adding more quirks for your system, 
+can you please check for a BIOS upgrade for your system?  If it's 
+happening with the latest BIOS, then can you please open a kernel 
+bugzilla with an acpidump and dmidecode included?
