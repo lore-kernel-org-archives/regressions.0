@@ -1,247 +1,168 @@
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB4901FA0
-	for <regressions@lists.linux.dev>; Thu, 27 Jul 2023 04:20:46 +0000 (UTC)
-Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-4036bd4fff1so175481cf.0
-        for <regressions@lists.linux.dev>; Wed, 26 Jul 2023 21:20:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1690431645; x=1691036445;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HDWif2m5byX45hQoE5JAyEJ71zmQ4VucYXfmypMa/vo=;
-        b=1GmDnVof1by7OkOqsXKi5kTWfXre0qhvCvy41TSaYqUAbifVAUlnihFA5fyX6auBLb
-         cNxi+sY7HoUd2HoJvNUjXXXTFPrmDDBL8wARGKgIsf648bWfwQyimPMBn/c8IwS/mFLG
-         /fUYC1+1AOCqiyX6uVVbQBT5Ce3LsL5VnaZJWE6pR2GjhVQ8/p65wuG7TcbL8nbOSWSX
-         sQbYHh6Os1DIHfnCNT2ZJ4yJezJSTBrCIohwqKXiQ7MyUb4xVZYmdeklVyvTXFlXhKd8
-         Dhz941/rnP7Usbs+diM55v8FfO3paxkOJJgIuPwSxzkEwL6U2+TCzwDvZjL22eFtKwMG
-         YUmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690431645; x=1691036445;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HDWif2m5byX45hQoE5JAyEJ71zmQ4VucYXfmypMa/vo=;
-        b=Uv2pTF954nEt4v3tpgictluvozyDwkEvKaXRuJ56++ellakLmeVG8Kzwx1TTgUs/R4
-         2IhqY7GFy806kjKoAa1VaqF7iicK4BGD0SCIkyFEifUS2UKlhQmuW7IJV380XH77ZOIs
-         nFEFHZ6jhS6MkcPbQaGIoBYqksAXp6YtteqyuM/AHSMTfnfI2AM6JKnQnj0FPrjMd+Kh
-         nqqxIAjrCSOrHMoTR0lOzAwPLQgY4XtgpVl/QMScNLXbaE2CAytOyHRhcPMJApMjNLCM
-         3z6aVR17kqrwzCDPX41yBtCwkP3qCbWLPW8jUox7ixOv/EBCMpCoexncoOGKraAhTDbG
-         UN2Q==
-X-Gm-Message-State: ABy/qLbjt5uQpLH95lfF921iXrr4vAANQ0A5FQlgeOl1HtKZimnEl3ry
-	wt+S+bGaY8xuLdQD4f0ZQRK3jitMGwMVpOMvrnwZiw==
-X-Google-Smtp-Source: APBJJlESVlYW2atLxqn0NY7UiLPLOv7RsTDyF0YF810qXSGs5fHdwCx0fZdt3Qrp/pIYzMlUaBQkjFKAWnW/UuvX5pk=
-X-Received: by 2002:a05:622a:190c:b0:403:dcd4:b9b1 with SMTP id
- w12-20020a05622a190c00b00403dcd4b9b1mr148241qtc.18.1690431645325; Wed, 26 Jul
- 2023 21:20:45 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 321398BEA
+	for <regressions@lists.linux.dev>; Thu, 27 Jul 2023 05:55:25 +0000 (UTC)
+Received: from pps.filterd (m0353723.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 36R5qxTj018845;
+	Thu, 27 Jul 2023 05:55:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : references : date : in-reply-to : message-id : content-type :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=o+EIBjujxUgUO2otmKEQSeb4Vv3m4Ywk+cFlo5Tu4sc=;
+ b=RPw1QxQsDTWZXKUS044YRNVdeBGnJCTiLuvsu510FNjN2gvNYa52pIcRXAvkhhsSwbmh
+ IWK1sEja39IoBLMsUO8kL8JWMysL9jpAOj+GcHo9uPcatI4nmnNufi5taVnW5xe7GDnE
+ 3VhBlKiPhrHeX/GqbZFLjiKvxTFPxyFuqqfq0Vy/jBX4JWRNOGYyFfb7nDSnb+rIlBST
+ xH1t6RYrxsGgC5ElTqIIg11wX4vissuyFXxboyHOeW5h1hKh63GdARGmOHE2NrfAzbOO
+ mBP5On0Opi5f9AS7S+28Nvkgv+RdQ0JQ2DySY9oji9LtRZthsGgd2uNmRSqSH8Az/3+h PQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3s3jtp011v-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 27 Jul 2023 05:55:22 +0000
+Received: from m0353723.ppops.net (m0353723.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 36R5sHW5021175;
+	Thu, 27 Jul 2023 05:55:22 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3s3jtp0119-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 27 Jul 2023 05:55:22 +0000
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 36R5AEXP026209;
+	Thu, 27 Jul 2023 05:55:21 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3s0sesbecd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 27 Jul 2023 05:55:21 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 36R5tJX619595956
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 27 Jul 2023 05:55:19 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A7E3D2004B;
+	Thu, 27 Jul 2023 05:55:19 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4CB1020040;
+	Thu, 27 Jul 2023 05:55:19 +0000 (GMT)
+Received: from tuxmaker.linux.ibm.com (unknown [9.152.85.9])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Thu, 27 Jul 2023 05:55:19 +0000 (GMT)
+From: Sven Schnelle <svens@linux.ibm.com>
+To: David Howells <dhowells@redhat.com>
+Cc: =?us-ascii?Q?=3D=3FUTF-8=3FB=3FT25kcmVqIE1vc27DocSNZWs=3D=3F=3D?=
+ <omosnacek@gmail.com>,
+        Herbert
+ Xu <herbert@gondor.apana.org.au>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Harald Freudenberger <freude@linux.vnet.ibm.com>,
+        Bagas Sanjaya
+ <bagasdotme@gmail.com>, linux-crypto@vger.kernel.org,
+        linux-s390@vger.kernel.org, netdev@vger.kernel.org,
+        regressions@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] crypto: Fix missing initialisation affecting gcm-aes-s390
+References: <CAAUqJDuRkHE8fPgZJGaKjUjd3QfGwzfumuJBmStPqBhubxyk_A@mail.gmail.com>
+	<97730.1690408399@warthog.procyon.org.uk>
+Date: Thu, 27 Jul 2023 07:55:18 +0200
+In-Reply-To: <97730.1690408399@warthog.procyon.org.uk> (David Howells's
+	message of "Wed, 26 Jul 2023 22:53:19 +0100")
+Message-ID: <yt9dbkfxsxtl.fsf@linux.ibm.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.0.50 (gnu/linux)
+Content-Type: text/plain; charset=utf-8
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: jEHmCZ_RSXWAXdm5e4N3Lm_egRSNPA8H
+X-Proofpoint-GUID: w2jNjsW5JfH-1HDwdVHh2Yyp_g7YSTeI
+Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <ca25b1b3-dc7a-b0bb-dce4-8d11eb343438@gmail.com>
-In-Reply-To: <ca25b1b3-dc7a-b0bb-dce4-8d11eb343438@gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 26 Jul 2023 21:20:33 -0700
-Message-ID: <CAP-5=fX2ar7Pfj9it8pX_ohgC7OzY59iuDFSQTY7Kcnkc3-S5g@mail.gmail.com>
-Subject: Re: [perf] Build error when using LTO on 6.4
-To: Bagas Sanjaya <bagasdotme@gmail.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kajol Jain <kjain@linux.ibm.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	John Garry <john.g.garry@oracle.com>, Marcus Seyfarth <m.seyfarth@gmail.com>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Linux Regressions <regressions@lists.linux.dev>, Linux Perf <linux-perf-users@vger.kernel.org>, 
-	Nick Desaulniers <ndesaulniers@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-07-26_08,2023-07-26_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 suspectscore=0
+ phishscore=0 mlxlogscore=999 lowpriorityscore=0 priorityscore=1501
+ malwarescore=0 spamscore=0 bulkscore=0 impostorscore=0 clxscore=1015
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2306200000 definitions=main-2307270049
 
-On Wed, Jul 26, 2023 at 8:55=E2=80=AFPM Bagas Sanjaya <bagasdotme@gmail.com=
-> wrote:
->
-> Hi,
->
-> I notice a build regression on Bugzilla [1]. Quoting from it:
->
-> > Starting with Kernel 6.4, I see a build error when using "-flto" to bui=
-ld perf. This used to work fine with earlier Kernels when using either bfd =
-or mold as linker when using GCC 13.1.1.
+David Howells <dhowells@redhat.com> writes:
 
-Hmm.. strange I've never seen this work with GCC.
-
-> >
-> > This is the PKGBUILD I use as my build recipe: https://github.com/ms178=
-/archpkgbuilds/blob/main/packages/bpf/PKGBUILD
-
-If this binary is for distribution BUILD_BPF_SKEL=3D1 should be set. We
-need to make this an opt-out rather than opt-in. The last time we did
-this there was some friction:
-https://lore.kernel.org/lkml/CAHk-=3DwjY_3cBELRSLMpqCt6Eb71Qei2agfKSNsrr5Kc=
-pdEQCaA@mail.gmail.com/
-
-> >
-> > This is the konsole output I get now with Kernel 6.4.5:
-> >
-> > [CODE]
-> > CFLAGS=3D'-Wno-error=3Dbad-function-cast -Wno-error=3Ddeclaration-after=
--statement -Wno-error=3Dswitch-enum -Wbad-function-cast -Wdeclaration-after=
--statement -Wformat-security -Wformat-y2k -Winit-self -Wmissing-declaration=
-s -Wmissing-prototypes -Wno-system-headers -Wold-style-definition -Wpacked =
--Wredundant-decls -Wstrict-prototypes -Wswitch-default -Wswitch-enum -Wunde=
-f -Wwrite-strings -Wformat -Wno-type-limits -Wstrict-aliasing=3D3 -Wshadow =
--DHAVE_SYSCALL_TABLE_SUPPORT -DHAVE_ARCH_X86_64_SUPPORT -Iarch/x86/include/=
-generated -DHAVE_PERF_REGS_SUPPORT -DHAVE_ARCH_REGS_QUERY_REGISTER_OFFSET -=
-Werror -DNDEBUG=3D1 -O6 -fno-omit-frame-pointer -ggdb3 -funwind-tables -Wal=
-l -Wextra -std=3Dgnu11 -fstack-protector-all -U_FORTIFY_SOURCE -D_FORTIFY_S=
-OURCE=3D2 -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=3D64 -D_GNU_SOURCE -I/t=
-mp/makepkg/linux-tools/src/linux/tools/perf/util/include -I/tmp/makepkg/lin=
-ux-tools/src/linux/tools/perf/arch/x86/include -I/tmp/makepkg/linux-tools/s=
-rc/linux/tools/include/ -I/tmp/makepkg/linux-tools/src/linux/tools/arch/x86=
-/include/uapi -I/tmp/makepkg/linux-tools/src/linux/tools/include/uapi -I/tm=
-p/makepkg/linux-tools/src/linux/tools/arch/x86/include/ -I/tmp/makepkg/linu=
-x-tools/src/linux/tools/arch/x86/ -I/tmp/makepkg/linux-tools/src/linux/tool=
-s/perf/util -I/tmp/makepkg/linux-tools/src/linux/tools/perf -DHAVE_PTHREAD_=
-ATTR_SETAFFINITY_NP -DHAVE_PTHREAD_BARRIER -DHAVE_EVENTFD_SUPPORT -DHAVE_GE=
-T_CURRENT_DIR_NAME -DHAVE_GETTID -DHAVE_FILE_HANDLE -DHAVE_DWARF_GETLOCATIO=
-NS_SUPPORT -DHAVE_AIO_SUPPORT -DHAVE_SCANDIRAT_SUPPORT -DHAVE_SCHED_GETCPU_=
-SUPPORT -DHAVE_SETNS_SUPPORT -DHAVE_LIBELF_SUPPORT -DHAVE_ELF_GETPHDRNUM_SU=
-PPORT -DHAVE_GELF_GETNOTE_SUPPORT -DHAVE_ELF_GETSHDRSTRNDX_SUPPORT -DHAVE_D=
-EBUGINFOD_SUPPORT -DHAVE_DWARF_SUPPORT  -DHAVE_LIBBPF_SUPPORT -DHAVE_BPF_PR=
-OLOGUE -DHAVE_JITDUMP -DHAVE_DWARF_UNWIND_SUPPORT -DNO_LIBUNWIND_DEBUG_FRAM=
-E -DHAVE_LIBUNWIND_SUPPORT -DHAVE_LIBCRYPTO_SUPPORT -DHAVE_SLANG_SUPPORT -D=
-NO_LIBPERL -DHAVE_TIMERFD_SUPPORT -DHAVE_LIBPYTHON_SUPPORT -DHAVE_CXA_DEMAN=
-GLE_SUPPORT -DHAVE_ZLIB_SUPPORT -DHAVE_LZMA_SUPPORT -DHAVE_ZSTD_SUPPORT -DH=
-AVE_LIBCAP_SUPPORT -DHAVE_BACKTRACE_SUPPORT -DHAVE_LIBNUMA_SUPPORT -DHAVE_K=
-VM_STAT_SUPPORT -DDISASM_FOUR_ARGS_SIGNATURE -DDISASM_INIT_STYLED -DHAVE_PE=
-RF_READ_VDSO32 -DHAVE_AUXTRACE_SUPPORT -DHAVE_LIBTRACEEVENT -DLIBTRACEEVENT=
-_VERSION=3D66813 -I/tmp/makepkg/linux-tools/src/linux/tools/perf/libapi/inc=
-lude -I/tmp/makepkg/linux-tools/src/linux/tools/perf/libbpf/include -I/tmp/=
-makepkg/linux-tools/src/linux/tools/perf/libsubcmd/include -I/tmp/makepkg/l=
-inux-tools/src/linux/tools/perf/libsymbol/include -I/tmp/makepkg/linux-tool=
-s/src/linux/tools/perf/libperf/include' LDFLAGS=3D'-Wl,-O3,--as-needed,-Bsy=
-mbolic-functions,--sort-common,-flto=3Dauto -fopenmp -fuse-ld=3Dmold -march=
-=3Dnative -mtune=3Dnative -maes -mbmi2 -mpclmul -Wl,-zmax-page-size=3D0x200=
-000 -Wl,-z,noexecstack  -lunwind-x86_64 -lunwind -llzma  -L/usr/lib ' \
-> >   '/usr/bin/python' util/setup.py \
-> >   --quiet build_ext; \
-> > cp python_ext_build/lib/perf*.so python/
-> > rm -f -f /tmp/makepkg/linux-tools/src/linux/tools/perf/libbpf/libbpf.a;=
- ar rcs /tmp/makepkg/linux-tools/src/linux/tools/perf/libbpf/libbpf.a /tmp/=
-makepkg/linux-tools/src/linux/tools/perf/libbpf/staticobjs/libbpf-in.o
-> > [snip]
-> > gcc -Wno-error=3Dbad-function-cast -Wno-error=3Ddeclaration-after-state=
-ment -Wno-error=3Dswitch-enum -Wbad-function-cast -Wdeclaration-after-state=
-ment -Wformat-security -Wformat-y2k -Winit-self -Wmissing-declarations -Wmi=
-ssing-prototypes -Wno-system-headers -Wold-style-definition -Wpacked -Wredu=
-ndant-decls -Wstrict-prototypes -Wswitch-default -Wswitch-enum -Wundef -Wwr=
-ite-strings -Wformat -Wno-type-limits -Wstrict-aliasing=3D3 -Wshadow -DHAVE=
-_SYSCALL_TABLE_SUPPORT -DHAVE_ARCH_X86_64_SUPPORT -Iarch/x86/include/genera=
-ted -DHAVE_PERF_REGS_SUPPORT -DHAVE_ARCH_REGS_QUERY_REGISTER_OFFSET -Werror=
- -DNDEBUG=3D1 -O6 -fno-omit-frame-pointer -ggdb3 -funwind-tables -Wall -Wex=
-tra -std=3Dgnu11 -fstack-protector-all -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=
-=3D2 -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=3D64 -D_GNU_SOURCE -I/tmp/ma=
-kepkg/linux-tools/src/linux/tools/perf/util/include -I/tmp/makepkg/linux-to=
-ols/src/linux/tools/perf/arch/x86/include -I/tmp/makepkg/linux-tools/src/li=
-nux/tools/include/ -I/tmp/makepkg/linux-tools/src/linux/tools/arch/x86/incl=
-ude/uapi -I/tmp/makepkg/linux-tools/src/linux/tools/include/uapi -I/tmp/mak=
-epkg/linux-tools/src/linux/tools/arch/x86/include/ -I/tmp/makepkg/linux-too=
-ls/src/linux/tools/arch/x86/ -I/tmp/makepkg/linux-tools/src/linux/tools/per=
-f/util -I/tmp/makepkg/linux-tools/src/linux/tools/perf -DHAVE_PTHREAD_ATTR_=
-SETAFFINITY_NP -DHAVE_PTHREAD_BARRIER -DHAVE_EVENTFD_SUPPORT -DHAVE_GET_CUR=
-RENT_DIR_NAME -DHAVE_GETTID -DHAVE_FILE_HANDLE -DHAVE_DWARF_GETLOCATIONS_SU=
-PPORT -DHAVE_AIO_SUPPORT -DHAVE_SCANDIRAT_SUPPORT -DHAVE_SCHED_GETCPU_SUPPO=
-RT -DHAVE_SETNS_SUPPORT -DHAVE_LIBELF_SUPPORT -DHAVE_ELF_GETPHDRNUM_SUPPORT=
- -DHAVE_GELF_GETNOTE_SUPPORT -DHAVE_ELF_GETSHDRSTRNDX_SUPPORT -DHAVE_DEBUGI=
-NFOD_SUPPORT -DHAVE_DWARF_SUPPORT  -DHAVE_LIBBPF_SUPPORT -DHAVE_BPF_PROLOGU=
-E -DHAVE_JITDUMP -DHAVE_DWARF_UNWIND_SUPPORT -DNO_LIBUNWIND_DEBUG_FRAME -DH=
-AVE_LIBUNWIND_SUPPORT -DHAVE_LIBCRYPTO_SUPPORT -DHAVE_SLANG_SUPPORT -DNO_LI=
-BPERL -DHAVE_TIMERFD_SUPPORT -DHAVE_LIBPYTHON_SUPPORT -DHAVE_CXA_DEMANGLE_S=
-UPPORT -DHAVE_ZLIB_SUPPORT -DHAVE_LZMA_SUPPORT -DHAVE_ZSTD_SUPPORT -DHAVE_L=
-IBCAP_SUPPORT -DHAVE_BACKTRACE_SUPPORT -DHAVE_LIBNUMA_SUPPORT -DHAVE_KVM_ST=
-AT_SUPPORT -DDISASM_FOUR_ARGS_SIGNATURE -DDISASM_INIT_STYLED -DHAVE_PERF_RE=
-AD_VDSO32 -DHAVE_AUXTRACE_SUPPORT -DHAVE_LIBTRACEEVENT -DLIBTRACEEVENT_VERS=
-ION=3D66813 -I/tmp/makepkg/linux-tools/src/linux/tools/perf/libapi/include =
--I/tmp/makepkg/linux-tools/src/linux/tools/perf/libbpf/include -I/tmp/makep=
-kg/linux-tools/src/linux/tools/perf/libsubcmd/include -I/tmp/makepkg/linux-=
-tools/src/linux/tools/perf/libsymbol/include -I/tmp/makepkg/linux-tools/src=
-/linux/tools/perf/libperf/include -Wl,-O3,--as-needed,-Bsymbolic-functions,=
---sort-common,-flto=3Dauto -fopenmp -fuse-ld=3Dmold -march=3Dnative -mtune=
-=3Dnative -maes -mbmi2 -mpclmul -Wl,-zmax-page-size=3D0x200000 -Wl,-z,noexe=
-cstack  -lunwind-x86_64 -lunwind -llzma  -L/usr/lib  \
-> >         perf-in.o pmu-events/pmu-events-in.o -Wl,--whole-archive /tmp/m=
-akepkg/linux-tools/src/linux/tools/perf/libapi/libapi.a /tmp/makepkg/linux-=
-tools/src/linux/tools/perf/libperf/libperf.a /tmp/makepkg/linux-tools/src/l=
-inux/tools/perf/libsubcmd/libsubcmd.a /tmp/makepkg/linux-tools/src/linux/to=
-ols/perf/libsymbol/libsymbol.a /tmp/makepkg/linux-tools/src/linux/tools/per=
-f/libbpf/libbpf.a  -Wl,--no-whole-archive -Wl,--start-group -lpthread -lrt =
--lm -ldl -lelf -ldebuginfod -ldw -lunwind-x86_64 -lunwind -llzma -lcrypto -=
-lslang -lpython3.11 -ldl -lm -lutil -lstdc++ -lz -llzma -lzstd -lcap -lnuma=
- -ltraceevent -Wl,--end-group -o perf
-> > mold: error: undefined symbol: main
+>=20=20=20=20=20
+> Fix af_alg_alloc_areq() to initialise areq->first_rsgl.sgl.sgt.sgl to poi=
+nt
+> to the scatterlist array in areq->first_rsgl.sgl.sgl.
 >
-> >>>> referenced by /usr/lib/Scrt1.o:(.text)
-> >>>>               /usr/lib/Scrt1.o:(_start)
-> > mold: error: undefined symbol: perf_pmu__getcpuid
-> >>>> referenced by pmu-events.c
-> >>>>               pmu-events/pmu-events-in.o:(perf_pmu__find_events_tabl=
-e)>>>
-> >>>>               referenced by pmu-events.c
-> >>>>               pmu-events/pmu-events-in.o:(perf_pmu__find_metrics_tab=
-le)
-> > mold: error: undefined symbol: strcmp_cpuid_str
-> >>>> referenced by pmu-events.c
-> >>>>               pmu-events/pmu-events-in.o:(perf_pmu__find_events_tabl=
-e)>>>
-> >>>>               referenced by pmu-events.c
-> >>>>               pmu-events/pmu-events-in.o:(perf_pmu__find_metrics_tab=
-le)>>>
-> >>>>               referenced by pmu-events.c
-> >>>>               pmu-events/pmu-events-in.o:(find_core_events_table)>>>
-> >>>>               referenced 1 more times
-> >
-> > mold: error: undefined symbol: _ctype
-> >>>> referenced by kallsyms.c
-> >>>>
-> >>>>               /tmp/makepkg/linux-tools/src/linux/tools/perf/libsymbo=
-l/libsymbol.a(libsymbol-in.o):(__tolower)>>>
-> >>>>               referenced by kallsyms.c
-> >>>>
-> >>>>               /tmp/makepkg/linux-tools/src/linux/tools/perf/libsymbo=
-l/libsymbol.a(libsymbol-in.o):(__toupper)
-> > mold: error: undefined symbol: strlcpy
-> >>>> referenced by exec-cmd.c
-> >>>>
-> >>>>               /tmp/makepkg/linux-tools/src/linux/tools/perf/libsubcm=
-d/libsubcmd.a(libsubcmd-in.o):(get_pwd_cwd)
-> > [/CODE]
-> >
-> > I have noticed a patch series of Ian Rodgers that might adress this iss=
-ue, but his reported errors were different to mine, see: https://www.spinic=
-s.net/lists/kernel/msg4872566.html
-> >
-> > Compiler: gcc-version 13.1.1 20230714 (GCC)
+> Without this, the gcm-aes-s390 driver will oops when it tries to do
+> gcm_walk_start() on req->dst because req->dst is set to the value of
+> areq->first_rsgl.sgl.sgl by _aead_recvmsg() calling
+> aead_request_set_crypt().
 >
-> See Bugzilla for the full thread.
+> The problem comes if an empty ciphertext is passed: the loop in
+> af_alg_get_rsgl() just passes straight out and doesn't set areq->first_rs=
+gl
+> up.
 >
-> Anyway, I'm adding this regression to regzbot:
+> This isn't a problem on x86_64 using gcmaes_crypt_by_sg() because, as far
+> as I can tell, that ignores req->dst and only uses req->src[*].
 >
-> #regzbot introduced: v6.3..v6.4.5 https://bugzilla.kernel.org/show_bug.cg=
-i?id=3D217706
+> [*] Is this a bug in aesni-intel_glue.c?
+>
+> The s390x oops looks something like:
+>
+>  Unable to handle kernel pointer dereference in virtual kernel address sp=
+ace
+>  Failing address: 0000000a00000000 TEID: 0000000a00000803
+>  Fault in home space mode while using kernel ASCE.
+>  AS:00000000a43a0007 R3:0000000000000024
+>  Oops: 003b ilc:2 [#1] SMP
+>  ...
+>  Call Trace:
+>   [<000003ff7fc3d47e>] gcm_walk_start+0x16/0x28 [aes_s390]
+>   [<00000000a2a342f2>] crypto_aead_decrypt+0x9a/0xb8
+>   [<00000000a2a60888>] aead_recvmsg+0x478/0x698
+>   [<00000000a2e519a0>] sock_recvmsg+0x70/0xb0
+>   [<00000000a2e51a56>] sock_read_iter+0x76/0xa0
+>   [<00000000a273e066>] vfs_read+0x26e/0x2a8
+>   [<00000000a273e8c4>] ksys_read+0xbc/0x100
+>   [<00000000a311d808>] __do_syscall+0x1d0/0x1f8
+>   [<00000000a312ff30>] system_call+0x70/0x98
+>  Last Breaking-Event-Address:
+>   [<000003ff7fc3e6b4>] gcm_aes_crypt+0x104/0xa68 [aes_s390]
+>
+> Fixes: c1abe6f570af ("crypto: af_alg: Use extract_iter_to_sg() to create =
+scatterlists")
+> Reported-by: Ondrej Mosn=C3=A1=C4=8Dek <omosnacek@gmail.com>
+> Link: https://lore.kernel.org/r/CAAUqJDuRkHE8fPgZJGaKjUjd3QfGwzfumuJBmStP=
+qBhubxyk_A@mail.gmail.com/
+> Signed-off-by: David Howells <dhowells@redhat.com>
+> cc: Herbert Xu <herbert@gondor.apana.org.au>
+> cc: Sven Schnelle <svens@linux.ibm.com>
+> cc: Harald Freudenberger <freude@linux.vnet.ibm.com>
+> cc: "David S. Miller" <davem@davemloft.net>
+> cc: Paolo Abeni <pabeni@redhat.com>
+> cc: linux-crypto@vger.kernel.org
+> cc: linux-s390@vger.kernel.org
+> cc: regressions@lists.linux.dev
+> ---
+>  crypto/af_alg.c |    1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/crypto/af_alg.c b/crypto/af_alg.c
+> index 06b15b9f661c..9ee8575d3b1a 100644
+> --- a/crypto/af_alg.c
+> +++ b/crypto/af_alg.c
+> @@ -1192,6 +1192,7 @@ struct af_alg_async_req *af_alg_alloc_areq(struct s=
+ock *sk,
+>=20=20
+>  	areq->areqlen =3D areqlen;
+>  	areq->sk =3D sk;
+> +	areq->first_rsgl.sgl.sgt.sgl =3D areq->first_rsgl.sgl.sgl;
+>  	areq->last_rsgl =3D NULL;
+>  	INIT_LIST_HEAD(&areq->rsgl_list);
+>  	areq->tsgl =3D NULL;
 
-Thanks, I'm not sure there is anything actionable for the bug.
-clang/llvm has always worked with LTO at Google. With my changes gcc
-works for me with some non-zero effort.
+Just tested, with this fix the kernel no longer crashes. Thanks!
 
-Thanks,
-Ian
-
-> Thanks.
->
-> [1]: https://bugzilla.kernel.org/show_bug.cgi?id=3D217706
->
-> --
-> An old man doll... just what I always wanted! - Clara
+Tested-by: Sven Schnelle <svens@linux.ibm.com>
