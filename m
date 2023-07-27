@@ -1,45 +1,45 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 281E0171A0
-	for <regressions@lists.linux.dev>; Thu, 27 Jul 2023 12:25:21 +0000 (UTC)
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1bba48b0bd2so5263585ad.3
-        for <regressions@lists.linux.dev>; Thu, 27 Jul 2023 05:25:21 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F107174D0
+	for <regressions@lists.linux.dev>; Thu, 27 Jul 2023 14:25:40 +0000 (UTC)
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-686f38692b3so678864b3a.2
+        for <regressions@lists.linux.dev>; Thu, 27 Jul 2023 07:25:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1690460721; x=1691065521;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Q8w2BroilchUm0vlMoQZCfmeRkJCD+OaWa9ouggpUhE=;
-        b=sUKo94Y7jEq4Of0ShNppcptl1bCqlql1WxhA77SDF4oX/ZTgGKfLfWXCaCclk5ezgF
-         IwIjH2S43Zy/sx5UZtoNF5iKjTSYX8odQPEUystkwgkmBpEldUzi60HBj+/pBrvNg8dV
-         Zm7KtORoej/Wgbexc9OE94Yo6fQQ1SCpL917giXDnCUVAywLCSczBhck4vxfCmwvdmJ0
-         9UbEpmc3yaqkt5ZXzTu284KAd+rqgr2FZiwlpReZZBTVuv0OEQaZXcyvmZwf2K4yTgiy
-         jfLFYZV4ciInNJuuHChpim0q45kwQNMJERFpjmYcP5WfkqyH4K43oQsFebb9TMPJo8Gc
-         +v6Q==
+        d=gmail.com; s=20221208; t=1690467940; x=1691072740;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XFMO1LpHpHTTpjvXoIkQLvxqJltg6buZb3Tzblg91ck=;
+        b=r+VDv71c7Nfr8/pVFNsHnVqWMG9Ui5kjeJEEjRHuSgTa5iyOdZ+rsPkla6ehaAlraq
+         n2lywEMxethBwJi2lAltm1JyJiLLM5YbfRsVNaGuC4i2FcSe312S8ZPO8uL0vQ987zKF
+         i0fN98OmAVhkVHLz8YCDg3tVp0VYPo5p2xGv6n+qbp0GieDG9ZlXdTNcg4S3TEKdArMx
+         z/dzyhNFF2tiWWNnG661HpyGRJr6wfS0yb5lA4FeohkSVdA6ZmPbmHebDBJY/QS5c8Tp
+         Z4z6tN7LbFo8HjxFQbD44tbJ3CPg+s+gT3uvg1FbGVQTuxMB1ytzBY86lKe2rvB+eThS
+         4H/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690460721; x=1691065521;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Q8w2BroilchUm0vlMoQZCfmeRkJCD+OaWa9ouggpUhE=;
-        b=gWV7B8NQQ/rbGLG41jwwQ8AxiRV8VmxfW/fwWEW2nvt5xWeZ2cufKpCg3IgnIUk6wA
-         IxaT9ux5bAxOIPBCHZ1SSvIROJzT/vhvGJlxLEOtwveVWe1jPxzWTd7IXDmCYHP8ZACQ
-         UIirMWrVGLvAwWU+bilkOTU5WxHClkIeCEVkBmNaMEyC8+yvUXIin29RDXifFGYr6W5z
-         S2b7FyfCzhn+tekjFct2B/F7hD1pkwvsUo6lma9vskm3yWDt9R6VyBywnfUNeM3sg9jA
-         LOFWnbNI/KhRGJLLkO6ZRvwe9zOXiuezswetfk9VCG4BH4gbkV/2INpOoep4UVC9xbW/
-         K/uw==
-X-Gm-Message-State: ABy/qLYe5Odvm7IBu1K4uSjJ06EsoQ2u7vZZK1VZS/k26ARb0gY7TQkD
-	MvqKVwmikTXDMPf8/NTsIK8=
-X-Google-Smtp-Source: APBJJlGnPll1D6uCbmYaFm6LhePlGO8cMGwnGGxYven5jT/I5hlWh+/MuAkBl8Oubp5VfczdMLBttA==
-X-Received: by 2002:a17:903:182:b0:1bb:e74b:39ff with SMTP id z2-20020a170903018200b001bbe74b39ffmr148542plg.0.1690460721291;
-        Thu, 27 Jul 2023 05:25:21 -0700 (PDT)
-Received: from [192.168.1.121] ([65.129.146.152])
-        by smtp.gmail.com with ESMTPSA id e16-20020a17090301d000b001bb381b8260sm1503595plh.100.2023.07.27.05.25.20
+        d=1e100.net; s=20221208; t=1690467940; x=1691072740;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=XFMO1LpHpHTTpjvXoIkQLvxqJltg6buZb3Tzblg91ck=;
+        b=HIAujp/qbYeugFl0RIKNAGuNp+h41btlS5bls4er8k7KC47TwoX6b4k6toGxKcbggh
+         pzAnOlz/SbZ0xcFT60PIhmBpcCQUwrAav5iEcB4B2YoxjG3lpRKts1ZzEXBYy01Pa04Y
+         Q6AwZ4JAnGs6oyVYRUZ5gRu3qcVPX5Kd5wxC009Ghg/yKa38BqzmDv7XhSLWmBdA4qgR
+         4FYpV5RSCBr8M7e3veX8yd/XHAdhmBR6fkHKAa/9YhGTtvQ0wZGdanKfrHCi6Tausxuu
+         vrXFWMFt+7CeVQBeSYTZsRHsiOVS2KWSGE4OgQdxTsNH4d3ZJvJe/YBF2hGZ/ltH9lLu
+         bKOg==
+X-Gm-Message-State: ABy/qLbAZp3BfD0U4UNHLqgK0dGKv4bIHj87lV3P9BIHPvM/t/Fi1CBm
+	U/sTiiCVO8MAg1qNrpezgKg=
+X-Google-Smtp-Source: APBJJlGxStoO7JfUzyQebiraBQzpo6zbBGztVdjJa29qXmyLgC700MfykmnzQyFKsrP1eYgXr2r0yA==
+X-Received: by 2002:a05:6a21:3d87:b0:12f:382d:2a37 with SMTP id bj7-20020a056a213d8700b0012f382d2a37mr5925845pzc.15.1690467939679;
+        Thu, 27 Jul 2023 07:25:39 -0700 (PDT)
+Received: from [192.168.0.104] ([103.131.18.64])
+        by smtp.gmail.com with ESMTPSA id i22-20020aa787d6000000b00682669dc19bsm1535555pfo.201.2023.07.27.07.24.21
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Jul 2023 05:25:20 -0700 (PDT)
-Message-ID: <f7e7b601-571f-bd2e-6410-a8a27e510c2f@gmail.com>
-Date: Thu, 27 Jul 2023 06:25:19 -0600
+        Thu, 27 Jul 2023 07:24:41 -0700 (PDT)
+Message-ID: <107f05b8-0104-501c-130c-4f89f3f8a628@gmail.com>
+Date: Thu, 27 Jul 2023 21:24:15 +0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -48,101 +48,121 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.13.0
-Subject: Re: Scsi_bus_resume+0x0/0x90 returns -5 when resuming from s3 sleep
-To: Damien Le Moal <dlemoal@kernel.org>,
- Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: regressions@lists.linux.dev, Mario Limonciello
- <mario.limonciello@amd.com>, Bart Van Assche <bvanassche@acm.org>,
- LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org
-References: <0e272abe-292d-d58f-cf80-55868e793abc@gmail.com>
- <6b66dd9a-8bd5-2882-9168-8e6e0848c454@leemhuis.info>
- <c70caa9e-164c-fee5-8f85-67f6d02373ab@kernel.org>
- <b0ed86e0-3e4a-d4d1-7b9d-c57f20538a80@gmail.com>
- <86435987-734e-c6c1-a857-1ba80da709fe@gmail.com>
- <48bc1736-5e4e-3a9b-3715-60509c333bb1@kernel.org>
 Content-Language: en-US
-From: TW <dalzot@gmail.com>
-In-Reply-To: <48bc1736-5e4e-3a9b-3715-60509c333bb1@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+To: Amit Daniel Kachhap <amit.kachhap@gmail.com>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>,
+ Viresh Kumar <viresh.kumar@linaro.org>, Goran <goran.brkuljan@gmail.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Linux Power Management <linux-pm@vger.kernel.org>
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+Subject: Fwd: XPS 17 9730 runs significantly warmer on Kernel 6.5-rc3 compared
+ to Kernel 6.4.3
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-It was all 1 patch but the first change had a formatting issue from the 
-email format I guess. So I fixed that and the patch went through and 
-looks like the drive error message has stopped. Still a little slow 
-coming back but that error is gone at least.
+Hi,
 
-Jul 27 05:05:05 rageworks systemd[1]: Starting System Suspend...
-Jul 27 05:05:05 rageworks systemd-sleep[1624]: Entering sleep state 
-'suspend'...
-Jul 27 05:05:05 rageworks kernel: PM: suspend entry (deep)
-Jul 27 05:05:05 rageworks kernel: Filesystems sync: 0.246 seconds
-Jul 27 05:05:26 rageworks kernel: Freezing user space processes
-Jul 27 05:05:26 rageworks kernel: Freezing user space processes 
-completed (elapsed 0.001 seconds)
-Jul 27 05:05:26 rageworks kernel: OOM killer disabled.
-Jul 27 05:05:26 rageworks kernel: Freezing remaining freezable tasks
-Jul 27 05:05:26 rageworks kernel: Freezing remaining freezable tasks 
-completed (elapsed 0.000 seconds)
-Jul 27 05:05:26 rageworks kernel: printk: Suspending console(s) (use 
-no_console_suspend to debug)
-Jul 27 05:05:26 rageworks kernel: serial 00:05: disabled
-Jul 27 05:05:26 rageworks kernel: sd 9:0:0:0: [sdc] Synchronizing SCSI cache
-Jul 27 05:05:26 rageworks kernel: sd 1:0:0:0: [sdb] Synchronizing SCSI cache
-Jul 27 05:05:26 rageworks kernel: sd 0:0:0:0: [sda] Synchronizing SCSI cache
-Jul 27 05:05:26 rageworks kernel: sd 9:0:0:0: [sdc] Stopping disk
-Jul 27 05:05:26 rageworks kernel: sd 1:0:0:0: [sdb] Stopping disk
-Jul 27 05:05:26 rageworks kernel: sd 0:0:0:0: [sda] Stopping disk
-Jul 27 05:05:26 rageworks kernel: ACPI: PM: Preparing to enter system 
-sleep state S3
-Jul 27 05:05:26 rageworks kernel: ACPI: PM: Saving platform NVS memory
-Jul 27 05:05:26 rageworks kernel: Disabling non-boot CPUs ...
-Jul 27 05:05:26 rageworks kernel: smpboot: CPU 1 is now offline
-Jul 27 05:05:26 rageworks kernel: smpboot: CPU 2 is now offline
-Jul 27 05:05:26 rageworks kernel: smpboot: CPU 3 is now offline
-Jul 27 05:05:26 rageworks kernel: ACPI: PM: Low-level resume complete
-Jul 27 05:05:26 rageworks kernel: ACPI: PM: Restoring platform NVS memory
-Jul 27 05:05:26 rageworks kernel: Enabling non-boot CPUs ...
-Jul 27 05:05:26 rageworks kernel: smpboot: Booting Node 0 Processor 1 
-APIC 0x1
-Jul 27 05:05:26 rageworks kernel: CPU1 is up
-Jul 27 05:05:26 rageworks kernel: smpboot: Booting Node 0 Processor 2 
-APIC 0x2
-Jul 27 05:05:26 rageworks kernel: CPU2 is up
-Jul 27 05:05:26 rageworks kernel: smpboot: Booting Node 0 Processor 3 
-APIC 0x3
-Jul 27 05:05:26 rageworks kernel: CPU3 is up
-Jul 27 05:05:26 rageworks kernel: ACPI: PM: Waking up from system sleep 
-state S3
-Jul 27 05:05:26 rageworks kernel: xhci_hcd 0000:02:00.0: xHC error in 
-resume, USBSTS 0x401, Reinit
-Jul 27 05:05:26 rageworks kernel: usb usb1: root hub lost power or was reset
-Jul 27 05:05:26 rageworks kernel: usb usb2: root hub lost power or was reset
-Jul 27 05:05:26 rageworks kernel: sd 0:0:0:0: [sda] Starting disk
-Jul 27 05:05:26 rageworks kernel: sd 1:0:0:0: [sdb] Starting disk
-Jul 27 05:05:26 rageworks kernel: sd 9:0:0:0: [sdc] Starting disk
-Jul 27 05:05:26 rageworks kernel: serial 00:05: activated
-Jul 27 05:05:26 rageworks kernel: ata6: SATA link down (SStatus 0 
-SControl 330)
-Jul 27 05:05:26 rageworks kernel: ata5: SATA link down (SStatus 0 
-SControl 330)
-Jul 27 05:05:26 rageworks kernel: ata9: SATA link down (SStatus 0 
-SControl 300)
-Jul 27 05:05:26 rageworks kernel: usb 1-10: reset full-speed USB device 
-number 4 using xhci_hcd
-Jul 27 05:05:26 rageworks kernel: usb 1-8: reset full-speed USB device 
-number 3 using xhci_hcd
-Jul 27 05:05:26 rageworks kernel: usb 1-7: reset full-speed USB device 
-number 2 using xhci_hcd
-Jul 27 05:05:26 rageworks kernel: OOM killer enabled.
-Jul 27 05:05:26 rageworks kernel: Restarting tasks ... done.
-Jul 27 05:05:26 rageworks kernel: random: crng reseeded on system resumption
-Jul 27 05:05:26 rageworks kernel: PM: suspend exit
+I notice a regression report on Bugzilla [1]. Quoting from it:
 
+> On my new XPS 17 9730 laptop, I recently installed the Kernel 6.5-rc3. I noticed, however, that during its operation, the laptop was getting significantly warmer than before. I did some analysis using the 'stress' tool to measure and compare the difference in CPU temperatures between Kernel 6.4.3 and Kernel 6.5-rc3. Here are my results:
+> 
+> OS: Ubuntu 23.10
+> CPU: i7-13700H
+> 
+> kernel 6.4.3:
+>                                                                                                                                                                                         
+> Initial CPU temperature:
+> coretemp-isa-0000
+> Core 0:        +47.0°C  (high = +100.0°C, crit = +100.0°C)
+> Core 4:        +45.0°C  (high = +100.0°C, crit = +100.0°C)
+> Core 8:        +46.0°C  (high = +100.0°C, crit = +100.0°C)
+> Core 12:       +46.0°C  (high = +100.0°C, crit = +100.0°C)
+> Core 16:       +45.0°C  (high = +100.0°C, crit = +100.0°C)
+> Core 20:       +44.0°C  (high = +100.0°C, crit = +100.0°C)
+> Core 24:       +44.0°C  (high = +100.0°C, crit = +100.0°C)
+> Core 25:       +44.0°C  (high = +100.0°C, crit = +100.0°C)
+> Core 26:       +44.0°C  (high = +100.0°C, crit = +100.0°C)
+> Core 27:       +44.0°C  (high = +100.0°C, crit = +100.0°C)
+> Core 28:       +45.0°C  (high = +100.0°C, crit = +100.0°C)
+> Core 29:       +45.0°C  (high = +100.0°C, crit = +100.0°C)
+> Core 30:       +45.0°C  (high = +100.0°C, crit = +100.0°C)
+> Core 31:       +45.0°C  (high = +100.0°C, crit = +100.0°C)
+> Stressing CPU for 30 seconds...
+> stress: info: [4858] dispatching hogs: 14 cpu, 0 io, 0 vm, 0 hdd
+> stress: info: [4858] successful run completed in 30s
+> CPU temperature immediately after stress test:
+> coretemp-isa-0000
+> Core 0:        +67.0°C  (high = +100.0°C, crit = +100.0°C)
+> Core 4:        +76.0°C  (high = +100.0°C, crit = +100.0°C)
+> Core 8:        +69.0°C  (high = +100.0°C, crit = +100.0°C)
+> Core 12:       +77.0°C  (high = +100.0°C, crit = +100.0°C)
+> Core 16:       +69.0°C  (high = +100.0°C, crit = +100.0°C)
+> Core 20:       +76.0°C  (high = +100.0°C, crit = +100.0°C)
+> Core 24:       +68.0°C  (high = +100.0°C, crit = +100.0°C)
+> Core 25:       +68.0°C  (high = +100.0°C, crit = +100.0°C)
+> Core 26:       +68.0°C  (high = +100.0°C, crit = +100.0°C)
+> Core 27:       +68.0°C  (high = +100.0°C, crit = +100.0°C)
+> Core 28:       +71.0°C  (high = +100.0°C, crit = +100.0°C)
+> Core 29:       +71.0°C  (high = +100.0°C, crit = +100.0°C)
+> Core 30:       +71.0°C  (high = +100.0°C, crit = +100.0°C)
+> Core 31:       +71.0°C  (high = +100.0°C, crit = +100.0°C)
+> Test ended at: Tue Jul 25 01:10:16 PM CEST 2023
+> 
+> 
+> kernel 6.5-rc-3:
+> 
+> Initial CPU temperature:
+> coretemp-isa-0000
+> Core 0:        +46.0°C  (high = +100.0°C, crit = +100.0°C)
+> Core 4:        +46.0°C  (high = +100.0°C, crit = +100.0°C)
+> Core 8:        +46.0°C  (high = +100.0°C, crit = +100.0°C)
+> Core 12:       +46.0°C  (high = +100.0°C, crit = +100.0°C)
+> Core 16:       +44.0°C  (high = +100.0°C, crit = +100.0°C)
+> Core 20:       +44.0°C  (high = +100.0°C, crit = +100.0°C)
+> Core 24:       +45.0°C  (high = +100.0°C, crit = +100.0°C)
+> Core 25:       +45.0°C  (high = +100.0°C, crit = +100.0°C)
+> Core 26:       +45.0°C  (high = +100.0°C, crit = +100.0°C)
+> Core 27:       +45.0°C  (high = +100.0°C, crit = +100.0°C)
+> Core 28:       +45.0°C  (high = +100.0°C, crit = +100.0°C)
+> Core 29:       +45.0°C  (high = +100.0°C, crit = +100.0°C)
+> Core 30:       +45.0°C  (high = +100.0°C, crit = +100.0°C)
+> Core 31:       +45.0°C  (high = +100.0°C, crit = +100.0°C)
+> Stressing CPU for 30 seconds...
+> stress: info: [11146] dispatching hogs: 14 cpu, 0 io, 0 vm, 0 hdd
+> stress: info: [11146] successful run completed in 30s
+> CPU temperature immediately after stress test:
+> coretemp-isa-0000
+> Core 0:        +84.0°C  (high = +100.0°C, crit = +100.0°C)
+> Core 4:        +97.0°C  (high = +100.0°C, crit = +100.0°C)
+> Core 8:        +87.0°C  (high = +100.0°C, crit = +100.0°C)
+> Core 12:      +100.0°C  (high = +100.0°C, crit = +100.0°C)
+> Core 16:       +86.0°C  (high = +100.0°C, crit = +100.0°C)
+> Core 20:       +99.0°C  (high = +100.0°C, crit = +100.0°C)
+> Core 24:       +83.0°C  (high = +100.0°C, crit = +100.0°C)
+> Core 25:       +83.0°C  (high = +100.0°C, crit = +100.0°C)
+> Core 26:       +83.0°C  (high = +100.0°C, crit = +100.0°C)
+> Core 27:       +83.0°C  (high = +100.0°C, crit = +100.0°C)
+> Core 28:       +89.0°C  (high = +100.0°C, crit = +100.0°C)
+> Core 29:       +89.0°C  (high = +100.0°C, crit = +100.0°C)
+> Core 30:       +89.0°C  (high = +100.0°C, crit = +100.0°C)
+> Core 31:       +89.0°C  (high = +100.0°C, crit = +100.0°C)
+> Test ended at: Tue Jul 25 01:05:42 PM CEST 2023
+> 
+> I tested few times with different setup and CPU temp on 6.5-rc3 is always higher especially when stressing with fewer cores.
 
-On 7/27/23 04:27, Damien Le Moal wrote:
-> On 7/27/23 19:22, TW wrote:
->> I managed to fix the patch file, guess the formatting messed up a bit. So will
->> try with those patches installed.
-> Just in case, patch fil attached to avoid formatting issues.
->
->
+See Bugzilla for the full thread.
+
+Goran: On Tuesday, I asked you to perform bisection. Any update on it?
+
+Anyway, I'm adding this regression to regzbot:
+
+#regzbot introduced: v6.4..v6.5-rc3 https://bugzilla.kernel.org/show_bug.cgi?id=217703
+#regzbot title: significant temperature increase on XPS 17 9730
+
+Thanks.
+
+[1]: https://bugzilla.kernel.org/show_bug.cgi?id=217703
+
+-- 
+An old man doll... just what I always wanted! - Clara
