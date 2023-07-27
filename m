@@ -1,104 +1,185 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E66DD538B
-	for <regressions@lists.linux.dev>; Thu, 27 Jul 2023 06:09:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1690438150;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YYQikt/RSGLbWmkNXwyvyF8FZ4OuKgmHNL/qSc2r2Mw=;
-	b=SCuWBJhvNXR3/a3dtl42onnDGboWOpNmyt8xfRAyeX6e4Q+2ILzj70kcOENEedSyR1/SWv
-	VzCVSV4Mvtonr6ncYgn9nCb+WkoCIAq0eYTqjBv+UrK371A43McyfKBrY0T9+N/UvhtxaK
-	qSRxPK4AAL71EIedd5VTA4r2RF9ttpA=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-130-rGf4UqSEPpm3nW-nJFppzg-1; Thu, 27 Jul 2023 02:09:09 -0400
-X-MC-Unique: rGf4UqSEPpm3nW-nJFppzg-1
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-3fd2778f5e4so2063505e9.1
-        for <regressions@lists.linux.dev>; Wed, 26 Jul 2023 23:09:09 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E44E107AD
+	for <regressions@lists.linux.dev>; Thu, 27 Jul 2023 10:06:35 +0000 (UTC)
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1bbd03cb7c1so4632825ad.3
+        for <regressions@lists.linux.dev>; Thu, 27 Jul 2023 03:06:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1690452395; x=1691057195;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=0FZGCECC5UQyB2oH7t7oPCmzkPOTLbo6iKgyeWpbv7c=;
+        b=sR0fpuXlCwcqDAm+RnK7VTaord/oL9OZcsbmgToilTPOq70tGFihy2R+rP6mvmX+XR
+         +E2JxyI3NB1Rvm9MFdaUC4cEgC+HAh3cjp/lsdxhia3AoYfag+RQ5IJOV5y5+my261ZY
+         cBW2bJCyxixxaBbzCo46GiPShOfWEdPFut+xTM/XMki2MH2txGGKUk2kb0ygmTuZvijJ
+         qUHs5yYhvWtl0rmpUiWnFhQ2jRLJyW6g/eGFY9Sk64uLICLO5KVqEDKImnpvFXjuc+bp
+         MAfc22wA8SyG0tKWmhCeuIsNZNM/n6GOdBnX5my0+hccEj66VoTfsdzy639wNSewEG8p
+         mTrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690438148; x=1691042948;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YYQikt/RSGLbWmkNXwyvyF8FZ4OuKgmHNL/qSc2r2Mw=;
-        b=QT88J6EPzxXXq8t+Nlob0G/AAa2g6VJxsdx1HuDMNkKg5WMOxgaI1HhsB0f8rQfYPZ
-         amEqLGT8u1gastyDDMx+1Bz4EH9zOp0/QeuSKhuIW/Azd2VtrardUgWDOgsKeRrpIVH4
-         XAB0igZgJ83BNU41fROBzdG0cVh8G1RKoYnSvQdf3W8Cr7A93qQFFsB6uZ/5MVrRtjCn
-         ykg5k8X+bMQukVmtaYkR6i9WBM1rCMPGgn54aBCVdvP71cDp3UTXqIuRh0b1+X1Y59wp
-         vKmKQHz/oDd0J1UcQnMghntxQfaDV9rB0mhVB1PARX5XdrbdjEgZ+K/osay2mc+JjVag
-         Afbg==
-X-Gm-Message-State: ABy/qLYnL2oZXU6Vf5to5Bs5NxdbLqpP+cD4HRLwsPaQCf1SFL7vTKEj
-	p322IBtgnbky4Fbj263lVUsQC1mYYP2jJjuNM1Mj2mGYEto9fR1vAx6DeWJcpa9xrgFqpdv30O+
-	EVokAvgmdvr/tgqj0OC2xnzA=
-X-Received: by 2002:a05:600c:21d8:b0:3fd:dd53:d9a3 with SMTP id x24-20020a05600c21d800b003fddd53d9a3mr774464wmj.17.1690438148432;
-        Wed, 26 Jul 2023 23:09:08 -0700 (PDT)
-X-Google-Smtp-Source: APBJJlFEJZQhApZRMbtLl2Ru/qutbhOPA4DROP8Vhc2vZ299DZKe6FqdK5pidW3CwisM1rCOLNo8mQ==
-X-Received: by 2002:a05:600c:21d8:b0:3fd:dd53:d9a3 with SMTP id x24-20020a05600c21d800b003fddd53d9a3mr774455wmj.17.1690438148167;
-        Wed, 26 Jul 2023 23:09:08 -0700 (PDT)
-Received: from redhat.com ([31.187.78.131])
-        by smtp.gmail.com with ESMTPSA id l5-20020a05600c1d0500b003fbb1ce274fsm15354729wms.0.2023.07.26.23.09.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Jul 2023 23:09:07 -0700 (PDT)
-Date: Thu, 27 Jul 2023 02:09:02 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Woody Suwalski <terraluna977@gmail.com>, imammedo@redhat.com,
-	bhelgaas@google.com, LKML <linux-kernel@vger.kernel.org>,
-	linux-pci@vger.kernel.org, regressions@lists.linux.dev,
-	"Linux regression tracking #adding (Thorsten Leemhuis)" <regressions@leemhuis.info>
-Subject: Re: Kernel 6.5-rc2: system crash on suspend bisected
-Message-ID: <20230727020621-mutt-send-email-mst@kernel.org>
-References: <11fc981c-af49-ce64-6b43-3e282728bd1a@gmail.com>
- <20230720202110.GA544761@bhelgaas>
+        d=1e100.net; s=20221208; t=1690452395; x=1691057195;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=0FZGCECC5UQyB2oH7t7oPCmzkPOTLbo6iKgyeWpbv7c=;
+        b=VIn6UuOOjtpY5n24CsPT96j7FQynsRygpnBDd3AS2JhGDeh7V7KEX7mTqoEeT9oeFb
+         JLZ8bRpZhHTMqNbJIPgYqb0qo465W1LhNRuc6iGWH0Ok0o7jVzI7tl8mCU48oOIxouuD
+         gn2Sv7QWlMiH5tgH8FaCx5+yqsNmJdOzWhBso9B70sWnAi8VewL+pRwCxGStu332TCMn
+         A+ZWVhPPOGfPmoQqz7hxDI2a+8vqbOWvRu1FtFc/3CKH5JB5X3S9U5X7H87qyRDzSEe0
+         X0qbFCrxw1FV7XCoML/9sGMJCqve6oQxFZjTcEmeJrh5kWZZ5Pzh/n001runA0MDWyaY
+         fWow==
+X-Gm-Message-State: ABy/qLbgrnDVA+RZg7UZ2XGFQgYeD0qhEZqwFZ893hJXj+b9qoVm0+kQ
+	r2/e5/reWgZZ/8yLNpLPF+A=
+X-Google-Smtp-Source: APBJJlGcNpa5SEIxTsbL6e1MnleOLiKInLJf+D24pkQZimLlFKc0j4iZnOu/4CNCbxCHmVrBtFrvKg==
+X-Received: by 2002:a17:902:7207:b0:1b6:ba60:77f0 with SMTP id ba7-20020a170902720700b001b6ba6077f0mr3867479plb.10.1690452395080;
+        Thu, 27 Jul 2023 03:06:35 -0700 (PDT)
+Received: from [192.168.1.121] ([65.129.146.152])
+        by smtp.gmail.com with ESMTPSA id 6-20020a170902ee4600b001bba3a4888bsm1212060plo.102.2023.07.27.03.06.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Jul 2023 03:06:34 -0700 (PDT)
+Message-ID: <b0ed86e0-3e4a-d4d1-7b9d-c57f20538a80@gmail.com>
+Date: Thu, 27 Jul 2023 04:06:33 -0600
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20230720202110.GA544761@bhelgaas>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: Scsi_bus_resume+0x0/0x90 returns -5 when resuming from s3 sleep
+Content-Language: en-US
+To: Damien Le Moal <dlemoal@kernel.org>,
+ Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: regressions@lists.linux.dev, Mario Limonciello
+ <mario.limonciello@amd.com>, Bart Van Assche <bvanassche@acm.org>,
+ LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org
+References: <0e272abe-292d-d58f-cf80-55868e793abc@gmail.com>
+ <6b66dd9a-8bd5-2882-9168-8e6e0848c454@leemhuis.info>
+ <c70caa9e-164c-fee5-8f85-67f6d02373ab@kernel.org>
+From: TW <dalzot@gmail.com>
+In-Reply-To: <c70caa9e-164c-fee5-8f85-67f6d02373ab@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jul 20, 2023 at 03:21:10PM -0500, Bjorn Helgaas wrote:
-> [+cc regressions list]
-> 
-> On Wed, Jul 19, 2023 at 11:36:51PM -0400, Woody Suwalski wrote:
-> > Laptop shows a kernel crash trace after a first suspend to ram, on a second
-> > attempt to suspend it becomes frozen solid. This is 100% repeatable with a
-> > 6.5-rc2 kernel, not happening with a 6.4 kernel - see the attached dmesg
-> > output.
-> > 
-> > I have bisected the kernel uilds and it points to :
-> > [40613da52b13fb21c5566f10b287e0ca8c12c4e9] PCI: acpiphp: Reassign resources
-> > on bridge if necessary
-> > 
-> > Reversing this patch seems to fix the kernel crash problem on my laptop.
-> 
-> Thank you very much for all your work debugging, bisecting, and
-> reporting this!  This is incredibly helpful.
-> 
-> Original report, including complete dmesg logs for both v6.4 and
-> v6.5-rc2:
-> https://lore.kernel.org/r/11fc981c-af49-ce64-6b43-3e282728bd1a@gmail.com
-> 
-> I queued up a revert of 40613da52b13 ("PCI: acpiphp: Reassign
-> resources on bridge if necessary") (on my for-linus branch for v6.5).
-> 
-> It looks like a NULL pointer dereference; hopefully the fix is obvious
-> and I can drop the revert and replace it with the fix.
-> 
-> Bjorn
+I retried on 6.5 rc3 without the Nvidia drivers and still received the 
+same error and going to try for the patch next but got a malformed patch 
+error on line 6 for the first patch for libata-scsi.c. The other two 
+seem to go through just fine however.
 
-Patch on list now:
-https://lore.kernel.org/all/20230726123518.2361181-1-imammedo%40redhat.com
+Also the bugzilla link is similar to what I have but the disk doesn't 
+disappear, comes back but just takes awhile to come back out of sleep mode.
 
--- 
-MST
-
+On 7/26/23 17:39, Damien Le Moal wrote:
+> On 7/26/23 22:47, Thorsten Leemhuis wrote:
+>> Hi, Thorsten here, the Linux kernel's regression tracker.
+>>
+>> On 26.07.23 13:54, TW wrote:
+>>> I have been having issues with the 6.x series of kernels resuming from
+>>> suspend with one of my drives. Far as I can tell it has trouble with the
+>>> cache on the drive when coming out of s3 sleep. Tried a few different
+>>> distros (Manjaro, OpenMandriva Rome, EndeavourOS) all that give the same
+>>> error message. It appears to work fine on the 5.15 kernel just fine
+>>> however.
+>>>
+>>> This is the error or errors that I have been getting and assume has been
+>>> holding up the system from resuming from suspend.
+>>>
+>>> Jul 20 04:13:41 rageworks kernel: ata10.00: device reported invalid CHS sector 0
+>>> Jul 20 04:13:41 rageworks kernel: sd 9:0:0:0: [sdc] Start/Stop Unit failed: Result: hostbyte=DID_OK driverbyte=DRIVER_OK
+>>> Jul 20 04:13:41 rageworks kernel: sd 9:0:0:0: [sdc] Sense Key : Illegal Request [current]
+>>> Jul 20 04:13:41 rageworks kernel: sd 9:0:0:0: [sdc] Add. Sense: Unaligned write command
+> This sense is garbage. This issue was reported already, but it is hard
+> to deal with as it seems to be due to drives/adapters not correctly
+> reporting status bits. So for now, let's ignore this sense codes.
+>
+> The start/stop unit failure is weird. On another case, I am suspecting
+> that this command is causing a delay on resume, but not an error like this.
+>
+>>> Jul 20 04:13:41 rageworks kernel: sd 9:0:0:0: PM: dpm_run_callback(): scsi_bus_resume+0x0/0x90 returns -5
+>>> Jul 20 04:13:41 rageworks kernel: sd 9:0:0:0: PM: failed to resume async: error -5
+>> Thx for your report. I CCed a few people, with a bit of luck they have
+>> an idea. But I doubt it. If no one replies you likely will need a
+>> bisection to find the root of the problem. But before going down that
+>> route you want to check if latest mainline kernel (vanilla!) works better.
+>>
+>> FWIW, this is not my area of expertise, so the following might be a
+>> misleading comment, but the problem looks somewhat similar to this one
+>> that iirc was never solved:
+>> https://bugzilla.kernel.org/show_bug.cgi?id=216087
+>>
+>>> Jul 20 04:12:51 rageworks systemd[1]: nvidia-suspend.service: Deactivated successfully.
+>>> Jul 20 04:12:51 rageworks systemd[1]: Finished NVIDIA system suspend actions.
+>>> Jul 20 04:12:51 rageworks systemd[1]: Starting System Suspend...
+>> That sounds like you are using out-of tree drivers which can cause all
+>> sorts of issues. Please recheck if the problem happens without those as
+>> well and do not use them in all further tests to debug the issue.
+> Yes. Please retest with the latest 6.5-rc3.
+>
+> And can you try this patch to see if it solves your issue ?
+>
+> commit 29e81d11812ee924d19425343ec69acd34af9d35
+> Author: Damien Le Moal <dlemoal@kernel.org>
+> Date:   Mon Jul 24 13:23:14 2023 +0900
+>
+>      ata,scsi: do not issue START STOP UNIT on resume
+>
+>      Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
+>
+> diff --git a/drivers/ata/libata-scsi.c b/drivers/ata/libata-scsi.c
+> index 370d18aca71e..6184c7bcc16c 100644
+> --- a/drivers/ata/libata-scsi.c
+> +++ b/drivers/ata/libata-scsi.c
+> @@ -1100,7 +1100,13 @@ int ata_scsi_dev_config(struct scsi_device *sdev, struct
+> ata_device *dev)
+>   		}
+>   	} else {
+>   		sdev->sector_size = ata_id_logical_sector_size(dev->id);
+> +		/*
+> +		 * Stop the drive on suspend but do not issue START STOP UNIT
+> +		 * on resume as this is not necessary: the port is reset on
+> +		 * resume, which wakes up the drive.
+> +		 */
+>   		sdev->manage_start_stop = 1;
+> +		sdev->no_start_on_resume = 1;
+>   	}
+>
+>   	/*
+> diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
+> index 68b12afa0721..b8584fe3123e 100644
+> --- a/drivers/scsi/sd.c
+> +++ b/drivers/scsi/sd.c
+> @@ -3876,7 +3876,7 @@ static int sd_suspend_runtime(struct device *dev)
+>   static int sd_resume(struct device *dev)
+>   {
+>   	struct scsi_disk *sdkp = dev_get_drvdata(dev);
+> -	int ret;
+> +	int ret = 0;
+>
+>   	if (!sdkp)	/* E.g.: runtime resume at the start of sd_probe() */
+>   		return 0;
+> @@ -3885,7 +3885,8 @@ static int sd_resume(struct device *dev)
+>   		return 0;
+>
+>   	sd_printk(KERN_NOTICE, sdkp, "Starting disk\n");
+> -	ret = sd_start_stop_device(sdkp, 1);
+> +	if (!sdkp->device->no_start_on_resume)
+> +		ret = sd_start_stop_device(sdkp, 1);
+>   	if (!ret)
+>   		opal_unlock_from_suspend(sdkp->opal_dev);
+>   	return ret;
+> diff --git a/include/scsi/scsi_device.h b/include/scsi/scsi_device.h
+> index 75b2235b99e2..b9230b6add04 100644
+> --- a/include/scsi/scsi_device.h
+> +++ b/include/scsi/scsi_device.h
+> @@ -194,6 +194,7 @@ struct scsi_device {
+>   	unsigned no_start_on_add:1;	/* do not issue start on add */
+>   	unsigned allow_restart:1; /* issue START_UNIT in error handler */
+>   	unsigned manage_start_stop:1;	/* Let HLD (sd) manage start/stop */
+> +	unsigned no_start_on_resume:1; /* Do not issue START_STOP_UNIT on resume */
+>   	unsigned start_stop_pwr_cond:1;	/* Set power cond. in START_STOP_UNIT */
+>   	unsigned no_uld_attach:1; /* disable connecting to upper level drivers */
+>   	unsigned select_no_atn:1;
+>
+>
