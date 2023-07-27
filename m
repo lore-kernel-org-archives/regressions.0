@@ -1,150 +1,234 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2055.outbound.protection.outlook.com [40.107.223.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A911399
-	for <regressions@lists.linux.dev>; Thu, 27 Jul 2023 02:56:33 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PZDXqF0GCzYnbtxuE30+9z/f0wjLltlhCETLD6FZqPpezIwshSY90aF4/5p+acGQkE6u1ak0t7JUHDXdSgHJN96KR2pa+vO+fvjrUgac9vLvJXNTcGlOhwW3eY2R36/UeIJ5p64ZtpLdrW5W4rjPFY+bVG5LNkJpDuwrPVWnqxjRoI2hj+QDqZi42cqEsyuK7xN0VZLhlqedjRx1RA0dGZo7b/a1k3OMBhQCBIG7QGqK6AcqZVqAqYezErlYjnV4P14sgsaWf4aqH0i5LIlhDO45wEnlEgz1YwhKUbAWQ8EnKX2AQ9NEY7lLweW5vc590XC+45IQP7VmnjLXPMoXHw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=KR1SczWhlotauKjBWSbFE6xx/Lfj5pymw9COYwoTka8=;
- b=GOD5f+IPLlGTmE7gUcgn1t45QMiQ5pYQn0GWFbuAOgTNlGhiyMk5Is+KvDqHEX+0hCCIN5sXyDuTmlVqiukPGtBBe5D7UwykdolGwiVBd4A3l+Mu3rcAu/B2qRusmr484rwAqRbfFdo56zgoXacvC3E7E0YgQEN/q4yISbDclx6v2oLqDNZMhoaLebl7xnu4+bdvlQ2lEnztOxssqFfV0s3kX7b8BVjxzclSh7ro1a2AVpFiGGm5SxnAMfd0W8iR5QDn03fs2qjHmkKyQGrkHbHKjSoZ2tzBFr5vK1aHJd3qyrUgInqsXltjSw3BwMtNagA/Z3AJt35maB+ZyFkBPQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KR1SczWhlotauKjBWSbFE6xx/Lfj5pymw9COYwoTka8=;
- b=1loB9kvMPuoQe5owRisCiLiGpymtzOs71Y3nF0HQEJd2nFPzlrncJrdEJSJHnTwVFyTw8dg/W/u6i24nUidvdzeXWSJPVmuMeoKOQUUnlIzO3gtDK7nMH5V6yp+04va4vAi4hLuwKyJEBXEzHCImmPFHOIibnHEvbjVx3M6TiR0=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by SJ0PR12MB6942.namprd12.prod.outlook.com (2603:10b6:a03:449::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6609.33; Thu, 27 Jul
- 2023 02:56:31 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::36f9:ffa7:c770:d146]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::36f9:ffa7:c770:d146%7]) with mapi id 15.20.6631.026; Thu, 27 Jul 2023
- 02:56:31 +0000
-Message-ID: <d3179d08-d513-a7e4-9ddb-416e50578957@amd.com>
-Date: Wed, 26 Jul 2023 21:56:28 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [REGRESSION] IRQ override revert breaks keyboard on Lenovo Yoga 7
- 14ARB7
-Content-Language: en-US
-To: August Wikerfors <git@augustwikerfors.se>,
- "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
- "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
- regressions@lists.linux.dev
-References: <596b9c4a-fb83-a8ab-3a44-6052d83fa546@augustwikerfors.se>
-From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <596b9c4a-fb83-a8ab-3a44-6052d83fa546@augustwikerfors.se>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: DM6PR01CA0021.prod.exchangelabs.com (2603:10b6:5:296::26)
- To MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 436CB1BEE4
+	for <regressions@lists.linux.dev>; Thu, 27 Jul 2023 03:55:38 +0000 (UTC)
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-267ffa7e441so394916a91.1
+        for <regressions@lists.linux.dev>; Wed, 26 Jul 2023 20:55:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1690430138; x=1691034938;
+        h=content-transfer-encoding:subject:cc:from:to:content-language
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aKPwval4JwVixs6vHq6OS1R7adXBXZhv/zbbiXcVS3s=;
+        b=KwdMrCh5/NHrZj7oM+yLpwO/bAqoP94blQR3KpRENtentCqcBXUMMN4nHXxX6M7xV1
+         ShnEwz3guiaFo9p13XwlXpjYbpi24DYGqDHn1SBOwzNUbJ2LjcGFCX2xZ7VSmlQujloW
+         lIDVTbVJkdHGCrbOOzFFfitmXILjW102OkmjPNDR1FhK2AzgeUhtHMB6i/K4svKvUTlC
+         JHucPNgI6ilcti4+217wDiMAmOPPWzwVZj0s2xlNVY+dMlx8JyXoa85JaeeTQYWjAFHh
+         /LWgA4KDUiTCPgX6dGWSqxgQxpsFhDTwX29BDJn82V6rNR0amygj6IxgzBgPNxh5UUjJ
+         lObg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690430138; x=1691034938;
+        h=content-transfer-encoding:subject:cc:from:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=aKPwval4JwVixs6vHq6OS1R7adXBXZhv/zbbiXcVS3s=;
+        b=Jh+0MyXeOa/R5BazGILcg5yvZjy1VIRCzBvVq2AuYj84kVClq017qI/k7Biia+KVer
+         kVyNPIslN4i7PCkCm+g61RnvwLEBub34XhqpKiwh0wZrh3LRmUmNzCz/PzVzDOeqNPd3
+         ZRfSstSNPMhEcra5H58dt8smT9aTcnvM5V6gFv/euS764IECf2cJU+p8scWacGPc02ND
+         nrg57mah/gWPGxFP8oTCRa+YMOsxaalziCFPsgS3OgwJJxuvOeCzSaGBG47cfqArQR4b
+         KqydyZMH1R9OBETWzNpRXx+c5uF1d4nOurp+YPXQdVnzMVuQHQVxKp31XSg0nDkNBWdb
+         TIsw==
+X-Gm-Message-State: ABy/qLaDLgJj+0U/nA223581H7vAeqn+4oAyvqKBFOfrqXfwdWdwMtQ8
+	3IWjstBaguOB5AFVMRtwH14=
+X-Google-Smtp-Source: APBJJlHssE1XTjk/Q8JN26scij/JN2XiZcd3xIP7S+0tX3vDtFcfraHefoPLwW8QEN/Qn4FpB6Hxhw==
+X-Received: by 2002:a17:90a:7047:b0:263:4164:dfba with SMTP id f65-20020a17090a704700b002634164dfbamr3482072pjk.6.1690430138285;
+        Wed, 26 Jul 2023 20:55:38 -0700 (PDT)
+Received: from [192.168.0.104] ([103.131.18.64])
+        by smtp.gmail.com with ESMTPSA id x19-20020a170902ea9300b001bba669a7eesm365951plb.52.2023.07.26.20.55.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 Jul 2023 20:55:25 -0700 (PDT)
+Message-ID: <ca25b1b3-dc7a-b0bb-dce4-8d11eb343438@gmail.com>
+Date: Thu, 27 Jul 2023 10:55:19 +0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|SJ0PR12MB6942:EE_
-X-MS-Office365-Filtering-Correlation-Id: f224569b-7c0a-4ee0-6fdd-08db8e4d147b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	4qxkHUqTKb07r3voe07eOavrvcn6Me8co4UbnRgQWA/W2n+yZtgivd0bNPqDeXvC1SqTLDwboygT7YnHs/6xs+3EZ+6nA1efQJmqS2in4t9fdARAJyPQ5BJhO1ptafJ+ZH7KChdm0CuvtPBgtEXomUUvfQBkoLThSs29WC1x32Af77mF6lkGtvIwZJKoyZjj7G+eQCfkvy6ODnQIe/qeCP5kpQ7eOUoHkBCe5FaqzA2jV5YyNsTsOsoZ1nCaXrQG7oK3ZWt9K6sj4RKM7As/l0HXmL4AAoM2SS78Javodswg5seCDPcHc714bPJR8Dh6nINPOjYh6dxQ/RCV6O/ptnZEoKjh5Tn9RIavCwbmfLSJo3SBlA2uoMdrlivqkrMOs5StEMSQYWANLJJeyeTAx7t3hslsOxwwoxX8ABbgQUhMwTP/2lzBFktTMZoZg3VcvzZexyPSQvpfuwqqhYyZILnIUI5iVtnVxwgmnzyE/39go8yZJMsZ+YRgsjIKjWY9BghG4N+rSPfI5SnC7Ejl6+Fa4af7qJ2BKcAYi5zI0VHs3+5WMW/pjNdec2g4ihvdyI4tVw6fMj/+HMCymDDM29RX4f+FHY/dNAEhzfmaYl733ggPhwuPVVDIYa/6dtc+b6AjDvlcRFadGlwgo2wopg==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(346002)(39860400002)(136003)(366004)(396003)(376002)(451199021)(31686004)(8676002)(8936002)(44832011)(5660300002)(41300700001)(316002)(4326008)(2906002)(66946007)(66556008)(66476007)(966005)(53546011)(186003)(6486002)(6512007)(478600001)(110136005)(6506007)(86362001)(31696002)(66574015)(36756003)(83380400001)(6666004)(38100700002)(2616005)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?Skl1cTd5VS9YL1pOS3BHZ3VEdmdHUDc3empyWmNIVVF3OEt4WitUT1RVbGNL?=
- =?utf-8?B?L0JheEh0RldUMFltMlExZjVSblIvL3EzbzVXQkpKY2xqcXF4NG1RU3JnUkg2?=
- =?utf-8?B?cmszLzk2N0tGWXRRYkJ3R2d3MGlzclZxU2FZRmx1OU1zdmVNYll6TklnNGI1?=
- =?utf-8?B?V0FGdk0wcWRhbEhKdXFvS1ByR2c2MGJzL0hDVTBQZi9zbGhlL3huVFRpaTQv?=
- =?utf-8?B?cGFSeTJLbGVpNk5kKzhUR3Z6TmJMS28wY3Z6dWR4T09LcEc3Z1h4b0thdlZD?=
- =?utf-8?B?K1UyVUk4YTFtVDFrQlBxRjhCWEZaYjRoY1p4U203VkhSdUFydnNtM1RRZHhT?=
- =?utf-8?B?elFmQWlxWk9wOE9WTXBWeWNjakhBVys5WmNud3dwS3NVWExrYjEwbWlGRnNQ?=
- =?utf-8?B?anoyNFN6RDJiN2lCM3MzKzY4b1B1R25sRE1kMklaUzMyRUpiZHF4UEJWMnBP?=
- =?utf-8?B?MWptd0VYMTdldDlCdENtS3dLYjBsblB4d3BHVTJPdW1IcFhvcEgrN3RvQVlq?=
- =?utf-8?B?SjZGdEt4MDI5MzdiV292TVlVVFVkdlVXNlVaVVExYXlVQ3U3a1BaQnYzR0di?=
- =?utf-8?B?TG1qSnlraE1zdHJNa21nUjd2a2NDclNWdXFFdE1jNWYwRVRIU204N2htVWZP?=
- =?utf-8?B?TDJnZ2ZPUUprVTV5MmxxZ085eHJHNWdCYW90bmJwWlg0Y2hmOVNKQmF3d3c5?=
- =?utf-8?B?QUhCckp4M2QzT3pIaHRiemhnS3NSellKZ3ZySFRiZFYvMGFwWUI1MkN2dlNv?=
- =?utf-8?B?dWwySjR0dDF1L0o2TjZoTlk0Yk9uN3BmdURLSm9aVEsvNTJ1S3VQVjN6bGdY?=
- =?utf-8?B?NlZjYzI4OTNYRjY5cGhNOUNtWnRpSk5EaUwyNWs3aE9nVTlHbWJ5d1RMRmZo?=
- =?utf-8?B?YS80dERxSkRrWFRiaHdHb05YcDQ2THNKSEdUcHBadk5aaXVHdlY1ditBVDFn?=
- =?utf-8?B?UEdEWGhoWDRac09pR052Tm01eks5VXFxV24zSGVyUVBRYmJNR3MwTUE1Ym8y?=
- =?utf-8?B?cjYydEVUdE5wcW9tTVJOSzUzRE1JMEVpbll3STRIa3pjL3RpbDAvQnJEamd1?=
- =?utf-8?B?b1l6VzMwZytoTGZ2TE05VjhEY3FBQ2loTTlxTTZpYXBjYnI1cWpZU0hhS0JG?=
- =?utf-8?B?dEl5cVZrVnlKekw3cTN6bWdzTTFxK0JYVkN0V3Bnb2hxb1NSZk4vUjVvbHNu?=
- =?utf-8?B?WVBqT3ZTbkhhc0U2b2ZyUGJ4bHk5cWppV0daNXRDRWtPVFQrYlNKR0FzQUlx?=
- =?utf-8?B?VVZ3NnJBVmc3ckMzcGhxUThKaHJEejFWWHpuS1RPZHpQVWhGeDBJT0Nsc1dz?=
- =?utf-8?B?V2V6WW1pODAydnhpVU9qTGprMVNBdXNvYTBRb1VaQjh0ZXpLSzVkcmJjVmZW?=
- =?utf-8?B?YWJidU53cXl4V2FkTE9BeHpMcG91MUtnU1BLcEhpUEVsdzdnUllEcEI4ZFdy?=
- =?utf-8?B?TmpXeEYwSHJRdUNjbjdmOEVNS2lyU245Mk82aWd6UXpyVzZmQVVaeW5oYjA2?=
- =?utf-8?B?Z2xvbjZpNUIxZ3hKN2xycTJTSGtkbmVBWFlwdGdjMmhBQVFrS3AvSFZMRnZs?=
- =?utf-8?B?eDJRcWhvdkxtVDA4QWRtTnhEZUZqYWx3NmpLVjB5dmdQYlhtbWtTbXQ1ZmFu?=
- =?utf-8?B?UTd0WjIvN1IwbUpjYlUzRVBZeSs3RG5XK0FHbVU4MytVdGUrcmlMcU1UK3FI?=
- =?utf-8?B?MVRSU3NXa1g4MUdUd1Z6SzBPSzNPQm5TSGhreWRFZzlCRThac0dmaE1VNVJO?=
- =?utf-8?B?L3R6V29YL1dRWFBUUnA4M1E0RWFYQkdvVWg1YkZYKzB3SmpQTmo1VDZuMFpF?=
- =?utf-8?B?Rm5BQnU1b1RmUmVUZXZtQ1QveTR0YmdROXRsK3J2YjlpNFNUWElGNHpYOXZ6?=
- =?utf-8?B?d3hmbjdPSVhEY05uYmdDWSs2R0lYM0dLYVh4RkdYUmNXbmE3Mmd5aFpLWGdN?=
- =?utf-8?B?QmFRMDI3eUxOWUJ2aUd2dGtmNzZzem9JMFE1MytIY25xQ0FxVW5yK0s3WDV0?=
- =?utf-8?B?Q1FMTXk2b3ZScXUyblg5bGNKSVJ2NFNzcHNjY21WS2g1dnVwL0VTWHpSYXBr?=
- =?utf-8?B?RC9DRmt2RVdTeUptSFpkK2gvNVV5a0RaeHhKUFRibEpXTXVuVG9VMzloU0tZ?=
- =?utf-8?B?bnozb1pEajV6aytiZjZjYlBRdDYvWEFRWTZId3F3cjMwRnI3UnVKUmpoTSts?=
- =?utf-8?B?RXc9PQ==?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f224569b-7c0a-4ee0-6fdd-08db8e4d147b
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jul 2023 02:56:31.1871
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: K1wpZC3H8E2QllOtMPb6bAM0Xyt7c97tNPNCsUMLNGDeGD4SiP/hcGum09c0qvqrGVKY4YuuWoyMBQM9kP2IpA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB6942
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Content-Language: en-US
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+ Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+ Kajol Jain <kjain@linux.ibm.com>, Kan Liang <kan.liang@linux.intel.com>,
+ John Garry <john.g.garry@oracle.com>, Marcus Seyfarth <m.seyfarth@gmail.com>
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Linux Perf <linux-perf-users@vger.kernel.org>
+Subject: Fwd: [perf] Build error when using LTO on 6.4
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On 7/26/23 17:54, August Wikerfors wrote:
-> Hi,
-> 
-> Since v6.5-rc1 the keyboard on this laptop no longer works. This problem
-> also existed before v6.0-rc1 commit 9946e39fe8d0 ("ACPI: resource: skip
-> IRQ override on AMD Zen platforms"), so I suspected the cause to be
-> a9c4a912b7dc ("ACPI: resource: Remove "Zen" specific match and quirks")
-> which reverted that commit. Reverting a9c4a912b7dc confirmed this theory.
-> 
-> #regzbot introduced: a9c4a912b7dc
-> 
-> My specs are:
-> Laptop model: Lenovo Yoga 7 14ARB7
-> BIOS: K5CN40WWT66 (latest beta from [1])
-> CPU: AMD Ryzen 5 6600U
-> Kernel config: [2]
-> Distribution: Arch Linux
-> 
-> The issue has been confirmed by at least one other user with this
-> laptop: [3]
-> 
-> [1] 
-> https://forums.lenovo.com/t5/Lenovo-Yoga-Series-Laptops/Yoga-7-14ARB7-keyboard-lag-when-on-certain-websites-or-when-Vantage-is-opened/m-p/5174991?page=28#5974742
-> [2] 
-> https://gitlab.archlinux.org/archlinux/packaging/packages/linux/-/raw/d4a56a1e994201b6c607199922aa22e4337b56c9/config
-> [3] https://github.com/tomsom/yoga-linux/issues/47
-> 
-> Regards,
-> August Wikerfors
+Hi,
 
-This is unfortunate.  Before we go adding more quirks for your system, 
-can you please check for a BIOS upgrade for your system?  If it's 
-happening with the latest BIOS, then can you please open a kernel 
-bugzilla with an acpidump and dmidecode included?
+I notice a build regression on Bugzilla [1]. Quoting from it:
+
+> Starting with Kernel 6.4, I see a build error when using "-flto" to bui=
+ld perf. This used to work fine with earlier Kernels when using either bf=
+d or mold as linker when using GCC 13.1.1.
+>=20
+> This is the PKGBUILD I use as my build recipe: https://github.com/ms178=
+/archpkgbuilds/blob/main/packages/bpf/PKGBUILD
+>=20
+> This is the konsole output I get now with Kernel 6.4.5:
+>=20
+> [CODE]
+> CFLAGS=3D'-Wno-error=3Dbad-function-cast -Wno-error=3Ddeclaration-after=
+-statement -Wno-error=3Dswitch-enum -Wbad-function-cast -Wdeclaration-aft=
+er-statement -Wformat-security -Wformat-y2k -Winit-self -Wmissing-declara=
+tions -Wmissing-prototypes -Wno-system-headers -Wold-style-definition -Wp=
+acked -Wredundant-decls -Wstrict-prototypes -Wswitch-default -Wswitch-enu=
+m -Wundef -Wwrite-strings -Wformat -Wno-type-limits -Wstrict-aliasing=3D3=
+ -Wshadow -DHAVE_SYSCALL_TABLE_SUPPORT -DHAVE_ARCH_X86_64_SUPPORT -Iarch/=
+x86/include/generated -DHAVE_PERF_REGS_SUPPORT -DHAVE_ARCH_REGS_QUERY_REG=
+ISTER_OFFSET -Werror -DNDEBUG=3D1 -O6 -fno-omit-frame-pointer -ggdb3 -fun=
+wind-tables -Wall -Wextra -std=3Dgnu11 -fstack-protector-all -U_FORTIFY_S=
+OURCE -D_FORTIFY_SOURCE=3D2 -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=3D6=
+4 -D_GNU_SOURCE -I/tmp/makepkg/linux-tools/src/linux/tools/perf/util/incl=
+ude -I/tmp/makepkg/linux-tools/src/linux/tools/perf/arch/x86/include -I/t=
+mp/makepkg/linux-tools/src/linux/tools/include/ -I/tmp/makepkg/linux-tool=
+s/src/linux/tools/arch/x86/include/uapi -I/tmp/makepkg/linux-tools/src/li=
+nux/tools/include/uapi -I/tmp/makepkg/linux-tools/src/linux/tools/arch/x8=
+6/include/ -I/tmp/makepkg/linux-tools/src/linux/tools/arch/x86/ -I/tmp/ma=
+kepkg/linux-tools/src/linux/tools/perf/util -I/tmp/makepkg/linux-tools/sr=
+c/linux/tools/perf -DHAVE_PTHREAD_ATTR_SETAFFINITY_NP -DHAVE_PTHREAD_BARR=
+IER -DHAVE_EVENTFD_SUPPORT -DHAVE_GET_CURRENT_DIR_NAME -DHAVE_GETTID -DHA=
+VE_FILE_HANDLE -DHAVE_DWARF_GETLOCATIONS_SUPPORT -DHAVE_AIO_SUPPORT -DHAV=
+E_SCANDIRAT_SUPPORT -DHAVE_SCHED_GETCPU_SUPPORT -DHAVE_SETNS_SUPPORT -DHA=
+VE_LIBELF_SUPPORT -DHAVE_ELF_GETPHDRNUM_SUPPORT -DHAVE_GELF_GETNOTE_SUPPO=
+RT -DHAVE_ELF_GETSHDRSTRNDX_SUPPORT -DHAVE_DEBUGINFOD_SUPPORT -DHAVE_DWAR=
+F_SUPPORT  -DHAVE_LIBBPF_SUPPORT -DHAVE_BPF_PROLOGUE -DHAVE_JITDUMP -DHAV=
+E_DWARF_UNWIND_SUPPORT -DNO_LIBUNWIND_DEBUG_FRAME -DHAVE_LIBUNWIND_SUPPOR=
+T -DHAVE_LIBCRYPTO_SUPPORT -DHAVE_SLANG_SUPPORT -DNO_LIBPERL -DHAVE_TIMER=
+FD_SUPPORT -DHAVE_LIBPYTHON_SUPPORT -DHAVE_CXA_DEMANGLE_SUPPORT -DHAVE_ZL=
+IB_SUPPORT -DHAVE_LZMA_SUPPORT -DHAVE_ZSTD_SUPPORT -DHAVE_LIBCAP_SUPPORT =
+-DHAVE_BACKTRACE_SUPPORT -DHAVE_LIBNUMA_SUPPORT -DHAVE_KVM_STAT_SUPPORT -=
+DDISASM_FOUR_ARGS_SIGNATURE -DDISASM_INIT_STYLED -DHAVE_PERF_READ_VDSO32 =
+-DHAVE_AUXTRACE_SUPPORT -DHAVE_LIBTRACEEVENT -DLIBTRACEEVENT_VERSION=3D66=
+813 -I/tmp/makepkg/linux-tools/src/linux/tools/perf/libapi/include -I/tmp=
+/makepkg/linux-tools/src/linux/tools/perf/libbpf/include -I/tmp/makepkg/l=
+inux-tools/src/linux/tools/perf/libsubcmd/include -I/tmp/makepkg/linux-to=
+ols/src/linux/tools/perf/libsymbol/include -I/tmp/makepkg/linux-tools/src=
+/linux/tools/perf/libperf/include' LDFLAGS=3D'-Wl,-O3,--as-needed,-Bsymbo=
+lic-functions,--sort-common,-flto=3Dauto -fopenmp -fuse-ld=3Dmold -march=3D=
+native -mtune=3Dnative -maes -mbmi2 -mpclmul -Wl,-zmax-page-size=3D0x2000=
+00 -Wl,-z,noexecstack  -lunwind-x86_64 -lunwind -llzma  -L/usr/lib ' \
+>   '/usr/bin/python' util/setup.py \
+>   --quiet build_ext; \
+> cp python_ext_build/lib/perf*.so python/
+> rm -f -f /tmp/makepkg/linux-tools/src/linux/tools/perf/libbpf/libbpf.a;=
+ ar rcs /tmp/makepkg/linux-tools/src/linux/tools/perf/libbpf/libbpf.a /tm=
+p/makepkg/linux-tools/src/linux/tools/perf/libbpf/staticobjs/libbpf-in.o
+> [snip]
+> gcc -Wno-error=3Dbad-function-cast -Wno-error=3Ddeclaration-after-state=
+ment -Wno-error=3Dswitch-enum -Wbad-function-cast -Wdeclaration-after-sta=
+tement -Wformat-security -Wformat-y2k -Winit-self -Wmissing-declarations =
+-Wmissing-prototypes -Wno-system-headers -Wold-style-definition -Wpacked =
+-Wredundant-decls -Wstrict-prototypes -Wswitch-default -Wswitch-enum -Wun=
+def -Wwrite-strings -Wformat -Wno-type-limits -Wstrict-aliasing=3D3 -Wsha=
+dow -DHAVE_SYSCALL_TABLE_SUPPORT -DHAVE_ARCH_X86_64_SUPPORT -Iarch/x86/in=
+clude/generated -DHAVE_PERF_REGS_SUPPORT -DHAVE_ARCH_REGS_QUERY_REGISTER_=
+OFFSET -Werror -DNDEBUG=3D1 -O6 -fno-omit-frame-pointer -ggdb3 -funwind-t=
+ables -Wall -Wextra -std=3Dgnu11 -fstack-protector-all -U_FORTIFY_SOURCE =
+-D_FORTIFY_SOURCE=3D2 -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=3D64 -D_G=
+NU_SOURCE -I/tmp/makepkg/linux-tools/src/linux/tools/perf/util/include -I=
+/tmp/makepkg/linux-tools/src/linux/tools/perf/arch/x86/include -I/tmp/mak=
+epkg/linux-tools/src/linux/tools/include/ -I/tmp/makepkg/linux-tools/src/=
+linux/tools/arch/x86/include/uapi -I/tmp/makepkg/linux-tools/src/linux/to=
+ols/include/uapi -I/tmp/makepkg/linux-tools/src/linux/tools/arch/x86/incl=
+ude/ -I/tmp/makepkg/linux-tools/src/linux/tools/arch/x86/ -I/tmp/makepkg/=
+linux-tools/src/linux/tools/perf/util -I/tmp/makepkg/linux-tools/src/linu=
+x/tools/perf -DHAVE_PTHREAD_ATTR_SETAFFINITY_NP -DHAVE_PTHREAD_BARRIER -D=
+HAVE_EVENTFD_SUPPORT -DHAVE_GET_CURRENT_DIR_NAME -DHAVE_GETTID -DHAVE_FIL=
+E_HANDLE -DHAVE_DWARF_GETLOCATIONS_SUPPORT -DHAVE_AIO_SUPPORT -DHAVE_SCAN=
+DIRAT_SUPPORT -DHAVE_SCHED_GETCPU_SUPPORT -DHAVE_SETNS_SUPPORT -DHAVE_LIB=
+ELF_SUPPORT -DHAVE_ELF_GETPHDRNUM_SUPPORT -DHAVE_GELF_GETNOTE_SUPPORT -DH=
+AVE_ELF_GETSHDRSTRNDX_SUPPORT -DHAVE_DEBUGINFOD_SUPPORT -DHAVE_DWARF_SUPP=
+ORT  -DHAVE_LIBBPF_SUPPORT -DHAVE_BPF_PROLOGUE -DHAVE_JITDUMP -DHAVE_DWAR=
+F_UNWIND_SUPPORT -DNO_LIBUNWIND_DEBUG_FRAME -DHAVE_LIBUNWIND_SUPPORT -DHA=
+VE_LIBCRYPTO_SUPPORT -DHAVE_SLANG_SUPPORT -DNO_LIBPERL -DHAVE_TIMERFD_SUP=
+PORT -DHAVE_LIBPYTHON_SUPPORT -DHAVE_CXA_DEMANGLE_SUPPORT -DHAVE_ZLIB_SUP=
+PORT -DHAVE_LZMA_SUPPORT -DHAVE_ZSTD_SUPPORT -DHAVE_LIBCAP_SUPPORT -DHAVE=
+_BACKTRACE_SUPPORT -DHAVE_LIBNUMA_SUPPORT -DHAVE_KVM_STAT_SUPPORT -DDISAS=
+M_FOUR_ARGS_SIGNATURE -DDISASM_INIT_STYLED -DHAVE_PERF_READ_VDSO32 -DHAVE=
+_AUXTRACE_SUPPORT -DHAVE_LIBTRACEEVENT -DLIBTRACEEVENT_VERSION=3D66813 -I=
+/tmp/makepkg/linux-tools/src/linux/tools/perf/libapi/include -I/tmp/makep=
+kg/linux-tools/src/linux/tools/perf/libbpf/include -I/tmp/makepkg/linux-t=
+ools/src/linux/tools/perf/libsubcmd/include -I/tmp/makepkg/linux-tools/sr=
+c/linux/tools/perf/libsymbol/include -I/tmp/makepkg/linux-tools/src/linux=
+/tools/perf/libperf/include -Wl,-O3,--as-needed,-Bsymbolic-functions,--so=
+rt-common,-flto=3Dauto -fopenmp -fuse-ld=3Dmold -march=3Dnative -mtune=3D=
+native -maes -mbmi2 -mpclmul -Wl,-zmax-page-size=3D0x200000 -Wl,-z,noexec=
+stack  -lunwind-x86_64 -lunwind -llzma  -L/usr/lib  \
+>         perf-in.o pmu-events/pmu-events-in.o -Wl,--whole-archive /tmp/m=
+akepkg/linux-tools/src/linux/tools/perf/libapi/libapi.a /tmp/makepkg/linu=
+x-tools/src/linux/tools/perf/libperf/libperf.a /tmp/makepkg/linux-tools/s=
+rc/linux/tools/perf/libsubcmd/libsubcmd.a /tmp/makepkg/linux-tools/src/li=
+nux/tools/perf/libsymbol/libsymbol.a /tmp/makepkg/linux-tools/src/linux/t=
+ools/perf/libbpf/libbpf.a  -Wl,--no-whole-archive -Wl,--start-group -lpth=
+read -lrt -lm -ldl -lelf -ldebuginfod -ldw -lunwind-x86_64 -lunwind -llzm=
+a -lcrypto -lslang -lpython3.11 -ldl -lm -lutil -lstdc++ -lz -llzma -lzst=
+d -lcap -lnuma -ltraceevent -Wl,--end-group -o perf
+> mold: error: undefined symbol: main
+>>>> referenced by /usr/lib/Scrt1.o:(.text)
+>>>>               /usr/lib/Scrt1.o:(_start)
+> mold: error: undefined symbol: perf_pmu__getcpuid
+>>>> referenced by pmu-events.c
+>>>>               pmu-events/pmu-events-in.o:(perf_pmu__find_events_tabl=
+e)>>>
+>>>>               referenced by pmu-events.c
+>>>>               pmu-events/pmu-events-in.o:(perf_pmu__find_metrics_tab=
+le)
+> mold: error: undefined symbol: strcmp_cpuid_str
+>>>> referenced by pmu-events.c
+>>>>               pmu-events/pmu-events-in.o:(perf_pmu__find_events_tabl=
+e)>>>
+>>>>               referenced by pmu-events.c
+>>>>               pmu-events/pmu-events-in.o:(perf_pmu__find_metrics_tab=
+le)>>>
+>>>>               referenced by pmu-events.c
+>>>>               pmu-events/pmu-events-in.o:(find_core_events_table)>>>=
+
+>>>>               referenced 1 more times
+>=20
+> mold: error: undefined symbol: _ctype
+>>>> referenced by kallsyms.c
+>>>>             =20
+>>>>               /tmp/makepkg/linux-tools/src/linux/tools/perf/libsymbo=
+l/libsymbol.a(libsymbol-in.o):(__tolower)>>>
+>>>>               referenced by kallsyms.c
+>>>>             =20
+>>>>               /tmp/makepkg/linux-tools/src/linux/tools/perf/libsymbo=
+l/libsymbol.a(libsymbol-in.o):(__toupper)
+> mold: error: undefined symbol: strlcpy
+>>>> referenced by exec-cmd.c
+>>>>             =20
+>>>>               /tmp/makepkg/linux-tools/src/linux/tools/perf/libsubcm=
+d/libsubcmd.a(libsubcmd-in.o):(get_pwd_cwd)
+> [/CODE]
+>=20
+> I have noticed a patch series of Ian Rodgers that might adress this iss=
+ue, but his reported errors were different to mine, see: https://www.spin=
+ics.net/lists/kernel/msg4872566.html
+>=20
+> Compiler: gcc-version 13.1.1 20230714 (GCC)
+
+See Bugzilla for the full thread.
+
+Anyway, I'm adding this regression to regzbot:
+
+#regzbot introduced: v6.3..v6.4.5 https://bugzilla.kernel.org/show_bug.cg=
+i?id=3D217706
+
+Thanks.
+
+[1]: https://bugzilla.kernel.org/show_bug.cgi?id=3D217706
+
+--=20
+An old man doll... just what I always wanted! - Clara
