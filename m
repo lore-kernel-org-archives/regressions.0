@@ -1,103 +1,148 @@
-Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D33021643D
-	for <regressions@lists.linux.dev>; Thu, 27 Jul 2023 12:07:26 +0000 (UTC)
-Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-768197bad1cso84773485a.1
-        for <regressions@lists.linux.dev>; Thu, 27 Jul 2023 05:07:26 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 281E0171A0
+	for <regressions@lists.linux.dev>; Thu, 27 Jul 2023 12:25:21 +0000 (UTC)
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1bba48b0bd2so5263585ad.3
+        for <regressions@lists.linux.dev>; Thu, 27 Jul 2023 05:25:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1690459645; x=1691064445;
-        h=content-transfer-encoding:in-reply-to:mime-version:user-agent:date
-         :message-id:from:references:cc:to:subject:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dnC0KU6XOkUWTwawkrEv0U18JS8bB3ff8im2fzrjaTg=;
-        b=N8/DkxFz3tL5pYXLLkY1KuGFeRL2dDwg5psU2g9TGEjlsWJzNLXPSqA+cGCUapdpYt
-         EMVefpdRE+jPiFfst4Xuksyv8bCdjlvLDHw3/C1a01/OwcGuhr5YbJQiSoWoUY/5OPwI
-         zoumO8ZuEqe1jEyhzjpKgIiTX/ro27lYOvlZjEI+KOoqhgGGpYLjHhYC+pDkYTrQfpga
-         NUDJQYPFa50O4TMvfGE2JVwkfwVuFjSK3SSbTNYmqqVBiqvTTC8VFYT/8FTFFJh+Ew1N
-         V5jPTP6usybJnNo4c+tD1562guFKg6yXp8BifJ3cVoiBIyI5CtDvTrIJBuTtHp13Eo61
-         VW1g==
+        d=gmail.com; s=20221208; t=1690460721; x=1691065521;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Q8w2BroilchUm0vlMoQZCfmeRkJCD+OaWa9ouggpUhE=;
+        b=sUKo94Y7jEq4Of0ShNppcptl1bCqlql1WxhA77SDF4oX/ZTgGKfLfWXCaCclk5ezgF
+         IwIjH2S43Zy/sx5UZtoNF5iKjTSYX8odQPEUystkwgkmBpEldUzi60HBj+/pBrvNg8dV
+         Zm7KtORoej/Wgbexc9OE94Yo6fQQ1SCpL917giXDnCUVAywLCSczBhck4vxfCmwvdmJ0
+         9UbEpmc3yaqkt5ZXzTu284KAd+rqgr2FZiwlpReZZBTVuv0OEQaZXcyvmZwf2K4yTgiy
+         jfLFYZV4ciInNJuuHChpim0q45kwQNMJERFpjmYcP5WfkqyH4K43oQsFebb9TMPJo8Gc
+         +v6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690459645; x=1691064445;
-        h=content-transfer-encoding:in-reply-to:mime-version:user-agent:date
-         :message-id:from:references:cc:to:subject:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=dnC0KU6XOkUWTwawkrEv0U18JS8bB3ff8im2fzrjaTg=;
-        b=kVXsbSo0OLN06FNysvU5an3yaRzO48d7pTDdhq1BffxX645hCTDKxlGz1XUg+WHMvp
-         qsV/6o1jiUNyPH/B61/jNOABZ9OVKSiKYeL9cNlL4bCYKj6H5RJsApQfXL07W1XRtuVI
-         qXD55pPP7ORPFog+OwZaibbPKH/iwGYzwqvF+qpKdeLUmuMETgsb951ew2cjhKBFR+7j
-         bL8vT0zUbHdQnubh4To6tdhT8Nk9K3/9Rs2wO/w0+48ZwluK8kVDXahTS+4+f9tD9Uid
-         oeVuC+PlOst6qt/wOXRgTopy0BbdgITGbu4+ZWtPbVn9n2uy0IuKrwKpfcKtVxF6bkR+
-         ZzVQ==
-X-Gm-Message-State: ABy/qLY4sYWQ/Z9WrDXdsqR779mJG/z35X+4n2I7RM/AG7gsAU25ZrfR
-	jdjpZZTGVN7P1hK9TeysNA==
-X-Google-Smtp-Source: APBJJlHthRuDqnjjwC1LhWRkktbaKrqCADZc1Mik4EmIab/UuoDusOrZDQ2LA55xv3Ob+BYoXRkKPg==
-X-Received: by 2002:a0c:c541:0:b0:628:2e08:78b7 with SMTP id y1-20020a0cc541000000b006282e0878b7mr4832675qvi.31.1690459645131;
-        Thu, 27 Jul 2023 05:07:25 -0700 (PDT)
-Received: from [120.7.1.38] (198-84-239-141.cpe.teksavvy.com. [198.84.239.141])
-        by smtp.gmail.com with ESMTPSA id p7-20020a0ce187000000b0063d0159e1f6sm365781qvl.109.2023.07.27.05.07.24
+        d=1e100.net; s=20221208; t=1690460721; x=1691065521;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Q8w2BroilchUm0vlMoQZCfmeRkJCD+OaWa9ouggpUhE=;
+        b=gWV7B8NQQ/rbGLG41jwwQ8AxiRV8VmxfW/fwWEW2nvt5xWeZ2cufKpCg3IgnIUk6wA
+         IxaT9ux5bAxOIPBCHZ1SSvIROJzT/vhvGJlxLEOtwveVWe1jPxzWTd7IXDmCYHP8ZACQ
+         UIirMWrVGLvAwWU+bilkOTU5WxHClkIeCEVkBmNaMEyC8+yvUXIin29RDXifFGYr6W5z
+         S2b7FyfCzhn+tekjFct2B/F7hD1pkwvsUo6lma9vskm3yWDt9R6VyBywnfUNeM3sg9jA
+         LOFWnbNI/KhRGJLLkO6ZRvwe9zOXiuezswetfk9VCG4BH4gbkV/2INpOoep4UVC9xbW/
+         K/uw==
+X-Gm-Message-State: ABy/qLYe5Odvm7IBu1K4uSjJ06EsoQ2u7vZZK1VZS/k26ARb0gY7TQkD
+	MvqKVwmikTXDMPf8/NTsIK8=
+X-Google-Smtp-Source: APBJJlGnPll1D6uCbmYaFm6LhePlGO8cMGwnGGxYven5jT/I5hlWh+/MuAkBl8Oubp5VfczdMLBttA==
+X-Received: by 2002:a17:903:182:b0:1bb:e74b:39ff with SMTP id z2-20020a170903018200b001bbe74b39ffmr148542plg.0.1690460721291;
+        Thu, 27 Jul 2023 05:25:21 -0700 (PDT)
+Received: from [192.168.1.121] ([65.129.146.152])
+        by smtp.gmail.com with ESMTPSA id e16-20020a17090301d000b001bb381b8260sm1503595plh.100.2023.07.27.05.25.20
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Jul 2023 05:07:24 -0700 (PDT)
-Subject: Re: Kernel 6.5-rc2: system crash on suspend bisected
-To: "Michael S. Tsirkin" <mst@redhat.com>, Bjorn Helgaas <helgaas@kernel.org>
-Cc: imammedo@redhat.com, bhelgaas@google.com,
- LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
- regressions@lists.linux.dev,
- "Linux regression tracking #adding (Thorsten Leemhuis)"
- <regressions@leemhuis.info>, Woody Suwalski <terraluna977@gmail.com>
-References: <11fc981c-af49-ce64-6b43-3e282728bd1a@gmail.com>
- <20230720202110.GA544761@bhelgaas>
- <20230727020621-mutt-send-email-mst@kernel.org>
-From: Woody Suwalski <terraluna977@gmail.com>
-Message-ID: <1d51d250-9524-33c5-9b3a-af8c33582eee@gmail.com>
-Date: Thu, 27 Jul 2023 08:07:23 -0400
-User-Agent: Mozilla/5.0 (X11; Linux i686; rv:91.0) Gecko/20100101 Firefox/91.0
- SeaMonkey/2.53.16
+        Thu, 27 Jul 2023 05:25:20 -0700 (PDT)
+Message-ID: <f7e7b601-571f-bd2e-6410-a8a27e510c2f@gmail.com>
+Date: Thu, 27 Jul 2023 06:25:19 -0600
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20230727020621-mutt-send-email-mst@kernel.org>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: Scsi_bus_resume+0x0/0x90 returns -5 when resuming from s3 sleep
+To: Damien Le Moal <dlemoal@kernel.org>,
+ Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: regressions@lists.linux.dev, Mario Limonciello
+ <mario.limonciello@amd.com>, Bart Van Assche <bvanassche@acm.org>,
+ LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org
+References: <0e272abe-292d-d58f-cf80-55868e793abc@gmail.com>
+ <6b66dd9a-8bd5-2882-9168-8e6e0848c454@leemhuis.info>
+ <c70caa9e-164c-fee5-8f85-67f6d02373ab@kernel.org>
+ <b0ed86e0-3e4a-d4d1-7b9d-c57f20538a80@gmail.com>
+ <86435987-734e-c6c1-a857-1ba80da709fe@gmail.com>
+ <48bc1736-5e4e-3a9b-3715-60509c333bb1@kernel.org>
+Content-Language: en-US
+From: TW <dalzot@gmail.com>
+In-Reply-To: <48bc1736-5e4e-3a9b-3715-60509c333bb1@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-Michael S. Tsirkin wrote:
-> On Thu, Jul 20, 2023 at 03:21:10PM -0500, Bjorn Helgaas wrote:
->> [+cc regressions list]
->>
->> On Wed, Jul 19, 2023 at 11:36:51PM -0400, Woody Suwalski wrote:
->>> Laptop shows a kernel crash trace after a first suspend to ram, on a second
->>> attempt to suspend it becomes frozen solid. This is 100% repeatable with a
->>> 6.5-rc2 kernel, not happening with a 6.4 kernel - see the attached dmesg
->>> output.
->>>
->>> I have bisected the kernel uilds and it points to :
->>> [40613da52b13fb21c5566f10b287e0ca8c12c4e9] PCI: acpiphp: Reassign resources
->>> on bridge if necessary
->>>
->>> Reversing this patch seems to fix the kernel crash problem on my laptop.
->> Thank you very much for all your work debugging, bisecting, and
->> reporting this!  This is incredibly helpful.
->>
->> Original report, including complete dmesg logs for both v6.4 and
->> v6.5-rc2:
->> https://lore.kernel.org/r/11fc981c-af49-ce64-6b43-3e282728bd1a@gmail.com
->>
->> I queued up a revert of 40613da52b13 ("PCI: acpiphp: Reassign
->> resources on bridge if necessary") (on my for-linus branch for v6.5).
->>
->> It looks like a NULL pointer dereference; hopefully the fix is obvious
->> and I can drop the revert and replace it with the fix.
->>
->> Bjorn
-> Patch on list now:
-> https://lore.kernel.org/all/20230726123518.2361181-1-imammedo%40redhat.com
-Confirm works OK.
---
-Tested-by: Woody Suwalski <terraluna977@gmail.com>
---
+It was all 1 patch but the first change had a formatting issue from the 
+email format I guess. So I fixed that and the patch went through and 
+looks like the drive error message has stopped. Still a little slow 
+coming back but that error is gone at least.
 
-Thanks, Woody
+Jul 27 05:05:05 rageworks systemd[1]: Starting System Suspend...
+Jul 27 05:05:05 rageworks systemd-sleep[1624]: Entering sleep state 
+'suspend'...
+Jul 27 05:05:05 rageworks kernel: PM: suspend entry (deep)
+Jul 27 05:05:05 rageworks kernel: Filesystems sync: 0.246 seconds
+Jul 27 05:05:26 rageworks kernel: Freezing user space processes
+Jul 27 05:05:26 rageworks kernel: Freezing user space processes 
+completed (elapsed 0.001 seconds)
+Jul 27 05:05:26 rageworks kernel: OOM killer disabled.
+Jul 27 05:05:26 rageworks kernel: Freezing remaining freezable tasks
+Jul 27 05:05:26 rageworks kernel: Freezing remaining freezable tasks 
+completed (elapsed 0.000 seconds)
+Jul 27 05:05:26 rageworks kernel: printk: Suspending console(s) (use 
+no_console_suspend to debug)
+Jul 27 05:05:26 rageworks kernel: serial 00:05: disabled
+Jul 27 05:05:26 rageworks kernel: sd 9:0:0:0: [sdc] Synchronizing SCSI cache
+Jul 27 05:05:26 rageworks kernel: sd 1:0:0:0: [sdb] Synchronizing SCSI cache
+Jul 27 05:05:26 rageworks kernel: sd 0:0:0:0: [sda] Synchronizing SCSI cache
+Jul 27 05:05:26 rageworks kernel: sd 9:0:0:0: [sdc] Stopping disk
+Jul 27 05:05:26 rageworks kernel: sd 1:0:0:0: [sdb] Stopping disk
+Jul 27 05:05:26 rageworks kernel: sd 0:0:0:0: [sda] Stopping disk
+Jul 27 05:05:26 rageworks kernel: ACPI: PM: Preparing to enter system 
+sleep state S3
+Jul 27 05:05:26 rageworks kernel: ACPI: PM: Saving platform NVS memory
+Jul 27 05:05:26 rageworks kernel: Disabling non-boot CPUs ...
+Jul 27 05:05:26 rageworks kernel: smpboot: CPU 1 is now offline
+Jul 27 05:05:26 rageworks kernel: smpboot: CPU 2 is now offline
+Jul 27 05:05:26 rageworks kernel: smpboot: CPU 3 is now offline
+Jul 27 05:05:26 rageworks kernel: ACPI: PM: Low-level resume complete
+Jul 27 05:05:26 rageworks kernel: ACPI: PM: Restoring platform NVS memory
+Jul 27 05:05:26 rageworks kernel: Enabling non-boot CPUs ...
+Jul 27 05:05:26 rageworks kernel: smpboot: Booting Node 0 Processor 1 
+APIC 0x1
+Jul 27 05:05:26 rageworks kernel: CPU1 is up
+Jul 27 05:05:26 rageworks kernel: smpboot: Booting Node 0 Processor 2 
+APIC 0x2
+Jul 27 05:05:26 rageworks kernel: CPU2 is up
+Jul 27 05:05:26 rageworks kernel: smpboot: Booting Node 0 Processor 3 
+APIC 0x3
+Jul 27 05:05:26 rageworks kernel: CPU3 is up
+Jul 27 05:05:26 rageworks kernel: ACPI: PM: Waking up from system sleep 
+state S3
+Jul 27 05:05:26 rageworks kernel: xhci_hcd 0000:02:00.0: xHC error in 
+resume, USBSTS 0x401, Reinit
+Jul 27 05:05:26 rageworks kernel: usb usb1: root hub lost power or was reset
+Jul 27 05:05:26 rageworks kernel: usb usb2: root hub lost power or was reset
+Jul 27 05:05:26 rageworks kernel: sd 0:0:0:0: [sda] Starting disk
+Jul 27 05:05:26 rageworks kernel: sd 1:0:0:0: [sdb] Starting disk
+Jul 27 05:05:26 rageworks kernel: sd 9:0:0:0: [sdc] Starting disk
+Jul 27 05:05:26 rageworks kernel: serial 00:05: activated
+Jul 27 05:05:26 rageworks kernel: ata6: SATA link down (SStatus 0 
+SControl 330)
+Jul 27 05:05:26 rageworks kernel: ata5: SATA link down (SStatus 0 
+SControl 330)
+Jul 27 05:05:26 rageworks kernel: ata9: SATA link down (SStatus 0 
+SControl 300)
+Jul 27 05:05:26 rageworks kernel: usb 1-10: reset full-speed USB device 
+number 4 using xhci_hcd
+Jul 27 05:05:26 rageworks kernel: usb 1-8: reset full-speed USB device 
+number 3 using xhci_hcd
+Jul 27 05:05:26 rageworks kernel: usb 1-7: reset full-speed USB device 
+number 2 using xhci_hcd
+Jul 27 05:05:26 rageworks kernel: OOM killer enabled.
+Jul 27 05:05:26 rageworks kernel: Restarting tasks ... done.
+Jul 27 05:05:26 rageworks kernel: random: crng reseeded on system resumption
+Jul 27 05:05:26 rageworks kernel: PM: suspend exit
 
+
+On 7/27/23 04:27, Damien Le Moal wrote:
+> On 7/27/23 19:22, TW wrote:
+>> I managed to fix the patch file, guess the formatting messed up a bit. So will
+>> try with those patches installed.
+> Just in case, patch fil attached to avoid formatting issues.
+>
+>
