@@ -1,114 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB12913AE5
-	for <regressions@lists.linux.dev>; Thu, 27 Jul 2023 10:27:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AEE9BC433C9;
-	Thu, 27 Jul 2023 10:27:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1690453656;
-	bh=fKIZ5MqPAyaVGlFdBkHtlz/zRB0AxCGG7ERibqg6qOU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=pTRhOY60TYEmu08EC0C6HEEwvFrDMKQoUX7dFtCT4BptyM+juGe5SeCSVnHB/tUej
-	 c8YtXot6Bhw3WGekPavtoomQLN6HHxL/76TkENGC6ljgQCQUGMHE8ddbo01w3oQOk9
-	 8/zyGWJ3gGpjIkrX7JQmreIfc6jllmVL445PaWyJn7s2eARmtAVnnj+f6QFGkkSVOJ
-	 8qKrEnEvgeVSUWuUxImb5fk9wJpITm2YfAlNp87WTYa6woH0zfusqsUd9Zn0tibVNq
-	 KeLzeyaDGePDnY2rX8Srvz/rvPB9cyJjhLqSlHzdSYxDSlT8Co0EiTyu0PkCwzzqyg
-	 PDuV+Gh5pbO4Q==
-Content-Type: multipart/mixed; boundary="------------oAWxdk5ed0hcZpvqb0D0WIQ2"
-Message-ID: <48bc1736-5e4e-3a9b-3715-60509c333bb1@kernel.org>
-Date: Thu, 27 Jul 2023 19:27:34 +0900
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D33021643D
+	for <regressions@lists.linux.dev>; Thu, 27 Jul 2023 12:07:26 +0000 (UTC)
+Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-768197bad1cso84773485a.1
+        for <regressions@lists.linux.dev>; Thu, 27 Jul 2023 05:07:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1690459645; x=1691064445;
+        h=content-transfer-encoding:in-reply-to:mime-version:user-agent:date
+         :message-id:from:references:cc:to:subject:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dnC0KU6XOkUWTwawkrEv0U18JS8bB3ff8im2fzrjaTg=;
+        b=N8/DkxFz3tL5pYXLLkY1KuGFeRL2dDwg5psU2g9TGEjlsWJzNLXPSqA+cGCUapdpYt
+         EMVefpdRE+jPiFfst4Xuksyv8bCdjlvLDHw3/C1a01/OwcGuhr5YbJQiSoWoUY/5OPwI
+         zoumO8ZuEqe1jEyhzjpKgIiTX/ro27lYOvlZjEI+KOoqhgGGpYLjHhYC+pDkYTrQfpga
+         NUDJQYPFa50O4TMvfGE2JVwkfwVuFjSK3SSbTNYmqqVBiqvTTC8VFYT/8FTFFJh+Ew1N
+         V5jPTP6usybJnNo4c+tD1562guFKg6yXp8BifJ3cVoiBIyI5CtDvTrIJBuTtHp13Eo61
+         VW1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690459645; x=1691064445;
+        h=content-transfer-encoding:in-reply-to:mime-version:user-agent:date
+         :message-id:from:references:cc:to:subject:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=dnC0KU6XOkUWTwawkrEv0U18JS8bB3ff8im2fzrjaTg=;
+        b=kVXsbSo0OLN06FNysvU5an3yaRzO48d7pTDdhq1BffxX645hCTDKxlGz1XUg+WHMvp
+         qsV/6o1jiUNyPH/B61/jNOABZ9OVKSiKYeL9cNlL4bCYKj6H5RJsApQfXL07W1XRtuVI
+         qXD55pPP7ORPFog+OwZaibbPKH/iwGYzwqvF+qpKdeLUmuMETgsb951ew2cjhKBFR+7j
+         bL8vT0zUbHdQnubh4To6tdhT8Nk9K3/9Rs2wO/w0+48ZwluK8kVDXahTS+4+f9tD9Uid
+         oeVuC+PlOst6qt/wOXRgTopy0BbdgITGbu4+ZWtPbVn9n2uy0IuKrwKpfcKtVxF6bkR+
+         ZzVQ==
+X-Gm-Message-State: ABy/qLY4sYWQ/Z9WrDXdsqR779mJG/z35X+4n2I7RM/AG7gsAU25ZrfR
+	jdjpZZTGVN7P1hK9TeysNA==
+X-Google-Smtp-Source: APBJJlHthRuDqnjjwC1LhWRkktbaKrqCADZc1Mik4EmIab/UuoDusOrZDQ2LA55xv3Ob+BYoXRkKPg==
+X-Received: by 2002:a0c:c541:0:b0:628:2e08:78b7 with SMTP id y1-20020a0cc541000000b006282e0878b7mr4832675qvi.31.1690459645131;
+        Thu, 27 Jul 2023 05:07:25 -0700 (PDT)
+Received: from [120.7.1.38] (198-84-239-141.cpe.teksavvy.com. [198.84.239.141])
+        by smtp.gmail.com with ESMTPSA id p7-20020a0ce187000000b0063d0159e1f6sm365781qvl.109.2023.07.27.05.07.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Jul 2023 05:07:24 -0700 (PDT)
+Subject: Re: Kernel 6.5-rc2: system crash on suspend bisected
+To: "Michael S. Tsirkin" <mst@redhat.com>, Bjorn Helgaas <helgaas@kernel.org>
+Cc: imammedo@redhat.com, bhelgaas@google.com,
+ LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
+ regressions@lists.linux.dev,
+ "Linux regression tracking #adding (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>, Woody Suwalski <terraluna977@gmail.com>
+References: <11fc981c-af49-ce64-6b43-3e282728bd1a@gmail.com>
+ <20230720202110.GA544761@bhelgaas>
+ <20230727020621-mutt-send-email-mst@kernel.org>
+From: Woody Suwalski <terraluna977@gmail.com>
+Message-ID: <1d51d250-9524-33c5-9b3a-af8c33582eee@gmail.com>
+Date: Thu, 27 Jul 2023 08:07:23 -0400
+User-Agent: Mozilla/5.0 (X11; Linux i686; rv:91.0) Gecko/20100101 Firefox/91.0
+ SeaMonkey/2.53.16
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: Scsi_bus_resume+0x0/0x90 returns -5 when resuming from s3 sleep
-Content-Language: en-US
-To: TW <dalzot@gmail.com>, Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: regressions@lists.linux.dev, Mario Limonciello
- <mario.limonciello@amd.com>, Bart Van Assche <bvanassche@acm.org>,
- LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org
-References: <0e272abe-292d-d58f-cf80-55868e793abc@gmail.com>
- <6b66dd9a-8bd5-2882-9168-8e6e0848c454@leemhuis.info>
- <c70caa9e-164c-fee5-8f85-67f6d02373ab@kernel.org>
- <b0ed86e0-3e4a-d4d1-7b9d-c57f20538a80@gmail.com>
- <86435987-734e-c6c1-a857-1ba80da709fe@gmail.com>
-From: Damien Le Moal <dlemoal@kernel.org>
-Organization: Western Digital Research
-In-Reply-To: <86435987-734e-c6c1-a857-1ba80da709fe@gmail.com>
-
-This is a multi-part message in MIME format.
---------------oAWxdk5ed0hcZpvqb0D0WIQ2
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <20230727020621-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 7/27/23 19:22, TW wrote:
-> I managed to fix the patch file, guess the formatting messed up a bit. So will
-> try with those patches installed.
+Michael S. Tsirkin wrote:
+> On Thu, Jul 20, 2023 at 03:21:10PM -0500, Bjorn Helgaas wrote:
+>> [+cc regressions list]
+>>
+>> On Wed, Jul 19, 2023 at 11:36:51PM -0400, Woody Suwalski wrote:
+>>> Laptop shows a kernel crash trace after a first suspend to ram, on a second
+>>> attempt to suspend it becomes frozen solid. This is 100% repeatable with a
+>>> 6.5-rc2 kernel, not happening with a 6.4 kernel - see the attached dmesg
+>>> output.
+>>>
+>>> I have bisected the kernel uilds and it points to :
+>>> [40613da52b13fb21c5566f10b287e0ca8c12c4e9] PCI: acpiphp: Reassign resources
+>>> on bridge if necessary
+>>>
+>>> Reversing this patch seems to fix the kernel crash problem on my laptop.
+>> Thank you very much for all your work debugging, bisecting, and
+>> reporting this!  This is incredibly helpful.
+>>
+>> Original report, including complete dmesg logs for both v6.4 and
+>> v6.5-rc2:
+>> https://lore.kernel.org/r/11fc981c-af49-ce64-6b43-3e282728bd1a@gmail.com
+>>
+>> I queued up a revert of 40613da52b13 ("PCI: acpiphp: Reassign
+>> resources on bridge if necessary") (on my for-linus branch for v6.5).
+>>
+>> It looks like a NULL pointer dereference; hopefully the fix is obvious
+>> and I can drop the revert and replace it with the fix.
+>>
+>> Bjorn
+> Patch on list now:
+> https://lore.kernel.org/all/20230726123518.2361181-1-imammedo%40redhat.com
+Confirm works OK.
+--
+Tested-by: Woody Suwalski <terraluna977@gmail.com>
+--
 
-Just in case, patch fil attached to avoid formatting issues.
+Thanks, Woody
 
-
--- 
-Damien Le Moal
-Western Digital Research
-
---------------oAWxdk5ed0hcZpvqb0D0WIQ2
-Content-Type: text/x-patch; charset=UTF-8;
- name="0001-ata-scsi-do-not-issue-START-STOP-UNIT-on-resume.patch"
-Content-Disposition: attachment;
- filename*0="0001-ata-scsi-do-not-issue-START-STOP-UNIT-on-resume.patch"
-Content-Transfer-Encoding: base64
-
-RnJvbSAyOWU4MWQxMTgxMmVlOTI0ZDE5NDI1MzQzZWM2OWFjZDM0YWY5ZDM1IE1vbiBTZXAg
-MTcgMDA6MDA6MDAgMjAwMQpGcm9tOiBEYW1pZW4gTGUgTW9hbCA8ZGxlbW9hbEBrZXJuZWwu
-b3JnPgpEYXRlOiBNb24sIDI0IEp1bCAyMDIzIDEzOjIzOjE0ICswOTAwClN1YmplY3Q6IFtQ
-QVRDSF0gYXRhLHNjc2k6IGRvIG5vdCBpc3N1ZSBTVEFSVCBTVE9QIFVOSVQgb24gcmVzdW1l
-CgpTaWduZWQtb2ZmLWJ5OiBEYW1pZW4gTGUgTW9hbCA8ZGxlbW9hbEBrZXJuZWwub3JnPgot
-LS0KIGRyaXZlcnMvYXRhL2xpYmF0YS1zY3NpLmMgIHwgNiArKysrKysKIGRyaXZlcnMvc2Nz
-aS9zZC5jICAgICAgICAgIHwgNSArKystLQogaW5jbHVkZS9zY3NpL3Njc2lfZGV2aWNlLmgg
-fCAxICsKIDMgZmlsZXMgY2hhbmdlZCwgMTAgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMo
-LSkKCmRpZmYgLS1naXQgYS9kcml2ZXJzL2F0YS9saWJhdGEtc2NzaS5jIGIvZHJpdmVycy9h
-dGEvbGliYXRhLXNjc2kuYwppbmRleCAzNzBkMThhY2E3MWUuLjYxODRjN2JjYzE2YyAxMDA2
-NDQKLS0tIGEvZHJpdmVycy9hdGEvbGliYXRhLXNjc2kuYworKysgYi9kcml2ZXJzL2F0YS9s
-aWJhdGEtc2NzaS5jCkBAIC0xMTAwLDcgKzExMDAsMTMgQEAgaW50IGF0YV9zY3NpX2Rldl9j
-b25maWcoc3RydWN0IHNjc2lfZGV2aWNlICpzZGV2LCBzdHJ1Y3QgYXRhX2RldmljZSAqZGV2
-KQogCQl9CiAJfSBlbHNlIHsKIAkJc2Rldi0+c2VjdG9yX3NpemUgPSBhdGFfaWRfbG9naWNh
-bF9zZWN0b3Jfc2l6ZShkZXYtPmlkKTsKKwkJLyoKKwkJICogU3RvcCB0aGUgZHJpdmUgb24g
-c3VzcGVuZCBidXQgZG8gbm90IGlzc3VlIFNUQVJUIFNUT1AgVU5JVAorCQkgKiBvbiByZXN1
-bWUgYXMgdGhpcyBpcyBub3QgbmVjZXNzYXJ5OiB0aGUgcG9ydCBpcyByZXNldCBvbgorCQkg
-KiByZXN1bWUsIHdoaWNoIHdha2VzIHVwIHRoZSBkcml2ZS4KKwkJICovCiAJCXNkZXYtPm1h
-bmFnZV9zdGFydF9zdG9wID0gMTsKKwkJc2Rldi0+bm9fc3RhcnRfb25fcmVzdW1lID0gMTsK
-IAl9CiAKIAkvKgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9zY3NpL3NkLmMgYi9kcml2ZXJzL3Nj
-c2kvc2QuYwppbmRleCA2OGIxMmFmYTA3MjEuLmI4NTg0ZmUzMTIzZSAxMDA2NDQKLS0tIGEv
-ZHJpdmVycy9zY3NpL3NkLmMKKysrIGIvZHJpdmVycy9zY3NpL3NkLmMKQEAgLTM4NzYsNyAr
-Mzg3Niw3IEBAIHN0YXRpYyBpbnQgc2Rfc3VzcGVuZF9ydW50aW1lKHN0cnVjdCBkZXZpY2Ug
-KmRldikKIHN0YXRpYyBpbnQgc2RfcmVzdW1lKHN0cnVjdCBkZXZpY2UgKmRldikKIHsKIAlz
-dHJ1Y3Qgc2NzaV9kaXNrICpzZGtwID0gZGV2X2dldF9kcnZkYXRhKGRldik7Ci0JaW50IHJl
-dDsKKwlpbnQgcmV0ID0gMDsKIAogCWlmICghc2RrcCkJLyogRS5nLjogcnVudGltZSByZXN1
-bWUgYXQgdGhlIHN0YXJ0IG9mIHNkX3Byb2JlKCkgKi8KIAkJcmV0dXJuIDA7CkBAIC0zODg1
-LDcgKzM4ODUsOCBAQCBzdGF0aWMgaW50IHNkX3Jlc3VtZShzdHJ1Y3QgZGV2aWNlICpkZXYp
-CiAJCXJldHVybiAwOwogCiAJc2RfcHJpbnRrKEtFUk5fTk9USUNFLCBzZGtwLCAiU3RhcnRp
-bmcgZGlza1xuIik7Ci0JcmV0ID0gc2Rfc3RhcnRfc3RvcF9kZXZpY2Uoc2RrcCwgMSk7CisJ
-aWYgKCFzZGtwLT5kZXZpY2UtPm5vX3N0YXJ0X29uX3Jlc3VtZSkKKwkJcmV0ID0gc2Rfc3Rh
-cnRfc3RvcF9kZXZpY2Uoc2RrcCwgMSk7CiAJaWYgKCFyZXQpCiAJCW9wYWxfdW5sb2NrX2Zy
-b21fc3VzcGVuZChzZGtwLT5vcGFsX2Rldik7CiAJcmV0dXJuIHJldDsKZGlmZiAtLWdpdCBh
-L2luY2x1ZGUvc2NzaS9zY3NpX2RldmljZS5oIGIvaW5jbHVkZS9zY3NpL3Njc2lfZGV2aWNl
-LmgKaW5kZXggNzViMjIzNWI5OWUyLi5iOTIzMGI2YWRkMDQgMTAwNjQ0Ci0tLSBhL2luY2x1
-ZGUvc2NzaS9zY3NpX2RldmljZS5oCisrKyBiL2luY2x1ZGUvc2NzaS9zY3NpX2RldmljZS5o
-CkBAIC0xOTQsNiArMTk0LDcgQEAgc3RydWN0IHNjc2lfZGV2aWNlIHsKIAl1bnNpZ25lZCBu
-b19zdGFydF9vbl9hZGQ6MTsJLyogZG8gbm90IGlzc3VlIHN0YXJ0IG9uIGFkZCAqLwogCXVu
-c2lnbmVkIGFsbG93X3Jlc3RhcnQ6MTsgLyogaXNzdWUgU1RBUlRfVU5JVCBpbiBlcnJvciBo
-YW5kbGVyICovCiAJdW5zaWduZWQgbWFuYWdlX3N0YXJ0X3N0b3A6MTsJLyogTGV0IEhMRCAo
-c2QpIG1hbmFnZSBzdGFydC9zdG9wICovCisJdW5zaWduZWQgbm9fc3RhcnRfb25fcmVzdW1l
-OjE7IC8qIERvIG5vdCBpc3N1ZSBTVEFSVF9TVE9QX1VOSVQgb24gcmVzdW1lICovCiAJdW5z
-aWduZWQgc3RhcnRfc3RvcF9wd3JfY29uZDoxOwkvKiBTZXQgcG93ZXIgY29uZC4gaW4gU1RB
-UlRfU1RPUF9VTklUICovCiAJdW5zaWduZWQgbm9fdWxkX2F0dGFjaDoxOyAvKiBkaXNhYmxl
-IGNvbm5lY3RpbmcgdG8gdXBwZXIgbGV2ZWwgZHJpdmVycyAqLwogCXVuc2lnbmVkIHNlbGVj
-dF9ub19hdG46MTsKLS0gCjIuNDEuMAoK
-
---------------oAWxdk5ed0hcZpvqb0D0WIQ2--
