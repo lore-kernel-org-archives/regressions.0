@@ -1,178 +1,261 @@
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+Received: from mail-oa1-f45.google.com (mail-oa1-f45.google.com [209.85.160.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCB1127150
-	for <regressions@lists.linux.dev>; Thu, 27 Jul 2023 17:45:34 +0000 (UTC)
-Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-4036bd4fff1so26981cf.0
-        for <regressions@lists.linux.dev>; Thu, 27 Jul 2023 10:45:34 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1ADE7C
+	for <regressions@lists.linux.dev>; Fri, 28 Jul 2023 01:31:20 +0000 (UTC)
+Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-1bbaa549bcbso1298133fac.3
+        for <regressions@lists.linux.dev>; Thu, 27 Jul 2023 18:31:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1690479933; x=1691084733;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9NM68tAoXkNSSuTEH5H5vU3+nDfBfd+jxzhQH9vzkrQ=;
-        b=TSwqBZ8n7ZEGiMAKIfH38i1gT8PJgCeByl6DHc9FRCkEe3M9IJpRif13ZASvuveFBL
-         MgYAwesAntN/aPqFJNWVSj4yeIRxUpytPOmO0/5p1QOUytMWZ+1/5ev07X0IvQFCRFnp
-         j9PmpZ3vBnTcP2lC5eRx5TaRhTZ86c/oO0By8T5W3Ld/HRAFNgJ7CH1JOvFjQscKwa7y
-         eATldlKSZmoIzicr4G9+D/lXK57D+uQ9EmMqG9GGjXByIaxGBH5QqRFVYiW9Lng2dvfL
-         LmvGfxZE1GRZhT6ZXEyU30YyPrFgAo+pZiiayJWzPEHaTXOG5k9M3strRyFE7EtY3s87
-         gDTw==
+        d=gmail.com; s=20221208; t=1690507879; x=1691112679;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=CaeqowdeOpwWPJ2yfhz53Af/U8Nhz+fo4LgseG11w/A=;
+        b=P4K6qoMuMhq6C6yWBuCUCE00krcPYf8yqhCMOyug99B1Jtfp8gjt92BJKmxPxjuibL
+         1gAIULQLPIwEfX2hVRDX5cfa8r4eAukgh3zTf2kyd8Gxa97KA1PHodPyp6v1lqkx83VP
+         bdeJN2kTO0hWhwJ1s5Jeqh9OuGkwL5en7iTIFr4jfUaLv+FUEVGKTnlmpHHIIEj8TEFv
+         wYIhLNA9+KMLlDta0hT5WrjoYxIKeP2XXmosZXui77g9YalvKsnkQrfkOVZ9cfbYMu57
+         ePgO8daG45522zquxoBvzLuw67LN0JRKnjpBpxXspr4Hq6PQelsWEmxYTV9WuBL9aFgg
+         x+MA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690479933; x=1691084733;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9NM68tAoXkNSSuTEH5H5vU3+nDfBfd+jxzhQH9vzkrQ=;
-        b=GjaTFDuZXNHiuudIALZbORjJc7ueIYGB9DGKsPJR52wLGfNBcMEoSFSgXsDr8/AGdr
-         kiVczW7HiqlKn7Xdbiv/U63vFZYyrEUN43T5vzhD0GuZyM7o48UmP9J8VFc2ogQKzj0T
-         dChjdV1jPlAoTTTTPbX1WqRjwySFlYfXyoRqfIm12IK1LUhqvvGKahSg5ygzbSH9xNEV
-         dd4EeMVEkke461K7c94XWcpVrAnopQcmgfFiW06tIC8WEirlnle3pW6l2PzuhstACP76
-         eLeXt1hZ6rrAtWbdG31o0LSfb7j8UU9Fxatvjg/yaNF5pUNGd6k3kgfyW2SBjzTz6Wkf
-         y7TQ==
-X-Gm-Message-State: ABy/qLZMwLeCibg9OZq357eHo66GssiyirKiJxzC+ouFSCt8MfO9E/mU
-	LXZmtJeZ397veHJuQEfsXlm97OuTtx1tg1YVOYGwWg==
-X-Google-Smtp-Source: APBJJlEj99lMMoNxLZYWPy675+FZqbeUxnuFQ5LbxIpF25s2aVsttkmdEpXKABFsgTiM3g7ONrVYArcNmSfFZO29G3c=
-X-Received: by 2002:a05:622a:174d:b0:403:a43d:be41 with SMTP id
- l13-20020a05622a174d00b00403a43dbe41mr19549qtk.20.1690479933375; Thu, 27 Jul
- 2023 10:45:33 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1690507879; x=1691112679;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CaeqowdeOpwWPJ2yfhz53Af/U8Nhz+fo4LgseG11w/A=;
+        b=SD5xFZJXR9LyXb+2pZfZM9xELEo4lvWKzEErLVXQNY7RDnXMFirzGevVT+RTEbiIwS
+         EGYcaeCZtQ/fwjyzMR/JGKyDorhvaXQOyfUSavEEVDDQhcW4pwd/dxZkMytw/ASdf0vn
+         RNNpWxMe9cGrR5xJB/GSTO5uZxioRL/HuUB8IMCpPo6hp8Swc7hr9nCzOXbJIJid94i3
+         EATDhKoch1Mcxh293n5IDLRrjsPPjNDSKg/Bjpt6deQIkrpqB77biX9x+oKx78ynHn5n
+         mvXXlKtcb13s5ELYW05BPRscfwMWD++rcoi+IDqzr1eeJyaHu2Pmm4mS0t8z7yIRXFAb
+         mz9Q==
+X-Gm-Message-State: ABy/qLa/QK0DvHZtIk+XbDr9z4TBi6gyrfcdxVCFQT1MhhltjuYqbn3M
+	HDcivlOKZlPFIX6KyQ/Ng7U=
+X-Google-Smtp-Source: APBJJlHNeu9e49iEMNIcqQ76ytZayikn4InUU2c9+/sqhYfU43fLY2rYJiyKvPHR2Cbt6/0J/sYyJw==
+X-Received: by 2002:a05:6870:ac0d:b0:1b0:2f63:4ff6 with SMTP id kw13-20020a056870ac0d00b001b02f634ff6mr1488579oab.1.1690507879500;
+        Thu, 27 Jul 2023 18:31:19 -0700 (PDT)
+Received: from debian.me ([103.131.18.64])
+        by smtp.gmail.com with ESMTPSA id i3-20020a63bf43000000b0055fead55e81sm2021813pgo.57.2023.07.27.18.31.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Jul 2023 18:31:18 -0700 (PDT)
+Received: by debian.me (Postfix, from userid 1000)
+	id 7275A8C50BB8; Fri, 28 Jul 2023 08:31:13 +0700 (WIB)
+Date: Fri, 28 Jul 2023 08:31:12 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Amit Daniel Kachhap <amit.kachhap@gmail.com>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Goran <goran.brkuljan@gmail.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Regressions <regressions@lists.linux.dev>,
+	Linux Power Management <linux-pm@vger.kernel.org>
+Subject: Re: Fwd: XPS 17 9730 runs significantly warmer on Kernel 6.5-rc3
+ compared to Kernel 6.4.3
+Message-ID: <ZMMaYLcc5G4KSVyf@debian.me>
+References: <4aaf1d3d-2ab7-2d3a-f597-a1741bf699d6@gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230628082337.1857302-1-georgmueller@gmx.net> <20230628082337.1857302-2-georgmueller@gmx.net>
-In-Reply-To: <20230628082337.1857302-2-georgmueller@gmx.net>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 27 Jul 2023 10:45:21 -0700
-Message-ID: <CAP-5=fUP6UuLgRty3t2=fQsQi3k4hDMz415vWdp1x88QMvZ8ug@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] perf probe: add test for regression introduced by
- switch to die_get_decl_file
-To: =?UTF-8?Q?Georg_M=C3=BCller?= <georgmueller@gmx.net>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, regressions@lists.linux.dev, 
-	Arnaldo Carvalho de Melo <acme@redhat.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="/DdscD0f0vtkCtCd"
+Content-Disposition: inline
+In-Reply-To: <4aaf1d3d-2ab7-2d3a-f597-a1741bf699d6@gmail.com>
+
+
+--/DdscD0f0vtkCtCd
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 28, 2023 at 1:25=E2=80=AFAM Georg M=C3=BCller <georgmueller@gmx=
-.net> wrote:
->
-> This patch adds a test to validate that perf probe works for binaries
-> where DWARF info is split into multiple CUs
->
-> Signed-off-by: Georg M=C3=BCller <georgmueller@gmx.net>
-> Link: https://lore.kernel.org/r/5a00d5a5-7be7-ef8a-4044-9a16249fff25@gmx.=
-net/
-> ---
->  .../shell/test_uprobe_from_different_cu.sh    | 77 +++++++++++++++++++
->  1 file changed, 77 insertions(+)
->  create mode 100755 tools/perf/tests/shell/test_uprobe_from_different_cu.=
-sh
->
-> diff --git a/tools/perf/tests/shell/test_uprobe_from_different_cu.sh b/to=
-ols/perf/tests/shell/test_uprobe_from_different_cu.sh
-> new file mode 100755
-> index 000000000000..00d2e0e2e0c2
-> --- /dev/null
-> +++ b/tools/perf/tests/shell/test_uprobe_from_different_cu.sh
-> @@ -0,0 +1,77 @@
-> +#!/bin/bash
-> +# test perf probe of function from different CU
-> +# SPDX-License-Identifier: GPL-2.0
-> +
-> +set -e
-> +
-> +temp_dir=3D$(mktemp -d /tmp/perf-uprobe-different-cu-sh.XXXXXXXXXX)
-> +
-> +cleanup()
-> +{
-> +       trap - EXIT TERM INT
-> +       if [[ "${temp_dir}" =3D~ ^/tmp/perf-uprobe-different-cu-sh.*$ ]];=
- then
-> +               echo "--- Cleaning up ---"
-> +               perf probe -x ${temp_dir}/testfile -d foo
-> +               rm -f "${temp_dir}/"*
-> +               rmdir "${temp_dir}"
-> +       fi
-> +}
-> +
-> +trap_cleanup()
-> +{
-> +        cleanup
-> +        exit 1
-> +}
-> +
-> +trap trap_cleanup EXIT TERM INT
-> +
-> +cat > ${temp_dir}/testfile-foo.h << EOF
-> +struct t
-> +{
-> +  int *p;
-> +  int c;
-> +};
-> +
-> +extern int foo (int i, struct t *t);
-> +EOF
-> +
-> +cat > ${temp_dir}/testfile-foo.c << EOF
-> +#include "testfile-foo.h"
-> +
-> +int
-> +foo (int i, struct t *t)
-> +{
-> +  int j, res =3D 0;
-> +  for (j =3D 0; j < i && j < t->c; j++)
-> +    res +=3D t->p[j];
-> +
-> +  return res;
-> +}
-> +EOF
-> +
-> +cat > ${temp_dir}/testfile-main.c << EOF
-> +#include "testfile-foo.h"
-> +
-> +static struct t g;
-> +
-> +int
-> +main (int argc, char **argv)
-> +{
-> +  int i;
-> +  int j[argc];
-> +  g.c =3D argc;
-> +  g.p =3D j;
-> +  for (i =3D 0; i < argc; i++)
-> +    j[i] =3D (int) argv[i][0];
-> +  return foo (3, &g);
-> +}
-> +EOF
-> +
-> +gcc -g -Og -flto -c ${temp_dir}/testfile-foo.c -o ${temp_dir}/testfile-f=
-oo.o
-> +gcc -g -Og -c ${temp_dir}/testfile-main.c -o ${temp_dir}/testfile-main.o
-> +gcc -g -Og -o ${temp_dir}/testfile ${temp_dir}/testfile-foo.o ${temp_dir=
-}/testfile-main.o
+On Thu, Jul 27, 2023 at 09:25:19PM +0700, Bagas Sanjaya wrote:
+> Hi,
+>=20
+> I notice a regression report on Bugzilla [1]. Quoting from it:
+>=20
+> > On my new XPS 17 9730 laptop, I recently installed the Kernel 6.5-rc3. =
+I noticed, however, that during its operation, the laptop was getting signi=
+ficantly warmer than before. I did some analysis using the 'stress' tool to=
+ measure and compare the difference in CPU temperatures between Kernel 6.4.=
+3 and Kernel 6.5-rc3. Here are my results:
+> >=20
+> > OS: Ubuntu 23.10
+> > CPU: i7-13700H
+> >=20
+> > kernel 6.4.3:
+> >                                                                        =
+                                                                           =
+                                     =20
+> > Initial CPU temperature:
+> > coretemp-isa-0000
+> > Core 0:        +47.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
+=C2=B0C)
+> > Core 4:        +45.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
+=C2=B0C)
+> > Core 8:        +46.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
+=C2=B0C)
+> > Core 12:       +46.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
+=C2=B0C)
+> > Core 16:       +45.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
+=C2=B0C)
+> > Core 20:       +44.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
+=C2=B0C)
+> > Core 24:       +44.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
+=C2=B0C)
+> > Core 25:       +44.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
+=C2=B0C)
+> > Core 26:       +44.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
+=C2=B0C)
+> > Core 27:       +44.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
+=C2=B0C)
+> > Core 28:       +45.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
+=C2=B0C)
+> > Core 29:       +45.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
+=C2=B0C)
+> > Core 30:       +45.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
+=C2=B0C)
+> > Core 31:       +45.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
+=C2=B0C)
+> > Stressing CPU for 30 seconds...
+> > stress: info: [4858] dispatching hogs: 14 cpu, 0 io, 0 vm, 0 hdd
+> > stress: info: [4858] successful run completed in 30s
+> > CPU temperature immediately after stress test:
+> > coretemp-isa-0000
+> > Core 0:        +67.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
+=C2=B0C)
+> > Core 4:        +76.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
+=C2=B0C)
+> > Core 8:        +69.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
+=C2=B0C)
+> > Core 12:       +77.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
+=C2=B0C)
+> > Core 16:       +69.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
+=C2=B0C)
+> > Core 20:       +76.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
+=C2=B0C)
+> > Core 24:       +68.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
+=C2=B0C)
+> > Core 25:       +68.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
+=C2=B0C)
+> > Core 26:       +68.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
+=C2=B0C)
+> > Core 27:       +68.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
+=C2=B0C)
+> > Core 28:       +71.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
+=C2=B0C)
+> > Core 29:       +71.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
+=C2=B0C)
+> > Core 30:       +71.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
+=C2=B0C)
+> > Core 31:       +71.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
+=C2=B0C)
+> > Test ended at: Tue Jul 25 01:10:16 PM CEST 2023
+> >=20
+> >=20
+> > kernel 6.5-rc-3:
+> >=20
+> > Initial CPU temperature:
+> > coretemp-isa-0000
+> > Core 0:        +46.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
+=C2=B0C)
+> > Core 4:        +46.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
+=C2=B0C)
+> > Core 8:        +46.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
+=C2=B0C)
+> > Core 12:       +46.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
+=C2=B0C)
+> > Core 16:       +44.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
+=C2=B0C)
+> > Core 20:       +44.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
+=C2=B0C)
+> > Core 24:       +45.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
+=C2=B0C)
+> > Core 25:       +45.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
+=C2=B0C)
+> > Core 26:       +45.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
+=C2=B0C)
+> > Core 27:       +45.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
+=C2=B0C)
+> > Core 28:       +45.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
+=C2=B0C)
+> > Core 29:       +45.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
+=C2=B0C)
+> > Core 30:       +45.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
+=C2=B0C)
+> > Core 31:       +45.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
+=C2=B0C)
+> > Stressing CPU for 30 seconds...
+> > stress: info: [11146] dispatching hogs: 14 cpu, 0 io, 0 vm, 0 hdd
+> > stress: info: [11146] successful run completed in 30s
+> > CPU temperature immediately after stress test:
+> > coretemp-isa-0000
+> > Core 0:        +84.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
+=C2=B0C)
+> > Core 4:        +97.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
+=C2=B0C)
+> > Core 8:        +87.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
+=C2=B0C)
+> > Core 12:      +100.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
+=C2=B0C)
+> > Core 16:       +86.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
+=C2=B0C)
+> > Core 20:       +99.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
+=C2=B0C)
+> > Core 24:       +83.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
+=C2=B0C)
+> > Core 25:       +83.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
+=C2=B0C)
+> > Core 26:       +83.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
+=C2=B0C)
+> > Core 27:       +83.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
+=C2=B0C)
+> > Core 28:       +89.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
+=C2=B0C)
+> > Core 29:       +89.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
+=C2=B0C)
+> > Core 30:       +89.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
+=C2=B0C)
+> > Core 31:       +89.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
+=C2=B0C)
+> > Test ended at: Tue Jul 25 01:05:42 PM CEST 2023
+> >=20
+> > I tested few times with different setup and CPU temp on 6.5-rc3 is alwa=
+ys higher especially when stressing with fewer cores.
+>=20
+> See Bugzilla for the full thread.
+>=20
+> Goran: On Tuesday, I asked you to perform bisection. Any update on it?
+>=20
+> Anyway, I'm adding this regression to regzbot:
+>=20
+> #regzbot introduced: v6.4..v6.5-rc3 https://bugzilla.kernel.org/show_bug.=
+cgi?id=3D217703
+> #regzbot title: significant temperature increase on XPS 17 9730
+>=20
+> Thanks.
+>=20
+> [1]: https://bugzilla.kernel.org/show_bug.cgi?id=3D217703
+>=20
 
-Thanks for the test Georg! By directly relying on gcc this test fails
-for me in some constrained environments, like containers. I think
-there should be a skip if gcc isn't present. A different option is to
-just build the test code into the perf binary itself as a test
-workload:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/perf/tests/workloads?h=3Dperf-tools-next
+Oops, I accidentally duped this. My email client was stuck sending it
+(but got delivered anyway), thus:
 
-Wdyt? Thanks,
-Ian
+#regzbot dup-of: https://lore.kernel.org/regressions/107f05b8-0104-501c-130=
+c-4f89f3f8a628@gmail.com/
 
-> +
-> +perf probe -x ${temp_dir}/testfile --funcs foo
-> +perf probe -x ${temp_dir}/testfile foo
-> +
-> +cleanup
-> --
-> 2.41.0
->
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--/DdscD0f0vtkCtCd
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZMMaWAAKCRD2uYlJVVFO
+o8lkAQDq0eSlsqzoVPJxeOlMs2nUyvfWCbEBU6N3l/pwi+1EnwEAgrcp/MXnsG+s
+/ouqV6PjFLS9NzE/m7jeCkW/eyv8BQQ=
+=qz+4
+-----END PGP SIGNATURE-----
+
+--/DdscD0f0vtkCtCd--
