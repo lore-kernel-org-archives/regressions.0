@@ -1,22 +1,45 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCF9F3FF5
-	for <regressions@lists.linux.dev>; Fri, 28 Jul 2023 04:09:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3CE1DC433C7;
-	Fri, 28 Jul 2023 04:09:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1690517348;
-	bh=uw0Xjt7/KMv5o/4UdrtIWciAkDGApwQ+7UzCn1CqA5g=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=p3Is/j119bril0PDN0qA5OJEw2nmlR2e+RcyQzjSfZz917JGE3cDUmeF3FHX10L/k
-	 rYD4MYnNeeXGNhnc0NM8Owv1582AZb9EH/dEINcR6bj6NIX4lT6CVrYXUfdmlYsPgR
-	 wG28HMtn7SzjrCq/X4SLXzPK1UbhRYIagygvJKbZ3Zto2kmFUoqaxJXA33ybhYpcW0
-	 CfSUXLsOADa1AzFrfbHJIkaEFC1pbsQPwTm6AVwHC2mO6Fd2jkzTrcwYrLWzRoNEEL
-	 VQLVtRGSaYW4n9rBt4UYyTgIXy5KvPRTd/Xp92/2y6QlI2iZ8OHzqTVfn6DcUu48dv
-	 Abb6SykABXp/g==
-Message-ID: <3836423e-8f0f-1278-38e5-d35fbd7298e4@kernel.org>
-Date: Fri, 28 Jul 2023 13:09:06 +0900
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04585AD5C
+	for <regressions@lists.linux.dev>; Fri, 28 Jul 2023 07:00:13 +0000 (UTC)
+Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-55b1238cab4so1049166a12.2
+        for <regressions@lists.linux.dev>; Fri, 28 Jul 2023 00:00:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1690527613; x=1691132413;
+        h=content-transfer-encoding:in-reply-to:references:cc:to:from
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=csffeR+oPJ4r1BFCRv18Ji1lYkr66TeUyNN6VXBOA5k=;
+        b=bRLx7EBYf2U/nH8+u7oRWuawRuAyUzkXbwowllN+/5tlGx22+wcqAfwqnLf6zyOJFT
+         aEB0LmSqIHbOI5lh5OaOyP58iVFGwoGiC6u9jCaxhKwNA7EkkrdrSPHJzOBeYRKgGvQQ
+         rR99TNGh+oqu74wFG70rdejgZdL98JInkuARS3eKs5FvfZVY+PcS3W8q/HR+6C2j35Yh
+         6Xi59KPlnLgmlc1xc8yfkn7TgINdqoqTShBzyKWD5evH6gLgsM9qDw8JYoxyq5SAeYqP
+         ZxNLgPQqQq7mGC0dmx10/LJnQT8/7Cv7WEBpSsZN9hv8o8pI8q4zXG5PHI9A/esxIIfx
+         et+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690527613; x=1691132413;
+        h=content-transfer-encoding:in-reply-to:references:cc:to:from
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=csffeR+oPJ4r1BFCRv18Ji1lYkr66TeUyNN6VXBOA5k=;
+        b=YdB0oWOf/M8gLkFjK5Ou60MJ3KlKiFGZI3ezVM+dU5AqIsN15/Ttb1LDK/07MeHBiI
+         ZXyMnpayK/XIasOrBOf7FOdAvl9LqaV1LbmVGWhybcoXaQykoaAa9m6qw8iu9qf3bLSU
+         3oDoVNlSMexhGotzjTJqtp830wWFckuqrCjLkeqqD2yODPgQMQElkfHDpv9baqBigILf
+         /2WhACeI8vB+cAcTcGPdCFo8tYpOplS7Q+mbVyKZVfHodDxIxuODq/tzQZNprdhMxs69
+         Tk5gWp6zSfWOcXbajzEaO7JtRDoPkbp4+ehrqDE4dCA4aIMsfxlhSLqX/GUPBgXjikE6
+         O8yw==
+X-Gm-Message-State: ABy/qLaxZZxdZJNBn5A2/kYnga7gIYIW4rywQBcmYGPi7wgOr0Y05WoF
+	9Hrxrr8fEOEEttvWBB7ipmGz+P3K8kvaeA==
+X-Google-Smtp-Source: APBJJlHQFId3j9XY4axmj92fg1mRTYT3ZW0i6+fQ9XtygsZgZwiS7I1U8crPutn4LhBlrp3d2H13DA==
+X-Received: by 2002:a17:90a:bf0a:b0:268:5558:de4c with SMTP id c10-20020a17090abf0a00b002685558de4cmr803408pjs.38.1690527613159;
+        Fri, 28 Jul 2023 00:00:13 -0700 (PDT)
+Received: from [192.168.0.104] ([103.131.18.64])
+        by smtp.gmail.com with ESMTPSA id fw3-20020a17090b128300b00262ca945cecsm3642658pjb.54.2023.07.28.00.00.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 28 Jul 2023 00:00:12 -0700 (PDT)
+Message-ID: <849bdcfb-b70f-5212-58f7-71e2da25c5ed@gmail.com>
+Date: Fri, 28 Jul 2023 14:00:05 +0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -25,52 +48,40 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.13.0
-Subject: Re: Scsi_bus_resume+0x0/0x90 returns -5 when resuming from s3 sleep
+Subject: Re: Fwd: XPS 17 9730 runs significantly warmer on Kernel 6.5-rc3
+ compared to Kernel 6.4.3
 Content-Language: en-US
-To: TW <dalzot@gmail.com>, Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: regressions@lists.linux.dev, Mario Limonciello
- <mario.limonciello@amd.com>, Bart Van Assche <bvanassche@acm.org>,
- LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org
-References: <0e272abe-292d-d58f-cf80-55868e793abc@gmail.com>
- <6b66dd9a-8bd5-2882-9168-8e6e0848c454@leemhuis.info>
- <c70caa9e-164c-fee5-8f85-67f6d02373ab@kernel.org>
- <b0ed86e0-3e4a-d4d1-7b9d-c57f20538a80@gmail.com>
- <86435987-734e-c6c1-a857-1ba80da709fe@gmail.com>
- <48bc1736-5e4e-3a9b-3715-60509c333bb1@kernel.org>
- <f7e7b601-571f-bd2e-6410-a8a27e510c2f@gmail.com>
- <40365501-283a-408b-3514-48c29db36861@kernel.org>
- <d44e4057-0758-4cb8-ca29-02b5bb340b8b@gmail.com>
-From: Damien Le Moal <dlemoal@kernel.org>
-Organization: Western Digital Research
-In-Reply-To: <d44e4057-0758-4cb8-ca29-02b5bb340b8b@gmail.com>
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Amit Daniel Kachhap <amit.kachhap@gmail.com>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>,
+ Viresh Kumar <viresh.kumar@linaro.org>, Goran <goran.brkuljan@gmail.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Linux Power Management <linux-pm@vger.kernel.org>
+References: <4aaf1d3d-2ab7-2d3a-f597-a1741bf699d6@gmail.com>
+ <ZMMaYLcc5G4KSVyf@debian.me>
+In-Reply-To: <ZMMaYLcc5G4KSVyf@debian.me>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 7/28/23 11:49, TW wrote:
-> Comparing to the 5.15 kernel which had almost no delay. They are HDDs 
-> though, it was working flawlessly earlier but didn't want to top post 
-> again. Tried a systemd suspend instead of from the Xfce4 logout menu and 
-> everything works as intended. So I'd say that it's fixed now.
-
-I think that asynchronous scsi suspend/resume using the PM infrastructure,
-introduced in 5.16, is creating this additional delay. The reason is that now,
-ata and scsi drivers do their resume operations from within the PM resume
-process, resulting in some delays to reach "PM: suspend exit".
-
-I am looking into improving this, but it may take some more time.
-
-I will post officially the patch you tried and CC you. A "tested-by" tag from
-you would be appreciated.
-
-Thanks.
-
+On 7/28/23 08:31, Bagas Sanjaya wrote:
+> Oops, I accidentally duped this. My email client was stuck sending it
+> (but got delivered anyway), thus:
 > 
-> On 7/27/23 20:33, Damien Le Moal wrote:
->> "Slow coming back" -> Compared to which version of the kernel ? Do you 
->> have numbers ? If the devices are HDDs, resume will wait for these to 
->> spin up. That takes a while (about 10s normally).
+> #regzbot dup-of: https://lore.kernel.org/regressions/107f05b8-0104-501c-130c-4f89f3f8a628@gmail.com/
+> 
+
+And to clean regzbot up:
+
+#regzbot invalid: accidental duplicate
+
+Please ignore this thread, and instead follow up the original
+forwarded report at [1].
+
+Sorry for inconvenience.
+
+[1]: https://lore.kernel.org/lkml/107f05b8-0104-501c-130c-4f89f3f8a628@gmail.com/
 
 -- 
-Damien Le Moal
-Western Digital Research
+An old man doll... just what I always wanted! - Clara
 
