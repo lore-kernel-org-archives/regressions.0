@@ -1,87 +1,63 @@
-Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04585AD5C
-	for <regressions@lists.linux.dev>; Fri, 28 Jul 2023 07:00:13 +0000 (UTC)
-Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-55b1238cab4so1049166a12.2
-        for <regressions@lists.linux.dev>; Fri, 28 Jul 2023 00:00:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1690527613; x=1691132413;
-        h=content-transfer-encoding:in-reply-to:references:cc:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=csffeR+oPJ4r1BFCRv18Ji1lYkr66TeUyNN6VXBOA5k=;
-        b=bRLx7EBYf2U/nH8+u7oRWuawRuAyUzkXbwowllN+/5tlGx22+wcqAfwqnLf6zyOJFT
-         aEB0LmSqIHbOI5lh5OaOyP58iVFGwoGiC6u9jCaxhKwNA7EkkrdrSPHJzOBeYRKgGvQQ
-         rR99TNGh+oqu74wFG70rdejgZdL98JInkuARS3eKs5FvfZVY+PcS3W8q/HR+6C2j35Yh
-         6Xi59KPlnLgmlc1xc8yfkn7TgINdqoqTShBzyKWD5evH6gLgsM9qDw8JYoxyq5SAeYqP
-         ZxNLgPQqQq7mGC0dmx10/LJnQT8/7Cv7WEBpSsZN9hv8o8pI8q4zXG5PHI9A/esxIIfx
-         et+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690527613; x=1691132413;
-        h=content-transfer-encoding:in-reply-to:references:cc:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=csffeR+oPJ4r1BFCRv18Ji1lYkr66TeUyNN6VXBOA5k=;
-        b=YdB0oWOf/M8gLkFjK5Ou60MJ3KlKiFGZI3ezVM+dU5AqIsN15/Ttb1LDK/07MeHBiI
-         ZXyMnpayK/XIasOrBOf7FOdAvl9LqaV1LbmVGWhybcoXaQykoaAa9m6qw8iu9qf3bLSU
-         3oDoVNlSMexhGotzjTJqtp830wWFckuqrCjLkeqqD2yODPgQMQElkfHDpv9baqBigILf
-         /2WhACeI8vB+cAcTcGPdCFo8tYpOplS7Q+mbVyKZVfHodDxIxuODq/tzQZNprdhMxs69
-         Tk5gWp6zSfWOcXbajzEaO7JtRDoPkbp4+ehrqDE4dCA4aIMsfxlhSLqX/GUPBgXjikE6
-         O8yw==
-X-Gm-Message-State: ABy/qLaxZZxdZJNBn5A2/kYnga7gIYIW4rywQBcmYGPi7wgOr0Y05WoF
-	9Hrxrr8fEOEEttvWBB7ipmGz+P3K8kvaeA==
-X-Google-Smtp-Source: APBJJlHQFId3j9XY4axmj92fg1mRTYT3ZW0i6+fQ9XtygsZgZwiS7I1U8crPutn4LhBlrp3d2H13DA==
-X-Received: by 2002:a17:90a:bf0a:b0:268:5558:de4c with SMTP id c10-20020a17090abf0a00b002685558de4cmr803408pjs.38.1690527613159;
-        Fri, 28 Jul 2023 00:00:13 -0700 (PDT)
-Received: from [192.168.0.104] ([103.131.18.64])
-        by smtp.gmail.com with ESMTPSA id fw3-20020a17090b128300b00262ca945cecsm3642658pjb.54.2023.07.28.00.00.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 28 Jul 2023 00:00:12 -0700 (PDT)
-Message-ID: <849bdcfb-b70f-5212-58f7-71e2da25c5ed@gmail.com>
-Date: Fri, 28 Jul 2023 14:00:05 +0700
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADCAA12B72
+	for <regressions@lists.linux.dev>; Fri, 28 Jul 2023 12:02:03 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1qPMAM-0000xt-1A; Fri, 28 Jul 2023 14:01:54 +0200
+Message-ID: <d3320f6f-0f31-4894-713b-821f6e1e48ec@leemhuis.info>
+Date: Fri, 28 Jul 2023 14:01:52 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: Fwd: XPS 17 9730 runs significantly warmer on Kernel 6.5-rc3
- compared to Kernel 6.4.3
-Content-Language: en-US
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Amit Daniel Kachhap <amit.kachhap@gmail.com>,
- Daniel Lezcano <daniel.lezcano@linaro.org>,
- Viresh Kumar <viresh.kumar@linaro.org>, Goran <goran.brkuljan@gmail.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>,
- Linux Power Management <linux-pm@vger.kernel.org>
-References: <4aaf1d3d-2ab7-2d3a-f597-a1741bf699d6@gmail.com>
- <ZMMaYLcc5G4KSVyf@debian.me>
-In-Reply-To: <ZMMaYLcc5G4KSVyf@debian.me>
+User-Agent: Mozilla Thunderbird
+Subject: Re: two reports about NULL pointer dereferences in mm subsystem since
+ 5.18(?) with qbittorrent on XFS
+Content-Language: en-US, de-DE
+To: Matthew Wilcox <willy@infradead.org>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ Linus Torvalds <torvalds@linux-foundation.org>, Linux-MM
+ <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>
+References: <2e453cab-9049-98e5-1d96-2305fbb751ee@leemhuis.info>
+ <ZMEzuqTOdT1EDApa@casper.infradead.org>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <ZMEzuqTOdT1EDApa@casper.infradead.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1690545723;6ed89bb7;
+X-HE-SMSGID: 1qPMAM-0000xt-1A
 
-On 7/28/23 08:31, Bagas Sanjaya wrote:
-> Oops, I accidentally duped this. My email client was stuck sending it
-> (but got delivered anyway), thus:
+On 26.07.23 16:54, Matthew Wilcox wrote:
+> On Wed, Jul 26, 2023 at 02:43:24PM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
+>> Hi everyone! There are two regression reports with somewhat similar
+>> symptoms in bugzilla.kernel.org that seem to not get the attention they
+>> IMHO deserve.
 > 
-> #regzbot dup-of: https://lore.kernel.org/regressions/107f05b8-0104-501c-130c-4f89f3f8a628@gmail.com/
-> 
+> I'm sorry you think this regression hasn't received the attention that
+> it deserves.  I've spent weeks thinking about this problem
 
-And to clean regzbot up:
+I know, but my last mails to prod things a few weeks ago iirc didn't
+even get any reply, that's why I got impatient and started this thread
+once it was confirmed the bug is not fixed. I pretty sure that's
+expected in my position at this point; looking back at this now in
+contrast to how Linus usually handles regressions I wonder if I should
+have gotten impatient a bit earlier, as this caused trouble for a quite
+a few users for quite a while already. But whatever, that's water under
+the bridge now.
 
-#regzbot invalid: accidental duplicate
+> and trying to track it down, with no success so far.
 
-Please ignore this thread, and instead follow up the original
-forwarded report at [1].
+I saw your comments in the bugzilla ticket, so it seems you finally
+found something that might cause the reported problems. Great & many thx
+for that!
 
-Sorry for inconvenience.
-
-[1]: https://lore.kernel.org/lkml/107f05b8-0104-501c-130c-4f89f3f8a628@gmail.com/
-
--- 
-An old man doll... just what I always wanted! - Clara
-
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
