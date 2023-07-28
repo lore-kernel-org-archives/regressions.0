@@ -1,261 +1,139 @@
-Received: from mail-oa1-f45.google.com (mail-oa1-f45.google.com [209.85.160.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1ADE7C
-	for <regressions@lists.linux.dev>; Fri, 28 Jul 2023 01:31:20 +0000 (UTC)
-Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-1bbaa549bcbso1298133fac.3
-        for <regressions@lists.linux.dev>; Thu, 27 Jul 2023 18:31:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1690507879; x=1691112679;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=CaeqowdeOpwWPJ2yfhz53Af/U8Nhz+fo4LgseG11w/A=;
-        b=P4K6qoMuMhq6C6yWBuCUCE00krcPYf8yqhCMOyug99B1Jtfp8gjt92BJKmxPxjuibL
-         1gAIULQLPIwEfX2hVRDX5cfa8r4eAukgh3zTf2kyd8Gxa97KA1PHodPyp6v1lqkx83VP
-         bdeJN2kTO0hWhwJ1s5Jeqh9OuGkwL5en7iTIFr4jfUaLv+FUEVGKTnlmpHHIIEj8TEFv
-         wYIhLNA9+KMLlDta0hT5WrjoYxIKeP2XXmosZXui77g9YalvKsnkQrfkOVZ9cfbYMu57
-         ePgO8daG45522zquxoBvzLuw67LN0JRKnjpBpxXspr4Hq6PQelsWEmxYTV9WuBL9aFgg
-         x+MA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690507879; x=1691112679;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CaeqowdeOpwWPJ2yfhz53Af/U8Nhz+fo4LgseG11w/A=;
-        b=SD5xFZJXR9LyXb+2pZfZM9xELEo4lvWKzEErLVXQNY7RDnXMFirzGevVT+RTEbiIwS
-         EGYcaeCZtQ/fwjyzMR/JGKyDorhvaXQOyfUSavEEVDDQhcW4pwd/dxZkMytw/ASdf0vn
-         RNNpWxMe9cGrR5xJB/GSTO5uZxioRL/HuUB8IMCpPo6hp8Swc7hr9nCzOXbJIJid94i3
-         EATDhKoch1Mcxh293n5IDLRrjsPPjNDSKg/Bjpt6deQIkrpqB77biX9x+oKx78ynHn5n
-         mvXXlKtcb13s5ELYW05BPRscfwMWD++rcoi+IDqzr1eeJyaHu2Pmm4mS0t8z7yIRXFAb
-         mz9Q==
-X-Gm-Message-State: ABy/qLa/QK0DvHZtIk+XbDr9z4TBi6gyrfcdxVCFQT1MhhltjuYqbn3M
-	HDcivlOKZlPFIX6KyQ/Ng7U=
-X-Google-Smtp-Source: APBJJlHNeu9e49iEMNIcqQ76ytZayikn4InUU2c9+/sqhYfU43fLY2rYJiyKvPHR2Cbt6/0J/sYyJw==
-X-Received: by 2002:a05:6870:ac0d:b0:1b0:2f63:4ff6 with SMTP id kw13-20020a056870ac0d00b001b02f634ff6mr1488579oab.1.1690507879500;
-        Thu, 27 Jul 2023 18:31:19 -0700 (PDT)
-Received: from debian.me ([103.131.18.64])
-        by smtp.gmail.com with ESMTPSA id i3-20020a63bf43000000b0055fead55e81sm2021813pgo.57.2023.07.27.18.31.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Jul 2023 18:31:18 -0700 (PDT)
-Received: by debian.me (Postfix, from userid 1000)
-	id 7275A8C50BB8; Fri, 28 Jul 2023 08:31:13 +0700 (WIB)
-Date: Fri, 28 Jul 2023 08:31:12 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Amit Daniel Kachhap <amit.kachhap@gmail.com>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Goran <goran.brkuljan@gmail.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Regressions <regressions@lists.linux.dev>,
-	Linux Power Management <linux-pm@vger.kernel.org>
-Subject: Re: Fwd: XPS 17 9730 runs significantly warmer on Kernel 6.5-rc3
- compared to Kernel 6.4.3
-Message-ID: <ZMMaYLcc5G4KSVyf@debian.me>
-References: <4aaf1d3d-2ab7-2d3a-f597-a1741bf699d6@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 212A419C
+	for <regressions@lists.linux.dev>; Fri, 28 Jul 2023 02:33:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6D2DC433C8;
+	Fri, 28 Jul 2023 02:33:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1690511601;
+	bh=H5DZiC+YGeGkUW+jjo5LoBNHhvMZFNEnZwIT7bvrBX4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=PRlj79ZaeaAKHeUVKI/L6crpFIc8/WF3LSUJJpTKmFHAppfcCwiUNidwqXpLthN64
+	 Nz+AHCbzjyF8JoBmdvX9MC1XueQ+GP1j7qKzto+tRqKQorxKxfbuCZ5l04bH1HXZCp
+	 jpwQ3vgc8nCdWH29HYh55CsXYqfxnR+HY7vA6h+ABRoQFkXi6gmeCwhoUF7zsXCqjO
+	 5dAMINBKICbmOsWCqpIAV2mZL5/LcXOmGwCo82GEjuNc2ntjPKeoDovaXhxA3JlchZ
+	 SptGNaqek6fmbCAu1lScUPo5EoESrHsetYDo3CofFLV2KKw9s81PHFvK+AIwTIxZjg
+	 MUoS0pE4me1SA==
+Message-ID: <40365501-283a-408b-3514-48c29db36861@kernel.org>
+Date: Fri, 28 Jul 2023 11:33:19 +0900
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="/DdscD0f0vtkCtCd"
-Content-Disposition: inline
-In-Reply-To: <4aaf1d3d-2ab7-2d3a-f597-a1741bf699d6@gmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: Scsi_bus_resume+0x0/0x90 returns -5 when resuming from s3 sleep
+Content-Language: en-US
+To: TW <dalzot@gmail.com>, Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: regressions@lists.linux.dev, Mario Limonciello
+ <mario.limonciello@amd.com>, Bart Van Assche <bvanassche@acm.org>,
+ LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org
+References: <0e272abe-292d-d58f-cf80-55868e793abc@gmail.com>
+ <6b66dd9a-8bd5-2882-9168-8e6e0848c454@leemhuis.info>
+ <c70caa9e-164c-fee5-8f85-67f6d02373ab@kernel.org>
+ <b0ed86e0-3e4a-d4d1-7b9d-c57f20538a80@gmail.com>
+ <86435987-734e-c6c1-a857-1ba80da709fe@gmail.com>
+ <48bc1736-5e4e-3a9b-3715-60509c333bb1@kernel.org>
+ <f7e7b601-571f-bd2e-6410-a8a27e510c2f@gmail.com>
+From: Damien Le Moal <dlemoal@kernel.org>
+Organization: Western Digital Research
+In-Reply-To: <f7e7b601-571f-bd2e-6410-a8a27e510c2f@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+On 7/27/23 21:25, TW wrote:
+> It was all 1 patch but the first change had a formatting issue from the 
+> email format I guess. So I fixed that and the patch went through and 
+> looks like the drive error message has stopped. Still a little slow 
+> coming back but that error is gone at least.
 
---/DdscD0f0vtkCtCd
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+"Slow coming back" -> Compared to which version of the kernel ? Do you have
+numbers ?
 
-On Thu, Jul 27, 2023 at 09:25:19PM +0700, Bagas Sanjaya wrote:
-> Hi,
->=20
-> I notice a regression report on Bugzilla [1]. Quoting from it:
->=20
-> > On my new XPS 17 9730 laptop, I recently installed the Kernel 6.5-rc3. =
-I noticed, however, that during its operation, the laptop was getting signi=
-ficantly warmer than before. I did some analysis using the 'stress' tool to=
- measure and compare the difference in CPU temperatures between Kernel 6.4.=
-3 and Kernel 6.5-rc3. Here are my results:
-> >=20
-> > OS: Ubuntu 23.10
-> > CPU: i7-13700H
-> >=20
-> > kernel 6.4.3:
-> >                                                                        =
-                                                                           =
-                                     =20
-> > Initial CPU temperature:
-> > coretemp-isa-0000
-> > Core 0:        +47.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
-=C2=B0C)
-> > Core 4:        +45.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
-=C2=B0C)
-> > Core 8:        +46.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
-=C2=B0C)
-> > Core 12:       +46.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
-=C2=B0C)
-> > Core 16:       +45.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
-=C2=B0C)
-> > Core 20:       +44.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
-=C2=B0C)
-> > Core 24:       +44.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
-=C2=B0C)
-> > Core 25:       +44.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
-=C2=B0C)
-> > Core 26:       +44.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
-=C2=B0C)
-> > Core 27:       +44.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
-=C2=B0C)
-> > Core 28:       +45.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
-=C2=B0C)
-> > Core 29:       +45.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
-=C2=B0C)
-> > Core 30:       +45.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
-=C2=B0C)
-> > Core 31:       +45.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
-=C2=B0C)
-> > Stressing CPU for 30 seconds...
-> > stress: info: [4858] dispatching hogs: 14 cpu, 0 io, 0 vm, 0 hdd
-> > stress: info: [4858] successful run completed in 30s
-> > CPU temperature immediately after stress test:
-> > coretemp-isa-0000
-> > Core 0:        +67.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
-=C2=B0C)
-> > Core 4:        +76.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
-=C2=B0C)
-> > Core 8:        +69.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
-=C2=B0C)
-> > Core 12:       +77.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
-=C2=B0C)
-> > Core 16:       +69.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
-=C2=B0C)
-> > Core 20:       +76.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
-=C2=B0C)
-> > Core 24:       +68.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
-=C2=B0C)
-> > Core 25:       +68.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
-=C2=B0C)
-> > Core 26:       +68.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
-=C2=B0C)
-> > Core 27:       +68.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
-=C2=B0C)
-> > Core 28:       +71.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
-=C2=B0C)
-> > Core 29:       +71.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
-=C2=B0C)
-> > Core 30:       +71.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
-=C2=B0C)
-> > Core 31:       +71.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
-=C2=B0C)
-> > Test ended at: Tue Jul 25 01:10:16 PM CEST 2023
-> >=20
-> >=20
-> > kernel 6.5-rc-3:
-> >=20
-> > Initial CPU temperature:
-> > coretemp-isa-0000
-> > Core 0:        +46.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
-=C2=B0C)
-> > Core 4:        +46.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
-=C2=B0C)
-> > Core 8:        +46.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
-=C2=B0C)
-> > Core 12:       +46.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
-=C2=B0C)
-> > Core 16:       +44.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
-=C2=B0C)
-> > Core 20:       +44.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
-=C2=B0C)
-> > Core 24:       +45.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
-=C2=B0C)
-> > Core 25:       +45.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
-=C2=B0C)
-> > Core 26:       +45.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
-=C2=B0C)
-> > Core 27:       +45.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
-=C2=B0C)
-> > Core 28:       +45.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
-=C2=B0C)
-> > Core 29:       +45.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
-=C2=B0C)
-> > Core 30:       +45.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
-=C2=B0C)
-> > Core 31:       +45.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
-=C2=B0C)
-> > Stressing CPU for 30 seconds...
-> > stress: info: [11146] dispatching hogs: 14 cpu, 0 io, 0 vm, 0 hdd
-> > stress: info: [11146] successful run completed in 30s
-> > CPU temperature immediately after stress test:
-> > coretemp-isa-0000
-> > Core 0:        +84.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
-=C2=B0C)
-> > Core 4:        +97.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
-=C2=B0C)
-> > Core 8:        +87.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
-=C2=B0C)
-> > Core 12:      +100.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
-=C2=B0C)
-> > Core 16:       +86.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
-=C2=B0C)
-> > Core 20:       +99.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
-=C2=B0C)
-> > Core 24:       +83.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
-=C2=B0C)
-> > Core 25:       +83.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
-=C2=B0C)
-> > Core 26:       +83.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
-=C2=B0C)
-> > Core 27:       +83.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
-=C2=B0C)
-> > Core 28:       +89.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
-=C2=B0C)
-> > Core 29:       +89.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
-=C2=B0C)
-> > Core 30:       +89.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
-=C2=B0C)
-> > Core 31:       +89.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=
-=C2=B0C)
-> > Test ended at: Tue Jul 25 01:05:42 PM CEST 2023
-> >=20
-> > I tested few times with different setup and CPU temp on 6.5-rc3 is alwa=
-ys higher especially when stressing with fewer cores.
->=20
-> See Bugzilla for the full thread.
->=20
-> Goran: On Tuesday, I asked you to perform bisection. Any update on it?
->=20
-> Anyway, I'm adding this regression to regzbot:
->=20
-> #regzbot introduced: v6.4..v6.5-rc3 https://bugzilla.kernel.org/show_bug.=
-cgi?id=3D217703
-> #regzbot title: significant temperature increase on XPS 17 9730
->=20
-> Thanks.
->=20
-> [1]: https://bugzilla.kernel.org/show_bug.cgi?id=3D217703
->=20
+If the devices are HDDs, resume will wait for these to spin up. That takes a
+while (about 10s normally).
 
-Oops, I accidentally duped this. My email client was stuck sending it
-(but got delivered anyway), thus:
+> 
+> Jul 27 05:05:05 rageworks systemd[1]: Starting System Suspend...
+> Jul 27 05:05:05 rageworks systemd-sleep[1624]: Entering sleep state 
+> 'suspend'...
+> Jul 27 05:05:05 rageworks kernel: PM: suspend entry (deep)
+> Jul 27 05:05:05 rageworks kernel: Filesystems sync: 0.246 seconds
+> Jul 27 05:05:26 rageworks kernel: Freezing user space processes
+> Jul 27 05:05:26 rageworks kernel: Freezing user space processes 
+> completed (elapsed 0.001 seconds)
+> Jul 27 05:05:26 rageworks kernel: OOM killer disabled.
+> Jul 27 05:05:26 rageworks kernel: Freezing remaining freezable tasks
+> Jul 27 05:05:26 rageworks kernel: Freezing remaining freezable tasks 
+> completed (elapsed 0.000 seconds)
+> Jul 27 05:05:26 rageworks kernel: printk: Suspending console(s) (use 
+> no_console_suspend to debug)
+> Jul 27 05:05:26 rageworks kernel: serial 00:05: disabled
+> Jul 27 05:05:26 rageworks kernel: sd 9:0:0:0: [sdc] Synchronizing SCSI cache
+> Jul 27 05:05:26 rageworks kernel: sd 1:0:0:0: [sdb] Synchronizing SCSI cache
+> Jul 27 05:05:26 rageworks kernel: sd 0:0:0:0: [sda] Synchronizing SCSI cache
+> Jul 27 05:05:26 rageworks kernel: sd 9:0:0:0: [sdc] Stopping disk
+> Jul 27 05:05:26 rageworks kernel: sd 1:0:0:0: [sdb] Stopping disk
+> Jul 27 05:05:26 rageworks kernel: sd 0:0:0:0: [sda] Stopping disk
+> Jul 27 05:05:26 rageworks kernel: ACPI: PM: Preparing to enter system 
+> sleep state S3
+> Jul 27 05:05:26 rageworks kernel: ACPI: PM: Saving platform NVS memory
+> Jul 27 05:05:26 rageworks kernel: Disabling non-boot CPUs ...
+> Jul 27 05:05:26 rageworks kernel: smpboot: CPU 1 is now offline
+> Jul 27 05:05:26 rageworks kernel: smpboot: CPU 2 is now offline
+> Jul 27 05:05:26 rageworks kernel: smpboot: CPU 3 is now offline
+> Jul 27 05:05:26 rageworks kernel: ACPI: PM: Low-level resume complete
+> Jul 27 05:05:26 rageworks kernel: ACPI: PM: Restoring platform NVS memory
+> Jul 27 05:05:26 rageworks kernel: Enabling non-boot CPUs ...
+> Jul 27 05:05:26 rageworks kernel: smpboot: Booting Node 0 Processor 1 
+> APIC 0x1
+> Jul 27 05:05:26 rageworks kernel: CPU1 is up
+> Jul 27 05:05:26 rageworks kernel: smpboot: Booting Node 0 Processor 2 
+> APIC 0x2
+> Jul 27 05:05:26 rageworks kernel: CPU2 is up
+> Jul 27 05:05:26 rageworks kernel: smpboot: Booting Node 0 Processor 3 
+> APIC 0x3
+> Jul 27 05:05:26 rageworks kernel: CPU3 is up
+> Jul 27 05:05:26 rageworks kernel: ACPI: PM: Waking up from system sleep 
+> state S3
+> Jul 27 05:05:26 rageworks kernel: xhci_hcd 0000:02:00.0: xHC error in 
+> resume, USBSTS 0x401, Reinit
+> Jul 27 05:05:26 rageworks kernel: usb usb1: root hub lost power or was reset
+> Jul 27 05:05:26 rageworks kernel: usb usb2: root hub lost power or was reset
+> Jul 27 05:05:26 rageworks kernel: sd 0:0:0:0: [sda] Starting disk
+> Jul 27 05:05:26 rageworks kernel: sd 1:0:0:0: [sdb] Starting disk
+> Jul 27 05:05:26 rageworks kernel: sd 9:0:0:0: [sdc] Starting disk
+> Jul 27 05:05:26 rageworks kernel: serial 00:05: activated
+> Jul 27 05:05:26 rageworks kernel: ata6: SATA link down (SStatus 0 
+> SControl 330)
+> Jul 27 05:05:26 rageworks kernel: ata5: SATA link down (SStatus 0 
+> SControl 330)
+> Jul 27 05:05:26 rageworks kernel: ata9: SATA link down (SStatus 0 
+> SControl 300)
+> Jul 27 05:05:26 rageworks kernel: usb 1-10: reset full-speed USB device 
+> number 4 using xhci_hcd
+> Jul 27 05:05:26 rageworks kernel: usb 1-8: reset full-speed USB device 
+> number 3 using xhci_hcd
+> Jul 27 05:05:26 rageworks kernel: usb 1-7: reset full-speed USB device 
+> number 2 using xhci_hcd
+> Jul 27 05:05:26 rageworks kernel: OOM killer enabled.
+> Jul 27 05:05:26 rageworks kernel: Restarting tasks ... done.
+> Jul 27 05:05:26 rageworks kernel: random: crng reseeded on system resumption
+> Jul 27 05:05:26 rageworks kernel: PM: suspend exit
+> 
+> 
+> On 7/27/23 04:27, Damien Le Moal wrote:
+>> On 7/27/23 19:22, TW wrote:
+>>> I managed to fix the patch file, guess the formatting messed up a bit. So will
+>>> try with those patches installed.
+>> Just in case, patch fil attached to avoid formatting issues.
+>>
+>>
 
-#regzbot dup-of: https://lore.kernel.org/regressions/107f05b8-0104-501c-130=
-c-4f89f3f8a628@gmail.com/
+-- 
+Damien Le Moal
+Western Digital Research
 
---=20
-An old man doll... just what I always wanted! - Clara
-
---/DdscD0f0vtkCtCd
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZMMaWAAKCRD2uYlJVVFO
-o8lkAQDq0eSlsqzoVPJxeOlMs2nUyvfWCbEBU6N3l/pwi+1EnwEAgrcp/MXnsG+s
-/ouqV6PjFLS9NzE/m7jeCkW/eyv8BQQ=
-=qz+4
------END PGP SIGNATURE-----
-
---/DdscD0f0vtkCtCd--
