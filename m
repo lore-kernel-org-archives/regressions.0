@@ -1,55 +1,33 @@
-Received: from mail-oa1-f51.google.com (mail-oa1-f51.google.com [209.85.160.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C48717EC
-	for <regressions@lists.linux.dev>; Fri, 28 Jul 2023 02:49:35 +0000 (UTC)
-Received: by mail-oa1-f51.google.com with SMTP id 586e51a60fabf-1bb7297c505so1313383fac.1
-        for <regressions@lists.linux.dev>; Thu, 27 Jul 2023 19:49:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1690512574; x=1691117374;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=a7ldvBB2rbS3bYpCeMk71DDYYFjKwRoTgn+P6aVeXY8=;
-        b=Pp24ZpJ2RxVFGw7CKZD0faZuq3f3UGoYXjgpgNEI+9I2zbl8POTFoc26bWPtyNanwb
-         jY6ud7VqOanqu7KAG6BKVONJm0B4wd5qqWrTxInpvVbGwuBuYpMBPxRJFr6eSEdHsYqs
-         ZpzkpND221WNnzjG1DJSC5EcgIPdH0IOkJjTSzfhrhXSCCgT2gTe1wEvNuauTnAi5GjK
-         LSt2uZvpgSQfNcXl0S2l4UrZGuUCFSOWPa5LQxCvZQohiw0LPyxXRlsTajuIhXgUej2F
-         XgfxuKA38WEW6l33DineQZgCj4nJFP4fmmmn0Jng+oIzPXGdhQRhHcKbSLHTkm0oVQuX
-         r9QA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690512574; x=1691117374;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=a7ldvBB2rbS3bYpCeMk71DDYYFjKwRoTgn+P6aVeXY8=;
-        b=LLh1ceRO2xzhK23Y0GaLNI+W/oL09bcxbzOlS83/RYbCyW86eYuCpeul5qBftfsFNe
-         6y5FgV+dtPgnFGAwIdsdm7BWQVm5PptQ44GxcNS2OxYF6osI1znH9fftKYGQzjncoAQB
-         An2omUBxXNOI+gLbOrH96xEz/ffGPT5NxTuTUNSuDdvNJirINeKCvv6lwvKulTK9zuPw
-         V4gCynMduE/933eNwbZCIL4b3Z9UuUlrViiv5vmj+QAf7wJ0kyv4DKYRoAgV+cIKH93i
-         jZUiM5gaQzgKIANHKNWSCYBDTRV2+eV1c9n1zkQ9SjY5dlAr8BbdCZWa2gyhpFWMvBSW
-         YsKQ==
-X-Gm-Message-State: ABy/qLb0lkeeayUDzxiX5sY/+skFIDxUhQnQdlh2dWn6O1zRqxQsqI7K
-	ILUWilMkU7qh6U6S5C4BsI4=
-X-Google-Smtp-Source: APBJJlGtCgVp7ZuZ7VNDUXvMMZkTwW96lkumq0zI3xVahOPyULSN9yW+RyhmE3N48WJfKWzkn28A7Q==
-X-Received: by 2002:a05:6870:5b9d:b0:1bb:a264:a7ba with SMTP id em29-20020a0568705b9d00b001bba264a7bamr1599749oab.56.1690512574356;
-        Thu, 27 Jul 2023 19:49:34 -0700 (PDT)
-Received: from [192.168.1.121] ([65.129.146.152])
-        by smtp.gmail.com with ESMTPSA id m3-20020aa78a03000000b00686e8b00a50sm429979pfa.104.2023.07.27.19.49.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Jul 2023 19:49:34 -0700 (PDT)
-Message-ID: <d44e4057-0758-4cb8-ca29-02b5bb340b8b@gmail.com>
-Date: Thu, 27 Jul 2023 20:49:32 -0600
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCF9F3FF5
+	for <regressions@lists.linux.dev>; Fri, 28 Jul 2023 04:09:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3CE1DC433C7;
+	Fri, 28 Jul 2023 04:09:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1690517348;
+	bh=uw0Xjt7/KMv5o/4UdrtIWciAkDGApwQ+7UzCn1CqA5g=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=p3Is/j119bril0PDN0qA5OJEw2nmlR2e+RcyQzjSfZz917JGE3cDUmeF3FHX10L/k
+	 rYD4MYnNeeXGNhnc0NM8Owv1582AZb9EH/dEINcR6bj6NIX4lT6CVrYXUfdmlYsPgR
+	 wG28HMtn7SzjrCq/X4SLXzPK1UbhRYIagygvJKbZ3Zto2kmFUoqaxJXA33ybhYpcW0
+	 CfSUXLsOADa1AzFrfbHJIkaEFC1pbsQPwTm6AVwHC2mO6Fd2jkzTrcwYrLWzRoNEEL
+	 VQLVtRGSaYW4n9rBt4UYyTgIXy5KvPRTd/Xp92/2y6QlI2iZ8OHzqTVfn6DcUu48dv
+	 Abb6SykABXp/g==
+Message-ID: <3836423e-8f0f-1278-38e5-d35fbd7298e4@kernel.org>
+Date: Fri, 28 Jul 2023 13:09:06 +0900
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
 Subject: Re: Scsi_bus_resume+0x0/0x90 returns -5 when resuming from s3 sleep
-To: Damien Le Moal <dlemoal@kernel.org>,
- Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: en-US
+To: TW <dalzot@gmail.com>, Thorsten Leemhuis <regressions@leemhuis.info>
 Cc: regressions@lists.linux.dev, Mario Limonciello
  <mario.limonciello@amd.com>, Bart Van Assche <bvanassche@acm.org>,
  LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org
@@ -61,18 +39,38 @@ References: <0e272abe-292d-d58f-cf80-55868e793abc@gmail.com>
  <48bc1736-5e4e-3a9b-3715-60509c333bb1@kernel.org>
  <f7e7b601-571f-bd2e-6410-a8a27e510c2f@gmail.com>
  <40365501-283a-408b-3514-48c29db36861@kernel.org>
-Content-Language: en-US
-From: TW <dalzot@gmail.com>
-In-Reply-To: <40365501-283a-408b-3514-48c29db36861@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+ <d44e4057-0758-4cb8-ca29-02b5bb340b8b@gmail.com>
+From: Damien Le Moal <dlemoal@kernel.org>
+Organization: Western Digital Research
+In-Reply-To: <d44e4057-0758-4cb8-ca29-02b5bb340b8b@gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Comparing to the 5.15 kernel which had almost no delay. They are HDDs 
-though, it was working flawlessly earlier but didn't want to top post 
-again. Tried a systemd suspend instead of from the Xfce4 logout menu and 
-everything works as intended. So I'd say that it's fixed now.
+On 7/28/23 11:49, TW wrote:
+> Comparing to the 5.15 kernel which had almost no delay. They are HDDs 
+> though, it was working flawlessly earlier but didn't want to top post 
+> again. Tried a systemd suspend instead of from the Xfce4 logout menu and 
+> everything works as intended. So I'd say that it's fixed now.
 
-On 7/27/23 20:33, Damien Le Moal wrote:
-> "Slow coming back" -> Compared to which version of the kernel ? Do you 
-> have numbers ? If the devices are HDDs, resume will wait for these to 
-> spin up. That takes a while (about 10s normally).
+I think that asynchronous scsi suspend/resume using the PM infrastructure,
+introduced in 5.16, is creating this additional delay. The reason is that now,
+ata and scsi drivers do their resume operations from within the PM resume
+process, resulting in some delays to reach "PM: suspend exit".
+
+I am looking into improving this, but it may take some more time.
+
+I will post officially the patch you tried and CC you. A "tested-by" tag from
+you would be appreciated.
+
+Thanks.
+
+> 
+> On 7/27/23 20:33, Damien Le Moal wrote:
+>> "Slow coming back" -> Compared to which version of the kernel ? Do you 
+>> have numbers ? If the devices are HDDs, resume will wait for these to 
+>> spin up. That takes a while (about 10s normally).
+
+-- 
+Damien Le Moal
+Western Digital Research
+
