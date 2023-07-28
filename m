@@ -1,99 +1,131 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2043.outbound.protection.outlook.com [40.107.92.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A1A16129
-	for <regressions@lists.linux.dev>; Fri, 28 Jul 2023 14:42:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
- s=s31663417; t=1690555313; x=1691160113; i=georgmueller@gmx.net;
- bh=M/WETmw5YIFP0LfRJ5a0hlrmqjLYh88H3TYqQUuDLdg=;
- h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:In-Reply-To;
- b=irSBPPfsD9YZWAOoLipis84tV4HY5LroJoPAytKtykYfw9PxsUvriC+YKqWh6yTuAizMhy7
- pRAvDM7vGICrT/FKpnz7bp+NhefqKYSasC2tqDJBXp2v4Za009ZmyP5L5byKVpWexWU4y7MI7
- Lf+nO7EAXI1jNkYySLM8WTz/bU4PTME5Afai9Vr6Bz7H+DFywHvaOB1/TVpz8g1rBtrfMcl4o
- iYciGffDtIZlV+e180y/dcklMQJrgUGoK+Z+Ow5U554VvFzj37No6kWTYIwL2SMAHicCJtXFl
- w10YdaTU+VDyfIxpwHR5I3ildC6jXqYkpd7eMluRWpT+xZhG6Ncg==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [10.54.0.101] ([79.246.95.128]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MfYLa-1pweU51ln6-00g23i; Fri, 28
- Jul 2023 16:41:53 +0200
-Message-ID: <adcb2f0e-9db1-dd5a-91dd-6f5567357174@gmx.net>
-Date: Fri, 28 Jul 2023 16:41:51 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A207D23B8
+	for <regressions@lists.linux.dev>; Fri, 28 Jul 2023 18:58:12 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=WV1XtvsD+G1Wr8PWchofnrY9OcrbVLXsG5WiU4aNPCrzfK5xtepTkBnL7ayvSeI8AodtM5nxXt6WUmxXWonkuWNG517Uy4VyTRPFqFmGETxJaSua8rzw+Y5Qj+c522t5o8Gh4T7+w8+6aojS62NPuEyZrOY+KaYTd9LD/4ZeHtyOjCA8WPSo2HfTkysueGgZb+YNBeKjs5a/hhA3405dMQEM0cRWJ2SW1HPFf9zoS7Ic63rGhCgU9cEoZB8BrTY02zgA7P8rbDxrXHtSu87iffToMd8ibfeWvDLft2NVFJy144EDoVV9pn3JEx5R1M0zxXwzRiBrGsawdkUcvgjuEA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=+roanUuhZ47D99lNgC12YhsT159hlP8mOyyS+ytkOC4=;
+ b=Nf00rUW3Jj7Ss+QQcAtjnNaZO4LMmhRSa1GrZRFjZbShC3KzAR8p0eC4g5n8NWRHP3F4EpTXlx5XFpxeETCmh9rQrjZOpwGar0FhErra5QclQua71mg1za69DF+8vHKWCHY0cCJh0tmghwZy1PlGT9nTTjJNDqNe0OuSwpc3nHwFvT0k+FC4F7UxHAU7jYnLyq/ccD+DKn/jhqUuCR/aSjhTDpct9dEyNdHbbJlxSxfVXvQM06iF1H/qEQKB8bzU2vEPFtdDBVFsypSSha5HXNsc7hfPlNcbsAiiq4lVKdvh+Ld+7ZCqrBxYyWkq1TIGQwR3latupeA4nDW8jVPJ/A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+roanUuhZ47D99lNgC12YhsT159hlP8mOyyS+ytkOC4=;
+ b=mYGU3Q//bdfupgLIQFeOk6lmUhVjjl2XCQ6RU3T/P+EJgbo1M+y5/awbwrooSzUWZynWnGSiKT5U1j8LM9C6KsdwZcByOpUiUxRrYwgzh9W/4wJdv8bSGMUfGDwWMb2bKvt9Vr2cvtp1xWwjBN6rdZN8yFbpce1NU3Ls2Stp1Ok=
+Received: from BYAPR07CA0007.namprd07.prod.outlook.com (2603:10b6:a02:bc::20)
+ by CY8PR12MB7415.namprd12.prod.outlook.com (2603:10b6:930:5d::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6609.24; Fri, 28 Jul
+ 2023 18:58:09 +0000
+Received: from CO1NAM11FT005.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:a02:bc:cafe::f7) by BYAPR07CA0007.outlook.office365.com
+ (2603:10b6:a02:bc::20) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6631.34 via Frontend
+ Transport; Fri, 28 Jul 2023 18:58:09 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CO1NAM11FT005.mail.protection.outlook.com (10.13.174.147) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.6631.29 via Frontend Transport; Fri, 28 Jul 2023 18:58:09 +0000
+Received: from SITE-L-T34-2.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Fri, 28 Jul
+ 2023 13:58:07 -0500
+From: Mario Limonciello <mario.limonciello@amd.com>
+To: <rafael@kernel.org>
+CC: <linux-kernel@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
+	<regressions@lists.linux.dev>, Mario Limonciello <mario.limonciello@amd.com>,
+	August Wikerfors <git@augustwikerfors.se>
+Subject: [PATCH] ACPI: resource: Add a quirk for Lenovo Yoga 7 14ARB7
+Date: Fri, 28 Jul 2023 13:39:21 -0500
+Message-ID: <20230728183921.17230-1-mario.limonciello@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH v2 1/2] perf probe: add test for regression introduced by
- switch to die_get_decl_file
-Content-Language: en-US
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- Adrian Hunter <adrian.hunter@intel.com>,
- "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
- regressions@lists.linux.dev, Arnaldo Carvalho de Melo <acme@redhat.com>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20230628082337.1857302-1-georgmueller@gmx.net>
- <20230628082337.1857302-2-georgmueller@gmx.net>
- <CAP-5=fUP6UuLgRty3t2=fQsQi3k4hDMz415vWdp1x88QMvZ8ug@mail.gmail.com>
-From: =?UTF-8?Q?Georg_M=c3=bcller?= <georgmueller@gmx.net>
-In-Reply-To: <CAP-5=fUP6UuLgRty3t2=fQsQi3k4hDMz415vWdp1x88QMvZ8ug@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:sDrqkfLvyKv87wPdI67Pfq8Dl0IoJ7GwNZNYrQTBseNuxPM0HT1
- qaKXhyQgK8x53dir8/keVvV22/H9RvuV71zhL1tJG6CDG1X4iCBQxMORJKb8tItAU7iI9IX
- heIB3x11p57i727oXCjTtGgruGT5oIT7tJukV+4omfX7u6h1x+dBmFZoC8eTsDC2H4XXl8f
- RCUgGladaVclQG/JHOtbg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:jMofSfNp27s=;ALDfp4otrWiPAi0bWjifjlNZHxp
- FBbnIv+agpXiztrLKqyKpIQny49hWZ/AfZHlEqm0cFNlKQAMXWdBWzSA7arZy6yw9shgjbwiz
- Sk6IirbVwFZpg51EOEGApCAw3zaWP9d5fY5zwJYfCsSFmuTXBkqS3lnYOTuT3U6Npt75H3B9l
- C22ALRlC3RLbO9rCMTPJCLrhvlBbXVErl6FdsGuFgH/2SiKD12cODw0HENT7fkWwmBrrMA27x
- rswn5qfdcr84cbvauFzegSqfNKAioIqCDCtWA7KKYWCLfNR5bfUdin0EHapSO0LGSWgoGIFxE
- 029AZGpjK4D9RM3ncmPDJ8m31dhvEEyIE++JhRtW6+cqq9Lg6q8cG0tDOeOzPCLZ3KV+b3FcO
- iQi2aUm6aiwE5m0zKFGktutYM66VooTrUJJaocfB26IN/bQ5EahN2wYciKqX+aiwWYTMnWMGn
- fYJJSq534xJNFez2X1DaNMQ1TtamRDDxmoETXUmd+TozWRAMisn6/2tP+MyzFLPAe66A5wPnp
- JSmcyaGgF1t+S/utiBz6QbZRwH/uaEviIFZnnI67CyfdFdmCk3QB5FTiRMCXkdcoJrEvwwtOu
- O+p2TjUOwg1ZLQXgwaGMegIqtrmBKA75q6CHA45ykdIr4TOzyozuBVBWsoylWgfQzL3srPqaW
- SXHIZY6xOjQtVvhjWhc8PSv+7jQKJQTV2zvazKzX8OJVhjx39NXkkifPO4A9dMkehmSz0vrSK
- QzVBPEyaVyvhol5UQbKEsX/u3lv7SgYopDVxeYyI4q+GP5iQM/meAl3z6hZuNmHaEmVkne577
- xc90UBXi5Cjdm2CbuPPWPHMLOrmY66XtBgdpOw9BX/oIH52isqOtnW0KTzTU0HwwwlclTtHJM
- 5qtxKPThslkhRUT8pYdHygR3tCS7eM+O5xtuzNXeRtVp8ik8RQJfZaIuvf+eHl/gQV7Lqi5PS
- m83DSw==
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1NAM11FT005:EE_|CY8PR12MB7415:EE_
+X-MS-Office365-Filtering-Correlation-Id: cd2e088b-88b2-4faf-5e9c-08db8f9c95cf
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	6qxtQcN8adCPqUt6F2BH1xe5w4C01MujOomj1hkNweSQCa/7aQIbVxFBZrY2hHaZHhNZsdp4PWmVn2q5KNihkyTwDfNusblPCVKauWjlKPVNfPT9ddSWwp6OhkIQgTO6dXwACPC9dCdCl0/v1hwmljLWnegS+4qPagVxWFKNe+Byar+aIWu2rYwyj4TQwELupEhv8lbM6eIRnR8zqp6vSLORsXclEgzXf1/A0T/EFyziSh0/tJ/RSsK5VUb4CPD7x34THI/i1OV/LpRsrocGjN6iPOhmqzvfLMrWs9tnCx19ptK0SM6dR4mvWXj18nO5xF+QV9QFzBE+QYnTsmBCBRWYWKID26ziXfA4qxbwLJJNirWgASh8CcikGvqsN1tZ08k5CaCEzvIGFUjAFoxcTHPUofvCkr2N5w4HZRvNJPRMIeTbp/9HWF+G8vHUfL9qm5TMF3lcPsG6QuHlMV52NSY10OyRe+WAxX7YkJO4WrqeXTLsydGTKW/xZvIiW9T1AGcnphImCHwrdGXSuri9OUbUeSQQ6+sdra8ikxNQzCzDskQMtbOEiFdfvFgIs96AVC+ziw/qPzVu5J17ndw9Yamqk/oJdpx1VucGc7dOmINDpzfm58meXUJjk0RoZmI4ZLLurjbYUmGpdAB2tzQ0L8D9aDDz+mk1c9rUKeigxQ+iWzEllUuJSqbWU89KhLeZ5szkkISoYvLGraqtyRcZOCsrNjVNXYMWuraR97PYCSYxeOOD0XIoJZdior6p/pPkD1u9Fzf0e3t8keOrpP7x1A==
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230028)(4636009)(39860400002)(136003)(396003)(346002)(376002)(451199021)(82310400008)(40470700004)(46966006)(36840700001)(82740400003)(44832011)(47076005)(5660300002)(2616005)(70206006)(8936002)(4326008)(83380400001)(316002)(6916009)(8676002)(70586007)(36860700001)(426003)(81166007)(2906002)(41300700001)(478600001)(356005)(6666004)(7696005)(54906003)(36756003)(186003)(1076003)(336012)(16526019)(40460700003)(86362001)(26005)(966005)(40480700001)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Jul 2023 18:58:09.2404
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: cd2e088b-88b2-4faf-5e9c-08db8f9c95cf
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CO1NAM11FT005.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7415
 
+Lenovo Yoga 7 needs to have keyboard interrupt signaling polarity
+is incorrect in the MADT and the value from the DSDT should be used.
 
-Am 27.07.23 um 19:45 schrieb Ian Rogers:
-> On Wed, Jun 28, 2023 at 1:25=E2=80=AFAM Georg M=C3=BCller <georgmueller@=
-gmx.net> wrote:
->
-> Thanks for the test Georg! By directly relying on gcc this test fails
-> for me in some constrained environments, like containers. I think
-> there should be a skip if gcc isn't present. A different option is to
-> just build the test code into the perf binary itself as a test
-> workload:
-> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git=
-/tree/tools/perf/tests/workloads?h=3Dperf-tools-next
->
-> Wdyt? Thanks,
-> Ian
->
+Reported-by: August Wikerfors <git@augustwikerfors.se>
+Closes: https://bugzilla.kernel.org/show_bug.cgi?id=217718
+Fixes: a9c4a912b7dc ("ACPI: resource: Remove "Zen" specific match and quirks")
+Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+---
+ drivers/acpi/resource.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-I prepare a commit which checks for gcc and skips the test in this case.
+diff --git a/drivers/acpi/resource.c b/drivers/acpi/resource.c
+index 1dd8d5aebf678..1a826419d5837 100644
+--- a/drivers/acpi/resource.c
++++ b/drivers/acpi/resource.c
+@@ -481,6 +481,17 @@ static const struct dmi_system_id lg_laptop[] = {
+ 	{ }
+ };
+ 
++static const struct dmi_system_id lenovo_laptop[] = {
++	{
++		.ident = "Lenovo Yoga 7 14ARB7",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "82QF"),
++		},
++	},
++	{ }
++};
++
+ struct irq_override_cmp {
+ 	const struct dmi_system_id *system;
+ 	unsigned char irq;
+@@ -494,6 +505,7 @@ static const struct irq_override_cmp override_table[] = {
+ 	{ medion_laptop, 1, ACPI_LEVEL_SENSITIVE, ACPI_ACTIVE_LOW, 0, false },
+ 	{ asus_laptop, 1, ACPI_LEVEL_SENSITIVE, ACPI_ACTIVE_LOW, 0, false },
+ 	{ lg_laptop, 1, ACPI_LEVEL_SENSITIVE, ACPI_ACTIVE_LOW, 0, false },
++	{ lenovo_laptop, 1, ACPI_LEVEL_SENSITIVE, ACPI_ACTIVE_LOW, 1, false}
+ };
+ 
+ static bool acpi_dev_irq_override(u32 gsi, u8 triggering, u8 polarity,
+-- 
+2.34.1
 
-I think building thi test code into the perf binary itself is not an optio=
-n
-here, since the test relies on a special setup of using -flto for one of t=
-he
-compilation units.
-
-There is also a cleanup issue if anything fails. This will be included in
-the patch as well.
-
-Best regards,
-Georg
