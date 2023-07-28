@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADCAA12B72
-	for <regressions@lists.linux.dev>; Fri, 28 Jul 2023 12:02:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97827134BD
+	for <regressions@lists.linux.dev>; Fri, 28 Jul 2023 13:42:32 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qPMAM-0000xt-1A; Fri, 28 Jul 2023 14:01:54 +0200
-Message-ID: <d3320f6f-0f31-4894-713b-821f6e1e48ec@leemhuis.info>
-Date: Fri, 28 Jul 2023 14:01:52 +0200
+	id 1qPNji-0007zf-Br; Fri, 28 Jul 2023 15:42:30 +0200
+Message-ID: <2e512646-816f-ff98-d466-b82f3a7d05ef@leemhuis.info>
+Date: Fri, 28 Jul 2023 15:42:29 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -15,49 +15,146 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: two reports about NULL pointer dereferences in mm subsystem since
- 5.18(?) with qbittorrent on XFS
+Subject: Re: Fwd: XPS 17 9730 runs significantly warmer on Kernel 6.5-rc3
+ compared to Kernel 6.4.3
 Content-Language: en-US, de-DE
-To: Matthew Wilcox <willy@infradead.org>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Linus Torvalds <torvalds@linux-foundation.org>, Linux-MM
- <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>
-References: <2e453cab-9049-98e5-1d96-2305fbb751ee@leemhuis.info>
- <ZMEzuqTOdT1EDApa@casper.infradead.org>
+To: Bagas Sanjaya <bagasdotme@gmail.com>,
+ "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Linux Power Management <linux-pm@vger.kernel.org>,
+ Goran <goran.brkuljan@gmail.com>,
+ Amit Daniel Kachhap <amit.kachhap@gmail.com>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>,
+ Viresh Kumar <viresh.kumar@linaro.org>
+References: <107f05b8-0104-501c-130c-4f89f3f8a628@gmail.com>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <ZMEzuqTOdT1EDApa@casper.infradead.org>
+In-Reply-To: <107f05b8-0104-501c-130c-4f89f3f8a628@gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1690545723;6ed89bb7;
-X-HE-SMSGID: 1qPMAM-0000xt-1A
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1690551752;b8242a06;
+X-HE-SMSGID: 1qPNji-0007zf-Br
 
-On 26.07.23 16:54, Matthew Wilcox wrote:
-> On Wed, Jul 26, 2023 at 02:43:24PM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
->> Hi everyone! There are two regression reports with somewhat similar
->> symptoms in bugzilla.kernel.org that seem to not get the attention they
->> IMHO deserve.
+[CCing Thermal maintainer Rafael, maybe he can help guide us]
+
+Hi Bagas and everyone!
+
+On 27.07.23 16:24, Bagas Sanjaya wrote:
+>
+> I notice a regression report on Bugzilla [1].
+
+Bagas, it looks like you forwarded this to the maintainers of
+"THERMAL/CPU_COOLING"; I think "THERMAL" would have been the way better
+entry in MAINTAINERS, as many (all?) of the former are Linaro employees
+and thus primarily care about ARM based devices. That's why I CCed Rafael.
+
+> Quoting from it:
 > 
-> I'm sorry you think this regression hasn't received the attention that
-> it deserves.  I've spent weeks thinking about this problem
+>> On my new XPS 17 9730 laptop, I recently installed the Kernel 6.5-rc3. I noticed, however, that during its operation, the laptop was getting significantly warmer than before. I did some analysis using the 'stress' tool to measure and compare the difference in CPU temperatures between Kernel 6.4.3 and Kernel 6.5-rc3. Here are my results:
 
-I know, but my last mails to prod things a few weeks ago iirc didn't
-even get any reply, that's why I got impatient and started this thread
-once it was confirmed the bug is not fixed. I pretty sure that's
-expected in my position at this point; looking back at this now in
-contrast to how Linus usually handles regressions I wonder if I should
-have gotten impatient a bit earlier, as this caused trouble for a quite
-a few users for quite a while already. But whatever, that's water under
-the bridge now.
+One thought: I wonder if there something wrong now or was there
+something wrong earlier that was fixed to unleash the full performance
+potential of the device. That 100°C there sounds like it's the latter
+case, as that's the TJUNCTION temp for that processor. But would be good
+to confirm from someone that knows better how hot such processors are
+allowed to get these days.
 
-> and trying to track it down, with no success so far.
+Ciao, Thorsten
 
-I saw your comments in the bugzilla ticket, so it seems you finally
-found something that might cause the reported problems. Great & many thx
-for that!
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+>> OS: Ubuntu 23.10
+>> CPU: i7-13700H
+>>
+>> kernel 6.4.3:
+>>                                                                                                                                                                                         
+>> Initial CPU temperature:
+>> coretemp-isa-0000
+>> Core 0:        +47.0°C  (high = +100.0°C, crit = +100.0°C)
+>> Core 4:        +45.0°C  (high = +100.0°C, crit = +100.0°C)
+>> Core 8:        +46.0°C  (high = +100.0°C, crit = +100.0°C)
+>> Core 12:       +46.0°C  (high = +100.0°C, crit = +100.0°C)
+>> Core 16:       +45.0°C  (high = +100.0°C, crit = +100.0°C)
+>> Core 20:       +44.0°C  (high = +100.0°C, crit = +100.0°C)
+>> Core 24:       +44.0°C  (high = +100.0°C, crit = +100.0°C)
+>> Core 25:       +44.0°C  (high = +100.0°C, crit = +100.0°C)
+>> Core 26:       +44.0°C  (high = +100.0°C, crit = +100.0°C)
+>> Core 27:       +44.0°C  (high = +100.0°C, crit = +100.0°C)
+>> Core 28:       +45.0°C  (high = +100.0°C, crit = +100.0°C)
+>> Core 29:       +45.0°C  (high = +100.0°C, crit = +100.0°C)
+>> Core 30:       +45.0°C  (high = +100.0°C, crit = +100.0°C)
+>> Core 31:       +45.0°C  (high = +100.0°C, crit = +100.0°C)
+>> Stressing CPU for 30 seconds...
+>> stress: info: [4858] dispatching hogs: 14 cpu, 0 io, 0 vm, 0 hdd
+>> stress: info: [4858] successful run completed in 30s
+>> CPU temperature immediately after stress test:
+>> coretemp-isa-0000
+>> Core 0:        +67.0°C  (high = +100.0°C, crit = +100.0°C)
+>> Core 4:        +76.0°C  (high = +100.0°C, crit = +100.0°C)
+>> Core 8:        +69.0°C  (high = +100.0°C, crit = +100.0°C)
+>> Core 12:       +77.0°C  (high = +100.0°C, crit = +100.0°C)
+>> Core 16:       +69.0°C  (high = +100.0°C, crit = +100.0°C)
+>> Core 20:       +76.0°C  (high = +100.0°C, crit = +100.0°C)
+>> Core 24:       +68.0°C  (high = +100.0°C, crit = +100.0°C)
+>> Core 25:       +68.0°C  (high = +100.0°C, crit = +100.0°C)
+>> Core 26:       +68.0°C  (high = +100.0°C, crit = +100.0°C)
+>> Core 27:       +68.0°C  (high = +100.0°C, crit = +100.0°C)
+>> Core 28:       +71.0°C  (high = +100.0°C, crit = +100.0°C)
+>> Core 29:       +71.0°C  (high = +100.0°C, crit = +100.0°C)
+>> Core 30:       +71.0°C  (high = +100.0°C, crit = +100.0°C)
+>> Core 31:       +71.0°C  (high = +100.0°C, crit = +100.0°C)
+>> Test ended at: Tue Jul 25 01:10:16 PM CEST 2023
+>>
+>>
+>> kernel 6.5-rc-3:
+>>
+>> Initial CPU temperature:
+>> coretemp-isa-0000
+>> Core 0:        +46.0°C  (high = +100.0°C, crit = +100.0°C)
+>> Core 4:        +46.0°C  (high = +100.0°C, crit = +100.0°C)
+>> Core 8:        +46.0°C  (high = +100.0°C, crit = +100.0°C)
+>> Core 12:       +46.0°C  (high = +100.0°C, crit = +100.0°C)
+>> Core 16:       +44.0°C  (high = +100.0°C, crit = +100.0°C)
+>> Core 20:       +44.0°C  (high = +100.0°C, crit = +100.0°C)
+>> Core 24:       +45.0°C  (high = +100.0°C, crit = +100.0°C)
+>> Core 25:       +45.0°C  (high = +100.0°C, crit = +100.0°C)
+>> Core 26:       +45.0°C  (high = +100.0°C, crit = +100.0°C)
+>> Core 27:       +45.0°C  (high = +100.0°C, crit = +100.0°C)
+>> Core 28:       +45.0°C  (high = +100.0°C, crit = +100.0°C)
+>> Core 29:       +45.0°C  (high = +100.0°C, crit = +100.0°C)
+>> Core 30:       +45.0°C  (high = +100.0°C, crit = +100.0°C)
+>> Core 31:       +45.0°C  (high = +100.0°C, crit = +100.0°C)
+>> Stressing CPU for 30 seconds...
+>> stress: info: [11146] dispatching hogs: 14 cpu, 0 io, 0 vm, 0 hdd
+>> stress: info: [11146] successful run completed in 30s
+>> CPU temperature immediately after stress test:
+>> coretemp-isa-0000
+>> Core 0:        +84.0°C  (high = +100.0°C, crit = +100.0°C)
+>> Core 4:        +97.0°C  (high = +100.0°C, crit = +100.0°C)
+>> Core 8:        +87.0°C  (high = +100.0°C, crit = +100.0°C)
+>> Core 12:      +100.0°C  (high = +100.0°C, crit = +100.0°C)
+>> Core 16:       +86.0°C  (high = +100.0°C, crit = +100.0°C)
+>> Core 20:       +99.0°C  (high = +100.0°C, crit = +100.0°C)
+>> Core 24:       +83.0°C  (high = +100.0°C, crit = +100.0°C)
+>> Core 25:       +83.0°C  (high = +100.0°C, crit = +100.0°C)
+>> Core 26:       +83.0°C  (high = +100.0°C, crit = +100.0°C)
+>> Core 27:       +83.0°C  (high = +100.0°C, crit = +100.0°C)
+>> Core 28:       +89.0°C  (high = +100.0°C, crit = +100.0°C)
+>> Core 29:       +89.0°C  (high = +100.0°C, crit = +100.0°C)
+>> Core 30:       +89.0°C  (high = +100.0°C, crit = +100.0°C)
+>> Core 31:       +89.0°C  (high = +100.0°C, crit = +100.0°C)
+>> Test ended at: Tue Jul 25 01:05:42 PM CEST 2023
+>>
+>> I tested few times with different setup and CPU temp on 6.5-rc3 is always higher especially when stressing with fewer cores.
+> 
+> See Bugzilla for the full thread.
+> 
+> Goran: On Tuesday, I asked you to perform bisection. Any update on it?
+> 
+> Anyway, I'm adding this regression to regzbot:
+> 
+> #regzbot introduced: v6.4..v6.5-rc3 https://bugzilla.kernel.org/show_bug.cgi?id=217703
+> #regzbot title: significant temperature increase on XPS 17 9730
+> 
+> Thanks.
+> 
+> [1]: https://bugzilla.kernel.org/show_bug.cgi?id=217703
+> 
