@@ -1,211 +1,89 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71F281426E
-	for <regressions@lists.linux.dev>; Fri, 28 Jul 2023 19:43:25 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qPTMx-0004vy-3H; Fri, 28 Jul 2023 21:43:23 +0200
-Message-ID: <da2bfc5b-8c98-17a4-1dbc-ef7989facc54@leemhuis.info>
-Date: Fri, 28 Jul 2023 21:43:22 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C153E375
+	for <regressions@lists.linux.dev>; Sun, 30 Jul 2023 02:41:48 +0000 (UTC)
+Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-56401f1da3dso1807657a12.0
+        for <regressions@lists.linux.dev>; Sat, 29 Jul 2023 19:41:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1690684908; x=1691289708;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QAiaID6w1L7IDF4pZp9zfrtsyHgijsW1Y/7VAznx6cY=;
+        b=EuS25bqI/gdh/aViCI9NX1VTpgUw8o1S+MN+jO0vY/GVNfOY+Gyj4X48Kn63ZDTeli
+         y7mWBYVCuyiUNN09nyTrbr8mQuuwBFu9Cmj7f3jyKpSI7DSVxYTif31xz1Iq7dvtk4g9
+         D0MCaGNLPmAH/QLfwNgLfUNqug8XEHVlQIxgUIiNJZP9MgkvfVhy/Rho3+E1NNWvBd0w
+         iqj6dkadE/1XAszud6/cDAL+DSwtl5v+YXkXvS/bHeTAQyKSDMJO61mEZjMUqxSulvwY
+         kR388w0dLZoRaxQcH8NAmWZgnI2W5uq7LswLHckcvn7XNC3gq5UEBfEQFno/x0ZdvSxX
+         V8pg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690684908; x=1691289708;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=QAiaID6w1L7IDF4pZp9zfrtsyHgijsW1Y/7VAznx6cY=;
+        b=XIha/Ai7XYe9Le+BX1KEFSqBN37GOPIvHXMYe/dIDZpgC5cq8aCSkZ6KfOD2eoig2H
+         onCo7ywqXWDhBIq3r2AV3FmSsVo0NSNslPz693Pvs9+95gskFnoSfqzzQzGDakAFEHmh
+         su8i5XY4hoh6NL+97BlmBmvVCnqXjs8L5RCka1y0sj/LD2L8vwHMx/X+Jwqi0FW8T6DL
+         TNAiSZQWJzczRu00cBMuR/y8KKZst68LJXnzSBoVRo44z5PVUuSS0p0YaV41hhP4R2F3
+         cojbkib9YoJ13QBvMSTLMIo4bN1SZSOh6uaEWS6TEJGZs2WTO2pHuDl9YTB69gTt4cPq
+         g+sg==
+X-Gm-Message-State: ABy/qLYt62Fba0dV+Q9NbqNFvg/1VEl0D4jjiI3mp8F4AmInfEUvPLuB
+	ddPUbFhwcBqNLoH8sLZwmUtqihDyGjh59w==
+X-Google-Smtp-Source: APBJJlFnfFzSE3di4bhKDbvhJVvGN9MhEqLfHgyjFDntNOf917WPORB5Hu9T0YH8iLOVwImfCCPjTA==
+X-Received: by 2002:a17:902:7242:b0:1b8:e2a:9ede with SMTP id c2-20020a170902724200b001b80e2a9edemr5433751pll.25.1690684907836;
+        Sat, 29 Jul 2023 19:41:47 -0700 (PDT)
+Received: from [192.168.0.105] ([103.131.18.64])
+        by smtp.gmail.com with ESMTPSA id cx3-20020a17090afd8300b002681deec24csm5943281pjb.20.2023.07.29.19.41.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 29 Jul 2023 19:41:47 -0700 (PDT)
+Message-ID: <bdc6cb4d-a853-72b2-b132-989b64740ad9@gmail.com>
+Date: Sun, 30 Jul 2023 09:41:40 +0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Fwd: XPS 17 9730 runs significantly warmer on Kernel 6.5-rc3
- compared to Kernel 6.4.3
-Content-Language: en-US, de-DE
-To: Goran Brkuljan <goran.brkuljan@gmail.com>
-Cc: Bagas Sanjaya <bagasdotme@gmail.com>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Content-Language: en-US
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+ Corentin Chary <corentin.chary@gmail.com>,
+ Guilhem Lettron <guilhem@lettron.fr>
+Cc: Linux Input Devices <linux-input@vger.kernel.org>,
+ ACPI Asus <acpi4asus-user@lists.sourceforge.net>,
+ Linux x86 Platform Drivers <platform-driver-x86@vger.kernel.org>,
  Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>,
- Linux Power Management <linux-pm@vger.kernel.org>,
- Amit Daniel Kachhap <amit.kachhap@gmail.com>,
- Daniel Lezcano <daniel.lezcano@linaro.org>,
- Viresh Kumar <viresh.kumar@linaro.org>
-References: <107f05b8-0104-501c-130c-4f89f3f8a628@gmail.com>
- <2e512646-816f-ff98-d466-b82f3a7d05ef@leemhuis.info>
- <CANhdOJEq-+KaMv=TX7E4ggf7rm456ibha2W_+Y5m1580ngCw_A@mail.gmail.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <CANhdOJEq-+KaMv=TX7E4ggf7rm456ibha2W_+Y5m1580ngCw_A@mail.gmail.com>
+ Linux Regressions <regressions@lists.linux.dev>
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+Subject: Fwd: 6.5 - 6.4.7 Regression : ASUS UM5302TA Keyboard don't work
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1690573405;28c9da40;
-X-HE-SMSGID: 1qPTMx-0004vy-3H
+Content-Transfer-Encoding: 7bit
 
-On 28.07.23 20:13, Goran Brkuljan wrote:
-> Hi Everyone,
+Hi,
 
-Please don't sent HTML mail to Linux kernel lists, it often will be
-rejected.
+I notice a regression report on Bugzilla [1]. Quoting from it:
 
->     Goran: On Tuesday, I asked you to perform bisection. Any update on it?
+> On a kernel 6.4.5 and less, the keyboard is working fine.
 > 
->  
-> Sorry for the delayed response. I wasn't able to do git bisection as I
-> was quite busy this week. 
+> Beginning with 6.5 rc1 and 6.4.7 any key don't respond.
 > 
-> However, I am no longer convinced that there is a kernel related issue.
-> I reinstalled both kernels and now I get consistent results between two,
-> and they both return higher values.
-> Now on both kernels, core20 spikes to +100.0°C and it stays there for
-> the duration of the test. Other cores are going from 80-95°C.
->
-> Note that I used the mainline kernel installer for handling installation. 
+> [    0.668850] input: ASUE140D:00 04F3:31B9 Keyboard as /devices/platform/AMDI0010:01/i2c-1/i2c-ASUE140D:00/0018:04F3:31B9.0001/input/input5
+> ...
+> [    1.930328] input: ASUE140D:00 04F3:31B9 Keyboard as /devices/platform/AMDI0010:01/i2c-1/i2c-ASUE140D:00/0018:04F3:31B9.0001/input/input13
 
-FWIW, I (and likely many others that read this) have no idea what
-(distro specifc?) tool you are talking about. But I guess that doesn't
-matter. :-D
+See Bugzilla for the full thread.
 
-> I would close the issue as tests and behaviour don't suggest significant
-> differences between kernel versions. 
+Anyway, I'm adding this regression to regzbot:
 
-Okydo, thx for the update.
+#regzbot introduced: v6.4..v6.5-rc1 https://bugzilla.kernel.org/show_bug.cgi?id=217726
+#regzbot title: ASUE140D:00 04F3:31B9 doesn't respond to input
 
-#regzbot resolve: notabug: seems everything is working fine
+Thanks.
 
-Ciao, Thorsten
+[1]: https://bugzilla.kernel.org/show_bug.cgi?id=217726
 
-> On Fri, Jul 28, 2023 at 3:42 PM Thorsten Leemhuis
-> <regressions@leemhuis.info <mailto:regressions@leemhuis.info>> wrote:
-> 
->     [CCing Thermal maintainer Rafael, maybe he can help guide us]
-> 
->     Hi Bagas and everyone!
-> 
->     On 27.07.23 16:24, Bagas Sanjaya wrote:
->     >
->     > I notice a regression report on Bugzilla [1].
-> 
->     Bagas, it looks like you forwarded this to the maintainers of
->     "THERMAL/CPU_COOLING"; I think "THERMAL" would have been the way better
->     entry in MAINTAINERS, as many (all?) of the former are Linaro employees
->     and thus primarily care about ARM based devices. That's why I CCed
->     Rafael.
-> 
->     > Quoting from it:
->     >
->     >> On my new XPS 17 9730 laptop, I recently installed the Kernel
->     6.5-rc3. I noticed, however, that during its operation, the laptop
->     was getting significantly warmer than before. I did some analysis
->     using the 'stress' tool to measure and compare the difference in CPU
->     temperatures between Kernel 6.4.3 and Kernel 6.5-rc3. Here are my
->     results:
-> 
->     One thought: I wonder if there something wrong now or was there
->     something wrong earlier that was fixed to unleash the full performance
->     potential of the device. That 100°C there sounds like it's the latter
->     case, as that's the TJUNCTION temp for that processor. But would be good
->     to confirm from someone that knows better how hot such processors are
->     allowed to get these days.
-> 
->     Ciao, Thorsten
-> 
->     >> OS: Ubuntu 23.10
->     >> CPU: i7-13700H
->     >>
->     >> kernel 6.4.3:
->     >>                                                                 
->                                                                        
->                                                        
->     >> Initial CPU temperature:
->     >> coretemp-isa-0000
->     >> Core 0:        +47.0°C  (high = +100.0°C, crit = +100.0°C)
->     >> Core 4:        +45.0°C  (high = +100.0°C, crit = +100.0°C)
->     >> Core 8:        +46.0°C  (high = +100.0°C, crit = +100.0°C)
->     >> Core 12:       +46.0°C  (high = +100.0°C, crit = +100.0°C)
->     >> Core 16:       +45.0°C  (high = +100.0°C, crit = +100.0°C)
->     >> Core 20:       +44.0°C  (high = +100.0°C, crit = +100.0°C)
->     >> Core 24:       +44.0°C  (high = +100.0°C, crit = +100.0°C)
->     >> Core 25:       +44.0°C  (high = +100.0°C, crit = +100.0°C)
->     >> Core 26:       +44.0°C  (high = +100.0°C, crit = +100.0°C)
->     >> Core 27:       +44.0°C  (high = +100.0°C, crit = +100.0°C)
->     >> Core 28:       +45.0°C  (high = +100.0°C, crit = +100.0°C)
->     >> Core 29:       +45.0°C  (high = +100.0°C, crit = +100.0°C)
->     >> Core 30:       +45.0°C  (high = +100.0°C, crit = +100.0°C)
->     >> Core 31:       +45.0°C  (high = +100.0°C, crit = +100.0°C)
->     >> Stressing CPU for 30 seconds...
->     >> stress: info: [4858] dispatching hogs: 14 cpu, 0 io, 0 vm, 0 hdd
->     >> stress: info: [4858] successful run completed in 30s
->     >> CPU temperature immediately after stress test:
->     >> coretemp-isa-0000
->     >> Core 0:        +67.0°C  (high = +100.0°C, crit = +100.0°C)
->     >> Core 4:        +76.0°C  (high = +100.0°C, crit = +100.0°C)
->     >> Core 8:        +69.0°C  (high = +100.0°C, crit = +100.0°C)
->     >> Core 12:       +77.0°C  (high = +100.0°C, crit = +100.0°C)
->     >> Core 16:       +69.0°C  (high = +100.0°C, crit = +100.0°C)
->     >> Core 20:       +76.0°C  (high = +100.0°C, crit = +100.0°C)
->     >> Core 24:       +68.0°C  (high = +100.0°C, crit = +100.0°C)
->     >> Core 25:       +68.0°C  (high = +100.0°C, crit = +100.0°C)
->     >> Core 26:       +68.0°C  (high = +100.0°C, crit = +100.0°C)
->     >> Core 27:       +68.0°C  (high = +100.0°C, crit = +100.0°C)
->     >> Core 28:       +71.0°C  (high = +100.0°C, crit = +100.0°C)
->     >> Core 29:       +71.0°C  (high = +100.0°C, crit = +100.0°C)
->     >> Core 30:       +71.0°C  (high = +100.0°C, crit = +100.0°C)
->     >> Core 31:       +71.0°C  (high = +100.0°C, crit = +100.0°C)
->     >> Test ended at: Tue Jul 25 01:10:16 PM CEST 2023
->     >>
->     >>
->     >> kernel 6.5-rc-3:
->     >>
->     >> Initial CPU temperature:
->     >> coretemp-isa-0000
->     >> Core 0:        +46.0°C  (high = +100.0°C, crit = +100.0°C)
->     >> Core 4:        +46.0°C  (high = +100.0°C, crit = +100.0°C)
->     >> Core 8:        +46.0°C  (high = +100.0°C, crit = +100.0°C)
->     >> Core 12:       +46.0°C  (high = +100.0°C, crit = +100.0°C)
->     >> Core 16:       +44.0°C  (high = +100.0°C, crit = +100.0°C)
->     >> Core 20:       +44.0°C  (high = +100.0°C, crit = +100.0°C)
->     >> Core 24:       +45.0°C  (high = +100.0°C, crit = +100.0°C)
->     >> Core 25:       +45.0°C  (high = +100.0°C, crit = +100.0°C)
->     >> Core 26:       +45.0°C  (high = +100.0°C, crit = +100.0°C)
->     >> Core 27:       +45.0°C  (high = +100.0°C, crit = +100.0°C)
->     >> Core 28:       +45.0°C  (high = +100.0°C, crit = +100.0°C)
->     >> Core 29:       +45.0°C  (high = +100.0°C, crit = +100.0°C)
->     >> Core 30:       +45.0°C  (high = +100.0°C, crit = +100.0°C)
->     >> Core 31:       +45.0°C  (high = +100.0°C, crit = +100.0°C)
->     >> Stressing CPU for 30 seconds...
->     >> stress: info: [11146] dispatching hogs: 14 cpu, 0 io, 0 vm, 0 hdd
->     >> stress: info: [11146] successful run completed in 30s
->     >> CPU temperature immediately after stress test:
->     >> coretemp-isa-0000
->     >> Core 0:        +84.0°C  (high = +100.0°C, crit = +100.0°C)
->     >> Core 4:        +97.0°C  (high = +100.0°C, crit = +100.0°C)
->     >> Core 8:        +87.0°C  (high = +100.0°C, crit = +100.0°C)
->     >> Core 12:      +100.0°C  (high = +100.0°C, crit = +100.0°C)
->     >> Core 16:       +86.0°C  (high = +100.0°C, crit = +100.0°C)
->     >> Core 20:       +99.0°C  (high = +100.0°C, crit = +100.0°C)
->     >> Core 24:       +83.0°C  (high = +100.0°C, crit = +100.0°C)
->     >> Core 25:       +83.0°C  (high = +100.0°C, crit = +100.0°C)
->     >> Core 26:       +83.0°C  (high = +100.0°C, crit = +100.0°C)
->     >> Core 27:       +83.0°C  (high = +100.0°C, crit = +100.0°C)
->     >> Core 28:       +89.0°C  (high = +100.0°C, crit = +100.0°C)
->     >> Core 29:       +89.0°C  (high = +100.0°C, crit = +100.0°C)
->     >> Core 30:       +89.0°C  (high = +100.0°C, crit = +100.0°C)
->     >> Core 31:       +89.0°C  (high = +100.0°C, crit = +100.0°C)
->     >> Test ended at: Tue Jul 25 01:05:42 PM CEST 2023
->     >>
->     >> I tested few times with different setup and CPU temp on 6.5-rc3
->     is always higher especially when stressing with fewer cores.
->     >
->     > See Bugzilla for the full thread.
->     >
->     > Goran: On Tuesday, I asked you to perform bisection. Any update on it?
->     >
->     > Anyway, I'm adding this regression to regzbot:
->     >
->     > #regzbot introduced: v6.4..v6.5-rc3
->     https://bugzilla.kernel.org/show_bug.cgi?id=217703
->     <https://bugzilla.kernel.org/show_bug.cgi?id=217703>
->     > #regzbot title: significant temperature increase on XPS 17 9730
->     >
->     > Thanks.
->     >
->     > [1]: https://bugzilla.kernel.org/show_bug.cgi?id=217703
->     <https://bugzilla.kernel.org/show_bug.cgi?id=217703>
->     >
-> 
+-- 
+An old man doll... just what I always wanted! - Clara
