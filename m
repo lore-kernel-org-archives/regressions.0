@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B893C20EE
-	for <regressions@lists.linux.dev>; Sun, 30 Jul 2023 16:16:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 215633D8A
+	for <regressions@lists.linux.dev>; Sun, 30 Jul 2023 16:53:43 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qQ95t-0001iD-IZ; Sun, 30 Jul 2023 18:16:33 +0200
-Message-ID: <3ef4662e-7888-9f41-32a3-d4cd07f1572c@leemhuis.info>
-Date: Sun, 30 Jul 2023 18:16:33 +0200
+	id 1qQ9fp-0006lv-Tx; Sun, 30 Jul 2023 18:53:41 +0200
+Message-ID: <73310d78-914b-7200-0fb7-073b52324aaf@leemhuis.info>
+Date: Sun, 30 Jul 2023 18:53:41 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -15,36 +15,36 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Regression: supported_interfaces filling enforcement
+Subject: Re: [REGRESSION] IRQ override revert breaks keyboard on Lenovo Yoga 7
+ 14ARB7
 Content-Language: en-US, de-DE
+To: regressions@lists.linux.dev
+Cc: linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <596b9c4a-fb83-a8ab-3a44-6052d83fa546@augustwikerfors.se>
 From: "Linux regression tracking #update (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
-To: netdev@vger.kernel.org
-Cc: Linux kernel regressions list <regressions@lists.linux.dev>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-References: <CABikg9wM0f5cjYY0EV_i3cMT2JcUT1bSe_kkiYk0wFwMrTo8=w@mail.gmail.com>
- <ac2efb70-aa19-41d3-ac57-8aaaf39c620b@leemhuis.info>
-In-Reply-To: <ac2efb70-aa19-41d3-ac57-8aaaf39c620b@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <596b9c4a-fb83-a8ab-3a44-6052d83fa546@augustwikerfors.se>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1690733795;7e21cda9;
-X-HE-SMSGID: 1qQ95t-0001iD-IZ
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1690736024;f55b3e0d;
+X-HE-SMSGID: 1qQ9fp-0006lv-Tx
 
-On 08.07.23 16:01, Linux regression tracking (Thorsten Leemhuis) wrote:
-> On 04.07.23 16:28, Sergei Antonov wrote:
->> Hello!
->> This commit seems to break the mv88e6060 dsa driver:
->> de5c9bf40c4582729f64f66d9cf4920d50beb897    "net: phylink: require
->> supported_interfaces to be filled"
->>
->> The driver does not fill 'supported_interfaces'. What is the proper
->> way to fix it? I managed to fix it by the following quick code.
->> Comments? Recommendations?
+On 27.07.23 00:54, August Wikerfors wrote:
+> 
+> Since v6.5-rc1 the keyboard on this laptop no longer works. This problem
+> also existed before v6.0-rc1 commit 9946e39fe8d0 ("ACPI: resource: skip
+> IRQ override on AMD Zen platforms"), so I suspected the cause to be
+> a9c4a912b7dc ("ACPI: resource: Remove "Zen" specific match and quirks")
+> which reverted that commit. Reverting a9c4a912b7dc confirmed this theory.
+> 
+> #regzbot introduced: a9c4a912b7dc
+
+Point regzbot to the fix:
 
 #regzbot monitor:
-https://lore.kernel.org/all/E1qOflM-001AEz-D3@rmk-PC.armlinux.org.uk/
-#regzbot fix: 9945c1fb03a3
+https://lore.kernel.org/linux-acpi/20230728183921.17230-1-mario.limonciello@amd.com/
+#regzbot fix: ACPI: resource: Add a quirk for Lenovo Yoga 7 14ARB7
 #regzbot ignore-activity
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
