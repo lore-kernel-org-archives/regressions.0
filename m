@@ -1,139 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21CF118B05
-	for <regressions@lists.linux.dev>; Mon, 31 Jul 2023 14:18:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E8D9C433CB
-	for <regressions@lists.linux.dev>; Mon, 31 Jul 2023 14:18:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1690813116;
-	bh=roJWAQyv2E5qkTUrOOBL4JF3wGCSEwvRkjeyvGDMfgA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=LJMq0mlLdbjKpQanOwpGJlkLgCigH2wg+fO3BVZxtnEV2DQwl/eUo1FpJyYmuwMqE
-	 HEG898Nl5MjGZngHWqLpaK+CfiiVDlRNwaoxRD+9t4IBC+vuQn19pMS2e9+I2/R+yl
-	 s4xPjn9HDHVeSeQWjhpfL54OyHWfiKBAcsN+7q4rcLKykjjZ04Pq8XqOS1XyWfR3bC
-	 KI8zPjPgKRfREnh52p23R4g4VwSnhjp1gxZyLLengURf37CMgjvgJmj8RsWkOe0rjq
-	 eCBChPkl/Gb89eyN+vT5YC9lA+NHRbjOYLqCl5/6Eboq85dSn9iCqHR8qnbBQV81pf
-	 ugTBFE4IcuwUA==
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2b9cf2b1309so39266371fa.0
-        for <regressions@lists.linux.dev>; Mon, 31 Jul 2023 07:18:36 -0700 (PDT)
-X-Gm-Message-State: ABy/qLY7VGWB+a7wiZif3pqfZFq+8Rv0LqvVq4y90pSVsYIL5nuuEuK2
-	vqC9dGnlhbhqV/aqLviH5J/2wrFkGBep/hqPs7w=
-X-Google-Smtp-Source: APBJJlEvkn1wHuYbYL8ntPekVB8VTmJ6TTXSwPpnDfTAJ0HYisyFNw9wh3socjCfnvnSVFOES7Il26opS+oE9Y5+jpI=
-X-Received: by 2002:a2e:a27b:0:b0:2b9:aad7:9d89 with SMTP id
- k27-20020a2ea27b000000b002b9aad79d89mr5322200ljm.15.1690813114640; Mon, 31
- Jul 2023 07:18:34 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 063EA19BC0
+	for <regressions@lists.linux.dev>; Mon, 31 Jul 2023 16:13:57 +0000 (UTC)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 0A7EA2216F;
+	Mon, 31 Jul 2023 16:13:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1690820036; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ys6linr9PzCpUy81x3sGvHDZa6ANMmw3Vdlc7JTFMTY=;
+	b=A+VFhLZFluaYDsL2CBkhBXoyWG6mCpBp+dsJzLyTrqAp69+0BWAlKTo6lu2qTGl52roHhP
+	h+1iMzb3h5bmjqujDEL1kW2JGFQ/1fyLA7mp97+DnY6sR9iHBbtekkeViJpWtB+JRi3HFc
+	g+vHbGwmupHuW2SI6c7T8iE+fygFyDU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1690820036;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ys6linr9PzCpUy81x3sGvHDZa6ANMmw3Vdlc7JTFMTY=;
+	b=mUSxr5isyAAA5saIvpPMGIykoqM+Va3Tv1oVylhxsZQz+pwRDpNa8AdjAurlgJrq3vB+Lc
+	xghomZ8umFX+ZACg==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id B770F1322C;
+	Mon, 31 Jul 2023 16:13:55 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+	by imap2.suse-dmz.suse.de with ESMTPSA
+	id oL+4K8Pdx2RsDQAAMHmgww
+	(envelope-from <hare@suse.de>); Mon, 31 Jul 2023 16:13:55 +0000
+Message-ID: <ef30b720-fec8-1c7c-1829-58252552ac2d@suse.de>
+Date: Mon, 31 Jul 2023 18:13:55 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAAUqJDuRkHE8fPgZJGaKjUjd3QfGwzfumuJBmStPqBhubxyk_A@mail.gmail.com>
- <97730.1690408399@warthog.procyon.org.uk>
-In-Reply-To: <97730.1690408399@warthog.procyon.org.uk>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Mon, 31 Jul 2023 16:18:22 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXHs_09b8UY7BsFQtxg1Rv6a3vfSRLFJT58Sn+MUevXi6g@mail.gmail.com>
-Message-ID: <CAMj1kXHs_09b8UY7BsFQtxg1Rv6a3vfSRLFJT58Sn+MUevXi6g@mail.gmail.com>
-Subject: Re: [PATCH] crypto: Fix missing initialisation affecting gcm-aes-s390
-To: David Howells <dhowells@redhat.com>
-Cc: =?UTF-8?B?T25kcmVqIE1vc27DocSNZWs=?= <omosnacek@gmail.com>, 
-	Herbert Xu <herbert@gondor.apana.org.au>, Paolo Abeni <pabeni@redhat.com>, 
-	Sven Schnelle <svens@linux.ibm.com>, Harald Freudenberger <freude@linux.vnet.ibm.com>, 
-	Bagas Sanjaya <bagasdotme@gmail.com>, linux-crypto@vger.kernel.org, 
-	linux-s390@vger.kernel.org, netdev@vger.kernel.org, 
-	regressions@lists.linux.dev, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: [PATCH] ata,scsi: do not issue START STOP UNIT on resume
+Content-Language: en-US
+To: Damien Le Moal <dlemoal@kernel.org>, linux-ide@vger.kernel.org,
+ linux-scsi@vger.kernel.org, "Martin K . Petersen"
+ <martin.petersen@oracle.com>
+Cc: Paul Ausbeck <paula@soe.ucsc.edu>,
+ Thorsten Leemhuis <regressions@leemhuis.info>, TW <dalzot@gmail.com>,
+ regressions@lists.linux.dev, Bart Van Assche <bvanassche@acm.org>
+References: <20230731003956.572414-1-dlemoal@kernel.org>
+From: Hannes Reinecke <hare@suse.de>
+In-Reply-To: <20230731003956.572414-1-dlemoal@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, 26 Jul 2023 at 23:54, David Howells <dhowells@redhat.com> wrote:
->
->
-> Fix af_alg_alloc_areq() to initialise areq->first_rsgl.sgl.sgt.sgl to poi=
-nt
-> to the scatterlist array in areq->first_rsgl.sgl.sgl.
->
-> Without this, the gcm-aes-s390 driver will oops when it tries to do
-> gcm_walk_start() on req->dst because req->dst is set to the value of
-> areq->first_rsgl.sgl.sgl by _aead_recvmsg() calling
-> aead_request_set_crypt().
->
-> The problem comes if an empty ciphertext is passed: the loop in
-> af_alg_get_rsgl() just passes straight out and doesn't set areq->first_rs=
-gl
-> up.
->
-> This isn't a problem on x86_64 using gcmaes_crypt_by_sg() because, as far
-> as I can tell, that ignores req->dst and only uses req->src[*].
->
-> [*] Is this a bug in aesni-intel_glue.c?
->
+On 7/31/23 02:39, Damien Le Moal wrote:
+> During system resume, ata_port_pm_resume() triggers ata EH to
+> 1) Resume the controller
+> 2) Reset and rescan the ports
+> 3) Revalidate devices
+> This EH execution is started asynchronously from ata_port_pm_resume(),
+> which means that when sd_resume() is executed, none or only part of the
+> above processing may have been executed. However, sd_resume() issues a
+> START STOP UNIT to wake up the drive from sleep mode. This command is
+> translated to ATA with ata_scsi_start_stop_xlat() and issued to the
+> device. However, depending on the state of execution of the EH process
+> and revalidation triggerred by ata_port_pm_resume(), two things may
+> happen:
+> 1) The START STOP UNIT fails if it is received before the controller has
+>     been reenabled at the beginning of the EH execution. This is visible
+>     with error messages like:
+> 
+> ata10.00: device reported invalid CHS sector 0
+> sd 9:0:0:0: [sdc] Start/Stop Unit failed: Result: hostbyte=DID_OK driverbyte=DRIVER_OK
+> sd 9:0:0:0: [sdc] Sense Key : Illegal Request [current]
+> sd 9:0:0:0: [sdc] Add. Sense: Unaligned write command
+> sd 9:0:0:0: PM: dpm_run_callback(): scsi_bus_resume+0x0/0x90 returns -5
+> sd 9:0:0:0: PM: failed to resume async: error -5
+> 
+> 2) The START STOP UNIT command is received while the EH process is
+>     on-going, which mean that it is stopped and must wait for its
+>     completion, at which point the command is rather useless as the drive
+>     is already fully spun up already. This case results also in a
+>     significant delay in sd_resume() which is observable by users as
+>     the entire system resume completion is delayed.
+> 
+> Given that ATA devices will be woken up by libata activity on resume,
+> sd_resume() has no need to issue a START STOP UNIT command, which solves
+> the above mentioned problems. Do not issue this command by introducing
+> the new scsi_device flag no_start_on_resume and setting this flag to 1
+> in ata_scsi_dev_config(). sd_resume() is modified to issue a START STOP
+> UNIT command only if this flag is not set.
+> 
+Q: As libata starts up the drive internally via reset/revalidate, why do 
+we have to sent START STOP UNIT for shutdown?
+Wouldn't it be better to disable START STOP UNIT completely for libata, 
+and let everything be handled via ATA command (IDLE IMMEDIATE, SLEEP) ?
+Hmm?
 
-It uses req->src directly only for processing the additional
-authenticated data (AAD) which contributes to the MAC but not to the
-ciphertext. Conceptually, there is no dst only src for this part, and
-only the IPsec specific encapsulations of GCM and CCM etc do a plain
-memcpy of src to dst (if src and dst do not refer to the same
-scatterlist already). Otherwise, the AAD is not considered to be part
-of the output.
+Otherwise a really good idea. We've fallen into this trap several times 
+ourselves.
+Incidentally, USB could benefit from the same mechanism ...
 
-The actual encryption logic does use both src and dst, but under the
-hood (inside the skcipher walk helpers)
+Cheers,
 
+Hannes
+-- 
+Dr. Hannes Reinecke                Kernel Storage Architect
+hare@suse.de                              +49 911 74053 688
+SUSE Software Solutions GmbH, Maxfeldstr. 5, 90409 Nürnberg
+HRB 36809 (AG Nürnberg), Geschäftsführer: Ivo Totev, Andrew
+Myers, Andrew McDonald, Martje Boudien Moerman
 
-
-> The s390x oops looks something like:
->
->  Unable to handle kernel pointer dereference in virtual kernel address sp=
-ace
->  Failing address: 0000000a00000000 TEID: 0000000a00000803
->  Fault in home space mode while using kernel ASCE.
->  AS:00000000a43a0007 R3:0000000000000024
->  Oops: 003b ilc:2 [#1] SMP
->  ...
->  Call Trace:
->   [<000003ff7fc3d47e>] gcm_walk_start+0x16/0x28 [aes_s390]
->   [<00000000a2a342f2>] crypto_aead_decrypt+0x9a/0xb8
->   [<00000000a2a60888>] aead_recvmsg+0x478/0x698
->   [<00000000a2e519a0>] sock_recvmsg+0x70/0xb0
->   [<00000000a2e51a56>] sock_read_iter+0x76/0xa0
->   [<00000000a273e066>] vfs_read+0x26e/0x2a8
->   [<00000000a273e8c4>] ksys_read+0xbc/0x100
->   [<00000000a311d808>] __do_syscall+0x1d0/0x1f8
->   [<00000000a312ff30>] system_call+0x70/0x98
->  Last Breaking-Event-Address:
->   [<000003ff7fc3e6b4>] gcm_aes_crypt+0x104/0xa68 [aes_s390]
->
-> Fixes: c1abe6f570af ("crypto: af_alg: Use extract_iter_to_sg() to create =
-scatterlists")
-> Reported-by: Ondrej Mosn=C3=A1=C4=8Dek <omosnacek@gmail.com>
-> Link: https://lore.kernel.org/r/CAAUqJDuRkHE8fPgZJGaKjUjd3QfGwzfumuJBmStP=
-qBhubxyk_A@mail.gmail.com/
-> Signed-off-by: David Howells <dhowells@redhat.com>
-> cc: Herbert Xu <herbert@gondor.apana.org.au>
-> cc: Sven Schnelle <svens@linux.ibm.com>
-> cc: Harald Freudenberger <freude@linux.vnet.ibm.com>
-> cc: "David S. Miller" <davem@davemloft.net>
-> cc: Paolo Abeni <pabeni@redhat.com>
-> cc: linux-crypto@vger.kernel.org
-> cc: linux-s390@vger.kernel.org
-> cc: regressions@lists.linux.dev
-> ---
->  crypto/af_alg.c |    1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/crypto/af_alg.c b/crypto/af_alg.c
-> index 06b15b9f661c..9ee8575d3b1a 100644
-> --- a/crypto/af_alg.c
-> +++ b/crypto/af_alg.c
-> @@ -1192,6 +1192,7 @@ struct af_alg_async_req *af_alg_alloc_areq(struct s=
-ock *sk,
->
->         areq->areqlen =3D areqlen;
->         areq->sk =3D sk;
-> +       areq->first_rsgl.sgl.sgt.sgl =3D areq->first_rsgl.sgl.sgl;
->         areq->last_rsgl =3D NULL;
->         INIT_LIST_HEAD(&areq->rsgl_list);
->         areq->tsgl =3D NULL;
->
