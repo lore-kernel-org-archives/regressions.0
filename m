@@ -1,154 +1,126 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1047618AFE
-	for <regressions@lists.linux.dev>; Mon, 31 Jul 2023 16:14:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B825E18C34
+	for <regressions@lists.linux.dev>; Mon, 31 Jul 2023 17:55:41 +0000 (UTC)
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 6D4A81F854;
-	Mon, 31 Jul 2023 16:14:39 +0000 (UTC)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id C64F22205E;
+	Mon, 31 Jul 2023 17:55:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1690820079; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2FPdvVJdYdtOHQsKLQpCAb/yeA5uJ3rxVC2Q1LTBHKs=;
-	b=rUzOmdPzBoAVPHEFZ8/BZFHzOOB1JhJ4VXdTppltLTFlTY5HBTXyE0iUWfZd4ZX9O2CCwi
-	wjczEqRgYsHZmX833c1GvprLht48uk0lZ3tbMReVKsL7tdm2E7brjVQpShSs7xIBX0qUaY
-	CUDQE8Ry5k1hFWImGj+9FrnbXmm0fdQ=
+	t=1690826139; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=blrHYZH6S+MmbSDFCHnNDxEACT0tP3PtmP/NQlgF3tk=;
+	b=wcMYO8XndgLwG5p/OyuY3UpiE0l+0HMY2x1/SXrwph3joT1jV78ELTxvq5rSvQ59fT3Nan
+	eVT4LzQfnb4JQ5uE96bTIJoDTJElJZ/UjRyNF0RReDUZWsvNZAUGxD0/USFcwUfsyQ21JS
+	NbhXgR+O31ACU0arIv6SxAIQFGfSIjs=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1690820079;
+	s=susede2_ed25519; t=1690826139;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2FPdvVJdYdtOHQsKLQpCAb/yeA5uJ3rxVC2Q1LTBHKs=;
-	b=9H0Vga1SoaCmt4UMa04L5AHwlWfZtjWyWkK06GmWA9QGpF1LqT/vXNom/YzSkfSNZ9LI4c
-	pHfjzn6qVrk0AaCA==
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=blrHYZH6S+MmbSDFCHnNDxEACT0tP3PtmP/NQlgF3tk=;
+	b=YfZcOQKWYqRzLZYjV6sNoImbAU2dOa4BJTDS23JpYYytINavTcuFq9l4WepVwHoUXqYIVV
+	MSoFkLnJEEaHv6Dg==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
 	(No client certificate requested)
-	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 0DD6A1322C;
-	Mon, 31 Jul 2023 16:14:39 +0000 (UTC)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 6FDA1133F7;
+	Mon, 31 Jul 2023 17:55:39 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
 	by imap2.suse-dmz.suse.de with ESMTPSA
-	id tNCCAu/dx2S7DQAAMHmgww
-	(envelope-from <tiwai@suse.de>); Mon, 31 Jul 2023 16:14:39 +0000
-Date: Mon, 31 Jul 2023 18:14:38 +0200
-Message-ID: <87o7jshxch.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Kailang <kailang@realtek.com>
-Cc: "Joseph C. Sible" <josephcsible@gmail.com>,
-	Bagas Sanjaya <bagasdotme@gmail.com>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
-	"perex@perex.cz"
-	<perex@perex.cz>,
-	"tiwai@suse.com" <tiwai@suse.com>,
-	"alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
-Subject: Re: Fwd: [Bug 217440] New: ALC236 audio disappears from HP 15z-fc000 on warm boot
-In-Reply-To: <878rbjdofa.wl-tiwai@suse.de>
-References: <bug-217440-225600@https.bugzilla.kernel.org/>
-	<CABpewhE4REgn9RJZduuEU6Z_ijXNeQWnrxO1tg70Gkw=F8qNYg@mail.gmail.com>
-	<ZGB0cVVI7OgaJU6t@debian.me>
-	<CABpewhGJE7-k52j8L2kJ2zKupgp3Ma+LdZazzzV4w1Bgihp7nw@mail.gmail.com>
-	<87cz338ix4.wl-tiwai@suse.de>
-	<CABpewhF01AK4cFPbwYVvKR9yWaO7o-ZE-2+MZjYSUF0BKUdYvw@mail.gmail.com>
-	<874jodlnmi.wl-tiwai@suse.de>
-	<415d4bc84aa74c74af913048f28b42a9@realtek.com>
-	<87fs7mdofi.wl-tiwai@suse.de>
-	<7da2fdfdae614b1c98deda6e11ca34eb@realtek.com>
-	<87353kd8b9.wl-tiwai@suse.de>
-	<1170325957764b4cbd7cd3639575f285@realtek.com>
-	<CABpewhGBakDSBLKZ1cr2=OMspuu3qyYwZrsXUggQ3vt8gsD88A@mail.gmail.com>
-	<873536js7q.wl-tiwai@suse.de>
-	<CABpewhE0NAC-Q=iqG2Ba=XhT7SXsWy18wQGYUaopzmKDfFxyPw@mail.gmail.com>
-	<2c1fcbc00bb44d66a29ac1c1e4bec5ad@realtek.com>
-	<CABpewhFthKG97dPiQC4JhGx9sapX9Yu5rWABQjpY95TSA+eawA@mail.gmail.com>
-	<485f99149508488080d563144454040e@realtek.com>
-	<CABpewhGkvWtM+9J=mx3vw0QY=OBB5OYCxzX3nzVffvFS4QazPA@mail.gmail.com>
-	<2831c55638a5431ca9e37d9caf365ed2@realtek.com>
-	<CABpewhGiMJUpyBA6=D9_-YA6=5rjR2R0RHUZeg+cWcjtzuCoZQ@mail.gmail.com>
-	<3c27f0455d6e4bd1a68115bd25bf1a12@realtek.com>
-	<CABpewhEptq0+W_71U__8iQ4+LNtYSUB9C+0bcS2Hw-5mnj9viQ@mail.gmail.com>
-	<009474f04d0b45c69a0e42e8622b7a86@realtek.com>
-	<87h6rhcef2.wl-tiwai@suse.de>
-	<0990300d759846d890de9c92fcad9a9d@realtek.com>
-	<CABpewhERnOH1qkkJ5_JJUZkz1_8oxD9aR5VBs1vsURAG7Eu_Ew@mail.gmail.com>
-	<878rctcavz.wl-tiwai@suse.de>
-	<874jnhc9u4.wl-tiwai@suse.de>
-	<CABpewhHG2+s8_6r6vChm2g5tD8ALW_SWJWubPRXWzTJB2aFR9g@mail.gmail.com>
-	<875y7vbxpg.wl-tiwai@suse.de>
-	<CABpewhHDnvn4v+uCpsaLHB+biw-f59tdTiCyFkicHnewXHYDNg@mail.gmail.com>
-	<87wn0aa1s4.wl-tiwai@suse.de>
-	<CABpewhFg=7+JR6v=zhi0_Hm9+S64DLOHKeG2pS-W7z-vNpu_5Q@mail.gmail.com>
-	<87leg7x4h7.wl-tiwai@suse.de>
-	<f4969213b5a14cc5a11befb4df861481@realtek.com>
-	<87cz182hfk.wl-tiwai@suse.de>
-	<4678992299664babac4403d9978e7ba7@realtek.com>
-	<CABpewhGkw2rg_NN7Rd8E_p+AN9MC0A1CjgnrhBvMnSKq0gz31w@mail.gmail.com>
-	<1f83caa215ad4374aec8859c70044b00@realtek.com>
-	<878rbjdofa.wl-tiwai@suse.de>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	id If54Gpv1x2SGOgAAMHmgww
+	(envelope-from <tzimmermann@suse.de>); Mon, 31 Jul 2023 17:55:39 +0000
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: deller@gmx.de,
+	mpe@ellerman.id.au,
+	npiggin@gmail.com,
+	christophe.leroy@csgroup.eu,
+	sam@ravnborg.org,
+	javierm@redhat.com,
+	bagasdotme@gmail.com,
+	rd.dunlab@gmail.com,
+	regressions@leemhuis.info,
+	sfr@canb.auug.org.au
+Cc: linux-kernel@vger.kernel.org,
+	linux-fbdev@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	regressions@lists.linux.dev,
+	linux-next@vger.kernel.org,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	dri-devel@lists.freedesktop.org
+Subject: [PATCH] fbdev/ps3fb: Build without kernel device
+Date: Mon, 31 Jul 2023 19:55:00 +0200
+Message-ID: <20230731175535.11345-1-tzimmermann@suse.de>
+X-Mailer: git-send-email 2.41.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Fri, 14 Jul 2023 07:58:49 +0200,
-Takashi Iwai wrote:
-> 
-> On Fri, 14 Jul 2023 04:46:25 +0200,
-> Kailang wrote:
-> > 
-> > Hi Takashi,
-> > 
-> > Could you agree this workaround?
-> 
-> Yes, looks fine.  I applied it now.
+Use fb_info() to print status message at the end of the probe function,
+which avoids decoding the devices. fb_info() works with or without an
+fbdev kernel device. Fixes the following error:
 
-... and now we receive a regression report due to this change :-<
-  https://bugzilla.kernel.org/show_bug.cgi?id=217732
+../drivers/video/fbdev/ps3fb.c: In function 'ps3fb_probe':
+../drivers/video/fbdev/ps3fb.c:1172:40: error: 'struct fb_info' has no member named 'dev'
+ 1172 |                  dev_driver_string(info->dev), dev_name(info->dev),
+      |                                        ^~
+../include/linux/dev_printk.h:110:37: note: in definition of macro 'dev_printk_index_wrap'
+  110 |                 _p_func(dev, fmt, ##__VA_ARGS__);                       \
+      |                                     ^~~~~~~~~~~
+../drivers/video/fbdev/ps3fb.c:1171:9: note: in expansion of macro 'dev_info'
+ 1171 |         dev_info(info->device, "%s %s, using %u KiB of video memory\n",
+      |         ^~~~~~~~
+../drivers/video/fbdev/ps3fb.c:1172:61: error: 'struct fb_info' has no member named 'dev'
+ 1172 |                  dev_driver_string(info->dev), dev_name(info->dev),
+      |                                                             ^~
+../include/linux/dev_printk.h:110:37: note: in definition of macro 'dev_printk_index_wrap'
+  110 |                 _p_func(dev, fmt, ##__VA_ARGS__);                       \
+      |                                     ^~~~~~~~~~~
+../drivers/video/fbdev/ps3fb.c:1171:9: note: in expansion of macro 'dev_info'
+ 1171 |         dev_info(info->device, "%s %s, using %u KiB of video memory\n",
+      |         ^~~~~~~~
 
-I believe the problem is that the patch disabled the 3kpull-low
-behavior too much while some codecs still need it.
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Closes: https://lore.kernel.org/lkml/ccc63065-2976-88ef-1211-731330bf2866@infradead.org/
+Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
+Fixes: 701d2054fa31 ("fbdev: Make support for userspace interfaces configurable")
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Sam Ravnborg <sam@ravnborg.org>
+Cc: Helge Deller <deller@gmx.de>
+Cc: Javier Martinez Canillas <javierm@redhat.com>
+Cc: Randy Dunlap <rdunlap@infradead.org>
+Cc: Bagas Sanjaya <bagasdotme@gmail.com>
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: dri-devel@lists.freedesktop.org
+Cc: linux-fbdev@vger.kernel.org
+Cc: linuxppc-dev@lists.ozlabs.org
+---
+ drivers/video/fbdev/ps3fb.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-The patch changes like:
-
-@@ -3638,8 +3640,7 @@ static void alc256_shutup(struct hda_codec *codec)
-        /* If disable 3k pulldown control for alc257, the Mic detection will not work correctly
-         * when booting with headset plugged. So skip setting it for the codec alc257
-         */
--       if (codec->core.vendor_id != 0x10ec0236 &&
--           codec->core.vendor_id != 0x10ec0257)
-+       if (spec->en_3kpull_low)
-                alc_update_coef_idx(codec, 0x46, 0, 3 << 12);
+diff --git a/drivers/video/fbdev/ps3fb.c b/drivers/video/fbdev/ps3fb.c
+index 5aedc30c5f7e..64d291d6b153 100644
+--- a/drivers/video/fbdev/ps3fb.c
++++ b/drivers/video/fbdev/ps3fb.c
+@@ -1168,9 +1168,7 @@ static int ps3fb_probe(struct ps3_system_bus_device *dev)
  
-        if (!spec->no_shutup_pins)
+ 	ps3_system_bus_set_drvdata(dev, info);
+ 
+-	dev_info(info->device, "%s %s, using %u KiB of video memory\n",
+-		 dev_driver_string(info->dev), dev_name(info->dev),
+-		 info->fix.smem_len >> 10);
++	fb_info(info, "using %u KiB of video memory\n", info->fix.smem_len >> 10);
+ 
+ 	task = kthread_run(ps3fbd, info, DEVICE_NAME);
+ 	if (IS_ERR(task)) {
+-- 
+2.41.0
 
-... while the only place setting spec->en_3kpull_low is:
-
-@@ -10682,6 +10683,8 @@ static int patch_alc269(struct hda_codec *codec)
-                spec->shutup = alc256_shutup;
-                spec->init_hook = alc256_init;
-                spec->gen.mixer_nid = 0; /* ALC256 does not have any loopback mixer path */
-+               if (codec->bus->pci->vendor == PCI_VENDOR_ID_AMD)
-+                       spec->en_3kpull_low = true;
-                break;
-        case 0x10ec0257:
-                spec->codec_variant = ALC269_TYPE_ALC257;
-
-Since spec->3n_3kpull_low is false as default, it means that, except
-for ALC230/236/256 and PCI vendor AMD, the flag is never set, hence
-it's no longer called.
-
-Shouldn't spec->en_3kpull_low be enabled rather as default?  Or which
-models can set it?
-
-
-thanks,
-
-Takashi
