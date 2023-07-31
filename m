@@ -1,160 +1,146 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AE964429
-	for <regressions@lists.linux.dev>; Mon, 31 Jul 2023 12:33:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de;
- s=s31663417; t=1690806806; x=1691411606; i=deller@gmx.de;
- bh=0RFDEXXQMPxJBQdMJHQn7D5WifSZ6l/L2WktkbceJyc=;
- h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:In-Reply-To;
- b=FXGk9moCw8qFnPcjSFfxssf06xB2w7SYR8UPNCKWRnYLOjxtepPLWJ1onxRzFeHeQOp+ApT
- ZdloVKFW6BctrAcKl3boCKaltVrEg05FJAMEGZ9JTRoL0XmvakhrDTGWCRLZ9VgU6WFYNq58p
- XD9GBC+8XPT8TYdHxvt7RwLju0T5qsERFCshKCzQRM6LlWTpxxc7mTOTNBDYrfNMIEJ5K3E0Z
- ik9Ny4gE5yarWwE6H8XWYfTgNnmSL9Mrx2s/jbx18XXJVsoQwvRFnELhp1kcBZmU9r1UbB6tH
- mOmKsf0fgrLd5uQX4G3HwID0IGuDIBuCM9bj4YfLNihfjlHTEz7Q==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.20.60] ([94.134.159.238]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MIwzA-1qAYrk2CD4-00KTWj; Mon, 31
- Jul 2023 14:33:26 +0200
-Message-ID: <6bd9ed23-5a79-879a-c9c1-0b3952fea0ad@gmx.de>
-Date: Mon, 31 Jul 2023 14:33:24 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 984F84429
+	for <regressions@lists.linux.dev>; Mon, 31 Jul 2023 13:35:56 +0000 (UTC)
+Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-c4cb4919bb9so4662458276.3
+        for <regressions@lists.linux.dev>; Mon, 31 Jul 2023 06:35:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1690810555; x=1691415355;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oAyXH6ekoTa05SAgzmQb3wllKwSfvfzCrLBBn4jkkW4=;
+        b=gLyC++uMA73NEwRZEkud6ZUJY1Dsimw7XhAv41TwiKC98Ik61qftRevUzwfUiCxVuh
+         3uiAbaiSuFE3ZrDVAso6i83lCKnNJ+FPzNkyVtSgjHfQuoGXYydiYmckIJwB5OfK2reR
+         Pb/ym26WIkf73+Jgbx8ZvnV6cQU6id7zSxbjIZ9J584vqeqvMDGbk7CdMrtKp2LdVAx+
+         /1Ey3DbxGLl4U2VVP0YYA9XL79GU50m5t/jyuaca5rfNmOP1DYjW5RCNVUo4QUPNoi4p
+         DY6ghdxqzyynDLBHa49ou/WG4Q/DI01xGlCKNv3htUCiMk0QXakVvdWP6f5gVqx6O9Gq
+         x7IQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690810555; x=1691415355;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=oAyXH6ekoTa05SAgzmQb3wllKwSfvfzCrLBBn4jkkW4=;
+        b=NRW67psbcngdYCRp7xEu18TKsfYaJYUMiEhcvJCVeY+gToc0hREUDWfmmYRo0iXJ90
+         3FKh3nIJi4MsTfNe36StQUg0yPfR9SBst8yjVOQwSPLBx5xiXrgzdOf1UPupbE7aYV2i
+         Kl8PphBdSeHT1C+5KUzH70NcSFy2cQF3pXRzdFeLAmbYkLPah1ZlSBXDqgN2UH0RMN9u
+         W5Fo1wK5LHpAwbdYA2ocByl+s2HMNuHdXg3vb+sig6xMXo9kvrPX9JjPGlRgxN4OJOTd
+         FrkZaQWVLiHShbOR3eb2ffIw/hp54PEfIwN5wr+uM6s/ImfjEd0ONjSD0QJsksGp3CVq
+         X4ow==
+X-Gm-Message-State: ABy/qLbMuONMeDdC0UPlZqpcJtg8WOvElSqLeupNpWut3eiDRghBv6jx
+	0Kv9kzNfPvHMmoqA4+ay9KKJueJrJJO//xR4Pks=
+X-Google-Smtp-Source: APBJJlHlKQxquau9vHbub3enl9P4TMStwyjPMWusF11iwrzgObp/yDS37tRQeizN7EUqGRl1cyuLrJAbgaz0DyI7iTQ=
+X-Received: by 2002:a25:ce04:0:b0:d0c:9ab2:72d3 with SMTP id
+ x4-20020a25ce04000000b00d0c9ab272d3mr9716417ybe.14.1690810555377; Mon, 31 Jul
+ 2023 06:35:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: linux-next: Tree for Jul 13 (drivers/video/fbdev/ps3fb.c)
-Content-Language: en-US
-To: Michael Ellerman <mpe@ellerman.id.au>,
- Bagas Sanjaya <bagasdotme@gmail.com>, Randy Dunlap <rdunlap@infradead.org>,
- Stephen Rothwell <sfr@canb.auug.org.au>,
- Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Thomas Zimmermann <tzimmermann@suse.de>,
- Javier Martinez Canillas <javierm@redhat.com>, linux-fbdev@vger.kernel.org,
- Linux PowerPC <linuxppc-dev@lists.ozlabs.org>,
- Linux Regressions <regressions@lists.linux.dev>,
- Geoff Levand <geoff@infradead.org>
-References: <20230713123710.5d7d81e4@canb.auug.org.au>
- <ccc63065-2976-88ef-1211-731330bf2866@infradead.org>
- <ZLYHtVuS7AElXcCb@debian.me> <874jm1jv9m.fsf@mail.lhotse>
-From: Helge Deller <deller@gmx.de>
-In-Reply-To: <874jm1jv9m.fsf@mail.lhotse>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+References: <CAAUqJDuRkHE8fPgZJGaKjUjd3QfGwzfumuJBmStPqBhubxyk_A@mail.gmail.com>
+ <97730.1690408399@warthog.procyon.org.uk> <yt9dbkfxsxtl.fsf@linux.ibm.com>
+In-Reply-To: <yt9dbkfxsxtl.fsf@linux.ibm.com>
+From: =?UTF-8?B?T25kcmVqIE1vc27DocSNZWs=?= <omosnacek@gmail.com>
+Date: Mon, 31 Jul 2023 15:35:44 +0200
+Message-ID: <CAAUqJDvk0y4x=fzfe8GX_t7Qj4WcRBfTOK2Za718wki9h-XkjA@mail.gmail.com>
+Subject: Re: [PATCH] crypto: Fix missing initialisation affecting gcm-aes-s390
+To: Sven Schnelle <svens@linux.ibm.com>
+Cc: David Howells <dhowells@redhat.com>, Herbert Xu <herbert@gondor.apana.org.au>, 
+	Paolo Abeni <pabeni@redhat.com>, Harald Freudenberger <freude@linux.vnet.ibm.com>, 
+	Bagas Sanjaya <bagasdotme@gmail.com>, linux-crypto@vger.kernel.org, 
+	linux-s390@vger.kernel.org, netdev@vger.kernel.org, 
+	regressions@lists.linux.dev, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:8JThjdBtX8FirEM7utDHiybc3BR1zxxlm3GKmGCUcmNv/w83edb
- otg9E/DNNBHl1ybbl0Dnt+KCqms2wgX2uWiHMlT0XaX/WaGBw57s9qbkwU/xJo/Gyaoilt9
- gfufL2w5I0drReRuUihbe4SuRPqukFP3MBOROScj4gMd13Q82B0WnIwBLjSOo4oRLNxgELH
- JvwRQszd9U8IqhRCFWcIQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:17kHrss4C9E=;k7E/NjF47QPlMvlKSJpOftE6ES3
- eRQdZ5sMAmvlfdbcYe0RUVBfrF0dShKRZCnn9H325/YHm74NPQuf17UrPeY7bd0yrllcgkrwA
- W8Fu5/qiLBPE7P/fqNXtQNBtJZfU5K9Eo3ruUmxYHFlPx4IhSqmta6zUKWDdsVXqIhQSBYj7L
- QoQiOQdeyq7ABC0dfN7w8IIzRIMENta3BEMvBhjeicsAB9vdx8TbKEMvNi3EcEzSE/C1dTpC7
- Eyn8AisbqGP5x8PXb5AVNVkrrt6RBvbm3tmlBxeBT1o6vGJWFYavZGlPpu7oMmDzCqqgIHnM/
- Q1QdDEIXOalxLp13B6FYQ6dELenoh2DXSczYRV6evYF3sjSgCNRiRRcyaGWAkSZ9eYqw/mm2V
- faG+rsElF3AdGmX9vieh74jpKAzPcuRBSijhFLckSxCRm/SnV7JB1a3IcY3b/QklKV+oWorBC
- 43MRn3g7Gzkk0NtHPy9xf0iC+Ew/Ruyv/7aqJO0KsThjaEWoDt1zCsLr4IffMKFmI+AoysWpp
- uVAiQ832jrE4OgQS/wGWUvVCa3CgfY57XPXtvTPW7xUk0mvC/DYBoCfOYmOT7+SpKRIFah+N4
- rTgnIEBFuUXRrWgzS+31fxKaOVYRzKbXPOl3eXuVJecTSqYpGa9jv4lx37drxct3TKnkIQglU
- vYUjs9KwjoRfHXJwSgwKQPIntjdX9vBfRjpN4Qg3rk12K3dAbsOhBZNa0f4Wp60Fo4Qc7XOgD
- XKvQHZ2ldvjTXpTSbtwuqnjVCZsKVXxJmuh3x+i6XX4Skiw0Sp49xXhSDp0HchERv8Ftz5UwC
- u3yEtA0CmMr/VZd+6tfVMn6GoI8ddFaVNmSt698nqcQsSamUb8d9Y4r09HJywn9gAQmTnQjzn
- T1E2abpkKs/FAGBH1dYSC+7PmmHxNjgHDF08P/xKNEoMPn+MsLkLLUODHvYs0pCwQPgE4nKRz
- 8hULd2moGa4LLOVU4AhIfK4Nugg=
 
-On 7/18/23 13:48, Michael Ellerman wrote:
-> Bagas Sanjaya <bagasdotme@gmail.com> writes:
->> On Thu, Jul 13, 2023 at 09:11:10AM -0700, Randy Dunlap wrote:
->>> on ppc64:
->>>
->>> In file included from ../include/linux/device.h:15,
->>>                   from ../arch/powerpc/include/asm/io.h:22,
->>>                   from ../include/linux/io.h:13,
->>>                   from ../include/linux/irq.h:20,
->>>                   from ../arch/powerpc/include/asm/hardirq.h:6,
->>>                   from ../include/linux/hardirq.h:11,
->>>                   from ../include/linux/interrupt.h:11,
->>>                   from ../drivers/video/fbdev/ps3fb.c:25:
->>> ../drivers/video/fbdev/ps3fb.c: In function 'ps3fb_probe':
->>> ../drivers/video/fbdev/ps3fb.c:1172:40: error: 'struct fb_info' has no=
- member named 'dev'
->>>   1172 |                  dev_driver_string(info->dev), dev_name(info-=
->dev),
->>>        |                                        ^~
->>> ../include/linux/dev_printk.h:110:37: note: in definition of macro 'de=
-v_printk_index_wrap'
->>>    110 |                 _p_func(dev, fmt, ##__VA_ARGS__);            =
-           \
->>>        |                                     ^~~~~~~~~~~
->>> ../drivers/video/fbdev/ps3fb.c:1171:9: note: in expansion of macro 'de=
-v_info'
->>>   1171 |         dev_info(info->device, "%s %s, using %u KiB of video =
-memory\n",
->>>        |         ^~~~~~~~
->>> ../drivers/video/fbdev/ps3fb.c:1172:61: error: 'struct fb_info' has no=
- member named 'dev'
->>>   1172 |                  dev_driver_string(info->dev), dev_name(info-=
->dev),
->>>        |                                                             ^=
-~
->>> ../include/linux/dev_printk.h:110:37: note: in definition of macro 'de=
-v_printk_index_wrap'
->>>    110 |                 _p_func(dev, fmt, ##__VA_ARGS__);            =
-           \
->>>        |                                     ^~~~~~~~~~~
->>> ../drivers/video/fbdev/ps3fb.c:1171:9: note: in expansion of macro 'de=
-v_info'
->>>   1171 |         dev_info(info->device, "%s %s, using %u KiB of video =
-memory\n",
->>>        |         ^~~~~~~~
->>>
->>>
->>
->> Hmm, there is no response from Thomas yet. I guess we should go with
->> reverting bdb616479eff419, right? Regardless, I'm adding this build reg=
-ression
->> to regzbot so that parties involved are aware of it:
->>
->> #regzbot ^introduced: bdb616479eff419
->> #regzbot title: build regression in PS3 framebuffer
+On Thu, Jul 27, 2023 at 7:55=E2=80=AFAM Sven Schnelle <svens@linux.ibm.com>=
+ wrote:
 >
-> Does regzbot track issues in linux-next?
+> David Howells <dhowells@redhat.com> writes:
 >
-> They're not really regressions because they're not in a release yet.
+> >
+> > Fix af_alg_alloc_areq() to initialise areq->first_rsgl.sgl.sgt.sgl to p=
+oint
+> > to the scatterlist array in areq->first_rsgl.sgl.sgl.
+> >
+> > Without this, the gcm-aes-s390 driver will oops when it tries to do
+> > gcm_walk_start() on req->dst because req->dst is set to the value of
+> > areq->first_rsgl.sgl.sgl by _aead_recvmsg() calling
+> > aead_request_set_crypt().
+> >
+> > The problem comes if an empty ciphertext is passed: the loop in
+> > af_alg_get_rsgl() just passes straight out and doesn't set areq->first_=
+rsgl
+> > up.
+> >
+> > This isn't a problem on x86_64 using gcmaes_crypt_by_sg() because, as f=
+ar
+> > as I can tell, that ignores req->dst and only uses req->src[*].
+> >
+> > [*] Is this a bug in aesni-intel_glue.c?
+> >
+> > The s390x oops looks something like:
+> >
+> >  Unable to handle kernel pointer dereference in virtual kernel address =
+space
+> >  Failing address: 0000000a00000000 TEID: 0000000a00000803
+> >  Fault in home space mode while using kernel ASCE.
+> >  AS:00000000a43a0007 R3:0000000000000024
+> >  Oops: 003b ilc:2 [#1] SMP
+> >  ...
+> >  Call Trace:
+> >   [<000003ff7fc3d47e>] gcm_walk_start+0x16/0x28 [aes_s390]
+> >   [<00000000a2a342f2>] crypto_aead_decrypt+0x9a/0xb8
+> >   [<00000000a2a60888>] aead_recvmsg+0x478/0x698
+> >   [<00000000a2e519a0>] sock_recvmsg+0x70/0xb0
+> >   [<00000000a2e51a56>] sock_read_iter+0x76/0xa0
+> >   [<00000000a273e066>] vfs_read+0x26e/0x2a8
+> >   [<00000000a273e8c4>] ksys_read+0xbc/0x100
+> >   [<00000000a311d808>] __do_syscall+0x1d0/0x1f8
+> >   [<00000000a312ff30>] system_call+0x70/0x98
+> >  Last Breaking-Event-Address:
+> >   [<000003ff7fc3e6b4>] gcm_aes_crypt+0x104/0xa68 [aes_s390]
+> >
+> > Fixes: c1abe6f570af ("crypto: af_alg: Use extract_iter_to_sg() to creat=
+e scatterlists")
+> > Reported-by: Ondrej Mosn=C3=A1=C4=8Dek <omosnacek@gmail.com>
+> > Link: https://lore.kernel.org/r/CAAUqJDuRkHE8fPgZJGaKjUjd3QfGwzfumuJBmS=
+tPqBhubxyk_A@mail.gmail.com/
+> > Signed-off-by: David Howells <dhowells@redhat.com>
+> > cc: Herbert Xu <herbert@gondor.apana.org.au>
+> > cc: Sven Schnelle <svens@linux.ibm.com>
+> > cc: Harald Freudenberger <freude@linux.vnet.ibm.com>
+> > cc: "David S. Miller" <davem@davemloft.net>
+> > cc: Paolo Abeni <pabeni@redhat.com>
+> > cc: linux-crypto@vger.kernel.org
+> > cc: linux-s390@vger.kernel.org
+> > cc: regressions@lists.linux.dev
+> > ---
+> >  crypto/af_alg.c |    1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/crypto/af_alg.c b/crypto/af_alg.c
+> > index 06b15b9f661c..9ee8575d3b1a 100644
+> > --- a/crypto/af_alg.c
+> > +++ b/crypto/af_alg.c
+> > @@ -1192,6 +1192,7 @@ struct af_alg_async_req *af_alg_alloc_areq(struct=
+ sock *sk,
+> >
+> >       areq->areqlen =3D areqlen;
+> >       areq->sk =3D sk;
+> > +     areq->first_rsgl.sgl.sgt.sgl =3D areq->first_rsgl.sgl.sgl;
+> >       areq->last_rsgl =3D NULL;
+> >       INIT_LIST_HEAD(&areq->rsgl_list);
+> >       areq->tsgl =3D NULL;
 >
-> Anyway I don't see where bdb616479eff419 comes from.
+> Just tested, with this fix the kernel no longer crashes. Thanks!
 >
-> The issue was introduced by:
->
->    701d2054fa31 fbdev: Make support for userspace interfaces configurabl=
-e
->
-> The driver seems to only use info->dev in that one dev_info() line,
-> which seems purely cosmetic, so I think it could just be removed, eg:
->
-> diff --git a/drivers/video/fbdev/ps3fb.c b/drivers/video/fbdev/ps3fb.c
-> index d4abcf8aff75..a304a39d712b 100644
-> --- a/drivers/video/fbdev/ps3fb.c
-> +++ b/drivers/video/fbdev/ps3fb.c
-> @@ -1168,8 +1168,7 @@ static int ps3fb_probe(struct ps3_system_bus_devic=
-e *dev)
->
->   	ps3_system_bus_set_drvdata(dev, info);
->
-> -	dev_info(info->device, "%s %s, using %u KiB of video memory\n",
-> -		 dev_driver_string(info->dev), dev_name(info->dev),
-> +	dev_info(info->device, "using %u KiB of video memory\n",
->   		 info->fix.smem_len >> 10);
->
->   	task =3D kthread_run(ps3fbd, info, DEVICE_NAME);
->
+> Tested-by: Sven Schnelle <svens@linux.ibm.com>
 
-Can you please resend this as proper patch to fbdev and/or drm-misc mailin=
-g lists?
-As it is, it never showed up for me in patchwork...
+Same here. Thanks for the fix!
 
-Helge
+Tested-by: Ondrej Mosn=C3=A1=C4=8Dek <omosnacek@gmail.com>
