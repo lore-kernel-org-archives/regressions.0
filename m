@@ -1,45 +1,45 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E241162D
-	for <regressions@lists.linux.dev>; Mon, 31 Jul 2023 03:47:12 +0000 (UTC)
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1bbc64f9a91so34229715ad.0
-        for <regressions@lists.linux.dev>; Sun, 30 Jul 2023 20:47:12 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0090662D
+	for <regressions@lists.linux.dev>; Mon, 31 Jul 2023 03:48:35 +0000 (UTC)
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1bb81809ca8so32271785ad.3
+        for <regressions@lists.linux.dev>; Sun, 30 Jul 2023 20:48:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1690775232; x=1691380032;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=gmail.com; s=20221208; t=1690775315; x=1691380115;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=0+Iq8rjthuWxB9vm3ZVIy+baoDKsYpVrmoMrfb4dLKY=;
-        b=YStm9bVWepmcQguvBLejF2BBxgRQqDiSzZ3kCJaYEePpdHArTHnp/xb1yJZo6Oekwy
-         KPpLCt1fGbbA5gZfZNdZO9ozUCa+//Z4YC5wNkrR0VVZTPVmJvLk9O0Ml9drDsB+rYMA
-         R0SO51OiSS0wxj3AL6PBGxheppHXcW6ZaL/x5HS3jfIqXv+STFIE/RuwWBVBBynzQ+aQ
-         BqG6M1h6U9HwQk6wZ8KiPZ4akXnSgixTE0ZTiDKHvt7GFMSMpXUFheIMLbhw5PVwNLmd
-         uafLu7StnqFFyzk2ayMT/tJ1RsYePwCaT74eqh9Hx06vJ+M6r2iXEX65/aH01XyDsF7O
-         LsmA==
+        bh=NtvygU/z1y3wTthGw51ELSQ5NZ4rAc6sckIpCAnR/EA=;
+        b=IPq/zdroTjGnIcnYK/wupfll2KvSO6uGpJZh0wNiPoMTwaSJJpaW5aWAw0YfV/E52N
+         lsqz+FhDSfFlU2z+V6xUUB2GfQnvnAJZVfKlL5ZOerX8LKfGmn09RPofiuQOsvJH9IhW
+         ZlO9oE4BZUPvoupTHTZ7LlA4RWHJUxg+Oec+MUQO5Z//RR5v9bVAuZbHTWteSSXnDBuR
+         6/zmD3gng9cGOxqiFA6Ml5Zlmuq/OxfdJ5pB4xBqrQ+hDm9B52lUS0IcA+zYhyDBtcGs
+         aFZDPJA3OTlrJVecPp8IvrbHrIlRke12w4m8O9bNY8zyBD+vfSxu948ELdj8jAJr44NY
+         WDVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690775232; x=1691380032;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20221208; t=1690775315; x=1691380115;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0+Iq8rjthuWxB9vm3ZVIy+baoDKsYpVrmoMrfb4dLKY=;
-        b=EUjJ9GHG4KEsm5lMVizq2AmQcLH/9/yh0g7weq7DgFR0ZRANHRhHfB0p2bwphuWvDY
-         Q2TG7UBaihGw3J1dJMLUnK0GLiuPQR9Z8DLqDNWNNVJ0+ncWCZtPAw4J/HHFCgLaIQ4j
-         ucJTazfY178toTWpDNm4lVBSwPwQGAyadXUShVc8LN7iWHh0MOiEdLDz4GY++kbsEaGa
-         cmmE4j1RV6c637w9ZcJ92jX8Uk6UqB5WPaJvgSDGhkHCnk3oNVGvT5OzvthSzoltv3NM
-         JD1CwqIMVrG3cMydZFqVD7W8n42ozK6PJr1fdGaXI5ddGZ8j2tOxZx5Hv+i7EBKdkoxy
-         Ld+g==
-X-Gm-Message-State: ABy/qLbyQeENBBI1jYzYjcTm4Nz4YQTAzXy50MEPbhBIukeHWl+oyU9O
-	3h54FRw49WDi54kidUwowrY=
-X-Google-Smtp-Source: APBJJlFTyP6ZfRWoW3McU9rAP40CAOmt4Cfdu3V0g/Fm6FNad28/o1TXHMe2Q5WqQPKReghuDGX0cg==
-X-Received: by 2002:a17:902:eccf:b0:1b5:694:b1a9 with SMTP id a15-20020a170902eccf00b001b50694b1a9mr10899480plh.32.1690775232164;
-        Sun, 30 Jul 2023 20:47:12 -0700 (PDT)
+        bh=NtvygU/z1y3wTthGw51ELSQ5NZ4rAc6sckIpCAnR/EA=;
+        b=DY6gyTL0MhQ8Pm5p14cT0lS0h5NB4iocmUkAEJBSeZ9wYf2RVQsY8MDepQsXtM9IGH
+         UXq1HlYNm1eauLaeslP8S/5FTJcgyFjfvNfdiNxV0t3hrtUpI0KSbmxbwtoADd/9XMKf
+         FBXA1KCuYM3/W5xgHXTx6R4AUgOL4Epx+4Hk0R+8JTpnlbNsJ83fMh+NQpyXJBrM9m3N
+         0ndlcXNS9yBYEPFnwanB6yhXtZXJF3EwMErrDICEh9nIT2BBOWRr+NqZosmfdWbSMwTl
+         quTLFVqKgVXqyUjQAP28j+Bc2JDGvZz3RBGCjc43xJQiiFpTWxHCRvoZF+rys0+NEQRI
+         ebhA==
+X-Gm-Message-State: ABy/qLZKloup/VhxSZQ3ufNTe1CGk7xZELlUnCUQdIP8vrAwxXNDqW+V
+	NpVJp19PuKhC7HRY//YuSg/Nu2HFjGgkCQ==
+X-Google-Smtp-Source: APBJJlGq7/xZ3PujiPxnBE9HK3jpP+P6WlUu8u/fupYFHVhjQ0EECzgORfY3JHnrO8dgfz83C8j9uA==
+X-Received: by 2002:a17:902:ceca:b0:1bb:97d0:c628 with SMTP id d10-20020a170902ceca00b001bb97d0c628mr10422762plg.31.1690775315104;
+        Sun, 30 Jul 2023 20:48:35 -0700 (PDT)
 Received: from [192.168.1.121] ([65.129.146.152])
-        by smtp.gmail.com with ESMTPSA id ix13-20020a170902f80d00b001b9d7c8f44dsm7325338plb.182.2023.07.30.20.47.11
+        by smtp.gmail.com with ESMTPSA id ix13-20020a170902f80d00b001b9d7c8f44dsm7325338plb.182.2023.07.30.20.48.33
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 30 Jul 2023 20:47:11 -0700 (PDT)
-Message-ID: <ec2a2031-366d-c6c1-ff11-accd1cccae8f@gmail.com>
-Date: Sun, 30 Jul 2023 21:47:11 -0600
+        Sun, 30 Jul 2023 20:48:34 -0700 (PDT)
+Message-ID: <92782079-140a-3581-797e-e5bf0c464d53@gmail.com>
+Date: Sun, 30 Jul 2023 21:48:35 -0600
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -47,31 +47,125 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Scsi_bus_resume+0x0/0x90 returns -5 when resuming from s3 sleep
-To: Damien Le Moal <dlemoal@kernel.org>,
- Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: regressions@lists.linux.dev, Mario Limonciello
- <mario.limonciello@amd.com>, Bart Van Assche <bvanassche@acm.org>,
- LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org
-References: <0e272abe-292d-d58f-cf80-55868e793abc@gmail.com>
- <6b66dd9a-8bd5-2882-9168-8e6e0848c454@leemhuis.info>
- <c70caa9e-164c-fee5-8f85-67f6d02373ab@kernel.org>
- <b0ed86e0-3e4a-d4d1-7b9d-c57f20538a80@gmail.com>
- <86435987-734e-c6c1-a857-1ba80da709fe@gmail.com>
- <48bc1736-5e4e-3a9b-3715-60509c333bb1@kernel.org>
- <f7e7b601-571f-bd2e-6410-a8a27e510c2f@gmail.com>
- <40365501-283a-408b-3514-48c29db36861@kernel.org>
- <d44e4057-0758-4cb8-ca29-02b5bb340b8b@gmail.com>
- <2b7e9239-fd48-0f74-f69b-e0039809c857@kernel.org>
+Subject: Re: [PATCH] ata,scsi: do not issue START STOP UNIT on resume
 Content-Language: en-US
+To: Damien Le Moal <dlemoal@kernel.org>, linux-ide@vger.kernel.org,
+ linux-scsi@vger.kernel.org, "Martin K . Petersen"
+ <martin.petersen@oracle.com>
+Cc: Paul Ausbeck <paula@soe.ucsc.edu>,
+ Thorsten Leemhuis <regressions@leemhuis.info>, regressions@lists.linux.dev,
+ Bart Van Assche <bvanassche@acm.org>
+References: <20230731003956.572414-1-dlemoal@kernel.org>
 From: TW <dalzot@gmail.com>
-In-Reply-To: <2b7e9239-fd48-0f74-f69b-e0039809c857@kernel.org>
+In-Reply-To: <20230731003956.572414-1-dlemoal@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-Oh excellent I'll go do that now.
+Tested-by: Tanner Watkins
 
-On 7/30/23 18:41, Damien Le Moal wrote:
-> I posted a proper patch and CC-ed you. A "Tested-by:" tag from you 
-> would be much appreciated (please use your full name in that case, 
-> instead of only "TW"). Thanks.
+On 7/30/23 18:39, Damien Le Moal wrote:
+> During system resume, ata_port_pm_resume() triggers ata EH to
+> 1) Resume the controller
+> 2) Reset and rescan the ports
+> 3) Revalidate devices
+> This EH execution is started asynchronously from ata_port_pm_resume(),
+> which means that when sd_resume() is executed, none or only part of the
+> above processing may have been executed. However, sd_resume() issues a
+> START STOP UNIT to wake up the drive from sleep mode. This command is
+> translated to ATA with ata_scsi_start_stop_xlat() and issued to the
+> device. However, depending on the state of execution of the EH process
+> and revalidation triggerred by ata_port_pm_resume(), two things may
+> happen:
+> 1) The START STOP UNIT fails if it is received before the controller has
+>     been reenabled at the beginning of the EH execution. This is visible
+>     with error messages like:
+>
+> ata10.00: device reported invalid CHS sector 0
+> sd 9:0:0:0: [sdc] Start/Stop Unit failed: Result: hostbyte=DID_OK driverbyte=DRIVER_OK
+> sd 9:0:0:0: [sdc] Sense Key : Illegal Request [current]
+> sd 9:0:0:0: [sdc] Add. Sense: Unaligned write command
+> sd 9:0:0:0: PM: dpm_run_callback(): scsi_bus_resume+0x0/0x90 returns -5
+> sd 9:0:0:0: PM: failed to resume async: error -5
+>
+> 2) The START STOP UNIT command is received while the EH process is
+>     on-going, which mean that it is stopped and must wait for its
+>     completion, at which point the command is rather useless as the drive
+>     is already fully spun up already. This case results also in a
+>     significant delay in sd_resume() which is observable by users as
+>     the entire system resume completion is delayed.
+>
+> Given that ATA devices will be woken up by libata activity on resume,
+> sd_resume() has no need to issue a START STOP UNIT command, which solves
+> the above mentioned problems. Do not issue this command by introducing
+> the new scsi_device flag no_start_on_resume and setting this flag to 1
+> in ata_scsi_dev_config(). sd_resume() is modified to issue a START STOP
+> UNIT command only if this flag is not set.
+>
+> Reported-by: Paul Ausbeck <paula@soe.ucsc.edu>
+> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=215880
+> Fixes: a19a93e4c6a9 ("scsi: core: pm: Rely on the device driver core for async power management")
+> Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
+> ---
+>   drivers/ata/libata-scsi.c  | 7 +++++++
+>   drivers/scsi/sd.c          | 9 ++++++---
+>   include/scsi/scsi_device.h | 1 +
+>   3 files changed, 14 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/ata/libata-scsi.c b/drivers/ata/libata-scsi.c
+> index 370d18aca71e..c6ece32de8e3 100644
+> --- a/drivers/ata/libata-scsi.c
+> +++ b/drivers/ata/libata-scsi.c
+> @@ -1100,7 +1100,14 @@ int ata_scsi_dev_config(struct scsi_device *sdev, struct ata_device *dev)
+>   		}
+>   	} else {
+>   		sdev->sector_size = ata_id_logical_sector_size(dev->id);
+> +		/*
+> +		 * Stop the drive on suspend but do not issue START STOP UNIT
+> +		 * on resume as this is not necessary and may fail: the device
+> +		 * will be woken up by ata_port_pm_resume() with a port reset
+> +		 * and device revalidation.
+> +		 */
+>   		sdev->manage_start_stop = 1;
+> +		sdev->no_start_on_resume = 1;
+>   	}
+>   
+>   	/*
+> diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
+> index 68b12afa0721..3c668cfb146d 100644
+> --- a/drivers/scsi/sd.c
+> +++ b/drivers/scsi/sd.c
+> @@ -3876,7 +3876,7 @@ static int sd_suspend_runtime(struct device *dev)
+>   static int sd_resume(struct device *dev)
+>   {
+>   	struct scsi_disk *sdkp = dev_get_drvdata(dev);
+> -	int ret;
+> +	int ret = 0;
+>   
+>   	if (!sdkp)	/* E.g.: runtime resume at the start of sd_probe() */
+>   		return 0;
+> @@ -3884,8 +3884,11 @@ static int sd_resume(struct device *dev)
+>   	if (!sdkp->device->manage_start_stop)
+>   		return 0;
+>   
+> -	sd_printk(KERN_NOTICE, sdkp, "Starting disk\n");
+> -	ret = sd_start_stop_device(sdkp, 1);
+> +	if (!sdkp->device->no_start_on_resume) {
+> +		sd_printk(KERN_NOTICE, sdkp, "Starting disk\n");
+> +		ret = sd_start_stop_device(sdkp, 1);
+> +	}
+> +
+>   	if (!ret)
+>   		opal_unlock_from_suspend(sdkp->opal_dev);
+>   	return ret;
+> diff --git a/include/scsi/scsi_device.h b/include/scsi/scsi_device.h
+> index 75b2235b99e2..b9230b6add04 100644
+> --- a/include/scsi/scsi_device.h
+> +++ b/include/scsi/scsi_device.h
+> @@ -194,6 +194,7 @@ struct scsi_device {
+>   	unsigned no_start_on_add:1;	/* do not issue start on add */
+>   	unsigned allow_restart:1; /* issue START_UNIT in error handler */
+>   	unsigned manage_start_stop:1;	/* Let HLD (sd) manage start/stop */
+> +	unsigned no_start_on_resume:1; /* Do not issue START_STOP_UNIT on resume */
+>   	unsigned start_stop_pwr_cond:1;	/* Set power cond. in START_STOP_UNIT */
+>   	unsigned no_uld_attach:1; /* disable connecting to upper level drivers */
+>   	unsigned select_no_atn:1;
