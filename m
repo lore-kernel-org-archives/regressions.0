@@ -1,146 +1,68 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7429E362
-	for <regressions@lists.linux.dev>; Mon, 31 Jul 2023 00:39:59 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19344C433C8;
-	Mon, 31 Jul 2023 00:39:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E421F362
+	for <regressions@lists.linux.dev>; Mon, 31 Jul 2023 00:41:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93CDFC433C7;
+	Mon, 31 Jul 2023 00:41:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1690763999;
-	bh=XzBZUHTgTNGnpl9JajUtFM1PZxSUFLsjHfd+xqKOt30=;
-	h=From:To:Cc:Subject:Date:From;
-	b=UujrK/KzLfCfZxWG8RM/f0CnhqUWd+9F6HF2uJAsv1VdwzA8Qq6mPUD/Ue0hrsdQv
-	 hoCqRTexRUqEObKwk7etrC3h8eZf9Ei6mgM1QmeZZcHBrxssBlItes4zMh0q2mp8v+
-	 zztr5Jtm9JOM/PWQUm7xnEO7YKIuGKl059jetvaOqxxk7nX+VSXBh9QLR+LGXuRNeU
-	 Qf//5pHEyo/Xrnz3g+udRKNR5jWB4ST9TCWmK7nSaSmUBzwkEzFsIfs/LaUg99Mecr
-	 szCvn+fXwhQE+Q4YZkLSiVaZzn47iGNIWi5WVrk3yVfw7Nasm7KODKUF23GG/1P+lB
-	 HSR3WgZBtmOXA==
-From: Damien Le Moal <dlemoal@kernel.org>
-To: linux-ide@vger.kernel.org,
-	linux-scsi@vger.kernel.org,
-	"Martin K . Petersen" <martin.petersen@oracle.com>
-Cc: Paul Ausbeck <paula@soe.ucsc.edu>,
-	Thorsten Leemhuis <regressions@leemhuis.info>,
-	TW <dalzot@gmail.com>,
-	regressions@lists.linux.dev,
-	Bart Van Assche <bvanassche@acm.org>
-Subject: [PATCH] ata,scsi: do not issue START STOP UNIT on resume
-Date: Mon, 31 Jul 2023 09:39:56 +0900
-Message-ID: <20230731003956.572414-1-dlemoal@kernel.org>
-X-Mailer: git-send-email 2.41.0
+	s=k20201202; t=1690764089;
+	bh=Id9w+26JcA3ovoOCmq873Dz/XimrlDDtDX+h2mPVv1Q=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=HVT1BwhXGDRxS21WFjAzyUa2Pv5ZOXtUdxpYAnQ7UFGX/YJcdaeoj4Wt+JbndEsxG
+	 A4IM3UQW49xYTIatHVmWxi4zNuw50oJ0QGzrheIli5FOd6qDnnRl4f82ZwVU1HfNQU
+	 rYLRqtroWcmk/pK3voKAwgvuZJcqug3cp+xPJGKB3mWym286roA69AKDRrnxWWR0b6
+	 /ZN9oq46aB8mdxhcacOxIAIQyHrbjugOIz+qkQoDoUkrL1dRDshmN1tnlYSTHkOQGw
+	 ocp/TczfNjQ6Vy30K7nWZAJ2bp4PQlL66mOsla5XoeaWU7JX1mEvMaMvbvBc5kTJLz
+	 fsfGFOBgcEqug==
+Message-ID: <2b7e9239-fd48-0f74-f69b-e0039809c857@kernel.org>
+Date: Mon, 31 Jul 2023 09:41:27 +0900
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: Scsi_bus_resume+0x0/0x90 returns -5 when resuming from s3 sleep
+To: TW <dalzot@gmail.com>, Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: regressions@lists.linux.dev, Mario Limonciello
+ <mario.limonciello@amd.com>, Bart Van Assche <bvanassche@acm.org>,
+ LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org
+References: <0e272abe-292d-d58f-cf80-55868e793abc@gmail.com>
+ <6b66dd9a-8bd5-2882-9168-8e6e0848c454@leemhuis.info>
+ <c70caa9e-164c-fee5-8f85-67f6d02373ab@kernel.org>
+ <b0ed86e0-3e4a-d4d1-7b9d-c57f20538a80@gmail.com>
+ <86435987-734e-c6c1-a857-1ba80da709fe@gmail.com>
+ <48bc1736-5e4e-3a9b-3715-60509c333bb1@kernel.org>
+ <f7e7b601-571f-bd2e-6410-a8a27e510c2f@gmail.com>
+ <40365501-283a-408b-3514-48c29db36861@kernel.org>
+ <d44e4057-0758-4cb8-ca29-02b5bb340b8b@gmail.com>
+Content-Language: en-US
+From: Damien Le Moal <dlemoal@kernel.org>
+Organization: Western Digital Research
+In-Reply-To: <d44e4057-0758-4cb8-ca29-02b5bb340b8b@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-During system resume, ata_port_pm_resume() triggers ata EH to
-1) Resume the controller
-2) Reset and rescan the ports
-3) Revalidate devices
-This EH execution is started asynchronously from ata_port_pm_resume(),
-which means that when sd_resume() is executed, none or only part of the
-above processing may have been executed. However, sd_resume() issues a
-START STOP UNIT to wake up the drive from sleep mode. This command is
-translated to ATA with ata_scsi_start_stop_xlat() and issued to the
-device. However, depending on the state of execution of the EH process
-and revalidation triggerred by ata_port_pm_resume(), two things may
-happen:
-1) The START STOP UNIT fails if it is received before the controller has
-   been reenabled at the beginning of the EH execution. This is visible
-   with error messages like:
+On 7/28/23 11:49, TW wrote:
+> Comparing to the 5.15 kernel which had almost no delay. They are HDDs 
+> though, it was working flawlessly earlier but didn't want to top post 
+> again. Tried a systemd suspend instead of from the Xfce4 logout menu and 
+> everything works as intended. So I'd say that it's fixed now.
 
-ata10.00: device reported invalid CHS sector 0
-sd 9:0:0:0: [sdc] Start/Stop Unit failed: Result: hostbyte=DID_OK driverbyte=DRIVER_OK
-sd 9:0:0:0: [sdc] Sense Key : Illegal Request [current]
-sd 9:0:0:0: [sdc] Add. Sense: Unaligned write command
-sd 9:0:0:0: PM: dpm_run_callback(): scsi_bus_resume+0x0/0x90 returns -5
-sd 9:0:0:0: PM: failed to resume async: error -5
+I posted a proper patch and CC-ed you. A "Tested-by:" tag from you would be much
+appreciated (please use your full name in that case, instead of only "TW").
+Thanks.
 
-2) The START STOP UNIT command is received while the EH process is
-   on-going, which mean that it is stopped and must wait for its
-   completion, at which point the command is rather useless as the drive
-   is already fully spun up already. This case results also in a
-   significant delay in sd_resume() which is observable by users as
-   the entire system resume completion is delayed.
+> 
+> On 7/27/23 20:33, Damien Le Moal wrote:
+>> "Slow coming back" -> Compared to which version of the kernel ? Do you 
+>> have numbers ? If the devices are HDDs, resume will wait for these to 
+>> spin up. That takes a while (about 10s normally).
 
-Given that ATA devices will be woken up by libata activity on resume,
-sd_resume() has no need to issue a START STOP UNIT command, which solves
-the above mentioned problems. Do not issue this command by introducing
-the new scsi_device flag no_start_on_resume and setting this flag to 1
-in ata_scsi_dev_config(). sd_resume() is modified to issue a START STOP
-UNIT command only if this flag is not set.
-
-Reported-by: Paul Ausbeck <paula@soe.ucsc.edu>
-Closes: https://bugzilla.kernel.org/show_bug.cgi?id=215880
-Fixes: a19a93e4c6a9 ("scsi: core: pm: Rely on the device driver core for async power management")
-Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
----
- drivers/ata/libata-scsi.c  | 7 +++++++
- drivers/scsi/sd.c          | 9 ++++++---
- include/scsi/scsi_device.h | 1 +
- 3 files changed, 14 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/ata/libata-scsi.c b/drivers/ata/libata-scsi.c
-index 370d18aca71e..c6ece32de8e3 100644
---- a/drivers/ata/libata-scsi.c
-+++ b/drivers/ata/libata-scsi.c
-@@ -1100,7 +1100,14 @@ int ata_scsi_dev_config(struct scsi_device *sdev, struct ata_device *dev)
- 		}
- 	} else {
- 		sdev->sector_size = ata_id_logical_sector_size(dev->id);
-+		/*
-+		 * Stop the drive on suspend but do not issue START STOP UNIT
-+		 * on resume as this is not necessary and may fail: the device
-+		 * will be woken up by ata_port_pm_resume() with a port reset
-+		 * and device revalidation.
-+		 */
- 		sdev->manage_start_stop = 1;
-+		sdev->no_start_on_resume = 1;
- 	}
- 
- 	/*
-diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
-index 68b12afa0721..3c668cfb146d 100644
---- a/drivers/scsi/sd.c
-+++ b/drivers/scsi/sd.c
-@@ -3876,7 +3876,7 @@ static int sd_suspend_runtime(struct device *dev)
- static int sd_resume(struct device *dev)
- {
- 	struct scsi_disk *sdkp = dev_get_drvdata(dev);
--	int ret;
-+	int ret = 0;
- 
- 	if (!sdkp)	/* E.g.: runtime resume at the start of sd_probe() */
- 		return 0;
-@@ -3884,8 +3884,11 @@ static int sd_resume(struct device *dev)
- 	if (!sdkp->device->manage_start_stop)
- 		return 0;
- 
--	sd_printk(KERN_NOTICE, sdkp, "Starting disk\n");
--	ret = sd_start_stop_device(sdkp, 1);
-+	if (!sdkp->device->no_start_on_resume) {
-+		sd_printk(KERN_NOTICE, sdkp, "Starting disk\n");
-+		ret = sd_start_stop_device(sdkp, 1);
-+	}
-+
- 	if (!ret)
- 		opal_unlock_from_suspend(sdkp->opal_dev);
- 	return ret;
-diff --git a/include/scsi/scsi_device.h b/include/scsi/scsi_device.h
-index 75b2235b99e2..b9230b6add04 100644
---- a/include/scsi/scsi_device.h
-+++ b/include/scsi/scsi_device.h
-@@ -194,6 +194,7 @@ struct scsi_device {
- 	unsigned no_start_on_add:1;	/* do not issue start on add */
- 	unsigned allow_restart:1; /* issue START_UNIT in error handler */
- 	unsigned manage_start_stop:1;	/* Let HLD (sd) manage start/stop */
-+	unsigned no_start_on_resume:1; /* Do not issue START_STOP_UNIT on resume */
- 	unsigned start_stop_pwr_cond:1;	/* Set power cond. in START_STOP_UNIT */
- 	unsigned no_uld_attach:1; /* disable connecting to upper level drivers */
- 	unsigned select_no_atn:1;
 -- 
-2.41.0
+Damien Le Moal
+Western Digital Research
 
