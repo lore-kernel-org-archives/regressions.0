@@ -1,109 +1,164 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 829B119BD5
-	for <regressions@lists.linux.dev>; Mon, 31 Jul 2023 19:43:54 +0000 (UTC)
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1bb2468257fso28737435ad.0
-        for <regressions@lists.linux.dev>; Mon, 31 Jul 2023 12:43:54 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFD571E518
+	for <regressions@lists.linux.dev>; Mon, 31 Jul 2023 21:50:33 +0000 (UTC)
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-3fba8e2aa52so55068405e9.1
+        for <regressions@lists.linux.dev>; Mon, 31 Jul 2023 14:50:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soe.ucsc.edu; s=soe-google-2018; t=1690832633; x=1691437433;
-        h=content-transfer-encoding:in-reply-to:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=2srF+VwsfZK2mGTSZ1/Lzy6JxU0qS8lMwLV+lKLY4gk=;
-        b=KNrPgz59EKXF/Cdi8VB+MqUgLmWvFCd6rarGZ1xw8oblswwKFiFfdzqnrAx986D6G8
-         9w0qN93ko6rlHDKeGSQwrvCCITCfv5GNQcsqd+3Cs5Ul3UnWJkm0y11UFqoYbZY3VdYP
-         iPtKz5KMpW319YBzaF+LNP7PxRGKF/OX7TPiRyVPJ1Low21ZPP5RiwLgt6fh98m9Skxz
-         LCvCyroPQTP92S66ctbcg/BMXU2bTOHLXBSpbEiqFZUYHBSmNkCNdT1kYFCQNq3a2saj
-         F+hgE1kp9CoK24xq50ISNYRW1PuiCqihCNZpQhxaeDrZFol/PK03QQKKCgXpV7+09Hl+
-         qGvw==
+        d=gmail.com; s=20221208; t=1690840232; x=1691445032;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=LzzSGKWkmVAwS6+5gn2kW/zuOpGQRDh54S2FzorJoyA=;
+        b=Gh6QtEjOYwj9odnsjh1f9DapsMkYw7zBcT5m9Kd1gaN0YupuuaRA1tt+K3+L1M0cAN
+         +iRFN3msBWUF/UKb2JDD+6GJI2Gv1MpevVryLb9Bdoci+QBKe5pT1Wnv8UJK1ofVufOb
+         xeETko2BcN4dMLmlLu7ea6ABxmGItWChPuqDD1x9cUqb5NUk/8kVlI50gFWAC4FIgthg
+         WykjFjx6566tCwyrYocar6zjVxbZ7lNyX5ar+4lNWJQ7d9yEO/PAgOrNAibQMW6T2vPX
+         2q5ZT1t0X6cQnwloXqZRTBwwiJ4F+bpq6IzkWzbzTq3MGZKXR6b1Dil1dLPiW+t7xm03
+         L/Dg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690832633; x=1691437433;
-        h=content-transfer-encoding:in-reply-to:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2srF+VwsfZK2mGTSZ1/Lzy6JxU0qS8lMwLV+lKLY4gk=;
-        b=BDVcc0x6whOBAvFNhT2eXz6d4OI1JVsXKkaZGxFk/m94a0qwFzAOZ1FNNpnOijBVjf
-         Wfk6n6Gotw49xwJJPe9qTv+0eoS1+QhIZhVl4Pb1WFKI/1HbsOC73LKdXBHviDgbIqT9
-         svvhxjOL5BstlKQbbHy7OPhvp3ElrvrLMUaxKn6vrOHTd85A4FuJPLBxmr7UIunjMPgV
-         414DN+LbEYS9x43exckabu1zlupElgetf9pWzO8BcQethLmmsxNNM9sS5QFL+kLbNABm
-         fPPdRD8Y/jIn3T7PFrjSVGAvD5MnxJjQ0OQUMUzTW/DRm7HwszkdPSPntvXjz4UMSK/M
-         3XzA==
-X-Gm-Message-State: ABy/qLbPpv2lghqmUmRb2Zh45DQE0XS1jmkB0ocmo3YQlFzD3Q1ywGOU
-	sJrAPElGJqMf9sGm2rWk+MQxlw==
-X-Google-Smtp-Source: APBJJlH1fVcQ97yyq8Zt7838/qVW3ws0AdnOmmS0wxBtL/mM82/pvD3MXZ7hdqU8RKAFXjjF4TkV2A==
-X-Received: by 2002:a17:90b:1003:b0:25e:d727:6fb4 with SMTP id gm3-20020a17090b100300b0025ed7276fb4mr9340515pjb.2.1690832633462;
-        Mon, 31 Jul 2023 12:43:53 -0700 (PDT)
-Received: from [192.168.1.50] (99-189-239-182.lightspeed.sntcca.sbcglobal.net. [99.189.239.182])
-        by smtp.gmail.com with ESMTPSA id p21-20020a17090adf9500b00263d3448141sm6574393pjv.8.2023.07.31.12.43.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 31 Jul 2023 12:43:52 -0700 (PDT)
-From: Paul Ausbeck <paula@soe.ucsc.edu>
-X-Google-Original-From: Paul Ausbeck <paula@alumni.cse.ucsc.edu>
-Message-ID: <a8d35a0e-fe01-e889-615a-2f2e104e2492@alumni.cse.ucsc.edu>
-Date: Mon, 31 Jul 2023 12:43:51 -0700
+        d=1e100.net; s=20221208; t=1690840232; x=1691445032;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LzzSGKWkmVAwS6+5gn2kW/zuOpGQRDh54S2FzorJoyA=;
+        b=LSDDxodoKaUVhSyCEbZRF0uSwi/6rWgcUohKzvP3ETjQdSBipLrcMH/YNcjwRhm005
+         u++MKdKdfkJenudrJ+LXThcaOY7H/EhmNv+ihjWrMk1rJIF4KJ25F+ILAWWMS+w+rN2m
+         tz1sPpMsh5+o7Nav3ItQ/gXEhRZeUlo2LpMojkkyd/bf67borvge0BEv8bdaPSxueUF4
+         Xv6n10SS7a28VTXp0cDc4mbqKCR5XFNcQIBqwVQTsDaLeCCg/qjW0V0v4hJt6qCUyfNK
+         cGHHsHkRmmw9jitf1JU6aUDgixmh/85if7eEGsq8+iuwR+w5QPV2e1b5+RHJqlrlDjOj
+         m4MA==
+X-Gm-Message-State: ABy/qLZTVKQu+Xbl5ZqHxUTlj50Axm+1iNPwOoFDbuyCHBa6nOo0d9i2
+	ZznTWYRmXOdae3XkOizQNFM=
+X-Google-Smtp-Source: APBJJlGkZeJD/ErBNLIHuV84FQDDzVLXS/9Ndpi2HOQ7+mZlSHPebNAIlPGdzhNi1ilsx784crY0JQ==
+X-Received: by 2002:a7b:cd1a:0:b0:3fc:92:73d6 with SMTP id f26-20020a7bcd1a000000b003fc009273d6mr854436wmj.11.1690840231335;
+        Mon, 31 Jul 2023 14:50:31 -0700 (PDT)
+Received: from lucifer.home ([2a00:23c5:dc8c:8701:1663:9a35:5a7b:1d76])
+        by smtp.googlemail.com with ESMTPSA id d12-20020a1c730c000000b003fa999cefc0sm12123626wmb.36.2023.07.31.14.50.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Jul 2023 14:50:30 -0700 (PDT)
+From: Lorenzo Stoakes <lstoakes@gmail.com>
+To: linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: Baoquan He <bhe@redhat.com>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	linux-fsdevel@vger.kernel.org,
+	Jiri Olsa <olsajiri@gmail.com>,
+	Will Deacon <will@kernel.org>,
+	Mike Galbraith <efault@gmx.de>,
+	Mark Rutland <mark.rutland@arm.com>,
+	wangkefeng.wang@huawei.com,
+	catalin.marinas@arm.com,
+	ardb@kernel.org,
+	David Hildenbrand <david@redhat.com>,
+	Linux regression tracking <regressions@leemhuis.info>,
+	regressions@lists.linux.dev,
+	Matthew Wilcox <willy@infradead.org>,
+	Liu Shixin <liushixin2@huawei.com>,
+	Jens Axboe <axboe@kernel.dk>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Lorenzo Stoakes <lstoakes@gmail.com>,
+	stable@vger.kernel.org
+Subject: [PATCH] fs/proc/kcore: reinstate bounce buffer for KCORE_TEXT regions
+Date: Mon, 31 Jul 2023 22:50:21 +0100
+Message-ID: <20230731215021.70911-1-lstoakes@gmail.com>
+X-Mailer: git-send-email 2.41.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH] ata,scsi: do not issue START STOP UNIT on resume
-Content-Language: en-US
-To: Damien Le Moal <dlemoal@kernel.org>, linux-ide@vger.kernel.org,
- linux-scsi@vger.kernel.org, "Martin K . Petersen"
- <martin.petersen@oracle.com>
-Cc: Paul Ausbeck <paula@soe.ucsc.edu>,
- Thorsten Leemhuis <regressions@leemhuis.info>, TW <dalzot@gmail.com>,
- regressions@lists.linux.dev, Bart Van Assche <bvanassche@acm.org>
-References: <20230731003956.572414-1-dlemoal@kernel.org>
-In-Reply-To: <20230731003956.572414-1-dlemoal@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 7/30/23 17:39, Damien Le Moal wrote:
-> During system resume, ata_port_pm_resume() triggers ata EH to
-> 1) Resume the controller
-> 2) Reset and rescan the ports
-> 3) Revalidate devices
-> This EH execution is started asynchronously from ata_port_pm_resume(),
-> which means that when sd_resume() is executed, none or only part of the
-> above processing may have been executed. However, sd_resume() issues a
-> START STOP UNIT to wake up the drive from sleep mode. This command is
-> translated to ATA with ata_scsi_start_stop_xlat() and issued to the
-> device. However, depending on the state of execution of the EH process
-> and revalidation triggerred by ata_port_pm_resume(), two things may
-> happen:
-> 1) The START STOP UNIT fails if it is received before the controller has
->     been reenabled at the beginning of the EH execution. This is visible
->     with error messages like:
-> 
-> ata10.00: device reported invalid CHS sector 0
-> sd 9:0:0:0: [sdc] Start/Stop Unit failed: Result: hostbyte=DID_OK driverbyte=DRIVER_OK
-> sd 9:0:0:0: [sdc] Sense Key : Illegal Request [current]
-> sd 9:0:0:0: [sdc] Add. Sense: Unaligned write command
-> sd 9:0:0:0: PM: dpm_run_callback(): scsi_bus_resume+0x0/0x90 returns -5
-> sd 9:0:0:0: PM: failed to resume async: error -5
-> 
-> 2) The START STOP UNIT command is received while the EH process is
->     on-going, which mean that it is stopped and must wait for its
->     completion, at which point the command is rather useless as the drive
->     is already fully spun up already. This case results also in a
->     significant delay in sd_resume() which is observable by users as
->     the entire system resume completion is delayed.
-> 
-> Given that ATA devices will be woken up by libata activity on resume,
-> sd_resume() has no need to issue a START STOP UNIT command, which solves
-> the above mentioned problems. Do not issue this command by introducing
-> the new scsi_device flag no_start_on_resume and setting this flag to 1
-> in ata_scsi_dev_config(). sd_resume() is modified to issue a START STOP
-> UNIT command only if this flag is not set.
-> 
-> Reported-by: Paul Ausbeck<paula@soe.ucsc.edu>
-> Closes:https://bugzilla.kernel.org/show_bug.cgi?id=215880
-> Fixes: a19a93e4c6a9 ("scsi: core: pm: Rely on the device driver core for async power management")
-> Signed-off-by: Damien Le Moal<dlemoal@kernel.org>
+Some architectures do not populate the entire range categorised by
+KCORE_TEXT, so we must ensure that the kernel address we read from is
+valid.
 
-Tested-by: Paul Ausbeck <paula@soe.ucsc.edu>
+Unfortunately there is no solution currently available to do so with a
+purely iterator solution so reinstate the bounce buffer in this instance so
+we can use copy_from_kernel_nofault() in order to avoid page faults when
+regions are unmapped.
+
+This change partly reverts commit 2e1c0170771e ("fs/proc/kcore: avoid
+bounce buffer for ktext data"), reinstating the bounce buffer, but adapts
+the code to continue to use an iterator.
+
+Fixes: 2e1c0170771e ("fs/proc/kcore: avoid bounce buffer for ktext data")
+Reported-by: Jiri Olsa <olsajiri@gmail.com>
+Closes: https://lore.kernel.org/all/ZHc2fm+9daF6cgCE@krava
+Cc: stable@vger.kernel.org
+Signed-off-by: Lorenzo Stoakes <lstoakes@gmail.com>
+---
+ fs/proc/kcore.c | 26 +++++++++++++++++++++++++-
+ 1 file changed, 25 insertions(+), 1 deletion(-)
+
+diff --git a/fs/proc/kcore.c b/fs/proc/kcore.c
+index 9cb32e1a78a0..3bc689038232 100644
+--- a/fs/proc/kcore.c
++++ b/fs/proc/kcore.c
+@@ -309,6 +309,8 @@ static void append_kcore_note(char *notes, size_t *i, const char *name,
+ 
+ static ssize_t read_kcore_iter(struct kiocb *iocb, struct iov_iter *iter)
+ {
++	struct file *file = iocb->ki_filp;
++	char *buf = file->private_data;
+ 	loff_t *fpos = &iocb->ki_pos;
+ 	size_t phdrs_offset, notes_offset, data_offset;
+ 	size_t page_offline_frozen = 1;
+@@ -554,11 +556,22 @@ static ssize_t read_kcore_iter(struct kiocb *iocb, struct iov_iter *iter)
+ 			fallthrough;
+ 		case KCORE_VMEMMAP:
+ 		case KCORE_TEXT:
++			/*
++			 * Sadly we must use a bounce buffer here to be able to
++			 * make use of copy_from_kernel_nofault(), as these
++			 * memory regions might not always be mapped on all
++			 * architectures.
++			 */
++			if (copy_from_kernel_nofault(buf, (void *)start, tsz)) {
++				if (iov_iter_zero(tsz, iter) != tsz) {
++					ret = -EFAULT;
++					goto out;
++				}
+ 			/*
+ 			 * We use _copy_to_iter() to bypass usermode hardening
+ 			 * which would otherwise prevent this operation.
+ 			 */
+-			if (_copy_to_iter((char *)start, tsz, iter) != tsz) {
++			} else if (_copy_to_iter(buf, tsz, iter) != tsz) {
+ 				ret = -EFAULT;
+ 				goto out;
+ 			}
+@@ -595,6 +608,10 @@ static int open_kcore(struct inode *inode, struct file *filp)
+ 	if (ret)
+ 		return ret;
+ 
++	filp->private_data = kmalloc(PAGE_SIZE, GFP_KERNEL);
++	if (!filp->private_data)
++		return -ENOMEM;
++
+ 	if (kcore_need_update)
+ 		kcore_update_ram();
+ 	if (i_size_read(inode) != proc_root_kcore->size) {
+@@ -605,9 +622,16 @@ static int open_kcore(struct inode *inode, struct file *filp)
+ 	return 0;
+ }
+ 
++static int release_kcore(struct inode *inode, struct file *file)
++{
++	kfree(file->private_data);
++	return 0;
++}
++
+ static const struct proc_ops kcore_proc_ops = {
+ 	.proc_read_iter	= read_kcore_iter,
+ 	.proc_open	= open_kcore,
++	.proc_release	= release_kcore,
+ 	.proc_lseek	= default_llseek,
+ };
+ 
+-- 
+2.41.0
+
