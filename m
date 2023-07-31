@@ -1,167 +1,113 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF8901DDC5
-	for <regressions@lists.linux.dev>; Mon, 31 Jul 2023 22:11:16 +0000 (UTC)
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3090d3e9c92so5158812f8f.2
-        for <regressions@lists.linux.dev>; Mon, 31 Jul 2023 15:11:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1690841475; x=1691446275;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=pG9mGaJw0oLWkMWSPqLey0DSlekkz+WPcfbnO7e1pGQ=;
-        b=AdJx8ydCFIxARVitkfM9CNQfZXbUI80HNWKPO1Yi0sm8djbBCc5tCgR5RLwKIN7ebu
-         D7Vv6AVdl4xoLugu6FzgI97k6sHx6VjhwUBetaw/pVvmMep64HTHs9MCBCWv9BaqDvLg
-         geVDaeZkscfBDRXVeU68N9fskl4Cge+UPXjb6UcUJDqvbrQaQyt8kbH3nS3QDvRqR7xP
-         V0SONxpWj77cGcJ5BYw27QuZXgdLYNQ9YOn/70OuwP8Q9R0klNLO2QAjRDdDKdFR+Gfz
-         HLqhFvyal2Q1BCynQzfZv3RVTNTkae2uDJTB2sK4O8QJTbSEbbuSWu7BTf9UPN6CGAtq
-         28Fw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690841475; x=1691446275;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pG9mGaJw0oLWkMWSPqLey0DSlekkz+WPcfbnO7e1pGQ=;
-        b=DRU1SM4mS1qpCBzHEH32iaX+bM+FfW56MgbXdI4l8CEqIO/xb0idDEsb31hHPaWORT
-         EVvi+93KP5JzBM4KdnXv83l/rHYUZauQAdPv5kGvaSOZU0E2bJSJ22RgtF5H4DztkLLm
-         4bqkruNMUY+H8zr/UPw6AEzj8nK3MXQtVVjwuzTR/wt4Jn/n86Wi1bs4P4USInidVc/Z
-         fOl3CL3eqbbrenGn8kAiV4p/nVQsN0o9ee9vUdm3wpeTGukTRjfF5NEHl8W39RQW9OZW
-         4C8Lb+ZlOMglvMr6JpOe27d2cG9XFwnI9hCsqILGGh/BHNWt/Ej0vbF1QOgGsycsjQh6
-         nuRg==
-X-Gm-Message-State: ABy/qLYgERQHzLid97cKSp+f0DX9U+mCAw3OGS/sbjel6E2WaMNnq3ls
-	evzF2RMk+GSnjxs2S+i72fU=
-X-Google-Smtp-Source: APBJJlFou8tDW9Flgwyhx9pQWEeY3FQxFVM+Nrg0yh4xg7Rg2mTQKyrDZDHLxPb2fsVAVFdEHjzSBA==
-X-Received: by 2002:a5d:670b:0:b0:317:6263:1ae2 with SMTP id o11-20020a5d670b000000b0031762631ae2mr806329wru.63.1690841474399;
-        Mon, 31 Jul 2023 15:11:14 -0700 (PDT)
-Received: from krava ([83.240.60.220])
-        by smtp.gmail.com with ESMTPSA id l10-20020a5d410a000000b00317495f88fasm14127444wrp.112.2023.07.31.15.11.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Jul 2023 15:11:13 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Tue, 1 Aug 2023 00:11:11 +0200
-To: Lorenzo Stoakes <lstoakes@gmail.com>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Baoquan He <bhe@redhat.com>, Uladzislau Rezki <urezki@gmail.com>,
-	linux-fsdevel@vger.kernel.org, Jiri Olsa <olsajiri@gmail.com>,
-	Will Deacon <will@kernel.org>, Mike Galbraith <efault@gmx.de>,
-	Mark Rutland <mark.rutland@arm.com>, wangkefeng.wang@huawei.com,
-	catalin.marinas@arm.com, ardb@kernel.org,
-	David Hildenbrand <david@redhat.com>,
-	Linux regression tracking <regressions@leemhuis.info>,
-	regressions@lists.linux.dev, Matthew Wilcox <willy@infradead.org>,
-	Liu Shixin <liushixin2@huawei.com>, Jens Axboe <axboe@kernel.dk>,
-	Alexander Viro <viro@zeniv.linux.org.uk>, stable@vger.kernel.org
-Subject: Re: [PATCH] fs/proc/kcore: reinstate bounce buffer for KCORE_TEXT
- regions
-Message-ID: <ZMgxf++oeQ2VU94J@krava>
-References: <20230731215021.70911-1-lstoakes@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D4161DDC1
+	for <regressions@lists.linux.dev>; Mon, 31 Jul 2023 23:22:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+	bh=0VwbE9w1enjcPt7/IUT5th5f1ZIeAHMgI/cQbU9ZQ2A=; b=W1MEZXbMSYUAoRpiX2J1gLUs6J
+	QNI3LZBl83MsiVfSkFwwVlVnz2w0CjvDmoqTdQ8gv+SYMSY2r0HtouhhUB5uUd+LbZmAPgaiaUlmS
+	qdipmFFr0Fl+4bPXWd4UhqXWIVGZCOf3ciB+VlGAJfo5GzvNp3rD3yDx66pCe1iWS42hN31arU9sa
+	IiveAdR1+sND6wubHmrrJpaPk4dF3Dr3DfIv01LVVDOX/64l05bpRsU+oOai73TB5NyG9wjVzoLyD
+	Z2lRPFbkS7szaMiGpw9aktwsF7+uOWMEn0cLp1cv6Jb49B1tHCwiPsSAfrVHqSNiea89JcJ+8JHFI
+	ZoPiTwJw==;
+Received: from [2601:1c2:980:9ec0::2764]
+	by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+	id 1qQcDK-00HZ0e-1R;
+	Mon, 31 Jul 2023 23:22:10 +0000
+Message-ID: <fb977502-ec9b-c847-6b9c-049bd226f4b1@infradead.org>
+Date: Mon, 31 Jul 2023 16:22:09 -0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230731215021.70911-1-lstoakes@gmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH] fbdev/ps3fb: Build without kernel device
+Content-Language: en-US
+To: Thomas Zimmermann <tzimmermann@suse.de>, deller@gmx.de,
+ mpe@ellerman.id.au, npiggin@gmail.com, christophe.leroy@csgroup.eu,
+ sam@ravnborg.org, javierm@redhat.com, bagasdotme@gmail.com,
+ rd.dunlab@gmail.com, regressions@leemhuis.info, sfr@canb.auug.org.au
+Cc: linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, regressions@lists.linux.dev,
+ linux-next@vger.kernel.org, dri-devel@lists.freedesktop.org
+References: <20230731175535.11345-1-tzimmermann@suse.de>
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20230731175535.11345-1-tzimmermann@suse.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jul 31, 2023 at 10:50:21PM +0100, Lorenzo Stoakes wrote:
-> Some architectures do not populate the entire range categorised by
-> KCORE_TEXT, so we must ensure that the kernel address we read from is
-> valid.
+
+
+On 7/31/23 10:55, Thomas Zimmermann wrote:
+> Use fb_info() to print status message at the end of the probe function,
+> which avoids decoding the devices. fb_info() works with or without an
+> fbdev kernel device. Fixes the following error:
 > 
-> Unfortunately there is no solution currently available to do so with a
-> purely iterator solution so reinstate the bounce buffer in this instance so
-> we can use copy_from_kernel_nofault() in order to avoid page faults when
-> regions are unmapped.
+> ../drivers/video/fbdev/ps3fb.c: In function 'ps3fb_probe':
+> ../drivers/video/fbdev/ps3fb.c:1172:40: error: 'struct fb_info' has no member named 'dev'
+>  1172 |                  dev_driver_string(info->dev), dev_name(info->dev),
+>       |                                        ^~
+> ../include/linux/dev_printk.h:110:37: note: in definition of macro 'dev_printk_index_wrap'
+>   110 |                 _p_func(dev, fmt, ##__VA_ARGS__);                       \
+>       |                                     ^~~~~~~~~~~
+> ../drivers/video/fbdev/ps3fb.c:1171:9: note: in expansion of macro 'dev_info'
+>  1171 |         dev_info(info->device, "%s %s, using %u KiB of video memory\n",
+>       |         ^~~~~~~~
+> ../drivers/video/fbdev/ps3fb.c:1172:61: error: 'struct fb_info' has no member named 'dev'
+>  1172 |                  dev_driver_string(info->dev), dev_name(info->dev),
+>       |                                                             ^~
+> ../include/linux/dev_printk.h:110:37: note: in definition of macro 'dev_printk_index_wrap'
+>   110 |                 _p_func(dev, fmt, ##__VA_ARGS__);                       \
+>       |                                     ^~~~~~~~~~~
+> ../drivers/video/fbdev/ps3fb.c:1171:9: note: in expansion of macro 'dev_info'
+>  1171 |         dev_info(info->device, "%s %s, using %u KiB of video memory\n",
+>       |         ^~~~~~~~
 > 
-> This change partly reverts commit 2e1c0170771e ("fs/proc/kcore: avoid
-> bounce buffer for ktext data"), reinstating the bounce buffer, but adapts
-> the code to continue to use an iterator.
-> 
-> Fixes: 2e1c0170771e ("fs/proc/kcore: avoid bounce buffer for ktext data")
-> Reported-by: Jiri Olsa <olsajiri@gmail.com>
+> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> Closes: https://lore.kernel.org/lkml/ccc63065-2976-88ef-1211-731330bf2866@infradead.org/
+> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
+> Fixes: 701d2054fa31 ("fbdev: Make support for userspace interfaces configurable")
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Sam Ravnborg <sam@ravnborg.org>
+> Cc: Helge Deller <deller@gmx.de>
+> Cc: Javier Martinez Canillas <javierm@redhat.com>
+> Cc: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Bagas Sanjaya <bagasdotme@gmail.com>
+> Cc: Thorsten Leemhuis <regressions@leemhuis.info>
+> Cc: dri-devel@lists.freedesktop.org
+> Cc: linux-fbdev@vger.kernel.org
+> Cc: linuxppc-dev@lists.ozlabs.org
 
-it fixed my issue, thanks
+Acked-by: Randy Dunlap <rdunlap@infradead.org>
+Tested-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
 
-Tested-by: Jiri Olsa <jolsa@kernel.org>
+Thanks.
 
-jirka
-
-> Closes: https://lore.kernel.org/all/ZHc2fm+9daF6cgCE@krava
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Lorenzo Stoakes <lstoakes@gmail.com>
 > ---
->  fs/proc/kcore.c | 26 +++++++++++++++++++++++++-
->  1 file changed, 25 insertions(+), 1 deletion(-)
+>  drivers/video/fbdev/ps3fb.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
 > 
-> diff --git a/fs/proc/kcore.c b/fs/proc/kcore.c
-> index 9cb32e1a78a0..3bc689038232 100644
-> --- a/fs/proc/kcore.c
-> +++ b/fs/proc/kcore.c
-> @@ -309,6 +309,8 @@ static void append_kcore_note(char *notes, size_t *i, const char *name,
+> diff --git a/drivers/video/fbdev/ps3fb.c b/drivers/video/fbdev/ps3fb.c
+> index 5aedc30c5f7e..64d291d6b153 100644
+> --- a/drivers/video/fbdev/ps3fb.c
+> +++ b/drivers/video/fbdev/ps3fb.c
+> @@ -1168,9 +1168,7 @@ static int ps3fb_probe(struct ps3_system_bus_device *dev)
 >  
->  static ssize_t read_kcore_iter(struct kiocb *iocb, struct iov_iter *iter)
->  {
-> +	struct file *file = iocb->ki_filp;
-> +	char *buf = file->private_data;
->  	loff_t *fpos = &iocb->ki_pos;
->  	size_t phdrs_offset, notes_offset, data_offset;
->  	size_t page_offline_frozen = 1;
-> @@ -554,11 +556,22 @@ static ssize_t read_kcore_iter(struct kiocb *iocb, struct iov_iter *iter)
->  			fallthrough;
->  		case KCORE_VMEMMAP:
->  		case KCORE_TEXT:
-> +			/*
-> +			 * Sadly we must use a bounce buffer here to be able to
-> +			 * make use of copy_from_kernel_nofault(), as these
-> +			 * memory regions might not always be mapped on all
-> +			 * architectures.
-> +			 */
-> +			if (copy_from_kernel_nofault(buf, (void *)start, tsz)) {
-> +				if (iov_iter_zero(tsz, iter) != tsz) {
-> +					ret = -EFAULT;
-> +					goto out;
-> +				}
->  			/*
->  			 * We use _copy_to_iter() to bypass usermode hardening
->  			 * which would otherwise prevent this operation.
->  			 */
-> -			if (_copy_to_iter((char *)start, tsz, iter) != tsz) {
-> +			} else if (_copy_to_iter(buf, tsz, iter) != tsz) {
->  				ret = -EFAULT;
->  				goto out;
->  			}
-> @@ -595,6 +608,10 @@ static int open_kcore(struct inode *inode, struct file *filp)
->  	if (ret)
->  		return ret;
+>  	ps3_system_bus_set_drvdata(dev, info);
 >  
-> +	filp->private_data = kmalloc(PAGE_SIZE, GFP_KERNEL);
-> +	if (!filp->private_data)
-> +		return -ENOMEM;
-> +
->  	if (kcore_need_update)
->  		kcore_update_ram();
->  	if (i_size_read(inode) != proc_root_kcore->size) {
-> @@ -605,9 +622,16 @@ static int open_kcore(struct inode *inode, struct file *filp)
->  	return 0;
->  }
+> -	dev_info(info->device, "%s %s, using %u KiB of video memory\n",
+> -		 dev_driver_string(info->dev), dev_name(info->dev),
+> -		 info->fix.smem_len >> 10);
+> +	fb_info(info, "using %u KiB of video memory\n", info->fix.smem_len >> 10);
 >  
-> +static int release_kcore(struct inode *inode, struct file *file)
-> +{
-> +	kfree(file->private_data);
-> +	return 0;
-> +}
-> +
->  static const struct proc_ops kcore_proc_ops = {
->  	.proc_read_iter	= read_kcore_iter,
->  	.proc_open	= open_kcore,
-> +	.proc_release	= release_kcore,
->  	.proc_lseek	= default_llseek,
->  };
->  
-> -- 
-> 2.41.0
-> 
+>  	task = kthread_run(ps3fbd, info, DEVICE_NAME);
+>  	if (IS_ERR(task)) {
+
+-- 
+~Randy
