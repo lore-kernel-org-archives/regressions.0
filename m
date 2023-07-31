@@ -1,121 +1,154 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 063EA19BC0
-	for <regressions@lists.linux.dev>; Mon, 31 Jul 2023 16:13:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1047618AFE
+	for <regressions@lists.linux.dev>; Mon, 31 Jul 2023 16:14:40 +0000 (UTC)
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 0A7EA2216F;
-	Mon, 31 Jul 2023 16:13:56 +0000 (UTC)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 6D4A81F854;
+	Mon, 31 Jul 2023 16:14:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1690820036; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1690820079; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ys6linr9PzCpUy81x3sGvHDZa6ANMmw3Vdlc7JTFMTY=;
-	b=A+VFhLZFluaYDsL2CBkhBXoyWG6mCpBp+dsJzLyTrqAp69+0BWAlKTo6lu2qTGl52roHhP
-	h+1iMzb3h5bmjqujDEL1kW2JGFQ/1fyLA7mp97+DnY6sR9iHBbtekkeViJpWtB+JRi3HFc
-	g+vHbGwmupHuW2SI6c7T8iE+fygFyDU=
+	bh=2FPdvVJdYdtOHQsKLQpCAb/yeA5uJ3rxVC2Q1LTBHKs=;
+	b=rUzOmdPzBoAVPHEFZ8/BZFHzOOB1JhJ4VXdTppltLTFlTY5HBTXyE0iUWfZd4ZX9O2CCwi
+	wjczEqRgYsHZmX833c1GvprLht48uk0lZ3tbMReVKsL7tdm2E7brjVQpShSs7xIBX0qUaY
+	CUDQE8Ry5k1hFWImGj+9FrnbXmm0fdQ=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1690820036;
+	s=susede2_ed25519; t=1690820079;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ys6linr9PzCpUy81x3sGvHDZa6ANMmw3Vdlc7JTFMTY=;
-	b=mUSxr5isyAAA5saIvpPMGIykoqM+Va3Tv1oVylhxsZQz+pwRDpNa8AdjAurlgJrq3vB+Lc
-	xghomZ8umFX+ZACg==
+	bh=2FPdvVJdYdtOHQsKLQpCAb/yeA5uJ3rxVC2Q1LTBHKs=;
+	b=9H0Vga1SoaCmt4UMa04L5AHwlWfZtjWyWkK06GmWA9QGpF1LqT/vXNom/YzSkfSNZ9LI4c
+	pHfjzn6qVrk0AaCA==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
 	(No client certificate requested)
-	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id B770F1322C;
-	Mon, 31 Jul 2023 16:13:55 +0000 (UTC)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 0DD6A1322C;
+	Mon, 31 Jul 2023 16:14:39 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
 	by imap2.suse-dmz.suse.de with ESMTPSA
-	id oL+4K8Pdx2RsDQAAMHmgww
-	(envelope-from <hare@suse.de>); Mon, 31 Jul 2023 16:13:55 +0000
-Message-ID: <ef30b720-fec8-1c7c-1829-58252552ac2d@suse.de>
-Date: Mon, 31 Jul 2023 18:13:55 +0200
+	id tNCCAu/dx2S7DQAAMHmgww
+	(envelope-from <tiwai@suse.de>); Mon, 31 Jul 2023 16:14:39 +0000
+Date: Mon, 31 Jul 2023 18:14:38 +0200
+Message-ID: <87o7jshxch.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Kailang <kailang@realtek.com>
+Cc: "Joseph C. Sible" <josephcsible@gmail.com>,
+	Bagas Sanjaya <bagasdotme@gmail.com>,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+	"perex@perex.cz"
+	<perex@perex.cz>,
+	"tiwai@suse.com" <tiwai@suse.com>,
+	"alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
+Subject: Re: Fwd: [Bug 217440] New: ALC236 audio disappears from HP 15z-fc000 on warm boot
+In-Reply-To: <878rbjdofa.wl-tiwai@suse.de>
+References: <bug-217440-225600@https.bugzilla.kernel.org/>
+	<CABpewhE4REgn9RJZduuEU6Z_ijXNeQWnrxO1tg70Gkw=F8qNYg@mail.gmail.com>
+	<ZGB0cVVI7OgaJU6t@debian.me>
+	<CABpewhGJE7-k52j8L2kJ2zKupgp3Ma+LdZazzzV4w1Bgihp7nw@mail.gmail.com>
+	<87cz338ix4.wl-tiwai@suse.de>
+	<CABpewhF01AK4cFPbwYVvKR9yWaO7o-ZE-2+MZjYSUF0BKUdYvw@mail.gmail.com>
+	<874jodlnmi.wl-tiwai@suse.de>
+	<415d4bc84aa74c74af913048f28b42a9@realtek.com>
+	<87fs7mdofi.wl-tiwai@suse.de>
+	<7da2fdfdae614b1c98deda6e11ca34eb@realtek.com>
+	<87353kd8b9.wl-tiwai@suse.de>
+	<1170325957764b4cbd7cd3639575f285@realtek.com>
+	<CABpewhGBakDSBLKZ1cr2=OMspuu3qyYwZrsXUggQ3vt8gsD88A@mail.gmail.com>
+	<873536js7q.wl-tiwai@suse.de>
+	<CABpewhE0NAC-Q=iqG2Ba=XhT7SXsWy18wQGYUaopzmKDfFxyPw@mail.gmail.com>
+	<2c1fcbc00bb44d66a29ac1c1e4bec5ad@realtek.com>
+	<CABpewhFthKG97dPiQC4JhGx9sapX9Yu5rWABQjpY95TSA+eawA@mail.gmail.com>
+	<485f99149508488080d563144454040e@realtek.com>
+	<CABpewhGkvWtM+9J=mx3vw0QY=OBB5OYCxzX3nzVffvFS4QazPA@mail.gmail.com>
+	<2831c55638a5431ca9e37d9caf365ed2@realtek.com>
+	<CABpewhGiMJUpyBA6=D9_-YA6=5rjR2R0RHUZeg+cWcjtzuCoZQ@mail.gmail.com>
+	<3c27f0455d6e4bd1a68115bd25bf1a12@realtek.com>
+	<CABpewhEptq0+W_71U__8iQ4+LNtYSUB9C+0bcS2Hw-5mnj9viQ@mail.gmail.com>
+	<009474f04d0b45c69a0e42e8622b7a86@realtek.com>
+	<87h6rhcef2.wl-tiwai@suse.de>
+	<0990300d759846d890de9c92fcad9a9d@realtek.com>
+	<CABpewhERnOH1qkkJ5_JJUZkz1_8oxD9aR5VBs1vsURAG7Eu_Ew@mail.gmail.com>
+	<878rctcavz.wl-tiwai@suse.de>
+	<874jnhc9u4.wl-tiwai@suse.de>
+	<CABpewhHG2+s8_6r6vChm2g5tD8ALW_SWJWubPRXWzTJB2aFR9g@mail.gmail.com>
+	<875y7vbxpg.wl-tiwai@suse.de>
+	<CABpewhHDnvn4v+uCpsaLHB+biw-f59tdTiCyFkicHnewXHYDNg@mail.gmail.com>
+	<87wn0aa1s4.wl-tiwai@suse.de>
+	<CABpewhFg=7+JR6v=zhi0_Hm9+S64DLOHKeG2pS-W7z-vNpu_5Q@mail.gmail.com>
+	<87leg7x4h7.wl-tiwai@suse.de>
+	<f4969213b5a14cc5a11befb4df861481@realtek.com>
+	<87cz182hfk.wl-tiwai@suse.de>
+	<4678992299664babac4403d9978e7ba7@realtek.com>
+	<CABpewhGkw2rg_NN7Rd8E_p+AN9MC0A1CjgnrhBvMnSKq0gz31w@mail.gmail.com>
+	<1f83caa215ad4374aec8859c70044b00@realtek.com>
+	<878rbjdofa.wl-tiwai@suse.de>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH] ata,scsi: do not issue START STOP UNIT on resume
-Content-Language: en-US
-To: Damien Le Moal <dlemoal@kernel.org>, linux-ide@vger.kernel.org,
- linux-scsi@vger.kernel.org, "Martin K . Petersen"
- <martin.petersen@oracle.com>
-Cc: Paul Ausbeck <paula@soe.ucsc.edu>,
- Thorsten Leemhuis <regressions@leemhuis.info>, TW <dalzot@gmail.com>,
- regressions@lists.linux.dev, Bart Van Assche <bvanassche@acm.org>
-References: <20230731003956.572414-1-dlemoal@kernel.org>
-From: Hannes Reinecke <hare@suse.de>
-In-Reply-To: <20230731003956.572414-1-dlemoal@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
 
-On 7/31/23 02:39, Damien Le Moal wrote:
-> During system resume, ata_port_pm_resume() triggers ata EH to
-> 1) Resume the controller
-> 2) Reset and rescan the ports
-> 3) Revalidate devices
-> This EH execution is started asynchronously from ata_port_pm_resume(),
-> which means that when sd_resume() is executed, none or only part of the
-> above processing may have been executed. However, sd_resume() issues a
-> START STOP UNIT to wake up the drive from sleep mode. This command is
-> translated to ATA with ata_scsi_start_stop_xlat() and issued to the
-> device. However, depending on the state of execution of the EH process
-> and revalidation triggerred by ata_port_pm_resume(), two things may
-> happen:
-> 1) The START STOP UNIT fails if it is received before the controller has
->     been reenabled at the beginning of the EH execution. This is visible
->     with error messages like:
+On Fri, 14 Jul 2023 07:58:49 +0200,
+Takashi Iwai wrote:
 > 
-> ata10.00: device reported invalid CHS sector 0
-> sd 9:0:0:0: [sdc] Start/Stop Unit failed: Result: hostbyte=DID_OK driverbyte=DRIVER_OK
-> sd 9:0:0:0: [sdc] Sense Key : Illegal Request [current]
-> sd 9:0:0:0: [sdc] Add. Sense: Unaligned write command
-> sd 9:0:0:0: PM: dpm_run_callback(): scsi_bus_resume+0x0/0x90 returns -5
-> sd 9:0:0:0: PM: failed to resume async: error -5
+> On Fri, 14 Jul 2023 04:46:25 +0200,
+> Kailang wrote:
+> > 
+> > Hi Takashi,
+> > 
+> > Could you agree this workaround?
 > 
-> 2) The START STOP UNIT command is received while the EH process is
->     on-going, which mean that it is stopped and must wait for its
->     completion, at which point the command is rather useless as the drive
->     is already fully spun up already. This case results also in a
->     significant delay in sd_resume() which is observable by users as
->     the entire system resume completion is delayed.
-> 
-> Given that ATA devices will be woken up by libata activity on resume,
-> sd_resume() has no need to issue a START STOP UNIT command, which solves
-> the above mentioned problems. Do not issue this command by introducing
-> the new scsi_device flag no_start_on_resume and setting this flag to 1
-> in ata_scsi_dev_config(). sd_resume() is modified to issue a START STOP
-> UNIT command only if this flag is not set.
-> 
-Q: As libata starts up the drive internally via reset/revalidate, why do 
-we have to sent START STOP UNIT for shutdown?
-Wouldn't it be better to disable START STOP UNIT completely for libata, 
-and let everything be handled via ATA command (IDLE IMMEDIATE, SLEEP) ?
-Hmm?
+> Yes, looks fine.  I applied it now.
 
-Otherwise a really good idea. We've fallen into this trap several times 
-ourselves.
-Incidentally, USB could benefit from the same mechanism ...
+... and now we receive a regression report due to this change :-<
+  https://bugzilla.kernel.org/show_bug.cgi?id=217732
 
-Cheers,
+I believe the problem is that the patch disabled the 3kpull-low
+behavior too much while some codecs still need it.
 
-Hannes
--- 
-Dr. Hannes Reinecke                Kernel Storage Architect
-hare@suse.de                              +49 911 74053 688
-SUSE Software Solutions GmbH, Maxfeldstr. 5, 90409 Nürnberg
-HRB 36809 (AG Nürnberg), Geschäftsführer: Ivo Totev, Andrew
-Myers, Andrew McDonald, Martje Boudien Moerman
+The patch changes like:
 
+@@ -3638,8 +3640,7 @@ static void alc256_shutup(struct hda_codec *codec)
+        /* If disable 3k pulldown control for alc257, the Mic detection will not work correctly
+         * when booting with headset plugged. So skip setting it for the codec alc257
+         */
+-       if (codec->core.vendor_id != 0x10ec0236 &&
+-           codec->core.vendor_id != 0x10ec0257)
++       if (spec->en_3kpull_low)
+                alc_update_coef_idx(codec, 0x46, 0, 3 << 12);
+ 
+        if (!spec->no_shutup_pins)
+
+... while the only place setting spec->en_3kpull_low is:
+
+@@ -10682,6 +10683,8 @@ static int patch_alc269(struct hda_codec *codec)
+                spec->shutup = alc256_shutup;
+                spec->init_hook = alc256_init;
+                spec->gen.mixer_nid = 0; /* ALC256 does not have any loopback mixer path */
++               if (codec->bus->pci->vendor == PCI_VENDOR_ID_AMD)
++                       spec->en_3kpull_low = true;
+                break;
+        case 0x10ec0257:
+                spec->codec_variant = ALC269_TYPE_ALC257;
+
+Since spec->3n_3kpull_low is false as default, it means that, except
+for ALC230/236/256 and PCI vendor AMD, the flag is never set, hence
+it's no longer called.
+
+Shouldn't spec->en_3kpull_low be enabled rather as default?  Or which
+models can set it?
+
+
+thanks,
+
+Takashi
