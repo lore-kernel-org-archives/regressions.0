@@ -1,24 +1,22 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D4161DDC1
-	for <regressions@lists.linux.dev>; Mon, 31 Jul 2023 23:22:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-	bh=0VwbE9w1enjcPt7/IUT5th5f1ZIeAHMgI/cQbU9ZQ2A=; b=W1MEZXbMSYUAoRpiX2J1gLUs6J
-	QNI3LZBl83MsiVfSkFwwVlVnz2w0CjvDmoqTdQ8gv+SYMSY2r0HtouhhUB5uUd+LbZmAPgaiaUlmS
-	qdipmFFr0Fl+4bPXWd4UhqXWIVGZCOf3ciB+VlGAJfo5GzvNp3rD3yDx66pCe1iWS42hN31arU9sa
-	IiveAdR1+sND6wubHmrrJpaPk4dF3Dr3DfIv01LVVDOX/64l05bpRsU+oOai73TB5NyG9wjVzoLyD
-	Z2lRPFbkS7szaMiGpw9aktwsF7+uOWMEn0cLp1cv6Jb49B1tHCwiPsSAfrVHqSNiea89JcJ+8JHFI
-	ZoPiTwJw==;
-Received: from [2601:1c2:980:9ec0::2764]
-	by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-	id 1qQcDK-00HZ0e-1R;
-	Mon, 31 Jul 2023 23:22:10 +0000
-Message-ID: <fb977502-ec9b-c847-6b9c-049bd226f4b1@infradead.org>
-Date: Mon, 31 Jul 2023 16:22:09 -0700
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 295187E
+	for <regressions@lists.linux.dev>; Tue,  1 Aug 2023 03:44:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73F6EC433C8;
+	Tue,  1 Aug 2023 03:44:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1690861470;
+	bh=5GVDP9qKgboBEYPIjLu96H2K6BAlmljWOxXtiA2FKmY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=NEtrBIBHOqZOsABOyQE0NLlbQL+VhffDNqroyec3STWz+HKduScSS9rxpeN12onye
+	 KIMitHFr8IFP+zN3WJPOGgqyAoyjTekBUS9NRWV/6FuTV+z4UYiUSAVEG6Yx1/AFqS
+	 oAIXkozkoXFUFkuhM0J1phdoh5mDzAnjMxLhnpTft0+NGdMo0otKofID+qVMuJLoVC
+	 92hCks2Ga4oFaEVmkFZI+Ddra89T1K799EMQv7j8JtF8ZDIStwB3Mo3F+KQFdtSxgF
+	 Pn+2K41dl7zhJXG5438o2DzEE7uB7uAKJYdS7K6XpydqD50jRwXm0MiK/3v9FqlAx7
+	 Co4nsJARCCRsw==
+Message-ID: <e139ba1e-b379-684d-b45f-86a1e33d26da@kernel.org>
+Date: Tue, 1 Aug 2023 12:44:28 +0900
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -27,87 +25,89 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.13.0
-Subject: Re: [PATCH] fbdev/ps3fb: Build without kernel device
+Subject: Re: [PATCH] ata,scsi: do not issue START STOP UNIT on resume
+To: Hannes Reinecke <hare@suse.de>, linux-ide@vger.kernel.org,
+ linux-scsi@vger.kernel.org, "Martin K . Petersen"
+ <martin.petersen@oracle.com>
+Cc: Paul Ausbeck <paula@soe.ucsc.edu>,
+ Thorsten Leemhuis <regressions@leemhuis.info>, TW <dalzot@gmail.com>,
+ regressions@lists.linux.dev, Bart Van Assche <bvanassche@acm.org>
+References: <20230731003956.572414-1-dlemoal@kernel.org>
+ <ef30b720-fec8-1c7c-1829-58252552ac2d@suse.de>
 Content-Language: en-US
-To: Thomas Zimmermann <tzimmermann@suse.de>, deller@gmx.de,
- mpe@ellerman.id.au, npiggin@gmail.com, christophe.leroy@csgroup.eu,
- sam@ravnborg.org, javierm@redhat.com, bagasdotme@gmail.com,
- rd.dunlab@gmail.com, regressions@leemhuis.info, sfr@canb.auug.org.au
-Cc: linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, regressions@lists.linux.dev,
- linux-next@vger.kernel.org, dri-devel@lists.freedesktop.org
-References: <20230731175535.11345-1-tzimmermann@suse.de>
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20230731175535.11345-1-tzimmermann@suse.de>
+From: Damien Le Moal <dlemoal@kernel.org>
+Organization: Western Digital Research
+In-Reply-To: <ef30b720-fec8-1c7c-1829-58252552ac2d@suse.de>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
+On 8/1/23 01:13, Hannes Reinecke wrote:
+> On 7/31/23 02:39, Damien Le Moal wrote:
+>> During system resume, ata_port_pm_resume() triggers ata EH to
+>> 1) Resume the controller
+>> 2) Reset and rescan the ports
+>> 3) Revalidate devices
+>> This EH execution is started asynchronously from ata_port_pm_resume(),
+>> which means that when sd_resume() is executed, none or only part of the
+>> above processing may have been executed. However, sd_resume() issues a
+>> START STOP UNIT to wake up the drive from sleep mode. This command is
+>> translated to ATA with ata_scsi_start_stop_xlat() and issued to the
+>> device. However, depending on the state of execution of the EH process
+>> and revalidation triggerred by ata_port_pm_resume(), two things may
+>> happen:
+>> 1) The START STOP UNIT fails if it is received before the controller has
+>>     been reenabled at the beginning of the EH execution. This is visible
+>>     with error messages like:
+>>
+>> ata10.00: device reported invalid CHS sector 0
+>> sd 9:0:0:0: [sdc] Start/Stop Unit failed: Result: hostbyte=DID_OK driverbyte=DRIVER_OK
+>> sd 9:0:0:0: [sdc] Sense Key : Illegal Request [current]
+>> sd 9:0:0:0: [sdc] Add. Sense: Unaligned write command
+>> sd 9:0:0:0: PM: dpm_run_callback(): scsi_bus_resume+0x0/0x90 returns -5
+>> sd 9:0:0:0: PM: failed to resume async: error -5
+>>
+>> 2) The START STOP UNIT command is received while the EH process is
+>>     on-going, which mean that it is stopped and must wait for its
+>>     completion, at which point the command is rather useless as the drive
+>>     is already fully spun up already. This case results also in a
+>>     significant delay in sd_resume() which is observable by users as
+>>     the entire system resume completion is delayed.
+>>
+>> Given that ATA devices will be woken up by libata activity on resume,
+>> sd_resume() has no need to issue a START STOP UNIT command, which solves
+>> the above mentioned problems. Do not issue this command by introducing
+>> the new scsi_device flag no_start_on_resume and setting this flag to 1
+>> in ata_scsi_dev_config(). sd_resume() is modified to issue a START STOP
+>> UNIT command only if this flag is not set.
+>>
+> Q: As libata starts up the drive internally via reset/revalidate, why do 
+> we have to sent START STOP UNIT for shutdown?
 
+To spin down the drive and put it to sleep.
 
-On 7/31/23 10:55, Thomas Zimmermann wrote:
-> Use fb_info() to print status message at the end of the probe function,
-> which avoids decoding the devices. fb_info() works with or without an
-> fbdev kernel device. Fixes the following error:
+> Wouldn't it be better to disable START STOP UNIT completely for libata, 
+> and let everything be handled via ATA command (IDLE IMMEDIATE, SLEEP) ?
+> Hmm?
+
+I am not sure this buys us much. Could try though, but that is a little too much
+changes for a bug fix for this cycle.
+
+I think we need to think about that in the context of reworking ata
+suspend/resume to be correct with regard to synchronizing ata device and scsi
+device suspend/resume with a direct device link, which we do not have right now.
+
+> Otherwise a really good idea. We've fallen into this trap several times 
+> ourselves.
+> Incidentally, USB could benefit from the same mechanism ...
+
+Could look into it, but these bug reports, if any, do not come to me :)
+
 > 
-> ../drivers/video/fbdev/ps3fb.c: In function 'ps3fb_probe':
-> ../drivers/video/fbdev/ps3fb.c:1172:40: error: 'struct fb_info' has no member named 'dev'
->  1172 |                  dev_driver_string(info->dev), dev_name(info->dev),
->       |                                        ^~
-> ../include/linux/dev_printk.h:110:37: note: in definition of macro 'dev_printk_index_wrap'
->   110 |                 _p_func(dev, fmt, ##__VA_ARGS__);                       \
->       |                                     ^~~~~~~~~~~
-> ../drivers/video/fbdev/ps3fb.c:1171:9: note: in expansion of macro 'dev_info'
->  1171 |         dev_info(info->device, "%s %s, using %u KiB of video memory\n",
->       |         ^~~~~~~~
-> ../drivers/video/fbdev/ps3fb.c:1172:61: error: 'struct fb_info' has no member named 'dev'
->  1172 |                  dev_driver_string(info->dev), dev_name(info->dev),
->       |                                                             ^~
-> ../include/linux/dev_printk.h:110:37: note: in definition of macro 'dev_printk_index_wrap'
->   110 |                 _p_func(dev, fmt, ##__VA_ARGS__);                       \
->       |                                     ^~~~~~~~~~~
-> ../drivers/video/fbdev/ps3fb.c:1171:9: note: in expansion of macro 'dev_info'
->  1171 |         dev_info(info->device, "%s %s, using %u KiB of video memory\n",
->       |         ^~~~~~~~
+> Cheers,
 > 
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> Closes: https://lore.kernel.org/lkml/ccc63065-2976-88ef-1211-731330bf2866@infradead.org/
-> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
-> Fixes: 701d2054fa31 ("fbdev: Make support for userspace interfaces configurable")
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Sam Ravnborg <sam@ravnborg.org>
-> Cc: Helge Deller <deller@gmx.de>
-> Cc: Javier Martinez Canillas <javierm@redhat.com>
-> Cc: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Bagas Sanjaya <bagasdotme@gmail.com>
-> Cc: Thorsten Leemhuis <regressions@leemhuis.info>
-> Cc: dri-devel@lists.freedesktop.org
-> Cc: linux-fbdev@vger.kernel.org
-> Cc: linuxppc-dev@lists.ozlabs.org
-
-Acked-by: Randy Dunlap <rdunlap@infradead.org>
-Tested-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
-
-Thanks.
-
-> ---
->  drivers/video/fbdev/ps3fb.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
-> 
-> diff --git a/drivers/video/fbdev/ps3fb.c b/drivers/video/fbdev/ps3fb.c
-> index 5aedc30c5f7e..64d291d6b153 100644
-> --- a/drivers/video/fbdev/ps3fb.c
-> +++ b/drivers/video/fbdev/ps3fb.c
-> @@ -1168,9 +1168,7 @@ static int ps3fb_probe(struct ps3_system_bus_device *dev)
->  
->  	ps3_system_bus_set_drvdata(dev, info);
->  
-> -	dev_info(info->device, "%s %s, using %u KiB of video memory\n",
-> -		 dev_driver_string(info->dev), dev_name(info->dev),
-> -		 info->fix.smem_len >> 10);
-> +	fb_info(info, "using %u KiB of video memory\n", info->fix.smem_len >> 10);
->  
->  	task = kthread_run(ps3fbd, info, DEVICE_NAME);
->  	if (IS_ERR(task)) {
+> Hannes
 
 -- 
-~Randy
+Damien Le Moal
+Western Digital Research
+
