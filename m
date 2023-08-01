@@ -1,150 +1,165 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D1502358D
-	for <regressions@lists.linux.dev>; Tue,  1 Aug 2023 16:33:22 +0000 (UTC)
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-31771bb4869so6021441f8f.0
-        for <regressions@lists.linux.dev>; Tue, 01 Aug 2023 09:33:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1690907600; x=1691512400;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=kHGU2gldR70GqySNOHxAwDHvYPybisAew0SwiRmKpZY=;
-        b=sUkr6tkOpfLpmNAXaSFuiW9LXXeEwoKnrmMBkcK4Hzd0GO2uCmDG+gS3aJeFobgXlD
-         ImcBSaz6f4I9GQ+RO4VH50l6qUxD+A8J0DSNTD75KJC1ayt6U4xdPnPubhdWeczlWQ6H
-         fMfduYyNkmjd2kWxa5QQJ123pP6nOzDRnh1UyGT5KnRAlO3R6gH86arPxDYsF/4Pn0ie
-         rKXwqC3Nj3MtsSP9/dw1OtLM6sSmfKy6MMU9v7Uf0lNMpxRtqiBJuwYDHe1w6uAg17kf
-         ZTu8tou6vHV8MSGse9+huBvZCwjrIlu7RI0oZQNdHGmjzTEizy9R6fAyj0yfLm36uJBV
-         32xg==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 589C94DC7B
+	for <regressions@lists.linux.dev>; Tue,  1 Aug 2023 16:34:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1690907671;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=kjefxxv3ZRGBWfEsXOGOuERDMNqo6jQLqyrxh73Gpjc=;
+	b=bqv+kHt+sGJ8+Pw7ZbpfZtC2SwnpE7y89vBUa1bjW+FBE05/S+QKui0xku/NjAf3w0sHUG
+	rSG9RcMp0Fx/EPs7Y4CXIZKN5YG5Ve1G/1H8LuHOhf5ub2DAFn8iAEl88fepEGlUme8fY0
+	YTbNniiO/e51ZbVJUyekO5Ta4T7R+uU=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-693-w3xUIoGqOOqBRyLv-_ICIw-1; Tue, 01 Aug 2023 12:34:29 -0400
+X-MC-Unique: w3xUIoGqOOqBRyLv-_ICIw-1
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-314275b653eso3156949f8f.1
+        for <regressions@lists.linux.dev>; Tue, 01 Aug 2023 09:34:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690907600; x=1691512400;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kHGU2gldR70GqySNOHxAwDHvYPybisAew0SwiRmKpZY=;
-        b=QSmRuECXwL5AhJIQADg43bM8y3JGv21zLSA5ytESzVrnpk0uV1GsGCmHfROF9d/m+U
-         zrtn6VSVxC2AzfqcHzJuJieaXWtndtjGkVjTjssLHOgvz4N/kjcqp0HDWPPBqe6Vve7B
-         bvyML61xlfP58OGE3nj5GmGXoOxCEwwo7fw0ZynEzC45NMZYRKa8G9MktO409Ld90aO8
-         zNBONlXgN0lkcpRqFFTfSzg/MsPi4LXzXHviMWIDUqhDUk8q8lF97Afr5YU3KB9Gu8Vp
-         v6qoLUzquFzsDQQpCAFlw6Wc09sGlaVnMn1ju3dCazd+PCdUrdm6cadanpGl21cNZiTy
-         i6CA==
-X-Gm-Message-State: ABy/qLbqbm8seOfhdxF4nhUn+iN7YbXMpytB12j8JY6C3cmHalCyOD/j
-	jXs7c2cwFlTIRVd+iKy0xHU=
-X-Google-Smtp-Source: APBJJlGWssiVAATcXmhQas2IAW1DtAJFXZ/rOYG4wKV4z3qFLF/SvVTfMh8RRRDM4z57utXs4wl8gg==
-X-Received: by 2002:a5d:6783:0:b0:313:f02f:be7f with SMTP id v3-20020a5d6783000000b00313f02fbe7fmr2576237wru.55.1690907600207;
-        Tue, 01 Aug 2023 09:33:20 -0700 (PDT)
-Received: from localhost ([2a00:23c5:dc8c:8701:1663:9a35:5a7b:1d76])
-        by smtp.gmail.com with ESMTPSA id h16-20020adffa90000000b0031423a8f4f7sm16488864wrr.56.2023.08.01.09.33.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Aug 2023 09:33:19 -0700 (PDT)
-Date: Tue, 1 Aug 2023 17:33:18 +0100
-From: Lorenzo Stoakes <lstoakes@gmail.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Baoquan He <bhe@redhat.com>, Uladzislau Rezki <urezki@gmail.com>,
-	linux-fsdevel@vger.kernel.org, Jiri Olsa <olsajiri@gmail.com>,
-	Will Deacon <will@kernel.org>, Mike Galbraith <efault@gmx.de>,
-	Mark Rutland <mark.rutland@arm.com>, wangkefeng.wang@huawei.com,
-	catalin.marinas@arm.com, ardb@kernel.org,
-	Linux regression tracking <regressions@leemhuis.info>,
-	regressions@lists.linux.dev, Matthew Wilcox <willy@infradead.org>,
-	Liu Shixin <liushixin2@huawei.com>, Jens Axboe <axboe@kernel.dk>,
-	Alexander Viro <viro@zeniv.linux.org.uk>, stable@vger.kernel.org
-Subject: Re: [PATCH] fs/proc/kcore: reinstate bounce buffer for KCORE_TEXT
- regions
-Message-ID: <dc30a97b-853e-4d2a-b171-e68fb3ab026c@lucifer.local>
-References: <20230731215021.70911-1-lstoakes@gmail.com>
- <0af1bc20-8ba2-c6b6-64e6-c1f58d521504@redhat.com>
+        d=1e100.net; s=20221208; t=1690907668; x=1691512468;
+        h=content-transfer-encoding:in-reply-to:organization:from:references
+         :cc:to:content-language:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kjefxxv3ZRGBWfEsXOGOuERDMNqo6jQLqyrxh73Gpjc=;
+        b=hqaNMkFlAbMJYDQpXSR43+ZTjc9Lzn4KNun3ZD1V+X1WcdH71odQKuMQV7k9ShhWEC
+         +3NYSc/+DGafNBbHcssCJiAdOW7rO2sdrXbPx4SJ83n7FNs1nvtDmq2sqdNCNAuMN2yz
+         5Ry6L8bToyjTHNazGB33JBcRdBcSEQxwCM31Tfad7E+t1ouvRxr1YdwOSf+444yC9e9F
+         XQExBNbio1ryc3SLW9FsfeI6cDfnCcodI4ZfGXyng3v4v5tggNjLu1t7hzT8ifPmFDqi
+         V+vNceBTIJYmB/87SoFAy2rR1LvTxQdGALT1Cqnb++2FiN/IdK7HX76RbxpIfK8Z/ocK
+         sI+A==
+X-Gm-Message-State: ABy/qLbxpjhB6BRIDOtaXs+22fykzCEubXDSvRtZeN1knnnzzZFHdXBN
+	n5KqB3evw0OALKTcGg2sUjp32skyNy/AgiTWHQ45WpmfDXcm7AkkvLvRAKf/UHpwmWreYjldjXR
+	0NpmAlYjoBfZ11dc6hBehFMg=
+X-Received: by 2002:adf:fdd1:0:b0:317:5b76:826 with SMTP id i17-20020adffdd1000000b003175b760826mr2809307wrs.0.1690907668490;
+        Tue, 01 Aug 2023 09:34:28 -0700 (PDT)
+X-Google-Smtp-Source: APBJJlGKWzZ6D+/xJlkeJbehIdicBnTcLOWAdOin/YiX77b1Dv3+c4jpwHuRHqkO20oah6xXgdI0yA==
+X-Received: by 2002:adf:fdd1:0:b0:317:5b76:826 with SMTP id i17-20020adffdd1000000b003175b760826mr2809290wrs.0.1690907668122;
+        Tue, 01 Aug 2023 09:34:28 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c705:d100:871b:ec55:67d:5247? (p200300cbc705d100871bec55067d5247.dip0.t-ipconnect.de. [2003:cb:c705:d100:871b:ec55:67d:5247])
+        by smtp.gmail.com with ESMTPSA id u5-20020a7bc045000000b003fa8dbb7b5dsm14145674wmc.25.2023.08.01.09.34.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Aug 2023 09:34:27 -0700 (PDT)
+Message-ID: <b6cb8d7f-f3f3-93c3-3ea0-4c184109a4db@redhat.com>
+Date: Tue, 1 Aug 2023 18:34:26 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0af1bc20-8ba2-c6b6-64e6-c1f58d521504@redhat.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH] fs/proc/kcore: reinstate bounce buffer for KCORE_TEXT
+ regions
+To: Lorenzo Stoakes <lstoakes@gmail.com>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ Andrew Morton <akpm@linux-foundation.org>, Baoquan He <bhe@redhat.com>,
+ Uladzislau Rezki <urezki@gmail.com>, linux-fsdevel@vger.kernel.org,
+ Jiri Olsa <olsajiri@gmail.com>, Will Deacon <will@kernel.org>,
+ Mike Galbraith <efault@gmx.de>, Mark Rutland <mark.rutland@arm.com>,
+ wangkefeng.wang@huawei.com, catalin.marinas@arm.com, ardb@kernel.org,
+ Linux regression tracking <regressions@leemhuis.info>,
+ regressions@lists.linux.dev, Matthew Wilcox <willy@infradead.org>,
+ Liu Shixin <liushixin2@huawei.com>, Jens Axboe <axboe@kernel.dk>,
+ Alexander Viro <viro@zeniv.linux.org.uk>, stable@vger.kernel.org
+References: <20230731215021.70911-1-lstoakes@gmail.com>
+ <0af1bc20-8ba2-c6b6-64e6-c1f58d521504@redhat.com>
+ <dc30a97b-853e-4d2a-b171-e68fb3ab026c@lucifer.local>
+From: David Hildenbrand <david@redhat.com>
+Organization: Red Hat
+In-Reply-To: <dc30a97b-853e-4d2a-b171-e68fb3ab026c@lucifer.local>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Aug 01, 2023 at 11:05:40AM +0200, David Hildenbrand wrote:
-> On 31.07.23 23:50, Lorenzo Stoakes wrote:
-> > Some architectures do not populate the entire range categorised by
-> > KCORE_TEXT, so we must ensure that the kernel address we read from is
-> > valid.
-> >
-> > Unfortunately there is no solution currently available to do so with a
-> > purely iterator solution so reinstate the bounce buffer in this instance so
-> > we can use copy_from_kernel_nofault() in order to avoid page faults when
-> > regions are unmapped.
-> >
-> > This change partly reverts commit 2e1c0170771e ("fs/proc/kcore: avoid
-> > bounce buffer for ktext data"), reinstating the bounce buffer, but adapts
-> > the code to continue to use an iterator.
-> >
-> > Fixes: 2e1c0170771e ("fs/proc/kcore: avoid bounce buffer for ktext data")
-> > Reported-by: Jiri Olsa <olsajiri@gmail.com>
-> > Closes: https://lore.kernel.org/all/ZHc2fm+9daF6cgCE@krava
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Lorenzo Stoakes <lstoakes@gmail.com>
-> > ---
-> >   fs/proc/kcore.c | 26 +++++++++++++++++++++++++-
-> >   1 file changed, 25 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/fs/proc/kcore.c b/fs/proc/kcore.c
-> > index 9cb32e1a78a0..3bc689038232 100644
-> > --- a/fs/proc/kcore.c
-> > +++ b/fs/proc/kcore.c
-> > @@ -309,6 +309,8 @@ static void append_kcore_note(char *notes, size_t *i, const char *name,
-> >   static ssize_t read_kcore_iter(struct kiocb *iocb, struct iov_iter *iter)
-> >   {
-> > +	struct file *file = iocb->ki_filp;
-> > +	char *buf = file->private_data;
-> >   	loff_t *fpos = &iocb->ki_pos;
-> >   	size_t phdrs_offset, notes_offset, data_offset;
-> >   	size_t page_offline_frozen = 1;
-> > @@ -554,11 +556,22 @@ static ssize_t read_kcore_iter(struct kiocb *iocb, struct iov_iter *iter)
-> >   			fallthrough;
-> >   		case KCORE_VMEMMAP:
-> >   		case KCORE_TEXT:
-> > +			/*
-> > +			 * Sadly we must use a bounce buffer here to be able to
-> > +			 * make use of copy_from_kernel_nofault(), as these
-> > +			 * memory regions might not always be mapped on all
-> > +			 * architectures.
-> > +			 */
-> > +			if (copy_from_kernel_nofault(buf, (void *)start, tsz)) {
-> > +				if (iov_iter_zero(tsz, iter) != tsz) {
-> > +					ret = -EFAULT;
-> > +					goto out;
-> > +				}
-> >   			/*
-> >   			 * We use _copy_to_iter() to bypass usermode hardening
-> >   			 * which would otherwise prevent this operation.
-> >   			 */
->
-> Having a comment at this indentation level looks for the else case looks
-> kind of weird.
+On 01.08.23 18:33, Lorenzo Stoakes wrote:
+> On Tue, Aug 01, 2023 at 11:05:40AM +0200, David Hildenbrand wrote:
+>> On 31.07.23 23:50, Lorenzo Stoakes wrote:
+>>> Some architectures do not populate the entire range categorised by
+>>> KCORE_TEXT, so we must ensure that the kernel address we read from is
+>>> valid.
+>>>
+>>> Unfortunately there is no solution currently available to do so with a
+>>> purely iterator solution so reinstate the bounce buffer in this instance so
+>>> we can use copy_from_kernel_nofault() in order to avoid page faults when
+>>> regions are unmapped.
+>>>
+>>> This change partly reverts commit 2e1c0170771e ("fs/proc/kcore: avoid
+>>> bounce buffer for ktext data"), reinstating the bounce buffer, but adapts
+>>> the code to continue to use an iterator.
+>>>
+>>> Fixes: 2e1c0170771e ("fs/proc/kcore: avoid bounce buffer for ktext data")
+>>> Reported-by: Jiri Olsa <olsajiri@gmail.com>
+>>> Closes: https://lore.kernel.org/all/ZHc2fm+9daF6cgCE@krava
+>>> Cc: stable@vger.kernel.org
+>>> Signed-off-by: Lorenzo Stoakes <lstoakes@gmail.com>
+>>> ---
+>>>    fs/proc/kcore.c | 26 +++++++++++++++++++++++++-
+>>>    1 file changed, 25 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/fs/proc/kcore.c b/fs/proc/kcore.c
+>>> index 9cb32e1a78a0..3bc689038232 100644
+>>> --- a/fs/proc/kcore.c
+>>> +++ b/fs/proc/kcore.c
+>>> @@ -309,6 +309,8 @@ static void append_kcore_note(char *notes, size_t *i, const char *name,
+>>>    static ssize_t read_kcore_iter(struct kiocb *iocb, struct iov_iter *iter)
+>>>    {
+>>> +	struct file *file = iocb->ki_filp;
+>>> +	char *buf = file->private_data;
+>>>    	loff_t *fpos = &iocb->ki_pos;
+>>>    	size_t phdrs_offset, notes_offset, data_offset;
+>>>    	size_t page_offline_frozen = 1;
+>>> @@ -554,11 +556,22 @@ static ssize_t read_kcore_iter(struct kiocb *iocb, struct iov_iter *iter)
+>>>    			fallthrough;
+>>>    		case KCORE_VMEMMAP:
+>>>    		case KCORE_TEXT:
+>>> +			/*
+>>> +			 * Sadly we must use a bounce buffer here to be able to
+>>> +			 * make use of copy_from_kernel_nofault(), as these
+>>> +			 * memory regions might not always be mapped on all
+>>> +			 * architectures.
+>>> +			 */
+>>> +			if (copy_from_kernel_nofault(buf, (void *)start, tsz)) {
+>>> +				if (iov_iter_zero(tsz, iter) != tsz) {
+>>> +					ret = -EFAULT;
+>>> +					goto out;
+>>> +				}
+>>>    			/*
+>>>    			 * We use _copy_to_iter() to bypass usermode hardening
+>>>    			 * which would otherwise prevent this operation.
+>>>    			 */
+>>
+>> Having a comment at this indentation level looks for the else case looks
+>> kind of weird.
+> 
+> Yeah, but having it indented again would be weird and seem like it doesn't
+> apply to the block below, there's really no good spot for it and
+> checkpatch.pl doesn't mind so I think this is ok :)
+> 
+>>
+>> (does that comment still apply?)
+> 
+> Hm good point, actually, now we're using the bounce buffer we don't need to
+> avoid usermode hardening any more.
+> 
+> However since we've established a bounce buffer ourselves its still
+> appropriate to use _copy_to_iter() as we know the source region is good to
+> copy from.
+> 
+> To make life easy I'll just respin with an updated comment :)
 
-Yeah, but having it indented again would be weird and seem like it doesn't
-apply to the block below, there's really no good spot for it and
-checkpatch.pl doesn't mind so I think this is ok :)
+I'm not too picky this time, no need to resend if everybody else is fine :P
 
->
-> (does that comment still apply?)
+-- 
+Cheers,
 
-Hm good point, actually, now we're using the bounce buffer we don't need to
-avoid usermode hardening any more.
+David / dhildenb
 
-However since we've established a bounce buffer ourselves its still
-appropriate to use _copy_to_iter() as we know the source region is good to
-copy from.
-
-To make life easy I'll just respin with an updated comment :)
-
->
->
-> --
-> Cheers,
->
-> David / dhildenb
->
