@@ -1,103 +1,191 @@
-Received: from madras.collabora.co.uk (madras.collabora.co.uk [46.235.227.172])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42DA51F952;
-	Tue,  1 Aug 2023 11:47:26 +0000 (UTC)
-Received: from localhost (unknown [IPv6:2a0c:5a83:9100:a000:2ba:2ec4:c400:5d53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 861CF1ADCC
+	for <regressions@lists.linux.dev>; Tue,  1 Aug 2023 15:58:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1690905497;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=v1Xszfz9uEDrPkkvCMGSkEQEMthpp9oBlq/CbCyVYks=;
+	b=i7KMon5QB9WWZiFZidfpaG6DhicU00itLoLqA8zPtLfKA8DBkwON9SXLxdoVEiAXcevdYg
+	JkaW85sTnRGh3yyXqMBw7AsGlfILkyeGUnbu4us8n8Yx0IlQ9Xa57RT6SGDQVarSBt0ezt
+	W5yjIQOr/RGS7m126Tc+17U0cDD0HHY=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-445-x24qKZ6FPHuvf70ETQoxQA-1; Tue, 01 Aug 2023 11:58:12 -0400
+X-MC-Unique: x24qKZ6FPHuvf70ETQoxQA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	(Authenticated sender: rcn)
-	by madras.collabora.co.uk (Postfix) with ESMTPSA id 3D8856607122;
-	Tue,  1 Aug 2023 12:47:19 +0100 (BST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1690890439;
-	bh=e/6VKfnBw/TDQbyNsut3VlPLcb43kMOPjTqCvRsbv24=;
-	h=From:To:Cc:Subject:Date:From;
-	b=lmRK1l/5cAo+aAylHsKM6KP71V8jecCCfWibgXrciZT8h6IRlOER4vTwYa6j00t0E
-	 0JVo5TkN1Xn4KC3NwvQiZJwvbmRWFd4vjPcnlAfK/teI7fxkHeXJovFIfGHzgWt6ss
-	 DTLSBJCw2bqTihzJBEKxDIUH298apIggTs7MrvEekPmkAcLkaKLULhMYfWQFukbXkR
-	 xjWj2Zni23RHe83xu+JyC6GzzhNtNVN8LPy/z3kRRgSf37XMPQPeGC3F2WWsrV/C/Z
-	 Xjnow75jUOO1Tb9I8agHfxmRUt4u1PoGqfwVDvuFc7gOw/OF+7dgW3WbK/FGJtQZay
-	 YyD5MGOVq7TtA==
-From: ricardo.canuelo@collabora.com (Ricardo =?utf-8?Q?Ca=C3=B1uelo?=)
-To: kernelci@lists.linux.dev, gregkh@linuxfoundation.org, thorsten@leemhuis.info, regressions@lists.linux.dev
-Cc: kernel@collabora.com, linux-kernel@vger.kernel.org, Gustavo Padovan <gustavo.padovan@collabora.com>, Shreeya Patel <shreeya.patel@collabora.com>
-Subject: Kernel regression tracking/reporting initiatives and KCIDB
-Date: Tue, 01 Aug 2023 13:47:16 +0200
-Message-ID: <874jljhtmj.fsf@rcn-XPS-13-9305.i-did-not-set--mail-host-address--so-tickle-me>
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 319E4185A791;
+	Tue,  1 Aug 2023 15:58:11 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.107])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 993E42166B25;
+	Tue,  1 Aug 2023 15:57:51 +0000 (UTC)
+Date: Tue, 1 Aug 2023 23:57:48 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Lorenzo Stoakes <lstoakes@gmail.com>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Uladzislau Rezki <urezki@gmail.com>, linux-fsdevel@vger.kernel.org,
+	Jiri Olsa <olsajiri@gmail.com>, Will Deacon <will@kernel.org>,
+	Mike Galbraith <efault@gmx.de>, Mark Rutland <mark.rutland@arm.com>,
+	wangkefeng.wang@huawei.com, catalin.marinas@arm.com,
+	ardb@kernel.org, David Hildenbrand <david@redhat.com>,
+	Linux regression tracking <regressions@leemhuis.info>,
+	regressions@lists.linux.dev, Matthew Wilcox <willy@infradead.org>,
+	Liu Shixin <liushixin2@huawei.com>, Jens Axboe <axboe@kernel.dk>,
+	Alexander Viro <viro@zeniv.linux.org.uk>, stable@vger.kernel.org
+Subject: Re: [PATCH] fs/proc/kcore: reinstate bounce buffer for KCORE_TEXT
+ regions
+Message-ID: <ZMkrfBDARIAYFYwz@MiWiFi-R3L-srv>
+References: <20230731215021.70911-1-lstoakes@gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230731215021.70911-1-lstoakes@gmail.com>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.6
 
-Hi all,
+On 07/31/23 at 10:50pm, Lorenzo Stoakes wrote:
+> Some architectures do not populate the entire range categorised by
+> KCORE_TEXT, so we must ensure that the kernel address we read from is
+> valid.
+> 
+> Unfortunately there is no solution currently available to do so with a
+> purely iterator solution so reinstate the bounce buffer in this instance so
+> we can use copy_from_kernel_nofault() in order to avoid page faults when
+> regions are unmapped.
+> 
+> This change partly reverts commit 2e1c0170771e ("fs/proc/kcore: avoid
+> bounce buffer for ktext data"), reinstating the bounce buffer, but adapts
+> the code to continue to use an iterator.
+> 
+> Fixes: 2e1c0170771e ("fs/proc/kcore: avoid bounce buffer for ktext data")
+> Reported-by: Jiri Olsa <olsajiri@gmail.com>
+> Closes: https://lore.kernel.org/all/ZHc2fm+9daF6cgCE@krava
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Lorenzo Stoakes <lstoakes@gmail.com>
+> ---
+>  fs/proc/kcore.c | 26 +++++++++++++++++++++++++-
+>  1 file changed, 25 insertions(+), 1 deletion(-)
+> 
+> diff --git a/fs/proc/kcore.c b/fs/proc/kcore.c
+> index 9cb32e1a78a0..3bc689038232 100644
+> --- a/fs/proc/kcore.c
+> +++ b/fs/proc/kcore.c
+> @@ -309,6 +309,8 @@ static void append_kcore_note(char *notes, size_t *i, const char *name,
+>  
+>  static ssize_t read_kcore_iter(struct kiocb *iocb, struct iov_iter *iter)
+>  {
+> +	struct file *file = iocb->ki_filp;
+> +	char *buf = file->private_data;
+>  	loff_t *fpos = &iocb->ki_pos;
+>  	size_t phdrs_offset, notes_offset, data_offset;
+>  	size_t page_offline_frozen = 1;
+> @@ -554,11 +556,22 @@ static ssize_t read_kcore_iter(struct kiocb *iocb, struct iov_iter *iter)
+>  			fallthrough;
+>  		case KCORE_VMEMMAP:
+>  		case KCORE_TEXT:
+> +			/*
+> +			 * Sadly we must use a bounce buffer here to be able to
+> +			 * make use of copy_from_kernel_nofault(), as these
+> +			 * memory regions might not always be mapped on all
+> +			 * architectures.
+> +			 */
+> +			if (copy_from_kernel_nofault(buf, (void *)start, tsz)) {
+> +				if (iov_iter_zero(tsz, iter) != tsz) {
+> +					ret = -EFAULT;
+> +					goto out;
+> +				}
+>  			/*
+>  			 * We use _copy_to_iter() to bypass usermode hardening
+>  			 * which would otherwise prevent this operation.
+>  			 */
+> -			if (_copy_to_iter((char *)start, tsz, iter) != tsz) {
+> +			} else if (_copy_to_iter(buf, tsz, iter) != tsz) {
+>  				ret = -EFAULT;
+>  				goto out;
+>  			}
+> @@ -595,6 +608,10 @@ static int open_kcore(struct inode *inode, struct file *filp)
+>  	if (ret)
+>  		return ret;
+>  
+> +	filp->private_data = kmalloc(PAGE_SIZE, GFP_KERNEL);
+> +	if (!filp->private_data)
+> +		return -ENOMEM;
+> +
+>  	if (kcore_need_update)
+>  		kcore_update_ram();
+>  	if (i_size_read(inode) != proc_root_kcore->size) {
+> @@ -605,9 +622,16 @@ static int open_kcore(struct inode *inode, struct file *filp)
+>  	return 0;
+>  }
+>  
+> +static int release_kcore(struct inode *inode, struct file *file)
+> +{
+> +	kfree(file->private_data);
+> +	return 0;
+> +}
+> +
+>  static const struct proc_ops kcore_proc_ops = {
+>  	.proc_read_iter	= read_kcore_iter,
+>  	.proc_open	= open_kcore,
+> +	.proc_release	= release_kcore,
+>  	.proc_lseek	= default_llseek,
+>  };
 
-I'm Ricardo from Collabora. In the past months, we=E2=80=99ve been analyzin=
-g the
-current status of CI regression reporting and tracking in the Linux
-kernel: assessing the existing tools, testing their functionalities,
-collecting ideas about desirable features that aren=E2=80=99t available yet=
- and
-sketching some of them.
+On 6.5-rc4, the failures can be reproduced stably on a arm64 machine.
+With patch applied, both makedumpfile and objdump test cases passed.
 
-As part of this effort, we wrote a Regression Tracker tool [1] as a
-proof of concept. It=E2=80=99s a rather simple tool that takes existing
-regression data and reports and uses them to show more context on each
-reported regression, as well as highlighting the relationships between
-them, whether they can be caused by an infrastructure error and other
-additional metadata about their current status.  We=E2=80=99ve been using it
-mostly as a playground for us to explore the current status of the
-functionalities provided by CI systems and to test ideas about new
-features.
+And the code change looks good to me, thanks.
 
-We=E2=80=99re also checking other tools and services provided by the commun=
-ity,
-such as regzbot [2], collaborating with them when possible and thinking
-about how to combine multiple scattered efforts by different people
-towards the same common goal. As a first step, we=E2=80=99ve contributed to
-regzbot and partially integrated its results into the Regression Tracker
-tool.
+Tested-by: Baoquan He <bhe@redhat.com>
+Reviewed-by: Baoquan He <bhe@redhat.com>
 
-So far, we=E2=80=99ve been using the KernelCI regression data and reports a=
-s a
-data source, we're now wondering if we could tackle the problem with a
-more general approach by building on top of what KCIDB already provides.
 
-In general, CI systems tend to define regressions as a low-level concept
-which is rather static: a snapshot of a test result at a certain point
-in time. When it comes to reporting them to developers, there's much
-more info that could be added to them. In particular, the context of it
-and the fact that a reported regression has a life cycle:
+===============================================
+[root@ ~]# makedumpfile --mem-usage /proc/kcore 
+The kernel version is not supported.
+The makedumpfile operation may be incomplete.
 
-- did this test also fail on other hardware targets or with other kernel
-  configurations?
-- is it possible that the test failed because of an infrastructure
-  error?
-- does the test fail consistently since that commit or does it show
-  unstable results?
-- does the test output show any traces of already known bugs?
-- has this regression been bisected and reported anywhere?
-- was the regression reported by anyone? If so, is there someone already
-  working on it?
+TYPE		PAGES			EXCLUDABLE	DESCRIPTION
+----------------------------------------------------------------------
+ZERO		76234           	yes		Pages filled with zero
+NON_PRI_CACHE	147613          	yes		Cache pages without private flag
+PRI_CACHE	3847            	yes		Cache pages with private flag
+USER		15276           	yes		User process pages
+FREE		15809884        	yes		Free pages
+KERN_DATA	459950          	no		Dumpable kernel data 
 
-Many of these info points can be extracted from the CI results databases
-and processed to provide additional regression data. That=E2=80=99s what we=
-=E2=80=99re
-trying to do with the Regression Tracker tool, and we think it=E2=80=99d be
-interesting to start experimenting with the data in KCIDB to see how
-this could be improved and what would be the right way to integrate this
-type of functionality.
+page size:		4096            
+Total pages on system:	16512804        
+Total size on system:	67636445184      Byte
 
-Please let us know if that's a possibility and if you'd like to add
-anything to the ideas proposed above.
+[root@ ~]# objdump -d  --start-address=0x^C
+[root@ ~]# cat /proc/kallsyms | grep ksys_read
+ffffab3be77229d8 T ksys_readahead
+ffffab3be782a700 T ksys_read
+[root@ ~]# objdump -d  --start-address=0xffffab3be782a700 --stop-address=0xffffab3be782a710 /proc/kcore 
 
-Cheers,
-Ricardo
+/proc/kcore:     file format elf64-littleaarch64
 
-[1] https://kernel.pages.collabora.com/kernelci-regressions-tracker/
-[2] https://linux-regtracking.leemhuis.info/regzbot/all/
+
+Disassembly of section load1:
+
+ffffab3be782a700 <load1+0x41a700>:
+ffffab3be782a700:	aa1e03e9 	mov	x9, x30
+ffffab3be782a704:	d503201f 	nop
+ffffab3be782a708:	d503233f 	paciasp
+ffffab3be782a70c:	a9bc7bfd 	stp	x29, x30, [sp, #-64]!
+objdump: error: /proc/kcore(load2) is too large (0x7bff70000000 bytes)
+objdump: Reading section load2 failed because: memory exhausted
+
+
