@@ -1,45 +1,47 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E4AA63B1
-	for <regressions@lists.linux.dev>; Wed,  2 Aug 2023 12:38:29 +0000 (UTC)
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1bba04b9df3so53938055ad.0
-        for <regressions@lists.linux.dev>; Wed, 02 Aug 2023 05:38:29 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BDB763B1
+	for <regressions@lists.linux.dev>; Wed,  2 Aug 2023 13:08:44 +0000 (UTC)
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-3fe1a17f983so35095365e9.3
+        for <regressions@lists.linux.dev>; Wed, 02 Aug 2023 06:08:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1690979909; x=1691584709;
-        h=content-transfer-encoding:in-reply-to:references:cc:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=BCaJfRDcQ/j8NvxBseF28uGTZsyouYPenyGPtBvs7Ag=;
-        b=OQVD00X+fFdoFOV6AIVr9E8zFxSx5ZSdlWn1z9cEHpSHI7fNoaOxt+4YE4hIq/sS0H
-         Tc5t+QY/Af0FPcb0UbOUTKbN/wjHt3x+M1L1EhJbNwv2Yeft9fGLKiBOmOdaJlFBaMCB
-         SA+05FZQ3LxRO8tWClstvW84jkw6GQQYE85CC2iYP4dk1nwSuSKe+ktwGc1OoOxNufBt
-         rHzA+llAGUZSu6H62F4OtIV8VCF0Qoh62wsylG1k4K0GiuIkbpbwqUISRAEgYjMvqv3H
-         xunEdkFirMg+HlQItswVt+0Ps8H3/2T6EIGW7GF0juUEzQ+jtxGI0Lvs97p+PayymOr1
-         XKTw==
+        d=linaro.org; s=google; t=1690981723; x=1691586523;
+        h=content-transfer-encoding:in-reply-to:subject:organization
+         :references:cc:to:content-language:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2gKqfx6Ptiw0IBGAk/3SH2zWXJ1w9LfF+qPC02xaE30=;
+        b=P/EWJoARx3LF+9GRRrMNDO5ED5UI+uBEVUm/4dN9aG/einEUFd3LJPgFt6J1yY2A1R
+         21KN7UiekIiFUxocGJ8aX0bfEzvP+bqAXKZMQrugVgu/2m0dOnBnEi9W4G4tTSFDjbej
+         Kqjcm94Qs3QYQRvgvW01wYn9ySkuBCm9qoeycc5TMTPfSQdF8XoR64AhaR5z6r/9GLxb
+         qJ9jFJN7CKIaYSOcUJfopvQsXpgDVrOM3UAb2mYBwt52S6bQQQ4ZgN15T1L3mBCN23Ku
+         JAQA8XjpaVIKQiPRj66vCrsRfOQQf0RoT2vsnLeWMI8dwfynmRG00J3d6tgnuig29I9C
+         SKiw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690979909; x=1691584709;
-        h=content-transfer-encoding:in-reply-to:references:cc:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=BCaJfRDcQ/j8NvxBseF28uGTZsyouYPenyGPtBvs7Ag=;
-        b=ZcKDjZT8WSKVshMtDyq75jXjTqAUknXW61e27ukw7b3OFxoVEADztEoD3zhMXj6/T2
-         83uo3y/WkszoNT7zD9IGMkJpPI2fMDxjT0bHZQVljFNlm/6I3rjYZjQ6LW9h0YADaTUa
-         cBHlGHsIF94LFPsucHj7T2bkzEvULwgf06Q8lQq4BUaDrBTgOC90DpLModElVegSykjf
-         jGl1N/yVKYMnyoP37jm80XwcniUCg1s43Pd1tGgZmQGy8o8P7Ruu7IudMLhczECba/Yc
-         0vNXH2/NGMGLCTwHz6+p4/qZCgCevLL4/Z4WK+BY5dzaan6YdK6tHRneZPGt1SCxEbhR
-         Y2sw==
-X-Gm-Message-State: ABy/qLZ+vPqCSHqF7+yv3f8WC5s4tJMleyfR0C9VuyBCytwb3cXfRS9h
-	Og13YmJ4XmD14tD6UIukhW8=
-X-Google-Smtp-Source: APBJJlHnD8LH6jLPiA1ybE8b0xGJc/HDo+xItbPoicPJ8NQ6sOjqNAamf9Z3J9pUfqgq/hovKFa2Sw==
-X-Received: by 2002:a17:903:2343:b0:1bb:a85c:23cc with SMTP id c3-20020a170903234300b001bba85c23ccmr20078880plh.15.1690979909291;
-        Wed, 02 Aug 2023 05:38:29 -0700 (PDT)
-Received: from [192.168.0.105] ([103.131.18.64])
-        by smtp.gmail.com with ESMTPSA id m24-20020a170902bb9800b001b87bedcc6fsm12310621pls.93.2023.08.02.05.38.26
+        d=1e100.net; s=20221208; t=1690981723; x=1691586523;
+        h=content-transfer-encoding:in-reply-to:subject:organization
+         :references:cc:to:content-language:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=2gKqfx6Ptiw0IBGAk/3SH2zWXJ1w9LfF+qPC02xaE30=;
+        b=eg5QduuznTmIfBfxDzaZOY31y1UO+2nz3PD6IF6BUT0LPKn7mJHWwraNusuE0jpFMK
+         U2wxI4+OzpPQUAfF9bpnGiEqkwjChjI8FpwYEUpT+9QBa16U69HeTSRL2VZE7sFRGMy3
+         cigG2942wZZsLDnpLSvW0yCxlVU9edlaNS2NwoeguMvVaTOE2Dq8EnsnJTmm3why0xJJ
+         P2vn70Jzw94ARxdAOSywFCzu+FX3s/Wte2dmdy9AmpExeeEuoNvrMoGZinHIwDULVP6T
+         A4vLbyCbgnlQ/YI1EJbUpKys5PSneCIfmtCdW+QMzvEv7zQkUKOTojc6X8vPpLgK1NPO
+         6+Lw==
+X-Gm-Message-State: ABy/qLZhJXwIUWs6nAh11oT4SC5OdtMvVMcwYTIdJeGaPa9ypU02Rhpy
+	zLVVB+18tC+dUDPmNP04wMOQLA==
+X-Google-Smtp-Source: APBJJlG8sr5jUWBVjL3BRFAbmn29x9oHMrYNBecenH9BIKBdXscxcFgCB56BCi9tNLKpz3rMG31rBg==
+X-Received: by 2002:adf:face:0:b0:313:f07b:801f with SMTP id a14-20020adfface000000b00313f07b801fmr4563714wrs.44.1690981722963;
+        Wed, 02 Aug 2023 06:08:42 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:982:cbb0:c5bb:5b4:61e3:d196? ([2a01:e0a:982:cbb0:c5bb:5b4:61e3:d196])
+        by smtp.gmail.com with ESMTPSA id m12-20020adff38c000000b00313f031876esm19063623wro.43.2023.08.02.06.08.41
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Aug 2023 05:38:28 -0700 (PDT)
-Message-ID: <80e4fe8d-96d0-2eba-918b-7c36f8341568@gmail.com>
-Date: Wed, 2 Aug 2023 19:38:23 +0700
+        Wed, 02 Aug 2023 06:08:42 -0700 (PDT)
+Message-ID: <d4b778f6-35b6-fc1b-014d-eaa9b3b900a4@linaro.org>
+Date: Wed, 2 Aug 2023 15:08:41 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -48,33 +50,109 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.13.0
-Subject: Re: Fwd: Kernel memory management bug at mm/migrate.c:662 when
- flushing caches
+From: neil.armstrong@linaro.org
+Reply-To: neil.armstrong@linaro.org
 Content-Language: en-US
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Alistair Popple <apopple@nvidia.com>,
- Felix Kuehling <Felix.Kuehling@amd.com>,
- Andrew Morton <akpm@linux-foundation.org>, Marco <rodomar705@protonmail.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Memory Management List <linux-mm@kvack.org>,
- Linux Regressions <regressions@lists.linux.dev>
-References: <428d8fe9-8c19-ddba-b36e-7db5524e8d04@gmail.com>
-In-Reply-To: <428d8fe9-8c19-ddba-b36e-7db5524e8d04@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+To: Marek Vasut <marex@denx.de>, Abhinav Kumar <quic_abhinavk@quicinc.com>,
+ Amit Pundir <amit.pundir@linaro.org>,
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Jagan Teki <jagan@amarulasolutions.com>, dri-devel@lists.freedesktop.org,
+ Robert Foss <rfoss@kernel.org>, Andrzej Hajda <andrzej.hajda@intel.com>,
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Michael Walle <michael@walle.cc>,
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+ linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ freedreno <freedreno@lists.freedesktop.org>
+References: <20230403221233.500485-1-marex@denx.de>
+ <20230403221233.500485-2-marex@denx.de>
+ <CAMi1Hd0TD=2z_=bcDrht3H_wiLvAFcv8Z-U_r_KUOoeMc6UMjw@mail.gmail.com>
+ <CAMty3ZBNFu=f-FS4YFN4wfmiTuk=48nna-vub1eMYwidDt+msg@mail.gmail.com>
+ <CAA8EJppbdiUz5m+9EAPnFb916DaS_VKWd30c7_EPWjuid8rtqQ@mail.gmail.com>
+ <CAMi1Hd2G5PJmz4wpO1wbdqKd0FA8LBgvRDv2u5ZYAMb5s6Kt0A@mail.gmail.com>
+ <d5fb8106-b8f3-0acf-1267-d4d6d0860e25@linaro.org>
+ <d28b0090-bd1e-6737-d92b-348dc6c30750@linaro.org>
+ <4396d197-f16f-92bd-727c-eb8c78016198@quicinc.com>
+ <961b4747-c9f1-a31c-c33c-475b4803f832@denx.de>
+ <64c3352f-c2aa-5260-c6ff-4a607ce219a2@quicinc.com>
+ <f768950b-0406-1f03-86a5-50d5794bb060@denx.de>
+ <51d782c4-3539-c3d3-6844-d6b9a39c09eb@linaro.org>
+ <88a49ed7-8132-3212-1f7a-9378eb640d68@denx.de>
+Organization: Linaro Developer Services
+Subject: Re: [PATCH 2/2] drm/bridge: lt9611: Do not generate HFP/HBP/HSA and
+ EOT packet
+In-Reply-To: <88a49ed7-8132-3212-1f7a-9378eb640d68@denx.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 02/08/2023 18:08, Bagas Sanjaya wrote:
-> #regzbot introduced: v6.2..v6.3 https://bugzilla.kernel.org/show_bug.cgi?id=217747
-> #regzbot title: kernel memory bug when cleaning hugepages before QEMU boot
+Hi Marek,
+
+On 02/08/2023 14:25, Marek Vasut wrote:
+> On 8/2/23 10:39, neil.armstrong@linaro.org wrote:
+>> Hi Marek,
 > 
+> Hi,
+> 
+>> On 13/07/2023 20:28, Marek Vasut wrote:
+>>
+>> <snip>
+>>
+>>>>>
+>>>>> MIPI_DSI_MODE_VIDEO_NO_HFP means the HBP period is just skipped by DSIM.
+>>>>>
+>>>>> Maybe there is a need for new set of flags which differentiate between HBP skipped (i.e. NO HBP) and HBP LP11 ?
+>>>>>
+>>>>
+>>>> No, the section of the MIPI DSI spec I posted below clearly states there are two options:
+>>>>
+>>>> 1) send blanking packets during those periods
+>>>> 2) transition to LP11 during those periods
+>>>>
+>>>> There is no 3rd option in the spec of not doing both like what you are suggesting. So DSIM should also be only transitioning to LP11 during those periods if its not sending the blanking packets with those flags set.
+>>>>
+>>>> So, there is no need for any new set of flags to differentiate.
+>>>>
+>>>> The flags and their interpretation is correct in MSM driver. I cannot comment on what exactly DSIM does with those flags.
+>>>
+>>> How do you explain the comment in include/drm/drm_mipi_dsi.h:
+>>>
+>>> 128 /* disable hback-porch area */
+>>> 129 #define MIPI_DSI_MODE_VIDEO_NO_HBP      BIT(6)
+>>
+>> Can you specify how you determined those flags were needed on DSIM ? a vendor tree ? a datasheet ?
+> 
+> The following upstream commit:
+> 
+> 996e1defca344 ("drm: exynos: dsi: Fix MIPI_DSI*_NO_* mode flags")
+> 
+>> In the meantime, we should revert this patch because it regresses some Qcom
+>> based platforms until we figure out what's missing to make DSIM based boards
+>> happy.
+>>
+>> I'll send a revert change afterwards.
+> 
+> That change would break existing use case on i.MX8M then, I disagree with that revert.
 
-The reporter confirmed that this regression is (Open)ZFS-specific,
-so:
+As I understand the timeline is :
 
-#regzbot invalid: out-of-tree (OpenZFS) regression
+- 996e1defca344 was merged in v6.2-rc2 and caused regression on NXP platforms
 
-Sorry for inconvenience.
+- 8ddce13ae696 was merged in v6.5-rc1 to fix that but caused regression on QCOM platforms
 
--- 
-An old man doll... just what I always wanted! - Clara
+Did I miss something ?
 
+I don't know how to handle this apart reverting 8ddce13ae696 and trying to find a proper fix that doesn't regress QCOM.
+
+So, The main issue is around the real meaning of the IPI_DSI_MODE_VIDEO_NO_* flags,
+Exynos DRM removed the HSA, HBP and HFP packets, Qcom DSI moves the DSI lanes
+state to LP-11 during the period.
+
+The behavior is significantly different and the naming doesn't suggest any
+correct behavior.
+
+The only solution is to find out why :
+- On Qcom platforms, having the HSA, HBP and HFP periods is OK, but not on DSIM
+- On DSIM, removing the HSA, HBP and HFP periods is fine
+- What's the exact requirement of the lt9611 bridge concerning those periods
+
+Neil
