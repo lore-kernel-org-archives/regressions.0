@@ -1,47 +1,26 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BDB763B1
-	for <regressions@lists.linux.dev>; Wed,  2 Aug 2023 13:08:44 +0000 (UTC)
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-3fe1a17f983so35095365e9.3
-        for <regressions@lists.linux.dev>; Wed, 02 Aug 2023 06:08:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1690981723; x=1691586523;
-        h=content-transfer-encoding:in-reply-to:subject:organization
-         :references:cc:to:content-language:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2gKqfx6Ptiw0IBGAk/3SH2zWXJ1w9LfF+qPC02xaE30=;
-        b=P/EWJoARx3LF+9GRRrMNDO5ED5UI+uBEVUm/4dN9aG/einEUFd3LJPgFt6J1yY2A1R
-         21KN7UiekIiFUxocGJ8aX0bfEzvP+bqAXKZMQrugVgu/2m0dOnBnEi9W4G4tTSFDjbej
-         Kqjcm94Qs3QYQRvgvW01wYn9ySkuBCm9qoeycc5TMTPfSQdF8XoR64AhaR5z6r/9GLxb
-         qJ9jFJN7CKIaYSOcUJfopvQsXpgDVrOM3UAb2mYBwt52S6bQQQ4ZgN15T1L3mBCN23Ku
-         JAQA8XjpaVIKQiPRj66vCrsRfOQQf0RoT2vsnLeWMI8dwfynmRG00J3d6tgnuig29I9C
-         SKiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690981723; x=1691586523;
-        h=content-transfer-encoding:in-reply-to:subject:organization
-         :references:cc:to:content-language:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=2gKqfx6Ptiw0IBGAk/3SH2zWXJ1w9LfF+qPC02xaE30=;
-        b=eg5QduuznTmIfBfxDzaZOY31y1UO+2nz3PD6IF6BUT0LPKn7mJHWwraNusuE0jpFMK
-         U2wxI4+OzpPQUAfF9bpnGiEqkwjChjI8FpwYEUpT+9QBa16U69HeTSRL2VZE7sFRGMy3
-         cigG2942wZZsLDnpLSvW0yCxlVU9edlaNS2NwoeguMvVaTOE2Dq8EnsnJTmm3why0xJJ
-         P2vn70Jzw94ARxdAOSywFCzu+FX3s/Wte2dmdy9AmpExeeEuoNvrMoGZinHIwDULVP6T
-         A4vLbyCbgnlQ/YI1EJbUpKys5PSneCIfmtCdW+QMzvEv7zQkUKOTojc6X8vPpLgK1NPO
-         6+Lw==
-X-Gm-Message-State: ABy/qLZhJXwIUWs6nAh11oT4SC5OdtMvVMcwYTIdJeGaPa9ypU02Rhpy
-	zLVVB+18tC+dUDPmNP04wMOQLA==
-X-Google-Smtp-Source: APBJJlG8sr5jUWBVjL3BRFAbmn29x9oHMrYNBecenH9BIKBdXscxcFgCB56BCi9tNLKpz3rMG31rBg==
-X-Received: by 2002:adf:face:0:b0:313:f07b:801f with SMTP id a14-20020adfface000000b00313f07b801fmr4563714wrs.44.1690981722963;
-        Wed, 02 Aug 2023 06:08:42 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:982:cbb0:c5bb:5b4:61e3:d196? ([2a01:e0a:982:cbb0:c5bb:5b4:61e3:d196])
-        by smtp.gmail.com with ESMTPSA id m12-20020adff38c000000b00313f031876esm19063623wro.43.2023.08.02.06.08.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Aug 2023 06:08:42 -0700 (PDT)
-Message-ID: <d4b778f6-35b6-fc1b-014d-eaa9b3b900a4@linaro.org>
-Date: Wed, 2 Aug 2023 15:08:41 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CB1EDF66
+	for <regressions@lists.linux.dev>; Wed,  2 Aug 2023 17:25:22 +0000 (UTC)
+Received: from [127.0.0.1] (p578adb1c.dip0.t-ipconnect.de [87.138.219.28])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
+	(No client certificate requested)
+	(Authenticated sender: marex@denx.de)
+	by phobos.denx.de (Postfix) with ESMTPSA id 60D5B8685D;
+	Wed,  2 Aug 2023 19:25:18 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
+	s=phobos-20191101; t=1690997119;
+	bh=RYe5PxJYQ9XrOHJfTi636roYNO47+WQvmmqcvq5UECM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=eVFe57KoNs4YTqA0uiq3jG392qoq2aYa2ch2IpgVhL+mcKy0vY4865Ep6sV5CbRDx
+	 0Syff0W9iVZUJjgvV3lIbIEt9E/eYpTYyDofUzVytSWx/QKmz2FKKz+utQEzPxs5Ps
+	 y5Jt2ekFNFsuevweac978G1PHlhjPxpwk+/O4UFiHhqcvrZ4TupN4OFpp6NqeGzcXw
+	 G+wWl2WfZ8nSdLAgcXTqaY+HSAonDk4G062DKQgjadTcqb6SOKSqUJI3DHtfZZTcg6
+	 RxOsvioaIUUdVvpS5dp7/DspbZRwt4/Wc3MLMutz6IXREiKrsha86nC+1Bn1kedXvK
+	 H9gh88Mwc38Dg==
+Message-ID: <c9e42b81-f0b4-05a7-03db-786fa7d38135@denx.de>
+Date: Wed, 2 Aug 2023 19:25:17 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -49,11 +28,10 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-From: neil.armstrong@linaro.org
-Reply-To: neil.armstrong@linaro.org
-Content-Language: en-US
-To: Marek Vasut <marex@denx.de>, Abhinav Kumar <quic_abhinavk@quicinc.com>,
+ Thunderbird/102.13.1
+Subject: Re: [PATCH 2/2] drm/bridge: lt9611: Do not generate HFP/HBP/HSA and
+ EOT packet
+To: neil.armstrong@linaro.org, Abhinav Kumar <quic_abhinavk@quicinc.com>,
  Amit Pundir <amit.pundir@linaro.org>,
  Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 Cc: Jagan Teki <jagan@amarulasolutions.com>, dri-devel@lists.freedesktop.org,
@@ -78,81 +56,120 @@ References: <20230403221233.500485-1-marex@denx.de>
  <f768950b-0406-1f03-86a5-50d5794bb060@denx.de>
  <51d782c4-3539-c3d3-6844-d6b9a39c09eb@linaro.org>
  <88a49ed7-8132-3212-1f7a-9378eb640d68@denx.de>
-Organization: Linaro Developer Services
-Subject: Re: [PATCH 2/2] drm/bridge: lt9611: Do not generate HFP/HBP/HSA and
- EOT packet
-In-Reply-To: <88a49ed7-8132-3212-1f7a-9378eb640d68@denx.de>
+ <d4b778f6-35b6-fc1b-014d-eaa9b3b900a4@linaro.org>
+Content-Language: en-US
+From: Marek Vasut <marex@denx.de>
+In-Reply-To: <d4b778f6-35b6-fc1b-014d-eaa9b3b900a4@linaro.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
+X-Virus-Status: Clean
 
-Hi Marek,
-
-On 02/08/2023 14:25, Marek Vasut wrote:
-> On 8/2/23 10:39, neil.armstrong@linaro.org wrote:
->> Hi Marek,
+On 8/2/23 15:08, neil.armstrong@linaro.org wrote:
+> Hi Marek,
 > 
-> Hi,
-> 
->> On 13/07/2023 20:28, Marek Vasut wrote:
+> On 02/08/2023 14:25, Marek Vasut wrote:
+>> On 8/2/23 10:39, neil.armstrong@linaro.org wrote:
+>>> Hi Marek,
 >>
->> <snip>
+>> Hi,
 >>
->>>>>
->>>>> MIPI_DSI_MODE_VIDEO_NO_HFP means the HBP period is just skipped by DSIM.
->>>>>
->>>>> Maybe there is a need for new set of flags which differentiate between HBP skipped (i.e. NO HBP) and HBP LP11 ?
->>>>>
->>>>
->>>> No, the section of the MIPI DSI spec I posted below clearly states there are two options:
->>>>
->>>> 1) send blanking packets during those periods
->>>> 2) transition to LP11 during those periods
->>>>
->>>> There is no 3rd option in the spec of not doing both like what you are suggesting. So DSIM should also be only transitioning to LP11 during those periods if its not sending the blanking packets with those flags set.
->>>>
->>>> So, there is no need for any new set of flags to differentiate.
->>>>
->>>> The flags and their interpretation is correct in MSM driver. I cannot comment on what exactly DSIM does with those flags.
+>>> On 13/07/2023 20:28, Marek Vasut wrote:
 >>>
->>> How do you explain the comment in include/drm/drm_mipi_dsi.h:
+>>> <snip>
 >>>
->>> 128 /* disable hback-porch area */
->>> 129 #define MIPI_DSI_MODE_VIDEO_NO_HBP      BIT(6)
+>>>>>>
+>>>>>> MIPI_DSI_MODE_VIDEO_NO_HFP means the HBP period is just skipped by 
+>>>>>> DSIM.
+>>>>>>
+>>>>>> Maybe there is a need for new set of flags which differentiate 
+>>>>>> between HBP skipped (i.e. NO HBP) and HBP LP11 ?
+>>>>>>
+>>>>>
+>>>>> No, the section of the MIPI DSI spec I posted below clearly states 
+>>>>> there are two options:
+>>>>>
+>>>>> 1) send blanking packets during those periods
+>>>>> 2) transition to LP11 during those periods
+>>>>>
+>>>>> There is no 3rd option in the spec of not doing both like what you 
+>>>>> are suggesting. So DSIM should also be only transitioning to LP11 
+>>>>> during those periods if its not sending the blanking packets with 
+>>>>> those flags set.
+>>>>>
+>>>>> So, there is no need for any new set of flags to differentiate.
+>>>>>
+>>>>> The flags and their interpretation is correct in MSM driver. I 
+>>>>> cannot comment on what exactly DSIM does with those flags.
+>>>>
+>>>> How do you explain the comment in include/drm/drm_mipi_dsi.h:
+>>>>
+>>>> 128 /* disable hback-porch area */
+>>>> 129 #define MIPI_DSI_MODE_VIDEO_NO_HBP      BIT(6)
+>>>
+>>> Can you specify how you determined those flags were needed on DSIM ? 
+>>> a vendor tree ? a datasheet ?
 >>
->> Can you specify how you determined those flags were needed on DSIM ? a vendor tree ? a datasheet ?
-> 
-> The following upstream commit:
-> 
-> 996e1defca344 ("drm: exynos: dsi: Fix MIPI_DSI*_NO_* mode flags")
-> 
->> In the meantime, we should revert this patch because it regresses some Qcom
->> based platforms until we figure out what's missing to make DSIM based boards
->> happy.
+>> The following upstream commit:
 >>
->> I'll send a revert change afterwards.
+>> 996e1defca344 ("drm: exynos: dsi: Fix MIPI_DSI*_NO_* mode flags")
+>>
+>>> In the meantime, we should revert this patch because it regresses 
+>>> some Qcom
+>>> based platforms until we figure out what's missing to make DSIM based 
+>>> boards
+>>> happy.
+>>>
+>>> I'll send a revert change afterwards.
+>>
+>> That change would break existing use case on i.MX8M then, I disagree 
+>> with that revert.
 > 
-> That change would break existing use case on i.MX8M then, I disagree with that revert.
+> As I understand the timeline is :
+> 
+> - 996e1defca344 was merged in v6.2-rc2 and caused regression on NXP 
+> platforms
+> 
+> - 8ddce13ae696 was merged in v6.5-rc1 to fix that but caused regression 
+> on QCOM platforms
+> 
+> Did I miss something ?
 
-As I understand the timeline is :
+That looks about right.
 
-- 996e1defca344 was merged in v6.2-rc2 and caused regression on NXP platforms
+> I don't know how to handle this apart reverting 8ddce13ae696 and trying 
+> to find a proper fix that doesn't regress QCOM.
 
-- 8ddce13ae696 was merged in v6.5-rc1 to fix that but caused regression on QCOM platforms
+I provided a suggestion above -- I believe QCOM is misinterpreting the 
+NO_H* flags and it needs separate flags for its behavior. The NXP 
+hardware per MX8M{M,N,P} reference manual (which is available at 
+NXP.com) skips the H* areas in the transfer, which matches the flags 
+description:
 
-Did I miss something ?
+include/drm/drm_mipi_dsi.h-/* disable hback-porch area */
+include/drm/drm_mipi_dsi.h:#define MIPI_DSI_MODE_VIDEO_NO_HBP   BIT(6)
 
-I don't know how to handle this apart reverting 8ddce13ae696 and trying to find a proper fix that doesn't regress QCOM.
+If the QCOM hardware does something else, it should introduce its own 
+set of flags for that something else and that would be problem solved, 
+for both platforms.
 
-So, The main issue is around the real meaning of the IPI_DSI_MODE_VIDEO_NO_* flags,
-Exynos DRM removed the HSA, HBP and HFP packets, Qcom DSI moves the DSI lanes
-state to LP-11 during the period.
+I don't have access to the QCOM hardware or datasheet however, is either 
+available ?
 
-The behavior is significantly different and the naming doesn't suggest any
-correct behavior.
+> So, The main issue is around the real meaning of the 
+> IPI_DSI_MODE_VIDEO_NO_* flags,
+> Exynos DRM removed the HSA, HBP and HFP packets, Qcom DSI moves the DSI 
+> lanes
+> state to LP-11 during the period.
+> 
+> The behavior is significantly different and the naming doesn't suggest any
+> correct behavior.
+> 
+> The only solution is to find out why :
+> - On Qcom platforms, having the HSA, HBP and HFP periods is OK, but not 
+> on DSIM
+> - On DSIM, removing the HSA, HBP and HFP periods is fine
+> - What's the exact requirement of the lt9611 bridge concerning those 
+> periods
 
-The only solution is to find out why :
-- On Qcom platforms, having the HSA, HBP and HFP periods is OK, but not on DSIM
-- On DSIM, removing the HSA, HBP and HFP periods is fine
-- What's the exact requirement of the lt9611 bridge concerning those periods
-
-Neil
+See above.
