@@ -1,161 +1,85 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95C9C5396
-	for <regressions@lists.linux.dev>; Wed,  2 Aug 2023 08:39:55 +0000 (UTC)
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-3fba8e2aa52so70331595e9.1
-        for <regressions@lists.linux.dev>; Wed, 02 Aug 2023 01:39:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1690965593; x=1691570393;
-        h=content-transfer-encoding:in-reply-to:organization:references:cc:to
-         :content-language:subject:reply-to:from:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=WRAP0HWhn6g/kOzKMWD911kOSk1jcneyHwYZl0WYjRQ=;
-        b=zjxvc+i/DMwy1ldffwestytA9zQ9YS0gCIeUp8PCaYqnMRm0KdoXXjQaiLjlmVNd4R
-         V9MlqPOtLLrS5A8JldTm24Y4SUL3Q/fbST66sPcPKUa7FlLcnbHIstHpy1qKRAfzEIcH
-         lWzUqvT4+c3diBNyjapbUqGjGLy+6J+B4XAysz/sviUq2oKPjjVzspVzhN5fkrsPO7S/
-         gsrNFKoV3BUklHuINdw0XifiiigWRFl+oINrXKVd1P9v3qESnDUt8MmAsmnBiOBMPhA8
-         tTG1VSsi4f5KTXhU1Jd22P/IB1ra3DG+yYW/39m6Ue2zFdFV8+PUgo8hjAnBqUjLIOCV
-         LNIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690965593; x=1691570393;
-        h=content-transfer-encoding:in-reply-to:organization:references:cc:to
-         :content-language:subject:reply-to:from:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=WRAP0HWhn6g/kOzKMWD911kOSk1jcneyHwYZl0WYjRQ=;
-        b=lTHmgobbLGgEiZNElt0o7uEdoC1OsSghPCAt+yHoaKkK2Nv9M2uCS/GVtfAS46Evh+
-         wcikMtzUcgpHOzS4EIZYP1DSqTW/Zohztqnx1Jw9p+j8HvHf35wKxpRI/9sT6adBKgyz
-         Yxe7VFDW20HNwF0tnOpxg5oF5qPG0/SAjkbwkBeXaGhoHmod6gCfO0t8MVHPnpJJXDCF
-         dMn17rYvNBoBJZ8tq2fcZ20MbQEdksMnCs/zE6X72uBwmG248dTChmyt8Ypp4DE7lwat
-         Bug0wu9LqFqTs3NTdb9X0eKDYzsYSf3lYbl8l5/adBv00aQJvAnXfLJaniItQrv/4TmF
-         XOkQ==
-X-Gm-Message-State: ABy/qLYm5rx4HM4BiNyft/Ccs6dDphqOX4+xIUaxrS/lms7rwmTE0Icy
-	BUMQZ7DFYk9UIZzeoBnpW/PeaQ==
-X-Google-Smtp-Source: APBJJlGt/JMMR519d7Jukm0qKi7EMlBz8mwUobaLaXQQYxBaB55wp9ApOuo9C23hQVRgAF3YcFVuYA==
-X-Received: by 2002:a5d:4e0a:0:b0:317:5747:b955 with SMTP id p10-20020a5d4e0a000000b003175747b955mr4465403wrt.17.1690965593557;
-        Wed, 02 Aug 2023 01:39:53 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:982:cbb0:c5bb:5b4:61e3:d196? ([2a01:e0a:982:cbb0:c5bb:5b4:61e3:d196])
-        by smtp.gmail.com with ESMTPSA id r18-20020adfce92000000b0031272fced4dsm18264016wrn.52.2023.08.02.01.39.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Aug 2023 01:39:52 -0700 (PDT)
-Message-ID: <51d782c4-3539-c3d3-6844-d6b9a39c09eb@linaro.org>
-Date: Wed, 2 Aug 2023 10:39:52 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32CCC1FC4
+	for <regressions@lists.linux.dev>; Wed,  2 Aug 2023 08:45:36 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1qR7U6-0005ov-52; Wed, 02 Aug 2023 10:45:34 +0200
+Message-ID: <d838ecf5-82e2-044c-206d-cf57de7b4379@leemhuis.info>
+Date: Wed, 2 Aug 2023 10:45:33 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-From: neil.armstrong@linaro.org
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH 2/2] drm/bridge: lt9611: Do not generate HFP/HBP/HSA and
- EOT packet
-Content-Language: en-US
-To: Marek Vasut <marex@denx.de>, Abhinav Kumar <quic_abhinavk@quicinc.com>,
- Amit Pundir <amit.pundir@linaro.org>,
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Jagan Teki <jagan@amarulasolutions.com>, dri-devel@lists.freedesktop.org,
- Robert Foss <rfoss@kernel.org>, Andrzej Hajda <andrzej.hajda@intel.com>,
- Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
- Michael Walle <michael@walle.cc>,
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
- linux-arm-msm <linux-arm-msm@vger.kernel.org>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- freedreno <freedreno@lists.freedesktop.org>
-References: <20230403221233.500485-1-marex@denx.de>
- <20230403221233.500485-2-marex@denx.de>
- <CAMi1Hd0TD=2z_=bcDrht3H_wiLvAFcv8Z-U_r_KUOoeMc6UMjw@mail.gmail.com>
- <CAMty3ZBNFu=f-FS4YFN4wfmiTuk=48nna-vub1eMYwidDt+msg@mail.gmail.com>
- <CAA8EJppbdiUz5m+9EAPnFb916DaS_VKWd30c7_EPWjuid8rtqQ@mail.gmail.com>
- <CAMi1Hd2G5PJmz4wpO1wbdqKd0FA8LBgvRDv2u5ZYAMb5s6Kt0A@mail.gmail.com>
- <d5fb8106-b8f3-0acf-1267-d4d6d0860e25@linaro.org>
- <d28b0090-bd1e-6737-d92b-348dc6c30750@linaro.org>
- <4396d197-f16f-92bd-727c-eb8c78016198@quicinc.com>
- <961b4747-c9f1-a31c-c33c-475b4803f832@denx.de>
- <64c3352f-c2aa-5260-c6ff-4a607ce219a2@quicinc.com>
- <f768950b-0406-1f03-86a5-50d5794bb060@denx.de>
-Organization: Linaro Developer Services
-In-Reply-To: <f768950b-0406-1f03-86a5-50d5794bb060@denx.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+User-Agent: Mozilla Thunderbird
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Re: btrfs write-bandwidth performance regression of 6.5-rc4/rc3
+Content-Language: en-US, de-DE
+To: Wang Yugui <wangyugui@e16-tech.com>, linux-btrfs@vger.kernel.org,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <20230731152223.4EFB.409509F4@e16-tech.com>
+From: "Linux regression tracking #adding (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+In-Reply-To: <20230731152223.4EFB.409509F4@e16-tech.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1690965937;e2150ef3;
+X-HE-SMSGID: 1qR7U6-0005ov-52
 
-Hi Marek,
+[CCing the regression list, as it should be in the loop for regressions:
+https://docs.kernel.org/admin-guide/reporting-regressions.html]
 
-On 13/07/2023 20:28, Marek Vasut wrote:
+[TLDR: I'm adding this report to the list of tracked Linux kernel
+regressions; the text you find below is based on a few templates
+paragraphs you might have encountered already in similar form.
+See link in footer if these mails annoy you.]
 
-<snip>
-
->>>
->>> MIPI_DSI_MODE_VIDEO_NO_HFP means the HBP period is just skipped by DSIM.
->>>
->>> Maybe there is a need for new set of flags which differentiate between HBP skipped (i.e. NO HBP) and HBP LP11 ?
->>>
->>
->> No, the section of the MIPI DSI spec I posted below clearly states there are two options:
->>
->> 1) send blanking packets during those periods
->> 2) transition to LP11 during those periods
->>
->> There is no 3rd option in the spec of not doing both like what you are suggesting. So DSIM should also be only transitioning to LP11 during those periods if its not sending the blanking packets with those flags set.
->>
->> So, there is no need for any new set of flags to differentiate.
->>
->> The flags and their interpretation is correct in MSM driver. I cannot comment on what exactly DSIM does with those flags.
+On 31.07.23 09:22, Wang Yugui wrote:
 > 
-> How do you explain the comment in include/drm/drm_mipi_dsi.h:
+> I noticed a btrfs write-bandwidth performance regression of 6.5-rc4/rc3
+> with the compare to btrfs 6.4.0
 > 
-> 128 /* disable hback-porch area */
-> 129 #define MIPI_DSI_MODE_VIDEO_NO_HBP      BIT(6)
-
-Can you specify how you determined those flags were needed on DSIM ? a vendor tree ? a datasheet ?
-
-In the meantime, we should revert this patch because it regresses some Qcom
-based platforms until we figure out what's missing to make DSIM based boards
-happy.
-
-I'll send a revert change afterwards.
-
-Neil
-
+> test case:
+>   disk: NVMe PCIe3 SSD *4 
+>   btrfs: -m raid -d raid0
+>   fio -name write-bandwidth -rw=write -bs=1024Ki -size=32Gi -runtime=30
+>    -iodepth 1 -ioengine sync -zero_buffers=1 -direct=0 -end_fsync=1 -numjobs=4
+>    -directory=/mnt/test
 > 
-> Esp. the "disable" part. That to me reads as "don't send HBP packet".
+> 6.5-rc4/rc3
+> 	fio(-numjobs=4) WRITE: bw=1512MiB/s (1586MB/s)
+> 	but ‘dd conv=fsync’ works well, 2.1 GiB/s.
 > 
-> Where do you see that quote above in the DSI spec (which chapter and which version do you read) ?
+> 6.4.0
+> 	fio(-numjobs=4) WRITE: bw=4147MiB/s (4349MB/s)
 > 
->>>> It should be replacing those periods with LP11 too.
->>>>
->>>> The traffic mode being used on this bridge is MIPI_DSI_MODE_VIDEO_SYNC_PULSE which is "Non-Burst Mode with Sync Pulses".
->>>>
->>>> As per this traffic mode in the DSI spec,
->>>>
->>>> "Normally, periods shown as HSA (Horizontal Sync Active), HBP (Horizontal Back Porch) and HFP (Horizontal Front Porch) are filled by Blanking Packets, with lengths (including packet overhead) calculated to match the period specified by the peripheral’s data sheet. Alternatively, if there is sufficient time to transition from HS to LP mode and back again, a timed interval in LP mode may substitute for a Blanking Packet, thus saving power. During HSA, HBP and HFP periods, the bus should stay in the LP-11 state."
->>>>
->>>> So we can either send the blanking packets or transition to LP state and those 3 flags are controlling exactly that during those periods for MSM driver.
->>>>
->>>> If you stop sending the blanking packets, you need to replace that gap with LP.
->>>
->>> I don't think that's what MIPI_DSI_MODE_VIDEO_NO_HBP means, the way I understand MIPI_DSI_MODE_VIDEO_NO_HBP is that it skips the HBP completely. So if you want HBP, then do not set MIPI_DSI_MODE_VIDEO_NO_HBP . And if you want LP11 during HBP, that is I think up to the controller (or maybe another new flag?).
->>>
->>
->> No, there is no need of another new flag. There are only two options as per the spec.
->>
->> In fact, as per my checking with more folks, requiring LP11 during those periods is something very rare.
->>
->> Because usually horizontal period is usually a very short period, most of the time we do not use the LP11 option and send the blanking packets instead.
->>
->> So its something very unusual for DSIM.
->>
->> That being said, I still think my previous question is important.
->>
->> 1) What is the difference between the resolution you are trying Vs what Amit is trying?
->>
->> 2) Are you both using just standard HDMI monitors?
+> 'git bisect' between 6.4 and 6.5 is yet not done.
 > 
-> What is a "standard HDMI monitor" ?
-> I use DELL U2713HM .
-> 
-> [...]
 
+Thanks for the report. To be sure the issue doesn't fall through the
+cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
+tracking bot:
+
+#regzbot ^introduced da023618076
+#regzbot title btrfs: write-bandwidth performance regression with NVMe raid0
+#regzbot ignore-activity
+
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply and tell me -- ideally
+while also telling regzbot about it, as explained by the page listed in
+the footer of this mail.
+
+Developers: When fixing the issue, remember to add 'Link:' tags pointing
+to the report (the parent of this mail). See page linked in footer for
+details.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+That page also explains what to do if mails like this annoy you.
