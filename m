@@ -1,146 +1,161 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F59E53A6;
-	Wed,  2 Aug 2023 08:07:36 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qR6tE-0006Bv-5v; Wed, 02 Aug 2023 10:07:28 +0200
-Message-ID: <ed9a0b64-b7e7-7735-85f7-d688a3b8e89e@leemhuis.info>
-Date: Wed, 2 Aug 2023 10:07:27 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95C9C5396
+	for <regressions@lists.linux.dev>; Wed,  2 Aug 2023 08:39:55 +0000 (UTC)
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-3fba8e2aa52so70331595e9.1
+        for <regressions@lists.linux.dev>; Wed, 02 Aug 2023 01:39:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1690965593; x=1691570393;
+        h=content-transfer-encoding:in-reply-to:organization:references:cc:to
+         :content-language:subject:reply-to:from:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=WRAP0HWhn6g/kOzKMWD911kOSk1jcneyHwYZl0WYjRQ=;
+        b=zjxvc+i/DMwy1ldffwestytA9zQ9YS0gCIeUp8PCaYqnMRm0KdoXXjQaiLjlmVNd4R
+         V9MlqPOtLLrS5A8JldTm24Y4SUL3Q/fbST66sPcPKUa7FlLcnbHIstHpy1qKRAfzEIcH
+         lWzUqvT4+c3diBNyjapbUqGjGLy+6J+B4XAysz/sviUq2oKPjjVzspVzhN5fkrsPO7S/
+         gsrNFKoV3BUklHuINdw0XifiiigWRFl+oINrXKVd1P9v3qESnDUt8MmAsmnBiOBMPhA8
+         tTG1VSsi4f5KTXhU1Jd22P/IB1ra3DG+yYW/39m6Ue2zFdFV8+PUgo8hjAnBqUjLIOCV
+         LNIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690965593; x=1691570393;
+        h=content-transfer-encoding:in-reply-to:organization:references:cc:to
+         :content-language:subject:reply-to:from:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=WRAP0HWhn6g/kOzKMWD911kOSk1jcneyHwYZl0WYjRQ=;
+        b=lTHmgobbLGgEiZNElt0o7uEdoC1OsSghPCAt+yHoaKkK2Nv9M2uCS/GVtfAS46Evh+
+         wcikMtzUcgpHOzS4EIZYP1DSqTW/Zohztqnx1Jw9p+j8HvHf35wKxpRI/9sT6adBKgyz
+         Yxe7VFDW20HNwF0tnOpxg5oF5qPG0/SAjkbwkBeXaGhoHmod6gCfO0t8MVHPnpJJXDCF
+         dMn17rYvNBoBJZ8tq2fcZ20MbQEdksMnCs/zE6X72uBwmG248dTChmyt8Ypp4DE7lwat
+         Bug0wu9LqFqTs3NTdb9X0eKDYzsYSf3lYbl8l5/adBv00aQJvAnXfLJaniItQrv/4TmF
+         XOkQ==
+X-Gm-Message-State: ABy/qLYm5rx4HM4BiNyft/Ccs6dDphqOX4+xIUaxrS/lms7rwmTE0Icy
+	BUMQZ7DFYk9UIZzeoBnpW/PeaQ==
+X-Google-Smtp-Source: APBJJlGt/JMMR519d7Jukm0qKi7EMlBz8mwUobaLaXQQYxBaB55wp9ApOuo9C23hQVRgAF3YcFVuYA==
+X-Received: by 2002:a5d:4e0a:0:b0:317:5747:b955 with SMTP id p10-20020a5d4e0a000000b003175747b955mr4465403wrt.17.1690965593557;
+        Wed, 02 Aug 2023 01:39:53 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:982:cbb0:c5bb:5b4:61e3:d196? ([2a01:e0a:982:cbb0:c5bb:5b4:61e3:d196])
+        by smtp.gmail.com with ESMTPSA id r18-20020adfce92000000b0031272fced4dsm18264016wrn.52.2023.08.02.01.39.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Aug 2023 01:39:52 -0700 (PDT)
+Message-ID: <51d782c4-3539-c3d3-6844-d6b9a39c09eb@linaro.org>
+Date: Wed, 2 Aug 2023 10:39:52 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Kernel regression tracking/reporting initiatives and KCIDB
-Content-Language: en-US, de-DE
-To: =?UTF-8?Q?Ricardo_Ca=C3=B1uelo?= <ricardo.canuelo@collabora.com>,
- kernelci@lists.linux.dev, gregkh@linuxfoundation.org,
- regressions@lists.linux.dev
-Cc: kernel@collabora.com, linux-kernel@vger.kernel.org,
- Gustavo Padovan <gustavo.padovan@collabora.com>,
- Shreeya Patel <shreeya.patel@collabora.com>
-References: <874jljhtmj.fsf@rcn-XPS-13-9305.i-did-not-set--mail-host-address--so-tickle-me>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <874jljhtmj.fsf@rcn-XPS-13-9305.i-did-not-set--mail-host-address--so-tickle-me>
-Content-Type: text/plain; charset=UTF-8
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+From: neil.armstrong@linaro.org
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH 2/2] drm/bridge: lt9611: Do not generate HFP/HBP/HSA and
+ EOT packet
+Content-Language: en-US
+To: Marek Vasut <marex@denx.de>, Abhinav Kumar <quic_abhinavk@quicinc.com>,
+ Amit Pundir <amit.pundir@linaro.org>,
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Jagan Teki <jagan@amarulasolutions.com>, dri-devel@lists.freedesktop.org,
+ Robert Foss <rfoss@kernel.org>, Andrzej Hajda <andrzej.hajda@intel.com>,
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Michael Walle <michael@walle.cc>,
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+ linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ freedreno <freedreno@lists.freedesktop.org>
+References: <20230403221233.500485-1-marex@denx.de>
+ <20230403221233.500485-2-marex@denx.de>
+ <CAMi1Hd0TD=2z_=bcDrht3H_wiLvAFcv8Z-U_r_KUOoeMc6UMjw@mail.gmail.com>
+ <CAMty3ZBNFu=f-FS4YFN4wfmiTuk=48nna-vub1eMYwidDt+msg@mail.gmail.com>
+ <CAA8EJppbdiUz5m+9EAPnFb916DaS_VKWd30c7_EPWjuid8rtqQ@mail.gmail.com>
+ <CAMi1Hd2G5PJmz4wpO1wbdqKd0FA8LBgvRDv2u5ZYAMb5s6Kt0A@mail.gmail.com>
+ <d5fb8106-b8f3-0acf-1267-d4d6d0860e25@linaro.org>
+ <d28b0090-bd1e-6737-d92b-348dc6c30750@linaro.org>
+ <4396d197-f16f-92bd-727c-eb8c78016198@quicinc.com>
+ <961b4747-c9f1-a31c-c33c-475b4803f832@denx.de>
+ <64c3352f-c2aa-5260-c6ff-4a607ce219a2@quicinc.com>
+ <f768950b-0406-1f03-86a5-50d5794bb060@denx.de>
+Organization: Linaro Developer Services
+In-Reply-To: <f768950b-0406-1f03-86a5-50d5794bb060@denx.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1690963656;f0e146fb;
-X-HE-SMSGID: 1qR6tE-0006Bv-5v
 
-On 01.08.23 13:47, Ricardo Cañuelo wrote:
+Hi Marek,
+
+On 13/07/2023 20:28, Marek Vasut wrote:
+
+<snip>
+
+>>>
+>>> MIPI_DSI_MODE_VIDEO_NO_HFP means the HBP period is just skipped by DSIM.
+>>>
+>>> Maybe there is a need for new set of flags which differentiate between HBP skipped (i.e. NO HBP) and HBP LP11 ?
+>>>
+>>
+>> No, the section of the MIPI DSI spec I posted below clearly states there are two options:
+>>
+>> 1) send blanking packets during those periods
+>> 2) transition to LP11 during those periods
+>>
+>> There is no 3rd option in the spec of not doing both like what you are suggesting. So DSIM should also be only transitioning to LP11 during those periods if its not sending the blanking packets with those flags set.
+>>
+>> So, there is no need for any new set of flags to differentiate.
+>>
+>> The flags and their interpretation is correct in MSM driver. I cannot comment on what exactly DSIM does with those flags.
 > 
-> I'm Ricardo from Collabora. In the past months, we’ve been analyzing the
-> current status of CI regression reporting and tracking in the Linux
-> kernel: assessing the existing tools, testing their functionalities,
-> collecting ideas about desirable features that aren’t available yet and
-> sketching some of them.
-
-Thx for your mail.
-
-Side note: I wonder how many people are interested in this topic and if
-it would be a good idea to have a session about it at the kernel summit
-on this years LPC; there afaik are still a few days left to submit a
-session about this; or did somebody already do this?
-
-But FWIW, I'm currently taken back and forth if I want to make the trip
-to the US; as things stand currently I likely won't go. Anyway, back to
-your mail.
-
-> As part of this effort, we wrote a Regression Tracker tool [1] as a
-> proof of concept. It’s a rather simple tool that takes existing
-> regression data and reports and uses them to show more context on each
-> reported regression, as well as highlighting the relationships between
-> them, whether they can be caused by an infrastructure error and other
-> additional metadata about their current status.  We’ve been using it
-> mostly as a playground for us to explore the current status of the
-> functionalities provided by CI systems and to test ideas about new
-> features.
-
-/me wanted to say "might be good to call it KernelCI regression tracker
-instead to avoid confusion", but then saw that the page behind the the
-url "[1]" above already calls it exactly that :-D
-
-> We’re also checking other tools and services provided by the community,
-> such as regzbot [2], collaborating with them when possible and thinking
-> about how to combine multiple scattered efforts by different people
-> towards the same common goal. As a first step, we’ve contributed to
-> regzbot and partially integrated its results into the Regression Tracker
-> tool.
-
-thx again for those contributions!
-
-> So far, we’ve been using the KernelCI regression data and reports as > data source, we're now wondering if we could tackle the problem with a
-> more general approach by building on top of what KCIDB already provides.
-
-That's more your area of expertise, but I have to wonder: doesn't that
-mainly depend on what the people/projects want which feed their test
-results into KCIDB? I had expected some of them might already have
-something to stay on top of regressions found by their systems, to at
-least ensure they notice and fix tests that broke for external reasons
--- e.g. a test script going sideways, faulty hardware, a network
-miss-configuration or others things which naturally will occur in this
-line of work.
-
-> In general, CI systems tend to define regressions as a low-level concept
-> which is rather static: a snapshot of a test result at a certain point
-> in time. When it comes to reporting them to developers, there's much
-> more info that could be added to them.
-
-I wonder if it should be s/could/should/ here, as *if I* would be
-running CI systems I'd fear that developers sooner or later might start
-ignoring more and more of the reports my systems sends when too many of
-them turn out to be bogus/misleading -- which naturally will happen for
-various reasons you outlined below yourself (broken
-hardware/test/network/...) (and seem to happen regularly, as mentioned
-in https://lwn.net/Articles/939538/ ).
-
-That doesn't mean that I think each failed test should be judged by a
-human before it's sent to the developers. Compile errors for example
-will be helpful often right away, especially for stable-rc.
-
-> In particular, the context of it
-> and the fact that a reported regression has a life cycle:
+> How do you explain the comment in include/drm/drm_mipi_dsi.h:
 > 
-> - did this test also fail on other hardware targets or with other kernel
->   configurations?
-> - is it possible that the test failed because of an infrastructure
->   error?
-> - does the test fail consistently since that commit or does it show
->   unstable results?
-> - does the test output show any traces of already known bugs?
-> - has this regression been bisected and reported anywhere?
-> - was the regression reported by anyone? If so, is there someone already
->   working on it?
->
-> Many of these info points can be extracted from the CI results databases
-> and processed to provide additional regression data. That’s what we’re
-> trying to do with the Regression Tracker tool, and we think it’d be
-> interesting to start experimenting with the data in KCIDB to see how
-> this could be improved and what would be the right way to integrate this
-> type of functionality.
+> 128 /* disable hback-porch area */
+> 129 #define MIPI_DSI_MODE_VIDEO_NO_HBP      BIT(6)
 
-I (with my likely somewhat biased view due to regzbot and my work with
-it) wonder if we have two aspects here that might be wise to keep separated:
+Can you specify how you determined those flags were needed on DSIM ? a vendor tree ? a datasheet ?
 
-* tests suddenly failing in one or multiple CI systems, which might be
-due to something going sideways in the tests or a real kernel regression
+In the meantime, we should revert this patch because it regresses some Qcom
+based platforms until we figure out what's missing to make DSIM based boards
+happy.
 
-* regressions found by individuals or CI systems where a human with some
-knowledge about the kernel did a sanity check (and also looked for
-duplicates) to ensure this most likely is a regression that should be
-acted upon -- and thus is also something that definitely should not be
-forgotten.
+I'll send a revert change afterwards.
 
-Your regression tracking tool could be the former, regzbot the latter
-(which could feed the outcome back to the CI regression tracking
-system). But as I said, my view is obviously biased, so maybe I'm to
-blinded to see a better solution.
+Neil
 
-> [1] https://kernel.pages.collabora.com/kernelci-regressions-tracker/
-> [2] https://linux-regtracking.leemhuis.info/regzbot/all/
+> 
+> Esp. the "disable" part. That to me reads as "don't send HBP packet".
+> 
+> Where do you see that quote above in the DSI spec (which chapter and which version do you read) ?
+> 
+>>>> It should be replacing those periods with LP11 too.
+>>>>
+>>>> The traffic mode being used on this bridge is MIPI_DSI_MODE_VIDEO_SYNC_PULSE which is "Non-Burst Mode with Sync Pulses".
+>>>>
+>>>> As per this traffic mode in the DSI spec,
+>>>>
+>>>> "Normally, periods shown as HSA (Horizontal Sync Active), HBP (Horizontal Back Porch) and HFP (Horizontal Front Porch) are filled by Blanking Packets, with lengths (including packet overhead) calculated to match the period specified by the peripheral’s data sheet. Alternatively, if there is sufficient time to transition from HS to LP mode and back again, a timed interval in LP mode may substitute for a Blanking Packet, thus saving power. During HSA, HBP and HFP periods, the bus should stay in the LP-11 state."
+>>>>
+>>>> So we can either send the blanking packets or transition to LP state and those 3 flags are controlling exactly that during those periods for MSM driver.
+>>>>
+>>>> If you stop sending the blanking packets, you need to replace that gap with LP.
+>>>
+>>> I don't think that's what MIPI_DSI_MODE_VIDEO_NO_HBP means, the way I understand MIPI_DSI_MODE_VIDEO_NO_HBP is that it skips the HBP completely. So if you want HBP, then do not set MIPI_DSI_MODE_VIDEO_NO_HBP . And if you want LP11 during HBP, that is I think up to the controller (or maybe another new flag?).
+>>>
+>>
+>> No, there is no need of another new flag. There are only two options as per the spec.
+>>
+>> In fact, as per my checking with more folks, requiring LP11 during those periods is something very rare.
+>>
+>> Because usually horizontal period is usually a very short period, most of the time we do not use the LP11 option and send the blanking packets instead.
+>>
+>> So its something very unusual for DSIM.
+>>
+>> That being said, I still think my previous question is important.
+>>
+>> 1) What is the difference between the resolution you are trying Vs what Amit is trying?
+>>
+>> 2) Are you both using just standard HDMI monitors?
+> 
+> What is a "standard HDMI monitor" ?
+> I use DELL U2713HM .
+> 
+> [...]
 
-Ciao, Thorsten
