@@ -1,221 +1,211 @@
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ACEA6D22
-	for <regressions@lists.linux.dev>; Wed,  2 Aug 2023 11:08:26 +0000 (UTC)
-Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-2680182bc21so3837395a91.2
-        for <regressions@lists.linux.dev>; Wed, 02 Aug 2023 04:08:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1690974505; x=1691579305;
-        h=content-transfer-encoding:subject:cc:from:to:content-language
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HN4yL9Ko67hBibaQtI8bqdyy0f3U3Ny1uhYF2yLwlQ8=;
-        b=GQZyJfbgsRz9nNrAGCts8b4/2MOEMy3S9AeJuWzhkuKlD9iW3mhZMPYEysDmxjapEg
-         56oHNng4Y3ImRd8B/13g1+W0IDzlmS1f/mlsMtmb1neEcJj0TJ4TcDEvVspQp4ZKas9R
-         HYsqNOVpO/LolK8ERdlP6mjW3JGFDuOIT9T59H+NhgGs2Fa99K3QAkC5a5ekk6znN+az
-         MLRS5K4gpJJvrrWya2h+76sd22lbwhID63tKbswPacEhYv4Q0J0Ds+NNv4viKBVbdbL2
-         ohG/szm18hERu6cn2tGJ+ZeTE4b2oXuTfNJOC+w+qPZY9gkebpS3v8Da57J2E4v+J+QS
-         ttdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690974505; x=1691579305;
-        h=content-transfer-encoding:subject:cc:from:to:content-language
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=HN4yL9Ko67hBibaQtI8bqdyy0f3U3Ny1uhYF2yLwlQ8=;
-        b=F0JVQOQLBzMU5cJ8tLS16PFGZLQmkAxatdmIcqE4YkHmTko75/G+eBjfFEa+fKcLaU
-         tAuiYgu+b2/PEqV9Ths3qIGUXIRXZlzNUfLK3oaWP+omIQQq8B5bO0+7m83ce2sMCwf7
-         2+Zv2Zh8YTK77XqLSnpK8/JuudD/bVLP3RG6fcd2YOkPZ+kW5u2VWIaoKTs4KD8oIrOC
-         0/sXnlYqjcPttMfE9Y77vENldCpGi5OeIvvJQE7UYFS0umtWLcbvRgFQMTWwOe2c/JZ8
-         r2Y0xHH046ze914ZjMrpZUhZpaE5ZbpN5gTgUkpvN1F6JNyxCl+BTJXzZidAW/qyYEhP
-         tl7w==
-X-Gm-Message-State: ABy/qLZMsPAMHI57wAtR2rOdiTGjbAYXGandU6LEZc2aYwDc22rE2XL0
-	LEzedJ6B0qohHAZLntjk7yA=
-X-Google-Smtp-Source: APBJJlFuxaM/ap7LahQ7bEdeqW1QLwRIaT165kyavi8a1q4dCF1PT3erL/L51C3YlMQ95f05ijztSQ==
-X-Received: by 2002:a17:90b:3556:b0:268:25b7:1922 with SMTP id lt22-20020a17090b355600b0026825b71922mr13151147pjb.5.1690974505514;
-        Wed, 02 Aug 2023 04:08:25 -0700 (PDT)
-Received: from [192.168.0.105] ([103.131.18.64])
-        by smtp.gmail.com with ESMTPSA id p5-20020a17090a284500b00262fc3d911esm997808pjf.28.2023.08.02.04.08.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Aug 2023 04:08:25 -0700 (PDT)
-Message-ID: <428d8fe9-8c19-ddba-b36e-7db5524e8d04@gmail.com>
-Date: Wed, 2 Aug 2023 18:08:20 +0700
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3F8D63AA
+	for <regressions@lists.linux.dev>; Wed,  2 Aug 2023 11:25:36 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1qR9ys-0003FX-Or; Wed, 02 Aug 2023 13:25:30 +0200
+Message-ID: <32c3d93c-c320-0f88-87db-003f51bfc039@leemhuis.info>
+Date: Wed, 2 Aug 2023 13:25:30 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Content-Language: en-US
-To: Alistair Popple <apopple@nvidia.com>,
- Felix Kuehling <Felix.Kuehling@amd.com>,
+User-Agent: Mozilla Thunderbird
+Subject: Re: Fwd: Kernel memory management bug at mm/migrate.c:662 when
+ flushing caches
+Content-Language: en-US, de-DE
+To: Bagas Sanjaya <bagasdotme@gmail.com>, Alistair Popple
+ <apopple@nvidia.com>, Felix Kuehling <Felix.Kuehling@amd.com>,
  Andrew Morton <akpm@linux-foundation.org>, Marco <rodomar705@protonmail.com>
-From: Bagas Sanjaya <bagasdotme@gmail.com>
 Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
  Linux Memory Management List <linux-mm@kvack.org>,
  Linux Regressions <regressions@lists.linux.dev>
-Subject: Fwd: Kernel memory management bug at mm/migrate.c:662 when flushing
- caches
+References: <428d8fe9-8c19-ddba-b36e-7db5524e8d04@gmail.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <428d8fe9-8c19-ddba-b36e-7db5524e8d04@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1690975537;0b635234;
+X-HE-SMSGID: 1qR9ys-0003FX-Or
 
-Hi,
-
-I notice a regression report on Bugzilla [1]. Quoting from it:
-
-> I hit this kernel bug on the latest 6.3.9 kernel after executing this s=
-cript to cleanup hugepages from the kernel before booting up a Windows 11=
- VM with QEMU (otherwise I don't have enough contiguous memory to allocat=
-e the pages to the VM)
+On 02.08.23 13:08, Bagas Sanjaya wrote:
 >=20
-> snip
-> if [[ $VM_ACTION =3D=3D 'prepare' ]];
-> then
->     sync
->     echo 3 > /proc/sys/vm/drop_caches
->     echo 1 > /proc/sys/vm/compact_memory
-> endsnip
+> I notice a regression report on Bugzilla [1]. Quoting from it:
 >=20
-> Attached is the full QEMU script that I used. I do use ZFS as a root fi=
-lesystem, as you can see from the loaded modules.
+>> I hit this kernel bug on the latest 6.3.9 kernel after executing this =
+script to cleanup hugepages from the kernel before booting up a Windows 1=
+1 VM with QEMU (otherwise I don't have enough contiguous memory to alloca=
+te the pages to the VM)
+>>
+>> snip
+>> if [[ $VM_ACTION =3D=3D 'prepare' ]];
+>> then
+>>     sync
+>>     echo 3 > /proc/sys/vm/drop_caches
+>>     echo 1 > /proc/sys/vm/compact_memory
+>> endsnip
+>>
+>> Attached is the full QEMU script that I used. I do use ZFS as a root f=
+ilesystem, as you can see from the loaded modules.
+
+Bagas, FWIW, I'd totally understand if developers will ignore this
+(remains to be seen if that is the case, maybe we are lucky and somebody
+will take a look), as I think you for now shouldn't have forwarded this
+for two reasons:
+
+* 6.3.y is old and EOL; testing mainline or at least a fresh 6.4.y
+kernel) would have been a must here.
+* with out-of-tree modules like ZFS anything can happen, the user is own
+its own.
+
+As I can see from the bug both things will likely clear up soon, hence
+waiting would have been wise here.
+
+Please in the future do not forward such bugs, as developers might
+otherwise start to ignore mails wrt to regression tracking -- which we
+really need to avoid, as that will make things a lot harder.
+
+Ciao, Thorsten
+
+>> Ever seen something similar? On first bootup this is fine, it works fi=
+ne. Any subsequent call cause to kill the script with the error below.
+>>
+>> [ 2682.534320] bash (54689): drop_caches: 3
+>> [ 2682.624207] ------------[ cut here ]------------
+>> [ 2682.624211] kernel BUG at mm/migrate.c:662!
+>> [ 2682.624219] invalid opcode: 0000 [#1] PREEMPT SMP NOPTI
+>> [ 2682.624223] CPU: 2 PID: 54689 Comm: bash Tainted: P           OE   =
+   6.3.9-arch1-1 #1 124dc55df4f5272ccb409f39ef4872fc2b3376a2
+>> [ 2682.624226] Hardware name: System manufacturer System Product Name/=
+ROG STRIX B450-F GAMING, BIOS 5102 05/31/2023
+>> [ 2682.624228] RIP: 0010:migrate_folio_extra+0x6c/0x70
+>> [ 2682.624234] Code: de 48 89 ef e8 35 e2 ff ff 5b 44 89 e0 5d 41 5c 4=
+1 5d e9 e7 6d 9d 00 e8 22 e2 ff ff 44 89 e0 5b 5d 41 5c 41 5d e9 d4 6d 9d=
+ 00 <0f> 0b 66 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 0f 1f
+>> [ 2682.624236] RSP: 0018:ffffb4685b5038f8 EFLAGS: 00010282
+>> [ 2682.624238] RAX: 02ffff0000008025 RBX: ffffd9f684f02740 RCX: 000000=
+0000000002
+>> [ 2682.624240] RDX: ffffd9f684f02740 RSI: ffffd9f68d958dc0 RDI: ffff99=
+d8d1cfe728
+>> [ 2682.624241] RBP: ffff99d8d1cfe728 R08: 0000000000000000 R09: 000000=
+0000000000
+>> [ 2682.624242] R10: ffffd9f68d958dc8 R11: 0000000004020000 R12: ffffd9=
+f68d958dc0
+>> [ 2682.624243] R13: 0000000000000002 R14: ffffd9f684f02740 R15: ffffb4=
+685b5039b8
+>> [ 2682.624245] FS:  00007f78b8182740(0000) GS:ffff99de9ea80000(0000) k=
+nlGS:0000000000000000
+>> [ 2682.624246] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>> [ 2682.624248] CR2: 00007fe9a0001960 CR3: 000000011e406000 CR4: 000000=
+00003506e0
+>> [ 2682.624249] Call Trace:
+>> [ 2682.624251]  <TASK>
+>> [ 2682.624253]  ? die+0x36/0x90
+>> [ 2682.624258]  ? do_trap+0xda/0x100
+>> [ 2682.624261]  ? migrate_folio_extra+0x6c/0x70
+>> [ 2682.624263]  ? do_error_trap+0x6a/0x90
+>> [ 2682.624266]  ? migrate_folio_extra+0x6c/0x70
+>> [ 2682.624268]  ? exc_invalid_op+0x50/0x70
+>> [ 2682.624271]  ? migrate_folio_extra+0x6c/0x70
+>> [ 2682.624273]  ? asm_exc_invalid_op+0x1a/0x20
+>> [ 2682.624278]  ? migrate_folio_extra+0x6c/0x70
+>> [ 2682.624280]  move_to_new_folio+0x136/0x150
+>> [ 2682.624283]  migrate_pages_batch+0x913/0xd30
+>> [ 2682.624285]  ? __pfx_compaction_free+0x10/0x10
+>> [ 2682.624289]  ? __pfx_remove_migration_pte+0x10/0x10
+>> [ 2682.624292]  migrate_pages+0xc61/0xde0
+>> [ 2682.624295]  ? __pfx_compaction_alloc+0x10/0x10
+>> [ 2682.624296]  ? __pfx_compaction_free+0x10/0x10
+>> [ 2682.624300]  compact_zone+0x865/0xda0
+>> [ 2682.624303]  compact_node+0x88/0xc0
+>> [ 2682.624306]  sysctl_compaction_handler+0x46/0x80
+>> [ 2682.624308]  proc_sys_call_handler+0x1bd/0x2e0
+>> [ 2682.624312]  vfs_write+0x239/0x3f0
+>> [ 2682.624316]  ksys_write+0x6f/0xf0
+>> [ 2682.624317]  do_syscall_64+0x60/0x90
+>> [ 2682.624322]  ? syscall_exit_to_user_mode+0x1b/0x40
+>> [ 2682.624324]  ? do_syscall_64+0x6c/0x90
+>> [ 2682.624327]  ? syscall_exit_to_user_mode+0x1b/0x40
+>> [ 2682.624329]  ? exc_page_fault+0x7c/0x180
+>> [ 2682.624330]  entry_SYSCALL_64_after_hwframe+0x72/0xdc
+>> [ 2682.624333] RIP: 0033:0x7f78b82f5bc4
+>> [ 2682.624355] Code: 15 99 11 0e 00 f7 d8 64 89 02 48 c7 c0 ff ff ff f=
+f eb b7 0f 1f 00 f3 0f 1e fa 80 3d 3d 99 0e 00 00 74 13 b8 01 00 00 00 0f=
+ 05 <48> 3d 00 f0 ff ff 77 54 c3 0f 1f 00 48 83 ec 28 48 89 54 24 18 48
+>> [ 2682.624356] RSP: 002b:00007ffd9d25ed18 EFLAGS: 00000202 ORIG_RAX: 0=
+000000000000001
+>> [ 2682.624358] RAX: ffffffffffffffda RBX: 0000000000000002 RCX: 00007f=
+78b82f5bc4
+>> [ 2682.624359] RDX: 0000000000000002 RSI: 000055c97c5f05c0 RDI: 000000=
+0000000001
+>> [ 2682.624360] RBP: 000055c97c5f05c0 R08: 0000000000000073 R09: 000000=
+0000000001
+>> [ 2682.624362] R10: 0000000000000000 R11: 0000000000000202 R12: 000000=
+0000000002
+>> [ 2682.624363] R13: 00007f78b83d86a0 R14: 0000000000000002 R15: 00007f=
+78b83d3ca0
+>> [ 2682.624365]  </TASK>
+>> [ 2682.624366] Modules linked in: vhost_net vhost vhost_iotlb tap tun =
+snd_seq_dummy snd_hrtimer snd_seq xt_CHECKSUM xt_MASQUERADE xt_conntrack =
+ipt_REJECT nf_reject_ipv4 xt_tcpudp ip6table_mangle ip6table_nat ip6table=
+_filter ip6_tables iptable_mangle iptable_nat nf_nat nf_conntrack nf_defr=
+ag_ipv6 nf_defrag_ipv4 libcrc32c iptable_filter bridge stp llc intel_rapl=
+_msr intel_rapl_common edac_mce_amd kvm_amd snd_hda_codec_realtek snd_hda=
+_codec_generic kvm snd_hda_codec_hdmi snd_usb_audio btusb btrtl snd_hda_i=
+ntel btbcm snd_intel_dspcfg crct10dif_pclmul btintel crc32_pclmul snd_int=
+el_sdw_acpi btmtk vfat polyval_clmulni snd_usbmidi_lib polyval_generic fa=
+t snd_hda_codec ext4 gf128mul snd_rawmidi eeepc_wmi bluetooth ghash_clmul=
+ni_intel snd_hda_core sha512_ssse3 asus_wmi snd_seq_device aesni_intel mc=
+ ledtrig_audio snd_hwdep crc32c_generic crypto_simd snd_pcm sparse_keymap=
+ crc32c_intel igb ecdh_generic platform_profile sp5100_tco cryptd snd_tim=
+er mbcache rapl rfkill wmi_bmof pcspkr dca asus_wmi_sensors snd i2c_piix4=
+ zenpower(OE) ccp
+>> [ 2682.624417]  jbd2 crc16 soundcore gpio_amdpt gpio_generic mousedev =
+acpi_cpufreq joydev mac_hid dm_multipath i2c_dev crypto_user loop fuse dm=
+_mod bpf_preload ip_tables x_tables usbhid zfs(POE) zunicode(POE) zzstd(O=
+E) zlua(OE) zavl(POE) icp(POE) zcommon(POE) znvpair(POE) spl(OE) nouveau =
+nvme nvme_core xhci_pci nvme_common xhci_pci_renesas vfio_pci vfio_pci_co=
+re irqbypass vfio_iommu_type1 vfio iommufd amdgpu i2c_algo_bit drm_ttm_he=
+lper ttm mxm_wmi video wmi drm_buddy gpu_sched drm_display_helper cec
+>> [ 2682.624456] ---[ end trace 0000000000000000 ]---
+>> [ 2682.624457] RIP: 0010:migrate_folio_extra+0x6c/0x70
+>> [ 2682.624461] Code: de 48 89 ef e8 35 e2 ff ff 5b 44 89 e0 5d 41 5c 4=
+1 5d e9 e7 6d 9d 00 e8 22 e2 ff ff 44 89 e0 5b 5d 41 5c 41 5d e9 d4 6d 9d=
+ 00 <0f> 0b 66 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 0f 1f
+>> [ 2682.624463] RSP: 0018:ffffb4685b5038f8 EFLAGS: 00010282
+>> [ 2682.624465] RAX: 02ffff0000008025 RBX: ffffd9f684f02740 RCX: 000000=
+0000000002
+>> [ 2682.624466] RDX: ffffd9f684f02740 RSI: ffffd9f68d958dc0 RDI: ffff99=
+d8d1cfe728
+>> [ 2682.624467] RBP: ffff99d8d1cfe728 R08: 0000000000000000 R09: 000000=
+0000000000
+>> [ 2682.624469] R10: ffffd9f68d958dc8 R11: 0000000004020000 R12: ffffd9=
+f68d958dc0
+>> [ 2682.624470] R13: 0000000000000002 R14: ffffd9f684f02740 R15: ffffb4=
+685b5039b8
+>> [ 2682.624472] FS:  00007f78b8182740(0000) GS:ffff99de9ea80000(0000) k=
+nlGS:0000000000000000
+>> [ 2682.624473] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>> [ 2682.624475] CR2: 00007fe9a0001960 CR3: 000000011e406000 CR4: 000000=
+00003506e0
 >=20
-> Ever seen something similar? On first bootup this is fine, it works fin=
-e. Any subsequent call cause to kill the script with the error below.
+> See Bugzilla for the full thread and attached QEMU hook script to
+> reproduce this regression.
 >=20
-> [ 2682.534320] bash (54689): drop_caches: 3
-> [ 2682.624207] ------------[ cut here ]------------
-> [ 2682.624211] kernel BUG at mm/migrate.c:662!
-> [ 2682.624219] invalid opcode: 0000 [#1] PREEMPT SMP NOPTI
-> [ 2682.624223] CPU: 2 PID: 54689 Comm: bash Tainted: P           OE    =
-  6.3.9-arch1-1 #1 124dc55df4f5272ccb409f39ef4872fc2b3376a2
-> [ 2682.624226] Hardware name: System manufacturer System Product Name/R=
-OG STRIX B450-F GAMING, BIOS 5102 05/31/2023
-> [ 2682.624228] RIP: 0010:migrate_folio_extra+0x6c/0x70
-> [ 2682.624234] Code: de 48 89 ef e8 35 e2 ff ff 5b 44 89 e0 5d 41 5c 41=
- 5d e9 e7 6d 9d 00 e8 22 e2 ff ff 44 89 e0 5b 5d 41 5c 41 5d e9 d4 6d 9d =
-00 <0f> 0b 66 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 0f 1f
-> [ 2682.624236] RSP: 0018:ffffb4685b5038f8 EFLAGS: 00010282
-> [ 2682.624238] RAX: 02ffff0000008025 RBX: ffffd9f684f02740 RCX: 0000000=
-000000002
-> [ 2682.624240] RDX: ffffd9f684f02740 RSI: ffffd9f68d958dc0 RDI: ffff99d=
-8d1cfe728
-> [ 2682.624241] RBP: ffff99d8d1cfe728 R08: 0000000000000000 R09: 0000000=
-000000000
-> [ 2682.624242] R10: ffffd9f68d958dc8 R11: 0000000004020000 R12: ffffd9f=
-68d958dc0
-> [ 2682.624243] R13: 0000000000000002 R14: ffffd9f684f02740 R15: ffffb46=
-85b5039b8
-> [ 2682.624245] FS:  00007f78b8182740(0000) GS:ffff99de9ea80000(0000) kn=
-lGS:0000000000000000
-> [ 2682.624246] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [ 2682.624248] CR2: 00007fe9a0001960 CR3: 000000011e406000 CR4: 0000000=
-0003506e0
-> [ 2682.624249] Call Trace:
-> [ 2682.624251]  <TASK>
-> [ 2682.624253]  ? die+0x36/0x90
-> [ 2682.624258]  ? do_trap+0xda/0x100
-> [ 2682.624261]  ? migrate_folio_extra+0x6c/0x70
-> [ 2682.624263]  ? do_error_trap+0x6a/0x90
-> [ 2682.624266]  ? migrate_folio_extra+0x6c/0x70
-> [ 2682.624268]  ? exc_invalid_op+0x50/0x70
-> [ 2682.624271]  ? migrate_folio_extra+0x6c/0x70
-> [ 2682.624273]  ? asm_exc_invalid_op+0x1a/0x20
-> [ 2682.624278]  ? migrate_folio_extra+0x6c/0x70
-> [ 2682.624280]  move_to_new_folio+0x136/0x150
-> [ 2682.624283]  migrate_pages_batch+0x913/0xd30
-> [ 2682.624285]  ? __pfx_compaction_free+0x10/0x10
-> [ 2682.624289]  ? __pfx_remove_migration_pte+0x10/0x10
-> [ 2682.624292]  migrate_pages+0xc61/0xde0
-> [ 2682.624295]  ? __pfx_compaction_alloc+0x10/0x10
-> [ 2682.624296]  ? __pfx_compaction_free+0x10/0x10
-> [ 2682.624300]  compact_zone+0x865/0xda0
-> [ 2682.624303]  compact_node+0x88/0xc0
-> [ 2682.624306]  sysctl_compaction_handler+0x46/0x80
-> [ 2682.624308]  proc_sys_call_handler+0x1bd/0x2e0
-> [ 2682.624312]  vfs_write+0x239/0x3f0
-> [ 2682.624316]  ksys_write+0x6f/0xf0
-> [ 2682.624317]  do_syscall_64+0x60/0x90
-> [ 2682.624322]  ? syscall_exit_to_user_mode+0x1b/0x40
-> [ 2682.624324]  ? do_syscall_64+0x6c/0x90
-> [ 2682.624327]  ? syscall_exit_to_user_mode+0x1b/0x40
-> [ 2682.624329]  ? exc_page_fault+0x7c/0x180
-> [ 2682.624330]  entry_SYSCALL_64_after_hwframe+0x72/0xdc
-> [ 2682.624333] RIP: 0033:0x7f78b82f5bc4
-> [ 2682.624355] Code: 15 99 11 0e 00 f7 d8 64 89 02 48 c7 c0 ff ff ff ff=
- eb b7 0f 1f 00 f3 0f 1e fa 80 3d 3d 99 0e 00 00 74 13 b8 01 00 00 00 0f =
-05 <48> 3d 00 f0 ff ff 77 54 c3 0f 1f 00 48 83 ec 28 48 89 54 24 18 48
-> [ 2682.624356] RSP: 002b:00007ffd9d25ed18 EFLAGS: 00000202 ORIG_RAX: 00=
-00000000000001
-> [ 2682.624358] RAX: ffffffffffffffda RBX: 0000000000000002 RCX: 00007f7=
-8b82f5bc4
-> [ 2682.624359] RDX: 0000000000000002 RSI: 000055c97c5f05c0 RDI: 0000000=
-000000001
-> [ 2682.624360] RBP: 000055c97c5f05c0 R08: 0000000000000073 R09: 0000000=
-000000001
-> [ 2682.624362] R10: 0000000000000000 R11: 0000000000000202 R12: 0000000=
-000000002
-> [ 2682.624363] R13: 00007f78b83d86a0 R14: 0000000000000002 R15: 00007f7=
-8b83d3ca0
-> [ 2682.624365]  </TASK>
-> [ 2682.624366] Modules linked in: vhost_net vhost vhost_iotlb tap tun s=
-nd_seq_dummy snd_hrtimer snd_seq xt_CHECKSUM xt_MASQUERADE xt_conntrack i=
-pt_REJECT nf_reject_ipv4 xt_tcpudp ip6table_mangle ip6table_nat ip6table_=
-filter ip6_tables iptable_mangle iptable_nat nf_nat nf_conntrack nf_defra=
-g_ipv6 nf_defrag_ipv4 libcrc32c iptable_filter bridge stp llc intel_rapl_=
-msr intel_rapl_common edac_mce_amd kvm_amd snd_hda_codec_realtek snd_hda_=
-codec_generic kvm snd_hda_codec_hdmi snd_usb_audio btusb btrtl snd_hda_in=
-tel btbcm snd_intel_dspcfg crct10dif_pclmul btintel crc32_pclmul snd_inte=
-l_sdw_acpi btmtk vfat polyval_clmulni snd_usbmidi_lib polyval_generic fat=
- snd_hda_codec ext4 gf128mul snd_rawmidi eeepc_wmi bluetooth ghash_clmuln=
-i_intel snd_hda_core sha512_ssse3 asus_wmi snd_seq_device aesni_intel mc =
-ledtrig_audio snd_hwdep crc32c_generic crypto_simd snd_pcm sparse_keymap =
-crc32c_intel igb ecdh_generic platform_profile sp5100_tco cryptd snd_time=
-r mbcache rapl rfkill wmi_bmof pcspkr dca asus_wmi_sensors snd i2c_piix4 =
-zenpower(OE) ccp
-> [ 2682.624417]  jbd2 crc16 soundcore gpio_amdpt gpio_generic mousedev a=
-cpi_cpufreq joydev mac_hid dm_multipath i2c_dev crypto_user loop fuse dm_=
-mod bpf_preload ip_tables x_tables usbhid zfs(POE) zunicode(POE) zzstd(OE=
-) zlua(OE) zavl(POE) icp(POE) zcommon(POE) znvpair(POE) spl(OE) nouveau n=
-vme nvme_core xhci_pci nvme_common xhci_pci_renesas vfio_pci vfio_pci_cor=
-e irqbypass vfio_iommu_type1 vfio iommufd amdgpu i2c_algo_bit drm_ttm_hel=
-per ttm mxm_wmi video wmi drm_buddy gpu_sched drm_display_helper cec
-> [ 2682.624456] ---[ end trace 0000000000000000 ]---
-> [ 2682.624457] RIP: 0010:migrate_folio_extra+0x6c/0x70
-> [ 2682.624461] Code: de 48 89 ef e8 35 e2 ff ff 5b 44 89 e0 5d 41 5c 41=
- 5d e9 e7 6d 9d 00 e8 22 e2 ff ff 44 89 e0 5b 5d 41 5c 41 5d e9 d4 6d 9d =
-00 <0f> 0b 66 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 0f 1f
-> [ 2682.624463] RSP: 0018:ffffb4685b5038f8 EFLAGS: 00010282
-> [ 2682.624465] RAX: 02ffff0000008025 RBX: ffffd9f684f02740 RCX: 0000000=
-000000002
-> [ 2682.624466] RDX: ffffd9f684f02740 RSI: ffffd9f68d958dc0 RDI: ffff99d=
-8d1cfe728
-> [ 2682.624467] RBP: ffff99d8d1cfe728 R08: 0000000000000000 R09: 0000000=
-000000000
-> [ 2682.624469] R10: ffffd9f68d958dc8 R11: 0000000004020000 R12: ffffd9f=
-68d958dc0
-> [ 2682.624470] R13: 0000000000000002 R14: ffffd9f684f02740 R15: ffffb46=
-85b5039b8
-> [ 2682.624472] FS:  00007f78b8182740(0000) GS:ffff99de9ea80000(0000) kn=
-lGS:0000000000000000
-> [ 2682.624473] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [ 2682.624475] CR2: 00007fe9a0001960 CR3: 000000011e406000 CR4: 0000000=
-0003506e0
-
-See Bugzilla for the full thread and attached QEMU hook script to
-reproduce this regression.
-
-Anyway, I'm adding it to regzbot:
-
-#regzbot introduced: v6.2..v6.3 https://bugzilla.kernel.org/show_bug.cgi?=
-id=3D217747
-#regzbot title: kernel memory bug when cleaning hugepages before QEMU boo=
-t
-
-Thanks.
-
-[1]: https://bugzilla.kernel.org/show_bug.cgi?id=3D217747
-
---=20
-An old man doll... just what I always wanted! - Clara
+> Anyway, I'm adding it to regzbot:
+>=20
+> #regzbot introduced: v6.2..v6.3 https://bugzilla.kernel.org/show_bug.cg=
+i?id=3D217747
+> #regzbot title: kernel memory bug when cleaning hugepages before QEMU b=
+oot
+>=20
+> Thanks.
+>=20
+> [1]: https://bugzilla.kernel.org/show_bug.cgi?id=3D217747
+>=20
