@@ -1,26 +1,44 @@
-Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1CDDDDB2
-	for <regressions@lists.linux.dev>; Wed,  2 Aug 2023 18:46:50 +0000 (UTC)
-Received: from [127.0.0.1] (p578adb1c.dip0.t-ipconnect.de [87.138.219.28])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8899F8F4F
+	for <regressions@lists.linux.dev>; Thu,  3 Aug 2023 08:27:44 +0000 (UTC)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
 	(No client certificate requested)
-	(Authenticated sender: marex@denx.de)
-	by phobos.denx.de (Postfix) with ESMTPSA id 988DF86851;
-	Wed,  2 Aug 2023 20:46:47 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
-	s=phobos-20191101; t=1691002008;
-	bh=EKe3hL3JC/TbKuOLimeKzrWst0PmwwaLD2ywLvHXsB0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Q77eJFOVAfhbEd5TcqcQxoEr4Yp7P9JLoeBd0GHiUbh/2ocH+JX+MaaL+GjWz7BR5
-	 bPNCf10dJR109kBe9z52xokVTToVQlOEqrw2+/dBzBX7SjaehZLznU8IaoL5srWF0T
-	 AJ0zz+5tosfxK2ovCYHfenqnefM4QAXosujOA5GCerrJ5GGu/QjE/Ub90foupFuHQx
-	 dh/ApJQ26eIYhpXO+VPSYlAnbgneiEKilS5FVxZP+VxXxnzdZGXtKpUg3U9VtAJcpM
-	 KvVeec4pIPeWS1BKeUYUSxG7THGYMpjUT+5fPaBpGD7/s8a+inFvTpgsCyB9dHoPSx
-	 PPjz0OMRiE10w==
-Message-ID: <8d4a4595-1aeb-1069-3558-275f56cb4516@denx.de>
-Date: Wed, 2 Aug 2023 20:46:47 +0200
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 8718521990;
+	Thu,  3 Aug 2023 08:27:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1691051262; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0JKh0YoT5EtMkmw+6bQ4IAlmA0cKqBisDvoowqXZlsY=;
+	b=QTwbY7tdSYtBbOr6bU3TIjPc48JFY0p1VEQ5UnC2EHaxwrykAGZGvKzQRdVgJSsKL/m+yM
+	fJuEpmMtc+P5sgSlDFeiqXxqxaeXH3fz3fl5asZhjGqs41c7L3FfI7JED49+jtjEXd++iP
+	tdAxoHZWGrv1GShKFMJxGJ048j17dSc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1691051262;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0JKh0YoT5EtMkmw+6bQ4IAlmA0cKqBisDvoowqXZlsY=;
+	b=SceAnaI/ZBi3nu/BhzdVcO/Exau4SNI7QBc/3iF9kI37OtrKOf3KYrOX0bS4DyIdl5GlUj
+	1GPytqRNhMzqXLDw==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 45FCC134B0;
+	Thu,  3 Aug 2023 08:27:42 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+	by imap2.suse-dmz.suse.de with ESMTPSA
+	id oHFOEP5ky2SfUgAAMHmgww
+	(envelope-from <vbabka@suse.cz>); Thu, 03 Aug 2023 08:27:42 +0000
+Message-ID: <2cfa5f55-1d68-8a4f-d049-13f42e0d1484@suse.cz>
+Date: Thu, 3 Aug 2023 10:27:41 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -29,153 +47,89 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.13.1
-Subject: Re: [PATCH 2/2] drm/bridge: lt9611: Do not generate HFP/HBP/HSA and
- EOT packet
+Subject: Re: [PATCH 04/24] PM: hibernate: move finding the resume device out
+ of software_resume
+To: Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Mike Snitzer <snitzer@kernel.org>,
+ Joern Engel <joern@lazybastard.org>,
+ Miquel Raynal <miquel.raynal@bootlin.com>,
+ Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
+ Pavel Machek <pavel@ucw.cz>, Loic Poulain <loic.poulain@linaro.org>,
+ dm-devel@redhat.com, linux-kernel@vger.kernel.org,
+ linux-block@vger.kernel.org, linux-mtd@lists.infradead.org,
+ linux-pm@vger.kernel.org,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+References: <20230531125535.676098-1-hch@lst.de>
+ <20230531125535.676098-5-hch@lst.de>
 Content-Language: en-US
-To: Abhinav Kumar <quic_abhinavk@quicinc.com>, neil.armstrong@linaro.org,
- Amit Pundir <amit.pundir@linaro.org>,
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Jagan Teki <jagan@amarulasolutions.com>, dri-devel@lists.freedesktop.org,
- Robert Foss <rfoss@kernel.org>, Andrzej Hajda <andrzej.hajda@intel.com>,
- Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
- Michael Walle <michael@walle.cc>,
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
- linux-arm-msm <linux-arm-msm@vger.kernel.org>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- freedreno <freedreno@lists.freedesktop.org>
-References: <20230403221233.500485-1-marex@denx.de>
- <20230403221233.500485-2-marex@denx.de>
- <CAMi1Hd0TD=2z_=bcDrht3H_wiLvAFcv8Z-U_r_KUOoeMc6UMjw@mail.gmail.com>
- <CAMty3ZBNFu=f-FS4YFN4wfmiTuk=48nna-vub1eMYwidDt+msg@mail.gmail.com>
- <CAA8EJppbdiUz5m+9EAPnFb916DaS_VKWd30c7_EPWjuid8rtqQ@mail.gmail.com>
- <CAMi1Hd2G5PJmz4wpO1wbdqKd0FA8LBgvRDv2u5ZYAMb5s6Kt0A@mail.gmail.com>
- <d5fb8106-b8f3-0acf-1267-d4d6d0860e25@linaro.org>
- <d28b0090-bd1e-6737-d92b-348dc6c30750@linaro.org>
- <4396d197-f16f-92bd-727c-eb8c78016198@quicinc.com>
- <961b4747-c9f1-a31c-c33c-475b4803f832@denx.de>
- <64c3352f-c2aa-5260-c6ff-4a607ce219a2@quicinc.com>
- <f768950b-0406-1f03-86a5-50d5794bb060@denx.de>
- <51d782c4-3539-c3d3-6844-d6b9a39c09eb@linaro.org>
- <88a49ed7-8132-3212-1f7a-9378eb640d68@denx.de>
- <d4b778f6-35b6-fc1b-014d-eaa9b3b900a4@linaro.org>
- <c9e42b81-f0b4-05a7-03db-786fa7d38135@denx.de>
- <9fae9cc5-7de0-7a65-8400-bb55263c0377@quicinc.com>
-From: Marek Vasut <marex@denx.de>
-In-Reply-To: <9fae9cc5-7de0-7a65-8400-bb55263c0377@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
-X-Virus-Status: Clean
+From: Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <20230531125535.676098-5-hch@lst.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 8/2/23 19:49, Abhinav Kumar wrote:
-> Hi Marek
+On 5/31/23 14:55, Christoph Hellwig wrote:
+> software_resume can be called either from an init call in the boot code,
+> or from sysfs once the system has finished booting, and the two
+> invocation methods this can't race with each other.
 > 
-> On 8/2/2023 10:25 AM, Marek Vasut wrote:
->> On 8/2/23 15:08, neil.armstrong@linaro.org wrote:
->>> Hi Marek,
->>>
->>> On 02/08/2023 14:25, Marek Vasut wrote:
->>>> On 8/2/23 10:39, neil.armstrong@linaro.org wrote:
->>>>> Hi Marek,
->>>>
->>>> Hi,
->>>>
->>>>> On 13/07/2023 20:28, Marek Vasut wrote:
->>>>>
->>>>> <snip>
->>>>>
->>>>>>>>
->>>>>>>> MIPI_DSI_MODE_VIDEO_NO_HFP means the HBP period is just skipped 
->>>>>>>> by DSIM.
->>>>>>>>
->>>>>>>> Maybe there is a need for new set of flags which differentiate 
->>>>>>>> between HBP skipped (i.e. NO HBP) and HBP LP11 ?
->>>>>>>>
->>>>>>>
->>>>>>> No, the section of the MIPI DSI spec I posted below clearly 
->>>>>>> states there are two options:
->>>>>>>
->>>>>>> 1) send blanking packets during those periods
->>>>>>> 2) transition to LP11 during those periods
->>>>>>>
->>>>>>> There is no 3rd option in the spec of not doing both like what 
->>>>>>> you are suggesting. So DSIM should also be only transitioning to 
->>>>>>> LP11 during those periods if its not sending the blanking packets 
->>>>>>> with those flags set.
->>>>>>>
->>>>>>> So, there is no need for any new set of flags to differentiate.
->>>>>>>
->>>>>>> The flags and their interpretation is correct in MSM driver. I 
->>>>>>> cannot comment on what exactly DSIM does with those flags.
->>>>>>
->>>>>> How do you explain the comment in include/drm/drm_mipi_dsi.h:
->>>>>>
->>>>>> 128 /* disable hback-porch area */
->>>>>> 129 #define MIPI_DSI_MODE_VIDEO_NO_HBP      BIT(6)
->>>>>
->>>>> Can you specify how you determined those flags were needed on DSIM 
->>>>> ? a vendor tree ? a datasheet ?
->>>>
->>>> The following upstream commit:
->>>>
->>>> 996e1defca344 ("drm: exynos: dsi: Fix MIPI_DSI*_NO_* mode flags")
->>>>
->>>>> In the meantime, we should revert this patch because it regresses 
->>>>> some Qcom
->>>>> based platforms until we figure out what's missing to make DSIM 
->>>>> based boards
->>>>> happy.
->>>>>
->>>>> I'll send a revert change afterwards.
->>>>
->>>> That change would break existing use case on i.MX8M then, I disagree 
->>>> with that revert.
->>>
->>> As I understand the timeline is :
->>>
->>> - 996e1defca344 was merged in v6.2-rc2 and caused regression on NXP 
->>> platforms
->>>
->>> - 8ddce13ae696 was merged in v6.5-rc1 to fix that but caused 
->>> regression on QCOM platforms
->>>
->>> Did I miss something ?
->>
->> That looks about right.
->>
->>> I don't know how to handle this apart reverting 8ddce13ae696 and 
->>> trying to find a proper fix that doesn't regress QCOM.
->>
->> I provided a suggestion above -- I believe QCOM is misinterpreting the 
->> NO_H* flags and it needs separate flags for its behavior. The NXP 
->> hardware per MX8M{M,N,P} reference manual (which is available at 
->> NXP.com) skips the H* areas in the transfer, which matches the flags 
->> description:
->>
->> include/drm/drm_mipi_dsi.h-/* disable hback-porch area */
->> include/drm/drm_mipi_dsi.h:#define MIPI_DSI_MODE_VIDEO_NO_HBP   BIT(6)
->>
->> If the QCOM hardware does something else, it should introduce its own 
->> set of flags for that something else and that would be problem solved, 
->> for both platforms.
->>
->> I don't have access to the QCOM hardware or datasheet however, is 
->> either available ?
->>
+> For the latter case we did just parse the suspend device manually, while
+> the former might not have one.  Split software_resume so that the search
+> only happens for the boot case, which also means the special lockdep
+> nesting annotation can go away as the system transition mutex can be
+> taken a little later and doesn't have the sysfs locking nest inside it.
 > 
-> Like I have written above, the DSI spec gives two options which we can 
-> do in the HBP/HSA/HFP periods:
-> 
-> 1) Transition to LP11 which means blanking packets will not be sent
-> 2) Send blanking packets during those periods
-> 
-> That flag controls exactly that and thats what MSM does.
-> 
-> There is no third option in the spec to not do either.
-> 
-> Now, are you saying that those flags are providing some other third 
-> option which is not even there in the DSI spec?
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> Acked-by: Rafael J. Wysocki <rafael@kernel.org>
 
-Can you please have a look at the i.MX8M reference manual and read 
-exactly what that controller does , then compare it to the QCOM 
-controller behavior ?
+This caused a regression for me in 6.5-rc1+, fix below.
+
+----8<----
+From 95a310ae6cfae9b3cab61e54a1bce488c3ab93a1 Mon Sep 17 00:00:00 2001
+From: Vlastimil Babka <vbabka@suse.cz>
+Date: Wed, 2 Aug 2023 15:46:18 +0200
+Subject: [PATCH] PM: hibernate: fix resume_store() return value when
+ hibernation not available
+
+On a laptop with hibernation set up but not actively used, and with
+secure boot and lockdown enabled kernel, 6.5-rc1 gets stuck on boot with
+the following repeated messages:
+
+  A start job is running for Resume from hibernation using device /dev/system/swap (24s / no limit)
+  lockdown_is_locked_down: 25311154 callbacks suppressed
+  Lockdown: systemd-hiberna: hibernation is restricted; see man kernel_lockdown.7
+  ...
+
+Checking the resume code leads to commit cc89c63e2fe3 ("PM: hibernate:
+move finding the resume device out of software_resume") which
+inadvertently changed the return value from resume_store() to 0 when
+!hibernation_available(). This apparently translates to userspace
+write() returning 0 as in number of bytes written, and userspace looping
+indefinitely in the attempt to write the intended value.
+
+Fix this by returning the full number of bytes that were to be written,
+as that's what was done before the commit.
+
+Fixes: cc89c63e2fe3 ("PM: hibernate: move finding the resume device out of software_resume")
+Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+---
+ kernel/power/hibernate.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/power/hibernate.c b/kernel/power/hibernate.c
+index e1b4bfa938dd..2b4a946a6ff5 100644
+--- a/kernel/power/hibernate.c
++++ b/kernel/power/hibernate.c
+@@ -1166,7 +1166,7 @@ static ssize_t resume_store(struct kobject *kobj, struct kobj_attribute *attr,
+ 	int error;
+ 
+ 	if (!hibernation_available())
+-		return 0;
++		return n;
+ 
+ 	if (len && buf[len-1] == '\n')
+ 		len--;
+-- 
+2.41.0
+
+
