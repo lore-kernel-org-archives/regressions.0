@@ -1,87 +1,93 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [85.215.255.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 778CAA929
-	for <regressions@lists.linux.dev>; Fri,  4 Aug 2023 12:51:58 +0000 (UTC)
-Received: from mail-lj1-f198.google.com (mail-lj1-f198.google.com
- [209.85.208.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-286-jH7Fuaw6NfaH3sdTu7sndA-1; Fri, 04 Aug 2023 08:51:55 -0400
-X-MC-Unique: jH7Fuaw6NfaH3sdTu7sndA-1
-Received: by mail-lj1-f198.google.com with SMTP id 38308e7fff4ca-2b9d5bc6161so3206251fa.0
-        for <regressions@lists.linux.dev>; Fri, 04 Aug 2023 05:51:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691153514; x=1691758314;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dRlXGWY/CFWI5iW4ld/1S29gsGd4s6U2sDlhS/FmuSE=;
-        b=NheaI8hhGZHMunXpMx89bXDy48cXVzJETRTntvimeQhvbA3HiWlf5DQlllU7EHYOAx
-         CzkvU6JhEa+B6AZf8SwEdAl+NX/vsmlzzS4ME9DZTq/6EghewKShqn66ckpCnlsTRYVN
-         k9dnWmmjBHixzW3D68xzf1DrcpeCdn/xbobzHiZ6BnXbduVxwKd+LbsT7LT0MrFdTEW8
-         xePjXPuhBR4MX8SC+lQqumGLhoSlPJU81oLERZRXsIoCaBkYZhAhVTfsPx6uKYcJfGHT
-         EsqntkXNzl1RrnnbBOmqa3uTKtrgENtfgY77jw8WR/px+zQRkjXBT7p2JOqL2AvJs/Jb
-         38sA==
-X-Gm-Message-State: ABy/qLbnRMgOPAj5h4PjYuPbsGDNCCKATdhNbfYgPZkmOFlqAELRmife
-	1SAb5wxSCapfQ/De54HPZbFiZ/0+AjUb7jw1aJKel+w2+Zl6VwkT9/muBLyXR0mqybhZmZyj/cm
-	EjebZbWW9EHhF+5L/mMnMOSc7iCLFvnM1KzQOxr8=
-X-Received: by 2002:a2e:a7cf:0:b0:2b6:9969:d0ab with SMTP id x15-20020a2ea7cf000000b002b69969d0abmr14626213ljp.4.1691153514604;
-        Fri, 04 Aug 2023 05:51:54 -0700 (PDT)
-X-Google-Smtp-Source: APBJJlFrcSjZXh6YM3wQYlauuWGfFGZv19JjISaVV8WqI5Be/z9XCLqb6j13RdZZx7ibxrrJTgr6pbJPMHFHOKn9vpw=
-X-Received: by 2002:a2e:a7cf:0:b0:2b6:9969:d0ab with SMTP id
- x15-20020a2ea7cf000000b002b69969d0abmr14626204ljp.4.1691153514326; Fri, 04
- Aug 2023 05:51:54 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45298A940
+	for <regressions@lists.linux.dev>; Fri,  4 Aug 2023 12:53:13 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; t=1691153230; cv=none;
+    d=strato.com; s=strato-dkim-0002;
+    b=fPPfv7Wf/FPOe0PdLkcNWUDqB504GCex5b6XdweL4YxnJv+RFTy4CwiRsab2hEgo/L
+    es3BMNAc2VeihGIszGXKR4L7dDPDX9mg7cCIpPki0BjjqFQEuuxdwTT/0uNJWF/KK/rN
+    HuEZ1S98YS+p+rnr8OULRTSi8+/Uymuinq/pp6n5fUGIOfrygdQY4a31VmSD1wkN5cYP
+    KXhwQ/MyqXFkOS2l0LwCXL4gOUcPFyNzBRudAk1NMrY8kgaTAvQBjXRUTS+8hPxt6bmZ
+    ZhHbqf5F81dYQkZ7a8SpjNRl2kD3P2wQDseDluqln8M1Bs8gIPL2KdUIeJZ08k+Q6dz4
+    TABQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1691153230;
+    s=strato-dkim-0002; d=strato.com;
+    h=References:Message-ID:In-Reply-To:Subject:cc:To:From:Date:Cc:Date:
+    From:Subject:Sender;
+    bh=9EYPZh3bK4/rfwAilTxfULasm0qSCr/n1iUN2yQEIqw=;
+    b=ODI6w+7xrbc1jEyW1ONt9mGBMp9KjaXKL5ffdUkSVo9d2yQaHChirp30CJu3CBvGUE
+    9HmBtNCMoFtU8EEKcrx1exVtasMuv3z2Y1w15Ii/X+zVPP9Psv/jeTPe8Br8LeoatpEo
+    n47unxX1OU6e6d8BWzp5LtTuwYfOBgXjHRCpeqtpYnfYg9Vqt5sP96DGLLyTHcAGIUSK
+    Mh0EUo2PAPrs0zdIA2SK0/PHwbHFo8qkOgvbwRJF0SeNWxdQe8LAC8ekGc2HV70ULHuu
+    Dihv6z/GtdjVGxi8KaHjcKnj4fpf/N9NZ99eGgKQVdgybuqKiJEYZwKuTpa85SI7htZh
+    6aKw==
+ARC-Authentication-Results: i=1; strato.com;
+    arc=none;
+    dkim=none
+X-RZG-CLASS-ID: mo01
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1691153230;
+    s=strato-dkim-0002; d=kravcenko.com;
+    h=References:Message-ID:In-Reply-To:Subject:cc:To:From:Date:Cc:Date:
+    From:Subject:Sender;
+    bh=9EYPZh3bK4/rfwAilTxfULasm0qSCr/n1iUN2yQEIqw=;
+    b=TqP2h85NJh2aEUoJOlpNH4jD4fVeXC9Q6PdsyJuA/BG7vvkQCKJrfA9Hcfy9G7Ay7R
+    /I6a3O5rvESDswGGPi7vz8RSM9d0osvWgtrYqy8oY4Ym7r40oYwH8tJLm4uKqziyIhQp
+    vqk5El8IZEpNO62k/kt7Fsub/ClLMmzMjH9FBHWswEinm6q2RrP3vDDDMN90IpBxhd3d
+    dGwSSrkPrgTwcUbxbLDyK9x4fZGz5Z5Qlc4oslNa/OyvH0ay7RyqHbVKSFUE1AO08Dso
+    fZhb751cJoUjZs+mI0PZIZdCywMeeKUCJH8shC5+gXsA/dQnmFmCl2UzfVJ/6awrbTVt
+    T0ug==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1691153230;
+    s=strato-dkim-0003; d=kravcenko.com;
+    h=References:Message-ID:In-Reply-To:Subject:cc:To:From:Date:Cc:Date:
+    From:Subject:Sender;
+    bh=9EYPZh3bK4/rfwAilTxfULasm0qSCr/n1iUN2yQEIqw=;
+    b=HDQWQS8l+d70MoVSgEaj3hlj6tipBNWp3rmySPugmybXsoFbfiuW4pdizNDCMZWTJW
+    RkaT62lHLgj7q6st+NBQ==
+X-RZG-AUTH: ":I2AFc2Cjaf5HiRB0lhnvZ9elhwku56KjVuxY6AZJWRy8C0aEhFGbVIvMVnbXlOZqFTX/PnlW"
+Received: from duane.cam.uni-heidelberg.de
+    by smtp.strato.de (RZmta 49.6.6 AUTH)
+    with ESMTPSA id dd2654z74ClAWsx
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+	(Client did not present a certificate);
+    Fri, 4 Aug 2023 14:47:10 +0200 (CEST)
+Date: Fri, 4 Aug 2023 14:46:54 +0200 (CEST)
+From: Olaf Skibbe <news@kravcenko.com>
+To: Karol Herbst <kherbst@redhat.com>
+cc: Thorsten Leemhuis <regressions@leemhuis.info>, 
+    dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org, 
+    1042753@bugs.debian.org, Ben Skeggs <bskeggs@redhat.com>, 
+    Lyude Paul <lyude@redhat.com>, 
+    Linux kernel regressions list <regressions@lists.linux.dev>, 
+    "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: nouveau bug in linux/6.1.38-2
+In-Reply-To: <CACO55ttcUEUjdVgx4y7pv26VAGeHS5q1wVKWrMw5=o9QLaJLZw@mail.gmail.com>
+Message-ID: <0a5084b7-732b-6658-653e-7ece4c0768c9@kravcenko.com>
+References: <20be6650-5db3-b72a-a7a8-5e817113cff5@kravcenko.com> <c27fb4dd-b2dc-22de-4425-6c7db5f543ba@leemhuis.info> <CACO55ttcUEUjdVgx4y7pv26VAGeHS5q1wVKWrMw5=o9QLaJLZw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20be6650-5db3-b72a-a7a8-5e817113cff5@kravcenko.com>
- <c27fb4dd-b2dc-22de-4425-6c7db5f543ba@leemhuis.info> <CACO55ttcUEUjdVgx4y7pv26VAGeHS5q1wVKWrMw5=o9QLaJLZw@mail.gmail.com>
- <0a5084b7-732b-6658-653e-7ece4c0768c9@kravcenko.com>
-In-Reply-To: <0a5084b7-732b-6658-653e-7ece4c0768c9@kravcenko.com>
-From: Karol Herbst <kherbst@redhat.com>
-Date: Fri, 4 Aug 2023 14:51:43 +0200
-Message-ID: <CACO55tvu4X3u8K-FGUeN2CBw1BnumRPBNEEqjn+EPzNCCCQYyg@mail.gmail.com>
-Subject: Re: nouveau bug in linux/6.1.38-2
-To: Olaf Skibbe <news@kravcenko.com>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>, dri-devel@lists.freedesktop.org, 
-	nouveau@lists.freedesktop.org, 1042753@bugs.debian.org, 
-	Ben Skeggs <bskeggs@redhat.com>, Lyude Paul <lyude@redhat.com>, 
-	Linux kernel regressions list <regressions@lists.linux.dev>, 
-	"stable@vger.kernel.org" <stable@vger.kernel.org>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; format=flowed; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, Aug 4, 2023 at 2:48=E2=80=AFPM Olaf Skibbe <news@kravcenko.com> wro=
-te:
->
-> On Fri, 4 Aug 2023 at 14:15, Karol Herbst wrote:
->
-> > mind retrying with only fb725beca62d and 62aecf23f3d1 reverted?
->
-> I will do this later this day (takes some time, it is a slow machine).
->
-> > Would be weird if the other two commits are causing it. If that's the
-> > case, it's a bit worrying that reverting either of the those causes
-> > issues, but maybe there is a good reason for it. Anyway, mind figuring
-> > out which of the two you need reverted to fix your issue? Thanks!
->
-> I can do this. But if I build two kernels anyway, isn't it faster to
-> build each with only one of the patches applied? Or do you expect the
-> patches to interact (so that the bug would only be present when both are
-> applied)?
->
+On Fri, 4 Aug 2023 at 14:15, Karol Herbst wrote:
 
-How are you building the kernel? Because normally from git reverting
-one of those shouldn't take long, because it doesn't recompile the
-entire kernel. But yeah, you can potentially just revert one of one
-for now and it should be fine.
+> mind retrying with only fb725beca62d and 62aecf23f3d1 reverted?
 
-> Cheers,
-> Olaf
->
+I will do this later this day (takes some time, it is a slow machine).
 
+> Would be weird if the other two commits are causing it. If that's the 
+> case, it's a bit worrying that reverting either of the those causes 
+> issues, but maybe there is a good reason for it. Anyway, mind figuring 
+> out which of the two you need reverted to fix your issue? Thanks!
+
+I can do this. But if I build two kernels anyway, isn't it faster to 
+build each with only one of the patches applied? Or do you expect the 
+patches to interact (so that the bug would only be present when both are 
+applied)?
+
+Cheers,
+Olaf
