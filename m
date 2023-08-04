@@ -1,121 +1,81 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 488651AA8B
-	for <regressions@lists.linux.dev>; Fri,  4 Aug 2023 22:27:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=oe3R1YKPMSS61Kql1VVF1wpgWu78Kb9TP4tIQw5QCgw=; b=SomGhhLqgNBWYw3yU37FFm8NyK
-	s731vyDc2/mwtHBDHIGN42h/VWqKhR7ykKos0RTCgVNWEeRLTW6cjMRygXWyWOw0tRkaJNoU8ihMt
-	joVIvLvs/SLsrlOSbDgQwuDcUf2tUgAXvZ06MdHxlSEi4slkyS8RXcw3xQXQpGACzxue2JTNuaUKE
-	8UjyA+Ru1k97X35qsFFUdXPQi408YX9k/nEMxwhC5z9COVi+ma3TUCk9he6zHNWSdYUXob5U+7FAk
-	+gTTRgTTtyhAfUAnGBToBl5TlJnE/mL9gLGS99weNkN5FiRMeCGbXfp9pnNeM6Behz7BUwJueWHfK
-	JWUbifAw==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:47482)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1qS3Gf-0000pF-0M;
-	Fri, 04 Aug 2023 23:27:33 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1qS3Ge-0004MT-Q1; Fri, 04 Aug 2023 23:27:32 +0100
-Date: Fri, 4 Aug 2023 23:27:32 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Nick Bowler <nbowler@draconx.ca>
-Cc: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	netdev@vger.kernel.org, regressions@lists.linux.dev
-Subject: Re: PROBLEM: Broken or delayed ethernet on Xilinx ZCU104 since 5.18
- (regression)
-Message-ID: <ZM17VKzDBdm4uMNY@shell.armlinux.org.uk>
-References: <CADyTPEzqf8oQAPSFRWJLxAhd-WE4fX2zdoe9Vu6V9hZMn1Yc8g@mail.gmail.com>
- <CAL_JsqLrErF__GGHfanRFCpfbOh6fvz4-aJv32h8OfDjUeZPSg@mail.gmail.com>
- <CADyTPEwgG0=R_b5DNBP0J0auDXu2BNTOwkSUFg-s7pLJUPC+Tg@mail.gmail.com>
- <CADyTPExgjcaUeKiR108geQhr0KwFC0A8qa_n_ST2RxhbSczomQ@mail.gmail.com>
- <CAL_Jsq+N2W0hVN7fUC1rxGL-Hw9B8eQvLgSwyQ3n41kqwDbxyg@mail.gmail.com>
- <CADyTPEyT4NJPrChtvtY=_GePZNeSDRAr9j3KRAk1hkjD=5+i8A@mail.gmail.com>
- <CAL_JsqKGAFtwB+TWc1yKAe_0M4BziEpFnApuWuR3h+Go_=djFg@mail.gmail.com>
- <CADyTPEwY4ydUKGtGNayf+iQSqRVBQncLiv0TpO9QivBVrmOc4g@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82E0FBA2C
+	for <regressions@lists.linux.dev>; Fri,  4 Aug 2023 22:57:34 +0000 (UTC)
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-522ab301692so3349901a12.2
+        for <regressions@lists.linux.dev>; Fri, 04 Aug 2023 15:57:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1691189852; x=1691794652;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Oufc1x89nwlrXRNKkHYYKDDdEzz4I9gpw2oNWdbuYSU=;
+        b=VqYbYAYnsgurjZvk38NMRpEXWNzMIh8bClm2aLRffNd6GpxzEhY/5t2SI3RoHCFJD7
+         mkyOBg8qRdLZ0bfOCH+PES2Bkjg9te6SsYX916N5I/GLY8uciRcu0rn1IupQwFsA0kai
+         MHoq1pXj/0/9k7cKdBHmBgd4xSQS/J2sGDK0Q=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1691189852; x=1691794652;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Oufc1x89nwlrXRNKkHYYKDDdEzz4I9gpw2oNWdbuYSU=;
+        b=igiGU6T0s7Fwsk4MW6ZeJlZDCyR8/sunVk/nuYD9S45OMeVy+T13N/ZdTqqxLkVUQS
+         DsK8nQHsbJsjultvsjezOI82sRxR4iLal3wzczva2prk17jIXCiMbwc6cNRDZfaFe4Kc
+         Nt1KbNrPruukRq78rZDT35kQwk4k2hcWlyZLxjCDOZjBzS/Nh6PGfCMU6OIRwq1MlfwV
+         z/qsq8Y+oq1jBE1vz9Y9Fiyh3Zk+5KZSeUqVN/NU8EL4dT3x+/gs6oL4T4ZUuyF8PcPy
+         oetKyZ+X2KYRcn82c8PBQzMyAxxLNt1TZPR9TSjNSh6ctIM1tZsWst//9iMf/gStLAwg
+         I38A==
+X-Gm-Message-State: AOJu0Yz0hXi4O18efxCv0rcFwmxOdiC9GxPhe6QE4miB3kRXIKCXR2y/
+	FbeY9OwkFQhb9lTj4Yj+CUCbNTLtgq9j3hiaYu0Uqw==
+X-Google-Smtp-Source: AGHT+IGCHF89f+PbnUektQvERrm0qcuBd8x1SnV1IA1nsRpjQK5wv3a38KsE8G833dufzf79lscz/w==
+X-Received: by 2002:a05:6402:1b04:b0:523:f55:18de with SMTP id by4-20020a0564021b0400b005230f5518demr2344105edb.20.1691189852358;
+        Fri, 04 Aug 2023 15:57:32 -0700 (PDT)
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com. [209.85.218.42])
+        by smtp.gmail.com with ESMTPSA id d12-20020aa7ce0c000000b005230724b2b1sm1850780edv.45.2023.08.04.15.57.31
+        for <regressions@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 04 Aug 2023 15:57:31 -0700 (PDT)
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-99bd1d0cf2fso360189366b.3
+        for <regressions@lists.linux.dev>; Fri, 04 Aug 2023 15:57:31 -0700 (PDT)
+X-Received: by 2002:a05:6402:514:b0:521:d75d:ef69 with SMTP id
+ m20-20020a056402051400b00521d75def69mr2790287edv.31.1691189397521; Fri, 04
+ Aug 2023 15:49:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CADyTPEwY4ydUKGtGNayf+iQSqRVBQncLiv0TpO9QivBVrmOc4g@mail.gmail.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+References: <20230708191212.4147700-1-surenb@google.com> <20230708191212.4147700-3-surenb@google.com>
+ <20230804214620.btgwhsszsd7rh6nf@f>
+In-Reply-To: <20230804214620.btgwhsszsd7rh6nf@f>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Fri, 4 Aug 2023 15:49:40 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wiy125k1dBmQFTGpHwiOqEyrD6xnd4xKWfe97H_HodgDA@mail.gmail.com>
+Message-ID: <CAHk-=wiy125k1dBmQFTGpHwiOqEyrD6xnd4xKWfe97H_HodgDA@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] fork: lock VMAs of the parent process when forking
+To: Mateusz Guzik <mjguzik@gmail.com>
+Cc: Suren Baghdasaryan <surenb@google.com>, akpm@linux-foundation.org, regressions@leemhuis.info, 
+	bagasdotme@gmail.com, jacobly.alt@gmail.com, willy@infradead.org, 
+	liam.howlett@oracle.com, david@redhat.com, peterx@redhat.com, 
+	ldufour@linux.ibm.com, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, 
+	gregkh@linuxfoundation.org, regressions@lists.linux.dev, 
+	Jiri Slaby <jirislaby@kernel.org>, =?UTF-8?Q?Holger_Hoffst=C3=A4tte?= <holger@applied-asynchrony.com>, 
+	stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Aug 04, 2023 at 05:31:21PM -0400, Nick Bowler wrote:
-> On 2023-08-04, Rob Herring <robh@kernel.org> wrote:
-> > On Fri, Aug 4, 2023 at 11:52 AM Nick Bowler <nbowler@draconx.ca> wrote:
-> >> I don't know about the deferred probe timeout, but I bisected the 6.5-rc4
-> >> breakage to this commit:
-> >>
-> >>   commit c720a1f5e6ee8cb39c28435efc0819cec84d6ee2
-> >>   Author: Michal Simek <michal.simek@amd.com>
-> >>   Date:   Mon May 22 16:59:48 2023 +0200
-> >>
-> >>       arm64: zynqmp: Describe TI phy as ethernet-phy-id
-> >
-> > I don't see anything obviously problematic with that commit. (The
-> > #phy-cells property added is wrong as ethernet phys don't use the phy
-> > binding, but that should just be ignored). I'd check if the phy probed
-> > and has a DT node associated with it.
-> 
-> I think the answer is "no, the phy was not probed".  Without reverting
-> that commit, there is absolutely nothing in /sys/bus/mdio_bus/devices.
-> There is no phy device link under /sys/bus/mdio_bus/drivers/"TI DP83867",
-> and there is no mdio_bus under /sys/bus/platform/devices/ff0e0000.ethernet.
-> 
-> When I revert that commit, I can locate the phy device under all these
-> locations.
-> 
-> > fw_devlink tracks parent-child dependencies and maybe changing to
-> > parent-grandchild affected that. We don't yet track 'phy-handle'
-> > dependencies, but we'd have a circular one here if we did (though that
-> > should be handled). Does "fw_devlink=off" help?
-> 
-> Booting with fw_devlink=off results in no obvious change in behaviour.
+On Fri, 4 Aug 2023 at 14:46, Mateusz Guzik <mjguzik@gmail.com> wrote:
+>
+> I don't see it mentioned in the discussion, so at a risk of ruffling
+> feathers or looking really bad I'm going to ask: is the locking of any
+> use if the forking process is single-threaded? T
 
-I think we need to rewind a tad.
+Sadly, we've always been able to access the mm from other processes,
+so the locking is - I think - unavoidable.
 
-My understanding is that this uses the Cadence macb driver.
+And some of those "access from other processes" aren't even uncommon
+or special. It's things like "ps" etc, that do it just to see the
+process name and arguments.
 
-In your original message, you said that the ethernet driver wasn't
-being bound to the driver.
-
-Since the ethernet driver is responsible for spotting the "mdio"
-sub-node and creating the MDIO bus, if the driver isn't being
-successfully bound, then the MDIO bus and the PHYs on the bus won't be
-created, so you won't find them in /sys/bus/mdio_bus/devices.
-
-Moreover, the Cadence macb driver, and this doesn't care about the
-presence of the PHY at probe time, only when the network interface is
-brought up. See macb_phylink_connect() which is called from
-macb_open().
-
-So, I think that the deferred probing has nothing to do with PHYs, and
-that's just a wild goose chase.
-
-I think instead we need to be concentrating on what's going on with
-the ethernet driver, and why the ethernet driver is deferring its
-probe. Is macb_probe() getting called at all? How far through
-macb_probe() do we get before we defer?
-
-I think those are the key questions that need answering.
-
-Maybe, if you can get access to the machine while the driver is
-deferring, /sys/kernel/debug/devices_deferred might give some
-useful information, but that's just a hope.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+            Linus
