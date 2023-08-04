@@ -1,110 +1,284 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56DDEC14A
-	for <regressions@lists.linux.dev>; Fri,  4 Aug 2023 15:52:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E734BC433C7
-	for <regressions@lists.linux.dev>; Fri,  4 Aug 2023 15:52:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1691164354;
-	bh=LOq7RS20TqfH4Hdkn/iEhzGYnzzqU4MxbtyZDje5DTM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=db/QpyGWZiGv+hOkDcQmId64EfLtCECXdj6SVN9iqNnUz87wDzhSDSDKkPqhesxXc
-	 XkYO8574UAfmZclBZdnsGi8VAqj7rHu/+xeRD5KvG+ijc7xo9ROK2jfD8yKTKqRCsq
-	 zX7BT0Uug6JnRWvDTte1vdDZs+zBhkIs/jjQPHMmwIvSG5BIkp48BbFKST0uVCujlZ
-	 cjAylaRSCFsl6gdna/65Ckv7KfS6T+R/op7i0mliGSpS53yTpBcmy7X+2F4JyUZyFj
-	 GtkGEVfoBBfJpXmPTUq+8Kd9wNfncXOGt2deJxPXuSrP9bccesOId7cwFMM5+Q17UG
-	 R0JgvLmb+aF9g==
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2b9bf52cd08so34916641fa.2
-        for <regressions@lists.linux.dev>; Fri, 04 Aug 2023 08:52:34 -0700 (PDT)
-X-Gm-Message-State: AOJu0YwaGaeXlLFc3+Zu9yn5mlJG9zupydCoDYihG7qtoKmefrR3te1J
-	uWagEUB1re3RFdfUtgRNxHeVFQRXVsKEhmuWpw==
-X-Google-Smtp-Source: AGHT+IGTRbQZ164zyFuRSDnd5vaQ7H79WmuECLzjpyyzN1RdAra6RmdexIM3oHlL3swhcI2UIbnez1POXc8rZk7AbpE=
-X-Received: by 2002:a2e:9d5a:0:b0:2b9:53bd:47a7 with SMTP id
- y26-20020a2e9d5a000000b002b953bd47a7mr1705190ljj.30.1691164352899; Fri, 04
- Aug 2023 08:52:32 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C54A519883;
+	Fri,  4 Aug 2023 16:06:40 +0000 (UTC)
+Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-40ff82320a7so4591691cf.3;
+        Fri, 04 Aug 2023 09:06:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1691165199; x=1691769999;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=9WHpaML7TDpchlXETOyRPhVVaYZ8jGUF38TR9WRuWOk=;
+        b=kFTiARaoAXW2m4aK60apoeeCITzjsHdc6gptlWS/PNQ9yvKwzIrKGaSl0Ahf6XkNAR
+         JoS5FjzksZlmxMoTeizw+tbXrHfB4iv1Cm6aS+hC9KBKV14ZMhU9/lpJv3P3xjJY1wmf
+         W6HMTOeWlHSi0IjpsZrCmVuvp7VbhoExuTBbG8dsMDvW8TTH/JY+yhYBRRkI10Mhbzl5
+         IMLXIKgmtPdIBdg5y4uOsOslSsCqSB/CXpyY334jzyCmv9CGICISmqB+gobA+Yst62cC
+         ggUoEVNraubR17J7I2u6I9UgB2ct+K6ikrkumOcFjDMYi99jmlRzHev6RsLYs+rNdOtA
+         7cZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1691165199; x=1691769999;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9WHpaML7TDpchlXETOyRPhVVaYZ8jGUF38TR9WRuWOk=;
+        b=jG/EtD5Uy7xdSc4JZzUhwROcnG0GOK43H4hRcOke/7xGAZUgzdpId/Dtw6YPFp7sGO
+         wOKCbCg/RXZyBTxdFFShhO9iT6zYdjUUuD8/mPQnXwcP3w6r3YnV5WZK2+fcJqA7D4xD
+         RpSeJETvJsijH5bnIHNmK6fD3UdRlkTfavblIeNvmymoibr6BV1GmZf5mxoQ1eDktosY
+         Dc6XK4NhhVIy4W6c6KznHdVs99UQcFSmUJx2EsrUpabFzXD9GNiD5EidORrQZwKTsTvo
+         IPftUPeZR/EWolwIzqoh3F0hsI78h2mLxGgGSHsxdDfj4KmZz+pjeCmisBxCF0TXpBXU
+         AVWg==
+X-Gm-Message-State: AOJu0YwxNxsnfftF9t4QBnFllrinYe7gpLZzZ6r2q5P7GcJs6qDXiNME
+	7RPbkQUiG5FsLEuSR3jAcao=
+X-Google-Smtp-Source: AGHT+IG4llEuyDN62wdGO5+g2Pd6HbEpOc2DuV5egwlhQAnyr8QgmANl9YPT9LP7PGVJrJ1elAr2jQ==
+X-Received: by 2002:ac8:5843:0:b0:3f6:c253:a738 with SMTP id h3-20020ac85843000000b003f6c253a738mr3483552qth.41.1691165199093;
+        Fri, 04 Aug 2023 09:06:39 -0700 (PDT)
+Received: from [192.168.0.118] (88-113-27-52.elisa-laajakaista.fi. [88.113.27.52])
+        by smtp.gmail.com with ESMTPSA id y24-20020ac87c98000000b0040541a8bd66sm734830qtv.60.2023.08.04.09.06.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 04 Aug 2023 09:06:33 -0700 (PDT)
+Message-ID: <f40c35d3-5558-6a46-4ad4-1631ca9e1805@gmail.com>
+Date: Fri, 4 Aug 2023 19:06:26 +0300
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CADyTPEzqf8oQAPSFRWJLxAhd-WE4fX2zdoe9Vu6V9hZMn1Yc8g@mail.gmail.com>
-In-Reply-To: <CADyTPEzqf8oQAPSFRWJLxAhd-WE4fX2zdoe9Vu6V9hZMn1Yc8g@mail.gmail.com>
-From: Rob Herring <robh@kernel.org>
-Date: Fri, 4 Aug 2023 09:52:20 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLrErF__GGHfanRFCpfbOh6fvz4-aJv32h8OfDjUeZPSg@mail.gmail.com>
-Message-ID: <CAL_JsqLrErF__GGHfanRFCpfbOh6fvz4-aJv32h8OfDjUeZPSg@mail.gmail.com>
-Subject: Re: PROBLEM: Broken or delayed ethernet on Xilinx ZCU104 since 5.18 (regression)
-To: Nick Bowler <nbowler@draconx.ca>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	netdev@vger.kernel.org, regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.1
+Subject: Re: Kernel regression tracking/reporting initiatives and KCIDB
+To: =?UTF-8?Q?Ricardo_Ca=c3=b1uelo?= <ricardo.canuelo@collabora.com>,
+ kernelci@lists.linux.dev, gregkh@linuxfoundation.org,
+ thorsten@leemhuis.info, regressions@lists.linux.dev
+Cc: kernel@collabora.com, linux-kernel@vger.kernel.org,
+ Gustavo Padovan <gustavo.padovan@collabora.com>,
+ Shreeya Patel <shreeya.patel@collabora.com>
+References: <874jljhtmj.fsf@rcn-XPS-13-9305.i-did-not-set--mail-host-address--so-tickle-me>
+Content-Language: en-US
+From: Nikolai Kondrashov <spbnick@gmail.com>
+In-Reply-To: <874jljhtmj.fsf@rcn-XPS-13-9305.i-did-not-set--mail-host-address--so-tickle-me>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Fri, Aug 4, 2023 at 9:27=E2=80=AFAM Nick Bowler <nbowler@draconx.ca> wro=
-te:
->
-> Hi,
->
-> With recent kernels (5.18 and newer) the ethernet is all wonky on my
-> ZCU104 board.
->
-> There is some behaviour inconsistency between kernel versions identified
-> during bisection, so maybe there is more than one issue with the ethernet=
-?
->
->   6.5-rc4: after 10 seconds, the following message is printed:
->
->     [   10.761808] platform ff0e0000.ethernet: deferred probe pending
->
->   but the network device seemingly never appears (I waited about a minute=
-).
->
->   6.1 and 6.4: after 10 seconds, the device suddenly appears and starts
->   working (but this is way too late).
+Hi Ricardo,
 
-10 sec is probably the deferred probe timeout. You can set this to
-less time on the kernel command line.
+On 8/1/23 14:47, Ricardo Cañuelo wrote:
+ > Hi all,
+ >
+ > I'm Ricardo from Collabora. In the past months, we’ve been analyzing the
+ > current status of CI regression reporting and tracking in the Linux
+ > kernel: assessing the existing tools, testing their functionalities,
+ > collecting ideas about desirable features that aren’t available yet and
+ > sketching some of them.
+ >
+ > As part of this effort, we wrote a Regression Tracker tool [1] as a
+ > proof of concept. It’s a rather simple tool that takes existing
+ > regression data and reports and uses them to show more context on each
+ > reported regression, as well as highlighting the relationships between
+ > them, whether they can be caused by an infrastructure error and other
+ > additional metadata about their current status.  We’ve been using it
+ > mostly as a playground for us to explore the current status of the
+ > functionalities provided by CI systems and to test ideas about new
+ > features.
+ >
+ > We’re also checking other tools and services provided by the community,
+ > such as regzbot [2], collaborating with them when possible and thinking
+ > about how to combine multiple scattered efforts by different people
+ > towards the same common goal. As a first step, we’ve contributed to
+ > regzbot and partially integrated its results into the Regression Tracker
+ > tool.
 
->   5.18: the device never appears and no unusual messages are printed
->   (I waited ten minutes).
->
-> With 5.17 and earlier versions, the eth0 device appears without any delay=
-.
->
-> Unfortunately, as bisection closed on the problematic section, all the
-> built kernels became untestable as they appear to crash during early
-> boot.  Nevertheless, I manually selected a commit that sounded relevant:
->
->   commit e461bd6f43f4e568f7436a8b6bc21c4ce6914c36
->   Author: Robert Hancock <robert.hancock@calian.com>
->   Date:   Thu Jan 27 10:37:36 2022 -0600
->
->       arm64: dts: zynqmp: Added GEM reset definitions
->
-> Reverting this fixes the problem on 5.18.  Reverting this fixes the
-> problem on 6.1.  Reverting this fixes the problem on 6.4.  In all of
-> these versions, with this change reverted, the network device appears
-> without delay.
+Nicely done!
 
-With the above change, the kernel is going to be waiting for the reset
-driver which either didn't exist or wasn't enabled in your config
-(maybe kconfig needs to be tweaked to enable it automatically).
+Especially cooperating with regzbot, something I haven't seen so far.
 
-There's not really a better solution than the probe timeout when the
-DT was incomplete and new dependencies get added.
+Various other kernel CI systems have been building similar things for a while,
+and it's nice to see the trend growing. It means we're getting somewhere.
 
-> Unfortunately, it seems this is not sufficient to correct the problem on
-> 6.5-rc4 -- there is no apparent change in behaviour, so maybe there is
-> a new, different problem?
+I tried to review these efforts last year:
+https://archive.fosdem.org/2022/schedule/event/masking_known_issues_across_six_kernel_ci_systems/
 
-Probably. You might check what changed with fw_devlink in that period.
-(Offhand, I don't recall many changes)
+ > So far, we’ve been using the KernelCI regression data and reports as a
+ > data source, we're now wondering if we could tackle the problem with a
+ > more general approach by building on top of what KCIDB already provides.
 
-> I guess I can kick off another bisection to find out when this revert
-> stops fixing things...
+Yes, I would love to work with you on a KCIDB implementation/integration.
 
-That always helps.
+I've been exploring and implementing a solution for tracking regressions (or
+"known issues" as I usually call them) based on what I researched (and
+presented above).
 
-Rob
+At this moment KCIDB submitters can send data linking a particular test or
+build result to an issue and its category (kernel/test/framework). We can
+generate notifications on e.g. a new issue being found by CI system
+(maintainers) in a particular repo/branch. There's no support on dashboards
+yet, and I'm yet to push for integration with particular CI systems.
+
+Here's the full announcement with examples:
+https://lore.kernel.org/kernelci/182b43fa-0261-11b7-2edb-f379a669bc28@redhat.com/
+
+Admittedly it's not much, and you're much further along (as many other CI
+systems), but we have further plans (more on that below).
+
+ > In general, CI systems tend to define regressions as a low-level concept
+ > which is rather static: a snapshot of a test result at a certain point
+ > in time. When it comes to reporting them to developers, there's much
+ > more info that could be added to them. In particular, the context of it
+ > and the fact that a reported regression has a life cycle:
+ >
+ > - did this test also fail on other hardware targets or with other kernel
+ >    configurations?
+ > - is it possible that the test failed because of an infrastructure
+ >    error?
+ > - does the test fail consistently since that commit or does it show
+ >    unstable results?
+ > - does the test output show any traces of already known bugs?
+ > - has this regression been bisected and reported anywhere?
+ > - was the regression reported by anyone? If so, is there someone already
+ >    working on it?
+ >
+ > Many of these info points can be extracted from the CI results databases
+ > and processed to provide additional regression data. That’s what we’re
+ > trying to do with the Regression Tracker tool, and we think it’d be
+ > interesting to start experimenting with the data in KCIDB to see how
+ > this could be improved and what would be the right way to integrate this
+ > type of functionality.
+
+These all are very useful insights to extract from the data, nicely done!
+
+Here's how they map to KCIDB:
+
+ > - did this test also fail on other hardware targets or with other kernel
+ >    configurations?
+
+KCIDB doesn't have a schema for identifying hardware at this moment. We can
+work on that, but meanwhile KCIDB dashboards wouldn't be able to show this.
+
+ > - is it possible that the test failed because of an infrastructure
+ >    error?
+
+Not sure how to approach this in KCIDB. How do you (plan to) do it?
+
+ > - does the test fail consistently since that commit or does it show
+ >    unstable results?
+
+This is a difficult thing to properly figure out in KCIDB, because it
+aggregates data from multiple CI systems. A single CI system can assume that
+earlier results for a branch correspond to earlier commits. However, because
+different CI systems test at different speeds, KCIDB cannot make that
+assumption. Commits and their testing results can come in any order. So we
+cannot draw these kinds of conclusions based on time alone.
+
+The only way KCIDB can make this work correctly is by correlating with actual
+git history, following the commit graph. I did some research into graph
+databases and while they can potentially help us do it, their performance with
+the actual Linux kernel git history turned out to be abysmal, due to a large
+number of nodes and edges, and the lack of optimization for DAGs:
+
+https://fosdem.org/2023/schedule/event/graph_case_for_dag/
+
+I got an optimistic promise from Neo4j folks to have this possibly working by
+next FOSDEM, but I wouldn't hold my breath for that. The fallback plan is to
+hack something together using libgit2 and/or the git command-tools.
+
+Before that happens, I think we can still do other things, just with time, to
+help us along.
+
+E.g. on the dashboard of a particular test result, display graphs of this
+test's results over time: overall, and for
+architecture/compiler/config/repo/branch of this test run. And something
+similar for test views on revision/checkout/build dashboards.
+
+BTW, a couple Mercurial folks approached me after the talk above, saying that
+they're working on supporting storing test results in history so they could do
+a similar kind of correlation and reasoning. So the idea is in the air.
+
+ > - does the test output show any traces of already known bugs?
+ > - was the regression reported by anyone? If so, is there someone already
+ >    working on it?
+
+This is what the KCIDB issue-linking support described above is working
+towards. Next step is to build a triaging system linking issues to build/test
+results automatically, based on patterns submitted by both CI systems, via the
+regular submission interface, and humans, via a dedicated UI.
+
+Patterns would specify which issue (bug URL) they're matching and include
+basic things like test name, architecture, hardware, and so on, but also
+patterns to find in e.g. test output files, logs, or in dmesg.
+
+That should answer questions of whether a test or a build exhibit a particular
+issue seen before.
+
+ > - has this regression been bisected and reported anywhere?
+
+Once we have history correlation mentioned above, then we would be able to
+find the PASS/FAIL boundaries between commits for particular issues, already
+based on just issue-linking reported by CI systems (even before implementing
+triaging).
+
+This would be a way to detect bisections, among other things. I.e. detecting
+if two adjacent commits both have results of a particular test, and they are
+different. This would, of course, also detect cases when the results just
+happened to appear in adjacent commits, not only because of bisection.
+
+I think this could be done more generally via frequency domain analyzis (FFT)
+of test outcomes over git history, which would also detect cases of flaky test
+changing failure frequency. But here I'm getting waaay ahead of myself :D
+
+Anyway, these are my ideas for KCIDB. I would love to hear your ideas as well
+feedback on the above. Email, IRC, Slack, or a video call would all do :D
+
+--
+
+One comment regarding the prototype you shared is that it's quite verbose and
+it's difficult to put together a feeling of what's been happening from
+overabundance of textual information. I think a visual touch could help here.
+
+E.g. drawing a timeline of test results, pointing particular events (first
+failed, first passed, stability and so on) along its length.
+
+So instead of this:
+
+ > first failed: today (2023-08-02)
+ >
+ >     kernel: chromeos-stable-20230802.0
+ >     commit: 5c04267bed569d41aea3940402c7ce8cf975a5fe
+ >
+ > most recent fail: today (2023-08-02)
+ >
+ >     kernel: chromeos-stable-20230802.0
+ >     commit: 5c04267bed569d41aea3940402c7ce8cf975a5fe
+ >
+ > last passed: 1 day ago (2023-08-01)
+ >
+ >     kernel: chromeos-stable-20230801.1
+ >     commit: cd496545d91d820441277cd6a855b9af725fdb8a
+
+Something like this (roughly):
+
+              |
+2023-08-02   F - last FAIL
+              F
+              |
+              P
+              F
+              |
+2023-08-02   F - first FAIL
+              |
+2023-08-01   P - last PASS
+              |
+              P
+
+And e.g. have the commit and other extra info pop up as needed when hovering
+over the status (F/P) letters/icons
+
+And in general try to express information more visually, so it could be
+absorbed at a glance, without needing to read much text, and tuck away
+information that's not immediately necessary into more on-hover popups.
+
+---
+
+Hope this helps, and thanks for reading through :D
+Nick
