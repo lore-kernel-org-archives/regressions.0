@@ -1,83 +1,87 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDD358F52
-	for <regressions@lists.linux.dev>; Fri,  4 Aug 2023 12:45:39 +0000 (UTC)
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-686be28e1a8so1499560b3a.0
-        for <regressions@lists.linux.dev>; Fri, 04 Aug 2023 05:45:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1691153139; x=1691757939;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mSm0LHggTF3l2aeyLG/2fKikbnrwzc2eP2dgLLzrPv4=;
-        b=H8+Mt1RJKgOVSJpv5ue/Vmj/iDAjFwcuqBenikvT/u9NokDxWaHtce+LSzYcnVmT0j
-         vTPImvio1m7gI3jXv9dvw0LohUtjRxWER2RGbTSxWzglllA6/dptE22VkOzc4o9sxERT
-         pIjEmQmCiUWLblpxC/fOoc4l0u2CTCD29XBOHfDiNoUcT12pXwyUNL6UeT5ALLQxI1Hu
-         c55BUX2FQ1rJ6PEYRv8eB+cuc9x+819YauGAoe0zAUM8+Ite10DiQoUhR1pih2/Kn8fC
-         6ZhIOa0I0gOU0UBx8dTBzH0jmp0zcj8Ho7kcsT0h0bw3xhFVIcJl8r9RcLThv+lFpHMJ
-         2ozw==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 778CAA929
+	for <regressions@lists.linux.dev>; Fri,  4 Aug 2023 12:51:58 +0000 (UTC)
+Received: from mail-lj1-f198.google.com (mail-lj1-f198.google.com
+ [209.85.208.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-286-jH7Fuaw6NfaH3sdTu7sndA-1; Fri, 04 Aug 2023 08:51:55 -0400
+X-MC-Unique: jH7Fuaw6NfaH3sdTu7sndA-1
+Received: by mail-lj1-f198.google.com with SMTP id 38308e7fff4ca-2b9d5bc6161so3206251fa.0
+        for <regressions@lists.linux.dev>; Fri, 04 Aug 2023 05:51:55 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691153139; x=1691757939;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=mSm0LHggTF3l2aeyLG/2fKikbnrwzc2eP2dgLLzrPv4=;
-        b=e1QsQtppp8fPcBPmXHTgrRI+F95OXLwjPOi9CI1DJMrmANEWlX0L122kOWT2ej3Sr/
-         KGxclUlLAqYTjfLNnnRLhUWewSX5MRikRJP9sMn1sFTU3+kyalVBd/lumyl8G1H5NmG9
-         5POSQhaj7s2fk8zyGRjuvo9P42SWLFqMYze/yswCaI/iRoO4osY9PZFT0xNOyoOwhQL6
-         sr9+ACOBgsS53s1tUVENnlKDlhv+l1iR5JOi2Jz43bCIZBZRy5k/rED5lE9SRnMbVVsH
-         EFLriB4dqDofrgZugWksq+4m4L3fk2N44tJeILVOTT/yVz0gA+Nva2I+zLsJES5xP0rF
-         vJhQ==
-X-Gm-Message-State: AOJu0YzmOFWFWF96eLsoWqSaI7jZs9P9036W1SeTPuFnmUoyiLX0lOjw
-	kq1LmfBvZmBkKuUh+UtWOU8=
-X-Google-Smtp-Source: AGHT+IHGLB8g1U8UsN2DTHPgNdRGdwPal/H/mLrBwBvjqcOrzv3I8ACc19Md38AOGdGvO2z0b6dFGw==
-X-Received: by 2002:a05:6a00:1828:b0:687:8417:ab51 with SMTP id y40-20020a056a00182800b006878417ab51mr1688267pfa.8.1691153138915;
-        Fri, 04 Aug 2023 05:45:38 -0700 (PDT)
-Received: from [192.168.0.105] ([103.131.18.64])
-        by smtp.gmail.com with ESMTPSA id n5-20020aa79045000000b00686ec858fb0sm1536456pfo.190.2023.08.04.05.45.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 04 Aug 2023 05:45:38 -0700 (PDT)
-Message-ID: <0ea231a1-e510-903d-22a0-998234426462@gmail.com>
-Date: Fri, 4 Aug 2023 19:45:34 +0700
+        d=1e100.net; s=20221208; t=1691153514; x=1691758314;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dRlXGWY/CFWI5iW4ld/1S29gsGd4s6U2sDlhS/FmuSE=;
+        b=NheaI8hhGZHMunXpMx89bXDy48cXVzJETRTntvimeQhvbA3HiWlf5DQlllU7EHYOAx
+         CzkvU6JhEa+B6AZf8SwEdAl+NX/vsmlzzS4ME9DZTq/6EghewKShqn66ckpCnlsTRYVN
+         k9dnWmmjBHixzW3D68xzf1DrcpeCdn/xbobzHiZ6BnXbduVxwKd+LbsT7LT0MrFdTEW8
+         xePjXPuhBR4MX8SC+lQqumGLhoSlPJU81oLERZRXsIoCaBkYZhAhVTfsPx6uKYcJfGHT
+         EsqntkXNzl1RrnnbBOmqa3uTKtrgENtfgY77jw8WR/px+zQRkjXBT7p2JOqL2AvJs/Jb
+         38sA==
+X-Gm-Message-State: ABy/qLbnRMgOPAj5h4PjYuPbsGDNCCKATdhNbfYgPZkmOFlqAELRmife
+	1SAb5wxSCapfQ/De54HPZbFiZ/0+AjUb7jw1aJKel+w2+Zl6VwkT9/muBLyXR0mqybhZmZyj/cm
+	EjebZbWW9EHhF+5L/mMnMOSc7iCLFvnM1KzQOxr8=
+X-Received: by 2002:a2e:a7cf:0:b0:2b6:9969:d0ab with SMTP id x15-20020a2ea7cf000000b002b69969d0abmr14626213ljp.4.1691153514604;
+        Fri, 04 Aug 2023 05:51:54 -0700 (PDT)
+X-Google-Smtp-Source: APBJJlFrcSjZXh6YM3wQYlauuWGfFGZv19JjISaVV8WqI5Be/z9XCLqb6j13RdZZx7ibxrrJTgr6pbJPMHFHOKn9vpw=
+X-Received: by 2002:a2e:a7cf:0:b0:2b6:9969:d0ab with SMTP id
+ x15-20020a2ea7cf000000b002b69969d0abmr14626204ljp.4.1691153514326; Fri, 04
+ Aug 2023 05:51:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.14.0
-Content-Language: en-US
-To: Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
- Jiri Kosina <jkosina@suse.cz>, Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>,
- Linux Input Devices <linux-input@vger.kernel.org>
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-Subject: Fwd: Regression: ALS/ACS stops working on amd-sfh
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20be6650-5db3-b72a-a7a8-5e817113cff5@kravcenko.com>
+ <c27fb4dd-b2dc-22de-4425-6c7db5f543ba@leemhuis.info> <CACO55ttcUEUjdVgx4y7pv26VAGeHS5q1wVKWrMw5=o9QLaJLZw@mail.gmail.com>
+ <0a5084b7-732b-6658-653e-7ece4c0768c9@kravcenko.com>
+In-Reply-To: <0a5084b7-732b-6658-653e-7ece4c0768c9@kravcenko.com>
+From: Karol Herbst <kherbst@redhat.com>
+Date: Fri, 4 Aug 2023 14:51:43 +0200
+Message-ID: <CACO55tvu4X3u8K-FGUeN2CBw1BnumRPBNEEqjn+EPzNCCCQYyg@mail.gmail.com>
+Subject: Re: nouveau bug in linux/6.1.38-2
+To: Olaf Skibbe <news@kravcenko.com>
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>, dri-devel@lists.freedesktop.org, 
+	nouveau@lists.freedesktop.org, 1042753@bugs.debian.org, 
+	Ben Skeggs <bskeggs@redhat.com>, Lyude Paul <lyude@redhat.com>, 
+	Linux kernel regressions list <regressions@lists.linux.dev>, 
+	"stable@vger.kernel.org" <stable@vger.kernel.org>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Fri, Aug 4, 2023 at 2:48=E2=80=AFPM Olaf Skibbe <news@kravcenko.com> wro=
+te:
+>
+> On Fri, 4 Aug 2023 at 14:15, Karol Herbst wrote:
+>
+> > mind retrying with only fb725beca62d and 62aecf23f3d1 reverted?
+>
+> I will do this later this day (takes some time, it is a slow machine).
+>
+> > Would be weird if the other two commits are causing it. If that's the
+> > case, it's a bit worrying that reverting either of the those causes
+> > issues, but maybe there is a good reason for it. Anyway, mind figuring
+> > out which of the two you need reverted to fix your issue? Thanks!
+>
+> I can do this. But if I build two kernels anyway, isn't it faster to
+> build each with only one of the patches applied? Or do you expect the
+> patches to interact (so that the bug would only be present when both are
+> applied)?
+>
 
-I notice a very concise regression report on Bugzilla [1]. That is,
-quoting from it:
+How are you building the kernel? Because normally from git reverting
+one of those shouldn't take long, because it doesn't recompile the
+entire kernel. But yeah, you can potentially just revert one of one
+for now and it should be fine.
 
-> Since commit a33e5e393171ae8384d3381db5cd159ba877cfcb ("HID: amd_sfh: Fix illuminance value"), the in_illuminance_raw is 0 all the time.
-> 
-> Before that commit, the ACS/ALS has normal value.
+> Cheers,
+> Olaf
+>
 
-See Bugzilla for the full thread.
-
-Anyway, I'm adding this regression to be tracked by regzbot:
-
-#regzbot introduced: a33e5e393171ae https://bugzilla.kernel.org/show_bug.cgi?id=217762
-#regzbot title: Fixing in_illuminance_raw value hard-codes ACS/ALS to 0
-
-Thanks.
-
-[1]: https://bugzilla.kernel.org/show_bug.cgi?id=217762
-
--- 
-An old man doll... just what I always wanted! - Clara
