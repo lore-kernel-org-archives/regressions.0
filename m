@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 963C4A922
-	for <regressions@lists.linux.dev>; Fri,  4 Aug 2023 08:55:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 085128F62
+	for <regressions@lists.linux.dev>; Fri,  4 Aug 2023 09:13:54 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qRqaA-0005M1-Tj; Fri, 04 Aug 2023 10:54:50 +0200
-Message-ID: <f11ba0ef-0bb1-b925-3088-2ba7a8d17393@leemhuis.info>
-Date: Fri, 4 Aug 2023 10:54:50 +0200
+	id 1qRqsX-0001BG-Re; Fri, 04 Aug 2023 11:13:49 +0200
+Message-ID: <b68cf309-fca4-7ae0-b42f-90d5f338acdd@leemhuis.info>
+Date: Fri, 4 Aug 2023 11:13:47 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -15,352 +15,219 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] Bluetooth: btrtl: Load FW v2 otherwise FW v1 for RTL8852C
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Re: [PATCH v2] HID: logitech-hidpp: rework one more time the retries
+ attempts
 Content-Language: en-US, de-DE
-To: max.chou@realtek.com, marcel@holtmann.org
-Cc: johan.hedberg@gmail.com, luiz.dentz@gmail.com,
- linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
- alex_lu@realsil.com.cn, hildawu@realtek.com, karenhsu@realtek.com,
- kidman@realtek.com, juerg.haefliger@canonical.com,
- vicamo.yang@canonical.com, Riley.Kao@dell.com,
- Josh Boyer <jwboyer@kernel.org>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>,
+To: bentiss@kernel.org, =?UTF-8?Q?Filipe_La=C3=ADns?= <lains@riseup.net>,
+ Bastien Nocera <hadess@hadess.net>, Jiri Kosina <jikos@kernel.org>,
+ Greg KH <gregkh@linuxfoundation.org>
+Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Benjamin Tissoires <benjamin.tissoires@redhat.com>, stable@vger.kernel.org,
  Linux kernel regressions list <regressions@lists.linux.dev>
-References: <20230804055426.6806-1-max.chou@realtek.com>
+References: <20230621-logitech-fixes-v2-1-3635f7f9c8af@kernel.org>
 From: "Linux regression tracking (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <20230804055426.6806-1-max.chou@realtek.com>
+In-Reply-To: <20230621-logitech-fixes-v2-1-3635f7f9c8af@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1691139308;2a94bf78;
-X-HE-SMSGID: 1qRqaA-0005M1-Tj
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1691140435;6cd1e846;
+X-HE-SMSGID: 1qRqsX-0001BG-Re
 
-[CCing the linux-firmware maintainer, the network maintainers, and the
-regressions lists]
+Hi Benjamin, /me again! :-D
 
-On 04.08.23 07:54, max.chou@realtek.com wrote:
-> From: Max Chou <max.chou@realtek.com>
+On 12.07.23 17:02, bentiss@kernel.org wrote:
+> From: Benjamin Tissoires <benjamin.tissoires@redhat.com>
 > 
-> In the commit of linux-firmware project, rtl8852cu_fw.bin is updated as
-> FW v2 format[1]. Consider the case that if driver did not be updated fo> FW v2 supported[2], it can not use FW v2.
->
-> By Canonical's suggestion, older driver should be able to load FW v1,
-
-Well, that's not only Canonical suggestion, that is how things are
-supposed to be handled in general. See
-Documentation/driver-api/firmware/firmware-usage-guidelines.rst (alt:
-https://docs.kernel.org/driver-api/firmware/firmware-usage-guidelines.html
-) for details.
-
-We had a similar situation in March already with a Wifi driver:
-https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/commit/?id=416a66cae796939d7d096988c72c641656c81c5a
-
-Makes me wonder: is there a problem here we should try harder to avoid?
-Especially as the problem in this case would have been simple to predict
-by reading the changelog of the linux-firmware change. To quote from
-https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/commit/?id=55e7448533e7
-
-```
-Note: This firmware patch needs to be used with driver
-"btrtl: Firmware format v2 support". Please update the
-driver with this commit: 9a24ce5e29b15c4c6b0c89c04f9df6ce14addefa
-```
-
-> so rtl8852cu_fw.bin will be revert to the previous commit as FW v1 and
-> add rtl8852cu_fw_v2.bin as FW v2. This item will be started on
-> linux-firmware project.
+> Extract the internal code inside a helper function, fix the
+> initialization of the parameters used in the helper function
+> (`hidpp->answer_available` was not reset and `*response` wasn't either),
+> and use a `do {...} while();` loop.
 > 
-> In this commit, the driver prefers to load FW v2 if available. Fallback to
-> FW v1 otherwise.
-> 
-> To do on linux-firmware project.
-> rtl_bt/rtl8852cu_fw.bin: FW v1 (stay at ver. 0xD7B8_FABF)
-> rtl_bt/rtl8852cu_fw_v2.bin: FW v2 (to be maintained)
-> 
-> [1]'9a24ce5e29b1 ("Bluetooth: btrtl: Firmware format v2 support")'
-> [2]'55e7448533e7 ("rtl_bt: Update RTL8852C BT USB firmware
->     to 0x040D_7225")'
+> Fixes: 586e8fede795 ("HID: logitech-hidpp: Retry commands when device is busy")
+> Cc: stable@vger.kernel.org
 
-You seem to have mixed up [1] and [2] here, or did my brain go sideways
-somewhere?
+From what I understood there was hope that this would cure the last
+remains (occasional init problems iirc) of the recent regressions with
+this driver and their fixes. But things look stalled. Is there a reason?
+Lack of reviews? Is there nevertheless hope that this will make it at
+least into 6.6?
 
-> Suggested-by: Juerg Haefliger <juerg.haefliger@canonical.com>
-> Tested-by: Hilda Wu <hildawu@realtek.com>
+Ciao, Thorsten
 
-All that sounds like this should also have these tags to to ensure this
-makes it back too all trees that applied 9a24ce5e29b:
-
- Fixes: 9a24ce5e29b ("Bluetooth: btrtl: Firmware format v2 support")
- Cc: stable@vger.kernel.org
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
-
-> Signed-off-by: Max Chou <max.chou@realtek.com>
+> Reviewed-by: Bastien Nocera <hadess@hadess.net>
+> Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
 > ---
->  drivers/bluetooth/btrtl.c | 68 +++++++++++++++++++++++++--------------
->  1 file changed, 44 insertions(+), 24 deletions(-)
+> as requested by https://lore.kernel.org/all/CAHk-=wiMbF38KCNhPFiargenpSBoecSXTLQACKS2UMyo_Vu2ww@mail.gmail.com/
+> This is a rewrite of that particular piece of code.
+> ---
+> Changes in v2:
+> - added __must_hold() for KASAN
+> - Reworked the comment describing the functions and their return values
+> - Link to v1: https://lore.kernel.org/r/20230621-logitech-fixes-v1-1-32e70933c0b0@redhat.com
+> ---
+>  drivers/hid/hid-logitech-hidpp.c | 115 +++++++++++++++++++++++++--------------
+>  1 file changed, 75 insertions(+), 40 deletions(-)
 > 
-> diff --git a/drivers/bluetooth/btrtl.c b/drivers/bluetooth/btrtl.c
-> index ddae6524106d..8bfa86dd12f7 100644
-> --- a/drivers/bluetooth/btrtl.c
-> +++ b/drivers/bluetooth/btrtl.c
-> @@ -104,7 +104,7 @@ static const struct id_table ic_id_table[] = {
->  	{ IC_INFO(RTL_ROM_LMP_8723A, 0xb, 0x6, HCI_USB),
->  	  .config_needed = false,
->  	  .has_rom_version = false,
-> -	  .fw_name = "rtl_bt/rtl8723a_fw.bin",
-> +	  .fw_name = "rtl_bt/rtl8723a_fw",
->  	  .cfg_name = NULL,
->  	  .hw_info = "rtl8723au" },
+> diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-hidpp.c
+> index 129b01be488d..09ba2086c95c 100644
+> --- a/drivers/hid/hid-logitech-hidpp.c
+> +++ b/drivers/hid/hid-logitech-hidpp.c
+> @@ -275,21 +275,22 @@ static int __hidpp_send_report(struct hid_device *hdev,
+>  }
 >  
-> @@ -112,7 +112,7 @@ static const struct id_table ic_id_table[] = {
->  	{ IC_INFO(RTL_ROM_LMP_8723B, 0xb, 0x6, HCI_UART),
->  	  .config_needed = true,
->  	  .has_rom_version = true,
-> -	  .fw_name  = "rtl_bt/rtl8723bs_fw.bin",
-> +	  .fw_name  = "rtl_bt/rtl8723bs_fw",
->  	  .cfg_name = "rtl_bt/rtl8723bs_config",
->  	  .hw_info  = "rtl8723bs" },
+>  /*
+> - * hidpp_send_message_sync() returns 0 in case of success, and something else
+> - * in case of a failure.
+> - * - If ' something else' is positive, that means that an error has been raised
+> - *   by the protocol itself.
+> - * - If ' something else' is negative, that means that we had a classic error
+> - *   (-ENOMEM, -EPIPE, etc...)
+> + * Effectively send the message to the device, waiting for its answer.
+> + *
+> + * Must be called with hidpp->send_mutex locked
+> + *
+> + * Same return protocol than hidpp_send_message_sync():
+> + * - success on 0
+> + * - negative error means transport error
+> + * - positive value means protocol error
+>   */
+> -static int hidpp_send_message_sync(struct hidpp_device *hidpp,
+> +static int __do_hidpp_send_message_sync(struct hidpp_device *hidpp,
+>  	struct hidpp_report *message,
+>  	struct hidpp_report *response)
+>  {
+> -	int ret = -1;
+> -	int max_retries = 3;
+> +	int ret;
 >  
-> @@ -120,7 +120,7 @@ static const struct id_table ic_id_table[] = {
->  	{ IC_INFO(RTL_ROM_LMP_8723B, 0xb, 0x6, HCI_USB),
->  	  .config_needed = false,
->  	  .has_rom_version = true,
-> -	  .fw_name  = "rtl_bt/rtl8723b_fw.bin",
-> +	  .fw_name  = "rtl_bt/rtl8723b_fw",
->  	  .cfg_name = "rtl_bt/rtl8723b_config",
->  	  .hw_info  = "rtl8723bu" },
+> -	mutex_lock(&hidpp->send_mutex);
+> +	__must_hold(&hidpp->send_mutex);
 >  
-> @@ -132,7 +132,7 @@ static const struct id_table ic_id_table[] = {
->  	  .hci_bus = HCI_UART,
->  	  .config_needed = true,
->  	  .has_rom_version = true,
-> -	  .fw_name  = "rtl_bt/rtl8723cs_cg_fw.bin",
-> +	  .fw_name  = "rtl_bt/rtl8723cs_cg_fw",
->  	  .cfg_name = "rtl_bt/rtl8723cs_cg_config",
->  	  .hw_info  = "rtl8723cs-cg" },
+>  	hidpp->send_receive_buf = response;
+>  	hidpp->answer_available = false;
+> @@ -300,47 +301,74 @@ static int hidpp_send_message_sync(struct hidpp_device *hidpp,
+>  	 */
+>  	*response = *message;
 >  
-> @@ -144,7 +144,7 @@ static const struct id_table ic_id_table[] = {
->  	  .hci_bus = HCI_UART,
->  	  .config_needed = true,
->  	  .has_rom_version = true,
-> -	  .fw_name  = "rtl_bt/rtl8723cs_vf_fw.bin",
-> +	  .fw_name  = "rtl_bt/rtl8723cs_vf_fw",
->  	  .cfg_name = "rtl_bt/rtl8723cs_vf_config",
->  	  .hw_info  = "rtl8723cs-vf" },
+> -	for (; max_retries != 0 && ret; max_retries--) {
+> -		ret = __hidpp_send_report(hidpp->hid_dev, message);
+> +	ret = __hidpp_send_report(hidpp->hid_dev, message);
+> +	if (ret) {
+> +		dbg_hid("__hidpp_send_report returned err: %d\n", ret);
+> +		memset(response, 0, sizeof(struct hidpp_report));
+> +		return ret;
+> +	}
 >  
-> @@ -156,7 +156,7 @@ static const struct id_table ic_id_table[] = {
->  	  .hci_bus = HCI_UART,
->  	  .config_needed = true,
->  	  .has_rom_version = true,
-> -	  .fw_name  = "rtl_bt/rtl8723cs_xx_fw.bin",
-> +	  .fw_name  = "rtl_bt/rtl8723cs_xx_fw",
->  	  .cfg_name = "rtl_bt/rtl8723cs_xx_config",
->  	  .hw_info  = "rtl8723cs" },
+> -		if (ret) {
+> -			dbg_hid("__hidpp_send_report returned err: %d\n", ret);
+> -			memset(response, 0, sizeof(struct hidpp_report));
+> -			break;
+> -		}
+> +	if (!wait_event_timeout(hidpp->wait, hidpp->answer_available,
+> +				5*HZ)) {
+> +		dbg_hid("%s:timeout waiting for response\n", __func__);
+> +		memset(response, 0, sizeof(struct hidpp_report));
+> +		return -ETIMEDOUT;
+> +	}
 >  
-> @@ -164,7 +164,7 @@ static const struct id_table ic_id_table[] = {
->  	{ IC_INFO(RTL_ROM_LMP_8723B, 0xd, 0x8, HCI_USB),
->  	  .config_needed = true,
->  	  .has_rom_version = true,
-> -	  .fw_name  = "rtl_bt/rtl8723d_fw.bin",
-> +	  .fw_name  = "rtl_bt/rtl8723d_fw",
->  	  .cfg_name = "rtl_bt/rtl8723d_config",
->  	  .hw_info  = "rtl8723du" },
+> -		if (!wait_event_timeout(hidpp->wait, hidpp->answer_available,
+> -					5*HZ)) {
+> -			dbg_hid("%s:timeout waiting for response\n", __func__);
+> -			memset(response, 0, sizeof(struct hidpp_report));
+> -			ret = -ETIMEDOUT;
+> -			break;
+> -		}
+> +	if (response->report_id == REPORT_ID_HIDPP_SHORT &&
+> +	    response->rap.sub_id == HIDPP_ERROR) {
+> +		ret = response->rap.params[1];
+> +		dbg_hid("%s:got hidpp error %02X\n", __func__, ret);
+> +		return ret;
+> +	}
 >  
-> @@ -172,7 +172,7 @@ static const struct id_table ic_id_table[] = {
->  	{ IC_INFO(RTL_ROM_LMP_8723B, 0xd, 0x8, HCI_UART),
->  	  .config_needed = true,
->  	  .has_rom_version = true,
-> -	  .fw_name  = "rtl_bt/rtl8723ds_fw.bin",
-> +	  .fw_name  = "rtl_bt/rtl8723ds_fw",
->  	  .cfg_name = "rtl_bt/rtl8723ds_config",
->  	  .hw_info  = "rtl8723ds" },
->  
-> @@ -180,7 +180,7 @@ static const struct id_table ic_id_table[] = {
->  	{ IC_INFO(RTL_ROM_LMP_8821A, 0xa, 0x6, HCI_USB),
->  	  .config_needed = false,
->  	  .has_rom_version = true,
-> -	  .fw_name  = "rtl_bt/rtl8821a_fw.bin",
-> +	  .fw_name  = "rtl_bt/rtl8821a_fw",
->  	  .cfg_name = "rtl_bt/rtl8821a_config",
->  	  .hw_info  = "rtl8821au" },
->  
-> @@ -189,7 +189,7 @@ static const struct id_table ic_id_table[] = {
->  	  .config_needed = false,
->  	  .has_rom_version = true,
->  	  .has_msft_ext = true,
-> -	  .fw_name  = "rtl_bt/rtl8821c_fw.bin",
-> +	  .fw_name  = "rtl_bt/rtl8821c_fw",
->  	  .cfg_name = "rtl_bt/rtl8821c_config",
->  	  .hw_info  = "rtl8821cu" },
->  
-> @@ -198,7 +198,7 @@ static const struct id_table ic_id_table[] = {
->  	  .config_needed = true,
->  	  .has_rom_version = true,
->  	  .has_msft_ext = true,
-> -	  .fw_name  = "rtl_bt/rtl8821cs_fw.bin",
-> +	  .fw_name  = "rtl_bt/rtl8821cs_fw",
->  	  .cfg_name = "rtl_bt/rtl8821cs_config",
->  	  .hw_info  = "rtl8821cs" },
->  
-> @@ -206,7 +206,7 @@ static const struct id_table ic_id_table[] = {
->  	{ IC_INFO(RTL_ROM_LMP_8761A, 0xa, 0x6, HCI_USB),
->  	  .config_needed = false,
->  	  .has_rom_version = true,
-> -	  .fw_name  = "rtl_bt/rtl8761a_fw.bin",
-> +	  .fw_name  = "rtl_bt/rtl8761a_fw",
->  	  .cfg_name = "rtl_bt/rtl8761a_config",
->  	  .hw_info  = "rtl8761au" },
->  
-> @@ -215,7 +215,7 @@ static const struct id_table ic_id_table[] = {
->  	  .config_needed = false,
->  	  .has_rom_version = true,
->  	  .has_msft_ext = true,
-> -	  .fw_name  = "rtl_bt/rtl8761b_fw.bin",
-> +	  .fw_name  = "rtl_bt/rtl8761b_fw",
->  	  .cfg_name = "rtl_bt/rtl8761b_config",
->  	  .hw_info  = "rtl8761btv" },
->  
-> @@ -223,7 +223,7 @@ static const struct id_table ic_id_table[] = {
->  	{ IC_INFO(RTL_ROM_LMP_8761A, 0xb, 0xa, HCI_USB),
->  	  .config_needed = false,
->  	  .has_rom_version = true,
-> -	  .fw_name  = "rtl_bt/rtl8761bu_fw.bin",
-> +	  .fw_name  = "rtl_bt/rtl8761bu_fw",
->  	  .cfg_name = "rtl_bt/rtl8761bu_config",
->  	  .hw_info  = "rtl8761bu" },
->  
-> @@ -232,7 +232,7 @@ static const struct id_table ic_id_table[] = {
->  	  .config_needed = true,
->  	  .has_rom_version = true,
->  	  .has_msft_ext = true,
-> -	  .fw_name  = "rtl_bt/rtl8822cs_fw.bin",
-> +	  .fw_name  = "rtl_bt/rtl8822cs_fw",
->  	  .cfg_name = "rtl_bt/rtl8822cs_config",
->  	  .hw_info  = "rtl8822cs" },
->  
-> @@ -241,7 +241,7 @@ static const struct id_table ic_id_table[] = {
->  	  .config_needed = true,
->  	  .has_rom_version = true,
->  	  .has_msft_ext = true,
-> -	  .fw_name  = "rtl_bt/rtl8822cs_fw.bin",
-> +	  .fw_name  = "rtl_bt/rtl8822cs_fw",
->  	  .cfg_name = "rtl_bt/rtl8822cs_config",
->  	  .hw_info  = "rtl8822cs" },
->  
-> @@ -250,7 +250,7 @@ static const struct id_table ic_id_table[] = {
->  	  .config_needed = false,
->  	  .has_rom_version = true,
->  	  .has_msft_ext = true,
-> -	  .fw_name  = "rtl_bt/rtl8822cu_fw.bin",
-> +	  .fw_name  = "rtl_bt/rtl8822cu_fw",
->  	  .cfg_name = "rtl_bt/rtl8822cu_config",
->  	  .hw_info  = "rtl8822cu" },
->  
-> @@ -259,7 +259,7 @@ static const struct id_table ic_id_table[] = {
->  	  .config_needed = true,
->  	  .has_rom_version = true,
->  	  .has_msft_ext = true,
-> -	  .fw_name  = "rtl_bt/rtl8822b_fw.bin",
-> +	  .fw_name  = "rtl_bt/rtl8822b_fw",
->  	  .cfg_name = "rtl_bt/rtl8822b_config",
->  	  .hw_info  = "rtl8822bu" },
->  
-> @@ -268,7 +268,7 @@ static const struct id_table ic_id_table[] = {
->  	  .config_needed = false,
->  	  .has_rom_version = true,
->  	  .has_msft_ext = true,
-> -	  .fw_name  = "rtl_bt/rtl8852au_fw.bin",
-> +	  .fw_name  = "rtl_bt/rtl8852au_fw",
->  	  .cfg_name = "rtl_bt/rtl8852au_config",
->  	  .hw_info  = "rtl8852au" },
->  
-> @@ -277,7 +277,7 @@ static const struct id_table ic_id_table[] = {
->  	  .config_needed = true,
->  	  .has_rom_version = true,
->  	  .has_msft_ext = true,
-> -	  .fw_name  = "rtl_bt/rtl8852bs_fw.bin",
-> +	  .fw_name  = "rtl_bt/rtl8852bs_fw",
->  	  .cfg_name = "rtl_bt/rtl8852bs_config",
->  	  .hw_info  = "rtl8852bs" },
->  
-> @@ -286,7 +286,7 @@ static const struct id_table ic_id_table[] = {
->  	  .config_needed = false,
->  	  .has_rom_version = true,
->  	  .has_msft_ext = true,
-> -	  .fw_name  = "rtl_bt/rtl8852bu_fw.bin",
-> +	  .fw_name  = "rtl_bt/rtl8852bu_fw",
->  	  .cfg_name = "rtl_bt/rtl8852bu_config",
->  	  .hw_info  = "rtl8852bu" },
->  
-> @@ -295,7 +295,7 @@ static const struct id_table ic_id_table[] = {
->  	  .config_needed = false,
->  	  .has_rom_version = true,
->  	  .has_msft_ext = true,
-> -	  .fw_name  = "rtl_bt/rtl8852cu_fw.bin",
-> +	  .fw_name  = "rtl_bt/rtl8852cu_fw",
->  	  .cfg_name = "rtl_bt/rtl8852cu_config",
->  	  .hw_info  = "rtl8852cu" },
->  
-> @@ -304,7 +304,7 @@ static const struct id_table ic_id_table[] = {
->  	  .config_needed = false,
->  	  .has_rom_version = true,
->  	  .has_msft_ext = false,
-> -	  .fw_name  = "rtl_bt/rtl8851bu_fw.bin",
-> +	  .fw_name  = "rtl_bt/rtl8851bu_fw",
->  	  .cfg_name = "rtl_bt/rtl8851bu_config",
->  	  .hw_info  = "rtl8851bu" },
->  	};
-> @@ -1045,10 +1045,12 @@ struct btrtl_device_info *btrtl_initialize(struct hci_dev *hdev,
->  	struct sk_buff *skb;
->  	struct hci_rp_read_local_version *resp;
->  	struct hci_command_hdr *cmd;
-> +	char fw_name[40];
->  	char cfg_name[40];
->  	u16 hci_rev, lmp_subver;
->  	u8 hci_ver, lmp_ver, chip_type = 0;
->  	int ret;
-> +	int fw_load_retry = 0;
->  	u8 reg_val[2];
->  
->  	btrtl_dev = kzalloc(sizeof(*btrtl_dev), GFP_KERNEL);
-> @@ -1154,9 +1156,26 @@ struct btrtl_device_info *btrtl_initialize(struct hci_dev *hdev,
->  			goto err_free;
->  	}
->  
-> -	btrtl_dev->fw_len = rtl_load_file(hdev, btrtl_dev->ic_info->fw_name,
-> +fw_name_load:
-> +	if (btrtl_dev->ic_info->fw_name) {
-> +		if (lmp_subver == RTL_ROM_LMP_8852A && hci_rev == 0x000c &&
-> +				  fw_load_retry == 0) {
-> +			fw_load_retry = 1;
-> +			snprintf(fw_name, sizeof(fw_name), "%s_v2.bin",
-> +				 btrtl_dev->ic_info->fw_name);
-> +		} else {
-> +			fw_load_retry = 0;
-> +			snprintf(fw_name, sizeof(fw_name), "%s.bin",
-> +				 btrtl_dev->ic_info->fw_name);
-> +		}
-> +		btrtl_dev->fw_len = rtl_load_file(hdev, fw_name,
->  					  &btrtl_dev->fw_data);
+> -		if (response->report_id == REPORT_ID_HIDPP_SHORT &&
+> -		    response->rap.sub_id == HIDPP_ERROR) {
+> -			ret = response->rap.params[1];
+> -			dbg_hid("%s:got hidpp error %02X\n", __func__, ret);
+> +	if ((response->report_id == REPORT_ID_HIDPP_LONG ||
+> +	     response->report_id == REPORT_ID_HIDPP_VERY_LONG) &&
+> +	    response->fap.feature_index == HIDPP20_ERROR) {
+> +		ret = response->fap.params[1];
+> +		dbg_hid("%s:got hidpp 2.0 error %02X\n", __func__, ret);
+> +		return ret;
 > +	}
 > +
->  	if (btrtl_dev->fw_len < 0) {
-> +		if (fw_load_retry == 1)
-> +			goto fw_name_load;
+> +	return 0;
+> +}
 > +
->  		rtl_dev_err(hdev, "firmware file %s not found",
->  			    btrtl_dev->ic_info->fw_name);
->  		ret = btrtl_dev->fw_len;
-> @@ -1491,4 +1510,5 @@ MODULE_FIRMWARE("rtl_bt/rtl8852bs_config.bin");
->  MODULE_FIRMWARE("rtl_bt/rtl8852bu_fw.bin");
->  MODULE_FIRMWARE("rtl_bt/rtl8852bu_config.bin");
->  MODULE_FIRMWARE("rtl_bt/rtl8852cu_fw.bin");
-> +MODULE_FIRMWARE("rtl_bt/rtl8852cu_fw_v2.bin");
->  MODULE_FIRMWARE("rtl_bt/rtl8852cu_config.bin");
+> +/*
+> + * hidpp_send_message_sync() returns 0 in case of success, and something else
+> + * in case of a failure.
+> + *
+> + * See __do_hidpp_send_message_sync() for a detailed explanation of the returned
+> + * value.
+> + */
+> +static int hidpp_send_message_sync(struct hidpp_device *hidpp,
+> +	struct hidpp_report *message,
+> +	struct hidpp_report *response)
+> +{
+> +	int ret;
+> +	int max_retries = 3;
+> +
+> +	mutex_lock(&hidpp->send_mutex);
+> +
+> +	do {
+> +		ret = __do_hidpp_send_message_sync(hidpp, message, response);
+> +		if (ret != HIDPP20_ERROR_BUSY)
+>  			break;
+> -		}
+>  
+> -		if ((response->report_id == REPORT_ID_HIDPP_LONG ||
+> -		     response->report_id == REPORT_ID_HIDPP_VERY_LONG) &&
+> -		    response->fap.feature_index == HIDPP20_ERROR) {
+> -			ret = response->fap.params[1];
+> -			if (ret != HIDPP20_ERROR_BUSY) {
+> -				dbg_hid("%s:got hidpp 2.0 error %02X\n", __func__, ret);
+> -				break;
+> -			}
+> -			dbg_hid("%s:got busy hidpp 2.0 error %02X, retrying\n", __func__, ret);
+> -		}
+> -	}
+> +		dbg_hid("%s:got busy hidpp 2.0 error %02X, retrying\n", __func__, ret);
+> +	} while (--max_retries);
+>  
+>  	mutex_unlock(&hidpp->send_mutex);
+>  	return ret;
+>  
+>  }
+>  
+> +/*
+> + * hidpp_send_fap_command_sync() returns 0 in case of success, and something else
+> + * in case of a failure.
+> + *
+> + * See __do_hidpp_send_message_sync() for a detailed explanation of the returned
+> + * value.
+> + */
+>  static int hidpp_send_fap_command_sync(struct hidpp_device *hidpp,
+>  	u8 feat_index, u8 funcindex_clientid, u8 *params, int param_count,
+>  	struct hidpp_report *response)
+> @@ -373,6 +401,13 @@ static int hidpp_send_fap_command_sync(struct hidpp_device *hidpp,
+>  	return ret;
+>  }
+>  
+> +/*
+> + * hidpp_send_rap_command_sync() returns 0 in case of success, and something else
+> + * in case of a failure.
+> + *
+> + * See __do_hidpp_send_message_sync() for a detailed explanation of the returned
+> + * value.
+> + */
+>  static int hidpp_send_rap_command_sync(struct hidpp_device *hidpp_dev,
+>  	u8 report_id, u8 sub_id, u8 reg_address, u8 *params, int param_count,
+>  	struct hidpp_report *response)
+> 
+> ---
+> base-commit: 87854366176403438d01f368b09de3ec2234e0f5
+> change-id: 20230621-logitech-fixes-a4c0e66ea2ad
+> 
+> Best regards,
