@@ -1,354 +1,174 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 26583A929
-	for <regressions@lists.linux.dev>; Fri,  4 Aug 2023 10:48:43 +0000 (UTC)
-Authenticated-By: 
-X-SpamFilter-By: ArmorX SpamTrap 5.77 with qID 374AlwcR7004861, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
-	by rtits2.realtek.com.tw (8.15.2/2.81/5.90) with ESMTPS id 374AlwcR7004861
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-	Fri, 4 Aug 2023 18:47:58 +0800
-Received: from RTEXMBS03.realtek.com.tw (172.21.6.96) by
- RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.32; Fri, 4 Aug 2023 18:47:41 +0800
-Received: from localhost.localhost (172.21.132.123) by
- RTEXMBS03.realtek.com.tw (172.21.6.96) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.7; Fri, 4 Aug 2023 18:47:40 +0800
-From: <max.chou@realtek.com>
-To: <marcel@holtmann.org>
-CC: <johan.hedberg@gmail.com>, <luiz.dentz@gmail.com>,
-        <linux-bluetooth@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <alex_lu@realsil.com.cn>, <hildawu@realtek.com>,
-        <karenhsu@realtek.com>, <kidman@realtek.com>, <max.chou@realtek.com>,
-        <juerg.haefliger@canonical.com>, <vicamo.yang@canonical.com>,
-        <Riley.Kao@dell.com>, <stable@vger.kernel.org>, <jwboyer@kernel.org>,
-        <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
-        <pabeni@redhat.com>, <regressions@lists.linux.dev>
-Subject: [PATCH v2] Bluetooth: btrtl: Load FW v2 otherwise FW v1 for RTL8852C
-Date: Fri, 4 Aug 2023 18:47:35 +0800
-Message-ID: <20230804104735.9281-1-max.chou@realtek.com>
-X-Mailer: git-send-email 2.34.1
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2316BA28
+	for <regressions@lists.linux.dev>; Fri,  4 Aug 2023 12:02:08 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1qRtVN-0005pA-FF; Fri, 04 Aug 2023 14:02:05 +0200
+Message-ID: <c27fb4dd-b2dc-22de-4425-6c7db5f543ba@leemhuis.info>
+Date: Fri, 4 Aug 2023 14:02:04 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: nouveau bug in linux/6.1.38-2
+Content-Language: en-US, de-DE
+To: Olaf Skibbe <news@kravcenko.com>, dri-devel@lists.freedesktop.org,
+ nouveau@lists.freedesktop.org
+Cc: 1042753@bugs.debian.org, Ben Skeggs <bskeggs@redhat.com>,
+ Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ "stable@vger.kernel.org" <stable@vger.kernel.org>
+References: <20be6650-5db3-b72a-a7a8-5e817113cff5@kravcenko.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <20be6650-5db3-b72a-a7a8-5e817113cff5@kravcenko.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [172.21.132.123]
-X-ClientProxiedBy: RTEXH36505.realtek.com.tw (172.21.6.25) To
- RTEXMBS03.realtek.com.tw (172.21.6.96)
-X-KSE-ServerInfo: RTEXMBS03.realtek.com.tw, 9
-X-KSE-AntiSpam-Interceptor-Info: fallback
-X-KSE-Antivirus-Interceptor-Info: fallback
-X-KSE-AntiSpam-Interceptor-Info: fallback
-X-KSE-ServerInfo: RTEXH36505.realtek.com.tw, 9
-X-KSE-AntiSpam-Interceptor-Info: fallback
-X-KSE-Antivirus-Interceptor-Info: fallback
-X-KSE-AntiSpam-Interceptor-Info: fallback
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1691150528;2be53768;
+X-HE-SMSGID: 1qRtVN-0005pA-FF
 
-From: Max Chou <max.chou@realtek.com>
+Hi!
 
-In the commit of linux-firmware project, rtl8852cu_fw.bin is updated as
-FW v2 format[1]. Consider the case that if driver did not be updated for
-FW v2 supported[2], it can not use FW v2.
-By Canonical's suggestion, older driver should be able to load FW v1,
-so rtl8852cu_fw.bin will be revert to the previous commit as FW v1 and
-add rtl8852cu_fw_v2.bin as FW v2. This item will be started on
-linux-firmware project.
+On 02.08.23 23:28, Olaf Skibbe wrote:
+> Dear Maintainers,
+> 
+> Hereby I would like to report an apparent bug in the nouveau driver in
+> linux/6.1.38-2.
 
-In this commit, the driver prefers to load FW v2 if available. Fallback to
-FW v1 otherwise.
+Thx for your report. Maybe your problem is caused by a incomplete
+backport. I Cced the maintainers for the drivers (and the regressions
+and the stable list), maybe one of them has an idea, as they know the
+driver.
 
-Note that the driver has supported to extract the data for v1 and v2
-since the commit[1].
-The previous FW format of RTL8852C is v1. After the commit[2], the FW format
-was changed to v2. Only RTL8852C suffered the different FW formats, so
-we will use rtl8852cu_fw.bin for the original commit as FW v1 and
-rtl8852cu_fw_v2.bin for the future maintained as FW v2. Other Realtek chips
-will not been impacted by this patch.
+If they don't reply in the next few days, please check if the problem is
+also present in mainline. If not, check if the latest 6.1.y. release
+already fixes this. If not, try to check which of the four patches you
+reverted to make things going is actually causing this (e.g. first only
+revert the one that was applied last; then the two last ones; ...).
 
-To do on linux-firmware project after this commit.
-1. revert '55e7448533e7 ("rtl_bt: Update RTL8852C BT USB firmware
-   to 0x040D_7225")'
-   => rtl_bt/rtl8852cu_fw.bin: FW v1 (stay at ver. 0xD7B8_FABF)
-2. Add a new commit for rtl8852cu_fw_v2.bin
-   =>rtl_bt/rtl8852cu_fw_v2.bin: FW v2 (to be maintained)
+> Running a current debian stable on a Dell Latitude E6510 with a
+> "NVIDIA Corporation GT218M" graphic card, the monitor turns black
+> after the grub screen. Also switching to a console (Strg-Alt-F2) shows
+> just a black screen. Access via ssh is possible.
+> 
+> ~# uname -r
+> 6.1.0-10-amd64
+> 
+> demesg shows the following error message:
+> 
+> [    3.560153] WARNING: CPU: 0 PID: 176 at
+> drivers/gpu/drm/nouveau/nvkm/engine/disp/dp.c:460
+> nvkm_dp_acquire+0x26a/0x490 [nouveau]
+> [    3.560287] Modules linked in: sd_mod t10_pi sr_mod crc64_rocksoft
+> cdrom crc64 crc_t10dif crct10dif_generic nouveau(+) ahci libahci mxm_wmi
+> i2c_algo_bit drm_display_helper libata cec rc_core drm_ttm_helper ttm
+> scsi_mod e1000e drm_kms_helper ptp firewire_ohci sdhci_pci cqhci
+> ehci_pci sdhci ehci_hcd firewire_core i2c_i801 crct10dif_pclmul
+> crct10dif_common drm crc32_pclmul crc32c_intel psmouse usbcore mmc_core
+> crc_itu_t pps_core scsi_common i2c_smbus lpc_ich usb_common battery
+> video wmi button
+> [    3.560322] CPU: 0 PID: 176 Comm: kworker/u16:5 Not tainted
+> 6.1.0-10-amd64 #1  Debian 6.1.38-2
+> [    3.560325] Hardware name: Dell Inc. Latitude E6510/0N5KHN, BIOS A17
+> 05/12/2017
+> [    3.560327] Workqueue: nvkm-disp nv50_disp_super [nouveau]
+> [    3.560433] RIP: 0010:nvkm_dp_acquire+0x26a/0x490 [nouveau]
+> [    3.560538] Code: 48 8b 44 24 58 65 48 2b 04 25 28 00 00 00 0f 85 37
+> 02 00 00 48 83 c4 60 44 89 e0 5b 5d 41 5c 41 5d 41 5e 41 5f c3 cc cc cc
+> cc <0f> 0b c1 e8 03 41 88 6d 62 44 89 fe 48 89 df 48 69 c0 cf 0d d6 26
+> [    3.560541] RSP: 0018:ffff9899c048bd60 EFLAGS: 00010246
+> [    3.560542] RAX: 0000000000041eb0 RBX: ffff88e0209d2600 RCX:
+> 0000000000041eb0
+> [    3.560544] RDX: ffffffffc079f760 RSI: 0000000000000000 RDI:
+> ffff9899c048bcf0
+> [    3.560545] RBP: 0000000000000001 R08: ffff9899c048bc64 R09:
+> 0000000000005b76
+> [    3.560546] R10: 000000000000000d R11: ffff9899c048bde0 R12:
+> 00000000ffffffea
+> [    3.560548] R13: ffff88e00b39e480 R14: 0000000000044d45 R15:
+> 0000000000000000
+> [    3.560549] FS:  0000000000000000(0000) GS:ffff88e123c00000(0000)
+> knlGS:0000000000000000
+> [    3.560551] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [    3.560552] CR2: 00007f57f4e90451 CR3: 0000000181410000 CR4:
+> 00000000000006f0
+> [    3.560554] Call Trace:
+> [    3.560558]  <TASK>
+> [    3.560560]  ? __warn+0x7d/0xc0
+> [    3.560566]  ? nvkm_dp_acquire+0x26a/0x490 [nouveau]
+> [    3.560671]  ? report_bug+0xe6/0x170
+> [    3.560675]  ? handle_bug+0x41/0x70
+> [    3.560679]  ? exc_invalid_op+0x13/0x60
+> [    3.560681]  ? asm_exc_invalid_op+0x16/0x20
+> [    3.560685]  ? init_reset_begun+0x20/0x20 [nouveau]
+> [    3.560769]  ? nvkm_dp_acquire+0x26a/0x490 [nouveau]
+> [    3.560888]  nv50_disp_super_2_2+0x70/0x430 [nouveau]
+> [    3.560997]  nv50_disp_super+0x113/0x210 [nouveau]
+> [    3.561103]  process_one_work+0x1c7/0x380
+> [    3.561109]  worker_thread+0x4d/0x380
+> [    3.561113]  ? rescuer_thread+0x3a0/0x3a0
+> [    3.561116]  kthread+0xe9/0x110
+> [    3.561120]  ? kthread_complete_and_exit+0x20/0x20
+> [    3.561122]  ret_from_fork+0x22/0x30
+> [    3.561130]  </TASK>
+> 
+> Further information:
+> 
+> $ lspci -v -s $(lspci | grep -i vga | awk '{ print $1 }')
+> 01:00.0 VGA compatible controller: NVIDIA Corporation GT218M [NVS 3100M]
+> (rev a2) (prog-if 00 [VGA controller])
+>     Subsystem: Dell Latitude E6510
+>     Flags: bus master, fast devsel, latency 0, IRQ 27
+>     Memory at e2000000 (32-bit, non-prefetchable) [size=16M]
+>     Memory at d0000000 (64-bit, prefetchable) [size=256M]
+>     Memory at e0000000 (64-bit, prefetchable) [size=32M]
+>     I/O ports at 7000 [size=128]
+>     Expansion ROM at 000c0000 [disabled] [size=128K]
+>     Capabilities: <access denied>
+>     Kernel driver in use: nouveau
+>     Kernel modules: nouveau
+> 
+> I reported this bug to debian already, see
+> https://bugs.debian.org/1042753 for context.
+> 
+> With support (thanks Diederik!) I managed to figure out that the cause
+> was a regression between upstream kernel version 6.1.27 and 6.1.38.
+> 
+> I build a new 6.1.38 kernel with these commits reverted:
+> 
+> 62aecf23f3d1 drm/nouveau: add nv_encoder pointer check for NULL
+> fb725beca62d drm/nouveau/dp: check for NULL nv_connector->native_mode
+> 90748be0f4f3 drm/nouveau: don't detect DSM for non-NVIDIA device
+> 5a144bad3e75 nouveau: fix client work fence deletion race
+> 
+> With that kernel the graphic works again.
+> 
+> Please inform me if further tests are required.
 
-Reference:
-[1]'9a24ce5e29b1 ("Bluetooth: btrtl: Firmware format v2 support")'
-[2]'55e7448533e7 ("rtl_bt: Update RTL8852C BT USB firmware
-    to 0x040D_7225")'
+FWIW, to be sure the issue doesn't fall through the cracks unnoticed,
+I'm adding it to regzbot, the Linux kernel regression tracking bot:
 
-Fixes: 9a24ce5e29b ("Bluetooth: btrtl: Firmware format v2 support")
-Suggested-by: Juerg Haefliger <juerg.haefliger@canonical.com>
-Tested-by: Hilda Wu <hildawu@realtek.com>
-Signed-off-by: Max Chou <max.chou@realtek.com>
+#regzbot ^introduced v6.1.27..v6.1.38
+#regzbot title drm/nouveau: display stays black
+#regzbot ignore-activity
 
----
-Changes in v2:
-- Tuning the code for more readable. Thanks Juerg!
-- Modify the commit log.
----
- drivers/bluetooth/btrtl.c | 70 +++++++++++++++++++++++++--------------
- 1 file changed, 45 insertions(+), 25 deletions(-)
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply and tell me -- ideally
+while also telling regzbot about it, as explained by the page listed in
+the footer of this mail.
 
-diff --git a/drivers/bluetooth/btrtl.c b/drivers/bluetooth/btrtl.c
-index ddae6524106d..84c2c2e1122f 100644
---- a/drivers/bluetooth/btrtl.c
-+++ b/drivers/bluetooth/btrtl.c
-@@ -104,7 +104,7 @@ static const struct id_table ic_id_table[] = {
- 	{ IC_INFO(RTL_ROM_LMP_8723A, 0xb, 0x6, HCI_USB),
- 	  .config_needed = false,
- 	  .has_rom_version = false,
--	  .fw_name = "rtl_bt/rtl8723a_fw.bin",
-+	  .fw_name = "rtl_bt/rtl8723a_fw",
- 	  .cfg_name = NULL,
- 	  .hw_info = "rtl8723au" },
- 
-@@ -112,7 +112,7 @@ static const struct id_table ic_id_table[] = {
- 	{ IC_INFO(RTL_ROM_LMP_8723B, 0xb, 0x6, HCI_UART),
- 	  .config_needed = true,
- 	  .has_rom_version = true,
--	  .fw_name  = "rtl_bt/rtl8723bs_fw.bin",
-+	  .fw_name  = "rtl_bt/rtl8723bs_fw",
- 	  .cfg_name = "rtl_bt/rtl8723bs_config",
- 	  .hw_info  = "rtl8723bs" },
- 
-@@ -120,7 +120,7 @@ static const struct id_table ic_id_table[] = {
- 	{ IC_INFO(RTL_ROM_LMP_8723B, 0xb, 0x6, HCI_USB),
- 	  .config_needed = false,
- 	  .has_rom_version = true,
--	  .fw_name  = "rtl_bt/rtl8723b_fw.bin",
-+	  .fw_name  = "rtl_bt/rtl8723b_fw",
- 	  .cfg_name = "rtl_bt/rtl8723b_config",
- 	  .hw_info  = "rtl8723bu" },
- 
-@@ -132,7 +132,7 @@ static const struct id_table ic_id_table[] = {
- 	  .hci_bus = HCI_UART,
- 	  .config_needed = true,
- 	  .has_rom_version = true,
--	  .fw_name  = "rtl_bt/rtl8723cs_cg_fw.bin",
-+	  .fw_name  = "rtl_bt/rtl8723cs_cg_fw",
- 	  .cfg_name = "rtl_bt/rtl8723cs_cg_config",
- 	  .hw_info  = "rtl8723cs-cg" },
- 
-@@ -144,7 +144,7 @@ static const struct id_table ic_id_table[] = {
- 	  .hci_bus = HCI_UART,
- 	  .config_needed = true,
- 	  .has_rom_version = true,
--	  .fw_name  = "rtl_bt/rtl8723cs_vf_fw.bin",
-+	  .fw_name  = "rtl_bt/rtl8723cs_vf_fw",
- 	  .cfg_name = "rtl_bt/rtl8723cs_vf_config",
- 	  .hw_info  = "rtl8723cs-vf" },
- 
-@@ -156,7 +156,7 @@ static const struct id_table ic_id_table[] = {
- 	  .hci_bus = HCI_UART,
- 	  .config_needed = true,
- 	  .has_rom_version = true,
--	  .fw_name  = "rtl_bt/rtl8723cs_xx_fw.bin",
-+	  .fw_name  = "rtl_bt/rtl8723cs_xx_fw",
- 	  .cfg_name = "rtl_bt/rtl8723cs_xx_config",
- 	  .hw_info  = "rtl8723cs" },
- 
-@@ -164,7 +164,7 @@ static const struct id_table ic_id_table[] = {
- 	{ IC_INFO(RTL_ROM_LMP_8723B, 0xd, 0x8, HCI_USB),
- 	  .config_needed = true,
- 	  .has_rom_version = true,
--	  .fw_name  = "rtl_bt/rtl8723d_fw.bin",
-+	  .fw_name  = "rtl_bt/rtl8723d_fw",
- 	  .cfg_name = "rtl_bt/rtl8723d_config",
- 	  .hw_info  = "rtl8723du" },
- 
-@@ -172,7 +172,7 @@ static const struct id_table ic_id_table[] = {
- 	{ IC_INFO(RTL_ROM_LMP_8723B, 0xd, 0x8, HCI_UART),
- 	  .config_needed = true,
- 	  .has_rom_version = true,
--	  .fw_name  = "rtl_bt/rtl8723ds_fw.bin",
-+	  .fw_name  = "rtl_bt/rtl8723ds_fw",
- 	  .cfg_name = "rtl_bt/rtl8723ds_config",
- 	  .hw_info  = "rtl8723ds" },
- 
-@@ -180,7 +180,7 @@ static const struct id_table ic_id_table[] = {
- 	{ IC_INFO(RTL_ROM_LMP_8821A, 0xa, 0x6, HCI_USB),
- 	  .config_needed = false,
- 	  .has_rom_version = true,
--	  .fw_name  = "rtl_bt/rtl8821a_fw.bin",
-+	  .fw_name  = "rtl_bt/rtl8821a_fw",
- 	  .cfg_name = "rtl_bt/rtl8821a_config",
- 	  .hw_info  = "rtl8821au" },
- 
-@@ -189,7 +189,7 @@ static const struct id_table ic_id_table[] = {
- 	  .config_needed = false,
- 	  .has_rom_version = true,
- 	  .has_msft_ext = true,
--	  .fw_name  = "rtl_bt/rtl8821c_fw.bin",
-+	  .fw_name  = "rtl_bt/rtl8821c_fw",
- 	  .cfg_name = "rtl_bt/rtl8821c_config",
- 	  .hw_info  = "rtl8821cu" },
- 
-@@ -198,7 +198,7 @@ static const struct id_table ic_id_table[] = {
- 	  .config_needed = true,
- 	  .has_rom_version = true,
- 	  .has_msft_ext = true,
--	  .fw_name  = "rtl_bt/rtl8821cs_fw.bin",
-+	  .fw_name  = "rtl_bt/rtl8821cs_fw",
- 	  .cfg_name = "rtl_bt/rtl8821cs_config",
- 	  .hw_info  = "rtl8821cs" },
- 
-@@ -206,7 +206,7 @@ static const struct id_table ic_id_table[] = {
- 	{ IC_INFO(RTL_ROM_LMP_8761A, 0xa, 0x6, HCI_USB),
- 	  .config_needed = false,
- 	  .has_rom_version = true,
--	  .fw_name  = "rtl_bt/rtl8761a_fw.bin",
-+	  .fw_name  = "rtl_bt/rtl8761a_fw",
- 	  .cfg_name = "rtl_bt/rtl8761a_config",
- 	  .hw_info  = "rtl8761au" },
- 
-@@ -215,7 +215,7 @@ static const struct id_table ic_id_table[] = {
- 	  .config_needed = false,
- 	  .has_rom_version = true,
- 	  .has_msft_ext = true,
--	  .fw_name  = "rtl_bt/rtl8761b_fw.bin",
-+	  .fw_name  = "rtl_bt/rtl8761b_fw",
- 	  .cfg_name = "rtl_bt/rtl8761b_config",
- 	  .hw_info  = "rtl8761btv" },
- 
-@@ -223,7 +223,7 @@ static const struct id_table ic_id_table[] = {
- 	{ IC_INFO(RTL_ROM_LMP_8761A, 0xb, 0xa, HCI_USB),
- 	  .config_needed = false,
- 	  .has_rom_version = true,
--	  .fw_name  = "rtl_bt/rtl8761bu_fw.bin",
-+	  .fw_name  = "rtl_bt/rtl8761bu_fw",
- 	  .cfg_name = "rtl_bt/rtl8761bu_config",
- 	  .hw_info  = "rtl8761bu" },
- 
-@@ -232,7 +232,7 @@ static const struct id_table ic_id_table[] = {
- 	  .config_needed = true,
- 	  .has_rom_version = true,
- 	  .has_msft_ext = true,
--	  .fw_name  = "rtl_bt/rtl8822cs_fw.bin",
-+	  .fw_name  = "rtl_bt/rtl8822cs_fw",
- 	  .cfg_name = "rtl_bt/rtl8822cs_config",
- 	  .hw_info  = "rtl8822cs" },
- 
-@@ -241,7 +241,7 @@ static const struct id_table ic_id_table[] = {
- 	  .config_needed = true,
- 	  .has_rom_version = true,
- 	  .has_msft_ext = true,
--	  .fw_name  = "rtl_bt/rtl8822cs_fw.bin",
-+	  .fw_name  = "rtl_bt/rtl8822cs_fw",
- 	  .cfg_name = "rtl_bt/rtl8822cs_config",
- 	  .hw_info  = "rtl8822cs" },
- 
-@@ -250,7 +250,7 @@ static const struct id_table ic_id_table[] = {
- 	  .config_needed = false,
- 	  .has_rom_version = true,
- 	  .has_msft_ext = true,
--	  .fw_name  = "rtl_bt/rtl8822cu_fw.bin",
-+	  .fw_name  = "rtl_bt/rtl8822cu_fw",
- 	  .cfg_name = "rtl_bt/rtl8822cu_config",
- 	  .hw_info  = "rtl8822cu" },
- 
-@@ -259,7 +259,7 @@ static const struct id_table ic_id_table[] = {
- 	  .config_needed = true,
- 	  .has_rom_version = true,
- 	  .has_msft_ext = true,
--	  .fw_name  = "rtl_bt/rtl8822b_fw.bin",
-+	  .fw_name  = "rtl_bt/rtl8822b_fw",
- 	  .cfg_name = "rtl_bt/rtl8822b_config",
- 	  .hw_info  = "rtl8822bu" },
- 
-@@ -268,7 +268,7 @@ static const struct id_table ic_id_table[] = {
- 	  .config_needed = false,
- 	  .has_rom_version = true,
- 	  .has_msft_ext = true,
--	  .fw_name  = "rtl_bt/rtl8852au_fw.bin",
-+	  .fw_name  = "rtl_bt/rtl8852au_fw",
- 	  .cfg_name = "rtl_bt/rtl8852au_config",
- 	  .hw_info  = "rtl8852au" },
- 
-@@ -277,7 +277,7 @@ static const struct id_table ic_id_table[] = {
- 	  .config_needed = true,
- 	  .has_rom_version = true,
- 	  .has_msft_ext = true,
--	  .fw_name  = "rtl_bt/rtl8852bs_fw.bin",
-+	  .fw_name  = "rtl_bt/rtl8852bs_fw",
- 	  .cfg_name = "rtl_bt/rtl8852bs_config",
- 	  .hw_info  = "rtl8852bs" },
- 
-@@ -286,7 +286,7 @@ static const struct id_table ic_id_table[] = {
- 	  .config_needed = false,
- 	  .has_rom_version = true,
- 	  .has_msft_ext = true,
--	  .fw_name  = "rtl_bt/rtl8852bu_fw.bin",
-+	  .fw_name  = "rtl_bt/rtl8852bu_fw",
- 	  .cfg_name = "rtl_bt/rtl8852bu_config",
- 	  .hw_info  = "rtl8852bu" },
- 
-@@ -295,7 +295,7 @@ static const struct id_table ic_id_table[] = {
- 	  .config_needed = false,
- 	  .has_rom_version = true,
- 	  .has_msft_ext = true,
--	  .fw_name  = "rtl_bt/rtl8852cu_fw.bin",
-+	  .fw_name  = "rtl_bt/rtl8852cu_fw",
- 	  .cfg_name = "rtl_bt/rtl8852cu_config",
- 	  .hw_info  = "rtl8852cu" },
- 
-@@ -304,7 +304,7 @@ static const struct id_table ic_id_table[] = {
- 	  .config_needed = false,
- 	  .has_rom_version = true,
- 	  .has_msft_ext = false,
--	  .fw_name  = "rtl_bt/rtl8851bu_fw.bin",
-+	  .fw_name  = "rtl_bt/rtl8851bu_fw",
- 	  .cfg_name = "rtl_bt/rtl8851bu_config",
- 	  .hw_info  = "rtl8851bu" },
- 	};
-@@ -1045,6 +1045,7 @@ struct btrtl_device_info *btrtl_initialize(struct hci_dev *hdev,
- 	struct sk_buff *skb;
- 	struct hci_rp_read_local_version *resp;
- 	struct hci_command_hdr *cmd;
-+	char fw_name[40];
- 	char cfg_name[40];
- 	u16 hci_rev, lmp_subver;
- 	u8 hci_ver, lmp_ver, chip_type = 0;
-@@ -1154,8 +1155,26 @@ struct btrtl_device_info *btrtl_initialize(struct hci_dev *hdev,
- 			goto err_free;
- 	}
- 
--	btrtl_dev->fw_len = rtl_load_file(hdev, btrtl_dev->ic_info->fw_name,
--					  &btrtl_dev->fw_data);
-+	if (!btrtl_dev->ic_info->fw_name) {
-+		ret = -ENOMEM;
-+		goto err_free;
-+	}
-+
-+	btrtl_dev->fw_len = -EIO;
-+	if (lmp_subver == RTL_ROM_LMP_8852A && hci_rev == 0x000c) {
-+		snprintf(fw_name, sizeof(fw_name), "%s_v2.bin",
-+				btrtl_dev->ic_info->fw_name);
-+		btrtl_dev->fw_len = rtl_load_file(hdev, fw_name,
-+				&btrtl_dev->fw_data);
-+	}
-+
-+	if (btrtl_dev->fw_len < 0) {
-+		snprintf(fw_name, sizeof(fw_name), "%s.bin",
-+				btrtl_dev->ic_info->fw_name);
-+		btrtl_dev->fw_len = rtl_load_file(hdev, fw_name,
-+				&btrtl_dev->fw_data);
-+	}
-+
- 	if (btrtl_dev->fw_len < 0) {
- 		rtl_dev_err(hdev, "firmware file %s not found",
- 			    btrtl_dev->ic_info->fw_name);
-@@ -1491,4 +1510,5 @@ MODULE_FIRMWARE("rtl_bt/rtl8852bs_config.bin");
- MODULE_FIRMWARE("rtl_bt/rtl8852bu_fw.bin");
- MODULE_FIRMWARE("rtl_bt/rtl8852bu_config.bin");
- MODULE_FIRMWARE("rtl_bt/rtl8852cu_fw.bin");
-+MODULE_FIRMWARE("rtl_bt/rtl8852cu_fw_v2.bin");
- MODULE_FIRMWARE("rtl_bt/rtl8852cu_config.bin");
--- 
-2.34.1
+Developers: When fixing the issue, remember to add 'Link:' tags pointing
+to the report (the parent of this mail). See page linked in footer for
+details.
 
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+That page also explains what to do if mails like this annoy you.
