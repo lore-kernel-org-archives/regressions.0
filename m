@@ -1,233 +1,95 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from 167-179-156-38.a7b39c.syd.nbn.aussiebb.net (167-179-156-38.a7b39c.syd.nbn.aussiebb.net [167.179.156.38])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 085128F62
-	for <regressions@lists.linux.dev>; Fri,  4 Aug 2023 09:13:54 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qRqsX-0001BG-Re; Fri, 04 Aug 2023 11:13:49 +0200
-Message-ID: <b68cf309-fca4-7ae0-b42f-90d5f338acdd@leemhuis.info>
-Date: Fri, 4 Aug 2023 11:13:47 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2485A921
+	for <regressions@lists.linux.dev>; Fri,  4 Aug 2023 09:28:07 +0000 (UTC)
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.94.2 #2 (Debian))
+	id 1qRqqT-003ayv-PZ; Fri, 04 Aug 2023 17:11:42 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Fri, 04 Aug 2023 17:11:41 +0800
+Date: Fri, 4 Aug 2023 17:11:41 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: David Howells <dhowells@redhat.com>
+Cc: =?us-ascii?B?PT9VVEYtOD9CP1QyNWtjbVZxSUUxdmMyN0RvY1NOWldzPT89?= <omosnacek@gmail.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Harald Freudenberger <freude@linux.vnet.ibm.com>,
+	Bagas Sanjaya <bagasdotme@gmail.com>, linux-crypto@vger.kernel.org,
+	linux-s390@vger.kernel.org, netdev@vger.kernel.org,
+	regressions@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] crypto: Fix missing initialisation affecting gcm-aes-s390
+Message-ID: <ZMzAzX3WQn3ZT2N+@gondor.apana.org.au>
+References: <CAAUqJDuRkHE8fPgZJGaKjUjd3QfGwzfumuJBmStPqBhubxyk_A@mail.gmail.com>
+ <97730.1690408399@warthog.procyon.org.uk>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: [PATCH v2] HID: logitech-hidpp: rework one more time the retries
- attempts
-Content-Language: en-US, de-DE
-To: bentiss@kernel.org, =?UTF-8?Q?Filipe_La=C3=ADns?= <lains@riseup.net>,
- Bastien Nocera <hadess@hadess.net>, Jiri Kosina <jikos@kernel.org>,
- Greg KH <gregkh@linuxfoundation.org>
-Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
- Benjamin Tissoires <benjamin.tissoires@redhat.com>, stable@vger.kernel.org,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <20230621-logitech-fixes-v2-1-3635f7f9c8af@kernel.org>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-In-Reply-To: <20230621-logitech-fixes-v2-1-3635f7f9c8af@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1691140435;6cd1e846;
-X-HE-SMSGID: 1qRqsX-0001BG-Re
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <97730.1690408399@warthog.procyon.org.uk>
 
-Hi Benjamin, /me again! :-D
-
-On 12.07.23 17:02, bentiss@kernel.org wrote:
-> From: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+On Wed, Jul 26, 2023 at 10:53:19PM +0100, David Howells wrote:
+>     
+> Fix af_alg_alloc_areq() to initialise areq->first_rsgl.sgl.sgt.sgl to point
+> to the scatterlist array in areq->first_rsgl.sgl.sgl.
 > 
-> Extract the internal code inside a helper function, fix the
-> initialization of the parameters used in the helper function
-> (`hidpp->answer_available` was not reset and `*response` wasn't either),
-> and use a `do {...} while();` loop.
+> Without this, the gcm-aes-s390 driver will oops when it tries to do
+> gcm_walk_start() on req->dst because req->dst is set to the value of
+> areq->first_rsgl.sgl.sgl by _aead_recvmsg() calling
+> aead_request_set_crypt().
 > 
-> Fixes: 586e8fede795 ("HID: logitech-hidpp: Retry commands when device is busy")
-> Cc: stable@vger.kernel.org
-
-From what I understood there was hope that this would cure the last
-remains (occasional init problems iirc) of the recent regressions with
-this driver and their fixes. But things look stalled. Is there a reason?
-Lack of reviews? Is there nevertheless hope that this will make it at
-least into 6.6?
-
-Ciao, Thorsten
-
-> Reviewed-by: Bastien Nocera <hadess@hadess.net>
-> Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+> The problem comes if an empty ciphertext is passed: the loop in
+> af_alg_get_rsgl() just passes straight out and doesn't set areq->first_rsgl
+> up.
+> 
+> This isn't a problem on x86_64 using gcmaes_crypt_by_sg() because, as far
+> as I can tell, that ignores req->dst and only uses req->src[*].
+> 
+> [*] Is this a bug in aesni-intel_glue.c?
+> 
+> The s390x oops looks something like:
+> 
+>  Unable to handle kernel pointer dereference in virtual kernel address space
+>  Failing address: 0000000a00000000 TEID: 0000000a00000803
+>  Fault in home space mode while using kernel ASCE.
+>  AS:00000000a43a0007 R3:0000000000000024
+>  Oops: 003b ilc:2 [#1] SMP
+>  ...
+>  Call Trace:
+>   [<000003ff7fc3d47e>] gcm_walk_start+0x16/0x28 [aes_s390]
+>   [<00000000a2a342f2>] crypto_aead_decrypt+0x9a/0xb8
+>   [<00000000a2a60888>] aead_recvmsg+0x478/0x698
+>   [<00000000a2e519a0>] sock_recvmsg+0x70/0xb0
+>   [<00000000a2e51a56>] sock_read_iter+0x76/0xa0
+>   [<00000000a273e066>] vfs_read+0x26e/0x2a8
+>   [<00000000a273e8c4>] ksys_read+0xbc/0x100
+>   [<00000000a311d808>] __do_syscall+0x1d0/0x1f8
+>   [<00000000a312ff30>] system_call+0x70/0x98
+>  Last Breaking-Event-Address:
+>   [<000003ff7fc3e6b4>] gcm_aes_crypt+0x104/0xa68 [aes_s390]
+> 
+> Fixes: c1abe6f570af ("crypto: af_alg: Use extract_iter_to_sg() to create scatterlists")
+> Reported-by: Ondrej Mosnáček <omosnacek@gmail.com>
+> Link: https://lore.kernel.org/r/CAAUqJDuRkHE8fPgZJGaKjUjd3QfGwzfumuJBmStPqBhubxyk_A@mail.gmail.com/
+> Signed-off-by: David Howells <dhowells@redhat.com>
+> cc: Herbert Xu <herbert@gondor.apana.org.au>
+> cc: Sven Schnelle <svens@linux.ibm.com>
+> cc: Harald Freudenberger <freude@linux.vnet.ibm.com>
+> cc: "David S. Miller" <davem@davemloft.net>
+> cc: Paolo Abeni <pabeni@redhat.com>
+> cc: linux-crypto@vger.kernel.org
+> cc: linux-s390@vger.kernel.org
+> cc: regressions@lists.linux.dev
 > ---
-> as requested by https://lore.kernel.org/all/CAHk-=wiMbF38KCNhPFiargenpSBoecSXTLQACKS2UMyo_Vu2ww@mail.gmail.com/
-> This is a rewrite of that particular piece of code.
-> ---
-> Changes in v2:
-> - added __must_hold() for KASAN
-> - Reworked the comment describing the functions and their return values
-> - Link to v1: https://lore.kernel.org/r/20230621-logitech-fixes-v1-1-32e70933c0b0@redhat.com
-> ---
->  drivers/hid/hid-logitech-hidpp.c | 115 +++++++++++++++++++++++++--------------
->  1 file changed, 75 insertions(+), 40 deletions(-)
-> 
-> diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-hidpp.c
-> index 129b01be488d..09ba2086c95c 100644
-> --- a/drivers/hid/hid-logitech-hidpp.c
-> +++ b/drivers/hid/hid-logitech-hidpp.c
-> @@ -275,21 +275,22 @@ static int __hidpp_send_report(struct hid_device *hdev,
->  }
->  
->  /*
-> - * hidpp_send_message_sync() returns 0 in case of success, and something else
-> - * in case of a failure.
-> - * - If ' something else' is positive, that means that an error has been raised
-> - *   by the protocol itself.
-> - * - If ' something else' is negative, that means that we had a classic error
-> - *   (-ENOMEM, -EPIPE, etc...)
-> + * Effectively send the message to the device, waiting for its answer.
-> + *
-> + * Must be called with hidpp->send_mutex locked
-> + *
-> + * Same return protocol than hidpp_send_message_sync():
-> + * - success on 0
-> + * - negative error means transport error
-> + * - positive value means protocol error
->   */
-> -static int hidpp_send_message_sync(struct hidpp_device *hidpp,
-> +static int __do_hidpp_send_message_sync(struct hidpp_device *hidpp,
->  	struct hidpp_report *message,
->  	struct hidpp_report *response)
->  {
-> -	int ret = -1;
-> -	int max_retries = 3;
-> +	int ret;
->  
-> -	mutex_lock(&hidpp->send_mutex);
-> +	__must_hold(&hidpp->send_mutex);
->  
->  	hidpp->send_receive_buf = response;
->  	hidpp->answer_available = false;
-> @@ -300,47 +301,74 @@ static int hidpp_send_message_sync(struct hidpp_device *hidpp,
->  	 */
->  	*response = *message;
->  
-> -	for (; max_retries != 0 && ret; max_retries--) {
-> -		ret = __hidpp_send_report(hidpp->hid_dev, message);
-> +	ret = __hidpp_send_report(hidpp->hid_dev, message);
-> +	if (ret) {
-> +		dbg_hid("__hidpp_send_report returned err: %d\n", ret);
-> +		memset(response, 0, sizeof(struct hidpp_report));
-> +		return ret;
-> +	}
->  
-> -		if (ret) {
-> -			dbg_hid("__hidpp_send_report returned err: %d\n", ret);
-> -			memset(response, 0, sizeof(struct hidpp_report));
-> -			break;
-> -		}
-> +	if (!wait_event_timeout(hidpp->wait, hidpp->answer_available,
-> +				5*HZ)) {
-> +		dbg_hid("%s:timeout waiting for response\n", __func__);
-> +		memset(response, 0, sizeof(struct hidpp_report));
-> +		return -ETIMEDOUT;
-> +	}
->  
-> -		if (!wait_event_timeout(hidpp->wait, hidpp->answer_available,
-> -					5*HZ)) {
-> -			dbg_hid("%s:timeout waiting for response\n", __func__);
-> -			memset(response, 0, sizeof(struct hidpp_report));
-> -			ret = -ETIMEDOUT;
-> -			break;
-> -		}
-> +	if (response->report_id == REPORT_ID_HIDPP_SHORT &&
-> +	    response->rap.sub_id == HIDPP_ERROR) {
-> +		ret = response->rap.params[1];
-> +		dbg_hid("%s:got hidpp error %02X\n", __func__, ret);
-> +		return ret;
-> +	}
->  
-> -		if (response->report_id == REPORT_ID_HIDPP_SHORT &&
-> -		    response->rap.sub_id == HIDPP_ERROR) {
-> -			ret = response->rap.params[1];
-> -			dbg_hid("%s:got hidpp error %02X\n", __func__, ret);
-> +	if ((response->report_id == REPORT_ID_HIDPP_LONG ||
-> +	     response->report_id == REPORT_ID_HIDPP_VERY_LONG) &&
-> +	    response->fap.feature_index == HIDPP20_ERROR) {
-> +		ret = response->fap.params[1];
-> +		dbg_hid("%s:got hidpp 2.0 error %02X\n", __func__, ret);
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +/*
-> + * hidpp_send_message_sync() returns 0 in case of success, and something else
-> + * in case of a failure.
-> + *
-> + * See __do_hidpp_send_message_sync() for a detailed explanation of the returned
-> + * value.
-> + */
-> +static int hidpp_send_message_sync(struct hidpp_device *hidpp,
-> +	struct hidpp_report *message,
-> +	struct hidpp_report *response)
-> +{
-> +	int ret;
-> +	int max_retries = 3;
-> +
-> +	mutex_lock(&hidpp->send_mutex);
-> +
-> +	do {
-> +		ret = __do_hidpp_send_message_sync(hidpp, message, response);
-> +		if (ret != HIDPP20_ERROR_BUSY)
->  			break;
-> -		}
->  
-> -		if ((response->report_id == REPORT_ID_HIDPP_LONG ||
-> -		     response->report_id == REPORT_ID_HIDPP_VERY_LONG) &&
-> -		    response->fap.feature_index == HIDPP20_ERROR) {
-> -			ret = response->fap.params[1];
-> -			if (ret != HIDPP20_ERROR_BUSY) {
-> -				dbg_hid("%s:got hidpp 2.0 error %02X\n", __func__, ret);
-> -				break;
-> -			}
-> -			dbg_hid("%s:got busy hidpp 2.0 error %02X, retrying\n", __func__, ret);
-> -		}
-> -	}
-> +		dbg_hid("%s:got busy hidpp 2.0 error %02X, retrying\n", __func__, ret);
-> +	} while (--max_retries);
->  
->  	mutex_unlock(&hidpp->send_mutex);
->  	return ret;
->  
->  }
->  
-> +/*
-> + * hidpp_send_fap_command_sync() returns 0 in case of success, and something else
-> + * in case of a failure.
-> + *
-> + * See __do_hidpp_send_message_sync() for a detailed explanation of the returned
-> + * value.
-> + */
->  static int hidpp_send_fap_command_sync(struct hidpp_device *hidpp,
->  	u8 feat_index, u8 funcindex_clientid, u8 *params, int param_count,
->  	struct hidpp_report *response)
-> @@ -373,6 +401,13 @@ static int hidpp_send_fap_command_sync(struct hidpp_device *hidpp,
->  	return ret;
->  }
->  
-> +/*
-> + * hidpp_send_rap_command_sync() returns 0 in case of success, and something else
-> + * in case of a failure.
-> + *
-> + * See __do_hidpp_send_message_sync() for a detailed explanation of the returned
-> + * value.
-> + */
->  static int hidpp_send_rap_command_sync(struct hidpp_device *hidpp_dev,
->  	u8 report_id, u8 sub_id, u8 reg_address, u8 *params, int param_count,
->  	struct hidpp_report *response)
-> 
-> ---
-> base-commit: 87854366176403438d01f368b09de3ec2234e0f5
-> change-id: 20230621-logitech-fixes-a4c0e66ea2ad
-> 
-> Best regards,
+>  crypto/af_alg.c |    1 +
+>  1 file changed, 1 insertion(+)
+
+Patch applied.  Thanks.
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
