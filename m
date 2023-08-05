@@ -1,129 +1,114 @@
-Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
+Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com [209.85.217.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 808931C27
-	for <regressions@lists.linux.dev>; Sat,  5 Aug 2023 01:42:37 +0000 (UTC)
-Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-583c48a9aa1so30580607b3.1
-        for <regressions@lists.linux.dev>; Fri, 04 Aug 2023 18:42:37 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F32431FA5
+	for <regressions@lists.linux.dev>; Sat,  5 Aug 2023 06:57:14 +0000 (UTC)
+Received: by mail-vs1-f47.google.com with SMTP id ada2fe7eead31-44781abd5a8so1244196137.1
+        for <regressions@lists.linux.dev>; Fri, 04 Aug 2023 23:57:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1691199756; x=1691804556;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+rSm29+3cw5ZqZkXj3qFSUuwbm7CIlxZaN5vcndHFEY=;
-        b=plN7LmsfHyvXpPp/HAgS7nXgIXteE8264IDa/o2tjDOX8unsmYk7EojQmTU5cUe+jV
-         cjliykudifFvc7dLk6/DwgOH7+9X4MDhzMIsMQm/onYSQqKdwNZX8UqVTYKuJYl6Ha+O
-         9WZhXR18J7XAaXbGAAwEXZ6ix0+UBKlzsTvo5jb05KSoRLL7qXvNBl5pNC1d6tXmVHMW
-         SXIZLO8BP/DYmu5uEYaOUv39DLoLQlpwPV7BHp0dSXWIa4usOAk1N8w9mKX5V2IkcGwp
-         8LnltCq2ELwZcpwu4a4wWAkmF+JXVmG8o9gLjlgrYUu/NaekCF94WvOvLo4XO9zaSpD4
-         kw3g==
+        d=draconx-ca.20221208.gappssmtp.com; s=20221208; t=1691218633; x=1691823433;
+        h=cc:to:subject:message-id:date:from:references:in-reply-to
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=GakJ4004HfKzStoDWvRep5JehYxyKkuk704LbpteieY=;
+        b=iXBxP50Z/hxP49Fr1mP4ijKIdFt/Wca0mrpbiwcgNitt4mM0w/27tDndE7fedOi+fV
+         X8RBY/eFIIrVU0tcQ9uiBw7+rvw7bzf8kgcCLHginYB6tqEfTm6Hmp4EGx4/qYsZrf+b
+         vUfqarqvWrTEH5wemNLD7aGkB1zWAZxLI4HB+4emq7fYwEKSQ6EzliqIFDx8AM8zl5p9
+         guEdKZZ0/o3Sq4G0XPzmD2VVAD1qd4XsbRr2J+OftEDTAoKUehZeLxpQcHrYPdK1KzIL
+         c/IxVaztYohQe7k8/+dHV/jeLdE6BdKTD/pcBCLgi5TlR70HI0frWYUogaQh+PN5Ch5c
+         nY2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691199756; x=1691804556;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+rSm29+3cw5ZqZkXj3qFSUuwbm7CIlxZaN5vcndHFEY=;
-        b=f1Ia4EPvRDxtkSwjLAvIW4BdkSzIaHESzW1Oa5wjp6ndumajC85TPIZkyjBbsHZyFs
-         2hq3VOmxx199lTbg5n28mlw9c7T9RKjhaOL3nkKhsR2EALBHflR+8HDAY40n1Znw6Q2j
-         MoS0uKT4UndBG/Rhd0HgjqXFy8gCjApvO1GQmEH2mLNbGTM2Mgn29M5zQ/tj2U3WCnHP
-         2dDOj5is7IRGuRfsbdb1B9xI8rnEM1+zQcY6De4KAgudXsa/EsNOw+6z2P7yabRXLjOn
-         SKU3rOOoKW5yoAGaoaXUTZcjsCiOVaCeihX/058OsBYtkbcA1vYgpoTdgKFLfHHedcfH
-         ky6A==
-X-Gm-Message-State: AOJu0Yy8Id6t8hlx10+VefpTyfHlrxFfN38mC23fJs9c/FxISHYeSi4A
-	jy88rYxxuT8QG6TFjnDQpV0ISRVVZcaLL9cnxUf8Ug==
-X-Google-Smtp-Source: AGHT+IG/HG+1FkEX7JGdDxDWOldixEM0zkMBonCbqf9PfeycEQrUJ/6TiOpqPkR0mOG06UahG1Vw84tdIhU/dMHaqDg=
-X-Received: by 2002:a0d:db41:0:b0:570:2568:15e with SMTP id
- d62-20020a0ddb41000000b005702568015emr3945027ywe.43.1691199756040; Fri, 04
- Aug 2023 18:42:36 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1691218633; x=1691823433;
+        h=cc:to:subject:message-id:date:from:references:in-reply-to
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=GakJ4004HfKzStoDWvRep5JehYxyKkuk704LbpteieY=;
+        b=CPb1sEFHmYiAsdhssALOCa+BoukfctqI439j1LvXGwFX3j+mYpBb+JoMLG0sbOtIN4
+         ZCIMCbWKCzg5jeqlBTC0XEWqvROR5SeJHgGZheU6pcmnMbFVMjwoswNllIn/Buy4dmNF
+         nZBkLGv2xAQOo+68AkCNP26JtDYuvbkJKMJ7tAmAFj38iyFrxxJj0hx8hbDhhuOIZSee
+         LGZvVTs5bC7I16wiyrgJly0jnqHPRSFxrnCaRKxxpavbMdyFFb0PNXUkIeoemSruUMl4
+         IxBz0yG3SVbBFNHtpTO6bBtFwoaE4k0VH4JJb9GAIfNnNKhRkz2Rywwy4sl02T0vHurn
+         AOOA==
+X-Gm-Message-State: AOJu0YyH9/KzbHYyCrpixOSfWZ8PgPE+Gm7A18mAqwqQOAyciTT7tclc
+	8AbgH+vhxa0PggauwxaMU7uZiXLfgC0OTMGi/TIstw==
+X-Google-Smtp-Source: AGHT+IGJSssBp6wvD/ScMXX2ZJ5l6Cgn5Cbf4aMBixrBRvq30NTEpF11cjhncxgjo4CIKM5TaJkCDGafT0aOC6Zh/tA=
+X-Received: by 2002:a1f:bf0e:0:b0:487:177a:d0f8 with SMTP id
+ p14-20020a1fbf0e000000b00487177ad0f8mr2419082vkf.1.1691218633382; Fri, 04 Aug
+ 2023 23:57:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230708191212.4147700-1-surenb@google.com> <20230708191212.4147700-3-surenb@google.com>
- <20230804214620.btgwhsszsd7rh6nf@f> <CAHk-=wiy125k1dBmQFTGpHwiOqEyrD6xnd4xKWfe97H_HodgDA@mail.gmail.com>
- <CAGudoHFsAU_BDCOuz8UgDBLGEM8xg=aUGjaVoqkM_Zvxo2Re_g@mail.gmail.com>
- <CAHk-=wiG9xaVvBJXHqTxtop0=mW9KxPS9C54ED23p59VNEKdWg@mail.gmail.com> <CAGudoHFsxmiezZREyVkrPYBBij3u9SNaxLWipOOPy5S+5pJcZA@mail.gmail.com>
-In-Reply-To: <CAGudoHFsxmiezZREyVkrPYBBij3u9SNaxLWipOOPy5S+5pJcZA@mail.gmail.com>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Fri, 4 Aug 2023 18:42:23 -0700
-Message-ID: <CAJuCfpE6K6x7EKAr2rtW1Gn+1oht6w2qZSZ2bGATfoe8C8fJhA@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] fork: lock VMAs of the parent process when forking
-To: Mateusz Guzik <mjguzik@gmail.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, akpm@linux-foundation.org, 
-	regressions@leemhuis.info, bagasdotme@gmail.com, jacobly.alt@gmail.com, 
-	willy@infradead.org, liam.howlett@oracle.com, david@redhat.com, 
-	peterx@redhat.com, ldufour@linux.ibm.com, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org, 
-	linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org, 
-	regressions@lists.linux.dev, Jiri Slaby <jirislaby@kernel.org>, 
-	=?UTF-8?Q?Holger_Hoffst=C3=A4tte?= <holger@applied-asynchrony.com>, 
-	stable@vger.kernel.org
+Received: by 2002:ab0:6209:0:b0:794:1113:bb24 with HTTP; Fri, 4 Aug 2023
+ 23:57:12 -0700 (PDT)
+X-Originating-IP: [24.53.241.2]
+In-Reply-To: <ZM17VKzDBdm4uMNY@shell.armlinux.org.uk>
+References: <CADyTPEzqf8oQAPSFRWJLxAhd-WE4fX2zdoe9Vu6V9hZMn1Yc8g@mail.gmail.com>
+ <CAL_JsqLrErF__GGHfanRFCpfbOh6fvz4-aJv32h8OfDjUeZPSg@mail.gmail.com>
+ <CADyTPEwgG0=R_b5DNBP0J0auDXu2BNTOwkSUFg-s7pLJUPC+Tg@mail.gmail.com>
+ <CADyTPExgjcaUeKiR108geQhr0KwFC0A8qa_n_ST2RxhbSczomQ@mail.gmail.com>
+ <CAL_Jsq+N2W0hVN7fUC1rxGL-Hw9B8eQvLgSwyQ3n41kqwDbxyg@mail.gmail.com>
+ <CADyTPEyT4NJPrChtvtY=_GePZNeSDRAr9j3KRAk1hkjD=5+i8A@mail.gmail.com>
+ <CAL_JsqKGAFtwB+TWc1yKAe_0M4BziEpFnApuWuR3h+Go_=djFg@mail.gmail.com>
+ <CADyTPEwY4ydUKGtGNayf+iQSqRVBQncLiv0TpO9QivBVrmOc4g@mail.gmail.com> <ZM17VKzDBdm4uMNY@shell.armlinux.org.uk>
+From: Nick Bowler <nbowler@draconx.ca>
+Date: Sat, 5 Aug 2023 02:57:12 -0400
+Message-ID: <CADyTPEyqG7D-_iuo+5WFGhhidK7p_fmvDhbgz05xogSU042Uag@mail.gmail.com>
+Subject: Re: PROBLEM: Broken or delayed ethernet on Xilinx ZCU104 since 5.18 (regression)
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, 
+	regressions@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Aug 4, 2023 at 6:06=E2=80=AFPM Mateusz Guzik <mjguzik@gmail.com> wr=
-ote:
+On 2023-08-04, Russell King (Oracle) <linux@armlinux.org.uk> wrote:
+> I think we need to rewind a tad.
 >
-> On 8/5/23, Linus Torvalds <torvalds@linux-foundation.org> wrote:
-> > On Fri, 4 Aug 2023 at 16:25, Mateusz Guzik <mjguzik@gmail.com> wrote:
-> >>
-> >> I know of these guys, I think they are excluded as is -- they go
-> >> through access_remote_vm, starting with:
-> >>         if (mmap_read_lock_killable(mm))
-> >>                 return 0;
-> >>
-> >> while dup_mmap already write locks the parent's mm.
-> >
-> > Oh, you're only worried about vma_start_write()?
-> >
-> > That's a non-issue. It doesn't take the lock normally, since it starts =
-off
-> > with
-> >
-> >         if (__is_vma_write_locked(vma, &mm_lock_seq))
-> >                 return;
-> >
-> > which catches on the lock sequence number already being set.
-> >
-> > So no extra locking there.
-> >
-> > Well, technically there's extra locking because the code stupidly
-> > doesn't initialize new vma allocations to the right sequence number,
-> > but that was talked about here:
-> >
-> >
-> > https://lore.kernel.org/all/CAHk-=3DwiCrWAoEesBuoGoqqufvesicbGp3cX0LyKg=
-EvsFaZNpDA@mail.gmail.com/
-> >
-> > and it's a separate issue.
-> >
->
-> I'm going to bet one beer this is the issue.
->
-> The patch I'm responding to only consists of adding the call to
-> vma_start_write and claims the 5% slowdown from it, while fixing
-> crashes if the forking process is multithreaded.
->
-> For the fix to work it has to lock something against the parent.
->
->         VMA_ITERATOR(old_vmi, oldmm, 0);
-> [..]
->         for_each_vma(old_vmi, mpnt) {
-> [..]
->                 vma_start_write(mpnt);
->
-> the added line locks an obj in the parent's vm space.
->
-> The problem you linked looks like pessimization for freshly allocated
-> vmas, but that's what is being operated on here.
+> My understanding is that this uses the Cadence macb driver.
 
-Sorry, now I'm having trouble understanding the problem you are
-describing. We are locking the parent's vma before copying it and the
-newly created vma is locked before it's added into the vma tree. What
-is the problem then?
+Correct.
 
+> In your original message, you said that the ethernet driver wasn't
+> being bound to the driver.
+[...]
+> So, I think that the deferred probing has nothing to do with PHYs, and
+> that's just a wild goose chase.
 >
-> --
-> Mateusz Guzik <mjguzik gmail.com>
+> I think instead we need to be concentrating on what's going on with
+> the ethernet driver, and why the ethernet driver is deferring its
+> probe. Is macb_probe() getting called at all?
+
+I added some prints to the driver.  The macb_probe is called five times
+on this one device initially at boot, then ten seconds later it is
+called one last time, returning -EPROBE_DEFER each time.
+
+> How far through macb_probe() do we get before we defer?
+
+The result is the same for all six calls.  The macb_mdiobus_register
+function returns -EPROBE_DEFER, which comes from the topmost call
+to of_mdiobus_register within that function.  That is, this is the
+part that returns -EPROBE_DEFER:
+
+	child = of_get_child_by_name(np, "mdio");
+	if (child) {
+		int ret = of_mdiobus_register(bp->mii_bus, child);
+
+		of_node_put(child);
+		return ret;
+	}
+
+> I think those are the key questions that need answering.
+>
+> Maybe, if you can get access to the machine while the driver is
+> deferring, /sys/kernel/debug/devices_deferred might give some
+> useful information, but that's just a hope.
+
+This just contains one line:
+
+  ff0e0000.ethernet
+
+which is the name of the ethernet device that is not working.
+
+Thanks,
+  Nick
