@@ -1,56 +1,66 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1857A1FDD
-	for <regressions@lists.linux.dev>; Sat,  5 Aug 2023 07:25:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=Xez5f813ZkGpJ9nnfDVitRCP7/A75yJ6R1BQz4vgmBo=; b=Qn7QBoeVit7h+ZkGV7/BSu6coy
-	7btBZ9P/k7MTM8+UDhemjclBCDWPiMT3mpSk/eY6bxnkFS4dIbkO2VyriHVI5PaTWIZ5ctgZHCKqT
-	bhLrC1GFGTgReFo4yxVUQpqkoNJ/2IjJHKcuyqU/51YSpqwtdotrPBC6hJtujE4CVzC0=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1qSBf9-003AfK-M5; Sat, 05 Aug 2023 09:25:23 +0200
-Date: Sat, 5 Aug 2023 09:25:23 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Nick Bowler <nbowler@draconx.ca>
-Cc: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	netdev@vger.kernel.org, regressions@lists.linux.dev
-Subject: Re: PROBLEM: Broken or delayed ethernet on Xilinx ZCU104 since 5.18
- (regression)
-Message-ID: <c38e208b-4ffa-4310-ae00-412447fc4269@lunn.ch>
-References: <CADyTPEzqf8oQAPSFRWJLxAhd-WE4fX2zdoe9Vu6V9hZMn1Yc8g@mail.gmail.com>
- <CAL_JsqLrErF__GGHfanRFCpfbOh6fvz4-aJv32h8OfDjUeZPSg@mail.gmail.com>
- <CADyTPEwgG0=R_b5DNBP0J0auDXu2BNTOwkSUFg-s7pLJUPC+Tg@mail.gmail.com>
- <CADyTPExgjcaUeKiR108geQhr0KwFC0A8qa_n_ST2RxhbSczomQ@mail.gmail.com>
- <CAL_Jsq+N2W0hVN7fUC1rxGL-Hw9B8eQvLgSwyQ3n41kqwDbxyg@mail.gmail.com>
- <CADyTPEyT4NJPrChtvtY=_GePZNeSDRAr9j3KRAk1hkjD=5+i8A@mail.gmail.com>
- <CAL_JsqKGAFtwB+TWc1yKAe_0M4BziEpFnApuWuR3h+Go_=djFg@mail.gmail.com>
- <CADyTPEwY4ydUKGtGNayf+iQSqRVBQncLiv0TpO9QivBVrmOc4g@mail.gmail.com>
- <173b1b67-7f5a-4e74-a2e7-5c70e57ecae5@lunn.ch>
- <CADyTPExypWjMW2PF0EfSFc+vvdzRtNEi_H0p3S-mw1BNWyq6VQ@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 319C81FDD
+	for <regressions@lists.linux.dev>; Sat,  5 Aug 2023 07:31:22 +0000 (UTC)
+Received: from [192.168.0.2] (ip5f5aefd9.dynamic.kabel-deutschland.de [95.90.239.217])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: pmenzel)
+	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 752DC61E5FE06;
+	Sat,  5 Aug 2023 09:31:10 +0200 (CEST)
+Message-ID: <47e6ab77-e1dd-4ede-b75d-f484b2593395@molgen.mpg.de>
+Date: Sat, 5 Aug 2023 09:31:08 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CADyTPExypWjMW2PF0EfSFc+vvdzRtNEi_H0p3S-mw1BNWyq6VQ@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: regression: kernel 6.4.x breaks scanning/pairing (but not use) of
+ LE devices
+To: Bruno Pitrus <brunopitrus@hotmail.com>
+References: <2300626.ElGaqSPkdT@bruno-beit>
+Content-Language: en-US
+Cc: linux-bluetooth@vger.kernel.org, regressions@lists.linux.dev,
+ Takashi Iwai <tiwai@suse.de>
+From: Paul Menzel <pmenzel@molgen.mpg.de>
+In-Reply-To: <2300626.ElGaqSPkdT@bruno-beit>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-> > It was also commented out before that change. It could be that gpio
-> > controller is missing. Do you have the driver for the tca6416 in
-> > your kernel configuration?
+[Cc: +regressions@]
+
+#regzbot introduced v6.3.9..v6.4.2
+
+Dear Bruno,
+
+
+Thank you for your report.
+
+Am 04.08.23 um 20:55 schrieb Bruno Pitrus:
+> I am using openSUSE Tumbleweed on a Dell Precision 3551 which has a
+> bluetooth adapter of ID 8087:0026 (Intel AX201). I am using a
+> Logitech M575 trackball mouse which only supports Bluetooth LE.
 > 
-> I have CONFIG_GPIO_PCA953X=y which I think is the correct driver?
+> With kernel 6.4.2 or newer, scanning for devices — using either the
+> KDE gui or bluetoothctl — most of the time returns only “classic
+> bluetooth” devices like computers and phones, and not the mouse. If
+> the mouse was paired before, it works correctly however.
+> 
+> With previous kernel versions (6.3.9 and before), pairing the mouse
+> worked correctly.
 
-It does appear to be the correct driver. But check if it has
-loaded. It is an i2c device, so maybe you are missing the I2C bus
-master device?
+Are you able to bisect the regression? Please also attach the Linux 
+messages. (You can also create a ticket in the Linux kernel Bugzilla [1] 
+and attach everything there.)
 
-       Andrew
+
+Kind regards,
+
+Paul
+
+
+[1]: https://bugzilla.kernel.org/
