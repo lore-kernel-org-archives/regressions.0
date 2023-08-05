@@ -1,40 +1,40 @@
-Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
+Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE29E7E2
-	for <regressions@lists.linux.dev>; Sat,  5 Aug 2023 01:36:48 +0000 (UTC)
-Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-d414540af6bso2168414276.2
-        for <regressions@lists.linux.dev>; Fri, 04 Aug 2023 18:36:48 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 808931C27
+	for <regressions@lists.linux.dev>; Sat,  5 Aug 2023 01:42:37 +0000 (UTC)
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-583c48a9aa1so30580607b3.1
+        for <regressions@lists.linux.dev>; Fri, 04 Aug 2023 18:42:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1691199407; x=1691804207;
+        d=google.com; s=20221208; t=1691199756; x=1691804556;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=AujeCo6jm3AYe4qZ6y6dt+l/y9fmf46ls+zy0ks6uBk=;
-        b=bpswymm8/aHd6mYtUujhG2QErdghxkdOBUSisUuXISL43iBt5anSiCY7npzyoUiEp/
-         2r0DThfOtkG+yPEzC58xZLlele5B03sILA+y2PDwjAPMcXtkwUcFy5lrcWm18fIezCd2
-         TvTlOQPRw7trWWi7TFwzUQOVcXl3hZGoUY/y3/OIyQgS+g5h8gNRs0QcE+lMY/pkkoXy
-         Ns1q4mZuMDjIYZNsw7vuvEEABh4IA+p+ZsHCspKeMOXHkfvzh6yntnLUxWpgnw8t77Vi
-         bBEHLKcSkpQzi5wly6AOeCVeTC0b886H1B0C1idctkdvu2YXbxSIRxaC+odXZzrzeWAu
-         h22w==
+        bh=+rSm29+3cw5ZqZkXj3qFSUuwbm7CIlxZaN5vcndHFEY=;
+        b=plN7LmsfHyvXpPp/HAgS7nXgIXteE8264IDa/o2tjDOX8unsmYk7EojQmTU5cUe+jV
+         cjliykudifFvc7dLk6/DwgOH7+9X4MDhzMIsMQm/onYSQqKdwNZX8UqVTYKuJYl6Ha+O
+         9WZhXR18J7XAaXbGAAwEXZ6ix0+UBKlzsTvo5jb05KSoRLL7qXvNBl5pNC1d6tXmVHMW
+         SXIZLO8BP/DYmu5uEYaOUv39DLoLQlpwPV7BHp0dSXWIa4usOAk1N8w9mKX5V2IkcGwp
+         8LnltCq2ELwZcpwu4a4wWAkmF+JXVmG8o9gLjlgrYUu/NaekCF94WvOvLo4XO9zaSpD4
+         kw3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691199407; x=1691804207;
+        d=1e100.net; s=20221208; t=1691199756; x=1691804556;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=AujeCo6jm3AYe4qZ6y6dt+l/y9fmf46ls+zy0ks6uBk=;
-        b=R7wfLFZG5KKmbj3BPJ0+uhPnVnYHNwESjyH3IKvTln6Gsiw6Bdl4KSf4gO+e2bK7mO
-         4Gebd6Zy+MvjNFlXJm1OSXu3kgmMfuu02n6HXKRv3yvAbSc85uysSBep8Lhte60iiVAM
-         JNy0ROHmHMCSYYzEqYWmSHH8wY0fjBVPbibMsjs1pvbw6EyysT3pPYnspjPSw2QTDkYO
-         11ZiTqoFbVZcLYiHLySZRURlslVBE8/3ndlv1BCegmwwXXtMafd9Fq4Eam4kiSWa1TQV
-         uDTbiv6+dLGyQVIwZaod4M64q/Kk1OCGQVxfOsMkb8BMAyuZLEmLe7zbNqPVimaMwkv5
-         uk8Q==
-X-Gm-Message-State: AOJu0Yw16sORgCqZPJWCUB7HfmYULKbAAbppClZrTFRQDos0o7S7IEC2
-	lYvn407hvCg9ZB9en1fY96flTTAw+y4as59kcCdCWA==
-X-Google-Smtp-Source: AGHT+IFJHUDmRmfkaGOcYBONV1HYLRgCo/dnuTAMETxoZRKS9/hRI1iaTAV07Qp4qriq/KEZCcwC9+dZWAiPFh/72cs=
-X-Received: by 2002:a25:d08:0:b0:d1c:7549:4e8b with SMTP id
- 8-20020a250d08000000b00d1c75494e8bmr2986579ybn.29.1691199407388; Fri, 04 Aug
- 2023 18:36:47 -0700 (PDT)
+        bh=+rSm29+3cw5ZqZkXj3qFSUuwbm7CIlxZaN5vcndHFEY=;
+        b=f1Ia4EPvRDxtkSwjLAvIW4BdkSzIaHESzW1Oa5wjp6ndumajC85TPIZkyjBbsHZyFs
+         2hq3VOmxx199lTbg5n28mlw9c7T9RKjhaOL3nkKhsR2EALBHflR+8HDAY40n1Znw6Q2j
+         MoS0uKT4UndBG/Rhd0HgjqXFy8gCjApvO1GQmEH2mLNbGTM2Mgn29M5zQ/tj2U3WCnHP
+         2dDOj5is7IRGuRfsbdb1B9xI8rnEM1+zQcY6De4KAgudXsa/EsNOw+6z2P7yabRXLjOn
+         SKU3rOOoKW5yoAGaoaXUTZcjsCiOVaCeihX/058OsBYtkbcA1vYgpoTdgKFLfHHedcfH
+         ky6A==
+X-Gm-Message-State: AOJu0Yy8Id6t8hlx10+VefpTyfHlrxFfN38mC23fJs9c/FxISHYeSi4A
+	jy88rYxxuT8QG6TFjnDQpV0ISRVVZcaLL9cnxUf8Ug==
+X-Google-Smtp-Source: AGHT+IG/HG+1FkEX7JGdDxDWOldixEM0zkMBonCbqf9PfeycEQrUJ/6TiOpqPkR0mOG06UahG1Vw84tdIhU/dMHaqDg=
+X-Received: by 2002:a0d:db41:0:b0:570:2568:15e with SMTP id
+ d62-20020a0ddb41000000b005702568015emr3945027ywe.43.1691199756040; Fri, 04
+ Aug 2023 18:42:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -44,15 +44,11 @@ MIME-Version: 1.0
 References: <20230708191212.4147700-1-surenb@google.com> <20230708191212.4147700-3-surenb@google.com>
  <20230804214620.btgwhsszsd7rh6nf@f> <CAHk-=wiy125k1dBmQFTGpHwiOqEyrD6xnd4xKWfe97H_HodgDA@mail.gmail.com>
  <CAGudoHFsAU_BDCOuz8UgDBLGEM8xg=aUGjaVoqkM_Zvxo2Re_g@mail.gmail.com>
- <CAHk-=wiG9xaVvBJXHqTxtop0=mW9KxPS9C54ED23p59VNEKdWg@mail.gmail.com>
- <CAJuCfpGWGsh2BRgwcJ7oVHnqZfrtiesvhzomK0ZmxE_KK=R7FA@mail.gmail.com>
- <CAJuCfpG6BBP+fjV9oyBx3SNiKhiafPzM9vV9bx_goO2aZzAptg@mail.gmail.com>
- <CAGudoHFrDG6-u-XXEmQoPS2CJ2Wpo4ETwhXc2R=jy78RSYw-Zg@mail.gmail.com>
- <CAJuCfpHYBqULvwNELO3Gkc0bkKDV7VJxMjvBru4zaAz4WKQNhw@mail.gmail.com> <CAGudoHGm2hbjSG-2kJevF=xGpz=4Sd0m5CjVO8Ntsahqz5NcGA@mail.gmail.com>
-In-Reply-To: <CAGudoHGm2hbjSG-2kJevF=xGpz=4Sd0m5CjVO8Ntsahqz5NcGA@mail.gmail.com>
+ <CAHk-=wiG9xaVvBJXHqTxtop0=mW9KxPS9C54ED23p59VNEKdWg@mail.gmail.com> <CAGudoHFsxmiezZREyVkrPYBBij3u9SNaxLWipOOPy5S+5pJcZA@mail.gmail.com>
+In-Reply-To: <CAGudoHFsxmiezZREyVkrPYBBij3u9SNaxLWipOOPy5S+5pJcZA@mail.gmail.com>
 From: Suren Baghdasaryan <surenb@google.com>
-Date: Fri, 4 Aug 2023 18:36:34 -0700
-Message-ID: <CAJuCfpH0tG8n5AUOqxOnKgXR_ge7rU4dpW3aw0hjOUN99+WXTw@mail.gmail.com>
+Date: Fri, 4 Aug 2023 18:42:23 -0700
+Message-ID: <CAJuCfpE6K6x7EKAr2rtW1Gn+1oht6w2qZSZ2bGATfoe8C8fJhA@mail.gmail.com>
 Subject: Re: [PATCH v2 3/3] fork: lock VMAs of the parent process when forking
 To: Mateusz Guzik <mjguzik@gmail.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>, akpm@linux-foundation.org, 
@@ -67,53 +63,66 @@ Cc: Linus Torvalds <torvalds@linux-foundation.org>, akpm@linux-foundation.org,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Aug 4, 2023 at 6:17=E2=80=AFPM Mateusz Guzik <mjguzik@gmail.com> wr=
+On Fri, Aug 4, 2023 at 6:06=E2=80=AFPM Mateusz Guzik <mjguzik@gmail.com> wr=
 ote:
 >
-> On 8/5/23, Suren Baghdasaryan <surenb@google.com> wrote:
-> > On Fri, Aug 4, 2023 at 5:49=E2=80=AFPM Mateusz Guzik <mjguzik@gmail.com=
-> wrote:
-> >> However, the other users (that I know of ) go through the mmap
-> >> semaphore to mess with anything which means they will wait for
-> >> dup_mmap to finish (or do their work first). I would be surprised if
-> >> there were any cases which don't take the semaphore, given that it was
-> >> a requirement prior to the vma patchset (unless you patched some to no
-> >> longer need it?). I would guess worst case the semaphore can be added
-> >> if missing.
+> On 8/5/23, Linus Torvalds <torvalds@linux-foundation.org> wrote:
+> > On Fri, 4 Aug 2023 at 16:25, Mateusz Guzik <mjguzik@gmail.com> wrote:
+> >>
+> >> I know of these guys, I think they are excluded as is -- they go
+> >> through access_remote_vm, starting with:
+> >>         if (mmap_read_lock_killable(mm))
+> >>                 return 0;
+> >>
+> >> while dup_mmap already write locks the parent's mm.
 > >
-> > No, the only mmap_lock read-lock that is affected is during the page
-> > fault, which is expected.
+> > Oh, you're only worried about vma_start_write()?
+> >
+> > That's a non-issue. It doesn't take the lock normally, since it starts =
+off
+> > with
+> >
+> >         if (__is_vma_write_locked(vma, &mm_lock_seq))
+> >                 return;
+> >
+> > which catches on the lock sequence number already being set.
+> >
+> > So no extra locking there.
+> >
+> > Well, technically there's extra locking because the code stupidly
+> > doesn't initialize new vma allocations to the right sequence number,
+> > but that was talked about here:
+> >
+> >
+> > https://lore.kernel.org/all/CAHk-=3DwiCrWAoEesBuoGoqqufvesicbGp3cX0LyKg=
+EvsFaZNpDA@mail.gmail.com/
+> >
+> > and it's a separate issue.
 > >
 >
-> I have difficulty parsing your statement.
+> I'm going to bet one beer this is the issue.
+>
+> The patch I'm responding to only consists of adding the call to
+> vma_start_write and claims the 5% slowdown from it, while fixing
+> crashes if the forking process is multithreaded.
+>
+> For the fix to work it has to lock something against the parent.
+>
+>         VMA_ITERATOR(old_vmi, oldmm, 0);
+> [..]
+>         for_each_vma(old_vmi, mpnt) {
+> [..]
+>                 vma_start_write(mpnt);
+>
+> the added line locks an obj in the parent's vm space.
+>
+> The problem you linked looks like pessimization for freshly allocated
+> vmas, but that's what is being operated on here.
 
-I was just saying that vma lock patchset did not touch any other
-mmap_locking paths except for the page fault one where we try to skip
-read-locking mmap_lock.
-
->
-> I am saying that any 3rd parties which can trigger page faults already
-> read lock mmap_lock or can be made to do it (and I don't know any case
-> which does not already, but I'm not willing to spend time poking
-> around to make sure). One can consider 3rd parties as not a problem,
-> modulo the audit.
->
-> Past that there does is no known source of trouble? In my original
-> e-mail I was worried about processes up the chain in ancestry, perhaps
-> some of the state is shared(?) and the locking at hand neuters any
-> problems. I'm guessing this is not necessary.
->
-> Bottom line though it looks like this will work fine?
->
-> That said, I'm not going to submit a patch I can't confidently defend.
-> As I did not dig into any of the VMA code and can't be arsed to audit
-> all places which mess with "foreign" mm, I'm definitely not submitting
-> this myself. You are most welcome to write your own variant at your
-> leisure. :)
-
-Ok, I see. I'll need to double check locking when a 3rd party is
-involved. Will post a patch when I'm confident enough it's safe.
-Thanks!
+Sorry, now I'm having trouble understanding the problem you are
+describing. We are locking the parent's vma before copying it and the
+newly created vma is locked before it's added into the vma tree. What
+is the problem then?
 
 >
 > --
