@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D80E68F6F
-	for <regressions@lists.linux.dev>; Sat,  5 Aug 2023 12:16:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DE4F8F6F
+	for <regressions@lists.linux.dev>; Sat,  5 Aug 2023 13:04:27 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qSGCt-0000Dd-FE; Sat, 05 Aug 2023 14:16:31 +0200
-Message-ID: <7d4707fa-4161-865f-2445-675be6d70ddb@leemhuis.info>
-Date: Sat, 5 Aug 2023 14:16:30 +0200
+	id 1qSGx9-0006Nn-V8; Sat, 05 Aug 2023 15:04:20 +0200
+Message-ID: <0ca063c6-eaa2-0123-21cb-65d4a33550f4@leemhuis.info>
+Date: Sat, 5 Aug 2023 15:04:19 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -15,43 +15,70 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: XFS metadata CRC errors on zram block device on ppc64le
- architecture
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Re: [PATCH] crypto: caam - adjust RNG timing to support more devices
 Content-Language: en-US, de-DE
-From: "Linux regression tracking #update (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-To: linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+To: Bastian Krause <bst@pengutronix.de>, meenakshi.aggarwal@nxp.com,
+ horia.geanta@nxp.com, V.sethi@nxp.com, pankaj.gupta@nxp.com,
+ gaurav.jain@nxp.com, herbert@gondor.apana.org.au, davem@davemloft.net,
+ linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Victoria Milhoan <vicki.milhoan@freescale.com>,
+ Dan Douglass <dan.douglass@nxp.com>, Vipul Kumar <vipul_kumar@mentor.com>,
+ kernel@pengutronix.de,
  Linux kernel regressions list <regressions@lists.linux.dev>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-References: <b2d40565-7868-ba15-4bb1-fca6f0df076b@dustymabe.com>
- <ef208002-2978-f92e-0dd0-ba20369005fb@leemhuis.info>
-In-Reply-To: <ef208002-2978-f92e-0dd0-ba20369005fb@leemhuis.info>
+References: <20230612082615.1255357-1-meenakshi.aggarwal@nxp.com>
+ <e1f3f073-9d5e-1bae-f4f8-08dc48adad62@pengutronix.de>
+From: "Linux regression tracking #adding (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+In-Reply-To: <e1f3f073-9d5e-1bae-f4f8-08dc48adad62@pengutronix.de>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1691237793;8383ff11;
-X-HE-SMSGID: 1qSGCt-0000Dd-FE
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1691240667;0642b2c4;
+X-HE-SMSGID: 1qSGx9-0006Nn-V8
 
-[TLDR: This mail in primarily relevant for Linux regression tracking. A
-change or fix related to the regression discussed in this thread was
-posted or applied, but it did not use a Closes: tag to point to the
-report, as Linus and the documentation call for. Things happen, no
-worries -- but now the regression tracking bot needs to be told manually
-about the fix. See link in footer if these mails annoy you.]
+[CCing the regression list, as it should be in the loop for regressions:
+https://docs.kernel.org/admin-guide/reporting-regressions.html]
 
-On 04.08.23 18:22, Linux regression tracking #adding (Thorsten Leemhuis)
-wrote:
+[TLDR: I'm adding this report to the list of tracked Linux kernel
+regressions; the text you find below is based on a few templates
+paragraphs you might have encountered already in similar form.
+See link in footer if these mails annoy you.]
 
-> On 02.08.23 05:31, Dusty Mabe wrote:
->> In Fedora CoreOS we found an issue with an interaction of an XFS filesystem on a zram block device on ppc64le:
+On 17.07.23 14:43, Bastian Krause wrote:
+> On 6/12/23 10:26, meenakshi.aggarwal@nxp.com wrote:
+>> From: Victoria Milhoan <vicki.milhoan@freescale.com>
 >>
->> - https://github.com/coreos/fedora-coreos-tracker/issues/1489
->> - https://bugzilla.redhat.com/show_bug.cgi?id=2221314
+>> Adjust RNG timing parameters to support more i.MX6 devices.
+>>
+>> Signed-off-by: Victoria Milhoan <vicki.milhoan@freescale.com>
+>> Signed-off-by: Dan Douglass <dan.douglass@nxp.com>
+>> Signed-off-by: Vipul Kumar <vipul_kumar@mentor.com>
+>> Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
+>> ---
+>>   drivers/crypto/caam/ctrl.c | 4 ++--
+>>   1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> This patch seems to breaks CAAM RNG instantiation on an i.MX8MM at my end:
+> [...]
 
-#regzbot monitor:
-https://lore.kernel.org/all/20230805055537.147835-1-hch@lst.de/
-#regzbot fix: zram: take device and not only bvec offset into account
+Thanks for the report. I see that people are working on it already. But
+to be sure the issue doesn't fall through the cracks unnoticed, I'm
+adding it to regzbot, the Linux kernel regression tracking bot:
+
+#regzbot ^introduced ef492d08030
+#regzbot title crypto: broke CAAM RNG instantiation on an i.MX8MM
 #regzbot ignore-activity
+
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply and tell me -- ideally
+while also telling regzbot about it, as explained by the page listed in
+the footer of this mail.
+
+Developers: When fixing the issue, remember to add 'Link:' tags pointing
+to the report (the parent of this mail). See page linked in footer for
+details.
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
