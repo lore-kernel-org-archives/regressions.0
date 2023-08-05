@@ -1,88 +1,61 @@
-Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [81.169.146.167])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 599CD23A2
-	for <regressions@lists.linux.dev>; Sat,  5 Aug 2023 09:44:33 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; t=1691228664; cv=none;
-    d=strato.com; s=strato-dkim-0002;
-    b=k65bXpFg59UkmcwFt/FZzawuToBa6mWZK+5iwuRrYcLyHOmcLUJwG+Nxs3uP0AOB/n
-    ZTyfrVwrR1T0Z8xyT44lTxLcpzRqBuWCgQWXv9lMAYRgyL6yd1Yy+izLn7JBnmm1g9Zg
-    7UJ2VrTRarHxVwYBqErte555diOYRxq18a+goGLih9k6MfVTRnt0AA/OsxQIHCPSOvpQ
-    BIANJ+sc5jYykbYw73HT3A4lF/jHl7cozjCNgktdU3PmFTvOHGwbStJ+f/422IFE/aUF
-    EtgNIxgqS0utbab2pE82S/u44w3OnvZDi9vgAc/kbAVXsOsJNlpJ6Wt4Z5ZiZz710ECm
-    1w+Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1691228664;
-    s=strato-dkim-0002; d=strato.com;
-    h=References:Message-ID:In-Reply-To:Subject:cc:To:From:Date:Cc:Date:
-    From:Subject:Sender;
-    bh=GjUjP+DGWGUn/BiSDuX2B6VLpikBHTUWFpI5Xmu0UTA=;
-    b=lGmi7VIe156KxIzW6uKdWZWWY0empbUZyPMOyvlH/rKs0s31Um20hgMQXGkeDJE29H
-    g6kAe2hklgQ3M2k4EUl1zIviMzYLPbfx5SqQ6KvBmnqG3RB53GwSnkkUE1ApTtukF3d5
-    TeJyz2HoMmn2RIUdNagrvhW/Rw+ocyyN91m+gnZLo2ixE4FPGbeQK5NRy7IEfBk2ePTK
-    J65cQlL4vX+h6qkPRzyYwHdqopKbA0Iop0MBdU2l8sqjJGXjx3fr7h7U66EteneejoJ9
-    xlBaUzEzQm1YcQ6qFW/JglETWDWks4bhmAlcz/KhKkNFdDop/rSsYFAbDNgiDfE8g9oJ
-    SJXA==
-ARC-Authentication-Results: i=1; strato.com;
-    arc=none;
-    dkim=none
-X-RZG-CLASS-ID: mo01
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1691228664;
-    s=strato-dkim-0002; d=kravcenko.com;
-    h=References:Message-ID:In-Reply-To:Subject:cc:To:From:Date:Cc:Date:
-    From:Subject:Sender;
-    bh=GjUjP+DGWGUn/BiSDuX2B6VLpikBHTUWFpI5Xmu0UTA=;
-    b=L3psWUszTXjU+IowLlmpZHF4CMbvgXBrvdxRy8a6yLNrs46SmP9OsYVoUWILQOwx3J
-    F9kmQ3oc9hI99MthD2//X5ajLTJsQNMyQT8Wkaz/MvddII+IoaugBtumOJKP572ufOjN
-    vlXPvyU8MxYJoouBaf5GGuGqaZUWNeDPm+pAaADzWTLVNXlfoFwfGmKLniYCqyYcn1na
-    KGmKMmnc9ddadHIyi+Svu/Ji8nhwPmLmlwmDb7HKBwrLcPURmeq78V8IqP+o7oSJCRjR
-    lmkb0f+W/h/K5c5HnyGxlmmQw3BRpDXYgU2PKgNKjcLOELYzxz/RofiBN0uZd4/q3z15
-    +dYw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1691228664;
-    s=strato-dkim-0003; d=kravcenko.com;
-    h=References:Message-ID:In-Reply-To:Subject:cc:To:From:Date:Cc:Date:
-    From:Subject:Sender;
-    bh=GjUjP+DGWGUn/BiSDuX2B6VLpikBHTUWFpI5Xmu0UTA=;
-    b=TQp4xLYPqY1m2Az0TUmNocmSfPbvHUmVBzGK0RRhNesANRFj2jb7vFMwk1toD9cfFB
-    cTlfGiWfiPTRTC+tGzCw==
-X-RZG-AUTH: ":I2AFc2Cjaf5HiRB0lhnvZ9elhwku56KjVuxY6AZJWRy8C0aEhFGYVtZdsoywGOIVpSHY0o63PckPhiSO1IhQGG0mBjo18W4hBO/Ijw=="
-Received: from p200300c7f704d301468a5bfffe84f964.dip0.t-ipconnect.de
-    by smtp.strato.de (RZmta 49.6.6 AUTH)
-    with ESMTPSA id dd2654z759iNY7J
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-	(Client did not present a certificate);
-    Sat, 5 Aug 2023 11:44:23 +0200 (CEST)
-Date: Sat, 5 Aug 2023 11:44:22 +0200 (CEST)
-From: Olaf Skibbe <news@kravcenko.com>
-To: Karol Herbst <kherbst@redhat.com>
-cc: Thorsten Leemhuis <regressions@leemhuis.info>, 
-    dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org, 
-    1042753@bugs.debian.org, Ben Skeggs <bskeggs@redhat.com>, 
-    Lyude Paul <lyude@redhat.com>, 
-    Linux kernel regressions list <regressions@lists.linux.dev>, 
-    "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: nouveau bug in linux/6.1.38-2
-In-Reply-To: <CACO55tvq=GoPJZxouiTT0tty9A0fEeyS1uGjWLHjfJgq=VA4ug@mail.gmail.com>
-Message-ID: <3d58b37b-b6c2-7c4b-fa6b-3dac859dc20b@kravcenko.com>
-References: <20be6650-5db3-b72a-a7a8-5e817113cff5@kravcenko.com> <c27fb4dd-b2dc-22de-4425-6c7db5f543ba@leemhuis.info> <CACO55ttcUEUjdVgx4y7pv26VAGeHS5q1wVKWrMw5=o9QLaJLZw@mail.gmail.com> <977ac5b0-4ab8-7782-10e1-b4bee6b58030@kravcenko.com>
- <CACO55tvq=GoPJZxouiTT0tty9A0fEeyS1uGjWLHjfJgq=VA4ug@mail.gmail.com>
-User-Agent: Alpine 2.26 (DEB 649 2022-06-02)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D80E68F6F
+	for <regressions@lists.linux.dev>; Sat,  5 Aug 2023 12:16:33 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1qSGCt-0000Dd-FE; Sat, 05 Aug 2023 14:16:31 +0200
+Message-ID: <7d4707fa-4161-865f-2445-675be6d70ddb@leemhuis.info>
+Date: Sat, 5 Aug 2023 14:16:30 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: XFS metadata CRC errors on zram block device on ppc64le
+ architecture
+Content-Language: en-US, de-DE
+From: "Linux regression tracking #update (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+To: linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+References: <b2d40565-7868-ba15-4bb1-fca6f0df076b@dustymabe.com>
+ <ef208002-2978-f92e-0dd0-ba20369005fb@leemhuis.info>
+In-Reply-To: <ef208002-2978-f92e-0dd0-ba20369005fb@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1691237793;8383ff11;
+X-HE-SMSGID: 1qSGCt-0000Dd-FE
 
-On Sat, 5 Aug 2023 at 01:09, Karol Herbst wrote:
+[TLDR: This mail in primarily relevant for Linux regression tracking. A
+change or fix related to the regression discussed in this thread was
+posted or applied, but it did not use a Closes: tag to point to the
+report, as Linus and the documentation call for. Things happen, no
+worries -- but now the regression tracking bot needs to be told manually
+about the fix. See link in footer if these mails annoy you.]
 
-> Mind checking if instead of reverting the entire commit that this is
-> enough to fix it as well?
->
-> https://gitlab.freedesktop.org/karolherbst/nouveau/-/commit/f99ae069876f7ffeb6368da0381485e8c3adda43.patch
+On 04.08.23 18:22, Linux regression tracking #adding (Thorsten Leemhuis)
+wrote:
 
-This patch does fix the problem as well: Screen works.
+> On 02.08.23 05:31, Dusty Mabe wrote:
+>> In Fedora CoreOS we found an issue with an interaction of an XFS filesystem on a zram block device on ppc64le:
+>>
+>> - https://github.com/coreos/fedora-coreos-tracker/issues/1489
+>> - https://bugzilla.redhat.com/show_bug.cgi?id=2221314
 
-Cheers,
-Olaf
+#regzbot monitor:
+https://lore.kernel.org/all/20230805055537.147835-1-hch@lst.de/
+#regzbot fix: zram: take device and not only bvec offset into account
+#regzbot ignore-activity
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+That page also explains what to do if mails like this annoy you.
+
