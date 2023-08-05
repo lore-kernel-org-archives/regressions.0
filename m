@@ -1,123 +1,116 @@
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91A507E2
-	for <regressions@lists.linux.dev>; Sat,  5 Aug 2023 01:03:43 +0000 (UTC)
-Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-407db3e9669so57891cf.1
-        for <regressions@lists.linux.dev>; Fri, 04 Aug 2023 18:03:43 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D98FA7E2
+	for <regressions@lists.linux.dev>; Sat,  5 Aug 2023 01:06:14 +0000 (UTC)
+Received: by mail-ot1-f47.google.com with SMTP id 46e09a7af769-6b9defb36a2so2451341a34.2
+        for <regressions@lists.linux.dev>; Fri, 04 Aug 2023 18:06:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1691197422; x=1691802222;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=H+SuaTtMx9fDim3CvSX0GbYJTZyNduayXRPq9NXsUpY=;
-        b=xlaH5o/2Du//Lhkw+QJfIXnQDpGhOnhXk+WBTlLIsphjc5+zZda4bKm1edQX6vpIpm
-         ZQLJRUy4mOUWizuaWw9dgsBvC1KU1Sig9Cq6hvqTNYBxIzGAFYqDndcllDb4UURx5nEB
-         Qo5Jq4A1qOpfKC6QcVjQEGfeDKGwb2jn4x4aY/avzEZjx23mUyM9pL9sZsxPMfRP5sdh
-         gv+8GHwDJVdL0V0lIWMlidwirv62U8uZivM5xYu3nMLv1Ey6SFrn+zDaDA8dg6eecFbd
-         UhbIc/82/8hXA+BVfzSSUDJzAzSL70QiBANiCyKIhMN4RDRJKHymP+Ql/rHT7LC8T7Ci
-         RGUA==
+        d=gmail.com; s=20221208; t=1691197574; x=1691802374;
+        h=cc:to:subject:message-id:date:from:references:in-reply-to
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=5wLxtngQDf95laPzAr998ewYrpc6/LmQcNIxOteIueI=;
+        b=JWEJoBXO0UGnBg4xLdw9KEUhTH4lf77t4U6moAOmDX1C3WqbrVn5+P7FXQ8ajzo70m
+         3e/bt6Yn9H5A6cs+o19Z4C1zxcT4Et4m5abUWYZInQ1vxhkrUERvFXsImX2e/W3YpV0y
+         MJDLZNtb6Mz6g1WmggiYRNxAYKbjQPfE9Hl/4M9hLwFDdXJi166vWIcQYeRTPnhJJYOa
+         ijF8FYpFkp7oqHhWSIXvlxrG+UOuYO3wy+mJ2meE07tjEMkje7c42ME9yAweWkUXz+33
+         4uV3V8Ld4pJPhV1V1BINXfsLX3bscp/Uu7w4V/Rj3IlZV3giEvAfAcTDasK9x9+ZBd7c
+         HYhQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691197422; x=1691802222;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=H+SuaTtMx9fDim3CvSX0GbYJTZyNduayXRPq9NXsUpY=;
-        b=d6589AkA9WRGE4yqJk5I9TQ4dNXW+5FCNjREfG/+sXj3O1VHTjG3Z5+MQ5Tmgra7ff
-         M0ZTNIoBm/C8svqzJA+hb/h1WTvmvq4Xf5wNuEnjiIGjFYLN+F7xTibbC0M7sEaoUuWf
-         XL7kApz+M2WuxAm2AsWRfQYpjpTlvYH20pAruLDzr0rCnvAU9LZZpD3c+GSjAsWlcmdF
-         1uLVxzp0URKGmNpwz+AnQwuce9rd3EWimYwBTT+lKFPrv9Ky1Dor1J5fYBA+esJWGoVP
-         KkWS/4fl+YVCMaK+t82cfktwqCE8eh/20u5a2G/5/BU0LmTnyWPSINmWhtkl4wS7686W
-         lmbA==
-X-Gm-Message-State: AOJu0YzpaajRyUt8qOyyd8jlf0Uqodf1ViDtdTb2CAxq4qVHEYhNGUQv
-	f+n6Ng6w2CkDw0w3ysy1LYo53pJ36eO6sOzmOPvZoA==
-X-Google-Smtp-Source: AGHT+IGrgDjIbotpr/rVYZNba7hRTEfFCbLtlI3F0MRZR9VUXW493ijR0Z69OnSDdRKOOVZra9+lfctjEcTZedl83UM=
-X-Received: by 2002:a05:622a:64c:b0:3ef:3361:75d5 with SMTP id
- a12-20020a05622a064c00b003ef336175d5mr62002qtb.11.1691197422088; Fri, 04 Aug
- 2023 18:03:42 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1691197574; x=1691802374;
+        h=cc:to:subject:message-id:date:from:references:in-reply-to
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5wLxtngQDf95laPzAr998ewYrpc6/LmQcNIxOteIueI=;
+        b=fg2iiIHYUnea8buyIJYXK3J64VWaff8BcsNbC8uJLDcGhjTbx8NokiFbHj1vz1kjEs
+         0RMouvCJowydws5nzD9Egb9o3DR4wxoiVMqswmnb15ZmqFDqwb4d0z2Pdw6lLpneqqLG
+         U0QH8uLfsKfyLwHpVm6LYx2NoJhR9ra0YzVazvFAWdl33WwNOgQDA0EUBFL6IcYFrMQG
+         nQnuTb2U8t8FhqY3Szvs/qF+SXvpMu8dj71MNhdfCnFxexE3hL4ht0og5YkAznFY4Vr7
+         7l3hhq90wNzvrBLsZ0YD0r++MkPhxRBUJH6bsOx3/V1+dTUNJT79X5r3rVpfsrKw30qW
+         jasw==
+X-Gm-Message-State: AOJu0YxQ0DNBlexpWrS/SKrN82U588wW1b7CoU73xfDAGQ/4ng6QFNTc
+	8utdMjFeYWknS44b1MDLj7K48SQglKeJL4tVLpE=
+X-Google-Smtp-Source: AGHT+IG8PbrHRgIVAkXmrYRri3sk0mgD3rxRszibk3mbzi2/k2uRhFt/+JykTBC0PKuE3GPwCgYcPa9/gb2M+tKCYKM=
+X-Received: by 2002:a05:6870:82a2:b0:1b0:449e:cff9 with SMTP id
+ q34-20020a05687082a200b001b0449ecff9mr4064524oae.57.1691197573686; Fri, 04
+ Aug 2023 18:06:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CADyTPEzqf8oQAPSFRWJLxAhd-WE4fX2zdoe9Vu6V9hZMn1Yc8g@mail.gmail.com>
- <CAL_JsqLrErF__GGHfanRFCpfbOh6fvz4-aJv32h8OfDjUeZPSg@mail.gmail.com>
- <CADyTPEwgG0=R_b5DNBP0J0auDXu2BNTOwkSUFg-s7pLJUPC+Tg@mail.gmail.com>
- <CADyTPExgjcaUeKiR108geQhr0KwFC0A8qa_n_ST2RxhbSczomQ@mail.gmail.com>
- <CAL_Jsq+N2W0hVN7fUC1rxGL-Hw9B8eQvLgSwyQ3n41kqwDbxyg@mail.gmail.com>
- <CADyTPEyT4NJPrChtvtY=_GePZNeSDRAr9j3KRAk1hkjD=5+i8A@mail.gmail.com> <CAL_JsqKGAFtwB+TWc1yKAe_0M4BziEpFnApuWuR3h+Go_=djFg@mail.gmail.com>
-In-Reply-To: <CAL_JsqKGAFtwB+TWc1yKAe_0M4BziEpFnApuWuR3h+Go_=djFg@mail.gmail.com>
-From: Saravana Kannan <saravanak@google.com>
-Date: Fri, 4 Aug 2023 18:03:05 -0700
-Message-ID: <CAGETcx9zcdHtdqgH4xbgAFj1qPqJoUub9wv1DKiBuXQZmCHKEA@mail.gmail.com>
-Subject: Re: PROBLEM: Broken or delayed ethernet on Xilinx ZCU104 since 5.18 (regression)
-To: Rob Herring <robh@kernel.org>
-Cc: Nick Bowler <nbowler@draconx.ca>, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, 
-	regressions@lists.linux.dev
+Received: by 2002:ac9:7b87:0:b0:4f0:1250:dd51 with HTTP; Fri, 4 Aug 2023
+ 18:06:13 -0700 (PDT)
+In-Reply-To: <CAHk-=wiG9xaVvBJXHqTxtop0=mW9KxPS9C54ED23p59VNEKdWg@mail.gmail.com>
+References: <20230708191212.4147700-1-surenb@google.com> <20230708191212.4147700-3-surenb@google.com>
+ <20230804214620.btgwhsszsd7rh6nf@f> <CAHk-=wiy125k1dBmQFTGpHwiOqEyrD6xnd4xKWfe97H_HodgDA@mail.gmail.com>
+ <CAGudoHFsAU_BDCOuz8UgDBLGEM8xg=aUGjaVoqkM_Zvxo2Re_g@mail.gmail.com> <CAHk-=wiG9xaVvBJXHqTxtop0=mW9KxPS9C54ED23p59VNEKdWg@mail.gmail.com>
+From: Mateusz Guzik <mjguzik@gmail.com>
+Date: Sat, 5 Aug 2023 03:06:13 +0200
+Message-ID: <CAGudoHFsxmiezZREyVkrPYBBij3u9SNaxLWipOOPy5S+5pJcZA@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] fork: lock VMAs of the parent process when forking
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Suren Baghdasaryan <surenb@google.com>, akpm@linux-foundation.org, regressions@leemhuis.info, 
+	bagasdotme@gmail.com, jacobly.alt@gmail.com, willy@infradead.org, 
+	liam.howlett@oracle.com, david@redhat.com, peterx@redhat.com, 
+	ldufour@linux.ibm.com, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, 
+	gregkh@linuxfoundation.org, regressions@lists.linux.dev, 
+	Jiri Slaby <jirislaby@kernel.org>, =?UTF-8?Q?Holger_Hoffst=C3=A4tte?= <holger@applied-asynchrony.com>, 
+	stable@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Aug 4, 2023 at 1:22=E2=80=AFPM Rob Herring <robh@kernel.org> wrote:
+On 8/5/23, Linus Torvalds <torvalds@linux-foundation.org> wrote:
+> On Fri, 4 Aug 2023 at 16:25, Mateusz Guzik <mjguzik@gmail.com> wrote:
+>>
+>> I know of these guys, I think they are excluded as is -- they go
+>> through access_remote_vm, starting with:
+>>         if (mmap_read_lock_killable(mm))
+>>                 return 0;
+>>
+>> while dup_mmap already write locks the parent's mm.
 >
-> +Saravana
+> Oh, you're only worried about vma_start_write()?
+>
+> That's a non-issue. It doesn't take the lock normally, since it starts off
+> with
+>
+>         if (__is_vma_write_locked(vma, &mm_lock_seq))
+>                 return;
+>
+> which catches on the lock sequence number already being set.
+>
+> So no extra locking there.
+>
+> Well, technically there's extra locking because the code stupidly
+> doesn't initialize new vma allocations to the right sequence number,
+> but that was talked about here:
+>
+>
+> https://lore.kernel.org/all/CAHk-=wiCrWAoEesBuoGoqqufvesicbGp3cX0LyKgEvsFaZNpDA@mail.gmail.com/
+>
+> and it's a separate issue.
+>
 
-I'll look into this next week and reply.
+I'm going to bet one beer this is the issue.
 
--Saravana
+The patch I'm responding to only consists of adding the call to
+vma_start_write and claims the 5% slowdown from it, while fixing
+crashes if the forking process is multithreaded.
 
->
-> On Fri, Aug 4, 2023 at 11:52=E2=80=AFAM Nick Bowler <nbowler@draconx.ca> =
-wrote:
-> >
-> > On 2023-08-04, Rob Herring <robh@kernel.org> wrote:
-> > > On Fri, Aug 4, 2023 at 10:54=E2=80=AFAM Nick Bowler <nbowler@draconx.=
-ca> wrote:
-> > >> Oh, I get it, to include this driver I need to also enable:
-> > >>
-> > >>   CONFIG_RESET_CONTROLLER=3Dy
-> > >>
-> > >> Setting this fixes 6.4.  Perhaps CONFIG_ARCH_ZYNQMP should select it=
-?
-> > >
-> > > Maybe. Do other platforms do that?
-> >
-> > Of the ~40 platforms in arch/arm64/Kconfig.platforms, there appear to
-> > be 5 that do select it.
->
-> Then selecting should be okay. Unless there's a desire for resets to
-> remain optional (which is going to rely on the timeout).
->
-> > >> However, even with this option enabled, 6.5-rc4 remains broken (no
-> > >> change in behaviour wrt. the network device).  I will bisect this
-> > >> now.
-> > >
-> > > It would be good to know why the deferred probe timeout doesn't work.
-> > > If you disable modules, the kernel shouldn't wait past late_initcall.
-> > > Though this functionality keeps getting tweaked, so I may be off on
-> > > the current behavior.
-> >
-> > I don't know about the deferred probe timeout, but I bisected the 6.5-r=
-c4
-> > breakage to this commit:
-> >
-> >   commit c720a1f5e6ee8cb39c28435efc0819cec84d6ee2
-> >   Author: Michal Simek <michal.simek@amd.com>
-> >   Date:   Mon May 22 16:59:48 2023 +0200
-> >
-> >       arm64: zynqmp: Describe TI phy as ethernet-phy-id
->
-> I don't see anything obviously problematic with that commit. (The
-> #phy-cells property added is wrong as ethernet phys don't use the phy
-> binding, but that should just be ignored). I'd check if the phy probed
-> and has a DT node associated with it.
->
-> fw_devlink tracks parent-child dependencies and maybe changing to
-> parent-grandchild affected that. We don't yet track 'phy-handle'
-> dependencies, but we'd have a circular one here if we did (though that
-> should be handled). Does "fw_devlink=3Doff" help?
->
-> > So, reverting that on master appears to correct the issue (together wit=
-h
-> > setting CONFIG_RESET_CONTROLLER=3Dy).
+For the fix to work it has to lock something against the parent.
+
+        VMA_ITERATOR(old_vmi, oldmm, 0);
+[..]
+        for_each_vma(old_vmi, mpnt) {
+[..]
+                vma_start_write(mpnt);
+
+the added line locks an obj in the parent's vm space.
+
+The problem you linked looks like pessimization for freshly allocated
+vmas, but that's what is being operated on here.
+
+-- 
+Mateusz Guzik <mjguzik gmail.com>
