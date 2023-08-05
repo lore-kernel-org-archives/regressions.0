@@ -1,85 +1,88 @@
-Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [81.169.146.167])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0E701FDD
-	for <regressions@lists.linux.dev>; Sat,  5 Aug 2023 07:34:25 +0000 (UTC)
-Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-76af2cb7404so216465585a.0
-        for <regressions@lists.linux.dev>; Sat, 05 Aug 2023 00:34:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=draconx-ca.20221208.gappssmtp.com; s=20221208; t=1691220864; x=1691825664;
-        h=cc:to:subject:message-id:date:from:references:in-reply-to
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=w9uyawjZHnUZYQY4bK5UiV75xekF3m7LclUMpvxGdxc=;
-        b=wCv0jUGOVIW35mI2i0onFOjL9Al2wDEaZ/KD9WSeq5NKNGbb1wMiLuMCelEijDd8ks
-         b/FqqTdu3JcCCSZ3kFYjihJ2Q9v8Xi17ycTrDKZIdFmyBgE2PldYgGQLabueL3GKs0v2
-         8FoyKGM68aL7zQy24NAOmNYVR3roNK9kx6XbKe79IBPPej85xGu3GW1P+X6R4DqyWIya
-         z1NF14oc1yIu3BZ6ZxdLUtSMqUWIXFUwJQ+wnWM62dQ819Ecb6HMq73Q2qCBSiM4ayha
-         ouL0OMSp9pDup5pDmfIqplkDcVvGchtFBpLZe0iV9USwLpPtS7+oYhzYBGgfHAVFsb1F
-         uK3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691220864; x=1691825664;
-        h=cc:to:subject:message-id:date:from:references:in-reply-to
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=w9uyawjZHnUZYQY4bK5UiV75xekF3m7LclUMpvxGdxc=;
-        b=TVQxXJSe0f5oqAS2RwaVhUT/Svln7RNx/QvTfPtOsJjzrhNP1Clq4bdxCJ9HfzLfoH
-         ++kTiVlMXdk3wLjFmqb5I+IAucQpu2yflAs5lzZkDxgUlRl/TCDTI2WkMRLvPMbO4sVk
-         viDwp9hG72dOCFCiHvJ0xLnPSaTXUT1YCSCLPzh+BvdQI80O3XPniJ7f6gPoxjYEdHvp
-         1RSmCy4LtjsId9jFE+/VO2IUdSGhfquxI95hP82hT6sWhETPukM4YkLQnjX4C116H1qj
-         S7G08/UyPLgXD6yLPuL294jkIjAh0Bj5IDUhKkkfreDpNzMk3JJhFGJFwVZV760912Rh
-         19TQ==
-X-Gm-Message-State: AOJu0YzE4CIUrUw06GUb8hLD1jSerpb38/xuZFgSvueQkHzYavEp2Ei8
-	g4ixov9S5XE1UFirXFGHDJlIN7XvLOKDAno04tcaOg==
-X-Google-Smtp-Source: AGHT+IFdYcostVh57kE1L1S3kadAFjg+9iFXDHE2FAEn7ZWsTWYXPzw41CWvawMnXI34J9XRxsLPlCDQgPGLl/MPP7c=
-X-Received: by 2002:a05:620a:c47:b0:76c:97fd:c106 with SMTP id
- u7-20020a05620a0c4700b0076c97fdc106mr5134931qki.70.1691220863327; Sat, 05 Aug
- 2023 00:34:23 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 599CD23A2
+	for <regressions@lists.linux.dev>; Sat,  5 Aug 2023 09:44:33 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; t=1691228664; cv=none;
+    d=strato.com; s=strato-dkim-0002;
+    b=k65bXpFg59UkmcwFt/FZzawuToBa6mWZK+5iwuRrYcLyHOmcLUJwG+Nxs3uP0AOB/n
+    ZTyfrVwrR1T0Z8xyT44lTxLcpzRqBuWCgQWXv9lMAYRgyL6yd1Yy+izLn7JBnmm1g9Zg
+    7UJ2VrTRarHxVwYBqErte555diOYRxq18a+goGLih9k6MfVTRnt0AA/OsxQIHCPSOvpQ
+    BIANJ+sc5jYykbYw73HT3A4lF/jHl7cozjCNgktdU3PmFTvOHGwbStJ+f/422IFE/aUF
+    EtgNIxgqS0utbab2pE82S/u44w3OnvZDi9vgAc/kbAVXsOsJNlpJ6Wt4Z5ZiZz710ECm
+    1w+Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1691228664;
+    s=strato-dkim-0002; d=strato.com;
+    h=References:Message-ID:In-Reply-To:Subject:cc:To:From:Date:Cc:Date:
+    From:Subject:Sender;
+    bh=GjUjP+DGWGUn/BiSDuX2B6VLpikBHTUWFpI5Xmu0UTA=;
+    b=lGmi7VIe156KxIzW6uKdWZWWY0empbUZyPMOyvlH/rKs0s31Um20hgMQXGkeDJE29H
+    g6kAe2hklgQ3M2k4EUl1zIviMzYLPbfx5SqQ6KvBmnqG3RB53GwSnkkUE1ApTtukF3d5
+    TeJyz2HoMmn2RIUdNagrvhW/Rw+ocyyN91m+gnZLo2ixE4FPGbeQK5NRy7IEfBk2ePTK
+    J65cQlL4vX+h6qkPRzyYwHdqopKbA0Iop0MBdU2l8sqjJGXjx3fr7h7U66EteneejoJ9
+    xlBaUzEzQm1YcQ6qFW/JglETWDWks4bhmAlcz/KhKkNFdDop/rSsYFAbDNgiDfE8g9oJ
+    SJXA==
+ARC-Authentication-Results: i=1; strato.com;
+    arc=none;
+    dkim=none
+X-RZG-CLASS-ID: mo01
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1691228664;
+    s=strato-dkim-0002; d=kravcenko.com;
+    h=References:Message-ID:In-Reply-To:Subject:cc:To:From:Date:Cc:Date:
+    From:Subject:Sender;
+    bh=GjUjP+DGWGUn/BiSDuX2B6VLpikBHTUWFpI5Xmu0UTA=;
+    b=L3psWUszTXjU+IowLlmpZHF4CMbvgXBrvdxRy8a6yLNrs46SmP9OsYVoUWILQOwx3J
+    F9kmQ3oc9hI99MthD2//X5ajLTJsQNMyQT8Wkaz/MvddII+IoaugBtumOJKP572ufOjN
+    vlXPvyU8MxYJoouBaf5GGuGqaZUWNeDPm+pAaADzWTLVNXlfoFwfGmKLniYCqyYcn1na
+    KGmKMmnc9ddadHIyi+Svu/Ji8nhwPmLmlwmDb7HKBwrLcPURmeq78V8IqP+o7oSJCRjR
+    lmkb0f+W/h/K5c5HnyGxlmmQw3BRpDXYgU2PKgNKjcLOELYzxz/RofiBN0uZd4/q3z15
+    +dYw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1691228664;
+    s=strato-dkim-0003; d=kravcenko.com;
+    h=References:Message-ID:In-Reply-To:Subject:cc:To:From:Date:Cc:Date:
+    From:Subject:Sender;
+    bh=GjUjP+DGWGUn/BiSDuX2B6VLpikBHTUWFpI5Xmu0UTA=;
+    b=TQp4xLYPqY1m2Az0TUmNocmSfPbvHUmVBzGK0RRhNesANRFj2jb7vFMwk1toD9cfFB
+    cTlfGiWfiPTRTC+tGzCw==
+X-RZG-AUTH: ":I2AFc2Cjaf5HiRB0lhnvZ9elhwku56KjVuxY6AZJWRy8C0aEhFGYVtZdsoywGOIVpSHY0o63PckPhiSO1IhQGG0mBjo18W4hBO/Ijw=="
+Received: from p200300c7f704d301468a5bfffe84f964.dip0.t-ipconnect.de
+    by smtp.strato.de (RZmta 49.6.6 AUTH)
+    with ESMTPSA id dd2654z759iNY7J
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+	(Client did not present a certificate);
+    Sat, 5 Aug 2023 11:44:23 +0200 (CEST)
+Date: Sat, 5 Aug 2023 11:44:22 +0200 (CEST)
+From: Olaf Skibbe <news@kravcenko.com>
+To: Karol Herbst <kherbst@redhat.com>
+cc: Thorsten Leemhuis <regressions@leemhuis.info>, 
+    dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org, 
+    1042753@bugs.debian.org, Ben Skeggs <bskeggs@redhat.com>, 
+    Lyude Paul <lyude@redhat.com>, 
+    Linux kernel regressions list <regressions@lists.linux.dev>, 
+    "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: nouveau bug in linux/6.1.38-2
+In-Reply-To: <CACO55tvq=GoPJZxouiTT0tty9A0fEeyS1uGjWLHjfJgq=VA4ug@mail.gmail.com>
+Message-ID: <3d58b37b-b6c2-7c4b-fa6b-3dac859dc20b@kravcenko.com>
+References: <20be6650-5db3-b72a-a7a8-5e817113cff5@kravcenko.com> <c27fb4dd-b2dc-22de-4425-6c7db5f543ba@leemhuis.info> <CACO55ttcUEUjdVgx4y7pv26VAGeHS5q1wVKWrMw5=o9QLaJLZw@mail.gmail.com> <977ac5b0-4ab8-7782-10e1-b4bee6b58030@kravcenko.com>
+ <CACO55tvq=GoPJZxouiTT0tty9A0fEeyS1uGjWLHjfJgq=VA4ug@mail.gmail.com>
+User-Agent: Alpine 2.26 (DEB 649 2022-06-02)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Received: by 2002:ab0:6209:0:b0:794:1113:bb24 with HTTP; Sat, 5 Aug 2023
- 00:34:22 -0700 (PDT)
-X-Originating-IP: [24.53.241.2]
-In-Reply-To: <c38e208b-4ffa-4310-ae00-412447fc4269@lunn.ch>
-References: <CADyTPEzqf8oQAPSFRWJLxAhd-WE4fX2zdoe9Vu6V9hZMn1Yc8g@mail.gmail.com>
- <CAL_JsqLrErF__GGHfanRFCpfbOh6fvz4-aJv32h8OfDjUeZPSg@mail.gmail.com>
- <CADyTPEwgG0=R_b5DNBP0J0auDXu2BNTOwkSUFg-s7pLJUPC+Tg@mail.gmail.com>
- <CADyTPExgjcaUeKiR108geQhr0KwFC0A8qa_n_ST2RxhbSczomQ@mail.gmail.com>
- <CAL_Jsq+N2W0hVN7fUC1rxGL-Hw9B8eQvLgSwyQ3n41kqwDbxyg@mail.gmail.com>
- <CADyTPEyT4NJPrChtvtY=_GePZNeSDRAr9j3KRAk1hkjD=5+i8A@mail.gmail.com>
- <CAL_JsqKGAFtwB+TWc1yKAe_0M4BziEpFnApuWuR3h+Go_=djFg@mail.gmail.com>
- <CADyTPEwY4ydUKGtGNayf+iQSqRVBQncLiv0TpO9QivBVrmOc4g@mail.gmail.com>
- <173b1b67-7f5a-4e74-a2e7-5c70e57ecae5@lunn.ch> <CADyTPExypWjMW2PF0EfSFc+vvdzRtNEi_H0p3S-mw1BNWyq6VQ@mail.gmail.com>
- <c38e208b-4ffa-4310-ae00-412447fc4269@lunn.ch>
-From: Nick Bowler <nbowler@draconx.ca>
-Date: Sat, 5 Aug 2023 03:34:22 -0400
-Message-ID: <CADyTPEyQcHd5-A2TLf_-U5KdtA5WKZ_mNYKvx3DSMjkNi99E0g@mail.gmail.com>
-Subject: Re: PROBLEM: Broken or delayed ethernet on Xilinx ZCU104 since 5.18 (regression)
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, 
-	regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; format=flowed; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 2023-08-05, Andrew Lunn <andrew@lunn.ch> wrote:
->> > It was also commented out before that change. It could be that gpio
->> > controller is missing. Do you have the driver for the tca6416 in
->> > your kernel configuration?
->>
->> I have CONFIG_GPIO_PCA953X=y which I think is the correct driver?
+On Sat, 5 Aug 2023 at 01:09, Karol Herbst wrote:
+
+> Mind checking if instead of reverting the entire commit that this is
+> enough to fix it as well?
 >
-> It does appear to be the correct driver. But check if it has
-> loaded. It is an i2c device, so maybe you are missing the I2C bus
-> master device?
+> https://gitlab.freedesktop.org/karolherbst/nouveau/-/commit/f99ae069876f7ffeb6368da0381485e8c3adda43.patch
 
-That's it!  I needed to set
+This patch does fix the problem as well: Screen works.
 
-  CONFIG_I2C_CADENCE=y
-
-and now things are working again!
-
-Thanks,
-  Nick
+Cheers,
+Olaf
