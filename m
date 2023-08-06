@@ -1,97 +1,154 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4F198489
-	for <regressions@lists.linux.dev>; Sat,  5 Aug 2023 13:37:37 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qSHTH-0002eL-Pb; Sat, 05 Aug 2023 15:37:31 +0200
-Message-ID: <7d9a6d94-af49-b8f4-cb50-4665cb6ff272@leemhuis.info>
-Date: Sat, 5 Aug 2023 15:37:30 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C018A28EF
+	for <regressions@lists.linux.dev>; Sun,  6 Aug 2023 15:15:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1691334903;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=CNB47Sp7trc9bmNcKr/Qyt4K/JLPlJPyfPKXwvKIQrU=;
+	b=ecYZEnNv029pWGlO19IqjZY2bh1bwZI+5TAwtHJavDWnx0MMZyEcSL3pWCImtv7mqBnVOy
+	gg6EWD413BhvvM2CPkUMRDXE7S8aGWFMCzm6NnU+i4tL9lWshbkUVtimLOT8CSUxC+sbvc
+	OzFfusNqwnkmU4tQ+6NOxQGdxqzqN3w=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-590-70ptTuQVNsewBDtaapMtnw-1; Sun, 06 Aug 2023 11:14:58 -0400
+X-MC-Unique: 70ptTuQVNsewBDtaapMtnw-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E30038002BF;
+	Sun,  6 Aug 2023 15:14:57 +0000 (UTC)
+Received: from shalem.redhat.com (unknown [10.39.192.27])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id F1E232166B25;
+	Sun,  6 Aug 2023 15:14:56 +0000 (UTC)
+From: Hans de Goede <hdegoede@redhat.com>
+To: "Rafael J . Wysocki" <rafael@kernel.org>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	linux-acpi@vger.kernel.org,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Linux regressions mailing list <regressions@lists.linux.dev>,
+	stable@vger.kernel.org
+Subject: [PATCH] ACPI: resource: revert "Remove "Zen" specific match and quirks"
+Date: Sun,  6 Aug 2023 17:14:53 +0200
+Message-ID: <20230806151453.10690-1-hdegoede@redhat.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Fwd: 6.5 - 6.4.7 Regression : ASUS UM5302TA Keyboard don't work
-Content-Language: en-US, de-DE
-To: Hans de Goede <hdegoede@redhat.com>,
- Mario Limonciello <mario.limonciello@amd.com>
-Cc: Linux Input Devices <linux-input@vger.kernel.org>,
- ACPI Asus <acpi4asus-user@lists.sourceforge.net>,
- Linux x86 Platform Drivers <platform-driver-x86@vger.kernel.org>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Bagas Sanjaya <bagasdotme@gmail.com>,
- Dmitry Torokhov <dmitry.torokhov@gmail.com>,
- Corentin Chary <corentin.chary@gmail.com>,
- Guilhem Lettron <guilhem@lettron.fr>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- August Wikerfors <git@augustwikerfors.se>
-References: <bdc6cb4d-a853-72b2-b132-989b64740ad9@gmail.com>
- <8ee87fe1-684f-ad59-21c7-4401a4e70bee@leemhuis.info>
- <b7df9a02-3b81-4f8c-aeba-222c298180d4@augustwikerfors.se>
- <cc9e37b4-b5cb-fd4d-84b8-5b824afe710a@redhat.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <cc9e37b4-b5cb-fd4d-84b8-5b824afe710a@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1691242657;271a0c81;
-X-HE-SMSGID: 1qSHTH-0002eL-Pb
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.6
 
-On 05.08.23 15:09, Hans de Goede wrote:
-> On 8/4/23 17:26, August Wikerfors wrote:
->> On 2023-07-30 06:49, Linux regression tracking (Thorsten Leemhuis) wrote:
->>> Lo!
->>>
->>> On 30.07.23 04:41, Bagas Sanjaya wrote:
->>>>
->>>> I notice a regression report on Bugzilla [1]. Quoting from it:
->>>>
->>>>> On a kernel 6.4.5 and less, the keyboard is working fine.
->>>>>
->>>>> Beginning with 6.5 rc1 and 6.4.7 any key don't respond.
->>>
->>> That is a AMD Ryzen Laptop. And if that really started from
->>> v6.4.6..v6.4.7 then I guess there is a decent chance that this is caused
->>> by ```ACPI: resource: Remove "Zen" specific match and quirks``` from
->>> Mario. Hence adding him to the list of recipients.
->>
->> Confirmed now, see https://bugzilla.kernel.org/show_bug.cgi?id=217726#c9
->>
->> #regzbot introduced: a9c4a912b7dc7ff922d4b9261160c001558f9755
-> 
-> We just have received 2 bug reports for Fedora which I believe are also
-> this issue (not confirmed yet):
-> 
-> https://bugzilla.redhat.com/show_bug.cgi?id=2229165
-> https://bugzilla.redhat.com/show_bug.cgi?id=2229317
+Commit a9c4a912b7dc ("ACPI: resource: Remove "Zen" specific match and
+quirks") is causing keyboard problems for quite a log of AMD based
+laptop users, leading to many bug reports.
 
-Interesting, thx for sharing! I just asked people there to share
-dmidecode and acpidump to check if those are different machines.
+Revert this change for now, until we can come up with
+a better fix for the PS/2 IRQ trigger-type/polarity problems
+on some x86 laptops.
 
-> I'm going to create a Fedora 6.4.y test-kernel with a9c4a912b7dc7ff
-> reverted.
-> 
-> IMHO we really should revert a9c4a912b7dc7ff upstream,
-> at least for the 6.4.y series
+Fixes: a9c4a912b7dc ("ACPI: resource: Remove "Zen" specific match and quirks")
+Link: https://bugzilla.redhat.com/show_bug.cgi?id=2229165
+Link: https://bugzilla.redhat.com/show_bug.cgi?id=2229317
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=217726
+Cc: Mario Limonciello <mario.limonciello@amd.com>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: stable@vger.kernel.org
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/acpi/resource.c | 60 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 60 insertions(+)
 
-That is unlikely to be a option, because as explained in
-Documentation/process/handling-regressions.rst Greg's stance in cases
-like this usually is "fix it in mainline, and then I'll pick up the fix".
+diff --git a/drivers/acpi/resource.c b/drivers/acpi/resource.c
+index 1dd8d5aebf67..0800a9d77558 100644
+--- a/drivers/acpi/resource.c
++++ b/drivers/acpi/resource.c
+@@ -470,6 +470,52 @@ static const struct dmi_system_id asus_laptop[] = {
+ 	{ }
+ };
+ 
++static const struct dmi_system_id lenovo_laptop[] = {
++	{
++		.ident = "LENOVO IdeaPad Flex 5 14ALC7",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "82R9"),
++		},
++	},
++	{
++		.ident = "LENOVO IdeaPad Flex 5 16ALC7",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "82RA"),
++		},
++	},
++	{ }
++};
++
++static const struct dmi_system_id tongfang_gm_rg[] = {
++	{
++		.ident = "TongFang GMxRGxx/XMG CORE 15 (M22)/TUXEDO Stellaris 15 Gen4 AMD",
++		.matches = {
++			DMI_MATCH(DMI_BOARD_NAME, "GMxRGxx"),
++		},
++	},
++	{ }
++};
++
++static const struct dmi_system_id maingear_laptop[] = {
++	{
++		.ident = "MAINGEAR Vector Pro 2 15",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Micro Electronics Inc"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "MG-VCP2-15A3070T"),
++		}
++	},
++	{
++		.ident = "MAINGEAR Vector Pro 2 17",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Micro Electronics Inc"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "MG-VCP2-17A3070T"),
++		},
++	},
++	{ }
++};
++
+ static const struct dmi_system_id lg_laptop[] = {
+ 	{
+ 		.ident = "LG Electronics 17U70P",
+@@ -493,6 +539,10 @@ struct irq_override_cmp {
+ static const struct irq_override_cmp override_table[] = {
+ 	{ medion_laptop, 1, ACPI_LEVEL_SENSITIVE, ACPI_ACTIVE_LOW, 0, false },
+ 	{ asus_laptop, 1, ACPI_LEVEL_SENSITIVE, ACPI_ACTIVE_LOW, 0, false },
++	{ lenovo_laptop, 6, ACPI_LEVEL_SENSITIVE, ACPI_ACTIVE_LOW, 0, true },
++	{ lenovo_laptop, 10, ACPI_LEVEL_SENSITIVE, ACPI_ACTIVE_LOW, 0, true },
++	{ tongfang_gm_rg, 1, ACPI_EDGE_SENSITIVE, ACPI_ACTIVE_LOW, 1, true },
++	{ maingear_laptop, 1, ACPI_EDGE_SENSITIVE, ACPI_ACTIVE_LOW, 1, true },
+ 	{ lg_laptop, 1, ACPI_LEVEL_SENSITIVE, ACPI_ACTIVE_LOW, 0, false },
+ };
+ 
+@@ -512,6 +562,16 @@ static bool acpi_dev_irq_override(u32 gsi, u8 triggering, u8 polarity,
+ 			return entry->override;
+ 	}
+ 
++#ifdef CONFIG_X86
++	/*
++	 * IRQ override isn't needed on modern AMD Zen systems and
++	 * this override breaks active low IRQs on AMD Ryzen 6000 and
++	 * newer systems. Skip it.
++	 */
++	if (boot_cpu_has(X86_FEATURE_ZEN))
++		return false;
++#endif
++
+ 	return true;
+ }
+ 
+-- 
+2.41.0
 
-> where it seems to be doing more harm then good.
-> 
-> And propably also for 6.5-rc# for now until we figure out
-> a better solution.
-
-Hmmm, looks like the issue and the fix for one of the machines[1] didn't
-make much progress this week, so I tend to agree. Mario?
-
-[1]
-https://lore.kernel.org/all/20230728191408.18141-1-mario.limonciello@amd.com/
-
-Ciao, Thorsten
