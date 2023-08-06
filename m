@@ -1,132 +1,88 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from abi149hd127.arn1.oracleemaildelivery.com (abi149hd127.arn1.oracleemaildelivery.com [129.149.84.127])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB1B55388
-	for <regressions@lists.linux.dev>; Sun,  6 Aug 2023 15:19:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1691335160;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AhfpOREeEhVXZ8cxJasLZg5Zec9o2IwuXj0XyZAWd8M=;
-	b=DNMp0kbv2Pr4HccbsxOuUCccXXVVYfTAzEGn/RGXEjiQ6Tp4HVlA8lTbE2bVVL/XO+JYaI
-	UHT/pvtI0Jh7XP8Lb5ezKaGaO5QTcPUPlIlR13XKiCGjlOnwaZf6/eVc8gDXAvqioeORYk
-	P27YNaq95asIG1ivyZo9XYy6JFnjkuY=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-190-Q7VMMcR4NXOEH-HBuj_6DA-1; Sun, 06 Aug 2023 11:19:19 -0400
-X-MC-Unique: Q7VMMcR4NXOEH-HBuj_6DA-1
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-993831c639aso246161866b.2
-        for <regressions@lists.linux.dev>; Sun, 06 Aug 2023 08:19:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691335158; x=1691939958;
-        h=content-transfer-encoding:in-reply-to:references:cc:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=AhfpOREeEhVXZ8cxJasLZg5Zec9o2IwuXj0XyZAWd8M=;
-        b=PDcwhXBNYkXWoi/aCV7jfgD/5IvNwFoUixXA2wtrGCRIX8wXISjZd64Qs7Cz/vsT2Y
-         TjNvNeEL4S3XuAb/5X60Px9zU8aWM2QlKOiB1yaB6mTHZcKJQBrn2jOtRY13cSh5q9W3
-         ijHlqa2rVke1FX7pBDhX/UnBQvTNMiJ55I10hBNZA3AiwhOFYwOblmXe089/sHzd3Z1E
-         9RNUhWLQqRad/I60iVvVjZqEzCRfqXY1m8CZOUdnPUABYEIZjvtZbMFYxjTyCiMu+CBH
-         xfD28p2vKijlJ7cgeO5EFJpI0cQFvdAoss4RmHXorKHF1/r6YBn55R9Ge7pX3oZHw5rp
-         1Plg==
-X-Gm-Message-State: AOJu0Yz35CBR5j2NwxrCtgwkntamTMjTt/W8+guK4uva7w4qI+bVWhmy
-	D1mDvy0zCzEocdGR7jzZ00+8PkxAzJjMdThLILQLzGK1xqgqp5oTEIowtgZa4VFVerPCB91AQ59
-	aruuLIZI9NlZuOGN3mDCMfEE=
-X-Received: by 2002:a17:907:2cd4:b0:970:c9f:2db6 with SMTP id hg20-20020a1709072cd400b009700c9f2db6mr5334967ejc.63.1691335158315;
-        Sun, 06 Aug 2023 08:19:18 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHilB2YSqkhczP2772KNrt8XqRol0iVm73acAAU4kmFWAZNv16hlcyPfHrwapBfuOIbfu/Tsg==
-X-Received: by 2002:a17:907:2cd4:b0:970:c9f:2db6 with SMTP id hg20-20020a1709072cd400b009700c9f2db6mr5334956ejc.63.1691335157934;
-        Sun, 06 Aug 2023 08:19:17 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id gl23-20020a170906e0d700b009894b476310sm3993690ejb.163.2023.08.06.08.19.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 06 Aug 2023 08:19:17 -0700 (PDT)
-Message-ID: <37523499-5226-dcca-3b7c-87b92815bd12@redhat.com>
-Date: Sun, 6 Aug 2023 17:19:16 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE49453B3
+	for <regressions@lists.linux.dev>; Sun,  6 Aug 2023 15:56:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=oci-arn1-20220924;
+ d=augustwikerfors.se;
+ h=Date:To:From:Subject:Message-Id:MIME-Version:Sender;
+ bh=x/SG0A30SFxLUadyn8TesCdeaY9lbopeGx+AqtWaSH8=;
+ b=C+0lAmAwhYrlUEOg/RIc/wacgQBoujwxGhqqUcgOInd1LxjmmPHw1zhOlckEIwVFbd75wGEVBbjr
+   irGqxzv+EJwnPlToLsJgRoaN+pSRkLhN4X9vyJw5P38DUd5oVAq1GxIXfE0xywidKb2qj4XJGQWn
+   1eukAEOCfyKKqsYK18iuXGC2/liVnjlu8BRw1cLDM8tH+GqoEcTRRPwMCrVeeDAxSZ9wncjEVOee
+   UqEb3a6X2jbC6lBAUYxxoHFPWLBRwa1Zj8RjjaoplXKadhk3cTmdwCkd6Ns6Waosao507K30EEbA
+   rPpTHtsA5pkE2ZXy21iTGOH5ooKNGNWc97hWIQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=prod-arn-20211201;
+ d=arn1.rp.oracleemaildelivery.com;
+ h=Date:To:From:Subject:Message-Id:MIME-Version:Sender;
+ bh=x/SG0A30SFxLUadyn8TesCdeaY9lbopeGx+AqtWaSH8=;
+ b=grz5RZOv+pIfbcPpS2paGkgXdbft3u/fTSi0ZQyBdTdBiNVl2zewx7VKLegh+9Wv4sI6hMR4gJzD
+   C56llS8GCEstumBlU1t90ICOg55h//7dQa6lyPU22BOnOT3aYCCMFrnPXv1/BxWwcDiofsTyXOAI
+   151kCgRsSSd+l+84wwLyfYZmAH56fr9NTg6KPYoC9H5yqW6Or9JY4qDg5cDL/MDVQieqpwO+2rYK
+   LqkQaPe2QPFOfln8ZhTL0rMrjGhgB4F1uD06n2kFeUzuzs/uHIGzdIRKzy7ap8lnbI47w5gFRMNc
+   7f+GQBamBeiBs2f/+YsY9mOCggg7XF2RPy9Nwg==
+Received: by omta-ad1-fd2-401-eu-stockholm-1.omtaad1.vcndparn.oraclevcn.com
+ (Oracle Communications Messaging Server 8.1.0.1.20230707 64bit (built Jul  7
+ 2023))
+ with ESMTPS id <0RYZ00IBR82AK120@omta-ad1-fd2-401-eu-stockholm-1.omtaad1.vcndparn.oraclevcn.com>
+ for regressions@lists.linux.dev; Sun, 06 Aug 2023 15:51:46 +0000 (GMT)
+Message-id: <e56c1c28-9300-4103-b9b1-52191c09c436@augustwikerfors.se>
+Date: Sun, 6 Aug 2023 17:51:43 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: Fwd: 6.5 - 6.4.7 Regression : ASUS UM5302TA Keyboard don't work
-From: Hans de Goede <hdegoede@redhat.com>
-To: August Wikerfors <git@augustwikerfors.se>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Mario Limonciello <mario.limonciello@amd.com>,
- Linux Input Devices <linux-input@vger.kernel.org>,
- ACPI Asus <acpi4asus-user@lists.sourceforge.net>,
- Linux x86 Platform Drivers <platform-driver-x86@vger.kernel.org>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Bagas Sanjaya <bagasdotme@gmail.com>,
- Dmitry Torokhov <dmitry.torokhov@gmail.com>,
- Corentin Chary <corentin.chary@gmail.com>,
- Guilhem Lettron <guilhem@lettron.fr>
-References: <bdc6cb4d-a853-72b2-b132-989b64740ad9@gmail.com>
- <8ee87fe1-684f-ad59-21c7-4401a4e70bee@leemhuis.info>
- <b7df9a02-3b81-4f8c-aeba-222c298180d4@augustwikerfors.se>
- <cc9e37b4-b5cb-fd4d-84b8-5b824afe710a@redhat.com>
-In-Reply-To: <cc9e37b4-b5cb-fd4d-84b8-5b824afe710a@redhat.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US, nl
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+MIME-version: 1.0
+From: August Wikerfors <git@augustwikerfors.se>
+Subject: Re: [PATCH] ACPI: resource: revert
+ "Remove "Zen" specific match and quirks"
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: "Rafael J . Wysocki" <rafael@kernel.org>, linux-acpi@vger.kernel.org,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ stable@vger.kernel.org
+References: <20230806151453.10690-1-hdegoede@redhat.com>
+Content-language: en-US
+In-reply-to: <20230806151453.10690-1-hdegoede@redhat.com>
+Content-type: text/plain; charset=UTF-8; format=flowed
+Content-transfer-encoding: 7bit
+Reporting-Meta:
+ AAH1BlvagG6VXJZ1MKDUlAUw9iWIQPC6vIGZnYKwTMs/fesCqfB/c4UbXaYbw7b5
+ +holF8NzX225p2fEg/a8rflSLvHEpxdQxcTEQaMq/2ywi5WGPcH2PggJ12cpDuPF
+ 5NPUpPYFRfdhsFJhAmRd9mpbrqwcTSRDmwfx/zADjPnfJ0sNt6CQxtmVW+tMBXQL
+ qkWng8BR2CMsC+Dh0Ed2mf/B0FIwfex8dzfiSHgWWbIunKTNZ4e9byOpzDiPf+Nb
+ fVoXT9o782QL3IP+zDz6yklIpxPdgrfc5/EsP3HPEee/9xv4Z4Swfi/FMTf7L+VB
+ 1Y7qPDg5W0ZdYomqOZLAxcoMiay+2cvMyitJ79myj0C3ne4ahW8Vrhq5iNokfDnV
+ k+asChGB228Zc+sMAirEUVFaFc0L2dW7Gu9bbV1oGJvWCUwuXluxe5EptgQ4tCuc y3Hydfk=
 
-Hi,
+On 2023-08-06 17:14, Hans de Goede wrote:
+> Commit a9c4a912b7dc ("ACPI: resource: Remove "Zen" specific match and
+> quirks") is causing keyboard problems for quite a log of AMD based
+> laptop users, leading to many bug reports.
+> 
+> Revert this change for now, until we can come up with
+> a better fix for the PS/2 IRQ trigger-type/polarity problems
+> on some x86 laptops.
+> 
+> Fixes: a9c4a912b7dc ("ACPI: resource: Remove "Zen" specific match and quirks")
+> Link: https://bugzilla.redhat.com/show_bug.cgi?id=2229165
+> Link: https://bugzilla.redhat.com/show_bug.cgi?id=2229317
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=217726
 
-On 8/5/23 15:09, Hans de Goede wrote:
-> Hi,
-> 
-> On 8/4/23 17:26, August Wikerfors wrote:
->> On 2023-07-30 06:49, Linux regression tracking (Thorsten Leemhuis) wrote:
->>> Lo!
->>>
->>> On 30.07.23 04:41, Bagas Sanjaya wrote:
->>>>
->>>> I notice a regression report on Bugzilla [1]. Quoting from it:
->>>>
->>>>> On a kernel 6.4.5 and less, the keyboard is working fine.
->>>>>
->>>>> Beginning with 6.5 rc1 and 6.4.7 any key don't respond.
->>>
->>> That is a AMD Ryzen Laptop. And if that really started from
->>> v6.4.6..v6.4.7 then I guess there is a decent chance that this is caused
->>> by ```ACPI: resource: Remove "Zen" specific match and quirks``` from
->>> Mario. Hence adding him to the list of recipients.
->>
->> Confirmed now, see https://bugzilla.kernel.org/show_bug.cgi?id=217726#c9
->>
->> #regzbot introduced: a9c4a912b7dc7ff922d4b9261160c001558f9755
-> 
-> We just have received 2 bug reports for Fedora which I believe are also
-> this issue (not confirmed yet):
-> 
-> https://bugzilla.redhat.com/show_bug.cgi?id=2229165
-> https://bugzilla.redhat.com/show_bug.cgi?id=2229317
-> 
-> I'm going to create a Fedora 6.4.y test-kernel with a9c4a912b7dc7ff
-> reverted.
-> 
-> IMHO we really should revert a9c4a912b7dc7ff upstream,
-> at least for the 6.4.y series where it seems to be doing
-> more harm then good.
-> 
-> And propably also for 6.5-rc# for now until we figure out
-> a better solution.
+Other reports for various Lenovo laptops:
+https://lore.kernel.org/all/596b9c4a-fb83-a8ab-3a44-6052d83fa546@augustwikerfors.se/T/
+https://bugzilla.kernel.org/show_bug.cgi?id=217718
+https://bugzilla.kernel.org/show_bug.cgi?id=217731
 
-Testing has shown that reverting also fixes the 2 Fedora bugs.
+> Cc: Mario Limonciello <mario.limonciello@amd.com>
+> Cc: Linux regressions mailing list <regressions@lists.linux.dev>
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 
-I have submitted a revert of a9c4a912b7dc ("ACPI: resource: Remove "Zen" specific match and quirks") upstream now, because I believe that that is the best way to fix the regressions caused by this (until we figure out a better way to deal with the kbd interrupt trigger-type issues):
-
-https://lore.kernel.org/linux-acpi/20230806151453.10690-1-hdegoede@redhat.com/
+FWIW only reverting a9c4a912b7dc will also cause a regression because it 
+did also fix the keyboard on some devices, see the links in its commit 
+message.
 
 Regards,
-
-Hans
-
+August Wikerfors
