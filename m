@@ -1,252 +1,207 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 476183D63
-	for <regressions@lists.linux.dev>; Sun,  6 Aug 2023 17:14:59 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:5054:ff:feb3:8f48] (helo=regzbot.fritz.box); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	id 1qShLF-0004VZ-SQ; Sun, 06 Aug 2023 19:14:57 +0200
-From: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>
-To: LKML <linux-kernel@vger.kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Linux regressions report  for mainline [2023-08-06]
-Date: Sun,  6 Aug 2023 17:14:57 +0000
-Message-Id: <169134199152.488860.7520017509596978680@leemhuis.info>
-X-Mailer: git-send-email 2.40.1
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 060535696
+	for <regressions@lists.linux.dev>; Sun,  6 Aug 2023 18:20:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1691346020;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TSC0nhQYh4CfeL29OqIqZRL9s5DPSTmoy4ZpT/cMCmk=;
+	b=KVHXxzxXF47Nc+RhhOKOV7MUHhr/x9/ubNejblyq5r1eq3C5fFi4U37J3USoi3+fzq6V4j
+	Whv9hX3/YAEKCGoS6MjhyMRguA6HFG1fmm5kt4Toh9JxZ/8fW4VNdsKbLAWYykF63abDPK
+	1jgi1WkLfPkfR0y+Ex4ylNGU6dHem4E=
+Received: from mail-lj1-f200.google.com (mail-lj1-f200.google.com
+ [209.85.208.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-561-NXLMB-wlNRG0HXtfvnjHkA-1; Sun, 06 Aug 2023 14:20:19 -0400
+X-MC-Unique: NXLMB-wlNRG0HXtfvnjHkA-1
+Received: by mail-lj1-f200.google.com with SMTP id 38308e7fff4ca-2b9bf493456so36229291fa.0
+        for <regressions@lists.linux.dev>; Sun, 06 Aug 2023 11:20:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1691346017; x=1691950817;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=TSC0nhQYh4CfeL29OqIqZRL9s5DPSTmoy4ZpT/cMCmk=;
+        b=QgDsgOS1PSlotlyHwaMukf0mwui2Ufl+BmYmiRqy7w0Jc9Tv4SrSbjWPlQsfqfsO2c
+         WbFxVRz8c07VkJ6LH91xjfp9ozBW6V6FIO8EeuMT5IS9lIOhmTUQ9MdiYTyyjaMLCq+7
+         2UyH+2DblqNC1umMM5hwqlJfuSJLEazlTyasD/S97+RLqMjrFe3F8xin/pQoj5UZk6Hf
+         A2Z1Mvqy3d+6z5xdgcfSbYS7erY6rBkkgfVIYA8ahoAh0GEgRZjXbxex/w57Ly8lyaIj
+         ewHjt9HbyQQKFVc53FDgsAXS7jYu7gniXx3goIbZBkULOnD6ZpsC8AWjcc1CdNS2I6ds
+         tuVg==
+X-Gm-Message-State: AOJu0YyVZfoUl8vEV47nXqaQuwg5aJnnKJ+W0ScaBdhnftxkEji6iR89
+	Y3wm3m8hmj1FqqAnircUYvKbvgt0Bjpbz5w1KYzVfhkWpELESa2sTMdHvZZuiCQQIPLAtxyYl2p
+	S9Y0BWZZS248ZD4q1SqGR0kc=
+X-Received: by 2002:a2e:7c15:0:b0:2b6:e105:6174 with SMTP id x21-20020a2e7c15000000b002b6e1056174mr4763482ljc.47.1691346017602;
+        Sun, 06 Aug 2023 11:20:17 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFUhi1wLAOGbe2I1gYd6DBRCyk8IJP/ndGdF6V2OiTaVkoXJdMKcLANQ5F7d4mWZPABueNuKg==
+X-Received: by 2002:a2e:7c15:0:b0:2b6:e105:6174 with SMTP id x21-20020a2e7c15000000b002b6e1056174mr4763472ljc.47.1691346017174;
+        Sun, 06 Aug 2023 11:20:17 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id 4-20020a170906058400b00992c92af6f4sm4214310ejn.144.2023.08.06.11.20.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 06 Aug 2023 11:20:16 -0700 (PDT)
+Message-ID: <b37098da-4437-ef5b-53ae-a536f550df08@redhat.com>
+Date: Sun, 6 Aug 2023 20:20:15 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH] ACPI: resource: revert "Remove "Zen" specific match and
+ quirks"
+To: Mario Limonciello <mario.limonciello@amd.com>,
+ "Rafael J . Wysocki" <rafael@kernel.org>
+Cc: linux-acpi@vger.kernel.org,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ stable@vger.kernel.org
+References: <20230806151453.10690-1-hdegoede@redhat.com>
+ <130cb2e0-90b4-7d7b-1633-3469c859b30f@amd.com>
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <130cb2e0-90b4-7d7b-1633-3469c859b30f@amd.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US, nl
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1691342100;09e13e50;
-X-HE-SMSGID: 1qShLF-0004VZ-SQ
 
-Hi Linus. Not much to report from by side: nearly everything currently
-looks like business as usual.
+Hi Mario,
+
+On 8/6/23 19:13, Mario Limonciello wrote:
+> On 8/6/23 10:14, Hans de Goede wrote:
+>> Commit a9c4a912b7dc ("ACPI: resource: Remove "Zen" specific match and
+>> quirks") is causing keyboard problems for quite a log of AMD based
+>> laptop users, leading to many bug reports.
+>>
+>> Revert this change for now, until we can come up with
+>> a better fix for the PS/2 IRQ trigger-type/polarity problems
+>> on some x86 laptops.
+> 
+> Reverting it is going to help a bunch of machines but cause regressions for others.  How do you prioritize which to fix when it comes to a regression?
+
+I understand where you are coming from. But we are dealing with a lot of bug reports from users of recent kernel versions (so not on LTS distros) where things used to work fine. Which is pretty much the definition of a regression.
+
+OTOH the do not override IRQ on Zen behavior has been with us for a while now, so things which are broken by it have been broken for a while and have only started working since 6.4.7.
+
+So to me it is clear that we first need to revert to the old state, so that users for which everything was working fine get back to a working system.
+
+I realize this will unfix some very recently fixed systems, but notice the very recently bit here most users are no in 6.4.7 or .8 yet, so most users will not even have gotten the fixing effect OTOH many users are seeing breakage now.
+
+So IMHO we should first get back to the known bad state, instead of introducing a new unknown bad state like a9c4a912b7dc did.
+
+If there are known systems which will need an override with a9c4a912b7dc reverted, then we should probably add those to the override table right away.
+
+And I think what we also need is a way to specify an IRQ trigger-type override for IRQ 1 on the kernel commandline, so that we can easily ask users to try a different trigger-type without them needing to build a kernel with an updated quirk table.
+
+As Linus mentioned already, we really need to find a proper fix for this, but for now my main priority is to stop the influx of new Fedora bugzilla and bugzilla.kernel.org bugs caused by a9c4a912b7dc, counting the extra bug links added in this thread it seems we are up to 6 known bug reports for this and that likely is just the tip of the iceberg.
+
+Regards,
+
+Hans
+
+
+
+> 
+>>
+>> Fixes: a9c4a912b7dc ("ACPI: resource: Remove "Zen" specific match and quirks")
+>> Link: https://bugzilla.redhat.com/show_bug.cgi?id=2229165
+>> Link: https://bugzilla.redhat.com/show_bug.cgi?id=2229317
+>> Link: https://bugzilla.kernel.org/show_bug.cgi?id=217726
+>> Cc: Mario Limonciello <mario.limonciello@amd.com>
+>> Cc: Linux regressions mailing list <regressions@lists.linux.dev>
+>> Cc: stable@vger.kernel.org
+>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>> ---
+>>   drivers/acpi/resource.c | 60 +++++++++++++++++++++++++++++++++++++++++
+>>   1 file changed, 60 insertions(+)
+>>
+>> diff --git a/drivers/acpi/resource.c b/drivers/acpi/resource.c
+>> index 1dd8d5aebf67..0800a9d77558 100644
+>> --- a/drivers/acpi/resource.c
+>> +++ b/drivers/acpi/resource.c
+>> @@ -470,6 +470,52 @@ static const struct dmi_system_id asus_laptop[] = {
+>>       { }
+>>   };
+>>   +static const struct dmi_system_id lenovo_laptop[] = {
+>> +    {
+>> +        .ident = "LENOVO IdeaPad Flex 5 14ALC7",
+>> +        .matches = {
+>> +            DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+>> +            DMI_MATCH(DMI_PRODUCT_NAME, "82R9"),
+>> +        },
+>> +    },
+>> +    {
+>> +        .ident = "LENOVO IdeaPad Flex 5 16ALC7",
+>> +        .matches = {
+>> +            DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+>> +            DMI_MATCH(DMI_PRODUCT_NAME, "82RA"),
+>> +        },
+>> +    },
+>> +    { }
+>> +};
+>> +
+>> +static const struct dmi_system_id tongfang_gm_rg[] = {
+>> +    {
+>> +        .ident = "TongFang GMxRGxx/XMG CORE 15 (M22)/TUXEDO Stellaris 15 Gen4 AMD",
+>> +        .matches = {
+>> +            DMI_MATCH(DMI_BOARD_NAME, "GMxRGxx"),
+>> +        },
+>> +    },
+>> +    { }
+>> +};
+>> +
+>> +static const struct dmi_system_id maingear_laptop[] = {
+>> +    {
+>> +        .ident = "MAINGEAR Vector Pro 2 15",
+>> +        .matches = {
+>> +            DMI_MATCH(DMI_SYS_VENDOR, "Micro Electronics Inc"),
+>> +            DMI_MATCH(DMI_PRODUCT_NAME, "MG-VCP2-15A3070T"),
+>> +        }
+>> +    },
+>> +    {
+>> +        .ident = "MAINGEAR Vector Pro 2 17",
+>> +        .matches = {
+>> +            DMI_MATCH(DMI_SYS_VENDOR, "Micro Electronics Inc"),
+>> +            DMI_MATCH(DMI_PRODUCT_NAME, "MG-VCP2-17A3070T"),
+>> +        },
+>> +    },
+>> +    { }
+>> +};
+>> +
+>>   static const struct dmi_system_id lg_laptop[] = {
+>>       {
+>>           .ident = "LG Electronics 17U70P",
+>> @@ -493,6 +539,10 @@ struct irq_override_cmp {
+>>   static const struct irq_override_cmp override_table[] = {
+>>       { medion_laptop, 1, ACPI_LEVEL_SENSITIVE, ACPI_ACTIVE_LOW, 0, false },
+>>       { asus_laptop, 1, ACPI_LEVEL_SENSITIVE, ACPI_ACTIVE_LOW, 0, false },
+>> +    { lenovo_laptop, 6, ACPI_LEVEL_SENSITIVE, ACPI_ACTIVE_LOW, 0, true },
+>> +    { lenovo_laptop, 10, ACPI_LEVEL_SENSITIVE, ACPI_ACTIVE_LOW, 0, true },
+>> +    { tongfang_gm_rg, 1, ACPI_EDGE_SENSITIVE, ACPI_ACTIVE_LOW, 1, true },
+>> +    { maingear_laptop, 1, ACPI_EDGE_SENSITIVE, ACPI_ACTIVE_LOW, 1, true },
+>>       { lg_laptop, 1, ACPI_LEVEL_SENSITIVE, ACPI_ACTIVE_LOW, 0, false },
+>>   };
+>>   @@ -512,6 +562,16 @@ static bool acpi_dev_irq_override(u32 gsi, u8 triggering, u8 polarity,
+>>               return entry->override;
+>>       }
+>>   +#ifdef CONFIG_X86
+>> +    /*
+>> +     * IRQ override isn't needed on modern AMD Zen systems and
+>> +     * this override breaks active low IRQs on AMD Ryzen 6000 and
+>> +     * newer systems. Skip it.
+>> +     */
+>> +    if (boot_cpu_has(X86_FEATURE_ZEN))
+>> +        return false;
+>> +#endif
+>> +
+>>       return true;
+>>   }
+>>   
+> 
 
-Hans ~two hours ago submitted a revert for a9c4a912b7d to address the
-second manifestation of the Ryzen keyboard problems I brought to your
-attention last week (which was backported to 6.4.7 and thus meanwhile
-reached some mainstream distros). Thing is: for some users a9c4a912b7d
-was a fix to avoid the first manifestation of the regression (caused by
-9946e39fe8d0). Hence if we apply this we afaics need to extend the quirk
-list for the first manifestation of the problem. This thread has the
-details:
-https://lore.kernel.org/all/20230806151453.10690-1-hdegoede@redhat.com/
-
-FWIW, a zram regression from the 6.4 cycle that let to XFS metadata
-corruption on ppc64le turned up (I CCed you on Friday); a fix for
-that became ready over the weekend (thanks Christoph!) and Jens
-already picked it up:
-https://lore.kernel.org/lkml/b2d40565-7868-ba15-4bb1-fca6f0df076b@dustymabe.com/
-https://lore.kernel.org/lkml/20230805055537.147835-1-hch@lst.de/
-
-Ciao, Thorsten
-
----
-
-Hi, this is regzbot, the Linux kernel regression tracking bot.
-
-Currently I'm aware of 10 regressions in linux-mainline. Find the
-current status below and the latest on the web:
-
-https://linux-regtracking.leemhuis.info/regzbot/mainline/
-
-Bye bye, hope to see you soon for the next report.
-   Regzbot (on behalf of Thorsten Leemhuis)
-
-
-======================================================
-current cycle (v6.4.. aka v6.5-rc), culprit identified
-======================================================
-
-
-ASUE140D:00 04F3:31B9 doesn't respond to input
-----------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/bugzilla.kernel.org/217726/
-https://bugzilla.kernel.org/show_bug.cgi?id=217726
-https://lore.kernel.org/lkml/bdc6cb4d-a853-72b2-b132-989b64740ad9@gmail.com/
-
-By Guilhem Lettron and Guilhem Lettron; 8 days ago; 14 activities, latest 0 days ago.
-Introduced in a9c4a912b7dc (v6.5-rc1)
-
-Recent activities from: Guilhem Lettron (3), Hans de Goede (2), Mario
-  Limonciello (AMD) (2), henil (2), Linux regression tracking (Thorsten
-  Leemhuis) (1), August Wikerfors (1), Marcin Bachry (1)
-
-Noteworthy links:
-* [PATCH] ACPI: resource: revert "Remove "Zen" specific match and quirks"
-  https://lore.kernel.org/stable/20230806151453.10690-1-hdegoede@redhat.com/
-  0 days ago, by Hans de Goede; thread monitored.
-
-
-PCI: acpiphp: Oops on first attempt to suspend, freeze on second
-----------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/11fc981c-af49-ce64-6b43-3e282728bd1a@gmail.com/
-https://lore.kernel.org/lkml/11fc981c-af49-ce64-6b43-3e282728bd1a@gmail.com/
-
-By Woody Suwalski; 17 days ago; 31 activities, latest 1 days ago.
-Introduced in 40613da52b13 (v6.5-rc1)
-
-Fix incoming:
-* Revert "PCI: acpiphp: Reassign resources on bridge if necessary"
-  https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=master&id=b607aa1edc9ca2ff16ae29c48e3e4090fae8aeab
-
-
-[ *NEW* ] pm: boot problems when hibernate is configured and kernel locked down
--------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/2cfa5f55-1d68-8a4f-d049-13f42e0d1484@suse.cz/
-https://lore.kernel.org/lkml/2cfa5f55-1d68-8a4f-d049-13f42e0d1484@suse.cz/
-
-By Vlastimil Babka; 3 days ago; 3 activities, latest 2 days ago.
-Introduced in cc89c63e2fe3 (v6.5-rc1)
-
-Fix incoming:
-* PM: hibernate: fix resume_store() return value when hibernation not available
-  https://lore.kernel.org/lkml/84f6ea98-0d72-e17a-4b7c-d025f2d34e95@leemhuis.info/
-
-
-[ *NEW* ] crypto: broke CAAM RNG instantiation on an i.MX8MM
-------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/e1f3f073-9d5e-1bae-f4f8-08dc48adad62@pengutronix.de/
-https://lore.kernel.org/lkml/e1f3f073-9d5e-1bae-f4f8-08dc48adad62@pengutronix.de/
-
-By Bastian Krause; 20 days ago; 7 activities, latest 2 days ago.
-Introduced in ef492d08030 (v6.5-rc1)
-
-Recent activities from: Gaurav Jain (1), Herbert Xu (1)
-
-One patch associated with this regression:
-* Re: [PATCH] crypto: caam - adjust RNG timing to support more devices
-  https://lore.kernel.org/lkml/f673a09e-e212-ee7b-15c3-78afe8c70916@pengutronix.de/
-  19 days ago, by Bastian Krause
-
-
-kernel pointer dereference regression due to extract_iter_to_sg()
------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/CAAUqJDuRkHE8fPgZJGaKjUjd3QfGwzfumuJBmStPqBhubxyk_A@mail.gmail.com/
-https://lore.kernel.org/lkml/CAAUqJDuRkHE8fPgZJGaKjUjd3QfGwzfumuJBmStPqBhubxyk_A@mail.gmail.com/
-
-By Ondrej Mosnáček; 24 days ago; 11 activities, latest 2 days ago.
-Introduced in c1abe6f570af (v6.5-rc1)
-
-Recent activities from: Herbert Xu (1), Ard Biesheuvel (1), Ondrej
-  Mosnáček (1)
-
-One patch associated with this regression:
-* [PATCH] crypto: Fix missing initialisation affecting gcm-aes-s390
-  https://lore.kernel.org/lkml/97730.1690408399@warthog.procyon.org.uk/
-  10 days ago, by David Howells
-
-
-drm/bridge: lt9611: Dragonboard 845c (SDM845) devboard broken when running AOSP
--------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/CAMi1Hd0TD=2z_=bcDrht3H_wiLvAFcv8Z-U_r_KUOoeMc6UMjw@mail.gmail.com/
-https://lore.kernel.org/dri-devel/CAMi1Hd0TD=2z_=bcDrht3H_wiLvAFcv8Z-U_r_KUOoeMc6UMjw@mail.gmail.com/
-
-By Amit Pundir; 32 days ago; 49 activities, latest 2 days ago.
-Introduced in 8ddce13ae69 (v6.5-rc1)
-
-Recent activities from: Marek Vasut (11), Dmitry Baryshkov (7), Neil
-  Armstrong (5), neil.armstrong@linaro.org (2), Laurent Pinchart (1),
-  Rob Clark (1), Abhinav Kumar (1), Amit Pundir (1)
-
-Noteworthy links:
-* [PATCH] Revert "drm/bridge: lt9611: Do not generate HFP/HBP/HSA and EOT packet"
-  https://lore.kernel.org/lkml/20230802-revert-do-not-generate-hfp-hbp-hsa-eot-packet-v1-1-f8a20084e15a@linaro.org/
-  4 days ago, by Neil Armstrong; thread monitored.
-
-
-[ *NEW* ] btrfs: write-bandwidth performance regression with NVMe raid0
------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/20230731152223.4EFB.409509F4@e16-tech.com/
-https://lore.kernel.org/linux-btrfs/20230731152223.4EFB.409509F4@e16-tech.com/
-
-By Wang Yugui; 6 days ago; 14 activities, latest 4 days ago.
-Introduced in da023618076 (v6.5-rc1)
-
-Recent activities from: Christoph Hellwig (7), Wang Yugui (7)
-
-2 patch postings are associated with this regression, the latest is this:
-* Re: btrfs write-bandwidth performance regression of 6.5-rc4/rc3
-  https://lore.kernel.org/linux-btrfs/20230801235123.B665.409509F4@e16-tech.com/
-  5 days ago, by Wang Yugui
-
-
-[ *NEW* ] ALSA: hda/realtek: Audible "pop" sound whenever audio card goes in or out of sleep
---------------------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/bugzilla.kernel.org/217732/
-https://bugzilla.kernel.org/show_bug.cgi?id=217732
-https://lore.kernel.org/regressions/bc22f6c4-a147-3032-49ef-0784d0171d9a@leemhuis.info/
-
-By serfreeman1337 and serfreeman1337; 7 days ago; 3 activities, latest 7 days ago.
-Introduced in 69ea4c9d02b7 (v6.5-rc3)
-
-
-drm: amdgpu: HW acceleration broke on ThinkPad E595
----------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/647beed4-9d0b-e351-6f66-756f73eb73a5@daenzer.net/
-https://lore.kernel.org/amd-gfx/647beed4-9d0b-e351-6f66-756f73eb73a5@daenzer.net/
-
-By Michel Dänzer; 20 days ago; 12 activities, latest 8 days ago.
-Introduced in 84b4dd3f84d (v6.5-rc1)
-
-2 patch postings are associated with this regression, the latest is this:
-* RE: [PATCH 28/29] drm/amdkfd: Refactor migrate init to support partition switch
-  https://lore.kernel.org/amd-gfx/DM4PR12MB5152E173B970C3974F071E76E306A@DM4PR12MB5152.namprd12.prod.outlook.com/
-  9 days ago, by Zhang, Jesse(Jie)
-
-
-===================================================
-current cycle (v6.4.. aka v6.5-rc), unknown culprit
-===================================================
-
-
-mm/vmalloc: NULL or otherwise bad pointer dereferences on ARM64
----------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/42279f1f-7b82-40dc-8546-86171018729c@sirena.org.uk/
-https://lore.kernel.org/lkml/42279f1f-7b82-40dc-8546-86171018729c@sirena.org.uk/
-
-By Mark Brown; 27 days ago; 10 activities, latest 17 days ago.
-Introduced in v6.4..v6.5-rc1
-
-One patch associated with this regression:
-* Re: [PATCH v2 12/32] mm/vmalloc: vmalloc_to_page() use pte_offset_kernel()
-  https://lore.kernel.org/lkml/b479b946-f052-eb75-295d-6fa7c2d8ce8e@google.com/
-  26 days ago, by Hugh Dickins
-
-
-=============
-End of report
-=============
-
-All regressions marked '[ *NEW* ]' were added since the previous report,
-which can be found here:
-https://lore.kernel.org/r/169073747103.4140879.6035275932676410922@leemhuis.info
-
-Thanks for your attention, have a nice day!
-
-  Regzbot, your hard working Linux kernel regression tracking robot
-
-
-P.S.: Wanna know more about regzbot or how to use it to track regressions
-for your subsystem? Then check out the getting started guide or the
-reference documentation:
-
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
-
-The short version: if you see a regression report you want to see
-tracked, just send a reply to the report where you Cc
-regressions@lists.linux.dev with a line like this:
-
-#regzbot introduced: v5.13..v5.14-rc1
-
-If you want to fix a tracked regression, just do what is expected
-anyway: add a 'Link:' tag with the url to the report, e.g.:
-
-Link: https://lore.kernel.org/all/30th.anniversary.repost@klaava.Helsinki.FI/
