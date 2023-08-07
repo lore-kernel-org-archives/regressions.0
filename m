@@ -1,334 +1,300 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 57F6AFC00
-	for <regressions@lists.linux.dev>; Mon,  7 Aug 2023 11:44:06 +0000 (UTC)
-Authenticated-By: 
-X-SpamFilter-By: ArmorX SpamTrap 5.77 with qID 377BhFeO5009057, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
-	by rtits2.realtek.com.tw (8.15.2/2.81/5.90) with ESMTPS id 377BhFeO5009057
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-	Mon, 7 Aug 2023 19:43:15 +0800
-Received: from RTEXMBS03.realtek.com.tw (172.21.6.96) by
- RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.32; Mon, 7 Aug 2023 19:43:06 +0800
-Received: from localhost.localhost (172.21.132.123) by
- RTEXMBS03.realtek.com.tw (172.21.6.96) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.7; Mon, 7 Aug 2023 19:43:05 +0800
-From: <max.chou@realtek.com>
-To: <marcel@holtmann.org>
-CC: <johan.hedberg@gmail.com>, <luiz.dentz@gmail.com>,
-        <linux-bluetooth@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <alex_lu@realsil.com.cn>, <hildawu@realtek.com>,
-        <karenhsu@realtek.com>, <kidman@realtek.com>, <max.chou@realtek.com>,
-        <juerg.haefliger@canonical.com>, <vicamo.yang@canonical.com>,
-        <Riley.Kao@dell.com>, <jwboyer@kernel.org>, <davem@davemloft.net>,
-        <edumazet@google.com>, <kuba@kernel.org>, <pabeni@redhat.com>,
-        <regressions@lists.linux.dev>
-Subject: [PATCH v4] Bluetooth: btrtl: Load FW v2 otherwise FW v1 for RTL8852C
-Date: Mon, 7 Aug 2023 19:42:59 +0800
-Message-ID: <20230807114259.13654-1-max.chou@realtek.com>
-X-Mailer: git-send-email 2.25.1
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C3B710957
+	for <regressions@lists.linux.dev>; Mon,  7 Aug 2023 15:20:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1691421604;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wFqv/cLru+C9EdiPmmulE3UaUKd0oAuNQ0J088mMQ+8=;
+	b=YqCHmH0f5QszbRq6puciWjHhl8TVNKZAV1Pij2IznaxyFJGgVFyk/bI+8ZJg7a3Xis/H7k
+	YWjdFtMV0lZ/CsMt861Xpzep+Bw3XoHMw7nK6/VfxxQv+KB7YywPE1I8pDDwqy6lNLDtlp
+	X5o27O96K+3da+XhsJLuqpwG2M8G7Jw=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-508-0b89j57NNS-WrJyvu00R4A-1; Mon, 07 Aug 2023 11:20:02 -0400
+X-MC-Unique: 0b89j57NNS-WrJyvu00R4A-1
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-99bc8f1290eso314694766b.3
+        for <regressions@lists.linux.dev>; Mon, 07 Aug 2023 08:20:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1691421601; x=1692026401;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=wFqv/cLru+C9EdiPmmulE3UaUKd0oAuNQ0J088mMQ+8=;
+        b=S28g2NaMJ0H0UrJGj0+ylWgo3vS+1Xkm9ivuRylHpq5wfGdEiKmcolmSusyKKys9vU
+         KpBE8xQLPzv4x2eim2q5yZBRDj19EGw3NIm5p1J/CsaqyheBqYP+EY9+c88iStcH2AUD
+         33xyBIiXTXD7gnKA7I9OoCjlALf8g3+kDKSCNetGZtTKGnYSUWfSgbmhYWp+RUWct4Fc
+         b9N6pW4r4s8WMrqIvOgjEJH13jjsR/dLoSwNb45WLE5Qk88Xshh9gouvDDr2i0R+UmeZ
+         YUa+vXO0uYjnYvOlwqqOKF7E7ulbO5sXQqSJcxDaTweDzuQL9wqSlRxFjFrjbpMVY3c1
+         oGGw==
+X-Gm-Message-State: AOJu0Yze934cTLmtZQdDYa3v+m9hK/JD/NzxT2ovya9RXJ+o9ZpbkSQP
+	qoRiTs2N13HsXSUqF8BOmLRHr4kELIldnz3VUU5HOB+9P890Zdbq+pzNdj22Cyc0q4PRswgCMLy
+	JP7leAABm2PvVSxHJfJPhPfc=
+X-Received: by 2002:a17:906:ef90:b0:99c:4c94:1a9a with SMTP id ze16-20020a170906ef9000b0099c4c941a9amr6771622ejb.42.1691421601502;
+        Mon, 07 Aug 2023 08:20:01 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFj2BYdB5sgBFDcOsXFzpQIRJr3pnZIUQAYATthoLkJCHhAJUC+aVdZHM4mDbl/rkxKP6+Zig==
+X-Received: by 2002:a17:906:ef90:b0:99c:4c94:1a9a with SMTP id ze16-20020a170906ef9000b0099c4c941a9amr6771610ejb.42.1691421601194;
+        Mon, 07 Aug 2023 08:20:01 -0700 (PDT)
+Received: from [10.40.98.142] ([78.108.130.194])
+        by smtp.gmail.com with ESMTPSA id y8-20020a1709063a8800b0099316c56db9sm5241702ejd.127.2023.08.07.08.20.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Aug 2023 08:20:00 -0700 (PDT)
+Message-ID: <3cdde518-1c0c-24dc-1ffb-90ae34c23296@redhat.com>
+Date: Mon, 7 Aug 2023 17:19:59 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [172.21.132.123]
-X-ClientProxiedBy: RTEXH36505.realtek.com.tw (172.21.6.25) To
- RTEXMBS03.realtek.com.tw (172.21.6.96)
-X-KSE-ServerInfo: RTEXMBS03.realtek.com.tw, 9
-X-KSE-AntiSpam-Interceptor-Info: fallback
-X-KSE-Antivirus-Interceptor-Info: fallback
-X-KSE-AntiSpam-Interceptor-Info: fallback
-X-KSE-ServerInfo: RTEXH36505.realtek.com.tw, 9
-X-KSE-AntiSpam-Interceptor-Info: fallback
-X-KSE-Antivirus-Interceptor-Info: fallback
-X-KSE-AntiSpam-Interceptor-Info: fallback
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH] ACPI: resource: revert "Remove "Zen" specific match and
+ quirks"
+To: "Rafael J . Wysocki" <rafael@kernel.org>
+Cc: linux-acpi@vger.kernel.org, Mario Limonciello
+ <mario.limonciello@amd.com>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ stable@vger.kernel.org
+References: <20230806151453.10690-1-hdegoede@redhat.com>
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20230806151453.10690-1-hdegoede@redhat.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Max Chou <max.chou@realtek.com>
+Hi All,
 
-In this commit, prefer to load FW v2 if available. Fallback to FW v1
-otherwise. This behavior is only for RTL8852C.
+On 8/6/23 17:14, Hans de Goede wrote:
+> Commit a9c4a912b7dc ("ACPI: resource: Remove "Zen" specific match and
+> quirks") is causing keyboard problems for quite a log of AMD based
+> laptop users, leading to many bug reports.
+> 
+> Revert this change for now, until we can come up with
+> a better fix for the PS/2 IRQ trigger-type/polarity problems
+> on some x86 laptops.
+> 
+> Fixes: a9c4a912b7dc ("ACPI: resource: Remove "Zen" specific match and quirks")
+> Link: https://bugzilla.redhat.com/show_bug.cgi?id=2229165
+> Link: https://bugzilla.redhat.com/show_bug.cgi?id=2229317
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=217726
+> Cc: Mario Limonciello <mario.limonciello@amd.com>
+> Cc: Linux regressions mailing list <regressions@lists.linux.dev>
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 
-Fixes: 9a24ce5e29b1 ("Bluetooth: btrtl: Firmware format v2 support")
-Cc: stable@vger.kernel.org
-Suggested-by: Juerg Haefliger <juerg.haefliger@canonical.com>
-Tested-by: Hilda Wu <hildawu@realtek.com>
-Signed-off-by: Max Chou <max.chou@realtek.com>
+I've spend most of today analysing the situation / this problem :
 
----
-Changes in v4:
-- Reduce the commit log. Thanks Juerg!
-- Correct the tag for Fixes and Cc. Thanks Thorsten!
+213031 - MEDION notebook internal keyboard not recognized / not working correctly
+https://bugzilla.kernel.org/show_bug.cgi?id=213031
 
-Changes in v3:
-- Fix commit log for CheckPatch FAIL
+This is the bug that started it all, the issue here was overriding
+a level low DSDT entry:
 
-Changes in v2:
-- Tuning the code for more readable. Thanks Juerg!
-- Modify the commit log.
----
- drivers/bluetooth/btrtl.c | 70 +++++++++++++++++++++++++--------------
- 1 file changed, 45 insertions(+), 25 deletions(-)
+                IRQ (Level, ActiveLow, Exclusive, )
+                    {1}
 
-diff --git a/drivers/bluetooth/btrtl.c b/drivers/bluetooth/btrtl.c
-index ddae6524106d..84c2c2e1122f 100644
---- a/drivers/bluetooth/btrtl.c
-+++ b/drivers/bluetooth/btrtl.c
-@@ -104,7 +104,7 @@ static const struct id_table ic_id_table[] = {
- 	{ IC_INFO(RTL_ROM_LMP_8723A, 0xb, 0x6, HCI_USB),
- 	  .config_needed = false,
- 	  .has_rom_version = false,
--	  .fw_name = "rtl_bt/rtl8723a_fw.bin",
-+	  .fw_name = "rtl_bt/rtl8723a_fw",
- 	  .cfg_name = NULL,
- 	  .hw_info = "rtl8723au" },
- 
-@@ -112,7 +112,7 @@ static const struct id_table ic_id_table[] = {
- 	{ IC_INFO(RTL_ROM_LMP_8723B, 0xb, 0x6, HCI_UART),
- 	  .config_needed = true,
- 	  .has_rom_version = true,
--	  .fw_name  = "rtl_bt/rtl8723bs_fw.bin",
-+	  .fw_name  = "rtl_bt/rtl8723bs_fw",
- 	  .cfg_name = "rtl_bt/rtl8723bs_config",
- 	  .hw_info  = "rtl8723bs" },
- 
-@@ -120,7 +120,7 @@ static const struct id_table ic_id_table[] = {
- 	{ IC_INFO(RTL_ROM_LMP_8723B, 0xb, 0x6, HCI_USB),
- 	  .config_needed = false,
- 	  .has_rom_version = true,
--	  .fw_name  = "rtl_bt/rtl8723b_fw.bin",
-+	  .fw_name  = "rtl_bt/rtl8723b_fw",
- 	  .cfg_name = "rtl_bt/rtl8723b_config",
- 	  .hw_info  = "rtl8723bu" },
- 
-@@ -132,7 +132,7 @@ static const struct id_table ic_id_table[] = {
- 	  .hci_bus = HCI_UART,
- 	  .config_needed = true,
- 	  .has_rom_version = true,
--	  .fw_name  = "rtl_bt/rtl8723cs_cg_fw.bin",
-+	  .fw_name  = "rtl_bt/rtl8723cs_cg_fw",
- 	  .cfg_name = "rtl_bt/rtl8723cs_cg_config",
- 	  .hw_info  = "rtl8723cs-cg" },
- 
-@@ -144,7 +144,7 @@ static const struct id_table ic_id_table[] = {
- 	  .hci_bus = HCI_UART,
- 	  .config_needed = true,
- 	  .has_rom_version = true,
--	  .fw_name  = "rtl_bt/rtl8723cs_vf_fw.bin",
-+	  .fw_name  = "rtl_bt/rtl8723cs_vf_fw",
- 	  .cfg_name = "rtl_bt/rtl8723cs_vf_config",
- 	  .hw_info  = "rtl8723cs-vf" },
- 
-@@ -156,7 +156,7 @@ static const struct id_table ic_id_table[] = {
- 	  .hci_bus = HCI_UART,
- 	  .config_needed = true,
- 	  .has_rom_version = true,
--	  .fw_name  = "rtl_bt/rtl8723cs_xx_fw.bin",
-+	  .fw_name  = "rtl_bt/rtl8723cs_xx_fw",
- 	  .cfg_name = "rtl_bt/rtl8723cs_xx_config",
- 	  .hw_info  = "rtl8723cs" },
- 
-@@ -164,7 +164,7 @@ static const struct id_table ic_id_table[] = {
- 	{ IC_INFO(RTL_ROM_LMP_8723B, 0xd, 0x8, HCI_USB),
- 	  .config_needed = true,
- 	  .has_rom_version = true,
--	  .fw_name  = "rtl_bt/rtl8723d_fw.bin",
-+	  .fw_name  = "rtl_bt/rtl8723d_fw",
- 	  .cfg_name = "rtl_bt/rtl8723d_config",
- 	  .hw_info  = "rtl8723du" },
- 
-@@ -172,7 +172,7 @@ static const struct id_table ic_id_table[] = {
- 	{ IC_INFO(RTL_ROM_LMP_8723B, 0xd, 0x8, HCI_UART),
- 	  .config_needed = true,
- 	  .has_rom_version = true,
--	  .fw_name  = "rtl_bt/rtl8723ds_fw.bin",
-+	  .fw_name  = "rtl_bt/rtl8723ds_fw",
- 	  .cfg_name = "rtl_bt/rtl8723ds_config",
- 	  .hw_info  = "rtl8723ds" },
- 
-@@ -180,7 +180,7 @@ static const struct id_table ic_id_table[] = {
- 	{ IC_INFO(RTL_ROM_LMP_8821A, 0xa, 0x6, HCI_USB),
- 	  .config_needed = false,
- 	  .has_rom_version = true,
--	  .fw_name  = "rtl_bt/rtl8821a_fw.bin",
-+	  .fw_name  = "rtl_bt/rtl8821a_fw",
- 	  .cfg_name = "rtl_bt/rtl8821a_config",
- 	  .hw_info  = "rtl8821au" },
- 
-@@ -189,7 +189,7 @@ static const struct id_table ic_id_table[] = {
- 	  .config_needed = false,
- 	  .has_rom_version = true,
- 	  .has_msft_ext = true,
--	  .fw_name  = "rtl_bt/rtl8821c_fw.bin",
-+	  .fw_name  = "rtl_bt/rtl8821c_fw",
- 	  .cfg_name = "rtl_bt/rtl8821c_config",
- 	  .hw_info  = "rtl8821cu" },
- 
-@@ -198,7 +198,7 @@ static const struct id_table ic_id_table[] = {
- 	  .config_needed = true,
- 	  .has_rom_version = true,
- 	  .has_msft_ext = true,
--	  .fw_name  = "rtl_bt/rtl8821cs_fw.bin",
-+	  .fw_name  = "rtl_bt/rtl8821cs_fw",
- 	  .cfg_name = "rtl_bt/rtl8821cs_config",
- 	  .hw_info  = "rtl8821cs" },
- 
-@@ -206,7 +206,7 @@ static const struct id_table ic_id_table[] = {
- 	{ IC_INFO(RTL_ROM_LMP_8761A, 0xa, 0x6, HCI_USB),
- 	  .config_needed = false,
- 	  .has_rom_version = true,
--	  .fw_name  = "rtl_bt/rtl8761a_fw.bin",
-+	  .fw_name  = "rtl_bt/rtl8761a_fw",
- 	  .cfg_name = "rtl_bt/rtl8761a_config",
- 	  .hw_info  = "rtl8761au" },
- 
-@@ -215,7 +215,7 @@ static const struct id_table ic_id_table[] = {
- 	  .config_needed = false,
- 	  .has_rom_version = true,
- 	  .has_msft_ext = true,
--	  .fw_name  = "rtl_bt/rtl8761b_fw.bin",
-+	  .fw_name  = "rtl_bt/rtl8761b_fw",
- 	  .cfg_name = "rtl_bt/rtl8761b_config",
- 	  .hw_info  = "rtl8761btv" },
- 
-@@ -223,7 +223,7 @@ static const struct id_table ic_id_table[] = {
- 	{ IC_INFO(RTL_ROM_LMP_8761A, 0xb, 0xa, HCI_USB),
- 	  .config_needed = false,
- 	  .has_rom_version = true,
--	  .fw_name  = "rtl_bt/rtl8761bu_fw.bin",
-+	  .fw_name  = "rtl_bt/rtl8761bu_fw",
- 	  .cfg_name = "rtl_bt/rtl8761bu_config",
- 	  .hw_info  = "rtl8761bu" },
- 
-@@ -232,7 +232,7 @@ static const struct id_table ic_id_table[] = {
- 	  .config_needed = true,
- 	  .has_rom_version = true,
- 	  .has_msft_ext = true,
--	  .fw_name  = "rtl_bt/rtl8822cs_fw.bin",
-+	  .fw_name  = "rtl_bt/rtl8822cs_fw",
- 	  .cfg_name = "rtl_bt/rtl8822cs_config",
- 	  .hw_info  = "rtl8822cs" },
- 
-@@ -241,7 +241,7 @@ static const struct id_table ic_id_table[] = {
- 	  .config_needed = true,
- 	  .has_rom_version = true,
- 	  .has_msft_ext = true,
--	  .fw_name  = "rtl_bt/rtl8822cs_fw.bin",
-+	  .fw_name  = "rtl_bt/rtl8822cs_fw",
- 	  .cfg_name = "rtl_bt/rtl8822cs_config",
- 	  .hw_info  = "rtl8822cs" },
- 
-@@ -250,7 +250,7 @@ static const struct id_table ic_id_table[] = {
- 	  .config_needed = false,
- 	  .has_rom_version = true,
- 	  .has_msft_ext = true,
--	  .fw_name  = "rtl_bt/rtl8822cu_fw.bin",
-+	  .fw_name  = "rtl_bt/rtl8822cu_fw",
- 	  .cfg_name = "rtl_bt/rtl8822cu_config",
- 	  .hw_info  = "rtl8822cu" },
- 
-@@ -259,7 +259,7 @@ static const struct id_table ic_id_table[] = {
- 	  .config_needed = true,
- 	  .has_rom_version = true,
- 	  .has_msft_ext = true,
--	  .fw_name  = "rtl_bt/rtl8822b_fw.bin",
-+	  .fw_name  = "rtl_bt/rtl8822b_fw",
- 	  .cfg_name = "rtl_bt/rtl8822b_config",
- 	  .hw_info  = "rtl8822bu" },
- 
-@@ -268,7 +268,7 @@ static const struct id_table ic_id_table[] = {
- 	  .config_needed = false,
- 	  .has_rom_version = true,
- 	  .has_msft_ext = true,
--	  .fw_name  = "rtl_bt/rtl8852au_fw.bin",
-+	  .fw_name  = "rtl_bt/rtl8852au_fw",
- 	  .cfg_name = "rtl_bt/rtl8852au_config",
- 	  .hw_info  = "rtl8852au" },
- 
-@@ -277,7 +277,7 @@ static const struct id_table ic_id_table[] = {
- 	  .config_needed = true,
- 	  .has_rom_version = true,
- 	  .has_msft_ext = true,
--	  .fw_name  = "rtl_bt/rtl8852bs_fw.bin",
-+	  .fw_name  = "rtl_bt/rtl8852bs_fw",
- 	  .cfg_name = "rtl_bt/rtl8852bs_config",
- 	  .hw_info  = "rtl8852bs" },
- 
-@@ -286,7 +286,7 @@ static const struct id_table ic_id_table[] = {
- 	  .config_needed = false,
- 	  .has_rom_version = true,
- 	  .has_msft_ext = true,
--	  .fw_name  = "rtl_bt/rtl8852bu_fw.bin",
-+	  .fw_name  = "rtl_bt/rtl8852bu_fw",
- 	  .cfg_name = "rtl_bt/rtl8852bu_config",
- 	  .hw_info  = "rtl8852bu" },
- 
-@@ -295,7 +295,7 @@ static const struct id_table ic_id_table[] = {
- 	  .config_needed = false,
- 	  .has_rom_version = true,
- 	  .has_msft_ext = true,
--	  .fw_name  = "rtl_bt/rtl8852cu_fw.bin",
-+	  .fw_name  = "rtl_bt/rtl8852cu_fw",
- 	  .cfg_name = "rtl_bt/rtl8852cu_config",
- 	  .hw_info  = "rtl8852cu" },
- 
-@@ -304,7 +304,7 @@ static const struct id_table ic_id_table[] = {
- 	  .config_needed = false,
- 	  .has_rom_version = true,
- 	  .has_msft_ext = false,
--	  .fw_name  = "rtl_bt/rtl8851bu_fw.bin",
-+	  .fw_name  = "rtl_bt/rtl8851bu_fw",
- 	  .cfg_name = "rtl_bt/rtl8851bu_config",
- 	  .hw_info  = "rtl8851bu" },
- 	};
-@@ -1045,6 +1045,7 @@ struct btrtl_device_info *btrtl_initialize(struct hci_dev *hdev,
- 	struct sk_buff *skb;
- 	struct hci_rp_read_local_version *resp;
- 	struct hci_command_hdr *cmd;
-+	char fw_name[40];
- 	char cfg_name[40];
- 	u16 hci_rev, lmp_subver;
- 	u8 hci_ver, lmp_ver, chip_type = 0;
-@@ -1154,8 +1155,26 @@ struct btrtl_device_info *btrtl_initialize(struct hci_dev *hdev,
- 			goto err_free;
- 	}
- 
--	btrtl_dev->fw_len = rtl_load_file(hdev, btrtl_dev->ic_info->fw_name,
--					  &btrtl_dev->fw_data);
-+	if (!btrtl_dev->ic_info->fw_name) {
-+		ret = -ENOMEM;
-+		goto err_free;
-+	}
-+
-+	btrtl_dev->fw_len = -EIO;
-+	if (lmp_subver == RTL_ROM_LMP_8852A && hci_rev == 0x000c) {
-+		snprintf(fw_name, sizeof(fw_name), "%s_v2.bin",
-+				btrtl_dev->ic_info->fw_name);
-+		btrtl_dev->fw_len = rtl_load_file(hdev, fw_name,
-+				&btrtl_dev->fw_data);
-+	}
-+
-+	if (btrtl_dev->fw_len < 0) {
-+		snprintf(fw_name, sizeof(fw_name), "%s.bin",
-+				btrtl_dev->ic_info->fw_name);
-+		btrtl_dev->fw_len = rtl_load_file(hdev, fw_name,
-+				&btrtl_dev->fw_data);
-+	}
-+
- 	if (btrtl_dev->fw_len < 0) {
- 		rtl_dev_err(hdev, "firmware file %s not found",
- 			    btrtl_dev->ic_info->fw_name);
-@@ -1491,4 +1510,5 @@ MODULE_FIRMWARE("rtl_bt/rtl8852bs_config.bin");
- MODULE_FIRMWARE("rtl_bt/rtl8852bu_fw.bin");
- MODULE_FIRMWARE("rtl_bt/rtl8852bu_config.bin");
- MODULE_FIRMWARE("rtl_bt/rtl8852cu_fw.bin");
-+MODULE_FIRMWARE("rtl_bt/rtl8852cu_fw_v2.bin");
- MODULE_FIRMWARE("rtl_bt/rtl8852cu_config.bin");
--- 
-2.25.1
+With an edge high entry from the MADT, note that edge high is the default
+mp_irqs[idx].irqflags value for legacy/ISA IRQs. The dmesg for the Ice Lake
+Medion M15T this bug is about shows no INT_SRC_OVR entry for IRQ 1
+in the MADT, it does show INT_SRC_OVR entries for IRQ 0 and 9.
+
+At first a fix was attempted to not use the MADT override unless
+the DSDT entry was edge high. But that caused regressions, so a switch
+to a DMI based approach was used instead. Noteworthy is that some of
+the regressions benefitted from a MADT override to high edge for
+IRQ 3 and 4 (UART IRQs) even though there are no INT_SRC_OVR messages
+in the dmesg of the machine with the regression.
+
+*** fast forward to today ***
+
+The DMI quirk based approach seems to have worked well for the Ice Lake
+era problems from approx. 3 years ago. But on AMD Zen based systems
+the situation seems to be more complex. Not using the MADT override
+is a problem for quite a few models. But using the MADT override
+is a problem on quite a few other models ...
+
+Looking at the status quo for v6.4 where MADT overriding by default
+is not used, 3 bugs have been filed where the override is actually
+necessary (note dmesg snippets with patched kernel to enable
+MADT override):
+
+217394 - IRQ override skipping breaks the Aya Neo Air Plus 6800U keyboard buttons 
+https://bugzilla.kernel.org/show_bug.cgi?id=217394
+
+Aya Neo Air Plus - AMD Ryzen 7 6800U
+
+[    0.003333] ACPI: INT_SRC_OVR (bus 0 bus_irq 0 global_irq 2 dfl dfl)
+[    0.003333] ACPI: INT_SRC_OVR (bus 0 bus_irq 1 global_irq 1 low edge)
+[    0.003333] ACPI: INT_SRC_OVR (bus 0 bus_irq 9 global_irq 9 low level)
+[    0.410670] ACPI: IRQ 1 override to edge, low(!)
+
+217406 - very slow keyboard typing without IRQ override with new AMD Ryzen CPUs
+https://bugzilla.kernel.org/show_bug.cgi?id=217406
+
+HP Pavilion Aero 13 - AMD Ryzen 7735U 
+
+[    0.026135] ACPI: INT_SRC_OVR (bus 0 bus_irq 1 global_irq 1 low edge)
+[    0.026136] ACPI: INT_SRC_OVR (bus 0 bus_irq 0 global_irq 2 dfl dfl)
+[    0.026137] ACPI: INT_SRC_OVR (bus 0 bus_irq 9 global_irq 9 low level)
+
+[    0.361640] ACPI: IRQ 1 override to edge, low(!)
+
+217336 - keyboard not working Asus TUF FA617NS 
+https://bugzilla.kernel.org/show_bug.cgi?id=217336
+
+Asus TUF FA617NS - AMD Ryzen 7 7735HS
+
+Noteworthy DSTD keyboard resource:
+
+                IRQNoFlags ()
+                    {1}
+
+ACPI: INT_SRC_OVR (bus 0 bus_irq 0 global_irq 2 dfl dfl)
+ACPI: INT_SRC_OVR (bus 0 bus_irq 1 global_irq 1 low edge)
+ACPI: INT_SRC_OVR (bus 0 bus_irq 9 global_irq 9 low level)
+ACPI: IRQ 1 override to edge, low(!)
+
+So for all 3 do use MADT override on Zen bugs we have an INT_SRC_OVR dmesg entry
+for IRQ 1.
+
+Unfortunately the "MAINGEAR Vector Pro 2 17" / "MG-VCP2-17A3070T" for
+which a quirk was added in commit 9946e39fe8d0 to force the override
+even though it it Zen based breaks this pattern:
+
+[    0.073733] ACPI: INT_SRC_OVR (bus 0 bus_irq 0 global_irq 2 dfl dfl)
+[    0.073734] ACPI: INT_SRC_OVR (bus 0 bus_irq 9 global_irq 9 low level)
+[    0.341347] ACPI: IRQ 1 override to edge, high(!)
+
+Still the presence of an INT_SRC_OVR for a specific legacy IRQ seems
+to be a strong indicator that MADT overriding should be used in that
+case and can be used to at least reduce the amount of DMI quirks.
+
+Another interesting data point is that all the devices for which
+DMI quirks are present for which MADT overriding should not be used
+for IRQ 1 all have a DSDT entry with the IRQ configured as level low
+and exclusive.
+
+I think that the best thing to do might be to go back to
+the original approach from:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git/commit/?id=0ec4e55e9f571f08970ed115ec0addc691eda613
+
+and then limit this to IRQ1. Also maybe inverting the check to:
+
+static bool irq_is_legacy(struct acpi_resource_irq *irq)
+{
+	return !(irq->triggering == ACPI_LEVEL_SENSITIVE &&
+		 irq->polarity == ACPI_ACTIVE_LOW &&
+		 irq->shareable == ACPI_EXCLUSIVE);
+}
+
+But I need to check if this will work for all the new Zen models
+for which we got bug reports after the recent dropping of
+9946e39fe8d0 ("ACPI: resource: skip IRQ override on AMD Zen platforms")
+
+Regards,
+
+Hans
+
+
+
+
+
+> ---
+>  drivers/acpi/resource.c | 60 +++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 60 insertions(+)
+> 
+> diff --git a/drivers/acpi/resource.c b/drivers/acpi/resource.c
+> index 1dd8d5aebf67..0800a9d77558 100644
+> --- a/drivers/acpi/resource.c
+> +++ b/drivers/acpi/resource.c
+> @@ -470,6 +470,52 @@ static const struct dmi_system_id asus_laptop[] = {
+>  	{ }
+>  };
+>  
+> +static const struct dmi_system_id lenovo_laptop[] = {
+> +	{
+> +		.ident = "LENOVO IdeaPad Flex 5 14ALC7",
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "82R9"),
+> +		},
+> +	},
+> +	{
+> +		.ident = "LENOVO IdeaPad Flex 5 16ALC7",
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "82RA"),
+> +		},
+> +	},
+> +	{ }
+> +};
+> +
+> +static const struct dmi_system_id tongfang_gm_rg[] = {
+> +	{
+> +		.ident = "TongFang GMxRGxx/XMG CORE 15 (M22)/TUXEDO Stellaris 15 Gen4 AMD",
+> +		.matches = {
+> +			DMI_MATCH(DMI_BOARD_NAME, "GMxRGxx"),
+> +		},
+> +	},
+> +	{ }
+> +};
+> +
+> +static const struct dmi_system_id maingear_laptop[] = {
+> +	{
+> +		.ident = "MAINGEAR Vector Pro 2 15",
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Micro Electronics Inc"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "MG-VCP2-15A3070T"),
+> +		}
+> +	},
+> +	{
+> +		.ident = "MAINGEAR Vector Pro 2 17",
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Micro Electronics Inc"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "MG-VCP2-17A3070T"),
+> +		},
+> +	},
+> +	{ }
+> +};
+> +
+>  static const struct dmi_system_id lg_laptop[] = {
+>  	{
+>  		.ident = "LG Electronics 17U70P",
+> @@ -493,6 +539,10 @@ struct irq_override_cmp {
+>  static const struct irq_override_cmp override_table[] = {
+>  	{ medion_laptop, 1, ACPI_LEVEL_SENSITIVE, ACPI_ACTIVE_LOW, 0, false },
+>  	{ asus_laptop, 1, ACPI_LEVEL_SENSITIVE, ACPI_ACTIVE_LOW, 0, false },
+> +	{ lenovo_laptop, 6, ACPI_LEVEL_SENSITIVE, ACPI_ACTIVE_LOW, 0, true },
+> +	{ lenovo_laptop, 10, ACPI_LEVEL_SENSITIVE, ACPI_ACTIVE_LOW, 0, true },
+> +	{ tongfang_gm_rg, 1, ACPI_EDGE_SENSITIVE, ACPI_ACTIVE_LOW, 1, true },
+> +	{ maingear_laptop, 1, ACPI_EDGE_SENSITIVE, ACPI_ACTIVE_LOW, 1, true },
+>  	{ lg_laptop, 1, ACPI_LEVEL_SENSITIVE, ACPI_ACTIVE_LOW, 0, false },
+>  };
+>  
+> @@ -512,6 +562,16 @@ static bool acpi_dev_irq_override(u32 gsi, u8 triggering, u8 polarity,
+>  			return entry->override;
+>  	}
+>  
+> +#ifdef CONFIG_X86
+> +	/*
+> +	 * IRQ override isn't needed on modern AMD Zen systems and
+> +	 * this override breaks active low IRQs on AMD Ryzen 6000 and
+> +	 * newer systems. Skip it.
+> +	 */
+> +	if (boot_cpu_has(X86_FEATURE_ZEN))
+> +		return false;
+> +#endif
+> +
+>  	return true;
+>  }
+>  
 
