@@ -1,400 +1,174 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4404AD45
-	for <regressions@lists.linux.dev>; Mon,  7 Aug 2023 07:53:36 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qSv3W-00019d-4r; Mon, 07 Aug 2023 09:53:34 +0200
-Message-ID: <a65bd290-52d5-475c-0234-85759c5892a2@leemhuis.info>
-Date: Mon, 7 Aug 2023 09:53:33 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B7C7C8C0;
+	Mon,  7 Aug 2023 08:29:17 +0000 (UTC)
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-3fe4ad22eb0so25687405e9.3;
+        Mon, 07 Aug 2023 01:29:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1691396955; x=1692001755;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=xedCfYnu7czqa8+w0BoRZkS95VJKbfhAvT84gadWBaQ=;
+        b=KJ2v+8P5T7FADtAwsbOhuzi61mzvR1n4HyST8IoTE14WUadiVYAj8bcixUS70lVDuJ
+         uoi/Oy+5mVguqk53vI8lECmjIRCpiMs2FmaAmKQ/Ollou3HB9AWtOKEiO6to+JyIkOXf
+         sp5CmXaypEnAaZAxllmkXcAICXQ3z2ms38lRaWNpTw1W1Lqn6KNPtWBlA0c9OvILior9
+         URNEn7R85E6iwLNizheIzMJ7Yq79nN+oVjNBaaPeKGKdrPoRsgOcsFQAXRp3LFkYBx/b
+         f+E04UShl8WS7sgpjiSQkESxMCukp8S0nnY8f9OwpXIDQHxxfs0OZihj+mjUvCjBi1cb
+         6m9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1691396955; x=1692001755;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xedCfYnu7czqa8+w0BoRZkS95VJKbfhAvT84gadWBaQ=;
+        b=S3bUVWOmJDkRPQKtecS7VuQfksKKvmFDEQ6vGYFAKo7kJ7iXzuchQ6CHRVcId9PIKT
+         o4wVsotVD6FYGv/zE6V279/5PVvVAe8YB/8WZDyQ3r3xr/UXCiSaUQ1w48EoapHv2t1Y
+         lqZp9HQjlI/Wd1gBS0lXFtpy8QuW0RPh12q1W8Bnq8NeP8UW1QLcUmllobGGWbERZevg
+         5itg1BTzupnRAILrV/htjtNJDiukQu35nDYVBMJEhUZrzKa/PVmY7lddcJRS8UCRR5DN
+         bqdcLx2NDuN9BGRfmI+CqEkmdRuYXJSyc/898523VIryqfGyk3hQaMggQdsi0PNxsRX2
+         W1NQ==
+X-Gm-Message-State: AOJu0YyiYsj4J7tHOu9jt8BPRJTH0UEU9EtgKiP+YSVcGuOSxMxDHbGA
+	kCUb+SMbMn2rSxsqNNIPnqo=
+X-Google-Smtp-Source: AGHT+IGZc6ZOK0l/SXR4eXxv2Uq9owLaIVHisIsoNGlxGTL2VSplKSwRiG+i8/bMfg3xyYMR8pNl+w==
+X-Received: by 2002:a05:600c:2286:b0:3fa:8c68:4aba with SMTP id 6-20020a05600c228600b003fa8c684abamr6396840wmf.25.1691396955320;
+        Mon, 07 Aug 2023 01:29:15 -0700 (PDT)
+Received: from [192.168.0.118] (88-113-27-52.elisa-laajakaista.fi. [88.113.27.52])
+        by smtp.gmail.com with ESMTPSA id n1-20020a05600c4f8100b003fe15ac0934sm20884809wmq.1.2023.08.07.01.29.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Aug 2023 01:29:14 -0700 (PDT)
+Message-ID: <b3f9b848-be97-8ce8-9f6c-b9abcb0086f5@gmail.com>
+Date: Mon, 7 Aug 2023 11:29:13 +0300
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: atkbd input regression
-Content-Language: en-US, de-DE
-To: =?UTF-8?B?Sm9zw6kgUmFtw7NuIE11w7FveiBQZWtrYXJpbmVu?=
- <koalinux@gmail.com>, linux-input@vger.kernel.org
-Cc: dmitry.torokhov@gmail.com, gregkh@linuxfoundation.org,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <CANWZPgK2+9SCavsbSZv1DfJyhy0XUpJZ6+ebatM9ZGJPpAN1yA@mail.gmail.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <CANWZPgK2+9SCavsbSZv1DfJyhy0XUpJZ6+ebatM9ZGJPpAN1yA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.1
+Subject: Re: Kernel regression tracking/reporting initiatives and KCIDB
+Content-Language: en-US
+To: Thorsten Leemhuis <regressions@leemhuis.info>,
+ =?UTF-8?Q?Ricardo_Ca=c3=b1uelo?= <ricardo.canuelo@collabora.com>,
+ kernelci@lists.linux.dev, gregkh@linuxfoundation.org,
+ regressions@lists.linux.dev
+Cc: kernel@collabora.com, linux-kernel@vger.kernel.org,
+ Gustavo Padovan <gustavo.padovan@collabora.com>,
+ Shreeya Patel <shreeya.patel@collabora.com>
+References: <874jljhtmj.fsf@rcn-XPS-13-9305.i-did-not-set--mail-host-address--so-tickle-me>
+ <ed9a0b64-b7e7-7735-85f7-d688a3b8e89e@leemhuis.info>
+From: Nikolai Kondrashov <spbnick@gmail.com>
+In-Reply-To: <ed9a0b64-b7e7-7735-85f7-d688a3b8e89e@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1691394816;82759820;
-X-HE-SMSGID: 1qSv3W-00019d-4r
 
-[CCing the regression list, as it should be in the loop for regressions:
-https://docs.kernel.org/admin-guide/reporting-regressions.html]
+Hi Thorsten,
 
-Hi, Thorsten here, the Linux kernel's regression tracker.
+On 8/2/23 11:07, Thorsten Leemhuis wrote:
+ > On 01.08.23 13:47, Ricardo Cañuelo wrote:
+ >> So far, we’ve been using the KernelCI regression data and reports as
+ >> data source, we're now wondering if we could tackle the problem with a
+ >> more general approach by building on top of what KCIDB already provides.
+ >
+ > That's more your area of expertise, but I have to wonder: doesn't that
+ > mainly depend on what the people/projects want which feed their test
+ > results into KCIDB? I had expected some of them might already have
+ > something to stay on top of regressions found by their systems, to at
+ > least ensure they notice and fix tests that broke for external reasons
+ > -- e.g. a test script going sideways, faulty hardware, a network
+ > miss-configuration or others things which naturally will occur in this
+ > line of work.
 
-On 07.08.23 07:19, José Ramón Muñoz Pekkarinen wrote:
->     Sorry again, now in plaintext mode.
-> 
->     Hi,
-> 
->     I'd like to seek help or advise in a possible
-> regression that I detected on my system(a
-> Thinkpad L14 Gen 1) that concerns the atkbd
-> module. My OS is a gentoo, with self built
-> kernels, and a plasma desktop environment
-> using wayland. Up to the kernel 5.16.x my
-> builtin keyboard worked(and works still)
-> fine both in tty and the plasma session, but
-> from that kernel on, the keyboard works only
-> in tty, and no longer in the plasma session.
+Yes, some of this is already done by some CI systems submitting results to
+KCIDB. Syzbot is doing a very good job deduplicating crashes they have found,
+0day is looking for outcome differences, AFAIK, and CKI has its known-issue
+tracking system, which handles problems of various origin.
 
-Could you try bisecting this? A few howtos on the net describe what to
-do. Be sure to use the configuration for your working 5.16 kernel for
-any builds of newer versions (ideally put it <somewhere> and run "cp
-<somewhere> .config; make oldconfig" every time before building a newer
-kernel.
+ >> In general, CI systems tend to define regressions as a low-level concept
+ >> which is rather static: a snapshot of a test result at a certain point
+ >> in time. When it comes to reporting them to developers, there's much
+ >> more info that could be added to them.
+ >
+ > I wonder if it should be s/could/should/ here, as *if I* would be
+ > running CI systems I'd fear that developers sooner or later might start
+ > ignoring more and more of the reports my systems sends when too many of
+ > them turn out to be bogus/misleading -- which naturally will happen for
+ > various reasons you outlined below yourself (broken
+ > hardware/test/network/...) (and seem to happen regularly, as mentioned
+ > in https://lwn.net/Articles/939538/ ).
 
-Ciao, Thorsten
+Yes, this is a constant struggle.
 
->     The input config section of my 5.16.17 kernel:
-> 
-> #
-> # Input device support
-> #
-> CONFIG_INPUT=y
-> CONFIG_INPUT_LEDS=m
-> # CONFIG_INPUT_FF_MEMLESS is not set
-> # CONFIG_INPUT_SPARSEKMAP is not set
-> # CONFIG_INPUT_MATRIXKMAP is not set
-> 
-> #
-> # Userland interfaces
-> #
-> CONFIG_INPUT_MOUSEDEV=m
-> # CONFIG_INPUT_MOUSEDEV_PSAUX is not set
-> CONFIG_INPUT_MOUSEDEV_SCREEN_X=1024
-> CONFIG_INPUT_MOUSEDEV_SCREEN_Y=768
-> CONFIG_INPUT_JOYDEV=m
-> CONFIG_INPUT_EVDEV=m
-> # CONFIG_INPUT_EVBUG is not set
-> 
-> #
-> # Input Device Drivers
-> #
-> CONFIG_INPUT_KEYBOARD=y
-> # CONFIG_KEYBOARD_ADP5588 is not set
-> # CONFIG_KEYBOARD_ADP5589 is not set
-> # CONFIG_KEYBOARD_APPLESPI is not set
-> CONFIG_KEYBOARD_ATKBD=y
-> # CONFIG_KEYBOARD_QT1050 is not set
-> # CONFIG_KEYBOARD_QT1070 is not set
-> # CONFIG_KEYBOARD_QT2160 is not set
-> # CONFIG_KEYBOARD_DLINK_DIR685 is not set
-> # CONFIG_KEYBOARD_LKKBD is not set
-> # CONFIG_KEYBOARD_GPIO is not set
-> # CONFIG_KEYBOARD_GPIO_POLLED is not set
-> # CONFIG_KEYBOARD_TCA6416 is not set
-> # CONFIG_KEYBOARD_TCA8418 is not set
-> # CONFIG_KEYBOARD_MATRIX is not set
-> # CONFIG_KEYBOARD_LM8323 is not set
-> # CONFIG_KEYBOARD_LM8333 is not set
-> # CONFIG_KEYBOARD_MAX7359 is not set
-> # CONFIG_KEYBOARD_MCS is not set
-> # CONFIG_KEYBOARD_MPR121 is not set
-> # CONFIG_KEYBOARD_NEWTON is not set
-> # CONFIG_KEYBOARD_OPENCORES is not set
-> # CONFIG_KEYBOARD_SAMSUNG is not set
-> # CONFIG_KEYBOARD_STOWAWAY is not set
-> # CONFIG_KEYBOARD_SUNKBD is not set
-> # CONFIG_KEYBOARD_TM2_TOUCHKEY is not set
-> # CONFIG_KEYBOARD_XTKBD is not set
-> # CONFIG_KEYBOARD_CYPRESS_SF is not set
-> 
->     And the same for 6.4.7:
-> 
-> #
-> # Input device support
-> #
-> CONFIG_INPUT=y
-> CONFIG_INPUT_LEDS=m
-> # CONFIG_INPUT_FF_MEMLESS is not set
-> # CONFIG_INPUT_SPARSEKMAP is not set
-> # CONFIG_INPUT_MATRIXKMAP is not set
-> CONFIG_INPUT_VIVALDIFMAP=y
-> 
-> #
-> # Userland interfaces
-> #
-> CONFIG_INPUT_MOUSEDEV=m
-> # CONFIG_INPUT_MOUSEDEV_PSAUX is not set
-> CONFIG_INPUT_MOUSEDEV_SCREEN_X=1024
-> CONFIG_INPUT_MOUSEDEV_SCREEN_Y=768
-> CONFIG_INPUT_JOYDEV=m
-> CONFIG_INPUT_EVDEV=m
-> # CONFIG_INPUT_EVBUG is not set
-> 
-> #
-> # Input Device Drivers
-> #
-> CONFIG_INPUT_KEYBOARD=y
-> # CONFIG_KEYBOARD_ADP5588 is not set
-> # CONFIG_KEYBOARD_ADP5589 is not set
-> # CONFIG_KEYBOARD_APPLESPI is not set
-> CONFIG_KEYBOARD_ATKBD=y
-> # CONFIG_KEYBOARD_QT1050 is not set
-> # CONFIG_KEYBOARD_QT1070 is not set
-> # CONFIG_KEYBOARD_QT2160 is not set
-> # CONFIG_KEYBOARD_DLINK_DIR685 is not set
-> # CONFIG_KEYBOARD_LKKBD is not set
-> # CONFIG_KEYBOARD_GPIO is not set
-> # CONFIG_KEYBOARD_GPIO_POLLED is not set
-> # CONFIG_KEYBOARD_TCA6416 is not set
-> # CONFIG_KEYBOARD_TCA8418 is not set
-> # CONFIG_KEYBOARD_MATRIX is not set
-> # CONFIG_KEYBOARD_LM8323 is not set
-> # CONFIG_KEYBOARD_LM8333 is not set
-> # CONFIG_KEYBOARD_MAX7359 is not set
-> # CONFIG_KEYBOARD_MCS is not set
-> # CONFIG_KEYBOARD_MPR121 is not set
-> # CONFIG_KEYBOARD_NEWTON is not set
-> # CONFIG_KEYBOARD_OPENCORES is not set
-> # CONFIG_KEYBOARD_PINEPHONE is not set
-> # CONFIG_KEYBOARD_SAMSUNG is not set
-> # CONFIG_KEYBOARD_STOWAWAY is not set
-> # CONFIG_KEYBOARD_SUNKBD is not set
-> # CONFIG_KEYBOARD_TM2_TOUCHKEY is not set
-> # CONFIG_KEYBOARD_XTKBD is not set
-> # CONFIG_KEYBOARD_CYPRESS_SF is not set
-> 
->     If I run evtest, the keyboard is detected, and I can
-> retrieve its events. From my kernel 6.4, this is an
-> example of it's output.
-> 
-> # evtest
-> No device specified, trying to scan all of /dev/input/event*
-> Available devices:
-> /dev/input/event0:      AT Translated Set 2 keyboard
-> /dev/input/event1:      Power Button
-> /dev/input/event10:     SEM HCT Keyboard Consumer Control
-> /dev/input/event11:     SEM HCT Keyboard System Control
-> /dev/input/event12:     Logitech USB Optical Mouse
-> /dev/input/event2:      Lid Switch
-> /dev/input/event3:      Sleep Button
-> /dev/input/event4:      Power Button
-> /dev/input/event5:      Video Bus
-> /dev/input/event6:      ThinkPad Extra Buttons
-> /dev/input/event7:      SynPS/2 Synaptics TouchPad
-> /dev/input/event8:      TPPS/2 Elan TrackPoint
-> /dev/input/event9:      SEM HCT Keyboard
-> Select the device event number [0-12]: 0
-> Input driver version is 1.0.1
-> Input device ID: bus 0x11 vendor 0x1 product 0x1 version 0xab54
-> Input device name: "AT Translated Set 2 keyboard"
-> Supported events:
->  Event type 0 (EV_SYN)
->  Event type 1 (EV_KEY)
->    Event code 1 (KEY_ESC)
->    Event code 2 (KEY_1)
->    Event code 3 (KEY_2)
->    Event code 4 (KEY_3)
->    Event code 5 (KEY_4)
->    Event code 6 (KEY_5)
->    Event code 7 (KEY_6)
->    Event code 8 (KEY_7)
->    Event code 9 (KEY_8)
->    Event code 10 (KEY_9)
->    Event code 11 (KEY_0)
->    Event code 12 (KEY_MINUS)
->    Event code 13 (KEY_EQUAL)
->    Event code 14 (KEY_BACKSPACE)
->    Event code 15 (KEY_TAB)
->    Event code 16 (KEY_Q)
->    Event code 17 (KEY_W)
->    Event code 18 (KEY_E)
->    Event code 19 (KEY_R)
->    Event code 20 (KEY_T)
->    Event code 21 (KEY_Y)
->    Event code 22 (KEY_U)
->    Event code 23 (KEY_I)
->    Event code 24 (KEY_O)
->    Event code 25 (KEY_P)
->    Event code 26 (KEY_LEFTBRACE)
->    Event code 27 (KEY_RIGHTBRACE)
->    Event code 28 (KEY_ENTER)
->    Event code 29 (KEY_LEFTCTRL)
->    Event code 30 (KEY_A)
->    Event code 31 (KEY_S)
->    Event code 32 (KEY_D)
->    Event code 33 (KEY_F)
->    Event code 34 (KEY_G)
->    Event code 35 (KEY_H)
->    Event code 36 (KEY_J)
->    Event code 37 (KEY_K)
->    Event code 38 (KEY_L)
->    Event code 39 (KEY_SEMICOLON)
->    Event code 40 (KEY_APOSTROPHE)
->    Event code 41 (KEY_GRAVE)
->    Event code 42 (KEY_LEFTSHIFT)
->    Event code 43 (KEY_BACKSLASH)
->    Event code 44 (KEY_Z)
->    Event code 45 (KEY_X)
->    Event code 46 (KEY_C)
->    Event code 47 (KEY_V)
->    Event code 48 (KEY_B)
->    Event code 49 (KEY_N)
->    Event code 50 (KEY_M)
->    Event code 51 (KEY_COMMA)
->    Event code 52 (KEY_DOT)
->    Event code 53 (KEY_SLASH)
->    Event code 54 (KEY_RIGHTSHIFT)
->    Event code 55 (KEY_KPASTERISK)
->    Event code 56 (KEY_LEFTALT)
->    Event code 57 (KEY_SPACE)
->    Event code 58 (KEY_CAPSLOCK)
->    Event code 59 (KEY_F1)
->    Event code 60 (KEY_F2)
->    Event code 61 (KEY_F3)
->    Event code 62 (KEY_F4)
->    Event code 63 (KEY_F5)
->    Event code 64 (KEY_F6)
->    Event code 65 (KEY_F7)
->    Event code 66 (KEY_F8)
->    Event code 67 (KEY_F9)
->    Event code 68 (KEY_F10)
->    Event code 69 (KEY_NUMLOCK)
->    Event code 70 (KEY_SCROLLLOCK)
->    Event code 71 (KEY_KP7)
->    Event code 72 (KEY_KP8)
->    Event code 73 (KEY_KP9)
->    Event code 74 (KEY_KPMINUS)
->    Event code 75 (KEY_KP4)
->    Event code 76 (KEY_KP5)
->    Event code 77 (KEY_KP6)
->    Event code 78 (KEY_KPPLUS)
->    Event code 79 (KEY_KP1)
->    Event code 80 (KEY_KP2)
->    Event code 81 (KEY_KP3)
->    Event code 82 (KEY_KP0)
->    Event code 83 (KEY_KPDOT)
->    Event code 85 (KEY_ZENKAKUHANKAKU)
->    Event code 86 (KEY_102ND)
->    Event code 87 (KEY_F11)
->    Event code 88 (KEY_F12)
->    Event code 89 (KEY_RO)
->    Event code 90 (KEY_KATAKANA)
->    Event code 91 (KEY_HIRAGANA)
->    Event code 92 (KEY_HENKAN)
->    Event code 93 (KEY_KATAKANAHIRAGANA)
->    Event code 94 (KEY_MUHENKAN)
->    Event code 95 (KEY_KPJPCOMMA)
->    Event code 96 (KEY_KPENTER)
->    Event code 97 (KEY_RIGHTCTRL)
->    Event code 98 (KEY_KPSLASH)
->    Event code 99 (KEY_SYSRQ)
->    Event code 100 (KEY_RIGHTALT)
->    Event code 102 (KEY_HOME)
->    Event code 103 (KEY_UP)
->    Event code 104 (KEY_PAGEUP)
->    Event code 105 (KEY_LEFT)
->    Event code 106 (KEY_RIGHT)
->    Event code 107 (KEY_END)
->    Event code 108 (KEY_DOWN)
->    Event code 109 (KEY_PAGEDOWN)
->    Event code 110 (KEY_INSERT)
->    Event code 111 (KEY_DELETE)
->    Event code 112 (KEY_MACRO)
->    Event code 113 (KEY_MUTE)
->    Event code 114 (KEY_VOLUMEDOWN)
->    Event code 115 (KEY_VOLUMEUP)
->    Event code 116 (KEY_POWER)
->    Event code 117 (KEY_KPEQUAL)
->    Event code 118 (KEY_KPPLUSMINUS)
->    Event code 119 (KEY_PAUSE)
->    Event code 121 (KEY_KPCOMMA)
->    Event code 122 (KEY_HANGUEL)
->    Event code 123 (KEY_HANJA)
->    Event code 124 (KEY_YEN)
->    Event code 125 (KEY_LEFTMETA)
->    Event code 126 (KEY_RIGHTMETA)
->    Event code 127 (KEY_COMPOSE)
->    Event code 128 (KEY_STOP)
->    Event code 140 (KEY_CALC)
->    Event code 142 (KEY_SLEEP)
->    Event code 143 (KEY_WAKEUP)
->    Event code 155 (KEY_MAIL)
->    Event code 156 (KEY_BOOKMARKS)
->    Event code 157 (KEY_COMPUTER)
->    Event code 158 (KEY_BACK)
->    Event code 159 (KEY_FORWARD)
->    Event code 163 (KEY_NEXTSONG)
->    Event code 164 (KEY_PLAYPAUSE)
->    Event code 165 (KEY_PREVIOUSSONG)
->    Event code 166 (KEY_STOPCD)
->    Event code 172 (KEY_HOMEPAGE)
->    Event code 173 (KEY_REFRESH)
->    Event code 183 (KEY_F13)
->    Event code 184 (KEY_F14)
->    Event code 185 (KEY_F15)
->    Event code 217 (KEY_SEARCH)
->    Event code 226 (KEY_MEDIA)
->  Event type 4 (EV_MSC)
->    Event code 4 (MSC_SCAN)
->  Event type 17 (EV_LED)
->    Event code 0 (LED_NUML) state 0
->    Event code 1 (LED_CAPSL) state 0
->    Event code 2 (LED_SCROLLL) state 0
-> Key repeat handling:
->  Repeat type 20 (EV_REP)
->    Repeat code 0 (REP_DELAY)
->      Value    250
->    Repeat code 1 (REP_PERIOD)
->      Value     33
-> Properties:
-> Testing ... (interrupt to exit)
-> Event: time 1691384520.078772, type 4 (EV_MSC), code 4 (MSC_SCAN), value 10
-> Event: time 1691384520.078772, type 1 (EV_KEY), code 16 (KEY_Q), value 1
-> Event: time 1691384520.078772, -------------- SYN_REPORT ------------
-> Event: time 1691384520.157298, type 4 (EV_MSC), code 4 (MSC_SCAN), value 10
-> Event: time 1691384520.157298, type 1 (EV_KEY), code 16 (KEY_Q), value 0
-> Event: time 1691384520.157298, -------------- SYN_REPORT ------------
-> Event: time 1691384520.849991, type 4 (EV_MSC), code 4 (MSC_SCAN), value 11
-> Event: time 1691384520.849991, type 1 (EV_KEY), code 17 (KEY_W), value 1
-> Event: time 1691384520.849991, -------------- SYN_REPORT ------------
-> Event: time 1691384520.919630, type 4 (EV_MSC), code 4 (MSC_SCAN), value 11
-> Event: time 1691384520.919630, type 1 (EV_KEY), code 17 (KEY_W), value 0
-> Event: time 1691384520.919630, -------------- SYN_REPORT ------------
-> Event: time 1691384521.311986, type 4 (EV_MSC), code 4 (MSC_SCAN), value 12
-> Event: time 1691384521.311986, type 1 (EV_KEY), code 18 (KEY_E), value 1
-> Event: time 1691384521.311986, -------------- SYN_REPORT ------------
-> Event: time 1691384521.417578, type 4 (EV_MSC), code 4 (MSC_SCAN), value 12
-> Event: time 1691384521.417578, type 1 (EV_KEY), code 18 (KEY_E), value 0
-> Event: time 1691384521.417578, -------------- SYN_REPORT ------------
-> Event: time 1691384521.639505, type 4 (EV_MSC), code 4 (MSC_SCAN), value 13
-> Event: time 1691384521.639505, type 1 (EV_KEY), code 19 (KEY_R), value 1
-> Event: time 1691384521.639505, -------------- SYN_REPORT ------------
-> Event: time 1691384521.709170, type 4 (EV_MSC), code 4 (MSC_SCAN), value 13
-> Event: time 1691384521.709170, type 1 (EV_KEY), code 19 (KEY_R), value 0
-> Event: time 1691384521.709170, -------------- SYN_REPORT ------------
-> Event: time 1691384521.879657, type 4 (EV_MSC), code 4 (MSC_SCAN), value 14
-> Event: time 1691384521.879657, type 1 (EV_KEY), code 20 (KEY_T), value 1
-> Event: time 1691384521.879657, -------------- SYN_REPORT ------------
-> Event: time 1691384521.958384, type 4 (EV_MSC), code 4 (MSC_SCAN), value 14
-> Event: time 1691384521.958384, type 1 (EV_KEY), code 20 (KEY_T), value 0
-> Event: time 1691384521.958384, -------------- SYN_REPORT ------------
-> Event: time 1691384522.188556, type 4 (EV_MSC), code 4 (MSC_SCAN), value 15
-> Event: time 1691384522.188556, type 1 (EV_KEY), code 21 (KEY_Y), value 1
-> 
->     I have reported this time ago in libinput, and they
-> replied it might be a kernel problem, since booting
-> my kernel 5.16 makes it work correctly again anytime.
-> 
->    Could anyone please shed some light on this little
-> problem?
-> 
->    Best regards.
-> 
->    José Pekkarinen
+ > That doesn't mean that I think each failed test should be judged by a
+ > human before it's sent to the developers. Compile errors for example
+ > will be helpful often right away, especially for stable-rc.
+
+Ehhh, KCIDB gets build failures all the time (in merged code) and it takes
+a while before a fix propagates across all the trees.
+
+For example, the recent v6.5-rc5 has got 14 build failures (out of 865 builds
+received):
+
+https://kcidb.kernelci.org/d/revision/revision?orgId=1&var-git_commit_hash=52a93d39b17dc7eb98b6aa3edb93943248e03b2f&var-patchset_hash=
+
+I suspect that someone somewhere is already working on these, or even their
+fix has been merged somewhere already, but the CI just keeps failing
+meanwhile.
+
+ >> In particular, the context of it
+ >> and the fact that a reported regression has a life cycle:
+ >>
+ >> - did this test also fail on other hardware targets or with other kernel
+ >>    configurations?
+ >> - is it possible that the test failed because of an infrastructure
+ >>    error?
+ >> - does the test fail consistently since that commit or does it show
+ >>    unstable results?
+ >> - does the test output show any traces of already known bugs?
+ >> - has this regression been bisected and reported anywhere?
+ >> - was the regression reported by anyone? If so, is there someone already
+ >>    working on it?
+ >>
+ >> Many of these info points can be extracted from the CI results databases
+ >> and processed to provide additional regression data. That’s what we’re
+ >> trying to do with the Regression Tracker tool, and we think it’d be
+ >> interesting to start experimenting with the data in KCIDB to see how
+ >> this could be improved and what would be the right way to integrate this
+ >> type of functionality.
+ >
+ > I (with my likely somewhat biased view due to regzbot and my work with
+ > it) wonder if we have two aspects here that might be wise to keep separated:
+ >
+ > * tests suddenly failing in one or multiple CI systems, which might be
+ > due to something going sideways in the tests or a real kernel regression
+ >
+ > * regressions found by individuals or CI systems where a human with some
+ > knowledge about the kernel did a sanity check (and also looked for
+ > duplicates) to ensure this most likely is a regression that should be
+ > acted upon -- and thus is also something that definitely should not be
+ > forgotten.
+ >
+ > Your regression tracking tool could be the former, regzbot the latter
+ > (which could feed the outcome back to the CI regression tracking
+ > system). But as I said, my view is obviously biased, so maybe I'm to
+ > blinded to see a better solution.
+
+I agree that a human would be trusted more most of the time, and it would be
+beneficial to give the results of human review a boost. However, ultimately,
+automatic error detection is also made by humans, and it doesn't get tired,
+can detect harder-to-spot problems, and problems happening en-masse, as you
+mention.
+
+If we consider applying patterns defined by humans to find already-known
+issues in other test results, we get a combination of the two. I think
+training an AI on the manually-detected issues, and those picked by those
+patterns, could help us find completely new issues, and would further blur the
+line between manual and automatic issue detection. Something that I'm looking
+forward to exploring.
+
+Regardless, I think we need both, and, in general, every trick in the book to
+get Linux quality control on track.
+
+Nick
