@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0158FD2F2
-	for <regressions@lists.linux.dev>; Mon,  7 Aug 2023 10:30:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72D8617F4
+	for <regressions@lists.linux.dev>; Mon,  7 Aug 2023 10:41:11 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qSxVP-0004E8-4E; Mon, 07 Aug 2023 12:30:31 +0200
-Message-ID: <d7290782-bf72-3a65-26fa-b58e75bcae2c@leemhuis.info>
-Date: Mon, 7 Aug 2023 12:30:30 +0200
+	id 1qSxfX-000663-HB; Mon, 07 Aug 2023 12:40:59 +0200
+Message-ID: <d0a6b711-f683-0104-a1c8-09130a160861@leemhuis.info>
+Date: Mon, 7 Aug 2023 12:40:58 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -15,69 +15,86 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Fwd: Ubuntu 22.04, "nvme list" will hang for 60 seconds after
- "nvme subsystem-reset"
+Subject: Re: [PATCH v3] Bluetooth: btrtl: Load FW v2 otherwise FW v1 for
+ RTL8852C
 Content-Language: en-US, de-DE
-To: Bagas Sanjaya <bagasdotme@gmail.com>, Keith Busch <kbusch@kernel.org>,
- Christoph Hellwig <hch@lst.de>, shenlinghai@163.com,
- Jens Axboe <axboe@fb.com>, Sagi Grimberg <sagi@grimberg.me>,
- dwmw2@infradead.org
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>,
- Linux NVMe <linux-nvme@lists.infradead.org>
-References: <8edde583-2b5f-2332-e59a-f1f4688b9e40@gmail.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <8edde583-2b5f-2332-e59a-f1f4688b9e40@gmail.com>
+To: Juerg Haefliger <juerg.haefliger@canonical.com>, max.chou@realtek.com
+Cc: marcel@holtmann.org, johan.hedberg@gmail.com, luiz.dentz@gmail.com,
+ linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+ alex_lu@realsil.com.cn, hildawu@realtek.com, karenhsu@realtek.com,
+ kidman@realtek.com, vicamo.yang@canonical.com, Riley.Kao@dell.com,
+ stable@vger.kernel.org, jwboyer@kernel.org, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ regressions@lists.linux.dev
+References: <20230807014415.12358-1-max.chou@realtek.com>
+ <20230807120630.79b9e933@smeagol>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <20230807120630.79b9e933@smeagol>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1691404243;d1781a50;
-X-HE-SMSGID: 1qSxVP-0004E8-4E
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1691404871;00bef5e8;
+X-HE-SMSGID: 1qSxfX-000663-HB
 
-On 02.08.23 13:41, Bagas Sanjaya wrote:
+On 07.08.23 12:06, Juerg Haefliger wrote:
+> On Mon, 7 Aug 2023 09:44:15 +0800
+> <max.chou@realtek.com> wrote:
 > 
-> I notice a regression report on Bugzilla [1]. Quoting from it:
-> 
->> Issue description:
->> root:~# lsb_release -a
->> No LSB modules are available.
->> Distributor ID:	Ubuntu
->> Description:	Ubuntu 22.04 LTS
->> Release:	22.04
->> Codename:	jammy
+>> From: Max Chou <max.chou@realtek.com>
 >>
->> root:~# uname -a
->> Linux dapu-Star-Lake 5.19.0-46-generic #47~22.04.1-Ubuntu SMP PREEMPT_DYNAMIC Wed Jun 21 15:35:31 UTC 2 x86_64 x86_64 x86_64 GNU/Linux
+>> In the commit of linux-firmware project, rtl8852cu_fw.bin is updated as
+>> FW v2 format[1]. Consider the case that if driver did not be updated for
+>> FW v2 supported[2], it can not use FW v2.
+>> By Canonical's suggestion, older driver should be able to load FW v1,
+>> so rtl8852cu_fw.bin will be revert to the previous commit as FW v1 and
+>> add rtl8852cu_fw_v2.bin as FW v2. This item will be started on
+>> linux-firmware project.
+>>
+>> In this commit, the driver prefers to load FW v2 if available. Fallback to
+>> FW v1 otherwise.
+>>
+>> Note that the driver has supported to extract the data for v1 and v2
+>> since the commit[1].
+>> The previous FW format of RTL8852C is v1. After the commit[2], the FW
+>> format was changed to v2. Only RTL8852C suffered the different FW formats,
+>> so we will use rtl8852cu_fw.bin for the original commit as FW v1 and
+>> rtl8852cu_fw_v2.bin for the future maintained as FW v2. Other Realtek
+>> chips will not been impacted by this patch.
+>>
+>> To do on linux-firmware project after this commit.
+>> 1. revert '55e7448533e7 ("rtl_bt: Update RTL8852C BT USB firmware
+>>    to 0x040D_7225")'
+>>    => rtl_bt/rtl8852cu_fw.bin: FW v1 (stay at ver. 0xD7B8_FABF)  
+>> 2. Add a new commit for rtl8852cu_fw_v2.bin
+>>    =>rtl_bt/rtl8852cu_fw_v2.bin: FW v2 (to be maintained)  
+>>
+>> Reference:
+>> [1]'9a24ce5e29b1 ("Bluetooth: btrtl: Firmware format v2 support")'
+>> [2]'55e7448533e7 ("rtl_bt: Update RTL8852C BT USB firmware
+>>     to 0x040D_7225")'
+> 
+> IMO this commit message is too confusing. I don't think you need nor should
+> refer to linux-firmware commits and what happened in that repo. This commit
+> simply fixes the v2 support by trying to load a v2 file for certain chips
+> with a fall-back if fw is not found (or failed to load). That's all that
+> needs to be mentioned in the commit message.
 
-Bagas, please don't forward reports to the developers (and also don't
-add them to the regression tracking) if the report is about a problem
-with a vendor kernel that is known or likely to be patched[1].
-Developers otherwise will just start to ignore your mails, as you are
-wasting their time.
+/me totally agrees that this in confusing the way it is and needs to be
+simplified, but explaining things briefly with maybe a Link: to the
+linux-firmware commit in question might nevertheless be a good idea (YMMV)
+
+>> Fixes: '9a24ce5e29b ("Bluetooth: btrtl: Firmware format v2 support")'
+> 
+> No '' quotes.
+
+Max Chou, you could have just picked the two tags I mentioned earlier
+just without the space in front of it[1]. If you do so the 0-day robot
+will also stop complaining, as you apparently misunderstood what I meant
+with stable tag; [2] explains this.
 
 Ciao, Thorsten
 
-[1] unless of course the reporter confirmed that the issue also happens
-with a fresh vanilla kernel; but that afaics still hasn't happened in
-this case yet; and even if that's the case it must be really obvious
-when forwarding a report.
-
->> root:~#nvme subsystem-reset /dev/nvme0
->>
->> root:~#nvme list      //This command will hang about 60 seconds. 
->>
->> Issue analysis:
->> Maybe it hangs in function nvme_wait_reset. When we revert the following commit, this issue will disappear.
->> if (!nvme_wait_reset(ctrl))
->> https://github.com/torvalds/linux/commit/1e866afd4bcdd01a70a5eddb4371158d3035ce03?diff=split
-> 
-> See Bugzilla for the full thread.
-> 
-> Anyway, I'm adding this regression to be tracked by regzbot:
-> 
-> #regzbot introduced: 1e866afd4bcdd0 https://bugzilla.kernel.org/show_bug.cgi?id=217745
-> #regzbot title: listing nvme devices hangs after subsystem reset
-> 
-> Thanks.
-> 
-> [1]: https://bugzilla.kernel.org/show_bug.cgi?id=217745
-> 
+[1]
+https://lore.kernel.org/all/f11ba0ef-0bb1-b925-3088-2ba7a8d17393@leemhuis.info/
+[2] https://docs.kernel.org/process/stable-kernel-rules.html
