@@ -1,300 +1,139 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C3B710957
-	for <regressions@lists.linux.dev>; Mon,  7 Aug 2023 15:20:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1691421604;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=wFqv/cLru+C9EdiPmmulE3UaUKd0oAuNQ0J088mMQ+8=;
-	b=YqCHmH0f5QszbRq6puciWjHhl8TVNKZAV1Pij2IznaxyFJGgVFyk/bI+8ZJg7a3Xis/H7k
-	YWjdFtMV0lZ/CsMt861Xpzep+Bw3XoHMw7nK6/VfxxQv+KB7YywPE1I8pDDwqy6lNLDtlp
-	X5o27O96K+3da+XhsJLuqpwG2M8G7Jw=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-508-0b89j57NNS-WrJyvu00R4A-1; Mon, 07 Aug 2023 11:20:02 -0400
-X-MC-Unique: 0b89j57NNS-WrJyvu00R4A-1
-Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-99bc8f1290eso314694766b.3
-        for <regressions@lists.linux.dev>; Mon, 07 Aug 2023 08:20:02 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2A6DBA40
+	for <regressions@lists.linux.dev>; Mon,  7 Aug 2023 15:42:36 +0000 (UTC)
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-31783d02093so4103079f8f.0
+        for <regressions@lists.linux.dev>; Mon, 07 Aug 2023 08:42:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares.net; s=google; t=1691422954; x=1692027754;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=/72i5jsfsrVEKBMLji0A2cGwsaXrOPk6X/FKD0TLofQ=;
+        b=a362iDt3yf3DrKMcOi6TB4dfOAsFNUq77rbCmbpK9lnBKdbtmLboPylXWzq6ohKlo8
+         KPG+o6LvpKY23AH0eRPYqjWkevK8mfIAmsyJdvgF8tRrA93M+mctEojWVHYn1k1mHUN1
+         RdkXMBP+JBd30EbJPr2bOgOID/Rk7a8ZLPWnj5LBoLAVRrctP9U7CLehIRm3stamOrSW
+         05E45LJRwRv7Pt0uKGqEjQQPZv3xlbFKWRUoB5hVpr+pxvu6Mejj0IlZgPsGvA+um6WC
+         Zj+2JtKzxf4zKnwhdhjxOJ98EhfMOT76atF5LEhbJsFK2TfetJgT6tUx51mmDUzye7hB
+         nXRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691421601; x=1692026401;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20221208; t=1691422954; x=1692027754;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wFqv/cLru+C9EdiPmmulE3UaUKd0oAuNQ0J088mMQ+8=;
-        b=S28g2NaMJ0H0UrJGj0+ylWgo3vS+1Xkm9ivuRylHpq5wfGdEiKmcolmSusyKKys9vU
-         KpBE8xQLPzv4x2eim2q5yZBRDj19EGw3NIm5p1J/CsaqyheBqYP+EY9+c88iStcH2AUD
-         33xyBIiXTXD7gnKA7I9OoCjlALf8g3+kDKSCNetGZtTKGnYSUWfSgbmhYWp+RUWct4Fc
-         b9N6pW4r4s8WMrqIvOgjEJH13jjsR/dLoSwNb45WLE5Qk88Xshh9gouvDDr2i0R+UmeZ
-         YUa+vXO0uYjnYvOlwqqOKF7E7ulbO5sXQqSJcxDaTweDzuQL9wqSlRxFjFrjbpMVY3c1
-         oGGw==
-X-Gm-Message-State: AOJu0Yze934cTLmtZQdDYa3v+m9hK/JD/NzxT2ovya9RXJ+o9ZpbkSQP
-	qoRiTs2N13HsXSUqF8BOmLRHr4kELIldnz3VUU5HOB+9P890Zdbq+pzNdj22Cyc0q4PRswgCMLy
-	JP7leAABm2PvVSxHJfJPhPfc=
-X-Received: by 2002:a17:906:ef90:b0:99c:4c94:1a9a with SMTP id ze16-20020a170906ef9000b0099c4c941a9amr6771622ejb.42.1691421601502;
-        Mon, 07 Aug 2023 08:20:01 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFj2BYdB5sgBFDcOsXFzpQIRJr3pnZIUQAYATthoLkJCHhAJUC+aVdZHM4mDbl/rkxKP6+Zig==
-X-Received: by 2002:a17:906:ef90:b0:99c:4c94:1a9a with SMTP id ze16-20020a170906ef9000b0099c4c941a9amr6771610ejb.42.1691421601194;
-        Mon, 07 Aug 2023 08:20:01 -0700 (PDT)
-Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id y8-20020a1709063a8800b0099316c56db9sm5241702ejd.127.2023.08.07.08.20.00
+        bh=/72i5jsfsrVEKBMLji0A2cGwsaXrOPk6X/FKD0TLofQ=;
+        b=QfbPjUbYtl0VjYfcW+wpMiScSuPA87K7Fse8t3ev+hGx9O2OBMyClk1IzEdknotkRK
+         1C4NjOMq7/0zegvDgHvhB6rgYRnVHSUUrGR/g2G/fk1W16dS82UA6R8NFq4rDm4X8tQ9
+         +U/gaiAcpsYRjoqHWDohHh/gGKElw4hf8+YqOCumdFP+KrbvW0aWpxZyQPZb1fw+NoC/
+         x9itFfWiELwfxNG7X2giuCZdb0rj6P5YFE7Eac6tGI1bl7n7CgGI0aOBnz4IQGU0w7Xj
+         uy6PLa9y/fsOabfTVEx7UQJm8Tfj/GBbheDImhQOZKtnUzRyF8mHUh1imbYBUJ/0juQ4
+         CYfA==
+X-Gm-Message-State: AOJu0YydmQcwSXmgd1r2DUmrCDv617QgMvaSpuR9TqP+7+92tJSdVNJ7
+	grYvXUjZSe+EuWw3+UM305KQ2vhoNz/YizrfFDc=
+X-Google-Smtp-Source: AGHT+IFPPNtqI2dQ4XZHhpXqpmSrloyIVyFwGS818Q5FkrNmqU+87KDoVFm4bwdf5SjHYVDx26KObg==
+X-Received: by 2002:adf:f1ce:0:b0:317:5c82:10c2 with SMTP id z14-20020adff1ce000000b003175c8210c2mr6582256wro.59.1691422954516;
+        Mon, 07 Aug 2023 08:42:34 -0700 (PDT)
+Received: from [10.44.2.5] ([81.246.10.41])
+        by smtp.gmail.com with ESMTPSA id s8-20020adfea88000000b0031272fced4dsm10825416wrm.52.2023.08.07.08.42.34
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Aug 2023 08:20:00 -0700 (PDT)
-Message-ID: <3cdde518-1c0c-24dc-1ffb-90ae34c23296@redhat.com>
-Date: Mon, 7 Aug 2023 17:19:59 +0200
+        Mon, 07 Aug 2023 08:42:34 -0700 (PDT)
+Message-ID: <bad1180f-dc6d-45d8-9acc-08edd548261a@tessares.net>
+Date: Mon, 7 Aug 2023 17:42:33 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH] ACPI: resource: revert "Remove "Zen" specific match and
- quirks"
-To: "Rafael J . Wysocki" <rafael@kernel.org>
-Cc: linux-acpi@vger.kernel.org, Mario Limonciello
- <mario.limonciello@amd.com>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- stable@vger.kernel.org
-References: <20230806151453.10690-1-hdegoede@redhat.com>
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230806151453.10690-1-hdegoede@redhat.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
+User-Agent: Mozilla Thunderbird
+Subject: Re: 9p: MPTCP tests regressions due to new 9p features in v6.4
+Content-Language: en-GB
+To: Eric Van Hensbergen <ericvh@kernel.org>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: evanhensbergen@icloud.com, MPTCP Upstream <mptcp@lists.linux.dev>,
+ v9fs@lists.linux.dev
+References: <855a232a-76d3-7e7b-b2b5-2ebc41bcadd6@tessares.net>
+ <CAFkjPTnX0=-GK8sFzd4S+V2+cA8E-FAqYHNndZui2Sh_MvoHPw@mail.gmail.com>
+ <88f7a06b-b044-9fdc-b3dc-4b374dbca332@tessares.net>
+ <3E1DD5A9-A8CB-4951-839A-6EF229CFA8EA@icloud.com>
+ <4830cc62-64fd-f74b-bbfc-b8e44e023513@leemhuis.info>
+ <CAFkjPTnAV6Rngwn6voCF332CX+eUyeJd7U0GcYn9BbkBqcTkHA@mail.gmail.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Autocrypt: addr=matthieu.baerts@tessares.net; keydata=
+ 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
+In-Reply-To: <CAFkjPTnAV6Rngwn6voCF332CX+eUyeJd7U0GcYn9BbkBqcTkHA@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi All,
+Hi Eric,
 
-On 8/6/23 17:14, Hans de Goede wrote:
-> Commit a9c4a912b7dc ("ACPI: resource: Remove "Zen" specific match and
-> quirks") is causing keyboard problems for quite a log of AMD based
-> laptop users, leading to many bug reports.
-> 
-> Revert this change for now, until we can come up with
-> a better fix for the PS/2 IRQ trigger-type/polarity problems
-> on some x86 laptops.
-> 
-> Fixes: a9c4a912b7dc ("ACPI: resource: Remove "Zen" specific match and quirks")
-> Link: https://bugzilla.redhat.com/show_bug.cgi?id=2229165
-> Link: https://bugzilla.redhat.com/show_bug.cgi?id=2229317
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=217726
-> Cc: Mario Limonciello <mario.limonciello@amd.com>
-> Cc: Linux regressions mailing list <regressions@lists.linux.dev>
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+On 13/06/2023 18:07, Eric Van Hensbergen wrote:
+> Understood, this on top of my 9p stack, but day job has been getting
+> in the way lately so I need to unstack there first.  Will do my best
+> to reproduce and understand as quickly as I can -- but given its a
+> performance regression it is likely going to be tricky to reproduce
+> and understand, so I'm not sure how confident I am that we'll be able
+> to close it out prior to the final -rc.
 
-I've spend most of today analysing the situation / this problem :
+Good news, it looks like the bug has been fixed!
 
-213031 - MEDION notebook internal keyboard not recognized / not working correctly
-https://bugzilla.kernel.org/show_bug.cgi?id=213031
+I recently noticed some new patches fixing some issues in 9p in Linus
+tree because they were conflicting with the revert of 9p's v6.4 PR I did
+in June to stop having random issues in our tests. I then tried
+reproducing the issue we had on top of Linus' tree and I was not able
+too! (but I was still able to reproduce them just before the recent fixes)
 
-This is the bug that started it all, the issue here was overriding
-a level low DSDT entry:
+After a quick git bisect, it seems the bug is fixed thanks to
+350cd9b95975 ("fs/9p: remove unnecessary invalidate_inode_pages2").
 
-                IRQ (Level, ActiveLow, Exclusive, )
-                    {1}
+So we can also tell regzbot to stop tracking this:
 
-With an edge high entry from the MADT, note that edge high is the default
-mp_irqs[idx].irqflags value for legacy/ISA IRQs. The dmesg for the Ice Lake
-Medion M15T this bug is about shows no INT_SRC_OVR entry for IRQ 1
-in the MADT, it does show INT_SRC_OVR entries for IRQ 0 and 9.
+#regzbot fix: 350cd9b95975
 
-At first a fix was attempted to not use the MADT override unless
-the DSDT entry was edge high. But that caused regressions, so a switch
-to a DMI based approach was used instead. Noteworthy is that some of
-the regressions benefitted from a MADT override to high edge for
-IRQ 3 and 4 (UART IRQs) even though there are no INT_SRC_OVR messages
-in the dmesg of the machine with the regression.
-
-*** fast forward to today ***
-
-The DMI quirk based approach seems to have worked well for the Ice Lake
-era problems from approx. 3 years ago. But on AMD Zen based systems
-the situation seems to be more complex. Not using the MADT override
-is a problem for quite a few models. But using the MADT override
-is a problem on quite a few other models ...
-
-Looking at the status quo for v6.4 where MADT overriding by default
-is not used, 3 bugs have been filed where the override is actually
-necessary (note dmesg snippets with patched kernel to enable
-MADT override):
-
-217394 - IRQ override skipping breaks the Aya Neo Air Plus 6800U keyboard buttons 
-https://bugzilla.kernel.org/show_bug.cgi?id=217394
-
-Aya Neo Air Plus - AMD Ryzen 7 6800U
-
-[    0.003333] ACPI: INT_SRC_OVR (bus 0 bus_irq 0 global_irq 2 dfl dfl)
-[    0.003333] ACPI: INT_SRC_OVR (bus 0 bus_irq 1 global_irq 1 low edge)
-[    0.003333] ACPI: INT_SRC_OVR (bus 0 bus_irq 9 global_irq 9 low level)
-[    0.410670] ACPI: IRQ 1 override to edge, low(!)
-
-217406 - very slow keyboard typing without IRQ override with new AMD Ryzen CPUs
-https://bugzilla.kernel.org/show_bug.cgi?id=217406
-
-HP Pavilion Aero 13 - AMD Ryzen 7735U 
-
-[    0.026135] ACPI: INT_SRC_OVR (bus 0 bus_irq 1 global_irq 1 low edge)
-[    0.026136] ACPI: INT_SRC_OVR (bus 0 bus_irq 0 global_irq 2 dfl dfl)
-[    0.026137] ACPI: INT_SRC_OVR (bus 0 bus_irq 9 global_irq 9 low level)
-
-[    0.361640] ACPI: IRQ 1 override to edge, low(!)
-
-217336 - keyboard not working Asus TUF FA617NS 
-https://bugzilla.kernel.org/show_bug.cgi?id=217336
-
-Asus TUF FA617NS - AMD Ryzen 7 7735HS
-
-Noteworthy DSTD keyboard resource:
-
-                IRQNoFlags ()
-                    {1}
-
-ACPI: INT_SRC_OVR (bus 0 bus_irq 0 global_irq 2 dfl dfl)
-ACPI: INT_SRC_OVR (bus 0 bus_irq 1 global_irq 1 low edge)
-ACPI: INT_SRC_OVR (bus 0 bus_irq 9 global_irq 9 low level)
-ACPI: IRQ 1 override to edge, low(!)
-
-So for all 3 do use MADT override on Zen bugs we have an INT_SRC_OVR dmesg entry
-for IRQ 1.
-
-Unfortunately the "MAINGEAR Vector Pro 2 17" / "MG-VCP2-17A3070T" for
-which a quirk was added in commit 9946e39fe8d0 to force the override
-even though it it Zen based breaks this pattern:
-
-[    0.073733] ACPI: INT_SRC_OVR (bus 0 bus_irq 0 global_irq 2 dfl dfl)
-[    0.073734] ACPI: INT_SRC_OVR (bus 0 bus_irq 9 global_irq 9 low level)
-[    0.341347] ACPI: IRQ 1 override to edge, high(!)
-
-Still the presence of an INT_SRC_OVR for a specific legacy IRQ seems
-to be a strong indicator that MADT overriding should be used in that
-case and can be used to at least reduce the amount of DMI quirks.
-
-Another interesting data point is that all the devices for which
-DMI quirks are present for which MADT overriding should not be used
-for IRQ 1 all have a DSDT entry with the IRQ configured as level low
-and exclusive.
-
-I think that the best thing to do might be to go back to
-the original approach from:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git/commit/?id=0ec4e55e9f571f08970ed115ec0addc691eda613
-
-and then limit this to IRQ1. Also maybe inverting the check to:
-
-static bool irq_is_legacy(struct acpi_resource_irq *irq)
-{
-	return !(irq->triggering == ACPI_LEVEL_SENSITIVE &&
-		 irq->polarity == ACPI_ACTIVE_LOW &&
-		 irq->shareable == ACPI_EXCLUSIVE);
-}
-
-But I need to check if this will work for all the new Zen models
-for which we got bug reports after the recent dropping of
-9946e39fe8d0 ("ACPI: resource: skip IRQ override on AMD Zen platforms")
-
-Regards,
-
-Hans
-
-
-
-
-
-> ---
->  drivers/acpi/resource.c | 60 +++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 60 insertions(+)
-> 
-> diff --git a/drivers/acpi/resource.c b/drivers/acpi/resource.c
-> index 1dd8d5aebf67..0800a9d77558 100644
-> --- a/drivers/acpi/resource.c
-> +++ b/drivers/acpi/resource.c
-> @@ -470,6 +470,52 @@ static const struct dmi_system_id asus_laptop[] = {
->  	{ }
->  };
->  
-> +static const struct dmi_system_id lenovo_laptop[] = {
-> +	{
-> +		.ident = "LENOVO IdeaPad Flex 5 14ALC7",
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "82R9"),
-> +		},
-> +	},
-> +	{
-> +		.ident = "LENOVO IdeaPad Flex 5 16ALC7",
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "82RA"),
-> +		},
-> +	},
-> +	{ }
-> +};
-> +
-> +static const struct dmi_system_id tongfang_gm_rg[] = {
-> +	{
-> +		.ident = "TongFang GMxRGxx/XMG CORE 15 (M22)/TUXEDO Stellaris 15 Gen4 AMD",
-> +		.matches = {
-> +			DMI_MATCH(DMI_BOARD_NAME, "GMxRGxx"),
-> +		},
-> +	},
-> +	{ }
-> +};
-> +
-> +static const struct dmi_system_id maingear_laptop[] = {
-> +	{
-> +		.ident = "MAINGEAR Vector Pro 2 15",
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Micro Electronics Inc"),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "MG-VCP2-15A3070T"),
-> +		}
-> +	},
-> +	{
-> +		.ident = "MAINGEAR Vector Pro 2 17",
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Micro Electronics Inc"),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "MG-VCP2-17A3070T"),
-> +		},
-> +	},
-> +	{ }
-> +};
-> +
->  static const struct dmi_system_id lg_laptop[] = {
->  	{
->  		.ident = "LG Electronics 17U70P",
-> @@ -493,6 +539,10 @@ struct irq_override_cmp {
->  static const struct irq_override_cmp override_table[] = {
->  	{ medion_laptop, 1, ACPI_LEVEL_SENSITIVE, ACPI_ACTIVE_LOW, 0, false },
->  	{ asus_laptop, 1, ACPI_LEVEL_SENSITIVE, ACPI_ACTIVE_LOW, 0, false },
-> +	{ lenovo_laptop, 6, ACPI_LEVEL_SENSITIVE, ACPI_ACTIVE_LOW, 0, true },
-> +	{ lenovo_laptop, 10, ACPI_LEVEL_SENSITIVE, ACPI_ACTIVE_LOW, 0, true },
-> +	{ tongfang_gm_rg, 1, ACPI_EDGE_SENSITIVE, ACPI_ACTIVE_LOW, 1, true },
-> +	{ maingear_laptop, 1, ACPI_EDGE_SENSITIVE, ACPI_ACTIVE_LOW, 1, true },
->  	{ lg_laptop, 1, ACPI_LEVEL_SENSITIVE, ACPI_ACTIVE_LOW, 0, false },
->  };
->  
-> @@ -512,6 +562,16 @@ static bool acpi_dev_irq_override(u32 gsi, u8 triggering, u8 polarity,
->  			return entry->override;
->  	}
->  
-> +#ifdef CONFIG_X86
-> +	/*
-> +	 * IRQ override isn't needed on modern AMD Zen systems and
-> +	 * this override breaks active low IRQs on AMD Ryzen 6000 and
-> +	 * newer systems. Skip it.
-> +	 */
-> +	if (boot_cpu_has(X86_FEATURE_ZEN))
-> +		return false;
-> +#endif
-> +
->  	return true;
->  }
->  
-
+Cheers,
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
