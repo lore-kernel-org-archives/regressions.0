@@ -1,161 +1,334 @@
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2061.outbound.protection.outlook.com [40.107.101.61])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BE2FDF71
-	for <regressions@lists.linux.dev>; Mon,  7 Aug 2023 11:39:06 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ORjmxrPg9YCUzLtpCuRblNavNgZVeN1InBqFiOzmvjn8w29OFxRLcGwSf8Wr98HWU4ZlRIN2KG8PF0rdQZIlEayVAfzbid47vmr6TEwFqLWrNH6pDbr50O0RW1GPKzPfXL1KRcOLVeqw95v2O86e+EkylyDjfYIwr2wmLi7+Ovwtax03hqFjKGyEHpq9rU1XA5Lm4sYbmtplbWGuz1aJvY4NY9Qe0ebsep+PvhguwVvGMxHkp0+4B18DQx1bOSZaveOZbeHG4l9YDPS+lMg4EkUHQwSUlqQ+dcdl82rirelGD8uPTM5vDAfXHTfxoxGWt/yukWG/F9y/njVlGxPIGA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=nJUiiXf2uIow2qQa7K+aK3Ql8WiLaVoFQanao5VEEtg=;
- b=nhcWbJ1w6eA02VFfHG4940OmNHYqZPv0gSnPzoI1Gi6rlfamfcKzlkns2ugIB3Ka0+Zocc5RE3hIcK8/LurE0arMnZPLhmoVdu64h19a3JkZPFGTTYPgU/7Q3BVGZx5K4J5ThoJVNSBdAoVtU6Zd3aMK4V0ux0SuWYiuGXF2qXzwXmoKnQ6ukRlV0+EXd/Y7/GxRc1hXHW+siON/CZb1tKljaUxHOt4B80H7XiCLWkyUYLutVLYGQmR2rJQCsUO6Uqyc4+zVks2phhDPiHJyHQzV4agChZV+/piomf+co3ryiCZbRSfv4JSUwy/6zqkOJg4/0bAdsDSZaN0EIgbIoQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nJUiiXf2uIow2qQa7K+aK3Ql8WiLaVoFQanao5VEEtg=;
- b=FiZ/KDPSD0IuVSDeiVoYqcQFg1TUV7/mFG54WmN89W//LRqsBC1IbG7DCvOuPUheJBM7Sf9u986iZKI2JD/LnUktx38rVM1hZTrM0QsIfl0Utxzcbon2KTXHA2Tyl7xoku9sPIgV5kPZYD4je0LWID5yS9k+VBEhNuxWt7pPw94=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by SA3PR12MB7783.namprd12.prod.outlook.com (2603:10b6:806:314::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6652.26; Mon, 7 Aug
- 2023 11:39:01 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::36f9:ffa7:c770:d146]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::36f9:ffa7:c770:d146%7]) with mapi id 15.20.6652.026; Mon, 7 Aug 2023
- 11:39:01 +0000
-Message-ID: <561f0807-a78c-4dab-b8ef-a0f0836902d9@amd.com>
-Date: Mon, 7 Aug 2023 06:39:02 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ACPI: resource: revert "Remove "Zen" specific match and
- quirks"
-Content-Language: en-US
-To: Hans de Goede <hdegoede@redhat.com>,
- "Rafael J . Wysocki" <rafael@kernel.org>
-Cc: linux-acpi@vger.kernel.org,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- stable@vger.kernel.org, August Wikerfors <git@augustwikerfors.se>
-References: <20230806151453.10690-1-hdegoede@redhat.com>
- <130cb2e0-90b4-7d7b-1633-3469c859b30f@amd.com>
- <b37098da-4437-ef5b-53ae-a536f550df08@redhat.com>
- <0c1cb09a-2e78-65ad-61c1-174e5226d08e@amd.com>
- <8f0cbe61-99aa-8c45-c29e-69c27ba96d81@redhat.com>
-From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <8f0cbe61-99aa-8c45-c29e-69c27ba96d81@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SA0PR11CA0048.namprd11.prod.outlook.com
- (2603:10b6:806:d0::23) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 57F6AFC00
+	for <regressions@lists.linux.dev>; Mon,  7 Aug 2023 11:44:06 +0000 (UTC)
+Authenticated-By: 
+X-SpamFilter-By: ArmorX SpamTrap 5.77 with qID 377BhFeO5009057, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
+	by rtits2.realtek.com.tw (8.15.2/2.81/5.90) with ESMTPS id 377BhFeO5009057
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+	Mon, 7 Aug 2023 19:43:15 +0800
+Received: from RTEXMBS03.realtek.com.tw (172.21.6.96) by
+ RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.32; Mon, 7 Aug 2023 19:43:06 +0800
+Received: from localhost.localhost (172.21.132.123) by
+ RTEXMBS03.realtek.com.tw (172.21.6.96) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.7; Mon, 7 Aug 2023 19:43:05 +0800
+From: <max.chou@realtek.com>
+To: <marcel@holtmann.org>
+CC: <johan.hedberg@gmail.com>, <luiz.dentz@gmail.com>,
+        <linux-bluetooth@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <alex_lu@realsil.com.cn>, <hildawu@realtek.com>,
+        <karenhsu@realtek.com>, <kidman@realtek.com>, <max.chou@realtek.com>,
+        <juerg.haefliger@canonical.com>, <vicamo.yang@canonical.com>,
+        <Riley.Kao@dell.com>, <jwboyer@kernel.org>, <davem@davemloft.net>,
+        <edumazet@google.com>, <kuba@kernel.org>, <pabeni@redhat.com>,
+        <regressions@lists.linux.dev>
+Subject: [PATCH v4] Bluetooth: btrtl: Load FW v2 otherwise FW v1 for RTL8852C
+Date: Mon, 7 Aug 2023 19:42:59 +0800
+Message-ID: <20230807114259.13654-1-max.chou@realtek.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|SA3PR12MB7783:EE_
-X-MS-Office365-Filtering-Correlation-Id: e199206c-6adc-4d71-bb48-08db973ae551
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	uvP/o26+BMTIXM/2j+NiG0QthCKd3KoPFHPP0aNRxsK9VUDAO8ufkBHLkXaMeBkwmccmTzNGi/zcKbOUjr7tQ0B4hHvbx2vNWvWHRlOiCMzObqf1qH57qVXbnxWOs85XP2pA4XKskU6xDL/5/ivLtmMK+DB30s57WIBbC8s3dkdbqHygJN6FEq36zGheYDCit0rSau7d2RsxdlqM8C1yElm6aGHssPkHkOFt/YBU47l2ESTEZmnYSKIJhR08LLp24gx8Emg5Gkx/7kH3t5RENQ2bBwvoiHWHzaLAfOiUkGgp0AybYZhIeFX1G2mHl0zpzTtkdzAKNwP1Eco5VLAbJLRbgiqEialqb4QSHENwkNZlxDxJ5FS0wTZc+ZPqhYkpME3LDlPq10xpOekyHGH8/67bFntRVLaWWMrlXtCXLk0ZtRxQ4sjy0oN50W0J0OMYX1Ce/F3ZhSX7Flg0jn+DWtI/ynmIB8RZeXdvbDzHEyPdvYJVg61EW0KZ+FDeeWkoOvE1fr7CDcSZB4LU/duLTQHdITZhaC/ZPLv8wN6/CA6Pzi5jK0iP2npLP282kpUu4RnLZ+IrXS8go072iUsdqlIrQSRvH/UgzAmXaa+DloVMlJwSK4qS1aMXrv3eZmbqpXbMFBHMsD1aHKqr9iZx4g==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(39860400002)(396003)(136003)(346002)(376002)(366004)(451199021)(186006)(1800799003)(2616005)(36756003)(6512007)(4326008)(316002)(86362001)(478600001)(54906003)(110136005)(38100700002)(66946007)(6486002)(66556008)(66476007)(31696002)(6506007)(41300700001)(8676002)(8936002)(2906002)(83380400001)(5660300002)(31686004)(44832011)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?VVZEakpldDZDTUdJSktZd3ZZV3ZMa1B0TWo0aXYrdjJteTd4bGo3VWhnbWhS?=
- =?utf-8?B?eUNCenYvUGF0aWlFUnJ3L0lvM0VGVjdWUXV4cVdTMXFZcDhaUmtueEF1dHA0?=
- =?utf-8?B?NHh4L3lDaktTaVc2SUpyZTErUDJ3dzNuamVUSUd4TFcxb1gra3V4cTJqOEFo?=
- =?utf-8?B?bG4yT01CcmcrVnVuWWxLZmxFR29BOHJOUE1acW5rWUZnWUIyUDFXVDFZdHFz?=
- =?utf-8?B?NHZuTU9mZGE2UWpIbVhZUlphSE5lamprS29UZG8vNzNwc253ajI5cGRkL2Fo?=
- =?utf-8?B?ZHI5SStQcGI1NXRsNXRlRXJNeG04VnhUZjBoV05JTHo5Sk9kMnhydW9ZZWtq?=
- =?utf-8?B?RFNSTitWYVM3STZvQ1dJQUdPVVJWM1VBUEo3WnNTekZsbW4xbndNOU8xM0I0?=
- =?utf-8?B?N0UyWXVyZ25ybWFlSm1ndXZPWDNrcXZ4dlZwaHBBUzA5bHdQVGQwemdOTytU?=
- =?utf-8?B?a1NtYk15ZXM4R3dRa0pCZW95UGR4VG1QV25CemdiTWVINDB2VnA5ODczajhY?=
- =?utf-8?B?ZUphWGVtUi8wMUJjSW5hdDBSOEdoSGdUUVptc05LcmQ4MXRGQ2VWRzRCNk9F?=
- =?utf-8?B?a0M5UTV4OE14RVBTTWhTYzl4cDBOUDFpclZjQjNaZFQ2ZkF1MVVLb3YwK2Mr?=
- =?utf-8?B?cWxLM3BCazdiYTBrQ3BTYUs2bDU0d3RHSHRqbGtFVVgzUXh3d1ZZeVBlV2Jj?=
- =?utf-8?B?VTl4ZlNPb3Z1ZXA4WXpGV2lEM0dlUkF1dk1IUjhJT0lVWmowSW9KZUorcDhO?=
- =?utf-8?B?ZmcrdVk0RkpBNFdYUTNBSlMyNVpMVVlkcjRpM0dtNTJHS2QwUjdnc1pIRFNW?=
- =?utf-8?B?VkUzYzdaK3lueHhLT3RobkZnWE8rRDY5Z0NNZElRbTVudXJnZE12cXBqdEIz?=
- =?utf-8?B?d1BRZ0RmSCtpazJUc01CYytXdDg3R0d0enhxeU94Szc3TndWaWlSTGpzWGJv?=
- =?utf-8?B?ZnFTRnpORVBtQllmV09ndkhHNTJKVmErSXphQUYxRlhUaVJkN2NFd3VBczJ2?=
- =?utf-8?B?K1IvWHJHNGdxeTBpOWlSRzBVc2pyQUdnNXVZc09NMmkzQ01oUDFBQ0h5MFNO?=
- =?utf-8?B?TEtQVGwybmJpYWlsZ0pQK3g4YkRFUWVoVlJtNm82eENmUnc5d3pQcHRqOUxN?=
- =?utf-8?B?b1VDQjZQeTNMZ1MvY3pKdUxKMjZsSGFUY2NnSTNhb2dJNzdGWGR0SVd0VHpw?=
- =?utf-8?B?dEUwQnYxRFBzbXVzelIrUEkzR0dGamM4ZnJTMEVYbytlajNib1pZUVJWYTQy?=
- =?utf-8?B?YXRtZTBaUFRNazU2Tmw1VERDZ2hMcmRCU3hIMEJEODZXeksyWGJxZW1ydWZE?=
- =?utf-8?B?VitrelBLQy8vMUJFY1gwUURKRmE2QTRVdHVmeHpGYWdEaFF0dmZyU2prUTJO?=
- =?utf-8?B?Qk1FbkRBdTQxVjRYNlNzU2lEM2NUbzRsWVRDOEpwY04wbUxvbmdmY21LdC83?=
- =?utf-8?B?R3RKcStRSlFpdzBaZDduTkxpSXk1RFB3TEE4NDZudWwwekVSTVFWejlLVWw1?=
- =?utf-8?B?UE81UExOVG1pYTIrd1pPWGRuVUowaWl1M2lxV3BJYXRkNHpDdkhpbE8zemJN?=
- =?utf-8?B?U1E3UzlUc3YvaW94a3Zma052TTFYMGI4UHhWcEJiVWhvS0lZcmpNaVNWeWgz?=
- =?utf-8?B?Y2YySmlPcjBlcGFjdG44dlhFV2l0THBreTZnVWVDeDlyMFVpaS9JOTdvRmVO?=
- =?utf-8?B?Y0tiNStiVXVhZTM0TU5la0ZCbC9wNEZra2pwQWZxOVBkclZFdzRBbytyd3ZW?=
- =?utf-8?B?ckxLQ3dZOW1KSkkzR2hudVY4aWphU3hMOWtkMWcrSHg5ay95RjdGTk9rclg5?=
- =?utf-8?B?TWh1UlN3a3dTcjVsb1JJUnZuMlRISWx0UnNabmlvL0swU25GYldEcGdnTURm?=
- =?utf-8?B?OGJqS1VHR1ZkS2JxMjVRMFJnNzk1RVpnaTdsY1hGdGJmUVBYcG5MOEg3TUgr?=
- =?utf-8?B?MVhIWHdYNk5nVHNCWXNvUnRhQStsU2ZCeEpVZ1VLQkluQ1haVzllZnlJd25D?=
- =?utf-8?B?UGJ6UVRrUCtORnFzb0IrM2hmemd3RjM0T0JaSm96YkxvMEdZSXlnK3dQUmZz?=
- =?utf-8?B?azZiNGtyOGE1emoyMDJpQWVaYU9GcDdobTRRNFdxTlpFUnAzUkNVLy90NVc5?=
- =?utf-8?B?cUxubW9FamU1cFdpeVl0VTJOdUpQdHlUWGQ2b2JzS3pjT1dxTmYwZHIzeTRY?=
- =?utf-8?B?OFE9PQ==?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e199206c-6adc-4d71-bb48-08db973ae551
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Aug 2023 11:39:01.5817
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Ote+JmPlvvNlKxLLo9Mu/kzIzMSxizbXQC6qsdoiH4+NA/rnfOMGnZzz+2C60j0H7aQ6fkyLgmasCCcOulAJUQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB7783
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [172.21.132.123]
+X-ClientProxiedBy: RTEXH36505.realtek.com.tw (172.21.6.25) To
+ RTEXMBS03.realtek.com.tw (172.21.6.96)
+X-KSE-ServerInfo: RTEXMBS03.realtek.com.tw, 9
+X-KSE-AntiSpam-Interceptor-Info: fallback
+X-KSE-Antivirus-Interceptor-Info: fallback
+X-KSE-AntiSpam-Interceptor-Info: fallback
+X-KSE-ServerInfo: RTEXH36505.realtek.com.tw, 9
+X-KSE-AntiSpam-Interceptor-Info: fallback
+X-KSE-Antivirus-Interceptor-Info: fallback
+X-KSE-AntiSpam-Interceptor-Info: fallback
 
->> We haven't even given a try to fixing it; I think the revert is still hasty.
->>
->> I don't have a machine that can reproduce this failure, but I did confirm that my keyboard still works with this:
->>
->> diff --git a/drivers/acpi/resource.c b/drivers/acpi/resource.c
->> index 1dd8d5aebf678..b74d7d8cc8630 100644
->> --- a/drivers/acpi/resource.c
->> +++ b/drivers/acpi/resource.c
->> @@ -19,7 +19,7 @@
->>   #include <linux/dmi.h>
->>
->>   #ifdef CONFIG_X86
->> -#define valid_IRQ(i) (((i) != 0) && ((i) != 2))
->> +#define valid_IRQ(i) ((i) > 2)
->>   static inline bool acpi_iospace_resource_valid(struct resource *res)
->>   {
->>          /* On X86 IO space is limited to the [0 - 64K] IO port range */
->>
->> Can we perhaps see if that works instead for some affected people?
-> 
-> That does not just skip the override stuff, it will make the kernel return irqresource_disabled(res, 1) for the kbd IRQ:
-> 
-> static inline void irqresource_disabled(struct resource *res, u32 irq)
-> {
->          res->start = irq;
->          res->end = irq;
->          res->flags |= IORESOURCE_IRQ | IORESOURCE_DISABLED | IORESOURCE_UNSET;
-> }
-> 
-> Now not much code seems to actually check the IORESOURCE_DISABLED | IORESOURCE_UNSET flags, so this might still work but it does not seem like the right thing to do.
-> 
+From: Max Chou <max.chou@realtek.com>
 
-Right; so it makes the resource get skipped when PNP is enumerated.
+In this commit, prefer to load FW v2 if available. Fallback to FW v1
+otherwise. This behavior is only for RTL8852C.
 
-To me it seems that it should match the theme of 'don't reprogram the 
-polarity and triggering for the IRQ'.  When the IRQ is set up by i8042 
-then it will try to go and get a resource and wouldn't find one.  So 
-when the IRQ is set up it should match the values already programmed.
+Fixes: 9a24ce5e29b1 ("Bluetooth: btrtl: Firmware format v2 support")
+Cc: stable@vger.kernel.org
+Suggested-by: Juerg Haefliger <juerg.haefliger@canonical.com>
+Tested-by: Hilda Wu <hildawu@realtek.com>
+Signed-off-by: Max Chou <max.chou@realtek.com>
 
-I do wonder if both IRQ 1 and IRQ 12 both would need to be skipped for 
-this to work (if people are affected by both i8042 devices).
+---
+Changes in v4:
+- Reduce the commit log. Thanks Juerg!
+- Correct the tag for Fixes and Cc. Thanks Thorsten!
+
+Changes in v3:
+- Fix commit log for CheckPatch FAIL
+
+Changes in v2:
+- Tuning the code for more readable. Thanks Juerg!
+- Modify the commit log.
+---
+ drivers/bluetooth/btrtl.c | 70 +++++++++++++++++++++++++--------------
+ 1 file changed, 45 insertions(+), 25 deletions(-)
+
+diff --git a/drivers/bluetooth/btrtl.c b/drivers/bluetooth/btrtl.c
+index ddae6524106d..84c2c2e1122f 100644
+--- a/drivers/bluetooth/btrtl.c
++++ b/drivers/bluetooth/btrtl.c
+@@ -104,7 +104,7 @@ static const struct id_table ic_id_table[] = {
+ 	{ IC_INFO(RTL_ROM_LMP_8723A, 0xb, 0x6, HCI_USB),
+ 	  .config_needed = false,
+ 	  .has_rom_version = false,
+-	  .fw_name = "rtl_bt/rtl8723a_fw.bin",
++	  .fw_name = "rtl_bt/rtl8723a_fw",
+ 	  .cfg_name = NULL,
+ 	  .hw_info = "rtl8723au" },
+ 
+@@ -112,7 +112,7 @@ static const struct id_table ic_id_table[] = {
+ 	{ IC_INFO(RTL_ROM_LMP_8723B, 0xb, 0x6, HCI_UART),
+ 	  .config_needed = true,
+ 	  .has_rom_version = true,
+-	  .fw_name  = "rtl_bt/rtl8723bs_fw.bin",
++	  .fw_name  = "rtl_bt/rtl8723bs_fw",
+ 	  .cfg_name = "rtl_bt/rtl8723bs_config",
+ 	  .hw_info  = "rtl8723bs" },
+ 
+@@ -120,7 +120,7 @@ static const struct id_table ic_id_table[] = {
+ 	{ IC_INFO(RTL_ROM_LMP_8723B, 0xb, 0x6, HCI_USB),
+ 	  .config_needed = false,
+ 	  .has_rom_version = true,
+-	  .fw_name  = "rtl_bt/rtl8723b_fw.bin",
++	  .fw_name  = "rtl_bt/rtl8723b_fw",
+ 	  .cfg_name = "rtl_bt/rtl8723b_config",
+ 	  .hw_info  = "rtl8723bu" },
+ 
+@@ -132,7 +132,7 @@ static const struct id_table ic_id_table[] = {
+ 	  .hci_bus = HCI_UART,
+ 	  .config_needed = true,
+ 	  .has_rom_version = true,
+-	  .fw_name  = "rtl_bt/rtl8723cs_cg_fw.bin",
++	  .fw_name  = "rtl_bt/rtl8723cs_cg_fw",
+ 	  .cfg_name = "rtl_bt/rtl8723cs_cg_config",
+ 	  .hw_info  = "rtl8723cs-cg" },
+ 
+@@ -144,7 +144,7 @@ static const struct id_table ic_id_table[] = {
+ 	  .hci_bus = HCI_UART,
+ 	  .config_needed = true,
+ 	  .has_rom_version = true,
+-	  .fw_name  = "rtl_bt/rtl8723cs_vf_fw.bin",
++	  .fw_name  = "rtl_bt/rtl8723cs_vf_fw",
+ 	  .cfg_name = "rtl_bt/rtl8723cs_vf_config",
+ 	  .hw_info  = "rtl8723cs-vf" },
+ 
+@@ -156,7 +156,7 @@ static const struct id_table ic_id_table[] = {
+ 	  .hci_bus = HCI_UART,
+ 	  .config_needed = true,
+ 	  .has_rom_version = true,
+-	  .fw_name  = "rtl_bt/rtl8723cs_xx_fw.bin",
++	  .fw_name  = "rtl_bt/rtl8723cs_xx_fw",
+ 	  .cfg_name = "rtl_bt/rtl8723cs_xx_config",
+ 	  .hw_info  = "rtl8723cs" },
+ 
+@@ -164,7 +164,7 @@ static const struct id_table ic_id_table[] = {
+ 	{ IC_INFO(RTL_ROM_LMP_8723B, 0xd, 0x8, HCI_USB),
+ 	  .config_needed = true,
+ 	  .has_rom_version = true,
+-	  .fw_name  = "rtl_bt/rtl8723d_fw.bin",
++	  .fw_name  = "rtl_bt/rtl8723d_fw",
+ 	  .cfg_name = "rtl_bt/rtl8723d_config",
+ 	  .hw_info  = "rtl8723du" },
+ 
+@@ -172,7 +172,7 @@ static const struct id_table ic_id_table[] = {
+ 	{ IC_INFO(RTL_ROM_LMP_8723B, 0xd, 0x8, HCI_UART),
+ 	  .config_needed = true,
+ 	  .has_rom_version = true,
+-	  .fw_name  = "rtl_bt/rtl8723ds_fw.bin",
++	  .fw_name  = "rtl_bt/rtl8723ds_fw",
+ 	  .cfg_name = "rtl_bt/rtl8723ds_config",
+ 	  .hw_info  = "rtl8723ds" },
+ 
+@@ -180,7 +180,7 @@ static const struct id_table ic_id_table[] = {
+ 	{ IC_INFO(RTL_ROM_LMP_8821A, 0xa, 0x6, HCI_USB),
+ 	  .config_needed = false,
+ 	  .has_rom_version = true,
+-	  .fw_name  = "rtl_bt/rtl8821a_fw.bin",
++	  .fw_name  = "rtl_bt/rtl8821a_fw",
+ 	  .cfg_name = "rtl_bt/rtl8821a_config",
+ 	  .hw_info  = "rtl8821au" },
+ 
+@@ -189,7 +189,7 @@ static const struct id_table ic_id_table[] = {
+ 	  .config_needed = false,
+ 	  .has_rom_version = true,
+ 	  .has_msft_ext = true,
+-	  .fw_name  = "rtl_bt/rtl8821c_fw.bin",
++	  .fw_name  = "rtl_bt/rtl8821c_fw",
+ 	  .cfg_name = "rtl_bt/rtl8821c_config",
+ 	  .hw_info  = "rtl8821cu" },
+ 
+@@ -198,7 +198,7 @@ static const struct id_table ic_id_table[] = {
+ 	  .config_needed = true,
+ 	  .has_rom_version = true,
+ 	  .has_msft_ext = true,
+-	  .fw_name  = "rtl_bt/rtl8821cs_fw.bin",
++	  .fw_name  = "rtl_bt/rtl8821cs_fw",
+ 	  .cfg_name = "rtl_bt/rtl8821cs_config",
+ 	  .hw_info  = "rtl8821cs" },
+ 
+@@ -206,7 +206,7 @@ static const struct id_table ic_id_table[] = {
+ 	{ IC_INFO(RTL_ROM_LMP_8761A, 0xa, 0x6, HCI_USB),
+ 	  .config_needed = false,
+ 	  .has_rom_version = true,
+-	  .fw_name  = "rtl_bt/rtl8761a_fw.bin",
++	  .fw_name  = "rtl_bt/rtl8761a_fw",
+ 	  .cfg_name = "rtl_bt/rtl8761a_config",
+ 	  .hw_info  = "rtl8761au" },
+ 
+@@ -215,7 +215,7 @@ static const struct id_table ic_id_table[] = {
+ 	  .config_needed = false,
+ 	  .has_rom_version = true,
+ 	  .has_msft_ext = true,
+-	  .fw_name  = "rtl_bt/rtl8761b_fw.bin",
++	  .fw_name  = "rtl_bt/rtl8761b_fw",
+ 	  .cfg_name = "rtl_bt/rtl8761b_config",
+ 	  .hw_info  = "rtl8761btv" },
+ 
+@@ -223,7 +223,7 @@ static const struct id_table ic_id_table[] = {
+ 	{ IC_INFO(RTL_ROM_LMP_8761A, 0xb, 0xa, HCI_USB),
+ 	  .config_needed = false,
+ 	  .has_rom_version = true,
+-	  .fw_name  = "rtl_bt/rtl8761bu_fw.bin",
++	  .fw_name  = "rtl_bt/rtl8761bu_fw",
+ 	  .cfg_name = "rtl_bt/rtl8761bu_config",
+ 	  .hw_info  = "rtl8761bu" },
+ 
+@@ -232,7 +232,7 @@ static const struct id_table ic_id_table[] = {
+ 	  .config_needed = true,
+ 	  .has_rom_version = true,
+ 	  .has_msft_ext = true,
+-	  .fw_name  = "rtl_bt/rtl8822cs_fw.bin",
++	  .fw_name  = "rtl_bt/rtl8822cs_fw",
+ 	  .cfg_name = "rtl_bt/rtl8822cs_config",
+ 	  .hw_info  = "rtl8822cs" },
+ 
+@@ -241,7 +241,7 @@ static const struct id_table ic_id_table[] = {
+ 	  .config_needed = true,
+ 	  .has_rom_version = true,
+ 	  .has_msft_ext = true,
+-	  .fw_name  = "rtl_bt/rtl8822cs_fw.bin",
++	  .fw_name  = "rtl_bt/rtl8822cs_fw",
+ 	  .cfg_name = "rtl_bt/rtl8822cs_config",
+ 	  .hw_info  = "rtl8822cs" },
+ 
+@@ -250,7 +250,7 @@ static const struct id_table ic_id_table[] = {
+ 	  .config_needed = false,
+ 	  .has_rom_version = true,
+ 	  .has_msft_ext = true,
+-	  .fw_name  = "rtl_bt/rtl8822cu_fw.bin",
++	  .fw_name  = "rtl_bt/rtl8822cu_fw",
+ 	  .cfg_name = "rtl_bt/rtl8822cu_config",
+ 	  .hw_info  = "rtl8822cu" },
+ 
+@@ -259,7 +259,7 @@ static const struct id_table ic_id_table[] = {
+ 	  .config_needed = true,
+ 	  .has_rom_version = true,
+ 	  .has_msft_ext = true,
+-	  .fw_name  = "rtl_bt/rtl8822b_fw.bin",
++	  .fw_name  = "rtl_bt/rtl8822b_fw",
+ 	  .cfg_name = "rtl_bt/rtl8822b_config",
+ 	  .hw_info  = "rtl8822bu" },
+ 
+@@ -268,7 +268,7 @@ static const struct id_table ic_id_table[] = {
+ 	  .config_needed = false,
+ 	  .has_rom_version = true,
+ 	  .has_msft_ext = true,
+-	  .fw_name  = "rtl_bt/rtl8852au_fw.bin",
++	  .fw_name  = "rtl_bt/rtl8852au_fw",
+ 	  .cfg_name = "rtl_bt/rtl8852au_config",
+ 	  .hw_info  = "rtl8852au" },
+ 
+@@ -277,7 +277,7 @@ static const struct id_table ic_id_table[] = {
+ 	  .config_needed = true,
+ 	  .has_rom_version = true,
+ 	  .has_msft_ext = true,
+-	  .fw_name  = "rtl_bt/rtl8852bs_fw.bin",
++	  .fw_name  = "rtl_bt/rtl8852bs_fw",
+ 	  .cfg_name = "rtl_bt/rtl8852bs_config",
+ 	  .hw_info  = "rtl8852bs" },
+ 
+@@ -286,7 +286,7 @@ static const struct id_table ic_id_table[] = {
+ 	  .config_needed = false,
+ 	  .has_rom_version = true,
+ 	  .has_msft_ext = true,
+-	  .fw_name  = "rtl_bt/rtl8852bu_fw.bin",
++	  .fw_name  = "rtl_bt/rtl8852bu_fw",
+ 	  .cfg_name = "rtl_bt/rtl8852bu_config",
+ 	  .hw_info  = "rtl8852bu" },
+ 
+@@ -295,7 +295,7 @@ static const struct id_table ic_id_table[] = {
+ 	  .config_needed = false,
+ 	  .has_rom_version = true,
+ 	  .has_msft_ext = true,
+-	  .fw_name  = "rtl_bt/rtl8852cu_fw.bin",
++	  .fw_name  = "rtl_bt/rtl8852cu_fw",
+ 	  .cfg_name = "rtl_bt/rtl8852cu_config",
+ 	  .hw_info  = "rtl8852cu" },
+ 
+@@ -304,7 +304,7 @@ static const struct id_table ic_id_table[] = {
+ 	  .config_needed = false,
+ 	  .has_rom_version = true,
+ 	  .has_msft_ext = false,
+-	  .fw_name  = "rtl_bt/rtl8851bu_fw.bin",
++	  .fw_name  = "rtl_bt/rtl8851bu_fw",
+ 	  .cfg_name = "rtl_bt/rtl8851bu_config",
+ 	  .hw_info  = "rtl8851bu" },
+ 	};
+@@ -1045,6 +1045,7 @@ struct btrtl_device_info *btrtl_initialize(struct hci_dev *hdev,
+ 	struct sk_buff *skb;
+ 	struct hci_rp_read_local_version *resp;
+ 	struct hci_command_hdr *cmd;
++	char fw_name[40];
+ 	char cfg_name[40];
+ 	u16 hci_rev, lmp_subver;
+ 	u8 hci_ver, lmp_ver, chip_type = 0;
+@@ -1154,8 +1155,26 @@ struct btrtl_device_info *btrtl_initialize(struct hci_dev *hdev,
+ 			goto err_free;
+ 	}
+ 
+-	btrtl_dev->fw_len = rtl_load_file(hdev, btrtl_dev->ic_info->fw_name,
+-					  &btrtl_dev->fw_data);
++	if (!btrtl_dev->ic_info->fw_name) {
++		ret = -ENOMEM;
++		goto err_free;
++	}
++
++	btrtl_dev->fw_len = -EIO;
++	if (lmp_subver == RTL_ROM_LMP_8852A && hci_rev == 0x000c) {
++		snprintf(fw_name, sizeof(fw_name), "%s_v2.bin",
++				btrtl_dev->ic_info->fw_name);
++		btrtl_dev->fw_len = rtl_load_file(hdev, fw_name,
++				&btrtl_dev->fw_data);
++	}
++
++	if (btrtl_dev->fw_len < 0) {
++		snprintf(fw_name, sizeof(fw_name), "%s.bin",
++				btrtl_dev->ic_info->fw_name);
++		btrtl_dev->fw_len = rtl_load_file(hdev, fw_name,
++				&btrtl_dev->fw_data);
++	}
++
+ 	if (btrtl_dev->fw_len < 0) {
+ 		rtl_dev_err(hdev, "firmware file %s not found",
+ 			    btrtl_dev->ic_info->fw_name);
+@@ -1491,4 +1510,5 @@ MODULE_FIRMWARE("rtl_bt/rtl8852bs_config.bin");
+ MODULE_FIRMWARE("rtl_bt/rtl8852bu_fw.bin");
+ MODULE_FIRMWARE("rtl_bt/rtl8852bu_config.bin");
+ MODULE_FIRMWARE("rtl_bt/rtl8852cu_fw.bin");
++MODULE_FIRMWARE("rtl_bt/rtl8852cu_fw_v2.bin");
+ MODULE_FIRMWARE("rtl_bt/rtl8852cu_config.bin");
+-- 
+2.25.1
+
