@@ -1,259 +1,400 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3767CAD45
-	for <regressions@lists.linux.dev>; Mon,  7 Aug 2023 07:44:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1691394253;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+JCQZR3EjBoY9Gn4OenyJbbS8uuNzlYA3xL1UGjbFk8=;
-	b=c6Tkl3HHqLuoj+1527OQgFi1aX/z/oJUuMZSv1rFEiOGcFt6n8Gtyg9zW2S9Sq5jobDI8y
-	SlIF4L2vdqjBdXfvd0vnnCwSGhmiLBMiqQ7/YpPBtU16b+Q3qV3wHm1a4MPdo7h6VI6JW7
-	+9uPKstEEv1tPk3F41q656nm1NCyNNo=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-674-aRjDkWxdOPiycCjMpQ0m0A-1; Mon, 07 Aug 2023 03:44:12 -0400
-X-MC-Unique: aRjDkWxdOPiycCjMpQ0m0A-1
-Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-993831c639aso285133466b.2
-        for <regressions@lists.linux.dev>; Mon, 07 Aug 2023 00:44:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691394251; x=1691999051;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+JCQZR3EjBoY9Gn4OenyJbbS8uuNzlYA3xL1UGjbFk8=;
-        b=Ax0ja9gtYj2iCyh06GHycR/XnrcfcrNjdCzIEeM/YfDqqQCt26Cc5YJ6JB+U3MBi+9
-         1aKT30I+kTrMIetU6G1q0Ad2ndTvYWx/hFZ98FFvUnvz3lc7/H8O7ekXFlYB6GJd5sPf
-         /q49P2PGeoQDtHABUA7ma6vOdI19205/d+v+jd2BYee10r0OMrP6Nieug6198Iu+rcW9
-         LcZ/ez9tawEVgAu5/x2/+847KYVl/10jsQt+b+A3HH9DwuMFiX2jPbkQjLcsvdRTHGQT
-         0q8/pgcMYRqoOCOt13g8HRHAW/Jq1QnHjuJfPCBFXqVMVs2qJ13KjR4fF3ykFYSXQ+L0
-         CWvQ==
-X-Gm-Message-State: AOJu0YxCLWT3J8S35dbKUjIEznzNZWV0t6rFud8kQR03nTlWXbR9qNyz
-	kFKoG5qwYwLrkTEacpdWrhNkZVkvTwH50Ldry/r2yaTkNmFDzmAIxLfnD/x+/6eQ3covcobdvoD
-	YcIkrLR/2oyGGONDSX//YGBM=
-X-Received: by 2002:a17:906:20d4:b0:99b:dd38:864d with SMTP id c20-20020a17090620d400b0099bdd38864dmr8099636ejc.23.1691394251067;
-        Mon, 07 Aug 2023 00:44:11 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH27Jk3o0JkT1Qn89ig8DIvZy4Jj3QOpj9dFlYjkRBqwquGiVyvEtoEs50WICuQkk6YN7gpDg==
-X-Received: by 2002:a17:906:20d4:b0:99b:dd38:864d with SMTP id c20-20020a17090620d400b0099bdd38864dmr8099620ejc.23.1691394250738;
-        Mon, 07 Aug 2023 00:44:10 -0700 (PDT)
-Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id p27-20020a170906229b00b0099bd8c1f67esm4814187eja.109.2023.08.07.00.44.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Aug 2023 00:44:09 -0700 (PDT)
-Message-ID: <8f0cbe61-99aa-8c45-c29e-69c27ba96d81@redhat.com>
-Date: Mon, 7 Aug 2023 09:44:08 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4404AD45
+	for <regressions@lists.linux.dev>; Mon,  7 Aug 2023 07:53:36 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1qSv3W-00019d-4r; Mon, 07 Aug 2023 09:53:34 +0200
+Message-ID: <a65bd290-52d5-475c-0234-85759c5892a2@leemhuis.info>
+Date: Mon, 7 Aug 2023 09:53:33 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH] ACPI: resource: revert "Remove "Zen" specific match and
- quirks"
-To: Mario Limonciello <mario.limonciello@amd.com>,
- "Rafael J . Wysocki" <rafael@kernel.org>
-Cc: linux-acpi@vger.kernel.org,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- stable@vger.kernel.org, August Wikerfors <git@augustwikerfors.se>
-References: <20230806151453.10690-1-hdegoede@redhat.com>
- <130cb2e0-90b4-7d7b-1633-3469c859b30f@amd.com>
- <b37098da-4437-ef5b-53ae-a536f550df08@redhat.com>
- <0c1cb09a-2e78-65ad-61c1-174e5226d08e@amd.com>
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <0c1cb09a-2e78-65ad-61c1-174e5226d08e@amd.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
+User-Agent: Mozilla Thunderbird
+Subject: Re: atkbd input regression
+Content-Language: en-US, de-DE
+To: =?UTF-8?B?Sm9zw6kgUmFtw7NuIE11w7FveiBQZWtrYXJpbmVu?=
+ <koalinux@gmail.com>, linux-input@vger.kernel.org
+Cc: dmitry.torokhov@gmail.com, gregkh@linuxfoundation.org,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <CANWZPgK2+9SCavsbSZv1DfJyhy0XUpJZ6+ebatM9ZGJPpAN1yA@mail.gmail.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <CANWZPgK2+9SCavsbSZv1DfJyhy0XUpJZ6+ebatM9ZGJPpAN1yA@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1691394816;82759820;
+X-HE-SMSGID: 1qSv3W-00019d-4r
 
-Hi,
+[CCing the regression list, as it should be in the loop for regressions:
+https://docs.kernel.org/admin-guide/reporting-regressions.html]
 
-On 8/7/23 06:38, Mario Limonciello wrote:
-> On 8/6/23 13:20, Hans de Goede wrote:
->> Hi Mario,
->>
->> On 8/6/23 19:13, Mario Limonciello wrote:
->>> On 8/6/23 10:14, Hans de Goede wrote:
->>>> Commit a9c4a912b7dc ("ACPI: resource: Remove "Zen" specific match and
->>>> quirks") is causing keyboard problems for quite a log of AMD based
->>>> laptop users, leading to many bug reports.
->>>>
->>>> Revert this change for now, until we can come up with
->>>> a better fix for the PS/2 IRQ trigger-type/polarity problems
->>>> on some x86 laptops.
->>>
->>> Reverting it is going to help a bunch of machines but cause regressions for others.  How do you prioritize which to fix when it comes to a regression?
->>
->> I understand where you are coming from. But we are dealing with a lot of bug reports from users of recent kernel versions (so not on LTS distros) where things used to work fine. Which is pretty much the definition of a regression.
->>
->> OTOH the do not override IRQ on Zen behavior has been with us for a while now, so things which are broken by it have been broken for a while and have only started working since 6.4.7.
->>
->> So to me it is clear that we first need to revert to the old state, so that users for which everything was working fine get back to a working system.
->>
->> I realize this will unfix some very recently fixed systems, but notice the very recently bit here most users are no in 6.4.7 or .8 yet, so most users will not even have gotten the fixing effect OTOH many users are seeing breakage now.
->>
->> So IMHO we should first get back to the known bad state, instead of introducing a new unknown bad state like a9c4a912b7dc did.
->>
->> If there are known systems which will need an override with a9c4a912b7dc reverted, then we should probably add those to the override table right away.
->>
->> And I think what we also need is a way to specify an IRQ trigger-type override for IRQ 1 on the kernel commandline, so that we can easily ask users to try a different trigger-type without them needing to build a kernel with an updated quirk table.
->>
->> As Linus mentioned already, we really need to find a proper fix for this, but for now my main priority is to stop the influx of new Fedora bugzilla and bugzilla.kernel.org bugs caused by a9c4a912b7dc, counting the extra bug links added in this thread it seems we are up to 6 known bug reports for this and that likely is just the tip of the iceberg.
->>
->> Regards,
->>
->> Hans
->>
->>
+Hi, Thorsten here, the Linux kernel's regression tracker.
+
+On 07.08.23 07:19, José Ramón Muñoz Pekkarinen wrote:
+>     Sorry again, now in plaintext mode.
 > 
-> We haven't even given a try to fixing it; I think the revert is still hasty.
+>     Hi,
 > 
-> I don't have a machine that can reproduce this failure, but I did confirm that my keyboard still works with this:
+>     I'd like to seek help or advise in a possible
+> regression that I detected on my system(a
+> Thinkpad L14 Gen 1) that concerns the atkbd
+> module. My OS is a gentoo, with self built
+> kernels, and a plasma desktop environment
+> using wayland. Up to the kernel 5.16.x my
+> builtin keyboard worked(and works still)
+> fine both in tty and the plasma session, but
+> from that kernel on, the keyboard works only
+> in tty, and no longer in the plasma session.
+
+Could you try bisecting this? A few howtos on the net describe what to
+do. Be sure to use the configuration for your working 5.16 kernel for
+any builds of newer versions (ideally put it <somewhere> and run "cp
+<somewhere> .config; make oldconfig" every time before building a newer
+kernel.
+
+Ciao, Thorsten
+
+>     The input config section of my 5.16.17 kernel:
 > 
-> diff --git a/drivers/acpi/resource.c b/drivers/acpi/resource.c
-> index 1dd8d5aebf678..b74d7d8cc8630 100644
-> --- a/drivers/acpi/resource.c
-> +++ b/drivers/acpi/resource.c
-> @@ -19,7 +19,7 @@
->  #include <linux/dmi.h>
+> #
+> # Input device support
+> #
+> CONFIG_INPUT=y
+> CONFIG_INPUT_LEDS=m
+> # CONFIG_INPUT_FF_MEMLESS is not set
+> # CONFIG_INPUT_SPARSEKMAP is not set
+> # CONFIG_INPUT_MATRIXKMAP is not set
 > 
->  #ifdef CONFIG_X86
-> -#define valid_IRQ(i) (((i) != 0) && ((i) != 2))
-> +#define valid_IRQ(i) ((i) > 2)
->  static inline bool acpi_iospace_resource_valid(struct resource *res)
->  {
->         /* On X86 IO space is limited to the [0 - 64K] IO port range */
+> #
+> # Userland interfaces
+> #
+> CONFIG_INPUT_MOUSEDEV=m
+> # CONFIG_INPUT_MOUSEDEV_PSAUX is not set
+> CONFIG_INPUT_MOUSEDEV_SCREEN_X=1024
+> CONFIG_INPUT_MOUSEDEV_SCREEN_Y=768
+> CONFIG_INPUT_JOYDEV=m
+> CONFIG_INPUT_EVDEV=m
+> # CONFIG_INPUT_EVBUG is not set
 > 
-> Can we perhaps see if that works instead for some affected people?
-
-That does not just skip the override stuff, it will make the kernel return irqresource_disabled(res, 1) for the kbd IRQ:
-
-static inline void irqresource_disabled(struct resource *res, u32 irq)
-{
-        res->start = irq;
-        res->end = irq;
-        res->flags |= IORESOURCE_IRQ | IORESOURCE_DISABLED | IORESOURCE_UNSET;
-}
-
-Now not much code seems to actually check the IORESOURCE_DISABLED | IORESOURCE_UNSET flags, so this might still work but it does not seem like the right thing to do.
-
-Regards,
-
-Hans
-
-
-
-
-
-
+> #
+> # Input Device Drivers
+> #
+> CONFIG_INPUT_KEYBOARD=y
+> # CONFIG_KEYBOARD_ADP5588 is not set
+> # CONFIG_KEYBOARD_ADP5589 is not set
+> # CONFIG_KEYBOARD_APPLESPI is not set
+> CONFIG_KEYBOARD_ATKBD=y
+> # CONFIG_KEYBOARD_QT1050 is not set
+> # CONFIG_KEYBOARD_QT1070 is not set
+> # CONFIG_KEYBOARD_QT2160 is not set
+> # CONFIG_KEYBOARD_DLINK_DIR685 is not set
+> # CONFIG_KEYBOARD_LKKBD is not set
+> # CONFIG_KEYBOARD_GPIO is not set
+> # CONFIG_KEYBOARD_GPIO_POLLED is not set
+> # CONFIG_KEYBOARD_TCA6416 is not set
+> # CONFIG_KEYBOARD_TCA8418 is not set
+> # CONFIG_KEYBOARD_MATRIX is not set
+> # CONFIG_KEYBOARD_LM8323 is not set
+> # CONFIG_KEYBOARD_LM8333 is not set
+> # CONFIG_KEYBOARD_MAX7359 is not set
+> # CONFIG_KEYBOARD_MCS is not set
+> # CONFIG_KEYBOARD_MPR121 is not set
+> # CONFIG_KEYBOARD_NEWTON is not set
+> # CONFIG_KEYBOARD_OPENCORES is not set
+> # CONFIG_KEYBOARD_SAMSUNG is not set
+> # CONFIG_KEYBOARD_STOWAWAY is not set
+> # CONFIG_KEYBOARD_SUNKBD is not set
+> # CONFIG_KEYBOARD_TM2_TOUCHKEY is not set
+> # CONFIG_KEYBOARD_XTKBD is not set
+> # CONFIG_KEYBOARD_CYPRESS_SF is not set
 > 
-> If it does we should be able to throw away the entire quirks table.
+>     And the same for 6.4.7:
 > 
->>
->>>
->>>>
->>>> Fixes: a9c4a912b7dc ("ACPI: resource: Remove "Zen" specific match and quirks")
->>>> Link: https://bugzilla.redhat.com/show_bug.cgi?id=2229165
->>>> Link: https://bugzilla.redhat.com/show_bug.cgi?id=2229317
->>>> Link: https://bugzilla.kernel.org/show_bug.cgi?id=217726
->>>> Cc: Mario Limonciello <mario.limonciello@amd.com>
->>>> Cc: Linux regressions mailing list <regressions@lists.linux.dev>
->>>> Cc: stable@vger.kernel.org
->>>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->>>> ---
->>>>    drivers/acpi/resource.c | 60 +++++++++++++++++++++++++++++++++++++++++
->>>>    1 file changed, 60 insertions(+)
->>>>
->>>> diff --git a/drivers/acpi/resource.c b/drivers/acpi/resource.c
->>>> index 1dd8d5aebf67..0800a9d77558 100644
->>>> --- a/drivers/acpi/resource.c
->>>> +++ b/drivers/acpi/resource.c
->>>> @@ -470,6 +470,52 @@ static const struct dmi_system_id asus_laptop[] = {
->>>>        { }
->>>>    };
->>>>    +static const struct dmi_system_id lenovo_laptop[] = {
->>>> +    {
->>>> +        .ident = "LENOVO IdeaPad Flex 5 14ALC7",
->>>> +        .matches = {
->>>> +            DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
->>>> +            DMI_MATCH(DMI_PRODUCT_NAME, "82R9"),
->>>> +        },
->>>> +    },
->>>> +    {
->>>> +        .ident = "LENOVO IdeaPad Flex 5 16ALC7",
->>>> +        .matches = {
->>>> +            DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
->>>> +            DMI_MATCH(DMI_PRODUCT_NAME, "82RA"),
->>>> +        },
->>>> +    },
->>>> +    { }
->>>> +};
->>>> +
->>>> +static const struct dmi_system_id tongfang_gm_rg[] = {
->>>> +    {
->>>> +        .ident = "TongFang GMxRGxx/XMG CORE 15 (M22)/TUXEDO Stellaris 15 Gen4 AMD",
->>>> +        .matches = {
->>>> +            DMI_MATCH(DMI_BOARD_NAME, "GMxRGxx"),
->>>> +        },
->>>> +    },
->>>> +    { }
->>>> +};
->>>> +
->>>> +static const struct dmi_system_id maingear_laptop[] = {
->>>> +    {
->>>> +        .ident = "MAINGEAR Vector Pro 2 15",
->>>> +        .matches = {
->>>> +            DMI_MATCH(DMI_SYS_VENDOR, "Micro Electronics Inc"),
->>>> +            DMI_MATCH(DMI_PRODUCT_NAME, "MG-VCP2-15A3070T"),
->>>> +        }
->>>> +    },
->>>> +    {
->>>> +        .ident = "MAINGEAR Vector Pro 2 17",
->>>> +        .matches = {
->>>> +            DMI_MATCH(DMI_SYS_VENDOR, "Micro Electronics Inc"),
->>>> +            DMI_MATCH(DMI_PRODUCT_NAME, "MG-VCP2-17A3070T"),
->>>> +        },
->>>> +    },
->>>> +    { }
->>>> +};
->>>> +
->>>>    static const struct dmi_system_id lg_laptop[] = {
->>>>        {
->>>>            .ident = "LG Electronics 17U70P",
->>>> @@ -493,6 +539,10 @@ struct irq_override_cmp {
->>>>    static const struct irq_override_cmp override_table[] = {
->>>>        { medion_laptop, 1, ACPI_LEVEL_SENSITIVE, ACPI_ACTIVE_LOW, 0, false },
->>>>        { asus_laptop, 1, ACPI_LEVEL_SENSITIVE, ACPI_ACTIVE_LOW, 0, false },
->>>> +    { lenovo_laptop, 6, ACPI_LEVEL_SENSITIVE, ACPI_ACTIVE_LOW, 0, true },
->>>> +    { lenovo_laptop, 10, ACPI_LEVEL_SENSITIVE, ACPI_ACTIVE_LOW, 0, true },
->>>> +    { tongfang_gm_rg, 1, ACPI_EDGE_SENSITIVE, ACPI_ACTIVE_LOW, 1, true },
->>>> +    { maingear_laptop, 1, ACPI_EDGE_SENSITIVE, ACPI_ACTIVE_LOW, 1, true },
->>>>        { lg_laptop, 1, ACPI_LEVEL_SENSITIVE, ACPI_ACTIVE_LOW, 0, false },
->>>>    };
->>>>    @@ -512,6 +562,16 @@ static bool acpi_dev_irq_override(u32 gsi, u8 triggering, u8 polarity,
->>>>                return entry->override;
->>>>        }
->>>>    +#ifdef CONFIG_X86
->>>> +    /*
->>>> +     * IRQ override isn't needed on modern AMD Zen systems and
->>>> +     * this override breaks active low IRQs on AMD Ryzen 6000 and
->>>> +     * newer systems. Skip it.
->>>> +     */
->>>> +    if (boot_cpu_has(X86_FEATURE_ZEN))
->>>> +        return false;
->>>> +#endif
->>>> +
->>>>        return true;
->>>>    }
->>>>    
->>>
->>
+> #
+> # Input device support
+> #
+> CONFIG_INPUT=y
+> CONFIG_INPUT_LEDS=m
+> # CONFIG_INPUT_FF_MEMLESS is not set
+> # CONFIG_INPUT_SPARSEKMAP is not set
+> # CONFIG_INPUT_MATRIXKMAP is not set
+> CONFIG_INPUT_VIVALDIFMAP=y
 > 
-
+> #
+> # Userland interfaces
+> #
+> CONFIG_INPUT_MOUSEDEV=m
+> # CONFIG_INPUT_MOUSEDEV_PSAUX is not set
+> CONFIG_INPUT_MOUSEDEV_SCREEN_X=1024
+> CONFIG_INPUT_MOUSEDEV_SCREEN_Y=768
+> CONFIG_INPUT_JOYDEV=m
+> CONFIG_INPUT_EVDEV=m
+> # CONFIG_INPUT_EVBUG is not set
+> 
+> #
+> # Input Device Drivers
+> #
+> CONFIG_INPUT_KEYBOARD=y
+> # CONFIG_KEYBOARD_ADP5588 is not set
+> # CONFIG_KEYBOARD_ADP5589 is not set
+> # CONFIG_KEYBOARD_APPLESPI is not set
+> CONFIG_KEYBOARD_ATKBD=y
+> # CONFIG_KEYBOARD_QT1050 is not set
+> # CONFIG_KEYBOARD_QT1070 is not set
+> # CONFIG_KEYBOARD_QT2160 is not set
+> # CONFIG_KEYBOARD_DLINK_DIR685 is not set
+> # CONFIG_KEYBOARD_LKKBD is not set
+> # CONFIG_KEYBOARD_GPIO is not set
+> # CONFIG_KEYBOARD_GPIO_POLLED is not set
+> # CONFIG_KEYBOARD_TCA6416 is not set
+> # CONFIG_KEYBOARD_TCA8418 is not set
+> # CONFIG_KEYBOARD_MATRIX is not set
+> # CONFIG_KEYBOARD_LM8323 is not set
+> # CONFIG_KEYBOARD_LM8333 is not set
+> # CONFIG_KEYBOARD_MAX7359 is not set
+> # CONFIG_KEYBOARD_MCS is not set
+> # CONFIG_KEYBOARD_MPR121 is not set
+> # CONFIG_KEYBOARD_NEWTON is not set
+> # CONFIG_KEYBOARD_OPENCORES is not set
+> # CONFIG_KEYBOARD_PINEPHONE is not set
+> # CONFIG_KEYBOARD_SAMSUNG is not set
+> # CONFIG_KEYBOARD_STOWAWAY is not set
+> # CONFIG_KEYBOARD_SUNKBD is not set
+> # CONFIG_KEYBOARD_TM2_TOUCHKEY is not set
+> # CONFIG_KEYBOARD_XTKBD is not set
+> # CONFIG_KEYBOARD_CYPRESS_SF is not set
+> 
+>     If I run evtest, the keyboard is detected, and I can
+> retrieve its events. From my kernel 6.4, this is an
+> example of it's output.
+> 
+> # evtest
+> No device specified, trying to scan all of /dev/input/event*
+> Available devices:
+> /dev/input/event0:      AT Translated Set 2 keyboard
+> /dev/input/event1:      Power Button
+> /dev/input/event10:     SEM HCT Keyboard Consumer Control
+> /dev/input/event11:     SEM HCT Keyboard System Control
+> /dev/input/event12:     Logitech USB Optical Mouse
+> /dev/input/event2:      Lid Switch
+> /dev/input/event3:      Sleep Button
+> /dev/input/event4:      Power Button
+> /dev/input/event5:      Video Bus
+> /dev/input/event6:      ThinkPad Extra Buttons
+> /dev/input/event7:      SynPS/2 Synaptics TouchPad
+> /dev/input/event8:      TPPS/2 Elan TrackPoint
+> /dev/input/event9:      SEM HCT Keyboard
+> Select the device event number [0-12]: 0
+> Input driver version is 1.0.1
+> Input device ID: bus 0x11 vendor 0x1 product 0x1 version 0xab54
+> Input device name: "AT Translated Set 2 keyboard"
+> Supported events:
+>  Event type 0 (EV_SYN)
+>  Event type 1 (EV_KEY)
+>    Event code 1 (KEY_ESC)
+>    Event code 2 (KEY_1)
+>    Event code 3 (KEY_2)
+>    Event code 4 (KEY_3)
+>    Event code 5 (KEY_4)
+>    Event code 6 (KEY_5)
+>    Event code 7 (KEY_6)
+>    Event code 8 (KEY_7)
+>    Event code 9 (KEY_8)
+>    Event code 10 (KEY_9)
+>    Event code 11 (KEY_0)
+>    Event code 12 (KEY_MINUS)
+>    Event code 13 (KEY_EQUAL)
+>    Event code 14 (KEY_BACKSPACE)
+>    Event code 15 (KEY_TAB)
+>    Event code 16 (KEY_Q)
+>    Event code 17 (KEY_W)
+>    Event code 18 (KEY_E)
+>    Event code 19 (KEY_R)
+>    Event code 20 (KEY_T)
+>    Event code 21 (KEY_Y)
+>    Event code 22 (KEY_U)
+>    Event code 23 (KEY_I)
+>    Event code 24 (KEY_O)
+>    Event code 25 (KEY_P)
+>    Event code 26 (KEY_LEFTBRACE)
+>    Event code 27 (KEY_RIGHTBRACE)
+>    Event code 28 (KEY_ENTER)
+>    Event code 29 (KEY_LEFTCTRL)
+>    Event code 30 (KEY_A)
+>    Event code 31 (KEY_S)
+>    Event code 32 (KEY_D)
+>    Event code 33 (KEY_F)
+>    Event code 34 (KEY_G)
+>    Event code 35 (KEY_H)
+>    Event code 36 (KEY_J)
+>    Event code 37 (KEY_K)
+>    Event code 38 (KEY_L)
+>    Event code 39 (KEY_SEMICOLON)
+>    Event code 40 (KEY_APOSTROPHE)
+>    Event code 41 (KEY_GRAVE)
+>    Event code 42 (KEY_LEFTSHIFT)
+>    Event code 43 (KEY_BACKSLASH)
+>    Event code 44 (KEY_Z)
+>    Event code 45 (KEY_X)
+>    Event code 46 (KEY_C)
+>    Event code 47 (KEY_V)
+>    Event code 48 (KEY_B)
+>    Event code 49 (KEY_N)
+>    Event code 50 (KEY_M)
+>    Event code 51 (KEY_COMMA)
+>    Event code 52 (KEY_DOT)
+>    Event code 53 (KEY_SLASH)
+>    Event code 54 (KEY_RIGHTSHIFT)
+>    Event code 55 (KEY_KPASTERISK)
+>    Event code 56 (KEY_LEFTALT)
+>    Event code 57 (KEY_SPACE)
+>    Event code 58 (KEY_CAPSLOCK)
+>    Event code 59 (KEY_F1)
+>    Event code 60 (KEY_F2)
+>    Event code 61 (KEY_F3)
+>    Event code 62 (KEY_F4)
+>    Event code 63 (KEY_F5)
+>    Event code 64 (KEY_F6)
+>    Event code 65 (KEY_F7)
+>    Event code 66 (KEY_F8)
+>    Event code 67 (KEY_F9)
+>    Event code 68 (KEY_F10)
+>    Event code 69 (KEY_NUMLOCK)
+>    Event code 70 (KEY_SCROLLLOCK)
+>    Event code 71 (KEY_KP7)
+>    Event code 72 (KEY_KP8)
+>    Event code 73 (KEY_KP9)
+>    Event code 74 (KEY_KPMINUS)
+>    Event code 75 (KEY_KP4)
+>    Event code 76 (KEY_KP5)
+>    Event code 77 (KEY_KP6)
+>    Event code 78 (KEY_KPPLUS)
+>    Event code 79 (KEY_KP1)
+>    Event code 80 (KEY_KP2)
+>    Event code 81 (KEY_KP3)
+>    Event code 82 (KEY_KP0)
+>    Event code 83 (KEY_KPDOT)
+>    Event code 85 (KEY_ZENKAKUHANKAKU)
+>    Event code 86 (KEY_102ND)
+>    Event code 87 (KEY_F11)
+>    Event code 88 (KEY_F12)
+>    Event code 89 (KEY_RO)
+>    Event code 90 (KEY_KATAKANA)
+>    Event code 91 (KEY_HIRAGANA)
+>    Event code 92 (KEY_HENKAN)
+>    Event code 93 (KEY_KATAKANAHIRAGANA)
+>    Event code 94 (KEY_MUHENKAN)
+>    Event code 95 (KEY_KPJPCOMMA)
+>    Event code 96 (KEY_KPENTER)
+>    Event code 97 (KEY_RIGHTCTRL)
+>    Event code 98 (KEY_KPSLASH)
+>    Event code 99 (KEY_SYSRQ)
+>    Event code 100 (KEY_RIGHTALT)
+>    Event code 102 (KEY_HOME)
+>    Event code 103 (KEY_UP)
+>    Event code 104 (KEY_PAGEUP)
+>    Event code 105 (KEY_LEFT)
+>    Event code 106 (KEY_RIGHT)
+>    Event code 107 (KEY_END)
+>    Event code 108 (KEY_DOWN)
+>    Event code 109 (KEY_PAGEDOWN)
+>    Event code 110 (KEY_INSERT)
+>    Event code 111 (KEY_DELETE)
+>    Event code 112 (KEY_MACRO)
+>    Event code 113 (KEY_MUTE)
+>    Event code 114 (KEY_VOLUMEDOWN)
+>    Event code 115 (KEY_VOLUMEUP)
+>    Event code 116 (KEY_POWER)
+>    Event code 117 (KEY_KPEQUAL)
+>    Event code 118 (KEY_KPPLUSMINUS)
+>    Event code 119 (KEY_PAUSE)
+>    Event code 121 (KEY_KPCOMMA)
+>    Event code 122 (KEY_HANGUEL)
+>    Event code 123 (KEY_HANJA)
+>    Event code 124 (KEY_YEN)
+>    Event code 125 (KEY_LEFTMETA)
+>    Event code 126 (KEY_RIGHTMETA)
+>    Event code 127 (KEY_COMPOSE)
+>    Event code 128 (KEY_STOP)
+>    Event code 140 (KEY_CALC)
+>    Event code 142 (KEY_SLEEP)
+>    Event code 143 (KEY_WAKEUP)
+>    Event code 155 (KEY_MAIL)
+>    Event code 156 (KEY_BOOKMARKS)
+>    Event code 157 (KEY_COMPUTER)
+>    Event code 158 (KEY_BACK)
+>    Event code 159 (KEY_FORWARD)
+>    Event code 163 (KEY_NEXTSONG)
+>    Event code 164 (KEY_PLAYPAUSE)
+>    Event code 165 (KEY_PREVIOUSSONG)
+>    Event code 166 (KEY_STOPCD)
+>    Event code 172 (KEY_HOMEPAGE)
+>    Event code 173 (KEY_REFRESH)
+>    Event code 183 (KEY_F13)
+>    Event code 184 (KEY_F14)
+>    Event code 185 (KEY_F15)
+>    Event code 217 (KEY_SEARCH)
+>    Event code 226 (KEY_MEDIA)
+>  Event type 4 (EV_MSC)
+>    Event code 4 (MSC_SCAN)
+>  Event type 17 (EV_LED)
+>    Event code 0 (LED_NUML) state 0
+>    Event code 1 (LED_CAPSL) state 0
+>    Event code 2 (LED_SCROLLL) state 0
+> Key repeat handling:
+>  Repeat type 20 (EV_REP)
+>    Repeat code 0 (REP_DELAY)
+>      Value    250
+>    Repeat code 1 (REP_PERIOD)
+>      Value     33
+> Properties:
+> Testing ... (interrupt to exit)
+> Event: time 1691384520.078772, type 4 (EV_MSC), code 4 (MSC_SCAN), value 10
+> Event: time 1691384520.078772, type 1 (EV_KEY), code 16 (KEY_Q), value 1
+> Event: time 1691384520.078772, -------------- SYN_REPORT ------------
+> Event: time 1691384520.157298, type 4 (EV_MSC), code 4 (MSC_SCAN), value 10
+> Event: time 1691384520.157298, type 1 (EV_KEY), code 16 (KEY_Q), value 0
+> Event: time 1691384520.157298, -------------- SYN_REPORT ------------
+> Event: time 1691384520.849991, type 4 (EV_MSC), code 4 (MSC_SCAN), value 11
+> Event: time 1691384520.849991, type 1 (EV_KEY), code 17 (KEY_W), value 1
+> Event: time 1691384520.849991, -------------- SYN_REPORT ------------
+> Event: time 1691384520.919630, type 4 (EV_MSC), code 4 (MSC_SCAN), value 11
+> Event: time 1691384520.919630, type 1 (EV_KEY), code 17 (KEY_W), value 0
+> Event: time 1691384520.919630, -------------- SYN_REPORT ------------
+> Event: time 1691384521.311986, type 4 (EV_MSC), code 4 (MSC_SCAN), value 12
+> Event: time 1691384521.311986, type 1 (EV_KEY), code 18 (KEY_E), value 1
+> Event: time 1691384521.311986, -------------- SYN_REPORT ------------
+> Event: time 1691384521.417578, type 4 (EV_MSC), code 4 (MSC_SCAN), value 12
+> Event: time 1691384521.417578, type 1 (EV_KEY), code 18 (KEY_E), value 0
+> Event: time 1691384521.417578, -------------- SYN_REPORT ------------
+> Event: time 1691384521.639505, type 4 (EV_MSC), code 4 (MSC_SCAN), value 13
+> Event: time 1691384521.639505, type 1 (EV_KEY), code 19 (KEY_R), value 1
+> Event: time 1691384521.639505, -------------- SYN_REPORT ------------
+> Event: time 1691384521.709170, type 4 (EV_MSC), code 4 (MSC_SCAN), value 13
+> Event: time 1691384521.709170, type 1 (EV_KEY), code 19 (KEY_R), value 0
+> Event: time 1691384521.709170, -------------- SYN_REPORT ------------
+> Event: time 1691384521.879657, type 4 (EV_MSC), code 4 (MSC_SCAN), value 14
+> Event: time 1691384521.879657, type 1 (EV_KEY), code 20 (KEY_T), value 1
+> Event: time 1691384521.879657, -------------- SYN_REPORT ------------
+> Event: time 1691384521.958384, type 4 (EV_MSC), code 4 (MSC_SCAN), value 14
+> Event: time 1691384521.958384, type 1 (EV_KEY), code 20 (KEY_T), value 0
+> Event: time 1691384521.958384, -------------- SYN_REPORT ------------
+> Event: time 1691384522.188556, type 4 (EV_MSC), code 4 (MSC_SCAN), value 15
+> Event: time 1691384522.188556, type 1 (EV_KEY), code 21 (KEY_Y), value 1
+> 
+>     I have reported this time ago in libinput, and they
+> replied it might be a kernel problem, since booting
+> my kernel 5.16 makes it work correctly again anytime.
+> 
+>    Could anyone please shed some light on this little
+> problem?
+> 
+>    Best regards.
+> 
+>    José Pekkarinen
