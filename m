@@ -1,73 +1,466 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF19413AE6
-	for <regressions@lists.linux.dev>; Mon,  7 Aug 2023 22:50:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 5CCBCC433CC;
-	Mon,  7 Aug 2023 22:50:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1691448622;
-	bh=UqATlph8Eo/e5YiJi8/QqaqNEUFiDAYOsk+a0ly4odQ=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=iFqW/QLFnyeNdEkB1FKRTxoutUm2irL9EmxC/fd8R/KCcmR2ugMQ2o31g+GSKyijc
-	 9HGH+3As9jM0cRlD+3fFT3LMZx5pVCDHp3stPOyJ/COiNcQAVrZOTFTjVaB7ZwUxUQ
-	 a4YjlPbobB7TaBygDxUclDdqijqqZE6lK3t7wePOIfqphlPIUEpz4KkfEHSkzX2JZg
-	 quaLQKLdoaG/Cm6zCp06ZwNB0Q75YnAWMPYhPyEf1ssEhLBJq+Dup5YBXk7unXTTeD
-	 Hd/pCanVfBh7ZGEUfxJFrPpsh4aO49QoUWS+nV4eFoevaSpcH2M79hV4pRGJbt2fXN
-	 aWlBVu4pD1IfA==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 3FB26E33098;
-	Mon,  7 Aug 2023 22:50:22 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3C5537E
+	for <regressions@lists.linux.dev>; Tue,  8 Aug 2023 01:41:58 +0000 (UTC)
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-686c06b806cso3399278b3a.2
+        for <regressions@lists.linux.dev>; Mon, 07 Aug 2023 18:41:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1691458918; x=1692063718;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=jXh3iloQcY4eC0AYNvzerZtqUOWVJSd1gBq4KVA2J4Y=;
+        b=Wroe2QE9cEYXY8wPaREGuXqJG0x8LudjmjIlyFrziQbLe7gukKdc0AnsS60H4Sq4Sr
+         d71/EUAhGcpinhhzKrDosDFOJn1d86ZYVY21CQjhSeADp2Db21gyYMfym9mdWR+ycZNH
+         kZFx1E6ryy9jNAGdYyjHT2/b55syKXvbY3RGbXnT+bFrl6DOm6G32nrraHOuDSCT9uHb
+         DhuW0JkfcSoJJC55JSNHlsMKYKb8I9lHP+N9IysEus8UDZKfLPrOT2OEMbAglXHNI5Cv
+         5J8pJ51zP6qG1EspceGE5N+T4Z/7RMzRbb73TcGp0Ve/HY03/iz1zx2L8vbgbnOIrOE7
+         azXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1691458918; x=1692063718;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jXh3iloQcY4eC0AYNvzerZtqUOWVJSd1gBq4KVA2J4Y=;
+        b=Oi+JlIAaxHFZuwMSBJ6ihSSJJVnTLq1j++YnCNY0eUuPN5IaOapccOynB94GQJvt88
+         1QbYJzz+DjGyELQtE/8CEXJ0Ra4lpTpHAzACoLEhYbaD24g6MW8MkIce+MO9dx6RlkNs
+         HUvGptR0GImbKOMGTOBom/vFSz89B0b+wkpGvafa1KEyCcrSN4F+c9cqYKr58YgkyrGs
+         cRROrul0MTLu+EjrfTba1FlZpEEkkiGvNSqahI5MWxfuRPvMui4rzqvW7Yhqf9MaEC0t
+         ojb9gFo/E8G2yw6Vzpza6TlRGEi8S7c/CAFCUyzeBYl7ItkvUL55e6yDyVnmdUwROWeN
+         v50g==
+X-Gm-Message-State: AOJu0YwZNb956i9KvD90hssickZM9g4eGlkoj7y4ZGwZJab7aYrLsWA8
+	9E48W5oAXMOHqWpFs//m4FA=
+X-Google-Smtp-Source: AGHT+IESfUOel+K/iS9tDgMCxljkZwFVTj8CgTE0q5HMeIOK7UbQvYiRkY+BNCLUCyxWiEiWBzj/RQ==
+X-Received: by 2002:a05:6a00:21d0:b0:681:6169:e403 with SMTP id t16-20020a056a0021d000b006816169e403mr10148945pfj.8.1691458917709;
+        Mon, 07 Aug 2023 18:41:57 -0700 (PDT)
+Received: from debian.me ([103.131.18.64])
+        by smtp.gmail.com with ESMTPSA id w13-20020aa7858d000000b0068702b66ab1sm7009754pfn.174.2023.08.07.18.41.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Aug 2023 18:41:56 -0700 (PDT)
+Received: by debian.me (Postfix, from userid 1000)
+	id 44B9C8037774; Tue,  8 Aug 2023 08:41:53 +0700 (WIB)
+Date: Tue, 8 Aug 2023 08:41:52 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: =?utf-8?B?Sm9zw6kgUmFtw7NuIE11w7Fveg==?= Pekkarinen <koalinux@gmail.com>,
+	linux-input@vger.kernel.org, Raul Rangel <rrangel@chromium.org>
+Cc: dmitry.torokhov@gmail.com, gregkh@linuxfoundation.org,
+	Linux Regressions <regressions@lists.linux.dev>
+Subject: Re: atkbd input regression
+Message-ID: <ZNGdYCXOHRqWnoeT@debian.me>
+References: <CANWZPgK2+9SCavsbSZv1DfJyhy0XUpJZ6+ebatM9ZGJPpAN1yA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v4] Bluetooth: btrtl: Load FW v2 otherwise FW v1 for RTL8852C
-From: patchwork-bot+bluetooth@kernel.org
-Message-Id: 
- <169144862225.1999.15719551303477888698.git-patchwork-notify@kernel.org>
-Date: Mon, 07 Aug 2023 22:50:22 +0000
-References: <20230807114259.13654-1-max.chou@realtek.com>
-In-Reply-To: <20230807114259.13654-1-max.chou@realtek.com>
-To: Max Chou <max.chou@realtek.com>
-Cc: marcel@holtmann.org, johan.hedberg@gmail.com, luiz.dentz@gmail.com,
- linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
- alex_lu@realsil.com.cn, hildawu@realtek.com, karenhsu@realtek.com,
- kidman@realtek.com, juerg.haefliger@canonical.com, vicamo.yang@canonical.com,
- Riley.Kao@dell.com, jwboyer@kernel.org, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- regressions@lists.linux.dev
-
-Hello:
-
-This patch was applied to bluetooth/bluetooth-next.git (master)
-by Luiz Augusto von Dentz <luiz.von.dentz@intel.com>:
-
-On Mon, 7 Aug 2023 19:42:59 +0800 you wrote:
-> From: Max Chou <max.chou@realtek.com>
-> 
-> In this commit, prefer to load FW v2 if available. Fallback to FW v1
-> otherwise. This behavior is only for RTL8852C.
-> 
-> Fixes: 9a24ce5e29b1 ("Bluetooth: btrtl: Firmware format v2 support")
-> Cc: stable@vger.kernel.org
-> Suggested-by: Juerg Haefliger <juerg.haefliger@canonical.com>
-> Tested-by: Hilda Wu <hildawu@realtek.com>
-> Signed-off-by: Max Chou <max.chou@realtek.com>
-> 
-> [...]
-
-Here is the summary with links:
-  - [v4] Bluetooth: btrtl: Load FW v2 otherwise FW v1 for RTL8852C
-    https://git.kernel.org/bluetooth/bluetooth-next/c/77bceb7a4d68
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="nPzC4MhGwKg4yj0C"
+Content-Disposition: inline
+In-Reply-To: <CANWZPgK2+9SCavsbSZv1DfJyhy0XUpJZ6+ebatM9ZGJPpAN1yA@mail.gmail.com>
 
 
+--nPzC4MhGwKg4yj0C
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Aug 07, 2023 at 08:19:00AM +0300, Jos=C3=A9 Ram=C3=B3n Mu=C3=B1oz P=
+ekkarinen wrote:
+>     Sorry again, now in plaintext mode.
+>=20
+>     Hi,
+>=20
+>     I'd like to seek help or advise in a possible
+> regression that I detected on my system(a
+> Thinkpad L14 Gen 1) that concerns the atkbd
+> module. My OS is a gentoo, with self built
+> kernels, and a plasma desktop environment
+> using wayland. Up to the kernel 5.16.x my
+> builtin keyboard worked(and works still)
+> fine both in tty and the plasma session, but
+> from that kernel on, the keyboard works only
+> in tty, and no longer in the plasma session.
+>=20
+>     The input config section of my 5.16.17 kernel:
+>=20
+> #
+> # Input device support
+> #
+> CONFIG_INPUT=3Dy
+> CONFIG_INPUT_LEDS=3Dm
+> # CONFIG_INPUT_FF_MEMLESS is not set
+> # CONFIG_INPUT_SPARSEKMAP is not set
+> # CONFIG_INPUT_MATRIXKMAP is not set
+>=20
+> #
+> # Userland interfaces
+> #
+> CONFIG_INPUT_MOUSEDEV=3Dm
+> # CONFIG_INPUT_MOUSEDEV_PSAUX is not set
+> CONFIG_INPUT_MOUSEDEV_SCREEN_X=3D1024
+> CONFIG_INPUT_MOUSEDEV_SCREEN_Y=3D768
+> CONFIG_INPUT_JOYDEV=3Dm
+> CONFIG_INPUT_EVDEV=3Dm
+> # CONFIG_INPUT_EVBUG is not set
+>=20
+> #
+> # Input Device Drivers
+> #
+> CONFIG_INPUT_KEYBOARD=3Dy
+> # CONFIG_KEYBOARD_ADP5588 is not set
+> # CONFIG_KEYBOARD_ADP5589 is not set
+> # CONFIG_KEYBOARD_APPLESPI is not set
+> CONFIG_KEYBOARD_ATKBD=3Dy
+> # CONFIG_KEYBOARD_QT1050 is not set
+> # CONFIG_KEYBOARD_QT1070 is not set
+> # CONFIG_KEYBOARD_QT2160 is not set
+> # CONFIG_KEYBOARD_DLINK_DIR685 is not set
+> # CONFIG_KEYBOARD_LKKBD is not set
+> # CONFIG_KEYBOARD_GPIO is not set
+> # CONFIG_KEYBOARD_GPIO_POLLED is not set
+> # CONFIG_KEYBOARD_TCA6416 is not set
+> # CONFIG_KEYBOARD_TCA8418 is not set
+> # CONFIG_KEYBOARD_MATRIX is not set
+> # CONFIG_KEYBOARD_LM8323 is not set
+> # CONFIG_KEYBOARD_LM8333 is not set
+> # CONFIG_KEYBOARD_MAX7359 is not set
+> # CONFIG_KEYBOARD_MCS is not set
+> # CONFIG_KEYBOARD_MPR121 is not set
+> # CONFIG_KEYBOARD_NEWTON is not set
+> # CONFIG_KEYBOARD_OPENCORES is not set
+> # CONFIG_KEYBOARD_SAMSUNG is not set
+> # CONFIG_KEYBOARD_STOWAWAY is not set
+> # CONFIG_KEYBOARD_SUNKBD is not set
+> # CONFIG_KEYBOARD_TM2_TOUCHKEY is not set
+> # CONFIG_KEYBOARD_XTKBD is not set
+> # CONFIG_KEYBOARD_CYPRESS_SF is not set
+>=20
+>     And the same for 6.4.7:
+>=20
+> #
+> # Input device support
+> #
+> CONFIG_INPUT=3Dy
+> CONFIG_INPUT_LEDS=3Dm
+> # CONFIG_INPUT_FF_MEMLESS is not set
+> # CONFIG_INPUT_SPARSEKMAP is not set
+> # CONFIG_INPUT_MATRIXKMAP is not set
+> CONFIG_INPUT_VIVALDIFMAP=3Dy
+>=20
+> #
+> # Userland interfaces
+> #
+> CONFIG_INPUT_MOUSEDEV=3Dm
+> # CONFIG_INPUT_MOUSEDEV_PSAUX is not set
+> CONFIG_INPUT_MOUSEDEV_SCREEN_X=3D1024
+> CONFIG_INPUT_MOUSEDEV_SCREEN_Y=3D768
+> CONFIG_INPUT_JOYDEV=3Dm
+> CONFIG_INPUT_EVDEV=3Dm
+> # CONFIG_INPUT_EVBUG is not set
+>=20
+> #
+> # Input Device Drivers
+> #
+> CONFIG_INPUT_KEYBOARD=3Dy
+> # CONFIG_KEYBOARD_ADP5588 is not set
+> # CONFIG_KEYBOARD_ADP5589 is not set
+> # CONFIG_KEYBOARD_APPLESPI is not set
+> CONFIG_KEYBOARD_ATKBD=3Dy
+> # CONFIG_KEYBOARD_QT1050 is not set
+> # CONFIG_KEYBOARD_QT1070 is not set
+> # CONFIG_KEYBOARD_QT2160 is not set
+> # CONFIG_KEYBOARD_DLINK_DIR685 is not set
+> # CONFIG_KEYBOARD_LKKBD is not set
+> # CONFIG_KEYBOARD_GPIO is not set
+> # CONFIG_KEYBOARD_GPIO_POLLED is not set
+> # CONFIG_KEYBOARD_TCA6416 is not set
+> # CONFIG_KEYBOARD_TCA8418 is not set
+> # CONFIG_KEYBOARD_MATRIX is not set
+> # CONFIG_KEYBOARD_LM8323 is not set
+> # CONFIG_KEYBOARD_LM8333 is not set
+> # CONFIG_KEYBOARD_MAX7359 is not set
+> # CONFIG_KEYBOARD_MCS is not set
+> # CONFIG_KEYBOARD_MPR121 is not set
+> # CONFIG_KEYBOARD_NEWTON is not set
+> # CONFIG_KEYBOARD_OPENCORES is not set
+> # CONFIG_KEYBOARD_PINEPHONE is not set
+> # CONFIG_KEYBOARD_SAMSUNG is not set
+> # CONFIG_KEYBOARD_STOWAWAY is not set
+> # CONFIG_KEYBOARD_SUNKBD is not set
+> # CONFIG_KEYBOARD_TM2_TOUCHKEY is not set
+> # CONFIG_KEYBOARD_XTKBD is not set
+> # CONFIG_KEYBOARD_CYPRESS_SF is not set
+>=20
+>     If I run evtest, the keyboard is detected, and I can
+> retrieve its events. From my kernel 6.4, this is an
+> example of it's output.
+>=20
+> # evtest
+> No device specified, trying to scan all of /dev/input/event*
+> Available devices:
+> /dev/input/event0:      AT Translated Set 2 keyboard
+> /dev/input/event1:      Power Button
+> /dev/input/event10:     SEM HCT Keyboard Consumer Control
+> /dev/input/event11:     SEM HCT Keyboard System Control
+> /dev/input/event12:     Logitech USB Optical Mouse
+> /dev/input/event2:      Lid Switch
+> /dev/input/event3:      Sleep Button
+> /dev/input/event4:      Power Button
+> /dev/input/event5:      Video Bus
+> /dev/input/event6:      ThinkPad Extra Buttons
+> /dev/input/event7:      SynPS/2 Synaptics TouchPad
+> /dev/input/event8:      TPPS/2 Elan TrackPoint
+> /dev/input/event9:      SEM HCT Keyboard
+> Select the device event number [0-12]: 0
+> Input driver version is 1.0.1
+> Input device ID: bus 0x11 vendor 0x1 product 0x1 version 0xab54
+> Input device name: "AT Translated Set 2 keyboard"
+> Supported events:
+>  Event type 0 (EV_SYN)
+>  Event type 1 (EV_KEY)
+>    Event code 1 (KEY_ESC)
+>    Event code 2 (KEY_1)
+>    Event code 3 (KEY_2)
+>    Event code 4 (KEY_3)
+>    Event code 5 (KEY_4)
+>    Event code 6 (KEY_5)
+>    Event code 7 (KEY_6)
+>    Event code 8 (KEY_7)
+>    Event code 9 (KEY_8)
+>    Event code 10 (KEY_9)
+>    Event code 11 (KEY_0)
+>    Event code 12 (KEY_MINUS)
+>    Event code 13 (KEY_EQUAL)
+>    Event code 14 (KEY_BACKSPACE)
+>    Event code 15 (KEY_TAB)
+>    Event code 16 (KEY_Q)
+>    Event code 17 (KEY_W)
+>    Event code 18 (KEY_E)
+>    Event code 19 (KEY_R)
+>    Event code 20 (KEY_T)
+>    Event code 21 (KEY_Y)
+>    Event code 22 (KEY_U)
+>    Event code 23 (KEY_I)
+>    Event code 24 (KEY_O)
+>    Event code 25 (KEY_P)
+>    Event code 26 (KEY_LEFTBRACE)
+>    Event code 27 (KEY_RIGHTBRACE)
+>    Event code 28 (KEY_ENTER)
+>    Event code 29 (KEY_LEFTCTRL)
+>    Event code 30 (KEY_A)
+>    Event code 31 (KEY_S)
+>    Event code 32 (KEY_D)
+>    Event code 33 (KEY_F)
+>    Event code 34 (KEY_G)
+>    Event code 35 (KEY_H)
+>    Event code 36 (KEY_J)
+>    Event code 37 (KEY_K)
+>    Event code 38 (KEY_L)
+>    Event code 39 (KEY_SEMICOLON)
+>    Event code 40 (KEY_APOSTROPHE)
+>    Event code 41 (KEY_GRAVE)
+>    Event code 42 (KEY_LEFTSHIFT)
+>    Event code 43 (KEY_BACKSLASH)
+>    Event code 44 (KEY_Z)
+>    Event code 45 (KEY_X)
+>    Event code 46 (KEY_C)
+>    Event code 47 (KEY_V)
+>    Event code 48 (KEY_B)
+>    Event code 49 (KEY_N)
+>    Event code 50 (KEY_M)
+>    Event code 51 (KEY_COMMA)
+>    Event code 52 (KEY_DOT)
+>    Event code 53 (KEY_SLASH)
+>    Event code 54 (KEY_RIGHTSHIFT)
+>    Event code 55 (KEY_KPASTERISK)
+>    Event code 56 (KEY_LEFTALT)
+>    Event code 57 (KEY_SPACE)
+>    Event code 58 (KEY_CAPSLOCK)
+>    Event code 59 (KEY_F1)
+>    Event code 60 (KEY_F2)
+>    Event code 61 (KEY_F3)
+>    Event code 62 (KEY_F4)
+>    Event code 63 (KEY_F5)
+>    Event code 64 (KEY_F6)
+>    Event code 65 (KEY_F7)
+>    Event code 66 (KEY_F8)
+>    Event code 67 (KEY_F9)
+>    Event code 68 (KEY_F10)
+>    Event code 69 (KEY_NUMLOCK)
+>    Event code 70 (KEY_SCROLLLOCK)
+>    Event code 71 (KEY_KP7)
+>    Event code 72 (KEY_KP8)
+>    Event code 73 (KEY_KP9)
+>    Event code 74 (KEY_KPMINUS)
+>    Event code 75 (KEY_KP4)
+>    Event code 76 (KEY_KP5)
+>    Event code 77 (KEY_KP6)
+>    Event code 78 (KEY_KPPLUS)
+>    Event code 79 (KEY_KP1)
+>    Event code 80 (KEY_KP2)
+>    Event code 81 (KEY_KP3)
+>    Event code 82 (KEY_KP0)
+>    Event code 83 (KEY_KPDOT)
+>    Event code 85 (KEY_ZENKAKUHANKAKU)
+>    Event code 86 (KEY_102ND)
+>    Event code 87 (KEY_F11)
+>    Event code 88 (KEY_F12)
+>    Event code 89 (KEY_RO)
+>    Event code 90 (KEY_KATAKANA)
+>    Event code 91 (KEY_HIRAGANA)
+>    Event code 92 (KEY_HENKAN)
+>    Event code 93 (KEY_KATAKANAHIRAGANA)
+>    Event code 94 (KEY_MUHENKAN)
+>    Event code 95 (KEY_KPJPCOMMA)
+>    Event code 96 (KEY_KPENTER)
+>    Event code 97 (KEY_RIGHTCTRL)
+>    Event code 98 (KEY_KPSLASH)
+>    Event code 99 (KEY_SYSRQ)
+>    Event code 100 (KEY_RIGHTALT)
+>    Event code 102 (KEY_HOME)
+>    Event code 103 (KEY_UP)
+>    Event code 104 (KEY_PAGEUP)
+>    Event code 105 (KEY_LEFT)
+>    Event code 106 (KEY_RIGHT)
+>    Event code 107 (KEY_END)
+>    Event code 108 (KEY_DOWN)
+>    Event code 109 (KEY_PAGEDOWN)
+>    Event code 110 (KEY_INSERT)
+>    Event code 111 (KEY_DELETE)
+>    Event code 112 (KEY_MACRO)
+>    Event code 113 (KEY_MUTE)
+>    Event code 114 (KEY_VOLUMEDOWN)
+>    Event code 115 (KEY_VOLUMEUP)
+>    Event code 116 (KEY_POWER)
+>    Event code 117 (KEY_KPEQUAL)
+>    Event code 118 (KEY_KPPLUSMINUS)
+>    Event code 119 (KEY_PAUSE)
+>    Event code 121 (KEY_KPCOMMA)
+>    Event code 122 (KEY_HANGUEL)
+>    Event code 123 (KEY_HANJA)
+>    Event code 124 (KEY_YEN)
+>    Event code 125 (KEY_LEFTMETA)
+>    Event code 126 (KEY_RIGHTMETA)
+>    Event code 127 (KEY_COMPOSE)
+>    Event code 128 (KEY_STOP)
+>    Event code 140 (KEY_CALC)
+>    Event code 142 (KEY_SLEEP)
+>    Event code 143 (KEY_WAKEUP)
+>    Event code 155 (KEY_MAIL)
+>    Event code 156 (KEY_BOOKMARKS)
+>    Event code 157 (KEY_COMPUTER)
+>    Event code 158 (KEY_BACK)
+>    Event code 159 (KEY_FORWARD)
+>    Event code 163 (KEY_NEXTSONG)
+>    Event code 164 (KEY_PLAYPAUSE)
+>    Event code 165 (KEY_PREVIOUSSONG)
+>    Event code 166 (KEY_STOPCD)
+>    Event code 172 (KEY_HOMEPAGE)
+>    Event code 173 (KEY_REFRESH)
+>    Event code 183 (KEY_F13)
+>    Event code 184 (KEY_F14)
+>    Event code 185 (KEY_F15)
+>    Event code 217 (KEY_SEARCH)
+>    Event code 226 (KEY_MEDIA)
+>  Event type 4 (EV_MSC)
+>    Event code 4 (MSC_SCAN)
+>  Event type 17 (EV_LED)
+>    Event code 0 (LED_NUML) state 0
+>    Event code 1 (LED_CAPSL) state 0
+>    Event code 2 (LED_SCROLLL) state 0
+> Key repeat handling:
+>  Repeat type 20 (EV_REP)
+>    Repeat code 0 (REP_DELAY)
+>      Value    250
+>    Repeat code 1 (REP_PERIOD)
+>      Value     33
+> Properties:
+> Testing ... (interrupt to exit)
+> Event: time 1691384520.078772, type 4 (EV_MSC), code 4 (MSC_SCAN), value =
+10
+> Event: time 1691384520.078772, type 1 (EV_KEY), code 16 (KEY_Q), value 1
+> Event: time 1691384520.078772, -------------- SYN_REPORT ------------
+> Event: time 1691384520.157298, type 4 (EV_MSC), code 4 (MSC_SCAN), value =
+10
+> Event: time 1691384520.157298, type 1 (EV_KEY), code 16 (KEY_Q), value 0
+> Event: time 1691384520.157298, -------------- SYN_REPORT ------------
+> Event: time 1691384520.849991, type 4 (EV_MSC), code 4 (MSC_SCAN), value =
+11
+> Event: time 1691384520.849991, type 1 (EV_KEY), code 17 (KEY_W), value 1
+> Event: time 1691384520.849991, -------------- SYN_REPORT ------------
+> Event: time 1691384520.919630, type 4 (EV_MSC), code 4 (MSC_SCAN), value =
+11
+> Event: time 1691384520.919630, type 1 (EV_KEY), code 17 (KEY_W), value 0
+> Event: time 1691384520.919630, -------------- SYN_REPORT ------------
+> Event: time 1691384521.311986, type 4 (EV_MSC), code 4 (MSC_SCAN), value =
+12
+> Event: time 1691384521.311986, type 1 (EV_KEY), code 18 (KEY_E), value 1
+> Event: time 1691384521.311986, -------------- SYN_REPORT ------------
+> Event: time 1691384521.417578, type 4 (EV_MSC), code 4 (MSC_SCAN), value =
+12
+> Event: time 1691384521.417578, type 1 (EV_KEY), code 18 (KEY_E), value 0
+> Event: time 1691384521.417578, -------------- SYN_REPORT ------------
+> Event: time 1691384521.639505, type 4 (EV_MSC), code 4 (MSC_SCAN), value =
+13
+> Event: time 1691384521.639505, type 1 (EV_KEY), code 19 (KEY_R), value 1
+> Event: time 1691384521.639505, -------------- SYN_REPORT ------------
+> Event: time 1691384521.709170, type 4 (EV_MSC), code 4 (MSC_SCAN), value =
+13
+> Event: time 1691384521.709170, type 1 (EV_KEY), code 19 (KEY_R), value 0
+> Event: time 1691384521.709170, -------------- SYN_REPORT ------------
+> Event: time 1691384521.879657, type 4 (EV_MSC), code 4 (MSC_SCAN), value =
+14
+> Event: time 1691384521.879657, type 1 (EV_KEY), code 20 (KEY_T), value 1
+> Event: time 1691384521.879657, -------------- SYN_REPORT ------------
+> Event: time 1691384521.958384, type 4 (EV_MSC), code 4 (MSC_SCAN), value =
+14
+> Event: time 1691384521.958384, type 1 (EV_KEY), code 20 (KEY_T), value 0
+> Event: time 1691384521.958384, -------------- SYN_REPORT ------------
+> Event: time 1691384522.188556, type 4 (EV_MSC), code 4 (MSC_SCAN), value =
+15
+> Event: time 1691384522.188556, type 1 (EV_KEY), code 21 (KEY_Y), value 1
+>=20
+>     I have reported this time ago in libinput, and they
+> replied it might be a kernel problem, since booting
+> my kernel 5.16 makes it work correctly again anytime.
+>=20
+>    Could anyone please shed some light on this little
+> problem?
+
+You also missed dmesg output (from both v5.16.y and v6.4.y).
+
+Thorsten also asked you to bisect. Since you're on Gentoo, there is
+a wiki article on this [1]. To narrow the bisection range, let me ask this
+question: Does v6.1 kernel have this regression? What about v5.17? In any c=
+ase,
+the kernel documentation also have howto on building custom kernel with tri=
+mmed
+config [2].
+
+Anyway, I'm adding this regression to be tracked by regzbot:
+
+#regzbot ^introduced: v5.16..v6.4
+#regzbot title: Thinkpad L14 Gen 1 keyboard not working on Plasma session
+
+Thanks.
+
+[1]: https://wiki.gentoo.org/wiki/Kernel_git-bisect
+[2]: https://www.kernel.org/doc/html/latest/admin-guide/quickly-build-trimm=
+ed-linux.html
+
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--nPzC4MhGwKg4yj0C
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZNGdXAAKCRD2uYlJVVFO
+o08GAP43pBGfQEC5HNy5UXgx1sVNGrGFXA3+JUUAyGLHSWMBeAEA9IDZMBOwPhSI
+f/Vg085gnQeYPHzFBuiyC3gCH8LzmAo=
+=dbUi
+-----END PGP SIGNATURE-----
+
+--nPzC4MhGwKg4yj0C--
