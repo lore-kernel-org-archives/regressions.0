@@ -1,65 +1,138 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from abi149hd125.arn1.oracleemaildelivery.com (abi149hd125.arn1.oracleemaildelivery.com [129.149.84.125])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06B2B14F8D
-	for <regressions@lists.linux.dev>; Tue,  8 Aug 2023 17:55:02 +0000 (UTC)
-Received: from [185.238.219.14] (helo=[192.168.44.45]); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qTQv0-0004FA-Vs; Tue, 08 Aug 2023 19:54:55 +0200
-Message-ID: <47437162-e1bd-58c1-9f34-ca4b661c3e34@leemhuis.info>
-Date: Tue, 8 Aug 2023 19:54:53 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D14E171BE
+	for <regressions@lists.linux.dev>; Tue,  8 Aug 2023 20:32:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=oci-arn1-20220924;
+ d=augustwikerfors.se;
+ h=Date:To:From:Subject:Message-Id:MIME-Version:Sender;
+ bh=00B+bvS7xxbE3P6eaqYNfcMl67cqchVUieBrLpYsDxc=;
+ b=Lcug5vRz4iHrMWQFbkRRRJ1QogKubjFMqdPfIFsVGUmZl/2P9aw+rmoeswZRV3Uw4ISfqoyQJR6T
+   O0OZiS/n3mmdO9oEUkbOhnpZ6jXSRc0huKOTxl6+a3XC9Lpc98C1C7R9rgCrvhjVPU5x5yH/dqRV
+   WFq0dUOlaR7lTb7OFyp0xQs0cBElerp+YTaJtF4KX1YjXtfi18upscJCL+RLPmWxAgMP4g+9aDJP
+   zMnEJ5rtBxqwpG/mHekgGQFks6sFS5D5sdPWF3UyEEFlQZWRhmYD1AUk04f+u3bJHnOYvHi0aEMR
+   hoZQ2BMBvG6y1ApQzbxlK4JV7/GcvZ8v0dZp6A==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=prod-arn-20211201;
+ d=arn1.rp.oracleemaildelivery.com;
+ h=Date:To:From:Subject:Message-Id:MIME-Version:Sender;
+ bh=00B+bvS7xxbE3P6eaqYNfcMl67cqchVUieBrLpYsDxc=;
+ b=izLkc7PhLbHGtYjTXc/0sBGSLEqmkyIgouwwv40Bsd96Cn2U8WBW6v9XBAlzz+mKPb0gzomox063
+   f/v0vPXi1e9s/A7BFHaMSa29lVz2LpwKYFlmqp8TF22XNaKU2tkPXLIbikpN2BycK1BqAVka+mct
+   fW7P5EXOUxMH7QByEUYNOoJV8rdQszjOWpFV3I6zUFR0XPoGkEgz3FyyylFgVODzR1JAr7B84Gdt
+   eEZ2PWcYl0EmY7UTcZ6Bgd0vDrW7a0vqeQdNvpdK7dBs+bwdx5oMHj2FOSrEpY7GlaYonqshD+lr
+   p/ynKq8YraLynVid5xQnPHmHjQv+nnm6kBX1Vw==
+Received: by omta-ad1-fd1-401-eu-stockholm-1.omtaad1.vcndparn.oraclevcn.com
+ (Oracle Communications Messaging Server 8.1.0.1.20230707 64bit (built Jul  7
+ 2023))
+ with ESMTPS id <0RZ300A8XADDV630@omta-ad1-fd1-401-eu-stockholm-1.omtaad1.vcndparn.oraclevcn.com>
+ for regressions@lists.linux.dev; Tue, 08 Aug 2023 20:32:01 +0000 (GMT)
+Message-id: <abaad492-6aea-4edf-891f-f57bc2b86781@augustwikerfors.se>
+Date: Tue, 8 Aug 2023 22:31:57 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Regression fix not progressing towards mainline/stable
-Content-Language: en-US, de-DE
-To: =?UTF-8?Q?P=C3=A9ter_Ujfalusi?= <peter.ujfalusi@linux.intel.com>,
- Takashi Iwai <tiwai@suse.com>, Jaroslav Kysela <perex@perex.cz>,
- Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
- Liam Girdwood <lgirdwood@gmail.com>,
- Bard Liao <yung-chuan.liao@linux.intel.com>,
- Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
- Daniel Baluta <daniel.baluta@nxp.com>
-Cc: sound-open-firmware@alsa-project.org, LKML
- <linux-kernel@vger.kernel.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- Alsa-devel <alsa-devel@alsa-project.org>
-References: <661fcece-a83c-cb24-1b37-5d8693b1fb94@leemhuis.info>
- <98188012-8e07-4bb1-be1c-04d6c0f5260a@linux.intel.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <98188012-8e07-4bb1-be1c-04d6c0f5260a@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1691517303;fdb5bdc8;
-X-HE-SMSGID: 1qTQv0-0004FA-Vs
+MIME-version: 1.0
+Subject: Re: [PATCH v2 2/3] ACPI: resource: Always use MADT override IRQ
+ settings for GSI != 1
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: "Rafael J . Wysocki" <rafael@kernel.org>,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ stable@vger.kernel.org, linux-acpi@vger.kernel.org, x86@kernel.org
+References: <20230808103335.95339-1-hdegoede@redhat.com>
+ <20230808103335.95339-3-hdegoede@redhat.com>
+Content-language: en-US
+From: August Wikerfors <git@augustwikerfors.se>
+In-reply-to: <20230808103335.95339-3-hdegoede@redhat.com>
+Content-type: text/plain; charset=UTF-8; format=flowed
+Content-transfer-encoding: 7bit
+Reporting-Meta:
+ AAELwczx0/PLPh99wS5vR5JfKPvEuMYNwWpXbIZ357NfxSo4P0nGN+uZ47Gqli9C
+ 1Ie7q4CpfU++soFG2pstdAraYd+Sx3xJHcBta8Jc61Hno2bMLLZo0GSXPrpzSVBq
+ BxoF9BkBXd1vFMvqaQqMDSycWoLQ4ygBNmKvZ8HDuWzvgRIRHFdldUeMV1s2/Ay9
+ 2zDUm2lEBjcUQHNSkqDgJXCfLYqzkpmoz4Zs8+SkfxuqR+xBMhf6vSSkPjkl0pGg
+ vsN9rgrRPDjWbjkwCFcIaFVQhE3PPmHV16uBR8VdYPem6TAotN5ZqvTVtsuRrk8O
+ 57wWjq666T1UmAZ2IRAVUxjEjjLROe71q9ChS9/Pj1OkbfzVxB0HlNTut3DI2Yuh
+ GxJK8fu/8gODZ3zOxwU1apATa9azYICZmHmevzLHOd+gJhkg+V06HZUlHfXlfvzY 9RfAgPE=
 
-On 08.08.23 13:03, Péter Ujfalusi wrote:
-> On 08/08/2023 09:10, Thorsten Leemhuis wrote:
->>
->> I'm talking about about the fix "ASoC: SOF: intel: hda: Clean up link
->> DMA for IPC3 during stop" for this ticket:
->> https://github.com/thesofproject/linux/issues/4455
->>
->> Two more tickets about it:
->> https://github.com/thesofproject/linux/issues/4482
->> https://bugzilla.kernel.org/show_bug.cgi?id=217673
->>
->> It seems the fix is ready and reviewed for two weeks now,  [...]
->
-> We take regressions (and user reports) seriously and trying our best to
-> provide fixes asap.
-> We do prioritize bug fixes over features but in this case for some
-> reason the review process took longer than it usually does and the patch
-> has not been sent upstream. [...]
+On 2023-08-08 12:33, Hans de Goede wrote:
+> All the cases, were the DSDT IRQ settings should be used instead of
+> the MADT override, are for IRQ 1 (the PS/2 kbd IRQ).
+> 
+> Simplify things by always honering the override for GSI != 1
+> (for non DMI quirked cases).
+> 
+> This allows removing the DMI quirks to honor the override for
+> some non IRQ 1 IRQs on some AMD ZEN based Lenovo models.
+> 
+> Fixes: a9c4a912b7dc ("ACPI: resource: Remove "Zen" specific match and quirks")
+> Cc: Mario Limonciello <mario.limonciello@amd.com>
+> Cc: Linux regressions mailing list <regressions@lists.linux.dev>
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+>   drivers/acpi/resource.c | 28 ++++++++--------------------
+>   1 file changed, 8 insertions(+), 20 deletions(-)
+> 
+> diff --git a/drivers/acpi/resource.c b/drivers/acpi/resource.c
+> index 0800a9d77558..840b938a5fb0 100644
+> --- a/drivers/acpi/resource.c
+> +++ b/drivers/acpi/resource.c
+> @@ -470,24 +470,6 @@ static const struct dmi_system_id asus_laptop[] = {
+>   	{ }
+>   };
+>   
+> -static const struct dmi_system_id lenovo_laptop[] = {
+> -	{
+> -		.ident = "LENOVO IdeaPad Flex 5 14ALC7",
+> -		.matches = {
+> -			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+> -			DMI_MATCH(DMI_PRODUCT_NAME, "82R9"),
+> -		},
+> -	},
+> -	{
+> -		.ident = "LENOVO IdeaPad Flex 5 16ALC7",
+> -		.matches = {
+> -			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+> -			DMI_MATCH(DMI_PRODUCT_NAME, "82RA"),
+> -		},
+> -	},
+> -	{ }
+> -};
+> -
+>   static const struct dmi_system_id tongfang_gm_rg[] = {
+>   	{
+>   		.ident = "TongFang GMxRGxx/XMG CORE 15 (M22)/TUXEDO Stellaris 15 Gen4 AMD",
+> @@ -539,8 +521,6 @@ struct irq_override_cmp {
+>   static const struct irq_override_cmp override_table[] = {
+>   	{ medion_laptop, 1, ACPI_LEVEL_SENSITIVE, ACPI_ACTIVE_LOW, 0, false },
+>   	{ asus_laptop, 1, ACPI_LEVEL_SENSITIVE, ACPI_ACTIVE_LOW, 0, false },
+> -	{ lenovo_laptop, 6, ACPI_LEVEL_SENSITIVE, ACPI_ACTIVE_LOW, 0, true },
+> -	{ lenovo_laptop, 10, ACPI_LEVEL_SENSITIVE, ACPI_ACTIVE_LOW, 0, true },
+>   	{ tongfang_gm_rg, 1, ACPI_EDGE_SENSITIVE, ACPI_ACTIVE_LOW, 1, true },
+>   	{ maingear_laptop, 1, ACPI_EDGE_SENSITIVE, ACPI_ACTIVE_LOW, 1, true },
+>   	{ lg_laptop, 1, ACPI_LEVEL_SENSITIVE, ACPI_ACTIVE_LOW, 0, false },
+> @@ -562,6 +542,14 @@ static bool acpi_dev_irq_override(u32 gsi, u8 triggering, u8 polarity,
+>   			return entry->override;
+>   	}
+>   
+> +	/*
+> +	 * Always use the MADT override info, except for IRQ 1 for IRQ1
+> +	 * the DSDT IRQ settings should sometimes be used otherwise
+> +	 * PS/2 keyboards will not work.
+> +	 */
+> +	if (gsi != 1)
+> +		return true;
+> +
+>   #ifdef CONFIG_X86
+>   	/*
+>   	 * IRQ override isn't needed on modern AMD Zen systems and
 
-Happens, thx for taking care of it!
+I don't think this will work for the Lenovo ThinkPad neo 14 because 
+according to https://bugzilla.kernel.org/show_bug.cgi?id=217731 it needs 
+the override to also be skipped for IRQ 12.
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+Regards,
+August Wikerfors
