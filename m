@@ -1,263 +1,229 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from madras.collabora.co.uk (madras.collabora.co.uk [46.235.227.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CC6D659
-	for <regressions@lists.linux.dev>; Tue,  8 Aug 2023 08:36:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1691483804;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=J3K9oRRrQN7gSBge+DC1FxLTSD0L1mUpAjCJB98O/e4=;
-	b=BvTOhMT1h2uZ01rcp1pI3srSoAkYr85tlk19s3HkcSyBiTKqxxdPA/ek0msDBUjiPE/6PK
-	U5zVylL9BX5xthxH4sjFTCRc7zf7RWp7Eh+y3ZaWamUPGL+60v04H3GtIVlxvTLiNyfoCn
-	ab4nZCjMxMjY7nQn6Uq0dpeQBnYIVKo=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-354-8vlxlvOsPFejvrvT8pSOBw-1; Tue, 08 Aug 2023 04:36:43 -0400
-X-MC-Unique: 8vlxlvOsPFejvrvT8pSOBw-1
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-993d7ca4607so371242566b.1
-        for <regressions@lists.linux.dev>; Tue, 08 Aug 2023 01:36:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691483802; x=1692088602;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=J3K9oRRrQN7gSBge+DC1FxLTSD0L1mUpAjCJB98O/e4=;
-        b=NLEsBldeBuSEgGe3BxIrnQM+OZtgxdKMicQXVoTekRKqKz2l+j80UMTKCDlVE0PN0W
-         Po9j4PmLXvnl1ZZBj2F+TLYIO5QGdS/zk7PXCP7M+93q/hKE7VY/smq7+1Py6GQtzkdT
-         P+MGAbEGLsejS87lt3ce3QXM4GEv1QsLGfEX6UVioshaICu4SRc1JiOl7Hj+1G5EbVXr
-         ApgqXK7RJVcpz4SA9ng0aUJuI+6W3Ymody7UZ4jYgUY1+spir9a3im6gDklf1yGtlRBY
-         bVuwwuWsd0OEz8t8m5bEEtxvoEg8DNxNPD/l1cp2kFZEYQzSplwrRpZNRMggOskFGcOP
-         ayaQ==
-X-Gm-Message-State: AOJu0YxhQ/jDjC23zA7eFbFaHVMi2gz3gHteBVvbcZSS+BR+uaIMj16l
-	7CkJIge2ZVNnXfaNapg6orcZXqZUQxGBb0bE9W136CcjViMJ1NQ56OKn4XK1C/V0+nzihD86gik
-	fj+Csvj5y1QB8dDMvYNVZ09tonhhshz0=
-X-Received: by 2002:a17:907:763b:b0:99a:7ff1:9b5a with SMTP id jy27-20020a170907763b00b0099a7ff19b5amr9144724ejc.4.1691483802112;
-        Tue, 08 Aug 2023 01:36:42 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGcrXtc+wpksGkm6mY9AaRaOybT335ZUOHV9ljXSTTEGNdFjtq8IAqhiedpSReqD7ayF7Ac1g==
-X-Received: by 2002:a17:907:763b:b0:99a:7ff1:9b5a with SMTP id jy27-20020a170907763b00b0099a7ff19b5amr9144712ejc.4.1691483801836;
-        Tue, 08 Aug 2023 01:36:41 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id bm6-20020a170906c04600b0098e2969ed44sm6283841ejb.45.2023.08.08.01.36.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Aug 2023 01:36:41 -0700 (PDT)
-Message-ID: <de2864f9-1b70-0e35-b22a-875eb857d274@redhat.com>
-Date: Tue, 8 Aug 2023 10:36:40 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B821DDBF;
+	Tue,  8 Aug 2023 09:55:57 +0000 (UTC)
+Received: from localhost (unknown [IPv6:2a0c:5a83:9201:1300:c39b:5cf0:4d57:ce7])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: rcn)
+	by madras.collabora.co.uk (Postfix) with ESMTPSA id 29B4066071EE;
+	Tue,  8 Aug 2023 10:55:50 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1691488550;
+	bh=YoAY9Fw/9c6MO4ZIunTXxK9WxUDg1XM2ZcHTlhXdURE=;
+	h=From:To:Cc:Subject:References:In-reply-to:Date:From;
+	b=mwdnbXehlEpzg7R2KR4tUl44XSUn7006sUv9sHuEGDqfG3qRAjZvk+tlu3f/jURb+
+	 cqToTLsYTT+W/3DTCDfSZNeibTZTZQx0RVqUW00H1oxd6XqpGu+sN2bKH+sGlbwu8X
+	 kJ4tauJeWcF3D4RAmq4QLYDpD6T1gnHOtB9SPW25A+tQdzvSXv6BxjDkB9o9YQDP8R
+	 +7FixGgo/B3w2XAChcsYeu7oH7t1K/7v+M69LuEbvjcHur8Bc36TlXRJkx24JdEgPG
+	 nzvH6sFAdr4ietd3J2LSmP6zThzv+dWi/r3FHC9qIhs8zwaLb7ALR27aolP/SnxbXl
+	 IbFn4S/3zsWYg==
+From: Ricardo =?utf-8?Q?Ca=C3=B1uelo?= <ricardo.canuelo@collabora.com>
+To: Nikolai Kondrashov <spbnick@gmail.com>, kernelci@lists.linux.dev, gregkh@linuxfoundation.org, thorsten@leemhuis.info, regressions@lists.linux.dev
+Cc: kernel@collabora.com, linux-kernel@vger.kernel.org, Gustavo Padovan <gustavo.padovan@collabora.com>, Shreeya Patel <shreeya.patel@collabora.com>
+Subject: Re: Kernel regression tracking/reporting initiatives and KCIDB
+References: <874jljhtmj.fsf@rcn-XPS-13-9305.i-did-not-set--mail-host-address--so-tickle-me> <f40c35d3-5558-6a46-4ad4-1631ca9e1805@gmail.com>
+In-reply-to: <f40c35d3-5558-6a46-4ad4-1631ca9e1805@gmail.com>
+Date: Tue, 08 Aug 2023 11:55:47 +0200
+Message-ID: <87v8dphn8c.fsf@rcn-XPS-13-9305.i-did-not-set--mail-host-address--so-tickle-me>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH] ACPI: resource: revert "Remove "Zen" specific match and
- quirks"
-From: Hans de Goede <hdegoede@redhat.com>
-To: "Rafael J . Wysocki" <rafael@kernel.org>
-Cc: linux-acpi@vger.kernel.org, Mario Limonciello
- <mario.limonciello@amd.com>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- stable@vger.kernel.org
-References: <20230806151453.10690-1-hdegoede@redhat.com>
- <3cdde518-1c0c-24dc-1ffb-90ae34c23296@redhat.com>
-In-Reply-To: <3cdde518-1c0c-24dc-1ffb-90ae34c23296@redhat.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US, nl
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
-Hi,
+Hi Nikolai,
 
-On 8/7/23 17:19, Hans de Goede wrote:
-> Hi All,
-> 
-> On 8/6/23 17:14, Hans de Goede wrote:
->> Commit a9c4a912b7dc ("ACPI: resource: Remove "Zen" specific match and
->> quirks") is causing keyboard problems for quite a log of AMD based
->> laptop users, leading to many bug reports.
->>
->> Revert this change for now, until we can come up with
->> a better fix for the PS/2 IRQ trigger-type/polarity problems
->> on some x86 laptops.
->>
->> Fixes: a9c4a912b7dc ("ACPI: resource: Remove "Zen" specific match and quirks")
->> Link: https://bugzilla.redhat.com/show_bug.cgi?id=2229165
->> Link: https://bugzilla.redhat.com/show_bug.cgi?id=2229317
->> Link: https://bugzilla.kernel.org/show_bug.cgi?id=217726
->> Cc: Mario Limonciello <mario.limonciello@amd.com>
->> Cc: Linux regressions mailing list <regressions@lists.linux.dev>
->> Cc: stable@vger.kernel.org
->> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> 
-> I've spend most of today analysing the situation / this problem :
-> 
-> 213031 - MEDION notebook internal keyboard not recognized / not working correctly
-> https://bugzilla.kernel.org/show_bug.cgi?id=213031
-> 
-> This is the bug that started it all, the issue here was overriding
-> a level low DSDT entry:
-> 
->                 IRQ (Level, ActiveLow, Exclusive, )
->                     {1}
-> 
-> With an edge high entry from the MADT, note that edge high is the default
-> mp_irqs[idx].irqflags value for legacy/ISA IRQs. The dmesg for the Ice Lake
-> Medion M15T this bug is about shows no INT_SRC_OVR entry for IRQ 1
-> in the MADT, it does show INT_SRC_OVR entries for IRQ 0 and 9.
-> 
-> At first a fix was attempted to not use the MADT override unless
-> the DSDT entry was edge high. But that caused regressions, so a switch
-> to a DMI based approach was used instead. Noteworthy is that some of
-> the regressions benefitted from a MADT override to high edge for
-> IRQ 3 and 4 (UART IRQs) even though there are no INT_SRC_OVR messages
-> in the dmesg of the machine with the regression.
-> 
-> *** fast forward to today ***
-> 
-> The DMI quirk based approach seems to have worked well for the Ice Lake
-> era problems from approx. 3 years ago. But on AMD Zen based systems
-> the situation seems to be more complex. Not using the MADT override
-> is a problem for quite a few models. But using the MADT override
-> is a problem on quite a few other models ...
-> 
-> Looking at the status quo for v6.4 where MADT overriding by default
-> is not used, 3 bugs have been filed where the override is actually
-> necessary (note dmesg snippets with patched kernel to enable
-> MADT override):
-> 
-> 217394 - IRQ override skipping breaks the Aya Neo Air Plus 6800U keyboard buttons 
-> https://bugzilla.kernel.org/show_bug.cgi?id=217394
-> 
-> Aya Neo Air Plus - AMD Ryzen 7 6800U
-> 
-> [    0.003333] ACPI: INT_SRC_OVR (bus 0 bus_irq 0 global_irq 2 dfl dfl)
-> [    0.003333] ACPI: INT_SRC_OVR (bus 0 bus_irq 1 global_irq 1 low edge)
-> [    0.003333] ACPI: INT_SRC_OVR (bus 0 bus_irq 9 global_irq 9 low level)
-> [    0.410670] ACPI: IRQ 1 override to edge, low(!)
-> 
-> 217406 - very slow keyboard typing without IRQ override with new AMD Ryzen CPUs
-> https://bugzilla.kernel.org/show_bug.cgi?id=217406
-> 
-> HP Pavilion Aero 13 - AMD Ryzen 7735U 
-> 
-> [    0.026135] ACPI: INT_SRC_OVR (bus 0 bus_irq 1 global_irq 1 low edge)
-> [    0.026136] ACPI: INT_SRC_OVR (bus 0 bus_irq 0 global_irq 2 dfl dfl)
-> [    0.026137] ACPI: INT_SRC_OVR (bus 0 bus_irq 9 global_irq 9 low level)
-> 
-> [    0.361640] ACPI: IRQ 1 override to edge, low(!)
-> 
-> 217336 - keyboard not working Asus TUF FA617NS 
-> https://bugzilla.kernel.org/show_bug.cgi?id=217336
-> 
-> Asus TUF FA617NS - AMD Ryzen 7 7735HS
-> 
-> Noteworthy DSTD keyboard resource:
-> 
->                 IRQNoFlags ()
->                     {1}
-> 
-> ACPI: INT_SRC_OVR (bus 0 bus_irq 0 global_irq 2 dfl dfl)
-> ACPI: INT_SRC_OVR (bus 0 bus_irq 1 global_irq 1 low edge)
-> ACPI: INT_SRC_OVR (bus 0 bus_irq 9 global_irq 9 low level)
-> ACPI: IRQ 1 override to edge, low(!)
-> 
-> So for all 3 do use MADT override on Zen bugs we have an INT_SRC_OVR dmesg entry
-> for IRQ 1.
-> 
-> Unfortunately the "MAINGEAR Vector Pro 2 17" / "MG-VCP2-17A3070T" for
-> which a quirk was added in commit 9946e39fe8d0 to force the override
-> even though it it Zen based breaks this pattern:
-> 
-> [    0.073733] ACPI: INT_SRC_OVR (bus 0 bus_irq 0 global_irq 2 dfl dfl)
-> [    0.073734] ACPI: INT_SRC_OVR (bus 0 bus_irq 9 global_irq 9 low level)
-> [    0.341347] ACPI: IRQ 1 override to edge, high(!)
-> 
-> Still the presence of an INT_SRC_OVR for a specific legacy IRQ seems
-> to be a strong indicator that MADT overriding should be used in that
-> case and can be used to at least reduce the amount of DMI quirks.
-> 
-> Another interesting data point is that all the devices for which
-> DMI quirks are present for which MADT overriding should not be used
-> for IRQ 1 all have a DSDT entry with the IRQ configured as level low
-> and exclusive.
-> 
-> I think that the best thing to do might be to go back to
-> the original approach from:
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git/commit/?id=0ec4e55e9f571f08970ed115ec0addc691eda613
-> 
-> and then limit this to IRQ1. Also maybe inverting the check to:
-> 
-> static bool irq_is_legacy(struct acpi_resource_irq *irq)
-> {
-> 	return !(irq->triggering == ACPI_LEVEL_SENSITIVE &&
-> 		 irq->polarity == ACPI_ACTIVE_LOW &&
-> 		 irq->shareable == ACPI_EXCLUSIVE);
-> }
-> 
-> But I need to check if this will work for all the new Zen models
-> for which we got bug reports after the recent dropping of
-> 9946e39fe8d0 ("ACPI: resource: skip IRQ override on AMD Zen platforms")
+Thanks for the comprehensive answer, see my comments below,
 
-So today I have started with continueing the investigation looking
-at laptop models where we used to not override because of:
+On vie, ago 04 2023 at 19:06:26, Nikolai Kondrashov <spbnick@gmail.com> wrote:
+> I tried to review these efforts last year:
+> https://archive.fosdem.org/2022/schedule/event/masking_known_issues_across_six_kernel_ci_systems/
 
-        if (boot_cpu_has(X86_FEATURE_ZEN))
-                return false;
+That's a good summary, and it's nice to see an unbiased analysis of the
+current state of the art and what could be improved. I think we agree in
+most of the points.
 
-And where removing this and thus using the override has led to a
-regression.
+> At this moment KCIDB submitters can send data linking a particular test or
+> build result to an issue and its category (kernel/test/framework). We can
+> generate notifications on e.g. a new issue being found by CI system
+> (maintainers) in a particular repo/branch. There's no support on dashboards
+> yet, and I'm yet to push for integration with particular CI systems.
+>
+> Here's the full announcement with examples:
+> https://lore.kernel.org/kernelci/182b43fa-0261-11b7-2edb-f379a669bc28@redhat.com/
 
-Looking at the acpidump-s from the following bugs:
+What's the current status of this? Have any of the CI systems provided a
+set of issues and incidents yet?
 
-https://bugzilla.redhat.com/show_bug.cgi?id=2229165
-https://bugzilla.redhat.com/show_bug.cgi?id=2229317
-https://bugzilla.kernel.org/show_bug.cgi?id=217726
+I like the solution to bring CI-specific patterns and definitions into a
+CI-agnostic aggregator like KCIDB. I'm not familiar with the KCIDB
+schemas so I'm not aware of the different ways that each individual CI
+system chooses to define their test results.
 
-All of these use the following settings for the kbd in the DSDT:
+A different approach could be to define a standard way to report CI test
+results that every CI system could adhere to, but I guess that task
+could become way too expensive. I think defining some common
+abstractions is definitely possible and the way you did it is a good
+start. Hopefully it can be extended if needed.
 
-         IRQ (Edge, ActiveLow, Shared, )
-             {1}
+>  > - is it possible that the test failed because of an infrastructure
+>  >    error?
+>
+> Not sure how to approach this in KCIDB. How do you (plan to) do it?
 
-So we know these are at least 3 models with "Edge, ActiveLow, Shared" IRQ 1 settings which must not use the override. But the existing quirks before a9c4a912b7dc ("ACPI: resource: Remove "Zen" specific match and quirks") contain:
+In general, we can tell certain common errors very clearly by parsing
+the test log. We had prior experience running tests in different
+platforms in Collabora's LAVA lab so we were familiar with the most
+frequent types of infrastructure errors seen there: assorted network
+errors, failure to mount an NFS volume, failure to find the ramdisk,
+etc.
 
-        { tongfang_gm_rg, 1, ACPI_EDGE_SENSITIVE, ACPI_ACTIVE_LOW, 1, true },
-        { maingear_laptop, 1, ACPI_EDGE_SENSITIVE, ACPI_ACTIVE_LOW, 1, true },
+We define a set of strings to match against:
+https://gitlab.collabora.com/kernel/kernelci-regressions-tracker/-/blob/main/configs/logs-string-match.yaml
+and we keep adding to the list when we found new patterns
 
-IOW models with "Edge, ActiveLow, Shared" IRQ 1 settings which OTOH must use the override, so as I was already afraid there is no easy for these DSDT IRQ 1 settings skip the override solution :|
+At some point we'd like to use a similar approach, although automatized,
+to detect frequent patterns in test outputs so that a regression
+analyzer can match test results with known issues to avoid excessive
+report duplication and also to do a first-stage tagging and triaging of
+regressions.
 
-So I have 2 plans to move forward with this:
+>  > - does the test fail consistently since that commit or does it show
+>  >    unstable results?
+>
+> This is a difficult thing to properly figure out in KCIDB, because it
+> aggregates data from multiple CI systems. A single CI system can assume that
+> earlier results for a branch correspond to earlier commits. However, because
+> different CI systems test at different speeds, KCIDB cannot make that
+> assumption. Commits and their testing results can come in any order. So we
+> cannot draw these kinds of conclusions based on time alone.
 
-Plan 1. Short them for 6.5 and backporting to 6.4.y (and other stable series):
+Couldn't the results be filtered by CI-system origin so they can be
+analyzed without the noise of results from other origins? I was thinking
+about filtering the results by CI origin and then sorting them by
+date. But, as I said, I'm not familiar with the KCIDB schema so I
+wouldn't really know how to navigate through the results.
 
-1. Revert a9c4a912b7dc
-2. Limit the acpi_dev_irq_override() check to only ever skip the IRQ override
-   (return false) for GSI 1.
-3. Add a check if there is a INT_SRC_OVR MADT entry for GSI 1 and in that case
-   use the override even on ZEN, fixing:
+I can check the code to find the schema definitions but I was wondering
+if there's a quick way to visualize the raw test results data and the
+relationships between them.
 
-217394 - IRQ override skipping breaks the Aya Neo Air Plus 6800U keyboard buttons 
- https://bugzilla.kernel.org/show_bug.cgi?id=217394
-217406 - very slow keyboard typing without IRQ override with new AMD Ryzen CPUs
- https://bugzilla.kernel.org/show_bug.cgi?id=217406
-217336 - keyboard not working Asus TUF FA617NS 
- https://bugzilla.kernel.org/show_bug.cgi?id=217336
+> The only way KCIDB can make this work correctly is by correlating with actual
+> git history, following the commit graph.
 
-Which are known AMD ZEN based laptops which do need the override for IRQ 1.
+I think this might depend on the context that we have for every test
+result. That could be different depending on the data origin, but in our
+case, when checking the recent history of a KernelCI test we took
+advantage of the fact that KernelCI builds progress linearly (new builds
+are always newer versions of old builds, AFAICT), so we built the
+queries around that and we don't have to do any processing of the git
+repos to fetch the list of test runs of a particular test configuration
+after the last failed run:
+https://gitlab.collabora.com/kernel/kernelci-regressions-tracker/-/blob/main/common/analysis.py#L27
 
-This short term plan is not ideal, but it does fix all currently known issues / models and does so in a way which will hopefully not cause regressions on any other models.
+For other systems this will be different, of course. But the key idea is
+that we might be able to get to the same point using different paths,
+maybe simpler.
 
+> E.g. on the dashboard of a particular test result, display graphs of this
+> test's results over time: overall, and for
+> architecture/compiler/config/repo/branch of this test run. And something
+> similar for test views on revision/checkout/build dashboards.
 
-Plan 2. Long term, see if I can come up with a way to read back the actual trigger type set in the IOAPIC for IRQ 1 at boot (in drivers/acpi/resource.c) and use that.
+Yes, we have similar visions about how the dashboard
+features. Unfortunately, a proper dashboard would be a key part of the
+solution but it looks like it's still pretty far away in the future.
 
+> BTW, a couple Mercurial folks approached me after the talk above, saying that
+> they're working on supporting storing test results in history so they could do
+> a similar kind of correlation and reasoning. So the idea is in the air.
 
-Regards,
+This is very interesting. I think one thing we're missing from git is
+a standard way to keep commits metadata that won't be tied to specific
+refs (ie. metadata that could be linked to a commit even if it gets
+rebased).
+There's plenty of commit metadata scattered all over the kernel commit
+logs in the form of tags, and then anyone can write tools on top of that
+to find relationships between commits, patches and tests, but that's
+kind of suboptimal. Having proper support for that in the repo would
+make a huge difference in how the repo data is used, beyond tracking code
+changes.
 
-Hans
+> This is what the KCIDB issue-linking support described above is working
+> towards. Next step is to build a triaging system linking issues to build/test
+> results automatically, based on patterns submitted by both CI systems, via the
+> regular submission interface, and humans, via a dedicated UI.
+>
+> Patterns would specify which issue (bug URL) they're matching and include
+> basic things like test name, architecture, hardware, and so on, but also
+> patterns to find in e.g. test output files, logs, or in dmesg.
+>
+> That should answer questions of whether a test or a build exhibit a particular
+> issue seen before.
 
+This is a good approach, and it could tie in with what I mentioned above
+about log parsing and identifying similar issues from their test log
+outputs.
 
+> One comment regarding the prototype you shared is that it's quite verbose and
+> it's difficult to put together a feeling of what's been happening from
+> overabundance of textual information. I think a visual touch could help here.
+
+I agree, this started as an experiment and it shows. Having a nice and
+flexible html output was never the main requirement.
+
+> E.g. drawing a timeline of test results, pointing particular events (first
+> failed, first passed, stability and so on) along its length.
+>
+> So instead of this:
+>
+>  > first failed: today (2023-08-02)
+>  >
+>  >     kernel: chromeos-stable-20230802.0
+>  >     commit: 5c04267bed569d41aea3940402c7ce8cf975a5fe
+>  >
+>  > most recent fail: today (2023-08-02)
+>  >
+>  >     kernel: chromeos-stable-20230802.0
+>  >     commit: 5c04267bed569d41aea3940402c7ce8cf975a5fe
+>  >
+>  > last passed: 1 day ago (2023-08-01)
+>  >
+>  >     kernel: chromeos-stable-20230801.1
+>  >     commit: cd496545d91d820441277cd6a855b9af725fdb8a
+>
+> Something like this (roughly):
+>
+>               |
+> 2023-08-02   F - last FAIL
+>               F
+>               |
+>               P
+>               F
+>               |
+> 2023-08-02   F - first FAIL
+>               |
+> 2023-08-01   P - last PASS
+>               |
+>               P
+
+That's absolutely right. We have the data, I just wish I had the webdev
+chops to do that XD. Although we could probably give it a try now that
+the feature set is mostly stable.
+
+Thanks for the detailed answers and your insights. It's great to see we
+share many points of view. Now that we know there's a long road ahead
+it's time to draw an initial roadmap and see how far it can get us.
+
+So, what would you recommend we can start with KCIDB? Would there be a
+way for us to consume the data, even if it's only partially, to
+experiment and get some ideas about what to do next? Would you rather
+have these features implemented as part of KCIDB itself?
+
+Cheers,
+Ricardo
