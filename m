@@ -1,31 +1,31 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B09843D84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ED75E57E
 	for <regressions@lists.linux.dev>; Tue,  8 Aug 2023 10:33:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1691490830;
+	s=mimecast20190719; t=1691490831;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=CNB47Sp7trc9bmNcKr/Qyt4K/JLPlJPyfPKXwvKIQrU=;
-	b=XT67NQRJtdM3ixvHRyjS6RAbmdDKBb0K8gqJZD9by3HXc/zFm2D0F2CfwqOsmcUHcFdwen
-	w/r3mXyJByU94WnPsYb7XsNCHYu0xU+2pt61hhKYWCEvsYYXsIZmKiTzvSEhAmau2y9n9W
-	YY2Wn0pWt4U1YIEmD68G5LUmLp/PflU=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-550-a_3N6NsJOtqpEwgmPnVgVQ-1; Tue, 08 Aug 2023 06:33:46 -0400
-X-MC-Unique: a_3N6NsJOtqpEwgmPnVgVQ-1
+	bh=xeJkZiO3OJE7hMvROujUxKI2mbpdsUguGw9W7kaWg1M=;
+	b=adJ1Mi4bjM/aEIvchp2nEQfKy+YFOOwOv3GLXcHv2cM5jy3INzHi5VbsLnjlRseebB2ExL
+	GVZNDrVBphtrB0gz4pE90ARLEMoUve1RKRL7a1RGpO8PoDhsmQPsV3Nv6aPAhhw1m2xNub
+	QASyZ99+jDmCsMldsYkPyE0+r/KEgN4=
+Received: from mimecast-mx02.redhat.com (66.187.233.73 [66.187.233.73]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-540-RD3dkByZOKu5mi6EWAow4Q-1; Tue, 08 Aug 2023 06:33:49 -0400
+X-MC-Unique: RD3dkByZOKu5mi6EWAow4Q-1
 Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 63D93185A793;
-	Tue,  8 Aug 2023 10:33:46 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id BD8EE3C11C64;
+	Tue,  8 Aug 2023 10:33:48 +0000 (UTC)
 Received: from localhost.localdomain (unknown [10.39.194.191])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 68C8740C2076;
-	Tue,  8 Aug 2023 10:33:45 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id C3C0140C2076;
+	Tue,  8 Aug 2023 10:33:47 +0000 (UTC)
 From: Hans de Goede <hdegoede@redhat.com>
 To: "Rafael J . Wysocki" <rafael@kernel.org>,
 	Mario Limonciello <mario.limonciello@amd.com>
@@ -34,9 +34,9 @@ Cc: Hans de Goede <hdegoede@redhat.com>,
 	stable@vger.kernel.org,
 	linux-acpi@vger.kernel.org,
 	x86@kernel.org
-Subject: [PATCH v2 1/3] ACPI: resource: revert "Remove "Zen" specific match and quirks"
-Date: Tue,  8 Aug 2023 12:33:33 +0200
-Message-ID: <20230808103335.95339-2-hdegoede@redhat.com>
+Subject: [PATCH v2 3/3] ACPI: resource: Honor MADT INT_SRC_OVR settings for IRQ1 on AMD Zen
+Date: Tue,  8 Aug 2023 12:33:35 +0200
+Message-ID: <20230808103335.95339-4-hdegoede@redhat.com>
 In-Reply-To: <20230808103335.95339-1-hdegoede@redhat.com>
 References: <20230808103335.95339-1-hdegoede@redhat.com>
 Precedence: bulk
@@ -48,111 +48,76 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.1 on 10.11.54.1
 
-Commit a9c4a912b7dc ("ACPI: resource: Remove "Zen" specific match and
-quirks") is causing keyboard problems for quite a log of AMD based
-laptop users, leading to many bug reports.
+On AMD Zen acpi_dev_irq_override() by default prefers the DSDT IRQ 1
+settings over the MADT settings.
 
-Revert this change for now, until we can come up with
-a better fix for the PS/2 IRQ trigger-type/polarity problems
-on some x86 laptops.
+This causes the keyboard to malfunction on some laptop models
+(see Links), all models from the Links have an INT_SRC_OVR MADT entry
+for IRQ 1.
 
 Fixes: a9c4a912b7dc ("ACPI: resource: Remove "Zen" specific match and quirks")
-Link: https://bugzilla.redhat.com/show_bug.cgi?id=2229165
-Link: https://bugzilla.redhat.com/show_bug.cgi?id=2229317
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=217726
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=217336
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=217394
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=217406
 Cc: Mario Limonciello <mario.limonciello@amd.com>
 Cc: Linux regressions mailing list <regressions@lists.linux.dev>
 Cc: stable@vger.kernel.org
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
- drivers/acpi/resource.c | 60 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 60 insertions(+)
+ arch/x86/include/asm/acpi.h | 1 +
+ arch/x86/kernel/acpi/boot.c | 4 ++++
+ drivers/acpi/resource.c     | 4 ++++
+ 3 files changed, 9 insertions(+)
 
+diff --git a/arch/x86/include/asm/acpi.h b/arch/x86/include/asm/acpi.h
+index 8eb74cf386db..2173b7c19adf 100644
+--- a/arch/x86/include/asm/acpi.h
++++ b/arch/x86/include/asm/acpi.h
+@@ -31,6 +31,7 @@ extern int acpi_skip_timer_override;
+ extern int acpi_use_timer_override;
+ extern int acpi_fix_pin2_polarity;
+ extern int acpi_disable_cmcff;
++extern int acpi_irq1_int_src_ovr;
+ 
+ extern u8 acpi_sci_flags;
+ extern u32 acpi_sci_override_gsi;
+diff --git a/arch/x86/kernel/acpi/boot.c b/arch/x86/kernel/acpi/boot.c
+index 21b542a6866c..f69ffb9a35c1 100644
+--- a/arch/x86/kernel/acpi/boot.c
++++ b/arch/x86/kernel/acpi/boot.c
+@@ -52,6 +52,7 @@ int acpi_lapic;
+ int acpi_ioapic;
+ int acpi_strict;
+ int acpi_disable_cmcff;
++int acpi_irq1_int_src_ovr;
+ 
+ /* ACPI SCI override configuration */
+ u8 acpi_sci_flags __initdata;
+@@ -588,6 +589,9 @@ acpi_parse_int_src_ovr(union acpi_subtable_headers * header,
+ 
+ 	acpi_table_print_madt_entry(&header->common);
+ 
++	if (intsrc->source_irq == 1)
++		acpi_irq1_int_src_ovr = 1;
++
+ 	if (intsrc->source_irq == acpi_gbl_FADT.sci_interrupt) {
+ 		acpi_sci_ioapic_setup(intsrc->source_irq,
+ 				      intsrc->inti_flags & ACPI_MADT_POLARITY_MASK,
 diff --git a/drivers/acpi/resource.c b/drivers/acpi/resource.c
-index 1dd8d5aebf67..0800a9d77558 100644
+index 840b938a5fb0..8b0c641db1e8 100644
 --- a/drivers/acpi/resource.c
 +++ b/drivers/acpi/resource.c
-@@ -470,6 +470,52 @@ static const struct dmi_system_id asus_laptop[] = {
- 	{ }
- };
+@@ -551,6 +551,10 @@ static bool acpi_dev_irq_override(u32 gsi, u8 triggering, u8 polarity,
+ 		return true;
  
-+static const struct dmi_system_id lenovo_laptop[] = {
-+	{
-+		.ident = "LENOVO IdeaPad Flex 5 14ALC7",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "82R9"),
-+		},
-+	},
-+	{
-+		.ident = "LENOVO IdeaPad Flex 5 16ALC7",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "82RA"),
-+		},
-+	},
-+	{ }
-+};
+ #ifdef CONFIG_X86
++	/* If the override comes from an INT_SRC_OVR MADT entry honor it */
++	if (acpi_irq1_int_src_ovr)
++		return true;
 +
-+static const struct dmi_system_id tongfang_gm_rg[] = {
-+	{
-+		.ident = "TongFang GMxRGxx/XMG CORE 15 (M22)/TUXEDO Stellaris 15 Gen4 AMD",
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_NAME, "GMxRGxx"),
-+		},
-+	},
-+	{ }
-+};
-+
-+static const struct dmi_system_id maingear_laptop[] = {
-+	{
-+		.ident = "MAINGEAR Vector Pro 2 15",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Micro Electronics Inc"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "MG-VCP2-15A3070T"),
-+		}
-+	},
-+	{
-+		.ident = "MAINGEAR Vector Pro 2 17",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Micro Electronics Inc"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "MG-VCP2-17A3070T"),
-+		},
-+	},
-+	{ }
-+};
-+
- static const struct dmi_system_id lg_laptop[] = {
- 	{
- 		.ident = "LG Electronics 17U70P",
-@@ -493,6 +539,10 @@ struct irq_override_cmp {
- static const struct irq_override_cmp override_table[] = {
- 	{ medion_laptop, 1, ACPI_LEVEL_SENSITIVE, ACPI_ACTIVE_LOW, 0, false },
- 	{ asus_laptop, 1, ACPI_LEVEL_SENSITIVE, ACPI_ACTIVE_LOW, 0, false },
-+	{ lenovo_laptop, 6, ACPI_LEVEL_SENSITIVE, ACPI_ACTIVE_LOW, 0, true },
-+	{ lenovo_laptop, 10, ACPI_LEVEL_SENSITIVE, ACPI_ACTIVE_LOW, 0, true },
-+	{ tongfang_gm_rg, 1, ACPI_EDGE_SENSITIVE, ACPI_ACTIVE_LOW, 1, true },
-+	{ maingear_laptop, 1, ACPI_EDGE_SENSITIVE, ACPI_ACTIVE_LOW, 1, true },
- 	{ lg_laptop, 1, ACPI_LEVEL_SENSITIVE, ACPI_ACTIVE_LOW, 0, false },
- };
- 
-@@ -512,6 +562,16 @@ static bool acpi_dev_irq_override(u32 gsi, u8 triggering, u8 polarity,
- 			return entry->override;
- 	}
- 
-+#ifdef CONFIG_X86
-+	/*
-+	 * IRQ override isn't needed on modern AMD Zen systems and
-+	 * this override breaks active low IRQs on AMD Ryzen 6000 and
-+	 * newer systems. Skip it.
-+	 */
-+	if (boot_cpu_has(X86_FEATURE_ZEN))
-+		return false;
-+#endif
-+
- 	return true;
- }
- 
+ 	/*
+ 	 * IRQ override isn't needed on modern AMD Zen systems and
+ 	 * this override breaks active low IRQs on AMD Ryzen 6000 and
 -- 
 2.41.0
 
