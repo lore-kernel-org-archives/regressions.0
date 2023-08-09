@@ -1,165 +1,100 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 461471FA6
-	for <regressions@lists.linux.dev>; Wed,  9 Aug 2023 08:45:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD9652CA7
+	for <regressions@lists.linux.dev>; Wed,  9 Aug 2023 08:55:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1691570731;
+	s=mimecast20190719; t=1691571331;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lTRo6Ome7sqVUyF4PGEpdld0LyBjesDzlOLgeHp1kxk=;
-	b=Hga9dlEcYKGoA5MwNcUBARd+w0Oj4fpj4BNKQPIlbgWrNh2pBEJ1Y6Bkx9VZz3mRCL18OR
-	WOkCdOhO7W85OTfEFInk4fCZnOFYOS/LZjIW67hvfgRw2M9sS319pBVcUQ1uQvDNk3nvly
-	22l4QkcgQl6exOOQe+IYbaQ+tCpwUuc=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-9-UgAK16WfNBqdkK0qi_D6sw-1; Wed, 09 Aug 2023 04:45:29 -0400
-X-MC-Unique: UgAK16WfNBqdkK0qi_D6sw-1
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-98e40d91fdfso473252766b.3
-        for <regressions@lists.linux.dev>; Wed, 09 Aug 2023 01:45:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691570729; x=1692175529;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lTRo6Ome7sqVUyF4PGEpdld0LyBjesDzlOLgeHp1kxk=;
-        b=KdxaZvLp+K4GppiXk0lC/gcyhqBhWSjmT3FUKvlYjlP4v9f8wtpfHY5sPHlli6r4jU
-         74PA38lK3dshOrpCmVigjAJWm+J88mP3eDGebdhDh/SprbNTkWuZiaLq2OvZJ1B/I04e
-         6bGXt/1pJEBqiewBMsYo/PNbejcgZ1ZDNgN2KGWQYQizfSy80q7xVjAWmP/8lxZ+JW+1
-         Tb2/y0WMIRgQ2uGB/jjFvTXfYUfyJDQuhKgS4AeKGTlSEKXc4XfVgqxBQWp4myu8tq2K
-         ZCetg8XKHAKusDKB/Z71Bl5jajVjfZPivzWqHHSMm/AsQOWmee5bNDBWIRtPPHogX0ps
-         UcKA==
-X-Gm-Message-State: AOJu0Yx5LsXG7UVP09aEuRmGnD0e4Sz+eT4Tdvx8fOvPfHGhIAP7PZQo
-	pYJM6kFcT7fVFKdQpX3SMq+rygEvieIL5c79SIr1mVQztTmTxXA/bYUXcHymAvhOj2tfnb2JeUM
-	mTsHWRJCUJRAZctVH45oru8E=
-X-Received: by 2002:a17:906:8a4b:b0:992:7295:61c9 with SMTP id gx11-20020a1709068a4b00b00992729561c9mr1527130ejc.69.1691570728879;
-        Wed, 09 Aug 2023 01:45:28 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFvU/lh8ziAkKsu93hMd2qSm0cJhzw5VFwrmSiSrXH+lPgfvmyx4xKPTshowyUEyd955julKQ==
-X-Received: by 2002:a17:906:8a4b:b0:992:7295:61c9 with SMTP id gx11-20020a1709068a4b00b00992729561c9mr1527114ejc.69.1691570728559;
-        Wed, 09 Aug 2023 01:45:28 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id a23-20020a1709063e9700b00993150e5325sm7753768ejj.60.2023.08.09.01.45.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Aug 2023 01:45:27 -0700 (PDT)
-Message-ID: <10fe8a58-7609-feee-4c3c-6924862f24a8@redhat.com>
-Date: Wed, 9 Aug 2023 10:45:27 +0200
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=/2PjITaeSdxtRPrGdc+5P3Y3zD6poJp+/qiayk+doTM=;
+	b=aj4fx6+bKEwoi5SXvpZgcigS0pGcK0y5r72Is+A04cQ8UM9UUvtWdjlywMJleLWtK9DjZY
+	HIlP7WIlpMf6FfTNa+Rf7Z7hRnxk81umnywEQyN7mZx7rbSTWzF+rgeiKSSrlgG4+hKAoi
+	7sXIjayphLgtORzq0sOkfZ5HmAE+QJY=
+Received: from mimecast-mx02.redhat.com (66.187.233.73 [66.187.233.73]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-675-2KCwoi-cPtaxAdU1GZb2kw-1; Wed, 09 Aug 2023 04:55:28 -0400
+X-MC-Unique: 2KCwoi-cPtaxAdU1GZb2kw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C936D1C05AEC;
+	Wed,  9 Aug 2023 08:55:27 +0000 (UTC)
+Received: from shalem.redhat.com (unknown [10.39.194.12])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id AE9241121314;
+	Wed,  9 Aug 2023 08:55:26 +0000 (UTC)
+From: Hans de Goede <hdegoede@redhat.com>
+To: "Rafael J . Wysocki" <rafael@kernel.org>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	August Wikerfors <git@augustwikerfors.se>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	Linux regressions mailing list <regressions@lists.linux.dev>,
+	stable@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	x86@kernel.org
+Subject: [PATCH v3 0/3] ACPI: resource: Fix regressions from "Remove "Zen" specific match and quirks"
+Date: Wed,  9 Aug 2023 10:55:22 +0200
+Message-ID: <20230809085526.84913-1-hdegoede@redhat.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH v2 2/3] ACPI: resource: Always use MADT override IRQ
- settings for GSI != 1
-To: August Wikerfors <git@augustwikerfors.se>
-Cc: "Rafael J . Wysocki" <rafael@kernel.org>,
- Mario Limonciello <mario.limonciello@amd.com>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- stable@vger.kernel.org, linux-acpi@vger.kernel.org, x86@kernel.org
-References: <20230808103335.95339-1-hdegoede@redhat.com>
- <20230808103335.95339-3-hdegoede@redhat.com>
- <abaad492-6aea-4edf-891f-f57bc2b86781@augustwikerfors.se>
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <abaad492-6aea-4edf-891f-f57bc2b86781@augustwikerfors.se>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US, nl
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.3
 
-Hi August,
+Hi All,
 
-On 8/8/23 22:31, August Wikerfors wrote:
-> On 2023-08-08 12:33, Hans de Goede wrote:
->> All the cases, were the DSDT IRQ settings should be used instead of
->> the MADT override, are for IRQ 1 (the PS/2 kbd IRQ).
->>
->> Simplify things by always honering the override for GSI != 1
->> (for non DMI quirked cases).
->>
->> This allows removing the DMI quirks to honor the override for
->> some non IRQ 1 IRQs on some AMD ZEN based Lenovo models.
->>
->> Fixes: a9c4a912b7dc ("ACPI: resource: Remove "Zen" specific match and quirks")
->> Cc: Mario Limonciello <mario.limonciello@amd.com>
->> Cc: Linux regressions mailing list <regressions@lists.linux.dev>
->> Cc: stable@vger.kernel.org
->> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->> ---
->>   drivers/acpi/resource.c | 28 ++++++++--------------------
->>   1 file changed, 8 insertions(+), 20 deletions(-)
->>
->> diff --git a/drivers/acpi/resource.c b/drivers/acpi/resource.c
->> index 0800a9d77558..840b938a5fb0 100644
->> --- a/drivers/acpi/resource.c
->> +++ b/drivers/acpi/resource.c
->> @@ -470,24 +470,6 @@ static const struct dmi_system_id asus_laptop[] = {
->>       { }
->>   };
->>   -static const struct dmi_system_id lenovo_laptop[] = {
->> -    {
->> -        .ident = "LENOVO IdeaPad Flex 5 14ALC7",
->> -        .matches = {
->> -            DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
->> -            DMI_MATCH(DMI_PRODUCT_NAME, "82R9"),
->> -        },
->> -    },
->> -    {
->> -        .ident = "LENOVO IdeaPad Flex 5 16ALC7",
->> -        .matches = {
->> -            DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
->> -            DMI_MATCH(DMI_PRODUCT_NAME, "82RA"),
->> -        },
->> -    },
->> -    { }
->> -};
->> -
->>   static const struct dmi_system_id tongfang_gm_rg[] = {
->>       {
->>           .ident = "TongFang GMxRGxx/XMG CORE 15 (M22)/TUXEDO Stellaris 15 Gen4 AMD",
->> @@ -539,8 +521,6 @@ struct irq_override_cmp {
->>   static const struct irq_override_cmp override_table[] = {
->>       { medion_laptop, 1, ACPI_LEVEL_SENSITIVE, ACPI_ACTIVE_LOW, 0, false },
->>       { asus_laptop, 1, ACPI_LEVEL_SENSITIVE, ACPI_ACTIVE_LOW, 0, false },
->> -    { lenovo_laptop, 6, ACPI_LEVEL_SENSITIVE, ACPI_ACTIVE_LOW, 0, true },
->> -    { lenovo_laptop, 10, ACPI_LEVEL_SENSITIVE, ACPI_ACTIVE_LOW, 0, true },
->>       { tongfang_gm_rg, 1, ACPI_EDGE_SENSITIVE, ACPI_ACTIVE_LOW, 1, true },
->>       { maingear_laptop, 1, ACPI_EDGE_SENSITIVE, ACPI_ACTIVE_LOW, 1, true },
->>       { lg_laptop, 1, ACPI_LEVEL_SENSITIVE, ACPI_ACTIVE_LOW, 0, false },
->> @@ -562,6 +542,14 @@ static bool acpi_dev_irq_override(u32 gsi, u8 triggering, u8 polarity,
->>               return entry->override;
->>       }
->>   +    /*
->> +     * Always use the MADT override info, except for IRQ 1 for IRQ1
->> +     * the DSDT IRQ settings should sometimes be used otherwise
->> +     * PS/2 keyboards will not work.
->> +     */
->> +    if (gsi != 1)
->> +        return true;
->> +
->>   #ifdef CONFIG_X86
->>       /*
->>        * IRQ override isn't needed on modern AMD Zen systems and
-> 
-> I don't think this will work for the Lenovo ThinkPad neo 14 because according to https://bugzilla.kernel.org/show_bug.cgi?id=217731 it needs the override to also be skipped for IRQ 12.
+Here is v3 of my series to address the regressions wrt PS/2 IRQs
+not working on AMD zen models.
 
-You are right, thank you for catching this. I'll submit a v3 of
-the series with the check changed to:
+Changes in v3:
+- Add links to more bug reports caused by a9c4a912b7dc to the commitmsg
+- Also do the ZEN check for IRQ 12 (Reported-by August Wikerfors)
+- Move the gsi != 1 && gsi != 12 check to inside the #ifdef CONFIG_X86,
+  these being the i8042 IRQs is X86 specific and the "return true;" is
+  always done for #ifndef CONFIG_X86 already
+- Make acpi_int_src_ovr an array which keep track of the status
+  of all legacy IRQs and not just IRQ 1
 
-    if (gsi != 1 && gsi != 12)
-        return true;
+Changes in v2:
+- Add 2 patches on top of the revert to avoid the revert causing
+  other models which are known to need the override to regress.
 
+As discussed in the v1 thread:
+https://lore.kernel.org/linux-acpi/20230806151453.10690-1-hdegoede@redhat.com/
 
-I'll update the Link: tags in the revert to add more bugreports
-Links including the 217731 bugzilla.
+This series adds a few fixes on top of the revert to avoid the revert
+causing regressions on other AMD Zen systems where dropping the special
+Zen behavior was known to fix things.
+
+As also mentioned in the thread this is intended as a short term fix
+for 6.4.y >= 6.4.7 and 6.5 to get all the systems which were working
+fine before commit a9c4a912b7dc ("ACPI: resource: Remove "Zen"
+specific match and quirks") to work again.
+
+The long term plan is to see if we can read back what the BIOS
+has actually programmed as IRQ trigger-type / polarity into
+the IOAPIC.
 
 Regards,
 
 Hans
 
+Hans de Goede (3):
+  ACPI: resource: revert "Remove "Zen" specific match and quirks"
+  ACPI: resource: Always use MADT override IRQ settings for all legacy
+    non i8042 IRQs
+  ACPI: resource: Honor MADT INT_SRC_OVR settings for IRQ1 on AMD Zen
+
+ arch/x86/include/asm/acpi.h |  2 ++
+ arch/x86/kernel/acpi/boot.c |  4 +++
+ drivers/acpi/resource.c     | 52 +++++++++++++++++++++++++++++++++++++
+ 3 files changed, 58 insertions(+)
+
+-- 
+2.41.0
 
