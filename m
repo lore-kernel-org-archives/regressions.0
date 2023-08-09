@@ -1,7 +1,7 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F8948C0D
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E755EACE
 	for <regressions@lists.linux.dev>; Wed,  9 Aug 2023 08:55:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
 	s=mimecast20190719; t=1691571335;
@@ -9,23 +9,23 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Jh7LjiGp6WQaqELk9dgQUXW17bFjnrA9ZTaHQXUgeqQ=;
-	b=T72Kcl6KnjBQfYwruR8nnoyVnuEhd3rkp6fT/Y6HaOtOlsxVFddqvBgaaeTvkyO744miQD
-	lL0v673/VhN6w+WCaePhWSL5TwdPLZ0+MCUleTfFudIugustNlgnbAEWtrlBjAxh8HDiX7
-	n065ePmubPzT9IRrLtHANpSWl4mkfpI=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-556-cHl6x7cqPUuFMBQKqgSf3w-1; Wed, 09 Aug 2023 04:55:31 -0400
-X-MC-Unique: cHl6x7cqPUuFMBQKqgSf3w-1
+	bh=s3VBFXxI2pbsP1ZmcIb5tJNksNxfiIu3X88w43HuLHw=;
+	b=GylLmEsOZZQbSh+A1E/wuWUK2Si6+KDS9cOgKE2Aa2zyaANx7EXOAQa5ouP12XB3EC2agj
+	mAQffS8A46QjScTG/06FaPaEkwEZBT99NOk316wDkwRx13nWxyoZ5fRD/hijAAv+aWHHRr
+	4ts/TZIf+zbB9NwasakIh3KlCXreUgU=
+Received: from mimecast-mx02.redhat.com (66.187.233.73 [66.187.233.73]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-131-UJb9c5GZOCeulE0Mbv0kpg-1; Wed, 09 Aug 2023 04:55:32 -0400
+X-MC-Unique: UJb9c5GZOCeulE0Mbv0kpg-1
 Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 63CE58015AA;
-	Wed,  9 Aug 2023 08:55:30 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id ACBDE3C1015A;
+	Wed,  9 Aug 2023 08:55:31 +0000 (UTC)
 Received: from shalem.redhat.com (unknown [10.39.194.12])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 4DB001121314;
-	Wed,  9 Aug 2023 08:55:29 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 962081121314;
+	Wed,  9 Aug 2023 08:55:30 +0000 (UTC)
 From: Hans de Goede <hdegoede@redhat.com>
 To: "Rafael J . Wysocki" <rafael@kernel.org>,
 	Mario Limonciello <mario.limonciello@amd.com>,
@@ -35,9 +35,9 @@ Cc: Hans de Goede <hdegoede@redhat.com>,
 	stable@vger.kernel.org,
 	linux-acpi@vger.kernel.org,
 	x86@kernel.org
-Subject: [PATCH v3 2/3] ACPI: resource: Always use MADT override IRQ settings for all legacy non i8042 IRQs
-Date: Wed,  9 Aug 2023 10:55:24 +0200
-Message-ID: <20230809085526.84913-3-hdegoede@redhat.com>
+Subject: [PATCH v3 3/3] ACPI: resource: Honor MADT INT_SRC_OVR settings for IRQ1 on AMD Zen
+Date: Wed,  9 Aug 2023 10:55:25 +0200
+Message-ID: <20230809085526.84913-4-hdegoede@redhat.com>
 In-Reply-To: <20230809085526.84913-1-hdegoede@redhat.com>
 References: <20230809085526.84913-1-hdegoede@redhat.com>
 Precedence: bulk
@@ -49,78 +49,83 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.1 on 10.11.54.3
 
-All the cases, were the DSDT IRQ settings should be used instead of
-the MADT override, are for IRQ 1 or 12, the PS/2 kbd resp. mouse IRQs.
+On AMD Zen acpi_dev_irq_override() by default prefers the DSDT IRQ 1
+settings over the MADT settings.
 
-Simplify things by always honering the override for other legacy IRQs
-(for non DMI quirked cases).
-
-This allows removing the DMI quirks to honor the override for
-some non i8042 IRQs on some AMD ZEN based Lenovo models.
+This causes the keyboard to malfunction on some laptop models
+(see Links), all models from the Links have an INT_SRC_OVR MADT entry
+for IRQ 1.
 
 Fixes: a9c4a912b7dc ("ACPI: resource: Remove "Zen" specific match and quirks")
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=217336
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=217394
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=217406
 Cc: Mario Limonciello <mario.limonciello@amd.com>
 Cc: Linux regressions mailing list <regressions@lists.linux.dev>
 Cc: stable@vger.kernel.org
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
-Changes in v2:
-- Also do the ZEN check for IRQ 12 (Reported-by August Wikerfors)
-- Move the gsi != 1 && gsi != 12 check to inside the #ifdef CONFIG_X86,
-  this being the i8042 IRQs is X86 specific and the "return true;" is
-  always done for #ifndef CONFIG_X86 already
+Changes in v3:
+- Make acpi_int_src_ovr an array which keep track of the status
+  of all legacy IRQs and not just IRQ 1
 ---
- drivers/acpi/resource.c | 28 ++++++++--------------------
- 1 file changed, 8 insertions(+), 20 deletions(-)
+ arch/x86/include/asm/acpi.h | 2 ++
+ arch/x86/kernel/acpi/boot.c | 4 ++++
+ drivers/acpi/resource.c     | 4 ++++
+ 3 files changed, 10 insertions(+)
 
+diff --git a/arch/x86/include/asm/acpi.h b/arch/x86/include/asm/acpi.h
+index 8eb74cf386db..6bc00fddf8dd 100644
+--- a/arch/x86/include/asm/acpi.h
++++ b/arch/x86/include/asm/acpi.h
+@@ -15,6 +15,7 @@
+ #include <asm/mpspec.h>
+ #include <asm/x86_init.h>
+ #include <asm/cpufeature.h>
++#include <asm/irq_vectors.h>
+ 
+ #ifdef CONFIG_ACPI_APEI
+ # include <asm/pgtable_types.h>
+@@ -31,6 +32,7 @@ extern int acpi_skip_timer_override;
+ extern int acpi_use_timer_override;
+ extern int acpi_fix_pin2_polarity;
+ extern int acpi_disable_cmcff;
++extern int acpi_int_src_ovr[NR_IRQS_LEGACY];
+ 
+ extern u8 acpi_sci_flags;
+ extern u32 acpi_sci_override_gsi;
+diff --git a/arch/x86/kernel/acpi/boot.c b/arch/x86/kernel/acpi/boot.c
+index 21b542a6866c..b88e5e0135ab 100644
+--- a/arch/x86/kernel/acpi/boot.c
++++ b/arch/x86/kernel/acpi/boot.c
+@@ -52,6 +52,7 @@ int acpi_lapic;
+ int acpi_ioapic;
+ int acpi_strict;
+ int acpi_disable_cmcff;
++int acpi_int_src_ovr[NR_IRQS_LEGACY];
+ 
+ /* ACPI SCI override configuration */
+ u8 acpi_sci_flags __initdata;
+@@ -588,6 +589,9 @@ acpi_parse_int_src_ovr(union acpi_subtable_headers * header,
+ 
+ 	acpi_table_print_madt_entry(&header->common);
+ 
++	if (intsrc->source_irq < NR_IRQS_LEGACY)
++		acpi_int_src_ovr[intsrc->source_irq] = 1;
++
+ 	if (intsrc->source_irq == acpi_gbl_FADT.sci_interrupt) {
+ 		acpi_sci_ioapic_setup(intsrc->source_irq,
+ 				      intsrc->inti_flags & ACPI_MADT_POLARITY_MASK,
 diff --git a/drivers/acpi/resource.c b/drivers/acpi/resource.c
-index 0800a9d77558..380cda1e86f4 100644
+index 380cda1e86f4..a0bb53868e18 100644
 --- a/drivers/acpi/resource.c
 +++ b/drivers/acpi/resource.c
-@@ -470,24 +470,6 @@ static const struct dmi_system_id asus_laptop[] = {
- 	{ }
- };
+@@ -551,6 +551,10 @@ static bool acpi_dev_irq_override(u32 gsi, u8 triggering, u8 polarity,
+ 	if (gsi != 1 && gsi != 12)
+ 		return true;
  
--static const struct dmi_system_id lenovo_laptop[] = {
--	{
--		.ident = "LENOVO IdeaPad Flex 5 14ALC7",
--		.matches = {
--			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
--			DMI_MATCH(DMI_PRODUCT_NAME, "82R9"),
--		},
--	},
--	{
--		.ident = "LENOVO IdeaPad Flex 5 16ALC7",
--		.matches = {
--			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
--			DMI_MATCH(DMI_PRODUCT_NAME, "82RA"),
--		},
--	},
--	{ }
--};
--
- static const struct dmi_system_id tongfang_gm_rg[] = {
- 	{
- 		.ident = "TongFang GMxRGxx/XMG CORE 15 (M22)/TUXEDO Stellaris 15 Gen4 AMD",
-@@ -539,8 +521,6 @@ struct irq_override_cmp {
- static const struct irq_override_cmp override_table[] = {
- 	{ medion_laptop, 1, ACPI_LEVEL_SENSITIVE, ACPI_ACTIVE_LOW, 0, false },
- 	{ asus_laptop, 1, ACPI_LEVEL_SENSITIVE, ACPI_ACTIVE_LOW, 0, false },
--	{ lenovo_laptop, 6, ACPI_LEVEL_SENSITIVE, ACPI_ACTIVE_LOW, 0, true },
--	{ lenovo_laptop, 10, ACPI_LEVEL_SENSITIVE, ACPI_ACTIVE_LOW, 0, true },
- 	{ tongfang_gm_rg, 1, ACPI_EDGE_SENSITIVE, ACPI_ACTIVE_LOW, 1, true },
- 	{ maingear_laptop, 1, ACPI_EDGE_SENSITIVE, ACPI_ACTIVE_LOW, 1, true },
- 	{ lg_laptop, 1, ACPI_LEVEL_SENSITIVE, ACPI_ACTIVE_LOW, 0, false },
-@@ -563,6 +543,14 @@ static bool acpi_dev_irq_override(u32 gsi, u8 triggering, u8 polarity,
- 	}
- 
- #ifdef CONFIG_X86
-+	/*
-+	 * Always use the MADT override info, except for the i8042 PS/2 ctrl
-+	 * IRQs (1 and 12). For these the DSDT IRQ settings should sometimes
-+	 * be used otherwise PS/2 keyboards / mice will not work.
-+	 */
-+	if (gsi != 1 && gsi != 12)
++	/* If the override comes from an INT_SRC_OVR MADT entry honor it */
++	if (acpi_int_src_ovr[gsi])
 +		return true;
 +
  	/*
