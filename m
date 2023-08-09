@@ -1,136 +1,60 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E755EACE
-	for <regressions@lists.linux.dev>; Wed,  9 Aug 2023 08:55:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1691571335;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=s3VBFXxI2pbsP1ZmcIb5tJNksNxfiIu3X88w43HuLHw=;
-	b=GylLmEsOZZQbSh+A1E/wuWUK2Si6+KDS9cOgKE2Aa2zyaANx7EXOAQa5ouP12XB3EC2agj
-	mAQffS8A46QjScTG/06FaPaEkwEZBT99NOk316wDkwRx13nWxyoZ5fRD/hijAAv+aWHHRr
-	4ts/TZIf+zbB9NwasakIh3KlCXreUgU=
-Received: from mimecast-mx02.redhat.com (66.187.233.73 [66.187.233.73]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-131-UJb9c5GZOCeulE0Mbv0kpg-1; Wed, 09 Aug 2023 04:55:32 -0400
-X-MC-Unique: UJb9c5GZOCeulE0Mbv0kpg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id ACBDE3C1015A;
-	Wed,  9 Aug 2023 08:55:31 +0000 (UTC)
-Received: from shalem.redhat.com (unknown [10.39.194.12])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 962081121314;
-	Wed,  9 Aug 2023 08:55:30 +0000 (UTC)
-From: Hans de Goede <hdegoede@redhat.com>
-To: "Rafael J . Wysocki" <rafael@kernel.org>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	August Wikerfors <git@augustwikerfors.se>
-Cc: Hans de Goede <hdegoede@redhat.com>,
-	Linux regressions mailing list <regressions@lists.linux.dev>,
-	stable@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	x86@kernel.org
-Subject: [PATCH v3 3/3] ACPI: resource: Honor MADT INT_SRC_OVR settings for IRQ1 on AMD Zen
-Date: Wed,  9 Aug 2023 10:55:25 +0200
-Message-ID: <20230809085526.84913-4-hdegoede@redhat.com>
-In-Reply-To: <20230809085526.84913-1-hdegoede@redhat.com>
-References: <20230809085526.84913-1-hdegoede@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D226B613F
+	for <regressions@lists.linux.dev>; Wed,  9 Aug 2023 09:15:56 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AECD6C433C7;
+	Wed,  9 Aug 2023 09:15:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1691572556;
+	bh=Q0uq8jXhxDiUHMy34oilY5BxQXi+jvtkpHe3hOZtILs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=pIzNYGfu53aahgPC4Y84agjdk7f6WooBKwH78hh3bTjQBw1n65uv4QARSBzDY3Lp5
+	 NPeMGRfGovct4ctk3canU8GzqPYOZCw5G/FL4lqxVrdaawxsECFCeSduSySuD3IA7u
+	 TaO2hKAftuTWh9yD36RgRXVb53VWmS+YjvcAmC2I=
+Date: Wed, 9 Aug 2023 11:15:53 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: "stable@vger.kernel.org" <stable@vger.kernel.org>,
+	Linux kernel regressions list <regressions@lists.linux.dev>,
+	Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>,
+	Jani Nikula <jani.nikula@intel.com>,
+	LKML <linux-kernel@vger.kernel.org>, Kurt Garloff <kurt@garloff.de>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Sasha Levin <sashal@kernel.org>
+Subject: Re: Drop 0fc6fea41c71 ("drm/i915: Disable DC states for all
+ commits") from the 6.0.y series?
+Message-ID: <2023080930-overturn-duo-17de@gregkh>
+References: <f0870e8f-0c66-57fd-f95d-18d014a11939@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f0870e8f-0c66-57fd-f95d-18d014a11939@leemhuis.info>
 
-On AMD Zen acpi_dev_irq_override() by default prefers the DSDT IRQ 1
-settings over the MADT settings.
+On Mon, Aug 07, 2023 at 12:52:03PM +0200, Thorsten Leemhuis wrote:
+> Hi Greg! Months ago you picked up mainline commit a2b6e99d8a6
+> ("drm/i915: Disable DC states for all commits") for the 6.1.23 release
+> as commit 0fc6fea41c71. It causes issues vor a few people (at least
+> three, two of which are CCed) -- apparently because it depends on some
+> change that wasn't picked up for 6.1.y. This is known for a while now,
+> but nobody has yet found which change that is (Al found something that
+> worked for him, but that didn't work for others). For the whole story
+> skim this ticket:
+> 
+> https://gitlab.freedesktop.org/drm/intel/-/issues/8419
+> 
+> I wonder if it might be better if you revert that commit for 6.0.y; I
+> asked already in the ticket if this is likely to cause regressions for
+> users of 6.0.y, but got no answer from the i915 devs (or did I miss
+> something?). :-/
 
-This causes the keyboard to malfunction on some laptop models
-(see Links), all models from the Links have an INT_SRC_OVR MADT entry
-for IRQ 1.
+Now reverted (note, 6.0.y is long dead, I reverted this for 6.1.y)
 
-Fixes: a9c4a912b7dc ("ACPI: resource: Remove "Zen" specific match and quirks")
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=217336
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=217394
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=217406
-Cc: Mario Limonciello <mario.limonciello@amd.com>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: stable@vger.kernel.org
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
-Changes in v3:
-- Make acpi_int_src_ovr an array which keep track of the status
-  of all legacy IRQs and not just IRQ 1
----
- arch/x86/include/asm/acpi.h | 2 ++
- arch/x86/kernel/acpi/boot.c | 4 ++++
- drivers/acpi/resource.c     | 4 ++++
- 3 files changed, 10 insertions(+)
+thanks,
 
-diff --git a/arch/x86/include/asm/acpi.h b/arch/x86/include/asm/acpi.h
-index 8eb74cf386db..6bc00fddf8dd 100644
---- a/arch/x86/include/asm/acpi.h
-+++ b/arch/x86/include/asm/acpi.h
-@@ -15,6 +15,7 @@
- #include <asm/mpspec.h>
- #include <asm/x86_init.h>
- #include <asm/cpufeature.h>
-+#include <asm/irq_vectors.h>
- 
- #ifdef CONFIG_ACPI_APEI
- # include <asm/pgtable_types.h>
-@@ -31,6 +32,7 @@ extern int acpi_skip_timer_override;
- extern int acpi_use_timer_override;
- extern int acpi_fix_pin2_polarity;
- extern int acpi_disable_cmcff;
-+extern int acpi_int_src_ovr[NR_IRQS_LEGACY];
- 
- extern u8 acpi_sci_flags;
- extern u32 acpi_sci_override_gsi;
-diff --git a/arch/x86/kernel/acpi/boot.c b/arch/x86/kernel/acpi/boot.c
-index 21b542a6866c..b88e5e0135ab 100644
---- a/arch/x86/kernel/acpi/boot.c
-+++ b/arch/x86/kernel/acpi/boot.c
-@@ -52,6 +52,7 @@ int acpi_lapic;
- int acpi_ioapic;
- int acpi_strict;
- int acpi_disable_cmcff;
-+int acpi_int_src_ovr[NR_IRQS_LEGACY];
- 
- /* ACPI SCI override configuration */
- u8 acpi_sci_flags __initdata;
-@@ -588,6 +589,9 @@ acpi_parse_int_src_ovr(union acpi_subtable_headers * header,
- 
- 	acpi_table_print_madt_entry(&header->common);
- 
-+	if (intsrc->source_irq < NR_IRQS_LEGACY)
-+		acpi_int_src_ovr[intsrc->source_irq] = 1;
-+
- 	if (intsrc->source_irq == acpi_gbl_FADT.sci_interrupt) {
- 		acpi_sci_ioapic_setup(intsrc->source_irq,
- 				      intsrc->inti_flags & ACPI_MADT_POLARITY_MASK,
-diff --git a/drivers/acpi/resource.c b/drivers/acpi/resource.c
-index 380cda1e86f4..a0bb53868e18 100644
---- a/drivers/acpi/resource.c
-+++ b/drivers/acpi/resource.c
-@@ -551,6 +551,10 @@ static bool acpi_dev_irq_override(u32 gsi, u8 triggering, u8 polarity,
- 	if (gsi != 1 && gsi != 12)
- 		return true;
- 
-+	/* If the override comes from an INT_SRC_OVR MADT entry honor it */
-+	if (acpi_int_src_ovr[gsi])
-+		return true;
-+
- 	/*
- 	 * IRQ override isn't needed on modern AMD Zen systems and
- 	 * this override breaks active low IRQs on AMD Ryzen 6000 and
--- 
-2.41.0
-
+greg "drowning in kernel release numbers" k-h
