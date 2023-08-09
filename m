@@ -1,112 +1,112 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f51.google.com (mail-oo1-f51.google.com [209.85.161.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7936C24503
-	for <regressions@lists.linux.dev>; Wed,  9 Aug 2023 19:20:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1691608825;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NYJARn+Tr8oo6UNssY2uogwaQ1veOX4LdfLq6I1sIi0=;
-	b=GpFWoA4noun05sXXu7hal0LWdvtPYTYKjCQvsgXd5UwjHnPqCWUnQ45tsc81SAouVkAcG4
-	r8zXt3KElfCvuCLW1rBSLrcGzfK1y4btTVGJosgEHCwu58+xc1icIIXzDJiKTQFV3TsU9o
-	eJIZeRCfEb3KzhyKeDZM5NoZbRKQ5tY=
-Received: from mail-lf1-f72.google.com (mail-lf1-f72.google.com
- [209.85.167.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-472-qUFkKa2nOruryru_r2S2cw-1; Wed, 09 Aug 2023 15:20:23 -0400
-X-MC-Unique: qUFkKa2nOruryru_r2S2cw-1
-Received: by mail-lf1-f72.google.com with SMTP id 2adb3069b0e04-4fe565bca92so77389e87.0
-        for <regressions@lists.linux.dev>; Wed, 09 Aug 2023 12:20:23 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FC8624503
+	for <regressions@lists.linux.dev>; Wed,  9 Aug 2023 19:24:38 +0000 (UTC)
+Received: by mail-oo1-f51.google.com with SMTP id 006d021491bc7-56d67c5e87cso30581eaf.0
+        for <regressions@lists.linux.dev>; Wed, 09 Aug 2023 12:24:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691608822; x=1692213622;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NYJARn+Tr8oo6UNssY2uogwaQ1veOX4LdfLq6I1sIi0=;
-        b=S/lbTSynhVFObXfO/VK9JL0pxZuGPJ/2MJiJtXphB/iqmkCZlEz9hfbrdDA7gJ7Iy6
-         aDOLVWqWRUvrwcQztLLELzhzEwiAs4zyvhirWsqQSlntqxUWmKHKn5r4HSwVI2NvldP4
-         DzsQtrsa5Yk2zNGfiQ2SVTUEq2iWhYwAFkm9X7A8pkx6v1xuUgy9t7v652TpKiAFakHi
-         3mKMyFq8Jr5W162PzNrZheMkv909vNn8SS7sJGQjbA1uLNto+6Yt5sGbsABu9yirOwGV
-         yNX3vzKP06mU3rSrZqGH18yFcDlmiV6D7wM0MA6JCrmZiAEqp07AVE//7O05WQTpSl5E
-         g7QQ==
-X-Gm-Message-State: AOJu0YwvbYShUuc7gIuow6K0Wx1RO1FH1DxBrNycNry5Dg+xxk+YHgOh
-	5Yq00wZaQTU0P9JBNm/haSjVMiOa+oaUfxnLCkMJTuUQela6tqXUhY6B8bewcXKmf+6RC/6rs+m
-	I6lmXYWVf3NmsJuWajdDEr8Q=
-X-Received: by 2002:a05:6512:6d5:b0:4fe:825:a081 with SMTP id u21-20020a05651206d500b004fe0825a081mr44164lff.45.1691608822370;
-        Wed, 09 Aug 2023 12:20:22 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGtu6F06SjXUXLKVgFHropPatS+pATl3bG4JmLunyJmmo8QQwzISppJhRNnKn08hjruOqg3Cg==
-X-Received: by 2002:a05:6512:6d5:b0:4fe:825:a081 with SMTP id u21-20020a05651206d500b004fe0825a081mr44145lff.45.1691608822042;
-        Wed, 09 Aug 2023 12:20:22 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id p17-20020a1709066a9100b009887f4e0291sm8302774ejr.27.2023.08.09.12.20.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Aug 2023 12:20:20 -0700 (PDT)
-Message-ID: <c3684f00-27bd-d4dd-93dd-18936c006de9@redhat.com>
-Date: Wed, 9 Aug 2023 21:20:20 +0200
+        d=1e100.net; s=20221208; t=1691609077; x=1692213877;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=X6nqZfavj7lPMTgzRnojuEHNFwXHJ0sR2jKpGGcn1g8=;
+        b=Pp8LdMK04CSOFo/G6Bve8K1BVGii2atuuRJ60OCGPheWLJmJrWM4mVG9LOKOmxI2rY
+         klFlrSDnEunzaJWwozrGurLalq4hbI6um/EcE4WNASxplF0EmlkxLBmi2YoakZYikiEH
+         V8cnmnj83eQMTNeAzhdf7N0qKmlPq8Y9VtCQ0FgCUHPgO48UPGvRSFtOPFduowrZouTy
+         62wXrG5qbnU+3LMY6DnLVRmB0Pp9Y87lBwHJP+7dZApX8KU1+W60DK5kxnYR43grhGai
+         vdQANEuiMIueA4EnxLlOdy91z7uiHbzk5vuG0HionUcGDJG0PjDIwZ2oexbOKpjKq+gY
+         X0jw==
+X-Gm-Message-State: AOJu0Yzr5geKcWo+UiYQdNS1NkEldrUGMWY7kpwM7uCP2Of3sd0h4ogi
+	o4rrFWzL1ZQenr923BIwFWU9+/tQACZKsul463Y=
+X-Google-Smtp-Source: AGHT+IGU8IICmAsS+amt7KaPQqAJIjXzDKMaOEuKUKFxn0mp/ZA9pnGU+wWtlBQomuSsEfqlSb3khKZO8hTNbwkbqXg=
+X-Received: by 2002:a4a:dc87:0:b0:56d:72dc:5410 with SMTP id
+ g7-20020a4adc87000000b0056d72dc5410mr199666oou.1.1691609077493; Wed, 09 Aug
+ 2023 12:24:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
+References: <20230809085526.84913-1-hdegoede@redhat.com> <20230809085526.84913-4-hdegoede@redhat.com>
+ <f133d401-1975-6c85-47c5-f9464d5ef06f@kernel.org> <3fe197da-c26e-e826-4ea2-c13d2880046d@redhat.com>
+ <CAJZ5v0garg=icaM5f0JNvY+ip7PX1omMRWDS-UvF1_1f82SYZg@mail.gmail.com> <642bc861-f7fa-4c5f-2082-eb26258132a5@redhat.com>
+In-Reply-To: <642bc861-f7fa-4c5f-2082-eb26258132a5@redhat.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 9 Aug 2023 21:24:26 +0200
+Message-ID: <CAJZ5v0ik0pE+HikC+22yKLODvAiCoJ3sFwaSTxHi2yAsN_SLYw@mail.gmail.com>
 Subject: Re: [PATCH v3 3/3] ACPI: resource: Honor MADT INT_SRC_OVR settings
  for IRQ1 on AMD Zen
-To: August Wikerfors <git@augustwikerfors.se>
-Cc: "Rafael J . Wysocki" <rafael@kernel.org>,
- Mario Limonciello <mario.limonciello@amd.com>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- stable@vger.kernel.org, linux-acpi@vger.kernel.org, x86@kernel.org
-References: <20230809085526.84913-1-hdegoede@redhat.com>
- <20230809085526.84913-4-hdegoede@redhat.com>
- <6a6fa2ba-c07d-45b2-96c5-b0f44f5f288b@augustwikerfors.se>
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <6a6fa2ba-c07d-45b2-96c5-b0f44f5f288b@augustwikerfors.se>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US, nl
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Jiri Slaby <jirislaby@kernel.org>, 
+	Mario Limonciello <mario.limonciello@amd.com>, August Wikerfors <git@augustwikerfors.se>, 
+	Linux regressions mailing list <regressions@lists.linux.dev>, stable@vger.kernel.org, 
+	linux-acpi@vger.kernel.org, x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Wed, Aug 9, 2023 at 5:00=E2=80=AFPM Hans de Goede <hdegoede@redhat.com> =
+wrote:
+>
+> Hi,
+>
+> On 8/9/23 16:57, Rafael J. Wysocki wrote:
+> > On Wed, Aug 9, 2023 at 4:40=E2=80=AFPM Hans de Goede <hdegoede@redhat.c=
+om> wrote:
+> >>
+> >> Hi,
+> >>
+> >> On 8/9/23 11:20, Jiri Slaby wrote:
+> >>> On 09. 08. 23, 10:55, Hans de Goede wrote:
+> >>>> On AMD Zen acpi_dev_irq_override() by default prefers the DSDT IRQ 1
+> >>>> settings over the MADT settings.
+> >>>>
+> >>>> This causes the keyboard to malfunction on some laptop models
+> >>>> (see Links), all models from the Links have an INT_SRC_OVR MADT entr=
+y
+> >>>> for IRQ 1.
+> >>> ...
+> >>>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> >>> ...
+> >>>> diff --git a/arch/x86/kernel/acpi/boot.c b/arch/x86/kernel/acpi/boot=
+.c
+> >>>> index 21b542a6866c..b88e5e0135ab 100644
+> >>>> --- a/arch/x86/kernel/acpi/boot.c
+> >>>> +++ b/arch/x86/kernel/acpi/boot.c
+> >>>> @@ -52,6 +52,7 @@ int acpi_lapic;
+> >>>>   int acpi_ioapic;
+> >>>>   int acpi_strict;
+> >>>>   int acpi_disable_cmcff;
+> >>>> +int acpi_int_src_ovr[NR_IRQS_LEGACY];
+> >>>
+> >>> So why not to use bool to make it clear this is not an irq number, bu=
+t a state?
+> >>>
+> >>>>     /* ACPI SCI override configuration */
+> >>>>   u8 acpi_sci_flags __initdata;
+> >>>> @@ -588,6 +589,9 @@ acpi_parse_int_src_ovr(union acpi_subtable_heade=
+rs * header,
+> >>>>         acpi_table_print_madt_entry(&header->common);
+> >>>>   +    if (intsrc->source_irq < NR_IRQS_LEGACY)
+> >>>> +        acpi_int_src_ovr[intsrc->source_irq] =3D 1;
+> >>>
+> >>> And "true" here.
+> >>
+> >> Ack that would indeed be better.
+> >>
+> >> Rafael, can you fix this up while merging or do you want a v4 series ?
+> >
+> > I think I can do that.
+>
+> Great, thank you.
+>
+> Do you have any comments on this series, or is this ready for merging now=
+?
 
-On 8/9/23 17:58, August Wikerfors wrote:
-> On 2023-08-09 10:55, Hans de Goede wrote:
->> On AMD Zen acpi_dev_irq_override() by default prefers the DSDT IRQ 1
->> settings over the MADT settings.
->>
->> This causes the keyboard to malfunction on some laptop models
->> (see Links), all models from the Links have an INT_SRC_OVR MADT entry
->> for IRQ 1.
->>
->> Fixes: a9c4a912b7dc ("ACPI: resource: Remove "Zen" specific match and quirks")
->> Link: https://bugzilla.kernel.org/show_bug.cgi?id=217336
->> Link: https://bugzilla.kernel.org/show_bug.cgi?id=217394
->> Link: https://bugzilla.kernel.org/show_bug.cgi?id=217406
->> Cc: Mario Limonciello <mario.limonciello@amd.com>
->> Cc: Linux regressions mailing list <regressions@lists.linux.dev>
->> Cc: stable@vger.kernel.org
->> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> 
-> One of the laptops fixed by a9c4a912b7dc, PCSpecialist Elimina Pro 16 M [1], seems to have no INT_SRC_OVR entry for IRQ 1 [2]:
-> 
->> [    0.084265] ACPI: INT_SRC_OVR (bus 0 bus_irq 0 global_irq 2 dfl dfl)
->> [    0.084266] ACPI: INT_SRC_OVR (bus 0 bus_irq 9 global_irq 9 low level)
-> 
-> I'm not sure if it was IRQ 1 that needed to be overridden for that model though, so it may work anyway with patch 2 of this series.
-> 
-> [1] https://bugzilla.kernel.org/show_bug.cgi?id=217394#c18
-> [2] https://bugzilla.kernel.org/attachment.cgi?id=304338
+I've applied this series as 6.5-rc6 material and made the change
+discussed above.
 
-Good catch, thanks. So it looks like this one needs a DMI quirk (until we have a better generic solution.
+It has been added to my linux-next branch too.
 
-I'll reach out to the reporter and ask for dmidecode output and prepare a follow-up patch. Still I think that we should move forward with this series to fix the 6 bugs which are linked to from PAtch 1's commitmsg and those are likely just the top of the iceberg.
-
-Regards,
-
-Hans
-
+Thanks!
