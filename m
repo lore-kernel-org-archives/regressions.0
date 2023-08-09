@@ -1,130 +1,90 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from abi149hd127.arn1.oracleemaildelivery.com (abi149hd127.arn1.oracleemaildelivery.com [129.149.84.127])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0284E17752
-	for <regressions@lists.linux.dev>; Wed,  9 Aug 2023 15:00:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1691593237;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dveDaPi6Pv31ovE5nh4Udys9b+Io+evbznraaB9ZP6k=;
-	b=Kmwl8hzqnKQH79BwoQgIYVez0hf0Ig5Qt+ZWQN675GcL1bImQG6JG22pFo5/XQyy1vKg6I
-	86eyQlG3/oI9R8+GsH8Qmyr1Xq1H7z0vS50czLQMGit4PM9HNSGmtUt/rOGlW6H9bUVzUu
-	9Ef5sJWhHuHQnd3UTjeXvBMcBJ4alRE=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-657-7XCY3caqMyOdx-W8C-0RkQ-1; Wed, 09 Aug 2023 11:00:36 -0400
-X-MC-Unique: 7XCY3caqMyOdx-W8C-0RkQ-1
-Received: by mail-ed1-f72.google.com with SMTP id 4fb4d7f45d1cf-5219ceead33so5071820a12.2
-        for <regressions@lists.linux.dev>; Wed, 09 Aug 2023 08:00:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691593235; x=1692198035;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=dveDaPi6Pv31ovE5nh4Udys9b+Io+evbznraaB9ZP6k=;
-        b=kXFHcLKYhtJ9Uxrl+7wq58tDMAq9SP7kJ/HSN+RfcLrqPQRgqo9d5YVbO3v3d0URFe
-         D1ms0YAzDY3IaCvs14c0gHDiTimM/qDlEM5NfZmXtLmzEXLCt+ZonHjRdkl1FMPBkcmk
-         lG2dkYQevEp1LWPqixxd12kymkvM+1PsTrI3EtUvUiSmXw1AshwrPosZXpZOm2gt1DOR
-         P/8aV0ji6F+uXSP8rK9Xen4GhFm8KNqj5syuXqwqA6YXHKyPlrdBCnF+LU4YepSxUkzj
-         tJnv2ewWV/gl14o4YpG9V1Cvv0hzeJzGWf0TJZoGlGYaY6tno2ieJXvgmlnulbQS6AOX
-         wK2w==
-X-Gm-Message-State: AOJu0Yz6MjZP9oeP/W7KXU+Bahds6GqUlReBery7CxIewu4bCMThwvIO
-	LCFY+E9CbS0QSwSiCvlc6eam89kt7IZ2y5d89GTyjnx/1KjOjqBPVi8rWmt6cxUq/zNYCqbH+00
-	72IF7oYIcapTEy0uTFe6eRRQ=
-X-Received: by 2002:a50:ed83:0:b0:523:4dea:2498 with SMTP id h3-20020a50ed83000000b005234dea2498mr2759505edr.19.1691593235399;
-        Wed, 09 Aug 2023 08:00:35 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGBydt7ncisNSGPFhnkpSoFZ6lJjwg/5Am06dis4i75dQxHRBzi1C/4QrSr8oiu+7QmmEtncQ==
-X-Received: by 2002:a50:ed83:0:b0:523:4dea:2498 with SMTP id h3-20020a50ed83000000b005234dea2498mr2759486edr.19.1691593235143;
-        Wed, 09 Aug 2023 08:00:35 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id g17-20020a056402115100b005230f2a12b9sm8024864edw.43.2023.08.09.08.00.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Aug 2023 08:00:34 -0700 (PDT)
-Message-ID: <642bc861-f7fa-4c5f-2082-eb26258132a5@redhat.com>
-Date: Wed, 9 Aug 2023 17:00:33 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE17D18AE1
+	for <regressions@lists.linux.dev>; Wed,  9 Aug 2023 15:58:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=oci-arn1-20220924;
+ d=augustwikerfors.se;
+ h=Date:To:From:Subject:Message-Id:MIME-Version:Sender;
+ bh=wJbRNyHi8yoNQasim14sSnWXoA8mCY7kOtEKklhD9LI=;
+ b=ALcv05k++y44xeffdk0vwwr4NJDRAm33D0wA93M2I4QUaWQw4IzW2T0FKWvYT3UC+VhuI4CLqWZr
+   KuEFHQ4PyDaLSSGWQ9aIPg+2lMDz0EnAJzMYAoDfr0MP5SclJkfbXSpJCFJbDaZB2uYgwmgeAEZm
+   lxdJcVWkPZyF1oAeQxqzYA6jxoqQODjKD1ONYK9CbpTpovARSlxcR8cBEAY+J/nxPkUODvwgEjz5
+   oNbW5yWxOJWRxasW/kSQVyDLZy4lKMwiAmo6tVPNT9TLgd1Qj+FCJhBE77+A8mJTMoK+KbQ5q9Vc
+   9VvRtsII3sEe1ARJikRih3h1Kxk1FwEIq8Cdhw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=prod-arn-20211201;
+ d=arn1.rp.oracleemaildelivery.com;
+ h=Date:To:From:Subject:Message-Id:MIME-Version:Sender;
+ bh=wJbRNyHi8yoNQasim14sSnWXoA8mCY7kOtEKklhD9LI=;
+ b=N2gBetHlAq0OqxQQCFmtN/Wvw3AbVpd9totApijuZcCblmppefqRzehXgWWMNZ2Kh0YIZ7jD+6MT
+   jY3JQ/X9QobD0hiROTPXSr/mOne0Oj3aqFmhzQCbhyI7Ojzv4DVCh79szptimVh2rv/sgFIsrXI4
+   0QE9Rki/wDvawFUIqBkpb4rVLqGVwjosYSQxLxoFaJHwzoruCk2AbLO592+0g/6jQOzRpLF3mwdq
+   As4cv2RvHl0DZJOVdENVv5BIv6hdHZYhG96PMAToPc1B+9laoCijS7bRRnl1LbaO+Sx64d8r/05g
+   6YFm4PbWqFykqf2p13DC4IDi8NjZHOJ9XU0lpQ==
+Received: by omta-ad1-fd2-401-eu-stockholm-1.omtaad1.vcndparn.oraclevcn.com
+ (Oracle Communications Messaging Server 8.1.0.1.20230707 64bit (built Jul  7
+ 2023))
+ with ESMTPS id <0RZ4004QBSDHNXD0@omta-ad1-fd2-401-eu-stockholm-1.omtaad1.vcndparn.oraclevcn.com>
+ for regressions@lists.linux.dev; Wed, 09 Aug 2023 15:58:29 +0000 (GMT)
+Message-id: <6a6fa2ba-c07d-45b2-96c5-b0f44f5f288b@augustwikerfors.se>
+Date: Wed, 9 Aug 2023 17:58:25 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH v3 3/3] ACPI: resource: Honor MADT INT_SRC_OVR settings
- for IRQ1 on AMD Zen
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Jiri Slaby <jirislaby@kernel.org>,
+MIME-version: 1.0
+Subject: Re: [PATCH v3 3/3] ACPI: resource: Honor MADT INT_SRC_OVR settings for
+ IRQ1 on AMD Zen
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: "Rafael J . Wysocki" <rafael@kernel.org>,
  Mario Limonciello <mario.limonciello@amd.com>,
- August Wikerfors <git@augustwikerfors.se>,
  Linux regressions mailing list <regressions@lists.linux.dev>,
  stable@vger.kernel.org, linux-acpi@vger.kernel.org, x86@kernel.org
 References: <20230809085526.84913-1-hdegoede@redhat.com>
  <20230809085526.84913-4-hdegoede@redhat.com>
- <f133d401-1975-6c85-47c5-f9464d5ef06f@kernel.org>
- <3fe197da-c26e-e826-4ea2-c13d2880046d@redhat.com>
- <CAJZ5v0garg=icaM5f0JNvY+ip7PX1omMRWDS-UvF1_1f82SYZg@mail.gmail.com>
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <CAJZ5v0garg=icaM5f0JNvY+ip7PX1omMRWDS-UvF1_1f82SYZg@mail.gmail.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US, nl
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-language: en-US
+From: August Wikerfors <git@augustwikerfors.se>
+In-reply-to: <20230809085526.84913-4-hdegoede@redhat.com>
+Content-type: text/plain; charset=UTF-8; format=flowed
+Content-transfer-encoding: 7bit
+Reporting-Meta:
+ AAEnYWVjk7Vvuxio3PH4r2Bu30R2r5iymG9J69E5kFnUIZYVKHhD1P6r9DekHpXi
+ KOBUp4dsB38XhXFLQyPe7AxmivqcTZlDoZmldei9mRbmHnn1uw/RmSeih52PCJhy
+ /s95MyauKp/05ZY4e73KJxNxmwhfeBdvrMXWsdkYK+mf/am3lHlZtBUw1TugiFEI
+ /aIHLaGLyNzAANksByyw4MdbIwFasJ7aZcgFSG17ovKbiQ154EskKCJcgtp8CTp5
+ 2zh4dVJzoHhTAOLZZlz7W1AVfKZFlKl0HT3iId/n5NqSmVBuvyg13a+hH0v4O3oh
+ dErPTuKh/sEI/btEnHCMYygSiceUmmDdTPZHKqdRA8mXIfn7LChGBwQnKCC12iZn
+ 1jM2/RexRXFQL3PZDK9K6S2mIuV5GXVdHf4ANGa+uf2q3C4gvYYWZsYvx+2AjRH1 xpRB5Q==
 
-Hi,
-
-On 8/9/23 16:57, Rafael J. Wysocki wrote:
-> On Wed, Aug 9, 2023 at 4:40 PM Hans de Goede <hdegoede@redhat.com> wrote:
->>
->> Hi,
->>
->> On 8/9/23 11:20, Jiri Slaby wrote:
->>> On 09. 08. 23, 10:55, Hans de Goede wrote:
->>>> On AMD Zen acpi_dev_irq_override() by default prefers the DSDT IRQ 1
->>>> settings over the MADT settings.
->>>>
->>>> This causes the keyboard to malfunction on some laptop models
->>>> (see Links), all models from the Links have an INT_SRC_OVR MADT entry
->>>> for IRQ 1.
->>> ...
->>>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->>> ...
->>>> diff --git a/arch/x86/kernel/acpi/boot.c b/arch/x86/kernel/acpi/boot.c
->>>> index 21b542a6866c..b88e5e0135ab 100644
->>>> --- a/arch/x86/kernel/acpi/boot.c
->>>> +++ b/arch/x86/kernel/acpi/boot.c
->>>> @@ -52,6 +52,7 @@ int acpi_lapic;
->>>>   int acpi_ioapic;
->>>>   int acpi_strict;
->>>>   int acpi_disable_cmcff;
->>>> +int acpi_int_src_ovr[NR_IRQS_LEGACY];
->>>
->>> So why not to use bool to make it clear this is not an irq number, but a state?
->>>
->>>>     /* ACPI SCI override configuration */
->>>>   u8 acpi_sci_flags __initdata;
->>>> @@ -588,6 +589,9 @@ acpi_parse_int_src_ovr(union acpi_subtable_headers * header,
->>>>         acpi_table_print_madt_entry(&header->common);
->>>>   +    if (intsrc->source_irq < NR_IRQS_LEGACY)
->>>> +        acpi_int_src_ovr[intsrc->source_irq] = 1;
->>>
->>> And "true" here.
->>
->> Ack that would indeed be better.
->>
->> Rafael, can you fix this up while merging or do you want a v4 series ?
+On 2023-08-09 10:55, Hans de Goede wrote:
+> On AMD Zen acpi_dev_irq_override() by default prefers the DSDT IRQ 1
+> settings over the MADT settings.
 > 
-> I think I can do that.
+> This causes the keyboard to malfunction on some laptop models
+> (see Links), all models from the Links have an INT_SRC_OVR MADT entry
+> for IRQ 1.
+> 
+> Fixes: a9c4a912b7dc ("ACPI: resource: Remove "Zen" specific match and quirks")
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=217336
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=217394
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=217406
+> Cc: Mario Limonciello <mario.limonciello@amd.com>
+> Cc: Linux regressions mailing list <regressions@lists.linux.dev>
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 
-Great, thank you.
+One of the laptops fixed by a9c4a912b7dc, PCSpecialist Elimina Pro 16 M 
+[1], seems to have no INT_SRC_OVR entry for IRQ 1 [2]:
 
-Do you have any comments on this series, or is this ready for merging now?
+> [    0.084265] ACPI: INT_SRC_OVR (bus 0 bus_irq 0 global_irq 2 dfl dfl)
+> [    0.084266] ACPI: INT_SRC_OVR (bus 0 bus_irq 9 global_irq 9 low level)
+
+I'm not sure if it was IRQ 1 that needed to be overridden for that model 
+though, so it may work anyway with patch 2 of this series.
+
+[1] https://bugzilla.kernel.org/show_bug.cgi?id=217394#c18
+[2] https://bugzilla.kernel.org/attachment.cgi?id=304338
 
 Regards,
-
-Hans
-
+August Wikerfors
