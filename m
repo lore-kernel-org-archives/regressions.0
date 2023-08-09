@@ -1,138 +1,67 @@
-Received: from abi149hd125.arn1.oracleemaildelivery.com (abi149hd125.arn1.oracleemaildelivery.com [129.149.84.125])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D14E171BE
-	for <regressions@lists.linux.dev>; Tue,  8 Aug 2023 20:32:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=oci-arn1-20220924;
- d=augustwikerfors.se;
- h=Date:To:From:Subject:Message-Id:MIME-Version:Sender;
- bh=00B+bvS7xxbE3P6eaqYNfcMl67cqchVUieBrLpYsDxc=;
- b=Lcug5vRz4iHrMWQFbkRRRJ1QogKubjFMqdPfIFsVGUmZl/2P9aw+rmoeswZRV3Uw4ISfqoyQJR6T
-   O0OZiS/n3mmdO9oEUkbOhnpZ6jXSRc0huKOTxl6+a3XC9Lpc98C1C7R9rgCrvhjVPU5x5yH/dqRV
-   WFq0dUOlaR7lTb7OFyp0xQs0cBElerp+YTaJtF4KX1YjXtfi18upscJCL+RLPmWxAgMP4g+9aDJP
-   zMnEJ5rtBxqwpG/mHekgGQFks6sFS5D5sdPWF3UyEEFlQZWRhmYD1AUk04f+u3bJHnOYvHi0aEMR
-   hoZQ2BMBvG6y1ApQzbxlK4JV7/GcvZ8v0dZp6A==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=prod-arn-20211201;
- d=arn1.rp.oracleemaildelivery.com;
- h=Date:To:From:Subject:Message-Id:MIME-Version:Sender;
- bh=00B+bvS7xxbE3P6eaqYNfcMl67cqchVUieBrLpYsDxc=;
- b=izLkc7PhLbHGtYjTXc/0sBGSLEqmkyIgouwwv40Bsd96Cn2U8WBW6v9XBAlzz+mKPb0gzomox063
-   f/v0vPXi1e9s/A7BFHaMSa29lVz2LpwKYFlmqp8TF22XNaKU2tkPXLIbikpN2BycK1BqAVka+mct
-   fW7P5EXOUxMH7QByEUYNOoJV8rdQszjOWpFV3I6zUFR0XPoGkEgz3FyyylFgVODzR1JAr7B84Gdt
-   eEZ2PWcYl0EmY7UTcZ6Bgd0vDrW7a0vqeQdNvpdK7dBs+bwdx5oMHj2FOSrEpY7GlaYonqshD+lr
-   p/ynKq8YraLynVid5xQnPHmHjQv+nnm6kBX1Vw==
-Received: by omta-ad1-fd1-401-eu-stockholm-1.omtaad1.vcndparn.oraclevcn.com
- (Oracle Communications Messaging Server 8.1.0.1.20230707 64bit (built Jul  7
- 2023))
- with ESMTPS id <0RZ300A8XADDV630@omta-ad1-fd1-401-eu-stockholm-1.omtaad1.vcndparn.oraclevcn.com>
- for regressions@lists.linux.dev; Tue, 08 Aug 2023 20:32:01 +0000 (GMT)
-Message-id: <abaad492-6aea-4edf-891f-f57bc2b86781@augustwikerfors.se>
-Date: Tue, 8 Aug 2023 22:31:57 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C91F61FDA
+	for <regressions@lists.linux.dev>; Wed,  9 Aug 2023 08:16:38 +0000 (UTC)
+Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-5844bb9923eso75413837b3.0
+        for <regressions@lists.linux.dev>; Wed, 09 Aug 2023 01:16:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1691568997; x=1692173797;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=5IEuzWykTMtItBBOAFGOiv2XbuELxF8lm+BVPreJJuo=;
+        b=q97l8KGdYR6vSPeBPn5HJ6Iy8BCXsLr6xdF/EBnHsEZs587lM7np7eptBi/4MP+arH
+         dlL0+wk8KZutec0aS8NZtcHyslmnniF9L9hkAV533WLVuAx5Nagv78KzaTlcdBeBWEmK
+         vPAmfcJSizIpzA8mzol/5pZiJXMLr0k+RUwSddXcdtX0ozFnC3e24YsEbf6TVWuUWhc0
+         9xojO8cV1bR3zOK44Tjo50S7kV9Xe1AHAgFSFomGZOarl04kXqZMNSeeOd0TxTkN0dYq
+         N8PcyyQYn0DVdrYkbRYw85AbQkKNWYfjc+yhXg9QiBXeEBxA1yej+mAdVHpUxRPPi5A8
+         QJkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1691568997; x=1692173797;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5IEuzWykTMtItBBOAFGOiv2XbuELxF8lm+BVPreJJuo=;
+        b=lCcQiwN6UnW0lRnG9xAgXItdL8E3aUzBm+oQ1LsXj4QL6Mxp5KAZW/cBXajqHnphRe
+         nPgbOJVWmNXaeK5ddR+y8+OpYuKbgyx0MyWckCN0knu10TA1QuQ5PT8RoEXUSws3+Lw1
+         SUf52vqTL35njQfq4RfyrxjrEo6Hjrdbf81NJTZWXOWGbDFNjYZ4VRuhnjnj5/DKyMdz
+         1eJXMSTqorDCEIZl7mphtfkIwjMftZ7SyqDQYlgmj4lmYBu8PwoZfk1UB1+44yPkf1yc
+         N5R5fV5VBorvOfTvc4kens3I/Q264WslkPOX74iTSDmLJw2rUPG9kDEC7/KlP9LRs4vI
+         QWnw==
+X-Gm-Message-State: AOJu0YzIW5G15Ha65FCzYsNPamcGGET3ujVn9/all09juQFtY8Zt/k8L
+	e2awTz6NKqoz5aPIlQS9npTVhvwYBcbdwn7wbt4=
+X-Google-Smtp-Source: AGHT+IHS0MXJBfpz/y6yTU3fPASv7s5C/fpHPIcAx3s3X69HAorv6O8k4CBnsZhYTv6+C1NjXVpQpvXRTloJJZLEKjc=
+X-Received: by 2002:a81:82c3:0:b0:586:b686:8234 with SMTP id
+ s186-20020a8182c3000000b00586b6868234mr3054576ywf.8.1691568997495; Wed, 09
+ Aug 2023 01:16:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-version: 1.0
-Subject: Re: [PATCH v2 2/3] ACPI: resource: Always use MADT override IRQ
- settings for GSI != 1
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: "Rafael J . Wysocki" <rafael@kernel.org>,
- Mario Limonciello <mario.limonciello@amd.com>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- stable@vger.kernel.org, linux-acpi@vger.kernel.org, x86@kernel.org
-References: <20230808103335.95339-1-hdegoede@redhat.com>
- <20230808103335.95339-3-hdegoede@redhat.com>
-Content-language: en-US
-From: August Wikerfors <git@augustwikerfors.se>
-In-reply-to: <20230808103335.95339-3-hdegoede@redhat.com>
-Content-type: text/plain; charset=UTF-8; format=flowed
-Content-transfer-encoding: 7bit
-Reporting-Meta:
- AAELwczx0/PLPh99wS5vR5JfKPvEuMYNwWpXbIZ357NfxSo4P0nGN+uZ47Gqli9C
- 1Ie7q4CpfU++soFG2pstdAraYd+Sx3xJHcBta8Jc61Hno2bMLLZo0GSXPrpzSVBq
- BxoF9BkBXd1vFMvqaQqMDSycWoLQ4ygBNmKvZ8HDuWzvgRIRHFdldUeMV1s2/Ay9
- 2zDUm2lEBjcUQHNSkqDgJXCfLYqzkpmoz4Zs8+SkfxuqR+xBMhf6vSSkPjkl0pGg
- vsN9rgrRPDjWbjkwCFcIaFVQhE3PPmHV16uBR8VdYPem6TAotN5ZqvTVtsuRrk8O
- 57wWjq666T1UmAZ2IRAVUxjEjjLROe71q9ChS9/Pj1OkbfzVxB0HlNTut3DI2Yuh
- GxJK8fu/8gODZ3zOxwU1apATa9azYICZmHmevzLHOd+gJhkg+V06HZUlHfXlfvzY 9RfAgPE=
+MIME-Version: 1.0
+References: <97224321-c839-c0a7-52dd-3fb6e52fc15e@gmail.com>
+In-Reply-To: <97224321-c839-c0a7-52dd-3fb6e52fc15e@gmail.com>
+From: TatriX <tatrics@gmail.com>
+Date: Wed, 9 Aug 2023 10:16:26 +0200
+Message-ID: <CAG7LdX7DwNs4AenJgAkdUMa_09s_25jUE0O=4=0BR+Y9KU93GA@mail.gmail.com>
+Subject: Re: Bluetooth LE scan doesn't show device name
+To: Bagas Sanjaya <bagasdotme@gmail.com>
+Cc: Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>, 
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>, Masahiro Yamada <masahiroy@kernel.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	Linux Regressions <regressions@lists.linux.dev>, 
+	Linux Bluetooth <linux-bluetooth@vger.kernel.org>, 
+	Linux Kernel Build System <linux-kbuild@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On 2023-08-08 12:33, Hans de Goede wrote:
-> All the cases, were the DSDT IRQ settings should be used instead of
-> the MADT override, are for IRQ 1 (the PS/2 kbd IRQ).
-> 
-> Simplify things by always honering the override for GSI != 1
-> (for non DMI quirked cases).
-> 
-> This allows removing the DMI quirks to honor the override for
-> some non IRQ 1 IRQs on some AMD ZEN based Lenovo models.
-> 
-> Fixes: a9c4a912b7dc ("ACPI: resource: Remove "Zen" specific match and quirks")
-> Cc: Mario Limonciello <mario.limonciello@amd.com>
-> Cc: Linux regressions mailing list <regressions@lists.linux.dev>
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
->   drivers/acpi/resource.c | 28 ++++++++--------------------
->   1 file changed, 8 insertions(+), 20 deletions(-)
-> 
-> diff --git a/drivers/acpi/resource.c b/drivers/acpi/resource.c
-> index 0800a9d77558..840b938a5fb0 100644
-> --- a/drivers/acpi/resource.c
-> +++ b/drivers/acpi/resource.c
-> @@ -470,24 +470,6 @@ static const struct dmi_system_id asus_laptop[] = {
->   	{ }
->   };
->   
-> -static const struct dmi_system_id lenovo_laptop[] = {
-> -	{
-> -		.ident = "LENOVO IdeaPad Flex 5 14ALC7",
-> -		.matches = {
-> -			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-> -			DMI_MATCH(DMI_PRODUCT_NAME, "82R9"),
-> -		},
-> -	},
-> -	{
-> -		.ident = "LENOVO IdeaPad Flex 5 16ALC7",
-> -		.matches = {
-> -			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-> -			DMI_MATCH(DMI_PRODUCT_NAME, "82RA"),
-> -		},
-> -	},
-> -	{ }
-> -};
-> -
->   static const struct dmi_system_id tongfang_gm_rg[] = {
->   	{
->   		.ident = "TongFang GMxRGxx/XMG CORE 15 (M22)/TUXEDO Stellaris 15 Gen4 AMD",
-> @@ -539,8 +521,6 @@ struct irq_override_cmp {
->   static const struct irq_override_cmp override_table[] = {
->   	{ medion_laptop, 1, ACPI_LEVEL_SENSITIVE, ACPI_ACTIVE_LOW, 0, false },
->   	{ asus_laptop, 1, ACPI_LEVEL_SENSITIVE, ACPI_ACTIVE_LOW, 0, false },
-> -	{ lenovo_laptop, 6, ACPI_LEVEL_SENSITIVE, ACPI_ACTIVE_LOW, 0, true },
-> -	{ lenovo_laptop, 10, ACPI_LEVEL_SENSITIVE, ACPI_ACTIVE_LOW, 0, true },
->   	{ tongfang_gm_rg, 1, ACPI_EDGE_SENSITIVE, ACPI_ACTIVE_LOW, 1, true },
->   	{ maingear_laptop, 1, ACPI_EDGE_SENSITIVE, ACPI_ACTIVE_LOW, 1, true },
->   	{ lg_laptop, 1, ACPI_LEVEL_SENSITIVE, ACPI_ACTIVE_LOW, 0, false },
-> @@ -562,6 +542,14 @@ static bool acpi_dev_irq_override(u32 gsi, u8 triggering, u8 polarity,
->   			return entry->override;
->   	}
->   
-> +	/*
-> +	 * Always use the MADT override info, except for IRQ 1 for IRQ1
-> +	 * the DSDT IRQ settings should sometimes be used otherwise
-> +	 * PS/2 keyboards will not work.
-> +	 */
-> +	if (gsi != 1)
-> +		return true;
-> +
->   #ifdef CONFIG_X86
->   	/*
->   	 * IRQ override isn't needed on modern AMD Zen systems and
+> TatriX: Can you also attach dmesg output to your Bugzilla report?
 
-I don't think this will work for the Lenovo ThinkPad neo 14 because 
-according to https://bugzilla.kernel.org/show_bug.cgi?id=217731 it needs 
-the override to also be skipped for IRQ 12.
+Shall I include full dmesg output for both kernels?
+I have a laptop where I keep 5.9.12 and a desktop machine, where I use
+latest stable from the Arch repo.
 
-Regards,
-August Wikerfors
+When it comes to compilation issues, I'm experiencing the same
+symptoms as described here:
+https://unix.stackexchange.com/questions/709671/linux-kernel-5-15-54-compilation-errors-with-gcc-12-1
+I'll have to investigate how to downgrade gcc before I can do the bisection.
