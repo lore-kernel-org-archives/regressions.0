@@ -1,94 +1,155 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D09DC613F
-	for <regressions@lists.linux.dev>; Wed,  9 Aug 2023 09:20:26 +0000 (UTC)
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-51cff235226so1481019a12.0
-        for <regressions@lists.linux.dev>; Wed, 09 Aug 2023 02:20:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691572825; x=1692177625;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=cQaLc2nrPpBthIHL1xHv2ULZnA/x9m4F2lf1Bl4ddVk=;
-        b=UHKz0+Gt15/L1vzBWFqblZDIIdJ9COz+CZFJT+ZKJsd+uu1A/1N6wBDdMANb8XAzKf
-         kbZf6oH/05VPZ4Y+3wjEhgJzrKROEhM2TKNUgYdlj2Ko0TQoUNh+BppBLFTe/mSiIDK5
-         PUnbiJM08b/ycZCAab4t0pDGE4G/gFAbpI9UF22oo2Gb4TUhE5NUfJ9SQ83/dif66sbe
-         9ZjXzQtdiG+yIlgtbj86wKAKKJ9T9C9aStWUAcRbYamU2hjPBG7fMHFbdCKOWkZj0pR2
-         Wy2nJgzmq38a7c/Cl0zT0NjD1Q3qEo3xAdkMgLzQkdcpGdFn7+Ay8AvBIh2PjluaWQsi
-         Y7vw==
-X-Gm-Message-State: AOJu0YwHXfIilXXnzviWLuFSt5xRbgXKIKfIT1U09N32eher0g+SVd13
-	p1LSpmrkytDyC1xDbaYDro8=
-X-Google-Smtp-Source: AGHT+IHQymkVmf03FNeB5DWxGpGXvjqZuIUhesQ/SgWXPwpMAiEFq1X/yV4zd/M3vybssHCsoJw0Bw==
-X-Received: by 2002:aa7:df09:0:b0:523:2e23:a0bf with SMTP id c9-20020aa7df09000000b005232e23a0bfmr2599976edy.11.1691572824686;
-        Wed, 09 Aug 2023 02:20:24 -0700 (PDT)
-Received: from [192.168.1.58] (185-219-167-24-static.vivo.cz. [185.219.167.24])
-        by smtp.gmail.com with ESMTPSA id e23-20020a056402089700b00521d2f7459fsm7681092edy.49.2023.08.09.02.20.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Aug 2023 02:20:24 -0700 (PDT)
-Message-ID: <f133d401-1975-6c85-47c5-f9464d5ef06f@kernel.org>
-Date: Wed, 9 Aug 2023 11:20:22 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE6AF17731;
+	Wed,  9 Aug 2023 11:07:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5131C433C8;
+	Wed,  9 Aug 2023 11:07:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1691579235;
+	bh=SP7FcrL/n/JbIPYcqAj06Y4gPl8RVIcWqAmrAHKcOK0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=SMoV/HFqqhCVj8b1gMQ3x9AdUk7ya2sGae/9Su6NjtY5S74aEqimQHYIfEznJMhwq
+	 AdWH8huMEXrIWCb41Ny0Nb4rMe2a60/CURjXpLi1JnTuuWY0u3nCNvBRdBZaoTFJoY
+	 03LmrAFbyjOCCLhRR9i8MZPpDufeNvg3DQpEZejk=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: stable@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	patches@lists.linux.dev,
+	=?UTF-8?q?Georg=20M=C3=BCller?= <georgmueller@gmx.net>,
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Ian Rogers <irogers@google.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	regressions@lists.linux.dev,
+	Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 4.14 124/204] perf probe: Add test for regression introduced by switch to die_get_decl_file()
+Date: Wed,  9 Aug 2023 12:41:02 +0200
+Message-ID: <20230809103646.752555655@linuxfoundation.org>
+X-Mailer: git-send-email 2.41.0
+In-Reply-To: <20230809103642.552405807@linuxfoundation.org>
+References: <20230809103642.552405807@linuxfoundation.org>
+User-Agent: quilt/0.67
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.1
-Subject: Re: [PATCH v3 3/3] ACPI: resource: Honor MADT INT_SRC_OVR settings
- for IRQ1 on AMD Zen
-Content-Language: en-US
-To: Hans de Goede <hdegoede@redhat.com>,
- "Rafael J . Wysocki" <rafael@kernel.org>,
- Mario Limonciello <mario.limonciello@amd.com>,
- August Wikerfors <git@augustwikerfors.se>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
- stable@vger.kernel.org, linux-acpi@vger.kernel.org, x86@kernel.org
-References: <20230809085526.84913-1-hdegoede@redhat.com>
- <20230809085526.84913-4-hdegoede@redhat.com>
-From: Jiri Slaby <jirislaby@kernel.org>
-In-Reply-To: <20230809085526.84913-4-hdegoede@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 09. 08. 23, 10:55, Hans de Goede wrote:
-> On AMD Zen acpi_dev_irq_override() by default prefers the DSDT IRQ 1
-> settings over the MADT settings.
-> 
-> This causes the keyboard to malfunction on some laptop models
-> (see Links), all models from the Links have an INT_SRC_OVR MADT entry
-> for IRQ 1.
-...
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-...
-> diff --git a/arch/x86/kernel/acpi/boot.c b/arch/x86/kernel/acpi/boot.c
-> index 21b542a6866c..b88e5e0135ab 100644
-> --- a/arch/x86/kernel/acpi/boot.c
-> +++ b/arch/x86/kernel/acpi/boot.c
-> @@ -52,6 +52,7 @@ int acpi_lapic;
->   int acpi_ioapic;
->   int acpi_strict;
->   int acpi_disable_cmcff;
-> +int acpi_int_src_ovr[NR_IRQS_LEGACY];
+From: Georg Müller <georgmueller@gmx.net>
 
-So why not to use bool to make it clear this is not an irq number, but a 
-state?
+commit 56cbeacf143530576905623ac72ae0964f3293a6 upstream.
 
->   
->   /* ACPI SCI override configuration */
->   u8 acpi_sci_flags __initdata;
-> @@ -588,6 +589,9 @@ acpi_parse_int_src_ovr(union acpi_subtable_headers * header,
->   
->   	acpi_table_print_madt_entry(&header->common);
->   
-> +	if (intsrc->source_irq < NR_IRQS_LEGACY)
-> +		acpi_int_src_ovr[intsrc->source_irq] = 1;
+This patch adds a test to validate that 'perf probe' works for binaries
+where DWARF info is split into multiple CUs
 
-And "true" here.
+Signed-off-by: Georg Müller <georgmueller@gmx.net>
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Ian Rogers <irogers@google.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: regressions@lists.linux.dev
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20230628084551.1860532-5-georgmueller@gmx.net
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ tools/perf/tests/shell/test_uprobe_from_different_cu.sh |   77 ++++++++++++++++
+ 1 file changed, 77 insertions(+)
+ create mode 100755 tools/perf/tests/shell/test_uprobe_from_different_cu.sh
 
-thanks,
--- 
-js
-suse labs
+--- /dev/null
++++ b/tools/perf/tests/shell/test_uprobe_from_different_cu.sh
+@@ -0,0 +1,77 @@
++#!/bin/bash
++# test perf probe of function from different CU
++# SPDX-License-Identifier: GPL-2.0
++
++set -e
++
++temp_dir=$(mktemp -d /tmp/perf-uprobe-different-cu-sh.XXXXXXXXXX)
++
++cleanup()
++{
++	trap - EXIT TERM INT
++	if [[ "${temp_dir}" =~ ^/tmp/perf-uprobe-different-cu-sh.*$ ]]; then
++		echo "--- Cleaning up ---"
++		perf probe -x ${temp_dir}/testfile -d foo
++		rm -f "${temp_dir}/"*
++		rmdir "${temp_dir}"
++	fi
++}
++
++trap_cleanup()
++{
++        cleanup
++        exit 1
++}
++
++trap trap_cleanup EXIT TERM INT
++
++cat > ${temp_dir}/testfile-foo.h << EOF
++struct t
++{
++  int *p;
++  int c;
++};
++
++extern int foo (int i, struct t *t);
++EOF
++
++cat > ${temp_dir}/testfile-foo.c << EOF
++#include "testfile-foo.h"
++
++int
++foo (int i, struct t *t)
++{
++  int j, res = 0;
++  for (j = 0; j < i && j < t->c; j++)
++    res += t->p[j];
++
++  return res;
++}
++EOF
++
++cat > ${temp_dir}/testfile-main.c << EOF
++#include "testfile-foo.h"
++
++static struct t g;
++
++int
++main (int argc, char **argv)
++{
++  int i;
++  int j[argc];
++  g.c = argc;
++  g.p = j;
++  for (i = 0; i < argc; i++)
++    j[i] = (int) argv[i][0];
++  return foo (3, &g);
++}
++EOF
++
++gcc -g -Og -flto -c ${temp_dir}/testfile-foo.c -o ${temp_dir}/testfile-foo.o
++gcc -g -Og -c ${temp_dir}/testfile-main.c -o ${temp_dir}/testfile-main.o
++gcc -g -Og -o ${temp_dir}/testfile ${temp_dir}/testfile-foo.o ${temp_dir}/testfile-main.o
++
++perf probe -x ${temp_dir}/testfile --funcs foo
++perf probe -x ${temp_dir}/testfile foo
++
++cleanup
+
 
