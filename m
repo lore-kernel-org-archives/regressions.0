@@ -1,67 +1,165 @@
-Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C91F61FDA
-	for <regressions@lists.linux.dev>; Wed,  9 Aug 2023 08:16:38 +0000 (UTC)
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-5844bb9923eso75413837b3.0
-        for <regressions@lists.linux.dev>; Wed, 09 Aug 2023 01:16:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1691568997; x=1692173797;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=5IEuzWykTMtItBBOAFGOiv2XbuELxF8lm+BVPreJJuo=;
-        b=q97l8KGdYR6vSPeBPn5HJ6Iy8BCXsLr6xdF/EBnHsEZs587lM7np7eptBi/4MP+arH
-         dlL0+wk8KZutec0aS8NZtcHyslmnniF9L9hkAV533WLVuAx5Nagv78KzaTlcdBeBWEmK
-         vPAmfcJSizIpzA8mzol/5pZiJXMLr0k+RUwSddXcdtX0ozFnC3e24YsEbf6TVWuUWhc0
-         9xojO8cV1bR3zOK44Tjo50S7kV9Xe1AHAgFSFomGZOarl04kXqZMNSeeOd0TxTkN0dYq
-         N8PcyyQYn0DVdrYkbRYw85AbQkKNWYfjc+yhXg9QiBXeEBxA1yej+mAdVHpUxRPPi5A8
-         QJkg==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 461471FA6
+	for <regressions@lists.linux.dev>; Wed,  9 Aug 2023 08:45:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1691570731;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lTRo6Ome7sqVUyF4PGEpdld0LyBjesDzlOLgeHp1kxk=;
+	b=Hga9dlEcYKGoA5MwNcUBARd+w0Oj4fpj4BNKQPIlbgWrNh2pBEJ1Y6Bkx9VZz3mRCL18OR
+	WOkCdOhO7W85OTfEFInk4fCZnOFYOS/LZjIW67hvfgRw2M9sS319pBVcUQ1uQvDNk3nvly
+	22l4QkcgQl6exOOQe+IYbaQ+tCpwUuc=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-9-UgAK16WfNBqdkK0qi_D6sw-1; Wed, 09 Aug 2023 04:45:29 -0400
+X-MC-Unique: UgAK16WfNBqdkK0qi_D6sw-1
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-98e40d91fdfso473252766b.3
+        for <regressions@lists.linux.dev>; Wed, 09 Aug 2023 01:45:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691568997; x=1692173797;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5IEuzWykTMtItBBOAFGOiv2XbuELxF8lm+BVPreJJuo=;
-        b=lCcQiwN6UnW0lRnG9xAgXItdL8E3aUzBm+oQ1LsXj4QL6Mxp5KAZW/cBXajqHnphRe
-         nPgbOJVWmNXaeK5ddR+y8+OpYuKbgyx0MyWckCN0knu10TA1QuQ5PT8RoEXUSws3+Lw1
-         SUf52vqTL35njQfq4RfyrxjrEo6Hjrdbf81NJTZWXOWGbDFNjYZ4VRuhnjnj5/DKyMdz
-         1eJXMSTqorDCEIZl7mphtfkIwjMftZ7SyqDQYlgmj4lmYBu8PwoZfk1UB1+44yPkf1yc
-         N5R5fV5VBorvOfTvc4kens3I/Q264WslkPOX74iTSDmLJw2rUPG9kDEC7/KlP9LRs4vI
-         QWnw==
-X-Gm-Message-State: AOJu0YzIW5G15Ha65FCzYsNPamcGGET3ujVn9/all09juQFtY8Zt/k8L
-	e2awTz6NKqoz5aPIlQS9npTVhvwYBcbdwn7wbt4=
-X-Google-Smtp-Source: AGHT+IHS0MXJBfpz/y6yTU3fPASv7s5C/fpHPIcAx3s3X69HAorv6O8k4CBnsZhYTv6+C1NjXVpQpvXRTloJJZLEKjc=
-X-Received: by 2002:a81:82c3:0:b0:586:b686:8234 with SMTP id
- s186-20020a8182c3000000b00586b6868234mr3054576ywf.8.1691568997495; Wed, 09
- Aug 2023 01:16:37 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1691570729; x=1692175529;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=lTRo6Ome7sqVUyF4PGEpdld0LyBjesDzlOLgeHp1kxk=;
+        b=KdxaZvLp+K4GppiXk0lC/gcyhqBhWSjmT3FUKvlYjlP4v9f8wtpfHY5sPHlli6r4jU
+         74PA38lK3dshOrpCmVigjAJWm+J88mP3eDGebdhDh/SprbNTkWuZiaLq2OvZJ1B/I04e
+         6bGXt/1pJEBqiewBMsYo/PNbejcgZ1ZDNgN2KGWQYQizfSy80q7xVjAWmP/8lxZ+JW+1
+         Tb2/y0WMIRgQ2uGB/jjFvTXfYUfyJDQuhKgS4AeKGTlSEKXc4XfVgqxBQWp4myu8tq2K
+         ZCetg8XKHAKusDKB/Z71Bl5jajVjfZPivzWqHHSMm/AsQOWmee5bNDBWIRtPPHogX0ps
+         UcKA==
+X-Gm-Message-State: AOJu0Yx5LsXG7UVP09aEuRmGnD0e4Sz+eT4Tdvx8fOvPfHGhIAP7PZQo
+	pYJM6kFcT7fVFKdQpX3SMq+rygEvieIL5c79SIr1mVQztTmTxXA/bYUXcHymAvhOj2tfnb2JeUM
+	mTsHWRJCUJRAZctVH45oru8E=
+X-Received: by 2002:a17:906:8a4b:b0:992:7295:61c9 with SMTP id gx11-20020a1709068a4b00b00992729561c9mr1527130ejc.69.1691570728879;
+        Wed, 09 Aug 2023 01:45:28 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFvU/lh8ziAkKsu93hMd2qSm0cJhzw5VFwrmSiSrXH+lPgfvmyx4xKPTshowyUEyd955julKQ==
+X-Received: by 2002:a17:906:8a4b:b0:992:7295:61c9 with SMTP id gx11-20020a1709068a4b00b00992729561c9mr1527114ejc.69.1691570728559;
+        Wed, 09 Aug 2023 01:45:28 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id a23-20020a1709063e9700b00993150e5325sm7753768ejj.60.2023.08.09.01.45.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 09 Aug 2023 01:45:27 -0700 (PDT)
+Message-ID: <10fe8a58-7609-feee-4c3c-6924862f24a8@redhat.com>
+Date: Wed, 9 Aug 2023 10:45:27 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <97224321-c839-c0a7-52dd-3fb6e52fc15e@gmail.com>
-In-Reply-To: <97224321-c839-c0a7-52dd-3fb6e52fc15e@gmail.com>
-From: TatriX <tatrics@gmail.com>
-Date: Wed, 9 Aug 2023 10:16:26 +0200
-Message-ID: <CAG7LdX7DwNs4AenJgAkdUMa_09s_25jUE0O=4=0BR+Y9KU93GA@mail.gmail.com>
-Subject: Re: Bluetooth LE scan doesn't show device name
-To: Bagas Sanjaya <bagasdotme@gmail.com>
-Cc: Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>, 
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>, Masahiro Yamada <masahiroy@kernel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Linux Regressions <regressions@lists.linux.dev>, 
-	Linux Bluetooth <linux-bluetooth@vger.kernel.org>, 
-	Linux Kernel Build System <linux-kbuild@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH v2 2/3] ACPI: resource: Always use MADT override IRQ
+ settings for GSI != 1
+To: August Wikerfors <git@augustwikerfors.se>
+Cc: "Rafael J . Wysocki" <rafael@kernel.org>,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ stable@vger.kernel.org, linux-acpi@vger.kernel.org, x86@kernel.org
+References: <20230808103335.95339-1-hdegoede@redhat.com>
+ <20230808103335.95339-3-hdegoede@redhat.com>
+ <abaad492-6aea-4edf-891f-f57bc2b86781@augustwikerfors.se>
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <abaad492-6aea-4edf-891f-f57bc2b86781@augustwikerfors.se>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US, nl
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-> TatriX: Can you also attach dmesg output to your Bugzilla report?
+Hi August,
 
-Shall I include full dmesg output for both kernels?
-I have a laptop where I keep 5.9.12 and a desktop machine, where I use
-latest stable from the Arch repo.
+On 8/8/23 22:31, August Wikerfors wrote:
+> On 2023-08-08 12:33, Hans de Goede wrote:
+>> All the cases, were the DSDT IRQ settings should be used instead of
+>> the MADT override, are for IRQ 1 (the PS/2 kbd IRQ).
+>>
+>> Simplify things by always honering the override for GSI != 1
+>> (for non DMI quirked cases).
+>>
+>> This allows removing the DMI quirks to honor the override for
+>> some non IRQ 1 IRQs on some AMD ZEN based Lenovo models.
+>>
+>> Fixes: a9c4a912b7dc ("ACPI: resource: Remove "Zen" specific match and quirks")
+>> Cc: Mario Limonciello <mario.limonciello@amd.com>
+>> Cc: Linux regressions mailing list <regressions@lists.linux.dev>
+>> Cc: stable@vger.kernel.org
+>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>> ---
+>>   drivers/acpi/resource.c | 28 ++++++++--------------------
+>>   1 file changed, 8 insertions(+), 20 deletions(-)
+>>
+>> diff --git a/drivers/acpi/resource.c b/drivers/acpi/resource.c
+>> index 0800a9d77558..840b938a5fb0 100644
+>> --- a/drivers/acpi/resource.c
+>> +++ b/drivers/acpi/resource.c
+>> @@ -470,24 +470,6 @@ static const struct dmi_system_id asus_laptop[] = {
+>>       { }
+>>   };
+>>   -static const struct dmi_system_id lenovo_laptop[] = {
+>> -    {
+>> -        .ident = "LENOVO IdeaPad Flex 5 14ALC7",
+>> -        .matches = {
+>> -            DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+>> -            DMI_MATCH(DMI_PRODUCT_NAME, "82R9"),
+>> -        },
+>> -    },
+>> -    {
+>> -        .ident = "LENOVO IdeaPad Flex 5 16ALC7",
+>> -        .matches = {
+>> -            DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+>> -            DMI_MATCH(DMI_PRODUCT_NAME, "82RA"),
+>> -        },
+>> -    },
+>> -    { }
+>> -};
+>> -
+>>   static const struct dmi_system_id tongfang_gm_rg[] = {
+>>       {
+>>           .ident = "TongFang GMxRGxx/XMG CORE 15 (M22)/TUXEDO Stellaris 15 Gen4 AMD",
+>> @@ -539,8 +521,6 @@ struct irq_override_cmp {
+>>   static const struct irq_override_cmp override_table[] = {
+>>       { medion_laptop, 1, ACPI_LEVEL_SENSITIVE, ACPI_ACTIVE_LOW, 0, false },
+>>       { asus_laptop, 1, ACPI_LEVEL_SENSITIVE, ACPI_ACTIVE_LOW, 0, false },
+>> -    { lenovo_laptop, 6, ACPI_LEVEL_SENSITIVE, ACPI_ACTIVE_LOW, 0, true },
+>> -    { lenovo_laptop, 10, ACPI_LEVEL_SENSITIVE, ACPI_ACTIVE_LOW, 0, true },
+>>       { tongfang_gm_rg, 1, ACPI_EDGE_SENSITIVE, ACPI_ACTIVE_LOW, 1, true },
+>>       { maingear_laptop, 1, ACPI_EDGE_SENSITIVE, ACPI_ACTIVE_LOW, 1, true },
+>>       { lg_laptop, 1, ACPI_LEVEL_SENSITIVE, ACPI_ACTIVE_LOW, 0, false },
+>> @@ -562,6 +542,14 @@ static bool acpi_dev_irq_override(u32 gsi, u8 triggering, u8 polarity,
+>>               return entry->override;
+>>       }
+>>   +    /*
+>> +     * Always use the MADT override info, except for IRQ 1 for IRQ1
+>> +     * the DSDT IRQ settings should sometimes be used otherwise
+>> +     * PS/2 keyboards will not work.
+>> +     */
+>> +    if (gsi != 1)
+>> +        return true;
+>> +
+>>   #ifdef CONFIG_X86
+>>       /*
+>>        * IRQ override isn't needed on modern AMD Zen systems and
+> 
+> I don't think this will work for the Lenovo ThinkPad neo 14 because according to https://bugzilla.kernel.org/show_bug.cgi?id=217731 it needs the override to also be skipped for IRQ 12.
 
-When it comes to compilation issues, I'm experiencing the same
-symptoms as described here:
-https://unix.stackexchange.com/questions/709671/linux-kernel-5-15-54-compilation-errors-with-gcc-12-1
-I'll have to investigate how to downgrade gcc before I can do the bisection.
+You are right, thank you for catching this. I'll submit a v3 of
+the series with the check changed to:
+
+    if (gsi != 1 && gsi != 12)
+        return true;
+
+
+I'll update the Link: tags in the revert to add more bugreports
+Links including the 217731 bugzilla.
+
+Regards,
+
+Hans
+
+
