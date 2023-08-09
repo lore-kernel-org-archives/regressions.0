@@ -1,130 +1,153 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DAB624513
-	for <regressions@lists.linux.dev>; Wed,  9 Aug 2023 19:41:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1691610072;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5ldcQW9LZSQnCOkarDxdnYKtVsXTHlqQEYP12HWE3Go=;
-	b=Rjk6/zkWlwHd0i3G7jD0EXv96tzUyZwy8akUmuxgYx1kgssSmi1+8imPXvdcAoJly0zfSP
-	AKIAYjmzTrMWCGkWfVMt1bF8OcgmpvEsuJydcMaxhv+Uk5o9dxUz8DOF+3n1fqJgs7urL3
-	hL190Nd90QsEGGGyRPTq/j0u/UDC81g=
-Received: from mail-lj1-f200.google.com (mail-lj1-f200.google.com
- [209.85.208.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-447-V_m8CIFsOfayDXzv7bLa6Q-1; Wed, 09 Aug 2023 15:41:10 -0400
-X-MC-Unique: V_m8CIFsOfayDXzv7bLa6Q-1
-Received: by mail-lj1-f200.google.com with SMTP id 38308e7fff4ca-2b9e8abe539so1927741fa.3
-        for <regressions@lists.linux.dev>; Wed, 09 Aug 2023 12:41:10 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 090EB1C9E7
+	for <regressions@lists.linux.dev>; Wed,  9 Aug 2023 21:07:46 +0000 (UTC)
+Received: by mail-ot1-f49.google.com with SMTP id 46e09a7af769-6bd0c953fd9so212406a34.3
+        for <regressions@lists.linux.dev>; Wed, 09 Aug 2023 14:07:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1691615266; x=1692220066;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :references:in-reply-to:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VQhPymUQatLez9OhAXnkjteLBnvrlDrlwzKYnLXCkIU=;
+        b=EUnhMb2XtpgZMeivppTYpKUPHU/1tJTVNBvx8vjB6hgiPMyGsMKylvyif+u5Dy9rTO
+         MbQnLpB9E25ZjsusJDPz5b2JQva54uSYWYx+1c4sA6X4S0vkJkRcrz01EIBvZMxr57Zl
+         srRkBKI4gD1LySDPQnA8AFHo8eQclUdgOBu5zQe0t6UHyPNBGHga2x38AT3tJopFblRM
+         /wolOhfa4YMk3v7GqzGSVnmS01EF8XvsSnMK4eMdDmRPLskyVcvqMA2jHa5XPkMH7CaF
+         wrnnPYbeFBNeFTymBA7lA6EtgvuuWWPGNhHBn4V9roF47dPo0wrijxcmSVNKIse63GnY
+         Eupw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691610069; x=1692214869;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5ldcQW9LZSQnCOkarDxdnYKtVsXTHlqQEYP12HWE3Go=;
-        b=XwMEjALj5DccDPO6SFiEJNNfEG1TR8xSNh8vX649JeTZ0VeckZpovDekcXzAyQlz0G
-         Lxac2fvLgWK+nluVF0zJsDuwt8Pus1sJN75RmBYN8sVygNlhnxSOY/0DxkmRs0izF+RD
-         erNdfsMGLZL/w2ZEN46plh9/QesuYsRmnlXn+Jedkv08TdHvIiyHolzluDRKe4/Vpwvz
-         5/Qs+g+moGDJiWa2dqGa/U2ATxMM+4H/OUNtnWTsLVfI+lUGI2OxVZ+AXxkL1jUYFMmi
-         3/KNeO12riQn8SADX1TDiCUQgE89LRZF05yOLcvKZzaZGPmeC+kT1H6Bktzy1r6vE57Y
-         WKHQ==
-X-Gm-Message-State: AOJu0YzvAoUtb5l7KxpE7mcRwTlVBJpbM7iDX0TqIBRJab8pPoRpPuno
-	Kf85xM3o5ZBN4eDI0NcGDvF9bUQvWRSnQdfcXXZ+kEsCj6S6W6L9mb/Ne/NKC7oEgmnCcW5H2Cz
-	wrouXuTPow16eytwOaAYMYnQ=
-X-Received: by 2002:a2e:84d6:0:b0:2b9:a6a1:f20 with SMTP id q22-20020a2e84d6000000b002b9a6a10f20mr116790ljh.42.1691610068978;
-        Wed, 09 Aug 2023 12:41:08 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHKhGcVNXI/xOj0RQWT12121DSgH3gup/E/JQgK5hG1TahqXQggy6jTPzFlInE6TkM8pUzBhQ==
-X-Received: by 2002:a2e:84d6:0:b0:2b9:a6a1:f20 with SMTP id q22-20020a2e84d6000000b002b9a6a10f20mr116778ljh.42.1691610068686;
-        Wed, 09 Aug 2023 12:41:08 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id j26-20020a170906475a00b009930c80b87csm8507289ejs.142.2023.08.09.12.41.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Aug 2023 12:41:08 -0700 (PDT)
-Message-ID: <e0dd9065-6dd8-af33-29a0-ae21f82063a2@redhat.com>
-Date: Wed, 9 Aug 2023 21:41:07 +0200
+        d=1e100.net; s=20221208; t=1691615266; x=1692220066;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :references:in-reply-to:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=VQhPymUQatLez9OhAXnkjteLBnvrlDrlwzKYnLXCkIU=;
+        b=hjvBE1ey6MghmW106sCsolNECpOOi3hLNDWM8ZQfTeukWA7cV2ezc0QDpVEE1R+vBU
+         6tNzxZXdlHxjQOIzQswRPkImGOtVGSASgPRC/W4esxQfCocvq2yqEKtzzA5Kxf6Ea7zr
+         fDXsgHEROuSlGpHFANimNoOYDGf1qCfhgX9yvbJUs6QGhObJVzy7KrIYO1WhmlyHXAFR
+         Q/fxqUvBmJK1wOPJPOWUua92zRmDcr0ksnCgyn5nboyntV7/2oVBbsVZrke2pLirzjue
+         ibWHEdHgfdwZrgdllHY49YGGKzg9SvQ68/wI4fV3YMjTNLs4mAQeK4veO1aQpQRsWxga
+         a/nQ==
+X-Gm-Message-State: AOJu0YzXkSGz5LcE+XbcaM03j9cDRHuwNtQ/fd1uhVAWV2TqNNUPVA7/
+	ngDNXwRapipXOndTuXzsG4tZdtsquX3xPgmJ92A=
+X-Google-Smtp-Source: AGHT+IEfcjCJMWcdPFDkWHU7lh8NId2uR9ZSbF4zjNWL5iX3wKgvPA5uGM4+ivUnywUPI0zMEhF9Oh8mRWxuJA61RBA=
+X-Received: by 2002:a05:6870:88a9:b0:1b4:7411:5c0c with SMTP id
+ m41-20020a05687088a900b001b474115c0cmr443843oam.13.1691615265775; Wed, 09 Aug
+ 2023 14:07:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH v3 3/3] ACPI: resource: Honor MADT INT_SRC_OVR settings
- for IRQ1 on AMD Zen
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: August Wikerfors <git@augustwikerfors.se>,
- Mario Limonciello <mario.limonciello@amd.com>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- stable@vger.kernel.org, linux-acpi@vger.kernel.org, x86@kernel.org
-References: <20230809085526.84913-1-hdegoede@redhat.com>
- <20230809085526.84913-4-hdegoede@redhat.com>
- <6a6fa2ba-c07d-45b2-96c5-b0f44f5f288b@augustwikerfors.se>
- <c3684f00-27bd-d4dd-93dd-18936c006de9@redhat.com>
- <CAJZ5v0gx_vu_Pip3rkUo_78mNnUbp++hpRfpa-iDaZP9r6_4sw@mail.gmail.com>
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <CAJZ5v0gx_vu_Pip3rkUo_78mNnUbp++hpRfpa-iDaZP9r6_4sw@mail.gmail.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US, nl
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Received: by 2002:a8a:129a:0:b0:4f0:1250:dd51 with HTTP; Wed, 9 Aug 2023
+ 14:07:45 -0700 (PDT)
+In-Reply-To: <CAJuCfpE6K6x7EKAr2rtW1Gn+1oht6w2qZSZ2bGATfoe8C8fJhA@mail.gmail.com>
+References: <20230708191212.4147700-1-surenb@google.com> <20230708191212.4147700-3-surenb@google.com>
+ <20230804214620.btgwhsszsd7rh6nf@f> <CAHk-=wiy125k1dBmQFTGpHwiOqEyrD6xnd4xKWfe97H_HodgDA@mail.gmail.com>
+ <CAGudoHFsAU_BDCOuz8UgDBLGEM8xg=aUGjaVoqkM_Zvxo2Re_g@mail.gmail.com>
+ <CAHk-=wiG9xaVvBJXHqTxtop0=mW9KxPS9C54ED23p59VNEKdWg@mail.gmail.com>
+ <CAGudoHFsxmiezZREyVkrPYBBij3u9SNaxLWipOOPy5S+5pJcZA@mail.gmail.com> <CAJuCfpE6K6x7EKAr2rtW1Gn+1oht6w2qZSZ2bGATfoe8C8fJhA@mail.gmail.com>
+From: Mateusz Guzik <mjguzik@gmail.com>
+Date: Wed, 9 Aug 2023 23:07:45 +0200
+Message-ID: <CAGudoHEU62Rpp+uJakCFgKC36y3th=Qx+jE+b7KJh6_jeH7cNg@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] fork: lock VMAs of the parent process when forking
+To: Suren Baghdasaryan <surenb@google.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, akpm@linux-foundation.org, 
+	regressions@leemhuis.info, bagasdotme@gmail.com, jacobly.alt@gmail.com, 
+	willy@infradead.org, liam.howlett@oracle.com, david@redhat.com, 
+	peterx@redhat.com, ldufour@linux.ibm.com, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org, 
+	linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org, 
+	regressions@lists.linux.dev, Jiri Slaby <jirislaby@kernel.org>, 
+	=?UTF-8?Q?Holger_Hoffst=C3=A4tte?= <holger@applied-asynchrony.com>, 
+	stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
-
-On 8/9/23 21:25, Rafael J. Wysocki wrote:
-> On Wed, Aug 9, 2023 at 9:20 PM Hans de Goede <hdegoede@redhat.com> wrote:
+On 8/5/23, Suren Baghdasaryan <surenb@google.com> wrote:
+> On Fri, Aug 4, 2023 at 6:06=E2=80=AFPM Mateusz Guzik <mjguzik@gmail.com> =
+wrote:
 >>
->> Hi,
+>> On 8/5/23, Linus Torvalds <torvalds@linux-foundation.org> wrote:
+>> > On Fri, 4 Aug 2023 at 16:25, Mateusz Guzik <mjguzik@gmail.com> wrote:
+>> >>
+>> >> I know of these guys, I think they are excluded as is -- they go
+>> >> through access_remote_vm, starting with:
+>> >>         if (mmap_read_lock_killable(mm))
+>> >>                 return 0;
+>> >>
+>> >> while dup_mmap already write locks the parent's mm.
+>> >
+>> > Oh, you're only worried about vma_start_write()?
+>> >
+>> > That's a non-issue. It doesn't take the lock normally, since it starts
+>> > off
+>> > with
+>> >
+>> >         if (__is_vma_write_locked(vma, &mm_lock_seq))
+>> >                 return;
+>> >
+>> > which catches on the lock sequence number already being set.
+>> >
+>> > So no extra locking there.
+>> >
+>> > Well, technically there's extra locking because the code stupidly
+>> > doesn't initialize new vma allocations to the right sequence number,
+>> > but that was talked about here:
+>> >
+>> >
+>> > https://lore.kernel.org/all/CAHk-=3DwiCrWAoEesBuoGoqqufvesicbGp3cX0LyK=
+gEvsFaZNpDA@mail.gmail.com/
+>> >
+>> > and it's a separate issue.
+>> >
 >>
->> On 8/9/23 17:58, August Wikerfors wrote:
->>> On 2023-08-09 10:55, Hans de Goede wrote:
->>>> On AMD Zen acpi_dev_irq_override() by default prefers the DSDT IRQ 1
->>>> settings over the MADT settings.
->>>>
->>>> This causes the keyboard to malfunction on some laptop models
->>>> (see Links), all models from the Links have an INT_SRC_OVR MADT entry
->>>> for IRQ 1.
->>>>
->>>> Fixes: a9c4a912b7dc ("ACPI: resource: Remove "Zen" specific match and quirks")
->>>> Link: https://bugzilla.kernel.org/show_bug.cgi?id=217336
->>>> Link: https://bugzilla.kernel.org/show_bug.cgi?id=217394
->>>> Link: https://bugzilla.kernel.org/show_bug.cgi?id=217406
->>>> Cc: Mario Limonciello <mario.limonciello@amd.com>
->>>> Cc: Linux regressions mailing list <regressions@lists.linux.dev>
->>>> Cc: stable@vger.kernel.org
->>>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->>>
->>> One of the laptops fixed by a9c4a912b7dc, PCSpecialist Elimina Pro 16 M [1], seems to have no INT_SRC_OVR entry for IRQ 1 [2]:
->>>
->>>> [    0.084265] ACPI: INT_SRC_OVR (bus 0 bus_irq 0 global_irq 2 dfl dfl)
->>>> [    0.084266] ACPI: INT_SRC_OVR (bus 0 bus_irq 9 global_irq 9 low level)
->>>
->>> I'm not sure if it was IRQ 1 that needed to be overridden for that model though, so it may work anyway with patch 2 of this series.
->>>
->>> [1] https://bugzilla.kernel.org/show_bug.cgi?id=217394#c18
->>> [2] https://bugzilla.kernel.org/attachment.cgi?id=304338
+>> I'm going to bet one beer this is the issue.
 >>
->> Good catch, thanks. So it looks like this one needs a DMI quirk (until we have a better generic solution.
+>> The patch I'm responding to only consists of adding the call to
+>> vma_start_write and claims the 5% slowdown from it, while fixing
+>> crashes if the forking process is multithreaded.
 >>
->> I'll reach out to the reporter and ask for dmidecode output and prepare a follow-up patch. Still I think
->> that we should move forward with this series to fix the 6 bugs which are linked to from PAtch 1's
->> commitmsg and those are likely just the top of the iceberg.
-> 
-> You are probably right, but it would be good to get a fix for this
-> ASAP, as I would prefer it to go in along with the series, if
-> possible.
+>> For the fix to work it has to lock something against the parent.
+>>
+>>         VMA_ITERATOR(old_vmi, oldmm, 0);
+>> [..]
+>>         for_each_vma(old_vmi, mpnt) {
+>> [..]
+>>                 vma_start_write(mpnt);
+>>
+>> the added line locks an obj in the parent's vm space.
+>>
+>> The problem you linked looks like pessimization for freshly allocated
+>> vmas, but that's what is being operated on here.
+>
+> Sorry, now I'm having trouble understanding the problem you are
+> describing. We are locking the parent's vma before copying it and the
+> newly created vma is locked before it's added into the vma tree. What
+> is the problem then?
+>
 
-Agreed I've asked in the bugzilla for dmidecode output for the laptop model in question (I checked  https://linux-hardware.org/ and it does not have this model).
+Sorry for the late reply!
 
-As soon as I've dmidecode info I'll prepare the follow-up patch as well as a Fedora kernel with the entire series + qurik patch for the reporter to test.
+Looks there has been a bunch of weird talking past one another in this
+thread and I don't think trying to straighten it all out is worth any
+time.
 
-Regards,
+I think at least the two of us agree that if a single-threaded process
+enters dup_mmap an
+down_writes the mmap semaphore, then no new thread can pop up in said
+process, thus no surprise page faults from that angle. 3rd parties are
+supposed to interfaces like access_remote_vm, which down_read said
+semaphore and are consequently also not a problem. The only worry here
+is that someone is messing with another process memory without the
+semaphore, but is very unlikely and patchable in the worst case -- but
+someone(tm) has to audit. With all these conditions satisfied one can
+elide vma_start_write for a perf win.
 
-Hans
+Finally, I think we agreed you are going to do the audit ;)
 
-
+Cheers,
+--=20
+Mateusz Guzik <mjguzik gmail.com>
