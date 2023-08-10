@@ -1,153 +1,116 @@
-Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
+Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 090EB1C9E7
-	for <regressions@lists.linux.dev>; Wed,  9 Aug 2023 21:07:46 +0000 (UTC)
-Received: by mail-ot1-f49.google.com with SMTP id 46e09a7af769-6bd0c953fd9so212406a34.3
-        for <regressions@lists.linux.dev>; Wed, 09 Aug 2023 14:07:46 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03F527E4
+	for <regressions@lists.linux.dev>; Thu, 10 Aug 2023 03:03:45 +0000 (UTC)
+Received: by mail-oi1-f171.google.com with SMTP id 5614622812f47-3a78a29bccbso409135b6e.0
+        for <regressions@lists.linux.dev>; Wed, 09 Aug 2023 20:03:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1691615266; x=1692220066;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :references:in-reply-to:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20221208; t=1691636625; x=1692241425;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=VQhPymUQatLez9OhAXnkjteLBnvrlDrlwzKYnLXCkIU=;
-        b=EUnhMb2XtpgZMeivppTYpKUPHU/1tJTVNBvx8vjB6hgiPMyGsMKylvyif+u5Dy9rTO
-         MbQnLpB9E25ZjsusJDPz5b2JQva54uSYWYx+1c4sA6X4S0vkJkRcrz01EIBvZMxr57Zl
-         srRkBKI4gD1LySDPQnA8AFHo8eQclUdgOBu5zQe0t6UHyPNBGHga2x38AT3tJopFblRM
-         /wolOhfa4YMk3v7GqzGSVnmS01EF8XvsSnMK4eMdDmRPLskyVcvqMA2jHa5XPkMH7CaF
-         wrnnPYbeFBNeFTymBA7lA6EtgvuuWWPGNhHBn4V9roF47dPo0wrijxcmSVNKIse63GnY
-         Eupw==
+        bh=/mqIn1UxvvxNgWiVAxgUjE9nunV+x1Ajw+4mnlJTJ2U=;
+        b=WNBWdcyt8GmLswbKFdavF/RRxcjB8H9Ndg+oRoiWchhneNSVpQlS6RHec6/ympBFJe
+         FWHW/UlLcXifYRrvNjNLHfVzzwu/pmZdgy89xgYTSW5C3iVOo/6QlDttftUVk2JoUV5N
+         nT/09vw131HU5ZSuk9pkzXPdvzolaTsL/PrOV9UUQ5Q1neoAJHPUhKltz4DJFTB5vqvF
+         hThWEzmOOfsKG1YAK/+IKK9GGuQGbmcP6h8TlzxN/O4D6TzVb9pi6NPX6hKCk+DUpHL4
+         0k47pSB9gCoHwD9YjICcJQOegmti6N3yiXYAXJR8aXWFwyxVJAueDwrEZBt8xmaoJrUJ
+         kKkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691615266; x=1692220066;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :references:in-reply-to:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VQhPymUQatLez9OhAXnkjteLBnvrlDrlwzKYnLXCkIU=;
-        b=hjvBE1ey6MghmW106sCsolNECpOOi3hLNDWM8ZQfTeukWA7cV2ezc0QDpVEE1R+vBU
-         6tNzxZXdlHxjQOIzQswRPkImGOtVGSASgPRC/W4esxQfCocvq2yqEKtzzA5Kxf6Ea7zr
-         fDXsgHEROuSlGpHFANimNoOYDGf1qCfhgX9yvbJUs6QGhObJVzy7KrIYO1WhmlyHXAFR
-         Q/fxqUvBmJK1wOPJPOWUua92zRmDcr0ksnCgyn5nboyntV7/2oVBbsVZrke2pLirzjue
-         ibWHEdHgfdwZrgdllHY49YGGKzg9SvQ68/wI4fV3YMjTNLs4mAQeK4veO1aQpQRsWxga
-         a/nQ==
-X-Gm-Message-State: AOJu0YzXkSGz5LcE+XbcaM03j9cDRHuwNtQ/fd1uhVAWV2TqNNUPVA7/
-	ngDNXwRapipXOndTuXzsG4tZdtsquX3xPgmJ92A=
-X-Google-Smtp-Source: AGHT+IEfcjCJMWcdPFDkWHU7lh8NId2uR9ZSbF4zjNWL5iX3wKgvPA5uGM4+ivUnywUPI0zMEhF9Oh8mRWxuJA61RBA=
-X-Received: by 2002:a05:6870:88a9:b0:1b4:7411:5c0c with SMTP id
- m41-20020a05687088a900b001b474115c0cmr443843oam.13.1691615265775; Wed, 09 Aug
- 2023 14:07:45 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1691636625; x=1692241425;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=/mqIn1UxvvxNgWiVAxgUjE9nunV+x1Ajw+4mnlJTJ2U=;
+        b=bQyJ/3gqnCNGs6yq+4U3cu9mI2oFiwEE2u+MdgR73ti5HxTunoq4c9CTIW7spTQPjh
+         hH46JDTPKIfZY6rNBSDmgQhiTKMq7k9cEFEcKt09/AkmW1KKS+qukqa8QVWWugEnFP9U
+         sJkUBLMx1J5rTiOtStuJVjcsOeJRNBoq0Eh/ASUtZ+LRyFmK0xAFMU/K2/jvHxi3C+fI
+         Jij1+UlwECpN1sLZIHRKA2QvO2U+AuWIZNfTQO7T0Loh6pF0zFz7/ibKVPBPQgIko8G9
+         TEQgiAHceL9jr6PI/s8et4v7MlTy3auDi+IYYZEpLeobWAqkVN421CFSVGZLFN/y+tbU
+         jlvw==
+X-Gm-Message-State: AOJu0Yw6eYdzAohu0equXZnlei+05uhf098OPDDj+kHw7IQGBvHc5KVc
+	3oJWnlYJo9unk2oyboSVJWI=
+X-Google-Smtp-Source: AGHT+IF5FU/JqU6UdZo+3G+ycZQ/zMVVJwtMWzxJGHt8Fe4jF3F8mmZ5iIWq3IoZaC0yDjckn2dghg==
+X-Received: by 2002:a05:6808:14c8:b0:3a7:8a1:9cdd with SMTP id f8-20020a05680814c800b003a708a19cddmr1414926oiw.28.1691636624853;
+        Wed, 09 Aug 2023 20:03:44 -0700 (PDT)
+Received: from [192.168.0.105] ([103.131.18.64])
+        by smtp.gmail.com with ESMTPSA id i8-20020a17090a2ac800b0026307fa0442sm2334344pjg.49.2023.08.09.20.03.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 09 Aug 2023 20:03:44 -0700 (PDT)
+Message-ID: <4b0c06ba-b05c-071c-d494-67775bd7250f@gmail.com>
+Date: Thu, 10 Aug 2023 10:03:38 +0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Received: by 2002:a8a:129a:0:b0:4f0:1250:dd51 with HTTP; Wed, 9 Aug 2023
- 14:07:45 -0700 (PDT)
-In-Reply-To: <CAJuCfpE6K6x7EKAr2rtW1Gn+1oht6w2qZSZ2bGATfoe8C8fJhA@mail.gmail.com>
-References: <20230708191212.4147700-1-surenb@google.com> <20230708191212.4147700-3-surenb@google.com>
- <20230804214620.btgwhsszsd7rh6nf@f> <CAHk-=wiy125k1dBmQFTGpHwiOqEyrD6xnd4xKWfe97H_HodgDA@mail.gmail.com>
- <CAGudoHFsAU_BDCOuz8UgDBLGEM8xg=aUGjaVoqkM_Zvxo2Re_g@mail.gmail.com>
- <CAHk-=wiG9xaVvBJXHqTxtop0=mW9KxPS9C54ED23p59VNEKdWg@mail.gmail.com>
- <CAGudoHFsxmiezZREyVkrPYBBij3u9SNaxLWipOOPy5S+5pJcZA@mail.gmail.com> <CAJuCfpE6K6x7EKAr2rtW1Gn+1oht6w2qZSZ2bGATfoe8C8fJhA@mail.gmail.com>
-From: Mateusz Guzik <mjguzik@gmail.com>
-Date: Wed, 9 Aug 2023 23:07:45 +0200
-Message-ID: <CAGudoHEU62Rpp+uJakCFgKC36y3th=Qx+jE+b7KJh6_jeH7cNg@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] fork: lock VMAs of the parent process when forking
-To: Suren Baghdasaryan <surenb@google.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, akpm@linux-foundation.org, 
-	regressions@leemhuis.info, bagasdotme@gmail.com, jacobly.alt@gmail.com, 
-	willy@infradead.org, liam.howlett@oracle.com, david@redhat.com, 
-	peterx@redhat.com, ldufour@linux.ibm.com, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org, 
-	linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org, 
-	regressions@lists.linux.dev, Jiri Slaby <jirislaby@kernel.org>, 
-	=?UTF-8?Q?Holger_Hoffst=C3=A4tte?= <holger@applied-asynchrony.com>, 
-	stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.14.0
+Content-Language: en-US
+To: Ben Skeggs <bskeggs@redhat.com>, Karol Herbst <kherbst@redhat.com>,
+ Lyude Paul <lyude@redhat.com>, Peter Bottomley <peebee@gmx.com>,
+ peter@peebee.org.uk
+Cc: Linux DRI Development <dri-devel@lists.freedesktop.org>,
+ Linux Nouveau <nouveau@lists.freedesktop.org>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Linux Stable <stable@vger.kernel.org>
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+Subject: Fwd: System (Xeon Nvidia) hangs at boot terminal after kernel 6.4.7
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 8/5/23, Suren Baghdasaryan <surenb@google.com> wrote:
-> On Fri, Aug 4, 2023 at 6:06=E2=80=AFPM Mateusz Guzik <mjguzik@gmail.com> =
-wrote:
->>
->> On 8/5/23, Linus Torvalds <torvalds@linux-foundation.org> wrote:
->> > On Fri, 4 Aug 2023 at 16:25, Mateusz Guzik <mjguzik@gmail.com> wrote:
->> >>
->> >> I know of these guys, I think they are excluded as is -- they go
->> >> through access_remote_vm, starting with:
->> >>         if (mmap_read_lock_killable(mm))
->> >>                 return 0;
->> >>
->> >> while dup_mmap already write locks the parent's mm.
->> >
->> > Oh, you're only worried about vma_start_write()?
->> >
->> > That's a non-issue. It doesn't take the lock normally, since it starts
->> > off
->> > with
->> >
->> >         if (__is_vma_write_locked(vma, &mm_lock_seq))
->> >                 return;
->> >
->> > which catches on the lock sequence number already being set.
->> >
->> > So no extra locking there.
->> >
->> > Well, technically there's extra locking because the code stupidly
->> > doesn't initialize new vma allocations to the right sequence number,
->> > but that was talked about here:
->> >
->> >
->> > https://lore.kernel.org/all/CAHk-=3DwiCrWAoEesBuoGoqqufvesicbGp3cX0LyK=
-gEvsFaZNpDA@mail.gmail.com/
->> >
->> > and it's a separate issue.
->> >
->>
->> I'm going to bet one beer this is the issue.
->>
->> The patch I'm responding to only consists of adding the call to
->> vma_start_write and claims the 5% slowdown from it, while fixing
->> crashes if the forking process is multithreaded.
->>
->> For the fix to work it has to lock something against the parent.
->>
->>         VMA_ITERATOR(old_vmi, oldmm, 0);
->> [..]
->>         for_each_vma(old_vmi, mpnt) {
->> [..]
->>                 vma_start_write(mpnt);
->>
->> the added line locks an obj in the parent's vm space.
->>
->> The problem you linked looks like pessimization for freshly allocated
->> vmas, but that's what is being operated on here.
->
-> Sorry, now I'm having trouble understanding the problem you are
-> describing. We are locking the parent's vma before copying it and the
-> newly created vma is locked before it's added into the vma tree. What
-> is the problem then?
->
+Hi,
 
-Sorry for the late reply!
+I notice a regression report on Bugzilla [1]. Quoting from it:
 
-Looks there has been a bunch of weird talking past one another in this
-thread and I don't think trying to straighten it all out is worth any
-time.
+> Kernel 6.4.6 compiled from source worked AOK on my desktop with Intel Xeon cpu and Nvidia graphics - see below for system specs.
+> 
+> Kernels 6.4.7 & 6.4.8 also compiled from source with identical configs hang with a frozen boot terminal screen after a significant way through the boot sequence (e.g. whilst running /etc/profile). The system may still be running as a sound is emitted when the power button is pressed (only way to escape from the system hang).
+> 
+> The issue seems to be specific to the hardware of this desktop as the problem kernels do boot through to completion on other machines.
+> 
+> A test was done with a different build (from Porteus) of kernel 6.5-RC4 and that did not hang - but kernel 6.4.7 from the same builder hung just like my build.
+> 
+> I apologise that I cannot provide any detailed diagnostics - but I can put diagnostics into /etc/profile and provide screenshots if requested.
+> 
+> Forum thread with more details and screenshots:
+> https://forum.puppylinux.com/viewtopic.php?p=95733#p95733
+> 
+> Computer Profile:
+>  Machine                    Dell Inc. Precision WorkStation T5400   (version: Not Specified)
+>  Mainboard                  Dell Inc. 0RW203 (version: NA)
+>  • BIOS                     Dell Inc. A11 | Date: 04/30/2012 | Type: Legacy
+>  • CPU                      Intel(R) Xeon(R) CPU E5450 @ 3.00GHz (4 cores)
+>  • RAM                      Total: 7955 MB | Used: 1555 MB (19.5%) | Actual Used: 775 MB (9.7%)
+>  Graphics                   Resolution: 1366x768 pixels | Display Server: X.Org 21.1.8
+>  • device-0                 NVIDIA Corporation GT218 [NVS 300] [10de:10d8] (rev a2)
+>  Audio                      ALSA
+>  • device-0                 Intel Corporation 631xESB/632xESB High Definition Audio Controller [8086:269a] (rev 09)
+>  • device-1                 NVIDIA Corporation High Definition Audio Controller [10de:0be3] (rev a1)
+>  Network                    wlan1
+>  • device-0                 Ethernet: Broadcom Inc. and subsidiaries NetXtreme BCM5754 Gigabit Ethernet PCI Express [14e4:167a] (rev 02)
 
-I think at least the two of us agree that if a single-threaded process
-enters dup_mmap an
-down_writes the mmap semaphore, then no new thread can pop up in said
-process, thus no surprise page faults from that angle. 3rd parties are
-supposed to interfaces like access_remote_vm, which down_read said
-semaphore and are consequently also not a problem. The only worry here
-is that someone is messing with another process memory without the
-semaphore, but is very unlikely and patchable in the worst case -- but
-someone(tm) has to audit. With all these conditions satisfied one can
-elide vma_start_write for a perf win.
+See Bugzilla for the full thread.
 
-Finally, I think we agreed you are going to do the audit ;)
+FYI, this is stable-specific regression since it doesn't appear on mainline.
+Also, I have asked the reporter to also open the issue on gitlab.freedesktop.org
+tracker (as it is the standard for DRM subsystem).
 
-Cheers,
---=20
-Mateusz Guzik <mjguzik gmail.com>
+To the reporter (on To: list): It'd been great if you also have netconsole
+output on your Bugzilla report, providing that you have another machine
+connecting to your problematic one.
+
+Anyway, I'm adding this regression to be tracked by regzbot:
+
+#regzbot introduced: v6.4.6..v6.4.7 https://bugzilla.kernel.org/show_bug.cgi?id=217776
+#regzbot link: https://forum.puppylinux.com/viewtopic.php?p=95733#p95733
+
+Thanks.
+
+[1]: https://bugzilla.kernel.org/show_bug.cgi?id=217776
+
+-- 
+An old man doll... just what I always wanted! - Clara
