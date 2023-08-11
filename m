@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 575735256
-	for <regressions@lists.linux.dev>; Fri, 11 Aug 2023 08:18:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58CCE1869
+	for <regressions@lists.linux.dev>; Fri, 11 Aug 2023 08:47:55 +0000 (UTC)
 Received: from 46.183.103.8.relaix.net ([46.183.103.8] helo=[172.18.99.178]); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qUNLo-0002DU-3L; Fri, 11 Aug 2023 10:18:28 +0200
-Message-ID: <a588d1d3-12e0-b078-b6cc-b0a63c54ab37@leemhuis.info>
-Date: Fri, 11 Aug 2023 10:18:25 +0200
+	id 1qUNoD-0000Xs-E4; Fri, 11 Aug 2023 10:47:49 +0200
+Message-ID: <f9e34f8a-5a7b-8223-c672-4fcb2bb23c0a@leemhuis.info>
+Date: Fri, 11 Aug 2023 10:47:41 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -15,62 +15,59 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] tpm/tpm_tis: Disable interrupts for Framework
- Laptop Intel 12th gen
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Re: RE: [EXT] Re: [PATCH] crypto: caam - adjust RNG timing to support
+ more devices
 Content-Language: en-US, de-DE
-To: Jarkko Sakkinen <jarkko@kernel.org>,
- Lino Sanfilippo <LinoSanfilippo@gmx.de>
-Cc: Linux kernel regressions list <regressions@lists.linux.dev>,
- Peter Huewe <peterhuewe@gmx.de>, Christian Hesse <mail@eworm.de>,
- stable@vger.kernel.org, roubro1991@gmail.com,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- Grundik <ggrundik@gmail.com>, Christian Hesse <list@eworm.de>,
- linux-integrity@vger.kernel.org
-References: <20230710133836.4367-1-mail@eworm.de>
- <20230710142916.18162-1-mail@eworm.de>
- <20230710231315.4ef54679@leda.eworm.net>
- <bd0587e16d55ef38277ab1f6169909ae7cde3542.camel@kernel.org>
- <bb5580e93d244400c3330d7091bf64868aa2053f.camel@gmail.com>
- <0f272843a33a1706dbcbb2d84b02e3951ee60cbb.camel@kernel.org>
- <fdd5fd9ece045ebd1888672a75f157e64ade98fb.camel@gmail.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <fdd5fd9ece045ebd1888672a75f157e64ade98fb.camel@gmail.com>
+To: Gaurav Jain <gaurav.jain@nxp.com>,
+ Herbert Xu <herbert@gondor.apana.org.au>,
+ Meenakshi Aggarwal <meenakshi.aggarwal@nxp.com>
+Cc: Bastian Krause <bst@pengutronix.de>,
+ "davem@davemloft.net" <davem@davemloft.net>,
+ "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ Dan Douglass <dan.douglass@nxp.com>,
+ "kernel@pengutronix.de" <kernel@pengutronix.de>,
+ Horia Geanta <horia.geanta@nxp.com>, Varun Sethi <V.Sethi@nxp.com>,
+ Pankaj Gupta <pankaj.gupta@nxp.com>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <20230612082615.1255357-1-meenakshi.aggarwal@nxp.com>
+ <e1f3f073-9d5e-1bae-f4f8-08dc48adad62@pengutronix.de>
+ <f673a09e-e212-ee7b-15c3-78afe8c70916@pengutronix.de>
+ <DU0PR04MB9563E31E69F93B63EE83DD378E39A@DU0PR04MB9563.eurprd04.prod.outlook.com>
+ <DU0PR04MB95637D86F0134DC26EF955DB8E02A@DU0PR04MB9563.eurprd04.prod.outlook.com>
+ <ZMzBWXpvdW5YB8bt@gondor.apana.org.au>
+ <AM0PR04MB60046B045B5965A61BA1CA91E709A@AM0PR04MB6004.eurprd04.prod.outlook.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+In-Reply-To: <AM0PR04MB60046B045B5965A61BA1CA91E709A@AM0PR04MB6004.eurprd04.prod.outlook.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1691741910;edc95982;
-X-HE-SMSGID: 1qUNLo-0002DU-3L
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1691743675;3d6e857f;
+X-HE-SMSGID: 1qUNoD-0000Xs-E4
 
-On 06.08.23 18:30, Grundik wrote:
-> On Wed, 2023-07-12 at 00:50 +0300, Jarkko Sakkinen wrote:
->>> I want to say: this issue is NOT limited to Framework laptops.
->>>
->>> For example this MSI gen12 i5-1240P laptop also suffers from same
->>> problem:
->>>         Manufacturer: Micro-Star International Co., Ltd.
->>>         Product Name: Summit E13FlipEvo A12MT
-> [...]
+[CCing the regression list, as it should be in the loop for regressions:
+https://docs.kernel.org/admin-guide/reporting-regressions.html]
+
+On 04.08.23 14:02, Gaurav Jain wrote:
+> From: Herbert Xu <herbert@gondor.apana.org.au>
+>> On Mon, Jul 24, 2023 at 05:13:23AM +0000, Meenakshi Aggarwal wrote:
+>>> Please share the required information.
+>> Any progress on this?
 >>
->> It will be supplemented with
->> https://lore.kernel.org/linux-integrity/CTYXI8TL7C36.2SCWH82FAZWBO@suppilovahvero/T/#me895f1920ca6983f791b58a6fa0c157161a33849
->>
->> Together they should fairly sustainable framework.
+>> Should we revert the offending patch?
 > 
-> Unfortunately, they dont. Problem still occurs in debian 6.5-rc4
-> kernel, with forementioned laptop. According to sources, these patches
-> are applied in that kernel version.
+> Debugging is in progress. There should be some mismatch in TRNG configuration in customer board.
+> Will be sharing a patch to dump the same.
 
-Jarkko & Lino, did you see this msg Grundik posted that about a week
-ago? It looks like there is still something wrong there that need
-attention. Or am I missing something?
+Any progress on this? Afaics would be good to have either the fix or the
+revert in by -rc7 to ensure things get at least one week of proper
+testing before the final release.
 
-FWIW, two more users reported that they still see similar problems with
-recent 6.4.y kernels that contain the "tpm,tpm_tis: Disable interrupts
-after 1000 unhandled IRQs" patch. Both also with MSI laptops:
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
 
-https://bugzilla.kernel.org/show_bug.cgi?id=217631#c18
-https://bugzilla.kernel.org/show_bug.cgi?id=217631#c20
-
-No reply either afaics.
-
-Ciao, Thorsten
+#regzbot poke
