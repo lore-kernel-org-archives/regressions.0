@@ -1,108 +1,85 @@
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 126C28468
-	for <regressions@lists.linux.dev>; Fri, 11 Aug 2023 19:00:12 +0000 (UTC)
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2b9dc1bff38so34538841fa.1
-        for <regressions@lists.linux.dev>; Fri, 11 Aug 2023 12:00:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1691780411; x=1692385211;
-        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
-         :user-agent:references:from:to:cc:subject:date:message-id:reply-to;
-        bh=2tX4f5CxXwqQixuwBvoHfWLxIWpN0kImRL3p6vNuUzM=;
-        b=j8vSASKGirWUNk7iguwpnl+3vF0oqWasXtQrqVt7wt2BgyqwPkXWDwha9gLLISBUKV
-         iGKi6QH63mKvDBPYK9oYrIHZNzFjdXUGKEbNc0PX6OCa28t1kouW1WUl+wxSDG2O5W6B
-         snxBGmnneshbH6UEnINoRg0LEvGLK+19Ar9/pGo93D15GGpvCa/DNaT/Y6esnTX7izXV
-         d2PwV3nEnHbB9plozz05AiLJ6TAzZJM0nNytcxCVS77RDKFjVy4a8wMk8Rv2VLamrXWO
-         b9IfArlNA6LSxpXONDCSukiteldSR7UB00rvPbvj35Imt65y9XfKOGuyj3R6ZYMTXjyl
-         yZGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691780411; x=1692385211;
-        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
-         :user-agent:references:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2tX4f5CxXwqQixuwBvoHfWLxIWpN0kImRL3p6vNuUzM=;
-        b=bEhS8wFyB/Um4wgd8FyKvMl6h5W8kBv3djMY3M9l4VLml8JIzscbV3RrLmF2soIMOX
-         zvPy9QSN+Lmfa2SCzqNJK4UoRxLQ6E32pyVKOd1SbV0279K//4n9L1nF7bBEIJSWh9j6
-         UFj1DimfKKSxgNmygq4H/d8oGuf0pDKOs6p6OHMBMh97oy8yOJD1RLO9wkAQUwQ/h9OT
-         oVfgc0AmexiABpasLshf4RkzjOXnp5KmG/eJUEQ8RJCWjhiDbiiGgqNQc0SJ5uD/1i8A
-         yX9aiVAGwKwh9lF564rdjfbfertS/bxNDdQzUUtDi3MVNWdrHHj+wmrUSv/CnOSQHdV1
-         B7IQ==
-X-Gm-Message-State: AOJu0YyTRwPQ6ZOIxIL9Xe995pq5eoedimM+LKWcf7R0j33+/LOr7gQ8
-	QF04nJO+TFj/nQqG03NKuTk=
-X-Google-Smtp-Source: AGHT+IE21JkPWy5VzYd+vFT13uAi07aShArndTFVzf+n/csoJ4n2q0W2aKxFaqnloQOGjW/oW/mniQ==
-X-Received: by 2002:a2e:3518:0:b0:2b6:e283:32cb with SMTP id z24-20020a2e3518000000b002b6e28332cbmr2320415ljz.23.1691780410463;
-        Fri, 11 Aug 2023 12:00:10 -0700 (PDT)
-Received: from razdolb (95-24-154-238.broadband.corbina.ru. [95.24.154.238])
-        by smtp.gmail.com with ESMTPSA id y18-20020a2e9792000000b002b6e13fcedcsm1002637lji.122.2023.08.11.12.00.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Aug 2023 12:00:09 -0700 (PDT)
-References: <87v8dmr6ty.fsf@gmail.com>
- <f32b4636-969c-3b9e-6802-5991f511739e@leemhuis.info>
-User-agent: mu4e 1.10.4; emacs 29.1
-From: Mikhail Rudenko <mike.rudenko@gmail.com>
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: Thomas Zimmermann <tzimmermann@suse.de>, Neil Armstrong
- <neil.armstrong@linaro.org>, Dmitry Baryshkov
- <dmitry.baryshkov@linaro.org>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
- linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
- dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org, Jani
- Nikula <jani.nikula@linux.intel.com>, Joonas Lahtinen
- <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>,
- Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>, David Airlie
- <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [REGRESSION] HDMI connector detection broken in 6.3 on Intel(R)
- Celeron(R) N3060 integrated graphics
-Date: Fri, 11 Aug 2023 21:10:05 +0300
-In-reply-to: <f32b4636-969c-3b9e-6802-5991f511739e@leemhuis.info>
-Message-ID: <87il9l2ymf.fsf@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A196B8468
+	for <regressions@lists.linux.dev>; Fri, 11 Aug 2023 19:28:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F650C433C7;
+	Fri, 11 Aug 2023 19:28:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1691782113;
+	bh=Qwn9nJJxT7GtLecLQ803wJtLDl1iwvMz887QXkdDfdg=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=sd44wt2K7mPeq4mn3lD58KgWAP+5hvdkTjRvak8PcOc5ivRx2Gq3LlHidWFR0YA3u
+	 2Ql+yquNQureKaE7fVWETtW/urr5YDljGTGiTz06oqbOgs93NfR58t8b+Y+UnJhSv8
+	 BEns2FIPTrpAckUoIusDCsxDaKW6niaoXyOJqOJo1TTuqsNmdiI58iUWVzgF7vdzFO
+	 GkZh/1OjlNBECJPS9f5GrO3dQdIgTfRhFDH3D2oY3QUvpptYrLNh3cGdbRaI5RLoiG
+	 Acrb3FLExtTn8TdgUoSGdIF1/QNKdrOFuUBBRZPoSqRkd9J/U6wl4gpyyfqTqR13Jx
+	 tb6XAX6ZSOebA==
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 11 Aug 2023 22:28:27 +0300
+Message-Id: <CUPYPEYOKJ61.1WFKD20WQXVAA@suppilovahvero>
+Cc: "Thorsten Leemhuis" <regressions@leemhuis.info>, "Lino Sanfilippo"
+ <LinoSanfilippo@gmx.de>, "Linux kernel regressions list"
+ <regressions@lists.linux.dev>, "Peter Huewe" <peterhuewe@gmx.de>,
+ "Christian Hesse" <mail@eworm.de>, <stable@vger.kernel.org>,
+ <roubro1991@gmail.com>, "Grundik" <ggrundik@gmail.com>, "Christian Hesse"
+ <list@eworm.de>, <linux-integrity@vger.kernel.org>
+Subject: Re: [PATCH v2 1/2] tpm/tpm_tis: Disable interrupts for Framework
+ Laptop Intel 12th gen
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+To: "Linus Torvalds" <torvalds@linux-foundation.org>
+X-Mailer: aerc 0.14.0
+References: <20230710133836.4367-1-mail@eworm.de>
+ <20230710142916.18162-1-mail@eworm.de>
+ <20230710231315.4ef54679@leda.eworm.net>
+ <bd0587e16d55ef38277ab1f6169909ae7cde3542.camel@kernel.org>
+ <bb5580e93d244400c3330d7091bf64868aa2053f.camel@gmail.com>
+ <0f272843a33a1706dbcbb2d84b02e3951ee60cbb.camel@kernel.org>
+ <fdd5fd9ece045ebd1888672a75f157e64ade98fb.camel@gmail.com>
+ <a588d1d3-12e0-b078-b6cc-b0a63c54ab37@leemhuis.info>
+ <CUPW0XP1RFXI.162GZ78E46TBJ@suppilovahvero>
+ <CAHk-=whRVp4h8uWOX1YO+Y99+44u4s=XxMK4v00B6F1mOfqPLg@mail.gmail.com>
+In-Reply-To: <CAHk-=whRVp4h8uWOX1YO+Y99+44u4s=XxMK4v00B6F1mOfqPLg@mail.gmail.com>
 
-
-Hi, Thorsten!
-
-On 2023-08-11 at 08:45 +02, Thorsten Leemhuis <regressions@leemhuis.info> wrote:
-
-> [CCing the i915 maintainers and the dri maintainers]
+On Fri Aug 11, 2023 at 9:55 PM EEST, Linus Torvalds wrote:
+> On Fri, 11 Aug 2023 at 10:22, Jarkko Sakkinen <jarkko@kernel.org> wrote:
+> >
+> > I was planning to send a PR to Linus with a quirk for MSI GS66 Stealth
+> > 11UG, and apparently this bug report would add two additional MSI
+> > entries. This is becoming quickly a maintenance hell.
 >
-> Hi, Thorsten here, the Linux kernel's regression tracker.
+> Honestly, what would be the immediate effects of just not enabling the
+> TPM irq by default at all, and making it an explicit opt-in?
 >
-> On 10.08.23 21:33, Mikhail Rudenko wrote:
->> The following is a copy an issue I posted to drm/i915 gitlab [1] two
->> months ago. I repost it to the mailing lists in hope that it will help
->> the right people pay attention to it.
+> When a common solution is to just disable the TPM in the BIOS
+> entirely, and the end result is a working system, I really get the
+> teeling that this is all pain for very very little gain.
 >
-> Thx for your report. Wonder why Dmitry (who authored a4e771729a51) or
-> Thomas (who committed it) it didn't look into this, but maybe the i915
-> devs didn't forward the report to them.
+> Would anybody even notice if we just disabled it by default and added
+> a "if you really want it, use 'tpm=3Dirq' kernel command line"?
 >
-> Let's see if these mails help. Just wondering: does reverting
-> a4e771729a51 from 6.5-rc5 or drm-tip help as well?
-
-I've redone my tests with 6.5-rc5, and here are the results:
-(1) 6.5-rc5 -> still affected
-(2) 6.5-rc5 + revert a4e771729a51 -> not affected
-(3) 6.5-rc5 + two patches [1][2] suggested on i915 gitlab by @ideak -> not affected (!)
-
-Should we somehow tell regzbot about (3)?
-
-> BTW, there was an earlier report about a problem with a4e771729a51 that
-> afaics was never addressed, but it might be unrelated.
+> Hmm?
 >
-> https://lore.kernel.org/all/20230328023129.3596968-1-zhouzongmin@kylinos.cn/
->
-> Ciao, Thorsten
+>              Linus
 
-[1] https://patchwork.freedesktop.org/patch/548590/?series=121050&rev=1
-[2] https://patchwork.freedesktop.org/patch/548591/?series=121050&rev=1
+It would be in line with what I proposed in [1] (option A), and also
+what Grundik said in this thread.
 
---
-Best regards,
-Mikhail Rudenko
+Right now IRQs should be only enabled by a command-line option, and what
+"allow list" would mean in practice should really be something that
+would be advertised e.g. Device Tree or ACPI, not really part of the
+solution implemented right now.
+
+I'll send a patch ASAP, which makes this feature opt-in.
+
+[1] https://lore.kernel.org/linux-integrity/CUPW0XP1RFXI.162GZ78E46TBJ@supp=
+ilovahvero/
+
+BR, Jarkko
