@@ -1,89 +1,62 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57029187A
-	for <regressions@lists.linux.dev>; Fri, 11 Aug 2023 07:15:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C85CC433C8;
-	Fri, 11 Aug 2023 07:15:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1691738153;
-	bh=XANmocGoF5MvmXVwlaZrC+0leVQYZlMfoH2RyQXKu94=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Z0nc9A7bcksg22MKCjzDkiOdsVEOWIi0JJY01kJ6UlCULXi6/3sk1ok2afyewUied
-	 RJuuh+vJzVOhRHHDnEzvzN1p40QG6VAiiqCfOjvD6u2dL2BH4g35eV+gYBjFk6JtSl
-	 SWdeNEPdt70XZizIomcMFmeINxK+grfjPJn+qy7c=
-Date: Fri, 11 Aug 2023 09:15:51 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: "stable@vger.kernel.org" <stable@vger.kernel.org>,
-	Linux kernel regressions list <regressions@lists.linux.dev>,
-	Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>,
-	Jani Nikula <jani.nikula@intel.com>,
-	LKML <linux-kernel@vger.kernel.org>, Kurt Garloff <kurt@garloff.de>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Sasha Levin <sashal@kernel.org>
-Subject: Re: Drop 0fc6fea41c71 ("drm/i915: Disable DC states for all
- commits") from the 6.0.y series?
-Message-ID: <2023081117-darling-ruined-33b1@gregkh>
-References: <f0870e8f-0c66-57fd-f95d-18d014a11939@leemhuis.info>
- <2023080930-overturn-duo-17de@gregkh>
- <a10b911c-dc39-2924-26be-64c7964456ae@leemhuis.info>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 121B04C94
+	for <regressions@lists.linux.dev>; Fri, 11 Aug 2023 08:01:29 +0000 (UTC)
+Received: from 46.183.103.8.relaix.net ([46.183.103.8] helo=[172.18.99.178]); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1qUN5J-000677-KJ; Fri, 11 Aug 2023 10:01:26 +0200
+Message-ID: <ea44e743-10a0-6a2d-d1a7-92d411674790@leemhuis.info>
+Date: Fri, 11 Aug 2023 10:00:50 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a10b911c-dc39-2924-26be-64c7964456ae@leemhuis.info>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 12/32] mm/vmalloc: vmalloc_to_page() use
+ pte_offset_kernel()
+Content-Language: en-US, de-DE
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ linux-arm-kernel@lists.infradead.org
+References: <42279f1f-7b82-40dc-8546-86171018729c@sirena.org.uk>
+ <901ae88d-ad0c-4e9d-b199-f1566cc62a00@lucifer.local>
+ <c2358f37-ebaa-44d1-b443-ff91bdedc00b@sirena.org.uk>
+ <977ddee4-35f0-fcd1-2fd-1c3057e7ea2a@google.com>
+ <fbb2b76c-bc5c-4d75-b8cd-37479de688d4@sirena.org.uk>
+ <b479b946-f052-eb75-295d-6fa7c2d8ce8e@google.com>
+ <591b5253-47f0-440c-84b6-7786ff59667d@sirena.org.uk>
+ <20230720103227.GB11034@willie-the-truck>
+ <df264993-107c-44a1-a8ff-245bce044206@sirena.org.uk>
+ <88bb7f30-cbfe-feb4-1101-b7c98843652d@leemhuis.info>
+ <59946f0b-2a31-4bb2-a5a5-a051f3978c26@sirena.org.uk>
+From: "Linux regression tracking #update (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <59946f0b-2a31-4bb2-a5a5-a051f3978c26@sirena.org.uk>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1691740890;6654904d;
+X-HE-SMSGID: 1qUN5J-000677-KJ
 
-On Thu, Aug 10, 2023 at 01:31:00PM +0200, Thorsten Leemhuis wrote:
-> On 09.08.23 11:15, Greg KH wrote:
-> > On Mon, Aug 07, 2023 at 12:52:03PM +0200, Thorsten Leemhuis wrote:
-> >> Hi Greg! Months ago you picked up mainline commit a2b6e99d8a6
-> >> ("drm/i915: Disable DC states for all commits") for the 6.1.23 release
-> >> as commit 0fc6fea41c71. It causes issues vor a few people (at least
-> >> three, two of which are CCed) -- apparently because it depends on some
-> >> change that wasn't picked up for 6.1.y.
+On 08.08.23 13:09, Mark Brown wrote:
+> On Tue, Aug 08, 2023 at 07:52:43AM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
 > 
-> Fun fact: here I had an off-by-one error I noticed and fixed, but...
+>> Hi Mark, just wondering did anything come out of this and is this still
+>> happening? I'm just wondering, as I still have this on my list of
+>> tracked regressions.
 > 
-> >> This is known for a while now,
-> >> but nobody has yet found which change that is (Al found something that
-> >> worked for him, but that didn't work for others). For the whole story
-> >> skim this ticket:
-> >>
-> >> https://gitlab.freedesktop.org/drm/intel/-/issues/8419
-> >>
-> >> I wonder if it might be better if you revert that commit for 6.0.y; I
-> >> asked already in the ticket if this is likely to cause regressions for
-> >> users of 6.0.y,
-> 
-> ...here I did not. :-/ Sorry.
-> 
-> >> but got no answer from the i915 devs (or did I miss
-> >> something?). :-/
-> > 
-> > Now reverted (note, 6.0.y is long dead, I reverted this for 6.1.y)
-> 
-> Thx, but FWIW, seems my timing was bad. I had waited weeks before
-> escalating this to you (which looking back now is something I maybe
-> should have done earlier -- but first it looked like it was just one
-> person/machine affected by this problem). But it seems soon after I
-> brought this to your attention a solution came up, as a fix was posted
-> and confirmed working by one of the reporters -- and the developer wants
-> to post a backport for stable. For details see
-> https://gitlab.freedesktop.org/drm/intel/-/issues/8419#note_2035731
-> 
-> Not sure what's the right thing to do at this point for 6.1.y --
-> dropping the revert maybe before you do the release? You will know best
-> anyway.
+> It's fixed.
 
-Let me keep the revert, that will fix the issue now.  If upstream wants
-to solve this in a different/better way, we can add both patches at once
-to prevent any systems from being broken.
+In that case:
 
-thanks,
+#regzbot resolve: fixed according to reporter
+#regzbot ignore-activity
 
-greg k-h
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+That page also explains what to do if mails like this annoy you.
