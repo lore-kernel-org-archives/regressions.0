@@ -1,87 +1,108 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18AE78468
-	for <regressions@lists.linux.dev>; Fri, 11 Aug 2023 18:55:36 +0000 (UTC)
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-4fe0e34f498so3694499e87.2
-        for <regressions@lists.linux.dev>; Fri, 11 Aug 2023 11:55:36 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 126C28468
+	for <regressions@lists.linux.dev>; Fri, 11 Aug 2023 19:00:12 +0000 (UTC)
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2b9dc1bff38so34538841fa.1
+        for <regressions@lists.linux.dev>; Fri, 11 Aug 2023 12:00:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1691780134; x=1692384934;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=uuRnK69MU6Lcim2KwchdBtj06ixdIXcvFeb8SD9Pua0=;
-        b=at93fyhLm4FeeyPwKlH/o+Thsx8qR3KIIHdI6K3omhCqRquco97fhFl17IAleLjO/i
-         R40+5iELDgIWEHpB2EtfKC8Aeb9BPbGtT8W1u0XZ9j0nRno2JvtDdcrJGQxFlib/S4lH
-         SZjeNqBAAHxmIjV3NHtgvl2N79Zhl5ClacL9g=
+        d=gmail.com; s=20221208; t=1691780411; x=1692385211;
+        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
+         :user-agent:references:from:to:cc:subject:date:message-id:reply-to;
+        bh=2tX4f5CxXwqQixuwBvoHfWLxIWpN0kImRL3p6vNuUzM=;
+        b=j8vSASKGirWUNk7iguwpnl+3vF0oqWasXtQrqVt7wt2BgyqwPkXWDwha9gLLISBUKV
+         iGKi6QH63mKvDBPYK9oYrIHZNzFjdXUGKEbNc0PX6OCa28t1kouW1WUl+wxSDG2O5W6B
+         snxBGmnneshbH6UEnINoRg0LEvGLK+19Ar9/pGo93D15GGpvCa/DNaT/Y6esnTX7izXV
+         d2PwV3nEnHbB9plozz05AiLJ6TAzZJM0nNytcxCVS77RDKFjVy4a8wMk8Rv2VLamrXWO
+         b9IfArlNA6LSxpXONDCSukiteldSR7UB00rvPbvj35Imt65y9XfKOGuyj3R6ZYMTXjyl
+         yZGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691780134; x=1692384934;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=uuRnK69MU6Lcim2KwchdBtj06ixdIXcvFeb8SD9Pua0=;
-        b=PDqWAVuDAJXnwMjsnn0eIall6bMRQ1B3wgOTI9wuqiZ3AEx7DLTsDyVrzeOnolr1kV
-         DtVXaiv6ajLbYtlgCqbdl/OM/H4PmyzwT12Zy5mJsb7mP/qQUdAAZDCRBlJp5WCU2sJw
-         wf/0dkmS+ASr2lJnpj/zEfyG8d48cx5RpGmMTeI7THGdQwi78N3ziikdpjnECJIb3foO
-         C3u+22+uYBJTNEBnzbGjigUSTxg5gpjtaQVbHtQIbDDxr/Mt//QluZe1kROlVuglFbvM
-         WE/rWCgBAAfU4xBkZSO8Ow45YFXkdUy+JBaXxYQsJ7tnVyXUyJJWMeCXXW+PU/rB9rI2
-         WKhQ==
-X-Gm-Message-State: AOJu0YyfMe/5r70/Qhfm2+e3CeCgNAQVRe4XO3THCxSWoE8McWTYLnFz
-	wr0EqXUdWU1ssDA1+UN+525DYyVXzeZ47LRPKSaL+HBP
-X-Google-Smtp-Source: AGHT+IEyBgqtD7qa8AOBPYEELZUYjbLR217whVJ4lVCshzrZXe2tCd3dlbW+J0m7DBNtXfuIof66gg==
-X-Received: by 2002:a05:6512:3b4:b0:4f6:d7b:2f19 with SMTP id v20-20020a05651203b400b004f60d7b2f19mr1621603lfp.24.1691780134394;
-        Fri, 11 Aug 2023 11:55:34 -0700 (PDT)
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com. [209.85.167.48])
-        by smtp.gmail.com with ESMTPSA id g7-20020ac25387000000b004fe1448873asm820747lfh.27.2023.08.11.11.55.33
-        for <regressions@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 11 Aug 2023 11:55:33 -0700 (PDT)
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-4fe2de785e7so3702756e87.1
-        for <regressions@lists.linux.dev>; Fri, 11 Aug 2023 11:55:33 -0700 (PDT)
-X-Received: by 2002:a05:6512:10cd:b0:4fd:fef8:7a81 with SMTP id
- k13-20020a05651210cd00b004fdfef87a81mr2309540lfg.55.1691780133463; Fri, 11
- Aug 2023 11:55:33 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1691780411; x=1692385211;
+        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
+         :user-agent:references:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2tX4f5CxXwqQixuwBvoHfWLxIWpN0kImRL3p6vNuUzM=;
+        b=bEhS8wFyB/Um4wgd8FyKvMl6h5W8kBv3djMY3M9l4VLml8JIzscbV3RrLmF2soIMOX
+         zvPy9QSN+Lmfa2SCzqNJK4UoRxLQ6E32pyVKOd1SbV0279K//4n9L1nF7bBEIJSWh9j6
+         UFj1DimfKKSxgNmygq4H/d8oGuf0pDKOs6p6OHMBMh97oy8yOJD1RLO9wkAQUwQ/h9OT
+         oVfgc0AmexiABpasLshf4RkzjOXnp5KmG/eJUEQ8RJCWjhiDbiiGgqNQc0SJ5uD/1i8A
+         yX9aiVAGwKwh9lF564rdjfbfertS/bxNDdQzUUtDi3MVNWdrHHj+wmrUSv/CnOSQHdV1
+         B7IQ==
+X-Gm-Message-State: AOJu0YyTRwPQ6ZOIxIL9Xe995pq5eoedimM+LKWcf7R0j33+/LOr7gQ8
+	QF04nJO+TFj/nQqG03NKuTk=
+X-Google-Smtp-Source: AGHT+IE21JkPWy5VzYd+vFT13uAi07aShArndTFVzf+n/csoJ4n2q0W2aKxFaqnloQOGjW/oW/mniQ==
+X-Received: by 2002:a2e:3518:0:b0:2b6:e283:32cb with SMTP id z24-20020a2e3518000000b002b6e28332cbmr2320415ljz.23.1691780410463;
+        Fri, 11 Aug 2023 12:00:10 -0700 (PDT)
+Received: from razdolb (95-24-154-238.broadband.corbina.ru. [95.24.154.238])
+        by smtp.gmail.com with ESMTPSA id y18-20020a2e9792000000b002b6e13fcedcsm1002637lji.122.2023.08.11.12.00.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Aug 2023 12:00:09 -0700 (PDT)
+References: <87v8dmr6ty.fsf@gmail.com>
+ <f32b4636-969c-3b9e-6802-5991f511739e@leemhuis.info>
+User-agent: mu4e 1.10.4; emacs 29.1
+From: Mikhail Rudenko <mike.rudenko@gmail.com>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Thomas Zimmermann <tzimmermann@suse.de>, Neil Armstrong
+ <neil.armstrong@linaro.org>, Dmitry Baryshkov
+ <dmitry.baryshkov@linaro.org>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+ linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
+ dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org, Jani
+ Nikula <jani.nikula@linux.intel.com>, Joonas Lahtinen
+ <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>,
+ Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>, David Airlie
+ <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [REGRESSION] HDMI connector detection broken in 6.3 on Intel(R)
+ Celeron(R) N3060 integrated graphics
+Date: Fri, 11 Aug 2023 21:10:05 +0300
+In-reply-to: <f32b4636-969c-3b9e-6802-5991f511739e@leemhuis.info>
+Message-ID: <87il9l2ymf.fsf@gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230710133836.4367-1-mail@eworm.de> <20230710142916.18162-1-mail@eworm.de>
- <20230710231315.4ef54679@leda.eworm.net> <bd0587e16d55ef38277ab1f6169909ae7cde3542.camel@kernel.org>
- <bb5580e93d244400c3330d7091bf64868aa2053f.camel@gmail.com>
- <0f272843a33a1706dbcbb2d84b02e3951ee60cbb.camel@kernel.org>
- <fdd5fd9ece045ebd1888672a75f157e64ade98fb.camel@gmail.com>
- <a588d1d3-12e0-b078-b6cc-b0a63c54ab37@leemhuis.info> <CUPW0XP1RFXI.162GZ78E46TBJ@suppilovahvero>
-In-Reply-To: <CUPW0XP1RFXI.162GZ78E46TBJ@suppilovahvero>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Fri, 11 Aug 2023 11:55:16 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whRVp4h8uWOX1YO+Y99+44u4s=XxMK4v00B6F1mOfqPLg@mail.gmail.com>
-Message-ID: <CAHk-=whRVp4h8uWOX1YO+Y99+44u4s=XxMK4v00B6F1mOfqPLg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] tpm/tpm_tis: Disable interrupts for Framework
- Laptop Intel 12th gen
-To: Jarkko Sakkinen <jarkko@kernel.org>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>, Lino Sanfilippo <LinoSanfilippo@gmx.de>, 
-	Linux kernel regressions list <regressions@lists.linux.dev>, Peter Huewe <peterhuewe@gmx.de>, 
-	Christian Hesse <mail@eworm.de>, stable@vger.kernel.org, roubro1991@gmail.com, 
-	Grundik <ggrundik@gmail.com>, Christian Hesse <list@eworm.de>, linux-integrity@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 
-On Fri, 11 Aug 2023 at 10:22, Jarkko Sakkinen <jarkko@kernel.org> wrote:
+
+Hi, Thorsten!
+
+On 2023-08-11 at 08:45 +02, Thorsten Leemhuis <regressions@leemhuis.info> wrote:
+
+> [CCing the i915 maintainers and the dri maintainers]
 >
-> I was planning to send a PR to Linus with a quirk for MSI GS66 Stealth
-> 11UG, and apparently this bug report would add two additional MSI
-> entries. This is becoming quickly a maintenance hell.
+> Hi, Thorsten here, the Linux kernel's regression tracker.
+>
+> On 10.08.23 21:33, Mikhail Rudenko wrote:
+>> The following is a copy an issue I posted to drm/i915 gitlab [1] two
+>> months ago. I repost it to the mailing lists in hope that it will help
+>> the right people pay attention to it.
+>
+> Thx for your report. Wonder why Dmitry (who authored a4e771729a51) or
+> Thomas (who committed it) it didn't look into this, but maybe the i915
+> devs didn't forward the report to them.
+>
+> Let's see if these mails help. Just wondering: does reverting
+> a4e771729a51 from 6.5-rc5 or drm-tip help as well?
 
-Honestly, what would be the immediate effects of just not enabling the
-TPM irq by default at all, and making it an explicit opt-in?
+I've redone my tests with 6.5-rc5, and here are the results:
+(1) 6.5-rc5 -> still affected
+(2) 6.5-rc5 + revert a4e771729a51 -> not affected
+(3) 6.5-rc5 + two patches [1][2] suggested on i915 gitlab by @ideak -> not affected (!)
 
-When a common solution is to just disable the TPM in the BIOS
-entirely, and the end result is a working system, I really get the
-teeling that this is all pain for very very little gain.
+Should we somehow tell regzbot about (3)?
 
-Would anybody even notice if we just disabled it by default and added
-a "if you really want it, use 'tpm=irq' kernel command line"?
+> BTW, there was an earlier report about a problem with a4e771729a51 that
+> afaics was never addressed, but it might be unrelated.
+>
+> https://lore.kernel.org/all/20230328023129.3596968-1-zhouzongmin@kylinos.cn/
+>
+> Ciao, Thorsten
 
-Hmm?
+[1] https://patchwork.freedesktop.org/patch/548590/?series=121050&rev=1
+[2] https://patchwork.freedesktop.org/patch/548591/?series=121050&rev=1
 
-             Linus
+--
+Best regards,
+Mikhail Rudenko
