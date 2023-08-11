@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58CCE1869
-	for <regressions@lists.linux.dev>; Fri, 11 Aug 2023 08:47:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EDAA1869
+	for <regressions@lists.linux.dev>; Fri, 11 Aug 2023 08:58:34 +0000 (UTC)
 Received: from 46.183.103.8.relaix.net ([46.183.103.8] helo=[172.18.99.178]); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qUNoD-0000Xs-E4; Fri, 11 Aug 2023 10:47:49 +0200
-Message-ID: <f9e34f8a-5a7b-8223-c672-4fcb2bb23c0a@leemhuis.info>
-Date: Fri, 11 Aug 2023 10:47:41 +0200
+	id 1qUNyX-0002YE-1r; Fri, 11 Aug 2023 10:58:29 +0200
+Message-ID: <adfdb843-2220-5969-e647-d31ba8684d42@leemhuis.info>
+Date: Fri, 11 Aug 2023 10:58:27 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,53 +16,42 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: RE: [EXT] Re: [PATCH] crypto: caam - adjust RNG timing to support
- more devices
+Subject: Re: btrfs write-bandwidth performance regression of 6.5-rc4/rc3
 Content-Language: en-US, de-DE
-To: Gaurav Jain <gaurav.jain@nxp.com>,
- Herbert Xu <herbert@gondor.apana.org.au>,
- Meenakshi Aggarwal <meenakshi.aggarwal@nxp.com>
-Cc: Bastian Krause <bst@pengutronix.de>,
- "davem@davemloft.net" <davem@davemloft.net>,
- "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- Dan Douglass <dan.douglass@nxp.com>,
- "kernel@pengutronix.de" <kernel@pengutronix.de>,
- Horia Geanta <horia.geanta@nxp.com>, Varun Sethi <V.Sethi@nxp.com>,
- Pankaj Gupta <pankaj.gupta@nxp.com>,
+To: Christoph Hellwig <hch@lst.de>, Wang Yugui <wangyugui@e16-tech.com>
+Cc: linux-btrfs@vger.kernel.org, Chris Mason <clm@fb.com>,
+ David Sterba <dsterba@suse.com>, Josef Bacik <josef@toxicpanda.com>,
  Linux kernel regressions list <regressions@lists.linux.dev>
-References: <20230612082615.1255357-1-meenakshi.aggarwal@nxp.com>
- <e1f3f073-9d5e-1bae-f4f8-08dc48adad62@pengutronix.de>
- <f673a09e-e212-ee7b-15c3-78afe8c70916@pengutronix.de>
- <DU0PR04MB9563E31E69F93B63EE83DD378E39A@DU0PR04MB9563.eurprd04.prod.outlook.com>
- <DU0PR04MB95637D86F0134DC26EF955DB8E02A@DU0PR04MB9563.eurprd04.prod.outlook.com>
- <ZMzBWXpvdW5YB8bt@gondor.apana.org.au>
- <AM0PR04MB60046B045B5965A61BA1CA91E709A@AM0PR04MB6004.eurprd04.prod.outlook.com>
+References: <20230801235123.B665.409509F4@e16-tech.com>
+ <20230801155649.GA13009@lst.de> <20230802080451.F0C2.409509F4@e16-tech.com>
+ <20230802092631.GA27963@lst.de>
 From: "Linux regression tracking (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
-In-Reply-To: <AM0PR04MB60046B045B5965A61BA1CA91E709A@AM0PR04MB6004.eurprd04.prod.outlook.com>
+In-Reply-To: <20230802092631.GA27963@lst.de>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1691743675;3d6e857f;
-X-HE-SMSGID: 1qUNoD-0000Xs-E4
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1691744314;35859cad;
+X-HE-SMSGID: 1qUNyX-0002YE-1r
 
-[CCing the regression list, as it should be in the loop for regressions:
-https://docs.kernel.org/admin-guide/reporting-regressions.html]
-
-On 04.08.23 14:02, Gaurav Jain wrote:
-> From: Herbert Xu <herbert@gondor.apana.org.au>
->> On Mon, Jul 24, 2023 at 05:13:23AM +0000, Meenakshi Aggarwal wrote:
->>> Please share the required information.
->> Any progress on this?
+On 02.08.23 11:26, Christoph Hellwig wrote:
+> On Wed, Aug 02, 2023 at 08:04:57AM +0800, Wang Yugui wrote:
+>>> And with only a revert of
+>>>
+>>> "btrfs: submit IO synchronously for fast checksum implementations"?
 >>
->> Should we revert the offending patch?
+>> GOOD performance when only (Revert "btrfs: submit IO synchronously for fast
+>> checksum implementations") 
 > 
-> Debugging is in progress. There should be some mismatch in TRNG configuration in customer board.
-> Will be sharing a patch to dump the same.
+> Ok, so you have a case where the offload for the checksumming generation
+> actually helps (by a lot).  Adding Chris to the Cc list as he was
+> involved with this.
 
-Any progress on this? Afaics would be good to have either the fix or the
-revert in by -rc7 to ensure things get at least one week of proper
-testing before the final release.
+Radio silence from Chris here and on lore in general afaics. Also
+nothing new in this thread for more than a week now.
+
+CCing David and Josef, maybe they have an idea what's up here and if
+Chris might be afk for longer -- and maybe this can still be fixed
+before the 6.5 release.
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
@@ -71,3 +60,23 @@ https://linux-regtracking.leemhuis.info/about/#tldr
 If I did something stupid, please tell me, as explained on that page.
 
 #regzbot poke
+
+>>>> -       if (test_bit(BTRFS_FS_CSUM_IMPL_FAST, &bbio->fs_info->flags))
+>>>> +       if ((bbio->bio.bi_opf & REQ_META) && test_bit(BTRFS_FS_CSUM_IMPL_FAST, &bbio->fs_info->flags))
+>>>>                 return false;
+>>>
+>>> This disables synchronous checksum calculation entirely for data I/O.
+>>
+>> without this fix, data I/O checksum is always synchronous?
+>> this is a feature change of "btrfs: submit IO synchronously for fast checksum implementations"?
+> 
+> It is never with the above patch.
+> 
+>>
+>>> Also I'm curious if you see any differents for a non-RAID0 (i.e.
+>>> single profile) workload.
+>>
+>> '-m single -d single' is about 10% slow that '-m raid1 -d raid0' in this test
+>> case.
+> 
+> How does it compare with and without the revert?  Can you add the numbers?
