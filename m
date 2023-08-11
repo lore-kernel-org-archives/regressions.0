@@ -1,121 +1,147 @@
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C6B911734
-	for <regressions@lists.linux.dev>; Fri, 11 Aug 2023 17:12:04 +0000 (UTC)
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2b9c0391749so35504211fa.0
-        for <regressions@lists.linux.dev>; Fri, 11 Aug 2023 10:12:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1691773923; x=1692378723;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SlyaKuwj2DFFxidP787empBBUtzACLvaTTNnrqR+Se0=;
-        b=Wrq/oURPgVnyR8qktov2J5GfBHaQ/Kc/E0xg0ntNhhQyk0UaR+n8FOSBfn7ACaloLg
-         LigwbXITuMCvLyyidiJRNQWTq34rDqR0MQSK4iyeoxSI4hdjRqUq/pi9/COzO0OVikJR
-         W11rOCOuPmzmr/50cuI7HL51CvuhWJ3ic/SaLzMwc+bUTBvQS9/+t2PynjrC5fAWawMi
-         51amxgoJlunl/ssJiZAgE6k1BXp5hOQBPh58hnP+ROYFtCcsXLTRf+P88Rr4SpBXl984
-         7M4RikX1KZHlOnH3oJOQQt2lOWjbl8V0lVCNjaOoOYyoj2+wXh55jwZJ9rutc8Jz/url
-         eXfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691773923; x=1692378723;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SlyaKuwj2DFFxidP787empBBUtzACLvaTTNnrqR+Se0=;
-        b=Pv5JzkT7zE3UbGmnbQTEZ+wmSZK5TrFEEpg8Sgit4rdf0N8Fiq3/HEX8ucq3cIS/Wz
-         h7Np3OiqhxpJ7MxKEPfx7V+TAzKZsh64jfe/6am2Nmbm0ZFSccmIev/GtzLRyyVO1ZZg
-         J58yeHTqQkHgtFlucNCdL8hopZLpQNZxcgp5Kz/nFxef1TAlJR+qnK0+Rp0BYEmDdoWi
-         gPRAvHIVDMpHRGbCO0jnzzDkw9NUo7m0w8JOQdvA2P3X4lfb7+k7U/6KnO4F/qAlZSVg
-         mnFrkdeIJLJZFXSKANPr0w8uJ404vTJLtKyJqn4DAGwC4WcTwysZ4LWuVxx1ImmXDO/7
-         tOkw==
-X-Gm-Message-State: AOJu0YxJxz5uCg/psHHApcqd4dnejjYrOJT+x/7RziQwFz42Wgw4EqBF
-	b4wdV7YK67QKi8lbhbW7alK/Y6Ltrkuckz9JvbE=
-X-Google-Smtp-Source: AGHT+IHcdcO2UJfxUcpxWpL8WCWyLnjAGZQJonFoYsxnrR8wAfX/cWIF0NTB2hX+3vOEKVdDhL5jRJ33xn1VoJkOoWo=
-X-Received: by 2002:a2e:3604:0:b0:2b6:e196:68c4 with SMTP id
- d4-20020a2e3604000000b002b6e19668c4mr2076868lja.39.1691773922513; Fri, 11 Aug
- 2023 10:12:02 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA7761172E
+	for <regressions@lists.linux.dev>; Fri, 11 Aug 2023 17:22:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89AA4C433C8;
+	Fri, 11 Aug 2023 17:22:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1691774552;
+	bh=b0WAIA08t9rUAhUXRnN8z0dJFoPL6HgjNzKqMFPLAYU=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=tr2F8IoMvG293irAohgUcAgQkNfYM5yx3WRsGdgPcF3RQTNeKDtkTBiy5EpU0vV05
+	 sVi4Bh1kGtYqMITpYv80eKH78Ulmgh/+y/b5G5EFbPigLsPzXpzuwUYUD65iIeAYwV
+	 wYrEw5lvSdSju8z+zKcNGIk9YzPX3+ZlMv1/nIoIU2XQxNOX4Tf7HhKqHN14T2hFWu
+	 4x5jSuIwxNAmqb6nF69bER5jnlUX4fBVseXHSCzl36KEn6A0JwZ9E4FWT1G4JPJSIR
+	 kHeNwOPrVufLA33f2IhXq6qvjY7cwYcwBjvYDsN9BtEwgdNTppCb6nnAfXkEP9TG1Q
+	 8hnymmzB3i7+Q==
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-References: <2300626.ElGaqSPkdT@bruno-beit> <47e6ab77-e1dd-4ede-b75d-f484b2593395@molgen.mpg.de>
- <5706628.DvuYhMxLoT@bruno-beit>
-In-Reply-To: <5706628.DvuYhMxLoT@bruno-beit>
-From: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Date: Fri, 11 Aug 2023 10:11:50 -0700
-Message-ID: <CABBYNZ+Nt3Rho2=VtVrspRLond2agnKhT1LmeLCGdY4fdxmusg@mail.gmail.com>
-Subject: Re: regression: kernel 6.4.x breaks scanning/pairing (but not use) of
- LE devices
-To: Bruno Pitrus <brunopitrus@hotmail.com>
-Cc: Paul Menzel <pmenzel@molgen.mpg.de>, 
-	"linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>, 
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>, Takashi Iwai <tiwai@suse.de>, 
-	Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 11 Aug 2023 20:22:27 +0300
+Message-Id: <CUPW0XP1RFXI.162GZ78E46TBJ@suppilovahvero>
+Cc: "Linux kernel regressions list" <regressions@lists.linux.dev>, "Peter
+ Huewe" <peterhuewe@gmx.de>, "Christian Hesse" <mail@eworm.de>,
+ <stable@vger.kernel.org>, <roubro1991@gmail.com>, "Linus Torvalds"
+ <torvalds@linux-foundation.org>, "Linux kernel regressions list"
+ <regressions@lists.linux.dev>, "Grundik" <ggrundik@gmail.com>, "Christian
+ Hesse" <list@eworm.de>, <linux-integrity@vger.kernel.org>, "Linus Torvalds"
+ <torvalds@linux-foundation.org>
+Subject: Re: [PATCH v2 1/2] tpm/tpm_tis: Disable interrupts for Framework
+ Laptop Intel 12th gen
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+To: "Thorsten Leemhuis" <regressions@leemhuis.info>, "Lino Sanfilippo"
+ <LinoSanfilippo@gmx.de>
+X-Mailer: aerc 0.14.0
+References: <20230710133836.4367-1-mail@eworm.de>
+ <20230710142916.18162-1-mail@eworm.de>
+ <20230710231315.4ef54679@leda.eworm.net>
+ <bd0587e16d55ef38277ab1f6169909ae7cde3542.camel@kernel.org>
+ <bb5580e93d244400c3330d7091bf64868aa2053f.camel@gmail.com>
+ <0f272843a33a1706dbcbb2d84b02e3951ee60cbb.camel@kernel.org>
+ <fdd5fd9ece045ebd1888672a75f157e64ade98fb.camel@gmail.com>
+ <a588d1d3-12e0-b078-b6cc-b0a63c54ab37@leemhuis.info>
+In-Reply-To: <a588d1d3-12e0-b078-b6cc-b0a63c54ab37@leemhuis.info>
 
-Hi Bruno,
-
-On Fri, Aug 11, 2023 at 4:25=E2=80=AFAM Bruno Pitrus <brunopitrus@hotmail.c=
-om> wrote:
+On Fri Aug 11, 2023 at 11:18 AM EEST, Thorsten Leemhuis wrote:
+> On 06.08.23 18:30, Grundik wrote:
+> > On Wed, 2023-07-12 at 00:50 +0300, Jarkko Sakkinen wrote:
+> >>> I want to say: this issue is NOT limited to Framework laptops.
+> >>>
+> >>> For example this MSI gen12 i5-1240P laptop also suffers from same
+> >>> problem:
+> >>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Manufacturer: Micro-Star I=
+nternational Co., Ltd.
+> >>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Product Name: Summit E13Fl=
+ipEvo A12MT
+> > [...]
+> >>
+> >> It will be supplemented with
+> >> https://lore.kernel.org/linux-integrity/CTYXI8TL7C36.2SCWH82FAZWBO@sup=
+pilovahvero/T/#me895f1920ca6983f791b58a6fa0c157161a33849
+> >>
+> >> Together they should fairly sustainable framework.
+> >=20
+> > Unfortunately, they dont. Problem still occurs in debian 6.5-rc4
+> > kernel, with forementioned laptop. According to sources, these patches
+> > are applied in that kernel version.
 >
-> Dnia sobota, 5 sierpnia 2023 09:31:08 CEST Paul Menzel pisze:
-> > [Cc: +regressions@]
-> >
-> > #regzbot introduced v6.3.9..v6.4.2
-> >
-> > Dear Bruno,
-> >
-> >
-> > Thank you for your report.
-> >
-> > Am 04.08.23 um 20:55 schrieb Bruno Pitrus:
-> > > I am using openSUSE Tumbleweed on a Dell Precision 3551 which has a
-> > > bluetooth adapter of ID 8087:0026 (Intel AX201). I am using a
-> > > Logitech M575 trackball mouse which only supports Bluetooth LE.
-> > >
-> > > With kernel 6.4.2 or newer, scanning for devices =E2=80=94 using eith=
-er the
-> > > KDE gui or bluetoothctl =E2=80=94 most of the time returns only =E2=
-=80=9Cclassic
-> > > bluetooth=E2=80=9D devices like computers and phones, and not the mou=
-se. If
-> > > the mouse was paired before, it works correctly however.
-> > >
-> > > With previous kernel versions (6.3.9 and before), pairing the mouse
-> > > worked correctly.
-> >
-> > Are you able to bisect the regression? Please also attach the Linux
-> > messages. (You can also create a ticket in the Linux kernel Bugzilla [1=
-]
-> > and attach everything there.)
-> >
-> >
-> > Kind regards,
-> >
-> > Paul
-> >
-> >
-> > [1]: https://bugzilla.kernel.org/
-> >
+> Jarkko & Lino, did you see this msg Grundik posted that about a week
+> ago? It looks like there is still something wrong there that need
+> attention. Or am I missing something?
 >
-> The offending commit is https://github.com/SUSE/kernel/commit/288c90224ee=
-c55d13e786844b7954ef060752089 :
+> FWIW, two more users reported that they still see similar problems with
+> recent 6.4.y kernels that contain the "tpm,tpm_tis: Disable interrupts
+> after 1000 unhandled IRQs" patch. Both also with MSI laptops:
 >
-> > Bluetooth: Enable all supported LE PHY by default
-> > This enables 2M and Coded PHY by default if they are marked as supporte=
-d
-> > in the LE features bits.
-> >
-> > Signed-off-by: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
+> https://bugzilla.kernel.org/show_bug.cgi?id=3D217631#c18
+> https://bugzilla.kernel.org/show_bug.cgi?id=3D217631#c20
+>
+> No reply either afaics.
+>
+> Ciao, Thorsten
 
-Do you have the btmon/HCI traces showing this, we also need the
-firmware version as well since I suspect this is due to the controller
-setting the PHYs as supported but being unable to to use them
-properly.
+I was planning to send a PR to Linus with a quirk for MSI GS66 Stealth
+11UG, and apparently this bug report would add two additional MSI
+entries. This is becoming quickly a maintenance hell.
 
---=20
-Luiz Augusto von Dentz
+For Lenovo, I also added patch that will categorically disable irqs for
+all with vendor "LENOVO" because there was already six entries, and I
+got patch for 7th.
+
+Now we at least know that IRQs TPMs are somewhat broken so it is time to
+make decisions to make this converge to something.
+
+I see two long-standing options:
+
+A. Move from deny list to allow list when considering using IRQs. This
+   can be supplemented with a kernel command-line parameter to enforce
+   IRQs and ignore the allow list (and IRQ storm detection provides
+   additional measure in case you try to enforce)
+B. Change deny list to match only vendors for the time being. This can
+   be supplemented with a allow list that is processed after the deny
+   list for models where IRQs are known to work.
+
+This would the implementation of (B):
+
+static const struct dmi_system_id tpm_tis_dmi_table[] =3D {
+	{
+		.callback =3D tpm_tis_disable_irq,
+		.matches =3D {
+			DMI_MATCH(DMI_SYS_VENDOR, "Framework"),
+		},
+	},
+	{
+		.callback =3D tpm_tis_disable_irq,
+		.ident =3D "MSI GS66 Stealth 11UG",
+		.matches =3D {
+			DMI_MATCH(DMI_SYS_VENDOR, "Micro-Star International Co., Ltd."),
+		},
+	},
+	{
+		.callback =3D tpm_tis_disable_irq,
+		.matches =3D {
+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+		},
+	},
+	{
+		.callback =3D tpm_tis_disable_irq,
+		.matches =3D {
+			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
+		},
+	},
+	{
+		.callback =3D tpm_tis_disable_irq,
+		.matches =3D {
+			DMI_MATCH(DMI_SYS_VENDOR, "AAEON"),
+		},
+	},
+	{}
+};
+
+BR, Jarkko
