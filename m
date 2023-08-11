@@ -1,111 +1,87 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED9C98468
-	for <regressions@lists.linux.dev>; Fri, 11 Aug 2023 18:47:12 +0000 (UTC)
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-3fe2fb9b4d7so20104945e9.1
-        for <regressions@lists.linux.dev>; Fri, 11 Aug 2023 11:47:12 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18AE78468
+	for <regressions@lists.linux.dev>; Fri, 11 Aug 2023 18:55:36 +0000 (UTC)
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-4fe0e34f498so3694499e87.2
+        for <regressions@lists.linux.dev>; Fri, 11 Aug 2023 11:55:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1691779631; x=1692384431;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Lxiy661bwby5aRoESXiqAzZ+scVqqbirnP6RZhCnFMM=;
-        b=A7ILmlQA5bAiH10V7GlC8sTxKLx9opJQGSJL4IhDwDxykOuY/Xwk67uZzoN8yINKvL
-         8b0JyhV9U1ExuK970841hQyGd9FsSkEI5XiTF+THXpZwJpzs+oOG+lTgXpwZtJMInL25
-         dE+Y1qIrKLCG2/VGZNMXUWxWnEqEuXaOqpdwPGrdG/hlT09iWJ25oyo/FbIKBf3zVV0e
-         Mve9jAMHREhI8RexUeM5LQrBUaj2nyuUoisi5YXP0HxSo6YfeN/zG3ef1HVRShRhOyAq
-         owhy8i1hRoeWRQTXKk+25PDQS0RTihMyO0pZeVEe4qFALQjqvAMvIveboGH1BGWVk4Kl
-         znSw==
+        d=linux-foundation.org; s=google; t=1691780134; x=1692384934;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=uuRnK69MU6Lcim2KwchdBtj06ixdIXcvFeb8SD9Pua0=;
+        b=at93fyhLm4FeeyPwKlH/o+Thsx8qR3KIIHdI6K3omhCqRquco97fhFl17IAleLjO/i
+         R40+5iELDgIWEHpB2EtfKC8Aeb9BPbGtT8W1u0XZ9j0nRno2JvtDdcrJGQxFlib/S4lH
+         SZjeNqBAAHxmIjV3NHtgvl2N79Zhl5ClacL9g=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691779631; x=1692384431;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Lxiy661bwby5aRoESXiqAzZ+scVqqbirnP6RZhCnFMM=;
-        b=WZ6cSIMZ19GDrS01EJymyTxsDVbax7EE1tlq6SZknxNgHWVUza5yBCVmnHaQEqSKxB
-         GHcQVElv7PTclUkyRLlKx0NDhCMH3MIvNXpmabMtgOOu7bpcGi+dCUCicN7h2pteqIkA
-         R+kAyOuH1LmAepuVdPxxFD7wlh393ZB1YnhnJAzvzmpiwH0v2EK8vcsuUAFO4j8z3hqH
-         1C2sM3Gos/sHKLXHd6Y/v33DmxE8nRnUBFXMSuCMATcxP/k5VQzdzVQ6ynZgQtSldF9L
-         bUF02E0TgeEOhsCH0WYLIAy9pXB3/JhJ3CDtDBDjn531PqkRaZqeJi7XSJ2eoxzuCXhW
-         samg==
-X-Gm-Message-State: AOJu0YzRBQrsiuSMOk6JL1i/56WPfmPYA11qLzsvk2/6QrwJdJ4g7RoD
-	h82rCGI3EE5c5nhH/PbJxpoyxzPHGmAPmg==
-X-Google-Smtp-Source: AGHT+IH6iK08CJx3BF9fpDiBYtjrGSt7m8PU976946+kY85EA3t09QFl/CIA8khqPgbgmBL9w1BNUw==
-X-Received: by 2002:a05:600c:2946:b0:3fe:1f2c:df2b with SMTP id n6-20020a05600c294600b003fe1f2cdf2bmr2410275wmd.11.1691779630782;
-        Fri, 11 Aug 2023 11:47:10 -0700 (PDT)
-Received: from [192.168.1.23] ([176.232.63.90])
-        by smtp.gmail.com with ESMTPSA id a9-20020a5d5089000000b0031434c08bb7sm6236129wrt.105.2023.08.11.11.47.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Aug 2023 11:47:09 -0700 (PDT)
-Message-ID: <5806ebf113d52c660e1c70e8a57cc047ab039aff.camel@gmail.com>
-Subject: Re: [PATCH v2 1/2] tpm/tpm_tis: Disable interrupts for Framework
- Laptop Intel 12th gen
-From: Grundik <ggrundik@gmail.com>
-To: Jarkko Sakkinen <jarkko@kernel.org>, Thorsten Leemhuis
-	 <regressions@leemhuis.info>, Lino Sanfilippo <LinoSanfilippo@gmx.de>
-Cc: Linux kernel regressions list <regressions@lists.linux.dev>, Peter Huewe
- <peterhuewe@gmx.de>, Christian Hesse <mail@eworm.de>,
- stable@vger.kernel.org,  roubro1991@gmail.com, Linus Torvalds
- <torvalds@linux-foundation.org>,  Christian Hesse <list@eworm.de>,
- linux-integrity@vger.kernel.org
-Date: Fri, 11 Aug 2023 21:47:07 +0300
-In-Reply-To: <CUPWEV9HSGHY.MLO0B4RRH4RR@suppilovahvero>
-References: <20230710133836.4367-1-mail@eworm.de>
-	 <20230710142916.18162-1-mail@eworm.de>
-	 <20230710231315.4ef54679@leda.eworm.net>
-	 <bd0587e16d55ef38277ab1f6169909ae7cde3542.camel@kernel.org>
-	 <bb5580e93d244400c3330d7091bf64868aa2053f.camel@gmail.com>
-	 <0f272843a33a1706dbcbb2d84b02e3951ee60cbb.camel@kernel.org>
-	 <fdd5fd9ece045ebd1888672a75f157e64ade98fb.camel@gmail.com>
-	 <a588d1d3-12e0-b078-b6cc-b0a63c54ab37@leemhuis.info>
-	 <CUPW0XP1RFXI.162GZ78E46TBJ@suppilovahvero>
-	 <CUPWEV9HSGHY.MLO0B4RRH4RR@suppilovahvero>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 (by Flathub.org) 
+        d=1e100.net; s=20221208; t=1691780134; x=1692384934;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=uuRnK69MU6Lcim2KwchdBtj06ixdIXcvFeb8SD9Pua0=;
+        b=PDqWAVuDAJXnwMjsnn0eIall6bMRQ1B3wgOTI9wuqiZ3AEx7DLTsDyVrzeOnolr1kV
+         DtVXaiv6ajLbYtlgCqbdl/OM/H4PmyzwT12Zy5mJsb7mP/qQUdAAZDCRBlJp5WCU2sJw
+         wf/0dkmS+ASr2lJnpj/zEfyG8d48cx5RpGmMTeI7THGdQwi78N3ziikdpjnECJIb3foO
+         C3u+22+uYBJTNEBnzbGjigUSTxg5gpjtaQVbHtQIbDDxr/Mt//QluZe1kROlVuglFbvM
+         WE/rWCgBAAfU4xBkZSO8Ow45YFXkdUy+JBaXxYQsJ7tnVyXUyJJWMeCXXW+PU/rB9rI2
+         WKhQ==
+X-Gm-Message-State: AOJu0YyfMe/5r70/Qhfm2+e3CeCgNAQVRe4XO3THCxSWoE8McWTYLnFz
+	wr0EqXUdWU1ssDA1+UN+525DYyVXzeZ47LRPKSaL+HBP
+X-Google-Smtp-Source: AGHT+IEyBgqtD7qa8AOBPYEELZUYjbLR217whVJ4lVCshzrZXe2tCd3dlbW+J0m7DBNtXfuIof66gg==
+X-Received: by 2002:a05:6512:3b4:b0:4f6:d7b:2f19 with SMTP id v20-20020a05651203b400b004f60d7b2f19mr1621603lfp.24.1691780134394;
+        Fri, 11 Aug 2023 11:55:34 -0700 (PDT)
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com. [209.85.167.48])
+        by smtp.gmail.com with ESMTPSA id g7-20020ac25387000000b004fe1448873asm820747lfh.27.2023.08.11.11.55.33
+        for <regressions@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 11 Aug 2023 11:55:33 -0700 (PDT)
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-4fe2de785e7so3702756e87.1
+        for <regressions@lists.linux.dev>; Fri, 11 Aug 2023 11:55:33 -0700 (PDT)
+X-Received: by 2002:a05:6512:10cd:b0:4fd:fef8:7a81 with SMTP id
+ k13-20020a05651210cd00b004fdfef87a81mr2309540lfg.55.1691780133463; Fri, 11
+ Aug 2023 11:55:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+References: <20230710133836.4367-1-mail@eworm.de> <20230710142916.18162-1-mail@eworm.de>
+ <20230710231315.4ef54679@leda.eworm.net> <bd0587e16d55ef38277ab1f6169909ae7cde3542.camel@kernel.org>
+ <bb5580e93d244400c3330d7091bf64868aa2053f.camel@gmail.com>
+ <0f272843a33a1706dbcbb2d84b02e3951ee60cbb.camel@kernel.org>
+ <fdd5fd9ece045ebd1888672a75f157e64ade98fb.camel@gmail.com>
+ <a588d1d3-12e0-b078-b6cc-b0a63c54ab37@leemhuis.info> <CUPW0XP1RFXI.162GZ78E46TBJ@suppilovahvero>
+In-Reply-To: <CUPW0XP1RFXI.162GZ78E46TBJ@suppilovahvero>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Fri, 11 Aug 2023 11:55:16 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whRVp4h8uWOX1YO+Y99+44u4s=XxMK4v00B6F1mOfqPLg@mail.gmail.com>
+Message-ID: <CAHk-=whRVp4h8uWOX1YO+Y99+44u4s=XxMK4v00B6F1mOfqPLg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] tpm/tpm_tis: Disable interrupts for Framework
+ Laptop Intel 12th gen
+To: Jarkko Sakkinen <jarkko@kernel.org>
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>, Lino Sanfilippo <LinoSanfilippo@gmx.de>, 
+	Linux kernel regressions list <regressions@lists.linux.dev>, Peter Huewe <peterhuewe@gmx.de>, 
+	Christian Hesse <mail@eworm.de>, stable@vger.kernel.org, roubro1991@gmail.com, 
+	Grundik <ggrundik@gmail.com>, Christian Hesse <list@eworm.de>, linux-integrity@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, 2023-08-11 at 20:40 +0300, Jarkko Sakkinen wrote:
-> On Fri Aug 11, 2023 at 8:22 PM EEST, Jarkko Sakkinen wrote:
-> > On Fri Aug 11, 2023 at 11:18 AM EEST, Thorsten Leemhuis wrote:
-> >=20
-> >=20
-> > I see two long-standing options:
-> >=20
-> > A. Move from deny list to allow list when considering using IRQs.
-> > This
-> > =C2=A0=C2=A0 can be supplemented with a kernel command-line parameter t=
-o
-> > enforce
-> > =C2=A0=C2=A0 IRQs and ignore the allow list (and IRQ storm detection pr=
-ovides
-> > =C2=A0=C2=A0 additional measure in case you try to enforce)
-> > B. Change deny list to match only vendors for the time being. This
-> > can
-> > =C2=A0=C2=A0 be supplemented with a allow list that is processed after =
-the
-> > deny
-> > =C2=A0=C2=A0 list for models where IRQs are known to work.
-[...]
->=20
-> This is also super time consuming and takes the focus away from more
-> important matters (like most likely the AMD rng fix would have gone
-> smoother without these getting in the way all the time).
+On Fri, 11 Aug 2023 at 10:22, Jarkko Sakkinen <jarkko@kernel.org> wrote:
+>
+> I was planning to send a PR to Linus with a quirk for MSI GS66 Stealth
+> 11UG, and apparently this bug report would add two additional MSI
+> entries. This is becoming quickly a maintenance hell.
 
-Main problem of any list is maintaining of them. So, I think there
-should not be any black or white lists at all. Module should work with
-reasonable default (polling is the one, which lived without problems
-for years and years due to bug, as I understand), and probably a boot
-option to force IRQ. Maybe module should warn user to try that option.
+Honestly, what would be the immediate effects of just not enabling the
+TPM irq by default at all, and making it an explicit opt-in?
 
-I don't know: is it even worth it to use IRQ, if it so problematic? Are
-there any significant advantages of that? I understand, polling is a
-resource consumer, but its just TPM, which is used mainly at the boot
-time, is it worth it?
+When a common solution is to just disable the TPM in the BIOS
+entirely, and the end result is a working system, I really get the
+teeling that this is all pain for very very little gain.
 
+Would anybody even notice if we just disabled it by default and added
+a "if you really want it, use 'tpm=irq' kernel command line"?
+
+Hmm?
+
+             Linus
