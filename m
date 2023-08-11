@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 121B04C94
-	for <regressions@lists.linux.dev>; Fri, 11 Aug 2023 08:01:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 575735256
+	for <regressions@lists.linux.dev>; Fri, 11 Aug 2023 08:18:30 +0000 (UTC)
 Received: from 46.183.103.8.relaix.net ([46.183.103.8] helo=[172.18.99.178]); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qUN5J-000677-KJ; Fri, 11 Aug 2023 10:01:26 +0200
-Message-ID: <ea44e743-10a0-6a2d-d1a7-92d411674790@leemhuis.info>
-Date: Fri, 11 Aug 2023 10:00:50 +0200
+	id 1qUNLo-0002DU-3L; Fri, 11 Aug 2023 10:18:28 +0200
+Message-ID: <a588d1d3-12e0-b078-b6cc-b0a63c54ab37@leemhuis.info>
+Date: Fri, 11 Aug 2023 10:18:25 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -15,48 +15,62 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 12/32] mm/vmalloc: vmalloc_to_page() use
- pte_offset_kernel()
+Subject: Re: [PATCH v2 1/2] tpm/tpm_tis: Disable interrupts for Framework
+ Laptop Intel 12th gen
 Content-Language: en-US, de-DE
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- linux-arm-kernel@lists.infradead.org
-References: <42279f1f-7b82-40dc-8546-86171018729c@sirena.org.uk>
- <901ae88d-ad0c-4e9d-b199-f1566cc62a00@lucifer.local>
- <c2358f37-ebaa-44d1-b443-ff91bdedc00b@sirena.org.uk>
- <977ddee4-35f0-fcd1-2fd-1c3057e7ea2a@google.com>
- <fbb2b76c-bc5c-4d75-b8cd-37479de688d4@sirena.org.uk>
- <b479b946-f052-eb75-295d-6fa7c2d8ce8e@google.com>
- <591b5253-47f0-440c-84b6-7786ff59667d@sirena.org.uk>
- <20230720103227.GB11034@willie-the-truck>
- <df264993-107c-44a1-a8ff-245bce044206@sirena.org.uk>
- <88bb7f30-cbfe-feb4-1101-b7c98843652d@leemhuis.info>
- <59946f0b-2a31-4bb2-a5a5-a051f3978c26@sirena.org.uk>
-From: "Linux regression tracking #update (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <59946f0b-2a31-4bb2-a5a5-a051f3978c26@sirena.org.uk>
+To: Jarkko Sakkinen <jarkko@kernel.org>,
+ Lino Sanfilippo <LinoSanfilippo@gmx.de>
+Cc: Linux kernel regressions list <regressions@lists.linux.dev>,
+ Peter Huewe <peterhuewe@gmx.de>, Christian Hesse <mail@eworm.de>,
+ stable@vger.kernel.org, roubro1991@gmail.com,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ Grundik <ggrundik@gmail.com>, Christian Hesse <list@eworm.de>,
+ linux-integrity@vger.kernel.org
+References: <20230710133836.4367-1-mail@eworm.de>
+ <20230710142916.18162-1-mail@eworm.de>
+ <20230710231315.4ef54679@leda.eworm.net>
+ <bd0587e16d55ef38277ab1f6169909ae7cde3542.camel@kernel.org>
+ <bb5580e93d244400c3330d7091bf64868aa2053f.camel@gmail.com>
+ <0f272843a33a1706dbcbb2d84b02e3951ee60cbb.camel@kernel.org>
+ <fdd5fd9ece045ebd1888672a75f157e64ade98fb.camel@gmail.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <fdd5fd9ece045ebd1888672a75f157e64ade98fb.camel@gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1691740890;6654904d;
-X-HE-SMSGID: 1qUN5J-000677-KJ
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1691741910;edc95982;
+X-HE-SMSGID: 1qUNLo-0002DU-3L
 
-On 08.08.23 13:09, Mark Brown wrote:
-> On Tue, Aug 08, 2023 at 07:52:43AM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
+On 06.08.23 18:30, Grundik wrote:
+> On Wed, 2023-07-12 at 00:50 +0300, Jarkko Sakkinen wrote:
+>>> I want to say: this issue is NOT limited to Framework laptops.
+>>>
+>>> For example this MSI gen12 i5-1240P laptop also suffers from same
+>>> problem:
+>>>         Manufacturer: Micro-Star International Co., Ltd.
+>>>         Product Name: Summit E13FlipEvo A12MT
+> [...]
+>>
+>> It will be supplemented with
+>> https://lore.kernel.org/linux-integrity/CTYXI8TL7C36.2SCWH82FAZWBO@suppilovahvero/T/#me895f1920ca6983f791b58a6fa0c157161a33849
+>>
+>> Together they should fairly sustainable framework.
 > 
->> Hi Mark, just wondering did anything come out of this and is this still
->> happening? I'm just wondering, as I still have this on my list of
->> tracked regressions.
-> 
-> It's fixed.
+> Unfortunately, they dont. Problem still occurs in debian 6.5-rc4
+> kernel, with forementioned laptop. According to sources, these patches
+> are applied in that kernel version.
 
-In that case:
+Jarkko & Lino, did you see this msg Grundik posted that about a week
+ago? It looks like there is still something wrong there that need
+attention. Or am I missing something?
 
-#regzbot resolve: fixed according to reporter
-#regzbot ignore-activity
+FWIW, two more users reported that they still see similar problems with
+recent 6.4.y kernels that contain the "tpm,tpm_tis: Disable interrupts
+after 1000 unhandled IRQs" patch. Both also with MSI laptops:
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+https://bugzilla.kernel.org/show_bug.cgi?id=217631#c18
+https://bugzilla.kernel.org/show_bug.cgi?id=217631#c20
+
+No reply either afaics.
+
+Ciao, Thorsten
