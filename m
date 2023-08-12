@@ -1,95 +1,90 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9882C219E8
-	for <regressions@lists.linux.dev>; Fri, 11 Aug 2023 20:01:58 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D64BC433C8;
-	Fri, 11 Aug 2023 20:01:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1691784118;
-	bh=UGeRy4kLv1Yj8E1RIf2OqaKJS9+bUxuImBDCoJL5HU0=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=H8miYJcl51YWHF2csAydYJQUkKKHzXsVUALhwxhFOTo4h9lyerhLx6EGirlj2N4i+
-	 uWFG5gYxZ9SsZ7zWmiHt9SwND5jlo4rVikcBUn6m0nnbuNaLtcFRWeNsKxMzB3wFhT
-	 qYswuT77+lkervYtfN+kTXtbb5mzQVafF8f3hzIDunNw6V3FnVpLTcnKjFAjCJtSCM
-	 ekElFAgbpMStakJ1xm43G/nyKTC8GqG+UgsNlbtt4Yi8mLFmdvnbMcombOxoGWzZRz
-	 MM0/lTfdeeOoWrMRi2ueRTg7C+ebUuJwZoCnNXKLRS0W6NN4cd+X8GM8kdfgUxAe3B
-	 EWoTCokoWI6FQ==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2079E1CCCF
+	for <regressions@lists.linux.dev>; Sat, 12 Aug 2023 11:28:15 +0000 (UTC)
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-3fe4b45a336so24182775e9.1
+        for <regressions@lists.linux.dev>; Sat, 12 Aug 2023 04:28:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1691839694; x=1692444494;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=70k139ecuFQpmPCRNgfFtrlYieqZo6GAcu4jEsA6JKA=;
+        b=nXrB3COXiLAq2Q75l0l+IMRfQJq6CTo3uN8+OZcmxjFYaJGJayQ0z5ooFFswFlT4St
+         S0HcKzXZMDlC/pbAEeDX7mVoacjSLURm8KWO5D2gvtIysZFPEjCBLw/9DaFCXy5dxuPc
+         NYaxZq5gNzZwtf/qN1D9dgj21hJUYOXHL3jd5sVn8xI0lnCw+W+pJDIwGQGXltiH6bHJ
+         7Rz8U0no5UjqLwpIFmc3RWKQjgbmA17yMYz59Mbj9uB3IjkcT1rXdV3qMn/ifnBQ/vQp
+         oG8aRv2m3kZV+FepnIHpb/skBHlVO5LVozpshkHRYuQ3vk/cGlZuDCMAFq5c6a2kVMC8
+         Ihjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1691839694; x=1692444494;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=70k139ecuFQpmPCRNgfFtrlYieqZo6GAcu4jEsA6JKA=;
+        b=GI1Uj5CyFB2ZwjIIBULXR7c431oZSQB56+cXdRiKg8/rF6YW2jQtivPwTMOfmr2cqi
+         Ywa9bFrptCzR5m32kS48YZClZ3aj4DYktSV2ZZk61c25DmHUnY9Lof5W+1lfpRo86Bkt
+         LNKjq0/E9Vv4/HQIR3CfVLJN2tM/oqH7qYrTja4x4bBbde9sQxYoFFg1vhT30Ubb9fwT
+         nfpyHQ+a/XZTaZp0Lmb2sHeyqNCmn+d8HRDwqHFXLIqjWFIUqNuGSxRGwnezrrFCEnd7
+         ac7TGiyO7LnyiP9Av0n7jgOufY2jJuD5vUgdsez+xgVpWTHHxR6WYckNziC3RC5d6Y+I
+         0+lA==
+X-Gm-Message-State: AOJu0Yy6YiLQ94t1aEarDNdO7PL3DDNvJGSqVOYLl6Lm7FeuFdVpeYWH
+	QLHiXtg7BoJ10ZQ3Y6N0c3g=
+X-Google-Smtp-Source: AGHT+IHEPq1fiwSQ1ALm2QJMf/pdFBSIgoM0YqLd75gCv+KCwrLgEzhLyqL/R0cbXylP9xVbTN8cpA==
+X-Received: by 2002:a05:600c:252:b0:3fe:111b:7fc4 with SMTP id 18-20020a05600c025200b003fe111b7fc4mr3430160wmj.21.1691839693879;
+        Sat, 12 Aug 2023 04:28:13 -0700 (PDT)
+Received: from [192.168.1.23] ([176.232.63.90])
+        by smtp.gmail.com with ESMTPSA id k1-20020a05600c0b4100b003fa95f328afsm10971998wmr.29.2023.08.12.04.28.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 12 Aug 2023 04:28:13 -0700 (PDT)
+Message-ID: <2c5abdca1e93894ff3ee41ab1da90a5f8e38657f.camel@gmail.com>
+Subject: Re: [PATCH v2 1/2] tpm/tpm_tis: Disable interrupts for Framework
+ Laptop Intel 12th gen
+From: Grundik <ggrundik@gmail.com>
+To: Jarkko Sakkinen <jarkko@kernel.org>, Thorsten Leemhuis
+	 <regressions@leemhuis.info>, Lino Sanfilippo <LinoSanfilippo@gmx.de>
+Cc: Linux kernel regressions list <regressions@lists.linux.dev>, Peter Huewe
+ <peterhuewe@gmx.de>, Christian Hesse <mail@eworm.de>,
+ stable@vger.kernel.org,  roubro1991@gmail.com, Linus Torvalds
+ <torvalds@linux-foundation.org>,  Christian Hesse <list@eworm.de>,
+ linux-integrity@vger.kernel.org
+Date: Sat, 12 Aug 2023 14:28:11 +0300
+In-Reply-To: <CUPZF09RGD86.VQN9BOMEYZX5@suppilovahvero>
+References: <20230710133836.4367-1-mail@eworm.de>
+	 <20230710142916.18162-1-mail@eworm.de>
+	 <20230710231315.4ef54679@leda.eworm.net>
+	 <bd0587e16d55ef38277ab1f6169909ae7cde3542.camel@kernel.org>
+	 <bb5580e93d244400c3330d7091bf64868aa2053f.camel@gmail.com>
+	 <0f272843a33a1706dbcbb2d84b02e3951ee60cbb.camel@kernel.org>
+	 <fdd5fd9ece045ebd1888672a75f157e64ade98fb.camel@gmail.com>
+	 <a588d1d3-12e0-b078-b6cc-b0a63c54ab37@leemhuis.info>
+	 <CUPW0XP1RFXI.162GZ78E46TBJ@suppilovahvero>
+	 <CUPWEV9HSGHY.MLO0B4RRH4RR@suppilovahvero>
+	 <5806ebf113d52c660e1c70e8a57cc047ab039aff.camel@gmail.com>
+	 <CUPZF09RGD86.VQN9BOMEYZX5@suppilovahvero>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 (by Flathub.org) 
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 11 Aug 2023 23:01:53 +0300
-Message-Id: <CUPZF09RGD86.VQN9BOMEYZX5@suppilovahvero>
-Subject: Re: [PATCH v2 1/2] tpm/tpm_tis: Disable interrupts for Framework
- Laptop Intel 12th gen
-From: "Jarkko Sakkinen" <jarkko@kernel.org>
-To: "Grundik" <ggrundik@gmail.com>, "Thorsten Leemhuis"
- <regressions@leemhuis.info>, "Lino Sanfilippo" <LinoSanfilippo@gmx.de>
-Cc: "Linux kernel regressions list" <regressions@lists.linux.dev>, "Peter
- Huewe" <peterhuewe@gmx.de>, "Christian Hesse" <mail@eworm.de>,
- <stable@vger.kernel.org>, <roubro1991@gmail.com>, "Linus Torvalds"
- <torvalds@linux-foundation.org>, "Christian Hesse" <list@eworm.de>,
- <linux-integrity@vger.kernel.org>
-X-Mailer: aerc 0.14.0
-References: <20230710133836.4367-1-mail@eworm.de>
- <20230710142916.18162-1-mail@eworm.de>
- <20230710231315.4ef54679@leda.eworm.net>
- <bd0587e16d55ef38277ab1f6169909ae7cde3542.camel@kernel.org>
- <bb5580e93d244400c3330d7091bf64868aa2053f.camel@gmail.com>
- <0f272843a33a1706dbcbb2d84b02e3951ee60cbb.camel@kernel.org>
- <fdd5fd9ece045ebd1888672a75f157e64ade98fb.camel@gmail.com>
- <a588d1d3-12e0-b078-b6cc-b0a63c54ab37@leemhuis.info>
- <CUPW0XP1RFXI.162GZ78E46TBJ@suppilovahvero>
- <CUPWEV9HSGHY.MLO0B4RRH4RR@suppilovahvero>
- <5806ebf113d52c660e1c70e8a57cc047ab039aff.camel@gmail.com>
-In-Reply-To: <5806ebf113d52c660e1c70e8a57cc047ab039aff.camel@gmail.com>
+MIME-Version: 1.0
 
-On Fri Aug 11, 2023 at 9:47 PM EEST, Grundik wrote:
-> On Fri, 2023-08-11 at 20:40 +0300, Jarkko Sakkinen wrote:
-> > On Fri Aug 11, 2023 at 8:22 PM EEST, Jarkko Sakkinen wrote:
-> > > On Fri Aug 11, 2023 at 11:18 AM EEST, Thorsten Leemhuis wrote:
-> > >=20
-> > >=20
-> > > I see two long-standing options:
-> > >=20
-> > > A. Move from deny list to allow list when considering using IRQs.
-> > > This
-> > > =C2=A0=C2=A0 can be supplemented with a kernel command-line parameter=
- to
-> > > enforce
-> > > =C2=A0=C2=A0 IRQs and ignore the allow list (and IRQ storm detection =
-provides
-> > > =C2=A0=C2=A0 additional measure in case you try to enforce)
-> > > B. Change deny list to match only vendors for the time being. This
-> > > can
-> > > =C2=A0=C2=A0 be supplemented with a allow list that is processed afte=
-r the
-> > > deny
-> > > =C2=A0=C2=A0 list for models where IRQs are known to work.
-> [...]
-> >=20
-> > This is also super time consuming and takes the focus away from more
-> > important matters (like most likely the AMD rng fix would have gone
-> > smoother without these getting in the way all the time).
->
-> Main problem of any list is maintaining of them. So, I think there
-> should not be any black or white lists at all. Module should work with
-> reasonable default (polling is the one, which lived without problems
-> for years and years due to bug, as I understand), and probably a boot
-> option to force IRQ. Maybe module should warn user to try that option.
->
-> I don't know: is it even worth it to use IRQ, if it so problematic? Are
-> there any significant advantages of that? I understand, polling is a
-> resource consumer, but its just TPM, which is used mainly at the boot
-> time, is it worth it?
+On Fri, 2023-08-11 at 23:01 +0300, Jarkko Sakkinen wrote:
+>=20
+>=20
+> Thanks for sharing your opinion. I'll take the necessary steps.
+>=20
 
-+1
+I was thinking... Maybe I'm wrong, maybe I mistaking, but isnt this TPM
+located inside of the CPU chip? So that issue is not specific to laptop
+vendor or model, but its CPU-specific.
 
-Thanks for sharing your opinion. I'll take the necessary steps.
+My MSI A12MT laptop has i5-1240P, Framework laptops mentioned in this
+thread, also has i5-1240P CPU. Unfortunately there are no such
+information about other affected models, but could it be just that CPU
+line?
 
-BR, Jarkko
