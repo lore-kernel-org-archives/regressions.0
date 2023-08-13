@@ -1,90 +1,96 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2079E1CCCF
-	for <regressions@lists.linux.dev>; Sat, 12 Aug 2023 11:28:15 +0000 (UTC)
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-3fe4b45a336so24182775e9.1
-        for <regressions@lists.linux.dev>; Sat, 12 Aug 2023 04:28:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1691839694; x=1692444494;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=70k139ecuFQpmPCRNgfFtrlYieqZo6GAcu4jEsA6JKA=;
-        b=nXrB3COXiLAq2Q75l0l+IMRfQJq6CTo3uN8+OZcmxjFYaJGJayQ0z5ooFFswFlT4St
-         S0HcKzXZMDlC/pbAEeDX7mVoacjSLURm8KWO5D2gvtIysZFPEjCBLw/9DaFCXy5dxuPc
-         NYaxZq5gNzZwtf/qN1D9dgj21hJUYOXHL3jd5sVn8xI0lnCw+W+pJDIwGQGXltiH6bHJ
-         7Rz8U0no5UjqLwpIFmc3RWKQjgbmA17yMYz59Mbj9uB3IjkcT1rXdV3qMn/ifnBQ/vQp
-         oG8aRv2m3kZV+FepnIHpb/skBHlVO5LVozpshkHRYuQ3vk/cGlZuDCMAFq5c6a2kVMC8
-         Ihjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691839694; x=1692444494;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=70k139ecuFQpmPCRNgfFtrlYieqZo6GAcu4jEsA6JKA=;
-        b=GI1Uj5CyFB2ZwjIIBULXR7c431oZSQB56+cXdRiKg8/rF6YW2jQtivPwTMOfmr2cqi
-         Ywa9bFrptCzR5m32kS48YZClZ3aj4DYktSV2ZZk61c25DmHUnY9Lof5W+1lfpRo86Bkt
-         LNKjq0/E9Vv4/HQIR3CfVLJN2tM/oqH7qYrTja4x4bBbde9sQxYoFFg1vhT30Ubb9fwT
-         nfpyHQ+a/XZTaZp0Lmb2sHeyqNCmn+d8HRDwqHFXLIqjWFIUqNuGSxRGwnezrrFCEnd7
-         ac7TGiyO7LnyiP9Av0n7jgOufY2jJuD5vUgdsez+xgVpWTHHxR6WYckNziC3RC5d6Y+I
-         0+lA==
-X-Gm-Message-State: AOJu0Yy6YiLQ94t1aEarDNdO7PL3DDNvJGSqVOYLl6Lm7FeuFdVpeYWH
-	QLHiXtg7BoJ10ZQ3Y6N0c3g=
-X-Google-Smtp-Source: AGHT+IHEPq1fiwSQ1ALm2QJMf/pdFBSIgoM0YqLd75gCv+KCwrLgEzhLyqL/R0cbXylP9xVbTN8cpA==
-X-Received: by 2002:a05:600c:252:b0:3fe:111b:7fc4 with SMTP id 18-20020a05600c025200b003fe111b7fc4mr3430160wmj.21.1691839693879;
-        Sat, 12 Aug 2023 04:28:13 -0700 (PDT)
-Received: from [192.168.1.23] ([176.232.63.90])
-        by smtp.gmail.com with ESMTPSA id k1-20020a05600c0b4100b003fa95f328afsm10971998wmr.29.2023.08.12.04.28.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 12 Aug 2023 04:28:13 -0700 (PDT)
-Message-ID: <2c5abdca1e93894ff3ee41ab1da90a5f8e38657f.camel@gmail.com>
-Subject: Re: [PATCH v2 1/2] tpm/tpm_tis: Disable interrupts for Framework
- Laptop Intel 12th gen
-From: Grundik <ggrundik@gmail.com>
-To: Jarkko Sakkinen <jarkko@kernel.org>, Thorsten Leemhuis
-	 <regressions@leemhuis.info>, Lino Sanfilippo <LinoSanfilippo@gmx.de>
-Cc: Linux kernel regressions list <regressions@lists.linux.dev>, Peter Huewe
- <peterhuewe@gmx.de>, Christian Hesse <mail@eworm.de>,
- stable@vger.kernel.org,  roubro1991@gmail.com, Linus Torvalds
- <torvalds@linux-foundation.org>,  Christian Hesse <list@eworm.de>,
- linux-integrity@vger.kernel.org
-Date: Sat, 12 Aug 2023 14:28:11 +0300
-In-Reply-To: <CUPZF09RGD86.VQN9BOMEYZX5@suppilovahvero>
-References: <20230710133836.4367-1-mail@eworm.de>
-	 <20230710142916.18162-1-mail@eworm.de>
-	 <20230710231315.4ef54679@leda.eworm.net>
-	 <bd0587e16d55ef38277ab1f6169909ae7cde3542.camel@kernel.org>
-	 <bb5580e93d244400c3330d7091bf64868aa2053f.camel@gmail.com>
-	 <0f272843a33a1706dbcbb2d84b02e3951ee60cbb.camel@kernel.org>
-	 <fdd5fd9ece045ebd1888672a75f157e64ade98fb.camel@gmail.com>
-	 <a588d1d3-12e0-b078-b6cc-b0a63c54ab37@leemhuis.info>
-	 <CUPW0XP1RFXI.162GZ78E46TBJ@suppilovahvero>
-	 <CUPWEV9HSGHY.MLO0B4RRH4RR@suppilovahvero>
-	 <5806ebf113d52c660e1c70e8a57cc047ab039aff.camel@gmail.com>
-	 <CUPZF09RGD86.VQN9BOMEYZX5@suppilovahvero>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 (by Flathub.org) 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F1B62C9D
+	for <regressions@lists.linux.dev>; Sun, 13 Aug 2023 13:41:48 +0000 (UTC)
+Received: from p200300cf17418700333267be2b9ea1d1.dip0.t-ipconnect.de ([2003:cf:1741:8700:3332:67be:2b9e:a1d1]); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1qVBLY-00073T-2b; Sun, 13 Aug 2023 15:41:32 +0200
+Message-ID: <3df95e6d-8237-1c43-e220-a9bdb5d6e044@leemhuis.info>
+Date: Sun, 13 Aug 2023 15:41:30 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] HDMI connector detection broken in 6.3 on Intel(R)
+ Celeron(R) N3060 integrated graphics
+Content-Language: en-US, de-DE
+To: Mikhail Rudenko <mike.rudenko@gmail.com>, Imre Deak <imre.deak@intel.com>
+Cc: Thomas Zimmermann <tzimmermann@suse.de>,
+ Neil Armstrong <neil.armstrong@linaro.org>,
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, linux-kernel@vger.kernel.org,
+ regressions@lists.linux.dev, dri-devel@lists.freedesktop.org,
+ intel-gfx@lists.freedesktop.org, Jani Nikula <jani.nikula@linux.intel.com>,
+ Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>,
+ Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>
+References: <87v8dmr6ty.fsf@gmail.com>
+ <f32b4636-969c-3b9e-6802-5991f511739e@leemhuis.info>
+ <87il9l2ymf.fsf@gmail.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <87il9l2ymf.fsf@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1691934109;4926b4b3;
+X-HE-SMSGID: 1qVBLY-00073T-2b
 
-On Fri, 2023-08-11 at 23:01 +0300, Jarkko Sakkinen wrote:
->=20
->=20
-> Thanks for sharing your opinion. I'll take the necessary steps.
->=20
+On 11.08.23 20:10, Mikhail Rudenko wrote:
+> On 2023-08-11 at 08:45 +02, Thorsten Leemhuis <regressions@leemhuis.info> wrote:
+>> On 10.08.23 21:33, Mikhail Rudenko wrote:
+>>> The following is a copy an issue I posted to drm/i915 gitlab [1] two
+>>> months ago. I repost it to the mailing lists in hope that it will help
+>>> the right people pay attention to it.
+>>
+>> Thx for your report. Wonder why Dmitry (who authored a4e771729a51) or
+>> Thomas (who committed it) it didn't look into this, but maybe the i915
+>> devs didn't forward the report to them.
 
-I was thinking... Maybe I'm wrong, maybe I mistaking, but isnt this TPM
-located inside of the CPU chip? So that issue is not specific to laptop
-vendor or model, but its CPU-specific.
+For the record: they did, and Jani mentioned already. Sorry, should have
+phrased this differently.
 
-My MSI A12MT laptop has i5-1240P, Framework laptops mentioned in this
-thread, also has i5-1240P CPU. Unfortunately there are no such
-information about other affected models, but could it be just that CPU
-line?
+>> Let's see if these mails help. Just wondering: does reverting
+>> a4e771729a51 from 6.5-rc5 or drm-tip help as well?
+> 
+> I've redone my tests with 6.5-rc5, and here are the results:
+> (1) 6.5-rc5 -> still affected
+> (2) 6.5-rc5 + revert a4e771729a51 -> not affected
+> (3) 6.5-rc5 + two patches [1][2] suggested on i915 gitlab by @ideak -> not affected (!)
+> 
+> Should we somehow tell regzbot about (3)?
+
+That's good to know, thx. But the more important things are:
+
+* When will those be merged? They are not yet in next yet afaics, so it
+might take some time to mainline them, especially at this point of the
+devel cycle. Imre, could you try to prod the right people so that these
+are ideally upstreamed rather sooner than later, as they fix a regression?
+* They if possible ideally should be tagged for backporting to 6.4, as
+this is a regression from the 6.3 cycle.
+
+But yes, let's tell regzbot that fixes are available, too:
+
+#regzbot fix: drm/i915: Fix HPD polling, reenabling the output poll work
+as needed
+
+(for the record: that's the second of two patches apparently needed)
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
+
+>> BTW, there was an earlier report about a problem with a4e771729a51 that
+>> afaics was never addressed, but it might be unrelated.
+>> https://lore.kernel.org/all/20230328023129.3596968-1-zhouzongmin@kylinos.cn/
+> [1] https://patchwork.freedesktop.org/patch/548590/?series=121050&rev=1
+> [2] https://patchwork.freedesktop.org/patch/548591/?series=121050&rev=1
 
