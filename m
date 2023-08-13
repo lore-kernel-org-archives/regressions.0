@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F1B62C9D
-	for <regressions@lists.linux.dev>; Sun, 13 Aug 2023 13:41:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A97E55235
+	for <regressions@lists.linux.dev>; Sun, 13 Aug 2023 14:01:36 +0000 (UTC)
 Received: from p200300cf17418700333267be2b9ea1d1.dip0.t-ipconnect.de ([2003:cf:1741:8700:3332:67be:2b9e:a1d1]); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qVBLY-00073T-2b; Sun, 13 Aug 2023 15:41:32 +0200
-Message-ID: <3df95e6d-8237-1c43-e220-a9bdb5d6e044@leemhuis.info>
-Date: Sun, 13 Aug 2023 15:41:30 +0200
+	id 1qVBew-0004K3-Nm; Sun, 13 Aug 2023 16:01:34 +0200
+Message-ID: <e884f944-a933-2a9c-49f1-86dbe463d18f@leemhuis.info>
+Date: Sun, 13 Aug 2023 16:01:34 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -15,82 +15,51 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] HDMI connector detection broken in 6.3 on Intel(R)
- Celeron(R) N3060 integrated graphics
+Subject: Re: [REGRESSION] IRQ override revert breaks keyboard on Lenovo Yoga 7
+ 14ARB7
 Content-Language: en-US, de-DE
-To: Mikhail Rudenko <mike.rudenko@gmail.com>, Imre Deak <imre.deak@intel.com>
-Cc: Thomas Zimmermann <tzimmermann@suse.de>,
- Neil Armstrong <neil.armstrong@linaro.org>,
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, linux-kernel@vger.kernel.org,
- regressions@lists.linux.dev, dri-devel@lists.freedesktop.org,
- intel-gfx@lists.freedesktop.org, Jani Nikula <jani.nikula@linux.intel.com>,
- Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
- Rodrigo Vivi <rodrigo.vivi@intel.com>,
- Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>
-References: <87v8dmr6ty.fsf@gmail.com>
- <f32b4636-969c-3b9e-6802-5991f511739e@leemhuis.info>
- <87il9l2ymf.fsf@gmail.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
+From: "Linux regression tracking #update (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <87il9l2ymf.fsf@gmail.com>
+To: regressions@lists.linux.dev
+Cc: linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+References: <596b9c4a-fb83-a8ab-3a44-6052d83fa546@augustwikerfors.se>
+ <73310d78-914b-7200-0fb7-073b52324aaf@leemhuis.info>
+In-Reply-To: <73310d78-914b-7200-0fb7-073b52324aaf@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1691934109;4926b4b3;
-X-HE-SMSGID: 1qVBLY-00073T-2b
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1691935296;358eec36;
+X-HE-SMSGID: 1qVBew-0004K3-Nm
 
-On 11.08.23 20:10, Mikhail Rudenko wrote:
-> On 2023-08-11 at 08:45 +02, Thorsten Leemhuis <regressions@leemhuis.info> wrote:
->> On 10.08.23 21:33, Mikhail Rudenko wrote:
->>> The following is a copy an issue I posted to drm/i915 gitlab [1] two
->>> months ago. I repost it to the mailing lists in hope that it will help
->>> the right people pay attention to it.
+On 30.07.23 18:53, Linux regression tracking #update (Thorsten Leemhuis)
+wrote:
+> On 27.07.23 00:54, August Wikerfors wrote:
 >>
->> Thx for your report. Wonder why Dmitry (who authored a4e771729a51) or
->> Thomas (who committed it) it didn't look into this, but maybe the i915
->> devs didn't forward the report to them.
-
-For the record: they did, and Jani mentioned already. Sorry, should have
-phrased this differently.
-
->> Let's see if these mails help. Just wondering: does reverting
->> a4e771729a51 from 6.5-rc5 or drm-tip help as well?
+>> Since v6.5-rc1 the keyboard on this laptop no longer works. This problem
+>> also existed before v6.0-rc1 commit 9946e39fe8d0 ("ACPI: resource: skip
+>> IRQ override on AMD Zen platforms"), so I suspected the cause to be
+>> a9c4a912b7dc ("ACPI: resource: Remove "Zen" specific match and quirks")
+>> which reverted that commit. Reverting a9c4a912b7dc confirmed this theory.
+>>
+>> #regzbot introduced: a9c4a912b7dc
 > 
-> I've redone my tests with 6.5-rc5, and here are the results:
-> (1) 6.5-rc5 -> still affected
-> (2) 6.5-rc5 + revert a4e771729a51 -> not affected
-> (3) 6.5-rc5 + two patches [1][2] suggested on i915 gitlab by @ideak -> not affected (!)
+> Point regzbot to the fix:
 > 
-> Should we somehow tell regzbot about (3)?
+> #regzbot monitor:
+> https://lore.kernel.org/linux-acpi/20230728183921.17230-1-mario.limonciello@amd.com/
+> #regzbot fix: ACPI: resource: Add a quirk for Lenovo Yoga 7 14ARB7
+> #regzbot ignore-activity
 
-That's good to know, thx. But the more important things are:
+Things changed:
 
-* When will those be merged? They are not yet in next yet afaics, so it
-might take some time to mainline them, especially at this point of the
-devel cycle. Imre, could you try to prod the right people so that these
-are ideally upstreamed rather sooner than later, as they fix a regression?
-* They if possible ideally should be tagged for backporting to 6.4, as
-this is a regression from the 6.3 cycle.
-
-But yes, let's tell regzbot that fixes are available, too:
-
-#regzbot fix: drm/i915: Fix HPD polling, reenabling the output poll work
-as needed
-
-(for the record: that's the second of two patches apparently needed)
+#regzbot ignore-activity
+#regzbot fix: 9728ac221160c5ea111879125a7694bb81364
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
 Everything you wanna know about Linux kernel regression tracking:
 https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+That page also explains what to do if mails like this annoy you.
 
->> BTW, there was an earlier report about a problem with a4e771729a51 that
->> afaics was never addressed, but it might be unrelated.
->> https://lore.kernel.org/all/20230328023129.3596968-1-zhouzongmin@kylinos.cn/
-> [1] https://patchwork.freedesktop.org/patch/548590/?series=121050&rev=1
-> [2] https://patchwork.freedesktop.org/patch/548591/?series=121050&rev=1
-
+#regzbot ignore-activity
