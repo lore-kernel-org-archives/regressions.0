@@ -1,165 +1,180 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA6382C9D
-	for <regressions@lists.linux.dev>; Sun, 13 Aug 2023 14:05:03 +0000 (UTC)
-Received: from p200300cf17418700333267be2b9ea1d1.dip0.t-ipconnect.de ([2003:cf:1741:8700:3332:67be:2b9e:a1d1]); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qVBiF-0004o8-Jy; Sun, 13 Aug 2023 16:04:59 +0200
-Message-ID: <cd15c23c-e237-25e3-d2a6-79113945a2d7@leemhuis.info>
-Date: Sun, 13 Aug 2023 16:04:58 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96AAA17C5
+	for <regressions@lists.linux.dev>; Sun, 13 Aug 2023 15:01:59 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:5054:ff:feb3:8f48] (helo=regzbot.fritz.box); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	id 1qVCbN-0005Dw-EE; Sun, 13 Aug 2023 17:01:57 +0200
+From: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>
+To: LKML <linux-kernel@vger.kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Linux regressions report  for mainline [2023-08-13]
+Date: Sun, 13 Aug 2023 15:01:56 +0000
+Message-Id: <169193884982.322301.2963227405402975023@leemhuis.info>
+X-Mailer: git-send-email 2.40.1
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [EXT] Re: [PATCH] crypto: caam - adjust RNG timing to support
- more devices
-Content-Language: en-US, de-DE
-To: Meenakshi Aggarwal <meenakshi.aggarwal@nxp.com>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- Gaurav Jain <gaurav.jain@nxp.com>, Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Bastian Krause <bst@pengutronix.de>,
- "davem@davemloft.net" <davem@davemloft.net>,
- "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- Dan Douglass <dan.douglass@nxp.com>,
- "kernel@pengutronix.de" <kernel@pengutronix.de>,
- Horia Geanta <horia.geanta@nxp.com>, Varun Sethi <V.Sethi@nxp.com>,
- Pankaj Gupta <pankaj.gupta@nxp.com>
-References: <20230612082615.1255357-1-meenakshi.aggarwal@nxp.com>
- <e1f3f073-9d5e-1bae-f4f8-08dc48adad62@pengutronix.de>
- <f673a09e-e212-ee7b-15c3-78afe8c70916@pengutronix.de>
- <DU0PR04MB9563E31E69F93B63EE83DD378E39A@DU0PR04MB9563.eurprd04.prod.outlook.com>
- <DU0PR04MB95637D86F0134DC26EF955DB8E02A@DU0PR04MB9563.eurprd04.prod.outlook.com>
- <ZMzBWXpvdW5YB8bt@gondor.apana.org.au>
- <AM0PR04MB60046B045B5965A61BA1CA91E709A@AM0PR04MB6004.eurprd04.prod.outlook.com>
- <f9e34f8a-5a7b-8223-c672-4fcb2bb23c0a@leemhuis.info>
- <DU0PR04MB95639E903580457856250C008E10A@DU0PR04MB9563.eurprd04.prod.outlook.com>
- <DU0PR04MB95637DD95D05179F36AFAF958E10A@DU0PR04MB9563.eurprd04.prod.outlook.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <DU0PR04MB95637DD95D05179F36AFAF958E10A@DU0PR04MB9563.eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1691935503;4f80afb7;
-X-HE-SMSGID: 1qVBiF-0004o8-Jy
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1691938919;55391693;
+X-HE-SMSGID: 1qVCbN-0005Dw-EE
 
-On 11.08.23 14:58, Meenakshi Aggarwal wrote:
-> 
-> We discussed about it and lets revert the patch for now,
+Hi Linus. Not much to report from by side – but I'm on vacation since
+Thursday (for a bit more that two weeks) and thus didn't monitor lists
+as closely as I usually do, so I might have missed recent reports. But
+nevertheless here are three things of note where you might or might not
+want to take action yourself:
 
-Okay. So who will submit the revert?
+ * a regression in nouveau causes boot problems on some cards:
+https://lore.kernel.org/all/97730.1690408399@warthog.procyon.org.uk/
 
-> as the tag is to be applied this weekend.
+Sadly the patches that causes this also were backported to stable and
+Greg likely wants to see it fixed in mainline to pick up the fixes for
+stable. Karol was on PTO this week, but ACKed reverting 
+ea293f823a8 ("drm/nouveau/kms/nv50-: init hpd_irq_lock for PIOR DP")
+2b5d1c29f6c ("drm/nouveau/disp: PIOR DP uses GPIO for HPD, not PMGR AUX interrupts")
+752a281032b2 ("drm/nouveau/i2c: fix number of aux event slots"
 
-/me can't follow, but whatever, likely not that imporant
+To fix the regression quickly; but afaics nobody submitted such a
+revert. :-/
+https://lore.kernel.org/lkml/CACO55ttZUVCVuWpBiTcr1goWWxs2KP1Xxg00X+hYhbpeJzUEFA@mail.gmail.com/
+
+ * a fix for a crypto regression[1] is sitting in next as
+6a4b8aa0a91 ("crypto: af_alg - Fix missing initialisation affecting
+gcm-aes-s390") for more than a week now :-/
+https://lore.kernel.org/lkml/CAAUqJDuRkHE8fPgZJGaKjUjd3QfGwzfumuJBmStPqBhubxyk_A@mail.gmail.com/
+
+ * The developers behind ef492d08030 ("crypto: caam - adjust RNG timing
+to support more devices") recently agreed to revert the commit due to a
+regression, but afaics nobody submitted a revert yet; I just asked who
+will take care of this, so I guess this will happen during next week:
+https://lore.kernel.org/lkml/DU0PR04MB95637DD95D05179F36AFAF958E10A@DU0PR04MB9563.eurprd04.prod.outlook.com/
 
 Ciao, Thorsten
 
->> -----Original Message-----
->> From: Meenakshi Aggarwal <meenakshi.aggarwal@nxp.com>
->> Sent: Friday, August 11, 2023 5:25 PM
->> To: Linux regressions mailing list <regressions@lists.linux.dev>; Gaurav Jain
->> <gaurav.jain@nxp.com>; Herbert Xu <herbert@gondor.apana.org.au>
->> Cc: Bastian Krause <bst@pengutronix.de>; davem@davemloft.net; linux-
->> crypto@vger.kernel.org; linux-kernel@vger.kernel.org; Dan Douglass
->> <dan.douglass@nxp.com>; kernel@pengutronix.de; Horia Geanta
->> <horia.geanta@nxp.com>; Varun Sethi <V.Sethi@nxp.com>; Pankaj Gupta
->> <pankaj.gupta@nxp.com>
->> Subject: RE: RE: [EXT] Re: [PATCH] crypto: caam - adjust RNG timing to support
->> more devices
->>
->> Hi,
->>
->> we have tested this patch on multiple variants of imx board and it is working fine.
->>
->> We are actively debugging the issue, it is taking time as we are not able to
->> reproduce it at our end.
->>
->> Thanks,
->> Meenakshi
->>
->>> -----Original Message-----
->>> From: Linux regression tracking (Thorsten Leemhuis)
->>> <regressions@leemhuis.info>
->>> Sent: Friday, August 11, 2023 2:18 PM
->>> To: Gaurav Jain <gaurav.jain@nxp.com>; Herbert Xu
->>> <herbert@gondor.apana.org.au>; Meenakshi Aggarwal
->>> <meenakshi.aggarwal@nxp.com>
->>> Cc: Bastian Krause <bst@pengutronix.de>; davem@davemloft.net; linux-
->>> crypto@vger.kernel.org; linux-kernel@vger.kernel.org; Dan Douglass
->>> <dan.douglass@nxp.com>; kernel@pengutronix.de; Horia Geanta
->>> <horia.geanta@nxp.com>; Varun Sethi <V.Sethi@nxp.com>; Pankaj Gupta
->>> <pankaj.gupta@nxp.com>; Linux kernel regressions list
->>> <regressions@lists.linux.dev>
->>> Subject: Re: RE: [EXT] Re: [PATCH] crypto: caam - adjust RNG timing to
->>> support more devices
->>>
->>> [CCing the regression list, as it should be in the loop for regressions:
->>> https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fdocs
->>> .ker%2F&data=05%7C01%7Cmeenakshi.aggarwal%40nxp.com%7C84b2ed6da
->> ac44625
->>>
->> 779408db9a61d801%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C63
->> 827351
->>>
->> 7248142302%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoi
->> V2luMzI
->>>
->> iLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C&sdata=OWH18Cwu
->> h8zyAFqn
->>> I6iiL3Kewpj5NiWaQorKcmiYrr0%3D&reserved=0
->>> nel.org%2Fadmin-guide%2Freporting-
->>>
->> regressions.html&data=05%7C01%7Cmeenakshi.aggarwal%40nxp.com%7Cfde9
->>>
->> ceeb9e0d40d4f77d08db9a47a5e1%7C686ea1d3bc2b4c6fa92cd99c5c301635%7
->>>
->> C0%7C0%7C638273404742560069%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC
->>>
->> 4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C
->>> %7C%7C&sdata=lt7nphOXYXc3GRfOquvM5jmqNszQkDd%2BuSRdAbJd8Ec%3D
->> &r
->>> eserved=0]
->>>
->>> On 04.08.23 14:02, Gaurav Jain wrote:
->>>> From: Herbert Xu <herbert@gondor.apana.org.au>
->>>>> On Mon, Jul 24, 2023 at 05:13:23AM +0000, Meenakshi Aggarwal wrote:
->>>>>> Please share the required information.
->>>>> Any progress on this?
->>>>>
->>>>> Should we revert the offending patch?
->>>>
->>>> Debugging is in progress. There should be some mismatch in TRNG
->>> configuration in customer board.
->>>> Will be sharing a patch to dump the same.
->>>
->>> Any progress on this? Afaics would be good to have either the fix or
->>> the revert in by -rc7 to ensure things get at least one week of proper
->>> testing before the final release.
->>>
->>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker'
->>> hat)
->>> --
->>> Everything you wanna know about Linux kernel regression tracking:
->>> https://linux-/
->>>
->> regtracking.leemhuis.info%2Fabout%2F%23tldr&data=05%7C01%7Cmeenakshi.
->>>
->> aggarwal%40nxp.com%7Cfde9ceeb9e0d40d4f77d08db9a47a5e1%7C686ea1d3b
->>>
->> c2b4c6fa92cd99c5c301635%7C0%7C0%7C638273404742560069%7CUnknown
->>> %7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haW
->> wi
->>>
->> LCJXVCI6Mn0%3D%7C3000%7C%7C%7C&sdata=Xg3ZCWObptmF6xLKO7dpaIYB
->>> A17eKK5wNhlPZ6FR2XA%3D&reserved=0
->>> If I did something stupid, please tell me, as explained on that page.
->>>
->>> #regzbot poke
-> 
-> 
+---
+
+Hi, this is regzbot, the Linux kernel regression tracking bot.
+
+Currently I'm aware of 5 regressions in linux-mainline. Find the
+current status below and the latest on the web:
+
+https://linux-regtracking.leemhuis.info/regzbot/mainline/
+
+Bye bye, hope to see you soon for the next report.
+   Regzbot (on behalf of Thorsten Leemhuis)
+
+
+======================================================
+current cycle (v6.4.. aka v6.5-rc), culprit identified
+======================================================
+
+
+crypto: broke CAAM RNG instantiation on an i.MX8MM
+--------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/lore/e1f3f073-9d5e-1bae-f4f8-08dc48adad62@pengutronix.de/
+https://lore.kernel.org/lkml/e1f3f073-9d5e-1bae-f4f8-08dc48adad62@pengutronix.de/
+
+By Bastian Krause; 27 days ago; 10 activities, latest 0 days ago.
+Introduced in ef492d08030 (v6.5-rc1)
+
+Recent activities from: Meenakshi Aggarwal (2), Linux regression
+  tracking (Thorsten Leemhuis) (1)
+
+One patch associated with this regression:
+* Re: [PATCH] crypto: caam - adjust RNG timing to support more devices
+  https://lore.kernel.org/lkml/f673a09e-e212-ee7b-15c3-78afe8c70916@pengutronix.de/
+  26 days ago, by Bastian Krause
+
+
+btrfs: write-bandwidth performance regression with NVMe raid0
+-------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/lore/20230731152223.4EFB.409509F4@e16-tech.com/
+https://lore.kernel.org/linux-btrfs/20230731152223.4EFB.409509F4@e16-tech.com/
+
+By Wang Yugui; 13 days ago; 18 activities, latest 0 days ago.
+Introduced in da023618076 (v6.5-rc1)
+
+Recent activities from: Wang Yugui (2), Chris Mason (1), Christoph
+  Hellwig (1)
+
+3 patch postings are associated with this regression, the latest is this:
+* Re: btrfs write-bandwidth performance regression of 6.5-rc4/rc3
+  https://lore.kernel.org/linux-btrfs/20230811222321.2AD2.409509F4@e16-tech.com/
+  2 days ago, by Wang Yugui
+
+
+ALSA: hda/realtek: Audible "pop" sound whenever audio card goes in or out of sleep
+----------------------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/bugzilla.kernel.org/217732/
+https://bugzilla.kernel.org/show_bug.cgi?id=217732
+https://lore.kernel.org/regressions/bc22f6c4-a147-3032-49ef-0784d0171d9a@leemhuis.info/
+
+By serfreeman1337 and serfreeman1337; 14 days ago; 5 activities, latest 2 days ago.
+Introduced in 69ea4c9d02b7 (v6.5-rc3)
+
+Recent activities from: Takashi Iwai (1), The Linux kernel's regression
+  tracker (Thorsten Leemhuis) (1)
+
+
+[ *NEW* ] drm/nouveau: stopped booting
+--------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/lore/20230806213107.GFZNARG6moWpFuSJ9W@fat_crate.local/
+https://lore.kernel.org/lkml/20230806213107.GFZNARG6moWpFuSJ9W@fat_crate.local/
+
+By Borislav Petkov; 6 days ago; 16 activities, latest 3 days ago.
+Introduced in 2b5d1c29f6c4 (v6.5-rc3)
+
+Recent activities from: Karol Herbst (6), Takashi Iwai (5), Borislav
+  Petkov (3), Thorsten Leemhuis (2)
+
+
+kernel pointer dereference regression due to extract_iter_to_sg()
+-----------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/lore/CAAUqJDuRkHE8fPgZJGaKjUjd3QfGwzfumuJBmStPqBhubxyk_A@mail.gmail.com/
+https://lore.kernel.org/lkml/CAAUqJDuRkHE8fPgZJGaKjUjd3QfGwzfumuJBmStPqBhubxyk_A@mail.gmail.com/
+
+By Ondrej Mosnáček; 31 days ago; 12 activities, latest 6 days ago.
+Introduced in c1abe6f570af (v6.5-rc1)
+
+Fix incoming:
+* crypto: af_alg - Fix missing initialisation affecting gcm-aes-s390
+  https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=master&id=6a4b8aa0a916b39a39175584c07222434fa6c6ef
+
+
+=============
+End of report
+=============
+
+All regressions marked '[ *NEW* ]' were added since the previous report,
+which can be found here:
+https://lore.kernel.org/r/169134199152.488860.7520017509596978680@leemhuis.info
+
+Thanks for your attention, have a nice day!
+
+  Regzbot, your hard working Linux kernel regression tracking robot
+
+
+P.S.: Wanna know more about regzbot or how to use it to track regressions
+for your subsystem? Then check out the getting started guide or the
+reference documentation:
+
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
+
+The short version: if you see a regression report you want to see
+tracked, just send a reply to the report where you Cc
+regressions@lists.linux.dev with a line like this:
+
+#regzbot introduced: v5.13..v5.14-rc1
+
+If you want to fix a tracked regression, just do what is expected
+anyway: add a 'Link:' tag with the url to the report, e.g.:
+
+Link: https://lore.kernel.org/all/30th.anniversary.repost@klaava.Helsinki.FI/
