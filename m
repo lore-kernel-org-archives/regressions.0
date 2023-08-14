@@ -1,121 +1,61 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71E5BBA34
-	for <regressions@lists.linux.dev>; Mon, 14 Aug 2023 14:35:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1692023705; x=1723559705;
-  h=date:from:to:cc:subject:message-id:reply-to:references:
-   mime-version:in-reply-to;
-  bh=gRZPy6mHGf74LzmsrxabP7mm6fPg22EAQVGoqIlfHfk=;
-  b=hL3mIDpO3l/qMj1Gd8Ja9g8RzeGnVlATldQmdqQ8T4Qif22zE1F7Ur1c
-   4Y4+OOHb1mnwQKMZ3QeS165klC4t/jmzVVvGCtv7fW4JiJ3s4zecnZCE8
-   k3n0Lnzs4m3DXcKtqZLBPrPLeP9YBXl3nqzsycQFfwgNz0EndjFIj422e
-   t4E4j+ZLs9yj1xufdUvTYmpzkDVtghQOqcrt4sSz/cS6R6q1qA0vSdDdP
-   bElY7djYxZkQwZUod8OhaOAPAugIe4hg+OvFz+rm9J5e69fLypDMKsOKV
-   NNmrbyT5NQeF3oVQmwFsUOU4U99Y2tEJO93dNPC7uERQzQ3YcClbFEvoW
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10802"; a="372045323"
-X-IronPort-AV: E=Sophos;i="6.01,172,1684825200"; 
-   d="scan'208";a="372045323"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2023 07:35:04 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10802"; a="907259022"
-X-IronPort-AV: E=Sophos;i="6.01,172,1684825200"; 
-   d="scan'208";a="907259022"
-Received: from ideak-desk.fi.intel.com ([10.237.72.78])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2023 07:35:00 -0700
-Date: Mon, 14 Aug 2023 17:35:13 +0300
-From: Imre Deak <imre.deak@intel.com>
-To: Linux regressions mailing list <regressions@lists.linux.dev>,
-	Jani Nikula <jani.nikula@intel.com>
-Cc: Mikhail Rudenko <mike.rudenko@gmail.com>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>, linux-kernel@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [REGRESSION] HDMI connector detection broken in 6.3 on Intel(R)
- Celeron(R) N3060 integrated graphics
-Message-ID: <ZNo7oXeH0JK+4GPG@ideak-desk.fi.intel.com>
-Reply-To: imre.deak@intel.com
-References: <87v8dmr6ty.fsf@gmail.com>
- <f32b4636-969c-3b9e-6802-5991f511739e@leemhuis.info>
- <87il9l2ymf.fsf@gmail.com>
- <3df95e6d-8237-1c43-e220-a9bdb5d6e044@leemhuis.info>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8ADAC141
+	for <regressions@lists.linux.dev>; Mon, 14 Aug 2023 14:36:09 +0000 (UTC)
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-99bf8e5ab39so601045166b.2
+        for <regressions@lists.linux.dev>; Mon, 14 Aug 2023 07:36:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google; t=1692023768; x=1692628568;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=PBDCBE7RjzqM9AaRqPKjVsz1pmTLNzetZlkAiDCCFV8=;
+        b=aKolWpzf4l9+QDgsAeY0gM8tEjkEyCV+kCwYa/50PaJImWPKOa41rkaVr5azj4gr7K
+         PabnzaQ0abzGvjLZ9FDR1nFhbk5ePpiH7q7KFkvpHgFLYoOyDptUGbOR/zHzeOqIU8zE
+         NNcuj9Fm3jL/CvmYynDlzwx9YiY+CToyGd2z8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692023768; x=1692628568;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PBDCBE7RjzqM9AaRqPKjVsz1pmTLNzetZlkAiDCCFV8=;
+        b=IyrkN99LOVSjfoyKp9Y1l+rpXJenj11hyiqOVHRiTMv4EU8ca7XFyKqm1hoRtEqs5A
+         i1h/NYZXjeAv2JaNQJXct55vPHv1og8I08ky0TQdumizU29K2BOQnVZAK7X6rYiUsLwL
+         t5Oyfo0BcuTFS7hZ0PfvOY9LSPjNmXfWDyRjHgZERqPgjhu0IhmKATzcZNMDLtiJlbRD
+         26V43ullhISVbRya4CQJbKz8pEErbIkzw7rRVmGF1kCGtK2V8dh4n5BVJtJo9Jrp4ugD
+         ZirHESbCCECbFGxcHXcJNgkVIR7QEoBz/XB43wLyGY9gG2Fal7ZYFCIIU1HeJA7rPkGH
+         fphA==
+X-Gm-Message-State: AOJu0Yxjh8lTU4SOozjkAUuOmeRp2iwd+C+hKn5cRE9uCittdJyecsKU
+	7oSydK/OGVvt6CW3AEpdkB9q9cXP2MLQT7s6k+ObQw==
+X-Google-Smtp-Source: AGHT+IF/y/heO1ofQIbx2QpS88H0OEjtNIFBQZDYvDnoh0N/orizg8tGcrkQm20pKYRtBgIvmsFKUu2GsA5/m5ZA7Og=
+X-Received: by 2002:a17:907:7883:b0:99b:e464:bf49 with SMTP id
+ ku3-20020a170907788300b0099be464bf49mr8157072ejc.51.1692023767874; Mon, 14
+ Aug 2023 07:36:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3df95e6d-8237-1c43-e220-a9bdb5d6e044@leemhuis.info>
+References: <4f66cded234462964899f2a661750d6798a57ec0.camel@bitron.ch>
+ <CAJfpeguG4f4S-pq+_EXHxfB63mbof-VnaOy-7a-7seWLMj_xyQ@mail.gmail.com> <ZNozdrtKgTeTaMpX@tycho.pizza>
+In-Reply-To: <ZNozdrtKgTeTaMpX@tycho.pizza>
+From: Miklos Szeredi <miklos@szeredi.hu>
+Date: Mon, 14 Aug 2023 16:35:56 +0200
+Message-ID: <CAJfpegt6x_=F=mD8LEL4AZPbfCLGQrpurhtbDN4Ew50fd2ngqQ@mail.gmail.com>
+Subject: Re: [REGRESSION] fuse: execve() fails with ETXTBSY due to async fuse_flush
+To: Tycho Andersen <tycho@tycho.pizza>
+Cc: =?UTF-8?Q?J=C3=BCrg_Billeter?= <j@bitron.ch>, 
+	"Eric W. Biederman" <ebiederm@xmission.com>, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, regressions@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-On Sun, Aug 13, 2023 at 03:41:30PM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
-Hi,
+On Mon, 14 Aug 2023 at 16:00, Tycho Andersen <tycho@tycho.pizza> wrote:
 
-> On 11.08.23 20:10, Mikhail Rudenko wrote:
-> > On 2023-08-11 at 08:45 +02, Thorsten Leemhuis <regressions@leemhuis.info> wrote:
-> >> On 10.08.23 21:33, Mikhail Rudenko wrote:
-> >>> The following is a copy an issue I posted to drm/i915 gitlab [1] two
-> >>> months ago. I repost it to the mailing lists in hope that it will help
-> >>> the right people pay attention to it.
-> >>
-> >> Thx for your report. Wonder why Dmitry (who authored a4e771729a51) or
-> >> Thomas (who committed it) it didn't look into this, but maybe the i915
-> >> devs didn't forward the report to them.
-> 
-> For the record: they did, and Jani mentioned already. Sorry, should have
-> phrased this differently.
-> 
-> >> Let's see if these mails help. Just wondering: does reverting
-> >> a4e771729a51 from 6.5-rc5 or drm-tip help as well?
-> > 
-> > I've redone my tests with 6.5-rc5, and here are the results:
-> > (1) 6.5-rc5 -> still affected
-> > (2) 6.5-rc5 + revert a4e771729a51 -> not affected
-> > (3) 6.5-rc5 + two patches [1][2] suggested on i915 gitlab by @ideak -> not affected (!)
-> > 
-> > Should we somehow tell regzbot about (3)?
-> 
-> That's good to know, thx. But the more important things are:
-> 
-> * When will those be merged? They are not yet in next yet afaics, so it
-> might take some time to mainline them, especially at this point of the
-> devel cycle. Imre, could you try to prod the right people so that these
-> are ideally upstreamed rather sooner than later, as they fix a regression?
+> It seems like we really do need to wait here. I guess that means we
+> need some kind of exit-proof wait?
 
-I think the patches ([1] and [2]) could be merged via the drm-intel-next
-(drm-intel-fixes) tree Cc'ing also stable. Jani, is this ok?
+Could you please recap the original problem?
 
-> * They if possible ideally should be tagged for backporting to 6.4, as
-> this is a regression from the 6.3 cycle.
-> 
-> But yes, let's tell regzbot that fixes are available, too:
-> 
-> #regzbot fix: drm/i915: Fix HPD polling, reenabling the output poll work
-> as needed
-> 
-> (for the record: that's the second of two patches apparently needed)
-> 
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-> --
-> Everything you wanna know about Linux kernel regression tracking:
-> https://linux-regtracking.leemhuis.info/about/#tldr
-> If I did something stupid, please tell me, as explained on that page.
-> 
-> >> BTW, there was an earlier report about a problem with a4e771729a51 that
-> >> afaics was never addressed, but it might be unrelated.
-> >> https://lore.kernel.org/all/20230328023129.3596968-1-zhouzongmin@kylinos.cn/
-> > [1] https://patchwork.freedesktop.org/patch/548590/?series=121050&rev=1
-> > [2] https://patchwork.freedesktop.org/patch/548591/?series=121050&rev=1
-> 
+Thanks,
+Miklos
