@@ -1,86 +1,150 @@
-Received: from smart6-pmg.ufmg.br (smart6-03-pmg.ufmg.br [150.164.64.152])
+Received: from madras.collabora.co.uk (madras.collabora.co.uk [46.235.227.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 614832564
-	for <regressions@lists.linux.dev>; Sun, 13 Aug 2023 17:22:55 +0000 (UTC)
-Received: from smart6-pmg.ufmg.br (localhost.localdomain [127.0.0.1])
-	by smart6-pmg.ufmg.br (Proxmox) with ESMTP id 91CF478FC14
-	for <regressions@lists.linux.dev>; Sun, 13 Aug 2023 08:23:26 -0300 (-03)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=eba.ufmg.br; h=
-	cc:content-transfer-encoding:content-type:content-type:date:from
-	:from:message-id:mime-version:reply-to:reply-to:subject:subject
-	:to:to; s=mail; bh=SKFdmCtdhQrRnzjy1nADScInWwiji3n0DHT8UpP2Mug=; b=
-	bBztrYtVolcqjtTRzB59alFb4P0OO6Cqa32jl1YRdMdEfnqBQvWgRHCLaKdW0Y6x
-	IU/xQAQO866BVSbX9YAO65pJQekwFABbSLZbtLAxEbZgl1qVX+xxhwBK2fYD9AVx
-	u/a3acypXAUolxIdlYTP62/76Ke6I8FQWuUfzmjJgxn/ip4ACUqSr971b6G2Z/0Z
-	fF80WOWSuKzcrCF1NjKe/KxQVAH5BgBLV6t50YyJ69w+bFqcnoUonuCTE1LbgIAw
-	D5Z5qXTkeh9f0idDblm9AdbakjwMSvvPp5K+0nq0YBUFOPjHr8TbltDSTKNUWoR9
-	kicji1LXxa5q4lhKEBGSpg==
-Received: from carretel.grude.ufmg.br (carretel.grude.ufmg.br [150.164.64.36])
-	by smart6-pmg.ufmg.br (Proxmox) with ESMTP id 1ABB17948F7
-	for <regressions@lists.linux.dev>; Sun, 13 Aug 2023 07:54:27 -0300 (-03)
-Received: from eba.ufmg.br ([98.159.234.84])
-          by carretel.grude.ufmg.br (IBM Domino Release 10.0.1FP3)
-          with ESMTP id 2023081307351457-169132 ;
-          Sun, 13 Aug 2023 07:35:14 -0300 
-Reply-To: "Kristine Wellenstein" <dianedavis@impactfinancialgroupinc.com>
-From: "Kristine Wellenstein" <hildebrando@eba.ufmg.br>
-To: regressions@lists.linux.dev
-Subject: [RE]: RE:
-Date: 13 Aug 2023 06:35:14 -0400
-Message-ID: <20230813063514.B8E6EE64E3FA5983@eba.ufmg.br>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9724046AE
+	for <regressions@lists.linux.dev>; Mon, 14 Aug 2023 05:31:54 +0000 (UTC)
+Received: from [192.168.164.158] (unknown [116.71.172.205])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: usama.anjum)
+	by madras.collabora.co.uk (Postfix) with ESMTPSA id E9CBB660705E;
+	Mon, 14 Aug 2023 06:31:43 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1691991106;
+	bh=ANCniHg7REILr/QGUi9unlaj0a75Pe7ScZ5Fehdxbrk=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=KRkI9fAXgtzqN89AZyap4JhadnYJIvcuTIjEOdwSi0LG14TJMV0Vi9ixQcs5MbhcU
+	 bsFbe/XBpzrtCsyzJdAE2voWc/izY+aAN2xE8elmGp9vNpXOCaU+N62IE3N38zigu2
+	 ueM3bH+qU1h8kGkIDwnjuGg25sjIt5hQE6Dj/a8gVvyCWtXV7MfC0Py0KDlqNhLGOd
+	 QPE4aVrb9D85+h9s27ppNCc3qwBWBEwGPxGspiTpXo0/Z6kzzLSNJshmw6a6moMxGB
+	 Crb+tkO1hGE7x2Rb+3q5lHwATBbWxuKRNzjTJSq+Ndu+SgnGEkmy7w/9IAVNm0AiRE
+	 YgSgz2YDmEXBw==
+Message-ID: <4637f58c-1cf3-0691-4fc1-6fbc38ec47ce@collabora.com>
+Date: Mon, 14 Aug 2023 10:31:38 +0500
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MIMETrack: Itemize by SMTP Server on carretel/UFMG(Release 10.0.1FP3|August 09, 2019) at
- 13-08-2023 07:35:15,
-	Serialize by Router on carretel/UFMG(Release 10.0.1FP3|August 09, 2019) at
- 13-08-2023 07:54:26,
-	Serialize complete at 13-08-2023 07:54:26
-X-TNEFEvaluated: 1
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain;
-	charset="utf-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.1
+Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>,
+ linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-stable <stable@vger.kernel.org>, regressions@lists.linux.dev,
+ Baokun Li <libaokun1@huawei.com>, Andreas Dilger <adilger.kernel@dilger.ca>,
+ Theodore Ts'o <tytso@mit.edu>, Jan Kara <jack@suse.cz>
+Subject: Re: [v6.1] kernel BUG in ext4_writepages
+To: syzbot <syzbot+a8068dd81edde0186829@syzkaller.appspotmail.com>,
+ syzkaller-lts-bugs@googlegroups.com
+References: <00000000000081f8c905f6c24e0d@google.com>
+ <87dcdf62-8a74-1fbf-5f10-f4f3231f774f@collabora.com>
+Content-Language: en-US
+From: Muhammad Usama Anjum <usama.anjum@collabora.com>
+In-Reply-To: <87dcdf62-8a74-1fbf-5f10-f4f3231f774f@collabora.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-=E6=82=A8=E5=A5=BD=EF=BC=8C=EF=BC=9A=E6=82=A8=E7=9F=A5=E9=81=93=EF=BC=8C=E5=
-=8F=AA=E6=9C=89=E5=88=9B=E9=80=A0=E5=A4=9A=E7=A7=8D=E6=94=B6=E5=85=A5=E6=9D=
-=A5=E6=BA=90=EF=BC=8C=E6=82=A8=E6=89=8D=E8=83=BD=E5=AE=9E=E7=8E=B0=E8=B4=A2=
-=E5=8A=A1=E8=87=AA=E7=94=B1=E3=80=82
-=E6=88=91=E6=9C=89=E4=B8=80=E4=BB=BD=E5=95=86=E4=B8=9A=E6=8A=95=E8=B5=84=E7=
-=BB=84=E5=90=88=E6=8F=90=E6=A1=88=EF=BC=8C=E5=B0=86=E4=B8=BA=E6=88=91=E4=BB=
-=AC=E5=8F=8C=E6=96=B9=E5=B8=A6=E6=9D=A5=E7=BB=8F=E6=B5=8E=E5=88=A9=E7=9B=8A=
-=EF=BC=8C=E6=88=91=E5=B8=8C=E6=9C=9B=E5=AE=83=E8=83=BD=E5=90=B8=E5=BC=95=E6=
-=82=A8=E3=80=82 =E8=AF=B7=E6=8E=A5=E5=8F=97=E6=88=91=E5=AF=B9=E6=9C=AA=E7=
-=BB=8F=E6=82=A8=E5=90=8C=E6=84=8F=E5=8F=91=E9=80=81=E7=94=B5=E5=AD=90=E9=82=
-=AE=E4=BB=B6=E7=9A=84=E6=AD=89=E6=84=8F=E3=80=82
-=E6=88=91=E7=9B=B8=E4=BF=A1=E6=82=A8=E6=98=AF=E4=B8=80=E4=BD=8D=E5=A4=87=E5=
-=8F=97=E5=B0=8A=E6=95=AC=E7=9A=84=E4=BA=BA=E5=A3=AB=EF=BC=8C=E8=80=83=E8=99=
-=91=E5=88=B0=E6=88=91=E5=9C=A8=E8=B0=A8=E6=85=8E=E5=AF=BB=E6=89=BE=E8=83=BD=
-=E5=A4=9F=E5=8D=8F=E5=8A=A9=E6=88=91=E6=88=90=E5=8A=9F=E6=89=A7=E8=A1=8C=E8=
-=AF=A5=E9=A1=B9=E7=9B=AE=E7=9A=84=E6=9C=89=E8=83=BD=E5=8A=9B=E7=9A=84=E5=A4=
-=96=E5=9B=BD=E5=90=88=E4=BD=9C=E4=BC=99=E4=BC=B4=E6=9C=9F=E9=97=B4=EF=BC=8C=
-=E4=BB=8E=E7=BD=91=E7=BB=9C=E4=B8=8A=E7=9A=84=E4=BA=BA=E6=B0=91=E6=90=9C=E7=
-=B4=A2=E6=95=B0=E6=8D=AE=E5=BA=93=E4=B8=AD=E8=8E=B7=E5=8F=96=E4=BA=86=E6=82=
-=A8=E7=9A=84=E7=94=B5=E5=AD=90=E9=82=AE=E4=BB=B6=E8=81=94=E7=B3=BB=E4=BF=A1=
-=E6=81=AF=E3=80=82
-=E8=99=BD=E7=84=B6=EF=BC=8C=E6=88=91=E4=B8=8D=E7=9F=A5=E9=81=93=E4=BD=A0=E5=
-=AF=B9=E4=BA=8B=E6=83=85=E7=9A=84=E7=86=9F=E6=82=89=E7=A8=8B=E5=BA=A6=EF=BC=
-=8C=E4=BD=86=E5=B0=B1=E5=83=8F=E6=88=91=E8=AF=B4=E7=9A=84=EF=BC=8C=E6=88=91=
-=E6=9C=89=E4=B8=80=E4=B8=AA=E8=B0=A8=E6=85=8E=E7=9A=84=E5=BB=BA=E8=AE=AE=E7=
-=BB=99=E4=BD=A0=E3=80=82 =E7=84=B6=E8=80=8C=EF=BC=8C=E8=BF=99=E4=B8=8D=E6=
-=98=AF=E5=BC=BA=E5=88=B6=E6=80=A7=E7=9A=84=EF=BC=8C=E6=88=91=E4=B9=9F=E4=B8=
-=8D=E4=BC=9A=E4=BB=A5=E4=BB=BB=E4=BD=95=E6=96=B9=E5=BC=8F=E5=BC=BA=E8=BF=AB=
-=E6=82=A8=E8=BF=9D=E8=83=8C=E8=87=AA=E5=B7=B1=E7=9A=84=E6=84=8F=E6=84=BF=E5=
-=85=91=E7=8E=B0=EF=BC=8C=E4=BD=86=E6=88=91=E5=B8=8C=E6=9C=9B=E6=82=A8=E6=84=
-=BF=E6=84=8F=E4=BA=86=E8=A7=A3=E6=9B=B4=E5=A4=9A=E4=BF=A1=E6=81=AF=E5=B9=B6=
-=E8=80=83=E8=99=91=E6=88=91=E7=9A=84=E6=8F=90=E8=AE=AE=E3=80=82
-=E5=A6=82=E6=9E=9C=E6=9C=89=E5=85=B4=E8=B6=A3=EF=BC=8C=E8=AF=B7=E9=80=9A=E8=
-=BF=87=E7=94=B5=E5=AD=90=E9=82=AE=E4=BB=B6=E4=B8=8E=E6=88=91=E8=81=94=E7=B3=
-=BB=E4=BB=A5=E8=8E=B7=E5=8F=96=E6=9B=B4=E5=A4=9A=E4=BF=A1=E6=81=AF=EF=BC=9A=
-dianedavis@impactfinancialgroupinc.com =E4=BA=86=E8=A7=A3=E6=9B=B4=E5=A4=9A=
-=E8=AF=A6=E7=BB=86=E4=BF=A1=E6=81=AF=E5=92=8C=E7=A8=8B=E5=BA=8F=E3=80=82
+On 8/10/23 3:49 PM, Muhammad Usama Anjum wrote:
+> Hi,
+> 
+> Syzbot has reporting hitting this bug on 6.1.18 and 5.15.101 LTS kernels
+> and provided reproducer as well.
+> 
+> 	BUG_ON(ext4_test_inode_state(inode, EXT4_STATE_MAY_INLINE_DATA));
+> 
+> I've copied the same config and reproduced the bug on 6.1.18, 6.1.44 and
+> next-20230809.
+> 
+> This part of code hasn't been changed from the time it was introduced
+> 4e7ea81db53465 ("ext4: restructure writeback path"). I'm not sure why the
+> inlined data is being destroyed before copying it somewhere else.
+> 
+> Please consider this a report.
+> 
+> Regards,
+> Muhammad Usama Anjum
+> 
+> 
+> On 3/13/23 11:34 AM, syzbot wrote:
+>> syzbot has found a reproducer for the following issue on:
+>>
+>> HEAD commit: 1cc3fcf63192 Linux 6.1.18
+>> git tree: linux-6.1.y
+>> console output: https://syzkaller.appspot.com/x/log.txt?x=10d4b342c80000
+>> kernel config: https://syzkaller.appspot.com/x/.config?x=157296d36f92ea19
+> ^ Kernel config
+> 
+>> dashboard link: https://syzkaller.appspot.com/bug?extid=a8068dd81edde0186829
+>> compiler: Debian clang version 15.0.7, GNU ld (GNU Binutils for Debian) 2.35.2
+>> userspace arch: arm64
+>> syz repro: https://syzkaller.appspot.com/x/repro.syz?x=13512ec6c80000
+>> C reproducer: https://syzkaller.appspot.com/x/repro.c?x=15ca0ff4c80000
+> ^ reproducers. C reproducer reproduces the bug easily.
+> 
+>>
+>> Downloadable assets:
+>> disk image: https://storage.googleapis.com/syzbot-assets/0e4c0d43698b/disk-1cc3fcf6.raw.xz
+>> vmlinux: https://storage.googleapis.com/syzbot-assets/a4de39d735de/vmlinux-1cc3fcf6.xz
+>> kernel image: https://storage.googleapis.com/syzbot-assets/82bab928f6e3/Image-1cc3fcf6.gz.xz
+>> mounted in repro: https://storage.googleapis.com/syzbot-assets/bf2e21b96210/mount_0.gz
+>>
+>> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+>> Reported-by: syzbot+a8068dd81edde0186829@syzkaller.appspotmail.com
+>>
+>> ------------[ cut here ]------------
+>> kernel BUG at fs/ext4/inode.c:2746!
+>> Internal error: Oops - BUG: 00000000f2000800 [#1] PREEMPT SMP
+>> Modules linked in:
+>> CPU: 0 PID: 11 Comm: kworker/u4:1 Not tainted 6.1.18-syzkaller #0
+>> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/02/2023
+>> Workqueue: writeback wb_workfn (flush-7:0)
+>> pstate: 80400005 (Nzcv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+>> pc : ext4_writepages+0x35f4/0x35f8 fs/ext4/inode.c:2745
+>> lr : ext4_writepages+0x35f4/0x35f8 fs/ext4/inode.c:2745
+>> sp : ffff800019d16d40
+>> x29: ffff800019d17120 x28: ffff800008e691e4 x27: dfff800000000000
+>> x26: ffff0000de1f3ee0 x25: ffff800019d17590 x24: ffff800019d17020
+>> x23: ffff0000dd616000 x22: ffff800019d16f40 x21: ffff0000de1f4108
+>> x20: 0000008410000000 x19: 0000000000000001 x18: ffff800019d16a20
+>> x17: ffff80001572d000 x16: ffff8000083099b4 x15: 000000000000ba31
+>> x14: 00000000ffffffff x13: dfff800000000000 x12: 0000000000000001
+>> x11: ff80800008e6c7d8 x10: 0000000000000000 x9 : ffff800008e6c7d8
+>> x8 : ffff0000c099b680 x7 : 0000000000000000 x6 : 0000000000000000
+>> x5 : 0000000000000080 x4 : 0000000000000000 x3 : 0000000000000001
+>> x2 : 0000000000000000 x1 : 0000008000000000 x0 : 0000000000000000
+>> Call trace:
+>> ext4_writepages+0x35f4/0x35f8 fs/ext4/inode.c:2745
+>> do_writepages+0x2e8/0x56c mm/page-writeback.c:2469
+>> __writeback_single_inode+0x228/0x1ec8 fs/fs-writeback.c:1587
+>> writeback_sb_inodes+0x9c0/0x1844 fs/fs-writeback.c:1878
+>> wb_writeback+0x4f8/0x1580 fs/fs-writeback.c:2052
+>> wb_do_writeback fs/fs-writeback.c:2195 [inline]
+>> wb_workfn+0x460/0x11b8 fs/fs-writeback.c:2235
+>> process_one_work+0x868/0x16f4 kernel/workqueue.c:2289
+>> worker_thread+0x8e4/0xfec kernel/workqueue.c:2436
+>> kthread+0x24c/0x2d4 kernel/kthread.c:376
+>> ret_from_fork+0x10/0x20 arch/arm64/kernel/entry.S:860
+>> Code: d4210000 97da5cfa d4210000 97da5cf8 (d4210000)
+>> ---[ end trace 0000000000000000 ]---
+>>
+>>
 
+The last refactoring was done by 4e7ea81db53465 on this code in 2013. The
+code segment in question is present from even before that. It means that
+this bug is present for several years. 4.14 is the most old kernel being
+maintained today. So it affects all current LTS and mainline kernels. I'll
+report 4e7ea81db53465 with regzbot for proper tracking. Thus probably the
+bug report will get associated with all LTS kernels as well.
 
+#regzbot title: Race condition between buffer write and page_mkwrite
+
+#regzbot introduced: 4e7ea81db53465
+
+#regzbot monitor:
+https://lore.kernel.org/all/20230530134405.322194-1-libaokun1@huawei.com
+
+-- 
+BR,
+Muhammad Usama Anjum
