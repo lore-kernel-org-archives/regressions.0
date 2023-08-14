@@ -1,39 +1,70 @@
-Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
+Received: from wout3-smtp.messagingengine.com (wout3-smtp.messagingengine.com [64.147.123.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 771D9100AA
-	for <regressions@lists.linux.dev>; Mon, 14 Aug 2023 22:06:02 +0000 (UTC)
-Received: from cwcc.thunk.org (pool-173-48-82-92.bstnma.fios.verizon.net [173.48.82.92])
-	(authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 37EM5bBe007191
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 14 Aug 2023 18:05:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
-	t=1692050740; bh=iRv8SucL4d4OYoE5Cj7E+7EpEmUPiTYhpKfXfCItRcc=;
-	h=Date:From:Subject:Message-ID:MIME-Version:Content-Type;
-	b=W2X1E7TgU6mM3iJA/os2+pKqmvzRMoOPS3llA/P9Ez3p2GCHiUEAj7/sH5iP1sxdl
-	 8+QP12zP/F9KvBlytY+gn8IJqUQdtdjJl9TYtHXc/Poi6wf7wYSYm6ssF0FETsCsv0
-	 LiNHbOGL0fsRYl+8HivQQz4n7VC7OhlyuYa37J5AGVnqEQ+2xk8ZUGkLar+jAqf9fA
-	 gcfYFrFCRRYCRqK4Hqzod7wghhHGqL7UjALL01UdX0a64Gf8rmKBouPOwVPcqosr6j
-	 Jeu+I8Ac3GPoc9CLqxbYFTY9mWm9ERe0TzP7o5QJg3hywDYJ9VTuKmlHXSVcbFd5SM
-	 Ro5WIpBPqj2cQ==
-Received: by cwcc.thunk.org (Postfix, from userid 15806)
-	id E75E415C0292; Mon, 14 Aug 2023 18:05:36 -0400 (EDT)
-Date: Mon, 14 Aug 2023 18:05:36 -0400
-From: "Theodore Ts'o" <tytso@mit.edu>
-To: Muhammad Usama Anjum <usama.anjum@collabora.com>
-Cc: syzbot <syzbot+a8068dd81edde0186829@syzkaller.appspotmail.com>,
-        syzkaller-lts-bugs@googlegroups.com, linux-ext4@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-stable <stable@vger.kernel.org>,
-        regressions@lists.linux.dev, Baokun Li <libaokun1@huawei.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>, Jan Kara <jack@suse.cz>
-Subject: Re: [v6.1] kernel BUG in ext4_writepages
-Message-ID: <20230814220536.GE2247938@mit.edu>
-References: <00000000000081f8c905f6c24e0d@google.com>
- <87dcdf62-8a74-1fbf-5f10-f4f3231f774f@collabora.com>
- <4637f58c-1cf3-0691-4fc1-6fbc38ec47ce@collabora.com>
- <0fc2546b-da7c-aac4-b402-3ef4970a1789@collabora.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A82487E
+	for <regressions@lists.linux.dev>; Mon, 14 Aug 2023 22:36:46 +0000 (UTC)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+	by mailout.west.internal (Postfix) with ESMTP id 6078332004E7;
+	Mon, 14 Aug 2023 18:36:45 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute6.internal (MEProxy); Mon, 14 Aug 2023 18:36:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tycho.pizza; h=
+	cc:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:sender
+	:subject:subject:to:to; s=fm3; t=1692052604; x=1692139004; bh=aj
+	1uyDV78Du+3ZCPu4kabiwDe7pIihAf2jz8M5tL4JM=; b=h9pUt3siHysgPhnWmQ
+	3Z2kfwYatcYuuxJmS5NfO9EAdU1yHHnIqlu1KkSxbeGuDkpCTNVpZ2viD/sYOKci
+	S4ABOkGXC2nUBtVOkEEGvn/ymy3lZh6xB5CL0NGQPkUgDw/z1KCMFdv2fxbQy4oT
+	e07V7FLc1ZXdvaMYkAyV+pufXJANkP0saH4xquN3iNoamFdxjhGm2TuJPN/Q81Ec
+	KTw6FjQu3iENDOIcvKRUXBH4/5pZkr5HEb2LOJ8TqXNBd60uG71gEU1J55nG9xzk
+	L/1rz2Tq9vf4qT4nWE6wZNjg1wyQQjuyaR+J/hCxmA0SYj+/S99kBBTP9Sw1S0+X
+	sc2g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:sender:subject
+	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+	:x-sasl-enc; s=fm1; t=1692052604; x=1692139004; bh=aj1uyDV78Du+3
+	ZCPu4kabiwDe7pIihAf2jz8M5tL4JM=; b=di3qcdlZz8TAAtJfBuFtPfYXFXOJE
+	Q/HObj5Na/Yiq3qw6XmIZMfeidYo47gahzJnWkHKUMcftvZXdqDBrHARd0xL6xIp
+	si1j/XThsBTGcet12D/Y8asJFcYPoZmS6fXLd7W/QIni0rUljkf/3FQyKBtNAuvw
+	pMeuqYT3wcZxwraEk9Nd36ALzPYY7N+4SvLH7XjvX9hBEQ2hSYlBq5x+Gt5ZYeyI
+	L088Lzc3g/FJe3Mo9Nhg/D2Vh0/k5x6iSpkuHo9zaXUcJoAxCZD3Kfcdm4YjtAKA
+	MNv2t0/UTaqY5Hcv1gRchp36rZFkk7hFQLZ/ZCV5PYdLROeIZ4nT4FKnQ==
+X-ME-Sender: <xms:e6zaZIKrYNdNBF7Nw4XfYbp3Scb4GCblEj0U6uK3e-ikd6frq6dU5w>
+    <xme:e6zaZILuDa61fh9kOxf1WWNqGVTFrigMsSDdemwnRkuCSLCACu3tvWkL1pXoc6VHP
+    OKQowGi_w9mns2cqNU>
+X-ME-Received: <xmr:e6zaZIuxbzPTqYWWuSH1rmHZgLVK0C6-T7zp2Co6G_1UPaI1YnMbNcv4D-Q>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedruddtiedgtdelucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepvfihtghh
+    ohcutehnuggvrhhsvghnuceothihtghhohesthihtghhohdrphhiiiiirgeqnecuggftrf
+    grthhtvghrnhepjeeiiedtkeegvefhfeehgfdvheejgedugeduledtvdejveeijefhvedv
+    kefftdehnecuffhomhgrihhnpehgihhthhhusgdrtghomhenucevlhhushhtvghrufhiii
+    gvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehthigthhhosehthigthhhordhpihii
+    iigr
+X-ME-Proxy: <xmx:fKzaZFbmGLsHsTyt4xv97KqRwOpcUB6UODAFhe6mbgrSFOucrj6BOg>
+    <xmx:fKzaZPYaFzCWPpfyVXhNEZ8PkVXv9LfPVZJ-_knb98IIgdiYUWwZhw>
+    <xmx:fKzaZBAbvusAwsQi-EbrG_-f-8n1vyh_IYDFS7XpacZS0OLzOnssnA>
+    <xmx:fKzaZOVaDK_wN2xEOHZsoYJmp6XGLr1YeZochmaxGZf66LF5AJ1uEw>
+Feedback-ID: i21f147d5:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 14 Aug 2023 18:36:42 -0400 (EDT)
+Date: Mon, 14 Aug 2023 16:36:40 -0600
+From: Tycho Andersen <tycho@tycho.pizza>
+To: Miklos Szeredi <miklos@szeredi.hu>
+Cc: =?iso-8859-1?Q?J=FCrg?= Billeter <j@bitron.ch>,
+	"Eric W. Biederman" <ebiederm@xmission.com>,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: Re: [REGRESSION] fuse: execve() fails with ETXTBSY due to async
+ fuse_flush
+Message-ID: <ZNqseD4hqHWmeF2w@tycho.pizza>
+References: <4f66cded234462964899f2a661750d6798a57ec0.camel@bitron.ch>
+ <CAJfpeguG4f4S-pq+_EXHxfB63mbof-VnaOy-7a-7seWLMj_xyQ@mail.gmail.com>
+ <ZNozdrtKgTeTaMpX@tycho.pizza>
+ <CAJfpegt6x_=F=mD8LEL4AZPbfCLGQrpurhtbDN4Ew50fd2ngqQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -42,47 +73,55 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <0fc2546b-da7c-aac4-b402-3ef4970a1789@collabora.com>
+In-Reply-To: <CAJfpegt6x_=F=mD8LEL4AZPbfCLGQrpurhtbDN4Ew50fd2ngqQ@mail.gmail.com>
 
-On Mon, Aug 14, 2023 at 10:35:57AM +0500, Muhammad Usama Anjum wrote:
-> > The last refactoring was done by 4e7ea81db53465 on this code in 2013. The
-> > code segment in question is present from even before that. It means that
-> > this bug is present for several years. 4.14 is the most old kernel being
-> > maintained today. So it affects all current LTS and mainline kernels. I'll
-> > report 4e7ea81db53465 with regzbot for proper tracking. Thus probably the
-> > bug report will get associated with all LTS kernels as well.
-> > 
-> > #regzbot title: Race condition between buffer write and page_mkwrite
+On Mon, Aug 14, 2023 at 04:35:56PM +0200, Miklos Szeredi wrote:
+> On Mon, 14 Aug 2023 at 16:00, Tycho Andersen <tycho@tycho.pizza> wrote:
 > 
-> #regzbot title: ext4: Race condition between buffer write and page_mkwrite
+> > It seems like we really do need to wait here. I guess that means we
+> > need some kind of exit-proof wait?
+> 
+> Could you please recap the original problem?
 
-If it's a long-standing bug, then it's really not something I consider
-a regression.  That being said, you're assuming that the refactoring
-is what has introduced the bug; that's not necessarily case.
+Sure, the symptom is a deadlock, something like:
 
-*Especially* if it requires a maliciously fuzzed file system, since
-you have to be root to mount a file system.  That's the other thing;
-the different reports at the console have different reproducers, and
-at least one of them has a very badly corrupted file system --- and
-since you need to have root to mount the a maliciously fuzzed file
-system, these are treated with a much lower priority as far as I'm
-concerned.
+# cat /proc/1528591/stack
+[<0>] do_wait+0x156/0x2f0
+[<0>] kernel_wait4+0x8d/0x140
+[<0>] zap_pid_ns_processes+0x104/0x180
+[<0>] do_exit+0xa41/0xb80
+[<0>] do_group_exit+0x3a/0xa0
+[<0>] __x64_sys_exit_group+0x14/0x20
+[<0>] do_syscall_64+0x37/0xb0
+[<0>] entry_SYSCALL_64_after_hwframe+0x44/0xae
 
-(If you think it should be higher priority, and your company is
-willing to fund such work, patches are greatfully appreciated.  :-)
+which is stuck waiting for:
 
-I tried to reproduce this using one of the reproducers on a modern
-kernel, and it doesn't reproduce there.  That being said, it's not
-entirely what the reproducer is doing, since (a) passing -1 to the
-in_fd and out_fd to sendfile *should* just cause sendfile to to return
-an EBADF error, and (b) when I ran it, it just segfaulted on an mmap()
-before it executed anything interesting.
+# cat /proc/1544574/stack
+[<0>] request_wait_answer+0x12f/0x210
+[<0>] fuse_simple_request+0x109/0x2c0
+[<0>] fuse_flush+0x16f/0x1b0
+[<0>] filp_close+0x27/0x70
+[<0>] put_files_struct+0x6b/0xc0
+[<0>] do_exit+0x360/0xb80
+[<0>] do_group_exit+0x3a/0xa0
+[<0>] get_signal+0x140/0x870
+[<0>] arch_do_signal_or_restart+0xae/0x7c0
+[<0>] exit_to_user_mode_prepare+0x10f/0x1c0
+[<0>] syscall_exit_to_user_mode+0x26/0x40
+[<0>] do_syscall_64+0x46/0xb0
+[<0>] entry_SYSCALL_64_after_hwframe+0x44/0xae
 
-Please let me know (a) if you can replicate this on the latest
-upstream kernel, and (b) if the reproducer doesn't require a
-maliciously fuzzed kernel, or where the reproducer is scribbling on
-the file system image while it is mounted.
+I have a reproducer here:
+https://github.com/tych0/kernel-utils/blob/master/fuse2/Makefile#L7
 
-Cheers,
+The problem is that the second thread has called do_exit() ->
+exit_signals(), but then tries to request_wait_answer() which uses the
+core wait primitives that no longer get woken up from signals due to
+the code in exit_signals(). So when we try to exit the pid ns, the
+whole cleanup hangs.
 
-						- Ted
+It seems we really do need to wait in do_exit(), otherwise we get
+the behavior described in this regression...
+
+Tycho
