@@ -1,121 +1,88 @@
-Received: from wout4-smtp.messagingengine.com (wout4-smtp.messagingengine.com [64.147.123.20])
+Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE942CA4E
-	for <regressions@lists.linux.dev>; Mon, 14 Aug 2023 21:34:13 +0000 (UTC)
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
-	by mailout.west.internal (Postfix) with ESMTP id 59ED73200657;
-	Mon, 14 Aug 2023 17:34:12 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute2.internal (MEProxy); Mon, 14 Aug 2023 17:34:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fastmail.fm; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:sender:subject:subject:to:to; s=fm1; t=
-	1692048851; x=1692135251; bh=eEPse9ECRAzn6ElLDhuMktRPeYOzvASO0sc
-	0DZKvmYU=; b=TnYi/bbsx2ggn2SGxWnJEQmGzN3OagYR6pyoisWagh4c0+k/yoe
-	CFMS2wcVDMoEgemvomHr7DyYNS+RyjzwJKvi7XM+Wq0dSjmLYj0Q/xwSV7Fe27z1
-	WXvInKfrtv1HGmaMsVdzncWRpbVWezt5n59obXQ63qNYplMEJEzZlSVPXHPop+9/
-	xFS4EtMfxJMQjk0JpT1UFs28ae2dfbzEYL2YgIyfYN8apX/8oGKYSOVoPew0vsBw
-	lgmK5ikayUFfl3vX0udYtTpGwJkPFtpgOMBb1yOXNXNUIfmLgpS25y7xWIfWKddN
-	TB2FZ39wRIVw8oSiGnF2ih8SVyStbfUeAgA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:sender:subject:subject:to:to:x-me-proxy
-	:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
-	1692048851; x=1692135251; bh=eEPse9ECRAzn6ElLDhuMktRPeYOzvASO0sc
-	0DZKvmYU=; b=Yrr2YQxaq9qY7kvHoBRQQZisXd01NX5Huwafc/YT4iQRIBuim9G
-	dn0qwX5uHi/4gRrL25XkaJjxLCvEhM1x39HkrmfOW5O854cuYUY9qaW8K0qcN1th
-	INo4sBBF6bQjfYxykDpa4mS9znLFdkV5hE/e4db9wk8BcLxGl6Z2hE9weBISdz63
-	HBnV9r4zdMT42Nrwull50uhFLElIICkvItjOZHB7lyEORooEQ9u7vSrf+M+hXFfN
-	QWpy+daS7YjgtTtQ3q1uwLGuv7S3xTd88O9Q9tBRsG1wwn3XG9M/X5K8BVnPUZtR
-	FksX1XEVR8dywg+lG3/kY6hUrBKE9X46Q4Q==
-X-ME-Sender: <xms:053aZFK1CnLelYW-AsxXrBnfPlXMd3VThFdmOzo5sa_2TQNh-JBICA>
-    <xme:053aZBL8BLn6E10ZDo48uNM6f2UfD82lUUwP8THtIJbi5wIqREYRATxuDAgnuMDe-
-    cuCO4mpswylU1qP>
-X-ME-Received: <xmr:053aZNvXjzXBCo7sxhbrpXo9QhPHnNuWiG2yvlfm6d8m5RUxLb_ImdptvETHJTGGEVzK38poWAlI_IOui_0WrdBzJ_R8S9EY9l70xGaKbcKTZjqrcovmPauV>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedruddthedgfeegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepkfffgggfuffvvehfhfgjtgfgsehtkeertddtfeejnecuhfhrohhmpeeuvghr
-    nhguucfutghhuhgsvghrthcuoegsvghrnhgurdhstghhuhgsvghrthesfhgrshhtmhgrih
-    hlrdhfmheqnecuggftrfgrthhtvghrnhepfffhtddvveeivdduuedujeetffekkeelgfdv
-    fefgueffieefjefgjeffhedttdefnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
-    hmpehmrghilhhfrhhomhepsggvrhhnugdrshgthhhusggvrhhtsehfrghsthhmrghilhdr
-    fhhm
-X-ME-Proxy: <xmx:053aZGYW9TYmODksSoCZ5sOK4dLiznOw1eMpAw49brxCFwDJJCpvtg>
-    <xmx:053aZMbxxe72fqhKJvElzZXlN0wGsFIPyMBxAaIdlrSJdWXyej5Dpw>
-    <xmx:053aZKBx7phtuP-TFPuVMsCLcxGvIqx_pc3dOqGRx0XUg03t5J1x1A>
-    <xmx:053aZLyaA9f2jkRvWH-qEZBxM93iHhO2oL9bADnCy69MtfCyczk1Qg>
-Feedback-ID: id8a24192:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 14 Aug 2023 17:34:10 -0400 (EDT)
-Message-ID: <c88e4470-c20a-77fd-be19-f8d2e92b5125@fastmail.fm>
-Date: Mon, 14 Aug 2023 23:34:07 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 771D9100AA
+	for <regressions@lists.linux.dev>; Mon, 14 Aug 2023 22:06:02 +0000 (UTC)
+Received: from cwcc.thunk.org (pool-173-48-82-92.bstnma.fios.verizon.net [173.48.82.92])
+	(authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 37EM5bBe007191
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 14 Aug 2023 18:05:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
+	t=1692050740; bh=iRv8SucL4d4OYoE5Cj7E+7EpEmUPiTYhpKfXfCItRcc=;
+	h=Date:From:Subject:Message-ID:MIME-Version:Content-Type;
+	b=W2X1E7TgU6mM3iJA/os2+pKqmvzRMoOPS3llA/P9Ez3p2GCHiUEAj7/sH5iP1sxdl
+	 8+QP12zP/F9KvBlytY+gn8IJqUQdtdjJl9TYtHXc/Poi6wf7wYSYm6ssF0FETsCsv0
+	 LiNHbOGL0fsRYl+8HivQQz4n7VC7OhlyuYa37J5AGVnqEQ+2xk8ZUGkLar+jAqf9fA
+	 gcfYFrFCRRYCRqK4Hqzod7wghhHGqL7UjALL01UdX0a64Gf8rmKBouPOwVPcqosr6j
+	 Jeu+I8Ac3GPoc9CLqxbYFTY9mWm9ERe0TzP7o5QJg3hywDYJ9VTuKmlHXSVcbFd5SM
+	 Ro5WIpBPqj2cQ==
+Received: by cwcc.thunk.org (Postfix, from userid 15806)
+	id E75E415C0292; Mon, 14 Aug 2023 18:05:36 -0400 (EDT)
+Date: Mon, 14 Aug 2023 18:05:36 -0400
+From: "Theodore Ts'o" <tytso@mit.edu>
+To: Muhammad Usama Anjum <usama.anjum@collabora.com>
+Cc: syzbot <syzbot+a8068dd81edde0186829@syzkaller.appspotmail.com>,
+        syzkaller-lts-bugs@googlegroups.com, linux-ext4@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-stable <stable@vger.kernel.org>,
+        regressions@lists.linux.dev, Baokun Li <libaokun1@huawei.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>, Jan Kara <jack@suse.cz>
+Subject: Re: [v6.1] kernel BUG in ext4_writepages
+Message-ID: <20230814220536.GE2247938@mit.edu>
+References: <00000000000081f8c905f6c24e0d@google.com>
+ <87dcdf62-8a74-1fbf-5f10-f4f3231f774f@collabora.com>
+ <4637f58c-1cf3-0691-4fc1-6fbc38ec47ce@collabora.com>
+ <0fc2546b-da7c-aac4-b402-3ef4970a1789@collabora.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.14.0
-Subject: Re: [REGRESSION] fuse: execve() fails with ETXTBSY due to async
- fuse_flush
-Content-Language: en-US, de-DE
-To: Tycho Andersen <tycho@tycho.pizza>, Miklos Szeredi <miklos@szeredi.hu>
-Cc: =?UTF-8?Q?J=c3=bcrg_Billeter?= <j@bitron.ch>,
- "Eric W. Biederman" <ebiederm@xmission.com>, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-References: <4f66cded234462964899f2a661750d6798a57ec0.camel@bitron.ch>
- <CAJfpeguG4f4S-pq+_EXHxfB63mbof-VnaOy-7a-7seWLMj_xyQ@mail.gmail.com>
- <ZNozdrtKgTeTaMpX@tycho.pizza>
-From: Bernd Schubert <bernd.schubert@fastmail.fm>
-In-Reply-To: <ZNozdrtKgTeTaMpX@tycho.pizza>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0fc2546b-da7c-aac4-b402-3ef4970a1789@collabora.com>
 
-
-
-On 8/14/23 16:00, Tycho Andersen wrote:
-> On Mon, Aug 14, 2023 at 01:02:35PM +0200, Miklos Szeredi wrote:
->> On Mon, 14 Aug 2023 at 08:03, Jürg Billeter <j@bitron.ch> wrote:
->>>
->>> Since v6.3-rc1 commit 5a8bee63b1 ("fuse: in fuse_flush only wait if
->>> someone wants the return code") `fput()` is called asynchronously if a
->>> file is closed as part of a process exiting, i.e., if there was no
->>> explicit `close()` before exit.
->>>
->>> If the file was open for writing, also `put_write_access()` is called
->>> asynchronously as part of the async `fput()`.
->>>
->>> If that newly written file is an executable, attempting to `execve()`
->>> the new file can fail with `ETXTBSY` if it's called after the writer
->>> process exited but before the async `fput()` has run.
->>
->> Thanks for the report.
->>
->> At this point, I think it would be best to revert the original patch,
->> since only v6.4 has it.
+On Mon, Aug 14, 2023 at 10:35:57AM +0500, Muhammad Usama Anjum wrote:
+> > The last refactoring was done by 4e7ea81db53465 on this code in 2013. The
+> > code segment in question is present from even before that. It means that
+> > this bug is present for several years. 4.14 is the most old kernel being
+> > maintained today. So it affects all current LTS and mainline kernels. I'll
+> > report 4e7ea81db53465 with regzbot for proper tracking. Thus probably the
+> > bug report will get associated with all LTS kernels as well.
+> > 
+> > #regzbot title: Race condition between buffer write and page_mkwrite
 > 
-> I agree.
-> 
->> The original fix was already a workaround, and I don't see a clear
->> path forward in this direction.  We need to see if there's better
->> direction.
->>
->> Ideas?
-> 
-> It seems like we really do need to wait here. I guess that means we
-> need some kind of exit-proof wait?
+> #regzbot title: ext4: Race condition between buffer write and page_mkwrite
 
+If it's a long-standing bug, then it's really not something I consider
+a regression.  That being said, you're assuming that the refactoring
+is what has introduced the bug; that's not necessarily case.
 
-I'm not sure how hackish it is, if fuse_flush gets converted to 
-queue_work() and with a new work-queue in struct fuse_inode. That 
-work_queue could be flushed through a new inode operation from 
-do_open_execat.
+*Especially* if it requires a maliciously fuzzed file system, since
+you have to be root to mount a file system.  That's the other thing;
+the different reports at the console have different reproducers, and
+at least one of them has a very badly corrupted file system --- and
+since you need to have root to mount the a maliciously fuzzed file
+system, these are treated with a much lower priority as far as I'm
+concerned.
 
+(If you think it should be higher priority, and your company is
+willing to fund such work, patches are greatfully appreciated.  :-)
 
-Bernd
+I tried to reproduce this using one of the reproducers on a modern
+kernel, and it doesn't reproduce there.  That being said, it's not
+entirely what the reproducer is doing, since (a) passing -1 to the
+in_fd and out_fd to sendfile *should* just cause sendfile to to return
+an EBADF error, and (b) when I ran it, it just segfaulted on an mmap()
+before it executed anything interesting.
+
+Please let me know (a) if you can replicate this on the latest
+upstream kernel, and (b) if the reproducer doesn't require a
+maliciously fuzzed kernel, or where the reproducer is scribbling on
+the file system image while it is mounted.
+
+Cheers,
+
+						- Ted
