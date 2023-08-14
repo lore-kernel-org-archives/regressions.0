@@ -1,61 +1,77 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8ADAC141
-	for <regressions@lists.linux.dev>; Mon, 14 Aug 2023 14:36:09 +0000 (UTC)
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-99bf8e5ab39so601045166b.2
-        for <regressions@lists.linux.dev>; Mon, 14 Aug 2023 07:36:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google; t=1692023768; x=1692628568;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=PBDCBE7RjzqM9AaRqPKjVsz1pmTLNzetZlkAiDCCFV8=;
-        b=aKolWpzf4l9+QDgsAeY0gM8tEjkEyCV+kCwYa/50PaJImWPKOa41rkaVr5azj4gr7K
-         PabnzaQ0abzGvjLZ9FDR1nFhbk5ePpiH7q7KFkvpHgFLYoOyDptUGbOR/zHzeOqIU8zE
-         NNcuj9Fm3jL/CvmYynDlzwx9YiY+CToyGd2z8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692023768; x=1692628568;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=PBDCBE7RjzqM9AaRqPKjVsz1pmTLNzetZlkAiDCCFV8=;
-        b=IyrkN99LOVSjfoyKp9Y1l+rpXJenj11hyiqOVHRiTMv4EU8ca7XFyKqm1hoRtEqs5A
-         i1h/NYZXjeAv2JaNQJXct55vPHv1og8I08ky0TQdumizU29K2BOQnVZAK7X6rYiUsLwL
-         t5Oyfo0BcuTFS7hZ0PfvOY9LSPjNmXfWDyRjHgZERqPgjhu0IhmKATzcZNMDLtiJlbRD
-         26V43ullhISVbRya4CQJbKz8pEErbIkzw7rRVmGF1kCGtK2V8dh4n5BVJtJo9Jrp4ugD
-         ZirHESbCCECbFGxcHXcJNgkVIR7QEoBz/XB43wLyGY9gG2Fal7ZYFCIIU1HeJA7rPkGH
-         fphA==
-X-Gm-Message-State: AOJu0Yxjh8lTU4SOozjkAUuOmeRp2iwd+C+hKn5cRE9uCittdJyecsKU
-	7oSydK/OGVvt6CW3AEpdkB9q9cXP2MLQT7s6k+ObQw==
-X-Google-Smtp-Source: AGHT+IF/y/heO1ofQIbx2QpS88H0OEjtNIFBQZDYvDnoh0N/orizg8tGcrkQm20pKYRtBgIvmsFKUu2GsA5/m5ZA7Og=
-X-Received: by 2002:a17:907:7883:b0:99b:e464:bf49 with SMTP id
- ku3-20020a170907788300b0099be464bf49mr8157072ejc.51.1692023767874; Mon, 14
- Aug 2023 07:36:07 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E78AC2FF
+	for <regressions@lists.linux.dev>; Mon, 14 Aug 2023 17:33:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6333CC433C8;
+	Mon, 14 Aug 2023 17:33:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1692034411;
+	bh=dMLWHmmWTHTpECQlogQ0Ns+k8Paiopb9T66lZHlkhII=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=h8GDb/X2iClmuQ5zfnXPmiXaDl9Kr6TqdPk9iMRYifdCs5TcOthXO4Hnmac1V1af8
+	 mSo/bA8Uy1YoHuUBNr0W10qyeGiRKlZp6XGLSE7/C1qPbgwLQ23lxZdARJSGYc7Tq4
+	 PWAl705L0Cd1cvET+qYqT4H5ANbjo17n8elx8weikQQ0MVb99e5FMid9DcOOI6WQOd
+	 XUxLS1Yq0OSdv4mcDxAOPu66/N5DeAPo9DXiZ9jd+UibphFES1gctSEicQJ7NOSsbq
+	 rWljLJkhTLkxwNy2kdSq8LWYtYqz456/8ICTDs/lKeFKEZyT3CJVYStPUaR1Ojc0cb
+	 8JbvVV4wtiIcA==
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-References: <4f66cded234462964899f2a661750d6798a57ec0.camel@bitron.ch>
- <CAJfpeguG4f4S-pq+_EXHxfB63mbof-VnaOy-7a-7seWLMj_xyQ@mail.gmail.com> <ZNozdrtKgTeTaMpX@tycho.pizza>
-In-Reply-To: <ZNozdrtKgTeTaMpX@tycho.pizza>
-From: Miklos Szeredi <miklos@szeredi.hu>
-Date: Mon, 14 Aug 2023 16:35:56 +0200
-Message-ID: <CAJfpegt6x_=F=mD8LEL4AZPbfCLGQrpurhtbDN4Ew50fd2ngqQ@mail.gmail.com>
-Subject: Re: [REGRESSION] fuse: execve() fails with ETXTBSY due to async fuse_flush
-To: Tycho Andersen <tycho@tycho.pizza>
-Cc: =?UTF-8?Q?J=C3=BCrg_Billeter?= <j@bitron.ch>, 
-	"Eric W. Biederman" <ebiederm@xmission.com>, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 14 Aug 2023 20:33:27 +0300
+Message-Id: <CUSG4ZTYMMD3.30DE3M55W3CJ1@suppilovahvero>
+Cc: "Linux kernel regressions list" <regressions@lists.linux.dev>, "Peter
+ Huewe" <peterhuewe@gmx.de>, "Christian Hesse" <mail@eworm.de>,
+ <stable@vger.kernel.org>, <roubro1991@gmail.com>, "Linus Torvalds"
+ <torvalds@linux-foundation.org>, "Christian Hesse" <list@eworm.de>,
+ <linux-integrity@vger.kernel.org>
+Subject: Re: [PATCH v2 1/2] tpm/tpm_tis: Disable interrupts for Framework
+ Laptop Intel 12th gen
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+To: "Grundik" <ggrundik@gmail.com>, "Thorsten Leemhuis"
+ <regressions@leemhuis.info>, "Lino Sanfilippo" <LinoSanfilippo@gmx.de>
+X-Mailer: aerc 0.14.0
+References: <20230710133836.4367-1-mail@eworm.de>
+ <20230710142916.18162-1-mail@eworm.de>
+ <20230710231315.4ef54679@leda.eworm.net>
+ <bd0587e16d55ef38277ab1f6169909ae7cde3542.camel@kernel.org>
+ <bb5580e93d244400c3330d7091bf64868aa2053f.camel@gmail.com>
+ <0f272843a33a1706dbcbb2d84b02e3951ee60cbb.camel@kernel.org>
+ <fdd5fd9ece045ebd1888672a75f157e64ade98fb.camel@gmail.com>
+ <a588d1d3-12e0-b078-b6cc-b0a63c54ab37@leemhuis.info>
+ <CUPW0XP1RFXI.162GZ78E46TBJ@suppilovahvero>
+ <CUPWEV9HSGHY.MLO0B4RRH4RR@suppilovahvero>
+ <5806ebf113d52c660e1c70e8a57cc047ab039aff.camel@gmail.com>
+ <CUPZF09RGD86.VQN9BOMEYZX5@suppilovahvero>
+ <2c5abdca1e93894ff3ee41ab1da90a5f8e38657f.camel@gmail.com>
+In-Reply-To: <2c5abdca1e93894ff3ee41ab1da90a5f8e38657f.camel@gmail.com>
 
-On Mon, 14 Aug 2023 at 16:00, Tycho Andersen <tycho@tycho.pizza> wrote:
+On Sat Aug 12, 2023 at 2:28 PM EEST, Grundik wrote:
+> On Fri, 2023-08-11 at 23:01 +0300, Jarkko Sakkinen wrote:
+> >=20
+> >=20
+> > Thanks for sharing your opinion. I'll take the necessary steps.
+> >=20
+>
+> I was thinking... Maybe I'm wrong, maybe I mistaking, but isnt this TPM
+> located inside of the CPU chip? So that issue is not specific to laptop
+> vendor or model, but its CPU-specific.
 
-> It seems like we really do need to wait here. I guess that means we
-> need some kind of exit-proof wait?
+Nope, tpm_tis is MMIO interface for so called FIFO register interface,
+it could be backed e.g. by SPI [*]. It is a physical layer for MMIO.
+There's other backends too such as tpm_tis_i2c where kernel is directly
+exposed to the physical layer.
 
-Could you please recap the original problem?
+> My MSI A12MT laptop has i5-1240P, Framework laptops mentioned in this
+> thread, also has i5-1240P CPU. Unfortunately there are no such
+> information about other affected models, but could it be just that CPU
+> line?
 
-Thanks,
-Miklos
+[*] https://lkml.org/lkml/2023/8/14/1065
+
+BR, Jarkko
