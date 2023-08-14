@@ -1,127 +1,187 @@
-Received: from wout3-smtp.messagingengine.com (wout3-smtp.messagingengine.com [64.147.123.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A82487E
-	for <regressions@lists.linux.dev>; Mon, 14 Aug 2023 22:36:46 +0000 (UTC)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-	by mailout.west.internal (Postfix) with ESMTP id 6078332004E7;
-	Mon, 14 Aug 2023 18:36:45 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute6.internal (MEProxy); Mon, 14 Aug 2023 18:36:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tycho.pizza; h=
-	cc:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:sender
-	:subject:subject:to:to; s=fm3; t=1692052604; x=1692139004; bh=aj
-	1uyDV78Du+3ZCPu4kabiwDe7pIihAf2jz8M5tL4JM=; b=h9pUt3siHysgPhnWmQ
-	3Z2kfwYatcYuuxJmS5NfO9EAdU1yHHnIqlu1KkSxbeGuDkpCTNVpZ2viD/sYOKci
-	S4ABOkGXC2nUBtVOkEEGvn/ymy3lZh6xB5CL0NGQPkUgDw/z1KCMFdv2fxbQy4oT
-	e07V7FLc1ZXdvaMYkAyV+pufXJANkP0saH4xquN3iNoamFdxjhGm2TuJPN/Q81Ec
-	KTw6FjQu3iENDOIcvKRUXBH4/5pZkr5HEb2LOJ8TqXNBd60uG71gEU1J55nG9xzk
-	L/1rz2Tq9vf4qT4nWE6wZNjg1wyQQjuyaR+J/hCxmA0SYj+/S99kBBTP9Sw1S0+X
-	sc2g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:sender:subject
-	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-	:x-sasl-enc; s=fm1; t=1692052604; x=1692139004; bh=aj1uyDV78Du+3
-	ZCPu4kabiwDe7pIihAf2jz8M5tL4JM=; b=di3qcdlZz8TAAtJfBuFtPfYXFXOJE
-	Q/HObj5Na/Yiq3qw6XmIZMfeidYo47gahzJnWkHKUMcftvZXdqDBrHARd0xL6xIp
-	si1j/XThsBTGcet12D/Y8asJFcYPoZmS6fXLd7W/QIni0rUljkf/3FQyKBtNAuvw
-	pMeuqYT3wcZxwraEk9Nd36ALzPYY7N+4SvLH7XjvX9hBEQ2hSYlBq5x+Gt5ZYeyI
-	L088Lzc3g/FJe3Mo9Nhg/D2Vh0/k5x6iSpkuHo9zaXUcJoAxCZD3Kfcdm4YjtAKA
-	MNv2t0/UTaqY5Hcv1gRchp36rZFkk7hFQLZ/ZCV5PYdLROeIZ4nT4FKnQ==
-X-ME-Sender: <xms:e6zaZIKrYNdNBF7Nw4XfYbp3Scb4GCblEj0U6uK3e-ikd6frq6dU5w>
-    <xme:e6zaZILuDa61fh9kOxf1WWNqGVTFrigMsSDdemwnRkuCSLCACu3tvWkL1pXoc6VHP
-    OKQowGi_w9mns2cqNU>
-X-ME-Received: <xmr:e6zaZIuxbzPTqYWWuSH1rmHZgLVK0C6-T7zp2Co6G_1UPaI1YnMbNcv4D-Q>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedruddtiedgtdelucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepvfihtghh
-    ohcutehnuggvrhhsvghnuceothihtghhohesthihtghhohdrphhiiiiirgeqnecuggftrf
-    grthhtvghrnhepjeeiiedtkeegvefhfeehgfdvheejgedugeduledtvdejveeijefhvedv
-    kefftdehnecuffhomhgrihhnpehgihhthhhusgdrtghomhenucevlhhushhtvghrufhiii
-    gvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehthigthhhosehthigthhhordhpihii
-    iigr
-X-ME-Proxy: <xmx:fKzaZFbmGLsHsTyt4xv97KqRwOpcUB6UODAFhe6mbgrSFOucrj6BOg>
-    <xmx:fKzaZPYaFzCWPpfyVXhNEZ8PkVXv9LfPVZJ-_knb98IIgdiYUWwZhw>
-    <xmx:fKzaZBAbvusAwsQi-EbrG_-f-8n1vyh_IYDFS7XpacZS0OLzOnssnA>
-    <xmx:fKzaZOVaDK_wN2xEOHZsoYJmp6XGLr1YeZochmaxGZf66LF5AJ1uEw>
-Feedback-ID: i21f147d5:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 14 Aug 2023 18:36:42 -0400 (EDT)
-Date: Mon, 14 Aug 2023 16:36:40 -0600
-From: Tycho Andersen <tycho@tycho.pizza>
-To: Miklos Szeredi <miklos@szeredi.hu>
-Cc: =?iso-8859-1?Q?J=FCrg?= Billeter <j@bitron.ch>,
-	"Eric W. Biederman" <ebiederm@xmission.com>,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: Re: [REGRESSION] fuse: execve() fails with ETXTBSY due to async
- fuse_flush
-Message-ID: <ZNqseD4hqHWmeF2w@tycho.pizza>
-References: <4f66cded234462964899f2a661750d6798a57ec0.camel@bitron.ch>
- <CAJfpeguG4f4S-pq+_EXHxfB63mbof-VnaOy-7a-7seWLMj_xyQ@mail.gmail.com>
- <ZNozdrtKgTeTaMpX@tycho.pizza>
- <CAJfpegt6x_=F=mD8LEL4AZPbfCLGQrpurhtbDN4Ew50fd2ngqQ@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1915F8BEB
+	for <regressions@lists.linux.dev>; Mon, 14 Aug 2023 23:38:24 +0000 (UTC)
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2b9bf52cd08so72095131fa.2
+        for <regressions@lists.linux.dev>; Mon, 14 Aug 2023 16:38:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1692056303; x=1692661103;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=auCKH77GUmHtR8IapPBb8g4UiN/2zl1VUIFKJbzQ/kI=;
+        b=MKa6VDrja44w1LXj9J8jTSnXHE4lZXxJmJ832PLK492VGubJFyyH2medBsAcmF7Z+r
+         wMzRbjFr30iwnHvFoM10/q8CfuIu7iI4PC5DRWJt1QwXNrXa92/H90zt5J0LheUMYMnP
+         iwAAypdFF8rGILc2Gt5crqCuQyokzAqQziUDoex20leBimA62FIbjfLq2Kp6TC47mUgW
+         PTXhF8UpP9NyMsYkvsXoHDahESTicpPBviiMD79huk3dn2ryjxPsSKAMLMGubk5VzNvM
+         fjwmw2XTgTNXqXoZM+eLDPZg7yNDQwFbTTzIndTOpDLzC4wZktAkpveoaN5It2Ien3kZ
+         5Zsg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692056303; x=1692661103;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=auCKH77GUmHtR8IapPBb8g4UiN/2zl1VUIFKJbzQ/kI=;
+        b=bnAP8WKdnONe9tzFLYQIcT54McsGRmDnzt+riLi4/1z2uAsAPH5KyFKCugPaqlDbgE
+         d+TrwHKlWo6tx+qty2ijO36RCt7Jx29dQ6DNvxTKXz+RUWnlSl6yS87vS3/rPDDPa/NE
+         gBfjCB3ltuZ+3ogmpMfFu3pz9gQcJkj0NKbqG4+gelA9+6pt/RR/+tzXkSTgWOyKdc48
+         Xxkidxf9V6srBZurgMdsoIl92aO2JlvWM6LavovjngL3sXSCt5SEIHEHd5eFiixcQ640
+         fQUue2RXSe5N43FeqWwfXgHVH1QwFer2FlkWt6kZvyFXbhS7fdeDO6G41Np7ppYCStOK
+         mxDA==
+X-Gm-Message-State: AOJu0YwnmlHrN5RPSXcph1SEByHQ5nlLpDxlprucdom870vVNO9r5cJr
+	x8+BcCc4JAfftgWyY4hltI+Z/bEtL/Rn7I7z1Ck=
+X-Google-Smtp-Source: AGHT+IH2pYZt5ZO0uVppPWJ58wGlkDfjVd0pGa3fb/b0ihVaZq3jrTGj/cg5gIFAXuXeTSF/UvhygzIGyIoEmEngvno=
+X-Received: by 2002:a2e:925a:0:b0:2b9:f13b:6139 with SMTP id
+ v26-20020a2e925a000000b002b9f13b6139mr8189721ljg.20.1692056302570; Mon, 14
+ Aug 2023 16:38:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJfpegt6x_=F=mD8LEL4AZPbfCLGQrpurhtbDN4Ew50fd2ngqQ@mail.gmail.com>
+References: <2300626.ElGaqSPkdT@bruno-beit> <5706628.DvuYhMxLoT@bruno-beit>
+ <CABBYNZ+Nt3Rho2=VtVrspRLond2agnKhT1LmeLCGdY4fdxmusg@mail.gmail.com>
+ <13020832.2lBWEU9m2C@bruno-beit> <CABBYNZLpHxGHKsB_JPh1Drg=V_gXMGTp=nqXB=W1MM2_6BNHQw@mail.gmail.com>
+In-Reply-To: <CABBYNZLpHxGHKsB_JPh1Drg=V_gXMGTp=nqXB=W1MM2_6BNHQw@mail.gmail.com>
+From: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
+Date: Mon, 14 Aug 2023 16:38:10 -0700
+Message-ID: <CABBYNZLo0WT+VovmB3AKPKNNLXPNPBdECNzf6MNu+aL6d91naQ@mail.gmail.com>
+Subject: Re: regression: kernel 6.4.x breaks scanning/pairing (but not use) of
+ LE devices
+To: Bruno Pitrus <brunopitrus@hotmail.com>
+Cc: Paul Menzel <pmenzel@molgen.mpg.de>, 
+	"linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>, 
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>, Takashi Iwai <tiwai@suse.de>, 
+	Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Aug 14, 2023 at 04:35:56PM +0200, Miklos Szeredi wrote:
-> On Mon, 14 Aug 2023 at 16:00, Tycho Andersen <tycho@tycho.pizza> wrote:
-> 
-> > It seems like we really do need to wait here. I guess that means we
-> > need some kind of exit-proof wait?
-> 
-> Could you please recap the original problem?
+Hi Bruno,
 
-Sure, the symptom is a deadlock, something like:
+On Mon, Aug 14, 2023 at 1:21=E2=80=AFPM Luiz Augusto von Dentz
+<luiz.dentz@gmail.com> wrote:
+>
+> Hi Bruno,
+>
+> On Mon, Aug 14, 2023 at 3:00=E2=80=AFAM Bruno Pitrus <brunopitrus@hotmail=
+.com> wrote:
+> >
+> > Dnia pi=C4=85tek, 11 sierpnia 2023 19:11:50 CEST Luiz Augusto von Dentz=
+ pisze:
+> > > Hi Bruno,
+> > >
+> > > On Fri, Aug 11, 2023 at 4:25=E2=80=AFAM Bruno Pitrus <brunopitrus@hot=
+mail.com> wrote:
+> > > >
+> > > > Dnia sobota, 5 sierpnia 2023 09:31:08 CEST Paul Menzel pisze:
+> > > > > [Cc: +regressions@]
+> > > > >
+> > > > > #regzbot introduced v6.3.9..v6.4.2
+> > > > >
+> > > > > Dear Bruno,
+> > > > >
+> > > > >
+> > > > > Thank you for your report.
+> > > > >
+> > > > > Am 04.08.23 um 20:55 schrieb Bruno Pitrus:
+> > > > > > I am using openSUSE Tumbleweed on a Dell Precision 3551 which h=
+as a
+> > > > > > bluetooth adapter of ID 8087:0026 (Intel AX201). I am using a
+> > > > > > Logitech M575 trackball mouse which only supports Bluetooth LE.
+> > > > > >
+> > > > > > With kernel 6.4.2 or newer, scanning for devices =E2=80=94 usin=
+g either the
+> > > > > > KDE gui or bluetoothctl =E2=80=94 most of the time returns only=
+ =E2=80=9Cclassic
+> > > > > > bluetooth=E2=80=9D devices like computers and phones, and not t=
+he mouse. If
+> > > > > > the mouse was paired before, it works correctly however.
+> > > > > >
+> > > > > > With previous kernel versions (6.3.9 and before), pairing the m=
+ouse
+> > > > > > worked correctly.
+> > > > >
+> > > > > Are you able to bisect the regression? Please also attach the Lin=
+ux
+> > > > > messages. (You can also create a ticket in the Linux kernel Bugzi=
+lla [1]
+> > > > > and attach everything there.)
+> > > > >
+> > > > >
+> > > > > Kind regards,
+> > > > >
+> > > > > Paul
+> > > > >
+> > > > >
+> > > > > [1]: https://bugzilla.kernel.org/
+> > > > >
+> > > >
+> > > > The offending commit is https://github.com/SUSE/kernel/commit/288c9=
+0224eec55d13e786844b7954ef060752089 :
+> > > >
+> > > > > Bluetooth: Enable all supported LE PHY by default
+> > > > > This enables 2M and Coded PHY by default if they are marked as su=
+pported
+> > > > > in the LE features bits.
+> > > > >
+> > > > > Signed-off-by: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
+> > >
+> > > Do you have the btmon/HCI traces showing this, we also need the
+> > > firmware version as well since I suspect this is due to the controlle=
+r
+> > > setting the PHYs as supported but being unable to to use them
+> > > properly.
+> > >
+> > >
+> > hciconfig says the below: (I assume =E2=80=9CRevision=E2=80=9D is the f=
+irmware version)
+>
+> You can find the firmware information on dmesg, e.g:
+>
+> [    7.982585] Bluetooth: hci1: Found Intel DDC parameters: intel/ibt-20-=
+1-3.ddc
+> [    7.984113] Bluetooth: hci1: Applying Intel DDC parameters completed
+> [    7.985111] Bluetooth: hci1: Firmware revision 0.3 build 144 week 11 2=
+023
+>
+> > hci0:   Type: Primary  Bus: USB
+> >         BD Address: F0:9E:4A:E6:62:15  ACL MTU: 1021:4  SCO MTU: 96:6
+> >         UP RUNNING
+> >         RX bytes:150050 acl:8114 sco:0 events:270 errors:0
+> >         TX bytes:5970 acl:69 sco:0 commands:173 errors:0
+> >         Features: 0xbf 0xfe 0x0f 0xfe 0xdb 0xff 0x7b 0x87
+> >         Packet type: DM1 DM3 DM5 DH1 DH3 DH5 HV1 HV2 HV3
+> >         Link policy: RSWITCH SNIFF
+> >         Link mode: PERIPHERAL ACCEPT
+> >         Name: '[REDACTED]'
+> >         Class: 0x6c010c
+> >         Service Classes: Rendering, Capturing, Audio, Telephony
+> >         Device Class: Computer, Laptop
+> >         HCI Version: 5.2 (0xb)  Revision: 0x20ce
+> >         LMP Version: 5.2 (0xb)  Subversion: 0x20ce
+> >         Manufacturer: Intel Corp. (2)
+> >
+> > I'm unsure how to attach the btmon output as it is a binary file that c=
+ontains potentially private information (names of nearby devices)
+>
+> Well you can collect it manually and redacted the addresses, etc, up
+> to you, I'm usually not that paranoid of sharing this kind of
+> information if you scan for a short time, in the other hand I usually
+> use gist.github.com to do that so I can delete it later if needed.
 
-# cat /proc/1528591/stack
-[<0>] do_wait+0x156/0x2f0
-[<0>] kernel_wait4+0x8d/0x140
-[<0>] zap_pid_ns_processes+0x104/0x180
-[<0>] do_exit+0xa41/0xb80
-[<0>] do_group_exit+0x3a/0xa0
-[<0>] __x64_sys_exit_group+0x14/0x20
-[<0>] do_syscall_64+0x37/0xb0
-[<0>] entry_SYSCALL_64_after_hwframe+0x44/0xae
+Seems to be working fine here (with AX201 and AX210):
 
-which is stuck waiting for:
+https://gist.github.com/Vudentz/d80ab63f4f62f9f216796edb4838c855
 
-# cat /proc/1544574/stack
-[<0>] request_wait_answer+0x12f/0x210
-[<0>] fuse_simple_request+0x109/0x2c0
-[<0>] fuse_flush+0x16f/0x1b0
-[<0>] filp_close+0x27/0x70
-[<0>] put_files_struct+0x6b/0xc0
-[<0>] do_exit+0x360/0xb80
-[<0>] do_group_exit+0x3a/0xa0
-[<0>] get_signal+0x140/0x870
-[<0>] arch_do_signal_or_restart+0xae/0x7c0
-[<0>] exit_to_user_mode_prepare+0x10f/0x1c0
-[<0>] syscall_exit_to_user_mode+0x26/0x40
-[<0>] do_syscall_64+0x46/0xb0
-[<0>] entry_SYSCALL_64_after_hwframe+0x44/0xae
+> >
+>
+>
+> --
+> Luiz Augusto von Dentz
 
-I have a reproducer here:
-https://github.com/tych0/kernel-utils/blob/master/fuse2/Makefile#L7
 
-The problem is that the second thread has called do_exit() ->
-exit_signals(), but then tries to request_wait_answer() which uses the
-core wait primitives that no longer get woken up from signals due to
-the code in exit_signals(). So when we try to exit the pid ns, the
-whole cleanup hangs.
 
-It seems we really do need to wait in do_exit(), otherwise we get
-the behavior described in this regression...
-
-Tycho
+--=20
+Luiz Augusto von Dentz
