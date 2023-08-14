@@ -1,108 +1,121 @@
-Received: from out2-smtp.messagingengine.com (out2-smtp.messagingengine.com [66.111.4.26])
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C919C132
-	for <regressions@lists.linux.dev>; Mon, 14 Aug 2023 14:00:27 +0000 (UTC)
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
-	by mailout.nyi.internal (Postfix) with ESMTP id 3528C5C0189;
-	Mon, 14 Aug 2023 10:00:26 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute2.internal (MEProxy); Mon, 14 Aug 2023 10:00:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tycho.pizza; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:sender:subject:subject:to:to; s=fm3; t=
-	1692021626; x=1692108026; bh=V4Mqsvn0mkFBlxGUCbEghrLXs9l8NfuTuHH
-	E9sQ4L48=; b=avjl7gmH89v1HjLkGteWjWMg0ALJ3xJWEi1SFm3+qBT3D8OWrLy
-	T5k4KlAs/xKVrhz4kEiRFF5C0RADWMgp+JDEh3XC5xMB0q4X1P8R11KDlMAPZ1D2
-	+6tSrgeS8ojMFmvUV07hPAF1pAvA3i0GBQY2lsOIvuCZfjcnSntlBNZn5qkyoyfC
-	iyVN/V2MGub6Ve5a3MyvvsfpY5csEqGZZHauJIDAhQy0UoZ8AQzai+EUdtZT511r
-	xkB0CL8IyEtouxqpE9acZU6VraTDrAg6poLVBznB8VZK3nQd/iSdltHIo2sbcmjX
-	3wGGu4QqQYmmAqIxC0LloCrNN9ozEIEVTJg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:sender:subject:subject:to:to:x-me-proxy
-	:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
-	1692021626; x=1692108026; bh=V4Mqsvn0mkFBlxGUCbEghrLXs9l8NfuTuHH
-	E9sQ4L48=; b=zUI+0irwTXuT11zSktr7ZXVi7c1ZMTv2YUkNpRZigW5Tb5rSbm5
-	srV0m6y9y8zB7wQUJcfZYx2qKKY9kGdpwyPmbG63u7xfLWOFEu5jymTQFQtltfZx
-	3MHwbnllyxBvD5+1oENVpGMARWLNn6uzailF3QHMeI7ErsRWchbd/XKMRsC/LDCF
-	vlKUPgZWF8nYpYwPRBdyya7aSpQ6Yg/ZuF3MyMX3DB4rPleU/xbv4NGe4hwqtoCP
-	+qPDa7leperHaBhgZhfdN6wj09dY1XBhxPXGrHphFfg5DJ2iNnCrguduXKiwgzbX
-	MbCMvbrQKglURjOBoSXvatagtRIwXWKZZrQ==
-X-ME-Sender: <xms:eTPaZD-nG9Q1TBizUrOaQ6xpU_t0LCCurgH1xN22qkQ58r2e2uJAlQ>
-    <xme:eTPaZPvrEkC0f--0tnDIwIdH8inDIJi4SFuJWE9jnDd8hFXqWU8qqiprQreDwB0Uv
-    G7aQ-iulehN1wUUXx8>
-X-ME-Received: <xmr:eTPaZBBU1nSdXOO8PgyAMhyPhmc4_wa7mf3kbcX5DaTiG2u1WWX7SfLLVmg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedruddtgedgjedtucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvfevuffkfhggtggugfgjsehtkeortddttddunecuhfhrohhmpefvhigt
-    hhhoucetnhguvghrshgvnhcuoehthigthhhosehthigthhhordhpihiiiigrqeenucggtf
-    frrghtthgvrhhnpeevffehhfetteeffeelgefhffetueefhedtieekleefgeegtedutddt
-    lefhhfetieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhroh
-    hmpehthigthhhosehthigthhhordhpihiiiigr
-X-ME-Proxy: <xmx:eTPaZPeWa_IDgWNNBgNBIaKBadfs-5JMfssKbG4oYbTJDqvON2op0w>
-    <xmx:eTPaZIP1aHvhQxblm1yBRLSMlNzGWY1sXHmsJUEf3W03Gn6mH1vkCg>
-    <xmx:eTPaZBnX7kdiH3vEC_Uyfp6vmveqJDmEJCwhdTopnhBrr9YXMm0dwA>
-    <xmx:ejPaZFqG1TxeYKup4hFxWr6hhvu0QIh4yHYoQMX_V8PF6Ldj9rVSHA>
-Feedback-ID: i21f147d5:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 14 Aug 2023 10:00:24 -0400 (EDT)
-Date: Mon, 14 Aug 2023 08:00:22 -0600
-From: Tycho Andersen <tycho@tycho.pizza>
-To: Miklos Szeredi <miklos@szeredi.hu>
-Cc: =?iso-8859-1?Q?J=FCrg?= Billeter <j@bitron.ch>,
-	"Eric W. Biederman" <ebiederm@xmission.com>,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: Re: [REGRESSION] fuse: execve() fails with ETXTBSY due to async
- fuse_flush
-Message-ID: <ZNozdrtKgTeTaMpX@tycho.pizza>
-References: <4f66cded234462964899f2a661750d6798a57ec0.camel@bitron.ch>
- <CAJfpeguG4f4S-pq+_EXHxfB63mbof-VnaOy-7a-7seWLMj_xyQ@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71E5BBA34
+	for <regressions@lists.linux.dev>; Mon, 14 Aug 2023 14:35:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1692023705; x=1723559705;
+  h=date:from:to:cc:subject:message-id:reply-to:references:
+   mime-version:in-reply-to;
+  bh=gRZPy6mHGf74LzmsrxabP7mm6fPg22EAQVGoqIlfHfk=;
+  b=hL3mIDpO3l/qMj1Gd8Ja9g8RzeGnVlATldQmdqQ8T4Qif22zE1F7Ur1c
+   4Y4+OOHb1mnwQKMZ3QeS165klC4t/jmzVVvGCtv7fW4JiJ3s4zecnZCE8
+   k3n0Lnzs4m3DXcKtqZLBPrPLeP9YBXl3nqzsycQFfwgNz0EndjFIj422e
+   t4E4j+ZLs9yj1xufdUvTYmpzkDVtghQOqcrt4sSz/cS6R6q1qA0vSdDdP
+   bElY7djYxZkQwZUod8OhaOAPAugIe4hg+OvFz+rm9J5e69fLypDMKsOKV
+   NNmrbyT5NQeF3oVQmwFsUOU4U99Y2tEJO93dNPC7uERQzQ3YcClbFEvoW
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10802"; a="372045323"
+X-IronPort-AV: E=Sophos;i="6.01,172,1684825200"; 
+   d="scan'208";a="372045323"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2023 07:35:04 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10802"; a="907259022"
+X-IronPort-AV: E=Sophos;i="6.01,172,1684825200"; 
+   d="scan'208";a="907259022"
+Received: from ideak-desk.fi.intel.com ([10.237.72.78])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2023 07:35:00 -0700
+Date: Mon, 14 Aug 2023 17:35:13 +0300
+From: Imre Deak <imre.deak@intel.com>
+To: Linux regressions mailing list <regressions@lists.linux.dev>,
+	Jani Nikula <jani.nikula@intel.com>
+Cc: Mikhail Rudenko <mike.rudenko@gmail.com>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>, linux-kernel@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [REGRESSION] HDMI connector detection broken in 6.3 on Intel(R)
+ Celeron(R) N3060 integrated graphics
+Message-ID: <ZNo7oXeH0JK+4GPG@ideak-desk.fi.intel.com>
+Reply-To: imre.deak@intel.com
+References: <87v8dmr6ty.fsf@gmail.com>
+ <f32b4636-969c-3b9e-6802-5991f511739e@leemhuis.info>
+ <87il9l2ymf.fsf@gmail.com>
+ <3df95e6d-8237-1c43-e220-a9bdb5d6e044@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJfpeguG4f4S-pq+_EXHxfB63mbof-VnaOy-7a-7seWLMj_xyQ@mail.gmail.com>
+In-Reply-To: <3df95e6d-8237-1c43-e220-a9bdb5d6e044@leemhuis.info>
 
-On Mon, Aug 14, 2023 at 01:02:35PM +0200, Miklos Szeredi wrote:
-> On Mon, 14 Aug 2023 at 08:03, Jürg Billeter <j@bitron.ch> wrote:
-> >
-> > Since v6.3-rc1 commit 5a8bee63b1 ("fuse: in fuse_flush only wait if
-> > someone wants the return code") `fput()` is called asynchronously if a
-> > file is closed as part of a process exiting, i.e., if there was no
-> > explicit `close()` before exit.
-> >
-> > If the file was open for writing, also `put_write_access()` is called
-> > asynchronously as part of the async `fput()`.
-> >
-> > If that newly written file is an executable, attempting to `execve()`
-> > the new file can fail with `ETXTBSY` if it's called after the writer
-> > process exited but before the async `fput()` has run.
+On Sun, Aug 13, 2023 at 03:41:30PM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
+Hi,
+
+> On 11.08.23 20:10, Mikhail Rudenko wrote:
+> > On 2023-08-11 at 08:45 +02, Thorsten Leemhuis <regressions@leemhuis.info> wrote:
+> >> On 10.08.23 21:33, Mikhail Rudenko wrote:
+> >>> The following is a copy an issue I posted to drm/i915 gitlab [1] two
+> >>> months ago. I repost it to the mailing lists in hope that it will help
+> >>> the right people pay attention to it.
+> >>
+> >> Thx for your report. Wonder why Dmitry (who authored a4e771729a51) or
+> >> Thomas (who committed it) it didn't look into this, but maybe the i915
+> >> devs didn't forward the report to them.
 > 
-> Thanks for the report.
+> For the record: they did, and Jani mentioned already. Sorry, should have
+> phrased this differently.
 > 
-> At this point, I think it would be best to revert the original patch,
-> since only v6.4 has it.
-
-I agree.
-
-> The original fix was already a workaround, and I don't see a clear
-> path forward in this direction.  We need to see if there's better
-> direction.
+> >> Let's see if these mails help. Just wondering: does reverting
+> >> a4e771729a51 from 6.5-rc5 or drm-tip help as well?
+> > 
+> > I've redone my tests with 6.5-rc5, and here are the results:
+> > (1) 6.5-rc5 -> still affected
+> > (2) 6.5-rc5 + revert a4e771729a51 -> not affected
+> > (3) 6.5-rc5 + two patches [1][2] suggested on i915 gitlab by @ideak -> not affected (!)
+> > 
+> > Should we somehow tell regzbot about (3)?
 > 
-> Ideas?
+> That's good to know, thx. But the more important things are:
+> 
+> * When will those be merged? They are not yet in next yet afaics, so it
+> might take some time to mainline them, especially at this point of the
+> devel cycle. Imre, could you try to prod the right people so that these
+> are ideally upstreamed rather sooner than later, as they fix a regression?
 
-It seems like we really do need to wait here. I guess that means we
-need some kind of exit-proof wait?
+I think the patches ([1] and [2]) could be merged via the drm-intel-next
+(drm-intel-fixes) tree Cc'ing also stable. Jani, is this ok?
 
-Tycho
+> * They if possible ideally should be tagged for backporting to 6.4, as
+> this is a regression from the 6.3 cycle.
+> 
+> But yes, let's tell regzbot that fixes are available, too:
+> 
+> #regzbot fix: drm/i915: Fix HPD polling, reenabling the output poll work
+> as needed
+> 
+> (for the record: that's the second of two patches apparently needed)
+> 
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> --
+> Everything you wanna know about Linux kernel regression tracking:
+> https://linux-regtracking.leemhuis.info/about/#tldr
+> If I did something stupid, please tell me, as explained on that page.
+> 
+> >> BTW, there was an earlier report about a problem with a4e771729a51 that
+> >> afaics was never addressed, but it might be unrelated.
+> >> https://lore.kernel.org/all/20230328023129.3596968-1-zhouzongmin@kylinos.cn/
+> > [1] https://patchwork.freedesktop.org/patch/548590/?series=121050&rev=1
+> > [2] https://patchwork.freedesktop.org/patch/548591/?series=121050&rev=1
+> 
