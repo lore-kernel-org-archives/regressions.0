@@ -1,77 +1,67 @@
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3A1919C
-	for <regressions@lists.linux.dev>; Tue, 15 Aug 2023 00:23:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID
-	:Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID
-	:Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:
-	Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe
-	:List-Post:List-Owner:List-Archive;
-	bh=at/YNp1sTXjMfFJHp9NjljLZGOIZ2zX2T4jq1tox7DI=; b=DEIqSzNGhDjDdnSu/p8BKmWtVT
-	g0e2nFLy+OcECGemA8qme0/xm/AAx9lEsQx+g3IiQibP7WK7UxBlGMNYdFvr/89v9izY5WRhE7dRq
-	u4xY8snHyY2oZfnWiYkjPlARTIKXbWUMNd4xGIDA+irT9VjtooNH9muUS/AFkBn76yJwX9TgB60+J
-	wSWuB7yVrSqh47NIJnsJxwCv31eTsZMhZNJChRPDIQ2AUybxGM5nECC/J1WeWkxACQGPKYngsBxD2
-	URMBiRmN49TdMZom4vhw0xwpuRZVU3NiawnAwQuI/V7hcPJbghcuHuwZVidptiN6t9XTOfPWOi00M
-	kLr7Kkcg==;
-Received: from dg by mx.treblig.org with local (Exim 4.94.2)
-	(envelope-from <dg@treblig.org>)
-	id 1qVhq1-006xXT-NL; Tue, 15 Aug 2023 00:23:09 +0000
-Date: Tue, 15 Aug 2023 00:23:09 +0000
-From: "Dr. David Alan Gilbert" <dave@treblig.org>
-To: Bagas Sanjaya <bagasdotme@gmail.com>
-Cc: tytso@mit.edu, adilger.kernel@dilger.ca, song@kernel.org,
-	linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-ext4@vger.kernel.org,
-	Linux Regressions <regressions@lists.linux.dev>
-Subject: Re: 6.5.0rc5 fs hang - ext4? raid?
-Message-ID: <ZNrFbXw4dhlZsMNJ@gallifrey>
-References: <ZNqWfQPTScJDkmpX@gallifrey>
- <ZNrD1BBvDVh-npz4@debian.me>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D67BA1C13
+	for <regressions@lists.linux.dev>; Tue, 15 Aug 2023 03:44:31 +0000 (UTC)
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2b9a2033978so75071961fa.0
+        for <regressions@lists.linux.dev>; Mon, 14 Aug 2023 20:44:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1692071070; x=1692675870;
+        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ExxWNL+LW7XzrZodND+dO5D7ugPfOldXXe3KWEY0aF4=;
+        b=o8nbAqgu+tsuUEkjXoywwQsPd0GJ1xEiMjiU8UdSiJp+SnOFGmeUysJLF62JkaF8yT
+         rcvpXKvkKpovOASx/WZNdMsZ7rRdpv5jB1bTcGnJZTcOMLdWwRILHFuxUdC/zWaTotjk
+         1HnA/6HTMhtLtdYzsHHVBJJPpQ6FuN7xw7PwO4yyduqwu1hB1S+1B+I2IPxXGPn7i+rX
+         nlZXr+8bPymcp8tfXw/ii8M/0b4oT3NQDYzI4tuB4r94aW+bYp2G3e5Abrz7VMz1rhf5
+         1b7X5KgqTGdyhwk+xkvukslZ0m7kZc8NyHMWbOHcwx+5AdGSagnl4bRE/8OyDQnXd2O6
+         rV+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692071070; x=1692675870;
+        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ExxWNL+LW7XzrZodND+dO5D7ugPfOldXXe3KWEY0aF4=;
+        b=N2FXANVnBl7Wai2CKXIFN8L/MgL3jcmREWThmD0U1idfLNJ+OzBwnzJcLnb0VQZKWt
+         i3krc00kWTdMZIMuLW5egKZjEvYbj05G6wgLwTB68XuCg+luxG3Ud+HuLMnPC3F8xURb
+         /GoVbiA0EChXtRo1PhD1NJnM/wZnGUVXK+5zrgrvPv0Osn3RYoXkorHurNtXQMxbjjel
+         2CDV299KYxoa8Zd1z79oO+W8ilsG28TP8SPo8EF3gG3UCrOjGsUtIWt1rg0jfRFTF7D+
+         m4rhG2hj/wGhexljU5bycIUDMf2XNnPq1QbU5z7XnkuhitsZJsakSOj2pEcQ5WZ1A4gV
+         K7Lw==
+X-Gm-Message-State: AOJu0Yxf13+0tK950+uGTPLNhiBR2J8y7d18EMJnnv+kYH1BxE/yFfUq
+	uvhrJaFcyh+Rynx740k+n6L0ANZvSbRtn4wqXAo=
+X-Google-Smtp-Source: AGHT+IFgAyh9D6DMTdhSO6edBWp8xyryII/Mu1ztl6UbMz9eaIR9w9sl15mXEUaXtIVLI7GPSUxj5rJuMoWUUY99riw=
+X-Received: by 2002:a2e:2c09:0:b0:2b9:c046:8617 with SMTP id
+ s9-20020a2e2c09000000b002b9c0468617mr7719912ljs.5.1692071069534; Mon, 14 Aug
+ 2023 20:44:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-In-Reply-To: <ZNrD1BBvDVh-npz4@debian.me>
-X-Chocolate: 70 percent or better cocoa solids preferably
-X-Operating-System: Linux/5.10.0-23-amd64 (x86_64)
-X-Uptime: 00:20:36 up 39 days,  9:52,  1 user,  load average: 0.00, 0.00, 0.00
-User-Agent: Mutt/2.0.5 (2021-01-21)
+References: <CA+prNOpqd2Tk1tiBAa9MT6ZPxB5gj9ftxOhaZ-u1WEay9H-oHQ@mail.gmail.com>
+In-Reply-To: <CA+prNOpqd2Tk1tiBAa9MT6ZPxB5gj9ftxOhaZ-u1WEay9H-oHQ@mail.gmail.com>
+From: Xuancong Wang <xuancong84@gmail.com>
+Date: Tue, 15 Aug 2023 11:44:19 +0800
+Message-ID: <CA+prNOot8qCAws94CuFL7LqDRYk8jbHb=EWFuSQ9yDzJSy0VFw@mail.gmail.com>
+Subject: A small bug in file access control that all have neglected
+To: security@kernel.org, stable@vger.kernel.org, regressions@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-* Bagas Sanjaya (bagasdotme@gmail.com) wrote:
-> On Mon, Aug 14, 2023 at 09:02:53PM +0000, Dr. David Alan Gilbert wrote:
-> > Hi,
-> >   I'm seeing a few hangs on a fs after upgrading to fedora 39's bleeding
-> > edge; which is running kernel 6.5.0-0.rc5.20230808git14f9643dc90a.37.fc39.x86_64
-> > It was always solid prior to that.  It seems to trigger on heavy IO
-> > on this fs.
-> 
-> What kernel version prior to this upgrade?
+Dear all,
 
-The Fedora 38 kernel, 6.4.10-200.fc38.x86_64  seems happy with the same
-userspace as the broken kernel.
+I found in all versions of Linux (at least for kernel version 4/5/6),
+the following bug exists:
+When a user is granted full access to a file of which he is not the
+owner, he can read/write/delete the file, but cannot "change only its
+last modification date". In particular, `touch -m` fails and Python's
+`os.utime()` also fails with "Operation not permitted", but `touch`
+without -m works.
 
-> Also, it'd been great if you can also bisect this regression using kernel
-> tree obtained with git. See Documentation/admin-guide/bug-bisect.rst in
-> the kernel tree for how to perform bisection.
+This applies to both FACL extended permission as well as basic Linux
+file permission.
 
-Sure; I can do bisects.
+Thank you for fixing this in the future!
 
-Dave
-
-> Thanks.
-> 
-> -- 
-> An old man doll... just what I always wanted! - Clara
-
-
--- 
- -----Open up your eyes, open up your mind, open up your code -------   
-/ Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
-\        dave @ treblig.org |                               | In Hex /
- \ _________________________|_____ http://www.treblig.org   |_______/
+Cheers,
+Xuancong
