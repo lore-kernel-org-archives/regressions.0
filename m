@@ -1,78 +1,130 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 791E4525A
-	for <regressions@lists.linux.dev>; Tue, 15 Aug 2023 06:29:02 +0000 (UTC)
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-4ff88239785so198610e87.0
-        for <regressions@lists.linux.dev>; Mon, 14 Aug 2023 23:29:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1692080940; x=1692685740;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=ludy8s71/IVequuRzsey/0aGXZOas5qhy1/o2Tc5egU=;
-        b=R9HJDB3o2BKpiuDxOVG83IJyv8w8Tp4qjYRcn1F+t0LmvM/uIGFT8rq0O4QwLXu7Qq
-         OtcXdsTcaf5r1a5UmoQCj3Pti1Rp/j2Ewr05MClnPRjEo7eJEtyRbQgGU8ARmpELtRHI
-         ve8abFSll7ZVVPGNGpkCzXAPV1nJaCmWU0YZM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692080940; x=1692685740;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ludy8s71/IVequuRzsey/0aGXZOas5qhy1/o2Tc5egU=;
-        b=YonMlaqjouKB66ls5V7pI9b+pidzrJZkSL3riNJt64uS3pfsXXldiKxt2eyNdSQyHj
-         19/H6K9VLffm02FF2Zmh8RsTCcZ1N29ptuvHCpJ7+oKvWwa4M55ojyoG6nb5R6AveJMt
-         ppZhbpvmnTadXnDj+9mwebZNr4qiOx68eOygGZ1OZdOwACfkbuJ+ZVcSCeuAOW0RgYm6
-         YAEzSCXglWbd6vmRaOdFezq7Jx/Dp0PptSK36qK3jlRQ4XFmLuPqee5uSwCnx6t7115q
-         yb9zfBmKnBZbKhhuvBNe0p1QhkdprVbRtMKoaiU9JwUKw/S1Ow9RoI0KTKbciSkvWwsA
-         q3Jg==
-X-Gm-Message-State: AOJu0YyBxI3297K/LA9KH7I4NWv0Jv6HC+Wv1NV8FA2PqN4AILo/esnZ
-	BIE/m1Vc+2nHM9gvtLqdCPO68CUvAJ+uiKJTe9PDUg==
-X-Google-Smtp-Source: AGHT+IENZt6zQptdu1ikcyVIC6zIJS3Nq92rTR1edu8RLJP/MARNsDWSY21SV8ogIee8nIWC5n97AQ==
-X-Received: by 2002:a05:6512:74d:b0:4fd:8976:5fc9 with SMTP id c13-20020a056512074d00b004fd89765fc9mr6627454lfs.23.1692080939991;
-        Mon, 14 Aug 2023 23:28:59 -0700 (PDT)
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com. [209.85.167.41])
-        by smtp.gmail.com with ESMTPSA id c5-20020ac25305000000b004ff7e742143sm372739lfh.61.2023.08.14.23.28.58
-        for <regressions@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 14 Aug 2023 23:28:58 -0700 (PDT)
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-4fe1b00fce2so7574402e87.3
-        for <regressions@lists.linux.dev>; Mon, 14 Aug 2023 23:28:58 -0700 (PDT)
-X-Received: by 2002:a05:6512:60a:b0:4fe:ae7:d906 with SMTP id
- b10-20020a056512060a00b004fe0ae7d906mr6932731lfe.65.1692080938440; Mon, 14
- Aug 2023 23:28:58 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DED9CAD5F
+	for <regressions@lists.linux.dev>; Tue, 15 Aug 2023 08:12:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1692087173; x=1723623173;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=8FYXE+RfBzc1Zc5V0LYpU/SlMn68i32rsuFZsF7I7As=;
+  b=Al0BCKGeebQw2/B9daCCDhWr1Gg6XFQ7eS3JR3Oo/PPkwznNKZckNA5x
+   4SbMUn11A6MyDintiqttxq6MDJMIj0F7KUXMK12pmuXLrOibtYSfPn96P
+   i/0PxYY545yrExjbj/d+XWS6pQYlACsJ4AySmlVSLmvMq2ATS24bgG1Bo
+   KA//S22Tt730eglmUABfFwinkvZfS8jTnQ9V54EhUrGlt1wQxGj44rpBx
+   tLtnKmQIiLiPCUOovZaHEmWg4cBXZcD3Ldd6FUF16Ad0Efp8boz/dctk4
+   ZlT9wh8qGR4RJDve9XuaRIcdH/P7QkNYkThQp31vEevqFrqcd/OWKpMcX
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10802"; a="372226551"
+X-IronPort-AV: E=Sophos;i="6.01,174,1684825200"; 
+   d="scan'208";a="372226551"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Aug 2023 01:12:52 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10802"; a="683578480"
+X-IronPort-AV: E=Sophos;i="6.01,174,1684825200"; 
+   d="scan'208";a="683578480"
+Received: from cristina-mobl3.ger.corp.intel.com (HELO localhost) ([10.252.52.75])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Aug 2023 01:12:48 -0700
+From: Jani Nikula <jani.nikula@intel.com>
+To: imre.deak@intel.com, Linux regressions mailing list
+ <regressions@lists.linux.dev>
+Cc: Mikhail Rudenko <mike.rudenko@gmail.com>, Thomas Zimmermann
+ <tzimmermann@suse.de>, Neil Armstrong <neil.armstrong@linaro.org>, Dmitry
+ Baryshkov <dmitry.baryshkov@linaro.org>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+ linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ intel-gfx@lists.freedesktop.org, Joonas Lahtinen
+ <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>,
+ Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>, David Airlie
+ <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [REGRESSION] HDMI connector detection broken in 6.3 on Intel(R)
+ Celeron(R) N3060 integrated graphics
+In-Reply-To: <ZNo7oXeH0JK+4GPG@ideak-desk.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <87v8dmr6ty.fsf@gmail.com>
+ <f32b4636-969c-3b9e-6802-5991f511739e@leemhuis.info>
+ <87il9l2ymf.fsf@gmail.com>
+ <3df95e6d-8237-1c43-e220-a9bdb5d6e044@leemhuis.info>
+ <ZNo7oXeH0JK+4GPG@ideak-desk.fi.intel.com>
+Date: Tue, 15 Aug 2023 11:12:46 +0300
+Message-ID: <87edk4d8qp.fsf@intel.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CA+prNOpqd2Tk1tiBAa9MT6ZPxB5gj9ftxOhaZ-u1WEay9H-oHQ@mail.gmail.com>
- <20230815053132.GB22301@1wt.eu> <CA+prNOrUVWM9-vozUZyW49-m=qFWZR3JAtikZb4T1EimV0ZCDw@mail.gmail.com>
-In-Reply-To: <CA+prNOrUVWM9-vozUZyW49-m=qFWZR3JAtikZb4T1EimV0ZCDw@mail.gmail.com>
-From: Linus Torvalds <torvalds@linuxfoundation.org>
-Date: Tue, 15 Aug 2023 06:28:41 +0000
-X-Gmail-Original-Message-ID: <CAHk-=wgDbr7dw0GP4zEkPu5X2mME3YH9t0+cP8Avs3m0KZxbCQ@mail.gmail.com>
-Message-ID: <CAHk-=wgDbr7dw0GP4zEkPu5X2mME3YH9t0+cP8Avs3m0KZxbCQ@mail.gmail.com>
-Subject: Re: A small bug in file access control that all have neglected
-To: Xuancong Wang <xuancong84@gmail.com>
-Cc: Willy Tarreau <w@1wt.eu>, security@kernel.org, stable@vger.kernel.org, 
-	regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 
-On Tue, 15 Aug 2023 at 06:11, Xuancong Wang <xuancong84@gmail.com> wrote:
+On Mon, 14 Aug 2023, Imre Deak <imre.deak@intel.com> wrote:
+> On Sun, Aug 13, 2023 at 03:41:30PM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
+> Hi,
 >
-> Yes, by "full access", I mean `chmod 777`. You can easily reproduce
-> this bug on any Linux machine by typing the following commands:
+>> On 11.08.23 20:10, Mikhail Rudenko wrote:
+>> > On 2023-08-11 at 08:45 +02, Thorsten Leemhuis <regressions@leemhuis.info> wrote:
+>> >> On 10.08.23 21:33, Mikhail Rudenko wrote:
+>> >>> The following is a copy an issue I posted to drm/i915 gitlab [1] two
+>> >>> months ago. I repost it to the mailing lists in hope that it will help
+>> >>> the right people pay attention to it.
+>> >>
+>> >> Thx for your report. Wonder why Dmitry (who authored a4e771729a51) or
+>> >> Thomas (who committed it) it didn't look into this, but maybe the i915
+>> >> devs didn't forward the report to them.
+>> 
+>> For the record: they did, and Jani mentioned already. Sorry, should have
+>> phrased this differently.
+>> 
+>> >> Let's see if these mails help. Just wondering: does reverting
+>> >> a4e771729a51 from 6.5-rc5 or drm-tip help as well?
+>> > 
+>> > I've redone my tests with 6.5-rc5, and here are the results:
+>> > (1) 6.5-rc5 -> still affected
+>> > (2) 6.5-rc5 + revert a4e771729a51 -> not affected
+>> > (3) 6.5-rc5 + two patches [1][2] suggested on i915 gitlab by @ideak -> not affected (!)
+>> > 
+>> > Should we somehow tell regzbot about (3)?
+>> 
+>> That's good to know, thx. But the more important things are:
+>> 
+>> * When will those be merged? They are not yet in next yet afaics, so it
+>> might take some time to mainline them, especially at this point of the
+>> devel cycle. Imre, could you try to prod the right people so that these
+>> are ideally upstreamed rather sooner than later, as they fix a regression?
+>
+> I think the patches ([1] and [2]) could be merged via the drm-intel-next
+> (drm-intel-fixes) tree Cc'ing also stable. Jani, is this ok?
 
-This is how things are supposed to work. The 0777 permissions mean
-that you can read, write and execute the file. They do not mean that
-you own the file.
+It's fine by me, but need drm-misc maintainer ack to merge [1] via
+drm-intel.
 
-As a non-owner, you can set the access and modification times  the
-same way you could by just reading and writing to the file. So if you
-set mtime, you have to set ctime ("change time") too.
+BR,
+Jani.
 
-To actually change times arbitrarily and with other patterns, you need
-to actually own the file.
+>
+>> * They if possible ideally should be tagged for backporting to 6.4, as
+>> this is a regression from the 6.3 cycle.
+>> 
+>> But yes, let's tell regzbot that fixes are available, too:
+>> 
+>> #regzbot fix: drm/i915: Fix HPD polling, reenabling the output poll work
+>> as needed
+>> 
+>> (for the record: that's the second of two patches apparently needed)
+>> 
+>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+>> --
+>> Everything you wanna know about Linux kernel regression tracking:
+>> https://linux-regtracking.leemhuis.info/about/#tldr
+>> If I did something stupid, please tell me, as explained on that page.
+>> 
+>> >> BTW, there was an earlier report about a problem with a4e771729a51 that
+>> >> afaics was never addressed, but it might be unrelated.
+>> >> https://lore.kernel.org/all/20230328023129.3596968-1-zhouzongmin@kylinos.cn/
+>> > [1] https://patchwork.freedesktop.org/patch/548590/?series=121050&rev=1
+>> > [2] https://patchwork.freedesktop.org/patch/548591/?series=121050&rev=1
+>> 
 
-             Linus
+-- 
+Jani Nikula, Intel Open Source Graphics Center
