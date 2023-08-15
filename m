@@ -1,40 +1,45 @@
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA95C3207
-	for <regressions@lists.linux.dev>; Tue, 15 Aug 2023 06:11:41 +0000 (UTC)
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2b9ba3d6157so78775491fa.3
-        for <regressions@lists.linux.dev>; Mon, 14 Aug 2023 23:11:41 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 791E4525A
+	for <regressions@lists.linux.dev>; Tue, 15 Aug 2023 06:29:02 +0000 (UTC)
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-4ff88239785so198610e87.0
+        for <regressions@lists.linux.dev>; Mon, 14 Aug 2023 23:29:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1692079899; x=1692684699;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+uRmlNp0zVeV/2xZq56pyWJycC87MI6SKt4lbuSPPaQ=;
-        b=RixMO+c72EN6CMA7cwO5cA40NZSIJCAL+YfvbGxtQi+qNWO77CYMEAkmlEZxPxVf+2
-         oFEuEI8Wy3NAjfomoBrafT/Vfd3w2go6PjwAwtZykgf8RfTSe4GNd/dPbck4k7k941V4
-         lsp/oC9NwnAZ91FjPDv3CZubs8ntI5LYx38xWs+H+EMgAdEyLpIZxS2biBJBOwIZOeS6
-         HRHfp35h2nKMP79/32GIB8HZSp+aOm6F85pE4T1JpCLdwPOQSr1DXuxj8NovkE92UeiP
-         ZmJVDJCBikEbRpWB8Lj2WQirBPd9v023p6KiOJlmaw55JViZttGWmjStw3wmc7sRkNBI
-         4tKQ==
+        d=linuxfoundation.org; s=google; t=1692080940; x=1692685740;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=ludy8s71/IVequuRzsey/0aGXZOas5qhy1/o2Tc5egU=;
+        b=R9HJDB3o2BKpiuDxOVG83IJyv8w8Tp4qjYRcn1F+t0LmvM/uIGFT8rq0O4QwLXu7Qq
+         OtcXdsTcaf5r1a5UmoQCj3Pti1Rp/j2Ewr05MClnPRjEo7eJEtyRbQgGU8ARmpELtRHI
+         ve8abFSll7ZVVPGNGpkCzXAPV1nJaCmWU0YZM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692079899; x=1692684699;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+uRmlNp0zVeV/2xZq56pyWJycC87MI6SKt4lbuSPPaQ=;
-        b=BYC5X0aarnBMoR4nx4K9B91Q/qqmvXO/ad+M9Ny6HjktwONzHRgiCgvsI+VHRBZ1+q
-         uYhgnvmdjz79xUOHZUfshrKy3JBpB/8ZMA28hVkCLRqdOzqPcrRJmpAlDM7MO1mWPiCV
-         cxfGebnX2yLnzBSoXpBd24/L79uortvmmokI45i7O5IJflw8JiQoZ0AhJo9buuLiEQq0
-         8JYq7P7POBTZu1MxG39SvJZ+iuPNnIk/la7dSvQEO3fBBq3DkB8d5gXDglrrE5fBG90r
-         o1WmKvugmrDUMh2I1//EK/AYj8YaWyw75DvZFuibWyOSzqmW91HScYrCj4ItBv3B6Ldl
-         mMVg==
-X-Gm-Message-State: AOJu0Yz9uDcfQys+WVwyDbYWIK5uW1f3Xcv7qot5UTqJGsEpN2S436ek
-	KYNE+PVCQlNkPrJaEtsrarSInpyEghZuC9CtO+A=
-X-Google-Smtp-Source: AGHT+IFQSCQw7lJnipy721GFX6ZIrO8Uvr6+vFiWWFVsa/Y8aqt4FOFC3qMVy58dw3me6QoZzaGkVuZsC/YFS2aBofM=
-X-Received: by 2002:a2e:b0dc:0:b0:2b9:dfd1:3803 with SMTP id
- g28-20020a2eb0dc000000b002b9dfd13803mr8691959ljl.30.1692079899079; Mon, 14
- Aug 2023 23:11:39 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1692080940; x=1692685740;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ludy8s71/IVequuRzsey/0aGXZOas5qhy1/o2Tc5egU=;
+        b=YonMlaqjouKB66ls5V7pI9b+pidzrJZkSL3riNJt64uS3pfsXXldiKxt2eyNdSQyHj
+         19/H6K9VLffm02FF2Zmh8RsTCcZ1N29ptuvHCpJ7+oKvWwa4M55ojyoG6nb5R6AveJMt
+         ppZhbpvmnTadXnDj+9mwebZNr4qiOx68eOygGZ1OZdOwACfkbuJ+ZVcSCeuAOW0RgYm6
+         YAEzSCXglWbd6vmRaOdFezq7Jx/Dp0PptSK36qK3jlRQ4XFmLuPqee5uSwCnx6t7115q
+         yb9zfBmKnBZbKhhuvBNe0p1QhkdprVbRtMKoaiU9JwUKw/S1Ow9RoI0KTKbciSkvWwsA
+         q3Jg==
+X-Gm-Message-State: AOJu0YyBxI3297K/LA9KH7I4NWv0Jv6HC+Wv1NV8FA2PqN4AILo/esnZ
+	BIE/m1Vc+2nHM9gvtLqdCPO68CUvAJ+uiKJTe9PDUg==
+X-Google-Smtp-Source: AGHT+IENZt6zQptdu1ikcyVIC6zIJS3Nq92rTR1edu8RLJP/MARNsDWSY21SV8ogIee8nIWC5n97AQ==
+X-Received: by 2002:a05:6512:74d:b0:4fd:8976:5fc9 with SMTP id c13-20020a056512074d00b004fd89765fc9mr6627454lfs.23.1692080939991;
+        Mon, 14 Aug 2023 23:28:59 -0700 (PDT)
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com. [209.85.167.41])
+        by smtp.gmail.com with ESMTPSA id c5-20020ac25305000000b004ff7e742143sm372739lfh.61.2023.08.14.23.28.58
+        for <regressions@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 14 Aug 2023 23:28:58 -0700 (PDT)
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-4fe1b00fce2so7574402e87.3
+        for <regressions@lists.linux.dev>; Mon, 14 Aug 2023 23:28:58 -0700 (PDT)
+X-Received: by 2002:a05:6512:60a:b0:4fe:ae7:d906 with SMTP id
+ b10-20020a056512060a00b004fe0ae7d906mr6932731lfe.65.1692080938440; Mon, 14
+ Aug 2023 23:28:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -42,80 +47,32 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 References: <CA+prNOpqd2Tk1tiBAa9MT6ZPxB5gj9ftxOhaZ-u1WEay9H-oHQ@mail.gmail.com>
- <20230815053132.GB22301@1wt.eu>
-In-Reply-To: <20230815053132.GB22301@1wt.eu>
-From: Xuancong Wang <xuancong84@gmail.com>
-Date: Tue, 15 Aug 2023 14:11:28 +0800
-Message-ID: <CA+prNOrUVWM9-vozUZyW49-m=qFWZR3JAtikZb4T1EimV0ZCDw@mail.gmail.com>
+ <20230815053132.GB22301@1wt.eu> <CA+prNOrUVWM9-vozUZyW49-m=qFWZR3JAtikZb4T1EimV0ZCDw@mail.gmail.com>
+In-Reply-To: <CA+prNOrUVWM9-vozUZyW49-m=qFWZR3JAtikZb4T1EimV0ZCDw@mail.gmail.com>
+From: Linus Torvalds <torvalds@linuxfoundation.org>
+Date: Tue, 15 Aug 2023 06:28:41 +0000
+X-Gmail-Original-Message-ID: <CAHk-=wgDbr7dw0GP4zEkPu5X2mME3YH9t0+cP8Avs3m0KZxbCQ@mail.gmail.com>
+Message-ID: <CAHk-=wgDbr7dw0GP4zEkPu5X2mME3YH9t0+cP8Avs3m0KZxbCQ@mail.gmail.com>
 Subject: Re: A small bug in file access control that all have neglected
-To: Willy Tarreau <w@1wt.eu>
-Cc: security@kernel.org, stable@vger.kernel.org, regressions@lists.linux.dev
+To: Xuancong Wang <xuancong84@gmail.com>
+Cc: Willy Tarreau <w@1wt.eu>, security@kernel.org, stable@vger.kernel.org, 
+	regressions@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Yes, by "full access", I mean `chmod 777`. You can easily reproduce
-this bug on any Linux machine by typing the following commands:
+On Tue, 15 Aug 2023 at 06:11, Xuancong Wang <xuancong84@gmail.com> wrote:
+>
+> Yes, by "full access", I mean `chmod 777`. You can easily reproduce
+> this bug on any Linux machine by typing the following commands:
 
-xuancong@mx:~$ sudo su
-root@mx:/home/xuancong# echo yes >a
-root@mx:/home/xuancong# chmod 777 a
-root@mx:/home/xuancong#
-exit
-xuancong@mx:~$ echo no >>a
-xuancong@mx:~$ cat a
-yes
-no
-xuancong@mx:~$ ls -al a
--rwxrwxrwx 1 root root 7 Aug 15 14:08 a
-xuancong@mx:~$ touch -m a
-touch: setting times of 'a': Operation not permitted
-xuancong@mx:~$ python -c "import os,sys;os.utime('a',(1,1))"
-Traceback (most recent call last):
-  File "<string>", line 1, in <module>
-PermissionError: [Errno 1] Operation not permitted
+This is how things are supposed to work. The 0777 permissions mean
+that you can read, write and execute the file. They do not mean that
+you own the file.
 
+As a non-owner, you can set the access and modification times  the
+same way you could by just reading and writing to the file. So if you
+set mtime, you have to set ctime ("change time") too.
 
-Cheers,
-Xuancong
+To actually change times arbitrarily and with other patterns, you need
+to actually own the file.
 
-On Tue, Aug 15, 2023 at 1:31=E2=80=AFPM Willy Tarreau <w@1wt.eu> wrote:
->
-> Hello,
->
-> On Tue, Aug 15, 2023 at 11:42:55AM +0800, Xuancong Wang wrote:
-> > Dear all,
-> >
-> > I found in all versions of Linux (at least for kernel version 4/5/6), t=
-he
-> > following bug exists:
-> > When a user is granted full access to a file of which he is not the own=
-er,
-> > he can read/write/delete the file, but cannot "change only its last
-> > modification date". In particular, `touch -m` fails and Python's
-> > `os.utime()` also fails with "Operation not permitted", but `touch` wit=
-hout
-> > -m works.
-> >
-> > This applies to both FACL extended permission as well as basic Linux fi=
-le
-> > permission.
-> >
-> > Thank you for fixing this in the future!
->
-> Your description is unclear to me, particularly what you call "is
-> granted full access": do you mean chmod here ? If so, you can't
-> delete it, so maybe you mean something else ? You should share a
-> full reproducer showing the problem. Also, the fact that one
-> command (touch) works and another one (python) does not indicates
-> they don't do the same thing. So I suspect it's more related to
-> the way the file is accessed where both commands use different
-> semantics. As such, using strace on both commands showing the
-> sequence accessing that file will reveal the difference and very
-> likely explain why one can and the other cannot change the last
-> modification date.
->
-> Willy
->
-> PS: there's no need to keep security@ here, it's used to dispatch
->     issues to maintainers and coordinate fixes, now that your report
->     is public it will not bring anything anymore.
+             Linus
