@@ -1,130 +1,149 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DED9CAD5F
-	for <regressions@lists.linux.dev>; Tue, 15 Aug 2023 08:12:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1692087173; x=1723623173;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=8FYXE+RfBzc1Zc5V0LYpU/SlMn68i32rsuFZsF7I7As=;
-  b=Al0BCKGeebQw2/B9daCCDhWr1Gg6XFQ7eS3JR3Oo/PPkwznNKZckNA5x
-   4SbMUn11A6MyDintiqttxq6MDJMIj0F7KUXMK12pmuXLrOibtYSfPn96P
-   i/0PxYY545yrExjbj/d+XWS6pQYlACsJ4AySmlVSLmvMq2ATS24bgG1Bo
-   KA//S22Tt730eglmUABfFwinkvZfS8jTnQ9V54EhUrGlt1wQxGj44rpBx
-   tLtnKmQIiLiPCUOovZaHEmWg4cBXZcD3Ldd6FUF16Ad0Efp8boz/dctk4
-   ZlT9wh8qGR4RJDve9XuaRIcdH/P7QkNYkThQp31vEevqFrqcd/OWKpMcX
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10802"; a="372226551"
-X-IronPort-AV: E=Sophos;i="6.01,174,1684825200"; 
-   d="scan'208";a="372226551"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Aug 2023 01:12:52 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10802"; a="683578480"
-X-IronPort-AV: E=Sophos;i="6.01,174,1684825200"; 
-   d="scan'208";a="683578480"
-Received: from cristina-mobl3.ger.corp.intel.com (HELO localhost) ([10.252.52.75])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Aug 2023 01:12:48 -0700
-From: Jani Nikula <jani.nikula@intel.com>
-To: imre.deak@intel.com, Linux regressions mailing list
- <regressions@lists.linux.dev>
-Cc: Mikhail Rudenko <mike.rudenko@gmail.com>, Thomas Zimmermann
- <tzimmermann@suse.de>, Neil Armstrong <neil.armstrong@linaro.org>, Dmitry
- Baryshkov <dmitry.baryshkov@linaro.org>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
- linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
- intel-gfx@lists.freedesktop.org, Joonas Lahtinen
- <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>,
- Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>, David Airlie
- <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [REGRESSION] HDMI connector detection broken in 6.3 on Intel(R)
- Celeron(R) N3060 integrated graphics
-In-Reply-To: <ZNo7oXeH0JK+4GPG@ideak-desk.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <87v8dmr6ty.fsf@gmail.com>
- <f32b4636-969c-3b9e-6802-5991f511739e@leemhuis.info>
- <87il9l2ymf.fsf@gmail.com>
- <3df95e6d-8237-1c43-e220-a9bdb5d6e044@leemhuis.info>
- <ZNo7oXeH0JK+4GPG@ideak-desk.fi.intel.com>
-Date: Tue, 15 Aug 2023 11:12:46 +0300
-Message-ID: <87edk4d8qp.fsf@intel.com>
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 442E0AD5F
+	for <regressions@lists.linux.dev>; Tue, 15 Aug 2023 08:14:41 +0000 (UTC)
+X-SpamFilter-By: ArmorX SpamTrap 5.77 with qID 37F88bUU2022805, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
+	by rtits2.realtek.com.tw (8.15.2/2.81/5.90) with ESMTPS id 37F88bUU2022805
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 15 Aug 2023 16:08:37 +0800
+Received: from RTEXDAG01.realtek.com.tw (172.21.6.100) by
+ RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.32; Tue, 15 Aug 2023 16:08:48 +0800
+Received: from RTEXMBS01.realtek.com.tw (172.21.6.94) by
+ RTEXDAG01.realtek.com.tw (172.21.6.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.7; Tue, 15 Aug 2023 16:08:48 +0800
+Received: from RTEXMBS01.realtek.com.tw ([fe80::9cb8:8d5:b6b3:213b]) by
+ RTEXMBS01.realtek.com.tw ([fe80::9cb8:8d5:b6b3:213b%5]) with mapi id
+ 15.01.2375.007; Tue, 15 Aug 2023 16:08:48 +0800
+From: Kailang <kailang@realtek.com>
+To: "Joseph C. Sible" <josephcsible@gmail.com>, Takashi Iwai <tiwai@suse.de>
+CC: Bagas Sanjaya <bagasdotme@gmail.com>,
+        "regressions@lists.linux.dev"
+	<regressions@lists.linux.dev>,
+        "perex@perex.cz" <perex@perex.cz>, "tiwai@suse.com" <tiwai@suse.com>,
+        "alsa-devel@alsa-project.org"
+	<alsa-devel@alsa-project.org>
+Subject: RE: Fwd: [Bug 217440] New: ALC236 audio disappears from HP 15z-fc000 on warm boot
+Thread-Topic: Fwd: [Bug 217440] New: ALC236 audio disappears from HP 15z-fc000
+ on warm boot
+Thread-Index: AQHZhdSOD7kY6mXBDkGA3ryhp811r69Yu5SAgAASNACAAA22gIAA7n+AgAEJrYCABLe/YIAJNIWAgAIHAcD//4tyAIAB8UZw///vxgCADzWhgIABfgWAgACUPoCAAPnsAIAAmlKwgAA8s4CAAQ8boP//kIuAABWnYVAAAIR9gAAqhW/A//+7roD//3k98IAAkYyAgAAKhQCAAAZZgIAAiY6AgADw04CAALC0AIAA6TqAgBQJp4CAAhpFAP/xaKKggBysdYD/8VrnoAO7qooA//9fxND//w9ZgP/iuwIA/79IlID/bS7yQA==
+Date: Tue, 15 Aug 2023 08:08:48 +0000
+Message-ID: <01e212a538fc407ca6edd10b81ff7b05@realtek.com>
+References: <87o7jshxch.wl-tiwai@suse.de>
+ <CABpewhEG9ViuoCwZHmTN0Up-3jwZ1M-jfC+dAqo0zhqLOZtQ6g@mail.gmail.com>
+In-Reply-To: <CABpewhEG9ViuoCwZHmTN0Up-3jwZ1M-jfC+dAqo0zhqLOZtQ6g@mail.gmail.com>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach: yes
+X-MS-TNEF-Correlator:
+x-originating-ip: [172.22.102.106]
+x-kse-serverinfo: RTEXDAG01.realtek.com.tw, 9
+x-kse-antispam-interceptor-info: fallback
+x-kse-antivirus-interceptor-info: fallback
+Content-Type: multipart/mixed;
+	boundary="_002_01e212a538fc407ca6edd10b81ff7b05realtekcom_"
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+X-KSE-AntiSpam-Interceptor-Info: fallback
+X-KSE-ServerInfo: RTEXH36505.realtek.com.tw, 9
+X-KSE-AntiSpam-Interceptor-Info: fallback
+X-KSE-Antivirus-Interceptor-Info: fallback
+X-KSE-AntiSpam-Interceptor-Info: fallback
 
-On Mon, 14 Aug 2023, Imre Deak <imre.deak@intel.com> wrote:
-> On Sun, Aug 13, 2023 at 03:41:30PM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
-> Hi,
->
->> On 11.08.23 20:10, Mikhail Rudenko wrote:
->> > On 2023-08-11 at 08:45 +02, Thorsten Leemhuis <regressions@leemhuis.info> wrote:
->> >> On 10.08.23 21:33, Mikhail Rudenko wrote:
->> >>> The following is a copy an issue I posted to drm/i915 gitlab [1] two
->> >>> months ago. I repost it to the mailing lists in hope that it will help
->> >>> the right people pay attention to it.
->> >>
->> >> Thx for your report. Wonder why Dmitry (who authored a4e771729a51) or
->> >> Thomas (who committed it) it didn't look into this, but maybe the i915
->> >> devs didn't forward the report to them.
->> 
->> For the record: they did, and Jani mentioned already. Sorry, should have
->> phrased this differently.
->> 
->> >> Let's see if these mails help. Just wondering: does reverting
->> >> a4e771729a51 from 6.5-rc5 or drm-tip help as well?
->> > 
->> > I've redone my tests with 6.5-rc5, and here are the results:
->> > (1) 6.5-rc5 -> still affected
->> > (2) 6.5-rc5 + revert a4e771729a51 -> not affected
->> > (3) 6.5-rc5 + two patches [1][2] suggested on i915 gitlab by @ideak -> not affected (!)
->> > 
->> > Should we somehow tell regzbot about (3)?
->> 
->> That's good to know, thx. But the more important things are:
->> 
->> * When will those be merged? They are not yet in next yet afaics, so it
->> might take some time to mainline them, especially at this point of the
->> devel cycle. Imre, could you try to prod the right people so that these
->> are ideally upstreamed rather sooner than later, as they fix a regression?
->
-> I think the patches ([1] and [2]) could be merged via the drm-intel-next
-> (drm-intel-fixes) tree Cc'ing also stable. Jani, is this ok?
+--_002_01e212a538fc407ca6edd10b81ff7b05realtekcom_
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 
-It's fine by me, but need drm-misc maintainer ack to merge [1] via
-drm-intel.
+SGkgVGFrYXNoaSwNCg0KSSB0aGluayBtYXliZSBhdHRhY2ggcGF0Y2ggaXMgd2hhdCB5b3Ugd2Fu
+dC4NCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBKb3NlcGggQy4gU2li
+bGUgPGpvc2VwaGNzaWJsZUBnbWFpbC5jb20+DQo+IFNlbnQ6IEZyaWRheSwgQXVndXN0IDQsIDIw
+MjMgMTA6MzUgUE0NCj4gVG86IFRha2FzaGkgSXdhaSA8dGl3YWlAc3VzZS5kZT4NCj4gQ2M6IEth
+aWxhbmcgPGthaWxhbmdAcmVhbHRlay5jb20+OyBCYWdhcyBTYW5qYXlhIDxiYWdhc2RvdG1lQGdt
+YWlsLmNvbT47DQo+IHJlZ3Jlc3Npb25zQGxpc3RzLmxpbnV4LmRldjsgcGVyZXhAcGVyZXguY3o7
+IHRpd2FpQHN1c2UuY29tOw0KPiBhbHNhLWRldmVsQGFsc2EtcHJvamVjdC5vcmcNCj4gU3ViamVj
+dDogUmU6IEZ3ZDogW0J1ZyAyMTc0NDBdIE5ldzogQUxDMjM2IGF1ZGlvIGRpc2FwcGVhcnMgZnJv
+bSBIUA0KPiAxNXotZmMwMDAgb24gd2FybSBib290DQo+IA0KPiANCj4gRXh0ZXJuYWwgbWFpbC4N
+Cj4gDQo+IA0KPiANCj4gT24gTW9uLCBKdWwgMzEsIDIwMjMgYXQgMTI6MTTigK9QTSBUYWthc2hp
+IEl3YWkgPHRpd2FpQHN1c2UuZGU+IHdyb3RlOg0KPiA+DQo+ID4gLi4uIGFuZCBub3cgd2UgcmVj
+ZWl2ZSBhIHJlZ3Jlc3Npb24gcmVwb3J0IGR1ZSB0byB0aGlzIGNoYW5nZSA6LTwNCj4gPiAgIGh0
+dHBzOi8vYnVnemlsbGEua2VybmVsLm9yZy9zaG93X2J1Zy5jZ2k/aWQ9MjE3NzMyDQo+ID4NCj4g
+PiBJIGJlbGlldmUgdGhlIHByb2JsZW0gaXMgdGhhdCB0aGUgcGF0Y2ggZGlzYWJsZWQgdGhlIDNr
+cHVsbC1sb3cNCj4gPiBiZWhhdmlvciB0b28gbXVjaCB3aGlsZSBzb21lIGNvZGVjcyBzdGlsbCBu
+ZWVkIGl0Lg0KPiA+DQo+ID4gVGhlIHBhdGNoIGNoYW5nZXMgbGlrZToNCj4gPg0KPiA+IEBAIC0z
+NjM4LDggKzM2NDAsNyBAQCBzdGF0aWMgdm9pZCBhbGMyNTZfc2h1dHVwKHN0cnVjdCBoZGFfY29k
+ZWMNCj4gKmNvZGVjKQ0KPiA+ICAgICAgICAgLyogSWYgZGlzYWJsZSAzayBwdWxsZG93biBjb250
+cm9sIGZvciBhbGMyNTcsIHRoZSBNaWMgZGV0ZWN0aW9uIHdpbGwNCj4gbm90IHdvcmsgY29ycmVj
+dGx5DQo+ID4gICAgICAgICAgKiB3aGVuIGJvb3Rpbmcgd2l0aCBoZWFkc2V0IHBsdWdnZWQuIFNv
+IHNraXAgc2V0dGluZyBpdCBmb3IgdGhlDQo+IGNvZGVjIGFsYzI1Nw0KPiA+ICAgICAgICAgICov
+DQo+ID4gLSAgICAgICBpZiAoY29kZWMtPmNvcmUudmVuZG9yX2lkICE9IDB4MTBlYzAyMzYgJiYN
+Cj4gPiAtICAgICAgICAgICBjb2RlYy0+Y29yZS52ZW5kb3JfaWQgIT0gMHgxMGVjMDI1NykNCj4g
+PiArICAgICAgIGlmIChzcGVjLT5lbl8za3B1bGxfbG93KQ0KPiA+ICAgICAgICAgICAgICAgICBh
+bGNfdXBkYXRlX2NvZWZfaWR4KGNvZGVjLCAweDQ2LCAwLCAzIDw8IDEyKTsNCj4gPg0KPiA+ICAg
+ICAgICAgaWYgKCFzcGVjLT5ub19zaHV0dXBfcGlucykNCj4gPg0KPiA+IC4uLiB3aGlsZSB0aGUg
+b25seSBwbGFjZSBzZXR0aW5nIHNwZWMtPmVuXzNrcHVsbF9sb3cgaXM6DQo+ID4NCj4gPiBAQCAt
+MTA2ODIsNiArMTA2ODMsOCBAQCBzdGF0aWMgaW50IHBhdGNoX2FsYzI2OShzdHJ1Y3QgaGRhX2Nv
+ZGVjDQo+ICpjb2RlYykNCj4gPiAgICAgICAgICAgICAgICAgc3BlYy0+c2h1dHVwID0gYWxjMjU2
+X3NodXR1cDsNCj4gPiAgICAgICAgICAgICAgICAgc3BlYy0+aW5pdF9ob29rID0gYWxjMjU2X2lu
+aXQ7DQo+ID4gICAgICAgICAgICAgICAgIHNwZWMtPmdlbi5taXhlcl9uaWQgPSAwOyAvKiBBTEMy
+NTYgZG9lcyBub3QgaGF2ZSBhbnkNCj4gPiBsb29wYmFjayBtaXhlciBwYXRoICovDQo+ID4gKyAg
+ICAgICAgICAgICAgIGlmIChjb2RlYy0+YnVzLT5wY2ktPnZlbmRvciA9PSBQQ0lfVkVORE9SX0lE
+X0FNRCkNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBzcGVjLT5lbl8za3B1bGxfbG93ID0g
+dHJ1ZTsNCj4gPiAgICAgICAgICAgICAgICAgYnJlYWs7DQo+ID4gICAgICAgICBjYXNlIDB4MTBl
+YzAyNTc6DQo+ID4gICAgICAgICAgICAgICAgIHNwZWMtPmNvZGVjX3ZhcmlhbnQgPSBBTEMyNjlf
+VFlQRV9BTEMyNTc7DQo+ID4NCj4gPiBTaW5jZSBzcGVjLT4zbl8za3B1bGxfbG93IGlzIGZhbHNl
+IGFzIGRlZmF1bHQsIGl0IG1lYW5zIHRoYXQsIGV4Y2VwdA0KPiA+IGZvciBBTEMyMzAvMjM2LzI1
+NiBhbmQgUENJIHZlbmRvciBBTUQsIHRoZSBmbGFnIGlzIG5ldmVyIHNldCwgaGVuY2UNCj4gPiBp
+dCdzIG5vIGxvbmdlciBjYWxsZWQuDQo+ID4NCj4gPiBTaG91bGRuJ3Qgc3BlYy0+ZW5fM2twdWxs
+X2xvdyBiZSBlbmFibGVkIHJhdGhlciBhcyBkZWZhdWx0PyAgT3Igd2hpY2gNCj4gPiBtb2RlbHMg
+Y2FuIHNldCBpdD8NCj4gDQo+IEluIGJvdGggbXkgb3JpZ2luYWwgYnVnIGFuZCB0aGlzIG5ldyBi
+dWcsIHRoZSBwcm9ibGVtIHdhcyB0aGF0IHdlJ3JlIG5vdA0KPiBjYWxsaW5nIGl0IHdoZW4gd2Ug
+c2hvdWxkIGJlLiBHaXZlbiB0aGF0LCB3b3VsZG4ndCBhIHNpbXBsZSBmaXggYmUgdG8gY2FsbCBp
+dCBpZg0KPiBlaXRoZXIgdGhlIG9sZCBjb25kaXRpb24gb3IgdGhlIG5ldyBjb25kaXRpb24gaXMg
+dHJ1ZT8NCj4gRS5nLiwgc29tZXRoaW5nIGxpa2UgdGhpczoNCj4gDQo+IGlmICgoY29kZWMtPmNv
+cmUudmVuZG9yX2lkICE9IDB4MTBlYzAyMzYgJiYgY29kZWMtPmNvcmUudmVuZG9yX2lkICE9DQo+
+IDB4MTBlYzAyNTcpIHx8IHNwZWMtPmVuXzNrcHVsbF9sb3cpDQo+IA0KPiBKb3NlcGggQy4gU2li
+bGUNCj4gDQo+IC0tLS0tLVBsZWFzZSBjb25zaWRlciB0aGUgZW52aXJvbm1lbnQgYmVmb3JlIHBy
+aW50aW5nIHRoaXMgZS1tYWlsLg0KDQo=
 
-BR,
-Jani.
+--_002_01e212a538fc407ca6edd10b81ff7b05realtekcom_
+Content-Type: application/octet-stream; name="0000-redit-3k-pull-low.patch"
+Content-Description: 0000-redit-3k-pull-low.patch
+Content-Disposition: attachment; filename="0000-redit-3k-pull-low.patch";
+	size=1482; creation-date="Tue, 15 Aug 2023 07:56:18 GMT";
+	modification-date="Tue, 15 Aug 2023 08:02:02 GMT"
+Content-Transfer-Encoding: base64
 
->
->> * They if possible ideally should be tagged for backporting to 6.4, as
->> this is a regression from the 6.3 cycle.
->> 
->> But yes, let's tell regzbot that fixes are available, too:
->> 
->> #regzbot fix: drm/i915: Fix HPD polling, reenabling the output poll work
->> as needed
->> 
->> (for the record: that's the second of two patches apparently needed)
->> 
->> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
->> --
->> Everything you wanna know about Linux kernel regression tracking:
->> https://linux-regtracking.leemhuis.info/about/#tldr
->> If I did something stupid, please tell me, as explained on that page.
->> 
->> >> BTW, there was an earlier report about a problem with a4e771729a51 that
->> >> afaics was never addressed, but it might be unrelated.
->> >> https://lore.kernel.org/all/20230328023129.3596968-1-zhouzongmin@kylinos.cn/
->> > [1] https://patchwork.freedesktop.org/patch/548590/?series=121050&rev=1
->> > [2] https://patchwork.freedesktop.org/patch/548591/?series=121050&rev=1
->> 
+RnJvbSAzYTIwYTViMTg5YTMwM2EzOTdkNjQ4MDA4ZTFiODZhNzJkZmY1ZjhiIE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiBLYWlsYW5nIFlhbmcgPGthaWxhbmdAcmVhbHRlay5jb20+CkRh
+dGU6IFR1ZSwgMTUgQXVnIDIwMjMgMTU6NTQ6MjMgKzA4MDAKU3ViamVjdDogW1BBVENIXSBBTFNB
+OiBoZGEvcmVhbHRlayAtIFJlbW9kaWZpZWQgM2sgcHVsbCBsb3cgcHJvY2VkdXJlCgpTZXQgc3Bl
+Yy0+ZW5fM2twdWxsX2xvdyBkZWZhdWx0IHRvIHRydWUuClRoZW4gZmlsbGJhY2sgQUxDMjM2IGFu
+ZCBBTEMyNTcgdG8gZmFsc2UuCgpTaWduZWQtb2ZmLWJ5OiBLYWlsYW5nIFlhbmcgPGthaWxhbmdA
+cmVhbHRlay5jb20+CmRpZmYgLS1naXQgYS9zb3VuZC9wY2kvaGRhL3BhdGNoX3JlYWx0ZWsuYyBi
+L3NvdW5kL3BjaS9oZGEvcGF0Y2hfcmVhbHRlay5jCmluZGV4IDNiYjc2ZjhiOTYwNy4uY2M1NWNm
+N2Y2NWU1IDEwMDY0NAotLS0gYS9zb3VuZC9wY2kvaGRhL3BhdGNoX3JlYWx0ZWsuYworKysgYi9z
+b3VuZC9wY2kvaGRhL3BhdGNoX3JlYWx0ZWsuYwpAQCAtMTA2NTEsNiArMTA2NTEsNyBAQCBzdGF0
+aWMgaW50IHBhdGNoX2FsYzI2OShzdHJ1Y3QgaGRhX2NvZGVjICpjb2RlYykKIAlzcGVjID0gY29k
+ZWMtPnNwZWM7CiAJc3BlYy0+Z2VuLnNoYXJlZF9taWNfdnJlZl9waW4gPSAweDE4OwogCWNvZGVj
+LT5wb3dlcl9zYXZlX25vZGUgPSAwOworCXNwZWMtPmVuXzNrcHVsbF9sb3cgPSB0cnVlOwogCiAj
+aWZkZWYgQ09ORklHX1BNCiAJY29kZWMtPnBhdGNoX29wcy5zdXNwZW5kID0gYWxjMjY5X3N1c3Bl
+bmQ7CkBAIC0xMDczMywxNCArMTA3MzQsMTUgQEAgc3RhdGljIGludCBwYXRjaF9hbGMyNjkoc3Ry
+dWN0IGhkYV9jb2RlYyAqY29kZWMpCiAJCXNwZWMtPnNodXR1cCA9IGFsYzI1Nl9zaHV0dXA7CiAJ
+CXNwZWMtPmluaXRfaG9vayA9IGFsYzI1Nl9pbml0OwogCQlzcGVjLT5nZW4ubWl4ZXJfbmlkID0g
+MDsgLyogQUxDMjU2IGRvZXMgbm90IGhhdmUgYW55IGxvb3BiYWNrIG1peGVyIHBhdGggKi8KLQkJ
+aWYgKGNvZGVjLT5idXMtPnBjaS0+dmVuZG9yID09IFBDSV9WRU5ET1JfSURfQU1EKQotCQkJc3Bl
+Yy0+ZW5fM2twdWxsX2xvdyA9IHRydWU7CisJCWlmIChjb2RlYy0+Y29yZS52ZW5kb3JfaWQgPT0g
+MHgxMGVjMDIzNiAmJiBjb2RlYy0+YnVzLT5wY2ktPnZlbmRvciAhPSBQQ0lfVkVORE9SX0lEX0FN
+RCkKKwkJCXNwZWMtPmVuXzNrcHVsbF9sb3cgPSBmYWxzZTsKIAkJYnJlYWs7CiAJY2FzZSAweDEw
+ZWMwMjU3OgogCQlzcGVjLT5jb2RlY192YXJpYW50ID0gQUxDMjY5X1RZUEVfQUxDMjU3OwogCQlz
+cGVjLT5zaHV0dXAgPSBhbGMyNTZfc2h1dHVwOwogCQlzcGVjLT5pbml0X2hvb2sgPSBhbGMyNTZf
+aW5pdDsKIAkJc3BlYy0+Z2VuLm1peGVyX25pZCA9IDA7CisJCXNwZWMtPmVuXzNrcHVsbF9sb3cg
+PSBmYWxzZTsKIAkJYnJlYWs7CiAJY2FzZSAweDEwZWMwMjE1OgogCWNhc2UgMHgxMGVjMDI0NToK
 
--- 
-Jani Nikula, Intel Open Source Graphics Center
+--_002_01e212a538fc407ca6edd10b81ff7b05realtekcom_--
