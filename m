@@ -1,128 +1,140 @@
-Received: from r3-17.sinamail.sina.com.cn (r3-17.sinamail.sina.com.cn [202.108.3.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07AF5C15C
-	for <regressions@lists.linux.dev>; Tue, 15 Aug 2023 11:50:26 +0000 (UTC)
-X-SMAIL-HELO: localhost.localdomain
-Received: from unknown (HELO localhost.localdomain)([112.97.52.19])
-	by sina.com (172.16.97.27) with ESMTP
-	id 64DB65380000A43F; Tue, 15 Aug 2023 19:45:00 +0800 (CST)
-X-Sender: hdanton@sina.com
-X-Auth-ID: hdanton@sina.com
-Authentication-Results: sina.com;
-	 spf=none smtp.mailfrom=hdanton@sina.com;
-	 dkim=none header.i=none;
-	 dmarc=none action=none header.from=hdanton@sina.com
-X-SMAIL-MID: 824581786931
-From: Hillf Danton <hdanton@sina.com>
-To: Tycho Andersen <tycho@tycho.pizza>
-Cc: Miklos Szeredi <miklos@szeredi.hu>,
-	=?iso-8859-1?Q?J=FCrg?= Billeter <j@bitron.ch>,
-	"Eric W. Biederman" <ebiederm@xmission.com>,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: Re: [REGRESSION] fuse: execve() fails with ETXTBSY due to async fuse_flush
-Date: Tue, 15 Aug 2023 19:44:48 +0800
-Message-Id: <20230815114448.1557-1-hdanton@sina.com>
-In-Reply-To: <ZNqseD4hqHWmeF2w@tycho.pizza>
-References: <4f66cded234462964899f2a661750d6798a57ec0.camel@bitron.ch> <CAJfpeguG4f4S-pq+_EXHxfB63mbof-VnaOy-7a-7seWLMj_xyQ@mail.gmail.com> <ZNozdrtKgTeTaMpX@tycho.pizza> <CAJfpegt6x_=F=mD8LEL4AZPbfCLGQrpurhtbDN4Ew50fd2ngqQ@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADD76C15C
+	for <regressions@lists.linux.dev>; Tue, 15 Aug 2023 12:00:12 +0000 (UTC)
+Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-58c4e337357so13926847b3.0
+        for <regressions@lists.linux.dev>; Tue, 15 Aug 2023 05:00:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692100811; x=1692705611;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3u5LiIkAvVxxVW8WpXnX66pDAcHsjww5QTR5ehXhYNA=;
+        b=H9vbnOz80jQS15To4QwN+qweEWMoZsk2NGtU7FJ0rY0gTYW3dKGIFYtwDjHc7DIWqQ
+         6sxLK4bsLKlTnEZuFo5AyqBsU3s9iULU9lLWOSPylsYpPgENYwBEE7W31Ng9aV2bF2NW
+         AtnCQJGViRW4q13a6wV88hSwi5PUOv9dXnChANZh/NqZ9luLd0iof0hu1IRpWN7AKsqz
+         di9MIVDhVJ3z6GnNHEkPDPCDfodJzkAAqvsUZ1HiMp07HAKMQ/zCxvF1BtuSGeuXC9gs
+         +v69ui0boCG5BlV8SnGje8GZNbZB06YA+DcObFWWUZD2AjgigLLQeYrd+VZfhvVtfY+V
+         xAcA==
+X-Gm-Message-State: AOJu0Yz0VcH7vShEfI3sRnrNHTHpcECH0CboiO3i+XaDf3k3zWfRb9Cx
+	Q4sQROgMdXB126CzTfY+18BO1M3b0Kn3JA==
+X-Google-Smtp-Source: AGHT+IH9bwGyhu6VGou2MDT6DOlN7F8ZKsVjkSxlDLpN9HSr9lGm3hv94qI7Bqz10IswzWOBTOfqPQ==
+X-Received: by 2002:a81:4808:0:b0:577:3561:8a81 with SMTP id v8-20020a814808000000b0057735618a81mr13352272ywa.22.1692100809882;
+        Tue, 15 Aug 2023 05:00:09 -0700 (PDT)
+Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com. [209.85.219.175])
+        by smtp.gmail.com with ESMTPSA id n206-20020a8172d7000000b005899c8e8242sm3378082ywc.138.2023.08.15.05.00.08
+        for <regressions@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 15 Aug 2023 05:00:09 -0700 (PDT)
+Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-d67869054bfso3496453276.3
+        for <regressions@lists.linux.dev>; Tue, 15 Aug 2023 05:00:08 -0700 (PDT)
+X-Received: by 2002:a25:ac89:0:b0:d5d:4bae:6fe0 with SMTP id
+ x9-20020a25ac89000000b00d5d4bae6fe0mr13355730ybi.21.1692100808320; Tue, 15
+ Aug 2023 05:00:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <6702796fee0365bf399800326bbe6c88e5f73f68.1689014440.git.bcodding@redhat.com>
+ <54144a14-606a-4f2c-ca19-9b762e1f7e91@linux-m68k.org>
+In-Reply-To: <54144a14-606a-4f2c-ca19-9b762e1f7e91@linux-m68k.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 15 Aug 2023 13:59:55 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdWNW4dHZmPjJ9WUqA40_4ZvAM2DqcLMe18jWgmu=9UeRw@mail.gmail.com>
+Message-ID: <CAMuHMdWNW4dHZmPjJ9WUqA40_4ZvAM2DqcLMe18jWgmu=9UeRw@mail.gmail.com>
+Subject: Re: [PATCH] NFS: Fix sysfs server name memory leak
+To: Benjamin Coddington <bcodding@redhat.com>
+Cc: trond.myklebust@hammerspace.com, anna@kernel.org, aahringo@redhat.com, 
+	linux-nfs@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+	Linux regressions mailing list <regressions@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 14 Aug 2023 16:36:40 -0600 Tycho Andersen <tycho@tycho.pizza>
-> On Mon, Aug 14, 2023 at 04:35:56PM +0200, Miklos Szeredi wrote:
-> > On Mon, 14 Aug 2023 at 16:00, Tycho Andersen <tycho@tycho.pizza> wrote:
-> > 
-> > > It seems like we really do need to wait here. I guess that means we
-> > > need some kind of exit-proof wait?
-> > 
-> > Could you please recap the original problem?
-> 
-> Sure, the symptom is a deadlock, something like:
-> 
-> # cat /proc/1528591/stack
-> [<0>] do_wait+0x156/0x2f0
-> [<0>] kernel_wait4+0x8d/0x140
-> [<0>] zap_pid_ns_processes+0x104/0x180
-> [<0>] do_exit+0xa41/0xb80
-> [<0>] do_group_exit+0x3a/0xa0
-> [<0>] __x64_sys_exit_group+0x14/0x20
-> [<0>] do_syscall_64+0x37/0xb0
-> [<0>] entry_SYSCALL_64_after_hwframe+0x44/0xae
-> 
-> which is stuck waiting for:
-> 
-> # cat /proc/1544574/stack
-> [<0>] request_wait_answer+0x12f/0x210
-> [<0>] fuse_simple_request+0x109/0x2c0
-> [<0>] fuse_flush+0x16f/0x1b0
-> [<0>] filp_close+0x27/0x70
-> [<0>] put_files_struct+0x6b/0xc0
-> [<0>] do_exit+0x360/0xb80
-> [<0>] do_group_exit+0x3a/0xa0
-> [<0>] get_signal+0x140/0x870
-> [<0>] arch_do_signal_or_restart+0xae/0x7c0
-> [<0>] exit_to_user_mode_prepare+0x10f/0x1c0
-> [<0>] syscall_exit_to_user_mode+0x26/0x40
-> [<0>] do_syscall_64+0x46/0xb0
-> [<0>] entry_SYSCALL_64_after_hwframe+0x44/0xae
-> 
-> I have a reproducer here:
-> https://github.com/tych0/kernel-utils/blob/master/fuse2/Makefile#L7
-> 
-> The problem is that the second thread has called do_exit() ->
-> exit_signals(), but then tries to request_wait_answer() which uses the
-> core wait primitives that no longer get woken up from signals due to
-> the code in exit_signals(). So when we try to exit the pid ns, the
-> whole cleanup hangs.
+CC regressions
 
-Replacing 5a8bee63b1 ("fuse: in fuse_flush only wait if someone wants the
-return code") with checking PF_EXITING in request_wait_answer() makes fix
-or walkaround simpler.
+On Fri, Jul 14, 2023 at 5:29=E2=80=AFPM Geert Uytterhoeven <geert@linux-m68=
+k.org> wrote:
+> On Mon, 10 Jul 2023, Benjamin Coddington wrote:
+> > Free the formatted server index string after it has been duplicated by
+> > kobject_rename().
+> >
+> > Fixes: 1c7251187dc0 ("NFS: add superblock sysfs entries")
+> > Reported-by: Alexander Aring <aahringo@redhat.com>
+> > Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
+>
+> Thanks!
+>
+> This fixes the memory leaks I was seeing:
+>
+>      # cat /sys/kernel/debug/kmemleak
+>      unreferenced object 0xc6d3b7c0 (size 64):
+>        comm "mount.nfs", pid 261, jiffies 4294943450 (age 1385.530s)
+>        hex dump (first 32 bytes):
+>         73 65 72 76 65 72 2d 32 00 00 00 00 00 00 00 00  server-2........
+>         00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+>        backtrace:
+>         [<7849dbd6>] slab_post_alloc_hook.constprop.0+0x9c/0xac
+>         [<bf2297e0>] __kmem_cache_alloc_node+0xc4/0x124
+>         [<07299a52>] __kmalloc_node_track_caller+0x80/0xa4
+>         [<1876b300>] kvasprintf+0x5c/0xcc
+>         [<4fa40352>] kasprintf+0x28/0x58
+>         [<68e29ee6>] nfs_sysfs_move_sb_to_server+0x18/0x50
+>         [<6a98700b>] nfs_kill_super+0x18/0x34
+>         [<d388276a>] deactivate_locked_super+0x50/0x88
+>         [<3945c450>] cleanup_mnt+0x6c/0xc8
+>         [<fb0ac980>] task_work_run+0x84/0xb4
+>         [<d6ee2bd3>] do_work_pending+0x364/0x398
+>         [<c7a0dcab>] slow_work_pending+0xc/0x20
+>      unreferenced object 0xc6cdd6c0 (size 64):
+>        comm "mount.nfs", pid 261, jiffies 4294943456 (age 1385.470s)
+>        hex dump (first 32 bytes):
+>         73 65 72 76 65 72 2d 31 00 00 00 00 00 00 00 00  server-1........
+>         00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+>        backtrace:
+>         [<7849dbd6>] slab_post_alloc_hook.constprop.0+0x9c/0xac
+>         [<bf2297e0>] __kmem_cache_alloc_node+0xc4/0x124
+>         [<07299a52>] __kmalloc_node_track_caller+0x80/0xa4
+>         [<1876b300>] kvasprintf+0x5c/0xcc
+>         [<4fa40352>] kasprintf+0x28/0x58
+>         [<68e29ee6>] nfs_sysfs_move_sb_to_server+0x18/0x50
+>         [<6a98700b>] nfs_kill_super+0x18/0x34
+>         [<d388276a>] deactivate_locked_super+0x50/0x88
+>         [<3945c450>] cleanup_mnt+0x6c/0xc8
+>         [<fb0ac980>] task_work_run+0x84/0xb4
+>         [<d6ee2bd3>] do_work_pending+0x364/0x398
+>         [<c7a0dcab>] slow_work_pending+0xc/0x20
+>
+> Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>
+> > --- a/fs/nfs/sysfs.c
+> > +++ b/fs/nfs/sysfs.c
+> > @@ -345,8 +345,10 @@ void nfs_sysfs_move_sb_to_server(struct nfs_server=
+ *server)
+> >       int ret =3D -ENOMEM;
+> >
+> >       s =3D kasprintf(GFP_KERNEL, "server-%d", server->s_sysfs_id);
+> > -     if (s)
+> > +     if (s) {
+> >               ret =3D kobject_rename(&server->kobj, s);
+> > +             kfree(s);
+> > +     }
+> >       if (ret < 0)
+> >               pr_warn("NFS: rename sysfs %s failed (%d)\n",
+> >                                       server->kobj.name, ret);
 
-Only for thoughts.
+Gr{oetje,eeting}s,
 
-Hillf
+                        Geert
 
-+++ y/fs/fuse/dev.c
-@@ -365,11 +365,12 @@ static void request_wait_answer(struct f
- {
- 	struct fuse_conn *fc = req->fm->fc;
- 	struct fuse_iqueue *fiq = &fc->iq;
--	int err;
-+	int err = (current->flags & PF_EXITING) ? -EINTR : 0;
- 
- 	if (!fc->no_interrupt) {
- 		/* Any signal may interrupt this */
--		err = wait_event_interruptible(req->waitq,
-+		if (!err)
-+			err = wait_event_interruptible(req->waitq,
- 					test_bit(FR_FINISHED, &req->flags));
- 		if (!err)
- 			return;
-@@ -383,7 +384,8 @@ static void request_wait_answer(struct f
- 
- 	if (!test_bit(FR_FORCE, &req->flags)) {
- 		/* Only fatal signals may interrupt this */
--		err = wait_event_killable(req->waitq,
-+		if (!err)
-+			err = wait_event_killable(req->waitq,
- 					test_bit(FR_FINISHED, &req->flags));
- 		if (!err)
- 			return;
-@@ -400,6 +402,8 @@ static void request_wait_answer(struct f
- 		spin_unlock(&fiq->lock);
- 	}
- 
-+	if (err)
-+		return;
- 	/*
- 	 * Either request is already in userspace, or it was forced.
- 	 * Wait it out.
---
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
