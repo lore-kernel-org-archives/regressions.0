@@ -1,166 +1,106 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 727DADF57
-	for <regressions@lists.linux.dev>; Wed, 16 Aug 2023 12:22:21 +0000 (UTC)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id AD5941F74D;
-	Wed, 16 Aug 2023 12:22:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1692188539; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68332D52B
+	for <regressions@lists.linux.dev>; Wed, 16 Aug 2023 12:27:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1692188854;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=7Y0abpx6i0Ws/RZh4fVAk6Jn2cs+w+kHAqSQTosf15U=;
-	b=doZV2IsLzukZBbEPNjYaMzI15q4gYnWHdJug3UGA149OlI0IHC0HVttNLRgGoFVPIBunDy
-	nouOZ0wAYOQNNFwqprNttwx3JzUKLccK/9mjP1BSapS8XV6DOoLgLjgkZzd+ABc6mKKJY7
-	UDuuaGrwzYoX6FYxC9nTt52r4sJ+1rA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1692188539;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7Y0abpx6i0Ws/RZh4fVAk6Jn2cs+w+kHAqSQTosf15U=;
-	b=0GPKxcIjKfHcaZMArKjfcCxQtNmm5EXC6KsakfGgHT7WYPZMR6v9ZdkQ8/ahFAEz3bel5F
-	qTRCjDi2zxYjGXCQ==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 96CF01353E;
-	Wed, 16 Aug 2023 12:22:19 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-	by imap2.suse-dmz.suse.de with ESMTPSA
-	id NS5xJHu/3GRFNAAAMHmgww
-	(envelope-from <tiwai@suse.de>); Wed, 16 Aug 2023 12:22:19 +0000
-Date: Wed, 16 Aug 2023 14:22:19 +0200
-Message-ID: <87v8dfch38.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Kailang <kailang@realtek.com>
-Cc: "Joseph C. Sible" <josephcsible@gmail.com>,
-	Bagas Sanjaya <bagasdotme@gmail.com>,
-	"regressions@lists.linux.dev"
-	<regressions@lists.linux.dev>,
-	"perex@perex.cz" <perex@perex.cz>,
-	"tiwai@suse.com" <tiwai@suse.com>,
-	"alsa-devel@alsa-project.org"
-	<alsa-devel@alsa-project.org>
-Subject: Re: Fwd: [Bug 217440] New: ALC236 audio disappears from HP 15z-fc000 on warm boot
-In-Reply-To: <87il9gzn98.wl-tiwai@suse.de>
-References: <87o7jshxch.wl-tiwai@suse.de>
-	<CABpewhEG9ViuoCwZHmTN0Up-3jwZ1M-jfC+dAqo0zhqLOZtQ6g@mail.gmail.com>
-	<01e212a538fc407ca6edd10b81ff7b05@realtek.com>
-	<87il9gzn98.wl-tiwai@suse.de>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	bh=ijKYo6YIrYvwnBAnXfDfO1VnMtwxZii0rV5a4PpvoTc=;
+	b=CYIjDrL0J7mhWg0lLuLzsWog4X4dgdpUFB3cbYrKjMtS79FKDS3SR8hLLnPoXFp/A+EShT
+	IDifnpsQ60maFsdPW2OOMORXYaZAW4F+/8OUYAwE1UM26XpPlfqhKcn0Ws/E7qJ9I7rYq0
+	87/xRl+RMlTSPLgwWlmDedeZpA1RJWw=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-390-khdSlsm6PI2JfF4gYrvq-w-1; Wed, 16 Aug 2023 08:27:30 -0400
+X-MC-Unique: khdSlsm6PI2JfF4gYrvq-w-1
+Received: by mail-ed1-f72.google.com with SMTP id 4fb4d7f45d1cf-5236977ccfdso4542844a12.0
+        for <regressions@lists.linux.dev>; Wed, 16 Aug 2023 05:27:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692188849; x=1692793649;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ijKYo6YIrYvwnBAnXfDfO1VnMtwxZii0rV5a4PpvoTc=;
+        b=BMolae6eXyB8xEfZGF4qX0aMh1Y8NjimLzTHlUZNS7J90Fmqp9tOB9SNU1MANgwHZI
+         FHJ6rYqBW01w2AwhR9O785q5NHwQyk5eFoduKTEIlRDNQp8Q8jfm5AiXWr+XuDHZwc/p
+         jdfQNAKx6hXbipTIlgB0W0o94D9COr14dpVp8iFoZD2mB3z6xFWRkWntN/oL4m/u+Y4u
+         jBxgrvm9pucH1+KKBIne7rN4L5jb9FU6DG+ehYb8dbh4oSkMhv7qC8bo0lkZXwq7WusM
+         WdsRI1tDiz5/ZySVuc0cq83dDXCodbdDIy6AtDeJvFGsSDq5qLSNJp2DoFyP4ZUO3ift
+         P/XA==
+X-Gm-Message-State: AOJu0YxDxv/jsOP43KheqmXosxZRrriRWB0z1vxNLnfrpiiZHnCqZs0Z
+	pu9OqJ6PszFVh3cz61YAhCR/9LVqKH4g53I+rzyzhEOydIYindTiL7f2c8PCH/YNo3ksS+k8S8C
+	qACkW2Q0fOAp/nah7L7HmHHw=
+X-Received: by 2002:a05:6402:31f7:b0:523:406a:5f6 with SMTP id dy23-20020a05640231f700b00523406a05f6mr1443603edb.12.1692188849185;
+        Wed, 16 Aug 2023 05:27:29 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHU/74XE/K5Jc7jA6BEqLvhuW4kSG78ZzyQI/ebU7QqsSkoPCOzbXSL5nsV7AciG7WH7ck9vQ==
+X-Received: by 2002:a05:6402:31f7:b0:523:406a:5f6 with SMTP id dy23-20020a05640231f700b00523406a05f6mr1443587edb.12.1692188848862;
+        Wed, 16 Aug 2023 05:27:28 -0700 (PDT)
+Received: from fedora (g2.ign.cz. [91.219.240.8])
+        by smtp.gmail.com with ESMTPSA id o8-20020aa7c508000000b005255eec8797sm4365977edq.79.2023.08.16.05.27.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Aug 2023 05:27:27 -0700 (PDT)
+From: Vitaly Kuznetsov <vkuznets@redhat.com>
+To: Bagas Sanjaya <bagasdotme@gmail.com>, Paolo Bonzini
+ <pbonzini@redhat.com>, Sean Christopherson <seanjc@google.com>, Roman
+ Mamedov <rm+bko@romanrm.net>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux
+ Regressions <regressions@lists.linux.dev>, Linux KVM
+ <kvm@vger.kernel.org>, Borislav Petkov (AMD) <bp@alien8.de>
+Subject: Re: Fwd: kvm: Windows Server 2003 VM fails to work on 6.1.44 (works
+ fine on 6.1.43)
+In-Reply-To: <8cc000d5-9445-d6f1-f02e-4629a4a59e0e@gmail.com>
+References: <8cc000d5-9445-d6f1-f02e-4629a4a59e0e@gmail.com>
+Date: Wed, 16 Aug 2023 14:27:27 +0200
+Message-ID: <87o7j75g0g.fsf@redhat.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain
 
-On Tue, 15 Aug 2023 11:08:19 +0200,
-Takashi Iwai wrote:
-> 
-> On Tue, 15 Aug 2023 10:08:48 +0200,
-> Kailang wrote:
-> > 
-> > Hi Takashi,
-> > 
-> > I think maybe attach patch is what you want.
-> 
-> Looks good.  Let's ask the reporter to test with it.
+Bagas Sanjaya <bagasdotme@gmail.com> writes:
 
-I believe this regression fix should go for 6.5-rc7.
-Now applied.
+> Hi,
+>
+> I notice a regression report on Bugzilla [1]. Quoting from it:
+>
+>> Hello,
+>> 
+>> I have a virtual machine running the old Windows Server 2003. On kernels 6.1.44 and 6.1.45, the QEMU VNC window stays dark, not switching to any of the guest's video modes and the VM process uses only ~64 MB of RAM of the assigned 2 GB, indefinitely. It's like the VM is paused/halted/stuck before even starting. The process can be killed successfully and then restarted again (with the same result), so it is not deadlocked in kernel or the like.
+>> 
+>> Kernel 6.1.43 works fine.
+>> 
+>> I have also tried downgrading CPU microcode from 20230808 to 20230719, but that did not help.
+>> 
+>> The CPU is AMD Ryzen 5900. I suspect some of the newly added mitigations may be the culprit?
+>
+> See Bugzilla for the full thread.
+>
+> Anyway, I'm adding it to regzbot as stable-specific regression:
+>
+> #regzbot introduced: v6.1.43..v6.1.44 https://bugzilla.kernel.org/show_bug.cgi?id=217799
+> #regzbot title: Windows Server 2003 VM boot hang (only 64MB RAM allocated)
+>
+> Thanks.
+>
+> [1]: https://bugzilla.kernel.org/show_bug.cgi?id=217799
 
+From KVM's PoV, I don't see any KVM/x86 patches v6.1.44..v6.1.45 and in fact
+there are only two x86 patches:
 
-Takashi
+f2615bb47be4 x86/CPU/AMD: Do not leak quotient data after a division by 0
+98cccbd0a19a x86/hyperv: Disable IBT when hypercall page lacks ENDBR instruction
 
-> 
-> 
-> Thanks!
-> 
-> Takashi
-> 
-> > 
-> > > -----Original Message-----
-> > > From: Joseph C. Sible <josephcsible@gmail.com>
-> > > Sent: Friday, August 4, 2023 10:35 PM
-> > > To: Takashi Iwai <tiwai@suse.de>
-> > > Cc: Kailang <kailang@realtek.com>; Bagas Sanjaya <bagasdotme@gmail.com>;
-> > > regressions@lists.linux.dev; perex@perex.cz; tiwai@suse.com;
-> > > alsa-devel@alsa-project.org
-> > > Subject: Re: Fwd: [Bug 217440] New: ALC236 audio disappears from HP
-> > > 15z-fc000 on warm boot
-> > > 
-> > > 
-> > > External mail.
-> > > 
-> > > 
-> > > 
-> > > On Mon, Jul 31, 2023 at 12:14 PM Takashi Iwai <tiwai@suse.de> wrote:
-> > > >
-> > > > ... and now we receive a regression report due to this change :-<
-> > > >   https://bugzilla.kernel.org/show_bug.cgi?id=217732
-> > > >
-> > > > I believe the problem is that the patch disabled the 3kpull-low
-> > > > behavior too much while some codecs still need it.
-> > > >
-> > > > The patch changes like:
-> > > >
-> > > > @@ -3638,8 +3640,7 @@ static void alc256_shutup(struct hda_codec
-> > > *codec)
-> > > >         /* If disable 3k pulldown control for alc257, the Mic detection will
-> > > not work correctly
-> > > >          * when booting with headset plugged. So skip setting it for the
-> > > codec alc257
-> > > >          */
-> > > > -       if (codec->core.vendor_id != 0x10ec0236 &&
-> > > > -           codec->core.vendor_id != 0x10ec0257)
-> > > > +       if (spec->en_3kpull_low)
-> > > >                 alc_update_coef_idx(codec, 0x46, 0, 3 << 12);
-> > > >
-> > > >         if (!spec->no_shutup_pins)
-> > > >
-> > > > ... while the only place setting spec->en_3kpull_low is:
-> > > >
-> > > > @@ -10682,6 +10683,8 @@ static int patch_alc269(struct hda_codec
-> > > *codec)
-> > > >                 spec->shutup = alc256_shutup;
-> > > >                 spec->init_hook = alc256_init;
-> > > >                 spec->gen.mixer_nid = 0; /* ALC256 does not have any
-> > > > loopback mixer path */
-> > > > +               if (codec->bus->pci->vendor == PCI_VENDOR_ID_AMD)
-> > > > +                       spec->en_3kpull_low = true;
-> > > >                 break;
-> > > >         case 0x10ec0257:
-> > > >                 spec->codec_variant = ALC269_TYPE_ALC257;
-> > > >
-> > > > Since spec->3n_3kpull_low is false as default, it means that, except
-> > > > for ALC230/236/256 and PCI vendor AMD, the flag is never set, hence
-> > > > it's no longer called.
-> > > >
-> > > > Shouldn't spec->en_3kpull_low be enabled rather as default?  Or which
-> > > > models can set it?
-> > > 
-> > > In both my original bug and this new bug, the problem was that we're not
-> > > calling it when we should be. Given that, wouldn't a simple fix be to call it if
-> > > either the old condition or the new condition is true?
-> > > E.g., something like this:
-> > > 
-> > > if ((codec->core.vendor_id != 0x10ec0236 && codec->core.vendor_id !=
-> > > 0x10ec0257) || spec->en_3kpull_low)
-> > > 
-> > > Joseph C. Sible
-> > > 
-> > > ------Please consider the environment before printing this e-mail.
-> > 
-> > 
-> 
+and I'm pretty certain the later is unrelated; f2615bb47be4 looks like
+it can, in theory, be related. Cc: Borislav.
+
+-- 
+Vitaly
+
