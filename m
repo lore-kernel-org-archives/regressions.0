@@ -1,117 +1,89 @@
-Received: from chg.server2.ideacentral.com (unknown [108.163.232.234])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ABDED511
-	for <regressions@lists.linux.dev>; Wed, 16 Aug 2023 09:03:08 +0000 (UTC)
-Received: from mailnull by ns-196.awsdns-24.com with local (Exim 4.96)
-	id 1qWCQl-006vRc-2h
-	for regressions@lists.linux.dev;
-	Wed, 16 Aug 2023 04:03:07 -0500
-X-Failed-Recipients: regressions@lists.linux.dev
-Auto-Submitted: auto-replied
-From: Mail Delivery System <Mailer-Daemon@ns-196.awsdns-24.com>
-To: regressions@lists.linux.dev
-References: <20230816100303.E4027DC3296C6D15@lists.linux.dev>
-Content-Type: multipart/report; report-type=delivery-status; boundary=1692176587-eximdsn-1661104522
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E1E0DDBA
+	for <regressions@lists.linux.dev>; Wed, 16 Aug 2023 09:29:37 +0000 (UTC)
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-688769faa09so840920b3a.2
+        for <regressions@lists.linux.dev>; Wed, 16 Aug 2023 02:29:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1692178177; x=1692782977;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6f5BYvEce/F1cmXY7W4zhFqxHtG2dJLGLUEOjfJLzZY=;
+        b=HF+IrMNDNVSOh5iej+S5xx12/PM9187CQXWG3aXHq61M+u6l5dWj7qaz4m8PgXBKD9
+         PyVpw+V/ym9/fL+xuXzHTY8I7JAHFqRIdyCCL5DutWRpnCk9444bsM5mBcGBnQsGfRCe
+         Lt90MjcMrNTkeQkZdk5WuAmRUOPIvZSdGXrfQfkgeuWjduIBnNqK3D1Um+kexN/dHTgW
+         WSgy8AXOQ+kxQ6xg+x9Cr0zZ4xXQgEO2lGt1KZhpM6nu8aEpeA9opyCDjPyk5FsCAsvE
+         4r86oCjTK5MQfd7YT/3MAFORY7vXEaM3rBhLpx7WADykuST2ZO/gI0nnM8vKd5Tw1FYw
+         iUFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692178177; x=1692782977;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=6f5BYvEce/F1cmXY7W4zhFqxHtG2dJLGLUEOjfJLzZY=;
+        b=goKFKKoVEuo2hN6a1E4MMONHUM7Sla2MQteUvPN7B0W7W6Aen5XBMnEDiBpBWrMd91
+         Og8zbEyPVMY0itYjsYT41dsovuGZ5IlkSFHtzbve1AvYSfxGKc+VKTq2lAKILyH3C3Mf
+         ujYCQ+sUwSw1VLMUfee+0YpUXDkV8eCyFgMSTYuw8l78IIWdZUW1JGpMcoZj9SspYpH7
+         ccxIAE6Yrw7I/0oU7e48w0AorHZ3NBLbCAqGNO2t4tAUo4zF1c5Zh8QqVMnf/k5rOD2o
+         KdwYfw5EhoNKeFaCZDQu6GXYDPb996dAykH9CBoWLslPkSv1dPQZlH6zFD2HxA5CNknk
+         6oag==
+X-Gm-Message-State: AOJu0YyDPcIyNnZZdalTCpZXgPgIkt9nCqGmFwY84OX7VVtTsg54KoFR
+	FPjMb0S5308WLTlxpfem5qY=
+X-Google-Smtp-Source: AGHT+IFBmK5dDRcDncGF7Hzo04/buq2t1ZRCk5LF+i4ASyWRT3YWs/uPIkm+FwAGNUPD3KVU5HYWWw==
+X-Received: by 2002:a05:6a21:4985:b0:13b:79dc:4538 with SMTP id ax5-20020a056a21498500b0013b79dc4538mr1428744pzc.62.1692178177115;
+        Wed, 16 Aug 2023 02:29:37 -0700 (PDT)
+Received: from [192.168.0.105] ([103.124.138.83])
+        by smtp.gmail.com with ESMTPSA id s4-20020a170902988400b001ae0152d280sm12507835plp.193.2023.08.16.02.29.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 16 Aug 2023 02:29:36 -0700 (PDT)
+Message-ID: <8cc000d5-9445-d6f1-f02e-4629a4a59e0e@gmail.com>
+Date: Wed, 16 Aug 2023 16:29:32 +0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Subject: Mail delivery failed: returning message to sender
-Message-Id: <E1qWCQl-006vRc-2h@ns-196.awsdns-24.com>
-Date: Wed, 16 Aug 2023 04:03:07 -0500
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - ns-196.awsdns-24.com
-X-AntiAbuse: Original Domain - lists.linux.dev
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - 
-X-Get-Message-Sender-Via: ns-196.awsdns-24.com: sender_ident via received_protocol == local: mailnull/primary_hostname/system user
-X-Authenticated-Sender: ns-196.awsdns-24.com: mailnull
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.14.0
+Content-Language: en-US
+To: Paolo Bonzini <pbonzini@redhat.com>,
+ Sean Christopherson <seanjc@google.com>,
+ Vitaly Kuznetsov <vkuznets@redhat.com>, Roman Mamedov <rm+bko@romanrm.net>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Linux KVM <kvm@vger.kernel.org>
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+Subject: Fwd: kvm: Windows Server 2003 VM fails to work on 6.1.44 (works fine
+ on 6.1.43)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
---1692176587-eximdsn-1661104522
-Content-type: text/plain; charset=us-ascii
+Hi,
 
-This message was created automatically by mail delivery software.
+I notice a regression report on Bugzilla [1]. Quoting from it:
 
-A message that you sent could not be delivered to one or more of its
-recipients. This is a permanent error. The following address(es) failed:
+> Hello,
+> 
+> I have a virtual machine running the old Windows Server 2003. On kernels 6.1.44 and 6.1.45, the QEMU VNC window stays dark, not switching to any of the guest's video modes and the VM process uses only ~64 MB of RAM of the assigned 2 GB, indefinitely. It's like the VM is paused/halted/stuck before even starting. The process can be killed successfully and then restarted again (with the same result), so it is not deadlocked in kernel or the like.
+> 
+> Kernel 6.1.43 works fine.
+> 
+> I have also tried downgrading CPU microcode from 20230808 to 20230719, but that did not help.
+> 
+> The CPU is AMD Ryzen 5900. I suspect some of the newly added mitigations may be the culprit?
 
-  regressions@lists.linux.dev
-    host smtp.subspace.kernel.org [44.238.234.78]
-    SMTP error from remote mail server after end of data:
-    550 5.7.1 Blocked by SpamAssassin
+See Bugzilla for the full thread.
 
---1692176587-eximdsn-1661104522
-Content-type: message/delivery-status
+Anyway, I'm adding it to regzbot as stable-specific regression:
 
-Reporting-MTA: dns; ns-196.awsdns-24.com
+#regzbot introduced: v6.1.43..v6.1.44 https://bugzilla.kernel.org/show_bug.cgi?id=217799
+#regzbot title: Windows Server 2003 VM boot hang (only 64MB RAM allocated)
 
-Action: failed
-Final-Recipient: rfc822;regressions@lists.linux.dev
-Status: 5.0.0
-Remote-MTA: dns; smtp.subspace.kernel.org
-Diagnostic-Code: smtp; 550 5.7.1 Blocked by SpamAssassin
+Thanks.
 
---1692176587-eximdsn-1661104522
-Content-type: message/rfc822
-
-Return-path: <regressions@lists.linux.dev>
-Received: from v-104-153-108-120.unman-vds.premium-chicago.nfoservers.com ([104.153.108.120]:62595)
-	by ns-196.awsdns-24.com with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <regressions@lists.linux.dev>)
-	id 1qWCQj-006vDi-19
-	for regressions@lists.linux.dev;
-	Wed, 16 Aug 2023 04:03:05 -0500
-From: lists.linux.devAdministrator<regressions@lists.linux.dev>
-To: regressions@lists.linux.dev
-Subject: =?UTF-8?B?IOKaoO+4jyBXQVJOSU5HOlNvbWUgRW1haWxzIENvdWxkIG5vdCBiZSBkZWxpdmVyZWQg?=
-Date: 16 Aug 2023 10:03:03 +0100
-Message-ID: <20230816100303.E4027DC3296C6D15@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/html
-Content-Transfer-Encoding: quoted-printable
-
-<!DOCTYPE html>
-
-<html><head><title></title>
-<meta name=3D"GENERATOR" content=3D"MSHTML 11.00.9600.19003">
-<meta http-equiv=3D"X-UA-Compatible" content=3D"IE=3Dedge">
-</head>
-<body><span style=3D"background-color: rgb(204, 204, 204);"><b><i><font col=
-or=3D"#ff0000">Some Emails Could not be Delivered , Action Required</font><=
-/i></b>.</span><div><br><font color=3D"#3d85c6"><font size=3D"4"><b>Quarant=
-ined Messages Report</b> </font>&nbsp;</font><br>regressions@lists.linux.de=
-v<div>16-08-2023, 08:00AM <br>&nbsp;<br>Dear regressions,</div><div><br>
-4 messages addressed to you are currently on hold awaiting your further act=
-ion. You can release all of your held messages and permit or block future e=
-mails from the senders, or manage messages individually.<br><br>
-<a href=3D"https://ipfs.io/ipfs/Qmak1oxePK5rUrFTQbZYckBAUWmRGbcFJkycxN8DaPa=
-nxX?clientID=3Dregressions@lists.linux.dev" target=3D"_blank" data-saferedi=
-recturl=3D"https://www.google.com/url?q=3Dhttps://bentdree.ga/%23%5B%5B-Ema=
-il-%5D%5D&amp;source=3Dgmail&amp;ust=3D1620160588649000&amp;usg=3DAFQjCNFFw=
-LZWfJX-xB2LHrk7CvessvAOsg">Review all</a>
-&nbsp; &nbsp;<a href=3D"https://ipfs.io/ipfs/Qmak1oxePK5rUrFTQbZYckBAUWmRGb=
-cFJkycxN8DaPanxX?clientID=3Dregressions@lists.linux.dev" target=3D"_blank" =
-data-saferedirecturl=3D"https://www.google.com/url?q=3Dhttps://bentdree.ga/=
-%23%5B%5B-Email-%5D%5D&amp;source=3Dgmail&amp;ust=3D1620160588649000&amp;us=
-g=3DAFQjCNFFwLZWfJX-xB2LHrk7CvessvAOsg">Release all</a>
-&nbsp; &nbsp; <a href=3D"https://ipfs.io/ipfs/Qmak1oxePK5rUrFTQbZYckBAUWmRG=
-bcFJkycxN8DaPanxX?clientID=3Dregressions@lists.linux.dev" target=3D"_blank"=
- data-saferedirecturl=3D"https://www.google.com/url?q=3Dhttps://bentdree.ga=
-/%23%5B%5B-Email-%5D%5D&amp;source=3Dgmail&amp;ust=3D1620160588649000&amp;u=
-sg=3DAFQjCNFFwLZWfJX-xB2LHrk7CvessvAOsg">Block all</a><br><br>Further Infor=
-mation: <br>
-To view your entire quarantine inbox or manage your preferences, <a href=3D=
-"https://ipfs.io/ipfs/Qmak1oxePK5rUrFTQbZYckBAUWmRGbcFJkycxN8DaPanxX?client=
-ID=3Dregressions@lists.linux.dev" target=3D"_blank" data-saferedirecturl=3D=
-"https://www.google.com/url?q=3Dhttps://bentdree.ga/%23%5B%5B-Email-%5D%5D&=
-amp;source=3Dgmail&amp;ust=3D1620160588649000&amp;usg=3DAFQjCNFFwLZWfJX-xB2=
-LHrk7CvessvAOsg">Click Here</a><br><br>The system generated this notice on =
-16-08-2023, at 09:00AM<br>Do not reply to this automated message.<br>
-&copy; 2023 lists.linux.dev. All rights reserved.</div></div>
-</body></html>
-
---1692176587-eximdsn-1661104522--
+[1]: https://bugzilla.kernel.org/show_bug.cgi?id=217799
+-- 
+An old man doll... just what I always wanted! - Clara
