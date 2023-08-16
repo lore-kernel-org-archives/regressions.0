@@ -1,83 +1,117 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from chg.server2.ideacentral.com (unknown [108.163.232.234])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9823DEDE
-	for <regressions@lists.linux.dev>; Tue, 15 Aug 2023 16:44:53 +0000 (UTC)
-Received: from p200300cf17418700333267be2b9ea1d1.dip0.t-ipconnect.de ([2003:cf:1741:8700:3332:67be:2b9e:a1d1]); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qVx9v-0000wM-7d; Tue, 15 Aug 2023 18:44:43 +0200
-Message-ID: <0d6d7b2d-fc01-0e78-8492-e460cce9f6a7@leemhuis.info>
-Date: Tue, 15 Aug 2023 18:44:40 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ABDED511
+	for <regressions@lists.linux.dev>; Wed, 16 Aug 2023 09:03:08 +0000 (UTC)
+Received: from mailnull by ns-196.awsdns-24.com with local (Exim 4.96)
+	id 1qWCQl-006vRc-2h
+	for regressions@lists.linux.dev;
+	Wed, 16 Aug 2023 04:03:07 -0500
+X-Failed-Recipients: regressions@lists.linux.dev
+Auto-Submitted: auto-replied
+From: Mail Delivery System <Mailer-Daemon@ns-196.awsdns-24.com>
+To: regressions@lists.linux.dev
+References: <20230816100303.E4027DC3296C6D15@lists.linux.dev>
+Content-Type: multipart/report; report-type=delivery-status; boundary=1692176587-eximdsn-1661104522
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [v6.1] kernel BUG in ext4_writepages
-Content-Language: en-US, de-DE
-To: Muhammad Usama Anjum <usama.anjum@collabora.com>,
- Theodore Ts'o <tytso@mit.edu>
-Cc: syzbot <syzbot+a8068dd81edde0186829@syzkaller.appspotmail.com>,
- syzkaller-lts-bugs@googlegroups.com, linux-ext4@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-stable <stable@vger.kernel.org>,
- regressions@lists.linux.dev, Baokun Li <libaokun1@huawei.com>,
- Andreas Dilger <adilger.kernel@dilger.ca>, Jan Kara <jack@suse.cz>
-References: <00000000000081f8c905f6c24e0d@google.com>
- <87dcdf62-8a74-1fbf-5f10-f4f3231f774f@collabora.com>
- <4637f58c-1cf3-0691-4fc1-6fbc38ec47ce@collabora.com>
- <0fc2546b-da7c-aac4-b402-3ef4970a1789@collabora.com>
- <20230814220536.GE2247938@mit.edu>
- <1fa9ba26-d6f7-04e7-efb8-c85645857c7f@collabora.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <1fa9ba26-d6f7-04e7-efb8-c85645857c7f@collabora.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1692117893;48bb5312;
-X-HE-SMSGID: 1qVx9v-0000wM-7d
+Subject: Mail delivery failed: returning message to sender
+Message-Id: <E1qWCQl-006vRc-2h@ns-196.awsdns-24.com>
+Date: Wed, 16 Aug 2023 04:03:07 -0500
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - ns-196.awsdns-24.com
+X-AntiAbuse: Original Domain - lists.linux.dev
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - 
+X-Get-Message-Sender-Via: ns-196.awsdns-24.com: sender_ident via received_protocol == local: mailnull/primary_hostname/system user
+X-Authenticated-Sender: ns-196.awsdns-24.com: mailnull
 
-On 15.08.23 18:31, Muhammad Usama Anjum wrote:
-> Thank you for looking at the email.
-> 
-> On 8/15/23 3:05 AM, Theodore Ts'o wrote:
->> On Mon, Aug 14, 2023 at 10:35:57AM +0500, Muhammad Usama Anjum wrote:
->>>> The last refactoring was done by 4e7ea81db53465 on this code in 2013. The
->>>> code segment in question is present from even before that. It means that
->>>> this bug is present for several years. 4.14 is the most old kernel being
->>>> maintained today. So it affects all current LTS and mainline kernels. I'll
->>>> report 4e7ea81db53465 with regzbot for proper tracking. Thus probably the
->>>> bug report will get associated with all LTS kernels as well.
->>>>
->>>> #regzbot title: Race condition between buffer write and page_mkwrite
->>>
->>> #regzbot title: ext4: Race condition between buffer write and page_mkwrite
->>
->> If it's a long-standing bug, then it's really not something I consider
->> a regression.  That being said, you're assuming that the refactoring
->> is what has introduced the bug; that's not necessarily case.
-> The bug was introduced by the following patch:
-> 9c3569b50f12 ("ext4: add delalloc support for inline data")
+--1692176587-eximdsn-1661104522
+Content-type: text/plain; charset=us-ascii
 
-Which was v3.8-rc1 afaics.
+This message was created automatically by mail delivery software.
 
-> https://lore.kernel.org/all/1351047338-4963-7-git-send-email-tm@tao.ma/
-> The bug is in the inline data feature addition patches itself.
-> 
-> Should I remove this regression from regzbot marking it as not regression
-> and only a long-standing bug?
+A message that you sent could not be delivered to one or more of its
+recipients. This is a permanent error. The following address(es) failed:
 
-Let me do that:
+  regressions@lists.linux.dev
+    host smtp.subspace.kernel.org [44.238.234.78]
+    SMTP error from remote mail server after end of data:
+    550 5.7.1 Blocked by SpamAssassin
 
-#regzbot inconclusive: regression from the 3.8 days, tracking doesn't
-really gain us anything
+--1692176587-eximdsn-1661104522
+Content-type: message/delivery-status
 
-To explain: not sure how Linus sees it, but if the culprit was merged
-that long ago there is not much worth in tracking it, as there is no
-easy way to fix it with a revert or something anyway. Sure, the issue
-nevertheless should not remain unfixed, but lets trust Ted here that
-he'll sooner or later take care of it when he sees fit.
+Reporting-MTA: dns; ns-196.awsdns-24.com
 
-Ciao, Thorsten
+Action: failed
+Final-Recipient: rfc822;regressions@lists.linux.dev
+Status: 5.0.0
+Remote-MTA: dns; smtp.subspace.kernel.org
+Diagnostic-Code: smtp; 550 5.7.1 Blocked by SpamAssassin
+
+--1692176587-eximdsn-1661104522
+Content-type: message/rfc822
+
+Return-path: <regressions@lists.linux.dev>
+Received: from v-104-153-108-120.unman-vds.premium-chicago.nfoservers.com ([104.153.108.120]:62595)
+	by ns-196.awsdns-24.com with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <regressions@lists.linux.dev>)
+	id 1qWCQj-006vDi-19
+	for regressions@lists.linux.dev;
+	Wed, 16 Aug 2023 04:03:05 -0500
+From: lists.linux.devAdministrator<regressions@lists.linux.dev>
+To: regressions@lists.linux.dev
+Subject: =?UTF-8?B?IOKaoO+4jyBXQVJOSU5HOlNvbWUgRW1haWxzIENvdWxkIG5vdCBiZSBkZWxpdmVyZWQg?=
+Date: 16 Aug 2023 10:03:03 +0100
+Message-ID: <20230816100303.E4027DC3296C6D15@lists.linux.dev>
+MIME-Version: 1.0
+Content-Type: text/html
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE html>
+
+<html><head><title></title>
+<meta name=3D"GENERATOR" content=3D"MSHTML 11.00.9600.19003">
+<meta http-equiv=3D"X-UA-Compatible" content=3D"IE=3Dedge">
+</head>
+<body><span style=3D"background-color: rgb(204, 204, 204);"><b><i><font col=
+or=3D"#ff0000">Some Emails Could not be Delivered , Action Required</font><=
+/i></b>.</span><div><br><font color=3D"#3d85c6"><font size=3D"4"><b>Quarant=
+ined Messages Report</b> </font>&nbsp;</font><br>regressions@lists.linux.de=
+v<div>16-08-2023, 08:00AM <br>&nbsp;<br>Dear regressions,</div><div><br>
+4 messages addressed to you are currently on hold awaiting your further act=
+ion. You can release all of your held messages and permit or block future e=
+mails from the senders, or manage messages individually.<br><br>
+<a href=3D"https://ipfs.io/ipfs/Qmak1oxePK5rUrFTQbZYckBAUWmRGbcFJkycxN8DaPa=
+nxX?clientID=3Dregressions@lists.linux.dev" target=3D"_blank" data-saferedi=
+recturl=3D"https://www.google.com/url?q=3Dhttps://bentdree.ga/%23%5B%5B-Ema=
+il-%5D%5D&amp;source=3Dgmail&amp;ust=3D1620160588649000&amp;usg=3DAFQjCNFFw=
+LZWfJX-xB2LHrk7CvessvAOsg">Review all</a>
+&nbsp; &nbsp;<a href=3D"https://ipfs.io/ipfs/Qmak1oxePK5rUrFTQbZYckBAUWmRGb=
+cFJkycxN8DaPanxX?clientID=3Dregressions@lists.linux.dev" target=3D"_blank" =
+data-saferedirecturl=3D"https://www.google.com/url?q=3Dhttps://bentdree.ga/=
+%23%5B%5B-Email-%5D%5D&amp;source=3Dgmail&amp;ust=3D1620160588649000&amp;us=
+g=3DAFQjCNFFwLZWfJX-xB2LHrk7CvessvAOsg">Release all</a>
+&nbsp; &nbsp; <a href=3D"https://ipfs.io/ipfs/Qmak1oxePK5rUrFTQbZYckBAUWmRG=
+bcFJkycxN8DaPanxX?clientID=3Dregressions@lists.linux.dev" target=3D"_blank"=
+ data-saferedirecturl=3D"https://www.google.com/url?q=3Dhttps://bentdree.ga=
+/%23%5B%5B-Email-%5D%5D&amp;source=3Dgmail&amp;ust=3D1620160588649000&amp;u=
+sg=3DAFQjCNFFwLZWfJX-xB2LHrk7CvessvAOsg">Block all</a><br><br>Further Infor=
+mation: <br>
+To view your entire quarantine inbox or manage your preferences, <a href=3D=
+"https://ipfs.io/ipfs/Qmak1oxePK5rUrFTQbZYckBAUWmRGbcFJkycxN8DaPanxX?client=
+ID=3Dregressions@lists.linux.dev" target=3D"_blank" data-saferedirecturl=3D=
+"https://www.google.com/url?q=3Dhttps://bentdree.ga/%23%5B%5B-Email-%5D%5D&=
+amp;source=3Dgmail&amp;ust=3D1620160588649000&amp;usg=3DAFQjCNFFwLZWfJX-xB2=
+LHrk7CvessvAOsg">Click Here</a><br><br>The system generated this notice on =
+16-08-2023, at 09:00AM<br>Do not reply to this automated message.<br>
+&copy; 2023 lists.linux.dev. All rights reserved.</div></div>
+</body></html>
+
+--1692176587-eximdsn-1661104522--
