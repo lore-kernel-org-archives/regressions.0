@@ -1,144 +1,109 @@
-Received: from madras.collabora.co.uk (madras.collabora.co.uk [46.235.227.172])
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E03C3171C0;
-	Fri, 18 Aug 2023 07:50:56 +0000 (UTC)
-Received: from localhost (unknown [IPv6:2a0c:5a83:9102:5a00:2980:60a0:e717:d129])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: rcn)
-	by madras.collabora.co.uk (Postfix) with ESMTPSA id C5C1A6607143;
-	Fri, 18 Aug 2023 08:50:54 +0100 (BST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1692345054;
-	bh=hY+hsh+mHzNdHs2QGRKGuV2G4Hjv9CP76nBsrSXjAjg=;
-	h=From:To:Cc:Cc:Subject:References:In-reply-to:Date:From;
-	b=krJ9SDFC592y9pLWdqiJ0CS5EQTcBaNjL/6CPs8Ig6HxgujAVuSpeN0iaxCFx0Pii
-	 QoCSksXsgqMgvaO61Xmi4AsAQReKlsn5yhqgbaQvWK9W0ECgMyj2W9W2Lt0HxgVSb0
-	 ujU1+PnRbYYI2dl+sglpzTdl8kcmNZxpYZhp3SI+A1/swEL4WxVwB7sTY3183hk0Pt
-	 UrTNLZiordTVP4vqWgjjHe3bqvH6IOknVnbJY1jEzunQ9zGrfHVNfimro5zImvPCV+
-	 HvlPbSLHTEdYpZCoutKgPaWLgOLuDvQ6yEW9evZyCxME7VCHo/9Q3VbxaGQQ63Av+Q
-	 eAwv2/i/v1Zsw==
-From: Ricardo =?utf-8?Q?Ca=C3=B1uelo?= <ricardo.canuelo@collabora.com>
-To: Guillaume Tucker <guillaume.tucker@collabora.com>, kernelci@lists.linux.dev, gregkh@linuxfoundation.org, thorsten@leemhuis.info, regressions@lists.linux.dev
-Cc: kernel@collabora.com, linux-kernel@vger.kernel.org, Gustavo Padovan <gustavo.padovan@collabora.com>, Shreeya Patel <shreeya.patel@collabora.com>
-Cc: 
-Subject: Re: Kernel regression tracking/reporting initiatives and KCIDB
-References: <874jljhtmj.fsf@rcn-XPS-13-9305.i-did-not-set--mail-host-address--so-tickle-me> <c7120c90-e40b-0433-0175-f23f928daa50@collabora.com>
-In-reply-to: <c7120c90-e40b-0433-0175-f23f928daa50@collabora.com>
-Date: Fri, 18 Aug 2023 09:50:51 +0200
-Message-ID: <87o7j4hjqc.fsf@collabora.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD9641643D
+	for <regressions@lists.linux.dev>; Fri, 18 Aug 2023 08:16:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1692346602; x=1723882602;
+  h=date:from:to:cc:subject:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=dc06fUIqtwQAqNbNhGr+uIzCfrj4zxECY6jV06ommyo=;
+  b=I9h+oml42/iuDLqzo6FbdFA0og+90KnsQsCt44WLAJKWrTuCCq55+Ew8
+   fMDagAeoWGPATG9mP8xVUjxbnzqVjTq3rA4y61WA25BjJa5ZRKLnjFqws
+   TXTs6og8LmRHKL+066oVrYE4ysMEYqswcQN9uTQl1b5rQmvqphZOh1MFo
+   EG0kVj9dMLvrMzqM3kgo2AmU6/x8mX0gYaVjbYzUrGvcWN71vNaIHQ8WJ
+   dzv631o3tm8qDO14mxnQgkgdxLHHneqba8owYeaGYJFtOy9XglRt/SoxH
+   zphIfcQkyXKd6z2N5j4I3ilKj0JrI0Hg0S6un/beYXptPfAxdMKUqC7kd
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10805"; a="363205177"
+X-IronPort-AV: E=Sophos;i="6.01,182,1684825200"; 
+   d="scan'208";a="363205177"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2023 01:16:37 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10805"; a="735014632"
+X-IronPort-AV: E=Sophos;i="6.01,182,1684825200"; 
+   d="scan'208";a="735014632"
+Received: from mtkaczyk-mobl.ger.corp.intel.com (HELO localhost) ([10.249.139.215])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2023 01:16:35 -0700
+Date: Fri, 18 Aug 2023 10:16:30 +0200
+From: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
+To: Bagas Sanjaya <bagasdotme@gmail.com>
+Cc: Christoph Hellwig <hch@lst.de>, Song Liu <song@kernel.org>, AceLan Kao
+ <acelan@gmail.com>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Regressions
+ <regressions@lists.linux.dev>, Linux RAID <linux-raid@vger.kernel.org>
+Subject: Re: Infiniate systemd loop when power off the machine with multiple
+ MD RAIDs
+Message-ID: <20230818101630.000027f4@linux.intel.com>
+In-Reply-To: <028a21df-4397-80aa-c2a5-7c754560f595@gmail.com>
+References: <028a21df-4397-80aa-c2a5-7c754560f595@gmail.com>
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi,
+On Wed, 16 Aug 2023 16:37:26 +0700
+Bagas Sanjaya <bagasdotme@gmail.com> wrote:
 
-On jue, ago 17 2023 at 15:32:21, Guillaume Tucker <guillaume.tucker@collabora.com> wrote:
-> With the new API, data is owned by the users who submit it so we can
-> effectively provide a solution for grouping data from multiple CI
-> systems like KCIDB does.
->
-> The key thing here is that KernelCI as a project will be
-> providing a database with regression information collected from
-> any public CI system.
+> Hi,
+> 
+> I notice a regression report on Bugzilla [1]. Quoting from it:
+> 
+> > It needs to build at least 2 different RAIDs(eg. RAID0 and RAID10, RAID5
+> > and RAID10) and then you will see below error repeatly(need to use serial
+> > console to see it)
+> > 
+> > [ 205.360738] systemd-shutdown[1]: Stopping MD devices.
+> > [ 205.366384] systemd-shutdown[1]: sd-device-enumerator: Scan all dirs
+> > [ 205.373327] systemd-shutdown[1]: sd-device-enumerator: Scanning /sys/bus
+> > [ 205.380427] systemd-shutdown[1]: sd-device-enumerator: Scanning /sys/class
+> > [ 205.388257] systemd-shutdown[1]: Stopping MD /dev/md127 (9:127).
+> > [ 205.394880] systemd-shutdown[1]: Failed to sync MD block device
+> > /dev/md127, ignoring: Input/output error [ 205.404975] md: md127 stopped.
+> > [ 205.470491] systemd-shutdown[1]: Stopping MD /dev/md126 (9:126).
+> > [ 205.770179] md: md126: resync interrupted.
+> > [ 205.776258] md126: detected capacity change from 1900396544 to 0
+> > [ 205.783349] md: md126 stopped.
+> > [ 205.862258] systemd-shutdown[1]: Stopping MD /dev/md125 (9:125).
+> > [ 205.862435] md: md126 stopped.
+> > [ 205.868376] systemd-shutdown[1]: Failed to sync MD block device
+> > /dev/md125, ignoring: Input/output error [ 205.872845] block device
+> > autoloading is deprecated and will be removed. [ 205.880955] md: md125
+> > stopped. [ 205.934349] systemd-shutdown[1]: Stopping MD /dev/md124p2
+> > (259:7). [ 205.947707] systemd-shutdown[1]: Could not stop MD /dev/md124p2:
+> > Device or resource busy [ 205.957004] systemd-shutdown[1]: Stopping MD
+> > /dev/md124p1 (259:6). [ 205.964177] systemd-shutdown[1]: Could not stop MD
+> > /dev/md124p1: Device or resource busy [ 205.973155] systemd-shutdown[1]:
+> > Stopping MD /dev/md124 (9:124). [ 205.979789] systemd-shutdown[1]: Could
+> > not stop MD /dev/md124: Device or resource busy [ 205.988475]
+> > systemd-shutdown[1]: Not all MD devices stopped, 4 left.  
+> 
+> See Bugzilla for the full thread and attached full journalctl log.
+> 
+> Anyway, I'm adding this regression to be tracked by regzbot:
+> 
+> #regzbot introduced: 12a6caf273240a
+> https://bugzilla.kernel.org/show_bug.cgi?id=217798 #regzbot title: systemd
+> shutdown hang on machine with different RAID levels
+> 
+> Thanks.
+> 
+> [1]: https://bugzilla.kernel.org/show_bug.cgi?id=217798
+> 
 
-Does this mean that KernelCI will replace KCIDB? or will they both keep
-working separately?
+Hello,
+The issue is reproducible with IMSM metadata too, around 20% of reboot hangs. I
+will try to raise the priority in the bug because it is valid high- the
+base functionality of the system is affected.
 
-> So the topic of tracking regressions for the whole kernel is already
-> part of the roadmap for KernelCI, and if just waiting for CI systems
-> to push data is not enough we can have services that actively go and
-> look for regressions to feed them into the database under a particular
-> category (or user).
-> It would be good to align ideas you may have with KernelCI's
-> plans
-
-Our ideas start by studying the required features and needs for
-regression analysis, reporting and tracking in a general and
-system-agnostic way. First the concepts, then the implementation. I
-think that analyzing the problem from the specific perspective of
-KernelCI (or any other CI system in particular). If we start with a
-general approach we can always specialize it later to a particular
-implementation, but starting a design with a restricted design in mind,
-tailored to a specific system, will probably tie it to that system
-permanently.
-
-IMO the work we want to do with regressions should be higher-level,
-based on the data produced by a CI system (any of them) and not
-dependent on any particular implementation.
-
-> also please take into account the fact that the current
-> Regression tracker you've created relies on the legacy system
-> which is going to be retired in the coming months.
-
-That's correct. The regression tracker started as a proof of concept to
-explore ideas and we based it on KernelCI test data. We're aware that
-the legacy system will be retired soon, that's why we want to look into
-KCIDB as a data source.
-
->> - did this test also fail on other hardware targets or with other kernel
->>   configurations?
->> - is it possible that the test failed because of an infrastructure
->>   error?
->
-> This should be treated as a false-positive failing test rather
-> than a "regression".  But yes of course we need to deal with
-> them, it's just slightly off-topic here I think.
-
-Not regressions, that's right, but I don't think these should be simply
-categorized as false-positives. If we treated these two particular cases
-as false positives we would be hiding and missing important results:
-
-- If the same test case on the same kernel version failed with different
-  configurations or in other boards, highlighting that information could
-  help narrow down the investigation or point it to the right
-  direction. There's definitely a failure (probablyl not a regression)
-  but the thing to fix might not be a kernel code commit but the
-  configuration used for the test. This can be submitted to the test
-  authors or the maintainers of the CI system running the test.
-
-- If the test failed because of an infrastructure error, that's
-  something that can be reported to the lab maintainers to fix. This can
-  be done automatically.
-
->> - does the test fail consistently since that commit or does it show
->>   unstable results?
->> - does the test output show any traces of already known bugs?
->> - has this regression been bisected and reported anywhere?
->> - was the regression reported by anyone? If so, is there someone already
->>   working on it?
->
-> These are all part of the post-regression checks we've been
-> discussing to run as part of KernelCI.  Basically, extending from
-> the current automated bisection jobs we have and also taking into
-> account the notion of dynamic scheduling.  However, when
-> collecting data from other CI systems I don't think there is much
-> we can do if the data is not there.  But we might be able to
-> create collaborations to run extra post-regression checks in
-> other CI systems to tackle this.
-
-This is why I think handling this at a higher level, once all the test
-data from multiple CI systems has been collected, could be the right
-strategy. Can't these post-regression checks be applied to a common DB
-with results aggregated from different CI systems? As long as the
-results are collected in a common and standard way, I mean.  We could
-have those checks implemented only once, in a centralized and generic
-way, instead of having a different implementation of the same process in
-each of the data sources.
-
-> Experimenting with KCIDB now may be interesting, but depending on
-> the outcome of the discussions around having one central database
-> for KernelCI it might not be the optimal way to do it.
-
-Why not? Sorry, I might not have the full context, can you or Nikolai
-give a bit more insight about the possible future status of KCIDB and
-KernelCI and the relationship between them?
+Christoph, could you take a look in short term?
 
 Thanks,
-Ricardo
+Mariusz
