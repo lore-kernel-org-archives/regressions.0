@@ -1,143 +1,104 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74387168B7
-	for <regressions@lists.linux.dev>; Fri, 18 Aug 2023 09:21:28 +0000 (UTC)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id A3A0621884;
-	Fri, 18 Aug 2023 09:21:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1692350486; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=VmLxSY+YWIyBjqJPJ6QEFdRadSrzKGUHrz3qvFcr4F4=;
-	b=uulEYH5HLtomuCi2zoy9XTs3I/7mEQzLrAZE7pP6ul2zOQKJ7/d0L50BsYgJ1ptPdcgQ1m
-	cbMa4e155AQIyYUsySFvtmI0J5ZfJiyfesKaQSg1KECRxnLeqTcbGJuZ3wVM09jfCyCvGi
-	twdSNOkIM3tYKaJODmDZ9Fbq3DF2yBo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1692350486;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=VmLxSY+YWIyBjqJPJ6QEFdRadSrzKGUHrz3qvFcr4F4=;
-	b=gORR+RoS1h7nZoOs/J7X0vNnvZvsdrpxJv8miKoqqRWC4LQogDZqKBSozC0nZQcSAdEESF
-	NR2O825FE1BfeuCw==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 850EA13441;
-	Fri, 18 Aug 2023 09:21:26 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-	by imap2.suse-dmz.suse.de with ESMTPSA
-	id ZTqjHRY432SCJQAAMHmgww
-	(envelope-from <hare@suse.de>); Fri, 18 Aug 2023 09:21:26 +0000
-Message-ID: <1b2166ab-e788-475e-a8e2-a6cef26f2524@suse.de>
-Date: Fri, 18 Aug 2023 11:21:25 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F70B14F61
+	for <regressions@lists.linux.dev>; Fri, 18 Aug 2023 11:12:40 +0000 (UTC)
+Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-3a7e68f4214so529212b6e.1
+        for <regressions@lists.linux.dev>; Fri, 18 Aug 2023 04:12:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1692357159; x=1692961959;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Khwz4zTp6MJ6PWK+A13n2it+/5tcAZGPGUfEiyppD6M=;
+        b=mUCaI/ez38e9bNbQRf3z8GPGtiWc1nKM1Hgv/O0SWm8rGzSlZ0swl+XOvnOd87c+E1
+         dzTPdjRnLm0e9jR43NR1B2Z1GXZ7LjXNA4+6efAJqqs/048z3YsC12hgo2cLoqLhLYlp
+         FGptIeFpIwFIzvQMHHU1VBn4Fx2PJG9w+9EhzeR3OsmtZnzTf5FpLsOXxDFkXie2REDr
+         Y2ldEPv7ejHIfgeD8hKIZ3y/CriKd3tJHHJSve6phTaLCtIM97qkLV46y6BzNwNxdabt
+         OLAPsesWHhK4WD3c7BXN96r9C4Ckg3arAtzRcK6DDt9MLIygZyS4mWyzDZazdTVbQQvY
+         oTGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692357159; x=1692961959;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Khwz4zTp6MJ6PWK+A13n2it+/5tcAZGPGUfEiyppD6M=;
+        b=fvnfFUCqstllMBHcR/kN39XCrSOdSrMnqyW+EorAJgy3iCUhpi9t15Dm3j/1P2S2UO
+         foHhR26u0R/HkdrHqTHoMZPAZLyVj/IiKvRIR/tnMjAVtD+ryqBO4fExjWSLkSa/20Hb
+         orpJotiJfCpgdCTpfY9PWUIFVFbh3IM3AXiZJitDEaCNqQuAMY6Tl47dRKm0dgku6oCs
+         q5guRfvyHX0kpqEUmEShhz/xEVYk5uR+psEaTTREiTVh5BMnCjOwaYxB8h+/9jmphwro
+         EWHuzseW/e6CxHqmBOY0bvHCu8nY+MjidaBhXGteq5+p+rqx3mY3UlXMHuYrKqOwwfCH
+         ACdQ==
+X-Gm-Message-State: AOJu0YykbyIZBMOjOZHaoL5PysMa1ncym27d7ee/bMhENAysXwDQCt+S
+	pjRdoKoa/LQKprOdQps+dW4=
+X-Google-Smtp-Source: AGHT+IFEazWZG6MmX2ZZk7rM68ZYWmpLbl9yHN9X65owHjmeeVv92KZ4B++/1C5UXZjE7J5qBALiyQ==
+X-Received: by 2002:aca:120f:0:b0:3a3:eab8:8c40 with SMTP id 15-20020aca120f000000b003a3eab88c40mr2157828ois.54.1692357157828;
+        Fri, 18 Aug 2023 04:12:37 -0700 (PDT)
+Received: from debian.me ([103.124.138.83])
+        by smtp.gmail.com with ESMTPSA id x26-20020a63b21a000000b00553dcfc2179sm1282764pge.52.2023.08.18.04.12.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Aug 2023 04:12:37 -0700 (PDT)
+Received: by debian.me (Postfix, from userid 1000)
+	id C6A9D9DAC846; Fri, 18 Aug 2023 18:12:33 +0700 (WIB)
+Date: Fri, 18 Aug 2023 18:12:33 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Fiona Ebner <f.ebner@proxmox.com>, linux-kernel@vger.kernel.org
+Cc: siva.kallam@broadcom.com, prashant@broadcom.com, mchan@broadcom.com,
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, richardcochran@gmail.com, jdelvare@suse.com,
+	Guenter Roeck <linux@roeck-us.net>, netdev@vger.kernel.org,
+	linux-hwmon@vger.kernel.org, keescook@chromium.org,
+	Linux Regressions <regressions@lists.linux.dev>
+Subject: Re: "Use slab_build_skb() instead" deprecation warning triggered by
+ tg3
+Message-ID: <ZN9SId_KNgI3dfVI@debian.me>
+References: <1bd4cb9c-4eb8-3bdb-3e05-8689817242d1@proxmox.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Infiniate systemd loop when power off the machine with multiple
- MD RAIDs
-Content-Language: en-US
-To: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>,
- Bagas Sanjaya <bagasdotme@gmail.com>
-Cc: Christoph Hellwig <hch@lst.de>, Song Liu <song@kernel.org>,
- AceLan Kao <acelan@gmail.com>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>,
- Linux RAID <linux-raid@vger.kernel.org>
-References: <028a21df-4397-80aa-c2a5-7c754560f595@gmail.com>
- <20230818101630.000027f4@linux.intel.com>
-From: Hannes Reinecke <hare@suse.de>
-In-Reply-To: <20230818101630.000027f4@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-
-On 8/18/23 10:16, Mariusz Tkaczyk wrote:
-> On Wed, 16 Aug 2023 16:37:26 +0700
-> Bagas Sanjaya <bagasdotme@gmail.com> wrote:
-> 
->> Hi,
->>
->> I notice a regression report on Bugzilla [1]. Quoting from it:
->>
->>> It needs to build at least 2 different RAIDs(eg. RAID0 and RAID10, RAID5
->>> and RAID10) and then you will see below error repeatly(need to use serial
->>> console to see it)
->>>
->>> [ 205.360738] systemd-shutdown[1]: Stopping MD devices.
->>> [ 205.366384] systemd-shutdown[1]: sd-device-enumerator: Scan all dirs
->>> [ 205.373327] systemd-shutdown[1]: sd-device-enumerator: Scanning /sys/bus
->>> [ 205.380427] systemd-shutdown[1]: sd-device-enumerator: Scanning /sys/class
->>> [ 205.388257] systemd-shutdown[1]: Stopping MD /dev/md127 (9:127).
->>> [ 205.394880] systemd-shutdown[1]: Failed to sync MD block device
->>> /dev/md127, ignoring: Input/output error [ 205.404975] md: md127 stopped.
->>> [ 205.470491] systemd-shutdown[1]: Stopping MD /dev/md126 (9:126).
->>> [ 205.770179] md: md126: resync interrupted.
->>> [ 205.776258] md126: detected capacity change from 1900396544 to 0
->>> [ 205.783349] md: md126 stopped.
->>> [ 205.862258] systemd-shutdown[1]: Stopping MD /dev/md125 (9:125).
->>> [ 205.862435] md: md126 stopped.
->>> [ 205.868376] systemd-shutdown[1]: Failed to sync MD block device
->>> /dev/md125, ignoring: Input/output error [ 205.872845] block device
->>> autoloading is deprecated and will be removed. [ 205.880955] md: md125
->>> stopped. [ 205.934349] systemd-shutdown[1]: Stopping MD /dev/md124p2
->>> (259:7). [ 205.947707] systemd-shutdown[1]: Could not stop MD /dev/md124p2:
->>> Device or resource busy [ 205.957004] systemd-shutdown[1]: Stopping MD
->>> /dev/md124p1 (259:6). [ 205.964177] systemd-shutdown[1]: Could not stop MD
->>> /dev/md124p1: Device or resource busy [ 205.973155] systemd-shutdown[1]:
->>> Stopping MD /dev/md124 (9:124). [ 205.979789] systemd-shutdown[1]: Could
->>> not stop MD /dev/md124: Device or resource busy [ 205.988475]
->>> systemd-shutdown[1]: Not all MD devices stopped, 4 left.
->>
->> See Bugzilla for the full thread and attached full journalctl log.
->>
->> Anyway, I'm adding this regression to be tracked by regzbot:
->>
->> #regzbot introduced: 12a6caf273240a
->> https://bugzilla.kernel.org/show_bug.cgi?id=217798 #regzbot title: systemd
->> shutdown hang on machine with different RAID levels
->>
->> Thanks.
->>
->> [1]: https://bugzilla.kernel.org/show_bug.cgi?id=217798
->>
-> 
-> Hello,
-> The issue is reproducible with IMSM metadata too, around 20% of reboot hangs. I
-> will try to raise the priority in the bug because it is valid high- the
-> base functionality of the system is affected.
-> 
-> Christoph, could you take a look in short term?
-> 
-Does this help?
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="lvRWUCzAIjldd1ag"
+Content-Disposition: inline
+In-Reply-To: <1bd4cb9c-4eb8-3bdb-3e05-8689817242d1@proxmox.com>
 
 
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index 78be7811a89f..b3661c8def8c 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -9575,6 +9575,7 @@ static int md_notify_reboot(struct notifier_block 
-*this,
-         struct mddev *mddev, *n;
-         int need_delay = 0;
+--lvRWUCzAIjldd1ag
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-+       flush_workqueue(md_misc_wq);
-         spin_lock(&all_mddevs_lock);
-         list_for_each_entry_safe(mddev, n, &all_mddevs, all_mddevs) {
-                 if (!mddev_get(mddev))
+On Fri, Aug 18, 2023 at 10:05:11AM +0200, Fiona Ebner wrote:
+> Hi,
+> we've got a user report about the WARN_ONCE introduced by ce098da1497c
+> ("skbuff: Introduce slab_build_skb()") [0]. The stack trace indicates
+> that the call comes from the tg3 module. While this is still kernel 6.2
+> and I can't verify that the issue is still there with newer kernels, I
+> don't see related changes in drivers/net/ethernet/broadcom/tg3.* after
+> ce098da1497c, so I thought I should let you know.
+>=20
 
-Cheers,
+Thanks for the regression report. I'm adding it to regzbot:
 
-Hannes
+#regzbot ^introduced: ce098da1497c6d
+#regzbot link: https://forum.proxmox.com/threads/132338/
 
+PS: The proxmox forum link (except full dmesg log pasted there) is in
+German, so someone fluent in the language can be helpful here.
+
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--lvRWUCzAIjldd1ag
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZN9SGQAKCRD2uYlJVVFO
+o0TGAP93b0BAQsrPftlreCxezeMkGyoETtVZD/Bh6ikkhhbkmQD+LsOW9AHgHArX
+CYWd86fU6Na6NAt8Hkpz0iw07tDG4Qg=
+=RLLk
+-----END PGP SIGNATURE-----
+
+--lvRWUCzAIjldd1ag--
