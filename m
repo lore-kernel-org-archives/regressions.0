@@ -1,56 +1,143 @@
-Received: from 167-179-156-38.a7b39c.syd.nbn.aussiebb.net (167-179-156-38.a7b39c.syd.nbn.aussiebb.net [167.179.156.38])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88F9317AB7
-	for <regressions@lists.linux.dev>; Fri, 18 Aug 2023 09:14:04 +0000 (UTC)
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.94.2 #2 (Debian))
-	id 1qWuvM-005ETi-R3; Fri, 18 Aug 2023 16:33:41 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Fri, 18 Aug 2023 16:33:41 +0800
-Date: Fri, 18 Aug 2023 16:33:41 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: meenakshi.aggarwal@nxp.com
-Cc: horia.geanta@nxp.com, V.sethi@nxp.com, pankaj.gupta@nxp.com,
-	gaurav.jain@nxp.com, davem@davemloft.net,
-	linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-	"Linux regression tracking #adding (Thorsten Leemhuis)" <regressions@leemhuis.info>,
-	Bastian Krause <bst@pengutronix.de>,
-	Linux kernel regressions list <regressions@lists.linux.dev>
-Subject: Re: [PATCH] Revert "crypto: caam - optimize RNG sample size"
-Message-ID: <ZN8s5UL1SuJOQtKh@gondor.apana.org.au>
-References: <20230814053239.608702-1-meenakshi.aggarwal@nxp.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74387168B7
+	for <regressions@lists.linux.dev>; Fri, 18 Aug 2023 09:21:28 +0000 (UTC)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id A3A0621884;
+	Fri, 18 Aug 2023 09:21:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1692350486; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VmLxSY+YWIyBjqJPJ6QEFdRadSrzKGUHrz3qvFcr4F4=;
+	b=uulEYH5HLtomuCi2zoy9XTs3I/7mEQzLrAZE7pP6ul2zOQKJ7/d0L50BsYgJ1ptPdcgQ1m
+	cbMa4e155AQIyYUsySFvtmI0J5ZfJiyfesKaQSg1KECRxnLeqTcbGJuZ3wVM09jfCyCvGi
+	twdSNOkIM3tYKaJODmDZ9Fbq3DF2yBo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1692350486;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VmLxSY+YWIyBjqJPJ6QEFdRadSrzKGUHrz3qvFcr4F4=;
+	b=gORR+RoS1h7nZoOs/J7X0vNnvZvsdrpxJv8miKoqqRWC4LQogDZqKBSozC0nZQcSAdEESF
+	NR2O825FE1BfeuCw==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 850EA13441;
+	Fri, 18 Aug 2023 09:21:26 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+	by imap2.suse-dmz.suse.de with ESMTPSA
+	id ZTqjHRY432SCJQAAMHmgww
+	(envelope-from <hare@suse.de>); Fri, 18 Aug 2023 09:21:26 +0000
+Message-ID: <1b2166ab-e788-475e-a8e2-a6cef26f2524@suse.de>
+Date: Fri, 18 Aug 2023 11:21:25 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230814053239.608702-1-meenakshi.aggarwal@nxp.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: Infiniate systemd loop when power off the machine with multiple
+ MD RAIDs
+Content-Language: en-US
+To: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>,
+ Bagas Sanjaya <bagasdotme@gmail.com>
+Cc: Christoph Hellwig <hch@lst.de>, Song Liu <song@kernel.org>,
+ AceLan Kao <acelan@gmail.com>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Linux RAID <linux-raid@vger.kernel.org>
+References: <028a21df-4397-80aa-c2a5-7c754560f595@gmail.com>
+ <20230818101630.000027f4@linux.intel.com>
+From: Hannes Reinecke <hare@suse.de>
+In-Reply-To: <20230818101630.000027f4@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Aug 14, 2023 at 07:32:39AM +0200, meenakshi.aggarwal@nxp.com wrote:
-> From: Meenakshi Aggarwal <meenakshi.aggarwal@nxp.com>
+On 8/18/23 10:16, Mariusz Tkaczyk wrote:
+> On Wed, 16 Aug 2023 16:37:26 +0700
+> Bagas Sanjaya <bagasdotme@gmail.com> wrote:
 > 
-> This reverts commit 1abc89661ad3cd18d8c6af5c2584bcc63df43bf2.
+>> Hi,
+>>
+>> I notice a regression report on Bugzilla [1]. Quoting from it:
+>>
+>>> It needs to build at least 2 different RAIDs(eg. RAID0 and RAID10, RAID5
+>>> and RAID10) and then you will see below error repeatly(need to use serial
+>>> console to see it)
+>>>
+>>> [ 205.360738] systemd-shutdown[1]: Stopping MD devices.
+>>> [ 205.366384] systemd-shutdown[1]: sd-device-enumerator: Scan all dirs
+>>> [ 205.373327] systemd-shutdown[1]: sd-device-enumerator: Scanning /sys/bus
+>>> [ 205.380427] systemd-shutdown[1]: sd-device-enumerator: Scanning /sys/class
+>>> [ 205.388257] systemd-shutdown[1]: Stopping MD /dev/md127 (9:127).
+>>> [ 205.394880] systemd-shutdown[1]: Failed to sync MD block device
+>>> /dev/md127, ignoring: Input/output error [ 205.404975] md: md127 stopped.
+>>> [ 205.470491] systemd-shutdown[1]: Stopping MD /dev/md126 (9:126).
+>>> [ 205.770179] md: md126: resync interrupted.
+>>> [ 205.776258] md126: detected capacity change from 1900396544 to 0
+>>> [ 205.783349] md: md126 stopped.
+>>> [ 205.862258] systemd-shutdown[1]: Stopping MD /dev/md125 (9:125).
+>>> [ 205.862435] md: md126 stopped.
+>>> [ 205.868376] systemd-shutdown[1]: Failed to sync MD block device
+>>> /dev/md125, ignoring: Input/output error [ 205.872845] block device
+>>> autoloading is deprecated and will be removed. [ 205.880955] md: md125
+>>> stopped. [ 205.934349] systemd-shutdown[1]: Stopping MD /dev/md124p2
+>>> (259:7). [ 205.947707] systemd-shutdown[1]: Could not stop MD /dev/md124p2:
+>>> Device or resource busy [ 205.957004] systemd-shutdown[1]: Stopping MD
+>>> /dev/md124p1 (259:6). [ 205.964177] systemd-shutdown[1]: Could not stop MD
+>>> /dev/md124p1: Device or resource busy [ 205.973155] systemd-shutdown[1]:
+>>> Stopping MD /dev/md124 (9:124). [ 205.979789] systemd-shutdown[1]: Could
+>>> not stop MD /dev/md124: Device or resource busy [ 205.988475]
+>>> systemd-shutdown[1]: Not all MD devices stopped, 4 left.
+>>
+>> See Bugzilla for the full thread and attached full journalctl log.
+>>
+>> Anyway, I'm adding this regression to be tracked by regzbot:
+>>
+>> #regzbot introduced: 12a6caf273240a
+>> https://bugzilla.kernel.org/show_bug.cgi?id=217798 #regzbot title: systemd
+>> shutdown hang on machine with different RAID levels
+>>
+>> Thanks.
+>>
+>> [1]: https://bugzilla.kernel.org/show_bug.cgi?id=217798
+>>
 > 
-> Reverting the commit because of RNG instantiation failure
-> observed on imx8mm board.
+> Hello,
+> The issue is reproducible with IMSM metadata too, around 20% of reboot hangs. I
+> will try to raise the priority in the bug because it is valid high- the
+> base functionality of the system is affected.
 > 
-> Signed-off-by: Meenakshi Aggarwal <meenakshi.aggarwal@nxp.com>
-> ---
->  drivers/crypto/caam/ctrl.c | 52 +++++++++++++++-----------------------
->  drivers/crypto/caam/regs.h | 14 ++--------
->  2 files changed, 22 insertions(+), 44 deletions(-)
+> Christoph, could you take a look in short term?
+> 
+Does this help?
 
-This isn't the patch that was being discussed.  The offending
-patch was ef492d08030 ("crypto: caam - adjust RNG timing to support
-more devices").
 
-I'll revert that one instead of this.
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index 78be7811a89f..b3661c8def8c 100644
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -9575,6 +9575,7 @@ static int md_notify_reboot(struct notifier_block 
+*this,
+         struct mddev *mddev, *n;
+         int need_delay = 0;
 
-Thanks,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
++       flush_workqueue(md_misc_wq);
+         spin_lock(&all_mddevs_lock);
+         list_for_each_entry_safe(mddev, n, &all_mddevs, all_mddevs) {
+                 if (!mddev_get(mddev))
+
+Cheers,
+
+Hannes
+
