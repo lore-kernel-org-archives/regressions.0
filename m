@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C1345668
-	for <regressions@lists.linux.dev>; Sun, 20 Aug 2023 13:30:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A5805668
+	for <regressions@lists.linux.dev>; Sun, 20 Aug 2023 13:44:59 +0000 (UTC)
 Received: from p200300cf17418700333267be2b9ea1d1.dip0.t-ipconnect.de ([2003:cf:1741:8700:3332:67be:2b9e:a1d1]); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qXiVs-00012U-Lw; Sun, 20 Aug 2023 15:30:40 +0200
-Message-ID: <0659d006-0029-737d-48a4-72cc54e87b0a@leemhuis.info>
-Date: Sun, 20 Aug 2023 15:30:40 +0200
+	id 1qXiOD-0008Pc-U1; Sun, 20 Aug 2023 15:22:45 +0200
+Message-ID: <48b80ab9-560d-3a8c-bfa8-b2983ca591fa@leemhuis.info>
+Date: Sun, 20 Aug 2023 15:22:44 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -15,36 +15,46 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
+Subject: Re: Fwd: System becomes hot when put to sleep
 Content-Language: en-US, de-DE
-From: "Linux regression tracking #adding (Thorsten Leemhuis)"
+To: Bagas Sanjaya <bagasdotme@gmail.com>,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>,
+ Shubhra Prakash Nandi <email2shubhra@gmail.com>,
+ "Enrico Weigelt, metux IT consult" <info@metux.net>,
+ Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
+ <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Linux Power Management <linux-pm@vger.kernel.org>,
+ Linux Stable <stable@vger.kernel.org>,
+ Linux GPIO <linux-gpio@vger.kernel.org>
+References: <430ca35e-70a1-e2b0-34e4-2586bebccd44@gmail.com>
+From: "Linux regression tracking #update (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: TPM patch breaks S3 on some Intel systems (bugzilla ticket)
+In-Reply-To: <430ca35e-70a1-e2b0-34e4-2586bebccd44@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1692538242;c406445b;
-X-HE-SMSGID: 1qXiVs-00012U-Lw
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1692539100;47b67202;
+X-HE-SMSGID: 1qXiOD-0008Pc-U1
 
-[TLDR: Just adding a regression reported to bko to the tracking]
+On 03.08.23 16:13, Bagas Sanjaya wrote:
 
-Hi, Thorsten here, the Linux kernel's regression tracker. I noticed a
-regression reported in bugzilla.kernel.org that seems to be handled
-there already, nevertheless I'd like to add to the tracking to ensure
-it's doesn't fall through the cracks in the end:
+> I notice a regression report on Bugzilla [1]. Quoting from it:
+>> I have a Dell Inspiron 14 5425 laptop with hardware specified below. Up till kernel version 6.1.39 the system can sleep and resume correctly but with kernel version 6.1.40 it heats up when put to sleep and drains battery very quickly. It seems CPU cannot suspend though the system can resume correctly and functions correctly after that. I believe many GPIO and pinctrl patches/fixes for the AMD platform beginning 6.1.40 and 6.4.5 has caused this issue. There is no error in logs and sleep/resume log messages in both 6.1.39 and 6.1.40 are the same. Only s2idle sleep mode is available on my system.
+> [...] 
 
-#regzbot introduced: 554b841d470338a3
-https://bugzilla.kernel.org/show_bug.cgi?id=217804
-#regzbot dup-of:
-https://lore.kernel.org/all/485e8740385239b56753ce01d8995f01f84a68e5.camel@linux.intel.com/
+TWIMC, Mario is working on it and proposed a fix:
+
+#regzbot introduced: 65f6c7c91cb2
 #regzbot monitor:
-https://lore.kernel.org/all/20230818181516.19167-1-mario.limonciello@amd.com/
-#regzbot ignore-activity
-
-See the ticket for details, there were a few replies already.
+https://lore.kernel.org/all/20230818144850.1439-1-mario.limonciello@amd.com/
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
 Everything you wanna know about Linux kernel regression tracking:
 https://linux-regtracking.leemhuis.info/about/#tldr
 That page also explains what to do if mails like this annoy you.
+
+#regzbot ignore-activity
