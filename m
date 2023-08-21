@@ -1,121 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4768B187D
-	for <regressions@lists.linux.dev>; Mon, 21 Aug 2023 09:27:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6766FC433C7;
-	Mon, 21 Aug 2023 09:27:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1692610051;
-	bh=NW4Ycp3M+pHTjemza+su3ZhshTvZ9JFW/Vsro3BLEpM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZBTKJR0KBWIG4VuMcSVzQjw+2J53sX+IJt7Rq5hwg7pdrBU3PkmdQocsBZxi8jTqY
-	 aNBrdHTkq+SxVsWSM66H84S9RA4QHMm2dzgbe5BGjvzepijWQmqyDJ+hqzykISNru+
-	 VhIQyiWAKACU/4SWR7nlSJgWhVZjMdYLGzspKbNP3Niik9X01iHC8Cv+ANjbk0/Y8l
-	 M976tPJivUsAGX7V4dLvysawBRqqJ53F4gyv8lQ39Z38MhmgAuAA3IPB03aBiCjtWK
-	 Z6n9IgLMyQkNDHal279iJmTQLxPgy4KT7VG5lnqSQpSk349HnqVBZ6+x4aiRV7jyHp
-	 bzHp8p3FxyN+w==
-Date: Mon, 21 Aug 2023 11:27:29 +0200
-From: Maxime Ripard <mripard@kernel.org>
-To: Jani Nikula <jani.nikula@intel.com>
-Cc: imre.deak@intel.com, 
-	Linux regressions mailing list <regressions@lists.linux.dev>, Mikhail Rudenko <mike.rudenko@gmail.com>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org, 
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
-	Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>, David Airlie <airlied@gmail.com>, 
-	Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [REGRESSION] HDMI connector detection broken in 6.3 on Intel(R)
- Celeron(R) N3060 integrated graphics
-Message-ID: <2xlfp5bz77tyoffqvr7orvmo45wcb7uz6nbpl7jbv6zhnqvlx3@2hxa4ltb3s3y>
-References: <87v8dmr6ty.fsf@gmail.com>
- <f32b4636-969c-3b9e-6802-5991f511739e@leemhuis.info>
- <87il9l2ymf.fsf@gmail.com>
- <3df95e6d-8237-1c43-e220-a9bdb5d6e044@leemhuis.info>
- <ZNo7oXeH0JK+4GPG@ideak-desk.fi.intel.com>
- <87edk4d8qp.fsf@intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 640C7185B
+	for <regressions@lists.linux.dev>; Mon, 21 Aug 2023 09:45:47 +0000 (UTC)
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2b72161c6e9so48215331fa.0
+        for <regressions@lists.linux.dev>; Mon, 21 Aug 2023 02:45:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1692611145; x=1693215945;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YXrzJekWebthka+oRqCLeF2NbSrhuQVkBUewP5jY82E=;
+        b=ESUb5mt0pif/4/0ee8nGER4MumOqtbcKsk+y/YK4wWg8rNq/6Zbv3q014Tziv2SdtD
+         bl4s+RTSBPMXAVKEk4dpGwJpXvQTm78uZhPftx22qdsF1BO2fsTH1wJDTICNmn44dR3E
+         qHdtXJWXl9wfr/khAudxPtn+qzgp3nLtV2yef0DJq87C248AxvFQFbEZY8JcZ/tuSXUd
+         Rl1ioo6qaEWI8UnzblQhGiqi0YzCxjAoJqeNEhvb0hshxyFdF8Fzm5ZXQjcSlqAHnUZE
+         CraRLCsZbpTVPJ9XnwjPe8jFAD0fyadOmSP3As8MJxZ4wUmGwVWklXMQQWNmtwLOmvof
+         tTHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692611145; x=1693215945;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YXrzJekWebthka+oRqCLeF2NbSrhuQVkBUewP5jY82E=;
+        b=JZDDlIqWNcg4U9upMqMcGk2jLkyG0d1d8/TcAbChn4ZNcbHQIBLkVkZHedZtAlNulx
+         TCSkov/nYUjgQv0C/4PBaRFb8bFb632/euv2QPyETeCIRP63rDaS13TjMdgSUWW2BS+b
+         h/i976hSNceT26JB1SYaBaXViVBR7F3W0YI2/Vrsic5qPVIP478ftcjDABfYmIMLT14x
+         PB0Y8OX9dr+7M/SCRJXbxyJ3dgb9a3j8JpsVJys1y7SeTaB9Xk+xgZ+FyfNlrzbLHzkO
+         Qd0+EUGdIJajkl6K+2Jui8m3EbTaPo9m/CwvAxy/6Ga+Vfsa/A+dDFeibOjvpfbRgBBI
+         4Knw==
+X-Gm-Message-State: AOJu0YyiyBdocu5IRrKeXbDuFXUTx5rqC17qkqwl4zsFY2iJbCnnsCcY
+	qB9NnWO1ltGedLHBpvpCVWubi6gn7P3hhhUHlARLrloZRi6FwA==
+X-Google-Smtp-Source: AGHT+IEdM8QVeDFGwcQueS2atSsLxX9mr+uYi4bw6KPAiR9wR139TNuB4GQX211qP2ZEPWfyDqoPhuzw+80uqhQH6Zw=
+X-Received: by 2002:a2e:9915:0:b0:2b6:d0c1:7cd0 with SMTP id
+ v21-20020a2e9915000000b002b6d0c17cd0mr1993359lji.22.1692611145029; Mon, 21
+ Aug 2023 02:45:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="5ueyegkogb3zpaqt"
-Content-Disposition: inline
-In-Reply-To: <87edk4d8qp.fsf@intel.com>
-
-
---5ueyegkogb3zpaqt
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <CA+prNOpqd2Tk1tiBAa9MT6ZPxB5gj9ftxOhaZ-u1WEay9H-oHQ@mail.gmail.com>
+ <20230815053132.GB22301@1wt.eu> <CA+prNOrUVWM9-vozUZyW49-m=qFWZR3JAtikZb4T1EimV0ZCDw@mail.gmail.com>
+ <CAHk-=wgDbr7dw0GP4zEkPu5X2mME3YH9t0+cP8Avs3m0KZxbCQ@mail.gmail.com>
+In-Reply-To: <CAHk-=wgDbr7dw0GP4zEkPu5X2mME3YH9t0+cP8Avs3m0KZxbCQ@mail.gmail.com>
+From: Xuancong Wang <xuancong84@gmail.com>
+Date: Mon, 21 Aug 2023 17:45:38 +0800
+Message-ID: <CA+prNOpbbiLEDrvVLZ_9AHpyJPV8z3ge1aRX58ri2PPTjDJGGw@mail.gmail.com>
+Subject: Re: A small bug in file access control that all have neglected
+To: Linus Torvalds <torvalds@linuxfoundation.org>
+Cc: Willy Tarreau <w@1wt.eu>, security@kernel.org, stable@vger.kernel.org, 
+	regressions@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Aug 15, 2023 at 11:12:46AM +0300, Jani Nikula wrote:
-> On Mon, 14 Aug 2023, Imre Deak <imre.deak@intel.com> wrote:
-> > On Sun, Aug 13, 2023 at 03:41:30PM +0200, Linux regression tracking (Th=
-orsten Leemhuis) wrote:
-> > Hi,
-> >
-> >> On 11.08.23 20:10, Mikhail Rudenko wrote:
-> >> > On 2023-08-11 at 08:45 +02, Thorsten Leemhuis <regressions@leemhuis.=
-info> wrote:
-> >> >> On 10.08.23 21:33, Mikhail Rudenko wrote:
-> >> >>> The following is a copy an issue I posted to drm/i915 gitlab [1] t=
-wo
-> >> >>> months ago. I repost it to the mailing lists in hope that it will =
-help
-> >> >>> the right people pay attention to it.
-> >> >>
-> >> >> Thx for your report. Wonder why Dmitry (who authored a4e771729a51) =
+Thanks Torvalds for your clear-cut answer, I really appreciate that.
+
+On another hand, I would like to suggest that Linux files should have
+an additional permission bit to be granted arbitrary attributes
+access, especially for the atime, ctime and mtime. The reason is
+because in production data pipeline, we often need multiple people to
+get/set the same file's modification times arbitrarily (e.g., set an
+output file's mtime according to the input file for incremental
+processing), and this process is managed by several people. So now, we
+have to run our data processing pipeline as root which is risky and
+undesirable.
+
+This can be implemented either:
+- as a single bit in file attributes along with the 7777 (i.e., setUID
+bit, setGID bit, sticky bit, user-3-bits, group-3-bits,
+others-3-bits), I would call it group-attribute-bit to allow users in
+the same group to modify its timestamp arbitrarily.
 or
-> >> >> Thomas (who committed it) it didn't look into this, but maybe the i=
-915
-> >> >> devs didn't forward the report to them.
-> >>=20
-> >> For the record: they did, and Jani mentioned already. Sorry, should ha=
-ve
-> >> phrased this differently.
-> >>=20
-> >> >> Let's see if these mails help. Just wondering: does reverting
-> >> >> a4e771729a51 from 6.5-rc5 or drm-tip help as well?
-> >> >=20
-> >> > I've redone my tests with 6.5-rc5, and here are the results:
-> >> > (1) 6.5-rc5 -> still affected
-> >> > (2) 6.5-rc5 + revert a4e771729a51 -> not affected
-> >> > (3) 6.5-rc5 + two patches [1][2] suggested on i915 gitlab by @ideak =
--> not affected (!)
-> >> >=20
-> >> > Should we somehow tell regzbot about (3)?
-> >>=20
-> >> That's good to know, thx. But the more important things are:
-> >>=20
-> >> * When will those be merged? They are not yet in next yet afaics, so it
-> >> might take some time to mainline them, especially at this point of the
-> >> devel cycle. Imre, could you try to prod the right people so that these
-> >> are ideally upstreamed rather sooner than later, as they fix a regress=
-ion?
+- as an extra bit in user/group/other, so that it become 7FFF (it is
+nice to have 4-bits for user/group/other, because 4 bits make up for
+one hexadecimal digit=F0=9F=98=81)
+
+Thank you very much for your consideration!
+
+Cheers,
+Xuancong
+
+
+On Tue, Aug 15, 2023 at 2:29=E2=80=AFPM Linus Torvalds
+<torvalds@linuxfoundation.org> wrote:
+>
+> On Tue, 15 Aug 2023 at 06:11, Xuancong Wang <xuancong84@gmail.com> wrote:
 > >
-> > I think the patches ([1] and [2]) could be merged via the drm-intel-next
-> > (drm-intel-fixes) tree Cc'ing also stable. Jani, is this ok?
->=20
-> It's fine by me, but need drm-misc maintainer ack to merge [1] via
-> drm-intel.
-
-That's fine for me
-
-Maxime
-
---5ueyegkogb3zpaqt
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCZOMuAAAKCRDj7w1vZxhR
-xcY1AQDOKN6ASHLZWMlRtYX09Ur6wy9cO7kZRFg47cHR2T7F0AEAstd/HKTbxG6t
-B+77nQxr4KI6tALgEwk6/twhOWMDcgw=
-=dD+q
------END PGP SIGNATURE-----
-
---5ueyegkogb3zpaqt--
+> > Yes, by "full access", I mean `chmod 777`. You can easily reproduce
+> > this bug on any Linux machine by typing the following commands:
+>
+> This is how things are supposed to work. The 0777 permissions mean
+> that you can read, write and execute the file. They do not mean that
+> you own the file.
+>
+> As a non-owner, you can set the access and modification times  the
+> same way you could by just reading and writing to the file. So if you
+> set mtime, you have to set ctime ("change time") too.
+>
+> To actually change times arbitrarily and with other patterns, you need
+> to actually own the file.
+>
+>              Linus
