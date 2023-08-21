@@ -1,128 +1,159 @@
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42A2679F1
-	for <regressions@lists.linux.dev>; Mon, 21 Aug 2023 15:32:01 +0000 (UTC)
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2b962535808so56620541fa.0
-        for <regressions@lists.linux.dev>; Mon, 21 Aug 2023 08:32:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google; t=1692631920; x=1693236720;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=ajMViAn999T2borJAKgty2s8eZcgpP+nQpjCt7tMLBs=;
-        b=LPFdKYxeQdVH2E7Q5TbeGpZWaOvYdTEZXRyPlf3Uhz0AYFvFnpGtzmk+HpqhZbnAD6
-         KRGlXIr+NdKupKVWthCveG9ysMQ9CXZJ/xeH+/BivusXCcmBfU962Y2wLtiNwqofGPHd
-         4809M+OmUMXmes72udljBpM36v6jkoKj42MgQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692631920; x=1693236720;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ajMViAn999T2borJAKgty2s8eZcgpP+nQpjCt7tMLBs=;
-        b=HZB1uC1ZSnTgbbldudFDWErrNfyMb18vI0sL120MTJWCCOwl+nGTvnfZ15nwwc8Xb2
-         M9Fqedl4MJSaYtfDcJ8A2GgIViKS6Q9iA35GZP52qOiTPGf7Nt5dULqW5wleVBYeeijI
-         j1O6klCiFxqbu4BWHFfnA6oe0sBcgdfk22QF0s1V4fsZVZcH/woioLpfDPYSJE3h8Jti
-         nAvRgUREgLdlW8iESVSi26ecgw9zzvj/VdeZbOYMn9KL9xqzaO5rh5Sk77qJLwM9A06L
-         U4VijMm5Z9rY2hM+bM3f896dqZFLiz9IW6NsOxVf14vjcpQJmR6r86VnILX/gSVjaIuE
-         Xf1g==
-X-Gm-Message-State: AOJu0YwQBkG1/mAikH1jojiVGSTshvUdqhpARTVYAKr1yPpW3icEvI9C
-	JHVWWCPT7XQn1AoUCZPntVMDZ7104T8cEVfw1Y4NzQ==
-X-Google-Smtp-Source: AGHT+IGdFCpqnhpi/bYMX4uNpBpHyfyXed6rturJBY7W67IqhYWLzE2x172dXVlzvSbZaEUD+auVrY4l54jFuZcovfk=
-X-Received: by 2002:a2e:980f:0:b0:2b9:ea6b:64b with SMTP id
- a15-20020a2e980f000000b002b9ea6b064bmr4949521ljj.37.1692631919785; Mon, 21
- Aug 2023 08:31:59 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF59E4A10
+	for <regressions@lists.linux.dev>; Mon, 21 Aug 2023 19:10:57 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8284C433C7;
+	Mon, 21 Aug 2023 19:10:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1692645057;
+	bh=2muyo106Vd8pmINTrMd1YhKfAiK5OBu5XlLXu5kqLco=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=jnPkiBgCFj7KO/FWFKUX/bEp2F9ms2WsojH3UkqZ/zsAlOBNFb6RVC5B2eEF8Dnmc
+	 WCCYfAQznGyO/Dp0eElO2jEYXa7XInWVwcliQOwaNtSGSBBD4ULP7ukCCYm3RvFq3/
+	 c/VR2xCsFiKiILSj/wq2CQHF8rDuhxVSC+Nj5TM92vBy3IxiMLVX/97LxzS6vZiwIE
+	 aLhk20tSOTexbmP5chcTiQHSgH8GIkLSe1eecUHG4H6dNYFG+mMlsfv0VLxlsBUX96
+	 LCI1RAmqHPELCzRhtv4/uKc+RuDe35j0chH91CKTIgdYA7ROFtnuOqF00N+wxoD0XP
+	 +cMiKophjY76Q==
+Date: Mon, 21 Aug 2023 14:10:55 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Kamil Paral <kparal@redhat.com>
+Cc: linux-pci@vger.kernel.org, regressions@lists.linux.dev,
+	mika.westerberg@linux.intel.com, bhelgaas@google.com,
+	chris.chiu@canonical.com
+Subject: Re: [REGRESSION] resume with a Thunderbolt dock broke with commit
+ e8b908146d44 "PCI/PM: Increase wait time after resume"
+Message-ID: <20230821191055.GA362994@bhelgaas>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <4f66cded234462964899f2a661750d6798a57ec0.camel@bitron.ch>
- <CAJfpeguG4f4S-pq+_EXHxfB63mbof-VnaOy-7a-7seWLMj_xyQ@mail.gmail.com>
- <ZNozdrtKgTeTaMpX@tycho.pizza> <CAJfpegt6x_=F=mD8LEL4AZPbfCLGQrpurhtbDN4Ew50fd2ngqQ@mail.gmail.com>
- <ZNqseD4hqHWmeF2w@tycho.pizza> <CAJfpegtzj7=f99=m49DShDTgLpGAzx8gpHSakgPn0qe+dNjHdw@mail.gmail.com>
- <ZON8hKOAGRvTn83a@tycho.pizza>
-In-Reply-To: <ZON8hKOAGRvTn83a@tycho.pizza>
-From: Miklos Szeredi <miklos@szeredi.hu>
-Date: Mon, 21 Aug 2023 17:31:48 +0200
-Message-ID: <CAJfpegt2WrKBswYgSzurNogLefO-vU6ZpbCkrDrjFL365kcsug@mail.gmail.com>
-Subject: Re: [REGRESSION] fuse: execve() fails with ETXTBSY due to async fuse_flush
-To: Tycho Andersen <tycho@tycho.pizza>
-Cc: =?UTF-8?Q?J=C3=BCrg_Billeter?= <j@bitron.ch>, 
-	"Eric W. Biederman" <ebiederm@xmission.com>, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+cBOTeWrsTyANjLZQ=bGoBQ_yOkkV1juyRvJq-C8GOrbW6t9Q@mail.gmail.com>
 
-On Mon, 21 Aug 2023 at 17:02, Tycho Andersen <tycho@tycho.pizza> wrote:
->
-> On Mon, Aug 21, 2023 at 04:24:00PM +0200, Miklos Szeredi wrote:
-> > On Tue, 15 Aug 2023 at 00:36, Tycho Andersen <tycho@tycho.pizza> wrote:
-> > >
-> > > On Mon, Aug 14, 2023 at 04:35:56PM +0200, Miklos Szeredi wrote:
-> > > > On Mon, 14 Aug 2023 at 16:00, Tycho Andersen <tycho@tycho.pizza> wrote:
-> > > >
-> > > > > It seems like we really do need to wait here. I guess that means we
-> > > > > need some kind of exit-proof wait?
-> > > >
-> > > > Could you please recap the original problem?
-> > >
-> > > Sure, the symptom is a deadlock, something like:
-> > >
-> > > # cat /proc/1528591/stack
-> > > [<0>] do_wait+0x156/0x2f0
-> > > [<0>] kernel_wait4+0x8d/0x140
-> > > [<0>] zap_pid_ns_processes+0x104/0x180
-> > > [<0>] do_exit+0xa41/0xb80
-> > > [<0>] do_group_exit+0x3a/0xa0
-> > > [<0>] __x64_sys_exit_group+0x14/0x20
-> > > [<0>] do_syscall_64+0x37/0xb0
-> > > [<0>] entry_SYSCALL_64_after_hwframe+0x44/0xae
-> > >
-> > > which is stuck waiting for:
-> > >
-> > > # cat /proc/1544574/stack
-> > > [<0>] request_wait_answer+0x12f/0x210
-> > > [<0>] fuse_simple_request+0x109/0x2c0
-> > > [<0>] fuse_flush+0x16f/0x1b0
-> > > [<0>] filp_close+0x27/0x70
-> > > [<0>] put_files_struct+0x6b/0xc0
-> > > [<0>] do_exit+0x360/0xb80
-> > > [<0>] do_group_exit+0x3a/0xa0
-> > > [<0>] get_signal+0x140/0x870
-> > > [<0>] arch_do_signal_or_restart+0xae/0x7c0
-> > > [<0>] exit_to_user_mode_prepare+0x10f/0x1c0
-> > > [<0>] syscall_exit_to_user_mode+0x26/0x40
-> > > [<0>] do_syscall_64+0x46/0xb0
-> > > [<0>] entry_SYSCALL_64_after_hwframe+0x44/0xae
-> > >
-> > > I have a reproducer here:
-> > > https://github.com/tych0/kernel-utils/blob/master/fuse2/Makefile#L7
-> >
-> > The issue seems to be that the server process is recursing into the
-> > filesystem it is serving (nested_fsync()).  It's quite easy to
-> > deadlock fuse this way, and I'm not sure why this would be needed for
-> > any server implementation.   Can you explain?
->
-> I think the idea is that they're saving snapshots of their own threads
-> to the fs for debugging purposes.
+On Mon, Aug 21, 2023 at 12:39:02PM +0200, Kamil Paral wrote:
+> = Summary =
+> A Thinkpad T480s laptop with a Thinkpad Thunderbolt 3 Dock connected
+> can no longer resume from suspend. The problem was introduced in
+> e8b908146d44 "PCI/PM: Increase wait time after resume".
+> 
+> = Detailed description =
+> When running a kernel containing the identified commit and trying to
+> resume the laptop from sleep, the laptop's power light changes from
+> blinking (sleep state) to shining (running state), but the display
+> stays black and it doesn't respond to any keyboard input, nor to
+> ping/ssh, and no logs are written to the disk (which means I don't
+> know how to gather error logs). It needs to be force-rebooted. I
+> bisected the kernel and identified the commit which causes this
+> behavior. I used the vanilla kernel with a Fedora kernel config.
+> 
+> The reproducer is:
+> 1. Connect the dock to the laptop.
+> 2. Boot the laptop (in my case, to the gdm).
+> 3. Suspend the laptop.
+> 4. Resume the laptop. This is successful before the identified commit
+> (the last tested good commit was cc8a983d0fce), and unsuccessful
+> (black screen, frozen system) after the identified commit
+> (e8b908146d44).
+> 
+> The reproducibility is 100%, I tested it many many times in a row.
+> 
+> When the dock is unplugged, suspend and resume works as expected. When
+> I connect a different laptop to the dock (Thinkpad P1 gen3), I don't
+> see any resume failure. So this is somehow related to the particular
+> combination of Thinkpad T480s and Thinkpad Thunderbolt 3 Dock. The
+> dock is running the latest firmware.
 
-This seems a fairly special situation.   Have they (whoever they may
-be) thought about fixing this in their server?
+Thanks very much for the report.
 
-> Whether this is a sane thing to do or not, it doesn't seem like it
-> should deadlock pid ns destruction.
+Wow, this is super interesting.  e8b908146d44 literally just increases
+a timeout; the complete patch is:
 
-True.   So the suggested solution is to allow wait_event_killable() to
-return if a terminal signal is pending in the exiting state and only
-in that case turn the flush into a background request?  That would
-still allow for regressions like the one reported, but that would be
-much less likely to happen in real life.  Okay, I said this for the
-original solution as well, so this may turn out to be wrong as well.
+   static void pci_pm_bridge_power_up_actions(struct pci_dev *pci_dev)
+   {
+  -       pci_bridge_wait_for_secondary_bus(pci_dev, "resume", PCI_RESET_WAIT);
+  +       pci_bridge_wait_for_secondary_bus(pci_dev, "resume",
+  +                                         PCIE_RESET_READY_POLL_MS);
 
-Anyway, I'd prefer if this was fixed in the server code, as it looks
-fairly special and adding complexity to the kernel for this case might
-not be justifiable.   But I'm also open to suggestions on fixing this
-in the kernel in a not too complex manner.
+Increasing a timeout should never cause a failure like this, so
+there must be something really unexpected going on.
 
-Thanks,
-Miklos
+> I also tested "pcie_aspm=off",
+> and that allows the laptop to resume properly, but then there's a race
+> condition whether devices on the dock are visible to the OS or not
+> after resume, so this is not useful even just as a workaround.
+
+Wow, also shocking.  I see you have lspci output attached to the RH
+bugzilla, but it doesn't include the details.  Would you mind
+collecting the output of "sudo lspci -vv" both with and without
+"pcie_aspm=off"?  No need to try suspend/resume to collect these.
+
+Also, what does this race condition look like?  Dock devices are
+visible before suspend, but sometimes none of them are visible *after*
+resume?  We don't re-enumerate on resume, so does this mean they still
+appear in lspci output but they just don't work?
+
+If you can collect the complete dmesg log and "sudo lspci -vv" output
+after a resume when the dock devices aren't visible, maybe there would
+be a clue there.
+
+> I already created a downstream Fedora bug report in Red Hat Bugzilla:
+> https://bugzilla.redhat.com/show_bug.cgi?id=2230357
+> 
+> lspci of the laptop:
+> https://bugzilla-attachments.redhat.com/attachment.cgi?id=1982541
+> git bisect log:
+> https://bugzilla-attachments.redhat.com/attachment.cgi?id=1983351
+> 
+> 
+> The commit which broke resume is the following:
+> 
+> e8b908146d44310473e43b3382eca126e12d279c is the first bad commit
+> commit e8b908146d44310473e43b3382eca126e12d279c
+> Author: Mika Westerberg <mika.westerberg.com>
+> Date:   Tue Apr 4 08:27:13 2023 +0300
+> 
+>     PCI/PM: Increase wait time after resume
+> 
+>     PCIe r6.0 sec 6.6.1 prescribes that a device must be able to respond to
+>     config requests within 1.0 s (PCI_RESET_WAIT) after exiting conventional
+>     reset and this same delay is prescribed when coming out of D3cold (as that
+>     involves reset too).
+> 
+>     A device that requires more than 1 second to initialize after reset may
+>     respond to config requests with Request Retry Status completions (sec
+>     2.3.1), and we accommodate that in Linux with a 60 second cap
+>     (PCIE_RESET_READY_POLL_MS).
+> 
+>     Previously we waited up to PCIE_RESET_READY_POLL_MS only in the reset code
+>     path, not in the resume path.  However, a device has surfaced, namely Intel
+>     Titan Ridge xHCI, which requires a longer delay also in the resume code
+>     path.
+> 
+>     Make the resume code path to use this same extended delay as the reset
+>     path.
+> 
+>     Link: https://bugzilla.kernel.org/show_bug.cgi?id=216728
+>     Link: https://lore.kernel.org/r/20230404052714.51315-2-mika.westerberg@linux.intel.com
+>     Reported-by: Chris Chiu <chris.chiu>
+>     Signed-off-by: Mika Westerberg <mika.westerberg.com>
+>     Signed-off-by: Bjorn Helgaas <bhelgaas>
+>     Cc: Lukas Wunner <lukas>
+> 
+>  drivers/pci/pci-driver.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> 
+> I'm happy to add further details, perform additional debugging, or
+> test some experimental patches in order to resolve this regression.
+> Please CC me in your replies, I'm not subscribed to this list. Thank
+> you!
+> Kamil Páral
+> 
+> 
+> #regzbot introduced: e8b908146d44
+> 
