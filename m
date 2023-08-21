@@ -1,92 +1,158 @@
-Received: from madras.collabora.co.uk (madras.collabora.co.uk [46.235.227.172])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB5DE4C6D;
-	Mon, 21 Aug 2023 10:30:19 +0000 (UTC)
-Received: from localhost (unknown [IPv6:2a0c:5a83:9103:1700:7ffc:59a:ffce:ded])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: rcn)
-	by madras.collabora.co.uk (Postfix) with ESMTPSA id 7AAF76606EFD;
-	Mon, 21 Aug 2023 11:30:11 +0100 (BST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1692613811;
-	bh=3/SpDn4E/YYhiEBouzxukYNTQ4Iz0kF66TTL4tJYLSo=;
-	h=From:To:Cc:Cc:Subject:References:In-reply-to:Date:From;
-	b=nu2b9sg+XBfDx+1Q6998faAp9JCeba9ElDRqA99Thl8OOW5W87WK6Kh8TBPiZdLLM
-	 4nJQNWPYRcjkxhe5ga5g5mblRa6HQYT6mGp1neY0LM08ma/SZHUQCUTyd7W3XNNFr2
-	 7clr28GaKyo3QJ5hMg+4CETFKOXc60qx1vn1ZjYBvcEwDpVrrpwZ04xZ1lSS0NcrK8
-	 1En56btg2BKo1uSaFQy7nzh46JfCx4MJsKRRHaRJpN0YOPDuhXacZs2RzFJGLZGJxi
-	 NYnGETNYtXz+1jsBsj2FA3ePlSPolqf/phixY6r/uT9qwNIgxNs9fHLWkLl4HLtHo8
-	 Huic0ZIG2jWiQ==
-From: Ricardo =?utf-8?Q?Ca=C3=B1uelo?= <ricardo.canuelo@collabora.com>
-To: Guillaume Tucker <guillaume.tucker@collabora.com>, kernelci@lists.linux.dev, gregkh@linuxfoundation.org, thorsten@leemhuis.info, regressions@lists.linux.dev
-Cc: kernel@collabora.com, linux-kernel@vger.kernel.org, Gustavo Padovan <gustavo.padovan@collabora.com>, Shreeya Patel <shreeya.patel@collabora.com>
-Cc: 
-Subject: Re: Kernel regression tracking/reporting initiatives and KCIDB
-References: <874jljhtmj.fsf@rcn-XPS-13-9305.i-did-not-set--mail-host-address--so-tickle-me> <c7120c90-e40b-0433-0175-f23f928daa50@collabora.com> <87o7j4hjqc.fsf@collabora.com> <517c702f-5b75-b999-2224-bc27951f03f3@collabora.com>
-In-reply-to: <517c702f-5b75-b999-2224-bc27951f03f3@collabora.com>
-Date: Mon, 21 Aug 2023 12:30:08 +0200
-Message-ID: <87jztohemn.fsf@collabora.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5239C1863
+	for <regressions@lists.linux.dev>; Mon, 21 Aug 2023 10:39:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1692614371;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=eb39vEwU6YS1gjwjbC+gfgmbn74x4GCsfZvxii4hs5c=;
+	b=fjOER6X13c0okIXy/l3Km3FraPsJRxQ97A+ZahMxq9iv89gfzECSwKaAPwHYtdLX20osVg
+	CFebr9OEp+7tlz0IboBtXufxtd96g53HvSrqByLWVWu6afYJ1DbUzWqBTtLVpEdy6xMCrd
+	v2M/t6DKzTrLCZMgECc8H0hSqR3SioA=
+Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com
+ [209.85.216.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-379-LtOrQ6QSPrGBOgFMdaaHuw-1; Mon, 21 Aug 2023 06:39:29 -0400
+X-MC-Unique: LtOrQ6QSPrGBOgFMdaaHuw-1
+Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-26d1ec91c8aso3311197a91.2
+        for <regressions@lists.linux.dev>; Mon, 21 Aug 2023 03:39:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692614368; x=1693219168;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=eb39vEwU6YS1gjwjbC+gfgmbn74x4GCsfZvxii4hs5c=;
+        b=WllFRncWXpdgrtVRnxLF9EtcIMCXAkc6+7nb0wZ967mKGY4YafYKM0SIY4kiEjWcnZ
+         N/p/cT0RSVFXuQohzjrrq1W3auqnXQdtNwrvnHr/LD/rRBOD6HPx1QCDvt0lQtL5vSq4
+         K7v8Xacf7nZTh/jAdlzYJrNQu6aTrgtoVXvpkx/NRxX2DgN8IGB2qyEP7AOHvgPhmBkd
+         ZnmN/GlPS7Dib2luWLeArPfqsUL4xuMapXNZK/pk0uznRNsk+oMlLiU8bivOkaDjZe69
+         rSMF21IvbVTXUf4IjSlhicjxpiifkcq+jvu+HtqH0szhxVb04sCiM7FZcScNC/ijojoH
+         Ps7A==
+X-Gm-Message-State: AOJu0Yz98yfnhJCMV1+zqxFLPM+Qs+dVPfnF5+WIlSGIZatrtu1e8Iqr
+	LPdmASBzrTLHAs5+aTYzAoeyfYArNqi81YXIzJETUd3e7LbCIQcga7leC3uZDqyEmuH9y5D6gTZ
+	Ih1G9V6O2NCE8AjnwkypZEFE1kYFWmu8WPBe7hg==
+X-Received: by 2002:a17:90a:e285:b0:268:c7fc:b771 with SMTP id d5-20020a17090ae28500b00268c7fcb771mr3271808pjz.14.1692614368573;
+        Mon, 21 Aug 2023 03:39:28 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGEjcynWgeddgVf3x/UFb7711wXal1zhaohdOU1viEpeONCTG+12SD6nMzh1fLrcEkPxVq7lW3NUuClo15cCfw=
+X-Received: by 2002:a17:90a:e285:b0:268:c7fc:b771 with SMTP id
+ d5-20020a17090ae28500b00268c7fcb771mr3271803pjz.14.1692614368290; Mon, 21 Aug
+ 2023 03:39:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+From: Kamil Paral <kparal@redhat.com>
+Date: Mon, 21 Aug 2023 12:39:02 +0200
+Message-ID: <CA+cBOTeWrsTyANjLZQ=bGoBQ_yOkkV1juyRvJq-C8GOrbW6t9Q@mail.gmail.com>
+Subject: [REGRESSION] resume with a Thunderbolt dock broke with commit
+ e8b908146d44 "PCI/PM: Increase wait time after resume"
+To: linux-pci@vger.kernel.org
+Cc: regressions@lists.linux.dev, mika.westerberg@linux.intel.com, 
+	bhelgaas@google.com, chris.chiu@canonical.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On vie, ago 18 2023 at 22:11:52, Guillaume Tucker <guillaume.tucker@collabora.com> wrote:
-> KernelCI is not any CI, it's designed to be the main system for
-> the upstream kernel.  So it already took the high-level approach
-> to look at all this after becoming an LF project and we came up
-> with KCIDB and now the new API as the community still needs
-> an "active" system and not just a database for collecting data
-> from other systems.
+=3D Summary =3D
+A Thinkpad T480s laptop with a Thinkpad Thunderbolt 3 Dock connected
+can no longer resume from suspend. The problem was introduced in
+e8b908146d44 "PCI/PM: Increase wait time after resume".
 
-That sounds good and I think that's the way to go, but does that mean
-that, in theory, most or all current CI systems (0-day, CKI, etc) will
-"push" their results to the new KernelCI in the future?
+=3D Detailed description =3D
+When running a kernel containing the identified commit and trying to
+resume the laptop from sleep, the laptop's power light changes from
+blinking (sleep state) to shining (running state), but the display
+stays black and it doesn't respond to any keyboard input, nor to
+ping/ssh, and no logs are written to the disk (which means I don't
+know how to gather error logs). It needs to be force-rebooted. I
+bisected the kernel and identified the commit which causes this
+behavior. I used the vanilla kernel with a Fedora kernel config.
 
-> Right, except you might hit another deprecation hurdle if we
-> start changing how things are designed around KCIDB and the new
-> API.  There's no doubt KCIDB will be supported for a long time,
-> but taking into considerations all the new developments can save
-> you a lot of trouble.
+The reproducer is:
+1. Connect the dock to the laptop.
+2. Boot the laptop (in my case, to the gdm).
+3. Suspend the laptop.
+4. Resume the laptop. This is successful before the identified commit
+(the last tested good commit was cc8a983d0fce), and unsuccessful
+(black screen, frozen system) after the identified commit
+(e8b908146d44).
 
-So, if using KCIDB as a data source is not a good idea right now, do you
-have any suggestions on how to keep contributing to the improvement of
-regression analysis?
+The reproducibility is 100%, I tested it many many times in a row.
 
-If the new KernelCI API is already working with a large enough
-regression database maybe this analysis work can be plugged into the
-pipeline and we can start working on that.
+When the dock is unplugged, suspend and resume works as expected. When
+I connect a different laptop to the dock (Thinkpad P1 gen3), I don't
+see any resume failure. So this is somehow related to the particular
+combination of Thinkpad T480s and Thinkpad Thunderbolt 3 Dock. The
+dock is running the latest firmware. I also tested "pcie_aspm=3Doff",
+and that allows the laptop to resume properly, but then there's a race
+condition whether devices on the dock are visible to the OS or not
+after resume, so this is not useful even just as a workaround.
 
-> My point here is that KernelCI started tackling this issue of
-> reporting kernel bugs several years ago at a very high level and
-> we've come up with some carefully engineered solutions for it, so
-> it looks like you're walking in our footsteps now.  The new web
-> dashboard, new API & Pipeline and KCIDB which pioneered working
-> outside the native realm of KernelCI provide some answers to the
-> challenges you're currently investigating.  So maybe it is
-> actually the best strategy for you to carry on doing things
-> independently, but it would seem to me like due diligence for
-> each of us to know what others are doing.
 
-I surely must have missed most of those discussions but I couldn't find
-any traces of the functionalities I listed either in a design document
-or implemented anywhere. We certainly wouldn't have started this stream
-of work if we knew this was already a work in progress. If there are
-already concrete plans and some kind of design for this, let me know so
-we can contribute to it.
+I already created a downstream Fedora bug report in Red Hat Bugzilla:
+https://bugzilla.redhat.com/show_bug.cgi?id=3D2230357
 
-If the solutions that have been engineered so far are still unplanned,
-then I agree it'll be better to keep improving on this
-independently. But in order to do that we'd need to be able to use other
-data sources (KCIDB). Then, once the new KernelCI is ready to implement
-these functionalities we can try to move them there after they've been
-tested independently.
+lspci of the laptop:
+https://bugzilla-attachments.redhat.com/attachment.cgi?id=3D1982541
+git bisect log:
+https://bugzilla-attachments.redhat.com/attachment.cgi?id=3D1983351
 
-Cheers,
-Ricardo
+
+The commit which broke resume is the following:
+
+e8b908146d44310473e43b3382eca126e12d279c is the first bad commit
+commit e8b908146d44310473e43b3382eca126e12d279c
+Author: Mika Westerberg <mika.westerberg.com>
+Date:   Tue Apr 4 08:27:13 2023 +0300
+
+    PCI/PM: Increase wait time after resume
+
+    PCIe r6.0 sec 6.6.1 prescribes that a device must be able to respond to
+    config requests within 1.0 s (PCI_RESET_WAIT) after exiting conventiona=
+l
+    reset and this same delay is prescribed when coming out of D3cold (as t=
+hat
+    involves reset too).
+
+    A device that requires more than 1 second to initialize after reset may
+    respond to config requests with Request Retry Status completions (sec
+    2.3.1), and we accommodate that in Linux with a 60 second cap
+    (PCIE_RESET_READY_POLL_MS).
+
+    Previously we waited up to PCIE_RESET_READY_POLL_MS only in the reset c=
+ode
+    path, not in the resume path.  However, a device has surfaced, namely I=
+ntel
+    Titan Ridge xHCI, which requires a longer delay also in the resume code
+    path.
+
+    Make the resume code path to use this same extended delay as the reset
+    path.
+
+    Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D216728
+    Link: https://lore.kernel.org/r/20230404052714.51315-2-mika.westerberg@=
+linux.intel.com
+    Reported-by: Chris Chiu <chris.chiu>
+    Signed-off-by: Mika Westerberg <mika.westerberg.com>
+    Signed-off-by: Bjorn Helgaas <bhelgaas>
+    Cc: Lukas Wunner <lukas>
+
+ drivers/pci/pci-driver.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+
+I'm happy to add further details, perform additional debugging, or
+test some experimental patches in order to resolve this regression.
+Please CC me in your replies, I'm not subscribed to this list. Thank
+you!
+Kamil P=C3=A1ral
+
+
+#regzbot introduced: e8b908146d44
+
