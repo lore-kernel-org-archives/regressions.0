@@ -1,159 +1,194 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF59E4A10
-	for <regressions@lists.linux.dev>; Mon, 21 Aug 2023 19:10:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8284C433C7;
-	Mon, 21 Aug 2023 19:10:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1692645057;
-	bh=2muyo106Vd8pmINTrMd1YhKfAiK5OBu5XlLXu5kqLco=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=jnPkiBgCFj7KO/FWFKUX/bEp2F9ms2WsojH3UkqZ/zsAlOBNFb6RVC5B2eEF8Dnmc
-	 WCCYfAQznGyO/Dp0eElO2jEYXa7XInWVwcliQOwaNtSGSBBD4ULP7ukCCYm3RvFq3/
-	 c/VR2xCsFiKiILSj/wq2CQHF8rDuhxVSC+Nj5TM92vBy3IxiMLVX/97LxzS6vZiwIE
-	 aLhk20tSOTexbmP5chcTiQHSgH8GIkLSe1eecUHG4H6dNYFG+mMlsfv0VLxlsBUX96
-	 LCI1RAmqHPELCzRhtv4/uKc+RuDe35j0chH91CKTIgdYA7ROFtnuOqF00N+wxoD0XP
-	 +cMiKophjY76Q==
-Date: Mon, 21 Aug 2023 14:10:55 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Kamil Paral <kparal@redhat.com>
-Cc: linux-pci@vger.kernel.org, regressions@lists.linux.dev,
-	mika.westerberg@linux.intel.com, bhelgaas@google.com,
-	chris.chiu@canonical.com
-Subject: Re: [REGRESSION] resume with a Thunderbolt dock broke with commit
- e8b908146d44 "PCI/PM: Increase wait time after resume"
-Message-ID: <20230821191055.GA362994@bhelgaas>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 743361171B
+	for <regressions@lists.linux.dev>; Mon, 21 Aug 2023 20:09:00 +0000 (UTC)
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2bba6fc4339so59117571fa.2
+        for <regressions@lists.linux.dev>; Mon, 21 Aug 2023 13:09:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1692648538; x=1693253338;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8Or1cy9dRxfRtdHtl3c5wLqx3hRLVr3OcaxXKB58Q68=;
+        b=rN5VJofywMuv7s7R99Vzosh4JHDkNT5/5wy891UVx4wRVGkQ0MaOShJq9NG0SDLOA0
+         SmSWdFAIIkn0YuFRssl82H9ImKQloPlFg+6Je9QTkka7op6YIl6Jc8JDvJVn2ddDdaPO
+         +bWPTWSL5aBV/Ij+AxQ28hmkaZ7CtRebHKICIKTNUkgMAnVggVHkhxqTjldGX7nMmdak
+         AW/UhgixzukVGhMlEFdrQDC9j4W4hgJv/5rjPVKf/QTei9kCeIB17MNFx+nsZNHlSGxK
+         3iDIyscEqTwSRjQuWW/T6Ufxc6udr6CFEYc8rwt8ld1qGRsgwUyEgJ4rczL6HcNtLb6b
+         aahw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692648538; x=1693253338;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8Or1cy9dRxfRtdHtl3c5wLqx3hRLVr3OcaxXKB58Q68=;
+        b=BLIRt303RCHF/tgar0eQbNYD3tx0SX+RO2mnkn1HJbcLRsjtnXfGa59phpFZjjl7lV
+         6paXlk+yKtB+6iuUIogW388Kl+nW/k7z4nNk53XO1yXv2Scip7Gq5kXer+TRt+wZ7EfZ
+         r/s/UfzjM4LQej3NlUw0k+OoBqO5xBelTVbLr0kRnlpG32G9FVgmO3fgYGXV3xFy+FQv
+         b0aYn68yVWjoKDLvCcx1tSrhsOLzuDA1lZyYUT5atC5W4byMcJ3iTBZ5mVYuqcju8Ihn
+         sntdk/Ck/OZsrgCDxtqKHzgAnwz11E9LDC1PHi6PP7pfaxfz269yx1ICl+ZFG8DYETQH
+         uWkg==
+X-Gm-Message-State: AOJu0YzgZ9kOXfPhwNoPKnKjoYCDm6U4ikc1PuzuqvMug0hQFkrJrx1Y
+	n3HWJC4ROk8GNIvzd1CtabF4IbH7dO7ek9VUsOo=
+X-Google-Smtp-Source: AGHT+IEws6q0b0dFoWgb4XbrBKlbWei8RPV5N6UIL+1OlocawRNo9E1J8v/3dtLkkiR0Cp4v7RyAMQvBlnfiBwDi1jo=
+X-Received: by 2002:a2e:b012:0:b0:2ac:82c1:5a3d with SMTP id
+ y18-20020a2eb012000000b002ac82c15a3dmr5671636ljk.23.1692648538012; Mon, 21
+ Aug 2023 13:08:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+cBOTeWrsTyANjLZQ=bGoBQ_yOkkV1juyRvJq-C8GOrbW6t9Q@mail.gmail.com>
+References: <2300626.ElGaqSPkdT@bruno-beit> <5706628.DvuYhMxLoT@bruno-beit>
+ <CABBYNZ+Nt3Rho2=VtVrspRLond2agnKhT1LmeLCGdY4fdxmusg@mail.gmail.com>
+ <13020832.2lBWEU9m2C@bruno-beit> <CABBYNZLpHxGHKsB_JPh1Drg=V_gXMGTp=nqXB=W1MM2_6BNHQw@mail.gmail.com>
+ <CABBYNZLo0WT+VovmB3AKPKNNLXPNPBdECNzf6MNu+aL6d91naQ@mail.gmail.com>
+In-Reply-To: <CABBYNZLo0WT+VovmB3AKPKNNLXPNPBdECNzf6MNu+aL6d91naQ@mail.gmail.com>
+From: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
+Date: Mon, 21 Aug 2023 13:08:45 -0700
+Message-ID: <CABBYNZ+z_=ZfJQQJ=A-HC7Ox+1jueeb_oWwcerC0YKS8z0QMug@mail.gmail.com>
+Subject: Re: regression: kernel 6.4.x breaks scanning/pairing (but not use) of
+ LE devices
+To: Bruno Pitrus <brunopitrus@hotmail.com>
+Cc: Paul Menzel <pmenzel@molgen.mpg.de>, 
+	"linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>, 
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>, Takashi Iwai <tiwai@suse.de>, 
+	Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Aug 21, 2023 at 12:39:02PM +0200, Kamil Paral wrote:
-> = Summary =
-> A Thinkpad T480s laptop with a Thinkpad Thunderbolt 3 Dock connected
-> can no longer resume from suspend. The problem was introduced in
-> e8b908146d44 "PCI/PM: Increase wait time after resume".
-> 
-> = Detailed description =
-> When running a kernel containing the identified commit and trying to
-> resume the laptop from sleep, the laptop's power light changes from
-> blinking (sleep state) to shining (running state), but the display
-> stays black and it doesn't respond to any keyboard input, nor to
-> ping/ssh, and no logs are written to the disk (which means I don't
-> know how to gather error logs). It needs to be force-rebooted. I
-> bisected the kernel and identified the commit which causes this
-> behavior. I used the vanilla kernel with a Fedora kernel config.
-> 
-> The reproducer is:
-> 1. Connect the dock to the laptop.
-> 2. Boot the laptop (in my case, to the gdm).
-> 3. Suspend the laptop.
-> 4. Resume the laptop. This is successful before the identified commit
-> (the last tested good commit was cc8a983d0fce), and unsuccessful
-> (black screen, frozen system) after the identified commit
-> (e8b908146d44).
-> 
-> The reproducibility is 100%, I tested it many many times in a row.
-> 
-> When the dock is unplugged, suspend and resume works as expected. When
-> I connect a different laptop to the dock (Thinkpad P1 gen3), I don't
-> see any resume failure. So this is somehow related to the particular
-> combination of Thinkpad T480s and Thinkpad Thunderbolt 3 Dock. The
-> dock is running the latest firmware.
+Hi Bruno,
 
-Thanks very much for the report.
+On Mon, Aug 14, 2023 at 4:38=E2=80=AFPM Luiz Augusto von Dentz
+<luiz.dentz@gmail.com> wrote:
+>
+> Hi Bruno,
+>
+> On Mon, Aug 14, 2023 at 1:21=E2=80=AFPM Luiz Augusto von Dentz
+> <luiz.dentz@gmail.com> wrote:
+> >
+> > Hi Bruno,
+> >
+> > On Mon, Aug 14, 2023 at 3:00=E2=80=AFAM Bruno Pitrus <brunopitrus@hotma=
+il.com> wrote:
+> > >
+> > > Dnia pi=C4=85tek, 11 sierpnia 2023 19:11:50 CEST Luiz Augusto von Den=
+tz pisze:
+> > > > Hi Bruno,
+> > > >
+> > > > On Fri, Aug 11, 2023 at 4:25=E2=80=AFAM Bruno Pitrus <brunopitrus@h=
+otmail.com> wrote:
+> > > > >
+> > > > > Dnia sobota, 5 sierpnia 2023 09:31:08 CEST Paul Menzel pisze:
+> > > > > > [Cc: +regressions@]
+> > > > > >
+> > > > > > #regzbot introduced v6.3.9..v6.4.2
+> > > > > >
+> > > > > > Dear Bruno,
+> > > > > >
+> > > > > >
+> > > > > > Thank you for your report.
+> > > > > >
+> > > > > > Am 04.08.23 um 20:55 schrieb Bruno Pitrus:
+> > > > > > > I am using openSUSE Tumbleweed on a Dell Precision 3551 which=
+ has a
+> > > > > > > bluetooth adapter of ID 8087:0026 (Intel AX201). I am using a
+> > > > > > > Logitech M575 trackball mouse which only supports Bluetooth L=
+E.
+> > > > > > >
+> > > > > > > With kernel 6.4.2 or newer, scanning for devices =E2=80=94 us=
+ing either the
+> > > > > > > KDE gui or bluetoothctl =E2=80=94 most of the time returns on=
+ly =E2=80=9Cclassic
+> > > > > > > bluetooth=E2=80=9D devices like computers and phones, and not=
+ the mouse. If
+> > > > > > > the mouse was paired before, it works correctly however.
+> > > > > > >
+> > > > > > > With previous kernel versions (6.3.9 and before), pairing the=
+ mouse
+> > > > > > > worked correctly.
+> > > > > >
+> > > > > > Are you able to bisect the regression? Please also attach the L=
+inux
+> > > > > > messages. (You can also create a ticket in the Linux kernel Bug=
+zilla [1]
+> > > > > > and attach everything there.)
+> > > > > >
+> > > > > >
+> > > > > > Kind regards,
+> > > > > >
+> > > > > > Paul
+> > > > > >
+> > > > > >
+> > > > > > [1]: https://bugzilla.kernel.org/
+> > > > > >
+> > > > >
+> > > > > The offending commit is https://github.com/SUSE/kernel/commit/288=
+c90224eec55d13e786844b7954ef060752089 :
+> > > > >
+> > > > > > Bluetooth: Enable all supported LE PHY by default
+> > > > > > This enables 2M and Coded PHY by default if they are marked as =
+supported
+> > > > > > in the LE features bits.
+> > > > > >
+> > > > > > Signed-off-by: Luiz Augusto von Dentz <luiz.von.dentz@intel.com=
+>
+> > > >
+> > > > Do you have the btmon/HCI traces showing this, we also need the
+> > > > firmware version as well since I suspect this is due to the control=
+ler
+> > > > setting the PHYs as supported but being unable to to use them
+> > > > properly.
+> > > >
+> > > >
+> > > hciconfig says the below: (I assume =E2=80=9CRevision=E2=80=9D is the=
+ firmware version)
+> >
+> > You can find the firmware information on dmesg, e.g:
+> >
+> > [    7.982585] Bluetooth: hci1: Found Intel DDC parameters: intel/ibt-2=
+0-1-3.ddc
+> > [    7.984113] Bluetooth: hci1: Applying Intel DDC parameters completed
+> > [    7.985111] Bluetooth: hci1: Firmware revision 0.3 build 144 week 11=
+ 2023
+> >
+> > > hci0:   Type: Primary  Bus: USB
+> > >         BD Address: F0:9E:4A:E6:62:15  ACL MTU: 1021:4  SCO MTU: 96:6
+> > >         UP RUNNING
+> > >         RX bytes:150050 acl:8114 sco:0 events:270 errors:0
+> > >         TX bytes:5970 acl:69 sco:0 commands:173 errors:0
+> > >         Features: 0xbf 0xfe 0x0f 0xfe 0xdb 0xff 0x7b 0x87
+> > >         Packet type: DM1 DM3 DM5 DH1 DH3 DH5 HV1 HV2 HV3
+> > >         Link policy: RSWITCH SNIFF
+> > >         Link mode: PERIPHERAL ACCEPT
+> > >         Name: '[REDACTED]'
+> > >         Class: 0x6c010c
+> > >         Service Classes: Rendering, Capturing, Audio, Telephony
+> > >         Device Class: Computer, Laptop
+> > >         HCI Version: 5.2 (0xb)  Revision: 0x20ce
+> > >         LMP Version: 5.2 (0xb)  Subversion: 0x20ce
+> > >         Manufacturer: Intel Corp. (2)
+> > >
+> > > I'm unsure how to attach the btmon output as it is a binary file that=
+ contains potentially private information (names of nearby devices)
+> >
+> > Well you can collect it manually and redacted the addresses, etc, up
+> > to you, I'm usually not that paranoid of sharing this kind of
+> > information if you scan for a short time, in the other hand I usually
+> > use gist.github.com to do that so I can delete it later if needed.
+>
+> Seems to be working fine here (with AX201 and AX210):
+>
+> https://gist.github.com/Vudentz/d80ab63f4f62f9f216796edb4838c855
 
-Wow, this is super interesting.  e8b908146d44 literally just increases
-a timeout; the complete patch is:
+Can you try with the following patch:
 
-   static void pci_pm_bridge_power_up_actions(struct pci_dev *pci_dev)
-   {
-  -       pci_bridge_wait_for_secondary_bus(pci_dev, "resume", PCI_RESET_WAIT);
-  +       pci_bridge_wait_for_secondary_bus(pci_dev, "resume",
-  +                                         PCIE_RESET_READY_POLL_MS);
+https://patchwork.kernel.org/project/bluetooth/patch/20230821181848.3553863=
+-1-luiz.dentz@gmail.com/
 
-Increasing a timeout should never cause a failure like this, so
-there must be something really unexpected going on.
+Looks like we were not storing the whole advertisement sometimes.
 
-> I also tested "pcie_aspm=off",
-> and that allows the laptop to resume properly, but then there's a race
-> condition whether devices on the dock are visible to the OS or not
-> after resume, so this is not useful even just as a workaround.
-
-Wow, also shocking.  I see you have lspci output attached to the RH
-bugzilla, but it doesn't include the details.  Would you mind
-collecting the output of "sudo lspci -vv" both with and without
-"pcie_aspm=off"?  No need to try suspend/resume to collect these.
-
-Also, what does this race condition look like?  Dock devices are
-visible before suspend, but sometimes none of them are visible *after*
-resume?  We don't re-enumerate on resume, so does this mean they still
-appear in lspci output but they just don't work?
-
-If you can collect the complete dmesg log and "sudo lspci -vv" output
-after a resume when the dock devices aren't visible, maybe there would
-be a clue there.
-
-> I already created a downstream Fedora bug report in Red Hat Bugzilla:
-> https://bugzilla.redhat.com/show_bug.cgi?id=2230357
-> 
-> lspci of the laptop:
-> https://bugzilla-attachments.redhat.com/attachment.cgi?id=1982541
-> git bisect log:
-> https://bugzilla-attachments.redhat.com/attachment.cgi?id=1983351
-> 
-> 
-> The commit which broke resume is the following:
-> 
-> e8b908146d44310473e43b3382eca126e12d279c is the first bad commit
-> commit e8b908146d44310473e43b3382eca126e12d279c
-> Author: Mika Westerberg <mika.westerberg.com>
-> Date:   Tue Apr 4 08:27:13 2023 +0300
-> 
->     PCI/PM: Increase wait time after resume
-> 
->     PCIe r6.0 sec 6.6.1 prescribes that a device must be able to respond to
->     config requests within 1.0 s (PCI_RESET_WAIT) after exiting conventional
->     reset and this same delay is prescribed when coming out of D3cold (as that
->     involves reset too).
-> 
->     A device that requires more than 1 second to initialize after reset may
->     respond to config requests with Request Retry Status completions (sec
->     2.3.1), and we accommodate that in Linux with a 60 second cap
->     (PCIE_RESET_READY_POLL_MS).
-> 
->     Previously we waited up to PCIE_RESET_READY_POLL_MS only in the reset code
->     path, not in the resume path.  However, a device has surfaced, namely Intel
->     Titan Ridge xHCI, which requires a longer delay also in the resume code
->     path.
-> 
->     Make the resume code path to use this same extended delay as the reset
->     path.
-> 
->     Link: https://bugzilla.kernel.org/show_bug.cgi?id=216728
->     Link: https://lore.kernel.org/r/20230404052714.51315-2-mika.westerberg@linux.intel.com
->     Reported-by: Chris Chiu <chris.chiu>
->     Signed-off-by: Mika Westerberg <mika.westerberg.com>
->     Signed-off-by: Bjorn Helgaas <bhelgaas>
->     Cc: Lukas Wunner <lukas>
-> 
->  drivers/pci/pci-driver.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> 
-> I'm happy to add further details, perform additional debugging, or
-> test some experimental patches in order to resolve this regression.
-> Please CC me in your replies, I'm not subscribed to this list. Thank
-> you!
-> Kamil Páral
-> 
-> 
-> #regzbot introduced: e8b908146d44
-> 
+--=20
+Luiz Augusto von Dentz
