@@ -1,65 +1,105 @@
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EFA26FA7
-	for <regressions@lists.linux.dev>; Mon, 21 Aug 2023 13:13:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1692623622; x=1724159622;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=zB8yzETn3THtXBYT0i2OPbGB+wO93hCaneHbBu4UO+o=;
-  b=isDnbGnJRfDK57p4vfcWlJP0Cr1QFgpZY0MvfWM+iU13WGZqecVErTms
-   v46oIgS6+FbJV9fHoi0OV7oxghR4KS34VwkAJ5eLCCdEjnKcI9vyLkNVJ
-   17Nn2BeaLLcH36narVpZVYufqE27Zmj9bidmhjtcrtquB7Vk73gd7vYwf
-   7k7vALKTA5yO4hyIouo9OzvXZlfZdx4K7GqIJFPrjw/2i+M4O6XdlqOps
-   1Kg0/wmB4AALCWLso9giZKHF3eCCTpD8nw0CzUOtqk4EIw7pg2uqxNatv
-   krqJ9MCnEe3VluBjuTwHsqYRn2nhJoWqvA+XM+R55Fiy3etlOoy2QQJ/B
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10809"; a="363747564"
-X-IronPort-AV: E=Sophos;i="6.01,190,1684825200"; 
-   d="scan'208";a="363747564"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2023 06:12:27 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10809"; a="770938849"
-X-IronPort-AV: E=Sophos;i="6.01,190,1684825200"; 
-   d="scan'208";a="770938849"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga001.jf.intel.com with ESMTP; 21 Aug 2023 06:12:24 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-	id A264C2FF; Mon, 21 Aug 2023 16:12:23 +0300 (EEST)
-Date: Mon, 21 Aug 2023 16:12:23 +0300
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: Kamil Paral <kparal@redhat.com>
-Cc: linux-pci@vger.kernel.org, regressions@lists.linux.dev,
-	bhelgaas@google.com, chris.chiu@canonical.com
-Subject: Re: [REGRESSION] resume with a Thunderbolt dock broke with commit
- e8b908146d44 "PCI/PM: Increase wait time after resume"
-Message-ID: <20230821131223.GJ3465@black.fi.intel.com>
-References: <CA+cBOTeWrsTyANjLZQ=bGoBQ_yOkkV1juyRvJq-C8GOrbW6t9Q@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5F8F63DE
+	for <regressions@lists.linux.dev>; Mon, 21 Aug 2023 13:18:43 +0000 (UTC)
+Received: from mail02.huawei.com (unknown [172.30.67.169])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4RTtMs3RP8z4f3lXC
+	for <regressions@lists.linux.dev>; Mon, 21 Aug 2023 21:18:33 +0800 (CST)
+Received: from [10.174.176.73] (unknown [10.174.176.73])
+	by APP4 (Coremail) with SMTP id gCh0CgD3hqklZONkve76BA--.48806S3;
+	Mon, 21 Aug 2023 21:18:30 +0800 (CST)
+Subject: Re: Fwd: Infiniate systemd loop when power off the machine with
+ multiple MD RAIDs
+To: Bagas Sanjaya <bagasdotme@gmail.com>, Christoph Hellwig <hch@lst.de>,
+ Song Liu <song@kernel.org>, AceLan Kao <acelan@gmail.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Linux RAID <linux-raid@vger.kernel.org>, "yukuai (C)" <yukuai3@huawei.com>
+References: <028a21df-4397-80aa-c2a5-7c754560f595@gmail.com>
+From: Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <433392a3-5ec4-cd63-fa5b-58e24deb56b9@huaweicloud.com>
+Date: Mon, 21 Aug 2023 21:18:28 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CA+cBOTeWrsTyANjLZQ=bGoBQ_yOkkV1juyRvJq-C8GOrbW6t9Q@mail.gmail.com>
+In-Reply-To: <028a21df-4397-80aa-c2a5-7c754560f595@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgD3hqklZONkve76BA--.48806S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxJw1DWr4kWFy5ur1rAr1rCrg_yoW5Jw1Upr
+	1UZFn09rsIqr47KF4IkF4IgF15twnayws5KryF9w4a934rtFyxA3Wftry5Ja4UGw1F9rWD
+	Ar1qv34kWFWqv3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUyEb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij
+	64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x
+	8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE
+	2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42
+	xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIE
+	c7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU1zuWJUUUUU==
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+X-CFilter-Loop: Reflected
 
 Hi,
 
-On Mon, Aug 21, 2023 at 12:39:02PM +0200, Kamil Paral wrote:
-> = Summary =
-> A Thinkpad T480s laptop with a Thinkpad Thunderbolt 3 Dock connected
-> can no longer resume from suspend. The problem was introduced in
-> e8b908146d44 "PCI/PM: Increase wait time after resume".
+在 2023/08/16 17:37, Bagas Sanjaya 写道:
+> Hi,
+> 
+> I notice a regression report on Bugzilla [1]. Quoting from it:
+> 
+>> It needs to build at least 2 different RAIDs(eg. RAID0 and RAID10, RAID5 and RAID10) and then you will see below error repeatly(need to use serial console to see it)
+>>
+>> [ 205.360738] systemd-shutdown[1]: Stopping MD devices.
+>> [ 205.366384] systemd-shutdown[1]: sd-device-enumerator: Scan all dirs
+>> [ 205.373327] systemd-shutdown[1]: sd-device-enumerator: Scanning /sys/bus
+>> [ 205.380427] systemd-shutdown[1]: sd-device-enumerator: Scanning /sys/class
+>> [ 205.388257] systemd-shutdown[1]: Stopping MD /dev/md127 (9:127).
+>> [ 205.394880] systemd-shutdown[1]: Failed to sync MD block device /dev/md127, ignoring: Input/output error
+>> [ 205.404975] md: md127 stopped.
+>> [ 205.470491] systemd-shutdown[1]: Stopping MD /dev/md126 (9:126).
+>> [ 205.770179] md: md126: resync interrupted.
+>> [ 205.776258] md126: detected capacity change from 1900396544 to 0
+>> [ 205.783349] md: md126 stopped.
+>> [ 205.862258] systemd-shutdown[1]: Stopping MD /dev/md125 (9:125).
+>> [ 205.862435] md: md126 stopped.
+>> [ 205.868376] systemd-shutdown[1]: Failed to sync MD block device /dev/md125, ignoring: Input/output error
+>> [ 205.872845] block device autoloading is deprecated and will be removed.
+>> [ 205.880955] md: md125 stopped.
+>> [ 205.934349] systemd-shutdown[1]: Stopping MD /dev/md124p2 (259:7).
+>> [ 205.947707] systemd-shutdown[1]: Could not stop MD /dev/md124p2: Device or resource busy
+>> [ 205.957004] systemd-shutdown[1]: Stopping MD /dev/md124p1 (259:6).
+>> [ 205.964177] systemd-shutdown[1]: Could not stop MD /dev/md124p1: Device or resource busy
+>> [ 205.973155] systemd-shutdown[1]: Stopping MD /dev/md124 (9:124).
+>> [ 205.979789] systemd-shutdown[1]: Could not stop MD /dev/md124: Device or resource busy
+>> [ 205.988475] systemd-shutdown[1]: Not all MD devices stopped, 4 left.
 
-Thanks for the detailed description! There was follow up patch that made
-the timeout shorter for slow links, I wonder if you could try that first
-and see if that changes anything? It is this commit in the mainline:
+Without the problem, did the log complain about this?
 
-7b3ba09febf4 PCI/PM: Shorten pci_bridge_wait_for_secondary_bus() wait time for slow links
+Could not stop MD...Device or resource busy
 
-That should at least make the resume faster too but let's see.
+Thanks,
+Kuai
+
+> 
+> See Bugzilla for the full thread and attached full journalctl log.
+> 
+> Anyway, I'm adding this regression to be tracked by regzbot:
+> 
+> #regzbot introduced: 12a6caf273240a https://bugzilla.kernel.org/show_bug.cgi?id=217798
+> #regzbot title: systemd shutdown hang on machine with different RAID levels
+> 
+> Thanks.
+> 
+> [1]: https://bugzilla.kernel.org/show_bug.cgi?id=217798
+> 
+
