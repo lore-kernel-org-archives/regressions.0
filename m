@@ -1,105 +1,92 @@
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from madras.collabora.co.uk (madras.collabora.co.uk [46.235.227.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 640C7185B
-	for <regressions@lists.linux.dev>; Mon, 21 Aug 2023 09:45:47 +0000 (UTC)
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2b72161c6e9so48215331fa.0
-        for <regressions@lists.linux.dev>; Mon, 21 Aug 2023 02:45:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1692611145; x=1693215945;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YXrzJekWebthka+oRqCLeF2NbSrhuQVkBUewP5jY82E=;
-        b=ESUb5mt0pif/4/0ee8nGER4MumOqtbcKsk+y/YK4wWg8rNq/6Zbv3q014Tziv2SdtD
-         bl4s+RTSBPMXAVKEk4dpGwJpXvQTm78uZhPftx22qdsF1BO2fsTH1wJDTICNmn44dR3E
-         qHdtXJWXl9wfr/khAudxPtn+qzgp3nLtV2yef0DJq87C248AxvFQFbEZY8JcZ/tuSXUd
-         Rl1ioo6qaEWI8UnzblQhGiqi0YzCxjAoJqeNEhvb0hshxyFdF8Fzm5ZXQjcSlqAHnUZE
-         CraRLCsZbpTVPJ9XnwjPe8jFAD0fyadOmSP3As8MJxZ4wUmGwVWklXMQQWNmtwLOmvof
-         tTHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692611145; x=1693215945;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YXrzJekWebthka+oRqCLeF2NbSrhuQVkBUewP5jY82E=;
-        b=JZDDlIqWNcg4U9upMqMcGk2jLkyG0d1d8/TcAbChn4ZNcbHQIBLkVkZHedZtAlNulx
-         TCSkov/nYUjgQv0C/4PBaRFb8bFb632/euv2QPyETeCIRP63rDaS13TjMdgSUWW2BS+b
-         h/i976hSNceT26JB1SYaBaXViVBR7F3W0YI2/Vrsic5qPVIP478ftcjDABfYmIMLT14x
-         PB0Y8OX9dr+7M/SCRJXbxyJ3dgb9a3j8JpsVJys1y7SeTaB9Xk+xgZ+FyfNlrzbLHzkO
-         Qd0+EUGdIJajkl6K+2Jui8m3EbTaPo9m/CwvAxy/6Ga+Vfsa/A+dDFeibOjvpfbRgBBI
-         4Knw==
-X-Gm-Message-State: AOJu0YyiyBdocu5IRrKeXbDuFXUTx5rqC17qkqwl4zsFY2iJbCnnsCcY
-	qB9NnWO1ltGedLHBpvpCVWubi6gn7P3hhhUHlARLrloZRi6FwA==
-X-Google-Smtp-Source: AGHT+IEdM8QVeDFGwcQueS2atSsLxX9mr+uYi4bw6KPAiR9wR139TNuB4GQX211qP2ZEPWfyDqoPhuzw+80uqhQH6Zw=
-X-Received: by 2002:a2e:9915:0:b0:2b6:d0c1:7cd0 with SMTP id
- v21-20020a2e9915000000b002b6d0c17cd0mr1993359lji.22.1692611145029; Mon, 21
- Aug 2023 02:45:45 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB5DE4C6D;
+	Mon, 21 Aug 2023 10:30:19 +0000 (UTC)
+Received: from localhost (unknown [IPv6:2a0c:5a83:9103:1700:7ffc:59a:ffce:ded])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: rcn)
+	by madras.collabora.co.uk (Postfix) with ESMTPSA id 7AAF76606EFD;
+	Mon, 21 Aug 2023 11:30:11 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1692613811;
+	bh=3/SpDn4E/YYhiEBouzxukYNTQ4Iz0kF66TTL4tJYLSo=;
+	h=From:To:Cc:Cc:Subject:References:In-reply-to:Date:From;
+	b=nu2b9sg+XBfDx+1Q6998faAp9JCeba9ElDRqA99Thl8OOW5W87WK6Kh8TBPiZdLLM
+	 4nJQNWPYRcjkxhe5ga5g5mblRa6HQYT6mGp1neY0LM08ma/SZHUQCUTyd7W3XNNFr2
+	 7clr28GaKyo3QJ5hMg+4CETFKOXc60qx1vn1ZjYBvcEwDpVrrpwZ04xZ1lSS0NcrK8
+	 1En56btg2BKo1uSaFQy7nzh46JfCx4MJsKRRHaRJpN0YOPDuhXacZs2RzFJGLZGJxi
+	 NYnGETNYtXz+1jsBsj2FA3ePlSPolqf/phixY6r/uT9qwNIgxNs9fHLWkLl4HLtHo8
+	 Huic0ZIG2jWiQ==
+From: Ricardo =?utf-8?Q?Ca=C3=B1uelo?= <ricardo.canuelo@collabora.com>
+To: Guillaume Tucker <guillaume.tucker@collabora.com>, kernelci@lists.linux.dev, gregkh@linuxfoundation.org, thorsten@leemhuis.info, regressions@lists.linux.dev
+Cc: kernel@collabora.com, linux-kernel@vger.kernel.org, Gustavo Padovan <gustavo.padovan@collabora.com>, Shreeya Patel <shreeya.patel@collabora.com>
+Cc: 
+Subject: Re: Kernel regression tracking/reporting initiatives and KCIDB
+References: <874jljhtmj.fsf@rcn-XPS-13-9305.i-did-not-set--mail-host-address--so-tickle-me> <c7120c90-e40b-0433-0175-f23f928daa50@collabora.com> <87o7j4hjqc.fsf@collabora.com> <517c702f-5b75-b999-2224-bc27951f03f3@collabora.com>
+In-reply-to: <517c702f-5b75-b999-2224-bc27951f03f3@collabora.com>
+Date: Mon, 21 Aug 2023 12:30:08 +0200
+Message-ID: <87jztohemn.fsf@collabora.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CA+prNOpqd2Tk1tiBAa9MT6ZPxB5gj9ftxOhaZ-u1WEay9H-oHQ@mail.gmail.com>
- <20230815053132.GB22301@1wt.eu> <CA+prNOrUVWM9-vozUZyW49-m=qFWZR3JAtikZb4T1EimV0ZCDw@mail.gmail.com>
- <CAHk-=wgDbr7dw0GP4zEkPu5X2mME3YH9t0+cP8Avs3m0KZxbCQ@mail.gmail.com>
-In-Reply-To: <CAHk-=wgDbr7dw0GP4zEkPu5X2mME3YH9t0+cP8Avs3m0KZxbCQ@mail.gmail.com>
-From: Xuancong Wang <xuancong84@gmail.com>
-Date: Mon, 21 Aug 2023 17:45:38 +0800
-Message-ID: <CA+prNOpbbiLEDrvVLZ_9AHpyJPV8z3ge1aRX58ri2PPTjDJGGw@mail.gmail.com>
-Subject: Re: A small bug in file access control that all have neglected
-To: Linus Torvalds <torvalds@linuxfoundation.org>
-Cc: Willy Tarreau <w@1wt.eu>, security@kernel.org, stable@vger.kernel.org, 
-	regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-Thanks Torvalds for your clear-cut answer, I really appreciate that.
+On vie, ago 18 2023 at 22:11:52, Guillaume Tucker <guillaume.tucker@collabora.com> wrote:
+> KernelCI is not any CI, it's designed to be the main system for
+> the upstream kernel.  So it already took the high-level approach
+> to look at all this after becoming an LF project and we came up
+> with KCIDB and now the new API as the community still needs
+> an "active" system and not just a database for collecting data
+> from other systems.
 
-On another hand, I would like to suggest that Linux files should have
-an additional permission bit to be granted arbitrary attributes
-access, especially for the atime, ctime and mtime. The reason is
-because in production data pipeline, we often need multiple people to
-get/set the same file's modification times arbitrarily (e.g., set an
-output file's mtime according to the input file for incremental
-processing), and this process is managed by several people. So now, we
-have to run our data processing pipeline as root which is risky and
-undesirable.
+That sounds good and I think that's the way to go, but does that mean
+that, in theory, most or all current CI systems (0-day, CKI, etc) will
+"push" their results to the new KernelCI in the future?
 
-This can be implemented either:
-- as a single bit in file attributes along with the 7777 (i.e., setUID
-bit, setGID bit, sticky bit, user-3-bits, group-3-bits,
-others-3-bits), I would call it group-attribute-bit to allow users in
-the same group to modify its timestamp arbitrarily.
-or
-- as an extra bit in user/group/other, so that it become 7FFF (it is
-nice to have 4-bits for user/group/other, because 4 bits make up for
-one hexadecimal digit=F0=9F=98=81)
+> Right, except you might hit another deprecation hurdle if we
+> start changing how things are designed around KCIDB and the new
+> API.  There's no doubt KCIDB will be supported for a long time,
+> but taking into considerations all the new developments can save
+> you a lot of trouble.
 
-Thank you very much for your consideration!
+So, if using KCIDB as a data source is not a good idea right now, do you
+have any suggestions on how to keep contributing to the improvement of
+regression analysis?
+
+If the new KernelCI API is already working with a large enough
+regression database maybe this analysis work can be plugged into the
+pipeline and we can start working on that.
+
+> My point here is that KernelCI started tackling this issue of
+> reporting kernel bugs several years ago at a very high level and
+> we've come up with some carefully engineered solutions for it, so
+> it looks like you're walking in our footsteps now.  The new web
+> dashboard, new API & Pipeline and KCIDB which pioneered working
+> outside the native realm of KernelCI provide some answers to the
+> challenges you're currently investigating.  So maybe it is
+> actually the best strategy for you to carry on doing things
+> independently, but it would seem to me like due diligence for
+> each of us to know what others are doing.
+
+I surely must have missed most of those discussions but I couldn't find
+any traces of the functionalities I listed either in a design document
+or implemented anywhere. We certainly wouldn't have started this stream
+of work if we knew this was already a work in progress. If there are
+already concrete plans and some kind of design for this, let me know so
+we can contribute to it.
+
+If the solutions that have been engineered so far are still unplanned,
+then I agree it'll be better to keep improving on this
+independently. But in order to do that we'd need to be able to use other
+data sources (KCIDB). Then, once the new KernelCI is ready to implement
+these functionalities we can try to move them there after they've been
+tested independently.
 
 Cheers,
-Xuancong
-
-
-On Tue, Aug 15, 2023 at 2:29=E2=80=AFPM Linus Torvalds
-<torvalds@linuxfoundation.org> wrote:
->
-> On Tue, 15 Aug 2023 at 06:11, Xuancong Wang <xuancong84@gmail.com> wrote:
-> >
-> > Yes, by "full access", I mean `chmod 777`. You can easily reproduce
-> > this bug on any Linux machine by typing the following commands:
->
-> This is how things are supposed to work. The 0777 permissions mean
-> that you can read, write and execute the file. They do not mean that
-> you own the file.
->
-> As a non-owner, you can set the access and modification times  the
-> same way you could by just reading and writing to the file. So if you
-> set mtime, you have to set ctime ("change time") too.
->
-> To actually change times arbitrarily and with other patterns, you need
-> to actually own the file.
->
->              Linus
+Ricardo
