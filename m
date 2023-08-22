@@ -1,242 +1,119 @@
-Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-10.mta0.migadu.com (out-10.mta0.migadu.com [91.218.175.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 557D910E9
-	for <regressions@lists.linux.dev>; Tue, 22 Aug 2023 01:39:16 +0000 (UTC)
-Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-56b0c5a140dso1428495a12.0
-        for <regressions@lists.linux.dev>; Mon, 21 Aug 2023 18:39:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1692668355; x=1693273155;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rhIOJpykyDzQ+VCn+TLVVSTJ6B4L1SH3F+7Lz/pPEA4=;
-        b=c11QZBS+r7x0CWEUP4FACwNzMvKDz2Fw5BKcKmU/aDUOKnIECH43SbcUAmYVS1t2e8
-         FRydUSvCAfCQZD0oM87hbrqoJB82tjTs2V1joK+gNfa5WEG1RhByV55rmdYDuPV3a0Mk
-         ZsLAI+OJm/uKtA/2QdgAK3eYXcmnONVBvwDAIq8EhyuzXPaiQMVm8t6DZx9URPuc2Fr1
-         C/kO2Ovs6GrjgQa8i/xubZ3p3dxzqMIHFuN6k+Z8srcj+I/IZtGtc3vLj7VEzPrEfU2O
-         EdVtxVRLlF1IT63XwKrbckSTagrq/H5ZmzScgsXna9Qyzy3Ph1rk4QLCtY6XvmpuHwCV
-         3R2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692668355; x=1693273155;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rhIOJpykyDzQ+VCn+TLVVSTJ6B4L1SH3F+7Lz/pPEA4=;
-        b=AAtbptN4oI2az1GIu+z2QRxZBXbIC7Sd3pzo8a4UWR48yVBnkGX2pIf9SW32RoYpGN
-         mkN4k9d4wzuw01i5CalaSARU8bK9yKsVOWrVLpuvCI8arpUbaG2igxM+0rtxG1s4zta8
-         7SmR8SkYkQbwh/bk7AdqFHvYy+S6abs8loOmhwyQ/F0ka8yo5dGUawmqLkydpuvpLHul
-         YQVXQiVbEOWtIFWiC7qI6EBBY79qJrC8QMKvS1PPdHeMFbhtU6vCFigsEZAASQoorfeE
-         F2z9L1Jo4Ib7k0LYou4EJve7qTobrihyNVfVDNwqB0edAFMbYbNgpuP11R+5VrSWtxMe
-         JZFw==
-X-Gm-Message-State: AOJu0Yxnf4uyhDqSXaxtB/WYHnyzDinSq0nSFiwOGxw+U7+1ZuWknj0r
-	CUNGpSgwjeJuvJgwUuPWnUS+h3xtuQOltpco4+A=
-X-Google-Smtp-Source: AGHT+IFoyc4kNW3AYbcpR0x17NEZoO6nJrd2PM+kI4viupEvlkQz3g5cDYIR987jn1pTI/2AjTgn7tSIY3buuBX60qQ=
-X-Received: by 2002:a17:90b:1d8b:b0:268:5c3b:6f37 with SMTP id
- pf11-20020a17090b1d8b00b002685c3b6f37mr7081291pjb.0.1692668355384; Mon, 21
- Aug 2023 18:39:15 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3DE37F
+	for <regressions@lists.linux.dev>; Tue, 22 Aug 2023 03:51:25 +0000 (UTC)
+Message-ID: <b0488ff7-10c8-4b4e-28b8-01809133c297@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1692676283;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=d1XtgmVHmWphOhUDrhErIxCJnRoxFdHJ1QNgkVg6SUE=;
+	b=VgtV+jOen3G/PQf/JwsUEqgwyen6vBQSsoJOD2YoaJwxNCpYr0szLZyWwl8o0ozWMTU2QC
+	NXdu2CdBuizN0K9Jl4pOzYwoOgSa2j9qzzcKQcuA1yy94ntc3Xdcct0t/h7cQ7eUgHzDGu
+	61kMb8eQs4A3ItbvHkyJcrlGqGXPKdY=
+Date: Tue, 22 Aug 2023 11:51:13 +0800
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <028a21df-4397-80aa-c2a5-7c754560f595@gmail.com> <433392a3-5ec4-cd63-fa5b-58e24deb56b9@huaweicloud.com>
-In-Reply-To: <433392a3-5ec4-cd63-fa5b-58e24deb56b9@huaweicloud.com>
-From: AceLan Kao <acelan@gmail.com>
-Date: Tue, 22 Aug 2023 09:39:03 +0800
-Message-ID: <CAMz9Wg8kanG=2g6Y8TVcB7-=O8MgXrjgJ0YCewqa0cM51nXf=g@mail.gmail.com>
-Subject: Re: Fwd: Infiniate systemd loop when power off the machine with
- multiple MD RAIDs
-To: Yu Kuai <yukuai1@huaweicloud.com>
-Cc: Bagas Sanjaya <bagasdotme@gmail.com>, Christoph Hellwig <hch@lst.de>, Song Liu <song@kernel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Linux Regressions <regressions@lists.linux.dev>, Linux RAID <linux-raid@vger.kernel.org>, 
-	"yukuai (C)" <yukuai3@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-Yu Kuai <yukuai1@huaweicloud.com> =E6=96=BC 2023=E5=B9=B48=E6=9C=8821=E6=97=
-=A5 =E9=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=889:18=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> Hi,
->
-> =E5=9C=A8 2023/08/16 17:37, Bagas Sanjaya =E5=86=99=E9=81=93:
-> > Hi,
-> >
-> > I notice a regression report on Bugzilla [1]. Quoting from it:
-> >
-> >> It needs to build at least 2 different RAIDs(eg. RAID0 and RAID10, RAI=
-D5 and RAID10) and then you will see below error repeatly(need to use seria=
-l console to see it)
-> >>
-> >> [ 205.360738] systemd-shutdown[1]: Stopping MD devices.
-> >> [ 205.366384] systemd-shutdown[1]: sd-device-enumerator: Scan all dirs
-> >> [ 205.373327] systemd-shutdown[1]: sd-device-enumerator: Scanning /sys=
-/bus
-> >> [ 205.380427] systemd-shutdown[1]: sd-device-enumerator: Scanning /sys=
-/class
-> >> [ 205.388257] systemd-shutdown[1]: Stopping MD /dev/md127 (9:127).
-> >> [ 205.394880] systemd-shutdown[1]: Failed to sync MD block device /dev=
-/md127, ignoring: Input/output error
-> >> [ 205.404975] md: md127 stopped.
-> >> [ 205.470491] systemd-shutdown[1]: Stopping MD /dev/md126 (9:126).
-> >> [ 205.770179] md: md126: resync interrupted.
-> >> [ 205.776258] md126: detected capacity change from 1900396544 to 0
-> >> [ 205.783349] md: md126 stopped.
-> >> [ 205.862258] systemd-shutdown[1]: Stopping MD /dev/md125 (9:125).
-> >> [ 205.862435] md: md126 stopped.
-> >> [ 205.868376] systemd-shutdown[1]: Failed to sync MD block device /dev=
-/md125, ignoring: Input/output error
-> >> [ 205.872845] block device autoloading is deprecated and will be remov=
-ed.
-> >> [ 205.880955] md: md125 stopped.
-> >> [ 205.934349] systemd-shutdown[1]: Stopping MD /dev/md124p2 (259:7).
-> >> [ 205.947707] systemd-shutdown[1]: Could not stop MD /dev/md124p2: Dev=
-ice or resource busy
-> >> [ 205.957004] systemd-shutdown[1]: Stopping MD /dev/md124p1 (259:6).
-> >> [ 205.964177] systemd-shutdown[1]: Could not stop MD /dev/md124p1: Dev=
-ice or resource busy
-> >> [ 205.973155] systemd-shutdown[1]: Stopping MD /dev/md124 (9:124).
-> >> [ 205.979789] systemd-shutdown[1]: Could not stop MD /dev/md124: Devic=
-e or resource busy
-> >> [ 205.988475] systemd-shutdown[1]: Not all MD devices stopped, 4 left.
->
-> Without the problem, did the log complain about this?
->
-> Could not stop MD...Device or resource busy
->
-> Thanks,
-> Kuai
->
-> >
-> > See Bugzilla for the full thread and attached full journalctl log.
-> >
-> > Anyway, I'm adding this regression to be tracked by regzbot:
-> >
-> > #regzbot introduced: 12a6caf273240a https://bugzilla.kernel.org/show_bu=
-g.cgi?id=3D217798
-> > #regzbot title: systemd shutdown hang on machine with different RAID le=
-vels
-> >
-> > Thanks.
-> >
-> > [1]: https://bugzilla.kernel.org/show_bug.cgi?id=3D217798
-> >
->
-Hi Yu,
-
-Everything looks normal.
-I can see the MD raids stop without any warning/error messages.
-
-$ sudo journalctl -b -2 -k -o short-monotonic | egrep md[0-9]+
-[   13.418154] u-Precision-7960-Tower kernel: md/raid10:md125: active
-with 4 out of 4 devices
-[   13.424050] u-Precision-7960-Tower kernel: md125: detected capacity
-change from 0 to 1900396544
-[   13.525198] u-Precision-7960-Tower kernel: md123: detected capacity
-change from 0 to 1900396544
-[   13.576770] u-Precision-7960-Tower kernel: md122: detected capacity
-change from 0 to 1900417024
-[   13.585705] u-Precision-7960-Tower kernel:  md122: p1 p2 p3
-[   14.323717] u-Precision-7960-Tower kernel: EXT4-fs (md122p3):
-mounted filesystem 6d53dc8e-3f45-4efa-bc0e-4af477fac217 ro with
-ordered data mode. Quota mode: none.
-[   14.814365] u-Precision-7960-Tower systemd-gpt-auto-generator[587]:
-md122p3: Root device /dev/md122.
-[   14.829064] u-Precision-7960-Tower kernel: block md122: the
-capability attribute has been deprecated.
-[   18.133316] u-Precision-7960-Tower systemd[1]:
-unit_file_build_name_map: normal unit file:
-/lib/systemd/system/casper-md5check.service
-[   20.609948] u-Precision-7960-Tower kernel: EXT4-fs (md122p3):
-re-mounted 6d53dc8e-3f45-4efa-bc0e-4af477fac217 r/w. Quota mode: none.
-[   39.161554] u-Precision-7960-Tower kernel: md: requested-resync of
-RAID array md125
-[   77.344788] u-Precision-7960-Tower systemd[1]: Got message
-type=3Dsignal sender=3Dorg.freedesktop.DBus
-destination=3Dorg.freedesktop.systemd1 path=3D/org/freedesktop/DBus int
-erface=3Dorg.freedesktop.systemd1.Activator member=3DActivationRequest
-cookie=3D89 reply_cookie=3D0 signature=3Ds error-name=3Dn/a error-message=
-=3Dn/a
-[   77.736790] u-Precision-7960-Tower systemd[1]: Sent message
-type=3Dsignal sender=3Dn/a destination=3Dn/a path=3D/org/freedesktop/system=
-d1
-interface=3Dorg.freedesktop.systemd1.M
-anager member=3DUnitNew cookie=3D716 reply_cookie=3D0 signature=3Dso
-error-name=3Dn/a error-message=3Dn/a
-[   77.772791] u-Precision-7960-Tower systemd[1]: Sent message
-type=3Dsignal sender=3Dn/a destination=3Dn/a path=3D/org/freedesktop/system=
-d1
-interface=3Dorg.freedesktop.systemd1.M
-anager member=3DUnitRemoved cookie=3D717 reply_cookie=3D0 signature=3Dso
-error-name=3Dn/a error-message=3Dn/a
-[   77.808791] u-Precision-7960-Tower systemd[1]: Sent message
-type=3Dsignal sender=3Dn/a destination=3Dn/a path=3D/org/freedesktop/system=
-d1
-interface=3Dorg.freedesktop.systemd1.M
-anager member=3DUnitNew cookie=3D718 reply_cookie=3D0 signature=3Dso
-error-name=3Dn/a error-message=3Dn/a
-[   77.844795] u-Precision-7960-Tower systemd[1]: Sent message
-type=3Dsignal sender=3Dn/a destination=3Dn/a path=3D/org/freedesktop/system=
-d1
-interface=3Dorg.freedesktop.systemd1.M
-anager member=3DUnitRemoved cookie=3D719 reply_cookie=3D0 signature=3Dso
-error-name=3Dn/a error-message=3Dn/a
-[   77.880866] u-Precision-7960-Tower systemd[1]: Sent message
-type=3Dsignal sender=3Dn/a destination=3Dn/a path=3D/org/freedesktop/system=
-d1
-interface=3Dorg.freedesktop.systemd1.M
-anager member=3DUnitNew cookie=3D720 reply_cookie=3D0 signature=3Dso
-error-name=3Dn/a error-message=3Dn/a
-[   77.916817] u-Precision-7960-Tower systemd[1]: Sent message
-type=3Dsignal sender=3Dn/a destination=3Dn/a path=3D/org/freedesktop/system=
-d1
-interface=3Dorg.freedesktop.systemd1.M
-anager member=3DJobNew cookie=3D721 reply_cookie=3D0 signature=3Duos
-error-name=3Dn/a error-message=3Dn/a
-[   79.072786] u-Precision-7960-Tower systemd[1]: Sent message
-type=3Dsignal sender=3Dn/a destination=3Dn/a
-path=3D/org/freedesktop/systemd1/unit/systemd_2dlocaled_2eservice int
-erface=3Dorg.freedesktop.DBus.Properties member=3DPropertiesChanged
-cookie=3D724 reply_cookie=3D0 signature=3Dsa{sv}as error-name=3Dn/a
-error-message=3Dn/a
-[   79.112778] u-Precision-7960-Tower systemd[1]: Sent message
-type=3Dsignal sender=3Dn/a destination=3Dn/a
-path=3D/org/freedesktop/systemd1/unit/systemd_2dlocaled_2eservice int
-erface=3Dorg.freedesktop.DBus.Properties member=3DPropertiesChanged
-cookie=3D725 reply_cookie=3D0 signature=3Dsa{sv}as error-name=3Dn/a
-error-message=3Dn/a
-[   79.188801] u-Precision-7960-Tower systemd[1]: Sent message
-type=3Dsignal sender=3Dn/a destination=3Dn/a
-path=3D/org/freedesktop/systemd1/unit/systemd_2dlocaled_2eservice int
-erface=3Dorg.freedesktop.DBus.Properties member=3DPropertiesChanged
-cookie=3D726 reply_cookie=3D0 signature=3Dsa{sv}as error-name=3Dn/a
-error-message=3Dn/a
-[   79.228790] u-Precision-7960-Tower systemd[1]: Sent message
-type=3Dsignal sender=3Dn/a destination=3Dn/a
-path=3D/org/freedesktop/systemd1/unit/systemd_2dlocaled_2eservice int
-erface=3Dorg.freedesktop.DBus.Properties member=3DPropertiesChanged
-cookie=3D727 reply_cookie=3D0 signature=3Dsa{sv}as error-name=3Dn/a
-error-message=3Dn/a
-[   79.268794] u-Precision-7960-Tower systemd[1]: Sent message
-type=3Dsignal sender=3Dn/a destination=3Dn/a
-path=3D/org/freedesktop/systemd1/job/1915 interface=3Dorg.freedesktop.D
-Bus.Properties member=3DPropertiesChanged cookie=3D728 reply_cookie=3D0
-signature=3Dsa{sv}as error-name=3Dn/a error-message=3Dn/a
-[   81.064804] u-Precision-7960-Tower systemd[1]: Got message
-type=3Dmethod_call sender=3D:1.67 destination=3Dorg.freedesktop.systemd1
-path=3D/org/freedesktop/systemd1 interface
-=3Dorg.freedesktop.DBus.Properties member=3DGet cookie=3D31 reply_cookie=3D=
-0
-signature=3Dss error-name=3Dn/a error-message=3Dn/a
-[  286.066341] u-Precision-7960-Tower kernel: md123: detected capacity
-change from 1900396544 to 0
-[  286.073500] u-Precision-7960-Tower kernel: md: md123 stopped.
-[  286.175794] u-Precision-7960-Tower kernel: md: md124 stopped.
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Guoqing Jiang <guoqing.jiang@linux.dev>
+Subject: Re: Infiniate systemd loop when power off the machine with multiple
+ MD RAIDs
+To: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>,
+ Bagas Sanjaya <bagasdotme@gmail.com>
+Cc: Christoph Hellwig <hch@lst.de>, Song Liu <song@kernel.org>,
+ AceLan Kao <acelan@gmail.com>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Linux RAID <linux-raid@vger.kernel.org>
+References: <028a21df-4397-80aa-c2a5-7c754560f595@gmail.com>
+ <20230818101630.000027f4@linux.intel.com>
+Content-Language: en-US
+In-Reply-To: <20230818101630.000027f4@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
 
---=20
-Chia-Lin Kao(AceLan)
-http://blog.acelan.idv.tw/
-E-Mail: acelan.kaoATcanonical.com (s/AT/@/)
+
+On 8/18/23 16:16, Mariusz Tkaczyk wrote:
+> On Wed, 16 Aug 2023 16:37:26 +0700
+> Bagas Sanjaya<bagasdotme@gmail.com>  wrote:
+>
+>> Hi,
+>>
+>> I notice a regression report on Bugzilla [1]. Quoting from it:
+>>
+>>> It needs to build at least 2 different RAIDs(eg. RAID0 and RAID10, RAID5
+>>> and RAID10) and then you will see below error repeatly(need to use serial
+>>> console to see it)
+>>>
+>>> [ 205.360738] systemd-shutdown[1]: Stopping MD devices.
+>>> [ 205.366384] systemd-shutdown[1]: sd-device-enumerator: Scan all dirs
+>>> [ 205.373327] systemd-shutdown[1]: sd-device-enumerator: Scanning /sys/bus
+>>> [ 205.380427] systemd-shutdown[1]: sd-device-enumerator: Scanning /sys/class
+>>> [ 205.388257] systemd-shutdown[1]: Stopping MD /dev/md127 (9:127).
+>>> [ 205.394880] systemd-shutdown[1]: Failed to sync MD block device
+>>> /dev/md127, ignoring: Input/output error [ 205.404975] md: md127 stopped.
+>>> [ 205.470491] systemd-shutdown[1]: Stopping MD /dev/md126 (9:126).
+>>> [ 205.770179] md: md126: resync interrupted.
+>>> [ 205.776258] md126: detected capacity change from 1900396544 to 0
+>>> [ 205.783349] md: md126 stopped.
+>>> [ 205.862258] systemd-shutdown[1]: Stopping MD /dev/md125 (9:125).
+>>> [ 205.862435] md: md126 stopped.
+>>> [ 205.868376] systemd-shutdown[1]: Failed to sync MD block device
+>>> /dev/md125, ignoring: Input/output error [ 205.872845] block device
+>>> autoloading is deprecated and will be removed. [ 205.880955] md: md125
+>>> stopped. [ 205.934349] systemd-shutdown[1]: Stopping MD /dev/md124p2
+>>> (259:7). [ 205.947707] systemd-shutdown[1]: Could not stop MD /dev/md124p2:
+>>> Device or resource busy [ 205.957004] systemd-shutdown[1]: Stopping MD
+>>> /dev/md124p1 (259:6). [ 205.964177] systemd-shutdown[1]: Could not stop MD
+>>> /dev/md124p1: Device or resource busy [ 205.973155] systemd-shutdown[1]:
+>>> Stopping MD /dev/md124 (9:124). [ 205.979789] systemd-shutdown[1]: Could
+>>> not stop MD /dev/md124: Device or resource busy [ 205.988475]
+>>> systemd-shutdown[1]: Not all MD devices stopped, 4 left.
+>> See Bugzilla for the full thread and attached full journalctl log.
+>>
+>> Anyway, I'm adding this regression to be tracked by regzbot:
+>>
+>> #regzbot introduced: 12a6caf273240a
+>> https://bugzilla.kernel.org/show_bug.cgi?id=217798  #regzbot title: systemd
+>> shutdown hang on machine with different RAID levels
+>>
+>> Thanks.
+>>
+>> [1]:https://bugzilla.kernel.org/show_bug.cgi?id=217798
+>>
+> Hello,
+> The issue is reproducible with IMSM metadata too, around 20% of reboot hangs. I
+> will try to raise the priority in the bug because it is valid high- the
+> base functionality of the system is affected.
+
+Since it it reproducible from your side, is it possible to turn the 
+reproduce steps into a test case
+given the importance?
+
+I guess If all arrays are set with MD_DELETED flag, then reboot might 
+hang, not sure whether
+below (maybe need to flush wq as well  before list_del) helps or not, 
+just FYI.
+
+@@ -9566,8 +9566,10 @@ static int md_notify_reboot(struct notifier_block 
+*this,
+
+         spin_lock(&all_mddevs_lock);
+         list_for_each_entry_safe(mddev, n, &all_mddevs, all_mddevs) {
+-               if (!mddev_get(mddev))
++               if (!mddev_get(mddev)) {
++                       list_del(&mddev->all_mddevs);
+                         continue;
++               }
+
+Thanks,
+Guoqing
