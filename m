@@ -1,126 +1,146 @@
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9F38A934
-	for <regressions@lists.linux.dev>; Wed, 23 Aug 2023 09:05:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1692781529; x=1724317529;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=NlDtiuNoTa06J6TdkXaQq1gMsjcxGXExnbW9+T10Bcs=;
-  b=iNSgeXIpOa5GDfHT6SkGisbIyH114MzxSTqCdbtCMNpNB8uWIlnl/b0V
-   /JYb9Xcg2cYO1yb5vO0zquc9o4prbslUODZ1swdddX5PG1Qs3r3NNHv/e
-   paotsITteJeLoDeWU00IyYklitwAZ2EFuQSb5Ct07iudKVa9/WNcPyYYv
-   Cy/7ZNWPbOKcfvDorgr4wnhTYutEXJ4BmuwQS+FvVqtKqISc3gWd0g38P
-   g9HrNUwfnDEHJORYtKESZX/nxJJ6J8oFOdFTIIpJhNSGiylRlgnVCzHrp
-   78AdYl8SJbMUs/3kBAEt62NQN0aLLqq0e3W+jb5spvBF06I8Zq3DL3noC
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10810"; a="364286847"
-X-IronPort-AV: E=Sophos;i="6.01,195,1684825200"; 
-   d="scan'208";a="364286847"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Aug 2023 02:05:28 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10810"; a="802022722"
-X-IronPort-AV: E=Sophos;i="6.01,195,1684825200"; 
-   d="scan'208";a="802022722"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga008.fm.intel.com with ESMTP; 23 Aug 2023 02:05:26 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-	id 405772FF; Wed, 23 Aug 2023 12:05:25 +0300 (EEST)
-Date: Wed, 23 Aug 2023 12:05:25 +0300
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: Kamil Paral <kparal@redhat.com>
-Cc: linux-pci@vger.kernel.org, regressions@lists.linux.dev,
-	bhelgaas@google.com, chris.chiu@canonical.com
-Subject: Re: [REGRESSION] resume with a Thunderbolt dock broke with commit
- e8b908146d44 "PCI/PM: Increase wait time after resume"
-Message-ID: <20230823090525.GT3465@black.fi.intel.com>
-References: <CA+cBOTeWrsTyANjLZQ=bGoBQ_yOkkV1juyRvJq-C8GOrbW6t9Q@mail.gmail.com>
- <20230821131223.GJ3465@black.fi.intel.com>
- <CA+cBOTc-7U_sumg6g-uBs9w3m8xipuOV1VY=4nmBcyuppgi8_g@mail.gmail.com>
- <20230823050714.GP3465@black.fi.intel.com>
- <CA+cBOTdS5djXL=93VThP9K67pjYKHtjceqSczKf8NQonhpgo5Q@mail.gmail.com>
- <20230823074447.GR3465@black.fi.intel.com>
- <20230823075649.GS3465@black.fi.intel.com>
- <CA+cBOTco17b_8ZMhU8gXy8z2mtZXvVxrEUdKaAuZMhyFYC3yeQ@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 567034C75
+	for <regressions@lists.linux.dev>; Wed, 23 Aug 2023 11:14:12 +0000 (UTC)
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1bf6ea270b2so22995255ad.0
+        for <regressions@lists.linux.dev>; Wed, 23 Aug 2023 04:14:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1692789251; x=1693394051;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4qBzTYpIaY0eNPOXEfLhPS1Eq02rOoxrsLBeQtRmQkI=;
+        b=R/mEGaiawMIbszpvQxLNPN68CM1+qQNzewkt3WGF8+56pXjm/OzuAXNhQ7uf/5ArUS
+         kDlkW7/jybJUdp5VQgCgtIu96diGeTiBlxW1oFSFqImLtDfVIOaJVaE4kfU+G6quW6pJ
+         shs64jHufCYLfV2naz7xMrn+EWzjOfYWhFcwz8A45h4MTUqtwHuWxJSwoWTWsJWnLzQ9
+         0LmpjQtOCZ6aiIoBvPMLuQMzDPhbZr1ql3lOeN8UiguziWnAk06Ye7lnlrtj/JXxLG0D
+         RJBa6mz2O0z8Li2ERBkHUoV0fXU2mdlNC731frugQ925YcFbGIj9QeAYX6m2HLHoul93
+         x+tQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692789251; x=1693394051;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=4qBzTYpIaY0eNPOXEfLhPS1Eq02rOoxrsLBeQtRmQkI=;
+        b=IZNDGm9DoTU/hfMef4Uu9sLwexGHbipE4YBLhG6r6qEWjsbnb/onKbSbbKjbP6BQj/
+         Tq43mwFuPpupDV7i6pxRYdgM5ceKaJOvFmckRlOpreTp/mm6G63TUi2Sdmynd8sikN4+
+         gXRqWrQMrzkQrhlu7K2tk3xFTcFZHxzxV4NlHQaE3nzfgIcxIj4JExjpq2Fc1yVwD6JQ
+         dqLlf7AMljXQ4xWj/K5n9ozGzBHPGkQZgjJMedcBy3agcmEaCdhV+35w6cHoKbVRYDvO
+         484wzwYhSJVbviMu/aUsnhjtsyY2MklqDJuaNUD6+0k+gACTrbiInz0iyz2qV6fzLMm3
+         s40Q==
+X-Gm-Message-State: AOJu0Yz5gCCK01qFYQFGi8f1SFTIEW5/GLzcainfGG32+30W/dQBUlSL
+	/Qte/2qd44P3908LmHKhTho=
+X-Google-Smtp-Source: AGHT+IFQ4GfEQHwFW5B3P9gxyx57bQiXP0/ODLLyX8/UN4QA56F0uCMfoyrIu93LoDEqTbavxCLKDg==
+X-Received: by 2002:a17:902:d705:b0:1bb:1523:b311 with SMTP id w5-20020a170902d70500b001bb1523b311mr8326641ply.41.1692789251390;
+        Wed, 23 Aug 2023 04:14:11 -0700 (PDT)
+Received: from [192.168.0.105] ([103.124.138.83])
+        by smtp.gmail.com with ESMTPSA id 4-20020a170902c24400b001bf10059251sm10611051plg.239.2023.08.23.04.14.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 23 Aug 2023 04:14:10 -0700 (PDT)
+Message-ID: <d9255749-bf1e-c498-ace6-048d36fa962f@gmail.com>
+Date: Wed, 23 Aug 2023 18:14:03 +0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+cBOTco17b_8ZMhU8gXy8z2mtZXvVxrEUdKaAuZMhyFYC3yeQ@mail.gmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.14.0
+Content-Language: en-US
+To: Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>,
+ Trond Myklebust <trond.myklebust@hammerspace.com>,
+ Anna Schumaker <anna@kernel.org>, greg@greg.net.au
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Linux Network File System <linux-nfs@vger.kernel.org>
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+Subject: Fwd: kernel 6.4/6.5 nfs 4.1 unresponsive
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 Hi,
 
-On Wed, Aug 23, 2023 at 10:20:52AM +0200, Kamil Paral wrote:
-> On Wed, Aug 23, 2023 at 9:56 AM Mika Westerberg
-> <mika.westerberg@linux.intel.com> wrote:
-> > So directly after resume the PCIe link (tunnel) from the Thunderbolt host router
-> > PCIe downstream port does not get re-established and this brings down
-> > the whole device hierarchy behind that port. The delay just made it take
-> > longer but the actual problem is not the delay but why the tunnel is not
-> > re-established properly.
+I notice a regression report on Bugzilla [1]. Quoting from it:
+
+> I have two Synology Disk station NAS devices with NFS mounts present on Gentoo servers with the following fstab mount configuration:
 > 
-> If you want to compare it to a "fast" resume (~5 sec, before commit
-> e8b908146d44), here's dmesg:
-> https://bugzilla-attachments.redhat.com/attachment.cgi?id=1984726
+> 10.200.1.247:/volume1/filer02-sata      /mnt/filer02-sata       nfs     vers=4.1,tcp,rsize=32768,wsize=32768,nolock,noatime,nodiratime,hard,timeo=60,retry=6,retrans=6,nconnect=4 0 0
+> 10.200.1.247:/volume1/filer03-sata      /mnt/filer03-sata       nfs     vers=4.1,tcp,rsize=32768,wsize=32768,nolock,noatime,nodiratime,hard,timeo=60,retry=6,retrans=6,nconnect=4 0 0
+> 10.200.1.246:/volume1/filer04-sata      /mnt/filer04-sata       nfs     vers=4.1,tcp,rsize=32768,wsize=32768,nolock,noatime,nodiratime,hard,timeo=60,retry=6,retrans=6,nconnect=4 0 0
 > 
-> Even when the resume is fast, it takes a few extra seconds before the
-> devices on the dock are usable in the OS. For example, my USB mouse
-> connected to the dock doesn't work immediately, I have to wait a few
-> more seconds. The ethernet on the dock also reconnects only after a
-> few extra seconds.
-
-Yes, this is exactly the issue. The PCIe tunnel is not up and that makes
-the OS to remove the devices during resume. The delay just makes it more
-"visible".
-
-> > Next question is that what's the Thunderbolt firmware version? You can
-> > check it throughs sysfs: /sys/bus/thunderbolt/devices/0-0/nvm_version
 > 
-> $ sudo cat /sys/bus/thunderbolt/devices/0-0/nvm_version
-> 20.0
-
-OK, this is "Alpine Ridge Low Power" and for that the firmware seems to
-be quite recent.
-
-> Here's whole `fwupdmgr get-devices` output, if that helps:
-> https://bugzilla-attachments.redhat.com/attachment.cgi?id=1984728
+> On Linux Kernel 6.3.6 these work perfectly fine.
 > 
-> Before reporting this bug, I updated the firmware on the Dock itself
-> to the latest version (had to use Windows for that). The dock should
-> have now this firmware:
-> https://pcsupport.lenovo.com/us/en/downloads/DS506176
-> Which is:
->     Tool package V1.0.25
->     TBT FW: C44
->     PD FW: 1.38.07
->     DP hub: 3.13.005
->     Audio: 04-0E-87_Rev_0087
-> according to the Readme file. That seems to match the "44" version in
-> the fwupdmgr output.
-
-[You could do that in Linux too but Lenovo does not seem to ship the
-firmware through LVFS.]
-
-> > I
-> > see the BIOS you have seems to be quite recent (06/12/2023) so that
-> > probably should be good enough.
+> As soon as I upgrade to 6.4 (tested 6.4.7 through 6.4.11) or 6.5-rc7 NFS mounts randomly hang and block system operation with high load times eventually resulting in a system freeze.
 > 
-> Lenovo seems to support it through LVFS, so that's what I use for
-> updating the BIOS. Version 0.1.54 was updated quite recently and it
-> seems to be also the latest version they have on their website.
+> dmesg/syslog:
+> 
+> Aug 22 18:13:49 sjc-www2 kernel: nfs: server 10.200.1.247 OK
+> Aug 22 18:13:49 sjc-www2 kernel: nfs: server 10.200.1.247 OK
+> Aug 22 18:13:49 sjc-www2 kernel: nfs: server 10.200.1.247 OK
+> Aug 22 18:13:49 sjc-www2 kernel: nfs: server 10.200.1.247 OK
+> Aug 22 18:14:35 sjc-www2 kernel: nfs: server 10.200.1.247 not responding, still trying
+> Aug 22 18:14:35 sjc-www2 kernel: nfs: server 10.200.1.247 not responding, still trying
+> Aug 22 18:14:35 sjc-www2 kernel: nfs: server 10.200.1.247 not responding, still trying
+> Aug 22 18:14:35 sjc-www2 kernel: nfs: server 10.200.1.247 not responding, still trying
+> Aug 22 18:14:35 sjc-www2 kernel: nfs: server 10.200.1.247 not responding, still trying
+> Aug 22 18:14:35 sjc-www2 kernel: nfs: server 10.200.1.247 not responding, still trying
+> Aug 22 18:14:35 sjc-www2 kernel: nfs: server 10.200.1.247 not responding, still trying
+> Aug 22 18:14:35 sjc-www2 kernel: nfs: server 10.200.1.247 not responding, still trying
+> Aug 22 18:14:35 sjc-www2 kernel: nfs: server 10.200.1.247 not responding, still trying
+> Aug 22 18:14:35 sjc-www2 kernel: nfs: server 10.200.1.247 not responding, still trying
+> Aug 22 18:15:23 sjc-www2 kernel: nfs: server 10.200.1.247 OK
+> Aug 22 18:15:23 sjc-www2 kernel: nfs: server 10.200.1.247 OK
+> Aug 22 18:15:23 sjc-www2 kernel: nfs: server 10.200.1.247 OK
+> Aug 22 18:15:23 sjc-www2 kernel: nfs: server 10.200.1.247 OK
+> Aug 22 18:15:23 sjc-www2 kernel: nfs: server 10.200.1.247 OK
+> Aug 22 18:15:23 sjc-www2 kernel: nfs: server 10.200.1.247 OK
+> Aug 22 18:15:23 sjc-www2 kernel: nfs: server 10.200.1.247 OK
+> Aug 22 18:15:23 sjc-www2 kernel: nfs: server 10.200.1.247 OK
+> Aug 22 18:15:23 sjc-www2 kernel: nfs: server 10.200.1.247 OK
+> Aug 22 18:15:23 sjc-www2 kernel: nfs: server 10.200.1.247 OK
+> Aug 22 18:16:05 sjc-www2 kernel: nfs: server 10.200.1.247 not responding, still trying
+> Aug 22 18:16:05 sjc-www2 kernel: nfs: server 10.200.1.247 not responding, still trying
+> Aug 22 18:16:05 sjc-www2 kernel: nfs: server 10.200.1.247 not responding, still trying
+> Aug 22 18:16:05 sjc-www2 kernel: nfs: server 10.200.1.247 not responding, still trying
+> Aug 22 18:16:05 sjc-www2 kernel: nfs: server 10.200.1.247 not responding, still trying
+> Aug 22 18:16:05 sjc-www2 kernel: nfs: server 10.200.1.247 not responding, still trying
+> Aug 22 18:16:05 sjc-www2 kernel: nfs: server 10.200.1.247 not responding, still trying
+> Aug 22 18:16:05 sjc-www2 kernel: nfs: server 10.200.1.247 not responding, still trying
+> Aug 22 18:16:05 sjc-www2 kernel: nfs: server 10.200.1.247 not responding, still trying
+> Aug 22 18:16:05 sjc-www2 kernel: nfs: server 10.200.1.247 not responding, still trying
+> Aug 22 18:16:54 sjc-www2 kernel: nfs: server 10.200.1.247 OK
+> Aug 22 18:16:54 sjc-www2 kernel: nfs: server 10.200.1.247 OK
+> Aug 22 18:16:54 sjc-www2 kernel: nfs: server 10.200.1.247 OK
+> Aug 22 18:16:54 sjc-www2 kernel: nfs: server 10.200.1.247 OK
+> Aug 22 18:16:54 sjc-www2 kernel: nfs: server 10.200.1.247 OK
+> Aug 22 18:16:54 sjc-www2 kernel: nfs: server 10.200.1.247 OK
+> Aug 22 18:16:54 sjc-www2 kernel: nfs: server 10.200.1.247 OK
+> Aug 22 18:16:54 sjc-www2 kernel: nfs: server 10.200.1.247 OK
+> Aug 22 18:16:54 sjc-www2 kernel: nfs: server 10.200.1.247 OK
+> Aug 22 18:16:54 sjc-www2 kernel: nfs: server 10.200.1.247 OK
+> 
+> 
+> The box in question i have been testing the kernel upgrades on has 1 x 10G NIC set with MTU 9000 for NFS volumes and i can successfully ping the nfs host with 9000 byte packets:
+> 
+> sjc-www2 ~ # ping -4 -s 9000 10.200.1.247
+> PING 10.200.1.247 (10.200.1.247) 9000(9028) bytes of data.
+> 9008 bytes from 10.200.1.247: icmp_seq=1 ttl=64 time=0.205 ms
+> 9008 bytes from 10.200.1.247: icmp_seq=2 ttl=64 time=0.279 ms
+> 9008 bytes from 10.200.1.247: icmp_seq=3 ttl=64 time=0.402 ms
 
-OK. Did you change any BIOS settings from the defaults that might have
-affect on this? Sometimes these are exposed to through the BIOS menu and
-the user can change those (Lenovo typically does not, expose them
-though).
+See Bugzilla for the full thread.
 
-Can you also attach output of acpidump to and dmesg with
-"thunderbolt.dyndbg=+p" in the command line?
+Anyway, I'm adding this regression to be tracked by regzbot:
+
+#regzbot introduced: v6.3..v6.4 https://bugzilla.kernel.org/show_bug.cgi?id=217815
+#regzbot title: nfs server not responding loop on Synology NAS devices
+
+Thanks.
+
+[1]: https://bugzilla.kernel.org/show_bug.cgi?id=217815
+
+-- 
+An old man doll... just what I always wanted! - Clara
