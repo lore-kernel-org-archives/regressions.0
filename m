@@ -1,84 +1,121 @@
-Received: from hoggar.fisica.ufpr.br (hoggar.fisica.ufpr.br [200.238.171.242])
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0594E1DDE3
-	for <regressions@lists.linux.dev>; Tue, 22 Aug 2023 19:22:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=fisica.ufpr.br;
-	s=201705; t=1692731639;
-	bh=r2WY21HfAxQdW/OWjI0vSq9iHNBngP94lJY11ZPFXYs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tMszPhc+4JW59+jJOJMnozhXRUKgRC8kVYdFX5Dkp4InXzwN0Ut3269sz3sprhBiA
-	 6JdsxwKE0+KhjoUAGevhartrtNsvGoHPYjdwCDtnJAkvuvZeuubFc71U1zOile6WsG
-	 +dy4V1sz91Mli3xyKgT8KDApfnQbW5uzO4r9jJaa7U1yh6tvIVBR35P+w13loMdr2U
-	 6QMVcqiUHhq/WyVCFHfnICDIUtActpR4nkwAyAgGodlzmSc0ImkfX9hinFSi85KWh8
-	 rOX5DGfeFfKar+w1zmRgNonKlWBLmZM8egYuhATDAZjODXCaL3+YAHryrbuR6xEVkT
-	 17TGJG9jDT5hA==
-Received: by hoggar.fisica.ufpr.br (Postfix, from userid 577)
-	id 6D5FF3620360; Tue, 22 Aug 2023 16:13:59 -0300 (-03)
-Date: Tue, 22 Aug 2023 16:13:59 -0300
-From: Carlos Carvalho <carlos@fisica.ufpr.br>
-To: Song Liu <song@kernel.org>
-Cc: Bagas Sanjaya <bagasdotme@gmail.com>, Christoph Hellwig <hch@lst.de>,
-	AceLan Kao <acelan@gmail.com>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Regressions <regressions@lists.linux.dev>,
-	Linux RAID <linux-raid@vger.kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DBCF10E9
+	for <regressions@lists.linux.dev>; Wed, 23 Aug 2023 01:28:37 +0000 (UTC)
+Received: from mail02.huawei.com (unknown [172.30.67.169])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4RVpWb72s2z4f3kpW
+	for <regressions@lists.linux.dev>; Wed, 23 Aug 2023 09:28:27 +0800 (CST)
+Received: from [10.174.176.73] (unknown [10.174.176.73])
+	by APP4 (Coremail) with SMTP id gCh0CgAHl6m7YOVkVzFxBQ--.15372S3;
+	Wed, 23 Aug 2023 09:28:28 +0800 (CST)
 Subject: Re: Infiniate systemd loop when power off the machine with multiple
  MD RAIDs
-Message-ID: <ZOUI9yDzjxuFP68E@fisica.ufpr.br>
+To: Carlos Carvalho <carlos@fisica.ufpr.br>, Song Liu <song@kernel.org>
+Cc: Bagas Sanjaya <bagasdotme@gmail.com>, Christoph Hellwig <hch@lst.de>,
+ AceLan Kao <acelan@gmail.com>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Linux RAID <linux-raid@vger.kernel.org>, "yukuai (C)" <yukuai3@huawei.com>,
+ "yangerkun@huawei.com" <yangerkun@huawei.com>
 References: <028a21df-4397-80aa-c2a5-7c754560f595@gmail.com>
  <CAPhsuW5Od9tczboEBxC8gn+2XLkEbirfCUm7WuJBey5MKQjwDA@mail.gmail.com>
+ <ZOUI9yDzjxuFP68E@fisica.ufpr.br>
+From: Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <909a6669-01af-dbe7-b64b-84a5f3bc75a3@huaweicloud.com>
+Date: Wed, 23 Aug 2023 09:28:27 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAPhsuW5Od9tczboEBxC8gn+2XLkEbirfCUm7WuJBey5MKQjwDA@mail.gmail.com>
+In-Reply-To: <ZOUI9yDzjxuFP68E@fisica.ufpr.br>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgAHl6m7YOVkVzFxBQ--.15372S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7Kw4DKrW3Xry5JF4fKFy3Jwb_yoW8tr43p3
+	yI9FZ8KrnrXF4qqr4vya4xXryY9ryv9an8AFy7uF1UZ398ZrnrCr1rtr90gw1UA34rur4j
+	qa10vayUuFZrAaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvab4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7Mxk0xIA0c2IE
+	e2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxV
+	Aqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q
+	6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6x
+	kF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv
+	67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyT
+	uYvjxUOyCJDUUUU
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+X-CFilter-Loop: Reflected
 
-Song Liu (song@kernel.org) wrote on Tue, Aug 22, 2023 at 03:56:04PM -03:
-> >From systemd code, i.e. function delete_md(), this error:
-> 
-> [ 205.957004] systemd-shutdown[1]: Stopping MD /dev/md124p1 (259:6).
-> [ 205.964177] systemd-shutdown[1]: Could not stop MD /dev/md124p1:
-> Device or resource busy
-> 
-> is most likely triggered by ioctl(STOP_ARRAY).
-> 
-> And based on the code, I think the ioctl fails here:
-> 
->         if (cmd == STOP_ARRAY || cmd == STOP_ARRAY_RO) {
->                 /* Need to flush page cache, and ensure no-one else opens
->                  * and writes
->                  */
->                 mutex_lock(&mddev->open_mutex);
->                 if (mddev->pers && atomic_read(&mddev->openers) > 1) {
->                         mutex_unlock(&mddev->open_mutex);
->                         err = -EBUSY;
->                         goto out;        ////////////////////// HERE
->                 }
->                 if (test_and_set_bit(MD_CLOSING, &mddev->flags)) {
->                         mutex_unlock(&mddev->open_mutex);
->                         err = -EBUSY;
->                         goto out;
->                 }
->                 did_set_md_closing = true;
->                 mutex_unlock(&mddev->open_mutex);
->                 sync_blockdev(bdev);
->         }
+Hi,
 
-Probably. The problem is why doesn't it manage to flush the page cache? I find
-strange that the problem appears only when trying to stop the array, I get it
-when trying to umount the filesystem, where it also hangs because of the same
-reason. The kworker thread runs continuously using 100% cpu of only 1 core.
+在 2023/08/23 3:13, Carlos Carvalho 写道:
+> Song Liu (song@kernel.org) wrote on Tue, Aug 22, 2023 at 03:56:04PM -03:
+>> >From systemd code, i.e. function delete_md(), this error:
+>>
+>> [ 205.957004] systemd-shutdown[1]: Stopping MD /dev/md124p1 (259:6).
+>> [ 205.964177] systemd-shutdown[1]: Could not stop MD /dev/md124p1:
+>> Device or resource busy
+>>
+>> is most likely triggered by ioctl(STOP_ARRAY).
+>>
+>> And based on the code, I think the ioctl fails here:
+>>
+>>          if (cmd == STOP_ARRAY || cmd == STOP_ARRAY_RO) {
+>>                  /* Need to flush page cache, and ensure no-one else opens
+>>                   * and writes
+>>                   */
+>>                  mutex_lock(&mddev->open_mutex);
+>>                  if (mddev->pers && atomic_read(&mddev->openers) > 1) {
+>>                          mutex_unlock(&mddev->open_mutex);
+>>                          err = -EBUSY;
+>>                          goto out;        ////////////////////// HERE
 
-These are all similar symptoms of the underlying problem which I complained
-about days ago: the system doesn't manage to write to the disks, which stay
-nearly idle. If you wait long enough without issuing writes, which can be
-several hours, it'll eventually flush the page cache and proceed to a "normal"
-umount or reboot.
+Yes, I suspect here as well, but I do some test with error injection to
+gurantee that ioctl(STOP_ARRAY) always return -EBUSY, but I found that
+system reboot didn't hang, it'll try a few times but eventually reboot
+finished.
 
-The bug is dependent on the rate of writes and also on uptime; it rarely
-appears soon after boot, and increases as times passes.
+>>                  }
+>>                  if (test_and_set_bit(MD_CLOSING, &mddev->flags)) {
+>>                          mutex_unlock(&mddev->open_mutex);
+>>                          err = -EBUSY;
+>>                          goto out;
+>>                  }
+>>                  did_set_md_closing = true;
+>>                  mutex_unlock(&mddev->open_mutex);
+>>                  sync_blockdev(bdev);
+>>          }
+> 
+> Probably. The problem is why doesn't it manage to flush the page cache? I find
+> strange that the problem appears only when trying to stop the array, I get it
+> when trying to umount the filesystem, where it also hangs because of the same
+> reason. The kworker thread runs continuously using 100% cpu of only 1 core.
+
+The kworker do you mean the daemon thread or the sync thread?  runs
+continuously using 100% cpu doen't sounds correct to me.
+
+Thanks,
+Kuai
+
+> 
+> These are all similar symptoms of the underlying problem which I complained
+> about days ago: the system doesn't manage to write to the disks, which stay
+> nearly idle. If you wait long enough without issuing writes, which can be
+> several hours, it'll eventually flush the page cache and proceed to a "normal"
+> umount or reboot.
+> 
+> The bug is dependent on the rate of writes and also on uptime; it rarely
+> appears soon after boot, and increases as times passes.
+> 
+> .
+> 
+
