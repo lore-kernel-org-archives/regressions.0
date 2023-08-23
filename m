@@ -1,139 +1,76 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED60B1FA5
-	for <regressions@lists.linux.dev>; Wed, 23 Aug 2023 06:04:15 +0000 (UTC)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 0F1281F45A;
-	Wed, 23 Aug 2023 06:04:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1692770653; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D2D220F05
+	for <regressions@lists.linux.dev>; Wed, 23 Aug 2023 07:01:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1692774068;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=i8K0uqA75zgrqeyQqMOjA4vyh8El/ZLPyoR7z7nwmbY=;
-	b=cVwNHGclP/hGyDqH09K5eBIX+15NxFuAWXP9obLtWgsIrqBFik+JVFV33qZj8egkv0XI0Q
-	sUzwMNfxy6zm5sKHsJiQd699ZDKUOpnp3eko0oEJX6p6O/UoK53WGM8TjNZHcy1eIxrgP3
-	6I4QtU+HMax/BNSoUVAj8IYF4iPs4RA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1692770653;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=i8K0uqA75zgrqeyQqMOjA4vyh8El/ZLPyoR7z7nwmbY=;
-	b=dCjAtT+gGxw8t9YU35qqSEBvQBmVXVmwCzK64k9GxMCsAdxBGxgtknr0p2f5MeHYZEYB7s
-	1XH8fgkYjRTAhRCw==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 1779F13458;
-	Wed, 23 Aug 2023 06:04:10 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-	by imap2.suse-dmz.suse.de with ESMTPSA
-	id +z4gOVqh5WQ5GwAAMHmgww
-	(envelope-from <hare@suse.de>); Wed, 23 Aug 2023 06:04:10 +0000
-Message-ID: <c7454021-5559-6556-e9ec-de856e00f1fb@suse.de>
-Date: Wed, 23 Aug 2023 08:04:10 +0200
+	bh=zCxuyTwpAkZCk37mZn33IyDjWDzXgnaUh3RjKTM15/c=;
+	b=P0PVWIKijx/wfp/hS/bIlnEo6D2ypac6rY45T9AdmdYVUOwMdBV03kQhM1aVVmuhIRR4un
+	qttt+DkY7G9ey5v7L5/KpVTfbFf8OVr+f8P+Ie1PRE5mfhouC8HY2AQAyZ0JUoovQajV8a
+	X8gcEaqjk0OMiC4ztu+EskJIsjOU85U=
+Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com
+ [209.85.216.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-618-qwe6Em4rMGu7_qHs3rYV1g-1; Wed, 23 Aug 2023 03:01:06 -0400
+X-MC-Unique: qwe6Em4rMGu7_qHs3rYV1g-1
+Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-26f2dfb1fdbso4798130a91.2
+        for <regressions@lists.linux.dev>; Wed, 23 Aug 2023 00:01:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692774066; x=1693378866;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zCxuyTwpAkZCk37mZn33IyDjWDzXgnaUh3RjKTM15/c=;
+        b=Mbzsrxx0g9j7NkGA+qeQpHRkD+2rDnV4KIO7sSpdu6bsgL1xBHELZ0Ekef7ILHLGjK
+         5diyxrUdOPJx/Y47OwdDxQQwia5BAmWlJjFT1lII6SzZTcm572vj+38j6twpWZkrEUHh
+         NS/psJhNjRib3/+1wqhb7GodKMRaPEtNxVLvAWAd+SFiiYjoDxV5QrFWJ+DveR2q3nr4
+         eSgpH17zt2l5MiRj9yKQl9LujXO8hBzWhZCjsV1pzb+8/rJWLUfrXh1EkcDaSEHfGV8f
+         B9PsKrFuctYYW7lRsMCNm3PxHIR0ZGwyLxptlz6T/ffn9nDBhxVFkl0k/Ms5MTrFefJ+
+         mqpA==
+X-Gm-Message-State: AOJu0YwXl6kwVR0tCZCzOSxriaeFYq/A9207EoR/pMbSjpRbNHJGlZdo
+	KBocfW9kONuICRLhE7QJRC7ddiujEHdxkARiJkV4pF1ru2yq6a4v/EpLVAP5GGh3Z9xngz6BhAt
+	fqMtROSB2XZhCnW925jOvgqG2Hk4c9hiiY4p/HQ==
+X-Received: by 2002:a17:90b:1882:b0:267:ffcf:e9e3 with SMTP id mn2-20020a17090b188200b00267ffcfe9e3mr11020169pjb.46.1692774066040;
+        Wed, 23 Aug 2023 00:01:06 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHwbDCu65zazbtvERo2dSRY8zAUK59fINDdDAUFIjyiz53LnwxLGt7vY+xzLr1JpWTI+nrQCWgl97TYj5JqCkw=
+X-Received: by 2002:a17:90b:1882:b0:267:ffcf:e9e3 with SMTP id
+ mn2-20020a17090b188200b00267ffcfe9e3mr11020148pjb.46.1692774065746; Wed, 23
+ Aug 2023 00:01:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: Infiniate systemd loop when power off the machine with multiple
- MD RAIDs
-Content-Language: en-US
-To: Yu Kuai <yukuai1@huaweicloud.com>, Carlos Carvalho
- <carlos@fisica.ufpr.br>, Song Liu <song@kernel.org>
-Cc: Bagas Sanjaya <bagasdotme@gmail.com>, Christoph Hellwig <hch@lst.de>,
- AceLan Kao <acelan@gmail.com>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>,
- Linux RAID <linux-raid@vger.kernel.org>, "yukuai (C)" <yukuai3@huawei.com>,
- "yangerkun@huawei.com" <yangerkun@huawei.com>
-References: <028a21df-4397-80aa-c2a5-7c754560f595@gmail.com>
- <CAPhsuW5Od9tczboEBxC8gn+2XLkEbirfCUm7WuJBey5MKQjwDA@mail.gmail.com>
- <ZOUI9yDzjxuFP68E@fisica.ufpr.br>
- <909a6669-01af-dbe7-b64b-84a5f3bc75a3@huaweicloud.com>
-From: Hannes Reinecke <hare@suse.de>
-In-Reply-To: <909a6669-01af-dbe7-b64b-84a5f3bc75a3@huaweicloud.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <CA+cBOTeWrsTyANjLZQ=bGoBQ_yOkkV1juyRvJq-C8GOrbW6t9Q@mail.gmail.com>
+ <20230821131223.GJ3465@black.fi.intel.com> <CA+cBOTc-7U_sumg6g-uBs9w3m8xipuOV1VY=4nmBcyuppgi8_g@mail.gmail.com>
+ <20230823050714.GP3465@black.fi.intel.com>
+In-Reply-To: <20230823050714.GP3465@black.fi.intel.com>
+From: Kamil Paral <kparal@redhat.com>
+Date: Wed, 23 Aug 2023 09:00:39 +0200
+Message-ID: <CA+cBOTdS5djXL=93VThP9K67pjYKHtjceqSczKf8NQonhpgo5Q@mail.gmail.com>
+Subject: Re: [REGRESSION] resume with a Thunderbolt dock broke with commit
+ e8b908146d44 "PCI/PM: Increase wait time after resume"
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: linux-pci@vger.kernel.org, regressions@lists.linux.dev, 
+	bhelgaas@google.com, chris.chiu@canonical.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 8/23/23 03:28, Yu Kuai wrote:
-> Hi,
-> 
-> 在 2023/08/23 3:13, Carlos Carvalho 写道:
->> Song Liu (song@kernel.org) wrote on Tue, Aug 22, 2023 at 03:56:04PM -03:
->>> >From systemd code, i.e. function delete_md(), this error:
->>>
->>> [ 205.957004] systemd-shutdown[1]: Stopping MD /dev/md124p1 (259:6).
->>> [ 205.964177] systemd-shutdown[1]: Could not stop MD /dev/md124p1:
->>> Device or resource busy
->>>
->>> is most likely triggered by ioctl(STOP_ARRAY).
->>>
->>> And based on the code, I think the ioctl fails here:
->>>
->>>          if (cmd == STOP_ARRAY || cmd == STOP_ARRAY_RO) {
->>>                  /* Need to flush page cache, and ensure no-one else 
->>> opens
->>>                   * and writes
->>>                   */
->>>                  mutex_lock(&mddev->open_mutex);
->>>                  if (mddev->pers && atomic_read(&mddev->openers) > 1) {
->>>                          mutex_unlock(&mddev->open_mutex);
->>>                          err = -EBUSY;
->>>                          goto out;        ////////////////////// HERE
-> 
-> Yes, I suspect here as well, but I do some test with error injection to
-> gurantee that ioctl(STOP_ARRAY) always return -EBUSY, but I found that
-> system reboot didn't hang, it'll try a few times but eventually reboot
-> finished.
-> 
->>>                  }
->>>                  if (test_and_set_bit(MD_CLOSING, &mddev->flags)) {
->>>                          mutex_unlock(&mddev->open_mutex);
->>>                          err = -EBUSY;
->>>                          goto out;
->>>                  }
->>>                  did_set_md_closing = true;
->>>                  mutex_unlock(&mddev->open_mutex);
->>>                  sync_blockdev(bdev);
->>>          }
->>
->> Probably. The problem is why doesn't it manage to flush the page 
->> cache? I find
->> strange that the problem appears only when trying to stop the array, I 
->> get it
->> when trying to umount the filesystem, where it also hangs because of 
->> the same
->> reason. The kworker thread runs continuously using 100% cpu of only 1 
->> core.
-> 
-> The kworker do you mean the daemon thread or the sync thread?  runs
-> continuously using 100% cpu doen't sounds correct to me.
-> 
-That sounds more like kworker waiting on a mutex to be released.
-Can you trigger a kdump while in that state?
-Or do a sysrq-T to get a stack trace of all running processes?
-That should tell you where exactly the 100% cpu time is being
-wasted.
+On Wed, Aug 23, 2023 at 7:07=E2=80=AFAM Mika Westerberg
+<mika.westerberg@linux.intel.com> wrote:
+> Okay if I understand correctly with commit 7b3ba09febf4 things works as
+> before and you don't see any delays in resume?
 
-Cheers,
-
-Hannes
--- 
-Dr. Hannes Reinecke                Kernel Storage Architect
-hare@suse.de                              +49 911 74053 688
-SUSE Software Solutions GmbH, Maxfeldstr. 5, 90409 Nürnberg
-HRB 36809 (AG Nürnberg), Geschäftsführer: Ivo Totev, Andrew
-Myers, Andrew McDonald, Martje Boudien Moerman
+If commit 7b3ba09febf4 is included but commit e8b908146d44 is
+excluded, the resume works as usual. Once e8b908146d44 is included (it
+doesn't matter whether 7b3ba09febf4 is included or not), the resume
+gets delayed by ~60 seconds.
 
