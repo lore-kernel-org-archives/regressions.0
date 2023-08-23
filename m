@@ -1,121 +1,77 @@
-Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DBCF10E9
-	for <regressions@lists.linux.dev>; Wed, 23 Aug 2023 01:28:37 +0000 (UTC)
-Received: from mail02.huawei.com (unknown [172.30.67.169])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4RVpWb72s2z4f3kpW
-	for <regressions@lists.linux.dev>; Wed, 23 Aug 2023 09:28:27 +0800 (CST)
-Received: from [10.174.176.73] (unknown [10.174.176.73])
-	by APP4 (Coremail) with SMTP id gCh0CgAHl6m7YOVkVzFxBQ--.15372S3;
-	Wed, 23 Aug 2023 09:28:28 +0800 (CST)
-Subject: Re: Infiniate systemd loop when power off the machine with multiple
- MD RAIDs
-To: Carlos Carvalho <carlos@fisica.ufpr.br>, Song Liu <song@kernel.org>
-Cc: Bagas Sanjaya <bagasdotme@gmail.com>, Christoph Hellwig <hch@lst.de>,
- AceLan Kao <acelan@gmail.com>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>,
- Linux RAID <linux-raid@vger.kernel.org>, "yukuai (C)" <yukuai3@huawei.com>,
- "yangerkun@huawei.com" <yangerkun@huawei.com>
-References: <028a21df-4397-80aa-c2a5-7c754560f595@gmail.com>
- <CAPhsuW5Od9tczboEBxC8gn+2XLkEbirfCUm7WuJBey5MKQjwDA@mail.gmail.com>
- <ZOUI9yDzjxuFP68E@fisica.ufpr.br>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <909a6669-01af-dbe7-b64b-84a5f3bc75a3@huaweicloud.com>
-Date: Wed, 23 Aug 2023 09:28:27 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1577320F0F
+	for <regressions@lists.linux.dev>; Wed, 23 Aug 2023 05:07:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1692767239; x=1724303239;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=d7PdSEv7Jwsv3vTkO02exhv7qYxEAvqR08AmLs2hV0g=;
+  b=TGXZ8ILNoBpScl0Gl890eZ6Sjb8DTE/TMc3hppPkxbLnU9e7Se4o1tG1
+   bbifo8/3oYUkGNJdAVKR2rIvTmKGf3v5owxBlJrSDuhXg/VLxVQbM+xy9
+   mW+/PbkuqHuER+Mg5zMnLV3bHqiqunlXQd+mM54m8mS2867YUe2Es7lsH
+   8QGNQ8yfQ78OLe0vN7yv3CRIgFHKzE0rnIxAIESEdnmokbqJ83ZM3koT9
+   tIiteZDLXjwBGt72aqOYZs1/VIk6vFerbKuxUmxf/dykHQX7sNXMBv/Vi
+   FH4gEgle+kRqRSvW/POfVY3Ut9W7S7ONCOO6G2lymvWfGQhIELZZIUALG
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10810"; a="405068687"
+X-IronPort-AV: E=Sophos;i="6.01,194,1684825200"; 
+   d="scan'208";a="405068687"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2023 22:07:17 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10810"; a="801963211"
+X-IronPort-AV: E=Sophos;i="6.01,194,1684825200"; 
+   d="scan'208";a="801963211"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga008.fm.intel.com with ESMTP; 22 Aug 2023 22:07:16 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+	id DE4DE2FF; Wed, 23 Aug 2023 08:07:14 +0300 (EEST)
+Date: Wed, 23 Aug 2023 08:07:14 +0300
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: Kamil Paral <kparal@redhat.com>
+Cc: linux-pci@vger.kernel.org, regressions@lists.linux.dev,
+	bhelgaas@google.com, chris.chiu@canonical.com
+Subject: Re: [REGRESSION] resume with a Thunderbolt dock broke with commit
+ e8b908146d44 "PCI/PM: Increase wait time after resume"
+Message-ID: <20230823050714.GP3465@black.fi.intel.com>
+References: <CA+cBOTeWrsTyANjLZQ=bGoBQ_yOkkV1juyRvJq-C8GOrbW6t9Q@mail.gmail.com>
+ <20230821131223.GJ3465@black.fi.intel.com>
+ <CA+cBOTc-7U_sumg6g-uBs9w3m8xipuOV1VY=4nmBcyuppgi8_g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <ZOUI9yDzjxuFP68E@fisica.ufpr.br>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgAHl6m7YOVkVzFxBQ--.15372S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7Kw4DKrW3Xry5JF4fKFy3Jwb_yoW8tr43p3
-	yI9FZ8KrnrXF4qqr4vya4xXryY9ryv9an8AFy7uF1UZ398ZrnrCr1rtr90gw1UA34rur4j
-	qa10vayUuFZrAaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvab4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7Mxk0xIA0c2IE
-	e2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxV
-	Aqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q
-	6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6x
-	kF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv
-	67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyT
-	uYvjxUOyCJDUUUU
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
-X-CFilter-Loop: Reflected
+In-Reply-To: <CA+cBOTc-7U_sumg6g-uBs9w3m8xipuOV1VY=4nmBcyuppgi8_g@mail.gmail.com>
 
 Hi,
 
-在 2023/08/23 3:13, Carlos Carvalho 写道:
-> Song Liu (song@kernel.org) wrote on Tue, Aug 22, 2023 at 03:56:04PM -03:
->> >From systemd code, i.e. function delete_md(), this error:
->>
->> [ 205.957004] systemd-shutdown[1]: Stopping MD /dev/md124p1 (259:6).
->> [ 205.964177] systemd-shutdown[1]: Could not stop MD /dev/md124p1:
->> Device or resource busy
->>
->> is most likely triggered by ioctl(STOP_ARRAY).
->>
->> And based on the code, I think the ioctl fails here:
->>
->>          if (cmd == STOP_ARRAY || cmd == STOP_ARRAY_RO) {
->>                  /* Need to flush page cache, and ensure no-one else opens
->>                   * and writes
->>                   */
->>                  mutex_lock(&mddev->open_mutex);
->>                  if (mddev->pers && atomic_read(&mddev->openers) > 1) {
->>                          mutex_unlock(&mddev->open_mutex);
->>                          err = -EBUSY;
->>                          goto out;        ////////////////////// HERE
-
-Yes, I suspect here as well, but I do some test with error injection to
-gurantee that ioctl(STOP_ARRAY) always return -EBUSY, but I found that
-system reboot didn't hang, it'll try a few times but eventually reboot
-finished.
-
->>                  }
->>                  if (test_and_set_bit(MD_CLOSING, &mddev->flags)) {
->>                          mutex_unlock(&mddev->open_mutex);
->>                          err = -EBUSY;
->>                          goto out;
->>                  }
->>                  did_set_md_closing = true;
->>                  mutex_unlock(&mddev->open_mutex);
->>                  sync_blockdev(bdev);
->>          }
+On Tue, Aug 22, 2023 at 06:43:54PM +0200, Kamil Paral wrote:
+> On Mon, Aug 21, 2023 at 3:13 PM Mika Westerberg
+> <mika.westerberg@linux.intel.com> wrote:
+> > Thanks for the detailed description! There was follow up patch that made
+> > the timeout shorter for slow links, I wonder if you could try that first
+> > and see if that changes anything? It is this commit in the mainline:
+> >
+> > 7b3ba09febf4 PCI/PM: Shorten pci_bridge_wait_for_secondary_bus() wait time for slow links
+> >
 > 
-> Probably. The problem is why doesn't it manage to flush the page cache? I find
-> strange that the problem appears only when trying to stop the array, I get it
-> when trying to umount the filesystem, where it also hangs because of the same
-> reason. The kworker thread runs continuously using 100% cpu of only 1 core.
-
-The kworker do you mean the daemon thread or the sync thread?  runs
-continuously using 100% cpu doen't sounds correct to me.
-
-Thanks,
-Kuai
-
+> Hello Mika, thanks for a quick response. Please see my reply to Bjorn,
+> the resume is just 60+ seconds delayed, not completely failing, I was
+> wrong about that. I attached my logs there.
 > 
-> These are all similar symptoms of the underlying problem which I complained
-> about days ago: the system doesn't manage to write to the disks, which stay
-> nearly idle. If you wait long enough without issuing writes, which can be
-> several hours, it'll eventually flush the page cache and proceed to a "normal"
-> umount or reboot.
-> 
-> The bug is dependent on the rate of writes and also on uptime; it rarely
-> appears soon after boot, and increases as times passes.
-> 
-> .
-> 
+> To respond to your question, I applied 7b3ba09febf4 on top of
+> fe15c26ee26e (which is the parent of e8b908146d44) and tested that.
+> Hopefully I understood the instructions correctly. That kernel resumes
+> just fine, with the expected speed (~5 seconds), no extra delay. (If
+> there's a speed-up, I can't really tell).
 
+Okay if I understand correctly with commit 7b3ba09febf4 things works as
+before and you don't see any delays in resume?
