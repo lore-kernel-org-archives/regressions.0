@@ -1,116 +1,126 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAC5BA934
-	for <regressions@lists.linux.dev>; Wed, 23 Aug 2023 08:21:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1692778881;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=r2oaSMHcvqCziX2gO1IwQweHiiwucxeoyE3Pu01d/lk=;
-	b=bugnEVqx+E0LZprUZZxt/6AYQPVnGestjre6aInx5FK44nkFmzYq35PG3jggClSeJ72KYt
-	nbXHD8RAqs4vRVvZWbpiVzkZC48yj1TJD/5cgTQZYmJlVW7N6y3RXQ0J0WtlQYOpPUi9Kd
-	iXLuaX3PtbB8/wDQetMaQ7R2Pfhv284=
-Received: from mail-pg1-f198.google.com (mail-pg1-f198.google.com
- [209.85.215.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-677-FncZnhZ6OMyQvveQHP_tEQ-1; Wed, 23 Aug 2023 04:21:20 -0400
-X-MC-Unique: FncZnhZ6OMyQvveQHP_tEQ-1
-Received: by mail-pg1-f198.google.com with SMTP id 41be03b00d2f7-564656d952aso5744191a12.3
-        for <regressions@lists.linux.dev>; Wed, 23 Aug 2023 01:21:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692778879; x=1693383679;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=r2oaSMHcvqCziX2gO1IwQweHiiwucxeoyE3Pu01d/lk=;
-        b=RSyB3HAkJcwnO6XjHDetOOuiskfxxM+AUy7e4mb8NbNHCFI1epUWHY8+MAKsZI1n6r
-         6w+D0CawwRLM88STnhs5bFmm7Npfco92Bx1sGG75PLSvFYImnZ/w2XXhijAyUCy6zRRt
-         qCQn4dR6ikxwYseQh336bgixm0FiaPpZFUuetTzqWWVBbNvD7GwDT23Lev+kZSHbArKr
-         yRGAMVjEe9xQza18Xz8axZK5+aP87Ynj7uHpxc8CjFgFfWDGaTUPLEBV38veQHpKPhf+
-         VJy7QNFVRWMevZD+T+fSzRcSaSzP6hpWEE9ZXC/IKfDwLBEBrCkCt46FcDcqVkVp+w6N
-         yx/A==
-X-Gm-Message-State: AOJu0YzE97/jXBxJTq3FchcxkTbWVONehsD4xldSfttQCNfqV6xYfgOL
-	aK72YENmple+UWrPQYxlt0pnYgp8qK+p+jXBjYPzzF4Csa1KgnNBpRMU6QHEyxKIUrdfG9CR8wC
-	1FcnbCpQirRkEDNLrudRGwaAXzqimx70QIz9Bww==
-X-Received: by 2002:a17:90b:396:b0:26b:49de:13bd with SMTP id ga22-20020a17090b039600b0026b49de13bdmr8555262pjb.36.1692778879353;
-        Wed, 23 Aug 2023 01:21:19 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH2AOpuxpUJRRzJJlV3nnAX5OBFVvXSzcpjdc536DBn27Tjre2yixkzE6HTRX8vc8jIbWNoRGGfw9Pz4M+wnyA=
-X-Received: by 2002:a17:90b:396:b0:26b:49de:13bd with SMTP id
- ga22-20020a17090b039600b0026b49de13bdmr8555256pjb.36.1692778879042; Wed, 23
- Aug 2023 01:21:19 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9F38A934
+	for <regressions@lists.linux.dev>; Wed, 23 Aug 2023 09:05:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1692781529; x=1724317529;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=NlDtiuNoTa06J6TdkXaQq1gMsjcxGXExnbW9+T10Bcs=;
+  b=iNSgeXIpOa5GDfHT6SkGisbIyH114MzxSTqCdbtCMNpNB8uWIlnl/b0V
+   /JYb9Xcg2cYO1yb5vO0zquc9o4prbslUODZ1swdddX5PG1Qs3r3NNHv/e
+   paotsITteJeLoDeWU00IyYklitwAZ2EFuQSb5Ct07iudKVa9/WNcPyYYv
+   Cy/7ZNWPbOKcfvDorgr4wnhTYutEXJ4BmuwQS+FvVqtKqISc3gWd0g38P
+   g9HrNUwfnDEHJORYtKESZX/nxJJ6J8oFOdFTIIpJhNSGiylRlgnVCzHrp
+   78AdYl8SJbMUs/3kBAEt62NQN0aLLqq0e3W+jb5spvBF06I8Zq3DL3noC
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10810"; a="364286847"
+X-IronPort-AV: E=Sophos;i="6.01,195,1684825200"; 
+   d="scan'208";a="364286847"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Aug 2023 02:05:28 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10810"; a="802022722"
+X-IronPort-AV: E=Sophos;i="6.01,195,1684825200"; 
+   d="scan'208";a="802022722"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga008.fm.intel.com with ESMTP; 23 Aug 2023 02:05:26 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+	id 405772FF; Wed, 23 Aug 2023 12:05:25 +0300 (EEST)
+Date: Wed, 23 Aug 2023 12:05:25 +0300
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: Kamil Paral <kparal@redhat.com>
+Cc: linux-pci@vger.kernel.org, regressions@lists.linux.dev,
+	bhelgaas@google.com, chris.chiu@canonical.com
+Subject: Re: [REGRESSION] resume with a Thunderbolt dock broke with commit
+ e8b908146d44 "PCI/PM: Increase wait time after resume"
+Message-ID: <20230823090525.GT3465@black.fi.intel.com>
+References: <CA+cBOTeWrsTyANjLZQ=bGoBQ_yOkkV1juyRvJq-C8GOrbW6t9Q@mail.gmail.com>
+ <20230821131223.GJ3465@black.fi.intel.com>
+ <CA+cBOTc-7U_sumg6g-uBs9w3m8xipuOV1VY=4nmBcyuppgi8_g@mail.gmail.com>
+ <20230823050714.GP3465@black.fi.intel.com>
+ <CA+cBOTdS5djXL=93VThP9K67pjYKHtjceqSczKf8NQonhpgo5Q@mail.gmail.com>
+ <20230823074447.GR3465@black.fi.intel.com>
+ <20230823075649.GS3465@black.fi.intel.com>
+ <CA+cBOTco17b_8ZMhU8gXy8z2mtZXvVxrEUdKaAuZMhyFYC3yeQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CA+cBOTeWrsTyANjLZQ=bGoBQ_yOkkV1juyRvJq-C8GOrbW6t9Q@mail.gmail.com>
- <20230821131223.GJ3465@black.fi.intel.com> <CA+cBOTc-7U_sumg6g-uBs9w3m8xipuOV1VY=4nmBcyuppgi8_g@mail.gmail.com>
- <20230823050714.GP3465@black.fi.intel.com> <CA+cBOTdS5djXL=93VThP9K67pjYKHtjceqSczKf8NQonhpgo5Q@mail.gmail.com>
- <20230823074447.GR3465@black.fi.intel.com> <20230823075649.GS3465@black.fi.intel.com>
-In-Reply-To: <20230823075649.GS3465@black.fi.intel.com>
-From: Kamil Paral <kparal@redhat.com>
-Date: Wed, 23 Aug 2023 10:20:52 +0200
-Message-ID: <CA+cBOTco17b_8ZMhU8gXy8z2mtZXvVxrEUdKaAuZMhyFYC3yeQ@mail.gmail.com>
-Subject: Re: [REGRESSION] resume with a Thunderbolt dock broke with commit
- e8b908146d44 "PCI/PM: Increase wait time after resume"
-To: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: linux-pci@vger.kernel.org, regressions@lists.linux.dev, 
-	bhelgaas@google.com, chris.chiu@canonical.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+cBOTco17b_8ZMhU8gXy8z2mtZXvVxrEUdKaAuZMhyFYC3yeQ@mail.gmail.com>
 
-On Wed, Aug 23, 2023 at 9:56=E2=80=AFAM Mika Westerberg
-<mika.westerberg@linux.intel.com> wrote:
-> So directly after resume the PCIe link (tunnel) from the Thunderbolt host=
- router
-> PCIe downstream port does not get re-established and this brings down
-> the whole device hierarchy behind that port. The delay just made it take
-> longer but the actual problem is not the delay but why the tunnel is not
-> re-established properly.
+Hi,
 
-If you want to compare it to a "fast" resume (~5 sec, before commit
-e8b908146d44), here's dmesg:
-https://bugzilla-attachments.redhat.com/attachment.cgi?id=3D1984726
+On Wed, Aug 23, 2023 at 10:20:52AM +0200, Kamil Paral wrote:
+> On Wed, Aug 23, 2023 at 9:56 AM Mika Westerberg
+> <mika.westerberg@linux.intel.com> wrote:
+> > So directly after resume the PCIe link (tunnel) from the Thunderbolt host router
+> > PCIe downstream port does not get re-established and this brings down
+> > the whole device hierarchy behind that port. The delay just made it take
+> > longer but the actual problem is not the delay but why the tunnel is not
+> > re-established properly.
+> 
+> If you want to compare it to a "fast" resume (~5 sec, before commit
+> e8b908146d44), here's dmesg:
+> https://bugzilla-attachments.redhat.com/attachment.cgi?id=1984726
+> 
+> Even when the resume is fast, it takes a few extra seconds before the
+> devices on the dock are usable in the OS. For example, my USB mouse
+> connected to the dock doesn't work immediately, I have to wait a few
+> more seconds. The ethernet on the dock also reconnects only after a
+> few extra seconds.
 
-Even when the resume is fast, it takes a few extra seconds before the
-devices on the dock are usable in the OS. For example, my USB mouse
-connected to the dock doesn't work immediately, I have to wait a few
-more seconds. The ethernet on the dock also reconnects only after a
-few extra seconds.
+Yes, this is exactly the issue. The PCIe tunnel is not up and that makes
+the OS to remove the devices during resume. The delay just makes it more
+"visible".
 
-> Next question is that what's the Thunderbolt firmware version? You can
-> check it throughs sysfs: /sys/bus/thunderbolt/devices/0-0/nvm_version
+> > Next question is that what's the Thunderbolt firmware version? You can
+> > check it throughs sysfs: /sys/bus/thunderbolt/devices/0-0/nvm_version
+> 
+> $ sudo cat /sys/bus/thunderbolt/devices/0-0/nvm_version
+> 20.0
 
-$ sudo cat /sys/bus/thunderbolt/devices/0-0/nvm_version
-20.0
+OK, this is "Alpine Ridge Low Power" and for that the firmware seems to
+be quite recent.
 
-Here's whole `fwupdmgr get-devices` output, if that helps:
-https://bugzilla-attachments.redhat.com/attachment.cgi?id=3D1984728
+> Here's whole `fwupdmgr get-devices` output, if that helps:
+> https://bugzilla-attachments.redhat.com/attachment.cgi?id=1984728
+> 
+> Before reporting this bug, I updated the firmware on the Dock itself
+> to the latest version (had to use Windows for that). The dock should
+> have now this firmware:
+> https://pcsupport.lenovo.com/us/en/downloads/DS506176
+> Which is:
+>     Tool package V1.0.25
+>     TBT FW: C44
+>     PD FW: 1.38.07
+>     DP hub: 3.13.005
+>     Audio: 04-0E-87_Rev_0087
+> according to the Readme file. That seems to match the "44" version in
+> the fwupdmgr output.
 
-Before reporting this bug, I updated the firmware on the Dock itself
-to the latest version (had to use Windows for that). The dock should
-have now this firmware:
-https://pcsupport.lenovo.com/us/en/downloads/DS506176
-Which is:
-    Tool package V1.0.25
-    TBT FW: C44
-    PD FW: 1.38.07
-    DP hub: 3.13.005
-    Audio: 04-0E-87_Rev_0087
-according to the Readme file. That seems to match the "44" version in
-the fwupdmgr output.
+[You could do that in Linux too but Lenovo does not seem to ship the
+firmware through LVFS.]
 
-> I
-> see the BIOS you have seems to be quite recent (06/12/2023) so that
-> probably should be good enough.
+> > I
+> > see the BIOS you have seems to be quite recent (06/12/2023) so that
+> > probably should be good enough.
+> 
+> Lenovo seems to support it through LVFS, so that's what I use for
+> updating the BIOS. Version 0.1.54 was updated quite recently and it
+> seems to be also the latest version they have on their website.
 
-Lenovo seems to support it through LVFS, so that's what I use for
-updating the BIOS. Version 0.1.54 was updated quite recently and it
-seems to be also the latest version they have on their website.
+OK. Did you change any BIOS settings from the defaults that might have
+affect on this? Sometimes these are exposed to through the BIOS menu and
+the user can change those (Lenovo typically does not, expose them
+though).
 
+Can you also attach output of acpidump to and dmesg with
+"thunderbolt.dyndbg=+p" in the command line?
