@@ -1,146 +1,126 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 567034C75
-	for <regressions@lists.linux.dev>; Wed, 23 Aug 2023 11:14:12 +0000 (UTC)
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1bf6ea270b2so22995255ad.0
-        for <regressions@lists.linux.dev>; Wed, 23 Aug 2023 04:14:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1692789251; x=1693394051;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4qBzTYpIaY0eNPOXEfLhPS1Eq02rOoxrsLBeQtRmQkI=;
-        b=R/mEGaiawMIbszpvQxLNPN68CM1+qQNzewkt3WGF8+56pXjm/OzuAXNhQ7uf/5ArUS
-         kDlkW7/jybJUdp5VQgCgtIu96diGeTiBlxW1oFSFqImLtDfVIOaJVaE4kfU+G6quW6pJ
-         shs64jHufCYLfV2naz7xMrn+EWzjOfYWhFcwz8A45h4MTUqtwHuWxJSwoWTWsJWnLzQ9
-         0LmpjQtOCZ6aiIoBvPMLuQMzDPhbZr1ql3lOeN8UiguziWnAk06Ye7lnlrtj/JXxLG0D
-         RJBa6mz2O0z8Li2ERBkHUoV0fXU2mdlNC731frugQ925YcFbGIj9QeAYX6m2HLHoul93
-         x+tQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692789251; x=1693394051;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=4qBzTYpIaY0eNPOXEfLhPS1Eq02rOoxrsLBeQtRmQkI=;
-        b=IZNDGm9DoTU/hfMef4Uu9sLwexGHbipE4YBLhG6r6qEWjsbnb/onKbSbbKjbP6BQj/
-         Tq43mwFuPpupDV7i6pxRYdgM5ceKaJOvFmckRlOpreTp/mm6G63TUi2Sdmynd8sikN4+
-         gXRqWrQMrzkQrhlu7K2tk3xFTcFZHxzxV4NlHQaE3nzfgIcxIj4JExjpq2Fc1yVwD6JQ
-         dqLlf7AMljXQ4xWj/K5n9ozGzBHPGkQZgjJMedcBy3agcmEaCdhV+35w6cHoKbVRYDvO
-         484wzwYhSJVbviMu/aUsnhjtsyY2MklqDJuaNUD6+0k+gACTrbiInz0iyz2qV6fzLMm3
-         s40Q==
-X-Gm-Message-State: AOJu0Yz5gCCK01qFYQFGi8f1SFTIEW5/GLzcainfGG32+30W/dQBUlSL
-	/Qte/2qd44P3908LmHKhTho=
-X-Google-Smtp-Source: AGHT+IFQ4GfEQHwFW5B3P9gxyx57bQiXP0/ODLLyX8/UN4QA56F0uCMfoyrIu93LoDEqTbavxCLKDg==
-X-Received: by 2002:a17:902:d705:b0:1bb:1523:b311 with SMTP id w5-20020a170902d70500b001bb1523b311mr8326641ply.41.1692789251390;
-        Wed, 23 Aug 2023 04:14:11 -0700 (PDT)
-Received: from [192.168.0.105] ([103.124.138.83])
-        by smtp.gmail.com with ESMTPSA id 4-20020a170902c24400b001bf10059251sm10611051plg.239.2023.08.23.04.14.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 23 Aug 2023 04:14:10 -0700 (PDT)
-Message-ID: <d9255749-bf1e-c498-ace6-048d36fa962f@gmail.com>
-Date: Wed, 23 Aug 2023 18:14:03 +0700
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1262FBE4D
+	for <regressions@lists.linux.dev>; Wed, 23 Aug 2023 13:25:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A152C433C8
+	for <regressions@lists.linux.dev>; Wed, 23 Aug 2023 13:25:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1692797123;
+	bh=jEGoO/SIqTMm5IlTmQZnmSfRF3IDKY2mxs9mRNzX6OQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Q3o6S2BYEEa9SBrfzumW+pOFwcr5iOtKQfUWJjQhpoNvo1nmSJtXoz5NSjPigftJT
+	 wAFCTme3aZwxqhJKiUrSc0uxM5/Q+Uq8Q7yRLdNVKY3i7kxobXjEqVQJ4UIqjkCY+f
+	 2luu6xif70GQQt8NIOL7WSKCZ1wqkIroqghVVgE7CXC22HZmyfDCbBtuKKfSSF9zqn
+	 NSUSCHPbY7TJAxOF7VIg51yLWJ0nalE10wMUXWmIG67xjTqO2fydd1p61KJUjYV1ZM
+	 ztozSPc+4CL2Bz1bkOvhXLd3t1wjHdWgOXDJ16VOFd57HQomwsGMxAUTEPQlOaoBax
+	 IJiUGdG0lC91g==
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-4fe61ae020bso8603418e87.2
+        for <regressions@lists.linux.dev>; Wed, 23 Aug 2023 06:25:23 -0700 (PDT)
+X-Gm-Message-State: AOJu0YwSif2nklV0jxofiOAOWDrIuHyu9ykQT6cRWt0HBOPDr2/rg5Du
+	6GxfQf2xPNRCBQwE4giBOpIqfm2l89ABBLKxIUA=
+X-Google-Smtp-Source: AGHT+IGX9g86c71yNCwbKrv9G6HYy2Z2bkkDKT/Q72uRs//FLM6Cse0jXp/Uz7zyES9jM9n0j6gH9X/Tiqt0EwZbVxw=
+X-Received: by 2002:ac2:4d90:0:b0:4f8:5905:8e0a with SMTP id
+ g16-20020ac24d90000000b004f859058e0amr8355947lfe.6.1692797121470; Wed, 23 Aug
+ 2023 06:25:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.14.0
-Content-Language: en-US
-To: Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>,
- Trond Myklebust <trond.myklebust@hammerspace.com>,
- Anna Schumaker <anna@kernel.org>, greg@greg.net.au
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>,
- Linux Network File System <linux-nfs@vger.kernel.org>
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-Subject: Fwd: kernel 6.4/6.5 nfs 4.1 unresponsive
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <028a21df-4397-80aa-c2a5-7c754560f595@gmail.com>
+ <20230818101630.000027f4@linux.intel.com> <b0488ff7-10c8-4b4e-28b8-01809133c297@linux.dev>
+ <CAPhsuW6cSLqwRVO_EpFyimvc7hgi1rb3T8-NA+stHdwrqrScBA@mail.gmail.com>
+ <20230822083923.00007fb6@linux.intel.com> <CAMz9Wg8KE1rDkSaQnUTJ5ikzH7YGGYbkLM3AcrVue3=JgK+14w@mail.gmail.com>
+ <35130b3f-c0fd-e2d6-e849-a5ceb6a2895f@linux.dev> <CAMz9Wg_zKSJ2vL=r2zAtLBOv4GSMT63+ZQGXfYTjVJsE+DLQGA@mail.gmail.com>
+In-Reply-To: <CAMz9Wg_zKSJ2vL=r2zAtLBOv4GSMT63+ZQGXfYTjVJsE+DLQGA@mail.gmail.com>
+From: Song Liu <song@kernel.org>
+Date: Wed, 23 Aug 2023 06:25:09 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW6W0XgFjH1zNC+EFYjujd4smEiWs+-nYCWQ+KaFmbuvkg@mail.gmail.com>
+Message-ID: <CAPhsuW6W0XgFjH1zNC+EFYjujd4smEiWs+-nYCWQ+KaFmbuvkg@mail.gmail.com>
+Subject: Re: Infiniate systemd loop when power off the machine with multiple
+ MD RAIDs
+To: AceLan Kao <acelan@gmail.com>
+Cc: Guoqing Jiang <guoqing.jiang@linux.dev>, 
+	Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>, Bagas Sanjaya <bagasdotme@gmail.com>, 
+	Christoph Hellwig <hch@lst.de>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	Linux Regressions <regressions@lists.linux.dev>, Linux RAID <linux-raid@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+Hi AceLan,
 
-I notice a regression report on Bugzilla [1]. Quoting from it:
+On Wed, Aug 23, 2023 at 1:03=E2=80=AFAM AceLan Kao <acelan@gmail.com> wrote=
+:
+>
+[...]
+> >
+> > My suggestion is delete the list node under this scenario, did you try
+> > above?
+> Still no luck, the patch doesn't work, the sympton is the same.
+[...]
+> >
+> > Is the issue still reproducible with remove below from cmd?
+> >
+> > echo "repair" | sudo tee /sys/class/block/md12?/md/sync_action
+> >
+> > Just want to know if resync thread is related with the issue or not.
+> Probably not, we can reproduce the issue without resync, just feel
+> it's easier to reproduce the issue, so I put the command in my script.
+>
 
-> I have two Synology Disk station NAS devices with NFS mounts present on Gentoo servers with the following fstab mount configuration:
-> 
-> 10.200.1.247:/volume1/filer02-sata      /mnt/filer02-sata       nfs     vers=4.1,tcp,rsize=32768,wsize=32768,nolock,noatime,nodiratime,hard,timeo=60,retry=6,retrans=6,nconnect=4 0 0
-> 10.200.1.247:/volume1/filer03-sata      /mnt/filer03-sata       nfs     vers=4.1,tcp,rsize=32768,wsize=32768,nolock,noatime,nodiratime,hard,timeo=60,retry=6,retrans=6,nconnect=4 0 0
-> 10.200.1.246:/volume1/filer04-sata      /mnt/filer04-sata       nfs     vers=4.1,tcp,rsize=32768,wsize=32768,nolock,noatime,nodiratime,hard,timeo=60,retry=6,retrans=6,nconnect=4 0 0
-> 
-> 
-> On Linux Kernel 6.3.6 these work perfectly fine.
-> 
-> As soon as I upgrade to 6.4 (tested 6.4.7 through 6.4.11) or 6.5-rc7 NFS mounts randomly hang and block system operation with high load times eventually resulting in a system freeze.
-> 
-> dmesg/syslog:
-> 
-> Aug 22 18:13:49 sjc-www2 kernel: nfs: server 10.200.1.247 OK
-> Aug 22 18:13:49 sjc-www2 kernel: nfs: server 10.200.1.247 OK
-> Aug 22 18:13:49 sjc-www2 kernel: nfs: server 10.200.1.247 OK
-> Aug 22 18:13:49 sjc-www2 kernel: nfs: server 10.200.1.247 OK
-> Aug 22 18:14:35 sjc-www2 kernel: nfs: server 10.200.1.247 not responding, still trying
-> Aug 22 18:14:35 sjc-www2 kernel: nfs: server 10.200.1.247 not responding, still trying
-> Aug 22 18:14:35 sjc-www2 kernel: nfs: server 10.200.1.247 not responding, still trying
-> Aug 22 18:14:35 sjc-www2 kernel: nfs: server 10.200.1.247 not responding, still trying
-> Aug 22 18:14:35 sjc-www2 kernel: nfs: server 10.200.1.247 not responding, still trying
-> Aug 22 18:14:35 sjc-www2 kernel: nfs: server 10.200.1.247 not responding, still trying
-> Aug 22 18:14:35 sjc-www2 kernel: nfs: server 10.200.1.247 not responding, still trying
-> Aug 22 18:14:35 sjc-www2 kernel: nfs: server 10.200.1.247 not responding, still trying
-> Aug 22 18:14:35 sjc-www2 kernel: nfs: server 10.200.1.247 not responding, still trying
-> Aug 22 18:14:35 sjc-www2 kernel: nfs: server 10.200.1.247 not responding, still trying
-> Aug 22 18:15:23 sjc-www2 kernel: nfs: server 10.200.1.247 OK
-> Aug 22 18:15:23 sjc-www2 kernel: nfs: server 10.200.1.247 OK
-> Aug 22 18:15:23 sjc-www2 kernel: nfs: server 10.200.1.247 OK
-> Aug 22 18:15:23 sjc-www2 kernel: nfs: server 10.200.1.247 OK
-> Aug 22 18:15:23 sjc-www2 kernel: nfs: server 10.200.1.247 OK
-> Aug 22 18:15:23 sjc-www2 kernel: nfs: server 10.200.1.247 OK
-> Aug 22 18:15:23 sjc-www2 kernel: nfs: server 10.200.1.247 OK
-> Aug 22 18:15:23 sjc-www2 kernel: nfs: server 10.200.1.247 OK
-> Aug 22 18:15:23 sjc-www2 kernel: nfs: server 10.200.1.247 OK
-> Aug 22 18:15:23 sjc-www2 kernel: nfs: server 10.200.1.247 OK
-> Aug 22 18:16:05 sjc-www2 kernel: nfs: server 10.200.1.247 not responding, still trying
-> Aug 22 18:16:05 sjc-www2 kernel: nfs: server 10.200.1.247 not responding, still trying
-> Aug 22 18:16:05 sjc-www2 kernel: nfs: server 10.200.1.247 not responding, still trying
-> Aug 22 18:16:05 sjc-www2 kernel: nfs: server 10.200.1.247 not responding, still trying
-> Aug 22 18:16:05 sjc-www2 kernel: nfs: server 10.200.1.247 not responding, still trying
-> Aug 22 18:16:05 sjc-www2 kernel: nfs: server 10.200.1.247 not responding, still trying
-> Aug 22 18:16:05 sjc-www2 kernel: nfs: server 10.200.1.247 not responding, still trying
-> Aug 22 18:16:05 sjc-www2 kernel: nfs: server 10.200.1.247 not responding, still trying
-> Aug 22 18:16:05 sjc-www2 kernel: nfs: server 10.200.1.247 not responding, still trying
-> Aug 22 18:16:05 sjc-www2 kernel: nfs: server 10.200.1.247 not responding, still trying
-> Aug 22 18:16:54 sjc-www2 kernel: nfs: server 10.200.1.247 OK
-> Aug 22 18:16:54 sjc-www2 kernel: nfs: server 10.200.1.247 OK
-> Aug 22 18:16:54 sjc-www2 kernel: nfs: server 10.200.1.247 OK
-> Aug 22 18:16:54 sjc-www2 kernel: nfs: server 10.200.1.247 OK
-> Aug 22 18:16:54 sjc-www2 kernel: nfs: server 10.200.1.247 OK
-> Aug 22 18:16:54 sjc-www2 kernel: nfs: server 10.200.1.247 OK
-> Aug 22 18:16:54 sjc-www2 kernel: nfs: server 10.200.1.247 OK
-> Aug 22 18:16:54 sjc-www2 kernel: nfs: server 10.200.1.247 OK
-> Aug 22 18:16:54 sjc-www2 kernel: nfs: server 10.200.1.247 OK
-> Aug 22 18:16:54 sjc-www2 kernel: nfs: server 10.200.1.247 OK
-> 
-> 
-> The box in question i have been testing the kernel upgrades on has 1 x 10G NIC set with MTU 9000 for NFS volumes and i can successfully ping the nfs host with 9000 byte packets:
-> 
-> sjc-www2 ~ # ping -4 -s 9000 10.200.1.247
-> PING 10.200.1.247 (10.200.1.247) 9000(9028) bytes of data.
-> 9008 bytes from 10.200.1.247: icmp_seq=1 ttl=64 time=0.205 ms
-> 9008 bytes from 10.200.1.247: icmp_seq=2 ttl=64 time=0.279 ms
-> 9008 bytes from 10.200.1.247: icmp_seq=3 ttl=64 time=0.402 ms
+Could you please run the follow two experiments?
 
-See Bugzilla for the full thread.
+1. Confirm 12a6caf273240a triggers this. Specifically:
+   git checkout 12a6caf273240a =3D> repros
+   git checkout 12a6caf273240a~1 =3D> cannot repro
 
-Anyway, I'm adding this regression to be tracked by regzbot:
+2. Try with the following change (add debug messages), which hopefully
+   shows which command is holding a reference on mddev->openers.
 
-#regzbot introduced: v6.3..v6.4 https://bugzilla.kernel.org/show_bug.cgi?id=217815
-#regzbot title: nfs server not responding loop on Synology NAS devices
+Thanks,
+Song
 
-Thanks.
+diff --git i/drivers/md/md.c w/drivers/md/md.c
+index 78be7811a89f..3e9b718b32c1 100644
+--- i/drivers/md/md.c
++++ w/drivers/md/md.c
+@@ -7574,11 +7574,15 @@ static int md_ioctl(struct block_device *bdev,
+blk_mode_t mode,
+                if (mddev->pers && atomic_read(&mddev->openers) > 1) {
+                        mutex_unlock(&mddev->open_mutex);
+                        err =3D -EBUSY;
++                       pr_warn("%s return -EBUSY for %s with
+mddev->openers =3D %d\n",
++                               __func__, mdname(mddev),
+atomic_read(&mddev->openers));
+                        goto out;
+                }
+                if (test_and_set_bit(MD_CLOSING, &mddev->flags)) {
+                        mutex_unlock(&mddev->open_mutex);
+                        err =3D -EBUSY;
++                       pr_warn("%s return -EBUSY for %s with
+MD_CLOSING bit set\n",
++                               __func__, mdname(mddev));
+                        goto out;
+                }
+                did_set_md_closing =3D true;
+@@ -7789,6 +7793,8 @@ static int md_open(struct gendisk *disk, blk_mode_t m=
+ode)
+                goto out_unlock;
 
-[1]: https://bugzilla.kernel.org/show_bug.cgi?id=217815
+        atomic_inc(&mddev->openers);
++       pr_info("%s:%s openers++ =3D %d by %s\n", __func__, mdname(mddev),
++               atomic_read(&mddev->openers), current->comm);
+        mutex_unlock(&mddev->open_mutex);
 
--- 
-An old man doll... just what I always wanted! - Clara
+        disk_check_media_change(disk);
+@@ -7807,6 +7813,8 @@ static void md_release(struct gendisk *disk)
+
+        BUG_ON(!mddev);
+        atomic_dec(&mddev->openers);
++       pr_info("%s:%s openers-- =3D %d by %s\n", __func__, mdname(mddev),
++               atomic_read(&mddev->openers), current->comm);
+        mddev_put(mddev);
+ }
