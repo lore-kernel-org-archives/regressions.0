@@ -1,116 +1,121 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6261F156E6
-	for <regressions@lists.linux.dev>; Wed, 23 Aug 2023 19:30:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B152724550
+	for <regressions@lists.linux.dev>; Thu, 24 Aug 2023 11:43:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1692819004; x=1724355004;
-  h=date:from:to:cc:subject:message-id:reply-to:references:
-   mime-version:in-reply-to;
-  bh=O/K6buJTsts4lyk8qgqJ5lDMguNQN8GgLUMZdbG6uSI=;
-  b=Um3dnkYYOLbwfWeUuM/Jb89eqytYe5lWVn2dtO51KgeuroaBirqwfplZ
-   +nJlDXotxiPSqaASwF+362uSEQ6YKnN+BuNKUlLrjVfdIJePu8AdBVf2F
-   RAN4RkMToaS4L7ZiOna6IDeQMvRKxXLhf+DiHrDsagrKIR5BKPEj1AwMh
-   2IRbKmrTkq8+5pVmyMhxNcRTATrqGossKXHtEf0y1pkx1lkKZ6/75nFYb
-   iUZr5iSKDiV1Y+o1sU3NhG10LHyVdXPZUM/uwf4k4rZqbg/EDsZAAfStl
-   /SWdG6BeABcCc7cRCTMpz94nQHq5LGTE/PtQOi0R/8KqzAQnjMlF05UaM
+  t=1692877384; x=1724413384;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=62a01Rcd08HGwq/gnR3atk3pLVRr4J1sjtgZj4dbFFo=;
+  b=EdUnlvY7Giek6BS+Jb4962OjrojX8y0OVkjWrSYU01rcZVwWkr2AgV3m
+   jZewXZALva/xOaM0bju7JtkzsgGCNXWrWhz7wYLQGSLKTUdmOQ8Vlb53T
+   vTYSOUO6sADqg+Syd1/pKolLzkXqU2Polsiz1YBqcS70RYJsY3el/c/x3
+   xQQfxSVH9TVwkGeL0Q5I320rl+6d5zlzvd+zANfbZBmy5yCyxwj06/EkC
+   4TRp0fcFlpenek+2LQ1ErfAZfHH6a1T8e5UvEe5D552LmPIWGx9dFCIB6
+   CPlUxAAiKac1XYCEYbxxYiYXMcNYP4qkTPfKWNRdLkXr5Of2E/Fytp97A
    g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10811"; a="373138248"
+X-IronPort-AV: E=McAfee;i="6600,9927,10811"; a="373295991"
 X-IronPort-AV: E=Sophos;i="6.01,195,1684825200"; 
-   d="scan'208";a="373138248"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Aug 2023 12:30:03 -0700
+   d="scan'208";a="373295991"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2023 04:43:03 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10811"; a="713697765"
-X-IronPort-AV: E=Sophos;i="6.01,195,1684825200"; 
-   d="scan'208";a="713697765"
-Received: from ideak-desk.fi.intel.com ([10.237.72.78])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Aug 2023 12:29:59 -0700
-Date: Wed, 23 Aug 2023 22:30:13 +0300
-From: Imre Deak <imre.deak@intel.com>
-To: Maxime Ripard <mripard@kernel.org>
-Cc: Jani Nikula <jani.nikula@intel.com>,
-	Linux regressions mailing list <regressions@lists.linux.dev>,
-	Mikhail Rudenko <mike.rudenko@gmail.com>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	intel-gfx@lists.freedesktop.org,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [REGRESSION] HDMI connector detection broken in 6.3 on Intel(R)
- Celeron(R) N3060 integrated graphics
-Message-ID: <ZOZeRX2xZiZb61hH@ideak-desk.fi.intel.com>
-Reply-To: imre.deak@intel.com
-References: <87v8dmr6ty.fsf@gmail.com>
- <f32b4636-969c-3b9e-6802-5991f511739e@leemhuis.info>
- <87il9l2ymf.fsf@gmail.com>
- <3df95e6d-8237-1c43-e220-a9bdb5d6e044@leemhuis.info>
- <ZNo7oXeH0JK+4GPG@ideak-desk.fi.intel.com>
- <87edk4d8qp.fsf@intel.com>
- <2xlfp5bz77tyoffqvr7orvmo45wcb7uz6nbpl7jbv6zhnqvlx3@2hxa4ltb3s3y>
+X-IronPort-AV: E=Sophos;i="6.01,202,1684825200"; 
+   d="scan'208";a="880771849"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 24 Aug 2023 04:43:06 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+	id CB50217F; Thu, 24 Aug 2023 14:43:00 +0300 (EEST)
+Date: Thu, 24 Aug 2023 14:43:00 +0300
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: Kamil Paral <kparal@redhat.com>
+Cc: linux-pci@vger.kernel.org, regressions@lists.linux.dev,
+	bhelgaas@google.com, chris.chiu@canonical.com
+Subject: Re: [REGRESSION] resume with a Thunderbolt dock broke with commit
+ e8b908146d44 "PCI/PM: Increase wait time after resume"
+Message-ID: <20230824114300.GU3465@black.fi.intel.com>
+References: <CA+cBOTeWrsTyANjLZQ=bGoBQ_yOkkV1juyRvJq-C8GOrbW6t9Q@mail.gmail.com>
+ <20230821131223.GJ3465@black.fi.intel.com>
+ <CA+cBOTc-7U_sumg6g-uBs9w3m8xipuOV1VY=4nmBcyuppgi8_g@mail.gmail.com>
+ <20230823050714.GP3465@black.fi.intel.com>
+ <CA+cBOTdS5djXL=93VThP9K67pjYKHtjceqSczKf8NQonhpgo5Q@mail.gmail.com>
+ <20230823074447.GR3465@black.fi.intel.com>
+ <20230823075649.GS3465@black.fi.intel.com>
+ <CA+cBOTco17b_8ZMhU8gXy8z2mtZXvVxrEUdKaAuZMhyFYC3yeQ@mail.gmail.com>
+ <20230823090525.GT3465@black.fi.intel.com>
+ <CA+cBOTeOSBkw_-AM6desmdVQjTXUZbKppK_PDiOM3sXQW5QKiA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <2xlfp5bz77tyoffqvr7orvmo45wcb7uz6nbpl7jbv6zhnqvlx3@2hxa4ltb3s3y>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+cBOTeOSBkw_-AM6desmdVQjTXUZbKppK_PDiOM3sXQW5QKiA@mail.gmail.com>
 
-On Mon, Aug 21, 2023 at 11:27:29AM +0200, Maxime Ripard wrote:
-> On Tue, Aug 15, 2023 at 11:12:46AM +0300, Jani Nikula wrote:
-> > On Mon, 14 Aug 2023, Imre Deak <imre.deak@intel.com> wrote:
-> > > On Sun, Aug 13, 2023 at 03:41:30PM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
-> > > Hi,
-> > >
-> > >> On 11.08.23 20:10, Mikhail Rudenko wrote:
-> > >> > On 2023-08-11 at 08:45 +02, Thorsten Leemhuis <regressions@leemhuis.info> wrote:
-> > >> >> On 10.08.23 21:33, Mikhail Rudenko wrote:
-> > >> >>> The following is a copy an issue I posted to drm/i915 gitlab [1] two
-> > >> >>> months ago. I repost it to the mailing lists in hope that it will help
-> > >> >>> the right people pay attention to it.
-> > >> >>
-> > >> >> Thx for your report. Wonder why Dmitry (who authored a4e771729a51) or
-> > >> >> Thomas (who committed it) it didn't look into this, but maybe the i915
-> > >> >> devs didn't forward the report to them.
-> > >> 
-> > >> For the record: they did, and Jani mentioned already. Sorry, should have
-> > >> phrased this differently.
-> > >> 
-> > >> >> Let's see if these mails help. Just wondering: does reverting
-> > >> >> a4e771729a51 from 6.5-rc5 or drm-tip help as well?
-> > >> > 
-> > >> > I've redone my tests with 6.5-rc5, and here are the results:
-> > >> > (1) 6.5-rc5 -> still affected
-> > >> > (2) 6.5-rc5 + revert a4e771729a51 -> not affected
-> > >> > (3) 6.5-rc5 + two patches [1][2] suggested on i915 gitlab by @ideak -> not affected (!)
-> > >> > 
-> > >> > Should we somehow tell regzbot about (3)?
-> > >> 
-> > >> That's good to know, thx. But the more important things are:
-> > >> 
-> > >> * When will those be merged? They are not yet in next yet afaics, so it
-> > >> might take some time to mainline them, especially at this point of the
-> > >> devel cycle. Imre, could you try to prod the right people so that these
-> > >> are ideally upstreamed rather sooner than later, as they fix a regression?
-> > >
-> > > I think the patches ([1] and [2]) could be merged via the drm-intel-next
-> > > (drm-intel-fixes) tree Cc'ing also stable. Jani, is this ok?
-> > 
-> > It's fine by me, but need drm-misc maintainer ack to merge [1] via
-> > drm-intel.
+On Wed, Aug 23, 2023 at 04:02:06PM +0200, Kamil Paral wrote:
+> On Wed, Aug 23, 2023 at 11:05 AM Mika Westerberg
+> <mika.westerberg@linux.intel.com> wrote:
+> > OK. Did you change any BIOS settings from the defaults that might have
+> > affect on this? Sometimes these are exposed to through the BIOS menu and
+> > the user can change those (Lenovo typically does not, expose them
+> > though).
 > 
-> That's fine for me
+> These BIOS pages seem they could be relevant:
+> https://imgur.com/a/vEltxpj
+> 
+> And heureka, "Thunderbolt BIOS Assist Mode" affects this! It was
+> disabled (not sure if that's the default or I changed it before).
+> After I enable it, the resume 60+ second delay is gone, it resumes in
+> standard ~5 seconds. The dock devices (mouse, LAN) still take a few
+> extra seconds to activate. The dmesg for a resume with TB assist mode
+> is here:
+> https://bugzilla-attachments.redhat.com/attachment.cgi?id=1984785
 
-Thanks, I pushed the patches to drm-intel-next.
+I think the correct setting for this is to have it disabled. This means
+it is native PCIe with the runtime D3 support and looking at the ACPI
+dump you shared this seems to be the case.
 
-> Maxime
+> Unfortunately, it seems to have its own quirks. There seems to be
+> something like ~20% chance that the dock devices are no longer
+> available after resume. I see the dock as connected in boltctl, but I
+> no longer see the devices in lsusb. Reconnecting the dock doesn't
+> help, more suspend&resume cycles don't help, only system reboot helps.
+> I captured this situation in this dmesg (there are multiple resume
+> events, the devices disappear after the last one):
+> https://bugzilla-attachments.redhat.com/attachment.cgi?id=1984786
+> 
+> This might be the same problem that I described regarding
+> pcie_aspm=off to Bjorn, but I'd need to check. Either way, this wasn't
+> happening when the TB assist mode was disabled.
+> 
+> > Can you also attach output of acpidump to and dmesg with
+> > "thunderbolt.dyndbg=+p" in the command line?
+> 
+> acpidump:
+> https://bugzilla-attachments.redhat.com/attachment.cgi?id=1984802
+> 
+> dmesg with "thunderbolt.dyndbg=+p" and one suspend&resume cycle:
+> https://bugzilla-attachments.redhat.com/attachment.cgi?id=1984803
+> 
+> I'm currently running kernel 6.4.8 packaged in Fedora 38 for these
+> experiments, I hope that's OK. If needed, I can switch to the latest
+> kernel.
 
+I did not find anything "unusual" in the ACPI dump but I keep looking.
 
+One thing I noticed, probably has nothing to do with this, but you have
+the "security level" set to "secure". Now this is fine and actually
+recommended but I wonder if anything changes if you switch that
+temporarily to "user"? What is happening here is that once the system
+enters S3 the Thunderbolt driver tells the firmware to save the
+connected device list, and then once it exits S3 it is expected to
+re-connect the PCIe tunnels of the devices on that list but this is not
+happening and that's why the dock "dissappears" during resume.
+
+In any case we can conclude that the commit in question has nothing to
+do with the issue. This is completely Thunderbolt related problem.
