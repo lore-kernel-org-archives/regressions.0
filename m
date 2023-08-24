@@ -1,121 +1,170 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B152724550
-	for <regressions@lists.linux.dev>; Thu, 24 Aug 2023 11:43:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1692877384; x=1724413384;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=62a01Rcd08HGwq/gnR3atk3pLVRr4J1sjtgZj4dbFFo=;
-  b=EdUnlvY7Giek6BS+Jb4962OjrojX8y0OVkjWrSYU01rcZVwWkr2AgV3m
-   jZewXZALva/xOaM0bju7JtkzsgGCNXWrWhz7wYLQGSLKTUdmOQ8Vlb53T
-   vTYSOUO6sADqg+Syd1/pKolLzkXqU2Polsiz1YBqcS70RYJsY3el/c/x3
-   xQQfxSVH9TVwkGeL0Q5I320rl+6d5zlzvd+zANfbZBmy5yCyxwj06/EkC
-   4TRp0fcFlpenek+2LQ1ErfAZfHH6a1T8e5UvEe5D552LmPIWGx9dFCIB6
-   CPlUxAAiKac1XYCEYbxxYiYXMcNYP4qkTPfKWNRdLkXr5Of2E/Fytp97A
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10811"; a="373295991"
-X-IronPort-AV: E=Sophos;i="6.01,195,1684825200"; 
-   d="scan'208";a="373295991"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2023 04:43:03 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.01,202,1684825200"; 
-   d="scan'208";a="880771849"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 24 Aug 2023 04:43:06 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-	id CB50217F; Thu, 24 Aug 2023 14:43:00 +0300 (EEST)
-Date: Thu, 24 Aug 2023 14:43:00 +0300
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: Kamil Paral <kparal@redhat.com>
-Cc: linux-pci@vger.kernel.org, regressions@lists.linux.dev,
-	bhelgaas@google.com, chris.chiu@canonical.com
-Subject: Re: [REGRESSION] resume with a Thunderbolt dock broke with commit
- e8b908146d44 "PCI/PM: Increase wait time after resume"
-Message-ID: <20230824114300.GU3465@black.fi.intel.com>
-References: <CA+cBOTeWrsTyANjLZQ=bGoBQ_yOkkV1juyRvJq-C8GOrbW6t9Q@mail.gmail.com>
- <20230821131223.GJ3465@black.fi.intel.com>
- <CA+cBOTc-7U_sumg6g-uBs9w3m8xipuOV1VY=4nmBcyuppgi8_g@mail.gmail.com>
- <20230823050714.GP3465@black.fi.intel.com>
- <CA+cBOTdS5djXL=93VThP9K67pjYKHtjceqSczKf8NQonhpgo5Q@mail.gmail.com>
- <20230823074447.GR3465@black.fi.intel.com>
- <20230823075649.GS3465@black.fi.intel.com>
- <CA+cBOTco17b_8ZMhU8gXy8z2mtZXvVxrEUdKaAuZMhyFYC3yeQ@mail.gmail.com>
- <20230823090525.GT3465@black.fi.intel.com>
- <CA+cBOTeOSBkw_-AM6desmdVQjTXUZbKppK_PDiOM3sXQW5QKiA@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 530B328917
+	for <regressions@lists.linux.dev>; Thu, 24 Aug 2023 18:28:44 +0000 (UTC)
+Received: from rdvivi-mobl4 (unknown [192.55.54.48])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp.kernel.org (Postfix) with ESMTPSA id 9F73EC433C7;
+	Thu, 24 Aug 2023 18:28:42 +0000 (UTC)
+Date: Thu, 24 Aug 2023 14:28:41 -0400
+From: Rodrigo Vivi <rodrigo.vivi@kernel.org>
+To: Damien Le Moal <dlemoal@kernel.org>
+Cc: linux-ide@vger.kernel.org, linux-scsi@vger.kernel.org,
+	"Martin K . Petersen" <martin.petersen@oracle.com>,
+	Paul Ausbeck <paula@soe.ucsc.edu>,
+	Thorsten Leemhuis <regressions@leemhuis.info>,
+	TW <dalzot@gmail.com>, regressions@lists.linux.dev,
+	Bart Van Assche <bvanassche@acm.org>
+Subject: Re: [PATCH] ata,scsi: do not issue START STOP UNIT on resume
+Message-ID: <ZOehTysWO+U3mVvK@rdvivi-mobl4>
+References: <20230731003956.572414-1-dlemoal@kernel.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+cBOTeOSBkw_-AM6desmdVQjTXUZbKppK_PDiOM3sXQW5QKiA@mail.gmail.com>
+In-Reply-To: <20230731003956.572414-1-dlemoal@kernel.org>
 
-On Wed, Aug 23, 2023 at 04:02:06PM +0200, Kamil Paral wrote:
-> On Wed, Aug 23, 2023 at 11:05 AM Mika Westerberg
-> <mika.westerberg@linux.intel.com> wrote:
-> > OK. Did you change any BIOS settings from the defaults that might have
-> > affect on this? Sometimes these are exposed to through the BIOS menu and
-> > the user can change those (Lenovo typically does not, expose them
-> > though).
+On Mon, Jul 31, 2023 at 09:39:56AM +0900, Damien Le Moal wrote:
+> During system resume, ata_port_pm_resume() triggers ata EH to
+> 1) Resume the controller
+> 2) Reset and rescan the ports
+> 3) Revalidate devices
+> This EH execution is started asynchronously from ata_port_pm_resume(),
+> which means that when sd_resume() is executed, none or only part of the
+> above processing may have been executed. However, sd_resume() issues a
+> START STOP UNIT to wake up the drive from sleep mode. This command is
+> translated to ATA with ata_scsi_start_stop_xlat() and issued to the
+> device. However, depending on the state of execution of the EH process
+> and revalidation triggerred by ata_port_pm_resume(), two things may
+> happen:
+> 1) The START STOP UNIT fails if it is received before the controller has
+>    been reenabled at the beginning of the EH execution. This is visible
+>    with error messages like:
 > 
-> These BIOS pages seem they could be relevant:
-> https://imgur.com/a/vEltxpj
+> ata10.00: device reported invalid CHS sector 0
+> sd 9:0:0:0: [sdc] Start/Stop Unit failed: Result: hostbyte=DID_OK driverbyte=DRIVER_OK
+> sd 9:0:0:0: [sdc] Sense Key : Illegal Request [current]
+> sd 9:0:0:0: [sdc] Add. Sense: Unaligned write command
+> sd 9:0:0:0: PM: dpm_run_callback(): scsi_bus_resume+0x0/0x90 returns -5
+> sd 9:0:0:0: PM: failed to resume async: error -5
 > 
-> And heureka, "Thunderbolt BIOS Assist Mode" affects this! It was
-> disabled (not sure if that's the default or I changed it before).
-> After I enable it, the resume 60+ second delay is gone, it resumes in
-> standard ~5 seconds. The dock devices (mouse, LAN) still take a few
-> extra seconds to activate. The dmesg for a resume with TB assist mode
-> is here:
-> https://bugzilla-attachments.redhat.com/attachment.cgi?id=1984785
+> 2) The START STOP UNIT command is received while the EH process is
+>    on-going, which mean that it is stopped and must wait for its
+>    completion, at which point the command is rather useless as the drive
+>    is already fully spun up already. This case results also in a
+>    significant delay in sd_resume() which is observable by users as
+>    the entire system resume completion is delayed.
+> 
+> Given that ATA devices will be woken up by libata activity on resume,
+> sd_resume() has no need to issue a START STOP UNIT command, which solves
+> the above mentioned problems. Do not issue this command by introducing
+> the new scsi_device flag no_start_on_resume and setting this flag to 1
+> in ata_scsi_dev_config(). sd_resume() is modified to issue a START STOP
+> UNIT command only if this flag is not set.
 
-I think the correct setting for this is to have it disabled. This means
-it is native PCIe with the runtime D3 support and looking at the ACPI
-dump you shared this seems to be the case.
+Hi Damien,
 
-> Unfortunately, it seems to have its own quirks. There seems to be
-> something like ~20% chance that the dock devices are no longer
-> available after resume. I see the dock as connected in boltctl, but I
-> no longer see the devices in lsusb. Reconnecting the dock doesn't
-> help, more suspend&resume cycles don't help, only system reboot helps.
-> I captured this situation in this dmesg (there are multiple resume
-> events, the devices disappear after the last one):
-> https://bugzilla-attachments.redhat.com/attachment.cgi?id=1984786
-> 
-> This might be the same problem that I described regarding
-> pcie_aspm=off to Bjorn, but I'd need to check. Either way, this wasn't
-> happening when the TB assist mode was disabled.
-> 
-> > Can you also attach output of acpidump to and dmesg with
-> > "thunderbolt.dyndbg=+p" in the command line?
-> 
-> acpidump:
-> https://bugzilla-attachments.redhat.com/attachment.cgi?id=1984802
-> 
-> dmesg with "thunderbolt.dyndbg=+p" and one suspend&resume cycle:
-> https://bugzilla-attachments.redhat.com/attachment.cgi?id=1984803
-> 
-> I'm currently running kernel 6.4.8 packaged in Fedora 38 for these
-> experiments, I hope that's OK. If needed, I can switch to the latest
-> kernel.
+Last week I noticed that a basic test in our validation started failing,
+then I noticed that it was subsequent quick suspend and autoresume using
+rtcwake that was problematic.
 
-I did not find anything "unusual" in the ACPI dump but I keep looking.
+I couldn't collect any specific log that was pointing to some useful direction.
+After a painful bisect I got to this patch. After reverting in from the
+top of our tree, the tests are back to life.
 
-One thing I noticed, probably has nothing to do with this, but you have
-the "security level" set to "secure". Now this is fine and actually
-recommended but I wonder if anything changes if you switch that
-temporarily to "user"? What is happening here is that once the system
-enters S3 the Thunderbolt driver tells the firmware to save the
-connected device list, and then once it exits S3 it is expected to
-re-connect the PCIe tunnels of the devices on that list but this is not
-happening and that's why the dock "dissappears" during resume.
+The issue was that the subsequent quick suspend-resume (sometimes the
+second, sometimes third or even sixth) was simply hanging the machine
+in different points at Suspend.
 
-In any case we can conclude that the commit in question has nothing to
-do with the issue. This is completely Thunderbolt related problem.
+So, maybe we have some kind of disks/configuration out there where this
+start upon resume is needed? Maybe it is just a matter of timming to
+ensure some firmware underneath is up and back to life?
+
+Well, please let me know the best way to report this issue to you and what
+kind of logs I should get.
+
+Meanwhile if this ends up blocking our CI we can keep a revert in a
+topic branch for CI.
+
+Thanks,
+Rodrigo.
+
+> 
+> Reported-by: Paul Ausbeck <paula@soe.ucsc.edu>
+> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=215880
+> Fixes: a19a93e4c6a9 ("scsi: core: pm: Rely on the device driver core for async power management")
+> Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
+> ---
+>  drivers/ata/libata-scsi.c  | 7 +++++++
+>  drivers/scsi/sd.c          | 9 ++++++---
+>  include/scsi/scsi_device.h | 1 +
+>  3 files changed, 14 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/ata/libata-scsi.c b/drivers/ata/libata-scsi.c
+> index 370d18aca71e..c6ece32de8e3 100644
+> --- a/drivers/ata/libata-scsi.c
+> +++ b/drivers/ata/libata-scsi.c
+> @@ -1100,7 +1100,14 @@ int ata_scsi_dev_config(struct scsi_device *sdev, struct ata_device *dev)
+>  		}
+>  	} else {
+>  		sdev->sector_size = ata_id_logical_sector_size(dev->id);
+> +		/*
+> +		 * Stop the drive on suspend but do not issue START STOP UNIT
+> +		 * on resume as this is not necessary and may fail: the device
+> +		 * will be woken up by ata_port_pm_resume() with a port reset
+> +		 * and device revalidation.
+> +		 */
+>  		sdev->manage_start_stop = 1;
+> +		sdev->no_start_on_resume = 1;
+>  	}
+>  
+>  	/*
+> diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
+> index 68b12afa0721..3c668cfb146d 100644
+> --- a/drivers/scsi/sd.c
+> +++ b/drivers/scsi/sd.c
+> @@ -3876,7 +3876,7 @@ static int sd_suspend_runtime(struct device *dev)
+>  static int sd_resume(struct device *dev)
+>  {
+>  	struct scsi_disk *sdkp = dev_get_drvdata(dev);
+> -	int ret;
+> +	int ret = 0;
+>  
+>  	if (!sdkp)	/* E.g.: runtime resume at the start of sd_probe() */
+>  		return 0;
+> @@ -3884,8 +3884,11 @@ static int sd_resume(struct device *dev)
+>  	if (!sdkp->device->manage_start_stop)
+>  		return 0;
+>  
+> -	sd_printk(KERN_NOTICE, sdkp, "Starting disk\n");
+> -	ret = sd_start_stop_device(sdkp, 1);
+> +	if (!sdkp->device->no_start_on_resume) {
+> +		sd_printk(KERN_NOTICE, sdkp, "Starting disk\n");
+> +		ret = sd_start_stop_device(sdkp, 1);
+> +	}
+> +
+>  	if (!ret)
+>  		opal_unlock_from_suspend(sdkp->opal_dev);
+>  	return ret;
+> diff --git a/include/scsi/scsi_device.h b/include/scsi/scsi_device.h
+> index 75b2235b99e2..b9230b6add04 100644
+> --- a/include/scsi/scsi_device.h
+> +++ b/include/scsi/scsi_device.h
+> @@ -194,6 +194,7 @@ struct scsi_device {
+>  	unsigned no_start_on_add:1;	/* do not issue start on add */
+>  	unsigned allow_restart:1; /* issue START_UNIT in error handler */
+>  	unsigned manage_start_stop:1;	/* Let HLD (sd) manage start/stop */
+> +	unsigned no_start_on_resume:1; /* Do not issue START_STOP_UNIT on resume */
+>  	unsigned start_stop_pwr_cond:1;	/* Set power cond. in START_STOP_UNIT */
+>  	unsigned no_uld_attach:1; /* disable connecting to upper level drivers */
+>  	unsigned select_no_atn:1;
+> -- 
+> 2.41.0
+> 
