@@ -1,263 +1,657 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAD8BCA52
-	for <regressions@lists.linux.dev>; Fri, 25 Aug 2023 12:19:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7CB0C433C7;
-	Fri, 25 Aug 2023 12:19:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1692965993;
-	bh=lo8kdtKnIBMK0RBmDSkBDge4uqBrL+/NmJx/VM6oMgQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=BQ3ePLkd0q0asul4eHgyUaLuxWJwbBg47Whisv0UFq2rYlyaeDBvYeM0OTcCe1uuT
-	 yP58zv/e9glkXCoFgqAgRvGTMJHJstat1qOxAS95pYmCLxyw2xAxfsR/TYqftsC2K0
-	 d8hQpmdwHmPBJCAm7Hmr5J5niJfqu0bBPRZ6fr4SKScH+xCx8EL5MRLSLzSl2vO2sN
-	 /hdadvh2FflG1lAqJLpiyTY8UpO0go+7fRClx9SD4fOfaTNTVEtpczuG0XZp6zXv/W
-	 cq8scKduFdOnHacFZ7CPzeBI73IPP/CgWyn3VQzC2W+YFvwDyHPKMAtw0UcnO8zsmm
-	 bREL5CfJLy1WA==
-Content-Type: multipart/mixed; boundary="------------bF6QaiUtzo0gJ30Vc16x27lO"
-Message-ID: <ef45e164-dccb-c149-b85d-ae4e812935b4@kernel.org>
-Date: Fri, 25 Aug 2023 21:19:50 +0900
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04987107A8
+	for <regressions@lists.linux.dev>; Fri, 25 Aug 2023 17:09:20 +0000 (UTC)
+Received: from rdvivi-mobl4 (unknown [192.55.55.52])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp.kernel.org (Postfix) with ESMTPSA id 8A0E4C433C8;
+	Fri, 25 Aug 2023 17:09:16 +0000 (UTC)
+Date: Fri, 25 Aug 2023 13:09:15 -0400
+From: Rodrigo Vivi <rodrigo.vivi@kernel.org>
+To: Damien Le Moal <dlemoal@kernel.org>
+Cc: linux-ide@vger.kernel.org, linux-scsi@vger.kernel.org,
+	"Martin K . Petersen" <martin.petersen@oracle.com>,
+	Paul Ausbeck <paula@soe.ucsc.edu>,
+	Thorsten Leemhuis <regressions@leemhuis.info>,
+	TW <dalzot@gmail.com>, regressions@lists.linux.dev,
+	Bart Van Assche <bvanassche@acm.org>
+Subject: Re: [PATCH] ata,scsi: do not issue START STOP UNIT on resume
+Message-ID: <ZOjgJl4nlieu3+kL@rdvivi-mobl4>
+References: <20230731003956.572414-1-dlemoal@kernel.org>
+ <ZOehTysWO+U3mVvK@rdvivi-mobl4>
+ <40adc06d-0835-2786-0bfb-83239f546d92@kernel.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH] ata,scsi: do not issue START STOP UNIT on resume
-Content-Language: en-US
-To: Rodrigo Vivi <rodrigo.vivi@kernel.org>
-Cc: linux-ide@vger.kernel.org, linux-scsi@vger.kernel.org,
- "Martin K . Petersen" <martin.petersen@oracle.com>,
- Paul Ausbeck <paula@soe.ucsc.edu>,
- Thorsten Leemhuis <regressions@leemhuis.info>, TW <dalzot@gmail.com>,
- regressions@lists.linux.dev, Bart Van Assche <bvanassche@acm.org>
-References: <20230731003956.572414-1-dlemoal@kernel.org>
- <ZOehTysWO+U3mVvK@rdvivi-mobl4>
-From: Damien Le Moal <dlemoal@kernel.org>
-Organization: Western Digital Research
-In-Reply-To: <ZOehTysWO+U3mVvK@rdvivi-mobl4>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <40adc06d-0835-2786-0bfb-83239f546d92@kernel.org>
 
-This is a multi-part message in MIME format.
---------------bF6QaiUtzo0gJ30Vc16x27lO
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+On Fri, Aug 25, 2023 at 08:42:13AM +0900, Damien Le Moal wrote:
+> On 8/25/23 03:28, Rodrigo Vivi wrote:
+> > On Mon, Jul 31, 2023 at 09:39:56AM +0900, Damien Le Moal wrote:
+> >> During system resume, ata_port_pm_resume() triggers ata EH to
+> >> 1) Resume the controller
+> >> 2) Reset and rescan the ports
+> >> 3) Revalidate devices
+> >> This EH execution is started asynchronously from ata_port_pm_resume(),
+> >> which means that when sd_resume() is executed, none or only part of the
+> >> above processing may have been executed. However, sd_resume() issues a
+> >> START STOP UNIT to wake up the drive from sleep mode. This command is
+> >> translated to ATA with ata_scsi_start_stop_xlat() and issued to the
+> >> device. However, depending on the state of execution of the EH process
+> >> and revalidation triggerred by ata_port_pm_resume(), two things may
+> >> happen:
+> >> 1) The START STOP UNIT fails if it is received before the controller has
+> >>    been reenabled at the beginning of the EH execution. This is visible
+> >>    with error messages like:
+> >>
+> >> ata10.00: device reported invalid CHS sector 0
+> >> sd 9:0:0:0: [sdc] Start/Stop Unit failed: Result: hostbyte=DID_OK driverbyte=DRIVER_OK
+> >> sd 9:0:0:0: [sdc] Sense Key : Illegal Request [current]
+> >> sd 9:0:0:0: [sdc] Add. Sense: Unaligned write command
+> >> sd 9:0:0:0: PM: dpm_run_callback(): scsi_bus_resume+0x0/0x90 returns -5
+> >> sd 9:0:0:0: PM: failed to resume async: error -5
+> >>
+> >> 2) The START STOP UNIT command is received while the EH process is
+> >>    on-going, which mean that it is stopped and must wait for its
+> >>    completion, at which point the command is rather useless as the drive
+> >>    is already fully spun up already. This case results also in a
+> >>    significant delay in sd_resume() which is observable by users as
+> >>    the entire system resume completion is delayed.
+> >>
+> >> Given that ATA devices will be woken up by libata activity on resume,
+> >> sd_resume() has no need to issue a START STOP UNIT command, which solves
+> >> the above mentioned problems. Do not issue this command by introducing
+> >> the new scsi_device flag no_start_on_resume and setting this flag to 1
+> >> in ata_scsi_dev_config(). sd_resume() is modified to issue a START STOP
+> >> UNIT command only if this flag is not set.
+> > 
+> > Hi Damien,
+> > 
+> > Last week I noticed that a basic test in our validation started failing,
+> > then I noticed that it was subsequent quick suspend and autoresume using
+> > rtcwake that was problematic.
+> 
+> Arg... Again... Since the change of scsi layer to use async PM operations for
+> suspend/resume, ATA side has been a constant source of issues. When the change
+> was done, I did not notice any issue but several users reported problems.
+> 
+> > I couldn't collect any specific log that was pointing to some useful direction.
+> > After a painful bisect I got to this patch. After reverting in from the
+> > top of our tree, the tests are back to life.
+> > 
+> > The issue was that the subsequent quick suspend-resume (sometimes the
+> > second, sometimes third or even sixth) was simply hanging the machine
+> > in different points at Suspend.
+> 
+> I would have expected issues on the resume side. But it seems you are getting a
+> hang on suspend, which is new. How quick are your suspend/resume cycles ? I did
+> use rtcqake for my tests as well, but I was setting the wake timer at +5s or
+> more and suspending with "systemctl suspend".
 
-On 8/25/23 03:28, Rodrigo Vivi wrote:
-> On Mon, Jul 31, 2023 at 09:39:56AM +0900, Damien Le Moal wrote:
->> During system resume, ata_port_pm_resume() triggers ata EH to
->> 1) Resume the controller
->> 2) Reset and rescan the ports
->> 3) Revalidate devices
->> This EH execution is started asynchronously from ata_port_pm_resume(),
->> which means that when sd_resume() is executed, none or only part of the
->> above processing may have been executed. However, sd_resume() issues a
->> START STOP UNIT to wake up the drive from sleep mode. This command is
->> translated to ATA with ata_scsi_start_stop_xlat() and issued to the
->> device. However, depending on the state of execution of the EH process
->> and revalidation triggerred by ata_port_pm_resume(), two things may
->> happen:
->> 1) The START STOP UNIT fails if it is received before the controller has
->>    been reenabled at the beginning of the EH execution. This is visible
->>    with error messages like:
->>
->> ata10.00: device reported invalid CHS sector 0
->> sd 9:0:0:0: [sdc] Start/Stop Unit failed: Result: hostbyte=DID_OK driverbyte=DRIVER_OK
->> sd 9:0:0:0: [sdc] Sense Key : Illegal Request [current]
->> sd 9:0:0:0: [sdc] Add. Sense: Unaligned write command
->> sd 9:0:0:0: PM: dpm_run_callback(): scsi_bus_resume+0x0/0x90 returns -5
->> sd 9:0:0:0: PM: failed to resume async: error -5
->>
->> 2) The START STOP UNIT command is received while the EH process is
->>    on-going, which mean that it is stopped and must wait for its
->>    completion, at which point the command is rather useless as the drive
->>    is already fully spun up already. This case results also in a
->>    significant delay in sd_resume() which is observable by users as
->>    the entire system resume completion is delayed.
->>
->> Given that ATA devices will be woken up by libata activity on resume,
->> sd_resume() has no need to issue a START STOP UNIT command, which solves
->> the above mentioned problems. Do not issue this command by introducing
->> the new scsi_device flag no_start_on_resume and setting this flag to 1
->> in ata_scsi_dev_config(). sd_resume() is modified to issue a START STOP
->> UNIT command only if this flag is not set.
-> 
-> Hi Damien,
-> 
-> Last week I noticed that a basic test in our validation started failing,
-> then I noticed that it was subsequent quick suspend and autoresume using
-> rtcwake that was problematic.
-> 
-> I couldn't collect any specific log that was pointing to some useful direction.
-> After a painful bisect I got to this patch. After reverting in from the
-> top of our tree, the tests are back to life.
-> 
-> The issue was that the subsequent quick suspend-resume (sometimes the
-> second, sometimes third or even sixth) was simply hanging the machine
-> in different points at Suspend.
-> 
-> So, maybe we have some kind of disks/configuration out there where this
-> start upon resume is needed? Maybe it is just a matter of timming to
-> ensure some firmware underneath is up and back to life?
-> 
-> Well, please let me know the best way to report this issue to you and what
-> kind of logs I should get.
-> 
-> Meanwhile if this ends up blocking our CI we can keep a revert in a
-> topic branch for CI.
+I meant resume. It hangs during random parts at the resume sequence.
+Brain thought resume, fingers typed 'Suspend', I'm sorry!
 
-Can you try adding the patch attached to this email ?
-Thanks.
+> 
+> > So, maybe we have some kind of disks/configuration out there where this
+> > start upon resume is needed? Maybe it is just a matter of timming to
+> > ensure some firmware underneath is up and back to life?
+> 
+> I do not think so. Suspend will issue a start stop unit command to put the drive
+> to sleep and resume will reset the port (which should wake up the drive) and
+> then issue an IDENTIFY command (which will also wake up the drive) and other
+> read logs etc to rescan the drive.
+> In both cases, if the commands do not complete, we would see errors/timeout and
+> likely port reset/drive gone events. So I think this is likely another subtle
+> race between scsi suspend and ata suspend that is causing a deadlock.
+> 
+> The main issue I think is that there is no direct ancestry between the ata port
+> (device) and scsi device, so the change to scsi async pm ops made a mess of the
+> suspend/resume operations ordering. For suspend, scsi device (child of ata port)
+> should be first, then ata port device (parent). For resume, the reverse order is
+> needed. PM normally ensures that parent/child ordering, but we lack that
+> parent/child relationship. I am working on fixing that but it is very slow
+> progress because I have been so far enable to recreate any of the issues that
+> have been reported. I am patching "blind"...
 
--- 
-Damien Le Moal
-Western Digital Research
+I believe your suspicious makes sense. And on these lines, that patch you
+attached earlier would fix that. However my initial tries of that didn't
+help. I'm going to run more tests and get back to you.
 
---------------bF6QaiUtzo0gJ30Vc16x27lO
-Content-Type: text/x-patch; charset=UTF-8;
- name="0001-ata-libata-scsi-link-ata-port-and-scsi-device.patch"
-Content-Disposition: attachment;
- filename="0001-ata-libata-scsi-link-ata-port-and-scsi-device.patch"
-Content-Transfer-Encoding: base64
+> 
+> Any chance you could get a thread stack dump when the system hangs ?
+> 
+> echo t > /proc/sysrq-trigger
+> 
+> And:
+> 
+> echo d > /proc/sysrq-trigger
+> 
+> would be useful as well...
+> 
+> That is, unless you really have a hard lockup...
 
-RnJvbSAyMGI2MzY0OTRmOWM5OGJiY2E1MGQ2YjJmYjEyMzVmNDc0NzZjZGI0IE1vbiBTZXAg
-MTcgMDA6MDA6MDAgMjAwMQpGcm9tOiBEYW1pZW4gTGUgTW9hbCA8ZGxlbW9hbEBrZXJuZWwu
-b3JnPgpEYXRlOiBGcmksIDI1IEF1ZyAyMDIzIDE1OjQxOjE0ICswOTAwClN1YmplY3Q6IFtQ
-QVRDSF0gYXRhOiBsaWJhdGEtc2NzaTogbGluayBhdGEgcG9ydCBhbmQgc2NzaSBkZXZpY2UK
-ClRoZXJlIGlzIG5vIGRpcmVjdCBhbmNlc3RyeSBiZXR3ZWVuIGFuIGF0YV9kZXZpY2UgYW5k
-IGl0cyBzY3NpIGRldmljZSwKd2hpY2ggcHJldmVudHMgdGhlIHBvd2VyIG1hbmFnZW1lbnQg
-Y29kZSBmcm9tIGNvcnJlY3RseSBvcmRlcmluZyBzdXNwZW5kCmFuZCByZXN1bWUgb3BlcmF0
-aW9ucywgd2hpY2ggcmVxdWlyZXMgYWRkaXRpb25hbCBjb2RlIHRvIGJlIGhhbmRsZWQKY29y
-cmVjdGx5LiBDcmVhdGUgc3VjaCBhbmNlc3RyeSB0byBhbGxvdyBzaW1wbGlmeWluZyB0aGUg
-Y29kZS4KClRoZSBwYXJlbnQtY2hpbGQgKHN1cHBsaWVyLWNvbnN1bWVyKSByZWxhdGlvbnNo
-aXAgaXMgZXN0YWJsaXNoZWQgYmV0d2Vlbgp0aGUgYXRhX3BvcnQgKHBhcmVudCkgYW5kIHRo
-ZSBzY3NpIGRldmljZSAoY2hpbGQpIHdpdGgKZGV2aWNlX2FkZF9saW5rKCkuIFRoZSBwYXJl
-bnQgdXNlZCBpcyBub3QgdGhlIGF0YV9kZXZpY2UgYXMgdGhlIFBNCm9wZXJhdGlvbnMgYXJl
-IGRlZmluZWQgcGVyIHBvcnQgYW5kIGRldmljZXMgc3RhdHVzIGNvbnRyb2xsZWQgZnJvbSB0
-aGVzZQpwb3J0IG9wZXJhdGlvbnMuCgpUaGUgZGV2aWNlIGxpbmsgaXMgZXN0YWJsaXNoZWQg
-d2l0aCB0aGUgbmV3IGZ1bmN0aW9uCmF0YV9zY3NpX2Rldl9hbGxvYygpLiBUaGlzIGZ1bmN0
-aW9uIGlzIHVzZWQgdG8gZGVmaW5lIHRoZSAtPnNsYXZlX2FsbG9jCmNhbGxiYWNrIG9mIHRo
-ZSBzY3NpIGhvc3QgdGVtcGxhdGUgb2YgYWxsIGRyaXZlcnMuCgpTaWduZWQtb2ZmLWJ5OiBE
-YW1pZW4gTGUgTW9hbCA8ZGxlbW9hbEBrZXJuZWwub3JnPgotLS0KIGRyaXZlcnMvYXRhL2xp
-YmF0YS1zY3NpLmMgfCA0NiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrLS0t
-LS0KIGRyaXZlcnMvYXRhL2xpYmF0YS5oICAgICAgfCAgMSArCiBkcml2ZXJzL2F0YS9wYXRh
-X21hY2lvLmMgIHwgIDEgKwogZHJpdmVycy9hdGEvc2F0YV9tdi5jICAgICB8ICAxICsKIGRy
-aXZlcnMvYXRhL3NhdGFfbnYuYyAgICAgfCAgMiArKwogZHJpdmVycy9hdGEvc2F0YV9zaWwy
-NC5jICB8ICAxICsKIGluY2x1ZGUvbGludXgvbGliYXRhLmggICAgfCAgMyArKysKIDcgZmls
-ZXMgY2hhbmdlZCwgNTAgaW5zZXJ0aW9ucygrKSwgNSBkZWxldGlvbnMoLSkKCmRpZmYgLS1n
-aXQgYS9kcml2ZXJzL2F0YS9saWJhdGEtc2NzaS5jIGIvZHJpdmVycy9hdGEvbGliYXRhLXNj
-c2kuYwppbmRleCBjNmVjZTMyZGU4ZTMuLmFiNTcyY2M5YjNmOSAxMDA2NDQKLS0tIGEvZHJp
-dmVycy9hdGEvbGliYXRhLXNjc2kuYworKysgYi9kcml2ZXJzL2F0YS9saWJhdGEtc2NzaS5j
-CkBAIC0xMTM5LDYgKzExMzksNDUgQEAgaW50IGF0YV9zY3NpX2Rldl9jb25maWcoc3RydWN0
-IHNjc2lfZGV2aWNlICpzZGV2LCBzdHJ1Y3QgYXRhX2RldmljZSAqZGV2KQogCXJldHVybiAw
-OwogfQogCitpbnQgYXRhX3Njc2lfZGV2X2FsbG9jKHN0cnVjdCBzY3NpX2RldmljZSAqc2Rl
-diwgc3RydWN0IGF0YV9wb3J0ICphcCkKK3sKKwlzdHJ1Y3QgZGV2aWNlX2xpbmsgKmxpbms7
-CisKKwlhdGFfc2NzaV9zZGV2X2NvbmZpZyhzZGV2KTsKKworCS8qCisJICogQ3JlYXRlIGEg
-bGluayBmcm9tIHRoZSBhdGFfcG9ydCBkZXZpY2UgdG8gdGhlIHNjc2kgZGV2aWNlIHRvIGVu
-c3VyZQorCSAqIHRoYXQgUE0gZG9lcyBzdXNwZW5kL3Jlc3VtZSBpbiB0aGUgY29ycmVjdCBv
-cmRlcjogdGhlIHNjc2kgZGV2aWNlIGlzCisJICogY29uc3VtZXIgKGNoaWxkKSBhbmQgdGhl
-IGF0YSBwb3J0IHRoZSBzdXBwbGllciAocGFyZW50KS4KKwkgKi8KKwlsaW5rID0gZGV2aWNl
-X2xpbmtfYWRkKCZzZGV2LT5zZGV2X2dlbmRldiwgJmFwLT50ZGV2LAorCQkJICAgICAgIERM
-X0ZMQUdfUE1fUlVOVElNRSB8IERMX0ZMQUdfUlBNX0FDVElWRSk7CisJaWYgKCFsaW5rKSB7
-CisJCWF0YV9wb3J0X2VycihhcCwgIkZhaWxlZCB0byBjcmVhdGUgbGluayB0byBzY3NpIGRl
-dmljZSAlc1xuIiwKKwkJCSAgICAgZGV2X25hbWUoJnNkZXYtPnNkZXZfZ2VuZGV2KSk7CisJ
-CXJldHVybiAtRU5PREVWOworCX0KKworCXJldHVybiAwOworfQorCisvKioKKyAqCWF0YV9z
-Y3NpX3NsYXZlX2FsbG9jIC0gRWFybHkgc2V0dXAgb2YgU0NTSSBkZXZpY2UKKyAqCUBzZGV2
-OiBTQ1NJIGRldmljZSB0byBleGFtaW5lCisgKgorICoJVGhpcyBpcyBjYWxsZWQgZnJvbSBz
-Y3NpX2FsbG9jX3NkZXYoKSB3aGVuIHRoZSBzY3NpIGRldmljZQorICoJYXNzb2NpYXRlZCB3
-aXRoIGFuIEFUQSBkZXZpY2UgaXMgc2Nhbm5lZCBvbiBhIHBvcnQuCisgKgorICoJTE9DS0lO
-RzoKKyAqCURlZmluZWQgYnkgU0NTSSBsYXllci4gIFdlIGRvbid0IHJlYWxseSBjYXJlLgor
-ICovCisKK2ludCBhdGFfc2NzaV9zbGF2ZV9hbGxvYyhzdHJ1Y3Qgc2NzaV9kZXZpY2UgKnNk
-ZXYpCit7CisJcmV0dXJuIGF0YV9zY3NpX2Rldl9hbGxvYyhzZGV2LCBhdGFfc2hvc3RfdG9f
-cG9ydChzZGV2LT5ob3N0KSk7Cit9CitFWFBPUlRfU1lNQk9MX0dQTChhdGFfc2NzaV9zbGF2
-ZV9hbGxvYyk7CisKIC8qKgogICoJYXRhX3Njc2lfc2xhdmVfY29uZmlnIC0gU2V0IFNDU0kg
-ZGV2aWNlIGF0dHJpYnV0ZXMKICAqCUBzZGV2OiBTQ1NJIGRldmljZSB0byBleGFtaW5lCkBA
-IC0xMTU1LDE0ICsxMTk0LDExIEBAIGludCBhdGFfc2NzaV9zbGF2ZV9jb25maWcoc3RydWN0
-IHNjc2lfZGV2aWNlICpzZGV2KQogewogCXN0cnVjdCBhdGFfcG9ydCAqYXAgPSBhdGFfc2hv
-c3RfdG9fcG9ydChzZGV2LT5ob3N0KTsKIAlzdHJ1Y3QgYXRhX2RldmljZSAqZGV2ID0gX19h
-dGFfc2NzaV9maW5kX2RldihhcCwgc2Rldik7Ci0JaW50IHJjID0gMDsKLQotCWF0YV9zY3Np
-X3NkZXZfY29uZmlnKHNkZXYpOwogCiAJaWYgKGRldikKLQkJcmMgPSBhdGFfc2NzaV9kZXZf
-Y29uZmlnKHNkZXYsIGRldik7CisJCXJldHVybiBhdGFfc2NzaV9kZXZfY29uZmlnKHNkZXYs
-IGRldik7CiAKLQlyZXR1cm4gcmM7CisJcmV0dXJuIDA7CiB9CiBFWFBPUlRfU1lNQk9MX0dQ
-TChhdGFfc2NzaV9zbGF2ZV9jb25maWcpOwogCmRpZmYgLS1naXQgYS9kcml2ZXJzL2F0YS9s
-aWJhdGEuaCBiL2RyaXZlcnMvYXRhL2xpYmF0YS5oCmluZGV4IGNmOTkzODg1ZDJiMi4uYzQ1
-Y2FjMmEzNjMxIDEwMDY0NAotLS0gYS9kcml2ZXJzL2F0YS9saWJhdGEuaAorKysgYi9kcml2
-ZXJzL2F0YS9saWJhdGEuaApAQCAtMTEzLDYgKzExMyw3IEBAIGV4dGVybiBzdHJ1Y3QgYXRh
-X2RldmljZSAqYXRhX3Njc2lfZmluZF9kZXYoc3RydWN0IGF0YV9wb3J0ICphcCwKIGV4dGVy
-biBpbnQgYXRhX3Njc2lfYWRkX2hvc3RzKHN0cnVjdCBhdGFfaG9zdCAqaG9zdCwKIAkJCSAg
-ICAgIGNvbnN0IHN0cnVjdCBzY3NpX2hvc3RfdGVtcGxhdGUgKnNodCk7CiBleHRlcm4gdm9p
-ZCBhdGFfc2NzaV9zY2FuX2hvc3Qoc3RydWN0IGF0YV9wb3J0ICphcCwgaW50IHN5bmMpOwor
-ZXh0ZXJuIGludCBhdGFfc2NzaV9kZXZfYWxsb2Moc3RydWN0IHNjc2lfZGV2aWNlICpzZGV2
-LCBzdHJ1Y3QgYXRhX3BvcnQgKmFwKTsKIGV4dGVybiBpbnQgYXRhX3Njc2lfb2ZmbGluZV9k
-ZXYoc3RydWN0IGF0YV9kZXZpY2UgKmRldik7CiBleHRlcm4gYm9vbCBhdGFfc2NzaV9zZW5z
-ZV9pc192YWxpZCh1OCBzaywgdTggYXNjLCB1OCBhc2NxKTsKIGV4dGVybiB2b2lkIGF0YV9z
-Y3NpX3NldF9zZW5zZShzdHJ1Y3QgYXRhX2RldmljZSAqZGV2LApkaWZmIC0tZ2l0IGEvZHJp
-dmVycy9hdGEvcGF0YV9tYWNpby5jIGIvZHJpdmVycy9hdGEvcGF0YV9tYWNpby5jCmluZGV4
-IDE3ZjZjY2VlNTNjNy4uMzI5NjhiNGNmOGU0IDEwMDY0NAotLS0gYS9kcml2ZXJzL2F0YS9w
-YXRhX21hY2lvLmMKKysrIGIvZHJpdmVycy9hdGEvcGF0YV9tYWNpby5jCkBAIC05MTgsNiAr
-OTE4LDcgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBzY3NpX2hvc3RfdGVtcGxhdGUgcGF0YV9t
-YWNpb19zaHQgPSB7CiAJICogdXNlIDY0SyBtaW51cyAyNTYKIAkgKi8KIAkubWF4X3NlZ21l
-bnRfc2l6ZQk9IE1BWF9EQkRNQV9TRUcsCisJLnNsYXZlX2FsbG9jCQk9IGF0YV9zY3NpX3Ns
-YXZlX2FsbG9jLAogCS5zbGF2ZV9jb25maWd1cmUJPSBwYXRhX21hY2lvX3NsYXZlX2NvbmZp
-ZywKIAkuc2Rldl9ncm91cHMJCT0gYXRhX2NvbW1vbl9zZGV2X2dyb3VwcywKIAkuY2FuX3F1
-ZXVlCQk9IEFUQV9ERUZfUVVFVUUsCmRpZmYgLS1naXQgYS9kcml2ZXJzL2F0YS9zYXRhX212
-LmMgYi9kcml2ZXJzL2F0YS9zYXRhX212LmMKaW5kZXggZDQwNGU2MzFkMTUyLi4zN2EwYmJh
-YTgzNDEgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvYXRhL3NhdGFfbXYuYworKysgYi9kcml2ZXJz
-L2F0YS9zYXRhX212LmMKQEAgLTY3Myw2ICs2NzMsNyBAQCBzdGF0aWMgY29uc3Qgc3RydWN0
-IHNjc2lfaG9zdF90ZW1wbGF0ZSBtdjZfc2h0ID0gewogCS5zZGV2X2dyb3VwcwkJPSBhdGFf
-bmNxX3NkZXZfZ3JvdXBzLAogCS5jaGFuZ2VfcXVldWVfZGVwdGgJPSBhdGFfc2NzaV9jaGFu
-Z2VfcXVldWVfZGVwdGgsCiAJLnRhZ19hbGxvY19wb2xpY3kJPSBCTEtfVEFHX0FMTE9DX1JS
-LAorCS5zbGF2ZV9hbGxvYwkJPSBhdGFfc2NzaV9zbGF2ZV9hbGxvYywKIAkuc2xhdmVfY29u
-ZmlndXJlCT0gYXRhX3Njc2lfc2xhdmVfY29uZmlnCiB9OwogCmRpZmYgLS1naXQgYS9kcml2
-ZXJzL2F0YS9zYXRhX252LmMgYi9kcml2ZXJzL2F0YS9zYXRhX252LmMKaW5kZXggYWJmNTY1
-MWM4N2FiLi43NzE5Mzk0MGIzZjIgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvYXRhL3NhdGFfbnYu
-YworKysgYi9kcml2ZXJzL2F0YS9zYXRhX252LmMKQEAgLTM4MCw2ICszODAsNyBAQCBzdGF0
-aWMgY29uc3Qgc3RydWN0IHNjc2lfaG9zdF90ZW1wbGF0ZSBudl9hZG1hX3NodCA9IHsKIAku
-Y2FuX3F1ZXVlCQk9IE5WX0FETUFfTUFYX0NQQlMsCiAJLnNnX3RhYmxlc2l6ZQkJPSBOVl9B
-RE1BX1NHVEJMX1RPVEFMX0xFTiwKIAkuZG1hX2JvdW5kYXJ5CQk9IE5WX0FETUFfRE1BX0JP
-VU5EQVJZLAorCS5zbGF2ZV9hbGxvYwkJPSBhdGFfc2NzaV9zbGF2ZV9hbGxvYywKIAkuc2xh
-dmVfY29uZmlndXJlCT0gbnZfYWRtYV9zbGF2ZV9jb25maWcsCiAJLnNkZXZfZ3JvdXBzCQk9
-IGF0YV9uY3Ffc2Rldl9ncm91cHMsCiAJLmNoYW5nZV9xdWV1ZV9kZXB0aCAgICAgPSBhdGFf
-c2NzaV9jaGFuZ2VfcXVldWVfZGVwdGgsCkBAIC0zOTEsNiArMzkyLDcgQEAgc3RhdGljIGNv
-bnN0IHN0cnVjdCBzY3NpX2hvc3RfdGVtcGxhdGUgbnZfc3duY3Ffc2h0ID0gewogCS5jYW5f
-cXVldWUJCT0gQVRBX01BWF9RVUVVRSAtIDEsCiAJLnNnX3RhYmxlc2l6ZQkJPSBMSUJBVEFf
-TUFYX1BSRCwKIAkuZG1hX2JvdW5kYXJ5CQk9IEFUQV9ETUFfQk9VTkRBUlksCisJLnNsYXZl
-X2FsbG9jCQk9IGF0YV9zY3NpX3NsYXZlX2FsbG9jLAogCS5zbGF2ZV9jb25maWd1cmUJPSBu
-dl9zd25jcV9zbGF2ZV9jb25maWcsCiAJLnNkZXZfZ3JvdXBzCQk9IGF0YV9uY3Ffc2Rldl9n
-cm91cHMsCiAJLmNoYW5nZV9xdWV1ZV9kZXB0aCAgICAgPSBhdGFfc2NzaV9jaGFuZ2VfcXVl
-dWVfZGVwdGgsCmRpZmYgLS1naXQgYS9kcml2ZXJzL2F0YS9zYXRhX3NpbDI0LmMgYi9kcml2
-ZXJzL2F0YS9zYXRhX3NpbDI0LmMKaW5kZXggZTcyYTAyNTc5OTBkLi5lZDA5ZDY1Mzc0MWYg
-MTAwNjQ0Ci0tLSBhL2RyaXZlcnMvYXRhL3NhdGFfc2lsMjQuYworKysgYi9kcml2ZXJzL2F0
-YS9zYXRhX3NpbDI0LmMKQEAgLTM4MSw2ICszODEsNyBAQCBzdGF0aWMgY29uc3Qgc3RydWN0
-IHNjc2lfaG9zdF90ZW1wbGF0ZSBzaWwyNF9zaHQgPSB7CiAJLnRhZ19hbGxvY19wb2xpY3kJ
-PSBCTEtfVEFHX0FMTE9DX0ZJRk8sCiAJLnNkZXZfZ3JvdXBzCQk9IGF0YV9uY3Ffc2Rldl9n
-cm91cHMsCiAJLmNoYW5nZV9xdWV1ZV9kZXB0aAk9IGF0YV9zY3NpX2NoYW5nZV9xdWV1ZV9k
-ZXB0aCwKKwkuc2xhdmVfYWxsb2MJCT0gYXRhX3Njc2lfc2xhdmVfYWxsb2MsCiAJLnNsYXZl
-X2NvbmZpZ3VyZQk9IGF0YV9zY3NpX3NsYXZlX2NvbmZpZwogfTsKIApkaWZmIC0tZ2l0IGEv
-aW5jbHVkZS9saW51eC9saWJhdGEuaCBiL2luY2x1ZGUvbGludXgvbGliYXRhLmgKaW5kZXgg
-ODIwZjdhM2EyNzQ5Li41OTBkZWQ4ZTMxOWQgMTAwNjQ0Ci0tLSBhL2luY2x1ZGUvbGludXgv
-bGliYXRhLmgKKysrIGIvaW5jbHVkZS9saW51eC9saWJhdGEuaApAQCAtMTE1MSw2ICsxMTUx
-LDcgQEAgZXh0ZXJuIGludCBhdGFfc3RkX2Jpb3NfcGFyYW0oc3RydWN0IHNjc2lfZGV2aWNl
-ICpzZGV2LAogCQkJICAgICAgc3RydWN0IGJsb2NrX2RldmljZSAqYmRldiwKIAkJCSAgICAg
-IHNlY3Rvcl90IGNhcGFjaXR5LCBpbnQgZ2VvbVtdKTsKIGV4dGVybiB2b2lkIGF0YV9zY3Np
-X3VubG9ja19uYXRpdmVfY2FwYWNpdHkoc3RydWN0IHNjc2lfZGV2aWNlICpzZGV2KTsKK2V4
-dGVybiBpbnQgYXRhX3Njc2lfc2xhdmVfYWxsb2Moc3RydWN0IHNjc2lfZGV2aWNlICpzZGV2
-KTsKIGV4dGVybiBpbnQgYXRhX3Njc2lfc2xhdmVfY29uZmlnKHN0cnVjdCBzY3NpX2Rldmlj
-ZSAqc2Rldik7CiBleHRlcm4gdm9pZCBhdGFfc2NzaV9zbGF2ZV9kZXN0cm95KHN0cnVjdCBz
-Y3NpX2RldmljZSAqc2Rldik7CiBleHRlcm4gaW50IGF0YV9zY3NpX2NoYW5nZV9xdWV1ZV9k
-ZXB0aChzdHJ1Y3Qgc2NzaV9kZXZpY2UgKnNkZXYsCkBAIC0xNDEzLDEyICsxNDE0LDE0IEBA
-IGV4dGVybiBjb25zdCBzdHJ1Y3QgYXR0cmlidXRlX2dyb3VwICphdGFfY29tbW9uX3NkZXZf
-Z3JvdXBzW107CiAJX19BVEFfQkFTRV9TSFQoZHJ2X25hbWUpLAkJCQlcCiAJLmNhbl9xdWV1
-ZQkJPSBBVEFfREVGX1FVRVVFLAkJXAogCS50YWdfYWxsb2NfcG9saWN5CT0gQkxLX1RBR19B
-TExPQ19SUiwJCVwKKwkuc2xhdmVfYWxsb2MJCT0gYXRhX3Njc2lfc2xhdmVfYWxsb2MsCQlc
-CiAJLnNsYXZlX2NvbmZpZ3VyZQk9IGF0YV9zY3NpX3NsYXZlX2NvbmZpZwogCiAjZGVmaW5l
-IEFUQV9TVUJCQVNFX1NIVF9RRChkcnZfbmFtZSwgZHJ2X3FkKQkJCVwKIAlfX0FUQV9CQVNF
-X1NIVChkcnZfbmFtZSksCQkJCVwKIAkuY2FuX3F1ZXVlCQk9IGRydl9xZCwJCQlcCiAJLnRh
-Z19hbGxvY19wb2xpY3kJPSBCTEtfVEFHX0FMTE9DX1JSLAkJXAorCS5zbGF2ZV9hbGxvYwkJ
-PSBhdGFfc2NzaV9zbGF2ZV9hbGxvYywJCVwKIAkuc2xhdmVfY29uZmlndXJlCT0gYXRhX3Nj
-c2lfc2xhdmVfY29uZmlnCiAKICNkZWZpbmUgQVRBX0JBU0VfU0hUKGRydl9uYW1lKQkJCQkJ
-XAotLSAKMi40MS4wCgo=
+no chance... it is a hard lockup.
 
---------------bF6QaiUtzo0gJ30Vc16x27lO--
+> 
+> > Well, please let me know the best way to report this issue to you and what
+> > kind of logs I should get.
+> 
+> If you can get the above ? dmesg output as well with PM debug messages turned on.
+
+I have the CONFIG_PM_DEBUG here with no_console_suspend.
+If you remember any other config or parameter that would help, please let
+me know that I collect it again:
+
+[  104.571459] PM: suspend entry (deep)
+[  104.585967] Filesystems sync: 0.010 seconds
+[  104.618685] Freezing user space processes
+[  104.625374] Freezing user space processes completed (elapsed 0.002 seconds)
+[  104.632448] OOM killer disabled.
+[  104.635712] Freezing remaining freezable tasks
+[  104.641899] Freezing remaining freezable tasks completed (elapsed 0.001 seconds)
+[  104.669767] wlp6s0: deauthenticating from 08:36:c9:85:df:ef by local choice (Reason: 3=DEAUTH_LEAVING)
+[  104.679812] serial 00:01: disabled
+[  104.683466] sd 7:0:0:0: [sdc] Synchronizing SCSI cache
+[  104.688902] sd 7:0:0:0: [sdc] Stopping disk
+[  104.693176] sd 5:0:0:0: [sdb] Synchronizing SCSI cache
+[  104.698419] sd 4:0:0:0: [sda] Synchronizing SCSI cache
+[  104.703730] sd 4:0:0:0: [sda] Stopping disk
+[  104.885912] sd 5:0:0:0: [sdb] Stopping disk
+[  106.163215] PM: suspend devices took 1.514 seconds
+[  107.003217] serial 00:01: activated
+[  107.076779] nvme nvme0: 16/0/0 default/read/poll queues
+[  107.123917] r8169 0000:07:00.0 enp7s0: Link is Down
+[  107.208945] PM: resume devices took 0.241 seconds
+[  107.214746] pcieport 0000:00:1c.0: PCI bridge to [bus 06]
+[  107.220274] pcieport 0000:00:1c.0:   bridge window [mem 0x43700000-0x437fffff]
+[  107.227538] OOM killer enabled.
+[  107.230710] Restarting tasks ...
+[  107.231803] pcieport 0000:00:1c.2: PCI bridge to [bus 07]
+[  107.236474] done.
+[  107.240599] pcieport 0000:00:1c.2:   bridge window [io  0x4000-0x4fff]
+[  107.242574] random: crng reseeded on system resumption
+[  107.249119] pcieport 0000:00:1c.2:   bridge window [mem 0x43600000-0x436fffff]
+[  107.249405] pcieport 0000:00:1c.6: PCI bridge to [bus 08]
+[  107.259714] PM: suspend exit
+[  107.261623] pcieport 0000:00:1c.6:   bridge window [io  0x3000-0x3fff]
+[  107.276554] pcieport 0000:00:1c.6:   bridge window [mem 0x43500000-0x435fffff]
+[  107.283849] pcieport 0000:00:1c.6:   bridge window [mem 0x70900000-0x709fffff 64bit pref]
+[  107.293567] ata7: SATA link down (SStatus 4 SControl 300)
+[  107.304150] ata5: SATA link up 6.0 Gbps (SStatus 133 SControl 300)
+[  107.310975] ata6: SATA link up 6.0 Gbps (SStatus 133 SControl 300)
+[  107.319173] ata5.00: configured for UDMA/133
+[  107.324620] ata5.00: Enabling discard_zeroes_data
+[  107.398370] ata6.00: configured for UDMA/133
+[  108.563229] PM: suspend entry (deep)
+[  108.573610] Filesystems sync: 0.006 seconds
+[  108.580617] Freezing user space processes
+[  108.586774] Freezing user space processes completed (elapsed 0.002 seconds)
+[  108.593793] OOM killer disabled.
+[  108.597055] Freezing remaining freezable tasks
+[  108.603246] Freezing remaining freezable tasks completed (elapsed 0.001 seconds)
+[  108.621515] sd 7:0:0:0: [sdc] Synchronizing SCSI cache
+[  108.621522] sd 5:0:0:0: [sdb] Synchronizing SCSI cache
+[  108.622018] serial 00:01: disabled
+[  108.635420] sd 4:0:0:0: [sda] Synchronizing SCSI cache
+[  108.640747] sd 4:0:0:0: [sda] Stopping disk
+[  108.644148] sd 5:0:0:0: [sdb] Stopping disk
+[  108.983487] ata8: SATA link up 6.0 Gbps (SStatus 133 SControl 300)
+[  108.991923] ata8.00: configured for UDMA/133
+[  108.996423] sd 7:0:0:0: [sdc] Stopping disk
+[  109.973722] PM: suspend devices took 1.363 seconds
+[  110.721600] serial 00:01: activated
+[  110.802094] nvme nvme0: 16/0/0 default/read/poll queues
+[  110.873036] r8169 0000:07:00.0 enp7s0: Link is Down
+[  111.032278] ata5: SATA link up 6.0 Gbps (SStatus 133 SControl 300)
+[  111.038583] ata7: SATA link down (SStatus 4 SControl 300)
+[  111.044065] ata6: SATA link up 6.0 Gbps (SStatus 133 SControl 300)
+[  111.051326] ata5.00: configured for UDMA/133
+[  111.056118] ata5.00: Enabling discard_zeroes_data
+[  111.131795] ata6.00: configured for UDMA/133
+[  112.713764] ata8: SATA link up 6.0 Gbps (SStatus 133 SControl 300)
+[  112.724250] ata8.00: configured for UDMA/133
+
+
+> 
+> Also, what is your setup ? What machine, adapter and drive are you using ?
+
+$ sudo lshw -class disk
+  *-namespace:0
+       description: NVMe disk
+       physical id: 0
+       logical name: hwmon1
+  *-namespace:1
+       description: NVMe disk
+       physical id: 2
+       logical name: /dev/ng0n1
+  *-namespace:2
+       description: NVMe disk
+       physical id: 1
+       bus info: nvme@0:1
+       logical name: /dev/nvme0n1
+       size: 465GiB (500GB)
+       capabilities: gpt-1.00 partitioned partitioned:gpt
+       configuration: guid=fd1cdad8-4a22-4fc9-8479-cce1748e78d5 logicalsectorsize=512 sectorsize=512 wwid=eui.e8238fa6bf530001001b448b45c5252c
+  *-disk:0
+       description: ATA Disk
+       product: INTEL SSDSC2BB48
+       physical id: 0
+       bus info: scsi@4:0.0.0
+       logical name: /dev/sda
+       version: 0370
+       serial: BTWL409509Q6480QGN
+       size: 447GiB (480GB)
+       capabilities: partitioned partitioned:dos
+       configuration: ansiversion=5 logicalsectorsize=512 sectorsize=4096 signature=000226cf
+  *-disk:1
+       description: ATA Disk
+       product: INTEL SSDSC2BW48
+       physical id: 1
+       bus info: scsi@5:0.0.0
+       logical name: /dev/sdb
+       version: DC32
+       serial: PHDA4166003M4805GN
+       size: 447GiB (480GB)
+       capabilities: gpt-1.00 partitioned partitioned:gpt
+       configuration: ansiversion=5 guid=b6c93ada-cbb1-412e-92e9-d644a476cacc logicalsectorsize=512 sectorsize=512
+  *-disk:2
+       description: ATA Disk
+       product: ST1000DM010-2EP1
+       physical id: 0.0.0
+       bus info: scsi@7:0.0.0
+       logical name: /dev/sdc
+       version: CC46
+       serial: ZN1VGAFZ
+       size: 931GiB (1TB)
+       capabilities: gpt-1.00 partitioned partitioned:gpt
+       configuration: ansiversion=5 guid=8bd323ef-07b9-49c6-99c9-6581274d2f65 logicalsectorsize=512 sectorsize=4096
+
+$ lspci -vv
+00:00.0 Host bridge: Intel Corporation 12th Gen Core Processor Host Bridge/DRAM Registers (rev 02)
+	DeviceName: Onboard - Other
+	Subsystem: Gigabyte Technology Co., Ltd Device 5000
+	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
+	Status: Cap+ 66MHz- UDF- FastB2B+ ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+	Latency: 0
+
+00:01.0 PCI bridge: Intel Corporation 12th Gen Core Processor PCI Express x16 Controller #1 (rev 02) (prog-if 00 [Normal decode])
+	Subsystem: Gigabyte Technology Co., Ltd Device 5000
+	Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
+	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+	Latency: 0, Cache Line Size: 64 bytes
+	Interrupt: pin A routed to IRQ 120
+	Bus: primary=00, secondary=01, subordinate=04, sec-latency=0
+	I/O behind bridge: [disabled] [16-bit]
+	Memory behind bridge: 42000000-433fffff [size=20M] [32-bit]
+	Prefetchable memory behind bridge: 60000000-707fffff [size=264M] [32-bit]
+	Secondary status: 66MHz- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort+ <SERR- <PERR-
+	BridgeCtl: Parity- SERR+ NoISA- VGA+ VGA16+ MAbort- >Reset- FastB2B-
+		PriDiscTmr- SecDiscTmr- DiscTmrStat- DiscTmrSERREn-
+	Capabilities: <access denied>
+	Kernel driver in use: pcieport
+
+00:02.0 Display controller: Intel Corporation AlderLake-S GT1 (rev 0c)
+	DeviceName: Onboard - Video
+	Subsystem: Gigabyte Technology Co., Ltd Device d000
+	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
+	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+	Latency: 0, Cache Line Size: 64 bytes
+	Interrupt: pin A routed to IRQ 255
+	Region 0: Memory at 41000000 (64-bit, non-prefetchable) [size=16M]
+	Region 2: Memory at 50000000 (64-bit, prefetchable) [size=256M]
+	Region 4: I/O ports at 5000 [disabled] [size=64]
+	Capabilities: <access denied>
+	Kernel modules: i915, xe
+
+00:06.0 PCI bridge: Intel Corporation 12th Gen Core Processor PCI Express x4 Controller #0 (rev 02) (prog-if 00 [Normal decode])
+	Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
+	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+	Latency: 0, Cache Line Size: 64 bytes
+	Interrupt: pin D routed to IRQ 121
+	Bus: primary=00, secondary=05, subordinate=05, sec-latency=0
+	I/O behind bridge: [disabled] [16-bit]
+	Memory behind bridge: 43800000-438fffff [size=1M] [32-bit]
+	Prefetchable memory behind bridge: [disabled] [64-bit]
+	Secondary status: 66MHz- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- <SERR- <PERR-
+	BridgeCtl: Parity- SERR+ NoISA- VGA- VGA16+ MAbort- >Reset- FastB2B-
+		PriDiscTmr- SecDiscTmr- DiscTmrStat- DiscTmrSERREn-
+	Capabilities: <access denied>
+	Kernel driver in use: pcieport
+
+00:0a.0 Signal processing controller: Intel Corporation Platform Monitoring Technology (rev 01)
+	DeviceName: Onboard - Other
+	Control: I/O- Mem+ BusMaster- SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
+	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+	Region 0: Memory at 43910000 (64-bit, non-prefetchable) [size=32K]
+	Capabilities: <access denied>
+	Kernel driver in use: intel_vsec
+	Kernel modules: intel_vsec
+
+00:14.0 USB controller: Intel Corporation Alder Lake-S PCH USB 3.2 Gen 2x2 XHCI Controller (rev 11) (prog-if 30 [XHCI])
+	DeviceName: Onboard - Other
+	Subsystem: Gigabyte Technology Co., Ltd Device 5007
+	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
+	Status: Cap+ 66MHz- UDF- FastB2B+ ParErr- DEVSEL=medium >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+	Latency: 0
+	Interrupt: pin A routed to IRQ 126
+	Region 0: Memory at 43900000 (64-bit, non-prefetchable) [size=64K]
+	Capabilities: <access denied>
+	Kernel driver in use: xhci_hcd
+
+00:14.2 RAM memory: Intel Corporation Alder Lake-S PCH Shared SRAM (rev 11)
+	DeviceName: Onboard - Other
+	Control: I/O- Mem- BusMaster- SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
+	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+	Region 0: Memory at 4391c000 (64-bit, non-prefetchable) [disabled] [size=16K]
+	Region 2: Memory at 4392b000 (64-bit, non-prefetchable) [disabled] [size=4K]
+	Capabilities: <access denied>
+
+00:15.0 Serial bus controller: Intel Corporation Alder Lake-S PCH Serial IO I2C Controller #0 (rev 11)
+	DeviceName: Onboard - Other
+	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
+	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+	Latency: 0, Cache Line Size: 64 bytes
+	Interrupt: pin A routed to IRQ 27
+	Region 0: Memory at 40400000 (64-bit, non-prefetchable) [size=4K]
+	Capabilities: <access denied>
+	Kernel driver in use: intel-lpss
+
+00:15.1 Serial bus controller: Intel Corporation Alder Lake-S PCH Serial IO I2C Controller #1 (rev 11)
+	DeviceName: Onboard - Other
+	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
+	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+	Latency: 0, Cache Line Size: 64 bytes
+	Interrupt: pin B routed to IRQ 40
+	Region 0: Memory at 40401000 (64-bit, non-prefetchable) [size=4K]
+	Capabilities: <access denied>
+	Kernel driver in use: intel-lpss
+
+00:15.2 Serial bus controller: Intel Corporation Alder Lake-S PCH Serial IO I2C Controller #2 (rev 11)
+	DeviceName: Onboard - Other
+	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
+	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+	Latency: 0, Cache Line Size: 64 bytes
+	Interrupt: pin C routed to IRQ 29
+	Region 0: Memory at 40402000 (64-bit, non-prefetchable) [size=4K]
+	Capabilities: <access denied>
+	Kernel driver in use: intel-lpss
+
+00:15.3 Serial bus controller: Intel Corporation Alder Lake-S PCH Serial IO I2C Controller #3 (rev 11)
+	DeviceName: Onboard - Other
+	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
+	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+	Latency: 0, Cache Line Size: 64 bytes
+	Interrupt: pin D routed to IRQ 43
+	Region 0: Memory at 40403000 (64-bit, non-prefetchable) [size=4K]
+	Capabilities: <access denied>
+	Kernel driver in use: intel-lpss
+
+00:16.0 Communication controller: Intel Corporation Alder Lake-S PCH HECI Controller #1 (rev 11)
+	DeviceName: Onboard - Other
+	Subsystem: Gigabyte Technology Co., Ltd Device 1c3a
+	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
+	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+	Latency: 0
+	Interrupt: pin A routed to IRQ 146
+	Region 0: Memory at 43927000 (64-bit, non-prefetchable) [size=4K]
+	Capabilities: <access denied>
+	Kernel driver in use: mei_me
+	Kernel modules: mei_me
+
+00:17.0 SATA controller: Intel Corporation Alder Lake-S PCH SATA Controller [AHCI Mode] (rev 11) (prog-if 01 [AHCI 1.0])
+	DeviceName: Onboard - SATA
+	Subsystem: Gigabyte Technology Co., Ltd Device b005
+	Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
+	Status: Cap+ 66MHz+ UDF- FastB2B+ ParErr- DEVSEL=medium >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+	Latency: 0
+	Interrupt: pin A routed to IRQ 125
+	Region 0: Memory at 43920000 (32-bit, non-prefetchable) [size=8K]
+	Region 1: Memory at 43926000 (32-bit, non-prefetchable) [size=256]
+	Region 2: I/O ports at 5090 [size=8]
+	Region 3: I/O ports at 5080 [size=4]
+	Region 4: I/O ports at 5060 [size=32]
+	Region 5: Memory at 43925000 (32-bit, non-prefetchable) [size=2K]
+	Capabilities: <access denied>
+	Kernel driver in use: ahci
+
+00:19.0 Serial bus controller: Intel Corporation Alder Lake-S PCH Serial IO I2C Controller #4 (rev 11)
+	DeviceName: Onboard - Other
+	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
+	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+	Latency: 0, Cache Line Size: 64 bytes
+	Interrupt: pin A routed to IRQ 31
+	Region 0: Memory at 40404000 (64-bit, non-prefetchable) [size=4K]
+	Capabilities: <access denied>
+	Kernel driver in use: intel-lpss
+
+00:19.1 Serial bus controller: Intel Corporation Alder Lake-S PCH Serial IO I2C Controller #5 (rev 11)
+	DeviceName: Onboard - Other
+	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
+	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+	Latency: 0, Cache Line Size: 64 bytes
+	Interrupt: pin B routed to IRQ 32
+	Region 0: Memory at 40405000 (64-bit, non-prefetchable) [size=4K]
+	Capabilities: <access denied>
+	Kernel driver in use: intel-lpss
+
+00:1c.0 PCI bridge: Intel Corporation Alder Lake-S PCH PCI Express Root Port #1 (rev 11) (prog-if 00 [Normal decode])
+	Subsystem: Gigabyte Technology Co., Ltd Device 5001
+	Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
+	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+	Latency: 0, Cache Line Size: 64 bytes
+	Interrupt: pin A routed to IRQ 122
+	Bus: primary=00, secondary=06, subordinate=06, sec-latency=0
+	I/O behind bridge: [disabled] [16-bit]
+	Memory behind bridge: 43700000-437fffff [size=1M] [32-bit]
+	Prefetchable memory behind bridge: [disabled] [64-bit]
+	Secondary status: 66MHz- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- <SERR- <PERR-
+	BridgeCtl: Parity- SERR+ NoISA- VGA- VGA16+ MAbort- >Reset- FastB2B-
+		PriDiscTmr- SecDiscTmr- DiscTmrStat- DiscTmrSERREn-
+	Capabilities: <access denied>
+	Kernel driver in use: pcieport
+
+00:1c.2 PCI bridge: Intel Corporation Device 7aba (rev 11) (prog-if 00 [Normal decode])
+	Subsystem: Gigabyte Technology Co., Ltd Device 5001
+	Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
+	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+	Latency: 0, Cache Line Size: 64 bytes
+	Interrupt: pin C routed to IRQ 123
+	Bus: primary=00, secondary=07, subordinate=07, sec-latency=0
+	I/O behind bridge: 4000-4fff [size=4K] [16-bit]
+	Memory behind bridge: 43600000-436fffff [size=1M] [32-bit]
+	Prefetchable memory behind bridge: [disabled] [64-bit]
+	Secondary status: 66MHz- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- <SERR- <PERR-
+	BridgeCtl: Parity- SERR+ NoISA- VGA- VGA16+ MAbort- >Reset- FastB2B-
+		PriDiscTmr- SecDiscTmr- DiscTmrStat- DiscTmrSERREn-
+	Capabilities: <access denied>
+	Kernel driver in use: pcieport
+
+00:1c.6 PCI bridge: Intel Corporation Device 7abe (rev 11) (prog-if 00 [Normal decode])
+	Subsystem: Gigabyte Technology Co., Ltd Device 5001
+	Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
+	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+	Latency: 0, Cache Line Size: 64 bytes
+	Interrupt: pin C routed to IRQ 124
+	Bus: primary=00, secondary=08, subordinate=08, sec-latency=0
+	I/O behind bridge: 3000-3fff [size=4K] [16-bit]
+	Memory behind bridge: 43500000-435fffff [size=1M] [32-bit]
+	Prefetchable memory behind bridge: 70900000-709fffff [size=1M] [32-bit]
+	Secondary status: 66MHz- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- <SERR- <PERR-
+	BridgeCtl: Parity- SERR+ NoISA- VGA- VGA16+ MAbort- >Reset- FastB2B-
+		PriDiscTmr- SecDiscTmr- DiscTmrStat- DiscTmrSERREn-
+	Capabilities: <access denied>
+	Kernel driver in use: pcieport
+
+00:1f.0 ISA bridge: Intel Corporation Device 7a86 (rev 11)
+	DeviceName: Onboard - Other
+	Subsystem: Gigabyte Technology Co., Ltd Device 5001
+	Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
+	Status: Cap- 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+	Latency: 0
+
+00:1f.3 Audio device: Intel Corporation Alder Lake-S HD Audio Controller (rev 11)
+	DeviceName: Onboard - Sound
+	Subsystem: Gigabyte Technology Co., Ltd Device a194
+	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
+	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+	Latency: 32, Cache Line Size: 64 bytes
+	Interrupt: pin B routed to IRQ 148
+	Region 0: Memory at 43918000 (64-bit, non-prefetchable) [size=16K]
+	Region 4: Memory at 43400000 (64-bit, non-prefetchable) [size=1M]
+	Capabilities: <access denied>
+	Kernel driver in use: snd_hda_intel
+	Kernel modules: snd_hda_intel, snd_sof_pci_intel_tgl
+
+00:1f.4 SMBus: Intel Corporation Alder Lake-S PCH SMBus Controller (rev 11)
+	DeviceName: Onboard - Other
+	Subsystem: Gigabyte Technology Co., Ltd Device 5001
+	Control: I/O+ Mem+ BusMaster- SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
+	Status: Cap- 66MHz- UDF- FastB2B+ ParErr- DEVSEL=medium >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+	Interrupt: pin C routed to IRQ 18
+	Region 0: Memory at 43922000 (64-bit, non-prefetchable) [size=256]
+	Region 4: I/O ports at efa0 [size=32]
+	Kernel driver in use: i801_smbus
+	Kernel modules: i2c_i801
+
+00:1f.5 Serial bus controller: Intel Corporation Alder Lake-S PCH SPI Controller (rev 11)
+	DeviceName: Onboard - Other
+	Control: I/O- Mem+ BusMaster- SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
+	Status: Cap- 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+	Region 0: Memory at 40406000 (32-bit, non-prefetchable) [size=4K]
+
+01:00.0 PCI bridge: Intel Corporation Device 4fa0 (rev 01) (prog-if 00 [Normal decode])
+	Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
+	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+	Latency: 0, Cache Line Size: 64 bytes
+	Interrupt: pin A routed to IRQ 16
+	Region 0: Memory at 70000000 (64-bit, prefetchable) [size=8M]
+	Bus: primary=01, secondary=02, subordinate=04, sec-latency=0
+	I/O behind bridge: [disabled] [32-bit]
+	Memory behind bridge: 42000000-433fffff [size=20M] [32-bit]
+	Prefetchable memory behind bridge: 60000000-6fffffff [size=256M] [32-bit]
+	Secondary status: 66MHz- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- <SERR- <PERR-
+	BridgeCtl: Parity- SERR+ NoISA- VGA+ VGA16+ MAbort- >Reset- FastB2B-
+		PriDiscTmr- SecDiscTmr- DiscTmrStat- DiscTmrSERREn-
+	Capabilities: <access denied>
+	Kernel driver in use: pcieport
+
+02:01.0 PCI bridge: Intel Corporation Device 4fa4 (prog-if 00 [Normal decode])
+	Subsystem: Intel Corporation Device 4fa4
+	Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
+	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+	Latency: 0, Cache Line Size: 64 bytes
+	Bus: primary=02, secondary=03, subordinate=03, sec-latency=0
+	I/O behind bridge: [disabled] [16-bit]
+	Memory behind bridge: 42000000-431fffff [size=18M] [32-bit]
+	Prefetchable memory behind bridge: 60000000-6fffffff [size=256M] [32-bit]
+	Secondary status: 66MHz- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- <SERR- <PERR-
+	BridgeCtl: Parity- SERR+ NoISA- VGA+ VGA16+ MAbort- >Reset- FastB2B-
+		PriDiscTmr- SecDiscTmr- DiscTmrStat- DiscTmrSERREn-
+	Capabilities: <access denied>
+	Kernel driver in use: pcieport
+
+02:04.0 PCI bridge: Intel Corporation Device 4fa4 (prog-if 00 [Normal decode])
+	Subsystem: Intel Corporation Device 0000
+	Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
+	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+	Latency: 0, Cache Line Size: 64 bytes
+	Bus: primary=02, secondary=04, subordinate=04, sec-latency=0
+	I/O behind bridge: [disabled] [16-bit]
+	Memory behind bridge: 43300000-433fffff [size=1M] [32-bit]
+	Prefetchable memory behind bridge: [disabled] [64-bit]
+	Secondary status: 66MHz- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- <SERR- <PERR-
+	BridgeCtl: Parity- SERR+ NoISA- VGA- VGA16+ MAbort- >Reset- FastB2B-
+		PriDiscTmr- SecDiscTmr- DiscTmrStat- DiscTmrSERREn-
+	Capabilities: <access denied>
+	Kernel driver in use: pcieport
+
+03:00.0 VGA compatible controller: Intel Corporation DG2 [Arc A750] (rev 08) (prog-if 00 [VGA controller])
+	Subsystem: ASRock Incorporation Device 6002
+	Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
+	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+	Latency: 0, Cache Line Size: 64 bytes
+	Interrupt: pin ? routed to IRQ 145
+	Region 0: Memory at 42000000 (64-bit, non-prefetchable) [size=16M]
+	Region 2: Memory at 60000000 (64-bit, prefetchable) [size=256M]
+	Expansion ROM at 43000000 [disabled] [size=2M]
+	Capabilities: <access denied>
+	Kernel driver in use: xe
+	Kernel modules: i915, xe
+
+04:00.0 Audio device: Intel Corporation DG2 Audio Controller
+	Subsystem: ASRock Incorporation Device 6002
+	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
+	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+	Latency: 0, Cache Line Size: 64 bytes
+	Interrupt: pin ? routed to IRQ 149
+	Region 0: Memory at 43300000 (64-bit, non-prefetchable) [size=16K]
+	Capabilities: <access denied>
+	Kernel driver in use: snd_hda_intel
+	Kernel modules: snd_hda_intel
+
+05:00.0 Non-Volatile memory controller: Sandisk Corp Device 501e (prog-if 02 [NVM Express])
+	Subsystem: Sandisk Corp Device 501e
+	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
+	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+	Latency: 0, Cache Line Size: 64 bytes
+	Interrupt: pin A routed to IRQ 16
+	NUMA node: 0
+	Region 0: Memory at 43800000 (64-bit, non-prefetchable) [size=16K]
+	Capabilities: <access denied>
+	Kernel driver in use: nvme
+	Kernel modules: nvme
+
+06:00.0 Network controller: Intel Corporation Dual Band Wireless-AC 3168NGW [Stone Peak] (rev 10)
+	Subsystem: Intel Corporation Device 2110
+	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
+	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+	Latency: 0, Cache Line Size: 64 bytes
+	Interrupt: pin A routed to IRQ 147
+	Region 0: Memory at 43700000 (64-bit, non-prefetchable) [size=8K]
+	Capabilities: <access denied>
+	Kernel driver in use: iwlwifi
+	Kernel modules: iwlwifi
+
+07:00.0 Ethernet controller: Realtek Semiconductor Co., Ltd. RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller (rev 16)
+	Subsystem: Gigabyte Technology Co., Ltd Onboard Ethernet
+	Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
+	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+	Latency: 0, Cache Line Size: 64 bytes
+	Interrupt: pin A routed to IRQ 18
+	Region 0: I/O ports at 4000 [size=256]
+	Region 2: Memory at 43604000 (64-bit, non-prefetchable) [size=4K]
+	Region 4: Memory at 43600000 (64-bit, non-prefetchable) [size=16K]
+	Capabilities: <access denied>
+	Kernel driver in use: r8169
+	Kernel modules: r8169
+
+08:00.0 Serial controller: Device 1c00:3253 (rev 10) (prog-if 05 [16850])
+	Subsystem: Device 1c00:3253
+	Control: I/O+ Mem+ BusMaster- SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
+	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+	Interrupt: pin A routed to IRQ 18
+	Region 0: I/O ports at 3000 [size=256]
+	Region 1: Memory at 70900000 (32-bit, prefetchable) [size=32K]
+	Region 2: I/O ports at 3100 [size=4]
+	Expansion ROM at 43500000 [disabled] [size=32K]
+	Capabilities: <access denied>
+	Kernel driver in use: serial
+
+anything else or more specific?
+
+Thanks,
+Rodrigo.
+
+> 
+> -- 
+> Damien Le Moal
+> Western Digital Research
+> 
