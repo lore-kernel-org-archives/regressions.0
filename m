@@ -1,305 +1,104 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33503C8C4
-	for <regressions@lists.linux.dev>; Fri, 25 Aug 2023 09:45:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1692956747;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CrjGBjMuzKz4ebBtAvxlAUidoQDPdf4WSl157LQLo1U=;
-	b=NQJpIcCQei83Ynvxi9hEsUJuRN8Pu0iqXXtnhxVBKYzGf8gXDoJwM81QAP1TOtc4G1M22F
-	sn5UTjSt4XvXxaKBtSmfQjj/fbxMvoN6/2i8uKI459u8T19hVMn2MqmfT9LZpvnFw6JY8N
-	TAdLxTVHbKz4nYKStWULwpeQJJbFp/w=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-622-OJpBvlPlMQeoDsmpQp_NVA-1; Fri, 25 Aug 2023 05:45:45 -0400
-X-MC-Unique: OJpBvlPlMQeoDsmpQp_NVA-1
-Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-529f8ef2db5so746166a12.0
-        for <regressions@lists.linux.dev>; Fri, 25 Aug 2023 02:45:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692956744; x=1693561544;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CrjGBjMuzKz4ebBtAvxlAUidoQDPdf4WSl157LQLo1U=;
-        b=CCSQJGNxZx0kD9ZgAUd6NG8byLe+Y8QvE7Gdbx36ux+9E6OtoEfyz8/UDwiberk48y
-         z0JhfqI6pWrBNV46qoTuSdq5ZtwoRDbC8amiZgtExTE3skW26RuKWorn05k0bAW280j3
-         ozG60Xu4rv4SUWJLRmXkdPRwRqdz2fv7Ozs8cWXA8FM1NJNRmRceJjYwIz6mF1UJDlDV
-         AYv4gOsKDPUUYbkt0w4bZWjjkL0mlbaxsYDmnTdGvUTjhOwHywH6gQJEHIlh1eeWq5nz
-         VIUqZZWSh+L1L8Ui7KYnFcd5JOejUZxKkm6j8Jlt9AzCL0whaHvT31sYSiZNvNeJOxDw
-         OLNw==
-X-Gm-Message-State: AOJu0YyMHQZAEfunUvIdwJsdy/e6D7kHX1QgJdQ7LFMbq+9nwjTdxIT2
-	hi1r/2OVeLUiqPPpRLJcf/klSEt8mwqyI9o/B3N172xjwPYSdv0OqQ337K0I8wAhkROBRBpDHYz
-	xQsgPkujuSEcCb3O1NoRqUqy3fIsYzNv6i+2tS3/+hT1dxpA=
-X-Received: by 2002:aa7:d6d3:0:b0:526:9c4:bc06 with SMTP id x19-20020aa7d6d3000000b0052609c4bc06mr12003168edr.18.1692956744076;
-        Fri, 25 Aug 2023 02:45:44 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHgDt9FIdtsEpC4kqD3qNgfVsFAQCtSPJhDeSOFK7od6AJWv525UNBnReV1XMVXkZOH/9VDNNk8OLriDkJjk6M=
-X-Received: by 2002:aa7:d6d3:0:b0:526:9c4:bc06 with SMTP id
- x19-20020aa7d6d3000000b0052609c4bc06mr12003144edr.18.1692956743782; Fri, 25
- Aug 2023 02:45:43 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AE6DC8C4
+	for <regressions@lists.linux.dev>; Fri, 25 Aug 2023 09:46:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1692956810; x=1724492810;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=2kzpeTULOBgdjKH8IcKe5A4pH9I2HrNIDiNBAP1Ww1A=;
+  b=GOzfPZR8avnn9LJRGAFXi1W2kJChZQCXBfi4QkNd4DIFj4gnoZk21ZBl
+   37f+6IJmsjEq6PP0kceF9eMlSVHvIc79d41XWet/0jmEShhTgvZK7S/nM
+   wH45LnI2lJoQwYEeuMQVPUzEjxwYXuirTpHsXZZMfE1OhEIsOPca9004L
+   DjbYQZo21OgiJEjWgRT/qGw7uBMRBnfAXYRZIZXjrQRTQJiuKK9JFqaHl
+   adKQnAgWaZaCxSupV6ejWcMOMAFAf10RTIAcPO7169HHYpig9Z3rFMWDB
+   OZ91wtOiY3pixSsZp8uMl8XDPYquOPs8Qvf8oYgYqs17BPB+nD3GDfjmk
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10812"; a="355005927"
+X-IronPort-AV: E=Sophos;i="6.02,195,1688454000"; 
+   d="scan'208";a="355005927"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2023 02:46:49 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10812"; a="851902078"
+X-IronPort-AV: E=Sophos;i="6.02,195,1688454000"; 
+   d="scan'208";a="851902078"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga002.fm.intel.com with ESMTP; 25 Aug 2023 02:46:47 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+	id 3635623A; Fri, 25 Aug 2023 12:46:46 +0300 (EEST)
+Date: Fri, 25 Aug 2023 12:46:46 +0300
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: Kamil Paral <kparal@redhat.com>
+Cc: linux-pci@vger.kernel.org, regressions@lists.linux.dev,
+	bhelgaas@google.com, chris.chiu@canonical.com
+Subject: Re: [REGRESSION] resume with a Thunderbolt dock broke with commit
+ e8b908146d44 "PCI/PM: Increase wait time after resume"
+Message-ID: <20230825094646.GC3465@black.fi.intel.com>
+References: <CA+cBOTc-7U_sumg6g-uBs9w3m8xipuOV1VY=4nmBcyuppgi8_g@mail.gmail.com>
+ <20230823050714.GP3465@black.fi.intel.com>
+ <CA+cBOTdS5djXL=93VThP9K67pjYKHtjceqSczKf8NQonhpgo5Q@mail.gmail.com>
+ <20230823074447.GR3465@black.fi.intel.com>
+ <20230823075649.GS3465@black.fi.intel.com>
+ <CA+cBOTco17b_8ZMhU8gXy8z2mtZXvVxrEUdKaAuZMhyFYC3yeQ@mail.gmail.com>
+ <20230823090525.GT3465@black.fi.intel.com>
+ <CA+cBOTeOSBkw_-AM6desmdVQjTXUZbKppK_PDiOM3sXQW5QKiA@mail.gmail.com>
+ <20230824114300.GU3465@black.fi.intel.com>
+ <CA+cBOTej22hWEFvMOnFfKy16tuzS_+S7kccPPYXNoGVbYMoEdA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230621-logitech-fixes-v2-1-3635f7f9c8af@kernel.org> <b68cf309-fca4-7ae0-b42f-90d5f338acdd@leemhuis.info>
-In-Reply-To: <b68cf309-fca4-7ae0-b42f-90d5f338acdd@leemhuis.info>
-From: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Date: Fri, 25 Aug 2023 11:45:32 +0200
-Message-ID: <CAO-hwJLURSc03SdiHXst=kJnpZNjX0eeKPn14fYhtiSvWFzqKg@mail.gmail.com>
-Subject: Re: [PATCH v2] HID: logitech-hidpp: rework one more time the retries attempts
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: bentiss@kernel.org, =?UTF-8?Q?Filipe_La=C3=ADns?= <lains@riseup.net>, 
-	Bastien Nocera <hadess@hadess.net>, Jiri Kosina <jikos@kernel.org>, 
-	Greg KH <gregkh@linuxfoundation.org>, linux-input@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+cBOTej22hWEFvMOnFfKy16tuzS_+S7kccPPYXNoGVbYMoEdA@mail.gmail.com>
 
-Hi Thorsten,
+Hi,
 
-On Fri, Aug 4, 2023 at 11:14=E2=80=AFAM Linux regression tracking (Thorsten
-Leemhuis) <regressions@leemhuis.info> wrote:
->
-> Hi Benjamin, /me again! :-D
->
-> On 12.07.23 17:02, bentiss@kernel.org wrote:
-> > From: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-> >
-> > Extract the internal code inside a helper function, fix the
-> > initialization of the parameters used in the helper function
-> > (`hidpp->answer_available` was not reset and `*response` wasn't either)=
-,
-> > and use a `do {...} while();` loop.
-> >
-> > Fixes: 586e8fede795 ("HID: logitech-hidpp: Retry commands when device i=
-s busy")
-> > Cc: stable@vger.kernel.org
->
-> From what I understood there was hope that this would cure the last
-> remains (occasional init problems iirc) of the recent regressions with
-> this driver and their fixes. But things look stalled. Is there a reason?
-> Lack of reviews? Is there nevertheless hope that this will make it at
-> least into 6.6?
+On Fri, Aug 25, 2023 at 10:42:55AM +0200, Kamil Paral wrote:
+> On Thu, Aug 24, 2023 at 1:43 PM Mika Westerberg
+> <mika.westerberg@linux.intel.com> wrote:
+> > One thing I noticed, probably has nothing to do with this, but you have
+> > the "security level" set to "secure". Now this is fine and actually
+> > recommended but I wonder if anything changes if you switch that
+> > temporarily to "user"? What is happening here is that once the system
+> > enters S3 the Thunderbolt driver tells the firmware to save the
+> > connected device list, and then once it exits S3 it is expected to
+> > re-connect the PCIe tunnels of the devices on that list but this is not
+> > happening and that's why the dock "dissappears" during resume.
+> 
+> That was a great suggestion. After switching to the user security
+> level, the resume delay is gone, and my dock devices seem to be
+> working almost immediately after resume! The dmesg for that is here:
+> https://bugzilla-attachments.redhat.com/attachment.cgi?id=1985262
 
-Well, mostly lack of testing. But given that nothing happened, I just
-sneaked it in the 6.6 work. I guess bots are happy enough by now.
+Yeah looks good now.
 
-Cheers,
-Benjamin
+> I've done tens of cycles and haven't found any race conditions, unlike
+> with the TB assist mode. (Only once, my USB mouse wasn't working at
+> all, but that's something that occasionally happens on most docks I've
+> worked with and seems to be some different issue).
+> 
+> I'm sorry I haven't found this earlier myself. I did try switching
+> these options, but I bundled it together with enabling the TB assist
+> mode, which has quirks, so I didn't realize switching just this one
+> option might have an impact.
+> 
+> > In any case we can conclude that the commit in question has nothing to
+> > do with the issue. This is completely Thunderbolt related problem.
+> 
+> Considering the information above, does this appear to be a solely
+> dock-related issue (bugged firmware), or does it make sense to follow
+> up on this in some different kernel list? I have to say I'm completely
+> OK with running the laptop using the "user" TB security level, but if
+> you think I should follow up somewhere to get the "secure" level fixed
+> (or some workaround applied, etc), I can.
 
->
-> Ciao, Thorsten
->
-> > Reviewed-by: Bastien Nocera <hadess@hadess.net>
-> > Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-> > ---
-> > as requested by https://lore.kernel.org/all/CAHk-=3DwiMbF38KCNhPFiargen=
-pSBoecSXTLQACKS2UMyo_Vu2ww@mail.gmail.com/
-> > This is a rewrite of that particular piece of code.
-> > ---
-> > Changes in v2:
-> > - added __must_hold() for KASAN
-> > - Reworked the comment describing the functions and their return values
-> > - Link to v1: https://lore.kernel.org/r/20230621-logitech-fixes-v1-1-32=
-e70933c0b0@redhat.com
-> > ---
-> >  drivers/hid/hid-logitech-hidpp.c | 115 +++++++++++++++++++++++++------=
---------
-> >  1 file changed, 75 insertions(+), 40 deletions(-)
-> >
-> > diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitec=
-h-hidpp.c
-> > index 129b01be488d..09ba2086c95c 100644
-> > --- a/drivers/hid/hid-logitech-hidpp.c
-> > +++ b/drivers/hid/hid-logitech-hidpp.c
-> > @@ -275,21 +275,22 @@ static int __hidpp_send_report(struct hid_device =
-*hdev,
-> >  }
-> >
-> >  /*
-> > - * hidpp_send_message_sync() returns 0 in case of success, and somethi=
-ng else
-> > - * in case of a failure.
-> > - * - If ' something else' is positive, that means that an error has be=
-en raised
-> > - *   by the protocol itself.
-> > - * - If ' something else' is negative, that means that we had a classi=
-c error
-> > - *   (-ENOMEM, -EPIPE, etc...)
-> > + * Effectively send the message to the device, waiting for its answer.
-> > + *
-> > + * Must be called with hidpp->send_mutex locked
-> > + *
-> > + * Same return protocol than hidpp_send_message_sync():
-> > + * - success on 0
-> > + * - negative error means transport error
-> > + * - positive value means protocol error
-> >   */
-> > -static int hidpp_send_message_sync(struct hidpp_device *hidpp,
-> > +static int __do_hidpp_send_message_sync(struct hidpp_device *hidpp,
-> >       struct hidpp_report *message,
-> >       struct hidpp_report *response)
-> >  {
-> > -     int ret =3D -1;
-> > -     int max_retries =3D 3;
-> > +     int ret;
-> >
-> > -     mutex_lock(&hidpp->send_mutex);
-> > +     __must_hold(&hidpp->send_mutex);
-> >
-> >       hidpp->send_receive_buf =3D response;
-> >       hidpp->answer_available =3D false;
-> > @@ -300,47 +301,74 @@ static int hidpp_send_message_sync(struct hidpp_d=
-evice *hidpp,
-> >        */
-> >       *response =3D *message;
-> >
-> > -     for (; max_retries !=3D 0 && ret; max_retries--) {
-> > -             ret =3D __hidpp_send_report(hidpp->hid_dev, message);
-> > +     ret =3D __hidpp_send_report(hidpp->hid_dev, message);
-> > +     if (ret) {
-> > +             dbg_hid("__hidpp_send_report returned err: %d\n", ret);
-> > +             memset(response, 0, sizeof(struct hidpp_report));
-> > +             return ret;
-> > +     }
-> >
-> > -             if (ret) {
-> > -                     dbg_hid("__hidpp_send_report returned err: %d\n",=
- ret);
-> > -                     memset(response, 0, sizeof(struct hidpp_report));
-> > -                     break;
-> > -             }
-> > +     if (!wait_event_timeout(hidpp->wait, hidpp->answer_available,
-> > +                             5*HZ)) {
-> > +             dbg_hid("%s:timeout waiting for response\n", __func__);
-> > +             memset(response, 0, sizeof(struct hidpp_report));
-> > +             return -ETIMEDOUT;
-> > +     }
-> >
-> > -             if (!wait_event_timeout(hidpp->wait, hidpp->answer_availa=
-ble,
-> > -                                     5*HZ)) {
-> > -                     dbg_hid("%s:timeout waiting for response\n", __fu=
-nc__);
-> > -                     memset(response, 0, sizeof(struct hidpp_report));
-> > -                     ret =3D -ETIMEDOUT;
-> > -                     break;
-> > -             }
-> > +     if (response->report_id =3D=3D REPORT_ID_HIDPP_SHORT &&
-> > +         response->rap.sub_id =3D=3D HIDPP_ERROR) {
-> > +             ret =3D response->rap.params[1];
-> > +             dbg_hid("%s:got hidpp error %02X\n", __func__, ret);
-> > +             return ret;
-> > +     }
-> >
-> > -             if (response->report_id =3D=3D REPORT_ID_HIDPP_SHORT &&
-> > -                 response->rap.sub_id =3D=3D HIDPP_ERROR) {
-> > -                     ret =3D response->rap.params[1];
-> > -                     dbg_hid("%s:got hidpp error %02X\n", __func__, re=
-t);
-> > +     if ((response->report_id =3D=3D REPORT_ID_HIDPP_LONG ||
-> > +          response->report_id =3D=3D REPORT_ID_HIDPP_VERY_LONG) &&
-> > +         response->fap.feature_index =3D=3D HIDPP20_ERROR) {
-> > +             ret =3D response->fap.params[1];
-> > +             dbg_hid("%s:got hidpp 2.0 error %02X\n", __func__, ret);
-> > +             return ret;
-> > +     }
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +/*
-> > + * hidpp_send_message_sync() returns 0 in case of success, and somethi=
-ng else
-> > + * in case of a failure.
-> > + *
-> > + * See __do_hidpp_send_message_sync() for a detailed explanation of th=
-e returned
-> > + * value.
-> > + */
-> > +static int hidpp_send_message_sync(struct hidpp_device *hidpp,
-> > +     struct hidpp_report *message,
-> > +     struct hidpp_report *response)
-> > +{
-> > +     int ret;
-> > +     int max_retries =3D 3;
-> > +
-> > +     mutex_lock(&hidpp->send_mutex);
-> > +
-> > +     do {
-> > +             ret =3D __do_hidpp_send_message_sync(hidpp, message, resp=
-onse);
-> > +             if (ret !=3D HIDPP20_ERROR_BUSY)
-> >                       break;
-> > -             }
-> >
-> > -             if ((response->report_id =3D=3D REPORT_ID_HIDPP_LONG ||
-> > -                  response->report_id =3D=3D REPORT_ID_HIDPP_VERY_LONG=
-) &&
-> > -                 response->fap.feature_index =3D=3D HIDPP20_ERROR) {
-> > -                     ret =3D response->fap.params[1];
-> > -                     if (ret !=3D HIDPP20_ERROR_BUSY) {
-> > -                             dbg_hid("%s:got hidpp 2.0 error %02X\n", =
-__func__, ret);
-> > -                             break;
-> > -                     }
-> > -                     dbg_hid("%s:got busy hidpp 2.0 error %02X, retryi=
-ng\n", __func__, ret);
-> > -             }
-> > -     }
-> > +             dbg_hid("%s:got busy hidpp 2.0 error %02X, retrying\n", _=
-_func__, ret);
-> > +     } while (--max_retries);
-> >
-> >       mutex_unlock(&hidpp->send_mutex);
-> >       return ret;
-> >
-> >  }
-> >
-> > +/*
-> > + * hidpp_send_fap_command_sync() returns 0 in case of success, and som=
-ething else
-> > + * in case of a failure.
-> > + *
-> > + * See __do_hidpp_send_message_sync() for a detailed explanation of th=
-e returned
-> > + * value.
-> > + */
-> >  static int hidpp_send_fap_command_sync(struct hidpp_device *hidpp,
-> >       u8 feat_index, u8 funcindex_clientid, u8 *params, int param_count=
-,
-> >       struct hidpp_report *response)
-> > @@ -373,6 +401,13 @@ static int hidpp_send_fap_command_sync(struct hidp=
-p_device *hidpp,
-> >       return ret;
-> >  }
-> >
-> > +/*
-> > + * hidpp_send_rap_command_sync() returns 0 in case of success, and som=
-ething else
-> > + * in case of a failure.
-> > + *
-> > + * See __do_hidpp_send_message_sync() for a detailed explanation of th=
-e returned
-> > + * value.
-> > + */
-> >  static int hidpp_send_rap_command_sync(struct hidpp_device *hidpp_dev,
-> >       u8 report_id, u8 sub_id, u8 reg_address, u8 *params, int param_co=
-unt,
-> >       struct hidpp_report *response)
-> >
-> > ---
-> > base-commit: 87854366176403438d01f368b09de3ec2234e0f5
-> > change-id: 20230621-logitech-fixes-a4c0e66ea2ad
-> >
-> > Best regards,
->
-
+I would start by contacting Lenovo because I suspect this is Thunderbolt
+firmware (host side not dock) issue so they may pull a newer one for
+this one from Intel.
