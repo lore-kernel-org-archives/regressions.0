@@ -1,23 +1,23 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C880CA52
-	for <regressions@lists.linux.dev>; Fri, 25 Aug 2023 12:14:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
- s=s31663417; t=1692965661; x=1693570461; i=wahrenst@gmx.net;
- bh=fCfmUZ9y2OW+VD5pOAsTNkaXpwFH0ITwIigwyh1KSi8=;
- h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:In-Reply-To;
- b=DohdBf4Y7A/t/R69f5W4zT6rjFkP4lmH57+a5PozBwoMZzD6AoSLrTCtC/keBkKChgMiVw7
- Q0o9nc2Pl2EMyiv/hfbVbnkk/I9lyR1+MjLi86oBYD60kH07IvMi/Y7vnsheCiLRWmvNfYLmt
- QKA42YFEXyPRIulNnyjkoc3VLbOtNJwOcV42/b0oy64PD2+VaqWNwbHNjku5NgZlAVhaxIOds
- 5ToSjXb8nNz3e4aGCryP+7DwWGk9JYn+cTmtbK4j1VD5b564yl9jqlSmkYMNNi8tAVXJjxG/W
- gt2EKqvh5RJjeCopH5uyiYfxUaYcuAFzbNWhzBjfJtLaVlyWSQEQ==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.1.129] ([37.4.248.43]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MnakR-1psmyG29Ej-00jcW0; Fri, 25
- Aug 2023 14:14:21 +0200
-Message-ID: <20e3c73c-7736-b010-516a-6618c88d8dad@gmx.net>
-Date: Fri, 25 Aug 2023 14:14:19 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAD8BCA52
+	for <regressions@lists.linux.dev>; Fri, 25 Aug 2023 12:19:53 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7CB0C433C7;
+	Fri, 25 Aug 2023 12:19:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1692965993;
+	bh=lo8kdtKnIBMK0RBmDSkBDge4uqBrL+/NmJx/VM6oMgQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=BQ3ePLkd0q0asul4eHgyUaLuxWJwbBg47Whisv0UFq2rYlyaeDBvYeM0OTcCe1uuT
+	 yP58zv/e9glkXCoFgqAgRvGTMJHJstat1qOxAS95pYmCLxyw2xAxfsR/TYqftsC2K0
+	 d8hQpmdwHmPBJCAm7Hmr5J5niJfqu0bBPRZ6fr4SKScH+xCx8EL5MRLSLzSl2vO2sN
+	 /hdadvh2FflG1lAqJLpiyTY8UpO0go+7fRClx9SD4fOfaTNTVEtpczuG0XZp6zXv/W
+	 cq8scKduFdOnHacFZ7CPzeBI73IPP/CgWyn3VQzC2W+YFvwDyHPKMAtw0UcnO8zsmm
+	 bREL5CfJLy1WA==
+Content-Type: multipart/mixed; boundary="------------bF6QaiUtzo0gJ30Vc16x27lO"
+Message-ID: <ef45e164-dccb-c149-b85d-ae4e812935b4@kernel.org>
+Date: Fri, 25 Aug 2023 21:19:50 +0900
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -26,106 +26,238 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.13.0
-Subject: Re: bcm2835-rng: Performance regression since 96cb9d055445
+Subject: Re: [PATCH] ata,scsi: do not issue START STOP UNIT on resume
 Content-Language: en-US
-To: "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>,
- Florian Fainelli <florian.fainelli@broadcom.com>,
- Scott Branden <sbranden@broadcom.com>,
- bcm-kernel-feedback-list@broadcom.com, linux-crypto@vger.kernel.org,
- Linux ARM <linux-arm-kernel@lists.infradead.org>,
- Andrei Coardos <aboutphysycs@gmail.com>, Martin Kaiser <martin@kaiser.cx>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- Phil Elwell <phil@raspberrypi.com>
-References: <bc97ece5-44a3-4c4e-77da-2db3eb66b128@gmx.net>
- <ZOiP2H_6pfhKN3fj@zx2c4.com>
-From: Stefan Wahren <wahrenst@gmx.net>
-In-Reply-To: <ZOiP2H_6pfhKN3fj@zx2c4.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:k+ydxWD8F27tvwolbfoiF9VhPfuhmZ0BIFdAZOfhRltJ/UXgoL3
- raY/toYrx9cgXV+UpV83Qxwm6AV5fzr8VteYl6/8I63FFCKc/zVPWhEIDJu1fPC+r45+SAd
- a+kEbH+1TS6xEGVpdnICoaJc1Dboy6tKy4Z2YTvDWjzBejen1TB54EGxvzACBQsYpoXHvqk
- m29abvdyGiknSpSQaQoyw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:HKG9TUu/MGc=;5xCFcdhpJDoTvNkhY4zmv+/ZK75
- LyArpiio00WpyT7NU9JOV/x4jTGRMhjPWblGSBqloTqtjnXyNhCteG+5ARjbhCAwxwSCGmAeV
- s3QNVcoGcIkqKKZytti4Hw2q96WDqhDC36tC7S7/2PnPJN3fAtH4ezIUBJ406M4WqEgY84X2f
- 9LRN1+vrJTB4Og94B4C7zkDAbGh662IluQOgtjni2GFesNgALbFGb5EtBXlzQP0ndiKS6R0lR
- Ufcxmb6gD+ju0IjY1mCmSIu8dhoJ/FjD39fS2Q8gQA95HqjQ35+QdW5cSjGlVRArr865Sacj2
- 9kXFJceeusZTnwoytzR6Excvfm0EE32lo2WJb3YGF7s0X7sv7xs2e/IBUxaOXqQ/zJxO/6omo
- Shm1tb0nGL4TyZsN90Ni3Yw/KZns8x3fJPg97dBWNSR2fj/nrXg0FiUGLVTyQalkZIYkwT8Jw
- xx/LYerHN7955SsyWQWd7YtonTbpDZ5qgkV+jZEYhf9oXuxdKzs0vliuI921ZOwhg/HJIe9vx
- GNPXTnT8ISNbgRAx0RiOqntyeeeAbn+8qzAXjkA0yVE0iIB5qIOW/i4V80RtPaDYFPKxQRA8o
- 3KMKLlHhYLOby/xX1mNkxHd4KC//Aq0dejDpcTV0WW0QIqNBrW3EXufyupc8LlqYMNu9IgNi4
- BgvMJcB7QBjt65Kx2ca/SWebtMfygWr7D6EmH4DYqfVWhVQkzXcKSHUKMrEPAn4hS3vx1wHDD
- oeQXIYEbjX/Lns08Q5FoiqyHYJI0QqQKKu3RfMLgou9j2kZEy6BhRLu/HWVSgR3Dq/Kcw1C/i
- uW/QNP+QP35udE21idSQLFXc7xHuBh58NnxkASUVF8NG3j6PFJizcAKsU1N1hbWIKiID2zV28
- jMZWeqwcBJjGdKAfbot7j5SMstSGYQcq2zd+Ua/2DZGeK83p7xpd6ijV//HEMBxGAjBlOVJXD
- mUENx8y3uoyBWFJn2PQurhYiicc=
+To: Rodrigo Vivi <rodrigo.vivi@kernel.org>
+Cc: linux-ide@vger.kernel.org, linux-scsi@vger.kernel.org,
+ "Martin K . Petersen" <martin.petersen@oracle.com>,
+ Paul Ausbeck <paula@soe.ucsc.edu>,
+ Thorsten Leemhuis <regressions@leemhuis.info>, TW <dalzot@gmail.com>,
+ regressions@lists.linux.dev, Bart Van Assche <bvanassche@acm.org>
+References: <20230731003956.572414-1-dlemoal@kernel.org>
+ <ZOehTysWO+U3mVvK@rdvivi-mobl4>
+From: Damien Le Moal <dlemoal@kernel.org>
+Organization: Western Digital Research
+In-Reply-To: <ZOehTysWO+U3mVvK@rdvivi-mobl4>
 
-Hi Jason,
+This is a multi-part message in MIME format.
+--------------bF6QaiUtzo0gJ30Vc16x27lO
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Am 25.08.23 um 13:26 schrieb Jason A. Donenfeld:
-> Hi Stefan,
->
-> On Fri, Aug 25, 2023 at 01:14:55PM +0200, Stefan Wahren wrote:
->> Hi,
+On 8/25/23 03:28, Rodrigo Vivi wrote:
+> On Mon, Jul 31, 2023 at 09:39:56AM +0900, Damien Le Moal wrote:
+>> During system resume, ata_port_pm_resume() triggers ata EH to
+>> 1) Resume the controller
+>> 2) Reset and rescan the ports
+>> 3) Revalidate devices
+>> This EH execution is started asynchronously from ata_port_pm_resume(),
+>> which means that when sd_resume() is executed, none or only part of the
+>> above processing may have been executed. However, sd_resume() issues a
+>> START STOP UNIT to wake up the drive from sleep mode. This command is
+>> translated to ATA with ata_scsi_start_stop_xlat() and issued to the
+>> device. However, depending on the state of execution of the EH process
+>> and revalidation triggerred by ata_port_pm_resume(), two things may
+>> happen:
+>> 1) The START STOP UNIT fails if it is received before the controller has
+>>    been reenabled at the beginning of the EH execution. This is visible
+>>    with error messages like:
 >>
->> i didn't find the time to fix the performance regression in bcm2835-rng
->> which affects Raspberry Pi 0 - 3, so report it at least. AFAIK the firs=
-t
->> report about this issue was here [1] and identified the offending commi=
-t:
+>> ata10.00: device reported invalid CHS sector 0
+>> sd 9:0:0:0: [sdc] Start/Stop Unit failed: Result: hostbyte=DID_OK driverbyte=DRIVER_OK
+>> sd 9:0:0:0: [sdc] Sense Key : Illegal Request [current]
+>> sd 9:0:0:0: [sdc] Add. Sense: Unaligned write command
+>> sd 9:0:0:0: PM: dpm_run_callback(): scsi_bus_resume+0x0/0x90 returns -5
+>> sd 9:0:0:0: PM: failed to resume async: error -5
 >>
->> 96cb9d055445 ("hwrng: bcm2835 - use hwrng_msleep() instead of
->>    cpu_relax()")
+>> 2) The START STOP UNIT command is received while the EH process is
+>>    on-going, which mean that it is stopped and must wait for its
+>>    completion, at which point the command is rather useless as the drive
+>>    is already fully spun up already. This case results also in a
+>>    significant delay in sd_resume() which is observable by users as
+>>    the entire system resume completion is delayed.
 >>
->> #regzbot introduced: 96cb9d055445
->>
->> I was able to reproduce this issue with a Raspberry Pi 3 B+ on Linux
->> 6.5-rc6 (arm64/defconfig).
->>
->> Before:
->> time sudo dd if=3D/dev/hwrng of=3D/dev/urandom count=3D1 bs=3D4096 stat=
-us=3Dnone
->>
->> real	3m29,002s
->> user	0m0,018s
->> sys	0m0,054s
-> That's not surprising. But also, does it matter? That script has
-> *always* been wrong. Writing to /dev/urandom like that has *never*
-> ensured that those bytes are taken into account immediately after. It's
-> just not how that interface works. So any assumptions based on that are
-> bogus, and that line effectively does nothing.
->
-> Fortunately, however, the kernel itself incorporates hwrng output into
-> the rng pool, so you don't need to think about doing it yourself.
->
-> So go ahead and remove that line from your script.
-Thanks for your explanation. Unfortunately this isn't my script. I'm
-just a former BCM2835 maintainer and interested that more user stick to
-the mainline kernel instead of the vendor ones. I will try to report the
-script owner.
-> Now as far as the "regression" goes, we've made an already broken
-> userspace script take 3 minutes longer than usual, but it still does
-> eventually complete, so it's not making boot impossible or something.
-> How this relates to the "don't break userspace" rule might be a matter
-> of opinion. If you think it does, maybe send a patch to Herbert reducing
-> that sleep from 1000 to 100 and stating why with my background above,
-> and see if he agrees it's worth fixing. Or, if removing that line from
-> your scripts is good enough for you, that's also fine by me.
-Now i agree that the provided example isn't the proper way to handle
-/dev/urandom. Unfortunately most of the Raspberry Pi users doesn't care
-about such details. In their eyes the mainline kernel is "broken" and
-this is one argument to go back to the vendor ones.
+>> Given that ATA devices will be woken up by libata activity on resume,
+>> sd_resume() has no need to issue a START STOP UNIT command, which solves
+>> the above mentioned problems. Do not issue this command by introducing
+>> the new scsi_device flag no_start_on_resume and setting this flag to 1
+>> in ata_scsi_dev_config(). sd_resume() is modified to issue a START STOP
+>> UNIT command only if this flag is not set.
+> 
+> Hi Damien,
+> 
+> Last week I noticed that a basic test in our validation started failing,
+> then I noticed that it was subsequent quick suspend and autoresume using
+> rtcwake that was problematic.
+> 
+> I couldn't collect any specific log that was pointing to some useful direction.
+> After a painful bisect I got to this patch. After reverting in from the
+> top of our tree, the tests are back to life.
+> 
+> The issue was that the subsequent quick suspend-resume (sometimes the
+> second, sometimes third or even sixth) was simply hanging the machine
+> in different points at Suspend.
+> 
+> So, maybe we have some kind of disks/configuration out there where this
+> start upon resume is needed? Maybe it is just a matter of timming to
+> ensure some firmware underneath is up and back to life?
+> 
+> Well, please let me know the best way to report this issue to you and what
+> kind of logs I should get.
+> 
+> Meanwhile if this ends up blocking our CI we can keep a revert in a
+> topic branch for CI.
 
-Beside of the /dev/urandom abuse, i'm not convinced that sleeping for 1
-sec is a good choice. This HRNG IP is used in embedded devices (e.g.
-Router) and mostly without any other good source of entropy. So i think
-it's worth to define a reasonable value.
+Can you try adding the patch attached to this email ?
+Thanks.
 
-Best regards
->
-> Jason
+-- 
+Damien Le Moal
+Western Digital Research
 
+--------------bF6QaiUtzo0gJ30Vc16x27lO
+Content-Type: text/x-patch; charset=UTF-8;
+ name="0001-ata-libata-scsi-link-ata-port-and-scsi-device.patch"
+Content-Disposition: attachment;
+ filename="0001-ata-libata-scsi-link-ata-port-and-scsi-device.patch"
+Content-Transfer-Encoding: base64
+
+RnJvbSAyMGI2MzY0OTRmOWM5OGJiY2E1MGQ2YjJmYjEyMzVmNDc0NzZjZGI0IE1vbiBTZXAg
+MTcgMDA6MDA6MDAgMjAwMQpGcm9tOiBEYW1pZW4gTGUgTW9hbCA8ZGxlbW9hbEBrZXJuZWwu
+b3JnPgpEYXRlOiBGcmksIDI1IEF1ZyAyMDIzIDE1OjQxOjE0ICswOTAwClN1YmplY3Q6IFtQ
+QVRDSF0gYXRhOiBsaWJhdGEtc2NzaTogbGluayBhdGEgcG9ydCBhbmQgc2NzaSBkZXZpY2UK
+ClRoZXJlIGlzIG5vIGRpcmVjdCBhbmNlc3RyeSBiZXR3ZWVuIGFuIGF0YV9kZXZpY2UgYW5k
+IGl0cyBzY3NpIGRldmljZSwKd2hpY2ggcHJldmVudHMgdGhlIHBvd2VyIG1hbmFnZW1lbnQg
+Y29kZSBmcm9tIGNvcnJlY3RseSBvcmRlcmluZyBzdXNwZW5kCmFuZCByZXN1bWUgb3BlcmF0
+aW9ucywgd2hpY2ggcmVxdWlyZXMgYWRkaXRpb25hbCBjb2RlIHRvIGJlIGhhbmRsZWQKY29y
+cmVjdGx5LiBDcmVhdGUgc3VjaCBhbmNlc3RyeSB0byBhbGxvdyBzaW1wbGlmeWluZyB0aGUg
+Y29kZS4KClRoZSBwYXJlbnQtY2hpbGQgKHN1cHBsaWVyLWNvbnN1bWVyKSByZWxhdGlvbnNo
+aXAgaXMgZXN0YWJsaXNoZWQgYmV0d2Vlbgp0aGUgYXRhX3BvcnQgKHBhcmVudCkgYW5kIHRo
+ZSBzY3NpIGRldmljZSAoY2hpbGQpIHdpdGgKZGV2aWNlX2FkZF9saW5rKCkuIFRoZSBwYXJl
+bnQgdXNlZCBpcyBub3QgdGhlIGF0YV9kZXZpY2UgYXMgdGhlIFBNCm9wZXJhdGlvbnMgYXJl
+IGRlZmluZWQgcGVyIHBvcnQgYW5kIGRldmljZXMgc3RhdHVzIGNvbnRyb2xsZWQgZnJvbSB0
+aGVzZQpwb3J0IG9wZXJhdGlvbnMuCgpUaGUgZGV2aWNlIGxpbmsgaXMgZXN0YWJsaXNoZWQg
+d2l0aCB0aGUgbmV3IGZ1bmN0aW9uCmF0YV9zY3NpX2Rldl9hbGxvYygpLiBUaGlzIGZ1bmN0
+aW9uIGlzIHVzZWQgdG8gZGVmaW5lIHRoZSAtPnNsYXZlX2FsbG9jCmNhbGxiYWNrIG9mIHRo
+ZSBzY3NpIGhvc3QgdGVtcGxhdGUgb2YgYWxsIGRyaXZlcnMuCgpTaWduZWQtb2ZmLWJ5OiBE
+YW1pZW4gTGUgTW9hbCA8ZGxlbW9hbEBrZXJuZWwub3JnPgotLS0KIGRyaXZlcnMvYXRhL2xp
+YmF0YS1zY3NpLmMgfCA0NiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrLS0t
+LS0KIGRyaXZlcnMvYXRhL2xpYmF0YS5oICAgICAgfCAgMSArCiBkcml2ZXJzL2F0YS9wYXRh
+X21hY2lvLmMgIHwgIDEgKwogZHJpdmVycy9hdGEvc2F0YV9tdi5jICAgICB8ICAxICsKIGRy
+aXZlcnMvYXRhL3NhdGFfbnYuYyAgICAgfCAgMiArKwogZHJpdmVycy9hdGEvc2F0YV9zaWwy
+NC5jICB8ICAxICsKIGluY2x1ZGUvbGludXgvbGliYXRhLmggICAgfCAgMyArKysKIDcgZmls
+ZXMgY2hhbmdlZCwgNTAgaW5zZXJ0aW9ucygrKSwgNSBkZWxldGlvbnMoLSkKCmRpZmYgLS1n
+aXQgYS9kcml2ZXJzL2F0YS9saWJhdGEtc2NzaS5jIGIvZHJpdmVycy9hdGEvbGliYXRhLXNj
+c2kuYwppbmRleCBjNmVjZTMyZGU4ZTMuLmFiNTcyY2M5YjNmOSAxMDA2NDQKLS0tIGEvZHJp
+dmVycy9hdGEvbGliYXRhLXNjc2kuYworKysgYi9kcml2ZXJzL2F0YS9saWJhdGEtc2NzaS5j
+CkBAIC0xMTM5LDYgKzExMzksNDUgQEAgaW50IGF0YV9zY3NpX2Rldl9jb25maWcoc3RydWN0
+IHNjc2lfZGV2aWNlICpzZGV2LCBzdHJ1Y3QgYXRhX2RldmljZSAqZGV2KQogCXJldHVybiAw
+OwogfQogCitpbnQgYXRhX3Njc2lfZGV2X2FsbG9jKHN0cnVjdCBzY3NpX2RldmljZSAqc2Rl
+diwgc3RydWN0IGF0YV9wb3J0ICphcCkKK3sKKwlzdHJ1Y3QgZGV2aWNlX2xpbmsgKmxpbms7
+CisKKwlhdGFfc2NzaV9zZGV2X2NvbmZpZyhzZGV2KTsKKworCS8qCisJICogQ3JlYXRlIGEg
+bGluayBmcm9tIHRoZSBhdGFfcG9ydCBkZXZpY2UgdG8gdGhlIHNjc2kgZGV2aWNlIHRvIGVu
+c3VyZQorCSAqIHRoYXQgUE0gZG9lcyBzdXNwZW5kL3Jlc3VtZSBpbiB0aGUgY29ycmVjdCBv
+cmRlcjogdGhlIHNjc2kgZGV2aWNlIGlzCisJICogY29uc3VtZXIgKGNoaWxkKSBhbmQgdGhl
+IGF0YSBwb3J0IHRoZSBzdXBwbGllciAocGFyZW50KS4KKwkgKi8KKwlsaW5rID0gZGV2aWNl
+X2xpbmtfYWRkKCZzZGV2LT5zZGV2X2dlbmRldiwgJmFwLT50ZGV2LAorCQkJICAgICAgIERM
+X0ZMQUdfUE1fUlVOVElNRSB8IERMX0ZMQUdfUlBNX0FDVElWRSk7CisJaWYgKCFsaW5rKSB7
+CisJCWF0YV9wb3J0X2VycihhcCwgIkZhaWxlZCB0byBjcmVhdGUgbGluayB0byBzY3NpIGRl
+dmljZSAlc1xuIiwKKwkJCSAgICAgZGV2X25hbWUoJnNkZXYtPnNkZXZfZ2VuZGV2KSk7CisJ
+CXJldHVybiAtRU5PREVWOworCX0KKworCXJldHVybiAwOworfQorCisvKioKKyAqCWF0YV9z
+Y3NpX3NsYXZlX2FsbG9jIC0gRWFybHkgc2V0dXAgb2YgU0NTSSBkZXZpY2UKKyAqCUBzZGV2
+OiBTQ1NJIGRldmljZSB0byBleGFtaW5lCisgKgorICoJVGhpcyBpcyBjYWxsZWQgZnJvbSBz
+Y3NpX2FsbG9jX3NkZXYoKSB3aGVuIHRoZSBzY3NpIGRldmljZQorICoJYXNzb2NpYXRlZCB3
+aXRoIGFuIEFUQSBkZXZpY2UgaXMgc2Nhbm5lZCBvbiBhIHBvcnQuCisgKgorICoJTE9DS0lO
+RzoKKyAqCURlZmluZWQgYnkgU0NTSSBsYXllci4gIFdlIGRvbid0IHJlYWxseSBjYXJlLgor
+ICovCisKK2ludCBhdGFfc2NzaV9zbGF2ZV9hbGxvYyhzdHJ1Y3Qgc2NzaV9kZXZpY2UgKnNk
+ZXYpCit7CisJcmV0dXJuIGF0YV9zY3NpX2Rldl9hbGxvYyhzZGV2LCBhdGFfc2hvc3RfdG9f
+cG9ydChzZGV2LT5ob3N0KSk7Cit9CitFWFBPUlRfU1lNQk9MX0dQTChhdGFfc2NzaV9zbGF2
+ZV9hbGxvYyk7CisKIC8qKgogICoJYXRhX3Njc2lfc2xhdmVfY29uZmlnIC0gU2V0IFNDU0kg
+ZGV2aWNlIGF0dHJpYnV0ZXMKICAqCUBzZGV2OiBTQ1NJIGRldmljZSB0byBleGFtaW5lCkBA
+IC0xMTU1LDE0ICsxMTk0LDExIEBAIGludCBhdGFfc2NzaV9zbGF2ZV9jb25maWcoc3RydWN0
+IHNjc2lfZGV2aWNlICpzZGV2KQogewogCXN0cnVjdCBhdGFfcG9ydCAqYXAgPSBhdGFfc2hv
+c3RfdG9fcG9ydChzZGV2LT5ob3N0KTsKIAlzdHJ1Y3QgYXRhX2RldmljZSAqZGV2ID0gX19h
+dGFfc2NzaV9maW5kX2RldihhcCwgc2Rldik7Ci0JaW50IHJjID0gMDsKLQotCWF0YV9zY3Np
+X3NkZXZfY29uZmlnKHNkZXYpOwogCiAJaWYgKGRldikKLQkJcmMgPSBhdGFfc2NzaV9kZXZf
+Y29uZmlnKHNkZXYsIGRldik7CisJCXJldHVybiBhdGFfc2NzaV9kZXZfY29uZmlnKHNkZXYs
+IGRldik7CiAKLQlyZXR1cm4gcmM7CisJcmV0dXJuIDA7CiB9CiBFWFBPUlRfU1lNQk9MX0dQ
+TChhdGFfc2NzaV9zbGF2ZV9jb25maWcpOwogCmRpZmYgLS1naXQgYS9kcml2ZXJzL2F0YS9s
+aWJhdGEuaCBiL2RyaXZlcnMvYXRhL2xpYmF0YS5oCmluZGV4IGNmOTkzODg1ZDJiMi4uYzQ1
+Y2FjMmEzNjMxIDEwMDY0NAotLS0gYS9kcml2ZXJzL2F0YS9saWJhdGEuaAorKysgYi9kcml2
+ZXJzL2F0YS9saWJhdGEuaApAQCAtMTEzLDYgKzExMyw3IEBAIGV4dGVybiBzdHJ1Y3QgYXRh
+X2RldmljZSAqYXRhX3Njc2lfZmluZF9kZXYoc3RydWN0IGF0YV9wb3J0ICphcCwKIGV4dGVy
+biBpbnQgYXRhX3Njc2lfYWRkX2hvc3RzKHN0cnVjdCBhdGFfaG9zdCAqaG9zdCwKIAkJCSAg
+ICAgIGNvbnN0IHN0cnVjdCBzY3NpX2hvc3RfdGVtcGxhdGUgKnNodCk7CiBleHRlcm4gdm9p
+ZCBhdGFfc2NzaV9zY2FuX2hvc3Qoc3RydWN0IGF0YV9wb3J0ICphcCwgaW50IHN5bmMpOwor
+ZXh0ZXJuIGludCBhdGFfc2NzaV9kZXZfYWxsb2Moc3RydWN0IHNjc2lfZGV2aWNlICpzZGV2
+LCBzdHJ1Y3QgYXRhX3BvcnQgKmFwKTsKIGV4dGVybiBpbnQgYXRhX3Njc2lfb2ZmbGluZV9k
+ZXYoc3RydWN0IGF0YV9kZXZpY2UgKmRldik7CiBleHRlcm4gYm9vbCBhdGFfc2NzaV9zZW5z
+ZV9pc192YWxpZCh1OCBzaywgdTggYXNjLCB1OCBhc2NxKTsKIGV4dGVybiB2b2lkIGF0YV9z
+Y3NpX3NldF9zZW5zZShzdHJ1Y3QgYXRhX2RldmljZSAqZGV2LApkaWZmIC0tZ2l0IGEvZHJp
+dmVycy9hdGEvcGF0YV9tYWNpby5jIGIvZHJpdmVycy9hdGEvcGF0YV9tYWNpby5jCmluZGV4
+IDE3ZjZjY2VlNTNjNy4uMzI5NjhiNGNmOGU0IDEwMDY0NAotLS0gYS9kcml2ZXJzL2F0YS9w
+YXRhX21hY2lvLmMKKysrIGIvZHJpdmVycy9hdGEvcGF0YV9tYWNpby5jCkBAIC05MTgsNiAr
+OTE4LDcgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBzY3NpX2hvc3RfdGVtcGxhdGUgcGF0YV9t
+YWNpb19zaHQgPSB7CiAJICogdXNlIDY0SyBtaW51cyAyNTYKIAkgKi8KIAkubWF4X3NlZ21l
+bnRfc2l6ZQk9IE1BWF9EQkRNQV9TRUcsCisJLnNsYXZlX2FsbG9jCQk9IGF0YV9zY3NpX3Ns
+YXZlX2FsbG9jLAogCS5zbGF2ZV9jb25maWd1cmUJPSBwYXRhX21hY2lvX3NsYXZlX2NvbmZp
+ZywKIAkuc2Rldl9ncm91cHMJCT0gYXRhX2NvbW1vbl9zZGV2X2dyb3VwcywKIAkuY2FuX3F1
+ZXVlCQk9IEFUQV9ERUZfUVVFVUUsCmRpZmYgLS1naXQgYS9kcml2ZXJzL2F0YS9zYXRhX212
+LmMgYi9kcml2ZXJzL2F0YS9zYXRhX212LmMKaW5kZXggZDQwNGU2MzFkMTUyLi4zN2EwYmJh
+YTgzNDEgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvYXRhL3NhdGFfbXYuYworKysgYi9kcml2ZXJz
+L2F0YS9zYXRhX212LmMKQEAgLTY3Myw2ICs2NzMsNyBAQCBzdGF0aWMgY29uc3Qgc3RydWN0
+IHNjc2lfaG9zdF90ZW1wbGF0ZSBtdjZfc2h0ID0gewogCS5zZGV2X2dyb3VwcwkJPSBhdGFf
+bmNxX3NkZXZfZ3JvdXBzLAogCS5jaGFuZ2VfcXVldWVfZGVwdGgJPSBhdGFfc2NzaV9jaGFu
+Z2VfcXVldWVfZGVwdGgsCiAJLnRhZ19hbGxvY19wb2xpY3kJPSBCTEtfVEFHX0FMTE9DX1JS
+LAorCS5zbGF2ZV9hbGxvYwkJPSBhdGFfc2NzaV9zbGF2ZV9hbGxvYywKIAkuc2xhdmVfY29u
+ZmlndXJlCT0gYXRhX3Njc2lfc2xhdmVfY29uZmlnCiB9OwogCmRpZmYgLS1naXQgYS9kcml2
+ZXJzL2F0YS9zYXRhX252LmMgYi9kcml2ZXJzL2F0YS9zYXRhX252LmMKaW5kZXggYWJmNTY1
+MWM4N2FiLi43NzE5Mzk0MGIzZjIgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvYXRhL3NhdGFfbnYu
+YworKysgYi9kcml2ZXJzL2F0YS9zYXRhX252LmMKQEAgLTM4MCw2ICszODAsNyBAQCBzdGF0
+aWMgY29uc3Qgc3RydWN0IHNjc2lfaG9zdF90ZW1wbGF0ZSBudl9hZG1hX3NodCA9IHsKIAku
+Y2FuX3F1ZXVlCQk9IE5WX0FETUFfTUFYX0NQQlMsCiAJLnNnX3RhYmxlc2l6ZQkJPSBOVl9B
+RE1BX1NHVEJMX1RPVEFMX0xFTiwKIAkuZG1hX2JvdW5kYXJ5CQk9IE5WX0FETUFfRE1BX0JP
+VU5EQVJZLAorCS5zbGF2ZV9hbGxvYwkJPSBhdGFfc2NzaV9zbGF2ZV9hbGxvYywKIAkuc2xh
+dmVfY29uZmlndXJlCT0gbnZfYWRtYV9zbGF2ZV9jb25maWcsCiAJLnNkZXZfZ3JvdXBzCQk9
+IGF0YV9uY3Ffc2Rldl9ncm91cHMsCiAJLmNoYW5nZV9xdWV1ZV9kZXB0aCAgICAgPSBhdGFf
+c2NzaV9jaGFuZ2VfcXVldWVfZGVwdGgsCkBAIC0zOTEsNiArMzkyLDcgQEAgc3RhdGljIGNv
+bnN0IHN0cnVjdCBzY3NpX2hvc3RfdGVtcGxhdGUgbnZfc3duY3Ffc2h0ID0gewogCS5jYW5f
+cXVldWUJCT0gQVRBX01BWF9RVUVVRSAtIDEsCiAJLnNnX3RhYmxlc2l6ZQkJPSBMSUJBVEFf
+TUFYX1BSRCwKIAkuZG1hX2JvdW5kYXJ5CQk9IEFUQV9ETUFfQk9VTkRBUlksCisJLnNsYXZl
+X2FsbG9jCQk9IGF0YV9zY3NpX3NsYXZlX2FsbG9jLAogCS5zbGF2ZV9jb25maWd1cmUJPSBu
+dl9zd25jcV9zbGF2ZV9jb25maWcsCiAJLnNkZXZfZ3JvdXBzCQk9IGF0YV9uY3Ffc2Rldl9n
+cm91cHMsCiAJLmNoYW5nZV9xdWV1ZV9kZXB0aCAgICAgPSBhdGFfc2NzaV9jaGFuZ2VfcXVl
+dWVfZGVwdGgsCmRpZmYgLS1naXQgYS9kcml2ZXJzL2F0YS9zYXRhX3NpbDI0LmMgYi9kcml2
+ZXJzL2F0YS9zYXRhX3NpbDI0LmMKaW5kZXggZTcyYTAyNTc5OTBkLi5lZDA5ZDY1Mzc0MWYg
+MTAwNjQ0Ci0tLSBhL2RyaXZlcnMvYXRhL3NhdGFfc2lsMjQuYworKysgYi9kcml2ZXJzL2F0
+YS9zYXRhX3NpbDI0LmMKQEAgLTM4MSw2ICszODEsNyBAQCBzdGF0aWMgY29uc3Qgc3RydWN0
+IHNjc2lfaG9zdF90ZW1wbGF0ZSBzaWwyNF9zaHQgPSB7CiAJLnRhZ19hbGxvY19wb2xpY3kJ
+PSBCTEtfVEFHX0FMTE9DX0ZJRk8sCiAJLnNkZXZfZ3JvdXBzCQk9IGF0YV9uY3Ffc2Rldl9n
+cm91cHMsCiAJLmNoYW5nZV9xdWV1ZV9kZXB0aAk9IGF0YV9zY3NpX2NoYW5nZV9xdWV1ZV9k
+ZXB0aCwKKwkuc2xhdmVfYWxsb2MJCT0gYXRhX3Njc2lfc2xhdmVfYWxsb2MsCiAJLnNsYXZl
+X2NvbmZpZ3VyZQk9IGF0YV9zY3NpX3NsYXZlX2NvbmZpZwogfTsKIApkaWZmIC0tZ2l0IGEv
+aW5jbHVkZS9saW51eC9saWJhdGEuaCBiL2luY2x1ZGUvbGludXgvbGliYXRhLmgKaW5kZXgg
+ODIwZjdhM2EyNzQ5Li41OTBkZWQ4ZTMxOWQgMTAwNjQ0Ci0tLSBhL2luY2x1ZGUvbGludXgv
+bGliYXRhLmgKKysrIGIvaW5jbHVkZS9saW51eC9saWJhdGEuaApAQCAtMTE1MSw2ICsxMTUx
+LDcgQEAgZXh0ZXJuIGludCBhdGFfc3RkX2Jpb3NfcGFyYW0oc3RydWN0IHNjc2lfZGV2aWNl
+ICpzZGV2LAogCQkJICAgICAgc3RydWN0IGJsb2NrX2RldmljZSAqYmRldiwKIAkJCSAgICAg
+IHNlY3Rvcl90IGNhcGFjaXR5LCBpbnQgZ2VvbVtdKTsKIGV4dGVybiB2b2lkIGF0YV9zY3Np
+X3VubG9ja19uYXRpdmVfY2FwYWNpdHkoc3RydWN0IHNjc2lfZGV2aWNlICpzZGV2KTsKK2V4
+dGVybiBpbnQgYXRhX3Njc2lfc2xhdmVfYWxsb2Moc3RydWN0IHNjc2lfZGV2aWNlICpzZGV2
+KTsKIGV4dGVybiBpbnQgYXRhX3Njc2lfc2xhdmVfY29uZmlnKHN0cnVjdCBzY3NpX2Rldmlj
+ZSAqc2Rldik7CiBleHRlcm4gdm9pZCBhdGFfc2NzaV9zbGF2ZV9kZXN0cm95KHN0cnVjdCBz
+Y3NpX2RldmljZSAqc2Rldik7CiBleHRlcm4gaW50IGF0YV9zY3NpX2NoYW5nZV9xdWV1ZV9k
+ZXB0aChzdHJ1Y3Qgc2NzaV9kZXZpY2UgKnNkZXYsCkBAIC0xNDEzLDEyICsxNDE0LDE0IEBA
+IGV4dGVybiBjb25zdCBzdHJ1Y3QgYXR0cmlidXRlX2dyb3VwICphdGFfY29tbW9uX3NkZXZf
+Z3JvdXBzW107CiAJX19BVEFfQkFTRV9TSFQoZHJ2X25hbWUpLAkJCQlcCiAJLmNhbl9xdWV1
+ZQkJPSBBVEFfREVGX1FVRVVFLAkJXAogCS50YWdfYWxsb2NfcG9saWN5CT0gQkxLX1RBR19B
+TExPQ19SUiwJCVwKKwkuc2xhdmVfYWxsb2MJCT0gYXRhX3Njc2lfc2xhdmVfYWxsb2MsCQlc
+CiAJLnNsYXZlX2NvbmZpZ3VyZQk9IGF0YV9zY3NpX3NsYXZlX2NvbmZpZwogCiAjZGVmaW5l
+IEFUQV9TVUJCQVNFX1NIVF9RRChkcnZfbmFtZSwgZHJ2X3FkKQkJCVwKIAlfX0FUQV9CQVNF
+X1NIVChkcnZfbmFtZSksCQkJCVwKIAkuY2FuX3F1ZXVlCQk9IGRydl9xZCwJCQlcCiAJLnRh
+Z19hbGxvY19wb2xpY3kJPSBCTEtfVEFHX0FMTE9DX1JSLAkJXAorCS5zbGF2ZV9hbGxvYwkJ
+PSBhdGFfc2NzaV9zbGF2ZV9hbGxvYywJCVwKIAkuc2xhdmVfY29uZmlndXJlCT0gYXRhX3Nj
+c2lfc2xhdmVfY29uZmlnCiAKICNkZWZpbmUgQVRBX0JBU0VfU0hUKGRydl9uYW1lKQkJCQkJ
+XAotLSAKMi40MS4wCgo=
+
+--------------bF6QaiUtzo0gJ30Vc16x27lO--
