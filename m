@@ -1,114 +1,96 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+Received: from mail-oo1-f45.google.com (mail-oo1-f45.google.com [209.85.161.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B38E52FB2
-	for <regressions@lists.linux.dev>; Sat, 26 Aug 2023 20:33:53 +0000 (UTC)
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-31c479ede21so1600397f8f.2
-        for <regressions@lists.linux.dev>; Sat, 26 Aug 2023 13:33:53 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F639190
+	for <regressions@lists.linux.dev>; Sun, 27 Aug 2023 02:37:27 +0000 (UTC)
+Received: by mail-oo1-f45.google.com with SMTP id 006d021491bc7-57355a16941so944085eaf.2
+        for <regressions@lists.linux.dev>; Sat, 26 Aug 2023 19:37:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1693082032; x=1693686832;
-        h=content-transfer-encoding:content-language:cc:to:subject:from
+        d=gmail.com; s=20221208; t=1693103847; x=1693708647;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
          :user-agent:mime-version:date:message-id:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=uuBXyxO5VRkfmiSduOQc0d8U4bHaBkRBImnyuV2r9Co=;
-        b=QZKpKZ8XfxRk5j/u4lAb7sRP3Z8jWkHNCXx8038eeYYxaiQglIjMwYu6ocFlrt+jvr
-         fvRiEIy4qmfJ1tCd1JHJAL34nBoOK+I9zEo3eN/hBkanhWrPXYQMMaqXWWprmmhhng77
-         ZpOIx0Uo2ffCZV+LLFIMqfaUv0Vb/TzVv3zHcabxIY5rgoAyGUxZz2Sn+V2ePM+cPkiI
-         fTwY6l7iBC0iZJaKT7JoylazqP/l85FeHMJstZwwyLuI4j0dGKuid5Q2IXflQmZG5gwx
-         tM3T7rJ47xpckgLqhvc3Si8P3y886eVdttum2x76mPlHgFGVrCYo4p4k3jOqYiewV4K3
-         b2xQ==
+        bh=VZGOqorazSp+I1MKjY1gVz7xYjbzwYMSJxTzcyCljzo=;
+        b=OPBaC6TiPZ50X9Puq1TDuSWAMR9dhpAx1Jd9KmmBXToJBmzhB0F/i4qOQtOVSA7VI8
+         CMoT/MpVFa83wr0JQAwnB0wd3yz0gB+1iJIBOq00TULCQlx4SdPrnmEj88Fts4+48jt5
+         qrTlydjGQeXamK3TD1xNdJKoAq690hZnY0oRsCcNcAvgC2wCCd2dX9OfwxlYb3PxzTJx
+         Yqbkbab5fH4pj1qO4gszaH28eNgUpPk1QiLZ/DA2T7jz2yiUgaj5BTWPYzjft97643po
+         PPX2/b3058RdlpwALuhoU1mMByGccPCCKVJgbVOe9O9OMJhiIH1PZJHKvnpqH4lIdfGQ
+         240Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693082032; x=1693686832;
-        h=content-transfer-encoding:content-language:cc:to:subject:from
+        d=1e100.net; s=20221208; t=1693103847; x=1693708647;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
          :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=uuBXyxO5VRkfmiSduOQc0d8U4bHaBkRBImnyuV2r9Co=;
-        b=cur3Ip2ByqymLMU28uWLVhXXSL4qOvUX7P1TBkXFeUsCNKUe8fA4YysOAWf2xKFU6C
-         eTKptHDSUc9OXUYDmssXhZIu68XN29dAiuzZfnNCDYsZtnxMEUllR65COC0LyJjMUIaU
-         WGUpdp+FHUBb8nEmUW9Lt5Z970A795JOczH7r8oWqceKz4et7HQfbgRc8l7K2hWjFFSC
-         EAS5kNRY7IsT2ch0jiAf3G6Aycko4oWWyEB9VGLk3Fyla6XX1y6ckhiRRCkc8AvqgZvp
-         /ZKK4Ow7Nqzrj1NMiF7kjdFbmiQX5jWu5K/Fy4jODjGrRYFCkr77QDaIdpabaV/8qxBM
-         w4nw==
-X-Gm-Message-State: AOJu0YxBah3c8GRCgjfqAPDuU9JOFbp+CXfDIof+GJ/r89A2qWhuyee5
-	gYzVkII+lkYycSBLUfURr8Q=
-X-Google-Smtp-Source: AGHT+IFQrR+4XWYPtAmULJFnBb8HYuTxvfE3S2scsw+tj3UMmIHvkqcn2OBdi7ehLU5tygHUXsLvLA==
-X-Received: by 2002:adf:ce02:0:b0:319:6b5e:85e3 with SMTP id p2-20020adfce02000000b003196b5e85e3mr14788255wrn.71.1693082031420;
-        Sat, 26 Aug 2023 13:33:51 -0700 (PDT)
-Received: from [192.168.43.213] (na-19-75-36.service.infuturo.it. [151.19.75.36])
-        by smtp.gmail.com with ESMTPSA id y4-20020a5d6144000000b00316eb7770b8sm5802171wrt.5.2023.08.26.13.33.50
+        bh=VZGOqorazSp+I1MKjY1gVz7xYjbzwYMSJxTzcyCljzo=;
+        b=G+8+FmvItSe27IP/vmNkIf1H8Jlxh985G6/CbyGpBJY/XNidLS1D5UjiEnFUHH8Zq0
+         j5M6f9GeGd/4viM1ayt8RWREzCSEfMioMMydwIBf0QFYMwAN/QNNRxfr+7zXDyb15OrI
+         wI7d+c/pJfEXlOxFnvQzoGSzNbHnGdfASfr474QvAAVfQvwkBZS8zemSJQdgw2Lvqv8d
+         GhGvYCAKC9LCFLiOWv0goCKqXXwpnIhLg/LqISZFtFY4M+p3T3ZQ+5y69bMm90RifBP2
+         D8P44V2J7WbvPq+eiZD/INhu+0IqVtQ4rxYQ3UgflwmKtlanqQeLiTzHPY11NEIYk3w7
+         L9jA==
+X-Gm-Message-State: AOJu0Yz01hW4OaOtakT418E16nBXIi7BP0u5Jb4I5XoXI0eoLVtnivAT
+	HBtbOzlckW3WixrzegPYm1E=
+X-Google-Smtp-Source: AGHT+IGeYO4GsiwQZbi7GrBe/9XKREJ4gAcr0G77cOje1bpL7RoMtD7mVFJvF/YYCfNxLS9ldun1bw==
+X-Received: by 2002:a05:6358:949f:b0:134:c4dc:9e28 with SMTP id i31-20020a056358949f00b00134c4dc9e28mr25951691rwb.17.1693103846781;
+        Sat, 26 Aug 2023 19:37:26 -0700 (PDT)
+Received: from [192.168.0.105] ([103.124.138.83])
+        by smtp.gmail.com with ESMTPSA id t9-20020a170902e84900b001b5656b0bf9sm4421249plg.286.2023.08.26.19.37.24
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 26 Aug 2023 13:33:50 -0700 (PDT)
-Message-ID: <aa1649b6-b7a8-4fbe-8356-2c856951e283@gmail.com>
-Date: Sat, 26 Aug 2023 22:33:48 +0200
+        Sat, 26 Aug 2023 19:37:26 -0700 (PDT)
+Message-ID: <5a7f2a6e-46a4-a5c8-fe6a-c2581496b5cd@gmail.com>
+Date: Sun, 27 Aug 2023 09:37:21 +0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Luca Pigliacampo <lucapgl2001@gmail.com>
-Subject: [REGRESSION] [BISECTED] power button stopped working on lenovo
- ideapad 5 since a855724dc08b
-To: stable@vger.kernel.org
-Cc: regressions@lists.linux.dev, linus.walleij@linaro.org,
- mario.limonciello@amd.com, Basavaraj.Natikar@amd.com,
- Shyam-sundar.S-k@amd.com
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.14.0
 Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+To: Ping-Ke Shih <pkshih@realtek.com>, Kalle Valo <kvalo@kernel.org>,
+ Brett Hassall <brett.hassall@gmail.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Wireless <linux-wireless@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+Subject: Fwd: 5c8a79e8e12b ("wifi: rtw88: correct PS calculation for
+ SUPPORTS_DYNAMIC_PS", 2023-05-27) increases CPU usage usage for irq
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-since the commit
+Hi,
 
-a855724dc08b pinctrl: amd: Fix mistake in handling clearing pins at startup
+I notice a regression report on Bugzilla [1]. Quoting from it:
 
-after boot, pressing power button is detected just once and ignored 
-afterwards.
+> This commit improves power saving - it enables the kernel to achieve package C8. To achieve package C8, 3 Ubuntu VMD commits must be applied as well. The combined patch for the 3 Ubuntu VMD commits is attached (just in case). Package C8 lowers power usage on the laptop from 5.6W to 2.6W.
+> 
+> However, a side-effect of this commit is that CPU usage for irq/155-rtw88_pci has increased noticeably. This commit was introduced in 6.4-rc6. To confirm this commit is the cause, a branch was created from 6.4-rc5. This commit and the 3 Ubuntu VMD commits were applied. The resulting kernel was built and tested - it can achieve package C8 and exhibits the increased CPU usage on irq/155-rtw88_pci.
+> 
+> Booting and running top for 30 min with the system otherwise idle, gives these results for CPU on irq/155-rtw88_pci:
+> 6.4-rc5     - 00:02.9, mostly   0% and 0.3% displayed
+> patched rc5 - 00:13.4, mostly 0.7% and 1.0% displayed
+> By comparison, an 8th Gen Dell with an Intel WIFI has CPU usage of 00:01.7 under the same conditions.
+> 
+> Laptop is a HP 15s-fq4011TU 11th Gen (Tiger Lake) Intel with (from lspci) Realtek Semiconductor Co., Ltd. RTL8822CE 802.11ac PCIe Wireless Network Adapter and Intel Corporation Volume Management Device NVMe RAID Controller.
+> 
+> Ubuntu bug https://bugs.launchpad.net/ubuntu/+source/linux-hwe-6.2/+bug/2025040 provides further background.
+> 
+> Please advise if I can assist with further testing.
 
+See Bugzilla for the full thread and attached proposed patch(es) that fix
+this regression.
 
-product: IdeaPad 5 14ALC05
+Anyway, I'm adding this regression to be tracked by regzbot:
 
-cpu: AMD Ryzen 5 5500U with Radeon Graphics
+#regzbot introduced: 26a125f550a3bf https://bugzilla.kernel.org/show_bug.cgi?id=217828
+#regzbot title: correcting SUPPORTS_DYNAMIC_PS calculation for rtw88 increases CPU utilization
+#regzbot link: https://bugs.launchpad.net/ubuntu/+source/linux-hwe-6.2/+bug/2025040
 
-bios version: G5CN16WW(V1.04)
+Thanks.
 
-distro: Arch Linux
+[1]: https://bugzilla.kernel.org/show_bug.cgi?id=217828
 
-desktop environment: KDE Plasma 5.27.7
-
-
-steps to reproduce:
-
-boot the computer
-
-log in
-
-run sudo evtest
-
-select event2
-
-      (on my computer the power button is always represented by 
-/dev/input/event2,
-
-      i don't know if it's the same on others)
-
-press the power button multiple times
-
-     (might have to close the log out dialog depending on the DE)
-
-
-expected behavior:
-
-all the power button presses are recorded
-
-
-observed behavior:
-
-only the first power button press is recorded
-
-
-i also have a desktop computer with a ryzen 5 2600x processor, but that 
-isn't affected
-
-#regzbot introduced: a855724dc08b
-
+-- 
+An old man doll... just what I always wanted! - Clara
