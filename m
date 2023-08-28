@@ -1,303 +1,243 @@
-Received: from mail-oo1-f42.google.com (mail-oo1-f42.google.com [209.85.161.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 755EC11C83
-	for <regressions@lists.linux.dev>; Mon, 28 Aug 2023 10:49:13 +0000 (UTC)
-Received: by mail-oo1-f42.google.com with SMTP id 006d021491bc7-573912a7b14so378830eaf.1
-        for <regressions@lists.linux.dev>; Mon, 28 Aug 2023 03:49:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1693219752; x=1693824552;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=FkMCvWKkmZO1lazxPjQWZRNND5Yi2Heq0nhss7cMBzU=;
-        b=W5BlAmPfxrj1WgIVa98GZtugOqbdmxksUCvlAIynTPNb/KT0Vnu6oNbsKl9EFUZOuk
-         QEEqfxq7Ia25BBslY57bgYK3iEu1KVUrlq1cYUjN+VUwu+kuXASv1FUUJXzj6dXGPuRO
-         V3MBCkKcIB064mods6z38LYculqNO9ukMhBGYimimpK5Me3w6SEZqRfqIinlS09ZC8I4
-         nRt55p0GR2AM9Pj5z8nnZD51Hn+lGt3JCk+MLQbxbHFSer884kUFmzzIRu4mocK8e13C
-         iSox2kvifxTQcHDOq2dhI3dawORO+2SXZzflInmDY/XarOuYtFzk5jMWkMojLxsKyOk0
-         UdFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693219752; x=1693824552;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=FkMCvWKkmZO1lazxPjQWZRNND5Yi2Heq0nhss7cMBzU=;
-        b=FNADbrx4ohItF1OdwcWtnGdsWXZ8qnCESXB1AXlTK1vu8MMkG0m3TRI0Cwz6vttqcd
-         5zABcFrJs3Y0cT01byMeiCW/5ZkvfGYrKog/ZJi/H6K5uDYn6wKqyqPrcpJNUiZhJj8Z
-         1+PyTAXlzSu8EtppLyJ5WskjlWV2CFS7boRm2yypUua8PQ7NARZkipuGfuLXzwdWQklM
-         t+2xoRFtwm6C8+V3XtnnkmoaffwlDnEyI4ru9M1nhLQtLoZ8k460r8J5lSWcMT48xM9c
-         +W2sZ4F3wixWVz/AkVmH7r3jCHig5SusN+kLT5QJsyrmUMj//nuKZV6Ej/zij0dYZB6s
-         e3qA==
-X-Gm-Message-State: AOJu0YyQlnJnM7691KSHiF7plPmOEWaMyt22QKoqQPjj5mnERfHHnT3h
-	u0bjtr+L3Wes8Fi/Qz1jFSwTwJjyT+VCBmc2ls0=
-X-Google-Smtp-Source: AGHT+IHvDXaz575ElTSkYTqQLKxgZ57hBezeEu6jW0nc2EDYjWPOZOPcZa8yzGG5ISHSNtDAI8dH/Fu6GCMLbDm8QtE=
-X-Received: by 2002:a05:6870:d0c3:b0:1bf:d869:cd97 with SMTP id
- k3-20020a056870d0c300b001bfd869cd97mr10594537oaa.29.1693219752017; Mon, 28
- Aug 2023 03:49:12 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FA90125A6
+	for <regressions@lists.linux.dev>; Mon, 28 Aug 2023 13:51:13 +0000 (UTC)
+Received: from mail02.huawei.com (unknown [172.30.67.169])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4RZBm74BLZz4f3kKy
+	for <regressions@lists.linux.dev>; Mon, 28 Aug 2023 21:51:03 +0800 (CST)
+Received: from [10.174.176.73] (unknown [10.174.176.73])
+	by APP4 (Coremail) with SMTP id gCh0CgA3x6lDpuxkVXkpBw--.36009S3;
+	Mon, 28 Aug 2023 21:51:00 +0800 (CST)
+Subject: Re: Infiniate systemd loop when power off the machine with multiple
+ MD RAIDs
+To: Song Liu <song@kernel.org>, AceLan Kao <acelan@gmail.com>
+Cc: Guoqing Jiang <guoqing.jiang@linux.dev>,
+ Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>,
+ Bagas Sanjaya <bagasdotme@gmail.com>, Christoph Hellwig <hch@lst.de>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Linux RAID <linux-raid@vger.kernel.org>, "yukuai (C)" <yukuai3@huawei.com>
+References: <028a21df-4397-80aa-c2a5-7c754560f595@gmail.com>
+ <20230818101630.000027f4@linux.intel.com>
+ <b0488ff7-10c8-4b4e-28b8-01809133c297@linux.dev>
+ <CAPhsuW6cSLqwRVO_EpFyimvc7hgi1rb3T8-NA+stHdwrqrScBA@mail.gmail.com>
+ <20230822083923.00007fb6@linux.intel.com>
+ <CAMz9Wg8KE1rDkSaQnUTJ5ikzH7YGGYbkLM3AcrVue3=JgK+14w@mail.gmail.com>
+ <35130b3f-c0fd-e2d6-e849-a5ceb6a2895f@linux.dev>
+ <CAMz9Wg_zKSJ2vL=r2zAtLBOv4GSMT63+ZQGXfYTjVJsE+DLQGA@mail.gmail.com>
+ <CAPhsuW6W0XgFjH1zNC+EFYjujd4smEiWs+-nYCWQ+KaFmbuvkg@mail.gmail.com>
+ <CAMz9Wg9y52iuxJRSQFC2N5Katt72v-o=JvEjegJt-MwORmw9tQ@mail.gmail.com>
+ <CAPhsuW7XEy4q3XR389F7CUvXvJ=0JR0QkMOr4LU03avT0erAfg@mail.gmail.com>
+From: Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <354004ce-ad4e-5ad5-8fe6-303216647e0c@huaweicloud.com>
+Date: Mon, 28 Aug 2023 21:50:59 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <028a21df-4397-80aa-c2a5-7c754560f595@gmail.com>
- <20230818101630.000027f4@linux.intel.com> <b0488ff7-10c8-4b4e-28b8-01809133c297@linux.dev>
- <CAPhsuW6cSLqwRVO_EpFyimvc7hgi1rb3T8-NA+stHdwrqrScBA@mail.gmail.com>
- <20230822083923.00007fb6@linux.intel.com> <CAMz9Wg8KE1rDkSaQnUTJ5ikzH7YGGYbkLM3AcrVue3=JgK+14w@mail.gmail.com>
- <35130b3f-c0fd-e2d6-e849-a5ceb6a2895f@linux.dev> <CAMz9Wg_zKSJ2vL=r2zAtLBOv4GSMT63+ZQGXfYTjVJsE+DLQGA@mail.gmail.com>
- <CAPhsuW6W0XgFjH1zNC+EFYjujd4smEiWs+-nYCWQ+KaFmbuvkg@mail.gmail.com>
- <CAMz9Wg9y52iuxJRSQFC2N5Katt72v-o=JvEjegJt-MwORmw9tQ@mail.gmail.com> <CAPhsuW7XEy4q3XR389F7CUvXvJ=0JR0QkMOr4LU03avT0erAfg@mail.gmail.com>
 In-Reply-To: <CAPhsuW7XEy4q3XR389F7CUvXvJ=0JR0QkMOr4LU03avT0erAfg@mail.gmail.com>
-From: AceLan Kao <acelan@gmail.com>
-Date: Mon, 28 Aug 2023 18:48:58 +0800
-Message-ID: <CAMz9Wg-dcBFnw-3SfsD6Lrhp4o7cVf_w7y2X7yQ_hWCg+CiRXQ@mail.gmail.com>
-Subject: Re: Infiniate systemd loop when power off the machine with multiple
- MD RAIDs
-To: Song Liu <song@kernel.org>
-Cc: Guoqing Jiang <guoqing.jiang@linux.dev>, 
-	Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>, Bagas Sanjaya <bagasdotme@gmail.com>, 
-	Christoph Hellwig <hch@lst.de>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Linux Regressions <regressions@lists.linux.dev>, Linux RAID <linux-raid@vger.kernel.org>
-Content-Type: multipart/mixed; boundary="000000000000d9517e0603f971e2"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgA3x6lDpuxkVXkpBw--.36009S3
+X-Coremail-Antispam: 1UD129KBjvJXoW3Xw4DKr4DJF1fWr1Uur4DJwb_yoW7ZrW8pa
+	y8Ja98Kr42q3yDJa12qa4xX3W5t3sFk395ury5ua4fZwn3XrZxJF109r1rury8Cw1Fkr4Y
+	qF4jqFy2gF98GaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvIb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
+	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
+	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
+	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7I2V7IY0VAS
+	07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c
+	02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_
+	GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7
+	CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAF
+	wI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf
+	9x07UWE__UUUUU=
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+X-CFilter-Loop: Reflected
 
---000000000000d9517e0603f971e2
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Hi,
 
-Hi Song,
-
-Song Liu <song@kernel.org> =E6=96=BC 2023=E5=B9=B48=E6=9C=8828=E6=97=A5 =E9=
-=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=881:21=E5=AF=AB=E9=81=93=EF=BC=9A
->
+在 2023/08/28 13:20, Song Liu 写道:
 > Hi AceLan,
->
+> 
 > Thanks for running the experiments.
->
-> On Fri, Aug 25, 2023 at 9:32=E2=80=AFPM AceLan Kao <acelan@gmail.com> wro=
-te:
+> 
+> On Fri, Aug 25, 2023 at 9:32 PM AceLan Kao <acelan@gmail.com> wrote:
 > [...]
-> > >
-> > > Could you please run the follow two experiments?
-> > >
-> > > 1. Confirm 12a6caf273240a triggers this. Specifically:
-> > >    git checkout 12a6caf273240a =3D> repros
-> > >    git checkout 12a6caf273240a~1 =3D> cannot repro
-> > Yes, I'm pretty sure about this, that's my bisect result and I just
-> > confirmed it again.
-> > I also tried reverting 12a6caf273240a and the issue is gone.
->
+>>>
+>>> Could you please run the follow two experiments?
+>>>
+>>> 1. Confirm 12a6caf273240a triggers this. Specifically:
+>>>     git checkout 12a6caf273240a => repros
+>>>     git checkout 12a6caf273240a~1 => cannot repro
+>> Yes, I'm pretty sure about this, that's my bisect result and I just
+>> confirmed it again.
+>> I also tried reverting 12a6caf273240a and the issue is gone.
+> 
 > The log doesn't match my guess. Specifically:
->
+> 
 > [  420.068142] systemd-shutdown[1]: Stopping MD /dev/md123 (9:123).
-> [  420.074718] md_open:md123 openers++ =3D 1 by systemd-shutdow
+> [  420.074718] md_open:md123 openers++ = 1 by systemd-shutdow
 > [  420.080787] systemd-shutdown[1]: Failed to sync MD block device
 > /dev/md123, ignoring: Input/output error
 > [  420.090831] md: md123 stopped.
 > [  420.094465] systemd-shutdown[1]: Stopping MD /dev/md122 (9:122).
 > [  420.101045] systemd-shutdown[1]: Could not stop MD /dev/md122:
 > Device or resource busy
->
+
+I see that:
+
+systemd-shutdown[1]: Couldn't finalize remaining  MD devices, trying again.
+
+Can we make sure is this why power off hang?
+
+Because in my VM, power off is not hang and I got:
+
+systemd-shutdown[1]: Could not stop MD /dev/md1: Device or resource busy
+systemd-shutdown[1]: Failed to finalize MD devices, ignoring.
+> 
 > For a successful stop on md123, we reach the pr_info() in md_open().
 > For a failed stop on md122, the kernel returns -EBUSY before that
 > pr_info() in md_open(). There are some changes in md_open() in
 > the past few release, so I am not quite sure we are looking at the
 > same code.
->
+
+By the way, based on code review, looks like md_open never return
+-EBUSY, and I think following is the only place can return -EBUSY before
+md_open() is called:
+
+blkdev_open
+  blkdev_get_by_dev
+   bd_prepare_to_claim
+    bd_may_claim 	-> -EBUSY
+
+Acelan, can you add following debug patch on the top of Song's patch
+and reporduce it again? Hope it'll confirm why stop array failed with
+-EBUSY.
+
+diff --git a/block/bdev.c b/block/bdev.c
+index 979e28a46b98..699739223dcb 100644
+--- a/block/bdev.c
++++ b/block/bdev.c
+@@ -789,8 +789,11 @@ struct block_device *blkdev_get_by_dev(dev_t dev, 
+blk_mode_t mode, void *holder,
+         if (holder) {
+                 mode |= BLK_OPEN_EXCL;
+                 ret = bd_prepare_to_claim(bdev, holder, hops);
+-               if (ret)
++               if (ret) {
++                       pr_warn("%s:%s bd_prepare_to_claim return %d\n",
++                               disk->disk_name, current->comm, ret);
+                         goto put_blkdev;
++               }
+         } else {
+                 if (WARN_ON_ONCE(mode & BLK_OPEN_EXCL)) {
+                         ret = -EIO;
+diff --git a/block/fops.c b/block/fops.c
+index eaa98a987213..2d69119c71f6 100644
+--- a/block/fops.c
++++ b/block/fops.c
+@@ -587,8 +587,11 @@ static int blkdev_open(struct inode *inode, struct 
+file *filp)
+
+         bdev = blkdev_get_by_dev(inode->i_rdev, file_to_blk_mode(filp),
+                                  filp->private_data, NULL);
+-       if (IS_ERR(bdev))
++       if (IS_ERR(bdev)) {
++               pr_warn("%pD:%s blkdev_get_by_dev return %ld\n",
++                       filp, current->comm, PTR_ERR(bdev));
+                 return PTR_ERR(bdev);
++       }
+
+         if (bdev_nowait(bdev))
+                 filp->f_mode |= FMODE_NOWAIT;
+
+Thanks,
+Kuai
+
+> 
 > Therefore, could you please help clarify:
->
+> 
 > 1. Which base kernel are you using?
->
-> From the log, you are using 6.5-rc7-706a74159504. However,
+> 
+>>From the log, you are using 6.5-rc7-706a74159504. However,
 > I think we cannot cleanly revert 12a6caf273240a on top of
 > 6.5-rc7-706a74159504. Did you manually fix some issue in the
 > revert? If so, could you please share the revert commit?
-Yes, I'm basing 6.5.0-rc7 706a74159504 to apply your patch
-706a74159504 Linux 6.5-rc7
-
-Attached how I revert the commit.
-
->
+> 
 > 2. If you are not using 6.5-rc7-706a74159504 as base kernel, which
 > one are you using?
->
+> 
 > Thanks,
 > Song
->
-> >
-> > >
-> > > 2. Try with the following change (add debug messages), which hopefull=
-y
-> > >    shows which command is holding a reference on mddev->openers.
-> > >
-> > > Thanks,
-> > > Song
-> > >
-> > > diff --git i/drivers/md/md.c w/drivers/md/md.c
-> > > index 78be7811a89f..3e9b718b32c1 100644
-> > > --- i/drivers/md/md.c
-> > > +++ w/drivers/md/md.c
-> > > @@ -7574,11 +7574,15 @@ static int md_ioctl(struct block_device *bdev=
-,
-> > > blk_mode_t mode,
-> > >                 if (mddev->pers && atomic_read(&mddev->openers) > 1) =
-{
-> > >                         mutex_unlock(&mddev->open_mutex);
-> > >                         err =3D -EBUSY;
-> > > +                       pr_warn("%s return -EBUSY for %s with
-> > > mddev->openers =3D %d\n",
-> > > +                               __func__, mdname(mddev),
-> > > atomic_read(&mddev->openers));
-> > >                         goto out;
-> > >                 }
-> > >                 if (test_and_set_bit(MD_CLOSING, &mddev->flags)) {
-> > >                         mutex_unlock(&mddev->open_mutex);
-> > >                         err =3D -EBUSY;
-> > > +                       pr_warn("%s return -EBUSY for %s with
-> > > MD_CLOSING bit set\n",
-> > > +                               __func__, mdname(mddev));
-> > >                         goto out;
-> > >                 }
-> > >                 did_set_md_closing =3D true;
-> > > @@ -7789,6 +7793,8 @@ static int md_open(struct gendisk *disk, blk_mo=
-de_t mode)
-> > >                 goto out_unlock;
-> > >
-> > >         atomic_inc(&mddev->openers);
-> > > +       pr_info("%s:%s openers++ =3D %d by %s\n", __func__, mdname(md=
-dev),
-> > > +               atomic_read(&mddev->openers), current->comm);
-> > >         mutex_unlock(&mddev->open_mutex);
-> > >
-> > >         disk_check_media_change(disk);
-> > > @@ -7807,6 +7813,8 @@ static void md_release(struct gendisk *disk)
-> > >
-> > >         BUG_ON(!mddev);
-> > >         atomic_dec(&mddev->openers);
-> > > +       pr_info("%s:%s openers-- =3D %d by %s\n", __func__, mdname(md=
-dev),
-> > > +               atomic_read(&mddev->openers), current->comm);
-> > >         mddev_put(mddev);
-> > >  }
-> > It's pretty strange that I can't reproduce the issue after applied the =
-patch.
-> >
-> > I tried to figure out which part affect the issue and found when I
-> > comment out the pr_info() In md_release(), the issue could be
-> > reproduced.
-> >
-> > --
-> > Chia-Lin Kao(AceLan)
-> > http://blog.acelan.idv.tw/
-> > E-Mail: acelan.kaoATcanonical.com (s/AT/@/)
+> 
+>>
+>>>
+>>> 2. Try with the following change (add debug messages), which hopefully
+>>>     shows which command is holding a reference on mddev->openers.
+>>>
+>>> Thanks,
+>>> Song
+>>>
+>>> diff --git i/drivers/md/md.c w/drivers/md/md.c
+>>> index 78be7811a89f..3e9b718b32c1 100644
+>>> --- i/drivers/md/md.c
+>>> +++ w/drivers/md/md.c
+>>> @@ -7574,11 +7574,15 @@ static int md_ioctl(struct block_device *bdev,
+>>> blk_mode_t mode,
+>>>                  if (mddev->pers && atomic_read(&mddev->openers) > 1) {
+>>>                          mutex_unlock(&mddev->open_mutex);
+>>>                          err = -EBUSY;
+>>> +                       pr_warn("%s return -EBUSY for %s with
+>>> mddev->openers = %d\n",
+>>> +                               __func__, mdname(mddev),
+>>> atomic_read(&mddev->openers));
+>>>                          goto out;
+>>>                  }
+>>>                  if (test_and_set_bit(MD_CLOSING, &mddev->flags)) {
+>>>                          mutex_unlock(&mddev->open_mutex);
+>>>                          err = -EBUSY;
+>>> +                       pr_warn("%s return -EBUSY for %s with
+>>> MD_CLOSING bit set\n",
+>>> +                               __func__, mdname(mddev));
+>>>                          goto out;
+>>>                  }
+>>>                  did_set_md_closing = true;
+>>> @@ -7789,6 +7793,8 @@ static int md_open(struct gendisk *disk, blk_mode_t mode)
+>>>                  goto out_unlock;
+>>>
+>>>          atomic_inc(&mddev->openers);
+>>> +       pr_info("%s:%s openers++ = %d by %s\n", __func__, mdname(mddev),
+>>> +               atomic_read(&mddev->openers), current->comm);
+>>>          mutex_unlock(&mddev->open_mutex);
+>>>
+>>>          disk_check_media_change(disk);
+>>> @@ -7807,6 +7813,8 @@ static void md_release(struct gendisk *disk)
+>>>
+>>>          BUG_ON(!mddev);
+>>>          atomic_dec(&mddev->openers);
+>>> +       pr_info("%s:%s openers-- = %d by %s\n", __func__, mdname(mddev),
+>>> +               atomic_read(&mddev->openers), current->comm);
+>>>          mddev_put(mddev);
+>>>   }
+>> It's pretty strange that I can't reproduce the issue after applied the patch.
+>>
+>> I tried to figure out which part affect the issue and found when I
+>> comment out the pr_info() In md_release(), the issue could be
+>> reproduced.
+>>
+>> --
+>> Chia-Lin Kao(AceLan)
+>> http://blog.acelan.idv.tw/
+>> E-Mail: acelan.kaoATcanonical.com (s/AT/@/)
+> .
+> 
 
-
-
---=20
-Chia-Lin Kao(AceLan)
-http://blog.acelan.idv.tw/
-E-Mail: acelan.kaoATcanonical.com (s/AT/@/)
-
---000000000000d9517e0603f971e2
-Content-Type: text/x-patch; charset="US-ASCII"; 
-	name="0001-Revert-md-only-delete-entries-from-all_mddevs-when-t.patch"
-Content-Disposition: attachment; 
-	filename="0001-Revert-md-only-delete-entries-from-all_mddevs-when-t.patch"
-Content-Transfer-Encoding: base64
-Content-ID: <f_llurank60>
-X-Attachment-Id: f_llurank60
-
-RnJvbSA1OGRkMTA2ZGI4OGYwMGIwOGQyMGQ0YTk0OWEwMDE2MjkyMzhkYmMwIE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQpGcm9tOiAiQ2hpYS1MaW4gS2FvIChBY2VMYW4pIiA8YWNlbGFuLmthb0Bj
-YW5vbmljYWwuY29tPgpEYXRlOiBNb24sIDI4IEF1ZyAyMDIzIDAyOjM0OjA4IC0wNDAwClN1Ympl
-Y3Q6IFtQQVRDSF0gUmV2ZXJ0ICJtZDogb25seSBkZWxldGUgZW50cmllcyBmcm9tIGFsbF9tZGRl
-dnMgd2hlbiB0aGUgZGlzawogaXMgZnJlZWQiCgpUaGlzIHJldmVydHMgY29tbWl0IDEyYTZjYWYy
-NzMyNDBhZTQyODQyZGU4Y2MwNWZlYWE4NmU1ODJkNjEuCi0tLQogZHJpdmVycy9tZC9tZC5jIHwg
-NTIgKysrKysrKysrKysrKysrKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQogZHJp
-dmVycy9tZC9tZC5oIHwgIDIgLS0KIDIgZmlsZXMgY2hhbmdlZCwgMTcgaW5zZXJ0aW9ucygrKSwg
-MzcgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9tZC9tZC5jIGIvZHJpdmVycy9t
-ZC9tZC5jCmluZGV4IDc4YmU3ODExYTg5Zi4uYWY1ZDM3OWFkMzU3IDEwMDY0NAotLS0gYS9kcml2
-ZXJzL21kL21kLmMKKysrIGIvZHJpdmVycy9tZC9tZC5jCkBAIC02MDYsMTAgKzYwNiw2IEBAIEVY
-UE9SVF9TWU1CT0wobWRfZmx1c2hfcmVxdWVzdCk7CiAKIHN0YXRpYyBpbmxpbmUgc3RydWN0IG1k
-ZGV2ICptZGRldl9nZXQoc3RydWN0IG1kZGV2ICptZGRldikKIHsKLQlsb2NrZGVwX2Fzc2VydF9o
-ZWxkKCZhbGxfbWRkZXZzX2xvY2spOwotCi0JaWYgKHRlc3RfYml0KE1EX0RFTEVURUQsICZtZGRl
-di0+ZmxhZ3MpKQotCQlyZXR1cm4gTlVMTDsKIAlhdG9taWNfaW5jKCZtZGRldi0+YWN0aXZlKTsK
-IAlyZXR1cm4gbWRkZXY7CiB9CkBAIC02MjQsNyArNjIwLDcgQEAgdm9pZCBtZGRldl9wdXQoc3Ry
-dWN0IG1kZGV2ICptZGRldikKIAkgICAgbWRkZXYtPmN0aW1lID09IDAgJiYgIW1kZGV2LT5ob2xk
-X2FjdGl2ZSkgewogCQkvKiBBcnJheSBpcyBub3QgY29uZmlndXJlZCBhdCBhbGwsIGFuZCBub3Qg
-aGVsZCBhY3RpdmUsCiAJCSAqIHNvIGRlc3Ryb3kgaXQgKi8KLQkJc2V0X2JpdChNRF9ERUxFVEVE
-LCAmbWRkZXYtPmZsYWdzKTsKKwkJbGlzdF9kZWxfaW5pdCgmbWRkZXYtPmFsbF9tZGRldnMpOwog
-CiAJCS8qCiAJCSAqIENhbGwgcXVldWVfd29yayBpbnNpZGUgdGhlIHNwaW5sb2NrIHNvIHRoYXQK
-QEAgLTMyODUsOCArMzI4MSw2IEBAIHN0YXRpYyBib29sIG1kX3JkZXZfb3ZlcmxhcHMoc3RydWN0
-IG1kX3JkZXYgKnJkZXYpCiAKIAlzcGluX2xvY2soJmFsbF9tZGRldnNfbG9jayk7CiAJbGlzdF9m
-b3JfZWFjaF9lbnRyeShtZGRldiwgJmFsbF9tZGRldnMsIGFsbF9tZGRldnMpIHsKLQkJaWYgKHRl
-c3RfYml0KE1EX0RFTEVURUQsICZtZGRldi0+ZmxhZ3MpKQotCQkJY29udGludWU7CiAJCXJkZXZf
-Zm9yX2VhY2gocmRldjIsIG1kZGV2KSB7CiAJCQlpZiAocmRldiAhPSByZGV2MiAmJiByZGV2LT5i
-ZGV2ID09IHJkZXYyLT5iZGV2ICYmCiAJCQkgICAgbWRfcmRldnNfb3ZlcmxhcChyZGV2LCByZGV2
-MikpIHsKQEAgLTU0ODgsMTAgKzU0ODIsMTEgQEAgbWRfYXR0cl9zaG93KHN0cnVjdCBrb2JqZWN0
-ICprb2JqLCBzdHJ1Y3QgYXR0cmlidXRlICphdHRyLCBjaGFyICpwYWdlKQogCWlmICghZW50cnkt
-PnNob3cpCiAJCXJldHVybiAtRUlPOwogCXNwaW5fbG9jaygmYWxsX21kZGV2c19sb2NrKTsKLQlp
-ZiAoIW1kZGV2X2dldChtZGRldikpIHsKKwlpZiAobGlzdF9lbXB0eSgmbWRkZXYtPmFsbF9tZGRl
-dnMpKSB7CiAJCXNwaW5fdW5sb2NrKCZhbGxfbWRkZXZzX2xvY2spOwogCQlyZXR1cm4gLUVCVVNZ
-OwogCX0KKwltZGRldl9nZXQobWRkZXYpOwogCXNwaW5fdW5sb2NrKCZhbGxfbWRkZXZzX2xvY2sp
-OwogCiAJcnYgPSBlbnRyeS0+c2hvdyhtZGRldiwgcGFnZSk7CkBAIC01NTEyLDEwICs1NTA3LDEx
-IEBAIG1kX2F0dHJfc3RvcmUoc3RydWN0IGtvYmplY3QgKmtvYmosIHN0cnVjdCBhdHRyaWJ1dGUg
-KmF0dHIsCiAJaWYgKCFjYXBhYmxlKENBUF9TWVNfQURNSU4pKQogCQlyZXR1cm4gLUVBQ0NFUzsK
-IAlzcGluX2xvY2soJmFsbF9tZGRldnNfbG9jayk7Ci0JaWYgKCFtZGRldl9nZXQobWRkZXYpKSB7
-CisJaWYgKGxpc3RfZW1wdHkoJm1kZGV2LT5hbGxfbWRkZXZzKSkgewogCQlzcGluX3VubG9jaygm
-YWxsX21kZGV2c19sb2NrKTsKIAkJcmV0dXJuIC1FQlVTWTsKIAl9CisJbWRkZXZfZ2V0KG1kZGV2
-KTsKIAlzcGluX3VubG9jaygmYWxsX21kZGV2c19sb2NrKTsKIAlydiA9IGVudHJ5LT5zdG9yZSht
-ZGRldiwgcGFnZSwgbGVuZ3RoKTsKIAltZGRldl9wdXQobWRkZXYpOwpAQCAtNzgyNiw2ICs3ODIy
-LDcgQEAgc3RhdGljIHZvaWQgbWRfZnJlZV9kaXNrKHN0cnVjdCBnZW5kaXNrICpkaXNrKQogCXN0
-cnVjdCBtZGRldiAqbWRkZXYgPSBkaXNrLT5wcml2YXRlX2RhdGE7CiAKIAlwZXJjcHVfcmVmX2V4
-aXQoJm1kZGV2LT53cml0ZXNfcGVuZGluZyk7CisKIAltZGRldl9mcmVlKG1kZGV2KTsKIH0KIApA
-QCAtODE1OSw4ICs4MTU2LDcgQEAgc3RhdGljIHZvaWQgKm1kX3NlcV9zdGFydChzdHJ1Y3Qgc2Vx
-X2ZpbGUgKnNlcSwgbG9mZl90ICpwb3MpCiAJbGlzdF9mb3JfZWFjaCh0bXAsJmFsbF9tZGRldnMp
-CiAJCWlmICghbC0tKSB7CiAJCQltZGRldiA9IGxpc3RfZW50cnkodG1wLCBzdHJ1Y3QgbWRkZXYs
-IGFsbF9tZGRldnMpOwotCQkJaWYgKCFtZGRldl9nZXQobWRkZXYpKQotCQkJCWNvbnRpbnVlOwor
-CQkJbWRkZXZfZ2V0KG1kZGV2KTsKIAkJCXNwaW5fdW5sb2NrKCZhbGxfbWRkZXZzX2xvY2spOwog
-CQkJcmV0dXJuIG1kZGV2OwogCQl9CkBAIC04MTc0LDM1ICs4MTcwLDI1IEBAIHN0YXRpYyB2b2lk
-ICptZF9zZXFfbmV4dChzdHJ1Y3Qgc2VxX2ZpbGUgKnNlcSwgdm9pZCAqdiwgbG9mZl90ICpwb3Mp
-CiB7CiAJc3RydWN0IGxpc3RfaGVhZCAqdG1wOwogCXN0cnVjdCBtZGRldiAqbmV4dF9tZGRldiwg
-Km1kZGV2ID0gdjsKLQlzdHJ1Y3QgbWRkZXYgKnRvX3B1dCA9IE5VTEw7CiAKIAkrKypwb3M7CiAJ
-aWYgKHYgPT0gKHZvaWQqKTIpCiAJCXJldHVybiBOVUxMOwogCiAJc3Bpbl9sb2NrKCZhbGxfbWRk
-ZXZzX2xvY2spOwotCWlmICh2ID09ICh2b2lkKikxKSB7CisJaWYgKHYgPT0gKHZvaWQqKTEpCiAJ
-CXRtcCA9IGFsbF9tZGRldnMubmV4dDsKLQl9IGVsc2UgewotCQl0b19wdXQgPSBtZGRldjsKLQkJ
-dG1wID0gbWRkZXYtPmFsbF9tZGRldnMubmV4dDsKLQl9Ci0KLQlmb3IgKDs7KSB7Ci0JCWlmICh0
-bXAgPT0gJmFsbF9tZGRldnMpIHsKLQkJCW5leHRfbWRkZXYgPSAodm9pZCopMjsKLQkJCSpwb3Mg
-PSAweDEwMDAwOwotCQkJYnJlYWs7Ci0JCX0KLQkJbmV4dF9tZGRldiA9IGxpc3RfZW50cnkodG1w
-LCBzdHJ1Y3QgbWRkZXYsIGFsbF9tZGRldnMpOwotCQlpZiAobWRkZXZfZ2V0KG5leHRfbWRkZXYp
-KQotCQkJYnJlYWs7Ci0JCW1kZGV2ID0gbmV4dF9tZGRldjsKKwllbHNlCiAJCXRtcCA9IG1kZGV2
-LT5hbGxfbWRkZXZzLm5leHQ7CisJaWYgKHRtcCAhPSAmYWxsX21kZGV2cykKKwkJbmV4dF9tZGRl
-diA9IG1kZGV2X2dldChsaXN0X2VudHJ5KHRtcCxzdHJ1Y3QgbWRkZXYsYWxsX21kZGV2cykpOwor
-CWVsc2UgeworCQluZXh0X21kZGV2ID0gKHZvaWQqKTI7CisJCSpwb3MgPSAweDEwMDAwOwogCX0K
-IAlzcGluX3VubG9jaygmYWxsX21kZGV2c19sb2NrKTsKIAotCWlmICh0b19wdXQpCisJaWYgKHYg
-IT0gKHZvaWQqKTEpCiAJCW1kZGV2X3B1dChtZGRldik7CiAJcmV0dXJuIG5leHRfbWRkZXY7CiAK
-QEAgLTg3NzIsOCArODc1OCw2IEBAIHZvaWQgbWRfZG9fc3luYyhzdHJ1Y3QgbWRfdGhyZWFkICp0
-aHJlYWQpCiAJCQlnb3RvIHNraXA7CiAJCXNwaW5fbG9jaygmYWxsX21kZGV2c19sb2NrKTsKIAkJ
-bGlzdF9mb3JfZWFjaF9lbnRyeShtZGRldjIsICZhbGxfbWRkZXZzLCBhbGxfbWRkZXZzKSB7Ci0J
-CQlpZiAodGVzdF9iaXQoTURfREVMRVRFRCwgJm1kZGV2Mi0+ZmxhZ3MpKQotCQkJCWNvbnRpbnVl
-OwogCQkJaWYgKG1kZGV2MiA9PSBtZGRldikKIAkJCQljb250aW51ZTsKIAkJCWlmICghbWRkZXYt
-PnBhcmFsbGVsX3Jlc3luYwpAQCAtOTU3Nyw4ICs5NTYxLDcgQEAgc3RhdGljIGludCBtZF9ub3Rp
-ZnlfcmVib290KHN0cnVjdCBub3RpZmllcl9ibG9jayAqdGhpcywKIAogCXNwaW5fbG9jaygmYWxs
-X21kZGV2c19sb2NrKTsKIAlsaXN0X2Zvcl9lYWNoX2VudHJ5X3NhZmUobWRkZXYsIG4sICZhbGxf
-bWRkZXZzLCBhbGxfbWRkZXZzKSB7Ci0JCWlmICghbWRkZXZfZ2V0KG1kZGV2KSkKLQkJCWNvbnRp
-bnVlOworCQltZGRldl9nZXQobWRkZXYpOwogCQlzcGluX3VubG9jaygmYWxsX21kZGV2c19sb2Nr
-KTsKIAkJaWYgKG1kZGV2X3RyeWxvY2sobWRkZXYpKSB7CiAJCQlpZiAobWRkZXYtPnBlcnMpCkBA
-IC05OTM0LDggKzk5MTcsNyBAQCBzdGF0aWMgX19leGl0IHZvaWQgbWRfZXhpdCh2b2lkKQogCiAJ
-c3Bpbl9sb2NrKCZhbGxfbWRkZXZzX2xvY2spOwogCWxpc3RfZm9yX2VhY2hfZW50cnlfc2FmZSht
-ZGRldiwgbiwgJmFsbF9tZGRldnMsIGFsbF9tZGRldnMpIHsKLQkJaWYgKCFtZGRldl9nZXQobWRk
-ZXYpKQotCQkJY29udGludWU7CisJCW1kZGV2X2dldChtZGRldik7CiAJCXNwaW5fdW5sb2NrKCZh
-bGxfbWRkZXZzX2xvY2spOwogCQlleHBvcnRfYXJyYXkobWRkZXYpOwogCQltZGRldi0+Y3RpbWUg
-PSAwOwpkaWZmIC0tZ2l0IGEvZHJpdmVycy9tZC9tZC5oIGIvZHJpdmVycy9tZC9tZC5oCmluZGV4
-IDFhZWY4NmJmM2ZjMy4uNGUyNjVlMzhjMjI5IDEwMDY0NAotLS0gYS9kcml2ZXJzL21kL21kLmgK
-KysrIGIvZHJpdmVycy9tZC9tZC5oCkBAIC0yNTIsNyArMjUyLDYgQEAgc3RydWN0IG1kX2NsdXN0
-ZXJfaW5mbzsKICAqIEBNRF9OT1RfUkVBRFk6IGRvX21kX3J1bigpIGlzIGFjdGl2ZSwgc28gJ2Fy
-cmF5X3N0YXRlJywgdXN0IG5vdCByZXBvcnQgdGhhdAogICoJCSAgIGFycmF5IGlzIHJlYWR5IHll
-dC4KICAqIEBNRF9CUk9LRU46IFRoaXMgaXMgdXNlZCB0byBzdG9wIHdyaXRlcyBhbmQgbWFyayBh
-cnJheSBhcyBmYWlsZWQuCi0gKiBATURfREVMRVRFRDogVGhpcyBkZXZpY2UgaXMgYmVpbmcgZGVs
-ZXRlZAogICoKICAqIGNoYW5nZSBVTlNVUFBPUlRFRF9NRERFVl9GTEFHUyBmb3IgZWFjaCBhcnJh
-eSB0eXBlIGlmIG5ldyBmbGFnIGlzIGFkZGVkCiAgKi8KQEAgLTI2OSw3ICsyNjgsNiBAQCBlbnVt
-IG1kZGV2X2ZsYWdzIHsKIAlNRF9VUERBVElOR19TQiwKIAlNRF9OT1RfUkVBRFksCiAJTURfQlJP
-S0VOLAotCU1EX0RFTEVURUQsCiB9OwogCiBlbnVtIG1kZGV2X3NiX2ZsYWdzIHsKLS0gCjIuMzcu
-MgoK
---000000000000d9517e0603f971e2--
