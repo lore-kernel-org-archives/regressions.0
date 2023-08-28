@@ -1,554 +1,303 @@
-Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
+Received: from mail-oo1-f42.google.com (mail-oo1-f42.google.com [209.85.161.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E660632
-	for <regressions@lists.linux.dev>; Mon, 28 Aug 2023 08:53:41 +0000 (UTC)
-Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-59205f26e47so33585977b3.2
-        for <regressions@lists.linux.dev>; Mon, 28 Aug 2023 01:53:41 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 755EC11C83
+	for <regressions@lists.linux.dev>; Mon, 28 Aug 2023 10:49:13 +0000 (UTC)
+Received: by mail-oo1-f42.google.com with SMTP id 006d021491bc7-573912a7b14so378830eaf.1
+        for <regressions@lists.linux.dev>; Mon, 28 Aug 2023 03:49:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1693212820; x=1693817620;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Rhp8cTItEREa29C1VfB2jAq3kOy3fea/kHk9Bhi9l84=;
-        b=ivKmeijNJxvqTPFoOm0U7tAQSdzLAKwXG4DfCgeZeG+p946XvxJO9LCLA/9VKg/oBG
-         rthZPCk/uz0r6YzmfaMHrbvJPb6ObUjIVbhA3mWkvj0a4a1zHjto7oA91hDxGrUp2shf
-         Ea2RnIu2G4o+a5R58v/Gc89ZmSwR7vwBqEMk/ZWXDnLZVX4/LSoMvB6nUwhzCxk5Qg/B
-         RUfg2J57eS4Hor/Vq/Kv6ojX9BS0w0p7LNQEcA4162xcIu+6uRzvl0GVQc0/Ht1vSjda
-         725aighbHR47KifYBnYW27z/hr+a88yz1+R0RSakYiF1HE9BwiA20cwSsbHLBmH5esjz
-         qLiQ==
+        d=gmail.com; s=20221208; t=1693219752; x=1693824552;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=FkMCvWKkmZO1lazxPjQWZRNND5Yi2Heq0nhss7cMBzU=;
+        b=W5BlAmPfxrj1WgIVa98GZtugOqbdmxksUCvlAIynTPNb/KT0Vnu6oNbsKl9EFUZOuk
+         QEEqfxq7Ia25BBslY57bgYK3iEu1KVUrlq1cYUjN+VUwu+kuXASv1FUUJXzj6dXGPuRO
+         V3MBCkKcIB064mods6z38LYculqNO9ukMhBGYimimpK5Me3w6SEZqRfqIinlS09ZC8I4
+         nRt55p0GR2AM9Pj5z8nnZD51Hn+lGt3JCk+MLQbxbHFSer884kUFmzzIRu4mocK8e13C
+         iSox2kvifxTQcHDOq2dhI3dawORO+2SXZzflInmDY/XarOuYtFzk5jMWkMojLxsKyOk0
+         UdFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693212820; x=1693817620;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Rhp8cTItEREa29C1VfB2jAq3kOy3fea/kHk9Bhi9l84=;
-        b=kf43b/wMmS50hPIsVxy6jS1ix+9zP8pAUAoWMcLXppzgNYr8fviE8wtuxRTip+n6My
-         0Tpe1IQg5niG3gi4aRPLv0JpjFba60aULeH9vphFFwsBjmrubZsCW0Am3Js1mPZGCHd2
-         a/SLZEWyh/eHF54O32Ck7JKj4zhI883S/kjUnvqQO7VzWcXEnmM7wYmZGApTwVpzZLRU
-         JcaYjfwK/ioXhkWlozEvPoMePQywTWkU1zdjtFbXZhzBHmDJNPIOBSjbre8FXqQ1TZNV
-         KvbAxuUKg27u44usZVGkF2s7k792Vp3Hr9/abmhv7ZwtlvIIMOHF0EGHTA6TckTYpQsr
-         +cLA==
-X-Gm-Message-State: AOJu0YyaBWj63YJPF1ugGCLJESpjZCaIyHKgP3t2yXvj578J+umja4LR
-	VbPSxjF23EdHvkxB6DWDnn3+iLcvr7EbfTvHH4c=
-X-Google-Smtp-Source: AGHT+IEXOvricoiOTpJaszMaIm+FJYXx0RMYnf2IKnILA1o8lBdPlZKa5fRbldIVvSum9vMwgIzX0HBmo7qlbqJE3Ew=
-X-Received: by 2002:a0d:d54a:0:b0:591:15a6:c11f with SMTP id
- x71-20020a0dd54a000000b0059115a6c11fmr20348568ywd.50.1693212819887; Mon, 28
- Aug 2023 01:53:39 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1693219752; x=1693824552;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=FkMCvWKkmZO1lazxPjQWZRNND5Yi2Heq0nhss7cMBzU=;
+        b=FNADbrx4ohItF1OdwcWtnGdsWXZ8qnCESXB1AXlTK1vu8MMkG0m3TRI0Cwz6vttqcd
+         5zABcFrJs3Y0cT01byMeiCW/5ZkvfGYrKog/ZJi/H6K5uDYn6wKqyqPrcpJNUiZhJj8Z
+         1+PyTAXlzSu8EtppLyJ5WskjlWV2CFS7boRm2yypUua8PQ7NARZkipuGfuLXzwdWQklM
+         t+2xoRFtwm6C8+V3XtnnkmoaffwlDnEyI4ru9M1nhLQtLoZ8k460r8J5lSWcMT48xM9c
+         +W2sZ4F3wixWVz/AkVmH7r3jCHig5SusN+kLT5QJsyrmUMj//nuKZV6Ej/zij0dYZB6s
+         e3qA==
+X-Gm-Message-State: AOJu0YyQlnJnM7691KSHiF7plPmOEWaMyt22QKoqQPjj5mnERfHHnT3h
+	u0bjtr+L3Wes8Fi/Qz1jFSwTwJjyT+VCBmc2ls0=
+X-Google-Smtp-Source: AGHT+IHvDXaz575ElTSkYTqQLKxgZ57hBezeEu6jW0nc2EDYjWPOZOPcZa8yzGG5ISHSNtDAI8dH/Fu6GCMLbDm8QtE=
+X-Received: by 2002:a05:6870:d0c3:b0:1bf:d869:cd97 with SMTP id
+ k3-20020a056870d0c300b001bfd869cd97mr10594537oaa.29.1693219752017; Mon, 28
+ Aug 2023 03:49:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CANWZPgK2+9SCavsbSZv1DfJyhy0XUpJZ6+ebatM9ZGJPpAN1yA@mail.gmail.com>
- <ZNGdYCXOHRqWnoeT@debian.me> <CANWZPgKAtbNRUy0pyL7Zf-S-zLeMkJZ7fSWpFO8__YG0_e2Zgw@mail.gmail.com>
- <CAHQZ30AhngEgVR-Hcjcze2HyZOG=4fbfp_S2=Or7JUJUUxm4mQ@mail.gmail.com>
- <CANWZPgLcHa2x-Rdy6Hma39p-6E6_5UGUamjPZkKYqz_q0yKJ2g@mail.gmail.com> <CANWZPg+C4=U1khLJbvUb0nuDQq+ETULZdQyWDBhFhYN_3Wa=3g@mail.gmail.com>
-In-Reply-To: <CANWZPg+C4=U1khLJbvUb0nuDQq+ETULZdQyWDBhFhYN_3Wa=3g@mail.gmail.com>
-From: =?UTF-8?B?Sm9zw6kgUmFtw7NuIE11w7FveiBQZWtrYXJpbmVu?= <koalinux@gmail.com>
-Date: Mon, 28 Aug 2023 11:53:22 +0300
-Message-ID: <CANWZPgKe6GRUBVyi9Ua0Ns=eQDHT2riSsUZ7gr2nGfXT+jM00w@mail.gmail.com>
-Subject: Re: atkbd input regression
-To: linux-input@vger.kernel.org
-Cc: dmitry.torokhov@gmail.com, gregkh@linuxfoundation.org, 
-	Linux Regressions <regressions@lists.linux.dev>
+References: <028a21df-4397-80aa-c2a5-7c754560f595@gmail.com>
+ <20230818101630.000027f4@linux.intel.com> <b0488ff7-10c8-4b4e-28b8-01809133c297@linux.dev>
+ <CAPhsuW6cSLqwRVO_EpFyimvc7hgi1rb3T8-NA+stHdwrqrScBA@mail.gmail.com>
+ <20230822083923.00007fb6@linux.intel.com> <CAMz9Wg8KE1rDkSaQnUTJ5ikzH7YGGYbkLM3AcrVue3=JgK+14w@mail.gmail.com>
+ <35130b3f-c0fd-e2d6-e849-a5ceb6a2895f@linux.dev> <CAMz9Wg_zKSJ2vL=r2zAtLBOv4GSMT63+ZQGXfYTjVJsE+DLQGA@mail.gmail.com>
+ <CAPhsuW6W0XgFjH1zNC+EFYjujd4smEiWs+-nYCWQ+KaFmbuvkg@mail.gmail.com>
+ <CAMz9Wg9y52iuxJRSQFC2N5Katt72v-o=JvEjegJt-MwORmw9tQ@mail.gmail.com> <CAPhsuW7XEy4q3XR389F7CUvXvJ=0JR0QkMOr4LU03avT0erAfg@mail.gmail.com>
+In-Reply-To: <CAPhsuW7XEy4q3XR389F7CUvXvJ=0JR0QkMOr4LU03avT0erAfg@mail.gmail.com>
+From: AceLan Kao <acelan@gmail.com>
+Date: Mon, 28 Aug 2023 18:48:58 +0800
+Message-ID: <CAMz9Wg-dcBFnw-3SfsD6Lrhp4o7cVf_w7y2X7yQ_hWCg+CiRXQ@mail.gmail.com>
+Subject: Re: Infiniate systemd loop when power off the machine with multiple
+ MD RAIDs
+To: Song Liu <song@kernel.org>
+Cc: Guoqing Jiang <guoqing.jiang@linux.dev>, 
+	Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>, Bagas Sanjaya <bagasdotme@gmail.com>, 
+	Christoph Hellwig <hch@lst.de>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	Linux Regressions <regressions@lists.linux.dev>, Linux RAID <linux-raid@vger.kernel.org>
+Content-Type: multipart/mixed; boundary="000000000000d9517e0603f971e2"
+
+--000000000000d9517e0603f971e2
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, 27 Aug 2023 at 18:59, Jos=C3=A9 Ram=C3=B3n Mu=C3=B1oz Pekkarinen
-<koalinux@gmail.com> wrote:
+Hi Song,
+
+Song Liu <song@kernel.org> =E6=96=BC 2023=E5=B9=B48=E6=9C=8828=E6=97=A5 =E9=
+=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=881:21=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> Hi AceLan,
+>
+> Thanks for running the experiments.
+>
+> On Fri, Aug 25, 2023 at 9:32=E2=80=AFPM AceLan Kao <acelan@gmail.com> wro=
+te:
+> [...]
+> > >
+> > > Could you please run the follow two experiments?
+> > >
+> > > 1. Confirm 12a6caf273240a triggers this. Specifically:
+> > >    git checkout 12a6caf273240a =3D> repros
+> > >    git checkout 12a6caf273240a~1 =3D> cannot repro
+> > Yes, I'm pretty sure about this, that's my bisect result and I just
+> > confirmed it again.
+> > I also tried reverting 12a6caf273240a and the issue is gone.
+>
+> The log doesn't match my guess. Specifically:
+>
+> [  420.068142] systemd-shutdown[1]: Stopping MD /dev/md123 (9:123).
+> [  420.074718] md_open:md123 openers++ =3D 1 by systemd-shutdow
+> [  420.080787] systemd-shutdown[1]: Failed to sync MD block device
+> /dev/md123, ignoring: Input/output error
+> [  420.090831] md: md123 stopped.
+> [  420.094465] systemd-shutdown[1]: Stopping MD /dev/md122 (9:122).
+> [  420.101045] systemd-shutdown[1]: Could not stop MD /dev/md122:
+> Device or resource busy
+>
+> For a successful stop on md123, we reach the pr_info() in md_open().
+> For a failed stop on md122, the kernel returns -EBUSY before that
+> pr_info() in md_open(). There are some changes in md_open() in
+> the past few release, so I am not quite sure we are looking at the
+> same code.
+>
+> Therefore, could you please help clarify:
+>
+> 1. Which base kernel are you using?
+>
+> From the log, you are using 6.5-rc7-706a74159504. However,
+> I think we cannot cleanly revert 12a6caf273240a on top of
+> 6.5-rc7-706a74159504. Did you manually fix some issue in the
+> revert? If so, could you please share the revert commit?
+Yes, I'm basing 6.5.0-rc7 706a74159504 to apply your patch
+706a74159504 Linux 6.5-rc7
+
+Attached how I revert the commit.
+
+>
+> 2. If you are not using 6.5-rc7-706a74159504 as base kernel, which
+> one are you using?
+>
+> Thanks,
+> Song
+>
 > >
-> >     Excuse the long wait, I've been investigating with the kde communit=
+> > >
+> > > 2. Try with the following change (add debug messages), which hopefull=
 y
-> > and reading the code of libinput, systemd and the like, and I managed t=
-o
-> > find a difference that I'm not quite sure it is relevant to narrow the =
-issue.
-> > While the keyboard is populated in the udev database as this:
+> > >    shows which command is holding a reference on mddev->openers.
+> > >
+> > > Thanks,
+> > > Song
+> > >
+> > > diff --git i/drivers/md/md.c w/drivers/md/md.c
+> > > index 78be7811a89f..3e9b718b32c1 100644
+> > > --- i/drivers/md/md.c
+> > > +++ w/drivers/md/md.c
+> > > @@ -7574,11 +7574,15 @@ static int md_ioctl(struct block_device *bdev=
+,
+> > > blk_mode_t mode,
+> > >                 if (mddev->pers && atomic_read(&mddev->openers) > 1) =
+{
+> > >                         mutex_unlock(&mddev->open_mutex);
+> > >                         err =3D -EBUSY;
+> > > +                       pr_warn("%s return -EBUSY for %s with
+> > > mddev->openers =3D %d\n",
+> > > +                               __func__, mdname(mddev),
+> > > atomic_read(&mddev->openers));
+> > >                         goto out;
+> > >                 }
+> > >                 if (test_and_set_bit(MD_CLOSING, &mddev->flags)) {
+> > >                         mutex_unlock(&mddev->open_mutex);
+> > >                         err =3D -EBUSY;
+> > > +                       pr_warn("%s return -EBUSY for %s with
+> > > MD_CLOSING bit set\n",
+> > > +                               __func__, mdname(mddev));
+> > >                         goto out;
+> > >                 }
+> > >                 did_set_md_closing =3D true;
+> > > @@ -7789,6 +7793,8 @@ static int md_open(struct gendisk *disk, blk_mo=
+de_t mode)
+> > >                 goto out_unlock;
+> > >
+> > >         atomic_inc(&mddev->openers);
+> > > +       pr_info("%s:%s openers++ =3D %d by %s\n", __func__, mdname(md=
+dev),
+> > > +               atomic_read(&mddev->openers), current->comm);
+> > >         mutex_unlock(&mddev->open_mutex);
+> > >
+> > >         disk_check_media_change(disk);
+> > > @@ -7807,6 +7813,8 @@ static void md_release(struct gendisk *disk)
+> > >
+> > >         BUG_ON(!mddev);
+> > >         atomic_dec(&mddev->openers);
+> > > +       pr_info("%s:%s openers-- =3D %d by %s\n", __func__, mdname(md=
+dev),
+> > > +               atomic_read(&mddev->openers), current->comm);
+> > >         mddev_put(mddev);
+> > >  }
+> > It's pretty strange that I can't reproduce the issue after applied the =
+patch.
 > >
-> > $ udevadm info -e
-> > P: /devices/platform/i8042/serio0/input/input0
-> > M: input0
-> > R: 0
-> > U: input
-> > E: DEVPATH=3D/devices/platform/i8042/serio0/input/input0
-> > E: SUBSYSTEM=3Dinput
-> > E: PRODUCT=3D11/1/1/ab54
-> > E: NAME=3D"AT Translated Set 2 keyboard"
-> > E: PHYS=3D"isa0060/serio0/input0"
-> > E: PROP=3D0
-> > E: EV=3D120013
-> > E: KEY=3D402000000 3803078f800d001 feffffdfffefffff fffffffffffffffe
-> > E: MSC=3D10
-> > E: LED=3D7
-> > E: MODALIAS=3Dinput:b0011v0001p0001eAB54-e0,1,4,11,14,k71,72,73,74,75,7=
-6,77,79,7A,7B,7C,7D,7E,7F,80,8C,8E,8F,9B,9C,9D,9E,9F,A3,A4,A5,A6,AC,AD,B7,B=
-8,B9,D9,E2,ram4,l0,1,2,sfw
+> > I tried to figure out which part affect the issue and found when I
+> > comment out the pr_info() In md_release(), the issue could be
+> > reproduced.
 > >
-> >     There is no longer a corresponding entry under /run/udev/data,
-> > the following is the output of the ls -la /run/udev/data on 6.4.12:
-> >
-> > total 116
-> > -rw-r--r--. 1 root root  129 Aug 27 08:53 +backlight:amdgpu_bl1
-> > -rw-r--r--. 1 root root  737 Aug 27 08:54 +input:input10
-> > -rw-r--r--. 1 root root  715 Aug 27 08:54 +input:input11
-> > -rw-r--r--. 1 root root  715 Aug 27 08:54 +input:input12
-> > -rw-r--r--. 1 root root  776 Aug 27 08:54 +input:input13
-> > -rw-r--r--. 1 root root  166 Aug 27 08:54 +leds:input10::capslock
-> > -rw-r--r--. 1 root root  166 Aug 27 08:54 +leds:input10::numlock
-> > -rw-r--r--. 1 root root  166 Aug 27 08:54 +leds:input10::scrolllock
-> > -rw-r--r--. 1 root root  107 Aug 27 08:54 +usb:2-2.1:1.0
-> > -rw-r--r--. 1 root root  107 Aug 27 08:54 +usb:2-2.1:1.1
-> > -rw-r--r--. 1 root root   88 Aug 27 08:54 +usb:2-2.3:1.0
-> > -rw-r--r--. 1 root root  171 Aug 27 08:54 +usb:2-2:1.0
-> > -rw-r--r--. 1 root root  148 Aug 27 08:53 +usb:3-0:1.0
-> > -rw-r--r--. 1 root root   56 Aug 27 09:07 +usb:4-2:1.0
-> > -rw-r--r--. 1 root root   56 Aug 27 09:07 +usb:4-2:1.1
-> > -rw-r--r--. 1 root root   56 Aug 27 09:07 +usb:4-2:1.2
-> > -rw-r--r--. 1 root root  148 Aug 27 08:53 +usb:5-0:1.0
-> > drwxr-xr-x. 2 root root 1360 Aug 27 09:07 .
-> > drwxr-xr-x. 5 root root  100 Aug 27 09:07 ..
-> > -rw-r--r--. 1 root root    0 Aug 27 08:53 c10:229
-> > -rw-r--r--. 1 root root   36 Aug 27 08:54 c116:1
-> > -rw-r--r--. 1 root root   36 Aug 27 08:54 c116:33
-> > -rw-r--r--. 1 root root  815 Aug 27 08:54 c13:34
-> > -rw-r--r--. 1 root root  856 Aug 27 08:54 c13:73
-> > -rw-r--r--. 1 root root  831 Aug 27 08:54 c13:74
-> > -rw-r--r--. 1 root root  831 Aug 27 08:54 c13:75
-> > -rw-r--r--. 1 root root  881 Aug 27 08:54 c13:76
-> > -rw-r--r--. 1 root root  663 Aug 27 08:54 c189:129
-> > -rw-r--r--. 1 root root  681 Aug 27 08:54 c189:130
-> > -rw-r--r--. 1 root root  721 Aug 27 08:54 c189:131
-> > -rw-r--r--. 1 root root  783 Aug 27 09:07 c189:387
-> > -rw-r--r--. 1 root root    0 Aug 27 08:54 c247:0
-> > -rw-r--r--. 1 root root    0 Aug 27 08:54 c247:1
-> > -rw-r--r--. 1 root root    0 Aug 27 08:54 c247:2
-> > -rw-r--r--. 1 root root    0 Aug 27 08:53 c7:10
-> > -rw-r--r--. 1 root root    0 Aug 27 08:53 c7:11
-> > -rw-r--r--. 1 root root    0 Aug 27 08:53 c7:12
-> > -rw-r--r--. 1 root root    0 Aug 27 08:53 c7:130
-> > -rw-r--r--. 1 root root    0 Aug 27 08:53 c7:131
-> > -rw-r--r--. 1 root root    0 Aug 27 08:53 c7:132
-> > -rw-r--r--. 1 root root    0 Aug 27 08:53 c7:133
-> > -rw-r--r--. 1 root root    0 Aug 27 08:53 c7:134
-> > -rw-r--r--. 1 root root    0 Aug 27 08:53 c7:135
-> > -rw-r--r--. 1 root root    0 Aug 27 08:53 c7:136
-> > -rw-r--r--. 1 root root    0 Aug 27 08:53 c7:137
-> > -rw-r--r--. 1 root root    0 Aug 27 08:53 c7:138
-> > -rw-r--r--. 1 root root    0 Aug 27 08:53 c7:139
-> > -rw-r--r--. 1 root root    0 Aug 27 08:53 c7:140
-> > -rw-r--r--. 1 root root    0 Aug 27 08:53 c7:2
-> > -rw-r--r--. 1 root root    0 Aug 27 08:53 c7:3
-> > -rw-r--r--. 1 root root    0 Aug 27 08:53 c7:4
-> > -rw-r--r--. 1 root root    0 Aug 27 08:53 c7:5
-> > -rw-r--r--. 1 root root    0 Aug 27 08:53 c7:6
-> > -rw-r--r--. 1 root root    0 Aug 27 08:53 c7:66
-> > -rw-r--r--. 1 root root    0 Aug 27 08:53 c7:67
-> > -rw-r--r--. 1 root root    0 Aug 27 08:53 c7:68
-> > -rw-r--r--. 1 root root    0 Aug 27 08:53 c7:69
-> > -rw-r--r--. 1 root root    0 Aug 27 08:53 c7:7
-> > -rw-r--r--. 1 root root    0 Aug 27 08:53 c7:70
-> > -rw-r--r--. 1 root root    0 Aug 27 08:53 c7:71
-> > -rw-r--r--. 1 root root    0 Aug 27 08:53 c7:72
-> > -rw-r--r--. 1 root root    0 Aug 27 08:53 c7:73
-> > -rw-r--r--. 1 root root    0 Aug 27 08:53 c7:74
-> > -rw-r--r--. 1 root root    0 Aug 27 08:53 c7:75
-> > -rw-r--r--. 1 root root    0 Aug 27 08:53 c7:76
-> > -rw-r--r--. 1 root root    0 Aug 27 08:53 c7:8
-> > -rw-r--r--. 1 root root    0 Aug 27 08:53 c7:9
-> > -rw-r--r--. 1 root root  991 Aug 27 09:07 n3
-> >
-> >     And the same on the working 5.16 kernel:
-> >
-> > total 1156
-> > -rw-r--r--. 1 root root   62 Aug 27 09:54 +acpi:ACPI0003:00
-> > -rw-r--r--. 1 root root   62 Aug 27 09:54 +acpi:ACPI0007:00
-> > -rw-r--r--. 1 root root   62 Aug 27 09:54 +acpi:ACPI0007:01
-> > -rw-r--r--. 1 root root   62 Aug 27 09:54 +acpi:ACPI0007:02
-> > -rw-r--r--. 1 root root   62 Aug 27 09:54 +acpi:ACPI0007:03
-> > -rw-r--r--. 1 root root   62 Aug 27 09:54 +acpi:ACPI0007:04
-> > -rw-r--r--. 1 root root   62 Aug 27 09:54 +acpi:ACPI0007:05
-> > -rw-r--r--. 1 root root   62 Aug 27 09:54 +acpi:ACPI0007:06
-> > -rw-r--r--. 1 root root   62 Aug 27 09:54 +acpi:ACPI0007:07
-> > -rw-r--r--. 1 root root   62 Aug 27 09:54 +acpi:ACPI0007:08
-> > -rw-r--r--. 1 root root   62 Aug 27 09:54 +acpi:ACPI0007:09
-> > -rw-r--r--. 1 root root   62 Aug 27 09:54 +acpi:ACPI0007:0a
-> > -rw-r--r--. 1 root root   62 Aug 27 09:54 +acpi:ACPI0007:0b
-> > -rw-r--r--. 1 root root   62 Aug 27 09:54 +acpi:ACPI0007:0c
-> > -rw-r--r--. 1 root root   62 Aug 27 09:54 +acpi:ACPI0007:0d
-> > -rw-r--r--. 1 root root   62 Aug 27 09:54 +acpi:ACPI0007:0e
-> > -rw-r--r--. 1 root root   62 Aug 27 09:54 +acpi:ACPI0007:0f
-> > -rw-r--r--. 1 root root   62 Aug 27 09:54 +acpi:ACPI0010:00
-> > -rw-r--r--. 1 root root   59 Aug 27 09:54 +acpi:AMDI0030:00
-> > -rw-r--r--. 1 root root   62 Aug 27 09:54 +acpi:LEN0071:00
-> > -rw-r--r--. 1 root root   62 Aug 27 09:54 +acpi:LEN0100:00
-> > -rw-r--r--. 1 root root   62 Aug 27 09:54 +acpi:LEN0130:00
-> > -rw-r--r--. 1 root root   62 Aug 27 09:54 +acpi:LEN0268:00
-> > -rw-r--r--. 1 root root   62 Aug 27 09:54 +acpi:LEN0411:00
-> > -rw-r--r--. 1 root root   62 Aug 27 09:54 +acpi:LNXPOWER:00
-> > -rw-r--r--. 1 root root   62 Aug 27 09:54 +acpi:LNXPOWER:01
-> > -rw-r--r--. 1 root root   62 Aug 27 09:54 +acpi:LNXPOWER:02
-> > -rw-r--r--. 1 root root   62 Aug 27 09:54 +acpi:LNXPOWER:03
-> > -rw-r--r--. 1 root root   62 Aug 27 09:54 +acpi:LNXPOWER:04
-> > -rw-r--r--. 1 root root   62 Aug 27 09:54 +acpi:LNXPWRBN:00
-> > -rw-r--r--. 1 root root   62 Aug 27 09:54 +acpi:LNXSYBUS:00
-> > -rw-r--r--. 1 root root   62 Aug 27 09:54 +acpi:LNXSYBUS:01
-> > -rw-r--r--. 1 root root   62 Aug 27 09:54 +acpi:LNXSYSTM:00
-> > -rw-r--r--. 1 root root   62 Aug 27 09:54 +acpi:LNXVIDEO:00
-> > -rw-r--r--. 1 root root   62 Aug 27 09:54 +acpi:PNP0000:00
-> > -rw-r--r--. 1 root root   62 Aug 27 09:54 +acpi:PNP0100:00
-> > -rw-r--r--. 1 root root   62 Aug 27 09:54 +acpi:PNP0103:00
-> > -rw-r--r--. 1 root root   62 Aug 27 09:54 +acpi:PNP0200:00
-> > -rw-r--r--. 1 root root   62 Aug 27 09:54 +acpi:PNP0800:00
-> > -rw-r--r--. 1 root root   62 Aug 27 09:54 +acpi:PNP0A08:00
-> > -rw-r--r--. 1 root root   62 Aug 27 09:54 +acpi:PNP0B00:00
-> > -rw-r--r--. 1 root root   62 Aug 27 09:54 +acpi:PNP0C01:00
-> > -rw-r--r--. 1 root root   62 Aug 27 09:54 +acpi:PNP0C02:00
-> > -rw-r--r--. 1 root root   62 Aug 27 09:54 +acpi:PNP0C02:01
-> > -rw-r--r--. 1 root root   62 Aug 27 09:54 +acpi:PNP0C02:02
-> > -rw-r--r--. 1 root root   62 Aug 27 09:54 +acpi:PNP0C02:03
-> > -rw-r--r--. 1 root root   62 Aug 27 09:54 +acpi:PNP0C02:04
-> > -rw-r--r--. 1 root root   62 Aug 27 09:54 +acpi:PNP0C02:05
-> > -rw-r--r--. 1 root root   62 Aug 27 09:54 +acpi:PNP0C02:06
-> > -rw-r--r--. 1 root root   62 Aug 27 09:54 +acpi:PNP0C02:07
-> > -rw-r--r--. 1 root root   62 Aug 27 09:54 +acpi:PNP0C02:08
-> > -rw-r--r--. 1 root root   62 Aug 27 09:54 +acpi:PNP0C02:09
-> > -rw-r--r--. 1 root root   62 Aug 27 09:54 +acpi:PNP0C02:0a
-> > -rw-r--r--. 1 root root   62 Aug 27 09:54 +acpi:PNP0C02:0b
-> > -rw-r--r--. 1 root root   62 Aug 27 09:54 +acpi:PNP0C02:0c
-> > -rw-r--r--. 1 root root   62 Aug 27 09:54 +acpi:PNP0C04:00
-> > -rw-r--r--. 1 root root   62 Aug 27 09:54 +acpi:PNP0C09:00
-> > -rw-r--r--. 1 root root   62 Aug 27 09:54 +acpi:PNP0C0A:00
-> > -rw-r--r--. 1 root root   62 Aug 27 09:54 +acpi:PNP0C0C:00
-> > -rw-r--r--. 1 root root   62 Aug 27 09:54 +acpi:PNP0C0D:00
-> > -rw-r--r--. 1 root root   62 Aug 27 09:54 +acpi:PNP0C0E:00
-> > -rw-r--r--. 1 root root   62 Aug 27 09:54 +acpi:PNP0C0F:00
-> > -rw-r--r--. 1 root root   62 Aug 27 09:54 +acpi:PNP0C0F:01
-> > -rw-r--r--. 1 root root   62 Aug 27 09:54 +acpi:PNP0C0F:02
-> > -rw-r--r--. 1 root root   62 Aug 27 09:54 +acpi:PNP0C0F:03
-> > -rw-r--r--. 1 root root   62 Aug 27 09:54 +acpi:PNP0C0F:04
-> > -rw-r--r--. 1 root root   62 Aug 27 09:54 +acpi:PNP0C0F:05
-> > -rw-r--r--. 1 root root   62 Aug 27 09:54 +acpi:PNP0C0F:06
-> > -rw-r--r--. 1 root root   62 Aug 27 09:54 +acpi:PNP0C0F:07
-> > -rw-r--r--. 1 root root   62 Aug 27 09:54 +acpi:PNP0C14:00
-> > -rw-r--r--. 1 root root   62 Aug 27 09:54 +acpi:PNP0C14:01
-> > -rw-r--r--. 1 root root   62 Aug 27 09:54 +acpi:PNP0C14:02
-> > -rw-r--r--. 1 root root   62 Aug 27 09:54 +acpi:PNP0C14:03
-> > -rw-r--r--. 1 root root   54 Aug 27 09:54 +acpi:SMB0001:00
-> > -rw-r--r--. 1 root root   70 Aug 27 09:54 +acpi:STM0125:00
-> > -rw-r--r--. 1 root root   62 Aug 27 09:54 +acpi:USBC000:00
-> > -rw-r--r--. 1 root root  128 Aug 27 09:54 +backlight:amdgpu_bl0
-> > -rw-r--r--. 1 root root  140 Aug 27 09:54 +dmi:id
-> > -rw-r--r--. 1 root root  156 Aug 27 09:54 +drm:card0-DP-1
-> > -rw-r--r--. 1 root root  156 Aug 27 09:54 +drm:card0-DP-2
-> > -rw-r--r--. 1 root root  156 Aug 27 09:54 +drm:card0-HDMI-A-1
-> > -rw-r--r--. 1 root root  156 Aug 27 09:54 +drm:card0-eDP-1
-> > -rw-r--r--. 1 root root  230 Aug 27 09:54 +input:input0
-> > -rw-r--r--. 1 root root  237 Aug 27 09:54 +input:input10
-> > -rw-r--r--. 1 root root  151 Aug 27 09:54 +input:input3
-> > -rw-r--r--. 1 root root  154 Aug 27 09:54 +input:input4
-> > -rw-r--r--. 1 root root  151 Aug 27 09:54 +input:input5
-> > -rw-r--r--. 1 root root  154 Aug 27 09:54 +input:input6
-> > -rw-r--r--. 1 root root  154 Aug 27 09:54 +input:input7
-> > -rw-r--r--. 1 root root  213 Aug 27 09:54 +input:input8
-> > -rw-r--r--. 1 root root  192 Aug 27 09:54 +input:input9
-> > -rw-r--r--. 1 root root  141 Aug 27 09:54 +leds:input0::capslock
-> > -rw-r--r--. 1 root root  141 Aug 27 09:54 +leds:input0::numlock
-> > -rw-r--r--. 1 root root  141 Aug 27 09:54 +leds:input0::scrolllock
-> > -rw-r--r--. 1 root root  141 Aug 27 09:54 +leds:platform::micmute
-> > -rw-r--r--. 1 root root  141 Aug 27 09:54 +leds:platform::mute
-> > -rw-r--r--. 1 root root  141 Aug 27 09:54 +leds:tpacpi::kbd_backlight
-> > -rw-r--r--. 1 root root  141 Aug 27 09:54 +leds:tpacpi::lid_logo_dot
-> > -rw-r--r--. 1 root root  141 Aug 27 09:54 +leds:tpacpi::power
-> > -rw-r--r--. 1 root root  141 Aug 27 09:54 +leds:tpacpi::standby
-> > -rw-r--r--. 1 root root  141 Aug 27 09:54 +leds:tpacpi::thinkvantage
-> > -rw-r--r--. 1 root root  209 Aug 27 09:54 +pci:0000:00:00.0
-> > -rw-r--r--. 1 root root  215 Aug 27 09:54 +pci:0000:00:00.2
-> > -rw-r--r--. 1 root root  211 Aug 27 09:54 +pci:0000:00:01.0
-> > -rw-r--r--. 1 root root  211 Aug 27 09:54 +pci:0000:00:02.0
-> > -rw-r--r--. 1 root root  258 Aug 27 09:54 +pci:0000:00:02.1
-> > -rw-r--r--. 1 root root  258 Aug 27 09:54 +pci:0000:00:02.2
-> > -rw-r--r--. 1 root root  258 Aug 27 09:54 +pci:0000:00:02.4
-> > -rw-r--r--. 1 root root  211 Aug 27 09:54 +pci:0000:00:08.0
-> > -rw-r--r--. 1 root root  266 Aug 27 09:54 +pci:0000:00:08.1
-> > -rw-r--r--. 1 root root  211 Aug 27 09:54 +pci:0000:00:14.0
-> > -rw-r--r--. 1 root root  195 Aug 27 09:54 +pci:0000:00:14.3
-> > -rw-r--r--. 1 root root  210 Aug 27 09:54 +pci:0000:00:18.0
-> > -rw-r--r--. 1 root root  210 Aug 27 09:54 +pci:0000:00:18.1
-> > -rw-r--r--. 1 root root  210 Aug 27 09:54 +pci:0000:00:18.2
-> > -rw-r--r--. 1 root root  210 Aug 27 09:54 +pci:0000:00:18.3
-> > -rw-r--r--. 1 root root  210 Aug 27 09:54 +pci:0000:00:18.4
-> > -rw-r--r--. 1 root root  210 Aug 27 09:54 +pci:0000:00:18.5
-> > -rw-r--r--. 1 root root  210 Aug 27 09:54 +pci:0000:00:18.6
-> > -rw-r--r--. 1 root root  210 Aug 27 09:54 +pci:0000:00:18.7
-> > -rw-r--r--. 1 root root  278 Aug 27 09:54 +pci:0000:01:00.0
-> > -rw-r--r--. 1 root root  256 Aug 27 09:54 +pci:0000:02:00.0
-> > -rw-r--r--. 1 root root  256 Aug 27 09:54 +pci:0000:02:00.1
-> > -rw-r--r--. 1 root root  256 Aug 27 09:54 +pci:0000:02:00.2
-> > -rw-r--r--. 1 root root  258 Aug 27 09:54 +pci:0000:02:00.3
-> > -rw-r--r--. 1 root root  263 Aug 27 09:54 +pci:0000:02:00.4
-> > -rw-r--r--. 1 root root  176 Aug 27 09:54 +pci:0000:04:00.0
-> > -rw-r--r--. 1 root root  266 Aug 27 09:54 +pci:0000:06:00.0
-> > -rw-r--r--. 1 root root  262 Aug 27 09:54 +pci:0000:06:00.2
-> > -rw-r--r--. 1 root root  260 Aug 27 09:54 +pci:0000:06:00.3
-> > -rw-r--r--. 1 root root  260 Aug 27 09:54 +pci:0000:06:00.4
-> > -rw-r--r--. 1 root root  240 Aug 27 09:54 +pci:0000:06:00.5
-> > -rw-r--r--. 1 root root   59 Aug 27 09:54 +platform:AMDI0030:00
-> > -rw-r--r--. 1 root root   62 Aug 27 09:54 +platform:LEN0100:00
-> > -rw-r--r--. 1 root root   62 Aug 27 09:54 +platform:LEN0130:00
-> > -rw-r--r--. 1 root root   62 Aug 27 09:54 +platform:LEN0268:00
-> > -rw-r--r--. 1 root root   70 Aug 27 09:54 +platform:STM0125:00
-> > -rw-r--r--. 1 root root  205 Aug 27 09:54 +usb:1-0:1.0
-> > -rw-r--r--. 1 root root  190 Aug 27 09:54 +usb:2-0:1.0
-> > -rw-r--r--. 1 root root  148 Aug 27 09:54 +usb:3-0:1.0
-> > -rw-r--r--. 1 root root  190 Aug 27 09:54 +usb:4-0:1.0
-> > -rw-r--r--. 1 root root  148 Aug 27 09:54 +usb:5-0:1.0
-> > drwxr-xr-x. 2 root root 7200 Aug 27 09:54 .
-> > drwxr-xr-x. 8 root root  180 Aug 27 09:54 ..
-> > -rw-r--r--. 1 root root   33 Aug 27 09:54 b1:0
-> > -rw-r--r--. 1 root root   33 Aug 27 09:54 b1:1
-> > -rw-r--r--. 1 root root   33 Aug 27 09:54 b1:10
-> > -rw-r--r--. 1 root root   33 Aug 27 09:54 b1:11
-> > -rw-r--r--. 1 root root   33 Aug 27 09:54 b1:12
-> > -rw-r--r--. 1 root root   33 Aug 27 09:54 b1:13
-> > -rw-r--r--. 1 root root   33 Aug 27 09:54 b1:14
-> > -rw-r--r--. 1 root root   33 Aug 27 09:54 b1:15
-> > -rw-r--r--. 1 root root   33 Aug 27 09:54 b1:2
-> > -rw-r--r--. 1 root root   33 Aug 27 09:54 b1:3
-> > -rw-r--r--. 1 root root   33 Aug 27 09:54 b1:4
-> > -rw-r--r--. 1 root root   33 Aug 27 09:54 b1:5
-> > -rw-r--r--. 1 root root   33 Aug 27 09:54 b1:6
-> > -rw-r--r--. 1 root root   33 Aug 27 09:54 b1:7
-> > -rw-r--r--. 1 root root   33 Aug 27 09:54 b1:8
-> > -rw-r--r--. 1 root root   33 Aug 27 09:54 b1:9
-> > -rw-r--r--. 1 root root  129 Aug 27 09:54 b254:0
-> > -rw-r--r--. 1 root root  136 Aug 27 09:54 b254:1
-> > -rw-r--r--. 1 root root  129 Aug 27 09:54 b254:2
-> > -rw-r--r--. 1 root root  575 Aug 27 09:54 b259:0
-> > -rw-r--r--. 1 root root 1069 Aug 27 09:54 b259:1
-> > -rw-r--r--. 1 root root 1137 Aug 27 09:54 b259:2
-> > -rw-r--r--. 1 root root    0 Aug 27 09:54 c10:125
-> > -rw-r--r--. 1 root root    0 Aug 27 09:54 c10:126
-> > -rw-r--r--. 1 root root    0 Aug 27 09:54 c10:127
-> > -rw-r--r--. 1 root root    0 Aug 27 09:54 c10:130
-> > -rw-r--r--. 1 root root    0 Aug 27 09:54 c10:144
-> > -rw-r--r--. 1 root root    0 Aug 27 09:54 c10:183
-> > -rw-r--r--. 1 root root    0 Aug 27 09:54 c10:184
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c10:224
-> > -rw-r--r--. 1 root root    0 Aug 27 09:54 c10:227
-> > -rw-r--r--. 1 root root    0 Aug 27 09:54 c10:228
-> > -rw-r--r--. 1 root root    0 Aug 27 09:54 c10:229
-> > -rw-r--r--. 1 root root    0 Aug 27 09:54 c10:231
-> > -rw-r--r--. 1 root root    0 Aug 27 09:54 c10:232
-> > -rw-r--r--. 1 root root    0 Aug 27 09:54 c10:234
-> > -rw-r--r--. 1 root root    0 Aug 27 09:54 c10:236
-> > -rw-r--r--. 1 root root    0 Aug 27 09:54 c10:237
-> > -rw-r--r--. 1 root root   49 Aug 27 09:54 c10:242
-> > -rw-r--r--. 1 root root  201 Aug 27 09:54 c13:32
-> > -rw-r--r--. 1 root root  225 Aug 27 09:54 c13:33
-> > -rw-r--r--. 1 root root    0 Aug 27 09:54 c13:63
-> > -rw-r--r--. 1 root root  298 Aug 27 09:54 c13:64
-> > -rw-r--r--. 1 root root  177 Aug 27 09:54 c13:65
-> > -rw-r--r--. 1 root root  180 Aug 27 09:54 c13:66
-> > -rw-r--r--. 1 root root  177 Aug 27 09:54 c13:67
-> > -rw-r--r--. 1 root root  180 Aug 27 09:54 c13:68
-> > -rw-r--r--. 1 root root  179 Aug 27 09:54 c13:69
-> > -rw-r--r--. 1 root root  862 Aug 27 09:54 c13:70
-> > -rw-r--r--. 1 root root  422 Aug 27 09:54 c13:71
-> > -rw-r--r--. 1 root root  282 Aug 27 09:54 c13:72
-> > -rw-r--r--. 1 root root 1026 Aug 27 09:54 c189:0
-> > -rw-r--r--. 1 root root 1026 Aug 27 09:54 c189:128
-> > -rw-r--r--. 1 root root 1026 Aug 27 09:54 c189:256
-> > -rw-r--r--. 1 root root 1026 Aug 27 09:54 c189:384
-> > -rw-r--r--. 1 root root 1026 Aug 27 09:54 c189:512
-> > -rw-r--r--. 1 root root    0 Aug 27 09:54 c1:11
-> > -rw-r--r--. 1 root root    0 Aug 27 09:54 c1:3
-> > -rw-r--r--. 1 root root    0 Aug 27 09:54 c1:5
-> > -rw-r--r--. 1 root root    0 Aug 27 09:54 c1:7
-> > -rw-r--r--. 1 root root    0 Aug 27 09:54 c1:8
-> > -rw-r--r--. 1 root root    0 Aug 27 09:54 c1:9
-> > -rw-r--r--. 1 root root  212 Aug 27 09:54 c226:0
-> > -rw-r--r--. 1 root root  111 Aug 27 09:54 c226:128
-> > -rw-r--r--. 1 root root    0 Aug 27 09:54 c237:0
-> > -rw-r--r--. 1 root root    0 Aug 27 09:54 c238:0
-> > -rw-r--r--. 1 root root    0 Aug 27 09:54 c238:1
-> > -rw-r--r--. 1 root root    0 Aug 27 09:54 c238:2
-> > -rw-r--r--. 1 root root    0 Aug 27 09:54 c240:0
-> > -rw-r--r--. 1 root root    0 Aug 27 09:54 c244:0
-> > -rw-r--r--. 1 root root  278 Aug 27 09:54 c245:0
-> > -rw-r--r--. 1 root root   28 Aug 27 09:54 c250:0
-> > -rw-r--r--. 1 root root    0 Aug 27 09:54 c251:0
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c253:65536
-> > -rw-r--r--. 1 root root    0 Aug 27 09:54 c254:0
-> > -rw-r--r--. 1 root root  127 Aug 27 09:54 c29:0
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:0
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:1
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:10
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:11
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:12
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:13
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:14
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:15
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:16
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:17
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:18
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:19
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:2
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:20
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:21
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:22
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:23
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:24
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:25
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:26
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:27
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:28
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:29
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:3
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:30
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:31
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:32
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:33
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:34
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:35
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:36
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:37
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:38
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:39
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:4
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:40
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:41
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:42
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:43
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:44
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:45
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:46
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:47
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:48
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:49
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:5
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:50
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:51
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:52
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:53
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:54
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:55
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:56
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:57
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:58
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:59
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:6
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:60
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:61
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:62
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:63
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:64
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:65
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:66
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:67
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:68
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:69
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:7
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:70
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:71
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:72
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:73
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:74
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:75
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:76
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:77
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:78
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:79
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:8
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:80
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:81
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:82
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:83
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:84
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:85
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:86
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:87
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:88
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:89
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:9
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:90
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:91
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:92
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:93
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:94
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c4:95
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c5:0
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c5:1
-> > -rw-r--r--. 1 root root   35 Aug 27 09:54 c5:2
-> > -rw-r--r--. 1 root root    0 Aug 27 09:54 c7:0
-> > -rw-r--r--. 1 root root    0 Aug 27 09:54 c7:1
-> > -rw-r--r--. 1 root root    0 Aug 27 09:54 c7:10
-> > -rw-r--r--. 1 root root    0 Aug 27 09:54 c7:11
-> > -rw-r--r--. 1 root root    0 Aug 27 09:54 c7:12
-> > -rw-r--r--. 1 root root    0 Aug 27 09:54 c7:128
-> > -rw-r--r--. 1 root root    0 Aug 27 09:54 c7:129
-> > -rw-r--r--. 1 root root    0 Aug 27 09:54 c7:130
-> > -rw-r--r--. 1 root root    0 Aug 27 09:54 c7:131
-> > -rw-r--r--. 1 root root    0 Aug 27 09:54 c7:132
-> > -rw-r--r--. 1 root root    0 Aug 27 09:54 c7:133
-> > -rw-r--r--. 1 root root    0 Aug 27 09:54 c7:134
-> > -rw-r--r--. 1 root root    0 Aug 27 09:54 c7:135
-> > -rw-r--r--. 1 root root    0 Aug 27 09:54 c7:136
-> > -rw-r--r--. 1 root root    0 Aug 27 09:54 c7:137
-> > -rw-r--r--. 1 root root    0 Aug 27 09:54 c7:138
-> > -rw-r--r--. 1 root root    0 Aug 27 09:54 c7:139
-> > -rw-r--r--. 1 root root    0 Aug 27 09:54 c7:140
-> > -rw-r--r--. 1 root root    0 Aug 27 09:54 c7:2
-> > -rw-r--r--. 1 root root    0 Aug 27 09:54 c7:3
-> > -rw-r--r--. 1 root root    0 Aug 27 09:54 c7:4
-> > -rw-r--r--. 1 root root    0 Aug 27 09:54 c7:5
-> > -rw-r--r--. 1 root root    0 Aug 27 09:54 c7:6
-> > -rw-r--r--. 1 root root    0 Aug 27 09:54 c7:64
-> > -rw-r--r--. 1 root root    0 Aug 27 09:54 c7:65
-> > -rw-r--r--. 1 root root    0 Aug 27 09:54 c7:66
-> > -rw-r--r--. 1 root root    0 Aug 27 09:54 c7:67
-> > -rw-r--r--. 1 root root    0 Aug 27 09:54 c7:68
-> > -rw-r--r--. 1 root root    0 Aug 27 09:54 c7:69
-> > -rw-r--r--. 1 root root    0 Aug 27 09:54 c7:7
-> > -rw-r--r--. 1 root root    0 Aug 27 09:54 c7:70
-> > -rw-r--r--. 1 root root    0 Aug 27 09:54 c7:71
-> > -rw-r--r--. 1 root root    0 Aug 27 09:54 c7:72
-> > -rw-r--r--. 1 root root    0 Aug 27 09:54 c7:73
-> > -rw-r--r--. 1 root root    0 Aug 27 09:54 c7:74
-> > -rw-r--r--. 1 root root    0 Aug 27 09:54 c7:75
-> > -rw-r--r--. 1 root root    0 Aug 27 09:54 c7:76
-> > -rw-r--r--. 1 root root    0 Aug 27 09:54 c7:8
-> > -rw-r--r--. 1 root root    0 Aug 27 09:54 c7:9
-> > -rw-r--r--. 1 root root   52 Aug 27 09:54 n1
-> > -rw-r--r--. 1 root root  648 Aug 27 09:54 n2
-> >
-> >     To what I read, having it in the db either populated
-> > by the file under /run/udev/data, or populated from sysfs
-> > should be enough, but for some reason, it seems systemd
-> > and libudev expects the file under this folder.
-> >
-> >     Thanks!
-> >
-> >     Jos=C3=A9.
->
->     Re-adding the mailing lists.
->
->     Jos=C3=A9.
+> > --
+> > Chia-Lin Kao(AceLan)
+> > http://blog.acelan.idv.tw/
+> > E-Mail: acelan.kaoATcanonical.com (s/AT/@/)
 
-    I found that according to some early output on udev, the problem
-maybe that Gentoo is triggering the device discovery before the
-kernel is having multiple uevent files available. Retriggering the
-device discovery on a later stage makes the discovery of the
-devices work correctly and I can use the devices as in former
-kernels. The command to do so is:
 
-# udevadm trigger --type=3Ddevices --action=3Dadd
 
-    Is this something that can be improved from kernel end or should
-I just look for some solution on Gentoo side to delay that trigger and
-be done with it?
+--=20
+Chia-Lin Kao(AceLan)
+http://blog.acelan.idv.tw/
+E-Mail: acelan.kaoATcanonical.com (s/AT/@/)
 
-    Thanks!
+--000000000000d9517e0603f971e2
+Content-Type: text/x-patch; charset="US-ASCII"; 
+	name="0001-Revert-md-only-delete-entries-from-all_mddevs-when-t.patch"
+Content-Disposition: attachment; 
+	filename="0001-Revert-md-only-delete-entries-from-all_mddevs-when-t.patch"
+Content-Transfer-Encoding: base64
+Content-ID: <f_llurank60>
+X-Attachment-Id: f_llurank60
 
-    Jos=C3=A9.
+RnJvbSA1OGRkMTA2ZGI4OGYwMGIwOGQyMGQ0YTk0OWEwMDE2MjkyMzhkYmMwIE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiAiQ2hpYS1MaW4gS2FvIChBY2VMYW4pIiA8YWNlbGFuLmthb0Bj
+YW5vbmljYWwuY29tPgpEYXRlOiBNb24sIDI4IEF1ZyAyMDIzIDAyOjM0OjA4IC0wNDAwClN1Ympl
+Y3Q6IFtQQVRDSF0gUmV2ZXJ0ICJtZDogb25seSBkZWxldGUgZW50cmllcyBmcm9tIGFsbF9tZGRl
+dnMgd2hlbiB0aGUgZGlzawogaXMgZnJlZWQiCgpUaGlzIHJldmVydHMgY29tbWl0IDEyYTZjYWYy
+NzMyNDBhZTQyODQyZGU4Y2MwNWZlYWE4NmU1ODJkNjEuCi0tLQogZHJpdmVycy9tZC9tZC5jIHwg
+NTIgKysrKysrKysrKysrKysrKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQogZHJp
+dmVycy9tZC9tZC5oIHwgIDIgLS0KIDIgZmlsZXMgY2hhbmdlZCwgMTcgaW5zZXJ0aW9ucygrKSwg
+MzcgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9tZC9tZC5jIGIvZHJpdmVycy9t
+ZC9tZC5jCmluZGV4IDc4YmU3ODExYTg5Zi4uYWY1ZDM3OWFkMzU3IDEwMDY0NAotLS0gYS9kcml2
+ZXJzL21kL21kLmMKKysrIGIvZHJpdmVycy9tZC9tZC5jCkBAIC02MDYsMTAgKzYwNiw2IEBAIEVY
+UE9SVF9TWU1CT0wobWRfZmx1c2hfcmVxdWVzdCk7CiAKIHN0YXRpYyBpbmxpbmUgc3RydWN0IG1k
+ZGV2ICptZGRldl9nZXQoc3RydWN0IG1kZGV2ICptZGRldikKIHsKLQlsb2NrZGVwX2Fzc2VydF9o
+ZWxkKCZhbGxfbWRkZXZzX2xvY2spOwotCi0JaWYgKHRlc3RfYml0KE1EX0RFTEVURUQsICZtZGRl
+di0+ZmxhZ3MpKQotCQlyZXR1cm4gTlVMTDsKIAlhdG9taWNfaW5jKCZtZGRldi0+YWN0aXZlKTsK
+IAlyZXR1cm4gbWRkZXY7CiB9CkBAIC02MjQsNyArNjIwLDcgQEAgdm9pZCBtZGRldl9wdXQoc3Ry
+dWN0IG1kZGV2ICptZGRldikKIAkgICAgbWRkZXYtPmN0aW1lID09IDAgJiYgIW1kZGV2LT5ob2xk
+X2FjdGl2ZSkgewogCQkvKiBBcnJheSBpcyBub3QgY29uZmlndXJlZCBhdCBhbGwsIGFuZCBub3Qg
+aGVsZCBhY3RpdmUsCiAJCSAqIHNvIGRlc3Ryb3kgaXQgKi8KLQkJc2V0X2JpdChNRF9ERUxFVEVE
+LCAmbWRkZXYtPmZsYWdzKTsKKwkJbGlzdF9kZWxfaW5pdCgmbWRkZXYtPmFsbF9tZGRldnMpOwog
+CiAJCS8qCiAJCSAqIENhbGwgcXVldWVfd29yayBpbnNpZGUgdGhlIHNwaW5sb2NrIHNvIHRoYXQK
+QEAgLTMyODUsOCArMzI4MSw2IEBAIHN0YXRpYyBib29sIG1kX3JkZXZfb3ZlcmxhcHMoc3RydWN0
+IG1kX3JkZXYgKnJkZXYpCiAKIAlzcGluX2xvY2soJmFsbF9tZGRldnNfbG9jayk7CiAJbGlzdF9m
+b3JfZWFjaF9lbnRyeShtZGRldiwgJmFsbF9tZGRldnMsIGFsbF9tZGRldnMpIHsKLQkJaWYgKHRl
+c3RfYml0KE1EX0RFTEVURUQsICZtZGRldi0+ZmxhZ3MpKQotCQkJY29udGludWU7CiAJCXJkZXZf
+Zm9yX2VhY2gocmRldjIsIG1kZGV2KSB7CiAJCQlpZiAocmRldiAhPSByZGV2MiAmJiByZGV2LT5i
+ZGV2ID09IHJkZXYyLT5iZGV2ICYmCiAJCQkgICAgbWRfcmRldnNfb3ZlcmxhcChyZGV2LCByZGV2
+MikpIHsKQEAgLTU0ODgsMTAgKzU0ODIsMTEgQEAgbWRfYXR0cl9zaG93KHN0cnVjdCBrb2JqZWN0
+ICprb2JqLCBzdHJ1Y3QgYXR0cmlidXRlICphdHRyLCBjaGFyICpwYWdlKQogCWlmICghZW50cnkt
+PnNob3cpCiAJCXJldHVybiAtRUlPOwogCXNwaW5fbG9jaygmYWxsX21kZGV2c19sb2NrKTsKLQlp
+ZiAoIW1kZGV2X2dldChtZGRldikpIHsKKwlpZiAobGlzdF9lbXB0eSgmbWRkZXYtPmFsbF9tZGRl
+dnMpKSB7CiAJCXNwaW5fdW5sb2NrKCZhbGxfbWRkZXZzX2xvY2spOwogCQlyZXR1cm4gLUVCVVNZ
+OwogCX0KKwltZGRldl9nZXQobWRkZXYpOwogCXNwaW5fdW5sb2NrKCZhbGxfbWRkZXZzX2xvY2sp
+OwogCiAJcnYgPSBlbnRyeS0+c2hvdyhtZGRldiwgcGFnZSk7CkBAIC01NTEyLDEwICs1NTA3LDEx
+IEBAIG1kX2F0dHJfc3RvcmUoc3RydWN0IGtvYmplY3QgKmtvYmosIHN0cnVjdCBhdHRyaWJ1dGUg
+KmF0dHIsCiAJaWYgKCFjYXBhYmxlKENBUF9TWVNfQURNSU4pKQogCQlyZXR1cm4gLUVBQ0NFUzsK
+IAlzcGluX2xvY2soJmFsbF9tZGRldnNfbG9jayk7Ci0JaWYgKCFtZGRldl9nZXQobWRkZXYpKSB7
+CisJaWYgKGxpc3RfZW1wdHkoJm1kZGV2LT5hbGxfbWRkZXZzKSkgewogCQlzcGluX3VubG9jaygm
+YWxsX21kZGV2c19sb2NrKTsKIAkJcmV0dXJuIC1FQlVTWTsKIAl9CisJbWRkZXZfZ2V0KG1kZGV2
+KTsKIAlzcGluX3VubG9jaygmYWxsX21kZGV2c19sb2NrKTsKIAlydiA9IGVudHJ5LT5zdG9yZSht
+ZGRldiwgcGFnZSwgbGVuZ3RoKTsKIAltZGRldl9wdXQobWRkZXYpOwpAQCAtNzgyNiw2ICs3ODIy
+LDcgQEAgc3RhdGljIHZvaWQgbWRfZnJlZV9kaXNrKHN0cnVjdCBnZW5kaXNrICpkaXNrKQogCXN0
+cnVjdCBtZGRldiAqbWRkZXYgPSBkaXNrLT5wcml2YXRlX2RhdGE7CiAKIAlwZXJjcHVfcmVmX2V4
+aXQoJm1kZGV2LT53cml0ZXNfcGVuZGluZyk7CisKIAltZGRldl9mcmVlKG1kZGV2KTsKIH0KIApA
+QCAtODE1OSw4ICs4MTU2LDcgQEAgc3RhdGljIHZvaWQgKm1kX3NlcV9zdGFydChzdHJ1Y3Qgc2Vx
+X2ZpbGUgKnNlcSwgbG9mZl90ICpwb3MpCiAJbGlzdF9mb3JfZWFjaCh0bXAsJmFsbF9tZGRldnMp
+CiAJCWlmICghbC0tKSB7CiAJCQltZGRldiA9IGxpc3RfZW50cnkodG1wLCBzdHJ1Y3QgbWRkZXYs
+IGFsbF9tZGRldnMpOwotCQkJaWYgKCFtZGRldl9nZXQobWRkZXYpKQotCQkJCWNvbnRpbnVlOwor
+CQkJbWRkZXZfZ2V0KG1kZGV2KTsKIAkJCXNwaW5fdW5sb2NrKCZhbGxfbWRkZXZzX2xvY2spOwog
+CQkJcmV0dXJuIG1kZGV2OwogCQl9CkBAIC04MTc0LDM1ICs4MTcwLDI1IEBAIHN0YXRpYyB2b2lk
+ICptZF9zZXFfbmV4dChzdHJ1Y3Qgc2VxX2ZpbGUgKnNlcSwgdm9pZCAqdiwgbG9mZl90ICpwb3Mp
+CiB7CiAJc3RydWN0IGxpc3RfaGVhZCAqdG1wOwogCXN0cnVjdCBtZGRldiAqbmV4dF9tZGRldiwg
+Km1kZGV2ID0gdjsKLQlzdHJ1Y3QgbWRkZXYgKnRvX3B1dCA9IE5VTEw7CiAKIAkrKypwb3M7CiAJ
+aWYgKHYgPT0gKHZvaWQqKTIpCiAJCXJldHVybiBOVUxMOwogCiAJc3Bpbl9sb2NrKCZhbGxfbWRk
+ZXZzX2xvY2spOwotCWlmICh2ID09ICh2b2lkKikxKSB7CisJaWYgKHYgPT0gKHZvaWQqKTEpCiAJ
+CXRtcCA9IGFsbF9tZGRldnMubmV4dDsKLQl9IGVsc2UgewotCQl0b19wdXQgPSBtZGRldjsKLQkJ
+dG1wID0gbWRkZXYtPmFsbF9tZGRldnMubmV4dDsKLQl9Ci0KLQlmb3IgKDs7KSB7Ci0JCWlmICh0
+bXAgPT0gJmFsbF9tZGRldnMpIHsKLQkJCW5leHRfbWRkZXYgPSAodm9pZCopMjsKLQkJCSpwb3Mg
+PSAweDEwMDAwOwotCQkJYnJlYWs7Ci0JCX0KLQkJbmV4dF9tZGRldiA9IGxpc3RfZW50cnkodG1w
+LCBzdHJ1Y3QgbWRkZXYsIGFsbF9tZGRldnMpOwotCQlpZiAobWRkZXZfZ2V0KG5leHRfbWRkZXYp
+KQotCQkJYnJlYWs7Ci0JCW1kZGV2ID0gbmV4dF9tZGRldjsKKwllbHNlCiAJCXRtcCA9IG1kZGV2
+LT5hbGxfbWRkZXZzLm5leHQ7CisJaWYgKHRtcCAhPSAmYWxsX21kZGV2cykKKwkJbmV4dF9tZGRl
+diA9IG1kZGV2X2dldChsaXN0X2VudHJ5KHRtcCxzdHJ1Y3QgbWRkZXYsYWxsX21kZGV2cykpOwor
+CWVsc2UgeworCQluZXh0X21kZGV2ID0gKHZvaWQqKTI7CisJCSpwb3MgPSAweDEwMDAwOwogCX0K
+IAlzcGluX3VubG9jaygmYWxsX21kZGV2c19sb2NrKTsKIAotCWlmICh0b19wdXQpCisJaWYgKHYg
+IT0gKHZvaWQqKTEpCiAJCW1kZGV2X3B1dChtZGRldik7CiAJcmV0dXJuIG5leHRfbWRkZXY7CiAK
+QEAgLTg3NzIsOCArODc1OCw2IEBAIHZvaWQgbWRfZG9fc3luYyhzdHJ1Y3QgbWRfdGhyZWFkICp0
+aHJlYWQpCiAJCQlnb3RvIHNraXA7CiAJCXNwaW5fbG9jaygmYWxsX21kZGV2c19sb2NrKTsKIAkJ
+bGlzdF9mb3JfZWFjaF9lbnRyeShtZGRldjIsICZhbGxfbWRkZXZzLCBhbGxfbWRkZXZzKSB7Ci0J
+CQlpZiAodGVzdF9iaXQoTURfREVMRVRFRCwgJm1kZGV2Mi0+ZmxhZ3MpKQotCQkJCWNvbnRpbnVl
+OwogCQkJaWYgKG1kZGV2MiA9PSBtZGRldikKIAkJCQljb250aW51ZTsKIAkJCWlmICghbWRkZXYt
+PnBhcmFsbGVsX3Jlc3luYwpAQCAtOTU3Nyw4ICs5NTYxLDcgQEAgc3RhdGljIGludCBtZF9ub3Rp
+ZnlfcmVib290KHN0cnVjdCBub3RpZmllcl9ibG9jayAqdGhpcywKIAogCXNwaW5fbG9jaygmYWxs
+X21kZGV2c19sb2NrKTsKIAlsaXN0X2Zvcl9lYWNoX2VudHJ5X3NhZmUobWRkZXYsIG4sICZhbGxf
+bWRkZXZzLCBhbGxfbWRkZXZzKSB7Ci0JCWlmICghbWRkZXZfZ2V0KG1kZGV2KSkKLQkJCWNvbnRp
+bnVlOworCQltZGRldl9nZXQobWRkZXYpOwogCQlzcGluX3VubG9jaygmYWxsX21kZGV2c19sb2Nr
+KTsKIAkJaWYgKG1kZGV2X3RyeWxvY2sobWRkZXYpKSB7CiAJCQlpZiAobWRkZXYtPnBlcnMpCkBA
+IC05OTM0LDggKzk5MTcsNyBAQCBzdGF0aWMgX19leGl0IHZvaWQgbWRfZXhpdCh2b2lkKQogCiAJ
+c3Bpbl9sb2NrKCZhbGxfbWRkZXZzX2xvY2spOwogCWxpc3RfZm9yX2VhY2hfZW50cnlfc2FmZSht
+ZGRldiwgbiwgJmFsbF9tZGRldnMsIGFsbF9tZGRldnMpIHsKLQkJaWYgKCFtZGRldl9nZXQobWRk
+ZXYpKQotCQkJY29udGludWU7CisJCW1kZGV2X2dldChtZGRldik7CiAJCXNwaW5fdW5sb2NrKCZh
+bGxfbWRkZXZzX2xvY2spOwogCQlleHBvcnRfYXJyYXkobWRkZXYpOwogCQltZGRldi0+Y3RpbWUg
+PSAwOwpkaWZmIC0tZ2l0IGEvZHJpdmVycy9tZC9tZC5oIGIvZHJpdmVycy9tZC9tZC5oCmluZGV4
+IDFhZWY4NmJmM2ZjMy4uNGUyNjVlMzhjMjI5IDEwMDY0NAotLS0gYS9kcml2ZXJzL21kL21kLmgK
+KysrIGIvZHJpdmVycy9tZC9tZC5oCkBAIC0yNTIsNyArMjUyLDYgQEAgc3RydWN0IG1kX2NsdXN0
+ZXJfaW5mbzsKICAqIEBNRF9OT1RfUkVBRFk6IGRvX21kX3J1bigpIGlzIGFjdGl2ZSwgc28gJ2Fy
+cmF5X3N0YXRlJywgdXN0IG5vdCByZXBvcnQgdGhhdAogICoJCSAgIGFycmF5IGlzIHJlYWR5IHll
+dC4KICAqIEBNRF9CUk9LRU46IFRoaXMgaXMgdXNlZCB0byBzdG9wIHdyaXRlcyBhbmQgbWFyayBh
+cnJheSBhcyBmYWlsZWQuCi0gKiBATURfREVMRVRFRDogVGhpcyBkZXZpY2UgaXMgYmVpbmcgZGVs
+ZXRlZAogICoKICAqIGNoYW5nZSBVTlNVUFBPUlRFRF9NRERFVl9GTEFHUyBmb3IgZWFjaCBhcnJh
+eSB0eXBlIGlmIG5ldyBmbGFnIGlzIGFkZGVkCiAgKi8KQEAgLTI2OSw3ICsyNjgsNiBAQCBlbnVt
+IG1kZGV2X2ZsYWdzIHsKIAlNRF9VUERBVElOR19TQiwKIAlNRF9OT1RfUkVBRFksCiAJTURfQlJP
+S0VOLAotCU1EX0RFTEVURUQsCiB9OwogCiBlbnVtIG1kZGV2X3NiX2ZsYWdzIHsKLS0gCjIuMzcu
+MgoK
+--000000000000d9517e0603f971e2--
