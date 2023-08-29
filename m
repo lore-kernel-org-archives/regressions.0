@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49DBC1116
-	for <regressions@lists.linux.dev>; Tue, 29 Aug 2023 12:08:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7129A1116
+	for <regressions@lists.linux.dev>; Tue, 29 Aug 2023 12:11:41 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qaxVt-0005Gc-4Q; Tue, 29 Aug 2023 14:08:05 +0200
-Message-ID: <6a39c016-0f00-6cfa-834e-abe5acb79757@leemhuis.info>
-Date: Tue, 29 Aug 2023 14:08:04 +0200
+	id 1qaxZL-0005te-66; Tue, 29 Aug 2023 14:11:39 +0200
+Message-ID: <e4f32537-bec5-3d9e-11b1-0aa79fa10103@leemhuis.info>
+Date: Tue, 29 Aug 2023 14:11:38 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -15,88 +15,54 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: radeon.ko/i586: BUG: kernel NULL pointer
- dereference,address:00000004
+Subject: Re: Fwd: UBSAN: index 1 is out of range for type
+ 'xen_netif_rx_sring_entry [1]'
 Content-Language: en-US, de-DE
-To: kkabe@vega.pgw.jp
-Cc: regressions@lists.linux.dev, bagasdotme@gmail.com,
- alexander.deucher@amd.com, christian.koenig@amd.com, Xinhui.Pan@amd.com,
- tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, hpa@zytor.com, linux-kernel@vger.kernel.org,
- amd-gfx@lists.freedesktop.org, Steven Rostedt <rostedt@goodmis.org>
-References: <230722113014.M0204460@vega.pgw.jp>
- <230723205506.M0106064@vega.pgw.jp>
- <20230723103210.4b1b032e@rorschach.local.home>
-From: "Linux regression tracking (Thorsten Leemhuis)"
+To: Linux Regressions <regressions@lists.linux.dev>
+Cc: Linux Xen <xen-devel@lists.xenproject.org>,
+ Linux BPF <bpf@vger.kernel.org>, Linux Networking <netdev@vger.kernel.org>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <7e3841ce-011d-5ba6-9dae-7b14e07b5c4b@gmail.com>
+ <20230723000657.GA878540@dev-arch.thelio-3990X>
+ <e208365f-dbc6-06d1-ccc9-3b2e945a0bff@suse.com>
+ <73019154-6a34-f714-96b5-b43038569feb@suse.com>
+ <202307252204.09AC0089@keescook>
+From: "Linux regression tracking #update (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <20230723103210.4b1b032e@rorschach.local.home>
+In-Reply-To: <202307252204.09AC0089@keescook>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1693310890;cda544a1;
-X-HE-SMSGID: 1qaxVt-0005Gc-4Q
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1693311101;bafe2bc0;
+X-HE-SMSGID: 1qaxZL-0005te-66
 
-Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
-for once, to make this easily accessible to everyone.
+[TLDR: This mail in primarily relevant for Linux kernel regression
+tracking. See link in footer if these mails annoy you.]
 
-I still have this issue on my list of tracked regressions.
+On 26.07.23 07:06, Kees Cook wrote:
+> On Tue, Jul 25, 2023 at 03:34:26PM +0200, Juergen Gross wrote:
+>> On 25.07.23 15:24, Juergen Gross wrote:
+>>> On 23.07.23 02:06, Nathan Chancellor wrote:
+>>>> On Sat, Jul 22, 2023 at 07:21:05AM +0700, Bagas Sanjaya wrote:
+>>>>>
+>>>>> I notice a regression report on Bugzilla [1]. Quoting from it:
+>>>>>>
+>>>>>> I rebuild today latest version from mainline repo.
+>>>>>> And i notice issue regarding xen-netfront.c.
+> [...]
+>> Oh, in fact there is a way in Xen to do that correctly. It schould be enough to
+>> use ring[XEN_FLEX_ARRAY_DIM], which will do the right thing.
+>>
+>> So I'll write a Xen patch first, after all.
+> 
+> Perfect! I went to go look, and yes, this is good:
 
-Was this fixed in between? Doesn't look like it from here, but I might
-be missing something.
+#regzbot resolve: will be dealt with on the xen side
+#regzbot ignore-activity
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
 Everything you wanna know about Linux kernel regression tracking:
 https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+That page also explains what to do if mails like this annoy you.
 
-#regzbot poke
-
-On 23.07.23 16:32, Steven Rostedt wrote:
-> On Sun, 23 Jul 2023 20:55:06 +0900
-> <kkabe@vega.pgw.jp> wrote:
-> 
->> So I tried to trap NULL and return:
->>
->> ================ patch-drm_vblank_cancel_pending_works-printk-NULL-ret.patch
->> diff -up ./drivers/gpu/drm/drm_vblank_work.c.pk2 ./drivers/gpu/drm/drm_vblank_work.c
->> --- ./drivers/gpu/drm/drm_vblank_work.c.pk2	2023-06-06 20:50:40.000000000 +0900
->> +++ ./drivers/gpu/drm/drm_vblank_work.c	2023-07-23 14:29:56.383093673 +0900
->> @@ -71,6 +71,10 @@ void drm_vblank_cancel_pending_works(str
->>  {
->>  	struct drm_vblank_work *work, *next;
->>  
->> +	if (!vblank->dev) {
->> +		printk(KERN_WARNING "%s: vblank->dev == NULL? returning\n", __func__);
->> +		return;
->> +	}
->>  	assert_spin_locked(&vblank->dev->event_lock);
->>  
->>  	list_for_each_entry_safe(work, next, &vblank->pending_work, node) {
->> ================
->>
->> This time, the printk trap does not happen!! and radeon.ko works.
->> (NULL check for vblank->worker is still fireing though)
->>
->> Now this is puzzling.
->> Is this a timing issue?
-> 
-> It could very well be. And the ftrace patch could possibly not be the
-> cause at all. But the thread that is created to do the work is causing
-> the race window to be opened up, which is why you see it with the patch
-> and don't without it. It may not be the problem, it may just tickle the
-> timings enough to trigger the bug, and is causing you to go on a wild
-> goose chase in the wrong direction.
-> 
-> -- Steve
-> 
-> 
->> Is systemd-udevd doing something not favaorble to kernel?
->> Is drm vblank code running without enough initialization?
->>
->> Puzzling is, that purely useland activity
->> (logging in on tty1 before radeon.ko load)
->> is affecting kernel panic/no-panic.
-> 
-> 
-> 
