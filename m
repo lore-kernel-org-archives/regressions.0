@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4DE120E8
-	for <regressions@lists.linux.dev>; Tue, 29 Aug 2023 08:38:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1AE563C0
+	for <regressions@lists.linux.dev>; Tue, 29 Aug 2023 09:45:35 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qauFE-0007Gv-KK; Tue, 29 Aug 2023 10:38:40 +0200
-Message-ID: <fcf2f600-d1f0-de14-956b-4d4f3f0cb3fa@leemhuis.info>
-Date: Tue, 29 Aug 2023 10:38:38 +0200
+	id 1qavHt-00045K-0K; Tue, 29 Aug 2023 11:45:29 +0200
+Message-ID: <4108c514-77ff-a247-d6e1-2c12a5dea295@leemhuis.info>
+Date: Tue, 29 Aug 2023 11:45:28 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,85 +16,90 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: [PATCH v3] tpm: Enable hwrng only for Pluton on AMD CPUs
+Subject: Re: btrfs write-bandwidth performance regression of 6.5-rc4/rc3
 Content-Language: en-US, de-DE
-To: Mario Limonciello <mario.limonciello@amd.com>,
- Jarkko Sakkinen <jarkko@kernel.org>, Paul Menzel <pmenzel@molgen.mpg.de>
-Cc: linux-integrity@vger.kernel.org, Jerry Snitselaar <jsnitsel@redhat.com>,
- stable@vger.kernel.org, Todd Brandt <todd.e.brandt@intel.com>,
- Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
- linux-kernel@vger.kernel.org, Patrick Steinhardt <ps@pks.im>,
- Ronan Pigott <ronan@rjp.ie>, Raymond Jay Golo <rjgolo@gmail.com>,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- Dusty Mabe <dusty@dustymabe.com>
-References: <20230822231510.2263255-1-jarkko@kernel.org>
- <705b9769-4132-450b-bd47-2423c419db2a@molgen.mpg.de>
- <CV03X3OEI7RE.3NI1QJ6MBJSHA@suppilovahvero>
- <1eeddbdc-c1f0-4499-b3d1-24c96f42a50b@amd.com>
- <CV3J3TCMB74C.1WA96NQ9J593U@suppilovahvero>
- <f6d75cac-2556-484e-8a2c-3531b24b1ca5@amd.com>
+To: Wang Yugui <wangyugui@e16-tech.com>, Chris Mason <clm@meta.com>
+Cc: Christoph Hellwig <hch@lst.de>, linux-btrfs@vger.kernel.org,
+ Chris Mason <clm@fb.com>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <20230811222321.2AD2.409509F4@e16-tech.com>
+ <20ab0be0-e7d0-632b-b94c-89d76911f1ed@meta.com>
+ <20230813175032.AA17.409509F4@e16-tech.com>
 From: "Linux regression tracking (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
-In-Reply-To: <f6d75cac-2556-484e-8a2c-3531b24b1ca5@amd.com>
+In-Reply-To: <20230813175032.AA17.409509F4@e16-tech.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1693298338;29bcc229;
-X-HE-SMSGID: 1qauFE-0007Gv-KK
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1693302335;84a549fd;
+X-HE-SMSGID: 1qavHt-00045K-0K
 
-[CCing the regression list, as it should be in the loop for regressions:
-https://docs.kernel.org/admin-guide/reporting-regressions.html]
-
-On 28.08.23 02:35, Mario Limonciello wrote:
-> On 8/27/2023 13:12, Jarkko Sakkinen wrote:
->> On Wed Aug 23, 2023 at 9:58 PM EEST, Mario Limonciello wrote:
->>> On 8/23/2023 12:40, Jarkko Sakkinen wrote:
->>>> On Wed Aug 23, 2023 at 11:23 AM EEST, Paul Menzel wrote:
->>>>> Am 23.08.23 um 01:15 schrieb Jarkko Sakkinen:
->>>>>> The vendor check introduced by commit 554b841d4703 ("tpm: Disable
->>>>>> RNG for
->>>>>> all AMD fTPMs") doesn't work properly on a number of Intel fTPMs. 
->>>>>> On the
->>>>>> reported systems the TPM doesn't reply at bootup and returns back the
->>>>>> command code. This makes the TPM fail probe.
+On 13.08.23 11:50, Wang Yugui wrote:
+>> On 8/11/23 10:23 AM, Wang Yugui wrote:
+>>>> On Wed, Aug 02, 2023 at 08:04:57AM +0800, Wang Yugui wrote:
+>>>>>> And with only a revert of
 >>>>>>
->>>>>> Since only Microsoft Pluton is the only known combination of AMD
->>>>>> CPU and
->>>>>> fTPM from other vendor, disable hwrng otherwise. In order to make
->>>>>> sysadmin
->>>>>> aware of this, print also info message to the klog.
->>>>>>
->>>>>> Cc: stable@vger.kernel.org
->>>>>> Fixes: 554b841d4703 ("tpm: Disable RNG for all AMD fTPMs")
->>>>>> Reported-by: Todd Brandt <todd.e.brandt@intel.com>
->>>>>> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=217804
->>>>>> Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
->>>>>
->>>>> Mario’s patch also had the three reporters below listed:
->>>>>
->>>>> Reported-by: Patrick Steinhardt <ps@pks.im>
->>>>> Reported-by: Ronan Pigott <ronan@rjp.ie>
->>>>> Reported-by: Raymond Jay Golo <rjgolo@gmail.com>
+>>>>>> "btrfs: submit IO synchronously for fast checksum implementations"?
+>>>>> GOOD performance when only (Revert "btrfs: submit IO synchronously for fast
+>>>>> checksum implementations") 
+>>>> Ok, so you have a case where the offload for the checksumming generation
+>>>> actually helps (by a lot).  Adding Chris to the Cc list as he was
+>>>> involved with this.
 >>>>
->>>> The problem here is that checkpatch throws three warnings:
+>>>>>>> -       if (test_bit(BTRFS_FS_CSUM_IMPL_FAST, &bbio->fs_info->flags))
+>>>>>>> +       if ((bbio->bio.bi_opf & REQ_META) && test_bit(BTRFS_FS_CSUM_IMPL_FAST, &bbio->fs_info->flags))
+>>>>>>>                 return false;
+>>>>>> This disables synchronous checksum calculation entirely for data I/O.
+>>>>> without this fix, data I/O checksum is always synchronous?
+>>>>> this is a feature change of "btrfs: submit IO synchronously for fast checksum implementations"?
+>>>> It is never with the above patch.
 >>>>
->>>> WARNING: Reported-by: should be immediately followed by Closes: with
->>>> a URL to the report
+>>>>>> Also I'm curious if you see any differents for a non-RAID0 (i.e.
+>>>>>> single profile) workload.
+>>>>> '-m single -d single' is about 10% slow that '-m raid1 -d raid0' in this test
+>>>>> case.
+>>>> How does it compare with and without the revert?  Can you add the numbers?
+>>
+>> Looking through the thread, you're comparing -m single -d single, but
+>> btrfs is still doing the raid.
+>>
+>> Sorry to keep asking for more runs, but these numbers are a surprise,
+>> and I probably won't have time today to reproduce before vacation next
+>> week (sadly, Christoph and I aren't going together).
 
-Note, those are warnings (and not an errors) on purpose and the text
-says "should" (and not "must"), so this is IMHO something in this case
-can be ignored, as Mario indicated in his reply.
+Sadly I also did not run into either you or Christoph during my own
+vacation during the last two weeks. But I'm back from it how, which got
+me wondering:
 
-But I write for a different reason: this seems to become a regression
-that is annoying quite a few people (in 6.5 and 6.4.y afaics), so it
-would be good to get the fix merged to mainline rather sooner than
-later. Are these warnings and the mentioning of affected machines in the
-patch descriptions the only remaining problems, or is there anything
-else that needs to be addressed?
+What happened to this regression? Was any progress made to resolve this
+in one way or another?
 
-Ciao, Thorsten (just back from vacation and catching up)
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
 Everything you wanna know about Linux kernel regression tracking:
 https://linux-regtracking.leemhuis.info/about/#tldr
 If I did something stupid, please tell me, as explained on that page.
 
 #regzbot poke
+
+>> Can you please do a run where lvm or MD raid are providing the raid0?
+> no LVM/MD used here.
+> 
+>> It doesn't look like you're using compression, but I wanted to double check.
+> 
+> Yes. '-m xx -d yy' with other default mkfs.btrfs option, so no compression.
+> 
+>> How much ram do you have?
+> 
+> 192G ECC memory.
+> 
+> two CPU numa nodes, but all PCIe3 NVMe SSD are connected to one NVMe HBA/
+> one numa node.
+> 
+>> Your fio run has 4 jobs going, can I please see the full fio output for
+>> a fast run and a slow run?
+> 
+> fio results are saved into attachment files (fast.text & slow.txt)
+> 
+> Best Regards
+> Wang Yugui (wangyugui@e16-tech.com)
+> 2023/08/13
