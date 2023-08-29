@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A972156C7
-	for <regressions@lists.linux.dev>; Tue, 29 Aug 2023 12:17:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E86D156C7
+	for <regressions@lists.linux.dev>; Tue, 29 Aug 2023 12:26:38 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qaxf4-0007Lv-9L; Tue, 29 Aug 2023 14:17:34 +0200
-Message-ID: <efbe13a5-1c6d-e6fe-25be-bd942823432c@leemhuis.info>
-Date: Tue, 29 Aug 2023 14:17:33 +0200
+	id 1qaxnk-0000X0-Pd; Tue, 29 Aug 2023 14:26:32 +0200
+Message-ID: <2a73e06c-46a4-64a1-a646-76b095b8b978@leemhuis.info>
+Date: Tue, 29 Aug 2023 14:26:32 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -15,47 +15,155 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Scrub of my nvme SSD has slowed by about 2/3
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Re: [PATCH v2] pci: loongson: Workaround MIPS firmware MRRS settings
 Content-Language: en-US, de-DE
-From: "Linux regression tracking #update (Thorsten Leemhuis)"
+To: Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@kernel.org>
+Cc: linux-pci@vger.kernel.org, bhelgaas@google.com,
+ linux-kernel@vger.kernel.org, kw@linux.com, lpieralisi@kernel.org,
+ stable@vger.kernel.org,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <20230725061008.1504292-1-jiaxun.yang@flygoat.com>
+ <e9c103dc-98ac-9a51-7291-f5da1467b2ff@flygoat.com>
+ <CAAhV-H7_OjTaU_wn6mUW0-JSrXS+=A2rXCiBc8cyce5ob49BLg@mail.gmail.com>
+ <861a809d-3df1-327e-e033-87506f6d89e5@flygoat.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
-To: linux-btrfs@vger.kernel.org
-Cc: Linux kernel regressions list <regressions@lists.linux.dev>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-References: <CAAKzf7=yS9vnf5zNid1CyvN19wyAgPz5o9sJP0vBqN6LReqXVg@mail.gmail.com>
- <1d611dbb-8aee-9a6e-701c-6498f1b51c34@leemhuis.info>
-In-Reply-To: <1d611dbb-8aee-9a6e-701c-6498f1b51c34@leemhuis.info>
+In-Reply-To: <861a809d-3df1-327e-e033-87506f6d89e5@flygoat.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1693311456;db9aaf5d;
-X-HE-SMSGID: 1qaxf4-0007Lv-9L
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1693311998;95e4bda4;
+X-HE-SMSGID: 1qaxnk-0000X0-Pd
 
-On 12.07.23 13:02, Linux regression tracking #adding (Thorsten Leemhuis)
-wrote:
+Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
+for once, to make this easily accessible to everyone.
 
-> On 03.07.23 22:19, Tim Cuthbertson wrote:
->> Yesterday, I noticed that a scrub of my main system filesystem has
->> slowed from about 2.9 gb/sec to about 949 mb/sec. My scrub used to run
->> in about 12 seconds, now it is taking 51 seconds. I had just installed
->> Linux kernel 6.4.1 on Arch Linux, upgrading from 6.3.9. At first I
->> suspected the new kernel, but now I am not so sure.
-> 
-> Thanks for the report. It seems it will take some work to address this,
-> so to be sure the issue doesn't fall through the cracks unnoticed, I'm
-> adding it to regzbot, the Linux kernel regression tracking bot:
-> 
-> #regzbot ^introduced e02ee89baa66
-
-#regzbot resolve: various changes merged for 6.6 improve things again;
-more planned; backporting is planned, too;
-#regzbot ignore-activity
-
-(yes, that is not idea, but that's how it is sometimes)
+What's the status here? From my point it looks like this regression that
+was ported six weeks ago is still not fixed -- and it seems nothing has
+happened since three weeks now. But maybe I'm just missing something,
+that's why I'm asking.
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
 Everything you wanna know about Linux kernel regression tracking:
 https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+If I did something stupid, please tell me, as explained on that page.
 
+#regzbot poke
+
+On 08.08.23 09:38, Jiaxun Yang wrote:
+> 
+> 
+> 在 2023/8/6 22:30, Huacai Chen 写道:
+>> Hi, Jiaxun,
+>>
+>> On Sun, Aug 6, 2023 at 10:20 AM Jiaxun Yang <jiaxun.yang@flygoat.com>
+>> wrote:
+>>>
+>>>
+>>> 在 2023/7/25 14:10, Jiaxun Yang 写道:
+>>>> This is a partial revert of commit 8b3517f88ff2 ("PCI:
+>>>> loongson: Prevent LS7A MRRS increases") for MIPS based Loongson.
+>>>>
+>>>> There are many MIPS based Loongson systems in wild that
+>>>> shipped with firmware which does not set maximum MRRS properly.
+>>>>
+>>>> Limiting MRRS to 256 for all as MIPS Loongson comes with higher
+>>>> MRRS support is considered rare.
+>>>>
+>>>> Cc: stable@vger.kernel.org
+>>>> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=217680
+>>>> Fixes: 8b3517f88ff2 ("PCI: loongson: Prevent LS7A MRRS increases")
+>>>> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+>>> Ping?
+>>> I expect this patch to go through PCI fixes tree.
+>> Can we do it like this by modifying the existing loongson_mrrs_quirk()?
+> 
+> Hmm, I'm not sure this will work, since loongson_mrrs_quirk only run on
+> bridges
+> but the old quirk should run on every single device.
+> 
+> Thanks
+> Jiaxun
+> 
+>>
+>> static void loongson_mrrs_quirk(struct pci_dev *pdev)
+>> {
+>>          /*
+>>           * Some Loongson PCIe ports have h/w limitations of maximum read
+>>           * request size. They can't handle anything larger than this. So
+>>           * force this limit on any devices attached under these ports.
+>>           */
+>>          struct pci_host_bridge *bridge =
+>> pci_find_host_bridge(pdev->bus);
+>>
+>> #ifdef CONFIG_MIPS
+>>          set_pcie_ports_to_mrrs_256_to_emulate_the_firmware_behavior();
+>> #endif
+>>
+>>          bridge->no_inc_mrrs = 1;
+>> }
+>>
+>>> Thanks
+>>> - Jiaxun
+>>>
+>>>> ---
+>>>> v2: Rename quirk name to: loongson_old_mrrs_quirk
+>>>> ---
+>>>>    drivers/pci/controller/pci-loongson.c | 38
+>>>> +++++++++++++++++++++++++++
+>>>>    1 file changed, 38 insertions(+)
+>>>>
+>>>> diff --git a/drivers/pci/controller/pci-loongson.c
+>>>> b/drivers/pci/controller/pci-loongson.c
+>>>> index fe0f732f6e43..d0f68b102d10 100644
+>>>> --- a/drivers/pci/controller/pci-loongson.c
+>>>> +++ b/drivers/pci/controller/pci-loongson.c
+>>>> @@ -108,6 +108,44 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+>>>>    DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+>>>>                        DEV_LS7A_PCIE_PORT6, loongson_mrrs_quirk);
+>>>>
+>>>> +#ifdef CONFIG_MIPS
+>>>> +static void loongson_old_mrrs_quirk(struct pci_dev *pdev)
+>>>> +{
+>>>> +     struct pci_bus *bus = pdev->bus;
+>>>> +     struct pci_dev *bridge;
+>>>> +     static const struct pci_device_id bridge_devids[] = {
+>>>> +             { PCI_VDEVICE(LOONGSON, DEV_LS2K_PCIE_PORT0) },
+>>>> +             { PCI_VDEVICE(LOONGSON, DEV_LS7A_PCIE_PORT0) },
+>>>> +             { PCI_VDEVICE(LOONGSON, DEV_LS7A_PCIE_PORT1) },
+>>>> +             { PCI_VDEVICE(LOONGSON, DEV_LS7A_PCIE_PORT2) },
+>>>> +             { PCI_VDEVICE(LOONGSON, DEV_LS7A_PCIE_PORT3) },
+>>>> +             { PCI_VDEVICE(LOONGSON, DEV_LS7A_PCIE_PORT4) },
+>>>> +             { PCI_VDEVICE(LOONGSON, DEV_LS7A_PCIE_PORT5) },
+>>>> +             { PCI_VDEVICE(LOONGSON, DEV_LS7A_PCIE_PORT6) },
+>>>> +             { 0, },
+>>>> +     };
+>>>> +
+>>>> +     /* look for the matching bridge */
+>>>> +     while (!pci_is_root_bus(bus)) {
+>>>> +             bridge = bus->self;
+>>>> +             bus = bus->parent;
+>>>> +             /*
+>>>> +              * There are still some wild MIPS Loongson firmware won't
+>>>> +              * set MRRS properly. Limiting MRRS to 256 as MIPS
+>>>> Loongson
+>>>> +              * comes with higher MRRS support is considered rare.
+>>>> +              */
+>>>> +             if (pci_match_id(bridge_devids, bridge)) {
+>>>> +                     if (pcie_get_readrq(pdev) > 256) {
+>>>> +                             pci_info(pdev, "limiting MRRS to 256\n");
+>>>> +                             pcie_set_readrq(pdev, 256);
+>>>> +                     }
+>>>> +                     break;
+>>>> +             }
+>>>> +     }
+>>>> +}
+>>>> +DECLARE_PCI_FIXUP_ENABLE(PCI_ANY_ID, PCI_ANY_ID,
+>>>> loongson_old_mrrs_quirk);
+>>>> +#endif
+>>>> +
+>>>>    static void loongson_pci_pin_quirk(struct pci_dev *pdev)
+>>>>    {
+>>>>        pdev->pin = 1 + (PCI_FUNC(pdev->devfn) & 3);
+> 
