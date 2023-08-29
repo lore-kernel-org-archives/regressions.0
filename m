@@ -1,241 +1,191 @@
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2074.outbound.protection.outlook.com [40.107.237.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E58E414AAF
-	for <regressions@lists.linux.dev>; Tue, 29 Aug 2023 20:42:39 +0000 (UTC)
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2bceb02fd2bso72433671fa.1
-        for <regressions@lists.linux.dev>; Tue, 29 Aug 2023 13:42:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1693341758; x=1693946558; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3OTEAVjWZManNNhW8B7XS+y7CCMSFbnafvp7IyfPI7E=;
-        b=aXUu50p8B9ytWmU9boWpMfLR+zx+Wk6kiRn5FAkNYnRzJ6HBWvEx++PhFWo3srdszx
-         vyoBdGiTcrHgKvoQ0MLkPVHvYs26w0kzK3tv/90rHAZE0b65LC45qtRqeAvF81mXVJI+
-         GHM9wcrDZjQUo5L+NLnOePZNnclCI8EYFCLnTG/GfBWOVBoqI5ZdC0eJP26TzBfzWghR
-         1+UNmKZt52aDiptpfXiAYtyph5dVAPzRl0uMBZBOfb5+mCeyu6j9pQ0KgyDr+USk5lEY
-         eU+vJpEmoNWVZx1jjhK71AfG0A6ISXyNqecLh2BH6IynSxTn88/xdMuRs0IMGtPd2Gb7
-         iZuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693341758; x=1693946558;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3OTEAVjWZManNNhW8B7XS+y7CCMSFbnafvp7IyfPI7E=;
-        b=hCUtJncqyAv6rgTyRsfozPSggeTIdS/OAIluOf01TD/1+/1h1b0H997DS/84BnWXzm
-         VVRWTi71QBT6bwBz7nvW3Y2aXKIRo0apjOD2r6GhyYLqF+/M26sYgsJ64DfM5mm9xTu5
-         0FIEszLCFRxia14v95xuXiRnH9nE1Qc87sNc8TbjwtsGzzW7mUT5VK1jqk0cmYh6yz7M
-         vpJC6SNK0WlcqURI0N1mh9bsMKghqdqBOyDLwKq/8dbjdtZLWSmIz/STP7yfD/cZT8JH
-         dVLBh47kTbSL8JReDSnU70nzrot9n3FT80HZMZU+BA6rPMdk0rRKpkKpUJXpc6hlE5Qr
-         TYcw==
-X-Gm-Message-State: AOJu0YzE6t+zXhtFEOk6ypwIcAX1tpVp8i/avZUJf3Skkc7oiCRIuIUZ
-	bo2Feofhs3IwPRSA4FOsnhr/R+Xe32z8ZBXU1og=
-X-Google-Smtp-Source: AGHT+IHb43rPzhP3p0pse1Ty20zQ9rN3uYAqxtCcf9g4P/GkDhxLRjMO7wTtWo7wboL70vBGLY1yK8FTK53kElQ6cUc=
-X-Received: by 2002:a2e:7d0e:0:b0:2bb:997a:493e with SMTP id
- y14-20020a2e7d0e000000b002bb997a493emr276700ljc.35.1693341757409; Tue, 29 Aug
- 2023 13:42:37 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE6B414AAF
+	for <regressions@lists.linux.dev>; Tue, 29 Aug 2023 21:37:31 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=aZAf1i82qCGEi41VkZ5iLEY/gq+AMMg06aUPtN0umaGerATyOhOQrfZc+AS0PO9lHICXE3h98dc/MxySnHs/4NYhRy1BUBp73Fa3FBMYoqzoIP1/DO/O9IGP6UdZ1UQe41/b5eifir9302mUKn2ZWLTWPWPLpsRnsTw4D9FkEpNkc3U6fqDxuY1d5BdRCJ9PF52d6ftX+l+JFMOzaANfe869M22Hx+i/+8EmXQqn4eVtZYeP/YP0VfKDqlGfHuNkMdU92VVMKj+KAntptmQVNR3DPu0XfZ02XpiPkltvwBZ2voLnbXUfShN5gWmQ38ufSVX37vp4oXMErKXwcoo3FQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=RQMRk/FYH/TIwhi/Kah0Idus+GW3ncSLlNQR6jizEg0=;
+ b=k/fzX/W8DmUOrrLdvdBYx1g6nWPwHEopt+ubrM3bxhiYeUKWNLM0GkSKy8RpJFbTynCDzJbyK5OS90YUu7ijy48s5vb2YqZsw0Y2zF7j57sknfKQCwjjVc9X+klHixg3zJ41pbLQl4NUwgs1ZGmEEWgKxWzowklTnRL/gFAWUKFqxmasZnc6GcAbt5EpOU9Y53AG0MQ5quvQ6W3gjJOQJ6VOthHay/hM4lWvvuYkVbV/AJk6jTp+VnGfgRtx22MkK4K5AemUJXfEDy4Y67k7w7UuNCnt5P+GHZHzW13pu5SeYtHrd+k9CCryVQjrwPFH227iHqPE1iRtpiVTDIx5tg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RQMRk/FYH/TIwhi/Kah0Idus+GW3ncSLlNQR6jizEg0=;
+ b=0VKJLlHXjXxPTHsnm58w1wGNyheWnhEv8O3zrShzRhlbLDqjP+1pPZXhLw3+uFf8dJK3ZVCHxgIeawuLsAZMBGwzQY4OgA5El1rbj0BkVLhrP6OYj3nioOlhk1PJPRWSBjzEJPcR07yOuUNEQFQReGmDHhmfkvuFCA5M6R3xenY=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+ by CH0PR12MB5121.namprd12.prod.outlook.com (2603:10b6:610:bc::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6699.35; Tue, 29 Aug
+ 2023 21:37:29 +0000
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::36f9:ffa7:c770:d146]) by MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::36f9:ffa7:c770:d146%7]) with mapi id 15.20.6699.034; Tue, 29 Aug 2023
+ 21:37:28 +0000
+Message-ID: <07353676-bad0-44f8-a15a-4877f1898b6b@amd.com>
+Date: Tue, 29 Aug 2023 16:37:25 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/3] pinctrl: amd: Add a quirk for Lenovo Ideapad 5
+To: Hans de Goede <hdegoede@redhat.com>, linus.walleij@linaro.org
+Cc: Shyam-sundar.S-k@amd.com, Basavaraj.Natikar@amd.com,
+ linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ regressions@lists.linux.dev, lucapgl2001@gmail.com
+References: <20230829165627.156542-1-mario.limonciello@amd.com>
+ <20230829165627.156542-4-mario.limonciello@amd.com>
+ <1d891d34-053a-368d-cf47-bcaf35284c79@redhat.com>
+Content-Language: en-US
+From: Mario Limonciello <mario.limonciello@amd.com>
+In-Reply-To: <1d891d34-053a-368d-cf47-bcaf35284c79@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BN7PR06CA0058.namprd06.prod.outlook.com
+ (2603:10b6:408:34::35) To MN0PR12MB6101.namprd12.prod.outlook.com
+ (2603:10b6:208:3cb::10)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20220727135834.294184-1-brian.gix@intel.com> <20220727135834.294184-3-brian.gix@intel.com>
- <578e6d7afd676129decafba846a933f5@agner.ch> <CABBYNZJGKfwTQM8WAdUGXueTPnFyus1a65UO5mg2g4PXVuCnpA@mail.gmail.com>
- <CABBYNZLgG+zTsk-6ceqzLXXyVRnN6p-m8sFq9Ss7mveD0f9BsQ@mail.gmail.com>
- <CABUQxGxBdAFncJ6YVb7a9gnU-_YZDGFDmpHJTtm5K1tDGEGRDQ@mail.gmail.com>
- <0de3f0d0d5eb6d83cfc8d90cbb2b1ba1@agner.ch> <fcdf856db8fd8e77558b4d82b843c51e@agner.ch>
- <24bf25f7-314f-ca73-59e9-df757732f6a9@leemhuis.info> <ac58995a00cb6ad6bb4ce4c74b006a2f@agner.ch>
-In-Reply-To: <ac58995a00cb6ad6bb4ce4c74b006a2f@agner.ch>
-From: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Date: Tue, 29 Aug 2023 13:42:25 -0700
-Message-ID: <CABBYNZ+5RMqNVMyYKi+gOVaV+K6k8Z-C37KnfGa=qRUORc3dWg@mail.gmail.com>
-Subject: Re: [PATCH v4 2/4] Bluetooth: Rework le_scan_restart for hci_sync
-To: Stefan Agner <stefan@agner.ch>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>, Brian Gix <brian.gix@gmail.com>, 
-	linux-bluetooth@vger.kernel.org, marcel@holtmann.org, 
-	=?UTF-8?B?SmFuIMSMZXJtw6Fr?= <sairon@sairon.cz>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|CH0PR12MB5121:EE_
+X-MS-Office365-Filtering-Correlation-Id: 08ffb483-a7ca-48cb-a830-08dba8d824be
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	jhmzzOgZHUAB8ee9G8mYYIOnST0rQ+wApyDJMd405I8pRfYiecGv1aYcrbvs6E2cgOA+9iMZU36vVRdPRxUb1BjwFN6wy3c2hLhMslDsbaiCnVYH35jfW/H92ZNEycygvavHZGUCJGvuji8kOR+sySdwoJgy5qXuUqgvCkObxmSm34RbAJM4zt9A+Ni52cAujIxsoyxa9xH+NYM9IHjNBWyXRM4j4c6YDGXKoMTKWyCJpX2xM3OPWA23OVaxRJCXb9JSBa0rZmbyMGv9oBMP1ytEqQKJLdj7DGTNwCoyi2G0wWrnuKCk/xBDfm8STPOnn+Q5TujDUFEWOM/dAVlHrXXOuX4yBn5auFC6FSu+lxgSuUVx0D4+n8LsGvXk2htlaWFzKiHu7YBAGML4vvcaXZr6pQMqzx0jSuUykCh1GFgGHzR5Zq4N91G3eWVmiNT6ZXyZmfn2kBBiAjgMVLBxnRcaQX3lSHYX3/0JijPbBD7zNbmEYLUxEAj71r+7bJbXjaQkJXiFGlQsqJcnuCahzp2caoIdK4aekIr032xBGJvrQThvcX5DoqGS7XL2+hMwT8Iw6jYhCqftx/+h/1u8DQpC5v2YVRo90XxE5UHDj5KLY7s94kUgPeRdsIvh9Q0ali+Pj/P6Yrc50/tXxJS5OJpApM2cktHrLAOGaegL9yo=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(376002)(396003)(346002)(39860400002)(366004)(1800799009)(186009)(451199024)(8936002)(6666004)(53546011)(478600001)(31686004)(6506007)(66556008)(66946007)(66476007)(6486002)(966005)(316002)(38100700002)(41300700001)(6512007)(26005)(44832011)(8676002)(5660300002)(36756003)(31696002)(2906002)(83380400001)(2616005)(86362001)(4326008)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?cUJBbFdTZjgzZnZQRGVhaEJteEt3a292QndaT2FjVFl5dlY4eE91UFIwOE14?=
+ =?utf-8?B?T3NtekViYkF2UGFWZm1WakJ5NU5jeWNzcjJjbURCdXZ3RDhlOENYSXZGV0tH?=
+ =?utf-8?B?L0NaWGM3NXM5MTRwWHBheVhOTEUxNWFiZmZHVi8wTkhWM3ZXSmUvd3dKZkda?=
+ =?utf-8?B?RnVmeG1xZ0pjS1ZFdW1EekQ3M09aQ0hBQW8xY1hwRE42SWNpRjZiREdXWFZP?=
+ =?utf-8?B?Y1AyeTRlZGdaUndVZFNoUkZxV3VNR2lOSk9lWURmUW14QW9ZSmlwSS9veVpY?=
+ =?utf-8?B?Rk82eDU1OHZPR0oxanF3SG5vNC9FdW5jaDdRbEdTQTlIWE0xUEp0bFRzQU1X?=
+ =?utf-8?B?MHlSNXJCQWQ0Zm1MUW1SK0U5V1ZPd1MzV0psaWpWVFNSdGlKcDdiOFdkcE94?=
+ =?utf-8?B?YTRCT011SXcvRCs0U2d3NWNzRUJ3RGtheTZtREJza054ZG5MdndmL1FwZ0Vk?=
+ =?utf-8?B?eTE4K09jMVg3LzFwUHdiZWJ0UGllREhRK1piMkNSMTRMTEV0TEZaUnQ1OWM2?=
+ =?utf-8?B?aENiUllSSGtkTkNFTUVpcjFwR2ZFczZaL1ZQdHAzRnNMSFdaaHdMbTVRN1dt?=
+ =?utf-8?B?Y2NKWDNvd0pUZTJUcENhRmpxV2hPTHlhTlJIcVlIamgzdlJ1dDVIMVducCtQ?=
+ =?utf-8?B?U3ZqY0RycVZZUlh0MGJvUjhXMXBMR21Sd3dwUXZkWm9LUXhtWFNiR09BS1hV?=
+ =?utf-8?B?eXdCWHQwWUdWQkFVblRaVkY4WTJHcWs4WWFqQlc4a2JuaHR2S2NNaHQyOTR0?=
+ =?utf-8?B?ait1K3pMWFU3cXNGSk92NTA3eGZNbks0VXpZU3JzU3F0OGdqSzlqeTBOMm9T?=
+ =?utf-8?B?Y3BXMWlsTWN3NHRqdW9tbkMwbWE0U3pRL2NqclJRWU9Mb3F3NkdHUEREaWJ6?=
+ =?utf-8?B?N2tnN0hCMW9CTjlvblFydjloOWt0Z2FlemxMQStPY2YzRlkyUDhLMnZvQmxa?=
+ =?utf-8?B?SWlsNWlkRHllaGcvM2JYdHdxQlZoYWlQbm1pQ2V2MW5TdlBPYVg1Tk84b3hT?=
+ =?utf-8?B?MmZmSXZjb3VQZHZEbXRReXVhYXpxeHRBaTdBVEc5SCtobFFVeVYxZkNVQjlY?=
+ =?utf-8?B?am5ieFV0dE16NG1YWmtncVRTV0NqTDFOOWZZVkZEK0lSRFlaQUhkNlZvS2V4?=
+ =?utf-8?B?MnBUZUx2YUx3aVJvNFJyNlJjTGdBM0ljMWpyblB4WFBtZkpZNEwxeXFvbFBG?=
+ =?utf-8?B?MkFZWEhzV05mUUhSRXdsc3hYc2hSbVF3MG1uOU9BVzYxeFVTYXFTeXJOS0Jy?=
+ =?utf-8?B?bTdmVEkzT3VPS1VraTNXUnFVUlR6UmFQY3kra0JRcXBoSFpwQlZlb3laOXhP?=
+ =?utf-8?B?TlRwSngrNFpBRzhYNFNPR25aWnJGZmZubU5GbUt1MEZrNVRZZW9Ja2tGWE5r?=
+ =?utf-8?B?em5EeFphcWJSMU1wQTVsUjA5Q3AxVnlCcFJEUlNmMzRJY0tKVHp2VzNyOFFn?=
+ =?utf-8?B?Y2ZpVXo3bUxjT0ROZEJCQ3pZWkRWTjgraHFxb3Nob3U3NUwxc1dvakF2UzEr?=
+ =?utf-8?B?ajhHYTlNTVI2S0hhL2I2OTdDWkROeEZKVlNlSU9wa0hITTBBT2E1ck4yK0VN?=
+ =?utf-8?B?NFlxWFkrK1BPZlR0WUlzbUFNbEprVU55THlTR1Myd044RFo3dEFTZHRNUHJH?=
+ =?utf-8?B?aWNHTHUyYVZmaEtlb0N1RGRQcjlqNnlSSndHM0dQT01NVWg5M2NXVCtFZUow?=
+ =?utf-8?B?dWdTZzM1emVNdGw5V0krOHM1ek5TeHFrVGZlZ2pzT2REMlZuNjNCSXdKNVRl?=
+ =?utf-8?B?Ti9IZTE1a3JVTC9NM3hhdEJ5eWU5ZWp6VlluVXd1aUNWdDRENG1wRFlKNkg4?=
+ =?utf-8?B?dzRFb00ybUwzelljU1JySXVwaW4rNXdrQ0VxNm1PYnRTVkVvOXdMWDdlQmhF?=
+ =?utf-8?B?R2ZzbGlpSFJyNS81S2VZNWh0aVQ3WER5S1Z0VzBoZmpQZndDWXBKZGpaTTJE?=
+ =?utf-8?B?aUVUNkNYcXN0bmQxclRaUm9zbmVBUTNsbFEzT3VuZjNJQjZ0M2h4WE9laUMx?=
+ =?utf-8?B?eUxENjBYazREL0FkMTRDNmIxS0lOaHc0YVlURjg1WjdVRWJvUldqK0ZEMlJn?=
+ =?utf-8?B?Y1pidjV1NjRXaTBabUFsTTlIMjF1UU5kNmUwUWViMnZpNU5DK2pzUktZODlS?=
+ =?utf-8?Q?WPylSpBm+7XKgCCcJvlgjjYO6?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 08ffb483-a7ca-48cb-a830-08dba8d824be
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Aug 2023 21:37:28.7883
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: u4hGr9BViYrkYzq41foUsXKcUggJIgvJykdQbz2/NGoLP6ThkA436wMQsv7iGfCWuNnu5m4rocTZXuejTNuIKg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR12MB5121
 
-Hi Stefan, Brian,
+On 8/29/2023 14:54, Hans de Goede wrote:
+> Hi Mario,
+> 
+> On 8/29/23 18:56, Mario Limonciello wrote:
+>> Lenovo ideapad 5 doesn't use interrupts for GPIO 0, and so internally
+>> debouncing with WinBlue debounce behavior means that the GPIO doesn't
+>> clear until a separate GPIO is used (such as touchpad).
+>>
+>> Prefer to use legacy debouncing to avoid problems.
+>>
+>> Reported-by: Luca Pigliacampo <lucapgl2001@gmail.com>
+>> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=217833
+>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> 
+> I'm not happy to see yet another DMI quirk solution here.
+> 
+> and I guess you're not happy with this either...
 
-On Tue, Aug 29, 2023 at 6:27=E2=80=AFAM Stefan Agner <stefan@agner.ch> wrot=
-e:
->
-> Hi Thorsten,
->
-> No, this hasn't been addressed so far. I am also not sure how we can
-> help solving that particular issue.
->
-> Besides this, we have other Bluetooth issues which seem to be Kernel
-> regressions (where downgrading to Linux 5.15 also helps), folks see
-> "hci0: unexpected event for opcode" on Intel but also other systems. We
-> haven't bisected that issue yet. But it seems that the Bluetooth stack
-> is really somewhat unstable in recent releases.
+Yeah I was really hoping the first patch was enough for the issue.
 
+If we can't come up with anything else we can potentially drop patches 2 
+and 3. Even patch 1 alone will "significantly" improve the situation.
 
-I suspect the following change shall make it behave as before, the use
-of hci_cmd_sync_queue is not equivalent to hci_req_sync:
+The other option I considered is to hardcode WinBlue debounce behavior 
+"off" in Linux.
 
-https://gist.github.com/Vudentz/b78f34e3775c8cd2db55b868e5c8ef42
+I don't think this is a good idea though though because we will likely 
+trade bugs because the debounce values in the AML for systems using _AEI 
+aren't actually used in Windows and might not have good values.
 
-That said, I'm considering removing the whole custom handling for
-HCI_QUIRK_STRICT_DUPLICATE_FILTER and just disable duplicate filtering
-when this flag is set.
+> 
+> Are we sure there is no other way? Did you check an acpidump
+> for the laptop and specifically for its ACPI powerbutton handling?
 
-> --
-> Stefan
->
->
-> On 2023-08-29 13:22, Linux regression tracking (Thorsten Leemhuis)
-> wrote:
-> > Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
-> > for once, to make this easily accessible to everyone.
-> >
-> > Stefan, was this regression ever addressed? Doesn't look like it from
-> > here, but maybe I'm missing something.
-> >
-> > Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat=
-)
-> > --
-> > Everything you wanna know about Linux kernel regression tracking:
-> > https://linux-regtracking.leemhuis.info/about/#tldr
-> > If I did something stupid, please tell me, as explained on that page.
-> >
-> > #regzbot poke
-> >
-> > On 30.06.23 12:59, Stefan Agner wrote:
-> >> Hi Brian,
-> >>
-> >> Gentle ping on the issue below.
-> >>
-> >> On 2023-06-20 16:41, Stefan Agner wrote:
-> >>> On 2023-06-16 03:22, Brian Gix wrote:
-> >>>
-> >>>> On Thu, Jun 15, 2023 at 11:28=E2=80=AFAM Luiz Augusto von Dentz <lui=
-z.dentz@gmail.com> wrote:
-> >>>>
-> >>>>> +Brian Gix
-> >>>>>
-> >>>>> On Thu, Jun 15, 2023 at 10:27=E2=80=AFAM Luiz Augusto von Dentz
-> >>>>> <luiz.dentz@gmail.com> wrote:
-> >>>>>>
-> >>>>>> Hi Stefan,
-> >>>>>>
-> >>>>>> On Thu, Jun 15, 2023 at 5:06=E2=80=AFAM Stefan Agner <stefan@agner=
-.ch> wrote:
-> >>>>>>>
-> >>>>>>> Hi Brian, hi all,
-> >>>>>>>
-> >>>>>>> We experienced quite some Bluetooth issues after moving from Linu=
-x 5.15
-> >>>>>>> to 6.1 on Home Assistant OS, especially on Intel NUC type systems=
- (which
-> >>>>>>> is a popular choice in our community, so it might just be that). =
-When
-> >>>>>>> continuously scanning/listening for BLE packets, the packet flow
-> >>>>>>> suddenly ends. Depending on which and how many devices (possibly =
-also
-> >>>>>>> other factors) within minutes or hours.
-> >>>>>>>
-> >>>>>>> Jan (in cc) was able to bisect the issue, and was able to pinpoin=
-t the
-> >>>>>>> problem to this change.
-> >>>>>>>
-> >>>>>>> Meanwhile I was able to confirm, that reverting this single commi=
-t on
-> >>>>>>> the latest 6.1.34 seems to resolve the issue.
-> >>>>>>>
-> >>>>>>> I've reviewed the change and surrounding code, and one thing I've
-> >>>>>>> noticed is that the if statement to set cp.filter_dup in
-> >>>>>>> hci_le_set_ext_scan_enable_sync and hci_le_set_scan_enable_sync a=
-re
-> >>>>>>> different. Not sure if that needs to be the way it is, but my out=
-side
-> >>>>>>> gut feeling says hci_le_set_ext_scan_enable_sync should use "if (=
-val &&
-> >>>>>>> hci_dev_test_flag(hdev, HCI_MESH))" as well.
-> >>>>>>>
-> >>>>>>> However, that did not fix the problem (but maybe it is wrong
-> >>>>>>> nonetheless?).
-> >>>>>>>
-> >>>>>>> Anyone has an idea what could be the problem here?
-> >>>>>>
-> >>>>>> Are there any logs of the problem? Does any HCI command fails or
-> >>>>>> anything so that we can track down what could be wrong?
-> >>>
-> >>> No HCI command fails, there is also no issue reported in the kernel l=
-og.
-> >>> BlueZ just stops receiving BLE packets, at least from certain devices=
-.
-> >>>
-> >>>>>
-> >>>>> @Brian Gix perhaps you have a better idea what is going wrong here?
-> >>>>
-> >>>> It seems unlikely that this is Mesh related. Mesh does need for filt=
-ering to
-> >>>> be FALSE, and Mesh does not use extended scanning in any case.
-> >>>>
-> >>>> But this was part of the final rewrite to retire the hci_req mechani=
-sm in
-> >>>> favor of the hci_sync mechanism. So my best guess off the top of my =
-head is
-> >>>> that there was an unintended race condition that worked better than =
-the
-> >>>> synchronous single-threading mechanism?  Filtering (or not) should n=
-ot
-> >>>
-> >>> After review the code I concluded the same. What is a bit surprising =
-to
-> >>> me is that it is so well reproducible. I guess it is nicer to have a
-> >>> reproducible one than a hard to reproduce one :)
-> >>>
-> >>>> prevent advertising packets from permanently wedging.  Does anyone h=
-ave an
-> >>>> HCI flow log with and without the offending patch?  Ideally they sho=
-uld be
-> >>>> identical...  If they are not then I obviously did something wrong. =
-As this
-> >>>> was not specifically Mesh related, I may have missed some non-mesh c=
-orner
-> >>>> cases.
-> >>>
-> >>>
-> >>> I've taken two btmon captures, I created them using:
-> >>> btmon -i hci0 -w /config/hcidump-hci-req-working.log
-> >>>
-> >>> You can find them at:
-> >>> https://os-builds.home-assistant.io/hcidump-hci-req-working.log
-> >>> https://os-builds.home-assistant.io/hcidump-hci-sync-non-working.log
-> >>
-> >> Could you gain any insights from these logs?
-> >>
-> >> --
-> >> Stefan
-> >>
-> >>
-> >>>
-> >>> This is while running our user space software (Home Assistant with
-> >>> Bluetooth integration). Besides some BLE devices (e.g. Xioami Mi
-> >>> Temperature & Humidity sensor) I have a ESP32 running which sends SPA=
-M
-> >>> advertisements every 100ms (this accelerates the issue). In the
-> >>> non-working case you'll see that the system doesn't receive any SPAM
-> >>> advertisements after around 27 seconds. The working log shows that it
-> >>> continuously receives the same packets (capture 120s).
-> >>>
-> >>> Hope this helps.
-> >>>
-> >>> --
-> >>> Stefan
-> >>>
-> >>>
-> >>
-> >>
+I'm not sure there is another way or not, but yes there is an acpidump 
+attached to the bug in case you or anyone else has some ideas.
 
+> 
+> I would expect the ACPI powerbutton handler to somehow clear
+> the bit, like how patch 1/3 clears it from the GPIO chip's
+> own IRQ handler.
+> 
+> I see that drivers/acpi/button.c does:
+> 
+> static u32 acpi_button_event(void *data)
+> {
+>          acpi_os_execute(OSL_NOTIFY_HANDLER, acpi_button_notify_run, data);
+>          return ACPI_INTERRUPT_HANDLED;
+> }
+> 
+> So unless I'm misreading something here, there is some AML being
+> executed on power-button events. So maybe there is something wrong
+> with how Linux interprets that AML ?
+> 
+The relevant ACPI spec section is here:
 
+https://uefi.org/htmlspecs/ACPI_Spec_6_4_html/04_ACPI_Hardware_Specification/ACPI_Hardware_Specification.html#control-method-power-button
 
---=20
-Luiz Augusto von Dentz
+I did look at the acpidump.  GPE 08 notifies \_SB.PWRB (a PNP0C0C 
+device) with 0x2.  According to the spec this is specifically for 
+letting the system know the power button is waking up the system from G1.
+
+I don't see any notifications with data 0x80 in the AML.  So I'm 
+wondering if the AML designer made an assumption that pressing the power 
+button caused the system to suspend or turn off.  That's the Windows 
+behavior, isn't it?
+
+The spec even says:
+
+"While the system is in the working state, a power button press is a 
+user request to transition the system into either the sleeping (G1) or 
+soft-off state (G2)."
+
+I think it would be a really good data point whether this happens with 
+Windows if possible too.  Then we can know if we're looking at a Linux 
+bug or a platform bug.
