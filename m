@@ -1,123 +1,150 @@
-Received: from out3-smtp.messagingengine.com (out3-smtp.messagingengine.com [66.111.4.27])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2052.outbound.protection.outlook.com [40.107.94.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 154D617AAE
-	for <regressions@lists.linux.dev>; Tue, 29 Aug 2023 17:42:07 +0000 (UTC)
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-	by mailout.nyi.internal (Postfix) with ESMTP id C5BB15C02F8;
-	Tue, 29 Aug 2023 13:42:06 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute1.internal (MEProxy); Tue, 29 Aug 2023 13:42:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tycho.pizza; h=
-	cc:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:sender
-	:subject:subject:to:to; s=fm3; t=1693330926; x=1693417326; bh=vU
-	Px8oYX/3QZqAoIaLAAWnQwMvEn8D/TQzGmJFD44tU=; b=KVttY2fUjqrtpFj3u/
-	mhZLGcaTNske7JtrPBgcwTi1RAOJ7Mjx7QmJX60EAwBCAd35RzLrlyGYW5TcnNLh
-	5uA2/B9gxY1GmQQxjuCKrT6ZuEt/bEX2zQTNgq3pneMqAoCLJorJ0AFoUBOkoZCx
-	a4Qp5Szc+N1h4QUSEUKxnyGvK/vFghIsG5T4RKGn+PGHQURYqNdBhSSNSwt0Za5u
-	2MBOzgbI7hehgtRGMD5gtc684N/Af1A773RyM4HJSEOjSl+ON/DNFfNsPcT4jBTW
-	5VzLk70eqpfZF5TX+cAW5wpW7ENnmzh5Lp2BjTEg5hFoO5ggw9HLv+VCnW2oyPcy
-	g6Uw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:sender:subject
-	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-	:x-sasl-enc; s=fm1; t=1693330926; x=1693417326; bh=vUPx8oYX/3QZq
-	AoIaLAAWnQwMvEn8D/TQzGmJFD44tU=; b=ONRcVfDeYseSBCSSURBgd5BsfEj7Q
-	SRNJ1ZuDbbdqN2deFIbKUybgUAMhn16s4GO4C/GoDThU7Xh7J/SiYXsaD+9p/sof
-	OMMrgPoAuHCV8kOj0cAKC+iMVulxRnsl/OPgibamLGFTQhFWxfmuqC54gQnYeqjG
-	GbOYsN//plUsnB2hpETgWXZi949YJgAfMzOr8EiTFj6WHN4mmk0SWw9dKozKDP7V
-	JzhMmY+y/MF1uh889VyI8y99dVUibexaIZcaSun8kgIq3Q1mA6QxxCuO6LWTQgFB
-	AMsMh5k02prZO217YhumA0js4mLK7mNkFoCJLGNlPTngfeHhmou9GJRlA==
-X-ME-Sender: <xms:7S3uZJdIWupChgxobXhkbrrsNWQjvxeETliORn97GUQ_AoPaAle-Hw>
-    <xme:7S3uZHOu0go8c7zrpI9wgiWcnnah_kAM1oqkwOvTW1Q8lJyj-Vozsm5led1sf7f1r
-    g7EH8CJUs2Z92_IxH8>
-X-ME-Received: <xmr:7S3uZCjx02c7ALH--bpvDJm5WIsTEwgnifUf5sHAFzwlnekgb4YR6QFklr0>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedrudefiedgudduiecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefvhigt
-    hhhoucetnhguvghrshgvnhcuoehthigthhhosehthigthhhordhpihiiiigrqeenucggtf
-    frrghtthgvrhhnpeejieeitdekgeevhfefhefgvdehjeegudegudeltddvjeevieejhfev
-    vdekffdtheenucffohhmrghinhepghhithhhuhgsrdgtohhmnecuvehluhhsthgvrhfuih
-    iivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepthihtghhohesthihtghhohdrphhi
-    iiiirg
-X-ME-Proxy: <xmx:7S3uZC8Kq-UCg05AFT_BwA_LU29mephwdusHimgKOHahV1k4-4BwFA>
-    <xmx:7S3uZFtUkdbD8PqFatbqsMIj6JR_E02hg6v9lybsbKvKVnLv0n2lrg>
-    <xmx:7S3uZBFJdRzfmrMpj4rkxvgiPLjuOsNf1coGGs3CdV1Akrol91CvQg>
-    <xmx:7i3uZPIXRGyta5Rc6sLoieas89aWSNTVzNOupogUXiID0kqbiOqjlw>
-Feedback-ID: i21f147d5:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 29 Aug 2023 13:42:04 -0400 (EDT)
-Date: Tue, 29 Aug 2023 11:42:02 -0600
-From: Tycho Andersen <tycho@tycho.pizza>
-To: Miklos Szeredi <miklos@szeredi.hu>
-Cc: =?iso-8859-1?Q?J=FCrg?= Billeter <j@bitron.ch>,
-	"Eric W. Biederman" <ebiederm@xmission.com>,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: Re: [REGRESSION] fuse: execve() fails with ETXTBSY due to async
- fuse_flush
-Message-ID: <ZO4t6pnCokUoEsoi@tycho.pizza>
-References: <4f66cded234462964899f2a661750d6798a57ec0.camel@bitron.ch>
- <CAJfpeguG4f4S-pq+_EXHxfB63mbof-VnaOy-7a-7seWLMj_xyQ@mail.gmail.com>
- <ZNozdrtKgTeTaMpX@tycho.pizza>
- <CAJfpegt6x_=F=mD8LEL4AZPbfCLGQrpurhtbDN4Ew50fd2ngqQ@mail.gmail.com>
- <ZNqseD4hqHWmeF2w@tycho.pizza>
- <CAJfpegtzj7=f99=m49DShDTgLpGAzx8gpHSakgPn0qe+dNjHdw@mail.gmail.com>
- <ZON8hKOAGRvTn83a@tycho.pizza>
- <CAJfpegt2WrKBswYgSzurNogLefO-vU6ZpbCkrDrjFL365kcsug@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ACAA17AA5
+	for <regressions@lists.linux.dev>; Tue, 29 Aug 2023 19:13:36 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=j6z3D8Kg28ta5y1j9DzM8wu2TbftIMQhu4n80OePP6FDiuBGUSfBHiy/IR1S6Co0ajtt7OpcBtC5orVRTNsOzyPhGIu3DrgNP5RqIf4eZs/xVKLIyakeYJlwNS3hWMOpGNP6fwS+l/EaAZ9jN0pI2YSKLRSKGwtoVzUkEoeAioucwnhlpvnfsoMlilnqEERptqYJOyuH8ft0k33l9k2+8y4E0rRHkajN20Q/1c4NA/VBbOW9HKlS8jLpel4JfCkT3Ec5gaHzzlRTvt/NnWZeVcXsz4KgmuV4kmvDIVm1+oKIhtPtHFmpo2JANcYVLEZi4f9+IeBZxblhXHVDS9BRQg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=l6ZZU76wYya+WtJsgWGBPJyx2qSpL1LcTseHyqw2emA=;
+ b=lQvwoD1j0h7W6LJp6oCfhN5twu+b7aI4aw8AraTrN+yJt7+bdgo/wm+yaSEzIUHtHTfMAbpHT2Uy01BcW8uXwF/kFUCz9RMtUK7zKnc5XKd0bFcb47ZcV7q/Ea8hMMUMxybv6a9JHqpyIF2lKtxJMnQuieAZ2TnBBfWCXMf9kRbhGspphgo1bJ7MoPShmO3OUBHfwCCP/VEk7EtPnDLO9YeV8tueyUGXuyF+sSBQfBQb1/RTZXbsIP2zoD51lfj+39NLE9lVh4V23oIqZXQuveG6r092/djb3Odo/s3VtylfoIxUM2NPKpFjhCfhdOpINDDDs5PtKTd0S+1XeyAIow==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=linaro.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=l6ZZU76wYya+WtJsgWGBPJyx2qSpL1LcTseHyqw2emA=;
+ b=2Y1KFI+r7SXvwW+MGGcpHyDldAWFSGj8aZ1S6NTNZoGOweJHB4feD0lGmxtOe0IDAlNslV13HIejGcFKgOviRLR2fWLxaqxgnrmz6FkzMxzzcIDN3/6QV464OPI2pIvRsfoXHlpNXzVlnIZ2vncZayS1s5EhrVpfu5Ktidyl7+c=
+Received: from MW4PR04CA0064.namprd04.prod.outlook.com (2603:10b6:303:6b::9)
+ by DM4PR12MB6445.namprd12.prod.outlook.com (2603:10b6:8:bd::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6699.27; Tue, 29 Aug
+ 2023 19:13:33 +0000
+Received: from CO1PEPF000042AA.namprd03.prod.outlook.com
+ (2603:10b6:303:6b:cafe::24) by MW4PR04CA0064.outlook.office365.com
+ (2603:10b6:303:6b::9) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6699.35 via Frontend
+ Transport; Tue, 29 Aug 2023 19:13:33 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CO1PEPF000042AA.mail.protection.outlook.com (10.167.243.39) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.6745.16 via Frontend Transport; Tue, 29 Aug 2023 19:13:33 +0000
+Received: from AUS-P9-MLIMONCI.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Tue, 29 Aug
+ 2023 14:13:32 -0500
+From: Mario Limonciello <mario.limonciello@amd.com>
+To: <linus.walleij@linaro.org>
+CC: <Shyam-sundar.S-k@amd.com>, <Basavaraj.Natikar@amd.com>,
+	<linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<regressions@lists.linux.dev>, <lucapgl2001@gmail.com>, Mario Limonciello
+	<mario.limonciello@amd.com>
+Subject: [PATCH 1/3] pinctrl: amd: Clear `Less2secSts` and `Less10secSts` for GPIO0
+Date: Tue, 29 Aug 2023 11:56:25 -0500
+Message-ID: <20230829165627.156542-2-mario.limonciello@amd.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20230829165627.156542-1-mario.limonciello@amd.com>
+References: <20230829165627.156542-1-mario.limonciello@amd.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJfpegt2WrKBswYgSzurNogLefO-vU6ZpbCkrDrjFL365kcsug@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1PEPF000042AA:EE_|DM4PR12MB6445:EE_
+X-MS-Office365-Filtering-Correlation-Id: fa570ee3-e95f-4074-fc93-08dba8c409dc
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	eYB7CzKYSyIvfu8KwSJD7xg7eu2xpJgzLLzH6SUxEtGXAoM7y8J6bnHOHRcGBBv7rvwoNL6tdkda9aq3sXQ6X+NbpWdKjjh3rn5NFBaYzWkbUk5v5Sn46O7U8wbp4YEQJZBeusdbtZ4EBAu9Iw4WDWA41uW/A5UiEadNd4K2FsFd8a+uk++wQxel7cHWbiAfvIbyBE62+hiJ+52FoEa6pO9N4/f7pYe2KXNAQJfUz9uKgZ2o5IPgP9zKnOUbf8pw9ABvzRNnb3AOZVkHqj20NPIkIxWv1Q7pafbhfGn/rCJv0xniLH0axg45tzT7wudSgSZbZqmWJODoW/paTzdPH44ZXFufP5gSoGeVCdQHcNkDODSbYbW8usenjfrVtuuzWfgNWzfClWIy7AHCNkk0XHmNlU3wWH3SOZIGLulfxQgjCdZTu+/+MjIjPwXGwLT10UYTfnpawDBQ4BQivnBSdL3OCULTzEwG4cTORfLs9ssOrt77acw0vouO0DkGR+CP9Y8XML1wt7ly6c18ZI0kXfxhd+Pf5rn+0Ejih1utj3lDVVrMePf0ZtuVEXwsQjmPFm8EYhn6vxszQ/Jd+ZrVN1KR6J3Lk4cmHHrlusYNBeH5PIUK7yCsF8yj+vzmg4ewIHO/E4fmOwI3ALbc0VTvsCKzJz7/NCI3TkVkJptyaYMd1aM9ct7Rn0oXdHgkUPtfflHzBfMV0dv84vxUXx8JJnVnkq7Bo028eRfVaR+DRaTpbJMN1SFk1tZhaO1DkXfi/CWnZa9dC9jEwwemu3JH1CfiL8PB2AyKdjahKqfMQvy6JHhEHPx0oQPPpd1Bp7QJVUW8Yu8r9/uJvhZ6LqskWA==
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(376002)(39860400002)(346002)(136003)(396003)(1800799009)(451199024)(82310400011)(186009)(46966006)(36840700001)(40470700004)(1076003)(40460700003)(2616005)(4326008)(5660300002)(8676002)(8936002)(83380400001)(47076005)(36756003)(426003)(336012)(36860700001)(40480700001)(26005)(16526019)(6666004)(82740400003)(44832011)(356005)(70206006)(81166007)(7696005)(54906003)(70586007)(316002)(6916009)(478600001)(966005)(41300700001)(2906002)(86362001)(81973001)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Aug 2023 19:13:33.4184
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: fa570ee3-e95f-4074-fc93-08dba8c409dc
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CO1PEPF000042AA.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6445
 
-On Mon, Aug 21, 2023 at 05:31:48PM +0200, Miklos Szeredi wrote:
+On systems that don't program GPIO0 through _AEI may still control
+the power button via this GPIO.  When the GPIO master controller
+register has bit 15 configured for `EnWinBlueBtn` this will cause
+GPIO 0 to behave differently. If the user presses the button for
+less than 2 seconds or less than 10 seconds then it is expected
+that interrupt status must be cleared by the GPIO driver.
 
-(Apologies for the delay, I have been away without cell signal for
-some time.)
+Reported-by: Luca Pigliacampo <lucapgl2001@gmail.com>
+Closes: https://bugzilla.kernel.org/show_bug.cgi?id=217833
+Fixes: a855724dc08b ("pinctrl: amd: Fix mistake in handling clearing pins at startup")
+Link: https://www.amd.com/content/dam/amd/en/documents/archived-tech-docs/programmer-references/55072_AMD_Family_15h_Models_70h-7Fh_BKDG.pdf p948
+Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+---
+ drivers/pinctrl/pinctrl-amd.c | 9 +++++++++
+ drivers/pinctrl/pinctrl-amd.h | 2 ++
+ 2 files changed, 11 insertions(+)
 
-> > I think the idea is that they're saving snapshots of their own threads
-> > to the fs for debugging purposes.
-> 
-> This seems a fairly special situation.   Have they (whoever they may
-> be) thought about fixing this in their server?
+diff --git a/drivers/pinctrl/pinctrl-amd.c b/drivers/pinctrl/pinctrl-amd.c
+index 74241b2ff21e..37d64fa55b66 100644
+--- a/drivers/pinctrl/pinctrl-amd.c
++++ b/drivers/pinctrl/pinctrl-amd.c
+@@ -590,6 +590,7 @@ static const struct irq_chip amd_gpio_irqchip = {
+ 	GPIOCHIP_IRQ_RESOURCE_HELPERS,
+ };
+ 
++#define GPIO0_LESS_TIME	(BIT(GPIO0_LESS_2_OFF) | BIT(GPIO0_LESS_10_OFF))
+ #define PIN_IRQ_PENDING	(BIT(INTERRUPT_STS_OFF) | BIT(WAKE_STS_OFF))
+ 
+ static bool do_amd_gpio_irq_handler(int irq, void *dev_id)
+@@ -610,6 +611,14 @@ static bool do_amd_gpio_irq_handler(int irq, void *dev_id)
+ 	status |= readl(gpio_dev->base + WAKE_INT_STATUS_REG0);
+ 	raw_spin_unlock_irqrestore(&gpio_dev->lock, flags);
+ 
++	/* check GPIO0 specifically for Less2 and Less10 */
++	regval = readl(gpio_dev->base);
++	if (regval & GPIO0_LESS_TIME) {
++		pm_pr_dbg("GPIO0 was pressed for less than %d seconds\n",
++			  regval & BIT(GPIO0_LESS_10_OFF) ? 10 : 2);
++		writel(regval | BIT(INTERRUPT_STS_OFF), gpio_dev->base);
++	}
++
+ 	/* Bit 0-45 contain the relevant status bits */
+ 	status &= (1ULL << 46) - 1;
+ 	regs = gpio_dev->base;
+diff --git a/drivers/pinctrl/pinctrl-amd.h b/drivers/pinctrl/pinctrl-amd.h
+index 34c5c3e71fb2..3ea9a5275845 100644
+--- a/drivers/pinctrl/pinctrl-amd.h
++++ b/drivers/pinctrl/pinctrl-amd.h
+@@ -45,6 +45,8 @@
+ #define WAKECNTRL_Z_OFF			27
+ #define INTERRUPT_STS_OFF		28
+ #define WAKE_STS_OFF			29
++#define GPIO0_LESS_2_OFF		30
++#define GPIO0_LESS_10_OFF		31
+ 
+ #define DB_TMR_OUT_MASK	0xFUL
+ #define DB_CNTRl_MASK	0x3UL
+-- 
+2.34.1
 
-Sorry, "we" here is some internal team that works for my employer
-Netflix. We can't use imap clients on our corporate e-mails, whee.
-
-> > Whether this is a sane thing to do or not, it doesn't seem like it
-> > should deadlock pid ns destruction.
-> 
-> True.   So the suggested solution is to allow wait_event_killable() to
-> return if a terminal signal is pending in the exiting state and only
-> in that case turn the flush into a background request?  That would
-> still allow for regressions like the one reported, but that would be
-> much less likely to happen in real life.  Okay, I said this for the
-> original solution as well, so this may turn out to be wrong as well.
-
-I wonder if there's room here for a completion that doesn't use the
-wait primitives. Something like an atomic + queuing in task_work()
-would both fix this bug and not exhibit this regression, IIUC.
-
-> Anyway, I'd prefer if this was fixed in the server code, as it looks
-> fairly special and adding complexity to the kernel for this case might
-> not be justifiable.   But I'm also open to suggestions on fixing this
-> in the kernel in a not too complex manner.
-
-I don't think this is specific to the server-accessing-its-own-file
-case. My reproducer uses that because I didn't quite understand the
-bug fully at the time. I believe that *any* task that is killed with
-an inflight fuse request will exhibit this. We have seen this fairly
-rarely on another fuse fs we use throughout the fleet:
-https://github.com/lxc/lxcfs and it doesn't really do anything
-strange, and is mounted from the host's pid ns.
-
-Tycho
