@@ -1,197 +1,123 @@
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out3-smtp.messagingengine.com (out3-smtp.messagingengine.com [66.111.4.27])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69EB817FFB
-	for <regressions@lists.linux.dev>; Tue, 29 Aug 2023 17:14:26 +0000 (UTC)
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-564656d952aso3343011a12.3
-        for <regressions@lists.linux.dev>; Tue, 29 Aug 2023 10:14:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1693329265; x=1693934065;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ahI8iyjZw36PW+SGypCxZc2SSBoi3VxST5CAkWkSc2U=;
-        b=moYrQvN0h7JrtBn36G5gchH1T6gS6jF0QEEl6puKPt953vVwKNrakqEdQ5lWVNJfti
-         /QTpkwDYI2/pyP7OuRSMCOL2Y69+xDhcqsAciceHurJQ7934PTn5+IRBHZvZtIW8vSSh
-         M4Tax9dUxv1nxLnaC0Ne542MMEbf2kexJzNuLDNY4pFFgtIljYaa0+3FSeL6uENehqwt
-         Wv+3gNbirfymcQt6NaEv2oVGQ/uA9uCMFW9r+UZxrdhha3jD/oGuYbv1roWKc/T4vkfG
-         Vjgk2uzKH6vbNYDefjyoCL1iUCwQ8aefQv7FwFZFwioFRKfl4/gyVYYwaQoCu0HtBhPf
-         mvwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693329265; x=1693934065;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=ahI8iyjZw36PW+SGypCxZc2SSBoi3VxST5CAkWkSc2U=;
-        b=HukoZOSyIRYoxJaLd4fes5TW830NWk635+tj6CVwZ6HdDBXG5OKzmZyANK/G9jKcUS
-         OibutIcwcsBX+b4bYIJEhLDzh1INFphxCz+yP4xZSwQzlPDYYa9zOKoXxszrS6DRLaRq
-         0dpv7dYBkBS2Qe3V6GRxnqlyvLmWrCjtusn/BWqt0FSvOZGPatWhX+cP+Gy1ys7kXC2Q
-         HNcog6xqPzY7pDADILuaEKWM8ZoyvCM2zNIB4AbNVGsBmHqaaRQeoBNvJgQpV0gVod0O
-         a6kiTJjdJgNo8oME5XGivJcIf0WVuGWdz4T1M8Iek5hvkkgaxm+MiLMMIrKCWyhTX9Er
-         r11A==
-X-Gm-Message-State: AOJu0Yx463ru6n8M2IARuF4S+FSSfG1XTjWJHfxibG2RaS8prEqlW7lL
-	Q+LriIYaeHDbDgM4jU4kcNsCZQhZ6Pg=
-X-Google-Smtp-Source: AGHT+IEHnkqOME5kKrmkS3D8dP5ttWBB6E7htY6MUv2/QlyWqsvzX4tHJHFpjcTIFGp4blBZ8BGZe/VoKqA=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a63:77ce:0:b0:565:ea10:201a with SMTP id
- s197-20020a6377ce000000b00565ea10201amr5552004pgc.12.1693329265614; Tue, 29
- Aug 2023 10:14:25 -0700 (PDT)
-Date: Tue, 29 Aug 2023 10:14:23 -0700
-In-Reply-To: <ZO4YJlhHYjM7MsK4@torres.zugschlus.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 154D617AAE
+	for <regressions@lists.linux.dev>; Tue, 29 Aug 2023 17:42:07 +0000 (UTC)
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+	by mailout.nyi.internal (Postfix) with ESMTP id C5BB15C02F8;
+	Tue, 29 Aug 2023 13:42:06 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute1.internal (MEProxy); Tue, 29 Aug 2023 13:42:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tycho.pizza; h=
+	cc:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:sender
+	:subject:subject:to:to; s=fm3; t=1693330926; x=1693417326; bh=vU
+	Px8oYX/3QZqAoIaLAAWnQwMvEn8D/TQzGmJFD44tU=; b=KVttY2fUjqrtpFj3u/
+	mhZLGcaTNske7JtrPBgcwTi1RAOJ7Mjx7QmJX60EAwBCAd35RzLrlyGYW5TcnNLh
+	5uA2/B9gxY1GmQQxjuCKrT6ZuEt/bEX2zQTNgq3pneMqAoCLJorJ0AFoUBOkoZCx
+	a4Qp5Szc+N1h4QUSEUKxnyGvK/vFghIsG5T4RKGn+PGHQURYqNdBhSSNSwt0Za5u
+	2MBOzgbI7hehgtRGMD5gtc684N/Af1A773RyM4HJSEOjSl+ON/DNFfNsPcT4jBTW
+	5VzLk70eqpfZF5TX+cAW5wpW7ENnmzh5Lp2BjTEg5hFoO5ggw9HLv+VCnW2oyPcy
+	g6Uw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:sender:subject
+	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+	:x-sasl-enc; s=fm1; t=1693330926; x=1693417326; bh=vUPx8oYX/3QZq
+	AoIaLAAWnQwMvEn8D/TQzGmJFD44tU=; b=ONRcVfDeYseSBCSSURBgd5BsfEj7Q
+	SRNJ1ZuDbbdqN2deFIbKUybgUAMhn16s4GO4C/GoDThU7Xh7J/SiYXsaD+9p/sof
+	OMMrgPoAuHCV8kOj0cAKC+iMVulxRnsl/OPgibamLGFTQhFWxfmuqC54gQnYeqjG
+	GbOYsN//plUsnB2hpETgWXZi949YJgAfMzOr8EiTFj6WHN4mmk0SWw9dKozKDP7V
+	JzhMmY+y/MF1uh889VyI8y99dVUibexaIZcaSun8kgIq3Q1mA6QxxCuO6LWTQgFB
+	AMsMh5k02prZO217YhumA0js4mLK7mNkFoCJLGNlPTngfeHhmou9GJRlA==
+X-ME-Sender: <xms:7S3uZJdIWupChgxobXhkbrrsNWQjvxeETliORn97GUQ_AoPaAle-Hw>
+    <xme:7S3uZHOu0go8c7zrpI9wgiWcnnah_kAM1oqkwOvTW1Q8lJyj-Vozsm5led1sf7f1r
+    g7EH8CJUs2Z92_IxH8>
+X-ME-Received: <xmr:7S3uZCjx02c7ALH--bpvDJm5WIsTEwgnifUf5sHAFzwlnekgb4YR6QFklr0>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedrudefiedgudduiecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefvhigt
+    hhhoucetnhguvghrshgvnhcuoehthigthhhosehthigthhhordhpihiiiigrqeenucggtf
+    frrghtthgvrhhnpeejieeitdekgeevhfefhefgvdehjeegudegudeltddvjeevieejhfev
+    vdekffdtheenucffohhmrghinhepghhithhhuhgsrdgtohhmnecuvehluhhsthgvrhfuih
+    iivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepthihtghhohesthihtghhohdrphhi
+    iiiirg
+X-ME-Proxy: <xmx:7S3uZC8Kq-UCg05AFT_BwA_LU29mephwdusHimgKOHahV1k4-4BwFA>
+    <xmx:7S3uZFtUkdbD8PqFatbqsMIj6JR_E02hg6v9lybsbKvKVnLv0n2lrg>
+    <xmx:7S3uZBFJdRzfmrMpj4rkxvgiPLjuOsNf1coGGs3CdV1Akrol91CvQg>
+    <xmx:7i3uZPIXRGyta5Rc6sLoieas89aWSNTVzNOupogUXiID0kqbiOqjlw>
+Feedback-ID: i21f147d5:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 29 Aug 2023 13:42:04 -0400 (EDT)
+Date: Tue, 29 Aug 2023 11:42:02 -0600
+From: Tycho Andersen <tycho@tycho.pizza>
+To: Miklos Szeredi <miklos@szeredi.hu>
+Cc: =?iso-8859-1?Q?J=FCrg?= Billeter <j@bitron.ch>,
+	"Eric W. Biederman" <ebiederm@xmission.com>,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: Re: [REGRESSION] fuse: execve() fails with ETXTBSY due to async
+ fuse_flush
+Message-ID: <ZO4t6pnCokUoEsoi@tycho.pizza>
+References: <4f66cded234462964899f2a661750d6798a57ec0.camel@bitron.ch>
+ <CAJfpeguG4f4S-pq+_EXHxfB63mbof-VnaOy-7a-7seWLMj_xyQ@mail.gmail.com>
+ <ZNozdrtKgTeTaMpX@tycho.pizza>
+ <CAJfpegt6x_=F=mD8LEL4AZPbfCLGQrpurhtbDN4Ew50fd2ngqQ@mail.gmail.com>
+ <ZNqseD4hqHWmeF2w@tycho.pizza>
+ <CAJfpegtzj7=f99=m49DShDTgLpGAzx8gpHSakgPn0qe+dNjHdw@mail.gmail.com>
+ <ZON8hKOAGRvTn83a@tycho.pizza>
+ <CAJfpegt2WrKBswYgSzurNogLefO-vU6ZpbCkrDrjFL365kcsug@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-References: <ZO2RlYCDl8kmNHnN@torres.zugschlus.de> <ZO2piz5n1MiKR-3-@debian.me>
- <ZO3sA2GuDbEuQoyj@torres.zugschlus.de> <ZO4GeazfcA09SfKw@google.com>
- <ZO4JCfnzRRL1RIZt@torres.zugschlus.de> <ZO4RzCr/Ugwi70bZ@google.com> <ZO4YJlhHYjM7MsK4@torres.zugschlus.de>
-Message-ID: <ZO4nbzkd4tovKpxx@google.com>
-Subject: Re: Linux 6.5 speed regression, boot VERY slow with anything systemd related
-From: Sean Christopherson <seanjc@google.com>
-To: Marc Haber <mh+linux-kernel@zugschlus.de>
-Cc: Bagas Sanjaya <bagasdotme@gmail.com>, linux-kernel@vger.kernel.org, 
-	Linux Regressions <regressions@lists.linux.dev>, Linux KVM <kvm@vger.kernel.org>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Tony Lindgren <tony@atomide.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJfpegt2WrKBswYgSzurNogLefO-vU6ZpbCkrDrjFL365kcsug@mail.gmail.com>
 
-On Tue, Aug 29, 2023, Marc Haber wrote:
-> On Tue, Aug 29, 2023 at 08:42:04AM -0700, Sean Christopherson wrote:
-> > On Tue, Aug 29, 2023, Marc Haber wrote:
-> > > On Tue, Aug 29, 2023 at 07:53:45AM -0700, Sean Christopherson wrote:
-> > > > What is different between the bad host(s) and the good host(s)?  E.=
-g. kernel, QEMU,
-> > >=20
-> > > The bad host is an APU ("AMD GX-412TC SOC") with 4 GB of RAM, one of =
-the
-> > > good hosts is a "Xeon(R) CPU E3-1246 v3" with 32 GB of RAM.
-> >=20
-> > I don't expect it to help, but can you try booting the bad host with
-> > "spec_rstack_overflow=3Doff"?
->=20
-> That is destined to go on the kernel command line of the host, not the
-> VM, right? I am asking because that host runs a set of VMs that are not
-> that easy to reboot without impact on other services, I'd rather not do
-> experiments with that.
+On Mon, Aug 21, 2023 at 05:31:48PM +0200, Miklos Szeredi wrote:
 
-Ah, yeah, in that case don't bother.
+(Apologies for the delay, I have been away without cell signal for
+some time.)
 
-> The issue can be triggered and worked around by changing the VM only, I
-> didn't touch the host other than some virsh incantations.
->=20
-> >=20
-> > > system configuration is from the same ansible playbook, but of
-> > > course there are differences.
-> >=20
-> > Can you capture the QEMU command lines for the good and bad hosts?
-> > KVM doesn't get directly involved in serial port emulation; if the
-> > blamed commit in 6.5 is triggering unexpected behavior then QEMU is a
-> > better starting point than KVM.
->=20
-> the qmu command line of the test VM on the APU host is
->=20
-> [14/4946]mh@prom:~ $ pstree -apl | grep [l]asso
->   |-qemu-system-x86,251092 -name guest=3Dlasso,debug-threads=3Don -S -obj=
-ect secret,id=3DmasterKey0,format=3Draw,file=3D/var/lib/libvirt/qemu/domain=
--20-lasso/master-key.aes -machine pc-i440fx-2.1,accel=3Dkvm,usb=3Doff,dump-=
-guest-core=3Doff -cpu Opteron_G3,monitor=3Doff,x2apic=3Don,hypervisor=3Don =
--m 768 -realtime mlock=3Doff -smp 1,sockets=3D1,cores=3D1,threads=3D1 -uuid=
- 15338d79-b877-48da-b72f-f706bd05dadf -no-user-config -nodefaults -chardev =
-socket,id=3Dcharmonitor,fd=3D30,server,nowait -mon chardev=3Dcharmonitor,id=
-=3Dmonitor,mode=3Dcontrol -rtc base=3Dutc,driftfix=3Dslew -global kvm-pit.l=
-ost_tick_policy=3Ddelay -no-hpet -no-shutdown -global PIIX4_PM.disable_s3=
-=3D1 -global PIIX4_PM.disable_s4=3D1 -boot strict=3Don -device ich9-usb-ehc=
-i1,id=3Dusb,bus=3Dpci.0,addr=3D0x5.0x7 -device ich9-usb-uhci1,masterbus=3Du=
-sb.0,firstport=3D0,bus=3Dpci.0,multifunction=3Don,addr=3D0x5 -device ich9-u=
-sb-uhci2,masterbus=3Dusb.0,firstport=3D2,bus=3Dpci.0,addr=3D0x5.0x1 -device=
- ich9-usb-uhci3,masterbus=3Dusb.0,firstport=3D4,bus=3Dpci.0,addr=3D0x5.0x2 =
--device virtio-serial-pci,id=3Dvirtio-serial0,bus=3Dpci.0,addr=3D0x6 -drive=
- file=3D/dev/prom/lasso,format=3Draw,if=3Dnone,id=3Ddrive-virtio-disk0,cach=
-e=3Dnone,aio=3Dnative -device virtio-blk-pci,scsi=3Doff,bus=3Dpci.0,addr=3D=
-0x7,drive=3Ddrive-virtio-disk0,id=3Dvirtio-disk0,bootindex=3D1,write-cache=
-=3Don -drive file=3D/dev/prom/lasso-swap0,format=3Draw,if=3Dnone,id=3Ddrive=
--virtio-disk1,cache=3Dnone,aio=3Dnative -device virtio-blk-pci,scsi=3Doff,b=
-us=3Dpci.0,addr=3D0x9,drive=3Ddrive-virtio-disk1,id=3Dvirtio-disk1,write-ca=
-che=3Don -drive if=3Dnone,id=3Ddrive-ide0-0-0,readonly=3Don -device ide-cd,=
-bus=3Dide.0,unit=3D0,drive=3Ddrive-ide0-0-0,id=3Dide0-0-0 -netdev tap,fd=3D=
-33,id=3Dhostnet0,vhost=3Don,vhostfd=3D34 -device virtio-net-pci,netdev=3Dho=
-stnet0,id=3Dnet0,mac=3D52:54:00:9e:9a:15,bus=3Dpci.0,addr=3D0x3 -chardev pt=
-y,id=3Dcharserial0 -device isa-serial,chardev=3Dcharserial0,id=3Dserial0 -c=
-hardev spicevmc,id=3Dcharchannel0,name=3Dvdagent -device virtserialport,bus=
-=3Dvirtio-serial0.0,nr=3D1,chardev=3Dcharchannel0,id=3Dchannel0,name=3Dcom.=
-redhat.spice.0 -device usb-tablet,id=3Dinput0,bus=3Dusb.0,port=3D1 -spice p=
-ort=3D5902,addr=3D127.0.0.1,disable-ticketing,seamless-migration=3Don -devi=
-ce qxl-vga,id=3Dvideo0,ram_size=3D67108864,vram_size=3D67108864,vram64_size=
-_mb=3D0,vgamem_mb=3D16,max_outputs=3D1,bus=3Dpci.0,addr=3D0x2 -device intel=
--hda,id=3Dsound0,bus=3Dpci.0,addr=3D0x4 -device hda-duplex,id=3Dsound0-code=
-c0,bus=3Dsound0.0,cad=3D0 -chardev spicevmc,id=3Dcharredir0,name=3Dusbredir=
- -device usb-redir,chardev=3Dcharredir0,id=3Dredir0,bus=3Dusb.0,port=3D2 -c=
-hardev spicevmc,id=3Dcharredir1,name=3Dusbredir -device usb-redir,chardev=
-=3Dcharredir1,id=3Dredir1,bus=3Dusb.0,port=3D3 -chardev spicevmc,id=3Dcharr=
-edir2,name=3Dusbredir -device usb-redir,chardev=3Dcharredir2,id=3Dredir2,bu=
-s=3Dusb.0,port=3D4 -chardev spicevmc,id=3Dcharredir3,name=3Dusbredir -devic=
-e usb-redir,chardev=3Dcharredir3,id=3Dredir3,bus=3Dusb.0,port=3D5 -device v=
-irtio-balloon-pci,id=3Dballoon0,bus=3Dpci.0,addr=3D0x8 -object rng-random,i=
-d=3Dobjrng0,filename=3D/dev/urandom -device virtio-rng-pci,rng=3Dobjrng0,id=
-=3Drng0,bus=3Dpci.0,addr=3D0xa -sandbox on,obsolete=3Ddeny,elevateprivilege=
-s=3Ddeny,spawn=3Ddeny,resourcecontrol=3Ddeny -msg timestamp=3Don
-> [15/4947]mh@prom:~ $
->=20
-> a refrence qemu command line of a test VM on the Xeon host is
->=20
-> [1/4992]mh@gancho:~ $ pstree -apl | grep '[w]hip'
->   |-qemu-system-x86,1478 -enable-kvm -name guest=3Dwhip,debug-threads=3Do=
-n -S -object secret,id=3DmasterKey0,format=3Draw,file=3D/var/lib/libvirt/qe=
-mu/domain-9-whip/master-key.aes -machine pc-i440fx-2.1,accel=3Dkvm,usb=3Dof=
-f,dump-guest-core=3Doff -cpu Nehalem -m 512 -realtime mlock=3Doff -smp 2,so=
-ckets=3D2,cores=3D1,threads=3D1 -uuid 3dd1f71d-3b84-44e2-808f-a5c67694f25c =
--no-user-config -nodefaults -chardev socket,id=3Dcharmonitor,fd=3D34,server=
-,nowait -mon chardev=3Dcharmonitor,id=3Dmonitor,mode=3Dcontrol -rtc base=3D=
-utc,driftfix=3Dslew -global kvm-pit.lost_tick_policy=3Ddelay -no-hpet -no-s=
-hutdown -global PIIX4_PM.disable_s3=3D1 -global PIIX4_PM.disable_s4=3D1 -bo=
-ot strict=3Don -device ich9-usb-ehci1,id=3Dusb,bus=3Dpci.0,addr=3D0x5.0x7 -=
-device ich9-usb-uhci1,masterbus=3Dusb.0,firstport=3D0,bus=3Dpci.0,multifunc=
-tion=3Don,addr=3D0x5 -device ich9-usb-uhci2,masterbus=3Dusb.0,firstport=3D2=
-,bus=3Dpci.0,addr=3D0x5.0x1 -device ich9-usb-uhci3,masterbus=3Dusb.0,firstp=
-ort=3D4,bus=3Dpci.0,addr=3D0x5.0x2 -device virtio-scsi-pci,id=3Dscsi0,bus=
-=3Dpci.0,addr=3D0x7 -device virtio-serial-pci,id=3Dvirtio-serial0,bus=3Dpci=
-.0,addr=3D0x6 -drive file=3D/dev/gancho/whip,format=3Draw,if=3Dnone,id=3Ddr=
-ive-scsi0-0-0-0,cache=3Dnone,aio=3Dnative -device scsi-hd,bus=3Dscsi0.0,cha=
-nnel=3D0,scsi-id=3D0,lun=3D0,drive=3Ddrive-scsi0-0-0-0,id=3Dscsi0-0-0-0,boo=
-tindex=3D1,write-cache=3Don -netdev tap,fd=3D36,id=3Dhostnet0,vhost=3Don,vh=
-ostfd=3D37 -device virtio-net-pci,netdev=3Dhostnet0,id=3Dnet0,mac=3D52:54:0=
-0:5e:b4:42,bus=3Dpci.0,addr=3D0x3 -chardev pty,id=3Dcharserial0 -device isa=
--serial,chardev=3Dcharserial0,id=3Dserial0 -chardev socket,id=3Dcharchannel=
-0,fd=3D38,server,nowait -device virtserialport,bus=3Dvirtio-serial0.0,nr=3D=
-1,chardev=3Dcharchannel0,id=3Dchannel0,name=3Dorg.qemu.guest_agent.0 -chard=
-ev spicevmc,id=3Dcharchannel1,name=3Dvdagent -device virtserialport,bus=3Dv=
-irtio-serial0.0,nr=3D2,chardev=3Dcharchannel1,id=3Dchannel1,name=3Dcom.redh=
-at.spice.0 -device usb-tablet,id=3Dinput0,bus=3Dusb.0,port=3D1 -spice port=
-=3D5908,addr=3D127.0.0.1,disable-ticketing,seamless-migration=3Don -device =
-qxl-vga,id=3Dvideo0,ram_size=3D67108864,vram_size=3D67108864,vram64_size_mb=
-=3D0,vgamem_mb=3D16,max_outputs=3D1,bus=3Dpci.0,addr=3D0x2 -device intel-hd=
-a,id=3Dsound0,bus=3Dpci.0,addr=3D0x4 -device hda-duplex,id=3Dsound0-codec0,=
-bus=3Dsound0.0,cad=3D0 -chardev spicevmc,id=3Dcharredir0,name=3Dusbredir -d=
-evice usb-redir,chardev=3Dcharredir0,id=3Dredir0,bus=3Dusb.0,port=3D2 -char=
-dev spicevmc,id=3Dcharredir1,name=3Dusbredir -device usb-redir,chardev=3Dch=
-arredir1,id=3Dredir1,bus=3Dusb.0,port=3D3 -device virtio-balloon-pci,id=3Db=
-alloon0,bus=3Dpci.0,addr=3D0x8 -object rng-random,id=3Dobjrng0,filename=3D/=
-dev/urandom -device virtio-rng-pci,rng=3Dobjrng0,id=3Drng0,bus=3Dpci.0,addr=
-=3D0x9 -sandbox on,obsolete=3Ddeny,elevateprivileges=3Ddeny,spawn=3Ddeny,re=
-sourcecontrol=3Ddeny -msg timestamp=3Don
-> [2/4993]mh@gancho:~ $
->=20
-> Both come from virt-manager, so if the XML helps more, I'll happy to
-> post that as well.
+> > I think the idea is that they're saving snapshots of their own threads
+> > to the fs for debugging purposes.
+> 
+> This seems a fairly special situation.   Have they (whoever they may
+> be) thought about fixing this in their server?
 
-Those command lines are quite different, e.g. the Intel one has two serial =
-ports
-versus one for the AMD VM.  Unless Tony jumps in with an idea, I would try =
-massaging
-either the good or bad VM's QEMU invocation, e.g. see if you can get the AM=
-D VM
-to "pass" by pulling in stuff from the Intel VM, or get the Intel VM to fai=
-l by
-making its command line look more like the AMD VM.
+Sorry, "we" here is some internal team that works for my employer
+Netflix. We can't use imap clients on our corporate e-mails, whee.
+
+> > Whether this is a sane thing to do or not, it doesn't seem like it
+> > should deadlock pid ns destruction.
+> 
+> True.   So the suggested solution is to allow wait_event_killable() to
+> return if a terminal signal is pending in the exiting state and only
+> in that case turn the flush into a background request?  That would
+> still allow for regressions like the one reported, but that would be
+> much less likely to happen in real life.  Okay, I said this for the
+> original solution as well, so this may turn out to be wrong as well.
+
+I wonder if there's room here for a completion that doesn't use the
+wait primitives. Something like an atomic + queuing in task_work()
+would both fix this bug and not exhibit this regression, IIUC.
+
+> Anyway, I'd prefer if this was fixed in the server code, as it looks
+> fairly special and adding complexity to the kernel for this case might
+> not be justifiable.   But I'm also open to suggestions on fixing this
+> in the kernel in a not too complex manner.
+
+I don't think this is specific to the server-accessing-its-own-file
+case. My reproducer uses that because I didn't quite understand the
+bug fully at the time. I believe that *any* task that is killed with
+an inflight fuse request will exhibit this. We have seen this fairly
+rarely on another fuse fs we use throughout the fleet:
+https://github.com/lxc/lxcfs and it doesn't really do anything
+strange, and is mounted from the host's pid ns.
+
+Tycho
