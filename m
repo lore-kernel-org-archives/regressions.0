@@ -1,86 +1,61 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B53DE46A8
-	for <regressions@lists.linux.dev>; Wed, 30 Aug 2023 11:30:01 +0000 (UTC)
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-31768ce2e81so4563578f8f.1
-        for <regressions@lists.linux.dev>; Wed, 30 Aug 2023 04:30:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1693394999; x=1693999799; darn=lists.linux.dev;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=HeVnp6+dMLCahTFEnv2mqRZRz0x2Xyv/+Cdn1caRov8=;
-        b=Qd/JAvpsY3/jRmSQkfMQ6PbQoMbdHJ5g+RhYPZChfACLAkK1OkOo1OMJ+ar1l2uVXB
-         OU/dwTCivB0tWBt+QXR9TYVs5rkFz8zQJwQCFgJqRHTMETxe7SYbQTV22IbgWDL3WSbA
-         SxYYKfZGB35Bc5pROMn1YTjbjKvux8fhzh5OSgVenBG/jVKcMp0Ay2JLCj3oeMFuDf/G
-         BhfJKIlyvLxIIJAANyfv77UeYNgT3hfxlUC91Xh7ls97qusIAiFkder7iy9lVHH1esqR
-         zJwt800Ez4YAu16cYqnsCU2WmlQIYahRP7AWl/A+bVP2qgoC2TkHjReGRahZahwdWw7Z
-         M2jQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693394999; x=1693999799;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=HeVnp6+dMLCahTFEnv2mqRZRz0x2Xyv/+Cdn1caRov8=;
-        b=PtxmEVuZIWfRKUFqaKIl4/MIpjoObjSqcgfC8Bi3MZMETj5U93PIeZi1WweQkNQjkn
-         XkeLfFgZJwnHWrNQSZxC8xMdNEWX6uKTe2VbMZWB/hIzwtFVDpZSfyc7YKdvx9HOGHa5
-         tmm5E5RMsS35QK9XNjv3L40pz/ag1yZQ2+MHz2sN2yISnBCj6rjGxOyYm4HObkV/oCgQ
-         IIzZ4DeDV3pHLNfVjeGPn5WNHQ4ka+LX3zHRFzVB9crNo0v1pEc9QLM8zho2mc+A0zKk
-         qXEl18isRkEh/zMqcXrUrUX/QBrmw2dj04e2GGfvy2vean3+nPeQAF6J0p8cfljbSBgO
-         ro9A==
-X-Gm-Message-State: AOJu0Yzq5mJjbE2UkI8WP6md1dKMzCV23WXJ3MC8ZRCXZTZg3ZwWBHbd
-	bN5qMVnJEZWYt2BpZ8+dpmg=
-X-Google-Smtp-Source: AGHT+IGyoO44Uu/f7TuIuGzv0Vb43TqZU+jGwsOABGqlgchMxzq3Xguj5jA+dX0NyTf8Pn0T7/S9hw==
-X-Received: by 2002:adf:fd0f:0:b0:31a:dcfa:c6bc with SMTP id e15-20020adffd0f000000b0031adcfac6bcmr1501071wrr.32.1693394999377;
-        Wed, 30 Aug 2023 04:29:59 -0700 (PDT)
-Received: from debian ([167.98.27.226])
-        by smtp.gmail.com with ESMTPSA id f17-20020a1c6a11000000b003fed8e12d62sm2017759wmc.27.2023.08.30.04.29.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Aug 2023 04:29:58 -0700 (PDT)
-Date: Wed, 30 Aug 2023 12:29:57 +0100
-From: "Sudip Mukherjee (Codethink)" <sudipm.mukherjee@gmail.com>
-To: James Schulman <james.schulman@cirrus.com>,
-	David Rhodes <david.rhodes@cirrus.com>,
-	Richard Fitzgerald <rf@opensource.cirrus.com>,
-	Lee Jones <lee@kernel.org>
-Cc: alsa-devel@alsa-project.org, patches@opensource.cirrus.com,
-	linux-kernel@vger.kernel.org,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	regressions@lists.linux.dev
-Subject: mainline build failure due to ace6d1448138 ("mfd: cs42l43: Add
- support for cs42l43 core driver")
-Message-ID: <ZO8oNb2hpegB6BbE@debian>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 738EF46A8
+	for <regressions@lists.linux.dev>; Wed, 30 Aug 2023 11:31:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74045C433C7;
+	Wed, 30 Aug 2023 11:31:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1693395104;
+	bh=I3QUcjvGQNK/WN89qE62mUZVvbzh+sWhFO8OhwQe9X8=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+	b=RqVB98BtcFRECsHjf/CiUJ0L+JtoTi59vAb6U8d2YYLwJ231NZIjyA7npgBQJAX+z
+	 egaJ/xuBPVb5pFWPpdsnbrE6deMEAJFAZnO3hv0rbHqpELBHeDWrCSgLl+mq2shwYp
+	 cp89hgjpa+AEKmITt/z5pYxu4CtjtGeQmjAeziRaqbpFUVoisXX+zf9nPAJZhawVRs
+	 LSU7v1ESMqoq6VQ5BRdLt6j6ndZVc5jW82b9o/9bXd3e+uTQpEzwDaav0YSSOvVAt/
+	 xBdzUgx+j1YjBcGgECYyJ80/0lk513eTmFp2cLf2w1Eq4hyp4MMZNUQTEsslS7ue5m
+	 rCRv6PRhC+2Kg==
+From: Kalle Valo <kvalo@kernel.org>
+To: "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>
+Cc: Ross Lagerwall <ross.lagerwall@citrix.com>,  Bjorn Helgaas
+ <bhelgaas@google.com>,  Linux regressions mailing list
+ <regressions@lists.linux.dev>,  linux-pci@vger.kernel.org,
+  linux-kernel@vger.kernel.org,  ath11k@lists.infradead.org
+Subject: Re: [regression v6.5-rc1] PCI: comm "swapper/0" leaking memory
+References: <878r9sga1t.fsf@kernel.org>
+	<8a737241-f216-169a-8bd3-d0832439b99e@leemhuis.info>
+Date: Wed, 30 Aug 2023 14:31:40 +0300
+In-Reply-To: <8a737241-f216-169a-8bd3-d0832439b99e@leemhuis.info> (Linux
+	regression tracking's message of "Wed, 30 Aug 2023 11:55:47 +0200")
+Message-ID: <874jkgg40z.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain
 
-Hi All,
+"Linux regression tracking (Thorsten Leemhuis)"
+<regressions@leemhuis.info> writes:
 
-The latest mainline kernel branch fails to build alpha, csky and s390
-allmodconfig with the error:
+> Hi, Thorsten here, the Linux kernel's regression tracker. Partially
+> top-posting for once, to make this easily accessible to everyone.
+>
+> Thx for the report. To quote one aspect:
+>
+>> v6.4 has no leaks.
+>
+> I pretty sure you mean stock 6.4 here. But FWIW, the culprit was
+> backported to 6.4.y and 6.1.y, so they latest versions might be affected
+> as well.
 
-drivers/mfd/cs42l43.c:1138:12: error: 'cs42l43_runtime_resume' defined but not used [-Werror=unused-function]
- 1138 | static int cs42l43_runtime_resume(struct device *dev)
-      |            ^~~~~~~~~~~~~~~~~~~~~~
-drivers/mfd/cs42l43.c:1124:12: error: 'cs42l43_runtime_suspend' defined but not used [-Werror=unused-function]
- 1124 | static int cs42l43_runtime_suspend(struct device *dev)
-      |            ^~~~~~~~~~~~~~~~~~~~~~~
-drivers/mfd/cs42l43.c:1106:12: error: 'cs42l43_resume' defined but not used [-Werror=unused-function]
- 1106 | static int cs42l43_resume(struct device *dev)
-      |            ^~~~~~~~~~~~~~
-drivers/mfd/cs42l43.c:1076:12: error: 'cs42l43_suspend' defined but not used [-Werror=unused-function]
- 1076 | static int cs42l43_suspend(struct device *dev)
-      |            ^~~~~~~~~~~~~~~
+Yes, I mean v6.4 release tagged by Linus:
 
-git bisect pointed to ace6d1448138 ("mfd: cs42l43: Add support for cs42l43 core driver")
-
-I will be happy to test any patch or provide any extra log if needed.
-
+6995e2de6891 Linux 6.4
 
 -- 
-Regards
-Sudip
+https://patchwork.kernel.org/project/linux-wireless/list/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
