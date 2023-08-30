@@ -1,191 +1,184 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2074.outbound.protection.outlook.com [40.107.237.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE6B414AAF
-	for <regressions@lists.linux.dev>; Tue, 29 Aug 2023 21:37:31 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=aZAf1i82qCGEi41VkZ5iLEY/gq+AMMg06aUPtN0umaGerATyOhOQrfZc+AS0PO9lHICXE3h98dc/MxySnHs/4NYhRy1BUBp73Fa3FBMYoqzoIP1/DO/O9IGP6UdZ1UQe41/b5eifir9302mUKn2ZWLTWPWPLpsRnsTw4D9FkEpNkc3U6fqDxuY1d5BdRCJ9PF52d6ftX+l+JFMOzaANfe869M22Hx+i/+8EmXQqn4eVtZYeP/YP0VfKDqlGfHuNkMdU92VVMKj+KAntptmQVNR3DPu0XfZ02XpiPkltvwBZ2voLnbXUfShN5gWmQ38ufSVX37vp4oXMErKXwcoo3FQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=RQMRk/FYH/TIwhi/Kah0Idus+GW3ncSLlNQR6jizEg0=;
- b=k/fzX/W8DmUOrrLdvdBYx1g6nWPwHEopt+ubrM3bxhiYeUKWNLM0GkSKy8RpJFbTynCDzJbyK5OS90YUu7ijy48s5vb2YqZsw0Y2zF7j57sknfKQCwjjVc9X+klHixg3zJ41pbLQl4NUwgs1ZGmEEWgKxWzowklTnRL/gFAWUKFqxmasZnc6GcAbt5EpOU9Y53AG0MQ5quvQ6W3gjJOQJ6VOthHay/hM4lWvvuYkVbV/AJk6jTp+VnGfgRtx22MkK4K5AemUJXfEDy4Y67k7w7UuNCnt5P+GHZHzW13pu5SeYtHrd+k9CCryVQjrwPFH227iHqPE1iRtpiVTDIx5tg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RQMRk/FYH/TIwhi/Kah0Idus+GW3ncSLlNQR6jizEg0=;
- b=0VKJLlHXjXxPTHsnm58w1wGNyheWnhEv8O3zrShzRhlbLDqjP+1pPZXhLw3+uFf8dJK3ZVCHxgIeawuLsAZMBGwzQY4OgA5El1rbj0BkVLhrP6OYj3nioOlhk1PJPRWSBjzEJPcR07yOuUNEQFQReGmDHhmfkvuFCA5M6R3xenY=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by CH0PR12MB5121.namprd12.prod.outlook.com (2603:10b6:610:bc::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6699.35; Tue, 29 Aug
- 2023 21:37:29 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::36f9:ffa7:c770:d146]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::36f9:ffa7:c770:d146%7]) with mapi id 15.20.6699.034; Tue, 29 Aug 2023
- 21:37:28 +0000
-Message-ID: <07353676-bad0-44f8-a15a-4877f1898b6b@amd.com>
-Date: Tue, 29 Aug 2023 16:37:25 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] pinctrl: amd: Add a quirk for Lenovo Ideapad 5
-To: Hans de Goede <hdegoede@redhat.com>, linus.walleij@linaro.org
-Cc: Shyam-sundar.S-k@amd.com, Basavaraj.Natikar@amd.com,
- linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
- regressions@lists.linux.dev, lucapgl2001@gmail.com
-References: <20230829165627.156542-1-mario.limonciello@amd.com>
- <20230829165627.156542-4-mario.limonciello@amd.com>
- <1d891d34-053a-368d-cf47-bcaf35284c79@redhat.com>
-Content-Language: en-US
-From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <1d891d34-053a-368d-cf47-bcaf35284c79@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BN7PR06CA0058.namprd06.prod.outlook.com
- (2603:10b6:408:34::35) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 660F3EA0
+	for <regressions@lists.linux.dev>; Wed, 30 Aug 2023 00:37:58 +0000 (UTC)
+Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-56f84dd2079so2478070a12.1
+        for <regressions@lists.linux.dev>; Tue, 29 Aug 2023 17:37:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1693355877; x=1693960677; darn=lists.linux.dev;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OIcXbpX8tnWENSZb3UK/qF6sfIxkS9IgL1xa8sIsyvY=;
+        b=rU+olVYoYEurqlEOTqBMZdvxnQneuJBtAeSedOKcUVMrAMGN5ShEZ50MVQfvZ7naXB
+         uFsb9SQakz0h7CiwNbQAf0UVcG4cVRtRNevXGrxAytxngyjNFXOgSFZmVtO4d3gObWCf
+         aFeSBf9hZVMVjacP7OTlGg2gV4jvxYzAyfRQQ8K0+7mb+rdPFJgT3q9NB2/gyEiPPray
+         SGFwCLQCUwRxqT5brjHrSr9i0mRtPdPGTvbAxxl7ut36ynj9TV3DKOVL+hs/OI5LqiwB
+         sk1nLEWACQEA2r/D8zXdOHXczrB9AlOZF1EixYshacm7JheYcDA42cM0Qr5mESm99NBf
+         oNeg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1693355877; x=1693960677;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=OIcXbpX8tnWENSZb3UK/qF6sfIxkS9IgL1xa8sIsyvY=;
+        b=TuKIMUu81JJIgHKEBNiO/g5+jP3uXf2noiG0DrCQj+U57knGqJpIXf9Mdkk6pBjWlZ
+         XCQNMQuuOYsgJMOtMq6L+2Ihs/pNOIDm8pgC9bAT685HBFky5uhSbkvgumHDBrm9Tugq
+         YEtCacQ0nhNMbCABZlIrZE/FqNVMuXqoMtp/cj7Ta31oCeNt26bQa1Rru63FUmlnLM6u
+         XqC/xpQVMJGPOGvQul3irxKYl5SJZ+A96FVhw2aM3LWs1Cnit0uTvF3ATT4obyqpgL6u
+         vWHataQmTD7r2fJSOYXjisgrrlzJxhXW9UGRHWscMELlSdvDJ5SLyMQSuqRTvnco4eqp
+         1Nag==
+X-Gm-Message-State: AOJu0Yz3wUpNhqwC7wdstl1Mry7evC3wUzab2jkC8DpBZWAspj3WUK1U
+	cDP0sd7X5CbPg746EqQMdVQ=
+X-Google-Smtp-Source: AGHT+IEtpJmO6nyBZRDvNlU6uMKF8p5HJd86RzqvGZ/sYcKl3mhrN9kEy4eTAZPE+NM+ysMKKpK4nA==
+X-Received: by 2002:a05:6a20:f398:b0:136:42c8:693c with SMTP id qr24-20020a056a20f39800b0013642c8693cmr836037pzb.6.1693355877341;
+        Tue, 29 Aug 2023 17:37:57 -0700 (PDT)
+Received: from [192.168.0.105] ([103.124.138.83])
+        by smtp.gmail.com with ESMTPSA id bt27-20020a63291b000000b0056b920051b3sm9698508pgb.7.2023.08.29.17.37.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 29 Aug 2023 17:37:56 -0700 (PDT)
+Message-ID: <a5dd536d-041a-2ce9-f4b7-64d8d85c86dc@gmail.com>
+Date: Wed, 30 Aug 2023 07:37:49 +0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|CH0PR12MB5121:EE_
-X-MS-Office365-Filtering-Correlation-Id: 08ffb483-a7ca-48cb-a830-08dba8d824be
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	jhmzzOgZHUAB8ee9G8mYYIOnST0rQ+wApyDJMd405I8pRfYiecGv1aYcrbvs6E2cgOA+9iMZU36vVRdPRxUb1BjwFN6wy3c2hLhMslDsbaiCnVYH35jfW/H92ZNEycygvavHZGUCJGvuji8kOR+sySdwoJgy5qXuUqgvCkObxmSm34RbAJM4zt9A+Ni52cAujIxsoyxa9xH+NYM9IHjNBWyXRM4j4c6YDGXKoMTKWyCJpX2xM3OPWA23OVaxRJCXb9JSBa0rZmbyMGv9oBMP1ytEqQKJLdj7DGTNwCoyi2G0wWrnuKCk/xBDfm8STPOnn+Q5TujDUFEWOM/dAVlHrXXOuX4yBn5auFC6FSu+lxgSuUVx0D4+n8LsGvXk2htlaWFzKiHu7YBAGML4vvcaXZr6pQMqzx0jSuUykCh1GFgGHzR5Zq4N91G3eWVmiNT6ZXyZmfn2kBBiAjgMVLBxnRcaQX3lSHYX3/0JijPbBD7zNbmEYLUxEAj71r+7bJbXjaQkJXiFGlQsqJcnuCahzp2caoIdK4aekIr032xBGJvrQThvcX5DoqGS7XL2+hMwT8Iw6jYhCqftx/+h/1u8DQpC5v2YVRo90XxE5UHDj5KLY7s94kUgPeRdsIvh9Q0ali+Pj/P6Yrc50/tXxJS5OJpApM2cktHrLAOGaegL9yo=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(376002)(396003)(346002)(39860400002)(366004)(1800799009)(186009)(451199024)(8936002)(6666004)(53546011)(478600001)(31686004)(6506007)(66556008)(66946007)(66476007)(6486002)(966005)(316002)(38100700002)(41300700001)(6512007)(26005)(44832011)(8676002)(5660300002)(36756003)(31696002)(2906002)(83380400001)(2616005)(86362001)(4326008)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?cUJBbFdTZjgzZnZQRGVhaEJteEt3a292QndaT2FjVFl5dlY4eE91UFIwOE14?=
- =?utf-8?B?T3NtekViYkF2UGFWZm1WakJ5NU5jeWNzcjJjbURCdXZ3RDhlOENYSXZGV0tH?=
- =?utf-8?B?L0NaWGM3NXM5MTRwWHBheVhOTEUxNWFiZmZHVi8wTkhWM3ZXSmUvd3dKZkda?=
- =?utf-8?B?RnVmeG1xZ0pjS1ZFdW1EekQ3M09aQ0hBQW8xY1hwRE42SWNpRjZiREdXWFZP?=
- =?utf-8?B?Y1AyeTRlZGdaUndVZFNoUkZxV3VNR2lOSk9lWURmUW14QW9ZSmlwSS9veVpY?=
- =?utf-8?B?Rk82eDU1OHZPR0oxanF3SG5vNC9FdW5jaDdRbEdTQTlIWE0xUEp0bFRzQU1X?=
- =?utf-8?B?MHlSNXJCQWQ0Zm1MUW1SK0U5V1ZPd1MzV0psaWpWVFNSdGlKcDdiOFdkcE94?=
- =?utf-8?B?YTRCT011SXcvRCs0U2d3NWNzRUJ3RGtheTZtREJza054ZG5MdndmL1FwZ0Vk?=
- =?utf-8?B?eTE4K09jMVg3LzFwUHdiZWJ0UGllREhRK1piMkNSMTRMTEV0TEZaUnQ1OWM2?=
- =?utf-8?B?aENiUllSSGtkTkNFTUVpcjFwR2ZFczZaL1ZQdHAzRnNMSFdaaHdMbTVRN1dt?=
- =?utf-8?B?Y2NKWDNvd0pUZTJUcENhRmpxV2hPTHlhTlJIcVlIamgzdlJ1dDVIMVducCtQ?=
- =?utf-8?B?U3ZqY0RycVZZUlh0MGJvUjhXMXBMR21Sd3dwUXZkWm9LUXhtWFNiR09BS1hV?=
- =?utf-8?B?eXdCWHQwWUdWQkFVblRaVkY4WTJHcWs4WWFqQlc4a2JuaHR2S2NNaHQyOTR0?=
- =?utf-8?B?ait1K3pMWFU3cXNGSk92NTA3eGZNbks0VXpZU3JzU3F0OGdqSzlqeTBOMm9T?=
- =?utf-8?B?Y3BXMWlsTWN3NHRqdW9tbkMwbWE0U3pRL2NqclJRWU9Mb3F3NkdHUEREaWJ6?=
- =?utf-8?B?N2tnN0hCMW9CTjlvblFydjloOWt0Z2FlemxMQStPY2YzRlkyUDhLMnZvQmxa?=
- =?utf-8?B?SWlsNWlkRHllaGcvM2JYdHdxQlZoYWlQbm1pQ2V2MW5TdlBPYVg1Tk84b3hT?=
- =?utf-8?B?MmZmSXZjb3VQZHZEbXRReXVhYXpxeHRBaTdBVEc5SCtobFFVeVYxZkNVQjlY?=
- =?utf-8?B?am5ieFV0dE16NG1YWmtncVRTV0NqTDFOOWZZVkZEK0lSRFlaQUhkNlZvS2V4?=
- =?utf-8?B?MnBUZUx2YUx3aVJvNFJyNlJjTGdBM0ljMWpyblB4WFBtZkpZNEwxeXFvbFBG?=
- =?utf-8?B?MkFZWEhzV05mUUhSRXdsc3hYc2hSbVF3MG1uOU9BVzYxeFVTYXFTeXJOS0Jy?=
- =?utf-8?B?bTdmVEkzT3VPS1VraTNXUnFVUlR6UmFQY3kra0JRcXBoSFpwQlZlb3laOXhP?=
- =?utf-8?B?TlRwSngrNFpBRzhYNFNPR25aWnJGZmZubU5GbUt1MEZrNVRZZW9Ja2tGWE5r?=
- =?utf-8?B?em5EeFphcWJSMU1wQTVsUjA5Q3AxVnlCcFJEUlNmMzRJY0tKVHp2VzNyOFFn?=
- =?utf-8?B?Y2ZpVXo3bUxjT0ROZEJCQ3pZWkRWTjgraHFxb3Nob3U3NUwxc1dvakF2UzEr?=
- =?utf-8?B?ajhHYTlNTVI2S0hhL2I2OTdDWkROeEZKVlNlSU9wa0hITTBBT2E1ck4yK0VN?=
- =?utf-8?B?NFlxWFkrK1BPZlR0WUlzbUFNbEprVU55THlTR1Myd044RFo3dEFTZHRNUHJH?=
- =?utf-8?B?aWNHTHUyYVZmaEtlb0N1RGRQcjlqNnlSSndHM0dQT01NVWg5M2NXVCtFZUow?=
- =?utf-8?B?dWdTZzM1emVNdGw5V0krOHM1ek5TeHFrVGZlZ2pzT2REMlZuNjNCSXdKNVRl?=
- =?utf-8?B?Ti9IZTE1a3JVTC9NM3hhdEJ5eWU5ZWp6VlluVXd1aUNWdDRENG1wRFlKNkg4?=
- =?utf-8?B?dzRFb00ybUwzelljU1JySXVwaW4rNXdrQ0VxNm1PYnRTVkVvOXdMWDdlQmhF?=
- =?utf-8?B?R2ZzbGlpSFJyNS81S2VZNWh0aVQ3WER5S1Z0VzBoZmpQZndDWXBKZGpaTTJE?=
- =?utf-8?B?aUVUNkNYcXN0bmQxclRaUm9zbmVBUTNsbFEzT3VuZjNJQjZ0M2h4WE9laUMx?=
- =?utf-8?B?eUxENjBYazREL0FkMTRDNmIxS0lOaHc0YVlURjg1WjdVRWJvUldqK0ZEMlJn?=
- =?utf-8?B?Y1pidjV1NjRXaTBabUFsTTlIMjF1UU5kNmUwUWViMnZpNU5DK2pzUktZODlS?=
- =?utf-8?Q?WPylSpBm+7XKgCCcJvlgjjYO6?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 08ffb483-a7ca-48cb-a830-08dba8d824be
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Aug 2023 21:37:28.7883
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: u4hGr9BViYrkYzq41foUsXKcUggJIgvJykdQbz2/NGoLP6ThkA436wMQsv7iGfCWuNnu5m4rocTZXuejTNuIKg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR12MB5121
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.14.0
+Content-Language: en-US
+To: Hao Jia <jiahao.os@bytedance.com>, Ben Segall <bsegall@google.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>,
+ "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+ Igor Raits <igor.raits@gmail.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Linux Stable <stable@vger.kernel.org>
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+Subject: Fwd: WARNING: CPU: 13 PID: 3837105 at kernel/sched/sched.h:1561
+ __cfsb_csd_unthrottle+0x149/0x160
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On 8/29/2023 14:54, Hans de Goede wrote:
-> Hi Mario,
-> 
-> On 8/29/23 18:56, Mario Limonciello wrote:
->> Lenovo ideapad 5 doesn't use interrupts for GPIO 0, and so internally
->> debouncing with WinBlue debounce behavior means that the GPIO doesn't
->> clear until a separate GPIO is used (such as touchpad).
->>
->> Prefer to use legacy debouncing to avoid problems.
->>
->> Reported-by: Luca Pigliacampo <lucapgl2001@gmail.com>
->> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=217833
->> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> 
-> I'm not happy to see yet another DMI quirk solution here.
-> 
-> and I guess you're not happy with this either...
+Hi,
 
-Yeah I was really hoping the first patch was enough for the issue.
+I notice a regression report on Bugzilla [1]. Quoting from it:
 
-If we can't come up with anything else we can potentially drop patches 2 
-and 3. Even patch 1 alone will "significantly" improve the situation.
+> Hello, we recently got a few kernel crashes with following backtrace. H=
+appened on 6.4.12 (and 6.4.11 I think) but did not happen (I think) on 6.=
+4.4.
+>=20
+> [293790.928007] ------------[ cut here ]------------
+> [293790.929905] rq->clock_update_flags & RQCF_ACT_SKIP
+> [293790.929919] WARNING: CPU: 13 PID: 3837105 at kernel/sched/sched.h:1=
+561 __cfsb_csd_unthrottle+0x149/0x160
+> [293790.933694] Modules linked in: xt_owner(E) xt_REDIRECT(E) mptcp_dia=
+g(E) xsk_diag(E) raw_diag(E) unix_diag(E) af_packet_diag(E) netlink_diag(=
+E) tcp_diag(E) udp_diag(E) inet_diag(E) rpcsec_gss_krb5(E) auth_rpcgss(E)=
+ nfsv4(E) nfs(E) lockd(E) grace(E) fscache(E) netfs(E) nbd(E) rbd(E) libc=
+eph(E) dns_resolver(E) xt_set(E) ipt_rpfilter(E) ip_set_hash_ip(E) ip_set=
+_hash_net(E) bpf_preload(E) xt_multiport(E) veth(E) wireguard(E) libchach=
+a20poly1305(E) chacha_x86_64(E) poly1305_x86_64(E) ip6_udp_tunnel(E) udp_=
+tunnel(E) curve25519_x86_64(E) libcurve25519_generic(E) libchacha(E) nf_c=
+onntrack_netlink(E) xt_nat(E) xt_statistic(E) xt_addrtype(E) ipt_REJECT(E=
+) nf_reject_ipv4(E) ip_set(E) ip_vs_sh(E) ip_vs_wrr(E) ip_vs_rr(E) ip_vs(=
+E) xt_MASQUERADE(E) nft_chain_nat(E) xt_mark(E) xt_conntrack(E) xt_commen=
+t(E) nft_compat(E) nf_tables(E) nfnetlink(E) br_netfilter(E) bridge(E) st=
+p(E) llc(E) iptable_nat(E) nf_nat(E) iptable_filter(E) ip_tables(E) overl=
+ay(E) dummy(E) sunrpc(E) nf_conntrack(E) nf_defrag_ipv6(E) nf_defrag_ipv4=
+(E)
+> [293790.933738]  binfmt_misc(E) tls(E) isofs(E) intel_rapl_msr(E) intel=
+_rapl_common(E) kvm_amd(E) virtio_gpu(E) ccp(E) virtio_dma_buf(E) drm_shm=
+em_helper(E) virtio_net(E) vfat(E) kvm(E) i2c_i801(E) drm_kms_helper(E) n=
+et_failover(E) irqbypass(E) syscopyarea(E) fat(E) i2c_smbus(E) failover(E=
+) sysfillrect(E) virtio_balloon(E) sysimgblt(E) drm(E) fuse(E) ext4(E) mb=
+cache(E) jbd2(E) sr_mod(E) cdrom(E) sg(E) ahci(E) libahci(E) crct10dif_pc=
+lmul(E) crc32_pclmul(E) polyval_clmulni(E) libata(E) polyval_generic(E) g=
+hash_clmulni_intel(E) sha512_ssse3(E) virtio_blk(E) serio_raw(E) btrfs(E)=
+ xor(E) zstd_compress(E) raid6_pq(E) libcrc32c(E) crc32c_intel(E) dm_mirr=
+or(E) dm_region_hash(E) dm_log(E) dm_mod(E)
+> [293790.946262] Unloaded tainted modules: edac_mce_amd(E):1
+> [293790.956625] CPU: 13 PID: 3837105 Comm: QueryWorker-30f Tainted: G  =
+      W   E      6.4.12-1.gdc.el9.x86_64 #1
+> [293790.957963] Hardware name: RDO OpenStack Compute/RHEL, BIOS edk2-20=
+230301gitf80f052277c8-2.el9 03/01/2023
+> [293790.959681] RIP: 0010:__cfsb_csd_unthrottle+0x149/0x160
+> [293790.960933] Code: 37 fa ff 0f 0b e9 17 ff ff ff 80 3d 41 59 fc 01 0=
+0 0f 85 21 ff ff ff 48 c7 c7 98 03 95 9d c6 05 2d 59 fc 01 01 e8 77 37 fa=
+ ff <0f> 0b 41 8b 85 88 09 00 00 e9 00 ff ff ff 66 0f 1f 84 00 00 00 00
+> [293790.964077] RSP: 0000:ffffb708e7217db8 EFLAGS: 00010086
+> [293790.965160] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 000000=
+0000000027
+> [293790.966340] RDX: ffff905482c5f708 RSI: 0000000000000001 RDI: ffff90=
+5482c5f700
+> [293790.967839] RBP: ffff9029bb0e9e00 R08: 0000000000000000 R09: 000000=
+00ffff7fff
+> [293790.969496] R10: ffffb708e7217c58 R11: ffffffff9e3e2c88 R12: 000000=
+00000317c0
+> [293790.970859] R13: ffff903602c317c0 R14: 0000000000000000 R15: ffff90=
+5482c726b8
+> [293790.972085] FS:  00007ff3b66fe640(0000) GS:ffff905482c40000(0000) k=
+nlGS:0000000000000000
+> [293790.973678] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [293790.974663] CR2: 00007f16889036c0 CR3: 0000002072e34004 CR4: 000000=
+0000770ee0
+> [293790.976108] PKRU: 55555554
+> [293790.977048] Call Trace:
+> [293790.978013]  <TASK>
+> [293790.978678]  ? __warn+0x80/0x130
+> [293790.979727]  ? __cfsb_csd_unthrottle+0x149/0x160
+> [293790.980824]  ? report_bug+0x195/0x1a0
+> [293790.981806]  ? handle_bug+0x3c/0x70
+> [293790.982884]  ? exc_invalid_op+0x14/0x70
+> [293790.983837]  ? asm_exc_invalid_op+0x16/0x20
+> [293790.984626]  ? __cfsb_csd_unthrottle+0x149/0x160
+> [293790.985599]  ? __cfsb_csd_unthrottle+0x149/0x160
+> [293790.986583]  unregister_fair_sched_group+0x73/0x1d0
+> [293790.987682]  sched_unregister_group_rcu+0x1a/0x40
+> [293790.988752]  rcu_do_batch+0x199/0x4d0
+> [293790.989643]  rcu_core+0x267/0x420
+> [293790.990418]  __do_softirq+0xc8/0x2ab
+> [293790.991285]  __irq_exit_rcu+0xb9/0xf0
+> [293790.992555]  sysvec_apic_timer_interrupt+0x3c/0x90
+> [293790.993477]  asm_sysvec_apic_timer_interrupt+0x16/0x20
+> [293790.994171] RIP: 0033:0x7ff4dca91f60
+> [293790.994801] Code: 75 15 49 8b f7 c5 f8 77 49 ba 80 6c bf f3 f4 7f 0=
+0 00 41 ff d2 eb 0d 4b 89 7c 13 f8 49 83 c2 f8 4d 89 57 70 48 8b c3 c5 f8=
+ 77 <48> 83 c4 50 5d 4d 8b 97 08 01 00 00 41 85 02 c3 49 8d 14 fc 8b 7a
+> [293790.997256] RSP: 002b:00007ff3b66fd190 EFLAGS: 00000246
+> [293790.998138] RAX: 0000000655fd6ed0 RBX: 0000000655fd6ed0 RCX: 000000=
+0000000004
+> [293790.999184] RDX: 0000000000000000 RSI: 000000066cf4939c RDI: 00007f=
+f4f1180eb7
+> [293791.000220] RBP: 0000000000000004 R08: 000000066cf48530 R09: 000000=
+066cf493a8
+> [293791.001274] R10: 00000000000007f0 R11: 00007ff3bc00ca80 R12: 000000=
+0000000000
+> [293791.002222] R13: 000000066cf49390 R14: 00000000cd9e9272 R15: 00007f=
+f39c033800
+> [293791.002966]  </TASK>
+> [293791.003489] ---[ end trace 0000000000000000 ]---
+> [293791.004440] ------------[ cut here ]------------
+> [293791.005479] rq->clock_update_flags < RQCF_ACT_SKIP
+> [293791.005493] WARNING: CPU: 0 PID: 3920513 at kernel/sched/sched.h:14=
+96 update_curr+0x162/0x1d0
+>=20
+> Sadly I don't have more info but hopefully this stacktrace will be enou=
+gh.
+>=20
 
-The other option I considered is to hardcode WinBlue debounce behavior 
-"off" in Linux.
+See Bugzilla for the full thread.
 
-I don't think this is a good idea though though because we will likely 
-trade bugs because the debounce values in the AML for systems using _AEI 
-aren't actually used in Windows and might not have good values.
+Anyway, I'm adding this regression to regzbot:
 
-> 
-> Are we sure there is no other way? Did you check an acpidump
-> for the laptop and specifically for its ACPI powerbutton handling?
+#regzbot introduced: ebb83d84e49b54 https://bugzilla.kernel.org/show_bug.=
+cgi?id=3D217843
 
-I'm not sure there is another way or not, but yes there is an acpidump 
-attached to the bug in case you or anyone else has some ideas.
+Thanks.
 
-> 
-> I would expect the ACPI powerbutton handler to somehow clear
-> the bit, like how patch 1/3 clears it from the GPIO chip's
-> own IRQ handler.
-> 
-> I see that drivers/acpi/button.c does:
-> 
-> static u32 acpi_button_event(void *data)
-> {
->          acpi_os_execute(OSL_NOTIFY_HANDLER, acpi_button_notify_run, data);
->          return ACPI_INTERRUPT_HANDLED;
-> }
-> 
-> So unless I'm misreading something here, there is some AML being
-> executed on power-button events. So maybe there is something wrong
-> with how Linux interprets that AML ?
-> 
-The relevant ACPI spec section is here:
+[1]: https://bugzilla.kernel.org/show_bug.cgi?id=3D217843
 
-https://uefi.org/htmlspecs/ACPI_Spec_6_4_html/04_ACPI_Hardware_Specification/ACPI_Hardware_Specification.html#control-method-power-button
-
-I did look at the acpidump.  GPE 08 notifies \_SB.PWRB (a PNP0C0C 
-device) with 0x2.  According to the spec this is specifically for 
-letting the system know the power button is waking up the system from G1.
-
-I don't see any notifications with data 0x80 in the AML.  So I'm 
-wondering if the AML designer made an assumption that pressing the power 
-button caused the system to suspend or turn off.  That's the Windows 
-behavior, isn't it?
-
-The spec even says:
-
-"While the system is in the working state, a power button press is a 
-user request to transition the system into either the sleeping (G1) or 
-soft-off state (G2)."
-
-I think it would be a really good data point whether this happens with 
-Windows if possible too.  Then we can know if we're looking at a Linux 
-bug or a platform bug.
+--=20
+An old man doll... just what I always wanted! - Clara
