@@ -1,126 +1,92 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CF966AA3
-	for <regressions@lists.linux.dev>; Wed, 30 Aug 2023 17:56:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
- s=s31663417; t=1693418158; x=1694022958; i=wahrenst@gmx.net;
- bh=PDL/l6os/JL0sjb08BLPOhoDi81r8MbjrMxF1r4+zKc=;
- h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:In-Reply-To;
- b=a7xkZz+88sO8XUH+zwOtFQnWE5Vzy6UUEYG4KxQorWp5Ce8jyLaobLukTrEgDg2fWsBXvqI
- w6H5q6v44pSqTQclvzwgyJ92fJxNBI4h8cQ9l/Y9ZwIzCTt9OR3dbVP6aq7TvJs9pEOjFNvQD
- ud5H0oh/uGryjkZgYgB3ErbbRSlbds4kxPDMqtbU5zR+LW+6Dj6ViQtVExxutLUH2AbXamfFi
- RHweFp8W9aMzNLz7K2DN8dKY7IaE4eBIFdyakKMKbCtn8QPbXnM65gKntIgmbOP7IhweKQI7x
- rxGRlq8Nxiup6vHpmfZM963VDngfjg6yVbhePGoo+0Pu5lRNvqlw==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.1.129] ([37.4.248.43]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1N1Obh-1pYlEb2RZL-012mvp; Wed, 30
- Aug 2023 19:55:58 +0200
-Message-ID: <4dfdadf0-a985-78d9-91b6-065c52d23b34@gmx.net>
-Date: Wed, 30 Aug 2023 19:55:55 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 109A37482
+	for <regressions@lists.linux.dev>; Wed, 30 Aug 2023 19:16:29 +0000 (UTC)
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1b52875b8d9so23595ad.0
+        for <regressions@lists.linux.dev>; Wed, 30 Aug 2023 12:16:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1693422989; x=1694027789; darn=lists.linux.dev;
+        h=mime-version:user-agent:message-id:in-reply-to:date:references
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=neliSw7qoh+YUhiPFUyH0EEqS3rYdeTkzSKzjqUjw8A=;
+        b=b2NBiu5KMAr1ZRmb6iV2dtGbzEDCWKGd+DjkPZv7INjw8UPpWbPwVHX4jSAiX/Mv5I
+         1sZInU0bPz14L9MUQqKTOoQ+SkgkzeRGYvoRYIbapEuNRjjM1USSrc7RoSosxkqiOwkB
+         TBgmSq8Z0pxhduyqNoiSYd1XsK762DptLHp8jnfiR1JhWxnFMdE9zoQbrECdCUz8e+ji
+         gKrZu6HIwBVXzQrW03HP1wht7eyLkSF1mndedjVEyvZ9CzmBzW+qnxAwzDMmXLIrhsTD
+         swW03K78eegqf1UflDbN7yC7/zix37OCawixFLBJSDkc9KtZ3lckxNG9te0/ug0SGO0D
+         laDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1693422989; x=1694027789;
+        h=mime-version:user-agent:message-id:in-reply-to:date:references
+         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=neliSw7qoh+YUhiPFUyH0EEqS3rYdeTkzSKzjqUjw8A=;
+        b=lIJm9vRc7rryEJZSWl9mMANOzgcpSOefKP1pX1TL8nJeeaG/HXjo68Je/wLvtf8Zyj
+         9EzitHXqQKW8Qg9Y9/HZxCNiJdsIw41AYdPEfpykH7o6RNgqMKOQpn5nP0nI7VYgt6HQ
+         qkIEUpfk8B+RO7eriPC5C0Ih4yMC7uw1JXf8hb5XM5x777fTKhV1Jf4kHv1yYuiYc7Mg
+         hOktPMYmdcbFJRwlHHhLWHtxWImiCjiAeyFjwhfBm8+IR6kOFtkiFMY1gvWvHltTVlL4
+         HD24r8D7+5H615qtGHuKkSl3rQC9ThdAbXyBMFc4z7K/G2KkmvDYuxrFdGjkBQvTTB5h
+         19Hg==
+X-Gm-Message-State: AOJu0YyP6NRJg8bEzU2WEuI8kTu8B8etJIFitgtNok3LCBkT1BOavW1P
+	jivv5JXyhx8vLbmrWZFFbZ/IxA==
+X-Google-Smtp-Source: AGHT+IEtPBJyW+fxDSwfhZLVKMbrw+fx+hC8DUP+9B7LnqUilulxgXIOq0VIs7hNfhDbzxT0E54wrg==
+X-Received: by 2002:a17:902:e551:b0:1c1:efe5:cce5 with SMTP id n17-20020a170902e55100b001c1efe5cce5mr28280plf.3.1693422989246;
+        Wed, 30 Aug 2023 12:16:29 -0700 (PDT)
+Received: from bsegall-glaptop.localhost (c-73-158-249-138.hsd1.ca.comcast.net. [73.158.249.138])
+        by smtp.gmail.com with ESMTPSA id f4-20020aa782c4000000b0068a0922b1f0sm10343368pfn.137.2023.08.30.12.16.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Aug 2023 12:16:28 -0700 (PDT)
+From: Benjamin Segall <bsegall@google.com>
+To: Bagas Sanjaya <bagasdotme@gmail.com>
+Cc: Hao Jia <jiahao.os@bytedance.com>,  Vincent Guittot
+ <vincent.guittot@linaro.org>,  "Peter Zijlstra (Intel)"
+ <peterz@infradead.org>,  Igor Raits <igor.raits@gmail.com>,  Linux Kernel
+ Mailing List <linux-kernel@vger.kernel.org>,  Linux Regressions
+ <regressions@lists.linux.dev>,  Linux Stable <stable@vger.kernel.org>
+Subject: Re: Fwd: WARNING: CPU: 13 PID: 3837105 at kernel/sched/sched.h:1561
+ __cfsb_csd_unthrottle+0x149/0x160
+References: <a5dd536d-041a-2ce9-f4b7-64d8d85c86dc@gmail.com>
+Date: Wed, 30 Aug 2023 12:16:24 -0700
+In-Reply-To: <a5dd536d-041a-2ce9-f4b7-64d8d85c86dc@gmail.com> (Bagas Sanjaya's
+	message of "Wed, 30 Aug 2023 07:37:49 +0700")
+Message-ID: <xm26cyz4ibnb.fsf@google.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: bcm2835-rng: Performance regression since 96cb9d055445
-To: Thorsten Leemhuis <regressions@leemhuis.info>,
- "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>,
- Florian Fainelli <florian.fainelli@broadcom.com>,
- Scott Branden <sbranden@broadcom.com>,
- bcm-kernel-feedback-list@broadcom.com, linux-crypto@vger.kernel.org,
- Linux ARM <linux-arm-kernel@lists.infradead.org>,
- Andrei Coardos <aboutphysycs@gmail.com>, Martin Kaiser <martin@kaiser.cx>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- Phil Elwell <phil@raspberrypi.com>
-References: <bc97ece5-44a3-4c4e-77da-2db3eb66b128@gmx.net>
- <ZOiP2H_6pfhKN3fj@zx2c4.com> <20e3c73c-7736-b010-516a-6618c88d8dad@gmx.net>
- <2a0fd8ef-8b43-b769-b4aa-c27405ead5e7@leemhuis.info>
-Content-Language: en-US
-From: Stefan Wahren <wahrenst@gmx.net>
-In-Reply-To: <2a0fd8ef-8b43-b769-b4aa-c27405ead5e7@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:icfQAfi9b0eHQhciAtcWG0+l9pF6iiPLg8NGGjLdmTQ+ggLB8aL
- +SBshbE1lC1N17cvq3uhkqDNO/jLRIvCmOArNjIjO4N3xHfZy/LJi9y57aZpznOFoiVO99n
- wZN8+EE+fCTkmDLkqF1X4QnG8HZuwtuOFV9uPqs/T0jP6Q7965Jfq9de/tEYcnTyo/t5mDv
- 6x7J04nOIXlNi08bAoflA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:Y3tVSRMS7Yo=;FxST7o+5hk3nkqWN640sb+3bcWf
- eMkJHYvw4ZSnEx4KnGJjvLExCnlBv7TbITKiwf4tfV+OlXl1vzhLo6WULMYmzgYoZK4YLkmcg
- +5SLpbWEM93Ix1F9sBMYn6ix6fb/WfIlZKdpatc1f9GjhnSPr7hNrs71juUyyK77JbBjJ3er2
- sznUJ1Q6nR/SuaM5lfJQbGssOaYTg+EpQmvX9APAUc6aeCGRTdvCZcVkeaFPiBqTc4MSLGpvc
- 9fSkzM8cXM99nYHaCrYxpjQ0BDuY6LhdD0qq6hn+LvwgOSdBmoZfwEdMvdjtS8UBE5kyPS+gI
- qCLOqQIl1NfAM8hmU2OL+O4muu/Uxb0LGRt731iE+8djAOU6+JBYCWBb345bv+Mro6H/d5cEP
- W/sgZQ9K9DgEzCdw1QuYmb247MIwWrwsuuR9sH0ujk8yBL5CeQKCmYeX/FGScpax8HC++F8JM
- DzyBA788bCEkGdn1VAlpUq35+fiGJaewTpVCx/OebNZ8H6lUVY1TfTAbaE1ZDDbL5ahEx4J1d
- IKxvxmWlhqDDvZXZLx/Lrk/x+pfTEfX46k6XcPp5QtX3s7uEO8MPvjUBaOu776OUmEdkZFgi6
- cc9kL0p3DFBkXHDGq46kKE4xwmjdxvmU8KHJW0zD2m7p6DfJ7YTefBSdZLVB78rJ5LHMuRxtC
- Sf69M5jzQw3iokr4u+msDTA4FQpHQf5nvEwr06+X9WAFLepzB9TFZCeuwjWZZT/Gcq+3Af08p
- O5yK8V2VYfRMTgRbMY89Tv/jh6gcsAc4mS/lGb5vceeHVEz83j/iUvWkxlRxyEWq4iYbR1hST
- vtwAayX6fIEOHoz5MRgUHD0kKq4/tFFuU9A/12C4gvKrcyccQ/I1xmD/YS3kCwH71+08em5VH
- XiqFGZt4D5rboJTauTB91GaeKzTf/QE9Dsw3th+5DpKUp7KhK5JDQJbsujU5qpQGEH/0N1zSp
- 5aPwINfLYrqUgmHdR6xciW1qh4I=
+Content-Type: text/plain
 
-Hi,
+Bagas Sanjaya <bagasdotme@gmail.com> writes:
 
-Am 30.08.23 um 12:38 schrieb Thorsten Leemhuis:
-> /me gets the impression he has to chime in here
+> Hi,
 >
-> On 25.08.23 14:14, Stefan Wahren wrote:
->> Am 25.08.23 um 13:26 schrieb Jason A. Donenfeld:
->>> On Fri, Aug 25, 2023 at 01:14:55PM +0200, Stefan Wahren wrote:
->>>> i didn't find the time to fix the performance regression in bcm2835-r=
-ng
->>>> which affects Raspberry Pi 0 - 3, so report it at least. AFAIK the fi=
-rst
->>>> report about this issue was here [1] and identified the offending
->>>> commit:
->>>>
->>>> 96cb9d055445 ("hwrng: bcm2835 - use hwrng_msleep() instead of
->>>>  =C2=A0=C2=A0 cpu_relax()")
->>>>
->>>> #regzbot introduced: 96cb9d055445
->>>>
->>>> I was able to reproduce this issue with a Raspberry Pi 3 B+ on Linux
->>>> 6.5-rc6 (arm64/defconfig).
->>>>
->>>> Before:
->>>> time sudo dd if=3D/dev/hwrng of=3D/dev/urandom count=3D1 bs=3D4096 st=
-atus=3Dnone
->>>>
->>>> real=C2=A0=C2=A0=C2=A0 3m29,002s
->>>> user=C2=A0=C2=A0=C2=A0 0m0,018s
->>>> sys=C2=A0=C2=A0=C2=A0 0m0,054s
->>> That's not surprising. But also, does it matter? That script has
->>> *always* been wrong. Writing to /dev/urandom like that has *never*
->>> ensured that those bytes are taken into account immediately after. It'=
-s
->>> just not how that interface works. So any assumptions based on that ar=
-e
->>> bogus, and that line effectively does nothing.
->>>
->>> Fortunately, however, the kernel itself incorporates hwrng output into
->>> the rng pool, so you don't need to think about doing it yourself.
->>>
->>> So go ahead and remove that line from your script.
->> Thanks for your explanation. Unfortunately this isn't my script.
-> And I assume it's in the standard install of the RpiOS or similarly
-> widespread?
-the repo / script is specific for Raspberry Pi / Debian.
+> I notice a regression report on Bugzilla [1]. Quoting from it:
 >
->> I'm
->> just a former BCM2835 maintainer and interested that more user stick to
->> the mainline kernel instead of the vendor ones. I will try to report th=
-e
->> script owner.
-> thx
+>> Hello, we recently got a few kernel crashes with following backtrace. Happened on 6.4.12 (and 6.4.11 I think) but did not happen (I think) on 6.4.4.
+>> 
+>> [293790.928007] ------------[ cut here ]------------
+>> [293790.929905] rq->clock_update_flags & RQCF_ACT_SKIP
+>> [293790.929919] WARNING: CPU: 13 PID: 3837105 at kernel/sched/sched.h:1561 __cfsb_csd_unthrottle+0x149/0x160
+>> [293790.933694] Modules linked in: [...]
+>> [293790.946262] Unloaded tainted modules: edac_mce_amd(E):1
+>> [293790.956625] CPU: 13 PID: 3837105 Comm: QueryWorker-30f Tainted: G        W   E      6.4.12-1.gdc.el9.x86_64 #1
+>> [293790.957963] Hardware name: RDO OpenStack Compute/RHEL, BIOS edk2-20230301gitf80f052277c8-2.el9 03/01/2023
+>> [293790.959681] RIP: 0010:__cfsb_csd_unthrottle+0x149/0x160
+>
+> See Bugzilla for the full thread.
+>
+> Anyway, I'm adding this regression to regzbot:
+>
+> #regzbot introduced: ebb83d84e49b54 https://bugzilla.kernel.org/show_bug.cgi?id=217843
+>
+> Thanks.
+>
+> [1]: https://bugzilla.kernel.org/show_bug.cgi?id=217843
 
-I made a pull request [1] in order to avoid longer discussions and today
-it has been merged :)
-
-[1] - https://github.com/RPi-Distro/raspberrypi-sys-mods/pull/77
+The code in question is literally "rq_lock; update_rq_clock;
+rq_clock_start_loop_update (the warning)", which suggests to me that
+RQCF_ACT_SKIP is somehow leaking from somewhere else?
