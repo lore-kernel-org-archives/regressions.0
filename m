@@ -1,71 +1,87 @@
-Received: from torres.zugschlus.de (torres.zugschlus.de [85.214.160.151])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 610CC10EE
-	for <regressions@lists.linux.dev>; Wed, 30 Aug 2023 06:44:19 +0000 (UTC)
-Received: from mh by torres.zugschlus.de with local (Exim 4.96)
-	(envelope-from <mh+linux-kernel@zugschlus.de>)
-	id 1qbEw3-002tne-1d;
-	Wed, 30 Aug 2023 08:44:15 +0200
-Date: Wed, 30 Aug 2023 08:44:15 +0200
-From: Marc Haber <mh+linux-kernel@zugschlus.de>
-To: Bagas Sanjaya <bagasdotme@gmail.com>
-Cc: linux-kernel@vger.kernel.org,
-	Linux Regressions <regressions@lists.linux.dev>,
-	Linux KVM <kvm@vger.kernel.org>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Tony Lindgren <tony@atomide.com>
-Subject: Re: Linux 6.5 speed regression, boot VERY slow with anything systemd
- related
-Message-ID: <ZO7lP1JKa7ptcFUP@torres.zugschlus.de>
-References: <ZO2RlYCDl8kmNHnN@torres.zugschlus.de>
- <ZO2piz5n1MiKR-3-@debian.me>
- <ZO3sA2GuDbEuQoyj@torres.zugschlus.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CF731C03
+	for <regressions@lists.linux.dev>; Wed, 30 Aug 2023 09:21:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 241C4C433C8;
+	Wed, 30 Aug 2023 09:21:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1693387298;
+	bh=siIZODpxnuFofigGdK4dwZYoGFyU6ZVlCj0AGqstUXY=;
+	h=From:To:Cc:Subject:Date:From;
+	b=NgYUZygmBVLwFbvipWgScmV9bhRY4kEtxv+LxE1ZR+6xyl9Ra9l+OKjTkwsKUnCLD
+	 beOWKm9nyL1Va+AILsLgv0NtwJ2QtqXMLv8ynDEuGiIwgZVZMt16SIOHzWgxPuZsVN
+	 xeLpsiLkB27M4lZ/rwqit+jHi9YByXMQjBcgdZxxb19C2y+hzqxYHKYG7Sd6rgWYJB
+	 K58+CwM9JjdL3H3y/i5yaHv7FD8sfAfdnK17j8OSiwPXnt7bFmP5S7jI+0rEoCdy1F
+	 nppDZS0xW0zmchJck+DBVrBKJVLogG9rnkW+0dtk7EMGUAWgGLjnalXMzHZwviC1QH
+	 wy9DkZFZ+4FVw==
+From: Kalle Valo <kvalo@kernel.org>
+To: Ross Lagerwall <ross.lagerwall@citrix.com>, Bjorn Helgaas
+ <bhelgaas@google.com>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+    ath11k@lists.infradead.org, regressions@lists.linux.dev
+Subject: [regression v6.5-rc1] PCI: comm "swapper/0" leaking memory
+Date: Wed, 30 Aug 2023 12:21:34 +0300
+Message-ID: <878r9sga1t.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ZO3sA2GuDbEuQoyj@torres.zugschlus.de>
-User-Agent: Mutt/2.2.9 (2022-11-12)
+Content-Type: text/plain
 
 Hi,
 
-while debugging in the direction of qemu/kvm continues, I think that
-this is an actual problem with the serial code.
+I noticed that starting from v6.5-rc1 my ath11k tests reported several
+memory leaks from swapper/0:
 
-On Tue, Aug 29, 2023 at 03:00:51PM +0200, Marc Haber wrote:
-> my bisect came out at
-> 84a9582fd203063cd4d301204971ff2cd8327f1a being the first bad commit.
-> This is a rather big one, that does not easily back out of the 6.5
-> release. Sadly, just transplanting drivers/tty/serial from a 6.4.12 tree
-> doesn't even build. I'm adding Tony Lindgren, the author of the commit,
-> to the Cc list.
+unreferenced object 0xffff88810a02b7a8 (size 96):
+  comm "swapper/0", pid 1, jiffies 4294671838 (age 98.120s)
+  hex dump (first 32 bytes):
+    80 b8 02 0a 81 88 ff ff b8 72 07 00 00 c9 ff ff  .........r......
+    c8 b7 02 0a 81 88 ff ff 00 00 00 00 00 00 00 00  ................
+  backtrace:
+unreferenced object 0xffff88810a02b880 (size 96):
+  comm "swapper/0", pid 1, jiffies 4294671838 (age 98.120s)
+  hex dump (first 32 bytes):
+    58 b9 02 0a 81 88 ff ff a8 b7 02 0a 81 88 ff ff  X...............
+    a0 b8 02 0a 81 88 ff ff 00 00 00 00 00 00 00 00  ................
+  backtrace:
+unreferenced object 0xffff88810a02b958 (size 96):
+  comm "swapper/0", pid 1, jiffies 4294671838 (age 98.120s)
+  hex dump (first 32 bytes):
+    30 ba 02 0a 81 88 ff ff 80 b8 02 0a 81 88 ff ff  0...............
+    78 b9 02 0a 81 88 ff ff 00 00 00 00 00 00 00 00  x...............
+  backtrace:
+unreferenced object 0xffff88810a02ba30 (size 96):
+  comm "swapper/0", pid 1, jiffies 4294671838 (age 98.120s)
+  hex dump (first 32 bytes):
+    08 bb 02 0a 81 88 ff ff 58 b9 02 0a 81 88 ff ff  ........X.......
+    50 ba 02 0a 81 88 ff ff 00 00 00 00 00 00 00 00  P...............
+  backtrace:
+unreferenced object 0xffff88810a02bb08 (size 96):
+  comm "swapper/0", pid 1, jiffies 4294671838 (age 98.120s)
+  hex dump (first 32 bytes):
+    e0 bb 02 0a 81 88 ff ff 30 ba 02 0a 81 88 ff ff  ........0.......
+    28 bb 02 0a 81 88 ff ff 00 00 00 00 00 00 00 00  (...............
+  backtrace:
 
-Last night, I tried hard to roll back that commit and ended up with
-doing
+I can easily reproduce this by doing a simple insmod and rmmod of ath11k
+and it's dependencies (mac80211, MHI etc). I can reliability reproduce
+the leaks but I only see them once after a boot, I need to reboot the
+host to see the leaks again. v6.4 has no leaks.
 
-git checkout v6.5
-git checkout 84a9582fd2^ -- drivers/tty/serial/
-git checkout 84a9582fd2^ -- include/linux/serial_8250.h
-git checkout 84a9582fd2^ -- include/linux/serial_core.h
+I did a bisect and found the commit below. I verified reverting the
+commit makes the leaks go away.
 
-which resulted in a 6.5 kernel that actually works without obvious
-regression on the VM in question.
+commit e54223275ba1bc6f704a6bab015fcd2ae4f72572
+Author:     Ross Lagerwall <ross.lagerwall@citrix.com>
+AuthorDate: Thu May 25 16:32:48 2023 +0100
+Commit:     Bjorn Helgaas <bhelgaas@google.com>
+CommitDate: Fri Jun 9 15:06:16 2023 -0500
 
-Thanks to Hilko Bengen and Bastian Blank who helped with the git
-gymnastics and with understanding the patch in question. I wouldn't have
-been able to roll that back without their help.
+    PCI: Release resource invalidated by coalescing
 
-Greetings
-Marc
-
--- 
------------------------------------------------------------------------------
-Marc Haber         | "I don't trust Computers. They | Mailadresse im Header
-Leimen, Germany    |  lose things."    Winona Ryder | Fon: *49 6224 1600402
-Nordisch by Nature |  How to make an American Quilt | Fax: *49 6224 1600421
+Kalle
