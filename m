@@ -1,190 +1,264 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 987F5525E
-	for <regressions@lists.linux.dev>; Wed, 30 Aug 2023 16:19:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1693412342;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=sGn9Fwe3ebvb2amdc5cegj/0/WNStRYvxlTjUfacLtM=;
-	b=UT/mz3oxcwJiLaagj3gmo+g1cnOV2PRX6ujqx2bOzEmYLZ8ORYDMhNYEMRBx0c1D02wE1f
-	rjQs4Z2qJKnwX+jKguEE0JUge6uPQV00oNFXK+zKQqGVerZUheDMURdT81kMciV9WmyZeq
-	wHkqmN1vx9Mb1A2V90GdZwfzBRIWE8A=
-Received: from mail-lj1-f197.google.com (mail-lj1-f197.google.com
- [209.85.208.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-471-d8zOzA9dO8KpTtcU7mI3yQ-1; Wed, 30 Aug 2023 12:19:00 -0400
-X-MC-Unique: d8zOzA9dO8KpTtcU7mI3yQ-1
-Received: by mail-lj1-f197.google.com with SMTP id 38308e7fff4ca-2bd09fdec5cso91051fa.1
-        for <regressions@lists.linux.dev>; Wed, 30 Aug 2023 09:19:00 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 260456AA3
+	for <regressions@lists.linux.dev>; Wed, 30 Aug 2023 17:28:38 +0000 (UTC)
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2bcb50e194dso1097581fa.3
+        for <regressions@lists.linux.dev>; Wed, 30 Aug 2023 10:28:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1693416517; x=1694021317; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=e7Q6yLBWpq+0cHDNlXkrewgCyTyJH571bDs7gW4UFiI=;
+        b=p9yg1Q94Ft+nOyF5hUN7OQW46RWXNSy5v+wT6t0r0WCX8A1VdYhW7Ty7I+Yr7YsnhC
+         1OzgW08Gw6Yg46sPBmrXocmv6ZtP3ydXbGc/6MtM8Rq6j95gj5hxurLefMxLA78WM/rs
+         QyKRy8d7pPa200so8D26Zku0ZJd8bBF5Wlgjd3/6JQhJICJucgrjRskfw2QuXnBWy5iv
+         r1wGeoQTYDmn7VNSpHUz6u57tcT5xKuO0F91hku7uHtaXmERY7t5g7YuP2dk3ztxuXbM
+         mxBMogNMj6enPZ4eD2Oda75q7rWcu6HzVHlA7Z4mDvJqrPefwfBiXe8PgYMw9GhUEu7V
+         pqEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693412339; x=1694017139;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=sGn9Fwe3ebvb2amdc5cegj/0/WNStRYvxlTjUfacLtM=;
-        b=QW5IkBTQsoCvGr378zW7l1uZVFddXKswOZ62VdUBBn7224oPCsUof7JjcZ0L3BLehW
-         37w2YZS68cJBAU0CxgA3WXDPWA3rAOSL9yVaLOo9fqOlXb2An6SqjkPlnf3Nkl/FIvQi
-         neXrWhkbNMDovKsftxDhl6XWTZFkNvf5ziyUX4w054nHBotc9WoUNrPkUEDO5E7rHLUf
-         F2TSIfDJbreiG04EdP3/XZKqcvjJCiRnpSfc9uEOk2hIFzspbyzOiH5cv1r7XwIGIvbm
-         IR/hr4fpOa0gUpCWMBGA/Y6YORLxjUbukQlLF5Q3ILTAOpUzERvkrkVAfuDHkcoBuj9S
-         Bl/Q==
-X-Gm-Message-State: AOJu0YxQaHb0ngCFopsXd+Bjf7gUEwu0NFNd1r3f1rC3YvhOLPzL64IP
-	AVQdAP64z5ni0AnaPs42RmHlGaU7VxjW8QW00Uiu8j93HQhXAF2mPmQoLoSO3NSaDmWYO3nfXN+
-	Uj9Sx2/dm1UhUwHTzsWNrI6U=
-X-Received: by 2002:a2e:910e:0:b0:2bc:ed80:46e with SMTP id m14-20020a2e910e000000b002bced80046emr2239843ljg.31.1693412339315;
-        Wed, 30 Aug 2023 09:18:59 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEsgTspLT1jaKbifI4HxlpoF5oFgJluee3aU1mr+htbVSJGoAuR/2Gksu5nEhTIXq8D7sLRjQ==
-X-Received: by 2002:a2e:910e:0:b0:2bc:ed80:46e with SMTP id m14-20020a2e910e000000b002bced80046emr2239801ljg.31.1693412338443;
-        Wed, 30 Aug 2023 09:18:58 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id k11-20020a1709063e0b00b009a1a653770bsm7300061eji.87.2023.08.30.09.18.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 30 Aug 2023 09:18:57 -0700 (PDT)
-Message-ID: <6734c409-89f1-89a1-3096-4054be29faf1@redhat.com>
-Date: Wed, 30 Aug 2023 18:18:56 +0200
+        d=1e100.net; s=20221208; t=1693416517; x=1694021317;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=e7Q6yLBWpq+0cHDNlXkrewgCyTyJH571bDs7gW4UFiI=;
+        b=QGWT29G08WoDhB2pqtn/dvqkh/G3BnB128bSOwx2UR4yexwd2+03uelibqW9B8KfIM
+         qdT4WV+86IECA2Pw1d0hUlW++MKxlZqXRg3HEq5W64bCe+fdvPgFaOOL3g+du+4T0LNx
+         2OgnhYy+IPvTSr7ec7FIKuf2qG44q/LkzwiwJsmDnezaHLCo4pVatzbStNPTHQPF2ahR
+         8CyCOqJt/hN9QTx1leP0Fue+OoSqHA5pSXg/ZNOHMf4bxPLBZ1hBO8Z0mWPg0NDkhZ+e
+         Mn8diOZXjNInaRSPyf68QDtblgozoR+ZUTgs06eN40vDUmXC7W2DLsTrRv2uOsHKaRbU
+         pO1w==
+X-Gm-Message-State: AOJu0YxR/CjojVNyF33y37ZZx7pcq06MwjkG2EYS1AybIbuvDqEJ/H/6
+	l3yAB3FKblkpOB8PSzoiLuNrUj4CH+fQ+fLJevQ=
+X-Google-Smtp-Source: AGHT+IEHENfxnJ7utzrHwU72Eldx3I/wFmAhJBiTlksgsJYsPSGG/SVz2t9KgZl0m9HD7zSrCTdESjAg2qzDi0FWm4g=
+X-Received: by 2002:a2e:8619:0:b0:2b7:31a:9d7c with SMTP id
+ a25-20020a2e8619000000b002b7031a9d7cmr2262356lji.33.1693416516483; Wed, 30
+ Aug 2023 10:28:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH 3/3] pinctrl: amd: Add a quirk for Lenovo Ideapad 5
-To: Mario Limonciello <mario.limonciello@amd.com>, linus.walleij@linaro.org
-Cc: Shyam-sundar.S-k@amd.com, Basavaraj.Natikar@amd.com,
- linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
- regressions@lists.linux.dev, lucapgl2001@gmail.com
-References: <20230829165627.156542-1-mario.limonciello@amd.com>
- <20230829165627.156542-4-mario.limonciello@amd.com>
- <1d891d34-053a-368d-cf47-bcaf35284c79@redhat.com>
- <07353676-bad0-44f8-a15a-4877f1898b6b@amd.com>
- <811225f8-c505-7344-ac18-882472ee0348@redhat.com>
- <d232c11d-901f-4ebc-b408-bed042ed8da9@amd.com>
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <d232c11d-901f-4ebc-b408-bed042ed8da9@amd.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US, nl
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20220727135834.294184-1-brian.gix@intel.com> <20220727135834.294184-3-brian.gix@intel.com>
+ <578e6d7afd676129decafba846a933f5@agner.ch> <CABBYNZJGKfwTQM8WAdUGXueTPnFyus1a65UO5mg2g4PXVuCnpA@mail.gmail.com>
+ <CABBYNZLgG+zTsk-6ceqzLXXyVRnN6p-m8sFq9Ss7mveD0f9BsQ@mail.gmail.com>
+ <CABUQxGxBdAFncJ6YVb7a9gnU-_YZDGFDmpHJTtm5K1tDGEGRDQ@mail.gmail.com>
+ <0de3f0d0d5eb6d83cfc8d90cbb2b1ba1@agner.ch> <fcdf856db8fd8e77558b4d82b843c51e@agner.ch>
+ <24bf25f7-314f-ca73-59e9-df757732f6a9@leemhuis.info> <ac58995a00cb6ad6bb4ce4c74b006a2f@agner.ch>
+ <CABBYNZ+5RMqNVMyYKi+gOVaV+K6k8Z-C37KnfGa=qRUORc3dWg@mail.gmail.com>
+In-Reply-To: <CABBYNZ+5RMqNVMyYKi+gOVaV+K6k8Z-C37KnfGa=qRUORc3dWg@mail.gmail.com>
+From: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
+Date: Wed, 30 Aug 2023 10:28:23 -0700
+Message-ID: <CABBYNZKoXd0+kLdD-FMz3UisrE03fzrt13Zk9-6+tWwuTsKF1g@mail.gmail.com>
+Subject: Re: [PATCH v4 2/4] Bluetooth: Rework le_scan_restart for hci_sync
+To: Stefan Agner <stefan@agner.ch>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>, Brian Gix <brian.gix@gmail.com>, 
+	linux-bluetooth@vger.kernel.org, marcel@holtmann.org, 
+	=?UTF-8?B?SmFuIMSMZXJtw6Fr?= <sairon@sairon.cz>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+Hi Stefan,
 
-On 8/30/23 17:47, Mario Limonciello wrote:
-> On 8/30/2023 10:37, Hans de Goede wrote:
->> Hi,
->>
->> On 8/29/23 23:37, Mario Limonciello wrote:
->>> On 8/29/2023 14:54, Hans de Goede wrote:
->>>> Hi Mario,
->>>>
->>>> On 8/29/23 18:56, Mario Limonciello wrote:
->>>>> Lenovo ideapad 5 doesn't use interrupts for GPIO 0, and so internally
->>>>> debouncing with WinBlue debounce behavior means that the GPIO doesn't
->>>>> clear until a separate GPIO is used (such as touchpad).
->>>>>
->>>>> Prefer to use legacy debouncing to avoid problems.
->>>>>
->>>>> Reported-by: Luca Pigliacampo <lucapgl2001@gmail.com>
->>>>> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=217833
->>>>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
->>>>
->>>> I'm not happy to see yet another DMI quirk solution here.
->>>>
->>>> and I guess you're not happy with this either...
->>>
->>> Yeah I was really hoping the first patch was enough for the issue.
->>>
->>> If we can't come up with anything else we can potentially drop patches 2 and 3. Even patch 1 alone will "significantly" improve the situation.
->>>
->>> The other option I considered is to hardcode WinBlue debounce behavior "off" in Linux.
->>>
->>> I don't think this is a good idea though though because we will likely trade bugs because the debounce values in the AML for systems using _AEI aren't actually used in Windows and might not have good values.
->>
->> What if we turn off the WinBlue debounce behavior for GPIO0 and then just hardcode some sane debounce values for it, overriding whatever the DSDT _AEI entries contain ?
->>
-> 
-> I don't think this is a good idea.
-> 
-> Some vendors GPIO0 doesn't connect to the power button but instead to the EC.  If it's connected to the EC, the EC might instead trigger GPIO0 for lid or power button or whatever they decided for a design specific way.
-> 
-> I'd worry that we're going to end up with inconsistent results if they have their own debouncing put in place in the EC *because* they were relying upon the Winblue debounce behavior.
-> 
-> After all - this was fixed because of https://bugzilla.kernel.org/show_bug.cgi?id=217315
+On Tue, Aug 29, 2023 at 1:42=E2=80=AFPM Luiz Augusto von Dentz
+<luiz.dentz@gmail.com> wrote:
+>
+> Hi Stefan, Brian,
+>
+> On Tue, Aug 29, 2023 at 6:27=E2=80=AFAM Stefan Agner <stefan@agner.ch> wr=
+ote:
+> >
+> > Hi Thorsten,
+> >
+> > No, this hasn't been addressed so far. I am also not sure how we can
+> > help solving that particular issue.
+> >
+> > Besides this, we have other Bluetooth issues which seem to be Kernel
+> > regressions (where downgrading to Linux 5.15 also helps), folks see
+> > "hci0: unexpected event for opcode" on Intel but also other systems. We
+> > haven't bisected that issue yet. But it seems that the Bluetooth stack
+> > is really somewhat unstable in recent releases.
+>
+>
+> I suspect the following change shall make it behave as before, the use
+> of hci_cmd_sync_queue is not equivalent to hci_req_sync:
+>
+> https://gist.github.com/Vudentz/b78f34e3775c8cd2db55b868e5c8ef42
+>
+> That said, I'm considering removing the whole custom handling for
+> HCI_QUIRK_STRICT_DUPLICATE_FILTER and just disable duplicate filtering
+> when this flag is set.
 
-Ok, that is fair.
+Any chance to tests the following changes:
+
+https://patchwork.kernel.org/project/bluetooth/patch/20230829205936.766544-=
+1-luiz.dentz@gmail.com/
+
+> > --
+> > Stefan
+> >
+> >
+> > On 2023-08-29 13:22, Linux regression tracking (Thorsten Leemhuis)
+> > wrote:
+> > > Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
+> > > for once, to make this easily accessible to everyone.
+> > >
+> > > Stefan, was this regression ever addressed? Doesn't look like it from
+> > > here, but maybe I'm missing something.
+> > >
+> > > Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' h=
+at)
+> > > --
+> > > Everything you wanna know about Linux kernel regression tracking:
+> > > https://linux-regtracking.leemhuis.info/about/#tldr
+> > > If I did something stupid, please tell me, as explained on that page.
+> > >
+> > > #regzbot poke
+> > >
+> > > On 30.06.23 12:59, Stefan Agner wrote:
+> > >> Hi Brian,
+> > >>
+> > >> Gentle ping on the issue below.
+> > >>
+> > >> On 2023-06-20 16:41, Stefan Agner wrote:
+> > >>> On 2023-06-16 03:22, Brian Gix wrote:
+> > >>>
+> > >>>> On Thu, Jun 15, 2023 at 11:28=E2=80=AFAM Luiz Augusto von Dentz <l=
+uiz.dentz@gmail.com> wrote:
+> > >>>>
+> > >>>>> +Brian Gix
+> > >>>>>
+> > >>>>> On Thu, Jun 15, 2023 at 10:27=E2=80=AFAM Luiz Augusto von Dentz
+> > >>>>> <luiz.dentz@gmail.com> wrote:
+> > >>>>>>
+> > >>>>>> Hi Stefan,
+> > >>>>>>
+> > >>>>>> On Thu, Jun 15, 2023 at 5:06=E2=80=AFAM Stefan Agner <stefan@agn=
+er.ch> wrote:
+> > >>>>>>>
+> > >>>>>>> Hi Brian, hi all,
+> > >>>>>>>
+> > >>>>>>> We experienced quite some Bluetooth issues after moving from Li=
+nux 5.15
+> > >>>>>>> to 6.1 on Home Assistant OS, especially on Intel NUC type syste=
+ms (which
+> > >>>>>>> is a popular choice in our community, so it might just be that)=
+. When
+> > >>>>>>> continuously scanning/listening for BLE packets, the packet flo=
+w
+> > >>>>>>> suddenly ends. Depending on which and how many devices (possibl=
+y also
+> > >>>>>>> other factors) within minutes or hours.
+> > >>>>>>>
+> > >>>>>>> Jan (in cc) was able to bisect the issue, and was able to pinpo=
+int the
+> > >>>>>>> problem to this change.
+> > >>>>>>>
+> > >>>>>>> Meanwhile I was able to confirm, that reverting this single com=
+mit on
+> > >>>>>>> the latest 6.1.34 seems to resolve the issue.
+> > >>>>>>>
+> > >>>>>>> I've reviewed the change and surrounding code, and one thing I'=
+ve
+> > >>>>>>> noticed is that the if statement to set cp.filter_dup in
+> > >>>>>>> hci_le_set_ext_scan_enable_sync and hci_le_set_scan_enable_sync=
+ are
+> > >>>>>>> different. Not sure if that needs to be the way it is, but my o=
+utside
+> > >>>>>>> gut feeling says hci_le_set_ext_scan_enable_sync should use "if=
+ (val &&
+> > >>>>>>> hci_dev_test_flag(hdev, HCI_MESH))" as well.
+> > >>>>>>>
+> > >>>>>>> However, that did not fix the problem (but maybe it is wrong
+> > >>>>>>> nonetheless?).
+> > >>>>>>>
+> > >>>>>>> Anyone has an idea what could be the problem here?
+> > >>>>>>
+> > >>>>>> Are there any logs of the problem? Does any HCI command fails or
+> > >>>>>> anything so that we can track down what could be wrong?
+> > >>>
+> > >>> No HCI command fails, there is also no issue reported in the kernel=
+ log.
+> > >>> BlueZ just stops receiving BLE packets, at least from certain devic=
+es.
+> > >>>
+> > >>>>>
+> > >>>>> @Brian Gix perhaps you have a better idea what is going wrong her=
+e?
+> > >>>>
+> > >>>> It seems unlikely that this is Mesh related. Mesh does need for fi=
+ltering to
+> > >>>> be FALSE, and Mesh does not use extended scanning in any case.
+> > >>>>
+> > >>>> But this was part of the final rewrite to retire the hci_req mecha=
+nism in
+> > >>>> favor of the hci_sync mechanism. So my best guess off the top of m=
+y head is
+> > >>>> that there was an unintended race condition that worked better tha=
+n the
+> > >>>> synchronous single-threading mechanism?  Filtering (or not) should=
+ not
+> > >>>
+> > >>> After review the code I concluded the same. What is a bit surprisin=
+g to
+> > >>> me is that it is so well reproducible. I guess it is nicer to have =
+a
+> > >>> reproducible one than a hard to reproduce one :)
+> > >>>
+> > >>>> prevent advertising packets from permanently wedging.  Does anyone=
+ have an
+> > >>>> HCI flow log with and without the offending patch?  Ideally they s=
+hould be
+> > >>>> identical...  If they are not then I obviously did something wrong=
+. As this
+> > >>>> was not specifically Mesh related, I may have missed some non-mesh=
+ corner
+> > >>>> cases.
+> > >>>
+> > >>>
+> > >>> I've taken two btmon captures, I created them using:
+> > >>> btmon -i hci0 -w /config/hcidump-hci-req-working.log
+> > >>>
+> > >>> You can find them at:
+> > >>> https://os-builds.home-assistant.io/hcidump-hci-req-working.log
+> > >>> https://os-builds.home-assistant.io/hcidump-hci-sync-non-working.lo=
+g
+> > >>
+> > >> Could you gain any insights from these logs?
+> > >>
+> > >> --
+> > >> Stefan
+> > >>
+> > >>
+> > >>>
+> > >>> This is while running our user space software (Home Assistant with
+> > >>> Bluetooth integration). Besides some BLE devices (e.g. Xioami Mi
+> > >>> Temperature & Humidity sensor) I have a ESP32 running which sends S=
+PAM
+> > >>> advertisements every 100ms (this accelerates the issue). In the
+> > >>> non-working case you'll see that the system doesn't receive any SPA=
+M
+> > >>> advertisements after around 27 seconds. The working log shows that =
+it
+> > >>> continuously receives the same packets (capture 120s).
+> > >>>
+> > >>> Hope this helps.
+> > >>>
+> > >>> --
+> > >>> Stefan
+> > >>>
+> > >>>
+> > >>
+> > >>
+>
+>
+>
+> --
+> Luiz Augusto von Dentz
 
 
->>>> Are we sure there is no other way? Did you check an acpidump
->>>> for the laptop and specifically for its ACPI powerbutton handling?
->>>
->>> I'm not sure there is another way or not, but yes there is an acpidump attached to the bug in case you or anyone else has some ideas.
->>>
->>>>
->>>> I would expect the ACPI powerbutton handler to somehow clear
->>>> the bit, like how patch 1/3 clears it from the GPIO chip's
->>>> own IRQ handler.
->>>>
->>>> I see that drivers/acpi/button.c does:
->>>>
->>>> static u32 acpi_button_event(void *data)
->>>> {
->>>>           acpi_os_execute(OSL_NOTIFY_HANDLER, acpi_button_notify_run, data);
->>>>           return ACPI_INTERRUPT_HANDLED;
->>>> }
->>>>
->>>> So unless I'm misreading something here, there is some AML being
->>>> executed on power-button events. So maybe there is something wrong
->>>> with how Linux interprets that AML ?
->>>>
->>> The relevant ACPI spec section is here:
->>>
->>> https://uefi.org/htmlspecs/ACPI_Spec_6_4_html/04_ACPI_Hardware_Specification/ACPI_Hardware_Specification.html#control-method-power-button
->>>
->>> I did look at the acpidump.  GPE 08 notifies \_SB.PWRB (a PNP0C0C device) with 0x2.  According to the spec this is specifically for letting the system know the power button is waking up the system from G1.
->>
->> Sorry, the acpi_os_execute() function name gave me the impression that this would actually call some ACPI defined function, since normally in acpi speak execute refers to an ACPI table defined method.
->>
->> But that is not the case here it is just a wrapper to deferred-exec the passed in function pointer.
->>
->> To be clear I was hoping that there was an ACPI defined (AML code) function which would maybe clear the GPIO for us and that that was maybe not working due to e.g. some opregion not being implemented by Linux. But no AML code is being executed at all, so this is all a red herring.
->>
->> Regards,
->>
->> Hans
->>
->>
-> 
-> Something we could do is add an extra callback for ACPI button driver to call the GPIO controller IRQ handler.  Worst case the IRQ handler does nothing, best case it fixes this issue.
-> I'm not sure how we'd tie it to something spec compliant.
 
-I was actually thinking the same thing. I think we should discuss going this route
-(ACPI button driver to call the GPIO controller IRQ handler) with Rafael.
-
-We can use the existing acpi_notifier_call_chain() mechanism and:
-
-1. Have the button code call acpi_notifier_call_chain() on the PNP0C0C
-event on button presses.
-
-2. Have the AMD pinctrl driver register a notifier_block with
-register_acpi_notifier() and then check if the source is a PNP0C0C
-device based on the device_class of the acpi_bus_event struct
-passed to the notifier and if it is check if GPIO0 needs
-clearing.
-
-I think this is preferable over the DMI quirk route, because this should
-fix the same issue also on other affected models which we don't know
-about.
-
-Regards,
-
-Hans
-
-
-
-
+--=20
+Luiz Augusto von Dentz
