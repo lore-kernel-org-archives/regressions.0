@@ -1,92 +1,225 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.kmu-office.ch (mail.kmu-office.ch [178.209.48.109])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 109A37482
-	for <regressions@lists.linux.dev>; Wed, 30 Aug 2023 19:16:29 +0000 (UTC)
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1b52875b8d9so23595ad.0
-        for <regressions@lists.linux.dev>; Wed, 30 Aug 2023 12:16:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1693422989; x=1694027789; darn=lists.linux.dev;
-        h=mime-version:user-agent:message-id:in-reply-to:date:references
-         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=neliSw7qoh+YUhiPFUyH0EEqS3rYdeTkzSKzjqUjw8A=;
-        b=b2NBiu5KMAr1ZRmb6iV2dtGbzEDCWKGd+DjkPZv7INjw8UPpWbPwVHX4jSAiX/Mv5I
-         1sZInU0bPz14L9MUQqKTOoQ+SkgkzeRGYvoRYIbapEuNRjjM1USSrc7RoSosxkqiOwkB
-         TBgmSq8Z0pxhduyqNoiSYd1XsK762DptLHp8jnfiR1JhWxnFMdE9zoQbrECdCUz8e+ji
-         gKrZu6HIwBVXzQrW03HP1wht7eyLkSF1mndedjVEyvZ9CzmBzW+qnxAwzDMmXLIrhsTD
-         swW03K78eegqf1UflDbN7yC7/zix37OCawixFLBJSDkc9KtZ3lckxNG9te0/ug0SGO0D
-         laDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693422989; x=1694027789;
-        h=mime-version:user-agent:message-id:in-reply-to:date:references
-         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=neliSw7qoh+YUhiPFUyH0EEqS3rYdeTkzSKzjqUjw8A=;
-        b=lIJm9vRc7rryEJZSWl9mMANOzgcpSOefKP1pX1TL8nJeeaG/HXjo68Je/wLvtf8Zyj
-         9EzitHXqQKW8Qg9Y9/HZxCNiJdsIw41AYdPEfpykH7o6RNgqMKOQpn5nP0nI7VYgt6HQ
-         qkIEUpfk8B+RO7eriPC5C0Ih4yMC7uw1JXf8hb5XM5x777fTKhV1Jf4kHv1yYuiYc7Mg
-         hOktPMYmdcbFJRwlHHhLWHtxWImiCjiAeyFjwhfBm8+IR6kOFtkiFMY1gvWvHltTVlL4
-         HD24r8D7+5H615qtGHuKkSl3rQC9ThdAbXyBMFc4z7K/G2KkmvDYuxrFdGjkBQvTTB5h
-         19Hg==
-X-Gm-Message-State: AOJu0YyP6NRJg8bEzU2WEuI8kTu8B8etJIFitgtNok3LCBkT1BOavW1P
-	jivv5JXyhx8vLbmrWZFFbZ/IxA==
-X-Google-Smtp-Source: AGHT+IEtPBJyW+fxDSwfhZLVKMbrw+fx+hC8DUP+9B7LnqUilulxgXIOq0VIs7hNfhDbzxT0E54wrg==
-X-Received: by 2002:a17:902:e551:b0:1c1:efe5:cce5 with SMTP id n17-20020a170902e55100b001c1efe5cce5mr28280plf.3.1693422989246;
-        Wed, 30 Aug 2023 12:16:29 -0700 (PDT)
-Received: from bsegall-glaptop.localhost (c-73-158-249-138.hsd1.ca.comcast.net. [73.158.249.138])
-        by smtp.gmail.com with ESMTPSA id f4-20020aa782c4000000b0068a0922b1f0sm10343368pfn.137.2023.08.30.12.16.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Aug 2023 12:16:28 -0700 (PDT)
-From: Benjamin Segall <bsegall@google.com>
-To: Bagas Sanjaya <bagasdotme@gmail.com>
-Cc: Hao Jia <jiahao.os@bytedance.com>,  Vincent Guittot
- <vincent.guittot@linaro.org>,  "Peter Zijlstra (Intel)"
- <peterz@infradead.org>,  Igor Raits <igor.raits@gmail.com>,  Linux Kernel
- Mailing List <linux-kernel@vger.kernel.org>,  Linux Regressions
- <regressions@lists.linux.dev>,  Linux Stable <stable@vger.kernel.org>
-Subject: Re: Fwd: WARNING: CPU: 13 PID: 3837105 at kernel/sched/sched.h:1561
- __cfsb_csd_unthrottle+0x149/0x160
-References: <a5dd536d-041a-2ce9-f4b7-64d8d85c86dc@gmail.com>
-Date: Wed, 30 Aug 2023 12:16:24 -0700
-In-Reply-To: <a5dd536d-041a-2ce9-f4b7-64d8d85c86dc@gmail.com> (Bagas Sanjaya's
-	message of "Wed, 30 Aug 2023 07:37:49 +0700")
-Message-ID: <xm26cyz4ibnb.fsf@google.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF8517476
+	for <regressions@lists.linux.dev>; Wed, 30 Aug 2023 20:31:50 +0000 (UTC)
+Received: from webmail.kmu-office.ch (unknown [IPv6:2a02:418:6a02::a3])
+	by mail.kmu-office.ch (Postfix) with ESMTPSA id D481A5C003C;
+	Wed, 30 Aug 2023 22:31:41 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agner.ch; s=dkim;
+	t=1693427501;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=YBQvgCS7Rw+t1TnKTfp40orXqv2UfTo3FcgfrM119Fc=;
+	b=uP9sCeYeXcGOnKDYJcujWBp8fE06Qxh19GAH/koZCKIr/kyCBzcjkHRTRwtiTC+u7C+9tM
+	s2wZVa/Ptd/Clslfo8RXRJKfLm01f5l2Qx7kf0cZHJHIYMISeKBrzgiF6GPinmMkAKptAJ
+	jXZ7ScYp01eYJ0ubB36STr1u21NQ5Tw=
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+Date: Wed, 30 Aug 2023 22:31:41 +0200
+From: Stefan Agner <stefan@agner.ch>
+To: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>, Brian Gix
+ <brian.gix@gmail.com>, linux-bluetooth@vger.kernel.org, marcel@holtmann.org,
+ =?UTF-8?Q?Jan_=C4=8Cerm=C3=A1k?= <sairon@sairon.cz>
+Subject: Re: [PATCH v4 2/4] Bluetooth: Rework le_scan_restart for hci_sync
+In-Reply-To: <CABBYNZKoXd0+kLdD-FMz3UisrE03fzrt13Zk9-6+tWwuTsKF1g@mail.gmail.com>
+References: <20220727135834.294184-1-brian.gix@intel.com>
+ <20220727135834.294184-3-brian.gix@intel.com>
+ <578e6d7afd676129decafba846a933f5@agner.ch>
+ <CABBYNZJGKfwTQM8WAdUGXueTPnFyus1a65UO5mg2g4PXVuCnpA@mail.gmail.com>
+ <CABBYNZLgG+zTsk-6ceqzLXXyVRnN6p-m8sFq9Ss7mveD0f9BsQ@mail.gmail.com>
+ <CABUQxGxBdAFncJ6YVb7a9gnU-_YZDGFDmpHJTtm5K1tDGEGRDQ@mail.gmail.com>
+ <0de3f0d0d5eb6d83cfc8d90cbb2b1ba1@agner.ch>
+ <fcdf856db8fd8e77558b4d82b843c51e@agner.ch>
+ <24bf25f7-314f-ca73-59e9-df757732f6a9@leemhuis.info>
+ <ac58995a00cb6ad6bb4ce4c74b006a2f@agner.ch>
+ <CABBYNZ+5RMqNVMyYKi+gOVaV+K6k8Z-C37KnfGa=qRUORc3dWg@mail.gmail.com>
+ <CABBYNZKoXd0+kLdD-FMz3UisrE03fzrt13Zk9-6+tWwuTsKF1g@mail.gmail.com>
+Message-ID: <b0b672069ee6a9e43fed1a07406c6dd3@agner.ch>
+X-Sender: stefan@agner.ch
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Bagas Sanjaya <bagasdotme@gmail.com> writes:
+Hi Luiz,
 
-> Hi,
->
-> I notice a regression report on Bugzilla [1]. Quoting from it:
->
->> Hello, we recently got a few kernel crashes with following backtrace. Happened on 6.4.12 (and 6.4.11 I think) but did not happen (I think) on 6.4.4.
->> 
->> [293790.928007] ------------[ cut here ]------------
->> [293790.929905] rq->clock_update_flags & RQCF_ACT_SKIP
->> [293790.929919] WARNING: CPU: 13 PID: 3837105 at kernel/sched/sched.h:1561 __cfsb_csd_unthrottle+0x149/0x160
->> [293790.933694] Modules linked in: [...]
->> [293790.946262] Unloaded tainted modules: edac_mce_amd(E):1
->> [293790.956625] CPU: 13 PID: 3837105 Comm: QueryWorker-30f Tainted: G        W   E      6.4.12-1.gdc.el9.x86_64 #1
->> [293790.957963] Hardware name: RDO OpenStack Compute/RHEL, BIOS edk2-20230301gitf80f052277c8-2.el9 03/01/2023
->> [293790.959681] RIP: 0010:__cfsb_csd_unthrottle+0x149/0x160
->
-> See Bugzilla for the full thread.
->
-> Anyway, I'm adding this regression to regzbot:
->
-> #regzbot introduced: ebb83d84e49b54 https://bugzilla.kernel.org/show_bug.cgi?id=217843
->
-> Thanks.
->
-> [1]: https://bugzilla.kernel.org/show_bug.cgi?id=217843
+On 2023-08-30 19:28, Luiz Augusto von Dentz wrote:
+> Hi Stefan,
+> 
+> On Tue, Aug 29, 2023 at 1:42 PM Luiz Augusto von Dentz
+> <luiz.dentz@gmail.com> wrote:
+>>
+>> Hi Stefan, Brian,
+>>
+>> On Tue, Aug 29, 2023 at 6:27 AM Stefan Agner <stefan@agner.ch> wrote:
+>> >
+>> > Hi Thorsten,
+>> >
+>> > No, this hasn't been addressed so far. I am also not sure how we can
+>> > help solving that particular issue.
+>> >
+>> > Besides this, we have other Bluetooth issues which seem to be Kernel
+>> > regressions (where downgrading to Linux 5.15 also helps), folks see
+>> > "hci0: unexpected event for opcode" on Intel but also other systems. We
+>> > haven't bisected that issue yet. But it seems that the Bluetooth stack
+>> > is really somewhat unstable in recent releases.
+>>
+>>
+>> I suspect the following change shall make it behave as before, the use
+>> of hci_cmd_sync_queue is not equivalent to hci_req_sync:
+>>
+>> https://gist.github.com/Vudentz/b78f34e3775c8cd2db55b868e5c8ef42
+>>
+>> That said, I'm considering removing the whole custom handling for
+>> HCI_QUIRK_STRICT_DUPLICATE_FILTER and just disable duplicate filtering
+>> when this flag is set.
+> 
+> Any chance to tests the following changes:
+> 
+> https://patchwork.kernel.org/project/bluetooth/patch/20230829205936.766544-1-luiz.dentz@gmail.com/
 
-The code in question is literally "rq_lock; update_rq_clock;
-rq_clock_start_loop_update (the warning)", which suggests to me that
-RQCF_ACT_SKIP is somehow leaking from somewhere else?
+I've tested this with my SPAM test device, and I can confirm that this
+indeed fixes the problem we are seeing: The BLE advertisements continue
+to come in just fine with the patch applied!
+
+Thanks for the fix!
+
+--
+Stefan
+
+> 
+>> > --
+>> > Stefan
+>> >
+>> >
+>> > On 2023-08-29 13:22, Linux regression tracking (Thorsten Leemhuis)
+>> > wrote:
+>> > > Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
+>> > > for once, to make this easily accessible to everyone.
+>> > >
+>> > > Stefan, was this regression ever addressed? Doesn't look like it from
+>> > > here, but maybe I'm missing something.
+>> > >
+>> > > Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+>> > > --
+>> > > Everything you wanna know about Linux kernel regression tracking:
+>> > > https://linux-regtracking.leemhuis.info/about/#tldr
+>> > > If I did something stupid, please tell me, as explained on that page.
+>> > >
+>> > > #regzbot poke
+>> > >
+>> > > On 30.06.23 12:59, Stefan Agner wrote:
+>> > >> Hi Brian,
+>> > >>
+>> > >> Gentle ping on the issue below.
+>> > >>
+>> > >> On 2023-06-20 16:41, Stefan Agner wrote:
+>> > >>> On 2023-06-16 03:22, Brian Gix wrote:
+>> > >>>
+>> > >>>> On Thu, Jun 15, 2023 at 11:28 AM Luiz Augusto von Dentz <luiz.dentz@gmail.com> wrote:
+>> > >>>>
+>> > >>>>> +Brian Gix
+>> > >>>>>
+>> > >>>>> On Thu, Jun 15, 2023 at 10:27 AM Luiz Augusto von Dentz
+>> > >>>>> <luiz.dentz@gmail.com> wrote:
+>> > >>>>>>
+>> > >>>>>> Hi Stefan,
+>> > >>>>>>
+>> > >>>>>> On Thu, Jun 15, 2023 at 5:06 AM Stefan Agner <stefan@agner.ch> wrote:
+>> > >>>>>>>
+>> > >>>>>>> Hi Brian, hi all,
+>> > >>>>>>>
+>> > >>>>>>> We experienced quite some Bluetooth issues after moving from Linux 5.15
+>> > >>>>>>> to 6.1 on Home Assistant OS, especially on Intel NUC type systems (which
+>> > >>>>>>> is a popular choice in our community, so it might just be that). When
+>> > >>>>>>> continuously scanning/listening for BLE packets, the packet flow
+>> > >>>>>>> suddenly ends. Depending on which and how many devices (possibly also
+>> > >>>>>>> other factors) within minutes or hours.
+>> > >>>>>>>
+>> > >>>>>>> Jan (in cc) was able to bisect the issue, and was able to pinpoint the
+>> > >>>>>>> problem to this change.
+>> > >>>>>>>
+>> > >>>>>>> Meanwhile I was able to confirm, that reverting this single commit on
+>> > >>>>>>> the latest 6.1.34 seems to resolve the issue.
+>> > >>>>>>>
+>> > >>>>>>> I've reviewed the change and surrounding code, and one thing I've
+>> > >>>>>>> noticed is that the if statement to set cp.filter_dup in
+>> > >>>>>>> hci_le_set_ext_scan_enable_sync and hci_le_set_scan_enable_sync are
+>> > >>>>>>> different. Not sure if that needs to be the way it is, but my outside
+>> > >>>>>>> gut feeling says hci_le_set_ext_scan_enable_sync should use "if (val &&
+>> > >>>>>>> hci_dev_test_flag(hdev, HCI_MESH))" as well.
+>> > >>>>>>>
+>> > >>>>>>> However, that did not fix the problem (but maybe it is wrong
+>> > >>>>>>> nonetheless?).
+>> > >>>>>>>
+>> > >>>>>>> Anyone has an idea what could be the problem here?
+>> > >>>>>>
+>> > >>>>>> Are there any logs of the problem? Does any HCI command fails or
+>> > >>>>>> anything so that we can track down what could be wrong?
+>> > >>>
+>> > >>> No HCI command fails, there is also no issue reported in the kernel log.
+>> > >>> BlueZ just stops receiving BLE packets, at least from certain devices.
+>> > >>>
+>> > >>>>>
+>> > >>>>> @Brian Gix perhaps you have a better idea what is going wrong here?
+>> > >>>>
+>> > >>>> It seems unlikely that this is Mesh related. Mesh does need for filtering to
+>> > >>>> be FALSE, and Mesh does not use extended scanning in any case.
+>> > >>>>
+>> > >>>> But this was part of the final rewrite to retire the hci_req mechanism in
+>> > >>>> favor of the hci_sync mechanism. So my best guess off the top of my head is
+>> > >>>> that there was an unintended race condition that worked better than the
+>> > >>>> synchronous single-threading mechanism?  Filtering (or not) should not
+>> > >>>
+>> > >>> After review the code I concluded the same. What is a bit surprising to
+>> > >>> me is that it is so well reproducible. I guess it is nicer to have a
+>> > >>> reproducible one than a hard to reproduce one :)
+>> > >>>
+>> > >>>> prevent advertising packets from permanently wedging.  Does anyone have an
+>> > >>>> HCI flow log with and without the offending patch?  Ideally they should be
+>> > >>>> identical...  If they are not then I obviously did something wrong. As this
+>> > >>>> was not specifically Mesh related, I may have missed some non-mesh corner
+>> > >>>> cases.
+>> > >>>
+>> > >>>
+>> > >>> I've taken two btmon captures, I created them using:
+>> > >>> btmon -i hci0 -w /config/hcidump-hci-req-working.log
+>> > >>>
+>> > >>> You can find them at:
+>> > >>> https://os-builds.home-assistant.io/hcidump-hci-req-working.log
+>> > >>> https://os-builds.home-assistant.io/hcidump-hci-sync-non-working.log
+>> > >>
+>> > >> Could you gain any insights from these logs?
+>> > >>
+>> > >> --
+>> > >> Stefan
+>> > >>
+>> > >>
+>> > >>>
+>> > >>> This is while running our user space software (Home Assistant with
+>> > >>> Bluetooth integration). Besides some BLE devices (e.g. Xioami Mi
+>> > >>> Temperature & Humidity sensor) I have a ESP32 running which sends SPAM
+>> > >>> advertisements every 100ms (this accelerates the issue). In the
+>> > >>> non-working case you'll see that the system doesn't receive any SPAM
+>> > >>> advertisements after around 27 seconds. The working log shows that it
+>> > >>> continuously receives the same packets (capture 120s).
+>> > >>>
+>> > >>> Hope this helps.
+>> > >>>
+>> > >>> --
+>> > >>> Stefan
+>> > >>>
+>> > >>>
+>> > >>
+>> > >>
+>>
+>>
+>>
+>> --
+>> Luiz Augusto von Dentz
