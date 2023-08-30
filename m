@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B04F21C08
-	for <regressions@lists.linux.dev>; Wed, 30 Aug 2023 10:07:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 342DD3FE1
+	for <regressions@lists.linux.dev>; Wed, 30 Aug 2023 10:38:13 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qbI6u-00059M-41; Wed, 30 Aug 2023 12:07:40 +0200
-Message-ID: <e9644f38-57be-5d26-0c08-08a74eee7cb1@leemhuis.info>
-Date: Wed, 30 Aug 2023 12:07:39 +0200
+	id 1qbIaK-000308-6C; Wed, 30 Aug 2023 12:38:04 +0200
+Message-ID: <2a0fd8ef-8b43-b769-b4aa-c27405ead5e7@leemhuis.info>
+Date: Wed, 30 Aug 2023 12:38:03 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -15,40 +15,95 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Fwd: Unexplainable packet drop starting at v6.4
+Subject: Re: bcm2835-rng: Performance regression since 96cb9d055445
 Content-Language: en-US, de-DE
-To: Jesse Brandeburg <jesse.brandeburg@intel.com>,
- Tony Nguyen <anthony.l.nguyen@intel.com>,
- Tirthendu Sarkar <tirthendu.sarkar@intel.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>,
- Linux Networking <netdev@vger.kernel.org>,
- Linux Intel Ethernet Drivers <intel-wired-lan@lists.osuosl.org>,
- Bagas Sanjaya <bagasdotme@gmail.com>
-References: <e79edb0f-de89-5041-186f-987d30e0187c@gmail.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <e79edb0f-de89-5041-186f-987d30e0187c@gmail.com>
+To: Stefan Wahren <wahrenst@gmx.net>, "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>,
+ Florian Fainelli <florian.fainelli@broadcom.com>,
+ Scott Branden <sbranden@broadcom.com>,
+ bcm-kernel-feedback-list@broadcom.com, linux-crypto@vger.kernel.org,
+ Linux ARM <linux-arm-kernel@lists.infradead.org>,
+ Andrei Coardos <aboutphysycs@gmail.com>, Martin Kaiser <martin@kaiser.cx>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ Phil Elwell <phil@raspberrypi.com>
+References: <bc97ece5-44a3-4c4e-77da-2db3eb66b128@gmx.net>
+ <ZOiP2H_6pfhKN3fj@zx2c4.com> <20e3c73c-7736-b010-516a-6618c88d8dad@gmx.net>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <20e3c73c-7736-b010-516a-6618c88d8dad@gmx.net>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1693390064;6dc12fb9;
-X-HE-SMSGID: 1qbI6u-00059M-41
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1693391894;d7aab92d;
+X-HE-SMSGID: 1qbIaK-000308-6C
 
-[replying with a heavily adjust set of recipients]
+/me gets the impression he has to chime in here
 
-On 18.07.23 02:51, Bagas Sanjaya wrote:
-> 
-> I notice a regression report on Bugzilla [1]. Quoting from it:
+On 25.08.23 14:14, Stefan Wahren wrote:
+> Am 25.08.23 um 13:26 schrieb Jason A. Donenfeld:
+>> On Fri, Aug 25, 2023 at 01:14:55PM +0200, Stefan Wahren wrote:
+>
+>>> i didn't find the time to fix the performance regression in bcm2835-rng
+>>> which affects Raspberry Pi 0 - 3, so report it at least. AFAIK the first
+>>> report about this issue was here [1] and identified the offending
+>>> commit:
+>>>
+>>> 96cb9d055445 ("hwrng: bcm2835 - use hwrng_msleep() instead of
+>>>    cpu_relax()")
+>>>
+>>> #regzbot introduced: 96cb9d055445
+>>>
+>>> I was able to reproduce this issue with a Raspberry Pi 3 B+ on Linux
+>>> 6.5-rc6 (arm64/defconfig).
+>>>
+>>> Before:
+>>> time sudo dd if=/dev/hwrng of=/dev/urandom count=1 bs=4096 status=none
+>>>
+>>> real    3m29,002s
+>>> user    0m0,018s
+>>> sys    0m0,054s
+>> That's not surprising. But also, does it matter? That script has
+>> *always* been wrong. Writing to /dev/urandom like that has *never*
+>> ensured that those bytes are taken into account immediately after. It's
+>> just not how that interface works. So any assumptions based on that are
+>> bogus, and that line effectively does nothing.
+>>
+>> Fortunately, however, the kernel itself incorporates hwrng output into
+>> the rng pool, so you don't need to think about doing it yourself.
+>>
+>> So go ahead and remove that line from your script.
+>
+> Thanks for your explanation. Unfortunately this isn't my script.
 
-Tirthendu Sarkar, turned out this regressions reported in
-https://bugzilla.kernel.org/show_bug.cgi?id=217678 is caused by your
-change e9031f2da1a ("i40e: introduce next_to_process to i40e_ring")
-[v6.4-rc1] that Tony applied in March.
+And I assume it's in the standard install of the RpiOS or similarly
+widespread?
 
-Could you (or someone else) please take a look? The bugzilla ticket has
-details and a comment from a second person that seems to be affected by
-the same problem. And 6.5 seems to still show the problem.
+> I'm
+> just a former BCM2835 maintainer and interested that more user stick to
+> the mainline kernel instead of the vendor ones. I will try to report the
+> script owner.
+
+thx
+
+>> Now as far as the "regression" goes, we've made an already broken
+>> userspace script take 3 minutes longer than usual, but it still does
+>> eventually complete, so it's not making boot impossible or something.
+>> How this relates to the "don't break userspace" rule might be a matter
+>> of opinion.
+
+Yup, but I'd say it bad enough to qualify as regression. If it would be
+something like 10 seconds it might be something different, but 3 minutes
+will look like a hang to many people, and I'm pretty sure that's
+something Linus doesn't want to see. But let's not involve him for now
+and first try to solve this differently.
+
+>> If you think it does, maybe send a patch to Herbert reducing
+>> that sleep from 1000 to 100 and stating why with my background above,
+>> and see if he agrees it's worth fixing.
+
+Stefan, did you try to see how long it would take when the sleep time is
+reduced? I guess that might be our best chance to solve this, as
+reverting the culprit afaics would lead to regressions for others.
+
+/me wonders if the sleep time could even be reduced futher that 100
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
@@ -56,65 +111,15 @@ Everything you wanna know about Linux kernel regression tracking:
 https://linux-regtracking.leemhuis.info/about/#tldr
 If I did something stupid, please tell me, as explained on that page.
 
->> Hi,
->>
->> After I updated to 6.4 through Archlinux kernel update, suddenly I noticed random packet losses on my routers like nodes. I have these networking relevant config on my nodes
->>
->> 1. Using archlinux
->> 2. Network config through systemd-networkd
->> 3. Using bird2 for BGP routing, but not relevant to this bug.
->> 4. Using nftables for traffic control, but seems not relevant to this bug. 
->> 5. Not using fail2ban like dymanic filtering tools, at least at L3/L4 level
->>
->> After I ruled out systemd-networkd, nftables related issues. I tracked down issues to kernel.
->>
->> Here's the tcpdump I'm seeing on one side of my node ""
->>
->> ```
->> sudo tcpdump -i fios_wan port 38851
->> tcpdump: verbose output suppressed, use -v[v]... for full protocol decode
->> listening on fios_wan, link-type EN10MB (Ethernet), snapshot length 262144 bytes
->> 10:33:06.073236 IP [BOS1_NODE].38851 > [REDACTED_PUBLIC_IPv4_1].38851: UDP, length 148
->> 10:33:11.406607 IP [BOS1_NODE].38851 > [REDACTED_PUBLIC_IPv4_1].38851: UDP, length 148
->> 10:33:16.739969 IP [BOS1_NODE].38851 > [REDACTED_PUBLIC_IPv4_1].38851: UDP, length 148
->> 10:33:21.859856 IP [BOS1_NODE].38851 > [REDACTED_PUBLIC_IPv4_1].38851: UDP, length 148
->> 10:33:27.193176 IP [BOS1_NODE].38851 > [REDACTED_PUBLIC_IPv4_1].38851: UDP, length 148
->> 5 packets captured
->> 5 packets received by filter
->> 0 packets dropped by kernel
->> ```
->>
->> But on the other side "[REDACTED_PUBLIC_IPv4_1]", tcpdump is replying packets in this wireguard stream. So packet is lost somewhere in the link.
->>
->> From the otherside, I can do "mtr" to "[BOS1_NODE]"'s public IP and found the moment the link got lost is right at "[BOS1_NODE]", that means "[BOS1_NODE]"'s networking stack completely drop the inbound packets from specific ip addresses.
->>
->> Some more digging
->>
->> 1. This situation began after booting in different delays. Sometimes can trigger after 30 seconds after booting, and sometimes will be after 18 hours or more.
->> 2. It can envolve into worse case that when I do "ip neigh show", the ipv4 ARP table and ipv6 neighbor discovery start to appear as "invalid", meaning the internet is completely loss.
->> 3. When this happened to wan facing interface, it seems OK with lan facing interfaces. WAN interface was using Intel X710-T4L using i40e and lan side was using virtio
->> 4. I tried to bisect in between 6.3 and 6.4, and the first bad commit it reports was "a3efabee5878b8d7b1863debb78cb7129d07a346". But this is not relevant to networking at all, maybe it's the wrong commit to look at. At the meantime, because I haven't found a reproducible way of 100% trigger the issue, it may be the case during bisect some "good" commits are actually bad. 
->> 5. I also tried to look at "dmesg", nothing interesting pop up. But I'll make it available upon request.
->>
->> This is my first bug reports. Sorry for any confusion it may lead to and thanks for reading.
+> Or, if removing that line from
+>> your scripts is good enough for you, that's also fine by me.
+> Now i agree that the provided example isn't the proper way to handle
+> /dev/urandom. Unfortunately most of the Raspberry Pi users doesn't care
+> about such details. In their eyes the mainline kernel is "broken" and
+> this is one argument to go back to the vendor ones.
 > 
-> See Bugzilla for the full thread.
-> 
-> Thorsten: The reporter had a bad bisect (some bad commits were marked as good
-> instead), hence SoB chain for culprit (unrelated) ipvu commit is in To:
-> list. I also asked the reporter (also in To:) to provide dmesg and request
-> rerunning bisection, but he doesn't currently have a reliable reproducer.
-> Is it the best I can do?
-> 
-> Anyway, I'm adding this regression to be tracked in regzbot:
-> 
-> #regzbot introduced: a3efabee5878b8 https://bugzilla.kernel.org/show_bug.cgi?id=217678
-> #regzbot title: packet drop on Intel X710-T4L due to ipvu boot fix
-> 
-> Thanks.
-> 
-> [1]: https://bugzilla.kernel.org/show_bug.cgi?id=217678
-> 
+> Beside of the /dev/urandom abuse, i'm not convinced that sleeping for 1
+> sec is a good choice. This HRNG IP is used in embedded devices (e.g.
+> Router) and mostly without any other good source of entropy. So i think
+> it's worth to define a reasonable value.
 
-#regzbot introduced: e9031f2da1a
-#regzbot poke
