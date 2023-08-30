@@ -1,136 +1,130 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FC34538F
-	for <regressions@lists.linux.dev>; Wed, 30 Aug 2023 11:37:47 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63FA3C433C8;
-	Wed, 30 Aug 2023 11:37:46 +0000 (UTC)
-Authentication-Results: smtp.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="mLRxTAV5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
-	t=1693395463;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=L27v8IkqK5qUzSwHUP0sLRyipVjz6POq64H7/1njluk=;
-	b=mLRxTAV5OdX2zQUA3PIfWPhnnCbrmQTaBUo6kZdID659hMyt2luMLN7fpuMiZAVF7IPNYY
-	J2ABzO57hZYRG6NKivnlJh5+MfDgHUPJvrGg9kzyxaw4mizvOiUte0+KNOYe1+M99Ru44n
-	QrK+o4+DjVvWyoGwH4C9iAgXEllqnN0=
-Received: 
-	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id e0905308 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-	Wed, 30 Aug 2023 11:37:42 +0000 (UTC)
-Date: Wed, 30 Aug 2023 13:37:39 +0200
-From: "Jason A. Donenfeld" <Jason@zx2c4.com>
-To: Phil Elwell <phil@raspberrypi.com>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
-	Stefan Wahren <wahrenst@gmx.net>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Scott Branden <sbranden@broadcom.com>,
-	bcm-kernel-feedback-list@broadcom.com, linux-crypto@vger.kernel.org,
-	Linux ARM <linux-arm-kernel@lists.infradead.org>,
-	Andrei Coardos <aboutphysycs@gmail.com>,
-	Martin Kaiser <martin@kaiser.cx>,
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: bcm2835-rng: Performance regression since 96cb9d055445
-Message-ID: <ZO8qAyNSKVkHWfjS@zx2c4.com>
-References: <bc97ece5-44a3-4c4e-77da-2db3eb66b128@gmx.net>
- <ZOiP2H_6pfhKN3fj@zx2c4.com>
- <20e3c73c-7736-b010-516a-6618c88d8dad@gmx.net>
- <2a0fd8ef-8b43-b769-b4aa-c27405ead5e7@leemhuis.info>
- <CAMEGJJ1c8=gxK=2C3pg7d0dFonNQqiBRM2PGRDBoQ_6=QP8uMg@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A20846BD
+	for <regressions@lists.linux.dev>; Wed, 30 Aug 2023 11:40:05 +0000 (UTC)
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4013454fa93so48471205e9.0
+        for <regressions@lists.linux.dev>; Wed, 30 Aug 2023 04:40:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1693395603; x=1694000403; darn=lists.linux.dev;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=IXiOAz/5YldoVo6YMY0MxhgKtPGOmCvkDjVmYV3HYIQ=;
+        b=LfSmRFPTSGu8WTX1IiFCViWcYRlky3+5tz5gN+liBJKhSIby0yxaP1WvzzxEFaDwFy
+         NUyHc/vpefQdVYpnL9wVC6SefHONhCujRL4rFazF6kVEE81dvLyOfUcQ/2HsVtWgQlQ9
+         sjUdI1svs26HuMgS812reMGHf2zjSBb97Wf+21RWCOYelfVLxzFIgQ6deABv+zcZAdHM
+         1DNPy6bqQKi7AezNfb38SqwIQLTI3uzLTT/tbbEqkOXbMQzjvgjMfceWUxItc8OuyTRD
+         q98j001a65B6XQVyNi4C5NUh3siRhkEQtvEquaLUgzeiSyQMy/yEPAZ8P41mSHKdN5wg
+         J4Mw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1693395603; x=1694000403;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=IXiOAz/5YldoVo6YMY0MxhgKtPGOmCvkDjVmYV3HYIQ=;
+        b=jRTs7jkNYE/KCZXounCx3LAZ26k6O9IM2saDqKcm4aiDungMB9tYYXQK+cxQI9aZNw
+         ZHkCIvvfphUdUVy/ABDNo70Ei082nvTxqg+2/zOHmR9EkOCcuT7RF1ETd7A8Crukr8xA
+         OW8qD5zP8n5QvopAArGtJm7C/HPVAwgX37EHSgQUpiCX8FhymyolbIe/shKtf2RMsZY3
+         XZ2yA9y5QuYOVntBgSQqu5quQQaykoatFBlD4+pgXUcyAEBDGG8Qd5gAaMhIHx6fUzjZ
+         S9f9+tQnOH9HRz3yjFfE5mZY7bh+TGq6LNtDIHswLIzhAOMSns+WSIFZP6VxvpQKeq4l
+         f8Cw==
+X-Gm-Message-State: AOJu0Yy/7VOkywjUFhMzH81a26am1iJIqSusQy9KLjWqO1FI3GWI2pXl
+	va1+Obt1D+qPKzhouaoXf88=
+X-Google-Smtp-Source: AGHT+IHkuPMEpQJgVFAWz/Fgk+XKScfrDr/wI7OXLhwOUAYdh7hAgUFiEqgxB7A6vvAQv0JSJMfCog==
+X-Received: by 2002:a7b:cbc6:0:b0:3fe:18be:76f8 with SMTP id n6-20020a7bcbc6000000b003fe18be76f8mr1744032wmi.38.1693395603237;
+        Wed, 30 Aug 2023 04:40:03 -0700 (PDT)
+Received: from debian ([167.98.27.226])
+        by smtp.gmail.com with ESMTPSA id f7-20020a1c6a07000000b003fe407ca05bsm2023455wmc.37.2023.08.30.04.40.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Aug 2023 04:40:02 -0700 (PDT)
+Date: Wed, 30 Aug 2023 12:40:01 +0100
+From: "Sudip Mukherjee (Codethink)" <sudipm.mukherjee@gmail.com>
+To: Guo Ren <guoren@linux.alibaba.com>, Oleg Nesterov <oleg@redhat.com>,
+	Guo Ren <guoren@kernel.org>
+Cc: linux-csky@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	regressions@lists.linux.dev
+Subject: mainline build failure due to c8171a86b274 ("csky: Fixup
+ -Wmissing-prototypes warning")
+Message-ID: <ZO8qkS0Skg9L4xzr@debian>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMEGJJ1c8=gxK=2C3pg7d0dFonNQqiBRM2PGRDBoQ_6=QP8uMg@mail.gmail.com>
 
-On Wed, Aug 30, 2023 at 11:44:31AM +0100, Phil Elwell wrote:
-> Hi all,
-> 
-> On Wed, 30 Aug 2023 at 11:38, Thorsten Leemhuis
-> <regressions@leemhuis.info> wrote:
-> >
-> > /me gets the impression he has to chime in here
-> >
-> > On 25.08.23 14:14, Stefan Wahren wrote:
-> > > Am 25.08.23 um 13:26 schrieb Jason A. Donenfeld:
-> > >> On Fri, Aug 25, 2023 at 01:14:55PM +0200, Stefan Wahren wrote:
-> > >
-> > >>> i didn't find the time to fix the performance regression in bcm2835-rng
-> > >>> which affects Raspberry Pi 0 - 3, so report it at least. AFAIK the first
-> > >>> report about this issue was here [1] and identified the offending
-> > >>> commit:
-> > >>>
-> > >>> 96cb9d055445 ("hwrng: bcm2835 - use hwrng_msleep() instead of
-> > >>>    cpu_relax()")
-> > >>>
-> > >>> #regzbot introduced: 96cb9d055445
-> > >>>
-> > >>> I was able to reproduce this issue with a Raspberry Pi 3 B+ on Linux
-> > >>> 6.5-rc6 (arm64/defconfig).
-> > >>>
-> > >>> Before:
-> > >>> time sudo dd if=/dev/hwrng of=/dev/urandom count=1 bs=4096 status=none
-> > >>>
-> > >>> real    3m29,002s
-> > >>> user    0m0,018s
-> > >>> sys    0m0,054s
-> > >> That's not surprising. But also, does it matter? That script has
-> > >> *always* been wrong. Writing to /dev/urandom like that has *never*
-> > >> ensured that those bytes are taken into account immediately after. It's
-> > >> just not how that interface works. So any assumptions based on that are
-> > >> bogus, and that line effectively does nothing.
-> > >>
-> > >> Fortunately, however, the kernel itself incorporates hwrng output into
-> > >> the rng pool, so you don't need to think about doing it yourself.
-> > >>
-> > >> So go ahead and remove that line from your script.
-> > >
-> > > Thanks for your explanation. Unfortunately this isn't my script.
-> >
-> > And I assume it's in the standard install of the RpiOS or similarly
-> > widespread?
-> >
-> > > I'm
-> > > just a former BCM2835 maintainer and interested that more user stick to
-> > > the mainline kernel instead of the vendor ones. I will try to report the
-> > > script owner.
-> >
-> > thx
-> >
-> > >> Now as far as the "regression" goes, we've made an already broken
-> > >> userspace script take 3 minutes longer than usual, but it still does
-> > >> eventually complete, so it's not making boot impossible or something.
-> > >> How this relates to the "don't break userspace" rule might be a matter
-> > >> of opinion.
-> >
-> > Yup, but I'd say it bad enough to qualify as regression. If it would be
-> > something like 10 seconds it might be something different, but 3 minutes
-> > will look like a hang to many people, and I'm pretty sure that's
-> > something Linus doesn't want to see. But let's not involve him for now
-> > and first try to solve this differently.
-> >
-> > >> If you think it does, maybe send a patch to Herbert reducing
-> > >> that sleep from 1000 to 100 and stating why with my background above,
-> > >> and see if he agrees it's worth fixing.
-> >
-> > Stefan, did you try to see how long it would take when the sleep time is
-> > reduced? I guess that might be our best chance to solve this, as
-> > reverting the culprit afaics would lead to regressions for others.
-> >
-> > /me wonders if the sleep time could even be reduced futher that 100
-> 
-> FYI, this is how I tackled it downstream:
-> 
-> https://github.com/raspberrypi/linux/commit/6a825ed68f75bd768e31110ba825b75c5c09cf2d
-> 
-> I can send a patch if it looks appropriate for upstream use.
-> 
-> Phil
+Hi All,
 
-Upstream discussion: https://lore.kernel.org/all/ZOoe0lOR9zpcAw5I@zx2c4.com/
+The latest mainline kernel branch fails to build csky allmodconfig with
+the error:
+
+In file included from ./arch/csky/include/asm/ptrace.h:7,
+                 from ./arch/csky/include/asm/processor.h:8,
+                 from ./include/linux/prefetch.h:15,
+                 from drivers/net/ethernet/intel/i40e/i40e_txrx.c:4:
+./arch/csky/include/asm/traps.h:43:11: error: expected ';' before 'void'
+   43 | asmlinkage void do_trap_unknown(struct pt_regs *regs);
+      |           ^~~~~
+      |           ;
+./arch/csky/include/asm/traps.h:44:11: error: expected ';' before 'void'
+   44 | asmlinkage void do_trap_zdiv(struct pt_regs *regs);
+      |           ^~~~~
+      |           ;
+./arch/csky/include/asm/traps.h:45:11: error: expected ';' before 'void'
+   45 | asmlinkage void do_trap_buserr(struct pt_regs *regs);
+      |           ^~~~~
+      |           ;
+./arch/csky/include/asm/traps.h:46:11: error: expected ';' before 'void'
+   46 | asmlinkage void do_trap_misaligned(struct pt_regs *regs);
+      |           ^~~~~
+      |           ;
+./arch/csky/include/asm/traps.h:47:11: error: expected ';' before 'void'
+   47 | asmlinkage void do_trap_bkpt(struct pt_regs *regs);
+      |           ^~~~~
+      |           ;
+./arch/csky/include/asm/traps.h:48:11: error: expected ';' before 'void'
+   48 | asmlinkage void do_trap_illinsn(struct pt_regs *regs);
+      |           ^~~~~
+      |           ;
+./arch/csky/include/asm/traps.h:49:11: error: expected ';' before 'void'
+   49 | asmlinkage void do_trap_fpe(struct pt_regs *regs);
+      |           ^~~~~
+      |           ;
+./arch/csky/include/asm/traps.h:50:11: error: expected ';' before 'void'
+   50 | asmlinkage void do_trap_priv(struct pt_regs *regs);
+      |           ^~~~~
+      |           ;
+./arch/csky/include/asm/traps.h:51:11: error: expected ';' before 'void'
+   51 | asmlinkage void trap_c(struct pt_regs *regs);
+      |           ^~~~~
+      |           ;
+./arch/csky/include/asm/traps.h:53:11: error: expected ';' before 'void'
+   53 | asmlinkage void do_notify_resume(struct pt_regs *regs,
+      |           ^~~~~
+      |           ;
+In file included from ./arch/csky/include/asm/processor.h:8,
+                 from ./include/linux/prefetch.h:15,
+                 from drivers/net/ethernet/intel/i40e/i40e_txrx.c:4:
+./arch/csky/include/asm/ptrace.h:99:11: error: expected ';' before 'int'
+   99 | asmlinkage int syscall_trace_enter(struct pt_regs *regs);
+      |           ^~~~
+      |           ;
+./arch/csky/include/asm/ptrace.h:100:11: error: expected ';' before 'void'
+  100 | asmlinkage void syscall_trace_exit(struct pt_regs *regs);
+      |           ^~~~~
+      |           ;
+
+git bisect pointed to c8171a86b274 ("csky: Fixup -Wmissing-prototypes warning").
+
+Reverting the commit has fixed the build failure.
+
+I will be happy to test any patch or provide any extra log if needed.
+
+#regzbot introduced: c8171a86b27401aa1f492dd1f080f3102264f1ab
+
+
+-- 
+Regards
+Sudip
