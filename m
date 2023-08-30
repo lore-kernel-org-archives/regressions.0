@@ -1,225 +1,259 @@
-Received: from mail.kmu-office.ch (mail.kmu-office.ch [178.209.48.109])
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF8517476
-	for <regressions@lists.linux.dev>; Wed, 30 Aug 2023 20:31:50 +0000 (UTC)
-Received: from webmail.kmu-office.ch (unknown [IPv6:2a02:418:6a02::a3])
-	by mail.kmu-office.ch (Postfix) with ESMTPSA id D481A5C003C;
-	Wed, 30 Aug 2023 22:31:41 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agner.ch; s=dkim;
-	t=1693427501;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YBQvgCS7Rw+t1TnKTfp40orXqv2UfTo3FcgfrM119Fc=;
-	b=uP9sCeYeXcGOnKDYJcujWBp8fE06Qxh19GAH/koZCKIr/kyCBzcjkHRTRwtiTC+u7C+9tM
-	s2wZVa/Ptd/Clslfo8RXRJKfLm01f5l2Qx7kf0cZHJHIYMISeKBrzgiF6GPinmMkAKptAJ
-	jXZ7ScYp01eYJ0ubB36STr1u21NQ5Tw=
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7919A7481
+	for <regressions@lists.linux.dev>; Wed, 30 Aug 2023 22:14:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1693433691; x=1724969691;
+  h=date:from:to:cc:subject:message-id:references:
+   content-transfer-encoding:in-reply-to:mime-version;
+  bh=v3g9qhONoTKoZSp1ertkw87dTHHwNx7pgjB4sI1RvTM=;
+  b=XnzpOMRCQLE4Fm1OJ/e0QKyV7TRbgbNm71HtyIppR1Nm20Qb+NNtW9c6
+   bjDdaxe3B9Nk3p7dLJdyQ7nCu+5PPWsGPjkyLb88mpxVte1mtvIk8GGWY
+   VQ2etnOjcR8fQHJCavBrXvT3VUepqhvotDQ/ae3GCHPdYBWcECtZXodoX
+   gK54WAwOJGsBNFleEqlJeTJqKwvZIwWIf4CgqWAJqgVsiA1LxgLCVH5/C
+   ido29ATirlUpoa5u8nhP3euqaeg0iNCxpnZ7Or1/U8psJydu6EXTYIdLD
+   bLcRsqMY//ecP1lUI61AALNULtJ+wB2WFIWtRykLpnU2T0kYcflbcSrLL
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10818"; a="360749394"
+X-IronPort-AV: E=Sophos;i="6.02,214,1688454000"; 
+   d="scan'208";a="360749394"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Aug 2023 15:14:49 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10818"; a="912984657"
+X-IronPort-AV: E=Sophos;i="6.02,214,1688454000"; 
+   d="scan'208";a="912984657"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by orsmga005.jf.intel.com with ESMTP; 30 Aug 2023 15:14:49 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.27; Wed, 30 Aug 2023 15:14:48 -0700
+Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.27 via Frontend Transport; Wed, 30 Aug 2023 15:14:48 -0700
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.176)
+ by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.27; Wed, 30 Aug 2023 15:14:39 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=iYSzggp440KXWauDxBwuBgASIJ4iBfvPTqWNpjC/bW6do0hbgksTp9LSy5C2nxbncE8VF7xqzfPkyVb84UXZa9IysFP6Bb+MjVQ/Wms7ta3hbwvQuXLy9B7IaSfH9Ac33gr5b7W51wOdTzL506j06SLgfYPswzR4wKmboJ4YrmYg2ySwDzzruzEcHQ/+VkO2DgE8SoB2wXOi1nFVlWhRFK3U5+uy0wr3WBfvNi2Zy8f1uOA85XS6I0DepRlKqD6d3+oXtlkWnNc73XbpyhyOPlOc+k0olhFDXTMH6XKoZVrAoe4abcfIvtiUM4NMK8XrgC6XgxWUFI0Rt6Jlppq4LA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=tupvZPOsvrFksxLLcDYN76lz481GRuNv5b38GfofsZc=;
+ b=G8/frJ3dnZSmJLaNsxEkHlIvAel8qyAaTxJiZuF2Yd+dTeYelUC4AhXkwSSeW0zDxXowBcinsQcVKHsf2KItlBjXG8lb5QwMd5ujdosJ0f9sieLkBhc1ErX1eoqjQQeUyelPhYAOTXdeVgnbalpwkiWJ3wRCWSjsFxg8my9YoFYSbpJwoTxKG2UVPB1giLgMuGVOk64IK/IFzIhq/mA6+6APwqH+0w+Ek/S0RzAwbcxfS18mUcZ4/90RuGtJCSnK3Y+GoQS3xzKrU/jv5ZooHlw5ciqasmEzMWc5jDLAJW9Ztviu/A0RDGLeC0qNN07scjuzkYBCwqclXmMCq8YwXw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from MN0PR11MB6059.namprd11.prod.outlook.com (2603:10b6:208:377::9)
+ by DM4PR11MB6214.namprd11.prod.outlook.com (2603:10b6:8:ac::7) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6699.34; Wed, 30 Aug 2023 22:14:38 +0000
+Received: from MN0PR11MB6059.namprd11.prod.outlook.com
+ ([fe80::7f94:b6c4:1ce2:294]) by MN0PR11MB6059.namprd11.prod.outlook.com
+ ([fe80::7f94:b6c4:1ce2:294%5]) with mapi id 15.20.6745.020; Wed, 30 Aug 2023
+ 22:14:38 +0000
+Date: Wed, 30 Aug 2023 18:14:31 -0400
+From: Rodrigo Vivi <rodrigo.vivi@intel.com>
+To: Damien Le Moal <dlemoal@kernel.org>
+CC: Rodrigo Vivi <rodrigo.vivi@kernel.org>, <linux-ide@vger.kernel.org>,
+	<linux-scsi@vger.kernel.org>, "Martin K . Petersen"
+	<martin.petersen@oracle.com>, Paul Ausbeck <paula@soe.ucsc.edu>, "Thorsten
+ Leemhuis" <regressions@leemhuis.info>, TW <dalzot@gmail.com>,
+	<regressions@lists.linux.dev>, Bart Van Assche <bvanassche@acm.org>
+Subject: Re: [PATCH] ata,scsi: do not issue START STOP UNIT on resume
+Message-ID: <ZO+/Rz4Q5+qvj5Bs@intel.com>
+References: <20230731003956.572414-1-dlemoal@kernel.org>
+ <ZOehTysWO+U3mVvK@rdvivi-mobl4>
+ <40adc06d-0835-2786-0bfb-83239f546d92@kernel.org>
+ <ZOjgJl4nlieu3+kL@rdvivi-mobl4>
+ <ccf3d87c-6517-6f01-a32a-4c98b841c7d4@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ccf3d87c-6517-6f01-a32a-4c98b841c7d4@kernel.org>
+X-ClientProxiedBy: BYAPR07CA0014.namprd07.prod.outlook.com
+ (2603:10b6:a02:bc::27) To MN0PR11MB6059.namprd11.prod.outlook.com
+ (2603:10b6:208:377::9)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Date: Wed, 30 Aug 2023 22:31:41 +0200
-From: Stefan Agner <stefan@agner.ch>
-To: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>, Brian Gix
- <brian.gix@gmail.com>, linux-bluetooth@vger.kernel.org, marcel@holtmann.org,
- =?UTF-8?Q?Jan_=C4=8Cerm=C3=A1k?= <sairon@sairon.cz>
-Subject: Re: [PATCH v4 2/4] Bluetooth: Rework le_scan_restart for hci_sync
-In-Reply-To: <CABBYNZKoXd0+kLdD-FMz3UisrE03fzrt13Zk9-6+tWwuTsKF1g@mail.gmail.com>
-References: <20220727135834.294184-1-brian.gix@intel.com>
- <20220727135834.294184-3-brian.gix@intel.com>
- <578e6d7afd676129decafba846a933f5@agner.ch>
- <CABBYNZJGKfwTQM8WAdUGXueTPnFyus1a65UO5mg2g4PXVuCnpA@mail.gmail.com>
- <CABBYNZLgG+zTsk-6ceqzLXXyVRnN6p-m8sFq9Ss7mveD0f9BsQ@mail.gmail.com>
- <CABUQxGxBdAFncJ6YVb7a9gnU-_YZDGFDmpHJTtm5K1tDGEGRDQ@mail.gmail.com>
- <0de3f0d0d5eb6d83cfc8d90cbb2b1ba1@agner.ch>
- <fcdf856db8fd8e77558b4d82b843c51e@agner.ch>
- <24bf25f7-314f-ca73-59e9-df757732f6a9@leemhuis.info>
- <ac58995a00cb6ad6bb4ce4c74b006a2f@agner.ch>
- <CABBYNZ+5RMqNVMyYKi+gOVaV+K6k8Z-C37KnfGa=qRUORc3dWg@mail.gmail.com>
- <CABBYNZKoXd0+kLdD-FMz3UisrE03fzrt13Zk9-6+tWwuTsKF1g@mail.gmail.com>
-Message-ID: <b0b672069ee6a9e43fed1a07406c6dd3@agner.ch>
-X-Sender: stefan@agner.ch
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN0PR11MB6059:EE_|DM4PR11MB6214:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2276bf44-cb4c-4e07-e2ac-08dba9a67fb4
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: m2wp356Oa8bJKWU3GgF0pEHzbz5WbgwNnC9nVVaH57S0dasLzSsBv4MxesV+WlNMHKfzVisQVBfR7orphC1ckJroSUVGuKHxNlHBnG6RUkHuInhFBcbPeBBOfTSXiJu8YiR2CyVgrtz3xQaFt4zuPLuB2dwz7NQ5KNE9YO02atlH6Tuj4FvBAfY9yV1ugDjnZPCgSh15LkMNkviQ/ZjkWzLMtPFD1YWPJsKOVJZBxdz5EH6p1fI0VgvlgS50/YhAauh5SXqfu7rQaLPY/Z65ZdDLhXCu+qIIPYA2EjaIG7UWRmJ3+tdEyMDx0KWgV4UqXiROFjCCVnKnx6Qr/z6e/9/eAUKDR0M17uhYxbOrACnJTnN99WG2Rf7z4ccSZk8tw5gRLaJ26gZ7CtgQZWzJFo/svxACf/TzLq/5Y4pCzTTeNzvFszXr4DjGHbow4+pnPQ9t7qHydQdID5xjuPfolClJ+9CLRXm+tFRoIu2E5QG43q0CqZdQpEnnthexqKBzBJOlTK4xolcvv3+adJPLhj69Rkci33niqMgcXGrJshBT1w6g6lqTdWy8DUGhWnhPZsbUK2HayWH0YQBm+IKGWw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR11MB6059.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(376002)(396003)(366004)(346002)(136003)(1800799009)(451199024)(186009)(8936002)(4326008)(8676002)(6916009)(2906002)(66556008)(54906003)(66946007)(36756003)(66476007)(316002)(5660300002)(44832011)(7416002)(41300700001)(6666004)(6512007)(26005)(53546011)(6506007)(82960400001)(478600001)(966005)(6486002)(83380400001)(38100700002)(2616005)(86362001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?QWVURmV0QTVOT0l1MDlBTmgwZXc3QnFTOXpnblBaZXJVbmdWMWFIK3hJL0xR?=
+ =?utf-8?B?YnIyc3k1amp2NkRNOUdZVmtZcnVweXhGT1ZXS2E2UGtFaC9UTzJaUXM0UEdj?=
+ =?utf-8?B?czJxQklmOFVuS3I1YU1XdnhVRWxaemFTdzJsWVJIK044RHEyWVlEQko2WEFx?=
+ =?utf-8?B?anlQclFOUGNZSXNKb3p2RHVPQjRGQ2Z4QndscGpBcThFYjZsbm1hTnR2SjBD?=
+ =?utf-8?B?YmxrWXBoeDZBYjkrYnpOSzZsZnljUzBWNE1HdWtEUVpIVU1VYmhNdHZOTUhP?=
+ =?utf-8?B?UXVydzBEOW9pakIvZGFkTFdNdXJwVkZaZERYUms2QzhTcm0xSTNKcm94ZjJU?=
+ =?utf-8?B?Qks5MVdmbFI5alFoS3RjcklBZGVSNUkwSmlXdkxCZGVYbWdzLzZ6UUtCQWpH?=
+ =?utf-8?B?Vjh1YmZnR1JLM3doaS9mTm8vZ0J6Ukc1eWhyaTdBYjVJS1hyUi9lZWJQSFlE?=
+ =?utf-8?B?bnhNN0hiekN2bWR0d0RXeFVzRmhqYzNib2Zra2xNWnQ0Q20vNFhZU1JhUCtP?=
+ =?utf-8?B?YTM4ZXVpdVpnVFZVMlNON3RMK1ZCdDlqQmFTamd4MXN5MGNNR0RYSWg2Ukpo?=
+ =?utf-8?B?cEZaVHE0NExBa1RLSU03WkFHMEhsVy82YnpaS2JKSVY5aWVSTjdQQW40aE0v?=
+ =?utf-8?B?YzkrSFdNdm9HSDByalZkdWxvYUVWTU5YYmhRYVFhZ1BMRHBpMzhJYXFxU1hK?=
+ =?utf-8?B?M1ZadSs2RG5NTVRFUmhybGxSdy9MZjRqZzcrSU1RbUFBTm9pTk1ja2haNHNk?=
+ =?utf-8?B?SVVYYmxzSW1YUGUvcmhZd3dXaHBPdmZ3RHFoNEJYN01pVEJOVmtFT0ovYWhX?=
+ =?utf-8?B?ekFwZjdMUElrZWxZLzMyUlIzbkQxd1lBMWcwZmgrdmJSTGdDZ2FLb2kxK1Rq?=
+ =?utf-8?B?ZlVwV2RXeFVyL3o4SWJlSkZxQ3JVR05ORlIzaHptREVNUDNmZ3QyQzhGbzFE?=
+ =?utf-8?B?T0MrTUxPVXFBNmUwTUVmSHN2QytabDFVWXk0ZXZqeFNTWkx3c2VmSW9Wem43?=
+ =?utf-8?B?bXFBZEl1NVprejBYejl3dnJ1WUFiLzdWNTJ0VW5iQWdER2lNb2ZsSHovR2VO?=
+ =?utf-8?B?Rno3OHRPTWhEUzBJVnVzZk1HRnVZVm9KclFmUGhLSk9uak8rKzNMSW9Nb1RR?=
+ =?utf-8?B?WDErMWhqM1FVcUNPdWczTDY5SXE2T2pTYm1GMEl0c1FCRXdMazdxSCtFQnlH?=
+ =?utf-8?B?ZmdwYkh4eTI2U05XTC8rVGtvcFBZM2ZpN2tkM21qNDdITkoza3ViSWswTFNB?=
+ =?utf-8?B?enErOWNPdlNXNTlpZHZmYWlFTXlxMjdqVlg0RG5RRW9YQmlESFpHd0h2YUlJ?=
+ =?utf-8?B?NUdtSVhyVmhwNlVrTjcveXFVaUV1UXZCTUEvYkZZK1ZkeEdYNXZWczdORSs2?=
+ =?utf-8?B?SkVLZkxVRGxpZ3dXWjcrREFzMmoxSG5YSkdJS3RxQ1lKTENqcmVTMTdEVGpN?=
+ =?utf-8?B?enEySThUUzBaUEx4dWdzWElKQkhaRUJUMFlNVEpXMkluSFE4L3dhUjNlbmI2?=
+ =?utf-8?B?Q0JrcTAvbXdicEpmMjh4YTcwTkNYcFlZODhCd0FqTUIwdnQyY1cveXNjZHdh?=
+ =?utf-8?B?M1FZR25OQ3dWblc1cW9UL0w1RFF4Q0xJbUMwQWRGLzFyVDVDc2lVRm1XZ0c1?=
+ =?utf-8?B?YmQ1S3pGeFAzWkJ0NVVGUUQ3bEJsa2tOYTRDVjk4QlpVRmc2SklRTXY3OWFa?=
+ =?utf-8?B?R3hTb1d6QTZYWHo3a1MzTmg3ZVlvRmxlL0FRK3pKM0FISlpXbGRyTmV4ZXBC?=
+ =?utf-8?B?ZS9zY1lTRnc5Y3BPT2VaM24rd2dON1ZyNEg4c0JiUzdock9xdmthZEVWMnV3?=
+ =?utf-8?B?bFBnMUFqZ2lqQjZta3g4bjRITXJPN0ZTcDFqcFJmRit0M21pd210aFdvK2pz?=
+ =?utf-8?B?R08xRTNQWlpSTFhqb013VUlpN1FEalJRNHowTHFqRGQ0aEZDMjAzc0twalk5?=
+ =?utf-8?B?Y2prQTBUVjlCUlZBU3RiUjRzYWNlb0F3ZzZtcXpGQkpvRFlPWVFmaWcyNFlR?=
+ =?utf-8?B?TWJqOC9YenhPQnByUVhpSzJ6QTAyb2Y1bGZJZ1djY1h1bEZ0TmM0NHFUa2c0?=
+ =?utf-8?B?ang5S3k5R3pCRkhBdXFCYXY4U3ZLbGpOZlNXYm9yUWt0c1AwWEY0V2prbHNO?=
+ =?utf-8?B?M1hjc0E3UVMwc0tlRlRCUVF1UFFwL0habnFDZFNnUXdFckZXS2NodjZLS1hI?=
+ =?utf-8?B?ZVE9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2276bf44-cb4c-4e07-e2ac-08dba9a67fb4
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR11MB6059.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Aug 2023 22:14:37.9284
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 3WZy0/XD9KejFj60boDhKE9rzacJtJDICR6bGIgHMYqsT38stGkQcCZu5XQM98Vu7QodnDsdTLo8AsKGdGdDaw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB6214
+X-OriginatorOrg: intel.com
 
-Hi Luiz,
-
-On 2023-08-30 19:28, Luiz Augusto von Dentz wrote:
-> Hi Stefan,
+On Tue, Aug 29, 2023 at 03:17:38PM +0900, Damien Le Moal wrote:
+> On 8/26/23 02:09, Rodrigo Vivi wrote:
+> >>> So, maybe we have some kind of disks/configuration out there where this
+> >>> start upon resume is needed? Maybe it is just a matter of timming to
+> >>> ensure some firmware underneath is up and back to life?
+> >>
+> >> I do not think so. Suspend will issue a start stop unit command to put the drive
+> >> to sleep and resume will reset the port (which should wake up the drive) and
+> >> then issue an IDENTIFY command (which will also wake up the drive) and other
+> >> read logs etc to rescan the drive.
+> >> In both cases, if the commands do not complete, we would see errors/timeout and
+> >> likely port reset/drive gone events. So I think this is likely another subtle
+> >> race between scsi suspend and ata suspend that is causing a deadlock.
+> >>
+> >> The main issue I think is that there is no direct ancestry between the ata port
+> >> (device) and scsi device, so the change to scsi async pm ops made a mess of the
+> >> suspend/resume operations ordering. For suspend, scsi device (child of ata port)
+> >> should be first, then ata port device (parent). For resume, the reverse order is
+> >> needed. PM normally ensures that parent/child ordering, but we lack that
+> >> parent/child relationship. I am working on fixing that but it is very slow
+> >> progress because I have been so far enable to recreate any of the issues that
+> >> have been reported. I am patching "blind"...
+> > 
+> > I believe your suspicious makes sense. And on these lines, that patch you
+> > attached earlier would fix that. However my initial tries of that didn't
+> > help. I'm going to run more tests and get back to you.
 > 
-> On Tue, Aug 29, 2023 at 1:42 PM Luiz Augusto von Dentz
-> <luiz.dentz@gmail.com> wrote:
->>
->> Hi Stefan, Brian,
->>
->> On Tue, Aug 29, 2023 at 6:27 AM Stefan Agner <stefan@agner.ch> wrote:
->> >
->> > Hi Thorsten,
->> >
->> > No, this hasn't been addressed so far. I am also not sure how we can
->> > help solving that particular issue.
->> >
->> > Besides this, we have other Bluetooth issues which seem to be Kernel
->> > regressions (where downgrading to Linux 5.15 also helps), folks see
->> > "hci0: unexpected event for opcode" on Intel but also other systems. We
->> > haven't bisected that issue yet. But it seems that the Bluetooth stack
->> > is really somewhat unstable in recent releases.
->>
->>
->> I suspect the following change shall make it behave as before, the use
->> of hci_cmd_sync_queue is not equivalent to hci_req_sync:
->>
->> https://gist.github.com/Vudentz/b78f34e3775c8cd2db55b868e5c8ef42
->>
->> That said, I'm considering removing the whole custom handling for
->> HCI_QUIRK_STRICT_DUPLICATE_FILTER and just disable duplicate filtering
->> when this flag is set.
+> Rodrigo,
 > 
-> Any chance to tests the following changes:
+> I pushed the resume-v2 branch to libata tree:
 > 
-> https://patchwork.kernel.org/project/bluetooth/patch/20230829205936.766544-1-luiz.dentz@gmail.com/
+> git@gitolite.kernel.org:pub/scm/linux/kernel/git/dlemoal/libata
+> (or https://git.kernel.org/pub/scm/linux/kernel/git/dlemoal/libata.git)
+> 
+> This branch adds 13 patches on top of 6.5.0 to cleanup libata suspend/resume and
+> other device shutdown issues. The first 4 patches are the main ones to fix
+> suspend resume. I tested that on 2 different machines with different drives and
+> with qemu. All seems fine.
+> 
+> Could you try to run this through your CI ? I am very interested in seeing if it
+> survives your suspend/resume tests.
 
-I've tested this with my SPAM test device, and I can confirm that this
-indeed fixes the problem we are seeing: The BLE advertisements continue
-to come in just fine with the patch applied!
+well, in the end this didn't affect the CI machinery as I was afraid.
+it is only in my local DG2.
 
-Thanks for the fix!
+https://intel-gfx-ci.01.org/tree/intel-xe/bat-all.html?testfilter=suspend
+(bat-dg2-oem2 one)
 
---
-Stefan
+I just got these 13 patches and applied to my branch and tested it again
+and it still *fails* for me.
+
+[   79.648328] [IGT] kms_pipe_crc_basic: finished subtest pipe-A-DP-2, SUCCESS
+[   79.657353] [IGT] kms_pipe_crc_basic: starting dynamic subtest pipe-B-DP-2
+[   80.375042] PM: suspend entry (deep)
+[   80.380799] Filesystems sync: 0.002 seconds
+[   80.386476] Freezing user space processes
+[   80.392286] Freezing user space processes completed (elapsed 0.001 seconds)
+[   80.399294] OOM killer disabled.
+[   80.402536] Freezing remaining freezable tasks
+[   80.408335] Freezing remaining freezable tasks completed (elapsed 0.001 seconds)
+[   80.439372] sd 5:0:0:0: [sdb] Synchronizing SCSI cache
+[   80.439716] serial 00:01: disabled
+[   80.448011] sd 4:0:0:0: [sda] Synchronizing SCSI cache
+[   80.448014] sd 7:0:0:0: [sdc] Synchronizing SCSI cache
+[   80.453600] ata6.00: Entering standby power mode
+[   80.464217] ata5.00: Entering standby power mode
+[   80.812294] ata8: SATA link up 6.0 Gbps (SStatus 133 SControl 300)
+[   80.818520] ata8.00: Entering active power mode
+[   80.842989] ata8.00: configured for UDMA/133
+[   80.847660] ata8.00: Entering standby power mode
+[   81.119426] xe 0000:03:00.0: [drm] GT0: suspended
+[   81.800508] PM: suspend of devices complete after 1367.829 msecs
+[   81.806661] PM: start suspend of devices complete after 1390.859 msecs
+[   81.813244] PM: suspend devices took 1.398 seconds
+[   81.820101] PM: late suspend of devices complete after 2.036 msecs
+�[   82.403857] serial 00:01: activated
+[   82.489612] nvme nvme0: 16/0/0 default/read/poll queues
+[   82.563318] r8169 0000:07:00.0 enp7s0: Link is Down
+[   82.581444] xe REG[0x223a8-0x223af]: allow read access
+[   82.586704] xe REG[0x1c03a8-0x1c03af]: allow read access
+[   82.592071] xe REG[0x1d03a8-0x1d03af]: allow read access
+[   82.597423] xe REG[0x1c83a8-0x1c83af]: allow read access
+[   82.602765] xe REG[0x1d83a8-0x1d83af]: allow read access
+[   82.608113] xe REG[0x1a3a8-0x1a3af]: allow read access
+[   82.613281] xe REG[0x1c3a8-0x1c3af]: allow read access
+[   82.618454] xe REG[0x1e3a8-0x1e3af]: allow read access
+[   82.623634] xe REG[0x263a8-0x263af]: allow read access
+[   82.628816] xe 0000:03:00.0: [drm] GT0: resumed
+[   82.728005] ata7: SATA link down (SStatus 4 SControl 300)
+[   82.733531] ata5: SATA link up 6.0 Gbps (SStatus 133 SControl 300)
+[   82.739773] ata5.00: Entering active power mode
+[   82.744398] ata6: SATA link up 6.0 Gbps (SStatus 133 SControl 300)
+[   82.750618] ata6.00: Entering active power mode
+[   82.755961] ata5.00: configured for UDMA/133
+[   82.760479] ata5.00: Enabling discard_zeroes_data
+[   82.836266] ata6.00: configured for UDMA/133
+[   84.460081] ata8: SATA link up 6.0 Gbps (SStatus 133 SControl 300)
+[   84.466354] ata8.00: Entering active power mode
+[   84.497256] ata8.00: configured for UDMA/133
+...
 
 > 
->> > --
->> > Stefan
->> >
->> >
->> > On 2023-08-29 13:22, Linux regression tracking (Thorsten Leemhuis)
->> > wrote:
->> > > Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
->> > > for once, to make this easily accessible to everyone.
->> > >
->> > > Stefan, was this regression ever addressed? Doesn't look like it from
->> > > here, but maybe I'm missing something.
->> > >
->> > > Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
->> > > --
->> > > Everything you wanna know about Linux kernel regression tracking:
->> > > https://linux-regtracking.leemhuis.info/about/#tldr
->> > > If I did something stupid, please tell me, as explained on that page.
->> > >
->> > > #regzbot poke
->> > >
->> > > On 30.06.23 12:59, Stefan Agner wrote:
->> > >> Hi Brian,
->> > >>
->> > >> Gentle ping on the issue below.
->> > >>
->> > >> On 2023-06-20 16:41, Stefan Agner wrote:
->> > >>> On 2023-06-16 03:22, Brian Gix wrote:
->> > >>>
->> > >>>> On Thu, Jun 15, 2023 at 11:28 AM Luiz Augusto von Dentz <luiz.dentz@gmail.com> wrote:
->> > >>>>
->> > >>>>> +Brian Gix
->> > >>>>>
->> > >>>>> On Thu, Jun 15, 2023 at 10:27 AM Luiz Augusto von Dentz
->> > >>>>> <luiz.dentz@gmail.com> wrote:
->> > >>>>>>
->> > >>>>>> Hi Stefan,
->> > >>>>>>
->> > >>>>>> On Thu, Jun 15, 2023 at 5:06 AM Stefan Agner <stefan@agner.ch> wrote:
->> > >>>>>>>
->> > >>>>>>> Hi Brian, hi all,
->> > >>>>>>>
->> > >>>>>>> We experienced quite some Bluetooth issues after moving from Linux 5.15
->> > >>>>>>> to 6.1 on Home Assistant OS, especially on Intel NUC type systems (which
->> > >>>>>>> is a popular choice in our community, so it might just be that). When
->> > >>>>>>> continuously scanning/listening for BLE packets, the packet flow
->> > >>>>>>> suddenly ends. Depending on which and how many devices (possibly also
->> > >>>>>>> other factors) within minutes or hours.
->> > >>>>>>>
->> > >>>>>>> Jan (in cc) was able to bisect the issue, and was able to pinpoint the
->> > >>>>>>> problem to this change.
->> > >>>>>>>
->> > >>>>>>> Meanwhile I was able to confirm, that reverting this single commit on
->> > >>>>>>> the latest 6.1.34 seems to resolve the issue.
->> > >>>>>>>
->> > >>>>>>> I've reviewed the change and surrounding code, and one thing I've
->> > >>>>>>> noticed is that the if statement to set cp.filter_dup in
->> > >>>>>>> hci_le_set_ext_scan_enable_sync and hci_le_set_scan_enable_sync are
->> > >>>>>>> different. Not sure if that needs to be the way it is, but my outside
->> > >>>>>>> gut feeling says hci_le_set_ext_scan_enable_sync should use "if (val &&
->> > >>>>>>> hci_dev_test_flag(hdev, HCI_MESH))" as well.
->> > >>>>>>>
->> > >>>>>>> However, that did not fix the problem (but maybe it is wrong
->> > >>>>>>> nonetheless?).
->> > >>>>>>>
->> > >>>>>>> Anyone has an idea what could be the problem here?
->> > >>>>>>
->> > >>>>>> Are there any logs of the problem? Does any HCI command fails or
->> > >>>>>> anything so that we can track down what could be wrong?
->> > >>>
->> > >>> No HCI command fails, there is also no issue reported in the kernel log.
->> > >>> BlueZ just stops receiving BLE packets, at least from certain devices.
->> > >>>
->> > >>>>>
->> > >>>>> @Brian Gix perhaps you have a better idea what is going wrong here?
->> > >>>>
->> > >>>> It seems unlikely that this is Mesh related. Mesh does need for filtering to
->> > >>>> be FALSE, and Mesh does not use extended scanning in any case.
->> > >>>>
->> > >>>> But this was part of the final rewrite to retire the hci_req mechanism in
->> > >>>> favor of the hci_sync mechanism. So my best guess off the top of my head is
->> > >>>> that there was an unintended race condition that worked better than the
->> > >>>> synchronous single-threading mechanism?  Filtering (or not) should not
->> > >>>
->> > >>> After review the code I concluded the same. What is a bit surprising to
->> > >>> me is that it is so well reproducible. I guess it is nicer to have a
->> > >>> reproducible one than a hard to reproduce one :)
->> > >>>
->> > >>>> prevent advertising packets from permanently wedging.  Does anyone have an
->> > >>>> HCI flow log with and without the offending patch?  Ideally they should be
->> > >>>> identical...  If they are not then I obviously did something wrong. As this
->> > >>>> was not specifically Mesh related, I may have missed some non-mesh corner
->> > >>>> cases.
->> > >>>
->> > >>>
->> > >>> I've taken two btmon captures, I created them using:
->> > >>> btmon -i hci0 -w /config/hcidump-hci-req-working.log
->> > >>>
->> > >>> You can find them at:
->> > >>> https://os-builds.home-assistant.io/hcidump-hci-req-working.log
->> > >>> https://os-builds.home-assistant.io/hcidump-hci-sync-non-working.log
->> > >>
->> > >> Could you gain any insights from these logs?
->> > >>
->> > >> --
->> > >> Stefan
->> > >>
->> > >>
->> > >>>
->> > >>> This is while running our user space software (Home Assistant with
->> > >>> Bluetooth integration). Besides some BLE devices (e.g. Xioami Mi
->> > >>> Temperature & Humidity sensor) I have a ESP32 running which sends SPAM
->> > >>> advertisements every 100ms (this accelerates the issue). In the
->> > >>> non-working case you'll see that the system doesn't receive any SPAM
->> > >>> advertisements after around 27 seconds. The working log shows that it
->> > >>> continuously receives the same packets (capture 120s).
->> > >>>
->> > >>> Hope this helps.
->> > >>>
->> > >>> --
->> > >>> Stefan
->> > >>>
->> > >>>
->> > >>
->> > >>
->>
->>
->>
->> --
->> Luiz Augusto von Dentz
+> If you can confirm that all issues are fixed, I will rebase this on for-next and
+> post.
+> 
+> Thanks !
+> 
+> 
+> -- 
+> Damien Le Moal
+> Western Digital Research
+> 
