@@ -1,217 +1,258 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA15C1FDC
-	for <regressions@lists.linux.dev>; Thu, 31 Aug 2023 06:55:13 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB377C433C7;
-	Thu, 31 Aug 2023 06:55:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1693464913;
-	bh=grzKBzpetMZY5pdHGAMbnhEOjQCjw9xTNEpumNTXwc0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=sspU5rM1PBNw//1BbhEu4+mqq94+fmuemobfJp5WDzZsgguk+bGecuAatllWXvuGM
-	 mVc9JlEnqfLb4Cxqu3SdIP4JA093SJsWiGy/83LDTIrXklcN6QewyDTpsCdl565QY9
-	 zGyVuytze8UgNF9kbkYLkX2OYSmHenaNIaBB7/PF/Gz5sOLLdWSqFNtDxJPAsv1ku0
-	 XTMJ3qEi6xIuwLVxqYumt1onQ/HwwqpIPoV7ysqquYsCR3RQBt5HJPas5wie21+MuB
-	 nk0Om86w4MwsHy8wq6B8sYKCjSB+/UWjGbfReszLgPnTLcCFS2juv58SFOwcMsZ4kD
-	 rhjvvyOVFVIBQ==
-Message-ID: <33be5c62-fd51-0485-ed4d-d9c79f26d85a@kernel.org>
-Date: Thu, 31 Aug 2023 15:55:10 +0900
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE2C4746B
+	for <regressions@lists.linux.dev>; Thu, 31 Aug 2023 08:48:53 +0000 (UTC)
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1bf078d5f33so4279365ad.3
+        for <regressions@lists.linux.dev>; Thu, 31 Aug 2023 01:48:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1693471733; x=1694076533; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cmHxtW5BDCI+klsJLFmGsEYI1Ty7dMZvjkbH7YkXfSw=;
+        b=MG3rGHp/RhYT7zRaNZTzbvaQIpST/EJgcnvlBZXiQPQs94qSK6ZyAEGeJQoSfaXBy6
+         9xlBKRzq7Fwoyha4WTkEFqOFex2SbFxLESSQ7yVz5woYhGY26OlDOUOkNunb4XKmP55m
+         0pjuozDg9aQYLqRauPeFGXwRVd0rxSXFB0Okp/QqWxd/XL6PFrHo4Xa0JbAazuXh9BFr
+         Rv0EXFozaQcZiRqmvI1SSsW4orjrSCpACxZqXTEZ1k2Qx2aobGGdkdnjigjd+0g5mTyE
+         XaIoWOvndQYSIkVKfRShCucQgOe46HgRDm7VDfE5V4Bv6iJyJ6C0w9BPYBgAkC3XGEoI
+         o+4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1693471733; x=1694076533;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=cmHxtW5BDCI+klsJLFmGsEYI1Ty7dMZvjkbH7YkXfSw=;
+        b=MGFmw4dH8/XZANtRs6SkyrHCfz7fyHOgM6wYBhPIrIhgRWzPsSuQsEawLYJbpfbp3t
+         jmN7HR2FdBiSCYTcjn/dDNUs/NpBzHsbTsNto9KaRCVopxtPqv+bG73H45s6Con7uWVx
+         EgoL0/7s7+sXQERQY4+ur5PdumeobUTCl0TLXTsHb3GWnu2LZny4USRMDpr6eJ1+2YCm
+         xY8XAgEIGlq9I8auE7f3p+yH9gsamrLnlwqafxv7943af8VdzVU1DJYF/LBG4tyvEevb
+         E9LksjCYxwXhl/cgMhABbhwCTAVmBpe84b3i/P/Dqa2o8UUPHsK+5RlU3eSUVI2JkJu0
+         ggeA==
+X-Gm-Message-State: AOJu0YwVF4/NsV3y0pLp9hkKflNT9VOSNf4BPlshT02rJBzyTs14KbM2
+	YC81R1hd6UDl7WVVNlwcaCCWNg==
+X-Google-Smtp-Source: AGHT+IEU4uV9edU+XNhQL065uaOKU00Or8bYyU1MHRoHn/U6tR5DeM7K54pCViRvbdp7PFa7UZxdnA==
+X-Received: by 2002:a17:902:d34c:b0:1b8:a19e:a3d3 with SMTP id l12-20020a170902d34c00b001b8a19ea3d3mr4068259plk.52.1693471732861;
+        Thu, 31 Aug 2023 01:48:52 -0700 (PDT)
+Received: from [10.84.158.67] ([203.208.167.146])
+        by smtp.gmail.com with ESMTPSA id x2-20020a170902fe8200b001bdf45eb5b6sm786424plm.284.2023.08.31.01.48.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 31 Aug 2023 01:48:52 -0700 (PDT)
+Message-ID: <55e2861e-9722-08f8-2c49-966035ff4218@bytedance.com>
+Date: Thu, 31 Aug 2023 16:48:29 +0800
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH] ata,scsi: do not issue START STOP UNIT on resume
-Content-Language: en-US
-To: Rodrigo Vivi <rodrigo.vivi@kernel.org>
-Cc: linux-ide@vger.kernel.org, linux-scsi@vger.kernel.org,
- "Martin K . Petersen" <martin.petersen@oracle.com>,
- Paul Ausbeck <paula@soe.ucsc.edu>,
- Thorsten Leemhuis <regressions@leemhuis.info>, TW <dalzot@gmail.com>,
- regressions@lists.linux.dev, Bart Van Assche <bvanassche@acm.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Pavel Machek <pavel@ucw.cz>,
- Len Brown <len.brown@intel.com>,
- Linux Power Management <linux-pm@vger.kernel.org>
-References: <20230731003956.572414-1-dlemoal@kernel.org>
- <ZOehTysWO+U3mVvK@rdvivi-mobl4>
- <40adc06d-0835-2786-0bfb-83239f546d92@kernel.org>
- <ZOjgJl4nlieu3+kL@rdvivi-mobl4>
-From: Damien Le Moal <dlemoal@kernel.org>
-Organization: Western Digital Research
-In-Reply-To: <ZOjgJl4nlieu3+kL@rdvivi-mobl4>
-Content-Type: text/plain; charset=UTF-8
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.14.0
+Subject: Re: [External] Re: Fwd: WARNING: CPU: 13 PID: 3837105 at
+ kernel/sched/sched.h:1561 __cfsb_csd_unthrottle+0x149/0x160
+To: Benjamin Segall <bsegall@google.com>, Bagas Sanjaya <bagasdotme@gmail.com>
+Cc: Vincent Guittot <vincent.guittot@linaro.org>,
+ "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+ Igor Raits <igor.raits@gmail.com>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Linux Stable <stable@vger.kernel.org>
+References: <a5dd536d-041a-2ce9-f4b7-64d8d85c86dc@gmail.com>
+ <xm26cyz4ibnb.fsf@google.com>
+From: Hao Jia <jiahao.os@bytedance.com>
+In-Reply-To: <xm26cyz4ibnb.fsf@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 8/26/23 02:09, Rodrigo Vivi wrote:
-> I have the CONFIG_PM_DEBUG here with no_console_suspend.
-> If you remember any other config or parameter that would help, please let
-> me know that I collect it again:
 
-Coming back to this previous dmesg output as I am in fact seeing something very
-similar now. See below.
 
-> [  104.571459] PM: suspend entry (deep)
-> [  104.585967] Filesystems sync: 0.010 seconds
-> [  104.618685] Freezing user space processes
-> [  104.625374] Freezing user space processes completed (elapsed 0.002 seconds)
-> [  104.632448] OOM killer disabled.
-> [  104.635712] Freezing remaining freezable tasks
-> [  104.641899] Freezing remaining freezable tasks completed (elapsed 0.001 seconds)
+On 2023/8/31 Benjamin Segall wrote:
+Hi,
 
-suspend start and freezes the user tasks, as expected.
+> Bagas Sanjaya <bagasdotme@gmail.com> writes:
+> 
+>> Hi,
+>>
+>> I notice a regression report on Bugzilla [1]. Quoting from it:
+>>
+>>> Hello, we recently got a few kernel crashes with following backtrace. Happened on 6.4.12 (and 6.4.11 I think) but did not happen (I think) on 6.4.4.
+>>>
+>>> [293790.928007] ------------[ cut here ]------------
+>>> [293790.929905] rq->clock_update_flags & RQCF_ACT_SKIP
+>>> [293790.929919] WARNING: CPU: 13 PID: 3837105 at kernel/sched/sched.h:1561 __cfsb_csd_unthrottle+0x149/0x160
+>>> [293790.933694] Modules linked in: [...]
+>>> [293790.946262] Unloaded tainted modules: edac_mce_amd(E):1
+>>> [293790.956625] CPU: 13 PID: 3837105 Comm: QueryWorker-30f Tainted: G        W   E      6.4.12-1.gdc.el9.x86_64 #1
+>>> [293790.957963] Hardware name: RDO OpenStack Compute/RHEL, BIOS edk2-20230301gitf80f052277c8-2.el9 03/01/2023
+>>> [293790.959681] RIP: 0010:__cfsb_csd_unthrottle+0x149/0x160
+>>
+>> See Bugzilla for the full thread.
+>>
+>> Anyway, I'm adding this regression to regzbot:
+>>
+>> #regzbot introduced: ebb83d84e49b54 https://bugzilla.kernel.org/show_bug.cgi?id=217843
+>>
+>> Thanks.
+>>
+>> [1]: https://bugzilla.kernel.org/show_bug.cgi?id=217843
+> 
+> The code in question is literally "rq_lock; update_rq_clock;
+> rq_clock_start_loop_update (the warning)", which suggests to me that
+> RQCF_ACT_SKIP is somehow leaking from somewhere else?
 
-> [  104.669767] wlp6s0: deauthenticating from 08:36:c9:85:df:ef by local choice (Reason: 3=DEAUTH_LEAVING)
-> [  104.679812] serial 00:01: disabled
-> [  104.683466] sd 7:0:0:0: [sdc] Synchronizing SCSI cache
-> [  104.688902] sd 7:0:0:0: [sdc] Stopping disk
-> [  104.693176] sd 5:0:0:0: [sdb] Synchronizing SCSI cache
-> [  104.698419] sd 4:0:0:0: [sda] Synchronizing SCSI cache
-> [  104.703730] sd 4:0:0:0: [sda] Stopping disk
-> [  104.885912] sd 5:0:0:0: [sdb] Stopping disk
-> [  106.163215] PM: suspend devices took 1.514 seconds
+If I understand correctly, rq->clock_update_flags may be set to 
+RQCF_ACT_SKIP after __schedule() holds the rq lock, and sometimes the rq 
+lock may be released briefly in __schedule(), such as newidle_balance(). 
+At this time Other CPUs hold this rq lock, and then calling 
+rq_clock_start_loop_update() may trigger this warning.
 
-All devices are suspended. No issues. Then resume starts...
+This warning check might be wrong. We need to add assert_clock_updated() 
+to check that the rq clock has been updated before calling 
+rq_clock_start_loop_update().
 
-> [  107.003217] serial 00:01: activated
-> [  107.076779] nvme nvme0: 16/0/0 default/read/poll queues
-> [  107.123917] r8169 0000:07:00.0 enp7s0: Link is Down
-> [  107.208945] PM: resume devices took 0.241 seconds
-> [  107.214746] pcieport 0000:00:1c.0: PCI bridge to [bus 06]
-> [  107.220274] pcieport 0000:00:1c.0:   bridge window [mem 0x43700000-0x437fffff]
-> [  107.227538] OOM killer enabled.
-> [  107.230710] Restarting tasks ...
+Maybe some things can be like this?
 
-... remember this one ...
+From: Hao Jia <jiahao.os@bytedance.com>
+Date: Thu, 31 Aug 2023 11:38:54 +0800
+Subject: [PATCH] sched/core: Fix wrong warning check in 
+rq_clock_start_loop_update()
 
-> [  107.231803] pcieport 0000:00:1c.2: PCI bridge to [bus 07]
-> [  107.236474] done.
-> [  107.240599] pcieport 0000:00:1c.2:   bridge window [io  0x4000-0x4fff]
-> [  107.242574] random: crng reseeded on system resumption
-> [  107.249119] pcieport 0000:00:1c.2:   bridge window [mem 0x43600000-0x436fffff]
-> [  107.249405] pcieport 0000:00:1c.6: PCI bridge to [bus 08]
-> [  107.259714] PM: suspend exit
-> [  107.261623] pcieport 0000:00:1c.6:   bridge window [io  0x3000-0x3fff]
-> [  107.276554] pcieport 0000:00:1c.6:   bridge window [mem 0x43500000-0x435fffff]
-> [  107.283849] pcieport 0000:00:1c.6:   bridge window [mem 0x70900000-0x709fffff 64bit pref]
-> [  107.293567] ata7: SATA link down (SStatus 4 SControl 300)
-> [  107.304150] ata5: SATA link up 6.0 Gbps (SStatus 133 SControl 300)
-> [  107.310975] ata6: SATA link up 6.0 Gbps (SStatus 133 SControl 300)
-> [  107.319173] ata5.00: configured for UDMA/133
-> [  107.324620] ata5.00: Enabling discard_zeroes_data
-> [  107.398370] ata6.00: configured for UDMA/133
+Commit ebb83d84e49b54 ("sched/core: Avoid multiple
+calling update_rq_clock() in __cfsb_csd_unthrottle()")
+add "rq->clock_update_flags & RQCF_ACT_SKIP" warning in
+rq_clock_start_loop_update().
+But this warning is inaccurate and may be triggered
+incorrectly in the following situations:
 
-started bringing back up devices, but suspend comes back again.
+     CPU0                                      CPU1
 
-> [  108.563229] PM: suspend entry (deep)
-> [  108.573610] Filesystems sync: 0.006 seconds
-> [  108.580617] Freezing user space processes
-> [  108.586774] Freezing user space processes completed (elapsed 0.002 seconds)
-> [  108.593793] OOM killer disabled.
-> [  108.597055] Freezing remaining freezable tasks
-> [  108.603246] Freezing remaining freezable tasks completed (elapsed 0.001 seconds)
+__schedule()
+   *rq->clock_update_flags <<= 1;*   unregister_fair_sched_group()
+   pick_next_task_fair+0x4a/0x410      destroy_cfs_bandwidth()
+     newidle_balance+0x115/0x3e0       for_each_possible_cpu(i) *i=0*
+       rq_unpin_lock(this_rq, rf)      __cfsb_csd_unthrottle()
+       raw_spin_rq_unlock(this_rq)
+                                       rq_lock(*CPU0_rq*, &rf)
+                                       rq_clock_start_loop_update()
+                                       rq->clock_update_flags & 
+RQCF_ACT_SKIP <--
 
-which freezes the tasks, again.
+       raw_spin_rq_lock(this_rq)
 
-> [  108.621515] sd 7:0:0:0: [sdc] Synchronizing SCSI cache
-> [  108.621522] sd 5:0:0:0: [sdb] Synchronizing SCSI cache
-> [  108.622018] serial 00:01: disabled
-> [  108.635420] sd 4:0:0:0: [sda] Synchronizing SCSI cache
-> [  108.640747] sd 4:0:0:0: [sda] Stopping disk
-> [  108.644148] sd 5:0:0:0: [sdb] Stopping disk
-> [  108.983487] ata8: SATA link up 6.0 Gbps (SStatus 133 SControl 300)
-> [  108.991923] ata8.00: configured for UDMA/133
-> [  108.996423] sd 7:0:0:0: [sdc] Stopping disk
-> [  109.973722] PM: suspend devices took 1.363 seconds
+So we remove this wrong check. Add assert_clock_updated() to
+check that rq clock has been updated before calling
+rq_clock_start_loop_update(). And use the variable rq_clock_flags
+in rq_clock_start_loop_update() to record the previous state of
+rq->clock_update_flags. Correspondingly, restore rq->clock_update_flags
+through rq_clock_flags in rq_clock_stop_loop_update() to prevent
+losing its previous information.
 
-And suspend finishes, followed by resume starting.
+Fixes: ebb83d84e49b ("sched/core: Avoid multiple calling 
+update_rq_clock() in __cfsb_csd_unthrottle()")
+Cc: stable@vger.kernel.org
+Reported-by: Igor Raits <igor.raits@gmail.com>
+Reported-by: Bagas Sanjaya <bagasdotme@gmail.com>
+Signed-off-by: Hao Jia <jiahao.os@bytedance.com>
+---
+  kernel/sched/fair.c  | 10 ++++++----
+  kernel/sched/sched.h | 12 +++++++-----
+  2 files changed, 13 insertions(+), 9 deletions(-)
 
-> [  110.721600] serial 00:01: activated
-> [  110.802094] nvme nvme0: 16/0/0 default/read/poll queues
-> [  110.873036] r8169 0000:07:00.0 enp7s0: Link is Down
-> [  111.032278] ata5: SATA link up 6.0 Gbps (SStatus 133 SControl 300)
-> [  111.038583] ata7: SATA link down (SStatus 4 SControl 300)
-> [  111.044065] ata6: SATA link up 6.0 Gbps (SStatus 133 SControl 300)
-> [  111.051326] ata5.00: configured for UDMA/133
-> [  111.056118] ata5.00: Enabling discard_zeroes_data
-> [  111.131795] ata6.00: configured for UDMA/133
-> [  112.713764] ata8: SATA link up 6.0 Gbps (SStatus 133 SControl 300)
-> [  112.724250] ata8.00: configured for UDMA/133
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 911d0063763c..0f6557c82a4c 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -5679,6 +5679,7 @@ void unthrottle_cfs_rq(struct cfs_rq *cfs_rq)
+  #ifdef CONFIG_SMP
+  static void __cfsb_csd_unthrottle(void *arg)
+  {
++	unsigned int rq_clock_flags;
+  	struct cfs_rq *cursor, *tmp;
+  	struct rq *rq = arg;
+  	struct rq_flags rf;
+@@ -5691,7 +5692,7 @@ static void __cfsb_csd_unthrottle(void *arg)
+  	 * Do it once and skip the potential next ones.
+  	 */
+  	update_rq_clock(rq);
+-	rq_clock_start_loop_update(rq);
++	rq_clock_start_loop_update(rq, &rq_clock_flags);
 
-Resume restarted the devices, but there is no "Restarting tasks" ! So the user
-tasks are frozen, hence the "hang". There are no user processes to run, so no
-coming back to the shell.
+  	/*
+  	 * Since we hold rq lock we're safe from concurrent manipulation of
+@@ -5712,7 +5713,7 @@ static void __cfsb_csd_unthrottle(void *arg)
 
-So even without the libata patches fixing the resume mess, this issue does not
-look like a libata issue. I think your bisect hitting the no_start_on_resume
-patch is simply because that patch changes the timing of things and makes it
-easier to hit this issue.
+  	rcu_read_unlock();
 
-Adding PM folks because I am out of my depth on this one...
+-	rq_clock_stop_loop_update(rq);
++	rq_clock_stop_loop_update(rq, &rq_clock_flags);
+  	rq_unlock(rq, &rf);
+  }
 
-PM folks,
+@@ -6230,6 +6231,7 @@ static void __maybe_unused 
+update_runtime_enabled(struct rq *rq)
+  /* cpu offline callback */
+  static void __maybe_unused unthrottle_offline_cfs_rqs(struct rq *rq)
+  {
++	unsigned int rq_clock_flags;
+  	struct task_group *tg;
 
-Rodrigo hit an issue doing suspend+resume cycles in a loop, with the resume
-triggered a very short time (wakealarm) after starting resume. This ends up
-with a hang. I could recreate the same in qemu. I cannot get wakealarm to work
-for some reason, but I have a virtio device not supporting suspend which
-triggers the resume in the middle of suspend. And repeating "systemctl suspend"
-again and again, I end up with a similar hang:
+  	lockdep_assert_rq_held(rq);
+@@ -6239,7 +6241,7 @@ static void __maybe_unused 
+unthrottle_offline_cfs_rqs(struct rq *rq)
+  	 * set_rq_offline(), so we should skip updating
+  	 * the rq clock again in unthrottle_cfs_rq().
+  	 */
+-	rq_clock_start_loop_update(rq);
++	rq_clock_start_loop_update(rq, &rq_clock_flags);
 
-[   98.455929] PM: suspend entry (s2idle)
-[   98.466622] Filesystems sync: 0.008 seconds
-[   98.473871] Freezing user space processes
-[   98.476372] Freezing user space processes completed (elapsed 0.001 seconds)
-[   98.478197] OOM killer disabled.
-[   98.479199] Freezing remaining freezable tasks
-[   98.481887] Freezing remaining freezable tasks completed (elapsed 0.001 seconds)
+  	rcu_read_lock();
+  	list_for_each_entry_rcu(tg, &task_groups, list) {
+@@ -6264,7 +6266,7 @@ static void __maybe_unused 
+unthrottle_offline_cfs_rqs(struct rq *rq)
+  	}
+  	rcu_read_unlock();
 
-suspend starts, freezineg the tasks.
+-	rq_clock_stop_loop_update(rq);
++	rq_clock_stop_loop_update(rq, &rq_clock_flags);
+  }
 
-[   98.493890] virtio-fs: suspend/resume not yet supported
-[   98.493971] sd 2:0:0:0: [sdc] Synchronizing SCSI cache
-[   98.499658] virtio-pci 0000:00:05.0: PM: pci_pm_suspend():
-virtio_pci_freeze+0x0/0x50 returns -95
-[   98.504241] virtio-pci 0000:00:05.0: PM: dpm_run_callback():
-pci_pm_suspend+0x0/0x230 returns -95
-[   98.507762] virtio-pci 0000:00:05.0: PM: failed to suspend async: error -95
+  bool cfs_task_bw_constrained(struct task_struct *p)
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index 04846272409c..ff2864f202f5 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -1558,20 +1558,22 @@ static inline void 
+rq_clock_cancel_skipupdate(struct rq *rq)
+   * when using list_for_each_entry_*)
+   * rq_clock_start_loop_update() can be called after updating the clock
+   * once and before iterating over the list to prevent multiple update.
++ * And use @rq_clock_flags to record the previous state of 
+rq->clock_update_flags.
+   * After the iterative traversal, we need to call 
+rq_clock_stop_loop_update()
+- * to clear RQCF_ACT_SKIP of rq->clock_update_flags.
++ * to restore rq->clock_update_flags through @rq_clock_flags.
+   */
+-static inline void rq_clock_start_loop_update(struct rq *rq)
++static inline void rq_clock_start_loop_update(struct rq *rq, unsigned 
+int *rq_clock_flags)
+  {
+  	lockdep_assert_rq_held(rq);
+-	SCHED_WARN_ON(rq->clock_update_flags & RQCF_ACT_SKIP);
++	assert_clock_updated(rq);
++	*rq_clock_flags = rq->clock_update_flags;
+  	rq->clock_update_flags |= RQCF_ACT_SKIP;
+  }
 
-Failure of the virtio device suspend which will trigger pm_recover+resume.
+-static inline void rq_clock_stop_loop_update(struct rq *rq)
++static inline void rq_clock_stop_loop_update(struct rq *rq, unsigned 
+int *rq_clock_flags)
+  {
+  	lockdep_assert_rq_held(rq);
+-	rq->clock_update_flags &= ~RQCF_ACT_SKIP;
++	rq->clock_update_flags = *rq_clock_flags;
+  }
 
-[   98.509451] ata3.00: Entering standby power mode
-[   98.511197] sd 1:0:0:0: [sdb] Synchronizing SCSI cache
-[   98.512917] sd 0:0:0:0: [sda] Synchronizing SCSI cache
-
-Here, the scsi devices already suspended (asynchronously) do their thing.
-
-[   98.515562] PM: Some devices failed to suspend, or early wake event detected
-[   98.521098] virtio_blk virtio3: 4/0/0 default/read/poll queues
-[   98.548229] OOM killer enabled.
-[   98.549338] Restarting tasks ... done.
-
-The tasks are restarted due to the suspend error above.
-
-[   98.551734] random: crng reseeded on system resumption
-[   98.559697] PM: suspend exit
-[   98.561038] PM: suspend entry (s2idle)
-[   98.566692] Filesystems sync: 0.004 seconds
-[   98.574461] Freezing user space processes
-[   98.577265] Freezing user space processes completed (elapsed 0.001 seconds)
-[   98.579351] OOM killer disabled.
-[   98.580341] Freezing remaining freezable tasks
-[   98.583109] Freezing remaining freezable tasks completed (elapsed 0.001 seconds)
-
-but here, for whatever reason, the tasks are suspended again despite the fact
-that we should be resuming. After this, I only see the scsi&ata devices
-finishing suspend and then being resumed all normally. But no coming back to
-the shell. It is frozen...
-
-Any idea ?
-
--- 
-Damien Le Moal
-Western Digital Research
-
+  struct rq_flags {
+--
+2.20.1
