@@ -1,110 +1,65 @@
-Received: from mail-oi1-f175.google.com (mail-oi1-f175.google.com [209.85.167.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACEC079F8
-	for <regressions@lists.linux.dev>; Thu, 31 Aug 2023 09:53:34 +0000 (UTC)
-Received: by mail-oi1-f175.google.com with SMTP id 5614622812f47-3a88c422e23so316346b6e.0
-        for <regressions@lists.linux.dev>; Thu, 31 Aug 2023 02:53:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1693475613; x=1694080413; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=+GDJQNvk1I3RU9eHa9L6NV+dyMRSPGsdEAWk45bEPSw=;
-        b=lrc1AKItI+3wzItcmDo2v7/crbO13UyQYPPVr44Ac1HLm2P2R1GwjRQD7XP+OGVY4S
-         6mu6ih3nK5CexksgwqCIt2yNJbPVipKbCVgi/VusejH6b96y+vN19tbopVWTNCIiSKYW
-         zNRLFzl/0Ev1Zxk0iFTN6fahGuMjena9JZQAu9fcl+VwYuYnIZKMR278Onoy11gI14Q/
-         2ljBhCeGEl36H3mXypkhoRf2CN1a/eRp+R6JAb2Zx3Vy4Jd3EtfDpA+5jsaRdw6xPmkj
-         eacCck3Fuajdw6kIQkol3RCXORKLY59AV8RVa8hKcDGxpsMGfyc83uQsucg5KyR9FN5y
-         LwWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693475613; x=1694080413;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+GDJQNvk1I3RU9eHa9L6NV+dyMRSPGsdEAWk45bEPSw=;
-        b=ZsdaleOIa/0WvlGQRc/Cu5llfJ5vUrKJgqB7trgICpbat25i1AQZhE/j+fdzqIqJaG
-         +21QzcDX+2g4lYA387JWC3DWWUuTvrbdYOwM5B+Cqu7dGqNZza9l5TLVi03IwdTkVWNx
-         gnRktvXYr0pQv3bthhMNjTaWLvJiS/vRl+SONZ+ffXp9ZKsljD79jHRBAkf4OCs7+Y9i
-         9KUQhzz3WEvscy9dh1FdGWilKAVrJ4Frb2kqDG6hhSAsQDz0m9wFoT4Dleo1+iRXBNbe
-         ycnDSLUQytsWUdWOYDS+NySbCfUtM1lnahVKiHlo1837z8Vf6vIi+n994xfiTanSK4kN
-         hBEg==
-X-Gm-Message-State: AOJu0Yzae3mHWml1w8qpUCHnMrqA0qBAoGwTgIui9Qa6E4shCeKQ6jwO
-	ur1/cWGb1iXc4jO5bzgx4MI=
-X-Google-Smtp-Source: AGHT+IFuTxBBnsClMiDGJuvLuCYgceaKjoXiFCmcN4xiYtVXao8M2f7wxtZGIsYY6C6Re0yFiTRAlw==
-X-Received: by 2002:a05:6808:210a:b0:3a7:72e2:f6be with SMTP id r10-20020a056808210a00b003a772e2f6bemr5295000oiw.2.1693475613564;
-        Thu, 31 Aug 2023 02:53:33 -0700 (PDT)
-Received: from debian.me ([103.124.138.83])
-        by smtp.gmail.com with ESMTPSA id v3-20020a655c43000000b00565e2ad12e5sm924535pgr.91.2023.08.31.02.53.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 31 Aug 2023 02:53:33 -0700 (PDT)
-Received: by debian.me (Postfix, from userid 1000)
-	id DB0A18BF2F99; Thu, 31 Aug 2023 16:53:29 +0700 (WIB)
-Date: Thu, 31 Aug 2023 16:53:29 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Frank Wunderlich <frank-w@public-files.de>,
-	Markus Schneider-Pargmann <msp@baylibre.com>,
-	Fabien Parent <fparent@baylibre.com>,
-	Amjad Ouled-Ameur <aouledameur@baylibre.com>
-Cc: Daniel Golle <daniel@makrotopia.org>,
-	linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Alex Riabchenko <d3adme4t@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Linux Regressions <regressions@lists.linux.dev>
-Subject: Re: regression with 33140e668b10 thermal/drivers/mediatek: Control
- buffer enablement tweaks
-Message-ID: <ZPBjGWPjSfl-HmDJ@debian.me>
-References: <trinity-6713557b-fe0a-4dae-84aa-1aa86f7619fa-1693473911557@3c-app-gmx-bs12>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 612FF63CC
+	for <regressions@lists.linux.dev>; Thu, 31 Aug 2023 10:35:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 667EFC433C7;
+	Thu, 31 Aug 2023 10:35:07 +0000 (UTC)
+Message-ID: <150a5670-8220-5c2f-351c-181ceeddf307@xs4all.nl>
+Date: Thu, 31 Aug 2023 12:35:06 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="RJwfJEiQhwB0+FtO"
-Content-Disposition: inline
-In-Reply-To: <trinity-6713557b-fe0a-4dae-84aa-1aa86f7619fa-1693473911557@3c-app-gmx-bs12>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: Fwd: in linux 6.3.7-200.fc38.x86_64 goes vlc in time to switch tv
+ channels to zombie-process
+Content-Language: en-US, nl
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Media <linux-media@vger.kernel.org>,
+ Linux Stable <stable@vger.kernel.org>
+References: <a7f997fc-e7cc-cf67-3ac0-80ed30346511@gmail.com>
+ <cdacb249-9d1d-cad9-44a9-ffa7b4b5b887@leemhuis.info>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+In-Reply-To: <cdacb249-9d1d-cad9-44a9-ffa7b4b5b887@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+On 31/08/2023 11:26, Linux regression tracking #update (Thorsten Leemhuis) wrote:
+> [TLDR: This mail in primarily relevant for Linux kernel regression
+> tracking. See link in footer if these mails annoy you.]
+> 
+> On 19.06.23 02:24, Bagas Sanjaya wrote:
+>>
+>> I notice a regression report on Bugzilla [1]. Quoting from it:
+>> [...]
+>>
+>> #regzbot introduced: v6.3.5..v6.3.7 https://bugzilla.kernel.org/show_bug.cgi?id=217566
+>> #regzbot title: switching TV channel causes VLC and firmware loading hang
+> 
+> #regzbot fix: 7cfab4c9dc09ca3a9d57c187894055a22bdcd
+> #regzbot ignore-activity
+> 
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> --
+> Everything you wanna know about Linux kernel regression tracking:
+> https://linux-regtracking.leemhuis.info/about/#tldr
+> That page also explains what to do if mails like this annoy you.
+> 
+> 
 
---RJwfJEiQhwB0+FtO
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+From what I can gather from the bugzilla report, whatever the issue was appears
+to be resolved or at least improved in later kernels.
 
-On Thu, Aug 31, 2023 at 11:25:11AM +0200, Frank Wunderlich wrote:
-> Hi,
->=20
-> The commit 33140e668b10 "thermal/drivers/mediatek: Control buffer enablem=
-ent tweaks" is merged between 6.3 and 6.4 and causes a regression where tem=
-perature cannot be read correctly at least for mt7986/Bpi-R3.
->=20
-> bpi-r3 ~ # cat /sys/class/thermal/thermal_zone0/temp
-> -274000
->=20
-> after reverting the commit and fixing some build-errors in 6.5-rc7 becaus=
-e new members used in mt8365_thermal_data too, we can read temperature on m=
-t7986 again.
->=20
+I can't find any relevant differences for the dvb-usb-v2/dvbsky/si2168 drivers that
+are used here, even if I diff between v6.2.1 and v6.4.1. So either fedora
+applied some patch that is not in linux-stable, or the issue is elsewhere,
+outside the media subsystem.
 
-Thanks for the regression report. I'm adding it to regzbot:
+Regards,
 
-#regzbot ^introduced: 33140e668b1020
-#regzbot title: incorrect temperature on MT7986 due to tweaking buffer
-
---=20
-An old man doll... just what I always wanted! - Clara
-
---RJwfJEiQhwB0+FtO
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZPBjFAAKCRD2uYlJVVFO
-o0mFAP91QuKCfgQVlixmP/Pv1pO2ZddoCUNEegbRBqxDSCFtvAEA+K4HSholbqcJ
-NGGQtAZxl6iJbR5W9KtqFAjrr34MLgo=
-=1gyx
------END PGP SIGNATURE-----
-
---RJwfJEiQhwB0+FtO--
+	Hans
