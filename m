@@ -1,88 +1,101 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD14E14A93
-	for <regressions@lists.linux.dev>; Thu, 31 Aug 2023 19:04:01 +0000 (UTC)
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-31dcf18f9e2so1013499f8f.0
-        for <regressions@lists.linux.dev>; Thu, 31 Aug 2023 12:04:01 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C9148F57
+	for <regressions@lists.linux.dev>; Thu, 31 Aug 2023 22:07:20 +0000 (UTC)
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-d7bb58517b8so1088855276.0
+        for <regressions@lists.linux.dev>; Thu, 31 Aug 2023 15:07:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1693508639; x=1694113439; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=MxGEoM6NvMI83xhY8G/ImCWZyFVY8xF2ffN+doaTRi0=;
-        b=avawRgOFfbOylvMQkyXyJc0e6jhpDvckVC1IaphD1xauKpI75F5PtQYOc/A55eOhAR
-         GRFRvClrZ11rEm/dFxc8kUGXlCeEWTmV550VGtuUsd08cXF47Uf0gPk7vzNY/piqlz8x
-         srCbytAvl4QH5q++ViseyWtWnCPjkBWmD6ZAg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693508639; x=1694113439;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=google.com; s=20221208; t=1693519640; x=1694124440; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=MxGEoM6NvMI83xhY8G/ImCWZyFVY8xF2ffN+doaTRi0=;
-        b=a0CLAFWUA00ZG2K4G2r0D/P+dzNd+MkMrl96dXKdalq4/HSlFv5tt6flp/AvwZJjF2
-         eBnk4qf++A6YI+F6tqMCHFtyqsc93qvtmPZpaN/YU1yJSz+Q9MPphhyL5w0jIayG0KQC
-         BUNVEEmahMLy9Yp3bULTqjf0V+e2a+vBYJPLFrp17HnSrx3eGVIWzRyl7ql3L9T9kuiI
-         fp5GxqZY8noWXGvZyK1E1L/SAj0wwWEYA/AgrFEs9otzKgIC0RoSoLK4R1XKl1JAJ7NO
-         6HfEvopoxdJadAo60q5pLWejS2RIuD3CjjMJkOZ2qpMFDcFY+OlJ/WIzw5QKPGcphopD
-         QQGQ==
-X-Gm-Message-State: AOJu0YySwTZZaVbfBlcqHyAPiJm0Gs4vhattZIq9HjXRx3odPYPfpnOK
-	Hu8cT9d4vPq0AW7oppjCtMHaHFlI2neRRCBax2CZ1We+
-X-Google-Smtp-Source: AGHT+IGe/fekjhplacclnWf5i1va8+h39yeWiSVajTyQX/F6eTc0m3EmhUGZGYjDQySUd16CG2+rbQ==
-X-Received: by 2002:a5d:4e42:0:b0:317:7062:32d2 with SMTP id r2-20020a5d4e42000000b00317706232d2mr259488wrt.54.1693508639491;
-        Thu, 31 Aug 2023 12:03:59 -0700 (PDT)
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com. [209.85.221.47])
-        by smtp.gmail.com with ESMTPSA id d4-20020a50ea84000000b00521d2f7459fsm1114561edo.49.2023.08.31.12.03.58
-        for <regressions@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 31 Aug 2023 12:03:58 -0700 (PDT)
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-31dcf18f9e2so1013477f8f.0
-        for <regressions@lists.linux.dev>; Thu, 31 Aug 2023 12:03:58 -0700 (PDT)
-X-Received: by 2002:a5d:5242:0:b0:315:8a13:ef17 with SMTP id
- k2-20020a5d5242000000b003158a13ef17mr269497wrc.65.1693508638437; Thu, 31 Aug
- 2023 12:03:58 -0700 (PDT)
+        bh=qgnjEF4yFasLmpmpPrDGfWRlTkHCJIfRLIREm8beBzY=;
+        b=QbWkLOJnsTR6qcoTqr+ijxfYzuIL/E2CnFaIlihy91LkyKpYmSlRVzyU8SjOQpHH1b
+         /kmB35bsY7pq+48EcgSwoh/HgNnct/dbyKbcg1lCV4bkAj3Uaun6Aio7ofd68aC0ht0i
+         oq6kSgZa+EOZRrhdPGLQWI9He7ncOV5w9nGEQ0r+i05VZTwCWm/rcUHskbZK/pWC4tAx
+         3btRmZHWFh4KxsSN76Bm0ALMir/gel7rtY87Km/DktQ985DKDlmEqagTYtopDbq3B0ej
+         1W+2OsbR0RFwW8iOYEWoySNQs+bVjvIdqxzfj7lv546QUZbGg+bFw6E5p5VNVjO3Br5i
+         bBGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1693519640; x=1694124440;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=qgnjEF4yFasLmpmpPrDGfWRlTkHCJIfRLIREm8beBzY=;
+        b=JGkTy4sSqtz+jYX17zS2NIakv2EHMyU/7WXL0CoWn5QGQxwXBQtVuWh/TmiKeQb9ed
+         7XhrHiWpJGgAFt1DjUfEtkc0FHqghLLSwCrwPyi/d42WcKqYR4ZtJ6JzYKFpf7QYXwjq
+         aNzoRtvpQDkFX2/z885bp5daO4FROBV/puyUUaJ2HZMcxPep3U037QQfpesTNMIqC+NN
+         i6zRx+QmXicauygqzVHm+QjRlaX03a0RbZffdNa0ivH6h2lpGunidjGTPNlrwxaCYb+O
+         PXa4kEynQ6zyw/9TS7xEgz2peAO9TAw2rH+uDymed/2wjpRs/FbwMq1UbQv6KumYmBbX
+         Qp7w==
+X-Gm-Message-State: AOJu0Yz6sJpV0YKZag5TUuzQeEDFRpHC4IU8b85c72DvoIHDg5vJir5s
+	O9/ZXkrKBLjKPqakkiKz9t306MmOSHA=
+X-Google-Smtp-Source: AGHT+IH7jvi73S8Hy8V1cTNRJcs7gjaW7hdTTxoQCUGUr4SIru6AT2AYKzQ67n76Lv+PuuOp0QD90g+s5Og=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a25:7343:0:b0:d77:df8a:389a with SMTP id
+ o64-20020a257343000000b00d77df8a389amr23375ybc.3.1693519640007; Thu, 31 Aug
+ 2023 15:07:20 -0700 (PDT)
+Date: Thu, 31 Aug 2023 15:07:16 -0700
+In-Reply-To: <ZO5OeoKA7TbAnrI1@torres.zugschlus.de>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-References: <ZPDgdGBbxrTl+m2s@debian>
-In-Reply-To: <ZPDgdGBbxrTl+m2s@debian>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Thu, 31 Aug 2023 12:03:41 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wg4vpuourbbUPn19yFx2cNj93O6t0PhiARLLL6z22yV4Q@mail.gmail.com>
-Message-ID: <CAHk-=wg4vpuourbbUPn19yFx2cNj93O6t0PhiARLLL6z22yV4Q@mail.gmail.com>
-Subject: Re: mainline build failure due to 501126083855 ("fbdev/g364fb: Use
- fbdev I/O helpers")
-To: "Sudip Mukherjee (Codethink)" <sudipm.mukherjee@gmail.com>
-Cc: Thomas Zimmermann <tzimmermann@suse.de>, Helge Deller <deller@gmx.de>, linux-fbdev@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+References: <ZO2RlYCDl8kmNHnN@torres.zugschlus.de> <ZO2piz5n1MiKR-3-@debian.me>
+ <ZO3sA2GuDbEuQoyj@torres.zugschlus.de> <ZO4GeazfcA09SfKw@google.com>
+ <ZO4JCfnzRRL1RIZt@torres.zugschlus.de> <ZO4RzCr/Ugwi70bZ@google.com>
+ <ZO4YJlhHYjM7MsK4@torres.zugschlus.de> <ZO4nbzkd4tovKpxx@google.com> <ZO5OeoKA7TbAnrI1@torres.zugschlus.de>
+Message-ID: <ZPEPFJ8QvubbD3H9@google.com>
+Subject: Re: Linux 6.5 speed regression, boot VERY slow with anything systemd related
+From: Sean Christopherson <seanjc@google.com>
+To: Marc Haber <mh+linux-kernel@zugschlus.de>
+Cc: Bagas Sanjaya <bagasdotme@gmail.com>, linux-kernel@vger.kernel.org, 
+	Linux Regressions <regressions@lists.linux.dev>, Linux KVM <kvm@vger.kernel.org>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Tony Lindgren <tony@atomide.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 31 Aug 2023 at 11:48, Sudip Mukherjee (Codethink)
-<sudipm.mukherjee@gmail.com> wrote:
-> The latest mainline kernel branch fails to build mips jazz_defconfig with
-> the error:
->
-> drivers/video/fbdev/g364fb.c:115:9: error: 'FB_DEFAULT_IOMEM_HELPERS' undeclared here (not in a function); did you mean 'FB_DEFAULT_IOMEM_OPS'?
->   115 |         FB_DEFAULT_IOMEM_HELPERS,
->       |         ^~~~~~~~~~~~~~~~~~~~~~~~
->       |         FB_DEFAULT_IOMEM_OPS
->
->
-> git bisect pointed to 501126083855 ("fbdev/g364fb: Use fbdev I/O helpers").
->
-> Reverting the commit has fixed the build failure.
->
-> I will be happy to test any patch or provide any extra log if needed.
+On Tue, Aug 29, 2023, Marc Haber wrote:
+> Hi,
+>=20
+> On Tue, Aug 29, 2023 at 10:14:23AM -0700, Sean Christopherson wrote:
+> > On Tue, Aug 29, 2023, Marc Haber wrote:
+> > > Both come from virt-manager, so if the XML helps more, I'll happy to
+> > > post that as well.
+> >=20
+> > Those command lines are quite different, e.g. the Intel one has two
+> > serial ports versus one for the AMD VM.
+>=20
+> Indeed? I virt-manager, I don't see a second serial port. In either case,
+> only the one showing up in the VM as ttyS0 is being used. But thanks for
+> making me look, I discovered that the machine on the Intel host still
+> used emulated SCSI instead of VirtIO f=C3=BCr the main disk. I changed th=
+at.
+>=20
+> >Unless Tony jumps in with an
+> > idea, I would try massaging either the good or bad VM's QEMU
+> > invocation, e.g. see if you can get the AMD VM to "pass" by pulling in
+> > stuff from the Intel VM, or get the Intel VM to fail by making its
+> > command line look more like the AMD VM.
+>=20
+> In Virt-Manager, both machines don't look THAT different tbh. I verified
+> the XML and the differences are not big at all.
+>=20
+> Do you want me to try different vCPU types? Currently the VM is set to
+> "Opteron_G3", would you recommend a different vCPU for the host having a
+> "AMD GX-412TC SOC" host CPU?
 
-Would you mind testing the exact thing that the compiler suggested?
-
-So instead of the revert, just replace FB_DEFAULT_IOMEM_HELPERS with
-FB_DEFAULT_IOMEM_OPS.
-
-I think it's just a typo / confusion with the config variable (which
-is called FB_IOMEM_HELPERS).
-
-               Linus
+I would be surprised if using a different vCPU type fixed anything, but it'=
+s not
+impossible that it could help.  In general, unless someone from the serial =
+driver
+side spots an issue, fixing whatever the bug is will likely require a repro=
+ducer,
+which in turn likely means narrowing down what exactly is unique about your=
+ AMD
+setup.  In other words, if you have cycles to spare, anything you can do to=
+ help
+isolate the problem would be appreciated.
