@@ -1,71 +1,114 @@
-Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 634215676
-	for <regressions@lists.linux.dev>; Sat,  2 Sep 2023 15:50:51 +0000 (UTC)
-Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-58c92a2c52dso310697b3.2
-        for <regressions@lists.linux.dev>; Sat, 02 Sep 2023 08:50:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1693669850; x=1694274650; darn=lists.linux.dev;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=pRMCIrxRKvjA3fHuNLxm+TCxQxtaqWRK8gpzuCewrLY=;
-        b=VF+XiJQkzQ7xm/ATpi5mtJVJAKE4K8zoLsCk5gt5Z4sqxalLTCqFlurexCJ/rgQoCz
-         DPUlldx2NOy157GGHWNT4Yfqn7Zm6riLPPcMAGV5feu7vT18lserU8mUjtIbx55a/5HC
-         IqwioKD8DICFZBBDqLNyc6KU9bd1FDg9W04YlnF82WchMb1iNo/+mbU7i6c5xLWCcvil
-         w+4ICCmW0aqXKNzguFh6WuK2IxeppmTE4WwWNs9IkrrRT58pMklaob6OKo6jzLVJb8D0
-         B9v4LvgP0zbcZTvORJn2/S74JvszU2FUrOXmRStd237SduSWpvcakTVghCXhDR69y1TT
-         Xg+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693669850; x=1694274650;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pRMCIrxRKvjA3fHuNLxm+TCxQxtaqWRK8gpzuCewrLY=;
-        b=Ony9mpfalIYajhaSSstQoMp5QSC+gG5x5RakDTyzjHO2kUdzhGHjYzIpvJBgU11JEL
-         rC8Mj+LbHqWVNWXpqkotE/GIad1s2DsOXLM75p9tYdOb1X+yXrgen7f3jpc+I92+CF0D
-         0HUNmvIgbWIkZmrYo0Hl1lu4mzhwbeoCq94rwu1PeGKE9r8thPiL9BOIYaWi7Xo9w9En
-         bpPC31mKeqs6SjZChOVSV2oHxl3rHG5pB7Ivdw8RpRyRSUdIUwxSn126xLiXvuLlJfpM
-         34W9/PQcgi+iGpy/UcJ+zJDjKGZ0nZDlkYSW8bm98TGY5CxjLnkj4yD2tylx3LtgBdlb
-         8BCA==
-X-Gm-Message-State: AOJu0YwwlJchFpeFggXThztr8AWA2qfo3ZNx2wA2wPEuLqNoRjDGiXYF
-	367dCGcE7BplXqgyfZWpSOVa+A==
-X-Google-Smtp-Source: AGHT+IEkAsyisZiz8vks79pWVNznhUxJYhALx926CW/w3O1pO2fXrC4tJqmdJCpcgyPEMjj+gItlXg==
-X-Received: by 2002:a81:84c8:0:b0:576:93f1:d118 with SMTP id u191-20020a8184c8000000b0057693f1d118mr6982475ywf.2.1693669850085;
-        Sat, 02 Sep 2023 08:50:50 -0700 (PDT)
-Received: from ripple.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
-        by smtp.gmail.com with ESMTPSA id l188-20020a0de2c5000000b00597e101dbd5sm1683494ywe.13.2023.09.02.08.50.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 02 Sep 2023 08:50:49 -0700 (PDT)
-Date: Sat, 2 Sep 2023 08:50:41 -0700 (PDT)
-From: Hugh Dickins <hughd@google.com>
-X-X-Sender: hugh@ripple.attlocal.net
-To: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-cc: Hugh Dickins <hughd@google.com>, Andrew Morton <akpm@linux-foundation.org>, 
-    Bagas Sanjaya <bagasdotme@gmail.com>, linux-kernel@vger.kernel.org, 
-    linux-mm@kvack.org, regressions@lists.linux.dev
-Subject: Re: 6.6/regression/bisected - after commit a349d72fd9efc87c8fd1d16d3164752d84a7275b
- system stopped booting
-In-Reply-To: <CABXGCsOM0j7ME4iUDbf5fpLMxZicXHwT9aBGWXCNWUVSPUO0Sw@mail.gmail.com>
-Message-ID: <ffb3fb7e-69f-d5b5-84a2-e51595a4a99e@google.com>
-References: <CABXGCsNi8Tiv5zUPNXr6UJw6qV1VdaBEfGqEAMkkXE3QPvZuAQ@mail.gmail.com> <3548ca67-ce58-3bc6-fef5-348b98d7678b@google.com> <CABXGCsOyamBvQ=Y-M9HQBTfEDfaRwGqzXqayBm7L259Q+t+gJQ@mail.gmail.com> <98eb1ba4-5bd3-ee7-1a88-47b054dc938@google.com>
- <CABXGCsOPcu8R9rpdihNR5r822FAHBZ42wBa5XUa5RDVierD_tg@mail.gmail.com> <5e4d50d4-978-ce54-e1ae-40f7117dbf3d@google.com> <CABXGCsOM0j7ME4iUDbf5fpLMxZicXHwT9aBGWXCNWUVSPUO0Sw@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36127A945;
+	Sat,  2 Sep 2023 19:43:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1693683814; x=1725219814;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=+9vo+M2L7/MeOyDeQ/8iCmxYZrv+WsA2IvXTKmHiP14=;
+  b=h/0MM4KJ0bKt4VO8yoS7ly5i1jOfJiAI+rzbSlYeYSW4Wv3OmgbYChqF
+   QvTVrGKD31hrCO39vsmQ5S+LXEKdJuv77GLZgv5ji197lXR0Fxc9/U592
+   WSDrfqoxG8KT7PRF5gAgaeSTldiZmqzsFhVmUH35updlA39Q6V/NwRZ/1
+   zfwf37xOWNsF05K3UTQXGzYJHH3KFRb9Oe8O6b0OmSbGtUFDBXp60VxJV
+   3oAFq9sWj6e2kBvuide3X4mEv3RSY22W25bVoRw/klnJB/Uk2CnWSPgwa
+   zbafxolDiegvAGQlS/b00k51spVEXoUeDHy7EQoyUiZs5UzHvL9fL0qvG
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10821"; a="462762159"
+X-IronPort-AV: E=Sophos;i="6.02,223,1688454000"; 
+   d="scan'208";a="462762159"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2023 12:43:31 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10821"; a="863909206"
+X-IronPort-AV: E=Sophos;i="6.02,223,1688454000"; 
+   d="scan'208";a="863909206"
+Received: from lkp-server01.sh.intel.com (HELO 5d8055a4f6aa) ([10.239.97.150])
+  by orsmga004.jf.intel.com with ESMTP; 02 Sep 2023 12:43:28 -0700
+Received: from kbuild by 5d8055a4f6aa with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1qcWWk-0002Yy-1d;
+	Sat, 02 Sep 2023 19:43:26 +0000
+Date: Sun, 3 Sep 2023 03:43:12 +0800
+From: kernel test robot <lkp@intel.com>
+To: Tejun Heo <tj@kernel.org>,
+	"Sudip Mukherjee (Codethink)" <sudipm.mukherjee@gmail.com>
+Cc: oe-kbuild-all@lists.linux.dev, Miaohe Lin <linmiaohe@huawei.com>,
+	Zefan Li <lizefan.x@bytedance.com>,
+	Johannes Weiner <hannes@cmpxchg.org>, cgroups@vger.kernel.org,
+	linux-kernel@vger.kernel.org, regressions@lists.linux.dev
+Subject: Re: [PATCH cgroup/for-6.6-fixes] cgroup: Put
+ cgroup_local_stat_show() inside CONFIG_CGROUP_SCHED
+Message-ID: <202309030303.qSTfRgZC-lkp@intel.com>
+References: <ZPNX-jZAZbebizXA@slm.duckdns.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZPNX-jZAZbebizXA@slm.duckdns.org>
 
-On Sat, 2 Sep 2023, Mikhail Gavrilov wrote:
-> 
-> Great, this is the right patch.
-> Both build a349d72fd9ef and latest in Rawhide (now it is 99d99825fc07)
-> works fine after applying this patch.
-> So thank you a lot.
-> Tested-by: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Hi Tejun,
 
-Great, thanks so much Mike: and Linus already took it into his tree:
-ee40d543e97d mm/pagewalk: fix bootstopping regression from extra pte_unmap()
+kernel test robot noticed the following build warnings:
 
-Hugh
+[auto build test WARNING on next-20230831]
+[cannot apply to linus/master v6.5 v6.5-rc7 v6.5-rc6 v6.5]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Tejun-Heo/cgroup-Put-cgroup_local_stat_show-inside-CONFIG_CGROUP_SCHED/20230902-234358
+base:   next-20230831
+patch link:    https://lore.kernel.org/r/ZPNX-jZAZbebizXA%40slm.duckdns.org
+patch subject: [PATCH cgroup/for-6.6-fixes] cgroup: Put cgroup_local_stat_show() inside CONFIG_CGROUP_SCHED
+config: arm-defconfig (https://download.01.org/0day-ci/archive/20230903/202309030303.qSTfRgZC-lkp@intel.com/config)
+compiler: arm-linux-gnueabi-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20230903/202309030303.qSTfRgZC-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202309030303.qSTfRgZC-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> kernel/cgroup/cgroup.c:503:36: warning: 'cgroup_tryget_css' defined but not used [-Wunused-function]
+     503 | static struct cgroup_subsys_state *cgroup_tryget_css(struct cgroup *cgrp,
+         |                                    ^~~~~~~~~~~~~~~~~
+
+
+vim +/cgroup_tryget_css +503 kernel/cgroup/cgroup.c
+
+42809dd4225b2f kernel/cgroup.c        Tejun Heo 2012-11-19  494  
+d41bf8c9deaed1 kernel/cgroup/cgroup.c Tejun Heo 2017-10-23  495  /**
+d41bf8c9deaed1 kernel/cgroup/cgroup.c Tejun Heo 2017-10-23  496   * cgroup_tryget_css - try to get a cgroup's css for the specified subsystem
+d41bf8c9deaed1 kernel/cgroup/cgroup.c Tejun Heo 2017-10-23  497   * @cgrp: the cgroup of interest
+d41bf8c9deaed1 kernel/cgroup/cgroup.c Tejun Heo 2017-10-23  498   * @ss: the subsystem of interest
+d41bf8c9deaed1 kernel/cgroup/cgroup.c Tejun Heo 2017-10-23  499   *
+08b2b6fdf6b260 kernel/cgroup/cgroup.c Zhen Lei  2021-05-24  500   * Find and get @cgrp's css associated with @ss.  If the css doesn't exist
+d41bf8c9deaed1 kernel/cgroup/cgroup.c Tejun Heo 2017-10-23  501   * or is offline, %NULL is returned.
+d41bf8c9deaed1 kernel/cgroup/cgroup.c Tejun Heo 2017-10-23  502   */
+d41bf8c9deaed1 kernel/cgroup/cgroup.c Tejun Heo 2017-10-23 @503  static struct cgroup_subsys_state *cgroup_tryget_css(struct cgroup *cgrp,
+d41bf8c9deaed1 kernel/cgroup/cgroup.c Tejun Heo 2017-10-23  504  						     struct cgroup_subsys *ss)
+d41bf8c9deaed1 kernel/cgroup/cgroup.c Tejun Heo 2017-10-23  505  {
+d41bf8c9deaed1 kernel/cgroup/cgroup.c Tejun Heo 2017-10-23  506  	struct cgroup_subsys_state *css;
+d41bf8c9deaed1 kernel/cgroup/cgroup.c Tejun Heo 2017-10-23  507  
+d41bf8c9deaed1 kernel/cgroup/cgroup.c Tejun Heo 2017-10-23  508  	rcu_read_lock();
+d41bf8c9deaed1 kernel/cgroup/cgroup.c Tejun Heo 2017-10-23  509  	css = cgroup_css(cgrp, ss);
+a581563f1bef03 kernel/cgroup/cgroup.c Peng Wang 2019-07-03  510  	if (css && !css_tryget_online(css))
+d41bf8c9deaed1 kernel/cgroup/cgroup.c Tejun Heo 2017-10-23  511  		css = NULL;
+d41bf8c9deaed1 kernel/cgroup/cgroup.c Tejun Heo 2017-10-23  512  	rcu_read_unlock();
+d41bf8c9deaed1 kernel/cgroup/cgroup.c Tejun Heo 2017-10-23  513  
+d41bf8c9deaed1 kernel/cgroup/cgroup.c Tejun Heo 2017-10-23  514  	return css;
+d41bf8c9deaed1 kernel/cgroup/cgroup.c Tejun Heo 2017-10-23  515  }
+d41bf8c9deaed1 kernel/cgroup/cgroup.c Tejun Heo 2017-10-23  516  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
