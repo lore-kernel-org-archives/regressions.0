@@ -1,131 +1,125 @@
-Received: from mail-oi1-f175.google.com (mail-oi1-f175.google.com [209.85.167.175])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B84E0CA4D
-	for <regressions@lists.linux.dev>; Fri,  1 Sep 2023 22:48:37 +0000 (UTC)
-Received: by mail-oi1-f175.google.com with SMTP id 5614622812f47-3a9f88b663cso1611230b6e.3
-        for <regressions@lists.linux.dev>; Fri, 01 Sep 2023 15:48:37 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91AC07F
+	for <regressions@lists.linux.dev>; Sat,  2 Sep 2023 00:02:06 +0000 (UTC)
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1bc8a2f71eeso20647505ad.0
+        for <regressions@lists.linux.dev>; Fri, 01 Sep 2023 17:02:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1693608516; x=1694213316; darn=lists.linux.dev;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=eONqcjJk6d5/5qOWzNU6WGhoVewodjNEM3WP2cqp3kM=;
-        b=W5DqzXA8DBdm7pEEYb78i6W91ZdUPhMO4u+FvGOF6XKnc77dJTJ01w0aXm2wOUDRPZ
-         ONg3ZgoT8jvCi9IOyuGJ3MU3WsmNxaQdKe11ZNeun4usBTnNuoVfGZ0s9M4fDgKkFd+s
-         XoVqfVzdD9yvonSPoyXbX9PMWvblGOxieNxa1JoQ6zWKPW5siHHDc+z9hCn0yYhk7Q+e
-         dRFDT61unRU4Ch578hN9C6KlJAAgCS0hnfaaU/s0lPwFvg5mnTsRUhYj5gvmLqYC57uf
-         //pQzif86A91YwVVZAPtyAyE2BLpl1rWjJHKdQwcDpOMagiakrMkBcGBn3hzViobKcNi
-         9v2Q==
+        d=gmail.com; s=20221208; t=1693612926; x=1694217726; darn=lists.linux.dev;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BBHir4fqlkZjATOANvJTnaRzDFazZQGgXDcHwsUpUF8=;
+        b=jfApPKjgc7Ft2ec4apgElyTYP3U/rZNtltNfAQBdjfMhtg8UwtlWTXXHonv8nTz8qR
+         SCfbt+C1Z/kwX1XdyGZGG9R6rq2gjgTE/NcY0mJWJs3nN3KhNHT+ZDYM6BpG/x1ZlAzz
+         cEgo4qDuB9OiY+3MGLLoBTMOrsqz0ivuZJlz0j3RTEyNVFuJEJhnS26ShReCaCtawOtg
+         PTuYo0WnrHTvIvzg7D6bdJTyWz7wwlCoWSSaJuuiDpS8csHA9GYkmILfn8I5X3zjHZHF
+         SE8CE9JQMsBK/1/CRz6Dsb0/ykQ5OpTpSUqKKv+lnuwTuP2j5ZbWBubULbWySvJ+hFdM
+         crIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693608516; x=1694213316;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=eONqcjJk6d5/5qOWzNU6WGhoVewodjNEM3WP2cqp3kM=;
-        b=b4I8MwCReEhRZINarA2mmZQX5a004mGPgoMNy6tuY81nW2dP7Y0Z1IGfZXXn50oKks
-         ZGyw/CF6H4eW1g+GxZbDVP1ICv6sT3C5wbPRiOJMCBmOjre3qWyMDSDsBENeDclXyMpv
-         UISpJHFkKNLD3pQTqA0jZ1QAhNBX+nywjg/6a8QswoNYKJ8oBKWLMiPhF1r9JcC1sono
-         UiDCSU0SMX+lK9z9JQom6CxNpCJhoaiPPujrlIhbR0JbDI79udc56IElqrmQ3/cQQUGg
-         ZjGIjQINu7VJXLx6rtCKVIt1M8bajWzgg9ZEoWxf4VGiFybUnATibBLJR7Jqu3mSrSxc
-         lAQQ==
-X-Gm-Message-State: AOJu0YznFtm2Ye5EQhGbqwNYIj816Pob8JOPqSQokDNsGhihCrLkGu9j
-	/gQx9DHLUrOVYxZM55M7jjp/nA==
-X-Google-Smtp-Source: AGHT+IHIRsnpNF/YhT6AjUk2xXQfDzfvwC68NkNoXY8yFOH/ftGxUh9fhjMkLdg6gqKRvn70ENI6Ew==
-X-Received: by 2002:a05:6358:5207:b0:13a:a85b:c373 with SMTP id b7-20020a056358520700b0013aa85bc373mr4551287rwa.18.1693608516272;
-        Fri, 01 Sep 2023 15:48:36 -0700 (PDT)
-Received: from ripple.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
-        by smtp.gmail.com with ESMTPSA id i193-20020a0ddfca000000b00583d1fa1fccsm1332554ywe.0.2023.09.01.15.48.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Sep 2023 15:48:35 -0700 (PDT)
-Date: Fri, 1 Sep 2023 15:48:26 -0700 (PDT)
-From: Hugh Dickins <hughd@google.com>
-X-X-Sender: hugh@ripple.attlocal.net
-To: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-cc: Hugh Dickins <hughd@google.com>, Andrew Morton <akpm@linux-foundation.org>, 
-    Bagas Sanjaya <bagasdotme@gmail.com>, linux-kernel@vger.kernel.org, 
-    linux-mm@kvack.org, regressions@lists.linux.dev
-Subject: Re: 6.6/regression/bisected - after commit a349d72fd9efc87c8fd1d16d3164752d84a7275b
- system stopped booting
-In-Reply-To: <CABXGCsOPcu8R9rpdihNR5r822FAHBZ42wBa5XUa5RDVierD_tg@mail.gmail.com>
-Message-ID: <5e4d50d4-978-ce54-e1ae-40f7117dbf3d@google.com>
-References: <CABXGCsNi8Tiv5zUPNXr6UJw6qV1VdaBEfGqEAMkkXE3QPvZuAQ@mail.gmail.com> <3548ca67-ce58-3bc6-fef5-348b98d7678b@google.com> <CABXGCsOyamBvQ=Y-M9HQBTfEDfaRwGqzXqayBm7L259Q+t+gJQ@mail.gmail.com> <98eb1ba4-5bd3-ee7-1a88-47b054dc938@google.com>
- <CABXGCsOPcu8R9rpdihNR5r822FAHBZ42wBa5XUa5RDVierD_tg@mail.gmail.com>
+        d=1e100.net; s=20221208; t=1693612926; x=1694217726;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=BBHir4fqlkZjATOANvJTnaRzDFazZQGgXDcHwsUpUF8=;
+        b=BJ1GUJqdaS4PWkNi5yEEpdbanp3KgK7LYmdD75rLxE0g6Jkzdqa4EWDjtIxdCUnjOJ
+         OxVFQv0gl9QaqobYC1VBIbP7nw1iAUkp6PRv8t4D+jhVub+4BHHMlTcee7tLtMr8HjWH
+         HioOb4S0vVbJmTBMfRGGNL/bc+2a6oF+gJvGxx7gDJi3tRVL95M0siVrj+cfyxKpZPYt
+         iHysc8KkL30+Kx71g60u7qXpZRX8bxHOsPK8OOJlj9b+VeIHeDQF5v49AXFflCcUD+Nj
+         IviOwJpv7zN0tDUcmXr4OyMOq3CTmBqD41ywyvOlrvIyDiwt6QgDoYZok/kejl8tXGKT
+         Vxow==
+X-Gm-Message-State: AOJu0YxN13T8Pw9reeoPhe51TvWY+c3ZW5C6FqhsYtW+ygZMTEIHzNuU
+	JPti7FHFVVC9GlZdJT2Hqfs=
+X-Google-Smtp-Source: AGHT+IEh7+4d8XZvbhk9lepBKYK0sM8SMFxCscjK63UUSC17NWVSSaJIEv72x/SN81Qx1AJi+qUaGA==
+X-Received: by 2002:a17:903:2288:b0:1c0:8bf3:eb15 with SMTP id b8-20020a170903228800b001c08bf3eb15mr5119172plh.30.1693612925681;
+        Fri, 01 Sep 2023 17:02:05 -0700 (PDT)
+Received: from [192.168.0.106] ([103.124.138.83])
+        by smtp.gmail.com with ESMTPSA id 4-20020a170902e9c400b001b86dd825e7sm3512634plk.108.2023.09.01.17.02.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 01 Sep 2023 17:02:05 -0700 (PDT)
+Message-ID: <f8c26878-aabc-7cc9-59a1-3f68bf1d43c1@gmail.com>
+Date: Sat, 2 Sep 2023 07:01:59 +0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="-1463760895-45710664-1693608515=:22700"
-
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
----1463760895-45710664-1693608515=:22700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.0
+Content-Language: en-US
+To: Daniel Vetter <daniel.vetter@ffwll.ch>,
+ Thomas Zimmermann <tzimmermann@suse.de>,
+ Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+ Helge Deller <deller@gmx.de>, Alexei Gradinari <alex2grad@gmail.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Linux Framebuffer <linux-fbdev@vger.kernel.org>,
+ Linux DRI Development <dri-devel@lists.freedesktop.org>
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+Subject: Fwd: Kernel version 6.1.50 regression: radeonfb deactivate vga
+ console
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Transfer-Encoding: 7bit
 
-On Fri, 1 Sep 2023, Mikhail Gavrilov wrote:
-> On Fri, Sep 1, 2023 at 2:08=E2=80=AFPM Hugh Dickins <hughd@google.com> wr=
-ote:
-> >
-> >
-> > Sorry about that, please try this instead, adds EXPORT_SYMBOL(pte_unmap=
-).
-> >
->=20
-> Thanks, now I have a working kernel builded at commit a349d72fd9ef.
->=20
-> > I've never used stackdepot before, but I've tried this out in good and
-> > bad cases, and expect it to work for you, shedding light on where is
-> > going wrong - machine should boot up fine, and in dmesg you'll find one
-> > stacktrace between "WARNING: pte_map..." and "End of pte_map..." lines.
->=20
-> Interesting, I checked twice but I didn't find any entry with
-> "pte_map" in the kernel log after applying your patch.
+Hi,
 
-That was very disappointing: I found it hard to explain, but was thinking
-of sending you a similar patch, doing the same check on all your 32 CPUs -
-maybe the stall being on CPU 0 in your photo was accidental.
+I notice a regression report on Bugzilla [1]. Quoting from it:
 
-But now I think I have the shameful answer (which studying your dmesg,
-and the 82328 jiffies at 86 seconds in your photo, did help me towards).
+> Since kernel version 6.1.50 the VGA console stopped working on all HP ProLiant (G6 and G7) servers with [AMD/ATI] ES1000 VGA controller.
+> 
+> No issue with all kernel version 6.1.X before 6.1.50.
+> No issue with the kernel 6.1.50 with the reversed next commit:
+> 
+> commit 6db53af15444e7022640d7b8d5e7531d94e27a43
+> Author: Daniel Vetter <daniel.vetter@ffwll.ch>
+> Date:   Wed Jan 11 16:41:08 2023 +0100
+>     fbdev/radeon: use pci aperture helpers
+> 
+> With the commit 6db53af15444e7022640d7b8d5e7531d94e27a43 there is kernel log "radeonfb 0000:01:03.0: vgaarb: deactivate vga console" and VGA console not working. Without this commit no such log and VGA console working.
+> 
+> Equipment:
+> HP ProLiant DL360 G7
+> 01:03.0 VGA compatible controller: Advanced Micro Devices, Inc. [AMD/ATI] ES1000 (rev 02) (prog-if 00 [VGA controller])
+>         Subsystem: Hewlett-Packard Company ProLiant DL360 G5
+>         Control: I/O+ Mem+ BusMaster- SpecCycle- MemWINV- VGASnoop- ParErr- Stepping+ SERR+ FastB2B- DisINTx-
+>         Status: Cap+ 66MHz- UDF- FastB2B+ ParErr- DEVSEL=medium >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+>         Interrupt: pin A routed to IRQ 23
+>         Region 0: Memory at e8000000 (32-bit, prefetchable) [size=128M]
+>         Region 1: I/O ports at 2000 [size=256]
+>         Region 2: Memory at f1cf0000 (32-bit, non-prefetchable) [size=64K]
+>         Expansion ROM at 000c0000 [virtual] [disabled] [size=128K]
+>         Capabilities: [50] Power Management version 2
+>                 Flags: PMEClk- DSI- D1+ D2+ AuxCurrent=0mA PME(D0-,D1-,D2-,D3hot-,D3cold-)
+>                 Status: D0 NoSoftRst- PME-Enable- DSel=0 DScale=0 PME-
+>         Kernel driver in use: radeonfb
+> 
+> HP ProLiant ML330 G6
+> 01:03.0 VGA compatible controller: Advanced Micro Devices, Inc. [AMD/ATI] ES1000 (rev 02) (prog-if 00 [VGA controller])
+>         Subsystem: Hewlett-Packard Company ProLiant DL360 G5
+>         Control: I/O+ Mem+ BusMaster- SpecCycle- MemWINV- VGASnoop- ParErr- Stepping+ SERR+ FastB2B- DisINTx-
+>         Status: Cap+ 66MHz- UDF- FastB2B+ ParErr- DEVSEL=medium >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+>         Interrupt: pin A routed to IRQ 23
+>         Region 0: Memory at f0000000 (32-bit, prefetchable) [size=128M]
+>         Region 1: I/O ports at 3000 [size=256]
+>         Region 2: Memory at fbef0000 (32-bit, non-prefetchable) [size=64K]
+>         Expansion ROM at 000c0000 [virtual] [disabled] [size=128K]
+>         Capabilities: [50] Power Management version 2
+>                 Flags: PMEClk- DSI- D1+ D2+ AuxCurrent=0mA PME(D0-,D1-,D2-,D3hot-,D3cold-)
+>                 Status: D0 NoSoftRst- PME-Enable- DSel=0 DScale=0 PME-
+>         Kernel driver in use: radeonfb
 
-That mm/pagewalk fix I put into 6.5 has a grievous oversight (and a
-video of your failing 6.6 bootup would likely have shown a WARN_ON_ONCE
-from the underflow in __rcu_read_unlock()).
+See Bugzilla for the full thread.
 
-Please revert the debug patch I sent yesterday (or earlier today), please
-try booting with this one on top of a349d72fd9ef; and if that's successful,
-then please go back to your original Rawhide tree and apply this on top of
-that, to confirm that boots to a working system too - thanks.
+Anyway, I'm adding it to regzbot:
 
-With my apologies,
+#regzbot introduced: 9b539c4d1b921b https://bugzilla.kernel.org/show_bug.cgi?id=217861
+#regzbot title: using pci aperture helpers deactivates AMD ES1000 VGA controller
 
-[PATCH] mm/pagewalk: fix bootstopping regression from extra pte_unmap()
+Thanks.
 
-[ Commit message yet to be written: it's actually something to go to
-6.5 stable, to correct i386 CONFIG_HIGHPTE there - though we know of
-no case where it is actually hit. ]
+[1]: https://bugzilla.kernel.org/show_bug.cgi?id=217861
 
-Signed-off-by: Hugh Dickins <hughd@google.com>
----
- mm/pagewalk.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/mm/pagewalk.c b/mm/pagewalk.c
-index 2022333805d3..9e7d0276c38a 100644
---- a/mm/pagewalk.c
-+++ b/mm/pagewalk.c
-@@ -58,7 +58,7 @@ static int walk_pte_range(pmd_t *pmd, unsigned long addr,=
- unsigned long end,
- =09=09=09pte =3D pte_offset_map(pmd, addr);
- =09=09if (pte) {
- =09=09=09err =3D walk_pte_range_inner(pte, addr, end, walk);
--=09=09=09if (walk->mm !=3D &init_mm)
-+=09=09=09if (walk->mm !=3D &init_mm && addr < TASK_SIZE)
- =09=09=09=09pte_unmap(pte);
- =09=09}
- =09} else {
---=20
-2.35.3
----1463760895-45710664-1693608515=:22700--
+-- 
+An old man doll... just what I always wanted! - Clara
