@@ -1,45 +1,45 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-oa1-f53.google.com (mail-oa1-f53.google.com [209.85.160.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91AC07F
-	for <regressions@lists.linux.dev>; Sat,  2 Sep 2023 00:02:06 +0000 (UTC)
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1bc8a2f71eeso20647505ad.0
-        for <regressions@lists.linux.dev>; Fri, 01 Sep 2023 17:02:06 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25D8C7F
+	for <regressions@lists.linux.dev>; Sat,  2 Sep 2023 00:21:04 +0000 (UTC)
+Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-1ccb58b0099so1639313fac.0
+        for <regressions@lists.linux.dev>; Fri, 01 Sep 2023 17:21:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1693612926; x=1694217726; darn=lists.linux.dev;
+        d=gmail.com; s=20221208; t=1693614064; x=1694218864; darn=lists.linux.dev;
         h=content-transfer-encoding:subject:from:cc:to:content-language
          :user-agent:mime-version:date:message-id:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=BBHir4fqlkZjATOANvJTnaRzDFazZQGgXDcHwsUpUF8=;
-        b=jfApPKjgc7Ft2ec4apgElyTYP3U/rZNtltNfAQBdjfMhtg8UwtlWTXXHonv8nTz8qR
-         SCfbt+C1Z/kwX1XdyGZGG9R6rq2gjgTE/NcY0mJWJs3nN3KhNHT+ZDYM6BpG/x1ZlAzz
-         cEgo4qDuB9OiY+3MGLLoBTMOrsqz0ivuZJlz0j3RTEyNVFuJEJhnS26ShReCaCtawOtg
-         PTuYo0WnrHTvIvzg7D6bdJTyWz7wwlCoWSSaJuuiDpS8csHA9GYkmILfn8I5X3zjHZHF
-         SE8CE9JQMsBK/1/CRz6Dsb0/ykQ5OpTpSUqKKv+lnuwTuP2j5ZbWBubULbWySvJ+hFdM
-         crIg==
+        bh=Psrz6OLugnAHI8N/ongnXW3Llo2Oy5igQZp0EV1W0To=;
+        b=fhHqVoAfPb++2R46GcpiCkQ4n0r2T90igoK2UCqzqHRV0KNjg2kY1EzfSLJWkdaulG
+         f/mpwzqIW1+L9dbGTSbs6k/BNwqZCj2VIYK+1fIDooKTpjxJhpOgMRpFbGipsacoYIy8
+         l1XvK3GSE4a9gr5rkHGaFWFvXlnjAsuecZBQTi1Jy51hHNpfWWbQgCpctv8OiON6c1hh
+         iZT7Q37ypWU/iTpTckUX+VLKzKFyymGRhdSHfnGR+LaxK9MqL2kzLBX4LIkEo9kF+Vj6
+         3DvuP0tVnRWLJtjVOfetepUt2kDrbxBF6uM/d4uvd31hG8/FJ81AbSsGbrPUKH5kdfAa
+         hCsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693612926; x=1694217726;
+        d=1e100.net; s=20221208; t=1693614064; x=1694218864;
         h=content-transfer-encoding:subject:from:cc:to:content-language
          :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=BBHir4fqlkZjATOANvJTnaRzDFazZQGgXDcHwsUpUF8=;
-        b=BJ1GUJqdaS4PWkNi5yEEpdbanp3KgK7LYmdD75rLxE0g6Jkzdqa4EWDjtIxdCUnjOJ
-         OxVFQv0gl9QaqobYC1VBIbP7nw1iAUkp6PRv8t4D+jhVub+4BHHMlTcee7tLtMr8HjWH
-         HioOb4S0vVbJmTBMfRGGNL/bc+2a6oF+gJvGxx7gDJi3tRVL95M0siVrj+cfyxKpZPYt
-         iHysc8KkL30+Kx71g60u7qXpZRX8bxHOsPK8OOJlj9b+VeIHeDQF5v49AXFflCcUD+Nj
-         IviOwJpv7zN0tDUcmXr4OyMOq3CTmBqD41ywyvOlrvIyDiwt6QgDoYZok/kejl8tXGKT
-         Vxow==
-X-Gm-Message-State: AOJu0YxN13T8Pw9reeoPhe51TvWY+c3ZW5C6FqhsYtW+ygZMTEIHzNuU
-	JPti7FHFVVC9GlZdJT2Hqfs=
-X-Google-Smtp-Source: AGHT+IEh7+4d8XZvbhk9lepBKYK0sM8SMFxCscjK63UUSC17NWVSSaJIEv72x/SN81Qx1AJi+qUaGA==
-X-Received: by 2002:a17:903:2288:b0:1c0:8bf3:eb15 with SMTP id b8-20020a170903228800b001c08bf3eb15mr5119172plh.30.1693612925681;
-        Fri, 01 Sep 2023 17:02:05 -0700 (PDT)
+        bh=Psrz6OLugnAHI8N/ongnXW3Llo2Oy5igQZp0EV1W0To=;
+        b=QEl4Xk3ohnJMiyijightmJChqhkm+2aXfzQKR3sUGec+GbK2OCOSuTa4GS4zQYO3/h
+         zH8O+97jwli29X08Q/kTwZf+Yt6j33bwlqHAvo1akidze/LG4kdFI7WZNOalZvHyJxR/
+         jDbOF1M5522LR9ZaOJ4ZUyvbNjB1C5HtUT+l459R7CBCQHvg6fkLURayx5106qs7Z0Bg
+         QVw0B4b4jxaZ8lFY1oTYnF28TGoJ6Lc+r3F9V4CPaF4jgLMXN9d2Po3zeJ3LWEBQRxqD
+         CwJ/iPExZTOQ6dz9s04FWplbZwC0hOpKFsKwOVvv9ZMt+letMJIDXiHiLIjNNN5hL8HO
+         ldZA==
+X-Gm-Message-State: AOJu0Ywj0JYXKyxOeAQ5uUJdY4qXJf5mynNCTtXOsHVnoojqugbgR0tS
+	XZ/rm7kap3as/U3qjnWp6+A=
+X-Google-Smtp-Source: AGHT+IFW9L2FLM8HcMkKhApzzFEzKsT9XZi/6S0+2uIs6H5Z0No5EZjuDhBc7GDMPQLEFnuqZxe4CA==
+X-Received: by 2002:a05:6870:561f:b0:1bf:2ad9:8dae with SMTP id m31-20020a056870561f00b001bf2ad98daemr4717892oao.45.1693614063761;
+        Fri, 01 Sep 2023 17:21:03 -0700 (PDT)
 Received: from [192.168.0.106] ([103.124.138.83])
-        by smtp.gmail.com with ESMTPSA id 4-20020a170902e9c400b001b86dd825e7sm3512634plk.108.2023.09.01.17.02.03
+        by smtp.gmail.com with ESMTPSA id s7-20020a17090a5d0700b0026b12768e46sm3488542pji.42.2023.09.01.17.20.59
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 01 Sep 2023 17:02:05 -0700 (PDT)
-Message-ID: <f8c26878-aabc-7cc9-59a1-3f68bf1d43c1@gmail.com>
-Date: Sat, 2 Sep 2023 07:01:59 +0700
+        Fri, 01 Sep 2023 17:21:03 -0700 (PDT)
+Message-ID: <0e6de51b-da1d-43f0-ffae-fb521febbe07@gmail.com>
+Date: Sat, 2 Sep 2023 07:20:55 +0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -49,17 +49,17 @@ MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.15.0
 Content-Language: en-US
-To: Daniel Vetter <daniel.vetter@ffwll.ch>,
- Thomas Zimmermann <tzimmermann@suse.de>,
- Benjamin Herrenschmidt <benh@kernel.crashing.org>,
- Helge Deller <deller@gmx.de>, Alexei Gradinari <alex2grad@gmail.com>
+To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+ "Paul E. McKenney" <paulmck@kernel.org>,
+ "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+ Mark Rutland <mark.rutland@arm.com>, Sean Christopherson
+ <seanjc@google.com>, Janpieter Sollie <janpieter.sollie@edpnet.be>
 Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>,
- Linux Framebuffer <linux-fbdev@vger.kernel.org>,
- Linux DRI Development <dri-devel@lists.freedesktop.org>
+ Linux Regressions <regressions@lists.linux.dev>
 From: Bagas Sanjaya <bagasdotme@gmail.com>
-Subject: Fwd: Kernel version 6.1.50 regression: radeonfb deactivate vga
- console
+Subject: Fwd: Uhhuh. NMI received for unknown reason 3d/2d/ on CPU xx
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -67,59 +67,109 @@ Hi,
 
 I notice a regression report on Bugzilla [1]. Quoting from it:
 
-> Since kernel version 6.1.50 the VGA console stopped working on all HP ProLiant (G6 and G7) servers with [AMD/ATI] ES1000 VGA controller.
+> seems to be a regression since 6.5 release:
+> the infamous error message from the kernel on this 32c/64t threadripper:
+>> [ 2046.269103] perf: interrupt took too long (3141 > 3138), lowering
+>> kernel.perf_event_max_sample_rate to 63600
+>> [ 2405.049567] Uhhuh. NMI received for unknown reason 2d on CPU 48.
+>> [ 2405.049571] Dazed and confused, but trying to continue
+>> [ 2406.902609] Uhhuh. NMI received for unknown reason 2d on CPU 33.
+>> [ 2406.902612] Dazed and confused, but trying to continue
+>> [ 2423.978918] Uhhuh. NMI received for unknown reason 2d on CPU 33.
+>> [ 2423.978921] Dazed and confused, but trying to continue
+>> [ 2429.995160] Uhhuh. NMI received for unknown reason 3d on CPU 48.
+>> [ 2429.995163] Dazed and confused, but trying to continue
+>> [ 2431.233575] Uhhuh. NMI received for unknown reason 3d on CPU 36.
+>> [ 2431.233578] Dazed and confused, but trying to continue
+>> [ 2442.382252] Uhhuh. NMI received for unknown reason 3d on CPU 48.
+>> [ 2442.382255] Dazed and confused, but trying to continue
+>> [ 2442.725076] Uhhuh. NMI received for unknown reason 2d on CPU 49.
+>> [ 2442.725078] Dazed and confused, but trying to continue
+>> [ 2442.732025] Uhhuh. NMI received for unknown reason 2d on CPU 48.
+>> [ 2442.732027] Dazed and confused, but trying to continue
+>> [ 2443.666671] Uhhuh. NMI received for unknown reason 2d on CPU 48.
+>> [ 2443.666673] Dazed and confused, but trying to continue
+>> [ 2443.756776] Uhhuh. NMI received for unknown reason 3d on CPU 39.
+>> [ 2443.756779] Dazed and confused, but trying to continue
+>> [ 2443.907309] Uhhuh. NMI received for unknown reason 3d on CPU 48.
+>> [ 2443.907311] Dazed and confused, but trying to continue
+>> [ 2444.004281] Uhhuh. NMI received for unknown reason 3d on CPU 49.
+>> [ 2444.004283] Dazed and confused, but trying to continue
+>> [ 2444.207944] Uhhuh. NMI received for unknown reason 2d on CPU 49.
+>> [ 2444.207945] Dazed and confused, but trying to continue
+>> [ 2444.517408] Uhhuh. NMI received for unknown reason 3d on CPU 49.
+>> [ 2444.517410] Dazed and confused, but trying to continue
+>> [ 2444.946941] Uhhuh. NMI received for unknown reason 2d on CPU 49.
+>> [ 2444.946943] Dazed and confused, but trying to continue
+>> [ 2445.573807] Uhhuh. NMI received for unknown reason 2d on CPU 49.
+>> [ 2445.573809] Dazed and confused, but trying to continue
+>> [ 2445.776108] Uhhuh. NMI received for unknown reason 2d on CPU 49.
+>> [ 2445.776110] Dazed and confused, but trying to continue
+>> [ 2445.969029] Uhhuh. NMI received for unknown reason 2d on CPU 49.
+>> [ 2445.969031] Dazed and confused, but trying to continue
+>> [ 2446.977458] Uhhuh. NMI received for unknown reason 3d on CPU 49.
+>> [ 2446.977460] Dazed and confused, but trying to continue
+>> [ 2447.044329] Uhhuh. NMI received for unknown reason 2d on CPU 46.
+>> [ 2447.044331] Dazed and confused, but trying to continue
+>> [ 2447.469269] Uhhuh. NMI received for unknown reason 2d on CPU 49.
+>> [ 2447.469271] Dazed and confused, but trying to continue
+>> [ 2447.866530] Uhhuh. NMI received for unknown reason 3d on CPU 48.
+>> [ 2447.866531] Dazed and confused, but trying to continue
+>> [ 2448.456615] Uhhuh. NMI received for unknown reason 3d on CPU 48.
+>> [ 2448.456617] Dazed and confused, but trying to continue
+>> [ 2448.509614] Uhhuh. NMI received for unknown reason 2d on CPU 49.
+>> [ 2448.509616] Dazed and confused, but trying to continue
+>> [ 2448.758005] Uhhuh. NMI received for unknown reason 3d on CPU 49.
+>> [ 2448.758007] Dazed and confused, but trying to continue
+>> [ 2449.093565] Uhhuh. NMI received for unknown reason 3d on CPU 48.
+>> [ 2449.093567] Dazed and confused, but trying to continue
+>> [ 2449.227344] Uhhuh. NMI received for unknown reason 3d on CPU 48.
+>> [ 2449.227346] Dazed and confused, but trying to continue
+>> [ 2449.770534] Uhhuh. NMI received for unknown reason 2d on CPU 49.
+>> [ 2449.770535] Dazed and confused, but trying to continue
+>> [ 2449.955594] Uhhuh. NMI received for unknown reason 3d on CPU 48.
+>> [ 2449.955596] Dazed and confused, but trying to continue
+>> [ 2450.077872] Uhhuh. NMI received for unknown reason 2d on CPU 48.
+>> [ 2450.077874] Dazed and confused, but trying to continue
+>> [ 2450.190844] Uhhuh. NMI received for unknown reason 3d on CPU 49.
+>> [ 2450.190846] Dazed and confused, but trying to continue
+>> [ 2450.561450] Uhhuh. NMI received for unknown reason 2d on CPU 49.
+>> [ 2450.561452] Dazed and confused, but trying to continue
+>> [ 2450.604498] Uhhuh. NMI received for unknown reason 3d on CPU 48.
+>> [ 2450.604500] Dazed and confused, but trying to continue
+>> [ 2450.814451] Uhhuh. NMI received for unknown reason 3d on CPU 48.
+>> [ 2450.814453] Dazed and confused, but trying to continue
+>> [ 2450.923171] Uhhuh. NMI received for unknown reason 2d on CPU 49.
+>> [ 2450.923173] Dazed and confused, but trying to continue
+>> [ 2451.084612] Uhhuh. NMI received for unknown reason 3d on CPU 49.
+>> [ 2451.084614] Dazed and confused, but trying to continue
+>> [ 2451.793342] Uhhuh. NMI received for unknown reason 3d on CPU 49.
+>> [ 2451.793343] Dazed and confused, but trying to continue
+>> [ 2451.793662] Uhhuh. NMI received for unknown reason 2d on CPU 48.
+>> [ 2451.793664] Dazed and confused, but trying to continue
+>> [ 2451.926819] Uhhuh. NMI received for unknown reason 3d on CPU 48.
+>> [ 2451.926821] Dazed and confused, but trying to continue
+>> [ 2452.502583] Uhhuh. NMI received for unknown reason 3d on CPU 49.
+>> [ 2452.502585] Dazed and confused, but trying to continue
+>> [ 2452.675633] Uhhuh. NMI received for unknown reason 2d on CPU 61.
+>> [ 2452.675636] Dazed and confused, but trying to continue
+>> [ 2452.974655] Uhhuh. NMI received for unknown reason 2d on CPU 48.
+>> [ 2452.974657] Dazed and confused, but trying to continue
+>> [ 7065.904855] elogind-daemon[2461]: New session c2 of user janpieter.
 > 
-> No issue with all kernel version 6.1.X before 6.1.50.
-> No issue with the kernel 6.1.50 with the reversed next commit:
-> 
-> commit 6db53af15444e7022640d7b8d5e7531d94e27a43
-> Author: Daniel Vetter <daniel.vetter@ffwll.ch>
-> Date:   Wed Jan 11 16:41:08 2023 +0100
->     fbdev/radeon: use pci aperture helpers
-> 
-> With the commit 6db53af15444e7022640d7b8d5e7531d94e27a43 there is kernel log "radeonfb 0000:01:03.0: vgaarb: deactivate vga console" and VGA console not working. Without this commit no such log and VGA console working.
-> 
-> Equipment:
-> HP ProLiant DL360 G7
-> 01:03.0 VGA compatible controller: Advanced Micro Devices, Inc. [AMD/ATI] ES1000 (rev 02) (prog-if 00 [VGA controller])
->         Subsystem: Hewlett-Packard Company ProLiant DL360 G5
->         Control: I/O+ Mem+ BusMaster- SpecCycle- MemWINV- VGASnoop- ParErr- Stepping+ SERR+ FastB2B- DisINTx-
->         Status: Cap+ 66MHz- UDF- FastB2B+ ParErr- DEVSEL=medium >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
->         Interrupt: pin A routed to IRQ 23
->         Region 0: Memory at e8000000 (32-bit, prefetchable) [size=128M]
->         Region 1: I/O ports at 2000 [size=256]
->         Region 2: Memory at f1cf0000 (32-bit, non-prefetchable) [size=64K]
->         Expansion ROM at 000c0000 [virtual] [disabled] [size=128K]
->         Capabilities: [50] Power Management version 2
->                 Flags: PMEClk- DSI- D1+ D2+ AuxCurrent=0mA PME(D0-,D1-,D2-,D3hot-,D3cold-)
->                 Status: D0 NoSoftRst- PME-Enable- DSel=0 DScale=0 PME-
->         Kernel driver in use: radeonfb
-> 
-> HP ProLiant ML330 G6
-> 01:03.0 VGA compatible controller: Advanced Micro Devices, Inc. [AMD/ATI] ES1000 (rev 02) (prog-if 00 [VGA controller])
->         Subsystem: Hewlett-Packard Company ProLiant DL360 G5
->         Control: I/O+ Mem+ BusMaster- SpecCycle- MemWINV- VGASnoop- ParErr- Stepping+ SERR+ FastB2B- DisINTx-
->         Status: Cap+ 66MHz- UDF- FastB2B+ ParErr- DEVSEL=medium >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
->         Interrupt: pin A routed to IRQ 23
->         Region 0: Memory at f0000000 (32-bit, prefetchable) [size=128M]
->         Region 1: I/O ports at 3000 [size=256]
->         Region 2: Memory at fbef0000 (32-bit, non-prefetchable) [size=64K]
->         Expansion ROM at 000c0000 [virtual] [disabled] [size=128K]
->         Capabilities: [50] Power Management version 2
->                 Flags: PMEClk- DSI- D1+ D2+ AuxCurrent=0mA PME(D0-,D1-,D2-,D3hot-,D3cold-)
->                 Status: D0 NoSoftRst- PME-Enable- DSel=0 DScale=0 PME-
->         Kernel driver in use: radeonfb
+> according to dmesg, this happens without any special reason (I didn't even notice)
+> some googling points at a ACPI C state problem on AMD CPUs a few years ago
+> in 5.14 kernels, I didn't see it.
 
 See Bugzilla for the full thread.
 
-Anyway, I'm adding it to regzbot:
+Anyway, I'm adding this regression to be tracked by regzbot:
 
-#regzbot introduced: 9b539c4d1b921b https://bugzilla.kernel.org/show_bug.cgi?id=217861
-#regzbot title: using pci aperture helpers deactivates AMD ES1000 VGA controller
+#regzbot introduced: v6.4..v6.5 https://bugzilla.kernel.org/show_bug.cgi?id=217857
 
 Thanks.
 
-[1]: https://bugzilla.kernel.org/show_bug.cgi?id=217861
+[1]: https://bugzilla.kernel.org/show_bug.cgi?id=217857
 
 -- 
 An old man doll... just what I always wanted! - Clara
