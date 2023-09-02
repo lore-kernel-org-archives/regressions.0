@@ -1,84 +1,99 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from mail-oo1-f48.google.com (mail-oo1-f48.google.com [209.85.161.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0A4C2F3E
-	for <regressions@lists.linux.dev>; Sat,  2 Sep 2023 11:32:32 +0000 (UTC)
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-401bbfc05fcso29083845e9.3
-        for <regressions@lists.linux.dev>; Sat, 02 Sep 2023 04:32:32 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 629985CBB
+	for <regressions@lists.linux.dev>; Sat,  2 Sep 2023 15:30:00 +0000 (UTC)
+Received: by mail-oo1-f48.google.com with SMTP id 006d021491bc7-57128297bd7so18810eaf.0
+        for <regressions@lists.linux.dev>; Sat, 02 Sep 2023 08:30:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1693654351; x=1694259151; darn=lists.linux.dev;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=8iUJUPxov9O7zxFefQw4YzTRyz6MbPYWWecwL9vIvnM=;
-        b=eFK0/tcj9zrA/ZG90qESx3pUiOXOlL9PZHxlxN2Np2Q/DXkJRgDxxeLl2yUPiafO9S
-         aucYAjGC7YVW21Lg4sojwjr5DpV/cR0h+e4YepCCrOjwTJuh1PNTaCGGeNRjZynbELVX
-         GDQXUa4wwFd5zRndApj4D92CEGGddLzO+k6doxzrBRf0RGWRGqi3LmQOva4Ns+BMOuYo
-         i21AI208oY6QdQmPZ53vJL8/3WE63wWDWkp2BFbHj8KHJ1QZSwsL6sbiS3JieaKrdRqb
-         BDBV+XXDDt5cFDsifCsK3dkMoIH/JIUfRSmZBa706jyo/AUwrTgA2/R1v+MPMPhhnm7G
-         R9ew==
+        d=google.com; s=20221208; t=1693668599; x=1694273399; darn=lists.linux.dev;
+        h=mime-version:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=94vGaJ39BVEqwQYt2X0XTeCa7BR+bq/679T/VBpfA0g=;
+        b=MrWiQDhrhLUpG+4iSi89rj5wj8xSxvArokztFPKcbV3WGfHZ0HRLI87kBxoh9Pzymy
+         GzRd4QIxejaalgHKlpcPI3CfpQ0KuHqa1psux5L/vzZ4s0ioc48Bq0WviSHNfsFNlBYZ
+         6RM85NNI+TqlolQ3EezdI8D8beFoFy3TTSpAscgJLeP/OOaV4WsP/L9YwxYmOv1SzCSi
+         a7fe9PBrIcMWu1l9ageLmxhmcOpFo/HdW6NhTHszuz5AOTfcx4iiWy5rMWCfKyuFWG+g
+         KQrQkYwoHBLWmfPvsya9Y4n+/uga0vptTz8E+mXFS6Hb6O/U/YyO94aLrFx5CAh66nF2
+         s3uw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693654351; x=1694259151;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8iUJUPxov9O7zxFefQw4YzTRyz6MbPYWWecwL9vIvnM=;
-        b=JLpH2ZxT4k7o3NXjzox9qkakbb+b5WnYDaYI3AkOPOZuKI3GmnaQvtyizX+5x6by9H
-         73k70zuS1kJQlD1+MpSL5LMP6ux1GOuUE42LgYM9k1wezTZaBykfPG/RbOYF4L0uQmG0
-         gg50kT7u+Bks9HONmuic6lOJDjgGYQpg4y3YcCmu1yn3e4xfIlEGTwWFJCHKRm3WDDlo
-         RwINGaDz9gp5YObtAaZ3Za3FOgGocAuLZmC+iRXQpqT/9LGq+O32FgGnHHqefHhgUmO/
-         cO+lGJ5rU0HsZZnT/qrY7yHr738lA9ctR4s4nbEgDTKFCM+yKej/mafeQtAxUWV9fTMT
-         sQ1Q==
-X-Gm-Message-State: AOJu0YzgRcnO6bE3Q13hPBphESi3+EkoBbmRjHZvphJSTJEJss0tNlaZ
-	UvQiTmtz06S7Pe8knlV2jlA=
-X-Google-Smtp-Source: AGHT+IEksE8aCxWYWYtz9f8hJhASA/oom1urAUAGSWY1ZnDYtHwOpnaM2MoadmcuHWJOdFkt8mBWZQ==
-X-Received: by 2002:a05:600c:364c:b0:401:b0f2:88b4 with SMTP id y12-20020a05600c364c00b00401b0f288b4mr3515615wmq.26.1693654350471;
-        Sat, 02 Sep 2023 04:32:30 -0700 (PDT)
-Received: from debian ([63.135.72.41])
-        by smtp.gmail.com with ESMTPSA id m18-20020a7bca52000000b003fe601a7d46sm10868578wml.45.2023.09.02.04.32.29
+        d=1e100.net; s=20221208; t=1693668599; x=1694273399;
+        h=mime-version:message-id:subject:cc:to:from:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=94vGaJ39BVEqwQYt2X0XTeCa7BR+bq/679T/VBpfA0g=;
+        b=Va5+2h5pyGsPTX1sfC5wISPvmeqDxZK3GOVUEBhW6q+xWlwlVqdI7WXyJeyJ5HSBQ/
+         H+Q6eQU/4ZQY77bu/POJ+eHlPGueiXqMmt6KIpQjz1V2setPT7qnkTRpL6djNAHYPfEG
+         z0UwvWj/26qds/Ag+YltxxPpUBj9NQrERVhGn/SoHE/N+aXC/QwOalUWBCoK4dXAsXgH
+         iWjUWF1DztIdWAJRYWQsc19gA1cp//L41B8yRKSu3kCw54ca2gPpbiwtzvzNtgnec7hT
+         EulsmSKzmhusi6rs0GNBvAPQOFVVq+yHAgHNrGPmxYrZLgsT6LkiarCXbfqxav8xmsdZ
+         ju+A==
+X-Gm-Message-State: AOJu0Yxts3/Tpn6U6HTfP4mMlfkNEyxHxHPYTJET1wMJeXzbpoCowhCS
+	lMpUmMJt7B723/QTYo2cVEMEIQ==
+X-Google-Smtp-Source: AGHT+IHA0XTRV8+ro9PdmZKhn1UTJ+8ioIcr8KGiOrHgZfMCqzyTp/BRmG0aV3RaSUgLAN9vhIP00g==
+X-Received: by 2002:a54:418c:0:b0:3a1:e85f:33c3 with SMTP id 12-20020a54418c000000b003a1e85f33c3mr5821810oiy.50.1693668599087;
+        Sat, 02 Sep 2023 08:29:59 -0700 (PDT)
+Received: from ripple.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
+        by smtp.gmail.com with ESMTPSA id t78-20020a25aad4000000b00bcd91bb300esm1448109ybi.54.2023.09.02.08.29.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 02 Sep 2023 04:32:30 -0700 (PDT)
-Date: Sat, 2 Sep 2023 12:32:28 +0100
-From: "Sudip Mukherjee (Codethink)" <sudipm.mukherjee@gmail.com>
-To: Miaohe Lin <linmiaohe@huawei.com>, Tejun Heo <tj@kernel.org>
-Cc: Zefan Li <lizefan.x@bytedance.com>,
-	Johannes Weiner <hannes@cmpxchg.org>, cgroups@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	regressions@lists.linux.dev
-Subject: mainline build failure due to d1d4ff5d11a5 ("cgroup: put
- cgroup_tryget_css() inside CONFIG_CGROUP_SCHED")
-Message-ID: <ZPMdTJ7zwrCkdMTu@debian>
+        Sat, 02 Sep 2023 08:29:58 -0700 (PDT)
+Date: Sat, 2 Sep 2023 08:29:30 -0700 (PDT)
+From: Hugh Dickins <hughd@google.com>
+X-X-Sender: hugh@ripple.attlocal.net
+To: Linus Torvalds <torvalds@linux-foundation.org>
+cc: Andrew Morton <akpm@linux-foundation.org>, 
+    Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>, 
+    Dave Hansen <dave.hansen@linux.intel.com>, 
+    Bagas Sanjaya <bagasdotme@gmail.com>, linux-kernel@vger.kernel.org, 
+    linux-mm@kvack.org, regressions@lists.linux.dev
+Subject: [PATCH] mm/pagewalk: fix bootstopping regression from extra
+ pte_unmap()
+Message-ID: <8321a347-4a38-526c-97fb-5999ceaf6dd@google.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset=US-ASCII
 
-Hi All,
+Mikhail reports early-6.6-based Fedora Rawhide not booting: "rcu_preempt
+detected expedited stalls", minutes wait, and then hung_task splat while
+kworker trying to synchronize_rcu_expedited().  Nothing logged to disk.
 
-The latest mainline kernel branch fails to build mips sb1250_swarm_defconfig with
-the error:
+He bisected to my 6.6 a349d72fd9ef ("mm/pgtable: add rcu_read_lock() and
+rcu_read_unlock()s"): but the one to blame is my 6.5 commit to fix the
+espfix "bad pmd" warnings when booting x86_64 with CONFIG_EFI_PGT_DUMP=y.
 
-kernel/cgroup/cgroup.c: In function 'cgroup_local_stat_show':
-kernel/cgroup/cgroup.c:3699:15: error: implicit declaration of function 'cgroup_tryget_css'; did you mean 'cgroup_tryget'? [-Werror=implicit-function-declaration]
- 3699 |         css = cgroup_tryget_css(cgrp, ss);
-      |               ^~~~~~~~~~~~~~~~~
-      |               cgroup_tryget
-kernel/cgroup/cgroup.c:3699:13: warning: assignment to 'struct cgroup_subsys_state *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
- 3699 |         css = cgroup_tryget_css(cgrp, ss);
-      |             ^
+Gaah, that added an "addr >= TASK_SIZE" check to avoid pte_offset_map(),
+but failed to add the equivalent check when choosing to pte_unmap().
 
+It's not a problem on 6.5 (for different reasons, it's harmless on both
+64-bit and 32-bit), but becomes a bootstopper on 6.6 with the unbalanced
+rcu_read_unlock() - RCU has a WARN_ON_ONCE for that, but it would have
+scrolled off Mikhail's console too quickly.
 
-git bisect pointed to d1d4ff5d11a5 ("cgroup: put cgroup_tryget_css() inside CONFIG_CGROUP_SCHED").
+Reported-by: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Closes: https://lore.kernel.org/linux-mm/CABXGCsNi8Tiv5zUPNXr6UJw6qV1VdaBEfGqEAMkkXE3QPvZuAQ@mail.gmail.com/
+Fixes: 8b1cb4a2e819 ("mm/pagewalk: fix EFI_PGT_DUMP of espfix area")
+Fixes: a349d72fd9ef ("mm/pgtable: add rcu_read_lock() and rcu_read_unlock()s")
+Signed-off-by: Hugh Dickins <hughd@google.com>
+Tested-by: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+---
+ mm/pagewalk.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Reverting the commit has fixed the build failure.
-
-I will be happy to test any patch or provide any extra log if needed.
-
-#regzbot introduced: d1d4ff5d11a5887a9c4cfc00294bc68ba03e7c16
-
+diff --git a/mm/pagewalk.c b/mm/pagewalk.c
+index 9b2d23fbf4d3..b7d7e4fcfad7 100644
+--- a/mm/pagewalk.c
++++ b/mm/pagewalk.c
+@@ -58,7 +58,7 @@ static int walk_pte_range(pmd_t *pmd, unsigned long addr, unsigned long end,
+ 			pte = pte_offset_map(pmd, addr);
+ 		if (pte) {
+ 			err = walk_pte_range_inner(pte, addr, end, walk);
+-			if (walk->mm != &init_mm)
++			if (walk->mm != &init_mm && addr < TASK_SIZE)
+ 				pte_unmap(pte);
+ 		}
+ 	} else {
 -- 
-Regards
-Sudip
+2.35.3
