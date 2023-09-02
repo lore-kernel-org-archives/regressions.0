@@ -1,71 +1,128 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE3953C1E
-	for <regressions@lists.linux.dev>; Sat,  2 Sep 2023 15:38:00 +0000 (UTC)
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-99c0cb7285fso12784766b.0
-        for <regressions@lists.linux.dev>; Sat, 02 Sep 2023 08:38:00 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D85203C1E
+	for <regressions@lists.linux.dev>; Sat,  2 Sep 2023 15:42:53 +0000 (UTC)
+Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-56c2e840e70so5142a12.3
+        for <regressions@lists.linux.dev>; Sat, 02 Sep 2023 08:42:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1693669078; x=1694273878; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=LqKOi6XeDft6JHIA0q1WMDUlAe87S892KnJGjksHzw4=;
-        b=NP0Q2nvO2KQkjmvdJgo60GkWTQJTLezbc6Ey+/BUKrlpZLxFPSmU37o+pE9LRxYbk/
-         4Au2CqJr3B4+tAYAXNwI+moUQJwWqtSHG/u10PUn1bAVP4of0QGfxc76SryQYCGKYsn5
-         Rxy8lHaqhyU2Ey33miCh0KF5N8SbAP1gpPDEc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693669078; x=1694273878;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=gmail.com; s=20221208; t=1693669373; x=1694274173; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=LqKOi6XeDft6JHIA0q1WMDUlAe87S892KnJGjksHzw4=;
-        b=kWQ9E9L5vDbXsvMlctNeKDHcge1MnSKx/uHcPu6xEM8p4H7iWX2z59OoxXiNUHLXeP
-         gPfKf8GyxH43yxJoY/+BcQ3eeaBoPISemV244ozjQDD/5fsqYE21j+B0WUEvFrZVurzq
-         Rq9gzYmMbIJb8Cu1vF3Yw7hJs02vCgllpEUnqoGjIcWKDD3wTXeZipIzJxOjD0t5vJo3
-         M1wmlACDlA326m1OwROKUfKV8icoJH+n7igOKjb0V4TdNE/fbUkh8c9rxxhVlfwui8YM
-         5A5gQCAd+S1O89/Qx1lNUHMwBF301emU0Ckybu+C6fSiHFqV322L3NR28p0i6p4/daED
-         NHEg==
-X-Gm-Message-State: AOJu0YyjERLIgvhHyANJaShnP7vkG+uKv0/PERRwM4WJYRDa0LoP0Hv6
-	qvZ8hY5rJ3/k47YR/XMNpfqiRy7glBnL0ECte6oO4g==
-X-Google-Smtp-Source: AGHT+IFboO8lZqZOGyHRup31HLhMai6lfIVG8Fcpk9Z2H8E4/ZGl3ynMAjURvexOiGDdTdgBVA9iiw==
-X-Received: by 2002:a17:906:53ca:b0:9a5:c431:e100 with SMTP id p10-20020a17090653ca00b009a5c431e100mr3982223ejo.39.1693669078241;
-        Sat, 02 Sep 2023 08:37:58 -0700 (PDT)
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com. [209.85.208.42])
-        by smtp.gmail.com with ESMTPSA id gj17-20020a170906e11100b0098921e1b064sm3516378ejb.181.2023.09.02.08.37.56
-        for <regressions@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 02 Sep 2023 08:37:56 -0700 (PDT)
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-52bd9ddb741so10022a12.0
-        for <regressions@lists.linux.dev>; Sat, 02 Sep 2023 08:37:56 -0700 (PDT)
-X-Received: by 2002:a05:6402:12d7:b0:51d:d390:143f with SMTP id
- k23-20020a05640212d700b0051dd390143fmr4373503edx.5.1693669076297; Sat, 02 Sep
- 2023 08:37:56 -0700 (PDT)
+        bh=6SQfYFAS0iiVi0orcSaVcos5wFLJxvemd/2Ha3R3PtM=;
+        b=BRQ5yyVUtzfRUoLjYsMwoSa1SQrOfGmwi78+LWQvkAyOrBuo7wwEvTlumCCDc//l9k
+         pxyV5k9FYLWzWpvwaa9l7vpka+0I/iq/hQKRxPqzvAn+dFRkCAd1VJ2kzpqkr+gsZWyX
+         2tEOUmuF18nJcWqhjN5Iujx/AoOLeWWHHeTZCMYVGjecWLOfFkjh8l8IEhdlxDdBvrOv
+         YtwZaaG+WAQc1xGCMFAQl6BmuMI5IdHIgZiEw+2tq7q8s7HWyHtc9+8nALwbXvDccHIO
+         lIM7ziiJjDwCuBVZEih2ibQ3I49RSrz003bxtQgtGdbhA3wd0kleYRRXm/CeNuatyjur
+         VmYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1693669373; x=1694274173;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6SQfYFAS0iiVi0orcSaVcos5wFLJxvemd/2Ha3R3PtM=;
+        b=WWCzOZTEepyMV/WGpxGVgwHDsVGdk8wO4HP9AJamKKhmxj89c6SYudodtsgStCrJ7I
+         Baevb8Ol6GRKZ7vEi8t90oFYAscEuwjVAq14LVQeolZGAr3emHGQm7A0AVUVFP8yF65i
+         S7Ad/eMUVuvlwdbyj8lW+wlVNwv+7qjOhelvtqJ+YepYFcPXvLG9whRD9F/sKnvfvjGx
+         Zi6gR5iWGhad18baIZMWj3V6cFiA8vTxy7gOUKAJp9gEzZen7jtJjpqKp9qWDRlSmp4p
+         fNfdKa7S8VDrG3rdOt0ph/OEL4XKJz2sOo/cuDPplTEVyI0F35rG8ongeH12ovQLRWSL
+         DGbg==
+X-Gm-Message-State: AOJu0YyCd9ONmYSvBDLbYAfwNwl744iOlVNgVrwTPuKjY9B+Ne2NVHLX
+	b5Nu5K8HkeAs4DNcNLU+Brc=
+X-Google-Smtp-Source: AGHT+IE2AG9OKVJwY3C00izsMETmrEpukmxWa4XJJxTCGW/GqZ7zAP1hi8yl32ymGI5dgepZormV6g==
+X-Received: by 2002:a05:6a20:244d:b0:12f:382d:2a37 with SMTP id t13-20020a056a20244d00b0012f382d2a37mr7402802pzc.15.1693669372796;
+        Sat, 02 Sep 2023 08:42:52 -0700 (PDT)
+Received: from localhost ([2620:10d:c090:400::5:eca7])
+        by smtp.gmail.com with ESMTPSA id m28-20020a63711c000000b0056c3ee09b71sm4773430pgc.74.2023.09.02.08.42.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 02 Sep 2023 08:42:51 -0700 (PDT)
+Sender: Tejun Heo <htejun@gmail.com>
+Date: Sat, 2 Sep 2023 05:42:50 -1000
+From: Tejun Heo <tj@kernel.org>
+To: "Sudip Mukherjee (Codethink)" <sudipm.mukherjee@gmail.com>
+Cc: Miaohe Lin <linmiaohe@huawei.com>, Zefan Li <lizefan.x@bytedance.com>,
+	Johannes Weiner <hannes@cmpxchg.org>, cgroups@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	regressions@lists.linux.dev
+Subject: [PATCH cgroup/for-6.6-fixes] cgroup: Put cgroup_local_stat_show()
+ inside CONFIG_CGROUP_SCHED
+Message-ID: <ZPNX-jZAZbebizXA@slm.duckdns.org>
+References: <ZPMdTJ7zwrCkdMTu@debian>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <ZPMdTJ7zwrCkdMTu@debian>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 In-Reply-To: <ZPMdTJ7zwrCkdMTu@debian>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Sat, 2 Sep 2023 08:37:38 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgmvf9OjxeiO7ZzN2hsmDZ7-HViP9AjQkRN84fuDXNATQ@mail.gmail.com>
-Message-ID: <CAHk-=wgmvf9OjxeiO7ZzN2hsmDZ7-HViP9AjQkRN84fuDXNATQ@mail.gmail.com>
-Subject: Re: mainline build failure due to d1d4ff5d11a5 ("cgroup: put
- cgroup_tryget_css() inside CONFIG_CGROUP_SCHED")
-To: "Sudip Mukherjee (Codethink)" <sudipm.mukherjee@gmail.com>
-Cc: Miaohe Lin <linmiaohe@huawei.com>, Tejun Heo <tj@kernel.org>, 
-	Zefan Li <lizefan.x@bytedance.com>, Johannes Weiner <hannes@cmpxchg.org>, cgroups@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
 
-On Sat, 2 Sept 2023 at 04:32, Sudip Mukherjee (Codethink)
-<sudipm.mukherjee@gmail.com> wrote:
->
-> git bisect pointed to d1d4ff5d11a5 ("cgroup: put cgroup_tryget_css() inside CONFIG_CGROUP_SCHED").
+From d8416c5d2a38e36651f022be01bb234a404b8f01 Mon Sep 17 00:00:00 2001
+From: Tejun Heo <tj@kernel.org>
+Date: Sat, 2 Sep 2023 05:28:06 -1000
 
-I pushed out a commit that should fix it (76be05d4fd6c: "cgroup: fix
-build when CGROUP_SCHED is not enabled")
+677ea015f231 ("sched: add throttled time stat for throttled children") which
+was merged through the sched branch added cgroup_local_stat_show() which is
+marked with __maybe_unused and used iff CONFIG_CGROUP_SCHED is set. This was
+following the existing pattern of cgroup_extra_stat_show().
 
-            Linus
+However, in the cgroup tree, 1299eb2b0ad5 ("cgroup: minor cleanup for
+cgroup_extra_stat_show()") moved cgroup_extra_stat_show() inside
+CONFIG_CGROUP_SCHED and dropped __maybe_unused and subsequently d1d4ff5d11a5
+("cgroup: put cgroup_tryget_css() inside CONFIG_CGROUP_SCHED") moved
+cgroup_tryget_css() inside the config option too as cgroup_extra_stat_show()
+was the only user.
+
+When the tree commits met in mainline, this led to a build breakage when
+!CONFIG_CGROUP_SCHED as cgroup_tryget_css() was no longer available for the
+__maybe_unused cgroup_local_stat_show().
+
+Fix it by moving cgroup_local_stat_show() inside CONFIG_CGROUP_SCHED and
+also drop __maybe_unused.
+
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Reported-by: "Sudip Mukherjee (Codethink)" <sudipm.mukherjee@gmail.com>
+Link: http://lkml.kernel.org/r/ZPMdTJ7zwrCkdMTu@debian
+Fixes: 677ea015f231 ("sched: add throttled time stat for throttled children")
+Cc: Josh Don <joshdon@google.com>
+Cc: Miaohe Lin <linmiaohe@huawei.com>
+---
+Sorry about that. This should fix it. Guess nobody is building linux-next w/
+!CONFIG_CGROUP_SCHED. I'll send the pull request to Linus soon.
+
+Thanks.
+
+ kernel/cgroup/cgroup.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
+index babb34a643ea..156eb96d7cc5 100644
+--- a/kernel/cgroup/cgroup.c
++++ b/kernel/cgroup/cgroup.c
+@@ -3686,8 +3686,9 @@ static int cpu_stat_show(struct seq_file *seq, void *v)
+ 	return ret;
+ }
+ 
+-static int __maybe_unused cgroup_local_stat_show(struct seq_file *seq,
+-						 struct cgroup *cgrp, int ssid)
++#ifdef CONFIG_CGROUP_SCHED
++static int cgroup_local_stat_show(struct seq_file *seq, struct cgroup *cgrp,
++				  int ssid)
+ {
+ 	struct cgroup_subsys *ss = cgroup_subsys[ssid];
+ 	struct cgroup_subsys_state *css;
+@@ -3704,6 +3705,7 @@ static int __maybe_unused cgroup_local_stat_show(struct seq_file *seq,
+ 	css_put(css);
+ 	return ret;
+ }
++#endif
+ 
+ static int cpu_local_stat_show(struct seq_file *seq, void *v)
+ {
+-- 
+2.42.0
+
