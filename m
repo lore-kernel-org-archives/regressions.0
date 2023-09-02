@@ -1,79 +1,73 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58DAA3C1E
-	for <regressions@lists.linux.dev>; Sat,  2 Sep 2023 15:44:42 +0000 (UTC)
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1c1e780aa95so190815ad.3
-        for <regressions@lists.linux.dev>; Sat, 02 Sep 2023 08:44:42 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFE4B3C1E
+	for <regressions@lists.linux.dev>; Sat,  2 Sep 2023 15:46:05 +0000 (UTC)
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-5007f3d3235so144406e87.2
+        for <regressions@lists.linux.dev>; Sat, 02 Sep 2023 08:46:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1693669481; x=1694274281; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=o5MqIon8Nabrk/UvYJeaLuN2bLyxr6GffPmpVBNQNzY=;
-        b=YkzWtOzLYbc1iuAw1O9st76htD88Eqeu9kP/UXrXNi0ulXIqUp/LKKZ7Lg4zTilCMy
-         nRydozqN4RMKv3ns4xB624ezTVaKTQVHSMYs4Rf+nU8anqwxOtgSaKaFD0/l11wCqxRK
-         8Y1dDJHkAEcTirw/3L/qR6cFxNRANwAgZ0/OBooOFkjom4w0R+Ag1MWdUVIuvZGxEr1i
-         vhr774cqySaYwqiAVkGZbRE7rLKt0vRBEIZgF96TodfeBw3mdu5g32H2G4LrpIuJ0Ur0
-         VvXjREoU/BSOc7qVh6f6mQhBUedlwXGyMdccnSACfpXIpfNz5Oj1KYtsNg3xbpqAczUj
-         R2tg==
+        d=linux-foundation.org; s=google; t=1693669563; x=1694274363; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=sTVrfuoyyUEeTTw7w2mP5y9qGCPLtPAJX6CEnNqN/W4=;
+        b=YgjgOI+yBcIH+XPXmFyCGePCzG03fJxPDQzLr3m9+mlZwxOT4x++5VhYe980OFOJIu
+         5Gj1HnPw0kIgfG23d+kZU95CyRWgFA59HLGtTSbPzH1g1pHYHNakZyetWHose5YawlZq
+         7Ht1tkFJV2WPic6kS/DNYbSJUUxiCYbSfCgnc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693669481; x=1694274281;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=o5MqIon8Nabrk/UvYJeaLuN2bLyxr6GffPmpVBNQNzY=;
-        b=PwlzSVwA5tFnmROVpqTZW+TjG18e+BNC/vov0HnPdR7iswTdhsCuglBsMzZlyRpySl
-         ROa/XukxuzLZkVrlUSrqVJnYpKzaz2gVSV+gd33e/lt/X/fmFG/7HedxXVDhobG86pAf
-         dQ13sxFlX763oCs8wm1v8pIWjzfLzw29ccyMELPOvMxjwsKYCw9oowmwuvwVB7A8ua7s
-         QQIA4XLKCcRR9bemmb8uBN3ZbTciWx3tzMJId6JkKIlFygJ36JO0RbRTCqdUtHXE5YGr
-         3mmUgH+GD6votTi70hHq8tY8Mude9Y6wT2oOi34flR/Vsr0L91xtypCqOzbSnc1H5JV2
-         E0FQ==
-X-Gm-Message-State: AOJu0YyLfqIhHIy1paACKSFw0Kks1r70FtVRc8FG9oxyqaDxXmM9i+Ts
-	GKJhLtNCWU5pabhl7m6Vquo=
-X-Google-Smtp-Source: AGHT+IGcBMkV457o3ML4vRJH+8WU9TjzwVYKJ5GtcOPGFgZvYZ1JSFh3URPE+iNYyEfnC0CaeAZMcw==
-X-Received: by 2002:a17:903:26ce:b0:1bd:f1ae:309d with SMTP id jg14-20020a17090326ce00b001bdf1ae309dmr4955077plb.9.1693669481269;
-        Sat, 02 Sep 2023 08:44:41 -0700 (PDT)
-Received: from localhost ([2620:10d:c090:400::5:eca7])
-        by smtp.gmail.com with ESMTPSA id l9-20020a170902d34900b001bdcde49bc3sm4802471plk.119.2023.09.02.08.44.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 02 Sep 2023 08:44:40 -0700 (PDT)
-Sender: Tejun Heo <htejun@gmail.com>
-Date: Sat, 2 Sep 2023 05:44:39 -1000
-From: Tejun Heo <tj@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: "Sudip Mukherjee (Codethink)" <sudipm.mukherjee@gmail.com>,
-	Miaohe Lin <linmiaohe@huawei.com>,
-	Zefan Li <lizefan.x@bytedance.com>,
-	Johannes Weiner <hannes@cmpxchg.org>, cgroups@vger.kernel.org,
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-Subject: Re: mainline build failure due to d1d4ff5d11a5 ("cgroup: put
- cgroup_tryget_css() inside CONFIG_CGROUP_SCHED")
-Message-ID: <ZPNYZ8quPOdJeVa2@slm.duckdns.org>
-References: <ZPMdTJ7zwrCkdMTu@debian>
- <CAHk-=wgmvf9OjxeiO7ZzN2hsmDZ7-HViP9AjQkRN84fuDXNATQ@mail.gmail.com>
+        d=1e100.net; s=20221208; t=1693669563; x=1694274363;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=sTVrfuoyyUEeTTw7w2mP5y9qGCPLtPAJX6CEnNqN/W4=;
+        b=XqK9Xo/+FNiVqMnG2I+ZtUN3hvCOeVHAvHNyRvx4RcpgRDycXa0d3Haafwz3dh4eTC
+         mMmASy1KZVl7navzkPbr1UnU4VCM4XCIrbp53OiywIYKHQTSPUnaut0/NjSQI5RM11E0
+         UCYJrwp3lXRdkuKbg41xlIYwCRjQmhgvnyVzEoHqJPMRCb3wWGpMpOjDjne+9nmDZpzf
+         SxtbAQ6FIAnTbMSbyBmrUnyK9eOmMhGzVRxgeRieXcfrYBg7XBCf1yFeLXdiNXirsV33
+         lGeGtQn6XKqSyPpWtxVi8cQ9WdxvCOJsP7l7DO2cKY8CV/Ob6hgMvdETcPfM0g2567cw
+         amdg==
+X-Gm-Message-State: AOJu0YwWuuIiSU/J2UhB5PjtTvTABkOp8f6Vr6VQE9jyVh3gktrrAAft
+	XJf3JP4NrBB1earw8q1pI7c8HNkFPRIAlxKrXu+p4A==
+X-Google-Smtp-Source: AGHT+IFnzvWKPPwneGHQZjlFTwUvSXrQfNm9L3o/tjj3IdwOVcOfhD3+a6JQ0DD5m5MMlsy0efSv3A==
+X-Received: by 2002:a05:6512:3047:b0:500:9860:f8a with SMTP id b7-20020a056512304700b0050098600f8amr3695275lfb.4.1693669563106;
+        Sat, 02 Sep 2023 08:46:03 -0700 (PDT)
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com. [209.85.167.51])
+        by smtp.gmail.com with ESMTPSA id q26-20020ac24a7a000000b00500832b083esm1007788lfp.298.2023.09.02.08.46.02
+        for <regressions@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 02 Sep 2023 08:46:02 -0700 (PDT)
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-5008faf4456so143933e87.3
+        for <regressions@lists.linux.dev>; Sat, 02 Sep 2023 08:46:02 -0700 (PDT)
+X-Received: by 2002:a05:6512:3b2c:b0:500:9026:a290 with SMTP id
+ f44-20020a0565123b2c00b005009026a290mr4608993lfv.9.1693669561847; Sat, 02 Sep
+ 2023 08:46:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wgmvf9OjxeiO7ZzN2hsmDZ7-HViP9AjQkRN84fuDXNATQ@mail.gmail.com>
+References: <ZPMdTJ7zwrCkdMTu@debian> <ZPNX-jZAZbebizXA@slm.duckdns.org>
+In-Reply-To: <ZPNX-jZAZbebizXA@slm.duckdns.org>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Sat, 2 Sep 2023 08:45:45 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wha+VT3yC3BKS1046GpuH2JRPER+_MXVu_Z1V2K1Ja6Dw@mail.gmail.com>
+Message-ID: <CAHk-=wha+VT3yC3BKS1046GpuH2JRPER+_MXVu_Z1V2K1Ja6Dw@mail.gmail.com>
+Subject: Re: [PATCH cgroup/for-6.6-fixes] cgroup: Put cgroup_local_stat_show()
+ inside CONFIG_CGROUP_SCHED
+To: Tejun Heo <tj@kernel.org>
+Cc: "Sudip Mukherjee (Codethink)" <sudipm.mukherjee@gmail.com>, Miaohe Lin <linmiaohe@huawei.com>, 
+	Zefan Li <lizefan.x@bytedance.com>, Johannes Weiner <hannes@cmpxchg.org>, cgroups@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, regressions@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-On Sat, Sep 02, 2023 at 08:37:38AM -0700, Linus Torvalds wrote:
-> On Sat, 2 Sept 2023 at 04:32, Sudip Mukherjee (Codethink)
-> <sudipm.mukherjee@gmail.com> wrote:
-> >
-> > git bisect pointed to d1d4ff5d11a5 ("cgroup: put cgroup_tryget_css() inside CONFIG_CGROUP_SCHED").
-> 
-> I pushed out a commit that should fix it (76be05d4fd6c: "cgroup: fix
-> build when CGROUP_SCHED is not enabled")
+On Sat, 2 Sept 2023 at 08:42, Tejun Heo <tj@kernel.org> wrote:
+>
+> Sorry about that. This should fix it. Guess nobody is building linux-next w/
+> !CONFIG_CGROUP_SCHED. I'll send the pull request to Linus soon.
 
-Ah, you beat me to it. I'll drop my fix branch.
+I solved it slightly differently by moving the whole function around
+rather than adding yet another #ifdef.
 
-Thanks.
+See 76be05d4fd6c ("cgroup: fix build when CGROUP_SCHED is not enabled")
 
--- 
-tejun
+                Linus
