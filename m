@@ -1,120 +1,90 @@
-Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41B7F33E3
-	for <regressions@lists.linux.dev>; Sat,  2 Sep 2023 09:52:07 +0000 (UTC)
-Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-64f4043dd38so2114446d6.1
-        for <regressions@lists.linux.dev>; Sat, 02 Sep 2023 02:52:07 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC7CC17EF
+	for <regressions@lists.linux.dev>; Sat,  2 Sep 2023 11:10:37 +0000 (UTC)
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-5007abb15e9so4934595e87.0
+        for <regressions@lists.linux.dev>; Sat, 02 Sep 2023 04:10:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1693648327; x=1694253127; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GjdWtHgsDTB4R4Jq1soVJcM9QWTddW8JRmrExPBXbIU=;
-        b=GW8a20QY8yZeYF1jQVJb8vLwAOkNm7wvVMUR6dpXvWjzpZJNygKdLL4j9jAT2zDM/5
-         WT/Zloc0yi9NQbvoUoytV9BhFJmy5qoThpPtO3sM1jSyL812qtVjK1Sd3cNvY7KcbBoq
-         8lZw/Z8dmw5bT5ooSGgDQ3Y2Z4+UczavbXUoA3BwWTFjJbM/jGoSSg14X1KrbeoaJIvi
-         lo75JoIC2gx9zVnuEth9ZVNeGETXXTIHKcdab2uZmUV6NPAaom+H5UiWQoIxgJ5G1yo8
-         lbPrTNs0Tq4ADO71G+bd9Sd8G2zVIkJ2EMDe53iK3a2OaNEDVWp+CiPoDk9Uwnrs4vdA
-         rtrg==
+        d=gmail.com; s=20221208; t=1693653035; x=1694257835; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=sCWoWPe6h8Qmaq6PAfz3dXsnt+0ElN/TsBNKOj8iL1I=;
+        b=VQ+MbsCjAxpGvVGHWfKcib2OUKy7fUTZYHSFroonbkGxZKbw08veBSI7Xs5Bwieamt
+         9nCA0+4qXvEDsdMyMU+PlU4V6FJit0/dGqqB4P8BETRwH4KOFT7CMSn4PpeiMRW/GpKG
+         +fkDSmODzUv3deyfeGXl8DlxUr18vQ3Gggov7Ad4Mc+GK6TwBocgnIATuMzD/nNIJIqM
+         moUaLIn6mIcAflfOfO3evv1Zi0Aqs8SfUhbdfSlOfyqMi1NSEAHgZkhLxdkcvPlt3guQ
+         wscwsrtA+jhHra5kGahXnpxUop79Ut1xWwIIjmERDw9RsYoxI8BAX9jd4uO6PAEQ0JDI
+         Ag1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693648327; x=1694253127;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GjdWtHgsDTB4R4Jq1soVJcM9QWTddW8JRmrExPBXbIU=;
-        b=dAt2El90NObC0l9uqm2NeCMBMN9S6jUf0EVjUNyKHwVar5t/noL5aWt/XJHO4dMh4S
-         iasEazpSDCaOkZYXJD6swbbZ99FxJX6AahcRMS8VC/LCoB2HUJsUrzU8c3YItJI8/5EC
-         RdodLlg4AJe/nMDmpmxLRGwv0urQZvUsaarl8zGzwD2j5XgB9HRLL1bYhiaHqBMt3pk1
-         y7EsocxYzCfdLqShgQrbNsa7hYhD3W9I7EvPeeI/ZtHbnkXVJsFtJzyIKjZ1lholQ6dH
-         ewS+Lw7d9SverT0RC+r9ED649MJ6a9Z/VAljM5A/PAseuGt1iLbXAM6vy/l/6/qwuQUC
-         wmww==
-X-Gm-Message-State: AOJu0YxdJRpc7qRTTCgjdMLrp5QChD5K5MXCvS6qRzedjQOJH7k+L07A
-	1kiMgNdQdczkYexJiOJDAOkbUnkyCEieyqasEEw=
-X-Google-Smtp-Source: AGHT+IE3L2Pns1+lhVfe9SzdXHBx2qDiPbdxS5Iukb3V4eViqvyqRuX63PI3CMe4Qyd/74RfpRpqlmOCsBaldezjBWU=
-X-Received: by 2002:a05:6214:f2e:b0:63c:7427:e7e9 with SMTP id
- iw14-20020a0562140f2e00b0063c7427e7e9mr5628283qvb.6.1693648326776; Sat, 02
- Sep 2023 02:52:06 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1693653035; x=1694257835;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=sCWoWPe6h8Qmaq6PAfz3dXsnt+0ElN/TsBNKOj8iL1I=;
+        b=Vj48l2/fVjnCzqY1M5sXRPRGHaKg7I+TfyEdKEcmz1PFD4Uo+Ztd43w7btCzsaz+Ot
+         VEBWazWZTCTQIYeZHLaqS6NUF7CvHzm4vhuGD3M38zl7Sm97P/9lL6LRHBPwccrGy9qy
+         8rQCiBPQODR41ZDp2EmCD344VkkcC+UBM1IUgruzsD0GO2Z9OZFqYXVV1bgz1dmxuNsO
+         BN6cYIrrtufgVCSXswxFz1mdSQP7YTKbR4ukVVC8brh0Xza3EFAw8I5qBH8prDuvexRD
+         jDHm0m3u0Ri8WbzMSJIpJitP7m1uDc2SejYR26iB/vtdhF3ULIsc6Ttnrn+wHXKdWTz0
+         eYAA==
+X-Gm-Message-State: AOJu0YyxG5vvhzWE8HQwaFQ3KIUKuhK3xsICEumqRUIc1zZn8BrbAmA+
+	DS0ny8cyRMD9O0mbu/96Pui8IN4M4euq1MRmU9Y=
+X-Google-Smtp-Source: AGHT+IG/VqY3vkLqgYJkFoWyA3BAQzDL3TGfy+OM6GskqKn3cNhSQnpX1YM1Nnj35Q12kl0+w6BraWus5k49mAtQrh4=
+X-Received: by 2002:a05:6512:742:b0:500:7f51:d129 with SMTP id
+ c2-20020a056512074200b005007f51d129mr2639186lfs.34.1693653035278; Sat, 02 Sep
+ 2023 04:10:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CABXGCsNi8Tiv5zUPNXr6UJw6qV1VdaBEfGqEAMkkXE3QPvZuAQ@mail.gmail.com>
- <3548ca67-ce58-3bc6-fef5-348b98d7678b@google.com> <CABXGCsOyamBvQ=Y-M9HQBTfEDfaRwGqzXqayBm7L259Q+t+gJQ@mail.gmail.com>
- <98eb1ba4-5bd3-ee7-1a88-47b054dc938@google.com> <CABXGCsOPcu8R9rpdihNR5r822FAHBZ42wBa5XUa5RDVierD_tg@mail.gmail.com>
- <5e4d50d4-978-ce54-e1ae-40f7117dbf3d@google.com>
-In-Reply-To: <5e4d50d4-978-ce54-e1ae-40f7117dbf3d@google.com>
-From: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Date: Sat, 2 Sep 2023 14:51:55 +0500
-Message-ID: <CABXGCsOM0j7ME4iUDbf5fpLMxZicXHwT9aBGWXCNWUVSPUO0Sw@mail.gmail.com>
-Subject: Re: 6.6/regression/bisected - after commit a349d72fd9efc87c8fd1d16d3164752d84a7275b
- system stopped booting
-To: Hugh Dickins <hughd@google.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Bagas Sanjaya <bagasdotme@gmail.com>, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, regressions@lists.linux.dev
+References: <ZPDgdGBbxrTl+m2s@debian> <CAHk-=wg4vpuourbbUPn19yFx2cNj93O6t0PhiARLLL6z22yV4Q@mail.gmail.com>
+In-Reply-To: <CAHk-=wg4vpuourbbUPn19yFx2cNj93O6t0PhiARLLL6z22yV4Q@mail.gmail.com>
+From: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Date: Sat, 2 Sep 2023 12:09:59 +0100
+Message-ID: <CADVatmMF1QS235CD4KbDPy_w9hAi0rN1EJqAXtJok2Xg0iE-UA@mail.gmail.com>
+Subject: Re: mainline build failure due to 501126083855 ("fbdev/g364fb: Use
+ fbdev I/O helpers")
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Thomas Zimmermann <tzimmermann@suse.de>, Helge Deller <deller@gmx.de>, linux-fbdev@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+	regressions@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Sat, Sep 2, 2023 at 3:48=E2=80=AFAM Hugh Dickins <hughd@google.com> wrot=
-e:
-> That was very disappointing: I found it hard to explain, but was thinking
-> of sending you a similar patch, doing the same check on all your 32 CPUs =
--
-> maybe the stall being on CPU 0 in your photo was accidental.
+On Thu, 31 Aug 2023 at 20:04, Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
 >
-> But now I think I have the shameful answer (which studying your dmesg,
-> and the 82328 jiffies at 86 seconds in your photo, did help me towards).
+> On Thu, 31 Aug 2023 at 11:48, Sudip Mukherjee (Codethink)
+> <sudipm.mukherjee@gmail.com> wrote:
+> > The latest mainline kernel branch fails to build mips jazz_defconfig with
+> > the error:
+> >
+> > drivers/video/fbdev/g364fb.c:115:9: error: 'FB_DEFAULT_IOMEM_HELPERS' undeclared here (not in a function); did you mean 'FB_DEFAULT_IOMEM_OPS'?
+> >   115 |         FB_DEFAULT_IOMEM_HELPERS,
+> >       |         ^~~~~~~~~~~~~~~~~~~~~~~~
+> >       |         FB_DEFAULT_IOMEM_OPS
+> >
+> >
+> > git bisect pointed to 501126083855 ("fbdev/g364fb: Use fbdev I/O helpers").
+> >
+> > Reverting the commit has fixed the build failure.
+> >
+> > I will be happy to test any patch or provide any extra log if needed.
 >
-> That mm/pagewalk fix I put into 6.5 has a grievous oversight (and a
-> video of your failing 6.6 bootup would likely have shown a WARN_ON_ONCE
-> from the underflow in __rcu_read_unlock()).
+> Would you mind testing the exact thing that the compiler suggested?
 >
-> Please revert the debug patch I sent yesterday (or earlier today), please
-> try booting with this one on top of a349d72fd9ef; and if that's successfu=
-l,
-> then please go back to your original Rawhide tree and apply this on top o=
-f
-> that, to confirm that boots to a working system too - thanks.
+> So instead of the revert, just replace FB_DEFAULT_IOMEM_HELPERS with
+> FB_DEFAULT_IOMEM_OPS.
 >
-> With my apologies,
->
-> [PATCH] mm/pagewalk: fix bootstopping regression from extra pte_unmap()
->
-> [ Commit message yet to be written: it's actually something to go to
-> 6.5 stable, to correct i386 CONFIG_HIGHPTE there - though we know of
-> no case where it is actually hit. ]
->
-> Signed-off-by: Hugh Dickins <hughd@google.com>
-> ---
->  mm/pagewalk.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/mm/pagewalk.c b/mm/pagewalk.c
-> index 2022333805d3..9e7d0276c38a 100644
-> --- a/mm/pagewalk.c
-> +++ b/mm/pagewalk.c
-> @@ -58,7 +58,7 @@ static int walk_pte_range(pmd_t *pmd, unsigned long add=
-r, unsigned long end,
->                         pte =3D pte_offset_map(pmd, addr);
->                 if (pte) {
->                         err =3D walk_pte_range_inner(pte, addr, end, walk=
-);
-> -                       if (walk->mm !=3D &init_mm)
-> +                       if (walk->mm !=3D &init_mm && addr < TASK_SIZE)
->                                 pte_unmap(pte);
->                 }
->         } else {
-> --
-> 2.35.3
+> I think it's just a typo / confusion with the config variable (which
+> is called FB_IOMEM_HELPERS).
 
-Great, this is the right patch.
-Both build a349d72fd9ef and latest in Rawhide (now it is 99d99825fc07)
-works fine after applying this patch.
-So thank you a lot.
-Tested-by: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Yeah, you were right.
+Patch sent - https://lore.kernel.org/lkml/20230902095102.5908-1-sudip.mukherjee@codethink.co.uk/
 
---=20
-Best Regards,
-Mike Gavrilov.
+
+-- 
+Regards
+Sudip
