@@ -1,34 +1,59 @@
-Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D40FF3C1E
-	for <regressions@lists.linux.dev>; Sun,  3 Sep 2023 20:43:44 +0000 (UTC)
-Received: from letrec.thunk.org (pool-173-48-116-73.bstnma.fios.verizon.net [173.48.116.73])
-	(authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 383Ke1oC004437
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 3 Sep 2023 16:40:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
-	t=1693773603; bh=Ppr8KeJeHsorQrVaGp9vsaGRferjzXALJp6n2MSlTSY=;
-	h=Date:From:Subject:Message-ID:MIME-Version:Content-Type;
-	b=NuQxVZ9mclBiwaN7p4ANjPYWQNpqTpGtI8FNJ5u85Jv/3mpwTxcAb29K7n+Kna8C/
-	 4vI4MvqtUa4MgoeAF/xkGyWINR5UD3Ncjpfw0mEAkiW9LkFX4ctP3xS5cKfMvAGgJS
-	 90iGpbU7cHuoe7141EeQnEy74+fZXryjMe78sGlOw67jTfqKOMJ058BxwaGwk2ICWH
-	 J1lYxuwjpuEreXNGUSPY2daWoB/qGVkGejcIuhrGggVC65+o1dCkrLaKFcoHAKRDYB
-	 GKCGc3vNkwfFbY05T/dTtO7tMEYZdLLrfvULFg4b9pavzqH0HTCLRS9A0/mZKdCl93
-	 SGw/ApcX/Ch9A==
-Received: by letrec.thunk.org (Postfix, from userid 15806)
-	id 9BEC28C026E; Sun,  3 Sep 2023 16:40:01 -0400 (EDT)
-Date: Sun, 3 Sep 2023 16:40:01 -0400
-From: "Theodore Ts'o" <tytso@mit.edu>
-To: Zorro Lang <zlang@kernel.org>
-Cc: linux-ext4@vger.kernel.org, fstests@vger.kernel.org,
-        regressions@lists.linux.dev
-Subject: Re: [fstests generic/388, 455, 475, 482 ...] Ext4 journal recovery
- test fails
-Message-ID: <ZPTvIb6hwIjY7T2M@mit.edu>
-References: <20230903120001.qjv5uva2zaqthgk2@zlang-mailbox>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C63FD3D6A
+	for <regressions@lists.linux.dev>; Sun,  3 Sep 2023 23:30:37 +0000 (UTC)
+Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-3aa1254fb45so599605b6e.2
+        for <regressions@lists.linux.dev>; Sun, 03 Sep 2023 16:30:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1693783836; x=1694388636; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=XZOoXJhaVo2TGCTIOjDSMSXw4Rlx/I9OKqXOgCPiDnA=;
+        b=g96QTn0FXla1KvVTQlAuGegcGECZjGoHG4+hcCZkOlsRoMMRYvqqW7GjJcGBdxfJvh
+         1i+VcF9Qy840nMDXPazxgR4iGmSGmq7a6BL9uXQJlWREUzY88Niuhn+f3EXrxvFjiFlj
+         woJZSJml6YLU4wtRlljT+UOH8gEAumJ/XBZqj0sO8W0tbJRh6bIe9HHNdzBwgvgZk5YI
+         1CHoqn6Gfb3i7nG8GcrNDBoxFeW+LxHFTF+Us6B16m+krDZw9Vb7x6mk3lfW3ynD/eNj
+         kG0kpwJmiC+5nFbpYMpGOYF6chvmY/d9rdu/TaySyJcqzQz4bqMQhb+kSKxvIFWyzUsO
+         xJrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1693783836; x=1694388636;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XZOoXJhaVo2TGCTIOjDSMSXw4Rlx/I9OKqXOgCPiDnA=;
+        b=Dctg95KmEHiSXwG1OHQUPn1cXxRJsE6+Qfaa9RE+RBjzRu5kjpMZL5tPRHuE1JRFkH
+         htnOvu00zhtOQcjGNiA7pELJMiA4joehr688S3UKOSjb5uncE9QpEWARlv6apky7q/g2
+         qJg7jKzIt5kjGujjwbwXIO1jUiO9B7xhG1Kwuo2iM/je/Gda1eeub/7Y5vY9siNlyekh
+         5SIj5wmlk7P8WNXJuaU33QLJDwF7+e5z4fuOTr+agAT+KpvbeDLhnGvhdTPy2rXS1aEq
+         Px5t9bCLOb72g4w2j0U7GbDfig/GHFBvkcyMMhWvoqtcgEdswfCZr6DGS3U7/zqkonrQ
+         RINg==
+X-Gm-Message-State: AOJu0YxFGlq7iN+JwNxJxq0KkFcCvI6BhgKcs5I4yD/wnSKAfo4Yq8Xb
+	l4dM5TJTBOLcseQIMmgeeUM=
+X-Google-Smtp-Source: AGHT+IE52Ilxt0FJzlGKG879WYPgQGgW7wg05kjjPjvHlrTLhFnh/sEpvS/WCdZUh87TzfzToOxV4A==
+X-Received: by 2002:a05:6808:148c:b0:3a9:e8bd:8510 with SMTP id e12-20020a056808148c00b003a9e8bd8510mr10293836oiw.49.1693783836539;
+        Sun, 03 Sep 2023 16:30:36 -0700 (PDT)
+Received: from luigi.stachecki.net (pool-96-232-116-30.nycmny.fios.verizon.net. [96.232.116.30])
+        by smtp.gmail.com with ESMTPSA id b12-20020a0ccd0c000000b0064f59ca89basm3171001qvm.45.2023.09.03.16.30.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 03 Sep 2023 16:30:36 -0700 (PDT)
+Date: Sun, 3 Sep 2023 19:30:59 -0400
+From: Tyler Stachecki <stachecki.tyler@gmail.com>
+To: Manikanta Pubbisetty <quic_mpubbise@quicinc.com>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
+	Bagas Sanjaya <bagasdotme@gmail.com>,
+	Kalle Valo <quic_kvalo@quicinc.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Atheros 11K <ath11k@lists.infradead.org>
+Subject: Re: Fwd: ath11k: QCN9074: ce desc not available for wmi command
+Message-ID: <ZPUXMx0H/8U9j15F@luigi.stachecki.net>
+References: <1326a6e4-758d-3344-d90c-8a126748b034@gmail.com>
+ <6a0c3aa0-86a8-8c06-81df-2d7085946cf5@leemhuis.info>
+ <16885654-09f0-c139-cc9b-c6c4d666932e@quicinc.com>
+ <ae1ad814-5613-704e-b0b1-4f1fc4bead44@leemhuis.info>
+ <1945f748-fb71-f1c1-83a2-ba0470daf817@quicinc.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -37,101 +62,41 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230903120001.qjv5uva2zaqthgk2@zlang-mailbox>
+In-Reply-To: <1945f748-fb71-f1c1-83a2-ba0470daf817@quicinc.com>
 
-On Sun, Sep 03, 2023 at 08:00:01PM +0800, Zorro Lang wrote:
-> Hi ext4 folks,
+> On 25.07.23 11:17, Manikanta Pubbisetty wrote:
 > 
-> Recently I found lots of fstests cases which belong to "recoveryloop" (e.g.
-> g/388 [1], g/455 [2], g/475 [3] and g/482 [4]) or does fs shutdown/resize test
-> (e.g. ext4/059 [5], g/530 [6]) failed ext4 with 1k blocksize, the kernel is
-> linux v6.6-rc0+ (HEAD=b84acc11b1c9).
-> 
-> I tested with MKFS_OPTIONS="-b 1024", no specific MOUNT_OPTIONS. I hit these
-> failure several times, and I didn't hit them on my last regression test on
-> v6.5-rc7+. So I think this might be a regression problem. And I didn't hit
-> this failures on xfs. If this's a known issue will be fixed soon, feel free
-> to tell me.
+> FWIW, Bagas Sanjaya just forwarded the report and the reporter is not
+> CCed afaics (bugzilla privacy policy does not allow this, which
+> complicates things a lot :-/ ). You have to use bugzilla to reach the
+> reporter: https://bugzilla.kernel.org/show_bug.cgi?id=217536
 
-TL;DR: there definitely seenms to be something going on with g/455 and
-g/482 with the ext4/1k blocksize case in Linus's latest upstream tree,
-although it wasn't there in the ext4 branch which I sent to Linus to
-pull.
+Hi Manikanta,
 
+I just wanted to report that this is likely related to QCN9074 when the host
+system only has 1 MSI-X vector available for the modem and/or related to a
+product named "WPEQ-405AX".
 
-Unfortunately, generic/475 is a known failure, especially in the 1k
-block size case.  The rate seems to change a bit over time.  For
-example from 6.2:
+I have two different hosts running the exact same kernel, same QCN9074
+firmware (WLAN.HK.2.7.0.1-01744-QCAHKSWPL_SILICONZ-1), etc. The only
+differences are that the one which does not work is running on a slightly
+older Intel SBC, with the older one leveraging mPCIe instead of PCIe and
+only having one MSI-X vector.
 
-ext4/1k: 522 tests, 2 failures, 45 skipped, 6153 seconds
-  Flaky: generic/051: 40% (2/5)   generic/475: 60% (3/5)
+I tried backing out the threaded NAPI commit and, as mentioned, everything
+begins working again on the host with 1 MSI-X vector. I have also seen some
+other oddities with the system only working with 1 MSI-X vector, such as
+the modem not working when I boot with hpet=disabled. I am guessing it is
+not related, but mentioning it just in case.
 
-and from 6.1.0-rc4:
+The only other thing I'll mention is that the CE desc errors are *only* seen
+after upping the link (via `ip link set wlp1s0 up`). After this point, doing
+something as simple as reading the temperature of the modem fails and the
+kernel log starts printing the errors described above. Prior to that, however,
+no error messages are seen.
 
-ext4/1k: 522 tests, 2 failures, 45 skipped, 5660 seconds
-  Flaky: generic/051: 60% (3/5)   generic/475: 40% (2/5)
+I'm happy to be of service to test any changes you might suggest. Thanks
+for the threaded NAPI work, by the way - it definitely provides a boost!
 
-In 6.5-rc3, it looks like the rate has gotten worse:
-
-ext4/1k: 30 tests, 29 failures, 2402 seconds
-  Flaky: generic/475: 97% (29/30)
-
-Alas, finding a root cause for generic/475 has been challenging.  I
-suspect that it happens when we crash while doing a large truncate on
-a highly fragmented file system, such as that the truncate has to span
-multiple truncates, with the inode on the orphan list so the kernel
-can complete the truncate if we trash mid-truncate when we clean up
-the orphan list.  However, that's just a theory, and I don't yet have
-hard evidence.
-
-
-The generic/388 test is very different.  It uses the shutdown ioctl,
-and that's something that ext4 has never completely handled correctly.
-Doing it right would require adding some locks in hot paths, so it's
-one which I've suppressed for all of my ext4 tests[1].
-
-[1] https://github.com/tytso/xfstests-bld/blob/master/test-appliance/files/root/fs/ext4/exclude
-
-
-The generic/455 and generic/482 tests work by using dm-log-writes, and
-that was *not* failing on the branch (v6.5.0-rc3-60-g768d612f7982) for
-which I sent a pull request to Linus:
-
-ext4/1k: 10 tests, 63 seconds
-  generic/455  Pass     4s
-  generic/482  Pass     8s
-  generic/455  Pass     5s
-  generic/482  Pass     8s
-  generic/455  Pass     5s
-  generic/482  Pass     7s
-  generic/455  Pass     5s
-  generic/482  Pass     8s
-  generic/455  Pass     5s
-  generic/482  Pass     8s
-Totals: 10 tests, 0 skipped, 0 failures, 0 errors, 63s
-
-... but I can confirm that it's failing on Linus's upstream (I tested
-commit 708283abf896):
-
-ext4/1k: 2 tests, 2 failures, 31 seconds
-  generic/455  Failed   4s
-  generic/455  Failed   2s
-  generic/455  Pass     5s
-  generic/455  Failed   3s
-  generic/455  Failed   2s
-  generic/482  Failed   2s
-  generic/482  Failed   3s
-  generic/482  Failed   1s
-  generic/482  Failed   3s
-  generic/482  Failed   4s
-Totals: 10 tests, 0 skipped, 9 failures, 0 errors, 29s
-
-						- Ted
-
-
-P.S.  After doing some digging, it appears generic/455 does have some
-failures on 6.4 (20%) and 6.5-rc3 (5%) on the ext4/1k blocksize test
-config.  But *something* is definitely causing a much greater failure
-rate in Linus's upstream.  The good news is that should make it
-relatively easy to bisect.  I'll look into it.  Thanks for flagging
-this.
+Regards,
+Tyler
